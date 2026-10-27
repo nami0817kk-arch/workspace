@@ -431,10 +431,10 @@
     "videos.update": 10
   },
   "2026-10-26": {
-    "channels.list": 11,
-    "playlistItems.list": 11,
-    "videos.insert": 10,
-    "thumbnails.set": 10,
+    "channels.list": 19,
+    "playlistItems.list": 19,
+    "videos.insert": 18,
+    "thumbnails.set": 18,
     "playlistItems.insert": 10,
     "videos.list": 1,
     "commentThreads.insert": 1

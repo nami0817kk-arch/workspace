@@ -1,0 +1,151 @@
+# 取材メモ（2026年10月27日）ムバッペはバロンドール2位。2年欠席したレアルが、今年は授賞式に来た（ショートだけ・見せ方 Y＝ムバッペ本人の言葉から始める）
+# 取材: 2026-10-27 朝。本文はすべて requests で読んだ（検索の要約は使っていない）。控えは research/raw/20261027_mbappe_madrid_*。
+#   ・ESPN 記事API 50286844（2026-10-26 14:44Z、Rodra / Adriana Garcia、関係者の話）「Real Madrid to end Ballon d'Or boycott」
+#       レアルは2024年にロドリがヴィニシウスを上回って受賞したことに怒り、過去2回の授賞式をボイコット。今年はムバッペを先頭に代表団。
+#       ククレジャ（候補）、ディオマンデ（コパ・トロフィー候補）も出席、エミリオ・ブトラゲーニョが同行。ムバッペはW杯・CL・ラ・リーガの得点王。
+#   ・レアル公式（2026-10-26 15:56Z）「The 2026 Ballon d'Or gala was held」: ムバッペ2位、ベリンガム11位、ヴィニシウス17位、ククレジャ18位。
+#       ムバッペはラ・リーガ25点・CL15点で得点王、W杯は10点で得点王、W杯の歴代最多得点者に。会場はロンドンのパレイディアム劇場。
+#   ・ESPN 50236983・50289067（結果と順位の一覧）: 受賞ケイン、2位ムバッペ、3位ヤマル。W杯通算22点（今大会10点）。
+#   ・ESPN 50283519（服装の記事）: レッドカーペットに出た選手の先頭にムバッペ＝会場に来たことの裏づけ（写真は代理店なので使わない）。
+#   ・Goal（AFP 配信、2026-10-26 20:43Z。仏語版と英語版）: 会場で L'Équipe のテレビに話した言葉を Foot Mercato が伝えた、とある。
+#       « Je sais que je suis au centre de l'attention. Vous me connaissez, et cela ne me dérange pas, je sais que je ne peux pas plaire à tout le monde. »
+#       « Je ne veux pas changer et devenir quelqu'un d'autre. C'est très difficile d'être quelqu'un d'autre. »
+#       受賞のあいさつを用意したかに « Non, ça porte malheur, il faut juste profiter du moment et voir comment les choses vont se dérouler dans la soirée. »
+#       （訳は文ごとに区切っただけで、言い換えていない。ショートの尺のため、使うのは「全員に好かれることはできない」「変わりたくないし、別の誰かになりたくもない」の2文だけ）
+#   ・RMC Sport（2026-10-27）: 主催するフランス・フットボール誌の編集長ヴァンサン・ガルシアが L'Équipe のテレビで
+#       「ケインとムバッペの点差は、2024年のロドリとヴィニシウスの差より小さい。あのときは41点で、それでも小さかった」。内訳は土曜に誌面で公開。
+#   ・SO FOOT（2026-10-27）: 2024年はロドリ1170点、ヴィニシウス1129点（41点差）。
+#   ・Foot Mercato（2026-10-27 00:28Z）: 授賞式のあと、ムバッペはインスタグラムに、式の前にパレイディアムのレッドカーペットで撮った自分の写真を、絵文字ひとつだけ添えて載せた。
+# 使わなかったもの: 女子の候補（女子サッカーは扱わない）。公式サイトの誤掲載（題9・題13の話）。ケインの言葉・ヤマル・スペイン勢（ほかの本の題）。
+#   ディオマンデのコパ5位（脇道）。ヴィニシウスとベリンガムのW杯の点（脇道）。点差の正確な数字（土曜まで出ない。言わない）。
+# 前の本との重なり: 10/26 mbappe_100_clasico（100点目・クラブ別の点・W杯歴代最多の言い回し）は使わない。10/22 ballondor_three・10/24 ballondor_eve_words の
+#   試合前の言葉（「自分が最高だと思う」「投票するのは記者」）とは別の日の別の言葉。写真は 10/16〜10/26 に使っていない File だけ。
+# 確度: 2位と4人の順位・得点王の数字は確定（レアル公式）。言葉・欠席・代表団・点差・投稿は報道。見立ては背景。
+# 反応: 作らない（0件）。approve は --no-voices。
+# 写真: Commons CC BY-SA 4.0、Bryan Berlin 撮影の2026年W杯のフランス代表。使うのは 09＝セネガル戦-521（両手を上げる）、03＝パラグアイ戦-124、02＝モロッコ戦-163、07＝パラグアイ戦-111。
+#   01・04・05・06・08・10 は顔が小さい・後ろ姿なので使わない（フォルダには残る）。出典は credits.json。
+#   レアルの姿・授賞式の写真は Commons に無く、記事の写真は Getty/AFP なので使わない。
+slot: world_2
+date: "2026年10月27日"
+format: news
+no_main: true
+people: [ムバッペ, レアル・マドリード, ケイン, ロドリ, ヴィニシウス, ベリンガム, ククレジャ]
+
+short_style: Y
+short_hook_quote: 全員に好かれることはできないと、分かっています。
+short_photos:
+  - assets/images/20261027_mbappe_second_madrid_back/09_v.jpg
+  - assets/images/20261027_mbappe_second_madrid_back/03_v.jpg
+  - assets/images/20261027_mbappe_second_madrid_back/02_v.jpg
+  - assets/images/20261027_mbappe_second_madrid_back/07_v.jpg
+
+short_question: ムバッペの2位とレアルの出席、あなたはどう見ましたか。
+short_hook: ムバッペは、バロンドール2位。
+short_telops:
+  - {match: 好かれることは, text: 「全員に好かれることは/できない」}
+  - {match: 41点, text: 2024年 ロドリ1170点/ヴィニシウス1129点}
+  - {match: 2年続けて, text: レアルは2024年・2025年/授賞式を欠席}
+  - {match: 25点, text: ラ・リーガ25点 CL15点/W杯10点 すべて得点王}
+
+theme:
+  id: mbappe_second_madrid_back
+  league: spain
+  league_name: ラ・リーガ
+  prefix: ""
+  title: ムバッペ、バロンドール2位。2年欠席したレアルが戻った夜、票の差は
+  hook: ""
+  question: 2位のムバッペと受賞者の差は、どれくらいだったのか
+  takeaway: レアルが欠席を始めた2024年の差は41点。戻った今年、ムバッペはそれより小さな差で2位だった
+
+thumbnail:
+  line1: ムバッペ、バロンドール2位
+  line2: レアルが戻った夜の票の差
+  tags: [レアル・マドリード, フランス]
+  layout: face
+  photo: assets/images/20261027_mbappe_second_madrid_back/03_w.jpg
+  short_photo: assets/images/20261027_mbappe_second_madrid_back/09_v.jpg
+
+answer: 主催誌の編集長によると、ケインとの差は2024年のロドリとヴィニシウスの41点差より小さかった
+watch: 31日の土曜に誌面で出る投票の内訳
+
+sections:
+  - id: what
+    main: true
+    heading: 2位のムバッペ、差はどれくらいだったのか
+    tier: 報道
+    telop: ムバッペは2位。差は2024年の41点より小さかった
+    say:
+      - text: 26日、ロンドンの授賞式。いまの言葉は、発表の前のものです。
+        image: assets/images/20261027_mbappe_second_madrid_back/09_w.jpg
+        card: none
+      - voice: ムバッペ
+        text: 全員に好かれることはできないと、分かっています。
+        image: assets/images/20261027_mbappe_second_madrid_back/02_w.jpg
+      - voice: ムバッペ
+        text: 変わりたくないし、別の誰かになりたくもありません。
+        cont: true
+        image: assets/images/20261027_mbappe_second_madrid_back/07_w.jpg
+      - text: 受賞したのは、バイエルンのケインでした。
+        emph: true
+        image: assets/images/20261027_mbappe_second_madrid_back/03_w.jpg
+      - text: 主催者側は、2人の差が2024年より小さかったと明かしました。
+        image: assets/images/20261027_mbappe_second_madrid_back/09_w.jpg
+      - text: 2024年は、ロドリが1170点、ヴィニシウスが1129点。41点差でした。
+        image: assets/images/20261027_mbappe_second_madrid_back/07_w.jpg
+        card: {type: table, title: 2024年のバロンドール, columns: [順位, 選手, 点], rows: [[1位, ロドリ, "1170"], [2位, ヴィニシウス, "1129"]], highlight_row: 1}
+      - text: その結果に怒ったレアルは、2年続けて授賞式を欠席していました。
+        image: assets/images/20261027_mbappe_second_madrid_back/02_w.jpg
+        card: none
+      - text: 今年はムバッペを先頭に、代表団をロンドンへ送りました。
+        emph: true
+        image: assets/images/20261027_mbappe_second_madrid_back/03_w.jpg
+    official: false
+    sources:
+      - https://www.goal.com/fr/news/mbappe-avant-la-ceremonie-du-ballon-d-or-je-sais-que-je-suis-au-centre-de-toutes-les-attentions/blt3b89fa6ef25133dc
+      - https://www.realmadrid.com/en-US/news/football/first-team/latest-news/hoy-se-celebra-la-gala-del-balon-de-oro-2026-mbappe-vini-jr-bellingham-y-cucurella-nominados-26-10-2026
+      - https://rmcsport.bfmtv.com/football/ballon-d-or/moins-d-ecart-qu-entre-rodri-et-vinicius-les-explications-du-redacteur-en-chef-de-france-football-sur-les-votes-du-ballon-d-or-2026_AV-202610270036.html
+      - https://www.sofoot.com/breves/lecart-minuscule-entre-harry-kane-et-kylian-mbappe-au-classement-du-ballon-dor
+      - https://www.espn.com/soccer/story/_/id/50286844/real-madrid-end-ballon-dor-boycott-kylian-mbappe-nominated
+
+  - id: ranks
+    heading: 戻ったレアルの4人は何位だったか
+    tier: 確定
+    telop: ムバッペ2位、ベリンガム11位、ヴィニシウス17位、ククレジャ18位
+    say:
+      - text: レアルの候補4人は、ムバッペ2位、ベリンガム11位。
+        image: assets/images/20261027_mbappe_second_madrid_back/09_w.jpg
+        card: &rm4 {type: table, title: レアルの候補4人の順位, columns: [選手, 順位], rows: [[ムバッペ, 2位], [ベリンガム, 11位], [ヴィニシウス, 17位], [ククレジャ, 18位]], highlight_row: 0}
+      - text: ヴィニシウス17位、ククレジャ18位でした。
+        image: assets/images/20261027_mbappe_second_madrid_back/07_w.jpg
+        card: {<<: *rm4, highlight_row: 2}
+    official: true
+    sources:
+      - https://www.realmadrid.com/en-US/news/football/first-team/latest-news/hoy-se-celebra-la-gala-del-balon-de-oro-2026-mbappe-vini-jr-bellingham-y-cucurella-nominados-26-10-2026
+
+  - id: view
+    viewpoint: true
+    heading: 41点より小さな差で、届かなかった
+    tier: 背景
+    telop: 欠席のきっかけは41点差。今年はそれより小さな差で2位
+    say:
+      - text: 見立てです。レアルが欠席を始めたのは、41点差で2位になった年。
+        image: assets/images/20261027_mbappe_second_madrid_back/02_w.jpg
+        card: none
+      - text: 戻った今年、ムバッペは、それより小さな差で届きませんでした。
+        image: assets/images/20261027_mbappe_second_madrid_back/03_w.jpg
+      - text: ラ・リーガ25点、チャンピオンズリーグ15点、W杯10点。
+        image: assets/images/20261027_mbappe_second_madrid_back/09_w.jpg
+      - text: 3つの大会で得点王でも、2位です。
+        emph: true
+        image: assets/images/20261027_mbappe_second_madrid_back/07_w.jpg
+      - text: 投票の内訳は、31日の土曜に誌面で出ます。
+        image: assets/images/20261027_mbappe_second_madrid_back/02_w.jpg
+      - text: 式のあと、ムバッペはインスタグラムに写真を載せました。
+        image: assets/images/20261027_mbappe_second_madrid_back/03_w.jpg
+      - text: レッドカーペットの写真に、絵文字をひとつ添えただけでした。
+        image: assets/images/20261027_mbappe_second_madrid_back/09_w.jpg
+    official: false
+    sources:
+      - https://www.realmadrid.com/en-US/news/football/first-team/latest-news/hoy-se-celebra-la-gala-del-balon-de-oro-2026-mbappe-vini-jr-bellingham-y-cucurella-nominados-26-10-2026
+      - https://www.footmercato.net/a1301546360570078013-ballon-dor-le-post-de-kylian-mbappe-apres-sa-deuxieme-place
+short_title: "ムバッペ、バロンドール2位。2年欠席したレアルが戻った夜、票の差は"

@@ -1,0 +1,115 @@
+# 取材メモ（2026年10月27日）日本と戦うブラジル代表、メンバー発表は現地29日。国内組は大きく減る見込み。ニュースのショート。見せ方 X＝冒頭に強い一言
+# 取材: 2026-10-27。requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約は使っていない。
+#   ・ゲキサカ 2026-10-26 12:59「日本と再戦するブラジル代表メンバーの発表日が決定…クラブ要請で国内組が減る可能性」（https://web.gekisaka.jp/news/world/detail/?461855-461855-fl、全文読んだ）:
+#       CBF は11月のシンガポール遠征のメンバーを現地29日に発表。14日に日本、17日にシンガポールと対戦。
+#       CBF「…アンチェロッティ監督が今後数年間の目標である2028年のコパ・アメリカと30年のワールドカップに向けてチームを構築していく取り組みを継続するもの…」
+#       9月・10月シリーズは GKアリソン、GKエデルソン、DFアレックス・サンドロ、MFカゼミーロらベテランを招集していない。
+#       ブラジルメディア（グローボ）: 国内リーグは終盤。「リーグ第36節の2日前に帰国する予定」。優勝争い・リベルタドーレス出場権争い・残留争いのクラブから招集を避けるよう要請。
+#       9月・10月は国内組11人 → 大幅に減る可能性。フラメンゴの FWペドロ・FWサムエウ・リーノ（前回招集）、MFパケタ・DFエメルソン（今回の候補リスト）の4人は「いずれも最終メンバーリストには含まれない見込み」（現地メディア）。
+#       海外組には招集制限はない。
+#   ・ゲキサカ 2026-09-03（https://web.gekisaka.jp/news/japan/detail/?458124-458124-fl、全文読んだ）: 日本は今夏のW杯ベスト32でブラジルに敗れた。11/14 ブラジル、11/17 パラグアイ。会場はシンガポール・ナショナルスタジアム。
+#   ・W杯ラウンド32 は日本1-2ブラジル（10/22 の監督紹介の台本で JFA・CBF の発表と確かめた数字）。
+#   ・年齢は英語版 Wikipedia の生年月日から計算（10/27 時点）: ペドロ 1997-06-20→29、サムエウ・リーノ 1999-12-23→26、パケタ 1997-08-27→29、エメルソン（エメルソン・ロイヤル）1999-01-14→27。4人とも currentclub はフラメンゴ。
+# 確度: 発表日（29日）と対戦日は確定（CBF・JFA の発表）。国内組が減る・フラメンゴの4人が外れる見込みは報道止まり（グローボほか現地メディア）。
+# 【言わないこと】媒体名／CBF声明の長い引用（本人の言葉ではない）／9月のアンチェロッティの若手優先の発言（題の出来事より1か月半前で、別の招集の話）／10/2025 の日本の初勝利の細部（10/21・10/22 の本で使った）。
+# 本人の言葉: 今回の発表についてのアンチェロッティ監督・選手の言葉は無い（CBF の声明だけ）→ X。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年10月27日"
+format: news
+no_main: true
+people: [ブラジル代表, 日本代表, カルロ・アンチェロッティ, フラメンゴ, ペドロ, サムエウ・リーノ, ルーカス・パケタ, エメルソン]
+short_style: X
+short_hook_word: 国内組11人
+short_question: 国内組が減ったブラジル、日本にとっては戦いやすくなると思いますか。
+short_hook: 日本と戦うブラジル代表。今回は、顔ぶれが変わりそうです。
+
+theme:
+  id: brazil_squad_japan
+  league: ""
+  league_name: 日本代表
+  prefix: ""
+  title: ブラジル代表、日本戦のメンバー発表は29日。大きく減りそうなのは
+  hook: ""
+  question: 11月14日に日本と戦うブラジル代表は、どんな顔ぶれになりそうか
+  takeaway: 9月・10月に11人いた国内組は、リーグ終盤のクラブの要請で大きく減る見込み。日本が戦うのは、ヨーロッパ組の比重が上がったブラジルになりそう
+
+thumbnail:
+  line1: ブラジル代表、日本戦の顔ぶれ
+  line2: 国内組11人から大幅減？
+  tags: [ブラジル代表, 日本代表, アンチェロッティ]
+  layout: face
+  photo: assets/images/20261027_brazil_squad_japan/a/01_w.jpg
+  short_photo: assets/images/20261027_brazil_squad_japan/a/01_v.jpg
+
+answer: 減りそうなのは国内リーグの選手。9月・10月の11人から大きく減り、フラメンゴの4人も外れる見込み
+watch: 現地29日のメンバー発表
+
+sections:
+  - id: what
+    main: true
+    heading: 日本戦のメンバーは29日に発表
+    tier: 報道
+    telop: ブラジル代表、日本戦のメンバー発表は現地29日
+    say:
+      - text: ブラジル代表が、11月の日本戦に向けたメンバーを、現地29日に発表します。
+        image: assets/images/20261027_brazil_squad_japan/a/01_w.jpg
+      - text: 試合は11月14日、シンガポール。
+        image: assets/images/20261027_brazil_squad_japan/c/01_w.jpg
+        card: {type: timeline, title: 日本とブラジル, rows: [[6月, W杯ラウンド32 日本1-2ブラジル], [10月29日, ブラジルのメンバー発表], [11月14日, シンガポールで日本戦]], highlight_row: 2}
+      - text: 6月のワールドカップで、日本が1対2で敗れた相手です。
+        image: assets/images/20261027_brazil_squad_japan/c/01_w.jpg
+        card: {type: timeline, title: 日本とブラジル, rows: [[6月, W杯ラウンド32 日本1-2ブラジル], [10月29日, ブラジルのメンバー発表], [11月14日, シンガポールで日本戦]], highlight_row: 0}
+      - text: ただ今回、ブラジル国内のリーグでプレーする選手は、大きく減りそうです。
+        emph: true
+        image: assets/images/20261027_brazil_squad_japan/a/01_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/world/detail/?461855-461855-fl
+      - https://web.gekisaka.jp/news/japan/detail/?458124-458124-fl
+
+  - id: why
+    heading: なぜ国内組が減るのか
+    tier: 報道
+    telop: リーグ終盤のクラブが、招集を避けるよう求めている
+    say:
+      - text: ブラジルのリーグは終盤。選手が代表から戻るのは、第36節の2日前です。
+        image: assets/images/20261027_brazil_squad_japan/a/01_w.jpg
+      - text: 優勝、南米の大会リベルタドーレス杯の出場権、残留を争うクラブ。
+        image: assets/images/20261027_brazil_squad_japan/a/01_w.jpg
+        card: none
+      - text: そうしたクラブが、招集を避けるよう求めていると報じられています。
+        image: assets/images/20261027_brazil_squad_japan/a/01_w.jpg
+        card: none
+      - text: 9月と10月は、国内組が11人いました。
+        image: assets/images/20261027_brazil_squad_japan/a/01_w.jpg
+        card: {type: stats, title: ブラジル代表の国内組, items: [[11, 人, 9月・10月の国内組], [4, 人, 外れる見込みのフラメンゴ勢]], focus: 0}
+      - text: 優勝を争うフラメンゴの4人は、最終メンバーに入らない見込みです。
+        image: assets/images/20261027_brazil_squad_japan/a/01_w.jpg
+        card: {type: table, title: 外れる見込みのフラメンゴの4人, columns: [所属, 名前, 位置, 年齢], rows: [[フラメンゴ, ペドロ, FW, 29], [フラメンゴ, サムエウ・リーノ, FW, 26], [フラメンゴ, パケタ, MF, 29], [フラメンゴ, エメルソン, DF, 27]]}
+      - text: ヨーロッパでプレーする選手には、制限はありません。
+        image: assets/images/20261027_brazil_squad_japan/b/01_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/world/detail/?461855-461855-fl
+
+  - id: view
+    viewpoint: true
+    heading: 日本が戦うのは、どんなブラジルか
+    tier: 報道
+    telop: 国内組11人のうち、何人残るか。答えは29日
+    say:
+      - text: 見立てです。ペドロと、サムエウ・リーノの2人が外れるだけで、国内組は9人以下。
+        image: assets/images/20261027_brazil_squad_japan/a/01_w.jpg
+        card: {type: calc, title: 国内組は何人残るか, terms: [[11, 9月・10月の国内組], [2, 前回呼ばれたフラメンゴの2人], [9人以下, 残る国内組]], ops: [−, ＝]}
+      - text: 日本が戦うのは、ヨーロッパ組の比重がさらに上がったブラジルになりそうです。
+        image: assets/images/20261027_brazil_squad_japan/b/01_w.jpg
+        card: none
+      - text: 答えは、29日の発表で分かります。
+        image: assets/images/20261027_brazil_squad_japan/b/01_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/world/detail/?461855-461855-fl

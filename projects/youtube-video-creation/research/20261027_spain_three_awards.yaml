@@ -1,0 +1,159 @@
+# 取材メモ（2026年10月27日）W杯王者スペインが授賞式で3つ（監督デ・ラ・フエンテ・GKウナイ・シモン・21歳以下ヤマル）。ニュースのショートだけ（no_main）。見せ方 X（受賞者の言葉は読んだ範囲に無い）。
+# 読んだ出典（requests で本文を全部読んだ。検索エンジンの要約は使っていない）:
+#   ・サッカーキング 2026-10-27「デ・ラ・フエンテ監督、最優秀監督賞を初受賞」（https://www.soccer-king.jp/news/world/20261027/2221647.html）
+#       26日ロンドンで授賞式。ヨハン・クライフ・トロフィー（最優秀監督）をデ・ラ・フエンテが初受賞。就任後 UNL2022-23・EURO2024、今夏の北中米W杯で4大会ぶり2度目の優勝。
+#       同賞は2024年新設。初年度アンチェロッティ（当時レアル）、昨年ルイス・エンリケ（PSG）。※記事は「2023年より率いる」と書くが Wikipedia は2022年12月就任。就任年は言わない。
+#   ・サッカーキング 2026-10-27「ヤシン・トロフィーはW杯優勝守護神に決定」（https://www.soccer-king.jp/news/world/20261027/2221633.html）
+#       ウナイ・シモン初受賞。W杯は全8試合でゴールを守り、大会を通して1失点。ゴールデングローブ賞。ラヤ・ジョアン・ガルシアも候補で、W杯のスペインのGK3人全員が候補。
+#   ・サッカーキング 2026-10-26「“気高き約束”がついに実現へ！？」（https://www.soccer-king.jp/news/world/esp/20261026/2221143.html。スペイン紙アスの引用）
+#       W杯で「大会最少失点（8試合1失点）」と「最長無失点時間（649分）」の2つの大会記録。2024年5月にビッグクラブのオファーを断り、ビルバオと2029年夏まで延長。
+#       本人の言葉（2024年の延長時）「僕はアスレティック・ビルバオで、世界最高のGKを目指す」。→ 受賞の言葉ではない。2024年の言葉と断って1行だけ使う。
+#   ・サッカーキング 2026-10-27 コパ・トロフィー（https://www.soccer-king.jp/news/world/20261027/2221635.html）ヤマルが史上初の3年連続。→ 別のショートで扱うので1行まで。
+#   ・ESPN「Ballon d'Or 2026 results」（content.core.api.espn.com/v1/sports/news/50289067）男子のGKの順位: 1位シモン、2位ラヤ（アーセナル）、7位ジョアン・ガルシア（バルサ）。
+#       監督賞 Luis de La Fuente (Spain)。男子バロンドールはケイン、3位ヤマル・4位ロドリ・10位ファビアン・ルイス。
+# 受賞者の言葉: 授賞式の言葉は読んだ範囲に無い（作らない）。→ X。
+# 言わないこと: 女子の部の受賞（扱わない）。10/22 シリーズ「スペイン代表」の言い回し（8試合で14得点1失点・就任日）。ケインの受賞の中身（題9）・ヤマルの言葉（題10）・エムバペ（題12）。
+# 確度: 受賞・順位は報道（サッカーキング・ESPN）。大会記録はアス→サッカーキングの報道。
+# 反応: 0件（作らない）。approve は --no-voices。
+# 写真: Commons（Bryan Berlin, CC BY-SA 4.0）。01 デ・ラ・フエンテ（W杯決勝 7/19）、02 デ・ラ・フエンテ（仏戦）、03 シモン（決勝、ゴールデングローブを持つ）、04 シモン（決勝。_v は720幅なので使わない）、05 シモン（仏戦）。
+#   10/22 の写真（s07_fuente＝-270 など）とは別のファイル。本人は目で確かめた（GKは背番号23）。
+slot: overseas
+date: 2026年10月27日
+format: news
+no_main: true
+people: [ルイス・デ・ラ・フエンテ, ウナイ・シモン, スペイン代表]
+
+short_style: X
+short_hook_word: 授賞式もスペイン
+short_question: 監督とゴールキーパー、スペインの優勝により大きかったのはどちらだと思いますか。
+short_hook: W杯王者スペインが、授賞式で3つの賞を取りました。
+
+short_photos:
+  - assets/images/20261027_spain_three_awards/01_v.jpg
+  - assets/images/20261027_spain_three_awards/03_v.jpg
+  - assets/images/20261027_spain_three_awards/02_v.jpg
+  - assets/images/20261027_spain_three_awards/05_v.jpg
+
+theme:
+  id: spain_three_awards
+  league: spain
+  league_name: スペイン代表
+  prefix: ""
+  title: デ・ラ・フエンテとウナイ・シモン、W杯王者スペインが授賞式で取ったもの
+  hook: ""
+  question: W杯王者スペインは、授賞式で何を取ったのか
+  takeaway: 監督とゴールキーパーはどちらも初受賞。ゴールキーパーの投票ではスペイン代表の3人が全員10位以内に入った
+
+thumbnail:
+  line1: デ・ラ・フエンテとシモン
+  line2: 王者スペインが取った3つ
+  tags: [スペイン代表]
+  photos:
+    - assets/images/20261027_spain_three_awards/01_w.jpg
+    - assets/images/20261027_spain_three_awards/03_w.jpg
+  short_photo: assets/images/20261027_spain_three_awards/01_v.jpg
+
+answer: 最優秀監督のデ・ラ・フエンテ、最優秀ゴールキーパーのウナイ・シモン、21歳以下のヤマル
+watch: ""
+
+sections:
+  - id: what
+    main: true
+    heading: スペインが取った3つの賞
+    tier: 報道
+    telop: 授賞式で、スペイン代表から3人
+    say:
+      - text: 26日のバロンドール授賞式。ワールドカップ王者スペインから、3人が賞を受けました。
+        image: assets/images/20261027_spain_three_awards/01_w.jpg
+      - text: 最優秀監督の賞は、デ・ラ・フエンテ監督。初受賞です。
+        image: assets/images/20261027_spain_three_awards/01_w.jpg
+      - text: この夏、スペインを4大会ぶり2度目の世界一に導きました。
+        image: assets/images/20261027_spain_three_awards/02_w.jpg
+      - text: ゴールキーパーに贈られるヤシン・トロフィーは、ウナイ・シモン。こちらも初受賞です。
+        image: assets/images/20261027_spain_three_awards/03_w.jpg
+      - text: そして21歳以下のコパ・トロフィーは、ヤマルが3年続けて受けました。
+        image: assets/images/20261027_spain_three_awards/05_w.jpg
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/20261027/2221647.html
+      - https://www.soccer-king.jp/news/world/20261027/2221633.html
+      - https://www.soccer-king.jp/news/world/20261027/2221635.html
+      - https://content.core.api.espn.com/v1/sports/news/50289067
+
+  - id: simon
+    heading: ウナイ・シモンは、ワールドカップで何をしたのか
+    tier: 報道
+    telop: 全8試合で、失点は1
+    say:
+      - text: シモンは2024年、大きなクラブの誘いを断って、ビルバオに残りました。
+        image: assets/images/20261027_spain_three_awards/05_w.jpg
+      - text: そのときの言葉です。
+        image: assets/images/20261027_spain_three_awards/05_w.jpg
+      - voice: ウナイ・シモン
+        text: 僕はアスレティック・ビルバオで、
+        image: assets/images/20261027_spain_three_awards/03_w.jpg
+      - voice: ウナイ・シモン
+        text: 世界最高のゴールキーパーを目指す。
+        cont: true
+        image: assets/images/20261027_spain_three_awards/03_w.jpg
+      - text: ワールドカップでは全8試合のゴールを守り、失点はわずか1。
+        image: assets/images/20261027_spain_three_awards/03_w.jpg
+      - text: 649分、点を取られなかった時間も、大会の記録になりました。
+        image: assets/images/20261027_spain_three_awards/05_w.jpg
+      - text: 大会のゴールデングローブ賞も受けています。
+        image: assets/images/20261027_spain_three_awards/05_w.jpg
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/20261027/2221633.html
+      - https://www.soccer-king.jp/news/world/esp/20261026/2221143.html
+
+  - id: coach
+    heading: 監督の賞は、前任者からの受け渡し
+    tier: 報道
+    telop: 去年の受賞は、前のスペイン代表監督
+    say:
+      - text: 監督の賞は、2024年にできたばかりです。
+        image: assets/images/20261027_spain_three_awards/02_w.jpg
+      - text: 最初はアンチェロッティ、去年はパリ・サンジェルマンのルイス・エンリケでした。
+        image: assets/images/20261027_spain_three_awards/02_w.jpg
+      - text: ルイス・エンリケは、デ・ラ・フエンテの前にスペイン代表を率いていた監督です。
+        image: assets/images/20261027_spain_three_awards/02_w.jpg
+      - text: デ・ラ・フエンテはそのあとを継ぎました。
+        image: assets/images/20261027_spain_three_awards/01_w.jpg
+      - text: ネーションズリーグ、ユーロ2024、ワールドカップと、3つを制しています。
+        image: assets/images/20261027_spain_three_awards/01_w.jpg
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/20261027/2221647.html
+
+  - id: view
+    viewpoint: true
+    heading: スペインの守護神は、どれだけ抜けていたか
+    tier: 背景
+    telop: ゴールキーパーの投票、スペインの3人が10位以内
+    say:
+      - text: 見立てです。ゴールキーパーの投票の順位を、並べてみました。
+        image: assets/images/20261027_spain_three_awards/05_w.jpg
+      - text: 1位がシモン、2位がアーセナルのラヤ、7位がバルセロナのジョアン・ガルシア。
+        image: assets/images/20261027_spain_three_awards/05_w.jpg
+        card:
+          type: table
+          title: ヤシン・トロフィーの順位（抜粋）
+          columns: [順位, 選手, 所属]
+          rows:
+            - ["1", ウナイ・シモン, アスレティック]
+            - ["2", ダビド・ラヤ, アーセナル]
+            - ["7", ジョアン・ガルシア, バルセロナ]
+          highlight_row: 0
+      - text: スペイン代表のゴールキーパー3人が、そろって10位以内に入りました。
+        image: assets/images/20261027_spain_three_awards/03_w.jpg
+        card: none
+      - text: 一方、バロンドールそのものはケイン。
+        image: assets/images/20261027_spain_three_awards/01_w.jpg
+      - text: スペイン勢の最高は、ヤマルの3位とロドリの4位でした。
+        image: assets/images/20261027_spain_three_awards/01_w.jpg
+    official: false
+    sources:
+      - https://content.core.api.espn.com/v1/sports/news/50289067
+      - https://www.soccer-king.jp/news/world/20261027/2221633.html
+short_title: "デ・ラ・フエンテとウナイ・シモン、W杯王者スペインが授賞式で取ったもの"

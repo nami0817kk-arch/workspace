@@ -1,0 +1,138 @@
+# 取材メモ（2026年10月27日）鈴木彩艶、BBCのプレミア第8節の週間ベストイレブンに。選んだ元ストライカー、トロイ・ディーニーの言葉（ニュースのショート。見せ方 Y＝選んだ人の言葉から始める）
+# 取材: 2026-10-27。requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約は使っていない（BBC の記事は BBC 自身の検索ページから URL を拾った）。
+#   ・**一次**＝BBC Sport 2026-10-25「Who has made Troy's Premier League team of the week?」https://www.bbc.co.uk/sport/football/articles/c804013klnn0o
+#       （控え research/raw/20261027_bbc_c804013klnn0o.html・本文 research/raw/20261027_bbc_totw8.txt）
+#       「BBC football pundit Troy Deeney will give you his team and manager of the week」
+#       Zion Suzuki (Aston Villa): "Fact, he's just a big-game player who gets the job done, comes up with big saves. He couldn't do anything about Erling Haaland's goal.
+#         Really good, strong, positive positions, but also when they win the ball back, he gets the Villa counter-attack going. Very, very good. He was excellent."
+#       11人: GK 鈴木／DF キャッシュ（ヴィラ）・ヒル（ボーンマス）・コンサ（アーセナル）・トリュフェ（ボーンマス）／MF チャールズ（フルアム）・ゴンサレス（ニューカッスル）・タヴァーニアー（ボーンマス）／
+#         FW ハイアン（ボーンマス）・テル（トッテナム）・ジャクソン（ヴィラ）。監督はマルコ・ローゼ（ボーンマス）。
+#   ・サッカーキング 2026-10-27 08:37 https://www.soccer-king.jp/news/world/eng/20261027/2221672.html （題材の元。全文。控え research/raw/20261027_sk_2221672.html / .txt）
+#       「かつてワトフォードや（バ）ーミンガムのストライカーとして活躍したトロイ・ディーニー氏」。言葉の日本語訳:
+#       「彼はまさに重要な試合でこそ力を発揮し、きっちりと仕事をこなす選手だ。ここぞという場面でビッグセーブを見せてくれる。アーリング・ハーランドのゴールに関しては、彼にはどうすることもできなかった。
+#        ポジショニングが非常に良く、力強く、前向きだ。さらに、ボールを奪い返した際にはチームのカウンター攻撃の起点になっている。本当に素晴らしいし、見事な出来だった」
+#       「ボーンマスから最多4名」。記事の主写真は Getty（使わない）。
+# 訳: 言葉は **サッカーキングの訳で通す**。英語の原文（BBC）と突き合わせて意味は合っている（"big-game player"＝重要な試合でこそ力を発揮）。画面で「言葉は日本語の訳」と断る。
+# ハーランドの1点: 後半7分の頭（10/25 の取材メモ、ゲキサカ 461731 の全文）→ 台本は「後半のハーランドの頭での同点ゴール」とだけ言う（分は言わない）。
+# 2節続けて: 第7節はプレミアリーグ公式の週間ベストイレブン（選者アラン・シアラー、premierleague.com 2026-10-20。10/21 の取材メモ research/20261021_suzuki_zion_pl_xi.yaml、控え research/raw/20261021_pl_totw7.html）。
+#   第8節は BBC のディーニー → 「2節続けて、選ぶ人が違う週間ベストイレブンに入った」は自分で突き合わせた見立て（背景）。
+# 自分で数えたこと（見立て）: 11人のクラブ別 ボーンマス4・ヴィラ3・アーセナル1・フルアム1・ニューカッスル1・トッテナム1（＝6クラブ）。
+# 【言わないこと】媒体名（BBC は「選んだ人の肩書」としてだけ言う）／6セーブ・枠内7本・4季連続（10/25 の本）／パス45本・1メートル90・ハーグリーブス（10/26 の本）／キャッシュの言葉（10/25）／
+#   ジャクソンの2得点の中身（10/25 のジャクソンの本）／シアラーの「愛するクラブ」（10/21 の本）／Football Insider の「第7節にディーニーが別のGKを選んだ」話（選手を小さく見せる。10/21 で外した判断のまま）／
+#   言葉の最後の「本当に素晴らしいし、見事な出来だった」（尺。文の途中では切っていない）。
+# 本人の言葉: 鈴木本人の言葉は無い（作らない）。話者は選んだディーニー。Y の一言はディーニーの言葉（10/25 キャッシュの本と同じ扱い）。
+# 反応: 0件（作らない。approve は --no-voices）。
+# 前の本との重なり: scripts/20261022〜27 を grep（ディーニー・ベスト11・重要な試合・ハーランドのゴール・2節続け）→ 当たり無し。ベストイレブンはレジェンドの本2つにだけ（別の話）。
+# 確度: 選出と言葉は 報道（BBC の記事。訳はサッカーキング）。第7節の選出は 確定（プレミアリーグ公式）。数えた内訳は 背景。
+# 写真: assets/images/20261027_suzuki_zion_bbc_xi/（credits.json）。3枚とも日本代表（10月のキリンカップ）の写真で、ヴィラの写真ではない。
+#   02＝サッカーキング（金田慎平）10/1 エクアドル戦のPKの場面 ／ 03＝サッカーキング 10/4 練習 ／ 04＝ゲキサカ（Kaoru WATANABE）9/30 練習（隣に別のGKと監督が写る。縦は鈴木を中心に手で切った）。
+#   10/21〜10/26 の鈴木彩艶の本で使った写真とは重ならない（credits の画像URLで確かめた）。ヴィラの写真は記事の主写真が全部代理店（Getty・ロイター・AP）で使えない。
+slot: japanese
+date: "2026年10月27日"
+format: news
+no_main: true
+people: [鈴木彩艶, トロイ・ディーニー, アストン・ヴィラ, マンチェスター・シティ, アーリング・ハーランド, ボーンマス]
+
+short_style: Y
+short_hook_quote: 彼はまさに重要な試合でこそ力を発揮し
+short_photos:
+  - assets/images/20261027_suzuki_zion_bbc_xi/02_v.jpg
+  - assets/images/20261027_suzuki_zion_bbc_xi/03_v.jpg
+  - assets/images/20261027_suzuki_zion_bbc_xi/04_v.jpg
+short_question: ディーニーが挙げた鈴木彩艶の良さで、いちばん大きいのはどれだと思いますか。
+short_telops:
+  - {match: 力を発揮し, text: 元ストライカー トロイ・ディーニー/言葉は日本語の訳}
+  - {match: トロイ・ディーニーが選ぶ, text: BBCの解説者/元ワトフォードのストライカー}
+  - {match: どうすることも, text: 後半 ハーランドの頭/シティの同点ゴール}
+  - {match: 6つのクラブ, text: ディーニーの11人/ボーンマス4 ヴィラ3}
+  - {match: 2節続けて, text: 第7節 プレミア公式/第8節 BBCのディーニー}
+
+theme:
+  id: suzuki_zion_bbc_xi
+  league: england
+  prefix: ""
+  title: 鈴木彩艶をベストイレブンに選んだ元ストライカー。ハーランドの1点への一言
+  hook: ""
+  question: 鈴木彩艶を選んだ元ストライカーは、シティ戦の何を見ていたのか
+  takeaway: 11人は6クラブから。ヴィラは3人でボーンマスの4人に次ぐ。鈴木は第7節のプレミア公式に続き、選ぶ人が違う週間ベストイレブンに2節続けて入った
+
+thumbnail:
+  layout: face
+  line1: 鈴木彩艶 BBCのベスト11
+  line2: 「重要な試合でこそ」
+  tags: [鈴木彩艶, アストン・ヴィラ]
+  photo: assets/images/20261027_suzuki_zion_bbc_xi/03_w.jpg
+  short_photo: assets/images/20261027_suzuki_zion_bbc_xi/02_v.jpg
+
+answer: ハーランドの1点は止めようがなかったと言い、そのうえで大事な場面のセーブと、奪い返した後のカウンターの起点を挙げた
+watch: 選ぶ人が違う週間ベストイレブン
+
+sections:
+  - id: what
+    main: true
+    heading: 選んだ元ストライカーの言葉
+    tier: 報道
+    telop: 元ワトフォードのストライカー、トロイ・ディーニーが選ぶ第8節のベストイレブン
+    say:
+      - text: ビービーシーの解説者、トロイ・ディーニーが選ぶ第8節の週間ベストイレブン。
+        image: assets/images/20261027_suzuki_zion_bbc_xi/03_w.jpg
+      - text: ゴールキーパーは鈴木彩艶でした。
+      - voice: ディーニー
+        text: 彼はまさに重要な試合でこそ力を発揮し、
+        emph: true
+        image: assets/images/20261027_suzuki_zion_bbc_xi/02_w.jpg
+      - voice: ディーニー
+        text: きっちりと仕事をこなす選手だ。
+        cont: true
+      - voice: ディーニー
+        text: ここぞという場面でビッグセーブを見せてくれる。
+      - voice: ディーニー
+        text: アーリング・ハーランドのゴールに関しては、
+        cont: true
+        image: assets/images/20261027_suzuki_zion_bbc_xi/03_w.jpg
+      - voice: ディーニー
+        text: 彼にはどうすることもできなかった。
+        cont: true
+      - voice: ディーニー
+        text: さらに、ボールを奪い返した際には
+        cont: true
+        image: assets/images/20261027_suzuki_zion_bbc_xi/04_w.jpg
+      - voice: ディーニー
+        text: チームのカウンター攻撃の起点になっている。
+        cont: true
+    official: false
+    sources:
+      - https://www.bbc.co.uk/sport/football/articles/c804013klnn0o
+      - https://www.soccer-king.jp/news/world/eng/20261027/2221672.html
+
+  - id: goal
+    heading: 「どうすることもできなかった」1点
+    tier: 報道
+    telop: 後半、ハーランドの頭での同点ゴール
+    say:
+      - text: 鈴木に止めようがなかったのは、首位シティ戦の後半、ハーランドの頭での1点。
+        image: assets/images/20261027_suzuki_zion_bbc_xi/02_w.jpg
+    official: false
+    sources:
+      - https://www.bbc.co.uk/sport/football/articles/c804013klnn0o
+      - https://web.gekisaka.jp/news/world/detail/?461731-461731-fl
+
+  - id: view
+    viewpoint: true
+    heading: 11人のうちヴィラは何人か
+    tier: 背景
+    telop: ディーニーの11人をクラブごとに数えた
+    say:
+      - text: 見立てです。ディーニーの11人は、6つのクラブから。
+        image: assets/images/20261027_suzuki_zion_bbc_xi/02_r.jpg
+        card: {type: table, title: ディーニーが選んだ第8節の11人, columns: [クラブ, 人数], rows: [[ボーンマス, 4人], [アストン・ヴィラ, 3人], [アーセナル, 1人], [フルアム, 1人], [ニューカッスル, 1人], [トッテナム, 1人]], highlight_row: 0}
+      - text: いちばん多いのはボーンマスの4人。ヴィラはそれより1人少ない3人。
+        card: {type: table, title: ディーニーが選んだ第8節の11人, columns: [クラブ, 人数], rows: [[ボーンマス, 4人], [アストン・ヴィラ, 3人], [アーセナル, 1人], [フルアム, 1人], [ニューカッスル, 1人], [トッテナム, 1人]], highlight_row: 1}
+      - text: 鈴木は第7節もプレミアリーグ公式の11人に入り、2節続けての選出。
+        emph: true
+        image: assets/images/20261027_suzuki_zion_bbc_xi/03_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.bbc.co.uk/sport/football/articles/c804013klnn0o
+      - https://www.premierleague.com/en/news/4743846/alan-shearers-team-of-the-week-for-matchweek-7

@@ -1,0 +1,152 @@
+# 取材メモ（2026年10月27日）ヤマル「この賞はクバルシのものだった」。コパ・トロフィー史上初の3連覇のあとで、2位の同僚に（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-10-27。requests で本文を読んだ（ESPN は記事API content.core.api.espn.com）。
+#   ・FCバルセロナ公式「Lamine Yamal, Young Talent of the Year and third in Ballon d'Or rankings」（10/26、一次情報）
+#       https://www.fcbarcelona.com/en/football/first-team/news/4599205/lamine-yamal-young-talent-of-the-year-and-third-in-ballon-dor-rankings
+#       地の文: 21歳以下の最優秀（Young Talent of the Year、旧コパ・トロフィー）を3年連続で受賞。3年続けては初めて（2024・2025・2026）。
+#               ロンドンの授賞式で、シェフチェンコから手渡された。バロンドール本体は3位（1位ケイン、2位エムバペ）。ロドリが5位。
+#               昨季はバルサで45試合24点18アシスト。ラ・リーガ優勝とスーペルコパ優勝。ラ・リーガの最優秀選手、リーグ戦16点11アシストでアシストはリーグでいちばん多い。
+#               W杯はスペイン代表で8試合1点、優勝。この賞はペドリ（2021）、ガビ（2022）もバルサから。2018年に France Football が新設。
+#       本人（英語）: "It's an honour to receive this award. I would have liked Cubarsí to have won, he deserves it, he has been great for a long time. I am very happy and I want to thank my club, the national team, everyone,"
+#       本人（カタルーニャ語）: "És un honor rebre aquest premi. M'hauria agradat que fos per Cubarsí, se'l mereixia. Porta temps a un nivell increïble. Estic molt feliç. Vull agrair al meu club, a la selecció i a tots. A seguir treballant per guanyar títols individuals com aquests"
+#   ・ESPN「Harry Kane wins 2026 Ballon d'Or ...」（10/27 00:05Z、https://www.espn.com/soccer/story/_/id/50236983）
+#       本人（短いあいさつ）: "I'd have liked it to be [teammate Pau] Cubarsi," / "This prize should have been for him. He deserves it."
+#   ・サッカーキング（10/27、https://www.soccer-king.jp/news/world/20261027/2221635.html）: 史上初の3年連続3度目。19歳。
+#       2026の最終順位 1位ヤマル 2位クバルシ（スペイン／バルセロナ）3位エメリ。歴代: 2018エムバペ 2019デ・リフト 2020中止 2021ペドリ 2022ガビ 2023ベリンガム 2024・2025ヤマル。
+# 自分で数えたこと（見立て）: 賞ができてから8回のうち5回がバルサの選手（ペドリ1・ガビ1・ヤマル3）。今年は1位と2位がどちらもバルサ。
+# 言わないこと: クバルシの年齢・今季の数字（読んだ本文に無い）。クバルシの反応（見つからない）。公式サイトの誤掲載（題11）。
+#   バロンドール本体の話は1行だけ（題9ケイン・題12エムバペ・題13スペインの3つと重ねない）。10/24 の「何も乞わない」と 10/22 の「ヤマルとサカ」の話・数字は使わない。
+# 訳はこちらの自訳（英語・カタルーニャ語の発表）。
+# 確度: 確定（受賞と言葉はクラブ公式に全文）。
+# 反応: 0件。作らない。approve は --no-voices で。
+# 写真: 01〜03 はFCバルセロナ公式の授賞式のギャラリー（©FC Barcelona、10/26 当日）。01＝赤じゅうたんのヤマル（横長は隣に別の人が写るので _v だけ使う）、
+#       02＝壇上でトロフィーを持つヤマル、03＝ラポルタ会長・ロドリらと並ぶヤマル。05＝クバルシ（Commons、CC BY-SA 4.0 Bryan Berlin、W杯 7/19）。
+#       05_w は顔の大写しで幅1112px しか無いので使わない。代理店（サッカーキングの主写真は Getty）は使わない。
+slot: overseas
+date: "2026年10月27日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [ラミン・ヤマル, パウ・クバルシ]
+
+short_style: Y
+short_hook_quote: この賞は、クバルシにもらってほしかった。
+short_question: 21歳以下でいちばんの選手、あなたならヤマルとクバルシのどちらを選びますか。
+short_hook: 史上初の3連覇。その壇上で名前を出したのは、2位の同僚でした。
+short_telops:
+  - {match: もらってほしかった, text: ヤマル/「この賞はクバルシのものだった」}
+  - {match: 3年続けて, text: 21歳以下の最優秀選手/ヤマルが史上初の3連覇}
+  - {match: 2位は, text: 2位 パウ・クバルシ/同じバルセロナ}
+  - {match: 24点, text: 前のシーズンのバルサ/45試合 24点 18アシスト}
+  - {match: ワールドカップ, text: W杯 スペイン代表で優勝/8試合 1点}
+  - {match: 8回のうち, text: 2018年から8回/5回がバルサの選手}
+
+theme:
+  id: yamal_kopa_cubarsi
+  league: spain
+  league_name: ラ・リーガ
+  prefix: ""
+  title: ヤマル「この賞はクバルシのものだった」。史上初の3連覇、壇上で語ったこと
+  hook: ""
+  question: 21歳以下の最優秀選手を3年続けて取ったヤマルは、なぜ壇上で2位の同僚の名前を出したのか
+  takeaway: 賞ができてから8回のうち5回がバルサの選手。今年は1位と2位がどちらもバルサで、ヤマルの言葉はその近さから出ていた
+
+thumbnail:
+  line1: ヤマル、史上初の3連覇
+  line2: 「クバルシのものだった」
+  tags: [バルセロナ, スペイン代表, バロンドール]
+  layout: classic
+  short_photo: assets/images/20261027_yamal_kopa_cubarsi/01_v.jpg
+  photos:
+    - assets/images/20261027_yamal_kopa_cubarsi/01_v.jpg
+    - assets/images/20261027_yamal_kopa_cubarsi/05_v.jpg
+
+answer: 3年連続の受賞のあいさつで、2位のクバルシに「ふさわしい」と話した
+watch: クバルシとヤマルの、バルセロナでのこれから
+
+short_photos:
+  - assets/images/20261027_yamal_kopa_cubarsi/01_v.jpg
+  - assets/images/20261027_yamal_kopa_cubarsi/02_v.jpg
+  - assets/images/20261027_yamal_kopa_cubarsi/05_v.jpg
+  - assets/images/20261027_yamal_kopa_cubarsi/03_v.jpg
+
+sections:
+  - id: what
+    main: true
+    heading: 3連覇の壇上で、ヤマルが話したこと
+    tier: 確定
+    telop: 21歳以下の最優秀選手。ヤマルが史上初の3連覇
+    say:
+      - text: バロンドールの授賞式で、21歳以下でいちばんの選手にヤマルが選ばれました。
+        image: assets/images/20261027_yamal_kopa_cubarsi/02_w.jpg
+      - voice: ヤマル
+        text: この賞は、クバルシにもらってほしかった。
+        short_voice: true
+        image: assets/images/20261027_yamal_kopa_cubarsi/01_w.jpg
+      - voice: ヤマル
+        text: 彼にふさわしい賞だった。
+        cont: true
+        image: assets/images/20261027_yamal_kopa_cubarsi/01_w.jpg
+      - text: 3年続けての受賞は、この賞で初めてです。
+        image: assets/images/20261027_yamal_kopa_cubarsi/02_w.jpg
+      - text: 2位は、同じバルセロナのパウ・クバルシでした。
+        image: assets/images/20261027_yamal_kopa_cubarsi/05_w.jpg
+      - text: クバルシは、スペイン代表のディフェンダー。
+        image: assets/images/20261027_yamal_kopa_cubarsi/05_w.jpg
+      - text: ヤマルとは、クラブでも代表でもチームメイトです。
+        image: assets/images/20261027_yamal_kopa_cubarsi/05_w.jpg
+      - voice: ヤマル
+        text: 彼は、もう長いあいだ、すごいレベルでやっている。
+        image: assets/images/20261027_yamal_kopa_cubarsi/01_w.jpg
+      - text: ヤマルの言葉は、クラブの発表をもとに日本語にしました。
+        image: assets/images/20261027_yamal_kopa_cubarsi/03_w.jpg
+    official: true
+    sources:
+      - https://www.fcbarcelona.com/en/football/first-team/news/4599205/lamine-yamal-young-talent-of-the-year-and-third-in-ballon-dor-rankings
+      - https://www.espn.com/soccer/story/_/id/50236983
+      - https://www.soccer-king.jp/news/world/20261027/2221635.html
+
+  - id: numbers
+    heading: 3年目の受賞を支えた数字
+    tier: 確定
+    telop: 前のシーズンのバルサで45試合24点18アシスト
+    say:
+      - text: 前のシーズン、ヤマルはバルセロナで45試合に出て24点、18アシスト。
+        image: assets/images/20261027_yamal_kopa_cubarsi/02_w.jpg
+      - text: リーグ戦のアシスト11は、ラ・リーガでいちばん多い数でした。
+        image: assets/images/20261027_yamal_kopa_cubarsi/02_w.jpg
+      - text: 夏のワールドカップでは、スペイン代表で8試合に出て1点。チームは優勝しています。
+        image: assets/images/20261027_yamal_kopa_cubarsi/03_w.jpg
+      - text: バロンドールの本体は、ケイン、エムバペに次ぐ3位でした。
+        image: assets/images/20261027_yamal_kopa_cubarsi/03_w.jpg
+      - voice: ヤマル
+        text: 受け取れて光栄だ。クラブと代表、みんなに感謝したい。
+        image: assets/images/20261027_yamal_kopa_cubarsi/01_w.jpg
+    official: true
+    sources:
+      - https://www.fcbarcelona.com/en/football/first-team/news/4599205/lamine-yamal-young-talent-of-the-year-and-third-in-ballon-dor-rankings
+      - https://www.espn.com/soccer/story/_/id/50236983
+
+  - id: view
+    viewpoint: true
+    heading: この賞は、なぜバルサの選手ばかりなのか
+    tier: 背景
+    telop: 2018年から8回のうち、5回がバルサの選手
+    say:
+      - text: ここからは見立てです。
+        image: assets/images/20261027_yamal_kopa_cubarsi/03_w.jpg
+      - text: この賞ができた2018年から、選ばれたのは8回。
+        image: assets/images/20261027_yamal_kopa_cubarsi/03_w.jpg
+      - text: そのうち5回はバルセロナの選手。ペドリとガビが1回ずつ、ヤマルが3回です。
+        image: assets/images/20261027_yamal_kopa_cubarsi/02_w.jpg
+      - text: 今年は1位と2位が、どちらもバルセロナでした。
+        image: assets/images/20261027_yamal_kopa_cubarsi/05_w.jpg
+      - text: いちばん近くで戦う2人が、票を分け合った形です。
+        image: assets/images/20261027_yamal_kopa_cubarsi/05_w.jpg
+      - text: 毎日、隣でクバルシを見ているヤマル。
+        image: assets/images/20261027_yamal_kopa_cubarsi/01_w.jpg
+      - text: 「もらってほしかった」は、そこから出た言葉かもしれません。
+        image: assets/images/20261027_yamal_kopa_cubarsi/01_w.jpg
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/20261027/2221635.html
+      - https://www.fcbarcelona.com/en/football/first-team/news/4599205/lamine-yamal-young-talent-of-the-year-and-third-in-ballon-dor-rankings
+short_title: "ヤマル「この賞はクバルシのものだった」。史上初の3連覇、壇上で語ったこと"

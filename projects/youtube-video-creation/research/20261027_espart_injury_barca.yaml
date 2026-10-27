@@ -1,0 +1,143 @@
+# 取材メモ（2026年10月27日）バルサの19歳エスパルト、クラシコで右足首を痛め約7週間（ショートだけ・見せ方 X＝冒頭に強い一言）
+# 取材: 2026-10-27。
+#   ESPN「Barcelona's Xavi Espart to set to be out for seven weeks with ankle injury」（記事API content.core.api.espn.com/v1/sports/news/50287697）の本文を全部読んだ。
+#     本文: 19歳。日曜のクラシコの前半に足首を痛め、バルデと交代。月曜に練習場で検査。クラブ発表「相手選手との接触で右足首の脛腓じん帯（syndesmosis）を痛めた」。約7週間。
+#     クリステンセン・クンデ・エリック・ガルシアはケガでクラシコを欠場。いま使えるトップチームのDFはバルデ・クバルシ・ジェラール・マルティン・カンセロの4人。
+#     2007年世代（クバルシ・ヤマル・マルク・ベルナルと同じ）。フリック監督がサイドバックに移し、今季台頭。開幕は左サイドバック、この1週間（PSG戦・マドリー戦）は右。
+#     クラシコは1対2でリーグ初黒星（9連勝が止まった）。その前の火曜、CLでPSGに2対4。次はリーグで本拠地のアラベス戦（日曜）。
+#   FCバルセロナ公式「Xavi Espart injury news」（2026-10-26）: 「右足首の syndesmosis joint のケガ。レアル・マドリー戦での相手選手との接触による」「約7週間の離脱」。→ 確定。
+#   FCバルセロナ公式「Xavi Espart comes of age against Paris Saint-Germain」（2026-10-21）: PSG戦（パルク・デ・プランス）、右サイドバックから攻め上がり、フェルミン・ロペスのパスを受けて
+#     55分に1対1の同点弾。トップチームで欧州の大会の初ゴール。クヴァラツヘリアをほとんど抑えた。ボール奪取8回・クリア2回。ほぼ1年前にもUEFAユースリーグのPSG戦で得点。
+#   ESPN 試合記録（event 401882832）: バルセロナ 1-2 レアル・マドリー。29分にエスパルトの負傷で中断、30分にバルデと交代。41分・87分ムバッペ、61分ラフィーニャ。
+# 言わないこと: 戻る日付（7週間からの逆算は言わない）、接触した相手の名前（クラブ発表に無い）、ケガの場面の細部、オルモの負傷（10/22 に作った）、フリック監督の言葉（10/27 のシリーズ）、
+#   ムバッペの2点の中身（10/26 に作った）、クンデたちの戻る時期（ESPN は「近い」とだけ）。
+# 本人の言葉: 無い → 型は X。
+# 確度: 負傷と期間は確定（クラブ発表）。DFの人数・2007年世代・起用の経緯は報道（ESPN）。PSG戦の数字はクラブ公式。交代の分は ESPN の試合記録（報道）。
+# 反応: 作らない（0件）。
+# 写真: すべて FCバルセロナ公式（© FC Barcelona。代理店のクレジットではない）。目で見て本人（背番号12）と確認。
+#   01＝10/25 クラシコ（ケガの発表記事の主写真、背番号12・奥にフリック）、02＝10/20 PSG戦（PSG戦の記事の主写真。02_v は630pxと細いのでショートでは回さない）、
+#   03＝10/20 PSG戦のギャラリー（顔の寄り。01・02 と同じ顔）、04＝同ギャラリー（背中に XAVI ESPART 12）。
+slot: other_1
+date: "2026年10月27日"
+format: news
+no_main: true
+people: [エスパルト, バルセロナ, フリック, バルデ, クバルシ, ジェラール・マルティン, カンセロ, クンデ, クリステンセン, エリック・ガルシア]
+
+short_style: X
+short_hook_word: 使えるDFは4人
+short_photos:
+  - assets/images/20261027_espart_injury_barca/03_v.jpg
+  - assets/images/20261027_espart_injury_barca/01_v.jpg
+  - assets/images/20261027_espart_injury_barca/04_v.jpg
+
+short_question: エスパルトの穴、バルサは誰で埋めると思いますか。
+short_hook: バルサの19歳エスパルトが、クラシコで右足首を痛めて約7週間の離脱。
+short_telops:
+  - {match: 30分, text: クラシコ 30分/バルデと交代}
+  - {match: 7週間, text: 右足首のじん帯を損傷/離脱は約7週間（クラブ発表）}
+  - {match: 55分, text: PSG戦 55分に同点弾/CLで初ゴール}
+  - {match: 4人, text: 使えるDF/バルデ・クバルシ・G・マルティン・カンセロ}
+
+theme:
+  id: espart_injury_barca
+  league: spain
+  league_name: ラ・リーガ
+  prefix: ""
+  title: エスパルト、クラシコ30分で交代。バルサに残ったDFの数
+  hook: ""
+  question: 19歳エスパルトの離脱で、バルサの守備陣はどうなるのか
+  takeaway: PSG戦で同点弾を決めたばかりの19歳が約7週間の離脱。ほかにDF3人がケガで、使えるのは4人だけのまま次のアラベス戦に向かう
+
+thumbnail:
+  line1: エスパルト、約7週間の離脱
+  line2: バルサに残ったDFは●人
+  tags: [バルセロナ]
+  layout: face
+  photo: assets/images/20261027_espart_injury_barca/01_w.jpg
+  short_photo: assets/images/20261027_espart_injury_barca/03_v.jpg
+
+answer: エスパルトは約7週間の離脱。使えるDFはバルデ・クバルシ・G・マルティン・カンセロの4人
+watch: 19歳の右サイドバックが抜けたあとのバルサの最終ライン
+
+sections:
+  - id: what
+    main: true
+    heading: クラシコの30分、19歳が交代
+    tier: 報道
+    telop: エスパルト、右足首のケガで約7週間
+    say:
+      - text: バルサの19歳、シャビ・エスパルト。
+        short_only: true
+        image: assets/images/20261027_espart_injury_barca/03_w.jpg
+        card: none
+      - text: 日曜のクラシコで、右サイドバックに入っていました。
+        short_only: true
+        image: assets/images/20261027_espart_injury_barca/04_w.jpg
+        card: none
+      - text: 29分、相手と接触して倒れ、30分にバルデと交代します。
+        image: assets/images/20261027_espart_injury_barca/01_w.jpg
+        card: none
+      - text: 月曜の検査で、クラブが発表。右足首のじん帯を痛めていて、離脱はおよそ7週間です。
+        image: assets/images/20261027_espart_injury_barca/03_w.jpg
+        card: none
+      - text: クンデ、クリステンセン、エリック・ガルシアの3人も、ケガでクラシコに出ていません。
+        image: assets/images/20261027_espart_injury_barca/04_w.jpg
+        card: {type: table, title: バルサのDF（10月26日時点）, columns: [状況, 選手], rows: [[約7週間の離脱, エスパルト], [クラシコを欠場, クンデ・クリステンセン・E・ガルシア], [使えるDF, バルデ・クバルシ・G・マルティン・カンセロ]], highlight_row: 1}
+      - text: 使えるDFは、バルデ、クバルシ、ジェラール・マルティン、カンセロの4人だけです。
+        emph: true
+        image: assets/images/20261027_espart_injury_barca/01_w.jpg
+        card: none
+    official: true
+    sources:
+      - https://www.fcbarcelona.com/en/football/first-team/news/4599042/xavi-espart-injury-news
+      - https://www.espn.com/soccer/story/_/id/50287697/xavi-espart-barcelona-ankle-injury-spanish-la-liga-champions-league
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/summary?event=401882832
+
+  - id: rise
+    heading: 中盤からサイドバックへ。PSG戦の同点弾
+    tier: 報道
+    telop: ヤマル・クバルシと同じ2007年生まれ
+    say:
+      - text: エスパルトは、ヤマルやクバルシと同じ2007年生まれの世代です。
+        image: assets/images/20261027_espart_injury_barca/03_w.jpg
+        card: none
+      - text: もとは中盤の選手。フリック監督がサイドバックに移しました。
+        image: assets/images/20261027_espart_injury_barca/01_w.jpg
+        card: none
+      - text: 今季は左サイドバックで開幕を迎えています。
+        image: assets/images/20261027_espart_injury_barca/04_w.jpg
+        card: none
+      - text: この1週間は右サイドバックに回り、火曜はパリ・サンジェルマン戦。
+        image: assets/images/20261027_espart_injury_barca/01_w.jpg
+        card: none
+      - text: 55分、右から駆け上がって1対1の同点弾。試合は2対4で敗れました。
+        image: assets/images/20261027_espart_injury_barca/03_w.jpg
+        card: none
+      - text: トップチームで、欧州の大会の初ゴール。守ってはボール奪取が8回です。
+        image: assets/images/20261027_espart_injury_barca/01_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.fcbarcelona.com/en/football/first-team/news/4596588/xavi-espart-comes-of-age-against-paris-saint-germain
+      - https://www.espn.com/soccer/story/_/id/50287697/xavi-espart-barcelona-ankle-injury-spanish-la-liga-champions-league
+
+  - id: view
+    viewpoint: true
+    heading: 同点弾から5日後の負傷
+    tier: 背景
+    telop: 右サイドバックで出た2試合は、いずれも負け
+    say:
+      - text: 見立てです。エスパルトが右サイドバックで出た2つの試合は、いずれも負け。
+        image: assets/images/20261027_espart_injury_barca/04_w.jpg
+        card: {type: table, title: エスパルトが右サイドバックに入った2試合, columns: [日, 試合, 結果], rows: [[10月20日（火）, CL パリ・サンジェルマン戦, 2対4 負け・同点弾], [10月25日（日）, リーグ レアル・マドリー戦, 1対2 負け・30分に交代]], highlight_row: 0}
+      - text: 同点弾から5日後のクラシコも1対2。リーグの連勝は9で止まりました。
+        image: assets/images/20261027_espart_injury_barca/01_w.jpg
+        card: none
+      - text: 伸び盛りの19歳を欠いたまま、次は日曜、本拠地でのアラベス戦です。
+        image: assets/images/20261027_espart_injury_barca/03_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50287697/xavi-espart-barcelona-ankle-injury-spanish-la-liga-champions-league
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/summary?event=401882832
+short_title: "エスパルト、クラシコ30分で交代。バルサに残ったDFの数"

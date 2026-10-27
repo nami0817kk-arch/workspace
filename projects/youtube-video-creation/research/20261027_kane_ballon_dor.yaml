@@ -1,0 +1,157 @@
+# 取材メモ（2026年10月27日）ケインがバロンドール。壇上で振り返った「何度もの貸し出し」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-10-27。requests で本文を読んだ（ESPN は記事API content.core.api.espn.com、BBC は記事の本文、Wikipedia は原文の infobox）。
+#   ・ESPN「Harry Kane wins 2026 Ballon d'Or ahead of Kylian Mbappé, Lamine Yamal; first Englishman in 25 years」（2026-10-27 00:05Z）— 題材の元。
+#       地の文: 月曜（26日）ロンドンの授賞式（London Palladium）。2位エムバペ、3位ヤマル。33歳。イングランド人で5人目、2001年のオーウェン以来。
+#       本人（壇上）: "Being in London, it is extra special, it felt like a good omen"
+#             "It's just the journey. For any young boy or girl who wants to achieve their dream, anything is possible."
+#             "I hope my journey, it wasn't straightforward, I didn't go straight to the top, I had to experience a lot of loan moves and fight my way to get to where I am now. I hope that can give you inspiration"
+#             妻ケイトへ "I felt like you wanted this more than me."（使わない。題から離れる）
+#   ・BBC「Kane ends England's 25-year Ballon d'Or wait - how he bucked the trend」（https://www.bbc.com/sport/football/articles/cqlye4jpzzxyo）
+#       本人（DAZN の取材）: "I had to go through many ups and downs, especially early in my career. I was never the person that people thought was going to be the superstar like some of the guys now."
+#             "I had to bide my time and work hard, a lot of times it was me against my own mind"
+#       地の文: 昨季はバイエルンで公式戦51試合61点（バイエルンの1季最多）。代表と合わせて65試合73点。今季はバイエルンで12試合10点＋ネーションズリーグ4試合6点＝16試合16点。
+#   ・Wikipedia 英語版 Harry Kane の infobox（背景）: トッテナムからの貸し出しは4つ。2011 レイトン・オリエント 18試合5点 / 2012 ミルウォール 22試合7点 /
+#       2012–13 ノリッジ 3試合0点 / 2013 レスター 13試合2点。infobox の数はリーグ戦だけ（合計56試合14点）。
+# 言わないこと: トゥヘル監督の言葉（題材一覧にあるが、今日読んだ BBC の本文には「delighted」「huge honour」しか無い）。W杯・CLの準決勝敗退の詳細（題9・10・12・13の他の本と重ねない）。
+#   エムバペ・ヤマルの話は1行（順位）まで。公式サイトの誤掲載（題11）は触れない。10/23「CLで10試合連続」・10/25「ケインとレヴァンドフスキ」の数字（147試合・36点差・PK）は使わない。
+# 数字の比べ: 貸し出しのリーグ戦14点と、昨季のバイエルン公式戦61点。大会の数え方が違うので、語りで断る。
+# 訳はこちらの自訳（英語）。
+# 確度: 受賞と順位は確定（ESPN・BBC が授賞式の結果として報道）。本人の言葉は報道。貸し出しの経歴は背景（Wikipedia）。
+# 反応: 0件。作らない。approve は --no-voices で。
+slot: overseas
+date: "2026年10月27日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [ハリー・ケイン]
+
+short_style: Y
+short_hook_quote: 僕は、まっすぐ頂点に行ったわけじゃない。
+short_question: 若いころの貸し出しは、ケインにとって遠回りだったと思いますか。
+short_hook: 若いころは、4つのクラブへ貸し出されていた。
+short_telops:
+  - {match: まっすぐ頂点に, text: ハリー・ケイン/「まっすぐ頂点に来たわけじゃない」}
+  - {match: その賞を手に, text: バロンドール/1位 ケイン 2位 エムバペ 3位 ヤマル}
+  - {match: 25年ぶり, text: イングランドの選手は/2001年のオーウェン以来}
+  - {match: レイトン・オリエント, text: 2011年 レイトン・オリエント/2012年 ミルウォール}
+  - {match: ノリッジ, text: 2012年 ノリッジ/2013年 レスター}
+  - {match: 56試合, text: 貸し出しの4クラブ/リーグ戦 56試合14点}
+  - {match: スターになると, text: ケイン（DAZN）/「スターになると思われていなかった」}
+  - {match: 61点, text: 昨季 バイエルンの公式戦/51試合61点}
+  - {match: 16試合で16点, text: 今季 代表と合わせて/16試合16点}
+
+theme:
+  id: kane_ballon_dor
+  league: germany
+  league_name: ブンデスリーガ
+  prefix: ""
+  title: ケイン、バロンドールの壇上で語った遠回り。若いころに何があったのか
+  hook: ""
+  question: バロンドールを受けたケインが、壇上で振り返った「まっすぐではない道」とは何だったのか
+  takeaway: 貸し出しの4クラブで決めたのはリーグ戦56試合14点。それが昨季はバイエルンの公式戦だけで61点。数え方は違うが、1季で4倍を超えた
+
+thumbnail:
+  line1: ハリー・ケイン
+  line2: 「まっすぐ頂点に来たわけじゃない」
+  tags: [バイエルン, トッテナム, バロンドール]
+  layout: face
+  photo: assets/images/20261027_kane_ballon_dor/03_w.jpg
+  short_photo: assets/images/20261027_kane_ballon_dor/01_v.jpg
+
+answer: 4クラブへの貸し出しでリーグ戦14点。昨季はバイエルンで61点を取って受賞
+watch: 今季も代表と合わせて16試合16点。2年続けての受賞を狙えるか
+
+short_photos:
+  - assets/images/20261027_kane_ballon_dor/01_v.jpg
+  - assets/images/20261027_kane_ballon_dor/02_v.jpg
+  - assets/images/20261027_kane_ballon_dor/03_v.jpg
+  - assets/images/20261027_kane_ballon_dor/04_v.jpg
+
+sections:
+  - id: what
+    main: true
+    heading: 受賞の壇上で、ケインが話したこと
+    tier: 報道
+    telop: バロンドールはケイン。壇上で話したのは、若いころのこと
+    say:
+      - text: 26日の夜、ロンドンで発表されたバロンドール。
+        image: assets/images/20261027_kane_ballon_dor/03_w.jpg
+      - text: その賞を手にしたのは、ハリー・ケインです。
+        image: assets/images/20261027_kane_ballon_dor/03_w.jpg
+      - voice: ケイン
+        text: 僕は、まっすぐ頂点に行ったわけじゃない。
+        image: assets/images/20261027_kane_ballon_dor/02_w.jpg
+      - voice: ケイン
+        text: 何度も貸し出されて、戦ってきた。
+        cont: true
+        image: assets/images/20261027_kane_ballon_dor/02_w.jpg
+      - voice: ケイン
+        text: そうして、いまの場所までたどり着いたんだ。
+        cont: true
+        image: assets/images/20261027_kane_ballon_dor/02_w.jpg
+      - text: イングランドの選手の受賞は、25年ぶり。2位はエムバペ、3位はヤマルでした。
+        image: assets/images/20261027_kane_ballon_dor/03_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50236983/harry-kane-2026-ballon-dor-kylian-mbappe-lamine-yamal
+      - https://www.bbc.com/sport/football/articles/cqlye4jpzzxyo
+
+  - id: loans
+    heading: 「何度も貸し出された」は、どこへ
+    tier: 背景
+    telop: トッテナムで育ち、10代の終わりから4つのクラブへ
+    card:
+      type: table
+      title: ケインが貸し出された4クラブ（リーグ戦）
+      columns: [年, クラブ, 試合, 得点]
+      rows:
+        - [2011, レイトン・オリエント, 18, 5]
+        - [2012, ミルウォール, 22, 7]
+        - [2012〜13, ノリッジ, 3, 0]
+        - [2013, レスター, 13, 2]
+    say:
+      - text: ケインは子どものころから、トッテナムの育成組織にいました。
+        image: assets/images/20261027_kane_ballon_dor/03_w.jpg
+      - text: ただ、トップチームにはすぐ定着できませんでした。
+        image: assets/images/20261027_kane_ballon_dor/02_w.jpg
+      - text: 2011年にレイトン・オリエント、2012年にミルウォールへ。
+        image: assets/images/20261027_kane_ballon_dor/03_w.jpg
+      - text: そのあとノリッジ、2013年にはレスターへ貸し出されています。
+        image: assets/images/20261027_kane_ballon_dor/03_w.jpg
+      - text: 4つのクラブでのリーグ戦は、合わせて56試合で14点でした。
+        image: assets/images/20261027_kane_ballon_dor/02_w.jpg
+      - voice: ケイン
+        text: 僕は、スターになると期待される選手じゃなかった。
+        image: assets/images/20261027_kane_ballon_dor/02_w.jpg
+      - voice: ケイン
+        text: じっと待って、努力するしかなかったんだ。
+        cont: true
+        image: assets/images/20261027_kane_ballon_dor/03_w.jpg
+    official: false
+    sources:
+      - https://en.wikipedia.org/wiki/Harry_Kane
+      - https://www.bbc.com/sport/football/articles/cqlye4jpzzxyo
+
+  - id: view
+    viewpoint: true
+    heading: 貸し出しの14点から、1季で61点へ
+    tier: 報道
+    telop: 貸し出し4クラブでリーグ戦14点。昨季はバイエルンで61点
+    say:
+      - text: ここからは見立てです。
+        image: assets/images/20261027_kane_ballon_dor/02_w.jpg
+      - text: 昨季のケインは、バイエルンの公式戦51試合で61点。クラブの1季の最多でした。
+        image: assets/images/20261027_kane_ballon_dor/03_w.jpg
+      - text: リーグ戦と公式戦で、数え方は違います。
+        image: assets/images/20261027_kane_ballon_dor/02_w.jpg
+      - text: それでも、貸し出しの4クラブで取った14点の、4倍を超えています。
+        image: assets/images/20261027_kane_ballon_dor/02_w.jpg
+      - text: 今季も、代表と合わせて16試合で16点。2年続けての受賞を狙える数字です。
+        image: assets/images/20261027_kane_ballon_dor/03_w.jpg
+      - voice: ケイン
+        text: 夢をかなえたい子どもたちへ。何だってできるんだ。
+        image: assets/images/20261027_kane_ballon_dor/02_w.jpg
+    official: false
+    sources:
+      - https://www.bbc.com/sport/football/articles/cqlye4jpzzxyo
+      - https://www.espn.com/soccer/story/_/id/50236983/harry-kane-2026-ballon-dor-kylian-mbappe-lamine-yamal
+short_title: "ケイン、バロンドールの壇上で語った遠回り。若いころに何があったのか"

@@ -1,0 +1,172 @@
+# 取材メモ（2026年10月27日）アジア杯の日程が確定、日本の初戦は1月11日インドネシア戦。それでも開催は「現時点で簡単じゃない」（宮本会長）。ニュースのショート。見せ方 Y＝宮本会長の一言から始める
+# 取材: 2026-10-27。requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約は事実に使っていない（URL探しにだけ使った）。
+#   ・ゲキサカ 2026-10-26 https://web.gekisaka.jp/news/japan/detail/?461878-461878-fl （全文読んだ）:
+#       AFCと大会組織委員会が26日、来年1〜2月にサウジアラビアで開くアジアカップの試合日程を発表。キックオフ時間・会場が確定。
+#       27年1月7日、リヤドのキング・ファハド・スポーツシティ・スタジアム（7万2000人）でサウジアラビア対パレスチナの開幕戦。
+#       24チームのGLは1月20日に終了、2日後にラウンド16。準々決勝1/28・29、準決勝2/1・2、決勝2/5（キング・ファハド）。
+#       日本はF組（大会2連覇中のカタール・タイ・インドネシア）。組み合わせは今年5月に決定済み。
+#       日本の日程: 01/11 vsインドネシア［ジッダ／プリンス・アブドゥラー］、01/16 vsタイ［リヤド／アルシャバーブ］、01/20 vsカタール［リヤド／キングサウード大学］。
+#         キックオフは「19:30KO」と書かれているが、現地時間か日本時間かが本文に無い → 時刻は言わない。
+#       リヤドの国際空港がフーシ派の攻撃を受け、多くの死傷者。開催可否は11月中旬にバンコクの理事会で最終決定する方針（23日、田嶋名誉会長）。
+#   ・ゲキサカ 2026-10-23 https://web.gekisaka.jp/news/japan/detail/?461641-461641-fl （全文読んだ。宮本会長の言葉はここから）:
+#       23日、東京都内のAFC臨時総会のあと、宮本恒靖会長が取材に応じた。
+#       「報道で知る限りではやっぱり安全ではない。現時点では開催は簡単じゃないと思っている」
+#       「一番は安全面。(延期など)仮定の話はあまりできないので、とにかく安全面のところを大切に考えていきたい」
+#       「大会が開催されても、日本が不参加を決めることもあるか」には「この場所ではなかなかお伝えできない。いろんなことを考えて決めないといけないし、安全面は最優先されること」。
+#       サウジの幹部と面談：「彼らが一番考えているのは選手、サポーターの皆さん、大会に参加する人たちの安全だと言っていた。…」
+#       外務省が22日、リヤド・ジッダ・アルコバールの危険レベルを「2」不要不急の渡航中止から「3」渡航中止勧告に引き上げ。宮本会長は「大切な一つの判断材料」。
+#       リヤドには大会最多の5会場。AFCのサルマン会長は、サウジ開催が難しい場合、代替地ではなく1年延期の可能性も示唆。森保監督はアジア杯までが任期。
+#   ・ゲキサカ 2026-10-23 https://web.gekisaka.jp/news/japan/detail/?461634-461634-fl （田嶋名誉会長。背景の確認だけ。台本には出さない）
+#   ・フットボールゾーン（23日、題材の一覧に出ていた記事）は URL を見つけられず読んでいない → 言葉はゲキサカの書き起こしで引く（「最優先は安全面です」の形は使わない）。
+# 自分で数えたこと: 10月27日 → 1月11日 は 76日。11月中旬（15日として）→ 開幕1月7日 は 53日（「50日ほど」と言う）。日本の3試合のうち2試合がリヤド。
+# 【言わないこと】媒体名／キックオフの時刻（現地か日本か不明）／田嶋名誉会長の言葉（今回の主役は宮本会長）／「日本が不参加」の推測（会長は答えていない）／死傷者の数（本文に無い）。
+# 反応: 探していない（0件。作らない）。approve は --no-voices。
+# 前の本との重なり: posted / covered / scripts 20261018〜27 を grep。アジア杯は 10/22〜10/27 のレジェンドの回（川口・小野・稲本・遠藤・岡崎）に昔の大会として出るだけ。
+#   10/26 のショート・10/27 のシリーズに宮本会長・アジア杯の日程は無い。題材3（映画のPR、同じ会長）は○が無く作らない。
+# 確度: 日程は確定（AFCの発表を伝えた記事）。開催の可否は未定。会長の言葉は報道（取材）。1年延期は報道（AFC会長が示唆）。
+# 写真: assets/images/20261027_asiancup_schedule/（credits.json）
+#   01 = ゲキサカの記事主写真（©Tatsuya TAKEUCHI/GEKISAKA。23日の取材の宮本会長本人。代理店ではない）。1280x960 なので縦版 01_v は 540x960（縦で約2倍）
+#   02 = Commons「Japan national team players huddling in Columbus」（CC BY 4.0、Keiteay。2025年9月のアメリカ戦）
+#   03 = Commons「Japan warmup in Columbus 1」（CC BY 4.0、Keiteay。同じ試合のアップ）
+#   ゲキサカ 26日の主写真（森保監督）は ©Getty Images なので使わない。映画祭の写真（©ONE CREATURE、4人並び）は使わない。
+slot: japan
+date: "2026年10月27日"
+format: news
+no_main: true
+people: [宮本恒靖, 日本代表, 森保一]
+
+short_style: Y
+short_hook_quote: 報道で知る限りではやっぱり安全ではない。
+short_question: アジアカップ、予定どおり1月に開いてほしいと思いますか。
+short_hook: 宮本恒靖会長「開催は簡単じゃない」。初戦まで76日のアジア杯、決まるのは。
+short_photos:
+  - assets/images/20261027_asiancup_schedule/01_v.jpg
+  - assets/images/20261027_asiancup_schedule/02_v.jpg
+  - assets/images/20261027_asiancup_schedule/03_v.jpg
+short_telops:
+  - {match: 23日, text: 23日 AFC臨時総会のあと/宮本恒靖 JFA会長}
+  - {match: 26日, text: 26日 AFCが試合日程を発表/2027年1月7日〜2月5日}
+  - {match: F組, text: 日本はF組/カタール・タイ・インドネシア}
+  - {match: 1月11日, text: 1月11日 インドネシア（ジッダ）/1月16日 タイ・1月20日 カタール（リヤド）}
+  - {match: 76日, text: 日本の初戦まで/あと76日}
+  - {match: 渡航中止勧告, text: 外務省 22日/リヤド・ジッダなどを「渡航中止勧告」に}
+  - {match: バンコク, text: 開催するかどうか/11月中旬 バンコクの理事会で決定へ}
+
+theme:
+  id: asiancup_schedule
+  league: japan
+  league_name: 日本代表
+  prefix: ""
+  title: 宮本恒靖「開催は簡単じゃない」。初戦まで76日のアジア杯、決まるのは
+  hook: ""
+  question: 日程が決まったアジアカップで、まだ決まっていないことは何か
+  takeaway: 日本の3試合のうち2試合は、空港が攻撃を受けたリヤド。開催するかどうかは11月中旬に決まり、そこから開幕まで50日ほどしかない
+
+thumbnail:
+  layout: face
+  line1: 宮本恒靖会長
+  line2: 開催は簡単じゃない
+  tags: [宮本恒靖, 日本代表, アジアカップ]
+  photo: assets/images/20261027_asiancup_schedule/01_w.jpg
+  short_photo: assets/images/20261027_asiancup_schedule/01_v.jpg
+
+answer: 開催するかどうか。11月中旬にバンコクで開くアジアサッカー連盟の理事会で最終決定する方針
+watch: 11月中旬のアジアサッカー連盟の理事会
+
+sections:
+  - id: what
+    main: true
+    heading: 宮本会長「現時点では開催は簡単じゃない」
+    tier: 報道
+    telop: 宮本恒靖会長「現時点では開催は簡単じゃない」
+    say:
+      - text: 23日、日本サッカー協会の宮本恒靖会長が、アジアカップの安全に触れました。
+        image: assets/images/20261027_asiancup_schedule/01_w.jpg
+      - voice: 宮本恒靖
+        text: 報道で知る限りではやっぱり安全ではない。
+        image: assets/images/20261027_asiancup_schedule/01_w.jpg
+      - voice: 宮本恒靖
+        text: 現時点では開催は簡単じゃないと思っている。
+        cont: true
+        image: assets/images/20261027_asiancup_schedule/01_w.jpg
+      - text: その3日後の26日、アジアサッカー連盟が試合の日程を発表しました。
+        image: assets/images/20261027_asiancup_schedule/02_w.jpg
+      - text: 大会はサウジアラビアで、2027年1月7日に開幕し、決勝は2月5日。
+        image: assets/images/20261027_asiancup_schedule/02_w.jpg
+      - text: 日本はF組。大会2連覇中のカタール、タイ、インドネシアと同じ組です。
+        image: assets/images/20261027_asiancup_schedule/03_w.jpg
+      - text: 初戦は1月11日、ジッダでインドネシアと。
+        image: assets/backgrounds/pitch.png
+        card: {type: timeline, title: 日本の試合（F組）, rows: [[1月11日, インドネシア（ジッダ）], [1月16日, タイ（リヤド）], [1月20日, カタール（リヤド）]], focus: 1月11日}
+      - text: 16日のタイ戦と20日のカタール戦は、首都リヤドです。
+        image: assets/backgrounds/pitch.png
+        card: {type: timeline, title: 日本の試合（F組）, rows: [[1月11日, インドネシア（ジッダ）], [1月16日, タイ（リヤド）], [1月20日, カタール（リヤド）]], focus: 1月11日}
+      - text: ただ、大会を開くかどうかは、まだ決まっていません。
+        image: assets/images/20261027_asiancup_schedule/02_w.jpg
+        card: none
+      - text: 11月中旬にバンコクで開くアジアサッカー連盟の理事会で、最終決定する方針です。
+        emph: true
+        image: assets/images/20261027_asiancup_schedule/02_w.jpg
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?461641-461641-fl
+      - https://web.gekisaka.jp/news/japan/detail/?461878-461878-fl
+
+  - id: why
+    heading: なぜ「簡単じゃない」のか
+    tier: 報道
+    telop: リヤドの国際空港が攻撃を受けた
+    say:
+      - text: 今月、そのリヤドの国際空港が、
+        image: assets/images/20261027_asiancup_schedule/02_w.jpg
+        card: none
+      - text: イエメンの武装組織フーシ派の攻撃を受け、多くの死傷者が出ています。
+        image: assets/images/20261027_asiancup_schedule/03_w.jpg
+      - text: 外務省は22日、リヤドとジッダなどの危険レベルを、渡航中止勧告に引き上げました。
+        image: assets/images/20261027_asiancup_schedule/02_w.jpg
+      - text: 宮本会長は、選手とスタッフを送るかどうかについて、こう話しています。
+        image: assets/images/20261027_asiancup_schedule/01_w.jpg
+      - voice: 宮本恒靖
+        text: 一番は安全面。
+        image: assets/images/20261027_asiancup_schedule/01_w.jpg
+      - voice: 宮本恒靖
+        text: 仮定の話はあまりできないので、
+        cont: true
+        image: assets/images/20261027_asiancup_schedule/01_w.jpg
+      - voice: 宮本恒靖
+        text: とにかく安全面のところを大切に考えていきたい。
+        cont: true
+        image: assets/images/20261027_asiancup_schedule/01_w.jpg
+      - text: 開けない場合、アジアサッカー連盟の会長は、
+        image: assets/images/20261027_asiancup_schedule/02_w.jpg
+      - text: 別の場所ではなく、1年延期の可能性にも触れています。
+        image: assets/images/20261027_asiancup_schedule/02_w.jpg
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?461641-461641-fl
+      - https://web.gekisaka.jp/news/japan/detail/?461878-461878-fl
+
+  - id: view
+    viewpoint: true
+    heading: 初戦まで76日、決まるまで3週間
+    tier: 背景
+    telop: 日本の3試合のうち2試合がリヤド
+    say:
+      - text: 見立てです。宮本会長が、安全を一番に挙げたこの大会。
+        image: assets/images/20261027_asiancup_schedule/01_w.jpg
+      - text: 日本の3試合のうち2試合は、攻撃を受けた空港のあるリヤドです。
+        image: assets/images/20261027_asiancup_schedule/03_w.jpg
+        card: {type: stats, title: アジアカップの日本, items: [[76, 日, 初戦まで], [2, 試合, 3試合のうちリヤド], [50, 日ほど, 決定から開幕まで]], focus: 0}
+      - text: 今日から初戦まで76日。
+        image: assets/images/20261027_asiancup_schedule/03_w.jpg
+      - text: 開催が決まるのが11月中旬なら、開幕まで50日ほどしかありません。
+        image: assets/images/20261027_asiancup_schedule/03_w.jpg
+      - text: 森保一監督は、このアジアカップまでが任期。
+        image: assets/images/20261027_asiancup_schedule/02_w.jpg
+        card: none
+      - text: 延期になれば、監督の去就にも関わってきます。
+        image: assets/images/20261027_asiancup_schedule/02_w.jpg
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?461641-461641-fl
+      - https://web.gekisaka.jp/news/japan/detail/?461878-461878-fl
