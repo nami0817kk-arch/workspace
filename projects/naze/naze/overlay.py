@@ -9,7 +9,7 @@ from typing import List, Optional, Tuple
 
 from PIL import Image, ImageDraw, ImageFont
 
-from .config import FONT, LAYOUT, W
+from .config import FONT, H, LAYOUT, W
 
 WHITE = (255, 255, 255)
 YEL = (255, 214, 64)
@@ -229,3 +229,23 @@ def cta(img: Image.Image, t: float, band_y, size: int = 64) -> None:
     od.text((tx + bh * 0.8 - (bb[0] + bb[2]) / 2, by - (bb[1] + bb[3]) / 2), THUMB, font=g, fill=(YEL if liked else WHITE) + (A,))
     img.alpha_composite(ov)
     BOXES.append(("cta", (x, by - bh / 2, x + tw, by + bh / 2), "登録と高評価", 1.0))
+
+
+def water_badge(img: Image.Image, level: float, note: str = "") -> None:
+    """右上に「水の高さ ○.○m」の札(水面を上げる回)。"""
+    f1, f2, f3 = font(34), font(76), font(26)
+    t = f"{level:.1f}m"
+    w = max(f2.getlength(t), f1.getlength("水の高さ"), f3.getlength(note)) + 60
+    x1 = W - 40
+    x0, y0 = x1 - w, (110 if W > H else 220)      # 縦は見出しの下
+    h = 34 + 76 + (34 if note else 0) + 40
+    ov = Image.new("RGBA", img.size, (0, 0, 0, 0))
+    od = ImageDraw.Draw(ov)
+    od.rounded_rectangle([x0, y0, x1, y0 + h], 18, fill=NAVY + (215,), outline=BLUE + (255,), width=4)
+    img.alpha_composite(ov)
+    d = ImageDraw.Draw(img)
+    d.text((x0 + 30, y0 + 14), "水の高さ", font=f1, fill=DIM)
+    d.text((x0 + 30, y0 + 50), t, font=f2, fill=BLUE)
+    if note:
+        d.text((x0 + 30, y0 + 50 + 86), note, font=f3, fill=DIM)
+    BOXES.append(("label", (x0, y0, x1, y0 + h), "水の高さ", 1.0))

@@ -43,6 +43,27 @@ def voice(ep: dict, out: Path) -> dict:
     return tl
 
 
+def water_keys(ep: dict, L: dict) -> list:
+    """EP の water=[(行 id, 行の中の時刻 0〜1, 水位 m)] をコマ番号のキーにする。無ければ空(水面なし)。"""
+    keys = []
+    for lid, at, lv in ep.get("water", []):
+        l = L[lid]
+        keys.append(dict(frame=int((l["start"] + at * (l["end"] - l["start"])) * FPS) + 1, level=float(lv)))
+    return sorted(keys, key=lambda k: k["frame"])
+
+
+def water_at(keys: list, fi: int):
+    """コマ fi の水位(Blender と同じ直線の補間)。水面が無ければ None。"""
+    if not keys:
+        return None
+    if fi <= keys[0]["frame"]:
+        return keys[0]["level"]
+    for a, b in zip(keys, keys[1:]):
+        if fi <= b["frame"]:
+            return a["level"] + (b["level"] - a["level"]) * (fi - a["frame"]) / max(1, b["frame"] - a["frame"])
+    return keys[-1]["level"]
+
+
 def prep(ep: dict, out: Path) -> dict:
     p = _paths(out)
     d = demmod.load(*ep["bbox"], z=ep.get("dem_z", 14))
@@ -79,8 +100,10 @@ def prep(ep: dict, out: Path) -> dict:
     if ep.get("rise"):
         l = L[ep["rise"]]
         rise = [int(l["start"] * FPS) + 1, max(int(l["start"] * FPS) + 2, int(l["end"] * FPS) - 10)]
+    water = water_keys(ep, L)
     job = dict(height=str(p["height"]), tex=str(p["tex"]), Wkm=Wkm, Hkm=Hkm, exag=ep["exag"], fps=FPS, frames=nf, lens=ep.get("lens", 28), size=[W, H],
-               keys=keys, rise=rise, points={k: v["pos"] for k, v in pts.items()}, heights={k: v["h"] for k, v in pts.items()}, out=str(out))
+               keys=keys, rise=rise, points={k: v["pos"] for k, v in pts.items()}, heights={k: v["h"] for k, v in pts.items()}, out=str(out),
+               water=water)
     text = json.dumps(job, ensure_ascii=False, indent=1)
     # 書き出しは途中から再開できる(できたコマは描き直さない)。設定が変わったら古いコマは捨てる
     if p["job"].exists() and p["job"].read_text(encoding="utf-8") != text and (out / "frames").exists():
@@ -122,6 +145,10 @@ def frame_fn(ep: dict, out: Path, still: bool = False):
         cur = ov.current(lines, t)
         d = defs[cur["id"]] if cur else {}
         ov.corner(dr, "出典：国土地理院（標高タイル・空中写真）" if ep.get("tex_opts", {}).get("photo") else "出典：国土地理院（標高タイル）", f"高さは{ep['exag']:g}倍に強調")
+        wl = water_at(job.get("water") or [], fi)
+        if wl is not None and wl >= 0 and d.get("style") not in ("question", "end", "cta"):
+            ov.water_badge(img, wl, ep.get("water_note", "仮の計算・堤防は考えない"))
+            dr = ImageDraw.Draw(img)
         style = d.get("style")
         if style not in ("question", "end", "cta") and ep.get("header"):
             ov.rows(dr, ep["header"], *LAYOUT["header"], stroke=6)

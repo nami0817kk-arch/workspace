@@ -98,6 +98,31 @@ if job.get("rise"):                                             # 平らな地�
     ob.keyframe_insert("scale", frame=f1)
 
 
+water = None
+if job.get("water"):                                            # 水面(高さをキーで上げ下げする。天気の子の回)
+    bpy.ops.mesh.primitive_plane_add(size=1)
+    water = bpy.context.active_object
+    water.scale = (job["Wkm"] * 1.02, job["Hkm"] * 1.02, 1)
+    wm = bpy.data.materials.new("water")
+    wm.use_nodes = True
+    wb = wm.node_tree.nodes.get("Principled BSDF")
+    wb.inputs["Base Color"].default_value = (0.03, 0.22, 0.48, 1)
+    wb.inputs["Roughness"].default_value = 0.5                  # 艶を落として日差しの白い照り返しを出さない
+    for nm in ("Specular IOR Level", "Specular"):
+        if nm in wb.inputs:
+            wb.inputs[nm].default_value = 0.05
+    wb.inputs["Alpha"].default_value = 0.82
+    for attr, val in (("blend_method", "BLEND"), ("surface_render_method", "BLENDED")):
+        try:
+            setattr(wm, attr, val)
+        except Exception:
+            pass
+    water.data.materials.append(wm)
+    for k in job["water"]:
+        water.location = (0, 0, k["level"] * EX / 1000.0)
+        water.keyframe_insert("location", frame=k["frame"])
+
+
 def _fcurves(o):
     ad = o.animation_data
     if not ad or not ad.action:
@@ -118,6 +143,10 @@ for o in (cam, tgt, ob):
         for kp in fc.keyframe_points:
             kp.interpolation, kp.easing = "BEZIER", "AUTO"
             kp.handle_left_type = kp.handle_right_type = "AUTO_CLAMPED"
+if water is not None:                                            # 水面はまっすぐ(重ねる「水位」の字と合わせる)
+    for fc in _fcurves(water):
+        for kp in fc.keyframe_points:
+            kp.interpolation = "LINEAR"
 
 # ---- 地点の画面位置 ----
 proj = {}
