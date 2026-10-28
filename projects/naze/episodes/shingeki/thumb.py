@@ -54,16 +54,11 @@ d.text((80 + w / 2, 90 + 83), t, font=f, fill=(255, 255, 255), anchor="mm")
 d.text((80 + w + 25, 90 + 83), "の超大型巨人を", font=O.font(104), fill=INK, anchor="lm", stroke_width=12, stroke_fill=(255, 255, 255))
 d.text((80, 300), "人の体で作ったら", font=O.font(165), fill=INK, stroke_width=16, stroke_fill=(255, 255, 255))
 
-# 動画でわかること 3 つ(本編の実験から)
-ITEMS = [("歩くだけで", "骨が折れる"), ("ふつうの鉄でも", "42mまで"), ("歩ける体は", "発泡スチロール並み")]
-fi = O.font(76)
-for i, (a, b) in enumerate(ITEMS):
-    y = 640 + i * 190
-    x1 = 80 + 150 + fi.getlength(a + b) + 50
-    d.rounded_rectangle([80, y, x1, y + 150], radius=30, fill=(255, 255, 255, 235), outline=INK, width=6)
-    d.ellipse([105, y + 25, 205, y + 125], fill=RED)
-    d.text((155, y + 75), str(i + 1), font=O.font(70), fill=(255, 255, 255), anchor="mm")
-    d.text((235, y + 75), a, font=fi, fill=INK, anchor="lm")
-    d.text((235 + fi.getlength(a), y + 75), b, font=fi, fill=RED, anchor="lm")
+# 動画でわかること 3 つ(本編の実験から)。箱や番号は付けず、字を直接のせる(2026-10-29 ユーザー指示)
+ITEMS = [(620, ("歩くだけで", "骨が折れる"), 128), (820, ("ふつうの鉄でも", "42mまで"), 128), (1020, ("歩ける体は", "発泡スチロール並み"), 112)]
+for y, (a, b), size in ITEMS:
+    fi = O.font(size)
+    d.text((80, y), a, font=fi, fill=INK, stroke_width=16, stroke_fill=(255, 255, 255))
+    d.text((80 + fi.getlength(a), y), b, font=fi, fill=RED, stroke_width=16, stroke_fill=(255, 255, 255))
 img.convert("RGB").resize((1280, 720), Image.LANCZOS).save(OUT / "thumb_long.jpg", quality=93)
 print(OUT / "thumb_long.jpg")
