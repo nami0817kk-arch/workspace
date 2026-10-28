@@ -1,0 +1,183 @@
+# 物語完結型ショート 伊達政宗 s4（2026-10-29）。本編 scripts/masamune-story.yaml の第4章（瑞巌寺の木像・陽徳院の記憶）から。
+# 形式は rikyu_s1.yaml・hidetsugu_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし（本編の想像3「殿のお顔は」は使わない）。
+# 絵は本編の AI 絵（out/story/masamune/main/M*.jpg）と実在の絵（広重の松島・瑞巌寺と木像の1912年の写真）。
+#   この回の決まり：AI 絵の政宗に眼帯は無い。右目が見えている絵の切り出しを作らない（M01 は使わない）。木像の写真は顔に寄らず全身で出す（暗い小さな写真）。
+# 事実カード（dev/output/rekishi-chiso/research/伊達政宗_facts_20261028.yaml）：masamune-08・43・85・86・28
+#   ・陽徳院の記憶を絵師に描かせ京都の仏師に作らせた＝瑞巌寺の案内（masamune-43）。
+#   ・作らせた人の食い違い：瑞巌寺の案内＝忠宗と陽徳院／塩澤寛樹（群馬県立女子大学 2023 の報告）＝陽徳院／観光庁の解説文＝政宗自身が両目の像を望んだと言われる（masamune-86）。
+#   ・右目の食い違い：観光庁と塩澤さん＝やや細い・すがめた／瑞巌寺の案内＝遺言によって開いている（masamune-28）。
+#   ・政宗の死から木像までは「16年目・17回忌」（本編と同じ）。
+# 理解テスト4問：
+#   ①誰の話か：伊達政宗の妻・陽徳院（愛姫）と、瑞巌寺の政宗の木像
+#   ②いつ・どこで何が：1652年、政宗の17回忌に、松島の瑞巌寺にほぼ等身大の甲冑の木像が作られた
+#   ③何を選んだか：陽徳院が覚えていた夫の姿を、まず絵師に描かせ、それをもとに京都の仏師に作らせた（瑞巌寺の案内）。作らせた人は説明によって違う
+#   ④どうなったか：同じ像の右目を、観光庁と塩澤さんは「やや細い」、瑞巌寺の案内は「開いている」とする
+title: 伊達政宗｜妻の記憶で作られた木像の右目
+yt_title: 伊達政宗の妻が記憶から作らせた木像　その右目は「細い」のか「開いている」のか
+description: |-
+  1652年、伊達政宗の17回忌。松島の瑞巌寺に、ほぼ等身大の政宗の木像が作られました。鎧をつけて腰をかけた姿で、高さは88.6センチ。目には玉眼という技が使われています。
+  瑞巌寺の案内によれば、政宗の正室、陽徳院（若いころの名は愛姫）が、覚えていた夫の姿を、まず絵師に描かせ、それをもとに京都の仏師に作らせたものです。
+  ただ、誰が作らせたのかは説明によって違います。瑞巌寺の案内は2代藩主の忠宗と陽徳院、群馬県立女子大学の塩澤寛樹さんの報告は陽徳院、観光庁の解説文は政宗自身が両方の目のある像を望んだと言われる、と書きます。
+  そして右目。観光庁の解説文と塩澤さんは、やや細く作っているとし、瑞巌寺の案内は、遺言によって右目が開いているとしています。
+hashtags: ["#伊達政宗", "#日本史", "#戦国時代"]
+ai_images: true
+art_dir: out/story/masamune
+out: masamune_story_s4
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 伊達政宗の妻・陽徳院（愛姫）
+  title: "妻の記憶で作った像の《右目》"
+now:
+  - {at: 政宗の妻, text: "1652年　松島の瑞巌寺", point: 1}
+  - {at: 1652年, text: "1652年　松島の瑞巌寺", point: 1}
+  - {at: 瑞巌寺の案内は, text: "今　瑞巌寺の案内", point: 2}
+timeline:
+  - {label: "1636"}
+  - {label: "1652"}
+  - {label: "今"}
+cards:
+  - type: table                          # 作らせたのは誰か（語った順に1行ずつ）
+    title: 木像を作らせたのは
+    from: 誰が作らせたのか
+    until: そして右目
+    items:
+      - {at: 息子の忠宗, text: "瑞巌寺の案内　忠宗と陽徳院"}
+      - {at: 塩澤寛樹さん, text: "塩澤寛樹の報告　陽徳院"}
+      - {at: 観光庁, text: "観光庁の解説文　政宗自身"}
+  - type: versus                         # 右目は細いのか、開いているのか
+    from: やや細く
+    until: あなたには
+    left: {tag: 観光庁・塩澤さん, big: 細い, dots: 1, color: blue}
+    right: {tag: 瑞巌寺の案内, big: 開いた, dots: 1, color: red}
+    mid: 対
+    text_y: 0.66
+shots:
+  M08f:                                  # 1文目：下絵を見つめる陽徳院
+    kind: ai
+    file: masamune/main/M08.jpg
+    focus: [0.42, 0.35]
+    move: in
+    zoom: 0.14
+    must: 下絵を見つめる陽徳院
+  Matsushima:                            # 1652年、松島の瑞巌寺
+    kind: real
+    image: paintings/masamune_matsushima_hiroshige_1853.jpg
+    focus: [0.5, 0.5]
+    move: down
+    credit: "歌川広重《六十余州名所図会 陸奥 松島風景富山眺望之略図》1853年（サンディエゴ美術館蔵）"
+    must: 松島の版画
+  M08:                                   # 絵師に描かせ、京都の仏師に
+    kind: ai
+    file: masamune/main/M08.jpg
+    focus: [0.7, 0.5]
+    move: left
+    must: 陽徳院と絵師
+  M07:                                   # 陽徳院、若いころの名は愛姫（手を合わせる後ろ姿）
+    kind: ai
+    file: masamune/main/M07.jpg
+    focus: [0.5, 0.55]
+    move: up
+    must: 厨子の前で手を合わせる陽徳院
+  Statue:                                # 鎧で腰をかけた木像・88.6センチ・玉眼
+    kind: real
+    image: paintings/masamune_zuiganji_statue_1912.jpg
+    focus: [0.5, 0.5]
+    move: out
+    zoom: 0.08
+    credit: "瑞巌寺の伊達政宗甲冑倚像（『日本写真帖』1912年の写真）"
+    must: 木像の全身
+  Zuiganji:                              # 作らせた人は説明によって違う（瑞巌寺の参道）
+    kind: real
+    image: paintings/masamune_zuiganji_1912.jpg
+    crop: [0.31, 0.04, 1.0, 1.0]
+    focus: [0.5, 0.5]
+    move: right
+    credit: "瑞巌寺の参道（田山宗尭編『日本写真帖』1912年）"
+    must: 瑞巌寺の参道
+  M07z:                                  # 観光庁は政宗自身が望んだ（厨子に寄る）
+    kind: ai
+    file: masamune/main/M07.jpg
+    focus: [0.5, 0.3]
+    move: in
+    zoom: 0.16
+    must: 本堂の厨子
+  Statue2:                               # 右目は細いのか、開いているのか
+    kind: real
+    image: paintings/masamune_zuiganji_statue_1912.jpg
+    focus: [0.5, 0.45]
+    move: in
+    zoom: 0.08
+    credit: "瑞巌寺の伊達政宗甲冑倚像（『日本写真帖』1912年の写真）"
+    must: 木像の全身
+  M08q:                                  # 最後の問い：陽徳院の顔
+    kind: ai
+    file: masamune/main/M08.jpg
+    focus: [0.42, 0.3]
+    move: in
+    zoom: 0.18
+    text_y: 0.76
+    must: 陽徳院の顔
+lines:
+  # fact: masamune-43, masamune-08
+  - 語り: 政宗の妻、陽徳院。夫が亡くなって16年目、覚えていた夫の姿を、《!像》に残させた。
+    shot: M08f
+    tone: 強調
+  # fact: masamune-08
+  - 語り: 1652年、政宗の17回忌。松島の瑞巌寺に、ほぼ等身大の、政宗の木像が作られた。
+    shot: Matsushima
+    tone: しみじみ
+    pause: 0.12
+  # fact: masamune-43
+  - 語り: 瑞巌寺の案内では、陽徳院が覚えていた夫の姿を絵師に描かせ、京都の仏師に作らせた。
+    shot: M08
+    tone: しみじみ
+    pause: 0.12
+  # fact: masamune-43
+  - 語り: 陽徳院。若いころの名を、愛姫という。
+    shot: M07
+    tone: しみじみ
+    pause: 0.12
+  # fact: masamune-85
+  - 語り: 鎧をつけて腰をかけた像。高さは88.6センチ。目には、玉眼という技が使われている。
+    shot: Statue
+    tone: しみじみ
+    pause: 0.12
+  # fact: masamune-86
+  - 語り: ただ、誰が作らせたのかは、説明で違う。瑞巌寺の案内は、息子の忠宗と陽徳院。
+    shot: Zuiganji
+    tone: 強調
+    pause: 0.12
+  # fact: masamune-86
+  - 語り: 塩澤寛樹さんの報告は、陽徳院。観光庁の解説文は、政宗自身が望んだと言われる、とする。
+    shot: M07z
+    tone: しみじみ
+    pause: 0.12
+  # fact: masamune-28
+  - 語り: そして右目。観光庁と塩澤さんは、右目を、やや細く作っている、とする。
+    shot: Statue2
+    tone: しみじみ
+    pause: 0.12
+  # fact: masamune-28
+  - 語り: ところが、瑞巌寺の案内は、遺言によって、右目が《!開いている》、とするのだ。
+    shot: Statue2
+    tone: 強調
+    pause: 0.3
+    dip: true
+  - 語り: 同じ右目が、見る人によって、細くも、開いても見える。
+    shot: M07z
+    tone: しみじみ
+    pause: 0.15
+  - 語り: あなたには、妻が残したこの右目が、どう《見えますか》。
+    shot: M08q
+    tone: 疑問
+    pause: 0.15

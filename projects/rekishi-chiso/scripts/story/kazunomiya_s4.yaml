@@ -1,0 +1,171 @@
+# 物語完結型ショート 和宮 s4（2026-10-29）。本編 scripts/kazunomiya-story.yaml の第4章（慶応4年の書状「御取つぶし」なら「覚悟」）から。
+# 形式は rikyu_s1.yaml・hidetsugu_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし（本編の想像6は使わない）。
+# 絵は本編の AI 絵（out/story/kazunomiya/main/W*.jpg。W13＝灯の下で手紙を書く尼の姿の和宮・横顔）と実在の絵（江戸城の写真・家茂の肖像）。
+# 事実カード（dev/output/rekishi-chiso/research/和宮_facts_20261028.yaml）：kazunomiya-04・35
+#   ・書状は慶応4年正月20日・橋本実梁（橋本少将）あて、海の見える杜美術館蔵（文化遺産オンラインの解説）。「御取つふし」は語りで「御取つぶし」と読む（本編と同じ）。
+#   ・『近世日本国民史』（徳富蘇峰）の「御自發にて」は「みずから進んで」と今の言葉で（kazunomiya-04）。
+#   ・家茂の大坂城での死・落飾・鳥羽伏見・慶喜が朝敵・江戸城の引き渡しは誰でも知っている流れ（本編も fact なし）。
+# 理解テスト4問：
+#   ①誰の話か：和宮（家茂の妻・夫の死後は静寛院宮）
+#   ②いつ・どこで何が：慶応4年（1868）正月、鳥羽伏見で旧幕府の軍が敗れ、徳川慶喜が朝敵とされた。新しい政府の軍が江戸へ向かう
+#   ③何を選んだか：正月20日、軍の総督・橋本実梁に手紙。徳川を「当家」と呼び、「御取つぶし」なら「覚悟いたし」と書いた。自ら進んで許しを願う動きも続けた（近世日本国民史）
+#   ④どうなったか：4月、江戸城は戦いにならずに引き渡され、徳川の家は取りつぶされずに残った。書状は今、海の見える杜美術館にある
+title: 和宮｜「御取つぶし」なら「覚悟いたし」
+yt_title: 皇女和宮が徳川のために書いた手紙「御取つぶしなら、覚悟いたします」
+description: |-
+  慶応2年、1866年。和宮の夫、将軍家茂は、大坂城で亡くなりました。和宮は髪を下ろし、静寛院宮となります。
+  慶応4年、1868年の正月。鳥羽と伏見で旧幕府の軍が敗れ、徳川慶喜は朝敵とされました。正月20日、和宮は、東海道を下ってくる軍の総督、公家の橋本実梁に手紙を書きます。
+  徳川の家を、当家と呼び、朝敵の汚名を残すのは「実に残念」。そして、官軍が下って当家を御取つぶしになさるなら、私も「覚悟いたし」ます、と。この書状は、いま広島県の海の見える杜美術館にあります。
+  徳富蘇峰の近世日本国民史は、和宮がみずから進んで、許しを願う動きを続けていたと書きます。その年の4月、江戸城は戦いにならずに引き渡され、徳川の家は残りました。
+hashtags: ["#和宮", "#日本史", "#幕末"]
+ai_images: true
+art_dir: out/story/kazunomiya
+out: kazunomiya_story_s4
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 和宮（将軍家茂の妻・静寛院宮）
+  title: "御取つぶしなら、《覚悟いたし》"
+now:
+  - {at: 皇女和宮, text: "慶応4年　江戸城", point: 1}
+  - {at: 慶応2年, text: "慶応2年　大坂城", point: 0}
+  - {at: 慶応4年, text: "慶応4年正月　鳥羽伏見", point: 1}
+  - {at: 正月20日, text: "正月20日　江戸城", point: 1}
+  - {at: 4月, text: "慶応4年4月　江戸城", point: 2}
+timeline:
+  - {label: "1866"}
+  - {label: "1868/1"}
+  - {label: "1868/4"}
+cards:
+  - type: table                          # 書状に書いたこと（語った順に1行ずつ）
+    title: 慶応4年正月20日　和宮の書状
+    from: 当家
+    until: 徳富蘇峰
+    items:
+      - {at: 当家, text: "徳川を「当家」と呼ぶ"}
+      - {at: 実に残念, text: "朝敵の汚名は「実に残念」"}
+      - {at: 御取つぶし, text: "御取つぶしなら「覚悟いたし」"}
+shots:
+  W13f:                                  # 1文目：灯の下で手紙を書く和宮
+    kind: ai
+    file: kazunomiya/main/W13.jpg
+    focus: [0.5, 0.6]
+    move: in
+    zoom: 0.12
+    must: 手紙を書く和宮の横顔と手
+  W05:                                   # 1866年、家茂が大坂城で亡くなる
+    kind: ai
+    file: kazunomiya/main/W05.jpg
+    focus: [0.45, 0.45]
+    move: left
+    must: 大坂城の石垣
+  Edo:                                   # 鳥羽伏見・慶喜が朝敵に（江戸城に知らせ）
+    kind: real
+    image: paintings/kira_edo_castle_beato.jpg
+    focus: [0.5, 0.5]
+    move: right
+    credit: "フェリーチェ・ベアト撮影《江戸城》1860年代"
+    must: 江戸城
+  W13:                                   # 正月20日、橋本実梁に手紙を書く
+    kind: ai
+    file: kazunomiya/main/W13.jpg
+    focus: [0.45, 0.6]
+    move: left
+    must: 蝋燭の灯と手紙を書く手
+  W13z:                                  # 当家・実に残念
+    kind: ai
+    file: kazunomiya/main/W13.jpg
+    focus: [0.42, 0.45]
+    move: in
+    zoom: 0.16
+    must: 蝋燭の灯
+  W13h:                                  # 御取つぶしなら覚悟いたし（書く手元に寄る）
+    kind: ai
+    file: kazunomiya/main/W13.jpg
+    focus: [0.6, 0.8]
+    move: in
+    zoom: 0.22
+    must: 筆を持つ手と手紙
+  W10:                                   # 近世日本国民史（書物・文机）
+    kind: ai
+    file: kazunomiya/main/W10.jpg
+    focus: [0.45, 0.5]
+    move: right
+    must: 文机の紙
+  Edo2:                                  # 4月、江戸城は戦いにならずに引き渡された
+    kind: real
+    image: paintings/kira_edo_castle_beato.jpg
+    focus: [0.3, 0.5]
+    move: in
+    credit: "フェリーチェ・ベアト撮影《江戸城》1860年代"
+    must: 江戸城
+  W09:                                   # 夫と暮らした家を守ろうとした
+    kind: ai
+    file: kazunomiya/main/W09.jpg
+    focus: [0.6, 0.5]
+    move: in
+    must: 廊下を歩く若い夫婦の後ろ姿
+  W13q:                                  # 最後の問い：和宮の横顔（W13 は顔が暗いので輿の横顔）
+    kind: ai
+    file: kazunomiya/main/W06.jpg
+    focus: [0.62, 0.38]
+    move: in
+    zoom: 0.2
+    text_y: 0.76
+    must: 和宮の横顔
+lines:
+  # fact: kazunomiya-04
+  - 語り: 徳川の家が、つぶされかけたとき。皇女和宮は、手紙に、《!覚悟》と書いた。
+    shot: W13f
+    tone: 強調
+  - 語り: 慶応2年、夫の将軍家茂が、大坂城で亡くなり、和宮は髪を下ろした。
+    shot: W05
+    tone: しみじみ
+    pause: 0.12
+  - 語り: 慶応4年、1868年の正月。鳥羽と伏見で旧幕府の軍が敗れ、慶喜は朝敵とされた。
+    shot: Edo
+    tone: 重い
+    pause: 0.12
+  # fact: kazunomiya-04, kazunomiya-35
+  - 語り: 正月20日。和宮は、江戸へ下ってくる軍の総督、橋本実梁に、手紙を書く。
+    shot: W13
+    tone: しみじみ
+    pause: 0.12
+  # fact: kazunomiya-35
+  - 語り: 徳川の家を、当家と呼び、朝敵の汚名を残すのは、「実に残念」。
+    shot: W13z
+    tone: しみじみ
+    pause: 0.12
+  # fact: kazunomiya-04
+  - 語り: そして、官軍が下ってきて、当家が、御取つぶしになるなら、私も、《!覚悟いたし》ます、と。
+    shot: W13h
+    tone: 強調
+    pause: 0.3
+    dip: true
+  # fact: kazunomiya-04
+  - 語り: 徳富蘇峰の近世日本国民史は、和宮が《みずから進んで》、許しを願い続けた、と書く。
+    shot: W10
+    tone: しみじみ
+    pause: 0.12
+  - 語り: その年の4月、江戸城は、戦いにならずに引き渡された。徳川の家は、取りつぶされずに残った。
+    shot: Edo2
+    tone: しみじみ
+    pause: 0.12
+  # fact: kazunomiya-35
+  - 語り: その書状は、いま、広島県の、海の見える杜美術館にある。
+    shot: W09
+    tone: しみじみ
+    pause: 0.15
+  - 語り: あなたは、嫁がされた家のために、この覚悟を、《書けますか》。
+    shot: W13q
+    tone: 疑問
+    pause: 0.15

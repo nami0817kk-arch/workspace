@@ -1,0 +1,174 @@
+# 物語完結型ショート 伊達政宗 s5（2026-10-29）。本編 scripts/masamune-story.yaml の第5章（1945年の焼失・1974年の発掘・2019年・2021年）から。
+# 形式は rikyu_s1.yaml・hidetsugu_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。
+# 絵は本編の AI 絵（out/story/masamune/main/M*.jpg・TKM）。
+#   この回の決まり：AI 絵の政宗に眼帯は無い。右目が見えている絵の切り出しを作らない（M01 は使わない。M09 は左の横顔だけ）。
+#   骨・亡骸は「骨」まで。棺の中・穴の中は見せない（M11 は穴の手前の調査員、M10 は焼け跡の石段）。
+# 事実カード（dev/output/rekishi-chiso/research/伊達政宗_facts_20261028.yaml）：masamune-59・13・50・01・61・02・03・04・60・09・63・89
+#   ・骨を調べたのが鈴木尚さんたちなのは出どころが1つ（masamune-61）→「と伝えられる」。
+#   ・2019年の 2.5ミリと「証明された」は瑞鳳殿の紹介（masamune-59）→ 瑞鳳殿の名を言う。
+#   ・2021年の顔が両目とも開いているとは出どころに無い（義眼を入れた、まで。masamune-63）。
+#   ・伊達泰宗さんの悩みは2021年の取材（masamune-89）。
+# 理解テスト4問：
+#   ①誰の話か：伊達政宗の骨と右目
+#   ②いつ・どこで何が：1945年の仙台空襲で瑞鳳殿が焼け、建て直しのために1974年に墓が調べられた
+#   ③何が分かったか：発掘まもなくの調べでは目のくぼみに傷は無く、片目は証明できなかった。2019年、国立科学博物館の調べで目のくぼみの高さが左右で2.5ミリ違うと分かった
+#   ④どうなったか：瑞鳳殿は片目が頭の骨からも証明されたとする。2021年に作り直された顔にも義眼が入れられ、伊達家18代の泰宗さんは片目の顔なら政宗像が壊れるのではと悩んだ
+title: 伊達政宗｜骨は、右目を覚えていた
+yt_title: 伊達政宗の骨に残っていた2.5ミリの差　墓の発掘から45年目に分かった右目のこと
+description: |-
+  1945年7月10日の仙台空襲で、伊達政宗の墓の上に建つ瑞鳳殿は焼けました。1974年、建て直しに合わせて、伊達家の許しを得て、墓の地下が調べられます。
+  骨を調べたのは東京大学の鈴木尚さんたちと伝えられます。身長はおよそ159.4センチ、血液型はB型。ただ、頭の骨の目のくぼみに傷は無く、片目だったことは証明できませんでした。
+  2019年、国立科学博物館の調べで、目のくぼみの高さが左と右で2.5ミリ違うことが分かります。瑞鳳殿は、失った右目のまわりの骨が育つのをやめたためだろうとし、片目だったことが頭の骨からも証明された、としています。
+  2021年、政宗の顔が作り直され、義眼が入れられました。伊達家18代当主の伊達泰宗さんは、片目の顔として作られたら、今までの政宗像が壊れてしまうのでは、と悩んだと明かしています。
+hashtags: ["#伊達政宗", "#日本史", "#戦国時代"]
+ai_images: true
+art_dir: out/story/masamune
+out: masamune_story_s5
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 伊達政宗（仙台藩の初代藩主）
+  title: "骨は、《右目》を覚えていた"
+now:
+  - {at: 伊達政宗の骨, text: "2019年　調べ直し", point: 2}
+  - {at: 1945年, text: "1945年　仙台", point: 0}
+  - {at: 1974年, text: "1974年　経ヶ峯", point: 1}
+  - {at: 2019年, text: "2019年　調べ直し", point: 2}
+  - {at: 2021年, text: "2021年　瑞鳳殿", point: 3}
+timeline:
+  - {label: "1945"}
+  - {label: "1974"}
+  - {label: "2019"}
+  - {label: "2021"}
+cards:
+  - type: versus                         # 頭の骨から片目と分かるか
+    from: 目のくぼみに傷は
+    until: 2021年
+    left: {tag: 発掘まもなく, big: 傷なし, dots: 1, color: blue}
+    right: {tag: 2019年の調べ, big: 2.5ミリ, dots: 1, color: red}
+    mid: 対
+    text_y: 0.66
+shots:
+  M09f:                                  # 1文目：若い政宗の左の横顔（右目は見えない）
+    kind: ai
+    file: masamune/main/M09.jpg
+    focus: [0.88, 0.35]
+    move: in
+    zoom: 0.14
+    must: 若い政宗の左の横顔
+  M10:                                   # 1945年の仙台空襲で瑞鳳殿が焼けた
+    kind: ai
+    file: masamune/main/M10.jpg
+    focus: [0.45, 0.5]
+    move: up
+    must: 焼け跡の石段
+  M11:                                   # 1974年、墓の地下が調べられた（調査員の後ろ姿）
+    kind: ai
+    file: masamune/main/M11.jpg
+    focus: [0.45, 0.5]
+    move: in
+    must: 調査員の後ろ姿と石段
+  M12:                                   # 身長・血液型（並べた品の手元）
+    kind: ai
+    file: masamune/main/M12.jpg
+    focus: [0.55, 0.45]
+    move: right
+    must: 黒い布の上の品
+  M11r:                                  # 片目だったことは証明できなかった
+    kind: ai
+    file: masamune/main/M11.jpg
+    focus: [0.65, 0.4]
+    move: left
+    must: 森の中の石段
+  M14:                                   # 2019年の調べ（瑞鳳殿）
+    kind: ai
+    file: masamune/main/M14.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 杉木立の中の霊屋
+  M14z:                                  # 瑞鳳殿は証明されたとする
+    kind: ai
+    file: masamune/main/M14.jpg
+    focus: [0.5, 0.35]
+    move: in
+    zoom: 0.16
+    must: 霊屋の正面
+  TKM:                                   # 2021年、顔を作り直し義眼を入れた
+    kind: ai
+    file: masamune/main/TKM.jpg
+    focus: [0.65, 0.45]
+    move: in
+    must: 兜の武将の左の横顔
+  M06:                                   # 伊達泰宗さんの悩み（山の上の後ろ姿）
+    kind: ai
+    file: masamune/main/M06.jpg
+    focus: [0.4, 0.5]
+    move: right
+    must: 山の上に立つ政宗の後ろ姿
+  M09q:                                  # 最後の問い：左の横顔に寄る
+    kind: ai
+    file: masamune/main/M09.jpg
+    focus: [0.88, 0.3]
+    move: in
+    zoom: 0.2
+    text_y: 0.76
+    must: 若い政宗の左の横顔
+lines:
+  # fact: masamune-59
+  - 語り: 伊達政宗の骨は、本人が隠し続けた右目のことを、400年近く、《!覚えていた》。
+    shot: M09f
+    tone: 強調
+  # fact: masamune-13
+  - 語り: 1945年7月10日。仙台空襲で、政宗の墓の上に建つ瑞鳳殿が、焼けた。
+    shot: M10
+    tone: 重い
+    pause: 0.12
+  # fact: masamune-50, masamune-01
+  - 語り: 1974年、建て直しに合わせて、墓の地下が調べられた。
+    shot: M11
+    tone: しみじみ
+    pause: 0.12
+  # fact: masamune-61, masamune-02, masamune-03
+  - 語り: 骨を調べたのは、鈴木尚さんたちと伝えられる。身長はおよそ159.4センチ、血液型はB型。
+    shot: M12
+    tone: しみじみ
+    pause: 0.12
+  # fact: masamune-04, masamune-60
+  - 語り: けれど、頭の骨の、目のくぼみに傷は無く、片目だったことは、《証明できなかった》。
+    shot: M11r
+    tone: 強調
+    pause: 0.12
+  # fact: masamune-59
+  - 語り: ところが2019年。国立科学博物館の調べで、目のくぼみの高さが、左と右で、《!2.5ミリ》違うと分かる。
+    shot: M14
+    tone: 強調
+    pause: 0.3
+    dip: true
+  # fact: masamune-59
+  - 語り: 瑞鳳殿は、右目のまわりの骨が育つのをやめたためだろう、とし、片目が証明された、とする。
+    shot: M14z
+    tone: しみじみ
+    pause: 0.12
+  # fact: masamune-09, masamune-63
+  - 語り: 2021年、政宗の顔が、もう一度作り直された。その顔にも、義眼が入れられた。
+    shot: TKM
+    tone: しみじみ
+    pause: 0.12
+  # fact: masamune-89
+  - 語り: 伊達家18代当主の泰宗さんは、片目の顔なら、今までの政宗像が壊れるのでは、と悩んだという。
+    shot: M06
+    tone: しみじみ
+    pause: 0.15
+  - 語り: あなたなら、政宗の顔を、片目と両目、どちらで《作りますか》。
+    shot: M09q
+    tone: 疑問
+    pause: 0.15
