@@ -17,12 +17,11 @@ W, H = 2560, 1440
 INK, RED, YEL, WHITE, BLACK = (20, 30, 60), (230, 30, 30), (255, 215, 0), (255, 255, 255), (10, 10, 20)
 v = sys.argv[1] if len(sys.argv) > 1 else "D"
 
-# 下地: 巨人が大きく見えるよう右上に寄せて拡大し、色を少し濃く
+# 下地: 拡大せず、壁と足元の人まで見せる(2026-10-29 ユーザー「壁とかある方が良い」)。色は少し濃く
 src = Image.open(HERE / "assets" / "thumb_gemini.jpg").convert("RGB")
-zoom = 1.22
-s = max(W / src.width, H / src.height) * zoom
-src = src.resize((int(src.width * s + 1), int(src.height * s + 1)), Image.LANCZOS)
-src = src.crop((src.width - W, int(src.height * 0.02), src.width, int(src.height * 0.02) + H))
+s = max(W / src.width, H / src.height)
+src = src.resize((int(src.width * s + 1), int(src.height * s + 1)), Image.LANCZOS).crop((0, 0, W, H))
+k = W / 1376  # 下地の座標(1376×768)からの倍率
 src = ImageEnhance.Color(src).enhance(1.25)
 src = ImageEnhance.Contrast(src).enhance(1.12)
 img = src.convert("RGBA")
@@ -66,7 +65,9 @@ def head():
     big((70, 230), [("人の体で作ったら", INK)], 120, w1=12, w2=20, outer=WHITE, inner=WHITE)
 
 
-tag((W - 210, 110), "60m", 110, INK, YEL)
+tag((1250 * k, 60 * k), "60m", 100, INK, YEL)
+tag((1120 * k, 520 * k), "壁 50m", 80, INK, WHITE)
+tag((690 * k, 738 * k), "人 1.7m", 64, INK, YEL)
 
 # 字は大きくしすぎない(2026-10-29 ユーザー指示)。絵の巨人が主役
 if v == "A":
