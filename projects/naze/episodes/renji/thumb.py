@@ -63,10 +63,18 @@ def line(x, y, parts, size):
         x += f.getlength(t)
 
 
-INK = (20, 30, 60)
-line(80, 200, [("電子レンジは", INK)], 170)
-line(80, 450, [("中から温めて", INK)], 170)
-line(80, 720, [("いなかった", (225, 30, 30))], 215)
+INK, RED = (20, 30, 60), (225, 30, 30)
+# 字の案。python episodes/renji/thumb.py [案] で out/renji/thumb_long[_案].jpg
+COPY = {
+    "": [(200, [("電子レンジは", INK)], 170), (450, [("中から温めて", INK)], 170), (720, [("いなかった", RED)], 215)],
+    "A": [(200, [("電波が届くのは", INK)], 150), (440, [("表面から", INK), ("数cm", RED)], 190), (720, [("中心は", INK), ("23℃", RED)], 215)],
+    "B": [(200, [("「中から温まる」は", INK)], 128), (430, [("半分だけ", RED)], 230), (720, [("正しかった", INK)], 190)],
+    "C": [(200, [("外は100℃でも", INK)], 160), (450, [("中心は", INK)], 170), (690, [("23℃", RED)], 300)],
+}
+v = sys.argv[1] if len(sys.argv) > 1 else ""
+for y, parts, size in COPY[v]:
+    line(80, y, parts, size)
 d.text((90, 1080), "厚さ10cmを温める計算", font=O.font(78), fill=(70, 80, 100), stroke_width=8, stroke_fill=(255, 255, 255))
-img.convert("RGB").resize((1280, 720), Image.LANCZOS).save(OUT / "thumb_long.jpg", quality=93)
-print(OUT / "thumb_long.jpg")
+name = f"thumb_long{'_' + v if v else ''}.jpg"
+img.convert("RGB").resize((1280, 720), Image.LANCZOS).save(OUT / name, quality=93)
+print(OUT / name)
