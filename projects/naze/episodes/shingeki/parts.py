@@ -2,6 +2,7 @@
 出典と計算は research.md、台本の承認版は scripts.md(2026-10-28 ユーザー承認。月と火星は外した)。作品の絵は使わない。"""
 
 CREDIT = "人と同じ形・同じ重さの体を仮定して計算（骨の強さ Reilly & Burstein 1975 ほか）"
+CREDIT_V = "人と同じ体を仮定した計算（Reilly & Burstein 1975 ほか）"  # 縦は幅が狭いので短く
 
 WALL = dict(kind="wall")
 BUILD = dict(kind="wall", building=True)
@@ -186,4 +187,4 @@ P["s5"] = dict(title="骨を鉄にしたら", lines=[
 
 def ep_for(name: str) -> dict:
     p = dict(P[name])
-    return dict(kind="sim", aspect="portrait" if name.startswith("s") else "landscape", credit=CREDIT, **p)
+    return dict(kind="sim", aspect="portrait" if name.startswith("s") else "landscape", credit=CREDIT_V if name.startswith("s") else CREDIT, **p)
