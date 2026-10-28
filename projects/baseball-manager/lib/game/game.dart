@@ -15,6 +15,8 @@ import 'records.dart';
 import 'flavor.dart';
 import 'childhood.dart';
 import 'invest.dart';
+import 'relations.dart';
+import 'shop.dart';
 import 'rival_story.dart';
 import 'school.dart';
 import 'snapshot.dart';
@@ -322,6 +324,127 @@ class Game {
     _note('invest', '${i.label}に投資(Lv${invests[i]})');
     return true;
   }
+
+  // ── お金の使い道(買い物) ──
+
+  /// 今年の買い物の回数(年末に空に戻る)と、一生に一度の買い物で買ったもの。
+  final Map<ShopItem, int> shopThisYear = {};
+  final Set<ShopItem> purchases = {};
+
+  /// 最新の用具を買った年齢(その年だけ経験点が増える)。
+  int gearAge = -1;
+  bool get gearActive => gearAge == player.age;
+
+  /// 買えない理由(買えるなら null)。
+  String? shopBlock(ShopItem i) {
+    if (!canInvest) return 'プロの間だけ';
+    if (i.once && purchases.contains(i)) return '購入済み';
+    if (i.perYear > 0 && (shopThisYear[i] ?? 0) >= i.perYear) return '今年はもう使った';
+    if (i == ShopItem.gift && cast.lover == null && cast.family == null) {
+      return '贈る相手がいない';
+    }
+    if (i == ShopItem.house && cast.family == null) return '贈る相手がいない';
+    if (money < i.cost) return 'お金が足りない';
+    return null;
+  }
+
+  /// 買う。買えないなら false。`focus` は合宿で重点にする能力。
+  bool buyShop(ShopItem i, [Ability? focus]) {
+    if (shopBlock(i) != null) return false;
+    money -= i.cost;
+    shopThisYear[i] = (shopThisYear[i] ?? 0) + 1;
+    if (i.once) purchases.add(i);
+    switch (i) {
+      case ShopItem.gear:
+        gearAge = player.age;
+        log.add('最新の用具をそろえた。この1年、経験点が${((gearMultiplier - 1) * 100).round()}%増える。');
+      case ShopItem.camp:
+        final f = focus ?? abilitiesOf(player.role).first;
+        final k = categoryOf(f);
+        exp = exp.add({
+          for (final c in usableCategories(player.role)) c: c == k ? 15 : 5,
+        });
+        condition = condition.copyWith(fatigue: condition.fatigue + 10);
+        log.add('海外で自主トレ合宿をした。${k.label}の経験点+15・ほかの種類+5。');
+      case ShopItem.care:
+        condition = condition.copyWith(fatigue: condition.fatigue - 35);
+        log.add('疲労回復の施術を受けた。疲れ-35。');
+      case ShopItem.gift:
+        final who = cast.lover ?? cast.family!;
+        who.addBond(20);
+        log.add('${who.name}に贈り物をした。絆+20。');
+      case ShopItem.house:
+        cast.family!.addBond(40);
+        log.add('${cast.family!.name}に家を贈った。絆+40。');
+        _note('invest', '${cast.family!.name}に家を贈った');
+      case ShopItem.donate:
+        condition = condition.copyWith(morale: condition.morale + 20);
+        log.add('地元に野球場を寄付した。子どもたちが、あなたの名前のついた球場で野球をする。');
+        _note('invest', '地元に野球場を寄付した');
+    }
+    return true;
+  }
+
+  // ── まわりの人との関係(交流の相手・頼みごと) ──
+
+  /// 交流の相手(登場人物の id)。null なら恋人か家族。
+  String? socialTargetId;
+
+  /// 今年もう頼みごとをした人(登場人物の id。年末に空に戻る)。
+  final Set<String> favorsUsed = {};
+
+  /// 次の練習で必ず友情タッグになる仲間(頼みごと「自主練」)。
+  String? tagMateId;
+
+  Character? memberById(String? id) =>
+      id == null ? null : cast.members.where((m) => m.id == id).firstOrNull;
+
+  Character? get socialTarget => memberById(socialTargetId);
+
+  void setSocialTarget(Character? c) => socialTargetId = c?.id;
+
+  /// 頼めない理由(頼めるなら null)。
+  String? favorBlock(Character c) {
+    if (phase != Phase.term) return 'いまは頼めない';
+    if (favorsUsed.contains(c.id)) return '今年はもう頼んだ';
+    final line = favorBondLine(c.kind);
+    if (c.bond < line) return '絆$lineで頼める';
+    if (c.kind == Kind.coach && c.teaches == null) return '教わる特殊能力がない';
+    return null;
+  }
+
+  /// 頼む。頼めないなら false。`focus` は合同練習の重点。
+  bool askFavor(Character c, [Ability? focus]) {
+    if (favorBlock(c) != null) return false;
+    favorsUsed.add(c.id);
+    c.addBond(-favorBondCost);
+    final f = favorOf(c.kind);
+    switch (f) {
+      case Favor.practice:
+        tagMateId = c.id;
+        log.add('${c.name}に自主練を頼んだ。次の練習は友情タッグになる。');
+      case Favor.meal:
+        condition = condition.copyWith(
+            fatigue: condition.fatigue - 25, morale: condition.morale + 5);
+        log.add('${c.name}の差し入れで元気が出た。疲れ-25・やる気+5。');
+      case Favor.cheer:
+        condition = condition.copyWith(
+            fatigue: condition.fatigue - 10, morale: condition.morale + 15);
+        log.add('${c.name}が応援に来てくれた。やる気+15・疲れ-10。');
+      case Favor.private:
+        c.tips++;
+        log.add('${c.name}に個別に見てもらった。コーチのコツ ${c.tips}/$tipsNeeded。');
+        _checkCoach();
+      case Favor.joint:
+        final k = categoryOf(focus ?? abilitiesOf(player.role).first);
+        exp = exp.add({k: 10});
+        condition = condition.copyWith(morale: condition.morale + 5);
+        log.add('ライバルの${c.name}と合同練習をした。${k.label}の経験点+10・やる気+5。');
+    }
+    checkMissions();
+    return true;
+  }
+
 
   /// 二世のとき、親の名前(殿堂の選手)。
   String? parentName;
@@ -687,6 +810,11 @@ class Game {
         gained = {...gained, k: (gained[k]! * streakBonus).round()};
       }
     }
+    if (gearActive && gained.isNotEmpty) {
+      gained = {
+        for (final e in gained.entries) e.key: (e.value * gearMultiplier).round(),
+      };
+    }
     // 育成サポート(買い切り)の経験点の上乗せ。保存はしない(画面側が毎回入れる)
     if (expBoost != 1.0 && gained.isNotEmpty) {
       gained = {
@@ -1007,9 +1135,10 @@ class Game {
             1,
             '練習試合で');
       case Plan.social:
+        final t = socialTarget;
         final mates = [
           for (final m in cast.teammates)
-            if (m.specialty != null) m
+            if (m.specialty != null && (t?.kind != Kind.teammate || m == t)) m
         ];
         if (mates.isNotEmpty) {
           final m = mates[rng.nextInt(mates.length)];
@@ -1180,7 +1309,11 @@ class Game {
         action == Plan.match ||
         action == Plan.lesson;
     if (trains && gained.isNotEmpty) {
-      final mate = cast.pickTagMate(focus, rng);
+      final picked = cast.pickTagMate(focus, rng);
+      // 頼みごと「自主練」の相手がいれば、その仲間と必ずタッグになる
+      final forced = memberById(tagMateId);
+      final mate = forced ?? picked;
+      tagMateId = null;
       if (mate != null) {
         for (final k in out.keys.toList()) {
           out[k] = (out[k]! * tagMultiplier * tagTraitMultiplier(player.traits))
@@ -1208,12 +1341,18 @@ class Game {
     if (action == Plan.lesson) {
       final coach = cast.coach;
       if (coach != null) {
+        coach.addBond(lessonBond);
         coach.tips++;
         _checkCoach();
       }
     }
     if (action == Plan.social) {
-      (cast.lover ?? cast.family)?.addBond(10);
+      final t = socialTarget;
+      if (t != null) {
+        t.addBond(socialTargetBond);
+      } else {
+        (cast.lover ?? cast.family)?.addBond(10);
+      }
     }
     return out;
   }
@@ -1752,6 +1891,11 @@ class Game {
     if (partner != null && partner.bond >= 50) {
       condition = condition.copyWith(fatigue: condition.fatigue - 5); // 支えてくれる
     }
+    if (purchases.contains(ShopItem.house)) {
+      condition = condition.copyWith(fatigue: condition.fatigue - 5); // 贈った家でくつろぐ
+    }
+    shopThisYear.clear();
+    favorsUsed.clear();
     if (trainCount + restCount > 0) {
       log.add(yearSummaryOf(trainCount, restCount, comboCount));
     }
@@ -1971,6 +2115,12 @@ class Game {
         'lastPlanFocus': lastPlanFocus?.name,
         'comboCount': comboCount,
         'comboTotal': comboTotal,
+        'shopThisYear': {for (final e in shopThisYear.entries) e.key.name: e.value},
+        'purchases': [for (final p in purchases) p.name],
+        'gearAge': gearAge,
+        'socialTargetId': socialTargetId,
+        'favorsUsed': favorsUsed.toList(),
+        'tagMateId': tagMateId,
         'goal': goal?.toJson(),
         'difficulty': difficulty.name,
         'awakened': awakened,
@@ -2046,6 +2196,20 @@ class Game {
     g.lastPlanFocus = Ability.parse((j['lastPlanFocus'] as String?) ?? '');
     g.comboCount = (j['comboCount'] as num?)?.toInt() ?? 0;
     g.comboTotal = (j['comboTotal'] as num?)?.toInt() ?? 0;
+    for (final e in ((j['shopThisYear'] as Map?) ?? const {}).entries) {
+      final i = ShopItem.parse(e.key as String?);
+      if (i != null) g.shopThisYear[i] = (e.value as num).toInt();
+    }
+    for (final x in (j['purchases'] as List?) ?? const []) {
+      final i = ShopItem.parse(x as String?);
+      if (i != null) g.purchases.add(i);
+    }
+    g.gearAge = (j['gearAge'] as num?)?.toInt() ?? -1;
+    g.socialTargetId = j['socialTargetId'] as String?;
+    g.favorsUsed.addAll([
+      for (final x in (j['favorsUsed'] as List?) ?? const []) x as String
+    ]);
+    g.tagMateId = j['tagMateId'] as String?;
     g.exp =ExpPool.fromJson((j['exp'] as Map?)?.cast<String, dynamic>() ?? {});
     g.phase = pick(Phase.values, j['phase'], Phase.term);
     g.pendingEvent =

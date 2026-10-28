@@ -11,7 +11,8 @@ String epilogueOf(Ending e, String name,
     int popularity = 0,
     int? retiredNumber,
     Map<String, int> childhood = const {},
-    List<String> rareTraitLabels = const []}) {
+    List<String> rareTraitLabels = const [],
+    List<String> purchases = const []}) {
   final parts = <String>[];
   if (!e.madePro) {
     parts.add('$nameはプロの舞台には立てなかったが、野球で学んだことを胸に、新しい道を歩き始めた。');
@@ -35,6 +36,13 @@ String epilogueOf(Ending e, String name,
   if (e.madePro && rareTraitLabels.isNotEmpty) {
     parts.add(
         '「${rareTraitLabels.join('」「')}」と呼ばれた天性の才能は、$nameを人々の記憶に残る存在へと押し上げた。');
+  }
+  // お金の使い道(一生に一度の買い物)。
+  if (purchases.contains('donate')) {
+    parts.add('$nameが寄付した地元の球場では、今日も子どもたちがボールを追いかけている。');
+  }
+  if (purchases.contains('house')) {
+    parts.add('家族に贈った家には、いまも現役時代のユニフォームが飾られている。');
   }
   // 幼いころの選択(憧れ・卒団の夢)を、結果とつなげる。
   final idol = childhood['kid-idol'];

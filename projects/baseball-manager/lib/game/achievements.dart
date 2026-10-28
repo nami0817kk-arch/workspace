@@ -175,6 +175,10 @@ final List<Achievement> achievements = [
   Achievement('rich', '資産家', '資産が10億円を超えて引退する。', (s) => s.money >= 100000),
   Achievement('full-support', '万全の体制', '3つの投資をすべて最大(Lv3)にする。',
       (s) => s.investTotal >= 9),
+  Achievement('hometown-hero', '地元の英雄', '地元に野球場を寄付する。',
+      (s) => s.purchases.contains('donate')),
+  Achievement('family-home', '親孝行', '家族に家を贈る。',
+      (s) => s.purchases.contains('house')),
   Achievement('superstar', '国民的スター', '人気が90以上(Sランク)になる。',
       (s) => popularityOf(s.records, s.worldRecords) >= 90),
   // 「むずかしい」専用の実績(狭き門・不屈の伝説)は、難しさの選択をなくしたので外した(2026-10-24)。

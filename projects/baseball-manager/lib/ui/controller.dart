@@ -11,7 +11,8 @@ import '../game/after_career.dart';
 import '../game/difficulty.dart';
 import '../game/exp.dart';
 import '../game/career.dart';
-import '../game/characters.dart' show tipsNeeded;
+import '../game/characters.dart' show tipsNeeded, Character;
+import '../game/shop.dart';
 import '../game/flavor.dart';
 import '../game/marks.dart';
 import '../game/game.dart';
@@ -690,6 +691,36 @@ class GameController extends ChangeNotifier {
     final ok = game!.buyInvest(i);
     if (ok) _commit();
     return ok;
+  }
+
+  /// お金の使い道(買い物)。買えたら true。
+  bool buyShop(ShopItem i) {
+    final g = game!;
+    final start = g.log.length;
+    final ok = g.buyShop(i, focus);
+    if (ok) {
+      recent = g.log.sublist(start);
+      _commit();
+    }
+    return ok;
+  }
+
+  /// まわりの人に頼みごとをする。頼めたら true。
+  bool askFavor(Character c) {
+    final g = game!;
+    final start = g.log.length;
+    final ok = g.askFavor(c, focus);
+    if (ok) {
+      recent = g.log.sublist(start);
+      _commit();
+    }
+    return ok;
+  }
+
+  /// 交流の相手を決める(null で恋人か家族)。
+  void setSocialTarget(Character? c) {
+    game!.setSocialTarget(c);
+    _commit();
   }
 
   /// 今年の目標のむずかしさを選ぶ(年の最初の行動の前だけ)。

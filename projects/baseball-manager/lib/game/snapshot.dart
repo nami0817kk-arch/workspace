@@ -41,6 +41,7 @@ class PlayerSnapshot {
     this.corporate,
     this.money = 0,
     this.investTotal = 0,
+    this.purchases = const [],
     this.rivalTalent,
     this.gifts = const {},
     this.awakened = false,
@@ -101,6 +102,9 @@ class PlayerSnapshot {
   final int money;
   final int investTotal;
 
+  /// 一生に一度の買い物で買ったもの(`ShopItem` の名前)。
+  final List<String> purchases;
+
   /// ライバルの素質(物語を作るのに使う)。
   final int? rivalTalent;
 
@@ -145,6 +149,7 @@ class PlayerSnapshot {
         corporate: g.route == null ? null : g.route == Course.corporate,
         money: g.money,
         investTotal: g.invests.values.fold(0, (a, b) => a + b),
+        purchases: [for (final p in g.purchases) p.name],
         rivalTalent: g.cast.rival?.talent,
         gifts: Map.of(g.player.gifts),
         awakened: g.awakened,
@@ -181,6 +186,7 @@ class PlayerSnapshot {
         'corporate': corporate,
         'money': money,
         'investTotal': investTotal,
+        'purchases': purchases,
         'rivalTalent': rivalTalent,
         'gifts': {for (final e in gifts.entries) e.key.name: e.value},
         'awakened': awakened,
@@ -246,6 +252,9 @@ class PlayerSnapshot {
       corporate: j['corporate'] as bool?,
       money: (j['money'] as num?)?.toInt() ?? 0,
       investTotal: (j['investTotal'] as num?)?.toInt() ?? 0,
+      purchases: [
+        for (final x in (j['purchases'] as List?) ?? const []) x as String
+      ],
       rivalTalent: (j['rivalTalent'] as num?)?.toInt(),
       gifts: giftsFromJson(j['gifts']),
       awakened: j['awakened'] == true,

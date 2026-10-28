@@ -6,7 +6,9 @@ import '../game/career.dart';
 import '../game/epilogue.dart';
 import '../game/exp.dart';
 import '../game/flavor.dart';
-import '../game/characters.dart' show tipsNeeded;
+import '../game/characters.dart';
+import '../game/relations.dart';
+import '../game/shop.dart';
 import '../game/combo.dart';
 import '../game/life_log.dart';
 import '../game/rival_story.dart';
@@ -395,6 +397,7 @@ class _GameScreenState extends State<GameScreen> {
               ),
             ),
           ),
+        _RelationActions(controller: widget.controller, game: game),
         CastCard(game: game, expanded: true),
       ];
 
@@ -749,6 +752,149 @@ class _TraitChips extends StatelessWidget {
               backgroundColor: traitChipColor(t),
             ),
           ),
+      ]),
+    );
+  }
+}
+
+class _ShopRow extends StatelessWidget {
+  const _ShopRow(
+      {required this.game, required this.controller, required this.item});
+  final Game game;
+  final GameController controller;
+  final ShopItem item;
+
+  @override
+  Widget build(BuildContext context) {
+    final block = game.shopBlock(item);
+    final used = game.shopThisYear[item] ?? 0;
+    final limit = item.once
+        ? '一生に一度'
+        : '年${item.perYear}回${item.perYear > 1 ? '(今年 $used回)' : ''}';
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(children: [
+        Expanded(
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(item.label, style: const TextStyle(fontWeight: FontWeight.bold)),
+            Text('${item.description}($limit)',
+                style: const TextStyle(fontSize: 12)),
+            if (block != null && block != 'お金が足りない')
+              Text(block,
+                  key: Key('shop-block-${item.name}'),
+                  style: TextStyle(
+                      fontSize: 11, color: Theme.of(context).colorScheme.outline)),
+          ]),
+        ),
+        const SizedBox(width: 8),
+        SizedBox(
+          width: 112,
+          child: FilledButton.tonal(
+            key: Key('shop-${item.name}'),
+            onPressed: block == null ? () => controller.buyShop(item) : null,
+            child: Text(fmtMoney(item.cost)),
+          ),
+        ),
+      ]),
+    );
+  }
+}
+
+/// まわりの人との関係を使う操作: 交流の相手を決める・頼みごと(関係タブ)。
+class _RelationActions extends StatelessWidget {
+  const _RelationActions({required this.controller, required this.game});
+  final GameController controller;
+  final Game game;
+
+  @override
+  Widget build(BuildContext context) {
+    final cast = game.cast;
+    final people = <Character>[
+      if (cast.lover != null) cast.lover!,
+      if (cast.family != null) cast.family!,
+      if (cast.coach != null) cast.coach!,
+      if (cast.rival != null) cast.rival!,
+      ...cast.teammates,
+    ];
+    final target = game.socialTarget;
+    final small = Theme.of(context).textTheme.bodySmall;
+    return Card(
+      key: const Key('relation-actions'),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text('関係を生かす', style: Theme.of(context).textTheme.titleSmall),
+          Text('交流すると、選んだ相手との絆が深まる。絆が育った相手には、1年に1回ずつ頼みごとができる(行動の回数は使わない・絆を$favorBondCost使う)。',
+              style: small),
+          const SizedBox(height: 6),
+          Text('交流の相手', style: Theme.of(context).textTheme.labelMedium),
+          Wrap(spacing: 4, runSpacing: 2, children: [
+            ChoiceChip(
+              key: const Key('social-target-auto'),
+              visualDensity: VisualDensity.compact,
+              label: const Text('おまかせ'),
+              selected: target == null,
+              onSelected: (_) => controller.setSocialTarget(null),
+            ),
+            for (final m in people)
+              ChoiceChip(
+                key: Key('social-target-${m.id}'),
+                visualDensity: VisualDensity.compact,
+                label: Text(m.name.split(' ').first),
+                selected: target == m,
+                onSelected: (_) => controller.setSocialTarget(m),
+              ),
+          ]),
+          const SizedBox(height: 6),
+          for (final m in people) _FavorRow(controller: controller, game: game, who: m),
+        ]),
+      ),
+    );
+  }
+}
+
+class _FavorRow extends StatelessWidget {
+  const _FavorRow(
+      {required this.controller, required this.game, required this.who});
+  final GameController controller;
+  final Game game;
+  final Character who;
+
+  @override
+  Widget build(BuildContext context) {
+    final f = favorOf(who.kind);
+    final block = game.favorBlock(who);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(children: [
+        Expanded(
+          child: Tooltip(
+            message: f.description,
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text('${who.name}(${who.kind.label}) 絆${who.bond}',
+                  style: const TextStyle(fontWeight: FontWeight.bold)),
+              Text('${f.label}: ${f.description}',
+                  style: const TextStyle(fontSize: 12)),
+              if (block != null)
+                Text(block,
+                    key: Key('favor-block-${who.id}'),
+                    style: TextStyle(
+                        fontSize: 11,
+                        color: Theme.of(context).colorScheme.outline)),
+            ]),
+          ),
+        ),
+        const SizedBox(width: 8),
+        // テーマのボタンは横いっぱいに広がるので、幅を決める
+        SizedBox(
+          width: 76,
+          child: FilledButton.tonal(
+            key: Key('favor-${who.id}'),
+            onPressed: block == null ? () => controller.askFavor(who) : null,
+            child: const Text('頼む'),
+          ),
+        ),
       ]),
     );
   }
@@ -1317,7 +1463,9 @@ class _ActionCard extends StatelessWidget {
                               (a == Plan.special || a == Plan.match),
                           sub: a == Plan.lesson && game.cast.coach != null
                               ? 'コツ ${game.cast.coach!.tips}/$tipsNeeded'
-                              : null)),
+                              : a == Plan.social && game.socialTarget != null
+                                  ? '${game.socialTarget!.name.split(' ').first}と'
+                                  : null)),
                 SizedBox(
                     width: w, child: _AutoYearTile(controller: controller)),
               ]);
@@ -1745,7 +1893,7 @@ class _ProCard extends StatelessWidget {
                 key: const Key('invest-open'),
                 icon: const Icon(Icons.savings, size: 18),
                 onPressed: () => _openInvest(context),
-                label: Text('投資(資産 ${fmtMoney(game.money)})'),
+                label: Text('お金の使い道(資産 ${fmtMoney(game.money)})'),
               ),
               if (game.canMoveOverseas)
                 OutlinedButton(
@@ -1806,7 +1954,7 @@ class _ProCard extends StatelessWidget {
       builder: (ctx) => ListenableBuilder(
         listenable: controller,
         builder: (ctx, _) => AlertDialog(
-          title: const Text('投資'),
+          title: const Text('お金の使い道'),
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -1815,11 +1963,17 @@ class _ProCard extends StatelessWidget {
                 Text('資産: ${fmtMoney(game.money)}',
                     key: const Key('money'),
                     style: const TextStyle(fontWeight: FontWeight.bold)),
-                const Text('年俸は資産になります。練習環境や体のケアに使って、選手を支えましょう。',
+                const Text('年俸は資産になります。練習環境や体のケア、まわりの人のために使いましょう。',
                     style: TextStyle(fontSize: 12)),
                 const SizedBox(height: 8),
+                Text('投資(ずっと効く)',
+                    style: Theme.of(ctx).textTheme.titleSmall),
                 for (final i in Invest.values)
                   _InvestRow(game: game, controller: controller, item: i),
+                const Divider(),
+                Text('買い物', style: Theme.of(ctx).textTheme.titleSmall),
+                for (final i in ShopItem.values)
+                  _ShopRow(game: game, controller: controller, item: i),
               ],
             ),
           ),
@@ -2132,7 +2286,7 @@ class EndingView extends StatelessWidget {
                   : 'プロの舞台には立てなかった。'),
               const SizedBox(height: 10),
               Text(
-                  '${epilogueOf(e, p.name, worldChampion: game.worldRecords.where((r) => r.champion).length, worldPlayed: game.worldRecords.length, overseasYears: game.records.where((r) => r.overseas).length, popularity: popularityOf(game.records, game.worldRecords), retiredNumber: uniformNumberOf(Stage.pro, p), childhood: game.childhood, rareTraitLabels: [
+                  '${epilogueOf(e, p.name, worldChampion: game.worldRecords.where((r) => r.champion).length, worldPlayed: game.worldRecords.length, overseasYears: game.records.where((r) => r.overseas).length, popularity: popularityOf(game.records, game.worldRecords), retiredNumber: uniformNumberOf(Stage.pro, p), childhood: game.childhood, purchases: [for (final p in game.purchases) p.name], rareTraitLabels: [
                         for (final t in p.traits)
                           if (t.rare) t.label
                       ])}'

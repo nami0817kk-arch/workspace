@@ -9,6 +9,7 @@ import 'package:baseball_manager/game/career.dart';
 import 'package:baseball_manager/game/difficulty.dart';
 import 'package:baseball_manager/game/game.dart';
 import 'package:baseball_manager/game/invest.dart';
+import 'package:baseball_manager/game/shop.dart';
 import 'package:baseball_manager/game/life.dart';
 import 'package:baseball_manager/game/path.dart';
 import 'package:baseball_manager/game/player.dart';
@@ -75,6 +76,10 @@ void main(List<String> a) {
               for (final i in Invest.values) {
                 g.buyInvest(i);
               }
+            } else {
+              // 投資しない選手は、お金を一生に一度の買い物(家・寄付)に使う
+              g.buyShop(ShopItem.house);
+              g.buyShop(ShopItem.donate);
             }
           }
           if (g.canChooseGoal && r.nextInt(3) == 0) {
