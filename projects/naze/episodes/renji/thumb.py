@@ -1,5 +1,5 @@
 """電子レンジの本編のサムネイル(1280×720)。下地は Gemini で作った絵(assets/thumb_gemini.jpg: 扉を開けた電子レンジと、外だけ煮えて中は冷たいグラタンの断面)。
-左に「電子レンジは／中から温めて／【いなかった】」、食べ物の外側に「外 100℃」、冷たい真ん中に赤い丸と「中 23℃」(厚さ 10cm の計算)。
+左に「電子レンジは／中から温めて／【いなかった】(赤)」、食べ物の外側に「外 100℃」、冷たい真ん中に赤い丸と「中 23℃」(厚さ 10cm の計算)。
 python episodes/renji/thumb.py"""
 import os
 import sys
@@ -22,12 +22,12 @@ src = src.resize((int(src.width * s + 1), int(src.height * s + 1)), Image.LANCZO
 img = src.crop((0, 0, W, H)).convert("RGBA")
 k = W / 1376  # 下地の座標(1376×768)からの倍率
 
-# 字の後ろ(左)を暗くする
+# 字の後ろ(左)を白く飛ばす(明るい絵なので字は紺、強調は赤にする)
 sh = Image.new("RGBA", (W, H), (0, 0, 0, 0))
 ds = ImageDraw.Draw(sh)
-for x in range(0, 1500, 4):
-    a = int(200 * max(0.0, 1 - x / 1500) ** 0.8)
-    ds.rectangle([x, 0, x + 4, H], fill=(5, 8, 20, a))
+for x in range(0, 1400, 4):
+    a = int(170 * max(0.0, 1 - x / 1400) ** 0.8)
+    ds.rectangle([x, 0, x + 4, H], fill=(255, 255, 255, a))
 img.alpha_composite(sh)
 d = ImageDraw.Draw(img)
 
@@ -59,13 +59,14 @@ d.line([(ox + 30, oy - 150), (ox, oy - 10)], fill=(255, 205, 60), width=12)
 def line(x, y, parts, size):
     f = O.font(size)
     for t, col in parts:
-        d.text((x, y), t, font=f, fill=col, stroke_width=18, stroke_fill=(5, 8, 20))
+        d.text((x, y), t, font=f, fill=col, stroke_width=16, stroke_fill=(255, 255, 255))
         x += f.getlength(t)
 
 
-line(80, 200, [("電子レンジは", O.WHITE)], 170)
-line(80, 450, [("中から温めて", O.WHITE)], 170)
-line(80, 720, [("いなかった", O.YEL)], 215)
-d.text((90, 1080), "厚さ10cmを温める計算", font=O.font(78), fill=(220, 225, 235), stroke_width=8, stroke_fill=(5, 8, 20))
+INK = (20, 30, 60)
+line(80, 200, [("電子レンジは", INK)], 170)
+line(80, 450, [("中から温めて", INK)], 170)
+line(80, 720, [("いなかった", (225, 30, 30))], 215)
+d.text((90, 1080), "厚さ10cmを温める計算", font=O.font(78), fill=(70, 80, 100), stroke_width=8, stroke_fill=(255, 255, 255))
 img.convert("RGB").resize((1280, 720), Image.LANCZOS).save(OUT / "thumb_long.jpg", quality=93)
 print(OUT / "thumb_long.jpg")
