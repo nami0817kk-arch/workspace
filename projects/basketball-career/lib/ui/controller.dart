@@ -19,6 +19,7 @@ import '../game/life.dart';
 import '../game/mastery.dart';
 import '../game/match.dart';
 import '../game/path.dart';
+import '../game/perks.dart';
 import '../game/player.dart';
 import '../game/season.dart';
 import 'labels.dart';
@@ -596,6 +597,22 @@ class GameController extends ChangeNotifier {
     final r = act(a);
     if (r.paused) return; // 大会はまだ終わっていない(広告の数えは `playClutch` で)
     if (r.tournament != null || r.satOut) await money?.tournamentPlayed();
+  }
+
+  /// コーチ・仲間・ライバルに頼む(季節のターンは使わない)。使えなければ何もしない。
+  void useFavor(Favor f) {
+    final g = game;
+    if (g == null || g.favorBlock(f) != null) return;
+    recent = g.useFavor(f, focus: focus);
+    _commit();
+  }
+
+  /// お金を使う(季節のターンは使わない)。使えなければ何もしない。
+  void spend(Spend s) {
+    final g = game;
+    if (g == null || g.spendBlock(s) != null) return;
+    recent = g.spend(s, focus: focus);
+    _commit();
   }
 
   /// 動画を見て(広告を消した人はそのまま)元気になる。

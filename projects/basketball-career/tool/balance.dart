@@ -12,6 +12,7 @@ import 'package:basketball_career/game/special.dart';
 import 'package:basketball_career/game/life.dart';
 import 'package:basketball_career/game/match.dart';
 import 'package:basketball_career/game/path.dart';
+import 'package:basketball_career/game/perks.dart';
 import 'package:basketball_career/game/player.dart';
 
 void main(List<String> args) {
@@ -34,6 +35,13 @@ void main(List<String> args) {
   var turnsTotal = 0, endAgeTotal = 0;
   // --specials: 特殊能力を優先順に習得しながら遊ぶ(おまかせ)。
   final specials = args.contains('--specials');
+  // --perks: 頼みごと・お金の使い道を、使えるときに使う。
+  final perks = args.any((a) => a.startsWith('--perks'));
+  // --perks=lesson,camp のように名前を並べると、それだけを使う(どれが効いているかを見るため)。
+  final perkOnly = args.where((a) => a.startsWith('--perks=')).map((a) => a.substring(8).split(',').toSet()).firstOrNull;
+  bool perkOn(String name) => perkOnly == null || perkOnly.contains(name);
+  var perkSpent = 0;
+  final perkLives = <String, int>{};
   // --style=<ビルド名> で目指す型を選んだ遊び方を測る(例: --style=sharpshooter)。無ければおまかせ。
   final styleArg = args.where((a) => a.startsWith('--style=')).map((a) => a.substring(8)).firstOrNull;
   final style = Build.parse(styleArg);
@@ -53,6 +61,15 @@ void main(List<String> args) {
             // 特殊能力は、安くて広く効くものから、ポイントがたまり次第習得する。
             for (final x in learnPriority) {
               if (canLearn(g.player.specials, g.sp, x)) g.learnSpecial(x);
+            }
+          }
+          if (perks) {
+            final pf = recommendedFocus(g.player);
+            for (final f in [Favor.letter, Favor.rival, Favor.lesson, Favor.extra, if (g.condition.morale < 50) Favor.talk]) {
+              if (perkOn(f.name) && g.favorBlock(f) == null) g.useFavor(f, focus: pf);
+            }
+            for (final x in [Spend.trainer, Spend.nutrition, Spend.camp, Spend.gear, Spend.parents, Spend.court, if (g.teamwork < 60) Spend.treat]) {
+              if (perkOn(x.name) && g.spendBlock(x) == null) g.spend(x, focus: pf);
             }
           }
           final rest = g.condition.fatigue >= 60 || g.condition.injured;
@@ -135,6 +152,10 @@ void main(List<String> args) {
     totP.add(g.totalPoints);
     totR.add(g.totalRebounds);
     totA.add(g.totalAssists);
+    perkSpent += g.spent;
+    for (final u in g.usedEver) {
+      perkLives[u] = (perkLives[u] ?? 0) + 1;
+    }
     if (g.totalEarnings > 0) {
       proCount++;
       earnSum += g.totalEarnings;
@@ -169,6 +190,10 @@ void main(List<String> args) {
   print('1試合あたり: スティール ${(st / games).toStringAsFixed(2)} ブロック ${(bl / games).toStringAsFixed(2)} 3P ${(th / games).toStringAsFixed(2)}本 / キャリアハイ平均 ${(high / n).toStringAsFixed(1)}点');
   print('平均の得意技: ${(skills / n).toStringAsFixed(1)}個');
   print('熟練: いちばん高い段の平均 Lv${(mTop / n).toStringAsFixed(1)} / 武器(Lv3)以上の能力 ${(mLv3 / n).toStringAsFixed(1)}個 / 極み(Lv5)に届いた人生 ${pct(mLv5)}');
+  if (perks) {
+    print('頼る・お金: 使ったお金の平均 ${(perkSpent / n).round()}万円');
+    print('  一度でも使った人生: ${[for (final e in perkLives.entries) '${e.key} ${pct(e.value)}'].join(' / ')}');
+  }
   print('平均の個人賞: ${(awards / n).toStringAsFixed(2)}回');
   for (final d in Dream.values) {
     print('夢「${d.label}」(${d.goalText})のかなう割合: ${pct(dreamHits[d]!)}');

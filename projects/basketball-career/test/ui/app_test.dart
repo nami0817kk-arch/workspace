@@ -382,7 +382,7 @@ void main() {
     expect(strip, findsWidgets);
     final stripRect = tester.getRect(strip.last);
     expect(stripRect.bottom, lessThanOrEqualTo(844));
-    expect(stripRect.top, greaterThan(844 - 260), reason: '帯は画面の下(ボタンの上)にある');
+    expect(stripRect.top, greaterThan(844 - 300), reason: '帯は画面の下(ボタンの上)にある。「頼る」「お金」の行の分だけ上');
     expect(resultStripText(c.recent), contains('成長'), reason: '何が伸びたかも帯に出る');
     // 帯を押すと「いまの結果」のカードまで戻る。
     await tester.tap(strip.last);
@@ -598,5 +598,49 @@ void main() {
     await d.autoYears(40);
     expect(d.game!.phase, isNot(Phase.season), reason: '進路・引退などで止まる');
     expect(d.game!.player.age, lessThan(60));
+  });
+
+  testWidgets('下のバーの「頼る」「お金」から、ターンを使わずに頼める・使える', (tester) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    final c = GameController(store: _NullStore(), rng: Random(1), events: false);
+    c.game = Game.start('ケイ', rng: Random(2), events: false)..teamwork = 60;
+    await tester.pumpWidget(BasketballCareerApp(controller: c));
+    await tester.pumpAndSettle();
+    expect(find.text('お金'), findsNothing, reason: 'プロになるまで(お金が無いうち)は出さない');
+    await tester.tap(find.text('頼る'));
+    await tester.pumpAndSettle();
+    expect(find.text('人に頼る'), findsOneWidget);
+    expect(find.textContaining('まだライバルと出会っていない'), findsOneWidget);
+    final talk = find.ancestor(of: find.textContaining('悩みを相談する'), matching: find.byType(Card));
+    await tester.tap(find.descendant(of: talk, matching: find.text('頼む')));
+    await tester.pumpAndSettle();
+    expect(find.text('人に頼る'), findsNothing, reason: '選ぶと閉じる');
+    expect(c.game!.slot, 0, reason: 'ターンは進まない');
+    expect(c.recent.first, contains('気持ち +15'));
+    expect(find.textContaining('気持ち +15'), findsWidgets, reason: '結果の帯に出る');
+
+    c.game = Game(
+      eventsEnabled: false,
+      player: Player(name: 'ケイ', age: 25, potential: 70, heightCm: 190, heightGenes: 0.5,
+          abilities: {for (final a in Ability.values) a: 70}),
+      rng: Random(1),
+      track: Track.pro,
+      cash: 700,
+    );
+    c.recent = const [];
+    await tester.pumpWidget(const SizedBox());
+    await tester.pumpWidget(BasketballCareerApp(controller: c));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('お金'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('使えるお金 700万円'), findsOneWidget);
+    expect(find.textContaining('お金が足りない'), findsWidgets);
+    final trainer = find.ancestor(of: find.text('個人トレーナーを雇う'), matching: find.byType(Card));
+    await tester.tap(find.descendant(of: trainer, matching: find.text('使う')));
+    await tester.pumpAndSettle();
+    expect(c.game!.cash, 100);
+    expect(c.game!.trainerTerms, 4);
   });
 }

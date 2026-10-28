@@ -1,6 +1,7 @@
 import 'build.dart';
 import 'honors.dart';
 import 'money.dart';
+import 'perks.dart';
 import 'dream.dart';
 import 'game.dart';
 import 'mastery.dart';
@@ -166,6 +167,15 @@ List<String> epilogueLines(Game g) {
 
   if (g.totalEarnings > 0) {
     lines.add('プロで稼いだ生涯収入は、年俸とスポンサー契約をあわせて約${moneyLabel(g.totalEarnings)}。');
+  }
+  if (g.usedEver.contains(Spend.parents.name)) {
+    lines.add('稼いだお金で、ずっと支えてくれた両親に家を贈った。');
+  }
+  if (g.usedEver.contains(Spend.court.name)) {
+    lines.add('地元に寄付したバスケコートでは、今も子どもたちがボールを追いかけている。');
+  }
+  if (g.usedEver.contains(Favor.rival.name) && g.rivalMet) {
+    lines.add('${g.rival.name}とは、競い合いながら一緒に汗を流した仲でもあった。');
   }
 
   final cp = g.totalPoints;
