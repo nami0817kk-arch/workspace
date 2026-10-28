@@ -149,4 +149,12 @@ const START = `S=newGame('m','normal',null);var c=S.tr.slice();S.sel=c.slice(0,S
   ok(g.run('budgetAdLeft()') === 0, '審査の順番を入れ替えても、制作費の動画の残りは戻らない');
 }
 
+// ===== 評価のお願い（2026-10-28：評価0件だったので、1シーズン目から頼む） =====
+{
+  const g = boot({ adFree: false, store: {}, owned: {} });
+  ok(g.run("reviewDue({seasons:1},'B')") && !g.run("reviewDue({seasons:1},'C')"), '1シーズン目でもB以上なら評価を頼み、C以下では頼まない');
+  ok(!g.run("reviewDue({seasons:3,reviewAsked:1,reviewAt:4},'S')") && g.run("reviewDue({seasons:4,reviewAsked:1,reviewAt:4},'A')"), '頼んだあとは3シーズンあける');
+  ok(!g.run("reviewDue({seasons:20,reviewAsked:3,reviewAt:4},'S')"), '頼むのは3回まで');
+}
+
 if (fails) { console.error(fails + '件 外れ'); process.exitCode = 1; } else console.log('すべて通った');
