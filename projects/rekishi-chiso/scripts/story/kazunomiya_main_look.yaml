@@ -1,0 +1,276 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：和宮（scripts/kazunomiya-story.yaml）。chiso/storymain.py が読む。
+# 10-28 作成（10/29 12:00 公開）。台本は最後の通し確認のあと固めた（この look は行の番号で絵を当てるので、台本を変えない）。決まりは docs/story-main.md・スキル rekishi-story-screen。見本は hidetsugu・rikyu の look。
+# 絵の方針：AI 絵は 15 枚（W01〜W15）。同じ絵を時間をずらして使い回す（続けて 20 秒まで）。
+#   人物は AI 絵（和宮は横顔か後ろ姿・正面の寄りは作らない）。実在の絵（パブリックドメイン。出典は台本の background / portrait の credit・caption）は額（frame:）と浮世絵の一部（part:）。
+# AI 絵の指示の一覧（英語・顔立ちの設定）：dev/output/rekishi-chiso/research/kazunomiya_ai_images.md
+# 届く前は art_dir の仮の絵（W01.jpg〜、番号と場面だけ書いた灰色の板。10-28 に PIL で 1376×768 で作った）で代える。届いたら main_art_dir に W01.jpg〜を置くだけ。
+#   crops・focus・fx の位置は仮の値。届いた絵を見て合わせ直す。
+# 墓・棺・遺骨の中は映さない（発掘は W01 の遠景、ガラス板は W02 の布の上の板と手だけ）。左手首・遺骨の行は手や骨の絵を当てない。
+#   「和宮とされる肖像」（kazu_portrait_small）は本人か疑う説があるので、替え玉の行（115〜116）には当てない。
+script: scripts/kazunomiya-story.yaml
+out: kazunomiya_story_main
+art_dir: out/story/kazunomiya/ph          # 仮の絵（placeholder）
+main_art_dir: out/story/kazunomiya/main   # Gemini の 16:9 の絵（W01.jpg〜W15.jpg）
+ai_disclosure: この動画の人物・情景の画像の多くは、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+
+# 章ごとの左上の札「いま｜章題」。台本は和暦と西暦を並べて言うので札は和暦（昭和33年の発掘も和暦）。
+# dates＝語りがその年・月日を言った行から替える（論文・記事・書物の年は物語の「いま」ではないので替えない。null で章題だけ）
+chapters:
+  0: {label: 序章 棺のガラス板は何だったのか, now: 昭和33年,
+      dates: {6: null, 10: 慶応4年正月, 13: null, 16: 昭和33年, 17: null}}
+  1: {label: 第1章 婚約者のいた皇女, now: 弘化3年,
+      dates: {20: null, 31: 文久元年}}
+  2: {label: 第2章 25日の中山道と縁切榎, now: 文久元年10月,
+      dates: {38: 文久元年10月20日, 55: 文久元年11月14日, 57: 文久元年11月15日}}
+  3: {label: 第3章 家茂との4年あまり, now: 文久2年2月,
+      dates: {63: 元治元年2月9日, 64: null, 69: 慶応2年7月}}
+  4: {label: 第4章 「御取つぶし」なら「覚悟」, now: 慶応4年正月,
+      dates: {81: 慶応4年正月20日, 91: 慶応4年4月, 92: 明治2年, 94: 明治4年6月, 96: 明治7年, 97: 明治10年}}
+  5: {label: 第5章 塔ノ沢の死と、骨が語ったこと, now: 明治10年9月2日,
+      dates: {101: 明治10年9月4日, 102: 明治10年9月, 105: 昭和33年}}
+  6: {label: まとめ ガラス板に写っていたのは誰か, now: 昭和33年,
+      dates: {126: null}}
+# 概要欄「■ 参考にした資料」（事実カード 和宮_facts_20261028.yaml のうち本文を開いた主なもの。題はカードの題のまま。10-28）
+references:
+  - 御書状 橋本少将宛 慶応四年正月二十日（文化遺産オンライン、海の見える杜美術館蔵）　https://online.bunka.go.jp/heritages/detail/280423
+  - 御書状 三条実美宛 明治四年六月十一日（文化遺産オンライン、海の見える杜美術館蔵）　https://online.bunka.go.jp/heritages/detail/213394
+  - 静寛院宮御日記 上　https://dl.ndl.go.jp/pid/1918439/1/19
+  - 【幕末こぼれ話】写真板の画像が消えた？ 皇女和宮をめぐるミステリー（Yahoo!ニュース エキスパート）　https://news.yahoo.co.jp/expert/articles/58af5a2f87a888e07d1ff1148010c393ec9eb1e8
+  - 皇女和宮…入れ替え説?左手欠損説?（ビジネスジャーナル）　https://biz-journal.jp/2021/08/post_239858.html
+  - 観光庁 地域観光資源の多言語解説文データベース（阿弥陀寺）　https://www.mlit.go.jp/tagengo-db/R1-01131.html
+  - 'Excavating Edo''s Cemeteries: Graves as Indicators of Status and Class（Japanese Journal of Religious Studies 19/2-3）　https://nirc.nanzan-u.ac.jp/journal/6/article/832/pdf/download'
+  - Japan 1853-1864, or, Genji Yume Monogatari（Satow 訳）　https://archive.org/stream/japanorgenjiyum00satogoog/japanorgenjiyum00satogoog_djvu.txt
+  - 企画展「和宮 江戸へ ―ふれた品物 みた世界―」レポート（インターネットミュージアム）　https://www.museum.or.jp/report/100848
+  - ぶぎんレポート No.226 皇女和宮 中山道を行く 街道は大混乱に　https://www.bugin-eri.co.jp/research/research02/file/r181031b.pdf
+  - こうぶんしょ館電子展示室53号「和宮と板橋宿」　https://www.city.itabashi.tokyo.jp/kusei/shiryo/koubunsho/ichiran/1009254.html
+  - 板橋区立郷土資料館 展示紹介（和宮）　https://www.city.itabashi.tokyo.jp/kyodoshiryokan/exhibition/3000804/3000807.html
+  - 港区教育委員会 文化財指定の資料（増上寺徳川将軍墓 礫石経 40,331点）　https://www.city.minato.tokyo.jp/documents/145233/bunkazaisyusei.pdf
+  - 国立歴史民俗博物館 特集展示「和宮ゆかりの雛かざり」（artscape の展覧会情報）　https://artscape.jp/exhibitions/32169/
+  - 日本女性美史 第二十五話（長谷川時雨、Wikisource）　https://ja.wikisource.org/wiki/%E6%97%A5%E6%9C%AC%E5%A5%B3%E6%80%A7%E7%BE%8E%E5%8F%B2_%E7%AC%AC%E4%BA%8C%E5%8D%81%E4%BA%94%E8%A9%B1
+no_tag_from: 132                     # 締め（冒頭の増上寺のガラス板に戻る所）から札を出さない
+
+# AI 絵（16:9 横・15枚）。scene は日本語の要約（英語の指示は research/kazunomiya_ai_images.md）。
+# pan：h＝左右（既定）・v＝上下・zoom＝ゆっくり寄る（顔の感情の場面だけ）。crops＝切り出し [倍率, 中心x, 中心y]
+ai:
+  W01: {scene: 1958年の増上寺の発掘の現場（遠景・顔は描かない・骨や棺は映さない）, pan: h, crops: {left: [1.18, 0.38, 0.5], right: [1.18, 0.62, 0.5]}}
+  W02: {scene: 白い布の上の古いガラス板と、白手袋の手（かすかな人影）, crops: {close: [1.25, 0.5, 0.5]}}
+  W03: {scene: 京の御所の縁側で和歌を習う少女の和宮（後ろ姿）, pan: h, crops: {left: [1.18, 0.38, 0.5], right: [1.18, 0.62, 0.5]}}
+  W04: {scene: 中山道の山あいを進む長い行列（遠景・顔なし）, pan: h, crops: {left: [1.18, 0.38, 0.5], right: [1.18, 0.62, 0.5]}}
+  W05: {scene: 1866年夏の大坂城の石垣と堀（天守は無い）, pan: h, crops: {right: [1.18, 0.62, 0.5]}}
+  W06: {scene: 輿の簾ごしに雪の山並みを見る和宮（横顔・16歳）, pan: zoom, crops: {face: [1.25, 0.60, 0.40]}}
+  W07: {scene: 宿場のはずれの大きな榎の老木（人物なし）, pan: v, crops: {left: [1.18, 0.40, 0.5], right: [1.18, 0.60, 0.5]}}
+  W08: {scene: 板橋宿の座敷の夜・行灯・一人座る和宮（後ろ姿）, crops: {close: [1.2, 0.5, 0.45]}}
+  W09: {scene: 江戸城の奥の廊下を歩く若い夫婦（後ろ姿）, pan: h, crops: {right: [1.18, 0.62, 0.5]}}
+  W10: {scene: 文机の上のかんざしと和歌の短冊（読めない筆の跡）・硯, crops: {left: [1.18, 0.38, 0.5], right: [1.18, 0.62, 0.5]}}
+  W11: {scene: 雛壇の小さな雛人形と雛道具（人物なし）, crops: {left: [1.18, 0.40, 0.5]}}
+  W12: {scene: 畳に広げた西陣の織物と、それに触れる手（顔なし）, crops: {close: [1.2, 0.5, 0.5]}}
+  W13: {scene: 灯の下で手紙を書く和宮（横顔・尼の姿・22歳ごろ）, pan: zoom, crops: {face: [1.25, 0.55, 0.38], right: [1.18, 0.62, 0.45]}}
+  W14: {scene: 箱根の山あいの湯の宿（秋・湯気・人物なし）, pan: h}
+  W15: {scene: 終了画面用。夕暮れの増上寺の遠景（右半分を空けた構図）, lock: [1.0, 0.5, 0.5]}
+
+# 絵の割り当て：「行の番号 種類:絵 [切り出し]」。次の行の指定まで続く。図（figure）の出る行は、その時の絵を暗くして図を置く（自動）
+shots:
+  # 序章（0〜18）：棺のガラス板 → 1958年の発掘 → 像が消えた → 和宮・熾仁 → 断った → 慶応4年の書状 → なぜ → かけら（行列・木・左手首）→ 名前 → 京へ
+  - 0 ai:W02 wide
+  - 1 ai:W01 wide
+  - 2 ai:W02 close
+  - 3 ai:W01 right
+  - 4 ai:W02 wide
+  - 5 part:paintings/kazu_zojoji_snow_hiroshige.jpg
+  - 6 frame:paintings/kazu_portrait_toyobunka.jpg
+  - 7 frame:paintings/kazu_arisugawa_taruhito.jpg
+  - 8 ai:W03 wide
+  - 9 part:paintings/kazu_kyoto_sanjo_hiroshige.jpg
+  - 10 ai:W13 wide
+  - 11 ai:W13 face                     # 史料の札（御取つふし・覚悟いたし）
+  - 12 frame:paintings/kazu_portrait_small.jpg
+  - 13 part:paintings/kazu_zojoji_snow_hiroshige.jpg
+  - 14 ai:W04 wide
+  - 15 ai:W07 wide
+  - 16 ai:W01 left                     # 左手首（発掘の遠景だけ。骨は映さない）
+  - 17 ai:W09 wide                     # 覚えてほしい名前（17〜18）の下地
+  - 18 ai:W03 right
+  # 第1章（19〜36）：婚約者のいた皇女
+  - 19 frame:paintings/kazu_komei_koyama_1902.png
+  - 20 frame:paintings/kazu_arisugawa_taruhito.jpg
+  - 21 ai:W03 wide
+  - 22 part:paintings/kira_edo_castle_beato.jpg
+  - 23 frame:paintings/kazu_iemochi_kano.jpg
+  - 24 part:paintings/kira_edo_castle_beato.jpg
+  - 25 ai:W03 left                     # 史料の札（歴史資料珍奇集）
+  - 26 part:paintings/kazu_kyoto_sanjo_hiroshige.jpg
+  - 27 frame:paintings/kazu_portrait_toyobunka.jpg   # 【想像1】兄上のお心を……
+  - 28 ai:W10 left
+  - 29 ai:W10 wide                     # 史料の札（中山忠能履歴資料の御ケ条書）
+  - 30 ai:W03 wide
+  - 31 part:paintings/kazu_kyoto_sanjo_hiroshige.jpg
+  - 32 ai:W03 left
+  - 33 frame:paintings/kazu_iemochi_kano.jpg
+  - 34 frame:paintings/kazu_komei_koyama_1902.png
+  - 35 ai:W04 wide
+  - 36 ai:W07 wide
+  # 第2章（37〜59）：25日の中山道と縁切榎
+  - 37 part:paintings/kazu_kyoto_sanjo_hiroshige.jpg   # 道具は東海道（三条大橋は東海道の終点）
+  - 38 ai:W04 wide                     # 地図（台本：京都→江戸）
+  - 39 ai:W06 face
+  - 40 ai:W04 right
+  - 41 part:paintings/kazu_omiya_eisen.jpg
+  - 42 ai:W04 left
+  - 43 ai:W04 wide                     # 人数の食い違い（versus3。この行は台本の棒の図を外す）→ 44 は台本の棒の図
+  - 45 part:paintings/kazu_omiya_eisen.jpg
+  - 46 part:paintings/kazu_yabuhara_eisen.jpg
+  - 47 ai:W06 face                     # 【想像2】都は、もう……
+  - 48 part:paintings/kazu_okegawa_eisen.jpg
+  - 49 ai:W04 right
+  - 50 part:paintings/kazu_itabashi_eisen.jpg
+  - 51 ai:W07 wide
+  - 52 part:paintings/kazu_itabashi_eisen.jpg
+  - 53 ai:W07 right                    # 縁切榎の表（台本の図）
+  - 54 part:paintings/kazu_itabashi_eisen.jpg
+  - 55 ai:W08 wide
+  - 56 ai:W08 close                    # 【想像3】ここを過ぎれば……
+  - 57 part:paintings/kira_edo_castle_beato.jpg
+  - 58 ai:W06 wide
+  - 59 ai:W09 wide
+  # 第3章（60〜78）：家茂との4年あまり
+  - 60 frame:paintings/kazu_iemochi_kawamura_1884.jpg
+  - 61 ai:W09 right
+  - 62 ai:W10 wide
+  - 63 frame:paintings/kazu_portrait_toyobunka.jpg   # 和宮から家茂への手紙（机に向かって書く姿の肖像）
+  - 64 ai:W11 wide
+  - 65 part:paintings/kazu_kyoto_sanjo_hiroshige.jpg   # 京の春（W11 が続けて20秒を超えないように）
+  - 66 ai:W09 wide
+  - 67 ai:W05 wide
+  - 68 frame:paintings/kazu_portrait_toyobunka.jpg   # 【想像4】上様が、ご無事で……
+  - 69 ai:W05 right
+  - 70 frame:paintings/kazu_iemochi_kawamura_1884.jpg
+  - 71 ai:W08 close                    # 【想像5】どうして、こんなに……
+  - 72 ai:W05 wide
+  - 73 ai:W12 wide
+  - 74 ai:W12 close                    # 伝わる歌の札
+  - 75 ai:W09 wide
+  - 76 frame:paintings/kazu_portrait_small.jpg
+  - 77 part:paintings/kira_edo_castle_beato.jpg
+  - 78 ai:W13 wide
+  # 第4章（79〜98）：慶応4年の書状と、その後
+  - 79 part:paintings/kazu_kyoto_sanjo_hiroshige.jpg   # 京都の南、鳥羽と伏見
+  - 80 part:paintings/kira_edo_castle_beato.jpg
+  - 81 ai:W13 wide
+  - 82 ai:W13 face
+  - 83 part:paintings/kira_edo_castle_beato.jpg   # 史料の札（当家朝敵の汚名・実ニ残念）
+  - 84 ai:W13 right                    # 史料の札（御取つふし・覚悟いたし）
+  - 85 frame:paintings/kazu_portrait_small.jpg
+  - 86 ai:W13 face                     # 【想像6】上様が遺されたこの家を……
+  - 87 part:paintings/kira_edo_castle_beato.jpg
+  - 88 ai:W13 wide                     # 史料の札（近世日本国民史）
+  - 89 frame:paintings/kazu_portrait_small.jpg
+  - 90 ai:W09 wide
+  - 91 part:paintings/kira_edo_castle_beato.jpg
+  - 92 part:paintings/kazu_kyoto_sanjo_hiroshige.jpg
+  - 93 ai:W06 wide
+  - 94 ai:W13 right
+  - 95 frame:paintings/kazu_portrait_small.jpg
+  - 96 part:paintings/kazu_zojoji_akabane_hiroshige.jpg   # 麻布（赤羽根のとなり）
+  - 97 ai:W14 wide
+  - 98 ai:W01 wide
+  # 第5章（99〜121）：塔ノ沢の死と、骨が語ったこと
+  - 99 part:paintings/kazu_tonosawa_1854.jpg
+  - 100 part:paintings/okubo_kagoshima_castle_gate.jpg
+  - 101 part:paintings/okubo_ginza_1880s.jpg   # 史料の札（本山彦一の日記）
+  - 102 part:paintings/kazu_zojoji_akabane_hiroshige.jpg
+  - 103 part:paintings/kazu_zojoji_sannai_hiroshige.jpg   # 史料の札（東京市史稿）
+  - 104 part:paintings/kazu_zojoji_snow_hiroshige.jpg
+  - 105 ai:W01 wide
+  - 106 ai:W01 right
+  - 107 part:paintings/kazu_zojoji_snow_hiroshige.jpg
+  - 108 ai:W01 left                    # 発掘で分かった和宮（台本の図）
+  - 109 part:paintings/kazu_zojoji_sannai_hiroshige.jpg
+  - 110 ai:W01 wide
+  - 111 frame:paintings/kazu_portrait_toyobunka.jpg   # 左手首（手や骨の絵は当てない）
+  - 112 ai:W10 wide                    # 名乗らない手紙
+  - 113 ai:W14 wide                    # 箱根の山の中
+  - 114 ai:W01 right
+  - 115 ai:W06 wide                    # 替え玉の話（「和宮とされる肖像」は当てない）
+  - 116 part:paintings/kazu_zojoji_sannai_hiroshige.jpg
+  - 117 ai:W01 wide
+  - 118 ai:W10 left
+  - 119 ai:W13 wide                    # 年表（記録に残る和宮）
+  - 120 ai:W02 wide
+  - 121 ai:W02 close
+  # まとめ（122〜134）：ガラス板の人物 → 同じ寺 → 答え → 冒頭の増上寺に戻る締め
+  - 122 frame:paintings/kazu_iemochi_kano.jpg
+  - 123 frame:paintings/kazu_arisugawa_taruhito.jpg   # ガラス板の人物の表（台本の図）123〜124。図の間は額を出さない
+  - 125 ai:W02 close
+  - 126 part:paintings/kazu_zojoji_akabane_hiroshige.jpg
+  - 127 part:paintings/kazu_zojoji_snow_hiroshige.jpg
+  - 128 ai:W04 wide
+  - 129 ai:W09 wide
+  - 130 ai:W13 face
+  - 131 part:paintings/kazu_zojoji_sannai_hiroshige.jpg
+  - 132 ai:W02 wide                    # 締め：冒頭のガラス板に戻る
+  - 133 ai:W02 close
+  - 134 ai:W15 wide
+  - end ai:W15 wide
+
+# look だけで足す図（台本には無い。語りがその名前・地点を言う 0.25 秒前に1つずつ書き込む）。spec: null はその行の台本の図を外す
+figures:
+  - {from: 43, to: 43, spec: null}     # 人数の食い違いは versus3 で見せる（44 は台本の棒の図のまま）
+  # 年表：119「願いを書いて出し、夫と和歌を贈り合い、家のために手紙を書き、小さな家を望んだ人」
+  - {from: 119, to: 119, spec: {type: numberline, title: 記録に残る和宮,
+      items: [[願いの箇条書, 1861], [和歌を贈り合う, 1862], [家のための手紙, 1868], [小さな家を望む, 1871]], unit: 年, focus: 家のための手紙}}
+
+# 語りがその物・人を言うと、カットの終わりにそれが主役になる所で止まる。位置は仮の値（届いた絵で合わせる）
+focus:
+  W02: {ガラス板|板|像: [1.25, 0.5, 0.55]}
+  W04: {行列: [1.2, 0.5, 0.55]}
+  W07: {榎|木: [1.2, 0.5, 0.40]}
+  W05: {大坂城|大坂: [1.2, 0.5, 0.40]}
+  paintings/kazu_okegawa_eisen.jpg: {桶川: [1.3, 0.5, 0.5]}
+  paintings/kazu_itabashi_eisen.jpg: {板橋: [1.3, 0.5, 0.5]}
+
+# 絵の一部だけを動かす（話に合う絵だけ・控えめに。顔・人物にはかけない）。届いた絵で範囲を見て直す
+fx:
+  W08: {lamp: {region: [0.70, 0.45, 0.90, 0.85]}}                     # 行灯の灯（人物の横）
+  W13: {lamp: {region: [0.05, 0.30, 0.25, 0.70]}}                     # 手元の蝋燭（顔にはかけない）
+  W14: {mist: {region: [0, 0.45, 1, 0.90], alpha: 0.12, speed: 5}}    # 湯けむり
+  W04: {mist: {region: [0, 0.0, 1, 0.40], alpha: 0.10, speed: 6}}     # 山あいの霧（上の方だけ）
+
+# 部品（from〜to の行、0 始まり。出ている間は絵を暗くする）
+parts:
+  - {type: names, from: 17, to: 18, title: この物語で覚えてほしい名前, every: 0.7,
+     items: [[和宮, 孝明天皇の妹・家茂の妻, paintings/kazu_portrait_toyobunka.jpg, [0.5, 0.30]],
+             [徳川家茂, 14代将軍・和宮の夫, paintings/kazu_iemochi_kano.jpg, [0.5, 0.30]],
+             [有栖川宮熾仁親王, 和宮のかつての婚約者, paintings/kazu_arisugawa_taruhito.jpg, [0.5, 0.30]]]}
+  - {type: quote, from: 11, to: 11, label: 史料, text: 官軍差下され御取つふし／覚悟いたし,
+     source: 和宮の書状（慶応4年正月20日・橋本少将あて、海の見える杜美術館蔵）}
+  - {type: quote, from: 25, to: 25, label: 史料, text: 最初宮は固辞して従ひ給はず／再三の上諭により,
+     source: 『歴史資料珍奇集』第3輯（1922年）}
+  - {type: quote, from: 29, to: 29, label: 史料, text: 和宮御方御願御ケ條書,
+     source: 『中山忠能履歴資料』第二（1933年）}
+  - {type: versus3, from: 43, to: 43, every: 1.2,
+     items: [[大垣市の広報, "総勢7,800余名"], [ぶぎんレポート, 人足を入れて3万余], [板橋区立郷土資料館, 総勢3万人]]}
+  - {type: quote, from: 74, to: 74, label: 伝わる歌, text: 空蝉の唐織衣何かせん／綾も錦も君ありてこそ,
+     source: 長谷川時雨『日本女性美史』（後の時代の読み物）}
+  - {type: quote, from: 83, to: 83, label: 史料, text: 当家朝敵の汚名を残／実ニ残念,
+     source: 和宮の書状（慶応4年正月20日・橋本少将あて）}
+  - {type: quote, from: 84, to: 84, label: 史料, text: 官軍差下され御取つふし／覚悟いたし,
+     source: 和宮の書状（慶応4年正月20日・橋本少将あて）}
+  - {type: quote, from: 88, to: 88, label: 史料, text: 又た御自発にて／頻りに雪寃、哀願の運動,
+     source: 徳富猪一郎『近世日本国民史』第68冊（1946年）p.226}
+  - {type: quote, from: 101, to: 101, label: 史料, text: 途中休暇ノ事ヲ聞ク／一昨日静寛院宮薨去ニ付,
+     source: 本山彦一の日記（明治10年9月4日・『松陰本山彦一翁』1937年）}
+  - {type: quote, from: 103, to: 103, label: 史料, text: 御葬穴等工業場無之ニ付／赤羽根通リ脇公園地囲込,
+     source: 『東京市史稿』遊園篇第4（1932年）}
+
+# 静止画（story-main を --frames なしで回したとき。簡易の描き方で、パン・部品は出ない。目で見るのは --frames の方）
+stills:
+  - {line: 0, note: 冒頭（0秒）棺のガラス板}
+  - {line: 11, note: 序章 慶応4年の書状の札}
+  - {line: 17, note: 序章の終わり 覚えてほしい名前}
+  - {line: 43, note: 第2章 行列の人数の食い違い}
+  - {line: 53, note: 第2章 縁切榎の表}
+  - {line: 74, note: 第3章 伝わる歌}
+  - {line: 88, note: 第4章 近世日本国民史}
+  - {line: 119, note: 第5章 年表}
+  - {line: 123, note: まとめ ガラス板の人物}
+  - {end: true, note: 終了画面の空き}
