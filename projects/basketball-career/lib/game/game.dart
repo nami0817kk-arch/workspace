@@ -8,6 +8,7 @@ import 'events.dart';
 import 'goals.dart';
 import 'honors.dart';
 import 'life.dart';
+import 'mastery.dart';
 import 'match.dart';
 import 'money.dart';
 import 'path.dart';
@@ -261,6 +262,7 @@ class Game {
     this.sp = 0,
     this.positionAuto = true,
     Map<Ability, int>? yearStart,
+    Map<Ability, int>? mastery,
   })  : rng = rng ?? Random(),
         rival = rival ?? Rival(name: 'ライバル', potential: 60),
         recentEventIds = recentEventIds ?? [],
@@ -270,6 +272,7 @@ class Game {
         goalOptions = goalOptions ?? [],
         goalStart = goalStart ?? {},
         yearStart = yearStart ?? {},
+        mastery = mastery ?? {},
         recentAchievements = recentAchievements ?? [],
         records = records ?? [];
 
@@ -321,6 +324,35 @@ class Game {
 
   /// 年のはじめの能力(能力の画面に「今年 +n」を出すため。保存あり。古いセーブは空=差を出さない)。
   Map<Ability, int> yearStart;
+
+  /// 能力ごとの熟練度の累計(`mastery.dart`。保存あり。古いセーブは空=0から)。
+  Map<Ability, int> mastery;
+
+  /// 直前のターンで熟練の段が上がった能力と、その新しい段(画面が見せる。保存しない)。
+  List<(Ability, int)> lastMasteryUps = const [];
+
+  int masteryOf(Ability a) => masteryLevel(mastery[a] ?? 0);
+
+  /// 重点にした能力へ熟練度を足し、段が上がればごほうびを当てる。
+  void _addMastery(Action action, Ability focus, Ability? focus2, bool injured) {
+    final g = masteryGain(action, injured: injured);
+    final ups = <(Ability, int)>[];
+    var ab = player.abilities;
+    for (final (a, n) in [(focus, g.first), if (focus2 != null && focus2 != focus) (focus2, g.second)]) {
+      if (n <= 0) continue;
+      final before = masteryLevel(mastery[a] ?? 0);
+      mastery[a] = (mastery[a] ?? 0) + n;
+      final after = masteryLevel(mastery[a]!);
+      for (var lv = before + 1; lv <= after; lv++) {
+        ups.add((a, lv));
+        ab = {...ab, a: ((ab[a] ?? 0) + masteryAbilityBonus(lv)).clamp(0, abilityCap)};
+        sp += masterySp(lv);
+      }
+    }
+    if (ups.isNotEmpty) player = player.copyWith(abilities: ab);
+    lastMasteryUps = ups;
+  }
+
   int goalRivalWins;
 
   /// 今年の大会での最多勝ち数・最高の平均得点(目標の判定に使う)。
@@ -775,6 +807,7 @@ class Game {
     lastCareerLines = const [];
     lastMetRival = false;
     lastNewSkills = {};
+    lastMasteryUps = const [];
     final rut = isRut(action);
     final wasInjured = condition.injured;
     final abilitiesBefore = Map<Ability, int>.of(player.abilities);
@@ -787,6 +820,7 @@ class Game {
     }
     lastWasRut = rut;
     player = r.player;
+    _addMastery(action, focus, focus2, wasInjured || r.gotInjured);
     lastGains = {
       for (final a in Ability.values)
         if (player.of(a) != abilitiesBefore[a]) a: player.of(a) - abilitiesBefore[a]!,
@@ -1575,6 +1609,7 @@ class Game {
         'sp': sp,
         'posAuto': positionAuto,
         'yearStart': {for (final e in yearStart.entries) e.key.name: e.value},
+        'mastery': {for (final e in mastery.entries) e.key.name: e.value},
         'number': number,
         'mate': mate,
         'teamName': teamName,
@@ -1677,6 +1712,11 @@ class Game {
         yearStart: {
           for (final e in ((j['yearStart'] as Map?) ?? const {}).entries)
             if (Ability.parse(e.key as String) != null)
+              Ability.parse(e.key as String)!: (e.value as num).toInt(),
+        },
+        mastery: {
+          for (final e in ((j['mastery'] is Map ? j['mastery'] as Map : null) ?? const {}).entries)
+            if (e.key is String && Ability.parse(e.key as String) != null && e.value is num)
               Ability.parse(e.key as String)!: (e.value as num).toInt(),
         },
         goalRivalWins: (j['goalRivalWins'] as num?)?.toInt() ?? 0,

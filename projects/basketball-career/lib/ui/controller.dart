@@ -16,6 +16,7 @@ import '../game/game.dart';
 import '../game/legacy.dart';
 import '../monetization/monetization.dart';
 import '../game/life.dart';
+import '../game/mastery.dart';
 import '../game/match.dart';
 import '../game/path.dart';
 import '../game/player.dart';
@@ -344,6 +345,8 @@ class GameController extends ChangeNotifier {
       '${a.label}した。',
       ..._gainLines(before, g.player),
       ..._rankUpLines(before, g.player),
+      for (final (ab, lv) in g.lastMasteryUps)
+        '熟練アップ! ${masteryLabel(ab, lv)}${masteryRewardText(ab, lv)}',
       if (g.lastWasRut) '同じ練習が続いてマンネリ気味…(伸びが少し落ちた)',
       if (r.gotInjured)
         '${g.condition.injuryName}をしてしまった…(あと${g.condition.injuredTerms}ターン)',
@@ -450,6 +453,15 @@ class GameController extends ChangeNotifier {
       lines.add('得意技を習得!「${k.label}」');
       pending.add(Milestone(MilestoneKind.skill, '得意技を習得!',
           '${k.label}\n${k.description}'));
+    }
+    // 熟練が「武器」以上に上がったら、大きく見せる(練習を重ねた手応え)。
+    for (final (ab, lv) in g.lastMasteryUps) {
+      if (lv < 3) continue;
+      pending.add(Milestone(
+          MilestoneKind.rank,
+          lv >= masteryMax ? '${ab.label}を極めた!' : '熟練 Lv$lv「${masteryNames[lv]}」',
+          '${ab.label}の練習を重ねて、${masteryNames[lv]}の域に達した。\n'
+              '${masteryRewardText(ab, lv).trim()}'));
     }
     // 節目の演出。
     if (g.lastMetRival) {
