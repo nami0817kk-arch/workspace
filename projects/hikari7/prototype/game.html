@@ -2251,12 +2251,14 @@ function nextRank(p){for(var i=0;i<RANKS.length;i++)if(RANKS[i][0]>p)return RANK
 var UNLOCK={camp:2,duo:4,live:7};
 function lockedFormats(p){var o={};for(var k in UNLOCK)if(p<UNLOCK[k])o[k]=UNLOCK[k];return o;}
 var GRADE_PT={S:5,A:3,B:2,C:1,D:0};
+/* 評価のお願い（2026-10-28）：評価0件で検索の順位が上がらなかった。1シーズン目からB以上で頼み、3シーズンあけて最大3回（iOS も年3回まで） */
+function reviewDue(c,grade){return 'SAB'.indexOf(grade)>=0&&(c.reviewAsked||0)<3&&c.seasons>=(c.reviewAt||1);}
 function recordCareer(S,E){if(S.recorded)return null;S.recorded=true;var c=loadCareer(),before=c.points,rk0=rankOf(before)[1];
   var got=GRADE_PT[E.grade]+E.missions.filter(function(m){return m.ok;}).length;c.seasons++;mergeDex(S,c);addMeikan(S,E,c);if(S.daily){if(!c.daily)c.daily={};var db=c.daily[S.daily];if(!db||E.total>db.t)c.daily[S.daily]={t:Math.round(E.total*10)/10,gr:E.grade};}addStats(S,E,c);got=Math.round(got*diffOf(S).pt);var ach=checkAchv(S,E,c);got+=ach.length;var chNews=null;if(S.chal&&'SA'.indexOf(E.grade)>=0){if(!c.chal)c.chal={};var first=!c.chal[S.chal];if(first||E.grade==='S')c.chal[S.chal]=E.grade;if(first){got+=CHAL_PT;chNews='チャレンジ「'+chalOf(S.chal).n+'」を達成した（＋'+CHAL_PT+'ポイント）';}}c.points+=got;
   c.hall.unshift({name:gName(S.prep),grade:E.grade,total:Math.round(E.total),g:S.g,n:E.n,members:E.D.map(function(t){return t.giv;}),mem:E.D.map(function(t){return {n:t.giv,img:t.img,sp:t.spec,aw:t.awoke?1:0,lead:E.L&&E.L.id===t.id?1:0};}),color:S.prep.color,song:S.prep.songs?S.prep.songs[S.prep.song||0]:null,diff:S.diff,chal:S.chal||null,daily:S.daily||null,season:c.seasons});c.hall=c.hall.slice(0,20);saveCareer(c);
   var news=ach.map(function(a){return '実績「'+a.t+'」を取った（'+a.d+'）';});if(chNews)news.unshift(chNews);for(var k in UNLOCK)if(before<UNLOCK[k]&&c.points>=UNLOCK[k])news.push('審査「'+FORMATS[k].t+'」が使えるようになった');
   var rk1=rankOf(c.points)[1];if(rk1!==rk0)news.unshift('肩書きが「'+rk1+'」になった');
-  if('SA'.indexOf(E.grade)>=0&&c.seasons>=2&&!c.reviewAsked&&typeof APP!=='undefined'&&APP){c.reviewAsked=1;saveCareer(c);appPost({type:'review'});}
+  if(reviewDue(c,E.grade)&&typeof APP!=='undefined'&&APP){c.reviewAsked=(c.reviewAsked||0)+1;c.reviewAt=c.seasons+3;saveCareer(c);appPost({type:'review'});}
   S.careerNews={got:got,points:c.points,news:news};return S.careerNews;}
 /* レッスンのおまかせ：疲れた子は休ませ、課題のある子は課題を、ほかは今回見られる力のうち弱いところを1つずつ */
 function autoLesson(S){prefillLesson(S);var sl=slotsOf(S);
