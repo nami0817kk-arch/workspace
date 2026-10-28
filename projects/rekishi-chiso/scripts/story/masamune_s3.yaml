@@ -1,0 +1,179 @@
+# 物語完結型ショート 伊達政宗 s3（2026-10-29）。本編 scripts/masamune-story.yaml の第1章の前半（梵天丸の右目）から。
+# 形式は rikyu_s1.yaml・hidetsugu_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。
+# 絵は本編の AI 絵（out/story/masamune/main/M*.jpg）と実在の絵（月岡芳年の疱瘡の神を退ける図）。
+#   この回の決まり：AI 絵の政宗に眼帯は無い。右目が見えている絵の切り出しを作らない（M01 は使わない。M02 の子は顔が見えない、M03 の少年は後ろ姿）。
+#   目の処置の様子は描かない・語らない（片倉の話は「取り去った、という話」まで。M03 は家臣が頭を下げる絵で刃物は無い）。
+# 事実カード（dev/output/rekishi-chiso/research/伊達政宗_facts_20261028.yaml）：masamune-07・81・83・82
+#   ・『治家記録』「疱瘡ヲ患ヒシ時年月不知餘毒御目ニ聚テ、其ヨリ右ノ方盲ヒ玉ヒシナリ」（「年月不知」は割注）。「5歳のとき」は公的な出どころが無いので「書く文章もある」まで。
+#   ・萬海上人の生まれ変わりの説と黒沼の魚（masamune-83）は、記録自身が疱瘡のせいだとして退けている。
+#   ・片倉小十郎景綱の話は記録自身が「云ヒ傳フ」（masamune-82）。
+#   ・1567年に米沢に生まれた・幼名は梵天丸は誰でも知っている前置き（本編も fact なし）。
+# 理解テスト4問：
+#   ①誰の話か：伊達政宗（幼名・梵天丸）の右目
+#   ②いつ・どこで何が：米沢で生まれた梵天丸が疱瘡にかかり、病の毒が目に集まって右目が見えなくなった（仙台藩の『治家記録』）。いつかは「年月知らず」
+#   ③記録はほかに何を書いたか：片目の行者・萬海上人の生まれ変わりという説（黒沼の魚まで片目）と、片倉小十郎が右目を取り去ったという話
+#   ④どうなったか：記録は生まれ変わりの説を疱瘡のせいだとして退け、片倉の話は「云ひ伝ふ」＝言い伝えとして書いた
+title: 伊達政宗｜右目を失ったわけ、記録の中の3つの話
+yt_title: 伊達政宗の右目はなぜ見えなくなったのか　藩の記録に残る生まれ変わりの説と言い伝え
+description: |-
+  1567年、出羽の国の米沢に生まれた伊達政宗。幼い名を梵天丸といいました。
+  仙台藩の記録『治家記録』は、梵天丸が疱瘡、今でいう天然痘にかかり、病の毒が目に集まって、それから右の目が見えなくなった、と書きます。その時期には、小さな字で「年月知らず」と添えています。
+  同じ記録には、片目の行者、萬海上人の生まれ変わりだから政宗も片目なのだ、という説も載っています。上人が身を清めた黒沼の魚まで、みな片目になったという言い伝えまで。記録は、片目になったのは疱瘡のせいだとして、その説を退けています。
+  家臣の片倉小十郎景綱が右目を取り去った、という話も、記録は「云ひ伝ふ」、言い伝えとして書いています。
+hashtags: ["#伊達政宗", "#日本史", "#戦国時代"]
+ai_images: true
+art_dir: out/story/masamune
+out: masamune_story_s3
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 伊達政宗（幼い名は梵天丸）
+  title: "右目を失ったわけ、《3つの話》"
+now:
+  - {at: 伊達政宗の, text: "幼いころ　米沢", point: 0}
+  - {at: 1567年, text: "1567年　米沢", point: 0}
+  - {at: 年月知らず, text: "いつ？　年月知らず", point: 1}
+  - {at: 萬海上人, text: "藩の記録", point: 2}
+timeline:
+  - {label: "1567"}
+  - {label: "幼いころ"}
+  - {label: "藩の記録"}
+cards:
+  - type: table                          # 記録の中の3つの話（語った順に1行ずつ）
+    title: 治家記録　右目の3つの話
+    from: 病の毒が
+    until: 生まれ変わりも
+    items:
+      - {at: 病の毒が, text: "疱瘡の毒が目に　記録の答え"}
+      - {at: 萬海上人, text: "萬海上人の生まれ変わり　退けた"}
+      - {at: 片倉小十郎, text: "片倉小十郎の話　言い伝え"}
+shots:
+  M02f:                                  # 1文目：熱にうなされる幼い子（顔は見えない）
+    kind: ai
+    file: masamune/main/M02.jpg
+    focus: [0.3, 0.6]
+    move: in
+    zoom: 0.14
+    must: 布団の幼い子と母の手
+  Hososhin:                              # 年月知らず（疱瘡の神をまつる図）
+    kind: real
+    image: paintings/masamune_hososhin_1798.jpg
+    focus: [0.45, 0.5]
+    move: down
+    text_box: true
+    credit: "志水軒朱蘭『疱瘡心得草』「疱瘡神祭る図」1798年ごろ"
+    must: 疱瘡神をまつる図
+  Smallpox:                              # 疱瘡（天然痘）
+    kind: real
+    image: paintings/masamune_smallpox_tametomo_yoshitoshi.jpg
+    focus: [0.5, 0.4]
+    move: down
+    text_box: true
+    credit: "月岡芳年《新形三十六怪撰 為朝の武威痘鬼神を退く図》1890年（疱瘡の神を退ける図）"
+    must: 疱瘡の神を退ける図
+  M02:                                   # 病の毒が目に集まった
+    kind: ai
+    file: masamune/main/M02.jpg
+    focus: [0.7, 0.6]
+    move: left
+    must: 見守る母の手
+  M02w:                                  # 年月知らず
+    kind: ai
+    file: masamune/main/M02.jpg
+    focus: [0.5, 0.4]
+    move: right
+    must: 城の奥の部屋
+  M07:                                   # 萬海上人の生まれ変わりの説（寺の奥）
+    kind: ai
+    file: masamune/main/M07.jpg
+    focus: [0.45, 0.4]
+    move: in
+    must: 灯明の本堂
+  M06m:                                  # 黒沼の魚まで片目（霧の山）
+    kind: ai
+    file: masamune/main/M06.jpg
+    focus: [0.75, 0.55]
+    move: right
+    must: 霧の山あいと川
+  M03:                                   # 片倉小十郎の話（頭を下げる家臣）
+    kind: ai
+    file: masamune/main/M03.jpg
+    focus: [0.6, 0.55]
+    move: in
+    must: 頭を下げる家臣
+  M03b:                                  # 「云ひ伝ふ」（少年の後ろ姿）
+    kind: ai
+    file: masamune/main/M03.jpg
+    focus: [0.3, 0.5]
+    move: right
+    must: 少年の後ろ姿
+  M02q:                                  # 最後の問い
+    kind: ai
+    file: masamune/main/M02.jpg
+    focus: [0.35, 0.55]
+    move: in
+    zoom: 0.2
+    text_y: 0.76
+    must: 布団の幼い子
+lines:
+  # fact: masamune-07, masamune-83, masamune-82
+  - 語り: 伊達政宗の右目は、なぜ見えなくなったのか。藩の記録には、ふしぎな説と、《!言い伝え》まで並んでいる。
+    shot: M02f
+    tone: 強調
+  - 語り: 1567年、米沢に生まれた政宗の幼い名は、梵天丸。
+    shot: M02w
+    tone: しみじみ
+    pause: 0.12
+  # fact: masamune-07
+  - 語り: 梵天丸は、疱瘡、今でいう天然痘にかかる。
+    shot: Smallpox
+    tone: 重い
+    pause: 0.12
+  # fact: masamune-07
+  - 語り: 仙台藩の記録、『治家記録』は、病の毒が目に集まり、それから、右の目が見えなくなった、と書く。
+    shot: M02
+    tone: しみじみ
+    pause: 0.12
+  # fact: masamune-81
+  - 語り: いつのことかは、小さな字で、「年月知らず」。5歳と書く文章もあるが、記録に年は無い。
+    shot: Hososhin
+    tone: しみじみ
+    pause: 0.12
+  # fact: masamune-83
+  - 語り: 同じ記録には、片目の行者、萬海上人の生まれ変わりだから片目なのだ、という説も載る。
+    shot: M07
+    tone: 強調
+    pause: 0.12
+  # fact: masamune-83
+  - 語り: 上人が身を清めた黒沼の魚まで、みな片目になった。記録はそう書いたうえで、疱瘡のせいだと、説を退けた。
+    shot: M06m
+    tone: しみじみ
+    pause: 0.12
+  # fact: masamune-82
+  - 語り: もうひとつ、家臣の片倉小十郎景綱が、その右目を、取り去った、という話もある。
+    shot: M03
+    tone: 重い
+    pause: 0.12
+  # fact: masamune-82
+  - 語り: ただ、記録はこの話を、「云ひ伝ふ」。《!言い伝え》として書いている。
+    shot: M03b
+    tone: 強調
+    pause: 0.3
+    dip: true
+  - 語り: 生まれ変わりも、家臣の話も。片目のわけを、のちの人々は、何かに求めたのかもしれない。
+    shot: M02w
+    tone: しみじみ
+    pause: 0.15
+  - 語り: あなたなら、記録の3つの話の、どれを《信じますか》。
+    shot: M02q
+    tone: 疑問
+    pause: 0.15

@@ -1,0 +1,157 @@
+# 物語完結型ショート 和宮 s5（2026-10-29）。本編 scripts/kazunomiya-story.yaml の第5章（塔ノ沢の死と、骨が語ったこと）から。ガラス板の話（s1）は入れない。
+# 形式は rikyu_s1.yaml・hidetsugu_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。
+# 絵は本編の AI 絵（out/story/kazunomiya/main/W*.jpg）と実在の絵（塔ノ沢の版画・広重の増上寺・和宮の肖像）。
+# 事実カード（dev/output/rekishi-chiso/research/和宮_facts_20261028.yaml）：kazunomiya-03・41・30・06・38・02・40・39
+#   ・骨の調べ（身長・左手首・刃の跡が無い）は鈴木尚『骨は語る』を岩波明（ビジネスジャーナル 2021）が紹介したもの → 語りで岩波さんの名と年を言う。
+#   ・替え玉の話は有吉佐和子の小説『和宮様御留』（1978、kazunomiya-39）。岩波さんの記事も信ぴょう性が薄いとする。
+#   ・墓・棺・遺骨の中は描かない。左手首・骨の行に手や骨の絵を当てない（本編の look と同じ）。W01 は発掘の遠景。
+#   ・「和宮とされる肖像」（kazu_portrait_small）は本人か疑う説があるので替え玉の行には当てない（使わない）。享年は「満31歳」だけ。
+# 理解テスト4問：
+#   ①誰の話か：和宮の最期と、その骨
+#   ②いつ・どこで何が：1877年9月2日、箱根の塔ノ沢で脚気で亡くなり、夫と同じ増上寺に葬られた。1958年の発掘で骨が調べられた
+#   ③何が分かったか：身長143.4センチの小柄な女性。刃の跡や病の跡は無い。ただ、左の手首から先の骨が見つからなかった
+#   ④どうなったか：「箱根で賊に襲われ自害した」という匿名の手紙、替え玉の話（有吉佐和子の小説）が生まれた。骨は手紙を裏づけず、替え玉説も信ぴょう性が薄い。左手首の理由は記事にも書かれていない
+title: 和宮｜見つからなかった左手首
+yt_title: 皇女和宮の骨に、左の手首から先が無かった　そこから生まれた替え玉の話
+description: |-
+  明治10年、1877年の9月2日。和宮は、箱根の塔ノ沢の温泉で療養中に、脚気で亡くなりました。墓は、夫の家茂と同じ、芝の増上寺に建てられたとされます。
+  昭和33年、1958年。増上寺の発掘で、和宮の骨が調べられました。人類学者の鈴木尚の調べを、精神科医の岩波明さんが2021年の記事で紹介しています。身長143.4センチの小柄な女性で、骨に刃の跡や病の跡はありませんでした。ただ、左の手首から先の骨が、見つかりませんでした。
+  発掘のさなか、名乗らない女性から「和宮は箱根の山中で賊に襲われ、自害した」という手紙が届きます。替え玉の話を描いたのは、有吉佐和子の1978年の小説『和宮様御留』でした。岩波さんの記事も、替え玉説は信ぴょう性が薄いとしています。
+hashtags: ["#和宮", "#日本史", "#幕末"]
+ai_images: true
+art_dir: out/story/kazunomiya
+out: kazunomiya_story_s5
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 和宮（将軍家茂の妻になった皇女）
+  title: "骨に無かった、《左手首》"
+now:
+  - {at: 皇女和宮, text: "1958年　増上寺", point: 1}
+  - {at: 明治10年, text: "1877年9月2日　塔ノ沢", point: 0}
+  - {at: 昭和33年, text: "1958年　増上寺", point: 1}
+  - {at: 1978年, text: "1978年　小説", point: 2}
+timeline:
+  - {label: "1877"}
+  - {label: "1958"}
+  - {label: "1978"}
+cards:
+  - type: table                          # 骨が語ったこと（語った順に1行ずつ）
+    title: 発掘で分かった和宮
+    from: 身長は
+    until: 発掘のさなか
+    items:
+      - {at: 身長は, text: "身長143.4センチ"}
+      - {at: 刃の跡, text: "刃の跡・病の跡は無い"}
+      - {at: 左の手首, text: "左の手首から先が無い"}
+shots:
+  W01f:                                  # 1文目：発掘の現場の遠景
+    kind: ai
+    file: kazunomiya/main/W01.jpg
+    focus: [0.45, 0.5]
+    move: in
+    zoom: 0.12
+    must: 発掘の現場の遠景
+  Tonosawa:                              # 1877年、箱根の塔ノ沢
+    kind: real
+    image: paintings/kazu_tonosawa_1854.jpg
+    focus: [0.5, 0.6]
+    move: up
+    credit: "《箱根 塔ノ沢》1854年（アムステルダム国立美術館）"
+    must: 塔ノ沢の版画
+  W01:                                   # 1958年の発掘
+    kind: ai
+    file: kazunomiya/main/W01.jpg
+    focus: [0.7, 0.5]
+    move: left
+    must: 発掘の調査員の後ろ姿
+  W10:                                   # 名乗らない女性からの手紙
+    kind: ai
+    file: kazunomiya/main/W10.jpg
+    focus: [0.6, 0.55]
+    move: in
+    must: 文机の紙
+  W14b:                                  # 箱根の山の中で賊に（山の宿）
+    kind: ai
+    file: kazunomiya/main/W14.jpg
+    focus: [0.2, 0.4]
+    move: up
+    must: 霧の山あいと川
+  W06:                                   # 替え玉の話・小説
+    kind: ai
+    file: kazunomiya/main/W06.jpg
+    focus: [0.6, 0.45]
+    move: in
+    must: 和宮の横顔
+  W15:                                   # 骨の調べ・左手首（手や骨の絵は当てない。夕暮れの寺の影）
+    kind: ai
+    file: kazunomiya/main/W15.jpg
+    focus: [0.3, 0.5]
+    move: right
+    must: 夕暮れの寺の影
+  W06q:                                  # 最後の問い：和宮の横顔
+    kind: ai
+    file: kazunomiya/main/W06.jpg
+    focus: [0.62, 0.38]
+    move: in
+    zoom: 0.18
+    text_y: 0.76
+    must: 和宮の横顔
+lines:
+  # fact: kazunomiya-02
+  - 語り: 皇女和宮の骨には、左の手首から先が、無かった。そこから、いくつもの《!物語》が生まれた。
+    shot: W01f
+    tone: 強調
+  # fact: kazunomiya-03
+  - 語り: 明治10年、1877年。和宮は、箱根の塔ノ沢で療養中に、脚気で亡くなった。
+    shot: Tonosawa
+    tone: 重い
+    pause: 0.12
+  # fact: kazunomiya-30, kazunomiya-06
+  - 語り: 昭和33年、増上寺の発掘で、和宮の骨が調べられた。岩波明さんの2021年の記事が、その結果を紹介している。
+    shot: W01
+    tone: しみじみ
+    pause: 0.12
+  # fact: kazunomiya-06, kazunomiya-38
+  - 語り: 和宮の身長は、143.4センチ。小柄な女性だった。骨に、刃の跡や病の跡は、無かった。
+    shot: W15
+    tone: しみじみ
+    pause: 0.12
+  # fact: kazunomiya-02
+  - 語り: ただ、《左の手首》から先の骨だけが、見つからなかった。
+    shot: W15
+    tone: 重い
+    pause: 0.3
+    dip: true
+  # fact: kazunomiya-40
+  - 語り: 発掘のさなか、名乗らない女性から、手紙が届く。和宮は箱根の山で賊に襲われ、自害した、と。
+    shot: W10
+    tone: しみじみ
+    pause: 0.12
+  - 語り: けれど、骨に、刃の跡は無い。
+    shot: W14b
+    tone: 強調
+    pause: 0.12
+  # fact: kazunomiya-39
+  - 語り: 和宮は別人だった、という替え玉の話は、有吉佐和子の1978年の小説が描いたものだ。
+    shot: W06
+    tone: しみじみ
+    pause: 0.12
+  # fact: kazunomiya-39
+  - 語り: 岩波さんの記事も、替え玉説は信ぴょう性が薄い、とする。左手首が無い理由は、書かれていない。
+    shot: W01
+    tone: しみじみ
+    pause: 0.15
+  - 語り: あなたは、見つからない骨から、物語が生まれるのを、どう《思いますか》。
+    shot: W06q
+    tone: 疑問
+    pause: 0.15
