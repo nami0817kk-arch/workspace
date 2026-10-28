@@ -1,4 +1,4 @@
-LONG = dict(title="電子レンジは中から温めていなかった", parts=[
+LONG = dict(title="電子レンジで中が冷たいのはなぜ", parts=[
     dict(title="「中から温まる」は、本当か", ep="ch1"),
     dict(title="厚さを変えて、温めてみる", ep="ch2"),
     dict(title="周波数を変えると、どうなるか", ep="ch3"),

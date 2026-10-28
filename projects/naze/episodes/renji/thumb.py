@@ -74,7 +74,7 @@ COPY = {
 # D: 動画でわかることを 3 つ並べる(本編の章から)
 COPY["D"] = [(150, [("電子レンジで", INK)], 150), (370, [("中が", INK), ("冷たい", RED), ("理由", INK)], 175)]
 LIST = {"D": ["電波が届く深さは数cm", "温めムラは6cmおき", "休ませると中まで温まる"]}
-v = sys.argv[1] if len(sys.argv) > 1 else ""
+v = sys.argv[1] if len(sys.argv) > 1 else "D"  # D を本番に(2026-10-29 ユーザーOK)
 for y, parts, size in COPY[v]:
     line(80, y, parts, size)
 if v in LIST:
@@ -88,6 +88,6 @@ if v in LIST:
         d.text((235, y + 75), item, font=f, fill=INK, anchor="lm")
 else:
     d.text((90, 1080), "厚さ10cmを温める計算", font=O.font(78), fill=(70, 80, 100), stroke_width=8, stroke_fill=(255, 255, 255))
-name = f"thumb_long{'_' + v if v else ''}.jpg"
+name = "thumb_long.jpg" if v == "D" else f"thumb_long_{v or '0'}.jpg"
 img.convert("RGB").resize((1280, 720), Image.LANCZOS).save(OUT / name, quality=93)
 print(OUT / name)
