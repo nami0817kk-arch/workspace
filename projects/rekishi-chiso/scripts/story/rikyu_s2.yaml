@@ -1,0 +1,179 @@
+# 物語完結型ショート 千利休 s2（2026-10-28）。本編 scripts/rikyu-story.yaml の序章・第2章（一条戻橋の木像の磔）から。投稿しない。
+# 形式は kazumasa_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。絵は本編の AI 絵（out/story/rikyu/main/R*.jpg・K05）を縦に切り出す。
+# 事実カード（dev/output/rekishi-chiso/research/千利休_facts_20261028.yaml）：rikyu-01・02・03・10・16
+#   ・伊達家に届いた書状（『大日本古文書 伊達家文書之二』）：「宗易、其身之形を木像ニ作立、紫野大徳寺ニ被納候ヲ殿下様より被召上」（rikyu-02・16）／
+#     「聚楽之大門もどり橋と申候所ニ、張付ニかけさせられ候」（rikyu-03）／「誠々前代未聞之由、於京中申事ニ候、見物之貴賤無際限候、右八付之脇ニ、色々ノ科共被遊御札ヲ被相立候」（rikyu-10）
+#     → 今の言葉にして語りで読む。門の「上」に置いたのは rikyu-02（山本兼一・Impress Watch ほか）。
+#   ・「人を罰する前に、像をさらした」は本編の言い方（見せるための罰。新しい事実は足さない）。46秒で短かったので足した。
+#   ・利休本人の死は「秀吉の命で、世を去った、と伝わる」まで（本当に切腹したかは s1・s4 の話。ここでは決めない）。首をさらした話（rikyu-04）は使わない。
+# 理解テスト4問：
+#   ①誰の話か：千利休（秀吉に仕えた茶人）の木像
+#   ②いつ・どこで何が：天正19年2月、京の一条戻橋（聚楽第の大門の近く）で、利休の木像が罪人として磔にされた
+#   ③誰が、どうしたか：利休が自分の姿を写して大徳寺の門の上に納めた木像を、秀吉が召し上げて磔にし、脇に罪を書いた札を立てた（遠い伊達家に届いた書状が伝える）
+#   ④どうなったか：京では「前代未聞」と言われ、身分を問わず見物人が際限なく集まった。同じ月、利休本人も秀吉の命で世を去ったと伝わる
+title: 千利休｜木像が、橋で磔にされた
+yt_title: 千利休の「木像」は、罪人として京の橋で磔にされた【伊達家に届いた書状】
+description: |-
+  天正19年2月。京の一条戻橋で、一体の木像が、罪人として磔にされました。木像の主は、茶人・千利休です。
+  遠く奥州の伊達家に届いた書状は、こう伝えています。利休が自分の姿を写して作り、大徳寺に納めた木像を、「殿下様」つまり豊臣秀吉が召し上げ、聚楽第の大門の近くの「もどり橋」で、張付（磔）にかけた。
+  京の中では「まことに前代未聞」と言い合い、見物に来る人は身分の高い者も低い者も際限がない。木像の脇には、罪を書き連ねた札が立てられた、と。
+  同じ月、利休本人も、秀吉の命で世を去ったと伝えられています。
+hashtags: ["#千利休", "#日本史", "#戦国時代"]
+ai_images: true
+art_dir: out/story/rikyu
+out: rikyu_story_s2
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 千利休（豊臣秀吉に仕えた茶人）
+  title: "利休の《木像》が、橋で磔にされた"
+now:
+  - {at: 天正19年2月, text: "天正19年2月　京", point: 1}
+  - {at: 木像は, text: "それより前　大徳寺", point: 0}
+  - {at: 奥州の, text: "天正19年　奥州へ", point: 1}
+  - {at: 一条戻橋で, text: "天正19年2月　一条戻橋", point: 1}
+  - {at: 同じ月, text: "天正19年2月　京", point: 2}
+timeline:
+  - {label: "大徳寺"}
+  - {label: "戻橋"}
+  - {label: "同じ月"}
+cards:
+  - type: year                           # 天正19年2月（木像の磔）
+    from: 一条戻橋で
+    until: 京の中では
+    big: 天正19年
+    sub: 2月　一条戻橋で木像が磔に
+    text_y: 0.70
+shots:
+  R07s:                                  # 1文目：橋の上の柱に縛られた木像（木像は絵の 0.52, 0.42）
+    kind: ai
+    file: rikyu/main/R07.jpg
+    focus: [0.52, 0.42]
+    move: in
+    zoom: 0.2
+    must: 橋の上の木像
+  R06:                                   # 木像は門の上に納めたもの（楼上の木像。顔は絵の 0.62, 0.15 → 寄って帯の下へ）
+    kind: ai
+    file: rikyu/main/R06.jpg
+    focus: [0.62, 0.0]
+    move: right
+    zoom: 1.0
+    must: 楼上の木像
+  R10:                                   # 伊達家に届いた書状
+    kind: ai
+    file: rikyu/main/R10.jpg
+    focus: [0.45, 0.6]
+    move: right
+    must: 文机の書状と行灯
+  K05:                                   # 殿下様＝秀吉が召し上げた
+    kind: ai
+    file: rikyu/main/K05.jpg
+    focus: [0.5, 0.45]
+    move: in
+    must: 金の襖の前の秀吉
+  R07w:                                  # 一条戻橋で張付に（橋と木像）
+    kind: ai
+    file: rikyu/main/R07.jpg
+    focus: [0.6, 0.5]
+    move: left
+    must: 橋と木像
+  R07c:                                  # 前代未聞・見物の人（左の人だかり）
+    kind: ai
+    file: rikyu/main/R07.jpg
+    focus: [0.2, 0.55]
+    move: right
+    zoom: 0.15
+    must: 見物の人だかり
+  R07z:                                  # 木像の脇の札（木像に寄る）
+    kind: ai
+    file: rikyu/main/R07.jpg
+    focus: [0.52, 0.4]
+    move: in
+    zoom: 0.45
+    must: 木像
+  R07w2:                                 # 像を人目にさらした（橋と人だかりを引きで）
+    kind: ai
+    file: rikyu/main/R07.jpg
+    focus: [0.4, 0.5]
+    move: out
+    zoom: 0.12
+    must: 橋の上の木像と見物の人
+  R01:                                   # 同じ月、利休本人も
+    kind: ai
+    file: rikyu/main/R01.jpg
+    focus: [0.5, 0.0]
+    move: in
+    zoom: 0.5
+    text_y: 0.80
+    must: 利休の顔
+  R01q:                                  # 最後の問い
+    kind: ai
+    file: rikyu/main/R01.jpg
+    focus: [0.5, 0.0]
+    move: in
+    zoom: 0.7
+    text_y: 0.80
+    must: 利休の顔
+lines:
+  # fact: rikyu-03
+  - 語り: 天正19年2月、茶人、千利休の《!木像》が、罪人として、京の橋で、磔にされた。
+    shot: R07s
+    tone: 強調
+  # fact: rikyu-16, rikyu-02
+  - 語り: 木像は、利休が自分の姿を写して作り、京の大徳寺の、門の上に納めたものだった。
+    shot: R06
+    tone: しみじみ
+    pause: 0.12
+  # fact: rikyu-10
+  - 語り: 遠く奥州の伊達家に届いた書状が、そのときの様子を、伝えている。
+    shot: R10
+    tone: しみじみ
+    pause: 0.12
+  # fact: rikyu-02
+  - 語り: 「殿下様」、つまり秀吉が、その木像を、《召し上げた》。
+    shot: K05
+    tone: 強調
+    pause: 0.12
+  # fact: rikyu-03
+  - 語り: そして、聚楽第の大門の近く、一条戻橋で、《磔》にかけた。
+    shot: R07w
+    tone: 重い
+    pause: 0.3
+    dip: true
+  # fact: rikyu-10
+  - 語り: まことに《前代未聞》だと、京の中では、言い合った。
+    shot: R07c
+    tone: しみじみ
+    pause: 0.15
+  # fact: rikyu-10
+  - 語り: 見物に来る人は、身分の高い者も、低い者も、際限がない。
+    shot: R07c
+    tone: しみじみ
+    pause: 0.12
+  # fact: rikyu-10
+  - 語り: 木像の脇には、罪を書き連ねた《札》が、立てられた。
+    shot: R07z
+    tone: 重い
+    pause: 0.15
+  - 語り: 人を罰する前に、まず、その人の姿をした像を、罪人のように、人目にさらしたのだ。
+    shot: R07w2
+    tone: しみじみ
+    pause: 0.12
+  # fact: rikyu-01
+  - 語り: 同じ月、利休本人も、秀吉の命で、世を去った、と伝わる。
+    shot: R01
+    tone: 重い
+    pause: 0.15
+  - 語り: あなたなら、自分の姿の像が、橋でさらされると知って、《耐えられますか》。
+    shot: R01q
+    tone: 疑問
+    pause: 0.15

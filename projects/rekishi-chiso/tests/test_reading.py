@@ -191,6 +191,8 @@ MISREADS = [
     ("asahi-story", "差し出す側が", "さしだすがわが", "ワガ"),
     ("asahi-story", "戦の都合", "いくさのつごう", "ツゴオ"),
     ("asahi-story", "家忠の日記は", "いえただ", "イエタダ"),
+    # 千利休（10-28 のショート story/rikyu_s1〜s5 の kana で。ショートの台本は script.load で読めないので本編の行で確かめる）
+    ("rikyu-story", "大日本茶道学会", "ちゃどう", "チャドオ"),
     # 豊臣秀次（10-28 のショート story/hidetsugu_s1〜s5 の kana で。ショートの台本は _texts が storyshort で読む）
     ("story/hidetsugu_s5", "ひとつの塚から", "のつかから", "ツカカラ"),
     # 和宮（10-28 の kazunomiya-story の kana で）
@@ -213,7 +215,7 @@ MISREADS = [
     ("kazunomiya-story", "橋本実梁", "さねやな", "サネヤ"),
     ("kazunomiya-story", "清水家の屋敷に", "シミズケ", "シミズケ"),
     ("kazunomiya-story", "礫石経", "れきせききょう", "レキセキ"),
-    ("kazunomiya-story", "和宮様御留", "おんとめ", "オントメ"),
+    ("kazunomiya-story", "和宮様御留", "おとめ", "オトメ"),
 ]
 
 
