@@ -15,7 +15,7 @@ OUT = HERE.parents[1] / "out" / "shingeki"
 OUT.mkdir(parents=True, exist_ok=True)
 W, H = 2560, 1440
 INK, RED, YEL, WHITE, BLACK = (20, 30, 60), (230, 30, 30), (255, 215, 0), (255, 255, 255), (10, 10, 20)
-v = sys.argv[1] if len(sys.argv) > 1 else "A"
+v = sys.argv[1] if len(sys.argv) > 1 else "D"
 
 # 下地: 巨人が大きく見えるよう右上に寄せて拡大し、色を少し濃く
 src = Image.open(HERE / "assets" / "thumb_gemini.jpg").convert("RGB")
@@ -68,26 +68,36 @@ def head():
 
 tag((W - 210, 110), "60m", 110, INK, YEL)
 
+# 字は大きくしすぎない(2026-10-29 ユーザー指示)。絵の巨人が主役
 if v == "A":
     # 疑問で引く: 歩いたら骨折 → じゃあ鉄の骨なら？
     head()
-    big((70, 470), [("歩いたら", WHITE)], 250, inner=BLACK, outer=WHITE, w1=14, w2=30)
-    big((70, 760), [("骨折", RED)], 400, inner=WHITE, outer=BLACK)
-    big((80, 1230), [("じゃあ ", WHITE), ("鉄の骨", YEL), ("なら…？", WHITE)], 120, inner=BLACK, outer=BLACK, w1=12, w2=14)
+    big((70, 470), [("歩いたら", WHITE)], 165, inner=BLACK, outer=WHITE, w1=12, w2=24)
+    big((70, 680), [("骨折", RED)], 260, inner=WHITE, outer=BLACK, w1=16, w2=34)
+    big((80, 1010), [("じゃあ ", WHITE), ("鉄の骨", YEL), ("なら…？", WHITE)], 100, inner=BLACK, outer=BLACK, w1=10, w2=12)
 elif v == "B":
     # 数字で引く: 一歩ごとに骨が折れる / 骨の負担 1.7倍
     head()
-    big((70, 470), [("一歩ごとに", INK)], 190, outer=WHITE, inner=WHITE, w1=16, w2=26)
-    big((70, 720), [("骨が", INK), ("折れる", RED)], 260, outer=WHITE, inner=WHITE, w1=18, w2=34)
-    d.rounded_rectangle([70, 1080, 1250, 1330], radius=40, fill=(190, 30, 30))
-    big((660, 1105), [("骨の負担 ", WHITE), ("1.7倍", YEL)], 150, anchor="ma", inner=(150, 20, 20), outer=(150, 20, 20), w1=6, w2=8)
+    big((70, 470), [("一歩ごとに", INK)], 140, outer=WHITE, inner=WHITE, w1=14, w2=22)
+    big((70, 660), [("骨が", INK), ("折れる", RED)], 190, outer=WHITE, inner=WHITE, w1=16, w2=28)
+    d.rounded_rectangle([70, 930, 930, 1110], radius=34, fill=(190, 30, 30))
+    big((500, 948), [("骨の負担 ", WHITE), ("1.7倍", YEL)], 110, anchor="ma", inner=(150, 20, 20), outer=(150, 20, 20), w1=5, w2=6)
 elif v == "C":
     # 答えで引く: 歩ける巨人は発泡スチロール並みに軽い!?
     head()
-    big((70, 470), [("歩ける巨人は", INK)], 190, outer=WHITE, inner=WHITE, w1=16, w2=26)
-    big((70, 720), [("発泡スチロール", RED)], 230, outer=WHITE, inner=WHITE, w1=18, w2=34)
-    big((70, 1020), [("並みに", INK), ("軽い", RED), ("!?", INK)], 200, outer=WHITE, inner=WHITE, w1=16, w2=30)
+    big((70, 470), [("歩ける巨人は", INK)], 140, outer=WHITE, inner=WHITE, w1=14, w2=22)
+    big((70, 660), [("発泡スチロール", RED)], 170, outer=WHITE, inner=WHITE, w1=16, w2=26)
+    big((70, 880), [("並みに", INK), ("軽い", RED), ("!?", INK)], 140, outer=WHITE, inner=WHITE, w1=14, w2=22)
 
-name = "thumb_long.jpg" if v == "A" else f"thumb_long_{v}.jpg"
+elif v == "D":
+    # 全部入り(2026-10-29 ユーザー指示「小さく、全要素いれる」)
+    head()
+    big((70, 440), [("歩いたら", INK), ("骨折", RED)], 170, outer=WHITE, inner=WHITE, w1=14, w2=24)
+    d.rounded_rectangle([70, 680, 830, 830], radius=30, fill=(190, 30, 30))
+    big((450, 693), [("骨の負担 ", WHITE), ("1.7倍", YEL)], 92, anchor="ma", inner=(150, 20, 20), outer=(150, 20, 20), w1=4, w2=5)
+    big((70, 880), [("じゃあ ", INK), ("鉄の骨", RED), ("なら…？", INK)], 100, outer=WHITE, inner=WHITE, w1=12, w2=18)
+    big((70, 1050), [("歩ける巨人は ", INK), ("発泡スチロール", RED), ("並み!?", INK)], 100, outer=WHITE, inner=WHITE, w1=12, w2=18)
+
+name = "thumb_long.jpg" if v == "D" else f"thumb_long_{v}.jpg"
 img.convert("RGB").resize((1280, 720), Image.LANCZOS).save(OUT / name, quality=93)
 print(OUT / name)
