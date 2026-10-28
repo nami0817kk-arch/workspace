@@ -18,6 +18,7 @@ description: |-
   11月15日、和宮は江戸に入りました。けれど夫の家茂とは、4年あまりで死に別れることになります。
 hashtags: ["#和宮", "#日本史", "#幕末"]
 ai_images: true
+ai_disclosure: この動画の人物・情景の画像の多くは、画像生成AI（Google の Gemini・Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
 art_dir: out/story/kazunomiya
 out: kazunomiya_story_s2
 header_style: B

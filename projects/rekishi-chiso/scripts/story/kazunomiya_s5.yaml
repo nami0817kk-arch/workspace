@@ -19,6 +19,7 @@ description: |-
   発掘のさなか、名乗らない女性から「和宮は箱根の山中で賊に襲われ、自害した」という手紙が届きます。替え玉の話を描いたのは、有吉佐和子の1978年の小説『和宮様御留』でした。岩波さんの記事も、替え玉説は信ぴょう性が薄いとしています。
 hashtags: ["#和宮", "#日本史", "#幕末"]
 ai_images: true
+ai_disclosure: この動画の人物・情景の画像の多くは、画像生成AI（Google の Gemini・Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
 art_dir: out/story/kazunomiya
 out: kazunomiya_story_s5
 header_style: B
