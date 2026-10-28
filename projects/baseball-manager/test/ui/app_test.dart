@@ -66,6 +66,26 @@ Game _until(bool Function(Game) stop, {int seed = 1, int? potential}) {
   return g;
 }
 
+/// 結婚して引退した選手。プロで恋人がいるところまで進め、絆を満タンにして引退する
+/// (自然に結婚まで行く選手を探すと、乱数や引退の年齢の決まりが変わるたびに見つからなくなった)。
+Game _marriedLife() {
+  for (var sd = 0; sd < 200; sd++) {
+    final g = _until(
+        (g) =>
+            g.stage == Stage.pro &&
+            g.phase == Phase.term &&
+            g.cast.lover != null &&
+            g.player.age >= 26,
+        seed: sd,
+        potential: 90);
+    if (g.phase == Phase.retired || g.cast.lover == null) continue;
+    g.cast.lover!.addBond(100);
+    g.retire();
+    if (g.ending?.married ?? false) return g;
+  }
+  fail('結婚して引退した選手がいない');
+}
+
 /// 下のタブを切り替える(train=育成 / ability=能力 / career=キャリア)。
 Future<void> _tab(WidgetTester t, String name) async {
   await t.tap(find.byKey(Key('tab-$name')));
@@ -1624,13 +1644,8 @@ void _rankTests() {
 
     testWidgets('結婚して引退したら、そのまま二世で続けられる', (t) async {
       final c = await _start(t);
-      Game? g;
-      for (var sd = 0; sd < 400 && g == null; sd++) {
-        final x = _until((g) => false, seed: sd, potential: 90);
-        if (x.ending?.married ?? false) g = x;
-      }
-      expect(g, isNotNull);
-      c.adopt(g!);
+      final g = _marriedLife();
+      c.adopt(g);
       await t.pumpAndSettle();
       await _dismissMilestones(t);
       await t.scrollUntilVisible(find.byKey(const Key('continue-heir')), 300,
@@ -2039,13 +2054,7 @@ void _rankTests() {
   });
 
   group('二世の画面', () {
-    Game marriedLife() {
-      for (var sd = 0; sd < 400; sd++) {
-        final g = _until((g) => false, seed: sd, potential: 90);
-        if (g.ending?.married ?? false) return g;
-      }
-      fail('結婚して引退した選手がいない');
-    }
+    Game marriedLife() => _marriedLife();
 
     testWidgets('殿堂に結婚した選手が居ると、二世として始められる', (t) async {
       SharedPreferences.setMockInitialValues({});

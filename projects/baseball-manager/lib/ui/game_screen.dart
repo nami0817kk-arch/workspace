@@ -13,6 +13,7 @@ import '../game/school.dart';
 import '../game/marks.dart';
 import '../game/goals.dart';
 import '../game/game.dart';
+import '../game/missions.dart';
 import '../game/skills.dart';
 import '../game/training.dart' show abilityCap, ageCeiling;
 import '../game/invest.dart';
@@ -328,6 +329,7 @@ class _GameScreenState extends State<GameScreen> {
             run: controller.expByAd,
           ),
         _TraitChips(game: game),
+        if (missionsFor(game.stage).isNotEmpty) _MissionCard(game: game),
         _AbilityCard(controller: controller, game: game),
         _SkillCard(controller: controller, game: game),
       ];
@@ -2868,3 +2870,54 @@ class _AdRewardTileState extends State<_AdRewardTile> {
     );
   }
 }
+
+/// 育成ミッション(いまの段階の目標)。達成すると経験点とやる気がもらえる。
+class _MissionCard extends StatelessWidget {
+  const _MissionCard({required this.game});
+  final Game game;
+
+  @override
+  Widget build(BuildContext context) {
+    final list = missionsFor(game.stage);
+    final done = list.where((m) => game.missionsDone.contains(m.id)).length;
+    return Card(
+      key: const Key('mission-card'),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text('育成ミッション(${stageLabel(game.stage)}) $done/${list.length}',
+              style: Theme.of(context).textTheme.titleSmall),
+          Text(
+              '達成すると 経験点+${missionExp(game.stage)}(全種類)・やる気+$missionMorale。'
+              '${game.stage == Stage.pro ? '' : '段階が変わると、残りは消える。'}',
+              style: const TextStyle(fontSize: 11, color: Colors.grey)),
+          const SizedBox(height: 4),
+          for (final m in list)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 2),
+              child: Row(children: [
+                Icon(
+                    game.missionsDone.contains(m.id)
+                        ? Icons.check_circle
+                        : Icons.radio_button_unchecked,
+                    key: Key('mission-${m.id}'),
+                    size: 18,
+                    color: game.missionsDone.contains(m.id)
+                        ? const Color(0xFF2E7D32)
+                        : Colors.grey),
+                const SizedBox(width: 6),
+                Expanded(
+                  child: Text(m.text,
+                      style: TextStyle(
+                          decoration: game.missionsDone.contains(m.id)
+                              ? TextDecoration.lineThrough
+                              : null)),
+                ),
+              ]),
+            ),
+        ]),
+      ),
+    );
+  }
+}
+

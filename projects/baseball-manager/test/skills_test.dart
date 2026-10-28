@@ -1,3 +1,4 @@
+import 'package:baseball_manager/game/missions.dart';
 // 特殊能力(経験点で取る・コツで安くなる)と、行動ごとの役割の違い(2026-10-24)。
 import 'dart:math';
 
@@ -121,6 +122,8 @@ void main() {
       g.adminAddExp(200);
       expect(g.buySkill(Skill.strikeout), 'この役割では取れない');
       expect(g.buySkill(Skill.artist), contains('パワーヒッター'));
+      // 育成ミッション(特殊能力を1つ取る)の報酬が混ざらないよう、済みにしておく
+      g.missionsDone.addAll([for (final m in missions) m.id]);
       final before = g.exp.of(Category.batting);
       expect(g.buySkill(Skill.powerHitter), isNull);
       expect(g.player.skills, contains(Skill.powerHitter));

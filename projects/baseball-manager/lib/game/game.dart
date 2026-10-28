@@ -24,6 +24,7 @@ import 'marks.dart';
 import 'talent.dart';
 import 'skills.dart';
 import 'competition.dart';
+import 'missions.dart';
 import 'traits.dart';
 import 'tryout.dart';
 import 'after_career.dart';
@@ -164,6 +165,7 @@ class Game {
                       .fold<int>(0, (a, c) => (a * 131 + c) & 0x7fffffff)) &
               0x3fffffff);
     g.overallHistory.add(overall(p).round());
+    g.yearStart = Map.of(p.abilities);
     g._note('stage', '${stageNameOf(Stage.youth)}を始めた');
     if (parent != null) {
       g._note('stage', '${parent.name}の子として生まれた(二世)');
@@ -186,6 +188,32 @@ class Game {
   Ability _eventFocus = Ability.contact;
 
   Course? route; // 大学/社会人を選んだか
+
+  /// 達成した育成ミッションの id(`missions.dart`)。保存する(古いセーブは空)。
+  final Set<String> missionsDone = {};
+
+  /// 今年のはじめの能力(1年の成長の記録に使う)。保存する(古いセーブは空=記録しない)。
+  Map<Ability, int> yearStart = {};
+
+  /// これまでで一番伸びた1年の、能力の伸びの合計。保存する。
+  int bestYearGain = 0;
+
+  /// いまの段階の育成ミッションを判定し、達成したものの報酬を渡す。達成した数を返す。
+  int checkMissions() {
+    if (phase == Phase.retired) return 0;
+    var n = 0;
+    for (final m in missionsFor(stage)) {
+      if (missionsDone.contains(m.id) || !m.check(this)) continue;
+      missionsDone.add(m.id);
+      final e = missionExp(stage);
+      exp = exp.add(spreadExp(player.role, e));
+      condition = condition.copyWith(morale: condition.morale + missionMorale);
+      log.add('育成ミッション達成: ${m.text}! 経験点+$e(全種類)・やる気+$missionMorale');
+      _note('title', '育成ミッション「${m.text}」を達成');
+      n++;
+    }
+    return n;
+  }
 
   /// チーム名・対戦相手の名前の種(選手ごと)。0 は古いセーブ(名前だけで決める)。
   int teamSeed = 0;
@@ -668,6 +696,7 @@ class Game {
     } else if (stage == Stage.pro && slot < 6) {
       _playLeagueMonth();
     }
+    checkMissions();
     _finishTurn(f, share);
   }
 
@@ -749,6 +778,7 @@ class Game {
     final t = finishFinal(m, bonus, rng);
     _summerAftermath(t, null);
     _finalNote = null;
+    checkMissions();
     _finishTurn(_eventFocus, slotShare(stage));
   }
 
@@ -782,6 +812,7 @@ class Game {
     _checkCoach();
     pendingEvent = null;
     phase = Phase.term;
+    checkMissions();
     _nextSlot();
   }
 
@@ -793,6 +824,7 @@ class Game {
     if (r == null) return false;
     player = r.player;
     exp = r.pool;
+    checkMissions();
     return true;
   }
 
@@ -801,6 +833,7 @@ class Game {
     final r = buyAll(player, exp, a);
     player = r.player;
     exp = r.pool;
+    checkMissions();
     return r.bought;
   }
 
@@ -849,6 +882,7 @@ class Game {
     if (studyTarget == s) studyTarget = null;
     log.add('特殊能力「${s.label}」を取得した!');
     _note('trait', '特殊能力「${s.label}」を取得');
+    checkMissions();
     return null;
   }
 
@@ -929,9 +963,13 @@ class Game {
 
   /// おまかせ: 種類ごとに低い能力から順に振り分ける。
   void autoSpend() {
-    final r = autoSpendExp(player, exp);
-    player = r.player;
-    exp = r.pool;
+    // 振り分けでミッションを達成すると経験点が入るので、それも続けて振り分ける
+    for (var i = 0; i < 5; i++) {
+      final r = autoSpendExp(player, exp);
+      player = r.player;
+      exp = r.pool;
+      if (checkMissions() == 0) break;
+    }
   }
 
   /// プロの間はいつでも役割を変えられる(二刀流にする/戻す)。
@@ -1618,6 +1656,26 @@ class Game {
   }
 
   void _endYear() {
+    // 1年の成長の記録(年のはじめの能力と比べる)。いちばん伸びた年は「自己ベスト」
+    if (yearStart.isNotEmpty) {
+      final ups = [
+        for (final a in abilitiesOf(player.role))
+          if (player.of(a) > (yearStart[a] ?? player.of(a)))
+            (a, yearStart[a]!, player.of(a))
+      ];
+      final total = ups.fold<int>(0, (t, u) => t + u.$3 - u.$2);
+      if (total > 0) {
+        log.add('この1年の成長: ${[
+          for (final u in ups) '${_abilityJp(u.$1)} ${u.$2}→${u.$3}'
+        ].join('・')}(合計+$total)');
+        if (total > bestYearGain) {
+          if (bestYearGain > 0) {
+            log.add('これまでで一番伸びた1年! (自己ベスト +$total)');
+          }
+          bestYearGain = total;
+        }
+      }
+    }
     final before = stage;
     slot = 0;
     offseasonDone = false;
@@ -1657,6 +1715,7 @@ class Game {
         ].join('・')}');
       }
     }
+    yearStart = Map.of(player.abilities);
     if (turnedPro) {
       if (proTeam != null && !overseas && proYears >= 1 && proYears % 3 == 0) {
         log.add('新人の${kohaiOf(proTeam!, player.age)}が入団してきた。');
@@ -1849,6 +1908,9 @@ class Game {
         'pendingFinal': pendingFinal?.toJson(),
         'farmYears': farmYears,
         'teamSeed': teamSeed,
+        'missionsDone': missionsDone.toList(),
+        'yearStart': {for (final e in yearStart.entries) e.key.name: e.value},
+        'bestYearGain': bestYearGain,
         'nextSalary': nextSalary,
         'afterPath': afterPath?.name,
       };
@@ -1883,6 +1945,15 @@ class Game {
     g.tryoutUsed = j['tryoutUsed'] == true;
     g.farmYears = (j['farmYears'] as num?)?.toInt() ?? 0;
     g.teamSeed = (j['teamSeed'] as num?)?.toInt() ?? 0;
+    g.missionsDone.addAll([
+      for (final x in (j['missionsDone'] as List?) ?? const []) x as String
+    ]);
+    g.yearStart = {
+      for (final e in ((j['yearStart'] as Map?) ?? const {}).entries)
+        if (Ability.parse(e.key as String) != null)
+          Ability.parse(e.key as String)!: (e.value as num).toInt()
+    };
+    g.bestYearGain = (j['bestYearGain'] as num?)?.toInt() ?? 0;
     g.nextSalary = (j['nextSalary'] as num?)?.toInt() ?? 0;
     g.afterPath = AfterPath.parse(j['afterPath'] as String?);
     final pf = j['pendingFinal'];

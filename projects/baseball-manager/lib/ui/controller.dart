@@ -956,6 +956,7 @@ class GameController extends ChangeNotifier {
     _expAdAge = -1;
     _legacyAdUsed = false;
     _autoYearAge = null;
+    _missionsShown = -1;
     // 継承: 図鑑にあり、ポイントが足りる特性だけ。持たせたぶんのポイントを使う。
     Trait? use;
     if (carry != null && carryCandidates(role).contains(carry)) {
@@ -982,6 +983,7 @@ class GameController extends ChangeNotifier {
   void adopt(Game g) {
     game = g;
     _autoYearAge = null;
+    _missionsShown = -1;
     focus = abilitiesOf(g.player.role).first;
     notifyListeners();
   }
@@ -1455,8 +1457,28 @@ class GameController extends ChangeNotifier {
   DateTime? lastSaved;
   bool _saveWarned = false;
 
+  /// 祝い終えた育成ミッションの数(新しく達成したら節目のダイアログで見せる)。
+  int _missionsShown = -1;
+
+  /// 新しく達成した育成ミッションを、節目のダイアログに積む(振り分け・特殊能力でも達成するので、ここでまとめて拾う)。
+  void _celebrateMissions(Game g) {
+    final n = g.missionsDone.length;
+    if (_missionsShown < 0 || n < _missionsShown) {
+      _missionsShown = n; // 読み込んだ直後・別の選手: 祝わずに数だけ合わせる
+      return;
+    }
+    if (n == _missionsShown) return;
+    final lines = g.log.where((l) => l.startsWith('育成ミッション達成')).toList();
+    for (final l in lines.skip(max(0, lines.length - (n - _missionsShown)))) {
+      pending.add(Milestone(MilestoneKind.achievement, '育成ミッション達成!',
+          l.replaceFirst('育成ミッション達成: ', '')));
+    }
+    _missionsShown = n;
+  }
+
   void _commit() {
     final g = game;
+    if (g != null) _celebrateMissions(g);
     // 年が1つ進んだ瞬間に、全画面広告(間隔・年齢の決まりは Monetization)。
     final m = money;
     if (m != null && g != null && g.phase != Phase.retired) {
