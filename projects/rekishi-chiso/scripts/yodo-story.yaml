@@ -106,13 +106,13 @@ thumbnail:
   layout: face
   side: right
   image: paintings/yodo_portrait_nara.jpg
-  crop: [0, 250, 1504, 1650]
+  crop: [150, 1500, 1350, 2550]
   name: 淀殿
   lead: なぜ悪女にされたのか
   main: 蛇にされた
   # 2段：上に小さい問い（lead）、下に特大の一言（main）。蛇の淀君（yodo-12）は冒頭10秒以内に出る。
   # 案b：lead「秀吉が送った手紙」／main「秋刀魚を食べよ」（yodo-25、冒頭30秒と第2章に出る）。
-  # 構図：直前の2本（kazunomiya scene・masamune versus）と替えて face（伝淀殿画像、奈良県立美術館）。crop は目で見て合わせ直す
+  # 構図：直前の2本（kazunomiya scene・masamune versus）と替えて face（伝淀殿画像、奈良県立美術館）。crop は 10-29 に目で見て顔と上半身に合わせた
 
 sections:
   # ================================================================ 導入（冒頭 約2分30秒）
