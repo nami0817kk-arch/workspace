@@ -18,6 +18,14 @@
 | シロナガスクジラ 約150t（330,000ポンド超） | NOAA Fisheries https://www.fisheries.noaa.gov/species/blue-whale | 高 |
 | 発泡スチロールは原料を約50倍に膨らませる（→約20kg/m³） | 発泡スチロール協会の説明（PRESIDENT Online https://president.jp/articles/-/41691 ）。密度は自分で換算 | 中。「発泡スチロールに近い軽さ」と言う |
 
+| SS400 降伏点 245MPa（16mm以下）、SM570 460MPa、橋の高強度鋼 SBHS500 は500MPa | 日建連 鉄骨Q&A https://www.nikkenren.com/kenchiku/sekou/steel_frame_Q&A/A-1-1.pdf ／東京都建設局 ／日本製鉄 | 中〜高 |
+| 皮質骨の密度 1.92 g/cm³（鋼 7.85 の約4分の1） | NIST https://physics.nist.gov/PhysRefData/XrayMassCoef/tab2.html | 高 |
+| 大腿骨の骨幹中央の径 男 26.5mm | Karakaş & Harma 2008 Diagn Interv Radiol 14:29 | 中（海外の計測） |
+| 太ももの最大周囲 男 53.9cm（日本人の青年） | 産総研 人体寸法DB 2003 https://www.airc.aist.go.jp/dhrt/fbodydb/2003_Statistics.pdf | 高 |
+| 激しく動くと骨のひずみは歩行の約3倍 | Burr ら 1996 Bone 18:405 | 中（被験者2人） |
+| 月 0.165G、火星 0.380G | NASA https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html ／marsfact.html | 高 |
+| ゾウは速く動いても4本の足が同時に浮かない | Hutchinson ら 2003 Nature 422:493 | 高 |
+
 ## 自分で計算した数字
 
 前提: 人は身長1.7m・体重65kg、形をそのまま拡大、密度は人と同じ。
@@ -29,6 +37,12 @@
 - 立って静止（縦の圧縮だけ）: 人 0.82MPa → 60m 約29MPa（強さの約7分の1）→ 立つだけなら耐える
 - 歩く（骨は曲げられる、実測の約10MPa）: 60m で 10 × 35.3 = **約350MPa** = 強さの約1.7倍 → 歩けば折れる
 - 骨の負担を人と同じにするには重さを35分の1: 2,860 ÷ 35 = 約80t。体の密度 1,000 ÷ 35 = 約28kg/m³（水の35分の1、発泡スチロール約20kg/m³に近い）
+
+- 実験1: 歩く負担 10MPa×k が 200MPa に届くのは k=20 → 34m。3m 9%、7m 21%、15m 44%
+- 実験2: 走る 30MPa×k → k=6.7 → 11m。15m 級は 265MPa（強さの1.3倍）
+- 実験3: SS400 245MPa → 42m、SM570 460MPa → 78m
+- 実験4: 骨の直径 2.65cm × 35.3^1.5(=210) = 5.6m、太もも 17.2cm × 35.3 = 6.1m → 9割。人は 15%
+- 実験5: 月 353×0.165 = 58MPa（29%）、火星 134MPa（67%）
 
 ## 言い切らないこと
 - 「立つだけで骨が折れる」は言わない（静止なら耐える計算）。「立てても歩けない」
