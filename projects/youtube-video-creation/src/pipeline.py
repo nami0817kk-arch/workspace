@@ -270,7 +270,7 @@ def open_early(script: Script, within: float = OPENING_WINDOW,
     """
     from .review import card_look
 
-    photo = str((script.meta or {}).get("thumbnail_photo") or "").strip()
+    photo = body_photo(script.meta)
     if not photo:
         return 0
 
@@ -326,7 +326,7 @@ def spread_long_cards(script: Script, limit: float | None = None, portrait: bool
     from .review import CARD_HOLD_MAX, card_look
 
     limit = CARD_HOLD_MAX if limit is None else limit
-    photo = str((script.meta or {}).get("thumbnail_photo") or "").strip()
+    photo = body_photo(script.meta)
     if not photo:
         return 0
     # 縦の画面（ショート）では、隣にある縦版を使う（上の `tall_twin` に理由）
@@ -401,6 +401,33 @@ def photo_key(path: str | None) -> str:
             if stem.endswith(suffix) and len(stem) > len(suffix):
                 stem, changed = stem[: -len(suffix)], True
     return f"{pure.parent.as_posix()}/{stem}"
+
+
+def body_photo(meta: dict | None) -> str:
+    """本文に挟む写真。サムネの写真が**サムネ専用の絵**なら、台本の `bg:` の写真に替える。
+
+    **選手紹介・レジェンド・監督紹介のサムネは、写真に通算の表を描き込んだ絵**
+    （`tools/thumbpanel.py`。隣に `.thumbonly` の印）。`open_early` と `spread_long_cards` は
+    それをそのまま本文へ挟んでいたので、**本編に表入りの絵が出て、名前の札や数字の板と重なった**
+    （2026-10-29 のファーガソン・クーニャ。10/1 にヤマルで決めた「サムネ専用の絵を本編に敷かない」は
+    冒頭の行（`opening_image`）にしか効いていなかった）。
+    `bg:` が写真（jpg・png）でなければ、何も挟まない（空を返す）。
+    """
+    from pathlib import Path as _P
+
+    from .research import THUMB_ONLY_MARK
+
+    meta = meta or {}
+    photo = str(meta.get("thumbnail_photo") or "").strip()
+    if not photo:
+        return ""
+    root = _P(__file__).resolve().parents[1]
+    if not (root / (photo + THUMB_ONLY_MARK)).exists():
+        return photo
+    bg = str(meta.get("bg") or "").strip()
+    if bg and _P(bg).suffix.lower() in (".jpg", ".jpeg", ".png") and (root / bg).exists():
+        return bg
+    return ""
 
 
 def tall_twin(photo: str) -> str:
