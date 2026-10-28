@@ -1,0 +1,279 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：伊達政宗（scripts/masamune-story.yaml）。chiso/storymain.py が読む。
+# 10-28 作成（10/29 19:00 公開）。台本には手を入れない（承認前。変えると控えが外れる）。決まりは docs/story-main.md・スキル rekishi-story-screen。見本は hidetsugu_main_look.yaml・rikyu_main_look.yaml。
+# 絵の方針：AI 絵は 15 枚（M01〜M15）。同じ絵を時間をずらして使い回す（続けて 20 秒まで）。
+#   人物は表情のある全面の AI 絵が主役。実在の絵（パブリックドメイン。出典は台本の background / portrait の credit・caption と下の credits）は額（frame:）と絵図・版画の一部（part:）。
+#   この回の決まり：AI 絵の政宗に眼帯を付けない（主題が「眼帯の肖像は一枚も無い」）。眼帯は M04（撮影所の小道具）だけ。肖像の話の行は実在の肖像（狩野安信・土佐光貞）を額で。
+# AI 絵の指示の一覧（英語・顔立ちの設定）：dev/output/rekishi-chiso/research/masamune_ai_images.md
+# 届く前は art_dir の仮の絵（M01.jpg〜、番号と場面だけ書いた灰色の板）で代える。届いたら main_art_dir に M01.jpg〜を置くだけ。
+#   仮の絵は out/ にあり git に入らない。無ければ 1376×768 の灰色の板に「M01（仮）」と場面を書いて作り直す（hidetsugu の ph と同じ形）。
+# 広告の配慮：骨・亡骸・棺の中・目の処置の様子は描かない（M11 は穴の中を見せない）。
+script: scripts/masamune-story.yaml
+out: masamune_story_main
+art_dir: out/story/masamune/ph          # 仮の絵（placeholder）
+main_art_dir: out/story/masamune/main   # Gemini の 16:9 の絵（M01.jpg〜M15.jpg）
+ai_disclosure: この動画の人物・情景の画像の多くは、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+
+# 章ごとの左上の札「いま｜章題」。台本の語りは西暦が主なので札も西暦（語りが和暦だけで言う日付は和暦のまま）。
+# dates＝語りがその年・月日を言った行から替える（研究・報告・広報・展示の年は物語の「いま」ではないので替えない。null で章題だけ）
+chapters:
+  0: {label: 序章 なぜ独眼竜は両目で残されたのか, now: null,
+      dates: {7: 1974年, 9: 2021年, 10: null}}
+  1: {label: 第1章 梵天丸の右目, now: null,
+      dates: {13: 1567年, 25: 天正12年10月12日, 27: 1590年, 29: null}}
+  2: {label: 第2章 眼帯と「独眼竜」はどこから来たのか, now: null,
+      dates: {40: 1987年, 43: null, 47: 1676年, 50: null}}
+  3: {label: 第3章 「両眼正しくせよ」, now: 1615年,
+      dates: {56: 1615年, 60: null, 61: 2023年, 62: 1636年5月24日, 64: 1636年6月3日, 66: null, 68: 1637年, 69: null}}
+  4: {label: 第4章 瑞巌寺の木像, now: 1652年,
+      dates: {82: 1609年, 83: 1652年}}
+  5: {label: 第5章 骨は右目を覚えていたのか, now: 1945年,
+      dates: {104: 1945年7月10日, 105: 1974年, 120: 2019年, 125: 1979年, 126: 2021年, 136: null}}
+# 概要欄「■ 参考にした資料」（事実カード 伊達政宗_facts_20261028.yaml のうち本文を開いた主なもの。題はカードの題のまま。10-28）
+references:
+  - 性山公治家記録 永禄十年八月三日条（『伊達政宗卿伝記史料』所収）　https://dl.ndl.go.jp/pid/1880040/1/35
+  - 市政だより 2017年4月号 伊達政宗（仙台市）　https://www.city.sendai.jp/shiminkoho/shise/koho/koho/shisedayori/2017-04/date.html
+  - 主な収蔵品 11 伊達政宗に関する資料（1）　https://www.city.sendai.jp/museum/shuzohin/shuzohin/shuzohin-18.html
+  - 表紙の解説 戦国武将の眼病事情　https://www2.kuh.kumamoto-u.ac.jp/ganka/pdf/ichiyo08.pdf
+  - 世界に通じるダテ男、初代仙台藩主・伊達政宗ゆかりの地【青葉城編】　https://www.nippon.com/ja/guide-to-japan/gu900153/
+  - 伊達政宗はいつ家督を継いだのか―天正一二年（一五八四）一〇月一二日付政宗書状を手がかりに―（山形大学紀要 人文科学 20-3）　https://yamagata.repo.nii.ac.jp/records/2000805
+  - 新出の伊達政宗文書発見 ～＜寛永12年（1635）ｶ＞三月十二日付妻木頼利宛伊達政宗書状～　https://www.yamagata-u.ac.jp/jp/download_file/view/25006/8011
+  - Materials Related to the Keicho-era Mission to Europe — Memory of the World nomination 2012-69　https://media.unesco.org/sites/default/files/webform/mow001/japan_spain_keicho.pdf
+  - 瑞巌寺 拝観のしおり（境内案内 PDF）　https://www.zuiganji.or.jp/guide/pdf/shiori.pdf
+  - 瑞巌寺 宝物館 木造伊達政宗倚像（地域観光資源の多言語解説文データベース）　https://www.mlit.go.jp/tagengo-db/H30-00215.html
+  - 中世・近世の肖像彫刻に関する総合的研究（科研費 18K00165 研究成果報告書）　https://kaken.nii.ac.jp/en/file/KAKENHI-PROJECT-18K00165/18K00165seika.pdf
+  - 瑞鳳殿のご案内　https://www.zuihoden.com/about/
+  - 伊達政宗公と瑞鳳殿―経ヶ峯伊達家墓所について―　https://tohoku-geo.ne.jp/information/daichi/img/64/p10.pdf
+  - フォトギャラリー「伊達政宗頭骨模型」　https://www.zuihoden.com/gallery/#post-3878
+  - 頭骨をもとに伊達政宗公の顔を復元！「伊達男」の真意をも表現する最新技術とは？　https://intojapanwaraku.com/rock/culture-rock/174548/
+no_tag_from: 141                     # 締め（冒頭の眼帯に戻る所）から札を出さない
+
+# AI 絵（16:9 横・15枚）。scene は日本語の要約（英語の指示は research/masamune_ai_images.md）。
+# pan：h＝左右（既定）・v＝上下・zoom＝ゆっくり寄る（顔の感情の場面だけ）。crops＝切り出し [倍率, 中心x, 中心y]
+# 位置（crops・focus・fx の region）は仮の値。届いた絵を見て合わせる
+ai:
+  M01: {scene: 晩年の政宗・胸から上。灯の下で右の横顔を影に沈める（眼帯なし）, pan: zoom, crops: {face: [1.25, 0.56, 0.36], left: [1.18, 0.38, 0.45]}}   # 届いた絵（10-28）：顔は右上（0.56, 0.28）、行灯は左（0.24, 0.30〜0.80）
+  M02: {scene: 米沢の城の奥、疱瘡の熱にうなされる幼い子と見守る母の手, pan: h, crops: {left: [1.18, 0.36, 0.58]}}   # 届いた絵：子は左下（0.30, 0.62）顔は見えない、母の手は右（0.70, 0.75）
+  M03: {scene: 若い家臣が少年の前に深く頭を下げる（刃物・傷なし）, pan: h, crops: {right: [1.18, 0.60, 0.55]}}   # 届いた絵：少年は左（0.24, 0.55）の後ろ姿、家臣は（0.62, 0.62）
+  M04: {scene: 撮影所の灯の下、黒い眼帯と兜・鎧が台に置かれている（俳優なし）, pan: h, crops: {face: [1.3, 0.32, 0.66], left: [1.18, 0.36, 0.6], right: [1.18, 0.62, 0.55]}}   # 届いた絵：眼帯は左下（0.27, 0.72）、兜は中央（0.50, 0.50）
+  M05: {scene: 江戸の屋敷の奥、早朝の淡い光。空の床の脇の文机・硯・書状（人物なし）, pan: h, crops: {left: [1.18, 0.38, 0.62], right: [1.18, 0.64, 0.62]}}   # 届いた絵：床は（0.40, 0.72）、文机と書状は（0.66, 0.70）
+  M06: {scene: 初夏の早朝、経ヶ峯の上に立つ政宗の後ろ姿（眼帯なし）, pan: h, crops: {right: [1.18, 0.64, 0.50]}}   # 届いた絵：政宗の後ろ姿は（0.38, 0.45）、霧の町と川は右（0.65, 0.55）
+  M07: {scene: 瑞巌寺の本堂の奥、閉じた厨子の前で手を合わせる陽徳院の後ろ姿, pan: v, crops: {left: [1.18, 0.40, 0.5], right: [1.18, 0.62, 0.5]}}   # 届いた絵：厨子は中央上（0.50, 0.30）、陽徳院は（0.50, 0.75）の後ろ姿
+  M08: {scene: 灯の下、年配の陽徳院が絵師の描いた下絵（顔は見せない）を見つめる, pan: zoom, crops: {face: [1.25, 0.42, 0.38]}}   # 届いた絵：陽徳院の顔は（0.40, 0.28）、絵師は右（0.85, 0.40）、灯は（0.26, 0.45）
+  M09: {scene: 若い当主（18歳）が広間の上座で家臣たちの礼を受ける（右側は影）, pan: h, crops: {face: [1.25, 0.80, 0.40], right: [1.18, 0.70, 0.50]}}   # 届いた絵（10-28）：当主は右（顔 0.86, 0.33・左向きの横顔）、家臣は左（0.30, 0.55）
+  M10: {scene: 1945年の焼け跡の経ヶ峯、焦げた杉と残った石段（人物なし）, pan: v, crops: {left: [1.18, 0.42, 0.55]}}   # 届いた絵：石段は中央（0.50, 0.40〜1.0）、奥に鳥居
+  M11: {scene: 1974年の発掘。石段の上に掘られた穴と、作業着の調査員の後ろ姿（穴の中は見せない）, pan: h, crops: {left: [1.18, 0.38, 0.5], right: [1.18, 0.62, 0.5]}}
+  M12: {scene: 黒い布の上の副葬品（煙管2本・硯・金のブローチ・日時計・一分金・鉛筆）, pan: h, crops: {left: [1.18, 0.38, 0.5], right: [1.18, 0.62, 0.5]}}
+  M13: {scene: 1590年、小田原へ向かう白装束の政宗（左の横顔）と陣の旗, pan: h, crops: {right: [1.18, 0.62, 0.45]}}
+  M14: {scene: 今の瑞鳳殿。杉木立の中の霊屋と石段（人物なし）, pan: v, crops: {left: [1.18, 0.40, 0.5], right: [1.18, 0.60, 0.5]}}
+  M15: {scene: 終了画面用。夕暮れの松島（右半分を空けた構図）, lock: [1.0, 0.5, 0.5]}
+
+# 実在の絵の手当て（元の画像は変えない）
+paint_fx:
+  paintings/masamune_couple_gentoku.jpg: {crop: [0.06, 0.63, 0.90, 0.875]}     # 縦長の掛幅から夫妻の所だけ（上の賛と右下の款記を外す）
+  paintings/masamune_portrait_mitsusada.jpg: {crop: [0.0, 0.30, 1.0, 0.95]}    # 上の空いた絹地を外す
+  paintings/masamune_zuiganji_1912.jpg: {crop: [0.31, 0.04, 1.0, 1.0]}         # 写真帖の頁の左上に重ねた木像の小写真を外し、参道だけ
+
+# 台本に出てこない実在の絵の出典（左下の字・概要欄）
+credits:
+  paintings/masamune_couple_gentoku.jpg: 狩野玄徳《伊達政宗・愛姫夫妻像》1800年ごろ以前（蟠桃院蔵）
+  paintings/masamune_hososhin_1798.jpg: 志水軒朱蘭『疱瘡心得草』「疱瘡神祭る図」1798年ごろ
+  paintings/masamune_pope_paul5.jpg: 《教皇パウロ5世像》1605〜1610年ごろ（ボルゲーゼ美術館蔵。政宗に届いた肖像とは別の絵）
+
+# 絵の割り当て：「行の番号 種類:絵 [切り出し]」。次の行の指定まで続く。図（figure）の出る行は、その時の絵を暗くして図を置く（自動）
+shots:
+  # 序章（0〜12）：眼帯の肖像は無い → 両目の画像 → 「両方の目を正しく造れ」→ 幼いころ右目 → 1974年の墓 → 2021年の顔 → なぜ → 名前
+  - 0 ai:M04 wide                      # 眼帯（撮影所の小道具）
+  - 1 part:paintings/masamune_sendai_castletown_1789.jpg   # 仙台市の広報
+  - 2 frame:paintings/masamune_portrait_yasunobu.jpg       # 両方の目が描かれた画像
+  - 3 ai:M05 wide                      # 仙台藩の記録「死んだあと」
+  - 4 ai:M01 face                      # 「両方の目を、正しく造れ」
+  - 5 ai:M02 wide                      # 幼いころ右目の光を失った
+  - 6 frame:paintings/masamune_zuiganji_statue_1912.jpg    # 死んだあとの自分の像
+  - 7 ai:M11 wide                      # 1974年 墓が開かれる
+  - 8 ai:M01 wide                      # 隠し続けた右目
+  - 9 ai:M14 wide                      # 2021年 作り直された顔（瑞鳳殿の資料館）
+  - 10 ai:M01 face
+  - 11 ai:M07 wide                     # 覚えてほしい名前（11〜12）の下地
+  # 第1章（13〜36）：梵天丸の右目
+  - 13 ai:M02 wide                     # 米沢に生まれる 梵天丸
+  - 14 part:paintings/masamune_smallpox_tametomo_yoshitoshi.jpg   # 疱瘡
+  - 15 ai:M02 left                     # 毒が目に集まり
+  - 16 frame:paintings/masamune_hososhin_1798.jpg          # 幼い子にとって
+  - 17 ai:M05 wide                     # 「年月知らず」
+  - 18 ai:M02 wide                     # 5歳のとき
+  - 19 ai:M05 right                    # 萬海上人の説
+  - 20 part:paintings/masamune_smallpox_tametomo_yoshitoshi.jpg   # 黒沼の魚まで
+  - 21 ai:M02 left                     # 疱瘡のせいだ
+  - 22 ai:M03 wide                     # 片倉小十郎景綱
+  - 23 ai:M03 right                    # 「云ひ伝ふ」
+  - 24 part:paintings/masamune_sendai_castle_fans.jpg
+  - 25 ai:M09 wide                     # 家督を継いだ日
+  - 26 ai:M05 left                     # 政宗の書状から絞り込む
+  - 27 ai:M13 wide                     # 1590年 小田原 白装束
+  - 28 ai:M13 right
+  - 29 ai:M05 wide                     # 『治家記録』「常に隻眼を愧ぢ」
+  - 30 ai:M01 face                     # 恥じて隠していた
+  - 31 ai:M09 wide                     # 人が片目の話をすると
+  - 32 ai:M05 right                    # 書くべきではない
+  - 33 ai:M01 wide
+  - 34 ai:M09 face                     # 【想像1】……この目のことは、言うてくれるな
+  - 35 ai:M04 wide                     # のちの時代の印に
+  - 36 ai:M04 right                     # 黒い眼帯と独眼竜
+  # 第2章（37〜55）：眼帯と独眼竜
+  - 37 ai:M04 wide
+  - 38 frame:paintings/masamune_portrait_yasunobu.jpg      # 江戸の肖像画にその姿は無い
+  - 39 ai:M04 left                     # 映画やドラマ
+  - 40 ai:M04 right                    # 1987年の大河の表（台本の図）
+  - 41 ai:M04 face                     # 題名そのものが独眼竜
+  - 42 part:paintings/masamune_sendai_castle_hasui_1933.jpg
+  - 43 ai:M01 wide                     # 呼び名はどこから
+  - 44 part:paintings/masamune_sendai_castletown_1789.jpg  # 要点の札（李克用・頼山陽）44〜45
+  - 45 part:paintings/masamune_sendai_castle_hasui_1933.jpg
+  - 46 ai:M01 left                     # 亡くなったあとの学者のたとえ
+  - 47 part:paintings/masamune_sendai_castletown_1789.jpg  # 1676年 先祖をまつる堂
+  - 48 frame:paintings/masamune_portrait_yasunobu.jpg      # 狩野安信の画像
+  - 49 ai:M07 wide                     # 木像や肖像画はすべて両目（額が続いて30秒を超えないように）
+  - 50 frame:paintings/masamune_portrait_mitsusada.jpg     # 右目を白く描いた像
+  - 51 frame:paintings/masamune_portrait_mitsusada.jpg b
+  - 52 frame:paintings/masamune_couple_gentoku.jpg         # 眼帯をかけていない政宗像
+  - 53 ai:M04 wide                     # 眼帯の政宗だけが、その中にいない
+  - 54 ai:M01 wide
+  - 55 ai:M05 wide                     # 答えは冒頭の言葉
+  # 第3章（56〜81）：1636年の死と『治家記録』の言葉
+  - 56 part:paintings/masamune_hasekura_paul5_audience.jpg   # 支倉常長 ローマ
+  - 57 frame:paintings/masamune_pope_paul5.jpg             # 教皇の油絵の肖像（別の肖像）
+  - 58 frame:paintings/masamune_hasekura_portrait.jpg       # 支倉常長像
+  - 59 ai:M01 left                     # 政宗は手もとで見ていた
+  - 60 part:paintings/masamune_sendai_castle_hasui_1933.jpg   # 酒好き
+  - 61 ai:M01 wide                     # 2023年に見つかった手紙（M05 が続けて20秒を超えないように）
+  - 62 ai:M05 wide                     # 1636年5月24日 早朝 江戸の桜田の屋敷
+  - 63 frame:paintings/masamune_portrait_yasunobu.jpg      # 初代の藩主として
+  - 64 ai:M05 right                    # 地図（台本：江戸→仙台）
+  - 65 part:paintings/masamune_sendai_castletown_1789.jpg  # 瑞鳳殿の案内 家臣15人
+  - 66 ai:M06 wide                     # 経ヶ峯 ほととぎすの初音
+  - 67 ai:M06 right                    # 【想像2】……ここが、よい
+  - 68 frame:paintings/masamune_zuihoden_1912.jpg          # 1637年 瑞鳳殿
+  - 69 ai:M05 wide                     # 史料の札（両眼正しくせよ）
+  - 70 ai:M01 face                     # 冒頭の言葉
+  - 71 ai:M09 face                     # 片目を恥じていた
+  - 72 ai:M14 wide                     # のちの世まで
+  - 73 ai:M07 wide                     # 死んだあとの姿は隠せない
+  - 74 ai:M05 left                     # 史料の札（隻眼に造り奉らず）
+  - 75 ai:M07 right                    # 理由の食い違いの表（台本の図）75〜77
+  - 78 ai:M01 wide
+  - 79 frame:paintings/masamune_portrait_yasunobu.jpg      # 政宗の姿は両目で残す
+  - 80 part:paintings/masamune_matsushima_hiroshige_1853.jpg   # 松島の寺に
+  - 81 ai:M08 wide                     # 顔をいちばん近くで見てきた人
+  # 第4章（82〜103）：瑞巌寺の木像（1652年）
+  - 82 part:paintings/masamune_zuiganji_1912.jpg           # 瑞巌寺 1609年の本堂
+  - 83 ai:M07 wide                     # 1652年 等身大の木像
+  - 84 frame:paintings/masamune_zuiganji_statue_1912.jpg   # 鎧で腰をかけた姿
+  - 85 frame:paintings/masamune_zuiganji_statue_1912.jpg b # 88.6センチ・玉眼
+  - 86 ai:M07 left                     # 126.3センチ
+  - 87 ai:M08 wide                     # 陽徳院が覚えていた夫の姿を絵師に
+  - 88 frame:paintings/masamune_couple_gentoku.jpg         # 陽徳院 若いころの名は愛姫
+  - 89 ai:M08 face                     # 【想像3】……殿のお顔は、このようでございました
+  - 90 ai:M07 right
+  - 91 ai:M08 wide                     # 作らせた人の表（台本の図）91〜94
+  - 95 frame:paintings/masamune_couple_gentoku.jpg         # 妻の記憶と息子の願いと本人の言葉
+  - 96 frame:paintings/masamune_zuiganji_statue_1912.jpg   # この像の右目
+  - 97 frame:paintings/masamune_zuiganji_statue_1912.jpg b # やや細い
+  - 98 ai:M07 wide                     # 瑞巌寺の案内：開いている
+  - 99 frame:paintings/masamune_zuiganji_statue_1912.jpg   # 細いと開いている
+  - 100 ai:M01 face                    # 答えが分かれる右目
+  - 101 ai:M07 right
+  - 102 frame:paintings/masamune_zuihoden_1912.jpg         # 墓の中の骨
+  - 103 ai:M11 wide                    # 1974年 墓が開かれる
+  # 第5章（104〜142）：その後 ＋ 冒頭の眼帯に戻る締め
+  - 104 ai:M10 wide                    # 1945年7月10日 仙台空襲で焼ける
+  - 105 ai:M11 wide                    # 1974年の発掘
+  - 106 ai:M10 left                    # 墓の部屋は3メートルの深さ（M11 が続けて20秒を超えないように）
+  - 107 ai:M11 right                   # 要点の札（記録と地面の下の食い違い）107〜108
+  - 108 ai:M14 left
+  - 109 frame:paintings/masamune_zuihoden_1912.jpg         # 一緒に納められた品は30点あまり（M12 が続けて20秒を超えないように）
+  - 110 ai:M12 wide                    # 一分金・日時計・ブローチ・鉛筆
+  - 111 ai:M05 right                   # 硯に墨が残っていた
+  - 112 ai:M12 left
+  - 113 ai:M11 left                    # 骨を調べた鈴木尚
+  - 114 ai:M13 wide                    # 身長159.4センチ
+  - 115 ai:M09 wide                    # 鍛えた体
+  - 116 ai:M01 face                    # 面長・鼻筋
+  - 117 ai:M11 wide                    # 頭の骨から片目と分かるかの表（台本の図）117〜122
+  - 123 ai:M01 wide                    # 骨は右目を覚えていた
+  - 124 ai:M12 wide                    # よろいは墓へ・品は博物館へ
+  - 125 ai:M14 wide                    # 1979年 建て直し
+  - 126 ai:M14 right                   # 2021年 顔を作り直す
+  - 127 ai:M01 left                    # 監修 坂上和弘さん
+  - 128 ai:M11 right                   # 1974年に骨を調べた鈴木尚さんの孫弟子
+  - 129 ai:M01 face                    # 肌の色
+  - 130 ai:M01 wide                    # 義眼
+  - 131 ai:M11 left                    # 泰宗さんは1974年の発掘に立ち会った
+  - 132 ai:M05 wide                    # 「両の目をそなえよ」と遺言
+  - 133 frame:paintings/masamune_portrait_yasunobu.jpg     # 今までの政宗像
+  - 134 ai:M14 wide
+  - 135 ai:M14 left                    # 瑞鳳殿の資料館
+  - 136 ai:M01 face                    # なぜの答え（藩の記録）
+  - 137 ai:M06 wide                    # のちの世の人に見られる姿
+  - 138 ai:M02 wide                    # 親から授かった体（母の手）
+  - 139 ai:M02 left                    # 幼い日に失った右目
+  - 140 ai:M07 wide                    # 年表（look の図）
+  - 141 frame:paintings/masamune_portrait_yasunobu.jpg     # 締め：眼帯ではなく、両目のそろった姿
+  - 142 ai:M15 wide
+  - end ai:M15 wide
+
+# look だけで足す図（台本には無い。語りがその名前・地点を言う 0.25 秒前に1つずつ書き込む）
+figures:
+  # 年表：140「骨は右目を覚えていて、像と多くの絵は、両目で伝わった」。どれも台本で語った年
+  - {from: 140, to: 140, spec: {type: stats, title: 政宗の姿が残された年,
+      items: [[瑞巌寺の木像, 1652年, 両目で造る], [狩野安信の画像, 1676年ころ, 両目で描く], [骨の調べ, 2019年, 右目のくぼみに2.5ミリの差]]}}   # stats は3列まで
+
+# 語りがその物・人を言うと、カットの終わりにそれが主役になる所で止まる。位置は仮（届いた絵で合わせる）
+focus:
+  M03: {片倉|小十郎|家臣: [1.25, 0.60, 0.55]}
+  M04: {眼帯: [1.3, 0.30, 0.68]}
+  M06: {経ヶ峯|ここ: [1.2, 0.62, 0.50]}
+  M07: {像|厨子: [1.2, 0.50, 0.32]}
+  M09: {家臣|家督|当主: [1.2, 0.80, 0.45]}
+  M12: {煙管: [1.25, 0.40, 0.50], ブローチ|日時計|鉛筆|一分金: [1.25, 0.65, 0.50]}
+  M14: {瑞鳳殿|資料館: [1.2, 0.5, 0.40]}
+  paintings/masamune_portrait_yasunobu.jpg: {両方の目|両目|狩野安信|政宗像: [1.4, 0.48, 0.42]}
+  paintings/masamune_portrait_mitsusada.jpg: {右目|白く|片目: [1.5, 0.47, 0.26]}
+  paintings/masamune_zuiganji_statue_1912.jpg: {右目|玉眼|目: [1.4, 0.48, 0.20]}
+  paintings/masamune_couple_gentoku.jpg: {陽徳院|愛姫|妻: [1.4, 0.25, 0.35], 政宗|本人|夫: [1.4, 0.73, 0.35]}
+
+# 絵の一部だけを動かす（話に合う絵だけ・控えめに。顔・人物にはかけない）。範囲は仮（届いた絵で見て直す）
+fx:
+  M01: {lamp: {region: [0.20, 0.40, 0.33, 0.68]}}                     # 左の行灯（顔にはかけない。10-28 届いた絵で合わせた）
+  M02: {lamp: {region: [0.66, 0.36, 0.76, 0.48]}}                     # 奥の火鉢
+  M06: {mist: {region: [0.45, 0.42, 0.85, 0.66], alpha: 0.10, speed: 5}}   # 町の上の朝霧（人物の右）
+  M07: {lamp: {region: [0.17, 0.44, 0.27, 0.62]}}                     # 本堂の左の灯明
+  M08: {lamp: {region: [0.22, 0.36, 0.30, 0.54]}}                     # 手元の灯（顔の左）
+  M10: {mist: {region: [0, 0.05, 1, 0.38], alpha: 0.10, speed: 4}}    # 曇り空の煙り（10-28 届いた絵で合わせた）
+  M09: {lamp: {region: [0.58, 0.50, 0.64, 0.66]}}                     # 広間の燭台
+  M14: {mist: {region: [0, 0.65, 1, 0.98], alpha: 0.08, speed: 5}}    # 杉木立の下の霧
+
+# 部品（from〜to の行、0 始まり。出ている間は絵を暗くする）
+parts:
+  - {type: names, from: 11, to: 12, title: この物語で覚えてほしい名前, every: 0.7,
+     items: [[伊達政宗, 幼いころ右目を失った仙台藩の初代, paintings/masamune_portrait_yasunobu.jpg, [0.48, 0.42]],
+             [陽徳院, 政宗の正室（愛姫）, paintings/masamune_couple_gentoku.jpg, [0.25, 0.35]],
+             [片倉小十郎景綱, 政宗の家臣, ai:M03, [0.62, 0.55]]]}
+  - {type: quote, from: 44, to: 45, label: 要点, text: 独眼竜＝唐の武将・李克用のあだ名／頼山陽が政宗をなぞらえて広まった,
+     source: 谷原秀信「戦国武将の眼病事情」（熊本大学眼科）}
+  - {type: quote, from: 69, to: 69, label: 史料, text: 薨去ノ後尊像ヲ造ラハ／兩眼正クセヨ,
+     source: 『性山公治家記録』永禄十年八月三日条（『伊達政宗卿伝記史料』所収）}
+  - {type: quote, from: 74, to: 74, label: 史料, text: 故ニ尊像ハ／隻眼ニ造リ奉ラス,
+     source: 『性山公治家記録』永禄十年八月三日条（『伊達政宗卿伝記史料』所収）}
+  - {type: quote, from: 107, to: 108, label: 要点, text: 記録：束帯・水銀と塩／発掘：麻の布・木炭,
+     source: 瑞鳳殿の学芸員の報告（「伊達政宗公と瑞鳳殿」）}
+
+# 静止画（story-main を --frames なしで回したとき。簡易の描き方で、パン・部品は出ない。目で見るのは --frames の方）
+stills:
+  - {line: 0, note: 冒頭（0秒）眼帯の小道具}
+  - {line: 11, note: 序章の終わり 覚えてほしい名前}
+  - {line: 34, note: 第1章 想像の台詞}
+  - {line: 50, note: 第2章 右目を白く描いた像}
+  - {line: 69, note: 第3章 両眼正しくせよ（記録・明朝）}
+  - {line: 91, note: 第4章 作らせた人の食い違い}
+  - {line: 120, note: 第5章 2019年の2.5ミリ}
+  - {end: true, note: 終了画面の空き}
