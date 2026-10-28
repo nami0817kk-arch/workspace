@@ -1,0 +1,464 @@
+# ユニフォームとエンブレムの歴史 ボーンマス（10/28 作成）。雛形は 10/27 サンダーランド回。
+# 題の問い：ボーンマスの赤と黒の縞は、どこから来たのか（答え＝1971年、ジョン・ボンド監督がACミランを手本に入れた）。
+# 重なり確認（2026-10-28）：scripts/*kit_*・research/covered.yaml・research/posted.json を grep。ボーンマスのユニフォーム回は無し。
+#   20260920_pl01_bournemouth（クラブ紹介・38日前）は「赤と黒の縦じまは、イタリアのミランが手本です」の1行だけ。
+#   20261009_stadium_bournemouth（スタジアム）はディーン・コートの名の由来。この回では競技場の話はしない。
+#   20261023_bournemouth_milan_3_0（ニュースのショート）はミラン戦の中身。この回では結果の1行だけ（退場・PKの経過は言わない）。
+# 今季のリーグ：ウィキペディア en "2026–27 AFC Bournemouth season"（league = Premier League、プレミア5季連続）。
+#   ESPN scoreboard（uefa.europa 2026-10-22）：AFC Bournemouth 3-0 AC Milan、12,130人。ウィキペディアの季の記事とも一致。
+# 取材：requests（ブラウザ User-Agent）だけ。ブラウザ操作・JS実行・検索のAI要約は使っていない。
+#   読んだ：ウィキペディア en "AFC Bournemouth"（History の Boscombe／AFC Bournemouth 節、Colours 節とメーカー・スポンサーの表）、
+#     "2026–27 AFC Bournemouth season"、"Dickie Dowsett"（infobox）、"AC Milan"（founded、キルピンの言葉）。
+#   Historical Football Kits（HFK。ファンの資料サイトだが典拠を明記）：ボーンマスの Background。
+#   読めなかった：クラブ公式 2013-07-15「Cherries launch evolved crest」（web.archive／Commons API が 429）。
+# ---- 食い違い・断ったこと ----
+#   ・AFCボーンマスへの改名：ウィキペディア「1971〜72年のシーズンの初めから」、HFK「1972年」→「1970年代の初め」とだけ言う。年は言わない。
+#   ・改名の理由（アルファベット順で先頭）：ウィキペディアが個人のブログを引く→「と言われます」で1行。
+#   ・ヘディングの紋章：ウィキペディア「改名の1年後」、HFK「1972年の後に冊子に出たロゴ、シャツに付いたのは1974〜75年の1季」→
+#     紋章ができたのは1972年ごろ、シャツには1974年から75年の1季、とだけ言う。
+#   ・街の紋章が最後にシャツに出た年：HFK の中で 1970〜71 と 1974〜75 が割れる→言わない。
+#   ・チェリーズの由来：ウィキペディア・HFK とも2説（さくらんぼ色の縞／クーパー・ディーン家の桜の木）→2説のまま言う。どちらとも決めない。
+#   ・赤と黒の縞の時期：ウィキペディア「1990年からはほとんど」（レドナップの自伝）、HFK・ウィキペディア「1971年に入れた」→
+#     入れたのは1971年。2004〜06年の2季は赤が主のシャツ、2006〜07年に縞へ戻った（ウィキペディア）。
+#   ・メーカーの表はウィキペディアに「典拠が要る」の印。HFK の一覧と照らして食い違いは無い（1981〜82年はクラブの自前）。
+#   ・2013年の新しい紋章：HFK「2013〜14年の季から、名前が金に、赤と白の縞の模様が消えた」→その2点だけ言う。
+# ---- 自分で数えた数 ----
+#   ミランの赤と黒：2026−1899＝127年。ボーンマスの赤と黒：2026−1971＝55年。127÷55≒2.31→およそ2.3倍。
+#   創立：ボスコムFC 1899年秋（ウィキペディア）、ミラン 1899年12月（ウィキペディア。クラブは16日、記事の infobox は18日）→「同じ1899年」とだけ言う。
+#   メーカー（ウィキペディアの表、1981〜82年の自前は数えない）：アンブロ74-78・アディダス78-81・オスカ82-83・アンブロ83-86・ヘンソン86-87・
+#     スコアライン87-90・エルグレン90-92・マッチウィナー92-95・ル・コック95-96・パトリック96-2000・スーパー・リーグ00-01・TFG 01-03・
+#     ボーン・レッド03-08・カーブリーニ08-11・フィラ11-14・カーブリーニ14-15・JD 15-17・アンブロ17-26・ヒュンメル26-＝のべ19回（17社）。
+#     アンブロ3回、カーブリーニ2回。1974年から 2026−1974＝52年。52÷19≒2.74→約2.7年。
+#     いちばん長いのはアンブロの2017〜2026年＝9年。9÷2.74≒3.3倍。
+#   ダウセット：ボーンマス＆ボスコム・アスレティックで1957〜62年、リーグ戦169試合79得点（infobox はリーグ戦だけの数）。
+# ---- 日本との接点 ----
+#   無し（research/pl_data/japan.json が空。メーカーにも日本の会社は無い）。入れない。
+# ---- 写真（assets/images/20261028_kit_bournemouth/、出典は credits.json）----
+#   k01・k02・k03 は Sky Sports の記事の写真（10/23 のニュースで取り込んだもの）。代理店の透かしは見当たらないが、Sky の写真の配信元は確かめていない。
+#   k04（タヴァニエ）・k05（クライファート）は Commons の CC0。エンブレム画像・放送映像は使っていない。
+date: 2026年10月28日
+slot: other_2
+format: news
+series: ユニフォームとエンブレムの歴史
+voice_min: 0
+people:
+- ボーンマス
+- アミーヌ・アドリ
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  end_bg: assets/images/20261028_kit_bournemouth/k03_tifo.jpg
+  id: kit_bournemouth
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: ボーンマス
+  title: ボーンマスの赤と黒の縞は、どのクラブを手本にしたのか
+  question: ボーンマスの赤と黒の縞は、どのクラブを手本にし、紋章の頭でボールを打つ人は誰なのか
+  opening_image: assets/images/20261028_kit_bournemouth/k01_adli.jpg
+  lead: 胸に、赤と黒の縞。
+  hook: ''
+  takeaway: 赤と黒の縞は1971年、ジョン・ボンド監督がACミランを手本に入れた。ミランの赤と黒は1899年から127年、ボーンマスは55年で、およそ2.3倍。2つのクラブは同じ1899年の生まれで、初めての公式戦は2026年10月22日、ボーンマスが3対0。紋章でボールを打つのは1950〜60年代の点取り屋ディッキー・ダウセット（リーグ戦79得点）。シャツのメーカーは1974年から52年でのべ19回、平均約2.7年
+  hook_unused: ''
+thumbnail:
+  layout: classic
+  callouts:
+  - 紋章の男はリーグ戦79点
+  - ミランに3対0
+  photo: assets/images/20261028_kit_bournemouth/k01_adli.jpg
+  line1: ボーンマスの赤と黒の縞
+  line2: 手本は55年前のミラン
+  tags:
+  - ボーンマス
+  - ユニフォーム
+  - エンブレム
+  - ACミラン
+  - チェリーズ
+  - ヨーロッパリーグ
+x-cards:
+  milan: &milan
+    type: timeline
+    title: 赤と黒の縞が来るまで（ウィキペディア・HFK）
+    rows:
+    - - 1899年
+      - ボスコムFCとミラン、同じ年に生まれる
+    - - 1971年
+      - ボンド監督が、ミランを手本に赤と黒
+    - - 1970年代の初め
+      - AFCボーンマスに改名
+    - - 2026年10月
+      - ヨーロッパリーグで、ミランに3対0
+    focus: 1971年
+    highlight_row: 1
+  colours: &colours
+    type: timeline
+    title: シャツの色の歩み（ウィキペディア・HFK）
+    rows:
+    - - 1899年〜
+      - 赤と白の縦縞
+    - - 1923年
+      - ボーンマス＆ボスコム・アスレティックに
+    - - 1930年代半ば
+      - 赤に白い袖。胸に街の紋章
+    - - 1960年代の終わり
+      - 胸に頭文字BFC
+    - - 1971年
+      - 赤と黒の縞
+    focus: 1971年
+    highlight_row: 0
+  crest: &crest
+    type: timeline
+    title: 紋章の歩み（ウィキペディア・HFK）
+    rows:
+    - - 1972年ごろ
+      - ボールを頭で打つ人の紋章
+    - - 1974〜75年
+      - その紋章が、1季だけシャツに
+    - - 1981年
+      - チェリーズの紋章
+    - - 1983年
+      - ヘディングの紋章が戻る。30年あまり
+    - - 2013年
+      - 名前を金に。赤と白の縞の模様が消える
+    focus: 1983年
+    highlight_row: 0
+  dowsett: &dowsett
+    type: stats
+    title: ディッキー・ダウセット（ボーンマスでのリーグ戦。ウィキペディア）
+    items:
+    - - '1957'
+      - 年〜62年
+      - 在籍
+    - - '169'
+      - 試合
+      - リーグ戦
+    - - '79'
+      - 得点
+      - リーグ戦
+    focus: 2
+  makers: &makers
+    type: table
+    title: シャツのメーカー（ウィキペディア。1974年から）
+    columns:
+    - 会社
+    - 期間
+    rows:
+    - - アンブロ（イングランド）
+      - 3回。いまに近いのは2017〜26年
+    - - カーブリーニ
+      - 2回
+    - - ほか15社
+      - 1回ずつ
+    - - ヒュンメル（デンマーク）
+      - 2026年から
+    highlight_row: 3
+  view: &view
+    type: table
+    title: 赤と黒は、何年続いているか
+    columns:
+    - クラブ
+    - 赤と黒の年数
+    rows:
+    - - ACミラン（1899年から）
+      - 127年
+    - - ボーンマス（1971年から）
+      - 55年
+    - - 初めての公式戦（2026年10月22日）
+      - ボーンマス3対0
+    highlight_row: 1
+sections:
+- id: milan
+  main: true
+  heading: ボーンマスの赤と黒の縞は、どのクラブを手本にしたのか
+  bg: assets/images/20261028_kit_bournemouth/k01_adli.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 赤と黒の縞は1971年から。手本はイタリアのACミラン
+  card: *milan
+  say:
+  - text: 今回は、ボーンマスの、赤と黒の縞と、胸の紋章です。
+    image: assets/images/20261028_kit_bournemouth/k01_adli.jpg
+    card: none
+    emph: true
+  - text: 2026年10月22日、ヨーロッパリーグ。
+    image: assets/images/20261028_kit_bournemouth/k02_milan.jpg
+    card: none
+  - text: ボーンマスは本拠地で、イタリアのACミランを3対0で破りました。
+    image: assets/images/20261028_kit_bournemouth/k02_milan.jpg
+    card:
+      <<: *milan
+      highlight_row: 3
+  - text: 赤と黒の縞のボーンマスと、赤と黒の縞のミラン。この夜、ミランは白でした。
+    image: assets/images/20261028_kit_bournemouth/k02_milan.jpg
+    card: none
+  - text: 実は、ボーンマスの赤と黒は、このミランが手本です。
+    image: assets/images/20261028_kit_bournemouth/k02_milan.jpg
+    card: none
+    emph: true
+  - text: 入れたのは1971年。当時の監督、ジョン・ボンドです。
+    image: assets/images/20261028_kit_bournemouth/k03_tifo.jpg
+    card:
+      <<: *milan
+      highlight_row: 1
+  - text: 同じころ、クラブの名前も、いまのエーエフシー・ボーンマスに変わります。
+    image: assets/images/20261028_kit_bournemouth/k03_tifo.jpg
+    card:
+      <<: *milan
+      highlight_row: 2
+  - text: イングランドのクラブを並べた一覧で、先頭に来るように、と言われています。
+    image: assets/images/20261028_kit_bournemouth/k03_tifo.jpg
+    card: none
+  - text: では、手本のミランは、なぜ赤と黒なのか。
+    image: assets/images/20261028_kit_bournemouth/k02_milan.jpg
+    card: none
+  - text: ミランを作ったイングランド人、ハーバート・キルピンの言葉が残っています。
+    image: assets/images/20261028_kit_bournemouth/k02_milan.jpg
+    card:
+      type: document
+      label: ハーバート・キルピン（1899年。ウィキペディアの英訳を訳した）
+      paragraphs:
+      - 我々は悪魔のチームになる。色は、炎のような赤と、相手に与える恐れのような黒だ。
+      highlight:
+      - 炎のような赤
+      - 恐れのような黒
+  - text: ミランの生まれは、1899年。
+    image: assets/images/20261028_kit_bournemouth/k02_milan.jpg
+    card: none
+  - text: そして、ボーンマスの前身、ボスコムFCが生まれたのも、同じ1899年でした。
+    image: assets/images/20261028_kit_bournemouth/k01_adli.jpg
+    card:
+      <<: *milan
+      highlight_row: 0
+    emph: true
+  sources:
+  - https://en.wikipedia.org/wiki/AFC_Bournemouth
+  - https://www.historicalkits.co.uk/Bournemouth/Bournemouth.htm
+  - https://en.wikipedia.org/wiki/AC_Milan
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_AFC_Bournemouth_season
+- id: colours
+  heading: 赤と黒の前は、何色だったのか
+  bg: assets/images/20261028_kit_bournemouth/k05_kluivert.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 最初は赤と白の縦縞。愛称チェリーズの由来には2つの説
+  card: *colours
+  say:
+  - text: 赤と黒の前、最初のシャツは、赤と白の縦縞でした。
+    image: assets/images/20261028_kit_bournemouth/k05_kluivert.jpg
+    card:
+      <<: *colours
+      highlight_row: 0
+    emph: true
+  - text: 愛称は、チェリーズ。さくらんぼです。
+    image: assets/images/20261028_kit_bournemouth/k05_kluivert.jpg
+    card: none
+  - text: 由来には2つの説があります。さくらんぼ色の縞のシャツから、という説。
+    image: assets/images/20261028_kit_bournemouth/k05_kluivert.jpg
+    card: none
+  - text: もう1つは、土地を貸した家の敷地に、桜の木が多かったから、という説です。
+    image: assets/images/20261028_kit_bournemouth/k05_kluivert.jpg
+    card: none
+  - text: 1923年、プロのリーグに入るとき、名前をボーンマス＆ボスコム・アスレティックに。
+    image: assets/images/20261028_kit_bournemouth/k03_tifo.jpg
+    card:
+      <<: *colours
+      highlight_row: 1
+  - text: 当時のリーグで、いちばん長いクラブ名だった、とされます。
+    image: assets/images/20261028_kit_bournemouth/k03_tifo.jpg
+    card: none
+  - text: 1930年代の半ばには、アーセナルのような、赤に白い袖のシャツ。
+    image: assets/images/20261028_kit_bournemouth/k03_tifo.jpg
+    card:
+      <<: *colours
+      highlight_row: 2
+  - text: 胸には、ボーンマスとボスコム、2つの町の紋章から作った印を付けました。
+    image: assets/images/20261028_kit_bournemouth/k03_tifo.jpg
+    card: none
+  - text: 1960年代の終わりには、紋章の代わりに、頭文字のビー・エフ・シー。
+    image: assets/images/20261028_kit_bournemouth/k05_kluivert.jpg
+    card:
+      <<: *colours
+      highlight_row: 3
+  - text: そして1971年、赤と黒の縞が来ます。
+    image: assets/images/20261028_kit_bournemouth/k01_adli.jpg
+    card:
+      <<: *colours
+      highlight_row: 4
+  sources:
+  - https://en.wikipedia.org/wiki/AFC_Bournemouth
+  - https://www.historicalkits.co.uk/Bournemouth/Bournemouth.htm
+- id: crest
+  heading: 紋章で、頭でボールを打っているのは誰か
+  bg: assets/images/20261028_kit_bournemouth/k04_tavernier_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 紋章の人は、1950〜60年代の点取り屋ディッキー・ダウセット。リーグ戦79得点
+  card: *crest
+  say:
+  - text: 改名のあと、クラブは新しい紋章を作ります。
+    image: assets/images/20261028_kit_bournemouth/k04_tavernier_w.jpg
+    card:
+      <<: *crest
+      highlight_row: 0
+  - text: 後ろに縞、手前に、頭でボールを打つ選手の横顔。
+    image: assets/images/20261028_kit_bournemouth/k04_tavernier_w.jpg
+    card: none
+  - text: クラブによれば、この横顔は、ディッキー・ダウセット。
+    image: assets/images/20261028_kit_bournemouth/k04_tavernier_w.jpg
+    card: none
+    emph: true
+  - text: 1957年から62年まで、ボーンマスで点を取り続けたフォワードです。
+    image: assets/images/20261028_kit_bournemouth/k04_tavernier_w.jpg
+    card: *dowsett
+  - text: リーグ戦169試合で、79得点。2試合に1点に近い割合です。
+    image: assets/images/20261028_kit_bournemouth/k04_tavernier_w.jpg
+    card:
+      <<: *dowsett
+      focus: 2
+    emph: true
+  - text: けれど、シャツの胸に載ったのは、1974年から75年の1季だけ。
+    image: assets/images/20261028_kit_bournemouth/k01_adli.jpg
+    card:
+      <<: *crest
+      highlight_row: 1
+  - text: 1981年には、愛称に合わせた、チェリーズの紋章に替わります。
+    image: assets/images/20261028_kit_bournemouth/k01_adli.jpg
+    card:
+      <<: *crest
+      highlight_row: 2
+  - text: ところが1983年、ヘディングの紋章が戻ってきました。
+    image: assets/images/20261028_kit_bournemouth/k03_tifo.jpg
+    card:
+      <<: *crest
+      highlight_row: 3
+    emph: true
+  - text: そこから30年あまり、少しずつ手を入れながら、使い続けます。
+    image: assets/images/20261028_kit_bournemouth/k03_tifo.jpg
+    card: none
+  - text: この紋章の中には、最初のシャツの、赤と白の縞が残っていました。
+    image: assets/images/20261028_kit_bournemouth/k03_tifo.jpg
+    card: none
+  - text: 2013年、クラブの名前を金色にした紋章に。赤と白の縞の模様は、ここで消えました。
+    image: assets/images/20261028_kit_bournemouth/k01_adli.jpg
+    card:
+      <<: *crest
+      highlight_row: 4
+  sources:
+  - https://en.wikipedia.org/wiki/AFC_Bournemouth
+  - https://en.wikipedia.org/wiki/Dickie_Dowsett
+  - https://www.historicalkits.co.uk/Bournemouth/Bournemouth.htm
+- id: makers
+  heading: 縞をやめた2年と、シャツを作る会社は何回替わったのか
+  bg: assets/images/20261028_kit_bournemouth/k05_kluivert.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 2004年からの2季は赤が主のシャツ。ファンの声で縞に戻った。メーカーは1974年から、のべ19回
+  card: *makers
+  say:
+  - text: ボーンマスの赤と黒の縞は、一度だけ、外されたことがあります。
+    image: assets/images/20261028_kit_bournemouth/k05_kluivert.jpg
+    card: none
+    emph: true
+  - text: 2004年からの2季は、赤が主のシャツでした。
+    image: assets/images/20261028_kit_bournemouth/k05_kluivert.jpg
+    card: none
+  - text: ファンの求めで、2006年の季から、縞に戻ります。
+    image: assets/images/20261028_kit_bournemouth/k05_kluivert.jpg
+    card: none
+  - text: 一方、ボーンマスのシャツを作る会社は、よく替わってきました。
+    image: assets/images/20261028_kit_bournemouth/k04_tavernier_w.jpg
+    card: *makers
+  - text: 1974年のアンブロから数えて、のべ19回。
+    image: assets/images/20261028_kit_bournemouth/k04_tavernier_w.jpg
+    card:
+      <<: *makers
+      highlight_row: 0
+    emph: true
+  - text: アンブロは3回、カーブリーニは2回、使われました。
+    image: assets/images/20261028_kit_bournemouth/k04_tavernier_w.jpg
+    card:
+      <<: *makers
+      highlight_row: 1
+  - text: いちばん長く続いたのは、アンブロの2017年からの9年。
+    image: assets/images/20261028_kit_bournemouth/k01_adli.jpg
+    card: none
+  - text: そして今季、2026年からは、デンマークのヒュンメルです。
+    image: assets/images/20261028_kit_bournemouth/k01_adli.jpg
+    card:
+      <<: *makers
+      highlight_row: 3
+  - text: ミランを破った夜の赤と黒も、このヒュンメルのシャツでした。
+    image: assets/images/20261028_kit_bournemouth/k02_milan.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/AFC_Bournemouth
+  - https://www.historicalkits.co.uk/Bournemouth/Bournemouth.htm
+- id: view
+  viewpoint: true
+  heading: 見立て・赤と黒はミランが127年、ボーンマスが55年。手本との差は何倍か
+  bg: assets/images/20261028_kit_bournemouth/k03_tifo.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 赤と黒の年数は、ミラン127年、ボーンマス55年。およそ2.3倍
+  card: *view
+  say:
+  - text: 同じ1899年に生まれた、2つのクラブ。赤と黒を着てきた年数を、比べます。
+    image: assets/images/20261028_kit_bournemouth/k03_tifo.jpg
+    card: none
+    emph: true
+  - text: ミランは、1899年から127年。
+    image: assets/images/20261028_kit_bournemouth/k03_tifo.jpg
+    card:
+      <<: *view
+      highlight_row: 0
+  - text: ボーンマスは、1971年から55年。
+    image: assets/images/20261028_kit_bournemouth/k03_tifo.jpg
+    card:
+      <<: *view
+      highlight_row: 1
+    mark:
+      kind: circle
+      row: 1
+  - text: 127年は、55年のおよそ2.3倍。手本のほうが、2倍あまり長く着ています。
+    image: assets/images/20261028_kit_bournemouth/k02_milan.jpg
+    card:
+      type: calc
+      title: 赤と黒の年数の比べ（自分で割った）
+      terms:
+      - - 127年
+        - ミラン
+      - - 55年
+        - ボーンマス
+      - - 約2.3倍
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+    emph: true
+  - text: その55年のあいだ、シャツの会社は、平均で3年に届かずに替わりました。
+    image: assets/images/20261028_kit_bournemouth/k05_kluivert.jpg
+    card:
+      type: calc
+      title: メーカー1回あたりの平均（自分で割った）
+      terms:
+      - - 52年
+        - 1974年から
+      - - 19回
+        - メーカー
+      - - 約2.7年
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: それでも、2年で戻した縞は、手本を真似てから55年、胸に残っています。
+    image: assets/images/20261028_kit_bournemouth/k01_adli.jpg
+    card: none
+  - text: 手本と初めて公式戦で会った夜は、3対0で、ボーンマスの勝ちでした。
+    image: assets/images/20261028_kit_bournemouth/k02_milan.jpg
+    card:
+      <<: *view
+      highlight_row: 2
+    emph: true
+  sources:
+  - https://en.wikipedia.org/wiki/AFC_Bournemouth
+  - https://en.wikipedia.org/wiki/AC_Milan
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_AFC_Bournemouth_season

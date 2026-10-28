@@ -1,0 +1,329 @@
+# クラブの財政：アイントラハト・フランクフルト（10/29 木、シリーズ「クラブの財政」、key: finance_frankfurt、型は news）。
+#
+# 題材の選び方：デロイト Football Money League 2026（2024/25）の順で、財政の回をまだ出していないクラブ。
+#   1〜19位は既出（19位ベンフィカは 10/28）。20位ウェストハムは今季2部（10/25 に確認済み）で扱わない。21位ガラタサライはトルコ（欧州7リーグの外）。
+#   → 22位アイントラハト・フランクフルト（2億6990万ユーロ）。
+#   重なりの確認（10/28）：scripts/*finance_* に frankfurt は無い。research/posted.json の frankfurt は 20261024_bd_frankfurt（ブンデスのクラブ紹介）だけ。
+#     covered.yaml は doan_frankfurt（堂安のニュース）と bd_frankfurt（クラブ紹介）。クラブ紹介の台本に収入・損益の数字は無い（grep で「収入・ユーロ・デロイト・赤字・黒字」0件）。
+#     ★10/24 のクラブ紹介と5日違いで同じクラブ。財政の数字は使っていないので重なりは中身では無いが、報告に書く。
+#   ★今季も1部：英語版 Wikipedia「2026–27 Eintracht Frankfurt season」の infobox「league = [[Bundesliga]]」「league result = 14th」、
+#     本文「In addition to the domestic league, Eintracht Frankfurt is also participating in this season's edition of the DFB-Pokal.」（ヨーロッパの大会には出ていない）
+#
+# 軸は「**チャンピオンズリーグ出場を決めた年に、なぜ最終の損益が赤字になったのか**」。
+#   答え：出場を決めた（ブンデス3位）＋ヨーロッパリーグ準々決勝に対する選手のボーナスを2024-25に払い、人件費が25.4%増の1億7730万ユーロ。
+#     一方、チャンピオンズリーグの収入は次の 2025-26 に入る（財務担当役員の会見、ヘッセン放送の報道）。収入は3億8910万ユーロで前の年（過去最高）とほぼ同じ。
+#   ★他の財政回（10/28 ベンフィカ＝本業の黒字、10/27 シュツットガルト＝伸び率と放映権の内訳）と軸を重ねない。主役は「出場の決定とお金の入る年のずれ」。
+#   ★日本との接点：2024-25 の決算の数字には無い（堂安律の加入は 2025-26）。無理に入れない（10/6 の決定）。
+#   ★選手の名前は、ヘッセン放送が書いた次の年の大型の売却（エキティケのリヴァプールへの移籍）1つだけ。監督の話・女子の話はしない。
+#   ★アルファベット（AG・UEFA・CL）は読み上げに出さない。「サッカー部門の会社」と言う。
+#
+# **決算期**：アイントラハト・フランクフルト・フースバルAG（サッカー部門の会社）は7月〜6月。デロイトの 2024/25 と同じ期間。
+#   クラブの「収入」は選手の移籍の収入を含む。デロイトは移籍を含めない → 389.1−118.6＝270.5 で、デロイトの269.9とほぼ同じ（差0.6は数え方の違い。台本では「ほぼ同じ」まで）。
+#
+# **出どころ（読んだもの）**
+#   ○ デロイト Football Money League 2026（2024/25）一次ページ（deloitte.com UK、2026-10-28 に requests で本文を取得）
+#       https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
+#       「Ranking 21-30 ... 21 Galatasaray 273.6 / 22 Eintracht Frankfurt 269.9 / 23 Brighton & Hove Albion 238.7 ...」
+#       上位20：3. Bayern Munich、12. Borussia Dortmund、18. VFB Stuttgart（ドイツのクラブ）→ フランクフルトはドイツで4番目。シュツットガルトは €296.3m（10/27 の取材メモ）。
+#   ○ クラブ公式「The 2024/25 financial statement」（2025-10-30、en.eintracht.de、requests で本文を取得）
+#       https://en.eintracht.de/news/die-finanzdaten-2024-25-172834
+#       「achieved total revenue of €389.1 million in the 2024/25 season, sustaining the level of 2023/24. Last year saw record turnover of €390.5 million posted.」
+#       「transfer revenues of €118.6 million along with participation in the UEFA Europa League once again played a key role」
+#       「The Europa League was largely responsible for the 16.5 percent increase in media revenues to €107.9 million」「matchday revenues also increased by 15.4 percent to €57.8 million」
+#       収入の表：Transfers 118.6／Media rights 107.9／Sponsorship & marketing 75.8／Matchday 57.8／Merchandising 23.5／Other 5.4
+#       「Expenditure, including financial results and taxes, rose by just over nine percent to €397.5 million.」
+#       「Personnel spending in particular rose by 25.4 percent to €177.3 million, mainly due to the payment of contractually agreed bonuses to the men’s first team for reaching the quarter-finals of the Europa League and qualifying for the UEFA Champions League by finishing third in the Bundesliga table. The personnel expenditure ratio ... at 45.6 percent」
+#       「depreciation jumped by 34 percent to €46.0 million」「Despite the net loss for the year of €8.3 million, equity rose significantly from €51.7 million to €69 million due to the successful increase in capital.」
+#       「Financial debt rose by around five percent from €68.2 million to €71.8 million」
+#   ○ クラブ公式「The 2023/24 financial statement」（2024-10-31）https://en.eintracht.de/news/die-finanzdaten-2023-24-162861
+#       「record turnover again in the 2023/24 season: €390.5 million, beating the €310.2 million from the 2022/23 campaign」「record transfer fees totalling €143.2 million」
+#       「media rights ... after €140.5 million in 2022/23, they amounted to €92.6 million」「expenditure ... rose by 24.3 percent from €292.6 million (2022/23) to €363.6 million (2023/24)」
+#       「personnel expenses rose by a further 18.2 percent to €141.4 million, the staff cost ratio of 39 percent」「Equity rose from €24.7 million to €51.6 million due to the profit」
+#   ○ クラブ公式「The 2022/23 financial figures」（2023-09-15）https://en.eintracht.de/news/die-finanzdaten-2022-23-153135
+#       「record turnover of €310.2 million」「a post-tax profit of €17.6 million was recorded」「Media rights (€140.5 million/45 per cent)」「Transfers (€15.8/5 per cent)」「participation in the Champions League」
+#   ○ ヘッセン放送（hessenschau.de、2025-10-30、dpa の配信を含む）https://www.hessenschau.de/sport/fussball/eintracht-frankfurt/champions-league-beschert-eintracht-frankfurt-millionen-verlust-v1,eintracht-bilanz-102.html
+#       「Weil sich Eintracht Frankfurt in der vergangenen Saison für die Champions League qualifiziert hat, weist das Gesamtergebnis der Hessen für 2024/25 einen Verlust von 8,3 Millionen Euro aus.」
+#       「"Ohne den Einzug in die Champions League hätten wir ein positives Ergebnis gehabt. Aber darüber hätte sich niemand gefreut, wenn wir die Königsklasse verpasst hätten"」（財務担当役員ユリアン・ツァムベルク）
+#       「Die Einnahmen aus der Königsklasse, gerechnet wird mit etwa 50 bis 60 Millionen Euro, fließen allerdings erst in dieser Saison auf das Konto der Hessen.」
+#       「Und weil im Mai auch noch die nicht ganz unumstrittene Kapitalerhöhung von 25,7 Millionen Euro umgesetzt wurde」（増資は2025年5月・2570万ユーロ）
+#       「Der 95-Millionen-Euro-Transfer des Franzosen zum FC Liverpool wird erst in der Bilanz für diese Saison erfasst.」
+#   ○ 英語版 Wikipedia「2026–27 Eintracht Frankfurt season」（上の引用）
+#   × 確かめられなかったもの：2025-26 の決算（10/28 時点で発表を見つけられなかった。例年10月末に発表）、ボーナスの額そのもの、
+#     デロイトの前の年（2023-24）のフランクフルトの額と順位、2022-23 の人件費。どれも台本に入れない。
+#
+# 自分で計算した数（検算済み）
+#   移籍を除く収入：389.1−118.6＝270.5（デロイト269.9と0.6差）✓
+#   内訳の合計：118.6+107.9+75.8+57.8+23.5+5.4＝389.0 ✓（丸め）
+#   移籍の割合：118.6÷389.1＝30.5%→約3割 ／ 前の年 143.2÷390.5＝36.7%→約37%
+#   2023-24 の最終損益：390.5−363.6＝26.9（純資産 24.7→51.6 の +26.9 と一致）✓
+#   2024-25：389.1−397.5＝−8.4（発表は −8.3。丸め）✓
+#   人件費の増え：177.3−141.4＝35.9 → 赤字 8.3 の 35.9÷8.3＝4.3倍（「4倍を超える」）✓
+#   人件費の伸び 35.9÷141.4＝25.4% ✓
+#   費用の伸び 397.5÷363.6＝1.093 → 9.3%（「just over nine percent」）✓
+#   放映権：前の年 107.9÷1.165＝92.6 ✓。2022-23（チャンピオンズリーグに出た年）140.5 との差 140.5−107.9＝32.6
+#   シュツットガルトとの差：296.3−269.9＝26.4（2640万ユーロ）
+#   ベンフィカ（283.4）との差 283.4−269.9＝13.5 → 使わない（ポルトガル）
+#
+# 写真：assets/images/20261029_finance_frankfurt/（Commons、出典は credits.json）。01 外観（上から）、02 ヨーロッパリーグの夜（2018 マルセイユ戦）、03 空撮（森の中）、04 メインスタンド、05 ゴール裏のマフラー、06 内部のパノラマ。
+#   10/24 のクラブ紹介と前の背景で使った「Deutsche bank park.jpg」「Waldstadion match ... Wolfsburg」は避けた。
+date: 2026年10月29日
+slot: other_1
+format: news
+series: クラブの財政
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- フランクフルト
+theme:
+  end_bg: assets/images/20261029_finance_frankfurt/03_w.jpg
+  id: finance_frankfurt
+  league: germany
+  league_name: ブンデスリーガ
+  kind: other
+  topic: フランクフルト
+  title: フランクフルト、チャンピオンズリーグ出場を決めた年に赤字。なぜ？
+  question: フランクフルトは、2024-25にブンデスリーガ3位でチャンピオンズリーグ出場を決めた。収入は前の年の過去最高とほぼ同じ3億8910万ユーロなのに、最終の損益は830万ユーロの赤字。なぜ赤字になったのか
+  lead: チャンピオンズリーグ出場を決めた年に、赤字。フランクフルト。
+  opening_image: assets/images/20261029_finance_frankfurt/02_w.jpg
+  takeaway: フランクフルトのサッカー部門の会社の2024-25の決算は、収入3億8910万ユーロ（前の年の過去最高3億9050万とほぼ同じ）で、最終の損益は830万ユーロの赤字（前の年は約2690万ユーロの黒字）。人件費は25.4%増の1億7730万ユーロで、増えた3590万ユーロは赤字の4倍を超える（自分で割った数）。クラブはヨーロッパリーグ準々決勝とチャンピオンズリーグ出場（ブンデス3位）の選手のボーナスを主な理由に挙げ、財務担当役員は「出場が無ければ黒字だった」と話した。出場で入るお金（約5000万〜6000万ユーロの見込み）は次の2025-26の決算に入る。デロイトの集計（移籍を除く）では2億6990万ユーロで世界22位、ドイツで4番目
+  short_title: フランクフルト、出場を決めた年の赤字
+thumbnail:
+  layout: number
+  crest_pos: right
+  photo: assets/images/20261029_finance_frankfurt/02_w.jpg
+  number: 830万ユーロ赤字
+  line1: フランクフルトの決算
+  line2: 出場を決めた年になぜ
+  callouts: [人件費25%増]
+  tags:
+  - フランクフルト
+  - ブンデスリーガ
+  - クラブの財政
+  - デロイト
+sections:
+- id: rank
+  heading: フランクフルトは、世界で何番目に稼ぐクラブなのか
+  tier: 報道
+  telop: 2024-25は世界22位。移籍を除く収入は2億6990万ユーロ
+  narrator: 解説
+  card: &rank_stats
+    type: stats
+    title: デロイトの収入ランキング（2024-25、移籍を除く）
+    items:
+    - ['22', 位, 世界の順位]
+    - ['2.70', 億ユーロ, 1年の収入]
+    - ['4', 番目, ドイツのクラブで]
+    focus: 0
+  say:
+  - text: 収入の大きい順に、世界のクラブを並べた一覧。会計事務所デロイトの集計です。
+    image: assets/images/20261029_finance_frankfurt/01_w.jpg
+    card: none
+  - text: 2024年から25年のシーズン、フランクフルトは22位でした。
+    card: *rank_stats
+  - text: 収入は、2億6990万ユーロ。選手の移籍で入ったお金は、ここに数えません。
+    card:
+      <<: *rank_stats
+      focus: 1
+  - text: ドイツのクラブでは、バイエルン、ドルトムント、シュツットガルトに次ぐ4番目。
+    card:
+      <<: *rank_stats
+      focus: 2
+  - text: 18位のシュツットガルトとは、2640万ユーロの差です。
+    image: assets/images/20261029_finance_frankfurt/04_w.jpg
+    card: none
+  sources:
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
+- id: total
+  heading: 選手の移籍も入れると、収入はいくらだったのか
+  tier: 報道
+  telop: 移籍も入れた収入は3億8910万ユーロ。過去最高の前の年とほぼ同じ
+  narrator: 解説
+  card: &rev_bars
+    type: bars
+    title: フランクフルトの収入の内訳（2024-25、百万ユーロ）
+    unit: 百万ユーロ
+    items:
+    - {label: 選手の移籍, value: 118.6, highlight: true}
+    - {label: 放映権, value: 107.9}
+    - {label: スポンサー・商業, value: 75.8}
+    - {label: 試合日, value: 57.8}
+    - {label: グッズ, value: 23.5}
+  say:
+  - text: クラブ自身の決算は、移籍の収入も含めて数えます。
+    image: assets/images/20261029_finance_frankfurt/06_w.jpg
+    card: none
+  - text: フランクフルトのサッカー部門の会社の決算は、7月から6月で区切ります。
+    card: none
+  - text: 2024年から25年の収入は、3億8910万ユーロ。
+    emph: true
+    card: *rev_bars
+  - text: 前の年は、クラブ史上いちばんの3億9050万ユーロ。それとほぼ同じ額です。
+    card: *rev_bars
+  - text: いちばん大きいのは、選手の移籍で、1億1860万ユーロ。収入の約3割です。
+    card: *rev_bars
+  - text: 移籍の分を引くと、約2億7000万ユーロ。デロイトの数字と、ほぼ同じになります。
+    image: assets/images/20261029_finance_frankfurt/05_w.jpg
+    card: none
+  - text: 放映権は、ヨーロッパリーグの分で16.5%増えて、1億790万ユーロに。
+    card: none
+  sources:
+  - https://en.eintracht.de/news/die-finanzdaten-2024-25-172834
+- id: loss
+  main: true
+  heading: チャンピオンズリーグ出場を決めたのに、なぜ赤字なのか
+  tier: 報道
+  telop: 最終の損益は830万ユーロの赤字。人件費は25.4%増の1億7730万ユーロ
+  narrator: 解説
+  card: &cost_table
+    type: table
+    title: サッカー部門の会社の決算（百万ユーロ）
+    columns: [項目, 2023-24, 2024-25]
+    rows:
+    - [収入, '390.5', '389.1']
+    - [費用（税などを含む）, '363.6', '397.5']
+    - [人件費, '141.4', '177.3']
+    highlight_row: 1
+  say:
+  - text: 収入は前の年とほぼ同じのフランクフルト。それでも、決算は赤字でした。
+    image: assets/images/20261029_finance_frankfurt/02_w.jpg
+    card: none
+    short_only: true
+  - text: 2024年から25年、フランクフルトはブンデスリーガで3位。
+    image: assets/images/20261029_finance_frankfurt/02_w.jpg
+    card: none
+  - text: チャンピオンズリーグへの出場を決めました。
+    card: none
+  - text: ところが、最後の損益は、830万ユーロの赤字。
+    emph: true
+    card: none
+  - text: 費用は、税などを含めて3億9750万ユーロ。前の年より9%あまり増えました。
+    card: *cost_table
+  - text: 中でも人件費は、1億7730万ユーロ。1年で25.4%増えています。
+    card:
+      <<: *cost_table
+      highlight_row: 2
+  - text: クラブの説明では、増えた主な理由は、選手に払ったボーナスです。
+    card: &bonus_doc
+      type: document
+      label: フランクフルトのサッカー部門の会社 決算の発表（2025年10月、訳）
+      paragraphs:
+      - 人件費は25.4%増えて1億7730万ユーロ。主な理由は、契約で決めていたトップチームへのボーナスの支払いだ。
+      - ヨーロッパリーグの準々決勝進出と、ブンデスリーガ3位でのチャンピオンズリーグ出場に対するものだ。
+      highlight: [ボーナスの支払い, チャンピオンズリーグ出場]
+  - text: ヨーロッパリーグの準々決勝進出と、チャンピオンズリーグ出場に対するボーナスです。
+    card: *bonus_doc
+  - text: 一方で、チャンピオンズリーグで入るお金は、次のシーズンの決算に入ります。
+    image: assets/images/20261029_finance_frankfurt/04_w.jpg
+    card: none
+  - text: 財務担当の役員は、会見でこう話しています。
+    card: none
+  - text: 「出場していなければ、黒字でした。でも、出場を逃して喜ぶ人はいなかったはずです」
+    card: none
+  sources:
+  - https://en.eintracht.de/news/die-finanzdaten-2024-25-172834
+  - https://www.hessenschau.de/sport/fussball/eintracht-frankfurt/champions-league-beschert-eintracht-frankfurt-millionen-verlust-v1,eintracht-bilanz-102.html
+- id: history
+  heading: 3年前と比べて、フランクフルトのお金はどう動いたのか
+  tier: 報道
+  telop: 2022-23は1760万、2023-24は約2690万の黒字。2024-25は830万の赤字
+  narrator: 解説
+  card: &hist_table
+    type: table
+    title: サッカー部門の会社の決算（百万ユーロ）
+    columns: [年, 収入, うち移籍, 最終の損益]
+    rows:
+    - [2022-23, '310.2', '15.8', '+17.6']
+    - [2023-24, '390.5', '143.2', '+26.9']
+    - [2024-25, '389.1', '118.6', '−8.3']
+    highlight_row: 0
+  say:
+  - text: では、3年前のフランクフルトはどうだったのか。
+    image: assets/images/20261029_finance_frankfurt/03_w.jpg
+    card: none
+  - text: 2022年から23年は、チャンピオンズリーグに出たシーズン。
+    card: *hist_table
+  - text: 最終の黒字は、1760万ユーロ。
+    card: *hist_table
+  - text: このときの放映権は、1億4050万ユーロ。
+    card: *hist_table
+  - text: 2024年から25年より、3260万ユーロ多い額です。
+    image: assets/images/20261029_finance_frankfurt/05_w.jpg
+    card: none
+  - text: 2023年から24年は、選手の移籍で1億4320万ユーロが入った年。
+    card:
+      <<: *hist_table
+      highlight_row: 1
+  - text: 収入から費用を引くと、約2690万ユーロの黒字です。
+    card:
+      <<: *hist_table
+      highlight_row: 1
+  - text: そして2024年から25年は、赤字に変わりました。
+    image: assets/images/20261029_finance_frankfurt/06_w.jpg
+    card:
+      <<: *hist_table
+      highlight_row: 2
+  - text: それでも、借金を除いた会社の元手、純資産は6900万ユーロに増えました。
+    image: assets/images/20261029_finance_frankfurt/04_w.jpg
+    card: none
+  - text: 2025年5月に、株を新しく出して、2570万ユーロを集めたためです。
+    card: none
+  - text: 一方、借り入れは、6820万から7180万ユーロへ。5%ほど増えています。
+    card: none
+  sources:
+  - https://en.eintracht.de/news/die-finanzdaten-2022-23-153135
+  - https://en.eintracht.de/news/die-finanzdaten-2023-24-162861
+  - https://en.eintracht.de/news/die-finanzdaten-2024-25-172834
+  - https://www.hessenschau.de/sport/fussball/eintracht-frankfurt/champions-league-beschert-eintracht-frankfurt-millionen-verlust-v1,eintracht-bilanz-102.html
+- id: view
+  viewpoint: true
+  heading: 見立て・フランクフルトの赤字は、チャンピオンズリーグの前払いだったのか
+  tier: 背景
+  telop: 人件費の増え3590万ユーロは、赤字の4倍超。人件費の比率は39%から45.6%へ
+  narrator: 解説
+  card: &view_table
+    type: table
+    title: 自分で割ってみた（サッカー部門の会社の決算）
+    columns: [比べ, 答え]
+    rows:
+    - [人件費の増え ÷ 赤字, 4倍超]
+    - [人件費 ÷ 収入（前の年は39%）, 45.6%]
+    - [収入のうち移籍（前の年は約37%）, 約3割]
+    highlight_row: 0
+  say:
+  - text: ここからは見立てです。フランクフルトの決算の数字を、自分で割ってみます。
+    image: assets/images/20261029_finance_frankfurt/05_w.jpg
+    card: none
+  - text: 人件費の増えは、3590万ユーロ。赤字の額の、4倍を超えます。
+    emph: true
+    mark:
+      kind: circle
+      row: 0
+      col: 1
+    card: *view_table
+  - text: 収入に対する人件費の割合は、前の年の39%から、45.6%に上がりました。
+    card:
+      <<: *view_table
+      highlight_row: 1
+  - text: 収入のうち移籍の分は、前の年の約37%から、約3割に下がっています。
+    card:
+      <<: *view_table
+      highlight_row: 2
+  - text: 題への答えです。
+    image: assets/images/20261029_finance_frankfurt/01_w.jpg
+    card: none
+  - text: 出場を決めたボーナスは、この年に払い、出場で入るお金は、次の年に入る。
+    emph: true
+    card: none
+  - text: そのずれが、赤字の大きな理由でした。
+    card: none
+  - text: 報道では、チャンピオンズリーグの収入は、5000万から6000万ユーロの見込み。
+    image: assets/images/20261029_finance_frankfurt/02_w.jpg
+    card: none
+  - text: エキティケのリヴァプールへの移籍の9500万ユーロも、次の年の決算に入ります。
+    card: none
+  - text: 前払いが、次の決算で取り返せるのか。ここが見どころです。
+    card: none
+  sources:
+  - https://en.eintracht.de/news/die-finanzdaten-2024-25-172834
+  - https://en.eintracht.de/news/die-finanzdaten-2023-24-162861
+  - https://www.hessenschau.de/sport/fussball/eintracht-frankfurt/champions-league-beschert-eintracht-frankfurt-millionen-verlust-v1,eintracht-bilanz-102.html

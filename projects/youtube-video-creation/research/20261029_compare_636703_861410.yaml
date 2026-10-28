@@ -1,0 +1,377 @@
+# 取材メモ（10/29 木、シリーズ「比べる」、key: compare_636703_861410）。フェルミン・ロペス（バルセロナ・23歳）×アルダ・ギュレル（レアル・マドリード・21歳）。
+# **FotMob・DataMB は使っていない**。数字は Transfermarkt（2026-10-28 取得。控え: research/raw/20261029_fermin_tm.json・20261029_guler_tm.json）。
+#   Transfermarkt 番号：フェルミン 636703・ギュレル 861410。API（tmapi-alpha）の player・performance-season（2021〜2026）・performance-game（2026）・market-value-history を2.5秒あけて取得。
+# **選んだ理由**：直近の比べ（10/2エムバペ×ハーランド〜10/28ハーランド×イサク）に2人とも一度も出ていない（scripts/*compare*・research/*compare*・posted.json・covered.yaml を grep）。
+#   ギュレルは covered.yaml に契約延長の見出し2件（9月）があるだけ。フェルミンの単独回は無い。ハーランドは外した。バロンドールの話は軸にしない。
+#   ほかに当たって外した候補：フリアン・アルバレス（ラ・リーガ 263分）・エキティケ（今季0分）・ドゥエ（リーグ 436分）・バルコラ（リーグ 425分）。
+# **2人とも今季も扱うリーグ（ラ・リーガ）の1部**。今季のラ・リーガ：フェルミン 9試合612分、ギュレル 10試合594分。**どちらも450分を超え、900分には届かない → 「いまの時点」と言う**。
+#   クラブの全公式戦：フェルミン 776分（リーグ612・CL164）、ギュレル 703分（リーグ594・CL109）。
+# **使った数**（TM の大会別、ラ・リーガだけ。代表・CL は混ぜない）
+#   23/24 フェルミン 31試合1444分8点0A・ギュレル 10試合373分6点0A
+#   24/25 フェルミン 28試合1245分6点5A・ギュレル 28試合1249分3点5A
+#   25/26 フェルミン 30試合1798分6点9A（先発19）・ギュレル 33試合2027分4点9A（先発25）
+#   26/27 フェルミン 9試合612分4点3A・ギュレル 10試合594分2点3A（どちらも10月25日のクラシコまで）
+#   得点＋アシストの90分あたり（自分で割った値）：フェルミン 0.80・0.75・1.03、ギュレル 0.58・0.58・0.76（24/25・25/26・26/27）
+#   1つ絡むのにかかった時間：25/26 フェルミン 1798÷15＝119.9（約120分）・ギュレル 2027÷13＝155.9（約156分）。26/27 フェルミン 612÷7＝87.4（約87分）・ギュレル 594÷5＝118.8（約119分）
+#   ラ・リーガ通算（23/24〜26/27）：フェルミン 24点17A・ギュレル 15点17A（アシストは同じ17）
+#   出場中のチームの得点（teamGoalsOnThePitch）：25/26 フェルミン54・ギュレル43、26/27 フェルミン25・ギュレル14。
+#   本人の得点＋アシストの割合：25/26 15÷54＝27.8%・13÷43＝30.2%、26/27 7÷25＝28%・5÷14＝35.7%。
+#   PK の得点はどちらも各季0。
+# プロフィール（TM）：フェルミン 2003-05-11 生・スペイン代表・右足・176cm・背番号7・トップ登録 2023-07-01・市場価値 1億1000万€（2026-10-05）、2025-06-09 は 5000万€。
+#   ギュレル 2005-02-25 生・トルコ代表・左足・176cm・背番号15・加入 2023-07-06（フェネルバフチェから）・市場価値 1億€（2026-10-05）、2025-06-09 は 4500万€。
+#   上がり幅：110÷50＝2.2倍、100÷45＝2.22倍。
+# クラシコ（ESPN 401882832、控え: research/raw/20261029_espn_esp1_20261025.json）：2026-10-25 20:00 UTC、バルセロナ 1対2 レアル・マドリード（カンプ・ノウ）。
+#   得点 41分エムバペ・61分ラフィーニャ・87分エムバペ。TM の試合記録：フェルミン 74分出場 0点0A、ギュレル 90分出場 0点0A。
+# 日本との接点：見つからない（ギュレルは 2023-09-12 のトルコ対日本の親善試合を負傷で欠場＝TM の記録 injured）。入れない。
+# 日程（ESPN、控え: research/raw/20261029_barca_espn_schedule.json・20261029_real_espn_schedule.json）：
+#   次のラ・リーガ：バルセロナ対アラベス 2026-10-31 20:00 UTC＝日本時間11月1日 5:00、ラシン・サンタンデール対レアル 2026-11-01 15:15 UTC＝日本時間11月2日 0:15。公開（10/29 17:00）までに2人の公式戦は無い。
+# 写真：f1＝Commons（Fermín López (cropped).jpg, CC BY 4.0 / Biso）、g1＝Commons（Arda Güler 2025 (cropped).jpg, CC BY-SA 4.0 / LawEnthusiast）。
+#   f2・f3・g3＝FCバルセロナ公式の10/25 クラシコの記事の写真（背番号7のフェルミン、背中に ARDA GÜLER 15）。g2＝レアル公式の10/18 セビージャ戦の記事（ギュレルのゴール）。代理店ではない。目で本人と確かめた。
+slot: other_1
+date: "2026年10月29日"
+format: news
+series: 比べる
+people:
+  - フェルミン・ロペス
+  - アルダ・ギュレル
+  - バルセロナ
+  - レアル・マドリード
+
+theme:
+  end_bg: assets/images/20261029_compare_636703_861410/pair_b/01.jpg
+  id: compare_636703_861410
+  league: spain
+  kind: other
+  topic: フェルミン・ロペスとアルダ・ギュレル
+  prefix: ""
+  title: フェルミンとギュレル、同じ9アシスト。点に絡む速さは、どれだけ違うのか
+  hook: ""
+  question: 2025年から26年のラ・リーガで、アシストはどちらも9。同じ数を残した2人は、点に絡むまでにどれだけの時間をかけているのか
+  takeaway: 2025年から26年は1つ絡むのに約120分と約156分、今季は約87分と約119分。速さはフェルミンが上だが、チームの点に占める割合はギュレルが大きい
+  league_name: ラ・リーガ
+  opening_image: assets/images/20261029_compare_636703_861410/pair_a/01.jpg
+
+short_title: フェルミンとギュレル、同じ9アシスト
+
+thumbnail:
+  photo: assets/images/20261029_compare_636703_861410/pair_a/01.jpg
+  photos:
+    - assets/images/20261029_compare_636703_861410/f2/01_t.jpg
+    - assets/images/20261029_compare_636703_861410/g2/01_t.jpg
+  short_photo: assets/images/20261029_compare_636703_861410/pair_b/01_v.jpg
+  face_link: VS
+  layout:
+    layout: classic
+    names: [フェルミン, ギュレル]
+    name_colors: ["#a50044", "#febe10"]
+  line1: フェルミンとギュレル
+  line2: 昨季ともに9アシスト
+  tags: [フェルミン・ロペス, アルダ・ギュレル, バルセロナ, レアル・マドリード]
+
+answer: 2025年から26年は1つ絡むのに約120分と約156分、今季は約87分と約119分で、速さはフェルミンが上
+watch: 毎日、数字でサッカーを読み解きます
+
+sections:
+  - id: hook
+    heading: 2025年から26年のラ・リーガ、2人のアシストはいくつだったのか
+    tier: 報道
+    telop: 2025年から26年 ラ・リーガのアシスト
+    narrator: 解説
+    card: &hookcard
+      type: stats
+      title: 25/26 ラ・リーガのアシスト
+      items:
+        - ["9", 本, フェルミン]
+        - ["9", 本, ギュレル]
+        - ["229", 分, 出場時間の差]
+      focus: 1
+    say:
+      - text: バルセロナのフェルミン・ロペスと、レアル・マドリードのアルダ・ギュレル。
+        image: assets/images/20261029_compare_636703_861410/pair_a/01.jpg
+        card: none
+      - text: 2025年から26年のシーズン、ラ・リーガのアシストは、フェルミンが9。
+        image: assets/images/20261029_compare_636703_861410/f2/01.jpg
+        card: {<<: *hookcard, focus: 0}
+      - text: ギュレルも9。クラシコを戦う2つのクラブの中盤が、同じ数を残しました。
+        emph: true
+        image: assets/images/20261029_compare_636703_861410/g3/01.jpg
+        card: {<<: *hookcard, focus: 1}
+      - text: ただし、出場時間はギュレルのほうが229分長い。
+        image: assets/images/20261029_compare_636703_861410/f3/01.jpg
+        card: {<<: *hookcard, focus: 2}
+      - text: 同じ9本でも、かかった時間は同じではありません。
+        image: assets/images/20261029_compare_636703_861410/g2/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/fermin-lopez/leistungsdaten/spieler/636703
+      - https://www.transfermarkt.com/arda-guler/leistungsdaten/spieler/861410
+
+  - id: data
+    heading: フェルミンとギュレルは、何歳で、いくらの選手なのか
+    tier: 報道
+    telop: 2023年夏にトップへ来た2人
+    narrator: 解説
+    card: &datacard
+      type: duel
+      left: {name: フェルミン, club: バルセロナ, photo: assets/images/20261029_compare_636703_861410/f1/01_sq.jpg, color: "#a50044"}
+      right: {name: ギュレル, club: レアル, photo: assets/images/20261029_compare_636703_861410/g1/01_sq.jpg, color: "#febe10"}
+      rows:
+        - [年齢, 23歳, 21歳]
+        - [代表, スペイン, トルコ]
+        - [身長, 176cm, 176cm]
+        - [利き足, 右, 左]
+        - [背番号, "7", "15"]
+        - [いまのクラブのトップへ, 2023年7月, 2023年7月]
+        - [市場価値, 1億1000万€, 1億€]
+      bars: false
+      note: 市場価値は Transfermarkt（2026年10月5日の値）
+    say:
+      - text: フェルミンは23歳。スペイン代表で、バルセロナの背番号7です。
+        image: assets/images/20261029_compare_636703_861410/f2/01.jpg
+        card: {<<: *datacard, highlight_row: 年齢}
+      - text: ギュレルは21歳。トルコ代表で、レアルの背番号15。
+        image: assets/images/20261029_compare_636703_861410/g3/01.jpg
+        card: {<<: *datacard, highlight_row: 代表}
+      - text: いまのクラブのトップチームに入ったのは、どちらも2023年の7月でした。
+        image: assets/images/20261029_compare_636703_861410/f3/01.jpg
+        card: {<<: *datacard, highlight_row: いまのクラブのトップへ}
+      - text: 市場価値は2025年6月の時点で、5000万ユーロと4500万ユーロ。
+        image: assets/images/20261029_compare_636703_861410/pair_b/01.jpg
+        card: none
+      - text: いまは1億1000万ユーロと1億ユーロ。2人ともおよそ2.2倍に上がっています。
+        emph: true
+        image: assets/images/20261029_compare_636703_861410/pair_b/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/fermin-lopez/profil/spieler/636703
+      - https://www.transfermarkt.com/arda-guler/profil/spieler/861410
+
+  - id: clasico
+    heading: 10月25日のクラシコで、2人はピッチにいたのか
+    tier: 報道
+    telop: 10月25日 バルセロナ対レアル
+    narrator: 解説
+    card: &clasicocard
+      type: table
+      title: ラ・リーガ第10節 バルセロナ 1対2 レアル・マドリード
+      columns: [時間, できごと]
+      rows:
+        - [41分, エムバペの先制点（レアル）]
+        - [61分, ラフィーニャが追いつく（バルセロナ）]
+        - [87分, エムバペの決勝点（レアル）]
+    say:
+      - text: 10月25日、バルセロナとレアルが戦うクラシコ。2人とも先発しました。
+        image: assets/images/20261029_compare_636703_861410/g3/01.jpg
+        card: none
+      - text: 試合はレアルが先に決め、61分にラフィーニャが追いつきます。
+        image: assets/images/20261029_compare_636703_861410/f2/01.jpg
+        card: {<<: *clasicocard, highlight_row: 1}
+      - text: 決めたのは87分のエムバペ。レアルが2対1で勝ちました。
+        image: assets/images/20261029_compare_636703_861410/g3/01.jpg
+        card: {<<: *clasicocard, highlight_row: 2}
+      - text: フェルミンは74分までプレー。ギュレルは90分を戦い抜きました。
+        image: assets/images/20261029_compare_636703_861410/pair_b/01.jpg
+        card: none
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401882832
+      - https://www.fcbarcelona.com/en/football/first-team/news/4598638/fc-barcelona-1-2-real-madrid-heartbreaking-defeat
+
+  - id: season
+    heading: 2025年から26年のラ・リーガ、2人の数字はどこまで並んでいたのか
+    tier: 報道
+    main: true
+    telop: 25/26 ラ・リーガ
+    narrator: 解説
+    card: &seasoncard
+      type: duel
+      left: {name: フェルミン, club: 25/26, photo: assets/images/20261029_compare_636703_861410/f1/01_sq.jpg, color: "#a50044"}
+      right: {name: ギュレル, club: 25/26, photo: assets/images/20261029_compare_636703_861410/g1/01_sq.jpg, color: "#febe10"}
+      rows:
+        - [試合, "30", "33"]
+        - [先発, "19", "25"]
+        - [出場時間, 1798分, 2027分]
+        - [得点, "6", "4"]
+        - [アシスト, "9", "9"]
+        - [得点＋アシスト（90分あたり）, "0.75", "0.58"]
+      bars: [出場時間, 得点, アシスト, 得点＋アシスト（90分あたり）]
+      note: 25/26 のラ・リーガだけ。90分あたりは自分で割った値
+    say:
+      - text: バルセロナのフェルミンとレアルのギュレル。昨季のアシストはどちらも9。
+        short_only: true
+        image: assets/images/20261029_compare_636703_861410/f2/01.jpg
+        card: none
+      - text: その季、出た試合は30と33。先発は19と25です。
+        image: assets/images/20261029_compare_636703_861410/pair_b/01.jpg
+        card: {<<: *seasoncard, highlight_row: 先発}
+      - text: 得点は6と4。アシストと足すと、15と13です。
+        image: assets/images/20261029_compare_636703_861410/g3/01.jpg
+        card: {<<: *seasoncard, highlight_row: 得点}
+      - text: 90分に直すと、点に絡んだ数は0.75と0.58。
+        emph: true
+        image: assets/images/20261029_compare_636703_861410/f3/01.jpg
+        card: {<<: *seasoncard, highlight_row: 得点＋アシスト（90分あたり）}
+      - text: 時間で言うと、フェルミンは約120分に1つ。ギュレルは約156分に1つでした。
+        image: assets/images/20261029_compare_636703_861410/g2/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/fermin-lopez/leistungsdaten/spieler/636703
+      - https://www.transfermarkt.com/arda-guler/leistungsdaten/spieler/861410
+
+  - id: trend
+    heading: 90分あたりの得点とアシストは、3つの季でどう動いたのか
+    tier: 報道
+    telop: ラ・リーガの得点＋アシスト（90分あたり）
+    narrator: 解説
+    card: &trendcard
+      type: line
+      title: ラ・リーガの得点＋アシスト、90分あたり（季ごと）
+      x: [24/25, 25/26, 26/27]
+      series:
+        - [フェルミン, [0.80, 0.75, 1.03]]
+        - [ギュレル, [0.58, 0.58, 0.76]]
+      focus: フェルミン
+      note: 得点・アシスト・出場時間は Transfermarkt（ラ・リーガだけ）。自分で割った値。26/27 は10月25日まで
+    say:
+      - text: 3つの季のラ・リーガで、90分あたりいくつ点に絡んだかを線にします。
+        image: assets/images/20261029_compare_636703_861410/f2/01.jpg
+        card: *trendcard
+      - text: 2024年から25年は、出場時間が1245分と1249分で、ほとんど同じでした。
+        image: assets/images/20261029_compare_636703_861410/g3/01.jpg
+        card: {<<: *trendcard, highlight: 24/25}
+      - text: アシストはどちらも5。それでも得点が6と3で、0.80と0.58に分かれました。
+        image: assets/images/20261029_compare_636703_861410/f3/01.jpg
+        card: {<<: *trendcard, highlight: 24/25}
+      - text: そして今季は、1.03と0.76。2人とも、これまででいちばん高い値です。
+        emph: true
+        image: assets/images/20261029_compare_636703_861410/g3/01.jpg
+        card: {<<: *trendcard, highlight: 26/27}
+      - text: ラ・リーガの通算アシストは、フェルミンが17、ギュレルも17。
+        image: assets/images/20261029_compare_636703_861410/pair_b/01.jpg
+        card: none
+      - text: 差がついているのは得点で、24点と15点です。
+        image: assets/images/20261029_compare_636703_861410/g2/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/fermin-lopez/leistungsdaten/spieler/636703
+      - https://www.transfermarkt.com/arda-guler/leistungsdaten/spieler/861410
+
+  - id: share
+    heading: チームの点のうち、2人はどれだけに絡んでいるのか
+    tier: 報道
+    telop: ピッチにいるあいだのチームの得点
+    narrator: 解説
+    card: &sharecard
+      type: duel
+      left: {name: フェルミン, club: バルセロナ, photo: assets/images/20261029_compare_636703_861410/f1/01_sq.jpg, color: "#a50044"}
+      right: {name: ギュレル, club: レアル, photo: assets/images/20261029_compare_636703_861410/g1/01_sq.jpg, color: "#febe10"}
+      rows:
+        - [25/26 出場中のチームの得点, "54", "43"]
+        - [25/26 本人が絡んだ割合, 28%, 30%]
+        - [26/27 出場中のチームの得点, "25", "14"]
+        - [26/27 本人が絡んだ割合, 28%, 36%]
+      bars: [25/26 出場中のチームの得点, 26/27 出場中のチームの得点]
+      note: ラ・リーガだけ（Transfermarkt）。出場中のチームの得点は、本人がピッチにいたあいだにチームが決めた点。割合は得点＋アシスト÷チームの得点で、自分で割った値
+    say:
+      - text: 2人が出ているあいだに、チームは何点を挙げていたのか。
+        image: assets/images/20261029_compare_636703_861410/g2/01.jpg
+        card: none
+      - text: 2025年から26年、バルセロナは54点、レアルは43点。
+        image: assets/images/20261029_compare_636703_861410/f2/01.jpg
+        card: {<<: *sharecard, highlight_row: 25/26 出場中のチームの得点}
+      - text: そのうち本人が得点かアシストで絡んだ割合は、28%と30%。
+        image: assets/images/20261029_compare_636703_861410/g3/01.jpg
+        card: {<<: *sharecard, highlight_row: 25/26 本人が絡んだ割合}
+      - text: 今季は、チームの点が25と14で、割合は28%と36%です。
+        emph: true
+        image: assets/images/20261029_compare_636703_861410/f3/01.jpg
+        card: {<<: *sharecard, highlight_row: 26/27 本人が絡んだ割合}
+      - text: 点の多いチームで数を積むフェルミンと、少ない点の多くに関わるギュレル。
+        image: assets/images/20261029_compare_636703_861410/pair_b/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/fermin-lopez/leistungsdaten/spieler/636703
+      - https://www.transfermarkt.com/arda-guler/leistungsdaten/spieler/861410
+
+  - id: now
+    heading: 今季のラ・リーガ、1つ点に絡むのに何分かかっているのか
+    tier: 報道
+    telop: 26/27 のいまの時点
+    narrator: 解説
+    card: &nowcard
+      type: duel
+      left: {name: フェルミン, club: 26/27, photo: assets/images/20261029_compare_636703_861410/f1/01_sq.jpg, color: "#a50044"}
+      right: {name: ギュレル, club: 26/27, photo: assets/images/20261029_compare_636703_861410/g1/01_sq.jpg, color: "#febe10"}
+      rows:
+        - [試合, "9", "10"]
+        - [出場時間, 612分, 594分]
+        - [得点, "4", "2"]
+        - [アシスト, "3", "3"]
+        - [1つ絡むのにかかった時間, 約87分, 約119分]
+      bars: [出場時間, 得点, アシスト]
+      lower: [1つ絡むのにかかった時間]
+      note: 26/27 のラ・リーガだけ（10月25日まで）。かかった時間は出場時間÷（得点＋アシスト）で、自分で計算した値。2人とも900分に届かないので、いまの時点の数字
+    say:
+      - text: 今季のラ・リーガは、10月25日までで、フェルミンが9試合4点3アシスト。
+        image: assets/images/20261029_compare_636703_861410/f2/01.jpg
+        card: {<<: *nowcard, highlight_row: 得点}
+      - text: ギュレルは10試合で2点3アシスト。出場時間は612分と594分で、ほぼ同じです。
+        image: assets/images/20261029_compare_636703_861410/g3/01.jpg
+        card: {<<: *nowcard, highlight_row: 出場時間}
+      - text: 1つ点に絡むのにかかった時間は、フェルミンが約87分、ギュレルが約119分。
+        emph: true
+        image: assets/images/20261029_compare_636703_861410/f3/01.jpg
+        card: {<<: *nowcard, highlight_row: 1つ絡むのにかかった時間}
+      - text: ただ、2人とも出場はまだ600分ほど。シーズンは始まったばかりです。
+        image: assets/images/20261029_compare_636703_861410/pair_b/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/fermin-lopez/leistungsdaten/spieler/636703
+      - https://www.transfermarkt.com/arda-guler/leistungsdaten/spieler/861410
+
+  - id: view
+    heading: 見立て・同じ9アシストの2人は、点に絡む速さがどれだけ違うのか
+    tier: 背景
+    viewpoint: true
+    narrator: 解説
+    telop: 数字の違いが示すもの
+    card: &viewcard
+      type: duel
+      left: {name: フェルミン, club: バルセロナ, photo: assets/images/20261029_compare_636703_861410/f1/01_sq.jpg, color: "#a50044"}
+      right: {name: ギュレル, club: レアル, photo: assets/images/20261029_compare_636703_861410/g1/01_sq.jpg, color: "#febe10"}
+      rows:
+        - [25/26 のアシスト, "9", "9"]
+        - [25/26 の1つ絡むのにかかった時間, 約120分, 約156分]
+        - [26/27 の1つ絡むのにかかった時間, 約87分, 約119分]
+        - [26/27 チームの点に絡んだ割合, 28%, 36%]
+      lower: [25/26 の1つ絡むのにかかった時間, 26/27 の1つ絡むのにかかった時間]
+      bars: false
+      note: ラ・リーガだけ。かかった時間は出場時間÷（得点＋アシスト）で、自分で計算した値。26/27 は10月25日まで
+    say:
+      - text: 見立てです。1つ点に絡むまでの時間の差は、2025年から26年が36分。
+        mark: {kind: circle, row: 1}
+        image: assets/images/20261029_compare_636703_861410/f2/01.jpg
+        card: {<<: *viewcard, highlight_row: 25/26 の1つ絡むのにかかった時間}
+      - text: 今季は32分。どちらの季も、速さはフェルミンが上です。
+        emph: true
+        image: assets/images/20261029_compare_636703_861410/g3/01.jpg
+        card: {<<: *viewcard, highlight_row: 26/27 の1つ絡むのにかかった時間}
+      - text: 一方で、チームの点に占める割合は、今季36%のギュレルが大きい。
+        image: assets/images/20261029_compare_636703_861410/f3/01.jpg
+        card: {<<: *viewcard, highlight_row: 26/27 チームの点に絡んだ割合}
+      - text: 同じ9アシストの裏で、速さはフェルミン、重みはギュレル、と分かれていました。
+        image: assets/images/20261029_compare_636703_861410/pair_b/01.jpg
+        card: none
+      - text: 次のラ・リーガ。バルセロナは日本時間11月1日の朝5時に、ホームでアラベス戦。
+        image: assets/images/20261029_compare_636703_861410/f2/01.jpg
+        card: none
+      - text: レアルは日本時間11月2日の0時15分に、アウェーでラシン・サンタンデール戦です。
+        image: assets/images/20261029_compare_636703_861410/g2/01.jpg
+        card: none
+      - text: クラシコの次の試合で、2人の数字がどう動くのか、注目です。
+        image: assets/images/20261029_compare_636703_861410/pair_a/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/fermin-lopez/leistungsdaten/spieler/636703
+      - https://www.transfermarkt.com/arda-guler/leistungsdaten/spieler/861410
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/all/teams/83/schedule?fixture=true
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/all/teams/86/schedule?fixture=true

@@ -1,0 +1,272 @@
+{{for|the baseball tournament|1999 Intercontinental Cup (baseball)}}
+{{Infobox football match
+|              title = 1999 Intercontinental Cup
+|              image = ToyotaCup1999.jpg
+|            caption = Match programme cover
+|              team1 = [[Manchester United F.C.|Manchester United]]
+|   team1association = {{flagicon|ENG|size=30px}}
+|         team1score = 1
+|              team2 = [[Sociedade Esportiva Palmeiras|Palmeiras]]
+|   team2association = {{flagicon|BRA|size=30px}}
+|         team2score = 0
+|            details =
+|               date = 30 November 1999
+|            stadium = [[National Stadium (Tokyo, 1958)|National Stadium]]
+|               city = [[Tokyo]]
+| man_of_the_match1a = [[Ryan Giggs]]<br />(Manchester United)
+|            referee = [[Hellmut Krug]] ([[German Football Association|Germany]])
+|         attendance = 53,372
+|            weather = Clear<br />{{convert|12|°C|°F|abbr=on}}<br />58% [[humidity]]<ref>{{cite web |url=http://www.wunderground.com/history/airport/RJTT/1999/11/30/DailyHistory.html?req_city=Tokyo&req_state&req_statename=Japan |title=Weather history for Tokyo, Japan – Tuesday, November 30, 1999 |work=Weather Underground |publisher=The Weather Channel |access-date=31 July 2014}}</ref>
+|           previous = [[1998 Intercontinental Cup|1998]]
+|               next = [[2000 Intercontinental Cup|2000]]
+}}
+The '''1999 Intercontinental Cup''' was an [[association football]] match played on 30 November 1999 between [[Manchester United F.C.|Manchester United]], winners of the [[1998–99 UEFA Champions League]], and [[Sociedade Esportiva Palmeiras|Palmeiras]], winners of the [[1999 Copa Libertadores]]. The match was played at the neutral venue of the [[National Stadium (Tokyo, 1958)|National Stadium]] in [[Tokyo]] in front of 53,372 spectators.
+
+Manchester United won the match 1–0, with captain [[Roy Keane]] taking advantage of a mistake by Palmeiras goalkeeper [[Marcos (footballer, born 1973)|Marcos]] to score the winning goal. This was United's only [[Intercontinental Cup (1960–2004)|Intercontinental Cup]] triumph, having been beaten by [[Estudiantes de La Plata|Estudiantes]] in the [[1968 Intercontinental Cup|1968 competition]]. This game was Palmeiras' only appearance in the Intercontinental Cup. [[Ryan Giggs]] was given the [[man of the match]] award.<ref>{{cite web|first=Marcelo |last=Leme de Arruda |title=Toyota Cup - Most Valuable Player of the Match Award |url=https://www.rsssf.org/tablest/toyotamvp.html |publisher=Rec.Sport.Soccer Statistics Foundation |date=2 January 2009 |access-date=12 January 2009 |archive-url=https://web.archive.org/web/20110629224208/http://www.rsssf.com/tablest/toyotamvp.html |archive-date=29 June 2011 |url-status=live }}</ref> Manchester United's victory made them the first and only team from [[England]] and also the [[British Isles]] to win the Intercontinental Cup.<ref>{{cite news |title=Manchester United 1 Palmeiras 0: Minute by minute |url=https://www.theguardian.com/football/1999/nov/30/newsstory.sport7 |work=guardian.co.uk |publisher=Guardian News and Media |date=30 November 1999 |access-date=7 June 2011 }}</ref>
+
+==Teams==
+{| class="wikitable"
+|-
+!Team
+!Qualification
+!Previous participation (bold indicates winners)
+|-
+|{{flagicon|ENG}} [[Manchester United F.C.|Manchester United]]
+|[[1998–99 UEFA Champions League]] winners
+|[[1968 Intercontinental Cup|1968]]
+|-
+|{{flagicon|BRA}} [[Sociedade Esportiva Palmeiras|Palmeiras]]
+|[[1999 Copa Libertadores]] winners
+|None
+|}
+
+==Venue==
+[[File:Yamazaki-nabisco-Cup final 2004.jpg|thumb|The [[National Stadium (Tokyo, 1958)|National Stadium]] in [[Tokyo]] hosted the match]]
+For the 20th consecutive season, as a result of the competition's sponsorship by [[Toyota]], the match was played at a neutral venue, the [[National Stadium (Tokyo, 1958)|National Stadium]] in Tokyo, Japan.<ref>{{cite web |title=Intercontinental Cup |url=https://www.manutd.com/en/history/trophy-room/intercontinental-cup |website=ManUtd.com |publisher=Manchester United |access-date=20 April 2019 }}</ref>
+{{-}}
+
+==Match==
+===Details===
+{{football box
+|date=30 November 1999
+|time=19:10 [[Japan Standard Time|JST]]
+|team1=[[Manchester United F.C.|Manchester United]] {{flagicon|ENG}}
+|score=1–0
+|report=https://www.uefa.com/uefachampionsleague/match/58531/
+|team2={{flagicon|BRA}} [[Sociedade Esportiva Palmeiras|Palmeiras]]
+|goals1=[[Roy Keane|Keane]] {{goal|35}}
+|goals2=
+|stadium=[[National Stadium (Tokyo, 1958)|National Stadium]], [[Tokyo]]
+|attendance=53,372
+|referee=[[Hellmut Krug]] ([[German Football Association|Germany]])
+}}
+
+{| width=92%
+|-
+|{{Football kit
+ | pattern_la =
+ | pattern_b  = _manutde9700
+ | pattern_ra =
+ | pattern_sh = _manutde9700alt
+ | pattern_so = _whiteline
+ | leftarm    = E20E0E
+ | body       = E20E0E
+ | rightarm   = E20E0E
+ | shorts     = 000000
+ | socks      = 000000
+ | title      = Manchester United
+}}
+|{{Football kit
+| pattern_la        = _palmeiras99h
+| pattern_b         = _palmeiras99h
+| pattern_ra        = _palmeiras99h
+| pattern_sh        = _palmeiras99h
+| pattern_so        = _palmeiras99h
+| leftarm           = 006100
+| body              = 006100 
+| rightarm          = 006100
+| shorts            = FFFFFF
+| socks             = 006100
+| title             = Palmeiras
+}}
+|}
+
+{| width=100%
+|valign="top" width="40%"|
+{| style="font-size:90%" cellspacing="0" cellpadding="0"
+|-
+!width=25| !!width=25|
+|-
+|GK ||'''1''' ||{{flagicon|AUS}} [[Mark Bosnich]]
+|-
+|RB ||'''2''' ||{{flagicon|ENG}} [[Gary Neville]]
+|-
+|CB ||'''6''' ||{{flagicon|NED}} [[Jaap Stam]]
+|-
+|CB ||'''27'''||{{flagicon|FRA|1974}} [[Mikaël Silvestre]] || {{yel|79}}
+|-
+|LB ||'''3''' ||{{flagicon|IRL}} [[Denis Irwin]]
+|-
+|DM ||'''16'''||{{flagicon|IRL}} [[Roy Keane]] ([[Captain (association football)|c]])
+|-
+|RM ||'''7''' ||{{flagicon|ENG}} [[David Beckham]]
+|-
+|CM ||'''8''' ||{{flagicon|ENG}} [[Nicky Butt]]
+|-
+|CM ||'''18'''||{{flagicon|ENG}} [[Paul Scholes]] || || {{suboff|75}}
+|-
+|LM ||'''11'''||{{flagicon|WAL}} [[Ryan Giggs]]
+|-
+|CF ||'''20'''||{{flagicon|NOR}} [[Ole Gunnar Solskjær]] || || {{suboff|46}}
+|-
+|colspan="4"|'''Substitutes:'''
+|-
+|GK ||'''26'''||{{flagicon|ITA|1946}} [[Massimo Taibi]]
+|-
+|DF ||'''12'''||{{flagicon|ENG}} [[Phil Neville]]
+|-
+|DF ||'''28'''||{{flagicon|ENG}} [[Danny Higginbotham]]
+|-
+|MF ||'''25'''||{{flagicon|RSA}} [[Quinton Fortune]]
+|-
+|MF ||'''30'''||{{flagicon|ENG}} [[Ronnie Wallwork]]
+|-
+|FW ||'''10'''||{{flagicon|ENG}} [[Teddy Sheringham]] || || {{subon|75}}
+|-
+|FW ||'''19'''||{{flagicon|TRI}} [[Dwight Yorke]] || || {{subon|46}}
+|-
+|colspan="4"|'''Manager:'''
+|-
+|colspan="4"|{{flagicon|SCO}} [[Alex Ferguson|Sir Alex Ferguson]]
+|}
+|valign="top"|[[File:Man Utd vs Palmeiras 1999-11-30.svg|300px]]
+|valign="top" width="50%"|
+{| style="font-size:90%" cellspacing="0" cellpadding="0" align=center
+|-
+!width=25| !!width=25|
+|-
+|GK ||'''1''' ||{{flagicon|BRA}} [[Marcos (footballer, born 1973)|Marcos]]
+|-
+|RB ||'''2''' ||{{flagicon|PAR|1990}} [[Francisco Arce|Chiqui Arce]]
+|-
+|CB ||'''4''' ||{{flagicon|BRA}} [[Roque Júnior]]
+|-
+|CB ||'''3''' ||{{flagicon|BRA}} [[Júnior Baiano]]
+|-
+|LB ||'''6''' ||{{flagicon|BRA}} [[Júnior (footballer, born 1973)|Júnior]]
+|-
+|DM ||'''15'''||{{flagicon|BRA}} [[Galeano (footballer)|Galeano]] || || {{suboff|54}}
+|-
+|DM ||'''5''' ||{{flagicon|BRA}} [[César Sampaio]]
+|-
+|AM ||'''10'''||{{flagicon|BRA}} [[Alex (footballer, born 1977)|Alex]] || {{yel|28}}
+|-
+|AM ||'''11'''||{{flagicon|BRA}} [[Zinho]] ([[Captain (association football)|c]])
+|-
+|CF ||'''7''' ||{{flagicon|BRA}} [[Paulo Nunes]] || || {{suboff|77}}
+|-
+|CF ||'''20'''||{{flagicon|COL}} [[Faustino Asprilla]] || || {{suboff|56}}
+|-
+|colspan="4"|'''Substitutes:'''
+|-
+|GK ||'''12'''||{{flagicon|BRA}} [[Sérgio (footballer, born 1970)|Sérgio]]
+|-
+|DF ||'''13'''||{{flagicon|BRA}} [[Tiago Silva (footballer, born 1979)|Tiago Silva]]
+|-
+|DF ||'''18'''||{{flagicon|BRA}} [[Cléber (footballer, born 1969)|Cléber]]
+|-
+|MF ||'''8''' ||{{flagicon|BRA}} [[Rogério (footballer, born 1976)|Rogério]]
+|-
+|FW ||'''9''' ||{{flagicon|BRA}} [[Oséas]] || || {{subon|56}}
+|-
+|FW ||'''17'''||{{flagicon|BRA}} [[Evair]] || || {{subon|54}}
+|-
+|FW ||'''19'''||{{flagicon|BRA}} [[Euller (footballer, born 1971)|Euller]] || || {{subon|77}}
+|-
+|colspan="4"|'''Manager:'''
+|-
+|colspan="4"|{{flagicon|BRA}} [[Luiz Felipe Scolari]]
+|}
+|}
+{| width=100% style="font-size: 90%"
+|
+'''Man of the Match:'''
+<br />[[Ryan Giggs]] (Manchester United)<ref>[https://web.archive.org/web/20010514025200/http://toyotacup.com/html/history/20/g_ef.html Toyota Cup]</ref>
+
+'''[[Assistant referee (association football)|Assistant referees]]:'''
+<br />Jeon Young-hyun ([[Korea Football Association|South Korea]])
+<br />Yoshikazu Hiroshima ([[Japan Football Association|Japan]])
+<br />'''[[Assistant referee (association football)#Fourth official|Fourth official]]:'''
+<br />[[Masayoshi Okada]] ([[Japan Football Association|Japan]])
+|}
+
+===Statistics===
+{| class="wikitable plainrowheaders" style="text-align: center"
+|+Overall<ref name="stats">{{cite web|title=Match Statistics|url=https://news.bbc.co.uk/2/hi/sport/football/543368.stm|access-date=30 November 2007|work=BBC News}}</ref> 
+|-
+!scope=col width=100 |
+!scope=col width=70 | Manchester United 
+!scope=col width=70 | Palmeiras
+|-
+!scope=row|Goals scored
+| 1
+| 0
+|-
+!scope=row|Total shots 
+| 8
+| 15
+|-
+!scope=row|Shots on target
+| 1
+| 4
+|-
+!scope=row|Corner kicks
+| 6
+| 12
+|-
+!scope=row|Offsides
+| 16
+| 13
+|-
+!scope=row|Yellow cards
+| 1
+| 1
+|-
+!scope=row|Red cards
+| 0
+| 0
+|}
+
+==See also==
+*[[1998–99 UEFA Champions League]]
+*[[1999 Copa Libertadores]]
+*[[2000 FIFA Club World Championship]]
+*[[Manchester United F.C. in European football]]
+
+==References==
+{{reflist}}
+
+==External links==
+*[https://web.archive.org/web/20080619040312/http://www.fifa.com/classicfootball/clubs/matchreport/newsid%3D512168.html 1999 Intercontinental Cup] at FIFA.com
+
+{{Intercontinental Cup (football)}}
+{{1999–2000 in English football}}
+{{Manchester United F.C. matches}}
+{{Sociedade Esportiva Palmeiras matches}}
+
+{{DEFAULTSORT:Intercontinental Cup 1999}}
+[[Category:1999–2000 in European men's continental football]]
+[[Category:1999 in South American men's continental football]]
+[[Category:1999 in Japanese football]]
+[[Category:Intercontinental Cup (1960–2004)|1999]]
+[[Category:Manchester United F.C. matches]]
+[[Category:SE Palmeiras matches]]
+[[Category:Intercontinental Cup (football) matches hosted by Japan|1999]]
+[[Category:1999 in Brazilian football]]
+[[Category:1999–2000 in English men's football]]
+[[Category:November 1999 sports events in Japan]]
+[[Category:1999 in Tokyo]]
+[[Category:Football competitions in Tokyo]]
+[[Category:Brazil–United Kingdom sports relations|1999]]
+[[Category:1999 in association football]]
+[[Category:1999 in men's international association football|Intercontinental]]

@@ -1,0 +1,419 @@
+# ユニフォームとエンブレムの歴史 ブレントフォード（10/29 作成）。雛形は 10/28 ボーンマス回。
+# 題の問い：ブレントフォードの胸の蜂は、本当に蜂だったのか（答え＝1890年代、学生の応援「バック・アップ、ビーズ（Bの字）」を新聞が蜂と聞き違えた）。
+# 重なり確認（2026-10-28 夜）：scripts/*kit_*・research/covered.yaml・research/posted.json を grep。ブレントフォードのユニフォーム回は無し。
+#   20260920_pl04_brentford（クラブ紹介・39日前）は「愛称は『ビーズ』。蜂です。」の1行だけ（由来は言っていない）。酒場の投票の話はそちらで済み→この回では言わない。
+#   20261012_stadium_brentford（スタジアム・17日前）は競技場の話。この回では競技場の話はしない（写真だけ流用）。
+#   フラムは 10/24 にスタジアム回、ハルは 10/29 のスタジアム回なので避けた。
+# 今季のリーグ：ウィキペディア en "2026–27 Brentford F.C. season"（league = Premier League、「6季連続でプレミア」）。
+# 取材：requests だけ。ブラウザ操作・JS実行・検索のAI要約は使っていない。
+#   読んだ：ウィキペディア en "Brentford F.C."（Nickname 節、Colours and badge 節、Kit suppliers の表）、"2026–27 Brentford F.C. season"、
+#     Historical Football Kits（HFK。ファンの資料サイトだが典拠を明記）：Brentford の Background。
+#   読めなかった：クラブ公式の紋章の告知（crest.brentfordfc.co.uk、2016-11-10）は開いていない。紋章の話はウィキペディアと HFK の一致した所だけ使う。
+# ---- 食い違い・断ったこと ----
+#   ・愛称の年：ウィキペディア「1890年代」、HFK「1893年ごろ」→「1890年代」とだけ言う。
+#   ・聞き違えたのは誰か：ウィキペディア「地元の新聞」、HFK「観客が取り違え、地元紙が広めた」→「周りと地元の新聞が、蜂と受け取った」。
+#   ・1893年ごろの最初の印：ウィキペディア「1893年、白い盾に BFC と青い波線。川とボートのクラブを表すと考えられる」、
+#     HFK「1893〜94年のチーム写真に、頭文字と川らしい模様の印」→「1890年代の写真に、頭文字と波の線。川を表す、と考えられています」。
+#   ・1938〜39年の町の紋章：HFK「確かではないが、ブレントフォード＆チズウィックの紋章らしい」→「町の紋章とされる印を、1季だけ」。
+#   ・1888年の紋章を外した年：ウィキペディア「1975年5月まで使い、1975〜76年から新しい紋章」、HFK「新しい図案は1976年」→年は言わず「数年で外した」。
+#   ・ファンが描いた紋章：ウィキペディア「1993年に描き、1994年から」、HFK「1995年2月に発表」→「1990年代の半ば」とだけ言う。
+#     ウィキペディアは「シーズンチケット2枚と引き換えに描いた」。2011年に別の人（ラッセル・グラント）が「自分が描いた」と言ったが誤り、とも書く→その話は入れない。
+#   ・金と青の1季：ウィキペディア「1960〜61年、うまくいかなかった」、HFK「1960年に戻したが効かず、季の終わりに4部へ」。
+#     ただし降格は1962年の季の終わりで HFK の表とも合わない→降格は言わない。「うまくいかず、1季で縞に戻した」まで。
+#   ・2季続けて着た：HFK「ファンの負担を軽くするため、2021〜22年のシャツをもう1季。2023〜25年にも繰り返した」。ウィキペディアの表も 2021–2023・2023–2025 の区切り。
+#   ・1部への昇格：HFK「2021年、1946〜47年の季以来」。
+# ---- 自分で数えた数 ----
+#   赤と白の縞：1925〜26年の季から。2026−1925＝101年。外したのは1960〜61年の1季だけ（ウィキペディア）。
+#   愛称から紋章の蜂まで：愛称1890年代（HFK 1893年ごろ）、蜂の入った紋章 1971〜72年（ウィキペディア）。1971−1893＝78→「80年近く」。
+#   2季ずつ：2021年から2025年までの4季でホームのシャツは2着。毎季新しくすれば4着。4÷2＝2季に1着。
+#   紋章の創立年：1888年と書いたが、本当は1889年（ウィキペディア）。差は1年。
+# ---- 日本との接点 ----
+#   無し（research/pl_data/japan.json にブレントフォードの日本人は無い）。入れない。
+# ---- 写真（assets/images/20261029_kit_brentford/、出典は credits.json）----
+#   k01〜k04 は Commons（10/12 のスタジアム回・9/20 のクラブ紹介で使ったもの。wt-yt-0906 から写した）。
+#   k05 は Commons の CC0（2025-11-29 バーンリー戦、背番号24）。原版は 429 で取れず、960px の縮小版から切った。
+#   エンブレム画像そのもの・放送映像・代理店の写真は使っていない（k02 は競技場の壁の紋章を撮った写真）。
+date: 2026年10月29日
+slot: other_2
+format: news
+series: ユニフォームとエンブレムの歴史
+voice_min: 0
+people:
+- ブレントフォード
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  end_bg: assets/images/20261029_kit_brentford/k01_lineup.jpg
+  id: kit_brentford
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: ブレントフォード
+  title: ブレントフォードの胸の蜂は、本当に蜂だったのか
+  question: ブレントフォードの紋章の蜂は、どこから来て、赤と白の縞はいつから続いているのか
+  opening_image: assets/images/20261029_kit_brentford/k02_crest_stadium.jpg
+  lead: 胸に、蜂。
+  hook: ''
+  takeaway: 愛称ビーズは1890年代、学生の応援「Bの字」を周りが蜂と聞き違えて生まれた。蜂が紋章に入ったのは1971年で、80年近くあと。赤と白の縞は1925年から101年、外したのは1960年からの1季だけ。2021年からの4季はホームのシャツを2着だけにして、2季ずつ着た
+  hook_unused: ''
+thumbnail:
+  layout: classic
+  callouts:
+  - 紋章の創立年が間違い
+  - 同じシャツを2季
+  photo: assets/images/20261029_kit_brentford/k05_damsgaard_w.jpg
+  short_photo: assets/images/20261029_kit_brentford/k04_griffin2013_v.jpg
+  line1: ブレントフォードの胸の蜂
+  line2: 始まりは聞き違い
+  tags:
+  - ブレントフォード
+  - ユニフォーム
+  - エンブレム
+  - ビーズ
+  - プレミアリーグ
+x-cards:
+  bees: &bees
+    type: timeline
+    title: 愛称と蜂の歩み（ウィキペディア・HFK）
+    rows:
+    - - 1889年
+      - ボートのクラブから、サッカーのクラブが生まれる
+    - - 1890年代
+      - 学生の応援「バック・アップ、ビーズ」
+    - - 1971年
+      - 紋章に、初めて蜂の巣と蜂
+    - - 2017年
+      - いまの紋章。真ん中に大きな蜂
+    focus: 1890年代
+    highlight_row: 1
+  colours: &colours
+    type: timeline
+    title: シャツの色の歩み（ウィキペディア・HFK）
+    rows:
+    - - 1889年〜
+      - ボートのクラブの色。サーモン、えんじ、水色
+    - - 1903年
+      - 後援者ロスチャイルド卿の、金と青
+    - - 1920年
+      - リーグ入りで、白いシャツ
+    - - 1925年
+      - 赤と白の縞
+    - - 1960年
+      - 1季だけ、金と青に戻す
+    focus: 1925年
+    highlight_row: 0
+  crest: &crest
+    type: timeline
+    title: 紋章の歩み（ウィキペディア・HFK）
+    rows:
+    - - 1890年代
+      - 頭文字と、川を表す波の線
+    - - 1971年
+      - 4つに割った盾。蜂の巣と蜂
+    - - 1973年
+      - 公募の紋章。創立を「1888年」と書く
+    - - 1990年代の半ば
+      - ファンが描いた紋章
+    - - 2017年
+      - 二重の丸に、大きな蜂
+    focus: 1973年
+    highlight_row: 0
+  wrongyear: &wrongyear
+    type: verdict
+    title: 1973年の紋章に書いた創立の年
+    columns:
+    - 項目
+    - 判定
+    - 一言
+    rows:
+    - - 紋章の年
+      - ×
+      - 1888年
+    - - 本当の創立
+      - ○
+      - 1889年
+    highlight_row: 0
+  twoseasons: &twoseasons
+    type: table
+    title: ホームのシャツ（HFK・ウィキペディア）
+    columns:
+    - 季
+    - ホームのシャツ
+    rows:
+    - - 2021年から23年まで
+      - 1着を2季
+    - - 2023年から25年まで
+      - 1着を2季
+    - - 2025年から
+      - スペインのジョマ
+    highlight_row: 0
+  view: &view
+    type: table
+    title: ブレントフォードの縞と蜂を数える
+    columns:
+    - 何を
+    - 数
+    rows:
+    - - 赤と白の縞（1925年から）
+      - 101年
+    - - 縞を外した季
+      - 1季
+    - - 愛称から紋章の蜂まで
+      - 80年近く
+    - - 2021年からのホームのシャツ
+      - 4季で2着
+    highlight_row: 0
+sections:
+- id: bees
+  main: true
+  heading: ブレントフォードの胸の蜂は、本当に蜂だったのか
+  bg: assets/images/20261029_kit_brentford/k02_crest_stadium.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 愛称ビーズは、学生の応援「Bの字」を、周りが蜂と聞き違えたもの
+  card: *bees
+  say:
+  - text: 今回は、ブレントフォードの、赤と白の縞と、胸の蜂です。
+    image: assets/images/20261029_kit_brentford/k02_crest_stadium.jpg
+    card: none
+    emph: true
+  - text: ブレントフォードの愛称は、ビーズ。紋章の真ん中にも、大きな蜂がいます。
+    image: assets/images/20261029_kit_brentford/k02_crest_stadium.jpg
+    card: none
+  - text: ところが、この愛称の始まりは、虫の蜂とは別のものでした。
+    image: assets/images/20261029_kit_brentford/k01_lineup.jpg
+    card: none
+    emph: true
+  - text: 1890年代、近くのボロー・ロード・カレッジの学生たちが、試合を見に来ていました。
+    image: assets/images/20261029_kit_brentford/k03_griffin1982.jpg
+    card:
+      <<: *bees
+      highlight_row: 1
+  - text: お目当ては、ブレントフォードでプレーしていた、仲間のジョセフ・ゲッティンズ。
+    image: assets/images/20261029_kit_brentford/k03_griffin1982.jpg
+    card: none
+  - text: 学生たちは、学校の応援の言葉で叫びます。バック・アップ、ビーズ。
+    image: assets/images/20261029_kit_brentford/k03_griffin1982.jpg
+    card:
+      type: document
+      label: ウィキペディア英語版「ブレントフォードFC」愛称の節（訳）
+      paragraphs:
+      - 学生たちは、学校の応援「バック・アップ、ビーズ（Bの字）」で仲間を励ました。地元の新聞はこれを「バック・アップ、ビーズ（蜂）」と聞き違え、愛称が残った。
+      highlight:
+      - Bの字
+      - 聞き違え
+  - text: このビーズは、蜂ではなく、アルファベットのビーの字でした。
+    image: assets/images/20261029_kit_brentford/k03_griffin1982.jpg
+    card: none
+    callword: Bの字
+    emph: true
+  - text: ところが、周りと地元の新聞は、これを蜂と受け取ります。
+    image: assets/images/20261029_kit_brentford/k04_griffin2013.jpg
+    card: none
+  - text: こうして、聞き違いから、ビーズという愛称が残りました。
+    image: assets/images/20261029_kit_brentford/k04_griffin2013.jpg
+    card: none
+  - text: 蜂が紋章に入るのは、ずっとあとの1971年です。
+    image: assets/images/20261029_kit_brentford/k02_crest_stadium.jpg
+    card:
+      <<: *bees
+      highlight_row: 2
+    emph: true
+  sources:
+  - https://en.wikipedia.org/wiki/Brentford_F.C.
+  - https://www.historicalkits.co.uk/Brentford/Brentford.htm
+- id: colours
+  heading: 赤と白の縞の前は、何色だったのか
+  bg: assets/images/20261029_kit_brentford/k04_griffin2013.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 最初はボートのクラブの色。金と青、白をへて、1925年に赤と白の縞
+  card: *colours
+  say:
+  - text: ブレントフォードは1889年、川のボートのクラブから生まれました。
+    image: assets/images/20261029_kit_brentford/k04_griffin2013.jpg
+    card:
+      <<: *colours
+      highlight_row: 0
+  - text: 最初のシャツは、そのボートのクラブの色。サーモン、えんじ、水色です。
+    image: assets/images/20261029_kit_brentford/k04_griffin2013.jpg
+    card: none
+  - text: 1903年には、後援者だったロスチャイルド卿の、競馬の勝負服の色、金と青に。
+    image: assets/images/20261029_kit_brentford/k04_griffin2013.jpg
+    card:
+      <<: *colours
+      highlight_row: 1
+  - text: 1920年、フットボールリーグに入るときは、白いシャツでした。
+    image: assets/images/20261029_kit_brentford/k03_griffin1982.jpg
+    card:
+      <<: *colours
+      highlight_row: 2
+  - text: そして1925年、いまの赤と白の縞が始まります。
+    image: assets/images/20261029_kit_brentford/k01_lineup.jpg
+    card:
+      <<: *colours
+      highlight_row: 3
+    emph: true
+  - text: その後、縞を外したのは一度だけ。
+    image: assets/images/20261029_kit_brentford/k01_lineup.jpg
+    card: none
+  - text: 1960年からの1季、運を変えようと、昔の金と青に戻しました。
+    image: assets/images/20261029_kit_brentford/k03_griffin1982.jpg
+    card:
+      <<: *colours
+      highlight_row: 4
+  - text: けれど、うまくいかず、1季で縞に戻しています。
+    image: assets/images/20261029_kit_brentford/k03_griffin1982.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Brentford_F.C.
+  - https://www.historicalkits.co.uk/Brentford/Brentford.htm
+- id: crest
+  heading: 紋章に書いた創立の年は、なぜ外されたのか
+  bg: assets/images/20261029_kit_brentford/k02_crest_stadium.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 1973年の公募の紋章は創立を1888年と書き、数年で外された。本当は1889年
+  card: *crest
+  say:
+  - text: ブレントフォードの紋章も、何度も替わってきました。
+    image: assets/images/20261029_kit_brentford/k02_crest_stadium.jpg
+    card: none
+  - text: 1890年代の写真には、頭文字と波の線の印。川を表す、と考えられています。
+    image: assets/images/20261029_kit_brentford/k02_crest_stadium.jpg
+    card:
+      <<: *crest
+      highlight_row: 0
+  - text: 1971年、4つに割った盾の1つに、蜂の巣と蜂が入ります。
+    image: assets/images/20261029_kit_brentford/k02_crest_stadium.jpg
+    card:
+      <<: *crest
+      highlight_row: 1
+  - text: 愛称が生まれてから、80年近くあとのことです。
+    image: assets/images/20261029_kit_brentford/k04_griffin2013.jpg
+    card: none
+  - text: 翌年には、新しい紋章をファンから募ります。選ばれたのは、丸の中に蜂と縞の図案。
+    image: assets/images/20261029_kit_brentford/k04_griffin2013.jpg
+    card:
+      <<: *crest
+      highlight_row: 2
+  - text: ところが、その紋章には、創立の年が1888年と書かれていました。
+    image: assets/images/20261029_kit_brentford/k04_griffin2013.jpg
+    card: *wrongyear
+    emph: true
+  - text: 本当の創立は、1889年。1年ずれていたのです。
+    image: assets/images/20261029_kit_brentford/k04_griffin2013.jpg
+    card:
+      <<: *wrongyear
+      highlight_row: 1
+    mark:
+      kind: strike
+      row: 0
+  - text: 指摘を受けて、この紋章は数年で外されました。
+    image: assets/images/20261029_kit_brentford/k01_lineup.jpg
+    card: none
+  - text: 1990年代の半ばには、ファンが描いた紋章が使われ始めます。
+    image: assets/images/20261029_kit_brentford/k01_lineup.jpg
+    card:
+      <<: *crest
+      highlight_row: 3
+  - text: そして2017年から、いまの形。二重の丸に、大きな蜂を1匹置いた紋章です。
+    image: assets/images/20261029_kit_brentford/k02_crest_stadium.jpg
+    card:
+      <<: *crest
+      highlight_row: 4
+    emph: true
+  sources:
+  - https://en.wikipedia.org/wiki/Brentford_F.C.
+  - https://www.historicalkits.co.uk/Brentford/Brentford.htm
+- id: twoseasons
+  heading: なぜ同じホームのシャツを、2季続けて着たのか
+  bg: assets/images/20261029_kit_brentford/k01_lineup.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 1部に上がった2021年から、ファンの負担を軽くするため、ホームのシャツを2季ずつ
+  card: *twoseasons
+  say:
+  - text: 2021年、ブレントフォードは、1947年以来の1部の舞台へ戻ります。
+    image: assets/images/20261029_kit_brentford/k01_lineup.jpg
+    card: none
+  - text: そこでクラブは、ホームのシャツを、次の季もそのまま着ると決めます。
+    image: assets/images/20261029_kit_brentford/k01_lineup.jpg
+    card:
+      <<: *twoseasons
+      highlight_row: 0
+    emph: true
+  - text: 理由は、ファンがシャツを買う負担を、軽くするためでした。
+    image: assets/images/20261029_kit_brentford/k01_lineup.jpg
+    card: none
+  - text: 2023年からの2季も、同じように、1着を2季着ています。
+    image: assets/images/20261029_kit_brentford/k01_lineup.jpg
+    card:
+      <<: *twoseasons
+      highlight_row: 1
+  - text: そして2025年からは、作る会社がスペインのジョマに替わりました。
+    image: assets/images/20261029_kit_brentford/k01_lineup.jpg
+    card:
+      <<: *twoseasons
+      highlight_row: 2
+  sources:
+  - https://www.historicalkits.co.uk/Brentford/Brentford.htm
+  - https://en.wikipedia.org/wiki/Brentford_F.C.
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_Brentford_F.C._season
+- id: view
+  viewpoint: true
+  heading: 見立て・縞は101年、外したのは1季。蜂が紋章に来るまで何年かかったか
+  bg: assets/images/20261029_kit_brentford/k01_lineup.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 縞は101年で外したのは1季。愛称から紋章の蜂まで80年近く。4季でシャツは2着
+  card: *view
+  say:
+  - text: ブレントフォードの縞と蜂を、数で並べます。
+    image: assets/images/20261029_kit_brentford/k01_lineup.jpg
+    card: none
+  - text: 赤と白の縞は、1925年から101年。
+    image: assets/images/20261029_kit_brentford/k01_lineup.jpg
+    card:
+      <<: *view
+      highlight_row: 0
+  - text: そのうち外したのは、1960年からの1季だけです。
+    image: assets/images/20261029_kit_brentford/k01_lineup.jpg
+    card:
+      <<: *view
+      highlight_row: 1
+    mark:
+      kind: circle
+      row: 1
+  - text: 聞き違いの愛称から、蜂が紋章に入るまでは、80年近くかかりました。
+    image: assets/images/20261029_kit_brentford/k02_crest_stadium.jpg
+    card:
+      <<: *view
+      highlight_row: 2
+    emph: true
+  - text: そして2021年からの4季で、ホームのシャツは2着。
+    image: assets/images/20261029_kit_brentford/k01_lineup.jpg
+    card:
+      <<: *view
+      highlight_row: 3
+  - text: 毎季替えれば4着のところ、半分で済ませています。
+    image: assets/images/20261029_kit_brentford/k01_lineup.jpg
+    card:
+      type: calc
+      title: 1着を何季着たか（自分で割った）
+      terms:
+      - - 4季
+        - 2021年から
+      - - 2着
+        - ホームのシャツ
+      - - 2季に1着
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: 101年続く縞と、1文字の聞き違いから生まれた蜂。どちらも、いまの胸にあります。
+    image: assets/images/20261029_kit_brentford/k02_crest_stadium.jpg
+    card: none
+    emph: true
+  sources:
+  - https://en.wikipedia.org/wiki/Brentford_F.C.
+  - https://www.historicalkits.co.uk/Brentford/Brentford.htm

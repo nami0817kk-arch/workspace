@@ -1,0 +1,445 @@
+# 宮本恒靖（元日本代表DF）の紹介。シリーズ「レジェンドの紹介（日本）」2026-10-29。型は 10/28 の松井大輔と同じ8節。
+# **FotMob・DataMB・FBref・Sofascore・Transfermarkt は不使用**。数字は 英語版/日本語版 Wikipedia の成績表と試合記録、サッカーキング・NHK・Number、自分で足した値だけ。
+# **私生活（家族）は入れない。女子サッカーは入れない**。Jリーグは経歴の事実（ガンバ・神戸の所属、2005年の優勝）だけで、サムネの主役にしない。
+#
+# **重なりの確認（2026-10-29）**：scripts/・research/posted.json で「宮本恒靖」のレジェンド回は0件。
+#   research/covered.yaml に 10/27 のニュース「宮本恒靖『開催は簡単じゃない』。初戦まで76日のアジア杯…」（JFA会長としての発言）が1件、
+#   scripts/20261027_asiancup_schedule.md・20260929_debut.md・20261022_kawaguchi_yoshikatsu_legend.md に名前が出る。選手としての紹介は未公開。
+# **引退の確認**：サッカーキング 2011-12-19 12:50「日韓W杯主将の元日本代表DF宮本恒靖が引退『別れを告げる時が来た』」（web.archive の控えを requests で読んだ）
+#   「神戸に所属する元日本代表DF宮本恒靖が、現役生活からの引退を表明した」。英語版も「On 19 December 2011, Miyamoto confirmed his retirement」。→ **現役ではない**。
+# **いまの立場**：NHK 2024-03-23「日本サッカー協会 新会長に宮本恒靖氏が就任 47歳 戦後最年少」（web.archive の控え）。英語版の冒頭も「current president of the Japan Football Association」。
+#   2026年10月のいまも会長かは、10/27 のニュース（covered.yaml）で会長として発言しているので会長のまま。
+# **日本との接点**：全体が日本代表・W杯の話。基礎DATAの次に代表の節を置いた。
+#
+# **数字の出どころ**
+# - 生年月日 1977-02-07 大阪府富田林市（英語版 infobox）→ 2026-10-29 で49歳、2002-06-09 で25歳、2024-03-23 で47歳（NHK も47歳）、2011-12-19 で34歳。
+# - 日本代表 71試合3得点（2000〜2006）。英語版の年別：2000=2・2001=3・2002=11・2003=10・2004=19(2点)・2005=15(1点)・2006=11。サッカーキング 2011 も「代表通算は71試合3得点」。
+#   区切りは自分で足した：2000〜2003 = 26試合0得点、2004〜2006 = 45試合3得点。2004年の19試合は71試合の27%。
+#   デビュー 2000-06-18 ボリビア戦（英語版）。代表初得点 2004-02-07 マレーシア戦（日本語版）。
+# - 2002年W杯（英語版 2002 Group H の試合表）：6月4日ベルギー 2対2（71分に森岡隆三と交代で出場）、6月9日ロシア 1対0（稲本51分。先発）、6月14日チュニジア 2対0（先発・主将）。
+#   決勝トーナメント1回戦 6月18日 宮城でトルコに0対1（英語版 knockout stage の組み合わせ表）。W杯初勝利はロシア戦。
+#   鼻の骨折と顔のガード、「バットマン」：日本語版（日刊スポーツ 2002-06-16「英では『バットマン』宮本が人気!」を引用）。
+# - 2006年W杯：オーストラリア戦・クロアチア戦にフル出場、ブラジル戦は警告の累積で出られず。クロアチア戦が代表最後の試合（英語版・日本語版）。
+# - 2004年アジアカップ：準々決勝 7月31日 重慶 ヨルダンと1対1（延長）、PK戦4対3（英語版 2004 AFC Asian Cup）。決勝 8月7日 北京で中国に3対1。
+#   全6試合フル出場・大会ベストイレブン（英語版）。PK戦で中村俊輔と三都主アレサンドロが続けて外して0対2→主審に申し入れてゴールを替えた（日本語版、Number 2010-05-24）。
+#   本人の言葉「ダメもとでいってみたんです」（Number 2010-05-24 page 6。WebFetch の要約で読んだ語。前後の文は確かめていないので、この一言だけ）。
+# - ザルツブルク：2006年12月に移籍（英語版）。オーストリアのリーグ戦 21試合0得点（2006-07 が9試合・2007-08 が12試合）。2006-07 にリーグ優勝（英語版 Honors）。2007-08 は左サイドバックでも先発（日本語版、本人のブログ）。
+# - 引退：2011年12月19日（サッカーキング・英語版）。本人のコメント（サッカーキング 2011-12-19、本人の公式HPから）「ピッチに別れを告げる時が来ました。2011シーズンを持って現役を引退します。」
+# - FIFAマスター：2013年7月19日に修了、日本人の元プロ選手で初（日本語版）。英語版も「a graduate of the 13th edition of FIFA Master」。
+# - 会長：2024年3月23日、第15代、47歳は戦後最年少、元Jリーガーでワールドカップ出場経験がある人の就任は初めて（NHK）。言葉「選手の時からずっとそうだがサッカーをもっと大きな存在にしたい」（NHK）。
+#
+# **入れなかったもの**：家族、2008年の怪我の中身、ガンバ監督の成績、Jリーグの通算数字（サムネにも使わない）、2005年のアジア最終予選のイラン戦（Mehr の写真は 2005年のアザディの事故と結びついているので使わない）。
+# **写真**：Commons は 400px 前後の2006年の写真しか無かった（内閣官房内閣広報室、CC BY 4.0。2006-05-16 の代表発表）。
+#   JFA 公式の就任の記事（jfa.jp/news/00033797/）の写真 640x480 を足した（JFA の自前の写真。代理店の表記なし）。2002年W杯・2004年アジアカップの写真は使えるものが無い（行では「その試合の写真」と言わない）。
+watch: 毎日、数字でサッカーを読み解きます
+title: 宮本恒靖は、どんな選手だった？ PK戦で主審に何を求めたのか
+format: news
+short_title: 宮本恒靖は、どんな選手だった？
+series: レジェンドの紹介
+topic: 宮本恒靖
+date: 2026年10月29日
+slot: other_1
+people:
+- 宮本恒靖
+theme:
+  id: legend_miyamoto_tsuneyasu
+  league: japan
+  league_name: ワールドカップ
+  kind: other
+  topic: 宮本恒靖
+  title: 宮本恒靖は、どんな選手だった？ PK戦で主審に何を求めたのか
+  question: 2002年と2006年のワールドカップで日本の主将を務め、アジアカップのPK戦でゴールを替えさせた宮本恒靖は、どんな選手で、いまは何をしているのか
+  takeaway: 宮本恒靖の日本代表71試合のうち、45試合は2004年からの3年に集まる。2004年だけで19試合、アジアカップは全6試合フル出場。2002年は控えから主将になり、ワールドカップ2大会で6試合に出た守備の柱は、いま日本サッカー協会の会長として日本のサッカーを動かしている
+  nameplate: 宮本恒靖｜元日本代表 DF
+  opening_image: assets/images/20261029_miyamoto_tsuneyasu_legend/21_w.jpg
+  end_bg: assets/images/20261029_miyamoto_tsuneyasu_legend/21_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+  outro_title: 毎日、数字でサッカーを読み解きます
+thumbnail:
+  line1: 宮本恒靖、代表71試合3点
+  line2: W杯2大会で日本の主将
+  tags: []
+  photo: assets/images/20261029_miyamoto_tsuneyasu_legend/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261029_miyamoto_tsuneyasu_legend/21_v.jpg
+sections:
+- id: hook
+  heading: 日本のワールドカップ初勝利の夜、最終ラインの中央に立っていたのは誰か
+  tier: 報道
+  telop: 2002年6月9日、横浜でのロシア戦
+  card: &hookcard
+    type: stats
+    title: 宮本恒靖 元日本代表DF（49歳）
+    items:
+    - - '71'
+      - 試合
+      - 日本代表（2000〜2006年）
+    - - '2'
+      - 大会
+      - W杯で主将（2002・2006）
+    - - '6'
+      - 試合
+      - 2004年アジアカップ 全試合フル出場
+    focus: 1
+  say:
+  - text: 2002年6月9日。横浜で、日本はロシアと戦いました。
+    image: assets/images/20261029_miyamoto_tsuneyasu_legend/21_w.jpg
+    card: none
+  - text: 後半6分、稲本潤一が決めた1点を守り、日本が勝ちます。
+    card: none
+    emph: true
+  - text: 日本にとって、ワールドカップの舞台での初めての白星でした。
+    card: none
+  - text: 守備の中央には、顔にガードを着けた25歳がいました。宮本恒靖です。
+    card: none
+  - text: 日本代表で71試合。
+    image: assets/images/20261029_miyamoto_tsuneyasu_legend/11_w.jpg
+    card: {<<: *hookcard, focus: 0}
+  - text: ワールドカップは2大会続けて、主将として戦いました。
+    card: {<<: *hookcard, focus: 1}
+    emph: true
+  - text: 控えから始まった、守備の柱の歩みをたどります。
+    card: {<<: *hookcard, focus: 2}
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/2002_FIFA_World_Cup_Group_H
+  - https://en.wikipedia.org/wiki/Tsuneyasu_Miyamoto
+  - https://ja.wikipedia.org/wiki/%E5%AE%AE%E6%9C%AC%E6%81%92%E9%9D%96
+- id: data
+  heading: 宮本恒靖は、どこでプレーし、何を残した選手か
+  tier: 報道
+  telop: 宮本恒靖の基礎DATA
+  card: &datacard
+    type: table
+    title: 宮本恒靖
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 生年月日
+      - 1977年2月7日・大阪府生まれ
+    - - ポジション
+      - DF（センターバック）
+    - - 日本代表
+      - 71試合3得点（2000〜2006）
+    - - ワールドカップ
+      - 2002年・2006年（2大会とも主将）
+    - - 代表のタイトル
+      - アジアカップ優勝（2004）
+    - - 海外のクラブ
+      - ザルツブルク（オーストリア）
+    - - 引退
+      - 2011年12月に発表（34歳）
+    source: Wikipedia・サッカーキング
+    highlight_row: 0
+  say:
+  - text: 宮本恒靖の生まれは、1977年2月7日。大阪府の出身で、いま49歳です。
+    image: assets/images/20261029_miyamoto_tsuneyasu_legend/21_w.jpg
+    card: {<<: *datacard, highlight_row: 0}
+  - text: ポジションは、センターバック。守備の中央です。
+    card: {<<: *datacard, highlight_row: 1}
+  - text: 守備の選手ながら、日本代表では3得点。
+    card: {<<: *datacard, highlight_row: 2}
+    emph: true
+  - text: 2004年には、アジアカップを主将として掲げました。
+    card: {<<: *datacard, highlight_row: 4}
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Tsuneyasu_Miyamoto
+  - https://www.soccer-king.jp/news/japan/20111219/15337.html
+- id: japan
+  heading: 宮本恒靖の代表の出番は、なぜ2004年から増えたのか
+  tier: 報道
+  telop: 日本代表で71試合3得点
+  card: &jpncard
+    type: table
+    title: 宮本恒靖 日本代表の出場と得点
+    columns:
+    - 年
+    - 試合
+    - 得点
+    rows:
+    - - 2000〜2001
+      - '5'
+      - '0'
+    - - 2002〜2003
+      - '21'
+      - '0'
+    - - 2004〜2006
+      - '45'
+      - '3'
+    - - 合計
+      - '71'
+      - '3'
+    source: Wikipedia
+    highlight_row: 3
+  say:
+  - text: 宮本恒靖の代表歴は、時期で分けると形がはっきりします。
+    image: assets/images/20261029_miyamoto_tsuneyasu_legend/11_w.jpg
+    card: {<<: *jpncard, highlight_row: 3}
+  - text: デビューは2000年6月、ボリビア戦。最初の2年の出場は5試合でした。
+    card: {<<: *jpncard, highlight_row: 0}
+  - text: 当時の守備の中央には、森岡隆三がいました。宮本恒靖は、その控えです。
+    card: {<<: *jpncard, highlight_row: 0}
+  - text: 2002年と2003年で、21試合。ワールドカップを境に、出番が増えていきます。
+    card: {<<: *jpncard, highlight_row: 1}
+  - text: そして2004年からの3年で、45試合。
+    image: assets/images/20261029_miyamoto_tsuneyasu_legend/21_w.jpg
+    card: {<<: *jpncard, highlight_row: 2}
+    emph: true
+  - text: 代表の3得点も、すべてこの時期。最初の1点は2004年2月、マレーシア戦です。
+    card: {<<: *jpncard, highlight_row: 2}
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Tsuneyasu_Miyamoto
+  - https://ja.wikipedia.org/wiki/%E5%AE%AE%E6%9C%AC%E6%81%92%E9%9D%96
+- id: career
+  heading: ガンバ大阪で育った宮本恒靖は、オーストリアで何を手にしたのか
+  tier: 報道
+  telop: 大阪から、オーストリアのザルツブルクへ
+  card: &careercard
+    type: table
+    title: 歩んできた道（リーグ戦）
+    columns:
+    - 年
+    - 所属
+    - 試合・得点
+    rows:
+    - - 1995〜2006
+      - ガンバ大阪
+      - 295試合7得点
+    - - 2006〜2009
+      - ザルツブルク
+      - 21試合0得点
+    - - 2009〜2011
+      - ヴィッセル神戸
+      - 42試合1得点
+    source: Wikipedia
+    highlight_row: 0
+  say:
+  - text: 1995年、ガンバ大阪のユースから、トップチームへ上がります。
+    image: assets/images/20261029_miyamoto_tsuneyasu_legend/11_w.jpg
+    card: {<<: *careercard, highlight_row: 0}
+  - text: 2005年には主将として、クラブに初めてのリーグ優勝をもたらしました。
+    card: {<<: *careercard, highlight_row: 0}
+  - text: 2006年のワールドカップのあと、宮本恒靖は29歳で海を渡ります。
+    card: none
+  - text: 行き先は、オーストリアのレッドブル・ザルツブルク。
+    image: assets/images/20261029_miyamoto_tsuneyasu_legend/12_w.jpg
+    card: {<<: *careercard, highlight_row: 1}
+    emph: true
+  - text: その最初のシーズンに、ザルツブルクはオーストリアの頂点に立ちます。
+    card: {<<: *careercard, highlight_row: 1}
+    callword: リーグ優勝
+  - text: 2年目は、センターバックだけでなく左サイドバックでも先発しました。
+    card: none
+  - text: 本人はブログに、このポジションは10年ぶりだったと書いています。
+    card: none
+  - text: 2009年1月、ヴィッセル神戸へ。日本に戻り、ここでも主将を任されました。
+    image: assets/images/20261029_miyamoto_tsuneyasu_legend/21_w.jpg
+    card: {<<: *careercard, highlight_row: 2}
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Tsuneyasu_Miyamoto
+  - https://ja.wikipedia.org/wiki/%E5%AE%AE%E6%9C%AC%E6%81%92%E9%9D%96
+- id: match
+  heading: 2002年の4試合で、控えだった宮本恒靖はどう主将になったのか
+  tier: 報道
+  telop: 2002年W杯、日本はベスト16
+  main: true
+  card: &wccard
+    type: table
+    title: 2002年W杯 日本と宮本恒靖
+    columns:
+    - 日付
+    - 試合
+    rows:
+    - - 6月4日
+      - ベルギーと2対2。71分から出場
+    - - 6月9日
+      - ロシアに1対0。W杯初勝利
+    - - 6月14日
+      - チュニジアに2対0。主将で先発
+    - - 6月18日
+      - トルコに0対1。ベスト16
+    highlight_row: 0
+  say:
+  - text: 元日本代表のディフェンダー、宮本恒靖。
+    image: assets/images/20261029_miyamoto_tsuneyasu_legend/21_w.jpg
+    card: none
+    short_only: true
+  - text: 2002年、日韓大会。宮本恒靖は25歳で、守備の中央の控えでした。
+    image: assets/images/20261029_miyamoto_tsuneyasu_legend/11_w.jpg
+    card: none
+  - text: 大会の直前には、練習試合で鼻の骨を折っています。
+    card: none
+  - text: 初戦のベルギー戦。森岡隆三が痛み、71分に代わって入りました。
+    card: {<<: *wccard, highlight_row: 0}
+  - text: ロシア戦からは先発。主将の腕章と、顔を守る黒いガードを着けます。
+    card: {<<: *wccard, highlight_row: 1}
+    emph: true
+  - text: その姿は海外で、「バットマン」と呼ばれました。
+    image: assets/images/20261029_miyamoto_tsuneyasu_legend/21_w.jpg
+    card: none
+    callword: バットマン
+  - text: ロシアに1対0、チュニジアに2対0で連勝。日本はグループ1位で突破します。
+    card: {<<: *wccard, highlight_row: 2}
+  - text: 決勝トーナメントの1回戦は、トルコに0対1。日本の大会は16強で幕を閉じます。
+    card: {<<: *wccard, highlight_row: 3}
+  - text: 4年後のドイツ大会も、主将はこの人でした。
+    image: assets/images/20261029_miyamoto_tsuneyasu_legend/11_w.jpg
+    card: none
+    emph: true
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/2002_FIFA_World_Cup_Group_H
+  - https://en.wikipedia.org/wiki/2002_FIFA_World_Cup_knockout_stage
+  - https://ja.wikipedia.org/wiki/%E5%AE%AE%E6%9C%AC%E6%81%92%E9%9D%96
+- id: secret
+  heading: アジアカップのPK戦で、宮本恒靖は主審に何を求めたのか
+  tier: 報道
+  telop: 2004年アジアカップ、ヨルダンとのPK戦
+  card: &secretcard
+    type: table
+    title: 2004年アジアカップ 日本の勝ち上がり
+    columns:
+    - 日付
+    - 試合
+    rows:
+    - - 7月31日
+      - 準々決勝 ヨルダンと1対1、PK戦4対3
+    - - 8月7日
+      - 決勝 中国に3対1。優勝
+    source: Wikipedia
+    highlight_row: 0
+  say:
+  - text: もう1つ、数字の外にある話を。2004年、中国でのアジアカップです。
+    image: assets/images/20261029_miyamoto_tsuneyasu_legend/12_w.jpg
+    card: {<<: *secretcard, highlight_row: 0}
+  - text: 準々決勝のヨルダン戦は、延長でも1対1。PK戦に入ります。
+    card: {<<: *secretcard, highlight_row: 0}
+  - text: 日本は中村俊輔と三都主アレサンドロが、続けて外しました。
+    card: none
+  - text: 足元が滑る。宮本恒靖は主審のもとへ行き、蹴るゴールを替えてほしいと申し入れます。
+    card: none
+    emph: true
+  - text: 申し入れは通り、PK戦の途中で、ゴールが替わりました。
+    image: assets/images/20261029_miyamoto_tsuneyasu_legend/21_w.jpg
+    card: none
+    callword: ゴールを替えた
+  - text: のちに本人は、こう振り返っています。
+    card: none
+  - voice: 宮本恒靖
+    text: ダメもとでいってみたんです。
+    card: none
+  - text: 日本はPK戦を4対3でものにし、決勝では中国に3対1。
+    image: assets/images/20261029_miyamoto_tsuneyasu_legend/12_w.jpg
+    card: {<<: *secretcard, highlight_row: 1}
+  - text: 宮本恒靖は全6試合にフル出場し、大会のベストイレブンに選ばれました。
+    card: {<<: *secretcard, highlight_row: 1}
+    emph: true
+  quotes_from:
+  - https://number.bunshun.jp/articles/-/24178?page=6
+  sources:
+  - https://en.wikipedia.org/wiki/2004_AFC_Asian_Cup
+  - https://number.bunshun.jp/articles/-/24178?page=6
+  - https://ja.wikipedia.org/wiki/%E5%AE%AE%E6%9C%AC%E6%81%92%E9%9D%96
+- id: after
+  heading: 引退した宮本恒靖は、いま、どこで何をしているのか
+  tier: 報道
+  telop: 34歳での引退と、日本サッカー協会の会長へ
+  card: &aftercard
+    type: table
+    title: 引退のあと
+    columns:
+    - いつ
+    - 何があったか
+    rows:
+    - - 2011年12月
+      - 34歳で現役の引退を発表
+    - - 2013年7月
+      - フィファマスターを修了
+    - - 2024年3月
+      - 日本サッカー協会の第15代会長に。47歳
+    highlight_row: 0
+  say:
+  - text: 2011年12月19日。34歳の宮本恒靖は、現役の引退を発表します。
+    image: assets/images/20261029_miyamoto_tsuneyasu_legend/21_w.jpg
+    card: {<<: *aftercard, highlight_row: 0}
+  - voice: 宮本恒靖
+    text: ピッチに別れを告げる時が来ました。
+    card: none
+  - text: 引退のあとは、スイスで国際サッカー連盟の大学院コース、フィファマスターに学びます。
+    image: assets/images/20261029_miyamoto_tsuneyasu_legend/21_w.jpg
+    card: {<<: *aftercard, highlight_row: 1}
+  - text: 2013年に修了。日本人の元プロ選手として、初めてでした。
+    card: {<<: *aftercard, highlight_row: 1}
+  - text: そして2024年3月。日本サッカー協会の、第15代の会長に就きます。
+    card: {<<: *aftercard, highlight_row: 2}
+    emph: true
+  - text: 47歳は戦後で最も若く、ワールドカップに出た元Jリーガーの会長は初めてです。
+    card: {<<: *aftercard, highlight_row: 2}
+  - text: 就任の会見では、こう話しました。
+    card: none
+  - voice: 宮本恒靖
+    text: 選手の時からずっとそうだが
+    card: none
+  - voice: 宮本恒靖
+    text: サッカーをもっと大きな存在にしたい。
+    card: none
+    cont: true
+  quotes_from:
+  - https://www.soccer-king.jp/news/japan/20111219/15337.html
+  - https://www3.nhk.or.jp/news/html/20240323/k10014400491000.html
+  sources:
+  - https://www.soccer-king.jp/news/japan/20111219/15337.html
+  - https://www3.nhk.or.jp/news/html/20240323/k10014400491000.html
+  - https://ja.wikipedia.org/wiki/%E5%AE%AE%E6%9C%AC%E6%81%92%E9%9D%96
+- id: view
+  heading: 控えから始まった宮本恒靖は、なぜ日本の守備の顔になれたのか
+  tier: 背景
+  telop: 2000〜2003年の26試合と、2004〜2006年の45試合
+  viewpoint: true
+  card: &viewcard
+    type: table
+    title: 宮本恒靖の代表を並べる
+    columns:
+    - 時期
+    - 試合
+    - 1年あたり
+    rows:
+    - - 2000〜2003（4年）
+      - '26'
+      - およそ6.5
+    - - 2004〜2006（3年）
+      - '45'
+      - '15'
+    source: Wikipedia
+    highlight_row: 0
+  say:
+  - text: 最後に、宮本恒靖の代表の数字を並べます。
+    image: assets/images/20261029_miyamoto_tsuneyasu_legend/11_w.jpg
+    card: {<<: *viewcard, highlight_row: 0}
+  - text: 2000年から2003年の4年で、26試合。1年あたり、およそ6.5試合です。
+    card: {<<: *viewcard, highlight_row: 0}
+  - text: 2004年からの3年は、1年あたり15試合。2倍を超えました。
+    card: {<<: *viewcard, highlight_row: 1}
+    emph: true
+    mark:
+      kind: circle
+      row: 1
+      col: 1年あたり
+  - text: 2004年だけで19試合。代表の全出場の、4分の1を超えます。
+    card: {<<: *viewcard, highlight_row: 1}
+  - text: 控えから入り、鼻を折ったままワールドカップに立ち、
+    image: assets/images/20261029_miyamoto_tsuneyasu_legend/21_w.jpg
+    card: none
+  - text: PK戦では主審に向かって、流れを変える一言を言えた。
+    card: none
+  - text: 試合を外から見て、動かせる人だった。
+    card: none
+  - text: その目はいま、会長として、日本のサッカー全体に向いています。
+    card: none
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Tsuneyasu_Miyamoto

@@ -1,0 +1,432 @@
+# 阿部勇樹（元日本代表MF）の紹介。シリーズ「レジェンドの紹介（日本）」2026-10-29。型は 10/28 の松井大輔と同じ8節。
+# 先に宮本恒靖で作ったが、使える写真が最大960px（本編で2〜3倍、ショートで最大5.3倍に引き伸ばし）しか無く、調整役の指示で阿部勇樹に替えた。
+# **FotMob・DataMB・FBref・Sofascore・Transfermarkt は不使用**。数字は 英語版/日本語版 Wikipedia の成績表と試合記録、Goal.com・Jリーグ公式、自分で足した値だけ。
+# **私生活（家族・レスターを離れた理由）は入れない。女子サッカーは入れない**。Jリーグは経歴の事実だけで、サムネの主役にしない。
+#
+# **重なりの確認（2026-10-29）**：scripts/・research/covered.yaml・research/posted.json を「阿部勇樹」で grep → 0件。
+# **引退の確認**：Goal.com 2021-11-14 20:32「浦和レッズの元日本代表MF阿部勇樹が今季現役引退を発表『本当に幸せなサッカー人生でした』」（浦和の公式YouTubeの会見を伝える）。
+#   Jリーグ公式 2022-09-07「阿部 勇樹氏の引退試合を開催【浦和】」の本人コメント「2021年シーズンで現役を引退しましたが」。英語版も「announced that he would retire from football at the end of the 2021 season」。→ **現役ではない**。
+# **いまの立場**：日本語版「2022年シーズンより浦和レッズユースのコーチに就任」（2022-01-12 発表）。2026年のいまの役職は確かめられなかったので、台本は「2022年に」と時点で言う。
+# **日本との接点**：全体が日本代表・W杯の話。基礎DATAの次に代表の節を置いた。
+#
+# **数字の出どころ**
+# - 生年月日 1981-09-06 千葉県市川市（英語版・日本語版 infobox）→ 2026-10-29 で45歳、2010-06-14 で28歳、2010-08-26 で28歳。Goal.com「2021年9月に40歳の誕生日」と合う。
+# - 日本代表 53試合3得点（2005〜2011）：英語版の年別 2005=5・2006=8(1)・2007=11(1)・2008=9・2009=8(1)・2010=9・2011=3。Goal.com「日本代表としても53キャップ」。
+#   区切りは自分で足した：2005〜2009 = 41試合3得点、2010〜2011 = 12試合0得点。
+#   デビュー 2005-01-29 カザフスタン戦（英語版）。2007年アジアカップ準決勝 7月25日 ハノイ サウジアラビアに2対3、阿部が得点（英語版の得点一覧・日本語版の出場一覧）。
+# - 2010年W杯：日本語版「W杯本戦では終始アンカーとして全試合にスタメン出場。決勝トーナメント1回戦パラグアイ戦で中村憲剛と途中交代するまでフル出場を続けた」。
+#   Goal.com「2010年の南アフリカ・ワールドカップでは4試合に出場」。結果はカメルーン1対0・オランダ0対1・デンマーク3対1・パラグアイ0対0（PK戦3対5）（英語版 2010 Group E・knockout stage、10/28 の松井の回で確かめた値と同じ）。交代の分は確かめられなかったので言わない。
+#   それまでセンターバックで使われることが多かった（日本語版）。
+# - クラブ（リーグ戦、英語版 infobox）：ジェフ千葉 214試合36得点（1998〜2006）、浦和 120試合14得点（2007〜2010）、レスター 52試合2得点（2010〜2012）、浦和 256試合25得点（2012〜2021）。浦和は合計 376試合39得点（自分で足した）。
+#   J1初出場 1998-08-05 ガンバ戦、16歳333日で当時のJ1最年少（日本語版）。2003年にオシム監督が21歳で主将に（日本語版）。
+#   レスター：2010-08-26 に3年契約、デビュー 2010-09-14 カーディフ戦 2対1、初得点 2011-05-07 イプスウィッチ戦 4対2（英語版）。当時のレスターはイングランド2部。
+# - 引退の言葉（Goal.com 2021-11-14）「本当に幸せなサッカー人生でした。」「その差が僕にとって引退する合図なのかなと考えて決断させていただきました」。
+#
+# **入れなかったもの**：家族、レスター退団の理由、移籍金の推定額、「日本代表のMVPに挙げた」（日本語版だけ）、J1の連続出場などJリーグの記録、パラグアイ戦の交代の分。
+# **写真**：Commons の Category:Yuki Abe から3枚（どれも2011年のレスター時代）。11 = Yuki Abe 7.05.2011.jpg（Yuya Shino、CC BY-SA 3.0、1322x1326）、
+#   12 = Yuki Abe, Leicester City.jpg（Jon Candy、CC BY-SA 2.0、700x1280）、13 = Yuki Abe penalty shootout.jpg（Jon Candy、CC BY-SA 2.0、1920x1440。阿部は小さく写るので「その試合」とは言わない）。
+#   代表時代・2010年W杯の写真は使えるものが無かった（行では「その試合の写真」と言わない）。代理店の写真は無し。
+watch: 毎日、数字でサッカーを読み解きます
+title: 阿部勇樹は、どんな選手だった？ 「アンカー」とは何だったのか
+format: news
+short_title: 阿部勇樹は、どんな選手だった？
+series: レジェンドの紹介
+topic: 阿部勇樹
+date: 2026年10月29日
+slot: other_1
+people:
+- 阿部勇樹
+theme:
+  id: legend_abe_yuki
+  league: japan
+  league_name: ワールドカップ
+  kind: other
+  topic: 阿部勇樹
+  title: 阿部勇樹は、どんな選手だった？ 「アンカー」とは何だったのか
+  question: 2010年のワールドカップで守備的な中盤の底「アンカー」として全4試合に先発し、イングランドのレスターでもプレーした阿部勇樹は、どんな選手で、いまは何をしているのか
+  takeaway: 阿部勇樹の日本代表53試合のうち、ワールドカップの年の2010年は9試合。それまで主にセンターバックで使われた選手が、本番の4試合すべてで中盤の底に立った。16歳でJ1に出た男は、28歳でイングランド2部のレスターに渡り、52試合でリーグ戦に出た
+  nameplate: 阿部勇樹｜元日本代表 MF
+  opening_image: assets/images/20261029_abe_yuki_legend/11_w.jpg
+  end_bg: assets/images/20261029_abe_yuki_legend/13_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+  outro_title: 毎日、数字でサッカーを読み解きます
+thumbnail:
+  line1: 阿部勇樹、代表53試合3点
+  line2: 南アW杯で全4試合に先発
+  tags: []
+  photo: assets/images/20261029_abe_yuki_legend/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261029_abe_yuki_legend/11_v.jpg
+sections:
+- id: hook
+  heading: 2010年のワールドカップで、日本の守備の真ん中に置かれたのは誰か
+  tier: 報道
+  telop: 2010年6月、南アフリカ大会
+  card: &hookcard
+    type: stats
+    title: 阿部勇樹 元日本代表MF（45歳）
+    items:
+    - - '53'
+      - 試合
+      - 日本代表（2005〜2011年）
+    - - '4'
+      - 試合
+      - 2010年W杯 全試合に先発
+    - - '52'
+      - 試合
+      - レスターでのリーグ戦
+    focus: 1
+  say:
+  - text: 2010年6月、南アフリカ。日本は大会の直前に、守り方を大きく変えました。
+    image: assets/images/20261029_abe_yuki_legend/11_w.jpg
+    card: none
+  - text: 最終ラインの前に、守備だけを受け持つ1人を置く。「アンカー」と呼ばれる役目です。
+    card: none
+    callword: アンカー
+  - text: 任されたのは、それまで主にセンターバックで使われていた阿部勇樹でした。
+    card: none
+    emph: true
+  - text: 本番の4試合、阿部勇樹はすべて先発。
+    image: assets/images/20261029_abe_yuki_legend/11_w.jpg
+    card: {<<: *hookcard, focus: 1}
+  - text: 日本代表では53試合に出ています。
+    card: {<<: *hookcard, focus: 0}
+  - text: イングランドにも渡った、黒子のキャリアを見ていきます。
+    card: {<<: *hookcard, focus: 2}
+  quotes_from: []
+  sources:
+  - https://ja.wikipedia.org/wiki/%E9%98%BF%E9%83%A8%E5%8B%87%E6%A8%B9
+  - https://en.wikipedia.org/wiki/Yuki_Abe
+  - https://www.goal.com/jp/%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9/jleague-j1-urawa-abe-retire-20211114/blt61d1d2ec73ac1268
+- id: data
+  heading: 阿部勇樹は、どこでプレーし、何を残した選手か
+  tier: 報道
+  telop: 阿部勇樹の基礎DATA
+  card: &datacard
+    type: table
+    title: 阿部勇樹
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 生年月日
+      - 1981年9月6日・千葉県生まれ
+    - - ポジション
+      - MF（守備的な中盤）・DF
+    - - 日本代表
+      - 53試合3得点（2005〜2011）
+    - - ワールドカップ
+      - 2010年 全4試合に先発
+    - - 海外のクラブ
+      - レスター（イングランド2部）
+    - - 引退
+      - 2021年11月に発表（40歳）
+    source: Wikipedia・Goal.com
+    highlight_row: 0
+  say:
+  - text: 阿部勇樹の生まれは、1981年9月6日。千葉県の出身で、いま45歳です。
+    image: assets/images/20261029_abe_yuki_legend/12.jpg
+    card: {<<: *datacard, highlight_row: 0}
+  - text: ポジションは守備的なミッドフィールダー。最終ラインにも入れる選手でした。
+    card: {<<: *datacard, highlight_row: 1}
+  - text: 日本代表の得点は3つ。守備の役目が多い選手としては、点も取りました。
+    card: {<<: *datacard, highlight_row: 2}
+  - text: 引退の発表は、2021年11月。40歳でした。
+    card: {<<: *datacard, highlight_row: 5}
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Yuki_Abe
+  - https://www.goal.com/jp/%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9/jleague-j1-urawa-abe-retire-20211114/blt61d1d2ec73ac1268
+- id: japan
+  heading: 阿部勇樹の代表は、どの時期に積み上がったのか
+  tier: 報道
+  telop: 日本代表で53試合3得点
+  card: &jpncard
+    type: table
+    title: 阿部勇樹 日本代表の出場と得点
+    columns:
+    - 年
+    - 試合
+    - 得点
+    rows:
+    - - 2005〜2009
+      - '41'
+      - '3'
+    - - '2010'
+      - '9'
+      - '0'
+    - - '2011'
+      - '3'
+      - '0'
+    - - 合計
+      - '53'
+      - '3'
+    source: Wikipedia
+    highlight_row: 3
+  say:
+  - text: 阿部勇樹の代表歴は、ワールドカップの年を境に2つに分かれます。
+    image: assets/images/20261029_abe_yuki_legend/13_w.jpg
+    card: {<<: *jpncard, highlight_row: 3}
+  - text: デビューは2005年1月、カザフスタン戦。23歳でした。
+    card: {<<: *jpncard, highlight_row: 0}
+  - text: 2009年までの5年で41試合。3つの得点は、すべてこの時期です。
+    card: {<<: *jpncard, highlight_row: 0}
+    emph: true
+  - text: 2007年のアジアカップ準決勝では、サウジアラビアから1点。
+    card: none
+  - text: 試合は2対3の負けでした。
+    card: none
+  - text: このころは、主にセンターバックとしての出場でした。
+    image: assets/images/20261029_abe_yuki_legend/11_w.jpg
+    card: none
+  - text: そして2010年。出場は9試合。そのうち4試合が、ワールドカップの本番です。
+    card: {<<: *jpncard, highlight_row: 1}
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Yuki_Abe
+  - https://ja.wikipedia.org/wiki/%E9%98%BF%E9%83%A8%E5%8B%87%E6%A8%B9
+- id: career
+  heading: 16歳でデビューした阿部勇樹は、なぜイングランドへ渡ったのか
+  tier: 報道
+  telop: 千葉から浦和、そしてレスターへ
+  card: &careercard
+    type: table
+    title: 歩んできた道（リーグ戦）
+    columns:
+    - 年
+    - 所属
+    - 試合・得点
+    rows:
+    - - 1998〜2006
+      - ジェフ千葉
+      - 214試合36得点
+    - - 2007〜2010
+      - 浦和レッズ
+      - 120試合14得点
+    - - 2010〜2012
+      - レスター
+      - 52試合2得点
+    - - 2012〜2021
+      - 浦和レッズ
+      - 256試合25得点
+    source: Wikipedia
+    highlight_row: 0
+  say:
+  - text: 1998年8月、阿部勇樹は16歳で、Jリーグ1部のピッチに立ちます。
+    image: assets/images/20261029_abe_yuki_legend/13_w.jpg
+    card: {<<: *careercard, highlight_row: 0}
+  - text: 当時の、いちばん若い出場の記録でした。
+    card: none
+  - text: 2003年、新しく来たオシム監督は、21歳の阿部勇樹を主将に指名しました。
+    card: {<<: *careercard, highlight_row: 0}
+    emph: true
+  - text: 2007年に浦和へ移り、その年にアジアのクラブの頂点を決める大会を制します。
+    card: {<<: *careercard, highlight_row: 1}
+  - text: ワールドカップから2か月後の2010年8月。28歳で、イングランドへ渡りました。
+    image: assets/images/20261029_abe_yuki_legend/13_w.jpg
+    card: none
+  - text: 行き先は、当時イングランド2部のレスター・シティ。3年の契約です。
+    card: none
+    callword: レスター
+  - text: 2011年5月、イプスウィッチ戦で、イングランドでの初めてのゴール。
+    card: none
+    emph: true
+  - text: チームも、4点を奪って勝ちました。
+    card: none
+  - text: レスターでのリーグ戦は、52試合2得点。2012年に、浦和へ戻ります。
+    image: assets/images/20261029_abe_yuki_legend/13_w.jpg
+    card: {<<: *careercard, highlight_row: 2}
+  - text: 浦和では2017年に、その大会で2度目の優勝を味わいました。
+    card: {<<: *careercard, highlight_row: 3}
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Yuki_Abe
+  - https://ja.wikipedia.org/wiki/%E9%98%BF%E9%83%A8%E5%8B%87%E6%A8%B9
+- id: match
+  heading: 南アフリカの4試合で、阿部勇樹のアンカーは何を変えたのか
+  tier: 報道
+  telop: 2010年W杯、全4試合に先発
+  main: true
+  card: &wccard
+    type: table
+    title: 2010年W杯 日本と阿部勇樹
+    columns:
+    - 日付
+    - 試合
+    rows:
+    - - 6月14日
+      - カメルーンに1対0で勝利
+    - - 6月19日
+      - オランダに0対1で敗戦
+    - - 6月24日
+      - デンマークに3対1で勝利。突破
+    - - 6月29日
+      - パラグアイと0対0。PK戦で敗退
+    highlight_row: 0
+  say:
+  - text: 元日本代表のミッドフィールダー、阿部勇樹。
+    image: assets/images/20261029_abe_yuki_legend/11_w.jpg
+    card: none
+    short_only: true
+  - text: 2010年の南アフリカ大会。阿部勇樹は28歳でした。
+    image: assets/images/20261029_abe_yuki_legend/11_w.jpg
+    card: none
+  - text: 大会の前まで、代表では主にセンターバック。それが本番では、中盤の底に置かれます。
+    card: none
+    emph: true
+  - text: 4人の最終ラインの前で、相手の攻めを最初に止める。それがアンカーの仕事です。
+    card: none
+    callword: 中盤の底
+  - text: 初戦のカメルーン戦は、1対0の勝ち。
+    image: assets/images/20261029_abe_yuki_legend/11_w.jpg
+    card: {<<: *wccard, highlight_row: 0}
+  - text: オランダ戦は0対1の負け。それでも強豪を相手に、許したのは1点だけでした。
+    card: {<<: *wccard, highlight_row: 1}
+  - text: デンマークには3対1で勝ち、日本は2勝1敗で決勝トーナメントへ進みます。
+    card: {<<: *wccard, highlight_row: 2}
+    emph: true
+  - text: 決勝トーナメントの1回戦は、パラグアイと0対0。
+    image: assets/images/20261029_abe_yuki_legend/11_w.jpg
+    card: {<<: *wccard, highlight_row: 3}
+  - text: 阿部勇樹は、中村憲剛と交代するまでピッチに立ち続けました。
+    card: none
+  - text: 日本はPK戦で敗れ、16強で大会を終えます。
+    card: none
+  - text: 4試合の失点は、合わせて2。1試合あたり0.5点に抑えました。
+    card: none
+    emph: true
+  quotes_from: []
+  sources:
+  - https://ja.wikipedia.org/wiki/%E9%98%BF%E9%83%A8%E5%8B%87%E6%A8%B9
+  - https://en.wikipedia.org/wiki/2010_FIFA_World_Cup_Group_E
+  - https://en.wikipedia.org/wiki/2010_FIFA_World_Cup_knockout_stage
+- id: secret
+  heading: 21歳で主将を任された阿部勇樹は、どう変わったのか
+  tier: 報道
+  telop: 数字の外にある、オシム監督との出会い
+  card: &secretcard
+    type: table
+    title: 数字の外にある、2つの話
+    columns:
+    - いつ
+    - 何があったか
+    rows:
+    - - 2003年
+      - オシム監督が21歳で主将に指名
+    - - 2005年
+      - 守備的な中盤でリーグ戦12得点
+    source: Wikipedia
+    highlight_row: 0
+  say:
+  - text: 阿部勇樹の、数字の外にある話を。
+    image: assets/images/20261029_abe_yuki_legend/11_w.jpg
+    card: {<<: *secretcard, highlight_row: 0}
+  - text: 2003年にジェフへ来たオシム監督は、おとなしい21歳を、あえて主将にしました。
+    card: {<<: *secretcard, highlight_row: 0}
+  - text: 本人は当初、主将を務めるのが嫌で仕方なかったと伝えられています。
+    card: none
+  - text: それでも任されるうちに、フリーキックを自分で蹴り、前へ出ていくようになります。
+    card: none
+    emph: true
+  - text: 2005年には、中盤の守りを受け持ちながら、リーグ戦で12得点。
+    image: assets/images/20261029_abe_yuki_legend/11_w.jpg
+    card: {<<: *secretcard, highlight_row: 1}
+  - text: 守る役目のまま点も取れる。その幅が、5年後の南アフリカにつながりました。
+    card: none
+  quotes_from: []
+  sources:
+  - https://ja.wikipedia.org/wiki/%E9%98%BF%E9%83%A8%E5%8B%87%E6%A8%B9
+- id: after
+  heading: 引退した阿部勇樹は、いま、どこで何をしているのか
+  tier: 報道
+  telop: 40歳での引退と、指導者の道へ
+  card: &aftercard
+    type: table
+    title: 引退と、そのあと
+    columns:
+    - いつ
+    - 何があったか
+    rows:
+    - - 2021年11月14日
+      - 会見で引退を発表。40歳
+    - - 2022年1月
+      - 浦和レッズのユースのコーチに
+    highlight_row: 0
+  say:
+  - text: 2021年11月14日。40歳の阿部勇樹は、会見で現役の引退を発表しました。
+    image: assets/images/20261029_abe_yuki_legend/11_w.jpg
+    card: {<<: *aftercard, highlight_row: 0}
+  - text: 決めた理由を、こう話しています。
+    card: none
+  - voice: 阿部勇樹
+    text: その差が僕にとって引退する合図なのかなと考えて
+    card: none
+  - voice: 阿部勇樹
+    text: 決断させていただきました。
+    card: none
+    cont: true
+  - text: 1年前と比べた、サッカーをしたい思いの差。それが合図だったといいます。
+    card: none
+  - voice: 阿部勇樹
+    text: 本当に幸せなサッカー人生でした。
+    card: none
+  - text: 2022年からは、浦和レッズのユースのコーチとして、指導者の道を歩み始めました。
+    image: assets/images/20261029_abe_yuki_legend/11_w.jpg
+    card: {<<: *aftercard, highlight_row: 1}
+    emph: true
+  quotes_from:
+  - https://www.goal.com/jp/%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9/jleague-j1-urawa-abe-retire-20211114/blt61d1d2ec73ac1268
+  sources:
+  - https://www.goal.com/jp/%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9/jleague-j1-urawa-abe-retire-20211114/blt61d1d2ec73ac1268
+  - https://www.jleague.jp/news/article/23262/
+  - https://ja.wikipedia.org/wiki/%E9%98%BF%E9%83%A8%E5%8B%87%E6%A8%B9
+- id: view
+  heading: センターバックだった阿部勇樹は、なぜ本番の中盤の底を任されたのか
+  tier: 背景
+  telop: 代表53試合と、本番の4試合
+  viewpoint: true
+  card: &viewcard
+    type: table
+    title: 阿部勇樹の数字を並べる
+    columns:
+    - 場面
+    - 試合
+    - 得点
+    rows:
+    - - 代表 2005〜2009
+      - '41'
+      - '3'
+    - - 代表 2010（W杯の年）
+      - '9'
+      - '0'
+    - - 2005年のリーグ戦
+      - ―
+      - '12'
+    source: Wikipedia
+    highlight_row: 0
+  say:
+  - text: 最後に、阿部勇樹の数字を並べます。
+    image: assets/images/20261029_abe_yuki_legend/11_w.jpg
+    card: {<<: *viewcard, highlight_row: 0}
+  - text: 代表の最初の5年は、1年あたりおよそ8試合。
+    card: {<<: *viewcard, highlight_row: 0}
+  - text: ワールドカップの年は9試合と、ほぼ同じ数です。
+    card: {<<: *viewcard, highlight_row: 1}
+  - text: 出番が増えたのではなく、置かれる場所が変わった年でした。
+    card: {<<: *viewcard, highlight_row: 1}
+    emph: true
+    mark:
+      kind: circle
+      row: 1
+      col: 試合
+  - text: 守備的な中盤で、1年に12点を取ったこともある選手が、本番では守ることに徹した。
+    image: assets/images/20261029_abe_yuki_legend/11_w.jpg
+    card: {<<: *viewcard, highlight_row: 2}
+  - text: どこに置かれても、その役目をこなす。
+    card: none
+  - text: それが、16強の日本を中盤の底で支えた、阿部勇樹という選手でした。
+    card: none
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Yuki_Abe
+  - https://ja.wikipedia.org/wiki/%E9%98%BF%E9%83%A8%E5%8B%87%E6%A8%B9

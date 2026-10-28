@@ -1,0 +1,175 @@
+# 取材メモ（2026年10月28日）4部フリートウッドがアーセナルにPK勝ち（リーグカップ4回戦）。ショートだけ・見せ方 X
+# 取材: 2026-10-28 朝。本文を全部読んだもの:
+#   ・ゲキサカ「人口2万人“港町”の英4部クラブ、プレミア覇者アーセナル撃破の大金星!」（10/28 07:09）
+#     → 人口約2万6000人の港の町（英北西部ランカシャー）、ヴァーディがレスター移籍直前にいたクラブ、3回戦でシェフィールド・ユナイテッドに1-0、
+#       前半2分に未許可のドローンで中断（約9分程度）、21分ルパロビ先制、後半5分ギェケレシュが今季公式戦初ゴール（オニールのクロス）、
+#       後半41分ダウマンが報復行為で一発退場、ロスタイムにホワイト・ウーデゴーアのシュートをGKリンチが止める、PK戦で4人目ギマランイスが止められ5-3。
+#   ・ESPN 記事API（content.core.api.espn.com/v1/sports/news/50301787・50300814・50253183）
+#     → 前のシーズンのプレミア王者が4部のクラブにリーグカップで敗れるのは初めて。序列で84の差。フリートウッドは4部18位。
+#       1部のクラブに勝ったのはクラブ初、準々決勝も初。最後のキックは10代のDFコナー・ホーイ。フリートウッドは5人とも成功。
+#       アーセナルは4部とのリーグカップ直近2試合でいずれもPK戦で敗退（前は2012-13の準々決勝ブラッドフォード）、その前の8試合は全勝。
+#       ドローン: 2分に主審サリスベリーが中断、10分に再開。「フットボールリーグのクラブになって15年で一番大きな試合」。
+#   ・BBC（中断の記事）: 1分40秒で中断、10分で再開、「8分あまり」。警察が操縦者を見つけた（Sky の実況の話として）。
+#   ・Sky Sports の試合レポート: 2012年まではノンリーグ。
+#   ・Guardian の試合レポートとライブ: フリートウッドのローラー監督、GKリンチ、ホーイの試合後の言葉はある。
+# 資料のずれ（台本では言わない）:
+#   ・中断の長さ: ゲキサカ「約9分程度」、ESPN「around eight minutes」、BBC「more than eight minutes」、Sky「seven-minute」。
+#     → 台本は「始まって2分で止まり、再開は10分」とだけ言い、長さは「8分ほど」（2分→10分の差）。
+#   ・ダウマン退場の分: ゲキサカ「後半41分」、ESPN「five minutes left」、Guardian のライブは88分、Sky は90分。→ 「終盤」とだけ言う。
+#   ・ホーイの年齢: ESPN は teenage、Guardian のライブで監督が「19歳」。→ 「10代のディフェンダー」。
+# 本人の言葉: アルテタ監督・アーセナルの選手の試合後の言葉は、ESPN・BBC・Guardian・Sky の本文に見つからない（10/28 朝の時点）。
+#   → 型は X（作らない）。フリートウッド側の言葉はあるが、主語はアーセナル（敗れた側）なので使わない。
+# 前の本との重なり: posted.json・covered.yaml・scripts/20261018〜20261028 にフリートウッドは無い。ダウマンの最年少記録（covered）は触れない。
+#   10/26 アルテタの監督紹介とは写真（File）も言い回しも重ねていない（アルテタの写真は使わない）。
+# 確度: 試合の流れ・PKは報道（ESPN・ゲキサカ。公式の試合記録までは当たっていない）。「初めて」「84」は報道（ESPN Research）。見立ては背景。
+# 反応: 作らない（0件）。approve は --no-voices。
+slot: world_2
+date: "2026年10月28日"
+format: news
+no_main: true
+people: [アーセナル, フリートウッド・タウン, ギェケレシュ, ダウマン, ウーデゴーア, ギマランイス, ヴァーディ]
+
+short_style: X
+short_hook_word: 王者が4部に敗退
+short_photos:
+  - assets/images/20261028_fleetwood_arsenal_cup/01_v.jpg
+  - assets/images/20261028_fleetwood_arsenal_cup/02_v.jpg
+  - assets/images/20261028_fleetwood_arsenal_cup/03_v.jpg
+
+short_question: プレミア王者が4部に敗れたこの夜、いちばん驚いたのはどこですか。
+short_hook: 王者アーセナル、4部に敗退。
+short_telops:
+  - {match: ドローン, text: 2分 ドローンで中断/再開は10分}
+  - {match: 21分, text: 21分 ルパロビ/フリートウッド先制}
+  - {match: 後半5分, text: 後半5分 ギェケレシュ/1対1}
+  - {match: 一発退場, text: 終盤 16歳ダウマン/一発退場}
+  - {match: 5対3, text: PK戦 5対3/フリートウッドが勝ち抜け}
+  - {match: 84, text: 序列の差は84/王者が4部に敗れるのは初}
+
+theme:
+  id: fleetwood_arsenal_cup
+  league: england
+  league_name: リーグカップ
+  prefix: ""
+  title: アーセナル、4部のクラブにPK負け。ドローンで止まった夜に起きたこと
+  hook: ""
+  question: プレミア王者のアーセナルは、4部のクラブにどう敗れたのか
+  takeaway: 4部のクラブとのリーグカップは8連勝のあと、2回続けてPK戦で敗退。序列で84下のクラブに初めて敗れた
+
+thumbnail:
+  line1: アーセナル、4部にPK負け
+  line2: ドローンで止まった夜
+  tags: [アーセナル]
+  layout: face
+  photo: assets/images/20261028_fleetwood_arsenal_cup/01_w.jpg
+  short_photo: assets/images/20261028_fleetwood_arsenal_cup/01_v.jpg
+
+answer: 1対1から終盤にダウマンが退場。PK戦で4人目のギマランイスが止められ、3対5で敗れた
+watch: 水曜に行われる準々決勝の組み合わせ抽選
+
+sections:
+  - id: what
+    main: true
+    heading: 2分で止まり、PK戦で終わった夜
+    tier: 報道
+    telop: リーグカップ4回戦 フリートウッド1対1アーセナル
+    say:
+      - text: リーグカップ4回戦。プレミア王者アーセナルが、4部フリートウッドの本拠地へ。
+        short_only: true
+        image: assets/images/20261028_fleetwood_arsenal_cup/01_w.jpg
+        card: none
+      - text: 試合は始まって2分で止まります。ピッチの上を、許可のないドローンが飛んでいました。
+        image: assets/images/20261028_fleetwood_arsenal_cup/02_w.jpg
+        card: none
+      - text: 再開は10分。8分ほど、選手たちはボールを回して体を温めていました。
+        image: assets/images/20261028_fleetwood_arsenal_cup/02_w.jpg
+        card: none
+      - text: 21分、フラムから期限付きで来ているルパロビが決めて、フリートウッドが先制。
+        image: assets/images/20261028_fleetwood_arsenal_cup/03_w.jpg
+        card: &goals {type: table, title: 10月27日 リーグカップ4回戦 フリートウッド1対1アーセナル, columns: [時間, 出来事], rows: [[2分, ドローンで中断（10分に再開）], [21分, ルパロビ（フリートウッド）], [後半5分, ギェケレシュ（アーセナル）], [終盤, ダウマン（アーセナル）退場], [PK戦, フリートウッドが5対3]], highlight_row: 1}
+      - text: アーセナルは後半5分、ギェケレシュが今季初めてのゴールで追いつきます。
+        image: assets/images/20261028_fleetwood_arsenal_cup/01_w.jpg
+        card: {<<: *goals, highlight_row: 2}
+      - text: ところが終盤、16歳のダウマンが、相手への報復とされる行為で一発退場。
+        image: assets/images/20261028_fleetwood_arsenal_cup/03_w.jpg
+        card: none
+      - text: ロスタイム、ホワイトとウーデゴーアのシュートを、キーパーのリンチが連続で阻止。
+        image: assets/images/20261028_fleetwood_arsenal_cup/03_w.jpg
+        card: none
+      - text: 1対1の引き分けのまま、延長戦はなく、PK戦へ。
+        image: assets/images/20261028_fleetwood_arsenal_cup/02_w.jpg
+        card: none
+      - text: アーセナルの4人目、ギマランイスのキックを、リンチが止めます。
+        emph: true
+        image: assets/images/20261028_fleetwood_arsenal_cup/01_w.jpg
+        card: none
+      - text: 最後は10代のディフェンダー、ホーイが決めて、フリートウッドが5対3の勝ち。
+        image: assets/images/20261028_fleetwood_arsenal_cup/03_w.jpg
+        card: none
+      - text: フリートウッドは5人全員が成功しました。
+        emph: true
+        image: assets/images/20261028_fleetwood_arsenal_cup/02_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/world/detail/?461939-461939-fl
+      - https://www.espn.com/soccer/story/_/id/50301787/arsenal-fleetwood-town-carabao-cup-4th-round-dowman-drone
+      - https://www.espn.com/soccer/story/_/id/50300814/fleetwood-town-vs-arsenal-drone-carabao-cup
+      - https://www.bbc.co.uk/sport/football/articles/cmqlngxw6lv3o
+
+  - id: numbers
+    heading: 84の差と、港の町のクラブ
+    tier: 報道
+    telop: イングランドの序列で84の差
+    say:
+      - text: プレミア王者が4部のクラブにリーグカップで敗れたのは、大会で初めて。
+        emph: true
+        image: assets/images/20261028_fleetwood_arsenal_cup/03_w.jpg
+        card: none
+      - text: 1部から4部までを1列に並べると、アーセナルとの差は84チーム。
+        image: assets/images/20261028_fleetwood_arsenal_cup/01_w.jpg
+        card: &gap {type: stats, title: アーセナルとフリートウッド, items: [["84", チーム, 序列の差], ["18", 位, フリートウッドの4部の順位], ["2万6000", 人, 本拠地の町の人口]], focus: 0}
+      - text: フリートウッドはいま、4部で18位。
+        image: assets/images/20261028_fleetwood_arsenal_cup/03_w.jpg
+        card: {<<: *gap, focus: 1}
+      - text: 本拠地はイングランド北西部、人口およそ2万6000人の港の町。
+        image: assets/images/20261028_fleetwood_arsenal_cup/02_w.jpg
+        card: {<<: *gap, focus: 2}
+      - text: ヴァーディがレスターへ移る直前にいたクラブで、5部より下にいたのは2012年まで。
+        image: assets/images/20261028_fleetwood_arsenal_cup/03_w.jpg
+        card: none
+      - text: アーセナルのような1部のクラブに勝ったのも、準々決勝へ進むのも、これが初。
+        image: assets/images/20261028_fleetwood_arsenal_cup/02_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50301787/arsenal-fleetwood-town-carabao-cup-4th-round-dowman-drone
+      - https://web.gekisaka.jp/news/world/detail/?461939-461939-fl
+      - https://www.skysports.com/football/fleetwood-town-vs-arsenal/report/578610
+
+  - id: view
+    viewpoint: true
+    heading: 8連勝のあとの2連敗
+    tier: 背景
+    telop: 4部とのリーグカップ、8連勝のあと2回続けてPK戦で敗退
+    say:
+      - text: 見立てです。アーセナルは、4部とのリーグカップで8試合続けて勝っていました。
+        image: assets/images/20261028_fleetwood_arsenal_cup/01_w.jpg
+        card: none
+      - text: ところが2012年、当時4部のブラッドフォードにPK戦で敗退。
+        image: assets/images/20261028_fleetwood_arsenal_cup/03_w.jpg
+        card: none
+      - text: そして今回。4部との対戦で、2回続けてPK戦で敗れました。
+        image: assets/images/20261028_fleetwood_arsenal_cup/01_w.jpg
+        card: none
+      - text: 準々決勝の組み合わせ抽選は水曜日。
+        image: assets/images/20261028_fleetwood_arsenal_cup/03_w.jpg
+        card: none
+      - text: 1部以外で残るのは、フリートウッドとブラッドフォードの2つだけです。
+        image: assets/images/20261028_fleetwood_arsenal_cup/02_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50301787/arsenal-fleetwood-town-carabao-cup-4th-round-dowman-drone
+      - https://www.theguardian.com/football/live/2026/oct/27/fleetwood-town-v-arsenal-carabao-cup-fourth-round-live
+short_title: "アーセナル、4部のクラブにPK負け。ドローンで止まった夜に起きたこと"

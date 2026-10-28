@@ -1,0 +1,147 @@
+# 菅原由勢の取材メモ（2026年10月28日・ショートだけ・見せ方 X＝冒頭に強い一言）
+# 取材: 2026-10-28。requests で原文を読んだ。
+#   ・ESPN 試合記録（summary event=401874780、2026-10-27 19:45Z、Olimpico）ローマ 4-2 カリアリ。
+#     10分 ンゾラPK（ピジッリのハンド）／15分 ルッリ頭／21分 ピジッリ／81分 マルディーニ（オベールのスルーパス）／85分 モラ頭／87分 マレン。
+#     菅原は先発（右のMF＝RM、背番号28）、90+1分にトレピと交代。シュート1（62分、コーナーの流れから右足でエリア外、枠の上）、ファウルを受けた1（51分）。
+#     カリアリの日程（teams/2925/schedule）を全試合当たった：菅原の出場はアタランタ・ウディネーゼ・ユヴェントス・モンツァ・ボローニャで5試合とも途中出場、
+#     ローマ戦が6試合目で初めての先発。直近はモンツァに0-4、ボローニャに0-2、ローマに2-4でリーグ戦3連敗。順位は9位（9試合・勝ち点13）。
+#   ・カリアリ公式 MATCH REPORT（2026-10-27）本文を全部読んだ。菅原は先発で 91分に交代（Sugawara (91' Trepy)）。マルディーニの得点を公式は82分と書く（ESPN は81分。分は ESPN に合わせる）。
+#     次は日曜、ふたたびローマでラツィオと対戦（"I rossoblù torneranno in campo domenica, ancora a Roma, per affrontare la Lazio"）。
+#   ・フットボールゾーン 681191（2026-10-27）本文を読んだ。前節ボローニャ戦は後半から出場。地元紙の採点など → **台本では使わない**（選手を小さく見せる材料になるため）。
+# 所属: カリアリ（セリエA）を ESPN の出場記録とカリアリ公式の選手ページ（/giocatore/yukinari-sugawara/）で確認。
+# 本人の言葉: **無い**（公式・FZ とも本人のコメント無し。試合後の監督会見も公式に見当たらない）→ 型は X。
+# 反応: 探していない（0件。作らない）。
+# 言わないこと: 採点、日本時間、出場時間の合計、ラツィオ戦の日時（「日曜」までしか書いていない）。
+# 写真: 3枚ともカリアリ公式の選手ページ（01 VSP_1189-sugawara＝スタジアムで拳、02 SUGAWARA-ESULTANZA＝ユニフォームで拳、03 SUGAWARA＝ユニフォームで立ち姿。背番号28）。
+#   3枚とも本人を目で確かめた。マッチレポートの主写真（白いアウェーのユニフォーム）は本人と確かめきれず使わない。
+#   公式の選手ページにあった「Juventus-Cagliari」の写真は女子チームの写真だったので外した。
+# 確度: 確定（クラブ公式の試合記録＋ESPN の試合記録）。
+slot: japan
+date: "2026年10月28日"
+format: news
+no_main: true
+people: [菅原由勢, カリアリ, ローマ, マルディーニ, ラツィオ]
+
+short_style: X
+short_hook_word: カリアリで初先発
+short_photos:
+  - assets/images/20261028_sugawara_cagliari_roma/01_v.jpg
+  - assets/images/20261028_sugawara_cagliari_roma/02_v.jpg
+  - assets/images/20261028_sugawara_cagliari_roma/03_v.jpg
+
+short_question: 菅原由勢は、カリアリの右サイドで先発に定着できると思いますか。
+short_hook: 菅原由勢、カリアリで初先発。
+short_telops:
+  - {match: 6試合目, text: カリアリで6試合目/初めての先発}
+  - {match: 右サイド, text: 菅原は右サイド/背番号28}
+  - {match: 81分, text: 81分 マルディーニ/2対2に追いつく}
+  - {match: 85分, text: 85分・87分に失点/ローマ 4-2 カリアリ}
+  - {match: 91分, text: 菅原は91分まで/プレー}
+  - {match: ラツィオ, text: 次は日曜/ふたたびローマでラツィオ戦}
+
+theme:
+  id: sugawara_cagliari_roma
+  league: italy
+  league_name: セリエA
+  prefix: ""
+  title: 菅原由勢がカリアリで初先発。2対2に追いついたローマ戦、最後の6分に起きたこと
+  hook: ""
+  question: 菅原由勢が初めて先発したローマ戦は、どんな結末だったのか
+  takeaway: 途中出場が5試合続いたあと、6試合目で初めての先発。91分まで右サイドを任され、チームは81分に2対2へ追いついたが、85分と87分の失点で3連敗。次は日曜、ふたたびローマでラツィオと戦う
+
+thumbnail:
+  line1: 菅原由勢がカリアリで初先発
+  line2: 追いついてから6分で
+  tags: [菅原由勢, カリアリ]
+  photo: assets/images/20261028_sugawara_cagliari_roma/02_w.jpg
+  short_photo: assets/images/20261028_sugawara_cagliari_roma/01_v.jpg
+
+answer: 菅原由勢は91分までプレー。カリアリは81分に2対2へ追いついたが、85分と87分に失点して2対4で敗れた
+watch: 6試合目で初先発をつかんだ菅原由勢が、次のラツィオ戦でも右サイドを任されるか
+
+sections:
+  - id: what
+    main: true
+    heading: 6試合目でつかんだ先発
+    tier: 報道
+    telop: 菅原由勢、カリアリで初先発
+    say:
+      - text: 日本代表の菅原由勢は、今季からセリエAのカリアリでプレーしています。
+        short_only: true
+        image: assets/images/20261028_sugawara_cagliari_roma/02_w.jpg
+        card: none
+      - text: その舞台は、敵地オリンピコでのローマ戦です。
+        image: assets/images/20261028_sugawara_cagliari_roma/02_w.jpg
+        card: none
+      - text: ここまでの5試合は、すべて途中からの出場。
+        image: assets/images/20261028_sugawara_cagliari_roma/03_w.jpg
+        card: none
+      - text: 6試合目で、ついに先発の座をつかみました。
+        emph: true
+        image: assets/images/20261028_sugawara_cagliari_roma/03_w.jpg
+        card: none
+      - text: 菅原が任されたのは、右サイドでした。
+        image: assets/images/20261028_sugawara_cagliari_roma/02_w.jpg
+        card: none
+    official: true
+    sources:
+      - https://cagliaricalcio.com/news/match-report-roma-cagliari-4-2/
+      - https://www.espn.com/soccer/match/_/gameId/401874780
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/teams/2925/schedule?season=2026
+      - https://www.football-zone.net/archives/681191
+
+  - id: match
+    heading: 追いついたあとの6分
+    tier: 報道
+    telop: ローマ 4-2 カリアリ
+    say:
+      - text: 試合は10分、カリアリがPKで先制します。
+        image: assets/images/20261028_sugawara_cagliari_roma/02_w.jpg
+        card: none
+      - text: しかしローマが15分と21分に決めて、逆転。
+        image: assets/images/20261028_sugawara_cagliari_roma/03_w.jpg
+        card: none
+      - text: 菅原も62分、ペナルティーエリアの外から、右足で狙いました。
+        image: assets/images/20261028_sugawara_cagliari_roma/03_w.jpg
+        card: none
+      - text: そして81分、途中出場のマルディーニが決めて、2対2に追いつきます。
+        image: assets/images/20261028_sugawara_cagliari_roma/02_w.jpg
+        card: none
+      - text: ところが85分、ローマに頭で勝ち越されます。
+        image: assets/images/20261028_sugawara_cagliari_roma/02_w.jpg
+        card: none
+      - text: 2分後の87分にも失点。追いついてから6分で、2点を失いました。
+        emph: true
+        image: assets/images/20261028_sugawara_cagliari_roma/03_w.jpg
+        card: none
+      - text: 菅原は91分までプレーして、交代しています。
+        image: assets/images/20261028_sugawara_cagliari_roma/03_w.jpg
+        card: none
+    official: true
+    sources:
+      - https://cagliaricalcio.com/news/match-report-roma-cagliari-4-2/
+      - https://www.espn.com/soccer/match/_/gameId/401874780
+
+  - id: view
+    viewpoint: true
+    heading: 3連敗のなかで、次はラツィオ
+    tier: 報道
+    telop: カリアリはリーグ戦3連敗
+    say:
+      - text: カリアリはモンツァ、ボローニャに敗れたのに続いて、リーグ戦3連敗。
+        image: assets/images/20261028_sugawara_cagliari_roma/02_w.jpg
+        card: none
+      - text: 見立てとしては、途中出場が5試合続いたあとの先発で、菅原は91分まで。
+        image: assets/images/20261028_sugawara_cagliari_roma/02_w.jpg
+        card: none
+      - text: 右サイドの先発争いで、次につながる一歩です。
+        image: assets/images/20261028_sugawara_cagliari_roma/03_w.jpg
+        card: none
+      - text: 次は日曜。ふたたびローマで、ラツィオと戦います。
+        image: assets/images/20261028_sugawara_cagliari_roma/03_w.jpg
+        card: none
+    official: true
+    sources:
+      - https://cagliaricalcio.com/news/match-report-roma-cagliari-4-2/
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/teams/2925/schedule?season=2026
+short_title: "菅原由勢がカリアリで初先発。2対2に追いついたローマ戦、最後の6分に起きたこと"

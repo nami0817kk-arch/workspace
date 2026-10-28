@@ -1,0 +1,154 @@
+# 取材メモ（2026年10月28日）ケイン、バイエルンに戻ると職員が花道。壇上では古巣トッテナムに感謝（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-10-28。ESPN は記事API（content.core.api.espn.com/v1/sports/news/<id>）で本文を requests で読んだ。
+#   ・ESPN 50292020「Harry Kane thanks Tottenham, pays tribute to England after Ballon d'Or win」（2026-10-27 15:42Z）— 題材の元。
+#       地の文: 11歳でトッテナムに入り、2023年にバイエルンへ。受賞スピーチでトッテナムに「special mention」。
+#             指導者の名前: Chris Ramsey, Tim Sherwood, Ryan Mason（「one of his best friends」）。33歳。2026年W杯でイングランドを主将として3位に。
+#       本人（壇上）: "I want to say thank you to Tottenham Hotspur. I wouldn't be where I am today without Tottenham, for sure,"
+#             "I was there from 11 years old. [With] all the guidance, the coaches, you allowed me to live my dream."
+#             "To all my England teammates. We had a special year," "It wasn't the perfect year but we had a lot of good moments."
+#             "This one is for all of us, for sure."
+#   ・ESPN 50301097「Ballon d'or winner Harry Kane gets hero's welcome on Bayern Munich return」（2026-10-27 21:16Z）
+#       ※題材一覧は花道と SNS の言葉も 50292020 にあると書いていたが、実際は 50301097 の本文にあった。
+#       地の文: 火曜（27日）にドイツへ戻り、練習に来たケインを職員が guard of honor（花道）で迎え、「Harry, Harry」の大きな声。
+#             バイエルンの受賞者は45年ぶり。ドイツのクラブの選手としては1996年以来。バイエルンで4人目（ベッケンバウアー・ゲルト・ミュラー・ルンメニゲ、最後は1981年のルンメニゲ）。
+#             水曜（28日）はドイツカップ2回戦のマクデブルク戦（2部）。土曜（31日）のドルトムント戦で、ケインがトロフィーをファンに見せる予定。
+#       本人（SNS、火曜）: "Where do I begin? That was an evening I'll never forget," "This will live long in the memory."
+#       フロイントSD の言葉もあるが使わない（他人の声を増やさない）。コンパニの体調・キミッヒの忌引は触れない。
+#   ・ESPN 50295267（2026-10-27）: 火曜の朝にミュンヘンへ戻る便を取り、午後の練習へ、と本人の予定。背景の確認だけ。
+# 10/27 のショート（scripts/20261027_kane_ballon_dor.md）と重ねない: 貸し出し4クラブ・56試合14点・61点・16試合16点・「25年ぶり」「オーウェン以来」・2位3位・
+#   「夢をかなえたい子どもたちへ」・写真（20261027_kane_ballon_dor の4枚）は使わない。写真は Commons の別の5枚（2017 スパーズ、2026-01 バイエルン、2026 W杯）。
+# 試合: マクデブルク戦は公開（18:30）の時点で未開催。結果は言わない。
+# 訳はこちらの自訳（英語）。
+# 確度: 花道・SNS・スピーチの言葉は報道（ESPN）。受賞は確定。バイエルン45年ぶり・4人目は報道（ESPN）＋背景。
+# 反応: 0件。作らない。approve は --no-voices で。
+slot: overseas
+date: "2026年10月28日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [ハリー・ケイン]
+
+short_style: Y
+short_hook_quote: トッテナムがなければ、今の僕は間違いなくいない。
+short_question: ケインが壇上でトッテナムに感謝したこと、どう感じましたか。
+short_hook: バイエルンの職員が、花道で出迎えた。
+short_telops:
+  - {match: 花道, text: バイエルンの練習場/職員が花道で出迎え}
+  - {match: 一生忘れない, text: ケイン（SNS）/「一生忘れない夜になった」}
+  - {match: 間違いなくいない, text: ハリー・ケイン/「トッテナムがなければ、今の僕はいない」}
+  - {match: 11歳から, text: 11歳でトッテナムへ/2023年にバイエルンへ}
+  - {match: ラムジー, text: 名前を挙げた指導者/ラムジー・シャーウッド・メイソン}
+  - {match: 3位, text: 2026年ワールドカップ/イングランドは3位}
+  - {match: 45年ぶり, text: バイエルンの受賞者は4人目/前回は1981年のルンメニゲ}
+  - {match: ドルトムント, text: 31日 ドルトムント戦/トロフィーをファンに披露}
+
+theme:
+  id: kane_bayern_return
+  league: germany
+  league_name: ブンデスリーガ
+  prefix: ""
+  title: ケイン、バイエルンに戻ると職員が花道。壇上で感謝を向けた古巣への言葉
+  hook: ""
+  question: バロンドールのケインは、バイエルンでどう迎えられ、壇上で誰に何を伝えたのか
+  takeaway: 壇上で感謝を向けたのは11歳から育ったトッテナム。一方で喜びに沸くのは、1981年以来45年ぶりに受賞者を迎えたバイエルン。31日のドルトムント戦で、トロフィーがファンの前に出る
+
+thumbnail:
+  line1: ハリー・ケイン
+  line2: 「トッテナムがなければ」
+  tags: [バイエルン, トッテナム, バロンドール]
+  layout: face
+  photo: assets/images/20261028_kane_bayern_return/06_w.jpg
+  short_photo: assets/images/20261028_kane_bayern_return/06_v.jpg
+
+answer: 練習場では職員の花道。壇上では「トッテナムがなければ今の僕はいない」と古巣に感謝
+watch: 31日のドルトムント戦で、トロフィーがファンの前に出る
+
+short_photos:
+  - assets/images/20261028_kane_bayern_return/06_v.jpg
+  - assets/images/20261028_kane_bayern_return/01_v.jpg
+  - assets/images/20261028_kane_bayern_return/03_v.jpg
+  - assets/images/20261028_kane_bayern_return/04_v.jpg
+  - assets/images/20261028_kane_bayern_return/05_v.jpg
+
+sections:
+  - id: what
+    main: true
+    heading: バイエルンに戻ったケインと、壇上の言葉
+    tier: 報道
+    telop: 練習場では職員の花道。壇上では古巣に感謝
+    say:
+      - text: 27日、ハリー・ケインがドイツに戻り、バイエルンの練習場へ。
+        image: assets/images/20261028_kane_bayern_return/01_w.jpg
+      - text: 職員が両側に並んで花道をつくり、「ハリー、ハリー」の大きな声で迎えました。
+        image: assets/images/20261028_kane_bayern_return/01_w.jpg
+      - voice: ケイン
+        text: どこから話せばいいんだろう。一生忘れない夜になった。
+        image: assets/images/20261028_kane_bayern_return/06_w.jpg
+      - text: 前の晩はロンドンでバロンドールの授賞式。壇上で特に名前を挙げたのが、古巣でした。
+        image: assets/images/20261028_kane_bayern_return/03_w.jpg
+      - voice: ケイン
+        text: トッテナムがなければ、今の僕は間違いなくいない。
+        image: assets/images/20261028_kane_bayern_return/06_w.jpg
+      - voice: ケイン
+        text: 11歳から、あそこにいたんだ。
+        cont: true
+        image: assets/images/20261028_kane_bayern_return/03_w.jpg
+      - voice: ケイン
+        text: コーチたちの導きで、僕は夢を生きることができた。
+        cont: true
+        image: assets/images/20261028_kane_bayern_return/04_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50301097/harry-kane-ballon-dor-award-bayern-munich-welcome
+      - https://www.espn.com/soccer/story/_/id/50292020/harry-kane-tottenham-england-thomas-tuchel-ballon-dor
+
+  - id: thanks
+    heading: 壇上で名前を挙げた人たち
+    tier: 報道
+    telop: トッテナムの指導者3人と、イングランドの仲間
+    say:
+      - text: ケインがトッテナムを離れ、バイエルンへ移ったのは2023年のことです。
+        image: assets/images/20261028_kane_bayern_return/03_w.jpg
+      - text: 名前を挙げた指導者は3人。クリス・ラムジーとティム・シャーウッド。
+        image: assets/images/20261028_kane_bayern_return/04_w.jpg
+      - text: そして、親友の一人と呼んだライアン・メイソンです。
+        image: assets/images/20261028_kane_bayern_return/03_w.jpg
+      - text: 今年のワールドカップでは、主将としてイングランドを3位に導きました。
+        image: assets/images/20261028_kane_bayern_return/05_w.jpg
+      - voice: ケイン
+        text: 完璧な1年ではなかった。でも、いい時間がたくさんあった。
+        image: assets/images/20261028_kane_bayern_return/04_w.jpg
+      - voice: ケイン
+        text: この賞は、僕たちみんなのものだ。
+        cont: true
+        image: assets/images/20261028_kane_bayern_return/06_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50292020/harry-kane-tottenham-england-thomas-tuchel-ballon-dor
+
+  - id: view
+    viewpoint: true
+    heading: 45年ぶりの受賞者を迎えたバイエルン
+    tier: 報道
+    telop: バイエルンの受賞者は4人目。前回は1981年
+    say:
+      - text: ここからは見立てです。
+        image: assets/images/20261028_kane_bayern_return/01_w.jpg
+      - text: 感謝を向けた先はトッテナム。それでも、いちばん沸いているのはバイエルンです。
+        image: assets/images/20261028_kane_bayern_return/01_w.jpg
+      - text: バイエルンの選手の受賞は、1981年のルンメニゲ以来、45年ぶり。
+        image: assets/images/20261028_kane_bayern_return/06_w.jpg
+        card: {type: timeline, title: バイエルンのバロンドール受賞者, rows: [[1970, ゲルト・ミュラー], [1972・76, ベッケンバウアー], [1980・81, ルンメニゲ], [2026, ハリー・ケイン]], focus: 2026}
+      - text: ベッケンバウアー、ゲルト・ミュラー、ルンメニゲに続いて、4人目になりました。
+        image: assets/images/20261028_kane_bayern_return/06_w.jpg
+        card: {type: timeline, title: バイエルンのバロンドール受賞者, rows: [[1970, ゲルト・ミュラー], [1972・76, ベッケンバウアー], [1980・81, ルンメニゲ], [2026, ハリー・ケイン]], focus: 2026}
+      - text: ドイツのクラブの選手としても、1996年以来の受賞。
+        image: assets/images/20261028_kane_bayern_return/05_w.jpg
+        card: none
+      - text: 28日にはドイツカップのマクデブルク戦があります。
+        image: assets/images/20261028_kane_bayern_return/01_w.jpg
+      - text: そして31日のドルトムント戦で、ケインがトロフィーをファンに見せる予定です。
+        image: assets/images/20261028_kane_bayern_return/04_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50301097/harry-kane-ballon-dor-award-bayern-munich-welcome
+short_title: "ケイン、バイエルンに戻ると職員が花道。壇上で感謝を向けた古巣への言葉"

@@ -1,0 +1,200 @@
+# ブンデスリーガ チーム紹介 ⑨ボルシアMG（見本は 10/28 のマインツ）。2026-10-28 作成。
+# 事実は research/bd_data/gladbach_research.md（出典付き）から。アルファベットは読み上げに残さない。
+# 今季の出場と得点は ESPN の試合データで数えた。順位の言い方で選手・クラブを小さく見せない。
+title: ボルシアMGは1部優勝5回。なぜ若い「子馬たち」は70年代を制したのか
+short_title: ボルシアMG、なぜ子馬たちは70年代を制したのか
+opening: "1970年代に、1部優勝5回。いまは日本人が4人。"
+hook: 若い選手たちの攻めるサッカーに、ドイツ中のファンが目を向けました。
+thumbnail:
+  line1: 日本人4人のボルシアMG
+  line2: 1部優勝5回の子馬たち
+  crest_main: [ボルシアMG]
+  tags: [ボルシアMG, ボルシア・メンヒェングラートバッハ, ブンデスリーガ, 板倉滉, 町野修斗, 宇野禅斗, 橋岡大樹]
+  layout: classic
+
+reasons:
+- "今季は板倉滉、橋岡大樹、町野修斗、宇野禅斗。日本人が**4人**在籍しています。"
+- "町野修斗は今季、リーグ戦で**2得点**。直近のシュツットガルト戦では、勝ち越しのゴールを決めました。"
+- "チームは7試合を終えて1勝。その1勝が、シュツットガルト戦でした。"
+reasons_focus: [1, 2, 3]
+reasons_telop: 日本人4人が在籍。町野修斗は2得点。直近で今季初勝利
+reasons_rows:
+- ["理由1", "日本人4人が在籍"]
+- ["理由2", "町野修斗が今季2得点"]
+- ["理由3", "直近で今季初勝利"]
+reasons_sources:
+- https://en.wikipedia.org/wiki/Borussia_M%C3%B6nchengladbach
+- https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/teams/268/schedule?season=2026
+- https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings
+
+data:
+- 創立は**1900年**。最初の名前は、ボルシア1900でした。
+- 愛称は「フォーレン」。ドイツ語で「子馬たち」です。
+- 1部の優勝は**5回**。ドイツカップは3回です。
+- ヨーロッパの大会でも、優勝が2回あります。
+- 昨季のリーグ戦は**12位**。勝ち点は38でした。
+data_focus: [0, 1, 5, 6, 8]
+
+story_sections:
+  - id: japan
+    heading: 板倉、橋岡、町野、宇野。日本人4人は、いま何を担っているのか
+    tier: 背景
+    telop: 板倉滉は2022年に加入し、いったん出て戻った。町野修斗は今季2得点
+    narrator: 解説
+    say:
+      - text: 2022年、板倉滉がボルシアMGに加わりました。
+        card:
+          type: table
+          title: 日本人4人の今季（リーグ戦）
+          columns: ["名前", "位置", "今季"]
+          rows:
+            - ["板倉滉", "DF", "4試合に先発"]
+            - ["橋岡大樹", "DF", "5試合に出場"]
+            - ["町野修斗", "FW", "5試合2得点"]
+            - ["宇野禅斗", "MF", "3試合1アシスト"]
+      - 最初の3年で、リーグ戦**75試合**に出ています。
+      - 2025年にアヤックスへ。
+      - 日本人で初めて、アヤックスのトップチームでプレーしました。
+      - text: そして2026年8月、ボルシアMGに戻ってきました。
+        card: none
+        image: assets/images/bd_gladbach_pair_jp/01.jpg
+      - 今季は開幕から4試合、すべて先発です。
+      - text: 前線には、2025年に加わった町野修斗がいます。
+        image: assets/images/bd_gladbach_pair_jp/01.jpg
+      - 今季は途中出場が続くなか、マインツ戦でペナルティーキックを決めました。
+      - シュツットガルト戦では、左足で勝ち越し点です。
+      - 中盤では、宇野禅斗が直近2試合に先発。
+      - スラヴィア・プラハから来た橋岡大樹も、5試合に出ています。
+    sources:
+      - https://en.wikipedia.org/wiki/K%C5%8D_Itakura
+      - https://en.wikipedia.org/wiki/Sh%C5%ABto_Machino
+      - https://en.wikipedia.org/wiki/Zento_Uno
+      - https://en.wikipedia.org/wiki/Daiki_Hashioka
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/summary?event=401884761
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/summary?event=401884786
+  - id: golden
+    heading: 1部優勝5回。なぜ70年代のボルシアMGは強かったのか
+    tier: 背景
+    telop: 若い選手で攻める。70年代の10年で、1部優勝5回
+    narrator: 解説
+    main: true
+    say:
+      - text: 1965年、ボルシアMGはブンデスリーガへ昇格。
+        image: assets/backgrounds/stadium_ボルシアMG.png
+      - 同じ年に昇格したのが、バイエルンです。
+      - text: 率いたのは、ヘネス・ヴァイスヴァイラー監督。
+        image: assets/images/bd_gladbach_pair_70s/01.jpg
+      - 若い選手たちに、前へ攻めるサッカーをさせました。
+      - 愛称の「子馬たち」は、この若いチームの呼び名です。
+      - text: 1970年、1部で初めての優勝。翌年も勝って、2連覇です。
+        card:
+          type: table
+          title: ボルシアMGの1部優勝
+          columns: ["シーズン", "結果"]
+          rows:
+            - ["1969-70", "優勝"]
+            - ["1970-71", "優勝（2連覇）"]
+            - ["1974-75", "優勝"]
+            - ["1975-76", "優勝"]
+            - ["1976-77", "優勝（3連覇）"]
+      - 1975年からは3連覇。70年代の10年で、優勝は**5回**になりました。
+      - 同じ時代の、どのクラブよりも多い数です。
+      - text: 1975年、主将のフォクツが、ヨーロッパの大会のトロフィーを掲げます。
+        card: none
+        image: assets/images/bd_gladbach_pair_70s/01.jpg
+      - 1977年には、ヨーロッパチャンピオンズカップの決勝まで進みました。
+      - 1979年には、1975年と同じ大会で2度目の優勝。
+    sources:
+      - https://en.wikipedia.org/wiki/Borussia_M%C3%B6nchengladbach
+
+features:
+- "ボルシアMGのプレーの色は、若い選手で攻めること。"
+- "70年代の監督ヴァイスヴァイラーが、その形をつくりました。"
+- "運営の型は、2004年の新しいスタジアム。"
+- "収容は、それまでのボーケルベルクの**3万4500人**から、**5万4057人**に増えました。"
+- "クラブの気質は、リヴァプールとの友情。"
+- "ヨーロッパの大会で何度も戦ったことから、いまもファンが行き来しています。"
+features_marks: [2, 4]
+features_telop: 若い選手で攻める。新しいスタジアム。リヴァプールとの友情
+features_rows:
+- ["プレーの色", "若い選手で攻める"]
+- ["運営の型", "2004年に新スタジアム"]
+- ["クラブの気質", "リヴァプールとの友情"]
+features_sources:
+- https://en.wikipedia.org/wiki/Borussia_M%C3%B6nchengladbach
+
+episode:
+  id: episode
+  heading: 1978年、ドルトムントに12対0。それでも、なぜ優勝できなかったのか
+  tier: 背景
+  telop: 1978年4月29日、最終日にドルトムントに12対0。優勝はケルン
+  narrator: 解説
+  card:
+    type: table
+    title: 1977年から78年のシーズン 最終日
+    columns: ["", ""]
+    rows:
+      - ["日付", "1978年4月29日"]
+      - ["ボルシアMG", "ドルトムントに12対0"]
+      - ["ケルン", "ザンクトパウリに5対0"]
+      - ["優勝", "ケルン（得失点差）"]
+  say:
+    - text: 1978年4月29日。シーズンの最終日です。
+      image: assets/images/bd_gladbach_fans/scene.jpg
+    - ボルシアMGは、ドルトムントに12対0で勝ちました。
+    - いまもブンデスリーガの歴史で、いちばん大きな点差の勝利です。
+    - text: ところが、首位のケルンもザンクトパウリに5対0で勝ちます。
+      card: none
+      image: assets/backgrounds/stadium_ボルシアMG.png
+    - 勝ち点は並び、優勝はケルン。ボルシアMGは、得失点差で届きませんでした。
+  sources:
+    - https://en.wikipedia.org/wiki/Borussia_M%C3%B6nchengladbach
+
+legends:
+- - フォクツは1965年に加わった守備の選手です。
+  - "1979年まで在籍し、リーグ戦**419試合**。いまもクラブの最多出場です。"
+  - 引退後はドイツ代表の監督になり、1996年のヨーロッパ選手権で優勝しました。
+- - ハインケスはフォワード。2度にわたって、ボルシアMGでプレーしました。
+  - "1部では**195得点**。ボルシアMGの選手で、いちばん多い数です。"
+  - 監督としても、2013年にバイエルンで3冠を果たしました。
+- - ロイスは2009年に加わった攻撃の選手です。
+  - "2012年まで、リーグ戦**97試合36得点**。"
+  - 2012年にドルトムントへ。背番号11は、ボルシアMG時代と同じでした。
+legend_rows:
+- ["ベルティ・フォクツ", "1965-1979", "リーグ戦419試合"]
+- ["ユップ・ハインケス", "1963-67、70-78", "1部195得点"]
+- ["マルコ・ロイス", "2009-2012", "リーグ戦97試合36得点"]
+legend_sources:
+- - https://en.wikipedia.org/wiki/Berti_Vogts
+- - https://en.wikipedia.org/wiki/Jupp_Heynckes
+- - https://en.wikipedia.org/wiki/Marco_Reus
+
+manager:
+- ボルシアMGの今季の監督は、アレクサンダー・ブレッシン。**53歳**のドイツ人です。
+- 前のシーズンまでは、ザンクトパウリを率いていました。
+- 2026年9月22日に、ボルシアMGの監督になりました。
+manager_telop: 監督はブレッシン。2026年9月22日に就任
+manager_rows:
+- ["監督", "アレクサンダー・ブレッシン"]
+- ["就任", "2026年9月22日"]
+- ["前の仕事", "ザンクトパウリの監督"]
+manager_sources:
+- https://en.wikipedia.org/wiki/Alexander_Blessin
+
+season:
+- text: 今季はリーグ戦7試合で1勝6敗。勝ち点は3です。
+  card:
+    type: stats
+    title: 今季のリーグ戦（7試合）
+    items:
+    - ["11", "", "得点"]
+    - ["4", "", "1点差の負け"]
+    - ["3", "", "勝ち点"]
+    focus: 1
+- text: 6つの負けのうち**4つ**は、1点差でした。
+  mark: {kind: circle, item: 1}
+- 得点は7試合で11。点は取れています。
+- text: そして10月、シュツットガルトに3対2。ようやく今季初めての勝利でした。
+  card: none
+  image: assets/images/bd_gladbach_pair_jp/01.jpg
+- 次は10月31日、ホームでパーダーボルンと戦います。

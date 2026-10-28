@@ -1,0 +1,436 @@
+# アンドレア・ピルロ（元イタリア代表MF）の紹介。シリーズ「レジェンドの紹介（世界）」2026-10-28。型は 10/27 のドログバと同じ9節（フック→基礎DATA→日本との接点→歩み→持ち味→あの試合→引退のあと→マル秘話→見立て）。
+# **FotMob・DataMB・FBref・Sofascore・Transfermarkt は不使用**。数字は英語版 Wikipedia（Andrea Pirlo の成績表・本文、2006 FIFA World Cup knockout stage、2013 FIFA Confederations Cup Group A）と BBC（2017-11-07「Andrea Pirlo: The football genius who defied the number crunchers」）と、自分で足した値だけ。
+# **私生活・法的な問題は入れない**（家族の会社・ワイン・賭けの会社との契約の話は使わない）。女子サッカーは入れない。
+#
+# **重なりの確認（10/28）**：scripts/・research/covered.yaml・research/posted.json を「ピルロ／Pirlo」で grep。ピルロが主役の回は無し（10/22 アンチェロッティ監督の回に名前と2007年CL決勝のFKが出た、10/27 の選手紹介に比べの相手として名前が1回、10/24 マルディーニの出典URLに1本）。レジェンド既出（ジダン・ロナウジーニョ・シャビ・イニエスタ・ベッカム・ロナウド・アンリ・イブラヒモビッチ・マルディーニ・カカ・ジェラード・ドログバ）とも重ならない。
+# **2005年イスタンブール・2012年CL決勝は山場にしない**。2007年CL決勝もアンチェロッティの回で使ったので触れない。山場は 2006年W杯準決勝ドイツ戦（ドルトムント）。
+# **引退の確認（一次情報に近いもの）**：Wikipedia「2017: Retirement」＝2017-10-08 に季末での引退を表明、2017-11-05 MLSプレーオフのコロンバス・クルー戦（2対0）に90分から出たのが最後、翌日に本人の Twitter で正式に。BBC 2017-11-07 本文「the 38-year-old ambled off the bench as a 90th-minute replacement against Columbus Crew to play the 872nd and final game of his career」で確認（requests で本文取得）。→ **選手としては現役ではない（47歳）**。
+# **いまの立場**：監督。2020年にユベントスの監督、2022-23 ファティ・カラギュムリュク、2023-24 サンプドリア（2部）、2025-26 UAE のドバイ・ユナイテッド、2026-05-15 にクラブ初の1部昇格（Wikipedia。**確度は報道**）。
+# **日本との接点**：2013-06-19 ブラジルのレシフェ、コンフェデ杯A組 イタリア4対3日本。本田21分PK・香川33分で日本が2対0→ピルロのCKからデ・ロッシ41分→内田のオウンゴール50分・バロテッリ52分PK→岡崎69分で3対3→ジョヴィンコ86分。ピルロは先発でフル出場（メンバー表に交代の印なし）。試合の最優秀選手は香川（FIFA）。イタリアはこの勝ちで初めて準決勝へ（Wikipedia）。
+# **数字の出どころと自分で足した値**
+# - 成績表（Wikipedia、公式戦）：ブレシア49/6＋ブレシア（貸出）10/0＋インテル40/0＋レッジーナ30/6＋ミラン401/41＋ユベントス164/19＋NYCFC62/1＝クラブ756/73（表の Career total と一致）。ほかのクラブ＝49+10+40+30+62＝191試合、6+0+0+6+1＝13点（自分で足した値）。
+# - イタリア代表 116試合13点（Wikipedia。年別を足して13点を確認）。クラブと代表の合計 872試合86点（自分で足した値）＝BBC の「872th and final game」と一致。
+# - ユベントス：164試合19点、うち15点がフリーキック。4季でセリエA 4回（Wikipedia）。2011年に移籍金なしで加入（Wikipedia「signed him on a free transfer」）。1979-05-19 生まれなので加入時32歳。
+# - ミラン：2001〜2011の10季でセリエA優勝2回（2003-04・2010-11）、CL2回（Wikipedia の冒頭）。
+# - セリエAのフリーキックの得点は、ミハイロヴィッチと並んでいちばん多い（Wikipedia）。
+# - 2006年W杯：全試合に出て668分、パス580本中475本成功、試合の最優秀選手3回（大会で一番多い）、ブロンズボール（Wikipedia）。準決勝 2006-07-04 ドルトムント（ヴェストファーレンシュタディオン）ドイツ0対2イタリア、グロッソ119分・デル・ピエーロ120+1分、グロッソの点をピルロがアシスト。決勝 7/9 ベルリン、ピルロのCKからマテラッツィの同点、PK戦の1人目を決めた。
+# - 見立て（自分で割った値）：ミラン 10季で優勝2回＝5季に1回、ユベントス 4季で4回＝毎季。ユベントスの19点のうち15点がフリーキック＝約8割。
+# - 本人の言葉：自伝『考えるから、プレーする（Penso quindi gioco）』の一節（Wikipedia に引用）「2006年7月9日、日曜日の午後、ベルリンで寝て、プレイステーションをしていた。夜、外に出て、ワールドカップに勝った」。プレイステーションは「車輪の次に、いちばんの発明」（BBC 2017-11-07 が自伝から引用）。
+# - マル秘話：ブレシアでバッジョの練習を見てフリーキックを磨いた／ジュニーニョの無回転を手本にした蹴り方はイタリアで「マレデッタ（呪われた球）」と呼ばれた／2009年にチェルシーが獲りに来たが、ミランが断った（Wikipedia）。
+# **入れなかったもの**：家族の会社・ワイン・資産、賭けの会社との契約、監督の解任の経緯、2005年・2007年のCL決勝、BBC が引いた自伝の下品な言い回し。
+# **読みで怪しいもの**：ドルトムント、ヴェストファーレン（言わない）、デル・ピエーロ、ジョヴィンコ、ミハイロヴィッチ、レシフェ、プレイステーション、「最多」は使わず「いちばん多い」。
+title: ピルロは、どんな選手だった？ 移籍金ゼロの32歳は、何を変えたのか
+format: news
+short_title: ピルロは、どんな選手だった？
+series: レジェンドの紹介
+topic: アンドレア・ピルロ
+date: 2026年10月28日
+slot: other_1
+people: [アンドレア・ピルロ]
+watch: 毎日、数字でサッカーを読み解きます
+theme: {id: legend_pirlo, league: italy, league_name: セリエA, kind: other, topic: アンドレア・ピルロ, title: ピルロは、どんな選手だった？ 移籍金ゼロの32歳は、何を変えたのか, question: ミランを移籍金なしで出たピルロは、何を残した選手で、いまは何をしているのか, takeaway: ミランでは10季でリーグ優勝2回、5季に1回。32歳で移ったユベントスでは4季で4回、毎季。衰えたと見られた年齢から、優勝のペースは5倍になった,
+  nameplate: アンドレア・ピルロ｜元イタリア代表 MF, opening_image: assets/images/20261028_pirlo_legend/12_w.jpg, end_bg: assets/images/20261028_pirlo_legend/09_w.jpg, bgm: assets/audio/bgm_calm.wav, outro_title: 毎日、数字でサッカーを読み解きます}
+thumbnail:
+  line1: ピルロ、通算872試合86点
+  line2: 32歳、移籍金ゼロから4連覇
+  tags: [ユベントス]
+  photo: assets/images/20261028_pirlo_legend/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261028_pirlo_legend/10_v.jpg
+sections:
+- id: hook
+  heading: 移籍金ゼロで出された32歳は、そのあと何を勝ち取ったのか
+  tier: 報道
+  telop: 2011年、ミランからユベントスへ
+  card: &hk
+    type: stats
+    title: ピルロ 元MF（47歳）
+    items:
+    - ['872', 試合, クラブと代表の公式戦]
+    - ['116', 試合, イタリア代表]
+    - ['4', 連覇, ユベントスのセリエA]
+    focus: 2
+  say:
+  - {text: 2011年の夏。ミランは、32歳の司令塔を、移籍金なしで手放しました。, card: none, image: assets/images/20261028_pirlo_legend/02_w.jpg}
+  - {text: 行き先は、ライバルのユベントス。, card: none}
+  - {text: その男は、そこから4シーズン続けて、リーグ優勝を勝ち取ります。, card: none, image: assets/images/20261028_pirlo_legend/09_w.jpg, emph: true}
+  - text: アンドレア・ピルロ。クラブと代表で、あわせて872試合に出た司令塔です。
+    card: *hk
+    image: assets/images/20261028_pirlo_legend/08_w.jpg
+    callword: 4連覇
+  - text: イタリア代表としては、2006年に、ワールドカップを勝ち取りました。
+    card:
+      type: stats
+      title: ピルロ 元MF（47歳）
+      items:
+      - ['872', 試合, クラブと代表の公式戦]
+      - ['116', 試合, イタリア代表]
+      - ['4', 連覇, ユベントスのセリエA]
+      focus: 1
+    image: assets/images/20261028_pirlo_legend/06_w.jpg
+  - {text: 速さでも体の強さでもなく、頭とパスで勝った司令塔。歩みを数字で追います。, card: none, image: assets/images/20261028_pirlo_legend/10_w.jpg}
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Andrea_Pirlo', 'https://www.bbc.com/sport/football/41903596']
+- id: data
+  heading: ピルロは、いつ、どこで生まれ、どんな選手か
+  tier: 報道
+  telop: ピルロの基礎DATA
+  card: &dt
+    type: table
+    title: アンドレア・ピルロ
+    columns: [項目, 内容]
+    rows: &dtr
+    - [生年月日, 1979年5月19日・イタリア]
+    - [ポジション, ミッドフィールダー]
+    - [おもなクラブ, ミラン・ユベントス]
+    - [代表, 116試合13得点・W杯優勝・五輪銅]
+    - [引退, 2017年11月（38歳）]
+    source: Wikipedia
+    highlight_row: 0
+  say:
+  - text: ピルロは、1979年5月19日、イタリア北部、ブレシアの近くの町に生まれました。
+    card: *dt
+    image: assets/images/20261028_pirlo_legend/08_w.jpg
+  - text: ポジションはミッドフィールダー。守備の前に立って、試合を組み立てました。
+    card:
+      type: table
+      title: アンドレア・ピルロ
+      columns: [項目, 内容]
+      rows: *dtr
+      source: Wikipedia
+      highlight_row: 1
+    image: assets/images/20261028_pirlo_legend/02_w.jpg
+  - text: 名を上げたのはミラン。そして、32歳からのユベントスです。
+    card:
+      type: table
+      title: アンドレア・ピルロ
+      columns: [項目, 内容]
+      rows: *dtr
+      source: Wikipedia
+      highlight_row: 2
+    image: assets/images/20261028_pirlo_legend/09_w.jpg
+  - text: イタリア代表は116試合13得点。2004年の五輪では主将で銅メダル。
+    card:
+      type: table
+      title: アンドレア・ピルロ
+      columns: [項目, 内容]
+      rows: *dtr
+      source: Wikipedia
+      highlight_row: 3
+    image: assets/images/20261028_pirlo_legend/06_w.jpg
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Andrea_Pirlo']
+- id: japan
+  heading: ピルロは、日本代表との打ち合いで、何をしたのか
+  tier: 報道
+  telop: 2013年、レシフェの7点
+  say:
+  - {text: 日本代表とは2013年6月、各大陸の王者が集まるコンフェデ杯で対戦。, card: none, image: assets/images/20261028_pirlo_legend/01_w.jpg}
+  - text: 先に点を取ったのは日本。本田圭佑と香川真司で、2点を先行します。
+    card: &jp
+      type: timeline
+      title: 2013年 コンフェデ杯 イタリア対日本
+      rows: &jpr
+      - [21分・33分, 本田と香川で日本が2点リード]
+      - [41分, ピルロのCKからデ・ロッシ]
+      - [69分, 岡崎で日本が同点に]
+      - [86分, ジョヴィンコでイタリアの勝ち]
+      focus: 0
+      highlight_row: 0
+  - text: 流れを止めたのは41分。ピルロのコーナーキックから、デ・ロッシの頭。
+    card: none
+    image: assets/images/20261028_pirlo_legend/12_w.jpg
+    emph: true
+  - text: 後半はイタリアが2点を取り、逆転。それでも日本は、岡崎慎司で追いつきます。
+    card:
+      type: timeline
+      title: 2013年 コンフェデ杯 イタリア対日本
+      rows: *jpr
+      focus: 2
+      highlight_row: 0
+  - text: 決着は86分。ジョヴィンコの1点で、日本は4対3の負け。打ち合いの末でした。
+    card:
+      type: timeline
+      title: 2013年 コンフェデ杯 イタリア対日本
+      rows: *jpr
+      focus: 3
+      highlight_row: 0
+    image: assets/images/20261028_pirlo_legend/01_w.jpg
+    callword: 4対3
+  - {text: ピルロは、90分すべてに出ていました。, card: none}
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/2013_FIFA_Confederations_Cup_Group_A', 'https://en.wikipedia.org/wiki/Andrea_Pirlo']
+- id: career
+  heading: 攻撃の選手だったピルロは、なぜ後ろへ下がったのか
+  tier: 報道
+  telop: 前から、後ろへ
+  card: &cr
+    type: timeline
+    title: 歩んできた道
+    rows: &crr
+    - ['1995', 16歳でセリエAデビュー]
+    - ['1998', インテルへ]
+    - ['2001', ミランへ]
+    - ['2011', 移籍金なしでユベントスへ]
+    - ['2015', アメリカのニューヨークへ]
+    - ['2017', 38歳で引退]
+    focus: 0
+  say:
+  - text: ピルロは16歳でセリエAにデビュー。ブレシアで、セリエAに出た最も若い選手でした。
+    card: *cr
+    image: assets/images/20261028_pirlo_legend/08_w.jpg
+  - text: もともとは、前のほうで点にからむ選手。インテルでは、出番を得られませんでした。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *crr
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261028_pirlo_legend/02_w.jpg
+  - {text: 転機は、守備の前の位置に下げられたことでした。, card: none}
+  - text: 2001年にミランへ。アンチェロッティ監督のもとで、試合を後ろから組み立てる役に。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *crr
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261028_pirlo_legend/02_w.jpg
+    emph: true
+  - {text: チームのリズムを刻むことから、「メトロノーム」と呼ばれました。, card: none}
+  - text: 2011年、移籍金なしでユベントスへ。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *crr
+      focus: 3
+      highlight_row: 0
+    image: assets/images/20261028_pirlo_legend/09_w.jpg
+  - {text: 2015年には、アメリカのニューヨーク・シティへ渡ります。, card: none, image: assets/images/20261028_pirlo_legend/07_w.jpg}
+  - text: 2017年11月、90分からの途中出場が、最後の試合。38歳でした。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *crr
+      focus: 5
+      highlight_row: 0
+    image: assets/images/20261028_pirlo_legend/07_w.jpg
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Andrea_Pirlo', 'https://www.bbc.com/sport/football/41903596']
+- id: style
+  heading: 足が速くないピルロは、何で相手を上回ったのか
+  tier: 報道
+  telop: 先を読む頭と、狙ったところへ届くボール
+  card: &st
+    type: table
+    title: ピルロの持ち味
+    columns: [項目, 中身]
+    rows: &str
+    - [武器1, 先を読んで、空いた所に立つ]
+    - [武器2, 遠くまで正確に届く長いパス]
+    - [武器3, フリーキック]
+    - [記録, 代表116試合・W杯優勝]
+    source: Wikipedia・BBC
+    highlight_row: 0
+  say:
+  - text: ピルロの武器、まずは頭。速さに頼らず、次に空く場所を先に読みました。
+    card: *st
+    image: assets/images/20261028_pirlo_legend/10_w.jpg
+  - text: 次に、長いパス。低い位置から、前線の足元へ、ぴたりと届けます。
+    card:
+      type: table
+      title: ピルロの持ち味
+      columns: [項目, 中身]
+      rows: *str
+      source: Wikipedia・BBC
+      highlight_row: 1
+    image: assets/images/20261028_pirlo_legend/01_w.jpg
+  - text: そして、フリーキック。セリエAで決めた数は、いちばん多い記録です。
+    card:
+      type: table
+      title: ピルロの持ち味
+      columns: [項目, 中身]
+      rows: *str
+      source: Wikipedia・BBC
+      highlight_row: 2
+    image: assets/images/20261028_pirlo_legend/09_w.jpg
+    emph: true
+  - {text: 並ぶのはミハイロヴィッチ。ユベントスでは19点中15点を、直接決めました。, card: none, image: assets/images/20261028_pirlo_legend/08_w.jpg}
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Andrea_Pirlo', 'https://www.bbc.com/sport/football/41903596']
+- id: match
+  heading: 2006年のドルトムントで、ピルロは何を決めたのか
+  tier: 報道
+  main: true
+  telop: 119分の1本のパス
+  card: &mt
+    type: timeline
+    title: 2006年 W杯準決勝 ドイツ対イタリア
+    rows: &mtr
+    - [90分, 0対0のまま延長へ]
+    - [119分, ピルロのパスからグロッソ]
+    - [120分, デル・ピエーロで2対0]
+    - [決勝, ピルロのCKから同点、PK戦の1人目]
+    focus: 0
+    highlight_row: 0
+  say:
+  - {text: ピルロ。, short_only: true, card: none, image: assets/images/20261028_pirlo_legend/06_w.jpg}
+  - {text: いちばん語られるのは、2006年のワールドカップ準決勝です。, short_only: true, card: none}
+  - {text: 2006年7月4日、ドイツのドルトムント。相手は、開催国のドイツでした。, card: none, image: assets/images/20261028_pirlo_legend/01_w.jpg}
+  - text: 90分を終えても、どちらも点が無いまま。試合は延長に入り、PK戦が近づきます。
+    card: *mt
+    image: assets/images/20261028_pirlo_legend/06_w.jpg
+  - text: 119分。PK戦まで、あと1分。ピルロが、ゴール前のグロッソへパスを送ります。
+    card:
+      type: timeline
+      title: 2006年 W杯準決勝 ドイツ対イタリア
+      rows: *mtr
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261028_pirlo_legend/01_w.jpg
+    emph: true
+  - {text: グロッソが決めて、イタリアがついに先制します。, card: none}
+  - text: 1分後には、デル・ピエーロが追加点。2対0で、決勝へ進みました。
+    card:
+      type: timeline
+      title: 2006年 W杯準決勝 ドイツ対イタリア
+      rows: *mtr
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261028_pirlo_legend/06_w.jpg
+    callword: 119分
+  - text: 決勝のフランス戦も、ピルロのコーナーから同点。PK戦は1人目で成功。
+    card:
+      type: timeline
+      title: 2006年 W杯準決勝 ドイツ対イタリア
+      rows: *mtr
+      focus: 3
+      highlight_row: 0
+    image: assets/images/20261028_pirlo_legend/01_w.jpg
+  - {text: この大会、試合の最優秀選手に3回。出場したどの選手よりも多い数でした。, card: none, image: assets/images/20261028_pirlo_legend/06_w.jpg}
+  - {text: 決勝の日のことを、本人は自伝にこう書いています。, card: none, image: assets/images/20261028_pirlo_legend/07_w.jpg}
+  - {voice: ピルロ, text: 日曜の午後は、ベルリンで寝て、プレイステーションをしていた。, card: none}
+  - {voice: ピルロ, text: 夜、外に出て、ワールドカップに勝った。, card: none, pause: 0.6}
+  quotes_from: ['https://en.wikipedia.org/wiki/Andrea_Pirlo']
+  sources: ['https://en.wikipedia.org/wiki/2006_FIFA_World_Cup_knockout_stage', 'https://en.wikipedia.org/wiki/Andrea_Pirlo']
+- id: after
+  heading: 引退のあと、ピルロは何をしてきたのか
+  tier: 報道
+  telop: 監督として、4つのクラブへ
+  card: &af
+    type: timeline
+    title: 引退のあと
+    rows: &afr
+    - [2020年, ユベントスの監督に]
+    - [2022年, トルコのクラブへ]
+    - [2023年, サンプドリアへ]
+    - [2026年5月, ドバイのクラブを初の1部昇格へ]
+    focus: 0
+    highlight_row: 0
+  say:
+  - text: 引退から3年後の2020年。ピルロは、ユベントスの監督に選ばれます。
+    card: *af
+    image: assets/images/20261028_pirlo_legend/09_w.jpg
+  - text: そのあとは、トルコのクラブ、イタリア2部のサンプドリアで指揮をとりました。
+    card:
+      type: timeline
+      title: 引退のあと
+      rows: *afr
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261028_pirlo_legend/07_w.jpg
+  - text: 2025年からは、アラブ首長国連邦のドバイ・ユナイテッド。
+    card:
+      type: timeline
+      title: 引退のあと
+      rows: *afr
+      focus: 3
+      highlight_row: 0
+    image: assets/images/20261028_pirlo_legend/07_w.jpg
+  - {text: 2026年5月、クラブの歴史で初めて、1部への昇格を決めました。, card: none, image: assets/images/20261028_pirlo_legend/07_w.jpg, emph: true}
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Andrea_Pirlo']
+- id: secret
+  heading: ピルロのフリーキックとプレイステーションには、何があったのか
+  tier: 報道
+  telop: バッジョの練習と、呪われた球
+  card: &sc
+    type: table
+    title: 知られざる、3つの話
+    columns: [いつ, 何があったか]
+    rows: &scr
+    - [ブレシア, バッジョの練習を見てフリーキックを磨く]
+    - [ミラン, 無回転の「呪われた球」]
+    - [2009年, チェルシーの誘いを、クラブが断る]
+    source: Wikipedia・BBC
+    highlight_row: 0
+  say:
+  - {text: ピルロには、意外な裏話が3つあります。, card: none, image: assets/images/20261028_pirlo_legend/08_w.jpg}
+  - text: 1つ目。フリーキックは、ブレシアで一緒だったバッジョの練習を見て、磨いたものです。
+    card: *sc
+    image: assets/images/20261028_pirlo_legend/08_w.jpg
+  - text: 2つ目。ジュニーニョを手本にした無回転の球は、「呪われた球」と呼ばれました。
+    card:
+      type: table
+      title: 知られざる、3つの話
+      columns: [いつ, 何があったか]
+      rows: *scr
+      source: Wikipedia・BBC
+      highlight_row: 1
+    image: assets/images/20261028_pirlo_legend/09_w.jpg
+    emph: true
+  - text: 3つ目。2009年、チェルシーが獲りに来ましたが、ミランは売りませんでした。
+    card:
+      type: table
+      title: 知られざる、3つの話
+      columns: [いつ, 何があったか]
+      rows: *scr
+      source: Wikipedia・BBC
+      highlight_row: 2
+    image: assets/images/20261028_pirlo_legend/09_w.jpg
+  - {text: プレイステーションのことは、自伝でこう呼んでいます。, card: none, image: assets/images/20261028_pirlo_legend/07_w.jpg}
+  - {voice: ピルロ, text: 車輪の次に、いちばんの発明だ。, card: none, pause: 0.5}
+  quotes_from: ['https://www.bbc.com/sport/football/41903596']
+  sources: ['https://en.wikipedia.org/wiki/Andrea_Pirlo', 'https://www.bbc.com/sport/football/41903596']
+- id: view
+  heading: ミランのピルロとユベントスのピルロは、何が違ったのか
+  tier: 背景
+  viewpoint: true
+  telop: 5季に1回から、毎季へ
+  card: &vw
+    type: table
+    title: ピルロ リーグ優勝のペース
+    columns: [クラブ, 季, 優勝, 何季に1回]
+    rows: &vwr
+    - [ミラン, '10', '2', '5']
+    - [ユベントス, '4', '4', '1']
+    source: Wikipedia
+    highlight_row: 0
+  say:
+  - text: 最後に、ピルロのリーグ優勝のペースを、2つのクラブで並べます。
+    card: *vw
+    image: assets/images/20261028_pirlo_legend/09_w.jpg
+  - text: ミランでは、10シーズンでリーグ優勝2回。5シーズンに1回です。
+    card:
+      type: table
+      title: ピルロ リーグ優勝のペース
+      columns: [クラブ, 季, 優勝, 何季に1回]
+      rows: *vwr
+      source: Wikipedia
+      highlight_row: 0
+    image: assets/images/20261028_pirlo_legend/09_w.jpg
+  - text: 32歳で移ったユベントスでは、4シーズンで4回。毎シーズンです。
+    card:
+      type: table
+      title: ピルロ リーグ優勝のペース
+      columns: [クラブ, 季, 優勝, 何季に1回]
+      rows: *vwr
+      source: Wikipedia
+      highlight_row: 1
+    image: assets/images/20261028_pirlo_legend/09_w.jpg
+    emph: true
+    mark: {kind: circle, row: 1, col: 3}
+  - {text: 優勝のペースは、5倍になりました。, card: none, image: assets/images/20261028_pirlo_legend/07_w.jpg}
+  - {text: 32歳からが、いちばん勝った4年間。頭で勝つ選手の強さが、数字に出ています。, card: none}
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Andrea_Pirlo']

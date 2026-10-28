@@ -1,0 +1,156 @@
+# 佐藤龍之介（バレンシア）の取材メモ（2026年10月28日・ショートだけ・見せ方 X＝冒頭に強い一言）
+# 題材の元: research/20261028_topics_src.yaml の num 2（フットボールゾーン 681196、地元紙スーペルデポルテの報道）。
+# 読んだ出典（requests・ブラウザUAで本文。控え research/raw/20261028_sato_copa_src.txt）:
+#   ・フットボールゾーン 681196（2026-10-28）: 今季からスペイン1部バレンシアに加入。開幕後は先発もあったが、成績不振で監督が交代し、
+#     アギーレ監督の就任後はチャンスを得られていない。28日の国王杯タベルネス戦では「主力数人を休ませ、普段は出場機会の少ない選手にチャンスを与える考え」。
+#     スーペルデポルテ「佐藤龍之介は、アギーレがタベルネス戦で送り出す先発の、大きな変更点の一つとなりそうだ…まだ1分も出場していない」。
+#     「パテルナで通常どおり練習を続けているにもかかわらず、出場機会から遠ざかっている」。主写真は REX/アフロ → 使わない。
+#   ・スーペルデポルテ原文 135778972（10/26）: Sato apunta a ser una de las grandes novedades del once de Aguirre contra el Tavernes / no ha disputado todavía ningún minuto desde la llegada del mexicano。
+#     佐藤は Valencia Mestalla（Bチーム）の登録（ficha del filial）で、規定上は下部組織の選手として数える。1部のチームは下部組織の登録の選手を同時に4人までしかピッチに置けない → 佐藤が先発すれば残りは3枠。
+#   ・スーペルデポルテ 135786729（10/27）: 試合は水曜21時、メスタージャ。主力を休ませ、出番の少ない選手に機会。Sato は todavía no ha debutado con Javier Aguirre。コルベランのもとでは機会があった。
+#   ・スーペルデポルテ 135814108（10/27）: 「佐藤とエリオットは先発がほぼ確実」。
+#   ・（使わない）スーペルデポルテ 135798850（10/27、見出しだけ）: バレンシアが100年以上の歴史で2度目、メスタージャで「アウェー」として戦う。ESPN の日程も「Valencia at Tavernes de la Valldigna」、2026-10-28T20:00Z（日本時間29日5時）。
+#   ・スーペルデポルテ 135761497（10/26）: 次のリーグ戦は日曜、エルチェとアウェー（マルティネス・バレロ）。
+# 所属の確認: ESPN の esp.1（2026年シーズン）の20チームにバレンシアがある。research/ll_data/clubs.json（2026-27）にもある → 今季ラ・リーガ1部。
+# 試合は公開（10/28 11:30）の後（日本時間29日朝5時）。**結果は書かない。先発は地元紙の見込みと断る。**
+# 言わないこと: 試合数・先発数（今日の出典に無い。10/20 の本は別の記事の数字）、タベルネスの所属リーグ（本文に無い。「格下」も言わない＝「カテゴリーの差」は本文にあるが具体は無い）、移籍の噂。
+# 本人の言葉: 無い。アギーレ監督の佐藤についての言葉も、今日の出典の本文には無い（10/10 の動画の見出しだけ）→ 型は X。作らない。
+# 反応: 0件。作らない。
+# 重なり: 10/20 の本（ビルバオ戦も出番なし・オランダ紙の見立て）と言い回し・写真を重ねない。今日は「国王杯で先発の見込み」と「Bチーム登録の4人枠」が新しい。
+# 写真: 01 スーペルデポルテ（Germán Caballero、ベティス戦でシュート）／03 スーペルデポルテ（Germán Caballero、10/22 のパテルナでの練習）／04 スーペルデポルテ（JM López、7月の入団会見）。
+#   3枚とも本人を目で確かめた（キャプションに Sato の名前、顔も一致）。代理店ではない（新聞社の写真部）。許諾は得ていない＝引き受ける危険。
+#   02（7月の記事の写真、キャプションに Sato）は顔の一致に自信が無いので外した。
+# 確度: 報道（地元紙1社の見込み）。
+slot: japan
+date: "2026年10月28日"
+format: news
+no_main: true
+people: [佐藤龍之介, バレンシア, アギーレ]
+
+short_style: X
+short_hook_word: アギーレの下で0分
+short_photos:
+  - assets/images/20261028_sato_ryunosuke_copa/03_v.jpg
+  - assets/images/20261028_sato_ryunosuke_copa/04_v.jpg
+  - assets/images/20261028_sato_ryunosuke_copa/01_v.jpg
+
+short_question: 佐藤龍之介は、国王杯でアギーレ監督に何を見せると思いますか。
+short_hook: 佐藤龍之介、アギーレの下で0分。
+short_telops:
+  - {match: カップ戦, text: 28日 スペイン国王杯/バレンシア対タベルネス}
+  - {match: 大きな変更点, text: 地元紙「先発の大きな/変更点の一つになりそう」}
+  - {match: 朝5時, text: 日本時間29日 朝5時/結果はまだ出ていません}
+  - {match: 4人まで, text: Bチーム登録の選手は/同時に4人まで}
+  - {match: エルチェ, text: 次のリーグ戦は/日曜のエルチェ戦}
+
+theme:
+  id: sato_ryunosuke_copa
+  league: spain
+  league_name: ラ・リーガ
+  prefix: ""
+  title: 佐藤龍之介、アギーレ監督の下ではまだ0分。国王杯を前に地元紙が書いたこと
+  hook: ""
+  question: アギーレ監督の下で出番の無い佐藤龍之介に、国王杯で何が起きそうか
+  takeaway: アギーレ監督の就任後は0分の佐藤龍之介が、国王杯で先発の見込みと地元紙。Bチーム登録なので、先発すれば下部組織の登録の枠4つのうち1つを使う
+
+thumbnail:
+  line1: 佐藤龍之介、まだ0分
+  line2: 国王杯で先発の見込み
+  tags: [佐藤龍之介, バレンシア, アギーレ]
+  layout: face
+  photo: assets/images/20261028_sato_ryunosuke_copa/03_w.jpg
+  short_photo: assets/images/20261028_sato_ryunosuke_copa/03_v.jpg
+
+answer: 地元紙は、国王杯で佐藤が先発の大きな変更点の一つになりそうだと書いた。結果はまだ出ていない
+watch: 日本時間29日朝5時の国王杯タベルネス戦の先発
+
+sections:
+  - id: what
+    main: true
+    heading: 国王杯で先発の見込み
+    tier: 報道
+    telop: 国王杯タベルネス戦、佐藤は先発の見込み
+    say:
+      - text: スペイン1部バレンシアの20歳、日本代表の佐藤龍之介に、出番が回ってきそうです。
+        short_only: true
+        image: assets/images/20261028_sato_ryunosuke_copa/03_w.jpg
+        card: none
+      - text: 28日はスペインのカップ戦、国王杯。相手は、カテゴリーが下のタベルネス。
+        image: assets/images/20261028_sato_ryunosuke_copa/04_w.jpg
+        card: none
+      - text: アギーレ監督は、この試合で主力の何人かを休ませる考えのようです。
+        image: assets/images/20261028_sato_ryunosuke_copa/01_w.jpg
+        card: none
+      - text: そして、ふだん出番の少ない選手を使うつもりだといいます。
+        image: assets/images/20261028_sato_ryunosuke_copa/03_w.jpg
+        card: none
+      - text: 佐藤については、地元紙が「先発の大きな変更点の一つになりそうだ」と書きました。
+        emph: true
+        image: assets/images/20261028_sato_ryunosuke_copa/04_w.jpg
+        card: none
+      - text: 試合は日本時間で29日の朝5時から。この動画の時点では、結果はまだ出ていません。
+        image: assets/images/20261028_sato_ryunosuke_copa/01_w.jpg
+        card: none
+      - text: 先発も、あくまで地元紙の見込みです。
+        image: assets/images/20261028_sato_ryunosuke_copa/03_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.football-zone.net/archives/681196
+      - https://www.superdeporte.es/valencia-cf/2026/10/26/ryunosuke-sato-limita-presencia-canteranos-alineacion-inedbida-135778972.html
+      - https://www.superdeporte.es/valencia-cf/2026/10/27/hora-olvidados-aguirre-valencia-cf-copa-del-rey-135786729.html
+
+  - id: before
+    heading: 監督が代わってから
+    tier: 報道
+    telop: アギーレ監督の就任後は、まだ1分も出ていない
+    say:
+      - text: 佐藤は開幕直後、コルベラン前監督のもとで先発もありました。
+        image: assets/images/20261028_sato_ryunosuke_copa/04_w.jpg
+        card: none
+      - text: しかしチームの成績が振るわず、監督が交代しました。
+        image: assets/images/20261028_sato_ryunosuke_copa/01_w.jpg
+        card: none
+      - text: 元日本代表監督のアギーレ監督が来てからは、まだ1分も出ていません。
+        image: assets/images/20261028_sato_ryunosuke_copa/03_w.jpg
+        card: none
+      - text: 練習には、ふだんどおり加わっていると地元紙は書いています。
+        image: assets/images/20261028_sato_ryunosuke_copa/04_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.football-zone.net/archives/681196
+      - https://www.superdeporte.es/valencia-cf/2026/10/27/hora-olvidados-aguirre-valencia-cf-copa-del-rey-135786729.html
+
+  - id: view
+    viewpoint: true
+    heading: 先発すれば、枠を1つ使う
+    tier: 報道
+    telop: Bチーム登録の選手は、同時に4人まで
+    say:
+      - text: 地元紙は、もう一つの事情も書いています。
+        image: assets/images/20261028_sato_ryunosuke_copa/01_w.jpg
+        card: none
+      - text: 佐藤の登録は、書類の上ではBチームのものです。
+        image: assets/images/20261028_sato_ryunosuke_copa/03_w.jpg
+        card: none
+      - text: 1部のチームは、下部組織の登録の選手を、同時に4人までしかピッチに置けません。
+        image: assets/images/20261028_sato_ryunosuke_copa/04_w.jpg
+        card: none
+      - text: 佐藤が先発すれば、残りは3人です。
+        image: assets/images/20261028_sato_ryunosuke_copa/01_w.jpg
+        card: none
+      - text: ほかの若手を何人使えるかにも関わる、というのが地元紙の見立てです。
+        image: assets/images/20261028_sato_ryunosuke_copa/03_w.jpg
+        card: none
+      - text: 4日後の日曜には、リーグ戦のエルチェ戦があります。
+        image: assets/images/20261028_sato_ryunosuke_copa/04_w.jpg
+        card: none
+      - text: 国王杯で何を見せるかが、その先の出番につながります。
+        image: assets/images/20261028_sato_ryunosuke_copa/01_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.superdeporte.es/valencia-cf/2026/10/26/ryunosuke-sato-limita-presencia-canteranos-alineacion-inedbida-135778972.html
+      - https://www.superdeporte.es/valencia-cf/2026/10/26/copa-rey-oportunidades-son-seis-canteranos-aguirre-135761497.html
+short_title: "佐藤龍之介、アギーレ監督の下ではまだ0分。国王杯を前に地元紙が書いたこと"

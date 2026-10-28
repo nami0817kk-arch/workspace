@@ -1,0 +1,186 @@
+# リーグ・アン、フランス各地のデモで土曜の3試合を動かした（2026年10月28日・ショートだけ）。見せ方は X（本人の言葉が無い題。人物の題ではない）
+# 読んだ出典:
+#   ・ESPN 2026-10-27（https://www.espn.com/soccer/story/_/id/50297412/ligue-1-reschedules-matches-public-protests-france）
+#     記事API（https://content.core.api.espn.com/v1/sports/news/50297412）で本文を全部読んだ。
+#     LFP が火曜（27日）の声明で、地元の行政当局の要請を理由に、土曜の試合を動かすと発表。
+#     リヨン対アンジェは土曜の現地20時45分から日曜の午後へ。土曜に予定していたニースとロリアンのホームの試合は、それぞれ金曜の夜と月曜の夜へ。
+#     記事の主写真は「Kiran RIDLEY / AFP via Getty Images」なので使わない。
+#   ・ESPN の日程（https://site.api.espn.com/apis/site/v2/sports/soccer/fra.1/scoreboard?dates=20261030〜20261102）:
+#     ニース対レンヌ 10/30 18:00Z（現地19時）、リヨン対アンジェ 11/1 16:15Z（現地17時15分）、ロリアン対ブレスト 11/2 19:45Z（現地20時45分）。
+#     フランスは 10/25 から冬時間（UTC+1）。台本では細かい時刻は言わず、記事の言い方（日曜の午後・金曜の夜・月曜の夜）に合わせる。
+#   ・ESPN の各クラブの日程（site.api.espn.com/.../teams/<id>/schedule?fixture=true）:
+#     リヨン 11/5 ヨーロッパリーグ（アウェーでレアル・ソシエダ）→ 11/8 アウェーでブレスト。
+#     レンヌ 11/5 ヨーロッパリーグ（ホームでオリンピアコス）。ブレスト 11/2 ロリアン → 11/8 リヨン。ロリアン 11/2 → 11/8 ル・アーヴル。
+#   ・LFP（ligue1.com）の声明の原文は検索で見つけられず読めていない → 確度は「報道」どまり（確定と言わない）。
+# 決まり: デモの政治的な中身（何に抗議しているか）は台本に入れない。サッカーへの影響と、理由として発表された言葉（地元の行政当局の要請）だけ。
+# 本人の言葉: 無し（クラブ・監督・選手のコメントは読めていない）→ Y にしない。反応: 0件（作らない）。
+# 写真: Commons のスタジアム・試合の場面4枚（人物の題ではない）。グルパマ・スタジアム2枚、アリアンツ・リヴィエラ1枚、ムストワール1枚。
+# 見立ての「あいだの日数」は、上の日程から自分で数えた（日付の差。時刻は数えていない）。
+#   リヨン: 土曜→木曜なら あいだ4日 / 日曜→木曜で あいだ3日。木曜→日曜（ブレスト戦）は あいだ2日。
+#   レンヌ: 土曜→木曜なら あいだ4日 / 金曜→木曜で あいだ5日。ブレスト: 月曜→日曜で あいだ5日。
+slot: overseas
+date: 2026年10月28日
+format: news
+no_main: true
+people:
+- リーグ・アン
+- リヨン
+- ニース
+- ロリアン
+short_style: X
+short_photos:
+- assets/images/20261028_ligue1_protests_moved/01_v.jpg
+- assets/images/20261028_ligue1_protests_moved/02_v.jpg
+- assets/images/20261028_ligue1_protests_moved/03_v.jpg
+- assets/images/20261028_ligue1_protests_moved/04_v.jpg
+short_question: 試合が1日ずれると、次の試合までの日数はどう変わると思いますか。
+short_hook: リーグ・アン、土曜の3試合が動いた。
+theme:
+  id: ligue1_protests_moved
+  league: france
+  league_name: リーグ・アン
+  prefix: ''
+  title: リヨン対アンジェが日曜へ。リーグ・アンが土曜の3試合を動かした理由
+  hook: ''
+  question: デモの週末、どの試合がいつに動き、何が変わるのか
+  takeaway: 同じ週末の日程変更でも、木曜にヨーロッパリーグがあるリヨンは休みが1日減り、レンヌは1日増えた
+thumbnail:
+  line1: リヨン戦ほか3試合が移動
+  line2: リヨンは木曜まで、あいだ3日
+  tags:
+  - リヨン
+  - ニース
+  photo: assets/images/20261028_ligue1_protests_moved/01_w.jpg
+  photos:
+  - assets/images/20261028_ligue1_protests_moved/01_w.jpg
+  - assets/images/20261028_ligue1_protests_moved/02_w.jpg
+  short_photo: assets/images/20261028_ligue1_protests_moved/01_v.jpg
+answer: リヨン対アンジェは日曜の午後へ、ニースのホームは金曜の夜へ、ロリアンのホームは月曜の夜へ。理由は地元の行政当局の要請
+watch: リヨンは11月5日にヨーロッパリーグでレアル・ソシエダ、11月8日にブレストと戦う
+sections:
+- id: what
+  main: true
+  heading: どの試合が、いつに動いたのか
+  tier: 報道
+  telop: リーグ・アンが、土曜の3試合を別の日へ
+  card:
+    type: table
+    title: 土曜から動いた3試合
+    columns:
+    - 試合
+    - 新しい日
+    rows:
+    - - リヨン対アンジェ
+      - 日曜の午後
+    - - ニース対レンヌ
+      - 金曜の夜
+    - - ロリアン対ブレスト
+      - 月曜の夜
+  say:
+  - text: リーグ・アンが、今週土曜に予定していた3試合を、別の日に移しました。
+    image: assets/images/20261028_ligue1_protests_moved/01_w.jpg
+    card: none
+  - text: フランス各地で、週末にデモが続いているためです。
+    image: assets/images/20261028_ligue1_protests_moved/04_w.jpg
+    card: none
+  - text: リヨン対アンジェは、土曜の夜8時45分から、日曜の午後へ。
+    image: assets/images/20261028_ligue1_protests_moved/01_w.jpg
+    card:
+      type: table
+      title: 土曜から動いた3試合
+      columns:
+      - 試合
+      - 新しい日
+      rows:
+      - - リヨン対アンジェ
+        - 日曜の午後
+      - - ニース対レンヌ
+        - 金曜の夜
+      - - ロリアン対ブレスト
+        - 月曜の夜
+      highlight_row: 0
+  - text: ニースのホーム、レンヌ戦は、1日早い金曜の夜へ。
+    image: assets/images/20261028_ligue1_protests_moved/02_w.jpg
+    card:
+      type: table
+      title: 土曜から動いた3試合
+      columns:
+      - 試合
+      - 新しい日
+      rows:
+      - - リヨン対アンジェ
+        - 日曜の午後
+      - - ニース対レンヌ
+        - 金曜の夜
+      - - ロリアン対ブレスト
+        - 月曜の夜
+      highlight_row: 1
+  - text: ロリアンのホーム、ブレスト戦は、2日あとの月曜の夜へ移りました。
+    image: assets/images/20261028_ligue1_protests_moved/03_w.jpg
+    card:
+      type: table
+      title: 土曜から動いた3試合
+      columns:
+      - 試合
+      - 新しい日
+      rows:
+      - - リヨン対アンジェ
+        - 日曜の午後
+      - - ニース対レンヌ
+        - 金曜の夜
+      - - ロリアン対ブレスト
+        - 月曜の夜
+      highlight_row: 2
+  official: false
+  sources:
+  - https://www.espn.com/soccer/story/_/id/50297412/ligue-1-reschedules-matches-public-protests-france
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/fra.1/scoreboard?dates=20261101
+- id: view
+  viewpoint: true
+  heading: 1日ずれると、次の試合までは何日になるのか
+  tier: 背景
+  telop: リヨンは木曜のヨーロッパリーグまで、あいだ3日
+  say:
+  - text: 見立てです。影響が大きいのは、リヨンです。
+    image: assets/images/20261028_ligue1_protests_moved/04_w.jpg
+    card: none
+  - text: その次の木曜に、アウェーでレアル・ソシエダとのヨーロッパリーグがあるからです。
+    image: assets/images/20261028_ligue1_protests_moved/01_w.jpg
+    card: none
+  - text: 土曜に戦えば、木曜までのあいだは4日でした。日曜に動いて、3日になります。
+    image: assets/images/20261028_ligue1_protests_moved/04_w.jpg
+    card: none
+    emph: true
+  - text: 同じ木曜にヨーロッパリーグがあるレンヌは、逆です。
+    image: assets/images/20261028_ligue1_protests_moved/02_w.jpg
+    card: none
+  - text: 金曜に前倒しになり、あいだは4日から5日に増えました。
+    image: assets/images/20261028_ligue1_protests_moved/01_w.jpg
+    card: none
+  - text: リヨンはその3日後の日曜に、ブレストへ乗り込みます。
+    image: assets/images/20261028_ligue1_protests_moved/03_w.jpg
+    card: none
+  - text: 月曜に戦うブレストは、そこまで、あいだ5日です。
+    image: assets/images/20261028_ligue1_protests_moved/04_w.jpg
+    card: none
+  official: false
+  sources:
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/all/teams/167/schedule?fixture=true
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/all/teams/169/schedule?fixture=true
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/all/teams/6997/schedule?fixture=true
+- id: why
+  heading: 誰が、試合を動かすよう求めたのか
+  tier: 報道
+  telop: 理由は、地元の行政当局からの要請
+  say:
+  - text: リーグが日程の変更を発表したのは、27日の火曜日です。
+    image: assets/images/20261028_ligue1_protests_moved/02_w.jpg
+    card: none
+  - text: 日程を変えるよう求めたのは、地元の行政当局だと、リーグは説明しています。
+    image: assets/images/20261028_ligue1_protests_moved/03_w.jpg
+    card: none
+  official: false
+  sources:
+  - https://www.espn.com/soccer/story/_/id/50297412/ligue-1-reschedules-matches-public-protests-france
+short_title: リヨン対アンジェが日曜へ。リーグ・アンが土曜の3試合を動かした理由
+short_hook_word: 土曜の3試合が動いた

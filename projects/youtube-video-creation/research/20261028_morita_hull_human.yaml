@@ -1,0 +1,145 @@
+# 取材メモ（2026年10月28日）守田英正は「ロボットではなく、人間」。ハルの監督が明かした、途中出場が続く理由（ニュースのショート。見せ方 Y＝監督の言葉から始める）
+# 取材: 2026-10-28。requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約は使っていない。
+# ハルが今季プレミアにいるか（一次に近い確かめ）:
+#   ・ESPN の eng.1（プレミアリーグ 2026）のチーム一覧20クラブに Hull City がある。順位表は第8節終了で 10位・8試合・勝ち点10（2勝4分2敗）。英2部ではない。
+#   ・ESPN のハルの日程（eng.1）: 8/22 ハル2-0マンU、8/29 コヴェントリー0-1ハル、9/5 ハル0-0ヴィラ、9/12 チェルシー2-2ハル、9/19 ニューカッスル2-1ハル、10/11 ハル2-2エヴァートン、10/17 フラム1-0ハル、10/25 ハル1-1ブレントフォード。
+# 出典（本文を全部読んだ）:
+#   ・**原文**＝Hull Live 2026-10-26 05:00「Hull City head to Manchester United in bid to give first team players valuable minutes」
+#       https://www.hulldailymail.co.uk/sport/football/football-news/hull-city-head-manchester-united-11212770
+#       "Maybe Morita, you see, it's been a long time since he last played, and he's not a robot, he's a human being. You need time, you need match fitness, you need rhythm to catch the rhythm.
+#        But OK, this is my problem, and I will try to solve this."
+#       "In December, we have a lot of games, every three or four days, so everyone will get the chance."
+#       「Tim Iroegnbunam was handed a first start on Sunday, with Morita coming off the bench in the second half.」
+#       ※どの試合のあとの会見かは本文で読み切れない（"after that game" がフラム戦かブレントフォード戦か曖昧）→ 台本では「いつ」を言わない。
+#   ・フットボールゾーン 2026-10-27 https://www.football-zone.net/archives/681190 （題材の元。原文の日本語訳）
+#       「最後にプレーしてから、かなり時間がたっていました。彼はロボットではなく、人間です。時間も、試合を戦うためのコンディションも必要ですし、
+#         リズムを取り戻す必要があります。ただ、これは私の課題ですから、解決しようと思っています」
+#       「守田はふくらはぎに問題を抱えたとされ、9月から離脱していた。10月に入ってトレーニングに復帰すると、11日のエバートン戦から3試合連続で途中出場」
+#       「8月29日のコベントリー・シティ戦以来となるスタメン復帰となるかどうか」「今週末にはイプスウィッチ戦」。記事の主写真はロイター（使わない）。
+#       → 監督の言葉は **フットボールゾーンの訳で通す**。英語の原文と突き合わせて意味は合っている。
+#   ・Hull Live 2026-10-27 05:00「Sergej Jakirovic opens up on Christos Mouzakitis Hull City absence ...」
+#       https://www.hulldailymail.co.uk/sport/football/football-news/sergej-jakirovic-opens-up-christos-11212756
+#       "Imagine now that Morita and Tim, if they didn't have problems. They will play because we brought them to play. ... so it's seven players for right now, two positions."
+#       → 日本語の記事が無いので **こちらで訳した**（「守田とティムに問題がなかったら、と考えてみてください。2人は試合に出ます。出すために連れてきたのですから」）。
+#         ティム＝ティム・イロエグブナム（ニューカッスル戦のあと膝の内側じん帯を痛めていた。同じ記事・10/26 の記事）。
+#   ・ESPN の試合記録（summary API。分は試合記録で確かめた）:
+#       8/29 コヴェントリー戦 先発・45分で交代（Gourna-Douath と交代）／10/11 エヴァートン戦 75分から（Slater と交代）／
+#       10/17 フラム戦 75分から（Slater と交代）／10/25 ブレントフォード戦 72分から（Iroegbunam と交代。Hull Live の採点は71分）。9/5・9/12・9/19 はメンバー外。8/22 は名前が無い。
+# 自分で数えたもの（見立て・背景）: 今季のリーグ戦は4試合。45＋15＋15＋18＝約93分（アディショナルタイムを除く）。90分の1試合とほぼ同じ。
+#   途中出場の3試合のハルは、引き分け2つと負け1つ。
+# 【言わないこと】10/18 の本（フラム戦75分・79分のベルーミへのパス・5試合勝ちなし）と重ねない／媒体名／45分で交代した理由（書かれていない。推測しない）／
+#   ブレントフォード戦の採点・寸評（選手を小さく見せる言い方がある）／ムザキティスの移籍金。
+# 本人の言葉: 守田本人の言葉は無い（作らない）。話者は監督。Y の一言は監督の言葉。
+# 反応: 0件（作らない。approve は --no-voices）。
+# 「2つの位置に7人」「出すために連れてきた」（10/27 の Hull Live）は、ショートの尺に見立てが入らなくなるので台本から外した（取材メモにだけ残す）。
+# 前の本との重なり: scripts/20261018〜20261028 を grep（ロボット・ヤキロヴィッチ・途中出場・イプスウィッチ）→ 当たりは 10/18 の守田の本だけ（75分・途中出場）。話は別。
+# 確度: 監督の言葉と離脱・復帰は 報道。出場の分は ESPN の試合記録（報道）。数えた合計は 背景。
+# 写真: assets/images/20261028_morita_hull_human/（credits.json。4枚とも Commons・Timmy96・CC0・2026-10-17 フラム対ハル）。
+#   01〜03＝守田（ハルの練習着・試合前のアップ）。04＝ヤキロヴィッチ監督（試合後。左端の別の人は切り落とした。2024年の本人写真と顔を突き合わせた）。
+#   10/18 の守田の本（2017年のユニバーシアードの写真）とは重ならない。報道の主写真はロイター・PA で使わない。
+slot: japanese
+date: "2026年10月28日"
+format: news
+no_main: true
+people: [守田英正, セルゲイ・ヤキロヴィッチ, ハル・シティ]
+
+short_style: Y
+short_hook_quote: 彼はロボットではなく、人間です。
+short_photos:
+  - assets/images/20261028_morita_hull_human/01_v.jpg
+  - assets/images/20261028_morita_hull_human/04_v.jpg
+  - assets/images/20261028_morita_hull_human/03_v.jpg
+  - assets/images/20261028_morita_hull_human/02_v.jpg
+short_question: 守田英正は、次のイプスウィッチ戦で先発に戻ると思いますか。
+short_telops:
+  - {match: ロボットではなく, text: ハル ヤキロヴィッチ監督/言葉は日本語の訳}
+  - {match: 70分台から, text: 復帰後の3試合/どれも70分台から出場}
+  - {match: 9月から離れて, text: ふくらはぎの問題で/9月から離脱}
+  - {match: 約93分, text: 今季のリーグ戦/4試合で約93分}
+
+theme:
+  id: morita_hull_human
+  league: england
+  prefix: ""
+  title: 守田英正、3試合続けて途中から。ハルの監督が明かした理由
+  hook: ""
+  question: ハルの監督は、守田英正の途中出場が続くわけをどう話したのか
+  takeaway: 守田の今季のリーグ戦は4試合で約93分。90分の1試合とほぼ同じ長さで、監督は「時間とリズムが要る」と話し、課題は自分の側にあると言った
+
+thumbnail:
+  layout: face
+  line1: 守田英正 3戦続けて途中から
+  line2: 監督「ロボットではなく」
+  tags: [守田英正, ハル・シティ]
+  photo: assets/images/20261028_morita_hull_human/03_w.jpg
+  short_photo: assets/images/20261028_morita_hull_human/01_v.jpg
+
+answer: 長く試合から離れていたので、時間と試合の体力とリズムが要る。ただしそれは監督の課題で、解決するつもりだと話した
+watch: 今週末のイプスウィッチ戦で、8月29日以来の先発があるか
+
+sections:
+  - id: what
+    main: true
+    heading: 守田英正は、3試合続けてベンチから
+    tier: 報道
+    telop: 守田英正、3試合続けて途中出場
+    say:
+      - text: プレミアのハルの守田英正は、ふくらはぎの問題で9月から離れていました。
+        image: assets/images/20261028_morita_hull_human/01_w.jpg
+      - text: 10月に練習へ戻り、復帰後の3試合はどれも70分台からの出場です。
+    official: false
+    sources:
+      - https://www.football-zone.net/archives/681190
+      - https://www.espn.com/soccer/team/_/id/306/hull-city
+
+  - id: words
+    heading: 監督が語った、途中から使うわけ
+    tier: 報道
+    telop: ヤキロヴィッチ監督「彼はロボットではなく、人間です」
+    say:
+      - text: ヤキロヴィッチ監督は、守田についてこう話しました。
+        image: assets/images/20261028_morita_hull_human/04_w.jpg
+      - voice: ヤキロヴィッチ監督
+        text: 最後にプレーしてから、かなり時間がたっていました。
+      - voice: ヤキロヴィッチ監督
+        text: 彼はロボットではなく、人間です。
+        emph: true
+        image: assets/images/20261028_morita_hull_human/03_w.jpg
+      - voice: ヤキロヴィッチ監督
+        text: 時間も、試合を戦うためのコンディションも必要ですし、
+        cont: true
+      - voice: ヤキロヴィッチ監督
+        text: リズムを取り戻す必要があります。
+        cont: true
+        image: assets/images/20261028_morita_hull_human/02_w.jpg
+      - voice: ヤキロヴィッチ監督
+        text: ただ、これは私の課題ですから、解決しようと思っています。
+        image: assets/images/20261028_morita_hull_human/04_w.jpg
+    official: false
+    sources:
+      - https://www.hulldailymail.co.uk/sport/football/football-news/hull-city-head-manchester-united-11212770
+      - https://www.football-zone.net/archives/681190
+
+  - id: view
+    viewpoint: true
+    heading: 守田の今季は、何分か
+    tier: 背景
+    telop: 今季のリーグ戦は4試合で約93分
+    say:
+      - text: 見立てです。守田の今季のリーグ戦は4試合。
+        image: assets/images/20261028_morita_hull_human/02_w.jpg
+        card: {type: table, title: 守田英正 今季のリーグ戦, columns: [相手, 出方, 時間], rows: [[コヴェントリー, 先発, 45分], [エヴァートン, 75分から, 約15分], [フラム, 75分から, 約15分], [ブレントフォード, 72分から, 約18分]], highlight_row: 0}
+      - text: 先発は8月29日のコヴェントリー戦の1試合で、合わせて約93分。
+        card: {type: table, title: 守田英正 今季のリーグ戦, columns: [相手, 出方, 時間], rows: [[コヴェントリー, 先発, 45分], [エヴァートン, 75分から, 約15分], [フラム, 75分から, 約15分], [ブレントフォード, 72分から, 約18分]], highlight_row: 3}
+      - text: 90分の1試合と、ほぼ同じ長さです。
+        emph: true
+        image: assets/images/20261028_morita_hull_human/01_w.jpg
+        card: none
+      - text: 監督は、12月は3日か4日おきに試合があり、全員に出番が来るとも話しています。
+      - text: 次は今週末、ホームのイプスウィッチ戦です。
+        image: assets/images/20261028_morita_hull_human/03_w.jpg
+    official: false
+    sources:
+      - https://www.hulldailymail.co.uk/sport/football/football-news/hull-city-head-manchester-united-11212770
+      - https://www.espn.com/soccer/team/_/id/306/hull-city
+      - https://www.football-zone.net/archives/681190

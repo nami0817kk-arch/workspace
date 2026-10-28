@@ -1,0 +1,144 @@
+# 板倉滉の取材メモ（2026年10月28日・ショートだけ・見せ方 X＝冒頭に強い一言）
+# 取材: 2026-10-28。
+#   ・ESPN の試合記録（site.api.espn.com/apis/site/v2/sports/soccer/ger.dfb_pokal/summary?event=401917031）を全部読んだ。
+#     2026-27 ドイツ杯2回戦（German Cup, Second Round）。10月27日、ボルシア・パルク、観客43,034人。ボルシアMG 2-0 カールスルーエ。
+#     7分 ハック（先制）／39分 ザンダー 退場（赤。ボルシアMGの警告は0枚）／45分 ウルリッヒ 途中出場 → 49分 追加点／72分 ンゲファク／77分 板倉 途中出場／86分 モヒヤ。
+#     先発: 町野修斗（F）・宇野禅斗（CM）。どちらも途中で退いた（何分かは記録に無い→言わない）。カールスルーエは福田師王が先発（交代なし）。
+#     数字: 支配率 35.9%対64.1%、シュート4本対15本、枠内3本対4本、ボルシアMGのGK（バッツ）のセーブ4。
+#   ・ESPN のチーム日程（ger.1 teams/268/schedule）と各試合の記録: 板倉は 8/29・9/5・9/12・9/19（マインツ戦）に先発、そのあと 10/11 ケルン戦・10/18 ホッフェンハイム戦・10/23 シュツットガルト戦は登録に無い（3試合）。
+#     → ボルシアMGの公式戦に出たのは 9月19日以来。数えると38日（9/19→10/27）。
+#   ・カールスルーエは2部（ESPN の ger.2 のチーム一覧にある）。
+#   ・けが: フットボールトライブ 2026-10-16・10-17 の本文（控え research/raw/20261017_itakura_ft*.txt）。クラブの発表として「左中殿筋の筋繊維断裂」。
+#     代表の活動から戻ったあとの 11日 ケルン戦を欠場。10/17 の記事でブレッシン監督は「来週か遅くとも再来週には復帰できるかどうかを見極める」（10/17 のショートで使った。今回は引用しない）。
+#   ・日本代表は11月14日にブラジル戦（10/16・10/17 の記事で一致）。10/27 から数えて18日。
+# 言わないこと: 板倉が誰と代わったか（記録に無い）、町野・宇野が退いた分、次の試合の日程（読めていない）、代表の招集（発表を読めていない）、
+#   日本代表の10月の試合に出たこと（クラブの試合では38日ぶり、とだけ言う。「38日ぶりの試合」とは言わない）、Qoly 等の見出しの「復帰間近」の話（本文を読めていない）。
+# 本人の言葉: 無い（日本語・ドイツ語の本文を読めていない。作らない）→ 型は X。監督の10/17の言葉は今回の試合の言葉ではないので Y にしない。
+# 反応: 0件（作らない）。
+# 確度: 出場・得点・退場・数字は ESPN の試合記録（報道）。けがの名前はクラブ発表を伝えた記事（報道）。
+# 写真: 今日の試合の写真は取れなかった（borussia.de は中身がスクリプトで読めず、ESPN・goal 等は Getty）。Commons の Category:Kō Itakura から3枚:
+#   01＝2021-05-01 ベガルタ仙台時代（McRonaldo9, CC BY-SA 4.0, 794x1106）／02＝2022-12-08 首相官邸の日本代表（内閣広報室, CC BY 4.0、後列の板倉を切り出し 620x1040）／
+#   03＝2026-01-11 アヤックス時代（Mtjonenfa, CC BY-SA 4.0。10/17 と同じ元写真を別に切り出した）。どれもボルシアMGのユニフォームではない。
+slot: japan
+date: "2026年10月28日"
+format: news
+no_main: true
+people: [板倉滉, ボルシアMG, カールスルーエ, 町野修斗, 宇野禅斗, 福田師王, ハック, ザンダー, ウルリッヒ]
+
+short_style: X
+short_hook_word: 77分から復帰
+short_photos:
+  - assets/images/20261028_itakura_return_pokal/03_v.jpg
+  - assets/images/20261028_itakura_return_pokal/01_v.jpg
+  - assets/images/20261028_itakura_return_pokal/02_v.jpg
+
+short_question: 板倉滉は、11月14日のブラジル戦に間に合うと思いますか。
+short_hook: 板倉滉、77分から復帰。
+short_telops:
+  - {match: ドイツ杯の2回戦, text: ドイツ杯2回戦/ボルシアMG 2-0 カールスルーエ}
+  - {match: 39分, text: 39分にザンダーが退場/ボルシアMGは10人に}
+  - {match: 77分, text: 77分/板倉滉が途中出場}
+  - {match: 左の中殿筋, text: クラブの発表/左中殿筋の筋繊維断裂}
+  - {match: 38日, text: ボルシアMGの公式戦は/9月19日以来 38日ぶり}
+  - {match: 15本, text: シュート 4本対15本/支配率 36%対64%}
+  - {match: 18日, text: 11月14日 ブラジル戦まで/18日}
+
+theme:
+  id: itakura_return_pokal
+  league: germany
+  league_name: ドイツ杯
+  prefix: ""
+  title: 板倉滉がケガ明けで入った77分。そのときボルシアMGが置かれていた状況
+  hook: ""
+  question: 板倉滉は、どんな試合でケガから戻ったのか
+  takeaway: リーグ戦3試合を欠いた板倉が、クラブでは38日ぶりに出場。11月14日のブラジル戦まで18日ある
+
+thumbnail:
+  line1: 板倉滉、ケガから戻った
+  line2: 10人のボルシアMGで77分から
+  tags: [板倉滉, ボルシアMG, 町野修斗]
+  layout: face
+  photo: assets/images/20261028_itakura_return_pokal/03_w.jpg
+  short_photo: assets/images/20261028_itakura_return_pokal/03_v.jpg
+
+answer: 10人で2-0とリードした77分に途中出場。ボルシアMGの公式戦は9月19日以来38日ぶり
+watch: 11月14日のブラジル戦までの18日
+
+sections:
+  - id: what
+    main: true
+    heading: 10人で守った試合の77分
+    tier: 報道
+    telop: 板倉滉、77分から途中出場
+    say:
+      - text: ボルシアMGの板倉滉が、27日の試合で戻ってきました。
+        short_only: true
+        image: assets/images/20261028_itakura_return_pokal/03_w.jpg
+        card: none
+      - text: 27日のドイツ杯の2回戦。本拠地で、2部のカールスルーエと戦いました。
+        image: assets/images/20261028_itakura_return_pokal/03_w.jpg
+        card: none
+      - text: 町野修斗と宇野禅斗が先発。相手のカールスルーエでは、福田師王が先発しています。
+        image: assets/images/20261028_itakura_return_pokal/01_w.jpg
+        card: none
+      - text: 7分にハックが先制。ところが39分、ザンダーが退場します。
+        image: assets/images/20261028_itakura_return_pokal/01_w.jpg
+        card: {type: table, title: ボルシアMG 2-0 カールスルーエ（ドイツ杯2回戦）, columns: [分, できごと], rows: [[7分, ハックが先制], [39分, ザンダーが退場], [49分, ウルリッヒが追加点], [77分, 板倉滉が途中出場]], highlight_row: 1}
+      - text: 残りの50分あまりを10人で戦い、49分に後半から入ったウルリッヒが追加点。
+        image: assets/images/20261028_itakura_return_pokal/02_w.jpg
+        card: {type: table, title: ボルシアMG 2-0 カールスルーエ（ドイツ杯2回戦）, columns: [分, できごと], rows: [[7分, ハックが先制], [39分, ザンダーが退場], [49分, ウルリッヒが追加点], [77分, 板倉滉が途中出場]], highlight_row: 2}
+      - text: そして77分、板倉滉が途中から入りました。
+        emph: true
+        image: assets/images/20261028_itakura_return_pokal/03_w.jpg
+        card: none
+      - text: 痛めていたのは、左の中殿筋。クラブの発表として、筋繊維断裂と伝えられていました。
+        image: assets/images/20261028_itakura_return_pokal/02_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401917031
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.dfb_pokal/summary?event=401917031
+      - https://football-tribe.com/japan/2026/10/17/360459/
+      - https://football-tribe.com/japan/2026/10/16/360431/
+
+  - id: numbers
+    heading: 戻った試合は、10人で守る展開
+    tier: 報道
+    telop: シュート4本対15本、支配率36%対64%
+    say:
+      - text: 板倉滉が戻った試合は、10人で守る展開でした。
+        image: assets/images/20261028_itakura_return_pokal/03_w.jpg
+        card: none
+      - text: シュートは4本対15本。ボールを持った時間は36%対64%です。
+        image: assets/images/20261028_itakura_return_pokal/01_w.jpg
+        card: {type: stats, title: ボルシアMG 対 カールスルーエ, items: [[4対15, 本, シュート], [36対64, ％, ボールを持った時間], [4, 回, GKバッツのセーブ]], focus: 1}
+      - text: 相手の枠内シュート4本は、GKのバッツがすべて止めています。
+        image: assets/images/20261028_itakura_return_pokal/02_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.dfb_pokal/summary?event=401917031
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/teams/268/schedule?season=2026
+      - https://football-tribe.com/japan/2026/10/17/360459/
+
+  - id: view
+    viewpoint: true
+    heading: クラブで38日ぶり、ブラジル戦まで18日
+    tier: 報道
+    telop: リーグ戦は3試合欠場。ボルシアMGの公式戦は9月19日以来
+    say:
+      - text: 見立てです。板倉滉がクラブの公式戦に出たのは、9月19日以来。38日ぶりです。
+        image: assets/images/20261028_itakura_return_pokal/01_w.jpg
+        card: {type: table, title: 板倉滉とボルシアMGの公式戦, columns: [日, 試合, 板倉], rows: [[9月19日, リーグ マインツ戦, 先発], [10月11日, リーグ ケルン戦, 欠場], [10月18日, リーグ ホッフェンハイム戦, 欠場], [10月23日, リーグ シュツットガルト戦, 欠場], [10月27日, ドイツ杯 カールスルーエ戦, 77分から]], highlight_row: 4}
+      - text: そのあいだ、リーグ戦は3試合、出ていませんでした。
+        image: assets/images/20261028_itakura_return_pokal/02_w.jpg
+        card: {type: table, title: 板倉滉とボルシアMGの公式戦, columns: [日, 試合, 板倉], rows: [[9月19日, リーグ マインツ戦, 先発], [10月11日, リーグ ケルン戦, 欠場], [10月18日, リーグ ホッフェンハイム戦, 欠場], [10月23日, リーグ シュツットガルト戦, 欠場], [10月27日, ドイツ杯 カールスルーエ戦, 77分から]], highlight_row: 2}
+      - text: 日本代表は11月14日にブラジル戦。この日から数えて、18日あります。
+        emph: true
+        image: assets/images/20261028_itakura_return_pokal/03_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.dfb_pokal/summary?event=401917031
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/teams/268/schedule?season=2026
+short_title: "板倉滉がケガ明けで入った77分。そのときボルシアMGが置かれていた状況"

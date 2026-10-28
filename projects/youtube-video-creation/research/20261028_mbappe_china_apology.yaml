@@ -1,0 +1,182 @@
+# 取材メモ（2026年10月28日）ムバッペが謝罪の声明。「中国の独裁者」発言のあと、中国の3社が契約を終えた（ショートだけ・見せ方 Y＝本人の謝罪の言葉から始める）
+# 方針（依頼どおり）: 政治に触れる題なので、起きた事実（発言・謝罪・契約の終了・ラ・リーガの声明）と本人・当事者の言葉だけを確度つきで伝える。
+#   こちらの意見・評価・政治の解説は入れない。煽らない。見立ての節は置かない（評価になるため）。
+# 取材: 2026-10-28 朝。本文は requests で読んだ（検索の要約は使っていない）。
+#   ・ESPN 記事API 50295111（2026-10-27 15:57Z、ESPN News Services、AP の協力）「Kylian Mbappé dropped by Chinese brands after alleged dictator comment」
+#       控え research/raw/20261028_mbappe_china_espn.txt・_espn_api.json。
+#       飲料のドンポン（Dongpeng）、乳業の蒙牛（Mengniu）、チーズのミルクグラウンド（Milkground）が火曜（27日）に似た文面で契約の終了を発表、
+#       どれも "any words and actions that hurt national sentiment" に反対と。3社とも理由は具体的に書いていない。発表は X で動画が広まったあと。
+#       動画: フランスのネットの対談番組 "The Bridge" に出る前の取材とみられる。好きな自分のミームを聞かれ
+#       "a video someone made of a guy ... I think he was a Chinese dictator"（… は原文の切れ目。補わない）。動画には毛沢東の体にムバッペの顔を合わせた画像。
+#       本人の声明（SNS、火曜）: "During a recent interview I reacted to an image of myself. My comment was ill-judged, and I now understand that it hurts
+#       many people in China and in Chinese communities around the world. I apologise to everyone my words have upset. This was absolutely not my intention.
+#       I have deep respect for the Chinese people and their history and I am sincerely sorry."（訳は自前。文を区切っただけで言い換えていない）
+#       RedNote（小紅書）: 2024年12月31日に終わった契約の宣伝素材を消す、と別に声明。
+#       ラ・リーガの声明（火曜）: 個人としての発言でラ・リーガを代表しない／リーグと全クラブを代表して謝る／クラブ・選手と、ほかの文化を尊重する啓発と伝え方の手順を入れる。
+#   ・ゲキサカ（2026-10-27 23:51、編集部）控え research/raw/20261028_mbappe_china_gekisaka.html: 本人の謝罪をSNSで、と同じ内容。3社の名前は無い。
+#   ・本人の X / Instagram の投稿そのものは、ブラウザの道具を使わない決まりで開いていない（報道2つの引用が一字一句一致することで確かめた）。
+# 言わないこと: 毛沢東の評価、中国の政治・スポンサー市場の解説、契約の額、損失の見積り、ファンの反応（Weibo の話題は記事にあるが反応は作らない・引かない）、
+#   バロンドール（10/27 の本と重なる）、本人の「…」の続きの推測。
+# 前の本との重なり: 10/26 mbappe_100_clasico・10/27 mbappe_second_madrid_back と話・言い回しは別。写真は 10/16〜10/27 のどのフォルダでも使っていない File だけ（credits.json を横断で確認）。
+#   10/28 のシリーズ台本（scripts/20261028_*）にムバッペ・中国の話は無い。
+# 確度: 本人の声明・3社の発表・ラ・リーガの声明は報道（ESPN・ゲキサカの2つが一致）。会社・リーグの一次の発表文は開けていないので確定にしない。
+# 反応: 作らない（0件）。approve は --no-voices。
+# 写真: Commons CC BY-SA 4.0、Bryan Berlin 撮影の2026年W杯のフランス代表。謝罪の題なので喜ぶ場面の写真は外した。
+#   01＝パラグアイ戦-201（真顔の上半身）、02＝パラグアイ戦-121（下を向く）、03＝ノルウェー戦-069（プレー中）、04＝スペイン戦-133（プレー中）。出典は credits.json。
+#   レアルの姿の大きな写真は Commons に無く、記事の写真は Getty なので使わない。
+slot: world_2
+date: "2026年10月28日"
+format: news
+no_main: true
+people: [ムバッペ, レアル・マドリード, ラ・リーガ]
+
+short_style: Y
+short_hook_quote: 心から、申し訳なく思っています。
+short_photos:
+  - assets/images/20261028_mbappe_china_apology/01_v.jpg
+  - assets/images/20261028_mbappe_china_apology/02_v.jpg
+  - assets/images/20261028_mbappe_china_apology/03_v.jpg
+  - assets/images/20261028_mbappe_china_apology/04_v.jpg
+
+short_question: ムバッペの謝罪の声明、あなたはどう受け止めましたか。
+short_hook: ムバッペが、謝罪の声明を出しました。
+short_telops:
+  - {match: 申し訳なく, text: 「心から、申し訳なく/思っています」}
+  - {match: 3社, text: 中国の3社が/契約を終えると発表}
+  - {match: ラ・リーガも, text: ラ・リーガも/声明で謝罪}
+
+theme:
+  id: mbappe_china_apology
+  league: spain
+  league_name: ラ・リーガ
+  prefix: ""
+  title: ムバッペが謝罪の声明。中国の3社が契約を終えた、きっかけの一言
+  hook: ""
+  question: ムバッペは、何について謝ったのか
+  takeaway: 取材での一言の動画が広まったあと、中国の3社が契約を終え、本人とラ・リーガが謝罪の声明を出した
+
+thumbnail:
+  line1: ムバッペ、謝罪の声明
+  line2: 中国の3社が契約を終えた
+  tags: [レアル・マドリード, フランス]
+  layout: face
+  photo: assets/images/20261028_mbappe_china_apology/01_w.jpg
+  short_photo: assets/images/20261028_mbappe_china_apology/01_v.jpg
+
+answer: 取材で、自分のネットミームについて「中国の独裁者だったと思う」人物の動画と答えた発言を謝った
+watch: クラブや選手と進めるとした、ラ・リーガの取り組み
+
+sections:
+  - id: what
+    main: true
+    heading: 謝ったのは、どんな発言だったのか
+    tier: 報道
+    telop: 番組の前の取材で、好きな自分のネットミームを聞かれた
+    say:
+      - text: 発端は、フランスのネットの対談番組に出る前に受けた、取材の動画です。
+        image: assets/images/20261028_mbappe_china_apology/02_w.jpg
+      - text: 好きな自分のネットミームを聞かれ、ムバッペは、ある男の動画を挙げました。
+        image: assets/images/20261028_mbappe_china_apology/03_w.jpg
+      - text: その男を、中国の独裁者だったと思う、と言っています。
+        image: assets/images/20261028_mbappe_china_apology/04_w.jpg
+      - text: 映っていたのは、中国の建国の指導者、毛沢東の体に、顔を合わせた画像です。
+        image: assets/images/20261028_mbappe_china_apology/01_w.jpg
+      - text: この動画が、ネットで広まりました。
+        image: assets/images/20261028_mbappe_china_apology/02_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50295111/real-madrid-kylian-mbappe-chinese-brands-dictator-comment
+      - https://web.gekisaka.jp/news/world/detail/?461936-461936-fl
+
+  - id: apology
+    heading: ムバッペは、どんな言葉で謝ったのか
+    tier: 報道
+    telop: ムバッペがSNSで謝罪の声明
+    say:
+      - text: 27日、ムバッペは自分の公式のアカウントに、謝罪の声明を載せました。
+        card: none
+        image: assets/images/20261028_mbappe_china_apology/01_w.jpg
+      - voice: ムバッペ
+        text: 最近の取材で、自分の画像に反応しました。
+        image: assets/images/20261028_mbappe_china_apology/02_w.jpg
+      - voice: ムバッペ
+        text: あの発言は、配慮を欠いていました。
+        cont: true
+        image: assets/images/20261028_mbappe_china_apology/02_w.jpg
+      - voice: ムバッペ
+        text: 中国の多くの人たち、世界中の中国系の人たちを、
+        cont: true
+        image: assets/images/20261028_mbappe_china_apology/03_w.jpg
+      - voice: ムバッペ
+        text: 傷つけたと、いまは分かっています。
+        cont: true
+        image: assets/images/20261028_mbappe_china_apology/03_w.jpg
+      - voice: ムバッペ
+        text: 私の言葉で気分を害したすべての方に、おわびします。
+        cont: true
+        image: assets/images/20261028_mbappe_china_apology/04_w.jpg
+      - voice: ムバッペ
+        text: 決して、そのつもりはありませんでした。
+        cont: true
+        image: assets/images/20261028_mbappe_china_apology/04_w.jpg
+      - voice: ムバッペ
+        text: 中国の人々と、その歴史に、深い敬意を持っています。
+        cont: true
+        image: assets/images/20261028_mbappe_china_apology/01_w.jpg
+      - voice: ムバッペ
+        text: 心から、申し訳なく思っています。
+        emph: true
+        image: assets/images/20261028_mbappe_china_apology/02_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50295111/real-madrid-kylian-mbappe-chinese-brands-dictator-comment
+      - https://web.gekisaka.jp/news/world/detail/?461936-461936-fl
+
+  - id: brands
+    heading: 契約を終えたのは、どの会社か
+    tier: 報道
+    telop: 中国の3社が、ムバッペとの契約を終えると発表
+    say:
+      - text: 同じ27日、中国の3社が、ムバッペとの契約を終えると発表しました。
+        image: assets/images/20261028_mbappe_china_apology/03_w.jpg
+        card: &brands {type: table, title: 契約を終えると発表した3社, columns: [会社, 何の会社], rows: [[ドンポン, 飲料], [モンニウ（蒙牛）, 乳業], [ミルクグラウンド, チーズ]], highlight_row: 0}
+      - text: 飲料のドンポン、乳業のモンニウ、チーズのミルクグラウンドです。
+        image: assets/images/20261028_mbappe_china_apology/04_w.jpg
+        card: {<<: *brands, highlight_row: 2}
+      - text: 3社とも、国民感情を傷つける言動に反対する、という似た文面でした。
+        image: assets/images/20261028_mbappe_china_apology/01_w.jpg
+        card: none
+      - text: 理由を具体的に挙げた会社はありません。発表は、動画が広まったあとでした。
+        image: assets/images/20261028_mbappe_china_apology/02_w.jpg
+      - text: 交流サイトのレッドノートも、別に発表しています。
+        image: assets/images/20261028_mbappe_china_apology/03_w.jpg
+      - text: 2024年末に終わった契約の、宣伝の素材を消すとしています。
+        image: assets/images/20261028_mbappe_china_apology/04_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50295111/real-madrid-kylian-mbappe-chinese-brands-dictator-comment
+
+  - id: laliga
+    heading: ラ・リーガは、何と言ったのか
+    tier: 報道
+    telop: ラ・リーガも声明で謝罪
+    say:
+      - text: ムバッペの発言について、ラ・リーガも同じ日に声明を出しました。
+        image: assets/images/20261028_mbappe_china_apology/04_w.jpg
+      - voice: ラ・リーガ
+        text: 発言は、個人としてのものです。
+        image: assets/images/20261028_mbappe_china_apology/01_w.jpg
+      - voice: ラ・リーガ
+        text: ラ・リーガを代表するものではありません。
+        cont: true
+        image: assets/images/20261028_mbappe_china_apology/04_w.jpg
+      - voice: ラ・リーガ
+        text: リーグと、すべてのクラブを代表して、おわびします。
+        cont: true
+        image: assets/images/20261028_mbappe_china_apology/02_w.jpg
+      - text: クラブや選手と、ほかの文化を尊重するための取り組みを進める、としています。
+        image: assets/images/20261028_mbappe_china_apology/03_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50295111/real-madrid-kylian-mbappe-chinese-brands-dictator-comment
+short_title: "ムバッペが謝罪の声明。中国の3社が契約を終えた、きっかけの一言"

@@ -1,0 +1,611 @@
+# マテウス・クーニャ（マンチェスター・ユナイテッド／ブラジル代表）の紹介。選手紹介の8節の型（2026-10-29、シリーズ「有名選手の紹介」。key: player_517894）。
+# **FotMob は使わない**（雛形が書いた radar/shots/heat の板と research/player_pool/fotmob_863098.json は消した）。数字は Transfermarkt API の試合記録（控え research/raw/20261029_cunha_tm.json）と、自分で割った90分あたり。
+# **選んだ理由・重なり確認（2026-10-28）**：一覧（players_202610.yaml、31人すべて○）で紹介済みでないうち値が最上位は 27位クーニャ（7500万ユーロ。22位バリオス・24位シュロッターベック・26位ヌメチャは5500万）。
+#   scripts/・research/posted.json・covered.yaml を「クーニャ／Cunha／517894」で grep：紹介・比べるの台本は0件（10/27・10/28 の取材メモに名前が出るだけ）。
+#   今季もプレミアの1部：TM の試合記録で 26/27 のプレミア8試合（8/22〜10/25）、英語版Wikipedia の infobox も current_club = Manchester United（club_update 2026-09-20）。現役。
+# **数字の軸**：トップチームと代表の通算（ブラジルU23・シオンの下部は除く。全公式戦、TM）：シオン32試合10得点／ライプツィヒ52・9／ヘルタ40・13／アトレティコ54・7／ウルブズ92・33／マンU47・12（25/26 35試合10得点＋今季12試合2得点）
+#   ／ブラジル代表28試合4得点（TM と Wikipedia 2026-07-05 時点が一致）→ 345試合88得点。
+#   今季（TM、10/27時点）：リーグ8試合・551分・1得点3アシスト（9/20 フラム戦で得点、8/30 イプスウィッチ戦で2アシスト、10/10 トッテナム戦で1アシスト）。CL 3試合1得点（9/10 敵地4-0）。リーグ杯1試合。
+#   90分あたり（プレミア、TM の分とシュート数から自分で割った）：22/23 0.19点・2.41本 → 23/24 0.44・2.68 → 24/25 0.52・3.80 → 25/26 0.36・3.24 → 今季 0.16・2.78（551分）。
+# **日本との接点（ESPN の試合記録で確認）**：2021/8/7 東京五輪決勝（横浜・日産スタジアム）ブラジルU23 2-1 スペイン（延長）、クーニャが45+2分に先制点、90分に交代。
+#   2025/10/14 親善試合（東京スタジアム）日本 3-2 ブラジル、57分から出場。2026/6/29 W杯ラウンド32（ヒューストン）ブラジル 2-1 日本、先発で66分まで（日本は佐野海舟が29分に先制、ブラジルはカゼミーロとマルティネッリ）。
+# **一次情報・出典**：英語版Wikipedia（ジョアンペソア生まれ・コリチーバの下部・18歳でシオン・2018年5月トゥーン戦ハットトリック・2018/6/24 ライプツィヒ・2019年4月レヴァークーゼン戦の得点がブンデスの月間ベストゴール＆プスカシュ賞候補・
+#   2020/1/31 ヘルタ・2021/8/25 アトレティコへ推定3000万ユーロ・2023/1/1 ウルブズへ期限付き→完全・2024/2/4 チェルシー戦ハットトリック（ウルブズでプレミアのハットトリックはジョタ以来2人目）・24/25 リーグ15得点で自己最多・
+#   2025/6/12 マンUへ報道で6250万ポンド・2026/1/25 アーセナル戦の決勝点・サーフィンのゴールパフォーマンス・2026 W杯ハイチ戦2得点）。
+#   本人の言葉：Sky Sports（2025年6月2日、Adam Bate の記事で前年夏の取材の言葉。英語を訳した）。
+# **入れなかったもの**：処分・出場停止・トラブルの話、私生活、FotMob の指標、リーグ杯 PK 戦の失敗。
+# **写真**：Commons 3枚（b1＝2026/6/13 ブラジル対モロッコ Bryan Berlin CC BY-SA 4.0／lp＝2018 ライプツィヒ Steffen Prößdorf CC BY-SA 4.0／wv＝2023 ウルブズ Bex Walton CC BY 2.0）。young は lp と wv を pairphoto で並べた。
+# **不安**：今季の数は 10/27 時点。移籍金は報道の値。ブラジル代表は 2026-07-05 時点（その後の代表戦は TM に記録なし）。
+date: 2026年10月29日
+slot: other_1
+format: news
+series: 有名選手の紹介
+people:
+- マテウス・クーニャ
+theme:
+  id: player_517894
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: マンチェスター・ユナイテッド
+  title: クーニャってどんな選手？ W杯で日本と戦ったブラジルの9番は、どこから来たのか
+  question: 6つのクラブを渡ってきたマテウス・クーニャは、どこで値を上げ、なぜ日本と縁が深いのか
+  takeaway: 通算345試合88得点。プレミアの90分あたりの得点はウルブズの24/25が0.52、マンU1年目が0.36、今季は551分で0.16。点より、3アシストの形で数字が出ている
+  nameplate: マテウス・クーニャ｜マンチェスター・ユナイテッド FW／ブラジル代表
+  opening_image: assets/images/20261029_player_517894/b1/01_w.jpg
+  end_bg: assets/images/20261029_player_517894/b1/01_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+watch: 毎日、数字でサッカーを読み解きます
+short_title: クーニャってどんな選手？
+thumbnail:
+  line1: クーニャ、345試合88点
+  line2: W杯で日本と戦った9番
+  tags:
+  - マンチェスター・ユナイテッド
+  photo: assets/images/20261029_player_517894/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261029_player_517894/b1/01_v.jpg
+sections:
+- id: hook
+  heading: 150万ユーロの18歳は、なぜマンUの10番になったのか
+  tier: 報道
+  telop: 150万ユーロから、7500万ユーロへ
+  narrator: 解説
+  card: &hook_card
+    type: stats
+    title: マテウス・クーニャの数字
+    items:
+    - - '150万'
+      - ユーロ
+      - 18歳 シオンでの市場価値
+    - - '7500万'
+      - ユーロ
+      - いまの市場価値
+    - - '6'
+      - クラブ
+      - 4つの国を渡った
+    focus: 1
+  say:
+  - text: マンチェスター・ユナイテッドの背番号10、マテウス・クーニャ。
+    image: assets/images/20261029_player_517894/b1/01_w.jpg
+    card: none
+  - text: 2017年、18歳でブラジルからヨーロッパへ渡りました。
+    card:
+      <<: *hook_card
+      focus: 0
+  - text: そのときの市場価値は、150万ユーロ。
+    card:
+      <<: *hook_card
+      focus: 0
+  - text: いまは7500万ユーロ。なんと50倍です。
+    card:
+      <<: *hook_card
+      focus: 1
+    emph: true
+  - text: その間に渡ったクラブは6つ。スイス、ドイツ、スペイン、イングランドです。
+    card:
+      <<: *hook_card
+      focus: 2
+  - text: しかも日本とは、大きな舞台で何度も向き合ってきました。
+    card: none
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/matheus-cunha/profil/spieler/517894
+  - https://en.wikipedia.org/wiki/Matheus_Cunha
+- id: data
+  heading: クーニャは、いまどこで、いくらと見られている選手か
+  tier: 報道
+  telop: マテウス・クーニャの基礎DATA
+  narrator: 解説
+  card: &data_card
+    type: table
+    title: マテウス・クーニャ（マンチェスター・ユナイテッド）
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 所属
+      - マンU（10番）
+    - - ポジション
+      - FW・トップ下・ウイング
+    - - 生年月日
+      - 1999年5月27日（27歳）
+    - - 出身
+      - ブラジル（ジョアンペソア）
+    - - 身長・利き足
+      - 1.83m・右足
+    - - 代表
+      - ブラジル（28試合4得点）
+    - - 契約・市場価値
+      - 2030年まで・7500万ユーロ
+    source: Transfermarkt
+  say:
+  - text: クーニャの持ち場は前線。センターフォワードのほか、トップ下やウイングもこなします。
+    image: assets/images/20261029_player_517894/young/01.jpg
+    card: none
+  - text: 1999年5月27日に、ブラジル北東部のジョアンペソアで生まれました。
+    card:
+      <<: *data_card
+      highlight_row: 2
+  - text: 身長は1メートル83。利き足は右です。
+    card:
+      <<: *data_card
+      highlight_row: 4
+  - text: ブラジル代表では28試合で4得点。
+    card:
+      <<: *data_card
+      highlight_row: 5
+  - text: マンUとの契約は、2030年の夏まで。
+    card:
+      <<: *data_card
+      highlight_row: 6
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/matheus-cunha/profil/spieler/517894
+  - https://en.wikipedia.org/wiki/Matheus_Cunha
+- id: japan
+  heading: クーニャは、日本とどこで向き合ってきたのか
+  tier: 報道
+  telop: 日本で金メダル、W杯で日本と
+  narrator: 解説
+  card: &japan_card
+    type: table
+    title: クーニャと日本の3試合
+    columns:
+    - 日付
+    - 試合
+    - クーニャ
+    rows:
+    - - 2021年8月7日
+      - 東京五輪決勝 ブラジル2-1スペイン
+      - 先発・先制点
+    - - 2025年10月14日
+      - 親善試合 日本3-2ブラジル
+      - 57分から出場
+    - - 2026年6月29日
+      - W杯 ブラジル2-1日本
+      - 先発・66分まで
+    source: ESPN
+    highlight_row: 0
+  say:
+  - text: 最初の縁は、2021年の東京オリンピックです。
+    image: assets/images/20261029_player_517894/b1/01_w.jpg
+    card: none
+  - text: 横浜の日産スタジアムでの決勝。相手はスペインでした。
+    card:
+      <<: *japan_card
+      highlight_row: 0
+  - text: クーニャは前半の終わりに先制点。延長の末、ブラジルが2対1で勝って金メダルです。
+    card:
+      <<: *japan_card
+      highlight_row: 0
+    emph: true
+  - text: 2025年10月には、東京スタジアムで日本代表と対戦。
+    card:
+      <<: *japan_card
+      highlight_row: 1
+  - text: 57分から入りましたが、試合は日本が3対2で勝利しています。
+    card:
+      <<: *japan_card
+      highlight_row: 1
+  - text: そして2026年のワールドカップ、決勝トーナメント1回戦でまた日本と当たります。
+    card: none
+  - text: クーニャは先発で66分まで。先制したのは日本、佐野海舟でした。
+    card:
+      <<: *japan_card
+      highlight_row: 2
+  - text: それでも最後は、ブラジルが2対1の逆転勝ちです。
+    card:
+      <<: *japan_card
+      highlight_row: 2
+  quotes_from: []
+  sources:
+  - https://www.espn.com/soccer/match/_/gameId/601586
+  - https://www.espn.com/soccer/match/_/gameId/757632
+  - https://www.espn.com/soccer/match/_/gameId/760487
+- id: career
+  heading: ブラジルの若者は、どこで値を上げてきたのか
+  tier: 背景
+  telop: シオンから、ドイツ、スペイン、イングランドへ
+  narrator: 解説
+  card: &career_card
+    type: timeline
+    title: クーニャの歩み
+    rows:
+    - - '2017'
+      - 18歳でスイスのシオンへ
+    - - '2018'
+      - ライプツィヒへ。翌年、月間ベストゴール
+    - - '2021'
+      - アトレティコ・マドリードへ
+    - - '2023'
+      - ウルブズへ。2年目にリーグ15得点
+    - - '2025'
+      - マンUへ
+    focus: '2017'
+  say:
+  - text: 育ったのは、ブラジルのコリチーバの下部組織。
+    image: assets/images/20261029_player_517894/young/01.jpg
+    card: none
+  - text: アメリカのユース大会、ダラスカップで目に留まります。
+    card: none
+  - text: 2017年、スイスの1部、シオンに入りました。
+    card:
+      <<: *career_card
+      focus: '2017'
+  - text: 翌年の5月には、トゥーン戦で1人で3点。
+    card:
+      <<: *career_card
+      focus: '2017'
+  - text: 2018年6月、ドイツのライプツィヒへ。
+    card:
+      <<: *career_card
+      focus: '2018'
+  - text: 2019年4月のレヴァークーゼン戦の一発は、ブンデスリーガの月間ベストゴールに。
+    card:
+      <<: *career_card
+      focus: '2018'
+    emph: true
+  - text: 年間の最優秀ゴール、プスカシュ賞の候補にも入りました。
+    card:
+      <<: *career_card
+      focus: '2018'
+  - text: 2020年にヘルタへ移り、2021年8月にはアトレティコ・マドリードへ。
+    card: none
+  - text: 移籍金は、推定で3000万ユーロでした。
+    card:
+      <<: *career_card
+      focus: '2021'
+  - text: 2023年1月、イングランドのウルブズへ。
+    card:
+      <<: *career_card
+      focus: '2023'
+  - text: 最初は期限付き移籍で、夏に完全移籍になりました。
+    card:
+      <<: *career_card
+      focus: '2023'
+  - text: 24年から25年のシーズンは、リーグ戦で15得点。自己最多で、チームの得点王です。
+    card:
+      <<: *career_card
+      focus: '2023'
+  - text: そして2025年6月、マンUへ。報道では6250万ポンドの移籍でした。
+    image: assets/images/20261029_player_517894/b1/01_w.jpg
+    card:
+      <<: *career_card
+      focus: '2025'
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Matheus_Cunha
+  - https://www.transfermarkt.com/matheus-cunha/profil/spieler/517894
+- id: style
+  heading: クーニャは、どこで違いを作る選手なのか
+  tier: 背景
+  telop: 運んで、遠くから打つ
+  narrator: 解説
+  card: &style_card
+    type: table
+    title: クーニャの節目の場面
+    columns:
+    - 日付
+    - 試合
+    - 中身
+    rows:
+    - - 2024年2月4日
+      - チェルシー戦（敵地）
+      - ハットトリック
+    - - 2025年10月25日
+      - ブライトン戦
+      - マンUでの初得点
+    - - 2026年1月25日
+      - アーセナル戦（敵地）
+      - 3対2の決勝点
+    source: Wikipedia
+  say:
+  - text: クーニャの武器は、ボールを運ぶ力と、狭い所でのドリブル。
+    card: none
+  - text: そして、遠くからのシュートです。
+    image: assets/images/20261029_player_517894/young/01.jpg
+    card: none
+  - text: 2024年2月、ウルブズで敵地のチェルシー戦。
+    card:
+      <<: *style_card
+      highlight_row: 0
+  - text: 3点を1人で決め、4対2の勝ちでした。
+    card:
+      <<: *style_card
+      highlight_row: 0
+    emph: true
+  - text: ウルブズの選手でプレミアのハットトリックは、ディオゴ・ジョタ以来2人目でした。
+    card:
+      <<: *style_card
+      highlight_row: 0
+  - text: マンUでの初得点は2025年10月のブライトン戦。
+    card:
+      <<: *style_card
+      highlight_row: 1
+  - text: ペナルティーエリアの外から、低く打ち込みました。
+    image: assets/images/20261029_player_517894/b1/01_w.jpg
+    card:
+      <<: *style_card
+      highlight_row: 1
+  - text: 2026年1月には、敵地のアーセナル戦で決勝点。
+    card:
+      <<: *style_card
+      highlight_row: 2
+  - text: マンUがエミレーツでリーグ戦に勝ったのは、2017年12月以来でした。
+    card:
+      <<: *style_card
+      highlight_row: 2
+  - text: 点を取ると見せるのは、波に乗るサーフィンのポーズ。
+    card: none
+  - text: 故郷の近くで習ったサーフィンが元です。
+    card: none
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Matheus_Cunha
+- id: past
+  heading: クーニャは、各季で何試合に出て、いくつ点を取ったのか
+  tier: 報道
+  telop: ウルブズとマンUの4季
+  narrator: 解説
+  card: &past_card
+    type: table
+    title: クーニャ イングランドでの4季（全公式戦）
+    columns:
+    - シーズン
+    - クラブ
+    - 試合
+    - 得点
+    - アシスト
+    rows:
+    - - 22/23
+      - ウルブズ
+      - '20'
+      - '2'
+      - '1'
+    - - 23/24
+      - ウルブズ
+      - '36'
+      - '14'
+      - '8'
+    - - 24/25
+      - ウルブズ
+      - '36'
+      - '17'
+      - '6'
+    - - 25/26
+      - マンU
+      - '35'
+      - '10'
+      - '4'
+    source: Transfermarkt
+    highlight_row: 0
+  say:
+  - text: クーニャがウルブズに来た22/23は、半季で20試合2得点。
+    image: assets/images/20261029_player_517894/young/01.jpg
+    card:
+      <<: *past_card
+      highlight_row: 0
+  - text: 翌季は36試合で14得点。一気に数字を伸ばしました。
+    card:
+      <<: *past_card
+      highlight_row: 1
+  - text: 24/25は36試合で17得点。イングランドでの最多です。
+    card:
+      <<: *past_card
+      highlight_row: 2
+    emph: true
+  - text: マンUの1年目は、35試合で10得点。
+    card:
+      <<: *past_card
+      highlight_row: 3
+  - text: 続いて通算です。シオンは32試合で10得点。
+    image: assets/images/20261029_player_517894/b1/01_w.jpg
+    card: &total_card
+      type: table
+      title: クーニャ 通算（トップチームと代表）
+      columns:
+      - 所属
+      - 試合
+      - 得点
+      rows:
+      - - シオン
+        - '32'
+        - '10'
+      - - ライプツィヒ
+        - '52'
+        - '9'
+      - - ヘルタ
+        - '40'
+        - '13'
+      - - アトレティコ
+        - '54'
+        - '7'
+      - - ウルブズ
+        - '92'
+        - '33'
+      - - マンU
+        - '47'
+        - '12'
+      - - ブラジル代表
+        - '28'
+        - '4'
+      - - 合計
+        - '345'
+        - '88'
+      source: Transfermarkt
+      highlight_row: 0
+  - text: いちばん多く点を取ったのはウルブズ。92試合で33得点です。
+    card:
+      <<: *total_card
+      highlight_row: 4
+  - text: ブラジル代表も足すと、通算345試合で88得点になります。
+    card:
+      <<: *total_card
+      highlight_row: 7
+    emph: true
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/matheus-cunha/leistungsdatendetails/spieler/517894
+  - https://en.wikipedia.org/wiki/Matheus_Cunha
+- id: season
+  heading: 今季のクーニャは、マンUで何を見せているのか
+  tier: 報道
+  main: true
+  telop: 今季ここまで
+  narrator: 解説
+  card: &season_card
+    type: table
+    title: 今季のクーニャ（10月27日時点）
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - リーグ戦
+      - 8試合・551分・1得点3アシスト
+    - - チャンピオンズリーグ
+      - 3試合・1得点
+    - - リーグカップ
+      - 1試合
+    source: Transfermarkt
+    highlight_row: 0
+  say:
+  - text: マンチェスター・ユナイテッドで2季目に入ったクーニャ。今季の中身を見ます。
+    image: assets/images/20261029_player_517894/b1/01_w.jpg
+    card: none
+    short_only: true
+  - text: 今季のリーグ戦は8試合すべてに出場しています。
+    image: assets/images/20261029_player_517894/b1/01_w.jpg
+    card:
+      <<: *season_card
+      highlight_row: 0
+  - text: 8月30日のイプスウィッチ戦では、2つのアシスト。
+    card:
+      <<: *season_card
+      highlight_row: 0
+  - text: 9月20日のフラム戦では、自分で1点。アシストの3つより少ない数です。
+    card:
+      <<: *season_card
+      highlight_row: 0
+  - text: 10月のトッテナム戦でも、アシストを記録。
+    card:
+      <<: *season_card
+      highlight_row: 0
+  - text: 昨季のリーグ戦は4アシスト。もう1つで並びます。
+    card:
+      <<: *season_card
+      highlight_row: 0
+  - text: リーグ戦では、点よりもアシストの形で数字が出ています。
+    image: assets/images/20261029_player_517894/young/01.jpg
+    card: none
+    emph: true
+  - text: チャンピオンズリーグでは、9月の敵地の試合で1得点。チームは4対0で勝ちました。
+    card:
+      <<: *season_card
+      highlight_row: 1
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/matheus-cunha/leistungsdatendetails/spieler/517894
+- id: words
+  heading: クーニャは、ピッチで何を大事にしているのか。本人の言葉
+  tier: 報道
+  telop: 本人の言葉
+  narrator: 解説
+  card: &words_card
+    type: document
+    label: スカイスポーツの取材での言葉（2024年夏）の訳
+    paragraphs:
+    - ピッチに立って、ロボットにはなりたくない。楽しみたいんだ。
+    - 僕は、感情で動く人間なんだ。
+    highlight:
+    - ロボット
+    - 楽しみたい
+  say:
+  - text: ウルブズにいたころの取材で、クーニャはこう語りました。
+    image: assets/images/20261029_player_517894/young/01.jpg
+    card: none
+  - voice: クーニャ
+    text: ピッチに立って、ロボットにはなりたくない。
+    card: *words_card
+  - voice: クーニャ
+    text: 楽しみたいんだ。
+    card: *words_card
+  - voice: クーニャ
+    text: 僕は、感情で動く人間なんだ。
+    card: *words_card
+    pause: 0.5
+  - text: 決まった型より、その場のひらめきで勝負する。それがクーニャという選手です。
+    image: assets/images/20261029_player_517894/b1/01_w.jpg
+    card: none
+  quotes_from:
+  - Sky Sports https://www.skysports.com/football/news/11095/13353754/matheus-cunha-to-man-utd-wolves-forward-is-an-emotional-maverick-not-a-robot-but-he-could-light-up-old-trafford
+  sources:
+  - https://www.skysports.com/football/news/11095/13353754/matheus-cunha-to-man-utd-wolves-forward-is-an-emotional-maverick-not-a-robot-but-he-could-light-up-old-trafford
+- id: view
+  heading: プレミアの数字で比べると、クーニャの点のペースはどう動いてきたのか
+  tier: 背景
+  viewpoint: true
+  narrator: 解説
+  telop: 90分あたりの得点とシュート（リーグ戦）
+  card: &view_card
+    type: table
+    title: クーニャ プレミアリーグの90分あたり
+    columns:
+    - 季
+    - 得点
+    - シュート
+    rows:
+    - - 22/23 ウルブズ
+      - '0.19'
+      - 2.41本
+    - - 23/24 ウルブズ
+      - '0.44'
+      - 2.68本
+    - - 24/25 ウルブズ
+      - '0.52'
+      - 3.80本
+    - - 25/26 マンU
+      - '0.36'
+      - 3.24本
+    - - 今季 マンU
+      - '0.16'
+      - 2.78本
+    source: Transfermarkt
+    highlight_row: 0
+  say:
+  - text: 締めくくりに、イングランドでの各季を、90分あたりの点で並べます。
+    image: assets/images/20261029_player_517894/b1/01_w.jpg
+    card:
+      <<: *view_card
+      highlight_row: 0
+  - text: ウルブズに来た季は、0.19点でした。
+    card:
+      <<: *view_card
+      highlight_row: 0
+  - text: 24/25には0.52点まで上がり、シュートも3.80本に増えました。
+    card:
+      <<: *view_card
+      highlight_row: 2
+    emph: true
+    mark:
+      kind: circle
+      row: 2
+  - text: マンUの1年目は0.36点。今季は551分で0.16点です。
+    card:
+      <<: *view_card
+      highlight_row: 4
+  - text: ただ今季は、3アシストでチームの点に絡んでいます。
+    card: none
+  - text: 数字は、まだ8試合の時点のものです。
+    image: assets/images/20261029_player_517894/young/01.jpg
+    card: none
+  - text: ウルブズで見せた0.52点のペースに、マンUでどこまで近づけるのか。
+    card: none
+  - text: 次は10月31日、敵地でのチェルシー戦。
+    card: none
+  - text: 2024年2月、ウルブズで3点を奪った相手です。
+    image: assets/images/20261029_player_517894/b1/01_w.jpg
+    card: none
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/matheus-cunha/leistungsdatendetails/spieler/517894

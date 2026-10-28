@@ -1,0 +1,29 @@
+{
+ "gladbach": {
+  "ユップ・ハインケス": {
+   "role": "legend",
+   "file": "assets/photos/bd/gladbach/gladbach_legend_da964fb0.jpg",
+   "page": "Jupp Heynckes"
+  },
+  "ベルティ・フォクツ": {
+   "role": "legend",
+   "file": "assets/photos/bd/gladbach/gladbach_legend_cafa43b4.jpg",
+   "page": "Berti Vogts"
+  },
+  "アラン・シモンセン": {
+   "role": "legend",
+   "file": "assets/photos/bd/gladbach/gladbach_legend_d5380a2b.jpg",
+   "page": "Allan Simonsen"
+  },
+  "アレクサンダー・ブレッシン": {
+   "role": "manager",
+   "file": "assets/photos/bd/gladbach/gladbach_manager_7e713e42.jpg",
+   "page": "Alexander Blessin"
+  },
+  "マルコ・ロイス": {
+   "role": "legend",
+   "file": "assets/photos/bd/gladbach/gladbach_legend_5c801836.jpg",
+   "page": "Marco Reus"
+  }
+ }
+}

@@ -1,0 +1,508 @@
+# ブンデスリーガ18クラブ紹介 ⑧マインツ（2026-10-28 作成。見本は 10/27 のフライブルク）。tools/plbuild.py（CLUB_LEAGUE=bundesliga）で組み立て。
+# 材料は research/bd_data/mainz*.json・mainz_say.yaml・mainz_research.md。（出力名・theme.id・date・question・takeaway・people・season の viewpoint と出典・watch は手で足した）
+format: news
+voice_min: 0
+slot: other_1
+date: 2026年10月28日
+people:
+- マインツ
+- 佐野海舟
+- 川﨑颯太
+- 岡崎慎司
+- 武藤嘉紀
+- ユルゲン・クロップ
+- トーマス・トゥヘル
+short_title: マインツ、なぜクロップとトゥヘルが育ったのか
+series: ブンデスリーガチーム紹介
+theme:
+  id: bd_mainz
+  league: germany
+  league_name: ブンデスリーガ
+  kind: other
+  topic: マインツ
+  title: マインツは1部の優勝なし。それでも、なぜクロップとトゥヘルが育ったのか
+  question: 1部の優勝が無いマインツから、なぜクロップとトゥヘルが育ったのか
+  hook: 選手から監督になった男と、ユースの監督。2人とも、ここから世界へ。
+  lead: 1部の優勝は無し。それでも、欧州の名将を2人送り出したクラブ。
+  takeaway: 今季はリーグ戦7試合で勝ち点10、1試合あたり1.43は昨季34試合の1.18を上回る。得点も1試合2.29で昨季の1.29より多く、負けた3試合のうち2つは1点差。失点を減らせるかが次の物差し
+  opening_image: assets/stats/bd_mainz_data_t.png
+thumbnail:
+  line1: マインツが育てた
+  line2: クロップとトゥヘル
+  crest_main:
+  - マインツ
+  tags:
+  - マインツ
+  - ブンデスリーガ
+  - 佐野海舟
+  - 川﨑颯太
+  - 岡崎慎司
+  - クロップ
+  - トゥヘル
+  layout: classic
+  board: assets/stats/bd_mainz_data_t.png
+sections:
+- id: data
+  heading: いま見る理由と基礎DATA
+  main: true
+  tier: 背景
+  telop: 日本人2人が在籍。佐野海舟は7試合すべて先発。チームは7位
+  narrator: キャスター
+  say:
+  - text: 今季は佐野海舟と川﨑颯太。日本人が2人在籍しています。
+    image: assets/stats/bd_mainz_data_r1.png
+    no_telop: true
+  - text: 佐野海舟は今季、リーグ戦7試合すべてに先発。アシストは**2つ**。
+    image: assets/stats/bd_mainz_data_r2.png
+    no_telop: true
+  - text: リーグ戦は7試合を消化して、順位は**7位**。
+    image: assets/stats/bd_mainz_data_r3.png
+    no_telop: true
+  - image: assets/stats/bd_mainz_data0.png
+    text: 創立は**1905年**。合併を重ねて、1919年にいまの名前の元ができました。
+    no_telop: true
+  - image: assets/stats/bd_mainz_data1.png
+    text: 愛称は「ヌルフュンファー」。創立の年、1905年の05から来た呼び名です。
+    no_telop: true
+  - image: assets/stats/bd_mainz_data2.png
+    text: ホームタウンのマインツは、ドイツのカーニバルの3大都市の1つ。
+    no_telop: true
+  - image: assets/stats/bd_mainz_data3.png
+    text: 本拠地はメーヴァ・アレーナ。収容は**3万3305人**。
+    no_telop: true
+  - image: assets/stats/bd_mainz_cups.png
+    text: 1部、ドイツカップ、ヨーロッパの大会で、優勝はまだありません。
+    no_telop: true
+  - image: assets/stats/bd_mainz_data7.png
+    text: ヨーロッパの最高成績は、昨季のカンファレンスリーグのベスト8です。
+    no_telop: true
+  - image: assets/stats/bd_mainz_data8.png
+    text: 昨季のリーグ戦は**10位**。勝ち点は40でした。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/1._FSV_Mainz_05
+  - https://en.wikipedia.org/wiki/2026–27_1._FSV_Mainz_05_season
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/teams/2950/schedule?season=2026
+  - https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings
+  bg: assets/backgrounds/stadium_マインツ.png
+  official: false
+- id: japan
+  heading: 岡崎、武藤、そして佐野。日本人は何を残してきたのか
+  tier: 背景
+  telop: 岡崎慎司はリーグ戦27得点。武藤嘉紀は20得点。今季は佐野海舟と川﨑颯太
+  narrator: 解説
+  say:
+  - text: 2013年、マインツに岡崎慎司が加わりました。
+    card:
+      type: table
+      title: マインツの日本人選手（リーグ戦）
+      columns:
+      - 名前
+      - 在籍
+      - リーグ戦
+      rows:
+      - - 岡崎慎司
+        - 2013-2015
+        - 65試合27得点
+      - - 武藤嘉紀
+        - 2015-2018
+        - 66試合20得点
+      - - 佐野海舟
+        - 2024-
+        - 今季7試合2アシスト
+      - - 川﨑颯太
+        - 2025-
+        - 2026年3月に完全移籍
+  - 1年目はリーグ戦**15得点**。
+  - 2014年9月、通算28点目。当時のブンデスリーガで、日本人の最多得点です。
+  - text: 2015年には、武藤嘉紀が加わります。
+    card: none
+    image: assets/images/bd_mainz_muto/scene_w.jpg
+  - その年の10月、アウクスブルク戦でハットトリック。
+  - ブンデスリーガの日本人では、高原直泰に続く2人目でした。
+  - text: いまの中盤を支えるのが、佐野海舟です。
+    image: assets/images/bd_mainz_pair_sano/01.jpg
+  - 今季は中盤の底で先発を続け、ハンブルクとボルシアMGとの試合でアシスト。
+  - 2025年には川﨑颯太も加入。2026年3月、完全移籍での獲得が決まっています。
+  sources:
+  - https://en.wikipedia.org/wiki/Shinji_Okazaki
+  - https://en.wikipedia.org/wiki/Yoshinori_Muto
+  - https://en.wikipedia.org/wiki/Kaish%C5%AB_Sano
+  - https://en.wikipedia.org/wiki/S%C5%8Dta_Kawasaki
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/summary?event=401884803
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/summary?event=401884786
+  bg: assets/backgrounds/stadium_マインツ.png
+  official: false
+- id: coaches
+  heading: クロップとトゥヘル。なぜマインツから名監督が出たのか
+  tier: 背景
+  telop: フランクが新しい守り方を持ち込み、クロップ、トゥヘルへ
+  narrator: 解説
+  main: true
+  card:
+    type: table
+    title: マインツの監督（抜粋）
+    columns: &id001
+    - 在任
+    - 監督
+    rows:
+    - - 1995-2000
+      - ヴォルフガング・フランク
+  say:
+  - 1990年代、マインツは2部で残留を争っていました。
+  - そこへヴォルフガング・フランク監督が、新しい守り方を持ち込みます。
+  - 最後尾に余る選手、リベロを置かず、4人が横に並んで地域を守る形。
+  - ドイツのクラブでは、早い採用でした。
+  - text: その下でプレーしていたのが、ユルゲン・クロップです。
+    card: none
+    image: assets/images/bd_mainz_klopp/scene.jpg
+  - text: 選手としては1990年から11年在籍。リーグ戦**325試合**に出ました。
+    card:
+      type: table
+      title: マインツの監督（抜粋）
+      columns: *id001
+      rows:
+      - - 2001-2008
+        - ユルゲン・クロップ
+  - 2001年2月、引退してすぐに監督へ。2004年、クラブを初めて1部に上げました。
+  - 1部では予算もスタジアムもリーグでいちばん小さいなか、1年目は11位でした。
+  - text: 2008年にドルトムントへ移り、そこでリーグ優勝を果たします。
+    card:
+      type: table
+      title: マインツの監督（抜粋）
+      columns: *id001
+      rows:
+      - - 2009-2014
+        - トーマス・トゥヘル
+  - text: 2009年に1部の監督を任されたのは、トーマス・トゥヘル。
+    image: assets/images/bd_mainz_tuchel/scene.jpg
+  - 前の1年は19歳以下のチームを率い、ドイツ王者にしていました。
+  - text: 2010年から11年のシーズンは、開幕から7連勝。1部の開幕記録に並びました。
+    card:
+      type: table
+      title: マインツの監督（抜粋）
+      columns: *id001
+      rows:
+      - - 2025-
+        - ウルス・フィッシャー
+  - この年の5位は、いまもクラブの1部での最高順位です。
+  - 2015年、トゥヘルもクロップと同じく、ドルトムントの監督に。
+  - フランクの守り方を学んだ選手を監督にし、ユースの監督を1部へ引き上げる。
+  - 内側から人を育てたことが、2人の出発点でした。
+  sources:
+  - https://en.wikipedia.org/wiki/1._FSV_Mainz_05
+  - https://en.wikipedia.org/wiki/J%C3%BCrgen_Klopp
+  - https://en.wikipedia.org/wiki/Thomas_Tuchel
+  - https://en.wikipedia.org/wiki/Wolfgang_Frank
+  bg: assets/backgrounds/stadium_マインツ.png
+  official: false
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 前から奪う。下部組織を鍛える。カーニバルの明るさ
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns: &id002
+    - ''
+    - ''
+    rows:
+    - &id003
+      - プレーの色
+      - 前から奪いに行く
+  say:
+  - text: マインツのプレーの色は、前から奪いに行くこと。
+    image: assets/photos/bd/mainz/mainz_manager_39a66be1.jpg
+  - クロップもトゥヘルも、相手の陣地で奪う守り方を磨きました。
+  - text: 運営の型は、下部組織を鍛えること。
+    card:
+      type: table
+      title: このクラブの特徴
+      columns: *id002
+      rows:
+      - *id003
+      - &id004
+        - 運営の型
+        - 下部組織を鍛える
+  - 19歳以下のドイツ王者に、2009年と2023年の**2回**なっています。
+  - text: クラブの気質は、カーニバルの明るさ。
+    card:
+      type: table
+      title: このクラブの特徴
+      columns: *id002
+      rows:
+      - *id003
+      - *id004
+      - - クラブの気質
+        - カーニバルの明るさ
+  - ホームで点が入るたび、カーニバルの行進曲が流れます。
+  sources:
+  - https://en.wikipedia.org/wiki/1._FSV_Mainz_05
+  - https://en.wikipedia.org/wiki/J%C3%BCrgen_Klopp
+  - https://en.wikipedia.org/wiki/Thomas_Tuchel
+  bg: assets/backgrounds/stadium_マインツ.png
+  official: false
+- id: episode
+  heading: 2026年、カンファレンスリーグでベスト8。どう勝ち上がったのか
+  tier: 背景
+  telop: 2025-26のカンファレンスリーグ。クラブ初のベスト8
+  narrator: 解説
+  card:
+    type: table
+    title: 2025-26のカンファレンスリーグ
+    columns: &id005
+    - ''
+    - ''
+    rows:
+    - - プレーオフ
+      - ローゼンボリに合計5対3
+    - - リーグフェーズ
+      - 6試合で4勝1分1敗。7位
+  say:
+  - text: 2025年から26年、マインツはカンファレンスリーグに出ました。
+    image: assets/backgrounds/stadium_マインツ.png
+  - プレーオフは、ノルウェーのローゼンボリに合計5対3で勝ち。
+  - リーグフェーズは6試合で4勝。フィオレンティーナにも2対1で勝ち。
+  - text: ベスト16は、チェコのシグマ・オロモウツに合計2対0で勝ち。
+    card:
+      type: table
+      title: 2025-26のカンファレンスリーグ
+      columns: *id005
+      rows:
+      - - ベスト16
+        - シグマ・オロモウツに合計2対0
+      - - 準々決勝
+        - ストラスブールに合計2対4
+    image: assets/backgrounds/stadium_マインツ.png
+  - ヨーロッパの大会で、ベスト16を勝ち抜いたのは、クラブで初めてです。
+  - 準々決勝はフランスのストラスブール。ホームでは2対0で勝ちました。
+  - しかし敵地で0対4。合計2対4の負けで終わりました。
+  sources:
+  - https://en.wikipedia.org/wiki/1._FSV_Mainz_05
+  bg: assets/backgrounds/stadium_マインツ.png
+  official: false
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - &id006
+      - アンドレ・シュールレ
+      - 2009-2011
+      - リーグ戦66試合20得点
+  say:
+  - text: シュールレは2006年、マインツのユースに入りました。
+    image: assets/photos/bd/mainz/mainz_legend_b9b77d12.jpg
+  - トップではリーグ戦**66試合20得点**。2011年にレバークーゼンへ。
+  - 2014年のワールドカップで優勝。決勝では、ゲッツェの決勝点をアシストしました。
+  sources:
+  - https://en.wikipedia.org/wiki/Andr%C3%A9_Sch%C3%BCrrle
+  - https://en.wikipedia.org/wiki/Niko_Bungert
+  - https://en.wikipedia.org/wiki/Stefan_Bell
+  bg: assets/backgrounds/stadium_マインツ.png
+  official: false
+- id: legends2
+  heading: このクラブを語る3人（2人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id006
+    - &id007
+      - ニコ・ブンゲルト
+      - 2008-2019
+      - リーグ戦198試合
+  say:
+  - text: ブンゲルトは2008年、2部にいたマインツに加わった守備の選手です。
+    image: assets/photos/bd/mainz/mainz_legend_31340fb0.jpg
+  - 2019年まで11年在籍し、リーグ戦**198試合**。
+  - 引退後もクラブに残り、2021年にはクラブで初めてのアンバサダーになりました。
+  sources:
+  - https://en.wikipedia.org/wiki/Andr%C3%A9_Sch%C3%BCrrle
+  - https://en.wikipedia.org/wiki/Niko_Bungert
+  - https://en.wikipedia.org/wiki/Stefan_Bell
+  bg: assets/backgrounds/stadium_マインツ.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id006
+    - *id007
+    - - シュテファン・ベル
+      - 2010-
+      - リーグ戦302試合
+  say:
+  - text: ベルは2007年、マインツの下部組織に入ったセンターバック。
+    image: assets/photos/bd/mainz/mainz_legend_ef8b743e.jpg
+  - 2010年にトップでデビューし、リーグ戦**302試合**に出ています。
+  - いまも登録選手の1人。ユースから上がった選手の代表です。
+  sources:
+  - https://en.wikipedia.org/wiki/Andr%C3%A9_Sch%C3%BCrrle
+  - https://en.wikipedia.org/wiki/Niko_Bungert
+  - https://en.wikipedia.org/wiki/Stefan_Bell
+  bg: assets/backgrounds/stadium_マインツ.png
+  official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はフィッシャー。2025年12月に就任。ウニオンをCLへ導いた
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - ウルス・フィッシャー
+    - - 就任
+      - 2025年12月
+    - - 前の実績
+      - ウニオンをCLへ
+  say:
+  - text: マインツの今季の監督は、ウルス・フィッシャー。**60歳**のスイス人です。
+    image: assets/photos/bd/mainz/mainz_manager_39a66be1.jpg
+  - ウニオン・ベルリンでは、クラブ史上初の1部昇格を果たしました。
+  - 2023年には、ヨーロッパ最高峰の大会への初出場に導きました。
+  - マインツの監督には、2025年12月に就任しています。
+  sources:
+  - https://en.wikipedia.org/wiki/1._FSV_Mainz_05
+  - https://en.wikipedia.org/wiki/Urs_Fischer_(footballer)
+  bg: assets/backgrounds/stadium_マインツ.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は25人です。
+    image: assets/stats/bd_mainz_gk.png
+    no_telop: true
+  - image: assets/stats/bd_mainz_gk.png
+    text: ゴールキーパーは2人。
+    no_telop: true
+  - image: assets/stats/bd_mainz_df_f.png
+    text: ディフェンダーは9人。
+    no_telop: true
+  - image: assets/stats/bd_mainz_df_f.png
+    text: 主将を務めるのが**シルヴァン・ヴィドマー**。
+    no_telop: true
+  - image: assets/stats/bd_mainz_df_f.png
+    text: シュテファン・ポッシュはオーストリア代表で**59試合**。
+    no_telop: true
+  - image: assets/stats/bd_mainz_mf_f.png
+    text: ミッドフィールダーは8人。
+    no_telop: true
+  - image: assets/stats/bd_mainz_mf_f.png
+    text: 日本の佐野海舟と川﨑颯太も、この8人に入っています。
+    no_telop: true
+  - image: assets/stats/bd_mainz_mf_f.png
+    text: イ・ジェソンは韓国代表で**110試合**。
+    no_telop: true
+  - image: assets/stats/bd_mainz_fw_f.png
+    text: フォワードは6人。
+    no_telop: true
+  - image: assets/stats/bd_mainz_fw_f.png
+    text: シェラルド・ベッカーはスリナム代表で**23試合**。
+    no_telop: true
+  - image: assets/stats/bd_mainz_fw_f.png
+    text: シラスはコンゴ民主共和国代表で**19試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/1._FSV_Mainz_05
+  bg: assets/backgrounds/stadium_マインツ.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 7試合で3勝1分3敗。7位
+  narrator: 解説
+  card:
+    type: table
+    title: ブンデスリーガの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - パーダーボルン（ホーム）
+      - 0対0
+    - - 第2節
+      - ハンブルガーSV（アウェー）
+      - 5対0
+    - - 第3節
+      - フランクフルト（ホーム）
+      - 1対3
+    - - 第4節
+      - ボルシアMG（アウェー）
+      - 4対3
+    - - 第5節
+      - レバークーゼン（ホーム）
+      - 3対4
+    - - 第6節
+      - シャルケ（アウェー）
+      - 1対0
+    - - 第7節
+      - ブレーメン（ホーム）
+      - 2対3
+  say:
+  - text: 今季はリーグ戦7試合で3勝1分3敗。勝ち点10で7位。
+    card:
+      type: stats
+      title: 1試合あたりの数字（リーグ戦）
+      items:
+      - - '1.43'
+        - ''
+        - 今季の勝ち点
+      - - '1.18'
+        - ''
+        - 昨季の勝ち点
+      - - '2.29'
+        - ''
+        - 今季の得点
+      focus: 0
+  - text: 1試合あたりの勝ち点は**1.43**。昨季1年間の1.18を上回ります。
+    mark:
+      kind: circle
+      item: 0
+  - 得点は7試合で16。1試合あたり、2点を超えています。
+  - text: 負けた3試合のうち2つは、1点差でした。
+    card: none
+    image: assets/backgrounds/stadium_マインツ.png
+  sources:
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/teams/2950/schedule?season=2026
+  - https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings
+  - https://en.wikipedia.org/wiki/2025%E2%80%9326_Bundesliga
+  bg: assets/backgrounds/stadium_マインツ.png
+  official: false
+  viewpoint: true
+watch: 毎日、数字でサッカーを読み解きます

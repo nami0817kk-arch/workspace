@@ -1,0 +1,418 @@
+# 取材メモ（10/28 水、シリーズ「比べる」、key: compare_418560_349066）。アーリング・ハーランド（マンチェスター・シティ・26歳）×アレクサンデル・イサク（リヴァプール・27歳）。
+# **FotMob・DataMB は使っていない**。数字は Transfermarkt（2026-10-28 取得。控え: research/raw/20261028_haaland_tm.json・20261028_isak_tm.json）。
+#   Transfermarkt 番号：ハーランド 418560・イサク 349066。API（tmapi-alpha）の player・performance-season（2020〜2026）・performance-game・market-value-history を2.5秒あけて取得。
+#   クロスチェック：2024–25 プレミアリーグの得点ランキング（英語版 Wikipedia。控え: research/raw/20261028_pl2425_wiki.wikitext）＝1位サラー29・**2位イサク23（ニューカッスル）・3位ハーランド22**。TM のリーグ戦の得点と一致。
+#   イサクの移籍（英語版 Wikipedia Alexander Isak。控え: research/raw/20261028_isak_wiki.wikitext）＝2025年にニューカッスルからリヴァプールへ、1億2500万ポンド、クラブとイギリスの移籍金の記録（Sky Sports 2025-09-01 の記事を出典に引いている）。TM の加入日 2025-09-01。
+# **選んだ理由**：直近の比べ（10/2エムバペ×ハーランド・10/3クラシコ・10/9ベリンガム×ムシアラ・10/11マレン×ラウタロ・10/12ドルトムント×モナコ・10/14バレバ×カマラ・10/16エムバペ×ヴィニシウス・
+#   10/17ペドリ×ヴィティーニャ・10/19バイエルン×ドルトムント・10/20ランキング・10/21ライス×ネヴェス・10/22ヤマル×サカ・10/23ヴィルツ×ロジャーズ・10/24オリーセ×パーマー・
+#   10/25ケイン×レヴァンドフスキ・10/26ブルーノ×ウーデゴール・10/27デンベレ×ラフィーニャ）に、イサクは一度も出ていない。ハーランドは 10/2 にエムバペと比べたが、ハーランド×イサクの組み合わせは無い
+#   （scripts/*compare*・research/*compare*・posted.json の build 名・covered.yaml を grep。ハーランドの直近は 10/18 の CL 記録の本と、マレスカ監督の発言のショート。イサクは covered.yaml にギョケレスの見出しの中で名前が出るだけ）。
+#   バロンドールの話は軸にしない（10/27 のショートで4本出した）。この回の軸は **2024年から25年のプレミアの得点（23と22、イサクが1点上）**と、今季のプレミアの得点のペース。
+#   ほかに当たって外した候補：フリアン・アルバレス（今季の出場 263分＋CL で450分に届くか怪しい）・ギョケレス（今季のプレミア 148分）・ラウタロ（ハーランドとの組み合わせは成り立つが、イサクのほうが日本との縁がある）。
+# **2人とも今季も扱うリーグ（プレミア）の1部**。今季のクラブの全公式戦の出場：ハーランド 943分（リーグ 710・CL 180・コミュニティ・シールド 53）、イサク 687分（リーグ 571・CL 112・リーグカップ 4）。**どちらも450分を超える。イサクは900分に届かない → 「いまの時点」と言う**。
+# **使った数**（TM の大会別、プレミアリーグだけ。代表・ほかの大会は混ぜない）
+#   22/23 ハーランド 35試合2777分36点8A・イサク 22試合1526分10点2A（ニューカッスル）
+#   23/24 ハーランド 31試合2558分27点6A・イサク 30試合2266分21点2A
+#   24/25 ハーランド 31試合2743分22点3A・イサク 34試合2774分23点6A
+#   25/26 ハーランド 35試合2959分27点8A・イサク 14試合702分3点1A（リヴァプール）
+#   26/27 ハーランド 8試合710分9点0A・イサク 7試合571分6点0A（ハーランドは10/24、イサクは10/25 の試合まで）
+#   90分あたり（自分で割った値）：ハーランド 1.17・0.95・0.72・0.82・1.14、イサク 0.59・0.83・0.75・0.38・0.95。
+#   24/25 の1点にかかった時間：イサク 2774÷23＝120.6（約121分）、ハーランド 2743÷22＝124.7（約125分）。差は約4分。
+#   26/27 の1点にかかった時間：ハーランド 710÷9＝78.9（約79分）、イサク 571÷6＝95.2（約95分）。
+#   イサクの 25/26 は出場 702分で、理由（負傷など）は台本に入れない（決まり：病気・私生活は入れない。数字を小さく見せる言い方もしない）。
+# 日本との接点（確かめた縁）：2026年W杯の1次リーグ、2026年6月25日（現地）の日本対スウェーデン（AT&Tスタジアム、1対1）にイサクが先発し、交代なしで最後までプレー。
+#   日本の得点は56分に前田大然、堂安律のアシスト。スウェーデンの得点は62分エランガ（ESPN の試合記録 760471。控え: research/raw/20261028_espn_jpn_swe_20260625.json）。ハーランド側の日本との縁は見つからない（入れない）。
+#   **ESPN の日付は UTC で 2026-06-25T23:00Z**＝現地（テキサス）6月25日の夜・日本時間6月26日の朝。台本は「2026年のワールドカップ」とだけ言い、日付は言わない。
+# プロフィール（TM）：ハーランド 2000-07-21 生・ノルウェー代表・左足・195cm・シティの背番号9・2022年7月加入・市場価値 2億2000万€（2026-07-22）。
+#   イサク 1999-09-21 生・スウェーデン代表・右足・190cm・リヴァプールの背番号9・2025年9月加入・市場価値 9000万€（2026-10-07）。
+# 日程（ESPN、2026-10-28 取得。控え: research/raw/20261028_city_espn_schedule.json・20261028_liverpool_espn_schedule.json）：
+#   リーグカップ シティ対ブライトン 2026-10-28 19:30 UTC・リヴァプール対チェルシー 20:00 UTC（どちらも公開の後＝日本時間29日の早朝。数字は公開時点で古くならない）。
+#   次のプレミア：シティ対ブライトン 2026-10-31 15:00 UTC＝日本時間11月1日 0:00、リヴァプール対アーセナル 2026-11-01 16:30 UTC＝日本時間11月2日 1:30。
+# 写真：すべて Wikimedia Commons（出典は各フォルダの credits.json）。ハーランド＝2026年W杯のフランス戦・モロッコ戦（20261018_haaland から写した）・2024年のシティのアメリカ遠征・2025年6月のノルウェー代表の背中の写真（hh3、20261020_compare_ranking_ga から）。
+#   イサク＝2026年W杯のフランス対スウェーデン（6月30日、Bryan Berlin、w043・w107・w248・w096）と 2026年のスウェーデン対ギリシャ（i1）。2016年の写真（i2〜i4）は使っていない。目で本人（スウェーデンの9番）と確かめた。
+#   表の出る行は、顔が板の下に入らないよう、顔の小さい写真（hh3＝背中・w107＝ドリブルの引き）を敷く。
+# PK と出場中のチームの得点（TM の performance-season、GB1）：24/25 ハーランド PK 4本中3点・出場中のチームの得点58、イサク PK 4本中4点・62。26/27 は2人とも PK 0、出場中のチームの得点 ハーランド20・イサク11。
+#   通算（プレミア）：ハーランド 22/23〜25/26 の4季 36+27+22+27＝112点・2777+2558+2743+2959＝11037分（98.5分に1点）。イサク ニューカッスルの3季 10+21+23＝54点・1526+2266+2774＝6566分（121.6分に1点）。
+#   割合 22÷58＝37.9%・23÷62＝37.1%、9÷20＝45%・6÷11＝54.5%（台本は約55%）。
+slot: other_1
+date: "2026年10月28日"
+format: news
+series: 比べる
+people:
+  - アーリング・ハーランド
+  - アレクサンデル・イサク
+  - マンチェスター・シティ
+  - リヴァプール
+
+theme:
+  end_bg: assets/images/20261028_compare_418560_349066/pair_b/01.jpg
+  id: compare_418560_349066
+  league: england
+  kind: other
+  topic: アーリング・ハーランドとアレクサンデル・イサク
+  prefix: ""
+  title: ハーランドとイサク、22点と23点。いま速いのはどちらか
+  hook: ""
+  question: 2024年から25年のプレミアで、得点は22と23。1点差だった2人は、いまの季にどれだけの速さで点を取っているのか
+  takeaway: 2024年から25年は1点に約125分と約121分でほぼ互角。今季のプレミアは約79分と約95分で、いまはハーランドが速い。ただしイサクは出場が900分に届かない
+  league_name: プレミアリーグ
+  opening_image: assets/images/20261028_compare_418560_349066/pair_a/01.jpg
+
+short_title: ハーランドとイサク、22点と23点
+
+thumbnail:
+  photo: assets/images/20261028_compare_418560_349066/pair_a/01.jpg
+  photos:
+    - assets/images/20261028_compare_418560_349066/h_fra/01.jpg
+    - assets/images/20261028_compare_418560_349066/i1/01.jpg
+  short_photo: assets/images/20261028_compare_418560_349066/pair_a/01_v.jpg
+  face_link: VS
+  layout:
+    layout: classic
+    names: [ハーランド, イサク]
+    name_colors: ["#6cabdd", "#c8102e"]
+  line1: ハーランドとイサク
+  line2: プレミアで22点と23点
+  tags: [アーリング・ハーランド, アレクサンデル・イサク, マンチェスター・シティ, リヴァプール]
+
+answer: 2024年から25年は1点に約125分と約121分でほぼ互角、今季のプレミアは約79分と約95分でハーランドが速い
+watch: 毎日、数字でサッカーを読み解きます
+
+sections:
+  - id: hook
+    heading: プレミアの得点ランキング、2位と3位の2人は何点取っていたのか
+    tier: 報道
+    telop: 2024年から25年 プレミアの得点
+    narrator: 解説
+    card: &hookcard
+      type: stats
+      title: 24/25 プレミアリーグの得点
+      items:
+        - ["23", 点, イサク（2位）]
+        - ["22", 点, ハーランド（3位）]
+        - ["31", 分, 出場時間の差]
+      focus: 0
+    say:
+      - text: 2024年から25年のシーズン、プレミアリーグの得点ランキング。
+        image: assets/images/20261028_compare_418560_349066/pair_a/01.jpg
+        card: none
+      - text: 2位はアレクサンデル・イサク、23点。
+        image: assets/images/20261028_compare_418560_349066/hh3/01.jpg
+        card: {<<: *hookcard, focus: 0}
+      - text: 3位がアーリング・ハーランド、22点。イサクが1点上でした。
+        emph: true
+        image: assets/images/20261028_compare_418560_349066/w107/01.jpg
+        card: {<<: *hookcard, focus: 1}
+      - text: 出場時間の差は、わずか31分。ほとんど同じ時間で、ほとんど同じ数を決めていました。
+        image: assets/images/20261028_compare_418560_349066/hh3/01.jpg
+        card: {<<: *hookcard, focus: 2}
+    sources:
+      - https://en.wikipedia.org/wiki/2024%E2%80%9325_Premier_League
+      - https://www.transfermarkt.com/erling-haaland/leistungsdaten/spieler/418560
+      - https://www.transfermarkt.com/alexander-isak/leistungsdaten/spieler/349066
+
+  - id: data
+    heading: ハーランドとイサクは、何歳で、いまどこにいるのか
+    tier: 報道
+    telop: 背番号9の2人
+    narrator: 解説
+    card: &datacard
+      type: duel
+      left: {name: ハーランド, club: マンC, photo: assets/images/20261028_compare_418560_349066/h_fra/01_sq.jpg, color: "#6cabdd"}
+      right: {name: イサク, club: リヴァプール, photo: assets/images/20261028_compare_418560_349066/i1/01_sq.jpg, color: "#c8102e"}
+      rows:
+        - [年齢, 26歳, 27歳]
+        - [代表, ノルウェー, スウェーデン]
+        - [身長, 195cm, 190cm]
+        - [利き足, 左, 右]
+        - [背番号, "9", "9"]
+        - [いまのクラブへ, 2022年7月, 2025年9月]
+        - [市場価値, 2億2000万€, 9000万€]
+      bars: false
+      note: 市場価値は Transfermarkt（2026年7月・10月の値）
+    say:
+      - text: ハーランドは26歳。ノルウェー代表で、マンチェスター・シティの背番号9です。
+        image: assets/images/20261028_compare_418560_349066/w107/01.jpg
+        card: {<<: *datacard, highlight_row: 年齢}
+      - text: イサクは27歳。スウェーデン代表で、リヴァプールの背番号9。
+        image: assets/images/20261028_compare_418560_349066/hh3/01.jpg
+        card: {<<: *datacard, highlight_row: 代表}
+      - text: 身長は195センチと190センチ。左足と右足の、大きなストライカーです。
+        image: assets/images/20261028_compare_418560_349066/w107/01.jpg
+        card: {<<: *datacard, highlight_row: 身長}
+      - text: イサクは去年の9月、ニューカッスルからリヴァプールへ移りました。
+        image: assets/images/20261028_compare_418560_349066/pair_a/01.jpg
+        card: none
+      - text: 移籍金は1億2500万ポンド。イギリスの記録でした。
+        emph: true
+        image: assets/images/20261028_compare_418560_349066/pair_a/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/erling-haaland/profil/spieler/418560
+      - https://www.transfermarkt.com/alexander-isak/profil/spieler/349066
+      - https://en.wikipedia.org/wiki/Alexander_Isak
+
+  - id: japan
+    heading: イサクは、日本代表とどこで戦っていたのか
+    tier: 報道
+    telop: 2026年W杯 日本対スウェーデン
+    narrator: 解説
+    card: &japancard
+      type: table
+      title: 2026年W杯 1次リーグ 日本対スウェーデン
+      columns: [時間, できごと]
+      rows:
+        - [56分, 前田大然のゴール（堂安律のアシスト）]
+        - [62分, スウェーデンが追いつく]
+        - [試合終了, 1対1の引き分け]
+    say:
+      - text: 日本代表とピッチで向き合ったのは、イサクのほうです。
+        image: assets/images/20261028_compare_418560_349066/w043/01_w.jpg
+        card: none
+      - text: 2026年のワールドカップ、1次リーグの日本対スウェーデンでした。
+        image: assets/images/20261028_compare_418560_349066/pair_b/01.jpg
+        card: none
+      - text: イサクは先発して、交代なしで90分を戦いました。
+        image: assets/images/20261028_compare_418560_349066/w107/01.jpg
+        card: *japancard
+      - text: 日本は56分、堂安律のパスから前田大然が先制。
+        image: assets/images/20261028_compare_418560_349066/w107/01.jpg
+        card: {<<: *japancard, highlight_row: 0}
+      - text: スウェーデンが62分に追いつき、試合は1対1の引き分けでした。
+        image: assets/images/20261028_compare_418560_349066/w107/01.jpg
+        card: {<<: *japancard, highlight_row: 2}
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/760471
+
+  - id: season
+    heading: 2024年から25年のプレミア、2人の数字はどこまで並んでいたのか
+    tier: 報道
+    main: true
+    telop: 24/25 プレミアリーグ
+    narrator: 解説
+    card: &seasoncard
+      type: duel
+      left: {name: ハーランド, club: 24/25, photo: assets/images/20261028_compare_418560_349066/h_fra/01_sq.jpg, color: "#6cabdd"}
+      right: {name: イサク, club: 24/25, photo: assets/images/20261028_compare_418560_349066/i1/01_sq.jpg, color: "#c8102e"}
+      rows:
+        - [試合, "31", "34"]
+        - [出場時間, 2743分, 2774分]
+        - [得点, "22", "23"]
+        - [アシスト, "3", "6"]
+        - [得点（90分あたり）, "0.72", "0.75"]
+      bars: [出場時間, 得点, アシスト, 得点（90分あたり）]
+      note: 24/25 のプレミアリーグだけ。90分あたりは自分で割った値
+    say:
+      - text: ハーランドとイサク。2024年から25年のプレミアの得点は、22と23でした。
+        short_only: true
+        image: assets/images/20261028_compare_418560_349066/pair_a/01.jpg
+        card: none
+      - text: その季のプレミアで、出た試合は31と34。
+        image: assets/images/20261028_compare_418560_349066/w107/01.jpg
+        card: {<<: *seasoncard, highlight_row: 試合}
+      - text: 出場時間は、ハーランドが2743分、イサクが2774分。
+        image: assets/images/20261028_compare_418560_349066/hh3/01.jpg
+        card: {<<: *seasoncard, highlight_row: 出場時間}
+      - text: 90分に直すと、得点は0.72と0.75。ここもイサクがわずかに上です。
+        emph: true
+        image: assets/images/20261028_compare_418560_349066/w107/01.jpg
+        card: {<<: *seasoncard, highlight_row: 得点（90分あたり）}
+      - text: アシストは3と6。点に絡んだ数でも、イサクが多い季でした。
+        image: assets/images/20261028_compare_418560_349066/hh3/01.jpg
+        card: {<<: *seasoncard, highlight_row: アシスト}
+    sources:
+      - https://www.transfermarkt.com/erling-haaland/leistungsdaten/spieler/418560
+      - https://www.transfermarkt.com/alexander-isak/leistungsdaten/spieler/349066
+      - https://en.wikipedia.org/wiki/2024%E2%80%9325_Premier_League
+
+  - id: trend
+    heading: 90分あたりの得点は、5つの季でどう動いたのか
+    tier: 報道
+    telop: プレミアの得点（90分あたり）
+    narrator: 解説
+    card: &trendcard
+      type: line
+      title: プレミアの得点、90分あたり（季ごと）
+      x: [22/23, 23/24, 24/25, 25/26, 26/27]
+      series:
+        - [ハーランド, [1.17, 0.95, 0.72, 0.82, 1.14]]
+        - [イサク, [0.59, 0.83, 0.75, 0.38, 0.95]]
+      focus: ハーランド
+      note: 得点と出場時間は Transfermarkt（プレミアリーグだけ）。自分で割った値。26/27 は10月25日まで
+    say:
+      - text: 5つの季のプレミアで、90分あたり何点取ったかを線にします。
+        image: assets/images/20261028_compare_418560_349066/w107/01.jpg
+        card: *trendcard
+      - text: ハーランドは、シティに来た最初の季が1.17。36点を取った季です。
+        image: assets/images/20261028_compare_418560_349066/hh3/01.jpg
+        card: {<<: *trendcard, highlight: 22/23}
+      - text: イサクは、ニューカッスルで0.59から0.83へ。2人の差を詰めていきました。
+        image: assets/images/20261028_compare_418560_349066/w107/01.jpg
+        card: {<<: *trendcard, highlight: 23/24}
+      - text: そして2024年から25年、0.72と0.75で、初めてイサクが上に出ました。
+        emph: true
+        image: assets/images/20261028_compare_418560_349066/hh3/01.jpg
+        card: {<<: *trendcard, highlight: 24/25}
+      - text: シティでの4つの季を足すと、ハーランドのプレミアの得点は112点。
+        image: assets/images/20261028_compare_418560_349066/h_city/01_w.jpg
+        card: none
+      - text: 出場は1万1037分。割ると、約99分ごとに1点を決めています。
+        image: assets/images/20261028_compare_418560_349066/h_city/01_w.jpg
+        card: none
+      - text: イサクはニューカッスルの3つの季で54点。出場6566分で、約122分に1点です。
+        image: assets/images/20261028_compare_418560_349066/w248/01_w.jpg
+        card: none
+      - text: リヴァプールに移った昨季、イサクのリーグ戦の出場は702分。
+        image: assets/images/20261028_compare_418560_349066/pair_b/01.jpg
+        card: none
+      - text: 2人を並べて比べるには、短い季でした。
+        image: assets/images/20261028_compare_418560_349066/pair_b/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/erling-haaland/leistungsdaten/spieler/418560
+      - https://www.transfermarkt.com/alexander-isak/leistungsdaten/spieler/349066
+
+  - id: pk
+    heading: PKを除くと、2024年から25年の2人の得点はどう並ぶのか
+    tier: 報道
+    telop: PKを除いた得点と、チームの点に占める割合
+    narrator: 解説
+    card: &pkcard
+      type: duel
+      left: {name: ハーランド, club: 24/25, photo: assets/images/20261028_compare_418560_349066/h_fra/01_sq.jpg, color: "#6cabdd"}
+      right: {name: イサク, club: 24/25, photo: assets/images/20261028_compare_418560_349066/i1/01_sq.jpg, color: "#c8102e"}
+      rows:
+        - [得点, "22", "23"]
+        - [PKの得点, "3", "4"]
+        - [PKを除いた得点, "19", "19"]
+        - [出場中のチームの得点, "58", "62"]
+        - [そのうち本人の点, 38%, 37%]
+      bars: [得点, PKを除いた得点, 出場中のチームの得点]
+      note: 24/25 のプレミアリーグだけ（Transfermarkt）。出場中のチームの得点は、本人がピッチにいたあいだにチームが決めた点。割合は自分で割った値
+    say:
+      - text: 23点と22点。ここからPKで決めた点を引いてみます。
+        image: assets/images/20261028_compare_418560_349066/h_mor/01_w.jpg
+        card: none
+      - text: PKの得点は、ハーランドが3、イサクが4でした。
+        image: assets/images/20261028_compare_418560_349066/hh3/01.jpg
+        card: {<<: *pkcard, highlight_row: PKの得点}
+      - text: 引くと、どちらも19点。PKを除けば、まったく同じ数です。
+        emph: true
+        image: assets/images/20261028_compare_418560_349066/w107/01.jpg
+        card: {<<: *pkcard, highlight_row: PKを除いた得点}
+      - text: 次に、本人がピッチにいたあいだに、チームが何点取ったかを見ます。
+        image: assets/images/20261028_compare_418560_349066/hh3/01.jpg
+        card: {<<: *pkcard, highlight_row: 出場中のチームの得点}
+      - text: シティは58点、ニューカッスルは62点。
+        image: assets/images/20261028_compare_418560_349066/w107/01.jpg
+        card: {<<: *pkcard, highlight_row: 出場中のチームの得点}
+      - text: そのうち本人が決めた割合は、38%と37%。ここも並んでいます。
+        image: assets/images/20261028_compare_418560_349066/pair_b/01.jpg
+        card: none
+      - text: 今季はどうか。2人とも、PKの得点はまだ0です。
+        image: assets/images/20261028_compare_418560_349066/w248/01_w.jpg
+        card: none
+      - text: 本人がいるあいだのチームの得点は、シティ20、リヴァプール11。
+        image: assets/images/20261028_compare_418560_349066/h_fra/01_w.jpg
+        card: none
+      - text: そのうち本人の点は、ハーランドが45%、イサクは約55%。
+        image: assets/images/20261028_compare_418560_349066/h_fra/01_w.jpg
+        card: none
+      - text: チームの点に占める重みは、今季はイサクのほうが大きいんです。
+        emph: true
+        image: assets/images/20261028_compare_418560_349066/w043/01_w.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/erling-haaland/leistungsdaten/spieler/418560
+      - https://www.transfermarkt.com/alexander-isak/leistungsdaten/spieler/349066
+
+  - id: now
+    heading: 今季のプレミア、1点を取るのに何分かかっているのか
+    tier: 報道
+    telop: 26/27 のいまの時点
+    narrator: 解説
+    card: &nowcard
+      type: duel
+      left: {name: ハーランド, club: 26/27, photo: assets/images/20261028_compare_418560_349066/h_fra/01_sq.jpg, color: "#6cabdd"}
+      right: {name: イサク, club: 26/27, photo: assets/images/20261028_compare_418560_349066/i1/01_sq.jpg, color: "#c8102e"}
+      rows:
+        - [試合, "8", "7"]
+        - [出場時間, 710分, 571分]
+        - [得点, "9", "6"]
+        - [1点にかかった時間, 約79分, 約95分]
+      bars: [出場時間, 得点]
+      lower: [1点にかかった時間]
+      note: 26/27 のプレミアリーグだけ（10月25日まで）。1点にかかった時間は自分で計算した値。イサクは900分に届かないので、いまの時点の数字
+    say:
+      - text: 今季のプレミアは、10月25日までで、ハーランドが8試合9点。
+        image: assets/images/20261028_compare_418560_349066/w107/01.jpg
+        card: {<<: *nowcard, highlight_row: 得点}
+      - text: イサクは7試合で6点。ここから点を積み上げています。
+        image: assets/images/20261028_compare_418560_349066/hh3/01.jpg
+        card: {<<: *nowcard, highlight_row: 試合}
+      - text: 出場時間を得点で割ると、ハーランドは約79分に1点。
+        emph: true
+        image: assets/images/20261028_compare_418560_349066/w107/01.jpg
+        card: {<<: *nowcard, highlight_row: 1点にかかった時間}
+      - text: イサクは約95分に1点です。
+        image: assets/images/20261028_compare_418560_349066/hh3/01.jpg
+        card: {<<: *nowcard, highlight_row: 1点にかかった時間}
+      - text: ただ、イサクの出場は571分。まだ季の序盤の数字です。
+        image: assets/images/20261028_compare_418560_349066/pair_b/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/erling-haaland/leistungsdaten/spieler/418560
+      - https://www.transfermarkt.com/alexander-isak/leistungsdaten/spieler/349066
+
+  - id: view
+    heading: 見立て・22点と23点の2人は、いまどちらが速く点を取っているのか
+    tier: 背景
+    viewpoint: true
+    narrator: 解説
+    telop: 数字の違いが示すもの
+    card: &viewcard
+      type: duel
+      left: {name: ハーランド, club: マンC, photo: assets/images/20261028_compare_418560_349066/h_fra/01_sq.jpg, color: "#6cabdd"}
+      right: {name: イサク, club: リヴァプール, photo: assets/images/20261028_compare_418560_349066/i1/01_sq.jpg, color: "#c8102e"}
+      rows:
+        - [24/25 の得点, "22", "23"]
+        - [24/25 の1点にかかった時間, 約125分, 約121分]
+        - [26/27 の1点にかかった時間, 約79分, 約95分]
+      lower: [24/25 の1点にかかった時間, 26/27 の1点にかかった時間]
+      bars: [24/25 の得点]
+      note: プレミアリーグだけ。1点にかかった時間は出場時間÷得点で、自分で計算した値。26/27 は10月25日まで
+    say:
+      - text: 見立てです。2024年から25年は、1点にかかった時間が約125分と約121分。
+        mark: {kind: circle, row: 1}
+        image: assets/images/20261028_compare_418560_349066/w107/01.jpg
+        card: {<<: *viewcard, highlight_row: 24/25 の1点にかかった時間}
+      - text: 4分の差で、ほぼ互角でした。
+        image: assets/images/20261028_compare_418560_349066/pair_b/01.jpg
+        card: none
+      - text: 今季は約79分と約95分。
+        image: assets/images/20261028_compare_418560_349066/hh3/01.jpg
+        card: {<<: *viewcard, highlight_row: 26/27 の1点にかかった時間}
+      - text: いまの速さでは、ハーランドが16分ほど早く1点に届いています。
+        emph: true
+        image: assets/images/20261028_compare_418560_349066/w107/01.jpg
+        card: {<<: *viewcard, highlight_row: 26/27 の1点にかかった時間}
+      - text: ただし、イサクも2季前より26分ほど速くなっています。
+        image: assets/images/20261028_compare_418560_349066/hh3/01.jpg
+        card: {<<: *viewcard, highlight_row: 26/27 の1点にかかった時間}
+      - text: 出場が増えれば、この差はまだ動きます。
+        image: assets/images/20261028_compare_418560_349066/w043/01_w.jpg
+        card: none
+      - text: 次のプレミア。シティは日本時間11月1日の0時に、ホームでブライトン戦。
+        image: assets/images/20261028_compare_418560_349066/h_city/01_w.jpg
+        card: none
+      - text: リヴァプールは、日本時間11月2日の未明に、ホームでアーセナル戦です。
+        image: assets/images/20261028_compare_418560_349066/pair_b/01.jpg
+        card: none
+      - text: 2季前に1点差だった背番号9の2人。今季の得点王争いでも並ぶのか、注目です。
+        image: assets/images/20261028_compare_418560_349066/pair_a/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/erling-haaland/leistungsdaten/spieler/418560
+      - https://www.transfermarkt.com/alexander-isak/leistungsdaten/spieler/349066
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/all/teams/382/schedule?fixture=true
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/all/teams/364/schedule?fixture=true

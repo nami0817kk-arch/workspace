@@ -1,0 +1,457 @@
+# 監督紹介：ファーガソン（10/29 木 13:00 予定、シリーズ「監督紹介」、key: manager_ferguson、型は news）。9節の型（2026-10-20 決定）。見本は 20261028_manager_wenger。
+# 順：フック→基礎DATA→日本との接点（基礎DATAの次）→歩みと転機→戦術の色（実例の試合1つ）→数字で見る→本人の言葉→マル秘話→見立て。
+#
+# **重なりの確認（2026-10-28 夜に自分で）**：scripts/*manager_*・research/covered.yaml・research/posted.json を grep。
+#   ファーガソン／Ferguson は posted.json・covered.yaml に 0件。scripts は脇役として名前が出るだけ（マンUのクラブ紹介・ユニフォーム・ベッカム・グアルディオラ・シメオネ・ブライトン）。
+#   既出の監督紹介：グアルディオラ・アンチェロッティ・モウリーニョ・クロップ・シメオネ・アルテタ・フリック・ベンゲル。research/20261029_* にほかの監督の回は無い。
+#
+# **いまの立場（確かめた）**：引退した監督（2026-10-20 決定「退任した監督も扱ってよい」）。
+#   ○ 英語版 Wikipedia「Alex Ferguson」（控え research/raw/20261029_ferguson_wiki.txt・_plain.txt、2026-10-28 取得）：
+#     冒頭「He retired from management at the end of the 2012–13 season, having won the Premier League in his final season.」
+#     生年月日 1941-12-31（存命の書き方）。2013-05-08 に引退を発表、最後の試合は 2013-05-19 ウェスト・ブロムウィッチ戦 5-5（通算1500試合目）。
+#     クラブのアンバサダーは 2024年10月に「季の終わりで退く」と発表（Wikipedia Charitable work 節）→ 台本では「2013年に監督を退いた」までにする。
+#   × マンU公式・プレミア公式のページは当たっていない（時間の都合）。
+#
+# **通算（台本とサムネをそろえる）**＝英語版 Wikipedia「Managerial record by team and tenure」：
+#   イースト・スターリングシャー 17試合 9勝2分6敗／セント・ミレン 169試合 74勝41分54敗／アバディーン 459試合 272勝105分82敗
+#   ／スコットランド代表 10試合 3勝4分3敗／マンチェスター・ユナイテッド 1500試合 895勝338分267敗 ＝合計 2155試合 1253勝 490分 412敗（表の Career Total）。
+#   勝率（自分で割った）：合計 1253/2155＝58.1%、セント・ミレン 43.8%、アバディーン 59.3%、マンU 59.7%。
+#   ※サムネの表は「ほか2つ」＝イースト・スターリングシャー17試合9勝＋スコットランド代表10試合3勝＝27試合12勝。
+#   タイトル：マンUで38（冒頭「he won 38 trophies」。Honours の内訳：リーグ13・FA杯5・リーグ杯4・チャリティ／コミュニティ・シールド10・CL2・カップウィナーズ杯1・スーパーカップ1・インターコンチネンタル杯1・クラブW杯1＝38、自分で足して一致）。
+#   アバディーン：リーグ3・スコットランド杯4・リーグ杯1・ドライブラ杯1・カップウィナーズ杯1・スーパーカップ1。
+#   「has won more trophies than any other manager in the history of football」（冒頭）→ 台本は「いちばん多いとされる」。
+#   イングランド1部の優勝13回は記録（「won the top division title in England a record 13 times」）。リーグ3連覇を2回（初の監督）。
+#   マンUのリーグ優勝の分布（自分で数えた）：就任から6季（1986-87〜1991-92）で0回、続く21季（1992-93〜2012-13）で13回。
+#
+# **基礎**：1941-12-31 スコットランド・グラスゴー生まれ（84歳）。選手としてはFW、スコットランド代表4試合。ダンファームリンで 1965-66 にスコットランド1部の得点王。
+#   1974 イースト・スターリングシャー → 1974〜78 セント・ミレン（2部優勝 1976-77）→ 1978〜86 アバディーン → 1985〜86 スコットランド代表（1986年W杯）→ 1986-11-06 マンU → 2013 引退。
+#   就任時のマンUは21位（22クラブ中）、その季は11位で終える。最初のタイトルは 1990年の FA カップ（クリスタル・パレスに再試合で1-0）。
+#   リーグ優勝は 1992-93、26年ぶり（「ended United's 26-year wait」）。マンUの監督で最も長い在任（2010-12-19 にバスビーを抜く）。
+#
+# **日本との接点（一次で確かめた範囲。サッカーの縁だけ）**：
+#   ・1999-11-30 インターコンチネンタル杯（東京・国立競技場、53,372人）パルメイラスに1-0、キーンの得点。イングランドのクラブで初めてで唯一（英語版 Wikipedia「1999 Intercontinental Cup」）。
+#   ・2008年12月 クラブワールドカップ（日本開催）：準決勝でガンバ大阪に5-3、決勝は12月21日 横浜でリガ・デ・キトに1-0（英語版 Wikipedia「2008 FIFA Club World Cup」。得点者は確かめていないので言わない）。
+#   ・香川真司（英語版 Wikipedia「Shinji Kagawa」）：2012-06-05 加入発表、クラブ初の日本人選手。2013-03-02 ノリッジ戦4-0でハットトリック、プレミアでアジアの選手初。
+#     2013-04-22 優勝を決めたヴィラ戦に出場、日本人で初めてプレミアの優勝。2013-05-12 ファーガソン最後のホームゲーム（スウォンジーに2-1）でマン・オブ・ザ・マッチ。
+#
+# **戦術の色**（英語版 Wikipedia「1999 UEFA Champions League final」・Ferguson の本文）：1999-05-26 バルセロナ、バイエルンに2-1。
+#   ベッカムを中央、ギグスを右で始め、シェリンガムをブロンクヴィストに替えて形を戻す。残り10分でスールシャールをコールに替える。
+#   ロスタイムに途中出場の2人が得点（シェリンガム、スールシャール）。3冠（リーグ・FA杯・CL）。
+#   本人の言葉①（延長に向けて準備を、と言ったマクラーレンに）「Steve, this game isn't finished.」
+#   本人の言葉②（直後のインタビュー）「I can't believe it. Football, bloody hell. But they never gave in and that's what won it.」
+#   ※「ファーギー・タイム」：1992-93 の大事な試合でブルースが97分に決勝点（Wikipedia 本文）。
+#
+# **マル秘話**：1987-88 のバミューダ遠征の親善試合で、ファーガソン自身がピッチに立った。マンUのトップチームでの唯一の出場（Wikipedia）。
+#   2011-11-05 北側スタンドが「サー・アレックス・ファーガソン・スタンド」に／2012-11-23 オールド・トラッフォードの外に像／最後の試合は 5-5（1500試合目）。
+#
+# **入れなかったもの**：家族・夫人の死去・健康（脳出血）・認知症の慈善活動・政治・競走馬の争い・ベッカムとの件・審判とのもめごと・ニュースの反応・女子・お金。
+date: 2026年10月29日
+slot: other_1
+format: news
+series: 監督紹介
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- ファーガソン
+- 香川真司
+theme:
+  end_bg: assets/images/20261029_manager_ferguson/05_w.jpg
+  id: manager_ferguson
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: ファーガソン
+  title: ファーガソン監督ってどんな人？26年でマンUに38のタイトル、何が違ったのか
+  question: 元マンチェスター・ユナイテッドのファーガソン監督は、どんな人なのか。26年でタイトルを38個取ったチームは、何が違ったのか
+  lead: 元マンチェスター・ユナイテッド監督、アレックス・ファーガソン。
+  opening_image: assets/images/20261029_manager_ferguson/03_w.jpg
+  takeaway: 通算2155試合1253勝、勝率58.1%。マンUでは1500試合895勝。リーグ優勝は就任から6季で0回、続く21季で13回。最初の優勝まで6季かかった監督を、クラブは待ち続けた
+  short_title: ファーガソン、マンUの26年と38のタイトル
+  nameplate: ファーガソン｜元マンチェスター・ユナイテッド監督
+thumbnail:
+  line1: ファーガソン、通算1253勝
+  line2: マンUで38冠、リーグ優勝13回
+  tags:
+  - マンチェスター・ユナイテッド
+  photo: assets/images/20261029_manager_ferguson/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261029_manager_ferguson/03_v.jpg
+sections:
+- id: hook
+  main: true
+  heading: 26年で38のタイトル。ファーガソンとは、どんな監督なのか
+  tier: 報道
+  telop: マンチェスター・ユナイテッドで1500試合、タイトル38
+  narrator: 解説
+  card: &hook_stats
+    type: stats
+    title: ファーガソンのマンチェスター・ユナイテッド（1986〜2013年）
+    items:
+    - ['1500', 試合, '']
+    - ['38', 個, タイトル]
+    - ['13', 回, イングランド1部の優勝]
+    focus: 1
+  say:
+  - text: 1つのクラブで26年、タイトルは38個。平均すると、1年に1つを超えます。
+    image: assets/images/20261029_manager_ferguson/03_w.jpg
+    emph: true
+    card: none
+  - text: マンチェスター・ユナイテッドを率いて、勝ったのは全試合の6割近く。
+    image: assets/images/20261029_manager_ferguson/05_w.jpg
+    card:
+      <<: *hook_stats
+      focus: 1
+  - text: イングランド1部の優勝13回は、いまも誰にも並ばれていない記録です。
+    card:
+      <<: *hook_stats
+      focus: 2
+  - text: 率いたのは、2013年に監督を退いたアレックス・ファーガソンです。
+    image: assets/images/20261029_manager_ferguson/05_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Alex_Ferguson
+- id: data
+  heading: ファーガソンは、いつ、どこで、どんな道を歩いた人か
+  tier: 報道
+  telop: ファーガソンの基礎DATA
+  narrator: 解説
+  card: &data_table
+    type: table
+    title: ファーガソン（84歳）の基礎DATA
+    columns: [項目, 中身]
+    rows:
+    - [生年月日, 1941年12月31日（スコットランド・グラスゴー）]
+    - [選手のころ, FW。スコットランド代表4試合]
+    - [監督, セント・ミレン → アバディーン → マンU]
+    - [マンU, 1986〜2013年の26年半]
+    - [いま, 2013年に監督を退く]
+    highlight_row: 0
+    source: 英語版Wikipedia
+  say:
+  - text: ファーガソンは1941年12月31日、スコットランドのグラスゴー生まれ。
+    image: assets/images/20261029_manager_ferguson/05_w.jpg
+    card:
+      <<: *data_table
+      highlight_row: 0
+  - text: 選手のころはフォワード。スコットランド1部で得点王になったこともあります。
+    card:
+      <<: *data_table
+      highlight_row: 1
+  - text: 監督の道は、スコットランドのセント・ミレンとアバディーン。
+    card:
+      <<: *data_table
+      highlight_row: 2
+  - text: そしてマンチェスター・ユナイテッドです。
+    card:
+      <<: *data_table
+      highlight_row: 2
+  - text: ユナイテッドの26年半は、クラブの歴代監督で最も長い指揮です。
+    image: assets/images/20261029_manager_ferguson/03_w.jpg
+    emph: true
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Alex_Ferguson
+- id: japan
+  heading: ファーガソンのチームは、日本で何を勝ち取ったのか
+  tier: 報道
+  telop: 東京と横浜で世界一。そして香川真司
+  narrator: 解説
+  card: &jp_table
+    type: timeline
+    title: ファーガソンと日本
+    rows:
+    - [1999年11月, 東京でパルメイラスに1対0]
+    - [2008年12月, ガンバ大阪に5対3、横浜で世界一]
+    - [2012年6月, 香川真司がクラブ初の日本人選手に]
+    - [2013年3月, 香川がアジアの選手で初のハットトリック]
+    focus: 0
+  say:
+  - text: ファーガソンと日本の縁は、2度の世界一です。
+    image: assets/images/20261029_manager_ferguson/03_w.jpg
+    card: none
+  - text: 1999年11月、東京の国立競技場。
+    image: assets/images/20261029_manager_ferguson/05_w.jpg
+    card:
+      <<: *jp_table
+      focus: 0
+  - text: 欧州と南米の王者が戦う大会で、パルメイラスを1対0で下しました。
+    card:
+      <<: *jp_table
+      focus: 0
+  - text: イングランドのクラブで、この大会を取ったのはユナイテッドだけです。
+    image: assets/images/20261029_manager_ferguson/03_w.jpg
+    card: none
+  - text: 2008年12月、舞台は日本のクラブワールドカップ。
+    card:
+      <<: *jp_table
+      focus: 1
+  - text: 準決勝でガンバ大阪と打ち合い、5対3で勝ちます。
+    emph: true
+    card:
+      <<: *jp_table
+      focus: 1
+  - text: 決勝は横浜で、エクアドルのリガ・デ・キトに1対0。2度目の世界一でした。
+    image: assets/images/20261029_manager_ferguson/01_w.jpg
+    card: none
+  - text: そして2012年、クラブで初めての日本人選手を迎えます。香川真司です。
+    image: assets/images/20261029_manager_ferguson/05_w.jpg
+    card:
+      <<: *jp_table
+      focus: 2
+  - text: 香川は翌年3月のノリッジ戦でハットトリック。
+    card:
+      <<: *jp_table
+      focus: 3
+  - text: プレミアリーグで、アジアの選手として初めてでした。
+    card:
+      <<: *jp_table
+      focus: 3
+  - text: その季に、日本人で初めてプレミアリーグの優勝を経験します。
+    image: assets/images/20261029_manager_ferguson/03_w.jpg
+    card: none
+  - text: ファーガソン最後のホームゲームでも、香川はマン・オブ・ザ・マッチを受けています。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/1999_Intercontinental_Cup
+  - https://en.wikipedia.org/wiki/2008_FIFA_Club_World_Cup
+  - https://en.wikipedia.org/wiki/Shinji_Kagawa
+- id: career
+  heading: 21位のクラブを継いだ監督は、どうやって勝ち始めたのか
+  tier: 背景
+  telop: 歩みと転機。1986年、21位のマンチェスター・ユナイテッドへ
+  narrator: 解説
+  card: &career_tl
+    type: timeline
+    title: ファーガソンの歩み
+    rows:
+    - [1983年, アバディーンでレアル・マドリードに勝ち欧州の大会を制す]
+    - [1986年11月, マンチェスター・ユナイテッドの監督に]
+    - [1990年, FAカップ。就任から初めてのタイトル]
+    - [1993年, 26年ぶりのリーグ優勝]
+    focus: 0
+  say:
+  - text: ファーガソンが名前を上げたのは、スコットランドのアバディーンです。
+    image: assets/images/20261029_manager_ferguson/02_w.jpg
+    card: none
+  - text: 1983年、各国のカップ王者が集まる欧州の大会で、決勝を制します。
+    card:
+      <<: *career_tl
+      focus: 0
+  - text: 相手はレアル・マドリード。2対1の勝ちでした。
+    image: assets/images/20261029_manager_ferguson/03_w.jpg
+    card: none
+  - text: 1986年11月、ユナイテッドの監督に。そのときチームは21位でした。
+    image: assets/images/20261029_manager_ferguson/02_w.jpg
+    emph: true
+    card:
+      <<: *career_tl
+      focus: 1
+  - text: 最初のタイトルは、就任から3年半たった1990年のFAカップです。
+    card:
+      <<: *career_tl
+      focus: 2
+  - text: そして1993年、クラブは26年ぶりにリーグで優勝しました。
+    image: assets/images/20261029_manager_ferguson/06_w.jpg
+    card:
+      <<: *career_tl
+      focus: 3
+  - text: ここから、2013年に退くまでの21季で、リーグ優勝は13回を数えます。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Alex_Ferguson
+- id: style
+  heading: ファーガソンのチームは、なぜ最後に点を取れたのか
+  tier: 報道
+  telop: 戦術の色。1999年、バイエルンとの決勝
+  narrator: 解説
+  card: &style_doc
+    type: document
+    label: 1999年5月26日 チャンピオンズリーグ決勝（バルセロナ）
+    paragraphs:
+    - 前半6分にバイエルンが先制。
+    - 交代で入ったシェリンガムとスールシャール。
+    - ロスタイムに、2人がそろって得点。2対1。
+    highlight:
+    - 交代で入った
+    - ロスタイムに
+  say:
+  - text: チームの色がよく出たのが、1999年5月のチャンピオンズリーグ決勝です。
+    image: assets/images/20261029_manager_ferguson/02_w.jpg
+    card: *style_doc
+  - text: 相手はバイエルン。開始6分に先制されます。
+    card: *style_doc
+  - text: ファーガソンは途中でシェリンガムを入れ、残り10分でスールシャールも入れました。
+    card: *style_doc
+  - text: ロスタイム、その2人が続けて決めて、2対1。逆転で勝ち切りました。
+    image: assets/images/20261029_manager_ferguson/03_w.jpg
+    emph: true
+    callword: 逆転
+    card: none
+  - text: リーグ、FAカップと合わせて3冠。最後まで攻める交代が、この監督の色でした。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/1999_UEFA_Champions_League_final
+  - https://en.wikipedia.org/wiki/Alex_Ferguson
+- id: numbers
+  heading: 通算2155試合、勝率はどこで上がったのか
+  tier: 報道
+  telop: 通算1253勝。勝率はセント・ミレン43.8%、アバディーン59.3%、マンU59.7%
+  narrator: 解説
+  card: &rate_bars
+    type: bars
+    title: ファーガソンの勝率（チームごと、%）
+    unit: '%'
+    items:
+    - label: セント・ミレン
+      value: 43.8
+    - label: アバディーン
+      value: 59.3
+    - label: マンU
+      value: 59.7
+      highlight: true
+  say:
+  - text: ファーガソンの成績を、数字で見ていきます。
+    image: assets/images/20261029_manager_ferguson/05_w.jpg
+    card: &total_stats
+      type: stats
+      title: ファーガソンの監督通算（1974〜2013年）
+      items:
+      - ['2155', 試合, 4クラブとスコットランド代表]
+      - ['1253', 勝, 引き分け490・負け412]
+      - ['58.1', '%', 勝率]
+      focus: 1
+  - text: 4つのクラブとスコットランド代表で2155試合、1253勝。勝率は58.1%です。
+    emph: true
+    card:
+      <<: *total_stats
+      focus: 1
+  - text: チームごとに見ると、セント・ミレンは169試合で74勝、43.8%。
+    image: assets/images/20261029_manager_ferguson/06_w.jpg
+    card: *rate_bars
+  - text: アバディーンで59.3%。ユナイテッドでも59.7%と、ほぼ同じ高さを保ちました。
+    card: *rate_bars
+  - text: 監督として取ったタイトルの数は、これまでのどの監督よりも多いとされています。
+    image: assets/images/20261029_manager_ferguson/03_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Alex_Ferguson
+- id: words
+  heading: 本人は、あの決勝の夜に何を口にしたのか
+  tier: 報道
+  telop: ファーガソンの言葉。1999年5月26日
+  narrator: 解説
+  card: &words_doc
+    type: document
+    label: ファーガソンの言葉（訳）
+    paragraphs:
+    - スティーヴ、この試合はまだ終わっていない。
+    - 信じられない。サッカーってやつは、まったく。
+    - でも、彼らは最後まであきらめなかった。それで勝ったんだ。
+    highlight:
+    - まだ終わっていない
+    - 最後まであきらめなかった
+  say:
+  - text: 本人の言葉です。同点に追いついた直後、コーチに延長の準備を勧められて。
+    image: assets/images/20261029_manager_ferguson/02_w.jpg
+    card: *words_doc
+  - voice: ファーガソン
+    text: スティーヴ、この試合はまだ終わっていない。
+    pause: 0.5
+  - text: そして逆転のすぐあと、インタビューでこう話しました。
+    image: assets/images/20261029_manager_ferguson/06_w.jpg
+    card: *words_doc
+  - voice: ファーガソン
+    text: 信じられない。サッカーってやつは、まったく。
+  - voice: ファーガソン
+    text: でも、彼らは最後まであきらめなかった。それで勝ったんだ。
+    cont: true
+    pause: 0.5
+  quotes_from:
+  - https://en.wikipedia.org/wiki/Alex_Ferguson
+  sources:
+  - https://en.wikipedia.org/wiki/Alex_Ferguson
+- id: secret
+  heading: 数字の外にある話。監督が自分でピッチに立った日
+  tier: 背景
+  telop: 自分で出た試合、名前の付いたスタンド、そして像
+  narrator: 解説
+  card: &sec_table
+    type: table
+    title: 数字の外にある話
+    columns: [いつ, 何があったか]
+    rows:
+    - [1987年から88年, バミューダ遠征の親善試合に本人が出場]
+    - [2011年11月, 北側のスタンドに本人の名前]
+    - [2012年11月, オールド・トラッフォードの外に像]
+    - [2013年5月, 最後の試合は5対5。1500試合目]
+    highlight_row: 0
+    source: 英語版Wikipedia
+  say:
+  - text: ここから、数字の外の話。
+    image: assets/images/20261029_manager_ferguson/02_w.jpg
+    card: none
+  - text: 1987年から88年のシーズン、バミューダへの遠征。
+    card:
+      <<: *sec_table
+      highlight_row: 0
+  - text: 親善試合に、ファーガソン本人が選手として出ています。
+    card:
+      <<: *sec_table
+      highlight_row: 0
+  - text: これが、ユナイテッドのトップチームでの、ただ1度の出場です。
+    emph: true
+    card:
+      <<: *sec_table
+      highlight_row: 0
+  - text: 2011年には、本拠地の北側のスタンドに、ファーガソンの名前が付きました。
+    image: assets/images/20261029_manager_ferguson/05_w.jpg
+    card: none
+  - text: 翌年には、スタジアムの外に像も建っています。
+    image: assets/images/20261029_manager_ferguson/06_w.jpg
+    card:
+      <<: *sec_table
+      highlight_row: 2
+  - text: 最後の試合は2013年5月。5対5の引き分けで、ちょうど1500試合目でした。
+    card:
+      <<: *sec_table
+      highlight_row: 3
+  sources:
+  - https://en.wikipedia.org/wiki/Alex_Ferguson
+- id: view
+  viewpoint: true
+  heading: 見立て・最初の6季で0回の監督は、なぜ13回勝てたのか
+  tier: 背景
+  telop: リーグ優勝は、就任から6季で0回、続く21季で13回
+  narrator: 解説
+  card: &view_table
+    type: table
+    title: 自分で数えてみた（ユナイテッドの27季）
+    columns: [時期, 季の数, リーグ優勝]
+    rows:
+    - [就任から（1986〜92年）, '6', '0']
+    - [そのあと（1992〜2013年）, '21', '13']
+    - [勝率（全1500試合）, 59.7%, 895勝]
+    highlight_row: 0
+  say:
+  - text: 見立てです。ユナイテッドの27季を、最初のリーグ優勝の前とあとで分けました。
+    image: assets/images/20261029_manager_ferguson/05_w.jpg
+    card: *view_table
+  - text: 就任からの6季で、リーグ優勝は0回。
+    card:
+      <<: *view_table
+      highlight_row: 0
+  - text: そのあとの21季では13回。ほぼ3季に2回の割合です。
+    emph: true
+    mark: {kind: circle, row: 1, col: 2}
+    card:
+      <<: *view_table
+      highlight_row: 1
+  - text: アバディーンでも、ユナイテッドでも、勝率は59%台。
+  - text: クラブが変わっても、勝ち方は崩れていません。
+    image: assets/images/20261029_manager_ferguson/03_w.jpg
+    card: none
+  - text: 6季待ったクラブと、応えたファーガソン。その我慢が26年の土台だと見ています。
+    image: assets/images/20261029_manager_ferguson/01_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Alex_Ferguson

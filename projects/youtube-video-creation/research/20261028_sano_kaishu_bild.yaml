@@ -1,0 +1,186 @@
+# 佐野海舟の取材メモ（2026年10月28日・ショートだけ・見せ方 X＝冒頭に強い一言）
+# 取材: 2026-10-28。requests で原文を全部読んだ。
+#   ・フットボールゾーン 2026-10-27「佐野海舟に“異例事態”『トップフォームにはない』　SD懸念…」
+#     https://www.football-zone.net/archives/681113 （独ビルトの報道を日本語で伝えたもの）。
+#     **ビルトの原文は読めていない**。引用は日本語の記事のまま（ドイツ語の原文と一語一句は確かめていない）。
+#     記事にあること: 過去2年で68試合中1回しか途中交代が無かったのに今季すでに3度目／夏にクリスタル・パレス移籍が迫り
+#     プライベートジェットまで用意／クラブが6000万ユーロを求めて3000万ユーロの申し出を拒否／「前シーズンのトップフォームにはない」／
+#     ブンガートSD「海舟が評価されるハードルは、今や信じられないほど高くなっている」／チーム関係者は過去2年の活躍を称え、取り戻すことを期待。
+#     市場価値の下落（Transfermarkt）・「自信を打ち砕いたのか」「頭の中が完全に自由ではない」は記事にあるが、**選手を小さく見せる言い方になるので使わない**。
+#   ・**日付の食い違い**: 記事は「現地10月26日・第9節のブレーメン戦」。ESPN の試合記録は 2026-10-24（土）でリーグ戦7試合目。
+#     どちらか確かめきれないので、**台本では日付も節も言わない**（「直前のリーグ戦」）。スコア 2-3 は両方一致。
+#   ・ESPN の試合記録（site.api.espn.com summary）で自分で数えた:
+#     今季の佐野の途中交代 = ハンブルク戦 88分（event 401884803）、レヴァークーゼン戦 81分（401884776）、ブレーメン戦 90+1分（401884757）の3回。
+#     リーグ戦7試合（パーダーボルン・ハンブルク・フランクフルト・ボルシアMG・レヴァークーゼン・シャルケ・ブレーメン）はすべて先発。
+#     ドイツカップ2回戦（2026-10-27、event 401917029）: ボーフム 2-0 マインツ。得点 46分ラスムッセン・75分ホフマン。
+#     佐野は先発で交代なし（最後まで）。川﨑颯太は84分から。ボーフムの三好康児は63分から。ボーフムは2部（ESPN の所属リーグ German 2. Bundesliga）。
+#     次の試合: 日本時間31日午前4時30分（現地30日）、アウェーのエルフェルスベルク戦（ESPN の ger.1 の日程）。
+# 重ならないように: 10/28 のシリーズ本編「マインツ紹介（bd_mainz）」は、佐野を「いまの中盤を支える」「リーグ戦7試合すべてに先発。アシスト2つ」と言い、
+#   写真は Commons の Kaishu Sano 2024 (cropped)。**その言い回しと写真は使わない**。アシストの数・順位・クラブの歴史も言わない。
+#   10/18 の佐野のショート（シャルケ戦・田中聡）の写真（Commons の日本対タイ）とも重ならない。
+# 本人の言葉: **無い**（作らない）。言葉はブンガートSD（クラブの役員）のものだけ → 型は X。
+# 反応: 探していない（0件。作らない）。
+# 写真: フットボールゾーンの記事の主写真（撮影 菅原敬太。代理店ではない）。04=2026-08-18、01=2026-09-06、03=2026-03-04、05=2026-04-11。どれもマインツのユニフォームで本人を目で確かめた。
+#   02（10/27 の記事の主写真。額に手を当てる）は、選手を小さく見せる絵に取られかねないので使わない。アフロ（picture alliance）の記事は落とした。
+#   どれも元が 900x600〜1200x800 で、縦に敷くと2.4〜3.2倍に伸びる（今季の試合の写真で大きいものは取れなかった。Commons は 429 で引けなかった）。
+# 確度: 評価・移籍の経緯は報道（ビルト→フットボールゾーンの1本）。交代の回数・カップ戦の結果は ESPN の試合記録で確かめた（確定）。
+slot: japan
+date: "2026年10月28日"
+format: news
+no_main: true
+people: [佐野海舟, マインツ, ブンガート, 川﨑颯太, 三好康児, ボーフム]
+
+short_style: X
+short_hook_word: 2年で1回→今季3回
+short_photos:
+  - assets/images/20261028_sano_kaishu_bild/13_v.jpg
+  - assets/images/20261028_sano_kaishu_bild/11_v.jpg
+  - assets/images/20261028_sano_kaishu_bild/12_v.jpg
+  - assets/images/20261028_sano_kaishu_bild/14_v.jpg
+
+short_question: 31日のエルフェルスベルク戦、佐野海舟は最後までピッチに立つと思いますか。
+short_hook: 佐野海舟、2年で1回だった途中交代が、今季はもう3回。
+short_telops:
+  - {match: 68試合, text: 過去2年/68試合で途中交代は1回}
+  - {match: 3回目, text: 今季の途中交代/すでに3回}
+  - {match: トップフォーム, text: 独ビルト/「前シーズンのトップフォームにはない」}
+  - {match: 6000万ユーロ, text: 夏の移籍/マインツは6000万ユーロを要求}
+  - {match: ハードル, text: ブンガートSD/「ハードルは信じられないほど高く」}
+  - {match: 0対2, text: ドイツカップ2回戦/ボーフム 2-0 マインツ}
+  - {match: 88分, text: 今季の交代/88分・81分・90分過ぎ}
+  - {match: エルフェルスベルク, text: 次は日本時間31日午前4時半/エルフェルスベルク戦}
+
+theme:
+  id: sano_kaishu_bild
+  league: germany
+  league_name: ブンデスリーガ
+  prefix: ""
+  title: 佐野海舟、2年で1回の途中交代が今季は3回。SDが語った「ハードル」
+  hook: ""
+  question: 佐野海舟に向けられた「ハードル」とは何か
+  takeaway: 佐野海舟の今季の途中交代3回は、どれも81分より後。リーグ戦は全試合で先発していて、SDの言う高いハードルは、過去2年の佐野自身が作った基準
+
+thumbnail:
+  line1: 佐野海舟に独紙の評価
+  line2: SDが語った「ハードル」
+  tags: [佐野海舟, マインツ]
+  layout: face
+  photo: assets/images/20261028_sano_kaishu_bild/04_w.jpg
+  short_photo: assets/images/20261028_sano_kaishu_bild/13_v.jpg
+
+answer: ブンガートSDは「海舟が評価されるハードルは、今や信じられないほど高くなっている」と話した。基準は過去2年の佐野自身
+watch: 日本時間31日午前4時半、エルフェルスベルク戦
+
+sections:
+  - id: what
+    main: true
+    heading: 2年で1回だった途中交代
+    tier: 報道
+    telop: 佐野海舟、今季の途中交代はすでに3回
+    say:
+      - text: マインツの日本代表、佐野海舟。
+        short_only: true
+        image: assets/images/20261028_sano_kaishu_bild/01_w.jpg
+        card: none
+      - text: 直前のリーグ戦、マインツはブレーメンに2対3で敗れました。
+        image: assets/images/20261028_sano_kaishu_bild/04_w.jpg
+        card: none
+      - text: 佐野は先発し、90分を過ぎたところで交代しています。
+        image: assets/images/20261028_sano_kaishu_bild/03_w.jpg
+        card: none
+      - text: 過去2年、佐野が途中で退いたのは、68試合でわずか1回です。
+        image: assets/images/20261028_sano_kaishu_bild/05_w.jpg
+        card: none
+      - text: その途中交代が、今季はもう3回目になりました。
+        image: assets/images/20261028_sano_kaishu_bild/01_w.jpg
+        card: none
+      - text: ドイツのビルトは、こう書いています。
+        image: assets/images/20261028_sano_kaishu_bild/04_w.jpg
+        card: none
+      - text: 前シーズンのトップフォームにはない。
+        voice: ビルト
+        image: assets/images/20261028_sano_kaishu_bild/03_w.jpg
+        card: none
+      - text: マインツの強化責任者、ブンガートSDの言葉です。
+        image: assets/images/20261028_sano_kaishu_bild/05_w.jpg
+        card: none
+      - text: 海舟が評価されるハードルは、
+        voice: ブンガートSD
+        image: assets/images/20261028_sano_kaishu_bild/01_w.jpg
+        card: none
+      - text: 今や信じられないほど高くなっている。
+        voice: ブンガートSD
+        cont: true
+        image: assets/images/20261028_sano_kaishu_bild/04_w.jpg
+        card: none
+      - text: 背景にあるとされるのが、この夏の移籍話です。
+        image: assets/images/20261028_sano_kaishu_bild/03_w.jpg
+        card: none
+      - text: クリスタル・パレスへの移籍が迫り、専用機まで用意されていました。
+        image: assets/images/20261028_sano_kaishu_bild/05_w.jpg
+        card: none
+      - text: マインツは6000万ユーロを求め、3000万ユーロの申し出を断りました。
+        image: assets/images/20261028_sano_kaishu_bild/01_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.football-zone.net/archives/681113
+      - https://www.football-zone.net/archives/671359
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/all/summary?event=401884757
+
+  - id: cup
+    heading: 火曜のドイツカップ
+    tier: 報道
+    telop: ドイツカップ2回戦、マインツは2部のボーフムに0対2
+    say:
+      - text: そして火曜のドイツカップ2回戦。
+        image: assets/images/20261028_sano_kaishu_bild/04_w.jpg
+        card: none
+      - text: マインツは2部のボーフムに0対2で敗れ、大会を去りました。
+        image: assets/images/20261028_sano_kaishu_bild/03_w.jpg
+        card: none
+      - text: 佐野は先発し、交代せずに90分を戦いました。
+        image: assets/images/20261028_sano_kaishu_bild/05_w.jpg
+        card: none
+      - text: 川﨑颯太は、84分から入っています。
+        image: assets/images/20261028_sano_kaishu_bild/01_w.jpg
+        card: none
+      - text: ボーフムには三好康児。63分から出場し、終盤は日本人3人が同じピッチにいました。
+        image: assets/images/20261028_sano_kaishu_bild/04_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/all/summary?event=401917029
+
+  - id: view
+    viewpoint: true
+    heading: 佐野海舟の交代、数字で見ると
+    tier: 報道
+    telop: 今季の交代3回は、どれも81分より後
+    say:
+      - text: 今季の3回の交代は、88分、81分、90分過ぎ。
+        image: assets/images/20261028_sano_kaishu_bild/03_w.jpg
+        card: none
+      - text: 過去2年の1回と比べれば多くても、どれも試合の終盤でした。
+        image: assets/images/20261028_sano_kaishu_bild/05_w.jpg
+        card: none
+      - text: リーグ戦では、先発から外れた試合がまだありません。
+        image: assets/images/20261028_sano_kaishu_bild/01_w.jpg
+        card: none
+      - text: 見立てとしては、SDの言う高いハードルは、過去2年の佐野自身が作った基準です。
+        image: assets/images/20261028_sano_kaishu_bild/04_w.jpg
+        card: none
+      - text: 次は日本時間31日午前4時半、アウェーのエルフェルスベルク戦です。
+        image: assets/images/20261028_sano_kaishu_bild/03_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/all/summary?event=401884803
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/all/summary?event=401884776
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/scoreboard?dates=20261030
+      - https://www.football-zone.net/archives/680809
+      - https://www.football-zone.net/archives/680836
+      - https://www.football-zone.net/archives/674280
+      - https://www.football-zone.net/archives/671324
+      - https://www.football-zone.net/archives/669195
+short_title: "佐野海舟、2年で1回の途中交代が今季は3回。SDが語った「ハードル」"

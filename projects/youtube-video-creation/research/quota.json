@@ -438,5 +438,19 @@
     "playlistItems.insert": 10,
     "videos.list": 1,
     "commentThreads.insert": 1
+  },
+  "2026-10-27": {
+    "channels.list": 20,
+    "playlistItems.list": 20,
+    "videos.insert": 20,
+    "thumbnails.set": 20,
+    "playlistItems.insert": 10
+  },
+  "2026-10-28": {
+    "channels.list": 10,
+    "playlistItems.list": 10,
+    "videos.insert": 10,
+    "thumbnails.set": 10,
+    "playlistItems.insert": 10
   }
 }

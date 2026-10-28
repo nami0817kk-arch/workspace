@@ -1,0 +1,395 @@
+# クラブの財政：ベンフィカ（10/28 水、シリーズ「クラブの財政」、key: finance_benfica、型は news）。
+#
+# 題材の選び方：デロイト Football Money League 2026（2024/25）の順で、財政の回をまだ出していないクラブ。1〜18位は既出（18位シュツットガルトは 10/27）。19位がベンフィカ。
+#   重なりの確認（10/28）：scripts/*finance_* に benfica は無い。research/posted.json の benfica は 20260917_benfica（ミラン戦の勝利のニュース。30日より前・財政ではない）だけ。
+#   covered.yaml の benfica は 2026-09 のミラン戦（benfica_first_win_milan）と 10/11 の記録の解説（リーグ29連勝）。どちらも財政の数字は使っていない。
+#   10/23 の監督紹介（モウリーニョ）にベンフィカが出るが、こちらは監督の話をしない。
+#   ★今季も1部：英語版 Wikipedia「2026–27 S.L. Benfica season」「its 93rd consecutive season in the top flight of Portuguese football. Domestically, Benfica plays in the Primeira Liga ... In Europe, Benfica plays in the UEFA Europa League.」（ポルトガル1部は欧州7リーグに入る）
+#
+# 軸は「**選手の売り買いを除いた本業の損益が、7シーズンぶりに黒字。支えた収入は何か**」＋「**5大リーグの外で、デロイトの上位20に入ったのはベンフィカだけ**」。
+#   答え：本業の収入（選手の売り買いを除く）は2億3060万ユーロで過去最高（+30.6%）。チャンピオンズリーグの賞金7280万（クラブ史上2番目）と、クラブワールドカップの収入2190万。
+#     デロイトの内訳でも、1年で増えた5940万ユーロのうち約76%（4500万）が放映権（大会の賞金・分配金はここに入る）。
+#   ★他の財政回の軸（10/27 シュツットガルト＝伸び率上位20で1位・増えた分の53%が放映権、ほか 20 本）を繰り返さない。シュツットガルトと同じ「増えた分の内訳」は1節にとどめ、
+#     主役は「本業の黒字が7シーズンぶり」「5大リーグの外で唯一」「選手の売却が無ければ届かなかった最終の黒字」に置く。
+#   ★日本との接点：財政の数字には無い。無理に入れない（10/6 の決定）。
+#   ★選手個人の名前・移籍金の額は出さない。監督の話はしない。女子の話はしない（費用の内訳に女子チームの初年度の費用が入るが、触れない）。会員総会での決算の承認の話（票決）はしない。
+#   ★アルファベット（SAD・UEFA・FIFA）は読み上げに出さない。「サッカー部門の会社」と言う。
+#
+# **決算期**：ベンフィカのサッカー部門の会社（Sport Lisboa e Benfica – Futebol, SAD）は7月〜6月で決算。デロイトの 2024/25 と同じ期間。
+#   ただしデロイトの収入（2億8340万）と会社の「本業の収入」（2億3060万）は数え方が違う（デロイトは独自に調整した集計）。台本では2つを並べて足し引きしない。
+#
+# **出どころ（読んだもの）**
+#   ○ デロイト Football Money League 2026（2024/25）一次ページ（deloitte.com UK、2026-10-28 に requests で本文を取得）
+#       https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
+#       「FIFA Club World Cup clubs have strong representation in this year’s Money League, with ten of this year’s clubs having participated. This includes SL Benfica, resulting in the Portuguese club featuring for the first time since 2005/06,
+#        being the first non ‘big five’ league entrant since 2020/21 (Zenit St. Petersburg).」
+#       「Broadcast revenue includes prize money and distributions from participation in domestic leagues, cups, UEFA / other continental club competitions and the FIFA Club World Cup.」
+#       上位20の一覧（18. VFB Stuttgart／19. SL Benfica／20. West Ham United）。ほかの19クラブはどれも5大リーグ → 5大リーグの外はベンフィカだけ。
+#     ページ内の図（e.infogram.com、requests で取得。2026-10-28）
+#       ベンフィカ https://e.infogram.com/_/xL2moocoV7lCH6HDlbkj ：「2025 Revenue €283.4m (2024: €224m)」「Change on previous year +27% (+€59.4m)」「DFML position 19」「Liga Primeira 2nd」「UEFA Champions League R16」
+#         「REVENUE 2021-2025 (€m)」（Matchday／Broadcast／Commercial／Wages）：2021 20/66/34/124、2022 42/114/45/143、2023 52/126/55/174、2024 55/103/66/144、2025 63/148/72/157
+#       シュツットガルト（18位）€296.3m（10/27 の取材メモ、同じ図）
+#   ○ ベンフィカのサッカー部門の会社の発表（2025-09-09、2024/25 の決算。クラブ公式の PDF、requests で取得・pypdf で本文を読んだ）
+#       https://media.slbenfica.pt/-/media/BenficaDP/Images/Instituicao/SAD/informacao-privilegiada/2025/ComunicadoResultadosBenficaSAD2425.pdf
+#       「O resultado líquido positivo de 34,4 milhões de euros, representando um crescimento de 65,8 milhões de euros face ao período homólogo」
+#       「O resultado operacional sem direitos de atletas ascende a um valor positivo de 3,9 milhões de euros, o que equivale a uma melhoria de 32,2 milhões de euros face ao período homólogo – primeiro resultado positivo após sete épocas (desde 2017/18)」
+#       「Os rendimentos operacionais sem direitos de atletas atingem os 230,6 milhões de euros, representando um crescimento de 30,6% face ao exercício anterior – valor mais elevado de sempre da Benfica SAD.
+#        ... sendo de destacar a performance na Liga dos Campeões, a participação no Mundial de Clubes e o crescimento em 17,6% das receitas associadas ao Matchday」
+#       「Os prémios obtidos com a participação na Liga dos Campeões ascenderam a 72,8 milhões de euros, o 2.º melhor resultado de sempre, apenas ultrapassado pelos 74,3 milhões de euros alcançados em 2022/23」
+#       「As receitas líquidas geradas pelo Mundial de Clubes corresponderam a 21,9 milhões de euros」
+#       表（千ユーロ）：純損益 34 444（前年 −31 360）、本業の損益（選手の売り買いを除く）3 871（−28 251）、本業の収入 230 618（176 564）、本業の費用 −226 747（−204 815）、選手の売り買いの損益 46 739（13 457）
+#       「Os gastos operacionais sem direitos de atletas equivalem a um montante de 226,7 milhões de euros, correspondendo a um aumento de 21,9 milhões de euros」
+#       「A dívida líquida ascende a um valor de 196,9 milhões de euros ... face aos 201,8 milhões de euros」
+#       「Nos primeiros meses do exercício de 2025/26, a Benfica SAD garantiu o acesso à fase de liga da Liga dos Campeões.」
+#   ○ 英語版 Wikipedia「2026–27 S.L. Benfica season」（上の引用。ポルトガル1部・ヨーロッパリーグ）
+#   × 確かめられなかったもの：デロイトの集計と会社の決算の差の中身、2005-06 の順位と額、2025-26 シーズンの決算（未発表）、クラブワールドカップの成績ごとの賞金の内訳。
+#     「4500万の放映権の増えのうち、クラブワールドカップがいくらか」はデロイトが分けていないので言わない。
+#
+# 自分で計算した数（検算済み）
+#   デロイト：283.4−224.0＝59.4 ✓、59.4÷224.0＝26.5%→27% ✓
+#   内訳の合計（丸めた値）：2024: 55+103+66＝224 ✓ ／ 2025: 63+148+72＝283 ✓
+#   増減：放映権 148−103＝+45、試合日 63−55＝+8、商業 72−66＝+6、計 +59 ✓。放映権の割合 45÷59＝76.3%→約76%（4分の3を少し超える）
+#   放映権の倍率 148÷103＝1.44→約1.4倍。収入に占める放映権 148÷283＝52.3%→約52%
+#   人件費の比率 157÷283.4＝55.4%→約55%（前の年 144÷224＝64.3%→約64%）
+#   5年：120、201、233、224、283。283÷120＝2.36→約2.4倍。2023-24 は 233→224 で減った（放映権 126→103）
+#   シュツットガルトとの差：296.3−283.4＝12.9（1290万ユーロ）
+#   会社：本業の収入 230.6−176.6＝54.1（+30.6%：54.054÷176.564＝30.6% ✓）、本業の費用 226.7−204.8＝21.9、本業の損益 230.6−226.7＝3.9 ✓、前の年 176.6−204.8＝−28.3（千ユーロで −28 251）✓
+#   純損益 34.4 のうち選手の売り買いの損益 46.7。もし売り買いの損益が0なら：34.4−46.7＝−12.3（税・金融費用を同じとみなした、ざっくりの引き算。台本では「選手の売り買いの利益が、最終の黒字より大きい」とだけ言う）
+#   チャンピオンズリーグ賞金 72.8 ÷ 本業の収入 230.6＝31.6%→約3割
+#
+# 写真：assets/images/20261028_finance_benfica/（Commons、出典は credits.json）。01・02・06 は内部、03 はポルト戦の前の観客席、04 は外観、05 は上空から。
+date: 2026年10月28日
+slot: other_1
+format: news
+series: クラブの財政
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- ベンフィカ
+theme:
+  end_bg: assets/images/20261028_finance_benfica/04_w.jpg
+  id: finance_benfica
+  # league は集計の鍵で portugal が無いので england を置き、中身は league_name で上書きする（10/11 の記録の回と同じ）
+  league: england
+  league_name: ポルトガル1部
+  kind: other
+  topic: ベンフィカ
+  title: ベンフィカ、選手の売り買い抜きで7シーズンぶりの黒字。支えた収入は？
+  question: ベンフィカは、選手の売り買いを除いた本業の損益で、2024-25に7シーズンぶりの黒字になった。デロイトの収入ランキングでも、5大リーグの外からただ1つ上位20に入った。その黒字を支えた収入は何か
+  lead: 5大リーグの外から、ただ1つ、世界の収入ランキングの上位20へ。ベンフィカ。
+  opening_image: assets/images/20261028_finance_benfica/03_w.jpg
+  takeaway: ベンフィカのサッカー部門の会社の2024-25の決算で、選手の売り買いを除いた本業の損益は387万ユーロの黒字（前の年は2825万ユーロの赤字）。黒字は7シーズンぶりだった。本業の収入は2億3060万ユーロで過去最高（30.6%増）。支えたのはチャンピオンズリーグの賞金7280万ユーロ（クラブ史上2番目）と、クラブワールドカップの収入2190万ユーロ。デロイトの集計でも、収入は2億8340万ユーロで世界19位（27%増）、5大リーグの外で上位20に入ったのはベンフィカだけ。増えた約5900万ユーロのうち約76%が放映権（大会の賞金を含む、自分で割った数）。最終の黒字3440万ユーロは、選手の売り買いの利益4670万ユーロより小さい
+  short_title: ベンフィカ、7シーズンぶりの本業の黒字
+thumbnail:
+  layout: number
+  crest_pos: right
+  photo: assets/images/20261028_finance_benfica/01_w.jpg
+  number: 7季ぶり黒字
+  line1: ベンフィカの本業
+  line2: 支えた収入は何か
+  callouts: [世界19位]
+  tags:
+  - ベンフィカ
+  - ポルトガル1部
+  - クラブの財政
+  - デロイト
+sections:
+- id: rank
+  heading: ベンフィカは、世界で何番目に稼ぐクラブなのか
+  tier: 報道
+  telop: 2024-25は世界19位。収入は2億8340万ユーロ、1年で27%増
+  narrator: 解説
+  card: &rank_stats
+    type: stats
+    title: デロイトの収入ランキング（2024-25）
+    items:
+    - ['19', 位, 世界の順位]
+    - ['2.83', 億ユーロ, 1年の収入]
+    - ['+27', '%', 前の年からの伸び]
+    focus: 0
+  say:
+  - text: 収入の大きい順に、世界のクラブを並べた一覧。会計事務所デロイトの集計です。
+    image: assets/images/20261028_finance_benfica/03_w.jpg
+    card: none
+  - text: 2024年から25年のシーズン、ベンフィカは19位でした。
+    card: *rank_stats
+  - text: 収入は、2億8340万ユーロ。前の年から、27%増えています。
+    emph: true
+    card:
+      <<: *rank_stats
+      focus: 1
+  - text: 上位20のうち、ほかの19クラブは、すべて5大リーグのクラブ。
+    image: assets/images/20261028_finance_benfica/04_w.jpg
+    card: none
+  - text: 5大リーグの外から入ったのは、ベンフィカだけです。
+    emph: true
+    card: none
+  - text: 5大リーグの外からは、2020年から21年のロシアのゼニト以来。
+    card: none
+  - text: ベンフィカ自身は、2005年から06年のシーズン以来の20位以内でした。
+    card: none
+  sources:
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
+  - https://e.infogram.com/_/xL2moocoV7lCH6HDlbkj
+- id: profit
+  main: true
+  heading: 選手の売り買いを除くと、黒字だったのか
+  tier: 報道
+  telop: 選手の売り買いを除いた本業で、387万ユーロの黒字。7シーズンぶり
+  narrator: 解説
+  card: &op_table
+    type: table
+    title: サッカー部門の会社の決算（7月〜6月、選手の売り買いを除く、百万ユーロ）
+    columns: [年, 本業の収入, 本業の損益]
+    rows:
+    - [2023-24, '176.6', '−28.3']
+    - [2024-25, '230.6', '+3.9']
+    highlight_row: 1
+  say:
+  - text: 世界の収入ランキングで19位のベンフィカ。その決算を、本業に絞って見ます。
+    image: assets/images/20261028_finance_benfica/01_w.jpg
+    card: none
+    short_only: true
+  - text: ベンフィカのサッカー部門の会社は、決算の区切りが7月から6月です。
+    image: assets/images/20261028_finance_benfica/01_w.jpg
+    card: none
+  - text: 選手を売ったり買ったりしたお金を、いったん外して見ます。
+    card: none
+  - text: 2023年から24年は、本業で2825万ユーロの赤字でした。
+    card:
+      <<: *op_table
+      highlight_row: 0
+  - text: 2024年から25年は、387万ユーロの黒字。
+    emph: true
+    card: *op_table
+  - text: 会社の発表では、黒字は7シーズンぶりです。
+    card: &op_doc
+      type: document
+      label: ベンフィカのサッカー部門の会社 決算の発表（2025年9月、訳）
+      paragraphs:
+      - 選手の売り買いを除いた本業の損益は、プラス390万ユーロ。前の年から3220万ユーロ良くなった。7シーズンぶりの黒字だ。
+      - 選手の売り買いを除いた本業の収入は2億3060万ユーロで、30.6%増えた。会社として過去最高の額だ。
+      highlight: [7シーズンぶりの黒字, 過去最高]
+  - text: 本業の収入は、2億3060万ユーロ。1年で30.6%増えて、過去最高でした。
+    card: *op_doc
+  - text: 押し上げたのは、チャンピオンズリーグとクラブワールドカップのお金です。
+    card: none
+    short_only: true
+  sources:
+  - https://media.slbenfica.pt/-/media/BenficaDP/Images/Instituicao/SAD/informacao-privilegiada/2025/ComunicadoResultadosBenficaSAD2425.pdf
+- id: prize
+  heading: 収入を押し上げた、2つの大会はどれか
+  tier: 報道
+  telop: チャンピオンズリーグの賞金7280万、クラブワールドカップの収入2190万ユーロ
+  narrator: 解説
+  card: &prize_stats
+    type: stats
+    title: 2024-25 大会から入ったお金（百万ユーロ）
+    items:
+    - ['72.8', 百万ユーロ, チャンピオンズリーグの賞金]
+    - ['74.3', 百万ユーロ, 過去最高（2022-23）]
+    - ['21.9', 百万ユーロ, クラブワールドカップの収入]
+    focus: 0
+  say:
+  - text: 収入を押し上げた1つ目は、チャンピオンズリーグです。
+    image: assets/images/20261028_finance_benfica/02_w.jpg
+    card: none
+  - text: このシーズン、ベンフィカはベスト16まで勝ち進みました。
+    card: none
+  - text: 賞金は、7280万ユーロ。
+    emph: true
+    card: *prize_stats
+  - text: 2022年から23年の、7430万ユーロに次ぐ、クラブ史上2番目の額です。
+    card:
+      <<: *prize_stats
+      focus: 1
+  - text: 2つ目は、2025年の夏に、アメリカで開かれたクラブワールドカップ。
+    image: assets/images/20261028_finance_benfica/05_w.jpg
+    card: none
+  - text: この大会からの収入は、2190万ユーロ。
+    card:
+      <<: *prize_stats
+      focus: 2
+  - text: 参加の費用や税などを引いた、利益への効果は、1710万ユーロです。
+    card: none
+  sources:
+  - https://media.slbenfica.pt/-/media/BenficaDP/Images/Instituicao/SAD/informacao-privilegiada/2025/ComunicadoResultadosBenficaSAD2425.pdf
+  - https://e.infogram.com/_/xL2moocoV7lCH6HDlbkj
+- id: split
+  heading: ベンフィカの収入で、いちばん伸びた柱は何か
+  tier: 報道
+  telop: 1年で増えた5900万ユーロのうち、放映権が4500万
+  narrator: 解説
+  card: &rev_wf
+    type: waterfall
+    title: ベンフィカの収入の増減（デロイト、百万ユーロ）
+    start: [2023-24, 224]
+    steps:
+    - [放映権, 45]
+    - [試合日, 8]
+    - [スポンサー・商業, 6]
+    total: [2024-25, 283]
+    unit: 百万ユーロ
+    highlight: 放映権
+  say:
+  - text: デロイトの集計で、ベンフィカの同じ1年を、3つの柱に分けてみます。
+    image: assets/images/20261028_finance_benfica/06_w.jpg
+    card: *rev_wf
+  - text: テレビの放映権は、1億300万から、1億4800万ユーロへ。
+    emph: true
+    card: *rev_wf
+  - text: デロイトは、大会の賞金や分配金を、この放映権に数えています。
+    card: *rev_wf
+  - text: 試合の日の収入は、5500万から6300万ユーロ。
+    card:
+      <<: *rev_wf
+      highlight: 試合日
+  - text: スポンサーやグッズの商業収入は、6600万から7200万ユーロへ。
+    card:
+      <<: *rev_wf
+      highlight: スポンサー・商業
+  sources:
+  - https://e.infogram.com/_/xL2moocoV7lCH6HDlbkj
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
+- id: history
+  heading: 5年前の収入は、いくらだったのか
+  tier: 報道
+  telop: 2020-21は1億2000万ユーロ。4年で約2.4倍
+  narrator: 解説
+  card: &hist_line
+    type: line
+    title: ベンフィカの収入（デロイト、百万ユーロ）
+    x: [2020-21, 2021-22, 2022-23, 2023-24, 2024-25]
+    series:
+    - [収入, [120, 201, 233, 224, 283]]
+    - [放映権, [66, 114, 126, 103, 148]]
+    unit: 百万ユーロ
+    focus: 収入
+    highlight: 2024-25
+  say:
+  - text: では、5年前のベンフィカは、どうだったのか。
+    image: assets/images/20261028_finance_benfica/04_w.jpg
+    card: none
+  - text: 2020年から21年のシーズン、ベンフィカの収入は1億2000万ユーロ。
+    card:
+      <<: *hist_line
+      highlight: 2020-21
+  - text: その後、2億100万、2億3300万と伸びます。
+    card:
+      <<: *hist_line
+      highlight: 2022-23
+  - text: ところが2023年から24年は、2億2400万ユーロに下がりました。
+    card:
+      <<: *hist_line
+      highlight: 2023-24
+  - text: チャンピオンズリーグの賞金などが入る、放映権が減った年です。
+    card:
+      <<: *hist_line
+      highlight: 2023-24
+  - text: 2024年から25年は、一気に2億8300万ユーロ。4年で、約2.4倍です。
+    emph: true
+    card: *hist_line
+  sources:
+  - https://e.infogram.com/_/xL2moocoV7lCH6HDlbkj
+- id: net
+  heading: 最後に残った利益は、どこから来たのか
+  tier: 報道
+  telop: 最終の黒字は3440万ユーロ。選手の売り買いの利益は4670万ユーロ
+  narrator: 解説
+  card: &net_table
+    type: table
+    title: サッカー部門の会社の決算（百万ユーロ）
+    columns: [項目, 2023-24, 2024-25]
+    rows:
+    - [最終の損益, '−31.4', '+34.4']
+    - [選手の売り買いの損益, '+13.5', '+46.7']
+    - [借り入れなどを引いた負債, '201.8', '196.9']
+    highlight_row: 0
+  say:
+  - text: では、選手の売り買いも入れた、ベンフィカの最後の損益はどうか。
+    image: assets/images/20261028_finance_benfica/03_w.jpg
+    card: none
+  - text: 2023年から24年は、3136万ユーロの赤字。
+    card: *net_table
+  - text: 2024年から25年は、3444万ユーロの黒字に変わりました。
+    emph: true
+    card: *net_table
+  - text: ただ、選手の売り買いで出た利益は、4674万ユーロ。
+    card:
+      <<: *net_table
+      highlight_row: 1
+  - text: 最後の黒字よりも、選手の売り買いの利益のほうが大きいのです。
+    card:
+      <<: *net_table
+      highlight_row: 1
+  - text: 借り入れから手元のお金を引いた負債は、1億9690万ユーロ。
+    image: assets/images/20261028_finance_benfica/01_w.jpg
+    card:
+      <<: *net_table
+      highlight_row: 2
+  - text: 前の年の2億180万ユーロより、少し減りました。
+    card:
+      <<: *net_table
+      highlight_row: 2
+  sources:
+  - https://media.slbenfica.pt/-/media/BenficaDP/Images/Instituicao/SAD/informacao-privilegiada/2025/ComunicadoResultadosBenficaSAD2425.pdf
+- id: view
+  viewpoint: true
+  heading: 見立て・本業の黒字は、大会の賞金にどれだけ支えられたのか
+  tier: 背景
+  telop: 増えた収入の約76%が放映権。人件費は収入の約55%
+  narrator: 解説
+  card: &view_table
+    type: table
+    title: 自分で割ってみた（デロイト、2024-25）
+    columns: [比べ, 答え]
+    rows:
+    - [増えた収入のうち放映権, 約76%]
+    - [人件費 ÷ 収入（前の年は約64%）, 約55%]
+    - [18位シュツットガルトとの差, 1290万ユーロ]
+    highlight_row: 0
+  say:
+  - text: ここからは見立てです。デロイトの数字を、自分で割ってみます。
+    image: assets/images/20261028_finance_benfica/02_w.jpg
+    card: none
+  - text: 増えた5900万ユーロの約76%が、放映権の分。4分の3を少し超えます。
+    emph: true
+    mark:
+      kind: circle
+      row: 0
+      col: 1
+    card: *view_table
+  - text: 人件費は、収入の約55%。前の年の約64%から下がりました。
+    mark:
+      kind: circle
+      row: 1
+      col: 1
+    card:
+      <<: *view_table
+      highlight_row: 1
+  - text: 18位のシュツットガルトとは、1290万ユーロの差です。
+    card:
+      <<: *view_table
+      highlight_row: 2
+  - text: 題への答えです。
+    image: assets/images/20261028_finance_benfica/04_w.jpg
+    card: none
+  - text: 本業の黒字を支えたのは、2つの大会でした。
+    emph: true
+    card: none
+  - text: チャンピオンズリーグの賞金と、クラブワールドカップの収入です。
+    card: none
+  - text: ただ、クラブワールドカップは、毎年ある大会ではありません。
+    card: none
+  - text: 2025年から26年も、ベンフィカはチャンピオンズリーグに出ました。
+    image: assets/images/20261028_finance_benfica/06_w.jpg
+    card: none
+  - text: 今季は、ヨーロッパリーグを戦っています。
+    card: none
+  - text: 大会の賞金が変わる年に、本業の黒字を保てるか。次の決算で見えてきます。
+    card: none
+  sources:
+  - https://e.infogram.com/_/xL2moocoV7lCH6HDlbkj
+  - https://e.infogram.com/_/fgWl5rYPPa4Tc2ZPewVF
+  - https://media.slbenfica.pt/-/media/BenficaDP/Images/Instituicao/SAD/informacao-privilegiada/2025/ComunicadoResultadosBenficaSAD2425.pdf
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_S.L._Benfica_season

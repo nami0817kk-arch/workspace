@@ -1,0 +1,475 @@
+# 監督紹介：ベンゲル（10/28 水、シリーズ「監督紹介」、key: manager_wenger、型は news）。9節の型（2026-10-20 決定）。見本は 20261027_manager_flick。
+# 順：フック→基礎DATA→日本との接点（基礎DATAの次）→歩みと転機→戦術の色（実例の試合1つ）→数字で見る→本人の言葉→マル秘話→見立て。
+#
+# **重なりの確認（2026-10-28 に自分で）**：scripts/・research/covered.yaml・research/posted.json を grep。
+#   ベンゲル／ヴェンゲル／Wenger は posted.json・covered.yaml に 0件。scripts は脇役として名前が出るだけ（アーセナルのクラブ紹介・エミレーツ・アルテタ・アンリ・稲本のレジェンド・トルシエ・グアルディオラ・シメオネ）。
+#   既出の監督紹介：グアルディオラ・アンチェロッティ・モウリーニョ・クロップ・シメオネ・アルテタ・フリック。ルイス・エンリケは 10/26 にショートがあるので避けた。
+#   10/24 の「稲本潤一」レジェンドとは、稲本の名前を1行出すだけ（アーセナルに来た日本人3人の1人）。稲本の話はしない。
+#
+# **いまの立場（確かめた）**：退任した監督（2026-10-20 決定「退任した監督も扱ってよい」）。
+#   ○ 英語版 Wikipedia「Arsène Wenger」（控え research/raw/20261028_wenger_wiki.txt・_plain.txt、2026-10-28 取得）：
+#     infobox office = Chief of Global Football Development of FIFA、term_start 13 November 2019（後任の記載なし＝現職）。冒頭「has been serving as FIFA's Chief of Global Football Development since 2019」。
+#     「He stepped down as Arsenal manager in 2018 and retired from club management.」
+#   × FIFA 公式のページは当たっていない（requests で読める形のページが見つからなかった）。
+#
+# **通算（台本とサムネをそろえる）**＝英語版 Wikipedia「Managerial statistics」（Soccerbase、match played 13 May 2018。名古屋は J リーグのデータサイト）：
+#   ナンシー 114試合 33勝30分51敗／モナコ 349試合 169勝105分75敗／名古屋グランパスエイト 87試合 49勝4分34敗／アーセナル 1235試合 707勝280分248敗
+#   ＝合計 1785試合 958勝 419分 408敗。勝率（自分で割った）：合計 958/1785＝53.7%、ナンシー 28.9%、モナコ 48.4%、名古屋 56.3%、アーセナル 57.2%。
+#   ※当時の J リーグは引き分けが無い（延長・PK で決着。Wikipedia の注記）→ 名古屋の勝率は、ほかと同じ物差しではない。台本では名古屋の勝率を比べに使わない。
+#   優勝（Wikipedia Honours「Manager」）：モナコ 2（1部 1987-88、フランス杯 1990-91）／名古屋 2（天皇杯 1995、スーパーカップ 1996）
+#     ／アーセナル 17（プレミアリーグ 1997-98・2001-02・2003-04、FAカップ 7回 1997-98・2001-02・2002-03・2004-05・2013-14・2014-15・2016-17、チャリティ／コミュニティ・シールド 7回）＝21。
+#   FAカップ7回は「the competition's most successful manager」（Wikipedia 冒頭）→ 台本は「いちばん多い」。
+#   最初の8季（1996-97〜2003-04）：リーグ優勝3・FAカップ3（98・02・03）。残り14季（2004-05〜2017-18）：リーグ優勝0・FAカップ4（05・14・15・17）（自分で数えた）。
+#
+# **基礎**：1949-10-22 フランス・ストラスブール生まれ（77歳）。MF。ストラスブール大学で経済を学ぶ。愛称「ル・プロフェッスール（教授）」。1981年に監督の資格。
+#   1984 ナンシー → 1987 モナコ → 1995 名古屋 → 1996-10-01 アーセナル（就任発表 9月22日）→ 2018-05 退任 → 2019-11-13 FIFA。
+#   アーセナルの在任 22年は、プレミアリーグの監督で最も長い（Wikipedia 冒頭）。
+#
+# **日本との接点（一次で確かめた範囲。サッカーの縁だけ）**＝英語版 Wikipedia「1994–1996: Nagoya Grampus Eight」節：
+#   ・1994年12月、トヨタが主に持つ名古屋グランパスエイトの監督に（2年契約）。前の季、名古屋は J リーグの最下位。
+#   ・シーズン中の休みにフランスのヴェルサイユで合宿 → 続く27試合で17勝。1995年 J リーグ最優秀監督（ストイコビッチが選手の賞）。
+#   ・1996年1月 天皇杯（サンフレッチェ広島を破る）＝クラブ初のタイトル。2か月後スーパーカップ（横浜マリノスに 2-0）。
+#   ・1996年8月28日が最後の試合。ファンに日本語でお礼の言葉。2013年にアーセナルを連れて名古屋と親善試合（「a decade later」＝2003年の10年後）。
+#   ・食事：「日本での暮らしに影響を受けた」。ゆでた野菜・魚・ご飯（Wikipedia「Preparation」節の引用）→ アーセナルに栄養士を入れた。
+#   ・アーセナルの日本人：稲本潤一（2001〜02、期限付き。Wikipedia「Junichi Inamoto」infobox）・宮市亮（2010年の練習参加ののち加入。Wikipedia「Ryo Miyaichi」）・浅野拓磨（2016〜19。Wikipedia「Takuma Asano」infobox）。どれもベンゲルの在任中。
+#
+# **戦術の色**（Wikipedia「Tactics」節）：就任のときの言葉「real, modern football. That means compact lines, of zones, of quick, coordinated movements with a good technique.」。
+#   4-4-2 を好む（"no other formation is as efficient in covering space"）。実例の試合＝2004年3月のポーツマス戦 5-1。
+#   「the magnificently fluid Ajax of the early 70s」になぞらえられ、相手のサポーターが立って拍手（Wikipedia）。※大会名・得点者は確かめていないので言わない。
+#   2003-04（英語版 Wikipedia「2003–04 Arsenal F.C. season」、控え research/raw/20261028_arsenal_2003_04_wiki.txt）：リーグ 26勝12分0敗＝無敗優勝。勝ち点 90（26×3＋12、自分で数えた）。
+#   無敗の優勝はプレストン以来115年ぶり（Wikipedia）。リーグ49試合無敗は 2004-10-24 のマンチェスター・ユナイテッド戦（0-2）で止まる。イングランドの記録。
+# **本人の言葉（自訳。原文は Wikipedia の本文の引用）**：
+#   ①日本について「It has beautiful things that we have lost in Europe, beautiful things that make life good.」
+#   ②2003年夏、前の季に「無敗で終える」と言って優勝を逃したあと、選手に「Look, I said that because I think you can do it. But you must really want it,」
+# **マル秘話**：最後のホームゲーム 2018-05-06 バーンリーに 5-0、無敗優勝の金のトロフィーの複製を贈られる／2023年7月、そのトロフィーを掲げた像がエミレーツの外に／2006 CL決勝でバルセロナに 1-2、UEFAの3大会すべての決勝で敗れた唯一の監督。
+#
+# **入れなかったもの**：家族・私生活・父の戦争の話、ファーガソンとの口論・ピザ事件・罰金、退任の経緯への批判、契約の金額、ニュースの反応、女子、Jリーグの今の話（名古屋の話はベンゲルの経歴として1995〜96年だけ）。
+date: 2026年10月28日
+slot: other_1
+format: news
+series: 監督紹介
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- ベンゲル
+- 稲本潤一
+- 宮市亮
+- 浅野拓磨
+theme:
+  end_bg: assets/images/20261028_manager_wenger/05_w.jpg
+  id: manager_wenger
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: ベンゲル
+  title: ベンゲル監督ってどんな人？名古屋で何を見つけ、アーセナルを無敗で優勝させたのか
+  question: 元アーセナルのベンゲル監督は、どんな人なのか。名古屋で過ごした2年で何を得て、アーセナルで1度も負けない優勝にたどり着いたのか
+  lead: 元アーセナル監督、アーセン・ベンゲル。
+  opening_image: assets/images/20261028_manager_wenger/03_w.jpg
+  takeaway: 通算1785試合958勝、勝率53.7%。アーセナルでは22年で1235試合707勝。リーグ優勝3回は最初の8季に集中し、新しい本拠地へ移ったあとの14季はリーグ0・FAカップ4。ナンシー28.9%からアーセナル57.2%まで、勝率はクラブを移るたびに上がった
+  short_title: ベンゲル、名古屋の2年とアーセナルの無敗優勝
+  nameplate: ベンゲル｜元アーセナル監督
+thumbnail:
+  line1: ベンゲル、通算958勝
+  line2: 無敗で優勝、49戦負けなし
+  tags:
+  - アーセナル
+  photo: assets/images/20261028_manager_wenger/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261028_manager_wenger/03_v.jpg
+sections:
+- id: hook
+  main: true
+  heading: 38試合、1度も負けずに優勝。ベンゲルとは、どんな監督なのか
+  tier: 報道
+  telop: 2003年から04年のシーズン、リーグ38試合を1度も負けずに優勝
+  narrator: 解説
+  card: &hook_stats
+    type: stats
+    title: 2003年から04年のアーセナル（リーグ戦）
+    items:
+    - ['26', 勝, '']
+    - ['12', 分, '']
+    - ['0', 敗, 115年ぶりの無敗優勝]
+    focus: 2
+  say:
+  - text: 38試合を戦って、負けは0。115年ぶりの無敗優勝。
+    image: assets/images/20261028_manager_wenger/03_w.jpg
+    emph: true
+    card: none
+  - text: 2003年から04年のシーズン、アーセナルは1度も負けずに優勝しました。
+    image: assets/images/20261028_manager_wenger/02_w.jpg
+    card:
+      <<: *hook_stats
+      focus: 2
+  - text: 26勝12分。勝ち点は90でした。
+    card:
+      <<: *hook_stats
+      focus: 2
+  - text: 率いたのは、その8年前まで、日本の名古屋で監督をしていた人です。
+    image: assets/images/20261028_manager_wenger/04_w.jpg
+    emph: true
+    card: none
+  - text: アーセン・ベンゲル。アーセナルを22年率いた監督です。
+    image: assets/images/20261028_manager_wenger/01_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Ars%C3%A8ne_Wenger
+  - https://en.wikipedia.org/wiki/2003%E2%80%9304_Arsenal_F.C._season
+- id: data
+  heading: ベンゲルは、いつ、どこで、どんな道を歩いた人か
+  tier: 報道
+  telop: ベンゲルの基礎DATA
+  narrator: 解説
+  card: &data_table
+    type: table
+    title: ベンゲル（77歳）の基礎DATA
+    columns: [項目, 中身]
+    rows:
+    - [生年月日, 1949年10月22日（フランス・ストラスブール）]
+    - [愛称, ル・プロフェッスール（教授）]
+    - [監督, ナンシー → モナコ → 名古屋 → アーセナル]
+    - [アーセナル, 1996〜2018年の22年]
+    - [いま, 2019年からFIFAの役職]
+    highlight_row: 2
+    source: 英語版Wikipedia
+  say:
+  - text: ベンゲルは1949年10月22日、フランスのストラスブール生まれ。
+    image: assets/images/20261028_manager_wenger/07_w.jpg
+    card:
+      <<: *data_table
+      highlight_row: 0
+  - text: 大学で経済を学んだ人で、愛称は「教授」です。
+    card:
+      <<: *data_table
+      highlight_row: 1
+  - text: 監督としては、フランスのナンシー、モナコ、日本の名古屋、そしてアーセナル。
+    image: assets/images/20261028_manager_wenger/02_w.jpg
+    card:
+      <<: *data_table
+      highlight_row: 2
+  - text: アーセナルの22年は、プレミアリーグの監督でいちばん長い在任です。
+    emph: true
+    card:
+      <<: *data_table
+      highlight_row: 3
+  - text: 2018年に退き、いまは国際サッカー連盟で、世界の育成を担う役職です。
+    image: assets/images/20261028_manager_wenger/07_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Ars%C3%A8ne_Wenger
+- id: japan
+  heading: ベンゲルは、名古屋の2年で何を残し、何を持ち帰ったのか
+  tier: 報道
+  telop: 1995〜96年 名古屋グランパスエイトの監督
+  narrator: 解説
+  card: &jp_table
+    type: timeline
+    title: ベンゲルと名古屋
+    rows:
+    - [1994年12月, 名古屋の監督に]
+    - [1995年, 合宿のあと27試合で17勝。最優秀監督]
+    - [1996年1月, 天皇杯で優勝。クラブ初のタイトル]
+    - [1996年3月, スーパーカップも優勝]
+    - [1996年8月, 日本語で別れのあいさつ]
+    focus: 0
+  say:
+  - text: ベンゲルと日本の縁は、1994年12月に始まります。
+    image: assets/images/20261028_manager_wenger/04_w.jpg
+    card: none
+  - text: 名古屋グランパスエイトの監督に就任。前の季、名古屋は順位表のいちばん下でした。
+    image: assets/images/20261028_manager_wenger/03_w.jpg
+    card:
+      <<: *jp_table
+      focus: 0
+  - text: 1995年も負けが続き、シーズン途中にフランスで合宿を張ります。
+    card:
+      <<: *jp_table
+      focus: 1
+  - text: 求めたのは、ボールを持ったら自分で決めること。
+    image: assets/images/20261028_manager_wenger/03_w.jpg
+    card: none
+  - text: 「私を見るな、自分で考えろ」と声を上げたといいます。
+    card: none
+  - text: そこから27試合で17勝。この年のJリーグ最優秀監督に選ばれました。
+    emph: true
+    card:
+      <<: *jp_table
+      focus: 1
+  - text: 1996年1月には、天皇杯で優勝。名古屋にとって初めてのタイトルです。
+    card:
+      <<: *jp_table
+      focus: 2
+  - text: 3月にはスーパーカップも制します。
+    image: assets/images/20261028_manager_wenger/07_w.jpg
+    card: none
+  - text: 日本から持ち帰ったものもあります。食事です。
+    image: assets/images/20261028_manager_wenger/04_w.jpg
+    card: none
+  - text: ゆでた野菜と魚とご飯の、日本の食事。アーセナルには栄養士を入れました。
+    card: none
+  - text: アーセナルでは、稲本潤一、宮市亮、浅野拓磨の3人の日本人を迎えています。
+    image: assets/images/20261028_manager_wenger/02_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Ars%C3%A8ne_Wenger
+  - https://en.wikipedia.org/wiki/Junichi_Inamoto
+  - https://en.wikipedia.org/wiki/Ryo_Miyaichi
+  - https://en.wikipedia.org/wiki/Takuma_Asano
+- id: career
+  heading: 名古屋の監督が、なぜアーセナルを任されたのか
+  tier: 背景
+  telop: 歩みと転機。1996年、日本からロンドンへ
+  narrator: 解説
+  card: &career_tl
+    type: timeline
+    title: ベンゲルの歩み
+    rows:
+    - [1984年, ナンシーで監督に]
+    - [1987〜94年, モナコ。リーグ優勝・フランス杯]
+    - [1995〜96年, 名古屋。天皇杯]
+    - [1996年10月, アーセナルの監督に]
+    - [1998年, リーグとFAカップの2冠]
+    focus: 0
+  say:
+  - text: 監督の始まりは1984年、フランスのナンシーです。
+    image: assets/images/20261028_manager_wenger/06_w.jpg
+    card: *career_tl
+  - text: 1987年からのモナコでは、リーグ優勝とフランス杯を手にしました。
+    card:
+      <<: *career_tl
+      focus: 1
+  - text: 転機は、名古屋にいたころ。
+    image: assets/images/20261028_manager_wenger/04_w.jpg
+    card:
+      <<: *career_tl
+      focus: 2
+  - text: アーセナルの副会長は、ベンゲルに試合のビデオを送っては、意見を聞いていました。
+    card:
+      <<: *career_tl
+      focus: 2
+  - text: 1996年10月、ベンゲルはアーセナルの監督に。
+    image: assets/images/20261028_manager_wenger/02_w.jpg
+    emph: true
+    card:
+      <<: *career_tl
+      focus: 3
+  - text: 初めてのフランス人監督を、イギリスの報道は疑いの目で迎えました。
+    card: none
+  - text: それでも2季目の1998年に、リーグとFAカップの2冠。
+    image: assets/images/20261028_manager_wenger/01_w.jpg
+    card:
+      <<: *career_tl
+      focus: 4
+  - text: 外国人の監督として、初めての2冠でした。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Ars%C3%A8ne_Wenger
+- id: style
+  heading: ベンゲルのサッカーは、何を目指していたのか
+  tier: 報道
+  telop: 戦術の色。2004年3月、ポーツマス戦の5対1
+  narrator: 解説
+  card: &style_doc
+    type: document
+    label: アーセナル就任のときのベンゲルの言葉（訳）
+    paragraphs:
+    - 本物の、現代のサッカー。
+    - 間を詰めたライン、ゾーン。
+    - 素早く、そろった動きと、良い技術。
+    highlight:
+    - 間を詰めたライン
+    - 素早く、そろった動き
+  say:
+  - text: アーセナルに来たとき、ベンゲルは目指すサッカーをこう語っています。
+    image: assets/images/20261028_manager_wenger/06_w.jpg
+    card: *style_doc
+  - text: 間を詰めたライン。素早く、そろった動き。そして良い技術。
+    card: *style_doc
+  - text: 形は4-4-2を好みました。広い場所をうまく埋められるからです。
+    image: assets/images/20261028_manager_wenger/06_w.jpg
+    card: none
+  - text: それがよく表れたのが、無敗優勝の季の2004年3月、ポーツマス戦。
+    image: assets/images/20261028_manager_wenger/02_w.jpg
+    card: none
+  - text: 5対1で勝ったこの試合は、1970年代の流れるようなアヤックスにたとえられました。
+    emph: true
+    card: none
+  - text: 引き上げる選手たちに、相手のサポーターが立ち上がって拍手を送りました。
+    image: assets/images/20261028_manager_wenger/03_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Ars%C3%A8ne_Wenger
+- id: numbers
+  heading: 通算1785試合、クラブごとの勝率はどう変わったのか
+  tier: 報道
+  telop: 通算958勝。勝率はナンシー28.9%、モナコ48.4%、アーセナル57.2%
+  narrator: 解説
+  card: &rate_bars
+    type: bars
+    title: ベンゲルの勝率（クラブごと、%）
+    unit: '%'
+    items:
+    - label: ナンシー
+      value: 28.9
+    - label: モナコ
+      value: 48.4
+    - label: アーセナル
+      value: 57.2
+      highlight: true
+  say:
+  - text: ベンゲルの成績を、数字で見ていきます。
+    image: assets/images/20261028_manager_wenger/07_w.jpg
+    card: &total_stats
+      type: stats
+      title: ベンゲルの監督通算（1984〜2018年）
+      items:
+      - ['1785', 試合, ナンシー・モナコ・名古屋・アーセナル]
+      - ['958', 勝, 引き分け419・負け408]
+      - ['53.7', '%', 勝率]
+      focus: 1
+  - text: 4つのクラブで1785試合、958勝。勝率は53.7%です。
+    emph: true
+    card:
+      <<: *total_stats
+      focus: 1
+  - text: クラブごとに見ると、最初のナンシーは114試合で33勝。勝率28.9%でした。
+    image: assets/images/20261028_manager_wenger/01_w.jpg
+    card: *rate_bars
+  - text: モナコで48.4%。アーセナルでは57.2%まで上がります。
+    card: *rate_bars
+  - text: タイトルは、チャリティ・シールドも含めて21。
+    image: assets/images/20261028_manager_wenger/05_w.jpg
+    card: none
+  - text: FAカップの優勝7回。この大会で、これより多く勝った監督はいません。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Ars%C3%A8ne_Wenger
+- id: words
+  heading: 本人は、日本と、無敗の挑戦について、何を語ったのか
+  tier: 報道
+  telop: ベンゲルの言葉。日本について、そして選手たちへ
+  narrator: 解説
+  card: &words_doc
+    type: document
+    label: ベンゲルの言葉（訳）
+    paragraphs:
+    - 日本には、ヨーロッパが失ってしまった美しいものがある。
+    - 君たちならできると思ったから、そう言った。
+    - でも、本気で望まなければならない。
+    highlight:
+    - 失ってしまった美しいもの
+    - 本気で望まなければならない
+  say:
+  - text: ここで、ベンゲル本人の言葉。まず、日本について。
+    image: assets/images/20261028_manager_wenger/04_w.jpg
+    card: *words_doc
+  - voice: ベンゲル
+    text: 日本には、ヨーロッパが失ってしまった美しいものがある。
+  - voice: ベンゲル
+    text: 人生を良くしてくれる、美しいものだ。
+    cont: true
+    pause: 0.5
+  - text: もう1つは2003年の夏、優勝を逃したあと選手たちに向けた言葉です。
+    image: assets/images/20261028_manager_wenger/03_w.jpg
+    card: *words_doc
+  - voice: ベンゲル
+    text: そう言ったのは、君たちならできると思ったからだ。
+  - voice: ベンゲル
+    text: でも、本気で望まなければならない。
+    cont: true
+    pause: 0.5
+  - text: その季、アーセナルは本当に1度も負けませんでした。
+    image: assets/images/20261028_manager_wenger/01_w.jpg
+    card: none
+  quotes_from:
+  - https://en.wikipedia.org/wiki/Ars%C3%A8ne_Wenger
+  sources:
+  - https://en.wikipedia.org/wiki/Ars%C3%A8ne_Wenger
+- id: secret
+  heading: 数字の外にある話。最後の日に贈られた、金のトロフィー
+  tier: 背景
+  telop: 49試合負けなし、最後のホームゲーム、そして像
+  narrator: 解説
+  card: &sec_table
+    type: table
+    title: 数字の外にある話
+    columns: [いつ, 何があったか]
+    rows:
+    - [2004年10月, リーグ49試合負けなしが止まる]
+    - [2006年5月, チャンピオンズリーグ決勝でバルセロナに1対2]
+    - [2018年5月6日, 最後のホームゲーム。バーンリーに5対0]
+    - [2023年7月, 金のトロフィーを掲げた像]
+    highlight_row: 0
+    source: 英語版Wikipedia
+  say:
+  - text: ここから、数字の外の話。無敗の記録は、優勝のあとも続きました。
+    image: assets/images/20261028_manager_wenger/02_w.jpg
+    card: none
+  - text: リーグで49試合負けなし。イングランドの記録です。
+    emph: true
+    card:
+      <<: *sec_table
+      highlight_row: 0
+  - text: 2006年にはチャンピオンズリーグの決勝へ。バルセロナに1対2で敗れました。
+    card:
+      <<: *sec_table
+      highlight_row: 1
+  - text: 22年の最後のホームゲームは、2018年5月6日。バーンリーに5対0の勝ちでした。
+    image: assets/images/20261028_manager_wenger/05_w.jpg
+    card:
+      <<: *sec_table
+      highlight_row: 2
+  - text: クラブは、無敗優勝の金のトロフィーの複製をベンゲルに贈りました。
+    card: none
+  - text: 2023年7月、そのトロフィーを掲げたベンゲルの像が、本拠地の外に建っています。
+    image: assets/images/20261028_manager_wenger/05_w.jpg
+    card:
+      <<: *sec_table
+      highlight_row: 3
+  sources:
+  - https://en.wikipedia.org/wiki/Ars%C3%A8ne_Wenger
+- id: view
+  viewpoint: true
+  heading: 見立て・22年のタイトルは、なぜ前半に集まったのか
+  tier: 背景
+  telop: リーグ優勝は最初の8季で3回、残りの14季は0回
+  narrator: 解説
+  card: &view_table
+    type: table
+    title: 自分で数えてみた（アーセナルの22季）
+    columns: [時期, リーグ優勝, FAカップ優勝]
+    rows:
+    - [最初の8季（1996〜2004年）, '3', '3']
+    - [残りの14季（2004〜2018年）, '0', '4']
+    - [勝率（全1235試合）, 57.2%, 707勝]
+    highlight_row: 1
+  say:
+  - text: 見立てです。ベンゲルのアーセナルの22季を、前と後ろに分けて数えました。
+    image: assets/images/20261028_manager_wenger/07_w.jpg
+    card: *view_table
+  - text: リーグ優勝は、最初の8季で3回、残りの14季で0回。
+    card:
+      <<: *view_table
+      highlight_row: 0
+  - text: 一方でFAカップは、前の8季で3回、後ろの14季で4回です。
+    emph: true
+    mark: {kind: circle, row: 1, col: 2}
+    card:
+      <<: *view_table
+      highlight_row: 1
+  - text: 境目は2006年。クラブはハイバリーから新しいスタジアムへ移りました。
+    card: none
+  - text: その費用で、選手に使えるお金が絞られます。
+    image: assets/images/20261028_manager_wenger/06_w.jpg
+    card: none
+  - text: タイトルから9年遠ざかったのは、その時期です。
+    card: none
+  - text: リーグには届かなくなっても、カップで勝つ力は最後まで残っていた。そう見ています。
+    image: assets/images/20261028_manager_wenger/05_w.jpg
+    card: none
+  - text: 名古屋で見つけた食事と、選手に考えさせるやり方。無敗優勝の土台です。
+    image: assets/images/20261028_manager_wenger/01_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Ars%C3%A8ne_Wenger

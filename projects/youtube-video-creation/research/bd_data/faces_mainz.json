@@ -1,0 +1,24 @@
+{
+ "mainz": {
+  "アンドレ・シュールレ": {
+   "role": "legend",
+   "file": "assets/photos/bd/mainz/mainz_legend_b9b77d12.jpg",
+   "page": "André Schürrle"
+  },
+  "シュテファン・ベル": {
+   "role": "legend",
+   "file": "assets/photos/bd/mainz/mainz_legend_ef8b743e.jpg",
+   "page": "Stefan Bell"
+  },
+  "ウルス・フィッシャー": {
+   "role": "manager",
+   "file": "assets/photos/bd/mainz/mainz_manager_39a66be1.jpg",
+   "page": "Urs Fischer (footballer)"
+  },
+  "ニコ・ブンゲルト": {
+   "role": "legend",
+   "file": "assets/photos/bd/mainz/mainz_legend_31340fb0.jpg",
+   "page": "Niko Bungert"
+  }
+ }
+}

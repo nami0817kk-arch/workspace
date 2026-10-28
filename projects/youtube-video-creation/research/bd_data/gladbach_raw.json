@@ -1,0 +1,644 @@
+{
+ "club_title": "Borussia Mönchengladbach",
+ "season_title": "2026–27 Borussia Mönchengladbach season",
+ "squad": [
+  {
+   "no": "1",
+   "pos": "GK",
+   "nat": "GER",
+   "name": "Moritz Nicolas",
+   "page": "Moritz Nicolas",
+   "dob": "1997-10-21",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "2",
+   "pos": "DF",
+   "nat": "ITA",
+   "name": "Fabio Chiarodia",
+   "page": "Fabio Chiarodia",
+   "dob": "2005-06-05",
+   "captain": false,
+   "loan": false,
+   "team": "Italy",
+   "caps": 2
+  },
+  {
+   "no": "3",
+   "pos": "FW",
+   "nat": "SWE",
+   "name": "Isac Lidberg",
+   "page": "Isac Lidberg",
+   "dob": "1998-09-08",
+   "captain": false,
+   "loan": false,
+   "team": "Sweden",
+   "caps": 3
+  },
+  {
+   "no": "4",
+   "pos": "DF",
+   "nat": "IDN",
+   "name": "Kevin Diks",
+   "page": "Kevin Diks",
+   "dob": "1996-10-06",
+   "captain": false,
+   "loan": false,
+   "team": "Indonesia",
+   "caps": 16
+  },
+  {
+   "no": "5",
+   "pos": "DF",
+   "nat": "POL",
+   "name": "Jan Leszczyński",
+   "page": "Jan Leszczyński (footballer, born 2007)",
+   "dob": "2007-04-12",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "6",
+   "pos": "DF",
+   "nat": "JPN",
+   "name": "Kō Itakura",
+   "page": "Kō Itakura",
+   "dob": "1997-01-27",
+   "captain": false,
+   "loan": false,
+   "team": "Japan",
+   "caps": 44
+  },
+  {
+   "no": "7",
+   "pos": "MF",
+   "nat": "AUT",
+   "name": "Kevin Stöger",
+   "page": "Kevin Stöger",
+   "dob": "1993-08-27",
+   "captain": false,
+   "loan": false,
+   "team": "Austria",
+   "caps": 5
+  },
+  {
+   "no": "8",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Enzo Leopold",
+   "page": "Enzo Leopold",
+   "dob": "2000-07-23",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "9",
+   "pos": "MF",
+   "nat": "FRA",
+   "name": "Franck Honorat",
+   "page": "Franck Honorat",
+   "dob": "1996-08-11",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "10",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Florian Neuhaus",
+   "page": "Florian Neuhaus",
+   "dob": "1997-03-16",
+   "captain": false,
+   "loan": false,
+   "team": "Germany",
+   "caps": 10
+  },
+  {
+   "no": "11",
+   "pos": "FW",
+   "nat": "GER",
+   "name": "Tim Kleindienst",
+   "page": "Tim Kleindienst",
+   "dob": "1995-08-31",
+   "captain": true,
+   "loan": false,
+   "team": "Germany",
+   "caps": 6
+  },
+  {
+   "no": "14",
+   "pos": "DF",
+   "nat": "JPN",
+   "name": "Daiki Hashioka",
+   "page": "Daiki Hashioka",
+   "dob": "1999-05-17",
+   "captain": false,
+   "loan": true,
+   "team": "Japan",
+   "caps": 12
+  },
+  {
+   "no": "16",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Philipp Sander",
+   "page": "Philipp Sander",
+   "dob": "1998-02-21",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "17",
+   "pos": "MF",
+   "nat": "KOR",
+   "name": "Jens Castrop",
+   "page": "Jens Castrop",
+   "dob": "2003-07-29",
+   "captain": false,
+   "loan": false,
+   "team": "South Korea",
+   "caps": 8
+  },
+  {
+   "no": "18",
+   "pos": "FW",
+   "nat": "JPN",
+   "name": "Shūto Machino",
+   "page": "Shūto Machino",
+   "dob": "1999-09-30",
+   "captain": false,
+   "loan": false,
+   "team": "Japan",
+   "caps": 15
+  },
+  {
+   "no": "19",
+   "pos": "FW",
+   "nat": "GER",
+   "name": "Nicolas Kühn",
+   "page": "Nicolas Kühn",
+   "dob": "2000-01-01",
+   "captain": false,
+   "loan": true,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "20",
+   "pos": "DF",
+   "nat": "GER",
+   "name": "David Herold",
+   "page": "David Herold (footballer)",
+   "dob": "2003-02-20",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "21",
+   "pos": "GK",
+   "nat": "GER",
+   "name": "Tobias Sippel",
+   "page": "Tobias Sippel",
+   "dob": "1988-03-22",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "22",
+   "pos": "DF",
+   "nat": "UKR",
+   "name": "Yukhym Konoplya",
+   "page": "Yukhym Konoplya",
+   "dob": "1999-08-26",
+   "captain": false,
+   "loan": false,
+   "team": "Ukraine",
+   "caps": 27
+  },
+  {
+   "no": "23",
+   "pos": "GK",
+   "nat": "GER",
+   "name": "Jan Olschowsky",
+   "page": "Jan Olschowsky",
+   "dob": "2001-11-18",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "25",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Robin Hack",
+   "page": "Robin Hack",
+   "dob": "1998-08-27",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "26",
+   "pos": "DF",
+   "nat": "GER",
+   "name": "Lukas Ullrich",
+   "page": "Lukas Ullrich",
+   "dob": "2004-03-16",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "27",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Fritz Fleck",
+   "page": "Fritz Henri Fleck",
+   "dob": "",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "29",
+   "pos": "DF",
+   "nat": "USA",
+   "name": "Joe Scally",
+   "page": "Joe Scally",
+   "dob": "2002-12-31",
+   "captain": false,
+   "loan": false,
+   "team": "United States",
+   "caps": 28
+  },
+  {
+   "no": "33",
+   "pos": "GK",
+   "nat": "GER",
+   "name": "Daniel Batz",
+   "page": "Daniel Batz",
+   "dob": "1991-01-12",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "34",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Mathieu Nguefack",
+   "page": "Mathieu Nguefack",
+   "dob": "",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "35",
+   "pos": "FW",
+   "nat": "GER",
+   "name": "Josiah Uwakhonye",
+   "page": "Josiah Kaled Uwakhonye",
+   "dob": "",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "36",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Wael Mohya",
+   "page": "Wael Mohya",
+   "dob": "2008-12-31",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "38",
+   "pos": "MF",
+   "nat": "SWE",
+   "name": "Hugo Bolin",
+   "page": "Hugo Bolin",
+   "dob": "2003-07-24",
+   "captain": false,
+   "loan": false,
+   "team": "Sweden",
+   "caps": 3
+  },
+  {
+   "no": "39",
+   "pos": "FW",
+   "nat": "GNB",
+   "name": "Iaia Manco Danfa",
+   "page": "Iaia Manco Danfa",
+   "dob": "2007-04-06",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "47",
+   "pos": "MF",
+   "nat": "JPN",
+   "name": "Zento Uno",
+   "page": "Zento Uno",
+   "dob": "2003-11-20",
+   "captain": false,
+   "loan": false,
+   "team": "Japan",
+   "caps": 2
+  },
+  {
+   "no": "48",
+   "pos": "DF",
+   "nat": "GER",
+   "name": "Lion Schweers",
+   "page": "Lion Schweers",
+   "dob": "1996-04-01",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  }
+ ],
+ "results": [
+  [
+   "29 August 2026",
+   "1",
+   "RB Leipzig",
+   "3–0",
+   "Borussia Mönchengladbach"
+  ],
+  [
+   "5 September 2026",
+   "2",
+   "Borussia Mönchengladbach",
+   "3–4",
+   "SV Elversberg"
+  ],
+  [
+   "12 September 2026",
+   "3",
+   "SC Freiburg",
+   "5–0",
+   "Borussia Mönchengladbach"
+  ],
+  [
+   "19 September 2026",
+   "4",
+   "Borussia Mönchengladbach",
+   "3–4",
+   "Mainz 05"
+  ],
+  [
+   "10 October 2026",
+   "5",
+   "1. FC Köln",
+   "2–1",
+   "Borussia Mönchengladbach"
+  ],
+  [
+   "17 October 2026",
+   "6",
+   "Borussia Mönchengladbach",
+   "1–2",
+   "TSG Hoffenheim"
+  ],
+  [
+   "24 October 2026",
+   "7",
+   "VfB Stuttgart",
+   "2–3",
+   "Borussia Mönchengladbach"
+  ],
+  [
+   "31 October 2026",
+   "8",
+   "Borussia Mönchengladbach",
+   "",
+   "SC Paderborn"
+  ],
+  [
+   "7 November 2026",
+   "9",
+   "Hamburger SV",
+   "",
+   "Borussia Mönchengladbach"
+  ],
+  [
+   "21 November 2026",
+   "10",
+   "Borussia Mönchengladbach",
+   "",
+   "Borussia Dortmund"
+  ],
+  [
+   "28 November 2026",
+   "11",
+   "Werder Bremen",
+   "",
+   "Borussia Mönchengladbach"
+  ],
+  [
+   "5 December 2026",
+   "12",
+   "Bayer Leverkusen",
+   "",
+   "Borussia Mönchengladbach"
+  ],
+  [
+   "12 December 2026",
+   "13",
+   "Borussia Mönchengladbach",
+   "",
+   "Eintracht Frankfurt"
+  ],
+  [
+   "19 December 2026",
+   "14",
+   "Schalke 04",
+   "",
+   "Borussia Mönchengladbach"
+  ],
+  [
+   "9 January 2027",
+   "15",
+   "Borussia Mönchengladbach",
+   "",
+   "Bayern Munich"
+  ],
+  [
+   "13 January 2027",
+   "16",
+   "FC Augsburg",
+   "",
+   "Borussia Mönchengladbach"
+  ],
+  [
+   "16 January 2027",
+   "17",
+   "Borussia Mönchengladbach",
+   "",
+   "Union Berlin"
+  ],
+  [
+   "23 January 2027",
+   "18",
+   "Borussia Mönchengladbach",
+   "",
+   "RB Leipzig"
+  ],
+  [
+   "30 January 2027",
+   "19",
+   "SV Elversberg",
+   "",
+   "Borussia Mönchengladbach"
+  ],
+  [
+   "6 February 2027",
+   "20",
+   "Borussia Mönchengladbach",
+   "",
+   "SC Freiburg"
+  ],
+  [
+   "13 February 2027",
+   "21",
+   "Mainz 05",
+   "",
+   "Borussia Mönchengladbach"
+  ],
+  [
+   "20 February 2027",
+   "22",
+   "Borussia Mönchengladbach",
+   "",
+   "1. FC Köln"
+  ],
+  [
+   "27 February 2027",
+   "23",
+   "TSG Hoffenheim",
+   "",
+   "Borussia Mönchengladbach"
+  ],
+  [
+   "3 March 2027",
+   "24",
+   "Borussia Mönchengladbach",
+   "",
+   "VfB Stuttgart"
+  ],
+  [
+   "6 March 2027",
+   "25",
+   "SC Paderborn",
+   "",
+   "Borussia Mönchengladbach"
+  ],
+  [
+   "13 March 2027",
+   "26",
+   "Borussia Mönchengladbach",
+   "",
+   "Hamburger SV"
+  ],
+  [
+   "20 March 2027",
+   "27",
+   "Borussia Dortmund",
+   "",
+   "Borussia Mönchengladbach"
+  ],
+  [
+   "3 April 2027",
+   "28",
+   "Borussia Mönchengladbach",
+   "",
+   "Werder Bremen"
+  ],
+  [
+   "10 April 2027",
+   "29",
+   "Borussia Mönchengladbach",
+   "",
+   "Bayer Leverkusen"
+  ],
+  [
+   "17 April 2027",
+   "30",
+   "Eintracht Frankfurt",
+   "",
+   "Borussia Mönchengladbach"
+  ],
+  [
+   "24 April 2027",
+   "31",
+   "Borussia Mönchengladbach",
+   "",
+   "Schalke 04"
+  ],
+  [
+   "8 May 2027",
+   "32",
+   "Bayern Munich",
+   "",
+   "Borussia Mönchengladbach"
+  ],
+  [
+   "15 May 2027",
+   "33",
+   "Borussia Mönchengladbach",
+   "",
+   "FC Augsburg"
+  ],
+  [
+   "22 May 2027",
+   "34",
+   "Union Berlin",
+   "",
+   "Borussia Mönchengladbach"
+  ],
+  [
+   "23 August 2026",
+   "First round",
+   "Schott Mainz",
+   "0–5",
+   "Borussia Mönchengladbach"
+  ],
+  [
+   "27 October 2026",
+   "Second round",
+   "Borussia Mönchengladbach",
+   "2–0",
+   "Karlsruher SC"
+  ]
+ ]
+}

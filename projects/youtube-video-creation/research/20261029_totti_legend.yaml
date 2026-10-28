@@ -1,0 +1,422 @@
+# フランチェスコ・トッティ（元イタリア代表FW・MF）の紹介。シリーズ「レジェンドの紹介（世界）」2026-10-29。型は 10/28 のピルロと同じ9節（フック→基礎DATA→日本との接点→歩み→持ち味→あの試合→引退のあと→マル秘話→見立て）。
+# **FotMob・DataMB・FBref・Sofascore・Transfermarkt は不使用**。数字は英語版 Wikipedia（Francesco Totti の成績表・本文、UEFA Euro 2000 knockout stage）と BBC（2017-05-28「Roma 3-2 Genoa」）と、自分で足した・割った値だけ。
+# **私生活・法的な問題・怪我は入れない**（家族・賭けの会社の広告・2019年の退団会見の批判・2006年の骨折は使わない）。女子サッカーは入れない。
+#
+# **重なりの確認（10/28 夜）**：scripts/・research/covered.yaml・research/posted.json を「トッティ／Totti／totti」で grep。トッティが主役の回は無し（10/18 中田英寿の回に「トッティに代わって中田が入る」が出るだけ）。レジェンド既出（ジダン・ロナウジーニョ・シャビ・イニエスタ・ベッカム・ロナウド・アンリ・イブラヒモビッチ・マルディーニ・カカ・ジェラード・ドログバ・ピルロ）とも重ならない。
+# **2005年イスタンブール・2012年CL決勝・2006年W杯決勝は山場にしない**（W杯優勝は基礎DATAで一言だけ）。山場は EURO2000 準決勝オランダ戦（アムステルダム、PK戦のスプーン）。
+# **引退の確認（一次情報に近いもの）**：BBC 2017-05-28 本文「the final appearance of his 25-year Roma career ... scored 307 goals in 786 games for his only club, came on in the 54th minute in the win over Genoa」（requests で本文取得）。Wikipedia「On 17 July 2017, Totti confirmed his retirement from professional football」。→ **選手としては現役ではない（50歳）**。いまの立場：2017〜2019 ローマの役員（2019-06-17 に離任、Wikipedia）、2026年ミラノ・コルティナ冬季五輪のアンバサダー（Wikipedia）。
+# **日本との接点**：1993年の U-17 世界選手権（日本開催）でイタリアの得点を決めた（Wikipedia「scored Italy's goal in the tournament」）。2000-01 に中田英寿とローマで同僚、2001-05-06 ユヴェントス対ローマで60分ごろトッティに代わって中田、79分に中田が決め、終盤にモンテッラで2対2（10/18 中田の回で確かめた事実）。ローマは 2001-06-17 パルマに3対1で優勝、トッティも1点（Wikipedia）。
+# **数字の出どころと自分で足した値**
+# - 成績表（Wikipedia、公式戦）：ローマ 786試合307点（リーグ619/250・国内カップ59/18・欧州103/38・その他5/1。表の Career total）。BBC の「307 goals in 786 games」と一致。
+# - イタリア代表 58試合9点（Wikipedia の年別表の Total）。クラブと代表の合計 844試合316点（自分で足した値）。
+# - セリエA 250点は歴代2位、1つのクラブで挙げたセリエAの得点ではいちばん多い（Wikipedia）。セリエAに出た25シーズンはマルディーニと並ぶ（2016-09-11、Wikipedia）。
+# - 1993-03-28 ブレシア戦で16歳デビュー、1998-10-31 に22歳で主将＝セリエAでいちばん若い主将（Wikipedia）。
+# - 2006-07：セリエA 35試合26点、公式戦50試合32点、得点王、欧州ゴールデンシュー（Wikipedia の成績表と本文、BBC 2007-06-18 が出典）。
+# - 2014-09-30 マンチェスター・シティ戦、38歳でCLの当時の最年長得点（のちに2023年ペペが更新。Wikipedia）。
+# - EURO2000 準決勝 2000-06-29 アムステルダム：34分にザンブロッタ退場、0対0のまま延長、トッティは83分から出場、PK戦3対1、3人目のトッティが決める。オランダは4人中3人が失敗（Wikipedia の試合表）。直前に仲間のディ・ビアージョへ「Mo je faccio er cucchiaio」（ローマの方言で「今から、スプーンで決めてやる」）と言った（Wikipedia）。
+# - 見立て（自分で割った値）：2006-07 は 26÷35＝1試合0.74点。セリエA通算は 250÷619＝0.40点。約1.8倍。30歳（1976-09-27 生まれ）の季。
+# - 本人の言葉：引退試合のあとの手紙（BBC が引用）「I'm afraid. I can't see what the future looks like.」→「怖いんだ。この先がどう見えるのか、わからない」。
+# - マル秘話：母がミランの好条件の誘いを断った／入る直前までラツィオのユースに売る話がまとまっていた／1997年にサンプドリアへの貸し出しを会長センシが止めた（Wikipedia）。
+# **入れなかったもの**：2006年の骨折とその治療、2019年の退団会見での批判、家族、賭けの会社の広告、2006年W杯決勝の中身、EURO2000 決勝の結果。
+# **読みで怪しいもの**：トッティ、ディ・ビアージョ、ザンブロッタ、スパレッティ、カペッロ、センシ、サンプドリア、アムステルダム、ゴールデンシュー。「最多」「最年長」は使わず言い換える。
+title: トッティは、どんな選手だった？ ローマを離れなかった25年で、何を残したのか
+format: news
+short_title: トッティは、どんな選手だった？
+series: レジェンドの紹介
+topic: フランチェスコ・トッティ
+date: 2026年10月29日
+slot: other_1
+people: [フランチェスコ・トッティ]
+watch: 毎日、数字でサッカーを読み解きます
+theme: {id: legend_totti, league: italy, league_name: セリエA, kind: other, topic: フランチェスコ・トッティ, title: トッティは、どんな選手だった？ ローマを離れなかった25年で、何を残したのか, question: 生まれた街のクラブで25シーズンを過ごしたトッティは、何を残した選手で、いまは何をしているのか, takeaway: セリエA通算は1試合0.40点。最前線に置かれた30歳の季は26点で1試合0.74点、通算の約1.8倍。点を取る人として花開いたのは30歳だった,
+  nameplate: フランチェスコ・トッティ｜元イタリア代表 FW, opening_image: assets/images/20261029_totti_legend/01_w.jpg, end_bg: assets/images/20261029_totti_legend/03_w.jpg, bgm: assets/audio/bgm_calm.wav, outro_title: 毎日、数字でサッカーを読み解きます}
+thumbnail:
+  line1: トッティ、786試合307点
+  line2: ローマ一筋、25シーズン
+  tags: [ローマ]
+  photo: assets/images/20261029_totti_legend/panel_02.jpg
+  photos: []
+  short_photo: assets/images/20261029_totti_legend/01_v.jpg
+sections:
+- id: hook
+  heading: 生まれた街のクラブで、トッティは何点を取ったのか
+  tier: 報道
+  telop: ローマ一筋の25シーズン
+  card: &hk
+    type: stats
+    title: トッティ 元FW（50歳）
+    items:
+    - ['786', 試合, ローマの公式戦]
+    - ['307', 点, ローマの公式戦]
+    - ['25', シーズン, セリエAに出た季]
+    focus: 1
+  say:
+  - {text: 16歳でデビューして、40歳で引退するまで。ずっと、同じクラブでした。, card: none, image: assets/images/20261029_totti_legend/01_w.jpg}
+  - {text: 生まれた街、ローマのクラブです。, card: none}
+  - {text: 残したのは、786試合で307点。どちらも、クラブの歴史でいちばん多い数字です。, card: none, image: assets/images/20261029_totti_legend/02_w.jpg, emph: true}
+  - text: フランチェスコ・トッティ。セリエAに出たのは、25シーズンにのぼります。
+    card: *hk
+    image: assets/images/20261029_totti_legend/03_w.jpg
+    callword: 307点
+  - text: 代表では、2006年のワールドカップ優勝メンバーです。
+    card:
+      type: stats
+      title: トッティ 元FW（50歳）
+      items:
+      - ['786', 試合, ローマの公式戦]
+      - ['307', 点, ローマの公式戦]
+      - ['25', シーズン, セリエAに出た季]
+      focus: 2
+    image: assets/images/20261029_totti_legend/08_w.jpg
+  - {text: 背番号10の司令塔は、どう点を取る人になったのか。その歩みを、数字でたどります。, card: none, image: assets/images/20261029_totti_legend/07_w.jpg}
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Francesco_Totti', 'https://www.bbc.com/sport/football/40036023']
+- id: data
+  heading: トッティは、いつ、どこで生まれ、どんな選手か
+  tier: 報道
+  telop: トッティの基礎DATA
+  card: &dt
+    type: table
+    title: フランチェスコ・トッティ
+    columns: [項目, 内容]
+    rows: &dtr
+    - [生年月日, 1976年9月27日・イタリア]
+    - [ポジション, フォワード・攻撃的MF]
+    - [クラブ, ローマだけ（1993〜2017年）]
+    - [代表, 58試合9得点・W杯優勝]
+    - [引退, 2017年（40歳）]
+    source: Wikipedia
+    highlight_row: 0
+  say:
+  - text: トッティは、1976年9月27日、イタリアの首都ローマに生まれました。
+    card: *dt
+    image: assets/images/20261029_totti_legend/02_w.jpg
+  - text: ポジションはフォワード。背番号10を付けて、攻撃を組み立てる役もこなしました。
+    card:
+      type: table
+      title: フランチェスコ・トッティ
+      columns: [項目, 内容]
+      rows: *dtr
+      source: Wikipedia
+      highlight_row: 1
+    image: assets/images/20261029_totti_legend/01_w.jpg
+  - text: クラブは、ローマただ1つ。1993年から2017年までです。
+    card:
+      type: table
+      title: フランチェスコ・トッティ
+      columns: [項目, 内容]
+      rows: *dtr
+      source: Wikipedia
+      highlight_row: 2
+    image: assets/images/20261029_totti_legend/03_w.jpg
+  - {text: ほかのクラブでは、一度もプレーしていません。, card: none}
+  - text: イタリア代表は58試合9得点。2006年には、世界王者になりました。
+    card:
+      type: table
+      title: フランチェスコ・トッティ
+      columns: [項目, 内容]
+      rows: *dtr
+      source: Wikipedia
+      highlight_row: 3
+    image: assets/images/20261029_totti_legend/08_w.jpg
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Francesco_Totti']
+- id: japan
+  heading: トッティと日本には、どんな縁があったのか
+  tier: 報道
+  telop: 日本で決めた1点と、中田英寿
+  say:
+  - {text: 日本との縁は、まず1993年。, card: none, image: assets/images/20261029_totti_legend/07_w.jpg}
+  - {text: 16歳のトッティは、日本で開かれた17歳以下の世界大会に出ています。, card: none}
+  - {text: イタリアが大会で挙げた1点は、トッティが決めたものでした。, card: none}
+  - text: そして2000年からは、ローマで中田英寿とチームメイトに。
+    card: &jp
+      type: timeline
+      title: 2001年 ローマと中田英寿
+      rows: &jpr
+      - [5月6日, ユヴェントス戦、トッティに代わって中田]
+      - [79分, 中田が1点を返す]
+      - [6月17日, パルマに勝って優勝、トッティも1点]
+      focus: 0
+      highlight_row: 0
+    image: assets/images/20261029_totti_legend/02_w.jpg
+  - text: 2001年5月6日の首位攻防戦。監督は60分ごろ、主将のトッティを下げます。
+    card:
+      type: timeline
+      title: 2001年 ローマと中田英寿
+      rows: *jpr
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261029_totti_legend/02_w.jpg
+    emph: true
+  - {text: 入ったのは中田。79分にゴールを決めます。, card: none, image: assets/images/20261029_totti_legend/08_w.jpg}
+  - {text: ローマは0対2から2点を返し、引き分けました。, card: none}
+  - text: その年の6月17日、ローマは優勝。トッティもパルマ戦で1点を決めています。
+    card:
+      type: timeline
+      title: 2001年 ローマと中田英寿
+      rows: *jpr
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261029_totti_legend/03_w.jpg
+    callword: 優勝
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Francesco_Totti', 'https://it.wikipedia.org/wiki/Serie_A_2000-2001']
+- id: career
+  heading: 16歳でデビューしたトッティは、どう主役になったのか
+  tier: 報道
+  telop: 16歳のデビューから、22歳の主将へ
+  card: &cr
+    type: timeline
+    title: 歩んできた道
+    rows: &crr
+    - ['1993', 16歳でセリエAデビュー]
+    - ['1998', 22歳で主将に]
+    - ['2001', セリエA優勝]
+    - ['2005', 最前線に置かれる]
+    - ['2017', 40歳で最後の試合]
+    focus: 0
+  say:
+  - text: デビューは1993年3月28日。16歳で、ブレシアとのアウェー戦に出ました。
+    card: *cr
+    image: assets/images/20261029_totti_legend/01_w.jpg
+  - text: 1998年10月、22歳で主将に。セリエAのクラブで、いちばん若い主将の記録です。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *crr
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261029_totti_legend/02_w.jpg
+    emph: true
+  - {text: 2001年には、クラブにとって3回目のリーグ優勝。, card: none, image: assets/images/20261029_totti_legend/03_w.jpg}
+  - text: 転機は2005年。スパレッティ監督が、トッティをいちばん前に置きます。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *crr
+      focus: 3
+      highlight_row: 0
+    image: assets/images/20261029_totti_legend/07_w.jpg
+  - {text: 前にいながら下がってボールを受ける。のちに「偽の9番」と呼ばれる形でした。, card: none}
+  - text: 最後の試合は2017年5月28日。54分、サラーに代わってピッチへ。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *crr
+      focus: 4
+      highlight_row: 0
+    image: assets/images/20261029_totti_legend/08_w.jpg
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Francesco_Totti', 'https://www.bbc.com/sport/football/40036023']
+- id: style
+  heading: トッティは、何で相手を上回ったのか
+  tier: 報道
+  telop: 両足のシュートと、ふわりと浮かせる球
+  card: &st
+    type: table
+    title: トッティの持ち味
+    columns: [項目, 中身]
+    rows: &str
+    - [武器1, 両足で打てる強く正確なシュート]
+    - [武器2, ふわりと浮かせるチップキック]
+    - [武器3, 前線から下がって組み立てる]
+    - [記録, セリエA 250点は歴代2位]
+    source: Wikipedia
+    highlight_row: 0
+  say:
+  - text: トッティの武器、まずはシュート。利き足は右ですが、左でも強く正確に打てました。
+    card: *st
+    image: assets/images/20261029_totti_legend/01_w.jpg
+  - text: 次に、ふわりと浮かせるチップキック。イタリアでは「スプーン」と呼ばれます。
+    card:
+      type: table
+      title: トッティの持ち味
+      columns: [項目, 中身]
+      rows: *str
+      source: Wikipedia
+      highlight_row: 1
+    image: assets/images/20261029_totti_legend/03_w.jpg
+    emph: true
+  - text: そして、下がって組み立てる力。セリエAのアシストの記録は、歴代でいちばん上です。
+    card:
+      type: table
+      title: トッティの持ち味
+      columns: [項目, 中身]
+      rows: *str
+      source: Wikipedia
+      highlight_row: 2
+    image: assets/images/20261029_totti_legend/07_w.jpg
+  - {text: セリエAの得点は歴代2位。しかも、すべてローマで挙げたものです。, card: none, image: assets/images/20261029_totti_legend/02_w.jpg}
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Francesco_Totti']
+- id: match
+  heading: 2000年のアムステルダムで、トッティは何をしたのか
+  tier: 報道
+  main: true
+  telop: PK戦の「スプーン」
+  card: &mt
+    type: timeline
+    title: EURO2000 準決勝 イタリア対オランダ
+    rows: &mtr
+    - [34分, イタリアに退場者、10人に]
+    - [83分, トッティが入る]
+    - [120分, 0対0のままPK戦へ]
+    - [PK戦, 3人目のトッティがチップで決める]
+    focus: 0
+    highlight_row: 0
+  say:
+  - {text: トッティ。, short_only: true, card: none, image: assets/images/20261029_totti_legend/02_w.jpg}
+  - {text: いちばん語られるのは、2000年のヨーロッパ選手権、準決勝です。, short_only: true, card: none}
+  - {text: 2000年6月29日、オランダのアムステルダム。相手は、開催国のオランダでした。, card: none, image: assets/images/20261029_totti_legend/08_w.jpg}
+  - text: 34分、イタリアに退場者。延長を含めて残り86分を、10人で守り続けます。
+    card: *mt
+    image: assets/images/20261029_totti_legend/02_w.jpg
+  - text: 83分、トッティが入ります。延長に入っても、スコアは動きません。PK戦へ。
+    card:
+      type: timeline
+      title: EURO2000 準決勝 イタリア対オランダ
+      rows: *mtr
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261029_totti_legend/01_w.jpg
+  - {text: 3人目に向かうトッティは、仲間のディビアージョに、こう言ったといいます。, card: none, image: assets/images/20261029_totti_legend/02_w.jpg}
+  - {voice: トッティ, text: 今から、スプーンで決めてやる。, card: none, pause: 0.5}
+  - text: 言葉どおり、ボールをふわりと浮かせて、ゴールの真ん中へ。
+    card:
+      type: timeline
+      title: EURO2000 準決勝 イタリア対オランダ
+      rows: *mtr
+      focus: 3
+      highlight_row: 0
+    image: assets/images/20261029_totti_legend/01_w.jpg
+    emph: true
+    callword: スプーン
+  - {text: オランダは4人のうち3人が外し、イタリアがPK戦を3対1で勝って決勝へ。, card: none, image: assets/images/20261029_totti_legend/08_w.jpg}
+  - {text: このキックは、大会の名場面の1つに選ばれました。, card: none}
+  quotes_from: ['https://en.wikipedia.org/wiki/Francesco_Totti']
+  sources: ['https://en.wikipedia.org/wiki/UEFA_Euro_2000_knockout_stage', 'https://en.wikipedia.org/wiki/Francesco_Totti']
+- id: after
+  heading: 引退のあと、トッティは何をしてきたのか
+  tier: 報道
+  telop: 涙の手紙と、そのあと
+  card: &af
+    type: timeline
+    title: 引退のあと
+    rows: &afr
+    - [2017年5月, 最後の試合のあと、手紙を読む]
+    - [2017年7月, 引退を正式に、クラブの役員に]
+    - [2019年6月, ローマの役職を離れる]
+    - [2026年, 冬のオリンピックの顔に]
+    focus: 0
+    highlight_row: 0
+  say:
+  - text: 最後の試合のあと、トッティはファンへ、手紙を読みました。
+    card: *af
+    image: assets/images/20261029_totti_legend/08_w.jpg
+  - {voice: トッティ, text: 怖いんだ。この先がどうなるのか、見えない。, card: none, pause: 0.6}
+  - text: 2017年7月、引退を正式に発表。ローマの役員になります。
+    card:
+      type: timeline
+      title: 引退のあと
+      rows: *afr
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261029_totti_legend/05_w.jpg
+  - text: 2019年6月にはその役職も離れます。クラブとの関わりは、30年でした。
+    card:
+      type: timeline
+      title: 引退のあと
+      rows: *afr
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261029_totti_legend/05_w.jpg
+  - {text: 2026年には、ミラノとコルティナの冬季オリンピックで、大会の顔を務めました。, card: none, image: assets/images/20261029_totti_legend/07_w.jpg}
+  quotes_from: ['https://www.bbc.com/sport/football/40036023']
+  sources: ['https://en.wikipedia.org/wiki/Francesco_Totti', 'https://www.bbc.com/sport/football/40036023']
+- id: secret
+  heading: トッティは、なぜローマを出なかったのか
+  tier: 報道
+  telop: ミラン、ラツィオ、サンプドリア
+  card: &sc
+    type: table
+    title: 知られざる、3つの話
+    columns: [いつ, 何があったか]
+    rows: &scr
+    - [少年時代, 母がミランの好条件の誘いを断る]
+    - [12歳ごろ, ラツィオのユースへ行く話がまとまりかける]
+    - [1997年, サンプドリアへの貸し出しを会長が止める]
+    source: Wikipedia
+    highlight_row: 0
+  say:
+  - {text: トッティには、ローマを出ていたかもしれない話が3つあります。, card: none, image: assets/images/20261029_totti_legend/03_w.jpg}
+  - text: 1つ目。少年時代、ミランから好条件の誘い。断ったのは母でした。
+    card: *sc
+    image: assets/images/20261029_totti_legend/03_w.jpg
+  - {text: 息子を、地元に残すためです。, card: none}
+  - text: 2つ目。実は、街のライバル、ラツィオのユースへ行く話がまとまりかけていました。
+    card:
+      type: table
+      title: 知られざる、3つの話
+      columns: [いつ, 何があったか]
+      rows: *scr
+      source: Wikipedia
+      highlight_row: 1
+    image: assets/images/20261029_totti_legend/02_w.jpg
+    emph: true
+  - text: 3つ目。1997年1月のサンプドリアへの貸し出し。止めたのは会長でした。
+    card:
+      type: table
+      title: 知られざる、3つの話
+      columns: [いつ, 何があったか]
+      rows: *scr
+      source: Wikipedia
+      highlight_row: 2
+    image: assets/images/20261029_totti_legend/02_w.jpg
+  - {text: どれか1つでも違っていたら、ローマ一筋の25シーズンはありませんでした。, card: none, image: assets/images/20261029_totti_legend/08_w.jpg}
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Francesco_Totti']
+- id: view
+  heading: トッティが点を取る人として花開いたのは、いつだったのか
+  tier: 背景
+  viewpoint: true
+  telop: 30歳の季は、通算の約1.8倍
+  card: &vw
+    type: table
+    title: トッティ セリエAの得点ペース
+    columns: [期間, 試合, 得点, 1試合あたり]
+    rows: &vwr
+    - [通算, '619', '250', '0.40']
+    - [2006年から07年, '35', '26', '0.74']
+    source: Wikipedia
+    highlight_row: 0
+  say:
+  - text: 最後に、トッティのセリエAの得点ペースを、通算と1つのシーズンで比べます。
+    card: *vw
+    image: assets/images/20261029_totti_legend/01_w.jpg
+  - text: 通算は619試合で250点。1試合あたり0.40点です。
+    card:
+      type: table
+      title: トッティ セリエAの得点ペース
+      columns: [期間, 試合, 得点, 1試合あたり]
+      rows: *vwr
+      source: Wikipedia
+      highlight_row: 0
+    image: assets/images/20261029_totti_legend/01_w.jpg
+  - text: 30歳のシーズンは、35試合で26点。1試合あたり0.74点です。
+    card:
+      type: table
+      title: トッティ セリエAの得点ペース
+      columns: [期間, 試合, 得点, 1試合あたり]
+      rows: *vwr
+      source: Wikipedia
+      highlight_row: 1
+    image: assets/images/20261029_totti_legend/07_w.jpg
+    emph: true
+    mark: {kind: circle, row: 1, col: 3}
+  - {text: 通算の約1.8倍。この季、トッティはセリエAの得点王になりました。, card: none, image: assets/images/20261029_totti_legend/03_w.jpg}
+  - {text: ゴールデンシューも手にしています。ヨーロッパのリーグの得点王の賞です。, card: none}
+  - {text: 組み立て役から、点を取る人へ。30歳で役を替えて、いちばん点を取りました。, card: none}
+  - {text: 1つのクラブに長くいたからこそ見せた、もう一つの顔です。, card: none}
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Francesco_Totti']

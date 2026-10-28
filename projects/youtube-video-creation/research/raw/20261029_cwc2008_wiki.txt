@@ -1,0 +1,289 @@
+{{Use dmy dates|date=July 2021}}
+{{Infobox football match
+|              title = 2008 FIFA Club World Cup final
+|              image = FifaCWC2008Final.JPG
+|              event = [[2008 FIFA Club World Cup]]
+|              team1 = [[LDU Quito]]
+|   team1association = {{fbaicon|ECU|1900|size=30px}}
+|         team1score = 0
+|              team2 = [[Manchester United F.C.|Manchester United]]
+|   team2association = {{fbaicon|ENG|size=30px}}
+|         team2score = 1
+|            details =
+|               date = 21 December 2008
+|            stadium = [[International Stadium Yokohama|International Stadium]]
+|               city = [[Yokohama]]<ref name="match_report"/>
+|            referee = [[Ravshan Irmatov]] ([[Uzbekistan Football Federation|Uzbekistan]])<ref name="match_report"/>
+|         attendance = 68,682<ref name="match_report"/>
+|            weather = Clear night<br />{{convert|16|°C|°F}}<br />69% [[humidity]]
+|           previous = [[2007 FIFA Club World Cup final|2007]]
+|               next = [[2009 FIFA Club World Cup final|2009]]
+}}
+The '''2008 FIFA Club World Cup final''' was the final match of the [[2008 FIFA Club World Cup]], an [[association football]] tournament for the champion clubs from each of [[FIFA]]'s six continental confederations. The match took place at the [[International Stadium Yokohama]], Japan, on 21 December 2008, and pitted [[LDU Quito]] of Ecuador, the [[CONMEBOL]] club champions, and [[Manchester United F.C.|Manchester United]] of England, the [[UEFA]] club champions. Despite going down to ten men early in the second half, Manchester United won the match 1–0 thanks to a 73rd-minute goal from [[Wayne Rooney]].<ref>{{cite news|url=http://news.bbc.co.uk/sport2/hi/football/teams/m/man_utd/7793438.stm|title=Liga de Quito 0–1 Man Utd |date=21 December 2008|work=BBC Sport|access-date=22 September 2009}}</ref>
+
+==Road to final==
+Both LDU Quito and Manchester United qualified for the competition at the semi-final stage, after winning their respective continental competition, the [[2008 Copa Libertadores]] and the [[2007–08 UEFA Champions League]].
+
+LDU Quito's opening game was against [[Federación Mexicana de Fútbol Asociación|Mexican]] side [[C.F. Pachuca|Pachuca]], who had defeated [[Egyptian Football Association|Egyptian]] club [[Al Ahly SC|Al Ahly]] 4–2 in the quarter-finals after [[extra time]].<ref>{{cite web |url=https://www.fifa.com/clubworldcup/matches/round=252217/match=300073123/report.html |title=Al-Ahly – Pachuca Match Report |publisher=[[FIFA]] |date=13 December 2008 |access-date=20 December 2008 |archive-url=https://web.archive.org/web/20090216225713/http://www.fifa.com/clubworldcup/matches/round=252217/match=300073123/report.html |archive-date=16 February 2009 |url-status=dead }}</ref> Their semi-final match was played at the [[Olympic Stadium (Tokyo)|National Stadium]] in Tokyo on 17 December 2008.<ref>{{cite web |url=https://www.fifa.com/clubworldcup/matches/round=252222/match=300073125/report.html |title=Pachuca – Liga de Quito Match Report |publisher=[[FIFA]] |date=17 December 2008 |access-date=20 December 2008 |archive-url=https://web.archive.org/web/20090202043904/http://www.fifa.com/clubworldcup/matches/round=252222/match=300073125/report.html |archive-date=2 February 2009 |url-status=dead }}</ref> The Ecuadorian side scored two goals in the first 26&nbsp;minutes through [[Claudio Bieler]] and [[Luis Bolaños]], securing their place in the Club World Cup final.<ref>{{cite web|url=https://www.fifa.com/clubworldcup/matches/round=252222/match=300073125/summary.html |title=In a Liga of their own |publisher=[[FIFA]] |date=17 December 2008 |access-date=20 December 2008 |archive-url=https://web.archive.org/web/20081221083457/http://www.fifa.com/clubworldcup/matches/round%3D252222/match%3D300073125/summary.html |archive-date=21 December 2008 |url-status=dead }}</ref>
+
+Manchester United's semi-final opponents were [[Gamba Osaka]], who had previously defeated [[Football Federation Australia|Australian]] [[A-League]] premiers and [[2008 AFC Champions League|Asian Champions League]] runners-up [[Adelaide United FC|Adelaide United]] (1–0) to move into the second semi-final on 18 December.<ref>{{cite web |url=https://www.fifa.com/clubworldcup/matches/round=252217/match=300073122/report.html |title=Adelaide United – Gamba Osaka Match Report |publisher=[[FIFA]] |date=14 December 2008 |access-date=20 December 2008 |archive-url=https://web.archive.org/web/20090130072925/http://www.fifa.com/clubworldcup/matches/round=252217/match=300073122/report.html |archive-date=30 January 2009 |url-status=dead }}</ref> [[Nemanja Vidić]] and [[Cristiano Ronaldo]] opened the scoring in the first half, building up a two-goal lead at half-time. [[Masato Yamazaki (footballer, born 1981)|Masato Yamazaki]] was the next to score in the 74th minute to bring Gamba back into contention, but [[Wayne Rooney]] scored twice and [[Darren Fletcher]] once within the next five minutes to extend United's lead. [[Yasuhito Endō]] converted an 85th-minute [[Penalty kick (association football)|penalty kick]] and [[Hideo Hashimoto]] got a third for Gamba just minutes before the final whistle. The result was 5–3, taking Manchester United to the final.<ref>{{cite web|url=https://www.fifa.com/clubworldcup/matches/round=252222/match=300073124/summary.html |title=United hit five in thriller |publisher=[[FIFA]] |date=18 December 2008 |access-date=20 December 2008 |archive-url=https://web.archive.org/web/20090122065019/http://www.fifa.com/clubworldcup/matches/round%3D252222/match%3D300073124/summary.html |archive-date=22 January 2009 |url-status=dead }}</ref><ref>{{cite web |url=https://www.fifa.com/clubworldcup/matches/round=252222/match=300073124/report.html |title=Gamba Osaka – Manchester United Match Report |publisher=[[FIFA]] |date=18 December 2008 |access-date=20 December 2008 |archive-url=https://web.archive.org/web/20090202051203/http://www.fifa.com/clubworldcup/matches/round=252222/match=300073124/report.html |archive-date=2 February 2009 |url-status=dead }}</ref>
+{{Clear}}
+
+==Match==
+
+===Details===
+{{football box
+|date=21 December 2008
+|time=19:30 [[UTC+9]]
+|team1=[[LDU Quito]] {{fbaicon|ECU|1900}}
+|score=0–1
+|report=https://www.fifa.com/clubworldcup/matches/round=252219/match=300073127/report.html
+|team2={{fbaicon|ENG}} [[Manchester United F.C.|Manchester United]]
+|goals1=
+|goals2=[[Wayne Rooney|Rooney]] {{goal|73}}
+|stadium=[[International Stadium Yokohama]]
+|attendance=68,682<ref name="match_report">{{cite web |title=Match Report |url=https://www.fifa.com/mm/document/tournament/competition/98/47/53/08_1221_ecu-eng_fulltime.pdf |archive-url=https://web.archive.org/web/20121105030746/http://www.fifa.com/mm/document/tournament/competition/98/47/53/08_1221_ecu-eng_fulltime.pdf |url-status=dead |archive-date=5 November 2012 |work=FIFA.com |publisher=Fédération Internationale de Football Association |access-date=28 May 2012 }}</ref>
+|referee=[[Ravshan Irmatov]] ([[Uzbekistan Football Federation|Uzbekistan]])<ref name="match_report"/>
+}}
+
+{| width=92%
+|-
+|{{Football kit
+| pattern_la = _LDU 2008MC
+| pattern_b  = _LDU 2008MC
+| pattern_ra = _LDU 2008MC
+| leftarm    = 000000
+| body       = 000000
+| rightarm   = 000000
+| shorts     = 000000
+| socks      = 000000
+| title      = LDU Quito
+}}
+|{{Football kit
+| pattern_la = 
+| pattern_b  = _manutdh0709
+| pattern_ra = 
+| pattern_sh = _thinblackline
+| pattern_so = _blackline
+| leftarm    = E20E0E
+| body       = E20E0E
+| rightarm   = E20E0E
+| shorts     = FFFFFF
+| socks      = FFFFFF
+| title      = Manchester United
+}}
+|}
+
+{| style="width:100%;"
+|-
+|style="vertical-align:top; width:50%;"|
+{| style="font-size: 90%" cellspacing="0" cellpadding="0"
+|-
+|colspan="4"|
+|-
+!width=25| !!width=25|
+|-
+|GK ||'''1''' ||{{flagicon|ECU|1900}} [[José Cevallos (footballer, born 1971)|José Cevallos]] || {{yel|44}}
+|-
+|CB ||'''3''' ||{{flagicon|ECU|1900}} [[Renán Calle]] || {{yel|66}} || {{suboff|77}}
+|-
+|CB ||'''14'''||{{flagicon|ECU|1900}} [[Diego Calderón]]
+|-
+|CB ||'''2''' ||{{flagicon|ARG}} [[Norberto Araujo]]
+|-
+|RM ||'''23'''||{{flagicon|ECU|1900}} [[Jayro Campos]] || {{yel|36}}
+|-
+|CM ||'''15'''||{{flagicon|ECU|1900}} [[William Araujo]] || {{yel|71}}
+|-
+|CM ||'''8''' ||{{flagicon|ECU|1900}} [[Patricio Urrutia]] ([[Captain (association football)|c]])
+|-
+|LM ||'''7''' ||{{flagicon|ECU|1900}} [[Luis Bolaños]] || || {{suboff|87}}
+|-
+|RF ||'''13'''||{{flagicon|ECU|1900}} [[Néicer Reasco]] || || {{suboff|82}}
+|-
+|CF ||'''16'''||{{flagicon|ARG}} [[Claudio Bieler]] || {{yel|2}}
+|-
+|LF ||'''21'''||{{flagicon|ARG}} [[Damián Manso]]
+|-
+|colspan=3|'''Substitutions:'''
+|-
+|DF ||'''4''' ||{{flagicon|ECU|1900}} [[Paúl Ambrosi]] || || {{subon|77}}
+|-
+|MF ||'''20'''||{{flagicon|ECU|1900}} [[Pedro Larrea]] || || {{subon|82}}
+|-
+|FW ||'''19'''||{{flagicon|CHI}} [[Reinaldo Navia]] || || {{subon|87}}
+|-
+|colspan=3|'''Manager:'''
+|-
+|colspan=4|{{flagicon|ARG}} [[Edgardo Bauza]]
+|}
+|valign="top"|[[File:LDU Quito vs Man Utd 2008-12-21.svg|300px]]
+|style="vertical-align:top; width:50%;"|
+{| cellspacing="0" cellpadding="0" style="font-size:90%; margin:auto;"
+|-
+|colspan="4"|
+|-
+!width=25| !!width=25|
+|-
+|GK ||'''1''' ||{{flagicon|NED}} [[Edwin van der Sar]]
+|-
+|RB ||'''21'''||{{flagicon|BRA}} [[Rafael (footballer, born 1990)|Rafael]] || || {{suboff|85}}
+|-
+|CB ||'''5''' ||{{flagicon|ENG}} [[Rio Ferdinand]] ([[Captain (association football)|c]])
+|-
+|CB ||'''15'''||{{flagicon|SRB|2004}} [[Nemanja Vidić]] || {{sent off|0|49}}
+|-
+|LB ||'''3''' ||{{flagicon|FRA|1974}} [[Patrice Evra]]
+|-
+|CM ||'''16'''||{{flagicon|ENG}} [[Michael Carrick]]
+|-
+|CM ||'''8''' ||{{flagicon|BRA}} [[Anderson (footballer, born 1988)|Anderson]] || {{yel|70}} || {{suboff|88}}
+|-
+|RW ||'''7''' ||{{flagicon|POR}} [[Cristiano Ronaldo]]
+|-
+|AM ||'''13'''||{{flagicon|KOR|1997}} [[Park Ji-sung]]
+|-
+|LW ||'''32'''||{{flagicon|ARG}} [[Carlos Tevez]] || || {{suboff|51}}
+|-
+|CF ||'''10'''||{{flagicon|ENG}} [[Wayne Rooney]]
+|-
+|colspan=3|'''Substitutions:'''
+|-
+|DF ||'''23'''||{{flagicon|NIR}} [[Jonny Evans]] || || {{subon|51}}
+|-
+|DF ||'''2''' ||{{flagicon|ENG}} [[Gary Neville]] || || {{subon|85}}
+|-
+|MF ||'''24'''||{{flagicon|SCO}} [[Darren Fletcher]] || || {{subon|88}}
+|-
+|colspan=3|'''Manager:'''
+|-
+|colspan=4|{{flagicon|SCO}} Sir [[Sir Alex Ferguson|Alex Ferguson]]
+|}
+|}
+{| width=100% style="font-size: 90%"
+|
+'''Assistant referees:'''
+<br />Abdukhamidullo Rasulov ([[Uzbekistan Football Federation|Uzbekistan]])<ref name="match_report"/>
+<br />Bahadyr Kochkorov ([[Football Federation of Kyrgyz Republic|Kyrgyzstan]])<ref name="match_report"/>
+<br />'''Fourth official:'''
+<br />[[Yuichi Nishimura]] ([[Japan Football Association|Japan]])<ref name="match_report"/>
+| width=55% valign=top|
+'''Match rules'''
+*90 minutes
+*30 minutes of extra time if necessary
+*Penalty shoot-out if scores still level
+*Twelve named substitutes
+*Maximum of three substitutions
+|}
+
+===Statistics===
+<div style="float:left; width:33%;">
+{| class="wikitable" style="text-align: center"
+|+First half
+|-
+!width=100 |
+!width=70 | LDU Quito
+!width=70 | Manchester United
+|-
+|Goals scored || 0 || 0
+|-
+|Total shots || 4 || 11
+|-
+|Shots on target || 0 || 5
+|-
+|Ball possession || 36% || 64%
+|-
+|Corner kicks || 0 || 3
+|-
+|Fouls committed || 14 || 10
+|-
+|Offsides || 0 || 1
+|-
+|Yellow cards || 3 || 0
+|-
+|Red cards || 0 || 0
+|}
+</div><div style="float:left; width:33%;">
+
+{| class="wikitable" style="text-align: center"
+|+Second half
+|-
+!width=100 |
+!width=70 | LDU Quito
+!width=70 | Manchester United
+|-
+|Goals scored || 0 || 1
+|-
+|Total shots || 6 || 5
+|-
+|Shots on target || 3 || 4
+|-
+|Ball possession || 54% || 46%
+|-
+|Corner kicks || 5 || 0
+|-
+|Fouls committed || 12 || 7
+|-
+|Offsides || 3 || 0
+|-
+|Yellow cards || 2 || 1
+|-
+|Red cards || 0 || 1
+|}
+</div><div style="float:left; width:33%;">
+
+{| class="wikitable" style="text-align: center"
+|+Overall<ref name="stats">{{cite web|title=Match Statistics |url=https://www.fifa.com/tournaments/archive/clubworldcup/japan2008/results/match=300073127/statistics.html |access-date=28 May 2012 |publisher=FIFA |archive-url=https://web.archive.org/web/20090619131349/http://www.fifa.com/tournaments/archive/clubworldcup/japan2008/results/match%3D300073127/statistics.html |archive-date=19 June 2009 |url-status=dead }}</ref> 
+|-
+!width=100 |
+!width=70 | LDU Quito
+!width=70 | Manchester United
+|-
+|Goals scored || 0 || 1
+|-
+|Total shots || 10 || 16
+|-
+|Shots on target || 3 || 9
+|-
+|Ball possession || 45% || 55%
+|-
+|Corner kicks || 5 || 3
+|-
+|Fouls committed || 26 || 17
+|-
+|Offsides || 3 || 1
+|-
+|Yellow cards || 5 || 1
+|-
+|Red cards || 0 || 1
+|}
+</div>{{Clear}}
+
+==See also==
+*[[Manchester United F.C. in European football]]
+
+==References==
+{{reflist}}
+
+==External links==
+*[https://www.fifa.com/tournaments/mens/clubworldcup/japan2008/match-center FIFA Club World Cup Japan 2008], FIFA.com
+*[https://web.archive.org/web/20111220060704/http://www.fifa.com/mm/document/affederation/technicaldevp/01/03/18/35/cwcjapan2008report.pdf Technical Report and Statistics (PDF)], FIFA.com
+
+{{FIFA Club World Cup}}
+{{L.D.U. Quito matches}}
+{{Manchester United F.C. matches}}
+
+{{DEFAULTSORT:Fifa Club World Cup Final 2008}}
+[[Category:2008–09 in English men's football|World]]
+[[Category:2008 FIFA Club World Cup|Final]]
+[[Category:L.D.U. Quito matches]]
+[[Category:Manchester United F.C. matches]]
+[[Category:FIFA Club World Cup finals|2008]]
+[[Category:2008 in Ecuadorian football]]
+[[Category:Sports competitions in Yokohama]]
+[[Category:Football matches in Yokohama]]
+[[Category:2000s in Yokohama]]
+[[Category:2008 in Japanese football]]
+[[Category:Football finals in Japan]]
+[[Category:December 2008 sports events in Japan]]
+[[Category:Ecuador–United Kingdom sports relations|2008]]

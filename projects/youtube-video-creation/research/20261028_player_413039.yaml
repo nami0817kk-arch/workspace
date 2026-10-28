@@ -1,0 +1,582 @@
+# ブライアン・ムベウモ（マンチェスター・ユナイテッド／カメルーン代表）の紹介。選手紹介の8節の型（2026-10-28、シリーズ「有名選手の紹介」。key: player_413039）。
+# **FotMob は使わない**（雛形が書いた FotMob の板3種 radar/shots/heat と research/player_pool/fotmob_923312.json は消した）。数字は Transfermarkt API の試合記録（控え research/raw/20261028_mbeumo_tm.json）と、自分で割った90分あたり。
+# **選んだ理由・重なり確認（2026-10-28）**：scripts/ に紹介があるのは 1〜21位と23位トナーリ（10/27）。未紹介で一覧の値が最上位は 25位ムベウモと27位クーニャ（どちらも 7500万ユーロ）。一覧の順で先のムベウモ。
+#   scripts/・research/posted.json・covered.yaml を「ムベウモ／Mbeumo／413039」で grep：紹介・比べるの台本は0件。covered.yaml はブレントフォードのクラブ紹介の出典に名前があるだけ。
+#   今季もプレミアの1部：TM の試合記録で 26/27 のプレミア8試合（8/22〜10/25）、ESPN の順位表でマンUは8試合で勝ち点7。英語版Wikipedia の infobox も currentclub = Manchester United（club-update 2026-10-18）。現役。
+# **数字の軸**：トップチームと代表の通算（トロワのBチーム・U19、フランスの年代別代表は除く）：トロワ 46試合12得点（Wikipedia 本文と一致）／ブレントフォード 242試合70得点（TM。Wikipedia 本文も242試合）／
+#   マンU 46試合16得点（TM、25/26 34試合12得点＋今季12試合4得点）／カメルーン代表 35試合8得点（Wikipedia 10/3 時点・TM 一致）→ 369試合106得点。
+#   今季（TM・ESPN）：リーグ8試合・720分・4得点。チームのリーグ得点は10（0-2,5-2,2-2,0-1,1-1,1-1,1-1,0-3）。CL 3試合1アシスト、リーグ杯1試合。
+#   90分あたり（リーグ戦、TM の分とシュート数から自分で割った）：22/23 0.28点・2.18本 → 23/24 0.41・2.43 → 24/25 0.53・2.24 → 25/26 0.38・2.50 → 今季 0.50・3.25（720分）。
+# **日本との接点**：無し（無理に入れない）。
+# **一次情報・出典**：英語版Wikipedia（アヴァロン生まれ・父がカメルーン人・14歳でトロワ・2018年ガンバルデッラ杯の決勝で2得点・2018/2/17 メス戦でデビュー・2019/8/5 ブレントフォードへ580万ポンド＝当時のクラブ記録・
+#   2021年プレーオフ決勝でスウォンジーに2-0で昇格・21/22 ポスト・バーに7回（ラフィーニャと並ぶ最多タイ）・2022/1/8 FA杯で途中出場からハットトリック・2022年8月エトオと会ってカメルーンを選ぶ・2022年W杯3試合・
+#   24/25 リーグ20得点・2025/7/21 マンUへ報道で最大7100万ポンド・2025/10/19 アンフィールドで開始1分の先制点、2016年以来のアンフィールドでの勝利・10月の月間MVP・25/26 チーム得点王タイ11点）。
+#   本人の言葉：Flashscore（2025年7月、加入時のインタビュー。英語を訳した）。
+# **入れなかったもの**：年俸、私生活、リーグ杯 PK 戦の失敗、23/24 の怪我の詳細、FotMob の指標、市場価値の線（TM の推移が2024年12月からしか無い）。
+# **写真**：マンU公式の記事の主写真2枚（b1＝8月の月間ゴール、b2＝10/18 リーズ戦。scoreplay の配信を w=2400 で取得。代理店の表示なし。許諾は得ていない＝引き受ける危険）。若いころは Commons（トロワ 2018・フランスU20 2019）を pairphoto で2枚並べ（pair_young）。
+# **不安**：今季の数は 10/27 時点。移籍金は報道の値。
+date: 2026年10月28日
+slot: other_1
+format: news
+series: 有名選手の紹介
+people:
+- ブライアン・ムベウモ
+theme:
+  id: player_413039
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: マンチェスター・ユナイテッド
+  title: ムベウモってどんな選手？ 580万ポンドの若手は、どこで値を上げたのか
+  question: 2部のブレントフォードに580万ポンドで来たブライアン・ムベウモは、どうやってマンUの得点源になったのか
+  takeaway: 通算369試合106得点。リーグ戦の90分あたりの得点は24/25が0.53、25/26が0.38、今季は0.50。シュートは2.24本から3.25本に増え、マンUのリーグ10得点のうち4点を決めている
+  nameplate: ブライアン・ムベウモ｜マンチェスター・ユナイテッド FW／カメルーン代表
+  opening_image: assets/images/20261028_player_413039/b1/01_w.jpg
+  end_bg: assets/images/20261028_player_413039/b1/01_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+watch: 毎日、数字でサッカーを読み解きます
+short_title: ムベウモってどんな選手？
+thumbnail:
+  line1: ムベウモ、369試合106点
+  line2: 最初の値は580万ポンド
+  tags:
+  - マンチェスター・ユナイテッド
+  photo: assets/images/20261028_player_413039/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261028_player_413039/b1/01_v.jpg
+sections:
+- id: hook
+  heading: 2部から来た若手は、なぜマンUの点取り屋になったのか
+  tier: 報道
+  telop: 580万ポンドから、7100万ポンドへ
+  narrator: 解説
+  card: &hook_card
+    type: stats
+    title: ブライアン・ムベウモの数字
+    items:
+    - - '580万'
+      - ポンド
+      - 2019年 ブレントフォードへ
+    - - 最大7100万
+      - ポンド
+      - 2025年 マンUへ（報道）
+    - - '20'
+      - 得点
+      - 24/25 プレミアリーグ
+    focus: 1
+  say:
+  - text: マンチェスター・ユナイテッドの右ウイング、ブライアン・ムベウモ。
+    image: assets/images/20261028_player_413039/b1/01_w.jpg
+    card: none
+  - text: 2019年、フランス2部のトロワから、イングランド2部のブレントフォードへ。
+    card:
+      <<: *hook_card
+      focus: 0
+  - text: このときの移籍金は、580万ポンドでした。
+    card:
+      <<: *hook_card
+      focus: 0
+  - text: 6年後、マンUが払ったのは、報道で最大7100万ポンド。およそ12倍です。
+    card:
+      <<: *hook_card
+      focus: 1
+    emph: true
+  - text: その前の季には、プレミアリーグで20得点を挙げています。
+    card:
+      <<: *hook_card
+      focus: 2
+  - text: 移籍金が12倍になるまでに、何があったのか。数字で見ていきます。
+    card: none
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Bryan_Mbeumo
+  - https://www.transfermarkt.com/bryan-mbeumo/profil/spieler/413039
+- id: data
+  heading: ムベウモは、いまどこで、いくらと見られている選手か
+  tier: 報道
+  telop: ブライアン・ムベウモの基礎DATA
+  narrator: 解説
+  card: &data_card
+    type: table
+    title: ブライアン・ムベウモ（マンチェスター・ユナイテッド）
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 所属
+      - マンU（19番）
+    - - ポジション
+      - 右ウイング
+    - - 生年月日
+      - 1999年8月7日（27歳）
+    - - 出身
+      - フランス（アヴァロン）
+    - - 身長・利き足
+      - 1.71m・左足
+    - - 代表
+      - カメルーン（35試合8得点）
+    - - 契約・市場価値
+      - 2030年まで・7500万ユーロ
+    source: Transfermarkt
+  say:
+  - text: ムベウモの持ち場は右のウイング。マンUでは背番号19をつけています。
+    image: assets/images/20261028_player_413039/b1/01_w.jpg
+    card: none
+  - text: 1999年8月7日生まれの27歳。
+    card:
+      <<: *data_card
+      highlight_row: 2
+  - text: 生まれはフランス中部のアヴァロン。父はカメルーン人、母はフランス人です。
+    card:
+      <<: *data_card
+      highlight_row: 3
+  - text: 身長は1メートル71。利き足は左です。
+    card:
+      <<: *data_card
+      highlight_row: 4
+  - text: 市場価値は、推定で7500万ユーロ。契約は2030年まであります。
+    card:
+      <<: *data_card
+      highlight_row: 6
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/bryan-mbeumo/profil/spieler/413039
+  - https://en.wikipedia.org/wiki/Bryan_Mbeumo
+- id: career
+  heading: トロワの少年は、どこで値を上げてきたのか
+  tier: 背景
+  telop: トロワから、ブレントフォード、マンUへ
+  narrator: 解説
+  card: &career_card
+    type: timeline
+    title: ムベウモの歩み
+    rows:
+    - - '2018'
+      - 2月、18歳でトロワのトップデビュー
+    - - '2019'
+      - 8月、2部のブレントフォードへ
+    - - '2021'
+      - プレーオフ決勝に勝ってプレミアへ
+    - - '2022'
+      - カメルーン代表を選び、W杯へ
+    - - '2025'
+      - 7月、マンUへ
+    focus: '2018'
+  say:
+  - text: ムベウモは14歳で、トロワの下部組織に入りました。
+    image: assets/images/20261028_player_413039/pair_young/01.jpg
+    card: none
+  - text: 2018年、U19の全国大会の決勝で2得点。
+    card: none
+  - text: 舞台はスタッド・ドゥ・フランス。チームは優勝しています。
+    card: none
+  - text: 同じ年の2月17日、メス戦で、18歳でトップチームにデビュー。
+    card:
+      <<: *career_card
+      focus: '2018'
+  - text: 2部に落ちた翌季は40試合で11得点。トロワで、レギュラーになりました。
+    card:
+      <<: *career_card
+      focus: '2018'
+  - text: 2019年8月、ロンドンのクラブへ。払われたのは、当時のクラブ記録の移籍金でした。
+    image: assets/images/20261028_player_413039/b2/01_w.jpg
+    card:
+      <<: *career_card
+      focus: '2019'
+  - text: 2年目の2021年、プレーオフ決勝でスウォンジーに2対0の勝利。
+    card:
+      <<: *career_card
+      focus: '2021'
+  - text: クラブは、プレミアリーグへ上がります。
+    card:
+      <<: *career_card
+      focus: '2021'
+    emph: true
+  - text: フランスでは、U21までの年代別代表でプレーしていました。
+    card: none
+  - text: それでも2022年8月、カメルーン代表を選びます。
+    card: none
+  - text: 決め手は、ロンドンでのエトオとの話し合いでした。
+    card:
+      <<: *career_card
+      focus: '2022'
+  - text: その年の秋には、カタールでのワールドカップで3試合に出ています。
+    card:
+      <<: *career_card
+      focus: '2022'
+  - text: そして2025年7月21日、マンUへの移籍が決まりました。
+    image: assets/images/20261028_player_413039/b1/01_w.jpg
+    card:
+      <<: *career_card
+      focus: '2025'
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Bryan_Mbeumo
+  - https://www.transfermarkt.com/bryan-mbeumo/profil/spieler/413039
+- id: style
+  heading: ムベウモは、右から何をするウイングなのか
+  tier: 背景
+  telop: 右から、左足で中へ
+  narrator: 解説
+  card: &style_card
+    type: table
+    title: ムベウモの節目の場面
+    columns:
+    - 日付
+    - 試合
+    - 中身
+    rows:
+    - - 2022年1月8日
+      - FA杯 ポート・ヴェイル戦
+      - 途中出場でハットトリック
+    - - 21/22 シーズン
+      - プレミアリーグ
+      - ポスト・バーに7回
+    - - 2025年10月19日
+      - リヴァプール戦（敵地）
+      - 開始1分で先制点
+    source: Wikipedia
+  say:
+  - text: ムベウモの形は、右に立って、得意の左足で中へ切り込むこと。
+    image: assets/images/20261028_player_413039/b2/01_w.jpg
+    card: none
+  - text: 右のウイングのほか、センターフォワードや、トップ下もこなします。
+    card: none
+  - text: 2022年1月、FA杯のポート・ヴェイル戦。
+    card:
+      <<: *style_card
+      highlight_row: 0
+  - text: 途中から出て、ハットトリックを決めました。
+    card:
+      <<: *style_card
+      highlight_row: 0
+  - text: 途中出場の選手のハットトリックは、ブレントフォードの歴史で初めてでした。
+    card:
+      <<: *style_card
+      highlight_row: 0
+  - text: 同じ季、リーグ戦でポストとバーに当てたのが7回。
+    card:
+      <<: *style_card
+      highlight_row: 1
+  - text: プレミアの1季で、いちばん多い記録に並びました。
+    card:
+      <<: *style_card
+      highlight_row: 1
+  - text: 決めきれなかった季から、決める選手へ。マンUでも大舞台で点を取っています。
+    image: assets/images/20261028_player_413039/b1/01_w.jpg
+    card: none
+  - text: 2025年10月19日、敵地アンフィールドのリヴァプール戦。
+    card:
+      <<: *style_card
+      highlight_row: 2
+  - text: 開始1分で、先制点を決めました。
+    card:
+      <<: *style_card
+      highlight_row: 2
+    emph: true
+  - text: マンUは2対1で勝利。アンフィールドでの勝ちは、2016年以来でした。
+    card:
+      <<: *style_card
+      highlight_row: 2
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Bryan_Mbeumo
+- id: past
+  heading: ムベウモは、クラブの各季で、何試合に出て、いくつ点を取ったのか
+  tier: 報道
+  telop: ブレントフォードとマンUの7季
+  narrator: 解説
+  card: &past_card
+    type: table
+    title: ムベウモ クラブでの7季（全公式戦）
+    columns:
+    - シーズン
+    - クラブ
+    - 試合
+    - 得点
+    - アシスト
+    rows:
+    - - 19/20
+      - ブレントフォード
+      - '47'
+      - '16'
+      - '7'
+    - - 20/21
+      - ブレントフォード
+      - '49'
+      - '8'
+      - '13'
+    - - 21/22
+      - ブレントフォード
+      - '38'
+      - '8'
+      - '7'
+    - - 22/23
+      - ブレントフォード
+      - '39'
+      - '9'
+      - '8'
+    - - 23/24
+      - ブレントフォード
+      - '27'
+      - '9'
+      - '7'
+    - - 24/25
+      - ブレントフォード
+      - '42'
+      - '20'
+      - '9'
+    - - 25/26
+      - マンU
+      - '34'
+      - '12'
+      - '3'
+    source: Transfermarkt
+    highlight_row: 0
+  say:
+  - text: ムベウモのブレントフォード1年目、2部の19/20は、47試合で16得点。
+    image: assets/images/20261028_player_413039/b2/01_w.jpg
+    card:
+      <<: *past_card
+      highlight_row: 0
+  - text: 翌季は8得点でしたが、アシストが13まで増えています。
+    card:
+      <<: *past_card
+      highlight_row: 1
+  - text: 大きく伸びたのが24/25。42試合で、前の季の倍を超える得点です。
+    card:
+      <<: *past_card
+      highlight_row: 5
+    emph: true
+  - text: マンUの1年目の25/26は、34試合で12得点。
+    card:
+      <<: *past_card
+      highlight_row: 6
+  - text: リーグ戦の得点は、チームの得点王タイでした。
+    card:
+      <<: *past_card
+      highlight_row: 6
+  - text: 続いて通算です。トロワは46試合で12得点。
+    image: assets/images/20261028_player_413039/pair_young/01.jpg
+    card: &total_card
+      type: table
+      title: ムベウモ 通算（トップチームと代表）
+      columns:
+      - 所属
+      - 試合
+      - 得点
+      rows:
+      - - トロワ
+        - '46'
+        - '12'
+      - - ブレントフォード
+        - '242'
+        - '70'
+      - - マンU
+        - '46'
+        - '16'
+      - - カメルーン代表
+        - '35'
+        - '8'
+      - - 合計
+        - '369'
+        - '106'
+      source: Transfermarkt
+      highlight_row: 0
+  - text: ブレントフォードは242試合で70得点。マンUは46試合で16得点です。
+    card:
+      <<: *total_card
+      highlight_row: 1
+  - text: カメルーン代表も足すと、通算369試合で106得点になります。
+    card:
+      <<: *total_card
+      highlight_row: 4
+    emph: true
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/bryan-mbeumo/leistungsdatendetails/spieler/413039
+  - https://en.wikipedia.org/wiki/Bryan_Mbeumo
+- id: season
+  heading: 今季のムベウモは、マンUで何を見せているのか
+  tier: 報道
+  main: true
+  telop: 今季ここまで
+  narrator: 解説
+  card: &season_card
+    type: table
+    title: 今季のムベウモ（10月27日時点）
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - リーグ戦
+      - 8試合・720分・4得点
+    - - チームのリーグ得点
+      - 10点（うち4点がムベウモ）
+    - - チャンピオンズリーグ
+      - 3試合・1アシスト
+    - - カメルーン代表
+      - 2試合・1得点
+    source: Transfermarkt・ESPN
+    highlight_row: 0
+  say:
+  - text: マンチェスター・ユナイテッドに来て2季目のムベウモ。今季の中身を見ます。
+    image: assets/images/20261028_player_413039/b1/01_w.jpg
+    card: none
+    short_only: true
+  - text: 今季のリーグ戦は、8試合すべてにフル出場。720分に出ています。
+    image: assets/images/20261028_player_413039/b2/01_w.jpg
+    card: none
+  - text: 得点は4。まず8月30日のイプスウィッチ戦。
+    card:
+      <<: *season_card
+      highlight_row: 0
+  - text: 9月6日のエヴァートン戦でも、続けて決めました。
+    card:
+      <<: *season_card
+      highlight_row: 0
+  - text: 10月も、トッテナム戦とリーズ戦で1点ずつ。
+    card:
+      <<: *season_card
+      highlight_row: 0
+  - text: どちらも1対1の引き分けで、チームの1点はムベウモでした。
+    card:
+      <<: *season_card
+      highlight_row: 0
+  - text: マンUがリーグ戦で取った10点のうち、4点がムベウモです。
+    image: assets/images/20261028_player_413039/b1/01_w.jpg
+    card: none
+    emph: true
+  - text: ただ、チームは8試合で1勝。勝ち点7で、苦しい出だしです。
+    image: assets/images/20261028_player_413039/b2/01_w.jpg
+    card: none
+  - text: チャンピオンズリーグでは3試合に出場。
+    card:
+      <<: *season_card
+      highlight_row: 2
+  - text: 9月、アゼルバイジャンのサバとの試合でアシストを記録しました。
+    card:
+      <<: *season_card
+      highlight_row: 2
+  - text: カメルーン代表でも、9月の予選で1得点。
+    card:
+      <<: *season_card
+      highlight_row: 3
+  - text: 昨季の代表は、1試合で0点でした。
+    card:
+      <<: *season_card
+      highlight_row: 3
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/bryan-mbeumo/leistungsdatendetails/spieler/413039
+  - https://www.espn.com/soccer/team/fixtures/_/id/360/manchester-united
+- id: words
+  heading: ムベウモは、なぜマンUを選んだのか。加入の日の言葉
+  tier: 報道
+  telop: 加入の日の言葉
+  narrator: 解説
+  card: &words_card
+    type: document
+    label: 加入時のインタビュー（2025年7月）の訳
+    paragraphs:
+    - 最初から、このクラブに来たかった。この大きなクラブに。いま、ここにいて本当にうれしい。
+    - 僕が初めて着たユニフォームは、背中にロナウドの名前が入った、マンチェスター・ユナイテッドのものだったと思う。
+    highlight:
+    - 最初から
+    - ロナウド
+  say:
+  - text: 加入したとき、ムベウモはこう話しています。
+    image: assets/images/20261028_player_413039/b1/01_w.jpg
+    card: none
+  - voice: ムベウモ
+    text: 最初から、このクラブに来たかった。
+    card: *words_card
+  - voice: ムベウモ
+    text: いま、ここにいて本当にうれしい。
+    card: *words_card
+  - voice: ムベウモ
+    text: 僕が初めて着たユニフォームは、
+    card: *words_card
+  - voice: ムベウモ
+    text: 背中にロナウドの名前が入った、マンUのものだったと思う。
+    card: *words_card
+    pause: 0.5
+  - text: 子どものころに着たクラブで、いまは右を任されています。
+    card: none
+  quotes_from:
+  - Flashscore https://www.flashscore.com/news/soccer-premier-league-bryan-mbeumo-delighted-to-sign-for-biggest-club-in-the-world-manchester-united/txHFakNb
+  sources:
+  - https://www.flashscore.com/news/soccer-premier-league-bryan-mbeumo-delighted-to-sign-for-biggest-club-in-the-world-manchester-united/txHFakNb
+- id: view
+  heading: 同じプレミアで比べると、ムベウモの点のペースは戻っているのか
+  tier: 背景
+  viewpoint: true
+  narrator: 解説
+  telop: 90分あたりの得点とシュート（リーグ戦）
+  card: &view_card
+    type: table
+    title: ムベウモ プレミアリーグの90分あたり
+    columns:
+    - 季
+    - 得点
+    - シュート
+    rows:
+    - - 22/23 ブレントフォード
+      - '0.28'
+      - 2.18本
+    - - 23/24 ブレントフォード
+      - '0.41'
+      - 2.43本
+    - - 24/25 ブレントフォード
+      - '0.53'
+      - 2.24本
+    - - 25/26 マンU
+      - '0.38'
+      - 2.50本
+    - - 今季 マンU
+      - '0.50'
+      - 3.25本
+    source: Transfermarkt
+    highlight_row: 0
+  say:
+  - text: 最後に、プレミアリーグの数字どうしで、ムベウモの点のペースを比べます。
+    image: assets/images/20261028_player_413039/b1/01_w.jpg
+    card:
+      <<: *view_card
+      highlight_row: 0
+  - text: ブレントフォードの22/23は、90分あたり0.28点。
+    card:
+      <<: *view_card
+      highlight_row: 0
+  - text: そこから毎季上がり、24/25は0.53点でした。
+    card:
+      <<: *view_card
+      highlight_row: 2
+  - text: マンUの1年目は0.38点。ペースは一度落ちています。
+    card:
+      <<: *view_card
+      highlight_row: 3
+  - text: 今季は0.50点。シュートは90分あたり3.25本。
+    card:
+      <<: *view_card
+      highlight_row: 4
+  - text: 5季の中で、シュートの数はいちばん多くなっています。
+    card:
+      <<: *view_card
+      highlight_row: 4
+    emph: true
+    mark:
+      kind: circle
+      row: 4
+  - text: とはいえ、今季はまだ8試合。数字は、いまの時点のものです。
+    image: assets/images/20261028_player_413039/b2/01_w.jpg
+    card: none
+  - text: シュートが増えたいまの形で、チームの勝ち点にもつなげられるのか。
+    card: none
+  - text: 次は10月31日、敵地でのチェルシー戦です。
+    image: assets/images/20261028_player_413039/b1/01_w.jpg
+    card: none
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/bryan-mbeumo/leistungsdatendetails/spieler/413039
+  - https://www.espn.com/soccer/team/fixtures/_/id/360/manchester-united

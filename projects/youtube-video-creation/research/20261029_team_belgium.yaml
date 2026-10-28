@@ -1,0 +1,447 @@
+# 代表チーム紹介 ベルギー代表（10/29 作成。固定シリーズ9「代表チーム紹介」。見本は 10/28 のウルグアイ代表 scripts/20261028_team_uruguay.md）。7節：フック→基礎DATA（板）→日本との関係（早い節へ）→歴史と転機（年表）→看板選手（表）→いまのチーム→見立て。
+# **軸（2026-10-29）**：「2026年W杯で優勝したスペインが8試合で許した1点は、ベルギーが取った。それでも8強で止まった。3位だった2018年と何が違うのか」。答えは見立ての節（2018年の7試合と2026年の6試合の1試合あたりの得点・失点を自分で割って比べる）。
+# **日本との接点**：2018年W杯の決勝トーナメント1回戦（ロストフ）で日本は2点を先に取り、2対3で逆転負け。2002年W杯の1次リーグでも2対2。通算6試合、日本から見て2勝2分2敗。基礎DATAの次の節に置いた。
+# **重なりの確認（2026-10-29）**：scripts/・research/covered.yaml・research/posted.json を grep。ベルギー代表の「紹介」回（team_belgium）は無い。代表チーム紹介の既出はエクアドル・ニュージーランド・ブラジル・ドイツ・スペイン・アルゼンチン・フランス・イングランド・ポルトガル・オランダ・ウルグアイ。covered.yaml・posted.json に「ベルギー代表」が主役の回は無い（9/26 のイタリア代表の試合の回の出典にイタリア対ベルギーの記事があるだけ）。
+# ---- 確かめたこと（2026-10-29。WebFetch の要約は使わず、requests で Wikipedia の生の wikitext を読んだ）----
+#  ・FIFAランク：8位（2026-10-07 発表）。Module:SportsRankings/data/FIFA World Rankings（updated 7 October 2026）で Belgium 8・前回比0。日本は17位、スペイン1位、フランス3位（同じ表）。点数は書かない。
+#  ・W杯：出場15回（1930年が初）。最高は2018年の3位（Belgium national football team の infobox「World cup best = Third place (2018)」）。1986年は4位（Belgium at the FIFA World Cup 本文）。
+#  ・Belgium at the FIFA World Cup の表：2018年 3位・7試合6勝0分1敗・16得点6失点／2022年 1次リーグ・3試合1勝1分1敗・1得点2失点／2026年 準々決勝・6試合3勝2分1敗・14得点7失点。
+#  ・自分で割った（検算した）：2018年 16÷7=2.29・6÷7=0.86・勝率 6÷7=86%／2026年 14÷6=2.33・7÷6=1.17・勝率 3÷6=50%。
+#  ・2026年W杯の6試合（Belgium national football team の試合一覧）：6/15 エジプト1-1（ハニーのオウンゴール66分／アシュール19分）、6/21 イラン0-0、6/26 ニュージーランド5-1（トロサール28・50分、デ・ブライネ66分、ルカク86分、サーレマーケルス90+4分）、7/1 32強 セネガル3-2（延長。ルカク86分、ティーレマンス89分・120+5分PK）、7/6 16強 アメリカ4-1（デ・ケテラエル9・33分、ファナーケン57分、ルカク90+3分）、7/10 準々決勝 スペイン1-2（デ・ケテラエル41分／ファビアン30分・メリーノ88分）。
+#  ・スペインは2026年W杯で優勝（7/19 決勝でアルゼンチンに勝利）。Spain at the FIFA World Cup の表で2026年は8試合7勝1分0敗・14得点1失点。本文「Belgium ... being the only team to score ... against the eventual champion in the entire tournament」とも一致。
+#  ・ユーロ：最高は1980年の準優勝（infobox）。FIFAランク1位は2015年11月〜2016年3月と2018年9月〜2022年3月（infobox の FIFA max date）。
+#  ・監督：マルク・ファン・ボメル。2026-07-24 に就任、前任はルディ・ガルシア（Mark van Bommel の記事本文、RBFA の発表を出典）。選手としてオランダ代表79試合10得点、2010年W杯準優勝（同じ記事の infobox・medal）。ベルギー代表で4試合2勝0分2敗・6得点5失点（同じ記事の監督成績の表）。
+#  ・主将：ユーリ・ティーレマンス（名簿の印 captain。2025-09-03 に主将に、Reuters を出典）。代表93試合15得点、所属マンチェスター・ユナイテッド。副主将：ケヴィン・デ・ブライネ（vice-captain、127試合40得点、ナポリ）。名簿の数字は「Information correct as of 5 October 2026」。
+#  ・愛称：Red Devils（オランダ語 De Rode Duivels）＝赤い悪魔（infobox）。
+#  ・名簿・年齢：Wikipedia の Current squad と Recent call-ups（10月の名簿）。2026-10-29 時点の年齢（生年月日から計算）：ティーレマンス 1997-05-07=29（マンチェスター・ユナイテッド、MF）、デ・ブライネ 1991-06-28=35（ナポリ、MF）、クルトワ 1992-05-11=34（レアル・マドリード、GK、115試合）、ルカク 1993-05-13=33（フェネルバフチェ、FW、135試合94得点＝infobox の歴代最多得点）、デ・ケテラエル 2001-03-10=25（アタランタ、FW、39試合9得点）、ドク 2002-05-27=24（マンチェスター・シティ、FW、48試合7得点）。
+#  ・W杯のあと（Nations League A。試合一覧で日付・スコア・得点者を確認）：9/25 イタリア0-2（ローマ。ゴッツ20分・ルケバキオ69分）／9/28 フランス0-1（ブリュッセル。オリーズ88分）／10/2 トルコ3-0（リエージュ。デ・ブライネ10・60分、ルカク76分）／10/5 フランス1-4（サン＝ドニ。ルケバキオ35分／ドゥエ77分・シェルキ81分・オリーズ88・90+1分）＝2勝2敗・6得点5失点。次は 11/12 トルコ（敵地）、11/15 イタリア（ブリュッセル）。
+#  ・日本との対戦：国際Aマッチ6試合、日本から見て2勝2分2敗・11得点8失点（Japan national football team records and statistics の Head-to-head：BEL 1999–2018 6・2・2・2・11・8）。試合は Japan national football team results の各表：1999-06-03 キリンカップ 0-0（国立）／2002-06-04 W杯 2-2（埼玉）／2009-05-31 キリンカップ 4-0（国立）／2013-11-19 親善試合 3-2（ブリュッセル）／2017-11-14 親善試合 0-1（ブルッヘ）／2018-07-02 W杯16強 2-3（ロストフ）。ロストフの得点（2018 FIFA World Cup knockout stage）：原口元気48分・乾貴士52分／フェルトンゲン69分・フェライニ74分・シャドリ90+4分。
+# ---- 言わないもの ----
+#  ・怪我／出場停止（名簿の SUS の印）／私生活／背番号／戦術の説明／監督の契約の金額／ガルシア前監督の退任の事情。
+# ---- 写真（assets/images/20261029_team_belgium/、出典は credits.json）----
+#  ・b01_qf：Commons CC0（Alexis Doine）2026-07-10 W杯準々決勝 スペイン対ベルギーの全景（ロサンゼルス）。b03_tielemans・b05_debruyne・b07_deketelaere：Commons（2026-03-28 アメリカ対ベルギー）本人。b04_lukaku：Commons（2026-07-06 ベルギー対アメリカ）本人。b06_vanbommel：Commons 2010年の本人（選手時代）。代理店・放送映像は使っていない。
+date: 2026年10月29日
+slot: other_1
+format: news
+series: 代表チーム紹介
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- ベルギー代表
+- マルク・ファン・ボメル
+- ユーリ・ティーレマンス
+- ケヴィン・デ・ブライネ
+- ロメル・ルカク
+theme:
+  id: team_belgium
+  league: japan
+  league_name: ベルギー代表
+  kind: preview
+  topic: ベルギー代表
+  title: ベルギー代表は、W杯で優勝国から唯一の1点。3位だった2018年と、何が違うのか
+  question: 2026年W杯で優勝国スペインから唯一の点を取ったベルギーは、3位だった2018年と何が違うのか
+  lead: W杯で優勝したスペインから、ただ1点を奪った国。
+  hook: ''
+  opening_image: assets/stats/tb_belgium_data_t.png
+  end_bg: assets/images/20261029_team_belgium/b01_qf_w.jpg
+  takeaway: ベルギーは3位だった2018年W杯で7試合6勝、1試合あたり2.29得点・0.86失点。8強の2026年は6試合3勝で、2.33得点・1.17失点。点の取り方は変わらず、失点が増えた。優勝したスペインから唯一の1点を取ったが、1対2で敗れた。ファン・ボメル監督の4試合はフランスに2連敗。11月のトルコ戦・イタリア戦が確かめになる。
+thumbnail:
+  board: assets/stats/tb_belgium_data.png
+  line1: ベルギー代表
+  line2: 優勝国から唯一の1点
+  crest_main:
+  - ベルギー
+  tags:
+  - ベルギー代表
+  - ワールドカップ
+  - 日本代表
+  - デ・ブライネ
+  - ルカク
+  - 代表チーム紹介
+sections:
+- id: hook
+  heading: 優勝したスペインから、ただ1点。それでも、なぜ8強で止まったのか
+  main: true
+  tier: 背景
+  telop: スペインがW杯で許した1点は、ベルギー戦だけ
+  narrator: 解説
+  say:
+  - text: 2026年のワールドカップを制したスペインは、8試合で**1点しか**許しませんでした。
+    image: assets/stats/tb_belgium_data_r1.png
+    no_telop: true
+    emph: true
+  - text: その1点を取ったのが、準々決勝で戦ったベルギー代表です。
+    image: assets/stats/tb_belgium_data2.png
+    no_telop: true
+  - text: それでも試合は1対2の負け。ベルギーの大会は、8強までとなりました。
+    image: assets/stats/tb_belgium_data1.png
+    no_telop: true
+  - text: 日本とも、2018年のワールドカップで戦った相手です。
+    image: assets/stats/tb_belgium_data_r2.png
+    no_telop: true
+  - text: 国の最高成績を残した8年前と、いまのベルギーは、何が違うのでしょうか。
+    image: assets/stats/tb_belgium_data_t.png
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Spain_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/Belgium_national_football_team
+- id: data
+  heading: ベルギー代表は、どんな数字を持つ国なのか
+  tier: 背景
+  telop: ベルギー代表の基礎DATA
+  narrator: 解説
+  say:
+  - text: フィファが10月7日に出した最新のランクで、ベルギーは**8位**。
+    image: assets/stats/tb_belgium_data0.png
+    no_telop: true
+  - text: ワールドカップの最高成績は、2018年ロシア大会の3位。
+    image: assets/stats/tb_belgium_data1.png
+    no_telop: true
+  - text: 監督は、2010年のワールドカップで準優勝したオランダの元代表、マルク・ファン・ボメル。
+    image: assets/stats/tb_belgium_data4.png
+    no_telop: true
+  - text: 主将は、中盤のユーリ・ティーレマンスです。
+    image: assets/stats/tb_belgium_data5.png
+    no_telop: true
+  - text: 愛称は、赤い悪魔。赤いユニフォームにちなむ呼び名。
+    image: assets/stats/tb_belgium_data6.png
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Module:SportsRankings/data/FIFA_World_Rankings
+  - https://en.wikipedia.org/wiki/Belgium_national_football_team
+  - https://en.wikipedia.org/wiki/Mark_van_Bommel
+- id: japan
+  heading: 日本は、ベルギーとどう戦ってきたのか
+  tier: 背景
+  telop: 通算6試合、日本から見て2勝2分2敗。2018年W杯は2対3
+  narrator: 解説
+  card: &id_jp
+    type: table
+    title: 日本とベルギーの国際Aマッチ（全6試合）
+    columns:
+    - 年月
+    - 大会
+    - 日本から見た結果
+    rows:
+    - - 1999年6月
+      - キリンカップ
+      - 0-0
+    - - 2002年6月
+      - W杯
+      - 2-2
+    - - 2009年5月
+      - キリンカップ
+      - 4-0
+    - - 2013年11月
+      - 親善試合
+      - 3-2
+    - - 2017年11月
+      - 親善試合
+      - 0-1
+    - - 2018年7月
+      - W杯
+      - 2-3
+  say:
+  - text: 日本とベルギーの国際Aマッチは、これまで6試合。
+    image: assets/stats/tb_belgium_data7.png
+    no_telop: true
+  - text: 日本から見て、2勝2引き分け2敗。まったくの互角です。
+    image: assets/images/20261029_team_belgium/b01_qf_w.jpg
+    card: *id_jp
+  - text: 2002年の日韓大会では、1次リーグの初戦で2対2の引き分け。
+    card:
+      <<: *id_jp
+      highlight_row: 1
+  - text: 2013年11月には、ブリュッセルに乗り込んで3対2で勝っています。
+    card:
+      <<: *id_jp
+      highlight_row: 3
+  - text: そして2018年7月2日、ロシアのロストフ。
+    image: assets/images/20261029_team_belgium/b01_qf_w.jpg
+    card: none
+  - text: ワールドカップの、決勝トーナメント1回戦です。
+    card: none
+  - text: 48分に原口元気、52分に乾貴士。日本が2点を先に取りました。
+    card: none
+  - text: そこからフェルトンゲン、フェライニに追いつかれ、
+    card: none
+  - text: 最後は後半アディショナルタイムの4分、シャドリに決められて2対3の負け。
+    emph: true
+    card:
+      <<: *id_jp
+      highlight_row: 5
+  - text: ベルギーはこの大会で、3位まで進みました。
+    card:
+      <<: *id_jp
+      highlight_row: 5
+  sources:
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_records_and_statistics
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(1990%E2%80%931999)
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(2000%E2%80%932009)
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(2010%E2%80%932019)
+  - https://en.wikipedia.org/wiki/2018_FIFA_World_Cup_knockout_stage
+- id: history
+  heading: ベルギーは、どこまで頂点に近づいてきたのか
+  tier: 背景
+  telop: 1986年に4位、2018年に3位。FIFAランク1位も
+  narrator: 解説
+  card: &id_hist
+    type: timeline
+    title: ベルギー代表の歩み
+    rows:
+    - - 1930年
+      - 第1回のW杯に出場
+    - - 1980年
+      - ユーロで準優勝
+    - - 1986年
+      - W杯で4位
+    - - 2015年
+      - FIFAランクで初の1位
+    - - 2018年
+      - W杯で3位
+    - - 2026年
+      - W杯でベスト8
+    focus: 2018年
+  say:
+  - text: ベルギーは、1930年の第1回ワールドカップから出ている国です。
+    image: assets/images/20261029_team_belgium/b01_qf_w.jpg
+    card: *id_hist
+  - text: 1980年には、ヨーロッパ選手権で準優勝。
+    card:
+      <<: *id_hist
+      highlight_row: 1
+  - text: 1986年のメキシコ大会では、ワールドカップで4位に入りました。
+    card:
+      <<: *id_hist
+      highlight_row: 2
+  - text: 2015年11月には、フィファランクで初めて1位に立ちます。
+    card:
+      <<: *id_hist
+      highlight_row: 3
+  - text: 1位に立った世代が頂点に近づいたのが、2018年のロシア大会。
+    image: assets/images/20261029_team_belgium/pair_star/01.jpg
+    card: none
+  - text: 準々決勝でブラジルを2対1で破り、3位決定戦ではイングランドに2対0。
+    card: none
+  - text: 国の歴史でいちばん高い、3位でした。
+    emph: true
+    card:
+      <<: *id_hist
+      highlight_row: 4
+  - text: 2022年のカタール大会は1次リーグで敗れましたが、
+    image: assets/images/20261029_team_belgium/b01_qf_w.jpg
+    card: none
+  - text: 2026年は、ベスト8まで戻しています。
+    card:
+      <<: *id_hist
+      highlight_row: 5
+  sources:
+  - https://en.wikipedia.org/wiki/Belgium_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/Belgium_national_football_team
+- id: players
+  heading: いまの看板選手は、誰なのか
+  tier: 背景
+  telop: 看板選手を、所属・名前・位置・年齢で
+  narrator: 解説
+  card: &id_pl
+    type: table
+    title: ベルギー代表の看板選手
+    columns:
+    - 所属
+    - 名前
+    - 位置
+    - 年齢
+    rows:
+    - - マンチェスター・U
+      - ユーリ・ティーレマンス
+      - MF
+      - '29'
+    - - ナポリ
+      - ケヴィン・デ・ブライネ
+      - MF
+      - '35'
+    - - レアル・マドリード
+      - ティボー・クルトワ
+      - GK
+      - '34'
+    - - フェネルバフチェ
+      - ロメル・ルカク
+      - FW
+      - '33'
+    - - アタランタ
+      - シャルル・デ・ケテラエル
+      - FW
+      - '25'
+    - - マンチェスター・C
+      - ジェレミー・ドク
+      - FW
+      - '24'
+  say:
+  - text: いまのベルギーを引っ張る6人。
+    image: assets/images/20261029_team_belgium/b01_qf_w.jpg
+    card: *id_pl
+  - text: 年齢は、10月29日の時点のものです。
+    card: *id_pl
+  - text: 主将は、マンチェスター・ユナイテッドのティーレマンス。29歳で、代表93試合。
+    image: assets/images/20261029_team_belgium/pair_cap/01.jpg
+    card:
+      <<: *id_pl
+      highlight_row: 0
+  - text: 2026年のワールドカップでは、セネガル戦の延長で決勝点を決めています。
+    card: none
+  - text: 副主将のデ・ブライネは35歳。代表127試合40得点です。
+    image: assets/images/20261029_team_belgium/pair_cap/01.jpg
+    card:
+      <<: *id_pl
+      highlight_row: 1
+  - text: ゴールを守るのは、レアル・マドリードのクルトワ。代表115試合。
+    card:
+      <<: *id_pl
+      highlight_row: 2
+  - text: 前線のルカクは、代表135試合で94得点。ベルギーの歴代最多です。
+    emph: true
+    image: assets/images/20261029_team_belgium/pair_fw/01.jpg
+    card:
+      <<: *id_pl
+      highlight_row: 3
+  - text: 若い力では、25歳のデ・ケテラエル。2026年のワールドカップで3点。
+    card: none
+  - text: スペインから奪った1点も、デ・ケテラエルのゴールでした。
+    card:
+      <<: *id_pl
+      highlight_row: 4
+  sources:
+  - https://en.wikipedia.org/wiki/Belgium_national_football_team
+  - https://en.wikipedia.org/wiki/Youri_Tielemans
+  - https://en.wikipedia.org/wiki/Kevin_De_Bruyne
+  - https://en.wikipedia.org/wiki/Romelu_Lukaku
+  - https://en.wikipedia.org/wiki/Charles_De_Ketelaere
+- id: now
+  heading: ファン・ボメル監督のベルギーは、W杯のあとをどう戦っているのか
+  tier: 背景
+  telop: ファン・ボメル監督の4試合は、2勝2敗
+  narrator: 解説
+  card: &id_nw
+    type: table
+    title: W杯のあと ベルギーの4試合（ネーションズリーグ）
+    columns:
+    - 日付
+    - 相手
+    - ベルギーの結果
+    rows:
+    - - 9月25日
+      - イタリア（敵地）
+      - 2-0
+    - - 9月28日
+      - フランス（ホーム）
+      - 0-1
+    - - 10月2日
+      - トルコ（ホーム）
+      - 3-0
+    - - 10月5日
+      - フランス（敵地）
+      - 1-4
+  say:
+  - text: 7月24日、ファン・ボメルがベルギーの監督に就きました。
+    image: assets/images/20261029_team_belgium/pair_coach/01.jpg
+    card: none
+  - text: 前の監督は、ワールドカップで8強に導いたルディ・ガルシアです。
+    card: none
+  - text: ファン・ボメルは選手として、オランダ代表79試合10得点。
+    card: none
+  - text: 秋はヨーロッパの国どうしのリーグ戦、ネーションズリーグ。4試合で2勝2敗。
+    card: *id_nw
+  - text: 初戦は、ローマでイタリアに2対0の勝ち。
+    card:
+      <<: *id_nw
+      highlight_row: 0
+  - text: ところがフランスには、ホームで0対1の負け。
+    image: assets/images/20261029_team_belgium/b01_qf_w.jpg
+    card:
+      <<: *id_nw
+      highlight_row: 1
+  - text: トルコには3対0で勝ったものの、
+    card:
+      <<: *id_nw
+      highlight_row: 2
+  - text: 敵地での2度目のフランス戦は、1対4の負けでした。
+    card:
+      <<: *id_nw
+      highlight_row: 3
+  - text: 4試合で6得点5失点。その5失点は、すべてフランス戦でした。
+    image: assets/images/20261029_team_belgium/pair_coach/01.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Belgium_national_football_team
+  - https://en.wikipedia.org/wiki/Mark_van_Bommel
+- id: viewpoint
+  viewpoint: true
+  heading: 3位の2018年と8強の2026年で、数字はどこが変わったのか
+  tier: 背景
+  telop: 1試合の得点は2.29と2.33。失点は0.86から1.17へ
+  narrator: 解説
+  card: &id_vp
+    type: table
+    title: ベルギーのW杯 1試合あたりの得点と失点
+    columns:
+    - 大会
+    - 試合
+    - 勝ち
+    - 得点
+    - 失点
+    rows:
+    - - 2018年（3位）
+      - '7'
+      - '6'
+      - '2.29'
+      - '0.86'
+    - - 2026年（8強）
+      - '6'
+      - '3'
+      - '2.33'
+      - '1.17'
+  say:
+  - text: 見立てに入ります。ベルギーのロシア大会と、8強の2026年を並べます。
+    image: assets/images/20261029_team_belgium/b01_qf_w.jpg
+    card: none
+  - text: 2018年は7試合で6勝。取った点は16、失った点は6でした。
+    card:
+      <<: *id_vp
+      highlight_row: 0
+  - text: 2026年は6試合で3勝。取った点は14、失った点は7。
+    card:
+      <<: *id_vp
+      highlight_row: 1
+  - text: 1試合に直すと、得点は2.29と2.33。ほとんど同じです。
+    mark:
+      kind: circle
+      row: 1
+      col: 3
+    card:
+      <<: *id_vp
+      highlight_row: 1
+  - text: 違うのは失点。0.86から1.17へ、増えました。
+    emph: true
+    mark:
+      kind: circle
+      row: 1
+      col: 4
+    card:
+      <<: *id_vp
+      highlight_row: 1
+  - text: 点の取り方は変わらず、守りで差が出た。数字は、そう語っています。
+    card: none
+  - text: スペインから1点を取っても、2点を返されて止まりました。
+    image: assets/images/20261029_team_belgium/pair_fw/01.jpg
+    card: none
+  - text: ファン・ボメル監督のもとでも、フランスとの2試合で5失点。
+    card: none
+  - text: 次は11月12日に敵地でトルコ、15日にホームでイタリアと戦います。
+    image: assets/images/20261029_team_belgium/pair_coach/01.jpg
+    card: none
+  - text: 失点を減らせるのか。そこが、2018年に近づけるかの分かれ目です。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Belgium_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/Belgium_national_football_team
+  - https://en.wikipedia.org/wiki/Module:SportsRankings/data/FIFA_World_Rankings

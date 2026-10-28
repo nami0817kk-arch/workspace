@@ -1,0 +1,495 @@
+# スタジアム紹介シリーズ：ハル・シティの本拠地（エムケーエム・スタジアム、10/29 19:00 予定）。雛形は 10/28 コヴェントリーの回。
+# 重なりの確認（2026-10-28）：scripts/*stadium_* は20本（サン・シーロ〜コヴェントリー）。ハル無し。covered.yaml・posted.json にも stadium_hull は無い。
+#   クラブ紹介⑪ハル・シティ（posted.json の pl11 系、9月公開）は別シリーズで、軸は「4部から5年でプレミア」と名前を変えられかけた話。この回は本拠地の持ち主・旧本拠地・入場が軸。
+#   守田英正の本（10/18 フラム戦の75分・10/28「ロボットではなく人間」）とは、本拠地での出場2試合の1行だけ重なる。監督の言葉・離脱の話は入れない。
+# 今季のプレミア所属（一次情報）：ESPN の順位（2026-27 English Premier League）にハル・シティ 10位・8試合・勝ち点10。PL公式の試合API（2026/27 第1〜10節）にもハルの試合がある。
+# 収容（PL公式ハンドブック2026/27 の Club Directory: Hull City、控え research/raw/20261021_nufc_plhandbook.txt 1031〜1047行）：24,983・ピッチ 104.8×67.2m。所在地 MKM Stadium, West Park, Hull HU3 6HU。
+#   20クラブの並び（同じハンドブック）：17位クリスタル・パレス 25,194／18位ハル 24,983／19位ブレントフォード 17,250／20位ボーンマス 12,357／1位マンU 74,158。
+#   自分で引いた・割った：25,194-24,983=211／24,983-17,250=7,733／24,983÷74,158=0.3369＝約34％／55,019÷24,983=2.202＝約2.2倍／34,000-24,983=9,017。
+# 本拠地の歴史（ウィキペディア en "MKM Stadium"、控え scratchpad の hull/MKM_Stadium.txt）：
+#   持ち主はハル市議会、運営は Stadium Management Company。費用は約4400万ポンド、うち4200万ポンド超を市が出した（市が持っていた Kingston Communications の株の一部を売った）。
+#   1997年に構想。12か所以上を比べてウェスト・パークの「サークル」に。旧本拠地のひとつ「サークル」の競技場から約100メートル。イングランドで初めて公園の中に建ったスタジアム。
+#   2001年初めにクラブが管財人の管理下に。2001年秋に着工、14か月で予定どおり・予算どおりに完成。2002年12月18日に開場（親善試合でサンダーランドに1対0、2万2467人）。最初の公式戦はハートルプールに2対0。
+#   ラグビーリーグのハル FC が2か月後に入る（2003年2月9日が最初の試合）。席は黒・白・琥珀：黒と白はハル FC、黒と琥珀はハル・シティの色で、どちらにも寄らないように。北と南のスタンドに席で「Hull」の字。
+#   名前：KC Stadium（2002〜2016）→ 2016年4月4日、スポンサーの改名で KCOM Stadium → 2021年6月、建材の MKM Building Supplies と5年の契約で MKM Stadium。
+#   2011年、当時のオーナーのアッサム・アラムが本拠地の所有権を買いたいと言い、市が断った。
+#   本拠地でのハル・シティの最多入場は 25,030（2010年5月9日、リヴァプールに0対0）。ホームとアウェーの客を分ける区画のため、表の収容に届くことはない。
+#   広げる計画：東スタンドの2階4500席・北と南に約2000席ずつで、約3万4000席（市と運営会社が以前に検討）。昨季（2部）の平均入場 21,400。
+# 旧本拠地（ウィキペディア en "Boothferry Park"）：1946年8月31日に開場（未完成のまま、リンカーン・シティと0対0、2万5586人）。最多入場は1949年2月26日、FAカップ準々決勝のマンチェスター・ユナイテッド戦で5万5019人（クラブのホームの試合で今も最多）。
+#   1990年代、クラブの財政が苦しかった頃に、スタジアムの建物の中にスーパー（アイスランド・クイックセーブ）の店が入った。閉じたときの収容 15,160。2002年12月14日に閉場、2008〜2011年に取り壊し、跡地は住宅。
+# 入場（PL公式の試合API、2026/27 の第1・3・6・8節）：8/22 マンU 24,470（2対0で勝ち）／9/5 ヴィラ 24,425／10/11 エヴァートン 24,458／10/25 ブレントフォード 24,259
+#   → 合計97,612・平均24,403＝収容の97.7％（24,403÷24,983=0.9768）。いちばん多いマンU戦でも 24,983-24,470=513 届かない。昨季の平均との差 24,403-21,400=3,003。
+#   次の本拠地戦は 10/31 のイプスウィッチ戦（同じAPI、第9節、現地15:00）。
+#   比べ：コヴェントリーの今季ホーム4試合は平均31,248・95.8％（10/28 の回の控え）、フォレストは平均30,746・98.5％（10/27 の回の控え）。どちらも同じAPI。
+# 日本との接点（サッカーの縁）：守田英正。2026年7月24日に加入、2年契約（クラブの延長の権利が1年）（ウィキペディア、出典はクラブ公式 wearehullcity.co.uk）。前はポルトガルのスポルティング。日本代表40試合（ウィキペディアの infobox）。
+#   この本拠地でのリーグ戦は2試合、どちらも途中から（10/11 エヴァートン戦75分から・10/25 ブレントフォード戦72分から。ESPN の試合記録、10/28 の守田の取材メモの控え）。
+# 言わなかったもの：ラグビーの成績・入場／コンサート／ホスピタリティの細部／ハル・フェアともめた話／安全な立ち見席（2700席）の細部／アラム時代の抗議の中身／UEFA の大会での呼び名。
+#   KC が何の略かは、今回読めた出典では言い切れないので言わない。本拠地全体の最多入場（U-21 の代表戦 25,280）は使わない。
+# 写真：assets/images/20261029_stadium_hull/（credits.json）。01・02 は Commons の本拠地の内観（既に 1920x1080 に切ってあった背景の写真）。03 は守田（Commons・CC0・2026-10-17 フラム対ハル）。
+#   旧本拠地の写真は Commons が 429（取り込みの上限）で取れなかった。
+date: 2026年10月29日
+slot: other_1
+format: news
+series: スタジアム紹介
+voice_min: 0
+people: []
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  id: stadium_hull
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: ハル・シティ
+  title: ハル・シティの本拠地は、なぜクラブではなく市の持ち物なのか
+  question: 2002年からハル・シティが使う本拠地は、なぜクラブではなく市が建てて持ち、プレミアに戻ったいまどこまで埋まっているのか
+  lead: イングランドで初めて、公園の中に建ったスタジアム。
+  hook: ''
+  opening_image: assets/images/20261029_stadium_hull/02_w.jpg
+  end_bg: assets/images/20261029_stadium_hull/02_w.jpg
+  takeaway: ハル・シティの本拠地の収容は、今季の開幕時で2万4983人。プレミア20クラブで18位。建てたのも持つのもハル市で、2002年からラグビーのクラブと分け合う。今季のホーム4試合の平均は2万4403人で収容の97.7％。コヴェントリーの95.8％より埋まり、フォレストの98.5％に近い。昨季の平均より約3000人多いが、いちばん入った試合でも513席届かない
+  short_title: ハル・シティの本拠地、市が建てた公園のスタジアム
+thumbnail:
+  layout: scene
+  bold: false
+  callouts:
+  - ラグビーと同じ家
+  - 市が4200万ポンド
+  photo: assets/images/20261029_stadium_hull/02_w.jpg
+  line1: ハル・シティの本拠地
+  line2: 市の持ち物、ラグビーと同居
+  tags:
+  - ハル・シティ
+  - 守田英正
+  - プレミアリーグ
+  - スタジアム紹介
+sections:
+- id: data
+  main: true
+  heading: ハル・シティの本拠地は、プレミアで何番目の大きさなのか
+  bg: assets/images/20261029_stadium_hull/02_w.jpg
+  tier: 報道
+  telop: 収容は2万4983人。プレミア20クラブで18位。2002年からハル・シティの本拠地
+  narrator: 解説
+  card:
+    type: table
+    title: ハル・シティの本拠地の基礎DATA
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 収容人数
+      - 2万4983人（今季の開幕時）
+    - - 20クラブでは
+      - 18位
+    - - いまの名前
+      - エムケーエム・スタジアム
+    - - 持ち主
+      - ハル市
+    - - 本拠地として
+      - 2002年から
+    - - ピッチ
+      - 縦104.8×横67.2メートル
+  say:
+  - text: ハル・シティの本拠地の話です。
+    short_only: true
+    image: assets/images/20261029_stadium_hull/02_w.jpg
+    card: none
+  - text: 収容は、2万4983人。今季のプレミア20クラブで、18番目です。
+    emph: true
+    image: assets/images/20261029_stadium_hull/02_w.jpg
+    card: &id_rank
+      type: stats
+      title: プレミア18位の本拠地。すぐ上と、すぐ下
+      items:
+      - - '25194'
+        - 人
+        - 17位 クリスタル・パレス
+      - - '24983'
+        - 人
+        - ハル・シティの収容
+      - - '17250'
+        - 人
+        - 19位 ブレントフォード
+      focus: 1
+  - text: すぐ上は、クリスタル・パレス。2万5194人。差は、わずか211席。
+    image: assets/images/20261029_stadium_hull/02_w.jpg
+    card:
+      <<: *id_rank
+      focus: 0
+  - text: すぐ下のブレントフォードは、1万7250人。7733席の開きがあります。
+    image: assets/images/20261029_stadium_hull/02_w.jpg
+    card:
+      <<: *id_rank
+      focus: 2
+  - text: 首位は、マンチェスター・ユナイテッドの7万4158席。
+    image: assets/images/20261029_stadium_hull/01_w.jpg
+    card: none
+  - text: ハル・シティの本拠地は、首位の約34％の大きさです。
+    emph: true
+    image: assets/images/20261029_stadium_hull/01_w.jpg
+    card:
+      type: calc
+      title: 首位との比べ（自分で割った）
+      terms:
+      - - 2万4983人
+        - ハル・シティの収容
+      - - 7万4158人
+        - マンチェスター・ユナイテッド
+      - - 0.34
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: 持ち主は、クラブではなく、ハル市。2002年から、ここがホームです。
+    image: assets/images/20261029_stadium_hull/01_w.jpg
+    card: none
+  sources:
+  - https://resources.premierleague.pulselive.com/premierleague/document/2026/07/31/8a890ff9-176c-4364-a8ff-e08f995e2c86/TM2040_PL-Handbook-and-Collateral-2026-27_Digital_31.07.pdf
+  - https://en.wikipedia.org/wiki/MKM_Stadium
+- id: japan
+  heading: 守田英正は、この本拠地で何試合に出たのか
+  bg: assets/images/20261029_stadium_hull/02_w.jpg
+  tier: 報道
+  telop: 守田英正は2026年7月に加入。この本拠地でのリーグ戦は2試合、どちらも途中から
+  narrator: 解説
+  card: &id_jp
+    type: table
+    title: 守田英正とハル・シティ
+    columns:
+    - いつ
+    - できごと
+    rows:
+    - - 2026年7月
+      - スポルティングから加入。2年契約
+    - - 10月11日
+      - エヴァートン戦、75分から
+    - - 10月25日
+      - ブレントフォード戦、72分から
+    highlight_row: 0
+  say:
+  - text: いま、この本拠地を家にする日本人。それが守田英正です。
+    image: assets/images/20261029_stadium_hull/03_w.jpg
+    card: none
+  - text: 2026年7月24日、ポルトガルのスポルティングから加わりました。
+    image: assets/images/20261029_stadium_hull/03_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 0
+  - text: 日本代表で40試合に出てきた中盤です。
+    image: assets/images/20261029_stadium_hull/03_w.jpg
+    card: none
+  - text: この本拠地でのリーグ戦は、ここまで2試合。
+    image: assets/images/20261029_stadium_hull/03_w.jpg
+    card: none
+  - text: 10月11日のエヴァートン戦は、75分から。
+    image: assets/images/20261029_stadium_hull/03_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 1
+  - text: 10月25日のブレントフォード戦は、72分からの出場でした。
+    emph: true
+    image: assets/images/20261029_stadium_hull/03_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 2
+  sources:
+  - https://www.wearehullcity.co.uk/news/2026/july/24/morita-signs-for-hull-city/
+  - https://en.wikipedia.org/wiki/Hidemasa_Morita
+- id: old
+  heading: 5万5019人が入った旧本拠地は、なぜ消えたのか
+  bg: assets/images/20261029_stadium_hull/02_w.jpg
+  tier: 背景
+  telop: 旧本拠地ブースフェリー・パークは1946年から56年。いちばん多い入場は1949年のマンチェスター・ユナイテッド戦
+  narrator: 解説
+  card: &id_old
+    type: timeline
+    title: 旧本拠地ブースフェリー・パーク（ウィキペディア）
+    rows:
+    - - 1946年
+      - 未完成のまま開場
+    - - 1949年
+      - マンチェスター・ユナイテッド戦に5万5019人
+    - - 1990年代
+      - 建物の中にスーパーが入る
+    - - 2002年
+      - 閉場。収容は1万5160人
+    - - 2008年
+      - 取り壊しが始まり、跡地は住宅に
+    focus: 1949年
+    highlight_row: 0
+  say:
+  - text: 2002年より前の56年間、クラブの家は別の場所でした。
+    image: assets/images/20261029_stadium_hull/01_w.jpg
+    card: none
+  - text: 旧本拠地は、ブースフェリー・パーク。1946年8月、まだ未完成のまま開きました。
+    image: assets/images/20261029_stadium_hull/01_w.jpg
+    card:
+      <<: *id_old
+      highlight_row: 0
+  - text: 入場の記録は、1949年。
+    image: assets/images/20261029_stadium_hull/01_w.jpg
+    card:
+      <<: *id_old
+      highlight_row: 1
+  - text: FAカップの準々決勝、マンチェスター・ユナイテッド戦でした。
+    image: assets/images/20261029_stadium_hull/01_w.jpg
+    card:
+      <<: *id_old
+      highlight_row: 1
+  - text: その数、5万5019人。クラブのホームの試合の記録として、いまも破られていません。
+    emph: true
+    image: assets/images/20261029_stadium_hull/01_w.jpg
+    card:
+      type: calc
+      title: 旧本拠地のいちばん多い入場は、いまの収容の何倍か（自分で割った）
+      terms:
+      - - 5万5019人
+        - 1949年の入場
+      - - 2万4983人
+        - いまの収容
+      - - 2.2倍
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: 現在の収容と比べて、約2.2倍。客席の多くが立ち見だった時代の記録です。
+    image: assets/images/20261029_stadium_hull/02_w.jpg
+    card: none
+  - text: 1990年代、クラブのお金が苦しくなります。
+    image: assets/images/20261029_stadium_hull/02_w.jpg
+    card: none
+  - text: するとスタジアムの建物の中に、スーパーの店が入りました。
+    emph: true
+    image: assets/images/20261029_stadium_hull/02_w.jpg
+    card:
+      <<: *id_old
+      highlight_row: 2
+  - text: 閉じたときの収容は、1万5160人まで減っていました。
+    image: assets/images/20261029_stadium_hull/02_w.jpg
+    card:
+      <<: *id_old
+      highlight_row: 3
+  - text: 最後の試合は、2002年12月。
+    image: assets/images/20261029_stadium_hull/02_w.jpg
+    card: none
+  - text: 2008年から取り壊され、跡地には住宅が建っています。
+    image: assets/images/20261029_stadium_hull/02_w.jpg
+    card:
+      <<: *id_old
+      highlight_row: 4
+  sources:
+  - https://en.wikipedia.org/wiki/Boothferry_Park
+- id: owner
+  heading: なぜ本拠地は、クラブではなく市が建てて持っているのか
+  bg: assets/images/20261029_stadium_hull/02_w.jpg
+  tier: 背景
+  telop: 費用は約4400万ポンド、うち4200万ポンド超を市が出した。ラグビーのハルFCと分け合う
+  narrator: 解説
+  card: &id_owner
+    type: timeline
+    title: 市が建てた本拠地（ウィキペディア）
+    rows:
+    - - 1997年
+      - 新しいスタジアムの構想
+    - - 2001年
+      - クラブの経営が行き詰まる。秋に着工
+    - - 2002年12月
+      - 14か月で完成。開場
+    - - 2003年2月
+      - ラグビーのクラブも入る
+    - - 2011年
+      - オーナーが買いたいと言い、市が断る
+    focus: 2002年12月
+    highlight_row: 0
+  say:
+  - text: 新しいスタジアムの話が出たのは、1997年です。
+    image: assets/images/20261029_stadium_hull/01_w.jpg
+    card:
+      <<: *id_owner
+      highlight_row: 0
+  - text: お金を出したのは、ハル市でした。
+    emph: true
+    image: assets/images/20261029_stadium_hull/01_w.jpg
+    card: none
+  - text: 市が持っていた地元の会社の株を、一部売って作ったお金です。
+    image: assets/images/20261029_stadium_hull/01_w.jpg
+    card: none
+  - text: 費用は、約4400万ポンド。そのうち4200万ポンドを超える分を、市が出しました。
+    image: assets/images/20261029_stadium_hull/01_w.jpg
+    card:
+      type: stats
+      title: 建てるのにかかったお金（ウィキペディア）
+      items:
+      - - '4400'
+        - 万ポンド
+        - 費用の合計（約）
+      - - '4200'
+        - 万ポンド超
+        - ハル市が出した分
+      focus: 1
+  - text: 場所は、12か所以上を比べて、ウェスト・パークという公園の中に決まりました。
+    image: assets/images/20261029_stadium_hull/02_w.jpg
+    card: none
+  - text: 公園の中に建ったスタジアムは、イングランドで初めてです。
+    emph: true
+    image: assets/images/20261029_stadium_hull/02_w.jpg
+    card: none
+  - text: 建てる許可が出た直後の2001年初め、クラブの経営が行き詰まります。
+    image: assets/images/20261029_stadium_hull/02_w.jpg
+    card:
+      <<: *id_owner
+      highlight_row: 1
+  - text: それでも工事は進み、14か月で、予定どおり、予算どおりに完成しました。
+    image: assets/images/20261029_stadium_hull/02_w.jpg
+    card:
+      <<: *id_owner
+      highlight_row: 2
+  - text: 開場は2002年12月18日。サンダーランドとの親善試合でした。
+    image: assets/images/20261029_stadium_hull/02_w.jpg
+    card: none
+  - text: 2か月後には、街のラグビーのクラブ、ハル・エフシーも入ってきます。
+    image: assets/images/20261029_stadium_hull/01_w.jpg
+    card:
+      <<: *id_owner
+      highlight_row: 3
+  - text: 席の色は、黒と白と琥珀色。
+    image: assets/images/20261029_stadium_hull/01_w.jpg
+    card: none
+  - text: 黒と白はラグビーのクラブ、黒と琥珀はハル・シティの色。
+    image: assets/images/20261029_stadium_hull/01_w.jpg
+    card: none
+  - text: どちらのクラブにも寄らないように、選ばれた色です。
+    emph: true
+    image: assets/images/20261029_stadium_hull/01_w.jpg
+    card: none
+  - text: 2011年には、当時のオーナーが本拠地を買いたいと言い出します。市は、断りました。
+    image: assets/images/20261029_stadium_hull/01_w.jpg
+    card:
+      <<: *id_owner
+      highlight_row: 4
+  sources:
+  - https://en.wikipedia.org/wiki/MKM_Stadium
+- id: name
+  heading: 本拠地の名前は、なぜ2度変わったのか
+  bg: assets/images/20261029_stadium_hull/02_w.jpg
+  tier: 背景
+  telop: ケーシー・スタジアムから、2016年にケーコム、2021年にエムケーエム・スタジアムへ
+  narrator: 解説
+  card: &id_name
+    type: timeline
+    title: 本拠地の名前（ウィキペディア）
+    rows:
+    - - 2002年
+      - ケーシー・スタジアム
+    - - 2016年4月
+      - スポンサーの改名で、ケーコム・スタジアムに
+    - - 2021年6月
+      - 建材の会社と5年の契約で、エムケーエム・スタジアムに
+    focus: 2021年6月
+    highlight_row: 0
+  say:
+  - text: 名前も、2度変わっています。開いたときは、ケーシー・スタジアムでした。
+    image: assets/images/20261029_stadium_hull/02_w.jpg
+    card:
+      <<: *id_name
+      highlight_row: 0
+  - text: 2016年4月、スポンサーの会社の名前が変わり、ケーコム・スタジアムに。
+    image: assets/images/20261029_stadium_hull/02_w.jpg
+    card:
+      <<: *id_name
+      highlight_row: 1
+  - text: 2021年6月からは、建材の会社との5年の契約で、エムケーエム・スタジアムです。
+    emph: true
+    image: assets/images/20261029_stadium_hull/02_w.jpg
+    card:
+      <<: *id_name
+      highlight_row: 2
+  sources:
+  - https://en.wikipedia.org/wiki/MKM_Stadium
+- id: view
+  viewpoint: true
+  heading: 見立て・プレミアに戻った本拠地は、毎試合何％埋まっているのか
+  bg: assets/images/20261029_stadium_hull/02_w.jpg
+  tier: 報道
+  telop: 今季のホーム4試合の平均は2万4403人、収容の97.7％。コヴェントリーの95.8％より埋まっている
+  narrator: 解説
+  card: &id_view
+    type: table
+    title: 今季のホーム4試合の入場（プレミアリーグ公式）
+    columns:
+    - 相手
+    - 入場
+    rows:
+    - - マンチェスター・ユナイテッド
+      - 2万4470人
+    - - アストン・ヴィラ
+      - 2万4425人
+    - - エヴァートン
+      - 2万4458人
+    - - ブレントフォード
+      - 2万4259人
+    - - 平均
+      - 2万4403人（収容の97.7％）
+    highlight_row: 0
+  say:
+  - text: では、プレミアに戻ったいま、この本拠地はどこまで埋まっているのか。
+    emph: true
+    image: assets/images/20261029_stadium_hull/02_w.jpg
+    card: none
+  - text: 今季のホーム初戦は、マンチェスター・ユナイテッド戦。
+    image: assets/images/20261029_stadium_hull/02_w.jpg
+    card: none
+  - text: 2万4470人の前で、2対0で勝ちました。
+    image: assets/images/20261029_stadium_hull/02_w.jpg
+    card:
+      <<: *id_view
+      highlight_row: 0
+  - text: 4試合の平均は、2万4403人。収容の97.7％です。
+    image: assets/images/20261029_stadium_hull/02_w.jpg
+    card:
+      <<: *id_view
+      highlight_row: 4
+    mark:
+      kind: circle
+      row: 4
+  - text: 昨季、2部のときの平均より、約3000人多い数字です。
+    image: assets/images/20261029_stadium_hull/02_w.jpg
+    card:
+      <<: *id_view
+      highlight_row: 4
+  - text: 同じ昇格組のコヴェントリーは95.8％。フォレストは98.5％。
+    image: assets/images/20261029_stadium_hull/01_w.jpg
+    card:
+      type: stats
+      title: 今季のホーム4試合、収容の何％埋まったか（プレミアリーグ公式から割った）
+      items:
+      - - '95.8'
+        - ％
+        - コヴェントリー
+      - - '97.7'
+        - ％
+        - ハル・シティ
+      - - '98.5'
+        - ％
+        - ノッティンガム・フォレスト
+      focus: 1
+  - text: いちばん入ったユナイテッド戦でも、満員まであと513席でした。
+    emph: true
+    image: assets/images/20261029_stadium_hull/01_w.jpg
+    card: none
+  - text: ホームとアウェーの客を分ける区画があり、表の収容まで埋まることはないからです。
+    image: assets/images/20261029_stadium_hull/01_w.jpg
+    card: none
+  - text: 東のスタンドに2階を足すなどして、約3万4000席に広げる案もありました。
+    image: assets/images/20261029_stadium_hull/02_w.jpg
+    card: none
+  - text: 次の本拠地戦は、現地時間の10月31日。相手は、同じ昇格組のイプスウィッチです。
+    image: assets/images/20261029_stadium_hull/02_w.jpg
+    card: none
+  - text: 市が建てた公園のスタジアムは、プレミアの季に、あと何席を埋められるのか。
+    image: assets/images/20261029_stadium_hull/02_w.jpg
+    card: none
+  sources:
+  - https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v1/competitions/8/seasons/2026/matchweeks/8/matches ほか（2026/27 の第1・3・6・8・9節）
+  - https://resources.premierleague.pulselive.com/premierleague/document/2026/07/31/8a890ff9-176c-4364-a8ff-e08f995e2c86/TM2040_PL-Handbook-and-Collateral-2026-27_Digital_31.07.pdf
+  - https://en.wikipedia.org/wiki/MKM_Stadium
