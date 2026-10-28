@@ -50,7 +50,7 @@ no_tag_from: 130                     # 締め（冒頭の7月12日の条々に�
 # pan：h＝左右（既定）・v＝上下・zoom＝ゆっくり寄る（顔の感情の場面だけ）。crops＝切り出し [倍率, 中心x, 中心y]
 # 位置（crops・focus）は仮。届いた絵を見て合わせる
 ai:
-  H01: {scene: 秀次・胸から上（28歳前後・細面・関白の装束）。灯の下で思いつめた顔, pan: zoom, crops: {face: [1.25, 0.5, 0.32], left: [1.18, 0.45, 0.38]}}
+  H01: {scene: 秀次・胸から上（28歳前後・細面・関白の装束）。灯の下で思いつめた顔, pan: zoom, crops: {face: [1.25, 0.64, 0.38], left: [1.18, 0.30, 0.45]}}   # 届いた絵（10-28）：顔は右寄り（0.65, 0.40）、左に灯と襖
   H02: {scene: 伏見から高野山への山道。雨・少人数（秀次は後ろ姿・刀なし）, pan: v, crops: {right: [1.18, 0.62, 0.45]}}
   H03: {scene: 高野山の寺々を遠くから（夏・霧。人物なし）, pan: h, crops: {left: [1.18, 0.35, 0.45]}}
   H04: {scene: 青巌寺の書院。柳と鷺の襖絵の部屋（人物なし）, pan: h, crops: {right: [1.18, 0.65, 0.45]}}
@@ -69,6 +69,7 @@ ai:
 
 # 実在の絵の手当て（元の画像は変えない）。瑞泉寺の秀次像は一族・家臣の像と賛のある掛幅なので、秀次の所だけ切り出す
 paint_fx:
+  H01: {lamp: {region: [0.06, 0.55, 0.20, 0.85]}}                     # 左の燭台の灯（顔にはかけない）
   paintings/hidenaga_hidetsugu.jpg: {crop: [0.18, 0.22, 0.80, 0.56]}
 
 # 台本に出てこない実在の絵の出典（左下の字・概要欄）
@@ -123,8 +124,8 @@ shots:
   - 38 part:paintings/nene_fushimi_earthquake_yoshitoshi.jpg   # 福原が出発
   - 39 ai:H07 wide
   - 40 ai:H07 left                     # 川角太閤記「目出たく御仲直り」
-  - 41 ai:H07 right
-  - 42 ai:H06 left
+  - 41 ai:H06 left
+  - 42 ai:H02 right                    # 刀を帯びさせない決まりのとおり
   - 43 ai:H05 wide
   - 44 ai:H05 face                     # 【想像2】……仲直り、か
   - 45 part:paintings/nene_fushimi_earthquake_yoshitoshi.jpg   # 13日 福島・池田が出発
@@ -171,14 +172,14 @@ shots:
   - 86 frame:paintings/hidenaga_hidetsugu.jpg
   - 87 part:paintings/nene_kyoto_map_1696.jpg   # 一条の辻
   - 88 ai:H01 face
-  - 89 ai:H01 wide
+  - 89 frame:paintings/hidenaga_hidetsugu.jpg
   - 90 part:paintings/mitsunari_rakuchu_rakugai_pair.jpg
   - 91 ai:H05 wide                     # 矢部「根拠のない作り話」
   - 92 ai:H01 left
   - 93 ai:H12 wide
   - 94 part:paintings/mitsunari_omi_hakkei_seta_hiroshige.jpg   # 地図（台本：近江八幡）
   - 95 ai:H12 wide                     # 八幡堀
-  - 96 ai:H12 left
+  - 96 part:paintings/mitsunari_omi_hakkei_seta_hiroshige.jpg   # H12 が続けて20秒を超えないように
   - 97 ai:H12 right
   - 98 frame:paintings/hidenaga_hidetsugu.jpg
   - 99 ai:H01 face                     # 【想像4】……よい町に、なれ
@@ -194,7 +195,7 @@ shots:
   - 109 ai:H11 wide                    # 日本西教史「一宇も残さず」
   - 110 ai:H11 left
   - 111 ai:H14 wide                    # 2012年の発掘
-  - 112 ai:H14 right                   # 2023年の発掘
+  - 112 part:paintings/nene_kyoto_map_1696.jpg   # 2023年の発掘（西の外堀）。H14 が続けて20秒を超えないように
   - 113 part:paintings/hideyoshi_jurakudai_screen_mitsui.jpg
   - 114 ai:H14 wide
   - 115 part:paintings/ryoma_kyoto_sanjo_ohashi_hiroshige_1833.jpg   # 悪逆塚・畜生塚
@@ -207,7 +208,7 @@ shots:
   - 122 ai:H12 wide
   - 123 ai:H13 left
   - 124 ai:H04 wide                    # 柳の間
-  - 125 ai:H04 right
+  - 125 ai:H09 left                    # 大主殿（H04 が続けて20秒を超えないように）
   - 126 ai:H03 wide
   - 127 ai:H01 wide                    # 享年の表（台本の図）127〜128
   - 129 ai:H09 wide
@@ -249,8 +250,8 @@ parts:
   - {type: names, from: 12, to: 13, title: この物語で覚えてほしい名前, every: 0.7,
      items: [[豊臣秀次, 秀吉の甥・跡を継いだ関白, paintings/hidenaga_hidetsugu.jpg, [0.48, 0.26]],
              [豊臣秀吉, 秀次の叔父・太閤, ai:K05, [0.5, 0.40]]]}
-  - {type: quote, from: 36, to: 36, label: 要点, text: 供は15人まで／刀・脇差は帯びない／山の出入り口に番を置く,
-     source: 秀吉の条々（文禄4年7月12日・木食応其あて。『佐竹家旧記』『南行雑録』の写し）}
+  - {type: quote, from: 36, to: 36, label: 要点, text: 供は15人まで・刀は帯びない／山の出入り口に番を置く,
+     source: 秀吉の条々（文禄4年7月12日・『佐竹家旧記』ほかの写し）}
   - {type: quote, from: 72, to: 72, label: 史料, text: むしちゆへ／かくの事候のよし申すなり,
      source: 『御湯殿上日記』文禄4年7月16日}
   - {type: quote, from: 84, to: 84, label: 史料, text: 院の御所手向のためのかりなれは／これをせつしやう関白といふ,
