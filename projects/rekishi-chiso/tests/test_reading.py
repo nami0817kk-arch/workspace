@@ -121,6 +121,23 @@ MISREADS = [
     ("oichi-story", "その和子が", "まさこ", "マサコ"),
     ("oichi-story", "三法師", "さんぼうし", "ボオシ"),
     ("oichi-story", "天皇の位を", "くらいを", "クライオ"),
+    # 伊達政宗・物語型の本編（masamune-story、10-28）
+    ("masamune-story", "『治家記録』", "じけきろく", "ジケ"),
+    ("masamune-story", "疱瘡、今でいう", "ほうそう", "ホオソオ"),
+    ("masamune-story", "萬海上人の生まれ変わり", "まんかいしょうにん", "マンカイショオニン"),
+    ("masamune-story", "「云ひ伝ふ」", "いいつたう", "イイツタウ"),
+    ("masamune-story", "愧ぢたまひて", "はじたまいて", "ハジタ"),
+    ("masamune-story", "李克用のあだ名", "りこくよう", "リコクヨオ"),
+    ("masamune-story", "瑞鳳殿は", "ずいほうでん", "ズイホオデン"),
+    ("masamune-story", "仙台の経ヶ峯", "きょうがみね", "キョオガ"),
+    ("masamune-story", "2代藩主の忠宗", "ただむね", "タダ"),
+    ("masamune-story", "玉眼", "ぎょくがん", "ギョクガン"),
+    ("masamune-story", "東京大学の鈴木尚", "すずきひさし", "ヒサシ"),
+    ("masamune-story", "伊達泰宗さんは", "だてやすむね", "ヤス"),
+    ("masamune-story", "政宗公は", "まさむねこうわ", "マサムネコオワ"),
+    ("masamune-story", "一分金", "いちぶきん", "イチブ"),
+    ("masamune-story", "若いころの名を、愛姫", "めごひめ", "メゴヒメ"),
+    ("masamune-story", "殿のお顔", "とののおかお", "トノノ"),
     # 石川数正・物語型の本編（kazumasa-story、10-26）
     ("kazumasa-story", "数正自身が", "かずまさ", "カズマサ"),
     ("kazumasa-story", "康輝の「康」は", "「やす」は", "ヤスワ"),
@@ -201,7 +218,8 @@ def test_misread_kana(stem, phrase, _said, kana):
 def test_misread_list_covers_the_four_episodes():
     # 約50か所（4本）を残している
     assert len(MISREADS) >= 50
-    assert {m[0] for m in MISREADS} == {"shikoutei", "hidenaga", "oichi", "hideyoshi", "yoshinobu", "oichi-story", "kazumasa-story", "asahi-story"}
+    # 10-28 から回ごとに足すので、最初の8本が入っていることだけを見る（== だと新しい回を足すたびに落ちる）
+    assert {"shikoutei", "hidenaga", "oichi", "hideyoshi", "yoshinobu", "oichi-story", "kazumasa-story", "asahi-story"} <= {m[0] for m in MISREADS}
 
 
 # --- 置き換え ------------------------------------------------------------------
