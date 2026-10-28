@@ -22,9 +22,10 @@ CURVE = dict(kind="curve")
 QBLANK = dict(kind="formula", rows=[])
 HALDANE = dict(kind="formula", rows=[("1926年　ホールデン", 60, "dim"), ("身長18m（人の10倍）", 80, "white"), ("重さ 1000倍　骨 100倍", 90, "white"), ("一歩ごとに骨が折れる", 100, "yel")])
 GALILEO = dict(kind="galileo")
-ELEPHANT = dict(kind="animals", hl="elephant")
-DINO = dict(kind="animals", hl="dino")
-WHALE = dict(kind="animals", hl="whale")
+LINEUP = dict(kind="animals", hl="elephant")  # 同じ縮尺の影絵(大きさを比べる行)
+ELEPHANT = dict(kind="photo", name="elephant", note="アフリカゾウ　約6トン")
+DINO = dict(kind="photo", name="dino", note="最大級の恐竜　約70トン（推定）")
+WHALE = dict(kind="photo", name="whale", note="シロナガスクジラ　約150トン")
 
 
 def EXP(n, text):
@@ -108,8 +109,8 @@ P["ch5"] = dict(title="第5章 100年前に、同じ計算をした人がいる"
     dict(id="c4", text="人の太ももの骨は、体重の約10倍で折れる。だから巨人は、一歩ごとに骨を折る、と書いています。"),
     dict(id="c5", text="さらに約390年前、ガリレオも、大きな動物ほど、骨を太くしないと持たないと書きました。", scene=GALILEO,
          say="さらに、やく、さんびゃくきゅうじゅうねんまえ、ガリレオも、おおきな、どうぶつほど、ほねを、ふとく、しないと、もたないと、かきました。"),
-    dict(id="c6", text="本物の大きな動物は、どうしているのか。", section=True, scene=ELEPHANT),
-    dict(id="c7", text="ゾウの脚は、太くて、まっすぐ。柱のように立てて、骨が曲がるのを減らしています。"),
+    dict(id="c6", text="本物の大きな動物は、どうしているのか。", section=True, scene=LINEUP),
+    dict(id="c7", text="ゾウの脚は、太くて、まっすぐ。柱のように立てて、骨が曲がるのを減らしています。", scene=ELEPHANT),
     dict(id="c8", text="陸を歩いた最大級の恐竜でも、重さは約70トンと推定されています。超大型巨人の、約40分の1です。", scene=DINO, say="りくを、あるいた、さいだいきゅうの、きょうりゅうでも、おもさは、やく、ななじゅっトンと、すいていされています。ちょうおおがたきょじんの、やく、よんじゅうぶんのいちです。"),
     dict(id="c9", text="シロナガスクジラは約150トン。水が体を浮かせて、支えているからです。", scene=WHALE),
     dict(id="c10", text="体を大きくすると、重さは3乗で増え、骨は2乗でしか強くならない。", section=True, scene=CURVE),

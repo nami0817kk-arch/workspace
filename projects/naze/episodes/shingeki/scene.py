@@ -320,8 +320,9 @@ def sc_curve(img, box, t, k, P):
     p2 = [(px(1 + (kmax - 1) * i / n), py((1 + (kmax - 1) * i / n) ** 2)) for i in range(n + 1)]
     d.line(p3, fill=O.RED, width=int(8 * S), joint="curve")
     d.line(p2, fill=O.BLUE, width=int(8 * S), joint="curve")
-    label(d, (px(min(kmax, 8.2)) - 160 * S, py(min(kmax, 8.2) ** 3) - 10 * S), "重さ（3乗）", 38, O.RED)
-    label(d, (px(kmax) - 120 * S, py(kmax ** 2) - 50 * S), "骨の強さ（2乗）", 38, O.BLUE)
+    if kmax >= 6:  # 線が伸びきる前は2つの札が原点に重なる
+        label(d, (px(min(kmax, 8.2)) - 160 * S, py(min(kmax, 8.2) ** 3) - 10 * S), "重さ（3乗）", 38, O.RED)
+        label(d, (px(kmax) - 120 * S, py(kmax ** 2) - 50 * S), "骨の強さ（2乗）", 38, O.BLUE)
     text(d, (gx0, gy0 - 50 * S), "人を1として何倍になるか", 34, O.DIM, "la", 4)
 
 
