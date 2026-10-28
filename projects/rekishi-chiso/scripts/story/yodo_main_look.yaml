@@ -1,0 +1,278 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：淀殿（scripts/yodo-story.yaml）。chiso/storymain.py が読む。
+# 10-29 作成（10/30 12:00 公開）。台本は最後の通し確認のあと固めた（この look は行の番号で絵を当てるので、台本を変えない）。決まりは docs/story-main.md・スキル rekishi-story-screen。見本は kazunomiya・masamune の look。
+# 絵の方針：AI 絵は 15 枚（Y01〜Y15）。同じ絵を時間をずらして使い回す（続けて 20 秒まで）。
+#   人物は AI 絵（茶々は横顔か後ろ姿・正面の寄りは作らない）。実在の絵（パブリックドメイン。出典は台本の background / portrait の credit・caption と下の credits:）は額（frame:）と屏風・浮世絵の一部（part:）。
+# AI 絵の指示の一覧（英語・顔立ちの設定）：dev/output/rekishi-chiso/research/yodo_ai_images.md
+# 届く前は art_dir の仮の絵（Y01.jpg〜、番号と場面だけ書いた灰色の板。10-29 に PIL で 1376×768 で作った）で代える。届いたら main_art_dir に Y01.jpg〜を置くだけ。
+#   crops・focus・fx の位置は仮の値。届いた絵を見て合わせ直す。
+# 落城・最期の場面は人を描かない（燃える城は Y13 の遠景、山里丸の蔵は Y14 の外観だけ）。最期・亡骸の行に人物の絵を当てない。
+#   『絵本太閤記』の秀次の挿絵（yodo_ehon_taikoki_hidetsugu.jpg）は残酷な場面なので使わない。
+#   伝淀殿画像（yodo_portrait_nara・yodo_portrait_detail・yodo_portrait_yogenin_copy_1913）は「伝」の肖像。画面の字は台本の caption どおり「伝」を付ける。
+script: scripts/yodo-story.yaml
+out: yodo_story_main
+art_dir: out/story/yodo/ph          # 仮の絵（placeholder）
+main_art_dir: out/story/yodo/main   # Gemini の 16:9 の絵（Y01.jpg〜Y15.jpg）
+ai_disclosure: この動画の人物・情景の画像の多くは、画像生成AI（Google の Gemini・Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+
+# 章ごとの左上の札「いま｜章題」。台本は和暦と西暦を並べて言うので札は和暦。
+# dates＝語りがその年・月日を言った行から替える（論文・記事・書物の年は物語の「いま」ではないので替えない。null で章題だけ）。第5章（検証）とまとめは now: null
+chapters:
+  0: {label: 序章 蛇になった淀君は誰が作ったのか, now: 享和2年,
+      dates: {3: null}}
+  1: {label: 第1章 なぜ茶々は父の寺を建てたのか, now: 天正元年,
+      dates: {19: 天正11年, 24: 文禄3年, 26: 元和5年, 29: null}}
+  2: {label: 第2章 「秋刀魚を送る」, now: 天正17年5月,
+      dates: {35: null, 38: 文禄2年, 44: 慶長3年}}
+  3: {label: 第3章 「秀頼御袋より」, now: 慶長6年6月,
+      dates: {52: 慶長7年, 55: null, 60: 慶長18年ごろ, 62: null, 64: 慶長19年}}
+  4: {label: 第4章 三度目の落城で何が起きたのか, now: 慶長19年冬,
+      dates: {74: 慶長20年, 77: 慶長20年5月, 83: 慶長20年5月8日, 84: null}}
+  5: {label: 第5章 「淀君」はいつ生まれたのか, now: null}
+  6: {label: まとめ 淀殿はなぜ悪女にされたのか, now: null}
+# 概要欄「■ 参考にした資料」（事実カード 淀殿_facts_20261029.yaml のうち本文を開いた主なもの。10-29）
+references:
+  - 飯倉洋一「『絵本太閤記』「淀君行状」と『唐土の吉野』」『語文』114（大阪大学国語国文学会、2020）　https://doi.org/10.18910/85446
+  - 秀吉が側室の茶々に送った手紙（和樂web）　https://intojapanwaraku.com/rock/art-rock/1885/
+  - 豐臣秀吉寫給茶茶「閃文」曝光 睽違79年再發現親筆信（ETtoday、神戸新聞の報道を引く）　https://www.ettoday.net/news/20170731/978229.htm
+  - 当代記（『史籍雑纂 第二』）　https://dl.ndl.go.jp/pid/1912983/1/274
+  - 渡辺世祐『豊太閤と其家族』（1919）　https://dl.ndl.go.jp/pid/953289/1/86
+  - リーフレット京都 No.367・No.428（京都市埋蔵文化財研究所）　https://www.kyoto-arc.or.jp/news/leaflet/428.pdf
+  - 黒田基樹「関ヶ原後の茶々」（PRESIDENT Online）　https://president.jp/articles/-/75814
+  - 黒田基樹「茶々はなぜ且元を排除したのか」（PRESIDENT WOMAN Online）　https://president.jp/articles/-/76507
+  - 滋賀県史 第3巻（『時慶卿記』を引く）　https://dl.ndl.go.jp/pid/1218244/1/489
+  - 石山寺蓮如堂（滋賀県 指定文化財の解説）　https://www.pref.shiga.lg.jp/ippan/bunakasports/bunkazaihogo/312296.html
+  - 南孝雄「失われた東山大仏殿」（京都市考古資料館文化財講座 第361回）　https://www.kyoto-arc.or.jp/News/s-kouza/kouza361.pdf
+  - Léon Pagès, Histoire de la religion chrétienne au Japon（1869）　https://archive.org/stream/histoiredelareli01page/histoiredelareli01page_djvu.txt
+  - Diary of Richard Cocks（Project Gutenberg）　https://www.gutenberg.org/files/46803/46803-0.txt
+  - 徳富猪一郎『近世日本国民史』家康時代 中巻 大阪役（1925）　https://dl.ndl.go.jp/pid/3433693/1/229
+  - 観光庁 地域観光資源の多言語解説文データベース（養源院・歴史に残る鉄砲戦：大坂の陣・大阪国防館跡・奇妙な元興寺のかえる石の歴史）　https://www.mlit.go.jp/tagengo-db/common/001554742.pdf
+  - 広報ながはま 2011年4月号「浅井三姉妹ゆかりの実宰院」　https://www.city.nagahama.lg.jp/cmsfiles/contents/0000002/2994/p31.pdf
+  - 大阪市 報道発表資料 大阪城天守閣「特別展 戦国のきょうだい」　https://www.city.osaka.lg.jp/hodoshiryo/keizaisenryaku/0000684414.html
+no_tag_from: 135                     # 締め（冒頭の蛇の女と「おちゃちゃ」に戻る所）から札を出さない
+
+# 台本に出てこない実在の絵の出典（左下の字・概要欄）
+credits:
+  paintings/yodo_portrait_detail.jpg: 伝淀殿像（部分、17〜18世紀。奈良県立美術館本の色の違う版）
+  paintings/yodo_portrait_yogenin_copy_1913.jpg: 伝淀君像（養源院本の模写、1913年）
+  paintings/hideyori_senhime_portrait.jpg: 千姫姿絵（部分、江戸時代。茨城県常総市・弘経寺蔵）
+
+# AI 絵（16:9 横・15枚）。scene は日本語の要約（英語の指示は research/yodo_ai_images.md）。
+# pan：h＝左右（既定）・v＝上下・zoom＝ゆっくり寄る（顔の感情の場面だけ）。crops＝切り出し [倍率, 中心x, 中心y]
+ai:
+  Y01: {scene: 行灯の下で挿絵入りの古い読本を開く手（頁に大蛇の挿絵・顔なし）, crops: {close: [1.25, 0.60, 0.50], left: [1.18, 0.38, 0.5]}}
+  Y02: {scene: 遠くの山城から上る煙を見る三人の少女（後ろ姿・1573年）, pan: h, crops: {right: [1.18, 0.62, 0.5]}}
+  Y03: {scene: 江戸時代の大坂の本屋の店先（積まれた読本・人物は遠く）, pan: h, crops: {left: [1.18, 0.38, 0.5], right: [1.18, 0.62, 0.5]}}
+  Y04: {scene: 雪の北ノ庄を出る輿の列（遠景・1583年）, pan: h, crops: {right: [1.18, 0.62, 0.55]}}
+  Y05: {scene: 京の寺の本堂で手を合わせる茶々（横顔・1594年）, pan: zoom, crops: {face: [1.25, 0.62, 0.40], left: [1.18, 0.40, 0.5]}}
+  Y06: {scene: 城の奥で産着の赤子を抱く茶々（後ろ姿・1589年）, crops: {close: [1.2, 0.5, 0.45], left: [1.18, 0.40, 0.5]}}
+  Y07: {scene: 文机の手紙と盆の上の秋刀魚（手元だけ）, crops: {close: [1.25, 0.62, 0.55], right: [1.18, 0.62, 0.5]}}
+  Y08: {scene: 大坂城の奥で薬湯を前に座る茶々（横顔・30代）, pan: zoom, crops: {face: [1.25, 0.60, 0.38]}}
+  Y09: {scene: 石山寺の堂の建て直し（遠景・1602年）, pan: h, crops: {left: [1.18, 0.38, 0.5], right: [1.18, 0.62, 0.5]}}
+  Y10: {scene: 大仏殿の巨大な柱を鉄の輪で束ねる大工（遠景）, pan: v, crops: {right: [1.18, 0.62, 0.5]}}
+  Y11: {scene: 大坂城の広間で文を前に座る茶々（横顔）と青年の秀頼（後ろ姿）, pan: h, crops: {face: [1.25, 0.62, 0.40], right: [1.18, 0.62, 0.5]}}
+  Y12: {scene: 砲撃で壊れた城の奥の部屋・倒れた茶箪笥と割れた茶碗（人物なし）, crops: {close: [1.25, 0.5, 0.6]}}
+  Y13: {scene: 夕方、煙の上がる大坂城の天守（遠景・人物なし）, pan: v, crops: {right: [1.18, 0.62, 0.5]}}
+  Y14: {scene: 山里丸の白壁の蔵の外観（夕方・人物なし）, pan: h, crops: {right: [1.18, 0.62, 0.5]}}
+  Y15: {scene: 終了画面用。夕暮れの大坂城の石垣と堀（右半分を空けた構図）, lock: [1.0, 0.5, 0.5]}
+
+# 絵の割り当て：「行の番号 種類:絵 [切り出し]」。次の行の指定まで続く。図（figure）の出る行は、その時の絵を暗くして図を置く（自動）
+shots:
+  # 序章（0〜15）：蛇の女 → 絵本太閤記 → 元の怪談 → 秀吉の手紙 → 79年ぶり → 茶々 → 淀君の名 → なぜ → かけら（人数・石）→ 約束 → 小谷へ
+  - 0 ai:Y01 wide
+  - 1 frame:paintings/yodo_ehon_taikoki_kiyosu.jpg
+  - 2 ai:Y01 close
+  - 3 ai:Y07 wide
+  - 4 ai:Y07 close
+  - 5 frame:paintings/yodo_hideyoshi_portrait.jpg   # 史料の札（おちゃちゃ・大かう）
+  - 6 ai:Y07 right
+  - 7 frame:paintings/yodo_hideyoshi_portrait.jpg
+  - 8 frame:paintings/yodo_portrait_nara.jpg
+  - 9 frame:paintings/yodo_yoshitoshi_1873.jpg
+  - 10 ai:Y07 wide
+  - 11 ai:Y01 wide
+  - 12 part:paintings/yodo_natsunojin_byobu.jpg
+  - 13 ai:Y13 wide                     # 亡骸の言い伝え（人は描かない）
+  - 14 ai:Y02 wide                     # 覚えてほしい名前（14〜15）の下地
+  - 15 ai:Y02 right
+  # 第1章（16〜31）：二度の落城と父の寺
+  - 16 frame:paintings/yodo_nagamasa.jpg
+  - 17 ai:Y02 wide
+  - 18 ai:Y05 left
+  - 19 frame:paintings/yodo_oichi.jpg  # 地図（台本：小谷→北ノ庄→京都→淀→大坂）
+  - 20 ai:Y04 wide                     # 史料の札（当代記）
+  - 21 part:paintings/yodo_kitanosho_fukui_map.jpg
+  - 22 frame:paintings/yodo_hideyoshi_portrait.jpg
+  - 23 frame:paintings/yodo_portrait_nara.jpg   # 【想像1】父上、母上……
+  - 24 ai:Y05 wide
+  - 25 part:paintings/yodo_daibutsuden_17c.jpg
+  - 26 ai:Y05 face
+  - 27 part:paintings/yodo_daibutsu_okyo.jpg
+  - 28 ai:Y05 left
+  - 29 frame:paintings/yodo_oichi.jpg
+  - 30 ai:Y06 wide
+  - 31 part:paintings/yodo_yodo_river_hiroshige.jpg
+  # 第2章（32〜46）：淀城と秀吉の手紙
+  - 32 ai:Y06 wide
+  - 33 ai:Y06 close
+  - 34 part:paintings/yodo_yodo_river_hiroshige.jpg
+  - 36 ai:Y06 left                     # 二つの淀城の表（台本の図）
+  - 37 part:paintings/yodo_yodo_river_hiroshige.jpg
+  - 38 frame:paintings/yodo_hideyori_portrait.jpg
+  - 39 ai:Y07 wide
+  - 40 ai:Y07 close
+  - 41 frame:paintings/yodo_hideyoshi_portrait.jpg
+  - 42 frame:paintings/yodo_portrait_nara.jpg   # 【想像2】秋刀魚、とは……
+  - 43 ai:Y07 right
+  - 44 frame:paintings/yodo_hideyoshi_portrait.jpg
+  - 45 ai:Y08 wide
+  - 46 part:paintings/yodo_ishiyamadera_hiroshige.jpg
+  # 第3章（47〜71）：「秀頼御袋より」
+  - 47 ai:Y08 wide
+  - 48 ai:Y08 face                     # 史料の札（玄朔の記録）
+  - 49 part:paintings/yodo_osaka_castle_zu_byobu.jpg
+  - 50 frame:paintings/yodo_portrait_detail.jpg   # 【想像3】この子だけは……
+  - 51 part:paintings/yodo_ishiyamadera_hiroshige.jpg
+  - 52 ai:Y09 wide
+  - 53 ai:Y09 right                    # 史料の札（時慶卿記）
+  - 54 frame:paintings/yodo_portrait_nara.jpg
+  - 55 part:paintings/yodo_daibutsu_okyo.jpg
+  - 56 frame:paintings/yodo_daibutsuden_17c.jpg
+  - 57 ai:Y10 wide
+  - 58 ai:Y10 right
+  - 59 part:paintings/yodo_osaka_castle_zu_byobu.jpg
+  - 60 part:paintings/yodo_osaka_meisho_tenmabashi_hokusai.jpg
+  - 61 ai:Y09 left
+  - 62 frame:paintings/yodo_portrait_yogenin_copy_1913.jpg
+  - 63 ai:Y05 wide
+  - 64 part:paintings/yodo_daibutsu_okyo.jpg
+  - 65 ai:Y11 wide
+  - 66 ai:Y11 face                     # 【想像4】この身を、江戸へ……
+  - 67 part:paintings/yodo_osaka_castle_zu_byobu.jpg
+  - 68 ai:Y11 right
+  - 69 part:paintings/yodo_natsunojin_castle.jpg
+  - 70 part:paintings/yodo_natsunojin_byobu.jpg
+  - 71 ai:Y12 close
+  # 第4章（72〜97）：三度目の落城
+  - 72 part:paintings/yodo_natsunojin_castle.jpg
+  - 73 ai:Y12 wide
+  - 74 part:paintings/yodo_osaka_castle_zu_byobu.jpg
+  - 75 ai:Y11 face                     # 史料の札（近世日本国民史）
+  - 76 frame:paintings/yodo_portrait_nara.jpg   # 【想像5】初……
+  - 77 ai:Y13 wide
+  - 78 part:paintings/yodo_natsunojin_byobu.jpg
+  - 79 ai:Y13 right
+  - 80 frame:paintings/yodo_portrait_detail.jpg   # 【想像6】三度目、なのですね
+  - 81 ai:Y14 wide
+  - 82 ai:Y14 right
+  - 83 ai:Y13 wide                     # 最期の行（人は描かない）
+  - 84 part:paintings/yodo_natsunojin_castle.jpg
+  - 85 ai:Y14 wide                     # 人数の食い違い（versus3。この行は台本の棒の図を外す）
+  - 86 part:paintings/yodo_natsunojin_byobu.jpg
+  - 87 part:paintings/yodo_osaka_meisho_tenmabashi_hokusai.jpg
+  - 88 ai:Y13 wide
+  - 89 frame:paintings/hideyori_senhime_portrait.jpg   # 千姫
+  - 90 ai:Y13 right                    # 落城の知らせの表（台本の図）
+  - 91 frame:paintings/yodo_hideyori_portrait.jpg
+  - 92 part:paintings/yodo_osaka_meisho_tenmabashi_hokusai.jpg
+  - 93 ai:Y14 wide
+  - 94 part:paintings/yodo_natsunojin_byobu.jpg   # 最期の書き方の表（台本の図）
+  - 95 part:paintings/yodo_natsunojin_castle.jpg
+  - 96 ai:Y13 wide
+  - 97 ai:Y01 wide
+  # 第5章（98〜123）：「淀君」はいつ生まれたのか（検証）
+  - 98 frame:paintings/yodo_yoshitoshi_1873.jpg
+  - 99 ai:Y03 wide
+  - 100 ai:Y03 right
+  - 101 ai:Y01 left                    # 数直線（台本の図）
+  - 102 part:paintings/yodo_natsunojin_byobu.jpg
+  - 103 frame:paintings/yodo_ehon_taikoki_kiyosu.jpg
+  - 104 ai:Y03 wide
+  - 105 frame:paintings/yodo_kodaiin.jpg
+  - 106 frame:paintings/yodo_portrait_nara.jpg
+  - 107 ai:Y01 close
+  - 108 ai:Y03 right
+  - 109 ai:Y01 wide
+  - 110 frame:paintings/yodo_ehon_taikoki_kiyosu.jpg
+  - 111 ai:Y01 close
+  - 112 frame:paintings/yodo_kodaiin.jpg
+  - 113 frame:paintings/yodo_hideyoshi_portrait.jpg
+  - 114 ai:Y03 wide
+  - 115 part:paintings/yodo_osaka_castle_zu_byobu.jpg
+  - 116 ai:Y03 right
+  - 117 frame:paintings/yodo_yoshitoshi_1873.jpg   # 史料の札（胆大小心録）
+  - 118 ai:Y01 wide
+  - 119 frame:paintings/yodo_portrait_nara.jpg   # 伝淀殿画像
+  - 120 frame:paintings/yodo_portrait_yogenin_copy_1913.jpg   # 史料の札（国史大辞典）
+  - 121 ai:Y01 close
+  - 122 ai:Y14 wide
+  - 123 part:paintings/yodo_natsunojin_castle.jpg
+  # まとめ（124〜136）：墓と石 → 燭台 → 答え → 冒頭の蛇と「おちゃちゃ」に戻る締め
+  - 124 part:paintings/yodo_osaka_meisho_tenmabashi_hokusai.jpg
+  - 125 part:paintings/yodo_osaka_castle_zu_byobu.jpg
+  - 126 ai:Y14 right
+  - 127 part:paintings/yodo_natsunojin_byobu.jpg   # 亡骸の在りかの表（台本の図）
+  - 128 ai:Y13 right
+  - 129 ai:Y08 wide
+  - 130 frame:paintings/yodo_yoshitoshi_1873.jpg
+  - 131 ai:Y03 wide
+  - 132 frame:paintings/yodo_ehon_taikoki_kiyosu.jpg
+  - 133 part:paintings/yodo_ishiyamadera_hiroshige.jpg   # 数直線（台本の図）
+  - 134 ai:Y07 close
+  - 135 ai:Y01 close                   # 締め：冒頭の蛇の女と、秀吉の手紙に戻る
+  - 136 ai:Y15 wide
+  - end ai:Y15 wide
+
+# look だけで足す図（台本には無い）。spec: null はその行の台本の図を外す
+figures:
+  - {from: 85, to: 85, spec: null}     # 人数の食い違いは versus3 で見せる
+
+# 語りがその物・人を言うと、カットの終わりにそれが主役になる所で止まる。位置は仮の値（届いた絵で合わせる）
+focus:
+  Y07: {秋刀魚|手紙: [1.25, 0.60, 0.55]}
+  Y14: {蔵: [1.2, 0.5, 0.45]}
+  Y13: {天守|城: [1.2, 0.5, 0.40]}
+  Y01: {蛇|絵本: [1.25, 0.60, 0.50]}
+  paintings/yodo_natsunojin_castle.jpg: {天守|大坂城: [1.3, 0.5, 0.45]}
+
+# 絵の一部だけを動かす（話に合う絵だけ・控えめに。顔・人物にはかけない）。届いた絵で範囲を見て直す
+fx:
+  Y01: {lamp: {region: [0.02, 0.20, 0.22, 0.70]}}                     # 行灯の灯（手と本にはかけない）
+  Y05: {lamp: {region: [0.05, 0.40, 0.25, 0.80]}}                     # 本堂の蝋燭（顔にはかけない）
+  Y13: {smoke: {region: [0, 0.0, 1, 0.45], alpha: 0.12, speed: 5}}    # 城の上の煙（上の方だけ）
+  Y14: {smoke: {region: [0, 0.0, 1, 0.30], alpha: 0.08, speed: 4}}    # 空の薄い煙
+
+# 部品（from〜to の行、0 始まり。出ている間は絵を暗くする）
+parts:
+  - {type: names, from: 14, to: 15, title: この物語で覚えてほしい名前, every: 0.7,
+     items: [[茶々（淀殿）, 浅井長政とお市の長女・秀頼の母, paintings/yodo_portrait_nara.jpg, [0.5, 0.22]],
+             [豊臣秀吉, 茶々を側室に迎えた天下人, paintings/yodo_hideyoshi_portrait.jpg, [0.5, 0.25]],
+             [北政所, 秀吉の正室, paintings/yodo_kodaiin.jpg, [0.5, 0.25]]]}
+  - {type: quote, from: 5, to: 5, label: 史料, text: おちゃちゃ／大かう,
+     source: 秀吉の自筆の書状（文禄2〜5年ごろ・個人蔵。和樂web の紹介）}
+  - {type: quote, from: 20, to: 20, label: 史料, text: 浅井息女二人有之／姉公は後秀吉公に嫁,
+     source: 『当代記』（『史籍雑纂 第二』1911年 所収）}
+  - {type: quote, from: 48, to: 48, label: 史料, text: 秀頼公御母〈御年三十余〉／御気鬱滞、不食、眩暈,
+     source: 曲直瀬玄朔の診療の記録（慶長6年6月。黒田基樹さんの紹介）}
+  - {type: quote, from: 53, to: 53, label: 史料, text: 堂舎悉再興／秀頼御袋ヨリ,
+     source: 『時慶卿記』（『滋賀県史』第3巻 1928年 が引く）}
+  - {type: quote, from: 75, to: 75, label: 史料, text: 淀殿大に驚せ給ひき／常高院殿を頼ませ給ひ,
+     source: 徳富猪一郎『近世日本国民史』家康時代 中巻（1925年）p.229}
+  - {type: versus3, from: 85, to: 85, every: 1.2,
+     items: [[日本史料（1893年）, 治長ら25人と侍女7人], [山路愛山『徳川家康』, 30人あまり], [竹越与三郎（1896年）, 男女42人]]}
+  - {type: quote, from: 117, to: 117, label: 史料, text: よどのきみ、顔よきのみならず／色好む性あり,
+     source: 『胆大小心録』（文化5年・1808年）}
+  - {type: quote, from: 120, to: 120, label: 要点, text: 淀君の乱行などというのは／江戸時代の臆説である,
+     source: 『国史大辞典』（山本博文 執筆。飯倉洋一 2020 の引用による）}
+
+# 静止画（story-main を --frames なしで回したとき。簡易の描き方で、パン・部品は出ない。目で見るのは --frames の方）
+stills:
+  - {line: 0, note: 冒頭（0秒）蛇の女と読本}
+  - {line: 5, note: 序章 秀吉の手紙の札}
+  - {line: 14, note: 序章の終わり 覚えてほしい名前}
+  - {line: 19, note: 第1章 茶々の歩いた城の地図}
+  - {line: 53, note: 第3章 時慶卿記}
+  - {line: 85, note: 第4章 ともに死んだ人の数の食い違い}
+  - {line: 94, note: 第4章 最期の書き方の表}
+  - {line: 101, note: 第5章 悪女像の本の数直線}
+  - {line: 127, note: まとめ 亡骸の在りか}
+  - {end: true, note: 終了画面の空き}
