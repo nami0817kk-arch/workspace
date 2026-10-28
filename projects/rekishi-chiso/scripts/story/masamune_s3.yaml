@@ -22,6 +22,7 @@ description: |-
   家臣の片倉小十郎景綱が右目を取り去った、という話も、記録は「云ひ伝ふ」、言い伝えとして書いています。
 hashtags: ["#伊達政宗", "#日本史", "#戦国時代"]
 ai_images: true
+ai_disclosure: この動画の人物・情景の画像の多くは、画像生成AI（Google の Gemini・Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
 art_dir: out/story/masamune
 out: masamune_story_s3
 header_style: B

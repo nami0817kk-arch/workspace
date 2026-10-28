@@ -17,6 +17,7 @@ description: |-
   ところが、その像は数日のうちに消えてしまいました。家茂には写真を撮った記録が無いため、かつての婚約者、有栖川宮熾仁親王ではないか、という見方もあります。
 hashtags: ["#和宮", "#日本史", "#幕末"]
 ai_images: true
+ai_disclosure: この動画の人物・情景の画像の多くは、画像生成AI（Google の Gemini・Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
 art_dir: out/story/kazunomiya
 out: kazunomiya_story_s1
 header_style: B
