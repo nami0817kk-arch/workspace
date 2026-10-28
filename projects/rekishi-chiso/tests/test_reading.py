@@ -193,6 +193,27 @@ MISREADS = [
     ("asahi-story", "家忠の日記は", "いえただ", "イエタダ"),
     # 豊臣秀次（10-28 のショート story/hidetsugu_s1〜s5 の kana で。ショートの台本は _texts が storyshort で読む）
     ("story/hidetsugu_s5", "ひとつの塚から", "のつかから", "ツカカラ"),
+    # 和宮（10-28 の kazunomiya-story の kana で）
+    ("kazunomiya-story", "一枚のガラス板が", "ガラスイタ", "ガラスイタ"),
+    ("kazunomiya-story", "嫁がされた徳川", "とつがされた", "トツガサレタ"),
+    ("kazunomiya-story", "御取つぶし", "おとりつぶし", "オトリツブシ"),
+    ("kazunomiya-story", "有栖川宮の熾仁親王", "ありすがわのみやの", "アリスガワノミヤノ"),
+    ("kazunomiya-story", "都で育った", "みやこで", "ミヤコデ"),
+    ("kazunomiya-story", "都は、もう", "みやこわ", "ミヤコワ"),
+    ("kazunomiya-story", "都から来た", "みやこから", "ミヤコカラ"),
+    ("kazunomiya-story", "御ケ条書", "ごかじょうがき", "ゴカジョオガキ"),
+    ("kazunomiya-story", "親子といいます", "ちかこと", "チカコト"),
+    ("kazunomiya-story", "荷物を運ぶ人足", "にんそく", "ニンソク"),
+    ("kazunomiya-story", "桶川宿には", "おけがわしゅく", "オケガワシュク"),
+    ("kazunomiya-story", "藪原宿に泊まり", "ヤブハラジュク", "ヤブハラ"),
+    ("kazunomiya-story", "ここを過ぎれば", "すぎれば", "スギレバ"),
+    ("kazunomiya-story", "まわり道か", "まわりみちか", "マワリミチカ"),
+    ("kazunomiya-story", "元治元年", "げんじ", "ゲンジ"),
+    ("kazunomiya-story", "何かせん", "なにかせん", "ナニカ"),
+    ("kazunomiya-story", "橋本実梁", "さねやな", "サネヤ"),
+    ("kazunomiya-story", "清水家の屋敷に", "シミズケ", "シミズケ"),
+    ("kazunomiya-story", "礫石経", "れきせききょう", "レキセキ"),
+    ("kazunomiya-story", "和宮様御留", "おんとめ", "オントメ"),
 ]
 
 
