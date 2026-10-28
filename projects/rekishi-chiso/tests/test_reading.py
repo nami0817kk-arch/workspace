@@ -191,10 +191,16 @@ MISREADS = [
     ("asahi-story", "差し出す側が", "さしだすがわが", "ワガ"),
     ("asahi-story", "戦の都合", "いくさのつごう", "ツゴオ"),
     ("asahi-story", "家忠の日記は", "いえただ", "イエタダ"),
+    # 豊臣秀次（10-28 のショート story/hidetsugu_s1〜s5 の kana で。ショートの台本は _texts が storyshort で読む）
+    ("story/hidetsugu_s5", "ひとつの塚から", "のつかから", "ツカカラ"),
 ]
 
 
 def _texts(stem: str, phrase: str) -> list[str]:
+    if stem.startswith("story/"):                 # 物語完結型ショート（scripts/story/*.yaml、10-28）
+        from chiso import storyshort
+        doc = storyshort.load(ROOT / "scripts" / f"{stem}.yaml")
+        return [l.text for l in storyshort.lines_of(doc) if phrase in display_text(l.text)]
     sc = script.load(ROOT / "scripts" / f"{stem}.yaml")
     return [t for _, t in reading.items(sc) if phrase in display_text(t)]
 

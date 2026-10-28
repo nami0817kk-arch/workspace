@@ -1,0 +1,184 @@
+# 物語完結型ショート 豊臣秀次 s3（2026-10-28）。本編 scripts/hidetsugu-story.yaml の第4章（「殺生関白」の出どころと近江八幡）から。投稿しない。
+# 形式は kazumasa_s1.yaml・asahi_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。絵は本編の AI 絵＋実在の絵（洛中洛外図屏風・秀次像）。
+# 事実カード（dev/output/rekishi-chiso/research/豊臣秀次_facts_20261028.yaml）：hidetsugu-01・04・19・21
+#   ・『甫庵太閤記』（正保3年刊本）「其比洛中の辻々に落書夜々に有し 院の御所手向のためのかりなれは これをせつしやう関白といふ」（hidetsugu-04）。
+#   ・『本朝通鑑』（林羅山・林春斎）「殺生與政音響近」／『続撰清正記』「狩漁を好み給へば、世の人殺生関白といふ」／『絵本太閤記』（1884年の刊本）「一條の辻に札を立て」（hidetsugu-04）。
+#   ・矢部健太郎（2016）「秀次の『殺生関白』も、信頼すべき根拠のない作り話であった」（hidetsugu-04）。
+#   ・近江八幡：1585年に八幡山城の城下町を開き、商人を呼び、税を免じた（hidetsugu-19）。
+#   ・「死後に生まれた呼び名」とは言わない：『甫庵太閤記』は「そのころ」落書が出たと書き、初出が死後かどうかはカードで確かめられていない
+#     （矢部の「『大かうさまくんきのうち』に初めて現れる」は本文を未見）。言うのは「呼び名を伝えるのは江戸時代の書物」まで。
+# 理解テスト4問：
+#   ①誰の話か：豊臣秀次（秀吉の甥・関白。文禄4年に高野山で腹を切った）の「殺生関白」という呼び名
+#   ②いつ・どこで何が：江戸時代の『甫庵太閤記』が、そのころ京の辻々に夜ごと落書が出て「殺生関白」と書かれた、と伝える
+#   ③なぜそう呼ばれたと書かれたか：摂政と音が近い言葉遊び（『本朝通鑑』）／狩りを好んだから（『続撰清正記』）。明治の本では一条の辻の札に
+#   ④どうなったか：矢部健太郎さんは「根拠のない作り話」と書いた。秀次は1585年に近江八幡の商人の町を開いた人でもあった
+title: 豊臣秀次｜「殺生関白」は、江戸の書物の落書から
+yt_title: 豊臣秀次の「殺生関白」という呼び名は、どこから来たのか【江戸時代の書物の落書】
+description: |-
+  関白だった豊臣秀次は、「殺生関白」という悪い呼び名で知られてきました。
+  江戸時代の『甫庵太閤記』は、そのころ京の辻々に夜ごと落書が出て、「院の御所の手向けのための狩りなれば、これを殺生関白という」と書かれていた、と伝えます。
+  『本朝通鑑』は殺生と摂政は音が近いと書き添え、『続撰清正記』は狩りを好んだから世の人がそう呼んだ、とします。明治の『絵本太閤記』では、一条の辻に札が立ったことになっています。
+  歴史学者の矢部健太郎さんは、秀次の「殺生関白」も、根拠のない作り話だった、と書いています。秀次は1585年、近江八幡の商人の町を開いた人でもありました。
+hashtags: ["#豊臣秀次", "#日本史", "#戦国時代"]
+ai_images: true
+art_dir: out/story/hidetsugu
+out: hidetsugu_story_s3
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 豊臣秀次（秀吉の甥・関白）
+  title: "《殺生関白》は、江戸の書物から"
+now:
+  - {at: 豊臣秀次の悪い, text: "江戸時代　書物", point: 2}
+  - {at: 文禄4年, text: "文禄4年　高野山", point: 1}
+  - {at: 甫庵太閤記』には, text: "江戸時代　書物", point: 2}
+  - {at: 明治に刷られた, text: "明治17年", point: 3}
+  - {at: 1585年, text: "1585年　近江八幡", point: 0}
+timeline:
+  - {label: "1585"}
+  - {label: "1595"}
+  - {label: "江戸"}
+  - {label: "明治"}
+cards:
+  - type: table                          # 呼び名の理由（語った順に1行ずつ）
+    title: 「殺生関白」と書いた書物
+    from: 本朝通鑑
+    until: 矢部健太郎
+    items:
+      - {at: 本朝通鑑, text: "本朝通鑑　摂政と音が近い"}
+      - {at: 続撰清正記, text: "続撰清正記　狩りを好んだ"}
+      - {at: 絵本太閤記, text: "絵本太閤記　一条の辻の札"}
+shots:
+  H01f:                                  # 1文目：秀次の顔
+    kind: ai
+    file: hidetsugu/main/H01.jpg
+    focus: [0.64, 0.3]
+    move: in
+    zoom: 0.14
+    text_y: 0.74
+    must: 秀次の顔
+  Portrait:                              # 秀吉の甥・関白：秀次の肖像
+    kind: real
+    image: paintings/hidenaga_hidetsugu.jpg
+    crop: [0.18, 0.22, 0.80, 0.56]
+    focus: [0.5, 0.45]
+    move: down
+    text_box: true
+    credit: "《豊臣秀次像》17世紀前半（Wikimedia Commons・パブリックドメイン）"
+    must: 秀次の肖像画
+  H09:                                   # 文禄4年、高野山で腹を切った
+    kind: ai
+    file: hidetsugu/main/H09.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 夜明けの高野山の杉木立
+  Rakuchu:                               # 京の辻々に夜ごと落書（洛中の町）
+    kind: real
+    image: paintings/akechi_rakuchu_rakugai_uesugi_right.jpg
+    focus: [0.55, 0.6]
+    move: left
+    credit: "狩野永徳《洛中洛外図屏風》（上杉本）右隻（パブリックドメイン）"
+    must: 京の町並み
+  RakuchuZ:                              # 落書の文句（町に寄る）
+    kind: real
+    image: paintings/akechi_rakuchu_rakugai_uesugi_right.jpg
+    focus: [0.3, 0.7]
+    move: in
+    zoom: 0.25
+    credit: "狩野永徳《洛中洛外図屏風》（上杉本）右隻（パブリックドメイン）"
+    must: 京の町と人々
+  H06:                                   # 本朝通鑑・続撰清正記（書物）
+    kind: ai
+    file: hidetsugu/main/H06.jpg
+    focus: [0.45, 0.55]
+    move: right
+    must: 文机の文書
+  H06l:                                  # 絵本太閤記・書き写される（巻物）
+    kind: ai
+    file: hidetsugu/main/H06.jpg
+    focus: [0.25, 0.5]
+    move: left
+    must: 巻物
+  H05:                                   # 矢部さん：根拠のない作り話
+    kind: ai
+    file: hidetsugu/main/H05.jpg
+    focus: [0.62, 0.45]
+    move: in
+    must: 書状を読む秀次
+  H12:                                   # 1585年、近江八幡の商人の町
+    kind: ai
+    file: hidetsugu/main/H12.jpg
+    focus: [0.6, 0.6]
+    move: left
+    must: 八幡堀と商人の町
+  H01q:                                  # 最後の問い：秀次の顔
+    kind: ai
+    file: hidetsugu/main/H01.jpg
+    focus: [0.64, 0.28]
+    move: in
+    zoom: 0.18
+    text_y: 0.74
+    must: 秀次の顔
+lines:
+  # fact: hidetsugu-04
+  - 語り: 豊臣秀次の悪い呼び名、殺生関白。それを伝えるのは、《!江戸時代の書物》だ。
+    shot: H01f
+    tone: 強調
+  - 語り: 秀次は、秀吉の甥で、跡を継いで関白になった人だ。
+    shot: Portrait
+    tone: しみじみ
+    pause: 0.12
+  # fact: hidetsugu-01
+  - 語り: 文禄4年、秀次は、高野山で腹を切った。
+    shot: H09
+    tone: 重い
+    pause: 0.15
+  # fact: hidetsugu-04
+  - 語り: 江戸時代の書物、『甫庵太閤記』には、そのころ京の辻々に、夜ごと《落書》が出た、とある。
+    shot: Rakuchu
+    tone: しみじみ
+    pause: 0.12
+  # fact: hidetsugu-04
+  - 語り: 文句は、院の御所の手向けのための狩りなれば、これを《殺生関白》という。
+    shot: RakuchuZ
+    tone: 強調
+    pause: 0.15
+  # fact: hidetsugu-04
+  - 語り: 『本朝通鑑』は、殺生と摂政は、音が近い、と書き添えた。
+    shot: H06
+    tone: しみじみ
+    pause: 0.12
+  # fact: hidetsugu-04
+  - 語り: 『続撰清正記』は、狩りを好んだので、世の人が、そう呼んだ、とする。
+    shot: H06
+    tone: しみじみ
+    pause: 0.12
+  # fact: hidetsugu-04
+  - 語り: 明治に刷られた本、『絵本太閤記』では、一条の辻に、札が立ったことになっている。
+    shot: H06l
+    tone: しみじみ
+    pause: 0.12
+  # fact: hidetsugu-04
+  - 語り: 歴史学者の矢部健太郎さんは、殺生関白も、《根拠のない作り話》だった、と書いた。
+    shot: H05
+    tone: 強調
+    pause: 0.3
+    dip: true
+  # fact: hidetsugu-19
+  - 語り: 秀次は、1585年、近江八幡に、商人の町を開いた人でもあった。
+    shot: H12
+    tone: しみじみ
+    pause: 0.15
+  - 語り: 殺生関白か、町を開いた人か。あなたなら、どちらで《覚えますか》。
+    shot: H01q
+    tone: 疑問
+    pause: 0.15
