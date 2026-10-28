@@ -15,7 +15,7 @@ class Rival {
   final String name;
 
   /// 素質 0〜100(本人と同じ尺度)。
-  final int potential;
+  int potential;
 
   /// こちらから見た通算の勝ち・負け。
   int wins;

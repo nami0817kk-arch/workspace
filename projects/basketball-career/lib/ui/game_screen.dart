@@ -10,6 +10,7 @@ import '../game/mastery.dart';
 import '../game/match.dart';
 import '../game/money.dart';
 import '../game/path.dart';
+import '../game/perks.dart';
 import '../game/player.dart';
 import '../game/season.dart';
 import 'art/court.dart';
@@ -655,19 +656,197 @@ class _ActionBar extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
                   ),
-                  TextButton(
-                    onPressed: onShowSettings,
-                    style: TextButton.styleFrom(
-                        visualDensity: VisualDensity.compact,
-                        padding: const EdgeInsets.symmetric(horizontal: 8)),
-                    child: const Text('重点を変える', style: TextStyle(fontSize: 12)),
-                  ),
+                  _BarLink('重点を変える', onShowSettings),
                 ],
+              ),
+              // ターンを使わない操作。いまの信頼・チームワーク・お金を見せて、使えることに気づけるように。
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 3),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: _PerkButton(
+                        icon: Icons.handshake_outlined,
+                        label: '頼る',
+                        sub: '信頼${g.coachBond}・チーム${g.teamwork}',
+                        onPressed: () => openPerkSheet(context, c, money: false),
+                      ),
+                    ),
+                    if (g.track == Track.pro || g.cash > 0) ...[
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: _PerkButton(
+                          icon: Icons.payments_outlined,
+                          label: 'お金',
+                          sub: moneyLabel(g.cash),
+                          onPressed: () => openPerkSheet(context, c, money: true),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
               ),
               Row(children: [for (final a in acts.take(3)) button(a)]),
               Row(children: [for (final a in acts.skip(3)) button(a)]),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+/// 下のバーの見出しの横の、小さな文字のボタン。
+class _BarLink extends StatelessWidget {
+  const _BarLink(this.label, this.onPressed);
+  final String label;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) => TextButton(
+        onPressed: onPressed,
+        style: TextButton.styleFrom(
+            visualDensity: VisualDensity.compact,
+            minimumSize: const Size(0, 32),
+            padding: const EdgeInsets.symmetric(horizontal: 6)),
+        child: Text(label, style: const TextStyle(fontSize: 12)),
+      );
+}
+
+/// 下のバーの「頼る」「お金」。名前の横に、いまの値を小さく出す。
+class _PerkButton extends StatelessWidget {
+  const _PerkButton({required this.icon, required this.label, required this.sub, required this.onPressed});
+  final IconData icon;
+  final String label;
+  final String sub;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) => OutlinedButton(
+        onPressed: onPressed,
+        style: OutlinedButton.styleFrom(
+          minimumSize: const Size(0, 34),
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          visualDensity: VisualDensity.compact,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 16),
+            const SizedBox(width: 4),
+            Text(label, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+            const SizedBox(width: 6),
+            Flexible(
+              child: Text(sub,
+                  maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 11)),
+            ),
+          ],
+        ),
+      );
+}
+
+/// 「頼る」「お金」の一覧を下から出す。選ぶと閉じて、結果は下のバーの結果の帯に出る。
+void openPerkSheet(BuildContext context, GameController c, {required bool money}) {
+  showModalBottomSheet<void>(
+    context: context,
+    isScrollControlled: true,
+    showDragHandle: true,
+    builder: (ctx) => PerkSheet(controller: c, money: money),
+  );
+}
+
+/// 頼みごと(`Favor`)か、お金の使い道(`Spend`)の一覧。使えないものは理由を出す。
+class PerkSheet extends StatelessWidget {
+  const PerkSheet({super.key, required this.controller, required this.money});
+  final GameController controller;
+  final bool money;
+
+  @override
+  Widget build(BuildContext context) {
+    final g = controller.game!;
+    final cs = Theme.of(context).colorScheme;
+    final rows = <({String title, String cost, String effect, String? block, VoidCallback onUse})>[
+      if (money)
+        for (final s in Spend.values)
+          (
+            title: g.fill(s.label),
+            cost: moneyLabel(s.price),
+            effect: s.effect.replaceAll('第1重点', controller.focus.label),
+            block: g.spendBlock(s),
+            onUse: () => controller.spend(s),
+          )
+      else
+        for (final f in Favor.values)
+          // 推薦状はプロになると使い道が無いので、出さない。
+          if (!(f == Favor.letter && g.track == Track.pro))
+            (
+              title: g.fill(f.label),
+              cost: f.cost,
+              effect: f.effect.replaceAll('第1重点', controller.focus.label),
+              block: g.favorBlock(f),
+              onUse: () => controller.useFavor(f),
+            ),
+    ];
+    return SafeArea(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.8),
+        child: ListView(
+          shrinkWrap: true,
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+          children: [
+            Text(money ? 'お金を使う' : '人に頼る',
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 4),
+            Text(
+              money
+                  ? '使えるお金 ${moneyLabel(g.cash)}'
+                  : 'コーチとの信頼 ${g.coachBond}・チームワーク ${g.teamwork}',
+              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              money
+                  ? '年俸とスポンサー収入が季節ごとに入る。ターンは使わない。'
+                  : 'ターンは使わない。頼みごとは1ターンに1つまで。',
+              style: TextStyle(fontSize: 12, color: cs.onSurfaceVariant),
+            ),
+            const SizedBox(height: 8),
+            for (final r in rows)
+              Card(
+                margin: const EdgeInsets.only(bottom: 8),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(12, 10, 8, 10),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(r.title,
+                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                            Text('${r.cost} ・ ${r.effect}', style: const TextStyle(fontSize: 12)),
+                            if (r.block != null)
+                              Text(r.block!,
+                                  style: const TextStyle(fontSize: 12, color: Color(0xFFC62828))),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      FilledButton.tonal(
+                        // テーマの既定は横いっぱいなので、行の中では幅を決める。
+                        style: FilledButton.styleFrom(minimumSize: const Size(64, 40)),
+                        onPressed: r.block != null
+                            ? null
+                            : () {
+                                Navigator.of(context).pop();
+                                r.onUse();
+                              },
+                        child: Text(money ? '使う' : '頼む'),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+          ],
         ),
       ),
     );

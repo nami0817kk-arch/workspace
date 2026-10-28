@@ -11,6 +11,7 @@ import 'life.dart';
 import 'mastery.dart';
 import 'match.dart';
 import 'money.dart';
+import 'perks.dart';
 import 'path.dart';
 import 'player.dart';
 import 'rival.dart';
@@ -263,6 +264,15 @@ class Game {
     this.positionAuto = true,
     Map<Ability, int>? yearStart,
     Map<Ability, int>? mastery,
+    this.cash = 0,
+    this.spent = 0,
+    Set<String>? usedTerm,
+    Set<String>? usedYear,
+    Set<String>? usedEver,
+    this.trainerTerms = 0,
+    this.nutritionTerms = 0,
+    this.nextGrowthBoost = 1.0,
+    this.recommendBonus = 0,
   })  : rng = rng ?? Random(),
         rival = rival ?? Rival(name: 'ライバル', potential: 60),
         recentEventIds = recentEventIds ?? [],
@@ -273,6 +283,9 @@ class Game {
         goalStart = goalStart ?? {},
         yearStart = yearStart ?? {},
         mastery = mastery ?? {},
+        usedTerm = usedTerm ?? {},
+        usedYear = usedYear ?? {},
+        usedEver = usedEver ?? {},
         recentAchievements = recentAchievements ?? [],
         records = records ?? [];
 
@@ -337,20 +350,180 @@ class Game {
   void _addMastery(Action action, Ability focus, Ability? focus2, bool injured) {
     final g = masteryGain(action, injured: injured);
     final ups = <(Ability, int)>[];
-    var ab = player.abilities;
     for (final (a, n) in [(focus, g.first), if (focus2 != null && focus2 != focus) (focus2, g.second)]) {
-      if (n <= 0) continue;
-      final before = masteryLevel(mastery[a] ?? 0);
-      mastery[a] = (mastery[a] ?? 0) + n;
-      final after = masteryLevel(mastery[a]!);
-      for (var lv = before + 1; lv <= after; lv++) {
-        ups.add((a, lv));
-        ab = {...ab, a: ((ab[a] ?? 0) + masteryAbilityBonus(lv)).clamp(0, abilityCap)};
-        sp += masterySp(lv);
-      }
+      ups.addAll(_gainMastery(a, n));
+    }
+    lastMasteryUps = ups;
+  }
+
+  /// 能力 `a` に熟練度を `n` 足す。上がった段を返す(ごほうびはここで当てる)。
+  List<(Ability, int)> _gainMastery(Ability a, int n) {
+    if (n <= 0) return const [];
+    final ups = <(Ability, int)>[];
+    var ab = player.abilities;
+    final before = masteryLevel(mastery[a] ?? 0);
+    mastery[a] = (mastery[a] ?? 0) + n;
+    final after = masteryLevel(mastery[a]!);
+    for (var lv = before + 1; lv <= after; lv++) {
+      ups.add((a, lv));
+      ab = {...ab, a: ((ab[a] ?? 0) + masteryAbilityBonus(lv)).clamp(0, abilityCap)};
+      sp += masterySp(lv);
     }
     if (ups.isNotEmpty) player = player.copyWith(abilities: ab);
-    lastMasteryUps = ups;
+    return ups;
+  }
+
+  /// 頼みごと・買い物で上がった熟練の段を、結果の行にする。
+  List<String> _masteryLines(List<(Ability, int)> ups) => [
+        for (final (a, lv) in ups) '熟練アップ! ${masteryLabel(a, lv)}${masteryRewardText(a, lv)}',
+      ];
+
+  // ── 頼る・お金を使う(`perks.dart`。季節のターンは使わない) ──
+
+  /// 使えるお金(万円)。プロの年俸とスポンサー収入が季節ごとに4分の1ずつ入り、買い物で減る。
+  int cash;
+
+  /// これまでに使ったお金(万円)。
+  int spent;
+
+  /// このターン・この年・一生のうちに使った頼みごとと買い物(`Favor.name` / `Spend.name`)。
+  final Set<String> usedTerm;
+  final Set<String> usedYear;
+  final Set<String> usedEver;
+
+  /// 個人トレーナー・栄養士が効く残りのターン。
+  int trainerTerms;
+  int nutritionTerms;
+
+  /// 次のターンの伸びの倍率(個別指導で 1.2)。
+  double nextGrowthBoost;
+
+  /// 推薦状で、次の進路の実績に足す分。
+  double recommendBonus;
+
+  /// このターンに頼みごとをしたか(1ターンに1つまで)。
+  bool get favorUsedThisTerm => Favor.values.any((f) => usedTerm.contains(f.name));
+
+  /// 頼みごとを使えない理由。使えるなら null。
+  String? favorBlock(Favor f) {
+    if (phase != Phase.season) return '今は頼めない';
+    if (favorUsedThisTerm) return '頼みごとは1ターンに1つまで';
+    final hurt = condition.injured;
+    switch (f) {
+      case Favor.lesson:
+        if (hurt) return '怪我の間は頼めない';
+        if (coachBond < lessonBond) return 'コーチとの信頼が$lessonBondに足りない(いま$coachBond)';
+      case Favor.extra:
+        if (hurt) return '怪我の間は頼めない';
+        if (teamwork < extraTeamwork) return 'チームワークが$extraTeamworkに足りない(いま$teamwork)';
+      case Favor.talk:
+        if (teamwork < talkTeamwork) return 'チームワークが$talkTeamworkに足りない(いま$teamwork)';
+        if (condition.morale >= 80) return '気持ちはもう十分高い';
+      case Favor.rival:
+        if (!rivalMet) return 'まだライバルと出会っていない';
+        if (!rival.activeAt(player.age)) return 'ライバルはもう現役ではない';
+        if (hurt) return '怪我の間は頼めない';
+        if (usedYear.contains(f.name)) return '今年はもう一緒に練習した';
+      case Favor.letter:
+        if (track == Track.pro) return 'プロになったので要らない';
+        if (recommendBonus > 0) return 'もう書いてもらった';
+        if (coachBond < letterBond) return 'コーチとの信頼が$letterBondに足りない(いま$coachBond)';
+    }
+    return null;
+  }
+
+  /// 頼みごとをする。結果を行にして返す。
+  List<String> useFavor(Favor f, {Ability? focus}) {
+    final why = favorBlock(f);
+    if (why != null) throw StateError(why);
+    usedTerm.add(f.name);
+    usedYear.add(f.name);
+    usedEver.add(f.name);
+    final on = focus ?? lastFocus;
+    final lines = <String>[];
+    switch (f) {
+      case Favor.lesson:
+        coachBond -= lessonCost;
+        nextGrowthBoost = lessonGrowth;
+        lines.add(fill('{coach}がつきっきりで見てくれた。${on.label}の熟練度 +2、次のターンの伸びが1.2倍。'));
+        lines.addAll(_masteryLines(_gainMastery(on, 2)));
+      case Favor.extra:
+        teamwork -= extraCost;
+        condition = condition.copyWith(
+            morale: condition.morale + 5, fatigue: condition.fatigue + 5);
+        lines.add(fill('{mate}と日が暮れるまで${on.label}を練習した。熟練度 +2。'));
+        lines.addAll(_masteryLines(_gainMastery(on, 2)));
+      case Favor.talk:
+        teamwork -= talkCost;
+        condition = condition.copyWith(morale: condition.morale + 15);
+        lines.add(fill('{mate}に話を聞いてもらい、気持ちが軽くなった。気持ち +15。'));
+      case Favor.rival:
+        rival.potential = (rival.potential + 2).clamp(0, 95);
+        condition = condition.copyWith(morale: condition.morale + 10);
+        lines.add(fill('{rival}と合同練習。互いに刺激を受けた。${on.label}の熟練度 +2、気持ち +10(ライバルも少し伸びた)。'));
+        lines.addAll(_masteryLines(_gainMastery(on, 2)));
+      case Favor.letter:
+        coachBond -= letterCost;
+        recommendBonus = letterAchievement;
+        lines.add(fill('{coach}が推薦状を書いてくれた。次の進路で、プロの評価点 +3。'));
+    }
+    return lines;
+  }
+
+  /// お金を使えない理由。使えるなら null。
+  String? spendBlock(Spend s) {
+    if (phase != Phase.season) return '今は使えない';
+    switch (s.limit) {
+      case SpendLimit.term:
+        if (usedTerm.contains(s.name)) return 'このターンはもう使った';
+      case SpendLimit.year:
+        if (usedYear.contains(s.name)) return '今年はもう使った';
+      case SpendLimit.active:
+        final left = s == Spend.trainer ? trainerTerms : nutritionTerms;
+        if (left > 0) return 'まだ契約中(あと$leftターン)';
+      case SpendLimit.life:
+        if (usedEver.contains(s.name)) return 'もう贈った';
+    }
+    if (s == Spend.camp && condition.injured) return '怪我の間は行けない';
+    if (cash < s.price) return 'お金が足りない(いま${moneyLabel(cash)})';
+    return null;
+  }
+
+  /// お金を使う。結果を行にして返す。
+  List<String> spend(Spend s, {Ability? focus}) {
+    final why = spendBlock(s);
+    if (why != null) throw StateError(why);
+    cash -= s.price;
+    spent += s.price;
+    usedTerm.add(s.name);
+    usedYear.add(s.name);
+    usedEver.add(s.name);
+    final on = focus ?? lastFocus;
+    final lines = <String>['${moneyLabel(s.price)}を使った(残り ${moneyLabel(cash)})。'];
+    switch (s) {
+      case Spend.treat:
+        teamwork = (teamwork + 15).clamp(0, 100);
+        lines.add(fill('{mate}たちと食事に行き、打ち解けた。チームワーク +15。'));
+      case Spend.gear:
+        coachBond = (coachBond + 15).clamp(0, 100);
+        lines.add(fill('{coach}が新しい機材を喜んでくれた。コーチとの信頼 +15。'));
+      case Spend.trainer:
+        trainerTerms = perkTerms;
+        lines.add('個人トレーナーと契約した。これから$perkTermsターン、伸びが1.1倍。');
+      case Spend.nutrition:
+        nutritionTerms = perkTerms;
+        lines.add('栄養士と契約した。これから$perkTermsターン、衰えが2割減り、怪我をしにくい。');
+      case Spend.camp:
+        condition = condition.copyWith(fatigue: condition.fatigue + 15);
+        lines.add('海外のキャンプで${on.label}を鍛え込んだ。熟練度 +3。');
+        lines.addAll(_masteryLines(_gainMastery(on, 3)));
+      case Spend.parents:
+        condition = condition.copyWith(morale: condition.morale + 30);
+        lines.add('両親に家を贈った。ずっと支えてくれた二人が、涙を流して喜んだ。気持ち +30。');
+      case Spend.court:
+        lines.add('地元にバスケコートを寄付した。評判が広まり、来年からスポンサー契約が増える。');
+    }
+    return lines;
   }
 
   int goalRivalWins;
@@ -759,7 +932,7 @@ class Game {
   bool get hasWinterCup => stage == Stage.highSchool || stage == Stage.college;
 
   /// いまのプロ契約の評価点と見込み(進路の前に位置を伝える)。
-  double get offerNow => offerScore(player, achievement);
+  double get offerNow => offerScore(player, achievement + recommendBonus);
   Outlook get outlook => outlookOf(offerNow);
 
   /// 直近の大会の実績の平均(進路の評価に使う)。まだ無ければ 30。
@@ -808,12 +981,24 @@ class Game {
     lastMetRival = false;
     lastNewSkills = {};
     lastMasteryUps = const [];
+    usedTerm.clear();
     final rut = isRut(action);
     final wasInjured = condition.injured;
     final abilitiesBefore = Map<Ability, int>.of(player.abilities);
     final r = playTerm(player, condition, action, focus, rng,
         focus2: focus2,
-        growthScale: difficulty.growth * coachBoost * (rut ? slumpScale : 1.0));
+        growthScale: difficulty.growth *
+            coachBoost *
+            (rut ? slumpScale : 1.0) *
+            nextGrowthBoost *
+            (trainerTerms > 0 ? trainerGrowth : 1.0),
+        declineScale: nutritionTerms > 0 ? nutritionDecline : 1.0,
+        injuryScale: nutritionTerms > 0 ? nutritionInjury : 1.0);
+    nextGrowthBoost = 1.0;
+    if (trainerTerms > 0) trainerTerms--;
+    if (nutritionTerms > 0) nutritionTerms--;
+    // 年俸とスポンサー収入は、季節ごとに4分の1ずつ使えるお金に入る。
+    if (track == Track.pro) cash += (salary + sponsor) ~/ 4;
     recentActions.add(action);
     while (recentActions.length > 3) {
       recentActions.removeAt(0);
@@ -1211,6 +1396,7 @@ class Game {
       champion: records.any((r) => r.age == player.age && r.champion),
     );
     sp += lastSpGain;
+    usedYear.clear();
     if (track == Track.pro) totalEarnings += salary + sponsor; // その年の年俸とスポンサー収入
     growthLog.add(GrowthPoint(player.age, player.overall, player.heightCm));
     final stageBefore = stage;
@@ -1260,6 +1446,7 @@ class Game {
                     draftPick: draftPick,
                     caps: caps,
                     abroad: abroad,
+                    charity: usedEver.contains(Spend.court.name),
                   ) *
                   specialSponsorMultiplier(player.specials))
               .round();
@@ -1453,10 +1640,13 @@ class Game {
     if (!availableRoutes.contains(route)) {
       throw StateError('選べない進路: $route');
     }
+    // 推薦状は、この進路の選択で使い切る。
+    final ach = achievement + recommendBonus;
+    recommendBonus = 0;
     if (route == Route.pro) {
-      final win = winsContract(player, achievement, rng);
+      final win = winsContract(player, ach, rng);
       if (win) {
-        draftPick = draftPickOf(offerScore(player, achievement), rng);
+        draftPick = draftPickOf(offerScore(player, ach), rng);
         salary = rookieSalary(draftPick);
         if (draftPick <= 10) {
           // 上位指名は期待されている: 気持ちが高い状態ではじまる。
@@ -1637,6 +1827,15 @@ class Game {
         'lastFocus': lastFocus.name,
         'recentAchievements': recentAchievements,
         'records': [for (final r in records) r.toJson()],
+        'cash': cash,
+        'spent': spent,
+        'usedTerm': usedTerm.toList(),
+        'usedYear': usedYear.toList(),
+        'usedEver': usedEver.toList(),
+        'trainerTerms': trainerTerms,
+        'nutritionTerms': nutritionTerms,
+        'nextGrowthBoost': nextGrowthBoost,
+        'recommendBonus': recommendBonus,
       };
 
   /// 項目を足すときは既定値を置く(既存セーブを壊さない)。
@@ -1747,7 +1946,19 @@ class Game {
           for (final r in (j['records'] as List?) ?? const [])
             YearRecord.fromJson((r as Map).cast<String, dynamic>()),
         ],
+        cash: (j['cash'] as num?)?.toInt() ?? 0,
+        spent: (j['spent'] as num?)?.toInt() ?? 0,
+        usedTerm: _names(j['usedTerm']),
+        usedYear: _names(j['usedYear']),
+        usedEver: _names(j['usedEver']),
+        trainerTerms: (j['trainerTerms'] as num?)?.toInt() ?? 0,
+        nutritionTerms: (j['nutritionTerms'] as num?)?.toInt() ?? 0,
+        nextGrowthBoost: (j['nextGrowthBoost'] as num?)?.toDouble() ?? 1.0,
+        recommendBonus: (j['recommendBonus'] as num?)?.toDouble() ?? 0,
       );
+
+  static Set<String> _names(Object? v) =>
+      v is List ? {for (final x in v) if (x is String) x} : {};
 }
 
 /// `path.dart` の `canGoAbroad` を `Game` のゲッター名と衝突させずに使う。

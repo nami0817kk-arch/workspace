@@ -27,7 +27,7 @@ int salaryOf({required double overall, required int honorsLastYear, required boo
 }
 
 /// スポンサー契約の年収(万円)。人気で決まる: 前の年の表彰・優勝・華がある・上位指名・日本代表・海外での活躍。
-/// 総合60未満は付かない。1点あたり300万円、最大3,000万円。
+/// 地元への寄付(`Spend.court`)でも人気が上がる。総合60未満は付かない。1点あたり300万円、最大3,000万円。
 int sponsorOf({
   required double overall,
   required int honorsLastYear,
@@ -36,6 +36,7 @@ int sponsorOf({
   required int draftPick,
   required int caps,
   required bool abroad,
+  bool charity = false,
 }) {
   if (overall < 60) return 0;
   final points = min(honorsLastYear, 4) * 2 +
@@ -43,7 +44,8 @@ int sponsorOf({
       (star ? 3 : 0) +
       (draftPick >= 1 && draftPick <= 10 ? 2 : 0) +
       (caps > 0 ? 2 : 0) +
-      (abroad ? 2 : 0);
+      (abroad ? 2 : 0) +
+      (charity ? 3 : 0);
   return min(points * 300, 3000);
 }
 

@@ -200,6 +200,8 @@ int _stochasticRound(double v, Random rng) {
   Ability focus,
   Random rng, {
   double growthScale = 1.0,
+  double declineScale = 1.0,
+  double injuryScale = 1.0,
   Ability? focus2,
 }) {
   if (!canChoose(action, c)) {
@@ -218,7 +220,7 @@ int _stochasticRound(double v, Random rng) {
       // 伸びない過ごし方(休養)は、伸びる年には何も動かさない。衰えは止まらない。
       if (mult == 0 && yearly >= 0) continue;
       final base = yearly / 4 * (yearly < 0 ? 1.0 : mult);
-      final scaled = base >= 0 ? base * tired * mood * growthScale : base;
+      final scaled = base >= 0 ? base * tired * mood * growthScale : base * declineScale;
       final noise = (rng.nextDouble() - 0.5) * 0.6;
       next[a] = (p.of(a) + _stochasticRound(scaled + noise, rng))
           .clamp(0, abilityCap);
@@ -245,6 +247,7 @@ int _stochasticRound(double v, Random rng) {
     final risk = e.injury *
         injuryMultiplier(p.traits) *
         specialInjuryMultiplier(p.specials) *
+        injuryScale *
         (c.fatigue >= 70 ? 2.0 : 1.0);
     if (rng.nextDouble() < risk) {
       final kind = rollInjury(rng);
