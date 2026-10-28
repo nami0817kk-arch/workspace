@@ -20,11 +20,11 @@ chapters:
   1: {label: 第1章 若い歳三を支えたのは誰か, now: 1835年,
       dates: {12: 弘化3年, 13: null, 19: 1858年, 20: 文久2年9月, 21: null, 26: 1863年}}
   2: {label: 第2章 鬼の副長は本当に鬼だったのか, now: 1863年,
-      dates: {29: null, 34: 文久3年11月, 36: null, 44: 1868年1月, 45: 慶応4年4月, 46: null}}
+      dates: {29: null, 34: 文久3年11月, 36: null, 45: 1868年1月, 46: 慶応4年4月, 47: null}}
   3: {label: 第3章 洋装の写真は、いつ誰が撮ったのか, now: 1868年,
-      dates: {54: null, 67: 明治2年}}
+      dates: {55: null, 70: 明治2年}}
   4: {label: 第4章 「この者の身の上を、お頼み申します」, now: null,
-      dates: {70: 慶応3年, 72: null, 75: 明治2年, 86: 明治2年7月, 87: null}}
+      dates: {73: 慶応3年, 75: null, 78: 明治2年, 89: 明治2年7月, 90: null}}
   5: {label: 第5章 歳三は、なぜ写真をふるさとへ送ったのか, now: null,
       dates: {}}
 
@@ -47,7 +47,7 @@ references:
   - 柳川熊吉翁の碑（南北海道の文化財）　https://donan-museums.jp/archives/639
   - 「鬼の副長」土方歳三、優しい一面 箱館戦争時に宿の娘に小遣い（北海道新聞 2025）　https://www.hokkaido-np.co.jp/article/1223496/
   - Organization of the Defense of the Ezo Republic（S. S. Naumov, Russian Japanology Review 2024）　https://www.japanreview.ru/jour/article/view/111
-no_tag_from: 130                     # 締め（冒頭の写真に戻る所）から札を出さない
+no_tag_from: 137                     # 締め（冒頭の写真に戻る所）から札を出さない
 
 # AI 絵（16:9 横・15枚）。scene は日本語の要約（英語の指示は research/hijikata_ai_images.md）。
 # pan：h＝左右（既定）・v＝上下・zoom＝ゆっくり寄る（顔の感情の場面だけ。この回は顔を描かないので手もとの場面に）。crops＝切り出し [倍率, 中心x, 中心y]
@@ -93,10 +93,10 @@ credits:
 # 絵の割り当て：「行の番号 種類:絵 [切り出し]」。次の行の指定まで続く。図（figure）の出る行は、その時の絵を暗くして図を置く（自動）
 shots:
   # 序章（0〜10）：あの写真は少年が運んだ → 鉄之助 → 7月に届く → 2か月前に亡くなっていた → 漢詩 → 紙きれ → なぜ
-  - 0 frame:paintings/hijikata_photo_1869.jpg      # よく知られた洋装の写真
+  - 0 ai:J11 wide                                  # よく知られた洋装の写真（日野の家で写真を見つめる夫婦。最初のカットは AI 絵にする：額の下地に要る）
   - 1 ai:J01 wide                                  # 少年の名は市村鉄之助
   - 2 part:paintings/hijikata_hakodate_war_1869.jpg   # 大垣市立図書館の調べ（形見を届けよ）
-  - 3 ai:J11 wide                                  # 明治2年7月 佐藤家に届く
+  - 3 frame:paintings/hijikata_photo_1869.jpg      # 明治2年7月 佐藤家に届く
   - 4 ai:J12 wide                                  # 2か月前に箱館で亡くなっていた
   - 5 frame:paintings/hijikata_photo_1869.jpg b    # 手のひらほどの写真・裏の漢詩
   - 6 ai:J08 wide                                  # 紙きれが添えられていた
@@ -112,7 +112,7 @@ shots:
   - 16 frame:paintings/hijikata_museum_2024.jpg     # 資料館の大黒柱
   - 17 frame:paintings/hijikata_sato_hikogoro.jpg   # 佐藤彦五郎
   - 18 ai:J05 wide                                 # 道場・天然理心流
-  - 19 ai:J05 left                                 # 八坂神社の額（1858年）
+  - 19 part:paintings/hijikata_musashi_tamagawa_1858.jpg   # 八坂神社の額（1858年）（J05 が続けて20秒を超えないよう）
   - 20 ai:J05 right                                # 中極位目録
   - 21 ai:J03 left                                 # 豊玉発句集
   - 22 ai:J03 face                                 # 恋の句を消した跡
@@ -123,7 +123,7 @@ shots:
   - 27 ai:J03 wide                                 # 多摩の人々に手紙を送っている
   # 第2章（28〜52）：鬼の副長の検証と手紙
   - 28 part:paintings/ryoma_kyoto_map_bunkyu_1864.jpg   # 鬼の副長
-  - 29 part:paintings/ryoma_kyoto_sanjo_ohashi_hiroshige_1833.jpg    # 局中法度（29〜31 要点の札）
+  - 29 part:paintings/ryoma_kyoto_shijo_kamogawa_hiroshige2.jpg    # 局中法度（29〜31 要点の札）
   - 32 ai:J03 right                                # 決まりの名前ひとつにも
   - 33 part:paintings/ryoma_kyoto_shijo_kamogawa_hiroshige2.jpg   # 本人の手紙からは
   - 34 ai:J03 wide                                 # 文久3年11月 小島鹿之助への手紙
@@ -131,99 +131,104 @@ shots:
   - 36 part:paintings/hijikata_tamagawa_hiroshige.jpg   # 松本捨助が多摩へ持ち帰る
   - 37 part:paintings/ryoma_kyoto_shijo_kamogawa_hiroshige2.jpg   # 芸妓・舞妓
   - 38 ai:J03 left                                 # 報国の句（史料の札）
-  - 40 ai:J03 right                                # くだけた便り
-  - 41 part:paintings/ryoma_kyoto_sanjo_ohashi_hiroshige_1833.jpg    # 池田屋 鎖帷子
-  - 42 frame:paintings/hijikata_museum_2024.jpg     # 鉢金
-  - 43 part:paintings/ryoma_kyoto_map_bunkyu_1864.jpg   # 鎖帷子は公開できない
-  - 44 part:paintings/hijikata_toba_fushimi_1868.jpg   # 鳥羽・伏見
-  - 45 frame:paintings/hijikata_kondo_isami.jpg     # 近藤勇 板橋
-  - 46 part:paintings/hijikata_koshu_katsunuma_1880.jpg   # 宇都宮・会津へ
-  - 47 part:paintings/hijikata_hakodate_land_naval.jpg   # 蝦夷地での顔
-  - 48 ai:J06 wide                                 # 茂辺地の宿 硬貨
-  - 49 ai:J06 face                                 # 【想像2】……取っておけ
-  - 50 part:paintings/hijikata_hakodate_land_naval.jpg
-  - 51 ai:J04 wide                                 # 一枚の写真を残す
-  - 52 part:paintings/hijikata_hakodate_nishikie_mosai.jpg
+  - 40 part:paintings/hijikata_tamagawa_hiroshige.jpg   # 恋文の束はなくなった・多摩との結びつき
+  - 41 ai:J03 right                                # くだけた便り
+  - 42 part:paintings/ryoma_kyoto_sanjo_ohashi_hiroshige_1833.jpg    # 池田屋 鎖帷子
+  - 43 frame:paintings/hijikata_museum_2024.jpg     # 鉢金
+  - 44 part:paintings/ryoma_kyoto_map_bunkyu_1864.jpg   # 鎖帷子は公開できない
+  - 45 part:paintings/hijikata_toba_fushimi_1868.jpg   # 鳥羽・伏見
+  - 46 frame:paintings/hijikata_kondo_isami.jpg     # 近藤勇 板橋
+  - 47 part:paintings/hijikata_koshu_katsunuma_1880.jpg   # 宇都宮・会津へ
+  - 48 part:paintings/hijikata_hakodate_land_naval.jpg   # 蝦夷地での顔
+  - 49 ai:J06 wide                                 # 茂辺地の宿 硬貨
+  - 50 ai:J06 face                                 # 【想像2】……取っておけ
+  - 51 part:paintings/hijikata_hakodate_land_naval.jpg
+  - 52 ai:J04 wide                                 # 一枚の写真を残す
+  - 53 part:paintings/hijikata_hakodate_nishikie_mosai.jpg
   # 第3章（53〜68）：洋装の写真
-  - 53 part:paintings/hijikata_tokugawa_fleet_1868.jpg   # 1868年の暮れ 蝦夷地へ
-  - 54 ai:J10 wide                                 # 陸軍奉行か
-  - 55 frame:paintings/hijikata_goryokaku_honjin_1868.jpg   # 陸軍奉行並
-  - 56 ai:J04 wide                                 # 箱館で写真を撮る
-  - 57 frame:paintings/hijikata_photo_seated.jpg    # 田本研造（椅子に腰かけた姿）
-  - 58 ai:J04 right                                # 食い違う記録の表（台本の図）58〜61
-  - 62 frame:paintings/hijikata_photo_1869.jpg      # 分からないことが残る
-  - 63 frame:paintings/hijikata_hakodate_bugyosho_1868.jpg   # 函館市中央図書館の後年の焼き付け
-  - 64 ai:J10 left                                 # 台紙
-  - 65 frame:paintings/hijikata_photo_1869.jpg b    # 柔和な表情
-  - 66 ai:J04 wide                                 # 【想像3】……この姿を、残しておくか
-  - 67 part:paintings/hijikata_hakodate_nishikie_mosai.jpg   # 明治2年 新政府軍
-  - 68 ai:J08 left                                 # ある役目を与える
+  - 54 part:paintings/hijikata_tokugawa_fleet_1868.jpg   # 1868年の暮れ 蝦夷地へ
+  - 55 ai:J10 wide                                 # 陸軍奉行か
+  - 56 frame:paintings/hijikata_goryokaku_honjin_1868.jpg   # 陸軍奉行並
+  - 57 ai:J04 wide                                 # 箱館で写真を撮る
+  - 58 frame:paintings/hijikata_photo_seated.jpg    # 田本研造（椅子に腰かけた姿）
+  - 59 ai:J04 right                                # 食い違う記録の表（台本の図）58〜61
+  - 63 frame:paintings/hijikata_photo_1869.jpg      # 分からないことが残る
+  - 64 frame:paintings/hijikata_hakodate_bugyosho_1868.jpg   # 函館市中央図書館の後年の焼き付け
+  - 66 ai:J10 left                                 # 台紙
+  - 68 frame:paintings/hijikata_photo_1869.jpg b    # 柔和な表情
+  - 69 ai:J04 wide                                 # 【想像3】……この姿を、残しておくか
+  - 70 part:paintings/hijikata_hakodate_nishikie_mosai.jpg   # 明治2年 新政府軍
+  - 71 ai:J08 left                                 # ある役目を与える
   # 第4章（69〜98）：市村鉄之助
-  - 69 frame:paintings/hijikata_ogaki_castle_pre1945.jpg   # 大垣藩の家
-  - 70 ai:J07 wide                                 # 兄と一緒に新選組へ
-  - 71 ai:J07 right                                # 13歳
-  - 72 part:paintings/ryoma_kyoto_map_bunkyu_1864.jpg   # 両長召抱人
-  - 73 ai:J07 wide                                 # 兄は隊を抜ける
-  - 74 part:paintings/hijikata_hakodate_war_1869.jpg   # 箱館まで来ていた
-  - 75 ai:J08 wide                                 # 形見を届けよ
-  - 76 ai:J08 face                                 # 【想像4】……これを、日野へ、届けてくれ
-  - 77 ai:J01 wide                                 # 紙きれの言葉（史料の札）
-  - 78 ai:J01 right                                # 少年の身も頼んでいた
-  - 79 ai:J12 left                                 # 数日前に船で江戸へ（79〜84 地図：look の図）
-  - 81 ai:J01 wide                                 # 市造16、7歳
-  - 82 ai:J09 left                                 # 目録には鉄之助の名だけ
-  - 83 part:paintings/hijikata_musashi_tamagawa_1858.jpg   # 市造は川越へ
-  - 84 ai:J09 wide                                 # ひとりで日野へ
-  - 85 part:paintings/hijikata_tamagawa_hiroshige.jpg   # 盛られている所もある
-  - 86 ai:J11 wide                                 # 7月に着く・もうこの世にいない
-  - 87 frame:paintings/hijikata_sato_hikogoro.jpg   # 彦五郎のメモ（87〜88 要点の札）
-  - 89 ai:J11 right                                # かくまわれる
-  - 90 frame:paintings/hijikata_ogaki_castle_pre1945.jpg   # 大垣へ
-  - 91 ai:J07 right                                # 兄の死
-  - 92 ai:J09 left                                 # 最期の表（台本の図）92〜94
-  - 95 ai:J07 wide                                 # フィクション
-  - 96 frame:paintings/hijikata_ogaki_castle_pre1945.jpg   # 全昌寺
-  - 97 ai:J11 left                                 # 写真は日野に届いた
-  - 98 ai:J14 wide                                 # つらい日々
+  - 72 frame:paintings/hijikata_ogaki_castle_pre1945.jpg   # 大垣藩の家
+  - 73 ai:J07 wide                                 # 兄と一緒に新選組へ
+  - 74 ai:J07 right                                # 13歳
+  - 75 part:paintings/ryoma_kyoto_map_bunkyu_1864.jpg   # 両長召抱人
+  - 76 ai:J07 wide                                 # 兄は隊を抜ける
+  - 77 part:paintings/hijikata_hakodate_war_1869.jpg   # 箱館まで来ていた
+  - 78 ai:J08 wide                                 # 形見を届けよ
+  - 79 ai:J08 face                                 # 【想像4】……これを、日野へ、届けてくれ
+  - 80 ai:J01 wide                                 # 紙きれの言葉（史料の札）
+  - 81 ai:J01 right                                # 少年の身も頼んでいた
+  - 82 ai:J12 left                                 # 数日前に船で江戸へ（79〜84 地図：look の図）
+  - 84 ai:J01 wide                                 # 市造16、7歳
+  - 85 ai:J09 left                                 # 目録には鉄之助の名だけ
+  - 86 part:paintings/hijikata_musashi_tamagawa_1858.jpg   # 市造は川越へ
+  - 87 ai:J09 wide                                 # ひとりで日野へ
+  - 88 part:paintings/hijikata_tamagawa_hiroshige.jpg   # 盛られている所もある
+  - 89 ai:J11 wide                                 # 7月に着く・もうこの世にいない
+  - 90 frame:paintings/hijikata_sato_hikogoro.jpg   # 彦五郎のメモ（87〜88 要点の札）
+  - 92 ai:J11 right                                # かくまわれる
+  - 93 frame:paintings/hijikata_ogaki_castle_pre1945.jpg   # 大垣へ
+  - 94 ai:J07 right                                # 兄の死
+  - 95 ai:J09 left                                 # 最期の表（台本の図）92〜94
+  - 98 ai:J07 wide                                 # フィクション
+  - 99 frame:paintings/hijikata_ogaki_castle_pre1945.jpg   # 全昌寺
+  - 100 ai:J11 left                                 # 写真は日野に届いた
+  - 101 ai:J14 wide                                 # つらい日々
   # 第5章（99〜131）：その後 ＋ なぜの答え ＋ 冒頭の写真に戻る締め
-  - 99 ai:J12 wide                                 # 最期の場所の表（台本の図）99〜100
-  - 101 frame:paintings/hijikata_hakodate_monument_2014.jpg   # 1958年の碑
-  - 102 ai:J12 left                                # 葬られた場所は分からない
-  - 103 part:paintings/hijikata_hakodate_war_1869.jpg   # 賊軍・弔う人もいない
-  - 104 part:paintings/hijikata_hakodate_nishikie_mosai.jpg   # 柳川熊吉
-  - 105 ai:J13 wide                                # 1875年 碧血碑
-  - 106 ai:J12 wide                                # 150年の慰霊祭
-  - 107 ai:J13 right                               # 誰をまつるか書かない
-  - 108 frame:paintings/hijikata_takahata_fudodo.jpg   # 高幡不動の碑
-  - 109 ai:J13 wide                                # 明治21年
-  - 110 frame:paintings/hijikata_sato_hikogoro.jpg  # 彦五郎ら・容保・磐渓・松本順
-  - 111 ai:J14 wide                                # 遺品の処分・手紙を燃やす
-  - 112 ai:J11 left                                # 残したいものは残した
-  - 113 frame:paintings/hijikata_museum_2024.jpg    # 和泉守兼定
-  - 114 ai:J14 left                                # 拵えの傷（J14 が続けて20秒を超えないよう 113 に額を挟む）
-  - 115 part:paintings/hijikata_koshu_katsunuma_1880.jpg   # 中島登 甲州勝沼から
-  - 116 ai:J11 wide                                # 写真も佐藤家に残る
-  - 117 frame:paintings/hijikata_photo_1869.jpg     # 裏の漢詩・大きさ
-  - 118 frame:paintings/hijikata_photo_portrait.jpg  # 明治15年の肖像画
-  - 119 frame:paintings/hijikata_museum_2024.jpg     # 生家の複写
-  - 120 frame:paintings/hijikata_grave_ishidaji_2024.jpg   # 石田寺の墓
-  - 121 part:paintings/hijikata_tamagawa_hiroshige.jpg   # 今も多くの人が
-  - 122 frame:paintings/hijikata_museum_2024.jpg     # 1994年 資料館
-  - 123 ai:J11 right                               # 2025年 5,488人
-  - 124 ai:J01 wide                                # なぜ
-  - 125 ai:J08 face                                # 写真と紙きれだけ
-  - 126 frame:paintings/hijikata_sato_hikogoro.jpg  # 送り先は彦五郎の家
-  - 127 ai:J09 wide                                # 鉄之助はかくまわれた
-  - 128 ai:J11 wide                                # 両方を頼んだのかもしれない
-  - 129 ai:J14 left                                # 手紙は燃やされても
-  - 130 frame:paintings/hijikata_photo_1869.jpg     # 締め：冒頭の写真に戻る
-  - 131 ai:J15 wide
+  - 102 ai:J12 wide                                 # 最期の場所の表（台本の図）99〜100
+  - 104 frame:paintings/hijikata_hakodate_monument_2014.jpg   # 1958年の碑
+  - 105 ai:J12 left                                # 葬られた場所は分からない
+  - 106 part:paintings/hijikata_hakodate_war_1869.jpg   # 賊軍・弔う人もいない
+  - 107 part:paintings/hijikata_hakodate_nishikie_mosai.jpg   # 柳川熊吉
+  - 108 part:paintings/hijikata_hakodate_land_naval.jpg   # 熊吉の寿碑（1913年）
+  - 109 ai:J13 wide                                # 1875年 碧血碑
+  - 110 ai:J12 wide                                # 150年の慰霊祭
+  - 111 ai:J13 right                               # 題の字は大鳥圭介か
+  - 112 part:paintings/hijikata_hakodate_war_1869.jpg   # 誰をまつるか書かない
+  - 113 frame:paintings/hijikata_takahata_fudodo.jpg   # 高幡不動の碑
+  - 114 ai:J13 wide                                # 明治21年
+  - 115 frame:paintings/hijikata_sato_hikogoro.jpg  # 彦五郎ら・容保・磐渓・松本順
+  - 116 ai:J14 wide                                # 遺品の処分・手紙を燃やす
+  - 117 ai:J11 left                                # 残したいものは残した
+  - 118 frame:paintings/hijikata_museum_2024.jpg    # 和泉守兼定
+  - 119 ai:J14 left                                # 拵えの傷（J14 が続けて20秒を超えないよう 113 に額を挟む）
+  - 120 part:paintings/hijikata_koshu_katsunuma_1880.jpg   # 中島登 甲州勝沼から
+  - 121 ai:J11 wide                                # 写真も佐藤家に残る
+  - 122 frame:paintings/hijikata_photo_1869.jpg     # 裏の漢詩・大きさ
+  - 123 frame:paintings/hijikata_photo_portrait.jpg  # 明治15年の肖像画
+  - 124 frame:paintings/hijikata_museum_2024.jpg     # 生家の複写
+  - 125 frame:paintings/hijikata_grave_ishidaji_2024.jpg   # 石田寺の墓
+  - 126 part:paintings/hijikata_tamagawa_hiroshige.jpg   # 今も多くの人が
+  - 127 frame:paintings/hijikata_museum_2024.jpg     # 1994年 資料館
+  - 128 part:paintings/hijikata_musashi_tamagawa_1858.jpg   # 日野市の調べ 1位
+  - 129 ai:J11 right                               # 2025年 5,488人
+  - 130 ai:J01 wide                                # なぜ
+  - 131 ai:J08 face                                # 写真と紙きれだけ
+  - 132 frame:paintings/hijikata_photo_seated.jpg    # 日野市の広報 2019（軍服の写真を届けさせた）
+  - 133 frame:paintings/hijikata_sato_hikogoro.jpg  # 送り先は彦五郎の家
+  - 134 ai:J09 wide                                # 鉄之助はかくまわれた
+  - 135 ai:J11 wide                                # 両方を頼んだのかもしれない
+  - 136 ai:J14 left                                # 手紙は燃やされても
+  - 137 frame:paintings/hijikata_photo_1869.jpg     # 締め：冒頭の写真に戻る
+  - 138 ai:J15 wide
   - end ai:J15 wide
 
 # look だけで足す図（台本には無い。語りがその名前・地点を言う 0.25 秒前に1つずつ書き込む）
 figures:
   # 地図：79「船に乗せ、江戸へ送り出した」〜84「ひとりで、日野をめざしました」。どれも台本で語った地点
-  - {from: 79, to: 84, spec: {type: map, title: 明治2年 写真の道のり, bounds: [138.6, 142.2, 35.2, 42.2],
+  - {from: 82, to: 87, spec: {type: map, title: 明治2年 写真の道のり, bounds: [138.6, 142.2, 35.2, 42.2],
       places: [[箱館, 140.73, 41.77], [江戸, 139.76, 35.68], [日野, 139.40, 35.67]], route: [箱館, 江戸, 日野], note: 船で江戸へ・そこから日野へ}}
 
 # 語りがその物・人を言うと、カットの終わりにそれが主役になる所で止まる。位置は仮（届いた絵で合わせる）
@@ -255,17 +260,17 @@ parts:
      source: 菊地明「『局中法度書』は子母沢寛のつくり話だ」（2000年）ほか}
   - {type: quote, from: 38, to: 39, label: 史料, text: 報国の　心を忘るる　婦人かな,
      source: 土方歳三の句（土方愛さんの紹介。和樂web 2021）}
-  - {type: quote, from: 87, to: 88, label: 要点, text: 討死の知らせ＝沢忠助の届け・安富才介の手紙（襟に縫いこむ）,
+  - {type: quote, from: 90, to: 91, label: 要点, text: 討死の知らせ＝沢忠助の届け・安富才介の手紙（襟に縫いこむ）,
      source: 佐藤彦五郎新選組資料館の目録／和樂web 2021}
 
 # 静止画（story-main を --frames なしで回したとき。簡易の描き方で、パン・部品は出ない。目で見るのは --frames の方）
 stills:
-  - {line: 0, note: 冒頭（0秒）洋装の写真の額}
+  - {line: 0, note: 冒頭（0秒）日野の家で写真を見つめる夫婦（J11）}
   - {line: 7, note: 序章 紙きれの言葉（史料の札）}
   - {line: 9, note: 序章の終わり 覚えてほしい名前}
   - {line: 24, note: 第1章 想像の台詞}
-  - {line: 58, note: 第3章 撮った人と時期の食い違い}
-  - {line: 82, note: 第4章 写真の道のりの地図}
-  - {line: 92, note: 第4章 鉄之助の最期の2つの説}
-  - {line: 128, note: 第5章 なぜの答え}
+  - {line: 59, note: 第3章 撮った人と時期の食い違い}
+  - {line: 85, note: 第4章 写真の道のりの地図}
+  - {line: 95, note: 第4章 鉄之助の最期の2つの説}
+  - {line: 135, note: 第5章 なぜの答え}
   - {end: true, note: 終了画面の空き}
