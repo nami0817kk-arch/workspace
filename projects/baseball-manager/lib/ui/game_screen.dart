@@ -497,8 +497,7 @@ class _Header extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                    game.affiliation,
+                                Text(game.affiliation,
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     style: t.titleSmall?.copyWith(
@@ -757,6 +756,13 @@ class _TraitChips extends StatelessWidget {
   }
 }
 
+// お金・頼みごとのボタン。テーマのボタンは横いっぱいに広がるので幅を決め、
+// 内側の余白を詰めて「頼む」「2000万円」が折れないようにする。
+const _moneyButtonWidth = 96.0;
+final _compactButton = FilledButton.styleFrom(
+    padding: const EdgeInsets.symmetric(horizontal: 8),
+    minimumSize: const Size(0, 40));
+
 class _ShopRow extends StatelessWidget {
   const _ShopRow(
       {required this.game, required this.controller, required this.item});
@@ -770,28 +776,35 @@ class _ShopRow extends StatelessWidget {
     final used = game.shopThisYear[item] ?? 0;
     final limit = item.once
         ? '一生に一度'
-        : '年${item.perYear}回${item.perYear > 1 ? '(今年 $used回)' : ''}';
+        : '年${item.perYear}回${item.perYear > 1 ? '・今年$used回' : ''}';
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(children: [
         Expanded(
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(item.label, style: const TextStyle(fontWeight: FontWeight.bold)),
+            Text(item.label,
+                style: const TextStyle(fontWeight: FontWeight.bold)),
             Text('${item.description}($limit)',
                 style: const TextStyle(fontSize: 12)),
+            if (item == ShopItem.camp)
+              Text('いまの重点: ${categoryOf(controller.focus).label}',
+                  key: const Key('shop-camp-focus'),
+                  style: const TextStyle(fontSize: 12)),
             if (block != null && block != 'お金が足りない')
               Text(block,
                   key: Key('shop-block-${item.name}'),
                   style: TextStyle(
-                      fontSize: 11, color: Theme.of(context).colorScheme.outline)),
+                      fontSize: 11,
+                      color: Theme.of(context).colorScheme.outline)),
           ]),
         ),
         const SizedBox(width: 8),
         SizedBox(
-          width: 112,
+          width: _moneyButtonWidth,
           child: FilledButton.tonal(
             key: Key('shop-${item.name}'),
+            style: _compactButton,
             onPressed: block == null ? () => controller.buyShop(item) : null,
             child: Text(fmtMoney(item.cost)),
           ),
@@ -825,7 +838,8 @@ class _RelationActions extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text('関係を生かす', style: Theme.of(context).textTheme.titleSmall),
-          Text('交流すると、選んだ相手との絆が深まる。絆が育った相手には、1年に1回ずつ頼みごとができる(行動の回数は使わない・絆を$favorBondCost使う)。',
+          Text(
+              '交流すると、選んだ相手との絆が深まる。絆が育った相手には、1年に1回ずつ頼みごとができる(行動の回数は使わない・絆を$favorBondCost使う)。',
               style: small),
           const SizedBox(height: 6),
           Text('交流の相手', style: Theme.of(context).textTheme.labelMedium),
@@ -847,7 +861,8 @@ class _RelationActions extends StatelessWidget {
               ),
           ]),
           const SizedBox(height: 6),
-          for (final m in people) _FavorRow(controller: controller, game: game, who: m),
+          for (final m in people)
+            _FavorRow(controller: controller, game: game, who: m),
         ]),
       ),
     );
@@ -869,28 +884,28 @@ class _FavorRow extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(children: [
         Expanded(
-          child: Tooltip(
-            message: f.description,
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text('${who.name}(${who.kind.label}) 絆${who.bond}',
-                  style: const TextStyle(fontWeight: FontWeight.bold)),
-              Text('${f.label}: ${f.description}',
-                  style: const TextStyle(fontSize: 12)),
-              if (block != null)
-                Text(block,
-                    key: Key('favor-block-${who.id}'),
-                    style: TextStyle(
-                        fontSize: 11,
-                        color: Theme.of(context).colorScheme.outline)),
-            ]),
-          ),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text('${who.name}(${who.kind.label}) 絆${who.bond}',
+                style: const TextStyle(fontWeight: FontWeight.bold)),
+            Text(
+                '${f.label}: ${f.description}'
+                '${f == Favor.joint ? '(いまの重点: ${categoryOf(controller.focus).label})' : ''}',
+                style: const TextStyle(fontSize: 12)),
+            if (block != null)
+              Text(block,
+                  key: Key('favor-block-${who.id}'),
+                  style: TextStyle(
+                      fontSize: 11,
+                      color: Theme.of(context).colorScheme.outline)),
+          ]),
         ),
         const SizedBox(width: 8),
-        // テーマのボタンは横いっぱいに広がるので、幅を決める
         SizedBox(
-          width: 76,
+          width: 64,
           child: FilledButton.tonal(
             key: Key('favor-${who.id}'),
+            style: _compactButton,
             onPressed: block == null ? () => controller.askFavor(who) : null,
             child: const Text('頼む'),
           ),
@@ -925,9 +940,10 @@ class _InvestRow extends StatelessWidget {
         ),
         const SizedBox(width: 8),
         SizedBox(
-          width: 112,
+          width: _moneyButtonWidth,
           child: FilledButton.tonal(
             key: Key('invest-${item.name}'),
+            style: _compactButton,
             onPressed: can ? () => controller.buyInvest(item) : null,
             child: Text(cost == null ? '最大' : fmtMoney(cost)),
           ),
@@ -1249,7 +1265,8 @@ class _AbilityCard extends StatelessWidget {
                     '${p.age}歳。体の衰えで、能力に年齢の上限がある(経験点でもそれより上には上げられない)。'
                     'パワー・走力・守備・球威・スタミナは早く、ミート・選球眼・制球はゆっくり下がる。',
                     key: const Key('age-cap-note'),
-                    style: const TextStyle(fontSize: 11, color: Color(0xFFC62828))),
+                    style: const TextStyle(
+                        fontSize: 11, color: Color(0xFFC62828))),
               ),
             const SizedBox(height: 4),
             for (final a in abilitiesOf(p.role))
@@ -1284,10 +1301,12 @@ class _AbilityCard extends StatelessWidget {
                                           TextSpan(
                                               text: ' ${_abilityNote(p, a)}',
                                               style: TextStyle(
-                                                  color: p.of(a) >= ageCeiling(p, a)
+                                                  color: p.of(a) >=
+                                                          ageCeiling(p, a)
                                                       ? const Color(0xFFC62828)
                                                       : a == _weakest(p)
-                                                          ? const Color(0xFFEF6C00)
+                                                          ? const Color(
+                                                              0xFFEF6C00)
                                                           : Colors.grey)),
                                         ]),
                                         key: Key('note-${a.name}'),
@@ -1966,8 +1985,7 @@ class _ProCard extends StatelessWidget {
                 const Text('年俸は資産になります。練習環境や体のケア、まわりの人のために使いましょう。',
                     style: TextStyle(fontSize: 12)),
                 const SizedBox(height: 8),
-                Text('投資(ずっと効く)',
-                    style: Theme.of(ctx).textTheme.titleSmall),
+                Text('投資(ずっと効く)', style: Theme.of(ctx).textTheme.titleSmall),
                 for (final i in Invest.values)
                   _InvestRow(game: game, controller: controller, item: i),
                 const Divider(),
@@ -2286,7 +2304,9 @@ class EndingView extends StatelessWidget {
                   : 'プロの舞台には立てなかった。'),
               const SizedBox(height: 10),
               Text(
-                  '${epilogueOf(e, p.name, worldChampion: game.worldRecords.where((r) => r.champion).length, worldPlayed: game.worldRecords.length, overseasYears: game.records.where((r) => r.overseas).length, popularity: popularityOf(game.records, game.worldRecords), retiredNumber: uniformNumberOf(Stage.pro, p), childhood: game.childhood, purchases: [for (final p in game.purchases) p.name], rareTraitLabels: [
+                  '${epilogueOf(e, p.name, worldChampion: game.worldRecords.where((r) => r.champion).length, worldPlayed: game.worldRecords.length, overseasYears: game.records.where((r) => r.overseas).length, popularity: popularityOf(game.records, game.worldRecords), retiredNumber: uniformNumberOf(Stage.pro, p), childhood: game.childhood, purchases: [
+                        for (final p in game.purchases) p.name
+                      ], rareTraitLabels: [
                         for (final t in p.traits)
                           if (t.rare) t.label
                       ])}'
@@ -2768,9 +2788,8 @@ class _SkillCardState extends State<_SkillCard> {
         if (t != 0) return t;
         return game.skillPrice(a) - game.skillPrice(b);
       });
-    final hidden = list
-        .where((s) => !p.skills.contains(s) && tipsOf(s) == 0)
-        .length;
+    final hidden =
+        list.where((s) => !p.skills.contains(s) && tipsOf(s) == 0).length;
     final weak = [
       for (final s in weaknessesFor(p.role))
         if (p.skills.contains(s)) s
@@ -2788,7 +2807,8 @@ class _SkillCardState extends State<_SkillCard> {
                   style: Theme.of(context).textTheme.titleMedium),
             ),
           ]),
-          const Text('経験点で取る。コツを1つ以上つかむと取れる。研究・特訓・練習試合・交流・コーチでコツが貯まり、貯まるほど安くなる(コツ5で半額)。'
+          const Text(
+              '経験点で取る。コツを1つ以上つかむと取れる。研究・特訓・練習試合・交流・コーチでコツが貯まり、貯まるほど安くなる(コツ5で半額)。'
               '緑の数字は、いまの能力で取ったときの1シーズンの見込み(打者は143試合、投手は先発28試合)。',
               style: TextStyle(fontSize: 11, color: Colors.grey)),
           Text(
@@ -2844,28 +2864,29 @@ class _SkillCardState extends State<_SkillCard> {
               runSpacing: 6,
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
-            if (ready.isNotEmpty)
-              FilledButton.tonalIcon(
-                key: const Key('skill-buy-ready'),
-                style: FilledButton.styleFrom(
-                    minimumSize: const Size(0, 36),
-                    visualDensity: VisualDensity.compact),
-                onPressed: controller.buyReadySkills,
-                icon: const Icon(Icons.bolt, size: 18),
-                label: Text('取りどきを取る(${ready.length})'),
-              ),
-            SegmentedButton<bool>(
-              key: const Key('skill-filter'),
-              showSelectedIcon: false,
-              style: const ButtonStyle(visualDensity: VisualDensity.compact),
-              segments: const [
-                ButtonSegment(value: false, label: Text('コツあり')),
-                ButtonSegment(value: true, label: Text('すべて')),
-              ],
-              selected: {_all},
-              onSelectionChanged: (v) => setState(() => _all = v.first),
-            ),
-          ]),
+                if (ready.isNotEmpty)
+                  FilledButton.tonalIcon(
+                    key: const Key('skill-buy-ready'),
+                    style: FilledButton.styleFrom(
+                        minimumSize: const Size(0, 36),
+                        visualDensity: VisualDensity.compact),
+                    onPressed: controller.buyReadySkills,
+                    icon: const Icon(Icons.bolt, size: 18),
+                    label: Text('取りどきを取る(${ready.length})'),
+                  ),
+                SegmentedButton<bool>(
+                  key: const Key('skill-filter'),
+                  showSelectedIcon: false,
+                  style:
+                      const ButtonStyle(visualDensity: VisualDensity.compact),
+                  segments: const [
+                    ButtonSegment(value: false, label: Text('コツあり')),
+                    ButtonSegment(value: true, label: Text('すべて')),
+                  ],
+                  selected: {_all},
+                  onSelectionChanged: (v) => setState(() => _all = v.first),
+                ),
+              ]),
           if (!_all && open.isEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8),
@@ -2906,9 +2927,8 @@ class _SkillRow extends StatelessWidget {
         s.requires != null && !game.player.skills.contains(s.requires);
     final tooYoung = s.gold && game.player.age < goldSkillAge;
     final locked = needsBase || tooYoung;
-    final lockText = needsBase
-        ? '「${s.requires!.label}」が先'
-        : '金特は$goldSkillAge歳(高校)から';
+    final lockText =
+        needsBase ? '「${s.requires!.label}」が先' : '金特は$goldSkillAge歳(高校)から';
     final studying = game.studyTarget == s;
     final full = tips >= maxSkillTips;
     final canStudy = !locked && !full && game.phase != Phase.retired;
@@ -2928,7 +2948,8 @@ class _SkillRow extends StatelessWidget {
                 ? '${s.description}($lockText)'
                 : '${s.description} ${effectText(s)}',
             triggerMode: TooltipTriggerMode.tap,
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Row(children: [
                 if (s.gold)
                   const Padding(
@@ -3115,4 +3136,3 @@ class _MissionCard extends StatelessWidget {
     );
   }
 }
-

@@ -387,9 +387,7 @@ Plan recommendedPlan(Game g) {
 
 bool _studyPending(Game g) {
   final t = g.studyTarget;
-  return t != null &&
-      !g.player.skills.contains(t) &&
-      (g.skillTips[t] ?? 0) < 3;
+  return t != null && !g.player.skills.contains(t) && (g.skillTips[t] ?? 0) < 3;
 }
 
 /// おすすめの理由(画面に出す)。
@@ -426,7 +424,8 @@ String eventResultText(Player p0, Condition c0, Player p1, Condition c1,
   if (c1.injuredTerms > c0.injuredTerms) parts.add('怪我');
   // 才能(素質・天賦)は星5つで見せる。星が変わらない小さな上昇も知らせる。
   if (p1.potential > p0.potential) {
-    final s0 = talentStarCount(p0.potential), s1 = talentStarCount(p1.potential);
+    final s0 = talentStarCount(p0.potential),
+        s1 = talentStarCount(p1.potential);
     parts.add(s1 > s0 ? '才能 ${starsOf(s0)}→${starsOf(s1)}' : '才能が伸びた');
   }
   for (final a in abilitiesOf(p1.role)) {
@@ -1182,25 +1181,25 @@ class GameController extends ChangeNotifier {
     // 優勝: アマの大会(「…優勝した!」)・リーグ優勝・日本一。世界一は上で拾う。
     for (final l in lines) {
       if (l.endsWith('優勝した!')) {
-        pending.add(Milestone(MilestoneKind.champion, '優勝!',
-            l.replaceFirst('優勝した!', '優勝した。')));
+        pending.add(Milestone(
+            MilestoneKind.champion, '優勝!', l.replaceFirst('優勝した!', '優勝した。')));
       } else if (l == 'リーグ優勝!') {
         pending.add(Milestone(MilestoneKind.champion, 'リーグ優勝!',
             '${g.proTeam ?? 'チーム'}が、ペナントレースを制した。'));
       } else if (l.contains('日本一に輝いた')) {
-        pending.add(Milestone(
-            MilestoneKind.champion, '日本一!', '日本シリーズを制して、日本一に輝いた。'));
+        pending.add(
+            Milestone(MilestoneKind.champion, '日本一!', '日本シリーズを制して、日本一に輝いた。'));
       } else if (l.contains('アメリカのリーグの頂点に立った')) {
-        pending.add(Milestone(
-            MilestoneKind.champion, '頂点!', 'アメリカのリーグの頂点に立った。'));
+        pending
+            .add(Milestone(MilestoneKind.champion, '頂点!', 'アメリカのリーグの頂点に立った。'));
       }
     }
     for (final l in lines.where((l) => l.startsWith('タイトル獲得'))) {
       pending.add(Milestone(
           MilestoneKind.title, 'タイトル獲得!', l.replaceFirst('タイトル獲得: ', '')));
     }
-    for (final l in lines.where(
-        (l) => l.contains('を習得') || l.contains('のコツをつかんだ'))) {
+    for (final l
+        in lines.where((l) => l.contains('を習得') || l.contains('のコツをつかんだ'))) {
       pending.add(Milestone(MilestoneKind.trait, 'コツをつかんだ!', l));
     }
     if (lines.any((l) => l.contains('一軍に昇格した'))) {

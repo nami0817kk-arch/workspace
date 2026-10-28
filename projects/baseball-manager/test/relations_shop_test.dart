@@ -45,8 +45,8 @@ Game _proGame() {
   fail('プロになれない');
 }
 
-Game _kid([int seed = 1]) =>
-    Game.newGame(name: 'み', role: Role.batter, rng: Random(seed), potential: 60);
+Game _kid([int seed = 1]) => Game.newGame(
+    name: 'み', role: Role.batter, rng: Random(seed), potential: 60);
 
 Game _roundTrip(Game g) => Game.fromJson(
     jsonDecode(jsonEncode(g.toJson())) as Map<String, dynamic>, Random(1));
@@ -108,16 +108,15 @@ void main() {
       expect(again.purchases, contains('donate'));
       expect(
           epilogueOf(
-                  const Ending(
-                      title: 'レギュラー',
-                      madePro: true,
-                      proYears: 10,
-                      peakOverall: 70,
-                      championships: 0,
-                      wasTwoWay: false),
-                  't',
-                  purchases: const ['donate'])
-              .contains('寄付した地元の球場'),
+              const Ending(
+                  title: 'レギュラー',
+                  madePro: true,
+                  proYears: 10,
+                  peakOverall: 70,
+                  championships: 0,
+                  wasTwoWay: false),
+              't',
+              purchases: const ['donate']).contains('寄付した地元の球場'),
           isTrue);
     });
   });
@@ -180,12 +179,38 @@ void main() {
       expect(_roundTrip(g).socialTargetId, mate.id);
     });
 
+    test('進学で仲間が替わると、選んでいた交流の相手と自主練の約束は外れる', () {
+      final g = _kid(11);
+      final mate = g.cast.teammates.first;
+      g.setSocialTarget(mate);
+      g.tagMateId = mate.id;
+      final first = g.stage;
+      var n = 0;
+      while (g.stage == first && g.phase != Phase.retired && n++ < 200) {
+        switch (g.phase) {
+          case Phase.term:
+            g.choose(Plan.rest, Ability.contact);
+          case Phase.event:
+            g.resolveEvent(0);
+          case Phase.pathChoice:
+            g.chooseRoute(Course.university);
+          case Phase.retired:
+            break;
+        }
+      }
+      expect(g.stage, isNot(first));
+      expect(g.socialTargetId, isNull);
+      expect(g.tagMateId, isNull);
+    });
+
     test('コーチに教わると、コーチとの絆が育つ', () {
       final g = _kid(9);
       final c = g.cast.coach!;
       final b = c.bond;
       g.choose(Plan.lesson, Ability.contact);
-      if (g.cast.coach == c) expect(c.bond, greaterThanOrEqualTo(b + lessonBond));
+      if (g.cast.coach == c) {
+        expect(c.bond, greaterThanOrEqualTo(b + lessonBond));
+      }
     });
 
     test('古いセーブは、相手なし・頼みごとなしで読める', () {

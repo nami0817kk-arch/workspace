@@ -59,7 +59,8 @@ double comboBadFactor(Combo? c) => switch (c) {
     };
 
 /// いま選ぶと連携になる行動と、その連携(画面の印に使う)。
-Map<Plan, Combo> combosReady(Plan? prev, {Object? prevFocus, Object? focus}) => {
+Map<Plan, Combo> combosReady(Plan? prev, {Object? prevFocus, Object? focus}) =>
+    {
       for (final p in Plan.values)
         if (comboOf(prev, p, prevFocus: prevFocus, focus: focus) case final c?)
           p: c,

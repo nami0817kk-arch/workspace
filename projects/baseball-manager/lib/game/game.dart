@@ -357,7 +357,8 @@ class Game {
     switch (i) {
       case ShopItem.gear:
         gearAge = player.age;
-        log.add('最新の用具をそろえた。この1年、経験点が${((gearMultiplier - 1) * 100).round()}%増える。');
+        log.add(
+            '最新の用具をそろえた。この1年、経験点が${((gearMultiplier - 1) * 100).round()}%増える。');
       case ShopItem.camp:
         final f = focus ?? abilitiesOf(player.role).first;
         final k = categoryOf(f);
@@ -444,7 +445,6 @@ class Game {
     checkMissions();
     return true;
   }
-
 
   /// 二世のとき、親の名前(殿堂の選手)。
   String? parentName;
@@ -812,7 +812,8 @@ class Game {
     }
     if (gearActive && gained.isNotEmpty) {
       gained = {
-        for (final e in gained.entries) e.key: (e.value * gearMultiplier).round(),
+        for (final e in gained.entries)
+          e.key: (e.value * gearMultiplier).round(),
       };
     }
     // 育成サポート(買い切り)の経験点の上乗せ。保存はしない(画面側が毎回入れる)
@@ -1099,9 +1100,7 @@ class Game {
           out[e.key] = (out[e.key] ?? 0) + e.value;
         }
         final n = extra.values.fold(0, (a, b) => a + b);
-        why = n > 0
-            ? '特訓の疲れが抜けて、${_abilityJp(f)}の経験点+$n'
-            : '特訓の疲れが抜けた';
+        why = n > 0 ? '特訓の疲れが抜けて、${_abilityJp(f)}の経験点+$n' : '特訓の疲れが抜けた';
       case Combo.homework:
         why = '試合で見えた課題を研究して、コツが1つ多い';
       case Combo.cheer:
@@ -1117,10 +1116,8 @@ class Game {
   void _gainTips(Plan action, Ability f, Outcome outcome) {
     switch (action) {
       case Plan.study:
-        _addTips(
-            studyFocus(f),
-            (studious ? 3 : 2) + (lastCombo == Combo.homework ? 1 : 0),
-            '研究で');
+        _addTips(studyFocus(f),
+            (studious ? 3 : 2) + (lastCombo == Combo.homework ? 1 : 0), '研究で');
       case Plan.special:
         if (outcome == Outcome.good || outcome == Outcome.great) {
           _addTips(
@@ -1519,8 +1516,7 @@ class Game {
     if (slot != 3 || condition.injured || onFarm) return;
     final prog = seasonProgress;
     // 打者は40試合以上、投手は8試合以上の先発(投手は試合数が少なく、選ばれていなかった)
-    if (prog == null ||
-        (prog.line.games < 40 && prog.line.starts < 8)) {
+    if (prog == null || (prog.line.games < 40 && prog.line.starts < 8)) {
       return;
     }
     final l = prog.line;
@@ -1892,7 +1888,8 @@ class Game {
       condition = condition.copyWith(fatigue: condition.fatigue - 5); // 支えてくれる
     }
     if (purchases.contains(ShopItem.house)) {
-      condition = condition.copyWith(fatigue: condition.fatigue - 5); // 贈った家でくつろぐ
+      condition =
+          condition.copyWith(fatigue: condition.fatigue - 5); // 贈った家でくつろぐ
     }
     shopThisYear.clear();
     favorsUsed.clear();
@@ -1981,6 +1978,10 @@ class Game {
     if (after != before) {
       cast.rotate(after, rng, player.role, player.skills);
       school = School.local;
+      // 仲間とコーチは別の人になる(id は使い回される)ので、選んでいた相手・自主練の約束は外す
+      final k = socialTarget?.kind;
+      if (k == Kind.teammate || k == Kind.coach) socialTargetId = null;
+      tagMateId = null;
       if (after != Stage.pro && after != Stage.pathChoice) {
         _note('stage', '${stageNameOf(after)}に進んだ');
       }
@@ -2115,7 +2116,9 @@ class Game {
         'lastPlanFocus': lastPlanFocus?.name,
         'comboCount': comboCount,
         'comboTotal': comboTotal,
-        'shopThisYear': {for (final e in shopThisYear.entries) e.key.name: e.value},
+        'shopThisYear': {
+          for (final e in shopThisYear.entries) e.key.name: e.value
+        },
         'purchases': [for (final p in purchases) p.name],
         'gearAge': gearAge,
         'socialTargetId': socialTargetId,
@@ -2206,11 +2209,10 @@ class Game {
     }
     g.gearAge = (j['gearAge'] as num?)?.toInt() ?? -1;
     g.socialTargetId = j['socialTargetId'] as String?;
-    g.favorsUsed.addAll([
-      for (final x in (j['favorsUsed'] as List?) ?? const []) x as String
-    ]);
+    g.favorsUsed.addAll(
+        [for (final x in (j['favorsUsed'] as List?) ?? const []) x as String]);
     g.tagMateId = j['tagMateId'] as String?;
-    g.exp =ExpPool.fromJson((j['exp'] as Map?)?.cast<String, dynamic>() ?? {});
+    g.exp = ExpPool.fromJson((j['exp'] as Map?)?.cast<String, dynamic>() ?? {});
     g.phase = pick(Phase.values, j['phase'], Phase.term);
     g.pendingEvent =
         events.where((e) => e.id == j['pendingEvent']).firstOrNull ??
