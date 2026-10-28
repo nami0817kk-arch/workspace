@@ -108,11 +108,13 @@ bool hasOutcome(Plan a) =>
 
 /// 出来を決める。特訓は振れ幅が大きい(失敗も大成功も多い)。
 /// 平均の倍率は1.0前後になるようにしてある(全体のバランスは変えない)。
-Outcome rollOutcome(Plan a, Random rng, [Set<Trait> traits = const {}]) {
+/// `badFactor` は失敗の確率にかかる倍率(行動の連携で下がる)。
+Outcome rollOutcome(Plan a, Random rng,
+    [Set<Trait> traits = const {}, double badFactor = 1.0]) {
   if (!hasOutcome(a)) return Outcome.normal;
   final r = rng.nextDouble();
   final luck = outcomeLuck(traits);
-  final bad = (a == Plan.special ? 0.20 : 0.12) * luck.bad;
+  final bad = (a == Plan.special ? 0.20 : 0.12) * luck.bad * badFactor;
   final great = (a == Plan.special ? 0.10 : 0.08) * luck.great;
   final good = 0.20;
   if (r < bad) return Outcome.bad;
@@ -151,6 +153,8 @@ TermResult playTerm(
   double trainBonus = 1.0,
   double recoveryBonus = 1.0,
   double injuryFactor = 1.0,
+  double badFactor = 1.0,
+  bool keepMorale = false,
 }) {
   if (c.injured) {
     return TermResult(
@@ -161,7 +165,7 @@ TermResult playTerm(
     );
   }
   final e = effectOf(action);
-  final outcome = rollOutcome(action, rng, p.traits);
+  final outcome = rollOutcome(action, rng, p.traits, badFactor);
   final motiv = motivationOf(c.morale).expMultiplier * outcome.multiplier;
   final next = Map<Ability, int>.of(p.abilities);
   final gained = <Category, int>{};
@@ -197,7 +201,9 @@ TermResult playTerm(
           .round();
   var dMorale = e.morale > 0
       ? (e.morale * moraleGainMultiplier(p.traits) * share).round()
-      : (e.morale * moraleLossMultiplier(p.traits) * share).round();
+      : keepMorale
+          ? 0
+          : (e.morale * moraleLossMultiplier(p.traits) * share).round();
   // 大成功は気持ちが上がり、失敗は疲れが増える。
   if (outcome == Outcome.great) dMorale += (6 * share).round();
   final extraFatigue = outcome == Outcome.bad ? (6 * share).round() : 0;
@@ -212,6 +218,21 @@ TermResult playTerm(
     exp: gained,
     outcome: outcome,
   );
+}
+
+/// 重点の能力 `f` だけを `scale`(1年ぶんに対する割合)だけ伸ばしたときの経験点。超回復に使う。
+/// 衰える年齢(伸びが0以下)なら空。乱数は使わない。
+Map<Category, int> focusExpOf(
+    Player p, Ability f, double scale, double share, int morale) {
+  final x = yearlyDelta(p, f, f) * scale * share;
+  if (x <= 0) return const {};
+  return {
+    categoryOf(f): (x *
+            expPerPoint *
+            motivationOf(morale).expMultiplier *
+            roleExpFactor(p.role))
+        .round(),
+  };
 }
 
 /// 年の終わり: 年齢が1つ進み、疲れが少し抜ける。

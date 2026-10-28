@@ -467,7 +467,8 @@ String? ageNote(int age, {bool finalYear = false}) => switch (age) {
     };
 
 /// 1年間の練習と休養の回数のまとめ。
-String yearSummaryOf(int trains, int rests) => 'この1年: 練習・特訓$trains回、休養$rests回。';
+String yearSummaryOf(int trains, int rests, [int combos = 0]) =>
+    'この1年: 練習・特訓$trains回、休養$rests回${combos > 0 ? '、連携$combos回' : ''}。';
 
 /// 背番号の格上げ。タイトルを取った投手はエースナンバー18、打者は3。なければ null。
 int? specialNumberOf(Role role, List<SeasonRecord> records) {

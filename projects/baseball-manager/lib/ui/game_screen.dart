@@ -7,6 +7,7 @@ import '../game/epilogue.dart';
 import '../game/exp.dart';
 import '../game/flavor.dart';
 import '../game/characters.dart' show tipsNeeded;
+import '../game/combo.dart';
 import '../game/life_log.dart';
 import '../game/rival_story.dart';
 import '../game/school.dart';
@@ -1225,6 +1226,7 @@ class _ActionCard extends StatelessWidget {
     final focus = abilities.contains(controller.focus)
         ? controller.focus
         : abilities.first;
+    final combos = game.combosNow(focus);
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(10),
@@ -1270,7 +1272,23 @@ class _ActionCard extends StatelessWidget {
                       onSelected: (_) => controller.setFocus(a),
                     ),
                 ]),
-            if (game.focusStreak >= 2)
+            if (combos.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: Text(
+                    [
+                      for (final c in combos.values.toSet())
+                        '連携「${c.label}」: '
+                            '${[
+                          for (final e in combos.entries)
+                            if (e.value == c) _planShort(e.key)
+                        ].join('・')}で${c.effect}',
+                    ].join(' / '),
+                    key: const Key('combo-line'),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: _comboColor, fontWeight: FontWeight.bold)),
+              )
+            else if (game.focusStreak >= 2)
               Padding(
                 padding: const EdgeInsets.only(top: 4),
                 child: Text(
@@ -1294,6 +1312,7 @@ class _ActionCard extends StatelessWidget {
                           focus: focus,
                           controller: controller,
                           recommended: a == recommendedPlan(game),
+                          combo: combos[a],
                           danger: game.condition.fatigue >= 70 &&
                               (a == Plan.special || a == Plan.match),
                           sub: a == Plan.lesson && game.cast.coach != null
@@ -1309,6 +1328,9 @@ class _ActionCard extends StatelessWidget {
     );
   }
 }
+
+/// 連携の印の色(行動のどの色とも重ならない紫がかった青)。
+const _comboColor = Color(0xFF3949AB);
 
 String _planShort(Plan p) => switch (p) {
       Plan.train => '練習',
@@ -1337,10 +1359,14 @@ class _PlanTile extends StatelessWidget {
     this.recommended = false,
     this.sub,
     this.danger = false,
+    this.combo,
   });
   final Plan plan;
   final Ability focus;
   final GameController controller;
+
+  /// いま選ぶと起きる連携(前の行動とのつながり)。
+  final Combo? combo;
 
   /// 今のおすすめ(疲れ・気持ちから決める)。
   final bool recommended;
@@ -1357,11 +1383,13 @@ class _PlanTile extends StatelessWidget {
     return Semantics(
       button: true,
       label:
-          '${planTitle(plan, focus)}。${planHint(plan, focus)}${recommended ? '。おすすめ' : ''}',
+          '${planTitle(plan, focus)}。${planHint(plan, focus)}${recommended ? '。おすすめ' : ''}'
+          '${combo != null ? '。連携「${combo!.label}」' : ''}',
       excludeSemantics: true,
       child: Tooltip(
         // 長押しで、行動の説明が出る。
-        message: '${planTitle(plan, focus)}: ${planHint(plan, focus)}',
+        message: '${planTitle(plan, focus)}: ${planHint(plan, focus)}'
+            '${combo != null ? '\n連携「${combo!.label}」: ${combo!.hint}' : ''}',
         child: Material(
           key: Key('act-${plan.name}'),
           color: color.withValues(alpha: recommended ? 0.22 : 0.10),
@@ -1404,6 +1432,19 @@ class _PlanTile extends StatelessWidget {
                       top: -6,
                       child: const Icon(Icons.star,
                           size: 16, color: Color(0xFFF9A825)),
+                    ),
+                  if (combo != null)
+                    Positioned(
+                      key: Key('combo-${plan.name}'),
+                      right: -7,
+                      bottom: -5,
+                      child: Container(
+                        decoration: const BoxDecoration(
+                            color: _comboColor, shape: BoxShape.circle),
+                        padding: const EdgeInsets.all(2),
+                        child: const Icon(Icons.link,
+                            size: 12, color: Colors.white),
+                      ),
                     ),
                 ]),
                 const SizedBox(height: 4),

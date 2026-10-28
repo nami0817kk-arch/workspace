@@ -3,6 +3,7 @@ import 'dart:math';
 import 'calendar.dart';
 import 'career.dart';
 import 'characters.dart';
+import 'combo.dart';
 import 'exp.dart';
 import 'life.dart';
 import 'path.dart';
@@ -560,6 +561,21 @@ class Game {
   int focusStreak = 0;
   Ability? lastFocus;
 
+  /// 前のターンの行動と重点(行動の連携 `comboOf` に使う)。怪我で休んだターンのあとは null。
+  Plan? lastPlan;
+  Ability? lastPlanFocus;
+
+  /// 直前のターンで起きた連携(保存しない・画面と研究のコツに使う)。
+  Combo? lastCombo;
+
+  /// 今年の連携の回数と、一生の回数。
+  int comboCount = 0;
+  int comboTotal = 0;
+
+  /// いま選ぶと連携になる行動(重点 `focus` を選んでいるとき)。
+  Map<Plan, Combo> combosNow(Ability focus) =>
+      combosReady(lastPlan, prevFocus: lastPlanFocus, focus: focus);
+
   /// 継続ボーナスの倍率: 3回続けて+2%、6回続けて+4%。
   double get streakBonus =>
       focusStreak >= 6 ? 1.04 : (focusStreak >= 3 ? 1.02 : 1.0);
@@ -626,11 +642,16 @@ class Game {
     final share = slotShare(stage);
     final wasInjured = condition.injured;
     turnCount++;
+    final combo = wasInjured
+        ? null
+        : comboOf(lastPlan, action, prevFocus: lastPlanFocus, focus: f);
     final r = playTerm(player, condition, action, f, rng,
         share: share,
         trainBonus: trainerMultiplier(investLevel(Invest.trainer)),
         recoveryBonus: dietitianMultiplier(investLevel(Invest.dietitian)),
-        injuryFactor: medicalFactor(investLevel(Invest.medical)));
+        injuryFactor: medicalFactor(investLevel(Invest.medical)),
+        badFactor: comboBadFactor(combo),
+        keepMorale: combo == Combo.cheer);
     player = r.player;
     condition = r.condition;
     // _afterCast が経験点(コーチのボーナス)を直接足すことがあるので、先に評価する。
@@ -645,6 +666,10 @@ class Game {
       condition =
           condition.copyWith(fatigue: condition.fatigue + school.fatigue);
     }
+    if (combo != null) gained = _applyCombo(combo, gained, share);
+    lastCombo = combo;
+    lastPlan = wasInjured ? null : action;
+    lastPlanFocus = f;
     if (!wasInjured && (action == Plan.train || action == Plan.special)) {
       focusStreak = (lastFocus == f) ? focusStreak + 1 : 1;
       lastFocus = f;
@@ -921,13 +946,53 @@ class Game {
     return true;
   }
 
+  /// 連携の効き目(経験点の倍率・超回復の経験点)とログ。失敗しにくさ・やる気は `playTerm` が受け持つ。
+  Map<Category, int> _applyCombo(
+      Combo combo, Map<Category, int> gained, double share) {
+    comboCount++;
+    comboTotal++;
+    var out = gained;
+    final m = comboExpMultiplier(combo);
+    if (m != 1.0) {
+      out = {for (final e in out.entries) e.key: (e.value * m).round()};
+    }
+    final String why;
+    switch (combo) {
+      case Combo.insight:
+        why = '研究で見えたことを試して、経験点+$tComboInsight%';
+      case Combo.drill:
+        why = '教わったことを繰り返して、失敗しにくく経験点+$tComboDrill%';
+      case Combo.recovery:
+        final f = lastPlanFocus ?? abilitiesOf(player.role).first;
+        final extra = focusExpOf(
+            player, f, tComboRecovery / 100, share, condition.morale);
+        out = {...out};
+        for (final e in extra.entries) {
+          out[e.key] = (out[e.key] ?? 0) + e.value;
+        }
+        final n = extra.values.fold(0, (a, b) => a + b);
+        why = n > 0
+            ? '特訓の疲れが抜けて、${_abilityJp(f)}の経験点+$n'
+            : '特訓の疲れが抜けた';
+      case Combo.homework:
+        why = '試合で見えた課題を研究して、コツが1つ多い';
+      case Combo.cheer:
+        why = '仲間の声援で、特訓でもやる気が下がらない';
+    }
+    log.add('連携「${combo.label}」! $why');
+    return out;
+  }
+
   /// 行動ごとに貯まる、特殊能力のコツ(行動の役割の違い)。
   /// 研究=選んだ特殊能力に+2(研究熱心は+3)/特訓=好調・大成功で重点の種類に+1/
   /// 練習試合=勝負どころの特殊能力に+1/交流=仲間の得意な種類に+1。練習・休養・コーチはなし。
   void _gainTips(Plan action, Ability f, Outcome outcome) {
     switch (action) {
       case Plan.study:
-        _addTips(studyFocus(f), studious ? 3 : 2, '研究で');
+        _addTips(
+            studyFocus(f),
+            (studious ? 3 : 2) + (lastCombo == Combo.homework ? 1 : 0),
+            '研究で');
       case Plan.special:
         if (outcome == Outcome.good || outcome == Outcome.great) {
           _addTips(
@@ -1688,8 +1753,9 @@ class Game {
       condition = condition.copyWith(fatigue: condition.fatigue - 5); // 支えてくれる
     }
     if (trainCount + restCount > 0) {
-      log.add(yearSummaryOf(trainCount, restCount));
+      log.add(yearSummaryOf(trainCount, restCount, comboCount));
     }
+    comboCount = 0;
     trainCount = 0;
     restCount = 0;
     peakOverall = max(peakOverall, overall(player).round());
@@ -1901,6 +1967,10 @@ class Game {
         'childhood': childhood,
         'restCount': restCount,
         'lastFocus': lastFocus?.name,
+        'lastPlan': lastPlan?.name,
+        'lastPlanFocus': lastPlanFocus?.name,
+        'comboCount': comboCount,
+        'comboTotal': comboTotal,
         'goal': goal?.toJson(),
         'difficulty': difficulty.name,
         'awakened': awakened,
@@ -1972,7 +2042,11 @@ class Game {
     }
     g.restCount = (j['restCount'] as num?)?.toInt() ?? 0;
     g.lastFocus = Ability.parse((j['lastFocus'] as String?) ?? '');
-    g.exp = ExpPool.fromJson((j['exp'] as Map?)?.cast<String, dynamic>() ?? {});
+    g.lastPlan = Plan.values.where((p) => p.name == j['lastPlan']).firstOrNull;
+    g.lastPlanFocus = Ability.parse((j['lastPlanFocus'] as String?) ?? '');
+    g.comboCount = (j['comboCount'] as num?)?.toInt() ?? 0;
+    g.comboTotal = (j['comboTotal'] as num?)?.toInt() ?? 0;
+    g.exp =ExpPool.fromJson((j['exp'] as Map?)?.cast<String, dynamic>() ?? {});
     g.phase = pick(Phase.values, j['phase'], Phase.term);
     g.pendingEvent =
         events.where((e) => e.id == j['pendingEvent']).firstOrNull ??
