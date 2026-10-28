@@ -71,10 +71,23 @@ COPY = {
     "B": [(190, [("電子レンジの", INK)], 160), (430, [("「中から温まる」は", INK)], 128), (680, [("半分だけ", RED), ("正しい", INK)], 175)],
     "C": [(190, [("電子レンジで", INK)], 160), (440, [("外は100℃でも", INK)], 160), (690, [("中心は", INK), ("23℃", RED)], 215)],
 }
+# D: 動画でわかることを 3 つ並べる(本編の章から)
+COPY["D"] = [(150, [("電子レンジで", INK)], 150), (370, [("中が", INK), ("冷たい", RED), ("理由", INK)], 175)]
+LIST = {"D": ["電波が届く深さは数cm", "温めムラは6cmおき", "休ませると中まで温まる"]}
 v = sys.argv[1] if len(sys.argv) > 1 else ""
 for y, parts, size in COPY[v]:
     line(80, y, parts, size)
-d.text((90, 1080), "厚さ10cmを温める計算", font=O.font(78), fill=(70, 80, 100), stroke_width=8, stroke_fill=(255, 255, 255))
+if v in LIST:
+    f = O.font(76)
+    for i, item in enumerate(LIST[v]):
+        y = 680 + i * 190
+        x1 = 80 + 150 + f.getlength(item) + 50
+        d.rounded_rectangle([80, y, x1, y + 150], radius=30, fill=(255, 255, 255, 235), outline=(20, 30, 60), width=6)
+        d.ellipse([105, y + 25, 205, y + 125], fill=RED)
+        d.text((155, y + 75), str(i + 1), font=O.font(70), fill=(255, 255, 255), anchor="mm")
+        d.text((235, y + 75), item, font=f, fill=INK, anchor="lm")
+else:
+    d.text((90, 1080), "厚さ10cmを温める計算", font=O.font(78), fill=(70, 80, 100), stroke_width=8, stroke_fill=(255, 255, 255))
 name = f"thumb_long{'_' + v if v else ''}.jpg"
 img.convert("RGB").resize((1280, 720), Image.LANCZOS).save(OUT / name, quality=93)
 print(OUT / name)

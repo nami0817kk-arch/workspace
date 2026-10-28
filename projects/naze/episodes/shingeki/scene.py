@@ -100,7 +100,8 @@ def sc_wall(img, box, t, k, P):
     d.rectangle([x0, wy - 6 * S, x1, wy + 4 * S], fill=(140, 132, 118))
     hx = x0 + (x1 - x0) * 0.12
     person(d, hx, gy, max(6 * S, 1.7 * sc), O.YEL)
-    label(d, (hx + 10 * S, gy - 40 * S), "人 1.7m", 30, O.YEL)
+    # 縦は地面の近くが結びのお願いの画面と重なるので、壁の上に出す
+    label(d, (hx + 10 * S, gy - 40 * S if LAND else wy + 50 * S), "人 1.7m", 30, O.YEL)
     label(d, (x0 + (x1 - x0) * 0.3, wy + 50 * S), "壁 50m", 40, O.WHITE)
     label(d, (max(x0 + 90 * S, gx - 60 * sc * 0.16 - 90 * S), gy - 57 * sc), "60m", 44, O.YEL)
     if P.get("building"):
