@@ -3,6 +3,7 @@ import 'honors.dart';
 import 'money.dart';
 import 'dream.dart';
 import 'game.dart';
+import 'mastery.dart';
 import 'match.dart';
 import 'season.dart';
 import 'special.dart';
@@ -212,6 +213,16 @@ List<String> epilogueLines(Game g) {
   if (p.specials.isNotEmpty) {
     lines.add('磨き上げた特殊能力は${p.specials.length}個。'
         '「${p.specials.take(3).map((s) => s.label).join('」「')}」${p.specials.length > 3 ? 'ほか' : ''}が、勝負を支えた。');
+  }
+  // 熟練(練習を重ねた能力)。いちばん高い段のものを語る。
+  final top = [for (final a in Ability.values) if (g.masteryOf(a) >= 3) a]
+    ..sort((x, y) => g.masteryOf(y).compareTo(g.masteryOf(x)));
+  if (top.isNotEmpty) {
+    final best = g.masteryOf(top.first);
+    final names = [for (final a in top) if (g.masteryOf(a) == best) a.label];
+    lines.add(best >= masteryMax
+        ? '誰よりも練習を重ねた${names.join('と')}は、極みの域に達した。'
+        : '練習を重ねた${names.join('と')}は、${masteryNames[best]}と呼べる域になった。');
   }
 
   if (g.careerHigh != null && g.careerHigh!.points >= 20) {

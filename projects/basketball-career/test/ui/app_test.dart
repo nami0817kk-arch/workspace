@@ -9,7 +9,7 @@ import 'package:basketball_career/game/player.dart';
 import 'package:basketball_career/game/rival.dart';
 import 'package:basketball_career/ui/app.dart';
 import 'package:basketball_career/ui/controller.dart';
-import 'package:basketball_career/ui/game_screen.dart' show resultStripText;
+import 'package:basketball_career/ui/game_screen.dart' show masteryHint, resultStripText;
 import 'package:basketball_career/ui/milestone_dialog.dart';
 import 'package:flutter/material.dart' hide Action, Route;
 import 'package:flutter/services.dart';
@@ -390,6 +390,15 @@ void main() {
     final card = tester.getRect(find.text('いまの結果'));
     expect(card.top, greaterThanOrEqualTo(0));
     expect(card.top, lessThan(844 - 260));
+  });
+
+  test('下のバーの熟練の一言', () {
+    final g = Game.start('x', rng: Random(1), events: false);
+    expect(masteryHint(g, Ability.pass), '熟練Lv0 次まで10');
+    g.mastery[Ability.pass] = 15;
+    expect(masteryHint(g, Ability.pass), '熟練Lv1 次まで10');
+    g.mastery[Ability.pass] = 999;
+    expect(masteryHint(g, Ability.pass), '熟練 極み');
   });
 
   test('結果の帯は最初の2行をつなぐ', () {

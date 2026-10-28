@@ -6,6 +6,7 @@ import '../game/build.dart';
 import '../game/epilogue.dart';
 import '../game/game.dart';
 import '../game/life.dart';
+import '../game/mastery.dart';
 import '../game/match.dart';
 import '../game/money.dart';
 import '../game/path.dart';
@@ -649,7 +650,7 @@ class _ActionBar extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                        '${_seasonNames[g.slot]}  重点 ①${c.focus.label}${c.focus2 == null ? '' : ' ②${c.focus2!.label}'}',
+                        '${_seasonNames[g.slot]}  重点 ①${c.focus.label}(${masteryHint(g, c.focus)})${c.focus2 == null ? '' : ' ②${c.focus2!.label}'}',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
@@ -878,7 +879,7 @@ class _AbilityCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('能力  (◎○△ ＝ ${p.position.label} で効く度合い / ◆ ＝ 目指す型 / ▲＝今回 / 緑＋＝今年の伸び)',
+            Text('能力  (◎○△ ＝ ${p.position.label} で効く度合い / ◆ ＝ 目指す型 / ▲＝今回 / 緑＋＝今年の伸び / Lv・黄色の線＝熟練)',
                 style: const TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 6),
             // 身長も能力の1つ(総合評価に入る。素質=ポテンシャルとは別)。
@@ -911,13 +912,42 @@ class _AbilityCard extends StatelessWidget {
                   children: [
                     SizedBox(
                         width: 124,
-                        child: Text(
-                            '${a.label} ${_mark(weightsOf(p.position)[a])}'
-                            '${p.style != null && styleKeys(p.style!).contains(a) ? ' ◆' : ''}')),
+                        child: Text.rich(
+                          TextSpan(children: [
+                            TextSpan(
+                                text: '${a.label} ${_mark(weightsOf(p.position)[a])}'
+                                    '${p.style != null && styleKeys(p.style!).contains(a) ? ' ◆' : ''}'),
+                            if (game.masteryOf(a) > 0)
+                              TextSpan(
+                                  text: ' Lv${game.masteryOf(a)}',
+                                  style: const TextStyle(
+                                      fontSize: 11,
+                                      color: Color(0xFFB26A00),
+                                      fontWeight: FontWeight.bold)),
+                          ]),
+                          maxLines: 1,
+                          overflow: TextOverflow.fade,
+                          softWrap: false,
+                        )),
                     Expanded(
-                      child: LinearProgressIndicator(
-                        value: p.of(a) / abilityCap,
-                        minHeight: 8,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          LinearProgressIndicator(
+                            value: p.of(a) / abilityCap,
+                            minHeight: 8,
+                          ),
+                          // 熟練度(次の段まで)。練習を重ねた分が、伸びの小さい年でも見える。
+                          if ((game.mastery[a] ?? 0) > 0) ...[
+                            const SizedBox(height: 2),
+                            LinearProgressIndicator(
+                              value: _masteryValue(game.mastery[a]!),
+                              minHeight: 3,
+                              color: const Color(0xFFFFA000),
+                              backgroundColor: const Color(0x22FFA000),
+                            ),
+                          ],
+                        ],
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -1128,6 +1158,22 @@ class _MatchRow extends StatelessWidget {
       ),
     );
   }
+}
+
+/// 熟練度の線の長さ(次の段までの割合。極みなら満タン)。
+double _masteryValue(int points) {
+  final pr = masteryProgress(points);
+  return pr == null ? 1 : pr.have / pr.need;
+}
+
+/// 下のバーに出す、第1の重点の熟練の一言(「熟練Lv2 次まで7」)。
+@visibleForTesting
+String masteryHint(Game g, Ability focus) {
+  final pts = g.mastery[focus] ?? 0;
+  final lv = masteryLevel(pts);
+  final pr = masteryProgress(pts);
+  if (pr == null) return '熟練 極み';
+  return '熟練Lv$lv 次まで${pr.need - pr.have}';
 }
 
 /// 下の結果の帯に出す短い文。最初の2行(「練習した。」と「成長: …」など)をつなぐ。

@@ -20,7 +20,7 @@ void main(List<String> args) {
   final auto = args.contains('--auto');
   final spec = args.contains('--spec') || args.contains('--team');
   final team = args.contains('--team');
-  var pro = 0, direct = 0, abroad = 0, titles = 0, rw = 0, rl = 0, awards = 0, skills = 0, st = 0, bl = 0, th = 0, games = 0, high = 0;
+  var pro = 0, direct = 0, abroad = 0, titles = 0, rw = 0, rl = 0, awards = 0, skills = 0, mTop = 0, mLv3 = 0, mLv5 = 0, st = 0, bl = 0, th = 0, games = 0, high = 0;
   var ovrAt18 = 0.0, heightAt18 = 0.0;
   var earnSum = 0, earnMax = 0, proCount = 0, salaryTop = 0;
   final totP = <int>[], totR = <int>[], totA = <int>[];
@@ -127,6 +127,10 @@ void main(List<String> args) {
     games += g.totalGames;
     high += g.careerHigh?.points ?? 0;
     skills += g.player.skills.length;
+    final lvs = [for (final a in Ability.values) g.masteryOf(a)];
+    mTop += lvs.reduce((x, y) => x > y ? x : y);
+    mLv3 += lvs.where((l) => l >= 3).length;
+    if (lvs.any((l) => l >= 5)) mLv5++;
     awards += g.records.where((r) => r.award != null).length;
     totP.add(g.totalPoints);
     totR.add(g.totalRebounds);
@@ -164,6 +168,7 @@ void main(List<String> args) {
   print('ライバルとの通算: ${(rw / n).toStringAsFixed(1)}勝 ${(rl / n).toStringAsFixed(1)}敗(1人あたり)');
   print('1試合あたり: スティール ${(st / games).toStringAsFixed(2)} ブロック ${(bl / games).toStringAsFixed(2)} 3P ${(th / games).toStringAsFixed(2)}本 / キャリアハイ平均 ${(high / n).toStringAsFixed(1)}点');
   print('平均の得意技: ${(skills / n).toStringAsFixed(1)}個');
+  print('熟練: いちばん高い段の平均 Lv${(mTop / n).toStringAsFixed(1)} / 武器(Lv3)以上の能力 ${(mLv3 / n).toStringAsFixed(1)}個 / 極み(Lv5)に届いた人生 ${pct(mLv5)}');
   print('平均の個人賞: ${(awards / n).toStringAsFixed(2)}回');
   for (final d in Dream.values) {
     print('夢「${d.label}」(${d.goalText})のかなう割合: ${pct(dreamHits[d]!)}');
