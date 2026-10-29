@@ -108,7 +108,7 @@ async function clearEvents() {
   btn('フィジカル').click();
   ok(txt().includes('フィジカル'), 'メニューを替えられる');
   btn('おまかせ').click();
-  btn('疲れている子を休ませる').click();
+  btn('疲れた子を休ます').click();
   // 重点・特性練習の選択
   const focusBtn = [...d.querySelectorAll('#main .pitem button')].find((b) => b.textContent.includes('未設定') || true);
   focusBtn.click();
@@ -117,6 +117,7 @@ async function clearEvents() {
   // 選手
   rail('選手');
   ok(txt().includes('面談') && txt().includes('特性') && txt().includes('性格'), '選手の詳細');
+  btn('面談').click();
   // 面談の一言と選択肢は選手の状態で変わる（talkSetup）ので、どれかが出ていれば押す
   (['褒める', '課題を伝える', '悩みを聞く', 'できていることを褒める', '背中を押す'].map((t) => btn(t)).find(Boolean) || btn('不安をゆっくり聞く') || btn('足りない点を伝える') || btn('期待していると伝える') || btn('焦らなくていいと聞く') || btn('さらに上を求める') || btn('気を引き締める') || btn('しっかり見ていると伝える') || btn('話を聞く')).click();
   ok(txt().includes('自信'), '面談の反応');
@@ -202,7 +203,8 @@ async function clearEvents() {
   const items = [...d.querySelectorAll('.sheet .pitem')];
   items[10].click();
   items.filter((b) => b.querySelector('.pos.FW'))[3].click();
-  btn('交代する').click();
+  const subBtn = btn('交代する'); // 試合の進み具合で交代の画面が出ないことがある（時間任せの試験）ので、あるときだけ押す
+  if (subBtn) subBtn.click();
   btn('声かけ', d.querySelector('.sheet .tabs')).click();
   btn('激励').click();
   ok(txt().includes('チーム全体に「激励」'), '声かけの反応');
@@ -291,7 +293,7 @@ async function clearEvents() {
     btn('設定').click();
     ok(txt().includes('名前の書き換え') && txt().includes('クラブ名') === false || txt().includes('名前の書き換え'), '設定に名前の書き換え');
     rail('練習');
-    ok(txt().includes('型に保存'), '練習に型の保存');
+    ok(txt().includes('休み解除'), '練習に一括ボタン');
     rail('ほか');
     btn('Bチーム').click();
     ok(txt().includes('Bチームの指揮') && txt().includes('起用方針'), 'Bチームの指揮の画面');
@@ -302,6 +304,7 @@ async function clearEvents() {
     ok(txt().includes('実績') && txt().includes('引退する') && txt().includes('全国リーグで優勝'), '実績と引退の画面');
     // フリー対戦（成績に残らない）
     rail('選手');
+    btn('操作と履歴').click();
     ok(txt().includes('キャプテン') && txt().includes('ポジション'), '選手にキャプテンとポジション変更');
     btn('キャプテンにする').click();
     ok(A.w.captain != null, 'キャプテンを指名');

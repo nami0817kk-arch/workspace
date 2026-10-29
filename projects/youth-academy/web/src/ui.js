@@ -532,7 +532,7 @@
       top.append(h('button', { class: 'btn sm', style: 'align-self:center', onclick: () => { app.free = true; render(); } }, 'フリー対戦'));
     } else if (app.free && w && w.phase === 'match') top.append(h('button', { class: 'btn sm', style: 'align-self:center', onclick: () => { app.free = false; render(); } }, '今週の試合へ戻る'));
     if (!sched) YA.OPPONENTS.forEach((o2, i) => top.append(h('button', { class: 'opp' + (i === app.opp ? ' on' : ''), onclick: () => { persistTeam(t); app.opp = i; render(); } }, h('b', {}, h('span', { class: 'sw', style: 'background:' + o2.color }), o2.name), h('span', {}, o2.desc))));
-    const kick = h('div', { style: 'display:flex;flex-direction:column;gap:4px;min-width:92px' },
+    const kick = h('div', { class: 'kick' },
       h('button', { class: 'btn pri', style: 'flex:1;font-size:14px', onclick: () => { persistTeam(t); startMatch(t, oppTeam, opp, sched); } }, 'キックオフ'),
       h('button', { class: 'btn sm', onclick: () => { persistTeam(t); simulateAll(t, oppTeam, opp, sched); } }, '全シミュレーション'));
     top.append(kick);
