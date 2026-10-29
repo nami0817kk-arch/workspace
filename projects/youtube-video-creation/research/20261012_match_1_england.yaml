@@ -1,0 +1,144 @@
+# 試合結果 の取材メモ（2026年10月12日）
+# 1本＝1テーマ。まとめではなく、1つの話を掘る
+# 埋めたら python -m src.cli draft このファイル で台本になる
+slot: match
+date: "2026年10月12日"
+
+theme:
+  id: "palace_kamada"
+  league: "england"
+  prefix: ""
+  title: "鎌田大地のプレミア初ゴール、相手のベンチにいたのは"
+  hook: ""
+  question: "鎌田大地の初ゴールは、どの場面から生まれ、試合をどう動かしたか"
+  takeaway: "押されていた最初の40分のあと、41分の鎌田の同点弾から8分ほどで2点。流れはそこで変わった"
+  opening_image: assets/images/20261012_match_1_england_pair/01.jpg
+
+# 写真は Commons の1枚（File:DaichiKamada.jpg、CC BY-SA 4.0 / Silesia711、フランクフルトの
+#   ユニフォーム）。いまはパレスだが、恩師グラスナーと過ごした時代の写真なので話と合う。
+#   1510x2964 を tools/facecrop.py で切った（01_w 1510x849、01_v 1510x2684）。2枚とも開いて
+#   頭と顎が入っているのを見た。写真は冒頭から最後まで出続けるので、顔が真ん中だとどの板も顔にかかる。
+#   左にセルハースト・パーク（assets/backgrounds の Holmesdale Stand、CC BY-SA 4.0 / Rockybiggs）、右に 01_w を
+#   並べた1枚（tools/pairphoto.py）にして顔を右へ寄せた。ショートは鎌田1人の縦写真。
+#   20260909_kamada の写真（955x1272）は 16:9 にすると 955x537 で、2倍に引き伸ばすので外した
+thumbnail:
+  layout: face
+  photo: assets/images/20261012_match_1_england_pair/01.jpg
+  short_photo: assets/images/20261012_match_1_england/01_v.jpg
+  line1: "鎌田 68試合目の初弾"
+  line2: "相手は恩師グラスナー"
+  tags:
+    - "鎌田大地"
+    - "クリスタル・パレス"
+
+answer: "41分の同点弾は、鎌田が始めたパス回しから生まれた。そこから前半のうちに逆転し、パレスが3対1で勝った"
+watch: "パレスが12位から勝ち点を重ねられるか。鎌田が次の試合でも得点に絡むか"
+
+sections:
+  - id: score
+    heading: 試合はこうなった
+    tier: 確定
+    telop: "3対1　セルハースト・パーク"
+    say:
+      - "クリスタル・パレスは、ホームでノッティンガム・フォレストに3対1で勝ちました。"
+      - "パレスはサージュ監督のもとで、プレミアのホーム初勝利です。"
+    official: true
+    sources:
+      - "https://www.cpfc.co.uk/news/match-reports/match-report-highlights-crystal-palace-nottingham-forest-october-2026/"
+      - "https://www.theguardian.com/football/2026/oct/11/crystal-palace-nottingham-forest-premier-league-match-report"
+
+  - id: words
+    heading: 試合後の言葉
+    tier: 報道
+    telop: "グラスナー監督の言葉"
+    say:
+      - "古巣で負けたグラスナー監督は、試合後にこう話しました。"
+      - voice: グラスナー監督
+        text: "フォレストが一番相手を圧倒した試合だった。"
+      - voice: グラスナー監督
+        text: "でも、結果は正しくない。"
+        cont: true
+      - "パレスのファンの野次は、耳に入らなかったそうです。"
+    official: false
+    sources:
+      - "https://www.theguardian.com/football/2026/oct/11/crystal-palace-nottingham-forest-premier-league-match-report"
+
+  - id: turning
+    heading: 試合が決まった場面
+    tier: 確定
+    telop: "3分・41分・45+4分・59分"
+    say:
+      - text: "3分、フォレストのンドイエが先制しました。"
+        card: {type: table, title: この試合の得点（先制）, columns: [分, チーム, 得点した選手], rows: [['3分', 'フォレスト', 'ンドイエ'], ['41分', 'パレス', '鎌田大地'], ['45+4分', 'パレス', 'レルマ'], ['59分', 'パレス', 'ピノ']], highlight_row: 0}
+      - text: "パレスのハライリの弱いヘディングを受けて、ンドイエが抜け出しました。"
+        card: {type: table, title: この試合の得点（先制）, columns: [分, チーム, 得点した選手], rows: [['3分', 'フォレスト', 'ンドイエ'], ['41分', 'パレス', '鎌田大地'], ['45+4分', 'パレス', 'レルマ'], ['59分', 'パレス', 'ピノ']], highlight_row: 0}
+      - text: "41分、鎌田大地が同点に追いつきました。"
+        card: {type: table, title: この試合の得点（同点）, columns: [分, チーム, 得点した選手], rows: [['3分', 'フォレスト', 'ンドイエ'], ['41分', 'パレス', '鎌田大地'], ['45+4分', 'パレス', 'レルマ'], ['59分', 'パレス', 'ピノ']], highlight_row: 1}
+      - text: "鎌田が始めたワンタッチのパス回しが、最後は鎌田の足元に戻りました。"
+        card: {type: table, title: この試合の得点（同点）, columns: [分, チーム, 得点した選手], rows: [['3分', 'フォレスト', 'ンドイエ'], ['41分', 'パレス', '鎌田大地'], ['45+4分', 'パレス', 'レルマ'], ['59分', 'パレス', 'ピノ']], highlight_row: 1}
+      - text: "前半のアディショナルタイム、ワートンのコーナーからレルマが決めました。"
+        card: {type: table, title: この試合の得点（逆転と3点目）, columns: [分, チーム, 得点した選手], rows: [['3分', 'フォレスト', 'ンドイエ'], ['41分', 'パレス', '鎌田大地'], ['45+4分', 'パレス', 'レルマ'], ['59分', 'パレス', 'ピノ']], highlight_row: 2}
+      - text: "パレスが2対1と勝ち越して、前半を終えました。"
+        card: {type: table, title: この試合の得点（逆転と3点目）, columns: [分, チーム, 得点した選手], rows: [['3分', 'フォレスト', 'ンドイエ'], ['41分', 'パレス', '鎌田大地'], ['45+4分', 'パレス', 'レルマ'], ['59分', 'パレス', 'ピノ']], highlight_row: 2}
+      - text: "59分、ピノがパレスの3点目を決めました。"
+        card: {type: table, title: この試合の得点（逆転と3点目）, columns: [分, チーム, 得点した選手], rows: [['3分', 'フォレスト', 'ンドイエ'], ['41分', 'パレス', '鎌田大地'], ['45+4分', 'パレス', 'レルマ'], ['59分', 'パレス', 'ピノ']], highlight_row: 3}
+    official: true
+    sources:
+      - "https://www.cpfc.co.uk/news/match-reports/match-report-highlights-crystal-palace-nottingham-forest-october-2026/"
+      - "https://www.theguardian.com/football/2026/oct/11/crystal-palace-nottingham-forest-premier-league-match-report"
+
+  - id: numbers
+    heading: 数字で見ると
+    tier: 報道
+    telop: "押された40分、2点を取った8分"
+    viewpoint: true
+    say:
+      - "報道では、最初の40分ほどのパレスは出来が悪かったと評されています。"
+      - text: "ところが41分からの8分ほどで、2点を取りました。"
+        card: none
+      - text: "押された40分と、2点を取った8分。流れを変えたのは鎌田の1点でした。"
+        card: none
+    official: false
+    sources:
+      - "https://www.theguardian.com/football/2026/oct/11/crystal-palace-nottingham-forest-premier-league-match-report"
+      - "https://www.cpfc.co.uk/news/match-reports/match-report-highlights-crystal-palace-nottingham-forest-october-2026/"
+
+  - id: background
+    heading: 相手の監督は恩師
+    tier: 背景
+    main: true
+    telop: "フォレストを率いるのはグラスナー"
+    say:
+      - "フォレストの監督は、この夏までパレスを率いたグラスナーです。"
+      - "鎌田とはフランクフルトで、ヨーロッパリーグを一緒に勝ち取りました。"
+      - "鎌田をパレスに呼んだのも、グラスナーでした。"
+      - "その恩師の前で、鎌田はプレミアリーグ68試合目で初めて点を取りました。"
+    official: false
+    sources:
+      - "https://www.theguardian.com/football/2026/oct/11/crystal-palace-nottingham-forest-premier-league-match-report"
+
+  - id: next
+    heading: 順位と次の一戦
+    tier: 確定
+    telop: "12位に上昇"
+    say:
+      - "この勝利で、パレスは12位に上がりました。"
+      - "次はリヨン戦、そのあとブライトン戦が続きます。"
+    official: true
+    sources:
+      - "https://www.cpfc.co.uk/news/match-reports/match-report-highlights-crystal-palace-nottingham-forest-october-2026/"
+
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: "「プレミア初ゴールおめ」"
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: プレミア初ゴールおめ
+      - voice: ネット民
+        text: ほぼごっつぁんゴールやないか
+      - voice: ネット民
+        text: 昨季の鎌田は守備専のボランチだったからな
+    sources:
+      - "https://sakarabo.blog.jp/archives/1084559418.html"
