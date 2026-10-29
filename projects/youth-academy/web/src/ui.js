@@ -480,6 +480,11 @@
       YA.views.newgame(main);
       return;
     }
+    if (app.w.retired) {
+      root.classList.add('full');
+      YA.views.retired(main);
+      return;
+    }
     if (app.tab === 'match') {
       if (app.view === 'pre') viewPre(main);
       else if (app.view === 'play') viewPlay(main);
@@ -829,6 +834,7 @@
   YA.start = function () {
     loadCfg();
     // ボタンを押したときの小さな音
+    YA.applyFontScale(store.get('fs', 1));
     document.addEventListener('click', (e) => { if (e.target.closest && e.target.closest('button')) YA.sfx.play('tap'); });
     render();
   };

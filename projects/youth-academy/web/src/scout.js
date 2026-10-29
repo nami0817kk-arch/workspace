@@ -203,7 +203,7 @@
     const o = Math.round(YA.ovr(p) * 10) / 10;
     const r = YA.rngOf(w.seed + p.num * 7 + w.year);
     const status = p._path || (o >= 13.2 ? 'pro' : o >= 10.5 ? 'univ' : 'amateur');
-    return { name: p.name, pos: p.pos, year: w.year, ovr: o, note, grade: 3, age: 18, status, club: status === 'pro' ? r.pick(PRO) + ' ' + r.pick(PRO_N) : status === 'univ' ? r.pick(UNIV) : '社会人', apps: 0, goals: 0, nat: p.nat || 0, transfers: 0, retired: false, traits: p.traits.slice() };
+    return { name: p.name, pos: p.pos, year: w.year, ovr: o, note, grade: 3, age: 18, status, club: status === 'pro' ? r.pick(PRO) + ' ' + r.pick(PRO_N) : status === 'univ' ? r.pick(UNIV) : '社会人', apps: 0, goals: 0, nat: p.nat || 0, transfers: 0, retired: false, traits: p.traits.slice(), pushed: p._push || null, abroad: !!(p._sold && o >= 13) };
   };
   YA.alumniTick = function (w) {
     const r = YA.rngOf(w.seed * 67 + w.year * 29);
@@ -213,7 +213,7 @@
       a.age++;
       if (a.age <= 23) a.ovr = Math.round((a.ovr + r() * 0.7) * 10) / 10;
       else if (a.age >= 30) a.ovr = Math.round((a.ovr - r() * 0.5) * 10) / 10;
-      if (a.status === 'univ' && a.age >= 22 && a.ovr >= 12.4 && r() < 0.4) {
+      if (a.status === 'univ' && a.age >= 22 && a.ovr >= 12.4 && r() < (a.pushed === 'univ' ? 0.6 : 0.4)) {
         a.status = 'pro';
         a.club = r.pick(PRO) + ' ' + r.pick(PRO_N);
         YA.noteTier(w, 2, `卒業生の${a.name}が大学を経てプロ入りしました（${a.club}）`);
@@ -242,7 +242,10 @@
         a.note = '引退';
       }
     }
-    if (contrib) w.club.solidarity = (w.club.solidarity || 0) + contrib;
+    if (contrib) {
+      w.club.solidarity = (w.club.solidarity || 0) + contrib;
+      w.solidTotal = (w.solidTotal || 0) + contrib;
+    }
     return contrib;
   };
 
@@ -318,6 +321,11 @@
     const r = YA.rngOf(w.seed * 53 + w.year * 61 + w.week);
     const s = YA.SCHED(w.week);
     if (w.week % 4 === 0 && w.week <= 32 && w.week >= 4) YA.scoutReport(w);
+    // 38週：卒業する上位の子から、進路の相談が届く
+    if (w.week === 38) {
+      const sr = Object.values(w.players).filter((p) => p.grade === 3 && YA.ovr(p) >= 10.8).sort((a, b) => YA.ovr(b) - YA.ovr(a)).slice(0, 4);
+      w.forced = (w.forced || []).concat(sr.map((p) => ({ id: 'career', pid: p.id, week: w.week, year: w.year })));
+    }
     if (s.t === 'selection') YA.openSelection(w);
     if (s.t === 'internal') YA.openInternal(w);
     for (const p of Object.values(w.players)) {

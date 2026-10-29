@@ -44,7 +44,7 @@
   const gradeName = (g) => '高' + g;
   const fatColor = (v) => (v > 75 ? '#d63a3a' : v > 50 ? '#f0a020' : '#1a9d57');
   const fatBar = (p, wd) => h('div', { class: 'bar', style: `width:${wd || 40}px` }, h('i', { style: `width:${p.fat}%;background:${fatColor(p.fat)}` }));
-  const flags = (p) => [p.inj > 0 ? h('span', { class: 'fit bad' }, '怪我' + p.inj + '週') : null, p.spurt > 0 ? h('span', { class: 'fit good' }, '成長期') : null, p.star ? h('span', { class: 'chip trait' }, '★注目') : null, p.unrest >= 3 ? h('span', { class: 'fit bad' }, '不満') : null];
+  const flags = (p) => [p.inj > 0 ? h('span', { class: 'fit bad' }, '怪我' + p.inj + '週') : null, p.spurt > 0 ? h('span', { class: 'fit good' }, '成長期') : null, p.state && p.state.w > 0 ? h('span', { class: 'fit ' + (p.state.k === 'peak' ? 'good' : 'bad') }, p.state.k === 'peak' ? '伸び盛り' : '壁') : null, p.star ? h('span', { class: 'chip trait' }, '★注目') : null, p.unrest >= 3 ? h('span', { class: 'fit bad' }, '不満') : null];
 
   // ---------- ホーム ----------
   function viewHome(main) {
@@ -79,12 +79,14 @@
     const mid = h('div', { class: 'card pbody', style: 'flex:1;min-width:0' });
     mid.append(h('div', { class: 'h' }, 'お知らせ'));
     const list = h('div', { class: 'plist', style: 'margin-top:4px' });
-    const items = w.inbox.slice(-14).reverse();
+    const showLog = !!U().app.showLog;
+    const items = w.inbox.filter((n) => showLog || YA.noticeTier(w, n) <= 2).slice(-14).reverse();
     for (const n of items) {
-      const dot = n.tier === 1 ? '#d63a3a' : n.tier === 2 ? '#1f6feb' : '#b9c7de';
-      list.append(h('button', { class: 'pitem', style: 'align-items:flex-start;cursor:default', onclick: () => { if (n.pid && w.players[n.pid]) { U().app.pSel = n.pid; U().app.tab = 'players'; rerender(); } } }, h('span', { style: `width:8px;height:8px;border-radius:50%;background:${dot};margin-top:4px;flex:none` }), h('span', { style: 'font-size:11.5px;line-height:1.4', class: n.tier === 3 ? 'sub' : '' }, (n.week ? `${n.week}週 ` : '') + n.text)));
+      const et = YA.noticeTier(w, n);
+      const dot = et === 1 ? '#d63a3a' : et === 2 ? '#1f6feb' : '#b9c7de';
+      list.append(h('button', { class: 'pitem', style: 'align-items:flex-start;cursor:default', onclick: () => { if (n.pid && w.players[n.pid]) { U().app.pSel = n.pid; U().app.tab = 'players'; rerender(); } } }, h('span', { style: `width:8px;height:8px;border-radius:50%;background:${dot};margin-top:4px;flex:none` }), h('span', { style: 'font-size:11.5px;line-height:1.4', class: YA.noticeTier(w, n) === 3 ? 'sub' : '' }, (n.week ? `${n.week}週 ` : '') + n.text)));
     }
-    mid.append(list);
+    mid.append(list, h('button', { class: 'btn sm', style: 'margin-top:5px', onclick: () => { U().app.showLog = !showLog; rerender(); } }, showLog ? '記録だけのお知らせを隠す' : '記録だけのお知らせも見る'));
     // 右：気にかけたい子
     const right = h('div', { class: 'card pbody', style: 'width:210px;flex:none' });
     right.append(h('div', { class: 'h' }, '今週気にかけたい子'));
@@ -257,7 +259,10 @@
     const talk = h('div', { style: 'margin-top:8px;border-top:1px dashed var(--line);padding-top:6px' }, h('div', { class: 'h' }, '面談（1人とは週1回まで）'));
     const res = h('div', { class: 'msglog' });
     const can = YA.canTalk(w, sel);
-    talk.append(h('div', { class: 'fm-row', style: 'margin-top:4px' }, YA.TALKS.map((t) => h('button', { class: 'btn', disabled: !can, onclick: () => { const r = YA.talk(w, sel.id, t.k); res.replaceChildren(h('div', {}, r.ok ? `${sel.name.split(' ')[0]}は、${r.line}${r.small ? '（' + r.small + '）' : ''}${r.extra ? ' / ' + r.extra : ''}` : r.msg)); YA.saveWorld(); talkBtns(); } }, t.label))));
+    // 会話の形（決定71）：相手の一言 → 言葉の違う選択肢3つ → 相手の返事と結果
+    const su = YA.talkSetup(w, sel);
+    talk.append(h('div', { class: 'card', style: 'padding:6px 9px;margin:4px 0;background:#f5f8fd' }, h('b', {}, sel.name.split(' ')[0] + '：'), `「${su.line}」`));
+    talk.append(h('div', { class: 'fm-row', style: 'margin-top:4px' }, su.opts.map((t) => h('button', { class: 'btn', disabled: !can, onclick: () => { const r = YA.talk(w, sel.id, t.k); res.replaceChildren(h('div', {}, r.ok ? `${sel.name.split(' ')[0]}は、${r.line}${r.small ? '（' + r.small + '）' : ''}${r.extra ? ' / ' + r.extra : ''}` : r.msg)); YA.saveWorld(); talkBtns(); } }, t.label))));
     talk.append(res);
     const talkBtns = () => { for (const b of talk.querySelectorAll('button')) b.disabled = true; };
     right.append(talk, YA.playerExtras(w, sel));

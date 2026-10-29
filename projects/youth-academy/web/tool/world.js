@@ -8,6 +8,7 @@ require(path.join(__dirname, '../src/league.js'));
 require(path.join(__dirname, '../src/club.js'));
 require(path.join(__dirname, '../src/scout.js'));
 require(path.join(__dirname, '../src/extra.js'));
+require(path.join(__dirname, '../src/more.js'));
 const YA = globalThis.YA;
 let fails = 0;
 const ok = (c, m) => { if (!c) { fails++; console.log('FAIL:', m); } };
@@ -525,6 +526,25 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
     }
     console.log('海外移籍が起きた世界', abroadCount + '/40');
     ok(abroadCount >= 3, '海外移籍が起きる');
+  }
+  // 段2：実績・引退・お知らせの段・名前の書き換え・進路の相談・GK枠
+  {
+    const wm = YA.newWorld(11);
+    const ach = YA.achievements(wm);
+    ok(ach.length >= 9 && ach.every((x) => typeof x.done === 'boolean'), '実績の一覧が出る');
+    ok(YA.noticeKind('Aが怪我（3週）') === '怪我' && YA.noticeKind('なにか') === 'そのほか', 'お知らせの種類を分ける');
+    ok(YA.renamePlayer(wm, Object.keys(wm.players)[0], '').ok === false && YA.renamePlayer(wm, Object.keys(wm.players)[0], '新しい名前').ok, '名前を書き換えられる');
+    const sm0 = YA.careerSummary(wm);
+    ok(sm0.ach.length === ach.length && Array.isArray(sm0.best), '指導者人生のまとめが作れる');
+    YA.retire(wm);
+    ok(wm.retired && wm.retired.year === wm.year && JSON.parse(JSON.stringify(wm)).retired, '引退が保存される');
+    // GK枠：Bチームの先発GKが抜けても、GKが入る
+    const wg = YA.newWorld(12);
+    const gk0 = wg.lineupB[0].pid;
+    delete wg.players[gk0];
+    wg.benchB = wg.benchB.filter((id) => wg.players[id] && wg.players[id].pos !== 'GK');
+    YA.autoTeamsKeep(wg);
+    ok(wg.players[wg.lineupB[0].pid] && wg.players[wg.lineupB[0].pid].pos === 'GK', 'Bの先発GKが抜けて控えにもいなければ、GKが新しく入る');
   }
   // 効果音：音の出せない環境でも落ちない
   YA.sfx.on = true;

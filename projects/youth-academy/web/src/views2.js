@@ -239,6 +239,7 @@
     // 関係
     const rel = YA.relOf(w, sel.id);
     if (rel.length) wrap.append(h('div', { class: 'row', style: 'flex-wrap:wrap;gap:4px' }, h('span', { class: 'sub' }, '関係：'), rel.map((x) => h('span', { class: 'chip ' + (x.k === 'friend' ? 'trait' : 'instr') }, (x.k === 'friend' ? '仲良し ' : 'ライバル ') + x.other.name.split(' ')[0]))));
+    wrap.append(h('div', { class: 'row', style: 'margin-top:4px' }, h('button', { class: 'btn sm', onclick: () => YA.renameBox(sel) }, '名前を変える')));
     wrap.append(msg);
     return wrap;
   };
@@ -270,7 +271,7 @@
     const w = W();
     const ui = U().app;
     ui.mt = ui.mt || 'alumni';
-    const tabs = h('div', { class: 'tabs', style: 'width:420px' }, [['alumni', '卒業生名鑑'], ['rec', '記録'], ['set', '設定']].map(([k, n]) => h('button', { class: 'btn' + (ui.mt === k ? ' on' : ''), onclick: () => { ui.mt = k; rerender(); } }, n)));
+    const tabs = h('div', { class: 'tabs', style: 'width:420px' }, [['alumni', '卒業生名鑑'], ['rec', '記録'], ['ach', '実績と引退'], ['set', '設定']].map(([k, n]) => h('button', { class: 'btn' + (ui.mt === k ? ' on' : ''), onclick: () => { ui.mt = k; rerender(); } }, n)));
     const body = h('div', { class: 'card pbody', style: 'flex:1;min-height:0' });
     if (ui.mt === 'alumni') {
       body.append(h('div', { class: 'h' }, `卒業生と退団者（${w.alumni.length}人）`));
@@ -282,6 +283,8 @@
       body.append(title('獲得した大会'), ...(w.trophies && w.trophies.length ? w.trophies.map((t) => h('div', { class: 'pitem', style: 'cursor:default' }, h('span', { class: 'chip trait' }, t.rank), h('span', { class: 'nm grow' }, t.name), h('span', { class: 'sub' }, `${t.year}年目`))) : [h('div', { class: 'note' }, 'まだありません')]));
       body.append(title('リーグの履歴'), ...((w.leagueHist || []).slice().reverse().map((x) => h('div', { class: 'pitem', style: 'cursor:default' }, h('span', { class: 'sub', style: 'width:54px' }, `${x.year}年目`), h('span', { class: 'nm grow' }, YA.LEVEL_NAMES[x.level - 1]), h('b', {}, `${x.rank}位（勝点${x.pts}）`)))));
       body.append(title('最近の試合'), ...w.results.slice(-10).reverse().map((r) => h('div', { class: 'pitem', style: 'cursor:default' }, h('span', { class: 'sub', style: 'width:68px' }, `${r.year}年目${r.week}週`), h('span', { class: 'nm grow' }, (r.kind ? r.kind + ' ' : '') + r.opp), h('b', { style: `color:${r.gf > r.ga ? '#1a9d57' : r.gf < r.ga ? '#d63a3a' : 'inherit'}` }, `${r.gf}-${r.ga}`))));
+    } else if (ui.mt === 'ach') {
+      YA.achBlock(body);
     } else if (typeof YA.settingsBlock === 'function') {
       YA.settingsBlock(body);
     } else {

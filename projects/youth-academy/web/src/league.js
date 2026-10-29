@@ -69,7 +69,7 @@
       const ck = r.pick(COACH_KIND);
       teams.push({
         id: 't' + i, name, short: name.length > 9 ? name.slice(0, 9) : name, kind, style,
-        lvl: Math.round((levelBase(level) + w.year * 0.3 + (r() - 0.5) * 1.8 + (kind === 'club' ? 0.3 : 0)) * 10) / 10,
+        lvl: Math.round((levelBase(level) + w.year * 0.36 + (r() - 0.5) * 1.8 + (kind === 'club' ? 0.3 : 0)) * 10) / 10,
         formation: r.pick(['4-4-2', '4-3-3', '5-3-2', '4-2-3-1']), tactic: { power: 'ハイプレス', tech: 'ポゼッション', defend: '堅守' }[style],
         color: r.pick(['#c0392b', '#2c3e50', '#7f8c8d', '#8e44ad', '#d35400', '#16a085']),
         coach: { name: r.pick(COACH_SUR) + ' ' + r.pick(['監督', 'コーチ']), kind: ck[0], note: ck[1] },
@@ -105,7 +105,7 @@
       const style = r.pick(['power', 'tech', 'defend']);
       return { id: 'c' + i, name, short: name.length > 9 ? name.slice(0, 9) : name, style, lvl: Math.round((base + i * 0.55 + (r() - 0.5)) * 10) / 10, formation: r.pick(['4-4-2', '4-3-3', '5-3-2']), tactic: { power: 'ハイプレス', tech: 'ポゼッション', defend: '堅守' }[style], color: r.pick(['#c0392b', '#2c3e50', '#8e44ad', '#d35400']), coach: { name: r.pick(COACH_SUR) + ' 監督', kind: r.pick(COACH_KIND)[0], note: '' } };
     });
-    const base = levelBase(w.leagueLevel || 2) - 0.3 + w.year * 0.3;
+    const base = levelBase(w.leagueLevel || 2) - 0.3 + w.year * 0.36;
     w.cup = { summer: { alive: true, round: 0, opps: mk(3, base), result: null }, winter: { alive: true, round: 0, opps: mk(4, base - 0.2), result: null } };
   };
 
@@ -116,7 +116,7 @@
       // 旧データの互換：週ごとに作る
       const r = YA.rngOf(w.seed * 31 + w.year * 1000 + w.week * 7);
       const style = r.pick(['power', 'tech', 'defend']);
-      return { id: 'o' + w.week, name: r.pick(AREAS) + r.pick(HS), short: '相手', color: '#c0392b', lvl: 10 + w.year * 0.3, formation: '4-4-2', tactic: { power: 'ハイプレス', tech: 'ポゼッション', defend: '堅守' }[style], desc: STYLE_DESC[style], style, home: r.chance(0.5) };
+      return { id: 'o' + w.week, name: r.pick(AREAS) + r.pick(HS), short: '相手', color: '#c0392b', lvl: 10 + w.year * 0.36, formation: '4-4-2', tactic: { power: 'ハイプレス', tech: 'ポゼッション', defend: '堅守' }[style], desc: STYLE_DESC[style], style, home: r.chance(0.5) };
     }
     let t;
     let home = true;

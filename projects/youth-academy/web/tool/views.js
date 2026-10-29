@@ -22,6 +22,7 @@ const html = read('shell.html')
   .replace('/*__VIEWS__*/', () => read('views.js'))
   .replace('/*__VIEWS2__*/', () => read('views2.js'))
   .replace('/*__EXTRA__*/', () => read('extra.js'))
+  .replace('/*__MORE__*/', () => read('more.js'))
   .replace('/*__VIEWS3__*/', () => read('views3.js'));
 
 let fails = 0;
@@ -276,6 +277,16 @@ async function clearEvents() {
     rail('ほか');
     btn('卒業生名鑑').click();
     ok(d.querySelectorAll('#main .pitem').length >= 12, '卒業生が名鑑に並ぶ');
+    // 段2：設定の文字の大きさ・お知らせの重さ、実績、名前の書き換え
+    rail('ほか');
+    btn('設定').click();
+    ok(txt().includes('文字の大きさ') && txt().includes('お知らせの重さ') && txt().includes('必ず止める'), '設定に文字の大きさとお知らせの重さ');
+    btn('大', d.getElementById('main')).click();
+    ok(d.getElementById('app').style.zoom !== '', '文字の大きさが変わる');
+    btn('標準', d.getElementById('main')).click();
+    rail('ほか');
+    btn('実績と引退').click();
+    ok(txt().includes('実績') && txt().includes('引退する') && txt().includes('全国リーグで優勝'), '実績と引退の画面');
     // フリー対戦（成績に残らない）
     rail('選手');
     ok(txt().includes('キャプテン') && txt().includes('ポジション'), '選手にキャプテンとポジション変更');
