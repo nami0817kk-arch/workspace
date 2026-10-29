@@ -15,6 +15,7 @@
     if (week === 26) return { t: 'camp' };
     if (week >= 27 && week <= 30) return { t: 'cup', cup: 'winter', round: week - 26 };
     if (week === 33) return { t: 'selection' };
+    if (week === 34) return { t: 'junior' };
     if (week === 36) return { t: 'internal' };
     if (week === 40) return { t: 'ceremony' };
     return { t: 'none' };
@@ -23,7 +24,7 @@
     const s = YA.SCHED(w.week);
     if (s.t === 'league') return `リーグ第${s.n}節`;
     if (s.t === 'cup') return (s.cup === 'summer' ? '夏の全国大会' : '冬のカップ戦') + ` ${s.round}回戦`;
-    return { camp: '夏合宿・遠征', selection: 'セレクション', internal: 'U-15の内部昇格', ceremony: '卒業式', none: '' }[s.t];
+    return { camp: '夏合宿・遠征', selection: 'セレクション', junior: '中3の練習参加', internal: 'U-15の内部昇格', ceremony: '卒業式', none: '' }[s.t];
   };
   // 今週あるA戦。なければ null
   YA.matchOf = function (w) {

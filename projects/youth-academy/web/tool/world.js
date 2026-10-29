@@ -559,6 +559,36 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
     w3.plan.days[0].menu = '休み';
     ok(YA.loadMenuSlot(w3, 1) && w3.plan.days[0].menu !== '休み' && !YA.loadMenuSlot(w3, 2), '練習メニューの型を保存・呼出できる');
   }
+  // 段4：Bチームの指揮・中3の練習参加・U-21代表
+  {
+    const w4 = YA.newWorld(31);
+    const lineupA0 = JSON.stringify(w4.lineupA);
+    YA.setBCtl(w4, { form: '4-4-2', tactic: 'カウンター', policy: 'young' });
+    ok(w4.lineupB.length === 11 && JSON.stringify(w4.lineupA) === lineupA0, 'Bの布陣を変えてもAの並びは変わらない');
+    ok(w4.players[w4.lineupB[0].pid].pos === 'GK', 'Bの布陣を変えてもGKが入る');
+    const tm = YA.teamFromWorld(w4, 'B');
+    ok(tm.tactic.type === 'カウンター' || !YA.TACTICS['カウンター'], 'Bの戦い方が試合用のチームに反映される');
+    const b = YA.simulateB(w4);
+    ok(w4.resultsB.length === 1 && typeof b.gf === 'number', 'Bの結果が残る');
+    // 中3の練習参加：34週に候補が出て、見えている度合いが上がる
+    const w5 = YA.newWorld(32);
+    w5.week = 34;
+    YA.weekExtras(w5);
+    const ints = w5.scouting.cands.filter((c) => c.kind === 'int');
+    ok(ints.length === 6 && ints.every((c) => c.seen >= 1), '34週に中3が練習に参加して候補になる');
+    w5.week = 36;
+    YA.weekExtras(w5);
+    ok(w5.scouting.cands.filter((c) => c.kind === 'int').every((c) => c.persSeen), '36週の申し送りで性格が見える');
+    // U-21代表
+    let u21 = 0;
+    for (let sd = 1; sd <= 30; sd++) {
+      const wa = YA.newWorld(sd);
+      wa.alumni.push({ name: 'U21候補', pos: 'FW', year: 1, ovr: 13, note: 'プロ', grade: 3, age: 18, status: 'pro', club: '横浜 ブルーウィング', apps: 0, goals: 0, nat: 0, transfers: 0 });
+      for (let k = 0; k < 3; k++) { wa.year = 2 + k; YA.alumniTick(wa); }
+      if (wa.alumni.some((a) => a.u21 > 0)) u21++;
+    }
+    ok(u21 >= 5, 'U-21代表に選ばれる卒業生が出る ' + u21 + '/30');
+  }
   // 効果音：音の出せない環境でも落ちない
   YA.sfx.on = true;
   for (const k of ['tap', 'goal', 'concede', 'whistle', 'save', 'miss', 'x', null]) YA.sfx.play(k);

@@ -271,18 +271,20 @@
     const w = W();
     const ui = U().app;
     ui.mt = ui.mt || 'alumni';
-    const tabs = h('div', { class: 'tabs', style: 'width:420px' }, [['alumni', '卒業生名鑑'], ['rec', '記録'], ['ach', '実績と引退'], ['set', '設定']].map(([k, n]) => h('button', { class: 'btn' + (ui.mt === k ? ' on' : ''), onclick: () => { ui.mt = k; rerender(); } }, n)));
+    const tabs = h('div', { class: 'tabs', style: 'width:420px' }, [['alumni', '卒業生名鑑'], ['rec', '記録'], ['bteam', 'Bチーム'], ['ach', '実績と引退'], ['set', '設定']].map(([k, n]) => h('button', { class: 'btn' + (ui.mt === k ? ' on' : ''), onclick: () => { ui.mt = k; rerender(); } }, n)));
     const body = h('div', { class: 'card pbody', style: 'flex:1;min-height:0' });
     if (ui.mt === 'alumni') {
       body.append(h('div', { class: 'h' }, `卒業生と退団者（${w.alumni.length}人）`));
       const al = w.alumni.slice().reverse();
-      body.append(h('div', { class: 'plist', style: 'margin-top:5px' }, al.map((a) => h('div', { class: 'pitem', style: 'cursor:default;align-items:flex-start' }, h('span', { class: 'pos ' + a.pos }, a.pos), h('div', { class: 'grow' }, h('b', {}, a.name), h('div', { class: 'note' }, (a.status === 'left' ? '退団' : `${a.year}年卒・${a.age}歳`) + (a.club ? `・${a.club}` : '') + (a.retired ? '（引退）' : ''))), a.status === 'pro' ? h('span', { class: 'sub', style: 'font-size:10.5px' }, `出場${a.apps}・${a.goals}得点${a.transfers ? '・移籍' + a.transfers : ''}${a.nat ? '・代表' + a.nat : ''}`) : null, h('span', { class: 'chip gray' }, '能力 ' + a.ovr), h('span', { class: 'chip ' + (a.status === 'pro' ? 'trait' : 'gray') }, a.status === 'pro' ? 'プロ' : a.status === 'univ' ? '大学' : a.status === 'left' ? '退団' : '社会人')))));
+      body.append(h('div', { class: 'plist', style: 'margin-top:5px' }, al.map((a) => h('div', { class: 'pitem', style: 'cursor:default;align-items:flex-start' }, h('span', { class: 'pos ' + a.pos }, a.pos), h('div', { class: 'grow' }, h('b', {}, a.name), h('div', { class: 'note' }, (a.status === 'left' ? '退団' : `${a.year}年卒・${a.age}歳`) + (a.club ? `・${a.club}` : '') + (a.u21 ? `・U-21代表${a.u21}回` : '') + (a.nat ? `・代表${a.nat}回` : '') + (a.retired ? '（引退）' : ''))), a.status === 'pro' ? h('span', { class: 'sub', style: 'font-size:10.5px' }, `出場${a.apps}・${a.goals}得点${a.transfers ? '・移籍' + a.transfers : ''}${a.nat ? '・代表' + a.nat : ''}`) : null, h('span', { class: 'chip gray' }, '能力 ' + a.ovr), h('span', { class: 'chip ' + (a.status === 'pro' ? 'trait' : 'gray') }, a.status === 'pro' ? 'プロ' : a.status === 'univ' ? '大学' : a.status === 'left' ? '退団' : '社会人')))));
       if (!al.length) body.append(h('div', { class: 'note', style: 'margin-top:6px' }, '最初の卒業式（1年目の終わり）で、ここに並びます。卒業後も毎年、活躍が更新されます。'));
     } else if (ui.mt === 'rec') {
       body.append(title('主な記録'), h('div', { class: 'row', style: 'flex-wrap:wrap;gap:5px;margin-bottom:6px' }, h('span', { class: 'chip trait' }, `Aチーム ${w.rec.w}勝${w.rec.d}分${w.rec.l}敗`), h('span', { class: 'chip gray' }, `プロ入り ${w.alumni.filter((a) => a.status === 'pro').length}人`), h('span', { class: 'chip gray' }, `代表経験 ${w.alumni.filter((a) => a.nat).length}人`), h('span', { class: 'chip gray' }, `連帯貢献金 ${w.club.solidarityLast || 0}万円（今年）`)));
       body.append(title('獲得した大会'), ...(w.trophies && w.trophies.length ? w.trophies.map((t) => h('div', { class: 'pitem', style: 'cursor:default' }, h('span', { class: 'chip trait' }, t.rank), h('span', { class: 'nm grow' }, t.name), h('span', { class: 'sub' }, `${t.year}年目`))) : [h('div', { class: 'note' }, 'まだありません')]));
       body.append(title('リーグの履歴'), ...((w.leagueHist || []).slice().reverse().map((x) => h('div', { class: 'pitem', style: 'cursor:default' }, h('span', { class: 'sub', style: 'width:54px' }, `${x.year}年目`), h('span', { class: 'nm grow' }, YA.LEVEL_NAMES[x.level - 1]), h('b', {}, `${x.rank}位（勝点${x.pts}）`)))));
       body.append(title('最近の試合'), ...w.results.slice(-10).reverse().map((r) => h('div', { class: 'pitem', style: 'cursor:default' }, h('span', { class: 'sub', style: 'width:68px' }, `${r.year}年目${r.week}週`), h('span', { class: 'nm grow' }, (r.kind ? r.kind + ' ' : '') + r.opp), h('b', { style: `color:${r.gf > r.ga ? '#1a9d57' : r.gf < r.ga ? '#d63a3a' : 'inherit'}` }, `${r.gf}-${r.ga}`))));
+    } else if (ui.mt === 'bteam') {
+      YA.bBlock(body);
     } else if (ui.mt === 'ach') {
       YA.achBlock(body);
     } else if (typeof YA.settingsBlock === 'function') {

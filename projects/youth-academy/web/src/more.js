@@ -40,6 +40,7 @@
       { k: 'summer', name: '夏の全国大会で優勝', done: (w.trophies || []).some((t) => t.name === '夏の全国大会') },
       { k: 'winter', name: '冬のカップ戦で優勝', done: (w.trophies || []).some((t) => t.name === '冬のカップ戦') },
       { k: 'nat10', name: '代表経験者を10人出す', cur: al.filter((a) => a.nat > 0).length, goal: 10 },
+      { k: 'u21', name: 'U-21代表を出す', note: '卒業生がU-21日本代表に選ばれる', done: al.some((a) => a.u21 > 0) },
       { k: 'full', name: 'フル代表を出す', note: '卒業生が日本代表に選ばれる', done: al.some((a) => a.status === 'pro' && a.nat > 0 && a.ovr >= 14) },
       { k: 'abroad', name: '卒業生が海外のクラブへ', done: al.some((a) => a.abroad) },
       { k: 'pro20', name: 'プロ入りした卒業生が20人', cur: al.filter((a) => a.status === 'pro').length, goal: 20 },
@@ -91,6 +92,14 @@
     if (p.form >= 1 || (p.state && p.state.k === 'peak')) return { line: '今、調子がいいです！', opts: [{ k: 'praise', label: '褒める' }, { k: 'push', label: 'さらに上を求める' }, { k: 'issue', label: '気を引き締める' }] };
     if (p.pers['教えの受け止め方'] === '構ってほしい') return { line: '監督、見てくれていますか？', opts: [{ k: 'praise', label: 'しっかり見ていると伝える' }, { k: 'listen', label: '話を聞く' }, { k: 'issue', label: '課題を伝える' }] };
     return { line: '何かお話ですか？', opts: [{ k: 'praise', label: '褒める' }, { k: 'issue', label: '課題を伝える' }, { k: 'listen', label: '悩みを聞く' }] };
+  };
+
+  // ---------- Bチームの指揮（決定30）：布陣・戦い方・起用方針。試合は結果だけ自動で回る ----------
+  YA.B_POLICY = [['best', '力の順'], ['young', '下級生を優先'], ['rest', '疲れの少ない順']];
+  YA.setBCtl = function (w, patch) {
+    w.bCtl = Object.assign({ form: '4-3-3', tactic: null, policy: 'best' }, w.bCtl || {}, patch);
+    if (!YA.FORMATIONS[w.bCtl.form]) w.bCtl.form = '4-3-3';
+    YA.pickLineup(w, 'B', w.bCtl.form); // Aの並びは触らない
   };
 
   // ---------- クラブ名・相手クラブ名の書き換え（決定52・54）----------

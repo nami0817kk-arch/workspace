@@ -208,6 +208,19 @@
         } }, '決める')));
     });
   };
+  // ---------- Bチームの指揮（決定30） ----------
+  YA.bBlock = function (body) {
+    const app = U().app;
+    const w = app.w;
+    const c = Object.assign({ form: '4-3-3', tactic: null, policy: 'best' }, w.bCtl || {});
+    const set = (p) => { YA.setBCtl(w, p); YA.saveWorld(true); rerender(); };
+    body.append(h('div', { class: 'h' }, 'Bチームの指揮'), h('div', { class: 'note' }, 'Bの試合は毎週、結果だけ自動で回ります。布陣・戦い方・誰を使うかをここで決めます（Aの並びは変わりません）。'));
+    body.append(h('div', { class: 'h', style: 'margin-top:8px' }, '布陣'), h('div', { class: 'row', style: 'gap:5px;flex-wrap:wrap;margin-top:3px' }, ...Object.keys(YA.FORMATIONS).map((f) => h('button', { class: 'btn sm' + (c.form === f ? ' on' : ''), onclick: () => set({ form: f }) }, f))));
+    body.append(h('div', { class: 'h', style: 'margin-top:8px' }, '戦い方'), h('div', { class: 'row', style: 'gap:5px;flex-wrap:wrap;margin-top:3px' }, h('button', { class: 'btn sm' + (!c.tactic ? ' on' : ''), onclick: () => set({ tactic: null }) }, 'Aと同じ'), ...Object.keys(YA.TACTICS).map((t) => h('button', { class: 'btn sm' + (c.tactic === t ? ' on' : ''), onclick: () => set({ tactic: t }) }, t))));
+    body.append(h('div', { class: 'h', style: 'margin-top:8px' }, '起用方針'), h('div', { class: 'row', style: 'gap:5px;flex-wrap:wrap;margin-top:3px' }, ...YA.B_POLICY.map(([k, n]) => h('button', { class: 'btn sm' + (c.policy === k ? ' on' : ''), onclick: () => set({ policy: k }) }, n))));
+    const rs = (w.resultsB || []).slice(-8).reverse();
+    body.append(h('div', { class: 'h', style: 'margin-top:8px' }, 'Bの最近の結果'), ...(rs.length ? rs.map((r) => h('div', { class: 'note', style: 'color:var(--ink)' }, `${r.year}年目${r.week}週　${r.gf}-${r.ga}　vs ${r.opp}`)) : [h('div', { class: 'note' }, 'まだ試合がありません')]));
+  };
   YA.nameBlock = function (body) {
     const app = U().app;
     const w = app.w;
