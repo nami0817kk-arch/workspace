@@ -68,13 +68,26 @@
     for (let i = 0; i < n; i++) genCand(w, r, 'sel');
     YA.noteTier(w, 1, `セレクションの応募が${n}人ありました。テストの内容を決めて、入れる子を選んでください（クラブ→スカウト）`);
   };
-  YA.openInternal = function (w) {
+  // 中3の練習参加（34週）：内部昇格の候補6人がA・Bの練習に混ざる。実際に動きを見られるので見えている度合いが上がる。36週に指導者の申し送りで残りが見える
+  YA.openInternal = function (w, junior) {
     const S = w.scouting;
-    if (S.intOpen) return;
+    if (S.intOpen) {
+      if (!junior) {
+        for (const c of S.cands) if (c.kind === 'int') {
+          c.seen = Math.min(3, c.seen + 1);
+          c.persSeen = true;
+        }
+        YA.noteTier(w, 2, 'U-15の指導者から、各候補の申し送り（性格など）が届きました');
+      }
+      return;
+    }
     S.intOpen = true;
     const r = YA.rngOf(w.seed * 41 + w.year * 19);
     for (let i = 0; i < 6; i++) genCand(w, r, 'int');
-    YA.noteTier(w, 1, 'U-15の指導者から、内部昇格の候補6人の申し送りが届きました（クラブ→スカウト）');
+    if (junior) {
+      for (const c of S.cands) if (c.kind === 'int') c.seen = Math.min(3, c.seen + 1);
+      YA.noteTier(w, 1, '中3の6人が練習に参加しました。内部昇格の候補として動きを見られます（クラブ→スカウト）');
+    } else YA.noteTier(w, 1, 'U-15の指導者から、内部昇格の候補6人の申し送りが届きました（クラブ→スカウト）');
   };
   YA.testDays = (w) => 2 + (YA.budget(w).scout >= 300 ? 1 : 0);
   YA.TESTS = [['紅白戦', '動きと判断が見える'], ['技術テスト', 'ボールの扱いが見える'], ['体力測定', '足の速さ・体力が見える'], ['面接', '性格と目指すものが見える']];
@@ -127,13 +140,15 @@
   YA.resolveOffers = function (w) {
     const r = YA.rngOf(w.seed * 43 + w.year * 23 + w.week);
     for (const c of w.scouting.cands) if (c.status === 'offered') {
-      const pr = clamp(0.5 + (w.club.rep - 50) / 120 - (c.rival ? 0.18 : 0) - (c.amb - 5) * 0.015, 0.12, 0.92);
+      const pr = clamp(0.5 + (w.club.rep - 50) / 120 - (c.rival && !c.rivalBeat ? 0.18 : 0) + (c.rivalBeat ? 0.06 : 0) - (c.amb - 5) * 0.015, 0.12, 0.92);
       if (r() < pr) {
+        if (c.rival) w.rivalLosses = (w.rivalLosses || 0) + 1;
         c.status = 'signed';
         YA.noteTier(w, 1, `${c.p.name}（${c.p.pos}）が入団を決めました！`);
       } else {
         c.status = 'declined';
-        YA.noteTier(w, 2, `${c.p.name}は${c.rival ? '他のクラブ' : '別の道'}を選びました`);
+        if (c.rival) w.rivalWins = (w.rivalWins || 0) + 1;
+        YA.noteTier(w, 2, `${c.p.name}は${c.rival ? YA.rivalOf(w).coach + '監督の' + YA.rivalOf(w).club : '別の道'}を選びました`);
       }
     }
   };
@@ -232,7 +247,12 @@
           contrib += share;
           YA.noteTier(w, 1, `卒業生の${a.name}が${a.club}へ${abroad ? '海外移籍' : '移籍'}（移籍金およそ${fee}万円）。連帯貢献金 +${share}万円がクラブに入ります`);
         }
-        if (a.ovr >= 14 && r() < 0.1) {
+        // U-21代表（決定16）：21歳以下で力のある卒業生。のちにフル代表の足がかり
+        if (a.age <= 21 && a.ovr >= 12.2 && r() < 0.22) {
+          a.u21 = (a.u21 || 0) + 1;
+          if (a.u21 === 1) YA.noteTier(w, 1, `卒業生の${a.name}がU-21日本代表に選ばれました`);
+        }
+        if (a.ovr >= 14 && r() < (a.u21 ? 0.14 : 0.1)) {
           a.nat = (a.nat || 0) + 1;
           YA.noteTier(w, 1, `卒業生の${a.name}が日本代表に初めて選ばれました！`);
         }
@@ -327,6 +347,8 @@
       w.forced = (w.forced || []).concat(sr.map((p) => ({ id: 'career', pid: p.id, week: w.week, year: w.year })));
     }
     if (s.t === 'selection') YA.openSelection(w);
+    if (YA.rivalWeek) YA.rivalWeek(w);
+    if (s.t === 'junior') YA.openInternal(w, true);
     if (s.t === 'internal') YA.openInternal(w);
     for (const p of Object.values(w.players)) {
       if (p.away > 0) p.away--;

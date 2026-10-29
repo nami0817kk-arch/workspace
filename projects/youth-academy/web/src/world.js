@@ -217,7 +217,7 @@
     for (const p of all) p.team = A.has(p.id) ? 'A' : 'B';
     // 布陣4-3-3の11人
     pickLineup(w, 'A', init ? '4-3-3' : w.formation);
-    pickLineup(w, 'B', '4-3-3');
+    pickLineup(w, 'B', (w.bCtl && w.bCtl.form) || '4-3-3');
   }
   const NEED = { '4-3-3': { GK: 1, DF: 4, MF: 3, FW: 3 }, '4-4-2': { GK: 1, DF: 4, MF: 4, FW: 2 }, '4-2-3-1': { GK: 1, DF: 4, MF: 5, FW: 1 }, '3-5-2': { GK: 1, DF: 3, MF: 5, FW: 2 }, '5-3-2': { GK: 1, DF: 5, MF: 3, FW: 2 } };
   function pickLineup(w, which, formation) {
@@ -228,7 +228,10 @@
     fm.forEach((s, i) => need[YA.posOfSlot(s, i)]++);
     const chosen = [];
     for (const pos of ['GK', 'DF', 'MF', 'FW']) {
-      let c = pool.filter((p) => p.pos === pos && healthy(p)).sort((a, b) => YA.ovr(b) - YA.ovr(a) - (b.fat - a.fat) * 0.01);
+      // Bチームの起用方針（決定30）：力の順／下級生を優先／疲れの少ない順
+      const pol = which === 'B' && w.bCtl ? w.bCtl.policy : 'best';
+      const key = (p) => YA.ovr(p) - (p.fat * 0.01) + (pol === 'young' ? (3 - p.grade) * 0.6 : 0) - (pol === 'rest' ? p.fat * 0.04 : 0);
+      let c = pool.filter((p) => p.pos === pos && healthy(p)).sort((a, b) => key(b) - key(a));
       if (pos === 'GK' && !c.length) c = pool.filter((p) => p.pos === 'GK').sort((a, b) => YA.ovr(b) - YA.ovr(a));
       chosen.push(...c.slice(0, need[pos]));
     }
@@ -349,7 +352,7 @@
       p.friends = (w.rel || []).filter((x) => x.k === 'friend' && (x.a === id || x.b === id)).map((x) => (x.a === id ? x.b : x.a));
       players[id] = p;
     }
-    return { id: 'me', name: w.clubName + (which === 'B' ? ' B' : ''), short: which === 'B' ? 'レガーレB' : 'レガーレ', color: '#1f6feb', isUser: true, players, lineup: JSON.parse(JSON.stringify(lineup)), bench: bench.slice(), tactic: w.tactic ? JSON.parse(JSON.stringify(w.tactic)) : Object.assign({ type: 'ポゼッション' }, YA.TACTICS['ポゼッション']), instr: {}, subsUsed: 0, windowsUsed: 0, formation: w.formation, prep: YA.analysisLevel ? YA.analysisLevel(w) : 0, coachTactic: w.coach ? w.coach.tactic : 10, disc: w.disc, tactRep: YA.tactRepOf(w) };
+    return { id: 'me', name: w.clubName + (which === 'B' ? ' B' : ''), short: which === 'B' ? 'レガーレB' : 'レガーレ', color: '#1f6feb', isUser: true, players, lineup: JSON.parse(JSON.stringify(lineup)), bench: bench.slice(), tactic: which === 'B' && w.bCtl && w.bCtl.tactic && YA.TACTICS[w.bCtl.tactic] ? Object.assign({ type: w.bCtl.tactic }, YA.TACTICS[w.bCtl.tactic]) : w.tactic ? JSON.parse(JSON.stringify(w.tactic)) : Object.assign({ type: 'ポゼッション' }, YA.TACTICS['ポゼッション']), instr: {}, subsUsed: 0, windowsUsed: 0, formation: w.formation, prep: YA.analysisLevel ? YA.analysisLevel(w) : 0, coachTactic: w.coach ? w.coach.tactic : 10, disc: w.disc, tactRep: YA.tactRepOf(w) };
   };
 
   // 相手（週ごとに決まる）。年とともに強くなる
@@ -844,6 +847,8 @@
     let g = 0;
     while (!m.finished && g++ < 2000) m.step();
     YA.applyMatch(w, m, 'B', o2, false);
+    (w.resultsB = w.resultsB || []).push({ year: w.year, week: w.week, opp: o2.name, gf: m.score.home, ga: m.score.away });
+    if (w.resultsB.length > 30) w.resultsB.shift();
     return { gf: m.score.home, ga: m.score.away, opp: o2.name };
   };
 

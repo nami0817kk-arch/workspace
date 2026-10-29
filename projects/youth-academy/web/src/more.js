@@ -40,6 +40,7 @@
       { k: 'summer', name: '夏の全国大会で優勝', done: (w.trophies || []).some((t) => t.name === '夏の全国大会') },
       { k: 'winter', name: '冬のカップ戦で優勝', done: (w.trophies || []).some((t) => t.name === '冬のカップ戦') },
       { k: 'nat10', name: '代表経験者を10人出す', cur: al.filter((a) => a.nat > 0).length, goal: 10 },
+      { k: 'u21', name: 'U-21代表を出す', note: '卒業生がU-21日本代表に選ばれる', done: al.some((a) => a.u21 > 0) },
       { k: 'full', name: 'フル代表を出す', note: '卒業生が日本代表に選ばれる', done: al.some((a) => a.status === 'pro' && a.nat > 0 && a.ovr >= 14) },
       { k: 'abroad', name: '卒業生が海外のクラブへ', done: al.some((a) => a.abroad) },
       { k: 'pro20', name: 'プロ入りした卒業生が20人', cur: al.filter((a) => a.status === 'pro').length, goal: 20 },
@@ -91,6 +92,80 @@
     if (p.form >= 1 || (p.state && p.state.k === 'peak')) return { line: '今、調子がいいです！', opts: [{ k: 'praise', label: '褒める' }, { k: 'push', label: 'さらに上を求める' }, { k: 'issue', label: '気を引き締める' }] };
     if (p.pers['教えの受け止め方'] === '構ってほしい') return { line: '監督、見てくれていますか？', opts: [{ k: 'praise', label: 'しっかり見ていると伝える' }, { k: 'listen', label: '話を聞く' }, { k: 'issue', label: '課題を伝える' }] };
     return { line: '何かお話ですか？', opts: [{ k: 'praise', label: '褒める' }, { k: 'issue', label: '課題を伝える' }, { k: 'listen', label: '悩みを聞く' }] };
+  };
+
+  // ---------- ライバル監督：同じ部でいちばん強いクラブの監督。候補の取り合いと、直接対決の予告・卒業生の再会 ----------
+  YA.rivalOf = function (w) {
+    const ts = (w.league ? w.league.teams : []).filter((t) => !t.me);
+    const best = ts.slice().sort((a, b) => b.lvl - a.lvl)[0];
+    return best ? { coach: best.coach.name.replace(/ (監督|コーチ)$/, ''), club: best.name, id: best.id } : { coach: '？', club: '他のクラブ', id: null };
+  };
+  YA.rivalLabel = (w, c) => `${YA.rivalOf(w).coach}監督（${YA.rivalOf(w).club}）も注目`;
+  // 15の手間（スカウト経費）で先に会いに行き、取り合いの不利を消す
+  YA.rivalFight = function (w, id) {
+    const c = w.scouting.cands.find((x) => x.id === id);
+    const b = YA.budget(w);
+    if (!c || !c.rival || c.rivalBeat) return { ok: false, msg: '対抗できません' };
+    if (b.scout - w.club.spent.scout < 15) return { ok: false, msg: 'スカウトの配分が足りません' };
+    w.club.spent.scout += 15;
+    c.rivalBeat = true;
+    return { ok: true, msg: `${YA.rivalOf(w).coach}監督より先に会いに行きました` };
+  };
+  // 毎年4週に、ライバルとの直接対決の節を知らせる。20週に卒業生が母校を訪ねる（再会）
+  YA.rivalWeek = function (w) {
+    const r = YA.rngOf(w.seed * 73 + w.year * 37 + w.week);
+    if (w.week === 4 && w.league) {
+      const rv = YA.rivalOf(w);
+      const ks = [];
+      w.league.rounds.forEach((rd, k) => { if (rd.some(([a, b]) => (a === 'me' && b === rv.id) || (b === 'me' && a === rv.id))) ks.push(k + 1); });
+      if (ks.length) YA.noteTier(w, 2, `今年のライバルは${rv.club}の${rv.coach}監督。直接対決は第${ks.join('節と第')}節です`);
+    }
+    if (w.week === 20) {
+      const c = w.alumni.filter((a) => a.status === 'pro' && !a.retired && a.ovr >= 11);
+      if (c.length) {
+        const a = r.pick(c);
+        for (const p of Object.values(w.players)) if (p.grade === 1) p.conf = Math.min(100, p.conf + 4);
+        YA.noteTier(w, 2, `卒業生の${a.name}（${a.club}）が母校を訪ね、後輩に話をしてくれた。高1の自信が少し上がった`);
+      }
+    }
+  };
+
+  // 足りなかった出来事：保護者の相談・選手同士のライバル意識
+  YA.EVENTS.push({
+    id: 'parent', name: '保護者の相談', weight: 0.6,
+    pick: (w, r) => { const c = Object.values(w.players).filter((p) => p.team === 'B' && p.mins < 200 && p.grade >= 2); return c.length ? r.pick(c) : null; },
+    text: (p) => `${p.num}番 ${p.name}の保護者から、「もう少し試合に出られないでしょうか」と連絡が来た。`,
+    opts: [
+      { label: '現状と課題を丁寧に説明する', kind: 'warm', extra: (w, p) => { p.unrest = Math.max(0, p.unrest - 0.5); } },
+      { label: '起用を約束する', kind: 'push', extra: (w, p) => { p.train.promise = true; YA.addTrust && YA.addTrust(w, -1, '保護者に起用を約束した'); } },
+      { label: '一律の方針だと断る', kind: 'firm', extra: (w, p) => { p.unrest += 1; w.disc = Math.min(100, (w.disc == null ? 60 : w.disc) + 1); } },
+    ],
+  });
+  YA.EVENTS.push({
+    id: 'rivalry', name: '同じ位置のライバル意識', weight: 0.6,
+    pick: (w, r) => {
+      const ps = Object.values(w.players).filter((p) => p.team === 'A' && p.grade <= 2);
+      const pair = [];
+      for (const p of ps) { const q = ps.find((x) => x.id !== p.id && x.pos === p.pos && Math.abs(YA.ovr(x) - YA.ovr(p)) < 0.5 && x.id > p.id); if (q) pair.push([p, q]); }
+      if (!pair.length) return null;
+      const [p, q] = r.pick(pair);
+      p._rv = q.id;
+      return p;
+    },
+    text: (p, w) => `${p.num}番 ${p.name}と${(w.players[p._rv] || {}).name || '同じ位置の仲間'}が、先発の座を争って火花を散らしている。`,
+    opts: [
+      { label: '競わせて伸ばす（全力でぶつかれ）', kind: 'push', extra: (w, p, r) => { const q = w.players[p._rv]; if (q) { p.conf = Math.min(100, p.conf + 3); q.conf = Math.min(100, q.conf + 3); if (r() < 0.25) { p.unrest += 1; q.unrest += 1; } } } },
+      { label: '互いの良さを認め合わせる', kind: 'warm', extra: (w, p) => { const q = w.players[p._rv]; if (q) { p.unrest = Math.max(0, p.unrest - 0.5); q.unrest = Math.max(0, q.unrest - 0.5); } } },
+      { label: '何も言わず見守る', kind: 'wait', extra: () => {} },
+    ],
+  });
+
+  // ---------- Bチームの指揮（決定30）：布陣・戦い方・起用方針。試合は結果だけ自動で回る ----------
+  YA.B_POLICY = [['best', '力の順'], ['young', '下級生を優先'], ['rest', '疲れの少ない順']];
+  YA.setBCtl = function (w, patch) {
+    w.bCtl = Object.assign({ form: '4-3-3', tactic: null, policy: 'best' }, w.bCtl || {}, patch);
+    if (!YA.FORMATIONS[w.bCtl.form]) w.bCtl.form = '4-3-3';
+    YA.pickLineup(w, 'B', w.bCtl.form); // Aの並びは触らない
   };
 
   // ---------- クラブ名・相手クラブ名の書き換え（決定52・54）----------
