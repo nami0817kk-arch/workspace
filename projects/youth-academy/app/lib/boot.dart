@@ -4,6 +4,6 @@ import 'dart:convert';
 /// ページ側の `/*__BOOT__*/` の位置に差し込む。
 String injectBoot(String html, Map<String, String> store) {
   // </script> を含む値でページが壊れないように、< をエスケープして渡す
-  final json = jsonEncode({'store': store}).replaceAll('<', r'<');
+  final json = jsonEncode({'store': store}).replaceAll('<', String.fromCharCode(92) + 'u003c');
   return html.replaceFirst('/*__BOOT__*/', 'window.__BOOT=$json;');
 }
