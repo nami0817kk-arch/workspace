@@ -62,7 +62,7 @@
     FW: ['フィニッシュ', 'ドリブル', 'スピード', 'オフザボール', '加速', 'ヘディング'],
   };
   YA.ovr = function (p) {
-    const a = POS_ABS[p.pos];
+    const a = YA.POS_ABS15[p.main] || POS_ABS[p.pos];
     return a.reduce((s, n) => s + p.ab[n], 0) / a.length;
   };
   const abSum = (p) => (p.pos === 'GK' ? YA.AB_GK : YA.AB_FIELD).reduce((s, n) => s + p.ab[n], 0);
@@ -91,13 +91,18 @@
     }
     if (used) used.add(name);
     const lvl = 7.4 + grade * 0.8 + quality * 0.9;
-    const focus = POS_ABS[pos];
+    // pos は15個のうちの1つ。素質は3割で隣のポジション向き（登録とずれている＝あとで気づく）
+    const grp = YA.GROUP[pos];
+    const NEAR = { CB: ['DM', 'LB'], LB: ['LWB', 'CB'], RB: ['RWB', 'CB'], LWB: ['LB', 'LM'], RWB: ['RB', 'RM'], DM: ['CM', 'CB'], CM: ['DM', 'AM'], LM: ['LW', 'CM'], RM: ['RW', 'CM'], AM: ['CM', 'SS'], LW: ['LM', 'AM'], RW: ['RM', 'AM'], SS: ['AM', 'ST'], ST: ['SS', 'LW'] };
+    const trueP = pos === 'GK' ? pos : rng() < 0.35 ? NEAR[pos][rng.int(0, 1)] : pos;
+    const shifted = trueP !== pos;
+    const focus = YA.POS_ABS15[trueP];
     const boost = {};
-    for (let k = 0; k < 3; k++) boost[rng.pick(focus)] = rng.int(1, 4);
+    for (let k = 0; k < (shifted ? 4 : 3); k++) boost[rng.pick(focus)] = shifted ? rng.int(2, 5) : rng.int(1, 4);
     for (const n of YA.AB_MENTAL.concat(YA.AB_PHYS, YA.AB_TECH)) if (!boost[n] && rng.chance(0.12)) boost[n] = rng.pick([-2, -1, 1, 2]);
     const weak = rng.pick(YA.AB_FIELD);
     boost[weak] = (boost[weak] || 0) - 2;
-    const p = YA.mkPlayer(rng, { id, num: 0, name, pos, lvl, boost, traits: [], pers: {}, height: 164 + rng.int(0, 22) + (pos === 'GK' ? 5 : pos === 'DF' ? 2 : 0) - (pos === 'FW' ? 0 : 0) });
+    const p = YA.mkPlayer(rng, { id, num: 0, name, pos: grp, main: pos, lvl, boost, traits: [], pers: {}, height: 164 + rng.int(0, 22) + (grp === 'GK' ? 5 : pos === 'CB' ? 3 : 0) });
     // 性格
     for (const g of Object.keys(PERS_W)) {
       const ent = Object.entries(PERS_W[g]);
@@ -150,7 +155,9 @@
 
   // 1学年12人（GK1・DF4・MF4・FW3）
   function genGrade(rng, w, grade, used) {
-    const poss = ['GK', 'DF', 'DF', 'DF', 'DF', 'MF', 'MF', 'MF', 'MF', 'FW', 'FW', 'FW'];
+    const NEARP = { CB: ['DM', 'LB'], LB: ['LWB', 'CB'], RB: ['RWB', 'CB'], DM: ['CM', 'CB'], CM: ['DM', 'LM'], AM: ['SS', 'RM'], LW: ['LM', 'SS'], RW: ['RM', 'SS'], ST: ['SS', 'LW'] };
+    const base15 = ['GK', 'CB', 'CB', 'LB', 'RB', 'DM', 'CM', 'CM', 'AM', 'LW', 'RW', 'ST'];
+    const poss = base15.map((q) => (q !== 'GK' && rng.chance(0.3) ? NEARP[q][rng.int(0, 1)] : q));
     for (const pos of poss) {
       const id = 'p' + ++w.nextId;
       const q = clamp(Math.round((rng() + rng() + rng() - 1.5) * 2.2), -2, 2);
@@ -166,7 +173,7 @@
     numbers(w);
     autoTeams(w, true);
     w.plan = defaultPlan();
-    w.v = 2;
+    w.v = 3;
     w.coach = YA.newCoach();
     w.scouting = YA.newScouting();
     w.disc = 60;
@@ -210,7 +217,8 @@
     if (!YA.FORMATIONS[formation]) formation = '4-3-3';
     const pool = Object.values(w.players).filter((p) => p.team === which);
     const fm = YA.FORMATIONS[formation];
-    const need = Object.assign({}, NEED[formation] || NEED['4-3-3']);
+    const need = { GK: 0, DF: 0, MF: 0, FW: 0 };
+    fm.forEach((s, i) => need[YA.posOfSlot(s, i)]++);
     const chosen = [];
     for (const pos of ['GK', 'DF', 'MF', 'FW']) {
       let c = pool.filter((p) => p.pos === pos && healthy(p)).sort((a, b) => YA.ovr(b) - YA.ovr(a) - (b.fat - a.fat) * 0.01);
@@ -223,15 +231,21 @@
       chosen.push(...rest.slice(0, 11 - chosen.length));
     }
     // 布陣の各枠へ、位置の近い順に割り当てる
-    const slots = fm.map((s, i) => ({ i, s, pos: YA.posOfSlot(s, i) }));
+    const slots = fm.map((s, i) => ({ i, s, pos: YA.pos15OfSlot(s, i) }));
     const lineup = new Array(11);
     const left = chosen.slice();
-    const rolesOf = (pos) => YA.ROLES[pos][0];
     for (const sl of slots) {
-      let k = left.findIndex((p) => p.pos === sl.pos);
+      // その位置の適性が一番高い選手を置く（GKはGKだけ）
+      let k = -1;
+      let bv = -1e9;
+      left.forEach((p, j) => {
+        if ((p.pos === 'GK') !== (sl.pos === 'GK')) return;
+        const v = (p.apt ? p.apt[sl.pos] : 10) + (p.main === sl.pos ? 0.4 : 0);
+        if (v > bv) { bv = v; k = j; }
+      });
       if (k < 0) k = 0;
       const p = left.splice(k, 1)[0];
-      lineup[sl.i] = { pid: p.id, x: sl.s.x, y: sl.s.y, role: rolesOf(sl.pos) };
+      lineup[sl.i] = { pid: p.id, x: sl.s.x, y: sl.s.y, role: YA.defaultRole(sl.pos) };
     }
     const bench = pool.filter((p) => !lineup.some((l) => l.pid === p.id)).sort((a, b) => YA.ovr(b) - YA.ovr(a)).map((p) => p.id);
     if (which === 'A') {
@@ -257,7 +271,14 @@
       const pos = YA.posOfSlot(s, i);
       let k = bench.findIndex((id) => w.players[id] && healthy(w.players[id]) && (pos === 'GK' ? w.players[id].pos === 'GK' : w.players[id].pos !== 'GK'));
       if (pos !== 'GK') {
-        const k2 = bench.findIndex((id) => w.players[id] && healthy(w.players[id]) && w.players[id].pos === pos);
+        // その位置の適性が一番高いベンチの選手
+        const p15 = YA.pos15OfSlot(s, i);
+        let k2 = -1;
+        let bv2 = -1;
+        bench.forEach((id, kk) => {
+          const q = w.players[id];
+          if (q && healthy(q) && q.pos !== 'GK' && q.apt && q.apt[p15] > bv2) { bv2 = q.apt[p15]; k2 = kk; }
+        });
         if (k2 >= 0) k = k2;
       }
       if (k < 0) return;
@@ -394,6 +415,7 @@
           noteTier(w, 2, p.num + '番 ' + p.name + ' が特性「' + tr + '」を身につけた', p.id);
         }
       }
+      YA.refreshApt(p);
       // 自信・調子は少しずつ戻る
       p.form = Math.round((p.form * 0.6) * 10) / 10;
       p.conf = clamp(p.conf + (p.conf < 55 ? 2.2 : -0.8), 0, 100);
@@ -612,7 +634,7 @@
   }
   function newcomer(w, rng, grade) {
     const used = new Set(Object.values(w.players).map((p) => p.name));
-    const pos = rng.pick(['DF', 'MF', 'MF', 'FW']);
+    const pos = rng.pick(['CB', 'LB', 'RB', 'DM', 'CM', 'CM', 'AM', 'LW', 'RW', 'ST']);
     const id = 'p' + ++w.nextId;
     const p = YA.genPlayer(rng, id, grade || 1, pos, rng.int(-1, 1), used);
     p.team = 'B';
@@ -630,6 +652,11 @@
       if (!p) continue;
       const mm = p.st ? p.st.minutes : 0;
       p.mins += mm;
+      const s15 = team.startSlot && team.startSlot[id];
+      if (s15 && mm > 0) {
+        p.fam = p.fam || {};
+        p.fam[s15] = Math.min(14, (p.fam[s15] || 0) + 1);
+      }
       if (which === 'A') p.minsA = (p.minsA || 0) + mm;
       p._weekMins = (p._weekMins || 0) + mm;
       if (mm > 0) {
@@ -805,7 +832,7 @@
     if (fatigued > 8) plan.days[4] = { menu: '回復', int: 'normal' };
     for (const p of Object.values(w.players)) {
       const weak = abList(p).filter((n) => p.ab[n] < p.ab && 0).length;
-      const cand = (p.pos === 'GK' ? YA.AB_GK : POS_ABS[p.pos]).slice().sort((a, b) => p.ab[a] - p.ab[b]);
+      const cand = (p.pos === 'GK' ? YA.AB_GK : YA.POS_ABS15[p.main]).slice().sort((a, b) => p.ab[a] - p.ab[b]);
       p.train.focus = cand[0];
       p.rest = p.fat > 70 ? 'rest' : p.fat > 55 ? 'light' : null;
     }

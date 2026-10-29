@@ -33,7 +33,7 @@
 
   // 調子・自信・疲れをまとめた補正
   function cond(p, m) {
-    let c = 1 + p.form * 0.035 + (p.conf - 50) / 400 - (Math.max(0, 60 - p.stam) / 60) * (anyPers(p, '粘り強い') ? 0.15 : 0.3) - (p.adapt > 0 ? 0.08 : 0);
+    let c = 1 + p.form * 0.035 + (p.conf - 50) / 400 - (Math.max(0, 60 - p.stam) / 60) * (anyPers(p, '粘り強い') ? 0.15 : 0.3) - (p.adapt > 0 ? 0.08 : 0) - (p._pen || 0);
     return clamp(c, 0.6, 1.3);
   }
   const eff = (p, n, m) => p.ab[n] * cond(p, m);
@@ -75,8 +75,21 @@
         t.windowsUsed = 0;
         t.instr = {};
         t.onPitch = new Set(t.lineup.map((s) => s.pid));
+        t.startSlot = {};
+        t.lineup.forEach((s, i) => (t.startSlot[s.pid] = YA.pos15OfSlot(s, i)));
       }
       this.keyMinutes = this._pickMinutes();
+      this._refreshPen();
+    }
+    // 置いた場所での力の落ち方（適性・利き足）を、全員に付け直す
+    _refreshPen() {
+      for (const t of [this.home, this.away]) {
+        for (const p of Object.values(t.players)) p._pen = 0;
+        t.lineup.forEach((s, i) => {
+          const p = t.players[s.pid];
+          if (p) p._pen = YA.slotPenalty(p, YA.pos15OfSlot(s, i));
+        });
+      }
     }
 
     _pickMinutes() {
@@ -199,10 +212,11 @@
     roleFit(t, i) {
       const s = t.lineup[i];
       const p = t.players[s.pid];
-      const tr = YA.ROLE_TRAITS[s.role] || [];
-      const hit = tr.filter((x) => has(p, x)).length;
+      const rd = YA.ROLE_DEF[s.role];
+      if (!rd) return 0;
+      const hit = rd.traits.filter((x) => has(p, x)).length;
       if (hit) return 1;
-      const abs = YA.ROLE_ABS[s.role];
+      const abs = rd.abs;
       if (!abs) return 0;
       const avg = abs.reduce((a, n) => a + p.ab[n], 0) / abs.length;
       return avg < 8.5 ? -1 : 0;
@@ -234,13 +248,19 @@
       for (const x of on) {
         for (const t of x.p.traits) if (add[t]) w[add[t][0]] += add[t][1];
         const role = att.lineup[x.i].role;
-        const rb = { 上がる: ['cross', 0.3], 裏を狙う: ['through', 0.3], 飛び出す: ['through', 0.2], 配る: ['through', 0.25], 運ぶ: ['dribble', 0.2], ゴール前: ['cross', 0.2], 潰す: ['steal', 0.15], ポスト: ['onetwo', 0.2], 下がって受ける: ['onetwo', 0.2] }[role];
-        if (rb) w[rb[0]] += rb[1];
+        const rd = YA.ROLE_DEF[role];
+        // 役割が合っていると効きが強く、合っていないと弱い
+        const fitK = this.roleFit(att, x.i) > 0 ? 1.25 : this.roleFit(att, x.i) < 0 ? 0.6 : 1;
+        if (rd) for (const k of Object.keys(rd.boost)) w[k] += rd.boost[k] * fitK;
         const ins = this.instr(att, x.p);
         if (ins.dribble) w.dribble += 0.5;
         if (ins.shoot) w.longshot += 0.5;
       }
-      // 攻める方向の指定で左右を決める。ここでは重みだけ（左右は場面の中で）
+      // 守る側の役割（アンカー・カバーなど）で、相手の場面が出にくくなる
+      for (const x of this.onPitch(def)) {
+        const rd = YA.ROLE_DEF[def.lineup[x.i].role];
+        if (rd) for (const k of Object.keys(rd.deny)) w[k] *= 1 - rd.deny[k];
+      }
       return w;
     }
 
@@ -263,7 +283,10 @@
       return this.rng.weighted(cands, (x) => {
         let w = Math.pow(effAvg(x.p, abs, this) / 10, 2.2);
         for (const t of traits || []) if (has(x.p, t)) w *= 2.1;
-        if (roles && roles.indexOf(att.lineup[x.i].role) >= 0) w *= 1.6;
+        if (roles) {
+          const rd = YA.ROLE_DEF[att.lineup[x.i].role];
+          if (rd && rd.tags.some((tg) => roles.indexOf(tg) >= 0)) w *= this.roleFit(att, x.i) < 0 ? 1.2 : 1.6;
+        }
         const ins = this.instr(att, x.p);
         if (ins.back) w *= 0.2;
         if (ins.dribble && abs.indexOf('ドリブル') >= 0) w *= 2.5;
@@ -460,8 +483,8 @@
     // 裏への抜け出し
     _through(sc, att, def) {
       const rng = this.rng;
-      const passer = this.pickActor(att, ['MF', 'FW'], ['パス', '視野', 'テクニック'], ['スルーパス', 'ひらめき'], [], sc, ['配る']);
-      const runner = this.pickActor(att, ['FW', 'MF'], ['オフザボール', '加速', 'スピード'], ['裏への抜け出し'], [passer.id], sc, ['裏を狙う', '飛び出す']);
+      const passer = this.pickActor(att, ['MF', 'FW'], ['パス', '視野', 'テクニック'], ['スルーパス', 'ひらめき'], [], sc, ['pass']);
+      const runner = this.pickActor(att, ['FW', 'MF'], ['オフザボール', '加速', 'スピード'], ['裏への抜け出し'], [passer.id], sc, ['run']);
       const dl = this.defLineY(def);
       const d1 = this.pickDefender(def, 'L', sc);
       const d2 = this.pickDefender(def, 'R', sc);
@@ -509,7 +532,7 @@
         return;
       }
       // 抜け出して1対1
-      const Fq = effAvg(runner, ['フィニッシュ', '冷静さ', '判断'], this) + (rr === 'ゴール前' ? 1 : 0);
+      const Fq = effAvg(runner, ['フィニッシュ', '冷静さ', '判断'], this) + ((YA.ROLE_DEF[rr] && YA.ROLE_DEF[rr].tags.indexOf('finish') >= 0) ? 1 : 0);
       const loop = this.traitBonus(sc, runner, 'ループシュート', 1.5, '前に出たGKの頭上を狙った');
       const res = this.shot(sc, att, def, runner, Fq + loop, 1.5, 'through', { oneOnOne: true });
       this.finish(sc, att, def, res, runner, passer);
@@ -532,8 +555,8 @@
     _cross(sc, att, def) {
       const rng = this.rng;
       const left = rng() < 0.5 - (att.tactic.dir || 0) * 0.3;
-      const crosser = this.pickActor(att, ['DF', 'MF', 'FW'], ['クロス', 'ドリブル', 'スタミナ'], ['アーリークロス', 'オーバーラップ'], [], sc, ['上がる']);
-      const header = this.pickActor(att, ['FW', 'MF', 'DF'], ['ヘディング', 'ジャンプ', 'ポジショニング'], ['ヘディングシュート', 'ニアへの飛び込み'], [crosser.id], sc, ['ゴール前']);
+      const crosser = this.pickActor(att, ['DF', 'MF', 'FW'], ['クロス', 'ドリブル', 'スタミナ'], ['アーリークロス', 'オーバーラップ'], [], sc, ['cross']);
+      const header = this.pickActor(att, ['FW', 'MF', 'DF'], ['ヘディング', 'ジャンプ', 'ポジショニング'], ['ヘディングシュート', 'ニアへの飛び込み'], [crosser.id], sc, ['finish']);
       const dEnd = this.pickDefender(def, 'C', sc);
       sc.actors = { crosser: crosser.id, header: header.id };
       sc.defs = [dEnd.id];
@@ -575,12 +598,17 @@
     // ドリブル突破（カットイン／縦への突破）
     _dribble(sc, att, def) {
       const rng = this.rng;
-      const d = this.pickActor(att, ['FW', 'MF'], ['ドリブル', 'テクニック', 'スピード', 'バランス'], ['カットイン', '縦への突破'], [], sc, ['運ぶ']);
+      const d = this.pickActor(att, ['FW', 'MF'], ['ドリブル', 'テクニック', 'スピード', 'バランス'], ['カットイン', '縦への突破'], [], sc, ['dribble', 'carry']);
       const left = this.pos(att, d)[0] < 34;
       const df = this.pickDefender(def, left ? 'L' : 'R', sc);
       sc.actors = { dribbler: d.id };
       sc.defs = [df.id];
-      const cut = has(d, 'カットイン') && (!has(d, '縦への突破') || rng() < 0.55);
+      const si = att.lineup.findIndex((s) => s.pid === d.id);
+      const p15 = si >= 0 ? YA.pos15OfSlot(att.lineup[si], si) : null;
+      const inverted = !!p15 && ['LW', 'RW', 'LM', 'RM'].indexOf(p15) >= 0 && d.foot && d.foot !== 'B' && (d.foot === 'L') !== (YA.SIDE[p15] === 'L');
+      const roleCut = si >= 0 && (att.lineup[si].role === 'カットイン' || att.lineup[si].role === '内に絞る');
+      if (inverted) this._fx(sc, d, 'trait', '逆足のウイング', '利き足と逆の側から、中へ切れ込んだ');
+      const cut = (has(d, 'カットイン') && (!has(d, '縦への突破') || rng() < 0.55)) || ((inverted || roleCut) && rng() < 0.55);
       let Q = effAvg(d, ['ドリブル', 'テクニック', '敏しょう性', 'バランス'], this);
       Q += cut ? this.traitBonus(sc, d, 'カットイン', 3, '中へ切れ込んだ') : this.traitBonus(sc, d, '縦への突破', 3, '縦に仕掛けて抜き去った');
       Q += this.persMod(sc, att, d, 'duel') + (this.instr(att, d).dribble ? 1.2 : 0);
@@ -759,8 +787,8 @@
     _counter(sc, att, def) {
       const rng = this.rng;
       const c = this.pickActor(att, ['MF', 'FW'], ['ドリブル', 'スピード', '判断', '加速'], ['ボールを運ぶ', '縦への突破', '裏への抜け出し'], [], sc, ['運ぶ', '裏を狙う']);
-      const f = this.pickActor(att, ['FW', 'MF'], ['フィニッシュ', 'オフザボール', 'スピード'], ['裏への抜け出し', 'ニアへの飛び込み'], [c.id], sc, ['裏を狙う', 'ゴール前']);
-      const reb = this.pickActor(att, ['MF', 'DF'], ['タックル', '予測', 'ポジショニング'], ['ボール奪取', '読みのインターセプト', '即時奪回'], [c.id, f.id], sc, ['潰す']);
+      const f = this.pickActor(att, ['FW', 'MF'], ['フィニッシュ', 'オフザボール', 'スピード'], ['裏への抜け出し', 'ニアへの飛び込み'], [c.id], sc, ['run', 'finish']);
+      const reb = this.pickActor(att, ['MF', 'DF'], ['タックル', '予測', 'ポジショニング'], ['ボール奪取', '読みのインターセプト', '即時奪回'], [c.id, f.id], sc, ['press']);
       this.traitBonus(sc, reb, 'ボール奪取', 0, 'ボールを奪い取った');
       this.traitBonus(sc, reb, '読みのインターセプト', 0, '縦パスを読んでカット');
       this.traitBonus(sc, reb, '即時奪回', 0, '失ってすぐ奪い返した');
@@ -809,8 +837,8 @@
     // ワンツー突破
     _onetwo(sc, att, def) {
       const rng = this.rng;
-      const a = this.pickActor(att, ['MF', 'FW'], ['パス', 'ドリブル', 'オフザボール'], ['ワンツー', 'ひらめき'], [], sc, ['飛び出す']);
-      const b = this.pickActor(att, ['FW', 'MF'], ['ファーストタッチ', 'パス', 'テクニック'], ['ポストプレー', '下がって受ける', 'タメを作る', 'ワンツー'], [a.id], sc, ['ポスト', '下がって受ける']);
+      const a = this.pickActor(att, ['MF', 'FW'], ['パス', 'ドリブル', 'オフザボール'], ['ワンツー', 'ひらめき'], [], sc, ['run', 'pass']);
+      const b = this.pickActor(att, ['FW', 'MF'], ['ファーストタッチ', 'パス', 'テクニック'], ['ポストプレー', '下がって受ける', 'タメを作る', 'ワンツー'], [a.id], sc, ['post']);
       const d1 = this.pickDefender(def, 'C', sc);
       const d2 = this.pickDefender(def, 'C', sc);
       const gkp = this.gk(def);
@@ -847,8 +875,8 @@
     // 高い位置での奪取からのショートカウンター
     _steal(sc, att, def) {
       const rng = this.rng;
-      const p = this.pickActor(att, ['FW', 'MF'], ['タックル', '運動量', '予測', 'ポジショニング'], ['前線からの守備', '即時奪回', 'ボール奪取'], [], sc, ['潰す']);
-      const f = this.pickActor(att, ['FW', 'MF'], ['フィニッシュ', 'オフザボール'], [], [p.id], sc, ['ゴール前']);
+      const p = this.pickActor(att, ['FW', 'MF'], ['タックル', '運動量', '予測', 'ポジショニング'], ['前線からの守備', '即時奪回', 'ボール奪取'], [], sc, ['press']);
+      const f = this.pickActor(att, ['FW', 'MF'], ['フィニッシュ', 'オフザボール'], [], [p.id], sc, ['finish']);
       const victim = this.pickDefender(def, 'C', sc);
       const gkp = this.gk(def);
       sc.actors = { presser: p.id, finisher: f.id };
@@ -1031,8 +1059,8 @@
       t.players[inPid].stam = 100;
       t.subsUsed++;
       // 役割は新しい選手に合う初期へ
-      const pos = slotPos(i, t.lineup[i]);
-      if (YA.ROLES[pos].indexOf(t.lineup[i].role) < 0) t.lineup[i].role = YA.ROLES[pos][0];
+      YA.fixSlotRole(t.lineup[i], i);
+      this._refreshPen();
       // 出番がなくて不満だった子
       this.log.push({ minute: this.min, text: '交代：' + t.players[outPid].num + '番 ' + t.players[outPid].name.split(' ')[0] + ' → ' + t.players[inPid].num + '番 ' + t.players[inPid].name.split(' ')[0], kind: 'sub' });
       return { ok: true };
@@ -1049,13 +1077,14 @@
     moveSlot(t, i, x, y) {
       t.lineup[i].x = clamp(x, 0.04, 0.96);
       t.lineup[i].y = clamp(y, 0.02, 0.96);
-      const pos = slotPos(i, t.lineup[i]);
-      if (YA.ROLES[pos].indexOf(t.lineup[i].role) < 0) t.lineup[i].role = YA.ROLES[pos][0];
+      YA.fixSlotRole(t.lineup[i], i);
+      this._refreshPen();
     }
     swapSlots(t, i, j) {
       const a = t.lineup[i].pid;
       t.lineup[i].pid = t.lineup[j].pid;
       t.lineup[j].pid = a;
+      this._refreshPen();
     }
     setTactic(t, patch) {
       Object.assign(t.tactic, patch);

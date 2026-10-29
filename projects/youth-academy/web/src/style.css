@@ -35,7 +35,7 @@ button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:poin
 .chip.pers{background:#dbe9ff;color:#134a9e;border:1px solid #a8c6f5}
 .chip.instr{background:#ecdcff;color:#5a2a9a;border:1px solid #c8a8f2}
 .chip.gray{background:#eef2f8;color:var(--sub);border:1px solid var(--line)}
-.pos{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;color:#fff;font-weight:900;font-size:10px;box-shadow:0 1px 0 rgba(0,0,0,.25)}
+.pos{display:inline-flex;align-items:center;justify-content:center;min-width:26px;height:20px;padding:0 5px;border-radius:10px;color:#fff;font-weight:900;font-size:9.5px;white-space:nowrap;box-shadow:0 1px 0 rgba(0,0,0,.25)}
 .pos.GK{background:var(--gk)}.pos.DF{background:var(--df)}.pos.MF{background:var(--mf)}.pos.FW{background:var(--fw)}
 .h{font-weight:900;color:var(--navy);font-size:13px}
 .sub{color:var(--sub)}
@@ -141,3 +141,12 @@ button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:poin
 .insight.bad{background:#ffe9e9;border-left-color:var(--red)}
 .big-note{padding:24px;text-align:center;color:var(--sub);line-height:1.8}
 .hidden{display:none!important}
+
+.rolecard{display:flex;align-items:center;gap:8px;width:100%;text-align:left;padding:7px 9px;border-radius:10px;border:1.5px solid var(--line);background:#f5f8fd;margin-bottom:4px}
+.rolecard.on{border-color:var(--blue);background:#e6f0ff;box-shadow:inset 0 -2px 0 var(--blue)}
+.rolecard b{font-size:12.5px;color:var(--navy)}
+.rolecard span.d{font-size:10.5px;color:var(--sub);line-height:1.35}
+.aptrow{display:flex;gap:4px;flex-wrap:wrap}
+.aptchip{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border-radius:9px;background:#eef2f8;border:1px solid var(--line);font-size:10.5px;font-weight:800;color:var(--navy)}
+.aptchip.cur{background:#fff1b8;border-color:#f0cf55}
+.aptchip.best{background:#d9f5e5;border-color:#9fdcb8}

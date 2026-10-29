@@ -13,7 +13,7 @@
 
   // ---------- スカウト ----------
   const POS_ABS = { GK: YA.AB_GK, DF: ['タックル', 'マーク', 'ポジショニング', '予測', 'ヘディング', '強さ'], MF: ['パス', '視野', '判断', 'ドリブル', '運動量', 'テクニック'], FW: ['フィニッシュ', 'ドリブル', 'スピード', 'オフザボール', '加速', 'ヘディング'] };
-  YA.ovrAt = (p, pos) => POS_ABS[pos].reduce((s, n) => s + p.ab[n], 0) / POS_ABS[pos].length;
+  YA.ovrAt = (p, pos) => YA.POS_ABS15[pos].reduce((s, n) => s + p.ab[n], 0) / YA.POS_ABS15[pos].length;
   YA.newScouting = () => ({ cands: [], tests: [], testsDone: false, selOpen: false, intOpen: false, nextId: 0 });
   const eyeOf = (w) => clamp((YA.staffAb(w, 'スカウト') + (w.coach ? w.coach.eye : 8)) / 2, 3, 18);
   YA.eyeLevel = eyeOf;
@@ -22,7 +22,7 @@
 
   function genCand(w, rng, kind) {
     const S = w.scouting;
-    const pos = rng.pick(['GK', 'DF', 'DF', 'DF', 'MF', 'MF', 'MF', 'FW', 'FW']);
+    const pos = rng.pick(['GK', 'CB', 'CB', 'LB', 'RB', 'DM', 'CM', 'CM', 'AM', 'LM', 'RM', 'LW', 'RW', 'SS', 'ST', 'ST']);
     const used = new Set(Object.values(w.players).map((p) => p.name));
     const q = clamp(rng.int(-2, 2) * 0.8 + (kind === 'scout' ? (eyeOf(w) - 10) * 0.08 : 0) + (kind === 'int' ? 0.2 : 0), -2, 2.4);
     const id = 'c' + ++S.nextId + '_' + w.year;
@@ -132,7 +132,7 @@
     const room = p.pot - YA.abSum(p);
     const st = clamp(Math.round(room / 45), 0, 5);
     const sw = c.seen >= 3 ? 0 : c.seen >= 1 ? 1 : 2;
-    return { ovr: [Math.round(lo * 10) / 10, Math.round((lo + width) * 10) / 10], stars: [clamp(st - sw, 0, 5), clamp(st + sw, 0, 5)], traits: c.seen >= 1 ? p.traits : null, pers: c.persSeen ? p.pers : null, height: p.height, pos: p.pos, name: p.name, kind: c.kind };
+    return { ovr: [Math.round(lo * 10) / 10, Math.round((lo + width) * 10) / 10], stars: [clamp(st - sw, 0, 5), clamp(st + sw, 0, 5)], traits: c.seen >= 1 ? p.traits : null, pers: c.persSeen ? p.pers : null, height: p.height, pos: p.pos, label: YA.POS_LABEL[p.main], name: p.name, kind: c.kind };
   };
 
   // 入団（3月）：決まった子を学年1の選手にする。足りない分は一般入団で埋める
@@ -165,7 +165,8 @@
       while (have[pos] < want[pos] && n < 12) {
         const id = 'p' + ++w.nextId;
         const q = clamp(Math.round((rng() + rng() + rng() - 1.5) * 2), -2, 2);
-        const p = YA.genPlayer(rng, id, 1, pos, q, names);
+        const G15 = { GK: ['GK'], DF: ['CB', 'CB', 'LB', 'RB'], MF: ['DM', 'CM', 'CM', 'AM'], FW: ['LW', 'RW', 'ST'] }[pos];
+        const p = YA.genPlayer(rng, id, 1, G15[rng.int(0, G15.length - 1)], q, names);
         p.hist = [{ y: w.year, w: 40, t: '一般入団' }];
         w.players[id] = p;
         have[pos]++;
@@ -244,29 +245,24 @@
   };
 
   // ---------- ポジション変更（決定31）----------
-  YA.bestPosOf = function (p) {
-    if (p.pos === 'GK' && p.ab['反応'] >= 8) return 'GK';
-    let best = null;
-    let bv = -1;
-    for (const pos of ['DF', 'MF', 'FW']) {
-      const v = YA.ovrAt(p, pos) + (((p.id.charCodeAt(p.id.length - 1) + pos.charCodeAt(0)) % 7) - 3) * 0.12;
-      if (v > bv) { bv = v; best = pos; }
-    }
-    return best;
-  };
+  YA.bestPosOf = (p) => p.best || p.main;
   YA.changePos = function (w, pid, pos) {
     const p = w.players[pid];
-    if (p.pos === pos) return { ok: false, msg: 'すでにそのポジションです' };
+    if (p.main === pos) return { ok: false, msg: 'すでにそのポジションです' };
     if (p.pos === 'GK' || pos === 'GK') return { ok: false, msg: 'GKとの行き来は、この版ではできません' };
-    const r = YA.rngOf(w.seed + w.week * 3 + p.num);
+    const r = YA.rngOf(w.seed + w.week * 3 + p.num + YA.hash(pos));
     const stub = p.pers['教えの受け止め方'] === '頑固' ? 0.55 : p.pers['教えの受け止め方'] === '反骨心' ? 0.35 : 0.08;
     if (r() < stub) { p.conf = clamp(p.conf - 3, 0, 100); return { ok: false, msg: `${p.name}は納得せず、「今のポジションでやりたい」と断った` }; }
-    const best = YA.bestPosOf(p);
-    p.pos = pos;
+    const best = p.best;
+    const L = YA.POS_LABEL;
+    p.main = pos;
+    p.pos = YA.GROUP[pos];
     p.adapt = 12;
-    p.hist.unshift({ y: w.year, w: w.week, t: `ポジション変更（${pos}）` });
-    if (pos === best) { p.spurt = Math.max(p.spurt, 5); return { ok: true, msg: `${pos}に変更。しっくりきているようだ（向いていたポジション）。慣れるまで約12週` }; }
-    return { ok: true, msg: `${pos}に変更しました。慣れるまで約12週は力が落ちます` };
+    p.hist.unshift({ y: w.year, w: w.week, t: `ポジション変更（${L[pos]}）` });
+    // いまの並びに入っているなら、新しいポジションの役割に直す
+    for (const k of ['lineupA', 'lineupB']) w[k].forEach((sl, i) => { if (sl.pid === pid) YA.fixSlotRole(sl, i); });
+    if (pos === best) { p.spurt = Math.max(p.spurt, 5); p.bestKnown = true; return { ok: true, msg: `${L[pos]}に変更。しっくりきているようだ（向いていたポジション）。慣れるまで約12週` }; }
+    return { ok: true, msg: `${L[pos]}に変更しました。適性は${p.apt[pos]}（いまの最適は${L[best]}）。慣れるまで約12週は力が落ちます` };
   };
 
   // ---------- 選手同士の関係（決定20）----------
@@ -310,10 +306,10 @@
       if (p.dorm) p.fat = clamp(p.fat - 2, 0, 100);
       // 本当に向いているポジションに気づく
       if (p.pos !== 'GK' && !p.bestKnown && r() < 0.012 * (w.coach ? w.coach.eye / 10 : 1)) {
-        const best = YA.bestPosOf(p);
-        if (best && best !== p.pos && YA.ovrAt(p, best) - YA.ovrAt(p, p.pos) > 0.8) {
+        const best = p.best;
+        if (best && best !== p.main && p.apt[best] - p.apt[p.main] > 1.0) {
           p.bestKnown = true;
-          YA.noteTier(w, 1, `${p.num}番 ${p.name} は、${best}のほうが向いているかもしれません（ポジション変更を検討）`, p.id);
+          YA.noteTier(w, 1, `${p.num}番 ${p.name} は、${YA.POS_LABEL[best]}のほうが向いているかもしれません（いまは${YA.POS_LABEL[p.main]}。ポジション変更を検討）`, p.id);
         }
       }
     }

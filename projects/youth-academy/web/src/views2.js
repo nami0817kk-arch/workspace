@@ -167,7 +167,7 @@
   function candCard(w, c, actions) {
     const v = YA.candView(w, c);
     return h('div', { class: 'card', style: 'padding:7px 9px;margin-bottom:5px' },
-      h('div', { class: 'row' }, h('span', { class: 'pos ' + v.pos }, v.pos), h('b', { class: 'grow' }, v.name), h('span', { class: 'chip gray' }, YA.CAND_KIND[c.kind]), c.rival && c.status === 'open' ? h('span', { class: 'fit bad' }, '他クラブも注目') : null),
+      h('div', { class: 'row' }, h('span', { class: 'pos ' + v.pos }, v.label || v.pos), h('b', { class: 'grow' }, v.name), h('span', { class: 'chip gray' }, YA.CAND_KIND[c.kind]), c.rival && c.status === 'open' ? h('span', { class: 'fit bad' }, '他クラブも注目') : null),
       h('div', { class: 'row', style: 'flex-wrap:wrap;gap:5px;margin-top:3px' }, h('span', { class: 'chip trait' }, `能力 ${v.ovr[0]}〜${v.ovr[1]}`), h('span', { class: 'chip gray' }, `伸びしろ ${stars(v.stars)}`), h('span', { class: 'chip gray' }, `${v.height}cm`), v.traits ? (v.traits.length ? v.traits.map((t) => h('span', { class: 'chip trait' }, t)) : h('span', { class: 'sub' }, '特性なし')) : h('span', { class: 'sub' }, '特性：?'), v.pers ? Object.values(v.pers).filter((x) => x !== 'ふつう').slice(0, 4).map((x) => h('span', { class: 'chip pers' }, x)) : h('span', { class: 'sub' }, '性格：?')),
       h('div', { class: 'row', style: 'margin-top:4px' }, h('span', { class: 'sub grow' }, '見えている度合い：' + '●'.repeat(c.seen) + '○'.repeat(3 - c.seen)), actions));
   }
@@ -232,9 +232,10 @@
       h('button', { class: 'btn sm' + (w.captain === sel.id ? ' on' : ''), onclick: () => { say(YA.setCaptain(w, sel.id, 'captain')); rerender(); } }, w.captain === sel.id ? 'キャプテン' : 'キャプテンにする'),
       h('button', { class: 'btn sm' + (w.vice === sel.id ? ' on' : ''), onclick: () => { say(YA.setCaptain(w, sel.id, 'vice')); rerender(); } }, w.vice === sel.id ? '副キャプテン' : '副キャプテンにする'),
       sel.nat ? h('span', { class: 'chip trait' }, `代表 ${sel.nat}回`) : null));
-    // ポジション変更
-    const best = YA.bestPosOf(sel);
-    wrap.append(h('div', { class: 'row', style: 'flex-wrap:wrap;gap:4px;margin:4px 0' }, h('span', { class: 'sub' }, '向いているポジション：' + (sel.bestKnown || sel.pos === 'GK' ? best : '？（見る目や試合で分かってきます）')), h('span', { class: 'grow' }), sel.pos !== 'GK' ? ['DF', 'MF', 'FW'].filter((x) => x !== sel.pos).map((x) => h('button', { class: 'btn sm', onclick: () => { const r = YA.changePos(w, sel.id, x); say(r.msg); rerender(); } }, x + 'に変更')) : null, sel.adapt > 0 ? h('span', { class: 'fit bad' }, `慣れるまで${sel.adapt}週`) : null));
+    // ポジション変更（15個から選ぶ。向いていない位置にも変えられる）
+    const POSG = [['守備', ['CB', 'LB', 'RB', 'LWB', 'RWB']], ['中盤', ['DM', 'CM', 'LM', 'RM', 'AM']], ['攻撃', ['LW', 'RW', 'SS', 'ST']]];
+    wrap.append(h('div', { class: 'row', style: 'flex-wrap:wrap;gap:4px;margin:4px 0' }, h('span', { class: 'sub' }, `登録：${YA.POS_LABEL[sel.main]}／向いているポジション：` + (sel.bestKnown || sel.pos === 'GK' ? YA.POS_LABEL[sel.best] : '？（見る目や試合で分かってきます）')), sel.adapt > 0 ? h('span', { class: 'fit bad' }, `慣れるまで${sel.adapt}週`) : null));
+    if (sel.pos !== 'GK') for (const [gn, list] of POSG) wrap.append(h('div', { class: 'row', style: 'flex-wrap:wrap;gap:3px;margin:2px 0' }, h('span', { class: 'sub', style: 'width:30px' }, gn), list.filter((x) => x !== sel.main).map((x) => h('button', { class: 'btn sm', style: 'padding:2px 7px', onclick: () => { const r = YA.changePos(w, sel.id, x); say(r.msg); rerender(); } }, YA.POS_LABEL[x]))));
     // 関係
     const rel = YA.relOf(w, sel.id);
     if (rel.length) wrap.append(h('div', { class: 'row', style: 'flex-wrap:wrap;gap:4px' }, h('span', { class: 'sub' }, '関係：'), rel.map((x) => h('span', { class: 'chip ' + (x.k === 'friend' ? 'trait' : 'instr') }, (x.k === 'friend' ? '仲良し ' : 'ライバル ') + x.other.name.split(' ')[0]))));
