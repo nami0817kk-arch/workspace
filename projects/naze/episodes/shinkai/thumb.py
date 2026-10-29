@@ -1,7 +1,7 @@
 """深海魚の本編のサムネイル(1280×720)。下地は Gemini で作った絵(assets/thumb_gemini.jpg: 深い青の海の中で、つぶれたペットボトルのすぐ横を、
 半透明の小さな魚が平気な顔で泳ぐ)。
 形は電子レンジ・進撃の回でユーザーが決めたもの(2026-10-29): 字は絵の上に直接・箱や番号なし・大きくしすぎない・全部の要素を入れる・明るく。
-字(白＋黄): 「水深8,336mでも／深海魚はつぶれない／指先1平方cmに約870kg／ペットボトルの空気は845分の1」。python episodes/shinkai/thumb.py"""
+字(白＋黄): 「水深8,336mでも／深海魚はつぶれない／なぜ？／指先1平方cmに約870kg／ペットボトルの空気は845分の1に縮む」。前の版(「なぜ？」なし)は out/shinkai/thumb_long_v1.jpg。python episodes/shinkai/thumb.py"""
 import os
 import sys
 from pathlib import Path
@@ -35,13 +35,14 @@ def line(x, y, parts, size, stroke=16):
 
 
 x = 80
-line(x, 90, [("水深", WHITE), ("8,336m", YEL), ("でも", WHITE)], 112)
-line(x, 270, [("深海魚は", WHITE)], 150)
-line(x, 450, [("つぶれない", YEL)], 190)
-line(x, 740, [("指先1平方cmに", WHITE)], 96, stroke=14)
-line(x, 870, [("約", WHITE), ("870kg", YEL), ("の重さ", WHITE)], 130)
-line(x, 1090, [("ペットボトルの空気は", WHITE)], 80, stroke=12)
-line(x, 1190, [("845分の1", YEL), ("に縮む", WHITE)], 110)
+line(x, 80, [("水深", WHITE), ("8,336m", YEL), ("でも", WHITE)], 112)
+line(x, 245, [("深海魚は", WHITE)], 150)
+line(x, 415, [("つぶれない", YEL)], 190)
+line(x, 640, [("なぜ？", WHITE)], 150)   # 台本を「なぜつぶれないか」の筋にしたので、問いを足した(2026-10-29)
+line(x, 840, [("指先1平方cmに", WHITE)], 90, stroke=14)
+line(x, 945, [("約", WHITE), ("870kg", YEL), ("の重さ", WHITE)], 130)
+line(x, 1150, [("ペットボトルの空気は", WHITE)], 76, stroke=12)
+line(x, 1240, [("845分の1", YEL), ("に縮む", WHITE)], 104)
 
 img.convert("RGB").resize((1280, 720), Image.LANCZOS).save(OUT / "thumb_long.jpg", quality=93)
 print(OUT / "thumb_long.jpg")
