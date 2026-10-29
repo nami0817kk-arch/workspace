@@ -15,7 +15,8 @@ from naze import overlay as O  # noqa: E402
 OUT = HERE.parents[1] / "out" / "samurai"
 OUT.mkdir(parents=True, exist_ok=True)
 W, H = 2560, 1440
-NAVY, YEL, WHITE = (0, 10, 30), (255, 222, 40), (255, 255, 255)
+NAVY, YEL, WHITE = (10, 10, 10), (255, 225, 0), (255, 255, 255)
+RED, CYAN = (255, 60, 60), (90, 230, 255)
 
 src = Image.open(HERE / "assets" / "thumb_gemini.jpg").convert("RGB")
 s = max(W / src.width, H / src.height)
@@ -25,23 +26,23 @@ img = src.convert("RGBA")
 xs = np.arange(W)[None, :]
 alpha = (165 * np.clip(1 - xs / 1500, 0, 1) ** 1.2 * np.ones((H, 1))).astype("uint8")
 sh = Image.fromarray(np.dstack([np.zeros((H, W), "uint8"), np.full((H, W), 10, "uint8"), np.full((H, W), 30, "uint8"), alpha]), "RGBA")
-img.alpha_composite(sh)
 d = ImageDraw.Draw(img)
 
 
-def line(x, y, parts, size, stroke=12):
+def line(x, y, parts, size, stroke=None):
+    stroke = stroke or int(size * 0.085)
     f = O.font(size)
     for t, col in parts:
         d.text((x, y), t, font=f, fill=col, stroke_width=stroke, stroke_fill=NAVY)
         x += f.getlength(t)
 
 
-x = 80
-line(x, 70, [("テニスの王子様", WHITE)], 150, 11)
-line(x, 250, [("ボールを", WHITE)], 190, 13)
-line(x, 480, [("真っ二つ", YEL)], 260, 15)
-line(x, 800, [("当てる角度の幅は", WHITE)], 110, 9)
-line(x, 940, [("ボール", WHITE), ("1個分", YEL)], 190, 13)
-line(x, 1200, [("再現できる？", WHITE)], 120, 9)
+x = 60
+line(x, 40, [("テニスの王子様", WHITE)], 140)
+line(x, 170, [("サムライドライブ", YEL)], 270)
+line(x, 900, [("ボールを", WHITE), ("真っ二つ", RED)], 215)
+line(x, 1150, [("再現できる？", CYAN)], 215)
+line(1450, 1170, [("打つ角度の幅は", WHITE)], 85, 8)
+line(1450, 1270, [("ボール", WHITE), ("1個分", YEL)], 120, 11)
 img.convert("RGB").resize((1280, 720), Image.LANCZOS).save(OUT / "thumb_long.jpg", quality=93)
 print(OUT / "thumb_long.jpg")
