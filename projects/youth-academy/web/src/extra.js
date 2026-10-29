@@ -110,8 +110,18 @@
     const log = { events: [], notes: [], weeks: 0, matches: [], grad: null, stopped: null, important: 0, picks: 0 };
     const startYear = w.year;
     let guard = 0;
+    let lastN = w.inboxN || 0;
     while (guard++ < 800) {
       const r = step(w, o, log);
+      // 設定で「必ず止める」にしたお知らせ（決定76）が出たら止まる
+      if (o.stopOnImportant && w.noticeTier && YA.noticeKind) {
+        const hit = (w.inbox || []).filter((n) => (n.n || 0) > lastN).find((n) => w.noticeTier[YA.noticeKind(n.text)] === 1);
+        lastN = w.inboxN || lastN;
+        if (hit) {
+          log.stopped = 'お知らせ（' + YA.noticeKind(hit.text) + '）';
+          break;
+        }
+      }
       if (r.stop) {
         log.stopped = r.stop;
         break;

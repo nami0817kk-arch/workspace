@@ -4,7 +4,7 @@
 //   node tool/balance.js 10 20      … シード10個×20年（長い試し）
 'use strict';
 const path = require('path');
-for (const f of ['data', 'engine', 'world', 'league', 'club', 'scout', 'extra']) require(path.join(__dirname, '../src/' + f + '.js'));
+for (const f of ['data', 'engine', 'world', 'league', 'club', 'scout', 'extra', 'more']) require(path.join(__dirname, '../src/' + f + '.js'));
 const YA = globalThis.YA;
 let fails = 0;
 const ok = (c, m) => {

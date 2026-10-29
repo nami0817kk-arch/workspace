@@ -72,6 +72,7 @@
     body.append(h('div', { class: 'h' }, '設定'));
     body.append(h('div', { class: 'row', style: 'margin:6px 0' }, h('span', { class: 'grow' }, '試合の自動停止（前半終了・得点・失点・残り15分）'), h('button', { class: 'btn sm' + (app.autoStop ? ' on' : ''), onclick: () => { app.autoStop = !app.autoStop; store.set('autoStop', app.autoStop); rerender(); } }, app.autoStop ? 'ON' : 'OFF')));
     body.append(h('div', { class: 'row', style: 'margin:6px 0' }, h('span', { class: 'grow' }, '効果音'), h('button', { class: 'btn sm' + (YA.sfx.on ? ' on' : ''), onclick: () => { YA.sfx.on = !YA.sfx.on; store.set('sfx', YA.sfx.on); YA.sfx.play('tap'); rerender(); } }, YA.sfx.on ? 'ON' : 'OFF')));
+    fontAndNotices(body);
     // セーブ枠
     body.append(h('div', { class: 'h', style: 'margin-top:10px' }, `セーブ枠（無料${YA.SLOT_COUNT}つ）`), h('div', { class: 'note' }, '1つの遊びに自動セーブが1つ。枠ごとに別のクラブで遊べます。'));
     for (let i = 0; i < YA.SLOT_COUNT; i++) {
@@ -140,6 +141,72 @@
     };
     next();
   }
+  // ---------- 文字の大きさ・お知らせの3段（決定76） ----------
+  function fontAndNotices(body) {
+    const app = U().app;
+    const store = U().store;
+    const cur = store.get('fs', 1);
+    body.append(h('div', { class: 'h', style: 'margin-top:10px' }, '文字の大きさ'), h('div', { class: 'row', style: 'gap:5px;margin-top:3px' },
+      ...YA.FONT_SCALES.map(([name], i) => h('button', { class: 'btn sm' + (cur === i ? ' on' : ''), onclick: () => { store.set('fs', i); YA.applyFontScale(i); rerender(); } }, name))));
+    if (!app.w) return;
+    const w = app.w;
+    w.noticeTier = w.noticeTier || {};
+    body.append(h('div', { class: 'h', style: 'margin-top:10px' }, 'お知らせの重さ'), h('div', { class: 'note' }, '項目ごとに選べます。「必ず止める」はおまかせ進行でも止まります。「記録だけ」は出来事の記録にだけ残ります。'));
+    const kinds = YA.NOTICE_KINDS.map((x) => x[0]).concat(['そのほか']);
+    for (const k of kinds) {
+      const t = w.noticeTier[k] || 2;
+      body.append(h('div', { class: 'row', style: 'margin:3px 0;gap:4px' }, h('span', { class: 'grow', style: 'font-size:11.5px' }, k),
+        ...[1, 2, 3].map((n) => h('button', { class: 'btn sm' + (t === n ? ' on' : ''), onclick: () => { w.noticeTier[k] = n; YA.saveWorld(true); rerender(); } }, YA.NOTICE_TIER_NAME[n]))));
+    }
+  }
+
+  // ---------- 実績と引退（決定51） ----------
+  YA.achBlock = function (body) {
+    const app = U().app;
+    const w = app.w;
+    body.append(h('div', { class: 'h' }, '実績'));
+    for (const a of YA.achievements(w)) {
+      body.append(h('div', { class: 'pitem', style: 'cursor:default;gap:6px' },
+        h('span', { class: 'chip ' + (a.done ? 'trait' : 'gray') }, a.done ? '達成' : '未達'),
+        h('span', { class: 'grow', style: 'font-size:12px' }, a.name + (a.goal ? `（${Math.min(a.cur, a.goal)}/${a.goal}）` : '')),
+        a.note ? h('span', { class: 'note' }, a.note) : null));
+    }
+    body.append(h('div', { class: 'h', style: 'margin-top:10px' }, '引退'), h('div', { class: 'note' }, '指導者を引退して、ここまでの歩みをまとめます。引退すると続きは遊べません（書き出しで残せます）。'),
+      h('button', { class: 'btn', style: 'margin-top:5px;color:#b02020', onclick: () => confirmBox('指導者を引退しますか', () => { YA.retire(w); YA.saveWorld(true); rerender(); }) }, '引退する'));
+  };
+  YA.views = YA.views || {};
+  YA.views.retired = function (main) {
+    const app = U().app;
+    const s = YA.careerSummary(app.w);
+    const box = h('div', { class: 'card', style: 'margin:10px;padding:12px' });
+    box.append(h('div', { class: 'h', style: 'font-size:16px' }, `指導者人生のまとめ（${s.years}年）`));
+    box.append(h('div', { class: 'note' }, (app.w.coachName || '指導者') + 'さんの歩み'));
+    box.append(h('div', { class: 'insight' }, `プロ入りした卒業生 ${s.pros}人／代表経験者 ${s.nats}人／連帯貢献金 ${s.solid}万円`));
+    if (s.best.length) box.append(h('div', { class: 'h', style: 'margin-top:4px' }, '育てた主な子'), ...s.best.map((a) => h('div', { class: 'note', style: 'color:var(--ink)' }, `・${a.name}（${a.pos}・能力${a.ovr.toFixed(1)}・${a.club || ''}）`)));
+    if (s.trophies.length) box.append(h('div', { class: 'h', style: 'margin-top:4px' }, '獲ったもの'), ...s.trophies.map((t) => h('div', { class: 'note', style: 'color:var(--ink)' }, `・${t.year || ''}年 ${t.name}`)));
+    box.append(h('div', { class: 'h', style: 'margin-top:4px' }, '実績'), ...s.ach.map((a) => h('div', { class: 'note', style: 'color:var(--ink)' }, (a.done ? '◎ ' : '・') + a.name)));
+    box.append(h('div', { class: 'row', style: 'margin-top:8px;gap:6px' },
+      h('button', { class: 'btn', onclick: exportBox }, 'セーブを書き出す'),
+      h('button', { class: 'btn pri', onclick: () => { const st = U().store; st.set(YA.slotKey(app.slot), null); app.w = null; app.ng = null; rerender(); } }, '新しく始める')));
+    main.append(box);
+  };
+  // ---------- 名前の書き換え（決定52・54） ----------
+  YA.renameBox = function (p) {
+    const app = U().app;
+    const pid = p.id;
+    V().modal((close) => {
+      const inp = h('input', { type: 'text', value: p.name, maxlength: 14, style: 'width:100%;padding:6px 8px;border:1px solid #b9c7de;border-radius:8px;font:inherit;font-weight:700' });
+      const msg = h('div', { class: 'note' }, '1〜14文字で入れてください');
+      return h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(420px,95%);padding:12px;gap:8px' }, h('div', { class: 'h' }, '名前を変える'), inp, msg,
+        h('div', { class: 'row' }, h('button', { class: 'btn', onclick: close }, 'やめる'), h('button', { class: 'btn pri', onclick: () => {
+          const r = YA.renamePlayer(app.w, pid, inp.value);
+          if (!r.ok) { msg.textContent = r.msg; return; }
+          close();
+          YA.saveWorld(true);
+          rerender();
+        } }, '決める')));
+    });
+  };
   function confirmBox(text, ok) {
     V().modal((close) => h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(420px,95%);padding:12px;gap:8px' }, h('div', { class: 'h' }, text), h('div', { class: 'row' }, h('button', { class: 'btn', onclick: close }, 'やめる'), h('button', { class: 'btn pri', onclick: () => { close(); ok(); } }, 'はい'))));
   }
