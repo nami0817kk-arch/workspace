@@ -184,3 +184,9 @@ button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:poin
 .stars .on{color:#111}
 .stars .mid{color:#9aa3b2}
 .stars .off{color:#b9c0cc}
+
+/* 画面を埋める窓の「決める」ボタンは、スクロールしても下に残す */
+.sheet-in>.btn.pri:last-child{position:sticky;bottom:0;z-index:2;flex:none}
+@media (max-height:460px){.sheet-in .note{line-height:1.35}.sheet-in .h{margin-top:2px}}
+@media (max-height:460px){.pbody .card,.pbody .pitem.card{padding-top:3px !important;padding-bottom:3px !important}.pbody .card .note{line-height:1.3}}
+@media (max-height:460px){.pbody{padding:3px 8px}.pbody div.pitem{padding-top:1px;padding-bottom:1px}.pbody .h{line-height:1.25}.pbody .insight{margin-bottom:2px}.pbody .msglog{margin-top:3px}}
