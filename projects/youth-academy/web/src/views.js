@@ -252,10 +252,11 @@
     const list = h('div', { class: 'plist scroll', style: 'flex:1;min-height:0' }, filtered.map((p) => h('button', { class: 'pitem' + (p.id === sel.id ? ' on' : ''), onclick: () => { ui.pSel = p.id; const st = list.scrollTop; rerender(); const l2 = document.querySelector('.plist.scroll'); if (l2) l2.scrollTop = st; } }, posc(p), h('span', { class: 'num' }, p.num), h('span', { class: 'nm grow', style: 'overflow:hidden;text-overflow:ellipsis' }, p.name), h('span', { class: 'sub', style: 'font-size:10px' }, gradeName(p.grade) + p.team), h('b', { style: 'width:26px;text-align:right' }, YA.ovr(p).toFixed(1)), p.inj > 0 ? h('span', { class: 'fit bad' }, '怪') : null, p.star ? h('span', { style: 'color:#e6a800' }, '★') : null)));
     left.append(chips, list);
     const right = h('div', { class: 'card pbody', style: 'flex:1;min-width:0' });
-    right.append(U().playerCard({ lineup: w.lineupA }, sel, { all: true }));
+    const info = h('div', {});
+    info.append(U().playerCard({ lineup: w.lineupA }, sel, { all: true }));
     // 追加の情報（伸びしろの目安・状態・履歴）
     const stars = YA.starsOf(sel);
-    right.prepend(h('div', { class: 'row', style: 'flex-wrap:wrap;gap:5px;margin-bottom:6px' },
+    const head = (h('div', { class: 'row', style: 'flex-wrap:wrap;gap:5px;padding:2px 2px 0' },
       h('span', { class: 'chip gray' }, `${gradeName(sel.grade)} / ${sel.team}チーム`), h('span', { class: 'chip gray' }, `疲れ ${Math.round(sel.fat)}`), h('span', { class: 'chip gray' }, `出場 ${sel.mins}分`),
       h('span', { class: 'chip trait' }, '伸びしろ ' + '★'.repeat(stars[0]) + '☆'.repeat(stars[1] - stars[0]) + '（目安）'), ...flags(sel),
       h('button', { class: 'btn sm', onclick: () => { sel.star = !sel.star; YA.saveWorld(); rerender(); } }, sel.star ? '★ を外す' : '★ 注目の印'),
@@ -270,10 +271,21 @@
     talk.append(h('div', { class: 'fm-row', style: 'margin-top:4px' }, su.opts.map((t) => h('button', { class: 'btn', disabled: !can, onclick: () => { const r = YA.talk(w, sel.id, t.k); res.replaceChildren(h('div', {}, r.ok ? `${sel.name.split(' ')[0]}は、${r.line}${r.small ? '（' + r.small + '）' : ''}${r.extra ? ' / ' + r.extra : ''}` : r.msg)); YA.saveWorld(); talkBtns(); } }, t.label))));
     talk.append(res);
     const talkBtns = () => { for (const b of talk.querySelectorAll('button')) b.disabled = true; };
-    right.append(talk, YA.playerExtras(w, sel));
+    const ops = h('div', {});
+    ops.append(YA.playerExtras(w, sel));
     // 履歴
-    if (sel.hist.length) right.append(h('div', { class: 'h', style: 'margin-top:8px' }, '最近のこと'), h('div', { class: 'note', style: 'color:var(--ink)' }, sel.hist.slice(0, 6).map((x) => h('div', {}, `${x.y}年目 ${x.w}週：${x.t}`))));
-    main.append(h('div', { style: 'flex:1;min-height:0;display:flex;gap:8px' }, left, right));
+    if (sel.hist.length) ops.append(h('div', { class: 'h', style: 'margin-top:8px' }, '最近のこと'), h('div', { class: 'note', style: 'color:var(--ink)' }, sel.hist.slice(0, 6).map((x) => h('div', {}, `${x.y}年目 ${x.w}週：${x.t}`))));
+    // 能力・面談・操作を切り替えて、スクロールせずに選手への操作へ届くようにする
+    ui.pTab = ui.pTab || 'info';
+    const PT = [['info', '能力'], ['talk', '面談'], ['ops', '操作と履歴']];
+    const tabsEl = h('div', { class: 'tabs' });
+    const show = () => {
+      tabsEl.replaceChildren(...PT.map(([k, n]) => h('button', { class: 'btn sm' + (ui.pTab === k ? ' on' : ''), onclick: () => { ui.pTab = k; show(); } }, n)));
+      right.replaceChildren(ui.pTab === 'talk' ? talk : ui.pTab === 'ops' ? ops : info);
+      right.scrollTop = 0;
+    };
+    show();
+    main.append(h('div', { style: 'flex:1;min-height:0;display:flex;gap:8px' }, left, h('div', { style: 'flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;min-height:0' }, head, tabsEl, right)));
   }
   function swapTeam(p) {
     const w = W();
