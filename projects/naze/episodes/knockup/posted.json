@@ -1,0 +1,27 @@
+{
+ "long": {
+  "id": "SLtNeE495nQ",
+  "publish_at": "2026-10-31T19:00:00+09:00",
+  "thumb": "out/knockup/thumb_long.jpg"
+ },
+ "s1": {
+  "id": "ex0GUOVbd-w",
+  "publish_at": "2026-11-01T11:00:00+09:00"
+ },
+ "s2": {
+  "id": "RXr-B3WQZGw",
+  "publish_at": "2026-11-01T12:00:00+09:00"
+ },
+ "s3": {
+  "id": "_MjPvmij-gw",
+  "publish_at": "2026-11-01T13:00:00+09:00"
+ },
+ "s4": {
+  "id": "Du3XWPp7360",
+  "publish_at": "2026-11-01T14:00:00+09:00"
+ },
+ "s5": {
+  "id": "ZYJz9z3_Jhk",
+  "publish_at": "2026-11-01T16:00:00+09:00"
+ }
+}
