@@ -177,7 +177,7 @@ P["ch5"] = dict(title="第5章 条件を、全部そろえる", lines=[
 P["s1"] = dict(title="噴水も火山も届かない", lines=[
     dict(id="c1", text="ワンピースのノックアップストリーム。海から空へ、船を突き上げる海流です。", scene=COL0),
     dict(id="c2", text="作中の設定では、船が着く雲の海は、高さ7000mです。", scene=RULER0),
-    dict(id="c3", text="世界一の噴水や火山の勢いで、そこまで届くのか。", style="question", sub="世界一の噴水や火山の勢いで\nそこまで【届く】のか", scene=QBLANK),
+    dict(id="c3", text="世界一の噴水や火山の勢いで、そこまで届くのか。", style="question", sub="世界一の噴水や\n火山の勢いで\nそこまで【届く】のか", scene=QBLANK),
     dict(id="c4", text="答えは、届きません。足りないのは、水の速さです。", scene=CARD_SPEED),
     dict(id="c5", text="世界一高い噴水は、サウジアラビアのキング・ファハド噴水で312m。7000mは、その約22倍の高さです。", scene=B_FOUNT),
     dict(id="c6", text="火山の噴火でも、噴き出す速さは秒速200〜330m。勢いだけで届くのは2〜5.5kmです。", scene=B_VOLC_S),
@@ -189,7 +189,7 @@ P["s1"] = dict(title="噴水も火山も届かない", lines=[
 P["s2"] = dict(title="小さな水の玉は届かない", lines=[
     dict(id="c1", text="ワンピースの、空島へ行く水の柱。もし、ペットボトル1本分の玉だったら。", scene=DROPFLY1),
     dict(id="c2", text="秒速20kmで打っても、高さ7000mには届きません。"),
-    dict(id="c3", text="速く打てば届くはずなのに、なぜでしょう。", style="question", sub="速く打てば届くはずなのに\n【なぜ】でしょう", scene=QBLANK),
+    dict(id="c3", text="速く打てば届くはずなのに、なぜでしょう。", style="question", sub="速く打てば\n届くはずなのに\n【なぜ】でしょう", scene=QBLANK),
     dict(id="c4", text="答えは、空気。速いほど、強く押し返されるからです。", scene=AIRARROW),
     dict(id="c5", text="作中の設定では、船が空へ上がる高さは7000m。水の玉の大きさを変えて計算しました。", scene=RULER0),
     dict(id="c6", text="空気の押し返しは、速さが2倍なら4倍。", scene=AIRARROW),
@@ -201,7 +201,7 @@ P["s2"] = dict(title="小さな水の玉は届かない", lines=[
 P["s3"] = dict(title="水の柱は上で太る", lines=[
     dict(id="c1", text="ワンピースのノックアップストリーム。作中の設定では、船は高さ7000mまで昇ります。", scene=COL0),
     dict(id="c2", text="世界一高く噴く間欠泉でも、最大116m。7000mは、その約60倍です。", scene=B_GEYSER),
-    dict(id="c3", text="水の柱は、どうすれば、そこまで届くのか。", style="question", sub="水の柱は、どうすれば\nそこまで【届く】のか", scene=QBLANK),
+    dict(id="c3", text="水の柱は、どうすれば、そこまで届くのか。", style="question", sub="水の柱は、\nどうすれば\nそこまで【届く】のか", scene=QBLANK),
     dict(id="c4", text="答えは、太い柱を、途切れさせないこと。", scene=CARD_THICK),
     dict(id="c5", text="柱の先頭は空気を押しのけ、後ろの水は、その道を通ります。", scene=PUSH0),
     dict(id="c6", text="水は空気の約800倍重い。先頭の速さは、後ろの水の約97%までしか落ちません。", scene=PUSH1),
@@ -224,7 +224,7 @@ P["s4"] = dict(title="船の板は持つ。折れるのは荷物の梁", lines=[
 ])
 P["s5"] = dict(title="全部そろえば届く", lines=[
     dict(id="c1", text="ワンピースのノックアップストリーム。作中の設定では、船は高さ7000mまで昇ります。", scene=COL0),
-    dict(id="c2", text="水の勢いだけで、船はそこまで届くのか。", style="question", sub="水の勢いだけで\n船はそこまで【届く】のか", scene=QBLANK),
+    dict(id="c2", text="水の勢いだけで、船はそこまで届くのか。", style="question", sub="水の勢いだけで\n船はそこまで\n【届く】のか", scene=QBLANK),
     dict(id="c3", text="答えは、届きます。ただし、条件が3つ要ります。", scene=CONDS),
     dict(id="c4", text="1つめ。水は、秒速370m以上で噴き出す。音より速く。", scene=SPEED_DIAL),
     dict(id="c5", text="2つめ。水は、太い柱にして、途切れさせない。空気にも負けません。", scene=COL0),

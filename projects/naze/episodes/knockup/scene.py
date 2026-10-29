@@ -425,7 +425,7 @@ def sc_widen(img, box, t, k, P):
     d = ImageDraw.Draw(img)
     gy = y1 - 60 * S
     top = y0 + 140 * S
-    cx = x0 + (x1 - x0) * (0.4 if LAND else 0.5)
+    cx = x0 + (x1 - x0) * (0.4 if LAND else 0.2)
     sc = (gy - top) / 7000.0
     w0 = 40 * S
     hs = [i * 7000 / 400 for i in range(0, 400)] + [6990, 6998]
@@ -452,8 +452,12 @@ def sc_widen(img, box, t, k, P):
         for h, s in mk:
             wi = w0 * (1 - h / 7000.0) ** -0.25
             yy = gy - h * sc
-            d.line([(cx + wi / 2 + 6 * S, yy), (cx + 330 * S, yy)], fill=O.YEL, width=int(3 * S))
-            label(d, (cx + 560 * S + (0 if LAND else 60 * S), yy + (40 if h == 6000 else 0) * S), f"高さ{h}m　太さ 根元の{s[1:]}倍".replace("倍倍", "倍"), 34, O.YEL)
+            d.line([(cx + wi / 2 + 6 * S, yy), (cx + (330 if LAND else 150) * S, yy)], fill=O.YEL, width=int(3 * S))
+            lab = f"高さ{h}m　太さ 根元の{s[1:]}倍".replace("倍倍", "倍")
+            if LAND:
+                label(d, (cx + 560 * S, yy + (40 if h == 6000 else 0) * S), lab, 34, O.YEL)
+            else:
+                label(d, (cx + 170 * S, yy + (10 if h == 6000 else -30) * S), lab, 34, O.YEL, "lm")
         text(d, (cx, gy + 30 * S), "根元", 32, O.WHITE, "ma", 4)
     if st == 3:
         label(d, (cx - (330 * S if LAND else 0) - (0 if LAND else 0), top + (250 if LAND else 330) * S), "秒速400mで噴き出せば 7000mで秒速150m", 36, O.GREEN, "mm")
@@ -465,11 +469,11 @@ def sc_fountain(img, box, t, k, P):
     x0, y0, x1, y1 = box
     grad(img, (110, 165, 225), (200, 225, 245), box)
     d = ImageDraw.Draw(img)
-    gy = y1 - 170 * S
+    gy = y1 - (280 if LAND else 170) * S
     cx = (x0 + x1) / 2
     d.ellipse([cx - 360 * S, gy - 40 * S, cx + 360 * S, gy + 70 * S], fill=(120, 130, 140))
     d.ellipse([cx - 320 * S, gy - 26 * S, cx + 320 * S, gy + 50 * S], fill=(60, 130, 200))
-    top = gy - (y1 - y0) * 0.58
+    top = gy - (y1 - y0) * (0.46 if LAND else 0.58)
     d.rectangle([cx - 10 * S, top, cx + 10 * S, gy], fill=(230, 245, 255))
     for j in range(-6, 7):
         pts = []
@@ -479,7 +483,7 @@ def sc_fountain(img, box, t, k, P):
             pts.append((cx + j * 38 * S * u + wob, top + 330 * S * u * u - 40 * S * u * (1 - abs(j) / 7)))
         d.line(pts, fill=(235, 248, 255), width=int(5 * S))
     label(d, (cx, y0 + 60 * S), "てっぺんで 水が止まって 広がる", 40, O.WHITE, "mm")
-    text(d, ((x0 + x1) / 2, y1 - 30 * S), "噴き出す速さが 高さを決める", 34, O.NAVY, "md", 0)
+    text(d, ((x0 + x1) / 2, y1 - (130 if LAND else 30) * S), "噴き出す速さが 高さを決める", 34, O.NAVY, "md", 0)
 
 
 def sc_drops(img, box, t, k, P):
