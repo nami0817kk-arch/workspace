@@ -140,13 +140,15 @@
   YA.resolveOffers = function (w) {
     const r = YA.rngOf(w.seed * 43 + w.year * 23 + w.week);
     for (const c of w.scouting.cands) if (c.status === 'offered') {
-      const pr = clamp(0.5 + (w.club.rep - 50) / 120 - (c.rival ? 0.18 : 0) - (c.amb - 5) * 0.015, 0.12, 0.92);
+      const pr = clamp(0.5 + (w.club.rep - 50) / 120 - (c.rival && !c.rivalBeat ? 0.18 : 0) + (c.rivalBeat ? 0.06 : 0) - (c.amb - 5) * 0.015, 0.12, 0.92);
       if (r() < pr) {
+        if (c.rival) w.rivalLosses = (w.rivalLosses || 0) + 1;
         c.status = 'signed';
         YA.noteTier(w, 1, `${c.p.name}（${c.p.pos}）が入団を決めました！`);
       } else {
         c.status = 'declined';
-        YA.noteTier(w, 2, `${c.p.name}は${c.rival ? '他のクラブ' : '別の道'}を選びました`);
+        if (c.rival) w.rivalWins = (w.rivalWins || 0) + 1;
+        YA.noteTier(w, 2, `${c.p.name}は${c.rival ? YA.rivalOf(w).coach + '監督の' + YA.rivalOf(w).club : '別の道'}を選びました`);
       }
     }
   };
@@ -345,6 +347,7 @@
       w.forced = (w.forced || []).concat(sr.map((p) => ({ id: 'career', pid: p.id, week: w.week, year: w.year })));
     }
     if (s.t === 'selection') YA.openSelection(w);
+    if (YA.rivalWeek) YA.rivalWeek(w);
     if (s.t === 'junior') YA.openInternal(w, true);
     if (s.t === 'internal') YA.openInternal(w);
     for (const p of Object.values(w.players)) {

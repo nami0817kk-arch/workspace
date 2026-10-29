@@ -589,6 +589,39 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
     }
     ok(u21 >= 5, 'U-21代表に選ばれる卒業生が出る ' + u21 + '/30');
   }
+  // 段5：ライバル監督・再会・新しい出来事
+  {
+    const w6 = YA.newWorld(41);
+    const rv = YA.rivalOf(w6);
+    ok(rv.id && rv.coach.length >= 2 && !/監督$/.test(rv.coach), 'ライバル監督が決まる');
+    w6.week = 4;
+    const n0 = w6.inbox.length;
+    YA.rivalWeek(w6);
+    ok(w6.inbox.length >= n0, '4週にライバルとの直接対決を知らせる（同じ部のとき）');
+    YA.openSelection(w6);
+    const rc = w6.scouting.cands.find((c) => c.rival) || (() => { const c = w6.scouting.cands[0]; c.rival = true; return c; })();
+    const sp0 = w6.club.spent.scout;
+    ok(YA.rivalFight(w6, rc.id).ok && rc.rivalBeat && w6.club.spent.scout === sp0 + 15 && !YA.rivalFight(w6, rc.id).ok, 'ライバルに先んじて会いに行ける（1回だけ）');
+    w6.week = 20;
+    w6.alumni.push({ name: 'OB選手', pos: 'MF', year: 1, ovr: 12, note: 'プロ', grade: 3, age: 20, status: 'pro', club: 'テストFC', apps: 0, goals: 0, nat: 0, transfers: 0 });
+    const c1 = Object.values(w6.players).filter((p) => p.grade === 1)[0].conf;
+    YA.rivalWeek(w6);
+    ok(Object.values(w6.players).filter((p) => p.grade === 1)[0].conf >= c1, '卒業生が母校を訪ねる');
+    for (const id of ['parent', 'rivalry']) {
+      const def = YA.EVENTS.find((e) => e.id === id);
+      for (let k = 0; k < def.opts.length; k++) {
+        const wx = YA.newWorld(50 + k);
+        for (const p of Object.values(wx.players)) { p.team = 'A'; p.mins = 10; p.grade = 2; }
+        const ps = Object.values(wx.players).filter((p) => p.pos === 'MF');
+        if (ps.length >= 2) { ps[1].grade = 2; }
+        const r0 = YA.rngOf(7);
+        let pk = def.pick(wx, r0);
+        if (!pk) { pk = ps[0]; pk._rv = ps[1] && ps[1].id; }
+        const e = { id, pid: pk.id, week: 5, year: 1 };
+        ok(YA.eventView(wx, e) && YA.resolveEvent(wx, e, k) !== undefined, id + ' の選択肢' + k + 'が動く');
+      }
+    }
+  }
   // 効果音：音の出せない環境でも落ちない
   YA.sfx.on = true;
   for (const k of ['tap', 'goal', 'concede', 'whistle', 'save', 'miss', 'x', null]) YA.sfx.play(k);
