@@ -90,8 +90,56 @@
       h('button', { class: 'btn sm', onclick: exportBox }, '書き出す（コピーして保管）'),
       h('button', { class: 'btn sm', onclick: importBox }, '復元する（貼り付け）'),
       store.get(YA.slotKey(app.slot) + '_bak', null) ? h('button', { class: 'btn sm', onclick: () => confirmBox('年度はじめの控えに戻しますか（いまの進み具合は消えます）', () => { app.w = store.get(YA.slotKey(app.slot) + '_bak', null); YA.saveWorld(true); rerender(); }) }, '控え（年度はじめ）に戻す') : null));
+    testBlock(body);
     body.append(h('div', { class: 'h', style: 'margin-top:10px' }, 'この枠を最初からやり直す'), h('div', { class: 'note' }, '36人も成績も消えて、新しい指導者から始まります。'), h('button', { class: 'btn', style: 'margin-top:5px;color:#b02020', onclick: () => confirmBox('本当に最初からやり直しますか', () => { app.w = null; app.ng = null; store.set(YA.slotKey(app.slot), null); rerender(); }) }, '最初からやり直す'));
   };
+  // ---------- 点検用：新しい世界でNか年シミュレーション（いまの遊びには影響しない）----------
+  function testBlock(body) {
+    const app = U().app;
+    const f = (app.tt = app.tt || { seed: 1, years: 1, tier: 2 });
+    body.append(h('div', { class: 'h', style: 'margin-top:10px' }, '点検用：新しい世界でシミュレーション'), h('div', { class: 'note' }, 'いまの遊びには影響しません。同じシードなら同じ結果になります。1年に数秒〜十数秒かかります（10年は数分）。'));
+    const seed = h('input', { type: 'number', min: 1, max: 99999, value: f.seed, style: 'width:90px;padding:5px 7px;border:1px solid #b9c7de;border-radius:8px;font:inherit;font-weight:700' });
+    seed.addEventListener('input', () => (f.seed = clamp(parseInt(seed.value, 10) || 1, 1, 99999)));
+    body.append(h('div', { class: 'row', style: 'gap:5px;flex-wrap:wrap;margin-top:4px' },
+      h('span', { class: 'sub' }, 'シード'), seed,
+      h('span', { class: 'sub', style: 'margin-left:6px' }, '年数'), ...[1, 3, 10].map((y) => h('button', { class: 'btn sm' + (f.years === y ? ' on' : ''), onclick: () => { f.years = y; rerender(); } }, y + '年')),
+      h('span', { class: 'sub', style: 'margin-left:6px' }, 'クラブ'), ...[1, 2, 3].map((t) => h('button', { class: 'btn sm' + (f.tier === t ? ' on' : ''), onclick: () => { f.tier = t; rerender(); } }, YA.TIER_NAME[t])),
+      h('button', { class: 'btn pri sm', onclick: () => runTestUi(f) }, '実行')));
+  }
+  function runTestUi(f) {
+    const st = YA.testStart({ seed: f.seed, years: f.years, tier: f.tier });
+    const msg = h('div', { class: 'note' }, '進めています…');
+    const bx = h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(760px,98%);max-height:97%;padding:12px;gap:6px;overflow:auto' }, h('div', { class: 'h', style: 'font-size:15px' }, `点検用シミュレーション（シード${f.seed}・${f.years}年・${YA.TIER_NAME[f.tier]}）`), msg);
+    let closeFn = null;
+    V().modal((close) => {
+      closeFn = close;
+      return bx;
+    });
+    const next = () => {
+      if (st.done < f.years) {
+        msg.textContent = `進めています… ${st.done + 1}/${f.years}年目`;
+        setTimeout(() => {
+          YA.testYear(st);
+          next();
+        }, 30);
+        return;
+      }
+      const sm = YA.testSummary(st);
+      msg.remove();
+      const cell = (t, wd, strong) => h('span', { style: `width:${wd}px;flex:none;text-align:right;${strong ? 'font-weight:900' : ''}` }, t);
+      const head = h('div', { class: 'pitem', style: 'background:none;font-size:9.5px;color:var(--sub);font-weight:800;gap:2px' }, cell('年', 24), cell('順位', 46), cell('評価', 28), cell('信頼', 34), cell('予算', 42), cell('成長', 32), cell('怪我', 28), cell('退団', 28), cell('プロ', 28), cell('①/②/③', 62), cell('選ぶ/週', 46), cell('分/週', 36));
+      bx.append(head);
+      st.years.forEach((r, i) => {
+        const m = r.metrics;
+        bx.append(h('div', { class: 'pitem', style: 'cursor:default;font-size:10.5px;gap:2px' }, cell(i + 1, 24, true), cell(`${m.rank}位${m.move < 0 ? '↑' : m.move > 0 ? '↓' : ''}`, 46), cell(m.letter, 28, true), cell(`${m.trustBefore}→${m.trustAfter}`, 34), cell(m.budget, 42), cell('+' + m.growthAvg, 32), cell(m.injuries, 28), cell(m.quits, 28), cell(m.gradPaths.pro, 28), cell(`${m.noticesByTier[1]}/${m.noticesByTier[2]}/${m.noticesByTier[3]}`, 62), cell(m.picksPerWeek, 46), cell(m.minutesPerWeek, 36)));
+      });
+      bx.append(h('div', { class: 'insight' }, `平均：順位${sm.avgRank}位・成長+${sm.growthAvg}/年・怪我${sm.injuries}件/年・プロ入り${sm.pro}人/年・選ぶ回数${sm.picks}回/週・想定${sm.minutes}分/週（目標は1週8〜10分）`), h('div', { class: 'insight' }, '評価の内訳：' + Object.entries(sm.letters).map(([k, v]) => `${k}×${v}`).join('、') + `／予算の平均${sm.budget}万円／在籍${sm.players}人`));
+      const last = st.years[st.years.length - 1];
+      bx.append(h('div', { class: 'h', style: 'margin-top:4px' }, `最後の年（${st.years.length}年目）の報告`), ...last.lines.map((l) => h('div', { class: 'note', style: 'color:var(--ink)' }, '・' + l.t)));
+      bx.append(h('button', { class: 'btn pri', onclick: () => closeFn() }, '閉じる'));
+    };
+    next();
+  }
   function confirmBox(text, ok) {
     V().modal((close) => h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(420px,95%);padding:12px;gap:8px' }, h('div', { class: 'h' }, text), h('div', { class: 'row' }, h('button', { class: 'btn', onclick: close }, 'やめる'), h('button', { class: 'btn pri', onclick: () => { close(); ok(); } }, 'はい'))));
   }

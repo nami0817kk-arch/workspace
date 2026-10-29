@@ -37,6 +37,7 @@ jobs:
         run: |
           node tool/sim.js
           node tool/world.js
+          node tool/balance.js
 
       # 画面：ブラウザの代わりに全画面を作って、例外が出ないか・必要な文字が出るかを確かめる
       - name: 画面の点検

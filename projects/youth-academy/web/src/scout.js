@@ -202,7 +202,7 @@
   YA.alumniEntry = function (w, p, note) {
     const o = Math.round(YA.ovr(p) * 10) / 10;
     const r = YA.rngOf(w.seed + p.num * 7 + w.year);
-    const status = o >= 13.2 ? 'pro' : o >= 10.5 ? 'univ' : 'amateur';
+    const status = p._path || (o >= 13.2 ? 'pro' : o >= 10.5 ? 'univ' : 'amateur');
     return { name: p.name, pos: p.pos, year: w.year, ovr: o, note, grade: 3, age: 18, status, club: status === 'pro' ? r.pick(PRO) + ' ' + r.pick(PRO_N) : status === 'univ' ? r.pick(UNIV) : '社会人', apps: 0, goals: 0, nat: p.nat || 0, transfers: 0, retired: false, traits: p.traits.slice() };
   };
   YA.alumniTick = function (w) {

@@ -132,14 +132,14 @@
   // ---------- 年度はじめ：目標・約束事 ----------
   const GOAL_DEF = {
     result: { label: '成績', text: (g) => `リーグで${g.n}位以内`, opts: [4, 6, 8], key: 'n' },
-    develop: { label: '育成', text: (g) => `全選手の能力の合計を平均+${g.x}以上伸ばす`, opts: [8, 12, 16], key: 'x' },
-    promise: { label: '約束', text: (g) => `高1がAチームで合計${g.t}分以上出る`, opts: [500, 900, 1600], key: 't' },
+    develop: { label: '育成', text: (g) => `全選手の能力の合計を平均+${g.x}以上伸ばす`, opts: [18, 22, 28], key: 'x' },
+    promise: { label: '約束', text: (g) => `高1がAチームで合計${g.t}分以上出る`, opts: [1200, 2400, 4000], key: 't' },
   };
   YA.GOAL_DEF = GOAL_DEF;
   YA.makeGoals = function (w) {
     const c = w.club;
     const lv = w.league ? w.league.level : 2;
-    c.goals = [{ k: 'result', n: lv === 1 ? 8 : 6 }, { k: 'develop', x: 12 }, { k: 'promise', t: 900 }];
+    c.goals = [{ k: 'result', n: lv === 1 ? 8 : 6 }, { k: 'develop', x: 22 }, { k: 'promise', t: 2400 }];
     c.goalChanges = { low: 0, mid: 1, high: 2 }[YA.trustLevel(w)];
   };
   YA.goalText = (g) => GOAL_DEF[g.k].text(g);
@@ -214,8 +214,9 @@
     });
     const score = res.reduce((s, x) => s + x.score, 0);
     const letter = score >= 3 ? 'S' : score >= 2.3 ? 'A' : score >= 1.5 ? 'B' : score >= 0.8 ? 'C' : 'D';
-    const d = score - 1.5;
+    const d = score - 1.9; // B評価（2つ達成）はほぼ現状維持、A以上で信頼が上がり、C以下で下がる
     c.trust = clamp(c.trust + d * 9, 0, 100);
+    c.trust += (50 - c.trust) * 0.15; // 信頼度は、少しずつ真ん中へ戻る（張り付かないように）
     c.rep = clamp(c.rep + d * 3 + (w.leagueEndMove === -1 ? 4 : w.leagueEndMove === 1 ? -4 : 0), 0, 100);
     c.budgetAdj = clamp((c.budgetAdj || 0) + d * 0.05, -0.3, 0.4);
     w.rep = c.rep;
