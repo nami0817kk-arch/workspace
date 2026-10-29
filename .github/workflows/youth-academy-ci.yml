@@ -1,0 +1,64 @@
+# ユースの系譜（仮題）の検証：試合の中身（Node）と、アプリの外側（Flutter）。
+# 公開系（iOS リリース）は youth-academy-ios-release.yml に分けてある。
+name: youth-academy CI
+
+on:
+  push:
+    paths:
+      - "projects/youth-academy/**"
+      - ".github/workflows/youth-academy-ci.yml"
+  pull_request:
+    paths:
+      - "projects/youth-academy/**"
+      - ".github/workflows/youth-academy-ci.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # 試合の中身：落ちない・得点が釣り合う・特性や性格が結果に効く・交代と停止の決まりが守られる
+      - name: 試合の点検
+        working-directory: projects/youth-academy/web
+        run: node tool/sim.js
+
+      # 画面：ブラウザの代わりに全画面を作って、例外が出ないか・必要な文字が出るかを確かめる
+      - name: 画面の点検
+        working-directory: projects/youth-academy/web
+        run: |
+          npm install --no-save --no-audit --no-fund jsdom
+          node tool/views.js
+
+      - name: アプリに入れる1枚にまとめる
+        working-directory: projects/youth-academy/web
+        run: node tool/build.js
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Install dependencies
+        working-directory: projects/youth-academy/app
+        run: flutter pub get
+
+      - name: Analyze
+        working-directory: projects/youth-academy/app
+        run: flutter analyze
+
+      - name: Run tests
+        working-directory: projects/youth-academy/app
+        run: flutter test
