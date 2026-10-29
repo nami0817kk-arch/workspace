@@ -549,6 +549,8 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   // 段3：60クラブ・名前の書き換え・練習メニューの型
   {
     ok(YA.CLUB60.length === 60 && new Set(YA.CLUB60.map((c) => c.name)).size === 60, '60クラブは名前が重ならない');
+    const nicks = YA.CLUB60.filter((c) => c.kind === 'club').map((c) => c.name.split(' ')[1]);
+    ok(new Set(nicks).size === nicks.length, '60クラブの愛称が重ならない');
     const w3 = YA.newWorld(21);
     const names1 = w3.league.teams.filter((t) => !t.me).map((t) => t.cid);
     ok(names1.length === 11 && names1.every((c) => YA.CLUB60.find((x) => x.id === c && x.level === w3.league.level)), '相手は同じ部の固定クラブから選ばれる');

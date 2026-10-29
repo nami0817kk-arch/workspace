@@ -167,9 +167,9 @@
   function candCard(w, c, actions) {
     const v = YA.candView(w, c);
     return h('div', { class: 'card', style: 'padding:7px 9px;margin-bottom:5px' },
-      h('div', { class: 'row' }, h('span', { class: 'pos ' + v.pos }, v.label || v.pos), h('b', { class: 'grow' }, v.name), h('span', { class: 'chip gray' }, YA.CAND_KIND[c.kind]), c.rival && c.status === 'open' ? h('span', { class: 'fit bad' }, YA.rivalLabel(w, c)) : null, c.rival && (c.status === 'open' || c.status === 'offered') && !c.rivalBeat ? h('button', { class: 'btn sm', onclick: () => { const r = YA.rivalFight(w, c.id); if (r.ok) { save(); rerender(); } } }, 'ライバルに先んじて会いに行く') : null, v.nation ? h('span', { class: 'chip trait' }, v.nation) : null),
+      h('div', { class: 'row' }, h('span', { class: 'pos ' + v.pos }, v.label || v.pos), h('b', { class: 'grow' }, v.name), h('span', { class: 'chip gray' }, YA.CAND_KIND[c.kind]), c.rival && c.status === 'open' ? h('span', { class: 'fit bad' }, YA.rivalLabel(w, c)) : null, v.nation ? h('span', { class: 'chip trait' }, v.nation) : null),
       h('div', { class: 'row', style: 'flex-wrap:wrap;gap:5px;margin-top:3px' }, h('span', { class: 'chip trait' }, `能力 ${v.ovr[0]}〜${v.ovr[1]}`), h('span', { class: 'chip gray' }, `伸びしろ ${stars(v.stars)}`), h('span', { class: 'chip gray' }, `${v.height}cm`), v.traits ? (v.traits.length ? v.traits.map((t) => h('span', { class: 'chip trait' }, t)) : h('span', { class: 'sub' }, '特性なし')) : h('span', { class: 'sub' }, '特性：?'), v.pers ? Object.values(v.pers).filter((x) => x !== 'ふつう').slice(0, 4).map((x) => h('span', { class: 'chip pers' }, x)) : h('span', { class: 'sub' }, '性格：?')),
-      h('div', { class: 'row', style: 'margin-top:4px' }, h('span', { class: 'sub grow' }, '見えている度合い：' + '●'.repeat(c.seen) + '○'.repeat(3 - c.seen)), actions));
+      h('div', { class: 'row', style: 'margin-top:4px' }, h('span', { class: 'sub grow' }, '見えている度合い：' + '●'.repeat(c.seen) + '○'.repeat(3 - c.seen)), c.rival && (c.status === 'open' || c.status === 'offered') && !c.rivalBeat ? h('button', { class: 'btn sm', onclick: () => { const r = YA.rivalFight(w, c.id); if (r.ok) { save(); rerender(); } } }, '先に会う（15万）') : null, c.rivalBeat && c.status !== 'signed' ? h('span', { class: 'chip trait' }, '先に会った') : null, actions));
   }
   function scout(body, w) {
     const S = w.scouting;
@@ -216,7 +216,7 @@
     const right = h('div', { style: 'flex:1;min-width:0' });
     const cupRow = (name, c) => h('div', { class: 'row', style: 'padding:3px 0' }, h('b', { style: 'width:104px' }, name), h('span', { class: 'grow' }, c.result ? c.result : c.alive ? (c.round ? `${c.round}回戦を突破中` : 'これから') : ''));
     right.append(card(title('大会'), cupRow('夏の全国大会', w.cup.summer), cupRow('冬のカップ戦', w.cup.winter), h('div', { class: 'note' }, '負けたら終わりのトーナメントです（10〜12週・27〜30週）。')));
-    right.append(card(title('今年の日程'), h('div', { class: 'note', style: 'line-height:1.7' }, '1〜9週 リーグ前半／10〜12週 夏の全国大会／13〜25週 リーグ後半／26週 夏合宿・遠征／27〜30週 冬のカップ戦／33週 セレクション／36週 U-15の内部昇格／40週 卒業式')));
+    right.append(card(title('今年の日程'), h('div', { class: 'note', style: 'line-height:1.7' }, '1〜9週 リーグ前半／10〜12週 夏の全国大会／13〜25週 リーグ後半／26週 夏合宿・遠征／27〜30週 冬のカップ戦／33週 セレクション／34週 中3の練習参加／36週 U-15の内部昇格／40週 卒業式')));
     right.append(card(title('通算の対戦成績'), ...(Object.keys(w.h2h || {}).length ? Object.entries(w.h2h).slice(-6).map(([n, v]) => h('div', { class: 'row', style: 'padding:2px 0;font-size:11px' }, h('span', { class: 'grow' }, n), h('span', { class: 'sub' }, `${v[0]}勝${v[1]}分${v[2]}敗`))) : [h('div', { class: 'note' }, 'まだありません')])));
     body.append(h('div', { style: 'display:flex;gap:8px;align-items:flex-start' }, left, right));
   }
