@@ -1,0 +1,182 @@
+# 物語完結型ショート 土方歳三 s1（2026-10-29）。本編 scripts/hijikata-story.yaml の序章と第4章（写真を運んだ少年・市村鉄之助）から。
+# 形式は masamune_s1.yaml・kazunomiya_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。
+# 絵は本編の AI 絵（out/story/hijikata/main/J*.jpg）と実在の写真（洋装の写真・箱館の旧幕府軍の写真）。
+#   この回の決まり：AI 絵の土方は後ろ姿か横顔の影だけ（実在の写真の土方に似せない）。顔が分かるのは実在の写真の額だけ。亡骸・戦の場面は描かない。
+# 事実カード（dev/output/rekishi-chiso/research/土方歳三_facts_20261029.yaml）：hijikata-01・83・11・78・10
+#   ・形見を届けよと命じた→大垣市立図書館の調べ（hijikata-01）、紙きれの言葉→子孫の土方愛さんの話（和樂web 2021）→ 出どころを語りで言う。
+#   ・遺髪は出どころに無いので言わない（「写真などの形見」まで）。13歳で入隊（hijikata-83、和樂web）。
+#   ・かくまわれたのは和樂web（hijikata-78）。本編に後から足した熊吉の行・愛さんの恋文の束は使わない。
+# 理解テスト4問：
+#   ①誰の話か：土方歳三の洋装の写真を運んだ少年、市村鉄之助
+#   ②いつ・どこで何が：1869年、箱館で土方が鉄之助に、写真などの形見を日野の佐藤家へ届けるよう命じた
+#   ③何を託したか：写真と「この者の身の上を、お頼み申します」と書いた紙きれ。写真だけでなく少年の身も頼んでいた
+#   ④どうなったか：写真は1869年7月に日野へ届いた（土方はその2か月前に亡くなっていた）。鉄之助は日野の親類の家に数年かくまわれ、写真は今も日野に伝わる
+title: 土方歳三｜洋装の写真を運んだ少年に添えられた一行
+yt_title: 土方歳三の洋装の写真は、少年が箱館から運んだ　添えられていた「身の上をお頼み申します」
+description: |-
+  新選組の副長、土方歳三。よく知られた洋装の写真は、ひとりの少年が箱館から、ふるさとの日野まで運んだものでした。少年の名は、市村鉄之助。1867年、13歳のとき、兄とともに新選組に入った隊士です。
+  大垣市立図書館の調べによれば、土方は鉄之助に、写真などの形見を日野の佐藤家へ届けるよう命じました。写真には、土方が書いた紙きれが添えられていた、と子孫の土方愛さんは語っています。「この者の身の上を、お頼み申します」。
+  佐藤彦五郎新選組資料館の目録によれば、写真が日野に届いたのは1869年7月。土方は、その2か月前に箱館で亡くなっていました。鉄之助は、日野の親類の家に数年かくまわれた、と和樂webの記事は伝えています。
+hashtags: ["#土方歳三", "#日本史", "#幕末"]
+ai_images: true
+ai_disclosure: この動画の人物・情景の画像の多くは、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/hijikata
+out: hijikata_story_s1
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 土方歳三（新選組の副長）
+  title: "あの写真を運んだのは、《ひとりの少年》"
+now:
+  - {at: 少年の名は, text: "1867年　新選組", point: 0}
+  - {at: 1869年箱館, text: "1869年　箱館", point: 1}
+  - {at: 日野の佐藤家に着いた, text: "1869年7月　日野", point: 1}
+  - {at: 親類の家, text: "その後　日野", point: 1}
+timeline:
+  - {label: "1867"}
+  - {label: "1869"}
+cards:
+  - type: table                          # 土方が鉄之助に託したもの（語った順に1行ずつ）
+    title: 日野へ届けさせたもの
+    from: 写真などの形見
+    until: 写真が日野の
+    items:
+      - {at: 写真などの形見, text: "写真などの形見"}
+      - {at: 土方の書いた, text: "紙きれ　身の上をお頼み"}
+shots:
+  Photo:                                 # 1文目：洋装の写真（実在）
+    kind: real
+    image: paintings/hijikata_photo_1869.jpg
+    focus: [0.5, 0.45]
+    move: in
+    credit: "土方歳三の洋装の写真（1869年ごろ）"
+    must: 洋装の土方歳三の写真
+  J01:                                   # 少年の名は（港の少年の後ろ姿）
+    kind: ai
+    file: hijikata/main/J01.jpg
+    focus: [0.35, 0.5]
+    move: in
+    must: 港の桟橋に立つ少年の後ろ姿
+  War:                                   # 箱館の旧幕府軍の人々（実在の写真）
+    kind: real
+    image: paintings/hijikata_hakodate_war_1869.jpg
+    focus: [0.5, 0.5]
+    move: right
+    credit: "箱館のフランス軍事顧問と旧幕府軍の人々（1869年の写真）"
+    must: 旧幕府軍の人々の集合写真
+  J08:                                   # 形見と紙きれを渡す手
+    kind: ai
+    file: hijikata/main/J08.jpg
+    focus: [0.5, 0.4]
+    move: in
+    must: 包みと紙きれを渡す手
+  J08l:                                  # 紙きれの言葉（灯）
+    kind: ai
+    file: hijikata/main/J08.jpg
+    focus: [0.22, 0.62]
+    move: in
+    zoom: 0.14
+    must: 油の灯と包み
+  J01r:                                  # 少年の身も頼んでいた（帆船）
+    kind: ai
+    file: hijikata/main/J01.jpg
+    focus: [0.65, 0.5]
+    move: left
+    must: 港の帆船
+  J11:                                   # 日野の佐藤家に着いた（仏壇の前の写真）
+    kind: ai
+    file: hijikata/main/J11.jpg
+    focus: [0.5, 0.55]
+    move: in
+    must: 仏壇の前に座る夫婦の後ろ姿
+  J12:                                   # 2か月前に箱館で亡くなっていた
+    kind: ai
+    file: hijikata/main/J12.jpg
+    focus: [0.6, 0.5]
+    move: left
+    must: 夕暮れの函館山と港
+  J11r:                                  # かくまわれた
+    kind: ai
+    file: hijikata/main/J11.jpg
+    focus: [0.4, 0.55]
+    move: right
+    must: 座敷の夫婦
+  PhotoC:                                # 写真は今も日野に（実在の写真の顔）
+    kind: real
+    image: paintings/hijikata_photo_1869.jpg
+    focus: [0.5, 0.4]
+    move: in
+    zoom: 0.18
+    credit: "土方歳三の洋装の写真（1869年ごろ）"
+    must: 洋装の土方歳三の写真
+  J01q:                                  # 最後の問い：少年の後ろ姿
+    kind: ai
+    file: hijikata/main/J01.jpg
+    focus: [0.35, 0.5]
+    move: in
+    zoom: 0.2
+    text_y: 0.76
+    must: 少年の後ろ姿
+lines:
+  # fact: hijikata-01
+  - 語り: 新選組の土方歳三。あの洋装の写真は、ひとりの少年が、箱館から、ふるさとの日野まで、《!運んだ》。
+    shot: Photo
+    tone: 強調
+  # fact: hijikata-83
+  - 語り: 少年の名は、市村鉄之助。1867年、13歳で、兄とともに、新選組に入った。
+    shot: J01
+    tone: しみじみ
+    pause: 0.12
+  # fact: hijikata-01
+  - 語り: 1869年、箱館。大垣市立図書館の調べによれば、土方は、鉄之助に、写真などの形見を、日野の佐藤家へ届けるよう、命じた。
+    shot: War
+    tone: しみじみ
+    pause: 0.12
+  # fact: hijikata-01
+  - 語り: 写真には、土方の書いた紙きれが、添えられていた、と子孫の土方愛さんは語る。
+    shot: J08
+    tone: しみじみ
+    pause: 0.12
+  # fact: hijikata-01
+  - 語り: 「この者の身の上を、お頼み申します」。
+    shot: J08l
+    tone: 強調
+    pause: 0.12
+  - 語り: 頼まれたのは、写真だけではない。運んだ少年の、身の上でもあった。
+    shot: J01r
+    tone: しみじみ
+    pause: 0.12
+  # fact: hijikata-11
+  - 語り: 写真が、日野の佐藤家に着いたのは、1869年の7月。
+    shot: J11
+    tone: しみじみ
+    pause: 0.12
+  # fact: hijikata-11
+  - 語り: 土方は、その2か月前に、箱館で、もう、《!亡くなっていた》。
+    shot: J12
+    tone: 重い
+    pause: 0.3
+    dip: true
+  # fact: hijikata-78
+  - 語り: 鉄之助は、日野の親類の家に、数年、かくまわれた。写真を持ってきた人として、大事にされたという。
+    shot: J11r
+    tone: しみじみ
+    pause: 0.12
+  # fact: hijikata-11
+  - 語り: 写真は、今も、日野の佐藤家に、伝わっている。
+    shot: PhotoC
+    tone: しみじみ
+    pause: 0.15
+  - 語り: あなたは、この一行に、土方が託したものは、《何》だったと、思いますか。
+    shot: J01q
+    tone: 疑問
+    pause: 0.15
