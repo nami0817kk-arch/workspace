@@ -529,7 +529,9 @@ def sc_court(img, box, t, k, P):
                 if LAND:
                     label(d, (xn + 84 * S, (ya + yb) / 2), pth["gap"], 30, O.RED, "lm")
                 else:
-                    label(d, (xn + 40 * S, max(ya, yb) + 80 * S), pth["gap"], 30, O.RED, "rm")
+                    g1, g2 = pth["gap"].split("・")
+                    label(d, (xn + 84 * S, (ya + yb) / 2 - 30 * S), g1, 30, O.RED, "lm")
+                    label(d, (xn + 84 * S, (ya + yb) / 2 + 30 * S), g2, 30, O.RED, "lm")
     if P.get("ang_text"):
         label(d, (gx0 + 260 * S, y0 + (y1 - y0) * 0.16), P["ang_text"], 36, O.YEL)
     cap(d, (x1 - 50 * S, y1 - 14 * S), "縦は拡大して描いています", 24, O.DIM, "rd")
@@ -639,11 +641,12 @@ def sc_angline(img, box, t, k, P):
     if u > 0.9:
         label(d, (pa(6.60) - 60 * S, yl - 90 * S), "6.60°", 36, O.GREEN)
         label(d, (pa(6.93) + 60 * S, yl - 90 * S), "6.93°", 36, O.GREEN)
-        hbracket(d, pa(6.60), pa(6.93), yl + 130 * S, "窓の幅 約0.32°", O.GREEN, 38, up=False)
-        hbracket(d, pa(6.0), pa(7.0), yl + 230 * S, "1°の約3分の1", O.YEL, 38, up=False) if st == 0 else None
+        if st == 0:
+            hbracket(d, pa(6.60), pa(6.93), yl + 130 * S, "窓の幅 約0.32°", O.GREEN, 38, up=False)
+            hbracket(d, pa(6.0), pa(7.0), yl + 230 * S, "1°の約3分の1", O.YEL, 38, up=False)
     if st == 1:
         arrow(d, pa(6.93) + 12 * S, yl - 60 * S, pa(7.0) + 40 * S, yl - 60 * S, 10 * S, (150, 200, 250))
-        label(d, (pa(6.93) + 120 * S, yl - 170 * S), "これより上へ向けると 越える", 36, (150, 200, 250))
+        label(d, (pa(6.93) - 120 * S, yl - 170 * S), "これより上へ向けると 越える", 36, (150, 200, 250))
         label(d, (pa(6.93), yl + 130 * S), "窓の上限", 38, O.GREEN) if False else None
         hbracket(d, pa(6.60), pa(6.93), yl + 130 * S, "窓の上限が 6.93°", O.GREEN, 38, up=False)
     head(d, box, "窓を 角度にすると", O.WHITE, 40)
@@ -852,7 +855,7 @@ def sc_rub(img, box, t, k, P):
     d = ImageDraw.Draw(img)
     st = P.get("stage", 0)
     cx, cy = (x0 + x1) / 2 + 40 * S, (y0 + y1) / 2 + 20 * S
-    r = min(x1 - x0, y1 - y0) * 0.2
+    r = min(x1 - x0, y1 - y0) * (0.2 if LAND else 0.15)
     ball_at(d, cx, cy, r, 0.4, True, w=4)
     # ラケットの面(球の前側をこする)
     off = ((t * 0.7) % 1.0)
@@ -865,12 +868,17 @@ def sc_rub(img, box, t, k, P):
     arrow(d, fx - 64 * S, cy + r * 1.7, fx - 64 * S, cy - r * 1.7, 14 * S, O.YEL)
     label(d, (fx - 40 * S, top - 44 * S), "ラケットの面", 34, O.WHITE)
     if st >= 1:
-        label(d, (cx + r * 1.9, cy - r * 0.9), "こする速さ 秒速29m", 40, O.YEL, "lm")
-        label(d, (cx + r * 1.9, cy - r * 0.9 + 70 * S), "時速約105km", 40, O.YEL, "lm")
+        if LAND:
+            label(d, (cx + r * 1.9, cy - r * 0.9), "こする速さ 秒速29m", 40, O.YEL, "lm")
+            label(d, (cx + r * 1.9, cy - r * 0.9 + 70 * S), "時速約105km", 40, O.YEL, "lm")
+        else:
+            label(d, (cx, cy + r * 2.3), "こする速さ 秒速29m", 40, O.YEL)
+            label(d, (cx, cy + r * 2.3 + 70 * S), "時速約105km", 40, O.YEL)
     if st == 2:
-        label(d, (cx + r * 1.9, cy + r * 0.7), "吸い付きが悪いと もっと速く", 36, O.RED, "lm")
+        label(d, (cx + r * 1.9, cy + r * 0.7) if LAND else (cx, cy + r * 2.3 + 140 * S), "吸い付きが悪いと もっと速く", 36, O.RED, "lm" if LAND else "mm")
         arrow(d, fx - 150 * S, cy + r * 1.7, fx - 150 * S, cy - r * 2.2, 14 * S, O.RED)
-    label(d, (cx + r * 1.9, cy + r * 1.9), "回転は ラケットが球をこすってかける", 34, O.WHITE, "lm") if LAND else label(d, (cx, cy + r * 2.9), "回転は ラケットが球をこすってかける", 34, O.WHITE)
+    if LAND:
+        label(d, (cx + r * 1.9, cy + r * 1.9), "回転は ラケットが球をこすってかける", 34, O.WHITE, "lm")
 
 
 def sc_airdrag(img, box, t, k, P):
@@ -1142,9 +1150,9 @@ def sc_face(img, box, t, k, P):
             ball_at(d, ca, cy, dball / 2, 0.3, True)
             ball_at(d, cb, cy, dball / 2, 0.8, True)
             d.rectangle([cx - z / 2, cy - 18 * S, cx + z / 2, cy + 18 * S], fill=(70, 200, 120))
-            hbracket(d, ca, cb, cy + fh / 2 + 56 * S, f"離れ幅 {gm:.1f}m", O.YEL, 38, up=False)
+            hbracket(d, ca, cb, cy + fh / 2 + 70 * S, f"離れ幅 {gm:.1f}m", O.YEL, 38, up=True)
             if u > 0.95:
-                label(d, (cx, cy + fh / 2 + 130 * S), "22cmを引くと 外れ幅は 38〜79cm", 38, O.RED)
+                label(d, (cx, cy + fh / 2 + 150 * S) if LAND else (cx, cy - fh / 2 - 56 * S), "22cmを引くと 外れ幅は 38〜79cm", 38, O.RED)
         else:
             gm = 0.16
             ca, cb = cx - gm * sc / 2, cx + gm * sc / 2
