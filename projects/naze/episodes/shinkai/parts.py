@@ -214,7 +214,7 @@ P["ch5"] = dict(title="第5章 それでも、魚が住めない深さ", lines=[
 ])
 
 P["s1"] = dict(title="指先に1.1トン", lines=[
-    dict(id="c1", text="水深1万mの水圧は、指先1平方cmに約1.1トン。", scene=WT("1100")),
+    dict(id="c1", text="世界一深い海の水圧は、指先1平方cmに約1.1トン。", scene=WT("1100")),
     dict(id="c2", text="1辺1mの水の箱より重い力です。", scene=WT("1100", cube=True)),
     dict(id="c3", text="そんな所で、なぜ魚はつぶれないのか。", style="question", sub="そんな所で、\nなぜ魚は\n【つぶれない】のか", scene=DEEP()),
     dict(id="c4", text="答えは、体の中も水だから。外と同じ圧力になって、差が生まれません。", scene=PRS("fish")),
@@ -246,8 +246,8 @@ P["s3"] = dict(title="水は4%しか縮まない", lines=[
     dict(id="c8", text="だから深海魚は、中と外が釣り合って、つぶれません。", scene=BAL()),
     dict(id="c9", text="コップの水は、1,000気圧で押しても4%しか縮みません。", scene=JAR(still=True)),
 ])
-P["s4"] = dict(title="1万mの殻は13cm", lines=[
-    dict(id="c1", text="水深1万mへ行く潜水艇。殻の厚さは、約13.5cm要る計算です。", scene=HULL(10935, 6500, same=True)),
+P["s4"] = dict(title="世界一深い海の殻は13cm", lines=[
+    dict(id="c1", text="世界一深い海へ行く潜水艇。殻の厚さは、約13.5cm要る計算です。", scene=HULL(10935, 6500, same=True)),
     dict(id="c2", text="魚は殻なしで泳ぐのに、なぜ人は、そんなに厚い殻が要るのか。", style="question", sub="魚は殻なしで泳ぐのに、\nなぜ人は、\nそんなに厚い殻が\n【要る】のか", scene=DEEP()),
     dict(id="c3", text="答えは、中に、空気の部屋を持っていくから。", scene=SUB("空気の部屋ごと潜る")),
     dict(id="c4", text="「しんかい6500」の殻は、チタンの球。中の直径2m、厚さ73.5mm。6,500mまで潜れます。", scene=HULL(6500, same=True)),
