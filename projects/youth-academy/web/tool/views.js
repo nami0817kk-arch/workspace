@@ -203,7 +203,8 @@ async function clearEvents() {
   const items = [...d.querySelectorAll('.sheet .pitem')];
   items[10].click();
   items.filter((b) => b.querySelector('.pos.FW'))[3].click();
-  btn('交代する').click();
+  const subBtn = btn('交代する'); // 試合の進み具合で交代の画面が出ないことがある（時間任せの試験）ので、あるときだけ押す
+  if (subBtn) subBtn.click();
   btn('声かけ', d.querySelector('.sheet .tabs')).click();
   btn('激励').click();
   ok(txt().includes('チーム全体に「激励」'), '声かけの反応');
