@@ -209,7 +209,7 @@
         g.append(s('circle', { r: 4.6, cx: 0.4, cy: 0.9, fill: 'rgba(0,0,0,.3)' }), s('circle', { r: 4.6, fill: colors[pos], stroke: '#fff', 'stroke-width': 0.9 }), s('text', { y: 1.6, 'text-anchor': 'middle', fill: '#fff', 'font-size': 5, 'font-weight': 900 }, p.num));
         g.append(s('text', { y: -6.2, 'text-anchor': 'middle', fill: '#fff6c2', 'font-size': 3.3, 'font-weight': 900, stroke: 'rgba(0,0,0,.5)', 'stroke-width': 0.7, 'paint-order': 'stroke' }, YA.POS_LABEL[p15]));
         g.append(s('text', { y: 9.4, 'text-anchor': 'middle', fill: '#fff', 'font-size': 3.5, 'font-weight': 800, stroke: 'rgba(0,0,0,.45)', 'stroke-width': 0.7, 'paint-order': 'stroke' }, surname(p)));
-        g.append(s('text', { y: 13, 'text-anchor': 'middle', fill: fit < 0 || pen > 0.06 ? '#ffb3b3' : fit > 0 ? '#fff3b0' : '#e8f5ec', 'font-size': 3, 'font-weight': 700, stroke: 'rgba(0,0,0,.45)', 'stroke-width': 0.6, 'paint-order': 'stroke' }, sl.role + (fit > 0 ? ' ◎' : fit < 0 ? ' ×' : '') + (pen > 0.06 ? ' ▽' : '')));
+        g.append(s('text', { y: 13, 'text-anchor': 'middle', fill: fit < 0 || pen > 0.06 ? '#ffb3b3' : fit > 0 ? '#fff3b0' : '#e8f5ec', 'font-size': 3, 'font-weight': 700, stroke: 'rgba(0,0,0,.45)', 'stroke-width': 0.6, 'paint-order': 'stroke' }, (sl.role.length > 6 ? sl.role.slice(0, 6) + '…' : sl.role) + '(' + (YA.DUTY[sl.duty] ? YA.DUTY[sl.duty].short : '') + ')' + (fit > 0 ? ' ◎' : fit < 0 ? ' ×' : '') + (pen > 0.06 ? ' ▽' : '')));
         g.addEventListener('pointerdown', (ev) => {
           ev.preventDefault();
           g.setPointerCapture(ev.pointerId);
@@ -320,8 +320,8 @@
       saveRow.replaceChildren(
         h('span', { class: 'sub', style: 'align-self:center;font-weight:800' }, '保存'),
         ...[0, 1, 2].map((k) => h('button', { class: 'btn sm' + (slotSel === k ? ' on' : ''), onclick: () => { slotSel = k; renderFm(); } }, saved[k] ? `型${k + 1}●` : `型${k + 1}`)),
-        h('button', { class: 'btn sm', onclick: () => { const sv = store.get('forms', [null, null, null]); sv[slotSel] = { slots: t.lineup.map((x) => ({ x: x.x, y: x.y, role: x.role })) }; store.set('forms', sv); st.msgs = ['型' + (slotSel + 1) + 'に保存しました']; renderFm(); renderBody(); } }, '保存'),
-        h('button', { class: 'btn sm', onclick: () => { const sv = store.get('forms', [null, null, null]); const f2 = sv[slotSel]; if (!f2) { st.msgs = ['型' + (slotSel + 1) + 'はまだ空です']; renderBody(); return; } f2.slots.forEach((x, i) => { t.lineup[i].x = x.x; t.lineup[i].y = x.y; fixRole(t, i); }); t.formation = 'カスタム'; board.redraw(); onChange(); } }, '呼出'),
+        h('button', { class: 'btn sm', onclick: () => { const sv = store.get('forms', [null, null, null]); sv[slotSel] = { slots: t.lineup.map((x) => ({ x: x.x, y: x.y, role: x.role, duty: x.duty })) }; store.set('forms', sv); st.msgs = ['型' + (slotSel + 1) + 'に保存しました']; renderFm(); renderBody(); } }, '保存'),
+        h('button', { class: 'btn sm', onclick: () => { const sv = store.get('forms', [null, null, null]); const f2 = sv[slotSel]; if (!f2) { st.msgs = ['型' + (slotSel + 1) + 'はまだ空です']; renderBody(); return; } f2.slots.forEach((x, i) => { t.lineup[i].x = x.x; t.lineup[i].y = x.y; if (x.role) { t.lineup[i].role = x.role; t.lineup[i].duty = x.duty; } fixRole(t, i); }); t.formation = 'カスタム'; board.redraw(); onChange(); } }, '呼出'),
       );
     }
 
@@ -350,14 +350,27 @@
         body.append(h('div', { class: 'h', style: 'margin-top:8px' }, `いまの位置：${YA.POS_LABEL[p15]}（${YA.POS_NAME[p15]}）の役割`));
         const pen0 = YA.slotPenalty(p, p15);
         if (p.main !== p15) body.append(h('div', { class: 'note', style: 'color:' + (pen0 > 0.06 ? '#b02020' : 'var(--sub)') }, `この選手の登録は${YA.POS_LABEL[p.main]}。${YA.POS_LABEL[p15]}の適性は${aptText(p, p15)}` + (pen0 > 0.06 ? 'で、力が出にくい配置です（慣れるまで時間がかかります）' : pen0 < -0.01 ? '。向いている配置で、少し力が出ます' : '。')));
+        // 任務（2段目）：選んだ役割で選べるものだけ押せる
+        const curRd = YA.ROLE_DEF[sl.role];
+        const dutyBox = h('div', { class: 'card', style: 'padding:6px 8px;margin:4px 0 6px;background:#f5f8fd' });
+        dutyBox.append(h('div', { class: 'row', style: 'gap:5px;flex-wrap:wrap' }, h('b', {}, '任務'), ['def', 'sup', 'att', 'stop', 'cover'].filter((k) => curRd.duties.indexOf(k) >= 0 || (k !== 'stop' && k !== 'cover')).map((k) => {
+          const allowed = curRd.duties.indexOf(k) >= 0;
+          return h('button', { class: 'btn sm' + (sl.duty === k ? ' on' : ''), disabled: !allowed, onclick: () => { sl.duty = k; board.redraw(); onChange(); } }, YA.DUTY[k].label);
+        }), h('span', { class: 'grow' })), h('div', { class: 'note', style: 'margin-top:3px' }, (YA.DUTY[sl.duty] || YA.DUTY.sup).note + '。（深さ・戻り・場面の出やすさが変わります）'));
+        body.append(dutyBox);
+        body.append(h('div', { class: 'h' }, '役割'));
         for (const r of YA.ROLES15[p15]) {
           const save = sl.role;
+          const saveD = sl.duty;
           sl.role = r;
+          const rdr = YA.ROLE_DEF[r];
+          if (!sl.duty || rdr.duties.indexOf(sl.duty) < 0) sl.duty = YA.defaultDuty(r);
           const fit = YA.Match.prototype.roleFit.call(null, t, st.sel);
           sl.role = save;
-          const rd = YA.ROLE_DEF[r];
-          body.append(h('button', { class: 'rolecard' + (save === r ? ' on' : ''), onclick: () => { sl.role = r; board.redraw(); onChange(); } },
-            h('div', { class: 'grow' }, h('b', {}, r), h('div', {}, h('span', { class: 'd' }, rd.note)), h('div', {}, h('span', { class: 'd' }, '合う特性：' + rd.traits.slice(0, 3).join('・')))),
+          sl.duty = saveD;
+          const rd = rdr;
+          body.append(h('button', { class: 'rolecard' + (save === r ? ' on' : ''), onclick: () => { if (sl.role !== r) YA.setRole(sl, st.sel, r); board.redraw(); onChange(); } },
+            h('div', { class: 'grow' }, h('b', {}, r), h('div', {}, h('span', { class: 'd' }, rd.note)), h('div', {}, h('span', { class: 'd' }, '任務：' + rd.duties.map((k) => YA.DUTY[k].label).join('・') + ' ／ 合う特性：' + rd.traits.slice(0, 3).join('・')))),
             fit > 0 ? h('span', { class: 'fit good' }, 'ハマる') : fit < 0 ? h('span', { class: 'fit bad' }, '合わない') : null));
         }
         body.append(h('div', { class: 'note', style: 'margin-top:5px' }, '役割が特性や能力と合うと力が出て、合わない役割を続けると不満が出ます。役割をこなすうちに、戦術の理解が伸びます。'));

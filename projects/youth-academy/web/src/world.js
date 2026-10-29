@@ -246,6 +246,7 @@
       if (k < 0) k = 0;
       const p = left.splice(k, 1)[0];
       lineup[sl.i] = { pid: p.id, x: sl.s.x, y: sl.s.y, role: YA.defaultRole(sl.pos) };
+      YA.fixSlotRole(lineup[sl.i], sl.i);
     }
     const bench = pool.filter((p) => !lineup.some((l) => l.pid === p.id)).sort((a, b) => YA.ovr(b) - YA.ovr(a)).map((p) => p.id);
     if (which === 'A') {
@@ -295,6 +296,7 @@
   YA.teamFromWorld = function (w, which) {
     const lineup = which === 'A' ? w.lineupA : w.lineupB;
     const bench = which === 'A' ? w.benchA : w.benchB;
+    lineup.forEach((s, i) => YA.fixSlotRole(s, i)); // 古い保存データの役割名や、任務のないスロットを直す
     const ids = lineup.map((s) => s.pid).concat(bench);
     const players = {};
     for (const id of ids) {
@@ -634,7 +636,9 @@
   }
   function newcomer(w, rng, grade) {
     const used = new Set(Object.values(w.players).map((p) => p.name));
-    const pos = rng.pick(['CB', 'LB', 'RB', 'DM', 'CM', 'CM', 'AM', 'LW', 'RW', 'ST']);
+    // GKが足りなくなったら、途中加入はGK
+    const gkCount = Object.values(w.players).filter((q) => q.pos === 'GK').length;
+    const pos = gkCount < 3 ? 'GK' : rng.pick(['CB', 'LB', 'RB', 'DM', 'CM', 'CM', 'AM', 'LW', 'RW', 'ST']);
     const id = 'p' + ++w.nextId;
     const p = YA.genPlayer(rng, id, grade || 1, pos, rng.int(-1, 1), used);
     p.team = 'B';

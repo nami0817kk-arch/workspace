@@ -57,7 +57,9 @@
       for (const [t, flip] of [[m.home, false], [m.away, true]]) {
         t.lineup.forEach((s, i) => {
           const x = s.x * W;
-          const y = 4 + s.y * 78;
+          // 任務で立つ位置の深さが変わる（攻撃は高く、守備は低く）
+          const dep = (YA.DUTY[s.duty] ? YA.DUTY[s.duty].depth : 0) * 78;
+          const y = clamp(4 + s.y * 78 + (i === 0 ? 0 : dep), 2, 100);
           out[s.pid] = flip ? [W - x, L - y, t, i] : [x, y, t, i];
         });
       }

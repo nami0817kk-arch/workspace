@@ -215,11 +215,33 @@
       const rd = YA.ROLE_DEF[s.role];
       if (!rd) return 0;
       const hit = rd.traits.filter((x) => has(p, x)).length;
-      if (hit) return 1;
-      const abs = rd.abs;
-      if (!abs) return 0;
-      const avg = abs.reduce((a, n) => a + p.ab[n], 0) / abs.length;
-      return avg < 8.5 ? -1 : 0;
+      let fit;
+      if (hit) fit = 1;
+      else {
+        // 役割に効く能力を重みつきで見る
+        let sw = 0;
+        let sv = 0;
+        for (const n of Object.keys(rd.absW)) {
+          sw += rd.absW[n];
+          sv += rd.absW[n] * (p.ab[n] || 1);
+        }
+        fit = sw && sv / sw < 8.5 ? -1 : 0;
+      }
+      // 任務の条件：攻めに出るには走れること、後ろに残るには守れること。性格が合えば少し合う
+      const duty = s.duty || 'sup';
+      const ab = (ns) => ns.reduce((a, n) => a + (p.ab[n] || 1), 0) / ns.length;
+      let dutyOk = true;
+      if (duty === 'att' && ab(['運動量', 'スタミナ', 'スピード']) < 8) dutyOk = false;
+      if (duty === 'def' && ab(['ポジショニング', 'タックル', 'マーク']) < 7.5) dutyOk = false;
+      if (!dutyOk) fit = fit > 0 ? 0 : -1;
+      else if (fit === 0) {
+        if (duty === 'att' && (pers(p, 'プレーの気質', '勇敢') || pers(p, 'プレーの気質', '自信家') || pers(p, '目指すもの', '野心家'))) fit = 1;
+        if (duty === 'def' && (pers(p, 'プレーの気質', '献身的') || pers(p, '大舞台', '慎重'))) fit = 1;
+      }
+      return fit;
+    }
+    dutyOf(t, i) {
+      return YA.DUTY[t.lineup[i].duty] || YA.DUTY.sup;
     }
     roleOf(t, p) {
       const i = t.lineup.findIndex((s) => s.pid === p.id);
@@ -251,7 +273,8 @@
         const rd = YA.ROLE_DEF[role];
         // 役割が合っていると効きが強く、合っていないと弱い
         const fitK = this.roleFit(att, x.i) > 0 ? 1.25 : this.roleFit(att, x.i) < 0 ? 0.6 : 1;
-        if (rd) for (const k of Object.keys(rd.boost)) w[k] += rd.boost[k] * fitK;
+        const dm = this.dutyOf(att, x.i);
+        if (rd) for (const k of Object.keys(rd.boost)) w[k] += rd.boost[k] * fitK * dm.boostMul;
         const ins = this.instr(att, x.p);
         if (ins.dribble) w.dribble += 0.5;
         if (ins.shoot) w.longshot += 0.5;
@@ -259,7 +282,8 @@
       // 守る側の役割（アンカー・カバーなど）で、相手の場面が出にくくなる
       for (const x of this.onPitch(def)) {
         const rd = YA.ROLE_DEF[def.lineup[x.i].role];
-        if (rd) for (const k of Object.keys(rd.deny)) w[k] *= 1 - rd.deny[k];
+        const dm = this.dutyOf(def, x.i);
+        if (rd) for (const k of Object.keys(rd.deny)) w[k] *= 1 - Math.min(0.5, rd.deny[k] * dm.denyMul);
       }
       return w;
     }
@@ -285,7 +309,11 @@
         for (const t of traits || []) if (has(x.p, t)) w *= 2.1;
         if (roles) {
           const rd = YA.ROLE_DEF[att.lineup[x.i].role];
-          if (rd && rd.tags.some((tg) => roles.indexOf(tg) >= 0)) w *= this.roleFit(att, x.i) < 0 ? 1.2 : 1.6;
+          if (rd && rd.tags.some((tg) => roles.indexOf(tg) >= 0)) {
+            const dm = this.dutyOf(att, x.i);
+            const defending = roles.indexOf('press') >= 0 || roles.indexOf('stay') >= 0;
+            w *= (this.roleFit(att, x.i) < 0 ? 1.2 : 1.6) * (defending ? dm.press : dm.actor);
+          }
         }
         const ins = this.instr(att, x.p);
         if (ins.back) w *= 0.2;
@@ -606,7 +634,8 @@
       const si = att.lineup.findIndex((s) => s.pid === d.id);
       const p15 = si >= 0 ? YA.pos15OfSlot(att.lineup[si], si) : null;
       const inverted = !!p15 && ['LW', 'RW', 'LM', 'RM'].indexOf(p15) >= 0 && d.foot && d.foot !== 'B' && (d.foot === 'L') !== (YA.SIDE[p15] === 'L');
-      const roleCut = si >= 0 && (att.lineup[si].role === 'カットイン' || att.lineup[si].role === '内に絞る');
+      const rdc = si >= 0 ? YA.ROLE_DEF[att.lineup[si].role] : null;
+      const roleCut = !!rdc && rdc.tags.indexOf('cutin') >= 0;
       if (inverted) this._fx(sc, d, 'trait', '逆足のウイング', '利き足と逆の側から、中へ切れ込んだ');
       const cut = (has(d, 'カットイン') && (!has(d, '縦への突破') || rng() < 0.55)) || ((inverted || roleCut) && rng() < 0.55);
       let Q = effAvg(d, ['ドリブル', 'テクニック', '敏しょう性', 'バランス'], this);
@@ -1017,7 +1046,7 @@
           p.st.minutes++;
           const base = 0.5 + t.tactic.intensity * 0.3 + t.tactic.press * 0.25 + (t.tactic.line - 0.5) * 0.1;
           const f = clamp(1.25 - p.ab['スタミナ'] / 22, 0.45, 1.2);
-          p.stam = clamp(p.stam - base * f * (x.pos === 'GK' ? 0.3 : 1) * (pers(p, '気持ちの強さ', '粘り強い') ? 0.9 : 1), 0, 100);
+          p.stam = clamp(p.stam - base * f * (x.pos === 'GK' ? 0.3 : 1) * (pers(p, '気持ちの強さ', '粘り強い') ? 0.9 : 1) * this.dutyOf(t, x.i).fat, 0, 100);
         }
       }
     }
