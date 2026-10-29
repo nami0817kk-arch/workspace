@@ -33,7 +33,7 @@
 
   // 調子・自信・疲れをまとめた補正
   function cond(p, m) {
-    let c = 1 + p.form * 0.035 + (p.conf - 50) / 400 - (Math.max(0, 60 - p.stam) / 60) * (anyPers(p, '粘り強い') ? 0.15 : 0.3);
+    let c = 1 + p.form * 0.035 + (p.conf - 50) / 400 - (Math.max(0, 60 - p.stam) / 60) * (anyPers(p, '粘り強い') ? 0.15 : 0.3) - (p.adapt > 0 ? 0.08 : 0);
     return clamp(c, 0.6, 1.3);
   }
   const eff = (p, n, m) => p.ab[n] * cond(p, m);
@@ -124,6 +124,10 @@
       let b = 0;
       if (this.onPitch(t).some((x) => pers(x.p, '人との関わり', 'リーダー気質') && x.p !== p)) b += 0.3;
       if (this.onPitch(t).some((x) => has(x.p, '声で味方を動かす') && x.p !== p)) b += 0.3;
+      const cap = this.onPitch(t).find((x) => x.p.isCap);
+      if (cap && cap.p !== p) b += pers(cap.p, '人との関わり', 'リーダー気質') ? 0.5 : 0.2;
+      if (p.friends && p.friends.length && this.onPitch(t).some((x) => p.friends.indexOf(x.p.id) >= 0)) b += 0.25;
+      b += (t.prep || 0) * 0.12 + ((t.coachTactic || 10) - 10) * 0.03 + (((t.disc == null ? 60 : t.disc) - 60) * 0.004);
       return b;
     }
 

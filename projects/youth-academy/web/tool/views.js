@@ -14,9 +14,13 @@ const html = read('shell.html')
   .replace('/*__DATA__*/', () => read('data.js'))
   .replace('/*__ENGINE__*/', () => read('engine.js'))
   .replace('/*__WORLD__*/', () => read('world.js'))
+  .replace('/*__LEAGUE__*/', () => read('league.js'))
+  .replace('/*__CLUB__*/', () => read('club.js'))
+  .replace('/*__SCOUT__*/', () => read('scout.js'))
   .replace('/*__RENDER__*/', () => read('render.js'))
   .replace('/*__UI__*/', () => read('ui.js'))
-  .replace('/*__VIEWS__*/', () => read('views.js'));
+  .replace('/*__VIEWS__*/', () => read('views.js'))
+  .replace('/*__VIEWS2__*/', () => read('views2.js'));
 
 let fails = 0;
 const ok = (c, m) => {
@@ -67,8 +71,13 @@ async function clearEvents() {
 (async () => {
   await sleep(100);
   const A = w.YA._ui.app;
+  // 年度はじめ：クラブの目標と約束事
+  ok(txt().includes('クラブの目標') && txt().includes('この1年を始める') && txt().includes('易しく'), '年度はじめの目標の画面');
+  btn('遅刻をしない').click();
+  btn('この1年を始める').click();
+  ok(!d.querySelector('.sheet') && A.w.rules.length === 1 && !A.w.yearIntro, '目標と約束事を決めて始める');
   // ホーム
-  ok(txt().includes('1年目') && txt().includes('4月第1週'), 'ホームに年と週');
+  ok(txt().includes('1年目') && txt().includes('4月第1週') && txt().includes('リーグ'), 'ホームに年と週');
   ok(!!btn('練習を確定して週を進める') && !!btn('練習を組む'), 'ホームの操作');
   ok(txt().includes('今週気にかけたい子') && txt().includes('お知らせ'), 'ホームの欄');
   // 練習
@@ -98,7 +107,18 @@ async function clearEvents() {
   btn('全員', d.querySelector('.fm-row')).click();
   btn('Bに回す') || btn('Aに上げる');
   rail('クラブ');
+  ok(txt().includes('信頼度') && txt().includes('今年の目標'), 'クラブの概要');
+  for (const k of ['予算と施設', 'スタッフ', 'スカウト', '順位と日程', '概要']) {
+    btn(k).click();
+    await sleep(10);
+    if (k === '予算と施設') ok(txt().includes('今年の予算') && txt().includes('施設レベル'), '予算の画面');
+    if (k === 'スタッフ') ok(txt().includes('技術コーチ') && txt().includes('スタッフ候補'), 'スタッフの画面');
+    if (k === 'スカウト') ok(txt().includes('来年の入団予定'), 'スカウトの画面');
+    if (k === '順位と日程') ok(txt().includes('全国リーグ') || txt().includes('地域リーグ') || txt().includes('県リーグ'), '順位表');
+  }
   rail('ほか');
+  btn('記録').click();
+  ok(txt().includes('主な記録') && txt().includes('リーグの履歴'), '記録の画面');
   btn('設定').click();
   btn('卒業生名鑑').click();
 
@@ -166,14 +186,23 @@ async function clearEvents() {
     btn('卒業式へ').click();
     await sleep(20);
     ok(txt().includes('卒業式') && A.w.year === 2 && A.w.week === 1, '卒業式で次の年へ');
+    ok(txt().includes('今年の評価'), '卒業式に年末の評価が出る');
     btn('新しい年度へ').click();
+    ok(txt().includes('伸ばす力を1つ選んでください'), '指導者の成長の選択');
+    btn('教える力').click();
+    ok(txt().includes('2年目の始まり'), '次の年の目標の画面');
+    btn('この1年を始める').click();
     ok(txt().includes('2年目'), '2年目のホーム');
     rail('ほか');
     btn('卒業生名鑑').click();
     ok(d.querySelectorAll('#main .pitem').length >= 12, '卒業生が名鑑に並ぶ');
     // フリー対戦（成績に残らない）
+    rail('選手');
+    ok(txt().includes('キャプテン') && txt().includes('ポジション'), '選手にキャプテンとポジション変更');
+    btn('キャプテンにする').click();
+    ok(A.w.captain != null, 'キャプテンを指名');
     rail('試合');
-    ok(txt().includes('キックオフ'), 'フリー対戦の前の画面');
+    ok(txt().includes('キックオフ'), '試合の前の画面');
     ok(errors.length === 0, '例外: ' + errors.slice(0, 3).join(' | '));
     console.log(fails ? '失敗 ' + fails : '画面の点検: すべて通過');
     process.exit(fails ? 1 : 0);

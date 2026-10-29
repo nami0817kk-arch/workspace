@@ -14,7 +14,6 @@
     const first = Math.ceil((m / 12) * WEEKS) + 1;
     return { month: MONTHS[m], nth: week - first + 1 };
   };
-  YA.hasMatch = (week) => week <= 30;
   YA.WEEKS = WEEKS;
 
   // ---------- 能力の分類・特性の覚えやすさ ----------
@@ -167,6 +166,17 @@
     numbers(w);
     autoTeams(w, true);
     w.plan = defaultPlan();
+    w.v = 2;
+    w.coach = YA.newCoach();
+    w.scouting = YA.newScouting();
+    w.disc = 60;
+    w.rules = [];
+    w.trophies = [];
+    w.h2h = {};
+    w.rel = [];
+    YA.newClub(w, 2, w.clubName);
+    YA.relations(w);
+    YA.yearStart(w);
     YA.autoPlan(w);
     w.inbox.push({ week: 0, year: 1, tier: 2, text: '指導者として着任しました。高1〜高3の36人を預かります。まずは練習を組んで、週を進めましょう。' });
     return w;
@@ -180,7 +190,7 @@
   // ---------- チーム（A・B）の自動選出 ----------
   const SQUAD = { GK: 2, DF: 7, MF: 7, FW: 4 }; // Aの登録20
   function healthy(p) {
-    return p.inj <= 0;
+    return p.inj <= 0 && !(p.away > 0) && !(p.suspend > 0);
   }
   function autoTeams(w, init) {
     const all = Object.values(w.players);
@@ -203,7 +213,8 @@
     const need = Object.assign({}, NEED[formation] || NEED['4-3-3']);
     const chosen = [];
     for (const pos of ['GK', 'DF', 'MF', 'FW']) {
-      const c = pool.filter((p) => p.pos === pos && healthy(p)).sort((a, b) => YA.ovr(b) - YA.ovr(a) - (b.fat - a.fat) * 0.01);
+      let c = pool.filter((p) => p.pos === pos && healthy(p)).sort((a, b) => YA.ovr(b) - YA.ovr(a) - (b.fat - a.fat) * 0.01);
+      if (pos === 'GK' && !c.length) c = pool.filter((p) => p.pos === 'GK').sort((a, b) => YA.ovr(b) - YA.ovr(a));
       chosen.push(...c.slice(0, need[pos]));
     }
     // 足りない位置は他の位置から補う
@@ -244,7 +255,7 @@
       const p = w.players[s.pid];
       if (p && healthy(p)) return;
       const pos = YA.posOfSlot(s, i);
-      let k = bench.findIndex((id) => w.players[id] && healthy(w.players[id]) && w.players[id].pos === (pos === 'GK' ? 'GK' : w.players[id].pos) && (pos === 'GK' ? true : w.players[id].pos !== 'GK'));
+      let k = bench.findIndex((id) => w.players[id] && healthy(w.players[id]) && (pos === 'GK' ? w.players[id].pos === 'GK' : w.players[id].pos !== 'GK'));
       if (pos !== 'GK') {
         const k2 = bench.findIndex((id) => w.players[id] && healthy(w.players[id]) && w.players[id].pos === pos);
         if (k2 >= 0) k = k2;
@@ -268,9 +279,12 @@
     for (const id of ids) {
       const p = w.players[id];
       p._startStam = clamp(100 - p.fat * 0.55, 35, 100);
+      p.isCap = w.captain === id;
+      p.isVice = w.vice === id;
+      p.friends = (w.rel || []).filter((x) => x.k === 'friend' && (x.a === id || x.b === id)).map((x) => (x.a === id ? x.b : x.a));
       players[id] = p;
     }
-    return { id: 'me', name: w.clubName + (which === 'B' ? ' B' : ''), short: which === 'B' ? 'レガーレB' : 'レガーレ', color: '#1f6feb', isUser: true, players, lineup: JSON.parse(JSON.stringify(lineup)), bench: bench.slice(), tactic: w.tactic ? JSON.parse(JSON.stringify(w.tactic)) : Object.assign({ type: 'ポゼッション' }, YA.TACTICS['ポゼッション']), instr: {}, subsUsed: 0, windowsUsed: 0, formation: w.formation };
+    return { id: 'me', name: w.clubName + (which === 'B' ? ' B' : ''), short: which === 'B' ? 'レガーレB' : 'レガーレ', color: '#1f6feb', isUser: true, players, lineup: JSON.parse(JSON.stringify(lineup)), bench: bench.slice(), tactic: w.tactic ? JSON.parse(JSON.stringify(w.tactic)) : Object.assign({ type: 'ポゼッション' }, YA.TACTICS['ポゼッション']), instr: {}, subsUsed: 0, windowsUsed: 0, formation: w.formation, prep: YA.analysisLevel ? YA.analysisLevel(w) : 0, coachTactic: w.coach ? w.coach.tactic : 10, disc: w.disc };
   };
 
   // 相手（週ごとに決まる）。年とともに強くなる
@@ -300,12 +314,14 @@
     const plan = w.plan || defaultPlan();
     const all = Object.values(w.players);
     const gains = {};
+    const tfx = YA.trainerFx ? YA.trainerFx(w) : { recover: 0, inj: 1 };
+    const dscMult = 0.9 + (w.disc == null ? 60 : w.disc) / 500;
     let recoveries = 0;
     for (const d of plan.days) if (d.menu === '回復') recoveries++;
     for (const p of all) {
       p.gain = {};
       const inj = p.inj > 0;
-      const rest = p.rest === 'rest' || inj;
+      const rest = p.rest === 'rest' || inj || p.away > 0;
       const light = p.rest === 'light';
       let fatAdd = 0;
       const exp = {};
@@ -326,14 +342,14 @@
       // 試合の経験（頭の能力と自信に上乗せ。出番がなければなし）
       const mm = p._weekMins || 0;
       if (mm > 0) {
-        const tier = p.team === 'A' ? 1 : 0.55;
+        const tier = (p.team === 'A' ? 1 : 0.55) * (w.league ? YA.LEVEL_EXP[w.league.level - 1] : 1);
         for (const a of YA.AB_MENTAL) exp[a] = (exp[a] || 0) + (mm / 90) * 0.5 * tier;
       }
       p._weekMins = 0;
       // 疲れ・怪我
-      p.fat = clamp(p.fat + fatAdd * 2.4 - (rest ? 0 : 14), 0, 100);
+      p.fat = clamp(p.fat + fatAdd * 2.4 * (w.campMult > 1 ? 1.15 : 1) - (rest ? 0 : 14 + tfx.recover), 0, 100);
       if (!rest) {
-        const risk = 0.003 + Math.max(0, p.fat - 55) / 100 * 0.035 + (p.spurt > 0 ? 0.01 : 0);
+        const risk = (0.003 + Math.max(0, p.fat - 55) / 100 * 0.035 + (p.spurt > 0 ? 0.01 : 0)) * tfx.inj * (w.campMult > 1.5 ? 1.5 : 1);
         if (rng() < risk * (light ? 0.5 : 1)) {
           p.inj = rng.int(1, p.fat > 80 ? 8 : 5);
           p.hist.unshift({ y: w.year, w: w.week, t: '怪我（' + p.inj + '週）' });
@@ -353,7 +369,7 @@
       const diligence = anyP(p, '真面目') ? 1.08 : anyP(p, '練習嫌い') ? 0.9 : 1;
       for (const [a, e] of Object.entries(exp)) {
         const aff = p.aff[a] || 1;
-        const g = e * 0.17 * p.rate * aff * roomF * cond * diligence;
+        const g = e * 0.17 * p.rate * aff * roomF * cond * diligence * (YA.staffMult ? YA.staffMult(w, p, a) * YA.coachMult(w) * (w.campMult || 1) * dscMult : 1) * (p.adapt > 0 ? 0.92 : 1);
         // 高い値ほど伸びにくい
         const hard = clamp(1.25 - p.ab[a] / 22, 0.25, 1);
         p.prog[a] = (p.prog[a] || 0) + g * hard;
@@ -481,7 +497,7 @@
       text: (p) => pname(p) + 'の家庭で、遠征費のことが話題になっているという。本人は気にしている様子だ',
       opts: [opt('本人の話を聞く', 'warm'), opt('クラブに相談してみる、と伝える', 'push'), opt('そっとしておく', 'wait')] },
     { id: 'homesick', name: 'ホームシック', weight: 0.9,
-      pick: (w, r) => { const c = Object.values(w.players).filter((p) => ST(p, '目指すもの', '寂しがり') || ST(p, '人との関わり', '人見知り')); return c.length ? r.pick(c) : null; },
+      pick: (w, r) => { const c = Object.values(w.players).filter((p) => (ST(p, '目指すもの', '寂しがり') || ST(p, '人との関わり', '人見知り')) && p.dorm !== false); return c.length ? r.pick(c) : null; },
       text: (p) => pname(p) + 'は、チームにまだ馴染みきれていないようだ。一人でいることが多い',
       opts: [opt('仲の良い選手とペアで練習させる', 'warm', (w, p) => { p.unrest = Math.max(0, p.unrest - 1); }), opt('声をかけて背中を押す', 'push'), opt('様子を見る', 'wait')] },
     { id: 'hot', name: '絶好調', weight: 1.3,
@@ -509,7 +525,7 @@
         if (!p || used.has(p.id) || used.has(ev.id)) continue;
         used.add(p.id);
         used.add(ev.id);
-        out.push({ id: ev.id, pid: p.id, week: w.week, year: w.year });
+        out.push({ id: ev.id, pid: p.id || null, x: p._club != null ? p._club : p._staff, week: w.week, year: w.year });
         break;
       }
     }
@@ -532,15 +548,27 @@
 
   YA.eventView = function (w, e) {
     const def = YA.EVENTS.find((x) => x.id === e.id);
-    const p = w.players[e.pid];
-    if (!def || !p) return null;
-    return { name: def.name, text: def.text(p), p, opts: def.opts.map((o) => o.label) };
+    const p = e.pid ? w.players[e.pid] : null;
+    if (!def || (e.pid && !p)) return null;
+    if (e.x != null) {
+      w._clubReq = e.x;
+      w._staffIdx = Math.min(e.x, (w.club ? w.club.staff.length : 1) - 1);
+    }
+    return { name: def.name, text: def.text(p, w), p, opts: def.opts.map((o) => o.label) };
   };
   YA.resolveEvent = function (w, e, idx) {
     const def = YA.EVENTS.find((x) => x.id === e.id);
-    const p = w.players[e.pid];
+    const p = e.pid ? w.players[e.pid] : null;
     const o = def.opts[idx];
     const r = YA.rngOf(w.seed * 5 + w.year * 99 + w.week * 3 + idx);
+    if (e.x != null) {
+      w._clubReq = e.x;
+      w._staffIdx = Math.min(e.x, w.club.staff.length - 1);
+    }
+    if (o.run) {
+      const rr = o.run(w, p, r);
+      return { line: rr.line, small: rr.small || '', leave: '' };
+    }
     const res = react(p, o.kind);
     const small = apply(p, res);
     if (o.extra) o.extra(w, p, r);
@@ -557,7 +585,7 @@
 
   function removePlayer(w, id) {
     const p = w.players[id];
-    w.alumni.push({ name: p.name, pos: p.pos, year: w.year, ovr: Math.round(YA.ovr(p) * 10) / 10, note: '退団', grade: p.grade });
+    w.alumni.push({ name: p.name, pos: p.pos, year: w.year, ovr: Math.round(YA.ovr(p) * 10) / 10, note: '退団', grade: p.grade, age: null, status: 'left', club: '', apps: 0, goals: 0, nat: 0, transfers: 0, retired: false, traits: p.traits.slice() });
     delete w.players[id];
     for (const k of ['lineupA', 'lineupB']) { /* 入れ替えは autoTeams で */ }
     autoTeamsKeep(w);
@@ -602,6 +630,7 @@
       if (!p) continue;
       const mm = p.st ? p.st.minutes : 0;
       p.mins += mm;
+      if (which === 'A') p.minsA = (p.minsA || 0) + mm;
       p._weekMins = (p._weekMins || 0) + mm;
       if (mm > 0) {
         // 試合の疲れ
@@ -620,7 +649,8 @@
     const gf = m.score.home;
     const ga = m.score.away;
     if (which === 'A') {
-      w.results.push({ year: w.year, week: w.week, opp: opp.name, gf, ga });
+      w.results.push({ year: w.year, week: w.week, opp: opp.name, gf, ga, kind: opp.kindLabel || '' });
+      if (scheduled && YA.recordMatch) YA.recordMatch(w, m, opp);
       if (gf > ga) w.rec.w++;
       else if (gf === ga) w.rec.d++;
       else w.rec.l++;
@@ -646,24 +676,50 @@
   // ---------- 週の締め：出来事の反映・暦を進める・年度替わり ----------
   YA.startWeek = function (w) {
     // 今週の練習を実行して出来事を作る
+    w.campMult = 1;
+    if (YA.SCHED(w.week).t === 'camp') YA.applyCamp(w);
+    YA.weekExtras(w);
     const gains = YA.runTraining(w);
-    const swaps = [repairLineup(w, 'A'), repairLineup(w, 'B')];
-    for (const s of swaps[0]) noteTier(w, 2, '怪我の' + s[0].num + '番 ' + s[0].name + ' の代わりに ' + s[1].num + '番 ' + s[1].name + ' がAチームに入った');
     w.events = YA.rollEvents(w);
-    w.phase = YA.hasMatch(w.week) ? 'event' : 'event';
+    w.phase = 'event';
     w.matchDone = false;
     return gains;
   };
+  // 出来事のあと：欠けた先発を埋め、試合のある週は試合へ
+  YA.afterEvents = function (w) {
+    w.events = [];
+    const swaps = [repairLineup(w, 'A'), repairLineup(w, 'B')];
+    for (const s of swaps[0]) noteTier(w, 2, s[0].num + '番 ' + s[0].name + ' が出られないため、' + s[1].num + '番 ' + s[1].name + ' がAチームの先発に入った');
+    w.phase = YA.hasMatch(w.week, w) ? 'match' : 'after';
+  };
   YA.endWeek = function (w) {
     // Bの試合（自動）
-    if (YA.hasMatch(w.week)) {
+    const sch = YA.SCHED(w.week);
+    if (sch.t === 'league' || sch.t === 'cup') {
       const b = YA.simulateB(w);
       w.lastB = b;
     }
-    // 卒業式
+    YA.resolveOffers(w);
+    if (sch.t === 'league' && sch.n === 22) {
+      const le = YA.leagueEnd(w);
+      if (le) YA.noteTier(w, 1, `リーグ戦が終わりました。最終順位は${le.rank}位` + (le.move < 0 ? '（上位2位。来年は一つ上のリーグへ昇格）' : le.move > 0 ? '（下位2位。来年は一つ下のリーグへ降格）' : '') );
+    }
+    // 卒業式（年度末）：評価 → 卒業と入学 → 契約・解任
     let grad = null;
-    if (w.week >= WEEKS) grad = YA.graduate(w);
-    else w.week++;
+    if (w.week >= WEEKS) {
+      const le = YA.leagueEnd(w);
+      if (w.nextLevel) w.leagueLevel = w.nextLevel;
+      const ev = YA.evaluate(w);
+      w.coach.exp++;
+      w.pendingCoach = true;
+      grad = YA.graduate(w);
+      grad.eval = ev.rec;
+      if (ev.dismissed) {
+        const off = YA.moveOffers(w).sort((a, b) => b.tier - a.tier)[0];
+        YA.moveTo(w, off, '成績不振で解任されました。');
+        grad.dismissed = off;
+      } else if (w.club.contract.left <= 0) w.pendingContract = { offers: YA.moveOffers(w) };
+    } else w.week++;
     for (const p of Object.values(w.players)) p.rest = p.rest === 'rest' ? null : p.rest === 'light' ? null : null;
     w.phase = 'plan';
     w.matchDone = false;
@@ -674,11 +730,13 @@
   YA.graduate = function (w) {
     const rng = YA.rngOf(w.seed * 71 + w.year * 12345);
     const out = [];
+    const grads = [];
+    YA.alumniTick(w);
     for (const p of Object.values(w.players)) {
       if (p.grade === 3) {
         const o = Math.round(YA.ovr(p) * 10) / 10;
         const note = o >= 13.5 ? 'プロ契約（トップ昇格）' : o >= 12 ? '大学（強豪）へ' : o >= 10.5 ? '大学へ' : '社会人・就職へ';
-        w.alumni.push({ name: p.name, pos: p.pos, year: w.year, ovr: o, note, grade: 3, traits: p.traits.slice(), goals: 0 });
+        grads.push([p, note]);
         out.push({ name: p.name, pos: p.pos, ovr: o, note });
         delete w.players[p.id];
       } else {
@@ -693,14 +751,17 @@
       p.mins = 0;
       p.unrest = 0;
     }
+    for (const [p, note] of grads) w.alumni.push(YA.alumniEntry(w, p, note));
     const used = new Set(Object.values(w.players).map((p) => p.name));
-    genGrade(rng, w, 1, used);
+    YA.intake(w, rng, used);
     numbers(w);
     w.year++;
     w.week = 1;
     autoTeams(w, false);
+    YA.relations(w);
+    YA.yearStart(w);
     noteTier(w, 1, w.year - 1 + '年目が終わりました。' + out.length + '人が卒業し、新しい高1の12人が入団しました');
-    return { out, entered: 12 };
+    return { out, entered: 12, contrib: w.club.solidarityLast || 0 };
   };
 
   // ---------- 面談 ----------
@@ -718,6 +779,7 @@
     if (!YA.canTalk(w, p)) return { ok: false, msg: '1人とは週に1回までです' };
     p.talk = YA.talkWeek(w);
     const res = react(p, t.kind);
+    if (res.c > 0 && w.coach) res.c = res.c * (1 + (w.coach.talk - 10) * 0.03);
     // 話題によって少し違う
     let extra = '';
     if (k === 'issue' && p.train) {
@@ -774,5 +836,27 @@
       lowconf: all.filter((p) => p.conf < 35),
       hot: all.filter((p) => p.form >= 1 || p.spurt > 0),
     };
+  };
+  YA.noteTier = noteTier;
+  YA._genGrade = genGrade;
+  YA._numbers = numbers;
+  YA.applyReact = apply;
+  YA.clampV = clamp;
+  // ビルド3までの保存データ（育成だけ）を、クラブ運営つきの形に移す
+  YA.migrate = function (w) {
+    if (w.club && w.v >= 2) return w;
+    w.v = 2;
+    w.coach = w.coach || YA.newCoach();
+    w.scouting = w.scouting || YA.newScouting();
+    w.disc = 60;
+    w.rules = [];
+    w.trophies = [];
+    w.h2h = {};
+    w.rel = [];
+    YA.newClub(w, 2, w.clubName);
+    YA.relations(w);
+    YA.yearStart(w);
+    w.yearIntro = false;
+    return w;
   };
 })();
