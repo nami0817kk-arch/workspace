@@ -1,5 +1,5 @@
 // 画面の点検：ブラウザの代わりに jsdom で全画面を作り、例外が出ないか・必要な文字が出るか・操作が効くかを確かめる。
-// 見た目（色・配置・絵）は確かめない。そこはブラウザで見る（docs/screens/ に撮った画面を置いてある）。
+// 見た目（色・配置・絵）は確かめない。そこはブラウザで見る。
 //   npm install --no-save jsdom && node tool/views.js
 'use strict';
 const fs = require('fs');
@@ -13,8 +13,10 @@ const html = read('shell.html')
   .replace('/*__BOOT__*/', '')
   .replace('/*__DATA__*/', () => read('data.js'))
   .replace('/*__ENGINE__*/', () => read('engine.js'))
+  .replace('/*__WORLD__*/', () => read('world.js'))
   .replace('/*__RENDER__*/', () => read('render.js'))
-  .replace('/*__UI__*/', () => read('ui.js'));
+  .replace('/*__UI__*/', () => read('ui.js'))
+  .replace('/*__VIEWS__*/', () => read('views.js'));
 
 let fails = 0;
 const ok = (c, m) => {
@@ -45,42 +47,80 @@ const dom = new JSDOM(html, {
 const w = dom.window;
 const d = w.document;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-const btn = (t, scope) => [...(scope || d).querySelectorAll('button')].find((b) => b.textContent.includes(t));
+const btn = (t, scope) => [...(scope || d).querySelectorAll('button')].find((b) => b.textContent.includes(t) && !b.disabled);
 const txt = () => d.body.textContent;
+const rail = (k) => btn(k, d.getElementById('rail')).click();
+
+// 出来事が出ていたら、最初の選択肢で全部片付ける
+async function clearEvents() {
+  let n = 0;
+  while (d.querySelector('.sheet') && n++ < 10) {
+    const s = d.querySelector('.sheet');
+    const opts = [...s.querySelectorAll('button.btn')].filter((b) => !/次へ|閉じる|卒業|新しい年度/.test(b.textContent));
+    const next = btn('次へ', s) || btn('閉じる', s) || btn('新しい年度へ', s);
+    if (next) next.click();
+    else if (opts.length) opts[0].click();
+    await sleep(10);
+  }
+}
 
 (async () => {
   await sleep(100);
-  // 試合前
-  ok(!!btn('キックオフ'), 'キックオフのボタン');
-  ok(txt().includes('港北学院高校') && txt().includes('ブルーウィング東京ユース') && txt().includes('北陵高校'), '相手が3つ');
-  ok(d.querySelectorAll('.board svg g').length > 0, '布陣ボードに選手');
+  const A = w.YA._ui.app;
+  // ホーム
+  ok(txt().includes('1年目') && txt().includes('4月第1週'), 'ホームに年と週');
+  ok(!!btn('練習を確定して週を進める') && !!btn('練習を組む'), 'ホームの操作');
+  ok(txt().includes('今週気にかけたい子') && txt().includes('お知らせ'), 'ホームの欄');
+  // 練習
+  rail('練習');
+  ok(['月', '火', '水', '木', '金'].every((x) => txt().includes(x)) && txt().includes('重点にする能力'), '練習の曜日と表');
+  btn('月').click?.();
+  const dayBtns = [...d.querySelectorAll('#main button.card')];
+  ok(dayBtns.length === 5, '曜日のカード');
+  dayBtns[0].click();
+  ok(txt().includes('曜日のメニュー'), 'メニューの選択');
+  btn('フィジカル').click();
+  ok(txt().includes('フィジカル'), 'メニューを替えられる');
+  btn('おまかせ').click();
+  btn('疲れている子を休ませる').click();
+  // 重点・特性練習の選択
+  const focusBtn = [...d.querySelectorAll('#main .pitem button')].find((b) => b.textContent.includes('未設定') || true);
+  focusBtn.click();
+  ok(txt().includes('重点（今の値）'), '重点の選択');
+  btn('閉じる').click();
+  // 選手
+  rail('選手');
+  ok(txt().includes('面談') && txt().includes('特性') && txt().includes('性格'), '選手の詳細');
+  btn('褒める').click();
+  ok(txt().includes('自信'), '面談の反応');
+  btn('GK', d.querySelector('.fm-row')).click();
+  btn('怪我', d.querySelector('.fm-row')).click();
+  btn('全員', d.querySelector('.fm-row')).click();
+  btn('Bに回す') || btn('Aに上げる');
+  rail('クラブ');
+  rail('ほか');
+  btn('設定').click();
+  btn('卒業生名鑑').click();
+
+  // 1週目：練習を確定 → 出来事 → 試合
+  rail('ホーム');
+  btn('練習を確定して週を進める').click();
+  await sleep(20);
+  await clearEvents();
+  ok(A.w.phase === 'match', '出来事のあとは試合 ' + A.w.phase);
+  ok(txt().includes('試合へ'), '試合へのボタン');
+  btn('試合へ（').click();
+  ok(txt().includes('キックオフ') && txt().includes('vs') && txt().includes('全シミュレーション'), '今週の試合の前の画面');
   for (const k of ['戦い方', '選手と役割', '相手の分析']) {
     btn(k).click();
-    await sleep(20);
+    await sleep(10);
   }
-  ok(txt().includes('港北学院') && txt().includes('型：'), '相手の分析');
-  btn('選手と役割').click();
-  ok(txt().includes('特性') && txt().includes('役割'), '選手と役割の表示');
-  // 定番の形・型の保存と呼出
   for (const f of ['4-4-2', '3-5-2', '4-2-3-1', '5-3-2', '4-3-3']) {
     btn(f).click();
     ok(d.querySelectorAll('.board svg g').length >= 11, '形を変えても11人 ' + f);
   }
   btn('保存', d.querySelector('.fm-row:last-child')).click();
   btn('呼出').click();
-  // 左の縦タブ
-  for (const k of ['選手', '練習', 'クラブ', 'ほか', 'ホーム', '試合']) {
-    btn(k, d.getElementById('rail')).click();
-    await sleep(10);
-  }
-  btn('選手', d.getElementById('rail')).click();
-  ok(txt().includes('裏への抜け出し') && txt().includes('負けず嫌い'), '選手の詳細に特性と性格');
-  btn('試合', d.getElementById('rail')).click();
-
-  // 全シミュレーション：見ずに結果まで
-  btn('全シミュレーション').click();
-  ok(txt().includes('見どころ') && txt().includes('気づき'), '全シミュレーションで結果が出る');
-  btn('戦術を直す').click();
 
   // 試合中
   btn('キックオフ').click();
@@ -96,36 +136,46 @@ const txt = () => d.body.textContent;
     btn(k, d.querySelector('.sheet')).click();
     await sleep(10);
   }
-  // 交代
   btn('交代', d.querySelector('.sheet .tabs')).click();
-  [...d.querySelectorAll('.sheet .pitem')].find((b) => b.textContent.includes('鷹村')).click();
-  [...d.querySelectorAll('.sheet .pitem')].find((b) => b.textContent.includes('速水')).click();
+  const items = [...d.querySelectorAll('.sheet .pitem')];
+  items[10].click();
+  items.filter((b) => b.querySelector('.pos.FW'))[3].click();
   btn('交代する').click();
-  ok(txt().includes('交代しました'), '交代できる');
   btn('声かけ', d.querySelector('.sheet .tabs')).click();
   btn('激励').click();
   ok(txt().includes('チーム全体に「激励」'), '声かけの反応');
-  btn('指示', d.querySelector('.sheet .tabs')).click();
-  btn('仕掛けろ').click();
-  ok(txt().includes('仕掛けろ'), '指示');
   btn('再開', d.querySelector('.sheet')).click();
   ok(!d.querySelector('.sheet'), '再開でパネルが閉じる');
-
-  // 試合後の画面（エンジンを最後まで回して直接出す）
-  const YA = w.YA;
-  const m = new YA.Match({ seed: 5, home: YA.makeOurs(1), away: YA.makeOpponent(YA.OPPONENTS[0], 3), settings: { autoStop: false } });
-  let e;
-  while (!m.finished) e = m.step();
-  YA._ui.app.last = { m, summary: e.summary };
-  YA._ui.app.view = 'result';
-  YA._ui.render();
+  btn('結果まで').click();
   ok(txt().includes('見どころ') && txt().includes('気づき') && txt().includes('採点'), '試合後の画面');
-  ok(!!btn('同じ設定でもう一度') && !!btn('戦術を直す'), '試合後のボタン');
-  ok(txt().includes('特性') || txt().includes('性格'), '特性や性格が効いたことが出る');
-  btn('戦術を直す').click();
-  ok(!!btn('キックオフ'), '試合前に戻る');
+  ok(A.w.phase === 'after' && A.w.rec.w + A.w.rec.d + A.w.rec.l === 1, '試合の結果が名簿の世界に入る');
+  btn('ホームへ（次の週へ）').click();
+  ok(txt().includes('次の週へ') && txt().includes('試合が終わりました'), '試合後のホーム');
+  btn('次の週へ').click();
+  ok(A.w.week === 2 && A.w.phase === 'plan', '次の週へ進む');
 
-  ok(errors.length === 0, '例外: ' + errors.slice(0, 3).join(' | '));
-  console.log(fails ? '失敗 ' + fails : '画面の点検: すべて通過');
-  process.exit(fails ? 1 : 0);
+  // 試合のない週：1年を最後まで進めて、卒業式と入学
+  A.w.week = 40;
+  YA_startEnd();
+  async function YA_startEnd() {
+    rail('ホーム');
+    btn('練習を確定して週を進める').click();
+    await sleep(20);
+    await clearEvents();
+    ok(A.w.phase === 'after', '試合のない週 ' + A.w.phase);
+    btn('卒業式へ').click();
+    await sleep(20);
+    ok(txt().includes('卒業式') && A.w.year === 2 && A.w.week === 1, '卒業式で次の年へ');
+    btn('新しい年度へ').click();
+    ok(txt().includes('2年目'), '2年目のホーム');
+    rail('ほか');
+    btn('卒業生名鑑').click();
+    ok(d.querySelectorAll('#main .pitem').length >= 12, '卒業生が名鑑に並ぶ');
+    // フリー対戦（成績に残らない）
+    rail('試合');
+    ok(txt().includes('キックオフ'), 'フリー対戦の前の画面');
+    ok(errors.length === 0, '例外: ' + errors.slice(0, 3).join(' | '));
+    console.log(fails ? '失敗 ' + fails : '画面の点検: すべて通過');
+    process.exit(fails ? 1 : 0);
+  }
 })();

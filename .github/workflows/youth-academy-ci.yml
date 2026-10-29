@@ -34,7 +34,9 @@ jobs:
       # 試合の中身：落ちない・得点が釣り合う・特性や性格が結果に効く・交代と停止の決まりが守られる
       - name: 試合の点検
         working-directory: projects/youth-academy/web
-        run: node tool/sim.js
+        run: |
+          node tool/sim.js
+          node tool/world.js
 
       # 画面：ブラウザの代わりに全画面を作って、例外が出ないか・必要な文字が出るかを確かめる
       - name: 画面の点検
