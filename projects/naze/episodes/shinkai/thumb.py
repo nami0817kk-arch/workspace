@@ -1,7 +1,7 @@
 """深海魚の本編のサムネイル(1280×720)。下地は Gemini で作った絵(assets/thumb_gemini.jpg: 深い青の海の中で、つぶれたペットボトルのすぐ横を、
 半透明の小さな魚が平気な顔で泳ぐ)。
 形は電子レンジ・進撃の回でユーザーが決めたもの(2026-10-29): 字は絵の上に直接・箱や番号なし・大きくしすぎない・全部の要素を入れる・明るく。
-字(白＋黄): 「水深8,336mでも／深海魚はつぶれない／なぜ？／指先1平方cmに約870kg／ペットボトルの空気は845分の1に縮む」。上の右に長い一文「つぶれたペットボトルの横を、魚は平気で泳ぐ」。前の版(「なぜ？」なし)は out/shinkai/thumb_long_v1.jpg。python episodes/shinkai/thumb.py"""
+字(白＋黄): 「水深8,336mでも／深海魚はつぶれない／なぜ？／指先1平方cmに約870kg／ペットボトルの空気は845分の1に縮む」。上いっぱいに大きい横長の一文「つぶれたペットボトルの横を、魚は平気で泳ぐ」。前の版(「なぜ？」なし)は out/shinkai/thumb_long_v1.jpg。python episodes/shinkai/thumb.py"""
 import os
 import sys
 from pathlib import Path
@@ -35,21 +35,22 @@ def line(x, y, parts, size, stroke=16):
 
 
 x = 80
-line(x, 80, [("水深", WHITE), ("8,336m", YEL), ("でも", WHITE)], 112)
-# 上の右の空いている所に、横に長い一文(2026-10-29 ユーザー指示)。幅に収まるよう字の大きさを自動で決める
+# 上いっぱいに、大きい字の横長の一文(2026-10-29 ユーザー指示)。幅に収まるよう字の大きさを自動で決める
 LONG = [("つぶれたペットボトルの横を、", WHITE), ("魚は平気で泳ぐ", YEL)]
-lx, lw = 1000, 2480 - 1000
-sz = 80
+lw = 2560 - 2 * x
+sz = 140
 while sum(O.font(sz).getlength(t) for t, _ in LONG) > lw and sz > 40:
     sz -= 2
-line(lx, 88, LONG, sz, stroke=12)
-line(x, 245, [("深海魚は", WHITE)], 150)
-line(x, 415, [("つぶれない", YEL)], 190)
-line(x, 640, [("なぜ？", WHITE)], 150)   # 台本を「なぜつぶれないか」の筋にしたので、問いを足した(2026-10-29)
-line(x, 840, [("指先1平方cmに", WHITE)], 90, stroke=14)
-line(x, 945, [("約", WHITE), ("870kg", YEL), ("の重さ", WHITE)], 130)
-line(x, 1150, [("ペットボトルの空気は", WHITE)], 76, stroke=12)
-line(x, 1240, [("845分の1", YEL), ("に縮む", WHITE)], 104)
+line(x, 55, LONG, sz, stroke=14)
+# 左の字(上の一文の分、下に詰める)
+line(x, 255, [("水深", WHITE), ("8,336m", YEL), ("でも", WHITE)], 100)
+line(x, 370, [("深海魚は", WHITE)], 130)
+line(x, 510, [("つぶれない", YEL)], 170)
+line(x, 700, [("なぜ？", WHITE)], 130)   # 台本を「なぜつぶれないか」の筋にしたので、問いを足した(2026-10-29)
+line(x, 860, [("指先1平方cmに", WHITE)], 80, stroke=13)
+line(x, 950, [("約", WHITE), ("870kg", YEL), ("の重さ", WHITE)], 115)
+line(x, 1120, [("ペットボトルの空気は", WHITE)], 70, stroke=11)
+line(x, 1200, [("845分の1", YEL), ("に縮む", WHITE)], 96)
 
 img.convert("RGB").resize((1280, 720), Image.LANCZOS).save(OUT / "thumb_long.jpg", quality=93)
 print(OUT / "thumb_long.jpg")
