@@ -732,6 +732,15 @@ roles:
     tone_strength: 0.5
     max_intonation: 1.3
     max_speed: 1.0
+  高杉想像:                  # 10-29。takasugi-story の想像の台詞。高杉晋作（23〜27歳）は若い男性の声 玄野武宏（慶喜想像と同じ声。別の回なので重ならない）。同じ回に他の人物の声は無い
+    label: 高杉晋作（想像）
+    name: 玄野武宏
+    style_id: 11
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
 
 character_credits:
   - "立ち絵：春日部つむぎ公式立ち絵素材（春日部つくし）"
