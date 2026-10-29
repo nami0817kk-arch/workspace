@@ -37,3 +37,40 @@ st = final.stat()
 (out / "qc.json").write_text(json.dumps(dict(passed=not fails, at=datetime.now().isoformat(timespec="seconds"), video=final.name, size=st.st_size,
                                              mtime=st.st_mtime, fails=fails, warns=warns, stats=stats), ensure_ascii=False, indent=1), encoding="utf-8")
 print("本編の点検", "通過" if not fails else fails, stats)
+
+
+# ---- ショート 5 本(縦)も、ピークが -1 dBFS を超えていたら同じ仕上げをする。qc.json は音の項目だけ更新(size・mtime も) ----
+def fix_short(k):
+    vdir = ROOT / "out" / f"rocket_{k}"
+    v = vdir / f"rocket_{k}.mp4"
+    q = vdir / "qc.json"
+    if not v.exists() or not q.exists():
+        return
+    _, _, st0 = sound(v)
+    if st0["peak"] is not None and st0["peak"] <= -1.0:
+        print(k, "ピーク", st0["peak"], "そのまま")
+        return
+    s = vdir / "_src.mp4"
+    t = vdir / "_peak.mp4"
+    shutil.copy2(v, s)
+    for gain in (0.0, -0.4, -0.7, -1.0, -1.4, -1.8):
+        subprocess.run([ffmpeg(), "-y", "-loglevel", "error", "-i", str(s), "-c:v", "copy", "-af", f"alimiter=limit=0.8:level=false,volume={gain}dB",
+                        "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-ac", "1", "-movflags", "+faststart", str(t)], check=True)
+        _, _, st = sound(t)
+        print(k, "gain", gain, st)
+        if st["peak"] is not None and st["peak"] <= -1.0:
+            break
+    t.replace(v)
+    s.unlink()
+    _, warns_s, st = sound(v)
+    r = json.loads(q.read_text(encoding="utf-8"))
+    keep = [w for w in r.get("warns", []) if not w.startswith(("音量", "ピーク", "無音"))]
+    r["warns"] = keep + warns_s
+    r["stats"].update(LUFS=st["LUFS"], peak=st["peak"])
+    sst = v.stat()
+    r.update(size=sst.st_size, mtime=sst.st_mtime, at=datetime.now().isoformat(timespec="seconds"))
+    q.write_text(json.dumps(r, ensure_ascii=False, indent=1), encoding="utf-8")
+
+
+for k in ("s1", "s2", "s3", "s4", "s5"):
+    fix_short(k)
