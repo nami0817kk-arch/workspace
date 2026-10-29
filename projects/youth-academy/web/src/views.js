@@ -238,6 +238,8 @@
   }
 
   // ---------- 選手 ----------
+  // 伸びしろの星：5つのうち黒がいくつか（黒＝確実にある分、灰＝あるかもしれない分、白抜き＝なさそう）
+  YA.starsEl = (r) => h('span', { class: 'stars' }, ...[0, 1, 2, 3, 4].map((i) => h('span', { class: i < r[0] ? 'on' : i < r[1] ? 'mid' : 'off' }, i < r[1] ? '★' : '☆')));
   function viewPlayers(main) {
     const w = W();
     const ui = U().app;
@@ -258,7 +260,7 @@
     const stars = YA.starsOf(sel);
     const head = (h('div', { class: 'row', style: 'flex-wrap:wrap;gap:5px;padding:2px 2px 0' },
       h('span', { class: 'chip gray' }, `${gradeName(sel.grade)} / ${sel.team}チーム`), h('span', { class: 'chip gray' }, `疲れ ${Math.round(sel.fat)}`), h('span', { class: 'chip gray' }, `出場 ${sel.mins}分`),
-      h('span', { class: 'chip trait' }, '伸びしろ ' + '★'.repeat(stars[0]) + '☆'.repeat(stars[1] - stars[0]) + '（目安）'), ...flags(sel),
+      h('span', { class: 'chip trait' }, '伸びしろ ', YA.starsEl(stars), h('small', { style: 'font-weight:600;opacity:.8' }, '黒＝確実 灰＝かも')), ...flags(sel),
       h('button', { class: 'btn sm', onclick: () => { sel.star = !sel.star; YA.saveWorld(); rerender(); } }, sel.star ? '★ を外す' : '★ 注目の印'),
       h('button', { class: 'btn sm', onclick: () => swapTeam(sel) }, sel.team === 'A' ? 'Bに回す' : 'Aに上げる')));
     // 面談
