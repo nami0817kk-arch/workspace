@@ -1,0 +1,27 @@
+{
+ "long": {
+  "id": "hchGOq0SsRo",
+  "publish_at": "2026-10-31T21:00:00+09:00",
+  "thumb": "out/shinkai/thumb_long.jpg"
+ },
+ "s1": {
+  "id": "k--KK5QweJ0",
+  "publish_at": "2026-11-01T17:00:00+09:00"
+ },
+ "s2": {
+  "id": "MPvzj0pmKX8",
+  "publish_at": "2026-11-01T18:00:00+09:00"
+ },
+ "s3": {
+  "id": "YXfzTqxA0HM",
+  "publish_at": "2026-11-01T19:00:00+09:00"
+ },
+ "s4": {
+  "id": "tohG2dfwDAA",
+  "publish_at": "2026-11-01T20:00:00+09:00"
+ },
+ "s5": {
+  "id": "8Z3xiLk7rUE",
+  "publish_at": "2026-11-01T21:00:00+09:00"
+ }
+}
