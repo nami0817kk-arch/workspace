@@ -187,6 +187,8 @@
       h('button', { class: 'btn sm', onclick: () => { YA.autoPlan(w); YA.saveWorld(); rerender(); } }, 'おまかせ（弱点を重点に・疲れた子は休み）'),
       h('button', { class: 'btn sm', onclick: () => { for (const p of Object.values(w.players)) if (p.fat > 60 && p.inj <= 0) p.rest = 'rest'; YA.saveWorld(); rerender(); } }, '疲れている子を休ませる'),
       h('button', { class: 'btn sm', onclick: () => { for (const p of Object.values(w.players)) p.rest = null; YA.saveWorld(); rerender(); } }, '休みを全部外す'),
+      ...[0, 1, 2].map((i) => h('button', { class: 'btn sm', title: '長押しではなく、保存→呼出', onclick: () => { if (w.menuSlots && w.menuSlots[i]) { YA.loadMenuSlot(w, i); YA.saveWorld(); rerender(); } } }, '型' + (i + 1) + (w.menuSlots && w.menuSlots[i] ? '呼出' : '(空)'))),
+      h('button', { class: 'btn sm', onclick: () => confirmSlot(w) }, '型に保存'),
       h('span', { class: 'grow' }),
       ...[['all', '全員'], ['A', 'A'], ['B', 'B'], ['1', '高1'], ['2', '高2'], ['3', '高3']].map(([k, n]) => h('button', { class: 'btn sm' + (ui.tf === k ? ' on' : ''), onclick: () => { ui.tf = k; rerender(); } }, n)));
     // 選手の表
@@ -208,6 +210,9 @@
     }
     wrap.append(days, bulk, table);
     main.append(wrap);
+  }
+  function confirmSlot(w) {
+    modal((close) => h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(420px,95%);padding:12px;gap:8px' }, h('div', { class: 'h' }, 'いまの1週間のメニューを、どの型に保存しますか'), h('div', { class: 'row' }, ...[0, 1, 2].map((i) => h('button', { class: 'btn', onclick: () => { YA.saveMenuSlot(w, i); YA.saveWorld(); close(); rerender(); } }, '型' + (i + 1) + (w.menuSlots && w.menuSlots[i] ? '（上書き）' : '')))), h('button', { class: 'btn', onclick: close }, 'やめる')));
   }
   function pickMenu(i) {
     const w = W();

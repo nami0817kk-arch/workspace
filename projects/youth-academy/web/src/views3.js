@@ -73,6 +73,7 @@
     body.append(h('div', { class: 'row', style: 'margin:6px 0' }, h('span', { class: 'grow' }, '試合の自動停止（前半終了・得点・失点・残り15分）'), h('button', { class: 'btn sm' + (app.autoStop ? ' on' : ''), onclick: () => { app.autoStop = !app.autoStop; store.set('autoStop', app.autoStop); rerender(); } }, app.autoStop ? 'ON' : 'OFF')));
     body.append(h('div', { class: 'row', style: 'margin:6px 0' }, h('span', { class: 'grow' }, '効果音'), h('button', { class: 'btn sm' + (YA.sfx.on ? ' on' : ''), onclick: () => { YA.sfx.on = !YA.sfx.on; store.set('sfx', YA.sfx.on); YA.sfx.play('tap'); rerender(); } }, YA.sfx.on ? 'ON' : 'OFF')));
     fontAndNotices(body);
+    YA.nameBlock(body);
     // セーブ枠
     body.append(h('div', { class: 'h', style: 'margin-top:10px' }, `セーブ枠（無料${YA.SLOT_COUNT}つ）`), h('div', { class: 'note' }, '1つの遊びに自動セーブが1つ。枠ごとに別のクラブで遊べます。'));
     for (let i = 0; i < YA.SLOT_COUNT; i++) {
@@ -206,6 +207,20 @@
           rerender();
         } }, '決める')));
     });
+  };
+  YA.nameBlock = function (body) {
+    const app = U().app;
+    const w = app.w;
+    if (!w || !w.league) return;
+    const ask = (title, cur, fn) => V().modal((close) => {
+      const inp = h('input', { type: 'text', value: cur, maxlength: 14, style: 'width:100%;padding:6px 8px;border:1px solid #b9c7de;border-radius:8px;font:inherit;font-weight:700' });
+      const msg = h('div', { class: 'note' }, '1〜14文字で入れてください');
+      return h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(420px,95%);padding:12px;gap:8px' }, h('div', { class: 'h' }, title), inp, msg,
+        h('div', { class: 'row' }, h('button', { class: 'btn', onclick: close }, 'やめる'), h('button', { class: 'btn pri', onclick: () => { const r = fn(inp.value); if (!r.ok) { msg.textContent = r.msg; return; } close(); YA.saveWorld(true); rerender(); } }, '決める')));
+    });
+    body.append(h('div', { class: 'h', style: 'margin-top:10px' }, '名前の書き換え'), h('div', { class: 'note' }, '自分のクラブと、今年戦う相手クラブの名前を好きに変えられます（相手は翌年以降も同じ名前で出ます）。'));
+    body.append(h('div', { class: 'row', style: 'margin:3px 0' }, h('span', { class: 'grow' }, w.clubName), h('button', { class: 'btn sm', onclick: () => ask('クラブ名を変える', w.clubName, (v) => YA.renameClub(w, v)) }, '変更')));
+    for (const t of w.league.teams.filter((x) => !x.me)) body.append(h('div', { class: 'row', style: 'margin:3px 0' }, h('span', { class: 'grow', style: 'font-size:11.5px' }, t.name), h('button', { class: 'btn sm', onclick: () => ask('相手クラブの名前を変える', t.name, (v) => YA.renameTeam(w, t.id, v)) }, '変更')));
   };
   function confirmBox(text, ok) {
     V().modal((close) => h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(420px,95%);padding:12px;gap:8px' }, h('div', { class: 'h' }, text), h('div', { class: 'row' }, h('button', { class: 'btn', onclick: close }, 'やめる'), h('button', { class: 'btn pri', onclick: () => { close(); ok(); } }, 'はい'))));

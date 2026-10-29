@@ -286,6 +286,13 @@ async function clearEvents() {
     btn('標準', d.getElementById('main')).click();
     rail('ほか');
     btn('実績と引退').click();
+    rail('ほか');
+    btn('設定').click();
+    ok(txt().includes('名前の書き換え') && txt().includes('クラブ名') === false || txt().includes('名前の書き換え'), '設定に名前の書き換え');
+    rail('練習');
+    ok(txt().includes('型に保存'), '練習に型の保存');
+    rail('ほか');
+    btn('実績と引退').click();
     ok(txt().includes('実績') && txt().includes('引退する') && txt().includes('全国リーグで優勝'), '実績と引退の画面');
     // フリー対戦（成績に残らない）
     rail('選手');
