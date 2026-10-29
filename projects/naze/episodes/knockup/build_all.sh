@@ -9,3 +9,5 @@ for e in ch1 ch2 ch3 ch4 ch5 s1 s2 s3 s4 s5; do
 done
 python -m naze long episodes/knockup --skip-build > out/_knockup_build_long.log 2>&1
 echo "本編 終了 $? $(date +%H:%M)"
+python episodes/knockup/fix_peak.py >> out/_knockup_build_long.log 2>&1
+echo "ピーク抑え 終了 $? $(date +%H:%M)"
