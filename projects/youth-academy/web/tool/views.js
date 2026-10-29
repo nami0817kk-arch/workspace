@@ -77,11 +77,16 @@ const txt = () => d.body.textContent;
   ok(txt().includes('裏への抜け出し') && txt().includes('負けず嫌い'), '選手の詳細に特性と性格');
   btn('試合', d.getElementById('rail')).click();
 
+  // 全シミュレーション：見ずに結果まで
+  btn('全シミュレーション').click();
+  ok(txt().includes('見どころ') && txt().includes('気づき'), '全シミュレーションで結果が出る');
+  btn('戦術を直す').click();
+
   // 試合中
   btn('キックオフ').click();
   await sleep(300);
   ok(!!d.querySelector('canvas') && !!d.querySelector('.scoreboard'), '試合の画面');
-  ok(txt().includes('止める') && txt().includes('自動停止'), '止めるボタンと自動停止');
+  ok(txt().includes('止める') && txt().includes('自動停止') && txt().includes('結果まで'), '止めるボタン・自動停止・結果まで');
   btn('見どころ').click();
   btn('止める').click();
   let n = 0;
