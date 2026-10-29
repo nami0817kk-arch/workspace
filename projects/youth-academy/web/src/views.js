@@ -291,6 +291,13 @@
   }
   function swapTeam(p) {
     const w = W();
+    const bi = w.lineupB.findIndex((s) => s.pid === p.id);
+    if (bi >= 0 && p.team === 'B') {
+      // Bの先発をAに上げるときは、先にBのベンチの同じ位置の選手を先発に回す
+      const r = (w.benchB || []).map((id) => w.players[id]).filter((q) => q && q.inj <= 0).sort((a, b) => (b.pos === p.pos) - (a.pos === p.pos) || YA.ovr(b) - YA.ovr(a))[0];
+      if (!r) { modal((close) => h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(420px,95%);padding:12px;gap:8px' }, h('div', { class: 'h' }, 'Bの控えがいません'), h('button', { class: 'btn pri', onclick: close }, '閉じる'))); return; }
+      YA.swapB(w, bi, r.id);
+    }
     if (w.lineupA.some((s) => s.pid === p.id) || w.lineupB.some((s) => s.pid === p.id)) {
       modal((close) => h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(420px,95%);padding:12px;gap:8px' }, h('div', { class: 'h' }, '先発にいる選手です'), h('div', { class: 'note' }, 'まず試合の「選手と役割」で、ベンチと入れ替えてから動かしてください。'), h('button', { class: 'btn pri', onclick: close }, '閉じる')));
       return;
