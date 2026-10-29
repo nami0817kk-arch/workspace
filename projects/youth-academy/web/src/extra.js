@@ -80,6 +80,7 @@
     if (ph === 'event') {
       for (const e of w.events.slice()) {
         if (o.stopOnImportant && YA.SIM_IMPORTANT.indexOf(e.id) >= 0) return { stop: '出来事（' + (YA.EVENTS.find((x) => x.id === e.id) || {}).name + '）' };
+        if (YA.SIM_IMPORTANT.indexOf(e.id) >= 0) log.important++;
         const v = YA.eventView(w, e);
         if (v) {
           const r = YA.resolveEvent(w, e, Math.min(YA.autoChoice(e.id), v.opts.length - 1));
@@ -104,9 +105,9 @@
   // おまかせで進める。until: 'week' | 'match' | 'year'
   YA.simulate = function (w, opts) {
     const o = Object.assign({ until: 'week', stopOnImportant: true }, opts || {});
-    const before = { year: w.year, week: w.week, rec: Object.assign({}, w.rec), sums: {}, n: w.inboxN || 0, alumni: w.alumni.length };
+    const before = { year: w.year, week: w.week, rec: Object.assign({}, w.rec), sums: {}, n: w.inboxN || 0, alumni: w.alumni.length, trust: w.club.trust, rep: w.club.rep, total: w.club.total, salaries: w.club.staff.reduce((s, x) => s + x.salary, 0), inboxN: w.inboxN || 0 };
     for (const p of Object.values(w.players)) before.sums[p.id] = YA.abSum(p);
-    const log = { events: [], notes: [], weeks: 0, matches: [], grad: null, stopped: null };
+    const log = { events: [], notes: [], weeks: 0, matches: [], grad: null, stopped: null, important: 0, picks: 0 };
     const startYear = w.year;
     let guard = 0;
     while (guard++ < 800) {
@@ -163,7 +164,36 @@
       lines.push({ k: 'events', t: '出来事：' + Object.entries(c).map(([k, v]) => `${k}×${v}`).join('、') });
     }
     const big = fresh.filter((n) => n.tier === 1).slice(-6).map((n) => n.text);
-    return { title: 'おまかせ進行の結果', span, lines, big, stopped: log.stopped, weeks: log.weeks, matches: mm.length };
+    // ---- 指標（テスト・釣り合いの点検用）----
+    const tiers = { 1: 0, 2: 0, 3: 0 };
+    for (const n of fresh) tiers[n.tier] = (tiers[n.tier] || 0) + 1;
+    const salaries = w.club.staff.reduce((s2, x) => s2 + x.salary, 0);
+    const quits = w.alumni.slice(before.alumni).filter((a) => a.status === 'left').length;
+    const gradPaths = { pro: 0, univ: 0, amateur: 0 };
+    const newAl = w.alumni.slice(before.alumni).filter((a) => a.status !== 'left');
+    for (const a of newAl) gradPaths[a.status] = (gradPaths[a.status] || 0) + 1;
+    const weeksN = Math.max(1, log.weeks);
+    // 1週に自分で選ぶ回数の見積もり：練習の確認1・試合前の確認1・出来事・面談の目安1（出来事の選択肢は1回ずつ）
+    const picksPerWeek = Math.round((2 + log.events.length / weeksN + 1) * 10) / 10;
+    // 1回の選択を約25秒、試合を約2分半とすると、1週の想定の時間（分）
+    const minutesPerWeek = Math.round(((picksPerWeek * 25) / 60 + 2.5 * (mm.length / weeksN) + 0.7) * 10) / 10;
+    const lastEval = log.grad && log.grad.eval ? log.grad.eval : null;
+    const me = w.lastStandings && log.grad ? w.lastStandings.find((x) => x.me) : null;
+    const metrics = {
+      year: before.year, weeks: log.weeks, matches: mm.length,
+      rank: me ? me.rank : null, move: log.grad ? w.leagueEndMove : null, letter: lastEval ? lastEval.letter : null, score: lastEval ? lastEval.score : null,
+      trustBefore: Math.round(before.trust), trustAfter: Math.round(w.club.trust), repAfter: Math.round(w.club.rep),
+      budget: w.club.total, salaries, budgetBefore: before.total,
+      growthAvg: gains.length ? Math.round((gains.reduce((s2, x) => s2 + x[1], 0) / gains.length) * 10) / 10 : 0,
+      injuries: count(/怪我/), traits: count(/身につけた/), spurts: count(/成長期に入った/), peaks: count(/伸び盛り/), walls: count(/壁/), declines: count(/能力が下が/),
+      quits, gradPaths, noticesByTier: tiers, events: log.events.length, important: log.important, picksPerWeek, minutesPerWeek,
+      players: Object.keys(w.players).length, alumni: w.alumni.length, tier: w.club.tier, level: w.league ? w.league.level : null,
+    };
+    lines.push({ k: 'budget', t: `予算 ${w.club.total}万円（給料${salaries}万円）／信頼度 ${before.trust < w.club.trust ? '↑' : before.trust > w.club.trust ? '↓' : '→'} ${Math.round(before.trust)}→${Math.round(w.club.trust)}／評判 ${Math.round(w.club.rep)}` });
+    if (log.grad) lines.push({ k: 'path', t: `卒業生の進路：プロ${gradPaths.pro}・大学${gradPaths.univ}・社会人${gradPaths.amateur}／退団${quits}人` });
+    lines.push({ k: 'notice', t: `お知らせ：必ず止まる${tiers[1] || 0}・お知らせ${tiers[2] || 0}・記録だけ${tiers[3] || 0}／必ず止める出来事 ${log.important}回` });
+    lines.push({ k: 'time', t: `1週に自分で選ぶ回数の目安 ${picksPerWeek}回 → 想定${minutesPerWeek}分（目標は1週8〜10分）` });
+    return { title: 'おまかせ進行の結果', span, lines, big, stopped: log.stopped, weeks: log.weeks, matches: mm.length, metrics };
   };
 
   // ---------- 指導者の作成（決定50）と、最初のクラブ（決定49）----------
@@ -327,5 +357,57 @@
         p.adapt = Math.max(p.adapt || 0, p.adaptF < 3 ? 1 : 0);
       }
     }
+  };
+})();
+
+// ---------- 点検用：新しい世界でNか年おまかせ（シード指定で同じ結果になる）----------
+(function () {
+  'use strict';
+  const YA = globalThis.YA;
+  const CLUB_BY_TIER = { 1: 0, 2: 2, 3: 5 };
+  // 1年ずつ進められる形（画面を固めないために、呼び出し側が間に待ちを入れられる）
+  YA.testStart = function (opts) {
+    const o = Object.assign({ seed: 1, years: 1, tier: 2, career: 'grind' }, opts || {});
+    const w = YA.newWorld(o.seed, YA.makeStart({ name: '点検', career: o.career, club: CLUB_BY_TIER[o.tier] != null ? CLUB_BY_TIER[o.tier] : 2, points: {}, noFire: !!o.noFire }));
+    w.yearIntro = false;
+    return { w, o, years: [], done: 0 };
+  };
+  YA.testYear = function (st) {
+    const rep = YA.simulate(st.w, { until: 'year', stopOnImportant: false });
+    st.years.push(rep);
+    st.done++;
+    return rep;
+  };
+  YA.testSummary = function (st) {
+    const ms = st.years.map((r) => r.metrics);
+    const avg = (f) => (ms.length ? Math.round((ms.reduce((a, m) => a + f(m), 0) / ms.length) * 10) / 10 : 0);
+    const letters = {};
+    for (const m of ms) letters[m.letter] = (letters[m.letter] || 0) + 1;
+    return {
+      years: ms.length,
+      avgRank: avg((m) => m.rank || 0), letters,
+      growthAvg: avg((m) => m.growthAvg), injuries: avg((m) => m.injuries), quits: avg((m) => m.quits),
+      pro: avg((m) => m.gradPaths.pro), picks: avg((m) => m.picksPerWeek), minutes: avg((m) => m.minutesPerWeek),
+      budget: avg((m) => m.budget), players: ms.length ? ms[ms.length - 1].players : 0,
+    };
+  };
+  YA.runTest = function (opts) {
+    const st = YA.testStart(opts);
+    for (let i = 0; i < st.o.years; i++) YA.testYear(st);
+    st.summary = YA.testSummary(st);
+    return st;
+  };
+  // 数字の異常（NaN・無限大）を探す。見つかったら場所を返す
+  YA.findBadNumber = function (obj, path, depth) {
+    path = path || 'w';
+    depth = depth || 0;
+    if (depth > 8) return null;
+    if (typeof obj === 'number') return Number.isFinite(obj) ? null : path;
+    if (!obj || typeof obj !== 'object') return null;
+    for (const k of Object.keys(obj)) {
+      const r = YA.findBadNumber(obj[k], path + '.' + k, depth + 1);
+      if (r) return r;
+    }
+    return null;
   };
 })();

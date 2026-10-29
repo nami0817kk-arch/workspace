@@ -54,7 +54,8 @@ const w = dom.window;
 const d = w.document;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const btn = (t, scope) => [...(scope || d).querySelectorAll('button')].find((b) => b.textContent.includes(t) && !b.disabled);
-const txt = () => d.body.textContent;
+// 画面に出ている文字だけを見る（ページに埋め込んだスクリプトの文字を拾うと、何でも通ってしまう）
+const txt = () => d.getElementById('app').textContent;
 const rail = (k) => btn(k, d.getElementById('rail')).click();
 
 // 出来事が出ていたら、最初の選択肢で全部片付ける
@@ -252,6 +253,13 @@ async function clearEvents() {
     rail('ほか');
     btn('設定').click();
     ok(txt().includes('セーブ枠') && txt().includes('効果音') && !!btn('書き出す') && !!btn('復元する'), '設定の画面');
+    ok(txt().includes('点検用：新しい世界でシミュレーション') && !!btn('実行') && !!btn('10年'), '点検用シミュレーションの設定');
+    const before = JSON.stringify(A.w.year) + A.w.clubName;
+    btn('実行').click();
+    for (let i = 0; i < 400 && !txt().includes('平均：順位'); i++) await sleep(100);
+    ok(txt().includes('平均：順位') && txt().includes('想定') && txt().includes('評価の内訳'), '点検用シミュレーションの結果の表');
+    btn('閉じる', d.querySelector('.sheet')).click();
+    ok(JSON.stringify(A.w.year) + A.w.clubName === before, '点検用はいまの遊びに影響しない');
     btn('書き出す').click();
     const ta = d.querySelector('.sheet textarea');
     ok(!!ta && ta.value.indexOf('youth-academy') >= 0, '書き出しの画面');

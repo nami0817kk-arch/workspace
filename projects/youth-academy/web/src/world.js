@@ -448,7 +448,7 @@
       if (tr && !rest && p.traits.indexOf(tr) < 0) {
         const aff2 = YA.TRAIT_AFF[tr];
         const q = aff2.reduce((s, n) => s + p.ab[n], 0) / 2;
-        const speed = clamp((q / 11) * (q / 11), 0.35, 2.2) * p.rate * (light ? 0.55 : 1) * cond * 3.4;
+        const speed = clamp((q / 11) * (q / 11), 0.35, 2.2) * p.rate * (light ? 0.55 : 1) * cond * 2.6;
         p.tprog[tr] = (p.tprog[tr] || 0) + speed;
         if (p.tprog[tr] >= 100) {
           p.tprog[tr] = 0;
@@ -815,10 +815,17 @@
     const out = [];
     const grads = [];
     YA.alumniTick(w);
+    // その年の卒業生を力の順に並べ、上位からプロ契約（人数は評判で変わる）。突出して高い子は上限を超えてプロへ
+    const seniors = Object.values(w.players).filter((q) => q.grade === 3).sort((a, b) => YA.ovr(b) - YA.ovr(a));
+    const K = clamp(Math.round(1.5 + (w.club.rep - 30) / 45 + (rng() - 0.5) * 1.6), 1, 4);
+    seniors.forEach((q, i) => {
+      const o = YA.ovr(q);
+      q._path = (i < K && o >= 11.5) || o >= 15.5 ? 'pro' : o >= 10.5 ? 'univ' : 'amateur';
+    });
     for (const p of Object.values(w.players)) {
       if (p.grade === 3) {
         const o = Math.round(YA.ovr(p) * 10) / 10;
-        const note = o >= 13.5 ? 'プロ契約（トップ昇格）' : o >= 12 ? '大学（強豪）へ' : o >= 10.5 ? '大学へ' : '社会人・就職へ';
+        const note = p._path === 'pro' ? 'プロ契約（トップ昇格）' : p._path === 'univ' ? (o >= 12 ? '大学（強豪）へ' : '大学へ') : '社会人・就職へ';
         grads.push([p, note]);
         out.push({ name: p.name, pos: p.pos, ovr: o, note });
         delete w.players[p.id];
@@ -904,7 +911,7 @@
     const list = (p.pos === 'GK' ? GK_TRAITS : FIELD_TRAITS).filter((t) => p.traits.indexOf(t) < 0 && t in YA.TRAIT_AFF);
     return list.map((t) => {
       const q = YA.TRAIT_AFF[t].reduce((s, n) => s + p.ab[n], 0) / 2;
-      const speed = clamp((q / 11) * (q / 11), 0.35, 2.2) * p.rate * 3.4;
+      const speed = clamp((q / 11) * (q / 11), 0.35, 2.2) * p.rate * 2.6;
       return { t, weeks: Math.ceil(100 / speed), q };
     }).sort((a, b) => a.weeks - b.weeks);
   };

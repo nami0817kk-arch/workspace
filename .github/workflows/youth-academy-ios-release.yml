@@ -50,6 +50,7 @@ jobs:
         run: |
           node tool/sim.js
           node tool/world.js
+          node tool/balance.js
 
       - name: Build the match page for the app
         working-directory: projects/youth-academy/web
