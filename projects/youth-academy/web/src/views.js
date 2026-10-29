@@ -177,18 +177,18 @@
     ui.tf = ui.tf || 'all';
     const wrap = h('div', { style: 'flex:1;min-height:0;display:flex;flex-direction:column;gap:6px' });
     // 曜日
-    const days = h('div', { style: 'display:flex;gap:5px' });
+    const days = h('div', { class: 'days', style: 'display:flex;gap:5px' });
     w.plan.days.forEach((d, i) => {
       const m = YA.MENUS[d.menu];
       days.append(h('button', { class: 'card', style: 'flex:1;padding:6px 8px;text-align:left;min-width:0', onclick: () => pickMenu(i) }, h('div', { class: 'row' }, h('b', { style: 'color:var(--blue-d)' }, DAYS[i]), h('span', { class: 'grow' }), h('span', { class: 'chip ' + (d.int === 'hard' ? 'instr' : d.int === 'light' ? 'gray' : 'pers') }, YA.INTENS_NAMES[d.int])), h('div', { class: 'h', style: 'font-size:13px;margin-top:1px' }, d.menu), h('div', { class: 'note' }, m.note)));
     });
-    const bulk = h('div', { class: 'row', style: 'flex-wrap:wrap;gap:4px' },
+    const bulk = h('div', { class: 'row bulk', style: 'flex-wrap:wrap;gap:4px' },
       h('button', { class: 'btn sm', onclick: () => { if (w.lastPlan) { w.plan = JSON.parse(JSON.stringify(w.lastPlan)); YA.saveWorld(); rerender(); } } }, '先週と同じ'),
-      h('button', { class: 'btn sm', onclick: () => { YA.autoPlan(w); YA.saveWorld(); rerender(); } }, 'おまかせ（弱点を重点に・疲れた子は休み）'),
-      h('button', { class: 'btn sm', onclick: () => { for (const p of Object.values(w.players)) if (p.fat > 60 && p.inj <= 0) p.rest = 'rest'; YA.saveWorld(); rerender(); } }, '疲れている子を休ませる'),
-      h('button', { class: 'btn sm', onclick: () => { for (const p of Object.values(w.players)) p.rest = null; YA.saveWorld(); rerender(); } }, '休みを全部外す'),
-      ...[0, 1, 2].map((i) => h('button', { class: 'btn sm', title: '長押しではなく、保存→呼出', onclick: () => { if (w.menuSlots && w.menuSlots[i]) { YA.loadMenuSlot(w, i); YA.saveWorld(); rerender(); } } }, '型' + (i + 1) + (w.menuSlots && w.menuSlots[i] ? '呼出' : '(空)'))),
-      h('button', { class: 'btn sm', onclick: () => confirmSlot(w) }, '型に保存'),
+      h('button', { class: 'btn sm', onclick: () => { YA.autoPlan(w); YA.saveWorld(); rerender(); } }, 'おまかせ'),
+      h('button', { class: 'btn sm', onclick: () => { for (const p of Object.values(w.players)) if (p.fat > 60 && p.inj <= 0) p.rest = 'rest'; YA.saveWorld(); rerender(); } }, '疲れた子を休ます'),
+      h('button', { class: 'btn sm', onclick: () => { for (const p of Object.values(w.players)) p.rest = null; YA.saveWorld(); rerender(); } }, '休み解除'),
+      ...[0, 1, 2].map((i) => h('button', { class: 'btn sm', title: '長押しではなく、保存→呼出', onclick: () => { if (w.menuSlots && w.menuSlots[i]) { YA.loadMenuSlot(w, i); YA.saveWorld(); rerender(); } } }, '型' + (i + 1) + (w.menuSlots && w.menuSlots[i] ? '●' : ''))),
+      h('button', { class: 'btn sm', onclick: () => confirmSlot(w) }, '保存'),
       h('span', { class: 'grow' }),
       ...[['all', '全員'], ['A', 'A'], ['B', 'B'], ['1', '高1'], ['2', '高2'], ['3', '高3']].map(([k, n]) => h('button', { class: 'btn sm' + (ui.tf === k ? ' on' : ''), onclick: () => { ui.tf = k; rerender(); } }, n)));
     // 選手の表
@@ -205,7 +205,7 @@
         h('span', { class: 'nm grow', style: 'min-width:0;overflow:hidden;text-overflow:ellipsis' }, p.name, ' ', h('span', { class: 'sub', style: 'font-weight:600' }, gradeName(p.grade) + (p.team === 'A' ? ' A' : ' B')), ' ', flags(p)),
         fatBar(p, 42),
         h('button', { class: 'btn sm', style: 'width:116px;justify-content:space-between', onclick: () => pickFocus(p) }, p.train.focus || '未設定', p.train.focus ? h('span', { class: 'sub' }, p.ab[p.train.focus]) : null),
-        h('button', { class: 'btn sm', style: 'width:150px;justify-content:space-between', onclick: () => pickTrait(p) }, tp || '未設定', tp ? h('span', { class: 'sub' }, '残り約' + wk + '週') : null),
+        h('button', { class: 'btn sm', style: 'width:150px;justify-content:space-between;white-space:nowrap;gap:2px', onclick: () => pickTrait(p) }, h('span', { style: 'overflow:hidden;text-overflow:ellipsis' }, tp || '未設定'), tp ? h('span', { class: 'sub' }, wk + '週') : null),
         h('button', { class: 'btn sm' + (p.rest ? ' on' : ''), style: 'width:52px', disabled: p.inj > 0, onclick: () => { p.rest = p.rest === null ? 'light' : p.rest === 'light' ? 'rest' : null; YA.saveWorld(); const st = table.scrollTop; rerender(); const t2 = document.querySelector('.card.pbody.scroll'); if (t2) t2.scrollTop = st; } }, p.inj > 0 ? '療養' : p.rest === 'rest' ? '休み' : p.rest === 'light' ? '軽め' : '通常')));
     }
     wrap.append(days, bulk, table);

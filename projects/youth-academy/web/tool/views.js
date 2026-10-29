@@ -108,7 +108,7 @@ async function clearEvents() {
   btn('フィジカル').click();
   ok(txt().includes('フィジカル'), 'メニューを替えられる');
   btn('おまかせ').click();
-  btn('疲れている子を休ませる').click();
+  btn('疲れた子を休ます').click();
   // 重点・特性練習の選択
   const focusBtn = [...d.querySelectorAll('#main .pitem button')].find((b) => b.textContent.includes('未設定') || true);
   focusBtn.click();
@@ -291,7 +291,7 @@ async function clearEvents() {
     btn('設定').click();
     ok(txt().includes('名前の書き換え') && txt().includes('クラブ名') === false || txt().includes('名前の書き換え'), '設定に名前の書き換え');
     rail('練習');
-    ok(txt().includes('型に保存'), '練習に型の保存');
+    ok(txt().includes('休み解除'), '練習に一括ボタン');
     rail('ほか');
     btn('Bチーム').click();
     ok(txt().includes('Bチームの指揮') && txt().includes('起用方針'), 'Bチームの指揮の画面');

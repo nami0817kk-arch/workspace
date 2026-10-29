@@ -167,3 +167,15 @@ button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:poin
   .boardwrap .btn.sm{flex:1;min-height:28px;padding:2px 1px;font-size:10px;white-space:nowrap}
   .boardwrap .fm-row .sub{font-size:10px}
 }
+
+/* スクロールを減らす：横向きの低い画面で、まわりの余白と定型の部品を詰める */
+@media (max-height:460px){
+  #main{padding-top:calc(3px + var(--sat));padding-bottom:calc(3px + var(--sab));gap:4px}
+  .tut{padding:3px 8px;font-size:11px;line-height:1.35}
+  .pbody{padding:5px 8px}
+  .pitem{padding:3px 6px}
+  .insight{padding:3px 8px;margin-bottom:3px}
+  .days .card{padding:3px 8px !important}
+  .days .card .sub,.days .card span.sub{display:none}
+  .bulk .btn.sm{min-height:30px;padding:3px 8px}
+}
