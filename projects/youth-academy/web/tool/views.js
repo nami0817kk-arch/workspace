@@ -20,7 +20,9 @@ const html = read('shell.html')
   .replace('/*__RENDER__*/', () => read('render.js'))
   .replace('/*__UI__*/', () => read('ui.js'))
   .replace('/*__VIEWS__*/', () => read('views.js'))
-  .replace('/*__VIEWS2__*/', () => read('views2.js'));
+  .replace('/*__VIEWS2__*/', () => read('views2.js'))
+  .replace('/*__EXTRA__*/', () => read('extra.js'))
+  .replace('/*__VIEWS3__*/', () => read('views3.js'));
 
 let fails = 0;
 const ok = (c, m) => {
@@ -71,6 +73,17 @@ async function clearEvents() {
 (async () => {
   await sleep(100);
   const A = w.YA._ui.app;
+  // 新しく始める：指導者を作る・クラブを選ぶ
+  ok(txt().includes('指導者を作る') && txt().includes('最初のクラブを選ぶ') && txt().includes('この指導者で始める') && !A.w, '保存がなければ新しく始める画面');
+  const nameBox = d.querySelector('input[type=text]');
+  nameBox.value = 'テスト監督';
+  nameBox.dispatchEvent(new w.Event('input', { bubbles: true }));
+  btn('高校で指導していた').click();
+  for (let i = 0; i < 3; i++) [...d.querySelectorAll('#main button')].filter((b) => b.textContent === '＋')[0].click();
+  btn('千葉 アルバトロスU-18').click();
+  btn('この指導者で始める').click();
+  await sleep(50);
+  ok(A.w && A.w.coachName === 'テスト監督' && A.w.club.tier === 2 && A.w.clubName.indexOf('千葉') >= 0 && A.w.coach.exp === 3, '選んだ内容で世界が始まる');
   // 年度はじめ：クラブの目標と約束事
   ok(txt().includes('クラブの目標') && txt().includes('この1年を始める') && txt().includes('易しく'), '年度はじめの目標の画面');
   btn('遅刻をしない').click();
@@ -79,6 +92,8 @@ async function clearEvents() {
   // ホーム
   ok(txt().includes('1年目') && txt().includes('4月第1週') && txt().includes('リーグ'), 'ホームに年と週');
   ok(!!btn('練習を確定して週を進める') && !!btn('練習を組む'), 'ホームの操作');
+  ok(!!d.querySelector('.tut') && /練習/.test(d.querySelector('.tut').textContent), '最初の1か月の案内が出る');
+  ok(txt().includes('おまかせ進行') && !!btn('1年') && !!btn('次の試合まで'), 'おまかせ進行のボタン');
   ok(txt().includes('今週気にかけたい子') && txt().includes('お知らせ'), 'ホームの欄');
   // 練習
   rail('練習');
@@ -151,6 +166,14 @@ async function clearEvents() {
     btn(k).click();
     await sleep(10);
   }
+  btn('戦い方').click();
+  ok(txt().includes('クロスの種類') && txt().includes('セットプレーのキッカー') && txt().includes('戦い方の浸透') && d.querySelectorAll('#main select').length === 3, '戦術の細かい設定（クロス・キッカー・浸透）');
+  btn('高い（長身が生きる）').click();
+  ok(A.w.tactic && A.w.tactic.crossType === 'high', 'クロスの種類が保存される');
+  const fkSel = d.querySelectorAll('#main select')[0];
+  fkSel.value = fkSel.options[2].value;
+  fkSel.dispatchEvent(new w.Event('change', { bubbles: true }));
+  ok(A.w.tactic.fk === fkSel.options[2].value, 'キッカーの指定が保存される');
   for (const f of ['4-4-2', '3-5-2', '4-2-3-1', '5-3-2', '4-3-3']) {
     btn(f).click();
     ok(d.querySelectorAll('.board svg g').length >= 11, '形を変えても11人 ' + f);
@@ -209,6 +232,39 @@ async function clearEvents() {
     ok(txt().includes('2年目の始まり'), '次の年の目標の画面');
     btn('この1年を始める').click();
     ok(txt().includes('2年目'), '2年目のホーム');
+    // おまかせ進行：1週・1年（結果の画面が出る）
+    btn('1週').click();
+    await sleep(300);
+    ok(txt().includes('おまかせ進行の結果') && !!btn('閉じる', d.querySelector('.sheet')), 'おまかせ進行の結果の画面');
+    btn('閉じる', d.querySelector('.sheet')).click();
+    await clearEvents();
+    rail('ホーム');
+    const yb = [...d.querySelectorAll('#main button')].find((b) => b.textContent === '1年');
+    A.simStop = false;
+    A.w.phase = A.w.phase === 'match' || A.w.phase === 'after' || A.w.phase === 'event' ? A.w.phase : 'plan';
+    rail('ホーム');
+    [...d.querySelectorAll('#main button')].find((b) => b.textContent === '1年').click();
+    await sleep(2500);
+    ok(txt().includes('おまかせ進行の結果') && txt().includes('年末の評価'), '1年おまかせの結果の画面');
+    btn('閉じる', d.querySelector('.sheet')).click();
+    ok(A.w.year >= 3, '1年おまかせで年度が進む ' + A.w.year);
+    // 設定：セーブ枠・書き出し・復元・効果音
+    rail('ほか');
+    btn('設定').click();
+    ok(txt().includes('セーブ枠') && txt().includes('効果音') && !!btn('書き出す') && !!btn('復元する'), '設定の画面');
+    btn('書き出す').click();
+    const ta = d.querySelector('.sheet textarea');
+    ok(!!ta && ta.value.indexOf('youth-academy') >= 0, '書き出しの画面');
+    const exported = ta.value;
+    btn('閉じる', d.querySelector('.sheet')).click();
+    btn('復元する').click();
+    d.querySelector('.sheet textarea').value = '壊れた文字';
+    btn('復元する', d.querySelector('.sheet')).click();
+    ok(txt().includes('読み取れませんでした'), '壊れたデータは復元しない');
+    d.querySelector('.sheet textarea').value = exported;
+    btn('復元する', d.querySelector('.sheet')).click();
+    await sleep(20);
+    ok(!d.querySelector('.sheet') && A.w.players, '書き出したデータを復元できる');
     rail('ほか');
     btn('卒業生名鑑').click();
     ok(d.querySelectorAll('#main .pitem').length >= 12, '卒業生が名鑑に並ぶ');

@@ -150,3 +150,6 @@ button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:poin
 .aptchip{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border-radius:9px;background:#eef2f8;border:1px solid var(--line);font-size:10.5px;font-weight:800;color:var(--navy)}
 .aptchip.cur{background:#fff1b8;border-color:#f0cf55}
 .aptchip.best{background:#d9f5e5;border-color:#9fdcb8}
+
+.tut{display:flex;align-items:center;gap:8px;background:#fff7d6;border:1px solid #f0cf55;border-radius:10px;padding:5px 9px;font-size:11.5px;line-height:1.45;color:#5a4300;box-shadow:var(--shadow-s);flex:none}
+.tut .tutb{background:var(--yellow);color:#3b2d00;font-weight:900;border-radius:7px;padding:1px 7px;font-size:10.5px;flex:none}

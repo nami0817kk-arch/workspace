@@ -3,7 +3,7 @@ description: "ユースの系譜（仮題）— 試合の試作"
 publish_to: 'none'
 
 # 版とビルド番号。App Store Connect は同じビルド番号を二度受け付けない
-version: 0.5.0+6
+version: 0.6.0+7
 
 environment:
   sdk: ^3.13.2

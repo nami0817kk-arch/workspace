@@ -33,7 +33,7 @@
 
   // 調子・自信・疲れをまとめた補正
   function cond(p, m) {
-    let c = 1 + p.form * 0.035 + (p.conf - 50) / 400 - (Math.max(0, 60 - p.stam) / 60) * (anyPers(p, '粘り強い') ? 0.15 : 0.3) - (p.adapt > 0 ? 0.08 : 0) - (p._pen || 0);
+    let c = 1 + p.form * 0.035 + (p.conf - 50) / 400 - (Math.max(0, 60 - p.stam) / 60) * (anyPers(p, '粘り強い') ? 0.15 : 0.3) - (p.adapt > 0 ? 0.08 : 0) - (p._pen || 0) + ((p.tu == null ? 40 : p.tu) - 40) / 1500;
     return clamp(c, 0.6, 1.3);
   }
   const eff = (p, n, m) => p.ab[n] * cond(p, m);
@@ -240,6 +240,11 @@
       }
       return fit;
     }
+    // セットプレーのキッカー（自分で決めていれば、その選手が出ている間は）
+    taker(t, kind) {
+      const id = t.tactic && t.tactic[kind];
+      return id && t.onPitch && t.onPitch.has(id) ? t.players[id] : null;
+    }
     dutyOf(t, i) {
       return YA.DUTY[t.lineup[i].duty] || YA.DUTY.sup;
     }
@@ -250,8 +255,10 @@
 
     // ---------- 場面の重み ----------
     sceneWeights(att, def) {
-      const tc = att.tactic;
-      const dt = def.tactic;
+      // 戦い方がチームに浸透しているほど、つまみどおりに動く（決定38）
+      const kk = (t, v) => 0.5 + (v - 0.5) * (t.tactRep == null ? 1 : t.tactRep);
+      const tc = { tempo: kk(att, att.tactic.tempo), width: kk(att, att.tactic.width), press: kk(att, att.tactic.press), line: att.tactic.line };
+      const dt = { line: kk(def, def.tactic.line), intensity: def.tactic.intensity };
       const w = { through: 0.5, cross: 1, dribble: 0.9, longshot: 0.5, fk: 0.35, ck: 0.4, counter: 0.6, onetwo: 0.6, steal: 0.5, longthrow: 0 };
       w.through *= 0.6 + 0.8 * tc.tempo;
       w.counter *= 0.4 + 1.4 * tc.tempo;
@@ -259,6 +266,7 @@
       w.cross *= 0.5 + 1.0 * tc.width;
       w.dribble *= 0.8 + 0.4 * tc.width;
       w.steal *= 0.3 + 1.4 * tc.press;
+      if (att.tactic.crossType === 'early') w.cross += 0.1;
       w.through *= 0.75 + 0.7 * dt.line;
       w.counter *= 0.75 + 0.6 * dt.line;
       w.fk *= 0.7 + 0.6 * dt.intensity;
@@ -595,6 +603,11 @@
       H += (header.height - 178) * 0.12 + this.persMod(sc, att, header, 'duel');
       const aer = this.defTrait(sc, def, '空中戦の競り', 2.5, '体をぶつけて競り合った', ['DF']);
       let D = effAvg(dEnd, ['ヘディング', 'ジャンプ', 'ポジショニング', '強さ'], this) + aer.b + (dEnd.height - 178) * 0.12 + this.persMod(sc, def, dEnd, 'duel');
+      // クロスの種類（早い・高い・低い）
+      const ct = att.tactic.crossType;
+      if (ct === 'high') H += 0.6 + (header.height - 178) * 0.05;
+      if (ct === 'low') H += this.traitBonus(sc, header, 'ニアへの飛び込み', 1.5, 'ニアへの低いボールに飛び込んだ');
+      if (ct === 'early') C += 1;
       const fx = left ? 4 : 64;
       const hx = 34 + (rng() - 0.5) * 6;
       const gkp = this.gk(def);
@@ -667,7 +680,7 @@
       if (fouled && !cut) {
         // ペナルティエリア内で倒された
         this._fx(sc, d, d.traits.indexOf('ファウルをもらう') >= 0 ? 'trait' : 'pers', d.traits.indexOf('ファウルをもらう') >= 0 ? 'ファウルをもらう' : 'ずる賢い', '体を入れてファウルを誘った');
-        const k = this.pickActor(att, ['MF', 'FW'], ['PK', 'フィニッシュ', '冷静さ'], [], [], sc);
+        const k = this.taker(att, 'pk') || this.pickActor(att, ['MF', 'FW'], ['PK', 'フィニッシュ', '冷静さ'], [], [], sc);
         const res = this.shot(sc, att, def, k, effAvg(k, ['PK', '冷静さ', 'フィニッシュ'], this), 0, 'pk', { pk: true });
         sc.actors.kicker = k.id;
         this.finish(sc, att, def, res, k, null);
@@ -722,7 +735,7 @@
     // フリーキック
     _fk(sc, att, def) {
       const rng = this.rng;
-      const k = this.pickActor(att, ['MF', 'FW', 'DF'], ['プレースキック', 'テクニック', 'フィニッシュ'], ['直接FK'], [], sc);
+      const k = this.taker(att, 'fk') || this.pickActor(att, ['MF', 'FW', 'DF'], ['プレースキック', 'テクニック', 'フィニッシュ'], ['直接FK'], [], sc);
       const gkp = this.gk(def);
       const kx = 34 + (rng() - 0.5) * 16;
       sc.actors = { kicker: k.id };
@@ -745,7 +758,7 @@
     // コーナーキック
     _ck(sc, att, def) {
       const rng = this.rng;
-      const k = this.pickActor(att, ['MF', 'FW', 'DF'], ['プレースキック', 'クロス', 'テクニック'], ['曲がるCK'], [], sc);
+      const k = this.taker(att, 'ck') || this.pickActor(att, ['MF', 'FW', 'DF'], ['プレースキック', 'クロス', 'テクニック'], ['曲がるCK'], [], sc);
       const h = this.pickActor(att, ['DF', 'FW', 'MF'], ['ヘディング', 'ジャンプ', '強さ'], ['ヘディングシュート', '空中戦の競り'], [k.id], sc);
       const dd = this.pickDefender(def, 'C', sc);
       const gkp = this.gk(def);

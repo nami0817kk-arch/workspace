@@ -9,13 +9,25 @@
 
   // 保存は少しまとめて（操作のたびに全部は書かない）
   let saveT = null;
-  YA.saveWorld = function () {
+  YA.saveWorld = function (now) {
     clearTimeout(saveT);
     saveT = setTimeout(() => {
       try {
-        U().store.set('world', U().app.w);
+        const A = U().app;
+        if (!A.w) return;
+        const key = YA.slotKey(A.slot || 0);
+        U().store.set(key, A.w);
+        // 年度はじめの控え（決定78：壊れたときのために）
+        if (A.w.week === 1 && A.w.phase === 'plan') U().store.set(key + '_bak', A.w);
       } catch (e) {}
     }, 250);
+    if (now) {
+      clearTimeout(saveT);
+      try {
+        const A = U().app;
+        if (A.w) U().store.set(YA.slotKey(A.slot || 0), A.w);
+      } catch (e) {}
+    }
   };
   const rerender = () => U().render();
 
@@ -41,7 +53,7 @@
     const opp = YA.matchOf(w) ? YA.opponentOf(w) : null;
     const wrap = h('div', { class: 'home' });
     // 左：今週
-    const left = h('div', { class: 'card', style: 'width:36%;min-width:250px;padding:10px;display:flex;flex-direction:column;gap:6px' });
+    const left = h('div', { class: 'card', style: 'width:38%;min-width:260px;padding:10px;display:flex;flex-direction:column;gap:6px;overflow-y:auto' });
     left.append(h('div', { class: 'sub' }, w.clubName), h('div', { class: 'h', style: 'font-size:19px' }, `${w.year}年目  ${cal.month}第${cal.nth}週`), h('div', { class: 'note' }, `${YA.weekLabel(w) || '育成の週'} ／ ${YA.LEVEL_NAMES[w.league.level - 1]} ${YA.myRank(w)}位 ／ ${w.rec.w}勝${w.rec.d}分${w.rec.l}敗`));
     left.append(h('div', { style: 'border-top:1px dashed var(--line);padding-top:6px' }, h('div', { class: 'note' }, '今週の試合'), opp ? h('div', {}, h('b', {}, `${opp.home ? 'ホーム' : 'アウェイ'} vs ${opp.name}`), h('div', { class: 'note' }, opp.desc)) : h('div', { class: 'sub' }, 'なし（試合のない期間）。育成に集中できます')));
     const S = YA.summaryOf(w);
@@ -60,6 +72,8 @@
     } else {
       act.append(h('div', { class: 'note' }, w.matchDone ? '試合が終わりました。Bチームの試合も済んでいます。' : '今週はここまで。'), h('button', { class: 'btn pri', style: 'min-height:42px;font-size:14px', onclick: () => endWeek() }, w.week >= YA.WEEKS ? '卒業式へ' : '次の週へ'));
     }
+    const simc = YA.simCard();
+    if (simc) left.append(simc);
     left.append(act);
     // 中：お知らせ＋先週の伸び
     const mid = h('div', { class: 'card pbody', style: 'flex:1;min-width:0' });

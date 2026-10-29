@@ -28,7 +28,21 @@
     const id = 'c' + ++S.nextId + '_' + w.year;
     const p = YA.genPlayer(rng, id, 1, pos, q, used);
     p.grade = 0;
-    const c = { id, p, kind, seen: kind === 'int' ? 2 : 0, status: 'open', rival: kind === 'scout' && rng.chance(0.4), persSeen: kind === 'int', amb: rng.int(0, 10) };
+    // 外国籍の選手は年に0〜1人（決定53）。海外のスカウトか、まれな応募から
+    const FOREIGN = [['ブラジル', ['ルーカス・シウバ', 'カルロス・メンドンサ', 'ガブリエル・ソウザ']], ['韓国', ['キム・ジュノ', 'パク・ソンミン', 'イ・ヒョヌ']], ['ナイジェリア', ['エマニュエル・オコロ', 'ダニエル・アデバヨ']], ['アルゼンチン', ['マテオ・ゴンザレス', 'ニコラス・ペレス']], ['オーストラリア', ['ジャック・ウィルソン', 'ライアン・テイラー']]];
+    let foreign = false;
+    if (kind !== 'int' && !S.foreignDone && rng() < 0.07) {
+      const f = rng.pick(FOREIGN);
+      p.nation = f[0];
+      p.name = rng.pick(f[1]);
+      p.ab['スピード'] = clamp(p.ab['スピード'] + 2, 1, 20);
+      p.ab['強さ'] = clamp(p.ab['強さ'] + 1, 1, 20);
+      p.pot += 15;
+      p.fam = p.fam || {};
+      foreign = true;
+      S.foreignDone = true;
+    } else p.nation = '日本';
+    const c = { id, p, kind, foreign, seen: kind === 'int' ? 2 : 0, status: 'open', rival: kind === 'scout' && rng.chance(0.4), persSeen: kind === 'int', amb: rng.int(0, 10) };
     S.cands.push(c);
     return c;
   }
@@ -93,6 +107,10 @@
     const c = S.cands.find((x) => x.id === id);
     if (!c || c.status !== 'open') return { ok: false, msg: 'すでに決まっています' };
     if (YA.signedCount(w) >= 12) return { ok: false, msg: '新入生の枠（12人）がいっぱいです' };
+    if (c.foreign) {
+      const reg = Object.values(w.players).filter((q) => YA.isForeign(q)).length + S.cands.filter((x) => x.foreign && (x.status === 'signed' || x.status === 'offered')).length;
+      if (reg >= 5) return { ok: false, msg: '外国籍の選手の登録は5人までです' };
+    }
     if (YA.signedCount(w, c.kind) >= LIMIT[c.kind]) return { ok: false, msg: `${KIND_NAME[c.kind]}からは${LIMIT[c.kind]}人までです` };
     if (c.kind === 'scout') {
       c.status = 'offered';
@@ -132,7 +150,7 @@
     const room = p.pot - YA.abSum(p);
     const st = clamp(Math.round(room / 45), 0, 5);
     const sw = c.seen >= 3 ? 0 : c.seen >= 1 ? 1 : 2;
-    return { ovr: [Math.round(lo * 10) / 10, Math.round((lo + width) * 10) / 10], stars: [clamp(st - sw, 0, 5), clamp(st + sw, 0, 5)], traits: c.seen >= 1 ? p.traits : null, pers: c.persSeen ? p.pers : null, height: p.height, pos: p.pos, label: YA.POS_LABEL[p.main], name: p.name, kind: c.kind };
+    return { ovr: [Math.round(lo * 10) / 10, Math.round((lo + width) * 10) / 10], stars: [clamp(st - sw, 0, 5), clamp(st + sw, 0, 5)], traits: c.seen >= 1 ? p.traits : null, pers: c.persSeen ? p.pers : null, height: p.height, pos: p.pos, label: YA.POS_LABEL[p.main], name: p.name, kind: c.kind, nation: p.nation && p.nation !== '日本' ? p.nation : null };
   };
 
   // 入団（3月）：決まった子を学年1の選手にする。足りない分は一般入団で埋める
@@ -204,12 +222,15 @@
         a.apps += Math.round(clamp((a.ovr - 10) * 7 + r.int(-5, 8), 0, 34));
         a.goals += Math.round(clamp((a.ovr - 11) * (a.pos === 'FW' ? 3 : a.pos === 'MF' ? 1.2 : 0.4) + r.int(-1, 3), 0, 25));
         if (a.age >= 19 && a.age <= 30 && r() < 0.17) {
-          const fee = Math.round(Math.pow(Math.max(0, a.ovr - 9), 2.2) * 350);
+          // 力のある若い選手は、海外のクラブへ移ることもある
+          const abroad = a.ovr >= 13.8 && a.age <= 27 && r() < 0.35;
+          const fee = Math.round(Math.pow(Math.max(0, a.ovr - 9), 2.2) * 350 * (abroad ? 1.6 : 1));
           const share = Math.round(fee * 0.015);
           a.transfers++;
-          a.club = r.pick(PRO) + ' ' + r.pick(PRO_N);
+          a.club = abroad ? '海外（' + r.pick(['イングランド', 'ドイツ', 'スペイン', 'オランダ', 'ベルギー', 'ポルトガル']) + '）' + r.pick(PRO_N) : r.pick(PRO) + ' ' + r.pick(PRO_N);
+          if (abroad) a.abroad = true;
           contrib += share;
-          YA.noteTier(w, 1, `卒業生の${a.name}が${a.club}へ移籍（移籍金およそ${fee}万円）。連帯貢献金 +${share}万円がクラブに入ります`);
+          YA.noteTier(w, 1, `卒業生の${a.name}が${a.club}へ${abroad ? '海外移籍' : '移籍'}（移籍金およそ${fee}万円）。連帯貢献金 +${share}万円がクラブに入ります`);
         }
         if (a.ovr >= 14 && r() < 0.1) {
           a.nat = (a.nat || 0) + 1;

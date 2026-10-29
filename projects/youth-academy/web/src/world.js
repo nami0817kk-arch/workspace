@@ -160,28 +160,34 @@
     const poss = base15.map((q) => (q !== 'GK' && rng.chance(0.3) ? NEARP[q][rng.int(0, 1)] : q));
     for (const pos of poss) {
       const id = 'p' + ++w.nextId;
-      const q = clamp(Math.round((rng() + rng() + rng() - 1.5) * 2.2), -2, 2);
+      const q = clamp(Math.round((rng() + rng() + rng() - 1.5) * 2.2) + (w.tierQ || 0), -2, 2.5);
       w.players[id] = YA.genPlayer(rng, id, grade, pos, q, used);
     }
   }
 
-  YA.newWorld = function (seed) {
+  YA.newWorld = function (seed, opts) {
+    opts = opts || {};
     const rng = YA.rngOf(seed);
     const w = { v: 1, seed, year: 1, week: 1, nextId: 0, players: {}, plan: null, inbox: [], events: [], alumni: [], results: [], rec: { w: 0, d: 0, l: 0, gf: 0, ga: 0 }, phase: 'plan', captain: null, formation: '4-3-3', lineupA: null, benchA: null, lineupB: null, tactic: null, lastWeek: null, season: 1, notes: [], clubName: 'レガーレ湘南U-18', matchDone: false, log: [] };
+    w.tierQ = (2 - (opts.tier || 2)) * 0.5; // 上の部のクラブほど、素質のある子が集まる
     const used = new Set();
     for (const g of [1, 2, 3]) genGrade(rng, w, g, used);
     numbers(w);
     autoTeams(w, true);
     w.plan = defaultPlan();
     w.v = 3;
-    w.coach = YA.newCoach();
+    w.coach = opts.coach ? Object.assign(YA.newCoach(), opts.coach) : YA.newCoach();
+    w.coachName = opts.coachName || '監督';
+    w.tut = { on: opts.tutorial !== false };
     w.scouting = YA.newScouting();
     w.disc = 60;
     w.rules = [];
     w.trophies = [];
     w.h2h = {};
     w.rel = [];
-    YA.newClub(w, 2, w.clubName);
+    YA.newClub(w, opts.tier || 2, opts.clubName || w.clubName);
+    w.club.noFire = !!opts.noFire;
+    if (opts.repAdj) YA.addRep(w, opts.repAdj);
     YA.relations(w);
     YA.yearStart(w);
     YA.autoPlan(w);
@@ -288,8 +294,43 @@
       s.pid = inId;
       swaps.push([p, w.players[inId]]);
     });
+    swaps.push(...limitForeign(w, which));
     return swaps;
   }
+  // 外国籍の出場は3人まで（登録は5人まで）。超えたら、同じ括りの日本人のベンチと入れ替える
+  function isForeign(p) {
+    return !!p && !!p.nation && p.nation !== '日本';
+  }
+  YA.isForeign = isForeign;
+  function limitForeign(w, which) {
+    const lineup = which === 'A' ? w.lineupA : w.lineupB;
+    const bench = which === 'A' ? w.benchA : w.benchB;
+    const swaps = [];
+    let guard = 0;
+    while (guard++ < 6) {
+      const fs = lineup.map((s, i) => ({ s, i, p: w.players[s.pid] })).filter((x) => isForeign(x.p));
+      if (fs.length <= 3) break;
+      const out = fs.sort((a, b) => YA.ovr(a.p) - YA.ovr(b.p))[0];
+      const p15 = YA.pos15OfSlot(out.s, out.i);
+      let k = -1;
+      let bv = -1;
+      bench.forEach((id, kk) => {
+        const q = w.players[id];
+        if (q && healthy(q) && !isForeign(q) && (q.pos === 'GK') === (out.p.pos === 'GK') && q.apt && q.apt[p15] > bv) { bv = q.apt[p15]; k = kk; }
+      });
+      if (k < 0) break;
+      const inId = bench[k];
+      bench[k] = out.s.pid;
+      out.s.pid = inId;
+      swaps.push([out.p, w.players[inId]]);
+    }
+    return swaps;
+  }
+  YA.limitForeign = limitForeign;
+  YA.tactRepOf = function (w) {
+    const same = w.tactMem && w.tactic && w.tactMem.type === w.tactic.type ? w.tactMem.weeks : 0;
+    return Math.round((0.6 + 0.4 * Math.min(1, same / 12)) * 100) / 100;
+  };
   YA.repairLineup = repairLineup;
 
   // 名簿 → 試合用のチーム（engine の Match がそのまま使える形）
@@ -307,7 +348,7 @@
       p.friends = (w.rel || []).filter((x) => x.k === 'friend' && (x.a === id || x.b === id)).map((x) => (x.a === id ? x.b : x.a));
       players[id] = p;
     }
-    return { id: 'me', name: w.clubName + (which === 'B' ? ' B' : ''), short: which === 'B' ? 'レガーレB' : 'レガーレ', color: '#1f6feb', isUser: true, players, lineup: JSON.parse(JSON.stringify(lineup)), bench: bench.slice(), tactic: w.tactic ? JSON.parse(JSON.stringify(w.tactic)) : Object.assign({ type: 'ポゼッション' }, YA.TACTICS['ポゼッション']), instr: {}, subsUsed: 0, windowsUsed: 0, formation: w.formation, prep: YA.analysisLevel ? YA.analysisLevel(w) : 0, coachTactic: w.coach ? w.coach.tactic : 10, disc: w.disc };
+    return { id: 'me', name: w.clubName + (which === 'B' ? ' B' : ''), short: which === 'B' ? 'レガーレB' : 'レガーレ', color: '#1f6feb', isUser: true, players, lineup: JSON.parse(JSON.stringify(lineup)), bench: bench.slice(), tactic: w.tactic ? JSON.parse(JSON.stringify(w.tactic)) : Object.assign({ type: 'ポゼッション' }, YA.TACTICS['ポゼッション']), instr: {}, subsUsed: 0, windowsUsed: 0, formation: w.formation, prep: YA.analysisLevel ? YA.analysisLevel(w) : 0, coachTactic: w.coach ? w.coach.tactic : 10, disc: w.disc, tactRep: YA.tactRepOf(w) };
   };
 
   // 相手（週ごとに決まる）。年とともに強くなる
@@ -328,8 +369,8 @@
 
   // ---------- 1週を進める：練習 → 怪我・疲れ → 出来事 ----------
   function noteTier(w, tier, text, pid) {
-    w.inbox.push({ week: w.week, year: w.year, tier, text, pid: pid || null });
-    if (w.inbox.length > 80) w.inbox.splice(0, w.inbox.length - 80);
+    w.inbox.push({ week: w.week, year: w.year, tier, text, pid: pid || null, n: (w.inboxN = (w.inboxN || 0) + 1) });
+    if (w.inbox.length > 300) w.inbox.splice(0, w.inbox.length - 300);
   }
 
   YA.runTraining = function (w) {
@@ -662,6 +703,12 @@
         p.fam[s15] = Math.min(14, (p.fam[s15] || 0) + 1);
       }
       if (which === 'A') p.minsA = (p.minsA || 0) + mm;
+      if (mm > 0) {
+        // 役割をこなすうちに戦術の理解が伸びる（合っていると早い）
+        const li = team.lineup.findIndex((sl) => sl.pid === id);
+        const fit = li >= 0 ? YA.Match.prototype.roleFit.call(null, team, li) : 0;
+        p.tu = Math.min(100, (p.tu == null ? 40 : p.tu) + (fit >= 0 ? 2 : 0.5));
+      }
       p._weekMins = (p._weekMins || 0) + mm;
       if (mm > 0) {
         // 試合の疲れ
@@ -679,6 +726,11 @@
     }
     const gf = m.score.home;
     const ga = m.score.away;
+    if (which === 'A' && scheduled) {
+      // 同じ戦い方を続けると、チームに浸透する
+      const ty = team.tactic.type;
+      w.tactMem = w.tactMem && w.tactMem.type === ty ? { type: ty, weeks: w.tactMem.weeks + 1 } : { type: ty, weeks: 1 };
+    }
     if (which === 'A') {
       w.results.push({ year: w.year, week: w.week, opp: opp.name, gf, ga, kind: opp.kindLabel || '' });
       if (scheduled && YA.recordMatch) YA.recordMatch(w, m, opp);
@@ -838,6 +890,11 @@
       const weak = abList(p).filter((n) => p.ab[n] < p.ab && 0).length;
       const cand = (p.pos === 'GK' ? YA.AB_GK : YA.POS_ABS15[p.main]).slice().sort((a, b) => p.ab[a] - p.ab[b]);
       p.train.focus = cand[0];
+      // 特性練習は、いちばん早く覚えられるものを（おまかせのとき）
+      if (!p.train.trait) {
+        const lt = YA.learnable(p)[0];
+        if (lt && lt.weeks <= 34) p.train.trait = lt.t;
+      }
       p.rest = p.fat > 70 ? 'rest' : p.fat > 55 ? 'light' : null;
     }
     w.plan = plan;
