@@ -100,7 +100,7 @@
     app.cfg = c && c.lineup && c.lineup.length === 11 && c.bench && c.bench.length === 9 ? c : null;
     app.autoStop = store.get('autoStop', true);
     const sw = store.get('world', null);
-    app.w = sw && sw.v === 1 && sw.players && sw.lineupA ? sw : YA.newWorld((Date.now() % 90000) + 7);
+    app.w = sw && sw.v >= 1 && sw.players && sw.lineupA ? YA.migrate(sw) : YA.newWorld((Date.now() % 90000) + 7);
     YA.saveWorld();
   }
 
@@ -393,8 +393,10 @@
         const oo = o.opp;
         body.append(h('div', { class: 'note', style: 'margin:3px 0 6px' }, oo.desc));
         const ot = o.oppTeam;
-        body.append(h('div', { class: 'note' }, `型：${ot.tactic.type} / 布陣：${ot.formation}`));
-        body.append(h('div', { class: 'plist', style: 'margin-top:6px' }, ot.lineup.map((x) => { const q = ot.players[x.pid]; return h('div', { class: 'pitem' }, h('span', { class: 'num' }, q.num), h('span', { class: 'nm' }, q.name), h('span', { class: 'sub grow' }, q.traits.join('・'))); })));
+        const lvl = app.w && YA.analysisLevel ? YA.analysisLevel(app.w) : 2;
+        const lines = app.w && YA.analysis ? YA.analysis(app.w, ot, oo) : [`型：${ot.tactic.type} / 布陣：${ot.formation}`];
+        body.append(h('div', { class: 'plist' }, lines.map((l) => h('div', { class: 'insight', style: 'margin-bottom:3px' }, l))));
+        body.append(h('div', { class: 'plist', style: 'margin-top:6px' }, ot.lineup.map((x) => { const q = ot.players[x.pid]; return h('div', { class: 'pitem' }, h('span', { class: 'num' }, q.num), h('span', { class: 'nm' }, q.name), h('span', { class: 'sub grow' }, lvl >= 2 ? q.traits.join('・') : '')); })));
       }
       if (st.tab !== 'instr' && st.tab !== 'shout' && st.msgs.length) body.append(msgBox());
     }
@@ -460,7 +462,7 @@
     const top = h('div', { class: 'pre-top' });
     if (sched) {
       const cal = YA.calendar(w.week);
-      top.append(h('div', { class: 'opp on', style: 'cursor:default' }, h('b', {}, h('span', { class: 'sw', style: 'background:' + opp.color }), `${w.year}年目 ${cal.month}第${cal.nth}週  ${opp.home ? 'ホーム' : 'アウェイ'}  vs ${opp.name}`), h('span', {}, opp.desc + '（フリー対戦に切り替えると成績に残りません）')));
+      top.append(h('div', { class: 'opp on', style: 'cursor:default' }, h('b', {}, h('span', { class: 'sw', style: 'background:' + opp.color }), `${opp.kindLabel || ''}  ${opp.home ? 'ホーム' : 'アウェイ'}  vs ${opp.name}`), h('span', {}, opp.desc + '（フリー対戦に切り替えると成績に残りません）')));
       top.append(h('button', { class: 'btn sm', style: 'align-self:center', onclick: () => { app.free = true; render(); } }, 'フリー対戦'));
     } else if (app.free && w && w.phase === 'match') top.append(h('button', { class: 'btn sm', style: 'align-self:center', onclick: () => { app.free = false; render(); } }, '今週の試合へ戻る'));
     if (!sched) YA.OPPONENTS.forEach((o2, i) => top.append(h('button', { class: 'opp' + (i === app.opp ? ' on' : ''), onclick: () => { persistTeam(t); app.opp = i; render(); } }, h('b', {}, h('span', { class: 'sw', style: 'background:' + o2.color }), o2.name), h('span', {}, o2.desc))));
@@ -715,7 +717,7 @@
     const win = summary.score.home > summary.score.away;
     const draw = summary.score.home === summary.score.away;
     wrap.append(
-      h('div', { class: 'res-top' }, h('div', { class: 'res-score' }, h('span', {}, m.home.short), h('b', {}, `${summary.score.home} - ${summary.score.away}`), h('span', {}, m.away.short)), h('div', { class: 'h grow', style: 'font-size:15px' }, win ? '勝利' : draw ? '引き分け' : '敗戦'), m.scheduled ? h('button', { class: 'btn pri', style: 'min-width:110px', onclick: () => { app.view = 'pre'; preState = null; app.tab = 'home'; render(); } }, 'ホームへ（次の週へ）') : h('button', { class: 'btn', onclick: () => { app.view = 'pre'; preState = null; render(); } }, '戦術を直す'), m.scheduled ? null : h('button', { class: 'btn pri', onclick: () => { const t = newOurs(); startMatch(t, YA.makeOpponent(YA.OPPONENTS[app.opp], app.seed * 3 + app.opp + 1), YA.OPPONENTS[app.opp], false); } }, '同じ設定でもう一度')),
+      h('div', { class: 'res-top' }, h('div', { class: 'res-score' }, h('span', {}, m.home.short), h('b', {}, `${summary.score.home} - ${summary.score.away}`), h('span', {}, m.away.short)), h('div', { class: 'h grow', style: 'font-size:15px' }, win ? '勝利' : draw ? '引き分け' : '敗戦'), m.scheduled && !m.videoDone && YA.videoButton ? YA.videoButton(m) : null, m.scheduled ? h('button', { class: 'btn pri', style: 'min-width:110px', onclick: () => { app.view = 'pre'; preState = null; app.tab = 'home'; render(); } }, 'ホームへ（次の週へ）') : h('button', { class: 'btn', onclick: () => { app.view = 'pre'; preState = null; render(); } }, '戦術を直す'), m.scheduled ? null : h('button', { class: 'btn pri', onclick: () => { const t = newOurs(); startMatch(t, YA.makeOpponent(YA.OPPONENTS[app.opp], app.seed * 3 + app.opp + 1), YA.OPPONENTS[app.opp], false); } }, '同じ設定でもう一度')),
     );
     const left = h('div', { class: 'card pbody grow' }, h('div', { class: 'h', style: 'margin-bottom:5px' }, '見どころ'));
     const tl = h('div', { class: 'tl' });
