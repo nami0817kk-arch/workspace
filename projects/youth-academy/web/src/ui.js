@@ -442,7 +442,10 @@
     const wrap = h('div', { class: 'pre' });
     const top = h('div', { class: 'pre-top' });
     YA.OPPONENTS.forEach((o2, i) => top.append(h('button', { class: 'opp' + (i === app.opp ? ' on' : ''), onclick: () => { app.cfg = snapCfg(t); store.set('cfg', app.cfg); app.opp = i; render(); } }, h('b', {}, h('span', { class: 'sw', style: 'background:' + o2.color }), o2.name), h('span', {}, o2.desc))));
-    top.append(h('button', { class: 'btn pri', style: 'min-width:92px;font-size:14px', onclick: () => { app.cfg = snapCfg(t); store.set('cfg', app.cfg); startMatch(t, oppTeam, opp); } }, 'キックオフ'));
+    const kick = h('div', { style: 'display:flex;flex-direction:column;gap:4px;min-width:92px' },
+      h('button', { class: 'btn pri', style: 'flex:1;font-size:14px', onclick: () => { app.cfg = snapCfg(t); store.set('cfg', app.cfg); startMatch(t, oppTeam, opp); } }, 'キックオフ'),
+      h('button', { class: 'btn sm', onclick: () => { app.cfg = snapCfg(t); store.set('cfg', app.cfg); simulateAll(t, oppTeam, opp); } }, '全シミュレーション'));
+    top.append(kick);
     const panel = tacticPanel(t, { tabs: [['tactic', '戦い方'], ['role', '選手と役割'], ['opp', '相手の分析']], opp, oppTeam, onChange: () => { app.cfg = snapCfg(t); store.set('cfg', app.cfg); }, state: preState || {} });
     preState = panel.state;
     wrap.append(top, panel);
@@ -465,6 +468,23 @@
     render();
   }
 
+  // 見ずに最後まで回す。止まる節目は無視し、交代・指示はしない（布陣と戦い方は試合前のまま）
+  function simulateAll(t, oppTeam, opp) {
+    app.seed = (app.seed * 1103515245 + 12345) % 2147483647;
+    const m = new YA.Match({ seed: app.seed, home: t, away: oppTeam, settings: { autoStop: false } });
+    m.opp = opp;
+    let e;
+    let g = 0;
+    while (!m.finished && g++ < 5000) {
+      const ev = m.step();
+      if (ev.type === 'full') e = ev;
+    }
+    app.match = m;
+    app.last = { m, summary: e.summary };
+    app.view = 'result';
+    render();
+  }
+
   function viewPlay(main) {
     const m = app.match;
     const wrap = h('div', { class: 'play' });
@@ -473,7 +493,8 @@
     const clock = h('div', { class: 'clock' }, "0'");
     const stopBtn = h('button', { class: 'btn pri sm', style: 'min-height:34px;min-width:76px' }, '止める');
     const autoBtn = h('button', { class: 'btn sm', style: 'min-height:34px' });
-    const top = h('div', { class: 'topbar' }, h('div', { class: 'scoreboard' }, h('span', { class: 'tn' }, m.home.short), scoreHome, h('span', { style: 'color:#8fa3c4' }, '-'), scoreAway, h('span', { class: 'tn' }, m.away.short)), clock, h('div', { class: 'grow' }), autoBtn, stopBtn);
+    const skipBtn = h('button', { class: 'btn sm', style: 'min-height:34px', onclick: () => { cleanupPlay(); let e; let g = 0; while (!m.finished && g++ < 5000) { const ev = m.step(); if (ev.type === 'full') e = ev; } app.last = { m, summary: e ? e.summary : m.summary() }; app.view = 'result'; render(); } }, '結果まで');
+    const top = h('div', { class: 'topbar' }, h('div', { class: 'scoreboard' }, h('span', { class: 'tn' }, m.home.short), scoreHome, h('span', { style: 'color:#8fa3c4' }, '-'), scoreAway, h('span', { class: 'tn' }, m.away.short)), clock, h('div', { class: 'grow' }), skipBtn, autoBtn, stopBtn);
     const stage = h('div', { class: 'stage' });
     const cv = h('canvas', {});
     const sceneHead = h('div', { class: 'scene-head' });
