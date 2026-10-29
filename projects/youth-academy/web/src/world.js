@@ -223,6 +223,10 @@
   function pickLineup(w, which, formation) {
     if (!YA.FORMATIONS[formation]) formation = '4-3-3';
     const pool = Object.values(w.players).filter((p) => p.team === which);
+    // Bの起用方針が「手動」なら、いまの並びを残す（人が変わった・布陣が変わったときだけ組み直す）
+    if (which === 'B' && w.bCtl && w.bCtl.policy === 'manual' && w.lineupB && w.benchB && w.lineupB.length === YA.FORMATIONS[formation].length
+      && w.lineupB.every((s) => w.players[s.pid] && w.players[s.pid].team === 'B') && w.benchB.every((id) => w.players[id] && w.players[id].team === 'B')
+      && w.bCtl.formKept === formation) return;
     const fm = YA.FORMATIONS[formation];
     const need = { GK: 0, DF: 0, MF: 0, FW: 0 };
     fm.forEach((s, i) => need[YA.posOfSlot(s, i)]++);

@@ -629,5 +629,19 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   for (const k of ['tap', 'goal', 'concede', 'whistle', 'save', 'miss', 'x', null]) YA.sfx.play(k);
   ok(true, '効果音は例外を出さない');
 }
+// Bの手動入れ替え：先発と控えを替えても人数が崩れず、組み直しでも並びが残る
+{
+  const wb = YA.newWorld(5);
+  YA.setBCtl(wb, { policy: 'manual' });
+  const bench0 = wb.benchB[0];
+  const old = wb.lineupB[3].pid;
+  ok(YA.swapB(wb, 3, bench0), 'swapB が成功する');
+  ok(wb.lineupB[3].pid === bench0 && wb.benchB.includes(old), '先発と控えが入れ替わる');
+  YA.autoTeams(wb, false);
+  ok(wb.lineupB[3].pid === bench0, '手動のときは組み直しでも並びが残る');
+  ok(new Set(wb.lineupB.map((s) => s.pid)).size === 11, 'Bの先発に重複がない');
+  YA.setBCtl(wb, { policy: 'best' });
+  ok(wb.lineupB.length === 11, '方針を戻すと自動で組み直す');
+}
 console.log(fails ? '失敗 ' + fails : '育成の点検: すべて通過');
 process.exit(fails ? 1 : 0);

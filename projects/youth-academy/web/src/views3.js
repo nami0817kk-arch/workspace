@@ -218,6 +218,14 @@
     body.append(h('div', { class: 'h', style: 'margin-top:8px' }, '布陣'), h('div', { class: 'row', style: 'gap:5px;flex-wrap:wrap;margin-top:3px' }, ...Object.keys(YA.FORMATIONS).map((f) => h('button', { class: 'btn sm' + (c.form === f ? ' on' : ''), onclick: () => set({ form: f }) }, f))));
     body.append(h('div', { class: 'h', style: 'margin-top:8px' }, '戦い方'), h('div', { class: 'row', style: 'gap:5px;flex-wrap:wrap;margin-top:3px' }, h('button', { class: 'btn sm' + (!c.tactic ? ' on' : ''), onclick: () => set({ tactic: null }) }, 'Aと同じ'), ...Object.keys(YA.TACTICS).map((t) => h('button', { class: 'btn sm' + (c.tactic === t ? ' on' : ''), onclick: () => set({ tactic: t }) }, t))));
     body.append(h('div', { class: 'h', style: 'margin-top:8px' }, '起用方針'), h('div', { class: 'row', style: 'gap:5px;flex-wrap:wrap;margin-top:3px' }, ...YA.B_POLICY.map(([k, n]) => h('button', { class: 'btn sm' + (c.policy === k ? ' on' : ''), onclick: () => set({ policy: k }) }, n))));
+    if (c.policy === 'manual') {
+      const ui = app;
+      const slotName = (s, i) => YA.pos15OfSlot(s, i);
+      body.append(h('div', { class: 'h', style: 'margin-top:8px' }, 'Bの先発と控え'), h('div', { class: 'note' }, ui.bSel == null ? '入れ替えたい先発をタップ → 入れる選手をタップ' : '入れる選手（先発・控え）をタップ'));
+      const chip = (p, on, fn) => h('button', { class: 'btn sm' + (on ? ' on' : ''), style: 'min-height:34px;padding:4px 6px;font-size:11.5px', onclick: fn }, `${p.name.split(' ')[0]} ${YA.ovr(p).toFixed(0)}${p.inj > 0 ? '＊' : ''}`);
+      body.append(h('div', { class: 'row', style: 'gap:4px;flex-wrap:wrap;margin-top:3px' }, ...w.lineupB.map((s, i) => { const p = w.players[s.pid]; return h('span', { style: 'display:flex;flex-direction:column;align-items:center;gap:1px' }, h('span', { class: 'note', style: 'font-size:9.5px' }, slotName(s, i)), chip(p, ui.bSel === i, () => { if (ui.bSel == null) ui.bSel = i; else if (ui.bSel === i) ui.bSel = null; else { YA.swapB(w, ui.bSel, s.pid); ui.bSel = null; YA.saveWorld(true); } rerender(); })); })));
+      body.append(h('div', { class: 'note', style: 'margin-top:5px' }, '控え'), h('div', { class: 'row', style: 'gap:4px;flex-wrap:wrap;margin-top:3px' }, ...(w.benchB || []).map((id) => w.players[id]).filter(Boolean).map((p) => chip(p, false, () => { if (ui.bSel == null) return; YA.swapB(w, ui.bSel, p.id); ui.bSel = null; YA.saveWorld(true); rerender(); }))));
+    }
     const rs = (w.resultsB || []).slice(-8).reverse();
     body.append(h('div', { class: 'h', style: 'margin-top:8px' }, 'Bの最近の結果'), ...(rs.length ? rs.map((r) => h('div', { class: 'note', style: 'color:var(--ink)' }, `${r.year}年目${r.week}週　${r.gf}-${r.ga}　vs ${r.opp}`)) : [h('div', { class: 'note' }, 'まだ試合がありません')]));
   };

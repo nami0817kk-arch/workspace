@@ -161,11 +161,29 @@
   });
 
   // ---------- Bチームの指揮（決定30）：布陣・戦い方・起用方針。試合は結果だけ自動で回る ----------
-  YA.B_POLICY = [['best', '力の順'], ['young', '下級生を優先'], ['rest', '疲れの少ない順']];
+  YA.B_POLICY = [['best', '力の順'], ['young', '下級生を優先'], ['rest', '疲れの少ない順'], ['manual', '自分で決める']];
   YA.setBCtl = function (w, patch) {
     w.bCtl = Object.assign({ form: '4-3-3', tactic: null, policy: 'best' }, w.bCtl || {}, patch);
     if (!YA.FORMATIONS[w.bCtl.form]) w.bCtl.form = '4-3-3';
+    const keep = w.bCtl.policy === 'manual' && !('form' in patch);
+    if (!keep) w.bCtl.formKept = null;
     YA.pickLineup(w, 'B', w.bCtl.form); // Aの並びは触らない
+    if (w.bCtl.policy === 'manual') w.bCtl.formKept = w.bCtl.form;
+  };
+  // Bの先発の枠 i と、Bの別の選手（先発の別の枠か控え）を入れ替える
+  YA.swapB = function (w, slotI, pid) {
+    const s = w.lineupB[slotI];
+    if (!s || !w.players[pid] || w.players[pid].team !== 'B') return false;
+    const j = w.lineupB.findIndex((x) => x.pid === pid);
+    if (j >= 0) { const t = s.pid; s.pid = pid; w.lineupB[j].pid = t; YA.fixSlotRole(w.lineupB[j], j); } else {
+      const k = (w.benchB || []).indexOf(pid);
+      if (k >= 0) w.benchB[k] = s.pid; else w.benchB = (w.benchB || []).concat([s.pid]);
+      s.pid = pid;
+    }
+    YA.fixSlotRole(s, slotI);
+    w.bCtl = Object.assign({ form: '4-3-3', tactic: null, policy: 'manual' }, w.bCtl || {}, { policy: 'manual' });
+    w.bCtl.formKept = w.bCtl.form;
+    return true;
   };
 
   // ---------- クラブ名・相手クラブ名の書き換え（決定52・54）----------
