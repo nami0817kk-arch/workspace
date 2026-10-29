@@ -318,7 +318,7 @@ Line playGame(
     appeared = true;
     final foe = Pitcher(control: opp, stuff: opp);
     for (var i = 0; i < _batterTurns; i++) {
-      final r = simulateAtBat(foe, p.toBatter(), rng);
+      final r = simulateAtBat(foe, p.toBatter(), rng, ownBatter: true);
       final onBase = r == AtBatResult.walk || r == AtBatResult.single;
       line += Line(
         doubles: r == AtBatResult.double ? 1 : 0,
