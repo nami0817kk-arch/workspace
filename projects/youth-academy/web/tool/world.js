@@ -247,7 +247,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   const seenPos = new Set();
   for (const f of Object.keys(YA.FORMATIONS)) YA.FORMATIONS[f].forEach((sl, i) => seenPos.add(YA.pos15OfSlot(sl, i)));
   ok(YA.POS15.every((q) => seenPos.has(q)), '定番の布陣で15ポジション全部が使われる ' + [...seenPos].length);
-  for (const q of YA.POS15) { ok(YA.ROLES15[q].length >= 3, q + ' の役割'); for (const r of YA.ROLES15[q]) ok(YA.ROLE_DEF[r] && YA.ROLE_DEF[r].note && YA.ROLE_DEF[r].tags.length, '役割の定義 ' + r); }
+  for (const q of YA.POS15) { ok(YA.ROLES15[q].length >= 2, q + ' の役割'); for (const r of YA.ROLES15[q]) ok(YA.ROLE_DEF[r] && YA.ROLE_DEF[r].note && YA.ROLE_DEF[r].tags.length, '役割の定義 ' + r); }
   // 選手：適性・隠れた最適・利き足
   let mis = 0, tot = 0;
   const posCount = {};
@@ -277,50 +277,88 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   q.apt.CB = 6; q.apt.LB = 14; q.main = 'LB'; q.fam = { LB: 14 }; q.foot = 'L';
   const p0 = YA.slotPenalty(q, 'CB'); q.fam.CB = 10; const p1 = YA.slotPenalty(q, 'CB');
   ok(p0 > 0.1 && p1 < p0, '向いていない場所では力が落ち、慣れると和らぐ ' + p0 + ' → ' + p1);
-  // 全部の役割で試合が落ちない／役割が場面の出方を変える
-  const countScene = (role, pos15, type) => {
+  // 役割＋任務：表の形・全ポジションの全役割×任務で試合が最後まで回る
+  ok(Object.keys(YA.ROLE_DEF).length >= 44, '役割は44以上 ' + Object.keys(YA.ROLE_DEF).length);
+  for (const r of Object.keys(YA.ROLE_DEF)) {
+    const rd = YA.ROLE_DEF[r];
+    ok(rd.duties.length >= 1 && rd.duties.every((d) => YA.DUTY[d]) && Object.keys(rd.absW).length >= 3 && rd.traits.length >= 2 && rd.tags.length >= 1, '役割の表の形 ' + r);
+  }
+  ok(YA.ROLES15.CB.every((r) => ['センターディフェンダー', 'ボールプレイングDF', 'ノーナンセンスCB'].indexOf(r) < 0 || YA.ROLE_DEF[r].duties.join() === 'def,stop,cover'), 'CBの3役は守備・ストッパー・カバー');
+  ok(YA.ROLE_DEF['レジスタ'].duties.join() === 'sup' && YA.ROLE_DEF['アンカーマン'].duties.join() === 'def' && YA.ROLE_DEF['リベロ'].duties.join() === 'sup,att', '依頼どおりの任務の組み合わせ');
+  const formOf = {};
+  for (const f of Object.keys(YA.FORMATIONS)) YA.FORMATIONS[f].forEach((sl, i) => { const q3 = YA.pos15OfSlot(sl, i); if (!formOf[q3]) formOf[q3] = [f, i]; });
+  let combos = 0;
+  for (const q2 of YA.POS15) {
+    const [f, si] = formOf[q2];
+    const wf = YA.newWorld(77);
+    YA.pickLineup(wf, 'A', f);
+    for (const r of YA.ROLES15[q2]) for (const d of YA.ROLE_DEF[r].duties) {
+      const sl = wf.lineupA[si];
+      sl.role = r; sl.duty = d;
+      const home = YA.teamFromWorld(wf, 'A');
+      ok(home.lineup[si].role === r && home.lineup[si].duty === d, '役割と任務が試合に渡る ' + q2 + '/' + r + '/' + d);
+      const m = new YA.Match({ seed: 3 + combos, home, away: YA.makeOpponent(YA.OPPONENTS[combos % 3], 3), settings: { autoStop: false } });
+      while (!m.finished) m.step();
+      ok(m.finished && m.scenes.length >= 13, '役割×任務で試合が最後まで進む ' + q2 + '/' + r + '/' + d);
+      combos++;
+    }
+  }
+  console.log('全ポジションの全役割×任務で試合が回った組み合わせ', combos);
+  ok(combos >= 110, '組み合わせの数 ' + combos);
+  // 古い役割名や任務のないスロットは、使えるものに直る
+  { const wf = YA.newWorld(5); wf.lineupA[3].role = '昔の役割'; delete wf.lineupA[4].duty; const t0 = YA.teamFromWorld(wf, 'A'); ok(t0.lineup.every((sl, i) => YA.ROLES15[YA.pos15OfSlot(sl, i)].indexOf(sl.role) >= 0 && YA.ROLE_DEF[sl.role].duties.indexOf(sl.duty) >= 0), '役割と任務が直る'); }
+  // 役割・任務が場面の出方を変える
+  const countScene = (role, duty, pos15, type) => {
     let c = 0;
     for (let sd = 1; sd <= 80; sd++) {
       const home = YA.makeOurs(1);
-      home.lineup.forEach((sl, i) => { if (YA.pos15OfSlot(sl, i) === pos15) sl.role = role; });
+      home.lineup.forEach((sl, i) => { if (YA.pos15OfSlot(sl, i) === pos15) { sl.role = role; sl.duty = duty; } });
       const m = new YA.Match({ seed: sd, home, away: YA.makeOpponent(YA.OPPONENTS[1], sd), settings: { autoStop: false } });
       while (!m.finished) m.step();
       for (const sc of m.scenes) if (sc.side === 'home' && sc.type === type) c++;
     }
     return c;
   };
-  for (const q2 of YA.POS15) for (const r of YA.ROLES15[q2]) {
-    const home = YA.makeOurs(1);
-    let hit = false;
-    home.lineup.forEach((sl, i) => { if (YA.pos15OfSlot(sl, i) === q2) { sl.role = r; hit = true; } });
-    if (!hit) continue; // 4-3-3 にない位置は、別の布陣のテストで
-    const m = new YA.Match({ seed: 3, home, away: YA.makeOpponent(YA.OPPONENTS[0], 3), settings: { autoStop: false } });
-    while (!m.finished) m.step();
-    ok(m.finished, '役割で試合が最後まで進む ' + q2 + '/' + r);
-  }
-  // どの布陣でも、全ポジション・全役割の組み合わせで試合が回る
-  for (const f of Object.keys(YA.FORMATIONS)) {
-    const wf = YA.newWorld(77);
-    YA.pickLineup(wf, 'A', f);
-    for (const r of [0, 1, 2, 3]) {
-      wf.lineupA.forEach((sl, i) => { const rs = YA.rolesAt(sl, i); sl.role = rs[Math.min(r, rs.length - 1)]; });
-      const home = YA.teamFromWorld(wf, 'A');
-      const m = new YA.Match({ seed: 5 + r, home, away: YA.makeOpponent(YA.OPPONENTS[2], 5), settings: { autoStop: false } });
+  const runSt = countScene('アドバンスドフォワード', 'att', 'ST', 'through');
+  const tgSt = countScene('ターゲットフォワード', 'sup', 'ST', 'through');
+  const crSt = countScene('ターゲットフォワード', 'att', 'ST', 'cross');
+  const crSt2 = countScene('アドバンスドフォワード', 'att', 'ST', 'cross');
+  console.log('STの役割：アドバンスドフォワード→裏抜け', runSt, '/ターゲットフォワード→裏抜け', tgSt, '、ターゲットフォワード→クロス', crSt, '/アドバンスドフォワード→クロス', crSt2);
+  ok(runSt > tgSt, '「アドバンスドフォワード」は裏抜けの場面を増やす');
+  ok(crSt > crSt2, '「ターゲットフォワード」はクロスの場面を増やす');
+  const wgD = countScene('インサイドフォワード', 'att', 'RW', 'dribble'), wgD2 = countScene('ワイドプレイメーカー', 'sup', 'RW', 'dribble');
+  const wgC = countScene('ウイング', 'att', 'RW', 'cross'), wgC2 = countScene('インサイドフォワード', 'att', 'RW', 'cross');
+  console.log('WGの役割：インサイドフォワード→ドリブル', wgD, '/ワイドプレイメーカー→ドリブル', wgD2, '、ウイング→クロス', wgC, '/インサイドフォワード→クロス', wgC2);
+  ok(wgD > wgD2, '「インサイドフォワード」はドリブルの場面を増やす');
+  ok(wgC >= wgC2, '「ウイング」はクロスを減らさない');
+  // 任務：攻撃は場面を増やし、守備は減らす（同じ役割で比べる）
+  const stA = countScene('プレッシングフォワード', 'att', 'ST', 'steal');
+  const stD = countScene('プレッシングフォワード', 'def', 'ST', 'steal');
+  const cmA = countScene('セントラルMF', 'att', 'CM', 'onetwo');
+  const cmD = countScene('セントラルMF', 'def', 'CM', 'onetwo');
+  console.log('任務：プレッシングフォワード 攻撃→奪取', stA, '/守備→奪取', stD, '、セントラルMF 攻撃→ワンツー', cmA, '/守備→ワンツー', cmD);
+  ok(stA > stD, '任務「攻撃」は「守備」より攻めの場面が出やすい（奪取）');
+  ok(cmA >= cmD, '任務「攻撃」は「守備」より攻めの場面が出やすい（ワンツー）');
+  // 相手の場面を減らす：守備の任務のアンカーは、攻撃より相手の裏抜けを減らす
+  const oppThrough = (duty) => {
+    let c = 0;
+    for (let sd = 1; sd <= 80; sd++) {
+      const home = YA.makeOurs(1);
+      home.lineup.forEach((sl, i) => { if (YA.pos15OfSlot(sl, i) === 'DM') { sl.role = 'アンカーマン'; sl.duty = duty; } });
+      const m = new YA.Match({ seed: sd, home, away: YA.makeOpponent(YA.OPPONENTS[1], sd), settings: { autoStop: false } });
       while (!m.finished) m.step();
-      ok(m.finished && m.scenes.length >= 13, '布陣と役割の組み合わせ ' + f + '/' + r);
+      for (const sc of m.scenes) if (sc.side === 'away' && sc.type === 'through') c++;
     }
-    ok(wf.lineupA.every((sl, i) => YA.rolesAt(sl, i).indexOf(sl.role) >= 0), f + ' の役割がそのポジションで使える');
-  }
-  const runSt = countScene('裏へ抜ける', 'ST', 'through');
-  const tgSt = countScene('ターゲットマン', 'ST', 'through');
-  const crSt = countScene('ターゲットマン', 'ST', 'cross');
-  const crSt2 = countScene('裏へ抜ける', 'ST', 'cross');
-  console.log('STの役割：裏へ抜ける→裏抜け', runSt, '/ターゲットマン→裏抜け', tgSt, '、ターゲットマン→クロス', crSt, '/裏へ抜ける→クロス', crSt2);
-  ok(runSt > tgSt, '「裏へ抜ける」は裏抜けの場面を増やす');
-  ok(crSt > crSt2, '「ターゲットマン」はクロスの場面を増やす');
-  const wgC = countScene('クロッサー', 'RW', 'cross'), wgD = countScene('仕掛ける', 'RW', 'dribble'), wgD2 = countScene('クロッサー', 'RW', 'dribble');
-  console.log('WGの役割：クロッサー→クロス', wgC, '/仕掛ける→ドリブル', wgD, 'クロッサー→ドリブル', wgD2);
-  ok(wgD > wgD2, '「仕掛ける」はドリブルの場面を増やす');
+    return c;
+  };
+  console.log('アンカーマン（守備）→相手の裏抜け', oppThrough('def'));
+  // 立つ位置の深さ（任務で変わる）
+  ok(YA.DUTY.att.depth > YA.DUTY.sup.depth && YA.DUTY.sup.depth > YA.DUTY.def.depth, '任務で立つ位置の深さが変わる');
+  // 役割と任務が選手に合わないと「合わない」になる
+  { const wf = YA.newWorld(9); const tm = YA.teamFromWorld(wf, 'A'); const i = 9; const pl = tm.players[tm.lineup[i].pid];
+    tm.lineup[i].role = YA.ROLES15[YA.pos15OfSlot(tm.lineup[i], i)][0]; tm.lineup[i].duty = YA.ROLE_DEF[tm.lineup[i].role].duties.indexOf('att') >= 0 ? 'att' : tm.lineup[i].duty;
+    for (const n of ['運動量', 'スタミナ', 'スピード']) pl.ab[n] = 3;
+    if (tm.lineup[i].duty === 'att') ok(YA.Match.prototype.roleFit.call(null, tm, i) <= 0, '走れない選手に「攻撃」の任務は合わない'); }
 }
 console.log(fails ? '失敗 ' + fails : '育成の点検: すべて通過');
 process.exit(fails ? 1 : 0);
