@@ -49,7 +49,7 @@
   const STYLE_DESC = { power: '体が強く、前から奪いにくる', tech: 'つないで崩す技術派', defend: '堅守速攻。裏抜けに注意' };
 
   function levelBase(level) {
-    return [12.4, 11.3, 10.2][level - 1];
+    return [10.9, 9.8, 8.7][level - 1];
   }
   YA.LEVEL_NAMES = ['全国リーグ', '地域リーグ', '県リーグ'];
   YA.LEVEL_EXP = [1, 0.8, 0.6]; // 試合の経験値（決定62：全国＞地域＞県）
@@ -69,7 +69,7 @@
       const ck = r.pick(COACH_KIND);
       teams.push({
         id: 't' + i, name, short: name.length > 9 ? name.slice(0, 9) : name, kind, style,
-        lvl: Math.round((levelBase(level) + w.year * 0.12 + (r() - 0.5) * 1.8 + (kind === 'club' ? 0.3 : 0)) * 10) / 10,
+        lvl: Math.round((levelBase(level) + w.year * 0.3 + (r() - 0.5) * 1.8 + (kind === 'club' ? 0.3 : 0)) * 10) / 10,
         formation: r.pick(['4-4-2', '4-3-3', '5-3-2', '4-2-3-1']), tactic: { power: 'ハイプレス', tech: 'ポゼッション', defend: '堅守' }[style],
         color: r.pick(['#c0392b', '#2c3e50', '#7f8c8d', '#8e44ad', '#d35400', '#16a085']),
         coach: { name: r.pick(COACH_SUR) + ' ' + r.pick(['監督', 'コーチ']), kind: ck[0], note: ck[1] },
@@ -105,7 +105,7 @@
       const style = r.pick(['power', 'tech', 'defend']);
       return { id: 'c' + i, name, short: name.length > 9 ? name.slice(0, 9) : name, style, lvl: Math.round((base + i * 0.55 + (r() - 0.5)) * 10) / 10, formation: r.pick(['4-4-2', '4-3-3', '5-3-2']), tactic: { power: 'ハイプレス', tech: 'ポゼッション', defend: '堅守' }[style], color: r.pick(['#c0392b', '#2c3e50', '#8e44ad', '#d35400']), coach: { name: r.pick(COACH_SUR) + ' 監督', kind: r.pick(COACH_KIND)[0], note: '' } };
     });
-    const base = levelBase(w.leagueLevel || 2) - 0.3 + w.year * 0.12;
+    const base = levelBase(w.leagueLevel || 2) - 0.3 + w.year * 0.3;
     w.cup = { summer: { alive: true, round: 0, opps: mk(3, base), result: null }, winter: { alive: true, round: 0, opps: mk(4, base - 0.2), result: null } };
   };
 
@@ -210,14 +210,14 @@
       if (!win) {
         c.alive = false;
         c.result = `${s.round}回戦で敗退${pk}`;
-        w.inbox.push({ week: w.week, year: w.year, tier: 2, text: (s.cup === 'summer' ? '夏の全国大会' : '冬のカップ戦') + `は${s.round}回戦で敗退。` });
+        YA.noteTier(w, 2, (s.cup === 'summer' ? '夏の全国大会' : '冬のカップ戦') + `は${s.round}回戦で敗退。`);
       } else if (s.round >= c.opps.length) {
         c.alive = false;
         c.result = '優勝';
         w.trophies = (w.trophies || []).concat([{ year: w.year, name: s.cup === 'summer' ? '夏の全国大会' : '冬のカップ戦', rank: '優勝' }]);
-        w.inbox.push({ week: w.week, year: w.year, tier: 1, text: (s.cup === 'summer' ? '夏の全国大会' : '冬のカップ戦') + 'で優勝しました！' });
+        YA.noteTier(w, 1, (s.cup === 'summer' ? '夏の全国大会' : '冬のカップ戦') + 'で優勝しました！');
         if (w.club) w.club.rep = clamp(w.club.rep + 4, 0, 100);
-      } else w.inbox.push({ week: w.week, year: w.year, tier: 3, text: (s.cup === 'summer' ? '夏の全国大会' : '冬のカップ戦') + `の${s.round}回戦を突破${pk}` });
+      } else YA.noteTier(w, 3, (s.cup === 'summer' ? '夏の全国大会' : '冬のカップ戦') + `の${s.round}回戦を突破${pk}`);
     }
   };
 

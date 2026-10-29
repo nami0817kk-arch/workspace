@@ -7,6 +7,7 @@ require(path.join(__dirname, '../src/world.js'));
 require(path.join(__dirname, '../src/league.js'));
 require(path.join(__dirname, '../src/club.js'));
 require(path.join(__dirname, '../src/scout.js'));
+require(path.join(__dirname, '../src/extra.js'));
 const YA = globalThis.YA;
 let fails = 0;
 const ok = (c, m) => { if (!c) { fails++; console.log('FAIL:', m); } };
@@ -359,6 +360,176 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
     tm.lineup[i].role = YA.ROLES15[YA.pos15OfSlot(tm.lineup[i], i)][0]; tm.lineup[i].duty = YA.ROLE_DEF[tm.lineup[i].role].duties.indexOf('att') >= 0 ? 'att' : tm.lineup[i].duty;
     for (const n of ['運動量', 'スタミナ', 'スピード']) pl.ab[n] = 3;
     if (tm.lineup[i].duty === 'att') ok(YA.Match.prototype.roleFit.call(null, tm, i) <= 0, '走れない選手に「攻撃」の任務は合わない'); }
+}
+// ---- おまかせ進行・新しく始める・セーブ枠・戦術の細かい設定・外国籍・飛び級・海外移籍・効果音 ----
+{
+  // 1年をおまかせで進める（テスト用）：止まらない設定で、3年続けて落ちない
+  const wsim = YA.newWorld(61);
+  const y0 = wsim.year;
+  const rep1 = YA.simulate(wsim, { until: 'year', stopOnImportant: false });
+  ok(wsim.year === y0 + 1 && wsim.week === 1, '1年おまかせで年度が替わる ' + wsim.year + '/' + wsim.week);
+  ok(rep1.weeks >= 40 && rep1.matches >= 20 && rep1.lines.length >= 5, 'おまかせの報告 ' + rep1.weeks + '週 ' + rep1.matches + '試合 ' + rep1.lines.length + '行');
+  ok(rep1.lines.some((l) => l.k === 'eval') && rep1.lines.some((l) => l.k === 'grad') && rep1.lines.some((l) => l.k === 'grow'), '報告に評価・卒業・成長が出る');
+  ok(!wsim.yearIntro && !wsim.pendingContract && !wsim.pendingCoach, '止まらない設定では、年度はじめの選択も済ませる');
+  check(wsim);
+  YA.simulate(wsim, { until: 'year', stopOnImportant: false });
+  YA.simulate(wsim, { until: 'year', stopOnImportant: false });
+  ok(wsim.year === y0 + 3, '3年続けて進む');
+  console.log('1年おまかせの報告（例）:', rep1.lines.map((l) => l.t).join(' / ').slice(0, 260));
+  // 1週・次の試合
+  const w1 = YA.newWorld(62);
+  w1.yearIntro = false;
+  const r1 = YA.simulate(w1, { until: 'week', stopOnImportant: false });
+  ok(w1.week === 2 && r1.weeks === 1, '1週だけ進む');
+  const r2 = YA.simulate(w1, { until: 'match', stopOnImportant: false });
+  ok(r2.matches === 1 && w1.phase === 'after', '次の試合まで進む（試合のあとで止まる）');
+  // 大事な出来事では止まる設定
+  let stopped = 0;
+  for (let sd = 70; sd < 78; sd++) {
+    const wz = YA.newWorld(sd);
+    wz.yearIntro = false;
+    const rr = YA.simulate(wz, { until: 'year', stopOnImportant: true });
+    if (rr.stopped) {
+      stopped++;
+      ok((wz.phase === 'event' && wz.events.length > 0) || wz.pendingContract || wz.pendingCoach || wz.yearIntro, '止まったときの状態が続きから操作できる ' + rr.stopped);
+      for (const e of wz.events.slice()) {
+        YA.resolveEvent(wz, e, 0);
+        wz.events.shift();
+      }
+      if (wz.phase === 'event') YA.afterEvents(wz);
+      const rr2 = YA.simulate(wz, { until: 'week', stopOnImportant: false });
+      ok(rr2.weeks >= 0, '止まったあとも進められる');
+    }
+  }
+  console.log('大事な出来事で止まった回数（8つの世界）', stopped);
+  ok(stopped >= 3, '大事な出来事で止まる ' + stopped);
+  // 指導者の作成と経歴・クラブ選び
+  const st1 = YA.makeStart({ name: 'テスト監督', career: 'high', club: 0, points: { eye: 3, talk: 3 }, noFire: true });
+  const wn = YA.newWorld(5, st1);
+  ok(wn.coachName === 'テスト監督' && wn.coach.teach === 11 && wn.coach.eye === 11 && wn.coach.talk === 12 && wn.coach.exp === 3, '経歴と配分が能力に出る ' + JSON.stringify(wn.coach));
+  ok(wn.club.tier === 1 && wn.clubName.indexOf('ブルーウィング') >= 0 && wn.club.noFire && wn.league.level === 1, '選んだクラブ（1部）で始まる');
+  const wt3 = YA.newWorld(5, YA.makeStart({ career: 'pro', club: 6, points: {} }));
+  const avg = (wx) => Object.values(wx.players).reduce((a, p) => a + YA.ovr(p), 0) / 36;
+  ok(wt3.club.tier === 3 && wt3.coachName === '監督', '3部のクラブ・名前が空なら「監督」');
+  ok(avg(wn) > avg(wt3), '上の部のクラブのほうが選手の素質が高い ' + avg(wn).toFixed(2) + ' vs ' + avg(wt3).toFixed(2));
+  ok(YA.CAREER_POINTS === 6 && YA.START_CLUBS.length >= 8, '配分の点数とクラブの数');
+  // 最初の1か月の案内
+  const wtu = YA.newWorld(6);
+  ok(YA.tutorialText(wtu) && /目標/.test(YA.tutorialText(wtu)), '最初は目標の案内');
+  wtu.yearIntro = false;
+  ok(/練習/.test(YA.tutorialText(wtu)), '練習の案内');
+  wtu.phase = 'event';
+  ok(/出来事/.test(YA.tutorialText(wtu)), '出来事の案内');
+  wtu.phase = 'match';
+  ok(/試合/.test(YA.tutorialText(wtu)), '試合の案内');
+  wtu.week = 5;
+  ok(YA.tutorialText(wtu) === null, '1か月で案内は消える');
+  wtu.week = 1;
+  wtu.tut.on = false;
+  ok(YA.tutorialText(wtu) === null, '消せる');
+  // セーブ枠・書き出し・復元
+  const ex = YA.exportWorld(wsim);
+  const im = YA.importWorld(ex);
+  ok(im.ok && im.world.year === wsim.year && Object.keys(im.world.players).length === Object.keys(wsim.players).length, '書き出して復元できる');
+  ok(!YA.importWorld('これは違う').ok && !YA.importWorld('{"app":"x"}').ok && !YA.importWorld(ex.slice(0, 200)).ok, '壊れたデータは受け付けない');
+  ok(YA.slotKey(0) === 'world' && YA.slotKey(1) === 'world1' && YA.SLOT_COUNT === 2 && /年目/.test(YA.slotSummary(wsim)), 'セーブ枠の名前と要約');
+  // 戦術の細かい設定：キッカーの指定・クロスの種類・浸透
+  {
+    const wtac = YA.newWorld(88);
+    const cands = wtac.lineupA.slice(1).map((sl) => sl.pid);
+    const fkId = cands[cands.length - 1];
+    wtac.tactic = Object.assign({ type: 'ポゼッション' }, YA.TACTICS['ポゼッション'], { fk: fkId, ck: fkId, pk: fkId, crossType: 'high' });
+    let fkScenes = 0;
+    let byFk = 0;
+    for (let sd = 1; sd <= 120; sd++) {
+      const m = new YA.Match({ seed: sd, home: YA.teamFromWorld(wtac, 'A'), away: YA.makeOpponent(YA.OPPONENTS[1], sd), settings: { autoStop: false } });
+      while (!m.finished) m.step();
+      for (const sc of m.scenes) if (sc.side === 'home' && (sc.type === 'fk' || sc.type === 'ck')) {
+        fkScenes++;
+        if (sc.actors.kicker === fkId) byFk++;
+      }
+    }
+    console.log('指定したキッカーが蹴った割合', byFk + '/' + fkScenes);
+    ok(fkScenes > 10 && byFk === fkScenes, '指定したキッカーが蹴る');
+    // 戦い方の浸透：同じ戦い方を続けると上がり、変えると下がる
+    const wr = YA.newWorld(89);
+    ok(YA.tactRepOf(wr) === 0.6, '最初の浸透は60%');
+    wr.tactic = Object.assign({ type: 'カウンター' }, YA.TACTICS['カウンター']);
+    for (let i = 0; i < 12; i++) wr.tactMem = wr.tactMem && wr.tactMem.type === 'カウンター' ? { type: 'カウンター', weeks: wr.tactMem.weeks + 1 } : { type: 'カウンター', weeks: 1 };
+    ok(YA.tactRepOf(wr) === 1, '同じ戦い方を続けると100%');
+    wr.tactic.type = 'ポゼッション';
+    ok(YA.tactRepOf(wr) === 0.6, '戦い方を変えると下がる');
+    const fast = (rep) => {
+      let c = 0;
+      for (let sd = 1; sd <= 120; sd++) {
+        const h0 = YA.makeOurs(1);
+        h0.tactic = Object.assign({ type: '縦に速い' }, YA.TACTICS['縦に速い']);
+        h0.tactRep = rep;
+        const m = new YA.Match({ seed: sd, home: h0, away: YA.makeOpponent(YA.OPPONENTS[2], sd), settings: { autoStop: false } });
+        while (!m.finished) m.step();
+        for (const sc of m.scenes) if (sc.side === 'home' && (sc.type === 'through' || sc.type === 'counter')) c++;
+      }
+      return c;
+    };
+    const hi = fast(1);
+    const lo = fast(0.6);
+    console.log('縦に速い型の速攻系：浸透100%', hi, '/浸透60%', lo);
+    ok(hi >= lo, '浸透が高いほどつまみどおりに動く');
+  }
+  // 外国籍：3人までしか出られない・年に1人まで・適応の出来事
+  {
+    const wf = YA.newWorld(90);
+    for (const sl of wf.lineupA.slice(1, 8)) wf.players[sl.pid].nation = 'ブラジル';
+    YA.repairLineup(wf, 'A');
+    const fc = wf.lineupA.filter((sl) => YA.isForeign(wf.players[sl.pid])).length;
+    ok(fc <= 3, '外国籍の先発は3人まで ' + fc);
+    ok(YA.EVENTS.some((e) => e.id === 'adapt') && YA.EVENTS.some((e) => e.id === 'jump'), '外国籍の適応・飛び級の出来事がある');
+    let fgn = 0;
+    let years = 0;
+    for (let sd = 1; sd <= 60; sd++) {
+      const wc = YA.newWorld(sd);
+      for (let wk = 4; wk <= 32; wk += 4) {
+        wc.week = wk;
+        YA.scoutReport(wc);
+      }
+      const f = wc.scouting.cands.filter((c) => c.foreign);
+      ok(f.length <= 1, '外国籍の候補は年に1人まで');
+      fgn += f.length;
+      years++;
+    }
+    console.log('外国籍の候補が出た年', fgn + '/' + years);
+    ok(fgn >= 1, '外国籍の候補が出ることがある');
+    // 飛び級：受け入れると選手が増える／断ると信頼度が下がる
+    const wj = YA.newWorld(91);
+    wj.week = 8;
+    const n0 = Object.keys(wj.players).length;
+    const t0 = wj.club.trust;
+    YA.resolveEvent(wj, { id: 'jump', pid: null, x: 0, week: 8, year: 1 }, 0);
+    ok(Object.keys(wj.players).length === n0 + 1 && Object.values(wj.players).some((p) => p.jump), '飛び級を受け入れると選手が増える');
+    const t1 = wj.club.trust;
+    YA.resolveEvent(wj, { id: 'jump', pid: null, x: 0, week: 8, year: 1 }, 1);
+    ok(wj.club.trust < t1 && t1 >= t0, '断ると信頼度が下がる');
+    check(wj);
+  }
+  // 海外移籍：力のある卒業生が海外へ移ることがある
+  {
+    let abroadCount = 0;
+    for (let sd = 1; sd <= 40; sd++) {
+      const wa = YA.newWorld(sd);
+      wa.alumni.push({ name: 'テスト選手', pos: 'FW', year: 1, ovr: 15, note: 'プロ', grade: 3, age: 20, status: 'pro', club: '横浜 ブルーウィング', apps: 0, goals: 0, nat: 0, transfers: 0, retired: false, traits: [] });
+      for (let k = 0; k < 6; k++) {
+        wa.year = 2 + k;
+        YA.alumniTick(wa);
+      }
+      if (wa.alumni.some((a) => a.abroad)) abroadCount++;
+    }
+    console.log('海外移籍が起きた世界', abroadCount + '/40');
+    ok(abroadCount >= 3, '海外移籍が起きる');
+  }
+  // 効果音：音の出せない環境でも落ちない
+  YA.sfx.on = true;
+  for (const k of ['tap', 'goal', 'concede', 'whistle', 'save', 'miss', 'x', null]) YA.sfx.play(k);
+  ok(true, '効果音は例外を出さない');
 }
 console.log(fails ? '失敗 ' + fails : '育成の点検: すべて通過');
 process.exit(fails ? 1 : 0);

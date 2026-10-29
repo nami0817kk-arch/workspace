@@ -124,9 +124,16 @@
     const c = store.get('cfg', null);
     app.cfg = c && c.lineup && c.lineup.length === 11 && c.bench && c.bench.length === 9 ? c : null;
     app.autoStop = store.get('autoStop', true);
-    const sw = store.get('world', null);
-    app.w = sw && sw.v >= 3 && sw.players && sw.lineupA ? sw : YA.newWorld((Date.now() % 90000) + 7);
-    YA.saveWorld();
+    app.slot = store.get('slot', 0);
+    YA.sfx.on = store.get('sfx', true) !== false;
+    const sw = store.get(YA.slotKey(app.slot), null);
+    // 保存がなければ「新しく始める」画面（指導者の作成）から
+    app.w = sw && sw.v >= 3 && sw.players && sw.lineupA ? sw : null;
+    if (app.w) {
+      if (!app.w.tut) app.w.tut = { on: false };
+      [app.w.lineupA, app.w.lineupB].forEach((l) => l.forEach((sl, i) => YA.fixSlotRole(sl, i)));
+      YA.saveWorld();
+    }
   }
 
   // ---------- 選手の表示 ----------
@@ -151,7 +158,7 @@
     const top = (isGK ? YA.AB_GK : YA.AB_FIELD).map((n) => [n, p.ab[n]]).sort((a, b) => b[1] - a[1]);
     const wrap = h('div', {});
     wrap.append(
-      h('div', { class: 'row' }, posChip(p), h('div', { class: 'grow' }, h('div', { class: 'h' }, `${p.num}  ${p.name}`), h('div', { class: 'sub' }, `${p.height}cm  /  調子 ${p.form > 0 ? '+' : ''}${p.form}  /  自信 ${Math.round(p.conf)}`))),
+      h('div', { class: 'row' }, posChip(p), h('div', { class: 'grow' }, h('div', { class: 'h' }, `${p.num}  ${p.name}`), h('div', { class: 'sub' }, `${p.height}cm  /  調子 ${p.form > 0 ? '+' : ''}${p.form}  /  自信 ${Math.round(p.conf)}  /  戦術理解 ${Math.round(p.tu == null ? 40 : p.tu)}` + (p.nation && p.nation !== '日本' ? `  /  ${p.nation}` : '')))),
       h('div', { style: 'margin-top:5px' }, h('div', { class: 'note' }, 'ポジションの適性'), aptBlock(p)),
       h('div', { style: 'margin-top:5px' }, h('div', { class: 'note' }, '性格'), h('div', { class: 'row', style: 'flex-wrap:wrap;gap:3px' }, persChips(p, false))),
       h('div', { style: 'margin-top:5px' }, h('div', { class: 'note' }, '特性'), h('div', { class: 'row', style: 'flex-wrap:wrap;gap:3px' }, p.traits.length ? p.traits.map((x) => h('span', { class: 'chip trait' }, x)) : h('span', { class: 'sub' }, 'なし'))),
@@ -343,7 +350,13 @@
           body.append(h('div', { class: 'knob' }, h('label', {}, label), h('span', { class: 'l' }, lo), inp, h('span', {}, hi)));
         }
         body.append(h('div', { class: 'h', style: 'margin-top:6px' }, '攻める方向'), h('div', { class: 'fm-row', style: 'margin-top:3px' }, [['左中心', -1], ['両サイド', 0], ['右中心', 1]].map(([n, v]) => h('button', { class: 'btn sm' + ((t.tactic.dir || 0) === v ? ' on' : ''), onclick: () => { t.tactic.dir = v; onChange(); } }, n))));
-        body.append(h('div', { class: 'note', style: 'margin-top:8px' }, '型を選ぶとつまみが動きます。つまみは細かく変えられます。再現度は選手の戦術理解で決まる想定です（試作では未反映）。'));
+        // クロスの種類・セットプレーのキッカー（決定38）
+        body.append(h('div', { class: 'h', style: 'margin-top:6px' }, 'クロスの種類'), h('div', { class: 'fm-row', style: 'margin-top:3px' }, [['', '標準'], ['high', '高い（長身が生きる）'], ['early', '早い（アーリー）'], ['low', '低い（ニアに合わせる）']].map(([k, n]) => h('button', { class: 'btn sm' + ((t.tactic.crossType || '') === k ? ' on' : ''), onclick: () => { t.tactic.crossType = k; onChange(); } }, n))));
+        const onPitch = t.lineup.map((x) => t.players[x.pid]);
+        const sel = (key, label) => h('div', { class: 'row', style: 'gap:6px;margin:3px 0' }, h('span', { style: 'width:78px;font-weight:800' }, label), (() => { const s2 = h('select', { style: 'flex:1;padding:5px;border:1px solid #b9c7de;border-radius:8px;font:inherit' }, h('option', { value: '' }, '自動（得意な選手）'), onPitch.map((p) => h('option', { value: p.id }, `${p.num} ${p.name}`))); s2.value = t.tactic[key] && onPitch.some((p) => p.id === t.tactic[key]) ? t.tactic[key] : ''; s2.addEventListener('change', () => { t.tactic[key] = s2.value || null; o.onChange && o.onChange(); }); return s2; })());
+        body.append(h('div', { class: 'h', style: 'margin-top:6px' }, 'セットプレーのキッカー'), sel('fk', 'フリーキック'), sel('ck', 'コーナー'), sel('pk', 'PK'));
+        const rep = t.tactRep != null ? t.tactRep : 1;
+        body.append(h('div', { class: 'note', style: 'margin-top:8px' }, `戦い方の浸透：${Math.round(rep * 100)}%。同じ戦い方を続けるほど、つまみどおりに動きます（変えると下がります）。守備のマークは「指示」で、相手の1人に付かせられます。`));
       } else if (st.tab === 'role') {
         const p15 = YA.pos15OfSlot(sl, st.sel);
         body.append(h('div', { class: 'row', style: 'gap:6px;margin-bottom:4px' }, posChip(p), h('b', {}, `${p.num} ${p.name}`), h('span', { class: 'sub grow' }, `${p.height}cm ／ 自信 ${Math.round(p.conf)} ／ 利き足 ${p.foot === 'R' ? '右' : p.foot === 'L' ? '左' : '両'}`)), aptBlock(p));
@@ -462,12 +475,20 @@
     const main = document.getElementById('main');
     main.replaceChildren();
     cleanupPlay();
+    if (!app.w) {
+      root.classList.add('full');
+      YA.views.newgame(main);
+      return;
+    }
     if (app.tab === 'match') {
       if (app.view === 'pre') viewPre(main);
       else if (app.view === 'play') viewPlay(main);
       else viewResult(main);
     } else if (YA.views && YA.views[app.tab]) YA.views[app.tab](main);
     else viewPlaceholder(main);
+    // 最初の1か月の案内（決定77）
+    const tt = app.view !== 'play' ? YA.tutorialText(app.w) : null;
+    if (tt) main.prepend(h('div', { class: 'tut' }, h('span', { class: 'tutb' }, '案内'), h('span', { class: 'grow' }, tt), h('button', { class: 'btn sm', onclick: () => { app.w.tut.on = false; YA.saveWorld(); render(); } }, '消す')));
   }
 
   function viewPlaceholder(main) {
@@ -678,7 +699,11 @@
         const asp = sc.assist ? (sc.side === 'home' ? m.home : m.away).players[sc.assist] : null;
         bannerBox.replaceChildren(h('div', { class: 'banner' + (sc.side === 'away' ? ' opp' : '') }, h('div', { class: 'big' }, sc.side === 'home' ? 'GOAL!' : '失点'), h('div', { class: 'small' }, `${sp.num}番 ${sp.name}` + (asp ? `（アシスト ${surname(asp)}）` : ''))));
         S.hold = 1.4;
-      } else S.hold = 0.5;
+        YA.sfx.play(sc.side === 'home' ? 'goal' : 'concede');
+      } else {
+        S.hold = 0.5;
+        YA.sfx.play(sc.outcome === 'saved' ? 'save' : sc.outcome === 'missed' || sc.outcome === 'post' ? 'miss' : null);
+      }
       S.holdScene = true;
     }
 
@@ -687,7 +712,10 @@
         upd();
         if (e.text) setComm(e.minute, e.text);
         else commMin.textContent = e.minute + "'";
-        if (e.text && e.key) S.hold = 0.6;
+        if (e.text && e.key) {
+          S.hold = 0.6;
+          YA.sfx.play('whistle');
+        }
       } else if (e.type === 'scene') {
         upd();
         playScene(e.scene);
@@ -698,6 +726,7 @@
         openSheet(e.reason);
       } else if (e.type === 'full') {
         upd();
+        YA.sfx.play('whistle');
         finishMatch(m, e);
         app.view = 'result';
         render();
@@ -746,6 +775,7 @@
       R.draw();
     }
     S.raf = requestAnimationFrame(frame);
+    YA.sfx.play('whistle');
     // 場面のあとで止める：場面が終わったら次の step が stop を返す
     setComm(0, 'キックオフ。レガーレの攻撃で試合が始まります');
   }
@@ -798,6 +828,8 @@
 
   YA.start = function () {
     loadCfg();
+    // ボタンを押したときの小さな音
+    document.addEventListener('click', (e) => { if (e.target.closest && e.target.closest('button')) YA.sfx.play('tap'); });
     render();
   };
   YA._ui = { app, render, store, h, playerCard, persChips, abBar, surname, persText, newOurs, persistTeam };
