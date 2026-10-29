@@ -1,7 +1,7 @@
 """深海魚の本編のサムネイル(1280×720)。下地は Gemini で作った絵(assets/thumb_gemini.jpg: 深い青の海の中で、つぶれたペットボトルのすぐ横を、
 半透明の小さな魚が平気な顔で泳ぐ)。
 形は電子レンジ・進撃の回でユーザーが決めたもの(2026-10-29): 字は絵の上に直接・箱や番号なし・大きくしすぎない・全部の要素を入れる・明るく。
-字(白＋黄): 「水深8,336mでも／深海魚はつぶれない／なぜ？／指先1平方cmに約870kg／ペットボトルの空気は845分の1に縮む」。前の版(「なぜ？」なし)は out/shinkai/thumb_long_v1.jpg。python episodes/shinkai/thumb.py"""
+字(白＋黄): 「水深8,336mでも／深海魚はつぶれない／なぜ？／指先1平方cmに約870kg／ペットボトルの空気は845分の1に縮む」。上の右に長い一文「つぶれたペットボトルの横を、魚は平気で泳ぐ」。前の版(「なぜ？」なし)は out/shinkai/thumb_long_v1.jpg。python episodes/shinkai/thumb.py"""
 import os
 import sys
 from pathlib import Path
@@ -36,6 +36,13 @@ def line(x, y, parts, size, stroke=16):
 
 x = 80
 line(x, 80, [("水深", WHITE), ("8,336m", YEL), ("でも", WHITE)], 112)
+# 上の右の空いている所に、横に長い一文(2026-10-29 ユーザー指示)。幅に収まるよう字の大きさを自動で決める
+LONG = [("つぶれたペットボトルの横を、", WHITE), ("魚は平気で泳ぐ", YEL)]
+lx, lw = 1000, 2480 - 1000
+sz = 80
+while sum(O.font(sz).getlength(t) for t, _ in LONG) > lw and sz > 40:
+    sz -= 2
+line(lx, 88, LONG, sz, stroke=12)
 line(x, 245, [("深海魚は", WHITE)], 150)
 line(x, 415, [("つぶれない", YEL)], 190)
 line(x, 640, [("なぜ？", WHITE)], 150)   # 台本を「なぜつぶれないか」の筋にしたので、問いを足した(2026-10-29)
