@@ -741,6 +741,24 @@ roles:
     tone_strength: 0.5
     max_intonation: 1.3
     max_speed: 1.0
+  武蔵想像:                  # 10-29。musashi-story の想像の台詞。宮本武蔵（晩年の熊本・59〜62歳ごろ）は落ち着いた年配の男性の声 青山龍星（中岡想像・秀忠想像と同じ声。別の回なので重ならない）。同じ回に他の人物の声は無い
+    label: 宮本武蔵（想像）
+    name: 青山龍星
+    style_id: 13
+    speed: 0.92
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  曹操想像:                  # 10-29。sosou-story の想像の台詞（2か所・気持ちの言葉だけ）。曹操（遺令を残した66歳）は落ち着いた年配の男性の声 雀松朱司（勝想像・三成想像と同じ声。別の回なので重ならない）。同じ回に他の人物の声は無い
+    label: 曹操（想像）
+    name: 雀松朱司
+    style_id: 52
+    speed: 0.92
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
 
 character_credits:
   - "立ち絵：春日部つむぎ公式立ち絵素材（春日部つくし）"

@@ -1,0 +1,153 @@
+# 物語完結型ショート 小早川秀秋 s5（2026-10-29）。本編 scripts/hideaki-story.yaml の第5章（急死と断絶）から。
+# 形式は hijikata_s3.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。
+# 死の扱い：最期は「亡くなった」まで。病の細部・死因の病名・苦しむ様子は語らない（酒疸・肝硬変・「狂って」は使わない）。人を貶めない。
+# 絵は本編の AI 絵（H05・H13・H14・H15。人物なし）と実在の絵（落合芳幾の大谷吉継）。最期の行に人物の絵を当てない。
+# 事実カード：hideaki-47・35・50・36・37・38
+#   ・10/15 に鷹狩りのあと床に就き、18日朝に岡山城で亡くなった、21歳は聖護院道澄の追悼文による（hideaki-47・32、武将ジャパンの紹介）。
+#   ・吉継の祟りは江戸時代の軍記に見える話で裏付けは弱い（hideaki-35）。因果応報の物語という見方は光成準治（hideaki-50）。
+#   ・再興は勅により毛利三郎が家督を継いだ（コトバンク、hideaki-37）。瑞雲寺は観光協会の紹介（hideaki-38、単一出どころ）。
+# 理解テスト4問：
+#   ①誰の話か：岡山城で亡くなった小早川秀秋（21歳）
+#   ②いつ・どこで：1602年10月15日に鷹狩りから戻って床に就き、18日の朝、岡山城で亡くなった（聖護院道澄の追悼文）
+#   ③死のあと：跡継ぎがおらず小早川家は断絶。「吉継の祟り」は軍記の話で裏付けは弱い。光成準治は因果応報の物語とみる
+#   ④どうなったか：およそ277年後の1879年、毛利三郎が家督を継いで再興。菩提寺の瑞雲寺の本堂は空襲を免れて残る
+title: 小早川秀秋｜21歳で亡くなり、家は途絶え、277年後に再興された
+yt_title: 小早川秀秋は21歳で亡くなり、小早川家は断絶　277年後の1879年に再興されるまで
+description: |-
+  1602年10月15日、小早川秀秋は、鷹狩りから城へ戻ったあと、気分が悪くなって、床に就きました。聖護院道澄の追悼文によれば、18日の朝、岡山城で亡くなります。21歳でした。
+  秀秋には跡継ぎがおらず、小早川家は慶長7年に断絶します。備前には、翌年、池田輝政の次男、忠継が入りました。「大谷吉継の祟りで死んだ」という話は江戸時代の軍記に見えますが、史料の裏付けは弱いといいます。光成準治さんは、裏切り者の末路は惨めであるべきだという、因果応報の物語として作られた、と見ています。
+  およそ277年後の明治12年、1879年、勅により毛利三郎が家督を継いで、小早川家は再興されました。観光協会の紹介によれば、岡山市の瑞雲寺は、1602年に秀秋の菩提寺となりました。
+hashtags: ["#小早川秀秋", "#日本史", "#関ヶ原"]
+ai_images: true
+ai_disclosure: この動画の人物・情景の画像の多くは、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/hideaki
+out: hideaki_story_s5
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 小早川秀秋（岡山城の城主）
+  title: "21歳で亡くなり、家は《途絶えた》"
+now:
+  - {at: 1602年の10月15日, text: "1602年10月　岡山城", point: 0}
+  - {at: 1879年, text: "1879年　再興", point: 1}
+timeline:
+  - {label: "1602"}
+  - {label: "1879"}
+cards:
+  - type: year                           # 277年後
+    from: 277年後の
+    until: 観光協会
+    big: 1879年
+    sub: 277年後に小早川家が再興される
+    text_y: 0.70
+shots:
+  H13:                                   # 1文目：夕暮れの岡山城
+    kind: ai
+    file: hideaki/main/H13.jpg
+    focus: [0.6, 0.5]
+    move: in
+    must: 夕暮れの岡山城
+  H05:                                   # 10月15日（城下）
+    kind: ai
+    file: hideaki/main/H05.jpg
+    focus: [0.6, 0.35]
+    move: in
+    must: 川沿いの城下
+  H13r:                                  # 18日の朝・岡山城
+    kind: ai
+    file: hideaki/main/H13.jpg
+    focus: [0.3, 0.5]
+    move: right
+    must: 川面と紅葉
+  Otani:                                 # 祟りの話（軍記）
+    kind: real
+    image: paintings/sanada_otani_yoshitsugu_yoshiiku.jpg
+    focus: [0.5, 0.4]
+    move: down
+    credit: "大谷吉継（落合芳幾筆）"
+    must: 大谷吉継の絵
+  H08:                                   # 軍記（頁）
+    kind: ai
+    file: hideaki/main/H08.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 軍記の頁をめくる手
+  H05z:                                  # 備前に忠継が入る
+    kind: ai
+    file: hideaki/main/H05.jpg
+    focus: [0.25, 0.4]
+    move: right
+    must: 城と川
+  H15:                                   # 再興（夕暮れの稜線）
+    kind: ai
+    file: hideaki/main/H15.jpg
+    focus: [0.4, 0.5]
+    move: in
+    must: 夕暮れの山の稜線
+  H14:                                   # 瑞雲寺（寺の境内）
+    kind: ai
+    file: hideaki/main/H14.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 静かな寺の境内
+  H14q:                                  # 最後の問い
+    kind: ai
+    file: hideaki/main/H14.jpg
+    focus: [0.5, 0.35]
+    move: in
+    zoom: 0.15
+    must: 本堂の屋根と木立
+lines:
+  # fact: hideaki-47
+  - 語り: 小早川秀秋は、21歳で亡くなった。そして、小早川家は、《!途絶えた》。
+    shot: H13
+    tone: 強調
+  # fact: hideaki-47
+  - 語り: 慶長7年、1602年の10月15日。秀秋は、鷹狩りから城へ戻ったあと、気分が悪くなって、床に就いた。
+    shot: H05
+    tone: 重い
+    pause: 0.12
+  # fact: hideaki-47
+  - 語り: 聖護院道澄の追悼文によれば、18日の朝、岡山城で亡くなった。
+    shot: H13r
+    tone: 重い
+    pause: 0.2
+  # fact: hideaki-35
+  - 語り: 「大谷吉継の祟りで死んだ」という話は、江戸時代の軍記に見える。ただ、史料の裏付けは、弱い。
+    shot: Otani
+    tone: しみじみ
+    pause: 0.12
+  # fact: hideaki-50
+  - 語り: 光成準治さんは、裏切り者の末路は惨めであるべきだ、という、因果応報の物語だ、と見ている。
+    shot: H08
+    tone: しみじみ
+    pause: 0.12
+  # fact: hideaki-36
+  - 語り: 跡継ぎはおらず、小早川家は、慶長7年に断絶する。
+    shot: H05z
+    tone: 重い
+    pause: 0.12
+  # fact: hideaki-37
+  - 語り: およそ277年後の、1879年。勅により、毛利三郎が家督を継ぎ、小早川家は再興された。
+    shot: H15
+    tone: 強調
+    pause: 0.12
+  # fact: hideaki-38
+  - 語り: 観光協会の紹介では、岡山市の瑞雲寺は、1602年に秀秋の菩提寺となり、江戸期の本堂は、いまも残る。
+    shot: H14
+    tone: しみじみ
+    pause: 0.3
+    dip: true
+  - 語り: あなたは、21歳で終わった人生を、「裏切り者」の一言で、語れると、思いますか。
+    shot: H14q
+    tone: 疑問
+    pause: 0.15
