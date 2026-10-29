@@ -33,6 +33,7 @@
   const mem = {};
   const store = {
     get(k, d) {
+      if (mem[k] != null) return mem[k];
       try {
         if (globalThis.__BOOT && globalThis.__BOOT.store && globalThis.__BOOT.store[k] != null) return JSON.parse(globalThis.__BOOT.store[k]);
       } catch (e) {}
@@ -56,7 +57,7 @@
 
   // ---------- アプリの状態 ----------
   const app = {
-    tab: 'match',
+    tab: 'home',
     view: 'pre', // pre | play | result
     opp: 0,
     seed: (Date.now() % 100000) + 1,
@@ -70,9 +71,20 @@
   };
 
   function newOurs() {
+    if (app.w) return YA.teamFromWorld(app.w, 'A');
     const t = YA.makeOurs(1);
     if (app.cfg) applyCfg(t, app.cfg);
     return t;
+  }
+  // 試合前の布陣・役割・戦い方の変更を、名簿（世界）に書き戻す
+  function persistTeam(t) {
+    const w = app.w;
+    if (!w) return;
+    w.lineupA = JSON.parse(JSON.stringify(t.lineup));
+    w.benchA = t.bench.slice();
+    w.tactic = JSON.parse(JSON.stringify(t.tactic));
+    w.formation = t.formation;
+    YA.saveWorld();
   }
   function snapCfg(t) {
     return JSON.parse(JSON.stringify({ lineup: t.lineup, bench: t.bench, tactic: t.tactic, formation: t.formation }));
@@ -87,6 +99,9 @@
     const c = store.get('cfg', null);
     app.cfg = c && c.lineup && c.lineup.length === 11 && c.bench && c.bench.length === 9 ? c : null;
     app.autoStop = store.get('autoStop', true);
+    const sw = store.get('world', null);
+    app.w = sw && sw.v === 1 && sw.players && sw.lineupA ? sw : YA.newWorld((Date.now() % 90000) + 7);
+    YA.saveWorld();
   }
 
   // ---------- 選手の表示 ----------
@@ -99,9 +114,9 @@
     const keys = Object.keys(p.pers).filter((g) => all || p.pers[g] !== 'ふつう');
     return keys.map((g) => h('span', { class: 'chip pers' }, p.pers[g]));
   }
-  function abBar(name, v) {
+  function abBar(name, v, gain) {
     const c = v >= 15 ? '#1a9d57' : v >= 11 ? '#2f7ed8' : v >= 8 ? '#8fa3c4' : '#c7d0e0';
-    return h('div', { class: 'ab' }, h('b', {}, name), h('div', { class: 'bar' }, h('i', { style: `width:${(v / 20) * 100}%;background:${c}` })), h('em', { style: `color:${v >= 15 ? '#1a9d57' : 'inherit'}` }, v));
+    return h('div', { class: 'ab' }, h('b', {}, name), h('div', { class: 'bar' }, h('i', { style: `width:${(v / 20) * 100}%;background:${c}` })), h('em', { style: `color:${v >= 15 ? '#1a9d57' : 'inherit'}` }, v), gain ? h('span', { style: 'color:#1a9d57;font-weight:900;font-size:10px;width:18px' }, '+' + gain) : h('span', { style: 'width:18px' }));
   }
   function playerCard(t, p, opts) {
     opts = opts || {};
@@ -121,9 +136,9 @@
     const list = opts.all ? (isGK ? YA.AB_GK.concat(['フィールド']) : YA.AB_FIELD) : top.slice(0, 8).map((x) => x[0]);
     if (opts.all) {
       const groups = isGK ? [['GK', YA.AB_GK]] : [['技術', YA.AB_TECH], ['頭', YA.AB_MENTAL], ['体', YA.AB_PHYS]];
-      for (const [gn, ns] of groups) wrap.append(h('div', { class: 'note', style: 'margin:6px 0 2px;font-weight:800;color:var(--navy)' }, gn), h('div', { class: 'abg' }, ns.map((n) => abBar(n, p.ab[n]))));
+      for (const [gn, ns] of groups) wrap.append(h('div', { class: 'note', style: 'margin:6px 0 2px;font-weight:800;color:var(--navy)' }, gn), h('div', { class: 'abg' }, ns.map((n) => abBar(n, p.ab[n], p.gain && p.gain[n]))));
     } else {
-      wrap.append(h('div', { class: 'note', style: 'margin:6px 0 2px;font-weight:800;color:var(--navy)' }, '目立つ能力'), h('div', { class: 'abg' }, list.map((n) => abBar(n, p.ab[n]))));
+      wrap.append(h('div', { class: 'note', style: 'margin:6px 0 2px;font-weight:800;color:var(--navy)' }, '目立つ能力'), h('div', { class: 'abg' }, list.map((n) => abBar(n, p.ab[n], p.gain && p.gain[n]))));
     }
     return wrap;
   }
@@ -324,8 +339,8 @@
           body.append(h('div', { class: 'h', style: 'margin-top:8px' }, 'ベンチと入れ替える'));
           body.append(h('div', { class: 'plist' }, t.bench.map((bid) => {
             const bp = t.players[bid];
-            const ok2 = (bp.pos === 'GK') === (p.pos === 'GK');
-            return h('button', { class: 'pitem', style: ok2 ? '' : 'opacity:.35', onclick: () => { if (!ok2) return; const bi = t.bench.indexOf(bid); t.bench[bi] = sl.pid; sl.pid = bid; fixRole(t, st.sel); board.redraw(); onChange(); } }, h('span', { class: 'pos ' + bp.pos }, bp.pos), h('span', { class: 'num' }, bp.num), h('span', { class: 'nm grow' }, bp.name), h('span', { class: 'sub' }, bp.traits.slice(0, 2).join('・')));
+            const ok2 = (bp.pos === 'GK') === (p.pos === 'GK') && !(bp.inj > 0);
+            return h('button', { class: 'pitem', style: ok2 ? '' : 'opacity:.35', onclick: () => { if (!ok2) return; const bi = t.bench.indexOf(bid); t.bench[bi] = sl.pid; sl.pid = bid; fixRole(t, st.sel); board.redraw(); onChange(); } }, h('span', { class: 'pos ' + bp.pos }, bp.pos), h('span', { class: 'num' }, bp.num), h('span', { class: 'nm grow' }, bp.name), bp.inj > 0 ? h('span', { class: 'fit bad' }, '怪我' + bp.inj + '週') : h('span', { class: 'sub' }, bp.traits.slice(0, 2).join('・')));
           })));
         }
       } else if (st.tab === 'sub') {
@@ -409,7 +424,7 @@
       if (app.view === 'pre') viewPre(main);
       else if (app.view === 'play') viewPlay(main);
       else viewResult(main);
-    } else if (app.tab === 'players') viewPlayers(main);
+    } else if (YA.views && YA.views[app.tab]) YA.views[app.tab](main);
     else viewPlaceholder(main);
   }
 
@@ -437,16 +452,23 @@
   let preState = null;
   function viewPre(main) {
     const t = newOurs();
-    const opp = YA.OPPONENTS[app.opp];
-    const oppTeam = YA.makeOpponent(opp, app.seed * 3 + app.opp);
+    const w = app.w;
+    const sched = !!(w && w.phase === 'match' && !app.free);
+    const opp = sched ? YA.opponentOf(w) : YA.OPPONENTS[app.opp];
+    const oppTeam = YA.makeOpponent(opp, sched ? w.seed + w.week * 7 + w.year : app.seed * 3 + app.opp);
     const wrap = h('div', { class: 'pre' });
     const top = h('div', { class: 'pre-top' });
-    YA.OPPONENTS.forEach((o2, i) => top.append(h('button', { class: 'opp' + (i === app.opp ? ' on' : ''), onclick: () => { app.cfg = snapCfg(t); store.set('cfg', app.cfg); app.opp = i; render(); } }, h('b', {}, h('span', { class: 'sw', style: 'background:' + o2.color }), o2.name), h('span', {}, o2.desc))));
+    if (sched) {
+      const cal = YA.calendar(w.week);
+      top.append(h('div', { class: 'opp on', style: 'cursor:default' }, h('b', {}, h('span', { class: 'sw', style: 'background:' + opp.color }), `${w.year}年目 ${cal.month}第${cal.nth}週  ${opp.home ? 'ホーム' : 'アウェイ'}  vs ${opp.name}`), h('span', {}, opp.desc + '（フリー対戦に切り替えると成績に残りません）')));
+      top.append(h('button', { class: 'btn sm', style: 'align-self:center', onclick: () => { app.free = true; render(); } }, 'フリー対戦'));
+    } else if (app.free && w && w.phase === 'match') top.append(h('button', { class: 'btn sm', style: 'align-self:center', onclick: () => { app.free = false; render(); } }, '今週の試合へ戻る'));
+    if (!sched) YA.OPPONENTS.forEach((o2, i) => top.append(h('button', { class: 'opp' + (i === app.opp ? ' on' : ''), onclick: () => { persistTeam(t); app.opp = i; render(); } }, h('b', {}, h('span', { class: 'sw', style: 'background:' + o2.color }), o2.name), h('span', {}, o2.desc))));
     const kick = h('div', { style: 'display:flex;flex-direction:column;gap:4px;min-width:92px' },
-      h('button', { class: 'btn pri', style: 'flex:1;font-size:14px', onclick: () => { app.cfg = snapCfg(t); store.set('cfg', app.cfg); startMatch(t, oppTeam, opp); } }, 'キックオフ'),
-      h('button', { class: 'btn sm', onclick: () => { app.cfg = snapCfg(t); store.set('cfg', app.cfg); simulateAll(t, oppTeam, opp); } }, '全シミュレーション'));
+      h('button', { class: 'btn pri', style: 'flex:1;font-size:14px', onclick: () => { persistTeam(t); startMatch(t, oppTeam, opp, sched); } }, 'キックオフ'),
+      h('button', { class: 'btn sm', onclick: () => { persistTeam(t); simulateAll(t, oppTeam, opp, sched); } }, '全シミュレーション'));
     top.append(kick);
-    const panel = tacticPanel(t, { tabs: [['tactic', '戦い方'], ['role', '選手と役割'], ['opp', '相手の分析']], opp, oppTeam, onChange: () => { app.cfg = snapCfg(t); store.set('cfg', app.cfg); }, state: preState || {} });
+    const panel = tacticPanel(t, { tabs: [['tactic', '戦い方'], ['role', '選手と役割'], ['opp', '相手の分析']], opp, oppTeam, onChange: () => { persistTeam(t); }, state: preState || {} });
     preState = panel.state;
     wrap.append(top, panel);
     main.append(wrap);
@@ -459,20 +481,33 @@
     if (play) globalThis.removeEventListener('resize', play.onResize);
     play = null;
   }
-  function startMatch(t, oppTeam, opp) {
+  function finishMatch(m, e) {
+    const summary = e && e.summary ? e.summary : m.summary();
+    if (m.scheduled && !m.applied && app.w) {
+      m.applied = true;
+      YA.applyMatch(app.w, m, 'A', m.opp, true);
+      app.w.phase = 'after';
+      app.w.matchDone = true;
+      YA.saveWorld();
+    }
+    app.last = { m, summary };
+  }
+  function startMatch(t, oppTeam, opp, sched) {
     app.seed = (app.seed * 1103515245 + 12345) % 2147483647;
-    const m = new YA.Match({ seed: app.seed, home: t, away: oppTeam, settings: { autoStop: app.autoStop } });
+    const m = new YA.Match({ seed: sched ? app.w.seed + app.w.week * 3 + app.w.year : app.seed, home: t, away: oppTeam, settings: { autoStop: app.autoStop } });
     m.opp = opp;
+    m.scheduled = !!sched;
     app.match = m;
     app.view = 'play';
     render();
   }
 
   // 見ずに最後まで回す。止まる節目は無視し、交代・指示はしない（布陣と戦い方は試合前のまま）
-  function simulateAll(t, oppTeam, opp) {
+  function simulateAll(t, oppTeam, opp, sched) {
     app.seed = (app.seed * 1103515245 + 12345) % 2147483647;
-    const m = new YA.Match({ seed: app.seed, home: t, away: oppTeam, settings: { autoStop: false } });
+    const m = new YA.Match({ seed: sched ? app.w.seed + app.w.week * 3 + app.w.year : app.seed, home: t, away: oppTeam, settings: { autoStop: false } });
     m.opp = opp;
+    m.scheduled = !!sched;
     let e;
     let g = 0;
     while (!m.finished && g++ < 5000) {
@@ -480,7 +515,7 @@
       if (ev.type === 'full') e = ev;
     }
     app.match = m;
-    app.last = { m, summary: e.summary };
+    finishMatch(m, e);
     app.view = 'result';
     render();
   }
@@ -493,7 +528,7 @@
     const clock = h('div', { class: 'clock' }, "0'");
     const stopBtn = h('button', { class: 'btn pri sm', style: 'min-height:34px;min-width:76px' }, '止める');
     const autoBtn = h('button', { class: 'btn sm', style: 'min-height:34px' });
-    const skipBtn = h('button', { class: 'btn sm', style: 'min-height:34px', onclick: () => { cleanupPlay(); let e; let g = 0; while (!m.finished && g++ < 5000) { const ev = m.step(); if (ev.type === 'full') e = ev; } app.last = { m, summary: e ? e.summary : m.summary() }; app.view = 'result'; render(); } }, '結果まで');
+    const skipBtn = h('button', { class: 'btn sm', style: 'min-height:34px', onclick: () => { cleanupPlay(); let e; let g = 0; while (!m.finished && g++ < 5000) { const ev = m.step(); if (ev.type === 'full') e = ev; } finishMatch(m, e); app.view = 'result'; render(); } }, '結果まで');
     const top = h('div', { class: 'topbar' }, h('div', { class: 'scoreboard' }, h('span', { class: 'tn' }, m.home.short), scoreHome, h('span', { style: 'color:#8fa3c4' }, '-'), scoreAway, h('span', { class: 'tn' }, m.away.short)), clock, h('div', { class: 'grow' }), skipBtn, autoBtn, stopBtn);
     const stage = h('div', { class: 'stage' });
     const cv = h('canvas', {});
@@ -621,7 +656,7 @@
         openSheet(e.reason);
       } else if (e.type === 'full') {
         upd();
-        app.last = { m, summary: e.summary };
+        finishMatch(m, e);
         app.view = 'result';
         render();
       }
@@ -680,7 +715,7 @@
     const win = summary.score.home > summary.score.away;
     const draw = summary.score.home === summary.score.away;
     wrap.append(
-      h('div', { class: 'res-top' }, h('div', { class: 'res-score' }, h('span', {}, m.home.short), h('b', {}, `${summary.score.home} - ${summary.score.away}`), h('span', {}, m.away.short)), h('div', { class: 'h grow', style: 'font-size:15px' }, win ? '勝利' : draw ? '引き分け' : '敗戦'), h('button', { class: 'btn', onclick: () => { app.view = 'pre'; preState = null; render(); } }, '戦術を直す'), h('button', { class: 'btn pri', onclick: () => { const t = newOurs(); startMatch(t, YA.makeOpponent(YA.OPPONENTS[app.opp], app.seed * 3 + app.opp + 1), YA.OPPONENTS[app.opp]); } }, '同じ設定でもう一度')),
+      h('div', { class: 'res-top' }, h('div', { class: 'res-score' }, h('span', {}, m.home.short), h('b', {}, `${summary.score.home} - ${summary.score.away}`), h('span', {}, m.away.short)), h('div', { class: 'h grow', style: 'font-size:15px' }, win ? '勝利' : draw ? '引き分け' : '敗戦'), m.scheduled ? h('button', { class: 'btn pri', style: 'min-width:110px', onclick: () => { app.view = 'pre'; preState = null; app.tab = 'home'; render(); } }, 'ホームへ（次の週へ）') : h('button', { class: 'btn', onclick: () => { app.view = 'pre'; preState = null; render(); } }, '戦術を直す'), m.scheduled ? null : h('button', { class: 'btn pri', onclick: () => { const t = newOurs(); startMatch(t, YA.makeOpponent(YA.OPPONENTS[app.opp], app.seed * 3 + app.opp + 1), YA.OPPONENTS[app.opp], false); } }, '同じ設定でもう一度')),
     );
     const left = h('div', { class: 'card pbody grow' }, h('div', { class: 'h', style: 'margin-bottom:5px' }, '見どころ'));
     const tl = h('div', { class: 'tl' });
@@ -723,5 +758,5 @@
     loadCfg();
     render();
   };
-  YA._ui = { app, render, store, h };
+  YA._ui = { app, render, store, h, playerCard, persChips, abBar, surname, persText, newOurs, persistTeam };
 })();

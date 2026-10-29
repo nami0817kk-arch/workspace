@@ -47,7 +47,9 @@ jobs:
       # 試合の中身の点検（落ちない・釣り合う・特性が効く）を通してから、画面と中身を1枚にまとめる
       - name: Test the match engine
         working-directory: projects/youth-academy/web
-        run: node tool/sim.js
+        run: |
+          node tool/sim.js
+          node tool/world.js
 
       - name: Build the match page for the app
         working-directory: projects/youth-academy/web

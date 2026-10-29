@@ -64,7 +64,7 @@
       this.discontent = {}; // 役割が合わず不満が溜まった選手
       for (const t of [this.home, this.away]) {
         for (const p of Object.values(t.players)) {
-          p.stam = 100;
+          p.stam = p._startStam != null ? p._startStam : 100;
           p.st = { goals: 0, assists: 0, shots: 0, rating: 6.0, minutes: 0, saves: 0 };
           p.yellow = 0;
           p.off = false;
