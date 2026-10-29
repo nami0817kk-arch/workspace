@@ -922,6 +922,8 @@ def draw(img, dr, t, ctx):
     now, prev = scs[i], (scs[i - 1] if i > 0 else None)
     dd = defs.get(cur["id"], {})
     k = ctx["k"]
+    if prev is now:      # 前の行から引き継いだ図は、描き直さずそのまま見せる
+        k = 1.0
     tag = dd.get("exp") if now["kind"] != "formula" else None
     TAGGED[0] = bool(tag) and not LAND
     u = _ease((t - cur["start"]) / 0.5)
