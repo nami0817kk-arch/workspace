@@ -1,0 +1,153 @@
+# 物語完結型ショート 小早川秀秋 s2（2026-10-29）。本編 scripts/hideaki-story.yaml の第2章（開戦の半月前）から。
+# 形式は hijikata_s3.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。
+# 絵は本編の AI 絵（H01・H03・H04・H10）と実在の絵（伝秀秋像・黒田長政）。伝秀秋像は「伝」を付ける。
+# 事実カード：hideaki-39・09・11・13・14・20
+#   ・西尾家譜の読みは高橋陽介（hideaki-09）、9/13 の指示（hideaki-13）。誰の読みかを語りで言う。
+#   ・開戦前から東軍か：白峰・高橋／光成・呉座（hideaki-20）。どちらとも決めない。秀秋の動機は断定しない。
+# 理解テスト4問：
+#   ①誰の話か：関ヶ原のとき数えで19歳の小早川秀秋
+#   ②いつ・どこで何が：1600年8月26日ごろ、近江の柏原で家康の使者と会い、東軍に味方すると約束した、と高橋陽介は家譜を読む
+#   ③その後：28日に黒田長政・浅野幸長の書状、9月13日に家康の指示、9月14日に松尾山に入った
+#   ④どうなったか：開戦前から東軍だったか、西軍の戦略で松尾山に入ったか、研究者の見立ては割れている
+title: 小早川秀秋｜関ヶ原の半月前、家康の使者と会っていたのか
+yt_title: 小早川秀秋は関ヶ原の半月前に家康の使者と会っていた？　同じ家譜と手紙で見立てが割れる
+description: |-
+  関ヶ原のとき、数えで19歳だった小早川秀秋。高橋陽介さんは、『寛政重修諸家譜』にある西尾家の家譜から、秀秋が8月26日ごろ、近江の柏原で家康の使者の西尾正義と会い、東軍に味方すると約束した、と読みます。
+  28日には黒田長政と浅野幸長が書状を送り、9月13日の早朝には家康が、西軍への敵対をはっきりさせるよう指示した、と伝えられます。小早川勢が松尾山に入ったのは9月14日です。
+  秀秋は開戦前から東軍だったのか。白峰旬さんと高橋さんは、そうだと見ます。光成準治さんと呉座勇一さんは、西軍の戦略として松尾山に入り、開戦のあとに寝返った、と見ています。
+hashtags: ["#小早川秀秋", "#日本史", "#関ヶ原"]
+ai_images: true
+ai_disclosure: この動画の人物・情景の画像の多くは、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/hideaki
+out: hideaki_story_s2
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 小早川秀秋（関ヶ原の若き武将）
+  title: "半月前、《使者と会った》？"
+now:
+  - {at: 8月26日ごろ, text: "8月26日　柏原", point: 0}
+  - {at: 9月14日, text: "9月14日　松尾山", point: 1}
+timeline:
+  - {label: "8月"}
+  - {label: "9月"}
+cards:
+  - type: table                          # 開戦前の半月（語った順に1行ずつ）
+    title: 開戦前の半月
+    from: 28日には
+    until: 9月14日
+    items:
+      - {at: 28日には, text: "8月28日　黒田・浅野の書状"}
+      - {at: 9月13日, text: "9月13日　家康の指示"}
+    text_y: 0.70
+shots:
+  H03:                                   # 1文目：家康の使者（街道を急ぐ後ろ姿）
+    kind: ai
+    file: hideaki/main/H03.jpg
+    focus: [0.6, 0.5]
+    move: in
+    must: 街道を急ぐ騎馬の後ろ姿
+  Portrait:                              # 19歳（伝秀秋像）
+    kind: real
+    image: paintings/sekigahara_kobayakawa_hideaki_portrait_trim.jpg
+    focus: [0.5, 0.35]
+    move: down
+    credit: "伝小早川秀秋像（17世紀前半・高台寺蔵）"
+    must: 伝小早川秀秋像
+  H10:                                   # 家譜を読む手
+    kind: ai
+    file: hideaki/main/H10.jpg
+    focus: [0.5, 0.55]
+    move: in
+    must: 書状を読む手
+  Kuroda:                                # 黒田長政
+    kind: real
+    image: paintings/mitsunari_kuroda_nagamasa_yoshitora.jpg
+    focus: [0.5, 0.4]
+    move: down
+    credit: "黒田長政（月岡芳年筆）"
+    must: 黒田長政の絵
+  H11:                                   # 9月13日の指示（陣幕の灯）
+    kind: ai
+    file: hideaki/main/H11.jpg
+    focus: [0.7, 0.6]
+    move: left
+    must: 陣幕の内の灯
+  H01:                                   # 松尾山に入る
+    kind: ai
+    file: hideaki/main/H01.jpg
+    focus: [0.6, 0.4]
+    move: in
+    must: 霧の松尾山
+  H04:                                   # 見立てが割れる（関ヶ原の谷）
+    kind: ai
+    file: hideaki/main/H04.jpg
+    focus: [0.5, 0.5]
+    move: right
+    must: 霧の関ヶ原の谷
+  H10r:                                  # 同じ手紙と家譜
+    kind: ai
+    file: hideaki/main/H10.jpg
+    focus: [0.35, 0.6]
+    move: right
+    zoom: 0.12
+    must: 巻紙と蝋燭
+  H15:                                   # 最後の問い
+    kind: ai
+    file: hideaki/main/H15.jpg
+    focus: [0.4, 0.5]
+    move: in
+    must: 夕暮れの稜線
+lines:
+  # fact: hideaki-09
+  - 語り: 関ヶ原の半月以上前に、秀秋は、家康の使者と、会っていた。そう読む研究者が、《!いる》。
+    shot: H03
+    tone: 強調
+  # fact: hideaki-39
+  - 語り: のちに「裏切り者」と呼ばれる、小早川秀秋。関ヶ原のときは、数えで19歳だった。
+    shot: Portrait
+    tone: しみじみ
+    pause: 0.12
+  # fact: hideaki-09
+  - 語り: 高橋陽介さんは、西尾家の家譜を読む。8月26日ごろ、近江の柏原で、秀秋は、家康の使者、西尾正義と会い、東軍に味方すると、約束した、と。
+    shot: H10
+    tone: 強調
+    pause: 0.12
+  # fact: hideaki-11
+  - 語り: 28日には、黒田長政と浅野幸長が、秀秋の家臣を通して、書状を送り、東軍への加担を求めた。
+    shot: Kuroda
+    tone: しみじみ
+    pause: 0.12
+  # fact: hideaki-13
+  - 語り: 9月13日の早朝、家康は、西軍への敵対を、はっきりさせるように、と指示した。
+    shot: H11
+    tone: しみじみ
+    pause: 0.12
+  # fact: hideaki-14
+  - 語り: そして、9月14日。小早川勢は、松尾山に入った。
+    shot: H01
+    tone: 重い
+    pause: 0.12
+  # fact: hideaki-20
+  - 語り: では、秀秋は、開戦前から東軍だったのか。白峰旬さんと高橋さんは、そうだと見る。光成準治さんと呉座勇一さんは、西軍の戦略として、松尾山に入った、と見る。
+    shot: H04
+    tone: 強調
+    pause: 0.12
+  - 語り: 同じ手紙と家譜を読んで、見立てが、《割れている》。
+    shot: H10r
+    tone: 重い
+    pause: 0.3
+    dip: true
+  - 語り: あなたは、どちらの見立てが、《近い》と、思いますか。
+    shot: H15
+    tone: 疑問
+    pause: 0.15

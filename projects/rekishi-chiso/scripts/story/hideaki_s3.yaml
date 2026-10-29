@@ -1,0 +1,147 @@
+# 物語完結型ショート 小早川秀秋 s3（2026-10-29）。本編 scripts/hideaki-story.yaml の第1章（筑前の少年国主）から。
+# 形式は hijikata_s3.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。
+# 絵は本編の AI 絵（H02）と実在の絵（秀吉像・釜山鎮の図・石田三成像・家康像・伝秀秋像）。伝秀秋像は「伝」を付ける。
+# 事実カード：hideaki-22・23・24・25・26
+#   ・越前の石高は幻冬舎12万石／サライ15万石（hideaki-23）。蔚山説・讒言説への反論は渡邊大門（hideaki-24・25）。
+#   ・復領は一般向けの解説が書く（hideaki-26、単一出どころ）→「と書く」。秀秋の動機は断定しない。
+# 理解テスト4問：
+#   ①誰の話か：10代で筑前・筑後30万石以上の国主になった小早川秀秋
+#   ②何が起きたか：秀吉に領地を取り上げられ越前に移された（石高は12万石とも15万石とも）
+#   ③理由は：蔚山の軽率さ・三成の讒言と語られてきたが、渡邊大門は帰国は蔚山の前に決まっていた・三成は代官として預かっただけと述べる
+#   ④どうなったか：秀吉の死後、家康の働きかけで領地が戻ったと一般向けの解説は書く。若者の領地は大人たちの都合で動いた
+title: 小早川秀秋｜10代で30万石、そして取り上げられた領地
+yt_title: 小早川秀秋はなぜ領地を取り上げられた？　蔚山も三成の讒言も、書状で崩れる
+description: |-
+  小早川秀秋は、10代で、筑前と筑後の30万石以上を預かる国主になりました。ところが、秀吉は、その領地を取り上げて、秀秋を越前に移します。移された先の石高は、幻冬舎の解説は12万石、サライの記事は15万石と書いています。
+  理由は、蔚山で軽率だったから、石田三成の讒言のせい、と語られてきました。けれど、渡邊大門さんは、帰国は蔚山の戦いより前に決まっていた、慶長3年5月の三成の書状は、代官として筑前を一時預かっただけだと書いている、と述べています。
+  秀吉の死後は、家康が働きかけて、筑前と筑後を取り戻した、と一般向けの解説は書きます。
+hashtags: ["#小早川秀秋", "#日本史", "#戦国時代"]
+ai_images: true
+ai_disclosure: この動画の人物・情景の画像の多くは、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/hideaki
+out: hideaki_story_s3
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 小早川秀秋（のちの関ヶ原の若き武将）
+  title: "10代で30万石、そして《取り上げられた》"
+now:
+  - {at: 10代で, text: "筑前・筑後", point: 0}
+  - {at: 越前に, text: "越前", point: 1}
+  - {at: 慶長3年5月, text: "慶長3年　筑前", point: 1}
+  - {at: 秀吉の死後, text: "秀吉の死後", point: 2}
+timeline:
+  - {label: "筑前"}
+  - {label: "越前"}
+  - {label: "復領"}
+cards:
+  - type: versus                         # 越前の石高：記事で違う
+    from: 幻冬舎の解説は
+    until: 理由は
+    left: {tag: 幻冬舎の解説, big: 12万石, dots: 12, color: blue}
+    right: {tag: サライの記事, big: 15万石, dots: 15, color: red}
+    mid: 対
+    text_y: 0.66
+shots:
+  H02:                                   # 1文目：筑前の城下
+    kind: ai
+    file: hideaki/main/H02.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 筑前の海に面した城下
+  H02r:                                  # 越前に移す（城下の別の部分）
+    kind: ai
+    file: hideaki/main/H02.jpg
+    focus: [0.8, 0.55]
+    move: left
+    zoom: 0.1
+    must: 湾と帆船
+  Busan:                                 # 蔚山の戦いと語られてきた
+    kind: real
+    image: paintings/mitsunari_busanjin_1592.jpg
+    focus: [0.5, 0.4]
+    move: down
+    credit: "釜山鎮の戦いの図（1592年。Wikimedia Commons）"
+    must: 朝鮮の戦いの図
+  Mitsunari:                             # 三成の書状
+    kind: real
+    image: paintings/sekigahara_ishida_mitsunari.jpg
+    focus: [0.5, 0.18]
+    move: down
+    credit: "石田三成像"
+    must: 石田三成の像
+  H10:                                   # 書状（手元）
+    kind: ai
+    file: hideaki/main/H10.jpg
+    focus: [0.5, 0.55]
+    move: in
+    must: 書状を読む手
+  Ieyasu:                                # 家康の働きかけ
+    kind: real
+    image: paintings/sekigahara_tokugawa_ieyasu.jpg
+    focus: [0.5, 0.25]
+    move: down
+    credit: "徳川家康像（17世紀）"
+    must: 徳川家康の像
+  Portrait:                              # 取り上げられ、戻される（伝秀秋像）
+    kind: real
+    image: paintings/sekigahara_kobayakawa_hideaki_portrait_trim.jpg
+    focus: [0.5, 0.35]
+    move: in
+    credit: "伝小早川秀秋像（17世紀前半・高台寺蔵）"
+    must: 伝小早川秀秋像
+  H02q:                                  # 最後の問い
+    kind: ai
+    file: hideaki/main/H02.jpg
+    focus: [0.3, 0.45]
+    move: right
+    zoom: 0.12
+    must: 松の向こうの城下
+lines:
+  # fact: hideaki-22
+  - 語り: 小早川秀秋は、10代で、筑前と筑後、30万石以上を預かる国主になった。ところが、その領地を、《!取り上げられる》。
+    shot: H02
+    tone: 強調
+  # fact: hideaki-23
+  - 語り: 秀吉は、領地を取り上げて、秀秋を越前に移す。石高は、幻冬舎の解説は12万石、サライの記事は15万石と、書いている。
+    shot: H02r
+    tone: 強調
+    pause: 0.12
+  # fact: hideaki-24
+  - 語り: 理由は、蔚山での軽率さが、秀吉の怒りを買った、と語られてきた。けれど、渡邊大門さんは、秀秋の帰国は、蔚山の戦いより前に決まっていた、と述べている。
+    shot: Busan
+    tone: しみじみ
+    pause: 0.12
+  # fact: hideaki-25
+  - 語り: 「石田三成の讒言で」という話も、有名だ。渡邊さんは、慶長3年5月の、三成の書状に注目する。
+    shot: Mitsunari
+    tone: しみじみ
+    pause: 0.12
+  # fact: hideaki-25
+  - 語り: 三成は、代官として筑前を、一時、預かっただけだ、と書く。讒言の筋は、書状から、崩れる。
+    shot: H10
+    tone: 強調
+    pause: 0.12
+  # fact: hideaki-26
+  - 語り: 秀吉の死後、家康が働きかけて、秀秋は筑前と筑後を取り戻した、と一般向けの解説は書く。
+    shot: Ieyasu
+    tone: しみじみ
+    pause: 0.12
+  - 語り: 取り上げられ、戻される。若者の領地は、大人たちの都合で動いた。
+    shot: Portrait
+    tone: 重い
+    pause: 0.3
+    dip: true
+  - 語り: あなたなら、領地を大人の都合で動かされた若者を、どう見ますか。
+    shot: H02q
+    tone: 疑問
+    pause: 0.15
