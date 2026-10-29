@@ -93,6 +93,38 @@
     return { line: '何かお話ですか？', opts: [{ k: 'praise', label: '褒める' }, { k: 'issue', label: '課題を伝える' }, { k: 'listen', label: '悩みを聞く' }] };
   };
 
+  // ---------- クラブ名・相手クラブ名の書き換え（決定52・54）----------
+  const okName = (t) => t && t.length <= 14;
+  YA.renameClub = function (w, name) {
+    const t = String(name || '').replace(/\s+/g, ' ').trim();
+    if (!okName(t)) return { ok: false, msg: '1〜14文字で入れてください' };
+    w.clubName = t;
+    const me = w.league && w.league.teams.find((x) => x.me);
+    if (me) me.name = t;
+    return { ok: true };
+  };
+  // 相手は60クラブの固定名（w.rename に残るので、翌年以降も同じ名前で出る）
+  YA.renameTeam = function (w, id, name) {
+    const t = String(name || '').replace(/\s+/g, ' ').trim();
+    const tm = w.league && w.league.teams.find((x) => x.id === id && !x.me);
+    if (!tm || !okName(t)) return { ok: false, msg: '1〜14文字で入れてください' };
+    tm.name = t;
+    tm.short = t.length > 9 ? t.slice(0, 9) : t;
+    if (tm.cid) (w.rename = w.rename || {})[tm.cid] = t;
+    return { ok: true };
+  };
+
+  // ---------- 練習メニューの型（3つ保存・呼び出し）----------
+  YA.saveMenuSlot = function (w, i) {
+    (w.menuSlots = w.menuSlots || [null, null, null])[i] = JSON.parse(JSON.stringify(w.plan));
+  };
+  YA.loadMenuSlot = function (w, i) {
+    const s = w.menuSlots && w.menuSlots[i];
+    if (!s) return false;
+    w.plan = JSON.parse(JSON.stringify(s));
+    return true;
+  };
+
   // ---------- 名前の書き換え（決定52・54）----------
   YA.renamePlayer = function (w, pid, name) {
     const p = w.players[pid];

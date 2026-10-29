@@ -54,25 +54,49 @@
   YA.LEVEL_NAMES = ['全国リーグ', '地域リーグ', '県リーグ'];
   YA.LEVEL_EXP = [1, 0.8, 0.6]; // 試合の経験値（決定62：全国＞地域＞県）
 
-  YA.newLeague = function (w) {
-    const r = YA.rngOf(w.seed * 91 + w.year * 313 + (w.level || 2) * 7);
-    const level = w.leagueLevel || 2;
+  // 60クラブ（決定83）：各部20。名前・作風・監督・強さの癖（名門か新興か）は固定で、毎年そこから11を選ぶ
+  YA.CLUB60 = (function () {
+    const r = YA.rngOf(60601);
     const used = new Set();
-    const teams = [];
-    for (let i = 0; i < 11; i++) {
-      const kind = r.chance(0.55) ? 'club' : 'high';
+    const out = [];
+    for (let i = 0; i < 60; i++) {
+      const kind = i % 20 < 11 ? 'club' : 'high';
       let name;
       do name = kind === 'club' ? r.pick(AREAS) + ' ' + r.pick(NICK) + 'ユース' : r.pick(AREAS) + r.pick(HS);
       while (used.has(name));
       used.add(name);
       const style = r.pick(['power', 'tech', 'defend']);
       const ck = r.pick(COACH_KIND);
+      out.push({
+        id: 'k' + i, name, kind, style, level: Math.floor(i / 20) + 1,
+        edge: Math.round((r() - 0.5) * 1.6 * 10) / 10,
+        coach: { name: r.pick(COACH_SUR) + ' ' + r.pick(['監督', 'コーチ']), kind: ck[0], note: ck[1] },
+      });
+    }
+    return out;
+  })();
+
+  YA.newLeague = function (w) {
+    const r = YA.rngOf(w.seed * 91 + w.year * 313 + (w.level || 2) * 7);
+    const level = w.leagueLevel || 2;
+    const used = new Set();
+    const teams = [];
+    // 同じ部の20クラブから11を選ぶ（自分のクラブと同名は除く）。名前の書き換えは w.rename に残る
+    const pool = YA.CLUB60.filter((c) => c.level === level && c.name !== w.clubName);
+    const pick = pool.map((c) => ({ c, k: r() })).sort((a, b) => a.k - b.k).slice(0, 11).map((x) => x.c);
+    for (let i = 0; i < 11; i++) {
+      const c = pick[i];
+      const kind = c.kind;
+      const name = (w.rename && w.rename[c.id]) || c.name;
+      used.add(name);
+      const style = c.style;
+      const ck = [c.coach.kind, c.coach.note];
       teams.push({
-        id: 't' + i, name, short: name.length > 9 ? name.slice(0, 9) : name, kind, style,
-        lvl: Math.round((levelBase(level) + w.year * 0.36 + (r() - 0.5) * 1.8 + (kind === 'club' ? 0.3 : 0)) * 10) / 10,
+        id: 't' + i, cid: c.id, name, short: name.length > 9 ? name.slice(0, 9) : name, kind, style,
+        lvl: Math.round((levelBase(level) + w.year * 0.36 + c.edge + (r() - 0.5) * 0.8 + (kind === 'club' ? 0.3 : 0)) * 10) / 10,
         formation: r.pick(['4-4-2', '4-3-3', '5-3-2', '4-2-3-1']), tactic: { power: 'ハイプレス', tech: 'ポゼッション', defend: '堅守' }[style],
         color: r.pick(['#c0392b', '#2c3e50', '#7f8c8d', '#8e44ad', '#d35400', '#16a085']),
-        coach: { name: r.pick(COACH_SUR) + ' ' + r.pick(['監督', 'コーチ']), kind: ck[0], note: ck[1] },
+        coach: { name: c.coach.name, kind: ck[0], note: ck[1] },
       });
     }
     teams.push({ id: 'me', name: w.clubName, short: 'レガーレ', me: true });

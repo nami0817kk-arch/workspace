@@ -53,4 +53,5 @@
 - 1年をおまかせで進める：ホームの「おまかせ進行」→「1年」。`node` からは `YA.simulate(w, { until: 'year', stopOnImportant: false })`。報告（`YA.simReport`）が返る。
 - 新しく始める（保存がないとき）：指導者の名前・経歴・クラブ・解任の有無を選ぶ。`YA.newWorld(seed, YA.makeStart({...}))`。
 - 段2（ビルド9）：伸び盛り・壁（`p.state`）・能力の低下・進路の相談（`career` 出来事。`more.js`）・練習試合の練習メニュー・退団の4理由（怪我・能力・家庭・不満）・お知らせの3段（`YA.noticeKind`、設定で項目ごとに段を変える。「必ず止める」はおまかせ進行でも止まる）・実績と引退（`YA.achievements/retire/careerSummary`）・文字の大きさ3段・選手の名前の書き換え。Bの先発GKが抜けて控えにもいないときは `autoTeamsKeep` がGKを新しく入団させる。
+- 段3（ビルド10）：60クラブ（`YA.CLUB60`：各部20の固定の相手。名前・作風・監督・強さの癖は固定、毎年11を選ぶ）・クラブ名と相手名の書き換え（`YA.renameClub/renameTeam`、相手は `w.rename` に残る）・練習メニューの型3つ（`YA.saveMenuSlot/loadMenuSlot`）。
 - 保存の形は v3。セーブ枠は `world`（枠1）・`world1`（枠2）、年度はじめの控えは `<枠>_bak`。

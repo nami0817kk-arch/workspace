@@ -546,6 +546,19 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
     YA.autoTeamsKeep(wg);
     ok(wg.players[wg.lineupB[0].pid] && wg.players[wg.lineupB[0].pid].pos === 'GK', 'Bの先発GKが抜けて控えにもいなければ、GKが新しく入る');
   }
+  // 段3：60クラブ・名前の書き換え・練習メニューの型
+  {
+    ok(YA.CLUB60.length === 60 && new Set(YA.CLUB60.map((c) => c.name)).size === 60, '60クラブは名前が重ならない');
+    const w3 = YA.newWorld(21);
+    const names1 = w3.league.teams.filter((t) => !t.me).map((t) => t.cid);
+    ok(names1.length === 11 && names1.every((c) => YA.CLUB60.find((x) => x.id === c && x.level === w3.league.level)), '相手は同じ部の固定クラブから選ばれる');
+    const t0 = w3.league.teams.find((t) => !t.me);
+    ok(YA.renameTeam(w3, t0.id, '新しい相手').ok && w3.rename[t0.cid] === '新しい相手', '相手クラブの名前を変えられる');
+    ok(YA.renameClub(w3, '').ok === false && YA.renameClub(w3, 'つるはしFC').ok && w3.league.teams.find((t) => t.me).name === 'つるはしFC', '自分のクラブ名を変えられる');
+    YA.saveMenuSlot(w3, 1);
+    w3.plan.days[0].menu = '休み';
+    ok(YA.loadMenuSlot(w3, 1) && w3.plan.days[0].menu !== '休み' && !YA.loadMenuSlot(w3, 2), '練習メニューの型を保存・呼出できる');
+  }
   // 効果音：音の出せない環境でも落ちない
   YA.sfx.on = true;
   for (const k of ['tap', 'goal', 'concede', 'whistle', 'save', 'miss', 'x', null]) YA.sfx.play(k);
