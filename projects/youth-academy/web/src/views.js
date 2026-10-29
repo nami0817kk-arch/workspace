@@ -74,7 +74,7 @@
     }
     const simc = YA.simCard();
     if (simc) left.append(simc);
-    left.append(act);
+    left.insertBefore(act, left.children[3]); // 主な操作は上に置き、スクロールしなくても押せるように
     // 中：お知らせ＋先週の伸び
     const mid = h('div', { class: 'card pbody', style: 'flex:1;min-width:0' });
     mid.append(h('div', { class: 'h' }, 'お知らせ'));
