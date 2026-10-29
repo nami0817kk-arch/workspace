@@ -97,6 +97,10 @@ def BOT(mode, **kw):
     return dict(kind="bottle", mode=mode, **kw)
 
 
+def PRS(mode, **kw):
+    return dict(kind="pressure", mode=mode, **kw)
+
+
 def WT(kg, **kw):
     return dict(kind="weight", kg=kg, **kw)
 
@@ -109,6 +113,9 @@ YOMI = [
     ("1平方cm", "いちへいほうセンチ"),
     ("日本の南", "にほんのみなみ"),
     ("TEOS-10", "テオス・テン"),
+    ("中と外", "なかとそと"),
+    ("1万mの", "いちまんメートルの"),
+    ("1万mへ", "いちまんメートルへ"),
 ]
 
 
@@ -165,9 +172,11 @@ P["ch3"] = dict(title="第3章 水そのものを、1,000気圧で押す", cta=F
     dict(id="c10", text="海面は、約30m高くなります。10階建てのビルほど。", scene=SEA()),
     dict(id="c11", text="海の水は、少しだけ縮んで、今の高さに収まっています。", scene=SEA(still=True)),
     dict(id="c12", text="魚の体も、ほとんどが水。マダラの身で、約81%です。", scene=FSEC()),
-    dict(id="c13", text="体の中の水も、外の海水と同じく、少し縮むだけ。", scene=FSEC(still=True)),
-    dict(id="c14", text="中と外から同じ強さで押し合うので、つぶす力は残りません。", scene=BAL()),
-    dict(id="c15", text="深海魚は、力ずくで耐えているのではなく、水圧と釣り合っています。"),
+    dict(id="c13", text="ペットボトルは、中が空気。外だけ、水圧が強くなります。", scene=PRS("bottle")),
+    dict(id="c14", text="内と外の差で、つぶれます。", scene=PRS("bottle", still=True)),
+    dict(id="c15", text="魚は、中も水。外の水圧は、体の中にも、そのまま伝わります。", scene=PRS("fish")),
+    dict(id="c16", text="中と外から同じ強さで押し合うので、つぶす力は残りません。", scene=BAL()),
+    dict(id="c17", text="深海魚は、力ずくで耐えているのではなく、水圧と釣り合っています。"),
 ])
 P["ch4"] = dict(title="第4章 人が行くなら、殻は何cmか", cta=False, lines=[
     dict(id="c1", text="実験4。では、人が深海へ行くなら。", section=True, scene=card(4, "人が行くなら、殻は何cm", HULL(6500, same=True))),
@@ -197,8 +206,8 @@ P["ch5"] = dict(title="第5章 それでも、魚が住めない深さ", lines=[
     dict(id="c11", text="それより深いと、海の水が体へしみ込む向きに変わります。"),
     dict(id="c12", text="魚の体は、その逆向きに合わせられないのでは、と研究者は考えています。"),
     dict(id="c13", text="記録の8,336mは、その線とほぼ同じ深さです。", scene=OSM(still=True, rec=True)),
-    dict(id="c14", text="深海魚がつぶれないのは、つぶれる空気を持たないから。", section=True, scene=BLAD("none")),
-    dict(id="c15", text="そして、体の中の水が、外の水と釣り合っているから。", scene=BAL()),
+    dict(id="c14", text="つぶれる原因は、水圧の強さではありません。中と外の、圧力の差です。", section=True, scene=PRS("both")),
+    dict(id="c15", text="深海魚は、体の中も水で、つぶれる空気も持たない。だから、その差が、ほとんど生まれません。", scene=PRS("fish")),
     dict(id="c16", text="住める深さを決めているのは、体の中の化学だと考えられています。", scene=OSM(still=True, rec=True)),
     dict(id="c17", text="冒頭の、8,336mの魚。指先に約870kgの重さの中を、殻もなしに泳いでいました。", scene=FISH("水深 8,336m　指先に約870kg")),
     dict(id="c18", text="プールで潜って耳がつんとしたら、それは、縮んでいく空気です。"),
@@ -208,12 +217,12 @@ P["s1"] = dict(title="指先に1.1トン", lines=[
     dict(id="c1", text="水深1万mの水圧は、指先1平方cmに約1.1トン。", scene=WT("1100")),
     dict(id="c2", text="1辺1mの水の箱より重い力です。", scene=WT("1100", cube=True)),
     dict(id="c3", text="そんな所で、なぜ魚はつぶれないのか。", style="question", sub="そんな所で、\nなぜ魚は\n【つぶれない】のか", scene=DEEP()),
-    dict(id="c4", text="答えは、体に、つぶれる空気がないから。", scene=BLAD("none")),
-    dict(id="c5", text="計算すると、水深10mで約1kg、1,000mで約100kg。", scene=ST(1000, 10)),
-    dict(id="c6", text="2022年には、水深8,336mを泳ぐ魚が撮影されました。指先に約870kgの深さです。", scene=FISH("水深 8,336m")),
-    dict(id="c7", text="空気は押されると縮みます。でも水は、ほとんど縮みません。", scene=JARVS()),
-    dict(id="c8", text="体がほぼ水の魚は、中と外から同じ力で押し合って、釣り合っています。", scene=BAL()),
-    dict(id="c9", text="プールで潜って耳がつんとしたら、それは、縮んでいく空気です。"),
+    dict(id="c4", text="答えは、体の中も水だから。外と同じ圧力になって、差が生まれません。", scene=PRS("fish")),
+    dict(id="c5", text="つぶれるのは、水圧が強いからではなく、中と外の圧力に差があるとき。", scene=PRS("both")),
+    dict(id="c6", text="ペットボトルは、中が空気。外の水圧との差で、つぶれます。", scene=PRS("bottle")),
+    dict(id="c7", text="魚は、中も水で、つぶれる空気もない。だから、差がありません。", scene=PRS("fish")),
+    dict(id="c8", text="水深10mで約1kg、1,000mで約100kg。2022年には、8,336mを泳ぐ魚が撮影されました。", scene=ST(8336, 10, rec=True, ratio="撮影された魚の深さ")),
+    dict(id="c9", text="プールで潜って耳がつんとしたら、それは、縮んでいく空気です。", scene=ST(8336, 8336, rec=True, ratio="撮影された魚の深さ")),
 ])
 P["s2"] = dict(title="ペットボトルを8,000mに", lines=[
     dict(id="c1", text="ペットボトルの空気を、水深8,336mへ。直径1cmほどの粒になります。", scene=BOT("grain")),

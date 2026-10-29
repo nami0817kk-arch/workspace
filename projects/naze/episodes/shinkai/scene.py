@@ -230,7 +230,8 @@ def sc_strip(img, box, t, k, P):
     if P.get("rec"):
         yr = yy(8336)
         d.ellipse([cx - 14 * S, yr - 14 * S, cx + 14 * S, yr + 14 * S], fill=O.YEL, outline=O.NAVY, width=int(3 * S))
-        arrow(d, (cx + cw / 2 + 120 * S, yr - 60 * S), (cx + 22 * S, yr - 6 * S), O.YEL)
+        if not P.get("readout", True):
+            arrow(d, (cx + cw / 2 + 120 * S, yr - 60 * S), (cx + 22 * S, yr - 6 * S), O.YEL)
         if not P.get("readout", True):
             label(d, (cx + cw / 2 + 140 * S, yr - 85 * S), "魚の記録 8,336m", 38, O.YEL, "lm")
     if P.get("gray"):
@@ -526,7 +527,7 @@ def sc_fishsec(img, box, t, k, P):
     img.alpha_composite(lay)
     img.alpha_composite(base)
     d = ImageDraw.Draw(img)
-    label(d, (cx, cy + L * 0.34 + (80 if LAND else 60) * S), "魚の体はほとんど水", 42, O.WHITE)
+    label(d, (cx, cy + (L * 0.34 + 80 * S if LAND else L * 0.17 + 70 * S)), "魚の体はほとんど水", 42, O.WHITE)
     cell = min(bw * 0.3 / 10, bh * 0.5 / 10) if LAND else bw * 0.4 / 10
     gx0, gy0 = (x0 + bw * 0.62, y0 + bh * 0.2) if LAND else (x0 + bw * 0.5 - cell * 5, y0 + bh * 0.42)
     nfil = int(81 * u)
@@ -563,6 +564,62 @@ def sc_balance(img, box, t, k, P):
         label(d, (cx, cy + r + 150 * S), "外の水が押す", 40, O.RED)
         label(d, (cx, cy + r + 230 * S), "中の水が押し返す", 40, O.GREEN)
         label(d, (cx, cy + r + 320 * S), "つぶす力は残らない", 46, O.YEL)
+
+
+# ---- 内と外の圧力の差 ---------------------------------------------------------------------------
+def press_cell(d, cx, cy, size, kind, k, t):
+    """kind: bottle(外だけ強い→つぶれる) / fish(内も外も同じ→釣り合う)。cy は図の真ん中。"""
+    pul = 1 + 0.08 * math.sin(t * 3)
+    if kind == "bottle":
+        hgt, wid = size * 0.8, size * 0.38
+        crush = _ease(k * 1.4)
+        bottle(d, cx, cy + hgt / 2, hgt, wid, crush=crush)
+        bw_ = wid * (1 - 0.55 * crush) / 2
+        for sx in (-1, 1):
+            for dy in (-0.22, 0.12, 0.42):
+                y = cy + hgt * dy
+                arrow(d, (cx + sx * (bw_ + 150 * S * pul), y), (cx + sx * (bw_ + 14 * S), y), O.RED, 16, 44)
+                arrow(d, (cx + sx * bw_ * 0.15, y), (cx + sx * bw_ * 0.75, y), O.GREEN, 3, 10)
+    else:
+        L = size * 1.05
+        fish_side(d, cx, cy, L, (110, 150, 180))
+        h = L * 0.34
+        for ang in range(0, 360, 45):
+            a = math.radians(ang)
+            ex, ey = math.cos(a), math.sin(a)
+            rx, ry = L * 0.45, h * 0.62
+            p0 = (cx + L * 0.1 + ex * (rx + 110 * S * pul), cy + ey * (ry + 110 * S * pul))
+            p1 = (cx + L * 0.1 + ex * (rx + 8 * S), cy + ey * (ry + 8 * S))
+            arrow(d, p0, p1, O.RED, 12, 34)
+            arrow(d, (cx + L * 0.1 + ex * rx * 0.12, cy + ey * ry * 0.12), (cx + L * 0.1 + ex * rx * 0.72, cy + ey * ry * 0.72), O.GREEN, 12, 34)
+
+
+def sc_pressure(img, box, t, k, P):
+    x0, y0, x1, y1 = box
+    bw, bh = x1 - x0, y1 - y0
+    bg(img, box)
+    d = ImageDraw.Draw(img)
+    mode = P["mode"]
+    cy = (y0 + y1) / 2 - 20 * S
+    if mode == "both":
+        size = min(bw * 0.3, bh * 0.62)
+        cxs = (x0 + bw * 0.25, x0 + bw * 0.75)
+        press_cell(d, cxs[0], cy, size, "bottle", k, t)
+        press_cell(d, cxs[1], cy, size * (1.0 if LAND else 0.85), "fish", k, t)
+        label(d, (cxs[0], cy + size * 0.6 + 70 * S), "差がある → つぶれる", 38 if LAND else 34, O.YEL)
+        label(d, (cxs[1], cy + size * 0.6 + 70 * S), "差がない → そのまま", 38 if LAND else 34, O.YEL)
+        label(d, ((x0 + x1) / 2, y0 + 50 * S), "つぶれる原因は、中と外の圧力の差", 40 if LAND else 36, O.WHITE)
+        return
+    size = min(bw * 0.42, bh * 0.7) if LAND else min(bw * 0.5, bh * 0.55)
+    cx = (x0 + x1) / 2
+    press_cell(d, cx, cy, size, mode, k, t)
+    ly = cy + size * 0.55 + 90 * S
+    if mode == "bottle":
+        label(d, (cx - 20 * S, ly), "外の水圧が強い　中の空気は弱い", 40 if LAND else 34, O.WHITE)
+        label(d, (cx, ly + 80 * S), "差でつぶれる", 46, O.YEL)
+    else:
+        label(d, (cx, ly), "外も中も、同じ強さ", 42, O.WHITE)
+        label(d, (cx, ly + 80 * S), "差がない → 釣り合う", 46, O.YEL)
 
 
 # ---- 潜水艇の殻 --------------------------------------------------------------------------------
@@ -786,7 +843,7 @@ def sc_list(img, box, t, k, P):
 
 KINDS = dict(photo=sc_photo, deep=sc_deep, strip=sc_strip, weight=sc_weight, piston=sc_piston, bottle=sc_bottle, cup=sc_cup, bladder=sc_bladder,
              jar=sc_jar, sea=sc_sea, fishsec=sc_fishsec, balance=sc_balance, hull=sc_hull, spheres=sc_spheres, protein=sc_protein,
-             bars=sc_bars, osm=sc_osm, map=sc_map, list=sc_list)
+             bars=sc_bars, osm=sc_osm, pressure=sc_pressure, map=sc_map, list=sc_list)
 
 
 def region(P):
