@@ -3,7 +3,7 @@
 #   python -m src.cli sources --new
 sites:
 - host: derbyderbyderby.it
-  seen: 42
+  seen: 43
   days:
   - '2026-09-02'
   - '2026-09-03'
@@ -26,6 +26,7 @@ sites:
   - '2026-10-18'
   - '2026-10-20'
   - '2026-10-22'
+  - '2026-10-29'
   examples:
   - https://www.derbyderbyderby.it/calcio-italiano/monza-juric-dopo-la-vittoria-sul-torino-se-ci-salviamo-sara-un-grande-risultato/?intcmp=gazzanet-derbyderbyderby
   - https://www.derbyderbyderby.it/calcio-estero/monza-ecco-zeballos-in-italia-per-il-mito-di-maradona-e-i-consigli-di-paredes/?intcmp=gazzanet-derbyderbyderby
@@ -72,19 +73,8 @@ sites:
   - https://www.fcinter1908.it/news/interviste/sneijder-inter-triplete-ausilio-chivu-dumfries/?intcmp=gazzanet-fcinter1908
   - https://www.fcinter1908.it/cronaca-live/youth-league-real-madrid-inter/?intcmp=gazzanet-fcinter1908
   - https://www.fcinter1908.it/partite/conferenze-stampa/fabregas-roma-inter-como-frosinone/?intcmp=gazzanet-fcinter1908
-- host: transfermarkt.co.uk
-  seen: 14
-  days:
-  - '2026-09-02'
-  - '2026-09-03'
-  - '2026-09-04'
-  - '2026-09-05'
-  examples:
-  - https://www.transfermarkt.co.uk/folarin-balogun-transfer-to-everton-collapses-monaco-miss-out-on-euro-45m-fee-plus-add-ons/view/news/486066
-  - https://www.transfermarkt.co.uk/barcola-4th-rodri-19th-cucurella-29th-top-50-most-expensive-transfers-this-summer-ranked/view/news/483667
-  - https://www.transfermarkt.co.uk/club-record-sale-why-arsenal-were-right-to-sell-gabriel-martinelli-to-al-hilal/view/news/484606
 - host: mondoudinese.it
-  seen: 14
+  seen: 15
   days:
   - '2026-09-04'
   - '2026-09-05'
@@ -98,10 +88,22 @@ sites:
   - '2026-09-23'
   - '2026-09-25'
   - '2026-10-19'
+  - '2026-10-29'
   examples:
   - https://www.mondoudinese.it/udinese/news-udinese/udinese-unai-gomez-voglio-migliorare-e-aumentare-i-miei-numeri/?intcmp=gazzanet-mondoudinese
   - https://www.mondoudinese.it/udinese/news-udinese/conferenza-runjaic-bayo-puo-giocare-titolare-ma-non-vi-diro-lundici/?intcmp=gazzanet-mondoudinese
   - https://www.mondoudinese.it/udinese/news-udinese/palma-il-posto-da-titolare-me-lo-dovro-riguadagnare/?intcmp=gazzanet-mondoudinese
+- host: transfermarkt.co.uk
+  seen: 14
+  days:
+  - '2026-09-02'
+  - '2026-09-03'
+  - '2026-09-04'
+  - '2026-09-05'
+  examples:
+  - https://www.transfermarkt.co.uk/folarin-balogun-transfer-to-everton-collapses-monaco-miss-out-on-euro-45m-fee-plus-add-ons/view/news/486066
+  - https://www.transfermarkt.co.uk/barcola-4th-rodri-19th-cucurella-29th-top-50-most-expensive-transfers-this-summer-ranked/view/news/483667
+  - https://www.transfermarkt.co.uk/club-record-sale-why-arsenal-were-right-to-sell-gabriel-martinelli-to-al-hilal/view/news/484606
 - host: calcionapoli1926.it
   seen: 14
   days:
@@ -120,7 +122,7 @@ sites:
   - https://www.calcionapoli1926.it/altro/jorginho-agente-santos-proposte-serie-a/?intcmp=gazzanet-calcionapoli1926
   - https://www.calcionapoli1926.it/photogallery/giovane-infortunio-napoli-seriea-intervento-ernia-inguinale-post-social-instagram-photogallery-ultime/?refresh_ce&intcmp=gazzanet-calcionapoli1926
 - host: tuttobolognaweb.it
-  seen: 13
+  seen: 14
   days:
   - '2026-09-05'
   - '2026-09-08'
@@ -128,6 +130,7 @@ sites:
   - '2026-09-14'
   - '2026-09-23'
   - '2026-10-18'
+  - '2026-10-29'
   examples:
   - https://www.tuttobolognaweb.it/mercato/tedesco/?intcmp=gazzanet-tuttobolognaweb
   - https://www.tuttobolognaweb.it/news/dovbyk-emozionato-per-il-gol-ma-dobbiamo-migliorare/?intcmp=gazzanet-tuttobolognaweb
@@ -196,6 +199,21 @@ sites:
   - https://www.pianetamilan.it/news-milan/interviste/fofana-qui-per-riportare-il-siviglia-ad-alti-livelli-spero-di-ritrovare-il-piacere-di-giocare-a-calcio/?intcmp=gazzanet-pianetamilan
   - http://pianetamilan.it/news-milan/ultime-notizie/ex-milan-taarabt-appende-gli-scarpini-al-chiodo-non-cambierei-nulla-di-questo-viaggio/
   - https://www.pianetamilan.it/news-milan/rassegna-stampa/fofana-al-siviglia-cifre-dal-prestito-dal-milan-e-le-sue-prime-dichiarazioni/?intcmp=gazzanet-pianetamilan
+- host: fantamagazine.com
+  seen: 10
+  days:
+  - '2026-09-08'
+  - '2026-09-13'
+  - '2026-09-15'
+  - '2026-09-20'
+  - '2026-09-21'
+  - '2026-10-18'
+  - '2026-10-19'
+  - '2026-10-29'
+  examples:
+  - https://www.fantamagazine.com/news/cagliari-lecce-1-0-di-francesco-poco-cattivi-e-determinati-cosi-non-possiamo-permettercelo/
+  - https://www.fantamagazine.com/news/verso-lecce-monza-di-francesco-avverte-non-possiamo-ripetere-la-gara-di-cagliari/
+  - https://www.fantamagazine.com/news/como-parma-2-1-cuesta-abbiamo-creato-piu-occasioni-ma-non-e-bastato-dobbiamo-essere-piu-precisi/
 - host: genoaoggi.it
   seen: 9
   days:
@@ -211,20 +229,6 @@ sites:
   - https://www.genoaoggi.it/calciomercato/mercato-genoa/ehizibue-al-genoa-anni-fa-dissi-no-oggi-e-il-modo-migliore-per-chiedere-perdono/?intcmp=gazzanet-genoaoggi
   - https://www.genoaoggi.it/notizie/genoa-de-rossi-pari-frosinone/?intcmp=gazzanet-genoaoggi
   - https://www.genoaoggi.it/coppa-italia/de-rossi-promuove-il-genoa-risposte-positive-traore-ed-el-shaarawy-possono-fare-la-differenza/?intcmp=gazzanet-genoaoggi
-- host: fantamagazine.com
-  seen: 9
-  days:
-  - '2026-09-08'
-  - '2026-09-13'
-  - '2026-09-15'
-  - '2026-09-20'
-  - '2026-09-21'
-  - '2026-10-18'
-  - '2026-10-19'
-  examples:
-  - https://www.fantamagazine.com/news/cagliari-lecce-1-0-di-francesco-poco-cattivi-e-determinati-cosi-non-possiamo-permettercelo/
-  - https://www.fantamagazine.com/news/verso-lecce-monza-di-francesco-avverte-non-possiamo-ripetere-la-gara-di-cagliari/
-  - https://www.fantamagazine.com/news/como-parma-2-1-cuesta-abbiamo-creato-piu-occasioni-ma-non-e-bastato-dobbiamo-essere-piu-precisi/
 - host: cagliaricalcio-news.it
   seen: 7
   days:
