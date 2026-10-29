@@ -56,43 +56,186 @@
     慎重: '大事な場面で無理をしない',
   };
 
-  // ポジション別の役割（決定37）
-  YA.ROLES = {
-    GK: ['ゴール前に残る', '前に出る'],
-    DF: ['バランス', '上がる', '残る', 'ボール運び'],
-    MF: ['配る', '運ぶ', '潰す', '飛び出す'],
-    FW: ['裏を狙う', 'ポスト', '下がって受ける', 'ゴール前'],
+  // ---------- ポジション15個（決定81）と、ポジションごとの役割（決定37・81）----------
+  YA.POS15 = ['GK', 'CB', 'LB', 'RB', 'LWB', 'RWB', 'DM', 'CM', 'LM', 'RM', 'AM', 'LW', 'RW', 'SS', 'ST'];
+  YA.POS_LABEL = { GK: 'GK', CB: 'CB', LB: '左SB', RB: '右SB', LWB: '左WB', RWB: '右WB', DM: 'DM', CM: 'CM', LM: '左MF', RM: '右MF', AM: 'AM', LW: '左WG', RW: '右WG', SS: 'SS', ST: 'ST' };
+  YA.POS_NAME = { GK: 'ゴールキーパー', CB: 'センターバック', LB: '左サイドバック', RB: '右サイドバック', LWB: '左ウイングバック', RWB: '右ウイングバック', DM: '守備的MF', CM: 'センターMF', LM: '左サイドMF', RM: '右サイドMF', AM: '攻撃的MF', LW: '左ウイング', RW: '右ウイング', SS: 'セカンドストライカー', ST: 'ストライカー' };
+  // 試合の中身（場面の選び方）は4つの大きな括りで動く。ポジション名は細かく、中身は括りで共通
+  YA.GROUP = { GK: 'GK', CB: 'DF', LB: 'DF', RB: 'DF', LWB: 'DF', RWB: 'DF', DM: 'MF', CM: 'MF', LM: 'MF', RM: 'MF', AM: 'MF', LW: 'FW', RW: 'FW', SS: 'FW', ST: 'FW' };
+  YA.SIDE = { LB: 'L', LWB: 'L', LM: 'L', LW: 'L', RB: 'R', RWB: 'R', RM: 'R', RW: 'R' };
+  YA.POS_ABS15 = {
+    GK: YA.AB_GK,
+    CB: ['タックル', 'マーク', 'ポジショニング', '予測', 'ヘディング', '強さ'],
+    LB: ['タックル', 'マーク', 'スタミナ', 'スピード', 'クロス', '運動量'],
+    RB: ['タックル', 'マーク', 'スタミナ', 'スピード', 'クロス', '運動量'],
+    LWB: ['スタミナ', 'クロス', 'スピード', '運動量', 'ドリブル', 'タックル'],
+    RWB: ['スタミナ', 'クロス', 'スピード', '運動量', 'ドリブル', 'タックル'],
+    DM: ['タックル', 'ポジショニング', '予測', 'パス', '運動量', '判断'],
+    CM: ['パス', '視野', '運動量', '判断', 'ファーストタッチ', 'タックル'],
+    LM: ['クロス', 'スピード', '運動量', 'ドリブル', 'スタミナ', 'パス'],
+    RM: ['クロス', 'スピード', '運動量', 'ドリブル', 'スタミナ', 'パス'],
+    AM: ['パス', '視野', 'テクニック', 'ドリブル', '判断', 'オフザボール'],
+    LW: ['ドリブル', 'スピード', '加速', 'クロス', 'テクニック', 'フィニッシュ'],
+    RW: ['ドリブル', 'スピード', '加速', 'クロス', 'テクニック', 'フィニッシュ'],
+    SS: ['オフザボール', 'テクニック', 'ファーストタッチ', 'フィニッシュ', 'パス', '加速'],
+    ST: ['フィニッシュ', 'ヘディング', 'オフザボール', '強さ', 'ファーストタッチ', '加速'],
   };
-  YA.ROLE_TRAITS = {
-    上がる: ['オーバーラップ', '縦への突破', 'アーリークロス'],
-    残る: ['カバーリング', 'ラインコントロール', '1対1の粘り', '空中戦の競り'],
-    ボール運び: ['ボールを運ぶ', 'サイドチェンジ'],
-    配る: ['スルーパス', 'サイドチェンジ', 'ワンツー', 'ひらめき'],
-    運ぶ: ['ボールを運ぶ', '縦への突破', 'カットイン'],
-    潰す: ['ボール奪取', '読みのインターセプト', 'スライディング', '即時奪回', '前線からの守備'],
-    飛び出す: ['裏への抜け出し', 'ニアへの飛び込み'],
-    裏を狙う: ['裏への抜け出し', '縦への突破'],
-    ポスト: ['ポストプレー', '背負ってからのターン', 'タメを作る'],
-    下がって受ける: ['下がって受ける', 'ワンツー', 'ひらめき'],
-    ゴール前: ['ニアへの飛び込み', 'こぼれ球への嗅覚', 'ヘディングシュート'],
-    前に出る: ['前に出るGK', '足元のうまいGK'],
-    ゴール前に残る: ['PKストップ', 'クロスへの強さ', 'パンチング'],
+  // 布陣ボードに置いた場所からポジション名が決まる
+  YA.pos15OfPoint = function (x, y) {
+    const wide = x < 0.25 || x > 0.75;
+    const side = x < 0.5 ? 'L' : 'R';
+    if (y < 0.27) return wide ? side + 'B' : 'CB';
+    if (wide) return y < 0.5 ? side + 'WB' : y < 0.72 ? side + 'M' : side + 'W';
+    if (y < 0.46) return 'DM';
+    if (y < 0.66) return 'CM';
+    if (y < 0.76) return 'AM';
+    if (y < 0.84) return 'SS';
+    return 'ST';
   };
-  YA.ROLE_ABS = {
-    上がる: ['スタミナ', 'クロス'], 残る: ['ポジショニング', 'マーク'], ボール運び: ['ドリブル', 'パス'], バランス: ['判断', 'ポジショニング'],
-    配る: ['パス', '視野'], 運ぶ: ['ドリブル', '運動量'], 潰す: ['タックル', '強さ'], 飛び出す: ['オフザボール', '加速'],
-    裏を狙う: ['スピード', 'オフザボール'], ポスト: ['強さ', 'ファーストタッチ'], 下がって受ける: ['パス', 'テクニック'], ゴール前: ['フィニッシュ', 'ポジショニング'],
-    前に出る: ['飛び出し', '1対1'], ゴール前に残る: ['反応', 'ハンドリング'],
+  YA.pos15OfSlot = (s, i) => (i === 0 || s.y < 0.08 ? 'GK' : YA.pos15OfPoint(s.x, s.y));
+
+  // 役割。traits/abs = 合うかどうかの目安、tags = 場面の選ばれやすさ、boost = 自分のチームの場面の出やすさ、deny = 相手の場面の出にくさ
+  const RD = (note, traits, abs, tags, boost, deny) => ({ note, traits, abs, tags, boost: boost || {}, deny: deny || {} });
+  YA.ROLE_DEF = {
+    // GK
+    守護神: RD('ゴールを守ることに専念する', ['PKストップ', 'クロスへの強さ', 'パンチング'], ['反応', 'ハンドリング'], ['gk'], {}, { cross: 0.1, longshot: 0.08 }),
+    飛び出す: RD('裏のボールを前で処理する', ['前に出るGK'], ['飛び出し', '1対1'], ['gk'], {}, { through: 0.12, counter: 0.06 }),
+    足元でつなぐ: RD('後ろからつないで組み立てる', ['足元のうまいGK', '速い配球'], ['配球', 'ファーストタッチ'], ['gk', 'pass'], { counter: 0.12 }, {}),
+    // CB
+    ストッパー: RD('前に出て潰す', ['ボール奪取', '空中戦の競り', 'スライディング', 'シュートブロック'], ['タックル', '強さ', 'ヘディング'], ['stop'], { ck: 0.1 }, { cross: 0.08, dribble: 0.05 }),
+    カバー: RD('後ろで読んで拾う', ['カバーリング', '読みのインターセプト', 'ラインコントロール'], ['ポジショニング', '予測'], ['cover'], {}, { through: 0.1, counter: 0.08 }),
+    配る: RD('最終ラインやボランチから配る', ['スルーパス', 'サイドチェンジ', '速い配球', 'ひらめき'], ['パス', '視野'], ['pass'], { through: 0.2 }, {}),
+    運ぶ: RD('ボールを持ち上がる', ['ボールを運ぶ', 'サイドチェンジ'], ['ドリブル', '運動量'], ['carry'], { dribble: 0.1, counter: 0.1 }, {}),
+    // SB・WB
+    上がる: RD('高い位置まで駆け上がる', ['オーバーラップ', '縦への突破', 'アーリークロス'], ['スタミナ', 'クロス'], ['wide', 'cross'], { cross: 0.3 }, {}),
+    残る: RD('後ろに残って守りを固める', ['カバーリング', 'ラインコントロール', '1対1の粘り'], ['ポジショニング', 'マーク'], ['stay'], {}, { counter: 0.1, through: 0.05 }),
+    中に入る: RD('内側に入ってつなぐ', ['ボールを運ぶ', 'スルーパス', 'ワンツー'], ['パス', '判断'], ['pass', 'carry'], { onetwo: 0.2, through: 0.12 }, {}),
+    深く張る: RD('サイドの深い位置で待つ', ['アーリークロス', '縦への突破'], ['クロス', 'スピード'], ['wide', 'cross'], { cross: 0.2, dribble: 0.1 }, {}),
+    // DM
+    アンカー: RD('中央に残って守る', ['カバーリング', 'ボール奪取', 'ラインコントロール'], ['ポジショニング', 'タックル'], ['stay'], {}, { through: 0.1, longshot: 0.1, counter: 0.08 }),
+    レジスタ: RD('低い位置から攻撃を配る', ['スルーパス', 'サイドチェンジ', 'ひらめき'], ['パス', '視野'], ['pass'], { through: 0.25, counter: 0.1 }, {}),
+    潰す: RD('ボールを奪いにいく', ['ボール奪取', '読みのインターセプト', '即時奪回', 'スライディング'], ['タックル', '運動量'], ['press'], { steal: 0.2 }, { counter: 0.08 }),
+    最終ラインに落ちる: RD('DFの間に落ちて組み立てる', ['カバーリング', 'ボールを運ぶ'], ['ポジショニング', 'パス'], ['cover', 'pass'], {}, { through: 0.08 }),
+    // CM
+    ボックス・トゥ・ボックス: RD('攻守に走り回る', ['オーバーラップ', 'ボールを運ぶ', 'こぼれ球への嗅覚'], ['運動量', 'スタミナ'], ['carry', 'finish'], { dribble: 0.1, longshot: 0.1, counter: 0.1 }, {}),
+    攻撃的につなぐ: RD('近くの味方とつないで崩す', ['ワンツー', 'スルーパス', 'ひらめき'], ['パス', 'オフザボール'], ['pass', 'run'], { onetwo: 0.25, through: 0.12 }, {}),
+    // LM・RM
+    張る: RD('サイドに開いて幅を取る', ['縦への突破', 'アーリークロス'], ['スピード', 'クロス'], ['wide', 'cross'], { cross: 0.25 }, {}),
+    守備的に構える: RD('サイドの守りを優先する', ['カバーリング', '1対1の粘り'], ['マーク', '運動量'], ['stay'], {}, { cross: 0.05, counter: 0.08 }),
+    クロスを上げる: RD('クロスを狙う', ['アーリークロス', '曲がるCK'], ['クロス', 'テクニック'], ['cross'], { cross: 0.3, ck: 0.1 }, {}),
+    // AM
+    ゲームメーカー: RD('攻撃の組み立ての中心になる', ['スルーパス', 'ひらめき', 'サイドチェンジ'], ['パス', '視野', 'テクニック'], ['pass'], { through: 0.3, onetwo: 0.15 }, {}),
+    シャドー: RD('ストライカーの近くで裏へ飛び出す', ['裏への抜け出し', 'ニアへの飛び込み', 'こぼれ球への嗅覚'], ['オフザボール', 'フィニッシュ'], ['run', 'finish'], { through: 0.2, cross: 0.1 }, {}),
+    フリーロール: RD('自由に動いて仕掛ける', ['ひらめき', 'ワンツー', 'ボールを運ぶ'], ['テクニック', '判断'], ['carry', 'pass', 'dribble'], { dribble: 0.15, onetwo: 0.15, longshot: 0.1 }, {}),
+    前線から守る: RD('前線から追ってボールを奪う', ['前線からの守備', '即時奪回'], ['運動量', 'タックル'], ['press'], { steal: 0.3 }, {}),
+    // WG
+    仕掛ける: RD('ドリブルで縦に突破する', ['縦への突破', 'ボールを運ぶ'], ['ドリブル', 'スピード'], ['dribble'], { dribble: 0.35 }, {}),
+    カットイン: RD('中へ切れ込んでシュートを狙う', ['カットイン', '巻いて流し込むシュート'], ['ドリブル', 'フィニッシュ'], ['dribble', 'finish'], { dribble: 0.3, longshot: 0.1 }, {}),
+    クロッサー: RD('クロスで合わせる', ['アーリークロス', '縦への突破'], ['クロス', 'スピード'], ['cross', 'wide'], { cross: 0.35 }, {}),
+    内に絞る: RD('内側に絞ってつなぎ、裏を狙う', ['ワンツー', '裏への抜け出し'], ['オフザボール', '判断'], ['run', 'pass'], { through: 0.15, onetwo: 0.15 }, {}),
+    // SS
+    偽9番: RD('下がって受けて組み立てる', ['下がって受ける', 'スルーパス', 'ひらめき'], ['ファーストタッチ', '視野'], ['post', 'pass'], { onetwo: 0.3, through: 0.1 }, {}),
+    裏へ抜ける: RD('最終ラインの裏を狙う', ['裏への抜け出し', 'ループシュート'], ['オフザボール', 'スピード'], ['run'], { through: 0.35, counter: 0.15 }, {}),
+    つなぎ役: RD('前線でつなぎ、味方を生かす', ['ワンツー', 'ポストプレー', 'タメを作る'], ['パス', 'チームワーク'], ['post', 'pass'], { onetwo: 0.3 }, {}),
+    // ST
+    ターゲットマン: RD('高さと強さで収める', ['ポストプレー', 'ヘディングシュート', '背負ってからのターン'], ['強さ', 'ヘディング'], ['post', 'finish'], { cross: 0.3, onetwo: 0.15, longthrow: 0.1 }, {}),
+    ポーチャー: RD('ゴール前で待ち構える', ['ニアへの飛び込み', 'こぼれ球への嗅覚', 'ヘディングシュート'], ['フィニッシュ', 'オフザボール'], ['finish'], { cross: 0.2, ck: 0.1 }, {}),
+    万能: RD('どこにでも顔を出す', ['タメを作る', '裏への抜け出し', 'ヘディングシュート'], ['フィニッシュ', 'ファーストタッチ'], ['finish', 'post', 'run'], { through: 0.1, cross: 0.1, onetwo: 0.1 }, {}),
+  };
+  const SBR = ['残る', '上がる', '中に入る', '深く張る'];
+  const WBR = ['上がる', '深く張る', '中に入る', '残る'];
+  YA.ROLES15 = {
+    GK: ['守護神', '飛び出す', '足元でつなぐ'],
+    CB: ['ストッパー', 'カバー', '配る', '運ぶ'],
+    LB: SBR, RB: SBR, LWB: WBR, RWB: WBR,
+    DM: ['アンカー', 'レジスタ', '潰す', '最終ラインに落ちる'],
+    CM: ['配る', 'ボックス・トゥ・ボックス', '潰す', '攻撃的につなぐ'],
+    LM: ['張る', '中に入る', '守備的に構える', 'クロスを上げる'], RM: ['張る', '中に入る', '守備的に構える', 'クロスを上げる'],
+    AM: ['ゲームメーカー', 'シャドー', 'フリーロール', '前線から守る'],
+    LW: ['仕掛ける', 'カットイン', 'クロッサー', '内に絞る'], RW: ['仕掛ける', 'カットイン', 'クロッサー', '内に絞る'],
+    SS: ['偽9番', '裏へ抜ける', 'つなぎ役', 'フリーロール'],
+    ST: ['ターゲットマン', 'ポーチャー', '裏へ抜ける', '万能', '前線から守る'],
+  };
+  YA.defaultRole = (pos15) => YA.ROLES15[pos15][0];
+  // スロット（布陣の1つの位置）の役割一覧と、いまの役割がそこで使えるか
+  YA.rolesAt = (s, i) => YA.ROLES15[YA.pos15OfSlot(s, i)];
+  YA.fixSlotRole = function (s, i) {
+    const rs = YA.rolesAt(s, i);
+    if (rs.indexOf(s.role) < 0) s.role = rs[0];
+  };
+  // 互換：括り（GK・DF・MF・FW）別の役割の一覧（使わなくなったが、古い呼び出し用に最初の1つだけ）
+  YA.ROLE_TRAITS = {};
+  YA.ROLE_ABS = {};
+
+  // ---------- 選手のポジション適性（1〜20）。本人も知らない「本当に向いているポジション」----------
+  YA.hash = function (str) {
+    let hv = 7;
+    for (let k = 0; k < str.length; k++) hv = (hv * 31 + str.charCodeAt(k)) % 100003;
+    return hv;
+  };
+  const clampN = (v, a, b) => Math.max(a, Math.min(b, v));
+  YA.aptOf = function (p, pos15) {
+    const isGK = p.pos === 'GK' || p.main === 'GK';
+    if (isGK !== (pos15 === 'GK')) return 1;
+    const keys = YA.POS_ABS15[pos15];
+    let v = keys.reduce((s, n) => s + (p.ab[n] || 1), 0) / keys.length;
+    if (pos15 === 'CB' || pos15 === 'ST') v += (p.height - 178) * 0.12;
+    if (pos15 === 'LW' || pos15 === 'RW' || pos15 === 'LWB' || pos15 === 'RWB') v += ((p.ab['スピード'] || 8) - 10) * 0.1;
+    // 利き足と左右の相性
+    const side = YA.SIDE[pos15];
+    if (side && p.foot && p.foot !== 'B' && (p.foot === 'L') !== (side === 'L') && pos15.indexOf('W') < 0) v -= (12 - (p.ab['逆足の精度'] || 8)) * 0.05;
+    const bias = ((YA.hash(p.id + pos15) % 100) / 100 - 0.5) * 1.6;
+    return Math.round(clampN(v + bias, 1, 20) * 10) / 10;
+  };
+  YA.refreshApt = function (p) {
+    p.apt = p.apt || {};
+    let best = null;
+    let bv = -1;
+    for (const pos of YA.POS15) {
+      p.apt[pos] = YA.aptOf(p, pos);
+      if (p.apt[pos] > bv) { bv = p.apt[pos]; best = pos; }
+    }
+    p.best = best;
+  };
+  // 選手に、適性・登録ポジション・利き足を持たせる
+  YA.initPos = function (p, rng, main) {
+    p.foot = p.foot || (rng() < 0.72 ? 'R' : rng() < 0.78 ? 'L' : 'B');
+    p.fam = p.fam || {};
+    const isGK = p.pos === 'GK';
+    p.main = isGK ? 'GK' : main || null;
+    YA.refreshApt(p);
+    if (!p.main) {
+      // 登録は本当の適性とは限らない（3割は隣のポジションで登録されている）
+      p.main = p.best;
+      if (!isGK && rng() < 0.3) {
+        const near = { CB: ['DM', 'LB'], LB: ['LWB', 'CB'], RB: ['RWB', 'CB'], LWB: ['LB', 'LM'], RWB: ['RB', 'RM'], DM: ['CM', 'CB'], CM: ['DM', 'AM'], LM: ['LW', 'CM'], RM: ['RW', 'CM'], AM: ['CM', 'SS'], LW: ['LM', 'AM'], RW: ['RM', 'AM'], SS: ['AM', 'ST'], ST: ['SS', 'LW'] }[p.best];
+        if (near) p.main = near[rng.int(0, near.length - 1)];
+      }
+    }
+    p.pos = YA.GROUP[p.main];
+    p.fam[p.main] = 14;
+  };
+  // 置いた場所での力の落ち方（0〜）。向いていない場所・逆足だと落ち、慣れると和らぐ。向いている場所に置くと少し上がる
+  YA.slotPenalty = function (p, pos15) {
+    if (!p.apt) return 0;
+    if ((p.pos === 'GK') !== (pos15 === 'GK')) return 0.3;
+    let pen = clampN(((p.apt[p.main] || 10) - (p.apt[pos15] || 10)) * 0.02, -0.05, 0.25);
+    const fam = (p.fam && p.fam[pos15]) || 0;
+    if (pen > 0) pen *= clampN(1 - fam / 14, 0.3, 1);
+    const side = YA.SIDE[pos15];
+    if (side && ['LB', 'RB', 'LWB', 'RWB', 'LM', 'RM'].indexOf(pos15) >= 0 && p.foot !== 'B' && (p.foot === 'L') !== (side === 'L')) pen += clampN((12 - (p.ab['逆足の精度'] || 8)) * 0.01, 0, 0.1);
+    return Math.round(pen * 1000) / 1000;
   };
 
   // 布陣の定番（x:左0〜右1、y:自陣ゴール0〜相手ゴール1）。自由に動かせる土台
   const f = (a) => a.map(([x, y]) => ({ x, y }));
   YA.FORMATIONS = {
-    '4-3-3': f([[0.5, 0.03], [0.85, 0.2], [0.62, 0.17], [0.38, 0.17], [0.15, 0.2], [0.5, 0.4], [0.7, 0.52], [0.3, 0.52], [0.84, 0.82], [0.16, 0.82], [0.5, 0.88]]),
-    '4-4-2': f([[0.5, 0.03], [0.85, 0.2], [0.62, 0.17], [0.38, 0.17], [0.15, 0.2], [0.85, 0.5], [0.62, 0.45], [0.38, 0.45], [0.15, 0.5], [0.62, 0.85], [0.38, 0.85]]),
-    '4-2-3-1': f([[0.5, 0.03], [0.85, 0.2], [0.62, 0.17], [0.38, 0.17], [0.15, 0.2], [0.62, 0.4], [0.38, 0.4], [0.82, 0.65], [0.5, 0.65], [0.18, 0.65], [0.5, 0.88]]),
-    '3-5-2': f([[0.5, 0.03], [0.72, 0.17], [0.5, 0.15], [0.28, 0.17], [0.92, 0.48], [0.68, 0.45], [0.5, 0.4], [0.32, 0.45], [0.08, 0.48], [0.62, 0.85], [0.38, 0.85]]),
-    '5-3-2': f([[0.5, 0.03], [0.93, 0.28], [0.72, 0.17], [0.5, 0.15], [0.28, 0.17], [0.07, 0.28], [0.7, 0.5], [0.5, 0.46], [0.3, 0.5], [0.62, 0.85], [0.38, 0.85]]),
+    '4-3-3': f([[0.5, 0.03], [0.85, 0.2], [0.62, 0.17], [0.38, 0.17], [0.15, 0.2], [0.5, 0.4], [0.7, 0.54], [0.3, 0.54], [0.84, 0.82], [0.16, 0.82], [0.5, 0.9]]),
+    '4-4-2': f([[0.5, 0.03], [0.85, 0.2], [0.62, 0.17], [0.38, 0.17], [0.15, 0.2], [0.85, 0.55], [0.62, 0.52], [0.38, 0.52], [0.15, 0.55], [0.62, 0.9], [0.38, 0.8]]),
+    '4-2-3-1': f([[0.5, 0.03], [0.85, 0.2], [0.62, 0.17], [0.38, 0.17], [0.15, 0.2], [0.62, 0.4], [0.38, 0.4], [0.84, 0.78], [0.5, 0.7], [0.16, 0.78], [0.5, 0.9]]),
+    '3-5-2': f([[0.5, 0.03], [0.72, 0.17], [0.5, 0.15], [0.28, 0.17], [0.92, 0.48], [0.68, 0.54], [0.5, 0.4], [0.32, 0.54], [0.08, 0.48], [0.62, 0.9], [0.38, 0.8]]),
+    '5-3-2': f([[0.5, 0.03], [0.93, 0.3], [0.72, 0.17], [0.5, 0.15], [0.28, 0.17], [0.07, 0.3], [0.7, 0.54], [0.5, 0.4], [0.3, 0.54], [0.62, 0.9], [0.38, 0.8]]),
+    '3-4-3': f([[0.5, 0.03], [0.72, 0.17], [0.5, 0.15], [0.28, 0.17], [0.92, 0.48], [0.62, 0.54], [0.38, 0.54], [0.08, 0.48], [0.84, 0.82], [0.16, 0.82], [0.5, 0.9]]),
   };
 
   // 戦い方の型（決定38）と、つまみ
@@ -162,7 +305,7 @@
     const boost = d.boost || {};
     for (const n of YA.AB_FIELD) ab[n] = Math.max(1, Math.min(20, Math.round(d.lvl - (isGK ? 4 : 0) + (rng() - 0.5) * 3 + (boost[n] || 0))));
     for (const n of YA.AB_GK) ab[n] = Math.max(1, Math.min(20, Math.round((isGK ? d.lvl : 3) + (rng() - 0.5) * 3 + (isGK ? boost[n] || 0 : 0))));
-    return {
+    const p = {
       id: d.id,
       num: d.num,
       name: d.name,
@@ -177,6 +320,8 @@
       yellow: 0,
       st: { goals: 0, assists: 0, shots: 0, rating: 6.0, minutes: 0, saves: 0 },
     };
+    YA.initPos(p, rng, d.main || null);
+    return p;
   }
   YA.mkPlayer = mkPlayer;
 
@@ -225,7 +370,7 @@
   YA.makeOpponent = function (opp, seed) {
     const rng = rngOf(seed);
     const fm = YA.FORMATIONS[opp.formation];
-    const slotPos = fm.map((s, i) => (i === 0 ? 'GK' : s.y < 0.34 ? 'DF' : s.y < 0.62 ? 'MF' : 'FW'));
+    const slot15 = fm.map((s, i) => YA.pos15OfSlot(s, i));
     const usedName = new Set();
     const nameOf = () => {
       for (;;) {
@@ -237,10 +382,11 @@
       }
     };
     const players = {};
-    const mk = (i, pos, num, lvl) => {
-      const pool = STYLE_TRAITS[opp.style][pos];
+    const mk = (pos15, num, lvl) => {
+      const grp = YA.GROUP[pos15];
+      const pool = STYLE_TRAITS[opp.style][grp];
       const tr = [];
-      const nt = pos === 'GK' ? 1 : 1 + rng.int(0, 2);
+      const nt = grp === 'GK' ? 1 : 1 + rng.int(0, 2);
       while (tr.length < nt) {
         const t = rng.pick(pool);
         if (!tr.includes(t)) tr.push(t);
@@ -249,20 +395,20 @@
       if (opp.style === 'power') Object.assign(boost, { 強さ: 2, ジャンプ: 1, スタミナ: 2, テクニック: -1 });
       if (opp.style === 'tech') Object.assign(boost, { パス: 2, テクニック: 2, 視野: 1, 強さ: -2 });
       if (opp.style === 'defend') Object.assign(boost, { ポジショニング: 2, マーク: 2, 集中: 2, ドリブル: -1 });
-      const p = mkPlayer(rng, { id: opp.id + '_' + num, num, name: nameOf(), pos, lvl, boost, traits: tr, pers: rng.pick(PERS_POOL), height: 170 + rng.int(0, 16) });
+      for (const n of YA.POS_ABS15[pos15]) boost[n] = (boost[n] || 0) + (grp === 'GK' ? 0 : 1.5);
+      const p = mkPlayer(rng, { id: opp.id + '_' + num, num, name: nameOf(), pos: grp, main: pos15, lvl, boost, traits: tr, pers: rng.pick(PERS_POOL), height: 170 + rng.int(0, 16) });
       p.form = rng.int(-1, 1);
       players[p.id] = p;
       return p;
     };
     const lineup = fm.map((s, i) => {
-      const pos = slotPos[i];
-      const p = mk(i, pos, NUMS_START[i] != null ? NUMS_START[i] : 20 + i, opp.lvl + (rng() - 0.5) * 1.2);
-      return { pid: p.id, x: s.x, y: s.y, role: YA.ROLES[pos][0] };
+      const p = mk(slot15[i], NUMS_START[i] != null ? NUMS_START[i] : 20 + i, opp.lvl + (rng() - 0.5) * 1.2);
+      return { pid: p.id, x: s.x, y: s.y, role: YA.defaultRole(slot15[i]) };
     });
+    const benchPos = ['GK', 'CB', 'LB', 'RB', 'DM', 'CM', 'AM', 'LW', 'ST'];
     const bench = [];
     for (let k = 0; k < 9; k++) {
-      const pos = k === 0 ? 'GK' : ['DF', 'DF', 'MF', 'MF', 'FW', 'FW', 'MF', 'DF'][k - 1];
-      const p = mk(k, pos, 12 + k, opp.lvl - 1 + (rng() - 0.5));
+      const p = mk(benchPos[k], 12 + k, opp.lvl - 1 + (rng() - 0.5));
       bench.push(p.id);
     }
     return { id: opp.id, name: opp.name, short: opp.short, color: opp.color, isUser: false, players, lineup, bench, tactic: Object.assign({ type: opp.tactic }, YA.TACTICS[opp.tactic]), instr: {}, subsUsed: 0, windowsUsed: 0, formation: opp.formation };
@@ -279,12 +425,18 @@
     const fm = YA.FORMATIONS['4-3-3'];
     // 4-3-3 の並びに、スタメンを当てはめる（GK・右SB・CB・CB・左SB・アンカー・右IH・左IH・右W・左W・CF）
     const order = [1, 2, 4, 5, 3, 6, 8, 10, 7, 11, 9];
-    const lineup = order.map((n, i) => ({ pid: 'me_' + n, x: fm[i].x, y: fm[i].y, role: YA.ROLES[i === 0 ? 'GK' : fm[i].y < 0.34 ? 'DF' : fm[i].y < 0.62 ? 'MF' : 'FW'][0] }));
+    const lineup = order.map((n, i) => {
+      const pid = 'me_' + n;
+      const p15 = YA.pos15OfSlot(fm[i], i);
+      const pl = players[pid];
+      if (pl.pos !== 'GK') { pl.main = p15; pl.pos = YA.GROUP[p15]; pl.fam[p15] = 14; }
+      return { pid, x: fm[i].x, y: fm[i].y, role: YA.defaultRole(p15) };
+    });
     // 役割の初期値（特性の合う役割を初めから当てておく）
-    const init = { me_2: '上がる', me_3: '上がる', me_10: '配る', me_8: '運ぶ', me_6: '潰す', me_9: '裏を狙う', me_1: '前に出る' };
-    for (const s of lineup) if (init[s.pid]) s.role = init[s.pid];
+    const init = { me_2: '上がる', me_3: '上がる', me_10: '配る', me_8: '攻撃的につなぐ', me_6: '潰す', me_9: '裏へ抜ける', me_1: '飛び出す', me_7: '仕掛ける', me_11: 'カットイン' };
+    lineup.forEach((sl, i) => { if (init[sl.pid] && YA.rolesAt(sl, i).indexOf(init[sl.pid]) >= 0) sl.role = init[sl.pid]; });
     return { id: 'me', name: 'レガーレ湘南U-18', short: 'レガーレ', color: '#1f6feb', isUser: true, players, lineup, bench: [12, 13, 14, 15, 16, 17, 18, 19, 20].map((n) => 'me_' + n), tactic: Object.assign({ type: 'ポゼッション' }, YA.TACTICS['ポゼッション']), instr: {}, subsUsed: 0, windowsUsed: 0, formation: '4-3-3', _list: list };
   };
 
-  YA.posOfSlot = (s, idx) => (idx === 0 || s.y < 0.08 ? 'GK' : s.y < 0.34 ? 'DF' : s.y < 0.62 ? 'MF' : 'FW');
+  YA.posOfSlot = (s, idx) => YA.GROUP[YA.pos15OfSlot(s, idx)];
 })();

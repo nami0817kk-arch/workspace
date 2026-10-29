@@ -28,6 +28,7 @@
     return close;
   }
   const pcls = (p) => 'pos ' + p.pos;
+  const posc = (p) => YA._apt.posChip(p);
   const gradeName = (g) => '高' + g;
   const fatColor = (v) => (v > 75 ? '#d63a3a' : v > 50 ? '#f0a020' : '#1a9d57');
   const fatBar = (p, wd) => h('div', { class: 'bar', style: `width:${wd || 40}px` }, h('i', { style: `width:${p.fat}%;background:${fatColor(p.fat)}` }));
@@ -76,7 +77,7 @@
     const pick = [];
     for (const p of S.injured.concat(S.tired, S.lowconf, Object.values(w.players).filter((q) => q.unrest >= 3), S.hot)) if (pick.indexOf(p) < 0) pick.push(p);
     const gainers = Object.values(w.players).filter((p) => Object.keys(p.gain || {}).length).sort((a, b) => Object.values(b.gain).reduce((x, y) => x + y, 0) - Object.values(a.gain).reduce((x, y) => x + y, 0)).slice(0, 4);
-    right.append(h('div', { class: 'plist', style: 'margin-top:4px' }, pick.slice(0, 6).map((p) => h('button', { class: 'pitem', onclick: () => { U().app.pSel = p.id; U().app.tab = 'players'; rerender(); } }, h('span', { class: pcls(p) }, p.pos), h('span', { class: 'nm grow' }, p.name.split(' ')[0]), flags(p)))));
+    right.append(h('div', { class: 'plist', style: 'margin-top:4px' }, pick.slice(0, 6).map((p) => h('button', { class: 'pitem', onclick: () => { U().app.pSel = p.id; U().app.tab = 'players'; rerender(); } }, posc(p), h('span', { class: 'nm grow' }, p.name.split(' ')[0]), flags(p)))));
     if (!pick.length) right.append(h('div', { class: 'note' }, '大きな心配はありません'));
     right.append(h('div', { class: 'h', style: 'margin-top:10px' }, '先週の伸び'));
     right.append(h('div', { class: 'plist', style: 'margin-top:4px' }, gainers.map((p) => h('div', { class: 'note', style: 'color:var(--ink)' }, h('b', {}, p.name.split(' ')[0]), ' ', Object.entries(p.gain).map(([a, g]) => `${a}+${g}`).join(' ')))));
@@ -132,7 +133,7 @@
       const render1 = () => {
         box.replaceChildren(
           h('div', { class: 'row' }, h('span', { class: 'chip pers' }, '出来事'), h('b', {}, v.name), h('span', { class: 'grow' }), h('span', { class: 'sub' }, `残り${w.events.length}件`)),
-          h('div', { class: 'row', style: 'gap:8px' }, h('span', { class: pcls(p) }, p.pos), h('b', { style: 'white-space:nowrap' }, `${p.num}番 ${p.name}`), h('span', { class: 'sub' }, gradeName(p.grade)), U().persChips(p).slice(0, 4)),
+          p ? h('div', { class: 'row', style: 'gap:8px' }, posc(p), h('b', { style: 'white-space:nowrap' }, `${p.num}番 ${p.name}`), h('span', { class: 'sub' }, gradeName(p.grade)), U().persChips(p).slice(0, 4)) : h('div', { class: 'row' }, h('span', { class: 'chip gray' }, w.clubName)),
           h('div', { class: 'card', style: 'padding:9px 11px;font-size:13px;line-height:1.6' }, v.text),
           ...v.opts.map((label, i) => h('button', { class: 'btn', style: 'justify-content:flex-start;text-align:left;padding:9px 12px', onclick: () => choose(i) }, label)),
         );
@@ -141,7 +142,7 @@
         const r = YA.resolveEvent(w, e, i);
         box.replaceChildren(
           h('div', { class: 'h' }, v.name),
-          h('div', { class: 'card', style: 'padding:9px 11px;font-size:13px;line-height:1.6' }, `${p.name.split(' ')[0]}は、${r.line}`),
+          h('div', { class: 'card', style: 'padding:9px 11px;font-size:13px;line-height:1.6' }, (p ? `${p.name.split(' ')[0]}は、` : '') + r.line),
           r.small ? h('div', { class: 'chip trait', style: 'align-self:flex-start' }, r.small) : null,
           r.leave ? h('div', { class: 'insight bad' }, r.leave) : null,
           h('button', { class: 'btn pri', onclick: () => { w.events.shift(); if (!w.events.length) afterEvents(); YA.saveWorld(); close(); rerender(); } }, w.events.length > 1 ? '次へ' : '閉じる'),
@@ -173,7 +174,7 @@
       h('span', { class: 'grow' }),
       ...[['all', '全員'], ['A', 'A'], ['B', 'B'], ['1', '高1'], ['2', '高2'], ['3', '高3']].map(([k, n]) => h('button', { class: 'btn sm' + (ui.tf === k ? ' on' : ''), onclick: () => { ui.tf = k; rerender(); } }, n)));
     // 選手の表
-    const rows = Object.values(w.players).filter((p) => ui.tf === 'all' || p.team === ui.tf || String(p.grade) === ui.tf).sort((a, b) => (a.team === b.team ? 0 : a.team === 'A' ? -1 : 1) || ['GK', 'DF', 'MF', 'FW'].indexOf(a.pos) - ['GK', 'DF', 'MF', 'FW'].indexOf(b.pos) || b.grade - a.grade);
+    const rows = Object.values(w.players).filter((p) => ui.tf === 'all' || p.team === ui.tf || String(p.grade) === ui.tf).sort((a, b) => (a.team === b.team ? 0 : a.team === 'A' ? -1 : 1) || YA.POS15.indexOf(a.main) - YA.POS15.indexOf(b.main) || b.grade - a.grade);
     const table = h('div', { class: 'card pbody scroll', style: 'flex:1;min-height:0;padding:4px 6px' });
     table.append(h('div', { class: 'pitem', style: 'background:none;font-size:10px;color:var(--sub);font-weight:800' }, h('span', { style: 'width:22px' }), h('span', { style: 'width:20px' }), h('span', { class: 'grow' }, '選手'), h('span', { style: 'width:42px' }, '疲れ'), h('span', { style: 'width:116px' }, '重点にする能力'), h('span', { style: 'width:150px' }, '特性練習'), h('span', { style: 'width:52px' }, '今週')));
     for (const p of rows) {
@@ -181,7 +182,7 @@
       const lt = tp ? YA.learnable(p).find((x) => x.t === tp) : null;
       const wk = tp ? Math.max(1, Math.ceil((100 - (p.tprog[tp] || 0)) / (lt ? 100 / lt.weeks : 1))) : 0;
       table.append(h('div', { class: 'pitem', style: 'cursor:default' },
-        h('span', { class: pcls(p) }, p.pos),
+        posc(p),
         h('span', { class: 'num' }, p.num),
         h('span', { class: 'nm grow', style: 'min-width:0;overflow:hidden;text-overflow:ellipsis' }, p.name, ' ', h('span', { class: 'sub', style: 'font-weight:600' }, gradeName(p.grade) + (p.team === 'A' ? ' A' : ' B')), ' ', flags(p)),
         fatBar(p, 42),
@@ -222,12 +223,12 @@
     ui.pf = ui.pf || 'all';
     const all = Object.values(w.players);
     const f = ui.pf;
-    const filtered = all.filter((p) => f === 'all' || f === p.team || f === String(p.grade) || f === p.pos || (f === 'star' && p.star) || (f === 'inj' && p.inj > 0)).sort((a, b) => ['GK', 'DF', 'MF', 'FW'].indexOf(a.pos) - ['GK', 'DF', 'MF', 'FW'].indexOf(b.pos) || b.grade - a.grade || YA.ovr(b) - YA.ovr(a));
+    const filtered = all.filter((p) => f === 'all' || f === p.team || f === String(p.grade) || f === p.pos || (f === 'star' && p.star) || (f === 'inj' && p.inj > 0)).sort((a, b) => YA.POS15.indexOf(a.main) - YA.POS15.indexOf(b.main) || b.grade - a.grade || YA.ovr(b) - YA.ovr(a));
     if (!ui.pSel || !w.players[ui.pSel]) ui.pSel = (filtered[0] || all[0]).id;
     const sel = w.players[ui.pSel];
     const left = h('div', { class: 'card', style: 'width:262px;flex:none;display:flex;flex-direction:column;min-height:0;padding:5px' });
     const chips = h('div', { class: 'fm-row', style: 'margin-bottom:4px' }, [['all', '全員'], ['A', 'A'], ['B', 'B'], ['1', '高1'], ['2', '高2'], ['3', '高3'], ['GK', 'GK'], ['DF', 'DF'], ['MF', 'MF'], ['FW', 'FW'], ['star', '★'], ['inj', '怪我']].map(([k, n]) => h('button', { class: 'btn sm' + (f === k ? ' on' : ''), style: 'padding:2px 6px;min-height:22px;font-size:10.5px', onclick: () => { ui.pf = k; rerender(); } }, n)));
-    const list = h('div', { class: 'plist scroll', style: 'flex:1;min-height:0' }, filtered.map((p) => h('button', { class: 'pitem' + (p.id === sel.id ? ' on' : ''), onclick: () => { ui.pSel = p.id; const st = list.scrollTop; rerender(); const l2 = document.querySelector('.plist.scroll'); if (l2) l2.scrollTop = st; } }, h('span', { class: pcls(p) }, p.pos), h('span', { class: 'num' }, p.num), h('span', { class: 'nm grow', style: 'overflow:hidden;text-overflow:ellipsis' }, p.name), h('span', { class: 'sub', style: 'font-size:10px' }, gradeName(p.grade) + p.team), h('b', { style: 'width:26px;text-align:right' }, YA.ovr(p).toFixed(1)), p.inj > 0 ? h('span', { class: 'fit bad' }, '怪') : null, p.star ? h('span', { style: 'color:#e6a800' }, '★') : null)));
+    const list = h('div', { class: 'plist scroll', style: 'flex:1;min-height:0' }, filtered.map((p) => h('button', { class: 'pitem' + (p.id === sel.id ? ' on' : ''), onclick: () => { ui.pSel = p.id; const st = list.scrollTop; rerender(); const l2 = document.querySelector('.plist.scroll'); if (l2) l2.scrollTop = st; } }, posc(p), h('span', { class: 'num' }, p.num), h('span', { class: 'nm grow', style: 'overflow:hidden;text-overflow:ellipsis' }, p.name), h('span', { class: 'sub', style: 'font-size:10px' }, gradeName(p.grade) + p.team), h('b', { style: 'width:26px;text-align:right' }, YA.ovr(p).toFixed(1)), p.inj > 0 ? h('span', { class: 'fit bad' }, '怪') : null, p.star ? h('span', { style: 'color:#e6a800' }, '★') : null)));
     left.append(chips, list);
     const right = h('div', { class: 'card pbody', style: 'flex:1;min-width:0' });
     right.append(U().playerCard({ lineup: w.lineupA }, sel, { all: true }));

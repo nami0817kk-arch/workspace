@@ -6,6 +6,31 @@
   const L = 105;
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const POSN = { GK: 'GK', DF: 'DF', MF: 'MF', FW: 'FW' };
+  // ポジションの札（色は大きな括り、文字は15個のうちの名前）
+  const posChip = (p, label) => h('span', { class: 'pos ' + p.pos }, label || YA.POS_LABEL[p.main] || p.pos);
+  // 適性の見え方：確かめていないうちは幅だけ（決定10）。向いている位置に気づいたら正確に出る
+  function aptText(p, pos15) {
+    const v = p.apt[pos15];
+    if (p.bestKnown || pos15 === p.main) return String(Math.round(v));
+    return Math.max(1, Math.round(v - 2)) + '〜' + Math.min(20, Math.round(v + 2));
+  }
+  function aptBlock(p) {
+    if (p.pos === 'GK') return h('div', { class: 'note' }, 'GK（ほかのポジションの適性は、この版では見ません）');
+    const list = YA.POS15.filter((q) => q !== 'GK').sort((a, b) => p.apt[b] - p.apt[a]);
+    const top = list.slice(0, 3);
+    if (top.indexOf(p.main) < 0) top.push(p.main);
+    const row = h('div', { class: 'aptrow' }, top.map((q) => h('span', { class: 'aptchip' + (q === p.main ? ' cur' : '') + (p.bestKnown && q === p.best ? ' best' : '') }, YA.POS_LABEL[q], h('b', {}, aptText(p, q)), q === p.main ? h('span', { class: 'sub' }, '登録') : null)));
+    const more = h('button', { class: 'btn sm', onclick: () => { if (YA._v) YA._v.modal((close) => aptModal(p, close)); } }, '全ポジション');
+    return h('div', {}, h('div', { class: 'row', style: 'gap:5px;flex-wrap:wrap' }, row, more), h('div', { class: 'note', style: 'margin-top:2px' }, `利き足：${p.foot === 'R' ? '右' : p.foot === 'L' ? '左' : '両足'}（逆足の精度 ${p.ab['逆足の精度']}）` + (p.bestKnown ? `　向いているポジション：${YA.POS_LABEL[p.best]}` : '　本当に向いているポジションは、まだ分かっていません')));
+  }
+  function aptModal(p, close) {
+    const g = h('div', { style: 'display:grid;grid-template-columns:repeat(5,1fr);gap:4px' }, YA.POS15.filter((q) => q !== 'GK').map((q) => h('div', { class: 'aptchip' + (q === p.main ? ' cur' : '') + (p.bestKnown && q === p.best ? ' best' : ''), style: 'justify-content:space-between;padding:6px 8px' }, YA.POS_LABEL[q], h('b', {}, aptText(p, q)))));
+    return h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(620px,96%);padding:12px;gap:7px' },
+      h('div', { class: 'h' }, `${p.name} のポジション適性（1〜20）`), g,
+      h('div', { class: 'note' }, '「〜」の幅は、まだ確かめていないという意味です。見る目の高い指導者や、試合での気づきで、本当に向いているポジションが分かってきます。向いていないポジションにも置けますが、力が出にくく、慣れるまで数か月かかります。'),
+      h('button', { class: 'btn pri', onclick: close }, '閉じる'));
+  }
+  YA._apt = { posChip, aptBlock };
 
   // ---------- 小さな道具 ----------
   function h(tag, attrs, ...kids) {
@@ -100,7 +125,7 @@
     app.cfg = c && c.lineup && c.lineup.length === 11 && c.bench && c.bench.length === 9 ? c : null;
     app.autoStop = store.get('autoStop', true);
     const sw = store.get('world', null);
-    app.w = sw && sw.v >= 1 && sw.players && sw.lineupA ? YA.migrate(sw) : YA.newWorld((Date.now() % 90000) + 7);
+    app.w = sw && sw.v >= 3 && sw.players && sw.lineupA ? sw : YA.newWorld((Date.now() % 90000) + 7);
     YA.saveWorld();
   }
 
@@ -121,12 +146,13 @@
   function playerCard(t, p, opts) {
     opts = opts || {};
     const idx = t.lineup.findIndex((x) => x.pid === p.id);
-    const posKey = idx >= 0 ? YA.posOfSlot(t.lineup[idx], idx) : p.pos;
+    const posKey = p.pos;
     const isGK = p.pos === 'GK';
     const top = (isGK ? YA.AB_GK : YA.AB_FIELD).map((n) => [n, p.ab[n]]).sort((a, b) => b[1] - a[1]);
     const wrap = h('div', {});
     wrap.append(
-      h('div', { class: 'row' }, h('span', { class: 'pos ' + posKey }, posKey), h('div', { class: 'grow' }, h('div', { class: 'h' }, `${p.num}  ${p.name}`), h('div', { class: 'sub' }, `${p.height}cm  /  調子 ${p.form > 0 ? '+' : ''}${p.form}  /  自信 ${Math.round(p.conf)}`))),
+      h('div', { class: 'row' }, posChip(p), h('div', { class: 'grow' }, h('div', { class: 'h' }, `${p.num}  ${p.name}`), h('div', { class: 'sub' }, `${p.height}cm  /  調子 ${p.form > 0 ? '+' : ''}${p.form}  /  自信 ${Math.round(p.conf)}`))),
+      h('div', { style: 'margin-top:5px' }, h('div', { class: 'note' }, 'ポジションの適性'), aptBlock(p)),
       h('div', { style: 'margin-top:5px' }, h('div', { class: 'note' }, '性格'), h('div', { class: 'row', style: 'flex-wrap:wrap;gap:3px' }, persChips(p, false))),
       h('div', { style: 'margin-top:5px' }, h('div', { class: 'note' }, '特性'), h('div', { class: 'row', style: 'flex-wrap:wrap;gap:3px' }, p.traits.length ? p.traits.map((x) => h('span', { class: 'chip trait' }, x)) : h('span', { class: 'sub' }, 'なし'))),
     );
@@ -174,13 +200,16 @@
         const sx = mx;
         const sy = L - my; // 上へ攻める
         const pos = YA.posOfSlot(sl, i);
+        const p15 = YA.pos15OfSlot(sl, i);
+        const pen = YA.slotPenalty(p, p15);
         const sel = opts.selected && opts.selected() === i;
         const g = s('g', { transform: `translate(${sx} ${sy})`, style: 'cursor:grab' });
         if (sel) g.append(s('circle', { r: 6.4, fill: 'none', stroke: '#ffd54a', 'stroke-width': 1.1 }));
         const fit = YA.Match.prototype.roleFit.call(null, t, i);
         g.append(s('circle', { r: 4.6, cx: 0.4, cy: 0.9, fill: 'rgba(0,0,0,.3)' }), s('circle', { r: 4.6, fill: colors[pos], stroke: '#fff', 'stroke-width': 0.9 }), s('text', { y: 1.6, 'text-anchor': 'middle', fill: '#fff', 'font-size': 5, 'font-weight': 900 }, p.num));
+        g.append(s('text', { y: -6.2, 'text-anchor': 'middle', fill: '#fff6c2', 'font-size': 3.3, 'font-weight': 900, stroke: 'rgba(0,0,0,.5)', 'stroke-width': 0.7, 'paint-order': 'stroke' }, YA.POS_LABEL[p15]));
         g.append(s('text', { y: 9.4, 'text-anchor': 'middle', fill: '#fff', 'font-size': 3.5, 'font-weight': 800, stroke: 'rgba(0,0,0,.45)', 'stroke-width': 0.7, 'paint-order': 'stroke' }, surname(p)));
-        g.append(s('text', { y: 13, 'text-anchor': 'middle', fill: fit < 0 ? '#ffb3b3' : fit > 0 ? '#fff3b0' : '#e8f5ec', 'font-size': 3, 'font-weight': 700, stroke: 'rgba(0,0,0,.45)', 'stroke-width': 0.6, 'paint-order': 'stroke' }, sl.role + (fit > 0 ? ' ◎' : fit < 0 ? ' ×' : '')));
+        g.append(s('text', { y: 13, 'text-anchor': 'middle', fill: fit < 0 || pen > 0.06 ? '#ffb3b3' : fit > 0 ? '#fff3b0' : '#e8f5ec', 'font-size': 3, 'font-weight': 700, stroke: 'rgba(0,0,0,.45)', 'stroke-width': 0.6, 'paint-order': 'stroke' }, sl.role + (fit > 0 ? ' ◎' : fit < 0 ? ' ×' : '') + (pen > 0.06 ? ' ▽' : '')));
         g.addEventListener('pointerdown', (ev) => {
           ev.preventDefault();
           g.setPointerCapture(ev.pointerId);
@@ -232,36 +261,31 @@
     return wrap;
   }
   function fixRole(t, i) {
-    const pos = YA.posOfSlot(t.lineup[i], i);
-    if (YA.ROLES[pos].indexOf(t.lineup[i].role) < 0) t.lineup[i].role = YA.ROLES[pos][0];
+    YA.fixSlotRole(t.lineup[i], i);
   }
 
   // 定番の形を当てはめる。近い選手が近い位置に入る
   function applyFormation(t, name) {
     const fm = YA.FORMATIONS[name];
-    const cur = t.lineup.map((s2, i) => ({ i, pid: s2.pid, x: s2.x, y: s2.y, role: s2.role, g: t.players[s2.pid].pos }));
-    const gk = cur.find((c) => c.g === 'GK');
-    const used = new Set([gk.i]);
+    const cur = t.lineup.map((s2, i) => ({ i, pid: s2.pid, p: t.players[s2.pid], role: s2.role }));
+    const left = cur.slice();
     const out = new Array(11);
-    out[0] = { pid: gk.pid, x: fm[0].x, y: fm[0].y };
-    const slots = fm.map((f2, k) => ({ k, f: f2 })).slice(1).sort((a, b) => a.f.y - b.f.y);
-    for (const sl of slots) {
-      let best = null;
-      let bd = 1e9;
-      for (const c of cur) {
-        if (used.has(c.i)) continue;
-        const d = Math.hypot((c.x - sl.f.x) * 1, (c.y - sl.f.y) * 1.6);
-        if (d < bd) {
-          bd = d;
-          best = c;
-        }
-      }
-      used.add(best.i);
-      out[sl.k] = { pid: best.pid, x: sl.f.x, y: sl.f.y };
+    // GKを先に。ほかは、その位置の適性が一番高い選手を置く
+    const order = fm.map((_, k) => k).sort((a1, b1) => (YA.pos15OfSlot(fm[a1], a1) === 'GK' ? -1 : 0) - (YA.pos15OfSlot(fm[b1], b1) === 'GK' ? -1 : 0));
+    for (const k of order) {
+      const p15 = YA.pos15OfSlot(fm[k], k);
+      let bi = -1;
+      let bv = -1e9;
+      left.forEach((c, j) => {
+        if ((c.p.pos === 'GK') !== (p15 === 'GK')) return;
+        const v = (c.p.apt ? c.p.apt[p15] : 10) + (c.p.main === p15 ? 0.4 : 0);
+        if (v > bv) { bv = v; bi = j; }
+      });
+      if (bi < 0) bi = 0;
+      const c = left.splice(bi, 1)[0];
+      out[k] = { pid: c.pid, x: fm[k].x, y: fm[k].y, role: c.role };
     }
-    const roleOf = {};
-    cur.forEach((c) => (roleOf[c.pid] = c.role));
-    t.lineup = out.map((o, i) => ({ pid: o.pid, x: o.x, y: o.y, role: roleOf[o.pid] }));
+    t.lineup = out;
     t.lineup.forEach((_, i) => fixRole(t, i));
     t.formation = name;
   }
@@ -285,7 +309,7 @@
       renderBody();
       renderFm();
     }
-    board = boardEl(t, { selected: () => st.sel, onSelect: (i) => { st.sel = i; if (st.tab === 'role') renderBody(); else if (st.tab !== 'tactic' && st.tab !== 'sub') renderBody(); board.redraw(); }, onChange });
+    board = boardEl(t, { selected: () => st.sel, onSelect: (i) => { st.sel = i; if (o.tabs.some((x) => x[0] === 'role') && st.tab !== 'role' && st.tab !== 'sub') { st.tab = 'role'; renderTabs(); } renderBody(); board.redraw(); }, onChange });
     leftWrap.append(board, fmRow, saveRow);
     let slotSel = 0;
     function renderFm() {
@@ -321,26 +345,29 @@
         body.append(h('div', { class: 'h', style: 'margin-top:6px' }, '攻める方向'), h('div', { class: 'fm-row', style: 'margin-top:3px' }, [['左中心', -1], ['両サイド', 0], ['右中心', 1]].map(([n, v]) => h('button', { class: 'btn sm' + ((t.tactic.dir || 0) === v ? ' on' : ''), onclick: () => { t.tactic.dir = v; onChange(); } }, n))));
         body.append(h('div', { class: 'note', style: 'margin-top:8px' }, '型を選ぶとつまみが動きます。つまみは細かく変えられます。再現度は選手の戦術理解で決まる想定です（試作では未反映）。'));
       } else if (st.tab === 'role') {
-        const pos = YA.posOfSlot(sl, st.sel);
-        body.append(playerCard(t, p));
-        body.append(h('div', { class: 'h', style: 'margin-top:8px' }, '役割（' + pos + '）'));
-        const roles = YA.ROLES[pos];
-        body.append(
-          h('div', { class: 'fm-row', style: 'margin-top:3px' }, roles.map((r) => {
-            const save = sl.role;
-            sl.role = r;
-            const fit = YA.Match.prototype.roleFit.call(null, t, st.sel);
-            sl.role = save;
-            return h('button', { class: 'btn sm' + (save === r ? ' on' : ''), onclick: () => { sl.role = r; board.redraw(); onChange(); } }, r, fit > 0 ? h('span', { class: 'fit good' }, 'ハマる') : fit < 0 ? h('span', { class: 'fit bad' }, '合わない') : null);
-          })),
-        );
-        body.append(h('div', { class: 'note', style: 'margin-top:5px' }, '役割が特性と合うと場面で力が出ます。合わない役割を続けると、不満が溜まります。'));
+        const p15 = YA.pos15OfSlot(sl, st.sel);
+        body.append(h('div', { class: 'row', style: 'gap:6px;margin-bottom:4px' }, posChip(p), h('b', {}, `${p.num} ${p.name}`), h('span', { class: 'sub grow' }, `${p.height}cm ／ 自信 ${Math.round(p.conf)} ／ 利き足 ${p.foot === 'R' ? '右' : p.foot === 'L' ? '左' : '両'}`)), aptBlock(p));
+        body.append(h('div', { class: 'h', style: 'margin-top:8px' }, `いまの位置：${YA.POS_LABEL[p15]}（${YA.POS_NAME[p15]}）の役割`));
+        const pen0 = YA.slotPenalty(p, p15);
+        if (p.main !== p15) body.append(h('div', { class: 'note', style: 'color:' + (pen0 > 0.06 ? '#b02020' : 'var(--sub)') }, `この選手の登録は${YA.POS_LABEL[p.main]}。${YA.POS_LABEL[p15]}の適性は${aptText(p, p15)}` + (pen0 > 0.06 ? 'で、力が出にくい配置です（慣れるまで時間がかかります）' : pen0 < -0.01 ? '。向いている配置で、少し力が出ます' : '。')));
+        for (const r of YA.ROLES15[p15]) {
+          const save = sl.role;
+          sl.role = r;
+          const fit = YA.Match.prototype.roleFit.call(null, t, st.sel);
+          sl.role = save;
+          const rd = YA.ROLE_DEF[r];
+          body.append(h('button', { class: 'rolecard' + (save === r ? ' on' : ''), onclick: () => { sl.role = r; board.redraw(); onChange(); } },
+            h('div', { class: 'grow' }, h('b', {}, r), h('div', {}, h('span', { class: 'd' }, rd.note)), h('div', {}, h('span', { class: 'd' }, '合う特性：' + rd.traits.slice(0, 3).join('・')))),
+            fit > 0 ? h('span', { class: 'fit good' }, 'ハマる') : fit < 0 ? h('span', { class: 'fit bad' }, '合わない') : null));
+        }
+        body.append(h('div', { class: 'note', style: 'margin-top:5px' }, '役割が特性や能力と合うと力が出て、合わない役割を続けると不満が出ます。役割をこなすうちに、戦術の理解が伸びます。'));
+        body.append(h('div', { style: 'margin-top:8px;border-top:1px dashed var(--line);padding-top:6px' }, playerCard(t, p)));
         if (!o.sheet) {
           body.append(h('div', { class: 'h', style: 'margin-top:8px' }, 'ベンチと入れ替える'));
           body.append(h('div', { class: 'plist' }, t.bench.map((bid) => {
             const bp = t.players[bid];
             const ok2 = (bp.pos === 'GK') === (p.pos === 'GK') && !(bp.inj > 0);
-            return h('button', { class: 'pitem', style: ok2 ? '' : 'opacity:.35', onclick: () => { if (!ok2) return; const bi = t.bench.indexOf(bid); t.bench[bi] = sl.pid; sl.pid = bid; fixRole(t, st.sel); board.redraw(); onChange(); } }, h('span', { class: 'pos ' + bp.pos }, bp.pos), h('span', { class: 'num' }, bp.num), h('span', { class: 'nm grow' }, bp.name), bp.inj > 0 ? h('span', { class: 'fit bad' }, '怪我' + bp.inj + '週') : h('span', { class: 'sub' }, bp.traits.slice(0, 2).join('・')));
+            return h('button', { class: 'pitem', style: ok2 ? '' : 'opacity:.35', onclick: () => { if (!ok2) return; const bi = t.bench.indexOf(bid); t.bench[bi] = sl.pid; sl.pid = bid; fixRole(t, st.sel); board.redraw(); onChange(); } }, posChip(bp), h('span', { class: 'num' }, bp.num), h('span', { class: 'nm grow' }, bp.name), bp.inj > 0 ? h('span', { class: 'fit bad' }, '怪我' + bp.inj + '週') : h('span', { class: 'sub' }, bp.traits.slice(0, 2).join('・')));
           })));
         }
       } else if (st.tab === 'sub') {
@@ -353,12 +380,12 @@
         t.lineup.forEach((x, i) => {
           const q = t.players[x.pid];
           const pc = YA.posOfSlot(x, i);
-          lo.append(h('button', { class: 'pitem' + (st.subOut === q.id ? ' on' : ''), onclick: () => { st.subOut = q.id; renderBody(); } }, h('span', { class: 'pos ' + pc }, pc), h('span', { class: 'num' }, q.num), h('span', { class: 'nm grow' }, surname(q)), h('div', { class: 'bar stam' }, h('i', { style: `width:${q.stam}%;background:${q.stam < 45 ? '#d63a3a' : q.stam < 70 ? '#f0a020' : '#1a9d57'}` }))));
+          lo.append(h('button', { class: 'pitem' + (st.subOut === q.id ? ' on' : ''), onclick: () => { st.subOut = q.id; renderBody(); } }, posChip(q, YA.POS_LABEL[YA.pos15OfSlot(x, i)]), h('span', { class: 'num' }, q.num), h('span', { class: 'nm grow' }, surname(q)), h('div', { class: 'bar stam' }, h('i', { style: `width:${q.stam}%;background:${q.stam < 45 ? '#d63a3a' : q.stam < 70 ? '#f0a020' : '#1a9d57'}` }))));
         });
         const li = h('div', { class: 'grow plist' }, h('div', { class: 'note' }, '入れる選手（ベンチ）'));
         t.bench.forEach((bid) => {
           const q = t.players[bid];
-          li.append(h('button', { class: 'pitem' + (st.subIn === q.id ? ' on' : ''), onclick: () => { st.subIn = q.id; renderBody(); } }, h('span', { class: 'pos ' + q.pos }, q.pos), h('span', { class: 'num' }, q.num), h('span', { class: 'nm grow' }, surname(q)), h('span', { class: 'sub', style: 'font-size:9.5px' }, q.traits.slice(0, 1).join(''))));
+          li.append(h('button', { class: 'pitem' + (st.subIn === q.id ? ' on' : ''), onclick: () => { st.subIn = q.id; renderBody(); } }, posChip(q), h('span', { class: 'num' }, q.num), h('span', { class: 'nm grow' }, surname(q)), h('span', { class: 'sub', style: 'font-size:9.5px' }, q.traits.slice(0, 1).join(''))));
         });
         cols.append(lo, li);
         body.append(cols);
@@ -445,7 +472,7 @@
     const t = newOurs();
     const all = t.lineup.map((x) => t.players[x.pid]).concat(t.bench.map((id) => t.players[id]));
     const sel = clamp(app.pSel || 0, 0, all.length - 1);
-    const list = h('div', { class: 'card pbody scroll', style: 'width:200px;flex:none;padding:6px' }, h('div', { class: 'plist' }, all.map((q, i) => h('button', { class: 'pitem' + (i === sel ? ' on' : ''), onclick: () => { app.pSel = i; render(); } }, h('span', { class: 'pos ' + q.pos }, q.pos), h('span', { class: 'num' }, q.num), h('span', { class: 'nm grow' }, q.name), i < 11 ? h('span', { class: 'chip gray' }, 'A') : null))));
+    const list = h('div', { class: 'card pbody scroll', style: 'width:200px;flex:none;padding:6px' }, h('div', { class: 'plist' }, all.map((q, i) => h('button', { class: 'pitem' + (i === sel ? ' on' : ''), onclick: () => { app.pSel = i; render(); } }, posChip(q), h('span', { class: 'num' }, q.num), h('span', { class: 'nm grow' }, q.name), i < 11 ? h('span', { class: 'chip gray' }, 'A') : null))));
     const detail = h('div', { class: 'card pbody' }, playerCard(t, all[sel], { all: true }));
     main.append(h('div', { class: 'row', style: 'flex:1;min-height:0;align-items:stretch' }, list, detail));
   }
@@ -751,7 +778,7 @@
     const sa = m.stats.away;
     right.append(h('div', { class: 'h', style: 'margin-top:8px' }, 'シュート'), h('div', { class: 'note' }, `${m.home.short} ${sh.shots}（枠内${sh.onTarget}）  -  ${m.away.short} ${sa.shots}（枠内${sa.onTarget}）`));
     right.append(h('div', { class: 'h', style: 'margin-top:8px' }, '採点（上位）'));
-    right.append(h('div', { class: 'plist' }, summary.rated.slice(0, 6).map((p, i) => h('div', { class: 'pitem' }, h('span', { class: 'pos ' + p.pos }, p.pos), h('span', { class: 'nm grow' }, `${p.num} ${surname(p)}`), p.st.goals ? h('span', { class: 'chip gray' }, `${p.st.goals}得点`) : null, h('b', {}, p.st.rating.toFixed(1))))));
+    right.append(h('div', { class: 'plist' }, summary.rated.slice(0, 6).map((p, i) => h('div', { class: 'pitem' }, posChip(p), h('span', { class: 'nm grow' }, `${p.num} ${surname(p)}`), p.st.goals ? h('span', { class: 'chip gray' }, `${p.st.goals}得点`) : null, h('b', {}, p.st.rating.toFixed(1))))));
     wrap.append(h('div', { class: 'res-body' }, left, right));
     main.append(wrap);
   }

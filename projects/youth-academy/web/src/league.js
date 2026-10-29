@@ -255,7 +255,7 @@
     if (h) out.push(`通算の対戦成績：${h[0]}勝 ${h[1]}分 ${h[2]}敗`);
     if (lv >= 1) {
       const key = oppTeam.lineup.slice(1).map((s) => oppTeam.players[s.pid]).sort((a, b) => YA.ovr(b) - YA.ovr(a)).slice(0, lv >= 2 ? 3 : 1);
-      for (const p of key) out.push(`要注意：${p.num}番 ${p.name}（${p.pos}）${p.traits.length ? '特性「' + p.traits.join('・') + '」' : ''}`);
+      for (const p of key) out.push(`要注意：${p.num}番 ${p.name}（${YA.POS_LABEL[p.main] || p.pos}）${p.traits.length ? '特性「' + p.traits.join('・') + '」' : ''}`);
     }
     if (lv >= 2) {
       const t = oppTeam.tactic;

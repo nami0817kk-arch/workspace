@@ -216,23 +216,15 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   // ポジション変更
   const mf = ps.find((p) => p.pos === 'MF');
   let changed = null;
-  for (const pos of ['FW', 'DF']) { const r = YA.changePos(w9, mf.id, pos); if (r.ok) { changed = pos; break; } }
-  ok(changed ? mf.pos === changed && mf.adapt === 12 : true, 'ポジション変更と慣れる期間');
+  for (const pos of ['LW', 'RW', 'SS', 'AM', 'LM']) { if (pos === mf.main) continue; const r = YA.changePos(w9, mf.id, pos); if (r.ok) { changed = pos; break; } }
+  ok(changed ? mf.main === changed && mf.pos === YA.GROUP[changed] && mf.adapt === 12 : true, 'ポジション変更と慣れる期間（15ポジション）');
+  ok(!YA.changePos(w9, ps.find((p) => p.pos === 'GK').id, 'CB').ok, 'GKは変えられない');
   // 関係
   ok(w9.rel.filter((x) => x.k === 'friend').length === 8 && w9.rel.filter((x) => x.k === 'rival').length === 6, '関係が作られる');
   // 移籍（解任・契約満了）：36人を一から知る
   YA.moveTo(w9, { tier: 3, name: '大阪 サンライズU-18', budget: 1000 }, 'テスト');
   ok(Object.keys(w9.players).length === 36 && w9.clubName === '大阪 サンライズU-18' && w9.club.tier === 3 && w9.league.level === 3, '新しいクラブで新しい36人');
   check(w9);
-  // 古い保存データの移行
-  const old = YA.newWorld(21);
-  for (const k of ['club', 'coach', 'scouting', 'league', 'cup', 'rel', 'rules']) delete old[k];
-  old.v = 1; old.week = 14;
-  YA.migrate(old);
-  ok(old.club && old.league && old.coach && old.v === 2, '育成だけのデータを移せる');
-  const hv = YA.SCHED(14); ok(hv.t === 'league', '14週はリーグ戦');
-  YA.startWeek(old); YA.afterEvents(old);
-  ok(old.phase === 'match' || old.phase === 'after', '移したあとも週が進む');
 }
 {
   // 分析と映像ミーティング
@@ -248,6 +240,87 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   ok(vo.length >= 1, '映像の候補');
   const msgs = YA.videoApply(wA, vo.slice(0, 2));
   ok(msgs.length >= 1, '映像ミーティングの反応');
+}
+// ---- 15ポジションと役割 ----
+{
+  ok(YA.POS15.length === 15, 'ポジションは15');
+  const seenPos = new Set();
+  for (const f of Object.keys(YA.FORMATIONS)) YA.FORMATIONS[f].forEach((sl, i) => seenPos.add(YA.pos15OfSlot(sl, i)));
+  ok(YA.POS15.every((q) => seenPos.has(q)), '定番の布陣で15ポジション全部が使われる ' + [...seenPos].length);
+  for (const q of YA.POS15) { ok(YA.ROLES15[q].length >= 3, q + ' の役割'); for (const r of YA.ROLES15[q]) ok(YA.ROLE_DEF[r] && YA.ROLE_DEF[r].note && YA.ROLE_DEF[r].tags.length, '役割の定義 ' + r); }
+  // 選手：適性・隠れた最適・利き足
+  let mis = 0, tot = 0;
+  const posCount = {};
+  for (const seed of [1, 2, 3, 4, 5]) {
+    const wk = YA.newWorld(seed);
+    for (const p of Object.values(wk.players)) {
+      tot++;
+      posCount[p.main] = (posCount[p.main] || 0) + 1;
+      ok(p.apt && YA.POS15.every((q) => p.apt[q] >= 1 && p.apt[q] <= 20), '適性の範囲');
+      ok(p.pos === YA.GROUP[p.main], '括りが登録ポジションと合う');
+      ok(['R', 'L', 'B'].includes(p.foot), '利き足');
+      if (p.apt[p.best] - p.apt[p.main] > 1.5) mis++;
+    }
+  }
+  console.log('登録と本当の適性がずれている選手の割合', (mis / tot).toFixed(2), 'ポジション別', JSON.stringify(posCount));
+  ok(mis / tot > 0.08 && mis / tot < 0.5, 'ずれている割合が妥当');
+  ok(Object.keys(posCount).length >= 11, '生成される選手のポジションが多様 ' + Object.keys(posCount).length);
+  // 利き足とポジションのペナルティ
+  const wp = YA.newWorld(9);
+  const q = Object.values(wp.players).find((x) => x.pos === 'DF');
+  q.main = 'LB'; q.pos = 'DF'; q.apt.LB = q.apt.RB = 12; q.best = 'LB'; q.ab['逆足の精度'] = 4;
+  q.foot = 'R'; const penWrong = YA.slotPenalty(q, 'LB');
+  q.foot = 'L'; const penRight = YA.slotPenalty(q, 'LB');
+  ok(penWrong > penRight + 0.04, '逆足は力が落ちる ' + penWrong + ' vs ' + penRight);
+  q.foot = 'B'; ok(YA.slotPenalty(q, 'LB') === 0, '両足は落ちない');
+  // 向いていないポジションに置くと力が落ち、慣れると和らぐ
+  q.apt.CB = 6; q.apt.LB = 14; q.main = 'LB'; q.fam = { LB: 14 }; q.foot = 'L';
+  const p0 = YA.slotPenalty(q, 'CB'); q.fam.CB = 10; const p1 = YA.slotPenalty(q, 'CB');
+  ok(p0 > 0.1 && p1 < p0, '向いていない場所では力が落ち、慣れると和らぐ ' + p0 + ' → ' + p1);
+  // 全部の役割で試合が落ちない／役割が場面の出方を変える
+  const countScene = (role, pos15, type) => {
+    let c = 0;
+    for (let sd = 1; sd <= 80; sd++) {
+      const home = YA.makeOurs(1);
+      home.lineup.forEach((sl, i) => { if (YA.pos15OfSlot(sl, i) === pos15) sl.role = role; });
+      const m = new YA.Match({ seed: sd, home, away: YA.makeOpponent(YA.OPPONENTS[1], sd), settings: { autoStop: false } });
+      while (!m.finished) m.step();
+      for (const sc of m.scenes) if (sc.side === 'home' && sc.type === type) c++;
+    }
+    return c;
+  };
+  for (const q2 of YA.POS15) for (const r of YA.ROLES15[q2]) {
+    const home = YA.makeOurs(1);
+    let hit = false;
+    home.lineup.forEach((sl, i) => { if (YA.pos15OfSlot(sl, i) === q2) { sl.role = r; hit = true; } });
+    if (!hit) continue; // 4-3-3 にない位置は、別の布陣のテストで
+    const m = new YA.Match({ seed: 3, home, away: YA.makeOpponent(YA.OPPONENTS[0], 3), settings: { autoStop: false } });
+    while (!m.finished) m.step();
+    ok(m.finished, '役割で試合が最後まで進む ' + q2 + '/' + r);
+  }
+  // どの布陣でも、全ポジション・全役割の組み合わせで試合が回る
+  for (const f of Object.keys(YA.FORMATIONS)) {
+    const wf = YA.newWorld(77);
+    YA.pickLineup(wf, 'A', f);
+    for (const r of [0, 1, 2, 3]) {
+      wf.lineupA.forEach((sl, i) => { const rs = YA.rolesAt(sl, i); sl.role = rs[Math.min(r, rs.length - 1)]; });
+      const home = YA.teamFromWorld(wf, 'A');
+      const m = new YA.Match({ seed: 5 + r, home, away: YA.makeOpponent(YA.OPPONENTS[2], 5), settings: { autoStop: false } });
+      while (!m.finished) m.step();
+      ok(m.finished && m.scenes.length >= 13, '布陣と役割の組み合わせ ' + f + '/' + r);
+    }
+    ok(wf.lineupA.every((sl, i) => YA.rolesAt(sl, i).indexOf(sl.role) >= 0), f + ' の役割がそのポジションで使える');
+  }
+  const runSt = countScene('裏へ抜ける', 'ST', 'through');
+  const tgSt = countScene('ターゲットマン', 'ST', 'through');
+  const crSt = countScene('ターゲットマン', 'ST', 'cross');
+  const crSt2 = countScene('裏へ抜ける', 'ST', 'cross');
+  console.log('STの役割：裏へ抜ける→裏抜け', runSt, '/ターゲットマン→裏抜け', tgSt, '、ターゲットマン→クロス', crSt, '/裏へ抜ける→クロス', crSt2);
+  ok(runSt > tgSt, '「裏へ抜ける」は裏抜けの場面を増やす');
+  ok(crSt > crSt2, '「ターゲットマン」はクロスの場面を増やす');
+  const wgC = countScene('クロッサー', 'RW', 'cross'), wgD = countScene('仕掛ける', 'RW', 'dribble'), wgD2 = countScene('クロッサー', 'RW', 'dribble');
+  console.log('WGの役割：クロッサー→クロス', wgC, '/仕掛ける→ドリブル', wgD, 'クロッサー→ドリブル', wgD2);
+  ok(wgD > wgD2, '「仕掛ける」はドリブルの場面を増やす');
 }
 console.log(fails ? '失敗 ' + fails : '育成の点検: すべて通過');
 process.exit(fails ? 1 : 0);

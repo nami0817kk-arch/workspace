@@ -122,6 +122,22 @@ async function clearEvents() {
   btn('設定').click();
   btn('卒業生名鑑').click();
 
+  // 選手のいない出来事（クラブの要望・スタッフの引き抜き）でも、画面が開いて選べる
+  for (const [id, x] of [['club', 0], ['club', 1], ['club', 2], ['poach', 0]]) {
+    A.w.phase = 'event';
+    A.w.events = [{ id, pid: null, x, week: A.w.week, year: A.w.year }];
+    rail('ホーム');
+    ok(!!d.querySelector('.sheet') && txt().includes('出来事'), '選手のいない出来事の画面が開く ' + id + x);
+    const o1 = [...d.querySelectorAll('.sheet button.btn')][0];
+    o1.click();
+    await sleep(10);
+    ok(!!btn('閉じる', d.querySelector('.sheet')), '選んだあとの画面 ' + id + x);
+    btn('閉じる', d.querySelector('.sheet')).click();
+    ok(A.w.phase === 'match' || A.w.phase === 'after', '片付けたら先へ進める ' + id + x);
+  }
+  A.w.phase = 'plan';
+  rail('ホーム');
+
   // 1週目：練習を確定 → 出来事 → 試合
   rail('ホーム');
   btn('練習を確定して週を進める').click();
