@@ -475,7 +475,7 @@ class _BackupDialogState extends State<_BackupDialog> {
   }
 }
 
-/// 買い切りの商品(広告を消す・継承ブースト・育成サポート)と、購入の復元。
+/// 買い切りの商品(広告を消す・継承ブースト)と、購入の復元。
 /// ストアに繋がらない環境では、持っている商品だけ出す。
 class _AdsSection extends StatefulWidget {
   const _AdsSection({required this.money});
@@ -498,18 +498,6 @@ const _items = <(String, String, String, IconData)>[
     '継承ブースト',
     '引退のたびに貯まる継承ポイントが2倍になります。次の選手を強く始めやすくなります。',
     Icons.card_giftcard
-  ),
-  (
-    PurchaseService.growthSupportId,
-    '育成サポート',
-    '経験点がいつも1割多く貯まります。',
-    Icons.trending_up
-  ),
-  (
-    PurchaseService.bodyCharmId,
-    'からだ守り',
-    '怪我が3割しにくくなり、休んだときの疲れの抜けが1割よくなります。',
-    Icons.health_and_safety
   ),
 ];
 

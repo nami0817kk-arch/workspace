@@ -1068,26 +1068,10 @@ class GameController extends ChangeNotifier {
     };
   }
 
-  /// 育成サポートの経験点1割増し(買い切り)。
-  static const growthSupportBoost = 1.1;
-
-  /// 買った特典を、いまの選手に入れる(保存はしないので、行動の前に毎回)。
-  void _applyPurchases(Game g) {
-    g.expBoost = money?.growthSupport == true ? growthSupportBoost : 1.0;
-    final charm = money?.bodyCharm == true;
-    g.injuryGuard = charm ? bodyCharmInjury : 1.0;
-    g.recoveryGuard = charm ? bodyCharmRecovery : 1.0;
-  }
-
-  /// からだ守り(買い切り)の怪我の倍率と、回復の倍率。
-  static const bodyCharmInjury = 0.7;
-  static const bodyCharmRecovery = 1.1;
-
   void act(Plan a) {
     final g = game!;
     // 自分で行動を選んだら、「年末まで」の続きはしない
     if (!_inAutoYear) _autoYearAge = null;
-    _applyPurchases(g);
     if (!abilitiesOf(g.player.role).contains(focus)) {
       focus = abilitiesOf(g.player.role).first;
     }
@@ -1354,7 +1338,6 @@ class GameController extends ChangeNotifier {
   void autoYear({List<String> carry = const []}) {
     final g = game;
     if (g == null) return;
-    _applyPurchases(g);
     final age = g.player.age;
     _autoYearAge = age;
     final lines = <String>[];

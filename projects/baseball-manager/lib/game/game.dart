@@ -671,12 +671,6 @@ class Game {
   final Map<String, int> childhood = {};
   int restCount = 0;
 
-  /// 経験点の倍率(育成サポート=1.1。買ったかどうかは端末の記録なので、保存せず画面側が入れる)。
-  double expBoost = 1.0;
-
-  /// 怪我の起きやすさの倍率と、疲れの回復の倍率(からだ守り=0.7 / 1.1。保存せず画面側が入れる)。
-  double injuryGuard = 1.0;
-  double recoveryGuard = 1.0;
 
   /// 特殊能力のコツ(0〜`maxSkillTips`)。貯まるほど安く取れる。
   Map<Skill, int> skillTips = {};
@@ -775,9 +769,8 @@ class Game {
     final r = playTerm(player, condition, action, f, rng,
         share: share,
         trainBonus: trainerMultiplier(investLevel(Invest.trainer)),
-        recoveryBonus:
-            dietitianMultiplier(investLevel(Invest.dietitian)) * recoveryGuard,
-        injuryFactor: medicalFactor(investLevel(Invest.medical)) * injuryGuard,
+        recoveryBonus: dietitianMultiplier(investLevel(Invest.dietitian)),
+        injuryFactor: medicalFactor(investLevel(Invest.medical)),
         badFactor: comboBadFactor(combo),
         keepMorale: combo == Combo.cheer);
     player = r.player;
@@ -819,12 +812,6 @@ class Game {
       gained = {
         for (final e in gained.entries)
           e.key: (e.value * gearMultiplier).round(),
-      };
-    }
-    // 育成サポート(買い切り)の経験点の上乗せ。保存はしない(画面側が毎回入れる)
-    if (expBoost != 1.0 && gained.isNotEmpty) {
-      gained = {
-        for (final e in gained.entries) e.key: (e.value * expBoost).round(),
       };
     }
     if (difficulty != Difficulty.normal) {

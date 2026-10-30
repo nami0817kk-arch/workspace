@@ -34,18 +34,7 @@ abstract class PurchaseService {
   /// 継承ブースト(250円。引退のたびの継承ポイントが2倍。2026-10-25)。
   static const legacyBoostId = 'baseball_manager_legacy_boost';
 
-  /// 育成サポート(370円。経験点がいつも1割多い。2026-10-25)。
-  static const growthSupportId = 'baseball_manager_growth_support';
-
-  /// からだ守り(250円。怪我が3割少なく、休みの回復が1割多い。2026-10-30)。
-  static const bodyCharmId = 'baseball_manager_body_charm';
-
-  static const allIds = [
-    removeAdsId,
-    legacyBoostId,
-    growthSupportId,
-    bodyCharmId,
-  ];
+  static const allIds = [removeAdsId, legacyBoostId];
 
   /// **届いたら、待っているかどうかに関係なく呼ぶ。** ストアの通知は購入を始めた
   /// 瞬間に返るとは限らない（家族の承認・別の端末での購入・起動時の再送）。

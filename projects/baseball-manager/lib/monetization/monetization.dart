@@ -25,7 +25,7 @@ enum RecoveryGate {
 ///   選択の途中には出さない（年を進めた直後に、少し置いてから出す）。
 /// - 動画広告: 疲れがたまった年に1度、見ると疲れが大きく抜ける（任意）。読み込めていないときは出さない。
 /// - 広告を消す: 全画面広告が出なくなり、動画の特典も動画なしで使える。
-/// - 継承ブースト・育成サポート(2026-10-25): 買い切り。効き目は `legacyBoost` / `growthSupport` を見る側で。
+/// - 継承ブースト(2026-10-25): 買い切り。効き目は `legacyBoost` を見る側で。育成サポート・からだ守りは 2026-10-31 に不要と決めて外した。
 class Monetization extends ChangeNotifier {
   Monetization(this._prefs, {AdService? ads, PurchaseService? store})
       : ads = ads ?? NoOpAdService(),
@@ -55,12 +55,6 @@ class Monetization extends ChangeNotifier {
 
   /// 継承ブースト: 引退のたびの継承ポイントが2倍。
   bool get legacyBoost => owns(PurchaseService.legacyBoostId);
-
-  /// 育成サポート: 経験点がいつも1割多い。
-  bool get growthSupport => owns(PurchaseService.growthSupportId);
-
-  /// からだ守り: 怪我をしにくく、休みの回復が早い。
-  bool get bodyCharm => owns(PurchaseService.bodyCharmId);
 
   Future<void> _setOwned(String id, bool v) async {
     if (id == PurchaseService.removeAdsId) {
