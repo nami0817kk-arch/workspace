@@ -192,6 +192,7 @@
     YA.relations(w);
     YA.yearStart(w);
     YA.autoPlan(w);
+    if (opts.firstSel) YA.beginFirstSelection(w);
     w.inbox.push({ week: 0, year: 1, tier: 2, text: '指導者として着任しました。高1〜高3の36人を預かります。まずは練習を組んで、週を進めましょう。' });
     return w;
   };

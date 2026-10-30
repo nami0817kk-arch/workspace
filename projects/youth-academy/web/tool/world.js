@@ -164,6 +164,27 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
     ok(!YA.talk(w6, sen.id, 'praise').ok, '同じ週に2回は話せない');
   }
 }
+// 初回のセレクション：応募者から高1を選び、足りない分は一般入団で12人に
+{
+  const wf = YA.newWorld(21, Object.assign(YA.makeStart({ name: '点検', career: 0, club: 2, points: {}, noFire: false }), { firstSel: true }));
+  ok(wf.firstSel === true, '初回のセレクションが始まる');
+  const cands = wf.scouting.cands.filter((c) => c.kind === 'sel');
+  ok(cands.length >= 24, '応募者が24人以上 ' + cands.length);
+  let okc = 0;
+  for (const c of cands.slice(0, 7)) if (YA.signCand(wf, c.id).ok) okc++;
+  ok(okc === 7, '4人を超えて合格にできる（初回は12人まで） ' + okc);
+  const names = cands.slice(0, 7).map((c) => c.p.name);
+  const n = YA.finishFirstSelection(wf);
+  const g1 = Object.values(wf.players).filter((p) => p.grade === 1);
+  ok(n === 12 && g1.length === 12, '高1が12人になる ' + g1.length);
+  ok(names.every((nm) => g1.some((p) => p.name === nm)), '合格者が高1に入る');
+  ok(Object.keys(wf.players).length === 36, '全体36人 ' + Object.keys(wf.players).length);
+  ok(wf.lineupA.every((s) => wf.players[s.pid]) && wf.lineupB.every((s) => wf.players[s.pid]), '先発の選手がそろっている');
+  ok(!wf.firstSel, 'セレクションが終わる');
+  const wg = YA.newWorld(22, Object.assign(YA.makeStart({ name: '点検', career: 0, club: 2, points: {}, noFire: false }), { firstSel: true }));
+  YA.simulate(wg, { until: 'week', stopOnImportant: false });
+  ok(!wg.firstSel && Object.keys(wg.players).length === 36, 'おまかせ進行ではセレクションを飛ばす');
+}
 // 試合の経験：出た選手に、出場時間・採点・頭の経験値などの記録が残る
 {
   const we = YA.newWorld(13);

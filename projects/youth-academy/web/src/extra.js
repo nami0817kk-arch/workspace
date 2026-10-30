@@ -65,6 +65,7 @@
   function step(w, o, log) {
     const ph = w.phase;
     if (ph === 'plan') {
+      if (w.firstSel) YA.skipFirstSelection(w);
       // 年度はじめ・契約満了・指導者の成長は、止まる設定なら自分で決める
       if (o.stopOnImportant && (w.pendingContract || w.pendingCoach || w.yearIntro)) return { stop: w.pendingContract ? '契約満了の相談' : w.pendingCoach ? '指導者の成長' : '年度はじめの目標' };
       YA.autoPrompts(w, log.notes);
@@ -239,6 +240,7 @@
   YA.tutorialText = function (w) {
     if (!w || !w.tut || !w.tut.on || w.year > 1 || w.week > 4) return null;
     if (w.yearIntro) return '最初に、クラブの目標とチームの約束事を決めます。難しい目標は評価が高く出ますが、信頼度が低いと変えられません。';
+    if (w.firstSel) return '最初のセレクションです。「セレクションを開く」で応募者を見て、テスト（紅白戦・技術・体力・面接）を選んで実施し、高1の12人を合格にします。決めたら「新入生を決める」。';
     const ph = w.phase;
     if (ph === 'plan') return w.week === 1
       ? '① 今週の練習を組みます。「練習」タブで月〜金のメニューを決め、選手ごとの重点を決めます（「おまかせ」でも大丈夫）。決まったら「練習を確定して週を進める」。'

@@ -113,6 +113,36 @@
     if (c.seen >= 2) c.persSeen = true;
     return { ok: true, msg: `${c.p.name}を見に行きました（見える範囲が広がった）` };
   };
+  // ---------- 初回のセレクション：ゲームの最初に、高1の12人を応募者から選ぶ ----------
+  YA.beginFirstSelection = function (w) {
+    const S = w.scouting;
+    w.firstSel = true;
+    S.selOpen = true;
+    const r = YA.rngOf(w.seed * 37 + 5);
+    const n = 24 + Math.floor(w.club.rep / 8);
+    for (let i = 0; i < n; i++) genCand(w, r, 'sel');
+    w.inbox.push({ week: 0, year: 1, tier: 1, text: `最初のセレクションに${n}人の応募がありました。テストの内容を決めて、高1の12人を選んでください（クラブ→スカウト）。選ばなかった分は一般入団で埋まります` });
+  };
+  // セレクションを終える：最初にいた高1を、合格者と一般入団の12人に入れ替える
+  YA.finishFirstSelection = function (w) {
+    if (!w.firstSel) return 0;
+    const rng = YA.rngOf(w.seed * 71 + 3);
+    for (const p of Object.values(w.players)) if (p.grade === 1) delete w.players[p.id];
+    const used = new Set(Object.values(w.players).map((p) => p.name));
+    const n = YA.intake(w, rng, used);
+    YA._numbers(w);
+    w.firstSel = null;
+    w.lineupA = w.lineupB = w.benchA = w.benchB = null;
+    YA.autoTeams(w, true);
+    YA.relations(w);
+    return n;
+  };
+  // セレクションを開かずに進める（おまかせ進行）：最初にいた高1のまま
+  YA.skipFirstSelection = function (w) {
+    if (!w.firstSel) return;
+    w.firstSel = null;
+    w.scouting = YA.newScouting();
+  };
   const LIMIT = { scout: 4, sel: 4, int: 5 };
   YA.signedCount = (w, kind) => w.scouting.cands.filter((c) => c.status === 'signed' && (!kind || c.kind === kind)).length;
   YA.signCand = function (w, id) {
@@ -124,7 +154,8 @@
       const reg = Object.values(w.players).filter((q) => YA.isForeign(q)).length + S.cands.filter((x) => x.foreign && (x.status === 'signed' || x.status === 'offered')).length;
       if (reg >= 5) return { ok: false, msg: '外国籍の選手の登録は5人までです' };
     }
-    if (YA.signedCount(w, c.kind) >= LIMIT[c.kind]) return { ok: false, msg: `${KIND_NAME[c.kind]}からは${LIMIT[c.kind]}人までです` };
+    const lim = w.firstSel && c.kind === 'sel' ? 12 : LIMIT[c.kind];
+    if (YA.signedCount(w, c.kind) >= lim) return { ok: false, msg: `${KIND_NAME[c.kind]}からは${lim}人までです` };
     if (c.kind === 'scout') {
       c.status = 'offered';
       return { ok: true, msg: `${c.p.name}に声をかけました。返事は来週` };
@@ -180,7 +211,7 @@
       p.id = 'p' + ++w.nextId;
       p.team = 'B';
       p.num = 0;
-      p.hist = [{ y: w.year, w: 40, t: KIND_NAME[c.kind] + 'で入団' }];
+      p.hist = [{ y: w.year, w: w.firstSel ? 1 : 40, t: KIND_NAME[c.kind] + 'で入団' }];
       w.players[p.id] = p;
       names.add(p.name);
       n++;

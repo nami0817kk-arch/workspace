@@ -62,7 +62,13 @@
     const ex = YA.homeExtra();
     if (ex) left.append(ex);
     const act = h('div', { style: 'display:flex;flex-direction:column;gap:5px' });
-    if (w.phase === 'plan') {
+    if (w.firstSel && !w.yearIntro) {
+      // 最初のセレクション：高1の12人を応募者から選ぶ。終えるまで週は進められない
+      const signed = YA.signedCount(w, 'sel');
+      act.append(h('div', { class: 'card', style: 'padding:7px 9px;background:#eaf2ff' }, h('div', { class: 'h' }, '最初のセレクション'), h('div', { class: 'note' }, `応募者から高1の12人を選びます。合格 ${signed}人（残り${12 - signed}人は一般入団）`)),
+        h('button', { class: 'btn pri', style: 'min-height:42px', onclick: () => { U().app.tab = 'club'; U().app.ct = 'scout'; rerender(); } }, 'セレクションを開く（応募者を見る）'),
+        h('button', { class: 'btn', onclick: () => modal((close) => h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(420px,95%);padding:12px;gap:8px' }, h('div', { class: 'h' }, '新入生を決めますか'), h('div', { class: 'note' }, `合格の${signed}人と、一般入団${12 - signed}人が高1になります。決めたあとは変えられません。`), h('div', { class: 'row' }, h('button', { class: 'btn', onclick: close }, 'まだ選ぶ'), h('button', { class: 'btn pri', onclick: () => { YA.finishFirstSelection(w); YA.saveWorld(true); close(); rerender(); } }, '決める')))) }, 'セレクションを終えて新入生を決める'));
+    } else if (w.phase === 'plan') {
       // 練習は月に1回組めばよい。同じ月の残りの週は、組んだメニューのまま1タップで進める
       const mk = w.year * 100 + YA.monthIdx(w.week);
       const set = w.planMonth === mk;
