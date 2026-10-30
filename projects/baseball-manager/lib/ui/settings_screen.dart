@@ -505,6 +505,12 @@ const _items = <(String, String, String, IconData)>[
     '経験点がいつも1割多く貯まります。',
     Icons.trending_up
   ),
+  (
+    PurchaseService.bodyCharmId,
+    'からだ守り',
+    '怪我が3割しにくくなり、休んだときの疲れの抜けが1割よくなります。',
+    Icons.health_and_safety
+  ),
 ];
 
 class _AdsSectionState extends State<_AdsSection> {

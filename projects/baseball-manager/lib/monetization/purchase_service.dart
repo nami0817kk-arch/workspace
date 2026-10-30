@@ -37,7 +37,15 @@ abstract class PurchaseService {
   /// 育成サポート(370円。経験点がいつも1割多い。2026-10-25)。
   static const growthSupportId = 'baseball_manager_growth_support';
 
-  static const allIds = [removeAdsId, legacyBoostId, growthSupportId];
+  /// からだ守り(250円。怪我が3割少なく、休みの回復が1割多い。2026-10-30)。
+  static const bodyCharmId = 'baseball_manager_body_charm';
+
+  static const allIds = [
+    removeAdsId,
+    legacyBoostId,
+    growthSupportId,
+    bodyCharmId,
+  ];
 
   /// **届いたら、待っているかどうかに関係なく呼ぶ。** ストアの通知は購入を始めた
   /// 瞬間に返るとは限らない（家族の承認・別の端末での購入・起動時の再送）。

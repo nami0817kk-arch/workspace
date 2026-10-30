@@ -59,6 +59,9 @@ class Monetization extends ChangeNotifier {
   /// 育成サポート: 経験点がいつも1割多い。
   bool get growthSupport => owns(PurchaseService.growthSupportId);
 
+  /// からだ守り: 怪我をしにくく、休みの回復が早い。
+  bool get bodyCharm => owns(PurchaseService.bodyCharmId);
+
   Future<void> _setOwned(String id, bool v) async {
     if (id == PurchaseService.removeAdsId) {
       v ? await _setAdFree() : await _clearAdFree();

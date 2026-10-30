@@ -1074,7 +1074,14 @@ class GameController extends ChangeNotifier {
   /// 買った特典を、いまの選手に入れる(保存はしないので、行動の前に毎回)。
   void _applyPurchases(Game g) {
     g.expBoost = money?.growthSupport == true ? growthSupportBoost : 1.0;
+    final charm = money?.bodyCharm == true;
+    g.injuryGuard = charm ? bodyCharmInjury : 1.0;
+    g.recoveryGuard = charm ? bodyCharmRecovery : 1.0;
   }
+
+  /// からだ守り(買い切り)の怪我の倍率と、回復の倍率。
+  static const bodyCharmInjury = 0.7;
+  static const bodyCharmRecovery = 1.1;
 
   void act(Plan a) {
     final g = game!;

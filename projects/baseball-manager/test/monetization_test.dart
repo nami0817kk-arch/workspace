@@ -345,6 +345,30 @@ void main() {
       expect(GameController.growthSupportBoost, 1.1);
     });
 
+    test('からだ守りは買い切り。届けば怪我の倍率と回復の倍率が行動に入る', () async {
+      final (m, _, store) = await _open();
+      final plain = GameController(rng: Random(4), money: m)
+        ..newGame('t', Role.batter);
+      plain.act(Plan.train);
+      expect(plain.game!.injuryGuard, 1.0);
+      expect(plain.game!.recoveryGuard, 1.0);
+      expect(m.bodyCharm, isFalse);
+      expect(await m.buyItem(PurchaseService.bodyCharmId),
+          PurchaseOutcome.purchased);
+      expect(m.bodyCharm, isTrue);
+      expect(m.adFree, isFalse); // ほかの商品は付かない
+      final c = GameController(rng: Random(4), money: m)
+        ..newGame('t', Role.batter);
+      c.act(Plan.train);
+      expect(c.game!.injuryGuard, GameController.bodyCharmInjury);
+      expect(c.game!.recoveryGuard, GameController.bodyCharmRecovery);
+      expect(GameController.bodyCharmInjury, 0.7);
+      expect(GameController.bodyCharmRecovery, 1.1);
+      store.entitlements[PurchaseService.bodyCharmId] = false;
+      await store.revoked!(PurchaseService.bodyCharmId);
+      expect(m.bodyCharm, isFalse); // 返金されれば戻る
+    });
+
     test('動画の特典: 経験点(年1回)と継承ポイント(引退のたびに1回)', () async {
       final (m, ads, _) = await _open();
       final c = GameController(rng: Random(3), money: m);
@@ -362,6 +386,8 @@ void main() {
       expect(PurchaseService.legacyBoostId, 'baseball_manager_legacy_boost');
       expect(PurchaseService.growthSupportId, 'baseball_manager_growth_support');
       expect(PurchaseService.removeAdsId, 'baseball_manager_remove_ads');
+      expect(PurchaseService.bodyCharmId, 'baseball_manager_body_charm');
+      expect(PurchaseService.allIds.length, 4);
     });
   });
 
