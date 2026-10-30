@@ -1,4 +1,4 @@
-"""宇宙エレベーターの本編のサムネイル(1280×720)。下地は Gemini の絵(assets/thumb_gemini.jpg: 地球から宇宙へ伸びる光るケーブル)。python episodes/elevator/thumb.py"""
+"""宇宙エレベーターの本編のサムネイル(1280×720)。下地は Gemini の絵(assets/thumb_gemini2.jpg: 地球から宇宙へ伸びる光るケーブル)。python episodes/elevator/thumb.py"""
 import os
 import sys
 from pathlib import Path
@@ -17,7 +17,7 @@ W, H = 2560, 1440
 NAVY, YEL, WHITE = (10, 10, 10), (255, 225, 0), (255, 255, 255)
 RED, CYAN = (255, 60, 60), (90, 230, 255)
 
-src = Image.open(HERE / "assets" / "thumb_gemini.jpg").convert("RGB")
+src = Image.open(HERE / "assets" / "thumb_gemini2.jpg").convert("RGB")
 s = max(W / src.width, H / src.height)
 src = src.resize((int(src.width * s + 1), int(src.height * s + 1)), Image.LANCZOS).crop((0, 0, W, H))
 src = ImageEnhance.Color(src).enhance(1.1)
@@ -25,6 +25,10 @@ img = src.convert("RGBA")
 xs = np.arange(W)[None, :]
 alpha = (150 * np.clip(1 - xs / 1700, 0, 1) ** 1.2 * np.ones((H, 1))).astype("uint8")
 sh = Image.fromarray(np.dstack([np.zeros((H, W), "uint8"), np.full((H, W), 8, "uint8"), np.full((H, W), 30, "uint8"), alpha]), "RGBA")
+ys = np.arange(H)[:, None]
+vign = (170 * np.clip(1 - ys / 520, 0, 1) ** 1.5 + 190 * np.clip((ys - 820) / 620, 0, 1) ** 1.3) * np.ones((1, W))
+vg = Image.fromarray(np.dstack([np.zeros((H, W), "uint8")] * 3 + [vign.astype("uint8")]), "RGBA")
+img = Image.alpha_composite(img, vg)
 d = ImageDraw.Draw(img)
 
 
