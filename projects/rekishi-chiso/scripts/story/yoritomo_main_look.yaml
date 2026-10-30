@@ -1,0 +1,257 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：源頼朝（scripts/yoritomo-story.yaml）。chiso/storymain.py が読む。
+# 10-29 作成（11/2 12:00 公開）。musashi_main_look.yaml を写した。台本には手を入れない（承認のあと。変えると控えが外れる）。決まりは docs/story-main.md・スキル rekishi-story-screen。
+# 絵の方針：AI 絵は 15 枚（Q01〜Q15）。同じ絵を時間をずらして使い回す（続けて 20 秒まで）。
+#   人物は AI 絵に描かない（この回は全部が物・場所・遠景。馬は影・遠景だけ）。実在の肖像画（神護寺に伝わる、頼朝とされてきた絵。別人説がある。ウィキメディア・コモンズ、パブリックドメイン）は額（frame:）。
+#   『吾妻鏡』の頁・京都の絵・旧相模川橋脚の写真・鶴岡八幡宮の写真は絵図の一部（part:）。
+#   この回の決まり：最期（落馬・病・死）の場面に人物の絵を当てない（橋・川・馬の遠景・書物・灯だけ）。戦闘・負傷・遺体は描かない。実在の誰か・俳優に似せない（大河ドラマ・映画の頼朝にも似せない）。顔が分かるのは実在の肖像画の額だけ。
+# AI 絵の指示の一覧（英語・姿の設定）：dev/output/rekishi-chiso/research/yoritomo_ai_images.md
+# 届く前は art_dir の仮の絵（Q01.jpg〜、番号と場面だけ書いた灰色の板）で代える。届いたら main_art_dir に Q01.jpg〜を置くだけ。
+#   仮の絵は out/ にあり git に入らない。無ければ 1376×768 の灰色の板に「Q01（仮）」と場面を書いて作り直す。
+script: scripts/yoritomo-story.yaml
+out: yoritomo_story_main
+art_dir: out/story/yoritomo/ph          # 仮の絵（placeholder）
+main_art_dir: out/story/yoritomo/main   # Gemini の 16:9 の絵（Q01.jpg〜Q15.jpg）
+ai_disclosure: この動画の情景の画像の多くは、画像生成AI（Google の Gemini・Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+
+# 章ごとの左上の札「いま｜章題」。台本の語りは和暦と西暦が混じるので、語りが言った形のまま。
+# dates＝語りがその年・月日を言った行から替える（研究・報告・展示・報道の年は物語の「いま」ではないので替えない。null で章題だけ）
+chapters:
+  0: {label: 序章 創業者の死は、幕府の歴史書から消えた, now: null,
+      dates: {1: 建久6年12月, 2: 建暦2年2月28日, 5: null}}
+  1: {label: 第1章 『吾妻鏡』は、どこで途切れているのか, now: null,
+      dates: {14: 建久6年12月, 15: 建久6年12月22日, 16: 建久10年2月, 17: 1196年, 19: null}}
+  2: {label: 第2章 京都の日記は、頼朝の死をどう書いたのか, now: 建久10年1月,
+      dates: {30: 建久10年1月18日, 32: 建久10年1月20日, 36: 建久10年2月18日, 38: null}}
+  3: {label: 第3章 再開した最初の頁は、もう「故将軍」と呼んでいた, now: 建久10年2月,
+      dates: {45: 建久10年4月12日, 47: 正治元年10月, 49: 正治2年1月20日, 51: null}}
+  4: {label: 第4章 橋の修理の記事は、頼朝の死をどう書いたのか, now: 養和元年,
+      dates: {55: 建久6年, 59: 建久9年, 60: 建久9年12月27日, 61: 建久9年12月, 62: 建暦2年2月28日, 72: 元久2年4月, 73: 元久2年6月23日, 76: null}}
+  5: {label: 第5章 橋は、800年後に、水田から出てきた, now: 大正12年,
+      dates: {77: 大正12年9月1日, 78: 大正13年1月, 81: 大正13年4月25日, 83: null}}
+  6: {label: 第6章 死因は、何と書かれてきたのか, now: null,
+      dates: {89: 建久9年12月27日, 90: null}}
+  7: {label: 第7章 墓と肖像と書状　確かめられるものは、どれか, now: null,
+      dates: {105: 正治2年1月13日, 106: 元仁元年, 107: 安永8年, 108: null}}
+  8: {label: まとめ なぜ、頼朝の死は書かれなかったのか, now: null,
+      dates: {}}
+
+# 概要欄「■ 参考にした資料」（事実カード 源頼朝_facts_20261029.yaml のうち本文を開いた主なもの。10-29）
+references:
+  - 頼朝の死が『吾妻鏡』から消えた理由（nippon.com、小林明 2022）　https://www.nippon.com/ja/japan-topics/c10512/
+  - 頼朝像は別人？（nippon.com、小林明 2022）　https://www.nippon.com/ja/japan-topics/c10506/
+  - 頼朝の死因（和樂web 2022）　https://intojapanwaraku.com/rock/culture-rock/87894/
+  - 鎌倉殿の13人 稲毛三郎重成伝（川崎市公文書館 2022）　https://www.city.kawasaki.jp/170/cmsfiles/contents/0000155/155498/inagepanhu.pdf
+  - ちがさき丸ごと季刊誌 第42号（茅ヶ崎市教育委員会 2026）　https://www.city.chigasaki.kanagawa.jp/_res/projects/default_project/_page_/001/006/155/kikannshi0801.pdf
+  - 旧相模川橋脚（文化庁 文化遺産オンライン）　https://online.bunka.go.jp/heritages/detail/216179
+  - 法華堂跡（源頼朝墓・北条義時墓）（文化庁 文化遺産オンライン）　https://online.bunka.go.jp/db/heritages/detail/209910
+  - 広報しもつけ 2022年7月号（下野市教育委員会）　https://www.city.shimotsuke.lg.jp/manage/contents/upload/62b19861403d2.pdf
+  - 鎌倉殿の13人 コラム（神奈川県観光協会）　https://www.kanagawa-kankou.or.jp/features/kamakuradono-column409739
+  - ［座談会］『吾妻鏡』の謎をさぐる（Web版 有鄰 482号、五味文彦・高橋直樹・永井晋 2008）　https://www.yurindo.co.jp/yurin/article/482/2
+  - 吾妻鏡（ブリタニカ国際大百科事典・世界大百科事典・日本大百科全書）（コトバンク）　https://kotobank.jp/word/%E5%90%BE%E5%A6%BB%E9%8F%A1-26074
+  - 歴史と物語 吾妻鏡（国立公文書館）　https://www.archives.go.jp/exhibition/digital/rekishitomonogatari/contents/08.html
+  - 落馬事故による頼朝の死の真相とは？（JBpress、西股総生）　https://jbpress.ismedia.jp/articles/-/70517
+  - 週刊現代 2022年4月30日・5月7日号（現代ビジネス）　https://gendai.media/articles/-/94759
+  - 頼朝の死の謎（幻冬舎ゴールドオンライン）　https://gentosha-go.com/articles/-/58077
+  - 週末民俗学（さんたつ）　https://san-tatsu.jp/articles/203657/
+  - 源頼朝書状（東京国立博物館 ColBase）　https://colbase.nich.go.jp/collection_items/tnm/B-3297
+  - 吾妻鏡・明月記・愚管抄・承久記の翻刻（個人サイト toshio。建暦2年2月・建久10年1〜2月・建久6年12月）　http://www5a.biglobe.ne.jp/~micro-8/toshio/azuma/121202.html
+  - File:《伝源頼朝像》13世紀、鎌倉時代、神護寺、京都.jpg（ウィキメディア・コモンズ）　https://commons.wikimedia.org/wiki/File:%E3%80%8A%E4%BC%9D%E6%BA%90%E9%A0%BC%E6%9C%9D%E5%83%8F%E3%80%8B13%E4%B8%96%E7%B4%80%E3%80%81%E9%8E%8C%E5%80%89%E6%99%82%E4%BB%A3%E3%80%81%E7%A5%9E%E8%AD%B7%E5%AF%BA%E3%80%81%E4%BA%AC%E9%83%BD.jpg
+  - File:Former Sagami River Pier, gaikan.jpg（ウィキメディア・コモンズ、CC0）　https://commons.wikimedia.org/wiki/File:Former_Sagami_River_Pier,_gaikan.jpg
+no_tag_from: 118                      # 締め（欠けた3年の頁は、から）から札を出さない
+
+# AI 絵（16:9 横・15枚）。scene は日本語の要約（英語の指示は research/yoritomo_ai_images.md）。
+# pan：h＝左右（既定）・v＝上下・zoom＝ゆっくり寄る（顔の感情の場面だけ。この回は顔を描かないので使わない）。crops＝切り出し [倍率, 中心x, 中心y]
+# 位置（crops・focus・fx の region）は仮の値。届いた絵を見て合わせる
+ai:
+  Q01: {scene: 夜明けの鎌倉の海と、浜に向かう谷の遠景（人物なし）, pan: h, crops: {left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  Q02: {scene: 灯のもとで綴じ本を開く、静かな書院（人物なし）, pan: h, crops: {left: [1.18, 0.3, 0.58], right: [1.18, 0.6, 0.5]}}
+  Q03: {scene: 谷あいの武家屋敷の門。夜の遠景（人物なし）, pan: v, crops: {wide: [1.18, 0.62, 0.5], left: [1.18, 0.6, 0.5], right: [1.18, 0.66, 0.5]}}
+  Q04: {scene: 雪の降る京の町並みと、御所の屋根の遠景（人物なし）, pan: h, crops: {wide: [1.3, 0.5, 0.38], left: [1.3, 0.4, 0.38], right: [1.3, 0.6, 0.38]}}
+  Q05: {scene: 灯の下の文机と、開かれた日記の巻物（人物なし）, pan: h, crops: {left: [1.18, 0.4, 0.58], right: [1.18, 0.6, 0.55]}}
+  Q06: {scene: 朝の政所の広い板の間。文机と巻物だけ（人物なし）, pan: h, crops: {left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  Q07: {scene: 鶴岡八幡宮のような、石段と門の遠景（人物なし）, pan: h, crops: {wide: [1.6, 0.5, 0.31], left: [1.6, 0.42, 0.31], right: [1.6, 0.58, 0.31]}}
+  Q08: {scene: 川にかかる、長い木の橋の遠景。夕暮れ（人物なし）, pan: h, crops: {left: [1.18, 0.4, 0.55], right: [1.18, 0.6, 0.55]}}
+  Q09: {scene: 馬の影が、水辺の道を走る遠景（人物なし）, pan: h, crops: {left: [1.18, 0.4, 0.5], right: [1.18, 0.65, 0.5]}}
+  Q10: {scene: 早朝の水田と、地面から突き出た木の柱の遠景（人物なし）, pan: v, crops: {wide: [1.18, 0.42, 0.5], left: [1.18, 0.36, 0.5], right: [1.18, 0.55, 0.5]}}
+  Q11: {scene: 水を張った池に並ぶ、木の柱の影。夕景（人物なし）, pan: h, crops: {left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  Q12: {scene: 霧の立つ川と、岸に残された一頭の馬の遠景（人物なし）, pan: h, crops: {left: [1.18, 0.4, 0.55], right: [1.18, 0.6, 0.55]}}
+  Q13: {scene: 暗い部屋の灯と、閉じた書物（人物なし）, pan: h, crops: {left: [1.18, 0.4, 0.6], right: [1.18, 0.6, 0.6]}}
+  Q14: {scene: 山あいの石段の上の、小さな石塔の遠景（人物なし）, pan: v, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.48, 0.5], right: [1.18, 0.52, 0.5]}}
+  Q15: {scene: 終了画面用。夕暮れの川と橋の遠景（右半分を空けた構図）, lock: [1.0, 0.5, 0.5]}
+
+# 実在の絵の手当て（元の画像は変えない）
+paint_fx: {}
+
+# 台本に出てこない実在の絵の出典（左下の字・概要欄）
+credits:
+  paintings/yoritomo_azuma_najda_v16.jpg: 『吾妻鏡』第16巻の頁（国立公文書館蔵。ウィキメディア・コモンズ、パブリックドメイン。見開きの左頁を切り出し）
+  paintings/yoritomo_sagami_pier_gaikan.jpg: 旧相模川橋脚（茅ヶ崎市）の現在の姿（ウィキメディア・コモンズ、CC0）
+  paintings/yoritomo_sagami_pier_2004.jpg: 旧相模川橋脚の補修工事の前（2004年3月31日撮影。ウィキメディア・コモンズ、パブリックドメイン）
+  paintings/yoritomo_haka_ndl.jpg: 頼朝墓の挿絵（国立国会図書館蔵。ウィキメディア・コモンズ、パブリックドメイン）
+  paintings/yoritomo_portrait_jingoji.jpg: 神護寺に伝わる、頼朝とされてきた肖像画（13世紀。京都・神護寺蔵。ウィキメディア・コモンズ、パブリックドメイン。別人説がある）
+  paintings/kazu_kyoto_sanjo_hiroshige.jpg: 歌川広重《東海道五十三次之内 京師 三条大橋》1833年ごろ（メトロポリタン美術館）
+  paintings/takauji_kamakura_tsurugaoka.jpg: Ocdp撮影《鶴岡八幡宮》2017年（CC0）。現在の姿
+
+# 絵の割り当て：「行の番号 種類:絵 [切り出し]」。次の行の指定まで続く。図（figure）の出る行は、その時の絵を暗くして図を置く（自動）
+shots:
+  # 絵の割り当て（行の番号は台本の語りの行。0 始まり。人物（想像）の行も数える。章の切れ目は札で分かる）
+  - 0 ai:Q02 wide                                                  # 吾妻鏡に頼朝の死が書かれていない（最初のカットは AI 絵）
+  - 1 part:paintings/yoritomo_azuma_najda_v16.jpg                  # 第15巻と第16巻・約3年分が無い
+  - 2 ai:Q08 wide                                                  # 13年後 1212年 橋の修理の記事
+  - 3 ai:Q06 left                                                  # 将軍の命令：橋のせいではない
+  - 4 ai:Q03 wide                                                  # 稲毛重成も災いに遭った
+  - 5 part:paintings/kazu_kyoto_sanjo_hiroshige.jpg                # 京都の公家・明月記
+  - 6 ai:Q05 wide                                                  # 猪隈関白記・飲水の病
+  - 7 ai:Q13 wide                                                  # 東鑑集要 1695
+  - 8 ai:Q02 right                                                 # なぜ書かなかったのか・なぜ念を押したのか
+  - 9 part:paintings/yoritomo_azuma_najda_v16.jpg                  # どこで途切れているのか
+  - 10 ai:Q02 left                                                 # 成立 1300年前後
+  - 11 ai:Q13 left                                                 # 五味文彦：奉行人
+  - 12 ai:Q03 left                                                 # 写本の伝来 1590年
+  - 14 ai:Q13 right                                                # 最後の日付 16日／22日
+  - 15 ai:Q03 wide                                                 # 12月22日 安達盛長の甘縄の家
+  - 16 ai:Q01 wide                                                 # 生きている頼朝の記録はここで止まる
+  - 17 ai:Q03 right                                                # 欠けた3年のあいだ・大姫・兼実
+  - 19 ai:Q13 wide                                                 # ほかにも欠けた年
+  - 20 ai:Q02 wide                                                 # 世界大百科事典・益田宗
+  - 21 ai:Q13 left                                                 # 欠けた理由 3つの見方（台本の図）19〜21
+  - 24 ai:Q02 left                                                 # 見方は3つに割れている
+  - 25 ai:Q04 wide                                                 # 京都の人たちは
+  - 26 ai:Q04 left                                                 # 死の知らせが残っていた
+  - 27 ai:Q04 wide                                                 # 愚管抄 1月11日出家・13日死去
+  - 28 ai:Q05 wide                                                 # 慈円：今年こそ静かに上洛
+  - 29 ai:Q04 right                                                # 【想像1】今年こそ、静かに、京へ上ろう
+  - 30 part:paintings/kazu_kyoto_sanjo_hiroshige.jpg               # 明月記 1月18日
+  - 31 ai:Q05 left                                                 # 朝家の大事・怖畏逼迫の世（史料の札）
+  - 32 ai:Q05 wide                                                 # 20日の条・大略頓病か（台本の図）30〜32,35
+  - 35 ai:Q04 wide                                                 # 京都はざわついた
+  - 36 ai:Q13 right                                                # 2月18日 追善の御読経
+  - 37 ai:Q05 left                                                 # 落馬という言葉は無い（台本の図）
+  - 38 ai:Q06 wide                                                 # 13年後の鎌倉・橋の話
+  - 39 ai:Q06 left                                                 # 別の名前で呼ばれていた
+  - 40 part:paintings/yoritomo_azuma_najda_v16.jpg                                                 # 第16巻 2月 頼家に宣旨
+  - 42 ai:Q06 right                                                # 吉書始め
+  - 43 part:paintings/yoritomo_azuma_najda_v16.jpg                 # 故将軍が亡くなってから20日も経たない
+  - 44 ai:Q06 left                                                 # いつ・どこで・どうしては無い
+  - 45 ai:Q07 wide                                                 # 13人の合議制
+  - 46 ai:Q06 wide                                                 # 頼家18歳
+  - 47 part:paintings/takauji_kamakura_tsurugaoka.jpg              # 結城朝光：忠臣は二君に仕えず
+  - 49 ai:Q07 right                                                # 梶原景時が訴える
+  - 50 ai:Q03 wide                                                 # 争いは書かれ・死は書かれない
+  - 51 ai:Q08 wide                                                 # 13年後・橋の修理の記事
+  - 52 ai:Q09 wide                                                 # 3年前にさかのぼる
+  - 53 ai:Q03 left                                                 # 稲毛重成の来歴
+  - 54 ai:Q07 right                                                # 一の谷・北条時政の娘を妻に
+  - 55 ai:Q09 left                                                 # 1195年 上洛
+  - 56 ai:Q09 right                                                # 妻が危篤・駿馬
+  - 57 ai:Q09 wide                                                 # 【想像2】間に合ってくれ
+  - 58 ai:Q01 left                                                 # 妻は亡くなっていた
+  - 59 ai:Q08 right                                                # 1198年 橋を架ける
+  - 60 ai:Q08 left                                                 # 12月27日（台本の図）55〜56
+  - 62 ai:Q08 wide                                                 # 1212年2月28日 橋の記事
+  - 64 ai:Q06 right                                                # 橋の由来・落馬（史料の札）
+  - 65 ai:Q02 left                                                 # 評議の人たちの意見
+  - 66 ai:Q13 left                                                 # 将軍の答え（史料の札）60〜61
+  - 67 ai:Q06 right                                                # 一切不吉と言ってはならない
+  - 68 ai:Q02 wide                                                 # 初めて書かれた場面は説明だった
+  - 69 ai:Q13 wide                                                 # ほとぼりが冷めたころ
+  - 71 ai:Q03 right                                                # 重成の隠遁・1205年4月
+  - 73 ai:Q06 wide                                                 # 重成が殺された
+  - 74 ai:Q13 right                                                # 承久記の遺言
+  - 75 ai:Q03 left                                                 # 畠山と重成
+  - 76 ai:Q08 wide                                                 # その橋はいまも地面の下に
+  - 77 ai:Q10 wide                                                 # 1923年9月1日 水田から柱
+  - 78 ai:Q11 left                                                 # 7本・地下に3本
+  - 79 ai:Q10 right                                                # 和田清
+  - 80 part:paintings/yoritomo_azuma_najda_v16.jpg                 # 沼田頼輔：吾妻鏡をもとに考証
+  - 81 part:paintings/yoritomo_sagami_pier_2004.jpg                # 仮指定・国史跡
+  - 83 part:paintings/yoritomo_sagami_pier_gaikan.jpg              # 発掘・天然記念物
+  - 84 ai:Q11 wide                                                 # 埋め戻し・レプリカ
+  - 85 ai:Q10 left                                                 # 年輪年代
+  - 86 ai:Q08 left                                                 # 歴史書が橋を探し出す手がかりに
+  - 87 ai:Q12 wide                                                 # 本当に落馬で亡くなったのか
+  - 88 ai:Q12 left                                                 # 死因は時代ごとに違った
+  - 89 ai:Q13 wide                                                 # 細川重男：確かなこと
+  - 90 ai:Q12 right                                                # 保暦間記：亡霊
+  - 92 ai:Q05 wide                                                 # 承久記：水神
+  - 93 ai:Q13 left                                                 # 東鑑集要 1695
+  - 94 ai:Q13 right                                                # 暗殺だと言える史料は無い
+  - 95 ai:Q02 right                                                # 家康の噂
+  - 96 ai:Q05 wide                                                 # 歌舞伎『頼朝の死』は創作
+  - 98 ai:Q12 left                                                 # 和樂web：最も支持される見方
+  - 99 ai:Q02 wide                                                 # 病・亡霊・水の神・暗殺・創作
+  - 100 ai:Q13 wide                                                 # 確かなのは日付だけ
+  - 101 ai:Q14 wide                                                 # 亡くなったあとの頼朝をいまに伝えるもの
+  - 102 frame:paintings/yoritomo_haka_ndl.jpg                       # 法華堂・持仏堂
+  - 104 ai:Q14 left                                                 # 高さ七尺の多重塔
+  - 105 ai:Q01 right                                                # 一周忌・栄西
+  - 106 ai:Q14 right                                                # 義時の法華堂・発掘
+  - 107 frame:paintings/yoritomo_haka_ndl.jpg                       # 1779年 島津重豪が建てた墓
+  - 108 frame:paintings/yoritomo_portrait_jingoji.jpg               # 神護寺の肖像画・米倉迪夫
+  - 110 ai:Q13 left                                                # nippon.com：「伝」を付けて呼ばれる
+  - 111 ai:Q02 left                                                 # 書状：自筆はほとんど無い
+  - 112 ai:Q13 wide                                                 # 創業者のものは確かめにくい
+  - 113 ai:Q14 left                                                # なぜ書かれなかったのか
+  - 114 ai:Q01 wide                                                # 答え：言い切れる史料は見つからなかった
+  - 115 part:paintings/yoritomo_azuma_najda_v16.jpg                # 3つの見方
+  - 116 ai:Q05 wide                                                # 確かなのは12月27日と1月13日・京都は病と書いた
+  - 117 ai:Q08 wide                                                # 鎌倉が落馬を書いたのは13年後
+  - 118 ai:Q05 left                                                # 最期は京都の日記と橋の修理の記事に残った
+  - 119 part:paintings/yoritomo_sagami_pier_gaikan.jpg             # 橋の柱は800年あまり地面の下に
+  - 120 ai:Q15 wide
+  - end ai:Q15 wide
+# look だけで足す図（台本には無い）
+figures: []
+
+# 語りがその物・人を言うと、カットの終わりにそれが主役になる所で止まる。位置は仮（届いた絵で合わせる）
+focus:
+  Q02: {吾妻鏡|書: [1.3, 0.43, 0.60]}
+  Q03: {門|屋敷: [1.3, 0.62, 0.55]}
+  Q05: {日記|巻物|書: [1.3, 0.40, 0.66]}
+  Q08: {橋: [1.3, 0.62, 0.66]}
+  Q09: {馬|駿馬: [1.3, 0.78, 0.56]}
+  Q10: {柱|橋脚: [1.3, 0.42, 0.55]}
+  Q12: {馬: [1.3, 0.66, 0.60]}
+  Q13: {書物|書|記: [1.3, 0.58, 0.70]}
+  Q14: {塔|墓: [1.3, 0.50, 0.38]}
+  paintings/yoritomo_portrait_jingoji.jpg: {顔|肖像|像: [1.3, 0.5, 0.25]}
+
+# 絵の一部だけを動かす（話に合う絵だけ・控えめに。顔・人物にはかけない）。範囲は仮（届いた絵で見て直す）
+fx:
+  Q01: {water: {region: [0, 0.56, 0.62, 0.80]}}                           # 浜の入り江の水面
+  Q02: {lamp: {region: [0.80, 0.40, 0.90, 0.56]}}                         # 書院の灯
+  Q05: {lamp: {region: [0.55, 0.15, 0.69, 0.37]}}                         # 文机の灯
+  Q13: {lamp: {region: [0.66, 0.48, 0.78, 0.68]}}                         # 書物の灯
+  Q08: {water: {region: [0.02, 0.36, 0.60, 0.62]}}                        # 橋の手前の川面（橋は外す）
+  Q11: {water: {region: [0.25, 0.78, 0.95, 1.0]}}                         # 池の水面の映り
+  Q12: {mist: {region: [0, 0.30, 0.60, 0.80], alpha: 0.08, speed: 3}}    # 川の霧（馬は外す）
+  Q15: {water: {region: [0, 0.70, 1, 1.0]}}                               # 夕暮れの川面
+
+# 部品（from〜to の行、0 始まり。出ている間は絵を暗くする）
+parts:
+  - {type: quote, from: 28, to: 28, label: 史料, text: 今年必しづかにのぼりて世の事沙汰せんと思ひたりけり,
+     source: 『愚管抄』の翻刻（慈円。個人サイトの翻刻）}
+  - {type: quote, from: 31, to: 31, label: 史料, text: 朝家の大事何事に過ぐるや／怖畏逼迫の世か,
+     source: 『明月記』建久10年1月18日条の翻刻（藤原定家。個人サイトの翻刻）}
+  - {type: quote, from: 43, to: 43, label: 史料, text: この事故将軍薨御の後、未だ二十箇日を経ずと雖も,
+     source: 『吾妻鏡』建久10年2月4日条の翻刻（個人サイトの翻刻）}
+  - {type: quote, from: 64, to: 64, label: 史料, text: 還路に及び御落馬有り／幾程を経ず薨じ給いをはんぬ,
+     source: 『吾妻鏡』建暦2年2月28日条の翻刻（個人サイトの翻刻）}
+  - {type: quote, from: 66, to: 67, label: 史料, text: 全く橋建立の過に非ず／この上は一切不吉を称すべからず,
+     source: 『吾妻鏡』建暦2年2月28日条の翻刻（個人サイトの翻刻）}
+  - {type: quote, from: 114, to: 114, label: 要点, text: 頼朝の死が書かれなかった理由を、言い切れる史料は見つからなかった,
+     source: 私たちの調べ（『吾妻鏡』が欠けた理由の見方は3つに割れている）}
+
+# 静止画（story-main を --frames なしで回したとき。簡易の描き方で、パン・部品は出ない。目で見るのは --frames の方）
+stills:
+  - {line: 0, note: 冒頭（0秒）書院の灯と綴じ本（Q02）}
+  - {line: 1, note: 第15巻と第16巻・欠けた3年（『吾妻鏡』の頁の部分）}
+  - {line: 21, note: 第1章 欠けた理由 3つの見方（図）}
+  - {line: 31, note: 第2章 明月記の翻刻（史料の札）}
+  - {line: 32, note: 第2章 京都と鎌倉の記録の食い違い（図）}
+  - {line: 60, note: 第4章 橋供養の日の食い違い（図）}
+  - {line: 67, note: 第4章 将軍の答え（史料の札）}
+  - {line: 81, note: 第5章 旧相模川橋脚（写真の部分）}
+  - {line: 108, note: 第7章 神護寺の肖像画の額}
+  - {line: 119, note: まとめ 橋の柱}
+  - {end: true, note: 終了画面の空き}
