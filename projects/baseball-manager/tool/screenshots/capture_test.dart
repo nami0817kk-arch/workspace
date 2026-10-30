@@ -3,8 +3,9 @@
 /// **CI では回らない**(`test/` の外にある生成器。実行するとファイルを書き換える)。
 ///
 ///     flutter test tool/screenshots/capture_test.dart
+///     DEVICE=ipad flutter test tool/screenshots/capture_test.dart   (iPad 13インチ 2064x2752)
 ///
-/// 出力: `marketing/screenshots/*.png`
+/// 出力: `marketing/screenshots/*.png`(iPad は `marketing/screenshots/ipad/*.png`)
 ///
 /// 決まり(`docs/app-pitfalls.md` #4、Apple 2.3.2・2.3.7):
 /// - **読み込み中のまま撮らない。** 撮るたびに、読み込みの丸が無いこと・文字が一定数あることを検査する。
@@ -38,9 +39,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-const _logical = Size(402, 874);
-const _ratio = 3.0;
-const _bandHeight = 104.0;
+/// `DEVICE=ipad` で iPad 13インチ(2064x2752)。既定は iPhone 6.3インチ(1206x2622)。
+final _ipad = Platform.environment['DEVICE'] == 'ipad';
+final _logical = _ipad ? const Size(1032, 1376) : const Size(402, 874);
+final _ratio = _ipad ? 2.0 : 3.0;
+final _bandHeight = _ipad ? 168.0 : 104.0;
+final _outDir = _ipad ? 'marketing/screenshots/ipad' : 'marketing/screenshots';
 
 Future<void> _loadFonts() async {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -87,10 +91,10 @@ Widget _framed(String caption, Color top, Color bottom, Widget app) {
           child: Text(
             caption,
             textAlign: TextAlign.center,
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: 'NotoSansJP',
               color: Colors.white,
-              fontSize: 26,
+              fontSize: _ipad ? 44 : 26,
               height: 1.25,
               fontWeight: FontWeight.w700,
               decoration: TextDecoration.none,
@@ -125,26 +129,38 @@ Future<void> _shoot(
         colors.$1,
         colors.$2,
         // 育成タブは 390x844 の端末で1画面に収まる作り。残りの高さに合わせて少し縮める。
+        // iPad は縮めずに、帯を除いた実寸でそのまま描く。
         ColoredBox(
           color: const Color(0xFFF3F7EF),
-          child: FittedBox(
-            fit: BoxFit.contain,
-            child: SizedBox(
-              width: _logical.width,
-              height: 844,
-              child: MediaQuery(
-                data: MediaQueryData(
-                  size: Size(_logical.width, 844),
-                  devicePixelRatio: _ratio,
+          child: _ipad
+              ? MediaQuery(
+                  data: MediaQueryData(
+                    size: Size(_logical.width, _logical.height - _bandHeight),
+                    devicePixelRatio: _ratio,
+                  ),
+                  child: KeyedSubtree(
+                    key: ValueKey(name),
+                    child: BaseballManagerApp(controller: c),
+                  ),
+                )
+              : FittedBox(
+                  fit: BoxFit.contain,
+                  child: SizedBox(
+                    width: _logical.width,
+                    height: 844,
+                    child: MediaQuery(
+                      data: MediaQueryData(
+                        size: Size(_logical.width, 844),
+                        devicePixelRatio: _ratio,
+                      ),
+                      // 前の画面の State を使い回さない(controller が替わらなくなる)。
+                      child: KeyedSubtree(
+                        key: ValueKey(name),
+                        child: BaseballManagerApp(controller: c),
+                      ),
+                    ),
+                  ),
                 ),
-                // 前の画面の State を使い回さない(controller が替わらなくなる)。
-                child: KeyedSubtree(
-                  key: ValueKey(name),
-                  child: BaseballManagerApp(controller: c),
-                ),
-              ),
-            ),
-          ),
         ),
       ),
     ),
@@ -189,9 +205,8 @@ Future<void> _shoot(
     // 論理 402x874 を 3 倍にして、1206x2622(Dynamic Island 搭載 iPhone の中型)で書き出す。
     final img = await b.toImage(pixelRatio: _ratio);
     final data = await img.toByteData(format: ui.ImageByteFormat.png);
-    Directory('marketing/screenshots').createSync(recursive: true);
-    File('marketing/screenshots/$name.png')
-        .writeAsBytesSync(data!.buffer.asUint8List());
+    Directory(_outDir).createSync(recursive: true);
+    File('$_outDir/$name.png').writeAsBytesSync(data!.buffer.asUint8List());
   });
 }
 
