@@ -146,9 +146,15 @@
     const keys = Object.keys(p.pers).filter((g) => all || p.pers[g] !== 'ふつう');
     return keys.map((g) => h('span', { class: 'chip pers' }, p.pers[g]));
   }
-  function abBar(name, v, gain) {
+  // 棒の濃い部分＝いまの値、薄い緑＝次の+1までの進み。右の緑＝今月の伸び、灰＝今年の伸び
+  function abBar(name, v, gain, prog, yr) {
     const c = v >= 15 ? '#1a9d57' : v >= 11 ? '#2f7ed8' : v >= 8 ? '#8fa3c4' : '#c7d0e0';
-    return h('div', { class: 'ab' }, h('b', {}, name), h('div', { class: 'bar' }, h('i', { style: `width:${(v / 20) * 100}%;background:${c}` })), h('em', { style: `color:${v >= 15 ? '#1a9d57' : 'inherit'}` }, v), gain ? h('span', { style: 'color:#1a9d57;font-weight:900;font-size:10px;width:18px' }, '+' + gain) : h('span', { style: 'width:18px' }));
+    const pg = prog && v < 20 ? Math.min(0.99, prog) : 0;
+    const bar = h('div', { class: 'bar', style: 'position:relative' }, h('i', { style: `width:${(v / 20) * 100}%;background:${c}` }));
+    if (pg > 0.05) bar.append(h('i', { style: `position:absolute;left:${(v / 20) * 100}%;top:0;height:100%;width:${(pg / 20) * 100}%;background:#9bdcb4;border-radius:0 3px 3px 0` }));
+    return h('div', { class: 'ab' }, h('b', {}, name), bar, h('em', { style: `color:${v >= 15 ? '#1a9d57' : 'inherit'}` }, v),
+      gain ? h('span', { style: 'color:#1a9d57;font-weight:900;font-size:10px;width:18px' }, '+' + gain) : h('span', { style: 'width:18px' }),
+      yr ? h('span', { style: 'color:#7b879b;font-weight:700;font-size:9.5px;width:20px' }, (yr > 0 ? '+' : '') + yr) : h('span', { style: 'width:20px' }));
   }
   function playerCard(t, p, opts) {
     opts = opts || {};
@@ -169,9 +175,9 @@
     const list = opts.all ? (isGK ? YA.AB_GK.concat(['フィールド']) : YA.AB_FIELD) : top.slice(0, 8).map((x) => x[0]);
     if (opts.all) {
       const groups = isGK ? [['GK', YA.AB_GK]] : [['技術', YA.AB_TECH], ['頭', YA.AB_MENTAL], ['体', YA.AB_PHYS]];
-      for (const [gn, ns] of groups) wrap.append(h('div', { class: 'note', style: 'margin:6px 0 2px;font-weight:800;color:var(--navy)' }, gn), h('div', { class: 'abg' }, ns.map((n) => abBar(n, p.ab[n], p.gain && p.gain[n]))));
+      for (const [gn, ns] of groups) wrap.append(h('div', { class: 'note', style: 'margin:6px 0 2px;font-weight:800;color:var(--navy)' }, gn), h('div', { class: 'abg' }, ns.map((n) => abBar(n, p.ab[n], (YA.growthOf(p).month[n]) || (p.gain && p.gain[n]), p.prog && p.prog[n], YA.growthOf(p).year[n]))));
     } else {
-      wrap.append(h('div', { class: 'note', style: 'margin:6px 0 2px;font-weight:800;color:var(--navy)' }, '目立つ能力'), h('div', { class: 'abg' }, list.map((n) => abBar(n, p.ab[n], p.gain && p.gain[n]))));
+      wrap.append(h('div', { class: 'note', style: 'margin:6px 0 2px;font-weight:800;color:var(--navy)' }, '目立つ能力'), h('div', { class: 'abg' }, list.map((n) => abBar(n, p.ab[n], (YA.growthOf(p).month[n]) || (p.gain && p.gain[n]), p.prog && p.prog[n], YA.growthOf(p).year[n]))));
     }
     return wrap;
   }

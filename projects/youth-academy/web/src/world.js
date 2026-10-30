@@ -857,7 +857,27 @@
   };
 
   // ---------- 週の締め：出来事の反映・暦を進める・年度替わり ----------
+  // 成長の見える化：月の初めと年の初めの能力を控え、今月・今年の伸びと総合力の推移を出せるようにする
+  YA.growthTick = function (w) {
+    const mk = w.year * 100 + YA.monthIdx(w.week);
+    for (const p of Object.values(w.players)) {
+      const g = p.gr || (p.gr = { mk: null, y: null, mAb: null, yAb: null, log: [] });
+      if (g.mk !== mk) {
+        g.mk = mk;
+        g.mAb = Object.assign({}, p.ab);
+        g.log.push([mk, Math.round(YA.ovr(p) * 100) / 100]);
+        if (g.log.length > 40) g.log.shift();
+      }
+      if (g.y !== w.year) { g.y = w.year; g.yAb = Object.assign({}, p.ab); }
+    }
+  };
+  YA.growthOf = function (p) {
+    const g = p.gr;
+    const d = (base) => { const o = {}; if (base) for (const a of Object.keys(p.ab)) if (p.ab[a] !== base[a]) o[a] = p.ab[a] - (base[a] == null ? p.ab[a] : base[a]); return o; };
+    return { month: d(g && g.mAb), year: d(g && g.yAb), log: (g && g.log) || [] };
+  };
   YA.startWeek = function (w) {
+    YA.growthTick(w);
     w.planMonth = w.year * 100 + YA.monthIdx(w.week); // この月の練習は組んだことにする（同じ月の残りの週は1タップで進める）
     // 今週の練習を実行して出来事を作る
     w.campMult = 1;
