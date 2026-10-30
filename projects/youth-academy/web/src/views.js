@@ -62,9 +62,18 @@
     const ex = YA.homeExtra();
     if (ex) left.append(ex);
     const act = h('div', { style: 'display:flex;flex-direction:column;gap:5px' });
-    if (w.phase === 'plan') {
-      act.append(h('button', { class: 'btn', onclick: () => { U().app.tab = 'train'; rerender(); } }, '練習を組む（今週のメニュー）'));
-      act.append(h('button', { class: 'btn pri', style: 'min-height:42px;font-size:14px', onclick: () => { runWeek(); } }, '練習を確定して週を進める'));
+    if (w.firstSel && !w.yearIntro) {
+      // 最初のセレクション：高1の12人を応募者から選ぶ。終えるまで週は進められない
+      const signed = YA.signedCount(w, 'sel');
+      act.append(h('div', { class: 'card', style: 'padding:7px 9px;background:#eaf2ff' }, h('div', { class: 'h' }, '最初のセレクション'), h('div', { class: 'note' }, `応募者から高1の12人を選びます。合格 ${signed}人（残り${12 - signed}人は一般入団）`)),
+        h('button', { class: 'btn pri', style: 'min-height:42px', onclick: () => { U().app.tab = 'club'; U().app.ct = 'scout'; rerender(); } }, 'セレクションを開く（応募者を見る）'),
+        h('button', { class: 'btn', onclick: () => modal((close) => h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(420px,95%);padding:12px;gap:8px' }, h('div', { class: 'h' }, '新入生を決めますか'), h('div', { class: 'note' }, `合格の${signed}人と、一般入団${12 - signed}人が高1になります。決めたあとは変えられません。`), h('div', { class: 'row' }, h('button', { class: 'btn', onclick: close }, 'まだ選ぶ'), h('button', { class: 'btn pri', onclick: () => { YA.finishFirstSelection(w); YA.saveWorld(true); close(); rerender(); } }, '決める')))) }, 'セレクションを終えて新入生を決める'));
+    } else if (w.phase === 'plan') {
+      // 練習は月に1回組めばよい。同じ月の残りの週は、組んだメニューのまま1タップで進める
+      const mk = w.year * 100 + YA.monthIdx(w.week);
+      const set = w.planMonth === mk;
+      act.append(h('button', { class: 'btn', onclick: () => { U().app.tab = 'train'; rerender(); } }, set ? '今月の練習を組み直す' : `練習を組む（${cal.month}のメニュー）`));
+      act.append(h('button', { class: 'btn pri', style: 'min-height:42px;font-size:14px', onclick: () => { runWeek(); } }, set ? '今月の練習のまま週を進める' : '練習を確定して週を進める'));
     } else if (w.phase === 'event') {
       act.append(h('button', { class: 'btn pri', style: 'min-height:42px', onclick: () => rerender() }, '出来事を確認する'));
     } else if (w.phase === 'match') {
@@ -92,11 +101,12 @@
     right.append(h('div', { class: 'h' }, '今週気にかけたい子'));
     const pick = [];
     for (const p of S.injured.concat(S.tired, S.lowconf, Object.values(w.players).filter((q) => q.unrest >= 3), S.hot)) if (pick.indexOf(p) < 0) pick.push(p);
-    const gainers = Object.values(w.players).filter((p) => Object.keys(p.gain || {}).length).sort((a, b) => Object.values(b.gain).reduce((x, y) => x + y, 0) - Object.values(a.gain).reduce((x, y) => x + y, 0)).slice(0, 4);
+    const mg = (p) => YA.growthOf(p).month;
+    const gainers = Object.values(w.players).filter((p) => Object.keys(mg(p)).length).sort((a, b) => Object.values(mg(b)).reduce((x, y) => x + y, 0) - Object.values(mg(a)).reduce((x, y) => x + y, 0)).slice(0, 5);
     right.append(h('div', { class: 'plist', style: 'margin-top:4px' }, pick.slice(0, 6).map((p) => h('button', { class: 'pitem', onclick: () => { U().app.pSel = p.id; U().app.tab = 'players'; rerender(); } }, posc(p), h('span', { class: 'nm grow' }, p.name.split(' ')[0]), flags(p)))));
     if (!pick.length) right.append(h('div', { class: 'note' }, '大きな心配はありません'));
-    right.append(h('div', { class: 'h', style: 'margin-top:10px' }, '先週の伸び'));
-    right.append(h('div', { class: 'plist', style: 'margin-top:4px' }, gainers.map((p) => h('div', { class: 'note', style: 'color:var(--ink)' }, h('b', {}, p.name.split(' ')[0]), ' ', Object.entries(p.gain).map(([a, g]) => `${a}+${g}`).join(' ')))));
+    right.append(h('div', { class: 'h', style: 'margin-top:10px' }, '今月の伸び'));
+    right.append(h('div', { class: 'plist', style: 'margin-top:4px' }, gainers.map((p) => h('div', { class: 'note', style: 'color:var(--ink)' }, h('b', {}, p.name.split(' ')[0]), ' ', Object.entries(mg(p)).filter(([, g]) => g > 0).map(([a, g]) => `${a}+${g}`).join(' ')))));
     if (!gainers.length) right.append(h('div', { class: 'note' }, 'まだ伸びた能力はありません'));
     wrap.append(left, mid, right);
     wrap.style.cssText = 'flex:1;min-height:0;display:flex;gap:8px';
@@ -255,6 +265,7 @@
     left.append(chips, list);
     const right = h('div', { class: 'card pbody', style: 'flex:1;min-width:0' });
     const info = h('div', {});
+    info.append(growthBox(sel));
     info.append(U().playerCard({ lineup: w.lineupA }, sel, { all: true }));
     // 追加の情報（伸びしろの目安・状態・履歴）
     const stars = YA.starsOf(sel);
@@ -264,7 +275,7 @@
       h('button', { class: 'btn sm', onclick: () => { sel.star = !sel.star; YA.saveWorld(); rerender(); } }, sel.star ? '★ を外す' : '★ 注目の印'),
       h('button', { class: 'btn sm', onclick: () => swapTeam(sel) }, sel.team === 'A' ? 'Bに回す' : 'Aに上げる')));
     // 面談
-    const talk = h('div', { style: 'margin-top:8px;border-top:1px dashed var(--line);padding-top:6px' }, h('div', { class: 'h' }, '面談（1人とは週1回まで）'));
+    const talk = h('div', { style: 'margin-top:8px;border-top:1px dashed var(--line);padding-top:6px' }, h('div', { class: 'h' }, '面談（1人とは月1回まで）'));
     const res = h('div', { class: 'msglog' });
     const can = YA.canTalk(w, sel);
     // 会話の形（決定71）：相手の一言 → 言葉の違う選択肢3つ → 相手の返事と結果
@@ -288,6 +299,44 @@
     };
     show();
     main.append(h('div', { style: 'flex:1;min-height:0;display:flex;gap:8px' }, left, h('div', { style: 'flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;min-height:0' }, head, tabsEl, right)));
+  }
+  // 総合力の月ごとの推移（折れ線）と、今月・今年の伸びの要約
+  function growthBox(p) {
+    const G = YA.growthOf(p);
+    const log = G.log.slice();
+    const now = Math.round(YA.ovr(p) * 100) / 100;
+    log.push([-1, now]);
+    const sum = (o) => Object.values(o).reduce((a, b) => a + b, 0);
+    const top = (o) => Object.entries(o).sort((a, b) => b[1] - a[1]).filter((x) => x[1] > 0).slice(0, 3).map(([a, v]) => `${a}+${v}`).join(' ');
+    const box = h('div', { class: 'card', style: 'padding:6px 9px;margin:4px 0;background:#f5f8fd;display:flex;gap:10px;align-items:center' });
+    const NS = 'http://www.w3.org/2000/svg';
+    const W0 = 150;
+    const H0 = 44;
+    const vals = log.map((x) => x[1]);
+    const lo = Math.min(...vals) - 0.15;
+    const hi = Math.max(...vals) + 0.15;
+    const pts = vals.map((v, i) => `${(vals.length === 1 ? W0 : (i / (vals.length - 1)) * (W0 - 6)) + 3},${H0 - 4 - ((v - lo) / (hi - lo)) * (H0 - 8)}`);
+    const svg = document.createElementNS(NS, 'svg');
+    svg.setAttribute('viewBox', `0 0 ${W0} ${H0}`);
+    svg.style.cssText = `width:${W0}px;height:${H0}px;flex:none`;
+    const pl = document.createElementNS(NS, 'polyline');
+    pl.setAttribute('points', pts.join(' '));
+    pl.setAttribute('fill', 'none');
+    pl.setAttribute('stroke', '#1f6feb');
+    pl.setAttribute('stroke-width', '2');
+    svg.append(pl);
+    const last = pts[pts.length - 1].split(',');
+    const dot = document.createElementNS(NS, 'circle');
+    dot.setAttribute('cx', last[0]); dot.setAttribute('cy', last[1]); dot.setAttribute('r', '3'); dot.setAttribute('fill', '#1f6feb');
+    svg.append(dot);
+    const d0 = now - vals[0];
+    box.append(svg, h('div', { style: 'font-size:11px;line-height:1.5' },
+      h('div', {}, h('b', {}, '総合力 ' + now.toFixed(1)), h('span', { class: 'note' }, vals.length > 1 ? `（${d0 >= 0 ? '+' : ''}${d0.toFixed(1)}／記録の最初から）` : '（これから記録します）')),
+      h('div', {}, '今月 ', h('b', { style: 'color:#1a9d57' }, sum(G.month) ? '+' + sum(G.month) : '伸びなし'), ' ', h('span', { class: 'note' }, top(G.month))),
+      h('div', {}, '今年 ', h('b', {}, sum(G.year) ? '+' + sum(G.year) : '伸びなし'), ' ', h('span', { class: 'note' }, top(G.year))),
+      (() => { const tb = YA.tacticTrainBonus(W(), p); const parts = []; if (tb.tactic) parts.push(`戦術「${tb.tactic}」：${tb.tabs.join('・')}`); if (tb.role) parts.push(`役割「${tb.role}」：${tb.rabs.slice(0, 4).join('・')}`); return parts.length ? h('div', { class: 'note', style: 'color:var(--ink)' }, '練習で伸びやすい ', parts.join(' ／ ')) : null; })(),
+      h('div', { class: 'note', style: 'font-size:10px' }, '棒の薄い緑＝次の+1までの進み／右の緑＝今月・灰＝今年の伸び')));
+    return box;
   }
   function swapTeam(p) {
     const w = W();

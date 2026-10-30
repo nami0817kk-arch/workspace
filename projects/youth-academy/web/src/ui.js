@@ -146,9 +146,15 @@
     const keys = Object.keys(p.pers).filter((g) => all || p.pers[g] !== 'ふつう');
     return keys.map((g) => h('span', { class: 'chip pers' }, p.pers[g]));
   }
-  function abBar(name, v, gain) {
+  // 棒の濃い部分＝いまの値、薄い緑＝次の+1までの進み。右の緑＝今月の伸び、灰＝今年の伸び
+  function abBar(name, v, gain, prog, yr) {
     const c = v >= 15 ? '#1a9d57' : v >= 11 ? '#2f7ed8' : v >= 8 ? '#8fa3c4' : '#c7d0e0';
-    return h('div', { class: 'ab' }, h('b', {}, name), h('div', { class: 'bar' }, h('i', { style: `width:${(v / 20) * 100}%;background:${c}` })), h('em', { style: `color:${v >= 15 ? '#1a9d57' : 'inherit'}` }, v), gain ? h('span', { style: 'color:#1a9d57;font-weight:900;font-size:10px;width:18px' }, '+' + gain) : h('span', { style: 'width:18px' }));
+    const pg = prog && v < 20 ? Math.min(0.99, prog) : 0;
+    const bar = h('div', { class: 'bar', style: 'position:relative' }, h('i', { style: `width:${(v / 20) * 100}%;background:${c}` }));
+    if (pg > 0.05) bar.append(h('i', { style: `position:absolute;left:${(v / 20) * 100}%;top:0;height:100%;width:${(pg / 20) * 100}%;background:#9bdcb4;border-radius:0 3px 3px 0` }));
+    return h('div', { class: 'ab' }, h('b', {}, name), bar, h('em', { style: `color:${v >= 15 ? '#1a9d57' : 'inherit'}` }, v),
+      gain ? h('span', { style: 'color:#1a9d57;font-weight:900;font-size:10px;width:18px' }, '+' + gain) : h('span', { style: 'width:18px' }),
+      yr ? h('span', { style: 'color:#7b879b;font-weight:700;font-size:9.5px;width:20px' }, (yr > 0 ? '+' : '') + yr) : h('span', { style: 'width:20px' }));
   }
   function playerCard(t, p, opts) {
     opts = opts || {};
@@ -169,9 +175,9 @@
     const list = opts.all ? (isGK ? YA.AB_GK.concat(['フィールド']) : YA.AB_FIELD) : top.slice(0, 8).map((x) => x[0]);
     if (opts.all) {
       const groups = isGK ? [['GK', YA.AB_GK]] : [['技術', YA.AB_TECH], ['頭', YA.AB_MENTAL], ['体', YA.AB_PHYS]];
-      for (const [gn, ns] of groups) wrap.append(h('div', { class: 'note', style: 'margin:6px 0 2px;font-weight:800;color:var(--navy)' }, gn), h('div', { class: 'abg' }, ns.map((n) => abBar(n, p.ab[n], p.gain && p.gain[n]))));
+      for (const [gn, ns] of groups) wrap.append(h('div', { class: 'note', style: 'margin:6px 0 2px;font-weight:800;color:var(--navy)' }, gn), h('div', { class: 'abg' }, ns.map((n) => abBar(n, p.ab[n], (YA.growthOf(p).month[n]) || (p.gain && p.gain[n]), p.prog && p.prog[n], YA.growthOf(p).year[n]))));
     } else {
-      wrap.append(h('div', { class: 'note', style: 'margin:6px 0 2px;font-weight:800;color:var(--navy)' }, '目立つ能力'), h('div', { class: 'abg' }, list.map((n) => abBar(n, p.ab[n], p.gain && p.gain[n]))));
+      wrap.append(h('div', { class: 'note', style: 'margin:6px 0 2px;font-weight:800;color:var(--navy)' }, '目立つ能力'), h('div', { class: 'abg' }, list.map((n) => abBar(n, p.ab[n], (YA.growthOf(p).month[n]) || (p.gain && p.gain[n]), p.prog && p.prog[n], YA.growthOf(p).year[n]))));
     }
     return wrap;
   }
@@ -342,7 +348,15 @@
       const sl = t.lineup[st.sel];
       const p = t.players[sl.pid];
       if (st.tab === 'tactic') {
-        body.append(h('div', { class: 'h' }, '戦い方の型'), h('div', { class: 'fm-row', style: 'margin:4px 0 6px' }, Object.keys(YA.TACTICS).map((n) => h('button', { class: 'btn sm' + (t.tactic.type === n ? ' on' : ''), onclick: () => { o.match ? o.match.setType(t, n) : (t.tactic = Object.assign({ type: n, dir: t.tactic.dir || 0 }, YA.TACTICS[n])); onChange(); } }, n))));
+        body.append(h('div', { class: 'h' }, '戦い方の型'), h('div', { class: 'fm-row', style: 'margin:4px 0 6px' }, Object.keys(YA.TACTICS).map((n) => h('button', { class: 'btn sm' + (t.tactic.type === n ? ' on' : ''), onclick: () => { o.match ? o.match.setType(t, n) : (t.tactic = Object.assign({ type: n, dir: t.tactic.dir || 0 }, YA.TACTICS[n])); onChange(); } }, n + ' ' + YA.tacticFitOf(t, n).mark))));
+        {
+          const cur = YA.tacticFitOf(t, t.tactic.type);
+          const pf = YA.TAC_PROFILE[t.tactic.type];
+          if (pf) {
+            const wk = cur.abs.slice().sort((x, y) => x[1] - y[1]).slice(0, 2).map((x) => `${x[0]}${x[1].toFixed(1)}`).join('・');
+            body.append(h('div', { class: 'insight', style: 'margin-bottom:6px' }, h('b', {}, `いまのスタメンとの相性 ${cur.mark}`), `　${pf.why}。大事な能力：${pf.abs.join('・')}（先発の平均で低いのは ${wk}）。この戦術で練習すると、その能力が少し伸びやすくなります。◎○△✕は、各戦術とスタメンの相性です。`));
+          }
+        }
         for (const [k, label, lo, hi] of YA.KNOBS) {
           const inp = h('input', { type: 'range', min: 0, max: 100, value: Math.round(t.tactic[k] * 100) });
           inp.addEventListener('input', () => { t.tactic[k] = inp.value / 100; t.tactic.type = 'カスタム'; o.onChange && o.onChange(); });
@@ -794,7 +808,22 @@
     wrap.append(
       h('div', { class: 'res-top' }, h('div', { class: 'res-score' }, h('span', {}, m.home.short), h('b', {}, `${summary.score.home} - ${summary.score.away}`), h('span', {}, m.away.short)), h('div', { class: 'h grow', style: 'font-size:15px' }, win ? '勝利' : draw ? '引き分け' : '敗戦'), m.scheduled && !m.videoDone && YA.videoButton ? YA.videoButton(m) : null, m.scheduled ? h('button', { class: 'btn pri', style: 'min-width:110px', onclick: () => { app.view = 'pre'; preState = null; app.tab = 'home'; render(); } }, 'ホームへ（次の週へ）') : h('button', { class: 'btn', onclick: () => { app.view = 'pre'; preState = null; render(); } }, '戦術を直す'), m.scheduled ? null : h('button', { class: 'btn pri', onclick: () => { const t = newOurs(); startMatch(t, YA.makeOpponent(YA.OPPONENTS[app.opp], app.seed * 3 + app.opp + 1), YA.OPPONENTS[app.opp], false); } }, '同じ設定でもう一度')),
     );
-    const left = h('div', { class: 'card pbody grow' }, h('div', { class: 'h', style: 'margin-bottom:5px' }, '見どころ'));
+    const left = h('div', { class: 'card pbody grow' });
+    const hasExp = !!(m.scheduled && app.w);
+    const lpane = h('div', {});
+    const showL = (k) => {
+      left.replaceChildren(h('div', { class: 'row', style: 'margin-bottom:5px;gap:5px' }, h('button', { class: 'btn sm' + (k === 'tl' ? ' on' : ''), onclick: () => showL('tl') }, '見どころ'), hasExp ? h('button', { class: 'btn sm' + (k === 'xp' ? ' on' : ''), onclick: () => showL('xp') }, '試合の経験') : null), k === 'xp' ? expPane() : lpane);
+    };
+    // 試合でもらった経験：出場した選手ごとに、何がどれだけ増えたかを並べる
+    function expPane() {
+      const box = h('div', {});
+      box.append(h('div', { class: 'note', style: 'margin-bottom:4px' }, '出た時間と採点で、自信・戦術理解・頭の経験値が増えます。頭の経験値は、次の週の成長（判断・予測など）に入ります。'));
+      const rows = Object.keys(m.home.players).map((id) => app.w.players[id]).filter((p) => p && p.lm && p.lm.y === app.w.year && p.lm.w === app.w.week).sort((a, b) => b.lm.mins - a.lm.mins || b.lm.rating - a.lm.rating);
+      if (!rows.length) box.append(h('div', { class: 'note' }, '経験の記録がありません'));
+      const sg = (v, u) => (v > 0 ? '+' : '') + v + (u || '');
+      box.append(h('div', { class: 'plist' }, rows.map((p) => h('div', { class: 'pitem', style: 'cursor:default;gap:5px;font-size:11px' }, posChip(p), h('span', { class: 'nm grow', style: 'min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap' }, `${p.num} ${surname(p)}`), h('span', { class: 'sub', style: 'width:34px' }, p.lm.mins + '分'), h('b', { style: 'width:26px' }, p.lm.rating.toFixed(1)), h('span', { class: 'chip trait', style: 'font-size:10px' }, '頭 +' + p.lm.xp), h('span', { class: 'sub', style: 'width:50px' }, '自信' + sg(p.lm.conf)), h('span', { class: 'sub', style: 'width:54px' }, '戦術' + sg(p.lm.tu)), p.lm.state ? h('span', { class: 'fit ' + (p.lm.state === 'peak' ? 'good' : 'bad') }, p.lm.state === 'peak' ? '伸び盛り' : '壁') : null))));
+      return box;
+    }
     const tl = h('div', { class: 'tl' });
     for (const sc of m.scenes) {
       const who = (sc.side === 'home' ? m.home : m.away);
@@ -803,7 +832,8 @@
       const tags = sc.fxShow.map((f) => h('span', { class: 'chip ' + f.kind }, `${f.num}番 ${f.tag}`));
       tl.append(h('div', { class: 'it' + (sc.goal ? (sc.side === 'home' ? ' goal' : ' ogoal') : '') }, h('div', { class: 'm' }, sc.minute + "'"), h('div', { class: 'tx' }, h('span', { class: 'nm' }, (sc.side === 'home' ? m.home.short : m.away.short) + ' ' + sc.typeName), ' ', lastBeat, h('div', { class: 'tags' }, tags))));
     }
-    left.append(tl);
+    lpane.append(tl);
+    showL('tl');
     const right = h('div', { class: 'card pbody', style: 'width:250px;flex:none' });
     right.append(h('div', { class: 'h' }, '気づき'));
     // 特性・性格が効いた回数

@@ -91,6 +91,14 @@ async function clearEvents() {
   btn('遅刻をしない').click();
   btn('この1年を始める').click();
   ok(!d.querySelector('.sheet') && A.w.rules.length === 1 && !A.w.yearIntro, '目標と約束事を決めて始める');
+  // 最初のセレクション：開く画面があり、終えるまで週は進められない
+  ok(A.w.firstSel && txt().includes('最初のセレクション') && !!btn('セレクションを開く') && !btn('練習を確定して週を進める'), '最初のセレクションがホームに出る');
+  btn('セレクションを開く').click();
+  ok(A.tab === 'club' && A.ct === 'scout' && txt().includes('セレクションの応募者'), 'スカウトにセレクションの応募者');
+  A.ct = 'over'; A.tab = 'home'; rail('ホーム');
+  btn('セレクションを終えて新入生を決める').click();
+  btn('決める', d.querySelector('.sheet')).click();
+  ok(!A.w.firstSel && Object.values(A.w.players).filter((p) => p.grade === 1).length === 12, 'セレクションを終えると高1が12人');
   // ホーム
   ok(txt().includes('1年目') && txt().includes('4月第1週') && txt().includes('リーグ'), 'ホームに年と週');
   ok(!!btn('練習を確定して週を進める') && !!btn('練習を組む'), 'ホームの操作');

@@ -192,6 +192,7 @@
     YA.relations(w);
     YA.yearStart(w);
     YA.autoPlan(w);
+    if (opts.firstSel) YA.beginFirstSelection(w);
     w.inbox.push({ week: 0, year: 1, tier: 2, text: '指導者として着任しました。高1〜高3の36人を預かります。まずは練習を組んで、週を進めましょう。' });
     return w;
   };
@@ -423,6 +424,12 @@
       } else {
         fatAdd = -2.0;
       }
+      // 戦術と役割に合った能力が伸びやすい：A・Bの戦術で大事な能力と、いまの役割に効く能力に、練習の経験が少し上乗せされる
+      if (!rest) {
+        const tb = YA.tacticTrainBonus(w, p);
+        for (const [a, v] of Object.entries(tb.exp)) exp[a] = (exp[a] || 0) + v;
+        p._tacNote = tb;
+      }
       // 試合の経験（頭の能力と自信に上乗せ。出番がなければなし）
       // 練習試合：Bの選手に出番ができて、不満が和らぐ
       if (hasPractice && !rest && p.team === 'B') {
@@ -514,7 +521,7 @@
         p.state.w--;
         if (p.state.w <= 0) p.state = null;
       }
-      p.unrest = Math.max(0, p.unrest - 0.3);
+      p.unrest = Math.max(0, p.unrest - 0.5); // 面談が月1回になったので、自然に和らぐ量を増やした
       for (const a of Object.keys(p.gain)) gains[p.id] = (gains[p.id] || 0) + p.gain[a];
     }
     // 成長期（その子のタイミングで始まる）
@@ -588,7 +595,7 @@
   const QUIT_OK = { 不満: 0.62, 怪我: 0.72, 能力: 0.42, 家庭: 0.35 };
   const QUIT_NAME = { 不満: '不満', 怪我: '怪我', 能力: '能力的に厳しく', 家庭: '家庭の事情' };
   YA.EVENTS = [
-    { id: 'unrest', name: '出番の不満', weight: 2.2,
+    { id: 'unrest', name: '出番の不満', weight: 1.4,
       pick: (w, r) => { const c = Object.values(w.players).filter((p) => p.team === 'B' && p.mins < 60 && YA.ovr(p) > 8.5 && p.inj <= 0 && w.year * 40 + w.week > 6); return c.length ? r.pick(c) : null; },
       text: (p) => pname(p) + 'が声をかけてきた。「最近、試合に出られていません。何が足りないんでしょうか」',
       opts: [opt('次の機会は必ず作る、と約束する', 'warm', (w, p) => { p.unrest = Math.max(0, p.unrest - 2); }), opt('練習で見せろ、と求める', 'push', (w, p) => { p.train.promise = true; }), opt('今は我慢の時期だと伝える', 'firm', (w, p) => { p.unrest += 2; })] },
@@ -778,6 +785,9 @@
       const p = w.players[id];
       if (!p) continue;
       const mm = p.st ? p.st.minutes : 0;
+      const conf0 = p.conf;
+      const tu0 = p.tu == null ? 40 : p.tu;
+      const state0 = p.state ? p.state.k : null;
       p.mins += mm;
       const s15 = team.startSlot && team.startSlot[id];
       if (s15 && mm > 0) {
@@ -815,10 +825,15 @@
             }
           }
         }
-        if (p.pers && m.discontent && m.discontent[id] > 8) p.unrest += 1;
+        if (p.pers && m.discontent && m.discontent[id] > 10) p.unrest += 0.7; // 役割が合わない場面が多い試合だけ、少しずつ
       } else if (which === 'A' && p.team === 'A' && p.mins < 400) {
         // 控えにもならなかった子の小さな不満
-        if (ST(p, '気持ちの強さ', '負けず嫌い') || ST(p, '目指すもの', '野心家')) p.unrest += 0.2;
+        if (ST(p, '気持ちの強さ', '負けず嫌い') || ST(p, '目指すもの', '野心家')) p.unrest += 0.1;
+      }
+      if (mm > 0 && which === 'A') {
+        // 試合でもらった経験（試合後の画面に出す）。頭の能力の経験値は次の週の成長に入る
+        const tier = (p.team === 'A' ? 1 : 0.55) * (w.league ? YA.LEVEL_EXP[w.league.level - 1] : 1);
+        p.lm = { y: w.year, w: w.week, mins: mm, rating: p.st.rating, conf: Math.round(p.conf - conf0), tu: Math.round(((p.tu == null ? 40 : p.tu) - tu0) * 10) / 10, xp: Math.round((mm / 90) * 5 * tier * 10) / 10, pos: team.startSlot && team.startSlot[id], state: p.state && p.state.k !== state0 ? p.state.k : null };
       }
       delete p._startStam;
     }
@@ -856,8 +871,60 @@
     return { gf: m.score.home, ga: m.score.away, opp: o2.name };
   };
 
+  // ---------- 戦術と役割で変わる成長 ----------
+  // 戻り値：{ exp: 能力→上乗せ, tactic: 戦術名, tabs: 戦術で伸びやすい能力, role: 役割名, rabs: 役割で伸びやすい能力 }
+  YA.tacticTrainBonus = function (w, p) {
+    const out = { exp: {}, tactic: null, tabs: [], role: null, rabs: [] };
+    if (!w.lineupA || p.pos === 'GK') return out;
+    const inA = w.lineupA.findIndex((s) => s.pid === p.id);
+    const inB = inA < 0 ? w.lineupB.findIndex((s) => s.pid === p.id) : -1;
+    const benchA = (w.benchA || []).indexOf(p.id) >= 0;
+    if (inA < 0 && inB < 0 && !benchA && p.team !== 'A') return out;
+    const team = inA >= 0 || benchA || p.team === 'A' ? 'A' : 'B';
+    const type = team === 'B' && w.bCtl && w.bCtl.tactic && YA.TAC_PROFILE[w.bCtl.tactic] ? w.bCtl.tactic : w.tactic && w.tactic.type;
+    const pf = YA.TAC_PROFILE[type];
+    const rep = team === 'A' ? YA.tactRepOf(w) : 0.8;
+    const wide = ['LW', 'RW', 'LB', 'RB', 'LWB', 'RWB', 'LM', 'RM'];
+    const who = !pf ? false : pf.who === 'front' ? p.pos === 'MF' || p.pos === 'FW' : pf.who === 'back' ? p.pos === 'DF' || p.main === 'DM' : pf.who === 'wide' ? wide.indexOf(p.main) >= 0 : true;
+    if (pf && who) {
+      out.tactic = type;
+      for (const a of pf.abs) if (p.ab[a] != null) { out.exp[a] = (out.exp[a] || 0) + 0.18 * rep; out.tabs.push(a); }
+    }
+    const lu = team === 'A' ? w.lineupA : w.lineupB;
+    const si = lu.findIndex((s) => s.pid === p.id);
+    if (si >= 0) {
+      const rd = YA.ROLE_DEF[lu[si].role];
+      if (rd) {
+        out.role = lu[si].role;
+        for (const [a, wt] of Object.entries(rd.absW)) if (p.ab[a] != null) { out.exp[a] = (out.exp[a] || 0) + 0.07 * wt; out.rabs.push(a); }
+      }
+    }
+    return out;
+  };
+
   // ---------- 週の締め：出来事の反映・暦を進める・年度替わり ----------
+  // 成長の見える化：月の初めと年の初めの能力を控え、今月・今年の伸びと総合力の推移を出せるようにする
+  YA.growthTick = function (w) {
+    const mk = w.year * 100 + YA.monthIdx(w.week);
+    for (const p of Object.values(w.players)) {
+      const g = p.gr || (p.gr = { mk: null, y: null, mAb: null, yAb: null, log: [] });
+      if (g.mk !== mk) {
+        g.mk = mk;
+        g.mAb = Object.assign({}, p.ab);
+        g.log.push([mk, Math.round(YA.ovr(p) * 100) / 100]);
+        if (g.log.length > 40) g.log.shift();
+      }
+      if (g.y !== w.year) { g.y = w.year; g.yAb = Object.assign({}, p.ab); }
+    }
+  };
+  YA.growthOf = function (p) {
+    const g = p.gr;
+    const d = (base) => { const o = {}; if (base) for (const a of Object.keys(p.ab)) if (p.ab[a] !== base[a]) o[a] = p.ab[a] - (base[a] == null ? p.ab[a] : base[a]); return o; };
+    return { month: d(g && g.mAb), year: d(g && g.yAb), log: (g && g.log) || [] };
+  };
   YA.startWeek = function (w) {
+    YA.growthTick(w);
+    w.planMonth = w.year * 100 + YA.monthIdx(w.week); // この月の練習は組んだことにする（同じ月の残りの週は1タップで進める）
     // 今週の練習を実行して出来事を作る
     w.campMult = 1;
     if (YA.SCHED(w.week).t === 'camp') YA.applyCamp(w);
@@ -978,12 +1045,14 @@
     { k: 'listen', label: '悩みを聞く', kind: 'warm' },
     { k: 'push', label: '背中を押す', kind: 'push' },
   ];
-  YA.talkWeek = (w) => w.year * 100 + w.week;
+  // 面談は1人につき月に1回（暦の月で数える）
+  YA.monthIdx = (week) => Math.min(11, Math.floor(((week - 1) / WEEKS) * 12));
+  YA.talkWeek = (w) => w.year * 100 + YA.monthIdx(w.week);
   YA.canTalk = (w, p) => p.talk !== YA.talkWeek(w);
   YA.talk = function (w, pid, k) {
     const p = w.players[pid];
     const t = YA.TALKS.find((x) => x.k === k);
-    if (!YA.canTalk(w, p)) return { ok: false, msg: '1人とは週に1回までです' };
+    if (!YA.canTalk(w, p)) return { ok: false, msg: '1人とは月に1回までです' };
     p.talk = YA.talkWeek(w);
     const res = react(p, t.kind);
     if (res.c > 0 && w.coach) res.c = res.c * (1 + (w.coach.talk - 10) * 0.03);

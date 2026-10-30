@@ -194,5 +194,34 @@ ok(fxTraits > 200 && fxPers > 20, 'fx が少ない');
   const y = run(9, 1);
   ok(JSON.stringify(x.scenes.map((s) => [s.type, s.outcome, s.minute])) === JSON.stringify(y.scenes.map((s) => [s.type, s.outcome, s.minute])), '同じ種で同じ試合');
 }
+// 9. 戦術・役割が結果に効く：戦術に合う能力を高めると得失点差が上がり、役割をでたらめにすると下がる
+{
+  const gd = (mod, tac) => {
+    let g = 0;
+    for (let sd = 1; sd <= 200; sd++) {
+      const home = YA.makeOurs(1);
+      if (tac) home.tactic = Object.assign({ type: tac }, YA.TACTICS[tac]);
+      if (mod) mod(home);
+      const m = new YA.Match({ seed: sd, home, away: YA.makeOpponent(YA.OPPONENTS[2], sd), settings: { autoStop: false } });
+      let n = 0;
+      while (!m.finished && n++ < 1000) m.step();
+      g += m.score.home - m.score.away;
+    }
+    return g / 200;
+  };
+  const rel = (tac) => (h) => { for (const p of Object.values(h.players)) for (const n of YA.TAC_PROFILE[tac].abs) p.ab[n] = Math.min(20, p.ab[n] + 3); };
+  const irr = (h) => { for (const p of Object.values(h.players)) for (const n of ['ヘディング', 'ジャンプ', 'バランス', 'プレースキック', 'PK']) p.ab[n] = Math.min(20, p.ab[n] + 3); };
+  const a = gd(rel('ポゼッション'), 'ポゼッション');
+  const b = gd(irr, 'ポゼッション');
+  console.log('戦術に合う能力+3', a.toFixed(2), '無関係な能力+3', b.toFixed(2));
+  ok(a > b + 0.2, '戦術に合う能力を上げたほうが強い');
+  const base = gd(null);
+  const bad = gd((h) => h.lineup.forEach((s, i) => { const pos = YA.pos15OfSlot(s, i); const alt = Object.keys(YA.ROLE_DEF).filter((r) => YA.ROLES15[pos] && YA.ROLES15[pos].indexOf(r) >= 0); if (alt.length) { s.role = alt[(i * 7) % alt.length]; YA.fixSlotRole(s, i); } }));
+  console.log('役割 基準', base.toFixed(2), 'でたらめ', bad.toFixed(2));
+  ok(bad < base - 0.1, '役割をでたらめにすると弱くなる');
+  const home = YA.makeOurs(1);
+  const f = YA.tacticFitOf(home, 'ポゼッション');
+  ok(typeof f.fit === 'number' && ['◎', '○', '△', '✕'].includes(f.mark) && f.abs.length === 5, '戦術の相性が出る');
+}
 console.log(fails ? '失敗 ' + fails : 'すべて通過');
 process.exit(fails ? 1 : 0);
