@@ -143,6 +143,10 @@ button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:poin
 .big-note{padding:24px;text-align:center;color:var(--sub);line-height:1.8}
 .hidden{display:none!important}
 
+.gtag{flex:none;font-size:9.5px;font-weight:800;line-height:1;padding:2px 4px;border-radius:4px;background:#e8eef7;color:#355}
+.gtag.g1{background:#dff3e6;color:#1a7a43}
+.gtag.g2{background:#e6eefc;color:#2a5db0}
+.gtag.g3{background:#fdebd6;color:#a85d0c}
 .sqgrid{display:grid;grid-template-columns:1fr 1fr;gap:3px 6px;margin-top:3px}
 .pitem.sq{min-height:34px;padding:3px 6px;gap:4px;font-size:11.5px}
 .rolecard{display:flex;align-items:center;gap:8px;width:100%;text-align:left;padding:7px 9px;border-radius:10px;border:1.5px solid var(--line);background:#f5f8fd;margin-bottom:4px}

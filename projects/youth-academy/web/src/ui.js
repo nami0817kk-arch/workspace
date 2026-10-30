@@ -138,6 +138,8 @@
 
   // ---------- 選手の表示 ----------
   const surname = (p) => p.name.split(' ')[0];
+  // 学年の印（自分のチームの選手だけ。相手は学年を持たない）
+  const gtag = (p) => (p && p.grade ? h('span', { class: 'gtag g' + p.grade }, '高' + p.grade) : null);
   function persText(p) {
     const keys = Object.keys(p.pers).filter((g) => p.pers[g] !== 'ふつう');
     return keys.map((g) => p.pers[g]).join('・') || 'ふつう';
@@ -164,7 +166,7 @@
     const top = (isGK ? YA.AB_GK : YA.AB_FIELD).map((n) => [n, p.ab[n]]).sort((a, b) => b[1] - a[1]);
     const wrap = h('div', {});
     wrap.append(
-      h('div', { class: 'row' }, posChip(p), h('div', { class: 'grow' }, h('div', { class: 'h' }, `${p.num}  ${p.name}`), h('div', { class: 'sub' }, `${p.height}cm  /  調子 ${p.form > 0 ? '+' : ''}${p.form}  /  自信 ${Math.round(p.conf)}  /  戦術理解 ${Math.round(p.tu == null ? 40 : p.tu)}` + (p.nation && p.nation !== '日本' ? `  /  ${p.nation}` : '')))),
+      h('div', { class: 'row' }, posChip(p), h('div', { class: 'grow' }, h('div', { class: 'h' }, `${p.num}  ${p.name}`, p.grade ? `  （高${p.grade}）` : ''), h('div', { class: 'sub' }, `${p.height}cm  /  調子 ${p.form > 0 ? '+' : ''}${p.form}  /  自信 ${Math.round(p.conf)}  /  戦術理解 ${Math.round(p.tu == null ? 40 : p.tu)}` + (p.nation && p.nation !== '日本' ? `  /  ${p.nation}` : '')))),
       h('div', { style: 'margin-top:5px' }, h('div', { class: 'note' }, 'ポジションの適性'), aptBlock(p)),
       h('div', { style: 'margin-top:5px' }, h('div', { class: 'note' }, '性格'), h('div', { class: 'row', style: 'flex-wrap:wrap;gap:3px' }, persChips(p, false))),
       h('div', { style: 'margin-top:5px' }, h('div', { class: 'note' }, '特性'), h('div', { class: 'row', style: 'flex-wrap:wrap;gap:3px' }, p.traits.length ? p.traits.map((x) => h('span', { class: 'chip trait' }, x)) : h('span', { class: 'sub' }, 'なし'))),
@@ -410,7 +412,7 @@
           body.append(h('div', { class: 'plist' }, t.bench.map((bid) => {
             const bp = t.players[bid];
             const ok2 = (bp.pos === 'GK') === (p.pos === 'GK') && !(bp.inj > 0);
-            return h('button', { class: 'pitem', style: ok2 ? '' : 'opacity:.35', onclick: () => { if (!ok2) return; const bi = t.bench.indexOf(bid); t.bench[bi] = sl.pid; sl.pid = bid; fixRole(t, st.sel); board.redraw(); onChange(); } }, posChip(bp), h('span', { class: 'num' }, bp.num), h('span', { class: 'nm grow' }, bp.name), bp.inj > 0 ? h('span', { class: 'fit bad' }, '怪我' + bp.inj + '週') : h('span', { class: 'sub' }, bp.traits.slice(0, 2).join('・')));
+            return h('button', { class: 'pitem', style: ok2 ? '' : 'opacity:.35', onclick: () => { if (!ok2) return; const bi = t.bench.indexOf(bid); t.bench[bi] = sl.pid; sl.pid = bid; fixRole(t, st.sel); board.redraw(); onChange(); } }, posChip(bp), h('span', { class: 'num' }, bp.num), h('span', { class: 'nm grow' }, bp.name), gtag(bp), bp.inj > 0 ? h('span', { class: 'fit bad' }, '怪我' + bp.inj + '週') : h('span', { class: 'sub' }, bp.traits.slice(0, 2).join('・')));
           })));
         }
       } else if (st.tab === 'sub') {
@@ -423,12 +425,12 @@
         t.lineup.forEach((x, i) => {
           const q = t.players[x.pid];
           const pc = YA.posOfSlot(x, i);
-          lo.append(h('button', { class: 'pitem' + (st.subOut === q.id ? ' on' : ''), onclick: () => { st.subOut = q.id; renderBody(); } }, posChip(q, YA.POS_LABEL[YA.pos15OfSlot(x, i)]), h('span', { class: 'num' }, q.num), h('span', { class: 'nm grow' }, surname(q)), h('div', { class: 'bar stam' }, h('i', { style: `width:${q.stam}%;background:${q.stam < 45 ? '#d63a3a' : q.stam < 70 ? '#f0a020' : '#1a9d57'}` }))));
+          lo.append(h('button', { class: 'pitem' + (st.subOut === q.id ? ' on' : ''), onclick: () => { st.subOut = q.id; renderBody(); } }, posChip(q, YA.POS_LABEL[YA.pos15OfSlot(x, i)]), h('span', { class: 'num' }, q.num), h('span', { class: 'nm grow' }, surname(q)), gtag(q), h('div', { class: 'bar stam' }, h('i', { style: `width:${q.stam}%;background:${q.stam < 45 ? '#d63a3a' : q.stam < 70 ? '#f0a020' : '#1a9d57'}` }))));
         });
         const li = h('div', { class: 'grow plist' }, h('div', { class: 'note' }, '入れる選手（ベンチ）'));
         t.bench.forEach((bid) => {
           const q = t.players[bid];
-          li.append(h('button', { class: 'pitem' + (st.subIn === q.id ? ' on' : ''), onclick: () => { st.subIn = q.id; renderBody(); } }, posChip(q), h('span', { class: 'num' }, q.num), h('span', { class: 'nm grow' }, surname(q)), h('span', { class: 'sub', style: 'font-size:9.5px' }, q.traits.slice(0, 1).join(''))));
+          li.append(h('button', { class: 'pitem' + (st.subIn === q.id ? ' on' : ''), onclick: () => { st.subIn = q.id; renderBody(); } }, posChip(q), h('span', { class: 'num' }, q.num), h('span', { class: 'nm grow' }, surname(q)), gtag(q), h('span', { class: 'sub', style: 'font-size:9.5px' }, q.traits.slice(0, 1).join(''))));
         });
         cols.append(lo, li);
         body.append(cols);
@@ -581,7 +583,7 @@
       const aptv = p15 && p.apt ? p.apt[p15] : null;
       const tired = Math.round(p.fat || 0);
       return h('button', { class: 'pitem sq' + (on ? ' on' : ''), style: compat ? '' : 'opacity:.3', onclick: () => handlePick(x) },
-        posChip(p), h('span', { class: 'num' }, p.num), h('span', { class: 'nm grow', style: 'overflow:hidden;text-overflow:ellipsis;white-space:nowrap' }, surname(p)),
+        posChip(p), h('span', { class: 'num' }, p.num), h('span', { class: 'nm grow', style: 'overflow:hidden;text-overflow:ellipsis;white-space:nowrap' }, surname(p)), gtag(p),
         aptv != null ? h('span', { class: 'chip ' + (aptv >= 14 ? 'trait' : 'gray'), style: 'font-size:9.5px' }, '適' + aptv) : null,
         h('b', { style: 'width:26px;text-align:right' }, YA.ovr(p).toFixed(1)),
         p.inj > 0 ? h('span', { class: 'fit bad' }, '怪') : h('div', { class: 'bar stam', style: 'width:22px' }, h('i', { style: `width:${100 - tired}%;background:${tired > 60 ? '#d63a3a' : tired > 40 ? '#f0a020' : '#1a9d57'}` })));
@@ -593,7 +595,7 @@
       const top = h('div', { class: 'card', style: 'padding:5px 8px;margin-bottom:5px;background:#f5f8fd' });
       if (pp) {
         const sl2 = pk.k === 'L' ? t.lineup[pk.i] : null;
-        top.append(h('div', { class: 'row', style: 'gap:6px' }, posChip(pp), h('b', {}, `${pp.num} ${pp.name}`), h('span', { class: 'sub' }, `能力${YA.ovr(pp).toFixed(1)}／疲れ${Math.round(pp.fat || 0)}`), sl2 ? h('span', { class: 'chip trait' }, `${sl2.role}・${(YA.DUTY[sl2.duty] || YA.DUTY.sup).label}`) : null, h('span', { class: 'grow' }),
+        top.append(h('div', { class: 'row', style: 'gap:6px' }, posChip(pp), h('b', {}, `${pp.num} ${pp.name}`), gtag(pp), h('span', { class: 'sub' }, `能力${YA.ovr(pp).toFixed(1)}／疲れ${Math.round(pp.fat || 0)}`), sl2 ? h('span', { class: 'chip trait' }, `${sl2.role}・${(YA.DUTY[sl2.duty] || YA.DUTY.sup).label}`) : null, h('span', { class: 'grow' }),
           sl2 ? h('button', { class: 'btn sm', onclick: () => { st.sel = pk.i; st.tab = 'role'; renderTabs(); renderBody(); } }, '役割・任務') : null,
           h('button', { class: 'btn sm', onclick: () => { st.pick = null; renderBody(); board.redraw(); } }, '解除')));
         top.append(h('div', { class: 'note', style: 'margin-top:2px' }, '入れ替える相手（ピッチの選手・ベンチ・控え外）をタップ'));
@@ -675,7 +677,7 @@
     const t = newOurs();
     const all = t.lineup.map((x) => t.players[x.pid]).concat(t.bench.map((id) => t.players[id]));
     const sel = clamp(app.pSel || 0, 0, all.length - 1);
-    const list = h('div', { class: 'card pbody scroll', style: 'width:200px;flex:none;padding:6px' }, h('div', { class: 'plist' }, all.map((q, i) => h('button', { class: 'pitem' + (i === sel ? ' on' : ''), onclick: () => { app.pSel = i; render(); } }, posChip(q), h('span', { class: 'num' }, q.num), h('span', { class: 'nm grow' }, q.name), i < 11 ? h('span', { class: 'chip gray' }, 'A') : null))));
+    const list = h('div', { class: 'card pbody scroll', style: 'width:200px;flex:none;padding:6px' }, h('div', { class: 'plist' }, all.map((q, i) => h('button', { class: 'pitem' + (i === sel ? ' on' : ''), onclick: () => { app.pSel = i; render(); } }, posChip(q), h('span', { class: 'num' }, q.num), h('span', { class: 'nm grow' }, q.name), gtag(q), i < 11 ? h('span', { class: 'chip gray' }, 'A') : null))));
     const detail = h('div', { class: 'card pbody' }, playerCard(t, all[sel], { all: true }));
     main.append(h('div', { class: 'row', style: 'flex:1;min-height:0;align-items:stretch' }, list, detail));
   }
