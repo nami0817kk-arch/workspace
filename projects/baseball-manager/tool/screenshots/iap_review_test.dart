@@ -18,7 +18,6 @@ import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:baseball_manager/game/player.dart';
-import 'package:baseball_manager/monetization/ad_service.dart';
 import 'package:baseball_manager/monetization/monetization.dart';
 import 'package:baseball_manager/monetization/purchase_service.dart';
 import 'package:baseball_manager/ui/app.dart';
