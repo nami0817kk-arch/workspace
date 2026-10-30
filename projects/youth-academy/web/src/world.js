@@ -778,6 +778,9 @@
       const p = w.players[id];
       if (!p) continue;
       const mm = p.st ? p.st.minutes : 0;
+      const conf0 = p.conf;
+      const tu0 = p.tu == null ? 40 : p.tu;
+      const state0 = p.state ? p.state.k : null;
       p.mins += mm;
       const s15 = team.startSlot && team.startSlot[id];
       if (s15 && mm > 0) {
@@ -819,6 +822,11 @@
       } else if (which === 'A' && p.team === 'A' && p.mins < 400) {
         // 控えにもならなかった子の小さな不満
         if (ST(p, '気持ちの強さ', '負けず嫌い') || ST(p, '目指すもの', '野心家')) p.unrest += 0.1;
+      }
+      if (mm > 0 && which === 'A') {
+        // 試合でもらった経験（試合後の画面に出す）。頭の能力の経験値は次の週の成長に入る
+        const tier = (p.team === 'A' ? 1 : 0.55) * (w.league ? YA.LEVEL_EXP[w.league.level - 1] : 1);
+        p.lm = { y: w.year, w: w.week, mins: mm, rating: p.st.rating, conf: Math.round(p.conf - conf0), tu: Math.round(((p.tu == null ? 40 : p.tu) - tu0) * 10) / 10, xp: Math.round((mm / 90) * 5 * tier * 10) / 10, pos: team.startSlot && team.startSlot[id], state: p.state && p.state.k !== state0 ? p.state.k : null };
       }
       delete p._startStam;
     }

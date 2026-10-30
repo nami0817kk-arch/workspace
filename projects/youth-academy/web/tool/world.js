@@ -164,6 +164,15 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
     ok(!YA.talk(w6, sen.id, 'praise').ok, '同じ週に2回は話せない');
   }
 }
+// 試合の経験：出た選手に、出場時間・採点・頭の経験値などの記録が残る
+{
+  const we = YA.newWorld(13);
+  let g = 0;
+  while (we.year === 1 && we.week < 4 && g++ < 20) YA.simulate(we, { until: 'week', stopOnImportant: false });
+  const got = Object.values(we.players).filter((p) => p.lm && p.lm.mins > 0);
+  ok(got.length >= 11, '試合に出た選手に経験の記録が残る ' + got.length);
+  ok(got.every((p) => p.lm.xp > 0 && typeof p.lm.conf === 'number' && typeof p.lm.tu === 'number'), '経験の記録の中身');
+}
 // 面談は月に1回：同じ月の次の週は話せず、月が替われば話せる
 {
   const wm = YA.newWorld(11);
