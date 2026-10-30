@@ -858,6 +858,7 @@
 
   // ---------- 週の締め：出来事の反映・暦を進める・年度替わり ----------
   YA.startWeek = function (w) {
+    w.planMonth = w.year * 100 + YA.monthIdx(w.week); // この月の練習は組んだことにする（同じ月の残りの週は1タップで進める）
     // 今週の練習を実行して出来事を作る
     w.campMult = 1;
     if (YA.SCHED(w.week).t === 'camp') YA.applyCamp(w);
@@ -978,12 +979,14 @@
     { k: 'listen', label: '悩みを聞く', kind: 'warm' },
     { k: 'push', label: '背中を押す', kind: 'push' },
   ];
-  YA.talkWeek = (w) => w.year * 100 + w.week;
+  // 面談は1人につき月に1回（暦の月で数える）
+  YA.monthIdx = (week) => Math.min(11, Math.floor(((week - 1) / WEEKS) * 12));
+  YA.talkWeek = (w) => w.year * 100 + YA.monthIdx(w.week);
   YA.canTalk = (w, p) => p.talk !== YA.talkWeek(w);
   YA.talk = function (w, pid, k) {
     const p = w.players[pid];
     const t = YA.TALKS.find((x) => x.k === k);
-    if (!YA.canTalk(w, p)) return { ok: false, msg: '1人とは週に1回までです' };
+    if (!YA.canTalk(w, p)) return { ok: false, msg: '1人とは月に1回までです' };
     p.talk = YA.talkWeek(w);
     const res = react(p, t.kind);
     if (res.c > 0 && w.coach) res.c = res.c * (1 + (w.coach.talk - 10) * 0.03);

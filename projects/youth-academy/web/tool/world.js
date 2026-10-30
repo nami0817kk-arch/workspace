@@ -164,6 +164,16 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
     ok(!YA.talk(w6, sen.id, 'praise').ok, '同じ週に2回は話せない');
   }
 }
+// 面談は月に1回：同じ月の次の週は話せず、月が替われば話せる
+{
+  const wm = YA.newWorld(11);
+  const q = Object.values(wm.players)[0];
+  ok(YA.talk(wm, q.id, 'praise').ok, '月の最初は話せる');
+  wm.week++;
+  ok(!YA.talk(wm, q.id, 'praise').ok, '同じ月の次の週は話せない');
+  while (YA.monthIdx(wm.week) === 0) wm.week++;
+  ok(YA.talk(wm, q.id, 'praise').ok, '月が替われば話せる');
+}
 // ---- リーグ・大会・クラブ・スカウト・キャプテン・ポジション・卒業生 ----
 {
   const w8 = YA.newWorld(11);

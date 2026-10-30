@@ -63,8 +63,11 @@
     if (ex) left.append(ex);
     const act = h('div', { style: 'display:flex;flex-direction:column;gap:5px' });
     if (w.phase === 'plan') {
-      act.append(h('button', { class: 'btn', onclick: () => { U().app.tab = 'train'; rerender(); } }, '練習を組む（今週のメニュー）'));
-      act.append(h('button', { class: 'btn pri', style: 'min-height:42px;font-size:14px', onclick: () => { runWeek(); } }, '練習を確定して週を進める'));
+      // 練習は月に1回組めばよい。同じ月の残りの週は、組んだメニューのまま1タップで進める
+      const mk = w.year * 100 + YA.monthIdx(w.week);
+      const set = w.planMonth === mk;
+      act.append(h('button', { class: 'btn', onclick: () => { U().app.tab = 'train'; rerender(); } }, set ? '今月の練習を組み直す' : `練習を組む（${cal.month}のメニュー）`));
+      act.append(h('button', { class: 'btn pri', style: 'min-height:42px;font-size:14px', onclick: () => { runWeek(); } }, set ? '今月の練習のまま週を進める' : '練習を確定して週を進める'));
     } else if (w.phase === 'event') {
       act.append(h('button', { class: 'btn pri', style: 'min-height:42px', onclick: () => rerender() }, '出来事を確認する'));
     } else if (w.phase === 'match') {
@@ -264,7 +267,7 @@
       h('button', { class: 'btn sm', onclick: () => { sel.star = !sel.star; YA.saveWorld(); rerender(); } }, sel.star ? '★ を外す' : '★ 注目の印'),
       h('button', { class: 'btn sm', onclick: () => swapTeam(sel) }, sel.team === 'A' ? 'Bに回す' : 'Aに上げる')));
     // 面談
-    const talk = h('div', { style: 'margin-top:8px;border-top:1px dashed var(--line);padding-top:6px' }, h('div', { class: 'h' }, '面談（1人とは週1回まで）'));
+    const talk = h('div', { style: 'margin-top:8px;border-top:1px dashed var(--line);padding-top:6px' }, h('div', { class: 'h' }, '面談（1人とは月1回まで）'));
     const res = h('div', { class: 'msglog' });
     const can = YA.canTalk(w, sel);
     // 会話の形（決定71）：相手の一言 → 言葉の違う選択肢3つ → 相手の返事と結果
