@@ -178,6 +178,34 @@ async function clearEvents() {
     btn(k).click();
     await sleep(10);
   }
+  // 編成（FM風）：先発・ベンチ・控え外を、タップ→タップで入れ替える
+  btn('編成').click();
+  ok(txt().includes('ベンチ（9人）') && txt().includes('控え外') && d.querySelectorAll('.pitem.sq').length >= 9, '編成の画面');
+  {
+    const names = () => [...d.querySelectorAll('.pitem.sq')].slice(0, 9).map((b) => b.textContent);
+    const n0 = names();
+    d.querySelectorAll('.pitem.sq')[0].click();
+    d.querySelectorAll('.pitem.sq')[1].click();
+    const n1 = names();
+    ok(n1[0] === n0[1] && n1[1] === n0[0], 'ベンチどうしを入れ替えられる');
+    // ベンチ → 先発（ピッチ）：同じ位置の選手と入れ替わる
+    const gs = [...d.querySelectorAll('.board svg g')].filter((g) => g.getAttribute('transform'));
+    const lu0 = A.w.lineupA.map((s) => s.pid);
+    const bn = A.w.benchA.slice();
+    const cands = [...d.querySelectorAll('.pitem.sq')].slice(0, 9);
+    const fb = cands.find((b) => !b.textContent.includes('GK'));
+    fb.click();
+    gs[5].setPointerCapture = () => {};
+    gs[5].dispatchEvent(new w.Event('pointerdown', { bubbles: true }));
+    gs[5].dispatchEvent(new w.Event('pointerup', { bubbles: true }));
+    ok(!A.panelErr, 'ピッチの選手をタップできる');
+    const nowL = A.w.lineupA.map((s) => s.pid);
+    ok(nowL[5] !== lu0[5] && A.w.benchA.includes(lu0[5]), 'ベンチの選手と先発が入れ替わる');
+    ok(nowL.length === 11 && new Set(nowL.concat(A.w.benchA)).size === 20, '入れ替え後も先発11＋ベンチ9で重複なし');
+    // 控え外：選んで入れ替える
+    const res = [...d.querySelectorAll('.pitem.sq')].slice(9);
+    ok(res.length >= 10, '控え外の選手が並ぶ ' + res.length);
+  }
   btn('戦い方').click();
   ok(txt().includes('クロスの種類') && txt().includes('セットプレーのキッカー') && txt().includes('戦い方の浸透') && d.querySelectorAll('#main select').length === 3, '戦術の細かい設定（クロス・キッカー・浸透）');
   btn('高い（長身が生きる）').click();

@@ -306,7 +306,7 @@
   // ---------- 戦術パネル（試合前と停止中で共通） ----------
   function tacticPanel(t, o) {
     const root = h('div', { class: o.sheet ? 'sheet-body' : 'pre-body' });
-    const st = { tab: o.tabs[0][0], sel: 0, subOut: null, subIn: null, instrTarget: null, shoutTarget: 'team', msgs: [] };
+    const st = { tab: o.tabs[0][0], sel: 0, pick: null, subOut: null, subIn: null, instrTarget: null, shoutTarget: 'team', msgs: [] };
     if (o.state) Object.assign(st, o.state);
     let board;
     const right = h('div', { class: 'panel' });
@@ -318,11 +318,12 @@
     const fmRow = h('div', { class: 'fm-row' });
     const saveRow = h('div', { class: 'fm-row' });
     function onChange() {
+      st.pick = null; // ドラッグで動かしたあとは選択を外す
       o.onChange && o.onChange();
       renderBody();
       renderFm();
     }
-    board = boardEl(t, { selected: () => st.sel, onSelect: (i) => { st.sel = i; if (o.tabs.some((x) => x[0] === 'role') && st.tab !== 'role' && st.tab !== 'sub') { st.tab = 'role'; renderTabs(); } renderBody(); board.redraw(); }, onChange });
+    board = boardEl(t, { selected: () => st.sel, onSelect: (i) => { if (st.tab === 'squad') { handlePick({ k: 'L', i }); return; } st.sel = i; if (o.tabs.some((x) => x[0] === 'role') && st.tab !== 'role' && st.tab !== 'sub') { st.tab = 'role'; renderTabs(); } renderBody(); board.redraw(); }, onChange });
     leftWrap.append(board, fmRow, saveRow);
     let slotSel = 0;
     function renderFm() {
@@ -371,6 +372,8 @@
         body.append(h('div', { class: 'h', style: 'margin-top:6px' }, 'セットプレーのキッカー'), sel('fk', 'フリーキック'), sel('ck', 'コーナー'), sel('pk', 'PK'));
         const rep = t.tactRep != null ? t.tactRep : 1;
         body.append(h('div', { class: 'note', style: 'margin-top:8px' }, `戦い方の浸透：${Math.round(rep * 100)}%。同じ戦い方を続けるほど、つまみどおりに動きます（変えると下がります）。守備のマークは「指示」で、相手の1人に付かせられます。`));
+      } else if (st.tab === 'squad') {
+        renderSquad();
       } else if (st.tab === 'role') {
         const p15 = YA.pos15OfSlot(sl, st.sel);
         body.append(h('div', { class: 'row', style: 'gap:6px;margin-bottom:4px' }, posChip(p), h('b', {}, `${p.num} ${p.name}`), h('span', { class: 'sub grow' }, `${p.height}cm ／ 自信 ${Math.round(p.conf)} ／ 利き足 ${p.foot === 'R' ? '右' : p.foot === 'L' ? '左' : '両'}`)), aptBlock(p));
@@ -467,6 +470,153 @@
       }
       if (st.tab !== 'instr' && st.tab !== 'shout' && st.msgs.length) body.append(msgBox());
     }
+    // ---------- 編成（FM風）：ピッチの先発・ベンチ・控え外を、タップで入れ替える ----------
+    const slotIsGK = (i) => YA.pos15OfSlot(t.lineup[i], i) === 'GK';
+    function pickPlayer(x) {
+      return x.k === 'L' ? t.players[t.lineup[x.i].pid] : x.k === 'B' ? t.players[x.id] : app.w && app.w.players[x.id];
+    }
+    function say(msg) {
+      st.msgs = [msg];
+    }
+    const samePick = (a, x) => a.k === x.k && a.i === x.i && a.id === x.id;
+    function handlePick(x) {
+      const a = st.pick;
+      if (!a) {
+        st.pick = x;
+        if (x.k === 'L') st.sel = x.i;
+        renderBody();
+        board.redraw();
+        return;
+      }
+      if (samePick(a, x)) {
+        st.pick = null;
+        renderBody();
+        board.redraw();
+        return;
+      }
+      const order = { B: 0, L: 1, R: 2 };
+      const [P, Q] = order[a.k] <= order[x.k] ? [a, x] : [x, a];
+      const pp = pickPlayer(P);
+      const pq = pickPlayer(Q);
+      const bad = (slotX, pl) => slotX && slotX.k === 'L' && (slotIsGK(slotX.i) !== (pl.pos === 'GK') || pl.inj > 0 || pl.away > 0);
+      if (P.k === 'B' && Q.k === 'B') {
+        const i1 = t.bench.indexOf(P.id);
+        const i2 = t.bench.indexOf(Q.id);
+        t.bench[i1] = Q.id;
+        t.bench[i2] = P.id;
+      } else if (P.k === 'B' && Q.k === 'L') {
+        if (bad(Q, pp)) {
+          say(pp.inj > 0 ? `${pp.name}は怪我で出られません` : 'GKの枠はGKと入れ替えてください');
+          renderBody();
+          return;
+        }
+        const bi = t.bench.indexOf(P.id);
+        t.bench[bi] = t.lineup[Q.i].pid;
+        t.lineup[Q.i].pid = P.id;
+        fixRole(t, Q.i);
+        say(`${pp.name} ⇄ ${pq.name}`);
+      } else if (P.k === 'L' && Q.k === 'L') {
+        if (slotIsGK(P.i) !== slotIsGK(Q.i)) {
+          say('GKの枠は、GKどうしでだけ入れ替えられます');
+          renderBody();
+          return;
+        }
+        const tmp = t.lineup[P.i].pid;
+        t.lineup[P.i].pid = t.lineup[Q.i].pid;
+        t.lineup[Q.i].pid = tmp;
+        fixRole(t, P.i);
+        fixRole(t, Q.i);
+        say(`${pp.name} ⇄ ${pq.name}`);
+      } else if (Q.k === 'R' && app.w) {
+        // 控え外の選手を、ベンチか先発に入れる（名簿の側を書き換えて作り直す）
+        const slot = P;
+        const w = app.w;
+        const r = w.players[Q.id];
+        if (slot.k === 'L' && (slotIsGK(slot.i) !== (r.pos === 'GK') || r.inj > 0)) {
+          say(r.inj > 0 ? `${r.name}は怪我で出られません` : 'GKの枠はGKと入れ替えてください');
+          renderBody();
+          return;
+        }
+        persistTeam(t);
+        let d;
+        if (slot.k === 'L') {
+          const s2 = w.lineupA[slot.i];
+          d = w.players[s2.pid];
+          s2.pid = r.id;
+        } else {
+          const bi = w.benchA.indexOf(slot.id);
+          d = w.players[slot.id];
+          w.benchA[bi] = r.id;
+        }
+        if (r.team === 'B') {
+          const li = w.lineupB.findIndex((s2) => s2.pid === r.id);
+          if (li >= 0) {
+            w.lineupB[li].pid = d.id;
+            YA.fixSlotRole(w.lineupB[li], li);
+          }
+          const bi2 = (w.benchB || []).indexOf(r.id);
+          if (bi2 >= 0) w.benchB[bi2] = d.id;
+          else if (li < 0) w.benchB = (w.benchB || []).concat([d.id]);
+          r.team = 'A';
+          d.team = 'B';
+        }
+        w.lineupA.forEach((s2, i2) => YA.fixSlotRole(s2, i2));
+        YA.saveWorld();
+        st.pick = null;
+        say(`${r.name}を${slot.k === 'L' ? '先発' : 'ベンチ'}に入れました（${d.name}は控え外）`);
+        render();
+        return;
+      } else {
+        st.pick = x;
+        renderBody();
+        return;
+      }
+      st.pick = null;
+      board.redraw();
+      onChange();
+    }
+    function cell(p, x, p15) {
+      const on = st.pick && samePick(st.pick, x);
+      const compat = !st.pick || st.pick.k !== 'L' || slotIsGK(st.pick.i) === (p.pos === 'GK');
+      const aptv = p15 && p.apt ? p.apt[p15] : null;
+      const tired = Math.round(p.fat || 0);
+      return h('button', { class: 'pitem sq' + (on ? ' on' : ''), style: compat ? '' : 'opacity:.3', onclick: () => handlePick(x) },
+        posChip(p), h('span', { class: 'num' }, p.num), h('span', { class: 'nm grow', style: 'overflow:hidden;text-overflow:ellipsis;white-space:nowrap' }, surname(p)),
+        aptv != null ? h('span', { class: 'chip ' + (aptv >= 14 ? 'trait' : 'gray'), style: 'font-size:9.5px' }, '適' + aptv) : null,
+        h('b', { style: 'width:26px;text-align:right' }, YA.ovr(p).toFixed(1)),
+        p.inj > 0 ? h('span', { class: 'fit bad' }, '怪') : h('div', { class: 'bar stam', style: 'width:22px' }, h('i', { style: `width:${100 - tired}%;background:${tired > 60 ? '#d63a3a' : tired > 40 ? '#f0a020' : '#1a9d57'}` })));
+    }
+    function renderSquad() {
+      const pk = st.pick;
+      const pp = pk ? pickPlayer(pk) : null;
+      const p15 = pk && pk.k === 'L' ? YA.pos15OfSlot(t.lineup[pk.i], pk.i) : null;
+      const top = h('div', { class: 'card', style: 'padding:5px 8px;margin-bottom:5px;background:#f5f8fd' });
+      if (pp) {
+        const sl2 = pk.k === 'L' ? t.lineup[pk.i] : null;
+        top.append(h('div', { class: 'row', style: 'gap:6px' }, posChip(pp), h('b', {}, `${pp.num} ${pp.name}`), h('span', { class: 'sub' }, `能力${YA.ovr(pp).toFixed(1)}／疲れ${Math.round(pp.fat || 0)}`), sl2 ? h('span', { class: 'chip trait' }, `${sl2.role}・${(YA.DUTY[sl2.duty] || YA.DUTY.sup).label}`) : null, h('span', { class: 'grow' }),
+          sl2 ? h('button', { class: 'btn sm', onclick: () => { st.sel = pk.i; st.tab = 'role'; renderTabs(); renderBody(); } }, '役割・任務') : null,
+          h('button', { class: 'btn sm', onclick: () => { st.pick = null; renderBody(); board.redraw(); } }, '解除')));
+        top.append(h('div', { class: 'note', style: 'margin-top:2px' }, '入れ替える相手（ピッチの選手・ベンチ・控え外）をタップ'));
+      } else top.append(h('div', { class: 'note' }, 'ピッチの先発・ベンチ・控え外の選手を1人タップ → 入れ替える相手をタップ。役割は「役割・任務」から。'));
+      if (st.msgs.length) top.append(h('div', { class: 'note', style: 'color:var(--ink);margin-top:2px' }, st.msgs[st.msgs.length - 1]));
+      body.append(top);
+      const bench = t.bench.map((id) => t.players[id]).filter(Boolean);
+      if (pk && pk.k === 'L') {
+        const want = slotIsGK(pk.i) ? 0 : 1;
+        const g = (p) => (p.pos === 'GK' ? 0 : 1);
+        bench.sort((a, b) => (g(b) === want) - (g(a) === want) || ((b.apt && b.apt[p15]) || 0) - ((a.apt && a.apt[p15]) || 0));
+      }
+      body.append(h('div', { class: 'h' }, `ベンチ（${bench.length}人）`), h('div', { class: 'sqgrid' }, bench.map((p) => cell(p, { k: 'B', id: p.id }, p15))));
+      if (app.w) {
+        const inSq = new Set(t.lineup.map((s2) => s2.pid).concat(t.bench));
+        const rest = Object.values(app.w.players).filter((p) => !inSq.has(p.id)).sort((a, b) => (a.team === 'A' ? 0 : 1) - (b.team === 'A' ? 0 : 1) || YA.ovr(b) - YA.ovr(a));
+        st.resF = st.resF || 'all';
+        body.append(h('div', { class: 'row', style: 'margin-top:6px;gap:5px' }, h('div', { class: 'h grow' }, `控え外（${rest.length}人）`), ...[['all', '全員'], ['A', 'A'], ['B', 'B']].map(([k, n]) => h('button', { class: 'btn sm' + (st.resF === k ? ' on' : ''), onclick: () => { st.resF = k; renderBody(); } }, n))));
+        const shown = rest.filter((p) => st.resF === 'all' || p.team === st.resF);
+        body.append(h('div', { class: 'sqgrid' }, shown.map((p) => cell(p, { k: 'R', id: p.id }, p15))));
+        body.append(h('div', { class: 'note', style: 'margin-top:3px' }, 'Bの選手を入れると、入れ替わった選手はBチームに回ります。'));
+      }
+    }
     renderTabs();
     renderFm();
     renderBody();
@@ -550,7 +700,7 @@
       h('button', { class: 'btn pri', style: 'flex:1;font-size:14px', onclick: () => { persistTeam(t); startMatch(t, oppTeam, opp, sched); } }, 'キックオフ'),
       h('button', { class: 'btn sm', onclick: () => { persistTeam(t); simulateAll(t, oppTeam, opp, sched); } }, '全シミュレーション'));
     top.append(kick);
-    const panel = tacticPanel(t, { tabs: [['tactic', '戦い方'], ['role', '選手と役割'], ['opp', '相手の分析']], opp, oppTeam, onChange: () => { persistTeam(t); }, state: preState || {} });
+    const panel = tacticPanel(t, { tabs: [['squad', '編成'], ['tactic', '戦い方'], ['role', '選手と役割'], ['opp', '相手の分析']], opp, oppTeam, onChange: () => { persistTeam(t); }, state: preState || {} });
     preState = panel.state;
     wrap.append(top, panel);
     main.append(wrap);
