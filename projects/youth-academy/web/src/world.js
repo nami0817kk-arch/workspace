@@ -514,7 +514,7 @@
         p.state.w--;
         if (p.state.w <= 0) p.state = null;
       }
-      p.unrest = Math.max(0, p.unrest - 0.3);
+      p.unrest = Math.max(0, p.unrest - 0.5); // 面談が月1回になったので、自然に和らぐ量を増やした
       for (const a of Object.keys(p.gain)) gains[p.id] = (gains[p.id] || 0) + p.gain[a];
     }
     // 成長期（その子のタイミングで始まる）
@@ -588,7 +588,7 @@
   const QUIT_OK = { 不満: 0.62, 怪我: 0.72, 能力: 0.42, 家庭: 0.35 };
   const QUIT_NAME = { 不満: '不満', 怪我: '怪我', 能力: '能力的に厳しく', 家庭: '家庭の事情' };
   YA.EVENTS = [
-    { id: 'unrest', name: '出番の不満', weight: 2.2,
+    { id: 'unrest', name: '出番の不満', weight: 1.4,
       pick: (w, r) => { const c = Object.values(w.players).filter((p) => p.team === 'B' && p.mins < 60 && YA.ovr(p) > 8.5 && p.inj <= 0 && w.year * 40 + w.week > 6); return c.length ? r.pick(c) : null; },
       text: (p) => pname(p) + 'が声をかけてきた。「最近、試合に出られていません。何が足りないんでしょうか」',
       opts: [opt('次の機会は必ず作る、と約束する', 'warm', (w, p) => { p.unrest = Math.max(0, p.unrest - 2); }), opt('練習で見せろ、と求める', 'push', (w, p) => { p.train.promise = true; }), opt('今は我慢の時期だと伝える', 'firm', (w, p) => { p.unrest += 2; })] },
@@ -815,10 +815,10 @@
             }
           }
         }
-        if (p.pers && m.discontent && m.discontent[id] > 8) p.unrest += 1;
+        if (p.pers && m.discontent && m.discontent[id] > 10) p.unrest += 0.7; // 役割が合わない場面が多い試合だけ、少しずつ
       } else if (which === 'A' && p.team === 'A' && p.mins < 400) {
         // 控えにもならなかった子の小さな不満
-        if (ST(p, '気持ちの強さ', '負けず嫌い') || ST(p, '目指すもの', '野心家')) p.unrest += 0.2;
+        if (ST(p, '気持ちの強さ', '負けず嫌い') || ST(p, '目指すもの', '野心家')) p.unrest += 0.1;
       }
       delete p._startStam;
     }

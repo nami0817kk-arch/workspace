@@ -372,7 +372,7 @@
       const b = w.players[x.b];
       if (!a || !b) continue;
       const lo = inA.has(a.id) && !inA.has(b.id) ? b : inA.has(b.id) && !inA.has(a.id) ? a : null;
-      if (lo) lo.unrest += lo.pers['気持ちの強さ'] === '負けず嫌い' ? 0.35 : 0.15;
+      if (lo) lo.unrest += lo.pers['気持ちの強さ'] === '負けず嫌い' ? 0.2 : 0.08; // 毎週の自然な和らぎ（0.5）より小さく、積み上がらない
     }
     // キャプテンの重圧
     const cap = w.captain && w.players[w.captain];
