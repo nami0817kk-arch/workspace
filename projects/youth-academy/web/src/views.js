@@ -334,6 +334,7 @@
       h('div', {}, h('b', {}, '総合力 ' + now.toFixed(1)), h('span', { class: 'note' }, vals.length > 1 ? `（${d0 >= 0 ? '+' : ''}${d0.toFixed(1)}／記録の最初から）` : '（これから記録します）')),
       h('div', {}, '今月 ', h('b', { style: 'color:#1a9d57' }, sum(G.month) ? '+' + sum(G.month) : '伸びなし'), ' ', h('span', { class: 'note' }, top(G.month))),
       h('div', {}, '今年 ', h('b', {}, sum(G.year) ? '+' + sum(G.year) : '伸びなし'), ' ', h('span', { class: 'note' }, top(G.year))),
+      (() => { const tb = YA.tacticTrainBonus(W(), p); const parts = []; if (tb.tactic) parts.push(`戦術「${tb.tactic}」：${tb.tabs.join('・')}`); if (tb.role) parts.push(`役割「${tb.role}」：${tb.rabs.slice(0, 4).join('・')}`); return parts.length ? h('div', { class: 'note', style: 'color:var(--ink)' }, '練習で伸びやすい ', parts.join(' ／ ')) : null; })(),
       h('div', { class: 'note', style: 'font-size:10px' }, '棒の薄い緑＝次の+1までの進み／右の緑＝今月・灰＝今年の伸び')));
     return box;
   }

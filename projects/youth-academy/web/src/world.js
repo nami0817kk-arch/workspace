@@ -424,6 +424,12 @@
       } else {
         fatAdd = -2.0;
       }
+      // 戦術と役割に合った能力が伸びやすい：A・Bの戦術で大事な能力と、いまの役割に効く能力に、練習の経験が少し上乗せされる
+      if (!rest) {
+        const tb = YA.tacticTrainBonus(w, p);
+        for (const [a, v] of Object.entries(tb.exp)) exp[a] = (exp[a] || 0) + v;
+        p._tacNote = tb;
+      }
       // 試合の経験（頭の能力と自信に上乗せ。出番がなければなし）
       // 練習試合：Bの選手に出番ができて、不満が和らぐ
       if (hasPractice && !rest && p.team === 'B') {
@@ -863,6 +869,37 @@
     (w.resultsB = w.resultsB || []).push({ year: w.year, week: w.week, opp: o2.name, gf: m.score.home, ga: m.score.away });
     if (w.resultsB.length > 30) w.resultsB.shift();
     return { gf: m.score.home, ga: m.score.away, opp: o2.name };
+  };
+
+  // ---------- 戦術と役割で変わる成長 ----------
+  // 戻り値：{ exp: 能力→上乗せ, tactic: 戦術名, tabs: 戦術で伸びやすい能力, role: 役割名, rabs: 役割で伸びやすい能力 }
+  YA.tacticTrainBonus = function (w, p) {
+    const out = { exp: {}, tactic: null, tabs: [], role: null, rabs: [] };
+    if (!w.lineupA || p.pos === 'GK') return out;
+    const inA = w.lineupA.findIndex((s) => s.pid === p.id);
+    const inB = inA < 0 ? w.lineupB.findIndex((s) => s.pid === p.id) : -1;
+    const benchA = (w.benchA || []).indexOf(p.id) >= 0;
+    if (inA < 0 && inB < 0 && !benchA && p.team !== 'A') return out;
+    const team = inA >= 0 || benchA || p.team === 'A' ? 'A' : 'B';
+    const type = team === 'B' && w.bCtl && w.bCtl.tactic && YA.TAC_PROFILE[w.bCtl.tactic] ? w.bCtl.tactic : w.tactic && w.tactic.type;
+    const pf = YA.TAC_PROFILE[type];
+    const rep = team === 'A' ? YA.tactRepOf(w) : 0.8;
+    const wide = ['LW', 'RW', 'LB', 'RB', 'LWB', 'RWB', 'LM', 'RM'];
+    const who = !pf ? false : pf.who === 'front' ? p.pos === 'MF' || p.pos === 'FW' : pf.who === 'back' ? p.pos === 'DF' || p.main === 'DM' : pf.who === 'wide' ? wide.indexOf(p.main) >= 0 : true;
+    if (pf && who) {
+      out.tactic = type;
+      for (const a of pf.abs) if (p.ab[a] != null) { out.exp[a] = (out.exp[a] || 0) + 0.18 * rep; out.tabs.push(a); }
+    }
+    const lu = team === 'A' ? w.lineupA : w.lineupB;
+    const si = lu.findIndex((s) => s.pid === p.id);
+    if (si >= 0) {
+      const rd = YA.ROLE_DEF[lu[si].role];
+      if (rd) {
+        out.role = lu[si].role;
+        for (const [a, wt] of Object.entries(rd.absW)) if (p.ab[a] != null) { out.exp[a] = (out.exp[a] || 0) + 0.07 * wt; out.rabs.push(a); }
+      }
+    }
+    return out;
   };
 
   // ---------- 週の締め：出来事の反映・暦を進める・年度替わり ----------

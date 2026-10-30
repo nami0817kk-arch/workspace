@@ -36,7 +36,33 @@
     let c = 1 + p.form * 0.035 + (p.conf - 50) / 400 - (Math.max(0, 60 - p.stam) / 60) * (anyPers(p, '粘り強い') ? 0.15 : 0.3) - (p.adapt > 0 ? 0.08 : 0) - (p._pen || 0) + ((p.tu == null ? 40 : p.tu) - 40) / 1500;
     return clamp(c, 0.6, 1.3);
   }
-  const eff = (p, n, m) => p.ab[n] * cond(p, m);
+  // 役割の効き：役割が選手に合う（特性や得意な能力が役割に沿う）と力が出て、合わないと落ちる
+  const abMean = (p) => { let s = 0; let n = 0; for (const k in p.ab) { s += p.ab[k]; n++; } return n ? s / n : 10; };
+  function roleK(p, m) {
+    if (!m || !m.home) return 1;
+    const t = m.home.players[p.id] ? m.home : m.away.players[p.id] ? m.away : null;
+    if (!t) return 1;
+    const i = t.lineup.findIndex((s) => s.pid === p.id);
+    if (i < 0) return 1;
+    const sl = t.lineup[i];
+    const sig = i + '|' + sl.role + '|' + sl.duty;
+    const c = p._rk;
+    if (c && c.sig === sig) return c.k;
+    const rd = YA.ROLE_DEF[sl.role];
+    if (!rd) return 1;
+    const fit = m.roleFit(t, i);
+    let sw = 0;
+    let sv = 0;
+    for (const n of Object.keys(rd.absW)) {
+      sw += rd.absW[n];
+      sv += rd.absW[n] * (p.ab[n] || 1);
+    }
+    const rs = sw ? sv / sw : 10;
+    const k = 1 + (fit > 0 ? 0.04 : fit < 0 ? -0.07 : 0) + clamp((rs - abMean(p)) * 0.008, -0.04, 0.04);
+    p._rk = { sig, k };
+    return k;
+  }
+  const eff = (p, n, m) => p.ab[n] * cond(p, m) * roleK(p, m);
   const effAvg = (p, ns, m) => ns.reduce((a, n) => a + eff(p, n, m), 0) / ns.length;
 
   function slotPos(i, s) {
@@ -65,6 +91,7 @@
       for (const t of [this.home, this.away]) {
         for (const p of Object.values(t.players)) {
           p.stam = p._startStam != null ? p._startStam : 100;
+          p._rk = null;
           p.st = { goals: 0, assists: 0, shots: 0, rating: 6.0, minutes: 0, saves: 0 };
           p.yellow = 0;
           p.off = false;
@@ -122,15 +149,60 @@
     }
 
     // ---------- チームの強さ ----------
+    // 戦術と選手の相性：その戦術で大事な能力を、合う選手たちがどれだけ持っているか（±の能力点）
+    tacticFit(t) {
+      const pf = YA.TAC_PROFILE[t.tactic.type];
+      if (!pf) return 0;
+      const pick = (x) => {
+        const p15 = YA.pos15OfSlot(x.s, x.i);
+        if (x.pos === 'GK') return false;
+        if (pf.who === 'front') return x.pos === 'MF' || x.pos === 'FW';
+        if (pf.who === 'back') return x.pos === 'DF' || p15 === 'DM';
+        if (pf.who === 'wide') return ['LW', 'RW', 'LB', 'RB', 'LWB', 'RWB', 'LM', 'RM'].indexOf(p15) >= 0;
+        return true;
+      };
+      const xs = this.onPitch(t).filter(pick);
+      if (!xs.length) return 0;
+      const v = xs.reduce((a, x) => a + effAvg(x.p, pf.abs, this), 0) / xs.length;
+      // 浸透（同じ戦術を続けた度合い）が低いと、相性の良さも悪さも出きらない
+      return clamp((v - 9.5) * 0.3, -1.1, 1.1) * (t.tactRep == null ? 1 : t.tactRep);
+    }
+    // 戦術どうしの相性：att の戦術が def の戦術にどれだけ刺さるか（±の能力点。つまみの値から決まる）
+    tacticEdge(att, def) {
+      const a = att.tactic;
+      const d = def.tactic;
+      let e = 0;
+      // 前から奪う側 vs つなぐ側：つなぐ側の足元が足りないと奪われ、足りていれば剥がされる
+      const buildQ = (t) => {
+        const xs = this.onPitch(t).filter((x) => x.pos === 'DF' || YA.pos15OfSlot(x.s, x.i) === 'DM' || x.pos === 'GK');
+        return xs.reduce((s, x) => s + effAvg(x.p, ['ファーストタッチ', 'パス', '冷静さ'], this), 0) / Math.max(1, xs.length);
+      };
+      e += (a.press - 0.5) * (0.55 - d.tempo) * 2.2 * clamp((10 - buildQ(def)) * 0.35, -1, 1.2);
+      // カウンター・縦に速い側 vs ラインを上げる側：裏のスペースを突ける
+      e += (d.line - 0.5) * (a.tempo - 0.45) * 3.2;
+      // 低く構える側 vs 遅く持ち込む側：崩しにくい
+      e -= (0.5 - d.line) * (0.55 - a.tempo) * 2.6;
+      // 幅を使う側 vs 絞った守り／中を使う側 vs 開いた守り
+      e += (a.width - 0.5) * (0.5 - d.width) * 3.5 + (0.5 - a.width) * (d.width - 0.5) * 3.5;
+      return clamp(e, -0.9, 0.9);
+    }
+    // 戦術の相性が、決定機の質にも出る（攻める側の合い具合 − 守る側の合い具合）
+    fitShot(att, def) {
+      const pa = YA.TAC_PROFILE[att.tactic.type];
+      const pd = YA.TAC_PROFILE[def.tactic.type];
+      return (pa ? this.tacticFit(att) * pa.att * 0.9 : 0) - (pd ? this.tacticFit(def) * pd.def * 0.6 : 0);
+    }
     attPower(t) {
       const xs = this.onPitch(t).filter((x) => x.pos === 'FW' || x.pos === 'MF');
-      return xs.reduce((a, x) => a + (effAvg(x.p, ['パス', 'ドリブル', 'フィニッシュ', 'スピード', '視野', 'オフザボール'], this) + this.teamBonus(t, x.p)), 0) / Math.max(1, xs.length);
+      const pf = YA.TAC_PROFILE[t.tactic.type];
+      return (pf ? this.tacticFit(t) * pf.att * 1.6 : 0) + xs.reduce((a, x) => a + (effAvg(x.p, ['パス', 'ドリブル', 'フィニッシュ', 'スピード', '視野', 'オフザボール'], this) + this.teamBonus(t, x.p)), 0) / Math.max(1, xs.length);
     }
     defPower(t) {
       const xs = this.onPitch(t).filter((x) => x.pos === 'DF' || x.pos === 'MF');
       const g = this.gk(t);
       const d = xs.reduce((a, x) => a + effAvg(x.p, ['タックル', 'マーク', 'ポジショニング', '予測', '運動量'], this), 0) / Math.max(1, xs.length);
-      return d * 0.85 + effAvg(g, ['反応', '1対1', 'ハンドリング'], this) * 0.15;
+      const pf = YA.TAC_PROFILE[t.tactic.type];
+      return d * 0.85 + effAvg(g, ['反応', '1対1', 'ハンドリング'], this) * 0.15 + (pf ? this.tacticFit(t) * pf.def * 1.6 : 0);
     }
     // リーダーがいるとまとまる／チームワーク
     teamBonus(t, p) {
@@ -300,6 +372,7 @@
       const h = this.home;
       const a = this.away;
       let d = this.attPower(h) - this.defPower(a) - (this.attPower(a) - this.defPower(h));
+      d += (this.tacticEdge(h, a) - this.tacticEdge(a, h)) * 1.4; // 戦術どうしの相性
       d += (h.tactic.tempo - a.tactic.tempo) * 0.2 + (h.tactic.press - a.tactic.press) * 0.4;
       // 負けているほうが押し込む
       const sc = this.score.home - this.score.away;
@@ -366,7 +439,7 @@
       if (opt.cross) gq += this.traitBonus(sc, gkp, 'クロスへの強さ', 2, '高いボールに強く出た') + this.traitBonus(sc, gkp, 'パンチング', 1, 'パンチングで逃れた');
       if (opt.fk || opt.pk) gq += 0;
       gq += this.persMod(sc, def, gkp, 'defend') * 0.5;
-      const sq = q - diff + this.persMod(sc, att, shooter, 'shot') + this.markPenalty(att, def, shooter, sc) * -1;
+      const sq = q - diff + this.persMod(sc, att, shooter, 'shot') + this.markPenalty(att, def, shooter, sc) * -1 + this.tacticEdge(att, def) * 0.8 - this.tacticEdge(def, att) * 0.5 + this.fitShot(att, def);
       const onP = clamp(0.58 + (sq - 8) * 0.032, 0.25, 0.92);
       att.players[shooter.id].st.shots++;
       this.stats[this.side(att)].shots++;
@@ -1291,6 +1364,17 @@
   }
 
   YA.Match = Match;
+  // 戦術 type と、いまの先発との相性（画面用）。戻り値：{ fit, mark, abs:[[能力名, 先発の平均]] }
+  YA.tacticFitOf = function (t, type) {
+    const pf = YA.TAC_PROFILE[type];
+    if (!pf) return { fit: 0, mark: '－', abs: [] };
+    const fake = { home: t, away: { players: {} }, onPitch: (tt) => tt.lineup.map((s, i) => ({ s, i, p: tt.players[s.pid], pos: YA.posOfSlot(s, i) })), roleFit: Match.prototype.roleFit };
+    const probe = { lineup: t.lineup, players: t.players, tactic: { type }, tactRep: 1 };
+    const fit = Match.prototype.tacticFit.call(fake, probe);
+    const xs = fake.onPitch(probe).filter((x) => x.pos !== 'GK');
+    const abs = pf.abs.map((n) => [n, xs.reduce((a, x) => a + effAvg(x.p, [n], fake), 0) / Math.max(1, xs.length)]);
+    return { fit, mark: fit >= 0.5 ? '◎' : fit >= 0.1 ? '○' : fit >= -0.3 ? '△' : '✕', abs };
+  };
   YA.eff = eff;
   YA.cond = cond;
   YA.slotPos = slotPos;

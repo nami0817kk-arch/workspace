@@ -348,7 +348,15 @@
       const sl = t.lineup[st.sel];
       const p = t.players[sl.pid];
       if (st.tab === 'tactic') {
-        body.append(h('div', { class: 'h' }, '戦い方の型'), h('div', { class: 'fm-row', style: 'margin:4px 0 6px' }, Object.keys(YA.TACTICS).map((n) => h('button', { class: 'btn sm' + (t.tactic.type === n ? ' on' : ''), onclick: () => { o.match ? o.match.setType(t, n) : (t.tactic = Object.assign({ type: n, dir: t.tactic.dir || 0 }, YA.TACTICS[n])); onChange(); } }, n))));
+        body.append(h('div', { class: 'h' }, '戦い方の型'), h('div', { class: 'fm-row', style: 'margin:4px 0 6px' }, Object.keys(YA.TACTICS).map((n) => h('button', { class: 'btn sm' + (t.tactic.type === n ? ' on' : ''), onclick: () => { o.match ? o.match.setType(t, n) : (t.tactic = Object.assign({ type: n, dir: t.tactic.dir || 0 }, YA.TACTICS[n])); onChange(); } }, n + ' ' + YA.tacticFitOf(t, n).mark))));
+        {
+          const cur = YA.tacticFitOf(t, t.tactic.type);
+          const pf = YA.TAC_PROFILE[t.tactic.type];
+          if (pf) {
+            const wk = cur.abs.slice().sort((x, y) => x[1] - y[1]).slice(0, 2).map((x) => `${x[0]}${x[1].toFixed(1)}`).join('・');
+            body.append(h('div', { class: 'insight', style: 'margin-bottom:6px' }, h('b', {}, `いまのスタメンとの相性 ${cur.mark}`), `　${pf.why}。大事な能力：${pf.abs.join('・')}（先発の平均で低いのは ${wk}）。この戦術で練習すると、その能力が少し伸びやすくなります。◎○△✕は、各戦術とスタメンの相性です。`));
+          }
+        }
         for (const [k, label, lo, hi] of YA.KNOBS) {
           const inp = h('input', { type: 'range', min: 0, max: 100, value: Math.round(t.tactic[k] * 100) });
           inp.addEventListener('input', () => { t.tactic[k] = inp.value / 100; t.tactic.type = 'カスタム'; o.onChange && o.onChange(); });
