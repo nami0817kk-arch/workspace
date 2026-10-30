@@ -796,6 +796,51 @@ roles:
     tone_strength: 0.5
     max_intonation: 1.3
     max_speed: 1.0
+  百姓想像:                  # 10-30。shimabara-story の想像の台詞（年貢に苦しむ島原の百姓・気持ちだけ）。落ち着いた男性の声 栗田まろん（土方想像と同じ声。別の回なので重ならない）。同じ回の商館長想像（黒沢冴白）と別の声
+    label: 島原の百姓（想像）
+    name: 栗田まろん
+    style_id: 67
+    speed: 0.92
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  商館長想像:                # 10-30。shimabara-story の想像の台詞（砲撃を求められた平戸のオランダ人・気持ちだけ）。落ち着いた男性の声 黒沢冴白（頼朝想像と同じ声。別の回なので重ならない）
+    label: 平戸のオランダ商館の人（想像）
+    name: 黒沢冴白
+    style_id: 100
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  御家人想像:                # 10-30。genkou-if-story の想像の台詞（博多湾の防塁を守る九州の御家人・気持ちだけ）。落ち着いた男性の声 黒沢冴白（頼朝想像・商館長想像と同じ声。別の回なので重ならない）。同じ回の季長想像（雀松朱司）・時宗想像（離途）と別の声
+    label: 博多湾の御家人（想像）
+    name: 黒沢冴白
+    style_id: 100
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  季長想像:                  # 10-30。genkou-if-story の想像の台詞（恩賞を求めた竹崎季長・気持ちだけ）。雀松朱司（勝想像・広家想像と同じ声。別の回なので重ならない）
+    label: 竹崎季長（想像）
+    name: 雀松朱司
+    style_id: 52
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  時宗想像:                  # 10-30。genkou-if-story の想像の台詞（使者を斬った北条時宗・気持ちだけ）。離途（重成想像と同じ声。別の回なので重ならない）
+    label: 北条時宗（想像）
+    name: 離途
+    style_id: 99
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
 
 character_credits:
   - "立ち絵：春日部つむぎ公式立ち絵素材（春日部つくし）"
