@@ -1,0 +1,176 @@
+# 取材メモ（2026年10月29日）バルサの最終ラインは13試合で10通り（ショートだけ・見せ方 X＝冒頭に強い一言）
+# 取材: 2026-10-29。題材の元は 20261029_topics_src.yaml の 17（「バルセロナの悲惨な1週間」）だが、
+#   エスパルトの負傷・DFの人数・PSG戦とクラシコの2連敗は 10/27 に作った（scripts/20261027_espart_injury_barca.md）、
+#   ペドリのボール喪失は 10/26、フリックの経歴は 10/27。重ならないよう、**今日の新しい数字「最終ラインの組み合わせ」だけ**を軸にした。
+#   マルカ「La defensa, una pesadilla para Flick」（www.marca.com/futbol/barcelona/2026/10/28/defensa-pesadilla-flick.html。requests で本文を全部読んだ。2026-10-28 17:34 更新）:
+#     公式戦13試合（リーグ10・CL3）で、フリックは10通りの最終ライン（combinaciones defensivas）を並べた。同じ並びを2回以上使ったのは2つだけ。
+#     最多＝エリック・ガルシア、ジェラール・マルティン、クバルシ、エスパルト（3試合：アスレティック、バレンシア、レバンテ）。
+#     2番目＝エスパルト、クバルシ、ジェラール・マルティン、カンセロ（2試合：PSG、レアル・マドリー）。残り8通りは1度きり。
+#     土曜のアラベス戦で新しい並びが入り、11通り目（14試合）になる見込み。クンデはまだチームの練習に戻っておらず、エスパルト・クリステンセン・エリック・ガルシアは治療中。
+#     先発の候補はバルデ（今季まだ先発なし）か下部組織、カンセロは右へ。中盤はロドリとペドリが大一番でそろって出られている、両ウイングはヤマルとゴードン、ラフィーニャが9番（2試合ほど欠場）。
+#   フット・メルカート「Comment le FC Barcelone compte rebondir après sa terrible semaine」（requests で本文を読んだ。28日22:11）:
+#     11連勝の開幕から、PSG 2-4（敵地、CL）とクラシコ 1-2 の2連敗。クラシコに勝っていれば9差だった首位の差は3差。
+#   ESPN の順位表（site.api.espn.com/apis/v2/sports/soccer/esp.1/standings）: バルサ 10試合・勝ち点27・1位、アトレティコ25、レアル24 → 首位の差はレアルと3、アトレティコと2。
+#   ESPN の日程（scoreboard dates=20261031）: アラベス at バルセロナ 2026-10-31 20:00Z（スペイン21:00）＝土曜。※ 10/27 の台本は「日曜」と書いている（誤り）。公開済みなので触らない。
+# 言わないこと: ペドリ・ロドリのボール喪失の数（10/26）、エスパルトの負傷の中身・7週間（10/27）、「右サイドバックで出た2試合は負け」（10/27 の見立て）、
+#   ガビ・ラフィーニャの話（別の題材）、アラベス戦の結果（試合前の内容）、先発の予想を言い切ること（マルカは「可能性」）。
+# 本人の言葉: 無い → 型は X。
+# 確度: 組み合わせの数・並び・試合名は報道（マルカ）。PSG戦・クラシコの結果と勝ち点・日程は ESPN（報道）。「9差が3差」はフット・メルカートの算術を ESPN の勝ち点（27/24）で確かめた。
+# 反応: 作らない（0件）。
+# 写真: すべて FCバルセロナ公式（© FC Barcelona。代理店のクレジットではない）。10/25 クラシコのギャラリー（fcbarcelona.com/en/football/first-team/photos/4598658）。
+#   背番号は ESPN の名簿と突き合わせて目で確認：01＝5番クバルシ、02＝2番カンセロ、03＝3番バルデ、04＝フリック監督、05＝カンセロ（2）とクバルシ（5）、06＝16ロドリ・2カンセロ・18ジェラール・マルティン。
+#   10/27 のエスパルトの回とは別のコマ（エスパルトの写真は使わない）。
+slot: other_1
+date: "2026年10月29日"
+format: news
+no_main: true
+people: [バルセロナ, フリック, クバルシ, カンセロ, バルデ, ジェラール・マルティン, エスパルト, エリック・ガルシア, クンデ, クリステンセン]
+
+short_style: X
+short_hook_word: 最終ライン10通り
+short_photos:
+  - assets/images/20261029_barca_bad_week/01_v.jpg
+  - assets/images/20261029_barca_bad_week/02_v.jpg
+  - assets/images/20261029_barca_bad_week/03_v.jpg
+  - assets/images/20261029_barca_bad_week/04_v.jpg
+
+short_question: バルサの最終ライン、誰が組むべきだと思いますか。
+short_hook: バルサの最終ラインは、今季の公式戦13試合で、10通りも変わっています。
+short_telops:
+  - {match: 13試合, text: 今季の公式戦13試合/リーグ10・CL3}
+  - {match: 10通り, text: 最終ラインは10通り/同じ並びは2つだけ}
+  - {match: 3試合, text: 最多の並びでも3試合/E・ガルシア G・マルティン クバルシ エスパルト}
+  - {match: 11通り目, text: 土曜アラベス戦/11通り目の見込み（14試合）}
+
+theme:
+  id: barca_bad_week
+  league: spain
+  league_name: ラ・リーガ
+  prefix: ""
+  title: バルサの最終ライン、今季は何通り？
+  hook: ""
+  question: バルサの最終ラインは、今季ここまで何通りになったのか
+  takeaway: 最終ラインは13試合で10通りで、土曜のアラベス戦で11通り目の見込み。クラシコに勝っていればレアルと9差だった首位の差は、3差に縮んでいる
+
+thumbnail:
+  line1: バルサの最終ライン
+  line2: 13試合で10通り
+  tags: [バルセロナ]
+  photo: assets/images/20261029_barca_bad_week/07.jpg
+  short_photo: assets/images/20261029_barca_bad_week/01_v.jpg
+
+answer: 最終ラインは13試合で10通り。土曜のアラベス戦で11通り目の見込み
+watch: 土曜のアラベス戦の最終ライン
+
+sections:
+  - id: what
+    main: true
+    heading: 13試合で、最終ラインは10通り
+    tier: 報道
+    telop: 最終ラインは、13試合で10通り
+    say:
+      - text: バルセロナは、リーグ10節を終えて首位です。
+        short_only: true
+        image: assets/images/20261029_barca_bad_week/01_w.jpg
+        card: none
+      - text: 先週は、チャンピオンズリーグとクラシコで続けて負けました。
+        short_only: true
+        image: assets/images/20261029_barca_bad_week/03_w.jpg
+        card: none
+      - text: 今季の公式戦は、ここまで13試合。リーグ10試合と、CL3試合です。
+        image: assets/images/20261029_barca_bad_week/05_w.jpg
+        card: none
+      - text: この13試合で、フリック監督が並べた最終ラインは、10通りです。
+        emph: true
+        image: assets/images/20261029_barca_bad_week/06_w.jpg
+        card: none
+      - text: 同じ並びを2回以上使えたのは、2つだけ。
+        image: assets/images/20261029_barca_bad_week/04_w.jpg
+        card: none
+      - text: 残りの8通りは、1度きりの並びでした。
+        image: assets/images/20261029_barca_bad_week/03_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.marca.com/futbol/barcelona/2026/10/28/defensa-pesadilla-flick.html
+
+  - id: lines
+    heading: いちばん多い並びでも3試合
+    tier: 報道
+    telop: 最多の並びは3試合、2番目は2試合
+    say:
+      - text: いちばん多く組んだ並びは、この4人です。
+        image: assets/images/20261029_barca_bad_week/05_w.jpg
+        card: none
+      - text: エリック・ガルシア、ジェラール・マルティン、クバルシ、エスパルト。
+        image: assets/images/20261029_barca_bad_week/01_w.jpg
+        card: none
+      - text: アスレティック、バレンシア、レバンテ戦の3試合です。
+        image: assets/images/20261029_barca_bad_week/06_w.jpg
+        card: none
+      - text: 2番目は、エスパルト、クバルシ、ジェラール・マルティン、カンセロ。
+        image: assets/images/20261029_barca_bad_week/04_w.jpg
+        card: none
+      - text: パリ・サンジェルマン戦とクラシコの2試合で、この4人が並びました。
+        image: assets/images/20261029_barca_bad_week/01_w.jpg
+        card: {type: table, title: バルサの最終ライン（公式戦13試合）, columns: [並び, 試合数], rows: [[E・ガルシア G・マルティン クバルシ エスパルト, 3試合], [エスパルト クバルシ G・マルティン カンセロ, 2試合], [ほかの8通り, 各1試合]], highlight_row: 0}
+    official: false
+    sources:
+      - https://www.marca.com/futbol/barcelona/2026/10/28/defensa-pesadilla-flick.html
+
+  - id: next
+    heading: 土曜のアラベス戦で、11通り目に
+    tier: 報道
+    telop: 次のアラベス戦で11通り目の見込み
+    say:
+      - text: 最終ラインのケガが続いています。
+        image: assets/images/20261029_barca_bad_week/03_w.jpg
+        card: none
+      - text: クンデは、まだチームの練習に戻っていません。
+        image: assets/images/20261029_barca_bad_week/05_w.jpg
+        card: none
+      - text: エスパルト、クリステンセン、エリック・ガルシアも治療中です。
+        image: assets/images/20261029_barca_bad_week/06_w.jpg
+        card: none
+      - text: 土曜は、本拠地でアラベス戦。
+        image: assets/images/20261029_barca_bad_week/04_w.jpg
+        card: none
+      - text: 報道では、バルデを使う可能性があるとのこと。今季まだ先発のない選手です。
+        image: assets/images/20261029_barca_bad_week/03_w.jpg
+        card: none
+      - text: カンセロは右へ回る見通しです。そうなれば、14試合で11通り目の最終ラインです。
+        emph: true
+        image: assets/images/20261029_barca_bad_week/05_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.marca.com/futbol/barcelona/2026/10/28/defensa-pesadilla-flick.html
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard?dates=20261031
+
+  - id: view
+    viewpoint: true
+    heading: 13試合で10通りは、1.3試合に1回の入れ替え
+    tier: 背景
+    telop: 勝っていれば9差、いまは3差
+    say:
+      - text: 見立てです。平均すると、1.3試合に1回、並びが変わっています。
+        image: assets/images/20261029_barca_bad_week/01_w.jpg
+        card: none
+      - text: 報道では、中盤と攻撃はほぼ固まっていて、悩みは最終ラインだけです。
+        image: assets/images/20261029_barca_bad_week/06_w.jpg
+        card: none
+      - text: 開幕11連勝のあと、バルサはパリ・サンジェルマン戦とクラシコで2連敗。
+        image: assets/images/20261029_barca_bad_week/04_w.jpg
+        card: none
+      - text: クラシコに勝っていれば、レアルとの差は9。いまは3で、アトレティコとは2です。
+        image: assets/images/20261029_barca_bad_week/01_w.jpg
+        card: {type: table, title: スペイン・リーグ10節終了時（勝ち点）, columns: [順位, クラブ, 勝ち点], rows: [[1位, バルセロナ, 27], [2位, アトレティコ, 25], [3位, レアル・マドリー, 24]], highlight_row: 0}
+      - text: 土曜、11通り目の並びで、首位を守れるか。
+        image: assets/images/20261029_barca_bad_week/03_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.marca.com/futbol/barcelona/2026/10/28/defensa-pesadilla-flick.html
+      - https://www.footmercato.net/a4770041223376634507-comment-le-fc-barcelone-compte-rebondir-apres-sa-terrible-semaine
+      - https://site.api.espn.com/apis/v2/sports/soccer/esp.1/standings
+short_title: "バルサの最終ライン、今季は何通り？"
