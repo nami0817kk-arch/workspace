@@ -3,7 +3,7 @@ description: "つるはし採掘 — つるはし社の放置採掘ゲーム"
 publish_to: 'none'
 
 # 版とビルド番号。App Store Connect は同じビルド番号を二度受け付けない
-version: 1.0.0+2
+version: 1.0.1+3
 
 environment:
   sdk: ^3.13.2
