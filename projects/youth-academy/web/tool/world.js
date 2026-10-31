@@ -182,13 +182,19 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   ok(okc === 3, 'セレクションからは3人まで ' + okc);
   const sc = wf.scouting.cands.filter((c) => c.kind === 'scout');
   const ic = wf.scouting.cands.filter((c) => c.kind === 'int');
-  ok(sc.length >= 6 && ic.length === 6 && wf.scouting.intOpen, '初年度からスカウトと内部昇格の候補がいる');
+  ok(sc.length >= 6 && ic.length === 12 && wf.scouting.intOpen, '初年度からスカウトと内部昇格の候補がいる');
   let oks = 0;
   for (const c of sc) if (YA.signCand(wf, c.id).ok) oks++;
-  ok(oks === 4, 'スカウトは4人まで ' + oks);
+  ok(oks === 3, 'スカウトは3人まで ' + oks);
   let oki = 0;
   for (const c of ic) if (YA.signCand(wf, c.id).ok) oki++;
-  ok(oki === 5, '内部昇格は5人まで（全体12人の枠内） ' + oki);
+  ok(oki === 6, '内部昇格は8人まで、ただし全体12人の枠内（残り6人） ' + oki);
+  {
+    const wq = YA.newWorld(23, Object.assign(YA.makeStart({ name: '点検', career: 0, club: 2, points: {}, noFire: false }), { firstSel: true }));
+    let k = 0;
+    for (const c of wq.scouting.cands.filter((x) => x.kind === 'int')) if (YA.signCand(wq, c.id).ok) k++;
+    ok(k === 8, '内部昇格だけなら8人まで ' + k);
+  }
   const names = cands.slice(0, 3).map((c) => c.p.name).concat(ic.filter((c) => c.status === 'signed').map((c) => c.p.name));
   const n = YA.finishFirstSelection(wf);
   const g1 = Object.values(wf.players).filter((p) => p.grade === 1);
@@ -633,7 +639,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
     w5.week = 34;
     YA.weekExtras(w5);
     const ints = w5.scouting.cands.filter((c) => c.kind === 'int');
-    ok(ints.length === 6 && ints.every((c) => c.seen >= 1), '34週に中3が練習に参加して候補になる');
+    ok(ints.length === 12 && ints.every((c) => c.seen >= 1), '34週に中3が練習に参加して候補になる');
     w5.week = 36;
     YA.weekExtras(w5);
     ok(w5.scouting.cands.filter((c) => c.kind === 'int').every((c) => c.persSeen), '36週の申し送りで性格が見える');

@@ -176,7 +176,7 @@
     const say = (r) => { msg.replaceChildren(h('div', {}, r.msg)); if (r.ok) { save(); rerender(); } };
     const b = YA.budget(w);
     const signed = S.cands.filter((c) => c.status === 'signed' || c.status === 'offered');
-    body.append(h('div', { class: 'row', style: 'flex-wrap:wrap;gap:6px;margin-bottom:6px' }, h('span', { class: 'chip trait' }, `${w.firstSel ? '今年の高1' : '来年の入団予定'} ${signed.length}/12人`), h('span', { class: 'chip gray' }, `スカウト経費 ${w.club.spent.scout || 0}/${b.scout}万`), h('span', { class: 'chip gray' }, `見る目 ${Math.round(YA.eyeLevel(w))}`), h('span', { class: 'sub grow' }, '足りない分は一般入団で埋まります。スカウト4人・セレクション3人・内部昇格5人まで')));
+    body.append(h('div', { class: 'row', style: 'flex-wrap:wrap;gap:6px;margin-bottom:6px' }, h('span', { class: 'chip trait' }, `${w.firstSel ? '今年の高1' : '来年の入団予定'} ${signed.length}/12人`), h('span', { class: 'chip gray' }, `スカウト経費 ${w.club.spent.scout || 0}/${b.scout}万`), h('span', { class: 'chip gray' }, `見る目 ${Math.round(YA.eyeLevel(w))}`), h('span', { class: 'sub grow' }, '足りない分は一般入団で埋まります。スカウト3人・セレクション3人・内部昇格8人まで')));
     const sec = (t, k, list, mk) => { body.append(title(t)); if (!list.length) body.append(h('div', { class: 'note', style: 'margin-bottom:6px' }, k)); list.forEach((c) => body.append(mk(c))); };
     // 内部昇格
     if (S.intOpen) sec('U-15の内部昇格の候補（申し送り：性格と今の力がある程度わかる）', '', S.cands.filter((c) => c.kind === 'int'), (c) => candCard(w, c, c.status === 'signed' ? h('button', { class: 'btn sm on', onclick: () => { YA.unsign(w, c.id); save(); rerender(); } }, '昇格させる（取り消す）') : h('button', { class: 'btn sm', disabled: c.status !== 'open', onclick: () => say(YA.signCand(w, c.id)) }, '昇格させる')));

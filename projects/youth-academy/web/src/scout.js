@@ -84,7 +84,7 @@
     for (let i = 0; i < n; i++) genCand(w, r, 'sel');
     YA.noteTier(w, 1, `セレクションの応募が${n}人ありました。テストの内容を決めて、入れる子を選んでください（クラブ→スカウト）`);
   };
-  // 中3の練習参加（34週）：内部昇格の候補6人がA・Bの練習に混ざる。実際に動きを見られるので見えている度合いが上がる。36週に指導者の申し送りで残りが見える
+  // 中3の練習参加（34週）：内部昇格の候補12人がA・Bの練習に混ざる。実際に動きを見られるので見えている度合いが上がる。36週に指導者の申し送りで残りが見える
   YA.openInternal = function (w, junior) {
     const S = w.scouting;
     if (S.intOpen) {
@@ -99,11 +99,11 @@
     }
     S.intOpen = true;
     const r = YA.rngOf(w.seed * 41 + w.year * 19);
-    for (let i = 0; i < 6; i++) genCand(w, r, 'int');
+    for (let i = 0; i < 12; i++) genCand(w, r, 'int');
     if (junior) {
       for (const c of S.cands) if (c.kind === 'int') c.seen = Math.min(3, c.seen + 1);
-      YA.noteTier(w, 1, '中3の6人が練習に参加しました。内部昇格の候補として動きを見られます（クラブ→スカウト）');
-    } else YA.noteTier(w, 1, 'U-15の指導者から、内部昇格の候補6人の申し送りが届きました（クラブ→スカウト）');
+      YA.noteTier(w, 1, '中3の12人が練習に参加しました。内部昇格の候補として動きを見られます（クラブ→スカウト）');
+    } else YA.noteTier(w, 1, 'U-15の指導者から、内部昇格の候補12人の申し送りが届きました（クラブ→スカウト）');
   };
   YA.testDays = (w) => 2 + (YA.budget(w).scout >= 300 ? 1 : 0);
   YA.TESTS = [['紅白戦', '動きと判断が見える'], ['技術テスト', 'ボールの扱いが見える'], ['体力測定', '足の速さ・体力が見える'], ['面接', '性格と目指すものが見える']];
@@ -137,12 +137,12 @@
     const r = YA.rngOf(w.seed * 37 + 5);
     const n = 16 + Math.floor(w.club.rep / 8);
     for (let i = 0; i < n; i++) genCand(w, r, 'sel');
-    // 初年度からスカウトと内部昇格も使える（U-15の6人は練習に混ざって動きを見られる）
+    // 初年度からスカウトと内部昇格も使える（U-15の12人は練習に混ざって動きを見られる）
     for (let i = 0; i < 6; i++) genCand(w, r, 'scout');
     S.intOpen = true;
-    for (let i = 0; i < 6; i++) genCand(w, r, 'int');
+    for (let i = 0; i < 12; i++) genCand(w, r, 'int');
     for (const c of S.cands) if (c.kind === 'int') c.seen = Math.min(3, c.seen + 1);
-    w.inbox.push({ week: 0, year: 1, tier: 1, text: `最初の高1の12人を決めます（クラブ→スカウト）。セレクション（応募${n}人）は3人まで、スカウトは4人まで、U-15の内部昇格は5人まで選べます。選ばなかった分は一般入団で埋まります` });
+    w.inbox.push({ week: 0, year: 1, tier: 1, text: `最初の高1の12人を決めます（クラブ→スカウト）。セレクション（応募${n}人）は3人まで、スカウトは3人まで、U-15の内部昇格（候補12人）は8人まで選べます。選ばなかった分は一般入団で埋まります` });
   };
   // セレクションを終える：最初にいた高1を、合格者と一般入団の12人に入れ替える
   YA.finishFirstSelection = function (w) {
@@ -165,7 +165,7 @@
     w.firstSel = null;
     w.scouting = YA.newScouting();
   };
-  const LIMIT = { scout: 4, sel: 3, int: 5 };
+  const LIMIT = { scout: 3, sel: 3, int: 8 };
   const held = (w, kind) => w.scouting.cands.filter((c) => (c.status === 'signed' || c.status === 'offered') && (!kind || c.kind === kind)).length;
   YA.signedCount = (w, kind) => w.scouting.cands.filter((c) => c.status === 'signed' && (!kind || c.kind === kind)).length;
   YA.signCand = function (w, id) {
