@@ -210,6 +210,17 @@ extension GameStateMatch on GameState {
       _notify();
     }
 
+    // この節の週の処理は済んでいる(試合の途中でアプリが終わった)。
+    // 週の処理を二度かけず、試合だけを途中から再開する。
+    if (_save!.weekProcessedSeason == league.season &&
+        _save!.weekProcessedMatchday == next.matchday) {
+      return _resumeInterruptedMatchday(
+        next,
+        interactive: interactive,
+        wasAlreadyBusy: wasAlreadyBusy,
+      );
+    }
+
     _save!.trainingDoneThisWeek = false;
 
     // トレーニング自動化が有効な場合、この節の分をここで自動的に実施する。
@@ -253,6 +264,10 @@ extension GameStateMatch on GameState {
       ContractEngine.renewContract(signing);
       userTeam.players.add(signing);
       lastEmergencySignings.add(signing.name);
+    }
+    // ローン満了でスタメンから外れた枠を埋める。埋めないと10人で戦う。
+    if (loanEnded.isNotEmpty) {
+      LineupUtils.fillVacancies(userTeam);
     }
 
     // 選手の不満度を更新する。
@@ -726,12 +741,162 @@ extension GameStateMatch on GameState {
       _liveSubstitutionsUsed = 0;
     }
 
+    // 週の処理を済ませた印と、試合の途中経過を同じ保存に載せる。
+    _save!.weekProcessedSeason = league.season;
+    _save!.weekProcessedMatchday = md;
+    _recordLiveProgress();
+
     if (!wasAlreadyBusy) {
       isBusy = false;
     }
     _notify();
     await _persistNow();
     return userFirstHalf;
+  }
+
+  /// 週の処理が済んだ節を、試合だけ再開する。
+  ///
+  /// 保存してある途中経過([SaveGame.liveMatchProgress])があれば、その続き
+  /// から進める。前半で負けている試合を落としても、確定した得点は残る。
+  Future<HalfResult?> _resumeInterruptedMatchday(
+    Fixture next, {
+    required bool interactive,
+    required bool wasAlreadyBusy,
+  }) async {
+    final league = _save!.league;
+    final md = next.matchday;
+    final saved = _save!.liveMatchProgress;
+    final progress =
+        saved != null && saved.season == league.season && saved.matchday == md
+            ? saved
+            : null;
+    final userId = _save!.userTeamId;
+    Fixture? userFixture;
+    HalfResult? userFirstHalf;
+    _liveSecondHalfResume = null;
+    for (final f in league.fixturesForMatchday(md)) {
+      if (f.result != null) continue;
+      final home = _findTeam(league.teams, f.homeTeamId);
+      final away = _findTeam(league.teams, f.awayTeamId);
+      if (home == null || away == null) {
+        f.result = MatchResult(
+          matchday: md,
+          homeTeamId: f.homeTeamId,
+          awayTeamId: f.awayTeamId,
+          homeGoals: 0,
+          awayGoals: 0,
+          events: const [],
+        );
+        continue;
+      }
+      final weather = f.weather ?? WeatherEngine.roll();
+      f.weather = weather;
+      CpuTacticsAI.applyPreMatch(home, away, userId);
+      final isUserFixture = f.homeTeamId == userId || f.awayTeamId == userId;
+      if (!isUserFixture) {
+        f.result = MatchEngine.simulate(
+          home: home,
+          away: away,
+          matchday: md,
+          weather: weather,
+          homeAdvantageFactor: _homeAdvantageFor(home.id),
+        );
+        continue;
+      }
+      userFixture = f;
+      _liveWasInteractive = interactive;
+      lastShootout = null;
+      final secondHalf = progress?.secondHalf;
+      if (progress != null && secondHalf != null) {
+        // 前半は終わっていた。ハーフタイムから再開し、後半は続きから。
+        _liveFirstHalfState = MatchEngine.finishedHalfFrom(
+          home: home,
+          away: away,
+          interactiveTeamId: userId,
+          carried: progress.firstHalf,
+          weather: weather,
+          homeAdvantageFactor: _homeAdvantageFor(home.id),
+        );
+        _liveSecondHalfResume =
+            (tally: secondHalf, resumeMinute: progress.resumeMinute);
+      } else {
+        final state = MatchEngine.beginInteractiveHalf(
+          home: home,
+          away: away,
+          startMinute: progress?.resumeMinute ?? 1,
+          endMinute: 45,
+          interactiveTeamId: userId,
+          weather: weather,
+          homeAdvantageFactor: _homeAdvantageFor(home.id),
+          carried: progress?.firstHalf,
+        );
+        if (!interactive) {
+          while (!state.isFinished) {
+            MatchEngine.resolvePendingChance(state, ChanceDecision.shoot);
+          }
+        }
+        _liveFirstHalfState = state;
+        if (state.isFinished) {
+          MatchEngine.applyHalfTimeFatigue(
+            home: home,
+            away: away,
+            weather: weather,
+          );
+        }
+      }
+      userFirstHalf = _liveFirstHalfState!.toHalfResult();
+    }
+    if (userFixture != null) {
+      _liveFixture = userFixture;
+      _liveSubstitutionsUsed = progress?.substitutionsUsed ?? 0;
+    }
+    _recordLiveProgress();
+
+    if (!wasAlreadyBusy) {
+      isBusy = false;
+    }
+    _notify();
+    await _persistNow();
+    return userFirstHalf;
+  }
+
+  /// 進行中のリーグ戦の途中経過をセーブに書く(保存の直前に呼ぶ)。
+  /// カップ戦のライブ観戦は対象外(週の処理と結びついていない)。
+  void _recordLiveProgress() {
+    final save = _save;
+    final f = _liveFixture;
+    final first = _liveFirstHalfState;
+    if (save == null) return;
+    if (f == null || first == null) {
+      save.liveMatchProgress = null;
+      return;
+    }
+    final second = _liveSecondHalfState;
+    final HalfTally firstTally;
+    HalfTally? secondTally;
+    final int resume;
+    if (!first.isFinished) {
+      resume = first.resumeMinute(45);
+      firstTally = first.toTally(beforeMinute: resume);
+    } else {
+      firstTally = first.toTally(beforeMinute: 46);
+      if (second == null) {
+        final pendingResume = _liveSecondHalfResume;
+        resume = pendingResume?.resumeMinute ?? 46;
+        secondTally = pendingResume?.tally ?? const HalfTally();
+      } else {
+        resume = second.resumeMinute(90);
+        secondTally = second.toTally(beforeMinute: resume);
+      }
+    }
+    save.liveMatchProgress = LiveMatchProgress(
+      season: save.league.season,
+      matchday: f.matchday,
+      resumeMinute: resume,
+      substitutionsUsed: _liveSubstitutionsUsed,
+      firstHalf: firstTally,
+      secondHalf: secondTally,
+    );
   }
 
   /// ハーフタイムでの交代・戦術変更を反映して後半を消化し、試合を確定する。
@@ -752,14 +917,18 @@ extension GameStateMatch on GameState {
     final weather = _liveWeatherNow;
     if (interactive) _liveWasInteractive = true;
 
+    // 再起動前に後半の途中まで進んでいたら、その続きから。
+    final resume = _liveSecondHalfResume;
+    _liveSecondHalfResume = null;
     final state = MatchEngine.beginInteractiveHalf(
       home: home,
       away: away,
-      startMinute: 46,
+      startMinute: resume?.resumeMinute ?? 46,
       endMinute: 90,
       interactiveTeamId: _save!.userTeamId,
       weather: weather,
       homeAdvantageFactor: _homeAdvantageFor(home.id),
+      carried: resume?.tally,
     );
     if (!interactive) {
       while (!state.isFinished) {
@@ -771,6 +940,7 @@ extension GameStateMatch on GameState {
     if (state.isFinished) {
       return _finalizeSecondHalf(state.toHalfResult());
     }
+    _recordLiveProgress();
     _notify();
     await _persistNow();
     return null;
@@ -793,6 +963,7 @@ extension GameStateMatch on GameState {
         final merged = await _finalizeSecondHalf(secondState.toHalfResult());
         return (merged: merged, decisionEvent: event);
       }
+      _recordLiveProgress();
       _notify();
       await _persistNow();
       return (merged: null, decisionEvent: event);
@@ -808,6 +979,7 @@ extension GameStateMatch on GameState {
               home: home, away: away, weather: _liveWeatherNow);
         }
       }
+      _recordLiveProgress();
       _notify();
       await _persistNow();
       return (merged: null, decisionEvent: event);
@@ -948,6 +1120,8 @@ extension GameStateMatch on GameState {
     _liveCupTie = null;
     _liveFirstHalfState = null;
     _liveSecondHalfState = null;
+    _liveSecondHalfResume = null;
+    _save!.liveMatchProgress = null;
     _liveSubstitutionsUsed = 0;
     _liveWasInteractive = false;
 

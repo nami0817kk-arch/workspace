@@ -8,6 +8,7 @@ import '../models/formation.dart';
 import '../models/player.dart';
 import '../models/team.dart';
 import '../models/match_result.dart';
+import '../models/live_match_progress.dart';
 import '../models/weather.dart';
 import 'lineup_utils.dart';
 import 'style_engine.dart';
@@ -187,6 +188,11 @@ class InteractiveHalfState {
   /// バック表示に使う。
   MatchEvent? lastDecisionEvent;
 
+  /// アプリの再起動で試合を途中から再開したとき、それまでに確定していた
+  /// ぶん(シュート数・ポゼッション)。得点とイベントは[applyCarried]で
+  /// [homeGoals]/[events]へ直接入れてあるので、ここでは足さない。
+  HalfTally? carried;
+
   InteractiveHalfState({
     required this.home,
     required this.away,
@@ -208,6 +214,56 @@ class InteractiveHalfState {
   /// このハーフの進行が(判断待ちなく)完了したかどうか。
   bool get isFinished => pending == null && chanceIndex >= chanceMinutes.length;
 
+  /// 再開前に確定していた途中経過を引き継ぐ。得点・イベント・退場は
+  /// 画面がそのまま表示に使うので、このハーフの値へ直接入れる。
+  void applyCarried(HalfTally tally) {
+    carried = tally;
+    homeGoals += tally.homeGoals;
+    awayGoals += tally.awayGoals;
+    events.insertAll(0, tally.events);
+    for (final e in tally.events) {
+      if (e.type != MatchEventType.redCard) continue;
+      if (e.teamId == home.id) {
+        homeRedMinute =
+            homeRedMinute == null ? e.minute : min(homeRedMinute!, e.minute);
+      } else if (e.teamId == away.id) {
+        awayRedMinute =
+            awayRedMinute == null ? e.minute : min(awayRedMinute!, e.minute);
+      }
+    }
+  }
+
+  /// 次に進める分。判断待ちならその決定機の次の分(判断待ちの決定機は
+  /// 再開時には「実らなかった攻撃」として扱う)、終わっていれば[endMinute]+1。
+  int resumeMinute(int endMinute) {
+    final p = pending;
+    if (p != null) return p.minute + 1;
+    if (chanceIndex < chanceMinutes.length) return chanceMinutes[chanceIndex];
+    return endMinute + 1;
+  }
+
+  /// [beforeMinute]より前に確定した途中経過。再起動後の再開に使う。
+  /// 警告・退場は前もって全時間ぶん抽選されているので、まだ来ていない分の
+  /// ものは含めない。
+  HalfTally toTally({required int beforeMinute}) {
+    final c = carried;
+    final processed = chanceIndex + (pending != null ? 1 : 0);
+    return HalfTally(
+      homeGoals: homeGoals,
+      awayGoals: awayGoals,
+      events: [
+        for (final e in events)
+          if (e.minute < beforeMinute) e,
+      ]..sort((a, b) => a.minute.compareTo(b.minute)),
+      homeShots: homeShots + (c?.homeShots ?? 0),
+      awayShots: awayShots + (c?.awayShots ?? 0),
+      homeShotsOnTarget: homeShotsOnTarget + (c?.homeShotsOnTarget ?? 0),
+      awayShotsOnTarget: awayShotsOnTarget + (c?.awayShotsOnTarget ?? 0),
+      possessionShareSum: possessionShareSum + (c?.possessionShareSum ?? 0),
+      chanceCount: processed + (c?.chanceCount ?? 0),
+    );
+  }
+
   HalfResult toHalfResult() {
     final sorted = [...events]..sort((a, b) => a.minute.compareTo(b.minute));
     // ライブ観戦でも自動消化と同じ基準でシュート数を記録する
@@ -216,16 +272,17 @@ class InteractiveHalfState {
       chanceIndex,
       chanceIndex == 0 ? 0.5 : possessionShareSum / chanceIndex,
     );
+    final c = carried;
     return HalfResult(
       homeGoals: homeGoals,
       awayGoals: awayGoals,
       events: sorted,
-      homeShots: homeShots + speculative.home,
-      awayShots: awayShots + speculative.away,
-      homeShotsOnTarget: homeShotsOnTarget,
-      awayShotsOnTarget: awayShotsOnTarget,
-      possessionShareSum: possessionShareSum,
-      chanceCount: chanceMinutes.length,
+      homeShots: homeShots + speculative.home + (c?.homeShots ?? 0),
+      awayShots: awayShots + speculative.away + (c?.awayShots ?? 0),
+      homeShotsOnTarget: homeShotsOnTarget + (c?.homeShotsOnTarget ?? 0),
+      awayShotsOnTarget: awayShotsOnTarget + (c?.awayShotsOnTarget ?? 0),
+      possessionShareSum: possessionShareSum + (c?.possessionShareSum ?? 0),
+      chanceCount: chanceMinutes.length + (c?.chanceCount ?? 0),
     );
   }
 }
@@ -2128,7 +2185,19 @@ class MatchEngine {
     required String interactiveTeamId,
     Weather weather = Weather.clear,
     double homeAdvantageFactor = defaultHomeAdvantageFactor,
+    HalfTally? carried,
   }) {
+    if (startMinute > endMinute) {
+      // 再開した時点で、このハーフはもう終わっていた。
+      return finishedHalfFrom(
+        home: home,
+        away: away,
+        interactiveTeamId: interactiveTeamId,
+        weather: weather,
+        homeAdvantageFactor: homeAdvantageFactor,
+        carried: carried ?? const HalfTally(),
+      );
+    }
     if (startMinute == 1) {
       _rollMatchForm(home, away, weather);
     } else {
@@ -2278,7 +2347,39 @@ class MatchEngine {
       chanceMinutes: chanceMinutes,
       events: events,
     );
+    if (carried != null) state.applyCarried(carried);
     _advanceInteractiveHalf(state);
+    return state;
+  }
+
+  /// 途中経過[carried]だけを持つ、終わったハーフ。再起動後に試合を
+  /// 再開するとき、既に終えていた前半を作り直すのに使う。
+  static InteractiveHalfState finishedHalfFrom({
+    required Team home,
+    required Team away,
+    required String interactiveTeamId,
+    required HalfTally carried,
+    Weather weather = Weather.clear,
+    double homeAdvantageFactor = defaultHomeAdvantageFactor,
+  }) {
+    final state = InteractiveHalfState(
+      home: home,
+      away: away,
+      interactiveTeamId: interactiveTeamId,
+      homeLineup: lineupOf(home),
+      awayLineup: lineupOf(away),
+      weather: weather,
+      homeAdvantageFactor: homeAdvantageFactor,
+      homeAttackBase: 0,
+      awayAttackBase: 0,
+      homeDefenseBase: 0,
+      awayDefenseBase: 0,
+      homeRedMinute: null,
+      awayRedMinute: null,
+      chanceMinutes: <int>[],
+      events: <MatchEvent>[],
+    );
+    state.applyCarried(carried);
     return state;
   }
 

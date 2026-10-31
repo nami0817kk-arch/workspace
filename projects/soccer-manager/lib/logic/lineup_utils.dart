@@ -51,6 +51,53 @@ class LineupUtils {
     team.startingXI = xi.map((p) => p.id).toList();
   }
 
+  /// スタメンの空いた枠だけを埋める(残っている先発は動かさない)。
+  ///
+  /// ローン満了などで先発が抜けたとき、[autoFill]で組み直すと利用者が
+  /// 決めた先発まで入れ替わってしまう。抜けた枠に入る人だけを、[autoFill]と
+  /// 同じ優先順(主ポジション → 副ポジション → 同じ大分類 → 残り)で選ぶ。
+  static void fillVacancies(Team team) {
+    final byId = {for (final p in team.players) p.id: p};
+    team.startingXI.removeWhere((id) => !byId.containsKey(id));
+    final slots = team.formation.slots;
+    if (team.startingXI.length >= slots.length) return;
+    final assignments = resolveSlotAssignments(team);
+    final used = team.startingXI.toSet();
+    final available = team.players
+        .where(
+          (p) =>
+              !used.contains(p.id) &&
+              !p.isInjured &&
+              !p.isOnInternationalDuty &&
+              !p.isLoanedOut &&
+              !p.isSuspended,
+        )
+        .toList();
+
+    List<Player> candidatesFor(Position slot) {
+      final exact = available.where((p) => p.position == slot).toList();
+      if (exact.isNotEmpty) return exact;
+      final secondary =
+          available.where((p) => p.secondaryPositions.contains(slot)).toList();
+      if (secondary.isNotEmpty) return secondary;
+      final sameGroup =
+          available.where((p) => p.position.group == slot.group).toList();
+      if (sameGroup.isNotEmpty) return sameGroup;
+      return available;
+    }
+
+    for (int i = 0; i < assignments.length; i++) {
+      if (assignments[i] != null) continue;
+      if (team.startingXI.length >= slots.length) break;
+      final candidates = candidatesFor(slots[i])
+        ..sort((a, b) => b.overall.compareTo(a.overall));
+      if (candidates.isEmpty) break;
+      final chosen = candidates.first;
+      available.remove(chosen);
+      team.startingXI.add(chosen.id);
+    }
+  }
+
   /// スタメン11人をフォーメーションのスロット順に割り当てる。
   /// 完全一致がいない枠(グループ代用など)は残りの先発から総合力順に補う。
   /// スタメン画面のピッチ表示と、試合エンジンのポジション適性判定の

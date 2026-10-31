@@ -42,6 +42,7 @@ import '../models/team_talk.dart';
 import '../models/training_result.dart';
 import '../models/team.dart';
 import '../models/league.dart';
+import '../models/live_match_progress.dart';
 import '../models/match_result.dart';
 import '../models/weather.dart';
 import '../logic/achievement_engine.dart';
@@ -823,6 +824,12 @@ class GameState extends ChangeNotifier {
     await prefs.remove(_slotKey(slot));
     // 控えも一緒に消す。残すと、消したはずのクラブに戻せてしまう。
     await prefs.remove(_restorePointKey(slot));
+    // 壊れたとき用の自動の控えも、この枠のものなら消す。残すと、同じ枠に
+    // 作った新しいセーブが壊れたとき、消したはずのクラブに戻ってしまう。
+    if (prefs.getInt(_backupSlotKey) == slot) {
+      await prefs.remove(_backupKey);
+      await prefs.remove(_backupSlotKey);
+    }
     if (slot == currentSlot) {
       _save = null;
       transferMarket = [];
@@ -1139,6 +1146,10 @@ class GameState extends ChangeNotifier {
   InteractiveHalfState? _liveFirstHalfState;
   InteractiveHalfState? _liveSecondHalfState;
   int _liveSubstitutionsUsed = 0;
+
+  /// 再起動後に後半の途中から再開するときの、後半の途中経過と再開する分。
+  /// [GameStateMatch.playSecondHalf]が一度だけ使う。
+  ({HalfTally tally, int resumeMinute})? _liveSecondHalfResume;
   static const int maxSubstitutionsPerMatch = 3;
 
   // ---- カップ戦のライブ観戦(リーグ戦と同じ進行を再利用する) ----

@@ -114,6 +114,25 @@ void main() {
     expect(game.save!.budget, before + granted);
   });
 
+  test('購入画面と起動時の見張りが同時に移しても、二重に入らない', () async {
+    // 両方が同じ預かりを見て加算し、預かりを消す前にもう一方が加算していた。
+    final (money, store) = await build();
+    final game = GameState();
+    await game.startNewGame('同時FC');
+    final before = game.save!.budget;
+
+    await store.deliver(FundsPack.small.productId);
+    final results = await Future.wait([
+      deliverPendingFunds(money, game),
+      deliverPendingFunds(money, game),
+    ]);
+
+    final amount = game.purchasedFundsAmount(FundsPack.small);
+    expect(results.fold<int>(0, (s, r) => s + r), amount);
+    expect(game.save!.budget, before + amount, reason: '同じパックが2回入っている');
+    expect(money.undeliveredFundsPacks, isEmpty);
+  });
+
   test('セーブが無いあいだは預かったままで、消えない', () async {
     final (money, store) = await build();
     final empty = GameState();

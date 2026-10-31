@@ -563,4 +563,32 @@ class PlayerGenerator {
     });
     return Team(id: id, name: name, players: players);
   }
+
+  /// 総合力(チームの[Team.overallRating])が[targetOverall]に近くなるよう
+  /// スカッドを作る。
+  ///
+  /// [generateSquad]の strengthTier は選手の潜在能力の目安で、出来上がる
+  /// チームの総合力はそれより1〜2割低い(若手は潜在能力まで育っていない)。
+  /// 保存しておいた総合力をそのまま strengthTier に渡すと、作り直すたびに
+  /// 弱くなる。出来上がりを見て strengthTier を合わせ込む。
+  static Team generateSquadWithOverall({
+    required String id,
+    required String name,
+    required int targetOverall,
+  }) {
+    var tier = targetOverall;
+    Team? best;
+    var bestGap = 1 << 30;
+    for (var attempt = 0; attempt < 6; attempt++) {
+      final squad = generateSquad(id: id, name: name, strengthTier: tier);
+      final gap = targetOverall - squad.overallRating;
+      if (gap.abs() < bestGap) {
+        best = squad;
+        bestGap = gap.abs();
+      }
+      if (gap.abs() <= 1) break;
+      tier = (tier + gap).clamp(15, 120);
+    }
+    return best!;
+  }
 }
