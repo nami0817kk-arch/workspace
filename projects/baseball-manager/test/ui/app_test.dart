@@ -101,7 +101,25 @@ Future<void> _dismissMilestones(WidgetTester t) async {
 }
 
 void main() {
+  // 公開ビルドでは使えない管理者モードを、テストでは使えるようにする
+  GameController.adminAllowed = true;
   _rankTests();
+  testWidgets('公開ビルドでは管理者モードが使えない(スイッチも7連打も効かない)', (t) async {
+    GameController.adminAllowed = false;
+    addTearDown(() => GameController.adminAllowed = true);
+    final c = GameController(rng: Random(1));
+    final now = DateTime(2026, 1, 1);
+    for (var i = 0; i < 8; i++) {
+      expect(c.tapTitle(now: now), isFalse);
+    }
+    c.toggleAdmin();
+    expect(c.adminMode, isFalse);
+    await t.pumpWidget(BaseballManagerApp(controller: c));
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const Key('settings-open')));
+    await t.pumpAndSettle();
+    expect(find.byKey(const Key('admin-switch')), findsNothing);
+  });
   testWidgets('はじめの画面から選手を作ると、6歳の春から始まる', (t) async {
     await _start(t);
     expect(find.text('はじめる'), findsOneWidget);

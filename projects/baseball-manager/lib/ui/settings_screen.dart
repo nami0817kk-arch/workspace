@@ -33,6 +33,7 @@ class SettingsScreen extends StatelessWidget {
               constraints: const BoxConstraints(maxWidth: 560),
               child: ListView(
                 children: [
+                  if (GameController.adminAllowed)
                   SwitchListTile(
                     key: const Key('admin-switch'),
                     secondary: const Icon(Icons.admin_panel_settings),
