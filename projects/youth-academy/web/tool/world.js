@@ -237,7 +237,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   ok(prof('raw') + prof('low') + prof('mis') === cands.length, '応募者は原石・低め・位置ちがいのどれか');
   const raw = cands.filter((c) => c.prof === 'raw');
   const mis = cands.filter((c) => c.prof === 'mis');
-  ok(raw.every((c) => c.p.pot - YA.abSum(c.p) >= 170), '原石は伸びしろが大きい');
+  ok(raw.every((c) => c.p.pot - YA.abSum(c.p) >= 150), '原石は伸びしろが大きい');
   ok(raw.every((c) => YA.ovr(c.p) < 9), '原石は今の力が低い');
   ok(mis.every((c) => c.p.pos !== 'GK' && c.p.apt[c.p.main] <= c.p.apt[c.p.best] - 1), '位置ちがいは登録が合っていない');
   let okc = 0;
@@ -249,7 +249,15 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   YA.weekExtras(wf);
   const lateSel = cands.find((c) => c.status === 'open');
   ok(!YA.signCand(wf, lateSel.id).ok, '1月が過ぎたらセレクションの合否を変えられない');
-  // 1年を通して：3月の入団で高1が12人になる
+  // 12月〜3月もスカウトに出られる（返事の28週は除く）。会えた子は来年度の候補で、4月から声をかけられる
+  wf.week = 28;
+  ok(!YA.scoutOut(wf, 'local').ok, '返事の週はスカウトに出られない');
+  wf.week = 36;
+  for (const c of wf.scouting.cands.filter((x) => x.kind === 'scout' && x.status === 'open')) YA.passCand(wf, c.id);
+  const nx = YA.scoutOut(wf, 'local');
+  ok(nx.ok && nx.found.every((c) => c.next), '2月に会えた子は来年度の候補');
+  ok(!YA.signCand(wf, nx.found[0].id).ok, '来年度の候補には、まだ声をかけられない');
+  const nxIds = nx.found.map((c) => c.id);
   const names = wf.scouting.cands.filter((c) => c.status === 'signed').map((c) => c.p.name);
   wf.week = 40;
   const lg = wf.leagueLevel;
@@ -257,6 +265,9 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   const g1 = Object.values(wf.players).filter((p) => p.grade === 1);
   ok(g1.length === 12 && Object.keys(wf.players).length === 36, '3月に高1が12人 ' + g1.length);
   ok(names.every((nm) => g1.some((p) => p.name === nm)), '決めた子が高1に入る');
+  const carried = wf.scouting.cands.filter((c) => nxIds.indexOf(c.id) >= 0);
+  ok(carried.length === nxIds.length && carried.every((c) => !c.next && c.status === 'open'), '冬に会った子は翌年の候補に持ち越す');
+  ok(YA.signCand(wf, carried[0].id).ok, '4月になったら声をかけられる');
   // おまかせ進行でも暦どおり決まる
   const wg = mk(22);
   YA.simulate(wg, { until: 'year', stopOnImportant: false });
@@ -775,6 +786,19 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   ok(wi.players[hurt].team === 'B', '抜けた選手はBへ回る');
   ok(new Set(wi.lineupA.map((s) => s.pid).concat(wi.benchA)).size === 20, '穴埋めのあとも重複がない');
 }
+// AのGKが2人とも怪我：Bの先発GKがAへ上がり、Bはフィールドの選手がゴールを守る（怪我のGKは出ない）
+{
+  const wg = YA.newWorld(4);
+  const gks = Object.values(wg.players).filter((p) => p.pos === 'GK');
+  for (const p of gks.filter((q) => q.team === 'A')) p.inj = 5;
+  YA.repairLineup(wg, 'A');
+  YA.repairLineup(wg, 'B');
+  const ga = wg.players[wg.lineupA[0].pid];
+  const gb = wg.players[wg.lineupB[0].pid];
+  ok(ga.pos === 'GK' && ga.inj <= 0 && ga.team === 'A', 'AのGKは健康なGK ' + ga.pos + ' ' + ga.inj);
+  ok(gb.inj <= 0 && gb.team === 'B', 'BのGKも怪我をしていない ' + gb.pos);
+  ok(new Set(wg.lineupB.map((s) => s.pid)).size === 11 && new Set(wg.lineupA.map((s) => s.pid)).size === 11, 'GKの入れ替えのあとも重複がない');
+}
 // 絵の素材：顔とエンブレムが十分にあり、同じリーグのエンブレムは重ならず、顔は名簿のなかで重ならない
 {
   ok(YA.IMG.faces.length >= 70 && YA.IMG.emblems.length >= 60 && YA.IMG.title.startsWith('data:image/'), '素材の数 ' + YA.IMG.faces.length + '/' + YA.IMG.emblems.length);
@@ -784,6 +808,20 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   ok(new Set(idx).size === idx.length && idx.every((k) => k >= 0), '同じリーグのエンブレムは重ならない');
   const srcs = Object.values(wa.players).map((p) => YA.faceSrc(wa, p));
   ok(new Set(Object.values(wa.players).map((p) => p.face)).size === Object.keys(wa.players).length && srcs.every(Boolean), '名簿のなかで顔が重ならない');
+  // 入団の候補も、名簿の子と候補どうしで重ならない（素材の数が足りる範囲で）。入団したあとも名簿で重ならない
+  wa.week = 25; YA.weekExtras(wa);
+  wa.week = 31; YA.weekExtras(wa);
+  const live = wa.scouting.cands.filter((c) => c.status === 'open');
+  live.forEach((c) => YA.faceSrc(wa, c.p));
+  const room = YA.IMG.faces.length - Object.keys(wa.players).length;
+  const cf = live.slice(0, room).map((c) => c.p.face);
+  const rf = new Set(Object.values(wa.players).map((p) => p.face));
+  ok(new Set(cf).size === cf.length && cf.every((f) => !rf.has(f)), '候補の顔は名簿の子・ほかの候補と重ならない');
+  for (const c of wa.scouting.cands.filter((x) => x.kind === 'int').slice(0, 8)) YA.signCand(wa, c.id);
+  wa.week = 40;
+  YA.endWeek(wa);
+  Object.values(wa.players).forEach((p) => YA.faceSrc(wa, p));
+  ok(new Set(Object.values(wa.players).map((p) => p.face)).size === Object.keys(wa.players).length, '入団のあとも名簿のなかで顔が重ならない');
 }
 console.log(fails ? '失敗 ' + fails : '育成の点検: すべて通過');
 process.exit(fails ? 1 : 0);

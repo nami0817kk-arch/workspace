@@ -14,8 +14,10 @@
     c.trust = clamp(c.trust + d, 0, 100);
     if (why && Math.abs(c.trust - before) >= 1) YA.noteTier(w, 2, `クラブからの信頼度が${c.trust > before ? '上がりました' : '下がりました'}（${Math.round(before)}→${Math.round(c.trust)}）：${why}`);
   };
+  // 評判：高いほど上がりにくい（90を超えるのは一握り）。下がるのはそのまま
   YA.addRep = function (w, d) {
-    w.club.rep = clamp(w.club.rep + d, 0, 100);
+    const r = w.club.rep;
+    w.club.rep = clamp(r + (d > 0 ? d * Math.max(0.1, (100 - r) / 60) : d), 0, 100);
     w.rep = w.club.rep;
   };
 
@@ -172,7 +174,9 @@
     c.staffChanges = 1;
     c.alloc = Object.assign({ scout: 18, camp: 14, facility: 8 }, c.alloc);
     // 前の年の連帯貢献金などを予算に
-    c.total = Math.round(TIER_BASE[c.tier] * (0.85 + c.rep / 300) * (1 + (c.budgetAdj || 0)) + (c.solidarity || 0));
+    // 連帯貢献金は予算に足すが、クラブの本体にも回るので、育成の予算に入るのは基本予算の6割まで
+    c.solidarityIn = Math.round(Math.min(c.solidarity || 0, TIER_BASE[c.tier] * 0.6));
+    c.total = Math.round(TIER_BASE[c.tier] * (0.85 + c.rep / 300) * (1 + (c.budgetAdj || 0)) + c.solidarityIn);
     c.solidarityLast = c.solidarity || 0;
     c.solidarity = 0;
     c.facPts += YA.budget(w).facility;
@@ -217,7 +221,8 @@
     const d = score - 1.9; // B評価（2つ達成）はほぼ現状維持、A以上で信頼が上がり、C以下で下がる
     c.trust = clamp(c.trust + d * 9, 0, 100);
     c.trust += (50 - c.trust) * 0.15; // 信頼度は、少しずつ真ん中へ戻る（張り付かないように）
-    c.rep = clamp(c.rep + d * 3 + (w.leagueEndMove === -1 ? 4 : w.leagueEndMove === 1 ? -4 : 0), 0, 100);
+    YA.addRep(w, d * 3 + (w.leagueEndMove === -1 ? 4 : w.leagueEndMove === 1 ? -4 : 0));
+    c.rep += (50 - c.rep) * 0.08; // 評判も、何もしなければ少しずつ真ん中へ戻る
     c.budgetAdj = clamp((c.budgetAdj || 0) + d * 0.05, -0.3, 0.4);
     w.rep = c.rep;
     const rec = { year: w.year, letter, score: Math.round(score * 10) / 10, rank, level: w.league ? w.league.level : 2, goals: res };

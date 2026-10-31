@@ -645,18 +645,22 @@
     const main = document.getElementById('main');
     // 同じ画面のまま作り直すとき（ボタンを押した直後など）は、スクロール位置を覚えておいて戻す
     const sameView = renderKey === app.tab + '|' + app.view + '|' + (app.ct || '');
-    const keep = sameView ? [...main.querySelectorAll('*')].filter((e) => e.scrollTop > 0).map((e) => [e.className, e.scrollTop]) : [];
+    const scrollers = () => [...main.querySelectorAll('*')].filter((e) => e.scrollHeight > e.clientHeight + 2 && /auto|scroll/.test(getComputedStyle(e).overflowY));
+    const keep = sameView ? scrollers().map((e) => e.scrollTop) : [];
     renderKey = app.tab + '|' + app.view + '|' + (app.ct || '');
+    const restore = () => { if (keep.length) scrollers().forEach((e, i) => { if (keep[i]) e.scrollTop = keep[i]; }); };
     main.replaceChildren();
     cleanupPlay();
     if (!app.w) {
       root.classList.add('full');
       YA.views.newgame(main);
+      restore();
       return;
     }
     if (app.w.retired) {
       root.classList.add('full');
       YA.views.retired(main);
+      restore();
       return;
     }
     if (app.tab === 'match') {
@@ -668,7 +672,7 @@
     // 最初の1か月の案内（決定77）
     const tt = app.view !== 'play' ? YA.tutorialText(app.w) : null;
     if (tt) main.prepend(h('div', { class: 'tut' }, h('span', { class: 'tutb' }, '案内'), h('span', { class: 'grow' }, tt), h('button', { class: 'btn sm', onclick: () => { app.w.tut.on = false; YA.saveWorld(); render(); } }, '消す')));
-    for (const [cls, top] of keep) { const e = [...main.querySelectorAll('*')].find((x) => x.className === cls && x.scrollHeight > x.clientHeight); if (e) e.scrollTop = top; }
+    restore();
   }
 
   function viewPlaceholder(main) {
@@ -772,7 +776,7 @@
     const stopBtn = h('button', { class: 'btn pri sm', style: 'min-height:34px;min-width:76px' }, '止める');
     const autoBtn = h('button', { class: 'btn sm', style: 'min-height:34px' });
     const skipBtn = h('button', { class: 'btn sm', style: 'min-height:34px', onclick: () => { cleanupPlay(); let e; let g = 0; while (!m.finished && g++ < 5000) { const ev = m.step(); if (ev.type === 'full') e = ev; } finishMatch(m, e); app.view = 'result'; render(); } }, '結果まで');
-    const top = h('div', { class: 'topbar' }, h('div', { class: 'scoreboard' }, h('span', { class: 'tn' }, m.home.short), scoreHome, h('span', { style: 'color:#8fa3c4' }, '-'), scoreAway, h('span', { class: 'tn' }, m.away.short)), clock, h('div', { class: 'grow' }), skipBtn, autoBtn, stopBtn);
+    const top = h('div', { class: 'topbar' }, h('div', { class: 'scoreboard' }, YA.emblemEl(app.w, m.home.name, 18), h('span', { class: 'tn' }, m.home.short), scoreHome, h('span', { style: 'color:#8fa3c4' }, '-'), scoreAway, h('span', { class: 'tn' }, m.away.short), YA.emblemEl(app.w, m.away.name, 18)), clock, h('div', { class: 'grow' }), skipBtn, autoBtn, stopBtn);
     const stage = h('div', { class: 'stage' });
     const cv = h('canvas', {});
     const sceneHead = h('div', { class: 'scene-head' });
@@ -967,7 +971,7 @@
     const win = summary.score.home > summary.score.away;
     const draw = summary.score.home === summary.score.away;
     wrap.append(
-      h('div', { class: 'res-top' }, h('div', { class: 'res-score' }, h('span', {}, m.home.short), h('b', {}, `${summary.score.home} - ${summary.score.away}`), h('span', {}, m.away.short)), h('div', { class: 'h grow', style: 'font-size:15px' }, win ? '勝利' : draw ? '引き分け' : '敗戦'), m.scheduled && !m.videoDone && YA.videoButton ? YA.videoButton(m) : null, m.scheduled ? h('button', { class: 'btn pri', style: 'min-width:110px', onclick: () => { app.view = 'pre'; preState = null; app.tab = 'home'; render(); } }, 'ホームへ（次の週へ）') : h('button', { class: 'btn', onclick: () => { app.view = 'pre'; preState = null; render(); } }, '戦術を直す'), m.scheduled ? null : h('button', { class: 'btn pri', onclick: () => { const t = newOurs(); startMatch(t, YA.makeOpponent(YA.OPPONENTS[app.opp], app.seed * 3 + app.opp + 1), YA.OPPONENTS[app.opp], false); } }, '同じ設定でもう一度')),
+      h('div', { class: 'res-top' }, h('div', { class: 'res-score' }, YA.emblemEl(app.w, m.home.name, 24), h('span', {}, m.home.short), h('b', {}, `${summary.score.home} - ${summary.score.away}`), h('span', {}, m.away.short), YA.emblemEl(app.w, m.away.name, 24)), h('div', { class: 'h grow', style: 'font-size:15px' }, win ? '勝利' : draw ? '引き分け' : '敗戦'), m.scheduled && !m.videoDone && YA.videoButton ? YA.videoButton(m) : null, m.scheduled ? h('button', { class: 'btn pri', style: 'min-width:110px', onclick: () => { app.view = 'pre'; preState = null; app.tab = 'home'; render(); } }, 'ホームへ（次の週へ）') : h('button', { class: 'btn', onclick: () => { app.view = 'pre'; preState = null; render(); } }, '戦術を直す'), m.scheduled ? null : h('button', { class: 'btn pri', onclick: () => { const t = newOurs(); startMatch(t, YA.makeOpponent(YA.OPPONENTS[app.opp], app.seed * 3 + app.opp + 1), YA.OPPONENTS[app.opp], false); } }, '同じ設定でもう一度')),
     );
     const left = h('div', { class: 'card pbody grow' });
     const hasExp = !!(m.scheduled && app.w);

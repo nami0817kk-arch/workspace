@@ -13,16 +13,23 @@
     e.draggable = false;
     return e;
   };
-  // 選手の顔：名前から決めて p.face に残す（同じ名簿のなかでは重ならない）
+  // 選手の顔：名前から決めて p.face に残す。名簿のなかでは重ならず、入団の候補ともなるべく重ならない
   YA.faceSrc = function (w, p) {
     const F = IMG().faces;
     if (!F.length || !p) return null;
     if (p.face == null || p.face >= F.length) {
-      const used = new Set();
-      if (w) for (const q of Object.values(w.players)) if (q.face != null) used.add(q.face);
-      let k = YA.hash(p.name || String(p.id)) % F.length;
-      for (let i = 0; i < F.length && used.has(k); i++) k = (k + 1) % F.length;
-      p.face = k;
+      const roster = new Set();
+      const cands = new Set();
+      if (w) for (const q of Object.values(w.players)) if (q.face != null && q !== p) roster.add(q.face);
+      if (w && w.scouting) for (const c of w.scouting.cands) if (c.p !== p && c.p.face != null && c.status !== 'passed' && c.status !== 'declined') cands.add(c.p.face);
+      const start = YA.hash(p.name || String(p.id)) % F.length;
+      const probe = (bad) => {
+        for (let i = 0; i < F.length; i++) { const k = (start + i) % F.length; if (!bad(k)) return k; }
+        return -1;
+      };
+      let k = probe((x) => roster.has(x) || cands.has(x));
+      if (k < 0) k = probe((x) => roster.has(x));
+      p.face = k < 0 ? start : k;
     }
     return F[p.face];
   };

@@ -282,8 +282,19 @@
     const swaps = [];
     lineup.forEach((s, i) => {
       const p = w.players[s.pid];
-      if (p && healthy(p)) return;
       const pos = YA.posOfSlot(s, i);
+      if (p && healthy(p) && pos === 'GK' && p.pos !== 'GK') {
+        // 代わりにゴールを守っていたフィールドの選手：GKが戻ったら交代する
+        const kg = bench.findIndex((id) => w.players[id] && w.players[id].pos === 'GK' && healthy(w.players[id]));
+        if (kg >= 0) {
+          const inId = bench[kg];
+          bench[kg] = s.pid;
+          s.pid = inId;
+          swaps.push([p, w.players[inId]]);
+        }
+        return;
+      }
+      if (p && healthy(p)) return;
       let k = bench.findIndex((id) => w.players[id] && healthy(w.players[id]) && (pos === 'GK' ? w.players[id].pos === 'GK' : w.players[id].pos !== 'GK'));
       if (pos !== 'GK') {
         // その位置の適性が一番高いベンチの選手
@@ -296,6 +307,32 @@
         });
         if (k2 >= 0) k = k2;
       }
+      if (k < 0 && which === 'B' && pos === 'GK') {
+        // BのGKがいない：まずAの控えGKを借りる（怪我のGKはAのベンチへ）
+        const ka = (w.benchA || []).findIndex((id) => w.players[id] && w.players[id].pos === 'GK' && healthy(w.players[id]));
+        if (ka >= 0) {
+          const up = w.players[w.benchA[ka]];
+          w.benchA[ka] = s.pid;
+          if (p) p.team = 'A';
+          up.team = 'B';
+          s.pid = up.id;
+          swaps.push([p, up]);
+          return;
+        }
+        // それもいない：ベンチのフィールドの選手で、GKの適性がいちばん高い子がゴールを守る
+        let kf = -1;
+        let bf = -1;
+        bench.forEach((id, kk) => {
+          const q = w.players[id];
+          if (q && healthy(q) && q.pos !== 'GK' && (q.apt ? q.apt.GK : 1) > bf) { bf = q.apt ? q.apt.GK : 1; kf = kk; }
+        });
+        if (kf < 0) return;
+        const inId = bench[kf];
+        bench[kf] = s.pid;
+        s.pid = inId;
+        swaps.push([p, w.players[inId]]);
+        return;
+      }
       if (k < 0) {
         // Aのベンチに代わりがいない：Bのベンチから動ける選手を上げ、抜けた選手はBへ回す
         if (which !== 'A' || !w.benchB) return;
@@ -307,9 +344,13 @@
           const v = (q.apt ? q.apt[p15] : 10) + (w.benchB.indexOf(q.id) >= 0 ? 0.1 : 0);
           if (v > bvb) { bvb = v; up = q; }
         }
+        // GKだけは、Bの先発GKでも上げる（Aの試合を優先。Bはこのあと控えの誰かがゴールを守る）
+        if (!up && pos === 'GK') up = Object.values(w.players).find((q) => q.team === 'B' && q.pos === 'GK' && healthy(q)) || null;
         if (!up) return;
         const kb = w.benchB.indexOf(up.id);
         if (kb >= 0) w.benchB[kb] = s.pid;
+        const sb = kb < 0 ? w.lineupB.find((x) => x.pid === up.id) : null;
+        if (sb) sb.pid = s.pid;
         if (p) p.team = 'B';
         up.team = 'A';
         s.pid = up.id;
@@ -1022,6 +1063,13 @@
       }
       q._path = path;
     });
+    // プロ入りは、その年の目安（K人）まで。突出した子（16以上）だけ1人多く取れる。下から大学へ回す
+    const pros = seniors.filter((q) => q._path === 'pro');
+    const cap = K + (pros[K] && YA.ovr(pros[K]) >= 16 ? 1 : 0);
+    for (const q of pros.slice(cap)) {
+      q._path = 'univ';
+      if (q._sold) q._sold = false;
+    }
     for (const p of Object.values(w.players)) {
       if (p.grade === 3) {
         const o = Math.round(YA.ovr(p) * 10) / 10;
