@@ -64,8 +64,8 @@
     const act = h('div', { style: 'display:flex;flex-direction:column;gap:5px' });
     if (w.firstSel && !w.yearIntro) {
       // 最初のセレクション：高1の12人を応募者から選ぶ。終えるまで週は進められない
-      const signed = YA.signedCount(w, 'sel');
-      act.append(h('div', { class: 'card', style: 'padding:7px 9px;background:#eaf2ff' }, h('div', { class: 'h' }, '最初のセレクション'), h('div', { class: 'note' }, `応募者から高1の12人を選びます。合格 ${signed}人（残り${12 - signed}人は一般入団）`)),
+      const signed = YA.signedCount(w) + w.scouting.cands.filter((c) => c.status === 'offered').length;
+      act.append(h('div', { class: 'card', style: 'padding:7px 9px;background:#eaf2ff' }, h('div', { class: 'h' }, '最初のセレクション'), h('div', { class: 'note' }, `高1の12人を、セレクション（3人まで）・スカウト（4人まで）・内部昇格（5人まで）から選びます。決まった ${signed}人（残り${12 - signed}人は一般入団）`)),
         h('button', { class: 'btn pri', style: 'min-height:42px', onclick: () => { U().app.tab = 'club'; U().app.ct = 'scout'; rerender(); } }, 'セレクションを開く（応募者を見る）'),
         h('button', { class: 'btn', onclick: () => modal((close) => h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(420px,95%);padding:12px;gap:8px' }, h('div', { class: 'h' }, '新入生を決めますか'), h('div', { class: 'note' }, `合格の${signed}人と、一般入団${12 - signed}人が高1になります。決めたあとは変えられません。`), h('div', { class: 'row' }, h('button', { class: 'btn', onclick: close }, 'まだ選ぶ'), h('button', { class: 'btn pri', onclick: () => { YA.finishFirstSelection(w); YA.saveWorld(true); close(); rerender(); } }, '決める')))) }, 'セレクションを終えて新入生を決める'));
     } else if (w.phase === 'plan') {
