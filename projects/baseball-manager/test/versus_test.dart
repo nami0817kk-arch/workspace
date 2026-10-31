@@ -14,6 +14,7 @@ Map<Ability, int> _bat(int v) =>
 Map<Ability, int> _pit(int v) => {Ability.stuff: v, Ability.control: v};
 
 void main() {
+  GameController.adminAllowed = true; // 公開ビルドでは使えない管理者モードを、テストでは使う
   test('対戦テスト: 打者99 vs 投手10 は必ず出塁、投手99 vs 打者10 は必ず打ち取る', () {
     final a = runVersus(
         bat: _bat(99),

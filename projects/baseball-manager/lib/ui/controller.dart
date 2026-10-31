@@ -284,7 +284,7 @@ class SaveStore {
   Future<bool> loadAdmin() async {
     try {
       final p = await SharedPreferences.getInstance();
-      return p.getBool(adminKey) ?? kTestBuild;
+      return GameController.adminAllowed && (p.getBool(adminKey) ?? kTestBuild);
     } catch (_) {
       return false;
     }
@@ -758,6 +758,10 @@ class GameController extends ChangeNotifier {
   /// 管理者モード(素質・特性・コツなどを自由に編集できる)。端末ごとに覚える。
   bool adminMode = false;
 
+  /// 管理者モードを使えるか。公開ビルド(`TEST_BUILD` なし)では使えない
+  /// (継承ポイントの稼ぎや実績の水増しができるため)。テストだけが true にする。
+  static bool adminAllowed = kTestBuild;
+
   /// 文字の大きさ(1.0が標準)とテーマ。端末ごとに覚える。
   double textScale = 1.0;
   ThemeMode themeMode = ThemeMode.system;
@@ -919,6 +923,8 @@ class GameController extends ChangeNotifier {
       final a = {
         for (final x in (m['achievements'] as List?) ?? const []) x as String,
       };
+      // 貼り付けで読み込む前のデータも控えに残す(間違えて上書きしても戻せる)。
+      autoBackup('読み込む前');
       game = g;
       history = h;
       unlocked = a;
@@ -1023,6 +1029,7 @@ class GameController extends ChangeNotifier {
 
   /// タイトルを素早く7回タップすると管理者モードの入/切が切り替わる。切り替えたら true。
   bool tapTitle({DateTime? now}) {
+    if (!adminAllowed) return false;
     final t = now ?? DateTime.now();
     _titleTaps = t.difference(_lastTitleTap) > const Duration(seconds: 2)
         ? 1
@@ -1035,6 +1042,7 @@ class GameController extends ChangeNotifier {
   }
 
   void toggleAdmin() {
+    if (!adminAllowed) return;
     adminMode = !adminMode;
     store.saveAdmin(adminMode);
     notifyListeners();

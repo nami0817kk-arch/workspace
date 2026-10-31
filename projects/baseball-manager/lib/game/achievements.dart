@@ -55,9 +55,9 @@ final List<Achievement> achievements = [
       (s) => s.records.any(
           (r) => r.stage == Stage.highSchool && r.age == 18 && r.champion)),
   Achievement('league-champion', 'リーグ優勝', 'プロのリーグ優勝を経験する。',
-      (s) => _proRecords(s, (r) => r.rank == 1)),
+      (s) => _proRecords(s, (r) => !r.farm && r.rank == 1)),
   Achievement('dynasty', '黄金時代', 'リーグ3連覇を成し遂げる。',
-      (s) => _longestRun(s, (r) => r.rank == 1) >= 3),
+      (s) => _longestRun(s, (r) => !r.farm && r.rank == 1) >= 3),
   Achievement('title', 'タイトルホルダー', 'プロでタイトルを1つ獲得する。',
       (s) => s.records.any((r) => r.titles.isNotEmpty)),
   Achievement(
@@ -118,7 +118,7 @@ final List<Achievement> achievements = [
   Achievement('rival-winner', 'ライバルに勝ち越す', 'ライバルとの通算で、10勝以上して勝ち越す。',
       (s) => s.rivalWins >= 10 && s.rivalWins > s.rivalLosses),
   Achievement('s-rank', 'Sランク', 'いずれかの能力を90以上にする。',
-      (s) => s.abilities.values.any((v) => v >= 90)),
+      (s) => s.peakAbility >= 90 || s.abilities.values.any((v) => v >= 90)),
   Achievement('traits-full', 'こだわりの個性', '特性を上限(3つ)までそろえる。',
       (s) => s.traits.length >= maxTraits),
   Achievement('rare-trait', '選ばれし者', 'レア特性を持って引退する(生まれつき、または覚醒)。',

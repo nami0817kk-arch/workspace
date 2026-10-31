@@ -151,9 +151,13 @@ class Line {
 
   static const _eraSoft = 1.20;
 
+  /// 被安打(本塁打を含む)。`hitsAllowed` は本塁打を別に数えているので、
+  /// 画面に出す被安打・WHIP・被打率はこちらを使う。
+  int get totalHitsAllowed => hitsAllowed + homeRunsAllowed;
+
   /// WHIP(1回あたりに出した走者の数)。
   double? get whip =>
-      outs == 0 ? null : (walksGiven + hitsAllowed) / inningsPitched;
+      outs == 0 ? null : (walksGiven + totalHitsAllowed) / inningsPitched;
 
   /// 9回あたりの奪三振・与四球・被本塁打。
   double? get strikeoutsPer9 => outs == 0 ? null : strikeouts * 27 / outs;
@@ -167,7 +171,7 @@ class Line {
   /// 被打率(打者のうち、四球を除いた対戦での被安打の割合)。
   double? get battingAverageAgainst {
     final ab = faced - walksGiven;
-    return ab <= 0 ? null : hitsAllowed / ab;
+    return ab <= 0 ? null : totalHitsAllowed / ab;
   }
 
   /// 勝率。勝ち負けがあれば。

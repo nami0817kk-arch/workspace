@@ -28,8 +28,10 @@ PlayerSnapshot _snap({
   Difficulty difficulty = Difficulty.normal,
   bool married = false,
   Course? route,
+  int peakAbility = 0,
 }) =>
     PlayerSnapshot(
+      peakAbility: peakAbility,
       name: 't',
       role: role,
       age: age,
@@ -234,6 +236,28 @@ void main() {
           _has('rival-winner', _snap(rivalWins: 9, rivalLosses: 0)), isFalse);
       expect(_has('s-rank', _snap(abilities: {Ability.contact: 90})), isTrue);
       expect(_has('s-rank', _snap(abilities: {Ability.contact: 89})), isFalse);
+      // 体の衰えで引退時には落ちていても、人生の中で90に届いていれば取れる
+      expect(
+          _has('s-rank',
+              _snap(abilities: {Ability.contact: 70}, peakAbility: 91)),
+          isTrue);
+      expect(
+          _has('s-rank',
+              _snap(abilities: {Ability.contact: 70}, peakAbility: 89)),
+          isFalse);
+      // 二軍の年の1位は「リーグ優勝」に数えない
+      expect(
+          _has(
+              'league-champion',
+              _snap(records: [
+                SeasonRecord(
+                    age: 19,
+                    stage: Stage.pro,
+                    line: const Line(),
+                    rank: 1,
+                    farm: true)
+              ])),
+          isFalse);
       expect(
           _has(
               'traits-full',

@@ -50,6 +50,24 @@ void main() {
     expect(c2.autoBackups.first.why, c.autoBackups.first.why);
   });
 
+  test('貼り付けで読み込む前のデータも控えに残る。壊れた文字列では控えを足さない', () async {
+    SharedPreferences.setMockInitialValues({});
+    final c = GameController(rng: Random(1));
+    c.newGame('はじめ', Role.batter);
+    final text = c.exportBackup();
+    c.act(Plan.train);
+    c.newGame('あと', Role.batter);
+    final before = c.autoBackups.length;
+    expect(await c.importBackup('これは違う'), isFalse);
+    expect(c.autoBackups.length, before);
+    expect(await c.importBackup(text), isTrue);
+    expect(c.game!.player.name, 'はじめ');
+    expect(c.autoBackups.first.why, '読み込む前');
+    // 控えから「あと」に戻せる
+    expect(await c.restoreAutoBackup(0), isTrue);
+    expect(c.game!.player.name, 'あと');
+  });
+
   test('控えに戻せる。戻す前のデータも控えに残る(やり直せる)', () async {
     SharedPreferences.setMockInitialValues({});
     final c = GameController(rng: Random(1));
