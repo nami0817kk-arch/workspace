@@ -330,7 +330,8 @@
     dot.setAttribute('cx', last[0]); dot.setAttribute('cy', last[1]); dot.setAttribute('r', '3'); dot.setAttribute('fill', '#1f6feb');
     svg.append(dot);
     const d0 = now - vals[0];
-    box.append(svg, h('div', { style: 'font-size:11px;line-height:1.5' },
+    if (vals.length > 1) box.append(svg);
+    box.append(h('div', { style: 'font-size:11px;line-height:1.5' },
       h('div', {}, h('b', {}, '総合力 ' + now.toFixed(1)), h('span', { class: 'note' }, vals.length > 1 ? `（${d0 >= 0 ? '+' : ''}${d0.toFixed(1)}／記録の最初から）` : '（これから記録します）')),
       h('div', {}, '今月 ', h('b', { style: 'color:#1a9d57' }, sum(G.month) ? '+' + sum(G.month) : '伸びなし'), ' ', h('span', { class: 'note' }, top(G.month))),
       h('div', {}, '今年 ', h('b', {}, sum(G.year) ? '+' + sum(G.year) : '伸びなし'), ' ', h('span', { class: 'note' }, top(G.year))),
