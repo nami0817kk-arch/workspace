@@ -1,0 +1,164 @@
+title: 10月31日のシリーズ5本の題材
+lead: 5つのシリーズ（クラブ紹介・代表・監督・財政・レジェンド）から、各1本を選んでください（計5本）
+note: |
+  シリーズは1日5本になったので、10/29 に出した5つの並び（ブンデスのクラブ紹介・代表・監督・財政・世界のレジェンド）をもう一度回します。10/30 に出した選手紹介・比べる・国内レジェンド・スタジアム・ユニフォームは、11/1 に回します。<br><br>
+  <b>各シリーズに推しを1件ずつ付けました（1・5・9・13・17）。</b>推しをそのまま○にしていただければ、そのまま作り始めます。<br><br>
+  <b>確かめられていないこと：</b>写真のライセンスと横長かどうかは、どの題材もまだ確かめていません（作る段階で取り込んで、目で見ます）。数字の一部は Wikipedia だけで、台本を書く前に公式で確かめ直します。確かめ直しで食い違えば、その題材は作らずに報告します。女子サッカー・Jリーグ・現役選手のレジェンド化は出していません。
+items:
+- num: 1
+  slot: クラブ紹介（ブンデス）
+  head: シャルケってどんなクラブ？（推し）
+  why: 今季昇格し、10/25時点で16位・勝点6。**田中聡が所属**（日本人はこの9クラブのうち、シャルケとホッフェンハイムだけ）。優勝7回・1997年UEFAカップ優勝、2021年と2023年に降格した名門。スタジアム（Veltins-Arena、収容62,273）の写真が Commons に多い。**確かめること：田中の出場状況、日本人の過去の在籍（内田篤人は記憶で、出典未確認）。**
+  src: Wikipedia 英語版（2026–27 Bundesliga）、サッカーキング（8/21）
+  url: https://en.wikipedia.org/wiki/2026–27_Bundesliga
+  fmt: news
+- num: 2
+  slot: クラブ紹介（ブンデス）
+  head: ホッフェンハイムってどんなクラブ？
+  why: '**町田浩樹が在籍**。昨季5位、今季9位・勝点9。1899年創設、SAP創業者ホップの支援で2008年に1部入り、最高位は2017-18の3位。**弱い：タイトルが無く物語が薄い。Commons のカテゴリが見つからず写真が未確認。**'
+  src: Wikipedia 英語版
+  url: https://en.wikipedia.org/wiki/2026–27_Bundesliga
+  fmt: news
+  weak: true
+- num: 3
+  slot: クラブ紹介（ブンデス）
+  head: ブレーメンってどんなクラブ？
+  why: 今季6位・勝点12。守護神だった長田澪がフライブルクへ移り、**いまは日本人なし**。Weserstadion の写真は Commons に89枚。**弱い：今の日本人との縁が無い。**
+  src: Commons
+  url: https://commons.wikimedia.org/wiki/Category:Weserstadion
+  fmt: news
+  weak: true
+- num: 4
+  slot: クラブ紹介（ブンデス）
+  head: ウニオン・ベルリンってどんなクラブ？
+  why: 今季17位・勝点6。Alte Försterei の写真は Commons に88枚。**弱い：今の日本人との縁が弱い。**
+  src: Commons
+  url: https://commons.wikimedia.org/wiki/Category:Stadion_An_der_Alten_F%C3%B6rsterei
+  fmt: news
+  weak: true
+- num: 5
+  slot: 代表チーム紹介
+  head: スウェーデン代表ってどんなチーム？（推し）
+  why: '**W杯F組で日本と1対1**（6/25、前田・エランガ）。日本は2位通過、スウェーデンは3位で32強、6/30にフランスに0対3で敗退。監督はグラハム・ポッター（2025/10/20就任）、主将リンデレフ、看板はイサクとギェケレシュ。W杯最高は1958年の準優勝。**確かめること：FIFAランクの順位（Wikipedia で34位だが表記が曖昧）。** ポッターの写真は Commons に17枚（横長か未確認）。'
+  src: Wikipedia 英語版、football-lab.jp
+  url: https://en.wikipedia.org/wiki/Sweden_men%27s_national_football_team
+  fmt: news
+- num: 6
+  slot: 代表チーム紹介
+  head: スコットランド代表ってどんなチーム？
+  why: 3/29 に日本に0対1。W杯はC組でハイチに1対0、モロッコに0対1、ブラジルに0対3で敗退。監督はポコニョーリ（2026/8/16就任）。プレミア所属が多い（ロバートソンなど）。**弱い：就任直後で「いまの姿」が薄い。写真が未確認。**
+  src: Wikipedia 英語版、TSN
+  url: https://en.wikipedia.org/wiki/Scotland_national_football_team
+  fmt: news
+  weak: true
+- num: 7
+  slot: 代表チーム紹介
+  head: チュニジア代表ってどんなチーム？
+  why: W杯で日本に0対4（6/20、鎌田・上田2・伊東）。3戦全敗。**弱い：監督の名前が資料によって食い違う（公式で要確認）。日本が圧勝した相手なので「紹介」の需要は測れていない。**
+  src: Wikipedia 英語版
+  url: https://en.wikipedia.org/wiki/Tunisia_national_football_team
+  fmt: news
+  weak: true
+- num: 8
+  slot: 代表チーム紹介
+  head: アイスランド代表ってどんなチーム？
+  why: 5/31 国立で日本に0対1（小川87分、観衆62,212）。**弱い：大物度が低い。写真が未確認。**
+  src: Wikipedia 英語版
+  url: https://en.wikipedia.org/wiki/Iceland_men%27s_national_football_team
+  fmt: news
+  weak: true
+- num: 9
+  slot: 監督紹介
+  head: トゥヘル監督ってどんな人？（推し）
+  why: '**イングランド代表監督（2026/2/12に契約を2028年まで延長）。3/31 ウェンブリーで日本に0対1**（三笘23分。イングランドは対アジア勢で史上初の敗戦と報道）。W杯でイングランドは3位。岡崎（マインツ）・香川（ドルトムント）を指導した。写真は Commons に58枚（2026/6/23のイングランド対ガーナなど）。**確かめること：W杯3位の詳細、写真のライセンスと横長か。懸念：チェルシー時代の罰金（事実だけ）。**'
+  src: Wikipedia 英語版、スカイスポーツ
+  url: https://en.wikipedia.org/wiki/Thomas_Tuchel
+  fmt: news
+- num: 10
+  slot: 監督紹介
+  head: シャビ・アロンソ監督ってどんな人？
+  why: 2026/5/17にチェルシーが4年契約で任命（7/1開始）。1/12にレアル・マドリードを双方合意で退任。**弱い：日本との接点が薄い。監督期の写真が未確認。懸念：ヴィニシウスとの不和（事実だけ）。**
+  src: Wikipedia 英語版
+  url: https://en.wikipedia.org/wiki/Xabi_Alonso
+  fmt: news
+  weak: true
+- num: 11
+  slot: 監督紹介
+  head: ナーゲルスマン監督ってどんな人？
+  why: 前ドイツ代表監督（2026/7/3に辞任、いまは無職）。W杯は首位通過後、32強でパラグアイにPK3対4（ドイツ初のPK負け）。**弱い：日本との接点が薄い。私生活の報道が多く、題の軸にできない。写真は36枚（RBライプツィヒ時代が中心）。**
+  src: Wikipedia 英語版
+  url: https://en.wikipedia.org/wiki/Julian_Nagelsmann
+  fmt: news
+  weak: true
+- num: 13
+  slot: クラブの財政
+  head: ローマは、なぜ赤字を続けるのか（推し）
+  why: '**クラブ公式の決算（2025年6月期）まで読めて、数字がそろう。** 営業収入は2億7020万ユーロ（前年2億9990万）：試合収入4450万・商業7170万・放映権9040万。人件費1億5270万。グループの損失は5390万ユーロ（前年8140万）。いまセリエAで3位・勝点21。**確かめること：現役の日本人（未確認）。**'
+  src: AS ローマ 公式の決算（2025年6月期）
+  url: https://media.asroma.com/prod/files/file/gm-af5a5d7a-4129-48ec-ba0f-e27c9e2c327c-bilancio-di-esercizio-e-consolidato-al-30-giugno-2025.pdf
+  fmt: news
+- num: 14
+  slot: クラブの財政
+  head: ブライトンは、なぜ三笘を…（財政の線）
+  why: '**三笘薫が在籍**（5/9にハムストリングを負傷）。今季3位・勝点16。クラブ発表では営業損失5440万ポンド、選手売買が+6810万から-2500万へ。**弱い：Companies House の決算は画像PDFで文字が取れず、売上と人件費が一次資料で出せない（目で読めば出せる）。**'
+  src: クラブ発表、Companies House
+  url: https://find-and-update.company-information.service.gov.uk/
+  fmt: news
+  weak: true
+- num: 15
+  slot: クラブの財政
+  head: エバートンの財政
+  why: 売上1億9670万ポンド、損失860万ポンド。**弱い：二次情報のみで、一次資料は未確認。**
+  src: 二次情報
+  url: https://en.wikipedia.org/wiki/Deloitte_Football_Money_League
+  fmt: news
+  weak: true
+- num: 16
+  slot: クラブの財政
+  head: クリスタル・パレスの財政
+  why: 売上約1億9660万ポンド。**鎌田大地が在籍。弱い：損益の二次情報が食い違う（営業損失約4250万ポンドの記事と、税引前+827万ポンドの記事）。一次資料が要る。**
+  src: 二次情報
+  url: https://en.wikipedia.org/wiki/Deloitte_Football_Money_League
+  fmt: news
+  weak: true
+- num: 17
+  slot: レジェンド（世界）
+  head: カシージャスは、どんな選手だった？（推し）
+  why: 2020年8月4日に引退を発表（公式で確認）。**2010年W杯決勝（7月11日、延長1対0）でキャプテンを務め、ロッベンのシュートを2度止めた。** レアル・マドリード725試合、CL優勝3回、CL通算無失点51試合、スペイン代表167試合。Commons に28枚。**確かめること：写真のライセンスと横長か。懸念：2019年5月の心臓発作は題に使わない。**
+  src: Wikipedia 英語版
+  url: https://en.wikipedia.org/wiki/Iker_Casillas
+  fmt: news
+- num: 18
+  slot: レジェンド（世界）
+  head: デル・ピエロは、どんな選手だった？
+  why: 2015年10月に引退を公式発表。**1996年11月、東京でのトヨタカップ（決勝で得点しマン・オブ・ザ・マッチ）。** ユヴェントス全大会705試合290得点（クラブ記録）、CL優勝1回。日本との接点が強い。**確かめること：トヨタカップの日付と相手。2005・06年のスクデット剥奪は事実だけにし、題の軸にしない。** 写真は Commons に15枚。
+  src: Wikipedia 英語版
+  url: https://en.wikipedia.org/wiki/Alessandro_Del_Piero
+  fmt: news
+- num: 19
+  slot: レジェンド（世界）
+  head: ベルカンプは、どんな選手だった？
+  why: 2006年にクラブ引退。**1998年7月4日のW杯準々決勝、対アルゼンチンの90分の決勝ゴール。** アーセナル全大会423試合120得点、2003-04の無敗優勝。**弱い：日本との接点が弱い。ゴールの日付と分は別の出典が要る。** 写真は Commons に18枚。
+  src: Wikipedia 英語版
+  url: https://en.wikipedia.org/wiki/Dennis_Bergkamp
+  fmt: news
+  weak: true
+- num: 20
+  slot: レジェンド（世界）
+  head: ラウールは、どんな選手だった？
+  why: レアル・マドリード・スペイン代表のエース。CL優勝3回。シャルケ時代（2010〜12）もあり、**この回のクラブ紹介（シャルケ）と話がつながる。** **弱い：引退年月と数字がまだ確認できていない。** 写真は Commons に50枚以上。
+  src: Wikipedia 英語版（取得できず）
+  url: https://en.wikipedia.org/wiki/Ra%C3%BAl_(footballer,_born_1977)
+  fmt: news
+  weak: true
+- num: 21
+  slot: レジェンド（世界）
+  head: ロベルト・バッジョは、どんな選手だった？
+  why: 2004年5月16日、サン・シーロ（ミラン戦）が最後の試合。**1994年7月17日のW杯決勝のPK失敗。** 1993年バロンドール、クラブ488試合218得点、代表56試合27得点。日本での人気が高い。**弱い：現役時代の写真が少なく、ユニフォームの図が多い。写真が足りなければ外す。**
+  src: Wikipedia 英語版
+  url: https://en.wikipedia.org/wiki/Roberto_Baggio
+  fmt: news
+  weak: true
+drops:
+- [ウェスト・ハム・ウルヴァーハンプトンの財政, 今季の1部にいない（降格）]
+- [エルバースベルク・アウクスブルク・HSV・ケルン・パーダーボルンのクラブ紹介, 日本人との縁が確認できず、今回は見送り]

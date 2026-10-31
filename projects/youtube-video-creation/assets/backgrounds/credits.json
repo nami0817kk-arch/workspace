@@ -828,15 +828,6 @@
   "club": "パーダーボルン"
  },
  {
-  "file": "stadium_シャルケ_in.png",
-  "source": "wikimedia",
-  "title": "File:Veltins-Arena Panorama.jpg",
-  "page_url": "https://commons.wikimedia.org/wiki/File:Veltins-Arena_Panorama.jpg",
-  "author": "DerHans04",
-  "license": "CC BY-SA 3.0",
-  "club": "シャルケ"
- },
- {
   "file": "stadium_エルフェルスベルク_in.png",
   "source": "wikimedia",
   "title": "File:SV 07 Elversberg (Supporters) 2024-09-22 (03).jpg",
@@ -1105,5 +1096,32 @@
   "author": "Marcel Meier",
   "license": "CC BY-SA 2.0",
   "club": "ボルシアMG"
+ },
+ {
+  "file": "stadium_ホッフェンハイム.png",
+  "source": "wikimedia",
+  "title": "File:Hoffenheim CL.jpg",
+  "page_url": "https://commons.wikimedia.org/wiki/File:Hoffenheim_CL.jpg",
+  "author": "Lacu Schienred",
+  "license": "CC BY-SA 3.0 de",
+  "club": "ホッフェンハイム"
+ },
+ {
+  "file": "stadium_シャルケ.png",
+  "source": "wikimedia",
+  "title": "File:Gelsenkirchen - Schalker Feld - AufSchalke 26 ies.jpg",
+  "page_url": "https://commons.wikimedia.org/wiki/File:Gelsenkirchen_-_Schalker_Feld_-_AufSchalke_26_ies.jpg",
+  "author": "Frank Vincentz",
+  "license": "CC BY-SA 3.0",
+  "club": "シャルケ"
+ },
+ {
+  "file": "stadium_シャルケ_in.png",
+  "source": "wikimedia",
+  "title": "File:080110 schalke arena germany.JPG",
+  "page_url": "https://commons.wikimedia.org/wiki/File:080110_schalke_arena_germany.JPG",
+  "author": "Friedrich Petersdorff",
+  "license": "CC BY-SA 3.0 de",
+  "club": "シャルケ"
  }
 ]

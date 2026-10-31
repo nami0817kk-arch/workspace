@@ -1,0 +1,401 @@
+# クラブの財政：ASローマ（10/31 土、シリーズ「クラブの財政」、key: finance_roma、型は news）。
+#
+# 題材：research/20261031_series_topics.yaml の num 13（推し）。クラブ公式の決算（2024-25、2025年6月期）を一次資料として全部読み直した。
+#   重なりの確認（10/31）：scripts/*finance_* に roma は無い。research/posted.json・covered.yaml の roma は
+#     20260906_romano・20260907_romano（移籍情報の記者ロマーノのこと。クラブではない）、20261015_real_roma_cl（CLのレアル対ローマの試合）、
+#     20261028_sugawara_cagliari_roma（菅原のカリャリ対ローマ）。ローマの財政・決算の数字は無し（直近30日で重なる本は無い）。
+#   ★今季も1部：ESPN standings（2026-10-31 に取得）ita.1、9試合消化で ローマ 3位・勝点21（1位インテル25、2位ラツィオ25、4位コモ20）。→ 台本には入れない（題に答える節ではないため）。報告に書く。
+#   ★日本との接点：決算の数字には無い。無理に入れない（10/6 の決定）。
+#
+# 軸は「**赤字は3年で約4分の1に縮んだのに、なぜまだ赤字なのか**」。
+#   答え：選手の売り買いまで含めた運営の収支は +2420万ユーロの黒字。ところが、選手の償却と評価損5220万・引当金700万・金利1390万・税500万＝計7810万が、その黒字を上回る。
+#   縮めた主役は収入ではなく人件費の削減（収入は2960万減、人件費は4940万減）。赤字は株主（フリードキン氏のグループ）の貸付・出資で支えられている。
+#   ★他の財政回（10/29 フランクフルト＝出場の決定とお金の入る年のずれ、10/28 ベンフィカ、10/27 シュツットガルト）と軸を重ねない。主役は「運営は黒字でも、償却と金利で赤字」と「株主が払い続ける」。
+#   ★アルファベット（AS・UEFA・EL・EBITDA）は読み上げに出さない。「ヨーロッパサッカー連盟」「ヨーロッパリーグ」と言う。
+#   ★フランクフルトなど自分のチャンネルの過去回には触れない。
+#
+# **決算期**：A.S. ローマ（サッカー部門の連結）は7月〜6月。2024-25＝2024年7月〜2025年6月。
+#
+# **出どころ（読んだもの）**
+#   ○ クラブ公式「BILANCIO 2024-25」（連結財務諸表と報告書、2025年10月、media.asroma.com の PDF を requests で取得、1.26MB、全文を pdftotext で読んだ。research/raw/20261031_roma_bilancio2025.pdf・roma.txt）
+#       https://media.asroma.com/prod/files/file/gm-af5a5d7a-4129-48ec-ba0f-e27c9e2c327c-bilancio-di-esercizio-e-consolidato-al-30-giugno-2025.pdf
+#       「L'esercizio 2024-25 si è chiuso con una perdita di gruppo pari a 53,9 milioni di euro, rispetto alla perdita di 81,4 milioni」
+#       損益表（Conto economico riclassificato、千ユーロ）：運営収入 270.241（前 299.882）／運営費用 −245.993（−315.559）／選手売買を含む運営の収支 24.248（−15.677）／
+#         償却と評価損 −52.200（−43.893）／引当金 −7.008（−4.956）／金融費用（純） −13.938（−11.061）／税引前 −48.899（−75.586）／税 −4.986（−5.778）／最終 −53.884（−81.364）
+#       収入の内訳：試合日 44.466（55.465）／商業 71.671（25.621＋46.050。本文は グッズ・ロイヤルティ 25.6、スポンサー・広告 46.1）／放映権 90.374（104.147）／選手の売買 48.674（29.889＋5.663＋13.122）／その他 15.056（22.613）。合計 270.241 ✓
+#       収入が2960万減った理由（本文）：ヨーロッパリーグ −11（前の年は準決勝、今年は16強）／セリエAの放映権 −8.4（2024-29年の契約の評価額が前より低い）／親善試合・ツアー −2.3／保険の補償 −9.3
+#       費用が6960万減った理由（本文）：人件費 −49.4（152.734 対 202.126）、サービス −4.2、グッズの仕入れ −3.7 ほか
+#       選手の償却：45.6（前 38.1）。「rilevanti investimenti fatti nell'estate 2024 e nella finestra di mercato invernale 2025」
+#       引当金 7.0：「oneri per retribuzioni contrattualmente dovute a personale tesserato e non tesserato non più impiegato」
+#       金融費用 13.9：社債（Mediaco）11.3（利息10.6）。社債は 175 百万、固定金利 6.04%、返済期限 2027年10月30日
+#       過去の最終損益（本文）：2021-22 −219.3／2022-23 −102.7／2023-24 −81.4／2024-25 −53.9（「al 30 giugno 2023, pari a 102,7 milioni... al 30 giugno 2022, pari a 219,3 milioni」）
+#       株主：2024-25 に貸付 82.3、145 を出資の積立に切り替え。2025年6月末の貸付 234.8＋出資の積立 650.4＝885.2。報告書の日付までにさらに貸付 50 → 935.2
+#       純資産 −316.6（前 −407.7）。過去の赤字の繰越 −1,014.480
+#       継続の前提：株主が「irrevocabilmente」少なくとも12か月の資金を出すと約束。2025-26 の改定予算（2025年10月10日の取締役会）は「seppur ancora in perdita, in ulteriore miglioramento」
+#       ヨーロッパサッカー連盟の「選手費用の割合」：上限は2023年末90%・2024年末80%・2025年末から70%。「ha rispettato il target fissato al 31 dicembre 2024, mentre potrebbe non rispettare il target fissato al 31 dicembre 2025」
+#       ヨーロッパサッカー連盟との和解合意（2022年8月31日署名）
+#   ○ ヨーロッパサッカー連盟「Update on clubs under a settlement agreement in 2025/26」（2026年6月17日、WebFetch で原文を確認）
+#       https://www.uefa.com/news-media/news/02a6-20e42002ae77-fad3f5bff0c0-1000--update-on-clubs-under-a-settlement-agreement-in-2025-26/
+#       「AS Roma (ITA) slightly exceeded the intermediate target set for the financial year ending in 2025 and was fined € 2 million.」
+#       「Having also reported a squad cost ratio above 70% for the calendar year 2025, the club was imposed an additional fine of € 4 million.」
+#   ○ デロイト Football Money League 2026（2024/25）一次ページ（deloitte.com UK、requests で本文を取得、2026-10-31）
+#       https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
+#       「Ranking 21-30 ... 26 AFC Bournemouth 218.5 / 27 AS Roma 216.3 / 28 Fenerbahçe 216.0」（ローマは27位、2億1630万ユーロ。デロイトは移籍の収入を含めない）
+#   × 確かめられなかったもの：2025-26（2026年6月期）の決算（10/31 時点で承認の発表を見つけられなかった。WebSearch 2回）、ローマの収入のイタリアのクラブの中での順位（デロイトの上位20のページ本文が取れなかった）、
+#     デロイトの216.3と、クラブ自身の270.2（選手売買を含む）の差の中身（数え方が違うとしか言えない）。どれも台本に入れない。
+#   × 「人件費＋選手の償却÷収入」は自分で割った目安で、ヨーロッパサッカー連盟の定義（代理人報酬を足し、売却益を収入側に足す）とは違う。台本で「自分で割った」「目安」と断る。
+#
+# 自分で計算した数（検算済み）
+#   運営の収支：270.241−245.993＝24.248 ✓ ／ 24.248−52.200−7.008−13.938−4.986＝−53.884 ✓
+#   償却・引当・金利・税の合計：52.2+7.0+13.9+5.0＝78.1（7810万）。24.2−78.1＝−53.9 ✓
+#   赤字の縮み：53.884÷219.3＝24.6%（約4分の1） ／ 219.3+102.7+81.4+53.9＝457.3
+#   収入の減り：299.882−270.241＝29.641 ✓ ／ 費用の減り：315.559−245.993＝69.566 ✓ ／ 人件費：202.126−152.734＝49.392 ✓ → 24.4%減
+#   人件費÷収入：152.734÷270.241＝56.5%（前 202.126÷299.882＝67.4%）
+#   （人件費＋選手の償却）÷収入：(152.734+45.6)÷270.241＝73.4%（前 (202.126+38.1)÷299.882＝80.1%）
+#   株主の資金：234.8+650.4＝885.2 ✓（報告書の数字と一致）
+#
+# 写真：assets/images/20261031_finance_roma/（Commons、出典は credits.json）。01 サンプドリア戦の夜、02 HJK戦の前、03 ゴール裏、04 ユヴェントス戦（2014）、05 全景（空撮）、06 サポーターと旗。人物の顔は使わない。
+date: 2026年10月31日
+slot: other_1
+format: news
+series: クラブの財政
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- ローマ
+theme:
+  end_bg: assets/images/20261031_finance_roma/05_w.jpg
+  id: finance_roma
+  league: italy
+  league_name: セリエA
+  kind: other
+  topic: ローマ
+  title: ローマ、赤字は3年で約4分の1に。なぜまだ赤字なのか
+  question: ローマの赤字は、2021-22の2億1930万ユーロから、2024-25の5390万ユーロへと、約4分の1に縮んだ。選手の売り買いまで含めた運営の収支は黒字なのに、なぜ最後は赤字になるのか
+  lead: 赤字は4分の1に縮んだ。それでも、赤字。ローマ。
+  opening_image: assets/images/20261031_finance_roma/02_w.jpg
+  takeaway: ローマの2024-25の決算（クラブ公式）は、収入2億7020万ユーロ、運営費用2億4600万ユーロで、選手の売り買いを含む運営の収支は2420万ユーロの黒字。しかし選手の償却と評価損5220万・引当金700万・金利1390万・税500万の計7810万ユーロが黒字を上回り、最終は5390万ユーロの赤字（前の年は8140万）。赤字を縮めた主役は収入ではなく人件費の削減（収入は2960万減、人件費は4940万減の1億5270万）。赤字は、オーナーのフリードキン氏のグループの貸付と出資（2025年6月末で8億8520万ユーロ）で支えられ、純資産はマイナス3億1660万ユーロ。ヨーロッパサッカー連盟は2026年6月、選手費用の割合などでローマに計600万ユーロの罰金を科した。デロイトの集計（移籍を除く）では2億1630万ユーロで世界27位
+  short_title: ローマ、赤字は4分の1に。それでも赤字
+thumbnail:
+  layout: number
+  crest_pos: right
+  photo: assets/images/20261031_finance_roma/02_w.jpg
+  number: 5390万ユーロ赤字
+  line1: ローマの決算
+  line2: 縮んでも赤字のなぜ
+  callouts: [人件費24%減]
+  tags:
+  - ローマ
+  - セリエA
+  - クラブの財政
+  - デロイト
+sections:
+- id: rank
+  heading: ローマは、世界で何番目に稼ぐクラブなのか
+  tier: 報道
+  telop: 2024-25は世界27位。移籍を除く収入は2億1630万ユーロ
+  narrator: 解説
+  card: &rank_stats
+    type: stats
+    title: デロイトの収入ランキング（2024-25、移籍を除く）
+    items:
+    - ['27', 位, 世界の順位]
+    - ['2.16', 億ユーロ, デロイトの収入]
+    - ['2.70', 億ユーロ, クラブ自身の決算の収入]
+    focus: 0
+  say:
+  - text: デロイトは、世界のクラブを、収入の大きい順に並べています。
+    image: assets/images/20261031_finance_roma/01_w.jpg
+    card: none
+  - text: 2024年から25年のシーズン、ローマは27位でした。
+    card: *rank_stats
+  - text: 収入は2億1630万ユーロ。選手の売買の収入は、含みません。
+    card:
+      <<: *rank_stats
+      focus: 1
+  - text: クラブ自身の決算書は、売買の分も入れます。
+    card:
+      <<: *rank_stats
+      focus: 2
+  - text: ローマは、こちらのほうが大きい数字になります。
+    card:
+      <<: *rank_stats
+      focus: 2
+  - text: 世界で27番目に稼ぐクラブが、赤字を続けている。その中身を、決算書で読みます。
+    image: assets/images/20261031_finance_roma/03_w.jpg
+    card: none
+  sources:
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
+  - https://media.asroma.com/prod/files/file/gm-af5a5d7a-4129-48ec-ba0f-e27c9e2c327c-bilancio-di-esercizio-e-consolidato-al-30-giugno-2025.pdf
+- id: total
+  heading: ローマは、収入を何で稼いで、何が減ったのか
+  tier: 報道
+  telop: 収入は2億7020万ユーロ。前の年から2960万ユーロ減った
+  narrator: 解説
+  card: &rev_bars
+    type: bars
+    title: ローマの収入の内訳（2024-25、百万ユーロ）
+    unit: 百万ユーロ
+    items:
+    - {label: 放映権, value: 90.4, highlight: true}
+    - {label: スポンサー・グッズ, value: 71.7}
+    - {label: 選手の売り買い, value: 48.7}
+    - {label: 試合日, value: 44.5}
+    - {label: その他, value: 15.1}
+  say:
+  - text: ここからは、ローマ自身の決算。期間は、7月から翌年6月です。
+    image: assets/images/20261031_finance_roma/04_w.jpg
+    card: none
+  - text: 2024年から25年の収入は、2億7020万ユーロ。
+    emph: true
+    card: *rev_bars
+  - text: いちばん大きいのは放映権で、9040万ユーロ。
+    card: *rev_bars
+  - text: ヨーロッパリーグの分、2180万ユーロを含みます。
+    card: *rev_bars
+  - text: 次がスポンサーとグッズで、7170万ユーロ。
+    card: *rev_bars
+  - text: 選手の売り買いの収入は、4870万ユーロ。
+    card: *rev_bars
+  - text: 前の年の2億9990万ユーロから、2960万ユーロ減りました。
+    image: assets/images/20261031_finance_roma/06_w.jpg
+    card: none
+  - text: ヨーロッパリーグが、準決勝から16強で止まって、1100万ユーロの減。
+    card: none
+  - text: セリエAの放映権も、新しい契約の評価額が前より低く、減っています。
+    card: none
+  sources:
+  - https://media.asroma.com/prod/files/file/gm-af5a5d7a-4129-48ec-ba0f-e27c9e2c327c-bilancio-di-esercizio-e-consolidato-al-30-giugno-2025.pdf
+- id: loss
+  main: true
+  heading: ローマは、運営は黒字なのに、なぜ最後は赤字になるのか
+  tier: 報道
+  telop: 運営の収支は2420万の黒字。最終は5390万ユーロの赤字
+  narrator: 解説
+  card: &loss_wf
+    type: waterfall
+    title: 運営の黒字から最終の赤字まで（百万ユーロ）
+    unit: 百万ユーロ
+    start: [運営の収支, 24.2]
+    steps:
+    - [選手の償却など, -52.2]
+    - [引当金, -7.0]
+    - [金利など, -13.9]
+    - [税, -5.0]
+    total: [最終の損益, -53.9]
+  say:
+  - text: ローマの2024年から25年。収入は2億7020万ユーロ。
+    image: assets/images/20261031_finance_roma/02_w.jpg
+    card: none
+    short_only: true
+  - text: 運営にかかった費用は、2億4600万ユーロ。
+    card: none
+    short_only: true
+  - text: 引き算すると、2420万ユーロの黒字。
+    card: none
+  - text: 選手の売り買いの損益も含めた、運営の収支です。
+    image: assets/images/20261031_finance_roma/02_w.jpg
+    card: none
+  - text: ところが、最後の決算は、5390万ユーロの赤字。前の年は8140万でした。
+    emph: true
+    card: none
+  - text: 間にあるのは、選手の償却、引当金、金利、税の4つ。
+    card: *loss_wf
+  - text: 合計すると、運営の黒字の3倍あまり。
+    card: *loss_wf
+  - text: 償却とは、選手を買った費用を、契約の年数で割って、1年ごとの費用にすること。
+    image: assets/images/20261031_finance_roma/06_w.jpg
+    card: *loss_wf
+  - text: 評価損とあわせて、合計5220万ユーロ。
+    card: *loss_wf
+  - text: 選手の償却だけで、4560万ユーロ。前の年の3810万ユーロから増えました。
+    card: *loss_wf
+  - text: 2024年の夏と、25年の冬に、大きな投資をしたためだと、決算書は説明しています。
+    image: assets/images/20261031_finance_roma/05_w.jpg
+    card: none
+  - text: 金利などは1390万ユーロ。
+    image: assets/images/20261031_finance_roma/01_w.jpg
+    card: *loss_wf
+  - text: うち1130万ユーロは、投資家から借りた社債、1億7500万ユーロの費用です。
+    card:
+      <<: *loss_wf
+  - text: 引当金は700万ユーロ。
+    image: assets/images/20261031_finance_roma/03_w.jpg
+    card: *loss_wf
+  - text: 主に、もう戦力として使っていない人への、契約上の給料の備えです。
+    card: *loss_wf
+  - text: 税が500万ユーロ。4つの合計は、7810万ユーロ。
+    emph: true
+    card: *loss_wf
+  sources:
+  - https://media.asroma.com/prod/files/file/gm-af5a5d7a-4129-48ec-ba0f-e27c9e2c327c-bilancio-di-esercizio-e-consolidato-al-30-giugno-2025.pdf
+- id: cut
+  heading: ローマの赤字は、何を削って縮んだのか
+  tier: 報道
+  telop: 赤字は3年で約4分の1に。縮めた主役は、人件費の4940万ユーロ減
+  narrator: 解説
+  card: &hist_table
+    type: table
+    title: ローマの最終の損益（百万ユーロ）
+    columns: [シーズン, 最終の損益]
+    rows:
+    - [2021-22, '−219.3']
+    - [2022-23, '−102.7']
+    - [2023-24, '−81.4']
+    - [2024-25, '−53.9']
+    highlight_row: 0
+  say:
+  - text: では、ローマの赤字は、どこまで縮んだのか。
+    image: assets/images/20261031_finance_roma/06_w.jpg
+    card: none
+  - text: 2021年から22年は、2億1930万ユーロの赤字でした。
+    card: *hist_table
+  - text: 次の年が1億270万ユーロ。その次も、縮みました。
+    card:
+      <<: *hist_table
+      highlight_row: 1
+  - text: そして最新の決算が、2024年から25年。3年で、約4分の1です。
+    emph: true
+    card:
+      <<: *hist_table
+      highlight_row: 3
+  - text: 縮んだ中身を、前の年と並べます。
+    image: assets/images/20261031_finance_roma/03_w.jpg
+    card: none
+  - text: 収入は、前の年より減りました。
+    card: &cut_table
+      type: table
+      title: ローマの収入と費用（百万ユーロ）
+      columns: [項目, 2023-24, 2024-25]
+      rows:
+      - [収入, '299.9', '270.2']
+      - [運営費用, '315.6', '246.0']
+      - [人件費, '202.1', '152.7']
+      highlight_row: 0
+  - text: 一方、運営費用は、6960万ユーロ減。
+    card:
+      <<: *cut_table
+      highlight_row: 1
+  - text: そのうち人件費が、4940万ユーロ減って、1億5270万ユーロ。
+    emph: true
+    card:
+      <<: *cut_table
+      highlight_row: 2
+  - text: 赤字を縮めた主役は、収入の増加ではなく、人件費の削減でした。
+    image: assets/images/20261031_finance_roma/01_w.jpg
+    card: none
+  sources:
+  - https://media.asroma.com/prod/files/file/gm-af5a5d7a-4129-48ec-ba0f-e27c9e2c327c-bilancio-di-esercizio-e-consolidato-al-30-giugno-2025.pdf
+- id: owner
+  heading: ローマの赤字は、だれが払ってきたのか
+  tier: 報道
+  telop: オーナーの貸付と出資は、8億8520万ユーロ。純資産はマイナス3億1660万
+  narrator: 解説
+  card: &owner_table
+    type: table
+    title: 株主のお金（2025年6月末、百万ユーロ）
+    columns: [項目, 金額]
+    rows:
+    - [株主からの貸付, '234.8']
+    - [出資の積立（貸付から切り替え）, '650.4']
+    - [合計, '885.2']
+    highlight_row: 2
+  say:
+  - text: ローマの赤字は、だれが払ってきたのか。
+    image: assets/images/20261031_finance_roma/04_w.jpg
+    card: none
+  - text: 答えは、オーナーのフリードキン氏が支配するグループです。
+    card: none
+  - text: 2024年から25年だけで、8230万ユーロを貸しました。
+    card: *owner_table
+  - text: さらに、貸していた1億4500万ユーロを、出資の積立に切り替えています。
+    card: *owner_table
+  - text: 2025年6月末で、貸付と積立を合わせて、8億8520万ユーロです。
+    emph: true
+    card:
+      <<: *owner_table
+      highlight_row: 2
+  - text: 決算書は、株主の約束を、こう書いています。
+    image: assets/images/20261031_finance_roma/02_w.jpg
+    card: none
+  - text: 株主は、会社が事業を続けられるよう、資金を出すと約束しています。
+    card: &owner_doc
+      type: document
+      label: ローマの決算書（2025年10月）より、株主の約束（訳）
+      paragraphs:
+      - 間接の支配株主は、会社が事業を続けられるよう、必要な資金を出すことを、取り消せない形で約束した。
+      - 期間は、この報告書を取締役会が承認した日から、少なくとも12か月だ。
+      highlight: [取り消せない形で約束した, 少なくとも12か月]
+  - text: 取り消せない形で、少なくとも12か月。
+    card: *owner_doc
+  - text: 決算書の日付までに、さらに5000万ユーロを貸しています。
+    card: *owner_doc
+  - text: それでも、資産から借金を引いた純資産は、マイナス3億1660万ユーロ。
+    image: assets/images/20261031_finance_roma/05_w.jpg
+    card: none
+  - text: 2024年までに積み上がった赤字が、10億1450万ユーロあるためです。
+    card: none
+  sources:
+  - https://media.asroma.com/prod/files/file/gm-af5a5d7a-4129-48ec-ba0f-e27c9e2c327c-bilancio-di-esercizio-e-consolidato-al-30-giugno-2025.pdf
+- id: view
+  viewpoint: true
+  heading: 見立て・ローマの赤字は、まだ続くのか
+  tier: 背景
+  telop: 選手にかける割合は73%。連盟の上限は70%。2026年6月に罰金600万ユーロ
+  narrator: 解説
+  card: &view_table
+    type: table
+    title: 自分で割ってみた（ローマの決算）
+    columns: [比べ, 答え]
+    rows:
+    - [人件費 ÷ 収入（前の年は67.4%）, 56.5%]
+    - [（人件費＋選手の償却）÷ 収入（前の年は80.1%）, 73.4%]
+    - [4年の赤字の合計, 4億5730万ユーロ]
+    highlight_row: 1
+  say:
+  - text: ここからは見立てです。ローマの決算の数字で、割り算をしてみます。
+    image: assets/images/20261031_finance_roma/06_w.jpg
+    card: none
+  - text: 人件費は、収入の56.5%。前の年は67.4%でした。
+    card:
+      <<: *view_table
+      highlight_row: 0
+  - text: 人件費に選手の償却を足すと、収入の73.4%。前の年は80.1%です。
+    emph: true
+    mark:
+      kind: circle
+      row: 1
+      col: 1
+    card: *view_table
+  - text: ヨーロッパサッカー連盟は、選手にかけるお金の割合に、上限を置いています。
+    image: assets/images/20261031_finance_roma/03_w.jpg
+    card: none
+  - text: 2024年末は80%、2025年末からは70%です。
+    card: none
+  - text: ここで割った数字は目安で、連盟の数え方とは、少し違います。
+    card: none
+  - text: 決算書は、2025年末の70%を、守れないかもしれないと書いていました。
+    card: none
+  - text: そして2026年6月、連盟はローマに、600万ユーロの罰金を科しました。
+    emph: true
+    card: none
+  - text: 内訳は、サッカーの収支の目標を少し超えた分が200万。
+    image: assets/images/20261031_finance_roma/04_w.jpg
+    card: none
+  - text: 選手にかけるお金が70%を超えた分が、400万ユーロです。
+    card: none
+  - text: 題への答えです。
+    card: none
+  - text: 運営の黒字より、償却と金利などの合計が大きい。だから、赤字は続きます。
+    emph: true
+    card: none
+  - text: クラブは2025年10月に、先の見通しを示しました。
+    card: none
+  - text: 2025年から26年も、赤字は続くが、縮むという見込みです。
+    image: assets/images/20261031_finance_roma/05_w.jpg
+    card: none
+  - text: もう一つの山は、2027年10月30日。社債の、返済期限です。
+    card: none
+  sources:
+  - https://media.asroma.com/prod/files/file/gm-af5a5d7a-4129-48ec-ba0f-e27c9e2c327c-bilancio-di-esercizio-e-consolidato-al-30-giugno-2025.pdf
+  - https://www.uefa.com/news-media/news/02a6-20e42002ae77-fad3f5bff0c0-1000--update-on-clubs-under-a-settlement-agreement-in-2025-26/

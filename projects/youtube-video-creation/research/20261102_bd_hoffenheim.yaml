@@ -1,0 +1,489 @@
+# ブンデスリーガ18クラブ紹介 ⑪ホッフェンハイム（2026-10-31 作成。情報は10月30日時点。見本は 10/29 のボルシアMG）。tools/plbuild.py（CLUB_LEAGUE=bundesliga）で組み立て。
+# 材料は research/bd_data/hoffenheim*.json・hoffenheim_say.yaml・hoffenheim_research.md。（出力名・theme.id・date・question・takeaway・people・season の表と viewpoint と出典・watch は手で足した）
+format: news
+voice_min: 0
+slot: other_1
+date: 2026年10月30日
+people:
+- ホッフェンハイム
+- 町田浩樹
+- クリスティアン・イルツァー
+- ディートマー・ホップ
+- ユリアン・ナーゲルスマン
+- アンドレイ・クラマリッチ
+- ロベルト・フィルミーノ
+- ヴェダド・イビシェヴィッチ
+short_title: ホッフェンハイム、5部から8年で1部へ
+series: ブンデスリーガチーム紹介
+theme:
+  id: bd_hoffenheim
+  league: germany
+  league_name: ブンデスリーガ
+  kind: other
+  topic: ホッフェンハイム
+  title: ホッフェンハイムは5部から8年で1部へ。小さな町のクラブは、なぜ駆け上がれたのか
+  question: ホッフェンハイムは、なぜ5部から8年で1部へ上がれたのか
+  hook: 始まりは、故郷のクラブに力を貸した、ソフトウェア会社の創業者でした。
+  lead: 2000年に5部。2008年に1部。いま最終ラインには町田浩樹がいます。
+  takeaway: 10月30日時点で、リーグ戦は7試合で勝ち点9。1試合あたり1.29は、昨季34試合の1.79を下回る。得点は1試合2.0で昨季の1.91を上回るが、失点も2.0で昨季の1.53より多い。5部から8年で1部へ駆け上がったクラブが、守りを整えて国内とヨーロッパの両方で勝ち点を積めるかが次の物差し
+  opening_image: assets/stats/bd_hoffenheim_data_t.png
+thumbnail:
+  line1: 町田浩樹のホッフェンハイム
+  line2: 5部から8年で1部へ
+  crest_main:
+  - ホッフェンハイム
+  tags:
+  - ホッフェンハイム
+  - TSGホッフェンハイム
+  - ブンデスリーガ
+  - 町田浩樹
+  - クラマリッチ
+  - ナーゲルスマン
+  layout: classic
+  board: assets/stats/bd_hoffenheim_data_t.png
+sections:
+- id: data
+  heading: いま見る理由と基礎DATA
+  main: true
+  tier: 背景
+  telop: 町田浩樹が在籍。ヨーロッパリーグでゴール。10月30日時点で10位
+  narrator: キャスター
+  say:
+  - text: 町田浩樹がホッフェンハイムに在籍。今季はリーグ戦**5試合**に出場。
+    image: assets/stats/bd_hoffenheim_data_r1.png
+    no_telop: true
+  - text: 町田浩樹は、ヨーロッパリーグでゴールを記録しています。
+    image: assets/stats/bd_hoffenheim_data_r2.png
+    no_telop: true
+  - text: 10月30日の時点で、リーグ戦は7試合を終えて**10位**です。
+    image: assets/stats/bd_hoffenheim_data_r3.png
+    no_telop: true
+  - image: assets/stats/bd_hoffenheim_data0.png
+    text: 創立は**1899年**。体操クラブとして生まれました。
+    no_telop: true
+  - image: assets/stats/bd_hoffenheim_data1.png
+    text: 愛称は「クライヒガウアー」。ドイツ語で「クライヒガウの人たち」です。
+    no_telop: true
+  - image: assets/stats/bd_hoffenheim_cups.png
+    text: 1部、ドイツカップ、ヨーロッパの大会で、優勝はまだありません。
+    no_telop: true
+  - image: assets/stats/bd_hoffenheim_data6.png
+    text: 1部の最高順位は、**3位**です。
+    no_telop: true
+  - image: assets/stats/bd_hoffenheim_data8.png
+    text: 昨季のリーグ戦は**5位**。勝ち点は61でした。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/TSG_1899_Hoffenheim
+  - https://en.wikipedia.org/wiki/2026–27_TSG_1899_Hoffenheim_season
+  - https://en.wikipedia.org/wiki/K%C5%8Dki_Machida
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.europa/summary?event=401915563
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/teams/7911/schedule?season=2026
+  - https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings
+  bg: assets/backgrounds/stadium_ホッフェンハイム.png
+  official: false
+- id: japan
+  heading: 町田浩樹は、ホッフェンハイムで何を取り戻したのか
+  tier: 背景
+  telop: 町田浩樹は2025年に加入。今季はリーグ戦5試合、ヨーロッパリーグで1得点
+  narrator: 解説
+  say:
+  - text: 町田浩樹は、身長**190センチ**のセンターバックです。
+    card:
+      type: table
+      title: 町田浩樹の歩み
+      columns:
+      - 年
+      - 出来事
+      rows:
+      - - 2022-2025
+        - ベルギーのユニオンSG
+      - - '2024'
+        - カップ決勝で決勝点
+      - - 2025年6月
+        - ホッフェンハイムへ
+      - - 今季
+        - リーグ5試合、EL1得点
+  - 2022年から、ベルギーのユニオンSGでプレーしました。
+  - 2024年のベルギーカップ決勝では、唯一の得点を決めます。
+  - クラブにとって、110年ぶりのカップ優勝でした。
+  - text: 2025年6月25日、ホッフェンハイムへ。
+    card: none
+    image: assets/images/bd_hoffenheim_pair_machida/01.jpg
+  - 8月23日の開幕戦でデビューしますが、前半のうちにケガで交代。
+  - text: 復帰は2026年9月12日。シュツットガルト戦に、交代で入りました。
+    image: assets/images/bd_hoffenheim_arena/scene.jpg
+  - 10月15日、ヨーロッパリーグのベシクタシュ戦。
+  - 87分、コーナーキックからのヘディングで、ホッフェンハイムでの初ゴール。
+  - 25日のレバークーゼン戦は、先発でフル出場。チームは3対0の勝ちでした。
+  sources:
+  - https://en.wikipedia.org/wiki/K%C5%8Dki_Machida
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.europa/summary?event=401915563
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/summary?event=401884760
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/summary?event=401884797
+  bg: assets/backgrounds/stadium_ホッフェンハイム.png
+  official: false
+- id: golden
+  heading: 人口3445人の地区のクラブは、なぜ5部から8年で1部へ上がれたのか
+  tier: 背景
+  telop: 2000年に5部で優勝。2008年に1部。昇格は4回
+  narrator: 解説
+  main: true
+  say:
+  - text: ホッフェンハイムは、町シンスハイムの一地区。町の人口は、およそ**3万7000人**。
+    image: assets/images/bd_hoffenheim_oldground/scene.jpg
+  - そのうち、ホッフェンハイムの地区の人口は**3445人**です。
+  - 1990年代のはじめは、1部から数えて8番目のリーグの、地域クラブでした。
+  - text: 転機は2000年ごろ。ディートマー・ホップが、育ったクラブを支え始めます。
+    image: assets/images/bd_hoffenheim_pair_hopp/01.jpg
+  - ホップは、エスエーピーという会社の共同創業者です。
+  - text: 2000年、5部で優勝して、4部へ。
+    card:
+      type: table
+      title: ホッフェンハイムの昇格
+      columns:
+      - 年
+      - 結果
+      rows:
+      - - '2000'
+        - 5部で優勝、4部へ
+      - - '2001'
+        - 4部で優勝、3部へ
+      - - '2007'
+        - 3部で2位、2部へ
+      - - '2008'
+        - 2部で2位、1部へ
+  - 2001年も、4部で優勝。3部へ上がりました。
+  - text: 2006年には、ラルフ・ラングニックを監督に迎え、選手も補強します。
+    card: none
+    image: assets/images/bd_hoffenheim_oldground/scene.jpg
+  - 2007年、3部で2位。2部へ上がりました。
+  - text: 2008年、2部でも2位に入り、1部へ。2部で過ごしたのは、1年間です。
+    card: none
+    image: assets/images/bd_hoffenheim_2008/scene.jpg
+  - 2000年の5部から、8年で1部。昇格は4回でした。
+  - 初めてのブンデスリーガ、2008年から09年のシーズンは7位でした。
+  sources:
+  - https://en.wikipedia.org/wiki/TSG_1899_Hoffenheim
+  - https://de.wikipedia.org/wiki/Hoffenheim
+  bg: assets/backgrounds/stadium_ホッフェンハイム.png
+  official: false
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 本拠地は5000人から3万150人へ。3か国のクラブと提携
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns: &id001
+    - ''
+    - ''
+    rows:
+    - &id002
+      - 本拠地の変化
+      - 5000人から3万150人へ
+  say:
+  - text: ホッフェンハイムの特徴の1つめは、本拠地の大きさの変化です。
+    image: assets/images/bd_hoffenheim_oldground/scene.jpg
+  - かつての本拠地は、ディートマー・ホップ・シュタディオン。
+  - 1999年に完成し、収容は**5000人**でした。
+  - text: 1部の最初のシーズンは、マンハイムのスタジアムで開幕します。収容は**2万6022人**。
+    card:
+      type: table
+      title: このクラブの特徴
+      columns: *id001
+      rows:
+      - *id002
+      - &id003
+        - 1部の最初の年
+        - マンハイムで開幕
+  - text: もう1つの特徴は、海外のクラブとの提携です。
+    card:
+      type: table
+      title: このクラブの特徴
+      columns: *id001
+      rows:
+      - *id002
+      - *id003
+      - - クラブの広がり
+        - 3か国のクラブと提携
+  - 2020年に、アメリカのFCシンシナティと提携。
+  - text: ガーナのハーツ・オブ・オークとも、手を組みました。
+    card: none
+    image: assets/images/bd_hoffenheim_fans/scene.jpg
+  - 2025年3月には、インドのラージャスターン・ユナイテッドとも提携しました。
+  sources:
+  - https://en.wikipedia.org/wiki/TSG_1899_Hoffenheim
+  bg: assets/backgrounds/stadium_ホッフェンハイム.png
+  official: false
+- id: episode
+  heading: 2016年、17位のチームに28歳の監督。なぜ残留し、翌年は4位になれたのか
+  tier: 背景
+  telop: 2016年2月、17位のチームを28歳のナーゲルスマンが引き継ぐ
+  narrator: 解説
+  say:
+  - text: 2016年2月。ホッフェンハイムは、ブンデスリーガの17位でした。
+    image: assets/images/bd_hoffenheim_pair_nagelsmann/01.jpg
+  - 監督に就いたのは、ユリアン・ナーゲルスマン。**28歳**です。
+  - ブンデスリーガの歴史で、いちばん若い監督でした。
+  - text: 残りの14試合のうち、**7試合**に勝ちます。
+    card:
+      type: table
+      title: ナーゲルスマンのホッフェンハイム
+      columns: &id004
+      - ''
+      - ''
+      rows:
+      - - 2016年2月
+        - リーグ17位で就任
+      - - 2015年から16年
+        - 勝ち点1差で残留
+  - text: 降格プレーオフ圏の、勝ち点1差上で残留しました。
+    card:
+      type: table
+      title: ナーゲルスマンのホッフェンハイム
+      columns: *id004
+      rows:
+      - - 2016年から17年
+        - 4位
+      - - 2017年から18年
+        - 3位
+  - text: 翌2016年から17年のシーズンは、**4位**。
+    card: none
+    image: assets/images/bd_hoffenheim_fans/scene.jpg
+  - 2017年から18年のシーズンは**3位**。いまもクラブの最高順位です。
+  sources:
+  - https://en.wikipedia.org/wiki/Julian_Nagelsmann
+  - https://en.wikipedia.org/wiki/TSG_1899_Hoffenheim
+  bg: assets/backgrounds/stadium_ホッフェンハイム.png
+  official: false
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - &id005
+      - イビシェヴィッチ
+      - 2007-2012
+      - リーグ123試合48得点
+  say:
+  - text: イビシェヴィッチは、ホッフェンハイムのフォワード。2007年に加入。
+    image: assets/photos/bd/hoffenheim/hoffenheim_legend_c79c5191.jpg
+  - 2012年まで、リーグ戦**123試合48得点**。
+  - 1部に上がった最初のシーズンには、**18得点**を挙げました。
+  sources:
+  - https://en.wikipedia.org/wiki/Vedad_Ibi%C5%A1evi%C4%87
+  - https://en.wikipedia.org/wiki/Roberto_Firmino
+  - https://en.wikipedia.org/wiki/Andrej_Kramari%C4%87
+  - https://en.wikipedia.org/wiki/TSG_1899_Hoffenheim
+  bg: assets/backgrounds/stadium_ホッフェンハイム.png
+  official: false
+- id: legends2
+  heading: このクラブを語る3人（2人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id005
+    - &id006
+      - フィルミーノ
+      - 2011-2015
+      - リーグ140試合38得点
+  say:
+  - text: フィルミーノはブラジルの攻撃の選手。2011年から、ホッフェンハイムで4年半。
+    image: assets/photos/bd/hoffenheim/hoffenheim_legend_26bfd981.jpg
+  - 2015年まで、リーグ戦**140試合38得点**。
+  - 2013年から14年には、リーグが選ぶ「飛躍した選手」に。
+  - text: 2015年に、リヴァプールへ。
+    card: none
+  - 2018年から19年には、チャンピオンズリーグで優勝しました。
+  sources:
+  - https://en.wikipedia.org/wiki/Vedad_Ibi%C5%A1evi%C4%87
+  - https://en.wikipedia.org/wiki/Roberto_Firmino
+  - https://en.wikipedia.org/wiki/Andrej_Kramari%C4%87
+  bg: assets/backgrounds/stadium_ホッフェンハイム.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id005
+    - *id006
+    - - クラマリッチ
+      - 2016-
+      - リーグ311試合136得
+  say:
+  - text: クラマリッチはクロアチアのフォワード。2016年から、ホッフェンハイムの一員です。
+    image: assets/photos/bd/hoffenheim/hoffenheim_legend_8adb7511.jpg
+  - リーグ戦は**311試合136得点**。
+  - 2019年3月29日に、クラブの通算最多得点になりました。
+  sources:
+  - https://en.wikipedia.org/wiki/Vedad_Ibi%C5%A1evi%C4%87
+  - https://en.wikipedia.org/wiki/Roberto_Firmino
+  - https://en.wikipedia.org/wiki/Andrej_Kramari%C4%87
+  bg: assets/backgrounds/stadium_ホッフェンハイム.png
+  official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はイルツァー。2024年11月に就任
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - クリスティアン・イルツァー
+    - - 就任
+      - 2024年11月15日
+    - - 前の仕事
+      - シュトゥルム・グラーツの監督
+  say:
+  - text: 今季の監督は、クリスティアン・イルツァー。
+    image: assets/photos/bd/hoffenheim/hoffenheim_manager_0e8dac72.jpg
+  - '**49歳**のオーストリア人です。'
+  - 前の仕事は、オーストリアのシュトゥルム・グラーツの監督。
+  - 2023年から24年のシーズンには、リーグ優勝を果たしています。
+  - 2024年11月15日から、ホッフェンハイムを率いています。
+  sources:
+  - https://en.wikipedia.org/wiki/TSG_1899_Hoffenheim
+  - https://en.wikipedia.org/wiki/Christian_Ilzer
+  bg: assets/backgrounds/stadium_ホッフェンハイム.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: ここからは、ホッフェンハイムの主な登録選手です。
+    image: assets/stats/bd_hoffenheim_gk.png
+    no_telop: true
+  - image: assets/stats/bd_hoffenheim_gk_f.png
+    text: まずはゴールキーパー。
+    no_telop: true
+  - image: assets/stats/bd_hoffenheim_gk_f.png
+    text: 主将を務めるのが**オリヴァー・バウマン**。
+    no_telop: true
+  - image: assets/stats/bd_hoffenheim_df_f.png
+    text: ディフェンダーです。
+    no_telop: true
+  - image: assets/stats/bd_hoffenheim_df_f.png
+    text: 日本の町田浩樹がいます。
+    no_telop: true
+  - image: assets/stats/bd_hoffenheim_df_f.png
+    text: ヴラディミール・ツォウファルはチェコ代表で**67試合**。
+    no_telop: true
+  - image: assets/stats/bd_hoffenheim_mf_f.png
+    text: ミッドフィールダーです。
+    no_telop: true
+  - image: assets/stats/bd_hoffenheim_fw_f.png
+    text: フォワードです。
+    no_telop: true
+  - image: assets/stats/bd_hoffenheim_fw_f.png
+    text: アンドレイ・クラマリッチはクロアチア代表で**119試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/TSG_1899_Hoffenheim
+  bg: assets/backgrounds/stadium_ホッフェンハイム.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 10月30日時点で7試合3勝4敗。得点14、失点14
+  narrator: 解説
+  card:
+    type: table
+    title: ブンデスリーガの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - ケルン（アウェー）
+      - 2対3
+    - - 第2節
+      - ドルトムント（ホーム）
+      - 2対3
+    - - 第3節
+      - シュツットガルト（ホーム）
+      - 2対1
+    - - 第4節
+      - パーダーボルン（アウェー）
+      - 1対3
+    - - 第5節
+      - ハンブルガーSV（ホーム）
+      - 2対3
+    - - 第6節
+      - ボルシアMG（アウェー）
+      - 2対1
+    - - 第7節
+      - レバークーゼン（ホーム）
+      - 3対0
+  say:
+  - text: ホッフェンハイムは、ここまでの7試合で3勝4敗。勝ち点は9。
+    card:
+      type: stats
+      title: 今季のリーグ戦（7試合）
+      items:
+      - - '14'
+        - ''
+        - 得点
+      - - '3'
+        - ''
+        - 1点差の負け
+      - - '9'
+        - ''
+        - 勝ち点
+      focus: 1
+  - text: 4つの負けのうち**3つ**は、1点差でした。
+    mark:
+      kind: circle
+      item: 1
+  - 得点は1試合あたり**2.0**。昨季の1.91を上回っています。
+  - text: 失点は**2.0**。昨季の1.53より、増えています。
+    card: none
+    image: assets/images/bd_hoffenheim_fans/scene.jpg
+  - text: ヨーロッパリーグでは、10月22日にリヨンに3対0の勝ち。
+    card: none
+    image: assets/images/bd_hoffenheim_arena/scene.jpg
+  - クラマリッチが先制点と、2つのアシストでした。
+  - 次のヨーロッパリーグは、11月5日。クリスタル・パレスとの対戦。
+  sources:
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/teams/7911/schedule?season=2026
+  - https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.europa/summary?event=401915543
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_TSG_1899_Hoffenheim_season
+  bg: assets/backgrounds/stadium_ホッフェンハイム.png
+  official: false
+  viewpoint: true
+watch: 毎日、数字でサッカーを読み解きます

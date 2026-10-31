@@ -1,0 +1,29 @@
+{
+ "schalke": {
+  "マヌエル・ノイアー": {
+   "role": "legend",
+   "file": "assets/photos/bd/schalke/schalke_legend_2c114dbd.jpg",
+   "page": "Manuel Neuer"
+  },
+  "クラース・ヤン・フンテラール": {
+   "role": "legend",
+   "file": "assets/photos/bd/schalke/schalke_legend_271e4f17.jpg",
+   "page": "Klaas-Jan Huntelaar"
+  },
+  "ジェラルド・アサモア": {
+   "role": "legend",
+   "file": "assets/photos/bd/schalke/schalke_legend_d2fad233.jpg",
+   "page": "Gerald Asamoah"
+  },
+  "エルンスト・クツォラ": {
+   "role": "legend",
+   "file": "assets/photos/bd/schalke/schalke_legend_2b2cb135.jpg",
+   "page": "Ernst Kuzorra"
+  },
+  "内田篤人": {
+   "role": "player",
+   "file": "assets/photos/bd/schalke/schalke_player_be8e9a52.jpg",
+   "page": "Atsuto Uchida"
+  }
+ }
+}
