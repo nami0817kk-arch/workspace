@@ -645,18 +645,22 @@
     const main = document.getElementById('main');
     // 同じ画面のまま作り直すとき（ボタンを押した直後など）は、スクロール位置を覚えておいて戻す
     const sameView = renderKey === app.tab + '|' + app.view + '|' + (app.ct || '');
-    const keep = sameView ? [...main.querySelectorAll('*')].filter((e) => e.scrollTop > 0).map((e) => [e.className, e.scrollTop]) : [];
+    const scrollers = () => [...main.querySelectorAll('*')].filter((e) => e.scrollHeight > e.clientHeight + 2 && /auto|scroll/.test(getComputedStyle(e).overflowY));
+    const keep = sameView ? scrollers().map((e) => e.scrollTop) : [];
     renderKey = app.tab + '|' + app.view + '|' + (app.ct || '');
+    const restore = () => { if (keep.length) scrollers().forEach((e, i) => { if (keep[i]) e.scrollTop = keep[i]; }); };
     main.replaceChildren();
     cleanupPlay();
     if (!app.w) {
       root.classList.add('full');
       YA.views.newgame(main);
+      restore();
       return;
     }
     if (app.w.retired) {
       root.classList.add('full');
       YA.views.retired(main);
+      restore();
       return;
     }
     if (app.tab === 'match') {
@@ -668,7 +672,7 @@
     // 最初の1か月の案内（決定77）
     const tt = app.view !== 'play' ? YA.tutorialText(app.w) : null;
     if (tt) main.prepend(h('div', { class: 'tut' }, h('span', { class: 'tutb' }, '案内'), h('span', { class: 'grow' }, tt), h('button', { class: 'btn sm', onclick: () => { app.w.tut.on = false; YA.saveWorld(); render(); } }, '消す')));
-    for (const [cls, top] of keep) { const e = [...main.querySelectorAll('*')].find((x) => x.className === cls && x.scrollHeight > x.clientHeight); if (e) e.scrollTop = top; }
+    restore();
   }
 
   function viewPlaceholder(main) {
