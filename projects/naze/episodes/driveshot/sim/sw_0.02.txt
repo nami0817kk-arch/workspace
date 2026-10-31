@@ -1,0 +1,1 @@
+d=    2cm window 20.85-22.41 width 1.56 center 21.63 speed 27.80 spin 2.13rps wall 2.04 goal 2.06 footz 0.070

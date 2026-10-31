@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "C:\Users\‚È‚Ý\dev\wt-naze\projects\naze\episodes\driveshot\sim\side.py", line 25, in <module>
+    beta,psi=solve(d)
+             ^^^^^^^^
+  File "C:\Users\‚È‚Ý\dev\wt-naze\projects\naze\episodes\driveshot\sim\side.py", line 16, in solve
+    F=f(x)
+      ^^^^
+  File "C:\Users\‚È‚Ý\dev\wt-naze\projects\naze\episodes\driveshot\sim\side.py", line 15, in f
+    p=o[GOAL_X][0]; return np.array([p[2]-tz,p[1]-ty])
+      ~^^^^^^^^
+KeyError: 20.0
