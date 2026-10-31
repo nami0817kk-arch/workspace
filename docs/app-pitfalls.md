@@ -200,6 +200,33 @@ curl -s https://<サイト>/robots.txt | head -c 60
 （`site/` に robots.txt の実体が無い）。app-ads.txt 自体はテキストで返るので
 通るかもしれないが、サカマネで止まったのと同じ条件ではある。
 
+## 9. `RewardedAd.show` を await しても、見終わるまで待てていない（2026-11-01 / soccer-manager）
+
+**起きたこと**: サカマネの「動画を見て資金」で、公開中の 1.1.3 では**一度も特典が入っていなかった**。
+`await ad.show(onUserEarnedReward: (_, __) => earned = true); return earned;` の形。
+google_mobile_ads の `show` は**表示を頼んだ時点で返る**ので、`earned` は必ず false のまま返る。
+利用者は最後まで見ても何ももらえず、こちらには広告の表示だけが立つ。3番と同じ「await したのに待てていない」型。
+
+**テストが通っていた理由**: 差し替えの広告が `show` の中で報酬を確定させていた。本物は報酬も閉じる通知も後から来る。
+
+**直し方**: `Completer` で `onAdDismissedFullScreenContent` / `onAdFailedToShowFullScreenContent` まで待つ。
+報酬の通知が閉じる通知より遅れることがあるので、閉じた時点で報酬が無ければ1秒ほど待つ
+（`projects/soccer-manager/lib/monetization/ad_service.dart` の `showAndAwaitReward`）。
+
+**検査の形**: 差し替えの広告は本物と同じく「`show` はすぐ返り、報酬と閉じる通知は後から来る」形にする
+（`projects/soccer-manager/test/rewarded_ad_wait_test.dart`）。WebView のゲームでは、ゲーム側の打ち切り（90秒など）が
+「表示が始まった後」にも効いていないかを見る（tsuruhashi で、90秒を超えた動画の特典が捨てられていた）。
+
+## 10. 保存の版を上げたとき、読み込みの判定だけ古い版のまま（2026-11-01 / tsuruhashi）
+
+**起きたこと**: つるはし採掘で保存の版を 2→3 に上げたとき、`parseSave` の `o.v === 2` だけが残った。
+公開中の 1.0 は**起動し直すたびに保存を捨てて最初からになり、5秒後にまっさらな状態で上書き**していた。
+裏から戻るだけなら WebView が残るので、試遊では気づかない。
+
+**検査の形**: 「今の `fresh()` を保存の形にして読み戻すと同じ中身になる」を必ずテストに置く
+（`projects/tsuruhashi/tool/check.js`）。画面の通し確認では、保存を入れた状態でタイトルが「つづきから」になるかを見る。
+移行（migrate）を直接呼ぶテストだけでは、入口の判定は通らない。
+
 ## 通して言えること
 
 **「直したはず」で終わらせない。** 4も5も、コードの上では直っていた。
