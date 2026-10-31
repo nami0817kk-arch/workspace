@@ -20,6 +20,7 @@
   - 行に `section=True` を付けると、その前にひと呼吸(0.65 秒)入る。問いのあと・結び・お願いの前は自動で入る
   - `render` は途中から再開できる（できたコマは飛ばす）。`prep` で設定が変わると古いコマは捨てる
 - 計算の回（kind: sim）: `kana` → `voice` → `stills` → `compose`。画面は `ep.py` の `draw(img, dr, t, ctx)` が描く
+- 3D の物理演算は MuJoCo（`pip install mujoco`、2026-10-31 導入。落下の試運転は理論値と一致）。pybullet はこの PC にコンパイラが無く入らない。2D は pymunk。計算の回の `draw()` から時間を進めて軌道を描く
 - 声は VOICEVOX の剣崎雌雄（id 21、2026-10-26 ユーザーが選んだ）。読みは `kana` で全行を見て、違えば `say` で直す。概要欄に「VOICEVOX:剣崎雌雄」
 - 投稿: `python -m naze.upload 動画 --title … --desc-file … --publish-at 2026-10-27T19:00:00+09:00 [--thumb サムネ.jpg]`（カテゴリ教育）。本編は 19 時、翌日にショート 5 本を 11・12・13・14・16 時
 
