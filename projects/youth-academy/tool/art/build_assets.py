@@ -72,11 +72,23 @@ SHEET1 = (
 )
 
 
+# シートごとに使うマス（行順の番号）。None なら全部。
+# 3枚目は同じ顔が4色の服で並ぶので上の2行だけ、4枚目は表情の強すぎるもの（泣く・叫ぶ・怒る等）を外す
+FACE_SHEETS = [
+    ('faces_sheet1.png', SHEET1, None),
+    ('faces_sheet2.png', None, None),
+    ('faces_sheet3.png', None, list(range(14))),
+    ('faces_sheet4.png', None, [0, 5, 8, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 25, 27]),
+]
+
+
 def faces():
     out = []
-    for name, boxes in (('faces_sheet1.png', SHEET1), ('faces_sheet2.png', None)):
+    for name, boxes, keep in FACE_SHEETS:
         im = Image.open(os.path.join(ART, name)).convert('RGB')
         bx = boxes if boxes is not None else face_cells_auto(im)
+        if keep is not None:
+            bx = [bx[i] for i in keep if i < len(bx)]
         print(name, len(bx), 'cells')
         for i, b in enumerate(bx):
             f = square(im, b).resize((FACE_PX, FACE_PX), Image.LANCZOS)
