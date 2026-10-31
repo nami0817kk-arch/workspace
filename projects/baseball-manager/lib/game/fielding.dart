@@ -46,7 +46,7 @@ FieldingLine fieldingOf({
   if (player.role == Role.pitcher) return const FieldingLine(0, 0);
   final chances = (chancesPerGame(pos) * games).round();
   if (chances == 0) return const FieldingLine(0, 0);
-  final expected = chances * errorRate(player.of(Ability.fielding));
+  final expected = chances * errorRate(player.defense);
   // 名前と年齢から決める、±約25%のばらつき(0〜1)。
   final h = (player.name.codeUnits
           .fold<int>(age * 31, (a, c) => (a * 131 + c) & 0x7fffffff)) %

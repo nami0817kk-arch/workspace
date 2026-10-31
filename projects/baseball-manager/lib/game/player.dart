@@ -10,9 +10,11 @@ enum Role { batter, pitcher, twoWay }
 enum Ability {
   contact,
   power,
+  trajectory,
   speed,
+  arm,
   fielding,
-  eye,
+  catching,
   stuff,
   control,
   stamina;
@@ -25,12 +27,15 @@ enum Ability {
   }
 }
 
+/// 打者の能力(パワプロと同じ7つ)。弾道・肩力・捕球が、守備と長打の中身を分ける。
 const batterAbilities = [
+  Ability.trajectory,
   Ability.contact,
   Ability.power,
   Ability.speed,
+  Ability.arm,
   Ability.fielding,
-  Ability.eye,
+  Ability.catching,
 ];
 const pitcherAbilities = [Ability.stuff, Ability.control, Ability.stamina];
 
@@ -93,10 +98,15 @@ class Player {
         skills: skills ?? this.skills,
       );
 
+  /// 守備力(守備と捕球から)。失策や守備の表彰に使う。
+  int get defense =>
+      ((of(Ability.fielding) * 6 + of(Ability.catching) * 4) / 10).round();
+
+  /// 打席の計算に使う形。長打は弾道が3割、四球の選びやすさはミートに連動する。
   Batter toBatter() => Batter(
       contact: of(Ability.contact),
-      power: of(Ability.power),
-      eye: of(Ability.eye));
+      power: ((of(Ability.power) * 7 + of(Ability.trajectory) * 3) / 10).round(),
+      eye: of(Ability.contact));
   Pitcher toPitcher() =>
       Pitcher(control: of(Ability.control), stuff: of(Ability.stuff));
 
@@ -122,6 +132,14 @@ class Player {
     for (final e in raw.entries) {
       final a = Ability.parse(e.key as String);
       if (a != null) ab[a] = (e.value as num).toInt();
+    }
+    // 古いセーブ(能力が5つだった頃)は、足りない打者の能力を今ある能力から補う。選球眼は無くなった。
+    if (ab.isNotEmpty && role != Role.pitcher) {
+      final c = ab[Ability.contact] ?? 20, pw = ab[Ability.power] ?? 20;
+      final f = ab[Ability.fielding] ?? 20;
+      ab.putIfAbsent(Ability.trajectory, () => ((c + pw) / 2).round());
+      ab.putIfAbsent(Ability.arm, () => f);
+      ab.putIfAbsent(Ability.catching, () => f);
     }
     return Player(
       name: (j['name'] as String?) ?? '名無し',

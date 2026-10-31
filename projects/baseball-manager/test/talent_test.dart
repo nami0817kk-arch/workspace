@@ -85,10 +85,10 @@ void main() {
           role: Role.batter,
           age: 15,
           potential: 60,
-          gifts: {Ability.power: 2, Ability.eye: -1});
+          gifts: {Ability.power: 2, Ability.trajectory: -1});
       final back = Player.fromJson(p.toJson());
       expect(back.gift(Ability.power), 2);
-      expect(back.gift(Ability.eye), -1);
+      expect(back.gift(Ability.trajectory), -1);
       expect(back.gift(Ability.speed), 0);
       final old = p.toJson()..remove('gifts');
       expect(Player.fromJson(old).gifts, isEmpty);
@@ -305,15 +305,19 @@ void main() {
       expect(
           earnedBy(_snapshot(traits: {Trait.monster})), contains('rare-trait'));
       expect(earnedBy(_snapshot(awakened: true)), contains('awakening'));
-      // 打者(5能力): 合計+4で平均+0.8、合計+3では届かない
+      // 打者(7能力): 合計+6で平均+0.86、合計+5では届かない
       expect(
           earnedBy(_snapshot(gifts: {
             Ability.contact: 2,
-            Ability.power: 1,
-            Ability.eye: 1,
+            Ability.power: 2,
+            Ability.trajectory: 2,
           })),
           contains('gifted'));
-      expect(earnedBy(_snapshot(gifts: {Ability.contact: 2, Ability.power: 1})),
+      expect(earnedBy(_snapshot(gifts: {
+            Ability.contact: 2,
+            Ability.power: 2,
+            Ability.trajectory: 1
+          })),
           isNot(contains('gifted')));
       expect(giftAverage(Role.pitcher, {Ability.stuff: 2, Ability.control: 1}),
           closeTo(1.0, 1e-9));

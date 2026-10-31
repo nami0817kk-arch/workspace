@@ -66,7 +66,7 @@ void main() {
       abilities: {
         Ability.contact: 60,
         Ability.power: 20,
-        Ability.eye: 60,
+        Ability.trajectory: 60,
         Ability.speed: 40,
         Ability.fielding: 40,
       },

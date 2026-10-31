@@ -17,9 +17,11 @@ int _h(String s, [int salt = 0]) {
 String trainingMenu(Ability a) => switch (a) {
       Ability.contact => '素振りとティー打撃',
       Ability.power => 'ウエイトと打ち込み',
+      Ability.trajectory => 'ティー打撃で打球の角度づくり',
       Ability.speed => 'ダッシュとベースランニング',
+      Ability.arm => '遠投と送球練習',
       Ability.fielding => 'ノック(守備練習)',
-      Ability.eye => 'マシンで球の見極め',
+      Ability.catching => 'キャッチボールとゴロ捕球',
       Ability.stuff => 'ブルペンで投げ込み',
       Ability.control => '的を狙うコントロール練習',
       Ability.stamina => 'ランニングと投げ込み',
@@ -158,46 +160,63 @@ String handednessOf(String name) {
 /// 守備位置・役割。ポジションごとに、必要な能力の組み合わせ(適性)が違う。
 enum Pos {
   catcher('捕手', {
-    Ability.fielding: .5,
-    Ability.eye: .2,
-    Ability.power: .2,
-    Ability.contact: .1
+    Ability.catching: .35,
+    Ability.arm: .2,
+    Ability.fielding: .15,
+    Ability.power: .15,
+    Ability.contact: .15
   }),
   first('一塁手', {
-    Ability.power: .45,
+    Ability.power: .4,
     Ability.contact: .3,
-    Ability.eye: .15,
+    Ability.trajectory: .1,
+    Ability.catching: .1,
     Ability.fielding: .1
   }),
   second('二塁手', {
-    Ability.fielding: .4,
-    Ability.contact: .3,
+    Ability.fielding: .3,
+    Ability.contact: .25,
     Ability.speed: .2,
-    Ability.eye: .1
+    Ability.catching: .15,
+    Ability.arm: .1
   }),
   third('三塁手', {
-    Ability.power: .3,
-    Ability.fielding: .35,
-    Ability.contact: .25,
-    Ability.speed: .1
-  }),
-  shortstop(
-      '遊撃手', {Ability.fielding: .5, Ability.speed: .3, Ability.contact: .2}),
-  left('左翼手', {
-    Ability.power: .4,
-    Ability.contact: .35,
-    Ability.eye: .15,
-    Ability.speed: .1
-  }),
-  center(
-      '中堅手', {Ability.speed: .4, Ability.fielding: .35, Ability.contact: .25}),
-  right('右翼手', {
-    Ability.power: .3,
-    Ability.speed: .25,
+    Ability.power: .25,
     Ability.fielding: .25,
-    Ability.contact: .2
+    Ability.arm: .2,
+    Ability.contact: .2,
+    Ability.catching: .1
   }),
-  dh('指名打者', {Ability.power: .4, Ability.contact: .4, Ability.eye: .2}),
+  shortstop('遊撃手', {
+    Ability.fielding: .35,
+    Ability.speed: .25,
+    Ability.arm: .2,
+    Ability.catching: .1,
+    Ability.contact: .1
+  }),
+  left('左翼手', {
+    Ability.power: .35,
+    Ability.contact: .3,
+    Ability.trajectory: .15,
+    Ability.speed: .1,
+    Ability.arm: .1
+  }),
+  center('中堅手', {
+    Ability.speed: .3,
+    Ability.fielding: .25,
+    Ability.contact: .2,
+    Ability.arm: .15,
+    Ability.catching: .1
+  }),
+  right('右翼手', {
+    Ability.power: .25,
+    Ability.arm: .25,
+    Ability.speed: .2,
+    Ability.fielding: .15,
+    Ability.contact: .15
+  }),
+  dh('指名打者',
+      {Ability.power: .35, Ability.contact: .35, Ability.trajectory: .3}),
   starter('先発', {Ability.stamina: .4, Ability.control: .3, Ability.stuff: .3}),
   reliever(
       '中継ぎ', {Ability.stuff: .4, Ability.control: .35, Ability.stamina: .25}),

@@ -25,15 +25,17 @@ List<(String, Ability, bool)> finalStances(Player p) => _asPitcher(p)
     : const [
         ('強振で一発を狙う', Ability.power, true),
         ('コンパクトに当てにいく', Ability.contact, false),
-        ('粘って四球を選ぶ', Ability.eye, false),
+        ('逆方向へ狙い打つ', Ability.trajectory, false),
       ];
 
 String _abilityShort(Ability a) => switch (a) {
       Ability.contact => 'ミート',
       Ability.power => 'パワー',
+      Ability.trajectory => '弾道',
       Ability.speed => '走力',
+      Ability.arm => '肩力',
       Ability.fielding => '守備',
-      Ability.eye => '選球眼',
+      Ability.catching => '捕球',
       Ability.stuff => '球威',
       Ability.control => '制球',
       Ability.stamina => 'スタミナ',
