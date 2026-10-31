@@ -391,6 +391,8 @@
         }), h('span', { class: 'grow' })), h('div', { class: 'note', style: 'margin-top:3px' }, (YA.DUTY[sl.duty] || YA.DUTY.sup).note + '。（深さ・戻り・場面の出やすさが変わります）'));
         body.append(dutyBox);
         body.append(h('div', { class: 'h' }, '役割'));
+        const roleGrid = h('div', { class: 'rolegrid' });
+        body.append(roleGrid);
         for (const r of YA.ROLES15[p15]) {
           const save = sl.role;
           const saveD = sl.duty;
@@ -401,20 +403,12 @@
           sl.role = save;
           sl.duty = saveD;
           const rd = rdr;
-          body.append(h('button', { class: 'rolecard' + (save === r ? ' on' : ''), onclick: () => { if (sl.role !== r) YA.setRole(sl, st.sel, r); board.redraw(); onChange(); } },
+          roleGrid.append(h('button', { class: 'rolecard' + (save === r ? ' on' : ''), onclick: () => { if (sl.role !== r) YA.setRole(sl, st.sel, r); board.redraw(); onChange(); } },
             h('div', { class: 'grow' }, h('b', {}, r), h('div', {}, h('span', { class: 'd' }, rd.note)), h('div', {}, h('span', { class: 'd' }, '任務：' + rd.duties.map((k) => YA.DUTY[k].label).join('・') + ' ／ 合う特性：' + rd.traits.slice(0, 3).join('・')))),
             fit > 0 ? h('span', { class: 'fit good' }, 'ハマる') : fit < 0 ? h('span', { class: 'fit bad' }, '合わない') : null));
         }
         body.append(h('div', { class: 'note', style: 'margin-top:5px' }, '役割が特性や能力と合うと力が出て、合わない役割を続けると不満が出ます。役割をこなすうちに、戦術の理解が伸びます。'));
         body.append(h('div', { style: 'margin-top:8px;border-top:1px dashed var(--line);padding-top:6px' }, playerCard(t, p)));
-        if (!o.sheet) {
-          body.append(h('div', { class: 'h', style: 'margin-top:8px' }, 'ベンチと入れ替える'));
-          body.append(h('div', { class: 'plist' }, t.bench.map((bid) => {
-            const bp = t.players[bid];
-            const ok2 = (bp.pos === 'GK') === (p.pos === 'GK') && !(bp.inj > 0);
-            return h('button', { class: 'pitem', style: ok2 ? '' : 'opacity:.35', onclick: () => { if (!ok2) return; const bi = t.bench.indexOf(bid); t.bench[bi] = sl.pid; sl.pid = bid; fixRole(t, st.sel); board.redraw(); onChange(); } }, posChip(bp), h('span', { class: 'num' }, bp.num), h('span', { class: 'nm grow' }, bp.name), gtag(bp), bp.inj > 0 ? h('span', { class: 'fit bad' }, '怪我' + bp.inj + '週') : h('span', { class: 'sub' }, bp.traits.slice(0, 2).join('・')));
-          })));
-        }
       } else if (st.tab === 'sub') {
         const m = o.match;
         const left = 5 - t.subsUsed;

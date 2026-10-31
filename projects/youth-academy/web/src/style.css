@@ -143,6 +143,8 @@ button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:poin
 .big-note{padding:24px;text-align:center;color:var(--sub);line-height:1.8}
 .hidden{display:none!important}
 
+.rolegrid{display:grid;grid-template-columns:1fr 1fr;gap:4px 6px}
+.rolegrid .rolecard{margin:0;padding:5px 7px;font-size:11px}
 .gtag{flex:none;font-size:9.5px;font-weight:800;line-height:1;padding:2px 4px;border-radius:4px;background:#e8eef7;color:#355}
 .gtag.g1{background:#dff3e6;color:#1a7a43}
 .gtag.g2{background:#e6eefc;color:#2a5db0}
