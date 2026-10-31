@@ -164,6 +164,21 @@ async function clearEvents() {
     btn('閉じる', d.querySelector('.sheet')).click();
     ok(A.w.phase === 'match' || A.w.phase === 'after', '片付けたら先へ進める ' + id + x);
   }
+  // 選手の出来事：説明と接し方が出て、選んだあとの画面に「null」などが出ない
+  {
+    const pid = A.w.lineupA[5].pid;
+    for (const id of ['rival', 'hot', 'unrest', 'senpai', 'homesick', 'lowconf']) {
+      A.w.phase = 'event';
+      A.w.events = [{ id, pid, week: A.w.week, year: A.w.year }];
+      rail('ホーム');
+      const sh = d.querySelector('.sheet');
+      ok(!!sh && sh.textContent.includes(w.YA.EVENT_ABOUT[id]) && /寄り添う|厳しく|背中を押す|任せる/.test(sh.textContent), '出来事に説明と接し方が出る ' + id);
+      [...sh.querySelectorAll('button.btn')][0].click();
+      await sleep(10);
+      ok(!/null|undefined|NaN/.test(d.querySelector('.sheet').textContent), '出来事の結果に null などが出ない ' + id);
+      btn('閉じる', d.querySelector('.sheet')).click();
+    }
+  }
   A.w.phase = 'plan';
   rail('ホーム');
 

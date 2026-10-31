@@ -157,7 +157,12 @@
           h('div', { class: 'row' }, h('span', { class: 'chip pers' }, '出来事'), h('b', {}, v.name), h('span', { class: 'grow' }), h('span', { class: 'sub' }, `残り${w.events.length}件`)),
           p ? h('div', { class: 'row', style: 'gap:8px' }, posc(p), h('b', { style: 'white-space:nowrap' }, `${p.num}番 ${p.name}`), h('span', { class: 'sub' }, gradeName(p.grade)), U().persChips(p).slice(0, 4)) : h('div', { class: 'row' }, h('span', { class: 'chip gray' }, w.clubName)),
           h('div', { class: 'card', style: 'padding:9px 11px;font-size:13px;line-height:1.6' }, v.text),
-          ...v.opts.map((label, i) => h('button', { class: 'btn', style: 'justify-content:flex-start;text-align:left;padding:9px 12px', onclick: () => choose(i) }, label)),
+          v.about ? h('div', { class: 'note', style: 'margin-top:-2px' }, v.about) : null,
+          ...v.info.map((o, i) => h('button', { class: 'btn', style: 'justify-content:flex-start;text-align:left;padding:8px 12px;gap:6px', onclick: () => choose(i) },
+            o.kind ? h('span', { class: 'chip gray', style: 'font-size:10px;flex:none' }, YA.KIND_LABEL[o.kind]) : null,
+            h('span', { class: 'grow' }, o.label),
+            o.hint === 'good' ? h('span', { class: 'fit good', style: 'flex:none' }, '響きそう') : o.hint === 'bad' ? h('span', { class: 'fit bad', style: 'flex:none' }, '逆効果かも') : null)),
+          p ? h('div', { class: 'note' }, '「響きそう」「逆効果かも」は、見えている性格からの目安です。同じ言葉でも、性格で受け止め方が変わります。') : null,
         );
       };
       const choose = (i) => {
@@ -166,6 +171,7 @@
           h('div', { class: 'h' }, v.name),
           h('div', { class: 'card', style: 'padding:9px 11px;font-size:13px;line-height:1.6' }, (p ? `${p.name.split(' ')[0]}は、` : '') + r.line),
           r.small ? h('div', { class: 'chip trait', style: 'align-self:flex-start' }, r.small) : null,
+          r.small && /自信|調子/.test(r.small) ? h('div', { class: 'note' }, '自信：高いほど試合で力を出せる（低いと出来事が起きやすい）。調子：ここ数週の出来。') : null,
           r.leave ? h('div', { class: 'insight bad' }, r.leave) : null,
           h('button', { class: 'btn pri', onclick: () => { w.events.shift(); if (!w.events.length) afterEvents(); YA.saveWorld(); close(); rerender(); } }, w.events.length > 1 ? '次へ' : '閉じる'),
         );

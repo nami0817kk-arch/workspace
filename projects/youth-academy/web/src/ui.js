@@ -37,6 +37,18 @@
   }
   YA._apt = { posChip, aptBlock, goodPosRow };
 
+  // DOM の append・prepend・replaceChildren は、null を「null」という文字にして画面に出してしまう。
+  // 画面の組み立てでは「条件 ? 部品 : null」を多用するので、null・undefined・false は黙って捨てる
+  if (globalThis.Element && !Element.prototype._yaSafe) {
+    for (const k of ['append', 'prepend', 'replaceChildren']) {
+      const orig = Element.prototype[k];
+      Element.prototype[k] = function (...a) {
+        return orig.apply(this, a.filter((x) => x != null && x !== false));
+      };
+    }
+    Element.prototype._yaSafe = true;
+  }
+
   // ---------- 小さな道具 ----------
   function h(tag, attrs, ...kids) {
     const e = document.createElement(tag);
@@ -751,7 +763,7 @@
     else viewPlaceholder(main);
     // 最初の1か月の案内（決定77）
     const tt = app.view !== 'play' ? YA.tutorialText(app.w) : null;
-    if (tt) main.prepend(h('div', { class: 'tut' }, h('span', { class: 'tutb' }, '案内'), h('span', { class: 'grow' }, tt), h('button', { class: 'btn sm', onclick: () => { app.w.tut.on = false; YA.saveWorld(); render(); } }, '消す')));
+    if (tt) main.prepend(h('div', { class: 'tut' }, h('span', { class: 'tutb' }, '案内'), h('span', { class: 'grow' }, tt), h('button', { class: 'btn sm', onclick: () => { app.w.tut.on = false; YA.saveWorld(); render(); } }, '消す')));
     restore();
   }
 
