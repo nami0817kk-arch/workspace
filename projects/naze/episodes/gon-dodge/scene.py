@@ -754,7 +754,7 @@ def sc_time(img, box, t, k, P):
         d.rectangle([gl, yc - bh / 2, max(gl + 5 * S, e), yc + bh / 2], fill=col)
         if v > 0.05:
             d.rectangle([X(0.18), yc - bh / 2 - 6 * S, X(0.21), yc - bh / 2], fill=O.WHITE)
-            text(d, (e + 14 * S, yc), s, 32, O.WHITE, "lm", 4) if e < X(0.205) else text(d, (gl + 20 * S, yc), s, 32, (20, 28, 50), "lm", 0)
+            text(d, (e + 14 * S, yc), s, 32, O.WHITE, "lm", 4) if (LAND and e < X(0.205)) else text(d, (gl + 20 * S, yc), s, 32, (20, 28, 50), "lm", 0)
         else:
             text(d, (max(gl + 5 * S, e) + 16 * S, yc), s, 32, O.WHITE, "lm", 4)
         if st >= 5 and v > 0.05:
@@ -1039,7 +1039,7 @@ def sc_bone(img, box, t, k, P):
     d = ImageDraw.Draw(img)
     st = P.get("st", 0)
     cy = (y0 + y1) / 2 + (20 if LAND else -60) * S
-    ex, wx = x0 + (x1 - x0) * 0.12, x0 + (x1 - x0) * (0.70 if LAND else 0.78)
+    ex, wx = x0 + (x1 - x0) * (0.12 if LAND else 0.08), x0 + (x1 - x0) * (0.70 if LAND else 0.66)
     sk = (88, 70, 60)
     d.rounded_rectangle([ex - 40 * S, cy - 110 * S, wx + 40 * S, cy + 110 * S], int(100 * S), fill=(70, 58, 56))
     # 手(記号)
