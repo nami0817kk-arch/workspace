@@ -189,9 +189,15 @@ class GameBridge {
   }
 
   Future<void> _restore() async {
+    bool owned() => money.adFree || Monetization.packIds.any(money.owns);
+    final had = owned();
     final r = await money.restore();
-    final any = money.adFree || Monetization.packIds.any(money.owns);
-    await pushApp(msg: r == PurchaseOutcome.purchased || any ? '購入を復元しました' : '復元できる購入が見つかりませんでした');
+    final msg = r == PurchaseOutcome.purchased || (!had && owned())
+        ? '購入を復元しました'
+        : had
+            ? '購入はすでに入っています'
+            : '復元できる購入が見つかりませんでした';
+    await pushApp(msg: msg);
   }
 
   /// 広告を消したか・価格をゲーム本体に伝える（購入が後から届いたときにも呼ぶ）。

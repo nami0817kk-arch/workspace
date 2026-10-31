@@ -5297,7 +5297,7 @@ document.addEventListener('click',function(ev){
     case 'glclose':ui.gloss=false;render();break;
     case 'say':sayText(S&&S.tr[id],el.getAttribute('data-t')||el.textContent);break;
     case 'quit':if(!ui.quitArm){ui.quitArm=true;render();break;}ui.quitArm=false;keepBak();stopTimer();clearSave();S=null;ui.settings=false;render();window.scrollTo(0,0);break;
-    case 'adcancel':if(ui.adWait==='inter')break;if(pendingAd)appPost({type:'rewardCancel',id:ui.adId});pendingAd=null;ui.adWait=false;render();break;
+    case 'adcancel':if(ui.adWait==='inter')break;if(pendingAd){appPost({type:'rewardCancel',id:ui.adId});ui.adId++;}pendingAd=null;ui.adWait=false;render();break;
     case 'tinfo':if(TRAITS[v])toast(TRAITS[v].n+'：'+TRAITS[v].d);break;
     case 'settings':ui.settings=true;render();break;
     case 'setclose':ui.settings=false;render();break;
