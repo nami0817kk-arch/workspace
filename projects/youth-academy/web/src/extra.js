@@ -41,8 +41,10 @@
     if (!S) return;
     const wn = YA.scoutWindow(w);
     const best = (kind) => S.cands.filter((x) => x.kind === kind && x.status === 'open').sort((a, b) => (YA.ovr(b.p) + (b.p.pot - YA.abSum(b.p)) / 60) - (YA.ovr(a.p) + (a.p.pot - YA.abSum(a.p)) / 60));
+    const bud = YA.budget(w).scout;
+    if (!wn.scout && wn.explore && YA.scoutActsLeft(w) === YA.SCOUT_PER_MONTH) YA.scoutOut(w, 'local'); // 冬は月1回、残りの予算で下見
     if (wn.scout) {
-      for (let i = 0; i < 3 && YA.scoutActsLeft(w) > 0; i++) {
+      for (let i = 0; i < 3 && YA.scoutActsLeft(w) > 0 && w.club.spent.scout < bud * 0.7; i++) {
         const open = best('scout');
         if (open.length >= 12) YA.passCand(w, open[open.length - 1].id); // 候補がいっぱいなら、いちばん下を見送って枠を空ける
         if (!YA.scoutOut(w, YA.DEST_ORDER[(w.week + i) % 3]).ok) break;

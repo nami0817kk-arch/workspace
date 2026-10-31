@@ -31,9 +31,10 @@
     V().modal(() => box([
       h('div', { class: 'h', style: 'font-size:16px' }, '契約満了：これからのこと'),
       h('div', { class: 'note' }, `直近の評価は ${last ? last.letter : '-'}、信頼度は ${Math.round(w.club.trust)}。` + (refuse ? 'クラブは更新に消極的です。' : 'クラブは更新を前向きに考えています。')),
+      h('div', { class: 'note' }, `いまのクラブ：${YA.TIER_NAME[w.club.tier]}・今年の予算 ${w.club.total}万円・36人をよく知っている`),
       h('button', { class: 'btn pri', style: 'padding:9px', disabled: refuse, onclick: () => { YA.renewContract(w); save(); rerender(); } }, `${w.clubName}と契約を更新する（3年）`),
       h('div', { class: 'h', style: 'margin-top:4px' }, '他のクラブからの誘い（移ると、36人を一から知ることになります）'),
-      ...w.pendingContract.offers.map((o) => h('button', { class: 'btn', style: 'justify-content:space-between;padding:9px', onclick: () => { YA.moveTo(w, o, '契約満了で移りました。'); save(); rerender(); } }, h('b', {}, o.name), h('span', {}, `${YA.TIER_NAME[o.tier]}・予算およそ${o.budget}万円`))),
+      ...w.pendingContract.offers.map((o) => h('button', { class: 'btn', style: 'justify-content:space-between;padding:9px', onclick: () => { YA.moveTo(w, o, '契約満了で移りました。'); save(); rerender(); } }, h('span', { style: 'text-align:left' }, h('b', {}, o.name), o.note ? h('div', { class: 'sub', style: 'font-weight:600' }, o.note) : null), h('span', {}, `${YA.TIER_NAME[o.tier]}・予算およそ${o.budget}万円`))),
     ]));
   }
   function coachModal() {
@@ -78,19 +79,20 @@
       return h('div', { class: 'card', style: 'padding:7px 9px;background:#fff7d6' }, h('div', { class: 'h' }, '夏合宿・遠征の週'), ...opts.map((o) => h('button', { class: 'btn sm' + (cur === o.k ? ' on' : ''), style: 'width:100%;justify-content:space-between;margin-top:3px', disabled: !o.ok, onclick: () => { w.campChoice = o.k; save(); rerender(); } }, o.label, h('span', { class: 'sub', style: cur === o.k ? 'color:#fff' : '' }, o.ok ? `費用${o.cost}万` : o.why))));
     }
     const wn = YA.scoutWindow(w);
-    if (wn.int || wn.sel) return h('div', { class: 'card', style: 'padding:7px 9px;background:#eaf2ff' }, h('div', { class: 'h' }, wn.int ? '内部昇格の時期（11月）' : 'セレクションの時期（1月）'), h('div', { class: 'note' }, 'クラブ → スカウト で、入れる子を選べます。この期間のうちに決めます。'), h('button', { class: 'btn sm', onclick: () => { U().app.tab = 'club'; U().app.ct = 'scout'; rerender(); } }, 'スカウトを開く'));
+    if (wn.int || wn.sel) return h('div', { class: 'card', style: 'padding:7px 9px;background:#eaf2ff' }, h('div', { class: 'h' }, wn.int ? '内部昇格の時期（11月）' : 'セレクションの時期（1月）'), h('div', { class: 'note' }, 'クラブ → スカウト で、入れる子を選べます。この期間のうちに決めます。'), h('button', { class: 'btn sm', onclick: () => { U().app.tab = 'club'; U().app.ct = wn.int ? 'int' : 'sel'; rerender(); } }, wn.int ? '内部昇格を開く' : 'セレクションを開く'));
     return null;
   };
 
   // ---------- クラブ ----------
-  const SUBS = [['over', '概要'], ['money', '予算と施設'], ['staff', 'スタッフ'], ['scout', 'スカウト'], ['table', '順位と日程']];
+  const SUBS = [['over', '概要'], ['money', '予算と施設'], ['staff', 'スタッフ'], ['int', '内部昇格'], ['scout', 'スカウト'], ['sel', 'セレクション'], ['table', '順位と日程']];
   function viewClub(main) {
     const w = W();
     const ui = U().app;
     ui.ct = ui.ct || 'over';
     const tabs = h('div', { class: 'tabs', style: 'flex:none' }, SUBS.map(([k, n]) => h('button', { class: 'btn' + (ui.ct === k ? ' on' : ''), onclick: () => { ui.ct = k; rerender(); } }, n)));
     const body = h('div', { class: 'card pbody', style: 'flex:1;min-height:0' });
-    ({ over: over, money: money, staff: staff, scout: scout, table: table })[ui.ct](body, w);
+    if (!SUBS.some((x) => x[0] === ui.ct)) ui.ct = 'over';
+    ({ over: over, money: money, staff: staff, int: (b, w2) => recruit(b, w2, 'int'), scout: (b, w2) => recruit(b, w2, 'scout'), sel: (b, w2) => recruit(b, w2, 'sel'), table: table })[ui.ct](body, w);
     main.append(h('div', { style: 'flex:1;min-height:0;display:flex;flex-direction:column;gap:6px' }, tabs, body));
   }
 
@@ -177,7 +179,29 @@
     ['scout', 'スカウト', '声かけは4〜11月・返事は12月', (w) => (w.week <= 27 ? '受付中' : w.week === 28 ? '返事が届いた' : '来年度の下見')],
     ['sel', 'セレクション', '1月', (w) => (w.week < 31 ? 'まだ' : w.week <= 34 ? '受付中' : '決定済み')],
   ];
-  function scout(body, w) {
+  // ポジション別の人数（登録）：今いる人数と、来年（高3が卒業し、決まった子が入る）の人数
+  const PC_ORDER = ['GK', 'CB', 'LB', 'RB', 'LWB', 'RWB', 'DM', 'CM', 'LM', 'RM', 'AM', 'LW', 'RW', 'SS', 'ST'];
+  YA.posCounts = function (w) {
+    const ps = Object.values(w.players);
+    const inc = w.scouting ? w.scouting.cands.filter((c) => c.status === 'signed' || c.status === 'offered').map((c) => c.p) : [];
+    return PC_ORDER.map((q) => {
+      const now = ps.filter((p) => p.main === q).length;
+      const out = ps.filter((p) => p.main === q && p.grade === 3).length;
+      const inn = inc.filter((p) => p.main === q).length;
+      return { pos: q, now, out, inn, next: now - out + inn };
+    });
+  };
+  function posCountGrid(w) {
+    const rows = YA.posCounts(w);
+    return h('div', { class: 'card', style: 'padding:5px 7px;margin-bottom:6px' },
+      h('div', { class: 'row' }, h('b', { class: 'grow' }, 'ポジション別の人数（登録）'), h('span', { class: 'sub' }, '上：今の人数　下：来年（高3の卒業と、決まった新入生を差し引き）')),
+      h('div', { style: 'display:grid;grid-template-columns:repeat(15,1fr);gap:3px;margin-top:4px' }, rows.map((r) => h('div', { style: 'text-align:center;border-radius:7px;padding:2px 0;background:' + (r.next <= 0 && ['GK', 'CB', 'LB', 'RB', 'DM', 'CM', 'ST'].indexOf(r.pos) >= 0 ? '#ffe3e3' : '#f2f6fc') },
+        h('div', { style: 'font-size:9.5px;font-weight:800;color:var(--sub)' }, YA.POS_LABEL[r.pos]),
+        h('div', { style: 'font-size:15px;font-weight:900;line-height:1.1' }, r.now),
+        h('div', { style: 'font-size:9.5px;font-weight:700;color:' + (r.next < r.now ? '#b02020' : r.next > r.now ? '#16794a' : 'var(--sub)') }, '→' + r.next)))));
+  }
+  YA.posCountGrid = posCountGrid;
+  function recruit(body, w, kind) {
     const S = w.scouting;
     const wn = YA.scoutWindow(w);
     const msg = h('div', { class: 'msglog' });
@@ -187,11 +211,27 @@
     body.append(h('div', { class: 'row', style: 'flex-wrap:wrap;gap:6px;margin-bottom:6px' }, h('span', { class: 'chip trait' }, `来年の高1 ${heldN()}/12人`), h('span', { class: 'chip gray' }, `内部昇格 ${heldN('int')}/8`), h('span', { class: 'chip gray' }, `スカウト ${heldN('scout')}/3`), h('span', { class: 'chip gray' }, `セレクション ${heldN('sel')}/3`), h('span', { class: 'chip gray' }, `スカウト経費 ${w.club.spent.scout || 0}/${b.scout}万`), h('span', { class: 'chip gray' }, `見る目 ${Math.round(YA.eyeLevel(w))}`), h('span', { class: 'sub grow' }, '決めた子は来年の高1です。足りない分は一般入団で埋まります（合わせて12人まで）')));
     body.append(h('div', { style: 'display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:6px' }, SEASON.map(([k, n, when, st]) => {
       const now = st(w);
-      return h('div', { class: 'card', style: 'padding:5px 8px;margin:0;' + (now === '受付中' ? 'background:#eaf2ff;border-color:#9fc0f0' : '') }, h('div', { class: 'row' }, h('b', { class: 'grow' }, n), h('span', { class: 'chip ' + (now === '受付中' ? 'trait' : 'gray') }, now)), h('div', { class: 'note' }, when));
+      return h('button', { class: 'card', style: 'padding:5px 8px;margin:0;text-align:left;cursor:pointer;font:inherit;' + (k === kind ? 'outline:2px solid var(--blue);' : '') + (now === '受付中' ? 'background:#eaf2ff;border-color:#9fc0f0' : ''), onclick: () => { U().app.ct = k; rerender(); } }, h('div', { class: 'row' }, h('b', { class: 'grow' }, n), h('span', { class: 'chip ' + (now === '受付中' ? 'trait' : 'gray') }, now)), h('div', { class: 'note' }, when));
     })));
+    body.append(posCountGrid(w));
     // スカウトに出る（栄冠ナイン風：行き先を選んで出る。月3回まで）
     const left = YA.scoutActsLeft(w);
     const panel = h('div', { class: 'card', style: 'padding:7px 9px;margin-bottom:6px' });
+    const sec = (t, k, list, mk) => { body.append(title(t)); if (!list.length) body.append(h('div', { class: 'note', style: 'margin-bottom:6px' }, k)); list.forEach((c) => body.append(mk(c))); };
+    // 決める・取り消す（期間内だけ）
+    const decide = (c, yes, signedLabel) => (c.status === 'signed'
+      ? (wn[c.kind] ? h('button', { class: 'btn sm on', onclick: () => { YA.unsign(w, c.id); save(); rerender(); } }, `${signedLabel}（取り消す）`) : h('span', { class: 'fit good' }, signedLabel))
+      : c.status === 'open' ? h('button', { class: 'btn sm', disabled: !wn[c.kind], onclick: () => say(YA.signCand(w, c.id)) }, yes) : null);
+    if (kind === 'int') {
+      sec('U-15の内部昇格（11月に8人まで決める）', S.intOpen ? '' : '11月になると、中3の20人が練習に参加して候補になります', S.cands.filter((c) => c.kind === 'int'), (c) => candCard(w, c, decide(c, '昇格させる', '昇格決定')));
+      body.append(msg);
+      return;
+    }
+    if (kind === 'sel') {
+      selSection();
+      body.append(msg);
+      return;
+    }
     panel.append(h('div', { class: 'row' }, h('b', { class: 'grow' }, 'スカウトに出る'), wn.explore ? h('span', { class: 'chip trait' }, `今月あと ${'●'.repeat(left)}${'○'.repeat(YA.SCOUT_PER_MONTH - left)}`) : h('span', { class: 'chip gray' }, '返事の週（出られません）')));
     panel.append(h('div', { style: 'display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:5px' }, YA.DEST_ORDER.map((k) => {
       const D = YA.DESTS[k];
@@ -199,13 +239,6 @@
     })));
     panel.append(h('div', { class: 'note', style: 'margin-top:4px' }, wn.scout ? '会えた子は下の「スカウトの報告」に並びます。見に行く（10万）も今月の1回を使います。声をかけた子の返事は12月に届きます' : wn.explore ? '今の時期に会えた子は来年度の候補になり、4月から声をかけられます。見に行って見える範囲を広げておけます' : '今週はスカウトの返事が届く週です'));
     body.append(panel);
-    const sec = (t, k, list, mk) => { body.append(title(t)); if (!list.length) body.append(h('div', { class: 'note', style: 'margin-bottom:6px' }, k)); list.forEach((c) => body.append(mk(c))); };
-    // 決める・取り消す（期間内だけ）
-    const decide = (c, yes, signedLabel) => (c.status === 'signed'
-      ? (wn[c.kind] ? h('button', { class: 'btn sm on', onclick: () => { YA.unsign(w, c.id); save(); rerender(); } }, `${signedLabel}（取り消す）`) : h('span', { class: 'fit good' }, signedLabel))
-      : c.status === 'open' ? h('button', { class: 'btn sm', disabled: !wn[c.kind], onclick: () => say(YA.signCand(w, c.id)) }, yes) : null);
-    // 内部昇格
-    sec('U-15の内部昇格（11月に8人まで決める）', S.intOpen ? '' : '11月になると、中3の20人が練習に参加して候補になります', S.cands.filter((c) => c.kind === 'int'), (c) => candCard(w, c, decide(c, '昇格させる', '昇格決定')));
     // スカウトの報告
     sec('スカウトの報告（会った子に声をかける。3人まで・返事は12月）', 'まだ会った子はいません。上の行き先を選んでスカウトに出てください', S.cands.filter((c) => c.kind === 'scout' && c.status !== 'passed').reverse(), (c) => candCard(w, c, h('div', { class: 'row' },
       c.status === 'declined' ? h('span', { class: 'fit bad' }, '断られた') : null,
@@ -215,7 +248,8 @@
       c.status === 'open' ? h('button', { class: 'btn sm', onclick: () => say(YA.passCand(w, c.id)) }, '見送る') : null,
       c.status === 'open' && c.next ? h('span', { class: 'chip gray' }, '来年度の候補（4月から）') : null,
       c.status === 'open' && !c.next ? h('button', { class: 'btn sm pri', disabled: !wn.scout, onclick: () => say(YA.signCand(w, c.id)) }, '声をかける') : null)));
-    // セレクション
+    body.append(msg);
+    function selSection() {
     if (S.selOpen) {
       if (wn.sel || S.testsDone) {
         const tests = h('div', { class: 'card', style: 'padding:7px 9px;margin-bottom:5px;background:#eaf2ff' });
@@ -230,7 +264,7 @@
       }
       sec(`セレクションの応募者（1月に3人まで合格にする・${S.cands.filter((c) => c.kind === 'sel').length}人）`, '', S.cands.filter((c) => c.kind === 'sel'), (c) => candCard(w, c, decide(c, '合格にする', '合格')));
     } else sec('セレクション（1月に3人まで合格にする）', '1月になると、応募者が来ます（14人ほど）', [], () => null);
-    body.append(msg);
+    }
   }
 
   // ---------- 順位と日程 ----------
@@ -295,6 +329,39 @@
     } }, '映像ミーティング');
   };
 
+  // 卒業生のいちばんの勲章（一覧の札に出す）
+  YA.alumniHighlight = function (a) {
+    const aw = (a.awards || []).map((x) => x.name);
+    for (const k of ['バロンドール', 'バロンドール候補（30人）', 'W杯出場', 'アジア年間最優秀選手', '年間MVP', '得点王', 'ベストイレブン', '新人王']) {
+      const n = aw.filter((x) => x === k || x.endsWith(' ' + k)).length;
+      if (n) return k.replace('（30人）', '') + (n > 1 ? `×${n}` : '');
+    }
+    if (a.nat) return `日本代表${a.nat}回`;
+    if (a.u21) return 'U-21代表';
+    return null;
+  };
+  // 卒業後の経歴：年ごとのクラブ・リーグ・出場・得点・タイトル・賞
+  function alumniCareer(a) {
+    const ss = (a.seasons || []).slice().reverse();
+    const count = (list) => { const m = {}; for (const x of list) m[x.name] = (m[x.name] || 0) + 1; return Object.entries(m).map(([k, n]) => k + (n > 1 ? ` ×${n}` : '')); };
+    V().modal((close) => h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(720px,97%);max-height:96%;padding:10px 12px;gap:6px;overflow:auto' },
+      h('div', { class: 'row', style: 'gap:6px' }, h('span', { class: 'pos ' + a.pos }, YA.POS_LABEL[a.main] || a.pos), h('b', { style: 'font-size:15px' }, a.name), h('span', { class: 'sub' }, `${a.year}年卒・いま${a.age}歳${a.retired ? '（引退）' : ''}`), h('span', { class: 'grow' }), h('button', { class: 'btn sm', onclick: close }, '閉じる')),
+      h('div', { class: 'note' }, a.status === 'left' ? '在学中に退団した子です。' : `いま：${a.club || '-'}${a.league ? '（' + a.league + '）' : ''}　卒業時：${a.note || ''}　能力 ${a.ovr}`),
+      h('div', { class: 'row', style: 'flex-wrap:wrap;gap:4px' },
+        h('span', { class: 'chip trait' }, `通算 ${a.apps}試合・${a.goals}得点`),
+        a.nat ? h('span', { class: 'chip trait' }, `日本代表 ${a.nat}回` + (a.natGoals ? `・${a.natGoals}得点` : '')) : null,
+        a.u21 ? h('span', { class: 'chip gray' }, `U-21代表 ${a.u21}回`) : null,
+        a.transfers ? h('span', { class: 'chip gray' }, `移籍 ${a.transfers}回`) : null),
+      (a.titles || []).length ? h('div', {}, h('div', { class: 'h' }, `タイトル（${a.titles.length}）`), h('div', { class: 'row', style: 'flex-wrap:wrap;gap:4px' }, count(a.titles).map((x) => h('span', { class: 'chip trait' }, x)))) : null,
+      (a.awards || []).length ? h('div', {}, h('div', { class: 'h' }, '個人の賞・代表'), h('div', { class: 'row', style: 'flex-wrap:wrap;gap:4px' }, count(a.awards).map((x) => h('span', { class: 'chip pers' }, x)))) : null,
+      h('div', { class: 'h' }, '年ごとの経歴'),
+      ss.length ? h('div', { class: 'plist' },
+        h('div', { class: 'pitem', style: 'cursor:default;background:none;font-size:10px;color:var(--sub);font-weight:800' }, h('span', { style: 'width:46px' }, '年'), h('span', { style: 'width:34px' }, '年齢'), h('span', { class: 'grow' }, 'クラブ（リーグ）'), h('span', { style: 'width:40px;text-align:right' }, '出場'), h('span', { style: 'width:40px;text-align:right' }, '得点'), h('span', { style: 'width:190px' }, 'タイトル・賞')),
+        ss.map((x) => h('div', { class: 'pitem', style: 'cursor:default;font-size:11px' }, h('span', { style: 'width:46px' }, `${x.y}年目`), h('span', { style: 'width:34px' }, `${x.age}歳`), h('span', { class: 'grow', style: 'min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap' }, `${x.club}（${x.league}）`), h('b', { style: 'width:40px;text-align:right' }, x.apps), h('b', { style: 'width:40px;text-align:right' }, x.goals), h('span', { style: 'width:190px;font-size:10px' }, x.titles.concat(x.awards).join('・') || '―'))))
+        : h('div', { class: 'note' }, 'まだ記録はありません。卒業から1年たつと、ここに年ごとの経歴が並びます。'),
+    ));
+  }
+
   // ---------- ほか：名鑑・記録・設定 ----------
   function viewMore(main) {
     const w = W();
@@ -303,10 +370,23 @@
     const tabs = h('div', { class: 'tabs', style: 'width:420px' }, [['alumni', '卒業生名鑑'], ['rec', '記録'], ['bteam', 'Bチーム'], ['ach', '実績と引退'], ['set', '設定']].map(([k, n]) => h('button', { class: 'btn' + (ui.mt === k ? ' on' : ''), onclick: () => { ui.mt = k; rerender(); } }, n)));
     const body = h('div', { class: 'card pbody', style: 'flex:1;min-height:0' });
     if (ui.mt === 'alumni') {
-      body.append(h('div', { class: 'h' }, `卒業生と退団者（${w.alumni.length}人）`));
-      const al = w.alumni.slice().reverse();
-      body.append(h('div', { class: 'plist', style: 'margin-top:5px' }, al.map((a) => h('div', { class: 'pitem', style: 'cursor:default;align-items:flex-start' }, h('span', { class: 'pos ' + a.pos }, a.pos), h('div', { class: 'grow' }, h('b', {}, a.name), h('div', { class: 'note' }, (a.status === 'left' ? '退団' : `${a.year}年卒・${a.age}歳`) + (a.club ? `・${a.club}` : '') + (a.u21 ? `・U-21代表${a.u21}回` : '') + (a.nat ? `・代表${a.nat}回` : '') + (a.retired ? '（引退）' : ''))), a.status === 'pro' ? h('span', { class: 'sub', style: 'font-size:10.5px' }, `出場${a.apps}・${a.goals}得点${a.transfers ? '・移籍' + a.transfers : ''}${a.nat ? '・代表' + a.nat : ''}`) : null, h('span', { class: 'chip gray' }, '能力 ' + a.ovr), h('span', { class: 'chip ' + (a.status === 'pro' ? 'trait' : 'gray') }, a.status === 'pro' ? 'プロ' : a.status === 'univ' ? '大学' : a.status === 'left' ? '退団' : '社会人')))));
-      if (!al.length) body.append(h('div', { class: 'note', style: 'margin-top:6px' }, '最初の卒業式（1年目の終わり）で、ここに並びます。卒業後も毎年、活躍が更新されます。'));
+      // 絞り込み：全員・プロ・海外・代表・タイトル
+      ui.af = ui.af || 'all';
+      const AF = [['all', '全員'], ['pro', 'プロ'], ['abroad', '海外'], ['nat', '代表'], ['title', 'タイトル・賞']];
+      const pass = (a) => ui.af === 'all' || (ui.af === 'pro' && a.status === 'pro') || (ui.af === 'abroad' && a.abroad) || (ui.af === 'nat' && a.nat > 0) || (ui.af === 'title' && ((a.titles || []).length || (a.awards || []).length));
+      const al = w.alumni.slice().reverse().filter(pass);
+      body.append(h('div', { class: 'row', style: 'gap:4px;flex-wrap:wrap' }, h('div', { class: 'h grow' }, `卒業生と退団者（${w.alumni.length}人）`), ...AF.map(([k, n]) => h('button', { class: 'btn sm' + (ui.af === k ? ' on' : ''), onclick: () => { ui.af = k; rerender(); } }, n))));
+      body.append(h('div', { class: 'note' }, 'タップすると、卒業してからの年ごとの経歴（クラブ・リーグ・出場・得点・タイトル・賞）が見られます。'));
+      body.append(h('div', { class: 'plist', style: 'margin-top:5px' }, al.map((a) => {
+        const top = YA.alumniHighlight(a);
+        return h('button', { class: 'pitem', style: 'align-items:flex-start', onclick: () => alumniCareer(a) }, h('span', { class: 'pos ' + a.pos }, YA.POS_LABEL[a.main] || a.pos),
+          h('div', { class: 'grow', style: 'text-align:left;min-width:0' }, h('b', {}, a.name), h('div', { class: 'note' }, (a.status === 'left' ? '退団' : `${a.year}年卒・${a.age}歳`) + (a.club ? `・${a.club}` : '') + (a.league && a.status !== 'left' ? `（${a.league}）` : '') + (a.retired ? '・引退' : ''))),
+          a.status === 'pro' || a.status === 'univ' ? h('span', { class: 'sub', style: 'font-size:10.5px;white-space:nowrap' }, `通算${a.apps}試合・${a.goals}得点`) : null,
+          (a.titles || []).length ? h('span', { class: 'chip trait' }, `タイトル${a.titles.length}`) : null,
+          top ? h('span', { class: 'chip pers' }, top) : null,
+          h('span', { class: 'chip ' + (a.status === 'pro' ? 'trait' : 'gray') }, a.status === 'pro' ? (a.abroad ? '海外' : 'プロ') : a.status === 'univ' ? '大学' : a.status === 'left' ? '退団' : '社会人'));
+      })));
+      if (!al.length) body.append(h('div', { class: 'note', style: 'margin-top:6px' }, w.alumni.length ? '当てはまる卒業生はいません。' : '最初の卒業式（1年目の終わり）で、ここに並びます。卒業後も毎年、活躍が更新されます。'));
     } else if (ui.mt === 'rec') {
       body.append(title('主な記録'), h('div', { class: 'row', style: 'flex-wrap:wrap;gap:5px;margin-bottom:6px' }, h('span', { class: 'chip trait' }, `Aチーム ${w.rec.w}勝${w.rec.d}分${w.rec.l}敗`), h('span', { class: 'chip gray' }, `プロ入り ${w.alumni.filter((a) => a.status === 'pro').length}人`), h('span', { class: 'chip gray' }, `代表経験 ${w.alumni.filter((a) => a.nat).length}人`), h('span', { class: 'chip gray' }, `連帯貢献金 ${w.club.solidarityLast || 0}万円（今年）`)));
       body.append(title('獲得した大会'), ...(w.trophies && w.trophies.length ? w.trophies.map((t) => h('div', { class: 'pitem', style: 'cursor:default' }, h('span', { class: 'chip trait' }, t.rank), h('span', { class: 'nm grow' }, t.name), h('span', { class: 'sub' }, `${t.year}年目`))) : [h('div', { class: 'note' }, 'まだありません')]));

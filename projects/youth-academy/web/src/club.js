@@ -247,18 +247,21 @@
     const r = YA.rngOf(w.seed * 71 + w.year * 9);
     const rep = w.club.rep;
     const base = rep >= 75 ? 1 : rep >= 50 ? 2 : 3;
-    const tiers = [base, clamp(base + 1, 1, 3), clamp(base - (r.chance(0.5) ? 1 : 0), 1, 3)];
+    // 一つ上・同じ・一つ下の部から1つずつ（端の部では同じ部が2つになるので、クラブの色で差をつける）
+    const tiers = [clamp(base - 1, 1, 3), base, clamp(base + 1, 1, 3)];
+    const FLAVOR = [['予算が多い', 0.15], ['予算はふつう', 0], ['予算は少なめ（そのぶん期待も低い）', -0.12]];
     const names = ['横浜', '川崎', '大宮', '千葉', '東京', '名古屋', '大阪', '神戸', '広島', '福岡', '仙台', '札幌', '静岡', '新潟'];
     const nick = ['ブルーウィング', 'シルバーホーク', 'アルバトロス', 'サンライズ', 'レッドフォックス', 'ノースウィンド', 'ミストラル', 'クレセント'];
     const seen = new Set();
     const out = [];
-    for (const t of tiers) {
+    tiers.forEach((t, i) => {
       let n;
       do n = r.pick(names) + ' ' + r.pick(nick) + 'U-18';
       while (seen.has(n));
       seen.add(n);
-      out.push({ tier: t, name: n, budget: Math.round(TIER_BASE[t] * (0.85 + rep / 300)) });
-    }
+      const [note, adj] = FLAVOR[i];
+      out.push({ tier: t, name: n, note, budgetAdj: adj, budget: Math.round(TIER_BASE[t] * (0.85 + rep / 300) * (1 + adj)) });
+    });
     return out;
   };
   YA.renewContract = function (w) {
@@ -281,7 +284,7 @@
     w.captain = null;
     w.vice = null;
     w.rel = [];
-    w.scouting = null;
+    w.scouting = YA.newScouting();
     const keepEval = w.club.eval;
     const rep = w.club.rep;
     const noFire = w.club.noFire;
@@ -289,6 +292,7 @@
     YA.newClub(w, offer.tier, offer.name);
     w.club.rep = rep;
     w.club.eval = keepEval;
+    if (offer.budgetAdj) w.club.budgetAdj = offer.budgetAdj;
     w.pendingContract = null;
     w.plan = YA.defaultPlan();
     YA.autoPlan(w);

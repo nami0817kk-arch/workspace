@@ -55,7 +55,7 @@ button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:poin
 .opp .sw{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px;vertical-align:-1px}
 .pre-body{flex:1;min-height:0;display:flex;gap:8px}
 .kick{display:flex;flex-direction:column;gap:4px;min-width:92px}
-.boardwrap{width:36%;min-width:250px;max-width:340px;display:flex;flex-direction:column;gap:5px;min-height:0}
+.boardwrap{width:42%;min-width:260px;max-width:420px;display:flex;flex-direction:column;gap:5px;min-height:0}
 .board{flex:1;min-height:0;position:relative;border-radius:12px;box-shadow:var(--shadow);overflow:hidden;background:#2f9a5f}
 .board svg{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
 .panel{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px;min-height:0}
@@ -202,3 +202,6 @@ button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:poin
 @media (max-height:460px){.pbody{padding:3px 8px}.pbody div.pitem{padding-top:1px;padding-bottom:1px}.pbody .h{line-height:1.25}.pbody .insight{margin-bottom:2px}.pbody .msglog{margin-top:3px}}
 /* 一覧の行（押す部品）は指で押せる高さに */
 button.pitem{min-height:34px}
+/* 練習の表：1行を低くして、多くの子が見えるように */
+.trainrow{padding-top:1px;padding-bottom:1px}
+.trainrow .btn.sm{min-height:26px;padding-top:1px;padding-bottom:1px}

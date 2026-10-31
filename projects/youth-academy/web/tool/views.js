@@ -164,6 +164,21 @@ async function clearEvents() {
     btn('閉じる', d.querySelector('.sheet')).click();
     ok(A.w.phase === 'match' || A.w.phase === 'after', '片付けたら先へ進める ' + id + x);
   }
+  // 選手の出来事：説明と接し方が出て、選んだあとの画面に「null」などが出ない
+  {
+    const pid = A.w.lineupA[5].pid;
+    for (const id of ['rival', 'hot', 'unrest', 'senpai', 'homesick', 'lowconf']) {
+      A.w.phase = 'event';
+      A.w.events = [{ id, pid, week: A.w.week, year: A.w.year }];
+      rail('ホーム');
+      const sh = d.querySelector('.sheet');
+      ok(!!sh && sh.textContent.includes(w.YA.EVENT_ABOUT[id]) && /寄り添う|厳しく|背中を押す|任せる/.test(sh.textContent), '出来事に説明と接し方が出る ' + id);
+      [...sh.querySelectorAll('button.btn')][0].click();
+      await sleep(10);
+      ok(!/null|undefined|NaN/.test(d.querySelector('.sheet').textContent), '出来事の結果に null などが出ない ' + id);
+      btn('閉じる', d.querySelector('.sheet')).click();
+    }
+  }
   A.w.phase = 'plan';
   rail('ホーム');
 
@@ -181,7 +196,17 @@ async function clearEvents() {
     await sleep(10);
   }
   // 編成（FM風）：先発・ベンチ・控え外を、タップ→タップで入れ替える
-  btn('編成').click();
+  [...d.querySelectorAll('.tabs button')].find((b) => b.textContent.trim() === '編成').click();
+  // おまかせ編成：押すと11人がそろい、適性の合わない先発が減る
+  {
+    btn('おまかせ編成').click();
+    await sleep(10);
+    const lu = A.w.lineupA;
+    ok(lu.length === 11 && new Set(lu.map((s) => s.pid)).size === 11 && A.w.players[lu[0].pid].pos === 'GK', 'おまかせ編成で11人とGKがそろう');
+    const off = lu.filter((s, i) => A.w.players[s.pid].apt[d.defaultView.YA.pos15OfSlot(s, i)] < 14).length;
+    ok(off <= 2, 'おまかせ編成では、適性の合わない先発がほとんどいない ' + off);
+    [...d.querySelectorAll('.tabs button')].find((b) => b.textContent.trim() === '編成').click();
+  }
   ok(txt().includes('ベンチ（9人）') && txt().includes('控え外') && d.querySelectorAll('.pitem.sq').length >= 9, '編成の画面');
   {
     const names = () => [...d.querySelectorAll('.pitem.sq')].slice(0, 9).map((b) => b.textContent);

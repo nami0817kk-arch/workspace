@@ -103,12 +103,13 @@
     for (const n of YA.AB_MENTAL.concat(YA.AB_PHYS, YA.AB_TECH)) if (!boost[n] && rng.chance(0.12)) boost[n] = rng.pick([-2, -1, 1, 2]);
     const weak = rng.pick(YA.AB_FIELD);
     boost[weak] = (boost[weak] || 0) - 2;
-    const p = YA.mkPlayer(rng, { id, num: 0, name, pos: grp, main: pos, lvl, boost, traits: [], pers: {}, height: 164 + rng.int(0, 22) + (grp === 'GK' ? 5 : pos === 'CB' ? 3 : 0) });
+    const p = YA.mkPlayer(rng, { id, num: 0, name, pos: grp, main: pos, best: trueP, lvl, boost, traits: [], pers: {}, height: 164 + rng.int(0, 22) + (grp === 'GK' ? 5 : pos === 'CB' ? 3 : 0) });
     // 性格
     for (const g of Object.keys(PERS_W)) {
       const ent = Object.entries(PERS_W[g]);
       p.pers[g] = rng.weighted(ent, (e) => e[1])[0];
     }
+    YA.trimPers(p, rng);
     // 特性：能力に合うものを1〜2個（高学年ほど持っている）
     const pool = (pos === 'GK' ? GK_TRAITS : FIELD_TRAITS).filter((t) => t in YA.TRAIT_AFF);
     const nt = grade === 1 ? rng.int(0, 1) : grade === 2 ? rng.int(0, 2) : rng.int(1, 2);
@@ -219,6 +220,34 @@
     pickLineup(w, 'A', init ? '4-3-3' : w.formation);
     pickLineup(w, 'B', (w.bCtl && w.bCtl.form) || '4-3-3');
   }
+  // 枠に置いたときの値打ち：力×その位置の適性（◎はそのまま、○で1割弱、△で2〜3割、×は大きく落ちる）
+  YA.slotValue = function (p, p15) {
+    if ((p.pos === 'GK') !== (p15 === 'GK')) return -99;
+    const a = p.apt ? p.apt[p15] : 10;
+    return YA.ovr(p) * (1 - Math.max(0, 17 - a) * 0.03);
+  };
+  // 布陣の枠を、候補の少ない枠から順に、値打ちのいちばん高い選手で埋める
+  YA.fillSlots = function (fm, pool, key) {
+    const slots = fm.map((s, i) => ({ i, s, pos: YA.pos15OfSlot(s, i) }));
+    const left = pool.slice();
+    const lineup = new Array(fm.length);
+    const good = (sl) => left.filter((p) => (p.apt ? p.apt[sl.pos] : 10) >= 14).length;
+    const order = slots.slice();
+    while (order.length && left.length) {
+      order.sort((a, b) => (b.pos === 'GK') - (a.pos === 'GK') || good(a) - good(b));
+      const sl = order.shift();
+      let k = -1;
+      let bv = -1e9;
+      left.forEach((p, j) => {
+        const v = YA.slotValue(p, sl.pos) + (key ? key(p) : 0);
+        if (v > bv) { bv = v; k = j; }
+      });
+      const p = left.splice(k, 1)[0];
+      lineup[sl.i] = { pid: p.id, x: sl.s.x, y: sl.s.y, role: YA.defaultRole(sl.pos) };
+      YA.fixSlotRole(lineup[sl.i], sl.i);
+    }
+    return lineup;
+  };
   const NEED = { '4-3-3': { GK: 1, DF: 4, MF: 3, FW: 3 }, '4-4-2': { GK: 1, DF: 4, MF: 4, FW: 2 }, '4-2-3-1': { GK: 1, DF: 4, MF: 5, FW: 1 }, '3-5-2': { GK: 1, DF: 3, MF: 5, FW: 2 }, '5-3-2': { GK: 1, DF: 5, MF: 3, FW: 2 } };
   function pickLineup(w, which, formation) {
     if (!YA.FORMATIONS[formation]) formation = '4-3-3';
@@ -228,40 +257,16 @@
       && w.lineupB.every((s) => w.players[s.pid] && w.players[s.pid].team === 'B') && w.benchB.every((id) => w.players[id] && w.players[id].team === 'B')
       && w.bCtl.formKept === formation) return;
     const fm = YA.FORMATIONS[formation];
-    const need = { GK: 0, DF: 0, MF: 0, FW: 0 };
-    fm.forEach((s, i) => need[YA.posOfSlot(s, i)]++);
-    const chosen = [];
-    for (const pos of ['GK', 'DF', 'MF', 'FW']) {
-      // Bチームの起用方針（決定30）：力の順／下級生を優先／疲れの少ない順
-      const pol = which === 'B' && w.bCtl ? w.bCtl.policy : 'best';
-      const key = (p) => YA.ovr(p) - (p.fat * 0.01) + (pol === 'young' ? (3 - p.grade) * 0.6 : 0) - (pol === 'rest' ? p.fat * 0.04 : 0);
-      let c = pool.filter((p) => p.pos === pos && healthy(p)).sort((a, b) => key(b) - key(a));
-      if (pos === 'GK' && !c.length) c = pool.filter((p) => p.pos === 'GK').sort((a, b) => YA.ovr(b) - YA.ovr(a));
-      chosen.push(...c.slice(0, need[pos]));
+    // Bチームの起用方針（決定30）：力の順／下級生を優先／疲れの少ない順
+    const pol = which === 'B' && w.bCtl ? w.bCtl.policy : 'best';
+    const key = (p) => -(p.fat * 0.01) + (pol === 'young' ? (3 - p.grade) * 0.6 : 0) - (pol === 'rest' ? p.fat * 0.04 : 0);
+    const cand = pool.filter(healthy);
+    // 動けるGKがいなければ、怪我のGKでも入れる（Bは repairLineup でフィールドの選手に替わる）
+    if (!cand.some((p) => p.pos === 'GK')) {
+      const g = pool.filter((p) => p.pos === 'GK').sort((a, b) => YA.ovr(b) - YA.ovr(a))[0];
+      if (g) cand.push(g);
     }
-    // 足りない位置は他の位置から補う
-    if (chosen.length < 11) {
-      const rest = pool.filter((p) => healthy(p) && chosen.indexOf(p) < 0 && p.pos !== 'GK').sort((a, b) => YA.ovr(b) - YA.ovr(a));
-      chosen.push(...rest.slice(0, 11 - chosen.length));
-    }
-    // 布陣の各枠へ、位置の近い順に割り当てる
-    const slots = fm.map((s, i) => ({ i, s, pos: YA.pos15OfSlot(s, i) }));
-    const lineup = new Array(11);
-    const left = chosen.slice();
-    for (const sl of slots) {
-      // その位置の適性が一番高い選手を置く（GKはGKだけ）
-      let k = -1;
-      let bv = -1e9;
-      left.forEach((p, j) => {
-        if ((p.pos === 'GK') !== (sl.pos === 'GK')) return;
-        const v = (p.apt ? p.apt[sl.pos] : 10) + (p.main === sl.pos ? 0.4 : 0);
-        if (v > bv) { bv = v; k = j; }
-      });
-      if (k < 0) k = 0;
-      const p = left.splice(k, 1)[0];
-      lineup[sl.i] = { pid: p.id, x: sl.s.x, y: sl.s.y, role: YA.defaultRole(sl.pos) };
-      YA.fixSlotRole(lineup[sl.i], sl.i);
-    }
+    const lineup = YA.fillSlots(fm, cand, key);
     const bench = pool.filter((p) => !lineup.some((l) => l.pid === p.id)).sort((a, b) => YA.ovr(b) - YA.ovr(a)).map((p) => p.id);
     if (which === 'A') {
       w.lineupA = lineup;
@@ -754,8 +759,44 @@
       w._clubReq = e.x;
       w._staffIdx = Math.min(e.x, (w.club ? w.club.staff.length : 1) - 1);
     }
-    return { name: def.name, text: def.text(p, w), p, opts: def.opts.map((o) => o.label) };
+    // 選択肢ごとの接し方と、見えている性格から見た反応の目安（響きそう／逆効果かも）
+    const info = def.opts.map((o) => {
+      let hint = '';
+      if (p && !o.run && o.kind) {
+        const rr = react(p, o.kind);
+        hint = rr.c >= 6 || rr.f >= 1 ? 'good' : rr.c <= -3 || rr.f < 0 ? 'bad' : '';
+      }
+      return { label: o.label, kind: o.run ? null : o.kind, hint };
+    });
+    return { name: def.name, text: def.text(p, w), p, opts: def.opts.map((o) => o.label), info, about: YA.EVENT_ABOUT[e.id] || '' };
   };
+  // 出来事ごとの「どういうことか・何に響くか」
+  YA.EVENT_ABOUT = {
+    unrest: 'Bで出番の少ない子の不満です。不満が溜まると、退団の相談につながります。',
+    lowconf: '自信が大きく落ちています。自信が低いと、試合で力を出しにくくなります。',
+    tired: '疲れが溜まっています。疲れたまま続けると、怪我をしやすくなります。',
+    injury: '怪我の治し方の相談です。早く戻すと、再び痛める恐れがあります。',
+    rival: 'Aの選手を意識しているBの子です。うまく乗せると伸び、こじれると不満になります。',
+    senpai: '面倒見のいい高3です。任せると、同じポジションの高1の頭（判断・予測）が伸びます。',
+    family: '家庭の事情で気持ちが揺れています。放っておくと、自信や不満に響きます。',
+    homesick: 'チームに馴染めていない子です。不満が溜まりやすい状態です。',
+    hot: '調子のいい子です。さらに乗せると伸び盛りに入りやすく、戒めると性格次第で落ち込みます。',
+    quit: '退団を考えています。引き止めに失敗すると、チームを去ります。',
+    top: 'トップチームからの練習参加の打診です。本人は大きく伸びますが、今週は不在になります。',
+    nat: '代表への招集です。本人とクラブの評判は上がりますが、2週間不在になります。',
+    club: 'クラブからの要望です。応じると信頼度が上がり、断ると下がります。',
+    media: '取材の依頼です。受けると評判が上がり、目立ちたがりの子は自信を付けます。',
+    poach: 'スタッフが他から誘われています。引き止めるには給料が上がります。',
+    late: '規律の問題です。チームの約束事と、全体の規律（緩むと出来事が増える）に響きます。',
+    fight: '規律の問題です。チームの約束事と、全体の規律（緩むと出来事が増える）に響きます。',
+    slack: '規律の問題です。チームの約束事と、全体の規律（緩むと出来事が増える）に響きます。',
+    adapt: '外国籍の子の生活の相談です。馴染めないと、力を出しにくいままです。',
+    jump: 'U-15の子をBに加える打診です。受けると人数が1人増えます。',
+    career: '卒業する高3の進路です。選んだ道で、プロ入りの決まりやすさが変わります。',
+    parent: '保護者からの相談です。対応次第で、本人の自信と不満が動きます。',
+    rivalry: '同じポジションの2人が先発を争っています。競わせると伸びますが、繊細な子は崩れることもあります。',
+  };
+  YA.KIND_LABEL = { warm: '寄り添う', firm: '厳しく', push: '背中を押す', wait: '任せる' };
   YA.resolveEvent = function (w, e, idx) {
     const def = YA.EVENTS.find((x) => x.id === e.id);
     const p = e.pid ? w.players[e.pid] : null;
@@ -1077,7 +1118,7 @@
         if (p._pushFail) YA.addTrust(w, -2, p.name + 'のトップ昇格の推薦が通らなかった');
         if (p._sold) YA.addRep(w, 1);
         grads.push([p, note]);
-        out.push({ name: p.name, pos: p.pos, ovr: o, note });
+        out.push({ name: p.name, pos: p.pos, main: p.main, ovr: o, note });
         delete w.players[p.id];
       } else {
         p.grade++;
@@ -1139,6 +1180,26 @@
     return { ok: true, line: res.line, small, extra };
   };
 
+  // ---------- 重点の方針（まとめて決める）----------
+  // strong＝得意を伸ばす（ポジションに要る能力のいちばん高いもの）、weak＝苦手を伸ばす（全部の能力でいちばん低いもの）、
+  // pos＝ポジションの弱点（ポジションに要る能力のいちばん低いもの。おまかせの既定）。手で選んだら manual
+  YA.FOCUS_POLICY = { strong: '得意を伸ばす', weak: '苦手を伸ばす', pos: 'ポジションの弱点' };
+  YA.focusByPolicy = function (p, policy) {
+    const posAbs = (p.pos === 'GK' ? YA.AB_GK : YA.POS_ABS15[p.main]).filter((n) => p.ab[n] < 20);
+    const allAbs = (p.pos === 'GK' ? YA.AB_GK.concat(YA.AB_MENTAL, YA.AB_PHYS) : YA.AB_FIELD).filter((n) => p.ab[n] < 20);
+    if (policy === 'strong') return posAbs.slice().sort((a, b) => p.ab[b] - p.ab[a])[0] || null;
+    if (policy === 'weak') return allAbs.slice().sort((a, b) => p.ab[a] - p.ab[b])[0] || null;
+    return posAbs.slice().sort((a, b) => p.ab[a] - p.ab[b])[0] || null;
+  };
+  YA.setPolicy = function (p, policy) {
+    p.train.policy = policy;
+    if (policy !== 'manual') p.train.focus = YA.focusByPolicy(p, policy);
+  };
+  // 方針の決まっている子は、能力が伸びたら重点も選び直す（毎週）
+  YA.refreshFocus = function (w) {
+    for (const p of Object.values(w.players)) if (p.train && p.train.policy && p.train.policy !== 'manual') p.train.focus = YA.focusByPolicy(p, p.train.policy);
+  };
+
   // ---------- 練習の自動設定 ----------
   YA.autoPlan = function (w) {
     // 弱点を自動で重点に。疲れている子は軽めに
@@ -1147,8 +1208,9 @@
     if (fatigued > 8) plan.days[4] = { menu: '回復', int: 'normal' };
     for (const p of Object.values(w.players)) {
       const weak = abList(p).filter((n) => p.ab[n] < p.ab && 0).length;
-      const cand = (p.pos === 'GK' ? YA.AB_GK : YA.POS_ABS15[p.main]).slice().sort((a, b) => p.ab[a] - p.ab[b]);
-      p.train.focus = cand[0];
+      // 方針を決めてある子はそのまま、決めていない子はポジションの弱点を
+      if (p.train.policy && p.train.policy !== 'manual') p.train.focus = YA.focusByPolicy(p, p.train.policy);
+      else YA.setPolicy(p, 'pos');
       // 特性練習は、いちばん早く覚えられるものを（おまかせのとき）
       if (!p.train.trait) {
         const lt = YA.learnable(p)[0];
