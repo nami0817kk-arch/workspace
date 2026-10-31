@@ -425,7 +425,7 @@ def sc_island(img, box, t, k, P):
         if LAND:
             label(d, (icx + 0.62 * wz + 30 * S, icy - 0.4 * wz + 90 * S), "光った所がヘリウムで浮く分", 34, O.WHITE, "lm")
         else:
-            label(d, ((x0 + x1) / 2, y0 + 170 * S), "光った所がヘリウムで浮く分", 34, O.WHITE)
+            label(d, ((x0 + x1) / 2, y1 - 60 * S), "光った所がヘリウムで浮く分", 34, O.WHITE)
 
 
 def nasa_shape(d, cx, mouth, top, R, col, outline=O.WHITE):
@@ -857,8 +857,9 @@ def sc_row(img, box, t, k, P):
         bx = ex + re_ + 8 * S + i * 16 * S
         d.ellipse([bx - 6 * S, ey - 8 * S, bx + 6 * S, ey + 6 * S], fill=BALL)
     times = int(1 + 329 * _ease(k * 1.4 - 0.2)) if k > 0.15 else 1
-    text(d, ((x0 + x1) / 2, ey - 140 * S), "風船170兆個を1列に並べると", 46, O.WHITE, "mm", 5)
-    text(d, ((x0 + x1) / 2, ey + 140 * S), f"地球〜太陽の　約{times}倍" if times < 330 else "地球〜太陽の　約330倍", 70, O.YEL, "mm", 6)
+    off = 140 if LAND else 240
+    text(d, ((x0 + x1) / 2, ey - off * S), "風船170兆個を1列に並べると", 46, O.WHITE, "mm", 5)
+    text(d, ((x0 + x1) / 2, ey + off * S), f"地球〜太陽の　約{times}倍" if times < 330 else "地球〜太陽の　約330倍", 70, O.YEL, "mm", 6)
     text(d, ((x0 + x1) / 2, y1 - 20 * S), "1個を直径28cmとして", 30, O.DIM, "md", 3)
 
 
@@ -1462,7 +1463,7 @@ def sc_bag(img, box, t, k, P):
     d = ImageDraw.Draw(img)
     gy0, gy1 = y0 + 110 * S, y1 - 40 * S
     kmax = 23.0
-    pyk = (gy1 - gy0) / kmax
+    pyk = (gy1 - gy0) / kmax if LAND else min((gy1 - gy0) / kmax, (x1 - x0 - 340 * S) / 18.5)
     py = lambda km: gy1 - pyk * km
     # 空の濃さ(st>=2 は高さで変える。0・1 は 5,000m で一様)
     for i in range(0, int(gy1 - gy0), 4):
@@ -1478,7 +1479,7 @@ def sc_bag(img, box, t, k, P):
         yy = py(v)
         d.line([(gx - 12 * S, yy), (gx, yy)], fill=O.DIM, width=max(2, int(3 * S)))
         text(d, (gx - 18 * S, yy), f"{v}km", 28, O.DIM, "rm", 3)
-    cx = x0 + (x1 - x0) * (0.50 if LAND else 0.55)
+    cx = x0 + (x1 - x0) * 0.50 if LAND else x0 + 150 * S + 9.25 * pyk
     mouth = py(5.0)
     if st < 2:
         R = 18.5 / 2 * pyk
@@ -1492,7 +1493,7 @@ def sc_bag(img, box, t, k, P):
         R = 18.5 / 2 * pyk
         top = py(21.0)
         nasa_shape(d, cx, mouth, top, R, (236, 120, 140))
-        vbr(d, cx + R + 30 * S, top, mouth, "高さ16km", O.YEL, 38)
+        vbr(d, cx + R + 30 * S, top, mouth, "高さ16km" if LAND else "高さ\n16km", O.YEL, 38)
         dashed(d, (gx, top), (cx - 20 * S, top), O.YEL, 2)
         text(d, (gx + 20 * S, top - 12 * S), "てっぺん 21km", 34, O.YEL, "ld", 4)
         if st >= 3:
