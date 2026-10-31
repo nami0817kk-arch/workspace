@@ -95,7 +95,7 @@
     // pos は15個のうちの1つ。素質は3割で隣のポジション向き（登録とずれている＝あとで気づく）
     const grp = YA.GROUP[pos];
     const NEAR = { CB: ['DM', 'LB'], LB: ['LWB', 'CB'], RB: ['RWB', 'CB'], LWB: ['LB', 'LM'], RWB: ['RB', 'RM'], DM: ['CM', 'CB'], CM: ['DM', 'AM'], LM: ['LW', 'CM'], RM: ['RW', 'CM'], AM: ['CM', 'SS'], LW: ['LM', 'AM'], RW: ['RM', 'AM'], SS: ['AM', 'ST'], ST: ['SS', 'LW'] };
-    const trueP = pos === 'GK' ? pos : rng() < 0.35 ? NEAR[pos][rng.int(0, 1)] : pos;
+    const trueP = pos === 'GK' ? pos : rng() < 0.12 ? NEAR[pos][rng.int(0, 1)] : pos;
     const shifted = trueP !== pos;
     const focus = YA.POS_ABS15[trueP];
     const boost = {};
@@ -224,7 +224,8 @@
   YA.slotValue = function (p, p15) {
     if ((p.pos === 'GK') !== (p15 === 'GK')) return -99;
     const a = p.apt ? p.apt[p15] : 10;
-    return YA.ovr(p) * (1 - Math.max(0, 17 - a) * 0.03);
+    const k = a >= 17 ? 1 : a >= 14 ? 1 - (17 - a) * 0.02 : a >= 10 ? 0.72 - (14 - a) * 0.04 : 0.35;
+    return YA.ovr(p) * k;
   };
   // 布陣の枠を、候補の少ない枠から順に、値打ちのいちばん高い選手で埋める
   YA.fillSlots = function (fm, pool, key) {
@@ -554,7 +555,7 @@
         const aff = p.aff[a] || 1;
         const g = e * 0.17 * p.rate * aff * roomF * cond * diligence * heightK(p, a) * stateK(p) * (YA.staffMult ? YA.staffMult(w, p, a) * YA.coachMult(w) * (w.campMult || 1) * dscMult : 1) * (p.adapt > 0 ? 0.92 : 1);
         // 高い値ほど伸びにくい
-        const hard = clamp(1.25 - p.ab[a] / 22, 0.25, 1);
+        const hard = clamp(1.25 - p.ab[a] / 22, 0.25, 1) * (p.ab[a] >= 15 ? clamp(1 - (p.ab[a] - 14) * 0.15, 0.1, 1) : 1);
         p.prog[a] = (p.prog[a] || 0) + g * hard;
         while (p.prog[a] >= 1 && p.ab[a] < 20) {
           p.prog[a] -= 1;
@@ -1230,11 +1231,17 @@
     }).sort((a, b) => a.weeks - b.weeks);
   };
 
+  // 潜在能力（行き着く高さ）を★0〜5に。能力が伸びても星は減らない
+  YA.potStars = function (p) {
+    const n = (p.pos === 'GK' ? YA.AB_GK : YA.AB_FIELD).length;
+    const v = p.pot / n;
+    return v >= 15.5 ? 5 : v >= 14 ? 4 : v >= 12.7 ? 3 : v >= 11.5 ? 2 : v >= 10.3 ? 1 : 0;
+  };
   YA.starsOf = function (p) {
-    // 見える伸びしろは★の幅。実際の余地（pot-合計）を段階に直す
-    const room = p.pot - abSum(p);
-    const s = clamp(Math.round(room / 45), 0, 5);
-    return [clamp(s - 1, 0, 5), clamp(s + 1, 0, 5)];
+    // 見える伸びしろは★の幅。高学年ほど見極めがつき、幅が狭くなる
+    const s = YA.potStars(p);
+    const sw = p.grade >= 3 ? 0 : 1;
+    return [clamp(s - sw, 0, 5), clamp(s + sw, 0, 5)];
   };
 
   YA.summaryOf = function (w) {

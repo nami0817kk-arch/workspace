@@ -261,8 +261,7 @@
     const sh = ((hs % 100) / 100 - 0.5) * width * 0.8;
     const o = YA.ovr(p);
     const lo = o - width / 2 + sh;
-    const room = p.pot - YA.abSum(p);
-    const st = clamp(Math.round(room / 45), 0, 5);
+    const st = YA.potStars(p);
     const sw = c.seen >= 3 ? 0 : c.seen >= 1 ? 1 : 2;
     // 栄冠ナイン風のランク（見えている範囲の真ん中から。S〜E）。見る回数が増えるほど確かになる
     const score = ((lo + width / 2) - RANK_BASE) / RANK_SPAN * 0.5 + (clamp(st - sw, 0, 5) + clamp(st + sw, 0, 5)) / 2 / 5 * 0.5;
@@ -371,12 +370,12 @@
       if (a.status === 'pro' && a.age <= 21 && !a.awards.some((x) => /新人/.test(x.name)) && rel >= 0.5) award(lg + ' 新人王', 0.3);
     }
     if (a.status === 'pro' && a.ovr >= 17.2 && w._asiaY !== w.year && r() < clamp((a.ovr - 17.2) * 0.2 + 0.08, 0.08, 0.4)) { w._asiaY = w.year; s.awards.push('アジア年間最優秀選手'); a.awards.push({ y: w.year, name: 'アジア年間最優秀選手' }); }
-    if (a.status === 'pro' && a.abroad && LV[lg] >= 15.3 && a.ovr >= 17) {
+    if (a.status === 'pro' && a.abroad && LV[lg] >= 15.3 && a.ovr >= 17.5) {
       award('バロンドール候補（30人）', 0.5);
-      if (a.ovr >= 18.3) award('バロンドール', clamp((a.ovr - 18.3) * 0.2 + 0.04, 0.04, 0.25));
+      if (a.ovr >= 18.5) award('バロンドール', clamp((a.ovr - 18.5) * 0.25 + 0.05, 0.05, 0.3)); // 総合力185以上
     }
     // W杯（4年に1度）：代表に入っている子
-    if (a.nat > 0 && w.year % 4 === 2 && a.ovr >= 15.3 && (w._wcY !== w.year || w._wcN < 4) && r() < 0.45) {
+    if (a.nat > 0 && w.year % 4 === 2 && a.ovr >= 16.3 && (w._wcY !== w.year || w._wcN < 4) && r() < 0.45) {
       if (w._wcY !== w.year) { w._wcY = w.year; w._wcN = 0; }
       w._wcN++;
       const g = fw ? r.int(0, a.ovr >= 16 ? 3 : 1) : 0;
@@ -401,7 +400,7 @@
       a.titles = a.titles || [];
       a.awards = a.awards || [];
       a.age++;
-      if (a.age <= 23) a.ovr = Math.round((a.ovr + r() * (a.ovr >= 15 ? 0.35 : 0.6)) * 10) / 10; // 上に行くほど伸びは鈍る
+      if (a.age <= 23) a.ovr = Math.round((a.ovr + r() * (a.ovr >= 17.5 ? 0.08 : a.ovr >= 15.8 ? 0.2 : a.ovr >= 14 ? 0.35 : 0.6)) * 10) / 10; // 上に行くほど伸びは鈍る（200は歴史上No.1）
       else if (a.age >= 30) a.ovr = Math.round((a.ovr - r() * 0.5) * 10) / 10;
       if (a.status === 'univ' && a.age >= 22 && a.ovr >= 12.4 && r() < (a.pushed === 'univ' ? 0.6 : 0.4)) {
         a.status = 'pro';
@@ -432,11 +431,11 @@
           YA.noteTier(w, 1, `卒業生の${a.name}が${a.club}（${a.league}）へ${abroad ? '海外移籍' : '移籍'}（移籍金およそ${fee}万円）。連帯貢献金 +${share}万円がクラブに入ります`);
         }
         // U-21代表（決定16）：21歳以下で力のある卒業生。のちにフル代表の足がかり
-        if (a.age <= 21 && a.ovr >= 12.2 && r() < 0.22) {
+        if (a.age <= 21 && a.ovr >= 13.4 && r() < 0.2) {
           a.u21 = (a.u21 || 0) + 1;
           if (a.u21 === 1) YA.noteTier(w, 1, `卒業生の${a.name}がU-21日本代表に選ばれました`);
         }
-        if (a.ovr >= 14 && r() < clamp((a.u21 ? 0.14 : 0.1) + (a.ovr - 14) * 0.12, 0.1, 0.85)) {
+        if (a.ovr >= 15.8 && r() < clamp((a.u21 ? 0.12 : 0.08) + (a.ovr - 15.8) * 0.15, 0.08, 0.85)) {
           a.nat = (a.nat || 0) + 1;
           if (a.nat === 1) YA.noteTier(w, 1, `卒業生の${a.name}が日本代表に初めて選ばれました！`);
         }
@@ -480,7 +479,8 @@
     if (p.main === pos) return { ok: false, msg: 'すでにそのポジションです' };
     if (p.pos === 'GK' || pos === 'GK') return { ok: false, msg: 'GKとの行き来は、この版ではできません' };
     const r = YA.rngOf(w.seed + w.week * 3 + p.num + YA.hash(pos));
-    const stub = p.pers['教えの受け止め方'] === '頑固' ? 0.55 : p.pers['教えの受け止め方'] === '反骨心' ? 0.35 : 0.08;
+    const aptTo = p.apt ? p.apt[pos] : 10;
+    const stub = (p.pers['教えの受け止め方'] === '頑固' ? 0.55 : p.pers['教えの受け止め方'] === '反骨心' ? 0.35 : 0.08) + (aptTo < 14 ? 0.3 : aptTo < 17 ? 0.08 : 0);
     if (r() < stub) { p.conf = clamp(p.conf - 3, 0, 100); return { ok: false, msg: `${p.name}は納得せず、「今のポジションでやりたい」と断った` }; }
     const best = p.best;
     const L = YA.POS_LABEL;
@@ -491,7 +491,7 @@
     // いまの並びに入っているなら、新しいポジションの役割に直す
     for (const k of ['lineupA', 'lineupB']) w[k].forEach((sl, i) => { if (sl.pid === pid) YA.fixSlotRole(sl, i); });
     if (pos === best) { p.spurt = Math.max(p.spurt, 5); p.bestKnown = true; return { ok: true, msg: `${L[pos]}に変更。しっくりきているようだ（向いていたポジション）。慣れるまで約12週` }; }
-    return { ok: true, msg: `${L[pos]}に変更しました。適性は${p.apt[pos]}（いまの最適は${L[best]}）。慣れるまで約12週は力が落ちます` };
+    return { ok: true, msg: `${L[pos]}に変更しました。適性は${YA.aptGrade(p.apt[pos])}${Math.round(p.apt[pos])}。慣れるまで約12週は力が落ち、` + (p.apt[pos] < 14 ? '向いていない位置なので、慣れたあとも力は出しきれません' : '慣れると力を出せます') };
   };
 
   // ---------- 選手同士の関係（決定20）----------
@@ -557,7 +557,7 @@
       if (p.adapt > 0) p.adapt--;
       if (p.dorm) p.fat = clamp(p.fat - 2, 0, 100);
       // 本当に向いているポジションに気づく
-      if (p.pos !== 'GK' && !p.bestKnown && !noticed && !(w.year === 1 && w.week <= 5) && r() < 0.012 * (w.coach ? w.coach.eye / 10 : 1)) {
+      if (p.pos !== 'GK' && !p.bestKnown && !noticed && !(w.year === 1 && w.week <= 5) && r() < 0.006 * (w.coach ? w.coach.eye / 10 : 1)) {
         const best = p.best;
         if (best && best !== p.main && p.apt[best] - p.apt[p.main] > 1.0) {
           p.bestKnown = true;

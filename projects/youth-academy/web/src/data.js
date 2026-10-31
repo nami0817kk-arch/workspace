@@ -321,15 +321,47 @@
     p.pos = YA.GROUP[p.main];
     p.fam[p.main] = 14;
   };
+  // ---------- 総合力の物差し（0〜200）。200＝歴史上No.1の選手 ----------
+  // 内部の値（能力の平均 1〜20）を、水準がはっきりするように曲げて 0〜200 に直す
+  const RATE_PTS = [[1, 10], [5, 35], [8.5, 62], [11, 88], [13.6, 125], [15.8, 155], [17.5, 175], [19, 190], [20, 200]];
+  YA.rate = function (v) {
+    if (v == null || isNaN(v)) return 0;
+    for (let i = 1; i < RATE_PTS.length; i++) {
+      const [x0, y0] = RATE_PTS[i - 1];
+      const [x1, y1] = RATE_PTS[i];
+      if (v <= x1) return Math.round(y0 + ((Math.max(v, x0) - x0) / (x1 - x0)) * (y1 - y0));
+    }
+    return 200;
+  };
+  YA.rating = (p) => YA.rate(YA.ovr(p));
+  // 水準の表（総合力のめやす）
+  YA.LEVELS = [
+    [200, '歴史上No.1'],
+    [185, 'バロンドール級（世界の頂点）'],
+    [170, '世界のビッグクラブの主力'],
+    [155, '日本代表'],
+    [140, 'J1の主力・海外挑戦'],
+    [125, 'J1でやれる'],
+    [112, 'J2・J3でやれる'],
+    [100, 'プロ入りの目安'],
+    [88, '高3の全国レベル'],
+    [75, 'ユースのレギュラー'],
+    [62, '高1の平均'],
+    [0, '中学生の水準'],
+  ];
+  YA.levelOf = (r) => (YA.LEVELS.find(([t]) => r >= t) || YA.LEVELS[YA.LEVELS.length - 1])[1];
+
   // 適性の段階：◎ 本職（17以上）・○ こなせる（14以上）・△ 不慣れ（10以上）・× 不向き
   YA.aptGrade = (v) => (v >= 17 ? '◎' : v >= 14 ? '○' : v >= 10 ? '△' : '×');
+  YA.aptLabel = (v) => YA.aptGrade(v) + Math.round(v);
   // こなせるポジション（○以上）を、適性の高い順に
   YA.goodPositions = (p) => (p.pos === 'GK' ? ['GK'] : YA.POS15.filter((q) => q !== 'GK' && p.apt[q] >= 14).sort((a, b) => p.apt[b] - p.apt[a]));
   // 置いた場所での力の落ち方（0〜）。向いていない場所・逆足だと落ち、慣れると和らぐ。向いている場所に置くと少し上がる
   YA.slotPenalty = function (p, pos15) {
     if (!p.apt) return 0;
     if ((p.pos === 'GK') !== (pos15 === 'GK')) return 0.3;
-    let pen = clampN(((p.apt[p.main] || 10) - (p.apt[pos15] || 10)) * 0.02, -0.05, 0.25);
+    const natural = Math.max(p.apt[p.main] || 10, (p.best && p.apt[p.best]) || 0);
+    let pen = clampN((natural - (p.apt[pos15] || 10)) * 0.02, -0.05, 0.25);
     const fam = (p.fam && p.fam[pos15]) || 0;
     if (pen > 0) pen *= clampN(1 - fam / 14, 0.3, 1);
     const side = YA.SIDE[pos15];

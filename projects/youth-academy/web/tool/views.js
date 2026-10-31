@@ -204,7 +204,7 @@ async function clearEvents() {
     const lu = A.w.lineupA;
     ok(lu.length === 11 && new Set(lu.map((s) => s.pid)).size === 11 && A.w.players[lu[0].pid].pos === 'GK', 'おまかせ編成で11人とGKがそろう');
     const off = lu.filter((s, i) => A.w.players[s.pid].apt[d.defaultView.YA.pos15OfSlot(s, i)] < 14).length;
-    ok(off <= 2, 'おまかせ編成では、適性の合わない先発がほとんどいない ' + off);
+    ok(off <= 1, 'おまかせ編成では、適性の合わない先発がほとんどいない（Aに本職がいないときだけ） ' + off);
     [...d.querySelectorAll('.tabs button')].find((b) => b.textContent.trim() === '編成').click();
   }
   ok(txt().includes('ベンチ（9人）') && txt().includes('控え外') && d.querySelectorAll('.pitem.sq').length >= 9, '編成の画面');
@@ -391,6 +391,18 @@ async function clearEvents() {
     rail('試合');
     ok(txt().includes('キックオフ'), '試合の前の画面');
     ok(errors.length === 0, '例外: ' + errors.slice(0, 3).join(' | '));
+    // 先発をBに下げる：代わりに入る子を選ぶ画面が出て、選ぶと入れ替わる
+    {
+      const sid = A.w.lineupA[4].pid;
+      A.pSel = sid; A.tab = 'players'; w.YA._ui.render();
+      btn('Bに回す').click();
+      const sh = d.querySelector('.sheet');
+      ok(!!sh && sh.textContent.includes('先発に入る子を選ぶ'), '先発をBに下げると、代わりを選ぶ画面が出る');
+      const first = sh && sh.querySelector('.pitem');
+      if (first) first.click();
+      ok(A.w.players[sid].team === 'B' && !A.w.lineupA.some((s) => s.pid === sid) && A.w.lineupA.length === 11, '選ぶと先発が入れ替わり、下げた子はBへ');
+      ok(A.w.benchA.length === 9 && new Set(A.w.lineupA.map((s) => s.pid).concat(A.w.benchA)).size === 20, '入れ替えのあともAは20人で重ならない');
+    }
     console.log(fails ? '失敗 ' + fails : '画面の点検: すべて通過');
     process.exit(fails ? 1 : 0);
   }
