@@ -202,56 +202,59 @@
   }
 
   // ---------- 布陣ボード（指で動かす・升目に吸い付く） ----------
-  const GX = 4;
-  const GY = 5;
+  // 横向き（右へ攻める）。左サイドが上。相手陣の奥（92m より先）は使わないので切り落として、そのぶん大きく見せる
+  const VIEW_LEN = 92;
   function boardEl(t, opts) {
     const wrap = h('div', { class: 'board' });
-    const svg = s('svg', { viewBox: '-3 -3 74 118', preserveAspectRatio: 'xMidYMid meet' });
-    const stripes = 10;
-    for (let i = 0; i < stripes; i++) svg.append(s('rect', { x: -3, y: -3 + (111 / stripes) * i, width: 74, height: 111 / stripes + 0.1, fill: i % 2 ? '#2f9a5f' : '#37a869' }));
+    const svg = s('svg', { viewBox: `-3 -3 ${VIEW_LEN + 3} ${W + 6}`, preserveAspectRatio: 'xMidYMid meet' });
+    const stripes = 9;
+    for (let i = 0; i < stripes; i++) svg.append(s('rect', { x: -3 + ((VIEW_LEN + 3) / stripes) * i, y: -3, width: (VIEW_LEN + 3) / stripes + 0.1, height: W + 6, fill: i % 2 ? '#2f9a5f' : '#37a869' }));
     const ln = { stroke: 'rgba(255,255,255,.9)', 'stroke-width': 0.5, fill: 'none' };
-    svg.append(s('rect', Object.assign({ x: 0, y: 0, width: W, height: L }, ln)), s('line', Object.assign({ x1: 0, y1: L / 2, x2: W, y2: L / 2 }, ln)), s('circle', Object.assign({ cx: 34, cy: L / 2, r: 9.15 }, ln)));
-    for (const [y0, dir] of [[0, 1], [L, -1]]) {
-      svg.append(s('rect', Object.assign({ x: 13.84, y: dir > 0 ? y0 : y0 - 16.5, width: 40.32, height: 16.5 }, ln)), s('rect', Object.assign({ x: 24.84, y: dir > 0 ? y0 : y0 - 5.5, width: 18.32, height: 5.5 }, ln)));
-    }
+    svg.append(s('rect', Object.assign({ x: 0, y: 0, width: L, height: W }, ln)), s('line', Object.assign({ x1: L / 2, y1: 0, x2: L / 2, y2: W }, ln)), s('circle', Object.assign({ cx: L / 2, cy: W / 2, r: 9.15 }, ln)));
+    svg.append(s('rect', Object.assign({ x: 0, y: 13.84, width: 16.5, height: 40.32 }, ln)), s('rect', Object.assign({ x: 0, y: 24.84, width: 5.5, height: 18.32 }, ln)));
+    svg.append(s('text', { x: VIEW_LEN - 1, y: 2.4, 'text-anchor': 'end', fill: 'rgba(255,255,255,.8)', 'font-size': 3, 'font-weight': 800 }, '攻める方向 ▶'));
+    // 横の位置 x（0=左サイド）と縦の位置 y（0=自陣ゴール）→ 画面の座標
+    const at = (x, y) => ({ sx: 4 + y * 78, sy: x * W });
     // 置ける立ち位置（定番の布陣の位置を集めたもの）。動かしている間だけ、ポジション名つきで見える
     const grid = s('g', { opacity: 0.0, id: 'gridDots' });
     for (const sp of spots()) {
-      const gx = sp.x * W;
-      const gy = L - (4 + sp.y * 78);
-      grid.append(s('circle', { cx: gx, cy: gy, r: 3.2, fill: 'rgba(255,255,255,.18)', stroke: '#fff', 'stroke-width': 0.35, 'stroke-dasharray': '1 0.8' }), s('text', { x: gx, y: gy + 1.1, 'text-anchor': 'middle', fill: '#fff', 'font-size': 2.6, 'font-weight': 800 }, YA.POS_LABEL[YA.pos15OfPoint(sp.x, sp.y)]));
+      const { sx, sy } = at(sp.x, sp.y);
+      grid.append(s('circle', { cx: sx, cy: sy, r: 3.6, fill: 'rgba(255,255,255,.18)', stroke: '#fff', 'stroke-width': 0.35, 'stroke-dasharray': '1 0.8' }), s('text', { x: sx, y: sy + 1.1, 'text-anchor': 'middle', fill: '#fff', 'font-size': 2.8, 'font-weight': 800 }, YA.POS_LABEL[YA.pos15OfPoint(sp.x, sp.y)]));
     }
     svg.append(grid);
     const layer = s('g', {});
     svg.append(layer);
     wrap.append(svg);
-    const toM = (i) => ({ mx: t.lineup[i].x * W, my: 4 + t.lineup[i].y * 78 });
     const colors = { GK: '#f39c12', DF: '#2f7ed8', MF: '#16a34a', FW: '#e0453a' };
+    const lab = (y, fill, size, str) => s('text', { y, 'text-anchor': 'middle', fill, 'font-size': size, 'font-weight': 900, stroke: 'rgba(0,0,0,.55)', 'stroke-width': 0.8, 'paint-order': 'stroke' }, str);
     let drag = null;
     function draw() {
       layer.replaceChildren();
       t.lineup.forEach((sl, i) => {
         const p = t.players[sl.pid];
-        const { mx, my } = toM(i);
-        const sx = mx;
-        const sy = L - my; // 上へ攻める
+        const { sx, sy } = at(sl.x, sl.y);
         const pos = YA.posOfSlot(sl, i);
         const p15 = YA.pos15OfSlot(sl, i);
-        const pen = YA.slotPenalty(p, p15);
+        const grade = YA.aptGrade(p.apt ? p.apt[p15] : 17);
         const sel = opts.selected && opts.selected() === i;
         const g = s('g', { transform: `translate(${sx} ${sy})`, style: 'cursor:grab' });
-        if (sel) g.append(s('circle', { r: 6.4, fill: 'none', stroke: '#ffd54a', 'stroke-width': 1.1 }));
-        const fit = YA.Match.prototype.roleFit.call(null, t, i);
-        g.append(s('circle', { r: 4.6, cx: 0.4, cy: 0.9, fill: 'rgba(0,0,0,.3)' }), s('circle', { r: 4.6, fill: colors[pos], stroke: '#fff', 'stroke-width': 0.9 }), s('text', { y: 1.6, 'text-anchor': 'middle', fill: '#fff', 'font-size': 5, 'font-weight': 900 }, p.num));
-        g.append(s('text', { y: -6.2, 'text-anchor': 'middle', fill: '#fff6c2', 'font-size': 3.3, 'font-weight': 900, stroke: 'rgba(0,0,0,.5)', 'stroke-width': 0.7, 'paint-order': 'stroke' }, YA.POS_LABEL[p15]));
-        g.append(s('text', { y: 9.4, 'text-anchor': 'middle', fill: '#fff', 'font-size': 3.5, 'font-weight': 800, stroke: 'rgba(0,0,0,.45)', 'stroke-width': 0.7, 'paint-order': 'stroke' }, surname(p)));
-        g.append(s('text', { y: 13, 'text-anchor': 'middle', fill: fit < 0 || pen > 0.06 ? '#ffb3b3' : fit > 0 ? '#fff3b0' : '#e8f5ec', 'font-size': 3, 'font-weight': 700, stroke: 'rgba(0,0,0,.45)', 'stroke-width': 0.6, 'paint-order': 'stroke' }, (sl.role.length > 6 ? sl.role.slice(0, 6) + '…' : sl.role) + '(' + (YA.DUTY[sl.duty] ? YA.DUTY[sl.duty].short : '') + ')' + (fit > 0 ? ' ◎' : fit < 0 ? ' ×' : '') + (pen > 0.06 ? ' ▽' : '')));
+        if (sel) g.append(s('circle', { r: 6.6, fill: 'none', stroke: '#ffd54a', 'stroke-width': 1.2 }));
+        // 適性が合っていない枠は、丸のふちを黄（△）・赤（×）にする
+        const ring = grade === '×' ? '#ff4d4d' : grade === '△' ? '#ffd54a' : '#fff';
+        g.append(s('circle', { r: 4.6, cx: 0.4, cy: 0.9, fill: 'rgba(0,0,0,.3)' }), s('circle', { r: 4.6, fill: colors[pos], stroke: ring, 'stroke-width': ring === '#fff' ? 0.9 : 1.5 }), s('text', { y: 1.7, 'text-anchor': 'middle', fill: '#fff', 'font-size': 4.6, 'font-weight': 900 }, p.num));
+        g.append(lab(-5.8, '#fff', 3.4, surname(p)));
+        // ポジション名と適性は丸の右に（縦に並ぶ最終ラインでも、名前と重ならない）
+        if (p15 !== 'GK') g.append(s('text', { x: 5.3, y: 1.1, 'text-anchor': 'start', fill: ring === '#fff' ? '#fff6c2' : ring, 'font-size': 2.8, 'font-weight': 900, stroke: 'rgba(0,0,0,.55)', 'stroke-width': 0.8, 'paint-order': 'stroke' }, YA.POS_LABEL[p15] + (p15 === 'GK' ? '' : grade)));
+        if (opts.showRole && opts.showRole()) {
+          const fit = YA.Match.prototype.roleFit.call(null, t, i);
+          g.append(lab(8.2, fit < 0 ? '#ffb3b3' : fit > 0 ? '#fff3b0' : '#e8f5ec', 2.5, (sl.role.length > 5 ? sl.role.slice(0, 5) + '…' : sl.role) + (YA.DUTY[sl.duty] ? YA.DUTY[sl.duty].short : '')));
+        }
         g.addEventListener('pointerdown', (ev) => {
           ev.preventDefault();
           g.setPointerCapture(ev.pointerId);
           drag = { i, g, moved: false };
           opts.onSelect && opts.onSelect(i);
-          grid.setAttribute('opacity', 0.55);
+          grid.setAttribute('opacity', 0.6);
         });
         g.addEventListener('pointermove', (ev) => {
           if (!drag || drag.i !== i) return;
@@ -263,15 +266,15 @@
           let best = null;
           let bd = 1e9;
           for (const sp of spots()) {
-            const d = Math.hypot(sp.x * W - q.x, 4 + sp.y * 78 - (L - q.y));
+            const a2 = at(sp.x, sp.y);
+            const d = Math.hypot(a2.sx - q.x, a2.sy - q.y);
             if (d < bd) { bd = d; best = sp; }
           }
           if (!best) return;
           drag.sp = best;
-          drag.gx = best.x * W;
-          drag.gy = 4 + best.y * 78;
           drag.moved = true;
-          g.setAttribute('transform', `translate(${drag.gx} ${L - drag.gy})`);
+          const a3 = at(best.x, best.y);
+          g.setAttribute('transform', `translate(${a3.sx} ${a3.sy})`);
         });
         const up = () => {
           if (!drag || drag.i !== i) return;
@@ -414,7 +417,7 @@
       renderBody();
       renderFm();
     }
-    board = boardEl(t, { selected: () => st.sel, onSelect: (i) => { if (st.tab === 'squad') { handlePick({ k: 'L', i }); return; } st.sel = i; if (o.tabs.some((x) => x[0] === 'role') && st.tab !== 'role' && st.tab !== 'sub') { st.tab = 'role'; renderTabs(); } renderBody(); board.redraw(); }, onChange });
+    board = boardEl(t, { selected: () => st.sel, showRole: () => !!st.showRole, onSelect: (i) => { if (st.tab === 'squad') { handlePick({ k: 'L', i }); return; } st.sel = i; if (o.tabs.some((x) => x[0] === 'role') && st.tab !== 'role' && st.tab !== 'sub') { st.tab = 'role'; renderTabs(); } renderBody(); board.redraw(); }, onChange });
     leftWrap.append(board, fmRow, saveRow);
     let slotSel = 0;
     function renderFm() {
@@ -424,6 +427,7 @@
       );
       const saved = store.get('forms', [null, null, null]);
       saveRow.replaceChildren(
+        h('button', { class: 'btn sm' + (st.showRole ? ' on' : ''), onclick: () => { st.showRole = !st.showRole; renderFm(); board.redraw(); } }, '役割'),
         h('span', { class: 'sub', style: 'align-self:center;font-weight:800' }, '保存'),
         ...[0, 1, 2].map((k) => h('button', { class: 'btn sm' + (slotSel === k ? ' on' : ''), onclick: () => { slotSel = k; renderFm(); } }, saved[k] ? `型${k + 1}●` : `型${k + 1}`)),
         h('button', { class: 'btn sm', onclick: () => { const sv = store.get('forms', [null, null, null]); sv[slotSel] = { slots: t.lineup.map((x) => ({ x: x.x, y: x.y, role: x.role, duty: x.duty })) }; store.set('forms', sv); st.msgs = ['型' + (slotSel + 1) + 'に保存しました']; renderFm(); renderBody(); } }, '保存'),
