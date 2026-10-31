@@ -1118,7 +1118,7 @@
         if (p._pushFail) YA.addTrust(w, -2, p.name + 'のトップ昇格の推薦が通らなかった');
         if (p._sold) YA.addRep(w, 1);
         grads.push([p, note]);
-        out.push({ name: p.name, pos: p.pos, ovr: o, note });
+        out.push({ name: p.name, pos: p.pos, main: p.main, ovr: o, note });
         delete w.players[p.id];
       } else {
         p.grade++;

@@ -826,5 +826,15 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   Object.values(wa.players).forEach((p) => YA.faceSrc(wa, p));
   ok(new Set(Object.values(wa.players).map((p) => p.face)).size === Object.keys(wa.players).length, '入団のあとも名簿のなかで顔が重ならない');
 }
+// クラブを移った（契約満了・解任）あとも、入団の暦まで止まらずに1年回せる
+{
+  const wm = YA.newWorld(5);
+  const offs = YA.moveOffers(wm);
+  ok(new Set(offs.map((o) => o.tier + o.note)).size === 3, '誘いの3つに違いがある');
+  YA.moveTo(wm, offs[0], '');
+  ok(!!wm.scouting, '移ったあとも入団の情報がある');
+  let gm = 0;
+  try { while (wm.year === 1 && gm++ < 80) YA.simulate(wm, { until: 'week', stopOnImportant: false }); ok(wm.year === 2, '移ったあとも1年回せる'); } catch (e) { ok(false, '移ったあとに止まる: ' + e.message); }
+}
 console.log(fails ? '失敗 ' + fails : '育成の点検: すべて通過');
 process.exit(fails ? 1 : 0);

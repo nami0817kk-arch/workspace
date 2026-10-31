@@ -108,7 +108,7 @@
     wrap.style.cssText = 'flex:1;min-height:0;display:flex;gap:8px';
     main.append(wrap);
     if (w.phase === 'event' && w.events.length) showEvent();
-    else YA.promptsFor();
+    else if (!U().app.holdPrompts) YA.promptsFor();
   }
 
   function runWeek() {
@@ -128,14 +128,15 @@
     const res = YA.endWeek(w);
     YA.saveWorld();
     if (wasEnd && res) {
+      U().app.holdPrompts = true;
       rerender();
       modal((close) => h('div', { class: 'sheet-in', style: 'align-self:center;max-height:92%;flex:none;width:min(640px,96%);margin:auto;padding:12px' },
         h('div', { class: 'h', style: 'font-size:16px' }, '卒業式'),
         h('div', { class: 'note', style: 'margin:4px 0' }, `${res.out.length}人が巣立ち、新しい高1の${res.entered}人が入団しました（卒業生は「ほか」の名鑑で追えます）` + (res.contrib ? `　連帯貢献金が${res.contrib}万円入りました。` : '')),
         res.eval ? h('div', { class: 'card', style: 'padding:7px 10px;font-size:12px' }, h('b', {}, `今年の評価：${res.eval.letter}`), '　', res.eval.goals.map((g) => `${g.label}：${g.text}（${g.val}）${g.ok ? '達成' : g.score ? '惜しい' : '届かず'}`).join(' ／ ')) : null,
         res.dismissed ? h('div', { class: 'insight bad' }, `解任されました。${res.dismissed.name}（${YA.TIER_NAME[res.dismissed.tier]}）の指導者になります`) : null,
-        h('div', { class: 'pbody scroll', style: 'max-height:210px;padding:4px 6px' }, h('div', { class: 'plist' }, res.out.map((o) => h('div', { class: 'pitem' }, h('span', { class: 'pos ' + o.pos }, o.pos), h('span', { class: 'nm grow' }, o.name), h('span', { class: 'chip gray' }, '能力 ' + o.ovr), h('span', { class: 'sub' }, o.note))))),
-        h('button', { class: 'btn pri', style: 'margin-top:8px', onclick: close }, '新しい年度へ')));
+        h('div', { class: 'pbody scroll', style: 'max-height:210px;padding:4px 6px' }, h('div', { class: 'plist' }, res.out.map((o) => h('div', { class: 'pitem' }, h('span', { class: 'pos ' + o.pos }, YA.POS_LABEL[o.main] || o.pos), h('span', { class: 'nm grow' }, o.name), h('span', { class: 'chip gray' }, '能力 ' + o.ovr), h('span', { class: 'sub' }, o.note))))),
+        h('button', { class: 'btn pri', style: 'margin-top:8px', onclick: () => { U().app.holdPrompts = false; close(); rerender(); } }, '新しい年度へ')));
     } else rerender();
   }
 

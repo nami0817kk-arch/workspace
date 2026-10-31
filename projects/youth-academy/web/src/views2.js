@@ -31,9 +31,10 @@
     V().modal(() => box([
       h('div', { class: 'h', style: 'font-size:16px' }, '契約満了：これからのこと'),
       h('div', { class: 'note' }, `直近の評価は ${last ? last.letter : '-'}、信頼度は ${Math.round(w.club.trust)}。` + (refuse ? 'クラブは更新に消極的です。' : 'クラブは更新を前向きに考えています。')),
+      h('div', { class: 'note' }, `いまのクラブ：${YA.TIER_NAME[w.club.tier]}・今年の予算 ${w.club.total}万円・36人をよく知っている`),
       h('button', { class: 'btn pri', style: 'padding:9px', disabled: refuse, onclick: () => { YA.renewContract(w); save(); rerender(); } }, `${w.clubName}と契約を更新する（3年）`),
       h('div', { class: 'h', style: 'margin-top:4px' }, '他のクラブからの誘い（移ると、36人を一から知ることになります）'),
-      ...w.pendingContract.offers.map((o) => h('button', { class: 'btn', style: 'justify-content:space-between;padding:9px', onclick: () => { YA.moveTo(w, o, '契約満了で移りました。'); save(); rerender(); } }, h('b', {}, o.name), h('span', {}, `${YA.TIER_NAME[o.tier]}・予算およそ${o.budget}万円`))),
+      ...w.pendingContract.offers.map((o) => h('button', { class: 'btn', style: 'justify-content:space-between;padding:9px', onclick: () => { YA.moveTo(w, o, '契約満了で移りました。'); save(); rerender(); } }, h('span', { style: 'text-align:left' }, h('b', {}, o.name), o.note ? h('div', { class: 'sub', style: 'font-weight:600' }, o.note) : null), h('span', {}, `${YA.TIER_NAME[o.tier]}・予算およそ${o.budget}万円`))),
     ]));
   }
   function coachModal() {

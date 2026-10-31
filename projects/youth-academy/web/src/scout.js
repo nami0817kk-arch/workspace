@@ -452,6 +452,7 @@
   // ---------- 毎週の小さな処理 ----------
   YA.weekExtras = function (w) {
     const r = YA.rngOf(w.seed * 53 + w.year * 61 + w.week);
+    if (!w.scouting) w.scouting = YA.newScouting(); // 古い保存データ（クラブを移ったあと空になっていた）
     // 古い保存データ：性格は2つまでに減らす
     for (const p of Object.values(w.players)) YA.trimPers(p);
     if (w.scouting) for (const c of w.scouting.cands) YA.trimPers(c.p);
