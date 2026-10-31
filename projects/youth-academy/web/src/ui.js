@@ -18,7 +18,7 @@
   function goodPosRow(p) {
     const list = YA.goodPositions(p).filter((q) => q === p.main || (p.subs && p.subs.indexOf(q) >= 0) || (p.bestKnown && q === p.best));
     if (list.indexOf(p.main) < 0) list.unshift(p.main);
-    return h('span', { class: 'row', style: 'gap:3px;flex-wrap:wrap' }, list.map((q) => h('span', { class: 'aptchip' + (q === p.main ? ' cur' : ''), style: 'padding:1px 6px;font-size:10.5px' }, YA.POS_LABEL[q], h('b', {}, YA.aptGrade(p.apt[q])))));
+    return h('span', { class: 'row', style: 'gap:3px;flex-wrap:wrap' }, list.map((q) => h('span', { class: 'aptchip' + (q === p.main ? ' cur' : ''), style: 'padding:1px 6px;font-size:10.5px' }, YA.POS_LABEL[q], h('b', {}, YA.aptLabel(p.apt[q])))));
   }
   function aptBlock(p) {
     if (p.pos === 'GK') return h('div', { class: 'note' }, 'GK（ほかのポジションの適性は、この版では見ません）');
@@ -248,7 +248,7 @@
         g.append(s('circle', { r: 4.6, cx: 0.4, cy: 0.9, fill: 'rgba(0,0,0,.3)' }), s('circle', { r: 4.6, fill: colors[pos], stroke: ring, 'stroke-width': ring === '#fff' ? 0.9 : 1.5 }), s('text', { y: 1.7, 'text-anchor': 'middle', fill: '#fff', 'font-size': 4.6, 'font-weight': 900 }, p.num));
         g.append(lab(-5.8, '#fff', 3.4, surname(p)));
         // ポジション名と適性は丸の右に（縦に並ぶ最終ラインでも、名前と重ならない）
-        if (p15 !== 'GK') g.append(s('text', { x: 5.3, y: 1.1, 'text-anchor': 'start', fill: ring === '#fff' ? '#fff6c2' : ring, 'font-size': 2.8, 'font-weight': 900, stroke: 'rgba(0,0,0,.55)', 'stroke-width': 0.8, 'paint-order': 'stroke' }, YA.POS_LABEL[p15] + (p15 === 'GK' ? '' : grade)));
+        if (p15 !== 'GK') g.append(s('text', { x: 5.3, y: 1.1, 'text-anchor': 'start', fill: ring === '#fff' ? '#fff6c2' : ring, 'font-size': 2.8, 'font-weight': 900, stroke: 'rgba(0,0,0,.55)', 'stroke-width': 0.8, 'paint-order': 'stroke' }, YA.POS_LABEL[p15] + (p15 === 'GK' ? '' : YA.aptLabel(p.apt ? p.apt[p15] : 17))));
         if ((opts.showRole && opts.showRole()) || sel) {
           const fit = YA.Match.prototype.roleFit.call(null, t, i);
           g.append(s('text', { x: 5.3, y: p15 === 'GK' ? 1.1 : 4.3, 'text-anchor': 'start', fill: fit < 0 ? '#ffb3b3' : fit > 0 ? '#fff3b0' : '#e8f5ec', 'font-size': 2.3, 'font-weight': 800, stroke: 'rgba(0,0,0,.55)', 'stroke-width': 0.7, 'paint-order': 'stroke' }, (sl.role.length > 4 ? sl.role.slice(0, 4) + '…' : sl.role) + (YA.DUTY[sl.duty] ? '・' + YA.DUTY[sl.duty].short : '')));
@@ -348,6 +348,7 @@
     const ok = (p) => p.inj <= 0 && !(p.away > 0) && !(p.suspend > 0);
     const fm = t.lineup.map((s2) => ({ x: s2.x, y: s2.y }));
     const w = app.w;
+    // Aの20人から選ぶ（Bは入れない）
     const all = w ? Object.values(w.players).filter((p) => p.team === 'A') : Object.values(t.players);
     const pool = all.filter(ok);
     if (!pool.some((p) => p.pos === 'GK')) {
@@ -355,7 +356,10 @@
       if (g) pool.push(g);
     }
     const lineup = YA.fillSlots(fm, pool);
-    const bench = all.filter((p) => !lineup.some((l) => l && l.pid === p.id)).sort((a, b) => ok(b) - ok(a) || YA.ovr(b) - YA.ovr(a)).map((p) => p.id).slice(0, 9);
+    const rest = all.filter((p) => !lineup.some((l) => l && l.pid === p.id)).sort((a, b) => ok(b) - ok(a) || YA.ovr(b) - YA.ovr(a));
+    // ベンチ9人：控えのGKを1人は入れる
+    const gk = rest.find((p) => p.pos === 'GK' && ok(p));
+    const bench = (gk ? [gk] : []).concat(rest.filter((p) => p !== gk)).slice(0, 9).map((p) => p.id);
     if (w) {
       persistTeam(t);
       w.lineupA = lineup;
@@ -685,7 +689,7 @@
       const tired = Math.round(p.fat || 0);
       return h('button', { class: 'pitem sq' + (on ? ' on' : ''), style: compat ? '' : 'opacity:.3', onclick: () => handlePick(x) },
         posChip(p), h('span', { class: 'num' }, p.num), h('span', { class: 'nm grow', style: 'overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:2.6em' }, surname(p)), gtag(p),
-        aptv != null ? h('span', { class: 'chip ' + (aptv >= 14 ? 'trait' : 'gray'), style: 'font-size:9.5px' }, YA.aptGrade(aptv)) : null,
+        aptv != null ? h('span', { class: 'chip ' + (aptv >= 14 ? 'trait' : 'gray'), style: 'font-size:9.5px' }, YA.aptLabel(aptv)) : null,
         h('b', { style: 'width:26px;text-align:right' }, YA.ovr(p).toFixed(1)),
         p.inj > 0 ? h('span', { class: 'fit bad' }, '怪') : h('div', { class: 'bar stam', style: 'width:22px' }, h('i', { style: `width:${100 - tired}%;background:${tired > 60 ? '#d63a3a' : tired > 40 ? '#f0a020' : '#1a9d57'}` })));
     }
@@ -702,7 +706,7 @@
         top.append(h('div', { class: 'note', style: 'margin-top:2px' }, '入れ替える相手（ピッチの選手・ベンチ・控え外）をタップ'));
       } else top.append(h('div', { class: 'note' }, 'ピッチの先発・ベンチ・控え外の選手を1人タップ → 入れ替える相手をタップ。迷ったら左下の「おまかせ編成」。'));
       const off = offPos(t);
-      if (off.length) top.append(h('div', { class: 'note', style: 'color:#b02020;margin-top:2px' }, '適性の合っていない先発：' + off.map((x) => `${x.p.num} ${surname(x.p)}（${YA.POS_LABEL[x.p15]}${YA.aptGrade(x.p.apt[x.p15])}・本職${YA.POS_LABEL[x.p.main]}）`).join('、')));
+      if (off.length) top.append(h('div', { class: 'note', style: 'color:#b02020;margin-top:2px' }, '適性の合っていない先発：' + off.map((x) => `${x.p.num} ${surname(x.p)}（${YA.POS_LABEL[x.p15]}${YA.aptLabel(x.p.apt[x.p15])}・本職${YA.POS_LABEL[x.p.main]}）`).join('、')));
       if (st.msgs.length) top.append(h('div', { class: 'note', style: 'color:var(--ink);margin-top:2px' }, st.msgs[st.msgs.length - 1]));
       body.append(top);
       const bench = t.bench.map((id) => t.players[id]).filter(Boolean);

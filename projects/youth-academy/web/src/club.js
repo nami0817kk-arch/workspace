@@ -348,7 +348,7 @@
   YA.genStaffPublic = (r, role) => genStaff(r, role, 5, 12);
 
   // 規律（決定46・47）
-  const DISC = (id, name, text, rule, weightPick) => ({ id, name, weight: 0.9,
+  const DISC = (id, name, text, rule, weightPick, wt) => ({ id, name, weight: wt || 0.9,
     pick: (w, r) => { const c = Object.values(w.players).filter(weightPick); return c.length ? r.pick(c) : null; },
     text, opts: [
       o('見逃す', 'wait', (w, p) => { w.disc = clamp((w.disc == null ? 60 : w.disc) - 4, 0, 100); p.conf = clamp(p.conf + 1, 0, 100); }),
@@ -357,7 +357,7 @@
       o('練習を厳しくする（全員）', 'wait', (w) => { for (const q of Object.values(w.players)) { q.fat = clamp(q.fat + 5, 0, 100); } w.disc = clamp((w.disc == null ? 60 : w.disc) + 4, 0, 100); }),
       o('約束どおり処分する', 'firm', (w, p) => { const has = (w.rules || []).indexOf(rule) >= 0; w.disc = clamp((w.disc == null ? 60 : w.disc) + (has ? 8 : 3), 0, 100); if (has) YA.addTrust(w, 1); if (p.team === 'A' && YA.ovr(p) > 11.5) p.suspend = 1; }),
     ] });
-  E.push(DISC('late', '遅刻', (p) => `${pname(p)}が練習に遅刻してきた。理由は寝坊だという`, '遅刻をしない', (p) => p.pers['練習への向き合い'] === '練習嫌い' || p.pers['人との関わり'] === 'お調子者' || p.pers['感情の波'] === '気分屋'));
+  E.push(DISC('late', '遅刻', (p) => `${pname(p)}が練習に遅刻してきた。理由は寝坊だという`, '遅刻をしない', (p) => p.pers['練習への向き合い'] === '練習嫌い', 0.06));
   E.push(DISC('fight', 'もめごと', (p) => `${pname(p)}が練習中に仲間と言い合いになった。周りが止めに入った`, '挨拶と片付けを徹底する', (p) => p.pers['感情の波'] === '短気' || p.pers['プレーの気質'] === '闘争的' || p.pers['気持ちの強さ'] === '負けず嫌い'));
   E.push(DISC('slack', '練習の手抜き', (p) => `${pname(p)}の練習が明らかに手抜きになっている。コーチが指摘してきた`, '練習は全力で走る', (p) => p.pers['練習への向き合い'] === '練習嫌い' || p.unrest > 2));
 

@@ -323,13 +323,15 @@
   };
   // 適性の段階：◎ 本職（17以上）・○ こなせる（14以上）・△ 不慣れ（10以上）・× 不向き
   YA.aptGrade = (v) => (v >= 17 ? '◎' : v >= 14 ? '○' : v >= 10 ? '△' : '×');
+  YA.aptLabel = (v) => YA.aptGrade(v) + Math.round(v);
   // こなせるポジション（○以上）を、適性の高い順に
   YA.goodPositions = (p) => (p.pos === 'GK' ? ['GK'] : YA.POS15.filter((q) => q !== 'GK' && p.apt[q] >= 14).sort((a, b) => p.apt[b] - p.apt[a]));
   // 置いた場所での力の落ち方（0〜）。向いていない場所・逆足だと落ち、慣れると和らぐ。向いている場所に置くと少し上がる
   YA.slotPenalty = function (p, pos15) {
     if (!p.apt) return 0;
     if ((p.pos === 'GK') !== (pos15 === 'GK')) return 0.3;
-    let pen = clampN(((p.apt[p.main] || 10) - (p.apt[pos15] || 10)) * 0.02, -0.05, 0.25);
+    const natural = Math.max(p.apt[p.main] || 10, (p.best && p.apt[p.best]) || 0);
+    let pen = clampN((natural - (p.apt[pos15] || 10)) * 0.02, -0.05, 0.25);
     const fam = (p.fam && p.fam[pos15]) || 0;
     if (pen > 0) pen *= clampN(1 - fam / 14, 0.3, 1);
     const side = YA.SIDE[pos15];

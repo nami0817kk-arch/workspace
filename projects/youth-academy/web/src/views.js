@@ -356,6 +356,40 @@
       h('div', { class: 'note', style: 'font-size:10px' }, '棒の薄い緑＝次の+1までの進み／右の緑＝今月・灰＝今年の伸び')));
     return box;
   }
+  // Aの先発をBに下げる：その位置に入る子を、先に選んでもらう（Aのベンチ・Bから。位置の適性の順）
+  function demoteStarter(p) {
+    const w = W();
+    const i = w.lineupA.findIndex((s) => s.pid === p.id);
+    const sl = w.lineupA[i];
+    const p15 = YA.pos15OfSlot(sl, i);
+    const can = (q) => q.inj <= 0 && !(q.suspend > 0) && !(q.away > 0) && (q.pos === 'GK') === (p15 === 'GK');
+    const cands = Object.values(w.players).filter((q) => q.id !== p.id && !w.lineupA.some((s) => s.pid === q.id) && can(q)).sort((a, b) => YA.slotValue(b, p15) - YA.slotValue(a, p15)).slice(0, 12);
+    const pick = (q, close) => {
+      sl.pid = q.id;
+      YA.fixSlotRole(sl, i);
+      const bi = w.benchA.indexOf(q.id);
+      if (bi >= 0) {
+        // Aのベンチから先発へ。空いたベンチには、Bのいちばん力のある控えを上げる
+        const fill = Object.values(w.players).filter((x) => x.team === 'B' && x.id !== p.id && x.inj <= 0 && !w.lineupB.some((s) => s.pid === x.id)).sort((a, b) => YA.ovr(b) - YA.ovr(a))[0];
+        if (fill) { w.benchA[bi] = fill.id; fill.team = 'A'; w.benchB = (w.benchB || []).filter((id) => id !== fill.id); } else w.benchA.splice(bi, 1);
+        w.benchB = (w.benchB || []).concat([p.id]);
+      } else {
+        // Bから上げる。Bでその子がいた場所に、下げた子が入る
+        q.team = 'A';
+        const lb = w.lineupB.findIndex((s) => s.pid === q.id);
+        if (lb >= 0) { w.lineupB[lb].pid = p.id; YA.fixSlotRole(w.lineupB[lb], lb); } else { const k = (w.benchB || []).indexOf(q.id); if (k >= 0) w.benchB[k] = p.id; else w.benchB = (w.benchB || []).concat([p.id]); }
+      }
+      p.team = 'B';
+      YA.saveWorld();
+      close();
+      rerender();
+    };
+    modal((close) => h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(560px,96%);max-height:94%;padding:10px 12px;gap:5px;overflow:auto' },
+      h('div', { class: 'row' }, h('div', { class: 'h grow' }, `${p.name}をBに下げる：${YA.POS_LABEL[p15]}の先発に入る子を選ぶ`), h('button', { class: 'btn sm', onclick: close }, 'やめる')),
+      h('div', { class: 'note' }, '適性の高い順に並べています。Aのベンチから選ぶと、空いたベンチにはBのいちばん力のある子が上がります。'),
+      ...cands.map((q) => h('button', { class: 'pitem', onclick: () => pick(q, close) }, posc(q), YA.faceEl(w, q, 22), h('span', { class: 'nm grow', style: 'text-align:left' }, `${q.num} ${q.name}`), h('span', { class: 'sub' }, (w.benchA.indexOf(q.id) >= 0 ? 'Aのベンチ' : 'B') + '・' + gradeName(q.grade)), h('span', { class: 'chip ' + (q.apt[p15] >= 14 ? 'trait' : 'gray') }, YA.POS_LABEL[p15] + YA.aptLabel(q.apt[p15])), h('b', { style: 'width:30px;text-align:right' }, YA.ovr(q).toFixed(1)))),
+      cands.length ? null : h('div', { class: 'note' }, '入れられる子がいません（怪我や出場停止）。')));
+  }
   function swapTeam(p) {
     const w = W();
     const bi = w.lineupB.findIndex((s) => s.pid === p.id);
@@ -365,7 +399,8 @@
       if (!r) { modal((close) => h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(420px,95%);padding:12px;gap:8px' }, h('div', { class: 'h' }, 'Bの控えがいません'), h('button', { class: 'btn pri', onclick: close }, '閉じる'))); return; }
       YA.swapB(w, bi, r.id);
     }
-    if (w.lineupA.some((s) => s.pid === p.id) || w.lineupB.some((s) => s.pid === p.id)) {
+    if (w.lineupA.some((s) => s.pid === p.id)) return demoteStarter(p);
+    if (w.lineupB.some((s) => s.pid === p.id)) {
       modal((close) => h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(420px,95%);padding:12px;gap:8px' }, h('div', { class: 'h' }, '先発にいる選手です'), h('div', { class: 'note' }, 'まず試合の「選手と役割」で、ベンチと入れ替えてから動かしてください。'), h('button', { class: 'btn pri', onclick: close }, '閉じる')));
       return;
     }

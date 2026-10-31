@@ -855,6 +855,25 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   ok(act.reduce((s2, a) => s2 + a.titles.length + a.awards.length, 0) > 0, 'タイトルや賞が付くことがある');
   ok(act.every((a) => a.apps === a.seasons.reduce((s2, x) => s2 + x.apps, 0)), '通算の出場は年ごとの合計');
 }
+// 伸びしろの星は、能力が伸びても減らない／遅刻はほとんど起きない／日本代表は力のある子だけ／コンバートしても本職の力は出ない
+{
+  const ws = YA.newWorld(66);
+  const q = Object.values(ws.players).find((x) => x.pos !== 'GK');
+  const s0 = YA.starsOf(q).join();
+  for (const n of YA.AB_FIELD) q.ab[n] = Math.min(20, q.ab[n] + 3);
+  ok(YA.starsOf(q).join() === s0, '能力が伸びても星は減らない');
+  ok(YA.EVENTS.find((e) => e.id === 'late').weight <= 0.1, '遅刻はほとんど起きない');
+  const wn = YA.newWorld(67); let nat = 0;
+  for (let k = 0; k < 30; k++) { const a = YA.alumniEntry(wn, q, 'プロ'); a.name = '代表' + k; a.status = 'pro'; a.ovr = 14.5; wn.alumni.push(a); }
+  for (let y = 0; y < 4; y++) { wn.year = 2 + y; YA.alumniTick(wn); for (const a of wn.alumni) a.ovr = Math.min(a.ovr, 15); }
+  nat = wn.alumni.filter((a) => a.nat > 0).length;
+  ok(nat === 0, '能力15の卒業生は日本代表に選ばれない ' + nat);
+  const far = YA.POS15.filter((x) => x !== 'GK' && q.apt[x] < 10)[0];
+  q.pers['教えの受け止め方'] = '素直'; q.main = q.best; q.fam = {};
+  const pen0 = YA.slotPenalty(q, far);
+  q.main = far; q.pos = YA.GROUP[far]; q.fam[far] = 14;
+  ok(YA.slotPenalty(q, far) >= pen0 * 0.29 && YA.slotPenalty(q, far) > 0.05, '向いていない位置に登録を変えても、力は出しきれない');
+}
 // クラブを移った（契約満了・解任）あとも、入団の暦まで止まらずに1年回せる
 {
   const wm = YA.newWorld(5);
