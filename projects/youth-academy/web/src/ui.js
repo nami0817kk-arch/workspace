@@ -586,7 +586,7 @@
       const aptv = p15 && p.apt ? p.apt[p15] : null;
       const tired = Math.round(p.fat || 0);
       return h('button', { class: 'pitem sq' + (on ? ' on' : ''), style: compat ? '' : 'opacity:.3', onclick: () => handlePick(x) },
-        posChip(p), h('span', { class: 'num' }, p.num), h('span', { class: 'nm grow', style: 'overflow:hidden;text-overflow:ellipsis;white-space:nowrap' }, surname(p)), gtag(p),
+        posChip(p), YA.faceEl(app.w, p, 24), h('span', { class: 'num' }, p.num), h('span', { class: 'nm grow', style: 'overflow:hidden;text-overflow:ellipsis;white-space:nowrap' }, surname(p)), gtag(p),
         aptv != null ? h('span', { class: 'chip ' + (aptv >= 14 ? 'trait' : 'gray'), style: 'font-size:9.5px' }, '適' + aptv) : null,
         h('b', { style: 'width:26px;text-align:right' }, YA.ovr(p).toFixed(1)),
         p.inj > 0 ? h('span', { class: 'fit bad' }, '怪') : h('div', { class: 'bar stam', style: 'width:22px' }, h('i', { style: `width:${100 - tired}%;background:${tired > 60 ? '#d63a3a' : tired > 40 ? '#f0a020' : '#1a9d57'}` })));
@@ -697,7 +697,7 @@
     const top = h('div', { class: 'pre-top' });
     if (sched) {
       const cal = YA.calendar(w.week);
-      top.append(h('div', { class: 'opp on', style: 'cursor:default' }, h('b', {}, h('span', { class: 'sw', style: 'background:' + opp.color }), `${opp.kindLabel || ''}  ${opp.home ? 'ホーム' : 'アウェイ'}  vs ${opp.name}`), h('span', {}, opp.desc + '（フリー対戦に切り替えると成績に残りません）')));
+      top.append(h('div', { class: 'opp on', style: 'cursor:default' }, h('b', { style: 'display:flex;align-items:center;gap:5px' }, YA.emblemEl(app.w, opp.name, 20) || h('span', { class: 'sw', style: 'background:' + opp.color }), `${opp.kindLabel || ''}  ${opp.home ? 'ホーム' : 'アウェイ'}  vs ${opp.name}`), h('span', {}, opp.desc + '（フリー対戦に切り替えると成績に残りません）')));
       top.append(h('button', { class: 'btn sm', style: 'align-self:center', onclick: () => { app.free = true; render(); } }, 'フリー対戦'));
     } else if (app.free && w && w.phase === 'match') top.append(h('button', { class: 'btn sm', style: 'align-self:center', onclick: () => { app.free = false; render(); } }, '今週の試合へ戻る'));
     if (!sched) YA.OPPONENTS.forEach((o2, i) => top.append(h('button', { class: 'opp' + (i === app.opp ? ' on' : ''), onclick: () => { persistTeam(t); app.opp = i; render(); } }, h('b', {}, h('span', { class: 'sw', style: 'background:' + o2.color }), o2.name), h('span', {}, o2.desc))));

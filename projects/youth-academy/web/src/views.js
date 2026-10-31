@@ -54,7 +54,7 @@
     const wrap = h('div', { class: 'home' });
     // 左：今週
     const left = h('div', { class: 'card', style: 'width:38%;min-width:260px;padding:10px;display:flex;flex-direction:column;gap:6px;overflow-y:auto' });
-    left.append(h('div', { class: 'sub' }, w.clubName), h('div', { class: 'h', style: 'font-size:19px' }, `${w.year}年目  ${cal.month}第${cal.nth}週`), h('div', { class: 'note' }, `${YA.weekLabel(w) || '育成の週'} ／ ${YA.LEVEL_NAMES[w.league.level - 1]} ${YA.myRank(w)}位 ／ ${w.rec.w}勝${w.rec.d}分${w.rec.l}敗`));
+    left.append(h('div', { class: 'row', style: 'gap:6px' }, YA.emblemEl(w, w.clubName, 24), h('div', { class: 'sub' }, w.clubName)), h('div', { class: 'h', style: 'font-size:19px' }, `${w.year}年目  ${cal.month}第${cal.nth}週`), h('div', { class: 'note' }, `${YA.weekLabel(w) || '育成の週'} ／ ${YA.LEVEL_NAMES[w.league.level - 1]} ${YA.myRank(w)}位 ／ ${w.rec.w}勝${w.rec.d}分${w.rec.l}敗`));
     left.append(h('div', { style: 'border-top:1px dashed var(--line);padding-top:6px' }, h('div', { class: 'note' }, '今週の試合'), opp ? h('div', {}, h('b', {}, `${opp.home ? 'ホーム' : 'アウェイ'} vs ${opp.name}`), h('div', { class: 'note' }, opp.desc)) : h('div', { class: 'sub' }, 'なし（試合のない期間）。育成に集中できます')));
     const S = YA.summaryOf(w);
     left.append(h('div', { class: 'row', style: 'flex-wrap:wrap;gap:4px' }, S.injured.length ? h('span', { class: 'fit bad' }, '怪我 ' + S.injured.length + '人') : null, S.tired.length ? h('span', { class: 'fit bad' }, '疲れ ' + S.tired.length + '人') : null, S.lowconf.length ? h('span', { class: 'fit bad' }, '自信なし ' + S.lowconf.length + '人') : null, S.hot.length ? h('span', { class: 'fit good' }, '好調・成長期 ' + S.hot.length + '人') : null));
@@ -211,6 +211,7 @@
       const wk = tp ? Math.max(1, Math.ceil((100 - (p.tprog[tp] || 0)) / (lt ? 100 / lt.weeks : 1))) : 0;
       table.append(h('div', { class: 'pitem', style: 'cursor:default' },
         posc(p),
+        YA.faceEl(W(), p, 26),
         h('span', { class: 'num' }, p.num),
         h('span', { class: 'nm grow', style: 'min-width:0;overflow:hidden;text-overflow:ellipsis' }, p.name, ' ', h('span', { class: 'sub', style: 'font-weight:600' }, gradeName(p.grade) + (p.team === 'A' ? ' A' : ' B')), ' ', flags(p)),
         fatBar(p, 42),
@@ -261,7 +262,7 @@
     const sel = w.players[ui.pSel];
     const left = h('div', { class: 'card', style: 'width:262px;flex:none;display:flex;flex-direction:column;min-height:0;padding:5px' });
     const chips = h('div', { class: 'fm-row', style: 'margin-bottom:4px' }, [['all', '全員'], ['A', 'A'], ['B', 'B'], ['1', '高1'], ['2', '高2'], ['3', '高3'], ['GK', 'GK'], ['DF', 'DF'], ['MF', 'MF'], ['FW', 'FW'], ['star', '★'], ['inj', '怪我']].map(([k, n]) => h('button', { class: 'btn sm' + (f === k ? ' on' : ''), style: 'padding:4px 8px;min-height:32px;font-size:11.5px', onclick: () => { ui.pf = k; rerender(); } }, n)));
-    const list = h('div', { class: 'plist scroll', style: 'flex:1;min-height:0' }, filtered.map((p) => h('button', { class: 'pitem' + (p.id === sel.id ? ' on' : ''), onclick: () => { ui.pSel = p.id; const st = list.scrollTop; rerender(); const l2 = document.querySelector('.plist.scroll'); if (l2) l2.scrollTop = st; } }, posc(p), h('span', { class: 'num' }, p.num), h('span', { class: 'nm grow', style: 'overflow:hidden;text-overflow:ellipsis' }, p.name), h('span', { class: 'sub', style: 'font-size:10px' }, gradeName(p.grade) + p.team), h('b', { style: 'width:26px;text-align:right' }, YA.ovr(p).toFixed(1)), p.inj > 0 ? h('span', { class: 'fit bad' }, '怪') : null, p.star ? h('span', { style: 'color:#e6a800' }, '★') : null)));
+    const list = h('div', { class: 'plist scroll', style: 'flex:1;min-height:0' }, filtered.map((p) => h('button', { class: 'pitem' + (p.id === sel.id ? ' on' : ''), onclick: () => { ui.pSel = p.id; const st = list.scrollTop; rerender(); const l2 = document.querySelector('.plist.scroll'); if (l2) l2.scrollTop = st; } }, posc(p), YA.faceEl(W(), p, 24), h('span', { class: 'num' }, p.num), h('span', { class: 'nm grow', style: 'overflow:hidden;text-overflow:ellipsis' }, p.name), h('span', { class: 'sub', style: 'font-size:10px' }, gradeName(p.grade) + p.team), h('b', { style: 'width:26px;text-align:right' }, YA.ovr(p).toFixed(1)), p.inj > 0 ? h('span', { class: 'fit bad' }, '怪') : null, p.star ? h('span', { style: 'color:#e6a800' }, '★') : null)));
     left.append(chips, list);
     const right = h('div', { class: 'card pbody', style: 'flex:1;min-width:0' });
     const info = h('div', {});
@@ -270,6 +271,7 @@
     // 追加の情報（伸びしろの目安・状態・履歴）
     const stars = YA.starsOf(sel);
     const head = (h('div', { class: 'row', style: 'flex-wrap:wrap;gap:5px;padding:2px 2px 0' },
+      YA.faceEl(W(), sel, 40),
       h('span', { class: 'chip gray' }, `${gradeName(sel.grade)} / ${sel.team}チーム`), h('span', { class: 'chip gray' }, `疲れ ${Math.round(sel.fat)}`), h('span', { class: 'chip gray' }, `出場 ${sel.mins}分`),
       h('span', { class: 'chip trait' }, '伸びしろ ', YA.starsEl(stars), h('small', { style: 'font-weight:600;opacity:.8' }, '黒＝確実 灰＝かも')), ...flags(sel),
       h('button', { class: 'btn sm', onclick: () => { sel.star = !sel.star; YA.saveWorld(); rerender(); } }, sel.star ? '★ を外す' : '★ 注目の印'),

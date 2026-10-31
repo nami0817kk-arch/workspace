@@ -149,6 +149,8 @@ button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:poin
 .gtag.g1{background:#dff3e6;color:#1a7a43}
 .gtag.g2{background:#e6eefc;color:#2a5db0}
 .gtag.g3{background:#fdebd6;color:#a85d0c}
+.face{flex:none;border-radius:50%;object-fit:cover;background:#dfe3e8;border:1px solid rgba(0,0,0,.12)}
+.emb{flex:none;object-fit:contain;margin-right:3px}
 .sqgrid{display:grid;grid-template-columns:1fr 1fr;gap:3px 6px;margin-top:3px}
 .pitem.sq{min-height:34px;padding:3px 6px;gap:4px;font-size:11.5px}
 .rolecard{display:flex;align-items:center;gap:8px;width:100%;text-align:left;padding:7px 9px;border-radius:10px;border:1.5px solid var(--line);background:#f5f8fd;margin-bottom:4px}

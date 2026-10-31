@@ -9,6 +9,8 @@ require(path.join(__dirname, '../src/club.js'));
 require(path.join(__dirname, '../src/scout.js'));
 require(path.join(__dirname, '../src/extra.js'));
 require(path.join(__dirname, '../src/more.js'));
+require(path.join(__dirname, '../src/imgdata.js'));
+require(path.join(__dirname, '../src/art.js'));
 const YA = globalThis.YA;
 let fails = 0;
 const ok = (c, m) => { if (!c) { fails++; console.log('FAIL:', m); } };
@@ -716,6 +718,16 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   ok(now.id !== hurt && now.inj <= 0 && now.team === 'A', '怪我の先発がBの健康な選手で埋まる');
   ok(wi.players[hurt].team === 'B', '抜けた選手はBへ回る');
   ok(new Set(wi.lineupA.map((s) => s.pid).concat(wi.benchA)).size === 20, '穴埋めのあとも重複がない');
+}
+// 絵の素材：顔とエンブレムが十分にあり、同じリーグのエンブレムは重ならず、顔は名簿のなかで重ならない
+{
+  ok(YA.IMG.faces.length >= 40 && YA.IMG.emblems.length >= 60 && YA.IMG.title.startsWith('data:image/'), '素材の数 ' + YA.IMG.faces.length + '/' + YA.IMG.emblems.length);
+  ok(YA.IMG.faces.every((u) => u.startsWith('data:image/jpeg')) && YA.IMG.emblems.every((u) => u.startsWith('data:image/png')), '素材は data URI');
+  const wa = YA.newWorld(7);
+  const idx = wa.league.teams.map((t) => YA.emblemIndex(wa, t.name));
+  ok(new Set(idx).size === idx.length && idx.every((k) => k >= 0), '同じリーグのエンブレムは重ならない');
+  const srcs = Object.values(wa.players).map((p) => YA.faceSrc(wa, p));
+  ok(new Set(Object.values(wa.players).map((p) => p.face)).size === Object.keys(wa.players).length && srcs.every(Boolean), '名簿のなかで顔が重ならない');
 }
 console.log(fails ? '失敗 ' + fails : '育成の点検: すべて通過');
 process.exit(fails ? 1 : 0);
