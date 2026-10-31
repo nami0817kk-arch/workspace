@@ -246,7 +246,7 @@
         c.result = '優勝';
         w.trophies = (w.trophies || []).concat([{ year: w.year, name: s.cup === 'summer' ? '夏の全国大会' : '冬のカップ戦', rank: '優勝' }]);
         YA.noteTier(w, 1, (s.cup === 'summer' ? '夏の全国大会' : '冬のカップ戦') + 'で優勝しました！');
-        if (w.club) w.club.rep = clamp(w.club.rep + 4, 0, 100);
+        if (w.club) YA.addRep(w, 4);
       } else YA.noteTier(w, 3, (s.cup === 'summer' ? '夏の全国大会' : '冬のカップ戦') + `の${s.round}回戦を突破${pk}`);
     }
   };

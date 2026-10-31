@@ -28,7 +28,8 @@
   YA.INT_CANDS = 20; // 内部昇格の候補（中3）。8人まで決める
   YA.scoutWindow = function (w) {
     const wk = w.week;
-    return { int: wk >= 25 && wk <= 27, scout: wk <= 27, sel: wk >= 31 && wk <= 34 };
+    // scout＝声をかけられる（4〜11月）、explore＝スカウトに出られる（返事の届く28週を除く一年中。12月以降に会えた子は来年度の候補）
+    return { int: wk >= 25 && wk <= 27, scout: wk <= 27, explore: wk !== YA.SCOUT_RESULT_WEEK, sel: wk >= 31 && wk <= 34 };
   };
   YA.scoutActsLeft = function (w) {
     const a = w.scouting && w.scouting.acts;
@@ -47,7 +48,7 @@
     const wn = YA.scoutWindow(w);
     if (wn.int) return '内部昇格を決める（11月）';
     if (wn.sel) return 'セレクションの合否を決める（1月）';
-    if (wn.scout) return YA.scoutActsLeft(w) > 0 ? `スカウトに出る（今月あと${YA.scoutActsLeft(w)}回）` : 'スカウトの報告を見る（今月は出終わり）';
+    if (wn.explore) return YA.scoutActsLeft(w) > 0 ? `スカウトに出る（${wn.scout ? '' : '来年度の下見・'}今月あと${YA.scoutActsLeft(w)}回）` : 'スカウトの報告を見る（今月は出終わり）';
     return null;
   };
 
@@ -68,14 +69,14 @@
     // セレクションの応募者は、取りこぼされた子が来る：原石（今は低いが伸びしろが大きい）・低め（今も伸びしろも低い）・位置ちがい（登録が合っていない）
     const prof = kind === 'sel' ? (() => { const x = rng(); return x < 0.4 ? 'raw' : x < 0.7 ? 'low' : 'mis'; })() : null;
     let q = clamp(rng.int(-2, 2) * (dest === 'wide' ? 1.1 : 0.8) + (kind === 'scout' ? (eyeOf(w) - 10) * 0.08 + (D ? D.q : 0) : 0) + (kind === 'int' ? 0.2 : 0), -2, 2.4);
-    if (prof === 'raw') q = rng.int(-2, -1) * 0.9;
-    else if (prof === 'low') q = rng.int(-2, -1) * 0.8;
-    else if (prof === 'mis') q = rng.int(0, 1) * 0.8;
+    if (prof === 'raw') q = -2 + rng() * 0.5;
+    else if (prof === 'low') q = -1.8 + rng() * 0.8;
+    else if (prof === 'mis') q = -0.8 + rng() * 1.2;
     const id = 'c' + ++S.nextId + '_' + w.year;
     const gpos = prof === 'mis' && pos === 'GK' ? 'CM' : pos;
     const p = YA.genPlayer(rng, id, 1, gpos, q, used);
     p.grade = 0;
-    if (prof === 'raw') p.pot = YA.abSum(p) + rng.int(170, 250);
+    if (prof === 'raw') p.pot = YA.abSum(p) + rng.int(150, 220);
     else if (prof === 'low') p.pot = YA.abSum(p) + rng.int(20, 55);
     else if (prof === 'mis') {
       // 実力は十分だが、登録は別の括りのポジション
@@ -108,7 +109,8 @@
     const S = w.scouting;
     const D = YA.DESTS[dest];
     if (!D) return { ok: false, msg: '行き先を選んでください' };
-    if (!YA.scoutWindow(w).scout) return { ok: false, msg: 'スカウトに出られるのは4月〜11月です（返事は12月に届きます）' };
+    const wn = YA.scoutWindow(w);
+    if (!wn.explore) return { ok: false, msg: '返事が届く週は、スカウトに出られません' };
     if (YA.scoutActsLeft(w) <= 0) return { ok: false, msg: `今月のスカウトは${YA.SCOUT_PER_MONTH}回使いました。来月また出られます` };
     const room = 12 - S.cands.filter((c) => c.kind === 'scout' && c.status === 'open').length;
     if (room <= 0) return { ok: false, msg: '候補がいっぱいです。見送る子を決めてください' };
@@ -119,10 +121,14 @@
     if (r() < (eye - 8) * 0.05) n++;
     n = Math.min(n, 3, room);
     const found = [];
-    for (let i = 0; i < n; i++) found.push(genCand(w, r, 'scout', dest));
+    for (let i = 0; i < n; i++) {
+      const c = genCand(w, r, 'scout', dest);
+      if (!wn.scout) c.next = true; // 12月以降に会えた子：来年度の候補（声をかけられるのは4月から）
+      found.push(c);
+    }
     w.club.spent.scout += D.cost;
     useAct(w);
-    return { ok: true, msg: `${D.name}で${n}人の候補に会いました。名前は「スカウトの報告」に並んでいます`, found };
+    return { ok: true, msg: `${D.name}で${n}人の候補に会いました。` + (wn.scout ? '名前は「スカウトの報告」に並んでいます' : '来年度の候補として残り、4月から声をかけられます'), found };
   };
   // 見送る：候補の一覧から外して、枠を空ける
   YA.passCand = function (w, id) {
@@ -187,7 +193,7 @@
     const c = w.scouting.cands.find((x) => x.id === id);
     const b = YA.budget(w);
     if (!c || c.kind !== 'scout' || c.status !== 'open') return { ok: false, msg: '見に行けません' };
-    if (!YA.scoutWindow(w).scout) return { ok: false, msg: '見に行けるのは4月〜11月です' };
+    if (!YA.scoutWindow(w).explore) return { ok: false, msg: '返事が届く週は、見に行けません' };
     if (YA.scoutActsLeft(w) <= 0) return { ok: false, msg: `今月のスカウトは${YA.SCOUT_PER_MONTH}回使いました。来月また出られます` };
     if (c.seen >= 3) return { ok: false, msg: 'これ以上は見えません' };
     if (b.scout - w.club.spent.scout < 10) return { ok: false, msg: 'スカウトの配分が足りません' };
@@ -208,6 +214,7 @@
     const c = S.cands.find((x) => x.id === id);
     if (!c || c.status !== 'open') return { ok: false, msg: 'すでに決まっています' };
     if (!inWindow(w, c.kind)) return { ok: false, msg: WHEN[c.kind][1] };
+    if (c.next) return { ok: false, msg: `${c.p.name}は来年度の候補です。声をかけられるのは4月からです` };
     if (held(w) >= 12) return { ok: false, msg: '新入生の枠（12人）がいっぱいです' };
     if (c.foreign) {
       const reg = Object.values(w.players).filter((q) => YA.isForeign(q)).length + S.cands.filter((x) => x.foreign && (x.status === 'signed' || x.status === 'offered')).length;
@@ -269,8 +276,12 @@
     const signed = S.cands.filter((c) => c.status === 'signed').slice(0, 12);
     const names = new Set(used);
     let n = 0;
+    const faces = new Set(Object.values(w.players).map((q) => q.face).filter((f) => f != null));
     for (const c of signed) {
       const p = c.p;
+      // 候補のときの顔が、在籍の子と重なっていたら選び直す
+      if (p.face != null && faces.has(p.face)) p.face = null;
+      if (p.face != null) faces.add(p.face);
       p.grade = 1;
       p.id = 'p' + ++w.nextId;
       p.team = 'B';
@@ -301,7 +312,13 @@
         n++;
       }
     }
+    const carry = S.cands.filter((c) => c.kind === 'scout' && c.next && c.status === 'open');
     w.scouting = YA.newScouting();
+    for (const c of carry) {
+      c.next = false;
+      w.scouting.cands.push(c);
+    }
+    if (carry.length) YA.noteTier(w, 2, `去年の冬に会った${carry.length}人が、今年のスカウトの候補に入っています（クラブ→スカウト）`);
     return n;
   };
 
@@ -334,7 +351,8 @@
         if (a.age >= 19 && a.age <= 30 && r() < 0.17) {
           // 力のある若い選手は、海外のクラブへ移ることもある
           const abroad = a.ovr >= 13.8 && a.age <= 27 && r() < 0.35;
-          const fee = Math.round(Math.pow(Math.max(0, a.ovr - 9), 2.2) * 350 * (abroad ? 1.6 : 1));
+          // 国内の移籍金は小さく、海外は大きい
+          const fee = Math.round(abroad ? Math.pow(Math.max(0, a.ovr - 9), 2.2) * 560 : Math.pow(Math.max(0, a.ovr - 9), 2) * 80);
           const share = Math.round(fee * 0.015);
           a.transfers++;
           a.club = abroad ? '海外（' + r.pick(['イングランド', 'ドイツ', 'スペイン', 'オランダ', 'ベルギー', 'ポルトガル']) + '）' + r.pick(PRO_N) : r.pick(PRO) + ' ' + r.pick(PRO_N);
@@ -440,7 +458,7 @@
       w.scouting = YA.newScouting();
     }
     // 入団の暦：4月 スカウトが始まる／11月 内部昇格／12月 スカウトの返事／1月 セレクション
-    if (w.week === 1) YA.noteTier(w, 2, `新しい入団の季節です。スカウトは4月〜11月に月${YA.SCOUT_PER_MONTH}回まで（返事は12月）。内部昇格は11月、セレクションは1月に決めます。決めた子は来年の高1になります`);
+    if (w.week === 1) YA.noteTier(w, 2, `新しい入団の季節です。スカウトは月${YA.SCOUT_PER_MONTH}回まで出られ、声をかけられるのは4月〜11月（返事は12月）。内部昇格は11月、セレクションは1月に決めます。決めた子は来年の高1になります`);
     if (w.week === 25) YA.openInternal(w, true);
     if (w.week === 26) YA.openInternal(w);
     if (w.week === YA.SCOUT_RESULT_WEEK) {
