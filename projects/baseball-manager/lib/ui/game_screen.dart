@@ -1310,7 +1310,7 @@ class _AbilityCard extends StatelessWidget {
                                                           : Colors.grey)),
                                         ]),
                                         key: Key('note-${a.name}'),
-                                        style: const TextStyle(fontSize: 10))),
+                                        style: const TextStyle(fontSize: 11))),
                               ]))),
                   SizedBox(
                       width: 54,
@@ -1632,7 +1632,7 @@ class _PlanTile extends StatelessWidget {
                       style: Theme.of(context)
                           .textTheme
                           .bodySmall
-                          ?.copyWith(fontSize: 10)),
+                          ?.copyWith(fontSize: 11)),
                 ),
               ]),
             ),
@@ -1691,7 +1691,7 @@ class _AutoYearTile extends StatelessWidget {
                     style: Theme.of(context)
                         .textTheme
                         .bodySmall
-                        ?.copyWith(fontSize: 10)),
+                        ?.copyWith(fontSize: 11)),
               ),
             ]),
           ),
