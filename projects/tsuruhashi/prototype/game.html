@@ -1153,18 +1153,18 @@ function iconSvg(it, size, unknown){
 
 // ================= 保存 =================
 const KEY = 'tsuruhashi_v2', BAK = 'tsuruhashi_v2_bak';
-let S = fresh(), saveN = 0, loadBroken = false;
-function parseSave(raw){ try { const o = JSON.parse(raw); return o && typeof o === 'object' && o.v === 2 ? normalize(o) : null; } catch (e) { return null; } }
+let S = fresh(), saveN = 0, loadBroken = false, titleOpen = true;
+function parseSave(raw){ try { const o = JSON.parse(raw); return o && typeof o === 'object' && (o.v === 2 || o.v === 3) ? normalize(o) : null; } catch (e) { return null; } }
 function load(){
   const raw = TStore.get(KEY);
   if (!raw) return false;
   let o = parseSave(raw);
-  if (!o) { o = parseSave(TStore.get(BAK)); loadBroken = true; }
+  if (!o) { o = parseSave(TStore.get(BAK)); loadBroken = !!o; }
   if (!o) return false;
   S = o; return true;
 }
 function save(){
-  if (!pendingAway) S.last = NOW();   // おかえりの受け取り前は、留守の起点を動かさない
+  if (!pendingAway && !titleOpen) S.last = NOW();   // おかえりの受け取り前とタイトル画面の間は、留守の起点を動かさない
   try {
     if (!isFinite(S.ore) || !isFinite(S.dmg) || !isFinite(S.total)) { S = normalize(S); }   // 壊れた数は保存の前に直す
     const raw = JSON.stringify(S);
@@ -1174,7 +1174,7 @@ function save(){
 }
 
 // ================= 広告 =================
-let pendingAd = null, adTimer = 0;
+let pendingAd = null, adTimer = 0, lateAd = null;
 // 動画を見ずに効果が入る（ブラウザの試作だけ。アプリでは必ず動画）
 const noVideo = () => !APP;
 // 報酬型動画。見終えたら fn を呼ぶ。ブラウザの試作では、すぐ呼ぶ
@@ -1184,12 +1184,12 @@ function withAd(kind, fn){
   pendingAd = fn;
   appPost({ type:'reward', kind });
   clearTimeout(adTimer);
-  adTimer = setTimeout(() => { if (pendingAd) { pendingAd = null; toast('動画を読み込めませんでした', '少し待ってからもう一度お試しください'); updateUI(true); } }, 90000);
+  adTimer = setTimeout(() => { if (pendingAd) { lateAd = { fn: pendingAd, t: Date.now() }; pendingAd = null; toast('動画を読み込めませんでした', '少し待ってからもう一度お試しください'); updateUI(true); } }, 90000);
   updateUI(true);
 }
 // アプリが呼ぶ。受け取りは画面の状態を見ずに必ず行う（docs/app-pitfalls.md 2番）
 window.tsuruAdResult = (ok, msg) => {
-  const f = pendingAd; pendingAd = null; clearTimeout(adTimer);
+  const f = pendingAd || (lateAd && Date.now() - lateAd.t < 600000 ? lateAd.fn : null); pendingAd = null; lateAd = null; clearTimeout(adTimer);
   if (ok && f) { f(); save(); } else if (msg) toast('お知らせ', msg);
   updateUI(true);
 };
@@ -1681,7 +1681,7 @@ function afterFind(setsBefore){
 }
 
 // ================= おかえり =================
-let pendingAway = null, titleOpen = true;
+let pendingAway = null;
 function checkAway(){
   if (pendingAway || rbOpen || titleOpen) return;
   const a = awaySeconds(S, NOW());
