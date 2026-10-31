@@ -23,7 +23,9 @@ const html = read('shell.html')
   .replace('/*__VIEWS2__*/', () => read('views2.js'))
   .replace('/*__EXTRA__*/', () => read('extra.js'))
   .replace('/*__MORE__*/', () => read('more.js'))
-  .replace('/*__VIEWS3__*/', () => read('views3.js'));
+  .replace('/*__VIEWS3__*/', () => read('views3.js'))
+  .replace('/*__IMGDATA__*/', () => read('imgdata.js'))
+  .replace('/*__ART__*/', () => read('art.js'));
 
 let fails = 0;
 const ok = (c, m) => {
@@ -177,6 +179,51 @@ async function clearEvents() {
   for (const k of ['戦い方', '選手と役割', '相手の分析']) {
     btn(k).click();
     await sleep(10);
+  }
+  // 編成（FM風）：先発・ベンチ・控え外を、タップ→タップで入れ替える
+  btn('編成').click();
+  ok(txt().includes('ベンチ（9人）') && txt().includes('控え外') && d.querySelectorAll('.pitem.sq').length >= 9, '編成の画面');
+  {
+    const names = () => [...d.querySelectorAll('.pitem.sq')].slice(0, 9).map((b) => b.textContent);
+    const n0 = names();
+    d.querySelectorAll('.pitem.sq')[0].click();
+    d.querySelectorAll('.pitem.sq')[1].click();
+    const n1 = names();
+    ok(n1[0] === n0[1] && n1[1] === n0[0], 'ベンチどうしを入れ替えられる');
+    // ベンチ → 先発（ピッチ）：同じ位置の選手と入れ替わる
+    const gs = [...d.querySelectorAll('.board svg g')].filter((g) => g.getAttribute('transform'));
+    const lu0 = A.w.lineupA.map((s) => s.pid);
+    const bn = A.w.benchA.slice();
+    const cands = [...d.querySelectorAll('.pitem.sq')].slice(0, 9);
+    const fb = cands.find((b) => !b.textContent.includes('GK'));
+    fb.click();
+    gs[5].setPointerCapture = () => {};
+    gs[5].dispatchEvent(new w.Event('pointerdown', { bubbles: true }));
+    gs[5].dispatchEvent(new w.Event('pointerup', { bubbles: true }));
+    ok(!A.panelErr, 'ピッチの選手をタップできる');
+    const nowL = A.w.lineupA.map((s) => s.pid);
+    ok(nowL[5] !== lu0[5] && A.w.benchA.includes(lu0[5]), 'ベンチの選手と先発が入れ替わる');
+    ok(nowL.length === 11 && new Set(nowL.concat(A.w.benchA)).size === 20, '入れ替え後も先発11＋ベンチ9で重複なし');
+    // 控え外：選んで入れ替える
+    const res = [...d.querySelectorAll('.pitem.sq')].slice(9);
+    ok(res.length >= 10, '控え外の選手が並ぶ ' + res.length);
+    // 控え外 → ベンチ：Bの選手を入れると、入れ替わった選手はBに回り、Bの並びからも抜ける
+    const bpick = [...d.querySelectorAll('.pitem.sq')].slice(0, 9).find((b) => !b.textContent.includes('GK'));
+    const rpick = [...d.querySelectorAll('.pitem.sq')].slice(9).find((b) => !b.textContent.includes('GK') && !b.textContent.includes('怪'));
+    const inB = (id) => A.w.lineupB.some((s) => s.pid === id) || A.w.benchB.includes(id);
+    const benchBefore = A.w.benchA.slice();
+    bpick.click();
+    rpick.click();
+    const outId = benchBefore.find((id) => !A.w.benchA.includes(id));
+    const inId = A.w.benchA.find((id) => !benchBefore.includes(id));
+    ok(outId && inId, '控え外の選手がベンチに入る');
+    if (outId && inId) {
+      const pin = A.w.players[inId];
+      const pout = A.w.players[outId];
+      ok(pin.team === 'A' && pout.team === 'B', '入った選手はA・外れた選手はB');
+      ok(!inB(inId) && inB(outId), 'Bの並びも入れ替わる（Bに入ったままの選手が出ない）');
+      ok(new Set(A.w.lineupA.map((s) => s.pid).concat(A.w.benchA)).size === 20, '控え外から入れたあとも重複なし');
+    }
   }
   btn('戦い方').click();
   ok(txt().includes('クロスの種類') && txt().includes('セットプレーのキッカー') && txt().includes('戦い方の浸透') && d.querySelectorAll('#main select').length === 3, '戦術の細かい設定（クロス・キッカー・浸透）');

@@ -24,10 +24,26 @@
     const S = w.scouting;
     const pos = rng.pick(['GK', 'CB', 'CB', 'LB', 'RB', 'DM', 'CM', 'CM', 'AM', 'LM', 'RM', 'LW', 'RW', 'SS', 'ST', 'ST']);
     const used = new Set(Object.values(w.players).map((p) => p.name));
-    const q = clamp(rng.int(-2, 2) * 0.8 + (kind === 'scout' ? (eyeOf(w) - 10) * 0.08 : 0) + (kind === 'int' ? 0.2 : 0), -2, 2.4);
+    // セレクションの応募者は、取りこぼされた子が来る：原石（今は低いが伸びしろが大きい）・低め（今も伸びしろも低い）・位置ちがい（登録が合っていない）
+    const prof = kind === 'sel' ? (() => { const x = rng(); return x < 0.4 ? 'raw' : x < 0.7 ? 'low' : 'mis'; })() : null;
+    let q = clamp(rng.int(-2, 2) * 0.8 + (kind === 'scout' ? (eyeOf(w) - 10) * 0.08 : 0) + (kind === 'int' ? 0.2 : 0), -2, 2.4);
+    if (prof === 'raw') q = rng.int(-2, -1) * 0.9;
+    else if (prof === 'low') q = rng.int(-2, -1) * 0.8;
+    else if (prof === 'mis') q = rng.int(0, 1) * 0.8;
     const id = 'c' + ++S.nextId + '_' + w.year;
-    const p = YA.genPlayer(rng, id, 1, pos, q, used);
+    const gpos = prof === 'mis' && pos === 'GK' ? 'CM' : pos;
+    const p = YA.genPlayer(rng, id, 1, gpos, q, used);
     p.grade = 0;
+    if (prof === 'raw') p.pot = YA.abSum(p) + rng.int(170, 250);
+    else if (prof === 'low') p.pot = YA.abSum(p) + rng.int(20, 55);
+    else if (prof === 'mis') {
+      // 実力は十分だが、登録は別の括りのポジション
+      const far = YA.POS15.filter((x) => x !== 'GK' && YA.GROUP[x] !== p.pos && p.apt[x] <= p.apt[p.best] - 1).sort((x, y) => p.apt[x] - p.apt[y]);
+      if (far.length) {
+        p.main = far[rng.int(0, Math.min(2, far.length - 1))];
+        p.pos = YA.GROUP[p.main];
+      }
+    }
     // 外国籍の選手は年に0〜1人（決定53）。海外のスカウトか、まれな応募から
     const FOREIGN = [['ブラジル', ['ルーカス・シウバ', 'カルロス・メンドンサ', 'ガブリエル・ソウザ']], ['韓国', ['キム・ジュノ', 'パク・ソンミン', 'イ・ヒョヌ']], ['ナイジェリア', ['エマニュエル・オコロ', 'ダニエル・アデバヨ']], ['アルゼンチン', ['マテオ・ゴンザレス', 'ニコラス・ペレス']], ['オーストラリア', ['ジャック・ウィルソン', 'ライアン・テイラー']]];
     let foreign = false;
@@ -42,7 +58,7 @@
       foreign = true;
       S.foreignDone = true;
     } else p.nation = '日本';
-    const c = { id, p, kind, foreign, seen: kind === 'int' ? 2 : 0, status: 'open', rival: kind === 'scout' && rng.chance(0.4), persSeen: kind === 'int', amb: rng.int(0, 10) };
+    const c = { id, p, kind, prof, foreign, seen: kind === 'int' ? 2 : 0, status: 'open', rival: kind === 'scout' && rng.chance(0.4), persSeen: kind === 'int', amb: rng.int(0, 10) };
     S.cands.push(c);
     return c;
   }
@@ -68,7 +84,7 @@
     for (let i = 0; i < n; i++) genCand(w, r, 'sel');
     YA.noteTier(w, 1, `セレクションの応募が${n}人ありました。テストの内容を決めて、入れる子を選んでください（クラブ→スカウト）`);
   };
-  // 中3の練習参加（34週）：内部昇格の候補6人がA・Bの練習に混ざる。実際に動きを見られるので見えている度合いが上がる。36週に指導者の申し送りで残りが見える
+  // 中3の練習参加（34週）：内部昇格の候補12人がA・Bの練習に混ざる。実際に動きを見られるので見えている度合いが上がる。36週に指導者の申し送りで残りが見える
   YA.openInternal = function (w, junior) {
     const S = w.scouting;
     if (S.intOpen) {
@@ -83,11 +99,11 @@
     }
     S.intOpen = true;
     const r = YA.rngOf(w.seed * 41 + w.year * 19);
-    for (let i = 0; i < 6; i++) genCand(w, r, 'int');
+    for (let i = 0; i < 12; i++) genCand(w, r, 'int');
     if (junior) {
       for (const c of S.cands) if (c.kind === 'int') c.seen = Math.min(3, c.seen + 1);
-      YA.noteTier(w, 1, '中3の6人が練習に参加しました。内部昇格の候補として動きを見られます（クラブ→スカウト）');
-    } else YA.noteTier(w, 1, 'U-15の指導者から、内部昇格の候補6人の申し送りが届きました（クラブ→スカウト）');
+      YA.noteTier(w, 1, '中3の12人が練習に参加しました。内部昇格の候補として動きを見られます（クラブ→スカウト）');
+    } else YA.noteTier(w, 1, 'U-15の指導者から、内部昇格の候補12人の申し送りが届きました（クラブ→スカウト）');
   };
   YA.testDays = (w) => 2 + (YA.budget(w).scout >= 300 ? 1 : 0);
   YA.TESTS = [['紅白戦', '動きと判断が見える'], ['技術テスト', 'ボールの扱いが見える'], ['体力測定', '足の速さ・体力が見える'], ['面接', '性格と目指すものが見える']];
@@ -119,13 +135,19 @@
     w.firstSel = true;
     S.selOpen = true;
     const r = YA.rngOf(w.seed * 37 + 5);
-    const n = 24 + Math.floor(w.club.rep / 8);
+    const n = 16 + Math.floor(w.club.rep / 8);
     for (let i = 0; i < n; i++) genCand(w, r, 'sel');
-    w.inbox.push({ week: 0, year: 1, tier: 1, text: `最初のセレクションに${n}人の応募がありました。テストの内容を決めて、高1の12人を選んでください（クラブ→スカウト）。選ばなかった分は一般入団で埋まります` });
+    // 初年度からスカウトと内部昇格も使える（U-15の12人は練習に混ざって動きを見られる）
+    for (let i = 0; i < 6; i++) genCand(w, r, 'scout');
+    S.intOpen = true;
+    for (let i = 0; i < 12; i++) genCand(w, r, 'int');
+    for (const c of S.cands) if (c.kind === 'int') c.seen = Math.min(3, c.seen + 1);
+    w.inbox.push({ week: 0, year: 1, tier: 1, text: `最初の高1の12人を決めます（クラブ→スカウト）。決める順番は、U-15の内部昇格（候補12人から8人まで）、スカウト（3人まで）、セレクション（応募${n}人から3人まで）です。選ばなかった分は一般入団で埋まります` });
   };
   // セレクションを終える：最初にいた高1を、合格者と一般入団の12人に入れ替える
   YA.finishFirstSelection = function (w) {
     if (!w.firstSel) return 0;
+    YA.resolveOffers(w); // 声をかけたスカウトの返事は、ここで届く
     const rng = YA.rngOf(w.seed * 71 + 3);
     for (const p of Object.values(w.players)) if (p.grade === 1) delete w.players[p.id];
     const used = new Set(Object.values(w.players).map((p) => p.name));
@@ -143,22 +165,23 @@
     w.firstSel = null;
     w.scouting = YA.newScouting();
   };
-  const LIMIT = { scout: 4, sel: 4, int: 5 };
+  const LIMIT = { scout: 3, sel: 3, int: 8 };
+  const held = (w, kind) => w.scouting.cands.filter((c) => (c.status === 'signed' || c.status === 'offered') && (!kind || c.kind === kind)).length;
   YA.signedCount = (w, kind) => w.scouting.cands.filter((c) => c.status === 'signed' && (!kind || c.kind === kind)).length;
   YA.signCand = function (w, id) {
     const S = w.scouting;
     const c = S.cands.find((x) => x.id === id);
     if (!c || c.status !== 'open') return { ok: false, msg: 'すでに決まっています' };
-    if (YA.signedCount(w) >= 12) return { ok: false, msg: '新入生の枠（12人）がいっぱいです' };
+    if (held(w) >= 12) return { ok: false, msg: '新入生の枠（12人）がいっぱいです' };
     if (c.foreign) {
       const reg = Object.values(w.players).filter((q) => YA.isForeign(q)).length + S.cands.filter((x) => x.foreign && (x.status === 'signed' || x.status === 'offered')).length;
       if (reg >= 5) return { ok: false, msg: '外国籍の選手の登録は5人までです' };
     }
-    const lim = w.firstSel && c.kind === 'sel' ? 12 : LIMIT[c.kind];
-    if (YA.signedCount(w, c.kind) >= lim) return { ok: false, msg: `${KIND_NAME[c.kind]}からは${lim}人までです` };
+    const lim = LIMIT[c.kind];
+    if (held(w, c.kind) >= lim) return { ok: false, msg: `${KIND_NAME[c.kind]}からは${lim}人までです` };
     if (c.kind === 'scout') {
       c.status = 'offered';
-      return { ok: true, msg: `${c.p.name}に声をかけました。返事は来週` };
+      return { ok: true, msg: `${c.p.name}に声をかけました。` + (w.firstSel ? '返事は、新入生を決めたときに届きます' : '返事は来週') };
     }
     c.status = 'signed';
     return { ok: true, msg: `${c.p.name}の入団が決まりました` };

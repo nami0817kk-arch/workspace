@@ -31,7 +31,7 @@
     YA.START_CLUBS.forEach((c, i) => right.append(h('button', { class: 'rolecard' + (f.club === i ? ' on' : ''), onclick: () => { f.club = i; rerender(); } }, h('div', { class: 'grow' }, h('b', {}, c.name), h('div', {}, h('span', { class: 'd' }, c.note))), h('span', { class: 'chip ' + (c.tier === 1 ? 'trait' : c.tier === 2 ? 'pers' : 'gray') }, YA.TIER_NAME[c.tier]))));
     right.append(h('div', { class: 'row', style: 'margin-top:8px' }, h('span', { class: 'grow' }, '解任'), h('button', { class: 'btn sm' + (f.noFire ? ' on' : ''), onclick: () => { f.noFire = !f.noFire; rerender(); } }, f.noFire ? '解任なし' : '解任あり')), h('div', { class: 'note' }, '「解任なし」でも、評価が悪いと予算と信頼度は下がります。'));
     main.append(h('div', { style: 'flex:1;min-height:0;display:flex;flex-direction:column;gap:6px' },
-      h('div', { class: 'row', style: 'gap:8px' }, h('div', { class: 'h grow', style: 'font-size:17px' }, 'ユースの系譜　新しく始める'), h('button', { class: 'btn pri', style: 'min-width:150px;min-height:38px;font-size:14px', onclick: () => { const opts = YA.makeStart({ name: f.name, career: f.career, club: f.club, points: f.points, noFire: f.noFire });
+      h('div', { class: 'row', style: 'gap:8px;padding:14px 12px;border-radius:12px;color:#fff;background:linear-gradient(90deg,rgba(8,16,36,.7),rgba(8,16,36,.15)),' + (YA.titleSrc() ? `url(${YA.titleSrc()}) center/cover` : '#223') }, h('div', { class: 'h grow', style: 'font-size:19px;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.6)' }, 'ユースの系譜　新しく始める'), h('button', { class: 'btn pri', style: 'min-width:150px;min-height:38px;font-size:14px', onclick: () => { const opts = YA.makeStart({ name: f.name, career: f.career, club: f.club, points: f.points, noFire: f.noFire });
  opts.firstSel = true; app.w = YA.newWorld((Date.now() % 90000) + 7, opts); app.ng = null; app.tab = 'home'; app.view = 'pre'; YA.saveWorld(true); YA.sfx.play('whistle'); rerender(); } }, 'この指導者で始める')),
       h('div', { style: 'flex:1;min-height:0;display:flex;gap:8px' }, left, right)));
   };
@@ -155,10 +155,12 @@
     w.noticeTier = w.noticeTier || {};
     body.append(h('div', { class: 'h', style: 'margin-top:10px' }, 'お知らせの重さ'), h('div', { class: 'note' }, '項目ごとに選べます。「必ず止める」はおまかせ進行でも止まります。「記録だけ」は出来事の記録にだけ残ります。'));
     const kinds = YA.NOTICE_KINDS.map((x) => x[0]).concat(['そのほか']);
+    const grid = h('div', { style: 'display:grid;grid-template-columns:1fr 1fr;gap:3px 14px' });
+    body.append(grid);
     for (const k of kinds) {
       const t = w.noticeTier[k] || 2;
-      body.append(h('div', { class: 'row', style: 'margin:3px 0;gap:4px' }, h('span', { class: 'grow', style: 'font-size:11.5px' }, k),
-        ...[1, 2, 3].map((n) => h('button', { class: 'btn sm' + (t === n ? ' on' : ''), onclick: () => { w.noticeTier[k] = n; YA.saveWorld(true); rerender(); } }, YA.NOTICE_TIER_NAME[n]))));
+      grid.append(h('div', { class: 'row', style: 'gap:3px' }, h('span', { class: 'grow', style: 'font-size:11.5px' }, k),
+        ...[1, 2, 3].map((n) => h('button', { class: 'btn sm' + (t === n ? ' on' : ''), style: 'padding:3px 6px;min-height:28px;font-size:10.5px', onclick: () => { w.noticeTier[k] = n; YA.saveWorld(true); rerender(); } }, YA.NOTICE_TIER_NAME[n]))));
     }
   }
 

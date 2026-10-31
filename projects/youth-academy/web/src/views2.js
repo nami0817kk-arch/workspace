@@ -166,7 +166,7 @@
   function candCard(w, c, actions) {
     const v = YA.candView(w, c);
     return h('div', { class: 'card', style: 'padding:7px 9px;margin-bottom:5px' },
-      h('div', { class: 'row' }, h('span', { class: 'pos ' + v.pos }, v.label || v.pos), h('b', { class: 'grow' }, v.name), h('span', { class: 'chip gray' }, YA.CAND_KIND[c.kind]), c.rival && c.status === 'open' ? h('span', { class: 'fit bad' }, YA.rivalLabel(w, c)) : null, v.nation ? h('span', { class: 'chip trait' }, v.nation) : null),
+      h('div', { class: 'row' }, h('span', { class: 'pos ' + v.pos }, v.label || v.pos), YA.faceEl(w, c.p, 28), h('b', { class: 'grow' }, v.name), h('span', { class: 'chip gray' }, YA.CAND_KIND[c.kind]), c.rival && c.status === 'open' ? h('span', { class: 'fit bad' }, YA.rivalLabel(w, c)) : null, v.nation ? h('span', { class: 'chip trait' }, v.nation) : null),
       h('div', { class: 'row', style: 'flex-wrap:wrap;gap:5px;margin-top:3px' }, h('span', { class: 'chip trait' }, `能力 ${v.ovr[0]}〜${v.ovr[1]}`), h('span', { class: 'chip gray' }, '伸びしろ ', YA.starsEl(v.stars)), h('span', { class: 'chip gray' }, `${v.height}cm`), v.traits ? (v.traits.length ? v.traits.map((t) => h('span', { class: 'chip trait' }, t)) : h('span', { class: 'sub' }, '特性なし')) : h('span', { class: 'sub' }, '特性：?'), v.pers ? Object.values(v.pers).filter((x) => x !== 'ふつう').slice(0, 4).map((x) => h('span', { class: 'chip pers' }, x)) : h('span', { class: 'sub' }, '性格：?')),
       h('div', { class: 'row', style: 'margin-top:4px' }, h('span', { class: 'sub grow' }, '見えている度合い：' + '●'.repeat(c.seen) + '○'.repeat(3 - c.seen)), c.rival && (c.status === 'open' || c.status === 'offered') && !c.rivalBeat ? h('button', { class: 'btn sm', onclick: () => { const r = YA.rivalFight(w, c.id); if (r.ok) { save(); rerender(); } } }, '先に会う（15万）') : null, c.rivalBeat && c.status !== 'signed' ? h('span', { class: 'chip trait' }, '先に会った') : null, actions));
   }
@@ -176,10 +176,17 @@
     const say = (r) => { msg.replaceChildren(h('div', {}, r.msg)); if (r.ok) { save(); rerender(); } };
     const b = YA.budget(w);
     const signed = S.cands.filter((c) => c.status === 'signed' || c.status === 'offered');
-    body.append(h('div', { class: 'row', style: 'flex-wrap:wrap;gap:6px;margin-bottom:6px' }, h('span', { class: 'chip trait' }, `${w.firstSel ? '今年の高1' : '来年の入団予定'} ${YA.signedCount(w)}/12人`), h('span', { class: 'chip gray' }, `スカウト経費 ${w.club.spent.scout || 0}/${b.scout}万`), h('span', { class: 'chip gray' }, `見る目 ${Math.round(YA.eyeLevel(w))}`), h('span', { class: 'sub grow' }, (w.firstSel ? '最初のセレクションは12人まで合格にできます。足りない分は一般入団で埋まります' : '足りない分は一般入団で埋まります。スカウト4人・セレクション4人・内部昇格5人まで'))));
+    body.append(h('div', { class: 'row', style: 'flex-wrap:wrap;gap:6px;margin-bottom:6px' }, h('span', { class: 'chip trait' }, `${w.firstSel ? '今年の高1' : '来年の入団予定'} ${signed.length}/12人`), h('span', { class: 'chip gray' }, `スカウト経費 ${w.club.spent.scout || 0}/${b.scout}万`), h('span', { class: 'chip gray' }, `見る目 ${Math.round(YA.eyeLevel(w))}`), h('span', { class: 'sub grow' }, '足りない分は一般入団で埋まります。内部昇格8人 → スカウト3人 → セレクション3人の順に決めます（合わせて12人まで）')));
     const sec = (t, k, list, mk) => { body.append(title(t)); if (!list.length) body.append(h('div', { class: 'note', style: 'margin-bottom:6px' }, k)); list.forEach((c) => body.append(mk(c))); };
     // 内部昇格
     if (S.intOpen) sec('U-15の内部昇格の候補（申し送り：性格と今の力がある程度わかる）', '', S.cands.filter((c) => c.kind === 'int'), (c) => candCard(w, c, c.status === 'signed' ? h('button', { class: 'btn sm on', onclick: () => { YA.unsign(w, c.id); save(); rerender(); } }, '昇格させる（取り消す）') : h('button', { class: 'btn sm', disabled: c.status !== 'open', onclick: () => say(YA.signCand(w, c.id)) }, '昇格させる')));
+    // スカウトの報告
+    sec('スカウトの報告（見に行くと、見える範囲が広がります）', 'まだ候補はいません。4週ごとに報告が届きます（4〜32週）', S.cands.filter((c) => c.kind === 'scout' && c.status !== 'declined' || (c.kind === 'scout' && c.status === 'declined')), (c) => candCard(w, c, h('div', { class: 'row' },
+      c.status === 'declined' ? h('span', { class: 'fit bad' }, '断られた') : null,
+      c.status === 'signed' ? h('span', { class: 'fit good' }, '入団決定') : null,
+      c.status === 'offered' ? h('button', { class: 'btn sm on', onclick: () => { YA.unsign(w, c.id); save(); rerender(); } }, w.firstSel ? '声をかけた（返事は決めるとき）' : '声をかけた（返事は来週）') : null,
+      c.status === 'open' ? h('button', { class: 'btn sm', onclick: () => say(YA.scoutVisit(w, c.id)) }, '見に行く（15万）') : null,
+      c.status === 'open' ? h('button', { class: 'btn sm pri', onclick: () => say(YA.signCand(w, c.id)) }, '声をかける') : null)));
     // セレクション
     if (S.selOpen) {
       const tests = h('div', { class: 'card', style: 'padding:7px 9px;margin-bottom:5px;background:#eaf2ff' });
@@ -193,13 +200,6 @@
       body.append(tests);
       sec(`セレクションの応募者（${S.cands.filter((c) => c.kind === 'sel').length}人）`, '', S.cands.filter((c) => c.kind === 'sel'), (c) => candCard(w, c, c.status === 'signed' ? h('button', { class: 'btn sm on', onclick: () => { YA.unsign(w, c.id); save(); rerender(); } }, '合格（取り消す）') : h('button', { class: 'btn sm', disabled: c.status !== 'open', onclick: () => say(YA.signCand(w, c.id)) }, '合格にする')));
     }
-    // スカウトの報告
-    sec('スカウトの報告（見に行くと、見える範囲が広がります）', 'まだ候補はいません。4週ごとに報告が届きます（4〜32週）', S.cands.filter((c) => c.kind === 'scout' && c.status !== 'declined' || (c.kind === 'scout' && c.status === 'declined')), (c) => candCard(w, c, h('div', { class: 'row' },
-      c.status === 'declined' ? h('span', { class: 'fit bad' }, '断られた') : null,
-      c.status === 'signed' ? h('span', { class: 'fit good' }, '入団決定') : null,
-      c.status === 'offered' ? h('button', { class: 'btn sm on', onclick: () => { YA.unsign(w, c.id); save(); rerender(); } }, '声をかけた（返事は来週）') : null,
-      c.status === 'open' ? h('button', { class: 'btn sm', onclick: () => say(YA.scoutVisit(w, c.id)) }, '見に行く（15万）') : null,
-      c.status === 'open' ? h('button', { class: 'btn sm pri', onclick: () => say(YA.signCand(w, c.id)) }, '声をかける') : null)));
     body.append(msg);
   }
 
@@ -210,7 +210,7 @@
     const left = h('div', { style: 'flex:1.3;min-width:0' });
     left.append(title(`${YA.LEVEL_NAMES[L.level - 1]}　${w.year}年目（${L.done}/22節）`));
     left.append(h('div', { class: 'pitem', style: 'background:none;font-size:10px;color:var(--sub);font-weight:800' }, h('span', { style: 'width:20px' }, '順'), h('span', { class: 'grow' }, 'チーム'), ...['勝', '分', '敗', '得失', '点'].map((x) => h('span', { style: 'width:32px;text-align:right' }, x))));
-    for (const r of rows) left.append(h('div', { class: 'pitem', style: 'cursor:default;' + (r.me ? 'background:#fff7d6;border-color:#f0cf55' : '') }, h('b', { style: 'width:20px' }, r.rank), h('span', { class: 'nm grow', style: 'overflow:hidden;text-overflow:ellipsis;white-space:nowrap' }, r.name), ...[r.w, r.d, r.l, r.gd, r.p].map((x, i) => h(i === 4 ? 'b' : 'span', { style: 'width:32px;text-align:right' }, x))));
+    for (const r of rows) left.append(h('div', { class: 'pitem', style: 'cursor:default;' + (r.me ? 'background:#fff7d6;border-color:#f0cf55' : '') }, h('b', { style: 'width:20px' }, r.rank), YA.emblemEl(w, r.name, 16), h('span', { class: 'nm grow', style: 'overflow:hidden;text-overflow:ellipsis;white-space:nowrap' }, r.name), ...[r.w, r.d, r.l, r.gd, r.p].map((x, i) => h(i === 4 ? 'b' : 'span', { style: 'width:32px;text-align:right' }, x))));
     left.append(h('div', { class: 'note', style: 'margin-top:4px' }, '上位2チームは翌年に一つ上のリーグへ、下位2チームは一つ下のリーグへ。'));
     const right = h('div', { style: 'flex:1;min-width:0' });
     const cupRow = (name, c) => h('div', { class: 'row', style: 'padding:3px 0' }, h('b', { style: 'width:104px' }, name), h('span', { class: 'grow' }, c.result ? c.result : c.alive ? (c.round ? `${c.round}回戦を突破中` : 'これから') : ''));

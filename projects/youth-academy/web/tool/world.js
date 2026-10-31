@@ -9,6 +9,8 @@ require(path.join(__dirname, '../src/club.js'));
 require(path.join(__dirname, '../src/scout.js'));
 require(path.join(__dirname, '../src/extra.js'));
 require(path.join(__dirname, '../src/more.js'));
+require(path.join(__dirname, '../src/imgdata.js'));
+require(path.join(__dirname, '../src/art.js'));
 const YA = globalThis.YA;
 let fails = 0;
 const ok = (c, m) => { if (!c) { fails++; console.log('FAIL:', m); } };
@@ -169,11 +171,33 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   const wf = YA.newWorld(21, Object.assign(YA.makeStart({ name: '点検', career: 0, club: 2, points: {}, noFire: false }), { firstSel: true }));
   ok(wf.firstSel === true, '初回のセレクションが始まる');
   const cands = wf.scouting.cands.filter((c) => c.kind === 'sel');
-  ok(cands.length >= 24, '応募者が24人以上 ' + cands.length);
+  ok(cands.length >= 16, '応募者が16人以上 ' + cands.length);
+  const prof = (k) => cands.filter((c) => c.prof === k).length;
+  ok(prof('raw') + prof('low') + prof('mis') === cands.length, '応募者は原石・低め・位置ちがいのどれか');
+  const raw = cands.filter((c) => c.prof === 'raw');
+  const mis = cands.filter((c) => c.prof === 'mis');
+  ok(raw.every((c) => c.p.pot - YA.abSum(c.p) >= 170), '原石は伸びしろが大きい');
+  ok(raw.every((c) => YA.ovr(c.p) < 9), '原石は今の力が低い');
+  ok(mis.every((c) => c.p.pos !== 'GK' && c.p.apt[c.p.main] <= c.p.apt[c.p.best] - 1), '位置ちがいは登録が合っていない');
   let okc = 0;
-  for (const c of cands.slice(0, 7)) if (YA.signCand(wf, c.id).ok) okc++;
-  ok(okc === 7, '4人を超えて合格にできる（初回は12人まで） ' + okc);
-  const names = cands.slice(0, 7).map((c) => c.p.name);
+  for (const c of cands.slice(0, 6)) if (YA.signCand(wf, c.id).ok) okc++;
+  ok(okc === 3, 'セレクションからは3人まで ' + okc);
+  const sc = wf.scouting.cands.filter((c) => c.kind === 'scout');
+  const ic = wf.scouting.cands.filter((c) => c.kind === 'int');
+  ok(sc.length >= 6 && ic.length === 12 && wf.scouting.intOpen, '初年度からスカウトと内部昇格の候補がいる');
+  let oks = 0;
+  for (const c of sc) if (YA.signCand(wf, c.id).ok) oks++;
+  ok(oks === 3, 'スカウトは3人まで ' + oks);
+  let oki = 0;
+  for (const c of ic) if (YA.signCand(wf, c.id).ok) oki++;
+  ok(oki === 6, '内部昇格は8人まで、ただし全体12人の枠内（残り6人） ' + oki);
+  {
+    const wq = YA.newWorld(23, Object.assign(YA.makeStart({ name: '点検', career: 0, club: 2, points: {}, noFire: false }), { firstSel: true }));
+    let k = 0;
+    for (const c of wq.scouting.cands.filter((x) => x.kind === 'int')) if (YA.signCand(wq, c.id).ok) k++;
+    ok(k === 8, '内部昇格だけなら8人まで ' + k);
+  }
+  const names = cands.slice(0, 3).map((c) => c.p.name).concat(ic.filter((c) => c.status === 'signed').map((c) => c.p.name));
   const n = YA.finishFirstSelection(wf);
   const g1 = Object.values(wf.players).filter((p) => p.grade === 1);
   ok(n === 12 && g1.length === 12, '高1が12人になる ' + g1.length);
@@ -617,7 +641,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
     w5.week = 34;
     YA.weekExtras(w5);
     const ints = w5.scouting.cands.filter((c) => c.kind === 'int');
-    ok(ints.length === 6 && ints.every((c) => c.seen >= 1), '34週に中3が練習に参加して候補になる');
+    ok(ints.length === 12 && ints.every((c) => c.seen >= 1), '34週に中3が練習に参加して候補になる');
     w5.week = 36;
     YA.weekExtras(w5);
     ok(w5.scouting.cands.filter((c) => c.kind === 'int').every((c) => c.persSeen), '36週の申し送りで性格が見える');
@@ -682,6 +706,28 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   ok(new Set(wb.lineupB.map((s) => s.pid)).size === 11, 'Bの先発に重複がない');
   YA.setBCtl(wb, { policy: 'best' });
   ok(wb.lineupB.length === 11, '方針を戻すと自動で組み直す');
+}
+// Aのベンチが全員怪我でも、怪我の先発（フィールド）はBから上がった健康な選手で埋まる
+{
+  const wi = YA.newWorld(3);
+  for (const id of wi.benchA) wi.players[id].inj = 5;
+  const hurt = wi.lineupA[5].pid;
+  wi.players[hurt].inj = 5;
+  YA.repairLineup(wi, 'A');
+  const now = wi.players[wi.lineupA[5].pid];
+  ok(now.id !== hurt && now.inj <= 0 && now.team === 'A', '怪我の先発がBの健康な選手で埋まる');
+  ok(wi.players[hurt].team === 'B', '抜けた選手はBへ回る');
+  ok(new Set(wi.lineupA.map((s) => s.pid).concat(wi.benchA)).size === 20, '穴埋めのあとも重複がない');
+}
+// 絵の素材：顔とエンブレムが十分にあり、同じリーグのエンブレムは重ならず、顔は名簿のなかで重ならない
+{
+  ok(YA.IMG.faces.length >= 70 && YA.IMG.emblems.length >= 60 && YA.IMG.title.startsWith('data:image/'), '素材の数 ' + YA.IMG.faces.length + '/' + YA.IMG.emblems.length);
+  ok(YA.IMG.faces.every((u) => u.startsWith('data:image/jpeg')) && YA.IMG.emblems.every((u) => u.startsWith('data:image/png')), '素材は data URI');
+  const wa = YA.newWorld(7);
+  const idx = wa.league.teams.map((t) => YA.emblemIndex(wa, t.name));
+  ok(new Set(idx).size === idx.length && idx.every((k) => k >= 0), '同じリーグのエンブレムは重ならない');
+  const srcs = Object.values(wa.players).map((p) => YA.faceSrc(wa, p));
+  ok(new Set(Object.values(wa.players).map((p) => p.face)).size === Object.keys(wa.players).length && srcs.every(Boolean), '名簿のなかで顔が重ならない');
 }
 console.log(fails ? '失敗 ' + fails : '育成の点検: すべて通過');
 process.exit(fails ? 1 : 0);
