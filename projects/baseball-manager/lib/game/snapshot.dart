@@ -47,6 +47,7 @@ class PlayerSnapshot {
     this.awakened = false,
     this.afterPath,
     this.afterTier,
+    this.peakAbility = 0,
   });
 
   final String name;
@@ -118,6 +119,10 @@ class PlayerSnapshot {
   final String? afterPath;
   final int? afterTier;
 
+  /// 人生の中で、どれか1つの能力がいちばん高かったときの値(体の衰えで引退時には落ちている)。
+  /// 古い写しは 0(引退時の能力で見る)。
+  final int peakAbility;
+
   int of(Ability a) => abilities[a] ?? 0;
 
   factory PlayerSnapshot.fromGame(Game g) => PlayerSnapshot(
@@ -155,6 +160,7 @@ class PlayerSnapshot {
         awakened: g.awakened,
         afterPath: g.afterPath?.name,
         afterTier: g.secondCareer?.tier,
+        peakAbility: g.peakAbilityNow,
       );
 
   Map<String, dynamic> toJson() => {
@@ -192,6 +198,7 @@ class PlayerSnapshot {
         'awakened': awakened,
         'afterPath': afterPath,
         'afterTier': afterTier,
+        'peakAbility': peakAbility,
       };
 
   /// 項目を足すときは既定値を置く(殿堂の古い記録を壊さない)。
@@ -260,6 +267,7 @@ class PlayerSnapshot {
       awakened: j['awakened'] == true,
       afterPath: j['afterPath'] as String?,
       afterTier: (j['afterTier'] as num?)?.toInt(),
+      peakAbility: (j['peakAbility'] as num?)?.toInt() ?? 0,
     );
   }
 }

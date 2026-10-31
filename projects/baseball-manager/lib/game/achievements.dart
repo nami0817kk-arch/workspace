@@ -118,7 +118,7 @@ final List<Achievement> achievements = [
   Achievement('rival-winner', 'ライバルに勝ち越す', 'ライバルとの通算で、10勝以上して勝ち越す。',
       (s) => s.rivalWins >= 10 && s.rivalWins > s.rivalLosses),
   Achievement('s-rank', 'Sランク', 'いずれかの能力を90以上にする。',
-      (s) => s.abilities.values.any((v) => v >= 90)),
+      (s) => s.peakAbility >= 90 || s.abilities.values.any((v) => v >= 90)),
   Achievement('traits-full', 'こだわりの個性', '特性を上限(3つ)までそろえる。',
       (s) => s.traits.length >= maxTraits),
   Achievement('rare-trait', '選ばれし者', 'レア特性を持って引退する(生まれつき、または覚醒)。',

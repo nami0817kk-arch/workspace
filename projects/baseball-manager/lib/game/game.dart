@@ -279,6 +279,13 @@ class Game {
   FinalMoment? pendingFinal;
   int proYears = 0;
   int peakOverall = 0;
+
+  /// 人生の中で、どれか1つの能力がいちばん高かった値(年末ごとに更新。体の衰えで落ちる前の値を残す)。
+  int peakAbility = 0;
+
+  /// いまの能力まで含めた peakAbility。
+  int get peakAbilityNow => max(peakAbility,
+      player.abilities.values.fold<int>(0, (a, v) => max(a, v)));
   int championships = 0;
   bool _wasTwoWay = false;
   final List<double> achievements = []; // アマの大会ごとの実績
@@ -1892,6 +1899,7 @@ class Game {
     trainCount = 0;
     restCount = 0;
     peakOverall = max(peakOverall, overall(player).round());
+    peakAbility = peakAbilityNow;
     overallHistory.add(overall(player).round());
     // ライバルの人生の知らせ(進路・入団・活躍・引退)。
     final rs = storyOfCharacter(cast.rival)?.avoiding(proTeam);
@@ -2075,6 +2083,7 @@ class Game {
         'lowYears': lowYears,
         'proYears': proYears,
         'peakOverall': peakOverall,
+        'peakAbility': peakAbility,
         'championships': championships,
         'wasTwoWay': _wasTwoWay,
         'achievements': achievements,
@@ -2223,6 +2232,7 @@ class Game {
     g.lowYears = (j['lowYears'] as num?)?.toInt() ?? 0;
     g.proYears = (j['proYears'] as num?)?.toInt() ?? 0;
     g.peakOverall = (j['peakOverall'] as num?)?.toInt() ?? 0;
+    g.peakAbility = (j['peakAbility'] as num?)?.toInt() ?? 0;
     g.championships = (j['championships'] as num?)?.toInt() ?? 0;
     g.archived = (j['archived'] as bool?) ?? false;
     g.overallHistory.addAll(((j['overallHistory'] as List?) ?? const [])
