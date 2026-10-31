@@ -185,6 +185,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     controller: name,
                     textInputAction: TextInputAction.done,
                     onSubmitted: (_) => _start(),
+                    // 欄の外を押したらキーボードを閉じる(下の「はじめる」や一覧を触りやすく)
+                    onTapOutside: (_) =>
+                        FocusManager.instance.primaryFocus?.unfocus(),
                     decoration: InputDecoration(
                       labelText: '選手の名前',
                       border: const OutlineInputBorder(),
