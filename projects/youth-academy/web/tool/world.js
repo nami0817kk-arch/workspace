@@ -123,7 +123,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
     const w3 = YA.newWorld(9);
     const p = Object.values(w3.players).find((q) => q.pos === 'FW' && q.grade === 1);
     const before = p.ab['フィニッシュ'] + (p.prog['フィニッシュ'] || 0);
-    for (let i = 0; i < 20; i++) { YA.autoPlan(w3); p.train.focus = focus; p.rest = null; p.fat = 20; YA.startWeek(w3); w3.events = []; YA.endWeek(w3); }
+    for (let i = 0; i < 20; i++) { YA.autoPlan(w3); p.train.focus = focus; p.train.policy = 'manual'; p.rest = null; p.fat = 20; YA.startWeek(w3); w3.events = []; YA.endWeek(w3); }
     return p.ab['フィニッシュ'] + (p.prog['フィニッシュ'] || 0) - before;
   };
   const a = gainOf('フィニッシュ'), b = gainOf('タックル');
@@ -825,6 +825,23 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   YA.endWeek(wa);
   Object.values(wa.players).forEach((p) => YA.faceSrc(wa, p));
   ok(new Set(Object.values(wa.players).map((p) => p.face)).size === Object.keys(wa.players).length, '入団のあとも名簿のなかで顔が重ならない');
+}
+// 練習の重点の方針：得意を伸ばす・苦手を伸ばす・ポジションの弱点。手で選ぶと固定、方針は毎週選び直す
+{
+  const wt = YA.newWorld(77);
+  const q = Object.values(wt.players).find((x) => x.pos !== 'GK');
+  YA.setPolicy(q, 'strong');
+  const pa = YA.POS_ABS15[q.main];
+  ok(q.train.focus === pa.slice().sort((a, b) => q.ab[b] - q.ab[a])[0], '得意を伸ばす：ポジションの能力でいちばん高いもの');
+  YA.setPolicy(q, 'weak');
+  ok(q.ab[q.train.focus] === Math.min(...YA.AB_FIELD.map((n) => q.ab[n])), '苦手を伸ばす：全部の能力でいちばん低いもの');
+  q.train.focus = 'パス'; q.train.policy = 'manual';
+  YA.refreshFocus(wt);
+  ok(q.train.focus === 'パス', '手で選んだ重点は変わらない');
+  YA.setPolicy(q, 'weak'); const f0 = q.train.focus; q.ab[f0] = 19; YA.refreshFocus(wt);
+  ok(q.train.focus !== f0, '方針の子は、伸びたら重点を選び直す');
+  for (const x of Object.values(wt.players).filter((x) => x.grade === 1)) YA.setPolicy(x, 'strong');
+  ok(Object.values(wt.players).filter((x) => x.grade === 1).every((x) => x.train.policy === 'strong') && Object.values(wt.players).filter((x) => x.grade === 2).every((x) => x.train.policy !== 'strong'), '高1だけに方針を決められる');
 }
 // クラブを移った（契約満了・解任）あとも、入団の暦まで止まらずに1年回せる
 {

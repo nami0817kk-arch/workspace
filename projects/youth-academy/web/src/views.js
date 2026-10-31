@@ -202,10 +202,21 @@
       h('button', { class: 'btn sm', onclick: () => { for (const p of Object.values(w.players)) p.rest = null; YA.saveWorld(); rerender(); } }, '休み解除'),
       ...[0, 1, 2].map((i) => h('button', { class: 'btn sm', title: '長押しではなく、保存→呼出', onclick: () => { if (w.menuSlots && w.menuSlots[i]) { YA.loadMenuSlot(w, i); YA.saveWorld(); rerender(); } } }, '型' + (i + 1) + (w.menuSlots && w.menuSlots[i] ? '●' : ''))),
       h('button', { class: 'btn sm', onclick: () => confirmSlot(w) }, '保存'),
-      h('span', { class: 'grow' }),
-      ...[['all', '全員'], ['A', 'A'], ['B', 'B'], ['1', '高1'], ['2', '高2'], ['3', '高3']].map(([k, n]) => h('button', { class: 'btn sm' + (ui.tf === k ? ' on' : ''), onclick: () => { ui.tf = k; rerender(); } }, n)));
+    );
+    // まとめて設定：対象（全員・A・B・学年・ポジション）を選び、重点の方針や今週の強さをまとめて決める
+    const inTarget = (p) => ui.tf === 'all' || p.team === ui.tf || String(p.grade) === ui.tf || p.pos === ui.tf;
+    const targets = Object.values(w.players).filter(inTarget);
+    const bulk2 = h('div', { class: 'card', style: 'padding:4px 7px;display:flex;flex-direction:column;gap:3px' },
+      h('div', { class: 'row', style: 'flex-wrap:wrap;gap:3px' }, h('b', { style: 'font-size:11px;width:34px' }, '対象'),
+        ...[['all', '全員'], ['A', 'A'], ['B', 'B'], ['1', '高1'], ['2', '高2'], ['3', '高3'], ['GK', 'GK'], ['DF', 'DF'], ['MF', 'MF'], ['FW', 'FW']].map(([k, n]) => h('button', { class: 'btn sm' + (ui.tf === k ? ' on' : ''), onclick: () => { ui.tf = k; rerender(); } }, n)),
+        h('span', { class: 'sub' }, `${targets.length}人`)),
+      h('div', { class: 'row', style: 'flex-wrap:wrap;gap:3px' }, h('b', { style: 'font-size:11px;width:34px' }, '重点'),
+        ...Object.entries(YA.FOCUS_POLICY).map(([k, n]) => h('button', { class: 'btn sm' + (targets.length && targets.every((p) => p.train.policy === k) ? ' on' : ''), onclick: () => { for (const p of targets) YA.setPolicy(p, k); YA.saveWorld(); rerender(); } }, n)),
+        h('span', { class: 'sub', style: 'margin-left:6px' }, '今週'),
+        ...[[null, '通常'], ['light', '軽め'], ['rest', '休み']].map(([k, n]) => h('button', { class: 'btn sm', onclick: () => { for (const p of targets) if (p.inj <= 0) p.rest = k; YA.saveWorld(); rerender(); } }, n)),
+        h('span', { class: 'note grow', style: 'text-align:right' }, '方針を決めた子は、伸びに合わせて重点が毎週選び直されます')));
     // 選手の表
-    const rows = Object.values(w.players).filter((p) => ui.tf === 'all' || p.team === ui.tf || String(p.grade) === ui.tf).sort((a, b) => (a.team === b.team ? 0 : a.team === 'A' ? -1 : 1) || YA.POS15.indexOf(a.main) - YA.POS15.indexOf(b.main) || b.grade - a.grade);
+    const rows = Object.values(w.players).filter(inTarget).sort((a, b) => (a.team === b.team ? 0 : a.team === 'A' ? -1 : 1) || YA.POS15.indexOf(a.main) - YA.POS15.indexOf(b.main) || b.grade - a.grade);
     const table = h('div', { class: 'card pbody scroll', style: 'flex:1;min-height:0;padding:4px 6px' });
     table.append(h('div', { class: 'pitem', style: 'background:none;font-size:10px;color:var(--sub);font-weight:800' }, h('span', { style: 'width:22px' }), h('span', { style: 'width:20px' }), h('span', { class: 'grow' }, '選手'), h('span', { style: 'width:42px' }, '疲れ'), h('span', { style: 'width:116px' }, '重点にする能力'), h('span', { style: 'width:150px' }, '特性練習'), h('span', { style: 'width:52px' }, '今週')));
     for (const p of rows) {
@@ -218,11 +229,11 @@
         h('span', { class: 'num' }, p.num),
         h('span', { class: 'nm grow', style: 'min-width:0;overflow:hidden;text-overflow:ellipsis' }, p.name, ' ', h('span', { class: 'sub', style: 'font-weight:600' }, gradeName(p.grade) + (p.team === 'A' ? ' A' : ' B')), ' ', flags(p)),
         fatBar(p, 42),
-        h('button', { class: 'btn sm', style: 'width:116px;justify-content:space-between', onclick: () => pickFocus(p) }, p.train.focus || '未設定', p.train.focus ? h('span', { class: 'sub' }, p.ab[p.train.focus]) : null),
+        h('button', { class: 'btn sm', style: 'width:116px;justify-content:space-between;gap:2px', onclick: () => pickFocus(p) }, p.train.policy && p.train.policy !== 'manual' ? h('span', { class: 'chip gray', style: 'font-size:9px;padding:0 3px' }, { strong: '得', weak: '苦', pos: '位' }[p.train.policy]) : null, h('span', { class: 'grow', style: 'text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0' }, p.train.focus || '未設定'), p.train.focus ? h('span', { class: 'sub' }, p.ab[p.train.focus]) : null),
         h('button', { class: 'btn sm', style: 'width:150px;justify-content:space-between;white-space:nowrap;gap:2px', onclick: () => pickTrait(p) }, h('span', { style: 'overflow:hidden;text-overflow:ellipsis' }, tp || '未設定'), tp ? h('span', { class: 'sub' }, wk + '週') : null),
         h('button', { class: 'btn sm' + (p.rest ? ' on' : ''), style: 'width:52px', disabled: p.inj > 0, onclick: () => { p.rest = p.rest === null ? 'light' : p.rest === 'light' ? 'rest' : null; YA.saveWorld(); const st = table.scrollTop; rerender(); const t2 = document.querySelector('.card.pbody.scroll'); if (t2) t2.scrollTop = st; } }, p.inj > 0 ? '療養' : p.rest === 'rest' ? '休み' : p.rest === 'light' ? '軽め' : '通常')));
     }
-    wrap.append(days, bulk, table);
+    wrap.append(days, bulk, bulk2, table);
     main.append(wrap);
   }
   function confirmSlot(w) {
@@ -239,9 +250,10 @@
   function pickFocus(p) {
     const list = p.pos === 'GK' ? YA.AB_GK.concat(YA.AB_MENTAL, YA.AB_PHYS) : YA.AB_FIELD;
     modal((close) => h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(680px,97%);max-height:94%;padding:10px;gap:6px' },
-      h('div', { class: 'row' }, h('div', { class: 'h grow' }, `${p.name} の重点（今の値）`), h('button', { class: 'btn sm', onclick: () => { p.train.focus = null; YA.saveWorld(); close(); rerender(); } }, '外す'), h('button', { class: 'btn sm', onclick: close }, '閉じる')),
-      h('div', { class: 'scroll', style: 'display:grid;grid-template-columns:repeat(5,1fr);gap:4px;overflow:auto' }, list.map((n) => h('button', { class: 'btn sm' + (p.train.focus === n ? ' on' : ''), style: 'justify-content:space-between', onclick: () => { p.train.focus = n; YA.saveWorld(); close(); rerender(); } }, n, h('b', {}, p.ab[n])))),
-      h('div', { class: 'note' }, '重点にした能力は、ほかより多く伸びます。')));
+      h('div', { class: 'row' }, h('div', { class: 'h grow' }, `${p.name} の重点（今の値）`), h('button', { class: 'btn sm', onclick: () => { p.train.focus = null; p.train.policy = 'manual'; YA.saveWorld(); close(); rerender(); } }, '外す'), h('button', { class: 'btn sm', onclick: close }, '閉じる')),
+      h('div', { class: 'scroll', style: 'display:grid;grid-template-columns:repeat(5,1fr);gap:4px;overflow:auto' }, list.map((n) => h('button', { class: 'btn sm' + (p.train.focus === n ? ' on' : ''), style: 'justify-content:space-between', onclick: () => { p.train.focus = n; p.train.policy = 'manual'; YA.saveWorld(); close(); rerender(); } }, n, h('b', {}, p.ab[n])))),
+      h('div', { class: 'row', style: 'gap:4px' }, h('span', { class: 'sub' }, '方針で決める：'), ...Object.entries(YA.FOCUS_POLICY).map(([k, n]) => h('button', { class: 'btn sm' + (p.train.policy === k ? ' on' : ''), onclick: () => { YA.setPolicy(p, k); YA.saveWorld(); close(); rerender(); } }, n))),
+      h('div', { class: 'note' }, '重点にした能力は、ほかより多く伸びます。手で選ぶと、その能力のまま固定します（方針を選ぶと、伸びに合わせて毎週選び直します）。')));
   }
   function pickTrait(p) {
     const list = YA.learnable(p);

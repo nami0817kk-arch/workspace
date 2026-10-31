@@ -477,6 +477,7 @@
       w.forced = (w.forced || []).concat(sr.map((p) => ({ id: 'career', pid: p.id, week: w.week, year: w.year })));
     }
     if (YA.rivalWeek) YA.rivalWeek(w);
+    YA.refreshFocus(w);
     for (const p of Object.values(w.players)) {
       if (p.away > 0) p.away--;
       if (p.suspend > 0) p.suspend--;

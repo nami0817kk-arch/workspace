@@ -1180,6 +1180,26 @@
     return { ok: true, line: res.line, small, extra };
   };
 
+  // ---------- 重点の方針（まとめて決める）----------
+  // strong＝得意を伸ばす（ポジションに要る能力のいちばん高いもの）、weak＝苦手を伸ばす（全部の能力でいちばん低いもの）、
+  // pos＝ポジションの弱点（ポジションに要る能力のいちばん低いもの。おまかせの既定）。手で選んだら manual
+  YA.FOCUS_POLICY = { strong: '得意を伸ばす', weak: '苦手を伸ばす', pos: 'ポジションの弱点' };
+  YA.focusByPolicy = function (p, policy) {
+    const posAbs = (p.pos === 'GK' ? YA.AB_GK : YA.POS_ABS15[p.main]).filter((n) => p.ab[n] < 20);
+    const allAbs = (p.pos === 'GK' ? YA.AB_GK.concat(YA.AB_MENTAL, YA.AB_PHYS) : YA.AB_FIELD).filter((n) => p.ab[n] < 20);
+    if (policy === 'strong') return posAbs.slice().sort((a, b) => p.ab[b] - p.ab[a])[0] || null;
+    if (policy === 'weak') return allAbs.slice().sort((a, b) => p.ab[a] - p.ab[b])[0] || null;
+    return posAbs.slice().sort((a, b) => p.ab[a] - p.ab[b])[0] || null;
+  };
+  YA.setPolicy = function (p, policy) {
+    p.train.policy = policy;
+    if (policy !== 'manual') p.train.focus = YA.focusByPolicy(p, policy);
+  };
+  // 方針の決まっている子は、能力が伸びたら重点も選び直す（毎週）
+  YA.refreshFocus = function (w) {
+    for (const p of Object.values(w.players)) if (p.train && p.train.policy && p.train.policy !== 'manual') p.train.focus = YA.focusByPolicy(p, p.train.policy);
+  };
+
   // ---------- 練習の自動設定 ----------
   YA.autoPlan = function (w) {
     // 弱点を自動で重点に。疲れている子は軽めに
@@ -1188,8 +1208,9 @@
     if (fatigued > 8) plan.days[4] = { menu: '回復', int: 'normal' };
     for (const p of Object.values(w.players)) {
       const weak = abList(p).filter((n) => p.ab[n] < p.ab && 0).length;
-      const cand = (p.pos === 'GK' ? YA.AB_GK : YA.POS_ABS15[p.main]).slice().sort((a, b) => p.ab[a] - p.ab[b]);
-      p.train.focus = cand[0];
+      // 方針を決めてある子はそのまま、決めていない子はポジションの弱点を
+      if (p.train.policy && p.train.policy !== 'manual') p.train.focus = YA.focusByPolicy(p, p.train.policy);
+      else YA.setPolicy(p, 'pos');
       // 特性練習は、いちばん早く覚えられるものを（おまかせのとき）
       if (!p.train.trait) {
         const lt = YA.learnable(p)[0];
