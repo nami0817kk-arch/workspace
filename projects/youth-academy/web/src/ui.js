@@ -357,7 +357,7 @@
           const pf = YA.TAC_PROFILE[t.tactic.type];
           if (pf) {
             const wk = cur.abs.slice().sort((x, y) => x[1] - y[1]).slice(0, 2).map((x) => `${x[0]}${x[1].toFixed(1)}`).join('・');
-            body.append(h('div', { class: 'insight', style: 'margin-bottom:6px' }, h('b', {}, `いまのスタメンとの相性 ${cur.mark}`), `　${pf.why}。大事な能力：${pf.abs.join('・')}（先発の平均で低いのは ${wk}）。この戦術で練習すると、その能力が少し伸びやすくなります。◎○△✕は、各戦術とスタメンの相性です。`));
+            body.append(h('div', { class: 'insight', style: 'margin-bottom:4px;padding:5px 8px;font-size:11px;line-height:1.4' }, h('b', {}, `スタメンとの相性 ${cur.mark}`), `　${pf.why}。大事な能力：${pf.abs.join('・')}（先発で低いのは ${wk}）。練習するとこの能力が伸びやすくなります。`));
           }
         }
         for (const [k, label, lo, hi] of YA.KNOBS) {
@@ -428,9 +428,18 @@
           lo.append(h('button', { class: 'pitem' + (st.subOut === q.id ? ' on' : ''), onclick: () => { st.subOut = q.id; renderBody(); } }, posChip(q, YA.POS_LABEL[YA.pos15OfSlot(x, i)]), h('span', { class: 'num' }, q.num), h('span', { class: 'nm grow' }, surname(q)), gtag(q), h('div', { class: 'bar stam' }, h('i', { style: `width:${q.stam}%;background:${q.stam < 45 ? '#d63a3a' : q.stam < 70 ? '#f0a020' : '#1a9d57'}` }))));
         });
         const li = h('div', { class: 'grow plist' }, h('div', { class: 'note' }, '入れる選手（ベンチ）'));
-        t.bench.forEach((bid) => {
-          const q = t.players[bid];
-          li.append(h('button', { class: 'pitem' + (st.subIn === q.id ? ' on' : ''), onclick: () => { st.subIn = q.id; renderBody(); } }, posChip(q), h('span', { class: 'num' }, q.num), h('span', { class: 'nm grow' }, surname(q)), gtag(q), h('span', { class: 'sub', style: 'font-size:9.5px' }, q.traits.slice(0, 1).join(''))));
+        // 下げる選手を選ぶと、その位置への適性が高い順にベンチを並べる（FM風）
+        const outI = st.subOut ? t.lineup.findIndex((x) => x.pid === st.subOut) : -1;
+        const outP15 = outI >= 0 ? YA.pos15OfSlot(t.lineup[outI], outI) : null;
+        const outGK = outP15 === 'GK';
+        const benchP = t.bench.map((bid) => t.players[bid]);
+        if (outP15) benchP.sort((a, b) => ((b.pos === 'GK') === outGK) - ((a.pos === 'GK') === outGK) || ((b.apt && b.apt[outP15]) || 0) - ((a.apt && a.apt[outP15]) || 0));
+        benchP.forEach((q) => {
+          const ok = !outP15 || (q.pos === 'GK') === outGK;
+          const aptv = outP15 && q.apt ? q.apt[outP15] : null;
+          li.append(h('button', { class: 'pitem' + (st.subIn === q.id ? ' on' : ''), style: ok ? '' : 'opacity:.35', onclick: () => { st.subIn = q.id; renderBody(); } }, posChip(q), h('span', { class: 'num' }, q.num), h('span', { class: 'nm grow' }, surname(q)), gtag(q),
+            aptv != null ? h('span', { class: 'chip ' + (aptv >= 14 ? 'trait' : 'gray'), style: 'font-size:9.5px' }, '適' + aptv) : h('span', { class: 'sub', style: 'font-size:9.5px' }, q.traits.slice(0, 1).join('')),
+            q.inj > 0 ? h('span', { class: 'fit bad' }, '怪') : null));
         });
         cols.append(lo, li);
         body.append(cols);
