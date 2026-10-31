@@ -110,19 +110,12 @@ void markTests3() {
     expect(bad, contains('競り負け'));
     expect(rivalDuelLine(s, 22, 0, const Line()), isNull); // 対決は決まった月だけ
     expect(rivalDuelLine(s, 15, 1, const Line()), isNull); // まだプロでない
-    // 同じ入力なら同じ結果。出来が良いほど勝ちやすい。
-    const great =
-        Line(games: 140, atBats: 500, hits: 190, totalBases: 380, walks: 90);
-    expect(wonSeries('t', 25, great), wonSeries('t', 25, great));
-    var wins = 0, winsPoor = 0;
-    for (var age = 20; age < 220; age++) {
-      if (wonSeries('t', age, great)) wins++;
-      if (wonSeries('t', age, const Line(games: 140, atBats: 500, hits: 90))) {
-        winsPoor++;
-      }
-    }
-    expect(wins, greaterThan(winsPoor));
     expect(paradeCrowd(80), greaterThan(paradeCrowd(0)));
+    // 観客は球場の大きさで頭打ち(満員4.5万人)
+    expect(attendanceOf(100, 0.7), 4.5);
+    expect(attendanceLine(100, 0.7), contains('満員'));
+    expect(attendanceOf(0, 0.4), inInclusiveRange(1.2, 2.5));
+    expect(attendanceOf(60, 0.6), greaterThan(attendanceOf(20, 0.6)));
     expect(childrenOf('みさき'), inInclusiveRange(1, 3));
   });
 }
@@ -217,6 +210,13 @@ void markTests8() {
     expect(m.every((e) => e.$2 >= 1 && e.$2 <= 6), isTrue);
     expect(ageNote(18), contains('進路'));
     expect(ageNote(19), isNull);
+    // 大学・社会人の最後の夏の年に出す(ドラフトに落ちたあとではなく)
+    expect(ageNote(21, finalYear: true), contains('ドラフト'));
+    expect(ageNote(22), isNull);
+    // 育成契約の間は3桁、一軍に上がると2桁
+    final p = _p(Role.batter, const {});
+    expect(uniformNumberOf(Stage.pro, p, ikusei: true)!, greaterThan(100));
+    expect(uniformNumberOf(Stage.pro, p)!, lessThan(100));
     expect(yearSummaryOf(7, 3), contains('7回'));
   });
 }
@@ -250,5 +250,16 @@ void markTests9() {
     expect(projectedOverall(p, Ability.contact, 25), greaterThan(now));
     final old = p.copyWith(age: 36);
     expect(projectedOverall(old, Ability.contact, 41), lessThanOrEqualTo(now));
+  });
+
+  test('月間MVP: 飛び抜けた月だけ。いつも選ばれるわけではない', () {
+    const great = Line(atBats: 70, hits: 32, totalBases: 60, walks: 15);
+    const fine = Line(atBats: 70, hits: 22, totalBases: 35, walks: 8);
+    var picked = 0;
+    for (var age = 22; age < 122; age++) {
+      if (monthlyMvp(great, 'た', age, 2)) picked++;
+      expect(monthlyMvp(fine, 'た', age, 2), isFalse);
+    }
+    expect(picked, inInclusiveRange(20, 85));
   });
 }

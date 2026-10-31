@@ -18,7 +18,7 @@ enum Plan {
   study, // 研究: 気持ちが乗り、重点が少し伸びる
   social, // 交流: 友人・家族と過ごして気持ちを上げる
   match, // 練習試合・遠征: 全体が少し伸びる
-  lesson; // コーチに教わる: 少し伸び、コツが貯まる(貯まると特性を習得)
+  lesson; // コーチに教わる: 少し伸び、コツが貯まる(4回でコーチの特殊能力のコツが満タン)
 
   /// 重点の能力が要るか。
   bool get needsFocus =>
@@ -66,13 +66,22 @@ class Condition {
 /// 倍率は「1年ぶんの伸び」に対する割合で、通常の練習が 0.25(=4季節で1年)。
 ({double scale, int fatigue, int morale}) effectOf(Plan a) => switch (a) {
       Plan.train => (scale: 0.25, fatigue: 15, morale: 0),
-      Plan.special => (scale: 0.45, fatigue: 35, morale: -5),
+      Plan.special => (scale: tSpecial / 100, fatigue: tSpecialFatigue, morale: -5),
       Plan.rest => (scale: 0.05, fatigue: -40, morale: 5),
-      Plan.study => (scale: 0.12, fatigue: 5, morale: 10),
+      Plan.study => (scale: 0.12, fatigue: 5, morale: 10), // 主役は特殊能力のコツ(Game._gainTips)
       Plan.social => (scale: 0.03, fatigue: -10, morale: 20),
-      Plan.match => (scale: 0.11, fatigue: 20, morale: 0),
-      Plan.lesson => (scale: 0.15, fatigue: 12, morale: 0),
+      Plan.match => (scale: tMatch / 1000, fatigue: 20, morale: 0),
+      Plan.lesson => (scale: tLesson / 100, fatigue: 12, morale: 0),
     };
+
+// ── バランス調整のつまみ(dart run -DBAL_SPECIAL=40 tool/balance.dart で試せる) ──
+const tSpecial = int.fromEnvironment('BAL_SPECIAL', defaultValue: 40);
+const tSpecialFatigue = int.fromEnvironment('BAL_SPFAT', defaultValue: 35);
+const tLesson = int.fromEnvironment('BAL_LESSON', defaultValue: 15);
+const tMatchFix = bool.fromEnvironment('BAL_MATCHFIX', defaultValue: true);
+const tLessonGap = int.fromEnvironment('BAL_LGAP', defaultValue: 10);
+const tMatch = int.fromEnvironment('BAL_MATCH', defaultValue: 105);
+const tLessonGapCap = int.fromEnvironment('BAL_LGAPCAP', defaultValue: 40);
 
 /// 怪我の確率。疲れているほど、特訓ほど高い。
 double injuryChance(Condition c, Plan a, [Set<Trait> traits = const {}]) =>
@@ -99,11 +108,13 @@ bool hasOutcome(Plan a) =>
 
 /// 出来を決める。特訓は振れ幅が大きい(失敗も大成功も多い)。
 /// 平均の倍率は1.0前後になるようにしてある(全体のバランスは変えない)。
-Outcome rollOutcome(Plan a, Random rng, [Set<Trait> traits = const {}]) {
+/// `badFactor` は失敗の確率にかかる倍率(行動の連携で下がる)。
+Outcome rollOutcome(Plan a, Random rng,
+    [Set<Trait> traits = const {}, double badFactor = 1.0]) {
   if (!hasOutcome(a)) return Outcome.normal;
   final r = rng.nextDouble();
   final luck = outcomeLuck(traits);
-  final bad = (a == Plan.special ? 0.20 : 0.12) * luck.bad;
+  final bad = (a == Plan.special ? 0.20 : 0.12) * luck.bad * badFactor;
   final great = (a == Plan.special ? 0.10 : 0.08) * luck.great;
   final good = 0.20;
   if (r < bad) return Outcome.bad;
@@ -142,6 +153,8 @@ TermResult playTerm(
   double trainBonus = 1.0,
   double recoveryBonus = 1.0,
   double injuryFactor = 1.0,
+  double badFactor = 1.0,
+  bool keepMorale = false,
 }) {
   if (c.injured) {
     return TermResult(
@@ -152,17 +165,18 @@ TermResult playTerm(
     );
   }
   final e = effectOf(action);
-  final outcome = rollOutcome(action, rng, p.traits);
+  final outcome = rollOutcome(action, rng, p.traits, badFactor);
   final motiv = motivationOf(c.morale).expMultiplier * outcome.multiplier;
   final next = Map<Ability, int>.of(p.abilities);
   final gained = <Category, int>{};
   for (final a in abilitiesOf(p.role)) {
     // 練習試合は特定の能力に偏らない。
     final f = action == Plan.match ? a : focus;
-    var x = yearlyDelta(p, a, f) *
-        e.scale *
-        share *
-        (action == Plan.study ? studyMultiplier(p.traits) : 1.0);
+    var x = yearlyDelta(p, a, f) * e.scale * share;
+    // 練習試合は全部の能力が重点扱いなので、能力の数で割る補正(roleExpFactor)を戻す
+    if (tMatchFix && action == Plan.match && p.role == Role.pitcher) {
+      x *= pitcherPace / roleExpFactor(p.role);
+    }
     if (x > 0) x *= trainBonus; // 投資(専属トレーナー)
     if (x >= 0) {
       final cat = categoryOf(a);
@@ -187,7 +201,9 @@ TermResult playTerm(
           .round();
   var dMorale = e.morale > 0
       ? (e.morale * moraleGainMultiplier(p.traits) * share).round()
-      : (e.morale * moraleLossMultiplier(p.traits) * share).round();
+      : keepMorale
+          ? 0
+          : (e.morale * moraleLossMultiplier(p.traits) * share).round();
   // 大成功は気持ちが上がり、失敗は疲れが増える。
   if (outcome == Outcome.great) dMorale += (6 * share).round();
   final extraFatigue = outcome == Outcome.bad ? (6 * share).round() : 0;
@@ -202,6 +218,21 @@ TermResult playTerm(
     exp: gained,
     outcome: outcome,
   );
+}
+
+/// 重点の能力 `f` だけを `scale`(1年ぶんに対する割合)だけ伸ばしたときの経験点。超回復に使う。
+/// 衰える年齢(伸びが0以下)なら空。乱数は使わない。
+Map<Category, int> focusExpOf(
+    Player p, Ability f, double scale, double share, int morale) {
+  final x = yearlyDelta(p, f, f) * scale * share;
+  if (x <= 0) return const {};
+  return {
+    categoryOf(f): (x *
+            expPerPoint *
+            motivationOf(morale).expMultiplier *
+            roleExpFactor(p.role))
+        .round(),
+  };
 }
 
 /// 年の終わり: 年齢が1つ進み、疲れが少し抜ける。
@@ -279,7 +310,7 @@ final List<GameEvent> events = [
     EventChoice('今は断る',
         (p, c, f) => (player: p, condition: c.copyWith(morale: c.morale + 5))),
   ]),
-  GameEvent('rival', '同い年のライバルが現れた。', [
+  GameEvent('rival', 'よそのチームに、手ごわい同い年の選手が現れた。', [
     EventChoice(
         '意識して追いかける',
         (p, c, f) => (
@@ -340,7 +371,7 @@ final List<GameEvent> events = [
       when: (stage, cast) => cast.lover != null),
   GameEvent(
       'family',
-      '母がお弁当を作って待っていた。',
+      '母が、好物の手料理を作って待っていてくれた。',
       [
         EventChoice(
           '感謝して食べる',
@@ -523,7 +554,7 @@ final List<GameEvent> events = [
       );
     }),
   ]),
-  GameEvent('big-chance', '練習試合で先発のチャンスが回ってきた。', [
+  GameEvent('big-chance', '次の試合で、先発出場のチャンスが回ってきた。', [
     EventChoice.risky('挑む', (p, c, f, rng) {
       if (rng.nextDouble() < 0.5) {
         return (
@@ -962,7 +993,7 @@ final List<GameEvent> events = [
       weight: 0.5),
   GameEvent(
       'summer-camp',
-      '夏の合宿に誘われた。',
+      '強化合宿に誘われた。',
       [
         EventChoice(
             '最後まで参加する',

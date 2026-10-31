@@ -203,7 +203,7 @@ void main() {
           jsonDecode(jsonEncode(r.toJson())) as Map<String, dynamic>);
       expect((q.age, q.stage, q.roundsWon, q.rivalWon),
           (17, Stage.highSchool, 2, true));
-      expect(q.resultText, '3回戦敗退');
+      expect(q.resultText, '全国大会 準々決勝敗退');
       expect(
           const SeasonRecord(
                   age: 1,
@@ -212,7 +212,7 @@ void main() {
                   roundsWon: 4,
                   rounds: 4)
               .resultText,
-          '優勝');
+          '全国優勝');
       expect(
           const SeasonRecord(age: 1, stage: Stage.pro, line: Line(), rank: 1)
               .resultText,
@@ -350,6 +350,36 @@ void main() {
       return SeasonRecord(
           age: 26, stage: stage, line: line, rank: 2, titles: t);
     }
+
+    test('来季の年俸は今季の成績で決まり(契約更改)、減額には上限がある', () {
+      final star = rec(_p(Role.batter, 85), t: ['首位打者', '本塁打王', 'MVP']);
+      final poor = rec(_p(Role.batter, 40));
+      final hs = rec(_p(Role.batter, 60), stage: Stage.highSchool);
+      // 古い記録(年俸の記録なし): 前の年の年俸と成績から契約更改のように計算する
+      final list = [hs, star, star, poor, poor];
+      final pays = salariesOf(list);
+      expect(pays[0], 0); // プロ以外は0
+      expect(pays[1], salaryOf(star)); // 最初のプロの年(古い記録)はその年の成績どおり
+      expect(pays[2], renewSalary(pays[1], star));
+      expect(pays[3], renewSalary(pays[2], star));
+      expect(pays[4], renewSalary(pays[3], poor));
+      expect(pays[4], lessThan(pays[3])); // 不振の翌年は下がる
+      final cap = pays[3] > 10000 ? 0.6 : 0.75;
+      expect(pays[4], greaterThanOrEqualTo((pays[3] * cap).floor() - 10)); // 減額の上限(10万円単位の丸め)
+      expect(salaryIn(list, list[2]), pays[2]);
+      expect(careerEarnings(list), pays.reduce((a, b) => a + b));
+    });
+
+    test('年俸の記録(contract)があれば、それを使う。新人の年俸はドラフトの順位で決まる', () {
+      final line = _season(_p(Role.batter, 85), 3).line;
+      final a = SeasonRecord(age: 22, stage: Stage.pro, line: line, rank: 2, contract: 1500);
+      final b = SeasonRecord(age: 23, stage: Stage.pro, line: line, rank: 2, contract: 9000);
+      expect(salariesOf([a, b]), [1500, 9000]);
+      expect(rookieSalary(1), greaterThan(rookieSalary(4)));
+      expect(rookieSalary(6), 400); // 育成契約
+      // 大活躍の新人は、翌年に大きく上がる
+      expect(renewSalary(1500, a), greaterThan(3000));
+    });
 
     test('強い選手ほど高い。タイトルでも上がる。プロ以外は0', () {
       final lo = salaryOf(rec(_p(Role.batter, 40)));

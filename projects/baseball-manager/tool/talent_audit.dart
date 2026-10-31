@@ -16,7 +16,13 @@ import 'package:baseball_manager/game/player.dart';
 import 'package:baseball_manager/game/traits.dart';
 
 class Result {
-  int n = 0, pro = 0, legend = 0, awakened = 0, proAwakened = 0, titled = 0, titledAwakened = 0;
+  int n = 0,
+      pro = 0,
+      legend = 0,
+      awakened = 0,
+      proAwakened = 0,
+      titled = 0,
+      titledAwakened = 0;
   double peak = 0;
   void add(Game g) {
     n++;
@@ -72,8 +78,7 @@ void main(List<String> args) {
   final n = args.isNotEmpty ? int.parse(args[0]) : 300;
   for (final role in [Role.batter, Role.pitcher]) {
     print('── ${role == Role.batter ? '打者' : '投手'} ──');
-    Result run(
-        {Set<Trait>? traits, Map<Ability, int>? gifts, int offset = 0}) {
+    Result run({Set<Trait>? traits, Map<Ability, int>? gifts, int offset = 0}) {
       final r = Result();
       for (var i = 0; i < n; i++) {
         r.add(play(offset + i, role, traits: traits, gifts: gifts));

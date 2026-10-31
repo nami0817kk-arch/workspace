@@ -1,3 +1,4 @@
+import 'competition.dart';
 import 'dart:math';
 
 import 'calendar.dart';
@@ -8,6 +9,7 @@ import 'player.dart';
 import 'training.dart' show abilityCap, yearlyDelta;
 import 'records.dart';
 import 'snapshot.dart';
+import 'talent.dart';
 import 'rival_story.dart';
 import 'season.dart';
 
@@ -32,7 +34,42 @@ List<String> careerMarks(Line before, Line after) {
       (t) => t == 1 ? 'プロ初勝利' : '通算$t勝');
   cross(before.strikeouts, after.strikeouts, const [500, 1000, 2000, 3000],
       (t) => '通算$t奪三振');
+  // 実際の野球にある、長く第一線で続けた人の記録。
+  cross(before.games, after.games, const [1000, 1500, 2000], (t) => '通算$t試合出場');
+  cross(before.walks, after.walks, const [1000], (t) => '通算$t四球');
   return m;
+}
+
+/// プロの記録で、タイトルを獲った年が連続した最長の年数(「N年連続タイトル」)。
+int longestTitleStreak(Iterable<SeasonRecord> records) {
+  var best = 0, run = 0;
+  for (final r in records) {
+    if (r.stage != Stage.pro) continue;
+    run = r.titles.isEmpty ? 0 : run + 1;
+    if (run > best) best = run;
+  }
+  return best;
+}
+
+/// 今の年までで、タイトルの連続が何年か(直近から数える)。
+int currentTitleStreak(Iterable<SeasonRecord> records) {
+  var run = 0;
+  for (final r
+      in records.where((r) => r.stage == Stage.pro).toList().reversed) {
+    if (r.titles.isEmpty) break;
+    run++;
+  }
+  return run;
+}
+
+/// 入団会見のひとこと。ドラフトの順位(`round`)で、期待のされ方が違う。
+String pressConferenceNote(int round, int? number) {
+  final n = number == null ? '' : '背番号$number。';
+  return switch (round) {
+    1 => '入団会見: $n「1位指名の期待に応えたい。新人王を狙います」',
+    2 || 3 => '入団会見: $n「早く一軍で戦力になりたい」',
+    _ => '入団会見: $n「まずは二軍で結果を出して、一軍を目指します」',
+  };
 }
 
 /// 愛称。いちばん高い能力から決める(同じ選手なら同じ)。
@@ -203,10 +240,32 @@ String? rivalDuelLine(RivalStory s, int age, int slot, Line month) {
   return good ? '${s.team}の$nとの直接対決。気迫で上回った!' : '${s.team}の$nとの直接対決。ここは競り負けた…';
 }
 
-/// 日本シリーズ(リーグ優勝のあと)。乱数は使わず、年齢と名前と今年の出来から決める。
-bool wonSeries(String name, int age, Line season) {
-  final bonus = ((season.rating - 50) / 2).round();
-  return _hash(name, age) % 100 < 50 + bonus;
+/// 1試合の平均の観客数(万人)。人気と勝率から。球場の大きさがあるので、満員(4.5万人)で頭打ち
+/// (2026-10-26 ログを読んで、人気の高い選手のいる年に「平均6.7万人」が出ていた)。
+double attendanceOf(int popularity, double winPct) =>
+    (1.6 + popularity * 0.022 + winPct * 1.0).clamp(1.2, 4.5);
+
+/// 月報の観客動員の一行。満員なら、そう言う。
+String attendanceLine(int popularity, double winPct) {
+  final a = attendanceOf(popularity, winPct);
+  return a >= 4.5
+      ? '観客動員: 連日の満員(平均4.5万人)。'
+      : '観客動員: 平均${a.toStringAsFixed(1)}万人。';
+}
+
+/// 月間MVP(リーグで毎月1人)。飛び抜けた月(打者 OPS1.100以上・50打数〜、投手 防御率1.20以下・
+/// 18回〜)のうち、出来が良いほど選ばれやすい。選ぶのは名前・年齢・月から(乱数の並びは変えない)。
+/// それまでは OPS1.000 で必ず選ばれ、強い打者は毎月のように取っていた。
+bool monthlyMvp(Line l, String name, int age, int slot) {
+  double chance = 0;
+  if (l.hasBatting && l.atBats >= 50 && (l.ops ?? 0) >= 1.100) {
+    chance = 0.35 + ((l.ops ?? 0) - 1.100) * 2;
+  }
+  if (l.hasPitching && l.outs >= 54 && (l.era ?? 99) <= 1.20) {
+    chance = max(chance, 0.35 + (1.20 - (l.era ?? 99)) * 0.6);
+  }
+  if (chance <= 0) return false;
+  return _hash('$name/mvp/$slot', age) % 100 < (chance.clamp(0, 0.8) * 100);
 }
 
 /// 優勝パレードに集まった人数(万人)。人気から。
@@ -395,11 +454,12 @@ List<(String, int)> classmatesOf(String name, String team) => [
     ];
 
 /// 節目の年齢のひとこと(なければ null)。
-String? ageNote(int age) => switch (age) {
+/// `finalYear` は大学・社会人の最後の年(この夏のあと、秋のドラフトが最後のチャンス)。
+String? ageNote(int age, {bool finalYear = false}) => switch (age) {
+      _ when finalYear => '$age歳。大学・社会人の最後の年。この夏のあとのドラフトが、プロへの最後のチャンスだ。',
       12 => '12歳。来年は中学生だ。',
       15 => '15歳。高校でどこを目指すか考える時期だ。',
       18 => '18歳。高校最後の年。進路を決める時が来た。',
-      22 => '22歳。大学・社会人の最終年。プロ入りの最後のチャンスが近い。',
       30 => '30歳になった。ここから体の衰えと向き合っていく。',
       35 => '35歳。ベテランと呼ばれるようになった。',
       40 => '40歳。まだ現役でいられることに感謝している。',
@@ -407,7 +467,8 @@ String? ageNote(int age) => switch (age) {
     };
 
 /// 1年間の練習と休養の回数のまとめ。
-String yearSummaryOf(int trains, int rests) => 'この1年: 練習・特訓$trains回、休養$rests回。';
+String yearSummaryOf(int trains, int rests, [int combos = 0]) =>
+    'この1年: 練習・特訓$trains回、休養$rests回${combos > 0 ? '、連携$combos回' : ''}。';
 
 /// 背番号の格上げ。タイトルを取った投手はエースナンバー18、打者は3。なければ null。
 int? specialNumberOf(Role role, List<SeasonRecord> records) {
@@ -450,7 +511,11 @@ const _tips = [
   '進学先は、強豪ならプロ入りしやすく、進学校なら最終的な評価が少し高い。',
   'プロ8年目からは、一生に一度だけFA権が使える。',
   '投資は早いほど効く。年俸が入ったらトレーナーに投資してみよう。',
-  'コーチに教わってコツが貯まると、特性を習得できる。',
+  'コーチに間をあけて教わると、経験点が多い。4回でコーチの特殊能力のコツが満タンになる。',
+  '特殊能力は、幼いほど安く取れる。コツを1つ以上つかんでから、経験点で取ろう。',
+  '研究は、選んだ特殊能力のコツを2つ貯める。能力タブの本のボタンで選べる。',
+  '赤い特殊能力は弱点。経験点を払って克服すると消える。幼いうちほど安い。',
+  '金特は16歳(高校)から。もとになる特殊能力を先に取っておこう。',
   '二世として始めると、親の素質と良い特性を受け継げる。',
   '世界大会に出るには、その年の総合評価が目安を超えている必要がある。',
   'オフの過ごし方は、自主トレ・家族旅行・治療から選べる。',
@@ -467,6 +532,7 @@ int get tipCount => _tips.length;
 List<String> yearPlanOf(Stage stage, int age) => switch (stage) {
       Stage.youth => [
           '春〜冬: 練習・休養・交流を選んで育てる',
+          '特殊能力・弱点の克服は、少年のうちが半額',
           '夏: 少年野球の大会',
           '12歳: U-12の世界大会（実力しだい）'
         ],
@@ -477,15 +543,20 @@ List<String> yearPlanOf(Stage stage, int age) => switch (stage) {
         ],
       Stage.highSchool => [
           '入学の年: 進学先とポジションを決める',
-          '夏: 高校の大会（ドラフトの評価になる）',
+          if (age == 16) 'この年から: 金特が取れる',
+          '7月: 夏の大会（地方大会→全国大会。ドラフトの評価になる）',
           '18歳: U-18の世界大会（実力しだい）',
           '卒業の年: ドラフト会議'
         ],
-      Stage.pathChoice => ['大学・社会人: 夏の大会と、卒業の年のドラフト', '21歳: U-23の世界大会（実力しだい）'],
+      Stage.pathChoice => [
+          '大学: 春のリーグ戦→大学選手権 / 社会人: 都市対抗(地区予選→本大会)',
+          '卒業の年: ドラフト会議',
+          '21歳: U-23の世界大会（実力しだい）'
+        ],
       Stage.pro => [
           '年のはじめ: ポジション・オフの過ごし方・今年の目標',
-          '4〜9月: 月ごとのペナント（4か月目にオールスター）',
-          '10月: シーズン終了。表彰・日本シリーズ・契約更改',
+          '4〜9月: ペナントレース143試合（6月は交流戦、7月にオールスター）',
+          '10月: 3位までがクライマックスシリーズ→日本シリーズ。表彰・契約更改',
           if (age >= 22 && (age - 22) % 4 == 0) 'この年: 世界大会（実力しだい）',
           '8年目〜: 一生に一度のFA権',
         ],
@@ -493,13 +564,16 @@ List<String> yearPlanOf(Stage stage, int age) => switch (stage) {
     };
 
 /// 次の大会(プロはシーズン終了)までの残り。大会のターンを過ぎていれば null(来年)。
-({int left, String name, String unit})? untilTournament(Stage stage, int slot) {
+({int left, String name, String unit})? untilTournament(Stage stage, int slot,
+    {bool corporate = false}) {
   if (stage == Stage.retired) return null;
   final t = stage == Stage.pro ? 6 : (isMonthly(stage) ? 3 : 1);
   if (slot > t) return null;
   return (
     left: t - slot,
-    name: stage == Stage.pro ? 'シーズン終了' : '夏の大会',
+    name: stage == Stage.pro
+        ? 'シーズン終了'
+        : amateurEventName(stage, corporate: corporate),
     unit: isMonthly(stage) ? 'か月' : '季節',
   );
 }
@@ -541,7 +615,7 @@ String profileText(PlayerSnapshot s) {
   final ov = overall(p).round();
   return [
     '【野球育成】${s.name} (${s.age}歳)',
-    '総合評価 $ov ・ 素質 ${'★' * (s.potential ~/ 20)}',
+    '総合評価 $ov ・ 素質 ${talentStars(s.potential)}',
     if (nicknameOf(p).isNotEmpty)
       '「${nicknameOf(p)}」 ${s.role == Role.pitcher ? positionOf(p, s.position) : lineupRoleOf(p)}',
     if (s.traits.isNotEmpty) '特性: ${s.traits.map((t) => t.label).join('・')}',

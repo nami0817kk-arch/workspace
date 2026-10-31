@@ -3,7 +3,7 @@ import 'dart:math';
 import 'career.dart';
 import 'exp.dart';
 import 'player.dart';
-import 'traits.dart';
+import 'skills.dart';
 
 /// 登場人物の種類。名前はすべて架空(実在の人物と無関係)。
 enum Kind {
@@ -17,7 +17,7 @@ enum Kind {
   final String label;
 }
 
-/// コーチから「コツ」を何回教わると特性を習得できるか。
+/// コーチから「コツ」を何回教わると、コーチの特殊能力を習得できるか。
 const tipsNeeded = 4;
 
 class Character {
@@ -42,8 +42,8 @@ class Character {
   /// チームメイトの得意分野。同じ種類の練習で友情タッグが起きる。
   final Ability? specialty;
 
-  /// コーチが教えてくれる特性。
-  final Trait? teaches;
+  /// コーチが教えてくれる特殊能力。
+  final Skill? teaches;
   int tips;
 
   /// ライバルの素質 40〜90。強さの頭打ちを決める。
@@ -70,7 +70,7 @@ class Character {
             orElse: () => Kind.teammate),
         bond: (j['bond'] as num?)?.toInt() ?? 0,
         specialty: Ability.parse((j['specialty'] as String?) ?? ''),
-        teaches: Trait.parse((j['teaches'] as String?) ?? ''),
+        teaches: Skill.parse((j['teaches'] as String?) ?? ''),
         tips: (j['tips'] as num?)?.toInt() ?? 0,
         talent: (j['talent'] as num?)?.toInt() ?? 0,
       );
@@ -147,57 +147,20 @@ String _name(Random rng, Set<String> used, {bool lover = false}) {
   return '名無し';
 }
 
-/// 段階ごとにコーチが教えうる、基本の特性。
-const _taught = <Stage, List<Trait>>{
-  Stage.youth: [Trait.hardWorker, Trait.sunny, Trait.ironMan],
-  Stage.juniorHigh: [Trait.sturdy, Trait.ironMan, Trait.hardWorker],
-  Stage.highSchool: [Trait.clutch, Trait.genius, Trait.starPower],
-  Stage.pathChoice: [Trait.longevity, Trait.clutch, Trait.starPower],
-  Stage.pro: [Trait.longevity, Trait.genius, Trait.clutch, Trait.starPower],
-};
-
-/// 基本の特性を覚えきったあとに、コーチが教える個性派の特性。
-/// (先に基本のほうを教える。バランスのため、個性派は「余った分」で教わる。)
-const _taughtExtra = <Stage, List<Trait>>{
-  Stage.youth: [Trait.contactHitter, Trait.finesse, Trait.quickRecovery],
-  Stage.juniorHigh: [
-    Trait.patient,
-    Trait.speedster,
-    Trait.workhorse,
-    Trait.studious,
-  ],
-  Stage.highSchool: [
-    Trait.slugger,
-    Trait.fireballer,
-    Trait.leader,
-    Trait.moodMaker,
-  ],
-  Stage.pathChoice: [
-    Trait.leader,
-    Trait.studious,
-    Trait.contactHitter,
-    Trait.finesse
-  ],
-  Stage.pro: [
-    Trait.worldStage,
-    Trait.slugger,
-    Trait.fireballer,
-    Trait.leader,
-    Trait.workhorse,
-  ],
-};
-
-/// いま習得できるものから1つ。なければ null。
-/// 基本の特性が先で、それが無いときだけ個性派を教える。`role` に合わない特性は教えない。
-Trait? teachableTrait(Stage s, Set<Trait> have, Random rng, [Role? role]) {
-  List<Trait> pick(Map<Stage, List<Trait>> m) => [
-        for (final t in m[s] ?? const <Trait>[])
-          if (canGain(have, t) && (role == null || t.appliesTo(role))) t
-      ];
-  final basic = pick(_taught);
-  if (basic.isNotEmpty) return basic[rng.nextInt(basic.length)];
-  final extra = pick(_taughtExtra);
-  return extra.isEmpty ? null : extra[rng.nextInt(extra.length)];
+/// コーチが教える特殊能力を1つ選ぶ。なければ null。
+/// 少年・中学は基本の特殊能力だけ、高校から上は金の特殊能力も(もとの特殊能力を持っているときだけ)。
+/// 特性はコーチからは増えない(特性は生まれつきの体質と性格。2026-10-24)。
+Skill? teachableSkill(Stage s, Set<Skill> have, Random rng, [Role? role]) {
+  final early = s == Stage.youth || s == Stage.juniorHigh;
+  final pool = [
+    for (final k in Skill.values)
+      if (!have.contains(k) &&
+          !k.negative &&
+          (role == null || k.appliesTo(role)) &&
+          (!k.gold || (!early && k.requires != null && have.contains(k.requires))))
+        k
+  ];
+  return pool.isEmpty ? null : pool[rng.nextInt(pool.length)];
 }
 
 /// 友情タッグ練習で経験点が増える倍率。
@@ -228,7 +191,7 @@ class Cast {
       ];
 
   /// 6歳の始まり: 家族・ライバル(同い年)・チームメイト・コーチ。
-  factory Cast.initial(Random rng, Role role, Set<Trait> have) {
+  factory Cast.initial(Random rng, Role role, Set<Skill> have) {
     final used = <String>{};
     final c = Cast([
       Character(id: 'family', name: '母', kind: Kind.family, bond: 30),
@@ -245,7 +208,7 @@ class Cast {
 
   /// チームメイトとコーチを入れ替える。
   void _cast(
-      Stage s, Random rng, Role role, Set<Trait> have, Set<String> used) {
+      Stage s, Random rng, Role role, Set<Skill> have, Set<String> used) {
     members.removeWhere((m) => m.kind == Kind.teammate || m.kind == Kind.coach);
     final abilities = abilitiesOf(role == Role.twoWay ? Role.batter : role);
     for (var i = 0; i < 3; i++) {
@@ -261,12 +224,12 @@ class Cast {
       id: 'coach',
       name: _name(rng, used),
       kind: Kind.coach,
-      teaches: teachableTrait(s, have, rng, role),
+      teaches: teachableSkill(s, have, rng, role),
     ));
   }
 
   /// 段階が変わったとき。仲間とコーチが替わり、高校で恋人が現れる。
-  void rotate(Stage s, Random rng, Role role, Set<Trait> have) {
+  void rotate(Stage s, Random rng, Role role, Set<Skill> have) {
     final used = {
       for (final m in members) ...[m.name, '姓:${m.name.split(' ').first}'],
     };

@@ -18,6 +18,7 @@ import 'package:baseball_manager/game/invest.dart';
 import 'package:baseball_manager/game/life.dart';
 import 'package:baseball_manager/game/path.dart';
 import 'package:baseball_manager/game/player.dart';
+import 'package:baseball_manager/game/skills.dart';
 
 typedef Policy = void Function(Game g);
 
@@ -51,6 +52,31 @@ void coachOnly(Game g) {
 void studyOnly(Game g) {
   g.choose(g.condition.fatigue >= 60 ? Plan.rest : Plan.study,
       abilitiesOf(g.player.role).first);
+}
+
+/// 特殊能力も使う上手い遊び方: 4回に1回は研究でコツを貯め、コツが3つ以上(または金特)なら経験点で取る。
+void skillUser(Game g) {
+  if (g.slot % 4 == 3 && g.condition.fatigue < 70 && !g.condition.injured) {
+    final abilities = abilitiesOf(g.player.role);
+    g.choose(Plan.study, abilities.first);
+    return;
+  }
+  skilled(g);
+}
+
+/// 経験点を能力に振る前に、取りどきの特殊能力を取る(skillUser のとき)。
+bool buySkillsFirst = false;
+void _buySkills(Game g) {
+  // 弱点は見つけたら克服する(幼いほど安い)
+  for (final s in weaknessesFor(g.player.role)) {
+    if (g.player.skills.contains(s)) g.buySkill(s);
+  }
+  for (final s in skillsFor(g.player.role)) {
+    // 割に合う値段のときだけ(持つほど・年をとるほど高くなるので、高すぎるものは見送る)
+    if (((g.skillTips[s] ?? 0) >= 3 || s.gold) && g.skillPrice(s) <= s.baseCost) {
+      g.buySkill(s);
+    }
+  }
 }
 
 /// 今年の目標を毎年「むずかしい」「やさしい」にして、上手い遊び方をする。
@@ -107,6 +133,7 @@ Result play(int seed, Policy policy, Role role, Difficulty difficulty,
   var steps = 0;
   while (g.phase != Phase.retired) {
     if (++steps > 6000) throw StateError('終わらない seed=$seed');
+    if (buySkillsFirst) _buySkills(g);
     g.autoSpend();
     switch (g.phase) {
       case Phase.term:
@@ -175,6 +202,7 @@ void main(List<String> args) {
   for (final entry in {
     '平凡': plain,
     '上手い': skilled,
+    '特殊能力も使う': skillUser,
     if (extra) '特訓ばかり': grind,
     if (extra) '練習試合ばかり': matches,
     if (extra) 'コーチばかり': coachOnly,
@@ -182,6 +210,7 @@ void main(List<String> args) {
     if (extra) '目標むずかしい': skilledHardGoal,
     if (extra) '目標やさしい': skilledEasyGoal,
   }.entries) {
+    buySkillsFirst = entry.value == skillUser;
     for (final role in [Role.batter, Role.pitcher]) {
       final rs = [
         for (var s = 0; s < n; s++) play(s, entry.value, role, difficulty)

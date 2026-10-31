@@ -1,5 +1,4 @@
 import 'career.dart';
-import 'difficulty.dart';
 import 'marks.dart';
 import 'player.dart';
 import 'records.dart';
@@ -120,16 +119,39 @@ final List<Achievement> achievements = [
       (s) => s.rivalWins >= 10 && s.rivalWins > s.rivalLosses),
   Achievement('s-rank', 'Sランク', 'いずれかの能力を90以上にする。',
       (s) => s.abilities.values.any((v) => v >= 90)),
-  Achievement('traits-full', 'こだわりの個性', '特性を4つ以上そろえる。',
+  Achievement('traits-full', 'こだわりの個性', '特性を上限(3つ)までそろえる。',
       (s) => s.traits.length >= maxTraits),
   Achievement('rare-trait', '選ばれし者', 'レア特性を持って引退する(生まれつき、または覚醒)。',
       (s) => s.traits.any((t) => t.rare)),
-  Achievement('awakening', '眠れる才能', '節目の「覚醒」で、特性に目覚める。',
-      (s) => s.awakened),
-  Achievement('gifted', '才能の塊', '使う能力のうち、天賦が最大(+2)のものを3つ以上持つ。',
-      (s) => topGifts(s.role, s.gifts) >= 3),
+  Achievement('awakening', '眠れる才能', '節目の「覚醒」で、特性に目覚める。', (s) => s.awakened),
+  Achievement('gifted', '才能の塊', '使う能力の天賦の平均が+0.8以上(才能に恵まれて生まれる)。',
+      (s) => giftAverage(s.role, s.gifts) >= 0.8),
+  Achievement('triple-crown', '三冠王', '打率・本塁打・打点の三冠王に輝く。',
+      (s) => s.records.any((r) => r.awards.contains('三冠王'))),
+  Achievement('pitch-triple-crown', '投手三冠', '防御率・勝利・奪三振の投手三冠に輝く。',
+      (s) => s.records.any((r) => r.awards.contains('投手三冠'))),
+  Achievement('ace-award', 'エース賞', '先発投手の最高の栄誉「エース賞」を受ける。',
+      (s) => s.records.any((r) => r.awards.contains('エース賞'))),
+  Achievement('triple-three', 'トリプルスリー', '打率.300・30本塁打・30盗塁を同じ年に達成する。',
+      (s) => s.records.any((r) => r.awards.contains('トリプルスリー'))),
+  Achievement('series-mvp', 'シリーズの顔', '日本一の年に、シリーズMVPに選ばれる。',
+      (s) => s.records.any((r) => r.awards.contains('シリーズMVP'))),
+  Achievement('amateur-mvp', '大会の主役', 'アマの大会で「大会最優秀選手」に選ばれる。',
+      (s) => s.records.any((r) => r.awards.contains('大会最優秀選手'))),
+  Achievement(
+      'tryout-comeback',
+      'もう一度、舞台へ',
+      'トライアウトで契約を勝ち取り、現役を続ける。',
+      (s) => s.events
+          .any((e) => e.text.contains('トライアウトで') && e.text.contains('契約'))),
+  Achievement('second-career', 'セカンドキャリア', 'プロを引退したあと、新しい道(監督・解説者・実業家など)を選ぶ。',
+      (s) => s.afterPath != null),
+  Achievement('second-career-star', '第二の人生で輝く',
+      '引退後の道で「大成功」をおさめる(名監督・人気解説者・大実業家など)。', (s) => (s.afterTier ?? 0) >= 2),
+  Achievement('title-streak', '連続王者', 'プロで5年連続でタイトルを獲得する。',
+      (s) => longestTitleStreak(s.records) >= 5),
   Achievement('salary-oku', '億の男', '年俸が1億円を超える年を迎える。',
-      (s) => s.records.any((r) => salaryOf(r) >= 10000)),
+      (s) => salariesOf(s.records).any((y) => y >= 10000)),
   Achievement('earnings-10', '一代で財を成す', 'プロ通算の収入が10億円を超える。',
       (s) => careerEarnings(s.records) >= 100000),
   Achievement('national-team', '日の丸を背負う', '世界大会の日本代表に選ばれる。',
@@ -153,12 +175,27 @@ final List<Achievement> achievements = [
   Achievement('rich', '資産家', '資産が10億円を超えて引退する。', (s) => s.money >= 100000),
   Achievement('full-support', '万全の体制', '3つの投資をすべて最大(Lv3)にする。',
       (s) => s.investTotal >= 9),
+  Achievement('hometown-hero', '地元の英雄', '地元に野球場を寄付する。',
+      (s) => s.purchases.contains('donate')),
+  Achievement('family-home', '親孝行', '家族に家を贈る。',
+      (s) => s.purchases.contains('house')),
   Achievement('superstar', '国民的スター', '人気が90以上(Sランク)になる。',
       (s) => popularityOf(s.records, s.worldRecords) >= 90),
-  Achievement('hard-pro', '狭き門', '「むずかしい」で、プロ入りする。',
-      (s) => s.difficulty == Difficulty.hard && s.proStartAge != null),
-  Achievement('hard-legend', '不屈の伝説', '「むずかしい」で、レジェンドになる。',
-      (s) => s.difficulty == Difficulty.hard && s.endingTitle == 'レジェンド'),
+  // 「むずかしい」専用の実績(狭き門・不屈の伝説)は、難しさの選択をなくしたので外した(2026-10-24)。
+  // ── 特殊能力(2026-10-25) ──
+  Achievement('skills-5', '技の引き出し', '特殊能力を5つ以上持って引退する。',
+      (s) => s.skills.where((k) => !k.negative).length >= 5),
+  Achievement('skills-10', 'スペシャリスト', '特殊能力を8個以上持って引退する。',
+      (s) => s.skills.where((k) => !k.negative).length >= 8),
+  Achievement('gold-1', '金の輝き', '金の特殊能力を持って引退する。',
+      (s) => s.skills.any((k) => k.gold)),
+  Achievement('gold-3', '黄金の系譜', '金の特殊能力を2つ以上持って引退する。',
+      (s) => s.skills.where((k) => k.gold).length >= 2),
+  Achievement('overcome', '弱点克服', '生まれつきの弱点(赤い特殊能力)を克服する。',
+      (s) => s.events.any((e) => e.text.contains('を克服'))),
+  Achievement('young-skill', '早熟の技', '12歳までに特殊能力を取る。',
+      (s) => s.events.any((e) =>
+          e.age <= 12 && e.text.startsWith('特殊能力「') && e.text.endsWith('を取得'))),
 ];
 
 /// この一生で達成した実績の id。

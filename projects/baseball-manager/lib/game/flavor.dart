@@ -25,20 +25,67 @@ String trainingMenu(Ability a) => switch (a) {
       Ability.stamina => 'ランニングと投げ込み',
     };
 
-const _youthTeams = ['青葉', '若鷹', '北風', '朝日', '白波', '緑ヶ丘', '星空', '双葉'];
-const _schools = ['青陵', '北嶺', '朱鷺', '光明', '紅葉台', '大和', '桜丘', '蒼海', '白鷺', '緑風'];
+const _youthTeams = [
+  '青葉',
+  '若鷹',
+  '北風',
+  '朝日',
+  '白波',
+  '緑ヶ丘',
+  '星空',
+  '双葉',
+  '若竹',
+  '虹ヶ丘',
+  '小鷲',
+  '海風',
+  '若草',
+  '桜台',
+  '富士見',
+  '銀杏',
+];
+const _schools = [
+  '青陵',
+  '北嶺',
+  '朱鷺',
+  '光明',
+  '紅葉台',
+  '大和',
+  '桜丘',
+  '蒼海',
+  '白鷺',
+  '緑風',
+  '清流',
+  '星城',
+  '朝霧',
+  '若松',
+  '東陽',
+  '西峰',
+  '南風',
+  '北翔',
+  '城山',
+  '晴嵐',
+];
+const _ownUni = ['青嶺', '城北', '海南', '東和', '武蔵野台', '関西学林', '北海', '九州文理'];
+const _ownCorp = ['東邦鉄鋼', '日本海運', '中央自動車', '山陽電力', '北陸化学', '若葉生命'];
 
 /// 所属(少年野球のチーム・中学・高校・プロ球団)。プロ入り前後で変わる。
-String affiliationOf(Stage stage, String name, {String? proTeam}) {
+/// `seed` は選手ごとの種(`Game.teamSeed`)。名前だけだと、同じ名前で始めるたびに同じチームだった。
+/// 0 は古いセーブ(名前だけで決める)。`course` は大学・社会人のどちらに進んだか(未定なら null)。
+String affiliationOf(Stage stage, String name,
+    {String? proTeam, int seed = 0, bool? corporate}) {
+  final key = seed == 0 ? name : '$name#$seed';
   switch (stage) {
     case Stage.youth:
-      return '${_youthTeams[_h(name, 1) % _youthTeams.length]}ジュニアーズ';
+      return '${_youthTeams[_h(key, 1) % _youthTeams.length]}ジュニアーズ';
     case Stage.juniorHigh:
-      return '${_schools[_h(name, 2) % _schools.length]}中学 野球部';
+      return '${_schools[_h(key, 2) % _schools.length]}中学 野球部';
     case Stage.highSchool:
-      return '${_schools[_h(name, 3) % _schools.length]}高校 野球部';
+      return '${_schools[_h(key, 3) % _schools.length]}高校 野球部';
     case Stage.pathChoice:
-      return '進路を考え中';
+      if (corporate == null) return '進路を考え中';
+      return corporate
+          ? '${_ownCorp[_h(key, 4) % _ownCorp.length]} 野球部'
+          : '${_ownUni[_h(key, 4) % _ownUni.length]}大学 野球部';
     case Stage.pro:
     case Stage.retired:
       return proTeam ?? 'プロ野球';
@@ -223,9 +270,12 @@ String positionOf(Player p, [Pos? chosen]) =>
     effectivePosition(p, chosen).label;
 
 /// 背番号。少年野球は付けない(null)。投手は1〜19、野手は2〜99。
-int? uniformNumberOf(Stage stage, Player p) {
+/// `ikusei` は育成契約(二軍スタート)の間。実際のプロ野球と同じく3桁の背番号で、
+/// 一軍に上がる(支配下登録)と2桁に変わる。
+int? uniformNumberOf(Stage stage, Player p, {bool ikusei = false}) {
   if (stage == Stage.youth) return null;
   final h = _h(p.name, 5 + stage.index);
+  if (stage == Stage.pro && ikusei) return 101 + h % 40;
   if (p.role == Role.pitcher) {
     return stage == Stage.pro ? 11 + h % 19 : 1 + h % 11;
   }
@@ -235,9 +285,9 @@ int? uniformNumberOf(Stage stage, Player p) {
 
 /// 1行の選手カード: 「背番号18 ・ 右投左打 ・ 遊撃手」。
 String playerCardLine(Stage stage, Player p,
-    {Pos? position, int? numberOverride}) {
-  final n =
-      (stage == Stage.pro ? numberOverride : null) ?? uniformNumberOf(stage, p);
+    {Pos? position, int? numberOverride, bool ikusei = false}) {
+  final n = (stage == Stage.pro ? numberOverride : null) ??
+      uniformNumberOf(stage, p, ikusei: ikusei);
   return [
     if (n != null) '背番号$n',
     handednessOf(p.name),
@@ -245,7 +295,24 @@ String playerCardLine(Stage stage, Player p,
   ].join(' ・ ');
 }
 
-const _oppYouth = ['北斗', '若葉', '黒潮', '大空', '赤城', '旭', '鷲羽', '松風', '蒼', '日向'];
+const _oppYouth = [
+  '北斗',
+  '若葉',
+  '黒潮',
+  '大空',
+  '赤城',
+  '旭',
+  '鷲羽',
+  '松風',
+  '蒼',
+  '日向',
+  '飛鳥',
+  '白樺',
+  '千歳',
+  '岬',
+  '湊',
+  '高原',
+];
 const _oppSchool = [
   '桜丘',
   '東雲',
@@ -258,14 +325,21 @@ const _oppSchool = [
   '潮見',
   '雷鳴',
   '鳳凰',
-  '明星'
+  '明星',
+  '大鷲',
+  '若潮',
+  '常盤',
+  '春日',
+  '霧島',
+  '有明',
 ];
 const _oppUni = ['東都', '西海', '北辰', '南陵', '中京', '湘南', '浪速', '瀬戸'];
 const _oppCorp = ['大和製作所', '日の出重工', '三星ガス', '青空電機', '北辰食品', '新生運輸'];
 
 /// 勝ち抜き戦の相手の名前(架空)。同じ年・同じ回戦なら毎回同じ。自分の所属とは別の名前にする。
+/// `seed` は選手ごとの種(0 は古いセーブ)。年齢と回戦だけで決めると、どの選手でも同じ相手だった。
 String opponentName(Stage stage, int age, int round,
-    {bool corporate = false, String own = ''}) {
+    {bool corporate = false, String own = '', int seed = 0}) {
   final pool = switch (stage) {
     Stage.youth => _oppYouth.map((n) => '$nジュニアーズ').toList(),
     Stage.juniorHigh => _oppSchool.map((n) => '$n中学').toList(),
@@ -275,7 +349,10 @@ String opponentName(Stage stage, int age, int round,
         : _oppUni.map((n) => '$n大学').toList(),
     _ => _oppSchool.map((n) => '$n高校').toList(),
   };
-  var i = _h('$age/$round/${stage.index}') % pool.length;
+  var i = _h(seed == 0
+          ? '$age/$round/${stage.index}'
+          : '$age/$round/${stage.index}/$seed') %
+      pool.length;
   // 自分の所属と同じ名前は避ける。
   for (var k = 0;
       k < pool.length &&

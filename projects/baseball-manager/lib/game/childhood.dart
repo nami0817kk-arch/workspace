@@ -3,6 +3,7 @@ import 'dart:math';
 import 'characters.dart';
 import 'life.dart';
 import 'player.dart';
+import 'talent.dart';
 import 'training.dart';
 import 'traits.dart';
 
@@ -56,6 +57,21 @@ Player _gain(Player p, Ability a, int n) {
 Player _byRole(Player p, Ability bat, Ability pit, int n) =>
     _gain(_gain(p, bat, n), pit, n);
 
+/// 素質(才能の総合。星5つの元の数字)を上げる。
+Player _potential(Player p, int n) =>
+    p.copyWith(potential: (p.potential + n).clamp(0, 100));
+
+/// 重点の能力 `focus` の天賦を1段階上げる(使わない能力・上限なら、いちばん低い能力)。
+EventChoice _giftChoice(String label, {int fatigue = 0, int morale = 0}) =>
+    EventChoice(
+      label,
+      (p, c, focus) => (
+        player: giftUp(p, focus),
+        condition:
+            c.copyWith(fatigue: c.fatigue + fatigue, morale: c.morale + morale),
+      ),
+    );
+
 /// 特性を足す。持てない(もう上限・重複・矛盾)ときは、選んだことが無駄にならないよう、
 /// いちばん低い能力を+1にする。
 Player _trait(Player p, Trait t) {
@@ -65,9 +81,9 @@ Player _trait(Player p, Trait t) {
   return _gain(p, abilities.first, 1);
 }
 
-/// 役割に合う特性を1つ。打者向け・投手向けのどちらかを与える。
-Player _roleTrait(Player p, Trait bat, Trait pit) =>
-    _trait(p, p.role == Role.pitcher ? pit : bat);
+/// 役割に合う能力の天賦を1段階上げる(打者は `bat`、投手は `pit`)。
+Player _roleGift(Player p, Ability bat, Ability pit) =>
+    giftUp(p, p.role == Role.pitcher ? pit : bat);
 
 EventChoice _c(
   String label,
@@ -126,16 +142,13 @@ final List<ChildhoodStep> childhoodSteps = [
   ChildhoodStep(
     9,
     GameEvent('kid-idol', 'テレビで見た選手に、すっかり夢中になった。どんな選手?', [
-      _c(
-          '豪快な一発・剛速球の選手',
-          (p) => _roleTrait(
-              _gain(p, Ability.power, 1), Trait.slugger, Trait.fireballer)),
+      // 憧れは、その動きの才能(天賦)になる。特殊能力・特性は増やさない(2026-10-24)。
+      _c('豪快な一発・剛速球の選手',
+          (p) => _roleGift(_gain(p, Ability.power, 1), Ability.power, Ability.stuff)),
       _c('技巧派(ねらい打ち・精密な制球)',
-          (p) => _roleTrait(p, Trait.contactHitter, Trait.finesse)),
-      _c(
-          '足と体力で魅せる選手',
-          (p) => _roleTrait(
-              _gain(p, Ability.speed, 1), Trait.speedster, Trait.workhorse)),
+          (p) => _roleGift(p, Ability.contact, Ability.control)),
+      _c('足と体力で魅せる選手',
+          (p) => _roleGift(_gain(p, Ability.speed, 1), Ability.speed, Ability.stamina)),
     ]),
     const ['豪快な選手に憧れた', '技巧派の選手に憧れた', '足と体力の選手に憧れた'],
   ),
@@ -284,7 +297,7 @@ final List<ChildhoodStep> childhoodSteps = [
   ChildhoodStep(
     21,
     GameEvent('turn-route-pro', 'ドラフトが近づいてきた。どうアピールする?', [
-      _c('リーグ戦で結果を出すことに集中する',
+      _c('試合で結果を出すことに集中する',
           (p) => _byRole(p, Ability.power, Ability.stuff, 1),
           fatigue: 5),
       _c('スカウトとの面談に力を入れる', (p) => p, morale: 3),
@@ -325,6 +338,41 @@ final List<ChildhoodStep> childhoodSteps = [
       }),
     ]),
     const ['親友とケンカして、自分から謝った', '親友とケンカして、野球に打ち込んだ', '親友とのケンカを、コーチに助けてもらった'],
+    const [],
+    2,
+  ),
+  // ── 才能が上がる分かれ道(素質の星・能力ごとの天賦の星が増える) ──
+  ChildhoodStep(
+    7,
+    GameEvent('kid-talent-coach', '近所の元選手が、君の動きを見て「筋がいいね」と声をかけてくれた。', [
+      _c('「ぜひ、教えてください!」', (p) => _potential(p, 4), fatigue: 10),
+      _c('家族に相談して、通うか決める', (p) => _potential(p, 2),
+          morale: 5, onCast: (cast, rng) => cast.family?.addBond(10)),
+      _c('今は友だちと遊びたい', (p) => p, morale: 15),
+    ]),
+    const ['元選手に才能を見いだされ、教わった', '元選手の誘いを、家族と相談して決めた', '才能を認められたが、友だちと遊ぶほうを選んだ'],
+    const [],
+    2,
+  ),
+  ChildhoodStep(
+    10,
+    GameEvent('kid-talent-mentor', '憧れの選手の野球教室に参加できた。直接アドバイスをもらえる!', [
+      _c('全部メモして、毎日実践する', (p) => _potential(p, 3), fatigue: 8),
+      _giftChoice('いちばん得意にしたい動きを、教えてもらう', morale: 5),
+      _c('サインをもらって、大喜びする', (p) => p, morale: 20),
+    ]),
+    const ['憧れの選手の教えを、毎日実践した', '憧れの選手に、得意な動きを教わった', '憧れの選手のサインをもらって大喜びした'],
+    const [],
+    2,
+  ),
+  ChildhoodStep(
+    11,
+    GameEvent('kid-talent-flash', '練習の途中、体の使い方がふっとつかめた気がする!', [
+      _giftChoice('この感覚を、重点の能力で繰り返す', fatigue: 6),
+      _c('もう少し、いろいろ試してみる', (p) => _potential(p, 3), fatigue: 8),
+      _c('気のせいかな、と遊びに戻る', (p) => p, morale: 12),
+    ]),
+    const ['体の使い方をつかみ、得意を伸ばした', '感覚をつかみかけて、いろいろ試した', '感覚を気にせず、遊びに戻った'],
     const [],
     2,
   ),

@@ -8,6 +8,8 @@ import '../game/difficulty.dart';
 import '../game/marks.dart';
 import '../game/player.dart';
 import '../game/talent.dart';
+import '../game/skills.dart';
+import '../game/snapshot.dart';
 import '../game/traits.dart';
 import 'art/avatar.dart';
 import 'art/scene.dart';
@@ -34,7 +36,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final name = TextEditingController(text: '');
   Role role = Role.batter;
-  Difficulty difficulty = Difficulty.normal;
 
   /// 二世として始めるときの親(殿堂の、結婚した選手)。なければ ふつうに始める。
   HistoryEntry? heir;
@@ -50,7 +51,20 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    // 生まれ(才能・特性・弱点)の見本を引いておく。名前を変えると見本も変わる
+    if (widget.controller.birthSeed == null) {
+      widget.controller.rerollBirth(notify: false); // 画面を作っている最中なので知らせない
+    }
+    name.addListener(_nameChanged);
+  }
+
+  void _nameChanged() => setState(() {});
+
+  @override
   void dispose() {
+    name.removeListener(_nameChanged);
     name.dispose();
     super.dispose();
   }
@@ -91,7 +105,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _start() => widget.controller
-      .newGame(name.text, role, difficulty, heir?.snapshot, carry);
+      .newGame(name.text, role, Difficulty.normal, heir?.snapshot, carry);
 
   @override
   Widget build(BuildContext context) {
@@ -201,21 +215,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                   const SizedBox(height: 16),
-                  const Text('難しさ'),
-                  const SizedBox(height: 8),
-                  SegmentedButton<Difficulty>(
-                    key: const Key('difficulty'),
-                    segments: [
-                      for (final d in Difficulty.values)
-                        ButtonSegment(value: d, label: Text(d.label)),
-                    ],
-                    selected: {difficulty},
-                    onSelectionChanged: (s) =>
-                        setState(() => difficulty = s.first),
+                  _BirthPreview(
+                    controller: widget.controller,
+                    name: name.text,
+                    role: role,
+                    parent: heir?.snapshot,
+                    carry: carry,
                   ),
-                  const SizedBox(height: 8),
-                  Text(difficulty.description,
-                      style: Theme.of(context).textTheme.bodySmall),
                   if (_heirCandidates.isNotEmpty) ...[
                     const SizedBox(height: 16),
                     const Text('二世として始める'),
@@ -256,8 +262,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           selected: carry == null,
                           onSelected: (_) => setState(() => carry = null),
                         ),
-                        for (final t
-                            in widget.controller.carryCandidates(role))
+                        for (final t in widget.controller.carryCandidates(role))
                           Tooltip(
                             message: t.description,
                             child: ChoiceChip(
@@ -271,7 +276,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ] else if (widget.controller.legacyPoints > 0) ...[
                     const SizedBox(height: 16),
-                    Text('継承ポイント ${widget.controller.legacyPoints}pt'
+                    Text(
+                        '継承ポイント ${widget.controller.legacyPoints}pt'
                         '(図鑑にある特性を持たせるには、あと少し貯める)',
                         style: Theme.of(context).textTheme.bodySmall),
                   ],
@@ -330,7 +336,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           color: Color(0xFFD84315)),
                       title: const Text('特性図鑑'),
                       subtitle: Text(
-                          '${widget.controller.seenTraits.length} / ${Trait.values.length} 発見'),
+                          '特性 ${widget.controller.seenTraitCount} / ${Trait.values.length}・特殊能力 ${widget.controller.seenSkills.length} / ${Skill.values.where((k) => !k.negative).length}'),
                       trailing: const Icon(Icons.chevron_right),
                       onTap: () => Navigator.of(context).push(
                         MaterialPageRoute<void>(
@@ -463,6 +469,15 @@ class _HistoryTile extends StatelessWidget {
       if (e.snapshot != null && e.snapshot!.difficulty != Difficulty.normal)
         e.snapshot!.difficulty.label,
       if (e.married) '結婚',
+      // レア特性(生まれつき・覚醒)を持っていた選手
+      if (e.snapshot != null && e.snapshot!.traits.any((t) => t.rare))
+        '★${[
+          for (final t in e.snapshot!.traits)
+            if (t.rare) t.label
+        ].join('・')}',
+      // 金特(特殊能力の最上位)を持っていた選手
+      if (e.snapshot != null && e.snapshot!.skills.any((k) => k.gold))
+        '金特${e.snapshot!.skills.where((k) => k.gold).length}',
     ];
     return Card(
       child: ListTile(
@@ -498,21 +513,22 @@ Future<void> showHelp(BuildContext context) {
           '・練習すると「経験点」が貯まります。好きな能力に振り分けて強くします。\n'
           '・体力が減ると怪我しやすくなります。休養や交流で回復しましょう。\n'
           '・やる気が高いほど、経験点がたくさん貯まります。\n'
-          '・仲間と組むと友情タッグ練習、コーチに教わると特性を習得できます。\n'
-          '・夏の大会の成績がドラフトの評価になります。高校卒業時に指名されなければ、大学か社会人で1度だけ再挑戦できます。\n'
+          '・仲間と組むと友情タッグ練習。コーチに4回教わると、コーチの特殊能力を習得できます。\n'
+          '・特殊能力(チャンス○・奪三振など)は経験点で取ります。研究・特訓・練習試合・交流・コーチでコツをつかみ(1つ以上で取れる)、貯まるほど安くなります(コツ5で半額)。金特は16歳から。値段は幼いほど安く、大人になるほど高くなります。生まれつきの弱点(赤)は経験点で克服できます。特性(体質・性格)とは別の枠です。\n'
+          '・大会の成績がドラフトの評価になります。高校卒業時に指名されなければ、大学か社会人で1度だけ再挑戦できます。\n'
           '・プロになったら二刀流にいつでも挑戦できます(伸びは0.75倍。両方を伸ばせば評価が上乗せされ、年俸と人気も上がる)。\n'
-          '・夏の大会(プロは10月のシーズン終了)のあとに、成績が記録されます。右上のグラフのボタンで、成績表を見られます。\n'
+          '・アマチュアは夏の大会(高校は地方大会→全国大会、大学はリーグ戦→大学選手権、社会人は都市対抗)、プロは143試合のペナントレースのあとに成績が記録されます。プロは3位までがクライマックスシリーズに進み、勝ち抜けば日本シリーズです。右上のグラフのボタンで、成績表を見られます。\n'
           '・右上の人型ボタンで選手情報(プロフィール・成績・経歴)を、歯車で設定(管理者モードなど)を開けます。殿堂の選手をタップすると、過去の選手の情報も見られます。\n'
           '・毎年「今年の目標」が出ます。達成すると経験点とやる気がもらえます。\n'
           '・プロは長いので、「おすすめで年末まで進める」で1年を一気に進められます(出来事や節目では止まります)。\n'
           '・12歳・15歳・18歳(U-12・U-15・U-18)、大学・社会人の21歳(U-23)、プロは22歳から4年おきに「世界大会」があります。実力があると日本代表に選ばれ、世界一を目指します。\n'
           '・中学・高校・進路の最初の年と、プロの毎年のはじめに、ポジションを決められます。ポジションごとに必要な能力が違い、適性はランクで見えます。適性の低い所を選ぶとチーム力が下がります。\n'
           '・特性は34種類(うちレア7種)。打者・投手向けのものは、その役割の選手にだけつきます。成績の「指標」(OPS+・WHIPなど)は、項目をタップすると意味が出ます。\n'
-          '・能力には「天賦」(得意・苦手)があり、得意な能力は経験点が少なくて済みます。選手ごとに違います。\n'
+          '・才能は星5つで見えます。選手全体の才能と、能力ごとの才能(★が多いほど経験点が少なくて済む)があり、選手ごとに違います。幼少期の出来事で、才能が伸びることもあります。\n'
           '・レア特性は、生まれつき4%、またはプロでタイトルや優勝をしたときの「覚醒」(一生に一度)で手に入ります。持った特性は「特性図鑑」に残ります。\n'
           '・引退のたびに「継承ポイント」が貯まります(称号が高いほど多い)。次の選手を始めるとき、特性図鑑にある良い特性を生まれつき持たせられます(3pt、レアは8pt)。\n'
           '・同じ能力を重点に練習を続けると、経験点が少し増え、ときどき「開眼」します。重点を変えると連続は戻ります。\n'
-          '・プロでは、シーズン中の成績で月間MVPやオールスターに選ばれ、年の終わりに新人王・ベストナインなどの表彰があります。8年目からは一度だけ「FA権」で移籍を決められます。\n'
+          '・プロでは、シーズン中の成績で月間MVPやオールスターに選ばれ、年の終わりに新人王・ベストナイン・エース賞・三冠王・トリプルスリーなど、実際の野球にもある表彰や大記録があります(アマの大会にも大会優秀選手・最優秀選手があります)。8年目からは一度だけ「FA権」で移籍を決められます。\n'
           '・一生を通した達成は「実績」に残ります。ホームの実績カードから見られます。\n'
           '・引退までの一生が、あなたの選手の物語です。',
         ),
@@ -530,4 +546,116 @@ void showAdminToggled(BuildContext context, GameController c) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(content: Text('管理者モード: ${c.adminMode ? 'オン' : 'オフ'}')),
   );
+}
+
+/// 新規開始画面: この選手の「生まれ」(才能・生まれつきの特性・弱点・天賦の目立つもの)の見本と、引き直すボタン。
+/// 2026-10-25 ユーザー「最初の選手画面で、初期に保持している特性をランダムで決められるように」。
+class _BirthPreview extends StatelessWidget {
+  const _BirthPreview({
+    required this.controller,
+    required this.name,
+    required this.role,
+    this.parent,
+    this.carry,
+  });
+  final GameController controller;
+  final String name;
+  final Role role;
+  final PlayerSnapshot? parent;
+  final Trait? carry;
+
+  @override
+  Widget build(BuildContext context) {
+    final p = controller
+        .previewBirth(name, role, parent: parent, carry: carry)
+        .player;
+    final weak = [
+      for (final k in weaknessesFor(role))
+        if (p.skills.contains(k)) k
+    ];
+    final good = [
+      for (final a in abilitiesOf(role))
+        if (p.gift(a) >= 1) a
+    ];
+    final bad = [
+      for (final a in abilitiesOf(role))
+        if (p.gift(a) <= -1) a
+    ];
+    return Card(
+      key: const Key('birth-preview'),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(children: [
+            const Icon(Icons.child_care, color: Color(0xFF6D4C41)),
+            const SizedBox(width: 6),
+            const Expanded(
+              child: Text('生まれ持ったもの',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+            ),
+            FilledButton.tonalIcon(
+              key: const Key('birth-reroll'),
+              style: FilledButton.styleFrom(
+                  minimumSize: const Size(0, 36),
+                  visualDensity: VisualDensity.compact),
+              onPressed: controller.rerollBirth,
+              icon: const Icon(Icons.casino, size: 18),
+              label: const Text('引き直す'),
+            ),
+          ]),
+          const SizedBox(height: 6),
+          Text('才能 ${talentStars(p.potential)}',
+              key: const Key('birth-talent'),
+              style: const TextStyle(color: Color(0xFFF9A825))),
+          const SizedBox(height: 4),
+          Wrap(spacing: 6, runSpacing: 4, children: [
+            if (p.traits.isEmpty)
+              const Chip(
+                  key: Key('birth-no-trait'),
+                  visualDensity: VisualDensity.compact,
+                  label: Text('特性なし')),
+            for (final t in p.traits)
+              Tooltip(
+                message: t.description,
+                triggerMode: TooltipTriggerMode.tap,
+                child: Chip(
+                  key: Key('birth-trait-${t.name}'),
+                  visualDensity: VisualDensity.compact,
+                  avatar: Icon(t.rare ? Icons.stars : Icons.auto_awesome,
+                      size: 16, color: traitIconColor(t)),
+                  label: Text(t.rare ? '★${t.label}' : t.label),
+                ),
+              ),
+            for (final k in weak)
+              Tooltip(
+                message: '弱点。${effectText(k)}(経験点で克服できる。幼いうちほど安い)',
+                triggerMode: TooltipTriggerMode.tap,
+                child: Chip(
+                  key: Key('birth-weak-${k.name}'),
+                  visualDensity: VisualDensity.compact,
+                  avatar: const Icon(Icons.trending_down,
+                      size: 16, color: Color(0xFFC62828)),
+                  label: Text(k.label,
+                      style: const TextStyle(color: Color(0xFFC62828))),
+                ),
+              ),
+          ]),
+          if (good.isNotEmpty || bad.isNotEmpty) ...[
+            const SizedBox(height: 4),
+            Text(
+                [
+                  if (good.isNotEmpty)
+                    '得意: ${good.map(abilityLabel).join('・')}',
+                  if (bad.isNotEmpty) '苦手: ${bad.map(abilityLabel).join('・')}',
+                ].join('  '),
+                key: const Key('birth-gifts'),
+                style: Theme.of(context).textTheme.bodySmall),
+          ],
+          const SizedBox(height: 4),
+          Text('気に入るまで引き直せます(名前や役割を変えても変わります)。',
+              style: Theme.of(context).textTheme.bodySmall),
+        ]),
+      ),
+    );
+  }
 }

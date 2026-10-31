@@ -1,3 +1,4 @@
+import 'training.dart' show ageCeiling;
 import 'dart:math';
 
 import 'player.dart';
@@ -36,8 +37,14 @@ Map<Category, int> spreadExp(Role r, int n) =>
 double roleExpFactor(Role r) {
   final n = abilitiesOf(r).length;
   const batterShare = (1 + 0.25 * 4) / 5;
-  return batterShare / ((1 + 0.25 * (n - 1)) / n);
+  return batterShare / ((1 + 0.25 * (n - 1)) / n) * (r == Role.pitcher ? pitcherPace : 1.0);
 }
+
+/// 投手の伸びの補正(2026-10-21)。経験点を1能力あたりで揃えても、投手は打者よりプロに入りやすく
+/// レジェンドも多かった(`tool/balance.dart 600 normal`: 平凡のプロ入り 打者43%/投手62%、レジェンド 3%/19%)。
+/// 能力が3つで底上げが効き、投球の経験点が1つの種類に集まるため。0.85 にすると揃う
+/// (平凡 43.3%/43.8%・レジェンド 3.0%/4.0%、上手い 47.2%/46.2%・レジェンド 23.2%/21.5%)。0.75 だと投手が低すぎる(31%)。
+const pitcherPace = int.fromEnvironment('BAL_PPACE', defaultValue: 82) / 100;
 
 /// 能力1ぶん(基準)を経験点にしたときの量。練習の伸びはこれを掛けて貯まる。
 const expPerPoint = 8;
@@ -98,7 +105,8 @@ class ExpPool {
   final v = p.of(a);
   final cost = expCost(v, p.gift(a));
   final c = categoryOf(a);
-  if (v >= 99 || pool.of(c) < cost) return null;
+  // 年齢による上限(体の限界)より上には上げられない
+  if (v >= 99 || v >= ageCeiling(p, a) || pool.of(c) < cost) return null;
   return (
     player: p.copyWith(abilities: {...p.abilities, a: v + 1}),
     pool: pool.spend(c, cost),
@@ -126,7 +134,7 @@ class ExpPool {
     for (final c in Category.values) {
       final cands = [
         for (final a in abilitiesOf(p.role))
-          if (categoryOf(a) == c && p.of(a) < 99) a,
+          if (categoryOf(a) == c && p.of(a) < 99 && p.of(a) < ageCeiling(p, a)) a,
       ]..sort((x, y) => p.of(x).compareTo(p.of(y)));
       for (final a in cands) {
         final r = buy(p, pool, a);

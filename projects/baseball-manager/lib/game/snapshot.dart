@@ -5,6 +5,7 @@ import 'life_log.dart';
 import 'path.dart';
 import 'player.dart';
 import 'records.dart';
+import 'skills.dart';
 import 'traits.dart';
 import 'flavor.dart';
 import 'world.dart';
@@ -19,6 +20,7 @@ class PlayerSnapshot {
     required this.potential,
     required this.abilities,
     required this.traits,
+    this.skills = const {},
     required this.records,
     required this.events,
     required this.overallHistory,
@@ -35,11 +37,16 @@ class PlayerSnapshot {
     this.position,
     this.overseasTeam,
     this.parentName,
+    this.teamSeed = 0,
+    this.corporate,
     this.money = 0,
     this.investTotal = 0,
+    this.purchases = const [],
     this.rivalTalent,
     this.gifts = const {},
     this.awakened = false,
+    this.afterPath,
+    this.afterTier,
   });
 
   final String name;
@@ -49,6 +56,9 @@ class PlayerSnapshot {
   final int potential;
   final Map<Ability, int> abilities;
   final Set<Trait> traits;
+
+  /// 特殊能力(古い写しは空。昔の特性で特殊能力に移したものは読み替える)。
+  final Set<Skill> skills;
   final List<SeasonRecord> records;
   final List<LifeEvent> events;
   final List<int> overallHistory;
@@ -82,9 +92,18 @@ class PlayerSnapshot {
   /// 二世のとき、親の名前。
   final String? parentName;
 
+  /// チーム名の種(`Game.teamSeed`)。古い記録は0(名前だけで決める)。
+  final int teamSeed;
+
+  /// 大学・社会人のどちらに進んだか(進んでいなければ null)。
+  final bool? corporate;
+
   /// 資産(万円)と、投資のレベルの合計(最大9)。
   final int money;
   final int investTotal;
+
+  /// 一生に一度の買い物で買ったもの(`ShopItem` の名前)。
+  final List<String> purchases;
 
   /// ライバルの素質(物語を作るのに使う)。
   final int? rivalTalent;
@@ -94,6 +113,10 @@ class PlayerSnapshot {
 
   /// 一生のうちに特性が覚醒したか。
   final bool awakened;
+
+  /// 引退後に選んだ道の名前(`AfterPath.name`)と、その結果の段階(0〜2)。選んでいなければ null。
+  final String? afterPath;
+  final int? afterTier;
 
   int of(Ability a) => abilities[a] ?? 0;
 
@@ -105,6 +128,7 @@ class PlayerSnapshot {
         potential: g.player.potential,
         abilities: Map.of(g.player.abilities),
         traits: Set.of(g.player.traits),
+        skills: Set.of(g.player.skills),
         records: List.of(g.records),
         events: List.of(g.lifeLog),
         overallHistory: List.of(g.overallHistory),
@@ -121,11 +145,16 @@ class PlayerSnapshot {
         position: g.position,
         overseasTeam: g.overseas ? g.overseasTeam : null,
         parentName: g.parentName,
+        teamSeed: g.teamSeed,
+        corporate: g.route == null ? null : g.route == Course.corporate,
         money: g.money,
         investTotal: g.invests.values.fold(0, (a, b) => a + b),
+        purchases: [for (final p in g.purchases) p.name],
         rivalTalent: g.cast.rival?.talent,
         gifts: Map.of(g.player.gifts),
         awakened: g.awakened,
+        afterPath: g.afterPath?.name,
+        afterTier: g.secondCareer?.tier,
       );
 
   Map<String, dynamic> toJson() => {
@@ -136,6 +165,7 @@ class PlayerSnapshot {
         'potential': potential,
         'abilities': {for (final e in abilities.entries) e.key.name: e.value},
         'traits': [for (final t in traits) t.name],
+        'skills': [for (final s in skills) s.name],
         'records': [for (final r in records) r.toJson()],
         'events': [for (final e in events) e.toJson()],
         'overallHistory': overallHistory,
@@ -152,11 +182,16 @@ class PlayerSnapshot {
         'position': position?.name,
         'overseasTeam': overseasTeam,
         'parentName': parentName,
+        'teamSeed': teamSeed,
+        'corporate': corporate,
         'money': money,
         'investTotal': investTotal,
+        'purchases': purchases,
         'rivalTalent': rivalTalent,
         'gifts': {for (final e in gifts.entries) e.key.name: e.value},
         'awakened': awakened,
+        'afterPath': afterPath,
+        'afterTier': afterTier,
       };
 
   /// 項目を足すときは既定値を置く(殿堂の古い記録を壊さない)。
@@ -178,6 +213,12 @@ class PlayerSnapshot {
       traits: {
         for (final s in (j['traits'] as List?) ?? const [])
           if (Trait.parse(s as String) != null) Trait.parse(s)!,
+      },
+      skills: {
+        for (final s in (j['skills'] as List?) ?? const [])
+          if (Skill.parse(s as String) != null) Skill.parse(s)!,
+        for (final s in (j['traits'] as List?) ?? const [])
+          if (legacyTraitSkills[s] != null) legacyTraitSkills[s]!,
       },
       records: [
         for (final r in (j['records'] as List?) ?? const [])
@@ -207,11 +248,18 @@ class PlayerSnapshot {
       position: Pos.parse(j['position'] as String?),
       overseasTeam: j['overseasTeam'] as String?,
       parentName: j['parentName'] as String?,
+      teamSeed: (j['teamSeed'] as num?)?.toInt() ?? 0,
+      corporate: j['corporate'] as bool?,
       money: (j['money'] as num?)?.toInt() ?? 0,
       investTotal: (j['investTotal'] as num?)?.toInt() ?? 0,
+      purchases: [
+        for (final x in (j['purchases'] as List?) ?? const []) x as String
+      ],
       rivalTalent: (j['rivalTalent'] as num?)?.toInt(),
       gifts: giftsFromJson(j['gifts']),
       awakened: j['awakened'] == true,
+      afterPath: j['afterPath'] as String?,
+      afterTier: (j['afterTier'] as num?)?.toInt(),
     );
   }
 }

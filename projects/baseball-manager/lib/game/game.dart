@@ -3,6 +3,7 @@ import 'dart:math';
 import 'calendar.dart';
 import 'career.dart';
 import 'characters.dart';
+import 'combo.dart';
 import 'exp.dart';
 import 'life.dart';
 import 'path.dart';
@@ -14,6 +15,8 @@ import 'records.dart';
 import 'flavor.dart';
 import 'childhood.dart';
 import 'invest.dart';
+import 'relations.dart';
+import 'shop.dart';
 import 'rival_story.dart';
 import 'school.dart';
 import 'snapshot.dart';
@@ -22,8 +25,16 @@ import 'season.dart';
 import 'awards.dart';
 import 'marks.dart';
 import 'talent.dart';
+import 'skills.dart';
+import 'competition.dart';
+import 'missions.dart';
 import 'traits.dart';
-import 'training.dart' show abilityCap;
+import 'tryout.dart';
+import 'after_career.dart';
+import 'farm.dart';
+import 'fielding.dart';
+import 'final_moment.dart';
+import 'training.dart' show abilityCap, applyAgeCeiling;
 
 /// いま何を待っているか。画面はこれを見て出すものを決める。
 enum Phase {
@@ -130,11 +141,34 @@ class Game {
       abilities: {for (final a in abilitiesOf(role)) a: 15},
       traits: traits,
       gifts: gifts,
+      // 生まれつきの弱点(赤い特殊能力)。乱数の並びを変えないよう、素質と天賦から決める
+      skills: birthWeaknesses(
+          role,
+          (pot.toInt() * 7919 +
+                  gifts.values
+                      .fold<int>(0, (a, v) => (a * 5 + v + 2) & 0xfffffff) +
+                  name.codeUnits
+                      .fold<int>(0, (a, c) => (a * 31 + c) & 0x7fffffff)) &
+              0x7fffffff),
     );
-    final g = Game._(rng, p, Cast.initial(rng, role, p.traits), difficulty)
+    final g = Game._(rng, p, Cast.initial(rng, role, p.skills), difficulty)
       .._wasTwoWay = role == Role.twoWay
-      ..parentName = parent?.name;
+      ..parentName = parent?.name
+      // チーム名・対戦相手の種。生まれ(素質・天賦・特性)と名前から決める(乱数の並びは変えない)。
+      // 同じ名前で始めても、生まれが違えば別のチームになる。
+      ..teamSeed = 1 +
+          ((pot.toInt() * 104729 +
+                  gifts.values
+                          .fold<int>(0, (a, v) => (a * 7 + v + 3) & 0xfffffff) *
+                      31 +
+                  traits.fold<int>(
+                          0, (a, t) => (a * 37 + t.index + 1) & 0xfffffff) *
+                      17 +
+                  name.codeUnits
+                      .fold<int>(0, (a, c) => (a * 131 + c) & 0x7fffffff)) &
+              0x3fffffff);
     g.overallHistory.add(overall(p).round());
+    g.yearStart = Map.of(p.abilities);
     g._note('stage', '${stageNameOf(Stage.youth)}を始めた');
     if (parent != null) {
       g._note('stage', '${parent.name}の子として生まれた(二世)');
@@ -157,13 +191,97 @@ class Game {
   Ability _eventFocus = Ability.contact;
 
   Course? route; // 大学/社会人を選んだか
+
+  /// 達成した育成ミッションの id(`missions.dart`)。保存する(古いセーブは空)。
+  final Set<String> missionsDone = {};
+
+  /// 今年のはじめの能力(1年の成長の記録に使う)。保存する(古いセーブは空=記録しない)。
+  Map<Ability, int> yearStart = {};
+
+  /// これまでで一番伸びた1年の、能力の伸びの合計。保存する。
+  int bestYearGain = 0;
+
+  /// いまの段階の育成ミッションを判定し、達成したものの報酬を渡す。達成した数を返す。
+  int checkMissions() {
+    if (phase == Phase.retired) return 0;
+    var n = 0;
+    for (final m in missionsFor(stage)) {
+      if (missionsDone.contains(m.id) || !m.check(this)) continue;
+      missionsDone.add(m.id);
+      final e = missionExp(stage);
+      exp = exp.add(spreadExp(player.role, e));
+      condition = condition.copyWith(morale: condition.morale + missionMorale);
+      log.add('育成ミッション達成: ${m.text}! 経験点+$e(全種類)・やる気+$missionMorale');
+      _note('title', '育成ミッション「${m.text}」を達成');
+      n++;
+    }
+    return n;
+  }
+
+  /// チーム名・対戦相手の名前の種(選手ごと)。0 は古いセーブ(名前だけで決める)。
+  int teamSeed = 0;
+
+  /// 画面に出す所属(少年のチーム・中学・高校・大学・社会人・プロ球団)。
+  String get affiliation => affiliationOf(stage, player.name,
+      proTeam: proTeamLabel,
+      seed: teamSeed,
+      corporate: route == null ? null : route == Course.corporate);
   bool turnedPro = false;
   int lowYears = 0;
+
+  /// トライアウトをもう使ったか(一生に一度)。
+  bool tryoutUsed = false;
+
+  /// 引退後に選んだ道(監督・コーチ・解説者・実業家・少年野球の指導者)。引退してプロだった選手だけ。
+  AfterPath? afterPath;
+
+  /// 引退後の道を選ぶ(引退済み・プロ入りした選手だけ。選び直しもできる)。
+  void chooseAfterPath(AfterPath p) {
+    if (phase != Phase.retired || !(ending?.madePro ?? false)) {
+      throw StateError('引退後の道を選べるのは、プロを引退したときだけ');
+    }
+    afterPath = p;
+  }
+
+  /// 選んだ道での、引退後の物語。選んでいなければ null。
+  SecondCareer? get secondCareer {
+    final p = afterPath;
+    final e = ending;
+    if (p == null || e == null) return null;
+    return secondCareerOf(
+      p,
+      name: player.name,
+      peak: e.peakOverall,
+      titles: e.titles.length,
+      championships: e.championships,
+      popularity: popularityOf(records, worldRecords),
+      money: money,
+      proYears: e.proYears,
+      married: e.married,
+      team: proTeam,
+    );
+  }
+
+  /// 二軍(育成契約)で過ごす残りの年数。0なら一軍。保存する(古いセーブは0=一軍)。
+  int farmYears = 0;
+
+  /// 次のプロのシーズンの年俸(万円)。ドラフトで新人の契約、毎年の契約更改で決まる。0 は古いセーブ(成績から計算)。
+  int nextSalary = 0;
+
+  /// 二軍にいるか(プロ入りしていて、残りの年数がある)。
+  bool get onFarm => turnedPro && farmYears > 0;
+
+  /// 画面に出す所属: 二軍なら「○○ 二軍(育成)」。
+  String? get proTeamLabel =>
+      proTeam == null ? null : (onFarm ? '$proTeam 二軍(育成)' : proTeam);
+
+  /// アマの大会の決勝を前にして、見せ場の決断を待っている途中経過。決まれば null に戻る(保存する)。
+  FinalMoment? pendingFinal;
   int proYears = 0;
   int peakOverall = 0;
   int championships = 0;
   bool _wasTwoWay = false;
-  final List<double> achievements = []; // 夏の大会ごとの実績
+  final List<double> achievements = []; // アマの大会ごとの実績
   final List<String> log = []; // 画面に出す出来事の記録
   Outcome lastOutcome = Outcome.normal; // 直前のターンの出来(保存しない・画面の表示用)
   Map<Category, int> lastGain = const {}; // 直前のターンで貯まった経験点(保存しない・画面の表示用)
@@ -207,6 +325,127 @@ class Game {
     return true;
   }
 
+  // ── お金の使い道(買い物) ──
+
+  /// 今年の買い物の回数(年末に空に戻る)と、一生に一度の買い物で買ったもの。
+  final Map<ShopItem, int> shopThisYear = {};
+  final Set<ShopItem> purchases = {};
+
+  /// 最新の用具を買った年齢(その年だけ経験点が増える)。
+  int gearAge = -1;
+  bool get gearActive => gearAge == player.age;
+
+  /// 買えない理由(買えるなら null)。
+  String? shopBlock(ShopItem i) {
+    if (!canInvest) return 'プロの間だけ';
+    if (i.once && purchases.contains(i)) return '購入済み';
+    if (i.perYear > 0 && (shopThisYear[i] ?? 0) >= i.perYear) return '今年はもう使った';
+    if (i == ShopItem.gift && cast.lover == null && cast.family == null) {
+      return '贈る相手がいない';
+    }
+    if (i == ShopItem.house && cast.family == null) return '贈る相手がいない';
+    if (money < i.cost) return 'お金が足りない';
+    return null;
+  }
+
+  /// 買う。買えないなら false。`focus` は合宿で重点にする能力。
+  bool buyShop(ShopItem i, [Ability? focus]) {
+    if (shopBlock(i) != null) return false;
+    money -= i.cost;
+    shopThisYear[i] = (shopThisYear[i] ?? 0) + 1;
+    if (i.once) purchases.add(i);
+    switch (i) {
+      case ShopItem.gear:
+        gearAge = player.age;
+        log.add(
+            '最新の用具をそろえた。この1年、経験点が${((gearMultiplier - 1) * 100).round()}%増える。');
+      case ShopItem.camp:
+        final f = focus ?? abilitiesOf(player.role).first;
+        final k = categoryOf(f);
+        exp = exp.add({
+          for (final c in usableCategories(player.role)) c: c == k ? 15 : 5,
+        });
+        condition = condition.copyWith(fatigue: condition.fatigue + 10);
+        log.add('海外で自主トレ合宿をした。${k.label}の経験点+15・ほかの種類+5。');
+      case ShopItem.care:
+        condition = condition.copyWith(fatigue: condition.fatigue - 35);
+        log.add('疲労回復の施術を受けた。疲れ-35。');
+      case ShopItem.gift:
+        final who = cast.lover ?? cast.family!;
+        who.addBond(20);
+        log.add('${who.name}に贈り物をした。絆+20。');
+      case ShopItem.house:
+        cast.family!.addBond(40);
+        log.add('${cast.family!.name}に家を贈った。絆+40。');
+        _note('invest', '${cast.family!.name}に家を贈った');
+      case ShopItem.donate:
+        condition = condition.copyWith(morale: condition.morale + 20);
+        log.add('地元に野球場を寄付した。子どもたちが、あなたの名前のついた球場で野球をする。');
+        _note('invest', '地元に野球場を寄付した');
+    }
+    return true;
+  }
+
+  // ── まわりの人との関係(交流の相手・頼みごと) ──
+
+  /// 交流の相手(登場人物の id)。null なら恋人か家族。
+  String? socialTargetId;
+
+  /// 今年もう頼みごとをした人(登場人物の id。年末に空に戻る)。
+  final Set<String> favorsUsed = {};
+
+  /// 次の練習で必ず友情タッグになる仲間(頼みごと「自主練」)。
+  String? tagMateId;
+
+  Character? memberById(String? id) =>
+      id == null ? null : cast.members.where((m) => m.id == id).firstOrNull;
+
+  Character? get socialTarget => memberById(socialTargetId);
+
+  void setSocialTarget(Character? c) => socialTargetId = c?.id;
+
+  /// 頼めない理由(頼めるなら null)。
+  String? favorBlock(Character c) {
+    if (phase != Phase.term) return 'いまは頼めない';
+    if (favorsUsed.contains(c.id)) return '今年はもう頼んだ';
+    final line = favorBondLine(c.kind);
+    if (c.bond < line) return '絆$lineで頼める';
+    if (c.kind == Kind.coach && c.teaches == null) return '教わる特殊能力がない';
+    return null;
+  }
+
+  /// 頼む。頼めないなら false。`focus` は合同練習の重点。
+  bool askFavor(Character c, [Ability? focus]) {
+    if (favorBlock(c) != null) return false;
+    favorsUsed.add(c.id);
+    c.addBond(-favorBondCost);
+    final f = favorOf(c.kind);
+    switch (f) {
+      case Favor.practice:
+        tagMateId = c.id;
+        log.add('${c.name}に自主練を頼んだ。次の練習は友情タッグになる。');
+      case Favor.meal:
+        condition = condition.copyWith(
+            fatigue: condition.fatigue - 25, morale: condition.morale + 5);
+        log.add('${c.name}の差し入れで元気が出た。疲れ-25・やる気+5。');
+      case Favor.cheer:
+        condition = condition.copyWith(
+            fatigue: condition.fatigue - 10, morale: condition.morale + 15);
+        log.add('${c.name}が応援に来てくれた。やる気+15・疲れ-10。');
+      case Favor.private:
+        c.tips++;
+        log.add('${c.name}に個別に見てもらった。コーチのコツ ${c.tips}/$tipsNeeded。');
+        _checkCoach();
+      case Favor.joint:
+        final k = categoryOf(focus ?? abilitiesOf(player.role).first);
+        exp = exp.add({k: 10});
+        condition = condition.copyWith(morale: condition.morale + 5);
+        log.add('ライバルの${c.name}と合同練習をした。${k.label}の経験点+10・やる気+5。');
+    }
+    checkMissions();
+    return true;
+  }
+
   /// 二世のとき、親の名前(殿堂の選手)。
   String? parentName;
 
@@ -221,7 +460,7 @@ class Game {
     if (t == null) return false;
     player = player.copyWith(traits: gain(player.traits, t));
     awakened = true;
-    log.add('$why 眠っていた才能が目覚めた!特性「${t.label}」に覚醒した!');
+    log.add('$why眠っていた才能が目覚めた! 特性「${t.label}」に覚醒した!');
     _note('trait', '覚醒: 特性「${t.label}」');
     return true;
   }
@@ -353,6 +592,12 @@ class Game {
     overseasTeam = overseasTeams[rng.nextInt(overseasTeams.length)];
     condition = condition.copyWith(morale: condition.morale - 8);
     log.add('海を渡った! アメリカの$overseasTeamに移籍する。');
+    // 向こうの球団との契約(年俸は桁違い)
+    if (nextSalary > 0) {
+      nextSalary =
+          ((nextSalary * 2.5 / 10).round() * 10).clamp(400, 200000).toInt();
+      log.add('契約: 今季の年俸は${fmtSalary(nextSalary)}。');
+    }
     _note('overseas', 'アメリカの$overseasTeamに移籍');
     _newGoal(); // 相手が強くなるので、目標も立て直す
   }
@@ -364,6 +609,11 @@ class Game {
     overseas = false;
     condition = condition.copyWith(morale: condition.morale + 6);
     log.add('日本のリーグに復帰した。');
+    if (nextSalary > 0) {
+      nextSalary =
+          ((nextSalary / 2.5 / 10).round() * 10).clamp(400, 200000).toInt();
+      log.add('契約: 今季の年俸は${fmtSalary(nextSalary)}。');
+    }
     _note('overseas', '日本のリーグに復帰');
     _newGoal();
   }
@@ -409,6 +659,9 @@ class Game {
   int turnCount = 0;
   int lastCoachTurn = 0;
 
+  /// 前にコーチに教わった行動の番号(間をあけて教わるほど、教わったときの経験点が多い)。
+  int lastLessonTurn = 0;
+
   /// 今年の練習(練習・特訓)と休養の回数。年末にログに出して戻す。
   /// 今季ここまでの月ごとの成績(4〜9月)。シーズンの記録に写して空にする。
   List<String> monthRows = [];
@@ -418,9 +671,31 @@ class Game {
   final Map<String, int> childhood = {};
   int restCount = 0;
 
+
+  /// 特殊能力のコツ(0〜`maxSkillTips`)。貯まるほど安く取れる。
+  Map<Skill, int> skillTips = {};
+
+  /// 「研究」で調べる特殊能力(null ならコツの多いものを自動で選ぶ)。
+  Skill? studyTarget;
+
   /// 同じ能力を重点に練習・特訓を続けた回数(継続は力なり)。
   int focusStreak = 0;
   Ability? lastFocus;
+
+  /// 前のターンの行動と重点(行動の連携 `comboOf` に使う)。怪我で休んだターンのあとは null。
+  Plan? lastPlan;
+  Ability? lastPlanFocus;
+
+  /// 直前のターンで起きた連携(保存しない・画面と研究のコツに使う)。
+  Combo? lastCombo;
+
+  /// 今年の連携の回数と、一生の回数。
+  int comboCount = 0;
+  int comboTotal = 0;
+
+  /// いま選ぶと連携になる行動(重点 `focus` を選んでいるとき)。
+  Map<Plan, Combo> combosNow(Ability focus) =>
+      combosReady(lastPlan, prevFocus: lastPlanFocus, focus: focus);
 
   /// 継続ボーナスの倍率: 3回続けて+2%、6回続けて+4%。
   double get streakBonus =>
@@ -488,11 +763,16 @@ class Game {
     final share = slotShare(stage);
     final wasInjured = condition.injured;
     turnCount++;
+    final combo = wasInjured
+        ? null
+        : comboOf(lastPlan, action, prevFocus: lastPlanFocus, focus: f);
     final r = playTerm(player, condition, action, f, rng,
         share: share,
         trainBonus: trainerMultiplier(investLevel(Invest.trainer)),
         recoveryBonus: dietitianMultiplier(investLevel(Invest.dietitian)),
-        injuryFactor: medicalFactor(investLevel(Invest.medical)));
+        injuryFactor: medicalFactor(investLevel(Invest.medical)),
+        badFactor: comboBadFactor(combo),
+        keepMorale: combo == Combo.cheer);
     player = r.player;
     condition = r.condition;
     // _afterCast が経験点(コーチのボーナス)を直接足すことがあるので、先に評価する。
@@ -507,6 +787,10 @@ class Game {
       condition =
           condition.copyWith(fatigue: condition.fatigue + school.fatigue);
     }
+    if (combo != null) gained = _applyCombo(combo, gained, share);
+    lastCombo = combo;
+    lastPlan = wasInjured ? null : action;
+    lastPlanFocus = f;
     if (!wasInjured && (action == Plan.train || action == Plan.special)) {
       focusStreak = (lastFocus == f) ? focusStreak + 1 : 1;
       lastFocus = f;
@@ -524,6 +808,12 @@ class Game {
         gained = {...gained, k: (gained[k]! * streakBonus).round()};
       }
     }
+    if (gearActive && gained.isNotEmpty) {
+      gained = {
+        for (final e in gained.entries)
+          e.key: (e.value * gearMultiplier).round(),
+      };
+    }
     if (difficulty != Difficulty.normal) {
       gained = {
         for (final e in gained.entries)
@@ -533,6 +823,7 @@ class Game {
     exp = exp.add(gained);
     lastGain = gained;
     lastOutcome = wasInjured ? Outcome.normal : r.outcome;
+    if (!wasInjured) _gainTips(action, f, r.outcome);
     if (action == Plan.train || action == Plan.special) trainCount++;
     if (action == Plan.rest) restCount++;
     if (r.gotInjured) {
@@ -543,13 +834,29 @@ class Game {
     }
     if (isTournamentSlot(stage, slot)) {
       _playSummer();
+      if (pendingFinal != null) {
+        // 決勝の見せ場の決断を待つ(決まったら `_resolveFinalMoment` が続きを進める)。
+        _eventFocus = f;
+        return;
+      }
     } else if (stage == Stage.pro && slot < 6) {
       _playLeagueMonth();
     }
+    checkMissions();
+    _finishTurn(f, share);
+  }
 
+  /// 行動のあとの続き: 分かれ道・出来事、なければ次のターンへ。
+  void _finishTurn(Ability f, double share) {
     // 幼少期の分かれ道は、その歳の2回目の行動のあとに必ず出る(くじでは出ない)。
+    // 社会人は20歳が最後の年(21歳でドラフト)。21歳の分かれ道「ドラフトの年」も、20歳のうちに出す。
+    final corporateFinal = stage == Stage.pathChoice &&
+        route == Course.corporate &&
+        player.age == 20;
     final kid = stage != Stage.pro && stage != Stage.retired
-        ? childhoodStepFor(player.age, childhood, slot)?.event
+        ? (childhoodStepFor(player.age, childhood, slot) ??
+                (corporateFinal ? childhoodStepFor(21, childhood, slot) : null))
+            ?.event
         : null;
     final e = kid ??
         drawEvent(rng,
@@ -570,8 +877,67 @@ class Game {
     }
   }
 
+  /// トライアウトの選択(受ける/引退する)。年の終わりの戦力外のあとに出る。
+  void _resolveTryout(int index) {
+    pendingEvent = null;
+    phase = Phase.term;
+    if (index == 1) {
+      log.add('トライアウトは受けず、現役を退くことにした。');
+      _retire('戦力外通告を受けて引退');
+      return;
+    }
+    tryoutUsed = true;
+    if (rng.nextDouble() < tryoutChance(player)) {
+      final others = [
+        for (final t in draftTeams)
+          if (t != proTeam) t
+      ];
+      final next = others[rng.nextInt(others.length)];
+      proTeam = next;
+      lowYears = 0;
+      teamBoost = -1; // 新しい球団は、あまり強くない
+      condition = condition.copyWith(morale: condition.morale + 10);
+      log.add('トライアウトで好投・好打を見せ、$nextと契約を勝ち取った!');
+      // 拾ってもらった契約なので、年俸は低め
+      if (nextSalary > 0) nextSalary = min(nextSalary, 1000);
+      _note('team', 'トライアウトで$nextと契約');
+      _newGoal();
+    } else {
+      log.add('トライアウトを受けたが、どの球団からも声がかからなかった…。');
+      _retire('戦力外通告を受けて引退');
+    }
+  }
+
+  /// 決勝の見せ場の決断。決まったら決勝の勝ち負けを決め、大会の続き(記録・ライバル・世界大会)を進める。
+  /// 決勝の見せ場で選んだ作戦の一文(保存しない。その場でログに出すだけ)。
+  String? _finalNote;
+
+  void _resolveFinalMoment(int index) {
+    final m = pendingFinal!;
+    final stance = finalStances(player)[index];
+    pendingEvent = null;
+    pendingFinal = null;
+    phase = Phase.term;
+    // 決勝の試合の行のすぐ前に出す(_logRounds)
+    _finalNote = '決勝の最終回、${player.name}は「${stance.$1}」を選んだ。';
+    final bonus = finalBonus(index, player, rng);
+    final t = finishFinal(m, bonus, rng);
+    _summerAftermath(t, null);
+    _finalNote = null;
+    checkMissions();
+    _finishTurn(_eventFocus, slotShare(stage));
+  }
+
   void resolveEvent(int index) {
     _require(Phase.event);
+    if (pendingEvent!.id == tryoutEventId) {
+      _resolveTryout(index);
+      return;
+    }
+    if (pendingEvent!.id == finalMomentId) {
+      _resolveFinalMoment(index);
+      return;
+    }
     final ch = pendingEvent!.choices[index];
     if (childhoodStepById(pendingEvent!.id) != null) {
       childhood[pendingEvent!.id] = index;
@@ -592,6 +958,7 @@ class Game {
     _checkCoach();
     pendingEvent = null;
     phase = Phase.term;
+    checkMissions();
     _nextSlot();
   }
 
@@ -603,6 +970,7 @@ class Game {
     if (r == null) return false;
     player = r.player;
     exp = r.pool;
+    checkMissions();
     return true;
   }
 
@@ -611,14 +979,180 @@ class Game {
     final r = buyAll(player, exp, a);
     player = r.player;
     exp = r.pool;
+    checkMissions();
     return r.bought;
   }
 
+  /// 「取りどき」の特殊能力: コツが3つ以上(3割以上安い)で、いまの経験点で取れるもの。
+  /// 能力タブの印と、行の「取りどき」の札に使う(おまかせ振り分けは能力にしか使わないので、取り忘れを防ぐ)。
+  List<Skill> get skillsInSeason => [
+        for (final s in skillsFor(player.role))
+          if ((skillTips[s] ?? 0) >= 3 &&
+              skillBlock(player, s, exp, skillTips[s] ?? 0) == null)
+            s
+      ];
+
+  /// 来年から特殊能力の値段が上がるとき(その年の最後のターン)の知らせ。
+  /// 取れそうなもの(コツ1つ以上)か弱点があるときだけ。それ以外は null。
+  String? get skillPriceRiseNote {
+    if (phase == Phase.retired || slot != slotsInYear - 1) return null;
+    final now = skillAgeMultiplier(player.age);
+    final next = skillAgeMultiplier(player.age + 1);
+    if (next <= now) return null;
+    final any = skillsFor(player.role).any((s) =>
+        !player.skills.contains(s) &&
+        !s.negative &&
+        (skillTips[s] ?? 0) >= minSkillTips);
+    if (!any && !player.skills.any((s) => s.negative)) return null;
+    String f(double x) => x.toStringAsFixed(2).replaceFirst(RegExp(r'0$'), '');
+    return '来年(${player.age + 1}歳)から特殊能力の値段が×${f(now)}→×${f(next)}に上がる。取るなら今のうちに。';
+  }
+
+  /// 特殊能力の値段(いまのコツで)。
+  int skillPrice(Skill s) =>
+      skillCost(s, skillTips[s] ?? 0, player.age, ownedSkillCount(player));
+
+  /// 経験点で特殊能力を取る。取れなければ理由の文を返す(取れたら null)。
+  String? buySkill(Skill s) {
+    final why = skillBlock(player, s, exp, skillTips[s] ?? 0);
+    if (why != null) return why;
+    exp = exp.spend(s.category, skillPrice(s));
+    if (s.negative) {
+      player = player.copyWith(skills: {...player.skills}..remove(s));
+      log.add('弱点「${s.label}」を克服した!');
+      _note('trait', '弱点「${s.label}」を克服');
+      return null;
+    }
+    player = player.copyWith(skills: {...player.skills, s});
+    skillTips.remove(s);
+    if (studyTarget == s) studyTarget = null;
+    log.add('特殊能力「${s.label}」を取得した!');
+    _note('trait', '特殊能力「${s.label}」を取得');
+    checkMissions();
+    return null;
+  }
+
+  /// 研究の対象を決める(null で自動)。取得済み・役割に合わないものは選べない。
+  void setStudyTarget(Skill? s) {
+    if (s != null && (!s.appliesTo(player.role) || player.skills.contains(s))) {
+      throw ArgumentError('研究できない特殊能力: ${s.name}');
+    }
+    studyTarget = s;
+  }
+
+  /// 研究で次にコツが貯まる特殊能力(選んだもの、なければ重点の種類でコツの多いもの)。
+  /// 選んだもののコツが満タンなら、研究が無駄にならないよう自動で選ぶ。
+  Skill? studyFocus(Ability focus) {
+    final t = studyTarget;
+    if (t != null &&
+        !player.skills.contains(t) &&
+        t.appliesTo(player.role) &&
+        (skillTips[t] ?? 0) < maxSkillTips) {
+      return t;
+    }
+    return pickTipTarget(player, skillTips, Random(turnCount),
+            category: categoryOf(focus)) ??
+        pickTipTarget(player, skillTips, Random(turnCount));
+  }
+
+  /// 特殊能力のコツを `n` 足す(上限 `maxSkillTips`)。足せたら true。ログに出す。
+  bool _addTips(Skill? s, int n, String why) {
+    if (s == null || n <= 0 || player.skills.contains(s)) return false;
+    final before = skillTips[s] ?? 0;
+    final after = (before + n).clamp(0, maxSkillTips);
+    if (after == before) return false;
+    skillTips[s] = after;
+    log.add(
+        '$why「${s.label}」のコツ +${after - before}(Lv$after/$maxSkillTips・あと${skillPrice(s)}で取れる)');
+    return true;
+  }
+
+  /// 連携の効き目(経験点の倍率・超回復の経験点)とログ。失敗しにくさ・やる気は `playTerm` が受け持つ。
+  Map<Category, int> _applyCombo(
+      Combo combo, Map<Category, int> gained, double share) {
+    comboCount++;
+    comboTotal++;
+    var out = gained;
+    final m = comboExpMultiplier(combo);
+    if (m != 1.0) {
+      out = {for (final e in out.entries) e.key: (e.value * m).round()};
+    }
+    final String why;
+    switch (combo) {
+      case Combo.insight:
+        why = '研究で見えたことを試して、経験点+$tComboInsight%';
+      case Combo.drill:
+        why = '教わったことを繰り返して、失敗しにくく経験点+$tComboDrill%';
+      case Combo.recovery:
+        final f = lastPlanFocus ?? abilitiesOf(player.role).first;
+        final extra = focusExpOf(
+            player, f, tComboRecovery / 100, share, condition.morale);
+        out = {...out};
+        for (final e in extra.entries) {
+          out[e.key] = (out[e.key] ?? 0) + e.value;
+        }
+        final n = extra.values.fold(0, (a, b) => a + b);
+        why = n > 0 ? '特訓の疲れが抜けて、${_abilityJp(f)}の経験点+$n' : '特訓の疲れが抜けた';
+      case Combo.homework:
+        why = '試合で見えた課題を研究して、コツが1つ多い';
+      case Combo.cheer:
+        why = '仲間の声援で、特訓でもやる気が下がらない';
+    }
+    log.add('連携「${combo.label}」! $why');
+    return out;
+  }
+
+  /// 行動ごとに貯まる、特殊能力のコツ(行動の役割の違い)。
+  /// 研究=選んだ特殊能力に+2(研究熱心は+3)/特訓=好調・大成功で重点の種類に+1/
+  /// 練習試合=勝負どころの特殊能力に+1/交流=仲間の得意な種類に+1。練習・休養・コーチはなし。
+  void _gainTips(Plan action, Ability f, Outcome outcome) {
+    switch (action) {
+      case Plan.study:
+        _addTips(studyFocus(f),
+            (studious ? 3 : 2) + (lastCombo == Combo.homework ? 1 : 0), '研究で');
+      case Plan.special:
+        if (outcome == Outcome.good || outcome == Outcome.great) {
+          _addTips(
+              pickTipTarget(player, skillTips, rng, category: categoryOf(f)),
+              1,
+              '特訓で');
+        }
+      case Plan.match:
+        _addTips(
+            pickTipTarget(player, skillTips, rng, matchesOnly: true) ??
+                pickTipTarget(player, skillTips, rng),
+            1,
+            '練習試合で');
+      case Plan.social:
+        final t = socialTarget;
+        final mates = [
+          for (final m in cast.teammates)
+            if (m.specialty != null && (t?.kind != Kind.teammate || m == t)) m
+        ];
+        if (mates.isNotEmpty) {
+          final m = mates[rng.nextInt(mates.length)];
+          final s = pickTipTarget(player, skillTips, rng,
+              category: categoryOf(m.specialty!));
+          _addTips(s, 1, '${m.name}に教わって');
+        }
+      case Plan.train:
+      case Plan.rest:
+      case Plan.lesson:
+        break;
+    }
+  }
+
+  bool get studious => player.traits.contains(Trait.studious);
+
   /// おまかせ: 種類ごとに低い能力から順に振り分ける。
   void autoSpend() {
-    final r = autoSpendExp(player, exp);
-    player = r.player;
-    exp = r.pool;
+    // 振り分けでミッションを達成すると経験点が入るので、それも続けて振り分ける
+    for (var i = 0; i < 5; i++) {
+      final r = autoSpendExp(player, exp);
+      player = r.player;
+      exp = r.pool;
+      if (checkMissions() == 0) break;
+    }
   }
 
   /// プロの間はいつでも役割を変えられる(二刀流にする/戻す)。
@@ -654,9 +1188,22 @@ class Game {
 
   // ── 管理者機能(調整・検証用。ホーム画面のタイトルを7回タップで有効) ──
   //
-  // 通常の遊びでは使わない。上限(特性は4つまで)や矛盾(大器晩成と早熟など)も無視して書き換える。
+  // 通常の遊びでは使わない。上限(特性は`maxTraits`つまで)や矛盾(大器晩成と早熟など)も無視して書き換える。
 
   /// 素質(0〜100)を書き換える。
+  /// 動画を見た特典で、経験点を足す(使える種類すべてに `n`)。
+  void gainAdExp(int n) {
+    exp = exp.add(spreadExp(player.role, n));
+    log.add('動画を見て、自主練に励んだ。経験点 +$n(全種類)');
+  }
+
+  /// 動画を見た特典で、疲れを大きく抜く(怪我は治さない)。保存する項目は増えない。
+  void relieveFatigue() {
+    condition = condition.copyWith(
+        fatigue: condition.fatigue - 60, morale: condition.morale + 5);
+    log.add('動画を見て、しっかり体を休めた。疲れが大きく抜けた。');
+  }
+
   void adminSetPotential(int v) {
     player = player.copyWith(potential: v.clamp(0, 100));
   }
@@ -668,8 +1215,26 @@ class Game {
 
   /// 天賦(才能の偏り)を書き換える。-2〜+2。
   void adminSetGift(Ability a, int v) {
-    player = player.copyWith(
-        gifts: {...player.gifts, a: v.clamp(giftMin, giftMax)});
+    player =
+        player.copyWith(gifts: {...player.gifts, a: v.clamp(giftMin, giftMax)});
+  }
+
+  /// 特殊能力(弱点を含む)を、年齢・コツ・もとの特殊能力を無視して丸ごと置き換える。
+  void adminSetSkills(Set<Skill> s) {
+    player = player.copyWith(skills: Set.of(s));
+    skillTips.removeWhere((k, _) => s.contains(k));
+    if (studyTarget != null && s.contains(studyTarget)) studyTarget = null;
+  }
+
+  /// 特殊能力のコツを書き換える(0〜`maxSkillTips`)。持っているもの・弱点は対象外。
+  void adminSetSkillTips(Skill s, int n) {
+    if (player.skills.contains(s) || s.negative) return;
+    final v = n.clamp(0, maxSkillTips);
+    if (v == 0) {
+      skillTips.remove(s);
+    } else {
+      skillTips[s] = v;
+    }
   }
 
   /// 覚醒済みの印を書き換える(もう一度覚醒を試したいとき)。
@@ -686,7 +1251,7 @@ class Game {
     exp = ExpPool({for (final c in Category.values) c: max(0, exp.of(c) + n)});
   }
 
-  /// コーチのコツを書き換える。`tipsNeeded` 以上にすると、その場で特性を習得する。
+  /// コーチのコツを書き換える。`tipsNeeded` 以上にすると、その場でコーチの特殊能力のコツが満タンになる。
   void adminSetCoachTips(int n) {
     final coach = cast.coach;
     if (coach == null) return;
@@ -694,8 +1259,8 @@ class Game {
     _checkCoach();
   }
 
-  /// コーチが教える特性を差し替える(null なら教えられない)。
-  void adminSetCoachTeaches(Trait? t) {
+  /// コーチが教える特殊能力を差し替える(null なら教えられない)。
+  void adminSetCoachTeaches(Skill? t) {
     final i = cast.members.indexWhere((m) => m.kind == Kind.coach);
     if (i < 0) return;
     final c = cast.members[i];
@@ -733,7 +1298,11 @@ class Game {
         action == Plan.match ||
         action == Plan.lesson;
     if (trains && gained.isNotEmpty) {
-      final mate = cast.pickTagMate(focus, rng);
+      final picked = cast.pickTagMate(focus, rng);
+      // 頼みごと「自主練」の相手がいれば、その仲間と必ずタッグになる
+      final forced = memberById(tagMateId);
+      final mate = forced ?? picked;
+      tagMateId = null;
       if (mate != null) {
         for (final k in out.keys.toList()) {
           out[k] = (out[k]! * tagMultiplier * tagTraitMultiplier(player.traits))
@@ -743,29 +1312,57 @@ class Game {
         log.add('${mate.name}と友情タッグ練習!');
       }
     }
+    if (action == Plan.lesson &&
+        tLessonGap > 0 &&
+        out.isNotEmpty &&
+        stage != Stage.pro) {
+      // 間をあけて教わるほど身につく(コーチばかりより、練習と混ぜたほうが得)。
+      // プロでは足さない(長いプロ生活で積み上がり、レジェンド・タイトルが増えすぎた)。
+      final gap = turnCount - lastLessonTurn;
+      lastLessonTurn = turnCount;
+      final k = categoryOf(focus);
+      final extra = (min(tLessonGapCap, tLessonGap * (gap - 1)) *
+              slotShare(stage) *
+              roleExpFactor(player.role))
+          .round();
+      if (extra > 0) out[k] = (out[k] ?? 0) + extra;
+    }
     if (action == Plan.lesson) {
       final coach = cast.coach;
       if (coach != null) {
+        coach.addBond(lessonBond);
         coach.tips++;
         _checkCoach();
       }
     }
     if (action == Plan.social) {
-      (cast.lover ?? cast.family)?.addBond(10);
+      final t = socialTarget;
+      if (t != null) {
+        t.addBond(socialTargetBond);
+      } else {
+        (cast.lover ?? cast.family)?.addBond(10);
+      }
     }
     return out;
   }
 
-  /// コツが貯まったら、コーチの教える特性を習得する。
+  /// コツが貯まったら、コーチの教える特殊能力を習得する(経験点は払わない)。
   void _checkCoach() {
     final coach = cast.coach;
     if (coach == null || coach.tips < tipsNeeded) return;
     coach.tips = 0;
     final t = coach.teaches;
-    if (t != null && canGain(player.traits, t)) {
-      player = player.copyWith(traits: gain(player.traits, t));
-      log.add('${coach.name}のコツをつかんだ! 特性「${t.label}」を習得。');
-      _note('trait', '特性「${t.label}」を習得(コーチ ${coach.name})');
+    // コーチは特殊能力を「くれる」のではなく、コツを最大にしてくれる(取るのは経験点で。半額)。
+    // 無料で渡すと、プロで特殊能力が積み上がり、タイトル・レジェンドが増えすぎた(2026-10-24)。
+    final ready = t != null &&
+        t.appliesTo(player.role) &&
+        !player.skills.contains(t) &&
+        (skillTips[t] ?? 0) < maxSkillTips;
+    if (ready) {
+      skillTips[t] = maxSkillTips;
+      log.add('${coach.name}のコツをつかんだ! 「${t.label}」のコツが最大(Lv$maxSkillTips)に。'
+          'あと${skillPrice(t)}の経験点で取れる。');
+      _note('trait', '「${t.label}」のコツをつかんだ(コーチ ${coach.name})');
     } else {
       // 学びのボーナスは、前の学びからの間があくほど大きい(コーチばかりが最善にならないように)。
       final bonus = min(40, 3 * (turnCount - lastCoachTurn));
@@ -888,22 +1485,18 @@ class Game {
       log.add('$slotName: 怪我で全試合を欠場。チームは${m.wins}勝${m.losses}敗。');
       return;
     }
-    log.add('$slotName: ${d.isEmpty ? '' : '$d。'}チームは${m.wins}勝${m.losses}敗。');
-    monthRows
-        .add('$slotName: ${d.isEmpty ? '出場なし' : d} / ${m.wins}勝${m.losses}敗');
-    final crowd = (1.5 +
-        popularityOf(records, worldRecords) * 0.04 +
-        (m.wins + m.losses == 0 ? 0 : m.wins / (m.wins + m.losses)) * 1.5);
-    log.add('観客動員: 平均${crowd.toStringAsFixed(1)}万人。');
+    // 6月は交流戦(もう一方のリーグの球団と戦う)。海外の年は呼ばない。
+    final month =
+        isInterleagueMonth(slotName) && !overseas ? '$slotName(交流戦)' : slotName;
+    log.add('$month: ${d.isEmpty ? '' : '$d。'}チームは${m.wins}勝${m.losses}敗。');
+    monthRows.add('$month: ${d.isEmpty ? '出場なし' : d} / ${m.wins}勝${m.losses}敗');
+    log.add(attendanceLine(popularityOf(records, worldRecords),
+        m.wins + m.losses == 0 ? 0.5 : m.wins / (m.wins + m.losses)));
     final rs = storyOfCharacter(cast.rival)?.avoiding(proTeam);
     final duel =
         rs == null ? null : rivalDuelLine(rs, player.age, slot, m.line);
     if (duel != null) log.add(duel);
-    final mvp = (m.line.hasBatting &&
-            m.line.atBats >= 50 &&
-            (m.line.ops ?? 0) >= 1.000) ||
-        (m.line.hasPitching && m.line.outs >= 18 && (m.line.era ?? 99) <= 1.50);
-    if (mvp) {
+    if (monthlyMvp(m.line, player.name, player.age, slot) && !onFarm) {
       log.add('$slotNameの月間MVPに選ばれた!');
       _note('title', '$slotNameの月間MVP');
       condition = condition.copyWith(morale: condition.morale + 5);
@@ -912,9 +1505,12 @@ class Game {
 
   /// シーズン中盤(4か月目)に、ここまでの成績と人気でオールスターに選ばれることがある。
   void _allStar() {
-    if (slot != 3 || condition.injured) return;
+    if (slot != 3 || condition.injured || onFarm) return;
     final prog = seasonProgress;
-    if (prog == null || prog.line.games < 40) return;
+    // 打者は40試合以上、投手は8試合以上の先発(投手は試合数が少なく、選ばれていなかった)
+    if (prog == null || (prog.line.games < 40 && prog.line.starts < 8)) {
+      return;
+    }
     final l = prog.line;
     final pop = popularityOf(records, worldRecords);
     final good = (l.hasBatting && (l.ops ?? 0) >= 0.800) ||
@@ -953,19 +1549,34 @@ class Game {
     final team = l.team +
         traitTeamBonus(player.traits) +
         positionTeamAdjust(player, effectivePos);
-    final tournament = isPro
-        ? null
-        : playTournament(
-            fighter,
-            teamLevel: team,
-            opponents: l.opponents,
-            rng: rng,
-            condition: condition.value,
-          );
-    final league = isPro ? _finishLeague(fighter, team, l.opponents) : null;
+    if (isPro) {
+      _summerAftermath(null, _finishLeague(fighter, team, l.opponents));
+      return;
+    }
+    final prog = playTournamentToFinal(
+      fighter,
+      teamLevel: team,
+      opponents: l.opponents,
+      rng: rng,
+      condition: condition.value,
+      facedBase: amateurFacedBase(stage),
+    );
+    if (prog.moment != null) {
+      // 決勝まで勝ち上がった。勝負を決める場面の決断を、選んでもらう。
+      pendingFinal = prog.moment;
+      pendingEvent = finalMomentEvent(player);
+      phase = Phase.event;
+      return;
+    }
+    _summerAftermath(prog.done, null);
+  }
 
+  /// その年の大会(またはプロのシーズン)の結果が出たあとの、記録・ライバル・世界大会など。
+  void _summerAftermath(Tournament? tournament, LeagueSeason? league) {
     var ach = tournament?.achievement ?? 0;
     bool? rivalWon;
+    // ライバルとの勝負・今年の目標は、試合の結果のあとに出す(読む順を、起きた順に合わせる)
+    String? rivalLine;
     final rival = cast.rival;
     if (rival != null) {
       final mine = overall(player) + (rng.nextDouble() * 2 - 1) * 8;
@@ -974,29 +1585,55 @@ class Game {
         cast.rivalWins++;
         ach = min(100, ach + 5);
         condition = condition.copyWith(morale: condition.morale + 10);
-        log.add('${rival.name}に勝った!');
+        rivalLine = 'ライバルの${rival.name}との今年の勝負は、こちらの勝ち!';
       } else {
         rivalWon = false;
         cast.rivalLosses++;
         condition = condition.copyWith(morale: condition.morale - 8);
-        log.add('${rival.name}に負けた…');
+        rivalLine = 'ライバルの${rival.name}との今年の勝負は、向こうの勝ち…';
       }
       rival.addBond(5);
     }
 
     if (league != null) {
-      final titles =
-          titlesOf(league.line, games: league.games, rank: league.rank);
-      final proBefore = records.where((r) => r.stage == Stage.pro).toList();
-      final awards = awardsOf(
-        league.line,
-        games: league.games,
-        firstYear: proBefore.isEmpty,
-        prevGames: proBefore.isEmpty ? null : proBefore.last.line.games,
-        fielding: player.abilities[Ability.fielding] ?? 0,
-        isBatter: league.line.hasBatting && !league.line.hasPitching,
-      );
+      final farm = onFarm; // 二軍の年: タイトル・表彰・日本一の対象外
+      final titles = farm
+          ? <String>[]
+          : titlesOf(league.line, games: league.games, rank: league.rank);
+      final proBefore =
+          records.where((r) => r.stage == Stage.pro && !r.farm).toList();
+      final field = fieldingOf(
+          player: player,
+          pos: effectivePos,
+          games: league.line.hasBatting ? league.line.games : 0,
+          age: player.age);
+      final awards = farm
+          ? <String>[]
+          : awardsOf(
+              league.line,
+              games: league.games,
+              firstYear: proBefore.isEmpty,
+              prevGames: proBefore.isEmpty ? null : proBefore.last.line.games,
+              fielding: player.abilities[Ability.fielding] ?? 0,
+              isBatter: league.line.hasBatting && !league.line.hasPitching,
+              titles: titles,
+              fieldingPct: field.pct,
+            );
+      // 3位までがクライマックスシリーズ(海外はプレーオフ)→ 日本シリーズ。名前と年齢の乱数で決める。
+      final ps = farm
+          ? null
+          : playPostseason(
+              name: player.name,
+              age: player.age,
+              rank: league.rank,
+              winPct: league.games == 0 ? 0.5 : league.wins / league.games,
+              rating: league.line.rating.round(),
+              team: proTeam,
+              overseas: overseas,
+            );
       final rec = SeasonRecord(
+        contract: nextSalary,
+        post: ps?.result ?? '',
         age: player.age,
         stage: stage,
         line: league.line,
@@ -1009,29 +1646,46 @@ class Game {
         awards: awards,
         months: List.of(monthRows),
         twoWay: player.role == Role.twoWay,
+        farm: farm,
+        chances: field.chances,
+        errors: field.errors,
       );
       monthRows = [];
       records.add(rec);
-      _judgeGoal(rec);
       if (league.missed > 0) log.add('怪我で${league.missed}試合を欠場した。');
-      if (league.rank == 1) {
-        championships++;
-        log.add('リーグ優勝!');
-        log.add(
-            '優勝パレードには${paradeCrowd(popularityOf(records, worldRecords))}万人が集まった。');
-        if (wonSeries(player.name, player.age, league.line)) {
-          log.add('日本シリーズを制して、日本一に輝いた!');
-          awards.add('日本一');
-        } else {
-          log.add('日本シリーズでは惜しくも敗れた。');
-        }
+      if (farm) {
+        log.add('二軍の今季は${league.rank}位(${league.wins}勝${league.losses}敗)。');
       } else {
-        log.add('今季は${league.rank}位(${league.wins}勝${league.losses}敗)。');
+        if (league.rank == 1) {
+          championships++;
+          log.add('リーグ優勝!');
+        } else {
+          log.add('今季は${league.rank}位(${league.wins}勝${league.losses}敗)。');
+        }
+        log.addAll(ps!.lines);
+        if (ps.champion && !overseas) {
+          awards.add('日本一');
+          // シリーズMVP: 日本一の年に、打撃か投球がとくに良かった選手。
+          if ((league.line.ops ?? 0) >= 0.850 ||
+              (league.line.hasPitching && (league.line.era ?? 99) <= 2.50)) {
+            awards.add('シリーズMVP');
+          }
+        }
+        if (league.rank == 1 || ps.champion) {
+          log.add(
+              '優勝パレードには${paradeCrowd(popularityOf(records, worldRecords))}万人が集まった。');
+        }
       }
       final d = describeLine(league.line);
       if (d.isNotEmpty) log.add('今季成績: $d');
       for (final t in titles) {
         log.add('タイトル獲得: $t!');
+      }
+      // N年連続でタイトルを獲ったとき。
+      final streak = currentTitleStreak(records);
+      if (const [3, 5, 8].contains(streak)) {
+        log.add('$streak年連続でタイトルを獲得!');
+        _note('title', '$streak年連続でタイトルを獲得');
       }
       if (titles.isNotEmpty) {
         _tryAwaken(0.08, 'タイトルを獲った今季、');
@@ -1041,78 +1695,95 @@ class Game {
       for (final w in awards) {
         log.add('表彰: $w!');
       }
+      // 通算の記録(プロ初安打など)は一軍の成績だけで数える(実際のプロ野球と同じ)。
+      // 二軍の年は出さない(出すと、一軍に上がった年に「プロ初安打」がもう一度出た)。
       var careerBefore = const Line();
       for (final r in proBefore) {
         careerBefore += r.line;
       }
-      for (final m in careerMarks(careerBefore, careerBefore + league.line)) {
+      for (final m in farm
+          ? const <String>[]
+          : careerMarks(careerBefore, careerBefore + league.line)) {
         log.add('記録達成: $m!');
         _note('title', m);
       }
+      _judgeGoal(rec);
+      if (rivalLine != null) log.add(rivalLine);
       log.add(coachWordOf(player));
-      // 年俸が資産に入る。
-      money += salaryOf(rec);
+      // 今季の年俸が資産に入る(シーズン前に決まっていた額)。
+      final now = salariesOf(records).last;
+      money += now;
       final cm = cmFeeOf(popularityOf(records, worldRecords));
       if (cm > 0) {
         money += cm;
         log.add('CM出演料: ${fmtMoney(cm)}');
       }
-      // 契約更改(前の年からの増減)。保存はせず、成績から計算する。
-      final pro = records.where((r) => r.stage == Stage.pro).toList();
-      final now = salaryOf(rec);
-      if (pro.length >= 2) {
-        final prev = salaryOf(pro[pro.length - 2]);
-        final diff = now - prev;
-        final mark = diff > 0
-            ? '(アップ)'
-            : diff < 0
-                ? '(ダウン)'
-                : '(現状維持)';
-        log.add('契約更改: 年俸 ${fmtSalary(prev)} → ${fmtSalary(now)} $mark');
-      } else {
-        log.add('契約更改: 年俸 ${fmtSalary(now)}');
-      }
+      // 契約更改: 今季の成績で、来季の年俸が決まる。
+      final next = renewSalary(now, rec);
+      nextSalary = next;
+      final diff = next - now;
+      final mark = diff > 0
+          ? '(アップ)'
+          : diff < 0
+              ? '(ダウン)'
+              : '(現状維持)';
+      log.add('契約更改: 来季の年俸 ${fmtSalary(now)} → ${fmtSalary(next)} $mark');
     } else if (tournament != null) {
       achievements.add(ach);
+      // アマの大会の表彰(大会優秀選手・大会最優秀選手)。
+      final ampAwards = tournamentAwardsOf(
+          roundsWon: tournament.roundsWon,
+          rounds: tournament.rounds,
+          rating: tournament.line.rating);
+      final corp = stage == Stage.pathChoice && route == Course.corporate;
       final rec = SeasonRecord(
+        corporate: corp,
         age: player.age,
         stage: stage,
         line: tournament.line,
         roundsWon: tournament.roundsWon,
         rounds: tournament.rounds,
         rivalWon: rivalWon,
+        awards: ampAwards,
       );
       records.add(rec);
-      _judgeGoal(rec);
       _logRounds(tournament);
+      for (final w in ampAwards) {
+        log.add('表彰: $w!'); // 経歴には、成績の表彰として出る(_note すると重なる)
+      }
       if (tournament.champion) {
         championships++;
-        log.add('夏の大会で優勝した!');
+        log.add(amateurChampionLine(stage, corporate: corp));
         _tryAwaken(0.03, '優勝の勢いで、');
       } else {
         // 負けた試合(次の試合)の名前で、どこまで行ったかを伝える。
-        final lost = roundLabel(tournament.roundsWon, tournament.rounds);
-        log.add(tournament.roundsWon == 0
-            ? '夏の大会は初戦で敗れた。'
-            : tournament.roundsWon == tournament.rounds - 1
-                ? '夏の大会は準優勝。'
-                : '夏の大会は$lostで敗れた。');
+        log.add(amateurLossLine(stage, tournament.roundsWon, tournament.rounds,
+            corporate: corp));
       }
       final d = describeLine(tournament.line);
       if (d.isNotEmpty) log.add('大会成績: $d');
+      _judgeGoal(rec);
+      if (rivalLine != null) log.add(rivalLine);
     }
     _playWorld();
   }
 
   /// 勝ち抜き戦の各試合を、ログに残す(相手・勝ち負け・自分の出来)。
   void _logRounds(Tournament t) {
-    final own = affiliationOf(stage, player.name, proTeam: proTeam);
+    final own = affiliation;
+    final corp = stage == Stage.pathChoice && route == Course.corporate;
+    final qualify = amateurQualifyIndex(stage, t.rounds, corporate: corp);
     for (var i = 0; i < t.games.length; i++) {
       final g = t.games[i];
       final name = opponentName(stage, player.age, i,
-          corporate: route == Course.corporate, own: own);
+          corporate: corp, own: own, seed: teamSeed);
       final d = describeGame(g.line);
-      log.add('${g.won ? '○' : '●'} ${roundLabel(i, t.rounds)} vs $name'
+      if (qualify != null && i == qualify) {
+        log.add(amateurQualifyLine(stage, corporate: corp));
+      }
+      if (i == t.rounds - 1 && _finalNote != null) log.add(_finalNote!);
+      log.add(
+          '${g.won ? '○' : '●'} ${amateurRoundLabel(stage, i, t.rounds, corporate: corp)} vs $name'
           '${d.isEmpty ? '' : ' — $d'}'
           '${isHeroGame(g.line, won: g.won) ? ' ★殊勲(${heroNoteOf(g.line)})' : ''}');
       if (i == t.rounds - 1 && g.won && isHeroGame(g.line, won: true)) {
@@ -1142,7 +1813,9 @@ class Game {
           positionTeamAdjust(player, effectivePos),
       opponents: ev.opponents,
       rng: rng,
-      condition: condition.value + worldBonus(player.traits),
+      condition: condition.value +
+          worldBonus(player.traits) +
+          skillMatchBonus(player.skills),
     );
     final w = wrapWorld(event: ev, age: player.age, tournament: t);
     for (var i = 0; i < t.games.length; i++) {
@@ -1175,6 +1848,26 @@ class Game {
   }
 
   void _endYear() {
+    // 1年の成長の記録(年のはじめの能力と比べる)。いちばん伸びた年は「自己ベスト」
+    if (yearStart.isNotEmpty) {
+      final ups = [
+        for (final a in abilitiesOf(player.role))
+          if (player.of(a) > (yearStart[a] ?? player.of(a)))
+            (a, yearStart[a]!, player.of(a))
+      ];
+      final total = ups.fold<int>(0, (t, u) => t + u.$3 - u.$2);
+      if (total > 0) {
+        log.add('この1年の成長: ${[
+          for (final u in ups) '${_abilityJp(u.$1)} ${u.$2}→${u.$3}'
+        ].join('・')}(合計+$total)');
+        if (total > bestYearGain) {
+          if (bestYearGain > 0) {
+            log.add('これまでで一番伸びた1年! (自己ベスト +$total)');
+          }
+          bestYearGain = total;
+        }
+      }
+    }
     final before = stage;
     slot = 0;
     offseasonDone = false;
@@ -1186,9 +1879,16 @@ class Game {
     if (partner != null && partner.bond >= 50) {
       condition = condition.copyWith(fatigue: condition.fatigue - 5); // 支えてくれる
     }
-    if (trainCount + restCount > 0) {
-      log.add(yearSummaryOf(trainCount, restCount));
+    if (purchases.contains(ShopItem.house)) {
+      condition =
+          condition.copyWith(fatigue: condition.fatigue - 5); // 贈った家でくつろぐ
     }
+    shopThisYear.clear();
+    favorsUsed.clear();
+    if (trainCount + restCount > 0) {
+      log.add(yearSummaryOf(trainCount, restCount, comboCount));
+    }
+    comboCount = 0;
     trainCount = 0;
     restCount = 0;
     peakOverall = max(peakOverall, overall(player).round());
@@ -1198,18 +1898,52 @@ class Game {
     if (rs != null) log.addAll(rivalNews(rs, player.age));
 
     if (phase != Phase.retired) log.add('── ${player.age}歳 ──');
-    final an = ageNote(player.age);
+    // 大学(22歳でドラフト)・社会人(21歳でドラフト)の、最後の夏を迎える年
+    final finalYear = !turnedPro &&
+        route != null &&
+        player.age == (route == Course.corporate ? 20 : 21);
+    final an = ageNote(player.age, finalYear: finalYear);
     if (an != null && phase != Phase.retired) log.add(an);
+    // 年齢による上限(体の限界)を超えている能力は、上限まで落ちる
+    if (phase != Phase.retired) {
+      final aged = applyAgeCeiling(player);
+      if (aged.drops.isNotEmpty) {
+        player = aged.player;
+        log.add('体の衰え: ${[
+          for (final d in aged.drops) '${_abilityJp(d.$1)} ${d.$2}→${d.$3}'
+        ].join('・')}');
+      }
+    }
+    yearStart = Map.of(player.abilities);
     if (turnedPro) {
-      if (proTeam != null && proYears >= 1 && proYears % 3 == 0) {
+      if (proTeam != null && !overseas && proYears >= 1 && proYears % 3 == 0) {
         log.add('新人の${kohaiOf(proTeam!, player.age)}が入団してきた。');
       }
       proYears++;
+      if (farmYears > 0) {
+        farmYears--;
+        if (promoted(yearsLeft: farmYears, overall: overall(player))) {
+          farmYears = 0;
+          log.add(
+              '一軍に昇格した! 支配下登録され、背番号は${uniformNumberOf(Stage.pro, player)}に。');
+          _note('team', '一軍に昇格');
+        }
+      }
       lowYears = nextLowYears(player, lowYears);
       if (mustRetire(player, lowYears)) {
-        final why = isReleased(lowYears) ? '戦力外になった' : '年齢により引退した';
-        log.add('$why。');
-        _retire(isReleased(lowYears) ? '戦力外通告を受けて引退' : '年齢により引退');
+        if (isReleased(lowYears) &&
+            player.age <= maxProAge &&
+            canTryout(age: player.age, used: tryoutUsed)) {
+          // 戦力外通告。一生に一度、トライアウトを選べる(受ける/引退する)。
+          log.add('戦力外通告を受けた。');
+          _note('team', '戦力外通告を受けた');
+          pendingEvent = tryoutEvent;
+          phase = Phase.event;
+        } else {
+          final why = isReleased(lowYears) ? '戦力外になった' : '年齢により引退した';
+          log.add('$why。');
+          _retire(isReleased(lowYears) ? '戦力外通告を受けて引退' : '年齢により引退');
+        }
       }
     } else if (route == null && player.age == proEntryAge + 1) {
       _draft();
@@ -1218,10 +1952,14 @@ class Game {
     }
     _rotateCast(before);
     _newGoal();
-    if (turnedPro && phase != Phase.retired && proTeam != null) {
-      log.add('${player.age}歳シーズン開幕。${overseas ? overseasTeam : proTeam}'
-          'のスローガンは「${sloganOf(proTeam!, player.age)}」。'
-          '本拠地は${stadiumOf(proTeam!)}。');
+    // 戦力外通告のあと(トライアウトを選ぶ前)は、開幕の文を出さない
+    if (turnedPro && phase == Phase.term && proTeam != null) {
+      // 海外の年は、日本の球団のスローガン・球場を出さない
+      log.add(overseas
+          ? '${player.age}歳シーズン開幕。アメリカの$overseasTeamで迎える、プロ${player.age - (proStartAge ?? player.age) + 1}年目のシーズン。'
+          : '${player.age}歳シーズン開幕。$proTeam'
+              'のスローガンは「${sloganOf(proTeam!, player.age)}」。'
+              '本拠地は${stadiumOf(proTeam!)}。');
     }
   }
 
@@ -1230,8 +1968,12 @@ class Game {
     if (phase == Phase.retired) return;
     final after = stage;
     if (after != before) {
-      cast.rotate(after, rng, player.role, player.traits);
+      cast.rotate(after, rng, player.role, player.skills);
       school = School.local;
+      // 仲間とコーチは別の人になる(id は使い回される)ので、選んでいた相手・自主練の約束は外す
+      final k = socialTarget?.kind;
+      if (k == Kind.teammate || k == Kind.coach) socialTargetId = null;
+      tagMateId = null;
       if (after != Stage.pro && after != Stage.pathChoice) {
         _note('stage', '${stageNameOf(after)}に進んだ');
       }
@@ -1251,6 +1993,15 @@ class Game {
       proTeam = team;
       final round = draftRound(margin);
       log.add('ドラフトで指名された! $team から$round位指名。');
+      log.add(pressConferenceNote(round,
+          uniformNumberOf(Stage.pro, player, ikusei: farmYearsFor(round) > 0)));
+      farmYears = farmYearsFor(round);
+      nextSalary = rookieSalary(round);
+      log.add('契約: 1年目の年俸は${fmtSalary(nextSalary)}。');
+      if (farmYears > 0) {
+        log.add('育成契約での入団。まずは二軍で力をつけて、一軍昇格を目指す。');
+        _note('team', '育成契約で入団(二軍からのスタート)');
+      }
       final mates = classmatesOf(player.name, team);
       log.add(
           '同期入団: ${[for (final m in mates) '${m.$1}(${m.$2}位)'].join('・')}');
@@ -1273,11 +2024,14 @@ class Game {
     ending = _buildEnding();
   }
 
+  /// 称号「レジェンド」になる最高評価(dart run -DBAL_LEGEND=82 で試せる)。
+  static const legendLine = int.fromEnvironment('BAL_LEGEND', defaultValue: 82);
+
   Ending _buildEnding() {
     final String title;
     if (!turnedPro && proYears == 0) {
       title = 'プロにはなれなかった';
-    } else if (peakOverall >= 80) {
+    } else if (peakOverall >= legendLine) {
       title = 'レジェンド';
     } else if (peakOverall >= 65) {
       title = '一流選手';
@@ -1340,16 +2094,40 @@ class Game {
         'worldRecords': [for (final r in worldRecords) r.toJson()],
         'lifeLog': [for (final e in lifeLog) e.toJson()],
         'focusStreak': focusStreak,
+        'skillTips': skillTipsToJson(skillTips),
+        'studyTarget': studyTarget?.name,
         'turnCount': turnCount,
         'lastCoachTurn': lastCoachTurn,
+        'lastLessonTurn': lastLessonTurn,
         'monthRows': monthRows,
         'trainCount': trainCount,
         'childhood': childhood,
         'restCount': restCount,
         'lastFocus': lastFocus?.name,
+        'lastPlan': lastPlan?.name,
+        'lastPlanFocus': lastPlanFocus?.name,
+        'comboCount': comboCount,
+        'comboTotal': comboTotal,
+        'shopThisYear': {
+          for (final e in shopThisYear.entries) e.key.name: e.value
+        },
+        'purchases': [for (final p in purchases) p.name],
+        'gearAge': gearAge,
+        'socialTargetId': socialTargetId,
+        'favorsUsed': favorsUsed.toList(),
+        'tagMateId': tagMateId,
         'goal': goal?.toJson(),
         'difficulty': difficulty.name,
         'awakened': awakened,
+        'tryoutUsed': tryoutUsed,
+        'pendingFinal': pendingFinal?.toJson(),
+        'farmYears': farmYears,
+        'teamSeed': teamSeed,
+        'missionsDone': missionsDone.toList(),
+        'yearStart': {for (final e in yearStart.entries) e.key.name: e.value},
+        'bestYearGain': bestYearGain,
+        'nextSalary': nextSalary,
+        'afterPath': afterPath?.name,
       };
 
   /// 項目を足すときは既定値を置く(既存セーブを壊さない)。
@@ -1369,16 +2147,37 @@ class Game {
       player,
       castJson != null
           ? Cast.fromJson(castJson)
-          : Cast.initial(rng, player.role, player.traits),
+          : Cast.initial(rng, player.role, player.skills),
       Difficulty.parse(j['difficulty']),
     );
     g.condition = Condition.fromJson(
         (j['condition'] as Map?)?.cast<String, dynamic>() ?? {});
     g.slot = (j['slot'] as num?)?.toInt() ?? 0;
     g.focusStreak = (j['focusStreak'] as num?)?.toInt() ?? 0;
+    g.skillTips = skillTipsFromJson(j['skillTips']);
+    g.studyTarget = Skill.parse((j['studyTarget'] as String?) ?? '');
     g.awakened = j['awakened'] == true;
+    g.tryoutUsed = j['tryoutUsed'] == true;
+    g.farmYears = (j['farmYears'] as num?)?.toInt() ?? 0;
+    g.teamSeed = (j['teamSeed'] as num?)?.toInt() ?? 0;
+    g.missionsDone.addAll([
+      for (final x in (j['missionsDone'] as List?) ?? const []) x as String
+    ]);
+    g.yearStart = {
+      for (final e in ((j['yearStart'] as Map?) ?? const {}).entries)
+        if (Ability.parse(e.key as String) != null)
+          Ability.parse(e.key as String)!: (e.value as num).toInt()
+    };
+    g.bestYearGain = (j['bestYearGain'] as num?)?.toInt() ?? 0;
+    g.nextSalary = (j['nextSalary'] as num?)?.toInt() ?? 0;
+    g.afterPath = AfterPath.parse(j['afterPath'] as String?);
+    final pf = j['pendingFinal'];
+    if (pf is Map) {
+      g.pendingFinal = FinalMoment.fromJson(pf.cast<String, dynamic>());
+    }
     g.turnCount = (j['turnCount'] as num?)?.toInt() ?? 0;
     g.lastCoachTurn = (j['lastCoachTurn'] as num?)?.toInt() ?? 0;
+    g.lastLessonTurn = (j['lastLessonTurn'] as num?)?.toInt() ?? 0;
     g.monthRows = [
       for (final t in (j['monthRows'] as List?) ?? const []) t as String
     ];
@@ -1388,11 +2187,32 @@ class Game {
     }
     g.restCount = (j['restCount'] as num?)?.toInt() ?? 0;
     g.lastFocus = Ability.parse((j['lastFocus'] as String?) ?? '');
+    g.lastPlan = Plan.values.where((p) => p.name == j['lastPlan']).firstOrNull;
+    g.lastPlanFocus = Ability.parse((j['lastPlanFocus'] as String?) ?? '');
+    g.comboCount = (j['comboCount'] as num?)?.toInt() ?? 0;
+    g.comboTotal = (j['comboTotal'] as num?)?.toInt() ?? 0;
+    for (final e in ((j['shopThisYear'] as Map?) ?? const {}).entries) {
+      final i = ShopItem.parse(e.key as String?);
+      if (i != null) g.shopThisYear[i] = (e.value as num).toInt();
+    }
+    for (final x in (j['purchases'] as List?) ?? const []) {
+      final i = ShopItem.parse(x as String?);
+      if (i != null) g.purchases.add(i);
+    }
+    g.gearAge = (j['gearAge'] as num?)?.toInt() ?? -1;
+    g.socialTargetId = j['socialTargetId'] as String?;
+    g.favorsUsed.addAll(
+        [for (final x in (j['favorsUsed'] as List?) ?? const []) x as String]);
+    g.tagMateId = j['tagMateId'] as String?;
     g.exp = ExpPool.fromJson((j['exp'] as Map?)?.cast<String, dynamic>() ?? {});
     g.phase = pick(Phase.values, j['phase'], Phase.term);
     g.pendingEvent =
         events.where((e) => e.id == j['pendingEvent']).firstOrNull ??
-            childhoodStepById(j['pendingEvent'] as String?)?.event;
+            childhoodStepById(j['pendingEvent'] as String?)?.event ??
+            (j['pendingEvent'] == tryoutEventId ? tryoutEvent : null) ??
+            (j['pendingEvent'] == finalMomentId
+                ? finalMomentEvent(g.player)
+                : null);
     if (g.phase == Phase.event && g.pendingEvent == null) g.phase = Phase.term;
     g._eventFocus = pick(Ability.values, j['eventFocus'], Ability.contact);
     g.route = Course.values.where((r) => r.name == j['route']).firstOrNull;

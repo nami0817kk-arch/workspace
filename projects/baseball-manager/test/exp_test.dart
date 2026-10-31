@@ -1,3 +1,5 @@
+import 'package:baseball_manager/game/training.dart';
+import 'package:baseball_manager/game/traits.dart';
 import 'package:baseball_manager/game/calendar.dart';
 import 'package:baseball_manager/game/career.dart';
 import 'package:baseball_manager/game/exp.dart';
@@ -130,7 +132,9 @@ void _roleFactorTests() {
     }
 
     expect(roleExpFactor(Role.batter), closeTo(1.0, 1e-9));
-    expect(perAbility(Role.pitcher), closeTo(perAbility(Role.batter), 1e-9));
+    // 投手だけ、プロ入り率・レジェンド率を打者に揃えるため少し遅くしてある(pitcherPace)
+    expect(perAbility(Role.pitcher),
+        closeTo(perAbility(Role.batter) * pitcherPace, 1e-9));
     expect(perAbility(Role.twoWay), closeTo(perAbility(Role.batter), 1e-9));
     expect(roleExpFactor(Role.pitcher), lessThan(1.0));
   });
@@ -163,6 +167,44 @@ void _seasonTests() {
         expect(m.keys.toSet(), usableCategories(r).toSet());
         expect(m.values.toSet(), {6});
       }
+    });
+  });
+
+  group('年齢による上限(体の衰え)', () {
+    Player at(int age, int v, {Set<Trait> traits = const {}}) => Player(
+        name: 't',
+        role: Role.batter,
+        age: age,
+        potential: 60,
+        traits: traits,
+        abilities: {for (final a in abilitiesOf(Role.batter)) a: v});
+
+    test('29歳までは上限なし。体の能力は技術より早く・大きく下がる', () {
+      expect(ageCeiling(at(29, 80), Ability.power), 99);
+      expect(ageCeiling(at(32, 80), Ability.contact), 99);
+      final p38 = at(38, 80);
+      expect(ageCeiling(p38, Ability.power), lessThan(ageCeiling(p38, Ability.contact)));
+      expect(ageCeiling(at(42, 80), Ability.power),
+          lessThan(ageCeiling(at(38, 80), Ability.power)));
+    });
+
+    test('長持ちは衰えがゆるやか', () {
+      expect(ageCeiling(at(38, 80, traits: {Trait.longevity}), Ability.power),
+          greaterThan(ageCeiling(at(38, 80), Ability.power)));
+    });
+
+    test('上限より上には経験点で上げられない。年の変わり目に上限まで落ちる', () {
+      final p = at(40, 90);
+      final cap = ageCeiling(p, Ability.power);
+      expect(cap, lessThan(90));
+      const rich = ExpPool({Category.batting: 9999, Category.running: 9999});
+      expect(buy(p, rich, Ability.power), isNull);
+      final r = applyAgeCeiling(p);
+      expect(r.player.of(Ability.power), cap);
+      expect(r.drops.any((d) => d.$1 == Ability.power && d.$2 == 90 && d.$3 == cap), isTrue);
+      // 上限より下なら、上限までは上げられる
+      final low = at(40, cap - 5);
+      expect(buy(low, rich, Ability.power), isNotNull);
     });
   });
 }

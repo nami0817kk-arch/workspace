@@ -1,7 +1,7 @@
 name: baseball_manager
 description: "野球の監督・育成シミュレーション。"
 publish_to: 'none'
-version: 1.0.0+3
+version: 1.0.0+9
 
 environment:
   sdk: ^3.5.0
@@ -10,6 +10,12 @@ dependencies:
   flutter:
     sdk: flutter
   shared_preferences: ^2.3.0
+  audioplayers: ^6.8.1
+  url_launcher: ^6.3.2
+  google_mobile_ads: ^9.1.0
+  in_app_purchase: ^3.3.1
+  in_app_purchase_storekit: ^0.4.13
+  share_plus: ^13.3.1
 
 dev_dependencies:
   flutter_test:
@@ -22,6 +28,7 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    - assets/sfx/
 
   # 日本語フォントを同梱する(Web は足りない字形を外から取りに行って豆腐になる)。
   # 選手名は自由入力なので、サブセットはソースの文字に絞らない。assets/fonts/README.md 参照。

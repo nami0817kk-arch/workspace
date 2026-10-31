@@ -66,19 +66,19 @@ String planTitle(Plan a, Ability focus) => switch (a) {
 
 /// 重点の能力に合わせた、ひとこと。
 String planHint(Plan a, Ability focus) => switch (a) {
-      Plan.train => '${abilityLabel(focus)}の経験点が貯まる',
-      Plan.special => '${abilityLabel(focus)}がたくさん貯まる。疲れて怪我しやすい',
+      Plan.train => '${abilityLabel(focus)}の経験点が安定して貯まる',
+      Plan.special => '${abilityLabel(focus)}がたくさん貯まり、調子が良いと特殊能力のコツ。疲れて怪我しやすい',
       _ => actionHint(a),
     };
 
 String actionHint(Plan a) => switch (a) {
-      Plan.train => '重点の経験点が貯まる',
-      Plan.special => 'たくさん貯まる。疲れて怪我しやすい',
+      Plan.train => '重点の経験点が安定して貯まる',
+      Plan.special => 'たくさん貯まり、調子が良いと特殊能力のコツ。疲れて怪我しやすい',
       Plan.rest => '疲れを取る',
-      Plan.study => 'やる気が上がり、少し貯まる',
-      Plan.social => 'やる気が上がる。家族・恋人との絆',
-      Plan.match => '全体に少し貯まる',
-      Plan.lesson => 'コツが貯まる(4回で特性を習得)',
+      Plan.study => '特殊能力のコツ+2(安く取れるようになる)。経験点はわずか',
+      Plan.social => 'やる気が上がり、仲間から特殊能力のコツ。家族・恋人との絆',
+      Plan.match => '全体に少し貯まり、勝負どころの特殊能力のコツ',
+      Plan.lesson => 'コーチのコツが貯まる(4回でコーチの特殊能力のコツが満タン)',
     };
 
 String categoryLabel(Category c) => c.label;

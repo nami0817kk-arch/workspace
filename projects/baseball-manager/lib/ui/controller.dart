@@ -7,10 +7,12 @@ import 'package:flutter/material.dart' show ThemeMode;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../game/achievements.dart';
+import '../game/after_career.dart';
 import '../game/difficulty.dart';
 import '../game/exp.dart';
 import '../game/career.dart';
-import '../game/characters.dart' show tipsNeeded;
+import '../game/characters.dart' show tipsNeeded, Character;
+import '../game/shop.dart';
 import '../game/flavor.dart';
 import '../game/marks.dart';
 import '../game/game.dart';
@@ -20,10 +22,14 @@ import '../game/life.dart';
 import '../game/path.dart';
 import '../game/player.dart';
 import '../game/snapshot.dart';
+import '../game/skills.dart';
 import '../game/talent.dart';
 import '../game/traits.dart';
 import 'history.dart';
 import 'labels.dart';
+import 'backup_share.dart';
+import 'sound.dart';
+import '../monetization/monetization.dart';
 
 const saveKey = 'baseball_manager_save_v1';
 const historyKey = 'baseball_manager_history_v1';
@@ -45,6 +51,38 @@ const traitBookKey = 'baseball_manager_traitbook_v1';
 
 /// 継承ポイント(引退で貯まり、次の選手に特性を持たせるのに使う)。
 const legacyKey = 'baseball_manager_legacy_v1';
+
+/// 自動バックアップ(直近3件。選手を始め直す前・引退したとき・4歳ごとの節目)。
+const autoBackupKey = 'baseball_manager_autobackup_v1';
+const autoBackupMax = 3;
+
+/// 自動でとった、データの控え。
+class AutoBackup {
+  const AutoBackup(this.at, this.why, this.text);
+  final DateTime at;
+
+  /// とった理由(画面に出す)。
+  final String why;
+
+  /// `exportBackup` の文字列。
+  final String text;
+
+  Map<String, dynamic> toJson() =>
+      {'at': at.millisecondsSinceEpoch, 'why': why, 'text': text};
+
+  static AutoBackup? fromJson(Object? j) {
+    if (j is! Map) return null;
+    final at = j['at'];
+    final why = j['why'];
+    final text = j['text'];
+    if (at is! num || why is! String || text is! String) return null;
+    return AutoBackup(
+        DateTime.fromMillisecondsSinceEpoch(at.toInt()), why, text);
+  }
+}
+
+/// はじめてのガイドを見たか(端末単位)。
+const guideKey = 'baseball_manager_guide_v1';
 
 enum MilestoneKind {
   draft,
@@ -154,6 +192,58 @@ class SaveStore {
     } catch (_) {}
   }
 
+  Future<List<AutoBackup>> loadAutoBackups() async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      final raw = p.getString(autoBackupKey);
+      if (raw == null) return [];
+      return [
+        for (final e in jsonDecode(raw) as List)
+          if (AutoBackup.fromJson(e) != null) AutoBackup.fromJson(e)!,
+      ];
+    } catch (_) {
+      return [];
+    }
+  }
+
+  Future<void> saveAutoBackups(List<AutoBackup> list) async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      await p.setString(
+          autoBackupKey, jsonEncode([for (final b in list) b.toJson()]));
+    } catch (_) {}
+  }
+
+  Future<void> clearAutoBackups() async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      await p.remove(autoBackupKey);
+    } catch (_) {}
+  }
+
+  Future<bool> loadGuideSeen() async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      return p.getBool(guideKey) ?? false;
+    } catch (_) {
+      return true; // 保存できない環境では、毎回出さない
+    }
+  }
+
+  Future<void> saveGuideSeen() async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      await p.setBool(guideKey, true);
+    } catch (_) {}
+  }
+
+  Future<void> clearGuide() async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      await p.remove(guideKey);
+    } catch (_) {}
+  }
+
   Future<int> loadLegacy() async {
     try {
       final p = await SharedPreferences.getInstance();
@@ -224,7 +314,8 @@ class SaveStore {
   }
 
   /// 動きを減らす・触覚・結果の知らせ(画面の下)。保存は 'm,h,t' の形。
-  Future<({bool reduceMotion, bool haptics, bool toasts})> loadFlags() async {
+  Future<({bool reduceMotion, bool haptics, bool toasts, bool sound})>
+      loadFlags() async {
     try {
       final p = await SharedPreferences.getInstance();
       final v = (p.getString(flagsKey) ?? '').split(',');
@@ -232,17 +323,19 @@ class SaveStore {
       return (
         reduceMotion: at(0, false),
         haptics: at(1, true),
-        toasts: at(2, true)
+        toasts: at(2, true),
+        sound: at(3, true)
       );
     } catch (_) {
-      return (reduceMotion: false, haptics: true, toasts: true);
+      return (reduceMotion: false, haptics: true, toasts: true, sound: true);
     }
   }
 
-  Future<void> saveFlags(bool m, bool h, bool t) async {
+  Future<void> saveFlags(bool m, bool h, bool t, [bool s = true]) async {
     try {
       final p = await SharedPreferences.getInstance();
-      await p.setString(flagsKey, '${m ? 1 : 0},${h ? 1 : 0},${t ? 1 : 0}');
+      await p.setString(
+          flagsKey, '${m ? 1 : 0},${h ? 1 : 0},${t ? 1 : 0},${s ? 1 : 0}');
     } catch (_) {}
   }
 
@@ -282,12 +375,19 @@ Plan recommendedPlan(Game g) {
   final c = g.condition;
   if (c.fatigue >= 70) return Plan.rest;
   if (c.morale < 35) return Plan.social;
-  // コーチのコツが貯まりきっていなければ、3回に1回は教わる(特性の習得につながる)。
+  // コーチのコツが貯まりきっていなければ、3回に1回は教わる(コーチの特殊能力のコツが満タンになる)。
   final coach = g.cast.coach;
   if (coach != null && coach.tips < tipsNeeded && g.slot % 3 == 2) {
     return Plan.lesson;
   }
+  // 研究の対象を自分で選んでいて、まだ取りどき(コツ3つ)に届かなければ研究。
+  if (_studyPending(g)) return Plan.study;
   return Plan.train;
+}
+
+bool _studyPending(Game g) {
+  final t = g.studyTarget;
+  return t != null && !g.player.skills.contains(t) && (g.skillTips[t] ?? 0) < 3;
 }
 
 /// おすすめの理由(画面に出す)。
@@ -296,7 +396,11 @@ String recommendReason(Game g) {
   if (c.fatigue >= 70) return '疲れが${c.fatigue}と高いので、休養で回復しよう。';
   if (c.morale < 35) return 'やる気が${c.morale}と低いので、交流でやる気を上げよう。';
   if (recommendedPlan(g) == Plan.lesson) {
-    return 'コーチのコツを貯めると、特性を習得できる。今回は教わろう。';
+    return 'コーチに4回教わると、コーチの特殊能力のコツが満タン(半額)になる。今回は教わろう。';
+  }
+  if (recommendedPlan(g) == Plan.study) {
+    final t = g.studyTarget!;
+    return '研究の対象「${t.label}」のコツが${g.skillTips[t] ?? 0}つ。3つで取りどきになるので研究しよう。';
   }
   return '体調は十分。練習で重点の能力を伸ばそう。';
 }
@@ -318,6 +422,18 @@ String eventResultText(Player p0, Condition c0, Player p1, Condition c1,
   final f = c1.fatigue - c0.fatigue;
   if (f != 0) parts.add('疲れ ${sgn(f)}');
   if (c1.injuredTerms > c0.injuredTerms) parts.add('怪我');
+  // 才能(素質・天賦)は星5つで見せる。星が変わらない小さな上昇も知らせる。
+  if (p1.potential > p0.potential) {
+    final s0 = talentStarCount(p0.potential),
+        s1 = talentStarCount(p1.potential);
+    parts.add(s1 > s0 ? '才能 ${starsOf(s0)}→${starsOf(s1)}' : '才能が伸びた');
+  }
+  for (final a in abilitiesOf(p1.role)) {
+    if (p1.gift(a) > p0.gift(a)) {
+      parts.add(
+          '${abilityLabel(a)}の才能 ${giftStars(p0.gift(a))}→${giftStars(p1.gift(a))}');
+    }
+  }
   for (final t in p1.traits) {
     if (!p0.traits.contains(t)) parts.add('特性「${t.label}」');
   }
@@ -325,12 +441,184 @@ String eventResultText(Player p0, Condition c0, Player p1, Condition c1,
   return parts.join(' / ');
 }
 
+/// 図鑑の集合で、特殊能力を見分ける印。
+const skillBookPrefix = 'skill:';
+
 class GameController extends ChangeNotifier {
-  GameController({SaveStore? store, Random? rng})
+  GameController(
+      {SaveStore? store,
+      Random? rng,
+      SoundPlayer? sound,
+      this.autoGuide = false,
+      this.sharer,
+      this.money})
       : store = store ?? SaveStore(),
-        _rng = rng ?? Random();
+        _rng = rng ?? Random(),
+        sound = sound ?? const NullSound();
+
+  /// 最初の選手を始めたときに、はじめてのガイドを自動で出すか(アプリ本体は true、テストは false)。
+  final bool autoGuide;
+
+  /// 広告と「広告を消す」(アプリ本体だけ。テストは null で、広告も購入の表示も出ない)。
+  final Monetization? money;
+
+  /// 疲れを取る動画を見た歳(同じ歳には1度だけ)。
+  int _recoveredAge = -1;
+
+  /// 前の操作のときの歳(年が変わった瞬間を見つける)。
+  int _adAge = -1;
+
+  /// 動画で疲れを取れる状態か(疲れが70以上・怪我でない・その歳にまだ使っていない)。
+  bool get canRecoverByAd {
+    final g = game;
+    if (money == null || g == null || g.phase == Phase.retired) return false;
+    return g.condition.fatigue >= 70 &&
+        g.condition.injuredTerms == 0 &&
+        g.player.age != _recoveredAge;
+  }
+
+  /// 動画を見て疲れを取る。結果は「いまの結果」の文面(取れなかった理由を含む)で返す。
+  /// 動画の特典の、経験点の量(年に1回)。
+  static const adExpBonus = 10;
+
+  /// 動画で経験点をもらった歳(同じ歳には1度だけ)。
+  int _expAdAge = -1;
+
+  /// 動画で継承ポイントをもらったか(引退のたびに1度だけ)。
+  bool _legacyAdUsed = false;
+
+  /// 動画を見てもらう。見終えれば null、そうでなければ断る文を返す。
+  Future<String?> _watchReward(String declined,
+      {void Function()? onWaiting}) async {
+    final r = await money!.beforeRecovery(onWaiting: onWaiting);
+    if (r == RecoveryGate.granted) return null;
+    return switch (r) {
+      RecoveryGate.declined => declined,
+      RecoveryGate.showFailed => '動画を出せませんでした。しばらくしてからもう一度どうぞ。',
+      _ => '今は動画を読み込めません。通信を確かめて、あとでもう一度どうぞ。',
+    };
+  }
+
+  /// 動画で経験点をもらえるか(育成中・その歳にまだ使っていない)。
+  bool get canExpByAd {
+    final g = game;
+    return money != null &&
+        g != null &&
+        g.phase != Phase.retired &&
+        g.player.age != _expAdAge;
+  }
+
+  /// 動画を見て、経験点を足す(年に1回)。
+  Future<String> expByAd({void Function()? onWaiting}) async {
+    final g = game;
+    if (!canExpByAd || g == null) return '今は使えません。';
+    _expAdAge = g.player.age;
+    final why = await _watchReward('最後まで見ると経験点がもらえます。', onWaiting: onWaiting);
+    if (why != null) {
+      _expAdAge = -1;
+      return why;
+    }
+    if (!identical(game, g)) return '選手が替わったので、経験点は入りませんでした。';
+    final start = g.log.length;
+    g.gainAdExp(adExpBonus);
+    recent = g.log.sublist(start);
+    _cue(Sfx.gain);
+    _commit();
+    return '経験点 +$adExpBonus(全種類)';
+  }
+
+  /// 引退したあと、動画で継承ポイントを1つもらえるか(引退のたびに1度だけ)。
+  bool get canLegacyByAd {
+    final g = game;
+    return money != null &&
+        g != null &&
+        g.phase == Phase.retired &&
+        g.archived &&
+        !_legacyAdUsed;
+  }
+
+  /// 動画を見て、継承ポイントを1つ足す。
+  Future<String> legacyByAd({void Function()? onWaiting}) async {
+    if (!canLegacyByAd) return '今は使えません。';
+    _legacyAdUsed = true;
+    final why =
+        await _watchReward('最後まで見ると継承ポイントがもらえます。', onWaiting: onWaiting);
+    if (why != null) {
+      _legacyAdUsed = false;
+      return why;
+    }
+    legacyPoints += 1;
+    lastLegacyGain += 1;
+    store.saveLegacy(legacyPoints);
+    _cue(Sfx.gain);
+    notifyListeners();
+    return '継承ポイント +1(いま ${legacyPoints}pt)';
+  }
+
+  Future<String> recoverByAd({void Function()? onWaiting}) async {
+    final m = money;
+    final g = game;
+    if (m == null || g == null || !canRecoverByAd) return '今は使えません。';
+    final age = g.player.age;
+    _recoveredAge = age; // 重ねて押されても二重に渡さない
+    final r = await m.beforeRecovery(onWaiting: onWaiting);
+    // 広告を見ている間に画面を離れても渡す(見終えているのに何も入らない、を防ぐ)
+    if (r != RecoveryGate.granted) {
+      _recoveredAge = -1;
+      return switch (r) {
+        RecoveryGate.declined => '最後まで見ると疲れが取れます。',
+        RecoveryGate.showFailed => '動画を出せませんでした。しばらくしてからもう一度どうぞ。',
+        _ => '今は動画を読み込めません。通信を確かめて、あとでもう一度どうぞ。',
+      };
+    }
+    if (!identical(game, g)) return '選手が替わったので、疲れは取れませんでした。';
+    final start = g.log.length;
+    g.relieveFatigue();
+    recent = g.log.sublist(start);
+    _cue(Sfx.rankup);
+    _commit();
+    return '疲れが大きく抜けました。';
+  }
+
+  /// バックアップを共有メニューに渡す係(アプリ本体だけ。テストは null で、ボタンも出ない)。
+  final BackupSharer? sharer;
+
+  /// 自動バックアップ(新しい順、最大 `autoBackupMax` 件)。
+  List<AutoBackup> autoBackups = [];
+  int _backedAge = -1;
+
+  /// いまのデータの控えを1件とる。同じ内容がすぐ前にあれば足さない。
+  void autoBackup(String why) {
+    final text = exportBackup();
+    if (autoBackups.isNotEmpty && autoBackups.first.text == text) return;
+    autoBackups = [AutoBackup(DateTime.now(), why, text), ...autoBackups]
+        .take(autoBackupMax)
+        .toList();
+    store.saveAutoBackups(autoBackups);
+  }
+
+  /// 自動バックアップ `i` に戻す。戻す前のデータも控えに残す(戻しすぎても、やり直せる)。
+  Future<bool> restoreAutoBackup(int i) async {
+    if (i < 0 || i >= autoBackups.length) return false;
+    final text = autoBackups[i].text;
+    autoBackup('戻す前');
+    return importBackup(text);
+  }
+
+  /// 次の画面でガイドを出したいか。見せたら `markGuideSeen` で false に戻す。
+  bool guidePending = false;
+  bool guideSeen = false;
+
+  void markGuideSeen() {
+    guidePending = false;
+    guideSeen = true;
+    store.saveGuideSeen();
+  }
 
   final SaveStore store;
+
+  /// 効果音を鳴らす係(テストでは何もしない)。鳴らすかどうかは `soundOn`。
+  final SoundPlayer sound;
   final Random _rng;
   Game? game;
 
@@ -362,31 +650,7 @@ class GameController extends ChangeNotifier {
     if (g == null || g.phase != Phase.retired) return;
     final parent = PlayerSnapshot.fromGame(g);
     final role = g.player.role == Role.twoWay ? Role.batter : g.player.role;
-    newGame(randomNameOf(_rng), role, g.difficulty, parent);
-  }
-
-  /// ひとつ前の行動の直前のセーブ(「ひとつ前に戻す」用)。行動のたびに1件だけ持つ。
-  String? _undo;
-  bool _auto = false;
-
-  bool get canUndo =>
-      _undo != null && game != null && game!.phase != Phase.retired;
-
-  /// ひとつ前の行動(練習・出来事の選択・おすすめで進める)を取り消す。
-  /// 乱数は引き継がないので、やり直すと結果が変わることがある。
-  void undo() {
-    final u = _undo;
-    if (u == null || game == null) return;
-    game = Game.fromJson((jsonDecode(u) as Map).cast<String, dynamic>(), _rng);
-    _undo = null;
-    toast = null;
-    recent = const ['ひとつ前の行動を取り消した。'];
-    _commit();
-  }
-
-  void _rememberForUndo() {
-    if (_auto || game == null || game!.phase == Phase.retired) return;
-    _undo = jsonEncode(game!.toJson());
+    newGame(randomNameOf(_rng), role, Difficulty.normal, parent);
   }
 
   /// いま重点にしている能力。
@@ -426,6 +690,36 @@ class GameController extends ChangeNotifier {
     final ok = game!.buyInvest(i);
     if (ok) _commit();
     return ok;
+  }
+
+  /// お金の使い道(買い物)。買えたら true。
+  bool buyShop(ShopItem i) {
+    final g = game!;
+    final start = g.log.length;
+    final ok = g.buyShop(i, focus);
+    if (ok) {
+      recent = g.log.sublist(start);
+      _commit();
+    }
+    return ok;
+  }
+
+  /// まわりの人に頼みごとをする。頼めたら true。
+  bool askFavor(Character c) {
+    final g = game!;
+    final start = g.log.length;
+    final ok = g.askFavor(c, focus);
+    if (ok) {
+      recent = g.log.sublist(start);
+      _commit();
+    }
+    return ok;
+  }
+
+  /// 交流の相手を決める(null で恋人か家族)。
+  void setSocialTarget(Character? c) {
+    game!.setSocialTarget(c);
+    _commit();
   }
 
   /// 今年の目標のむずかしさを選ぶ(年の最初の行動の前だけ)。
@@ -472,14 +766,38 @@ class GameController extends ChangeNotifier {
   bool reduceMotion = false;
   bool haptics = true;
   bool toasts = true;
+  bool soundOn = true;
 
-  void setFlags({bool? reduceMotion, bool? haptics, bool? toasts}) {
+  void setFlags(
+      {bool? reduceMotion, bool? haptics, bool? toasts, bool? sound}) {
     this.reduceMotion = reduceMotion ?? this.reduceMotion;
     this.haptics = haptics ?? this.haptics;
     this.toasts = toasts ?? this.toasts;
-    store.saveFlags(this.reduceMotion, this.haptics, this.toasts);
+    soundOn = sound ?? soundOn;
+    store.saveFlags(this.reduceMotion, this.haptics, this.toasts, soundOn);
     notifyListeners();
   }
+
+  /// 効果音を1つ鳴らす(設定でオフなら鳴らさない)。
+  void _cue(Sfx s) {
+    _cuedThisTick = true;
+    if (soundOn) sound.play(s);
+  }
+
+  /// この操作ですでに音を鳴らしたか(出来事・引退の音は、ほかの音が無いときだけ)。
+  bool _cuedThisTick = false;
+  Phase? _soundPhase;
+
+  /// 節目に合う効果音。
+  Sfx _sfxOfMilestone(MilestoneKind k) => switch (k) {
+        MilestoneKind.draft => Sfx.draft,
+        MilestoneKind.champion => Sfx.champion,
+        MilestoneKind.title => Sfx.title,
+        MilestoneKind.achievement => Sfx.achievement,
+        MilestoneKind.trait => Sfx.trait,
+        MilestoneKind.national || MilestoneKind.world => Sfx.champion,
+        MilestoneKind.stage => Sfx.stage,
+      };
 
   void setTextScale(double v) {
     textScale = v;
@@ -496,8 +814,20 @@ class GameController extends ChangeNotifier {
   /// 解除した実績の id(何度遊んでも残る)。
   Set<String> unlocked = {};
 
-  /// 特性図鑑: これまでに持ったことのある特性(何度遊んでも残る)。
+  /// 特性図鑑: これまでに持ったことのある特性(何度遊んでも残る)。特殊能力は `skill:` を付けて同じ集合に入れる。
   Set<String> seenTraits = {};
+
+  /// 図鑑に載った特性の数(特殊能力は数えない)。
+  int get seenTraitCount =>
+      seenTraits.where((n) => !n.startsWith(skillBookPrefix)).length;
+
+  /// 図鑑に載った特殊能力。
+  Set<Skill> get seenSkills => {
+        for (final n in seenTraits)
+          if (n.startsWith(skillBookPrefix) &&
+              Skill.parse(n.substring(skillBookPrefix.length)) != null)
+            Skill.parse(n.substring(skillBookPrefix.length))!,
+      };
 
   /// 継承ポイント(貯まったぶん)と、直前の一生で増えたぶん(エンディングに出す)。
   int legacyPoints = 0;
@@ -514,7 +844,12 @@ class GameController extends ChangeNotifier {
 
   /// 持っている特性を図鑑に足す(増えたときだけ保存)。
   void _recordTraits(Game g) {
-    final names = {for (final t in g.player.traits) t.name};
+    // 特殊能力も同じ図鑑に「skill:名前」で残す(弱点は載せない)
+    final names = {
+      for (final t in g.player.traits) t.name,
+      for (final s in g.player.skills)
+        if (!s.negative) '$skillBookPrefix${s.name}',
+    };
     if (seenTraits.containsAll(names)) return;
     seenTraits = {...seenTraits, ...names};
     store.saveTraitBook(seenTraits);
@@ -526,6 +861,8 @@ class GameController extends ChangeNotifier {
   Future<bool> loadSaved() async {
     unlocked = await store.loadAchievements();
     seenTraits = await store.loadTraitBook();
+    guideSeen = await store.loadGuideSeen();
+    autoBackups = await store.loadAutoBackups();
     legacyPoints = await store.loadLegacy();
     adminMode = await store.loadAdmin();
     final disp = await store.loadDisplay();
@@ -535,6 +872,7 @@ class GameController extends ChangeNotifier {
     reduceMotion = fl.reduceMotion;
     haptics = fl.haptics;
     toasts = fl.toasts;
+    soundOn = fl.sound;
     history = await store.loadHistory();
     final j = await store.load();
     if (store.loadFailed) {
@@ -609,13 +947,46 @@ class GameController extends ChangeNotifier {
     }
   }
 
+  /// 新規開始画面で引いた「生まれ」の種(2026-10-25 ユーザー「初期に保持している特性をランダムで決められるように」)。
+  /// 同じ種なら、才能・天賦・生まれつきの特性・弱点が同じになる。null なら、ふつうに乱数で決める。
+  int? birthSeed;
+
+  /// 生まれを引き直す(新規開始画面の「引き直す」)。
+  void rerollBirth({bool notify = true}) {
+    birthSeed = _rng.nextInt(1 << 31);
+    if (notify) notifyListeners();
+  }
+
+  /// いまの種で始めたらどうなるかの見本(保存も乱数の消費もしない)。
+  Game previewBirth(String name, Role role,
+      {PlayerSnapshot? parent, Trait? carry}) {
+    final use =
+        carry != null && carryCandidates(role).contains(carry) ? carry : null;
+    return Game.newGame(
+        parent: parent,
+        carry: use,
+        name: name.trim().isEmpty ? '名無し' : name.trim(),
+        role: role,
+        rng: Random(birthSeed ?? 0));
+  }
+
   void newGame(String name, Role role,
       [Difficulty difficulty = Difficulty.normal,
       PlayerSnapshot? parent,
       Trait? carry]) {
     newlyUnlocked = const [];
     lastLegacyGain = 0;
-    _undo = null;
+    // 育成中の選手がいるなら、始め直す前に控えをとる。
+    if (game != null && game!.phase != Phase.retired) {
+      autoBackup('${game!.player.name}を始め直す前');
+    }
+    _backedAge = -1;
+    _adAge = -1;
+    _recoveredAge = -1;
+    _expAdAge = -1;
+    _legacyAdUsed = false;
+    _autoYearAge = null;
+    _missionsShown = -1;
     // 継承: 図鑑にあり、ポイントが足りる特性だけ。持たせたぶんのポイントを使う。
     Trait? use;
     if (carry != null && carryCandidates(role).contains(carry)) {
@@ -629,8 +1000,11 @@ class GameController extends ChangeNotifier {
         carry: use,
         name: name.trim().isEmpty ? '名無し' : name.trim(),
         role: role,
-        rng: _rng);
+        // 新規開始画面で引いた生まれがあれば、その見本どおりに始める
+        rng: birthSeed != null ? Random(birthSeed!) : _rng);
+    birthSeed = null;
     recent = birthTalentNotes(game!.player);
+    if (autoGuide && !guideSeen) guidePending = true;
     focus = abilitiesOf(role).first;
     _commit();
   }
@@ -638,7 +1012,8 @@ class GameController extends ChangeNotifier {
   /// 進行中のゲームを差し込む(続きから・テスト用)。
   void adopt(Game g) {
     game = g;
-    _undo = null;
+    _autoYearAge = null;
+    _missionsShown = -1;
     focus = abilitiesOf(g.player.role).first;
     notifyListeners();
   }
@@ -695,23 +1070,53 @@ class GameController extends ChangeNotifier {
 
   void act(Plan a) {
     final g = game!;
+    // 自分で行動を選んだら、「年末まで」の続きはしない
+    if (!_inAutoYear) _autoYearAge = null;
     if (!abilitiesOf(g.player.role).contains(focus)) {
       focus = abilitiesOf(g.player.role).first;
     }
-    _rememberForUndo();
     if (haptics) HapticFeedback.selectionClick();
     _turnBase = {for (final x in abilitiesOf(g.player.role)) x: g.player.of(x)};
     final start = g.log.length;
     final before = g.stage;
+    final n0 = pending.length;
+    final readyBefore = g.skillsInSeason.toSet();
     g.choose(a, focus);
     recent = [_summary(a, g), ...g.log.sublist(start)];
     toast = toasts ? recent.first : null;
+    // 新しく取りどきになった特殊能力があれば、知らせる(能力タブで取れる)
+    final newlyReady = [
+      for (final k in g.skillsInSeason)
+        if (!readyBefore.contains(k)) k
+    ];
+    if (newlyReady.isNotEmpty) {
+      final note =
+          '「${newlyReady.map((k) => k.label).join('」「')}」が取りどき!(能力タブで取れる)';
+      recent = [...recent, note];
+      if (toasts) toast = note;
+    }
+    // 年の最後のターンになり、来年から値段が上がるなら知らせる
+    final rise = g.skillPriceRiseNote;
+    if (g.phase == Phase.term && rise != null) recent = [...recent, rise];
     toastTone = g.condition.injured || g.lastOutcome == Outcome.bad
         ? -1
         : (g.lastOutcome == Outcome.good || g.lastOutcome == Outcome.great
             ? 1
             : 0);
     _detect(before, g, g.log.sublist(start));
+    if (g.condition.injured) {
+      _cue(Sfx.injury);
+    } else if (g.lastOutcome == Outcome.bad) {
+      _cue(Sfx.bad);
+    } else if (g.phase == Phase.event && pending.length == n0) {
+      // 出来事が起きた(節目の音が鳴らないとき)。
+      _cue(Sfx.event);
+    } else if (g.lastOutcome == Outcome.good ||
+        g.lastOutcome == Outcome.great) {
+      _cue(Sfx.great);
+    } else {
+      _cue(Sfx.tap);
+    }
     _commit();
   }
 
@@ -730,6 +1135,13 @@ class GameController extends ChangeNotifier {
 
   /// 今回のできごとから、見せる価値のある節目を拾う。
   void _detect(Stage before, Game g, List<String> lines) {
+    final n0 = pending.length;
+    _detectMilestones(before, g, lines);
+    // 新しい節目があれば、その音(いちばん最後に足されたもの = 大きな出来事)を鳴らす。
+    if (pending.length > n0) _cue(_sfxOfMilestone(pending.last.kind));
+  }
+
+  void _detectMilestones(Stage before, Game g, List<String> lines) {
     final name = g.player.name;
     final pick = lines.where((l) => l.contains('ドラフトで指名された')).firstOrNull;
     if (pick != null) {
@@ -757,15 +1169,33 @@ class GameController extends ChangeNotifier {
       pending.add(Milestone(MilestoneKind.stage, '${stageLabel(after)}へ',
           '${g.player.age}歳。新しい仲間とコーチが待っている。'));
     }
-    if (lines.any((l) => l.contains('優勝'))) {
-      pending.add(Milestone(MilestoneKind.champion, '優勝!', '夏の大会を制した。'));
+    // 優勝: アマの大会(「…優勝した!」)・リーグ優勝・日本一。世界一は上で拾う。
+    for (final l in lines) {
+      if (l.endsWith('優勝した!')) {
+        pending.add(Milestone(
+            MilestoneKind.champion, '優勝!', l.replaceFirst('優勝した!', '優勝した。')));
+      } else if (l == 'リーグ優勝!') {
+        pending.add(Milestone(MilestoneKind.champion, 'リーグ優勝!',
+            '${g.proTeam ?? 'チーム'}が、ペナントレースを制した。'));
+      } else if (l.contains('日本一に輝いた')) {
+        pending.add(
+            Milestone(MilestoneKind.champion, '日本一!', '日本シリーズを制して、日本一に輝いた。'));
+      } else if (l.contains('アメリカのリーグの頂点に立った')) {
+        pending
+            .add(Milestone(MilestoneKind.champion, '頂点!', 'アメリカのリーグの頂点に立った。'));
+      }
     }
     for (final l in lines.where((l) => l.startsWith('タイトル獲得'))) {
       pending.add(Milestone(
           MilestoneKind.title, 'タイトル獲得!', l.replaceFirst('タイトル獲得: ', '')));
     }
-    for (final l in lines.where((l) => l.contains('を習得'))) {
+    for (final l
+        in lines.where((l) => l.contains('を習得') || l.contains('のコツをつかんだ'))) {
       pending.add(Milestone(MilestoneKind.trait, 'コツをつかんだ!', l));
+    }
+    if (lines.any((l) => l.contains('一軍に昇格した'))) {
+      pending.add(Milestone(
+          MilestoneKind.stage, '一軍昇格!', '$name は二軍での努力が実り、一軍の舞台に立つ。'));
     }
     for (final l in lines.where((l) => l.contains('に覚醒した'))) {
       pending.add(Milestone(MilestoneKind.trait, '才能が覚醒!', l));
@@ -773,13 +1203,13 @@ class GameController extends ChangeNotifier {
   }
 
   /// 一生が終わったとき、新しい実績を解除して保存し、ダイアログで知らせる。
-  void _unlockAchievements(Game g) {
+  void _unlockAchievements(Game g, {bool append = false}) {
     final earned = earnedBy(PlayerSnapshot.fromGame(g));
     final fresh = [
       for (final a in achievements)
         if (earned.contains(a.id) && !unlocked.contains(a.id)) a,
     ];
-    newlyUnlocked = fresh;
+    newlyUnlocked = append ? [...newlyUnlocked, ...fresh] : fresh;
     if (fresh.isEmpty) return;
     unlocked = {...unlocked, ...fresh.map((a) => a.id)};
     store.saveAchievements(unlocked);
@@ -789,24 +1219,91 @@ class GameController extends ChangeNotifier {
     }
   }
 
+  /// 引退後の道を選ぶ(エンディングの画面から)。殿堂の記録も更新し、新しい実績があれば知らせる。
+  void chooseAfterPath(AfterPath p) {
+    final g = game;
+    if (g == null) return;
+    g.chooseAfterPath(p);
+    // 殿堂の最新の記録(この一生のもの)を、選んだ道を含む内容に差し替える。
+    if (g.archived && history.isNotEmpty) {
+      history = [HistoryEntry.of(g), ...history.skip(1)];
+      store.saveHistory(history);
+    }
+    _unlockAchievements(g, append: true);
+    _commit();
+  }
+
   /// 見せ終わった節目を1つ取り除く。
   void dismissMilestone() {
     if (pending.isNotEmpty) pending.removeAt(0);
     notifyListeners();
+    _resumeAutoYear();
   }
 
   void spend(Ability a) {
     final before = _ranks();
     if (game!.spend(a)) {
       if (haptics) HapticFeedback.selectionClick();
+      _cue(Sfx.gain);
       _noteRankUps(before);
       _commit();
     }
   }
 
+  /// 特殊能力を経験点で取る。取れなければ、その理由をトーストで知らせる。
+  void buySkill(Skill s) {
+    final g = game!;
+    final start = g.log.length;
+    final why = g.buySkill(s);
+    if (why != null) {
+      toast = '「${s.label}」は取れません: $why';
+      toastTone = -1;
+      notifyListeners();
+      return;
+    }
+    recent = g.log.sublist(start);
+    if (haptics) HapticFeedback.selectionClick();
+    _cue(Sfx.rankup);
+    _commit();
+  }
+
+  /// 取りどきの特殊能力(コツ3つ以上・いま取れる)を、まとめて取る。取れた数を返す。
+  int buyReadySkills() {
+    final g = game!;
+    final start = g.log.length;
+    var n = 0;
+    // 取ると次が高くなるので、取りどきを1つずつ見直しながら取る
+    for (;;) {
+      final ready = g.skillsInSeason;
+      if (ready.isEmpty) break;
+      if (g.buySkill(ready.first) != null) break;
+      n++;
+    }
+    if (n == 0) return 0;
+    recent = g.log.sublist(start);
+    if (haptics) HapticFeedback.selectionClick();
+    _cue(Sfx.rankup);
+    _commit();
+    return n;
+  }
+
+  /// 「研究」で調べる特殊能力を決める(null で自動)。
+  void setStudyTarget(Skill? s) {
+    game!.setStudyTarget(s);
+    _commit();
+  }
+
+  /// おまかせ振り分け。取りどきの特殊能力(コツ3つ以上)を先に取り、残りを能力に振る
+  /// (先に能力へ使い切ると、半額近い特殊能力を取り逃すため)。
   void autoSpend() {
     final before = _ranks();
-    game!.autoSpend();
+    final g = game!;
+    final start = g.log.length;
+    while (g.skillsInSeason.isNotEmpty) {
+      if (g.buySkill(g.skillsInSeason.first) != null) break;
+    }
+    if (g.log.length > start) recent = g.log.sublist(start);
+    g.autoSpend();
     _noteRankUps(before);
     _commit();
   }
@@ -824,24 +1321,34 @@ class GameController extends ChangeNotifier {
         if (before[a] != null && before[a] != rankOf(g.player.of(a)))
           '${abilityLabel(a)}が ${rankOf(g.player.of(a))}ランクに上がった!',
     ];
-    if (ups.isNotEmpty) recent = [...recent, ...ups];
+    if (ups.isNotEmpty) {
+      recent = [...recent, ...ups];
+      _cue(Sfx.rankup);
+    }
   }
 
+  /// 「年末まで」で進めている途中の歳。出来事・節目で止まったら、選び終えたところで続きを進める。
+  /// 年が変わる・進路を選ぶ・自分で行動を選ぶと null に戻る。
+  int? _autoYearAge;
+  bool _inAutoYear = false;
+
   /// おすすめの過ごし方で、今年(年が変わるまで)を進める。
-  /// 出来事・進路の選択・節目の演出が出たらそこで止まる(選ぶのは本人)。
-  void autoYear() {
+  /// 出来事・節目の演出が出たらいったん止まり、選び終える(閉じる)と自動で続きを進める
+  /// (2026-10-26 ユーザー「年末まで押しても年末まで行かない」)。進路の選択では止まる。
+  void autoYear({List<String> carry = const []}) {
     final g = game;
     if (g == null) return;
     final age = g.player.age;
+    _autoYearAge = age;
     final lines = <String>[];
     final gained = <Category, int>{};
     var turns = 0;
-    _rememberForUndo();
-    _auto = true;
     for (var i = 0; i < g.slotsInYear; i++) {
       if (game!.phase != Phase.term || game!.player.age != age) break;
       if (pending.isNotEmpty) break;
+      _inAutoYear = true;
       act(recommendedPlan(game!));
+      _inAutoYear = false;
       turns++;
       for (final e in g.lastGain.entries) {
         gained[e.key] = (gained[e.key] ?? 0) + e.value;
@@ -849,7 +1356,6 @@ class GameController extends ChangeNotifier {
       // 各ターンの「練習: …」の一行まとめ以外(怪我・大会・目標など)を集める。
       lines.addAll(recent.skip(1));
     }
-    _auto = false;
     if (turns > 1) {
       recent = [
         'おすすめの過ごし方で$turns回進めた。'
@@ -860,12 +1366,43 @@ class GameController extends ChangeNotifier {
         ...lines.reversed.take(8).toList().reversed,
       ];
       toast = recent.first;
-      notifyListeners();
+      // 進めている間に取りどきになった特殊能力は、最後にまとめて知らせる(8行に押し出されないように)
+      final ready = g.skillsInSeason;
+      if (ready.isNotEmpty) {
+        final note =
+            '「${ready.map((k) => k.label).join('」「')}」が取りどき!(能力タブで取れる)';
+        recent = [...recent.where((l) => !l.contains('が取りどき!')), note];
+        toast = '${recent.first}\n$note';
+      }
     }
+    // 出来事の結果など、続きを進める前の行を先に残す
+    if (carry.isNotEmpty && turns > 0) recent = [...carry, ...recent];
+    // 年が変わった・進路の選択など、もう続けないとき
+    final h = game!;
+    if (h.player.age != age ||
+        h.phase == Phase.retired ||
+        h.phase == Phase.pathChoice) {
+      _autoYearAge = null;
+    }
+    if (turns > 1 || carry.isNotEmpty) notifyListeners();
+  }
+
+  /// 「年末まで」の途中で出来事・節目に止まっていたら、続きを進める。
+  void _resumeAutoYear() {
+    final target = _autoYearAge;
+    final g = game;
+    if (target == null || g == null) return;
+    if (g.player.age != target ||
+        g.phase == Phase.retired ||
+        g.phase == Phase.pathChoice) {
+      _autoYearAge = null;
+      return;
+    }
+    if (g.phase != Phase.term || pending.isNotEmpty) return;
+    autoYear(carry: List.of(recent));
   }
 
   void chooseEvent(int i) {
-    _rememberForUndo();
     final start = game!.log.length;
     final before = game!.stage;
     final p0 = game!.player;
@@ -880,6 +1417,7 @@ class GameController extends ChangeNotifier {
     ];
     _detect(before, game!, recent);
     _commit();
+    _resumeAutoYear();
   }
 
   void chooseRoute(Course r) {
@@ -919,10 +1457,17 @@ class GameController extends ChangeNotifier {
     await store.clearAchievements();
     await store.clearTraitBook();
     await store.clearLegacy();
+    await store.clearGuide();
+    await store.clearAutoBackups();
+    autoBackups = [];
+    guideSeen = false;
     notifyListeners();
   }
 
   Future<void> reset() async {
+    if (game != null && game!.phase != Phase.retired) {
+      autoBackup('${game!.player.name}をやめる前');
+    }
     game = null;
     await store.clear();
     notifyListeners();
@@ -932,8 +1477,60 @@ class GameController extends ChangeNotifier {
   DateTime? lastSaved;
   bool _saveWarned = false;
 
+  /// 祝い終えた育成ミッションの数(新しく達成したら節目のダイアログで見せる)。
+  int _missionsShown = -1;
+
+  /// 新しく達成した育成ミッションを、節目のダイアログに積む(振り分け・特殊能力でも達成するので、ここでまとめて拾う)。
+  void _celebrateMissions(Game g) {
+    final n = g.missionsDone.length;
+    if (_missionsShown < 0 || n < _missionsShown) {
+      _missionsShown = n; // 読み込んだ直後・別の選手: 祝わずに数だけ合わせる
+      return;
+    }
+    if (n == _missionsShown) return;
+    final lines = g.log.where((l) => l.startsWith('育成ミッション達成')).toList();
+    for (final l in lines.skip(max(0, lines.length - (n - _missionsShown)))) {
+      pending.add(Milestone(MilestoneKind.achievement, '育成ミッション達成!',
+          l.replaceFirst('育成ミッション達成: ', '')));
+    }
+    _missionsShown = n;
+  }
+
   void _commit() {
     final g = game;
+    if (g != null) _celebrateMissions(g);
+    // 年が1つ進んだ瞬間に、全画面広告(間隔・年齢の決まりは Monetization)。
+    final m = money;
+    if (m != null && g != null && g.phase != Phase.retired) {
+      final age = g.player.age;
+      if (_adAge >= 0 && age == _adAge + 1) {
+        // 年を進めたタップの指が広告に当たらないよう、少し置いてから出す
+        Future<void>.delayed(const Duration(milliseconds: 900), () async {
+          if (identical(game, g) && g.phase != Phase.retired) {
+            await m.afterYear(age);
+          }
+        });
+      }
+      _adAge = age;
+    } else if (g == null || g.phase == Phase.retired) {
+      _adAge = -1;
+    }
+    // 4歳ごとの節目で、自動バックアップ(同じ歳では1度だけ)。
+    if (g != null && g.phase != Phase.retired && g.player.age != _backedAge) {
+      _backedAge = g.player.age;
+      if (g.player.age % 4 == 0) {
+        autoBackup('${g.player.name} ${g.player.age}歳');
+      }
+    }
+    // 出来事が起きた・引退したときの音(ほかに鳴らした音が無いときだけ)。
+    if (g != null && g.phase != _soundPhase) {
+      if (!_cuedThisTick && _soundPhase != null) {
+        if (g.phase == Phase.event) _cue(Sfx.event);
+        if (g.phase == Phase.retired) _cue(Sfx.retire);
+      }
+      _soundPhase = g.phase;
+    }
+    _cuedThisTick = false;
     if (g != null) _recordTraits(g);
     // 引退したら、殿堂に1度だけ書き込む。
     if (g != null && g.phase == Phase.retired && !g.archived) {
@@ -941,10 +1538,11 @@ class GameController extends ChangeNotifier {
       history = [HistoryEntry.of(g), ...history].take(historyLimit).toList();
       store.saveHistory(history);
       _unlockAchievements(g);
+      autoBackup('${g.player.name}が引退したとき');
       final e = g.ending;
       if (e != null) {
-        lastLegacyGain =
-            legacyPointsOf(madePro: e.madePro, title: e.title);
+        lastLegacyGain = legacyPointsOf(madePro: e.madePro, title: e.title) *
+            (money?.legacyBoost == true ? 2 : 1); // 継承ブースト(買い切り)は2倍
         legacyPoints += lastLegacyGain;
         store.saveLegacy(legacyPoints);
       }

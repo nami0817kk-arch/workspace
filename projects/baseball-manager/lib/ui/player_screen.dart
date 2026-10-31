@@ -6,6 +6,7 @@ import '../game/marks.dart';
 
 import '../game/career.dart';
 import '../game/exp.dart';
+import '../game/difficulty.dart';
 import '../game/game.dart';
 import '../game/life_log.dart';
 import '../game/path.dart' show overall;
@@ -14,6 +15,7 @@ import '../game/records.dart';
 import '../game/snapshot.dart';
 import 'art/avatar.dart';
 import 'art/radar.dart';
+import '../game/skills.dart';
 import '../game/talent.dart';
 import 'labels.dart';
 import 'records_screen.dart';
@@ -110,10 +112,7 @@ double overallOf(PlayerSnapshot s) => overall(Player(
     ));
 
 /// 素質を星5つで。
-String potentialStars(int potential) {
-  final n = (potential / 20).ceil().clamp(1, 5);
-  return '★' * n + '☆' * (5 - n);
-}
+String potentialStars(int potential) => talentStars(potential);
 
 Player _playerOf(PlayerSnapshot s) => Player(
     name: s.name,
@@ -152,6 +151,7 @@ class _ProfileTab extends StatelessWidget {
       potential: s.potential,
       abilities: s.abilities,
       traits: s.traits,
+      skills: s.skills,
     );
     final ov = overallOf(s).round();
     final proYears = s.records.where((r) => r.stage == Stage.pro).length;
@@ -196,7 +196,9 @@ class _ProfileTab extends StatelessWidget {
                           affiliationOf(
                               s.stage == Stage.retired ? Stage.pro : s.stage,
                               s.name,
-                              proTeam: s.overseasTeam ?? s.proTeam),
+                              proTeam: s.overseasTeam ?? s.proTeam,
+                              seed: s.teamSeed,
+                              corporate: s.corporate),
                           key: const Key('profile-affiliation')),
                       Text(
                           playerCardLine(
@@ -216,7 +218,7 @@ class _ProfileTab extends StatelessWidget {
                             Text('総合評価 $ov',
                                 style: Theme.of(context).textTheme.titleSmall),
                           ]),
-                      Text('素質 ${potentialStars(s.potential)}',
+                      Text('才能 ${potentialStars(s.potential)}',
                           key: const Key('potential-stars')),
                       Text(
                           '人気 ${rankOf(popularityOf(s.records, s.worldRecords))}'
@@ -280,7 +282,8 @@ class _ProfileTab extends StatelessWidget {
                     'プロ入り', s.proStartAge == null ? 'なし' : '${s.proStartAge}歳'),
                 _Fact('プロ年数', '$proYears年'),
                 _Fact('記録された年', '${s.records.length}年'),
-                _Fact('難しさ', s.difficulty.label),
+                if (s.difficulty != Difficulty.normal)
+                  _Fact('難しさ', s.difficulty.label),
               ]),
             ),
           ),
@@ -307,16 +310,18 @@ class _ProfileTab extends StatelessWidget {
                               child: Tooltip(
                                   message: (s.gifts[a] ?? 0) == 0
                                       ? abilityHint(a)
-                                      : '${abilityHint(a)} 天賦: ${giftHint(s.gifts[a]!)}',
+                                      : '${abilityHint(a)} 才能: ${giftHint(s.gifts[a]!)}',
                                   triggerMode: TooltipTriggerMode.tap,
                                   child: FittedBox(
                                       fit: BoxFit.scaleDown,
                                       alignment: Alignment.centerLeft,
-                                      child: Text(
-                                          (s.gifts[a] ?? 0) == 0
-                                              ? abilityLabel(a)
-                                              : '${abilityLabel(a)}(${giftLabel(s.gifts[a]!)})',
+                                      child: Text(abilityLabel(a),
                                           key: Key('gift-${a.name}'))))),
+                          Text(giftStars(s.gifts[a] ?? 0),
+                              key: Key('gift-stars-${a.name}'),
+                              style: const TextStyle(
+                                  fontSize: 10, color: Color(0xFFF9A825))),
+                          const SizedBox(width: 6),
                           SizedBox(
                               width: 28,
                               child: Text('${s.of(a)}',
@@ -417,7 +422,7 @@ class _Traits extends StatelessWidget {
           Text('特性 (${ts.length})',
               style: Theme.of(context).textTheme.titleSmall),
           const SizedBox(height: 4),
-          if (ts.isEmpty) const Text('特性はまだありません。コーチに教わると習得できます。'),
+          if (ts.isEmpty) const Text('特性(生まれつきの体質・性格)はありません。'),
           for (final t in ts)
             ListTile(
               key: Key('trait-${t.name}'),
@@ -435,6 +440,35 @@ class _Traits extends StatelessWidget {
                   style: const TextStyle(fontWeight: FontWeight.bold)),
               subtitle: Text(t.description),
             ),
+          if (snapshot.skills.isNotEmpty) ...[
+            const Divider(),
+            Text('特殊能力 (${snapshot.skills.length})',
+                key: const Key('profile-skills'),
+                style: Theme.of(context).textTheme.titleSmall),
+            const SizedBox(height: 4),
+            Wrap(spacing: 6, runSpacing: 4, children: [
+              for (final k in snapshot.skills)
+                Tooltip(
+                  message: '${k.description} ${effectText(k)}',
+                  triggerMode: TooltipTriggerMode.tap,
+                  child: Chip(
+                    key: Key('profile-skill-${k.name}'),
+                    avatar: Icon(
+                        k.negative
+                            ? Icons.trending_down
+                            : (k.gold ? Icons.workspace_premium : Icons.bolt),
+                        size: 16,
+                        color: k.negative
+                            ? const Color(0xFFC62828)
+                            : (k.gold
+                                ? const Color(0xFFC9A227)
+                                : const Color(0xFFF9A825))),
+                    label: Text(k.label),
+                    visualDensity: VisualDensity.compact,
+                  ),
+                ),
+            ]),
+          ],
         ]),
       ),
     );

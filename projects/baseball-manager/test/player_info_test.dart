@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:baseball_manager/game/skills.dart';
 import 'package:baseball_manager/game/career.dart';
 import 'package:baseball_manager/game/game.dart';
 import 'package:baseball_manager/game/life_log.dart';
@@ -80,13 +81,13 @@ void main() {
       expect(h.lifeLog.last.text, 'プロを諦めた');
     });
 
-    test('特性の習得・転向が記録される', () {
+    test('特殊能力の習得・転向が記録される', () {
       final g = Game.newGame(
           name: 't', role: Role.batter, rng: Random(5), potential: 60);
-      g.adminSetCoachTeaches(Trait.genius);
+      g.adminSetCoachTeaches(Skill.chance);
       g.adminSetCoachTips(4);
       expect(g.lifeLog.last.kind, 'trait');
-      expect(g.lifeLog.last.text, contains('天才肌'));
+      expect(g.lifeLog.last.text, contains('チャンス○'));
       // 出来事で増えた特性も記録される。
       final h = Game.newGame(
           name: 't', role: Role.batter, rng: Random(6), potential: 60);
@@ -142,7 +143,7 @@ void main() {
         'title',
         'retire'
       ]);
-      expect(t[1].text, '大会で優勝');
+      expect(t[1].text, '全国優勝'); // 少年の夏の学童大会
       expect(t[4].text, 'リーグ優勝');
       expect(t[5].text, 'タイトル獲得: 首位打者');
     });
@@ -207,7 +208,11 @@ void main() {
       });
       expect(overallOf(s), closeTo(60, 1e-9));
       expect(potentialStars(0), '★☆☆☆☆');
-      expect(potentialStars(50), '★★★☆☆');
+      expect(potentialStars(41), '★☆☆☆☆');
+      expect(potentialStars(42), '★★☆☆☆');
+      expect(potentialStars(50), '★★☆☆☆');
+      expect(potentialStars(60), '★★★☆☆');
+      expect(potentialStars(70), '★★★★☆');
       expect(potentialStars(100), '★★★★★');
     });
   });
