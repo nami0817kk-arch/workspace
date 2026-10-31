@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:soccer_manager/logic/player_generator.dart';
 import 'package:soccer_manager/models/player.dart';
 import 'package:soccer_manager/models/save_game.dart';
+import 'package:soccer_manager/models/team.dart';
 import 'package:soccer_manager/state/game_state.dart';
 
 /// [p] を ID だけ変えて複製する。
@@ -16,8 +17,13 @@ int _nextIdNumber() {
 }
 
 /// 保存して、別の GameState で読み直す(再起動の代わり)。
+///
+/// テストで直接書き換えた中身は保存の予約が立たないので、スロットへ
+/// 自分で書き出してから読む。
 Future<GameState> _reload(GameState game) async {
   await game.flushPendingSave();
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setString('soccer_manager_save_slot_0', game.exportSaveJson()!);
   final reloaded = GameState();
   await reloaded.init();
   return reloaded;
@@ -43,10 +49,11 @@ void main() {
       await game.startNewGame('オファーFC');
       game.save!.pendingJobOfferTeamId = otherDivisionTeamId(game);
 
-      expect(() => game.pendingJobOfferTeam, returnsNormally);
       expect(game.save!.pendingJobOfferTeamId, isNotNull,
           reason: '前提: まだ消えていない');
-      expect(game.pendingJobOfferTeam, isNull);
+      Team? team;
+      expect(() => team = game.pendingJobOfferTeam, returnsNormally);
+      expect(team, isNull);
       expect(game.save!.pendingJobOfferTeamId, isNull,
           reason: '成り立たないオファーが残っている');
     });
