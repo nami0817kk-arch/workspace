@@ -555,7 +555,7 @@
         const aff = p.aff[a] || 1;
         const g = e * 0.17 * p.rate * aff * roomF * cond * diligence * heightK(p, a) * stateK(p) * (YA.staffMult ? YA.staffMult(w, p, a) * YA.coachMult(w) * (w.campMult || 1) * dscMult : 1) * (p.adapt > 0 ? 0.92 : 1);
         // 高い値ほど伸びにくい
-        const hard = clamp(1.25 - p.ab[a] / 22, 0.25, 1);
+        const hard = clamp(1.25 - p.ab[a] / 22, 0.25, 1) * (p.ab[a] >= 15 ? clamp(1 - (p.ab[a] - 14) * 0.15, 0.1, 1) : 1);
         p.prog[a] = (p.prog[a] || 0) + g * hard;
         while (p.prog[a] >= 1 && p.ab[a] < 20) {
           p.prog[a] -= 1;

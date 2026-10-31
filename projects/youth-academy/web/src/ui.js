@@ -690,7 +690,7 @@
       return h('button', { class: 'pitem sq' + (on ? ' on' : ''), style: compat ? '' : 'opacity:.3', onclick: () => handlePick(x) },
         posChip(p), h('span', { class: 'num' }, p.num), h('span', { class: 'nm grow', style: 'overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:2.6em' }, surname(p)), gtag(p),
         aptv != null ? h('span', { class: 'chip ' + (aptv >= 14 ? 'trait' : 'gray'), style: 'font-size:9.5px' }, YA.aptLabel(aptv)) : null,
-        h('b', { style: 'width:26px;text-align:right' }, YA.ovr(p).toFixed(1)),
+        h('b', { style: 'width:26px;text-align:right' }, YA.rating(p)),
         p.inj > 0 ? h('span', { class: 'fit bad' }, '怪') : h('div', { class: 'bar stam', style: 'width:22px' }, h('i', { style: `width:${100 - tired}%;background:${tired > 60 ? '#d63a3a' : tired > 40 ? '#f0a020' : '#1a9d57'}` })));
     }
     function renderSquad() {
@@ -700,7 +700,7 @@
       const top = h('div', { class: 'card', style: 'padding:5px 8px;margin-bottom:5px;background:#f5f8fd' });
       if (pp) {
         const sl2 = pk.k === 'L' ? t.lineup[pk.i] : null;
-        top.append(h('div', { class: 'row', style: 'gap:6px' }, posChip(pp), h('b', {}, `${pp.num} ${pp.name}`), gtag(pp), h('span', { class: 'sub' }, `能力${YA.ovr(pp).toFixed(1)}／疲れ${Math.round(pp.fat || 0)}`), sl2 ? h('span', { class: 'chip trait' }, `${sl2.role}・${(YA.DUTY[sl2.duty] || YA.DUTY.sup).label}`) : null, h('span', { class: 'grow' }),
+        top.append(h('div', { class: 'row', style: 'gap:6px' }, posChip(pp), h('b', {}, `${pp.num} ${pp.name}`), gtag(pp), h('span', { class: 'sub' }, `能力${YA.rating(pp)}／疲れ${Math.round(pp.fat || 0)}`), sl2 ? h('span', { class: 'chip trait' }, `${sl2.role}・${(YA.DUTY[sl2.duty] || YA.DUTY.sup).label}`) : null, h('span', { class: 'grow' }),
           sl2 ? h('button', { class: 'btn sm', onclick: () => { st.sel = pk.i; st.tab = 'role'; renderTabs(); renderBody(); } }, '役割・任務') : null,
           h('button', { class: 'btn sm', onclick: () => { st.pick = null; renderBody(); board.redraw(); } }, '解除')));
         top.append(h('div', { class: 'note', style: 'margin-top:2px' }, '入れ替える相手（ピッチの選手・ベンチ・控え外）をタップ'));

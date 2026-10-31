@@ -135,7 +135,7 @@
         h('div', { class: 'note', style: 'margin:4px 0' }, `${res.out.length}人が巣立ち、新しい高1の${res.entered}人が入団しました（卒業生は「ほか」の名鑑で追えます）` + (res.contrib ? `　連帯貢献金が${res.contrib}万円入りました。` : '')),
         res.eval ? h('div', { class: 'card', style: 'padding:7px 10px;font-size:12px' }, h('b', {}, `今年の評価：${res.eval.letter}`), '　', res.eval.goals.map((g) => `${g.label}：${g.text}（${g.val}）${g.ok ? '達成' : g.score ? '惜しい' : '届かず'}`).join(' ／ ')) : null,
         res.dismissed ? h('div', { class: 'insight bad' }, `解任されました。${res.dismissed.name}（${YA.TIER_NAME[res.dismissed.tier]}）の指導者になります`) : null,
-        h('div', { class: 'pbody scroll', style: 'max-height:210px;padding:4px 6px' }, h('div', { class: 'plist' }, res.out.map((o) => h('div', { class: 'pitem' }, h('span', { class: 'pos ' + o.pos }, YA.POS_LABEL[o.main] || o.pos), h('span', { class: 'nm grow' }, o.name), h('span', { class: 'chip gray' }, '能力 ' + o.ovr), h('span', { class: 'sub' }, o.note))))),
+        h('div', { class: 'pbody scroll', style: 'max-height:210px;padding:4px 6px' }, h('div', { class: 'plist' }, res.out.map((o) => h('div', { class: 'pitem' }, h('span', { class: 'pos ' + o.pos }, YA.POS_LABEL[o.main] || o.pos), h('span', { class: 'nm grow' }, o.name), h('span', { class: 'chip gray' }, '総合力 ' + YA.rate(o.ovr)), h('span', { class: 'sub' }, o.note))))),
         h('button', { class: 'btn pri', style: 'margin-top:8px', onclick: () => { U().app.holdPrompts = false; close(); rerender(); } }, '新しい年度へ')));
     } else rerender();
   }
@@ -277,7 +277,7 @@
     const sel = w.players[ui.pSel];
     const left = h('div', { class: 'card', style: 'width:262px;flex:none;display:flex;flex-direction:column;min-height:0;padding:5px' });
     const chips = h('div', { class: 'fm-row', style: 'margin-bottom:4px' }, [['all', '全員'], ['A', 'A'], ['B', 'B'], ['1', '高1'], ['2', '高2'], ['3', '高3'], ['GK', 'GK'], ['DF', 'DF'], ['MF', 'MF'], ['FW', 'FW'], ['star', '★'], ['inj', '怪我']].map(([k, n]) => h('button', { class: 'btn sm' + (f === k ? ' on' : ''), style: 'padding:4px 8px;min-height:32px;font-size:11.5px', onclick: () => { ui.pf = k; rerender(); } }, n)));
-    const list = h('div', { class: 'plist scroll', style: 'flex:1;min-height:0' }, filtered.map((p) => h('button', { class: 'pitem' + (p.id === sel.id ? ' on' : ''), onclick: () => { const changed = ui.pSel !== p.id; ui.pSel = p.id; const st = list.scrollTop; rerender(); const l2 = document.querySelector('.plist.scroll'); if (l2) l2.scrollTop = st; const d2 = document.querySelector('#main .pdetail'); if (changed && d2) d2.scrollTop = 0; } }, posc(p), YA.faceEl(W(), p, 24), h('span', { class: 'num' }, p.num), h('span', { class: 'nm grow', style: 'overflow:hidden;text-overflow:ellipsis' }, p.name), h('span', { class: 'sub', style: 'font-size:10px' }, gradeName(p.grade) + p.team), h('b', { style: 'width:26px;text-align:right' }, YA.ovr(p).toFixed(1)), p.inj > 0 ? h('span', { class: 'fit bad' }, '怪') : null, p.star ? h('span', { style: 'color:#e6a800' }, '★') : null)));
+    const list = h('div', { class: 'plist scroll', style: 'flex:1;min-height:0' }, filtered.map((p) => h('button', { class: 'pitem' + (p.id === sel.id ? ' on' : ''), onclick: () => { const changed = ui.pSel !== p.id; ui.pSel = p.id; const st = list.scrollTop; rerender(); const l2 = document.querySelector('.plist.scroll'); if (l2) l2.scrollTop = st; const d2 = document.querySelector('#main .pdetail'); if (changed && d2) d2.scrollTop = 0; } }, posc(p), YA.faceEl(W(), p, 24), h('span', { class: 'num' }, p.num), h('span', { class: 'nm grow', style: 'overflow:hidden;text-overflow:ellipsis' }, p.name), h('span', { class: 'sub', style: 'font-size:10px' }, gradeName(p.grade) + p.team), h('b', { style: 'width:26px;text-align:right' }, YA.rating(p)), p.inj > 0 ? h('span', { class: 'fit bad' }, '怪') : null, p.star ? h('span', { style: 'color:#e6a800' }, '★') : null)));
     left.append(chips, list);
     const right = h('div', { class: 'card pbody pdetail', style: 'flex:1;min-width:0' });
     const info = h('div', {});
@@ -317,11 +317,18 @@
     show();
     main.append(h('div', { style: 'flex:1;min-height:0;display:flex;gap:8px' }, left, h('div', { style: 'flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;min-height:0' }, head, tabsEl, right)));
   }
+  // 総合力の水準の表（200＝歴史上No.1）
+  function levelTable(now) {
+    modal((close) => h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(460px,95%);max-height:94%;padding:10px 12px;gap:4px;overflow:auto' },
+      h('div', { class: 'row' }, h('div', { class: 'h grow' }, '総合力の水準（0〜200）'), h('button', { class: 'btn sm', onclick: close }, '閉じる')),
+      ...YA.LEVELS.map(([t, n], i) => h('div', { class: 'pitem', style: 'cursor:default;' + (YA.levelOf(now) === n ? 'background:#fff7d6;border-color:#f0cf55' : '') }, h('b', { style: 'width:44px;text-align:right' }, i === 0 ? '200' : t + '〜'), h('span', { class: 'grow' }, n))),
+      h('div', { class: 'note' }, '総合力は、いまのポジションに要る能力から出します。200は歴史上No.1の選手で、まず届きません。')));
+  }
   // 総合力の月ごとの推移（折れ線）と、今月・今年の伸びの要約
   function growthBox(p) {
     const G = YA.growthOf(p);
     const log = G.log.slice();
-    const now = Math.round(YA.ovr(p) * 100) / 100;
+    const now = YA.rating(p);
     log.push([-1, now]);
     const sum = (o) => Object.values(o).reduce((a, b) => a + b, 0);
     const top = (o) => Object.entries(o).sort((a, b) => b[1] - a[1]).filter((x) => x[1] > 0).slice(0, 3).map(([a, v]) => `${a}+${v}`).join(' ');
@@ -329,9 +336,9 @@
     const NS = 'http://www.w3.org/2000/svg';
     const W0 = 150;
     const H0 = 44;
-    const vals = log.map((x) => x[1]);
-    const lo = Math.min(...vals) - 0.15;
-    const hi = Math.max(...vals) + 0.15;
+    const vals = log.map((x, i) => (i === log.length - 1 ? x[1] : YA.rate(x[1])));
+    const lo = Math.min(...vals) - 1.5;
+    const hi = Math.max(...vals) + 1.5;
     const pts = vals.map((v, i) => `${(vals.length === 1 ? W0 : (i / (vals.length - 1)) * (W0 - 6)) + 3},${H0 - 4 - ((v - lo) / (hi - lo)) * (H0 - 8)}`);
     const svg = document.createElementNS(NS, 'svg');
     svg.setAttribute('viewBox', `0 0 ${W0} ${H0}`);
@@ -349,7 +356,7 @@
     const d0 = now - vals[0];
     if (vals.length > 1) box.append(svg);
     box.append(h('div', { style: 'font-size:11px;line-height:1.5' },
-      h('div', {}, h('b', {}, '総合力 ' + now.toFixed(1)), h('span', { class: 'note' }, vals.length > 1 ? `（${d0 >= 0 ? '+' : ''}${d0.toFixed(1)}／記録の最初から）` : '（これから記録します）')),
+      h('div', {}, h('b', {}, `総合力 ${now}`), h('span', { class: 'note' }, `／200　${YA.levelOf(now)} `), h('button', { class: 'btn sm', style: 'min-height:20px;padding:0 6px;font-size:10px', onclick: () => levelTable(now) }, '水準の表'), h('span', { class: 'note' }, '' + (vals.length > 1 ? `（${d0 >= 0 ? '+' : ''}${d0}／記録の最初から）` : ''))),
       h('div', {}, '今月 ', h('b', { style: 'color:#1a9d57' }, sum(G.month) ? '+' + sum(G.month) : '伸びなし'), ' ', h('span', { class: 'note' }, top(G.month))),
       h('div', {}, '今年 ', h('b', {}, sum(G.year) ? '+' + sum(G.year) : '伸びなし'), ' ', h('span', { class: 'note' }, top(G.year))),
       (() => { const tb = YA.tacticTrainBonus(W(), p); const parts = []; if (tb.tactic) parts.push(`戦術「${tb.tactic}」：${tb.tabs.join('・')}`); if (tb.role) parts.push(`役割「${tb.role}」：${tb.rabs.slice(0, 4).join('・')}`); return parts.length ? h('div', { class: 'note', style: 'color:var(--ink)' }, '練習で伸びやすい ', parts.join(' ／ ')) : null; })(),
@@ -387,7 +394,7 @@
     modal((close) => h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(560px,96%);max-height:94%;padding:10px 12px;gap:5px;overflow:auto' },
       h('div', { class: 'row' }, h('div', { class: 'h grow' }, `${p.name}をBに下げる：${YA.POS_LABEL[p15]}の先発に入る子を選ぶ`), h('button', { class: 'btn sm', onclick: close }, 'やめる')),
       h('div', { class: 'note' }, '適性の高い順に並べています。Aのベンチから選ぶと、空いたベンチにはBのいちばん力のある子が上がります。'),
-      ...cands.map((q) => h('button', { class: 'pitem', onclick: () => pick(q, close) }, posc(q), YA.faceEl(w, q, 22), h('span', { class: 'nm grow', style: 'text-align:left' }, `${q.num} ${q.name}`), h('span', { class: 'sub' }, (w.benchA.indexOf(q.id) >= 0 ? 'Aのベンチ' : 'B') + '・' + gradeName(q.grade)), h('span', { class: 'chip ' + (q.apt[p15] >= 14 ? 'trait' : 'gray') }, YA.POS_LABEL[p15] + YA.aptLabel(q.apt[p15])), h('b', { style: 'width:30px;text-align:right' }, YA.ovr(q).toFixed(1)))),
+      ...cands.map((q) => h('button', { class: 'pitem', onclick: () => pick(q, close) }, posc(q), YA.faceEl(w, q, 22), h('span', { class: 'nm grow', style: 'text-align:left' }, `${q.num} ${q.name}`), h('span', { class: 'sub' }, (w.benchA.indexOf(q.id) >= 0 ? 'Aのベンチ' : 'B') + '・' + gradeName(q.grade)), h('span', { class: 'chip ' + (q.apt[p15] >= 14 ? 'trait' : 'gray') }, YA.POS_LABEL[p15] + YA.aptLabel(q.apt[p15])), h('b', { style: 'width:30px;text-align:right' }, YA.rating(q)))),
       cands.length ? null : h('div', { class: 'note' }, '入れられる子がいません（怪我や出場停止）。')));
   }
   function swapTeam(p) {
@@ -441,7 +448,7 @@
     if (ui.mt === 'alumni') {
       body.append(h('div', { class: 'h' }, '卒業生と退団者'));
       const al = w.alumni.slice().reverse();
-      body.append(h('div', { class: 'plist', style: 'margin-top:5px' }, al.map((a) => h('div', { class: 'pitem', style: 'cursor:default' }, h('span', { class: 'pos ' + a.pos }, a.pos), h('span', { class: 'nm grow' }, a.name), h('span', { class: 'sub' }, `${a.year}年目`), h('span', { class: 'chip gray' }, '能力 ' + a.ovr), h('span', { class: 'sub', style: 'width:150px' }, a.note)))));
+      body.append(h('div', { class: 'plist', style: 'margin-top:5px' }, al.map((a) => h('div', { class: 'pitem', style: 'cursor:default' }, h('span', { class: 'pos ' + a.pos }, a.pos), h('span', { class: 'nm grow' }, a.name), h('span', { class: 'sub' }, `${a.year}年目`), h('span', { class: 'chip gray' }, '総合力 ' + YA.rate(a.ovr)), h('span', { class: 'sub', style: 'width:150px' }, a.note)))));
       if (!al.length) body.append(h('div', { class: 'note', style: 'margin-top:6px' }, '最初の卒業式（1年目の終わり）で、ここに並びます。'));
     } else {
       body.append(h('div', { class: 'h' }, '設定'));

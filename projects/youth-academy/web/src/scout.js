@@ -370,9 +370,9 @@
       if (a.status === 'pro' && a.age <= 21 && !a.awards.some((x) => /新人/.test(x.name)) && rel >= 0.5) award(lg + ' 新人王', 0.3);
     }
     if (a.status === 'pro' && a.ovr >= 17.2 && w._asiaY !== w.year && r() < clamp((a.ovr - 17.2) * 0.2 + 0.08, 0.08, 0.4)) { w._asiaY = w.year; s.awards.push('アジア年間最優秀選手'); a.awards.push({ y: w.year, name: 'アジア年間最優秀選手' }); }
-    if (a.status === 'pro' && a.abroad && LV[lg] >= 15.3 && a.ovr >= 17) {
+    if (a.status === 'pro' && a.abroad && LV[lg] >= 15.3 && a.ovr >= 17.5) {
       award('バロンドール候補（30人）', 0.5);
-      if (a.ovr >= 18.3) award('バロンドール', clamp((a.ovr - 18.3) * 0.2 + 0.04, 0.04, 0.25));
+      if (a.ovr >= 18.5) award('バロンドール', clamp((a.ovr - 18.5) * 0.25 + 0.05, 0.05, 0.3)); // 総合力185以上
     }
     // W杯（4年に1度）：代表に入っている子
     if (a.nat > 0 && w.year % 4 === 2 && a.ovr >= 16.3 && (w._wcY !== w.year || w._wcN < 4) && r() < 0.45) {
@@ -400,7 +400,7 @@
       a.titles = a.titles || [];
       a.awards = a.awards || [];
       a.age++;
-      if (a.age <= 23) a.ovr = Math.round((a.ovr + r() * (a.ovr >= 15 ? 0.35 : 0.6)) * 10) / 10; // 上に行くほど伸びは鈍る
+      if (a.age <= 23) a.ovr = Math.round((a.ovr + r() * (a.ovr >= 17.5 ? 0.08 : a.ovr >= 15.8 ? 0.2 : a.ovr >= 14 ? 0.35 : 0.6)) * 10) / 10; // 上に行くほど伸びは鈍る（200は歴史上No.1）
       else if (a.age >= 30) a.ovr = Math.round((a.ovr - r() * 0.5) * 10) / 10;
       if (a.status === 'univ' && a.age >= 22 && a.ovr >= 12.4 && r() < (a.pushed === 'univ' ? 0.6 : 0.4)) {
         a.status = 'pro';
