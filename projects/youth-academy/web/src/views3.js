@@ -155,10 +155,12 @@
     w.noticeTier = w.noticeTier || {};
     body.append(h('div', { class: 'h', style: 'margin-top:10px' }, 'お知らせの重さ'), h('div', { class: 'note' }, '項目ごとに選べます。「必ず止める」はおまかせ進行でも止まります。「記録だけ」は出来事の記録にだけ残ります。'));
     const kinds = YA.NOTICE_KINDS.map((x) => x[0]).concat(['そのほか']);
+    const grid = h('div', { style: 'display:grid;grid-template-columns:1fr 1fr;gap:3px 14px' });
+    body.append(grid);
     for (const k of kinds) {
       const t = w.noticeTier[k] || 2;
-      body.append(h('div', { class: 'row', style: 'margin:3px 0;gap:4px' }, h('span', { class: 'grow', style: 'font-size:11.5px' }, k),
-        ...[1, 2, 3].map((n) => h('button', { class: 'btn sm' + (t === n ? ' on' : ''), onclick: () => { w.noticeTier[k] = n; YA.saveWorld(true); rerender(); } }, YA.NOTICE_TIER_NAME[n]))));
+      grid.append(h('div', { class: 'row', style: 'gap:3px' }, h('span', { class: 'grow', style: 'font-size:11.5px' }, k),
+        ...[1, 2, 3].map((n) => h('button', { class: 'btn sm' + (t === n ? ' on' : ''), style: 'padding:3px 6px;min-height:28px;font-size:10.5px', onclick: () => { w.noticeTier[k] = n; YA.saveWorld(true); rerender(); } }, YA.NOTICE_TIER_NAME[n]))));
     }
   }
 
