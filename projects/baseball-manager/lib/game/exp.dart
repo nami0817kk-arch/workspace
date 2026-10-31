@@ -15,8 +15,12 @@ enum Category {
 }
 
 Category categoryOf(Ability a) => switch (a) {
-      Ability.contact || Ability.power || Ability.eye => Category.batting,
-      Ability.speed || Ability.fielding => Category.running,
+      Ability.contact || Ability.power || Ability.trajectory => Category.batting,
+      Ability.speed ||
+      Ability.arm ||
+      Ability.fielding ||
+      Ability.catching =>
+        Category.running,
       Ability.stuff || Ability.control || Ability.stamina => Category.pitching,
     };
 

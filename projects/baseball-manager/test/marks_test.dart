@@ -41,7 +41,7 @@ void main() {
   });
   test('打順と投手の役割', () {
     expect(lineupRoleOf(_p(Role.batter, {Ability.power: 85})), '4番');
-    expect(lineupRoleOf(_p(Role.batter, {Ability.speed: 70, Ability.eye: 65})),
+    expect(lineupRoleOf(_p(Role.batter, {Ability.speed: 70, Ability.contact: 65})),
         '1番');
     expect(lineupRoleOf(_p(Role.pitcher, {Ability.stamina: 70})), '先発');
     expect(

@@ -49,11 +49,13 @@ void main() {
     final low = _p(Role.batter, gifts: {
       Ability.contact: 1,
       Ability.power: 1,
-      Ability.eye: 0,
+      Ability.trajectory: 0,
       Ability.speed: 1,
+      Ability.arm: 1,
       Ability.fielding: 1,
+      Ability.catching: 1,
     });
-    expect(giftUp(low, Ability.stuff).gift(Ability.eye), 1);
+    expect(giftUp(low, Ability.stuff).gift(Ability.trajectory), 1);
     // 指定の能力がもう上限なら、別の能力を上げる
     final top = _p(Role.batter, gifts: {Ability.contact: giftMax});
     final r = giftUp(top, Ability.contact);

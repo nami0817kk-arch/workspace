@@ -80,9 +80,11 @@ String nicknameOf(Player p) {
   return switch (top.key) {
     Ability.contact => '安打製造機',
     Ability.power => '大砲',
+    Ability.trajectory => '弾道の魔術師',
     Ability.speed => '韋駄天',
+    Ability.arm => '鉄砲肩',
     Ability.fielding => '守備の職人',
-    Ability.eye => '選球眼の鬼',
+    Ability.catching => '捕球の名人',
     Ability.stuff => '剛腕',
     Ability.control => '精密機械',
     Ability.stamina => '鉄腕',
@@ -99,10 +101,10 @@ String lineupRoleOf(Player p) {
     return a(Ability.stuff) >= 65 ? '抑え' : '中継ぎ';
   }
   final power = a(Ability.power), contact = a(Ability.contact);
-  final speed = a(Ability.speed), eye = a(Ability.eye);
+  final speed = a(Ability.speed);
   if (power >= 70 && power >= contact) return '4番';
   if (contact + power >= 130) return '3番';
-  if (speed + eye >= 130) return '1番';
+  if (speed + contact >= 130) return '1番';
   if (contact >= 60) return '2番';
   if (power >= 55) return '5番';
   return a(Ability.fielding) >= 60 ? '8番' : '6番';
@@ -126,9 +128,11 @@ String injuryNameOf(int age, int slot) =>
 const _abilityWord = {
   Ability.contact: 'ミート',
   Ability.power: 'パワー',
+  Ability.trajectory: '弾道',
   Ability.speed: '走力',
+  Ability.arm: '肩力',
   Ability.fielding: '守備',
-  Ability.eye: '選球眼',
+  Ability.catching: '捕球',
   Ability.stuff: '球威',
   Ability.control: '制球',
   Ability.stamina: 'スタミナ',
@@ -343,9 +347,11 @@ String mottoOf(Player p) {
   return switch (top) {
     Ability.contact => '「一球入魂」',
     Ability.power => '「豪快に、大胆に」',
+    Ability.trajectory => '「高く、遠くへ」',
     Ability.speed => '「足は裏切らない」',
+    Ability.arm => '「肩には自信がある」',
     Ability.fielding => '「守りは勝利の土台」',
-    Ability.eye => '「球をよく見よう」',
+    Ability.catching => '「どんな球も捕る」',
     Ability.stuff => '「腕を振りきれ」',
     Ability.control => '「丁寧に低めへ」',
     Ability.stamina => '「最後に立っている者が勝つ」',

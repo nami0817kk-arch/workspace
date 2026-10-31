@@ -6,10 +6,11 @@ import 'traits.dart';
 
 const abilityCap = 99;
 
-/// 体の衰えが早い能力(パワー・走力・守備・球威・スタミナ)。ミート・選球眼・制球は技術なので遅い。
+/// 体の衰えが早い能力(パワー・走力・肩力・守備・球威・スタミナ)。ミート・弾道・捕球・制球は技術なので遅い。
 const physicalAbilities = {
   Ability.power,
   Ability.speed,
+  Ability.arm,
   Ability.fielding,
   Ability.stuff,
   Ability.stamina,

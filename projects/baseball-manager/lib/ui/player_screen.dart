@@ -14,7 +14,6 @@ import '../game/player.dart';
 import '../game/records.dart';
 import '../game/snapshot.dart';
 import 'art/avatar.dart';
-import 'art/radar.dart';
 import '../game/skills.dart';
 import '../game/talent.dart';
 import 'labels.dart';
@@ -298,7 +297,6 @@ class _ProfileTab extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('能力', style: Theme.of(context).textTheme.titleSmall),
-                    AbilityRadar(player: p),
                     for (final a in abilitiesOf(s.role))
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 2),

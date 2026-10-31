@@ -166,7 +166,7 @@ void main() {
     await t.pumpAndSettle();
     expect(find.byKey(const Key('recent')), findsNothing);
     await _tab(t, 'ability');
-    expect(find.text('G'), findsNWidgets(6)); // 15は全部Gランク(5能力+総合)
+    expect(find.text('G'), findsNWidgets(8)); // 15は全部Gランク(7能力+総合)
     await _tab(t, 'train');
     await t.tap(find.byKey(const Key('act-train')));
     await t.pumpAndSettle();
@@ -1835,7 +1835,7 @@ void _rankTests() {
       expect(
           find.descendant(
               of: find.byKey(const Key('mark-ability')),
-              matching: find.text('5')),
+              matching: find.text('7')),
           findsOneWidget);
     });
 

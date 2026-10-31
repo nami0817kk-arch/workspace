@@ -10,7 +10,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Map<Ability, int> _bat(int v) =>
-    {Ability.contact: v, Ability.power: v, Ability.eye: v};
+    {Ability.contact: v, Ability.power: v, Ability.trajectory: v};
 Map<Ability, int> _pit(int v) => {Ability.stuff: v, Ability.control: v};
 
 void main() {

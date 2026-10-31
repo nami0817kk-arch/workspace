@@ -203,7 +203,9 @@ void main() {
           'power': 60,
           'speed': 40,
           'fielding': 60,
-          'eye': 60
+          'trajectory': 60,
+          'arm': 60,
+          'catching': 60
         },
       });
       expect(overallOf(s), closeTo(60, 1e-9));
