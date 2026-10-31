@@ -44,6 +44,11 @@ def cut_white(cell, thr=232):
     edge = set(np.unique(np.concatenate([lab[0], lab[-1], lab[:, 0], lab[:, -1]]))) - {0}
     bg = np.isin(lab, list(edge))
     alpha = np.where(bg, 0, 255).astype(np.uint8)
+    # 肌色（桃色）の影・まぶたの塗りは抜く。肌の色が違う輪郭に重ねても浮かないように
+    mx, mn = a.max(axis=2), a.min(axis=2)
+    sat = (mx - mn) / np.maximum(mx, 1)
+    peach = (a[..., 0] >= a[..., 1]) & (a[..., 1] >= a[..., 2]) & (sat > 0.07) & (sat < 0.45) & (mx > 190)
+    alpha = np.where(peach, 0, alpha).astype(np.uint8)
     # 縁を少しなめらかに
     alpha = (ndimage.gaussian_filter(alpha.astype(float), 0.7)).astype(np.uint8)
     rgba = np.dstack([a.astype(np.uint8), alpha])
@@ -123,11 +128,31 @@ def extract():
 LAY = {
     'hair_w': 1.12,   # 髪の幅 / 頭の幅
     'hair_top': -0.12,  # 髪の上端 = 頭の上端 + この比率 × 頭の高さ
-    'eyes_w': 0.80,   # 目と眉の幅 / 頭の幅
+    'eyes_w': 0.70,   # 目と眉の幅 / 頭の幅
     'eyes_cy': 0.50,  # 目の中心 y = 頭の上端 + 比率 × 頭の高さ
-    'mouth_w': 0.34,
+    'mouth_w': 0.26,
     'mouth_cy': 0.74,   # 鼻と口の中心 y
 }
+
+
+def tint_brows(eyes, hair):
+    """眉の色を髪の色に合わせる（目のパーツの上の約4割にある暗い線を、髪の色の暗い版に塗り替える）"""
+    h = np.asarray(hair).astype(float)
+    m = h[..., 3] > 200
+    if m.sum() < 20:
+        return eyes
+    col = np.median(h[..., :3][m], axis=0)
+    lum = col.mean()
+    tgt = col * (0.55 if lum > 90 else 0.9)  # 明るい髪は眉をやや暗く
+    e = np.asarray(eyes).astype(float)
+    H = e.shape[0]
+    top = np.zeros(e.shape[:2], bool)
+    top[: int(H * 0.40)] = True
+    dark = (e[..., :3].mean(axis=2) < 120) & top & (e[..., 3] > 40)
+    k = (1 - e[..., :3].mean(axis=2) / 120.0).clip(0, 1)[..., None]  # 濃いほど髪色に寄せる
+    out = e.copy()
+    out[..., :3] = np.where(dark[..., None], e[..., :3] * (1 - k) + tgt * k + (e[..., :3] - e[..., :3].mean(axis=2, keepdims=True)) * 0.2, e[..., :3])
+    return Image.fromarray(out.clip(0, 255).astype(np.uint8), 'RGBA')
 
 
 def compose(head, parts_, size=112):
@@ -144,6 +169,7 @@ def compose(head, parts_, size=112):
         base.alpha_composite(q, (int(left_cx - q.size[0] / 2), ty)) if (ty >= 0 and int(left_cx - q.size[0] / 2) >= 0) else base.paste(q, (int(left_cx - q.size[0] / 2), ty), q)
 
     hair, eyes, mouth = parts_
+    eyes = tint_brows(eyes, hair)
     put(eyes, w * LAY['eyes_w'], cx, cy=y0 + h * LAY['eyes_cy'])
     put(mouth, w * LAY['mouth_w'], cx, cy=y0 + h * LAY['mouth_cy'])
     put(hair, w * LAY['hair_w'], cx, top=y0 + h * LAY['hair_top'])
