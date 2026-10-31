@@ -1,0 +1,227 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：黒船（scripts/kurofune-if-story.yaml）。chiso/storymain.py が読む。
+# 10-31 作成（11/4 12:00 公開）。genkou_if_main_look.yaml を写した。台本には手を入れない（承認のあと。変えると控えが外れる）。決まりは docs/story-main.md・スキル rekishi-story-screen。
+# 絵の方針：AI 絵は 15 枚（K01〜K15）。人物は描かない（海・港・浜・座敷・船影の遠景）。同じ絵を時間をずらして使い回す（続けて 20 秒まで）。
+#   Gemini（Claude in Chrome の無料 web、1376x768）で作ったのは K01・K03・K04。
+#   Gemini の無料枠が途中で切れたため、K02・K05〜K15 は Cloudflare Workers AI の FLUX.1 schnell（無料枠。1024 正方形から 16:9 を切り出し）で作った（CLAUDE.md「足りない場面だけ FLUX」）。
+#   実在の絵は江戸時代の版画（ペリー来航の瓦版・海陸御固泰平鑑・ペルリ像・合衆国水師提督口上書。パブリックドメイン）。額（frame:）と絵図の一部（part:）で使い、全面の主役にしない。
+#   この回の決まり：戦闘・負傷・遺体は描かない。実在の人物（ペリー・ビッドル・阿部正弘ほか）の顔は AI で描かない。顔が分かるのは実在の版画だけ。
+script: scripts/kurofune-if-story.yaml
+out: kurofune_if_story_main
+art_dir: out/story/kurofune-if/ph
+main_art_dir: out/story/kurofune-if/main
+ai_disclosure: この動画の情景の画像の多くは、画像生成AI（Google の Gemini・Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+
+chapters:
+  0: {label: 序章 黒船の提督は、代役だった, now: null, dates: {}}
+  1: {label: 第1章 7年前、浦賀の沖で何があったのか, now: 1846年7月, dates: {26: 1845年}}
+  2: {label: 第2章 幕府は、開く気があったのか, now: 1842年8月, dates: {34: 1844年, 40: 1845年7月, 42: 1850年, 43: null}}
+  3: {label: 第3章 オランダは、なぜ来航を知らせたのか, now: 1851年6月, dates: {48: 1852年4月, 50: 1852年7月, 51: 1852年11月}}
+  4: {label: 第4章 石炭が、ペリーを動かした, now: 1852年11月, dates: {67: 1853年6月, 69: 1853年7月}}
+  5: {label: 第5章 国書は、日本中に回された, now: 1853年7月, dates: {79: 1853年夏, 87: 1853年9月, 88: 1853年}}
+  6: {label: 第6章 ロシアとイギリスは、いつ来たのか, now: 1853年8月, dates: {97: 1854年12月, 100: 1855年2月, 103: 1854年9月, 105: 1854年10月, 108: null}}
+  7: {label: 第7章 ペリーのあとの国々は、何を見ていたのか, now: null, dates: {114: 1854年3月, 118: 1854年10月, 121: 1855年11月, 122: null}}
+  8: {label: まとめ ペリーが来なかったら、何が言えるのか, now: null, dates: {}}
+
+references:
+  - "アメリカ国務省歴史局 Opening to Japan, 1853-1854　https://history.state.gov/milestones/1830-1860/opening-to-japan"
+  - "Instructions to Commodore Matthew Perry on the Opening to Japan (1851-1852)（Classics of Strategy and Diplomacy 2015。ウェブスターの訓令・フィルモアの国書ほか）"
+  - "M. C. Perry / F. L. Hawks『Narrative of the Expedition of an American Squadron to the China Seas and Japan』（1856）"
+  - "John W. Foster『American Diplomacy in the Orient』（1903）第5章　https://en.wikisource.org/wiki/American_Diplomacy_in_the_Orient"
+  - "Matsukata Fuyuko, King Willem II's 1844 Letter to the Shogun: 'Recommendation to Open the Country'（Monumenta Nipponica 66:1, 2011）"
+  - "Herman J. Moeshart, The Conclusion of the First Dutch Treaty with Japan（CROSSROADS）"
+  - "Hugh Cortazzi, The First Treaties with Japan (1853-1868)（STICERD 1999）"
+  - "Hugh Cortazzi, Review of The Opening of Japan 1853-1855 / Review of Escape from Impasse（Japan Society Review）"
+  - "John W. Dower, Black Ships & Samurai（MIT Visualizing Cultures）　https://visualizingcultures.mit.edu/black_ships_and_samurai/"
+  - "国立国会図書館「史料にみる日本の近代」第1章　https://www.ndl.go.jp/modern/"
+  - "品川区「このまちアーカイブス」"
+  - "日本国米利堅合衆国和親条約・日本国魯西亜国通好条約・日本国大不列顛国約定・日本国和蘭国和親仮条約（データベース「世界と日本」）"
+  - "国立国会図書館レファレンス協同データベース「黒船来航時の狂歌」"
+  - "Russian Life, The Forgotten Journey of the Frigate Pallada（2021）"
+no_tag_from: 136
+
+ai:
+  K01: {scene: 夜明けの江戸湾の入り口。沖に船影（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  K02: {scene: 朝の江戸湾。沖に2隻の大きな帆船の遠景（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  K03: {scene: 湾にひしめく小さな無地の舟の群れ（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  K04: {scene: 石段の港と帆の小舟（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  K05: {scene: 海に開いた座敷と文机の書状（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  K06: {scene: 石畳の波止場と文机の白い書状（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.55], left: [1.18, 0.4, 0.55], right: [1.18, 0.6, 0.55]}}
+  K07: {scene: 夜の港の石炭の山と蒸気船の影（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.55], left: [1.18, 0.4, 0.55], right: [1.18, 0.6, 0.55]}}
+  K08: {scene: 南の島の入り江と小屋（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  K09: {scene: 朝の大海原を進む煙を上げる船（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  K10: {scene: 江戸湾に築く台場の島（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.55], left: [1.18, 0.4, 0.55], right: [1.18, 0.6, 0.55]}}
+  K11: {scene: 朝の久里浜の砂浜と沖の船（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  K12: {scene: 冬の朝の港町（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  K13: {scene: 丘から見下ろす長崎の港（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  K15: {scene: 終了画面用。夕暮れの海と岬の遠景（右側を空けた構図）, lock: [1.0, 0.5, 0.5]}
+
+paint_fx:
+  paintings/sakoku_perry_arrival_kawaraban.jpg: {crop: [0.48, 0.4, 1.0, 1.0]}
+
+credits:
+  paintings/sakoku_perry_arrival_kawaraban.jpg: ペリー来航の瓦版（1853年ごろ。ウィキメディア・コモンズ、パブリックドメイン）
+  paintings/sakoku_perry_coastal_defense_kawaraban.jpg: 瓦版「海陸御固泰平鑑」（1853年ごろ。ウィキメディア・コモンズ、パブリックドメイン）
+  paintings/sakoku_perry_adams_portraits.jpg: 「合衆国水師提督口上書」（1854年ごろの版画。米国議会図書館蔵。ウィキメディア・コモンズ、パブリックドメイン）
+
+shots:
+  - 0 ai:K01 wide
+  - 1 ai:K05 wide
+  - 2 part:paintings/sakoku_perry_adams_portraits.jpg
+  - 3 ai:K07 left
+  - 4 ai:K06 wide
+  - 5 ai:K06 left
+  - 6 ai:K02 wide
+  - 7 ai:K11 wide
+  - 8 ai:K03 wide
+  - 9 ai:K02 left
+  - 10 ai:K04 wide
+  - 11 part:paintings/sakoku_perry_coastal_defense_kawaraban.jpg
+  - 12 ai:K01 right
+  - 13 ai:K11 left
+  - 14 ai:K02 right
+  - 15 part:paintings/sakoku_perry_arrival_kawaraban.jpg
+  - 16 ai:K03 left
+  - 17 ai:K03 right
+  - 18 ai:K11 right
+  - 19 ai:K04 left
+  - 20 ai:K01 wide
+  - 21 part:paintings/sakoku_perry_coastal_defense_kawaraban.jpg
+  - 22 ai:K02 wide
+  - 23 ai:K01 left
+  - 24 ai:K11 wide
+  - 25 ai:K10 wide
+  - 26 ai:K08 wide
+  - 27 ai:K03 wide
+  - 28 ai:K04 wide
+  - 29 ai:K06 wide
+  - 30 ai:K06 left
+  - 31 ai:K12 wide
+  - 32 ai:K13 wide
+  - 33 ai:K12 left
+  - 34 ai:K06 right
+  - 35 ai:K05 left
+  - 36 ai:K13 left
+  - 37 ai:K04 wide
+  - 38 ai:K05 right
+  - 39 ai:K06 wide
+  - 40 ai:K05 wide
+  - 41 ai:K06 left
+  - 42 ai:K12 right
+  - 43 ai:K13 wide
+  - 44 ai:K11 wide
+  - 45 ai:K01 right
+  - 46 ai:K12 left
+  - 47 ai:K06 left
+  - 48 ai:K02 left
+  - 49 ai:K13 left
+  - 50 ai:K13 right
+  - 51 ai:K06 right
+  - 52 ai:K09 left
+  - 53 ai:K12 wide
+  - 54 ai:K06 wide
+  - 55 ai:K09 wide
+  - 56 ai:K07 wide
+  - 57 ai:K09 right
+  - 58 ai:K07 left
+  - 59 ai:K02 right
+  - 60 part:paintings/sakoku_perry_adams_portraits.jpg
+  - 61 ai:K09 left
+  - 62 ai:K05 right
+  - 63 ai:K07 right
+  - 64 ai:K07 wide
+  - 65 ai:K08 right
+  - 66 ai:K09 wide
+  - 67 ai:K08 left
+  - 68 ai:K09 left
+  - 69 part:paintings/sakoku_perry_arrival_kawaraban.jpg
+  - 70 ai:K11 wide
+  - 71 ai:K06 wide
+  - 72 ai:K05 left
+  - 73 ai:K06 left
+  - 74 part:paintings/sakoku_perry_coastal_defense_kawaraban.jpg
+  - 75 ai:K11 left
+  - 76 part:paintings/sakoku_perry_arrival_kawaraban.jpg
+  - 77 ai:K11 right
+  - 78 ai:K02 wide
+  - 79 part:paintings/sakoku_perry_adams_portraits.jpg
+  - 80 ai:K05 left
+  - 81 ai:K05 right
+  - 82 ai:K13 wide
+  - 83 ai:K06 wide
+  - 84 ai:K05 wide
+  - 85 ai:K10 wide
+  - 86 ai:K10 left
+  - 87 ai:K03 wide
+  - 88 part:paintings/sakoku_perry_coastal_defense_kawaraban.jpg
+  - 89 ai:K04 wide
+  - 90 part:paintings/sakoku_perry_arrival_kawaraban.jpg
+  - 91 ai:K11 left
+  - 92 ai:K09 left
+  - 93 ai:K01 right
+  - 94 ai:K13 right
+  - 95 ai:K06 right
+  - 96 ai:K09 right
+  - 97 ai:K13 left
+  - 98 ai:K12 right
+  - 99 ai:K09 wide
+  - 100 ai:K01 wide
+  - 101 ai:K12 wide
+  - 102 ai:K09 left
+  - 103 ai:K02 wide
+  - 104 ai:K02 left
+  - 105 ai:K05 wide
+  - 106 ai:K13 left
+  - 107 ai:K05 left
+  - 108 ai:K01 right
+  - 109 ai:K09 wide
+  - 110 ai:K01 wide
+  - 111 ai:K11 right
+  - 112 ai:K15 left
+  - 113 ai:K05 wide
+  - 114 part:paintings/sakoku_perry_adams_portraits.jpg
+  - 115 ai:K11 wide
+  - 116 ai:K05 left
+  - 117 ai:K05 right
+  - 118 ai:K13 left
+  - 119 ai:K13 wide
+  - 120 ai:K06 wide
+  - 121 ai:K12 wide
+  - 122 ai:K06 left
+  - 123 ai:K13 right
+  - 124 ai:K02 wide
+  - 125 ai:K09 wide
+  - 126 ai:K01 wide
+  - 127 ai:K07 wide
+  - 128 ai:K11 wide
+  - 129 ai:K01 left
+  - 130 ai:K05 right
+  - 131 ai:K03 wide
+  - 132 ai:K09 right
+  - 133 ai:K02 right
+  - 134 ai:K11 right
+  - 135 ai:K06 wide
+  - 136 ai:K15 wide
+  - 137 ai:K15 left
+  - end ai:K15 wide
+figures: []
+
+focus: {}
+
+fx:
+  K01: {mist: {region: [0.2, 0.3, 1, 0.5], alpha: 0.08, speed: 3}}
+  K09: {water: {region: [0, 0.5, 1, 1.0]}}
+  K15: {water: {region: [0.0, 0.6, 1, 1.0]}}
+
+parts:
+  - {type: quote, from: 3, to: 3, label: 史料, text: 日本の島々の地中に置かれた／神の贈り物, source: ウェブスターからオーリックへの訓令（1851年6月10日。英文の訳）}
+  - {type: quote, from: 19, to: 19, label: 史料, text: オランダ以外のどの国とも／通商は許されない, source: 『日本遠征記』（1856。英文の訳）}
+  - {type: quote, from: 40, to: 40, label: 史料, text: 今後の親書は／開封せずに返す, source: 老中連名の返書（1845年7月5日。松方冬子さんの論文から）}
+
+stills:
+  - {line: 0, note: 冒頭（0秒）夜明けの江戸湾（K01）}
+  - {line: 17, note: 第1章 ビッドル艦隊の日数（図）}
+  - {line: 33, note: 第2章 方針は3回揺れた（図）}
+  - {line: 66, note: 第4章 石炭の消費（図）}
+  - {line: 81, note: 第5章 大名55家の意見（図）}
+  - {line: 110, note: 第6章 来た順番と目的（図）}
+  - {end: true, note: 終了画面の空き}

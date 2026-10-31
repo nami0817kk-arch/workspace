@@ -679,6 +679,7 @@ def cmd_story_short(args) -> int:
     for e in errs:
         print(f"  × {e}")
     readings = load_readings(ROOT / "readings.yaml")
+    readings = {**readings, **{str(k): str(v) for k, v in (doc.get("readings") or {}).items()}}   # 台本ごとの読み替え（readings.yaml を変えずに足す。他の台本の読みの控えを外さないため）
     vs = voices(config)
     if args.kana:
         for row in storyshort.kana_report(doc, config, readings, tts.Voicevox(config["voicevox_url"]), vs["語り"]):
