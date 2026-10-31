@@ -29,9 +29,9 @@ enum Ability {
 
 /// 打者の能力(パワプロと同じ7つ)。弾道・肩力・捕球が、守備と長打の中身を分ける。
 const batterAbilities = [
-  Ability.trajectory,
   Ability.contact,
   Ability.power,
+  Ability.trajectory,
   Ability.speed,
   Ability.arm,
   Ability.fielding,

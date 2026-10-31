@@ -131,7 +131,8 @@ void _roleFactorTests() {
       return (1 + 0.25 * (n - 1)) / n * roleExpFactor(r);
     }
 
-    expect(roleExpFactor(Role.batter), closeTo(1.0, 1e-9));
+    // 打者は能力が7つなので、5つだった頃と1能力あたりの伸びを揃えるぶん少し速い(0.4 / (2.5/7))
+    expect(roleExpFactor(Role.batter), closeTo(1.12, 1e-9));
     // 投手だけ、プロ入り率・レジェンド率を打者に揃えるため少し遅くしてある(pitcherPace)
     expect(perAbility(Role.pitcher),
         closeTo(perAbility(Role.batter) * pitcherPace, 1e-9));

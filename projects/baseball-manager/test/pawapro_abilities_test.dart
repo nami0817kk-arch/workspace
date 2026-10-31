@@ -5,9 +5,9 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   test('打者の能力はパワプロと同じ7つ(選球眼はない)', () {
     expect(batterAbilities, [
-      Ability.trajectory,
       Ability.contact,
       Ability.power,
+      Ability.trajectory,
       Ability.speed,
       Ability.arm,
       Ability.fielding,
