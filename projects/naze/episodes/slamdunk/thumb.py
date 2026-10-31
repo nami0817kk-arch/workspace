@@ -1,4 +1,4 @@
-"""スラムダンクの本編のサムネイル(1280×720)。作品の絵は使わない。下地は Gemini の絵(assets/thumb_gemini2.jpg: リングに入るボールと体育館の時計)。python episodes/slamdunk/thumb.py"""
+"""スラムダンクの本編のサムネイル(1280×720)。作品の絵は使わない。下地は Gemini の絵(assets/thumb_gemini3.jpg: シュートを打つ選手と体育館の時計)。python episodes/slamdunk/thumb.py"""
 import os
 import sys
 from pathlib import Path
@@ -17,7 +17,7 @@ W, H = 2560, 1440
 NAVY, YEL, WHITE = (10, 10, 10), (255, 225, 0), (255, 255, 255)
 RED, CYAN = (255, 60, 60), (90, 230, 255)
 
-src = Image.open(HERE / "assets" / "thumb_gemini2.jpg").convert("RGB")
+src = Image.open(HERE / "assets" / "thumb_gemini3.jpg").convert("RGB")
 s = max(W / src.width, H / src.height)
 src = src.resize((int(src.width * s + 1), int(src.height * s + 1)), Image.LANCZOS).crop((0, 0, W, H))
 src = ImageEnhance.Color(src).enhance(1.1)

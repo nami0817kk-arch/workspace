@@ -41,9 +41,10 @@ def line(x, y, parts, size, stroke=None):
 
 
 x = 60
-line(x, 40, [("ケーブルの長さは", WHITE)], 140)
-line(x, 170, [("宇宙エレベーター", YEL)], 250)
-line(x, 880, [("鋼では", WHITE), ("作れない", RED)], 230)
-line(x, 1140, [("なぜ？", CYAN)], 230)
+line(x, 40, [("宇宙エレベーター", YEL)], 250)
+line(x, 880, [("鋼のケーブルで", WHITE)], 200)
+line(x, 1120, [("作れる", RED), ("？", CYAN)], 250)
+line(1330, 1130, [("鋼が耐える長さ", WHITE), ("23km", YEL)], 80, 8)
+line(1330, 1235, [("必要な長さ", WHITE), ("約4,940km", RED)], 80, 8)
 img.convert("RGB").resize((1280, 720), Image.LANCZOS).save(OUT / "thumb_long.jpg", quality=93)
 print(OUT / "thumb_long.jpg")
