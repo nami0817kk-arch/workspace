@@ -1,0 +1,138 @@
+# 物語完結型ショート 島原・天草一揆 s1（2026-10-31）。本編 scripts/shimabara-story.yaml 序章・第5章（城の中には、何人いたのか）から。11/3 19:00 公開の本編 → 11/4 9:30 に投稿。
+# 形式は yoritomo_s1.yaml・jeanne_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。戦闘・遺体・炎の絵なし（絵は本編の AI 絵 P01〜P15＝景色と物だけ、と実在の絵図）。
+# 切り口：城の中の人数の食い違い（細川家の覚書・辞典・オランダ商館長日記）。鉛の十字架（s2）・上使の戦死（s3）・発端（s4）・オランダ船（s5）には踏み込まない。
+# 事実カード（dev/output/rekishi-chiso/research/shimabara_facts_20261030.yaml）：shimabara-09・10・44・64・78。数字は本編の言い方のまま。
+#   ・細川家の覚書の日付：本編どおり「寛永15年2月4日付」（旧暦。年は西暦に直さない）。
+#   ・「3万7千人」の元の史料は私たちの調べでは辿れなかった（本編 第5章 6）→そのとおり言う。
+# 理解テスト4問：
+#   ①誰の話か：島原の乱（1637〜38年）で原城に立てこもった人たち。その人数
+#   ②いつ・どこで何が：寛永15年2月4日付の細川家の覚書は、捕虜の話の5〜6万に対し、書き手は1万4、5千と見た。辞典は3万7千・2万数千など
+#   ③何を選んだか／どう書いたか：書き手は聞いた数を信じず、「推量」と断って自分の見積もりを書いた
+#   ④どうなったか：誰にも数えられておらず、約400年たったいまも確かめられていない
+title: 島原の乱｜城の中に何人いたのか　誰にも数えられていない
+yt_title: 島原の乱で原城に立てこもったのは何人か　記録は1万4千人から5万人以上まで割れる
+description: |-
+  島原・天草一揆（島原の乱、1637〜38年）で、原城に立てこもった人は何人だったのか。攻めた側の記録でさえ、1万4千人から5万人以上まで食い違っています。
+  熊本藩の細川家に残る寛永15年2月4日付の覚書は、捕虜の話では城の中は5万、6万。けれど書き手は、男も女も合わせて1万4、5千だろうと見て、「推量仕り候」と付けています。後の辞典は、3万7千人、2万数千人と並べます。オランダ商館長の日記も、時期によって、数が変わります。3万7千人を最初に数えた史料は、調べた範囲ではたどれませんでした。
+  数え切れなかった城の、数え切れなかった人たち。そして、この城を幕府は3か月近く落とせませんでした。その理由を探った本編は、概要欄のリンクからどうぞ。
+hashtags: ['#島原の乱', '#日本史', '#原城']
+ai_images: true
+ai_disclosure: この動画の情景の画像の多くは、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+readings: {原城: はらじょう}      # 本編の声は「ハラノジョオ」になっていた（公開済み・直さない）。ショートは台本ごとの読み替えで直す
+art_dir: out/story/shimabara
+out: shimabara_story_s1
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 島原の乱（1637〜38年の一揆）
+  title: "城の中には、《何人》いたのか"
+now:
+  - {at: 寛永15年2月4日, text: "寛永15年2月4日　熊本藩（細川家）", point: 0}
+  - {at: 400年, text: "約400年後のいま", point: 1}
+timeline:
+  - {label: "寛永15年"}
+  - {label: "いま"}
+cards: []
+shots:
+  P01:
+    kind: ai
+    file: shimabara/main/P01.jpg
+    focus: [0.7, 0.45]
+    move: in
+    must: 夜明けの有明海に突き出す台地と古い石垣
+  Siege:
+    kind: real
+    image: paintings/shimabara_siege_hara_castle_screen.jpg
+    focus: [0.55, 0.45]
+    move: in
+    credit: "原城と寄せ手の陣を描いた絵図（17世紀、作者不詳）"
+    must: 原城と寄せ手の陣の絵図
+  P10:
+    kind: ai
+    file: shimabara/main/P10.jpg
+    focus: [0.35, 0.58]
+    move: in
+    must: 灯のもとの文机と開いた書状の巻物
+  Siege2:
+    kind: real
+    image: paintings/shimabara_siege_hara_castle_screen.jpg
+    focus: [0.45, 0.7]
+    move: right
+    zoom: 0.1
+    credit: "原城と寄せ手の陣を描いた絵図（17世紀、作者不詳）"
+    must: 原城の絵図の下の側
+  P12:
+    kind: ai
+    file: shimabara/main/P12.jpg
+    focus: [0.4, 0.5]
+    move: right
+    must: 草の斜面の石垣と青い海
+  P08:
+    kind: ai
+    file: shimabara/main/P08.jpg
+    focus: [0.5, 0.55]
+    move: in
+    must: 朝の高台に並ぶ竹の柵と筵の囲い
+  P14:
+    kind: ai
+    file: shimabara/main/P14.jpg
+    focus: [0.45, 0.5]
+    move: in
+    text_y: 0.74
+    must: 夜明けの海岸線と霧に沈む城跡
+lines:
+  # fact: shimabara-64, shimabara-10
+  - 語り: 島原の乱で、原城に立てこもった人は、何人だったのか。攻めた側の記録でさえ、《!1万4千人》から、5万人以上まで、食い違う。
+    shot: P01
+    tone: 強調
+    pause: 0.12
+  # fact: shimabara-64
+  - 語り: 熊本藩の細川家に残る、寛永15年2月4日付の覚書。捕虜の話では、城の中は、5万とも、6万とも。
+    shot: Siege
+    tone: しみじみ
+    pause: 0.12
+  # fact: shimabara-64
+  - 語り: けれど、書き手は、男も女も合わせて、1万4千から1万5千ほどだろう、と見た。
+    shot: P10
+    tone: しみじみ
+    pause: 0.12
+  # fact: shimabara-09
+  - 語り: よく言われる、3万7千人。辞典の項に、内訳がある。島原半島から2万4千人余、天草から1万3千人余だ。
+    shot: Siege2
+    tone: しみじみ
+    pause: 0.12
+  # fact: shimabara-09, shimabara-78
+  - 語り: ところが、同じ項に、「計2万数千人とも」という、別の数も並んでいる。
+    shot: P12
+    tone: 重い
+    pause: 0.12
+  # fact: shimabara-10（3万7千の出どころは本編 第5章 6）
+  - 語り: 3万7千人を、最初に数えた史料は、私たちの調べでは、たどれなかった。
+    shot: P08
+    tone: 重い
+    pause: 0.12
+  # fact: shimabara-64
+  - 語り: 細川家の覚書は、最後に「推量仕り候」と付ける。つまり、見積もりだ。
+    shot: P10
+    tone: しみじみ
+    pause: 0.12
+  # fact: shimabara-44, shimabara-64
+  - 語り: 数え切れなかった城の、数え切れなかった人たち。約400年たったいまも、確かめられていない。
+    shot: P14
+    tone: 重い
+    pause: 0.3
+    dip: true
+  # fact: （本編へ）
+  - 語り: では、その数の分からない城を、幕府は、なぜ、3か月近く、落とせなかったのか。
+    shot: P01
+    tone: 疑問
+    pause: 0.15
