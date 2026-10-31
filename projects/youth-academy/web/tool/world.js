@@ -843,6 +843,18 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   for (const x of Object.values(wt.players).filter((x) => x.grade === 1)) YA.setPolicy(x, 'strong');
   ok(Object.values(wt.players).filter((x) => x.grade === 1).every((x) => x.train.policy === 'strong') && Object.values(wt.players).filter((x) => x.grade === 2).every((x) => x.train.policy !== 'strong'), '高1だけに方針を決められる');
 }
+// 卒業後の経歴：年ごとにクラブ・リーグ・出場・得点が残り、タイトルや賞が付くことがある
+{
+  const wa2 = YA.newWorld(88);
+  const src = Object.values(wa2.players).find((x) => x.pos === 'FW');
+  for (let k = 0; k < 40; k++) { const a = YA.alumniEntry(wa2, src, 'プロ契約'); a.name = '経歴' + k; a.status = 'pro'; a.ovr = 13 + (k % 6); a.league = null; wa2.alumni.push(a); }
+  for (let y = 0; y < 8; y++) { wa2.year = 2 + y; YA.alumniTick(wa2); }
+  const act = wa2.alumni.filter((a) => a.name.startsWith('経歴'));
+  ok(act.every((a) => a.seasons.length >= 1 && a.seasons.every((x) => x.league && x.club && typeof x.apps === 'number')), '卒業生に年ごとの経歴が残る');
+  ok(act.some((a) => /J1|J2|J3|リーグ|リーガ|セリエ|ディビジ/.test(a.league)), '卒業生のリーグが分かる');
+  ok(act.reduce((s2, a) => s2 + a.titles.length + a.awards.length, 0) > 0, 'タイトルや賞が付くことがある');
+  ok(act.every((a) => a.apps === a.seasons.reduce((s2, x) => s2 + x.apps, 0)), '通算の出場は年ごとの合計');
+}
 // クラブを移った（契約満了・解任）あとも、入団の暦まで止まらずに1年回せる
 {
   const wm = YA.newWorld(5);

@@ -327,50 +327,121 @@
   const PRO = ['横浜', '川崎', '鹿島', '浦和', '柏', '名古屋', '大阪', '神戸', '広島', '福岡', '仙台', '札幌', '新潟', '町田'];
   const PRO_N = ['ブルーウィング', 'シルバーホーク', 'アルバトロス', 'サンライズ', 'レッドフォックス', 'ノースウィンド', 'ミストラル', 'クレセント'];
   const UNIV = ['関東の強豪大学', '関西の強豪大学', '東京の大学', '地方の大学'];
+  // 卒業後のリーグ。国内は力で J1〜J3、海外は国ごとのリーグ（力が高いと5大リーグへ）
+  const ABROAD = [['イングランド', 'プレミアリーグ', 1], ['スペイン', 'ラ・リーガ', 1], ['ドイツ', 'ブンデスリーガ', 1], ['イタリア', 'セリエA', 1], ['フランス', 'リーグ・アン', 1], ['オランダ', 'エールディビジ', 0], ['ベルギー', 'ジュピラー・プロ・リーグ', 0], ['ポルトガル', 'プリメイラ・リーガ', 0]];
+  YA.ABROAD_LEAGUES = ABROAD;
+  const domLeague = (o) => (o >= 13.6 ? 'J1リーグ' : o >= 12.2 ? 'J2リーグ' : 'J3リーグ');
+  // リーグの水準（その中で目立つかの物差し）
+  const LV = { J1リーグ: 14.6, J2リーグ: 13, J3リーグ: 11.6, 大学リーグ: 11.2, 社会人リーグ: 9.5, プレミアリーグ: 16.2, ラ・リーガ: 16, ブンデスリーガ: 15.7, セリエA: 15.7, リーグ・アン: 15.3, エールディビジ: 14.6, 'ジュピラー・プロ・リーグ': 14.3, プリメイラ・リーガ: 14.6 };
   YA.alumniEntry = function (w, p, note) {
     const o = Math.round(YA.ovr(p) * 10) / 10;
     const r = YA.rngOf(w.seed + p.num * 7 + w.year);
     const status = p._path || (o >= 13.2 ? 'pro' : o >= 10.5 ? 'univ' : 'amateur');
-    return { name: p.name, pos: p.pos, year: w.year, ovr: o, note, grade: 3, age: 18, status, club: status === 'pro' ? r.pick(PRO) + ' ' + r.pick(PRO_N) : status === 'univ' ? r.pick(UNIV) : '社会人', apps: 0, goals: 0, nat: p.nat || 0, transfers: 0, retired: false, traits: p.traits.slice(), pushed: p._push || null, abroad: !!(p._sold && o >= 13) };
+    const abroad = !!(p._sold && o >= 13);
+    const ab = abroad ? r.pick(ABROAD.filter((x) => !x[2])) : null;
+    return { name: p.name, pos: p.pos, main: p.main, year: w.year, ovr: o, note, grade: 3, age: 18, status,
+      club: status === 'pro' ? (ab ? ab[0] + '・' + r.pick(PRO_N) : r.pick(PRO) + ' ' + r.pick(PRO_N)) : status === 'univ' ? r.pick(UNIV) : '社会人',
+      league: status === 'pro' ? (ab ? ab[1] : domLeague(o)) : status === 'univ' ? '大学リーグ' : '社会人リーグ',
+      apps: 0, goals: 0, nat: p.nat || 0, natGoals: 0, transfers: 0, retired: false, traits: p.traits.slice(), pushed: p._push || null, abroad, seasons: [], titles: [], awards: [] };
   };
+  // 1年ぶんの経歴：出場・得点・タイトル・個人の賞。卒業生名鑑で年ごとに見られる
+  function careerSeason(w, a, r) {
+    const lg = a.league || (a.status === 'pro' ? domLeague(a.ovr) : a.status === 'univ' ? '大学リーグ' : '社会人リーグ');
+    a.league = lg;
+    const lv = LV[lg] || 12;
+    const rel = a.ovr - lv; // リーグの中での力の差（+なら主力）
+    const fw = a.pos === 'FW' ? 1 : a.pos === 'MF' ? 0.45 : a.pos === 'DF' ? 0.12 : 0;
+    const games = a.status === 'pro' ? 34 : a.status === 'univ' ? 22 : 18;
+    const apps = Math.round(clamp(games * (0.55 + rel * 0.18) + r.int(-4, 4), 0, games));
+    const goals = Math.round(clamp(apps * fw * (0.22 + rel * 0.08) + r.int(-1, 2), 0, 38) * (apps ? 1 : 0));
+    const s = { y: w.year, age: a.age, club: a.club, league: lg, apps, goals, titles: [], awards: [] };
+    const win = (name, p) => { if (r() < p) { s.titles.push(name); a.titles.push({ y: w.year, name }); } };
+    const award = (name, p) => { if (r() < p) { s.awards.push(name); a.awards.push({ y: w.year, name }); } };
+    const strong = clamp(0.015 + rel * 0.02, 0.01, 0.12); // 強いクラブにいるほど優勝しやすい
+    if (apps >= 10) {
+      win(lg + '優勝', strong);
+      if (a.status === 'pro' && !a.abroad) { win('天皇杯優勝', strong * 0.5); if (lg === 'J1リーグ') win('ルヴァンカップ優勝', strong * 0.5); }
+      if (a.abroad) win('国内カップ優勝', strong * 0.5);
+      if (a.abroad && LV[lg] >= 15.3 && a.ovr >= 16) win('チャンピオンズリーグ優勝', 0.06 + (a.ovr - 16) * 0.05);
+      if (lg === 'J1リーグ' && a.ovr >= 14) win('ACL優勝', 0.05);
+      // 個人の賞
+      if (fw && goals >= (a.status === 'pro' ? 18 : 12)) award(lg + ' 得点王', 0.3);
+      if (rel >= 3.2) award(lg + ' ベストイレブン', clamp(0.06 + (rel - 3.2) * 0.08, 0, 0.3));
+      if (rel >= 3.8) award(lg + ' 年間MVP', 0.05);
+      if (a.status === 'pro' && a.age <= 21 && !a.awards.some((x) => /新人/.test(x.name)) && rel >= 0.5) award(lg + ' 新人王', 0.3);
+    }
+    if (a.status === 'pro' && a.ovr >= 17.2 && w._asiaY !== w.year && r() < clamp((a.ovr - 17.2) * 0.2 + 0.08, 0.08, 0.4)) { w._asiaY = w.year; s.awards.push('アジア年間最優秀選手'); a.awards.push({ y: w.year, name: 'アジア年間最優秀選手' }); }
+    if (a.status === 'pro' && a.abroad && LV[lg] >= 15.3 && a.ovr >= 17) {
+      award('バロンドール候補（30人）', 0.5);
+      if (a.ovr >= 18.3) award('バロンドール', clamp((a.ovr - 18.3) * 0.2 + 0.04, 0.04, 0.25));
+    }
+    // W杯（4年に1度）：代表に入っている子
+    if (a.nat > 0 && w.year % 4 === 2 && a.ovr >= 15.3 && (w._wcY !== w.year || w._wcN < 4) && r() < 0.45) {
+      if (w._wcY !== w.year) { w._wcY = w.year; w._wcN = 0; }
+      w._wcN++;
+      const g = fw ? r.int(0, a.ovr >= 16 ? 3 : 1) : 0;
+      s.awards.push('W杯出場' + (g ? `（${g}得点）` : ''));
+      a.awards.push({ y: w.year, name: 'W杯出場' });
+      a.natGoals = (a.natGoals || 0) + g;
+    }
+    a.apps += apps;
+    a.goals += goals;
+    a.seasons = a.seasons || [];
+    a.seasons.push(s);
+    // 大きな知らせ
+    for (const t of s.titles) YA.noteTier(w, 2, `卒業生の${a.name}（${a.club}）が${t}`);
+    for (const x of s.awards) YA.noteTier(w, /バロンドール$|W杯|年間最優秀|MVP/.test(x) ? 1 : 2, `卒業生の${a.name}が${x}`);
+    return s;
+  }
   YA.alumniTick = function (w) {
     const r = YA.rngOf(w.seed * 67 + w.year * 29);
     let contrib = 0;
     for (const a of w.alumni) {
       if (a.retired || a.age == null) continue;
+      a.titles = a.titles || [];
+      a.awards = a.awards || [];
       a.age++;
-      if (a.age <= 23) a.ovr = Math.round((a.ovr + r() * 0.7) * 10) / 10;
+      if (a.age <= 23) a.ovr = Math.round((a.ovr + r() * (a.ovr >= 15 ? 0.35 : 0.6)) * 10) / 10; // 上に行くほど伸びは鈍る
       else if (a.age >= 30) a.ovr = Math.round((a.ovr - r() * 0.5) * 10) / 10;
       if (a.status === 'univ' && a.age >= 22 && a.ovr >= 12.4 && r() < (a.pushed === 'univ' ? 0.6 : 0.4)) {
         a.status = 'pro';
         a.club = r.pick(PRO) + ' ' + r.pick(PRO_N);
-        YA.noteTier(w, 2, `卒業生の${a.name}が大学を経てプロ入りしました（${a.club}）`);
+        a.league = domLeague(a.ovr);
+        YA.noteTier(w, 2, `卒業生の${a.name}が大学を経てプロ入りしました（${a.club}・${a.league}）`);
       }
       if (a.status === 'pro') {
-        a.apps += Math.round(clamp((a.ovr - 10) * 7 + r.int(-5, 8), 0, 34));
-        a.goals += Math.round(clamp((a.ovr - 11) * (a.pos === 'FW' ? 3 : a.pos === 'MF' ? 1.2 : 0.4) + r.int(-1, 3), 0, 25));
-        if (a.age >= 19 && a.age <= 30 && r() < 0.17) {
-          // 力のある若い選手は、海外のクラブへ移ることもある
-          const abroad = a.ovr >= 13.8 && a.age <= 27 && r() < 0.35;
-          // 国内の移籍金は小さく、海外は大きい
+        if (!a.abroad) a.league = domLeague(a.ovr); // 国内は力で昇格・降格のあるリーグへ
+        // 力のある選手ほど移籍が多く、海外へ出やすい（とても力があれば5大リーグ）
+        if (a.age >= 19 && a.age <= 30 && r() < 0.17 + clamp((a.ovr - 15) * 0.06, 0, 0.3) * (a.abroad ? 0.4 : 1)) {
+          const abroad = a.ovr >= 13.8 && a.age <= 27 && r() < clamp(0.35 + (a.ovr - 15) * 0.12, 0.35, 0.9);
           const fee = Math.round(abroad ? Math.pow(Math.max(0, a.ovr - 9), 2.2) * 560 : Math.pow(Math.max(0, a.ovr - 9), 2) * 80);
           const share = Math.round(fee * 0.015);
           a.transfers++;
-          a.club = abroad ? '海外（' + r.pick(['イングランド', 'ドイツ', 'スペイン', 'オランダ', 'ベルギー', 'ポルトガル']) + '）' + r.pick(PRO_N) : r.pick(PRO) + ' ' + r.pick(PRO_N);
-          if (abroad) a.abroad = true;
+          if (abroad) {
+            const pool = ABROAD.filter((x) => (a.ovr >= 15.3 ? true : !x[2]));
+            const ab = r.pick(pool);
+            a.club = ab[0] + '・' + r.pick(PRO_N);
+            a.league = ab[1];
+            a.abroad = true;
+          } else {
+            a.club = r.pick(PRO) + ' ' + r.pick(PRO_N);
+            if (a.abroad) a.abroad = false; // 国内へ戻る
+            a.league = domLeague(a.ovr);
+          }
           contrib += share;
-          YA.noteTier(w, 1, `卒業生の${a.name}が${a.club}へ${abroad ? '海外移籍' : '移籍'}（移籍金およそ${fee}万円）。連帯貢献金 +${share}万円がクラブに入ります`);
+          YA.noteTier(w, 1, `卒業生の${a.name}が${a.club}（${a.league}）へ${abroad ? '海外移籍' : '移籍'}（移籍金およそ${fee}万円）。連帯貢献金 +${share}万円がクラブに入ります`);
         }
         // U-21代表（決定16）：21歳以下で力のある卒業生。のちにフル代表の足がかり
         if (a.age <= 21 && a.ovr >= 12.2 && r() < 0.22) {
           a.u21 = (a.u21 || 0) + 1;
           if (a.u21 === 1) YA.noteTier(w, 1, `卒業生の${a.name}がU-21日本代表に選ばれました`);
         }
-        if (a.ovr >= 14 && r() < (a.u21 ? 0.14 : 0.1)) {
+        if (a.ovr >= 14 && r() < clamp((a.u21 ? 0.14 : 0.1) + (a.ovr - 14) * 0.12, 0.1, 0.85)) {
           a.nat = (a.nat || 0) + 1;
-          YA.noteTier(w, 1, `卒業生の${a.name}が日本代表に初めて選ばれました！`);
+          if (a.nat === 1) YA.noteTier(w, 1, `卒業生の${a.name}が日本代表に初めて選ばれました！`);
         }
       }
+      if (a.status !== 'left') careerSeason(w, a, r);
       if (a.age >= 33 || a.ovr < 9) {
         a.retired = true;
         a.note = '引退';

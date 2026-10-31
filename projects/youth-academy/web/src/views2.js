@@ -329,6 +329,39 @@
     } }, '映像ミーティング');
   };
 
+  // 卒業生のいちばんの勲章（一覧の札に出す）
+  YA.alumniHighlight = function (a) {
+    const aw = (a.awards || []).map((x) => x.name);
+    for (const k of ['バロンドール', 'バロンドール候補（30人）', 'W杯出場', 'アジア年間最優秀選手', '年間MVP', '得点王', 'ベストイレブン', '新人王']) {
+      const n = aw.filter((x) => x === k || x.endsWith(' ' + k)).length;
+      if (n) return k.replace('（30人）', '') + (n > 1 ? `×${n}` : '');
+    }
+    if (a.nat) return `日本代表${a.nat}回`;
+    if (a.u21) return 'U-21代表';
+    return null;
+  };
+  // 卒業後の経歴：年ごとのクラブ・リーグ・出場・得点・タイトル・賞
+  function alumniCareer(a) {
+    const ss = (a.seasons || []).slice().reverse();
+    const count = (list) => { const m = {}; for (const x of list) m[x.name] = (m[x.name] || 0) + 1; return Object.entries(m).map(([k, n]) => k + (n > 1 ? ` ×${n}` : '')); };
+    V().modal((close) => h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(720px,97%);max-height:96%;padding:10px 12px;gap:6px;overflow:auto' },
+      h('div', { class: 'row', style: 'gap:6px' }, h('span', { class: 'pos ' + a.pos }, YA.POS_LABEL[a.main] || a.pos), h('b', { style: 'font-size:15px' }, a.name), h('span', { class: 'sub' }, `${a.year}年卒・いま${a.age}歳${a.retired ? '（引退）' : ''}`), h('span', { class: 'grow' }), h('button', { class: 'btn sm', onclick: close }, '閉じる')),
+      h('div', { class: 'note' }, a.status === 'left' ? '在学中に退団した子です。' : `いま：${a.club || '-'}${a.league ? '（' + a.league + '）' : ''}　卒業時：${a.note || ''}　能力 ${a.ovr}`),
+      h('div', { class: 'row', style: 'flex-wrap:wrap;gap:4px' },
+        h('span', { class: 'chip trait' }, `通算 ${a.apps}試合・${a.goals}得点`),
+        a.nat ? h('span', { class: 'chip trait' }, `日本代表 ${a.nat}回` + (a.natGoals ? `・${a.natGoals}得点` : '')) : null,
+        a.u21 ? h('span', { class: 'chip gray' }, `U-21代表 ${a.u21}回`) : null,
+        a.transfers ? h('span', { class: 'chip gray' }, `移籍 ${a.transfers}回`) : null),
+      (a.titles || []).length ? h('div', {}, h('div', { class: 'h' }, `タイトル（${a.titles.length}）`), h('div', { class: 'row', style: 'flex-wrap:wrap;gap:4px' }, count(a.titles).map((x) => h('span', { class: 'chip trait' }, x)))) : null,
+      (a.awards || []).length ? h('div', {}, h('div', { class: 'h' }, '個人の賞・代表'), h('div', { class: 'row', style: 'flex-wrap:wrap;gap:4px' }, count(a.awards).map((x) => h('span', { class: 'chip pers' }, x)))) : null,
+      h('div', { class: 'h' }, '年ごとの経歴'),
+      ss.length ? h('div', { class: 'plist' },
+        h('div', { class: 'pitem', style: 'cursor:default;background:none;font-size:10px;color:var(--sub);font-weight:800' }, h('span', { style: 'width:46px' }, '年'), h('span', { style: 'width:34px' }, '年齢'), h('span', { class: 'grow' }, 'クラブ（リーグ）'), h('span', { style: 'width:40px;text-align:right' }, '出場'), h('span', { style: 'width:40px;text-align:right' }, '得点'), h('span', { style: 'width:190px' }, 'タイトル・賞')),
+        ss.map((x) => h('div', { class: 'pitem', style: 'cursor:default;font-size:11px' }, h('span', { style: 'width:46px' }, `${x.y}年目`), h('span', { style: 'width:34px' }, `${x.age}歳`), h('span', { class: 'grow', style: 'min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap' }, `${x.club}（${x.league}）`), h('b', { style: 'width:40px;text-align:right' }, x.apps), h('b', { style: 'width:40px;text-align:right' }, x.goals), h('span', { style: 'width:190px;font-size:10px' }, x.titles.concat(x.awards).join('・') || '―'))))
+        : h('div', { class: 'note' }, 'まだ記録はありません。卒業から1年たつと、ここに年ごとの経歴が並びます。'),
+    ));
+  }
+
   // ---------- ほか：名鑑・記録・設定 ----------
   function viewMore(main) {
     const w = W();
@@ -337,10 +370,23 @@
     const tabs = h('div', { class: 'tabs', style: 'width:420px' }, [['alumni', '卒業生名鑑'], ['rec', '記録'], ['bteam', 'Bチーム'], ['ach', '実績と引退'], ['set', '設定']].map(([k, n]) => h('button', { class: 'btn' + (ui.mt === k ? ' on' : ''), onclick: () => { ui.mt = k; rerender(); } }, n)));
     const body = h('div', { class: 'card pbody', style: 'flex:1;min-height:0' });
     if (ui.mt === 'alumni') {
-      body.append(h('div', { class: 'h' }, `卒業生と退団者（${w.alumni.length}人）`));
-      const al = w.alumni.slice().reverse();
-      body.append(h('div', { class: 'plist', style: 'margin-top:5px' }, al.map((a) => h('div', { class: 'pitem', style: 'cursor:default;align-items:flex-start' }, h('span', { class: 'pos ' + a.pos }, a.pos), h('div', { class: 'grow' }, h('b', {}, a.name), h('div', { class: 'note' }, (a.status === 'left' ? '退団' : `${a.year}年卒・${a.age}歳`) + (a.club ? `・${a.club}` : '') + (a.u21 ? `・U-21代表${a.u21}回` : '') + (a.nat ? `・代表${a.nat}回` : '') + (a.retired ? '（引退）' : ''))), a.status === 'pro' ? h('span', { class: 'sub', style: 'font-size:10.5px' }, `出場${a.apps}・${a.goals}得点${a.transfers ? '・移籍' + a.transfers : ''}${a.nat ? '・代表' + a.nat : ''}`) : null, h('span', { class: 'chip gray' }, '能力 ' + a.ovr), h('span', { class: 'chip ' + (a.status === 'pro' ? 'trait' : 'gray') }, a.status === 'pro' ? 'プロ' : a.status === 'univ' ? '大学' : a.status === 'left' ? '退団' : '社会人')))));
-      if (!al.length) body.append(h('div', { class: 'note', style: 'margin-top:6px' }, '最初の卒業式（1年目の終わり）で、ここに並びます。卒業後も毎年、活躍が更新されます。'));
+      // 絞り込み：全員・プロ・海外・代表・タイトル
+      ui.af = ui.af || 'all';
+      const AF = [['all', '全員'], ['pro', 'プロ'], ['abroad', '海外'], ['nat', '代表'], ['title', 'タイトル・賞']];
+      const pass = (a) => ui.af === 'all' || (ui.af === 'pro' && a.status === 'pro') || (ui.af === 'abroad' && a.abroad) || (ui.af === 'nat' && a.nat > 0) || (ui.af === 'title' && ((a.titles || []).length || (a.awards || []).length));
+      const al = w.alumni.slice().reverse().filter(pass);
+      body.append(h('div', { class: 'row', style: 'gap:4px;flex-wrap:wrap' }, h('div', { class: 'h grow' }, `卒業生と退団者（${w.alumni.length}人）`), ...AF.map(([k, n]) => h('button', { class: 'btn sm' + (ui.af === k ? ' on' : ''), onclick: () => { ui.af = k; rerender(); } }, n))));
+      body.append(h('div', { class: 'note' }, 'タップすると、卒業してからの年ごとの経歴（クラブ・リーグ・出場・得点・タイトル・賞）が見られます。'));
+      body.append(h('div', { class: 'plist', style: 'margin-top:5px' }, al.map((a) => {
+        const top = YA.alumniHighlight(a);
+        return h('button', { class: 'pitem', style: 'align-items:flex-start', onclick: () => alumniCareer(a) }, h('span', { class: 'pos ' + a.pos }, YA.POS_LABEL[a.main] || a.pos),
+          h('div', { class: 'grow', style: 'text-align:left;min-width:0' }, h('b', {}, a.name), h('div', { class: 'note' }, (a.status === 'left' ? '退団' : `${a.year}年卒・${a.age}歳`) + (a.club ? `・${a.club}` : '') + (a.league && a.status !== 'left' ? `（${a.league}）` : '') + (a.retired ? '・引退' : ''))),
+          a.status === 'pro' || a.status === 'univ' ? h('span', { class: 'sub', style: 'font-size:10.5px;white-space:nowrap' }, `通算${a.apps}試合・${a.goals}得点`) : null,
+          (a.titles || []).length ? h('span', { class: 'chip trait' }, `タイトル${a.titles.length}`) : null,
+          top ? h('span', { class: 'chip pers' }, top) : null,
+          h('span', { class: 'chip ' + (a.status === 'pro' ? 'trait' : 'gray') }, a.status === 'pro' ? (a.abroad ? '海外' : 'プロ') : a.status === 'univ' ? '大学' : a.status === 'left' ? '退団' : '社会人'));
+      })));
+      if (!al.length) body.append(h('div', { class: 'note', style: 'margin-top:6px' }, w.alumni.length ? '当てはまる卒業生はいません。' : '最初の卒業式（1年目の終わり）で、ここに並びます。卒業後も毎年、活躍が更新されます。'));
     } else if (ui.mt === 'rec') {
       body.append(title('主な記録'), h('div', { class: 'row', style: 'flex-wrap:wrap;gap:5px;margin-bottom:6px' }, h('span', { class: 'chip trait' }, `Aチーム ${w.rec.w}勝${w.rec.d}分${w.rec.l}敗`), h('span', { class: 'chip gray' }, `プロ入り ${w.alumni.filter((a) => a.status === 'pro').length}人`), h('span', { class: 'chip gray' }, `代表経験 ${w.alumni.filter((a) => a.nat).length}人`), h('span', { class: 'chip gray' }, `連帯貢献金 ${w.club.solidarityLast || 0}万円（今年）`)));
       body.append(title('獲得した大会'), ...(w.trophies && w.trophies.length ? w.trophies.map((t) => h('div', { class: 'pitem', style: 'cursor:default' }, h('span', { class: 'chip trait' }, t.rank), h('span', { class: 'nm grow' }, t.name), h('span', { class: 'sub' }, `${t.year}年目`))) : [h('div', { class: 'note' }, 'まだありません')]));
