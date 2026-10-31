@@ -103,7 +103,7 @@
     for (const n of YA.AB_MENTAL.concat(YA.AB_PHYS, YA.AB_TECH)) if (!boost[n] && rng.chance(0.12)) boost[n] = rng.pick([-2, -1, 1, 2]);
     const weak = rng.pick(YA.AB_FIELD);
     boost[weak] = (boost[weak] || 0) - 2;
-    const p = YA.mkPlayer(rng, { id, num: 0, name, pos: grp, main: pos, lvl, boost, traits: [], pers: {}, height: 164 + rng.int(0, 22) + (grp === 'GK' ? 5 : pos === 'CB' ? 3 : 0) });
+    const p = YA.mkPlayer(rng, { id, num: 0, name, pos: grp, main: pos, best: trueP, lvl, boost, traits: [], pers: {}, height: 164 + rng.int(0, 22) + (grp === 'GK' ? 5 : pos === 'CB' ? 3 : 0) });
     // 性格
     for (const g of Object.keys(PERS_W)) {
       const ent = Object.entries(PERS_W[g]);
@@ -219,6 +219,34 @@
     pickLineup(w, 'A', init ? '4-3-3' : w.formation);
     pickLineup(w, 'B', (w.bCtl && w.bCtl.form) || '4-3-3');
   }
+  // 枠に置いたときの値打ち：力×その位置の適性（◎はそのまま、○で1割弱、△で2〜3割、×は大きく落ちる）
+  YA.slotValue = function (p, p15) {
+    if ((p.pos === 'GK') !== (p15 === 'GK')) return -99;
+    const a = p.apt ? p.apt[p15] : 10;
+    return YA.ovr(p) * (1 - Math.max(0, 17 - a) * 0.03);
+  };
+  // 布陣の枠を、候補の少ない枠から順に、値打ちのいちばん高い選手で埋める
+  YA.fillSlots = function (fm, pool, key) {
+    const slots = fm.map((s, i) => ({ i, s, pos: YA.pos15OfSlot(s, i) }));
+    const left = pool.slice();
+    const lineup = new Array(fm.length);
+    const good = (sl) => left.filter((p) => (p.apt ? p.apt[sl.pos] : 10) >= 14).length;
+    const order = slots.slice();
+    while (order.length && left.length) {
+      order.sort((a, b) => (b.pos === 'GK') - (a.pos === 'GK') || good(a) - good(b));
+      const sl = order.shift();
+      let k = -1;
+      let bv = -1e9;
+      left.forEach((p, j) => {
+        const v = YA.slotValue(p, sl.pos) + (key ? key(p) : 0);
+        if (v > bv) { bv = v; k = j; }
+      });
+      const p = left.splice(k, 1)[0];
+      lineup[sl.i] = { pid: p.id, x: sl.s.x, y: sl.s.y, role: YA.defaultRole(sl.pos) };
+      YA.fixSlotRole(lineup[sl.i], sl.i);
+    }
+    return lineup;
+  };
   const NEED = { '4-3-3': { GK: 1, DF: 4, MF: 3, FW: 3 }, '4-4-2': { GK: 1, DF: 4, MF: 4, FW: 2 }, '4-2-3-1': { GK: 1, DF: 4, MF: 5, FW: 1 }, '3-5-2': { GK: 1, DF: 3, MF: 5, FW: 2 }, '5-3-2': { GK: 1, DF: 5, MF: 3, FW: 2 } };
   function pickLineup(w, which, formation) {
     if (!YA.FORMATIONS[formation]) formation = '4-3-3';
@@ -228,40 +256,16 @@
       && w.lineupB.every((s) => w.players[s.pid] && w.players[s.pid].team === 'B') && w.benchB.every((id) => w.players[id] && w.players[id].team === 'B')
       && w.bCtl.formKept === formation) return;
     const fm = YA.FORMATIONS[formation];
-    const need = { GK: 0, DF: 0, MF: 0, FW: 0 };
-    fm.forEach((s, i) => need[YA.posOfSlot(s, i)]++);
-    const chosen = [];
-    for (const pos of ['GK', 'DF', 'MF', 'FW']) {
-      // Bチームの起用方針（決定30）：力の順／下級生を優先／疲れの少ない順
-      const pol = which === 'B' && w.bCtl ? w.bCtl.policy : 'best';
-      const key = (p) => YA.ovr(p) - (p.fat * 0.01) + (pol === 'young' ? (3 - p.grade) * 0.6 : 0) - (pol === 'rest' ? p.fat * 0.04 : 0);
-      let c = pool.filter((p) => p.pos === pos && healthy(p)).sort((a, b) => key(b) - key(a));
-      if (pos === 'GK' && !c.length) c = pool.filter((p) => p.pos === 'GK').sort((a, b) => YA.ovr(b) - YA.ovr(a));
-      chosen.push(...c.slice(0, need[pos]));
+    // Bチームの起用方針（決定30）：力の順／下級生を優先／疲れの少ない順
+    const pol = which === 'B' && w.bCtl ? w.bCtl.policy : 'best';
+    const key = (p) => -(p.fat * 0.01) + (pol === 'young' ? (3 - p.grade) * 0.6 : 0) - (pol === 'rest' ? p.fat * 0.04 : 0);
+    const cand = pool.filter(healthy);
+    // 動けるGKがいなければ、怪我のGKでも入れる（Bは repairLineup でフィールドの選手に替わる）
+    if (!cand.some((p) => p.pos === 'GK')) {
+      const g = pool.filter((p) => p.pos === 'GK').sort((a, b) => YA.ovr(b) - YA.ovr(a))[0];
+      if (g) cand.push(g);
     }
-    // 足りない位置は他の位置から補う
-    if (chosen.length < 11) {
-      const rest = pool.filter((p) => healthy(p) && chosen.indexOf(p) < 0 && p.pos !== 'GK').sort((a, b) => YA.ovr(b) - YA.ovr(a));
-      chosen.push(...rest.slice(0, 11 - chosen.length));
-    }
-    // 布陣の各枠へ、位置の近い順に割り当てる
-    const slots = fm.map((s, i) => ({ i, s, pos: YA.pos15OfSlot(s, i) }));
-    const lineup = new Array(11);
-    const left = chosen.slice();
-    for (const sl of slots) {
-      // その位置の適性が一番高い選手を置く（GKはGKだけ）
-      let k = -1;
-      let bv = -1e9;
-      left.forEach((p, j) => {
-        if ((p.pos === 'GK') !== (sl.pos === 'GK')) return;
-        const v = (p.apt ? p.apt[sl.pos] : 10) + (p.main === sl.pos ? 0.4 : 0);
-        if (v > bv) { bv = v; k = j; }
-      });
-      if (k < 0) k = 0;
-      const p = left.splice(k, 1)[0];
-      lineup[sl.i] = { pid: p.id, x: sl.s.x, y: sl.s.y, role: YA.defaultRole(sl.pos) };
-      YA.fixSlotRole(lineup[sl.i], sl.i);
-    }
+    const lineup = YA.fillSlots(fm, cand, key);
     const bench = pool.filter((p) => !lineup.some((l) => l.pid === p.id)).sort((a, b) => YA.ovr(b) - YA.ovr(a)).map((p) => p.id);
     if (which === 'A') {
       w.lineupA = lineup;
