@@ -1,0 +1,146 @@
+# 物語完結型ショート 黒船（もしも）s3（2026-10-31）。本編 scripts/kurofune-if-story.yaml（11/4 12:00 公開、https://youtu.be/QRZZXxHicQ4）から。切り口：オランダは黒船の来航を一度は伏せ、1852年に知らせた（自分の国のため）
+# 形式は genkou_if_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。戦闘・負傷・死の絵なし。
+# 絵は本編の AI 絵（out/story/kurofune-if/main/K01〜K15。人物は描かない）。新しい絵は作らない。
+# 事実カード（dev/output/rekishi-chiso/research/黒船_facts_20261031.yaml）：kurofune-if-13・40・70（本編 第3章の言い方のまま）
+# ・年月日は本編の転記：1851年6月7日（伏せると決めた）→1852年4月17日（協議で変わる）→7月21日（クルチウス長崎着）→9月（書簡を受け取る）→11月2日（終わったものとみなす）。順番の食い違いなし。
+# ・「翌年の夏、ペリーが浦賀の沖に来る」は本編の1853年7月8日（第4章）から。1852年の翌年＝1853年。
+# ・最後の「もしも」は問いだけ（答えは言わない）。
+# 理解テスト4問：
+#   ①誰の話か：長崎のオランダ（総督府・商館長クルチウス）と幕府
+#   ②いつ・どこで何が：1851年6月7日にアメリカの計画を伏せると決め、1852年4月17日の協議で知らせる方へ変えた
+#   ③なぜ：衝突に巻き込まれて日本での立場を失うのを恐れた（自分の国のための知らせ）
+#   ④どうなったか：幕府は11月2日、この件は終わったものとみなすと伝えた。翌年の夏、ペリーが来る。もしも取り合っていたら、を問いで閉じる
+title: 黒船｜オランダは、黒船の来航を一度は伏せた
+yt_title: オランダは黒船の来航を一度は伏せた　1852年の予告と、取り合わなかった幕府
+description: |-
+  オランダは、一度は、黒船が来ることを、幕府に伏せると決めていました。
+  1851年6月7日、バタヴィア（今のジャカルタ）のオランダの総督府は、日本人に無用の不安を与えないため、アメリカの計画を伏せると決めます。それが、1852年4月17日の協議で変わりました。アメリカが日本と衝突すれば、イギリスも黙っていない。中立のオランダも巻き込まれる。研究者のヘルマン・モースハルトさんは、オランダが恐れたのは、日本での自分の立場を失うことだった、と書きます。1852年7月21日に長崎へ着いた商館長ドンケル・クルチウスの書簡を、長崎奉行は一度は受け取らず、受け取ったのは9月。11月2日、幕府は、この件を終わったものとみなす、と伝えました。
+  もしも、幕府がこの予告に取り合っていたら。この問いを、史料から掘り下げた本編は、概要欄のリンクからどうぞ。
+hashtags: ['#黒船', '#日本史', '#幕末']
+ai_images: true
+ai_disclosure: この動画の情景の画像の多くは、画像生成AI（Google の Gemini・Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/kurofune-if
+out: kurofune_if_story_s3
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: オランダ（長崎の商館）
+  title: "黒船の来航を、《一度は伏せた》"
+now:
+  - {at: 1851年6月7日, text: "1851年6月　バタヴィア", point: 0}
+  - {at: 1852年4月17日, text: "1852年4月", point: 1}
+  - {at: 1852年7月21日, text: "1852年7月　長崎", point: 1}
+  - {at: 11月2日, text: "1852年11月　長崎", point: 1}
+timeline:
+  - {label: "1851"}
+  - {label: "1852"}
+cards:
+  - type: table
+    title: 予告が届くまで
+    from: 1852年7月21日
+    until: 予告は
+    items:
+      - {at: 1852年7月21日, text: "7月21日　クルチウスが長崎に着く"}
+      - {at: 受け取ったのは, text: "9月　書簡を受け取る"}
+      - {at: 11月2日, text: "11月2日　この件は終わりと伝える"}
+    text_y: 0.70
+shots:
+  K13:
+    kind: ai
+    file: kurofune-if/main/K13.jpg
+    focus: [0.5, 0.45]
+    move: in
+    must: 丘から見下ろす港と帆船
+  K06:
+    kind: ai
+    file: kurofune-if/main/K06.jpg
+    focus: [0.55, 0.65]
+    move: in
+    must: 文机の上の白い書状
+  K09:
+    kind: ai
+    file: kurofune-if/main/K09.jpg
+    focus: [0.6, 0.5]
+    move: left
+    must: 大海原を進む煙を上げる船
+  K12:
+    kind: ai
+    file: kurofune-if/main/K12.jpg
+    focus: [0.6, 0.5]
+    move: right
+    must: 霧の港町の瓦屋根と小舟
+  K13b:
+    kind: ai
+    file: kurofune-if/main/K13.jpg
+    focus: [0.6, 0.35]
+    move: left
+    must: 入り江に浮かぶ帆船
+  K04:
+    kind: ai
+    file: kurofune-if/main/K04.jpg
+    focus: [0.4, 0.55]
+    move: in
+    must: 石段の港と帆の小舟
+  K05:
+    kind: ai
+    file: kurofune-if/main/K05.jpg
+    focus: [0.5, 0.6]
+    move: in
+    must: 座敷の文机の書状と、沖の帆船
+  K02:
+    kind: ai
+    file: kurofune-if/main/K02.jpg
+    focus: [0.55, 0.4]
+    move: right
+    must: 沖に2隻の大きな帆船
+lines:
+  # fact: kurofune-if-13
+  - 語り: オランダは、一度は、黒船が来ることを、幕府に《!伏せる》と決めていた。
+    shot: K13
+    tone: 強調
+    pause: 0.12
+  # fact: kurofune-if-13
+  - 語り: 1851年6月7日。オランダの総督府は、日本人に無用の不安を与えないため、アメリカの計画を伏せると決めた。
+    shot: K06
+    tone: しみじみ
+    pause: 0.12
+  # fact: kurofune-if-70, kurofune-if-40
+  - 語り: 1852年4月17日。オランダは、協議で、考えを変える。アメリカが日本と衝突すれば、イギリスも黙っていない。中立のオランダも、巻き込まれる。
+    shot: K09
+    tone: 重い
+    pause: 0.12
+  # fact: kurofune-if-70
+  - 語り: 研究者のモースハルトさんは、オランダが恐れたのは、日本での自分の立場を失うことだった、と書く。自分の国のための、知らせだった。
+    shot: K12
+    tone: しみじみ
+    pause: 0.12
+  # fact: kurofune-if-40
+  - 語り: 1852年7月21日、商館長クルチウスが、長崎に着いた。持ってきた書簡を、長崎奉行は、一度、受け取らなかった。
+    shot: K13b
+    tone: しみじみ
+    pause: 0.12
+  # fact: kurofune-if-40
+  - 語り: 受け取ったのは、9月。11月2日、幕府は、この件を終わったものとみなす、と伝えた。
+    shot: K04
+    tone: 重い
+    pause: 0.12
+  # 本編 第3章の結び「予告は、確かに届いていました」＋第4章の1853年7月8日
+  - 語り: 予告は、確かに届いていた。翌年の夏、ペリーの艦隊が、浦賀の沖に来る。
+    shot: K02
+    tone: 重い
+    pause: 0.3
+    dip: true
+  # fact: （本編へ）
+  - 語り: もしも、幕府がこの予告に取り合っていたら、何が変わっていたのか。
+    shot: K05
+    tone: 疑問
+    pause: 0.15

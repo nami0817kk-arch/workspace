@@ -181,10 +181,45 @@ def test_pause_before_turns_and_dips():
     assert S.GAP <= 0.15 and S.GAP_HEAVY <= 0.15
     dips = S.dips_of(lines, voice)
     assert dips and all(abs((b - a) - lines[i].pause) < 1e-9 for (a, b), i in zip(dips, [l.index for l in lines if l.dip and l.pause]))
-    assert total == pytest.approx(voice[-1][1] + S.END_HOLD)
+    assert total == pytest.approx(voice[-1][1] + S.END_HOLD + S.end_extra(voice[-1][1]))     # 59秒以内なら登録のお願いの分だけ延ばす
     assert abs((S.END_HOLD - S.CTA_SECONDS) - 0.4) < 1e-9 and S.END_HOLD == 1.2     # 声のあと1.2秒だけ出し、最初の0.4秒は余白（BGM だけ）のあとに「本編は概要欄から」
     assert S.boom_times(lines, voice) == [] and not any(l.riser for l in lines)  # 効果音（低い響き・ライザー）は台本から外した
     assert voice[0][0] == 0.0                                                    # 声は0秒から
+
+
+def test_subscribe_request_on_screen_at_the_end_without_voice():
+    """10-21 決定「ショート末尾に登録のお願い。声なし・画面のみ」を物語型にも（11-01）。文言は旧型と同じ。"""
+    from chiso import shorts
+    assert S.SUB_TEXT == shorts.CTA_SCREEN == "高評価・チャンネル登録もお願いします"
+    lines = _lines()
+    assert not any("登録" in l.text for l in lines)                                   # 声（語り）には足さない
+    # 尺：余裕があれば締めを SUB_EXTRA 延ばし（表示は計2.0秒）、59秒を超える分は延ばさない
+    assert S.end_extra(40.0) == pytest.approx(S.SUB_EXTRA) and S.CTA_SECONDS + S.SUB_EXTRA == pytest.approx(2.0)
+    assert 40.0 + S.END_HOLD + S.end_extra(40.0) <= S.MAX_SECONDS
+    assert S.end_extra(57.5) == pytest.approx(S.MAX_SECONDS - 57.5 - S.END_HOLD)
+    assert S.end_extra(58.5) == 0.0
+    voice, _b, _s, total = S.plan(lines, [3.0] * len(lines))
+    assert total <= S.MAX_SECONDS
+    assert total - S.cta_start(voice[-1][1]) == pytest.approx(S.CTA_SECONDS + S.end_extra(voice[-1][1]), abs=1e-3)
+    assert S.cta_start(voice[-1][1]) - voice[-1][1] == pytest.approx(0.4)             # 声のあと0.4秒の余白のあとに出す
+
+
+def test_subscribe_request_drawn_above_the_cta_pill():
+    font = "C:/Windows/Fonts/YuGothB.ttc"                 # config.yaml の fonts.gothic と同じ
+    if not Path(font).exists():
+        pytest.skip("字体が無い")
+    font_of = S.make_font_of({"gothic": font})
+    for style, y, sub_y in (("B", None, None), ("C", 1700, 1530)):
+        img = Image.new("RGBA", (S.W, S.H), (0, 0, 0, 0))
+        S.draw_cta(img, font_of, y, sub_y)
+        a = img.split()[3]
+        cy = int(S.H * 0.80) if y is None else y
+        sy = cy - 92 if sub_y is None else sub_y
+        assert a.crop((0, sy, S.W, sy + 72)).getbbox() is not None                    # 登録のお願いの帯
+        assert a.crop((0, cy, S.W, cy + 110)).getbbox() is not None                   # 「本編は概要欄から」の札
+        assert sy + 72 < cy                                                           # 重ならない
+        box = a.getbbox()
+        assert box[0] > 60 and box[2] < S.W - 60                                      # 画面の端に寄らない
 
 
 def test_last_block_is_the_question_and_stays_long():
