@@ -62,16 +62,12 @@
     const ex = YA.homeExtra();
     if (ex) left.append(ex);
     const act = h('div', { style: 'display:flex;flex-direction:column;gap:5px' });
-    if (w.firstSel && !w.yearIntro) {
-      // 最初のセレクション：高1の12人を応募者から選ぶ。終えるまで週は進められない
-      const signed = YA.signedCount(w) + w.scouting.cands.filter((c) => c.status === 'offered').length;
-      act.append(h('div', { class: 'card', style: 'padding:7px 9px;background:#eaf2ff' }, h('div', { class: 'h' }, '最初のセレクション'), h('div', { class: 'note' }, `高1の12人を、内部昇格（8人まで）→ スカウト（3人まで）→ セレクション（3人まで）の順に選びます。決まった ${signed}人（残り${12 - signed}人は一般入団）`)),
-        h('button', { class: 'btn pri', style: 'min-height:42px', onclick: () => { U().app.tab = 'club'; U().app.ct = 'scout'; rerender(); } }, 'セレクションを開く（応募者を見る）'),
-        h('button', { class: 'btn', onclick: () => modal((close) => h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(420px,95%);padding:12px;gap:8px' }, h('div', { class: 'h' }, '新入生を決めますか'), h('div', { class: 'note' }, `合格の${signed}人と、一般入団${12 - signed}人が高1になります。決めたあとは変えられません。`), h('div', { class: 'row' }, h('button', { class: 'btn', onclick: close }, 'まだ選ぶ'), h('button', { class: 'btn pri', onclick: () => { YA.finishFirstSelection(w); YA.saveWorld(true); close(); rerender(); } }, '決める')))) }, 'セレクションを終えて新入生を決める'));
-    } else if (w.phase === 'plan') {
+    if (w.phase === 'plan') {
       // 練習は月に1回組めばよい。同じ月の残りの週は、組んだメニューのまま1タップで進める
       const mk = w.year * 100 + YA.monthIdx(w.week);
       const set = w.planMonth === mk;
+      const hint = YA.scoutHint(w);
+      if (hint) act.append(h('button', { class: 'btn', onclick: () => { U().app.tab = 'club'; U().app.ct = 'scout'; rerender(); } }, hint));
       act.append(h('button', { class: 'btn', onclick: () => { U().app.tab = 'train'; rerender(); } }, set ? '今月の練習を組み直す' : `練習を組む（${cal.month}のメニュー）`));
       act.append(h('button', { class: 'btn pri', style: 'min-height:42px;font-size:14px', onclick: () => { runWeek(); } }, set ? '今月の練習のまま週を進める' : '練習を確定して週を進める'));
     } else if (w.phase === 'event') {

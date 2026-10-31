@@ -14,19 +14,59 @@
   // ---------- スカウト ----------
   const POS_ABS = { GK: YA.AB_GK, DF: ['タックル', 'マーク', 'ポジショニング', '予測', 'ヘディング', '強さ'], MF: ['パス', '視野', '判断', 'ドリブル', '運動量', 'テクニック'], FW: ['フィニッシュ', 'ドリブル', 'スピード', 'オフザボール', '加速', 'ヘディング'] };
   YA.ovrAt = (p, pos) => YA.POS_ABS15[pos].reduce((s, n) => s + p.ab[n], 0) / YA.POS_ABS15[pos].length;
-  YA.newScouting = () => ({ cands: [], tests: [], testsDone: false, selOpen: false, intOpen: false, nextId: 0 });
+  YA.newScouting = () => ({ cands: [], tests: [], testsDone: false, selOpen: false, intOpen: false, nextId: 0, acts: { m: -1, n: 0 }, seq: 0 });
   const eyeOf = (w) => clamp((YA.staffAb(w, 'スカウト') + (w.coach ? w.coach.eye : 8)) / 2, 3, 18);
   YA.eyeLevel = eyeOf;
   const KIND_NAME = { scout: 'スカウト', sel: 'セレクション', int: '内部昇格（U-15）' };
   YA.CAND_KIND = KIND_NAME;
 
-  function genCand(w, rng, kind) {
+  // ---------- 暦：いつ何を決めるか ----------
+  // 内部昇格は11月（25〜27週）／スカウトは4〜11月に月3回まで、返事は12月（28週）／セレクションは1月（31〜34週）に合否が決まる。
+  // 初年度も同じ暦で、決めた子は翌年の高1になる
+  YA.SCOUT_RESULT_WEEK = 28;
+  YA.SCOUT_PER_MONTH = 3;
+  YA.scoutWindow = function (w) {
+    const wk = w.week;
+    return { int: wk >= 25 && wk <= 27, scout: wk <= 27, sel: wk >= 31 && wk <= 34 };
+  };
+  YA.scoutActsLeft = function (w) {
+    const a = w.scouting && w.scouting.acts;
+    const used = a && a.m === YA.monthIdx(w.week) ? a.n : 0;
+    return Math.max(0, YA.SCOUT_PER_MONTH - used);
+  };
+  const useAct = function (w) {
     const S = w.scouting;
+    const m = YA.monthIdx(w.week);
+    if (!S.acts || S.acts.m !== m) S.acts = { m, n: 0 };
+    S.acts.n++;
+  };
+  // ホームに出す一言（なければ null）
+  YA.scoutHint = function (w) {
+    if (!w.scouting) return null;
+    const wn = YA.scoutWindow(w);
+    if (wn.int) return '内部昇格を決める（11月）';
+    if (wn.sel) return 'セレクションの合否を決める（1月）';
+    if (wn.scout) return `スカウトに出る（今月あと${YA.scoutActsLeft(w)}回）`;
+    return null;
+  };
+
+  // スカウトの行き先（栄冠ナイン風：行き先を選んで出る。月3回まで）
+  YA.DESTS = {
+    local: { name: '地元の中学・クラブ', cost: 5, note: '近くを回る。人数は多めでライバルは少ない', q: -0.3, rival: 0.15, foreign: 0.02 },
+    strong: { name: '強豪の中学・ユース', cost: 12, note: '粒ぞろいの子に会える。ほかのクラブも狙っている', q: 0.8, rival: 0.65, foreign: 0.04 },
+    wide: { name: '全国・海外へ遠征', cost: 20, note: '当たり外れが大きい。外国籍の子に会えることも', q: 0.1, rival: 0.35, foreign: 0.25 },
+  };
+  const DEST_ORDER = ['local', 'strong', 'wide'];
+  YA.DEST_ORDER = DEST_ORDER;
+
+  function genCand(w, rng, kind, dest) {
+    const S = w.scouting;
+    const D = dest ? YA.DESTS[dest] : null;
     const pos = rng.pick(['GK', 'CB', 'CB', 'LB', 'RB', 'DM', 'CM', 'CM', 'AM', 'LM', 'RM', 'LW', 'RW', 'SS', 'ST', 'ST']);
     const used = new Set(Object.values(w.players).map((p) => p.name));
     // セレクションの応募者は、取りこぼされた子が来る：原石（今は低いが伸びしろが大きい）・低め（今も伸びしろも低い）・位置ちがい（登録が合っていない）
     const prof = kind === 'sel' ? (() => { const x = rng(); return x < 0.4 ? 'raw' : x < 0.7 ? 'low' : 'mis'; })() : null;
-    let q = clamp(rng.int(-2, 2) * 0.8 + (kind === 'scout' ? (eyeOf(w) - 10) * 0.08 : 0) + (kind === 'int' ? 0.2 : 0), -2, 2.4);
+    let q = clamp(rng.int(-2, 2) * (dest === 'wide' ? 1.1 : 0.8) + (kind === 'scout' ? (eyeOf(w) - 10) * 0.08 + (D ? D.q : 0) : 0) + (kind === 'int' ? 0.2 : 0), -2, 2.4);
     if (prof === 'raw') q = rng.int(-2, -1) * 0.9;
     else if (prof === 'low') q = rng.int(-2, -1) * 0.8;
     else if (prof === 'mis') q = rng.int(0, 1) * 0.8;
@@ -47,7 +87,7 @@
     // 外国籍の選手は年に0〜1人（決定53）。海外のスカウトか、まれな応募から
     const FOREIGN = [['ブラジル', ['ルーカス・シウバ', 'カルロス・メンドンサ', 'ガブリエル・ソウザ']], ['韓国', ['キム・ジュノ', 'パク・ソンミン', 'イ・ヒョヌ']], ['ナイジェリア', ['エマニュエル・オコロ', 'ダニエル・アデバヨ']], ['アルゼンチン', ['マテオ・ゴンザレス', 'ニコラス・ペレス']], ['オーストラリア', ['ジャック・ウィルソン', 'ライアン・テイラー']]];
     let foreign = false;
-    if (kind !== 'int' && !S.foreignDone && rng() < 0.07) {
+    if (kind !== 'int' && !S.foreignDone && rng() < (kind === 'scout' && D ? D.foreign : 0.07)) {
       const f = rng.pick(FOREIGN);
       p.nation = f[0];
       p.name = rng.pick(f[1]);
@@ -58,22 +98,37 @@
       foreign = true;
       S.foreignDone = true;
     } else p.nation = '日本';
-    const c = { id, p, kind, prof, foreign, seen: kind === 'int' ? 2 : 0, status: 'open', rival: kind === 'scout' && rng.chance(0.4), persSeen: kind === 'int', amb: rng.int(0, 10) };
+    const c = { id, p, kind, prof, foreign, seen: kind === 'int' ? 2 : kind === 'scout' ? 1 : 0, status: 'open', rival: kind === 'scout' && rng.chance(D ? D.rival : 0.4), persSeen: kind === 'int', amb: rng.int(0, 10), where: D ? D.name : null };
     S.cands.push(c);
     return c;
   }
-  YA.scoutReport = function (w) {
+  // スカウトに出る：行き先を選ぶと、数人の候補に出会える。月3回まで・4〜11月・経費がかかる
+  YA.scoutOut = function (w, dest) {
     const S = w.scouting;
-    const r = YA.rngOf(w.seed * 29 + w.year * 131 + w.week);
-    const b = YA.budget(w);
-    const n = 1 + Math.floor((YA.staffAb(w, 'スカウト') - 4) / 5) + (b.scout - w.club.spent.scout >= 200 ? 1 : 0);
-    const open = S.cands.filter((c) => c.kind === 'scout' && c.status === 'open').length;
-    let made = 0;
-    for (let i = 0; i < n && open + made < 12; i++) {
-      genCand(w, r, 'scout');
-      made++;
-    }
-    if (made) YA.noteTier(w, 2, `スカウトから新しい候補の報告が${made}人ありました（クラブ→スカウト）`);
+    const D = YA.DESTS[dest];
+    if (!D) return { ok: false, msg: '行き先を選んでください' };
+    if (!YA.scoutWindow(w).scout) return { ok: false, msg: 'スカウトに出られるのは4月〜11月です（返事は12月に届きます）' };
+    if (YA.scoutActsLeft(w) <= 0) return { ok: false, msg: `今月のスカウトは${YA.SCOUT_PER_MONTH}回使いました。来月また出られます` };
+    const room = 12 - S.cands.filter((c) => c.kind === 'scout' && c.status === 'open').length;
+    if (room <= 0) return { ok: false, msg: '候補がいっぱいです。見送る子を決めてください' };
+    if (YA.budget(w).scout - w.club.spent.scout < D.cost) return { ok: false, msg: 'スカウトの配分が足りません' };
+    const r = YA.rngOf(w.seed * 29 + w.year * 131 + w.week * 7 + ++S.seq * 977 + YA.hash(dest));
+    const eye = eyeOf(w);
+    let n = dest === 'local' ? 1 + (r() < 0.5 ? 1 : 0) : dest === 'wide' ? 1 + (r() < 0.4 ? 1 : 0) : 1;
+    if (r() < (eye - 8) * 0.05) n++;
+    n = Math.min(n, 3, room);
+    const found = [];
+    for (let i = 0; i < n; i++) found.push(genCand(w, r, 'scout', dest));
+    w.club.spent.scout += D.cost;
+    useAct(w);
+    return { ok: true, msg: `${D.name}で${n}人の候補に会いました。名前は「スカウトの報告」に並んでいます`, found };
+  };
+  // 見送る：候補の一覧から外して、枠を空ける
+  YA.passCand = function (w, id) {
+    const c = w.scouting.cands.find((x) => x.id === id);
+    if (!c || c.kind !== 'scout' || c.status !== 'open') return { ok: false, msg: '見送れません' };
+    c.status = 'passed';
+    return { ok: true, msg: `${c.p.name}は見送りました` };
   };
   YA.openSelection = function (w) {
     const S = w.scouting;
@@ -82,9 +137,9 @@
     const r = YA.rngOf(w.seed * 37 + w.year * 17);
     const n = 14 + Math.floor(w.club.rep / 8);
     for (let i = 0; i < n; i++) genCand(w, r, 'sel');
-    YA.noteTier(w, 1, `セレクションの応募が${n}人ありました。テストの内容を決めて、入れる子を選んでください（クラブ→スカウト）`);
+    YA.noteTier(w, 1, `セレクションの応募が${n}人ありました。1月のうちに、テストの内容を決めて入れる子を選んでください（クラブ→スカウト）`);
   };
-  // 中3の練習参加（34週）：内部昇格の候補12人がA・Bの練習に混ざる。実際に動きを見られるので見えている度合いが上がる。36週に指導者の申し送りで残りが見える
+  // 中3の練習参加（11月の初め・25週）：内部昇格の候補12人がA・Bの練習に混ざる。実際に動きを見られるので見えている度合いが上がる。26週に指導者の申し送りで残りが見える
   YA.openInternal = function (w, junior) {
     const S = w.scouting;
     if (S.intOpen) {
@@ -93,7 +148,7 @@
           c.seen = Math.min(3, c.seen + 1);
           c.persSeen = true;
         }
-        YA.noteTier(w, 2, 'U-15の指導者から、各候補の申し送り（性格など）が届きました');
+        YA.noteTier(w, 2, 'U-15の指導者から、各候補の申し送り（性格など）が届きました。内部昇格を決めるのは11月のうちです');
       }
       return;
     }
@@ -102,8 +157,17 @@
     for (let i = 0; i < 12; i++) genCand(w, r, 'int');
     if (junior) {
       for (const c of S.cands) if (c.kind === 'int') c.seen = Math.min(3, c.seen + 1);
-      YA.noteTier(w, 1, '中3の12人が練習に参加しました。内部昇格の候補として動きを見られます（クラブ→スカウト）');
+      YA.noteTier(w, 1, '11月です。中3の12人が練習に参加しました。内部昇格の候補として動きを見られます。8人まで決められます（クラブ→スカウト）');
     } else YA.noteTier(w, 1, 'U-15の指導者から、内部昇格の候補12人の申し送りが届きました（クラブ→スカウト）');
+  };
+  // 11月の終わり：内部昇格が決まる。12月の初め：スカウトの返事。1月の終わり：セレクションの合否が決まる
+  YA.closeInternal = function (w) {
+    if (!w.scouting.intOpen) return;
+    YA.noteTier(w, 1, `内部昇格が決まりました（${YA.signedCount(w, 'int')}人）。来年の高1になります`);
+  };
+  YA.closeSelection = function (w) {
+    if (!w.scouting.selOpen) return;
+    YA.noteTier(w, 1, `セレクションの合否が決まりました（${YA.signedCount(w, 'sel')}人合格）。来年の高1になります`);
   };
   YA.testDays = (w) => 2 + (YA.budget(w).scout >= 300 ? 1 : 0);
   YA.TESTS = [['紅白戦', '動きと判断が見える'], ['技術テスト', 'ボールの扱いが見える'], ['体力測定', '足の速さ・体力が見える'], ['面接', '性格と目指すものが見える']];
@@ -121,57 +185,28 @@
   YA.scoutVisit = function (w, id) {
     const c = w.scouting.cands.find((x) => x.id === id);
     const b = YA.budget(w);
-    if (!c || c.kind !== 'scout') return { ok: false, msg: '見に行けません' };
+    if (!c || c.kind !== 'scout' || c.status !== 'open') return { ok: false, msg: '見に行けません' };
+    if (!YA.scoutWindow(w).scout) return { ok: false, msg: '見に行けるのは4月〜11月です' };
+    if (YA.scoutActsLeft(w) <= 0) return { ok: false, msg: `今月のスカウトは${YA.SCOUT_PER_MONTH}回使いました。来月また出られます` };
     if (c.seen >= 3) return { ok: false, msg: 'これ以上は見えません' };
-    if (b.scout - w.club.spent.scout < 15) return { ok: false, msg: 'スカウトの配分が足りません' };
-    w.club.spent.scout += 15;
+    if (b.scout - w.club.spent.scout < 10) return { ok: false, msg: 'スカウトの配分が足りません' };
+    w.club.spent.scout += 10;
+    useAct(w);
     c.seen++;
     if (c.seen >= 2) c.persSeen = true;
     return { ok: true, msg: `${c.p.name}を見に行きました（見える範囲が広がった）` };
   };
-  // ---------- 初回のセレクション：ゲームの最初に、高1の12人を応募者から選ぶ ----------
-  YA.beginFirstSelection = function (w) {
-    const S = w.scouting;
-    w.firstSel = true;
-    S.selOpen = true;
-    const r = YA.rngOf(w.seed * 37 + 5);
-    const n = 16 + Math.floor(w.club.rep / 8);
-    for (let i = 0; i < n; i++) genCand(w, r, 'sel');
-    // 初年度からスカウトと内部昇格も使える（U-15の12人は練習に混ざって動きを見られる）
-    for (let i = 0; i < 6; i++) genCand(w, r, 'scout');
-    S.intOpen = true;
-    for (let i = 0; i < 12; i++) genCand(w, r, 'int');
-    for (const c of S.cands) if (c.kind === 'int') c.seen = Math.min(3, c.seen + 1);
-    w.inbox.push({ week: 0, year: 1, tier: 1, text: `最初の高1の12人を決めます（クラブ→スカウト）。決める順番は、U-15の内部昇格（候補12人から8人まで）、スカウト（3人まで）、セレクション（応募${n}人から3人まで）です。選ばなかった分は一般入団で埋まります` });
-  };
-  // セレクションを終える：最初にいた高1を、合格者と一般入団の12人に入れ替える
-  YA.finishFirstSelection = function (w) {
-    if (!w.firstSel) return 0;
-    YA.resolveOffers(w); // 声をかけたスカウトの返事は、ここで届く
-    const rng = YA.rngOf(w.seed * 71 + 3);
-    for (const p of Object.values(w.players)) if (p.grade === 1) delete w.players[p.id];
-    const used = new Set(Object.values(w.players).map((p) => p.name));
-    const n = YA.intake(w, rng, used);
-    YA._numbers(w);
-    w.firstSel = null;
-    w.lineupA = w.lineupB = w.benchA = w.benchB = null;
-    YA.autoTeams(w, true);
-    YA.relations(w);
-    return n;
-  };
-  // セレクションを開かずに進める（おまかせ進行）：最初にいた高1のまま
-  YA.skipFirstSelection = function (w) {
-    if (!w.firstSel) return;
-    w.firstSel = null;
-    w.scouting = YA.newScouting();
-  };
   const LIMIT = { scout: 3, sel: 3, int: 8 };
+  // 決められる期間（内部昇格は11月・スカウトの声かけは4〜11月・セレクションは1月）
+  const WHEN = { int: ['int', '内部昇格を決めるのは11月です'], scout: ['scout', 'スカウトの声かけは4月〜11月です（返事は12月）'], sel: ['sel', 'セレクションの合否を決めるのは1月です'] };
+  const inWindow = (w, kind) => YA.scoutWindow(w)[WHEN[kind][0]];
   const held = (w, kind) => w.scouting.cands.filter((c) => (c.status === 'signed' || c.status === 'offered') && (!kind || c.kind === kind)).length;
   YA.signedCount = (w, kind) => w.scouting.cands.filter((c) => c.status === 'signed' && (!kind || c.kind === kind)).length;
   YA.signCand = function (w, id) {
     const S = w.scouting;
     const c = S.cands.find((x) => x.id === id);
     if (!c || c.status !== 'open') return { ok: false, msg: 'すでに決まっています' };
+    if (!inWindow(w, c.kind)) return { ok: false, msg: WHEN[c.kind][1] };
     if (held(w) >= 12) return { ok: false, msg: '新入生の枠（12人）がいっぱいです' };
     if (c.foreign) {
       const reg = Object.values(w.players).filter((q) => YA.isForeign(q)).length + S.cands.filter((x) => x.foreign && (x.status === 'signed' || x.status === 'offered')).length;
@@ -181,16 +216,16 @@
     if (held(w, c.kind) >= lim) return { ok: false, msg: `${KIND_NAME[c.kind]}からは${lim}人までです` };
     if (c.kind === 'scout') {
       c.status = 'offered';
-      return { ok: true, msg: `${c.p.name}に声をかけました。` + (w.firstSel ? '返事は、新入生を決めたときに届きます' : '返事は来週') };
+      return { ok: true, msg: `${c.p.name}に声をかけました。返事は12月に届きます` };
     }
     c.status = 'signed';
     return { ok: true, msg: `${c.p.name}の入団が決まりました` };
   };
   YA.unsign = function (w, id) {
     const c = w.scouting.cands.find((x) => x.id === id);
-    if (c && (c.status === 'signed' || c.status === 'offered')) c.status = 'open';
+    if (c && (c.status === 'signed' || c.status === 'offered') && inWindow(w, c.kind)) c.status = 'open';
   };
-  // 声をかけた子の返事（毎週の終わり）
+  // 声をかけた子の返事（12月の初め・28週）
   YA.resolveOffers = function (w) {
     const r = YA.rngOf(w.seed * 43 + w.year * 23 + w.week);
     for (const c of w.scouting.cands) if (c.status === 'offered') {
@@ -206,6 +241,8 @@
       }
     }
   };
+  const RANK_BASE = 5;
+  const RANK_SPAN = 8;
   // 見える情報（見る目と回数で幅が決まる）
   YA.candView = function (w, c) {
     const p = c.p;
@@ -219,7 +256,10 @@
     const room = p.pot - YA.abSum(p);
     const st = clamp(Math.round(room / 45), 0, 5);
     const sw = c.seen >= 3 ? 0 : c.seen >= 1 ? 1 : 2;
-    return { ovr: [Math.round(lo * 10) / 10, Math.round((lo + width) * 10) / 10], stars: [clamp(st - sw, 0, 5), clamp(st + sw, 0, 5)], traits: c.seen >= 1 ? p.traits : null, pers: c.persSeen ? p.pers : null, height: p.height, pos: p.pos, label: YA.POS_LABEL[p.main], name: p.name, kind: c.kind, nation: p.nation && p.nation !== '日本' ? p.nation : null };
+    // 栄冠ナイン風のランク（見えている範囲の真ん中から。S〜E）。見る回数が増えるほど確かになる
+    const score = ((lo + width / 2) - RANK_BASE) / RANK_SPAN * 0.5 + (clamp(st - sw, 0, 5) + clamp(st + sw, 0, 5)) / 2 / 5 * 0.5;
+    const rank = score >= 0.78 ? 'S' : score >= 0.64 ? 'A' : score >= 0.5 ? 'B' : score >= 0.36 ? 'C' : score >= 0.22 ? 'D' : 'E';
+    return { rank, ovr: [Math.round(lo * 10) / 10, Math.round((lo + width) * 10) / 10], stars: [clamp(st - sw, 0, 5), clamp(st + sw, 0, 5)], traits: c.seen >= 1 ? p.traits : null, pers: c.persSeen ? p.pers : null, height: p.height, pos: p.pos, label: YA.POS_LABEL[p.main], name: p.name, kind: c.kind, nation: p.nation && p.nation !== '日本' ? p.nation : null };
   };
 
   // 入団（3月）：決まった子を学年1の選手にする。足りない分は一般入団で埋める
@@ -234,7 +274,7 @@
       p.id = 'p' + ++w.nextId;
       p.team = 'B';
       p.num = 0;
-      p.hist = [{ y: w.year, w: w.firstSel ? 1 : 40, t: KIND_NAME[c.kind] + 'で入団' }];
+      p.hist = [{ y: w.year, w: 40, t: KIND_NAME[c.kind] + 'で入団' }];
       w.players[p.id] = p;
       names.add(p.name);
       n++;
@@ -393,17 +433,27 @@
   // ---------- 毎週の小さな処理 ----------
   YA.weekExtras = function (w) {
     const r = YA.rngOf(w.seed * 53 + w.year * 61 + w.week);
-    const s = YA.SCHED(w.week);
-    if (w.week % 4 === 0 && w.week <= 32 && w.week >= 4) YA.scoutReport(w);
+    // 古い保存データ：最初のセレクションの途中だったものは、その状態を閉じる
+    if (w.firstSel) {
+      w.firstSel = null;
+      w.scouting = YA.newScouting();
+    }
+    // 入団の暦：4月 スカウトが始まる／11月 内部昇格／12月 スカウトの返事／1月 セレクション
+    if (w.week === 1) YA.noteTier(w, 2, `新しい入団の季節です。スカウトは4月〜11月に月${YA.SCOUT_PER_MONTH}回まで（返事は12月）。内部昇格は11月、セレクションは1月に決めます。決めた子は来年の高1になります`);
+    if (w.week === 25) YA.openInternal(w, true);
+    if (w.week === 26) YA.openInternal(w);
+    if (w.week === YA.SCOUT_RESULT_WEEK) {
+      YA.closeInternal(w);
+      YA.resolveOffers(w);
+    }
+    if (w.week === 31) YA.openSelection(w);
+    if (w.week === 35) YA.closeSelection(w);
     // 38週：卒業する上位の子から、進路の相談が届く
     if (w.week === 38) {
       const sr = Object.values(w.players).filter((p) => p.grade === 3 && YA.ovr(p) >= 10.8).sort((a, b) => YA.ovr(b) - YA.ovr(a)).slice(0, 4);
       w.forced = (w.forced || []).concat(sr.map((p) => ({ id: 'career', pid: p.id, week: w.week, year: w.year })));
     }
-    if (s.t === 'selection') YA.openSelection(w);
     if (YA.rivalWeek) YA.rivalWeek(w);
-    if (s.t === 'junior') YA.openInternal(w, true);
-    if (s.t === 'internal') YA.openInternal(w);
     for (const p of Object.values(w.players)) {
       if (p.away > 0) p.away--;
       if (p.suspend > 0) p.suspend--;
