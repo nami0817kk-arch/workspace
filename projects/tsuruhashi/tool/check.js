@@ -182,6 +182,18 @@ ok(normalize({ v: 3, lt: [null, 'x', 5, -1] }).lt.join(',') === ',,5,', '壊れ�
 S = normalize({ v: 2, depth: 40, genDepth: 41, best: 120, room: { 20: 1 }, roomEver: { 20: 1, 60: 1 }, history: [{ gen: 1, depth: 240 }], mapTo: 120 });
 ok(S.v === 3 && S.depth === 100 && isBed(S.depth) && S.genDepth === 103 && S.best === 300 && S.room[50] && S.roomEver[150] && S.history[0].depth === 600 && S.mapTo === 300, '前の保存（1層40m）の深さを 2.5 倍に直す');
 
+// 起動し直しても保存が読める（2026-11-01：判定が v2 のままで、v3 の保存を捨てて最初からにしていた）
+{ const fn = src.match(/function parseSave\(raw\)\{[^\n]*\}/)[0];
+  const parseSave = new Function('normalize', fn + ';return parseSave;')(normalize);
+  const s3 = fresh(); s3.depth = 123; s3.pick = 7;
+  const back = parseSave(JSON.stringify(s3));
+  ok(back && back.depth === 123 && back.pick === 7, '今の形（v3）の保存を読める');
+  const b2 = parseSave(JSON.stringify({ v: 2, depth: 40 }));
+  ok(b2 && b2.depth === 100, '前の形（v2）の保存も読める');
+  ok(parseSave('{') === null && parseSave(JSON.stringify({ v: 9 })) === null, '壊れた保存・知らない版は読まない');
+  ok(/if \(!pendingAway && !titleOpen\) S\.last = NOW\(\)/.test(src), 'タイトル画面の間は留守の起点を動かさない');
+}
+
 // 掘り下げが止まらない（2026-10-05「掘り下げが全然進まないと萎える」）
 ok(LAYER_LEN === 100 && isBed(100) && !isBed(40) && REBIRTH_DEPTH === 600, '1層は100m、代替わりは600m から');
 ok(Math.abs(baseHp(100) * DK / (HP0 * Math.pow(HP_G, 40)) - 1) < 1e-9, '浅い所の固さは前と同じ（1層ぶんの合計）');
