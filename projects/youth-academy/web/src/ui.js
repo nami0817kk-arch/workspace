@@ -163,7 +163,14 @@
   }
   function persChips(p, all) {
     const keys = Object.keys(p.pers).filter((g) => all || p.pers[g] !== 'ふつう');
-    return keys.map((g) => h('span', { class: 'chip pers' }, p.pers[g]));
+    if (!keys.length) return [h('span', { class: 'chip gray' }, '性格：ふつう')];
+    return keys.map((g) => h('span', { class: 'chip pers', title: YA.PERS_NOTE[p.pers[g]] || '' }, p.pers[g]));
+  }
+  // 性格と、その意味（1行ずつ）
+  function persExplain(p) {
+    const keys = Object.keys(p.pers).filter((g) => p.pers[g] !== 'ふつう');
+    if (!keys.length) return h('div', { class: 'note' }, 'ふつう（目立った癖はない）');
+    return h('div', {}, keys.map((g) => h('div', { class: 'row', style: 'gap:5px;margin-top:2px' }, h('span', { class: 'chip pers' }, p.pers[g]), h('span', { class: 'note' }, YA.PERS_NOTE[p.pers[g]] || ''))));
   }
   // 棒の濃い部分＝いまの値、薄い緑＝次の+1までの進み。右の緑＝今月の伸び、灰＝今年の伸び
   function abBar(name, v, gain, prog, yr) {
@@ -185,12 +192,9 @@
     wrap.append(
       h('div', { class: 'row' }, posChip(p), h('div', { class: 'grow' }, h('div', { class: 'h' }, `${p.num}  ${p.name}`, p.grade ? `  （高${p.grade}）` : ''), h('div', { class: 'sub' }, `${p.height}cm  /  調子 ${p.form > 0 ? '+' : ''}${p.form}  /  自信 ${Math.round(p.conf)}  /  戦術理解 ${Math.round(p.tu == null ? 40 : p.tu)}` + (p.nation && p.nation !== '日本' ? `  /  ${p.nation}` : '')))),
       h('div', { style: 'margin-top:5px' }, h('div', { class: 'note' }, 'ポジションの適性'), aptBlock(p)),
-      h('div', { style: 'margin-top:5px' }, h('div', { class: 'note' }, '性格'), h('div', { class: 'row', style: 'flex-wrap:wrap;gap:3px' }, persChips(p, false))),
+      h('div', { style: 'margin-top:5px' }, h('div', { class: 'note' }, '性格'), persExplain(p)),
       h('div', { style: 'margin-top:5px' }, h('div', { class: 'note' }, '特性'), h('div', { class: 'row', style: 'flex-wrap:wrap;gap:3px' }, p.traits.length ? p.traits.map((x) => h('span', { class: 'chip trait' }, x)) : h('span', { class: 'sub' }, 'なし'))),
     );
-    const notes = [];
-    for (const g of Object.keys(p.pers)) if (YA.PERS_NOTE[p.pers[g]]) notes.push(`${p.pers[g]}：${YA.PERS_NOTE[p.pers[g]]}`);
-    if (notes.length) wrap.append(h('div', { class: 'note', style: 'margin-top:4px' }, notes.join(' / ')));
     const list = opts.all ? (isGK ? YA.AB_GK.concat(['フィールド']) : YA.AB_FIELD) : top.slice(0, 8).map((x) => x[0]);
     if (opts.all) {
       const groups = isGK ? [['GK', YA.AB_GK]] : [['技術', YA.AB_TECH], ['頭', YA.AB_MENTAL], ['体', YA.AB_PHYS]];
@@ -680,8 +684,8 @@
       const aptv = p15 && p.apt ? p.apt[p15] : null;
       const tired = Math.round(p.fat || 0);
       return h('button', { class: 'pitem sq' + (on ? ' on' : ''), style: compat ? '' : 'opacity:.3', onclick: () => handlePick(x) },
-        posChip(p), YA.faceEl(app.w, p, 24), h('span', { class: 'num' }, p.num), h('span', { class: 'nm grow', style: 'overflow:hidden;text-overflow:ellipsis;white-space:nowrap' }, surname(p)), gtag(p),
-        aptv != null ? h('span', { class: 'chip ' + (aptv >= 14 ? 'trait' : 'gray'), style: 'font-size:9.5px' }, '適' + YA.aptGrade(aptv)) : null,
+        posChip(p), h('span', { class: 'num' }, p.num), h('span', { class: 'nm grow', style: 'overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:2.6em' }, surname(p)), gtag(p),
+        aptv != null ? h('span', { class: 'chip ' + (aptv >= 14 ? 'trait' : 'gray'), style: 'font-size:9.5px' }, YA.aptGrade(aptv)) : null,
         h('b', { style: 'width:26px;text-align:right' }, YA.ovr(p).toFixed(1)),
         p.inj > 0 ? h('span', { class: 'fit bad' }, '怪') : h('div', { class: 'bar stam', style: 'width:22px' }, h('i', { style: `width:${100 - tired}%;background:${tired > 60 ? '#d63a3a' : tired > 40 ? '#f0a020' : '#1a9d57'}` })));
     }

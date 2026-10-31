@@ -452,6 +452,9 @@
   // ---------- 毎週の小さな処理 ----------
   YA.weekExtras = function (w) {
     const r = YA.rngOf(w.seed * 53 + w.year * 61 + w.week);
+    // 古い保存データ：性格は2つまでに減らす
+    for (const p of Object.values(w.players)) YA.trimPers(p);
+    if (w.scouting) for (const c of w.scouting.cands) YA.trimPers(c.p);
     // 古い保存データ：最初のセレクションの途中だったものは、その状態を閉じる
     if (w.firstSel) {
       w.firstSel = null;

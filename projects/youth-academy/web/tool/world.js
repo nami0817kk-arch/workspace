@@ -264,7 +264,10 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   const grad = YA.endWeek(wf);
   const g1 = Object.values(wf.players).filter((p) => p.grade === 1);
   ok(g1.length === 12 && Object.keys(wf.players).length === 36, '3月に高1が12人 ' + g1.length);
-  ok(names.every((nm) => g1.some((p) => p.name === nm)), '決めた子が高1に入る');
+  // 決めた子にGKがいなくて12人そろっているときは、1人外して一般入団のGKを入れる決まり（scout.js の intake）
+  const signedGK = wf.scouting.cands.length >= 0 && names.length >= 12 && !g1.some((p) => p.pos === 'GK' && names.indexOf(p.name) >= 0);
+  const inN = names.filter((nm) => g1.some((p) => p.name === nm)).length;
+  ok(inN === names.length || (signedGK && inN === names.length - 1), '決めた子が高1に入る ' + inN + '/' + names.length);
   const carried = wf.scouting.cands.filter((c) => nxIds.indexOf(c.id) >= 0);
   ok(carried.length === nxIds.length && carried.every((c) => !c.next && c.status === 'open'), '冬に会った子は翌年の候補に持ち越す');
   ok(YA.signCand(wf, carried[0].id).ok, '4月になったら声をかけられる');

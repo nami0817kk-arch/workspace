@@ -109,6 +109,7 @@
       const ent = Object.entries(PERS_W[g]);
       p.pers[g] = rng.weighted(ent, (e) => e[1])[0];
     }
+    YA.trimPers(p, rng);
     // 特性：能力に合うものを1〜2個（高学年ほど持っている）
     const pool = (pos === 'GK' ? GK_TRAITS : FIELD_TRAITS).filter((t) => t in YA.TRAIT_AFF);
     const nt = grade === 1 ? rng.int(0, 1) : grade === 2 ? rng.int(0, 2) : rng.int(1, 2);

@@ -54,6 +54,36 @@
     構ってほしい: '褒められると伸びる',
     目立ちたがり: '見せ場でシュートを選ぶ',
     慎重: '大事な場面で無理をしない',
+    完璧主義: '叱られると落ち込みやすいが、練習はていねい',
+    楽天家: '落ち込みにくい',
+    安定型: '調子の波が小さい',
+    世話好き: '後輩の面倒を見る（後輩の頭が伸びる）',
+    仲間思い: 'チームの和を大事にする',
+    お調子者: '乗せると伸び、気がゆるみやすい',
+    一匹狼: '一人で黙々とやる',
+    人見知り: 'チームに馴染むまで時間がかかる',
+    寡黙: '口数は少ないが、やることはやる',
+    真面目: '練習で手を抜かない',
+    勉強家: '戦術の理解が早い',
+    練習嫌い: '練習で手を抜くことがある',
+    野心家: '上を目指す。出番がないと不満が溜まりやすい',
+    クラブ愛: 'クラブを離れたがらない',
+    家族思い: '家庭のことで気持ちが揺れやすい',
+    寂しがり: 'ホームシックになりやすい',
+  };
+  // 性格は1人2つまで（決定42を簡単にした）。それ以外は「ふつう」。試合や出来事に効く性格を先に残す
+  YA.PERS_MAX = 2;
+  YA.trimPers = function (p, rng) {
+    if (!p || !p.pers) return;
+    const on = Object.keys(p.pers).filter((g) => p.pers[g] !== 'ふつう');
+    if (on.length <= YA.PERS_MAX) return;
+    let keep;
+    if (rng) {
+      keep = on.slice();
+      for (let i = keep.length - 1; i > 0; i--) { const j = Math.floor(rng() * (i + 1)); [keep[i], keep[j]] = [keep[j], keep[i]]; }
+      keep = keep.slice(0, rng() < 0.3 ? 1 : YA.PERS_MAX);
+    } else keep = on.slice().sort((a, b) => (YA.PERS_NOTE[p.pers[b]] && /力|指示|奮起|伸び/.test(YA.PERS_NOTE[p.pers[b]]) ? 1 : 0) - (YA.PERS_NOTE[p.pers[a]] && /力|指示|奮起|伸び/.test(YA.PERS_NOTE[p.pers[a]]) ? 1 : 0)).slice(0, YA.PERS_MAX);
+    for (const g of on) if (keep.indexOf(g) < 0) p.pers[g] = 'ふつう';
   };
 
   // ---------- ポジション15個（決定81）と、ポジションごとの役割（決定37・81）----------
