@@ -1593,9 +1593,14 @@ class CareerController extends ChangeNotifier {
       _state == null ? salary : _career.takeHome(_state!, salary);
 
   /// シーズン終了時の処理（大陸カップの結果を確定させる）。
+  ///
+  /// **1シーズンに1回だけ。** 季末の画面は開くたびにここを呼ぶので、
+  /// 済ませた季は何もしない（保存した結果をそのまま見せる）。
+  /// 記事も二度は出さない。
   Future<void> finishSeason() async {
     final state = _state;
     if (state == null || !state.seasonFinished) return;
+    if (state.seasonEndResolved) return;
     _career.resolveSeasonEnd(state);
     // 口にした約束の結末を、記事として残す。
     if (state.promise != null &&

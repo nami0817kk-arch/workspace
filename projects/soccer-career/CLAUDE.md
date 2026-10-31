@@ -3498,6 +3498,13 @@ lib/
     `initState` で `finishSeason()` を済ませているので**入り直すと大陸カップの結果が
     二度確定する**。結果が出てからは戻れる。`maybePop` は PopScope が止めたときも
     true を返すので、テストは画面が残っているかで見る。
+    - **⚠ 戻るを止めても、アプリが落ちて起動し直すと同じことが起きていた**
+      （2026-11-01）。季末の画面で契約・引退を選ぶ前に落ちると、開き直した
+      `initState` がもう一度 `finishSeason()` を呼び、世界大会を引き直して
+      代表キャップを二重に足していた。**季末処理は1シーズン1回だけ**
+      （`CareerState.seasonEndResolved`、保存に乗る・既定 false・翌季の状態で
+      false に戻る）。2回目以降は保存した結果をそのまま見せ、記事も出さない。
+      `test/season_end_once_test.dart` が見張る。
   - **タブのスクロール位置を残す**（各タブの `ListView` に `PageStorageKey`）。
     `TabBarView` は画面外のタブを捨てるので、育成タブで下まで見て試合タブへ戻り、
     また育成へ行くと先頭に戻されていた。**鍵を付けたら `ExpansionTile` が落ちた**——
@@ -3692,6 +3699,12 @@ lib/
   どのキャリアを遊んでいるかとは関係がない。引き継ぎコードにも載せない
   （他人の端末へ購入が移ってしまう）。
 - **復元の導線は iOS の審査要件。** 出していないと弾かれる。
+- **復元の対象が無いときは「復元できる購入はありませんでした」**
+  （`PurchaseOutcome.nothingToRestore` / 2026-11-01）。StoreKit 2 は対象が
+  無いと空のリストを1回流すだけなので、以前は20秒待ってから
+  「ストアに繋がりませんでした」と出していた。復元の呼び出しが返ってから
+  3秒（`restoreGrace`）待って何も来なければ対象なし。届き始めていれば
+  保存を待つ。呼び出しが20秒返らなければ「繋がらない」。`test/restore_test.dart`。
 - **Bundle ID は `com.namiki.soccercareer`**（2026-09-26、`soccer-manager` の
   `com.namiki.soccermanager` に揃えた。雛形が作った `dev.namikk.soccerCareer`
   のままだった）。**App Store に登録したあとは変えられない。**
