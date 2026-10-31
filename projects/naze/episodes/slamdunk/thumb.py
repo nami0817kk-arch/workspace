@@ -1,4 +1,4 @@
-"""スラムダンクの本編のサムネイル(1280×720)。作品の絵は使わない。下地は Gemini の絵(assets/thumb_gemini4.jpg: 1990年代の少年漫画風タッチで描いたシュートの場面（名前のない選手。作中の絵は使っていない）)。python episodes/slamdunk/thumb.py"""
+"""スラムダンクの本編のサムネイル(1280×720)。作品の絵は使わない。下地は Gemini の絵(assets/thumb_gemini5.jpg: 1990年代の少年漫画風タッチで描いたシュートの場面（名前のない選手。作中の絵は使っていない）)。python episodes/slamdunk/thumb.py"""
 import os
 import sys
 from pathlib import Path
@@ -17,7 +17,7 @@ W, H = 2560, 1440
 NAVY, YEL, WHITE = (10, 10, 10), (255, 225, 0), (255, 255, 255)
 RED, CYAN = (255, 60, 60), (90, 230, 255)
 
-src = Image.open(HERE / "assets" / "thumb_gemini4.jpg").convert("RGB")
+src = Image.open(HERE / "assets" / "thumb_gemini5.jpg").convert("RGB")
 m = int(src.width * 0.012)
 src = src.crop((m, int(m * 0.9), src.width - m, src.height - int(m * 0.9)))  # 白い縁を落とす
 s = max(W / src.width, H / src.height)
