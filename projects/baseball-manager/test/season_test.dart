@@ -122,7 +122,7 @@ void main() {
     });
 
     test('投手の指標を、式どおりに出す', () {
-      // 180回(540アウト)、被安打150、与四球50、奪三振200、被本塁打20
+      // 180回(540アウト)、被安打150(本塁打を除く)+被本塁打20 = 画面の被安打170、与四球50、奪三振200
       const p = Line(
         faced: 740,
         outs: 540,
@@ -134,12 +134,13 @@ void main() {
         losses: 6,
         starts: 28,
       );
-      expect(p.whip, closeTo((50 + 150) / 180, 1e-9));
+      expect(p.totalHitsAllowed, 170);
+      expect(p.whip, closeTo((50 + 170) / 180, 1e-9));
       expect(p.strikeoutsPer9, closeTo(200 * 9 / 180, 1e-9));
       expect(p.walksPer9, closeTo(50 * 9 / 180, 1e-9));
       expect(p.homeRunsPer9, closeTo(20 * 9 / 180, 1e-9));
       expect(p.strikeoutPerWalk, closeTo(4.0, 1e-9));
-      expect(p.battingAverageAgainst, closeTo(150 / 690, 1e-9));
+      expect(p.battingAverageAgainst, closeTo(170 / 690, 1e-9));
       expect(p.winRate, closeTo(0.7, 1e-9));
     });
 

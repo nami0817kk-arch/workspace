@@ -196,7 +196,7 @@ String describeGame(Line g) {
         '${g.rbi > 0 ? ' ${g.rbi}打点' : ''}');
   }
   if (g.faced > 0) {
-    parts.add('${g.inningsText}回 被安打${g.totalHitsAllowed}奪三振${g.strikeouts}');
+    parts.add('${g.inningsText}回 被安打${g.totalHitsAllowed} 奪三振${g.strikeouts}');
   }
   return parts.join(' / ');
 }
