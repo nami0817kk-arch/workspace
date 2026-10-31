@@ -181,7 +181,17 @@ async function clearEvents() {
     await sleep(10);
   }
   // 編成（FM風）：先発・ベンチ・控え外を、タップ→タップで入れ替える
-  btn('編成').click();
+  [...d.querySelectorAll('.tabs button')].find((b) => b.textContent.trim() === '編成').click();
+  // おまかせ編成：押すと11人がそろい、適性の合わない先発が減る
+  {
+    btn('おまかせ編成').click();
+    await sleep(10);
+    const lu = A.w.lineupA;
+    ok(lu.length === 11 && new Set(lu.map((s) => s.pid)).size === 11 && A.w.players[lu[0].pid].pos === 'GK', 'おまかせ編成で11人とGKがそろう');
+    const off = lu.filter((s, i) => A.w.players[s.pid].apt[d.defaultView.YA.pos15OfSlot(s, i)] < 14).length;
+    ok(off <= 2, 'おまかせ編成では、適性の合わない先発がほとんどいない ' + off);
+    [...d.querySelectorAll('.tabs button')].find((b) => b.textContent.trim() === '編成').click();
+  }
   ok(txt().includes('ベンチ（9人）') && txt().includes('控え外') && d.querySelectorAll('.pitem.sq').length >= 9, '編成の画面');
   {
     const names = () => [...d.querySelectorAll('.pitem.sq')].slice(0, 9).map((b) => b.textContent);

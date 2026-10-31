@@ -215,47 +215,86 @@
     return hv;
   };
   const clampN = (v, a, b) => Math.max(a, Math.min(b, v));
-  YA.aptOf = function (p, pos15) {
-    const isGK = p.pos === 'GK' || p.main === 'GK';
-    if (isGK !== (pos15 === 'GK')) return 1;
+  // ポジションの地図（左右0〜1・深さ0〜1）。近いポジションほど、こなしやすい
+  const SPOT = { CB: [0.5, 0.15], LB: [0.1, 0.2], RB: [0.9, 0.2], LWB: [0.1, 0.38], RWB: [0.9, 0.38], DM: [0.5, 0.35], CM: [0.5, 0.52], LM: [0.12, 0.56], RM: [0.88, 0.56], AM: [0.5, 0.68], LW: [0.12, 0.8], RW: [0.88, 0.8], SS: [0.5, 0.8], ST: [0.5, 0.92] };
+  YA.posDist = (a, b) => (SPOT[a] && SPOT[b] ? Math.hypot((SPOT[a][0] - SPOT[b][0]) * 0.5, SPOT[a][1] - SPOT[b][1]) : 1);
+  // 能力から見た、その位置への合い方（能力の平均）
+  function abFit(p, pos15) {
     const keys = YA.POS_ABS15[pos15];
     let v = keys.reduce((s, n) => s + (p.ab[n] || 1), 0) / keys.length;
     if (pos15 === 'CB' || pos15 === 'ST') v += (p.height - 178) * 0.12;
     if (pos15 === 'LW' || pos15 === 'RW' || pos15 === 'LWB' || pos15 === 'RWB') v += ((p.ab['スピード'] || 8) - 10) * 0.1;
+    return v;
+  }
+  // 適性（1〜20）：本当に向いているポジション（p.best）が18〜20、こなせるポジション（p.subs）が15〜17、
+  // 近いポジションは12〜16、遠いポジションは一桁。能力の合い方で少し上下する
+  YA.aptOf = function (p, pos15) {
+    const isGK = p.pos === 'GK' || p.main === 'GK';
+    if (isGK !== (pos15 === 'GK')) return 1;
+    if (pos15 === 'GK') return 19;
+    const best = p.best && p.best !== 'GK' ? p.best : p.main;
+    if (!best || !SPOT[best]) return 10;
+    const bias = ((YA.hash(p.id + pos15) % 100) / 100 - 0.5) * 1.2;
+    let v = 19.5 - 26 * YA.posDist(best, pos15);
+    if (p.subs && p.subs.indexOf(pos15) >= 0) v = Math.max(v, 15.5 + (YA.hash(p.name + pos15) % 20) / 10);
+    v += clampN((abFit(p, pos15) - abFit(p, best)) * 0.4, -1.5, 1.5) + bias;
     // 利き足と左右の相性
     const side = YA.SIDE[pos15];
-    if (side && p.foot && p.foot !== 'B' && (p.foot === 'L') !== (side === 'L') && pos15.indexOf('W') < 0) v -= (12 - (p.ab['逆足の精度'] || 8)) * 0.05;
-    const bias = ((YA.hash(p.id + pos15) % 100) / 100 - 0.5) * 1.6;
-    return Math.round(clampN(v + bias, 1, 20) * 10) / 10;
+    if (side && p.foot && p.foot !== 'B' && (p.foot === 'L') !== (side === 'L') && pos15.indexOf('W') < 0) v -= (12 - (p.ab['逆足の精度'] || 8)) * 0.15;
+    if (pos15 === best) v = Math.max(v, 18.5);
+    return Math.round(clampN(v, 1, 20) * 10) / 10;
   };
-  YA.refreshApt = function (p) {
-    p.apt = p.apt || {};
-    let best = null;
-    let bv = -1;
-    for (const pos of YA.POS15) {
-      p.apt[pos] = YA.aptOf(p, pos);
-      if (p.apt[pos] > bv) { bv = p.apt[pos]; best = pos; }
+  // 隣のポジション（登録のずれ・こなせるポジションの候補）
+  const NEAR = { CB: ['DM', 'LB', 'RB'], LB: ['LWB', 'CB', 'LM'], RB: ['RWB', 'CB', 'RM'], LWB: ['LB', 'LM'], RWB: ['RB', 'RM'], DM: ['CM', 'CB'], CM: ['DM', 'AM'], LM: ['LW', 'LWB', 'CM'], RM: ['RW', 'RWB', 'CM'], AM: ['CM', 'SS'], LW: ['LM', 'AM', 'ST'], RW: ['RM', 'AM', 'ST'], SS: ['AM', 'ST'], ST: ['SS', 'LW', 'RW'] };
+  YA.NEAR_POS = NEAR;
+  // こなせるポジション（1〜2個）を決める。古い保存データ（p.subs がない）も、ここで本職を登録に揃えて作り直す
+  function ensureSubs(p, rng) {
+    if (p.pos === 'GK' || p.main === 'GK') {
+      p.best = 'GK';
+      p.subs = [];
+      return;
     }
-    p.best = best;
+    if (p.subs) return;
+    if (!p.best || p.best === 'GK' || !SPOT[p.best] || YA.posDist(p.best, p.main) > 0.25) p.best = p.main;
+    const r = rng || (() => (YA.hash(p.name + 'subs') % 1000) / 1000);
+    const near = NEAR[p.best].slice();
+    const n = r() < 0.55 ? 2 : 1;
+    const subs = [];
+    if (p.main !== p.best) subs.push(p.main); // 登録しているポジションは、こなせる
+    while (subs.length < n && near.length) {
+      const k = Math.floor(r() * near.length) % near.length;
+      const q = near.splice(k, 1)[0];
+      if (subs.indexOf(q) < 0) subs.push(q);
+    }
+    p.subs = subs;
+  }
+  YA.refreshApt = function (p) {
+    ensureSubs(p);
+    p.apt = p.apt || {};
+    for (const pos of YA.POS15) p.apt[pos] = YA.aptOf(p, pos);
   };
   // 選手に、適性・登録ポジション・利き足を持たせる
-  YA.initPos = function (p, rng, main) {
+  YA.initPos = function (p, rng, main, best) {
     p.foot = p.foot || (rng() < 0.72 ? 'R' : rng() < 0.78 ? 'L' : 'B');
     p.fam = p.fam || {};
     const isGK = p.pos === 'GK';
-    p.main = isGK ? 'GK' : main || null;
-    YA.refreshApt(p);
-    if (!p.main) {
-      // 登録は本当の適性とは限らない（3割は隣のポジションで登録されている）
-      p.main = p.best;
-      if (!isGK && rng() < 0.3) {
-        const near = { CB: ['DM', 'LB'], LB: ['LWB', 'CB'], RB: ['RWB', 'CB'], LWB: ['LB', 'LM'], RWB: ['RB', 'RM'], DM: ['CM', 'CB'], CM: ['DM', 'AM'], LM: ['LW', 'CM'], RM: ['RW', 'CM'], AM: ['CM', 'SS'], LW: ['LM', 'AM'], RW: ['RM', 'AM'], SS: ['AM', 'ST'], ST: ['SS', 'LW'] }[p.best];
-        if (near) p.main = near[rng.int(0, near.length - 1)];
-      }
+    if (isGK) p.main = 'GK';
+    else {
+      // 登録は、指定があればそれ。なければ能力にいちばん合うポジション
+      p.main = main && main !== 'GK' ? main : YA.POS15.filter((q) => q !== 'GK').sort((a, b) => abFit(p, b) - abFit(p, a))[0];
+      // 本当に向いているポジション：指定があればそれ（genPlayer が能力ごと決める）。指定も登録もなければ、3割は隣のポジション
+      p.best = best && best !== 'GK' ? best : main ? p.main : rng() < 0.3 ? NEAR[p.main][rng.int(0, NEAR[p.main].length - 1)] : p.main;
     }
+    p.subs = null;
+    ensureSubs(p, rng);
+    YA.refreshApt(p);
     p.pos = YA.GROUP[p.main];
     p.fam[p.main] = 14;
   };
+  // 適性の段階：◎ 本職（17以上）・○ こなせる（14以上）・△ 不慣れ（10以上）・× 不向き
+  YA.aptGrade = (v) => (v >= 17 ? '◎' : v >= 14 ? '○' : v >= 10 ? '△' : '×');
+  // こなせるポジション（○以上）を、適性の高い順に
+  YA.goodPositions = (p) => (p.pos === 'GK' ? ['GK'] : YA.POS15.filter((q) => q !== 'GK' && p.apt[q] >= 14).sort((a, b) => p.apt[b] - p.apt[a]));
   // 置いた場所での力の落ち方（0〜）。向いていない場所・逆足だと落ち、慣れると和らぐ。向いている場所に置くと少し上がる
   YA.slotPenalty = function (p, pos15) {
     if (!p.apt) return 0;
@@ -372,7 +411,7 @@
       yellow: 0,
       st: { goals: 0, assists: 0, shots: 0, rating: 6.0, minutes: 0, saves: 0 },
     };
-    YA.initPos(p, rng, d.main || null);
+    YA.initPos(p, rng, d.main || null, d.best || null);
     return p;
   }
   YA.mkPlayer = mkPlayer;

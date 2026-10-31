@@ -11,14 +11,19 @@
   // 適性の見え方：確かめていないうちは幅だけ（決定10）。向いている位置に気づいたら正確に出る
   function aptText(p, pos15) {
     const v = p.apt[pos15];
-    if (p.bestKnown || pos15 === p.main) return String(Math.round(v));
+    if (p.bestKnown || pos15 === p.main || (p.subs && p.subs.indexOf(pos15) >= 0)) return YA.aptGrade(v) + Math.round(v);
     return Math.max(1, Math.round(v - 2)) + '〜' + Math.min(20, Math.round(v + 2));
+  }
+  // こなせるポジション（○以上）の札：登録・こなせる・（気づいていれば）本当に向いている
+  function goodPosRow(p) {
+    const list = YA.goodPositions(p).filter((q) => q === p.main || (p.subs && p.subs.indexOf(q) >= 0) || (p.bestKnown && q === p.best));
+    if (list.indexOf(p.main) < 0) list.unshift(p.main);
+    return h('span', { class: 'row', style: 'gap:3px;flex-wrap:wrap' }, list.map((q) => h('span', { class: 'aptchip' + (q === p.main ? ' cur' : ''), style: 'padding:1px 6px;font-size:10.5px' }, YA.POS_LABEL[q], h('b', {}, YA.aptGrade(p.apt[q])))));
   }
   function aptBlock(p) {
     if (p.pos === 'GK') return h('div', { class: 'note' }, 'GK（ほかのポジションの適性は、この版では見ません）');
-    const list = YA.POS15.filter((q) => q !== 'GK').sort((a, b) => p.apt[b] - p.apt[a]);
-    const top = list.slice(0, 3);
-    if (top.indexOf(p.main) < 0) top.push(p.main);
+    const top = [p.main].concat((p.subs || []).filter((q) => q !== p.main));
+    if (p.bestKnown && top.indexOf(p.best) < 0) top.push(p.best);
     const row = h('div', { class: 'aptrow' }, top.map((q) => h('span', { class: 'aptchip' + (q === p.main ? ' cur' : '') + (p.bestKnown && q === p.best ? ' best' : '') }, YA.POS_LABEL[q], h('b', {}, aptText(p, q)), q === p.main ? h('span', { class: 'sub' }, '登録') : null)));
     const more = h('button', { class: 'btn sm', onclick: () => { if (YA._v) YA._v.modal((close) => aptModal(p, close)); } }, '全ポジション');
     return h('div', {}, h('div', { class: 'row', style: 'gap:5px;flex-wrap:wrap' }, row, more), h('div', { class: 'note', style: 'margin-top:2px' }, `利き足：${p.foot === 'R' ? '右' : p.foot === 'L' ? '左' : '両足'}（逆足の精度 ${p.ab['逆足の精度']}）` + (p.bestKnown ? `　向いているポジション：${YA.POS_LABEL[p.best]}` : '　本当に向いているポジションは、まだ分かっていません')));
@@ -27,10 +32,10 @@
     const g = h('div', { style: 'display:grid;grid-template-columns:repeat(5,1fr);gap:4px' }, YA.POS15.filter((q) => q !== 'GK').map((q) => h('div', { class: 'aptchip' + (q === p.main ? ' cur' : '') + (p.bestKnown && q === p.best ? ' best' : ''), style: 'justify-content:space-between;padding:6px 8px' }, YA.POS_LABEL[q], h('b', {}, aptText(p, q)))));
     return h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(620px,96%);padding:12px;gap:7px' },
       h('div', { class: 'h' }, `${p.name} のポジション適性（1〜20）`), g,
-      h('div', { class: 'note' }, '「〜」の幅は、まだ確かめていないという意味です。見る目の高い指導者や、試合での気づきで、本当に向いているポジションが分かってきます。向いていないポジションにも置けますが、力が出にくく、慣れるまで数か月かかります。'),
+      h('div', { class: 'note' }, '◎ 本職（17以上）・○ こなせる（14以上）・△ 不慣れ（10以上）・× 不向き。「〜」の幅は、まだ確かめていないという意味です。見る目の高い指導者や、試合での気づきで、本当に向いているポジションが分かってきます。向いていないポジションにも置けますが、力が出にくく、慣れるまで数か月かかります。'),
       h('button', { class: 'btn pri', onclick: close }, '閉じる'));
   }
-  YA._apt = { posChip, aptBlock };
+  YA._apt = { posChip, aptBlock, goodPosRow };
 
   // ---------- 小さな道具 ----------
   function h(tag, attrs, ...kids) {
@@ -197,9 +202,13 @@
     for (const [y0, dir] of [[0, 1], [L, -1]]) {
       svg.append(s('rect', Object.assign({ x: 13.84, y: dir > 0 ? y0 : y0 - 16.5, width: 40.32, height: 16.5 }, ln)), s('rect', Object.assign({ x: 24.84, y: dir > 0 ? y0 : y0 - 5.5, width: 18.32, height: 5.5 }, ln)));
     }
-    // 升目の点
+    // 置ける立ち位置（定番の布陣の位置を集めたもの）。動かしている間だけ、ポジション名つきで見える
     const grid = s('g', { opacity: 0.0, id: 'gridDots' });
-    for (let gx = 0; gx <= W; gx += GX) for (let gy = 0; gy <= L; gy += GY) grid.append(s('circle', { cx: gx, cy: gy, r: 0.35, fill: '#fff' }));
+    for (const sp of spots()) {
+      const gx = sp.x * W;
+      const gy = L - (4 + sp.y * 78);
+      grid.append(s('circle', { cx: gx, cy: gy, r: 3.2, fill: 'rgba(255,255,255,.18)', stroke: '#fff', 'stroke-width': 0.35, 'stroke-dasharray': '1 0.8' }), s('text', { x: gx, y: gy + 1.1, 'text-anchor': 'middle', fill: '#fff', 'font-size': 2.6, 'font-weight': 800 }, YA.POS_LABEL[YA.pos15OfPoint(sp.x, sp.y)]));
+    }
     svg.append(grid);
     const layer = s('g', {});
     svg.append(layer);
@@ -238,19 +247,26 @@
           pt.x = ev.clientX;
           pt.y = ev.clientY;
           const q = pt.matrixTransform(svg.getScreenCTM().inverse());
-          const gx = clamp(Math.round(q.x / GX) * GX, 4, W - 4);
-          const gy = clamp(Math.round((L - q.y) / GY) * GY, 5, L - 8);
-          drag.gx = gx;
-          drag.gy = gy;
+          // いちばん近い立ち位置に吸い付く
+          let best = null;
+          let bd = 1e9;
+          for (const sp of spots()) {
+            const d = Math.hypot(sp.x * W - q.x, 4 + sp.y * 78 - (L - q.y));
+            if (d < bd) { bd = d; best = sp; }
+          }
+          if (!best) return;
+          drag.sp = best;
+          drag.gx = best.x * W;
+          drag.gy = 4 + best.y * 78;
           drag.moved = true;
-          g.setAttribute('transform', `translate(${gx} ${L - gy})`);
+          g.setAttribute('transform', `translate(${drag.gx} ${L - drag.gy})`);
         });
         const up = () => {
           if (!drag || drag.i !== i) return;
           grid.setAttribute('opacity', 0);
-          if (drag.moved && drag.gx != null) {
-            const nx = drag.gx / W;
-            const ny = (drag.gy - 4) / 78;
+          if (drag.moved && drag.sp) {
+            const nx = drag.sp.x;
+            const ny = drag.sp.y;
             const other = t.lineup.findIndex((x, j) => j !== i && Math.abs(x.x - nx) < 0.02 && Math.abs(x.y - ny) < 0.02);
             if (other >= 0) {
               t.lineup[other].x = t.lineup[i].x;
@@ -277,6 +293,67 @@
   }
   function fixRole(t, i) {
     YA.fixSlotRole(t.lineup[i], i);
+  }
+  // 置ける立ち位置：定番の布陣の位置（GKを除く）を重ならないよう集めたもの
+  let SPOTS = null;
+  function spots() {
+    if (SPOTS) return SPOTS;
+    SPOTS = [];
+    for (const fm of Object.values(YA.FORMATIONS)) for (const sp of fm) {
+      if (sp.y < 0.08) continue;
+      if (!SPOTS.some((q) => Math.abs(q.x - sp.x) < 0.06 && Math.abs(q.y - sp.y) < 0.05)) SPOTS.push({ x: sp.x, y: sp.y });
+    }
+    return SPOTS;
+  }
+  // その枠で、いちばんハマる役割を選ぶ
+  function bestRoles(t) {
+    t.lineup.forEach((sl, i) => {
+      const p15 = YA.pos15OfSlot(sl, i);
+      let best = sl.role;
+      let bv = -1e9;
+      for (const r of YA.ROLES15[p15]) {
+        const sr = sl.role;
+        const sd = sl.duty;
+        sl.role = r;
+        sl.duty = YA.defaultDuty(r);
+        const v = YA.Match.prototype.roleFit.call(null, t, i);
+        sl.role = sr;
+        sl.duty = sd;
+        if (v > bv) { bv = v; best = r; }
+      }
+      if (best !== sl.role) YA.setRole(sl, i, best);
+    });
+  }
+  // おまかせ編成：いまの布陣の枠に、Aの動ける選手から「力×その位置の適性」で11人を選び、役割も合わせる
+  function autoSquad(t) {
+    const ok = (p) => p.inj <= 0 && !(p.away > 0) && !(p.suspend > 0);
+    const fm = t.lineup.map((s2) => ({ x: s2.x, y: s2.y }));
+    const w = app.w;
+    const all = w ? Object.values(w.players).filter((p) => p.team === 'A') : Object.values(t.players);
+    const pool = all.filter(ok);
+    if (!pool.some((p) => p.pos === 'GK')) {
+      const g = all.filter((p) => p.pos === 'GK')[0];
+      if (g) pool.push(g);
+    }
+    const lineup = YA.fillSlots(fm, pool);
+    const bench = all.filter((p) => !lineup.some((l) => l && l.pid === p.id)).sort((a, b) => ok(b) - ok(a) || YA.ovr(b) - YA.ovr(a)).map((p) => p.id).slice(0, 9);
+    if (w) {
+      persistTeam(t);
+      w.lineupA = lineup;
+      w.benchA = bench;
+      const tmp = YA.teamFromWorld(w, 'A');
+      bestRoles(tmp);
+      tmp.lineup.forEach((sl, i) => { w.lineupA[i].role = sl.role; w.lineupA[i].duty = sl.duty; });
+      YA.saveWorld();
+    } else {
+      t.lineup = lineup;
+      t.bench = bench;
+      bestRoles(t);
+    }
+  }
+  // 適性の合っていない先発（○未満）
+  function offPos(t) {
+    return t.lineup.map((sl, i) => ({ i, p: t.players[sl.pid], p15: YA.pos15OfSlot(sl, i) })).filter((x) => x.p && x.p.apt && x.p.apt[x.p15] < 14);
   }
 
   // 定番の形を当てはめる。近い選手が近い位置に入る
@@ -330,6 +407,7 @@
     let slotSel = 0;
     function renderFm() {
       fmRow.replaceChildren(
+        h('button', { class: 'btn sm pri', onclick: () => { autoSquad(t); st.pick = null; st.msgs = ['おまかせで11人と役割を決めました（力とポジションの適性から）']; if (app.w) { render(); return; } onChange(); board.redraw(); } }, 'おまかせ編成'),
         ...Object.keys(YA.FORMATIONS).map((n) => h('button', { class: 'btn sm' + (t.formation === n ? ' on' : ''), onclick: () => { applyFormation(t, n); onChange(); board.redraw(); } }, n)),
       );
       const saved = store.get('forms', [null, null, null]);
@@ -587,7 +665,7 @@
       const tired = Math.round(p.fat || 0);
       return h('button', { class: 'pitem sq' + (on ? ' on' : ''), style: compat ? '' : 'opacity:.3', onclick: () => handlePick(x) },
         posChip(p), YA.faceEl(app.w, p, 24), h('span', { class: 'num' }, p.num), h('span', { class: 'nm grow', style: 'overflow:hidden;text-overflow:ellipsis;white-space:nowrap' }, surname(p)), gtag(p),
-        aptv != null ? h('span', { class: 'chip ' + (aptv >= 14 ? 'trait' : 'gray'), style: 'font-size:9.5px' }, '適' + aptv) : null,
+        aptv != null ? h('span', { class: 'chip ' + (aptv >= 14 ? 'trait' : 'gray'), style: 'font-size:9.5px' }, '適' + YA.aptGrade(aptv)) : null,
         h('b', { style: 'width:26px;text-align:right' }, YA.ovr(p).toFixed(1)),
         p.inj > 0 ? h('span', { class: 'fit bad' }, '怪') : h('div', { class: 'bar stam', style: 'width:22px' }, h('i', { style: `width:${100 - tired}%;background:${tired > 60 ? '#d63a3a' : tired > 40 ? '#f0a020' : '#1a9d57'}` })));
     }
@@ -602,7 +680,9 @@
           sl2 ? h('button', { class: 'btn sm', onclick: () => { st.sel = pk.i; st.tab = 'role'; renderTabs(); renderBody(); } }, '役割・任務') : null,
           h('button', { class: 'btn sm', onclick: () => { st.pick = null; renderBody(); board.redraw(); } }, '解除')));
         top.append(h('div', { class: 'note', style: 'margin-top:2px' }, '入れ替える相手（ピッチの選手・ベンチ・控え外）をタップ'));
-      } else top.append(h('div', { class: 'note' }, 'ピッチの先発・ベンチ・控え外の選手を1人タップ → 入れ替える相手をタップ。役割は「役割・任務」から。'));
+      } else top.append(h('div', { class: 'note' }, 'ピッチの先発・ベンチ・控え外の選手を1人タップ → 入れ替える相手をタップ。迷ったら左下の「おまかせ編成」。'));
+      const off = offPos(t);
+      if (off.length) top.append(h('div', { class: 'note', style: 'color:#b02020;margin-top:2px' }, '適性の合っていない先発：' + off.map((x) => `${x.p.num} ${surname(x.p)}（${YA.POS_LABEL[x.p15]}${YA.aptGrade(x.p.apt[x.p15])}・本職${YA.POS_LABEL[x.p.main]}）`).join('、')));
       if (st.msgs.length) top.append(h('div', { class: 'note', style: 'color:var(--ink);margin-top:2px' }, st.msgs[st.msgs.length - 1]));
       body.append(top);
       const bench = t.bench.map((id) => t.players[id]).filter(Boolean);
