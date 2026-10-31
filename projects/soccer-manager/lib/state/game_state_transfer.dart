@@ -13,6 +13,7 @@ extension GameStateTransfer on GameState {
     if (userTeam.players.length >= maxSquadSize) return false;
     if (!_wageBudgetAllowsSigning(player.wage)) return false;
     _save!.budget -= player.marketValue;
+    ContractEngine.applyTransferContract(player);
     userTeam.players.add(player);
     transferMarket.removeWhere((p) => p.id == playerId);
     _notify();
@@ -63,6 +64,7 @@ extension GameStateTransfer on GameState {
       return (attempted: true, accepted: false);
     }
     _save!.budget -= offer;
+    ContractEngine.applyTransferContract(player);
     userTeam.players.add(player);
     transferMarket.removeWhere((p) => p.id == playerId);
     if (offer < player.marketValue) {
@@ -409,6 +411,7 @@ extension GameStateTransfer on GameState {
         playerId: player.id,
       ),
     );
+    ContractEngine.applyTransferContract(player);
     userTeam.players.add(player);
     transferMarket.removeAt(idx);
     _notify();
@@ -464,7 +467,10 @@ extension GameStateTransfer on GameState {
     // ローン中は週俸を6割に軽減していた(signLoanPlayer)ため、完全移籍化に
     // あたって元の水準に戻す。そのままだと恒久的に割引契約のままになる。
     player.wage = (player.wage / 0.6).round().clamp(1, 999);
-    player.contractYearsRemaining = ContractEngine.negotiatedYears(player);
+    // 年数そのものを入れると今シーズンぶんが足りず、例えば32歳以上は1年で
+    // 境界を迎えてその場で退団していた。獲得と同じ考え方で結ぶ。
+    player.contractYearsRemaining = 0;
+    ContractEngine.applyTransferContract(player);
     _notify();
     await _persist();
     return true;
@@ -749,7 +755,10 @@ extension GameStateTransfer on GameState {
     if (_save == null) return false;
     if (!isTransferWindowOpen) return false;
     final team = userTeam;
-    if (team.players.length <= minSquadSize) return false;
+    // 既に貸し出している選手は手元に居ないので数えない。数えると、貸し出しを
+    // 重ねるうちに試合に出せる人数が最低人数を割り込む。
+    final available = team.players.where((p) => !p.isLoanedOut).length;
+    if (available <= minSquadSize) return false;
     final player = team.players.firstWhere((p) => p.id == playerId);
     if (player.isLoan || player.isLoanedOut) return false;
 
@@ -870,6 +879,7 @@ extension GameStateTransfer on GameState {
     if (wasStarter) {
       LineupUtils.autoFill(team);
     }
+    _movePlayerToBuyer(player, offer.buyerClubName);
     _save!.budget += offer.amount;
     _notify();
     await _persist();
@@ -881,6 +891,30 @@ extension GameStateTransfer on GameState {
     _save!.incomingOffers.removeWhere((o) => o.id == offerId);
     _notify();
     await _persist();
+  }
+
+  /// 売った選手を、買ったクラブへ移す。
+  ///
+  /// 以前は自クラブから外すだけで、選手はゲームから消えていた。売った選手が
+  /// 相手のクラブで戦い、対戦で顔を合わせるほうが自然で、相手の戦力も
+  /// 移籍金に見合って上がる。買い手が見つからない(既にリーグを去った等)
+  /// ときは、従来どおりどこにも移さない。
+  void _movePlayerToBuyer(Player player, String buyerClubName) {
+    if (_save == null) return;
+    Team? buyer;
+    for (final t in _save!.allTeams) {
+      if (t.id == _save!.userTeamId || t.name != buyerClubName) continue;
+      buyer = t;
+      break;
+    }
+    // 選手データを持たないクラブ(他ディビジョン)に1人だけ入れると、
+    // 強度がその1人の総合力になってしまう。
+    if (buyer == null || buyer.players.isEmpty) return;
+    player.isTransferListed = false;
+    player.releaseClause = null;
+    player.mentorId = null;
+    ContractEngine.applyTransferContract(player);
+    buyer.players.add(player);
   }
 
   /// 締切の節に入る駆け込みオファー。
@@ -1046,6 +1080,7 @@ extension GameStateTransfer on GameState {
             LineupUtils.autoFill(team);
           }
           _clearPlayerRoleReferences(team, chosen.id);
+          _movePlayerToBuyer(chosen, buyer.name);
           _save!.budget += amount;
           autoSold.add(chosen.name);
         } else {

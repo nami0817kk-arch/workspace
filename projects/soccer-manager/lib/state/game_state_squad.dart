@@ -433,11 +433,14 @@ extension GameStateSquad on GameState {
     final idx = _save!.staffCandidates.indexWhere((s) => s.id == staffId);
     if (idx < 0) return false;
     final hired = _save!.staffCandidates[idx];
+    final previous = _save!.infrastructure.staffFor(hired.role);
 
     // 週俸の総額が給与予算を食い潰さないよう、選手と同じ枠で見る。
-    if (!_wageBudgetAllowsSigning(hired.wage)) return false;
+    // 入れ替えなら前任者の週俸は出ていかなくなるので、差額で見る。
+    if (!_wageBudgetAllowsSigning(hired.wage - (previous?.wage ?? 0))) {
+      return false;
+    }
 
-    final previous = _save!.infrastructure.staffFor(hired.role);
     _save!.infrastructure.staff[hired.role] = hired;
     _save!.staffCandidates.removeAt(idx);
     // 入れ替えで空いた人は候補に戻さない。断った相手が翌週も同じ条件で

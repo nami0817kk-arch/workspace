@@ -99,7 +99,13 @@ class _FundsPackCardState extends State<FundsPackCard> {
     // 加算するのは「このパック」ではなく「預かっているぶん全部」。買った
     // ぶんはストアからの通知で預かりに入るので、ここで直接このパックを
     // 足すと、通知で入ったぶんと二重になる。
-    final granted = await deliverPendingFunds(money, gameState);
+    //
+    // 起動時の見張り(main.dart)が先に移し終えていると、ここでは0が返る。
+    // そのときは買ったパックの額を知らせる(資金には既に入っている)。
+    final delivered = await deliverPendingFunds(money, gameState);
+    final granted = delivered > 0 || outcome != PurchaseOutcome.purchased
+        ? delivered
+        : gameState.purchasedFundsAmount(pack);
 
     final message = switch (outcome) {
       PurchaseOutcome.purchased =>

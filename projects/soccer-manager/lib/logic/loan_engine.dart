@@ -29,8 +29,19 @@ class LoanEngine {
     return (capacity - outstandingDebt).clamp(0, capacity);
   }
 
-  static int weeklyRepaymentFor(int principal, LoanTerm term) =>
-      (principal * (1 + term.interestRatePercent / 100) / term.weeks).round();
+  /// 週の返済額。切り上げで、最低1。
+  ///
+  /// 四捨五入していたため、小さな融資(例えば26週で10万円)では週の返済が
+  /// 0に丸まり、借りたぶんをまるごと返さずに済んでいた。小数の誤差で
+  /// 切り上げが1つ余計に乗らないよう、整数で割る。
+  static int weeklyRepaymentFor(int principal, LoanTerm term) {
+    if (principal <= 0) return 0;
+    final totalHundredths =
+        (principal * (100 + term.interestRatePercent)).round();
+    final perWeekDivisor = 100 * term.weeks;
+    final weekly = (totalHundredths + perWeekDivisor - 1) ~/ perWeekDivisor;
+    return weekly < 1 ? 1 : weekly;
+  }
 
   static int totalRepaymentFor(int principal, LoanTerm term) =>
       weeklyRepaymentFor(principal, term) * term.weeks;

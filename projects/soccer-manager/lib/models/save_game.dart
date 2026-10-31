@@ -9,6 +9,7 @@ import 'incoming_offer.dart';
 import 'installment.dart';
 import 'investment.dart';
 import 'league.dart';
+import 'live_match_progress.dart';
 import 'news_item.dart';
 import 'youth_league.dart';
 import 'player.dart';
@@ -305,6 +306,15 @@ class SaveGame {
   /// シーズン終了時に、この時点からの成長を選手ごとに算出するために使う。
   Map<String, int> seasonStartOverallByPlayerId;
 
+  /// 週の処理(収入・週給・負傷回復・ローン・分割払い・ユース)を済ませた
+  /// 節。自クラブの試合の途中でアプリが終わり、同じ節を始め直すときに、
+  /// 週の処理を二度かけないための印。旧セーブは0(未処理)。
+  int weekProcessedSeason;
+  int weekProcessedMatchday;
+
+  /// 進行中の自クラブのリーグ戦の途中経過。試合中でなければ null。
+  LiveMatchProgress? liveMatchProgress;
+
   SaveGame({
     required this.clubName,
     required this.userTeamId,
@@ -378,6 +388,9 @@ class SaveGame {
     this.consecutiveNegativeBudgetWeeks = 0,
     Map<String, int>? unlockedAchievements,
     Map<String, int>? seasonStartOverallByPlayerId,
+    this.weekProcessedSeason = 0,
+    this.weekProcessedMatchday = 0,
+    this.liveMatchProgress,
   })  : unlockedAchievements = unlockedAchievements ?? {},
         seasonStartOverallByPlayerId = seasonStartOverallByPlayerId ?? {},
         newsLog = newsLog ?? [],
@@ -545,6 +558,9 @@ class SaveGame {
         'consecutiveNegativeBudgetWeeks': consecutiveNegativeBudgetWeeks,
         'unlockedAchievements': unlockedAchievements,
         'seasonStartOverallByPlayerId': seasonStartOverallByPlayerId,
+        'weekProcessedSeason': weekProcessedSeason,
+        'weekProcessedMatchday': weekProcessedMatchday,
+        'liveMatchProgress': liveMatchProgress?.toJson(),
       };
 
   factory SaveGame.fromJson(Map<String, dynamic> json) => SaveGame(
@@ -740,6 +756,12 @@ class SaveGame {
                   (k, v) => MapEntry(k as String, v as int),
                 ) ??
                 {},
+        weekProcessedSeason: json['weekProcessedSeason'] as int? ?? 0,
+        weekProcessedMatchday: json['weekProcessedMatchday'] as int? ?? 0,
+        liveMatchProgress: json['liveMatchProgress'] == null
+            ? null
+            : LiveMatchProgress.fromJson(
+                (json['liveMatchProgress'] as Map).cast<String, dynamic>()),
       );
 
   /// 5部制ピラミッド導入前の旧セーブデータ(`otherDivisionLeagues`キーが

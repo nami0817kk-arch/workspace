@@ -640,13 +640,23 @@ void main() {
     gameState.save!.budget = 100000;
     gameState.save!.wageBudget = 100000;
 
-    // 候補のうち一番良いスカウトを雇う。空席のときの水準は1なので、
-    // それより上の人を雇えば候補数が増える。
-    final best = gameState.staffCandidatesFor(StaffRole.scout)
-        .reduce((a, b) => a.effectiveLevel >= b.effectiveLevel ? a : b);
-    expect(best.effectiveLevel, greaterThan(1),
-        reason: '候補が全員最低水準では、この検証が成り立たない');
-    await gameState.hireStaff(best.id);
+    // 空席のときの水準は1なので、それより上の人を雇えば候補数が増える。
+    // 候補は乱数で作られ、たまたま全員が最低水準だと検証が成り立たない
+    // (実際に落ちていた)。水準の分かっている人を候補に入れて雇う。
+    final best = StaffMember(
+      id: 'test_scout',
+      name: '検証用スカウト',
+      age: 45,
+      role: StaffRole.scout,
+      attributes: const {
+        StaffAttribute.judging: 20,
+        StaffAttribute.motivating: 20,
+      },
+      wage: 10,
+    );
+    expect(best.effectiveLevel, greaterThan(1));
+    gameState.save!.staffCandidates.add(best);
+    expect(await gameState.hireStaff(best.id), isTrue);
 
     expect(gameState.scoutCandidateCount, greaterThan(baseCount));
   });

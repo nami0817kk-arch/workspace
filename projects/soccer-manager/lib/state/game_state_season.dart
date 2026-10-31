@@ -15,12 +15,14 @@ extension GameStateSeason on GameState {
   void _ensureSquadsForActiveTier(List<Team> teams) {
     for (final t in teams) {
       if (t.players.isNotEmpty) continue;
-      final generated = PlayerGenerator.generateSquad(
+      // 保持していた強度に合うスカッドを作る。strengthTier にそのまま
+      // 渡すと出来上がりが1〜2割弱く、再起動のたびに昇降格で入ってくる
+      // クラブが弱くなっていた。壊れたセーブで欠けていた場合に0の
+      // スカッドを作らないよう、移行時と同じ範囲に収める。
+      final generated = PlayerGenerator.generateSquadWithOverall(
         id: t.id,
         name: t.name,
-        // 保持していた強度。壊れたセーブで欠けていた場合に0のスカッドを
-        // 作らないよう、移行時と同じ範囲に収める。
-        strengthTier: (t.retainedOverall ?? 50).clamp(15, 90),
+        targetOverall: (t.retainedOverall ?? 50).clamp(15, 90),
       );
       t.players = generated.players;
       t.retainedOverall = null;
@@ -195,6 +197,8 @@ extension GameStateSeason on GameState {
     final teams = _save!.allTeams;
     final home = teams.firstWhere((t) => t.id == match.homeTeamId);
     final away = teams.firstWhere((t) => t.id == match.awayTeamId);
+    // 相手が別ディビジョンのクラブだと、再起動後は選手を持っていない。
+    _ensureSquadsForActiveTier([home, away]);
     final result = MatchEngine.simulate(
       home: home,
       away: away,
@@ -295,6 +299,9 @@ extension GameStateSeason on GameState {
         away = teamById(cupMatch.awayTeamId);
     }
     if (home == null || away == null) return false;
+    // スーパーカップの相手は別ディビジョンのことがあり、そのクラブは
+    // 再起動後に選手を持っていない(保存しないため)。0人では試合にならない。
+    _ensureSquadsForActiveTier([home, away]);
     final weather = WeatherEngine.roll();
     _liveCupKind = resolvedKind;
     _liveCupHome = home;

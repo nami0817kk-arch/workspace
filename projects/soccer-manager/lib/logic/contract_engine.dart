@@ -141,6 +141,19 @@ class ContractEngine {
     p.appearanceFee = appearanceFeeFor(p);
   }
 
+  /// 移籍で獲得した選手に、新しいクラブとの契約を結ばせる。
+  ///
+  /// 元のクラブでの残り年数のまま引き継いでいたため、残り1年の選手を買うと
+  /// 次のシーズンの切り替わりでその場で退団していた。[renewContract]と同じく
+  /// 今シーズンぶんの1年を足した年数を最低限とし、それより長く残っている
+  /// 契約は縮めない。
+  static void applyTransferContract(Player p) {
+    final minimum = negotiatedYears(p) + 1;
+    if (p.contractYearsRemaining < minimum) {
+      p.contractYearsRemaining = minimum;
+    }
+  }
+
   /// 契約交渉で選手が受け入れる最低週俸(万円)。要求水準が高い性格ほど、
   /// より大きな昇給を求める。
   /// スカッド・ステータス(出場機会の約束)が上の立場ほど、その立場に
