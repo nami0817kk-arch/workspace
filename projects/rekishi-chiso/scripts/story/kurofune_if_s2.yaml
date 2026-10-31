@@ -1,0 +1,147 @@
+# 物語完結型ショート 黒船（もしも）s2（2026-10-31）。本編 scripts/kurofune-if-story.yaml（11/4 12:00 公開、https://youtu.be/QRZZXxHicQ4）から。切り口：ペリーの7年前、1846年のビッドル艦隊（と1845年のマンハッタン号）は浦賀で断られた
+# 形式は genkou_if_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。戦闘・負傷・死の絵なし。
+# 絵は本編の AI 絵（out/story/kurofune-if/main/K01〜K15。人物は描かない）と実在の版画（paintings/sakoku_perry_*）。新しい絵は作らない。
+# 事実カード（dev/output/rekishi-chiso/research/黒船_facts_20261031.yaml）：kurofune-if-14・15・16・20（本編 第1章の言い方のまま）
+# ・計算のやり直し：1853年－1846年＝7年（「ペリーの7年前」）。日数は『日本遠征記』10日・同じ本の別の頁8から10日・1848年の石版画の展示文9日間（本編の stats どおり）。
+#   フォスターの「7月20日に錨、27日に返答」は日数の比べに混ぜない（尺のため外す）。突かれた逸話（17）も尺のため外す。
+# ・マンハッタン号の話は「フォスターが1903年の本に書いた話」と出どころを言う（本編どおり）。
+# 理解テスト4問：
+#   ①誰の話か：ペリーの7年前に浦賀へ来たアメリカの提督ビッドル
+#   ②いつ・どこで何が：1846年7月、2隻で浦賀の沖へ。約400隻の警備船に囲まれ、通商はオランダ以外許されないと返された
+#   ③何が問題か：浦賀にいた日数は記録で割れる（10日・8から10日・9日間）。結末はどれも同じ
+#   ④どうなったか：誰も上陸せず何も得られず帰った。前の年の捕鯨船も追い返されていた。幕府に開く気はなかったのかを問いで閉じる
+title: 黒船｜ペリーの7年前、浦賀で断られたアメリカの艦隊
+yt_title: ペリーの7年前に浦賀へ来たビッドル艦隊　約400隻に囲まれ、断られて帰った
+description: |-
+  ペリーの7年前、アメリカの軍艦は、浦賀に来て、断られて帰っています。
+  1846年7月、提督ビッドルのコロンバス号とヴィンセンス号が、浦賀の沖に入りました。ペリーの公式記録『日本遠征記』によると、日本の警備船は約400隻。通商ができるかを尋ねたビッドルへの返答は、「オランダ以外のどの国とも、通商は許されない」でした。浦賀にいた日数は、10日、8日から10日、9日間と、記録で割れています。それでも結末は同じで、誰も上陸せず、何も得られないまま帰りました。その前の年、1845年には、日本人22人を送り届けた捕鯨船マンハッタン号が、「二度と日本へ来るな」と追い返されています（フォスター、1903年）。
+  幕府は、本当に、開く気がなかったのか。この問いを、史料から掘り下げた本編は、概要欄のリンクからどうぞ。
+hashtags: ['#黒船', '#日本史', '#幕末']
+ai_images: true
+ai_disclosure: この動画の情景の画像の多くは、画像生成AI（Google の Gemini・Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/kurofune-if
+out: kurofune_if_story_s2
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: ビッドル（アメリカの提督）
+  title: "ペリーの7年前、浦賀で《断られた》"
+now:
+  - {at: 1846年7月, text: "1846年7月　浦賀の沖", point: 1}
+  - {at: 1845年, text: "1845年　江戸湾", point: 0}
+timeline:
+  - {label: "1845"}
+  - {label: "1846"}
+cards:
+  - type: table
+    title: 浦賀にいた日数（記録ごと）
+    from: 浦賀にいた日数は
+    until: それでも
+    items:
+      - {at: 浦賀にいた日数は, text: "『日本遠征記』　10日"}
+      - {at: 8日から10日, text: "同じ本の別の頁　8日から10日"}
+      - {at: 9日間, text: "1848年の石版画の展示文　9日間"}
+    text_y: 0.70
+shots:
+  K02:
+    kind: ai
+    file: kurofune-if/main/K02.jpg
+    focus: [0.55, 0.4]
+    move: left
+    must: 沖に2隻の大きな帆船
+  K02b:
+    kind: ai
+    file: kurofune-if/main/K02.jpg
+    focus: [0.75, 0.45]
+    move: in
+    must: 霧の中の2隻目の帆船
+  K03:
+    kind: ai
+    file: kurofune-if/main/K03.jpg
+    focus: [0.65, 0.6]
+    move: right
+    must: 湾にひしめく小さな舟の群れ
+  K05:
+    kind: ai
+    file: kurofune-if/main/K05.jpg
+    focus: [0.5, 0.6]
+    move: in
+    must: 座敷の文机の書状と、沖の帆船
+  Map:
+    kind: real
+    image: paintings/sakoku_perry_coastal_defense_kawaraban.jpg
+    crop: [0.4, 0.15, 0.85, 0.65]
+    focus: [0.5, 0.5]
+    move: in
+    text_box: true
+    credit: "瓦版「海陸御固泰平鑑」（1853年ごろ。ウィキメディア・コモンズ、パブリックドメイン）"
+    must: 江戸湾の絵図と異国の帆船
+  K15:
+    kind: ai
+    file: kurofune-if/main/K15.jpg
+    focus: [0.6, 0.5]
+    move: left
+    must: 夕暮れの静かな海
+  K04:
+    kind: ai
+    file: kurofune-if/main/K04.jpg
+    focus: [0.45, 0.55]
+    move: in
+    must: 石段の港と帆の小舟
+  K01:
+    kind: ai
+    file: kurofune-if/main/K01.jpg
+    focus: [0.3, 0.5]
+    move: right
+    must: 夜明けの湾の入り口と沖の小さな船影
+lines:
+  # fact: kurofune-if-14, kurofune-if-15
+  - 語り: ペリーの7年前、アメリカの軍艦は、浦賀に来て、《!断られて》帰っている。
+    shot: K02
+    tone: 強調
+    pause: 0.12
+  # fact: kurofune-if-14
+  - 語り: 1846年7月。提督ビッドルの、コロンバス号とヴィンセンス号の2隻が、浦賀の沖に入った。
+    shot: K02b
+    tone: しみじみ
+    pause: 0.12
+  # fact: kurofune-if-14
+  - 語り: すぐに、日本の警備船が取り囲んだ。その数は、ペリーの公式記録、『日本遠征記』によると、約400隻だ。
+    shot: K03
+    tone: しみじみ
+    pause: 0.12
+  # fact: kurofune-if-16
+  - 語り: ビッドルが尋ねたのは、通商ができるかどうか。返答は、こうだ。「オランダ以外の、どの国とも、通商は許されない」。
+    shot: K05
+    tone: 重い
+    pause: 0.12
+  # fact: kurofune-if-15
+  - 語り: 浦賀にいた日数は、記録によって、10日、8日から10日、9日間と、割れている。
+    shot: Map
+    tone: 疑問
+    pause: 0.12
+  # fact: kurofune-if-15
+  - 語り: それでも、結末は同じだ。誰も上陸せず、何も得られないまま、帰った。
+    shot: K15
+    tone: 重い
+    pause: 0.12
+  # fact: kurofune-if-20
+  - 語り: 1845年にも、断られた船がある。日本人22人を送り届けた、捕鯨船マンハッタン号だ。外交官フォスターが、1903年に書いた本によると、「二度と日本へ来るな」と、追い返された。
+    shot: K04
+    tone: しみじみ
+    pause: 0.3
+    dip: true
+  # fact: （本編へ）
+  - 語り: 日本人を無事に連れてきても、断られる。幕府は、本当に、開く気がなかったのか。
+    shot: K01
+    tone: 疑問
+    pause: 0.15

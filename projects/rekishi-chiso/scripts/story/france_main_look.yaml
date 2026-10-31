@@ -1,0 +1,245 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：フランス革命（scripts/france-if-story.yaml）。chiso/storymain.py が読む。
+# 10-31 作成（11/5 12:00 公開）。kurofune_main_look.yaml を写した。台本には手を入れない（承認のあと。変えると控えが外れる）。決まりは docs/story-main.md・スキル rekishi-story-screen。
+# 絵の方針：AI 絵は 16 枚（F01〜F16。Cloudflare Workers AI の FLUX.1 schnell、無料枠。1024 正方形から 16:9 を切り出し）。
+#   人物の顔は描かない（建物・部屋・畑・文書・手元・群衆の後ろ姿の遠景）。実在の人物（ルイ16世・テュルゴー・カロンヌ・ネッケル・トクヴィル）の顔は実在の絵（額）だけ。
+#   実在の絵は Commons のパブリックドメイン（CC0 を含む）の絵画・版画。額（frame:）と一部（part:）で使い、全面の主役にしない。
+#   この回の決まり：戦闘・負傷・遺体は描かない（バスティーユは建物と煙と遠景の群衆だけ）。
+script: scripts/france-if-story.yaml
+out: france_if_story_main
+art_dir: out/story/france-if/ph
+main_art_dir: out/story/france-if/main
+ai_disclosure: この動画の情景の画像の多くは、画像生成AI（Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+
+chapters:
+  0: {label: 序章 囚人は、7人だった, now: 1789年7月, dates: {2: 1789年6月, 5: 1776年, 7: null}}
+  1: {label: 第1章 テュルゴーは、なぜ外されたのか, now: 1771年, dates: {17: 1774年8月, 20: 1774年11月, 22: 1775年春, 26: 1776年1月, 30: 1776年3月, 32: 1776年5月, 35: null}}
+  2: {label: 第2章 名士会は、なぜ断ったのか, now: 1781年, dates: {41: 1786年8月, 43: 1787年2月, 46: 1787年4月, 47: null, 48: 1787年5月, 50: 1787年11月, 52: null}}
+  3: {label: 第3章 1788年、金庫と空が同時に崩れた, now: 1788年5月, dates: {56: 1788年6月, 58: 1788年7月, 63: 1788年8月, 67: 1788年12月, 69: null}}
+  4: {label: 第4章 陳情書は、王をやめろと書いたのか, now: 1789年春, dates: {}}
+  5: {label: 第5章 6月23日、国王は何を差し出したのか, now: 1789年6月, dates: {102: null, 103: 1789年7月}}
+  6: {label: 第6章 7月14日、バスティーユで何が起きたのか, now: 1789年7月, dates: {}}
+  7: {label: 第7章 歴史家は、避けられたと見るのか, now: null, dates: {}}
+  8: {label: まとめ フランス革命が起きなかったら、何が言えるのか, now: null, dates: {}}
+
+references:
+  - "Archives parlementaires, 1re série, t. VIII（1875）：1789年6月17日・20日・22日・23日・7月11日・13日の議事（Persée）"
+  - "Œuvres de Turgot（Daire 編 1844、Wikisource）／Gustave Schelle 編 Œuvres de Turgot et documents le concernant t. IV・V（1922-23）"
+  - "Jacques Necker, Compte rendu au roi（1781）／Calonne, Réponse de M. de Calonne à l'écrit de M. Necker（1788）"
+  - "Calonne, Discours prononcé … à l'Assemblée des notables（1787）"
+  - "Le Roy, Buache, Tessier, Rapport sur l'orage à grêle du 13 juillet 1788（Histoire de l'Académie royale des sciences）"
+  - "Musée de la Révolution française（Vizille）, Dossier pédagogique « 1788 en Dauphiné »"
+  - "Gilbert Shapiro & John Markoff, Officially Solicited Petitions: The Cahiers de Doléances as a Historical Source（2001）"
+  - "Archives départementales des Côtes-d'Armor, Doléances（2024）／Liberty, Equality, Fraternity（George Mason University）"
+  - "Arthur Young, Travels in France（1792）"
+  - "Frantz Funck-Brentano, Legends of the Bastille（1899）"
+  - "D. M. G. Sutherland, George Rudé's Crowd in the French Revolution（H-France 2019）"
+  - "Journal de Louis XVI（Louis Nicolardot 編 1873）"
+  - "Alexis de Tocqueville, L'Ancien Régime et la Révolution（1856）"
+  - "Archives départementales du Tarn・Parcours Révolution（パリ市）・Musée Carnavalet の解説"
+no_tag_from: 143
+
+ai:
+  F01: {scene: 夜明けのバスティーユ（遠景の群衆は後ろ姿）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  F02: {scene: 牢獄の廊下と開いた扉とランタン（人物なし）, pan: v, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  F03: {scene: ろうそくのヴェルサイユの大広間と空の玉座（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  F04: {scene: 封蝋の付いた白紙の羊皮紙と羽根ペン（文字なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  F05: {scene: 道の工事をする農民の後ろ姿, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  F06: {scene: 夜明けの市場にこぼれた小麦粉と倒れた荷車（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.55], left: [1.18, 0.4, 0.55], right: [1.18, 0.6, 0.55]}}
+  F07: {scene: 夜のパリの路地と遠くの群衆の影, pan: v, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  F08: {scene: 大臣の書斎の帳簿と金貨と天秤（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  F09: {scene: 議場の木の長椅子の列（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  F10: {scene: アルプスの町の瓦屋根（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.45], left: [1.18, 0.4, 0.45], right: [1.18, 0.6, 0.45]}}
+  F11: {scene: 麦畑に迫る雹の嵐の雲（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  F12: {scene: ろうそくの光で羽根ペンを持つ村人の手（顔なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  F13: {scene: 光の差す空の球戯場（人物なし）, pan: v, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  F14: {scene: 夕暮れの軍のテントとたき火（遠景）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  F15: {scene: 取り壊しの足場と石の山（遠景の小さな人影）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  F16: {scene: 終了画面用。夕暮れのセーヌ川（右側を空けた構図）, lock: [1.0, 0.5, 0.5]}
+
+credits:
+  paintings/france_bastille_robert.jpg: ユベール・ロベール《取り壊しの始まったバスティーユ》（1789年。カルナヴァレ美術館。ウィキメディア・コモンズ、パブリックドメイン）
+  paintings/bastille_houel.png: ジャン・ピエール・ウエル《バスティーユ襲撃》（1789年。ウィキメディア・コモンズ、パブリックドメイン）
+  paintings/france_turgot_ducreux.jpg: ジョゼフ・デュクルー《テュルゴーの肖像》（18世紀。ウィキメディア・コモンズ、パブリックドメイン）
+  paintings/france_calonne_vigee.jpg: エリザベト・ヴィジェ・ルブラン《カロンヌの肖像》（1784年。ウィキメディア・コモンズ、パブリックドメイン）
+  paintings/france_necker_duplessis.jpg: デュプレシにもとづく《ネッケルの肖像》（1781年ごろ。ウィキメディア・コモンズ、パブリックドメイン）
+  paintings/france_louis16_duplessis.jpg: ジョゼフ・シフレッド・デュプレシ《ルイ16世の肖像》（18世紀。コンデ美術館。ウィキメディア・コモンズ、パブリックドメイン）
+  paintings/france_notables_1787.jpg: ジャン・ミシェル・モロー《名士会　ヴェルサイユ　1787年》（版画。メトロポリタン美術館。ウィキメディア・コモンズ、CC0）
+  paintings/france_etats_generaux_couder.jpg: クデールの絵による版画《全国三部会の開会　1789年5月5日》（19世紀。パリ市立美術館群。ウィキメディア・コモンズ、CC0）
+  paintings/france_mirabeau_fragonard.jpg: アレクサンドル・エヴァリスト・フラゴナール《ドルー・ブレゼの前のミラボー》（19世紀。パリ市立美術館群。ウィキメディア・コモンズ、CC0）
+  paintings/france_serment_david.jpg: ジャック・ルイ・ダヴィッドの構図による《球戯場の誓い》（18世紀末。ウィキメディア・コモンズ、パブリックドメイン）
+  paintings/france_tocqueville_chasseriau.jpg: テオドール・シャセリオー《トクヴィルの肖像》（1850年。ウィキメディア・コモンズ、パブリックドメイン）
+  paintings/versailles_patel_1668.jpg: ピエール・パテル《ヴェルサイユ宮殿》（1668年。ウィキメディア・コモンズ、パブリックドメイン）
+
+shots:
+  - 0 ai:F01 wide
+  - 1 ai:F02 wide
+  - 2 frame:paintings/france_louis16_duplessis.jpg
+  - 3 ai:F04 wide
+  - 4 ai:F05 wide
+  - 5 ai:F05 left
+  - 6 frame:paintings/france_turgot_ducreux.jpg
+  - 7 ai:F03 wide
+  - 8 part:paintings/bastille_houel.png
+  - 9 frame:paintings/france_tocqueville_chasseriau.jpg
+  - 10 ai:F03 left
+  - 11 ai:F04 left
+  - 12 part:paintings/versailles_patel_1668.jpg
+  - 13 ai:F08 wide
+  - 14 ai:F09 wide
+  - 15 ai:F04 right
+  - 16 ai:F03 right
+  - 17 frame:paintings/france_turgot_ducreux.jpg
+  - 18 ai:F08 left
+  - 19 ai:F06 wide
+  - 20 ai:F09 left
+  - 21 ai:F03 wide
+  - 22 ai:F06 left
+  - 23 ai:F07 wide
+  - 24 ai:F04 wide
+  - 25 frame:paintings/france_louis16_duplessis.jpg
+  - 26 ai:F08 right
+  - 27 ai:F05 right
+  - 28 ai:F09 right
+  - 29 ai:F07 left
+  - 30 ai:F03 left
+  - 31 ai:F04 left
+  - 32 frame:paintings/france_turgot_ducreux.jpg
+  - 33 ai:F12 wide
+  - 34 ai:F08 wide
+  - 35 part:paintings/versailles_patel_1668.jpg
+  - 36 frame:paintings/france_necker_duplessis.jpg
+  - 37 ai:F08 left
+  - 38 frame:paintings/france_necker_duplessis.jpg
+  - 39 ai:F08 right
+  - 40 frame:paintings/france_calonne_vigee.jpg
+  - 41 ai:F04 wide
+  - 42 part:paintings/france_notables_1787.jpg
+  - 43 ai:F03 right
+  - 44 frame:paintings/france_calonne_vigee.jpg
+  - 45 ai:F05 wide
+  - 46 ai:F03 wide
+  - 47 part:paintings/france_notables_1787.jpg
+  - 48 ai:F09 wide
+  - 49 ai:F09 left
+  - 50 ai:F03 left
+  - 51 frame:paintings/france_louis16_duplessis.jpg
+  - 52 ai:F08 wide
+  - 53 ai:F11 left
+  - 54 ai:F11 wide
+  - 55 ai:F09 right
+  - 56 ai:F10 wide
+  - 57 ai:F07 right
+  - 58 ai:F10 right
+  - 59 ai:F09 left
+  - 60 ai:F11 right
+  - 61 ai:F11 wide
+  - 62 ai:F06 right
+  - 63 ai:F04 right
+  - 64 ai:F08 left
+  - 65 frame:paintings/france_necker_duplessis.jpg
+  - 66 ai:F09 wide
+  - 67 ai:F04 wide
+  - 68 ai:F09 right
+  - 69 ai:F03 right
+  - 70 ai:F12 left
+  - 71 ai:F12 wide
+  - 72 part:paintings/france_etats_generaux_couder.jpg
+  - 73 ai:F12 right
+  - 74 ai:F04 left
+  - 75 ai:F05 left
+  - 76 ai:F07 wide
+  - 77 ai:F12 wide
+  - 78 ai:F06 wide
+  - 79 ai:F12 left
+  - 80 ai:F08 right
+  - 81 ai:F04 wide
+  - 82 ai:F05 right
+  - 83 part:paintings/france_etats_generaux_couder.jpg
+  - 84 ai:F09 left
+  - 85 ai:F09 wide
+  - 86 ai:F03 wide
+  - 87 part:paintings/france_serment_david.jpg
+  - 88 ai:F13 wide
+  - 89 ai:F09 right
+  - 90 part:paintings/france_etats_generaux_couder.jpg
+  - 91 ai:F04 right
+  - 92 ai:F04 wide
+  - 93 ai:F05 wide
+  - 94 ai:F03 left
+  - 95 ai:F09 left
+  - 96 frame:paintings/france_louis16_duplessis.jpg
+  - 97 part:paintings/france_mirabeau_fragonard.jpg
+  - 98 ai:F13 left
+  - 99 ai:F04 left
+  - 100 ai:F14 wide
+  - 101 ai:F05 left
+  - 102 ai:F03 right
+  - 103 ai:F14 left
+  - 104 frame:paintings/france_necker_duplessis.jpg
+  - 105 ai:F09 wide
+  - 106 ai:F09 right
+  - 107 ai:F05 right
+  - 108 ai:F06 left
+  - 109 ai:F01 wide
+  - 110 ai:F02 wide
+  - 111 ai:F02 left
+  - 112 part:paintings/bastille_houel.png
+  - 113 ai:F06 wide
+  - 114 ai:F07 left
+  - 115 ai:F06 right
+  - 116 ai:F03 wide
+  - 117 ai:F04 right
+  - 118 ai:F15 wide
+  - 119 part:paintings/france_bastille_robert.jpg
+  - 120 ai:F15 left
+  - 121 ai:F01 right
+  - 122 frame:paintings/france_tocqueville_chasseriau.jpg
+  - 123 ai:F04 wide
+  - 124 frame:paintings/france_tocqueville_chasseriau.jpg
+  - 125 ai:F05 wide
+  - 126 ai:F07 wide
+  - 127 ai:F15 right
+  - 128 ai:F09 wide
+  - 129 ai:F03 left
+  - 130 ai:F09 left
+  - 131 ai:F13 wide
+  - 132 ai:F08 wide
+  - 133 frame:paintings/france_louis16_duplessis.jpg
+  - 134 part:paintings/versailles_patel_1668.jpg
+  - 135 ai:F04 left
+  - 136 ai:F01 left
+  - 137 ai:F05 wide
+  - 138 part:paintings/france_notables_1787.jpg
+  - 139 part:paintings/france_etats_generaux_couder.jpg
+  - 140 ai:F12 wide
+  - 141 ai:F16 left
+  - 142 ai:F16 wide
+  - 143 part:paintings/france_bastille_robert.jpg
+  - 144 ai:F16 left
+  - end ai:F16 wide
+figures: []
+
+focus: {}
+
+fx:
+  F01: {smoke: {region: [0.0, 0.0, 1, 0.4], alpha: 0.08, speed: 3}}
+  F07: {lamp: {region: [0.3, 0.3, 0.7, 0.8]}}
+  F14: {fire: {region: [0.2, 0.6, 0.8, 1.0]}}
+  F16: {water: {region: [0.0, 0.6, 1, 1.0]}}
+
+parts:
+  - {type: quote, from: 3, to: 3, label: 史料, text: 代表の同意なしに／新しい税は作らない, source: 国王の意図の宣言 第1条（1789年6月23日。仏文の訳）}
+  - {type: quote, from: 9, to: 9, label: 史料, text: 悪い政府にとって最も危険な時は／改革を始める時だ, source: トクヴィル『旧体制と大革命』（1856。仏文の訳）}
+  - {type: quote, from: 17, to: 17, label: 史料, text: 破産しない・増税しない／借金しない, source: テュルゴーから国王への手紙（1774年8月24日。仏文の訳）}
+  - {type: quote, from: 44, to: 44, label: 史料, text: 穴を埋めるのに何が残るか／悪弊, source: カロンヌの名士会の開会演説（1787年2月22日。仏文の訳）}
+  - {type: quote, from: 81, to: 81, label: 史料, text: 第三身分とは何か／すべてである, source: シエイエス『第三身分とは何か』（1789。仏文の訳）}
+  - {type: quote, from: 108, to: 108, label: 史料, text: 偉い人たちが、貧しい者のために／何かしてくれるらしい, source: アーサー・ヤング『フランス紀行』（1789年7月12日。英文の訳）}
+
+stills:
+  - {line: 0, note: 冒頭（0秒）バスティーユ（F01）}
+  - {line: 26, note: 第1章 6つの勅令（図）}
+  - {line: 40, note: 第2章 ネッケルとカロンヌ（図）}
+  - {line: 61, note: 第3章 雹（図）}
+  - {line: 94, note: 第5章 譲らなかったもの（図）}
+  - {line: 98, note: 第5章 ミラボーの2つの形（図）}
+  - {end: true, note: 終了画面の空き}

@@ -1,0 +1,152 @@
+# 物語完結型ショート 参勤交代 s2（2026-10-31）。本編 scripts/sankin-story.yaml（11/4 19:00 公開、https://youtu.be/cZ1q-xRuDHc）の序章・第2章から。11/5 12:30 公開。
+# 形式は genkou_if_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。絵は本編の AI 絵（人物なし）と本編で使った浮世絵・絵巻だけ。新しい絵は作らない。
+# 切り口：加賀藩の行列の人数が出どころごとに合わない（4千／2千5百余／2〜3千／1969）＋臨時の雇い686人と渡り者。条文（s1）・大井川（s3）・宿場（s4）・終わり（s5）には踏み込まない。
+# 事実カード（dev/output/rekishi-chiso/research/参勤交代_facts_20261031.yaml）：sankin-14・15・62。数は本編の言い方（出どころ付き）のまま。
+#   ・4千人は日本大百科全書の「加賀前田氏の4千人を筆頭に」、2千5百人余は世界大百科事典の「多いときで」、通常2千〜3千人は石川県立歴史博物館、1969人は文政10年（1827年）の記録。
+#   ・686÷1969＝34.8％ →「およそ3人に1人」（本編のまま）。文政10年＝1827年は計算し直して合う。屏風の473人は尺のため入れない。
+#   ・渡り者は「といわれる」（本編のまま）。
+# 理解テスト4問：
+#   ①誰の話か：加賀藩（102万石）の大名行列
+#   ②いつ・どこで何が：行列の人数が、事典は4千人・2千5百人余、博物館は通常2千〜3千人、文政10年（1827年）の記録は1969人
+#   ③なぜ食い違うか：書き方（筆頭に・多いときで・通常）と年が違う。1969人のうち686人は臨時の雇い
+#   ④どうなったか：江戸に入る前には渡り者を雇って人数を増やした → あなたならどれを行列の人数と呼ぶか
+title: 参勤交代｜加賀藩の行列は、何人だったのか
+yt_title: 加賀藩の大名行列は何人だったのか　4千人から1969人まで、出どころごとに合わない数
+description: |-
+  102万石の加賀藩。その大名行列の人数は、出どころごとに合いません。
+  日本大百科全書は4千人、世界大百科事典は多いときで2千5百人余、石川県立歴史博物館は通常2千人から3千人。そして、文政10年、1827年の記録は1969人です。しかも、その1969人のうち686人は、藩士ではない臨時の雇いでした。江戸に入る前には、「渡り者」と呼ばれる臨時の雇いで、人数を増やしたといわれます。
+  これほどの行列を、幕府は、なぜ毎年の往復として命じたのか。この問いを掘り下げた本編は、概要欄のリンクからどうぞ。
+hashtags: ['#参勤交代', '#大名行列', '#日本史']
+ai_images: true
+ai_disclosure: この動画の風景・室内の画像は、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+readings: {品川宿: しながわしゅく}      # 台本ごとの読み替え（readings.yaml は変えない）
+art_dir: out/story/sankin
+out: sankin_story_s2
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 加賀藩（102万石・前田家）
+  title: "加賀藩の行列は、《何人》だったのか"
+now:
+  - {at: 加賀藩, text: "加賀藩　金沢から江戸へ", point: 0}
+  - {at: 1827年, text: "1827年の記録", point: 1}
+timeline:
+  - {label: "加賀藩"}
+  - {label: "1827"}
+cards:
+  - type: table
+    title: 加賀藩の行列の人数
+    from: 日本大百科全書
+    until: しかも
+    items:
+      - {at: 日本大百科全書, text: "日本大百科全書　4千人"}
+      - {at: 世界大百科事典は, text: "世界大百科事典　2千5百人余"}
+      - {at: 石川県立歴史博物館は, text: "歴史博物館　通常2千〜3千人"}
+    text_y: 0.70
+shots:
+  Satta:
+    kind: real
+    image: paintings/sankin_satta_sadahide_1862.jpg
+    crop: [0.0, 0.45, 0.55, 1.0]
+    focus: [0.5, 0.8]
+    move: right
+    credit: "東海道中 薩埵峠の大名行列（歌川貞秀、1862年。メトロポリタン美術館所蔵、ウィキメディア・コモンズ、CC0）"
+    must: 峠の道を埋める長い行列
+  Hishi:
+    kind: real
+    image: paintings/sankin_hishikawa_crop.jpg
+    crop: [0.0, 0.0, 0.5, 1.0]
+    focus: [0.5, 0.5]
+    move: left
+    credit: "大名行列の絵巻（菱川派、1700年ごろ。メトロポリタン美術館所蔵、ウィキメディア・コモンズ、CC0）"
+    must: 絵巻の行列（駕籠と騎馬）
+  P04:
+    kind: ai
+    file: sankin/main/P04.jpg
+    focus: [0.4, 0.5]
+    move: in
+    must: 江戸の武家屋敷の白壁と門
+  P06:
+    kind: ai
+    file: sankin/main/P06.jpg
+    focus: [0.5, 0.6]
+    move: in
+    must: 灯の下の帳面と算盤
+  Hishi2:
+    kind: real
+    image: paintings/sankin_hishikawa_crop.jpg
+    crop: [0.5, 0.0, 1.0, 1.0]
+    focus: [0.5, 0.5]
+    move: right
+    credit: "大名行列の絵巻（菱川派、1700年ごろ。メトロポリタン美術館所蔵、ウィキメディア・コモンズ、CC0）"
+    must: 絵巻の行列（槍持ち・供の者）
+  P01:
+    kind: ai
+    file: sankin/main/P01.jpg
+    focus: [0.55, 0.5]
+    move: in
+    must: 松並木の朝の街道
+  Kasu:
+    kind: real
+    image: paintings/sankin_kasumigaseki_hiroshige2_1863.jpg
+    crop: [0.3, 0.35, 0.75, 1.0]
+    focus: [0.5, 0.5]
+    move: left
+    credit: "江戸霞ヶ関の大名行列（二代歌川広重、1863年。LACMA 所蔵、ウィキメディア・コモンズ、パブリックドメイン）"
+    must: 江戸の屋敷町を進む行列
+  P09:
+    kind: ai
+    file: sankin/main/P09.jpg
+    focus: [0.5, 0.5]
+    move: right
+    must: 夕暮れの江戸の町並み
+lines:
+  # fact: sankin-15
+  - 語り: 102万石の加賀藩。その大名行列の人数は、出どころごとに、《!まるで合わない》。
+    shot: Satta
+    tone: 強調
+    pause: 0.12
+  # fact: sankin-15
+  - 語り: 日本大百科全書は、4千人と書く。世界大百科事典は、多いときで、2千5百人余。
+    shot: Hishi
+    tone: しみじみ
+    pause: 0.12
+  # fact: sankin-15
+  - 語り: 石川県立歴史博物館は、通常、2千人から3千人だ。
+    shot: P04
+    tone: しみじみ
+    pause: 0.12
+  # fact: sankin-15
+  - 語り: そして、1827年の記録は、1969人。
+    shot: P06
+    tone: 重い
+    pause: 0.12
+  # fact: sankin-14
+  - 語り: しかも、その1969人のうち、686人は、藩士ではない、臨時の雇いだった。およそ3人に1人だ。
+    shot: Hishi2
+    tone: 重い
+    pause: 0.12
+  # fact: sankin-62
+  - 語り: 江戸に入る前には、人数を増やした。「渡り者」と呼ばれる、臨時の雇いだ。
+    shot: P01
+    tone: しみじみ
+    pause: 0.12
+  # fact: sankin-62
+  - 語り: 品川宿など、江戸の入り口にいた人たちを雇い、最低限の衣装を着せて、作法を教えた、といわれる。
+    shot: Kasu
+    tone: しみじみ
+    pause: 0.3
+    dip: true
+  - 語り: 4千人と、1969人。あなたなら、どちらを、加賀藩の行列と呼びますか。
+    shot: P09
+    tone: 疑問
+    pause: 0.15

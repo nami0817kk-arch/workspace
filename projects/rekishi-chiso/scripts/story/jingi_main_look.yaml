@@ -1,0 +1,304 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：三種の神器（scripts/jingi-story.yaml）。chiso/storymain.py が読む。
+# 10-31 作成（11/05 19:00 公開）。sankin_main_look.yaml を写した。台本には手を入れない（承認のあと）。決まりは docs/story-main.md・スキル rekishi-story-screen。
+# 絵の方針：神器の実物の姿は誰も知らないので、AI 絵（J01〜J12、Gemini の無料 web、1024x572）は箱・布・社殿・海・炎・森・巻物だけ。人物・文字・紋は描かせない。
+#   実在の絵は平治物語絵巻（内裏の炎上の場面の代わり）・尾張名所図会の熱田・安徳天皇縁起絵図・壇ノ浦の浮世絵・伊勢参宮名所図会・太平記の絵を part で使う。
+script: scripts/jingi-story.yaml
+out: jingi_story_main
+art_dir: out/story/jingi/ph
+main_art_dir: out/story/jingi/main
+ai_disclosure: この動画の風景・室内・箱の画像は、画像生成AI（Google の Gemini）で作った想像上のイメージで、実在の神器・記録映像・写真ではありません（画面の右上に「AI生成画像」と出しています）。
+
+chapters:
+  0: {label: 序章 破片と粒になった神鏡, now: 1040年, dates: {2: null}}
+  1: {label: 第1章 剣は、なぜ熱田にあるのか, now: 668年（天智天皇7年）, dates: {15: 686年（朱鳥元年）6月, 17: null, 22: 807年, 24: null}}
+  2: {label: 第2章 鏡は、火の中でどうなったのか, now: 960年（天徳4年）9月, dates: {37: 1005年（寛弘2年）11月, 40: 1040年（長暦4年）9月, 46: 1159年, 47: null}}
+  3: {label: 第3章 剣は、なぜ戻らなかったのか, now: 1183年（寿永2年）7月, dates: {52: 1185年（元暦2年）3月, 61: 1187年（文治3年）, 65: 1190年, 66: null}}
+  4: {label: 第4章 渡したのは偽物だったのか, now: 1331年（元弘元年）, dates: {73: 1336年（建武3年）, 76: 1339年, 77: 1351年, 80: 1352年, 82: null, 83: 1392年（明徳3年）, 86: null}}
+  5: {label: 第5章 勾玉は、どう取り戻されたのか, now: 1443年（嘉吉3年）9月, dates: {93: 1478年, 94: 1457年（長禄元年）12月, 97: 1458年（長禄2年）8月, 99: null}}
+  6: {label: 第6章 熱田の剣を見た者はいたのか, now: 江戸時代, dates: {107: 1898年, 108: 1890年, 110: 1930年, 112: null}}
+  7: {label: 第7章 「運命を共にする外ない」, now: 1889年, dates: {116: 1945年7月, 119: 1947年, 120: 1959年, 121: null, 122: 1974年11月, 123: 1989年1月7日, 124: 2019年5月1日, 125: 1817年, 126: 2019年5月, 127: null}}
+  8: {label: まとめ 3つの宝の、今わかること, now: null, dates: {}}
+
+references:
+  - 日本書紀 巻第廿七 天智天皇 七年是歳条（Wikisource 漢文本文。底本の記載なし）（舎人親王ら）　https://zh.wikisource.org/wiki/%E6%97%A5%E6%9C%AC%E6%9B%B8%E7%B4%80/%E5%8D%B7%E7%AC%AC%E5%BB%BF%E4%B8%83
+  - 名古屋市 歴史的風致（2-2 熱田神宮と摂社・末社等）（名古屋市）　https://www.city.nagoya.jp/_res/projects/default_project/_page_/001/017/245/rekimachi_2_2.pdf
+  - 日本書紀 巻第廿九 天武天皇下 朱鳥元年六月戊寅条（Wikisource 漢文本文）（舎人親王ら）　https://zh.wikisource.org/wiki/%E6%97%A5%E6%9C%AC%E6%9B%B8%E7%B4%80/%E5%8D%B7%E7%AC%AC%E5%BB%BF%E4%B9%9D
+  - 吾妻鏡 元暦2年4月11日条（吉川本 上巻、国書刊行会 1915）（鎌倉幕府（編））　https://dl.ndl.go.jp/pid/1920980/1/75
+  - 愚管抄 巻5（国史大系 第14巻、経済雑誌社 1901）（慈円）　https://dl.ndl.go.jp/pid/991104/1/274
+  - 平家物語 巻11（流布本、校註日本文学大系 第14巻 1925）（不詳）　https://dl.ndl.go.jp/pid/1018053/1/428
+  - 神皇正統記 後鳥羽院（Wikisource、底本 大町芳衛『神皇正統記評釈』1925）（北畠親房）　https://ja.wikisource.org/wiki/神皇正統記
+  - 増鏡（校註増鏡、Wikisource）（不詳）　https://ja.wikisource.org/wiki/増鏡_(校註増鏡)
+  - 扶桑略記 第廿六 村上天皇 天徳四年九月廿三日条（御日記の引用。Wikisource）（皇円）　https://zh.wikisource.org/wiki/%E6%89%B6%E6%A1%91%E7%95%A5%E8%A8%98/%E7%AC%AC026
+  - 内侍所神鏡をめぐる儀礼―十一世紀における神聖化―（洛北史学19）（斎木涼子）　https://www.jstage.jst.go.jp/article/rakuhoku/19/0/19_24/_pdf/-char/ja
+  - 古今著聞集 巻第一 神祇 第2話（やたがらすナビ 翻刻。底本 宮内庁書陵部本）（橘成季）　https://www.yatanavi.org/text/chomonju/s_chomonju002
+  - 太平記 巻17「還幸供奉人々被禁殺事」（Wikisource、底本の記載なし）（不詳）　https://ja.wikisource.org/wiki/太平記/巻第十七
+  - 太平記 巻30「持明院殿吉野遷幸事」（Wikisource）（不詳）　https://ja.wikisource.org/wiki/太平記/巻第三十
+  - 続神皇正統記 後小松院（Wikisource、底本 新校群書類従 第2巻 1929）（小槻晴富）　https://ja.wikisource.org/wiki/続神皇正統記
+  - 足利義満書状（近衛家文書。『御料地史稿』1937 所収の翻刻）（足利義満）　https://dl.ndl.go.jp/pid/1874594/1/207
+  - 神器考証（栗田寛）　https://dl.ndl.go.jp/pid/815487/1/23
+  - 古風土記逸文考証 巻二（栗田寛）　https://dl.ndl.go.jp/pid/993515/1/97
+  - 日本書紀通釈（飯田武郷）　https://dl.ndl.go.jp/pid/772297/1/181
+  - 古語拾遺精義（溝口駒造）　https://dl.ndl.go.jp/pid/1233224/1/228
+  - 木戸幸一日記 下巻（1945年7月31日条）（木戸幸一）　https://gendai.media/articles/-/149748
+  - 木戸幸一日記 下巻（1945年7月31日条）（木戸幸一）　https://president.jp/articles/-/28372
+  - ご大喪・ご即位・ご結婚などの行事（宮内庁）　https://www.kunaicho.go.jp/learn/institution/seido/seido10/index.html
+  - 即位の礼関係諸儀式（予定）英文併記（首相官邸（平成31年2月25日））　https://japan.kantei.go.jp/ongoingtopics/pdf/Details.pdf
+  - 御即位当日行事一覧（宮内庁）　https://www.kunaicho.go.jp/odaigawari/sokui-gyoji.html
+  - 【電子号外】象徴の責務果たす 天皇陛下、即位儀式（2019-05-01）（琉球新報（共同配信の記事））　https://ryukyushimpo.jp/news/entry-911872.html
+  - 古語拾遺 磯城瑞垣朝の条（Wikisource。底本記載なし・未校正の表示あり）（斎部広成）　https://zh.wikisource.org/wiki/%E5%8F%A4%E8%AA%9E%E6%8B%BE%E9%81%BA
+  - 日本書紀 巻第五 崇神天皇 六年条（舎人親王ら）　https://zh.wikisource.org/wiki/%E6%97%A5%E6%9C%AC%E6%9B%B8%E7%B4%80/%E5%8D%B7%E7%AC%AC%E4%BA%94
+  - 諸道勘文（神鏡・有裏文書） 書陵部所蔵資料目録・画像公開システム 九・53（宮内庁書陵部）　https://shoryobu.kunaicho.go.jp/Toshoryo/Detail/1000672150000
+  - 主要祭儀一覧（賢所御神楽）（宮内庁）　https://www.kunaicho.go.jp/about/gokomu/kyuchu/saishi/saishi01.html
+  - 知る見るわかる、伊勢神宮 - 知る編 -（神宮司庁）　https://www.isejingu.or.jp/first/beginner.html
+  - 吾妻鏡 元暦2年3月24日条（日本古典全集 吾妻鏡 第1、正宗敦夫編 1930）（鎌倉幕府（編））　https://dl.ndl.go.jp/pid/1111511/1/98
+  - 平家物語 巻11 先帝御入水の事（流布本、校註日本文学大系 第14巻 1925）（不詳）　https://dl.ndl.go.jp/pid/1018053/1/424
+  - 百錬抄 元暦2年3月24日条（国史大系 第14巻 1901）（不詳（鎌倉後期の編））　https://dl.ndl.go.jp/pid/991104/1/83
+  - 愚管抄 巻2 皇帝年代記（国史大系 第14巻 1901）（慈円）　https://dl.ndl.go.jp/pid/991104/1/209
+  - 平家物語 巻11 能登殿最後（流布本、1925）（不詳）　https://dl.ndl.go.jp/pid/1018053/1/425
+  - 吾妻鏡 文治元年5月16日条（吉川本 上巻 1915）（鎌倉幕府（編））　https://dl.ndl.go.jp/pid/1920980/1/80
+  - 吾妻鏡 元暦2年5月5日条（日本古典全集 第1、1930）（鎌倉幕府（編））　https://dl.ndl.go.jp/pid/1111511/1/106
+  - 吾妻鏡 文治3年6月3日条（日本古典全集 吾妻鏡 第2、1930）（鎌倉幕府（編））　https://dl.ndl.go.jp/pid/1110969/1/52
+  - 百錬抄 文治3年7月20日条（国史大系 第14巻 1901）（不詳）　https://dl.ndl.go.jp/pid/991104/1/85
+  - 玉葉 文治3年7月9日条（国書刊行会 玉葉 第3、1907）（九条兼実）　https://dl.ndl.go.jp/pid/772051/1/195
+  - 玉葉 文治3年8月条（国書刊行会 玉葉 第3、1907）（九条兼実）　https://dl.ndl.go.jp/pid/772051/1/210
+  - 玉葉 文治3年3月条（同上）（九条兼実）　https://dl.ndl.go.jp/pid/772051/1/175
+  - 玉葉 元暦2年8月条（国書刊行会 玉葉 第3、1907）（九条兼実）　https://dl.ndl.go.jp/pid/772051/1/50
+  - 玉葉 元暦2年6月条（国書刊行会 玉葉 第3、1907）（九条兼実）　https://dl.ndl.go.jp/pid/772051/1/45
+  - 玉葉 文治6年（建久元年）正月条（同上）（九条兼実）　https://dl.ndl.go.jp/pid/772051/1/296
+  - 太平記 巻25「自伊勢進宝剣事」（Wikisource）（不詳）　https://ja.wikisource.org/wiki/太平記/巻第二十五
+  - 太平記 巻27「雲景未来記事」（Wikisource。天狗の語りという作中の形）（不詳）　https://ja.wikisource.org/wiki/太平記/巻第二十七
+  - 玉葉 寿永2年7月26日条（国書刊行会 玉葉 第2、1907）（九条兼実）　https://dl.ndl.go.jp/pid/772050/1/309
+  - 太平記 巻3（Wikisource）（不詳）　https://ja.wikisource.org/wiki/太平記/巻第三
+  - 太平記 巻18「先帝潜幸芳野事」（Wikisource）（不詳）　https://ja.wikisource.org/wiki/太平記/巻第十八
+  - 太平記 巻32「無剣璽御即位無例事」（Wikisource）（不詳）　https://ja.wikisource.org/wiki/太平記/巻第三十二
+  - 敦有卿記 明徳3年閏10月2日条（『帝室制度史』第3巻 1942 所収）（綾小路敦有）　https://dl.ndl.go.jp/pid/1241583/1/289
+  - 南方紀伝 下（改定史籍集覧 第3冊 1906）（不詳（江戸期の編））　https://dl.ndl.go.jp/pid/3431170/1/167
+  - 十津河之記（改定史籍集覧 第3冊 1906）（不詳）　https://dl.ndl.go.jp/pid/3431170/1/233
+  - 武家年代記 嘉吉3年（国史大系 第5巻 附録 1903）（不詳）　https://dl.ndl.go.jp/pid/991112/1/438
+  - 上月記（群書類従 第14輯 合戦部、1894）（上月満吉・堀秀世ほか）　https://dl.ndl.go.jp/pid/1879783/1/362
+  - 上月記（同上）（上月満吉・堀秀世ほか）　https://dl.ndl.go.jp/pid/1879783/1/363
+  - 赤松記（群書類従 第14輯 巻393 合戦部25、1894）（不詳）　https://dl.ndl.go.jp/pid/1879783/1/226
+  - 日本民俗学（刀剣と民俗）（中山太郎）　https://dl.ndl.go.jp/pid/1449491/1/211
+  - 大日本帝国憲法（皇室典範を収録）（）　https://dl.ndl.go.jp/pid/1275721/1/10
+  - 第87回国会 参議院内閣委員会 第13号（秦豊（質問））　https://kokkai.ndl.go.jp/txt/108714889X01319790531/227
+  - 皇室経済法（昭和22年法律第4号）第7条（）　https://laws.e-gov.go.jp/law/322AC0000000004
+  - 第113回国会 衆議院決算委員会（東中光雄（質問））　https://kokkai.ndl.go.jp/txt/111304103X01019881108/161
+  - 第31回国会 衆議院内閣委員会 第14号（宇佐美毅（宮内庁））　https://kokkai.ndl.go.jp/txt/103104889X01419590305/76
+  - 第75回国会 参議院内閣委員会 第9号（宇佐美毅（宮内庁長官））　https://kokkai.ndl.go.jp/txt/107514889X00919750529/73
+  - 第31回国会 衆議院内閣委員会 第14号（木原津與志（質問））　https://kokkai.ndl.go.jp/txt/103104889X01419590305/75
+  - 第75回国会 参議院内閣委員会 第9号（宇佐美毅（宮内庁長官））　https://kokkai.ndl.go.jp/txt/107514889X00919750529/61
+  - 同上（秦豊（質問））　https://kokkai.ndl.go.jp/txt/107514889X00919750529/60
+  - 官報 号外特第1号（昭和64年1月7日）皇室事項（国立公文書館 展示資料）（宮内庁）　https://www.archives.go.jp/exhibition/digital/gozaii/contents/pdf/24.pdf
+  - 宮内庁作成資料1 歴史上の実例（宮内庁）　https://www.kunaicho.go.jp/kunaicho/shiryo/pdf/shikitenjyunbi-2-shiryo1.pdf
+  - 即位の礼及び大嘗祭関係諸儀式等（予定）について（令和元年7月3日）（宮内庁）　https://www.kunaicho.go.jp/kunaicho/shiryo/tairei/pdf/shiryo010703-5.pdf
+  - File:Heiji Monogatari Emaki - Sanjo scroll part 2.jpg（ボストン美術館、ウィキメディア・コモンズ、パブリックドメイン）　https://commons.wikimedia.org/wiki/File:Heiji_Monogatari_Emaki_-_Sanjo_scroll_part_2.jpg
+  - File:AntokuTennou Engi.7&8 Dannoura Kassen.jpg（赤間神宮、ウィキメディア・コモンズ、パブリックドメイン）　https://commons.wikimedia.org/wiki/File:AntokuTennou_Engi.7%268_Dannoura_Kassen.jpg
+  - File:Battle of Dan-no-ura NDL-DC 9369963-112 Utagawa Sadahide crd.jpg（ウィキメディア・コモンズ、パブリックドメイン）　https://commons.wikimedia.org/wiki/File:Battle_of_Dan-no-ura_NDL-DC_9369963-112_Utagawa_Sadahide_crd.jpg
+  - File:The Great Battle at Dan-no-ura.jpg（ウィキメディア・コモンズ、パブリックドメイン）　https://commons.wikimedia.org/wiki/File:The_Great_Battle_at_Dan-no-ura.jpg
+  - File:Ise sangu meisho zue - vol 5a Naiku Kyuchu-no-zu.jpg（ウィキメディア・コモンズ、パブリックドメイン）　https://commons.wikimedia.org/wiki/File:Ise_sangu_meisho_zue_-_vol_5a_Naiku_Kyuchu-no-zu.jpg
+no_tag_from: 137
+
+# AI 絵（16:9 横・12枚）。pan：h＝左右（既定）。crops＝切り出し [倍率, 中心x, 中心y]
+ai:
+  J01: {scene: 宮殿の暗い殿舎、白い絹に包まれた箱（中身は見せない）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  J02: {scene: 夜に燃える平安の宮殿, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  J03: {scene: 夜明けの神社の森と社殿, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  J04: {scene: 夕暮れの荒れた海峡と軍船（遠景）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  J05: {scene: 暗い海の底と光の筋, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  J06: {scene: 夜の雪の吉野の山道, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  J07: {scene: 夜の内裏の門と松明, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  J08: {scene: 机の上の古い巻物と和綴じの本（字は読めない）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  J09: {scene: 杉の森の玉砂利の参道, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  J10: {scene: 夏の夕暮れの石垣と堀, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.3, 0.28, 0.6], right: [1.18, 0.6, 0.5]}}
+  J11: {scene: 誰もいない広間と松の襖絵, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  J12: {scene: 夜明けの海（終了画面）, lock: [1.0, 0.5, 0.5]}
+
+paint_fx: {}
+
+credits:
+  paintings/jingi_heiji_sanjo_fire.jpg: 平治物語絵巻 三条殿夜討の巻の部分（13世紀後半。ボストン美術館所蔵、ウィキメディア・コモンズ、パブリックドメイン）
+  paintings/toshiie_owari_atsuta_zue.jpg: 岡田啓・野口道直『尾張名所図会』熱田大宮全図（1880年刊）
+  paintings/jingi_antoku_engi_dannoura.jpg: 安徳天皇縁起絵図 壇ノ浦合戦（土佐光信と伝わる。赤間神宮所蔵、ウィキメディア・コモンズ、パブリックドメイン）
+  paintings/jingi_dannoura_sadahide.jpg: 歌川貞秀《長州壇之浦赤間関合戦》（江戸時代後期。国立国会図書館デジタルコレクション、ウィキメディア・コモンズ、パブリックドメイン）
+  paintings/jingi_dannoura_great.jpg: 歌川芳艶《壇之浦大合戦之図》（1859年。ウィキメディア・コモンズ、パブリックドメイン）
+  paintings/jingi_ise_naiku_zue.jpg: 蔀関月『伊勢参宮名所図会』内宮宮中図（1797年。ウィキメディア・コモンズ、パブリックドメイン）
+  paintings/takauji_godaigo_emaki.jpg: 《太平記絵巻》の部分（江戸時代初めごろの絵巻。当時の絵ではない）
+  paintings/takauji_hyogo_taiheiki_kuniyoshi_ndl.jpg: 歌川国芳《太平記》の一場面（江戸時代後期。国立国会図書館所蔵、パブリックドメイン）
+
+shots:
+  - 0 ai:J02 wide
+  - 1 ai:J01 wide
+  - 2 ai:J01 left
+  - 3 ai:J11 wide
+  - 4 part:paintings/toshiie_owari_atsuta_zue.jpg wide
+  - 5 part:paintings/jingi_antoku_engi_dannoura.jpg wide
+  - 6 ai:J05 wide
+  - 7 ai:J02 right
+  - 8 part:paintings/takauji_godaigo_emaki.jpg wide
+  - 9 ai:J11 left
+  - 10 ai:J04 wide
+  - 11 ai:J03 wide
+  - 12 ai:J08 wide
+  - 13 ai:J04 left
+  - 14 ai:J01 right
+  - 15 ai:J08 left
+  - 16 part:paintings/toshiie_owari_atsuta_zue.jpg wide
+  - 17 ai:J03 left
+  - 18 ai:J03 right
+  - 19 part:paintings/toshiie_owari_atsuta_zue.jpg left
+  - 20 part:paintings/toshiie_owari_atsuta_zue.jpg right
+  - 21 ai:J01 wide
+  - 22 ai:J08 right
+  - 23 ai:J01 left
+  - 24 ai:J09 wide
+  - 25 part:paintings/jingi_ise_naiku_zue.jpg wide
+  - 26 part:paintings/toshiie_owari_atsuta_zue.jpg wide
+  - 27 ai:J01 right
+  - 28 ai:J02 left
+  - 29 ai:J02 wide
+  - 30 part:paintings/jingi_heiji_sanjo_fire.jpg wide
+  - 31 ai:J02 right
+  - 32 ai:J01 wide
+  - 33 ai:J01 left
+  - 34 ai:J09 left
+  - 35 part:paintings/jingi_heiji_sanjo_fire.jpg left
+  - 36 ai:J08 wide
+  - 37 ai:J02 left
+  - 38 ai:J08 left
+  - 39 ai:J08 right
+  - 40 part:paintings/jingi_heiji_sanjo_fire.jpg right
+  - 41 ai:J01 right
+  - 42 ai:J01 wide
+  - 43 ai:J07 wide
+  - 44 ai:J07 left
+  - 45 ai:J11 wide
+  - 46 part:paintings/jingi_heiji_sanjo_fire.jpg wide
+  - 47 ai:J01 left
+  - 48 ai:J04 wide
+  - 49 part:paintings/jingi_dannoura_sadahide.jpg wide
+  - 50 ai:J08 wide
+  - 51 ai:J11 right
+  - 52 part:paintings/jingi_antoku_engi_dannoura.jpg wide
+  - 53 part:paintings/jingi_dannoura_great.jpg wide
+  - 54 part:paintings/jingi_antoku_engi_dannoura.jpg left
+  - 55 ai:J04 right
+  - 56 part:paintings/jingi_dannoura_great.jpg right
+  - 57 part:paintings/jingi_antoku_engi_dannoura.jpg right
+  - 58 part:paintings/jingi_dannoura_sadahide.jpg left
+  - 59 ai:J08 left
+  - 60 ai:J05 wide
+  - 61 ai:J04 left
+  - 62 ai:J08 right
+  - 63 ai:J05 left
+  - 64 ai:J05 right
+  - 65 ai:J07 right
+  - 66 ai:J09 right
+  - 67 ai:J08 wide
+  - 68 ai:J04 wide
+  - 69 part:paintings/takauji_godaigo_emaki.jpg wide
+  - 70 part:paintings/takauji_godaigo_emaki.jpg wide
+  - 71 ai:J06 wide
+  - 72 part:paintings/takauji_hyogo_taiheiki_kuniyoshi_ndl.jpg wide
+  - 73 part:paintings/takauji_godaigo_emaki.jpg left
+  - 74 part:paintings/takauji_hyogo_taiheiki_kuniyoshi_ndl.jpg left
+  - 75 ai:J06 right
+  - 76 ai:J08 wide
+  - 77 ai:J07 wide
+  - 78 ai:J01 wide
+  - 79 ai:J08 left
+  - 80 ai:J07 left
+  - 81 ai:J01 right
+  - 82 part:paintings/takauji_godaigo_emaki.jpg right
+  - 83 ai:J08 right
+  - 84 ai:J07 right
+  - 85 part:paintings/jingi_dannoura_sadahide.jpg right
+  - 86 ai:J01 left
+  - 87 ai:J07 wide
+  - 88 ai:J07 wide
+  - 89 ai:J07 left
+  - 90 ai:J01 right
+  - 91 ai:J06 wide
+  - 92 part:paintings/takauji_hyogo_taiheiki_kuniyoshi_ndl.jpg wide
+  - 93 ai:J08 wide
+  - 94 ai:J06 left
+  - 95 ai:J06 right
+  - 96 part:paintings/takauji_hyogo_taiheiki_kuniyoshi_ndl.jpg right
+  - 97 ai:J07 right
+  - 98 ai:J08 left
+  - 99 part:paintings/toshiie_owari_atsuta_zue.jpg wide
+  - 100 ai:J08 right
+  - 101 ai:J08 wide
+  - 102 ai:J03 wide
+  - 103 ai:J01 wide
+  - 104 ai:J01 left
+  - 105 ai:J03 left
+  - 106 ai:J08 right
+  - 107 ai:J08 left
+  - 108 part:paintings/toshiie_owari_atsuta_zue.jpg wide
+  - 109 ai:J02 right
+  - 110 ai:J01 right
+  - 111 ai:J03 right
+  - 112 ai:J10 left
+  - 113 ai:J08 wide
+  - 114 ai:J08 left
+  - 115 ai:J11 wide
+  - 116 ai:J08 right
+  - 117 ai:J10 left
+  - 118 part:paintings/jingi_ise_naiku_zue.jpg wide
+  - 119 ai:J08 wide
+  - 120 ai:J11 left
+  - 121 part:paintings/jingi_ise_naiku_zue.jpg left
+  - 122 ai:J09 wide
+  - 123 ai:J11 wide
+  - 124 ai:J11 right
+  - 125 ai:J01 wide
+  - 126 ai:J09 left
+  - 127 ai:J04 wide
+  - 128 ai:J01 left
+  - 129 ai:J09 wide
+  - 130 part:paintings/toshiie_owari_atsuta_zue.jpg wide
+  - 131 part:paintings/jingi_antoku_engi_dannoura.jpg wide
+  - 132 part:paintings/jingi_ise_naiku_zue.jpg wide
+  - 133 ai:J05 wide
+  - 134 ai:J11 wide
+  - 135 ai:J01 wide
+  - 136 ai:J08 wide
+  - 137 ai:J01 right
+  - 138 ai:J12 wide
+  - end ai:J12 wide
+
+focus: {}
+
+fx:
+  J02: {fire: {region: [0.3, 0.0, 1.0, 0.6]}, sparks: {region: [0.2, 0.0, 1.0, 0.5]}}
+  J01: {lamp: {region: [0.55, 0.45, 0.7, 0.75]}}
+  J07: {fire: {region: [0.0, 0.5, 1.0, 0.75]}}
+  J08: {lamp: {region: [0.38, 0.15, 0.5, 0.55]}}
+  J12: {water: {region: [0.0, 0.62, 1, 1.0]}}
+
+parts:
+  - {type: quote, from: 13, to: 13, label: 史料, text: 是歳、沙門道行盗草薙剣、逃向新羅／而中路風雨、芒迷而帰, source: 『日本書紀』天智天皇7年（668年）是歳条}
+  - {type: quote, from: 16, to: 16, label: 史料, text: 卜天皇病、祟草薙剣／即日、送置于尾張国熱田社, source: 『日本書紀』朱鳥元年（686年）6月}
+  - {type: quote, from: 23, to: 23, label: 史料, text: 更鋳鏡造剣、以為護身御璽／是今践祚之日所献神璽鏡剣也, source: 斎部広成『古語拾遺』（807年）}
+  - {type: quote, from: 32, to: 32, label: 史料, text: 瓦上在鏡一面、径八寸許／頭雖有小瑕、専無損, source: 『扶桑略記』天徳4年（960年）9月24日条が引く天皇の日記}
+  - {type: quote, from: 63, to: 63, label: 史料, text: 不納龍宮、不移他州歟／従在処五町内, source: 九条兼実『玉葉』文治3年（1187年）8月に写された占いの文}
+  - {type: quote, from: 114, to: 114, label: 史料, text: 天皇崩スルトキハ皇嗣即チ践祚シ／祖宗ノ神器ヲ承ク, source: 皇室典範 第10条（1889年）}
+  - {type: quote, from: 118, to: 118, label: 史料, text: 万一の場合には自分が御守りして／運命を共にする外ないと思ふ, source: 『木戸幸一日記』1945年7月31日（辻田真佐憲の記事の引用による）}
+  - {type: quote, from: 135, to: 135, label: 要点, text: 剣　熱田の剣と、天皇のそばの剣／鏡　伊勢の八咫鏡と、宮中の破片と粒／勾玉　1458年に都へ戻った, source: この動画で見た記録から}
+
+stills:
+  - {line: 0, note: 冒頭（0秒）燃える宮殿}
+  - {line: 13, note: 日本書紀の史料の札}
+  - {line: 24, note: 鏡と剣は2つずつ（図）}
+  - {line: 35, note: 960年の3つの書き方（図）}
+  - {line: 54, note: 壇ノ浦（図）}
+  - {line: 78, note: 正平一統（図）}
+  - {line: 118, note: 木戸日記の札}
+  - {line: 135, note: まとめの要点札}
+  - {end: true, note: 終了画面の空き}
+
+figures:
+  - {from: 24, to: 24, spec: {"type": "stats", "title": "鏡と剣は2つずつ", "upto": 3, "items": [["剣のもと", "熱田神宮", "686年に熱田へ"], ["八咫鏡", "伊勢神宮", "皇居の外でまつる"], ["天皇のそば", "作り直した鏡と剣", "古語拾遺"]]}}
+  - {from: 35, to: 36, spec: {"type": "stats", "title": "960年の火事　3つの書き方", "upto": 3, "items": [["日記の23日", "皆、灰に", "扶桑略記が引く"], ["日記の24日", "瓦の上で見つかる", "小さな傷だけ"], ["古今著聞集", "飛び出して桜に", "「おぼつかなし」"]]}}
+  - {from: 54, to: 54, spec: {"type": "stats", "title": "壇ノ浦　天皇を抱いて沈んだのは", "upto": 3, "items": [["平家物語", "二位尼", "勾玉と宝剣も"], ["愚管抄ほか", "二位尼", "神皇正統記も"], ["吾妻鏡", "按察局", "二位尼は宝剣"]]}}
+  - {from: 78, to: 79, spec: {"type": "stats", "title": "正平一統の神器　2つの書き方", "upto": 2, "items": [["太平記", "偽物として捨てた", "剣と鏡はふつうの品に"], ["続神皇正統記", "賀名生へ移した", "南朝の使いが受け取る"]]}}
