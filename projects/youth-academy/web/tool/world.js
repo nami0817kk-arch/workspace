@@ -721,7 +721,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
 }
 // 絵の素材：顔とエンブレムが十分にあり、同じリーグのエンブレムは重ならず、顔は名簿のなかで重ならない
 {
-  ok(YA.IMG.faces.length >= 300 && YA.IMG.emblems.length >= 60 && YA.IMG.title.startsWith('data:image/'), '素材の数 ' + YA.IMG.faces.length + '/' + YA.IMG.emblems.length);
+  ok(YA.IMG.faces.length >= 70 && YA.IMG.emblems.length >= 60 && YA.IMG.title.startsWith('data:image/'), '素材の数 ' + YA.IMG.faces.length + '/' + YA.IMG.emblems.length);
   ok(YA.IMG.faces.every((u) => u.startsWith('data:image/jpeg')) && YA.IMG.emblems.every((u) => u.startsWith('data:image/png')), '素材は data URI');
   const wa = YA.newWorld(7);
   const idx = wa.league.teams.map((t) => YA.emblemIndex(wa, t.name));

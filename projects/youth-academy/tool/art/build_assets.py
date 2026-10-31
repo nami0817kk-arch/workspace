@@ -99,7 +99,7 @@ def faces():
     return out
 
 
-COMPOSITES = 300  # パーツの組み合わせで作る顔の数
+COMPOSITES = 0  # パーツ組み合わせの顔は見た目が良くないので、いまはゲームに入れない（素材と組み立ては残してある）
 COMPOSITE_PX = 80
 
 
@@ -111,7 +111,7 @@ def composites():
     print('parts', {k: len(v) for k, v in P.items()})
     rnd = random.Random(20261031)
     seen, out = set(), []
-    while len(out) < COMPOSITES:
+    while COMPOSITES and len(out) < COMPOSITES:
         k = (rnd.randrange(len(P['heads'])), rnd.randrange(len(P['hair'])), rnd.randrange(len(P['eyes'])), rnd.randrange(len(P['mouths'])))
         if k in seen:
             continue
