@@ -192,7 +192,7 @@
     // スカウトに出る（栄冠ナイン風：行き先を選んで出る。月3回まで）
     const left = YA.scoutActsLeft(w);
     const panel = h('div', { class: 'card', style: 'padding:7px 9px;margin-bottom:6px' });
-    panel.append(h('div', { class: 'row' }, h('b', { class: 'grow' }, 'スカウトに出る'), h('span', { class: 'chip trait' }, `今月あと ${'●'.repeat(left)}${'○'.repeat(YA.SCOUT_PER_MONTH - left)}`)));
+    panel.append(h('div', { class: 'row' }, h('b', { class: 'grow' }, 'スカウトに出る'), wn.scout ? h('span', { class: 'chip trait' }, `今月あと ${'●'.repeat(left)}${'○'.repeat(YA.SCOUT_PER_MONTH - left)}`) : h('span', { class: 'chip gray' }, '期間外（4月〜11月）')));
     panel.append(h('div', { style: 'display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:5px' }, YA.DEST_ORDER.map((k) => {
       const D = YA.DESTS[k];
       return h('button', { class: 'btn', style: 'flex-direction:column;align-items:flex-start;gap:2px;min-height:52px;text-align:left;white-space:normal', disabled: !wn.scout || left <= 0, onclick: () => say(YA.scoutOut(w, k)) }, h('span', {}, h('b', {}, D.name), h('span', { class: 'sub' }, `　${D.cost}万`)), h('span', { class: 'sub', style: 'font-weight:600;font-size:9.5px' }, D.note));

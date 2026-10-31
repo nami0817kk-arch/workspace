@@ -47,7 +47,7 @@
     const wn = YA.scoutWindow(w);
     if (wn.int) return '内部昇格を決める（11月）';
     if (wn.sel) return 'セレクションの合否を決める（1月）';
-    if (wn.scout) return `スカウトに出る（今月あと${YA.scoutActsLeft(w)}回）`;
+    if (wn.scout) return YA.scoutActsLeft(w) > 0 ? `スカウトに出る（今月あと${YA.scoutActsLeft(w)}回）` : 'スカウトの報告を見る（今月は出終わり）';
     return null;
   };
 

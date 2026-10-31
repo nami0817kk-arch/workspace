@@ -42,7 +42,11 @@
     const wn = YA.scoutWindow(w);
     const best = (kind) => S.cands.filter((x) => x.kind === kind && x.status === 'open').sort((a, b) => (YA.ovr(b.p) + (b.p.pot - YA.abSum(b.p)) / 60) - (YA.ovr(a.p) + (a.p.pot - YA.abSum(a.p)) / 60));
     if (wn.scout) {
-      for (let i = 0; i < 3 && YA.scoutActsLeft(w) > 0; i++) if (!YA.scoutOut(w, YA.DEST_ORDER[(w.week + i) % 3]).ok) break;
+      for (let i = 0; i < 3 && YA.scoutActsLeft(w) > 0; i++) {
+        const open = best('scout');
+        if (open.length >= 12) YA.passCand(w, open[open.length - 1].id); // 候補がいっぱいなら、いちばん下を見送って枠を空ける
+        if (!YA.scoutOut(w, YA.DEST_ORDER[(w.week + i) % 3]).ok) break;
+      }
       if (w.week === 27) for (const c of best('scout').slice(0, 3)) YA.signCand(w, c.id);
     }
     if (wn.int) for (const c of best('int').slice(0, 5)) YA.signCand(w, c.id);
