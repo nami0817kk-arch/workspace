@@ -104,10 +104,11 @@ const START = `S=newGame('m','normal',null);var c=S.tr.slice();S.sel=c.slice(0,S
   g.run(`withAd(function(){S.__got=(S.__got||0)+1;})`);
   g.run('hikariAdResult(true,null,1)');
   ok(!g.run('S.__got'), 'やめた動画の結果は、次の特典に入らない');
-  g.run('hikariAdShowing(2)');
+  const id2 = g.posts.filter((p) => p.type === 'reward').pop().id;
+  g.run(`hikariAdShowing(${id2})`);
   g.timers.filter(Boolean).forEach((f) => f());
   ok(g.run('!!pendingAd'), '動画の表示が始まったら、90秒の打ち切りで取り消さない');
-  g.run('hikariAdResult(true,null,2)');
+  g.run(`hikariAdResult(true,null,${id2})`);
   ok(g.run('S.__got') === 1, '見終えた返事で特典が入る');
 }
 
@@ -147,6 +148,16 @@ const START = `S=newGame('m','normal',null);var c=S.tr.slice();S.sel=c.slice(0,S
   const g = boot({ adFree: false, store: {}, owned: {} });
   g.run(START + 'S.budgetN=3;changeFmt(S);');
   ok(g.run('budgetAdLeft()') === 0, '審査の順番を入れ替えても、制作費の動画の残りは戻らない');
+}
+
+// ===== 動画を「やめる」と押したあとに届いた返事は受け取らない（2026-11-01：叱るような知らせが出ていた） =====
+{
+  const g = boot({ adFree: false, store: {}, owned: {} });
+  g.run(START + 'ui.toasts=[];window.__t=[];toast=function(m){__t.push(m);};S.__got=0;withAd(function(){S.__got=1;});');
+  const id = g.posts.filter((p) => p.type === 'reward').pop().id;
+  g.press('adcancel');
+  g.run(`hikariAdResult(false,'動画を最後まで見ると使えます',${id})`);
+  ok(g.run('__t.length') === 0 && !g.run('S.__got'), 'やめた動画の「途中で閉じた」の知らせは出さない');
 }
 
 // ===== 評価のお願い（2026-10-28：評価0件だったので、1シーズン目から頼む） =====
