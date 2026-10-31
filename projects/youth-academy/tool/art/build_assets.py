@@ -12,6 +12,8 @@ import json
 import os
 import sys
 
+import random
+
 import numpy as np
 from PIL import Image
 from scipy import ndimage
@@ -97,6 +99,30 @@ def faces():
     return out
 
 
+COMPOSITES = 300  # パーツの組み合わせで作る顔の数
+COMPOSITE_PX = 80
+
+
+def composites():
+    """輪郭・髪・目と眉・鼻と口のパーツを組み合わせた顔（同じ組み合わせは作らない）"""
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import parts as PT
+    P = PT.extract()
+    print('parts', {k: len(v) for k, v in P.items()})
+    rnd = random.Random(20261031)
+    seen, out = set(), []
+    while len(out) < COMPOSITES:
+        k = (rnd.randrange(len(P['heads'])), rnd.randrange(len(P['hair'])), rnd.randrange(len(P['eyes'])), rnd.randrange(len(P['mouths'])))
+        if k in seen:
+            continue
+        seen.add(k)
+        f = PT.compose(P['heads'][k[0]], (P['hair'][k[1]], P['eyes'][k[2]], P['mouths'][k[3]]), COMPOSITE_PX)
+        if len(out) < 40:
+            f.save(os.path.join(OUT, 'faces', 'combo_%02d.jpg' % len(out)), quality=88)
+        out.append(uri(f, 'JPEG', quality=72, optimize=True))
+    return out
+
+
 def emblem_from(cell, bgtol=28):
     """cell（RGB）の外側につながる背景色を透明にして、中身にぴったり切る"""
     a = np.asarray(cell.convert('RGB')).astype(int)
@@ -178,7 +204,7 @@ def title():
 
 
 if __name__ == '__main__':
-    fa, em, ti = faces(), emblems(), title()
+    fa, em, ti = faces() + composites(), emblems(), title()
     js = '// 自動生成：tool/art/build_assets.py（art/ の原本から）。手で直さない\n(function () {\n  const YA = (globalThis.YA = globalThis.YA || {});\n  YA.IMG = ' + json.dumps({'faces': fa, 'emblems': em, 'title': ti}, ensure_ascii=False) + ';\n})();\n'
     open(os.path.join(ROOT, 'web', 'src', 'imgdata.js'), 'w', encoding='utf8').write(js)
     print('faces', len(fa), 'emblems', len(em), 'js KB', len(js) // 1024)
