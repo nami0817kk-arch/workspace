@@ -1,0 +1,160 @@
+# 物語完結型ショート 参勤交代 s4（2026-10-31）。本編 scripts/sankin-story.yaml（11/4 19:00 公開、https://youtu.be/cZ1q-xRuDHc）の第3章（宿場）から。11/5 17:30 公開。
+# 形式は genkou_if_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。絵は本編の AI 絵（人物なし）と本編で使った浮世絵だけ。新しい絵は作らない。
+# 切り口：宿場は大名で潤ったのか（矢掛宿の宿代の値切り・郡山宿の年22.7日・助郷）。条文（s1）・人数（s2）・大井川（s3）・終わり（s5）には踏み込まない。
+# 事実カード（dev/output/rekishi-chiso/research/参勤交代_facts_20261031.yaml）：sankin-28・29・30・58。数は本編の言い方（出どころ付き）のまま。
+#   ・安永10年＝1781年（同年4月に天明へ改元）は計算し直して合う。143→128→138文は nippon.com の連載（「といいます」）→「という」。
+#   ・22.7÷12＝1.89 →「月に2日にもならない」（本編のまま）。
+#   ・助郷の賃金（無償、または日当2〜3文）は小林明さんの記述 →「と小林明さんは書いている」。
+# 理解テスト4問：
+#   ①誰の話か：参勤交代の行列と、街道の宿場
+#   ②いつ・どこで何が：1781年（安永10年）、萩藩の600〜700人が矢掛宿に泊まり、宿代143文を128文に値切って138文で折り合った
+#   ③宿場は得をしたか：郡山宿の本陣に行列が泊まったのは年平均22.7日。月に2日にもならない。人馬が足りないと近くの村が助郷で出し、賃金は無償か日当2〜3文
+#   ④どうなったか：大名を泊めた宿場は本当に得をしたのか（問い）
+title: 参勤交代｜大名行列は、宿代を値切った
+yt_title: 大名行列が宿代を値切った　1781年の矢掛宿、1人143文の交渉と宿場の本当の稼ぎ
+description: |-
+  1781年、安永10年。萩藩の行列、600人から700人が、矢掛宿に泊まりました。旅籠は1人143文。萩藩は128文を求め、138文で折り合ったといいます。
+  宿場が大名で潤った、とは限りません。西国街道、郡山宿の椿本陣に残る宿帳では、行列が泊まった日は1年に平均22.7日。月に2日にもなりません。参勤は年2回に集中するため、予約のない月もありました。人馬が足りなければ、近くの村が助郷として出し、その賃金は無償、あるいは日当2文から3文だった、と小林明さんは書いています。
+  これほどの旅を、幕府は、なぜ大名に命じたのか。この問いを掘り下げた本編は、概要欄のリンクからどうぞ。
+hashtags: ['#参勤交代', '#宿場町', '#江戸時代']
+ai_images: true
+ai_disclosure: この動画の風景・室内の画像は、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+readings: {矢掛宿: 矢掛じゅく, 郡山宿: こおりやまじゅく, 22.7日: ニジュウニテンナナニチ, 年2回: ネンニカイ}      # 台本ごとの読み替え（readings.yaml は変えない）
+art_dir: out/story/sankin
+out: sankin_story_s4
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 参勤交代（街道の宿場）
+  title: "大名行列は、《宿代を値切った》"
+now:
+  - {at: 1781年, text: "1781年　矢掛宿", point: 0}
+  - {at: 郡山宿, text: "西国街道　郡山宿", point: 1}
+  - {at: 助郷, text: "宿場と近くの村", point: 2}
+timeline:
+  - {label: "1781"}
+  - {label: "郡山"}
+  - {label: "助郷"}
+cards:
+  - type: table
+    title: 矢掛宿の宿代（1人あたり）
+    from: 旅籠の値段は
+    until: 宿場が
+    items:
+      - {at: 1人143文, text: "旅籠の値段　143文"}
+      - {at: 128文, text: "萩藩の求め　128文"}
+      - {at: 138文, text: "折り合い　138文"}
+    text_y: 0.70
+shots:
+  P03:
+    kind: ai
+    file: sankin/main/P03.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 夕暮れの宿場の通り
+  Satta:
+    kind: real
+    image: paintings/sankin_satta_sadahide_1862.jpg
+    crop: [0.0, 0.45, 0.55, 1.0]
+    focus: [0.5, 0.8]
+    move: right
+    credit: "東海道中 薩埵峠の大名行列（歌川貞秀、1862年。メトロポリタン美術館所蔵、ウィキメディア・コモンズ、CC0）"
+    must: 峠の道を埋める長い行列
+  P05:
+    kind: ai
+    file: sankin/main/P05.jpg
+    focus: [0.5, 0.55]
+    move: in
+    must: 旅籠の座敷
+  P03b:
+    kind: ai
+    file: sankin/main/P03.jpg
+    focus: [0.75, 0.5]
+    move: left
+    must: 宿場の軒と提灯
+  P06:
+    kind: ai
+    file: sankin/main/P06.jpg
+    focus: [0.5, 0.6]
+    move: in
+    must: 灯の下の帳面
+  P05b:
+    kind: ai
+    file: sankin/main/P05.jpg
+    focus: [0.25, 0.55]
+    move: right
+    must: 誰もいない座敷
+  P07:
+    kind: ai
+    file: sankin/main/P07.jpg
+    focus: [0.5, 0.55]
+    move: in
+    must: 雨の山道の休み処
+  Nihon:
+    kind: real
+    image: paintings/sankin_hoeido_nihonbashi_hiroshige.jpg
+    crop: [0.25, 0.25, 0.8, 1.0]
+    focus: [0.5, 0.55]
+    move: in
+    credit: "東海道五拾三次 日本橋（歌川広重、1833年ごろ。大英博物館所蔵、ウィキメディア・コモンズ、パブリックドメイン）"
+    must: 日本橋を渡る行列の先頭
+lines:
+  # fact: sankin-58
+  - 語り: 萩藩の大名行列が、《!宿代を値切った》。1781年、安永10年、矢掛宿でのことだ。
+    shot: P03
+    tone: 強調
+    pause: 0.12
+  # fact: sankin-58
+  - 語り: 一行は、600人から700人。
+    shot: Satta
+    tone: しみじみ
+    pause: 0.12
+  # fact: sankin-58
+  - 語り: 旅籠の値段は、1人143文。
+    shot: Satta
+    tone: しみじみ
+    pause: 0.12
+  # fact: sankin-58
+  - 語り: 萩藩は、128文を求め、138文で折り合った、という。
+    shot: P05
+    tone: しみじみ
+    pause: 0.12
+  # fact: sankin-30
+  - 語り: 宿場が、大名で潤った、とは限らない。
+    shot: P03b
+    tone: 重い
+    pause: 0.12
+  # fact: sankin-30
+  - 語り: 西国街道、郡山宿の本陣に残る宿帳では、行列が泊まった日は、1年に平均22.7日。
+    shot: P03b
+    tone: しみじみ
+    pause: 0.12
+  # fact: sankin-30
+  - 語り: 月に2日にも、ならない。参勤は、年2回に集中するため、予約のない月もあった。
+    shot: P05b
+    tone: 重い
+    pause: 0.12
+  # fact: sankin-28, sankin-29
+  - 語り: 東海道の宿場には、常に100人、100頭を備える決まりだった。足りなければ、近くの村が出した。助郷だ。
+    shot: P07
+    tone: しみじみ
+    pause: 0.12
+  # fact: sankin-28, sankin-29
+  - 語り: その賃金は、公用のため、無償、あるいは、日当2文から3文だった、と小林明さんは書いている。
+    shot: P06
+    tone: 重い
+    pause: 0.3
+    dip: true
+  - 語り: 大名を泊めた宿場は、本当に、得をしたのか。
+    shot: Nihon
+    tone: 疑問
+    pause: 0.15

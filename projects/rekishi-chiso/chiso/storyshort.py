@@ -36,8 +36,9 @@ FIRST_SCALE = 1.15         # 最初のブロックだけ大きく
 GAP = 0.12                 # 行と行のあいだ（第8版：もっと早口に。0.12〜0.15秒）
 MIN_BLOCK = 1.0            # 1ブロックの最短の表示時間（秒）。これより短い句は隣のブロックと結ぶ（plan が声の時刻を見て結ぶ）
 GAP_HEAVY = 0.15           # 重い・しみじみの行のあと
-END_HOLD = 1.2             # 最後の声のあとに残す秒数（最初の0.4秒は余白＝BGM だけ、そのあと「本編は概要欄から」）
+END_HOLD = 1.2             # 最後の声のあとに残す秒数（最初の0.4秒は余白＝BGM だけ、そのあと「本編は概要欄から」）。59秒以内なら SUB_EXTRA だけ延ばす
 CTA_SECONDS = 0.8          # 「本編は概要欄から」を出す秒数（最後の0.8秒）
+SUB_EXTRA = 1.2            # 登録のお願いを読む時間として締めを延ばす秒数（締めの表示は計2.0秒＝旧型の TEASE_AFTER と同じ）。59秒を超える分は延ばさない
 PEAK_SCALE = 1.15          # 感情の頂点の語（《!…》）の字を大きくする倍率
 DIP_DEPTH = 0.55           # 頂点の直前に絵を暗くする深さ（最大）
 MAX_SECONDS = 59.0         # 60秒以内で余裕1秒
@@ -54,6 +55,9 @@ PHRASE_CENTER_Y = int(H * 0.60)    # 中央〜やや下
 WHITE, YELLOW, BLACK = (255, 255, 255), (255, 214, 0), (0, 0, 0)
 AI_LABEL = "AI生成画像"
 CTA_TEXT = "本編は概要欄から"
+# 10-21 ユーザー決定「ショート末尾に登録のお願い。声なし・画面のみ」。旧型（shorts.CTA_SCREEN）と同じ文言。
+# 物語型（10-22〜）には入っていなかったので 11-01 に足した。「本編は概要欄から」と同時に、その上に小さく出す（読み上げはしない）
+SUB_TEXT = "高評価・チャンネル登録もお願いします"
 MERGE_BELOW, MERGE_MAX = 6, 16   # 6字未満の句は同じ文の隣の句とつなぎ、合わせて16字まで（1ブロックが短すぎないように。第6版）
 CONJ = ("だが", "しかし", "そして", "そのとき")      # 転換の言葉は短くても1ブロックにする（前後とつなげない）
 HEAD_PARTICLES = "をはがにでへのも"
@@ -500,6 +504,16 @@ def merge_short_blocks(lines: list, total: float, min_sec: float) -> None:
                 break
 
 
+def end_extra(voice_end: float) -> float:
+    """締め（「本編は概要欄から」＋登録のお願い）を延ばす秒数。全体が MAX_SECONDS を超える分は延ばさない（そのときは最後の表示に重ねるだけ）。"""
+    return round(max(0.0, min(SUB_EXTRA, MAX_SECONDS - (voice_end + END_HOLD))), 3)
+
+
+def cta_start(voice_end: float) -> float:
+    """締めの表示が出る時刻：最後の声のあと（END_HOLD - CTA_SECONDS）＝0.4秒の余白のあと。"""
+    return voice_end + END_HOLD - CTA_SECONDS
+
+
 def plan(lines: list[Line], seconds: list[float], onsets: list[list[float]] | None = None, min_block: float = MIN_BLOCK):
     """(各行の声の (開始, 終了), ブロック, 絵の区間, 全体の長さ)。
 
@@ -512,7 +526,7 @@ def plan(lines: list[Line], seconds: list[float], onsets: list[list[float]] | No
             t = voice[-1][1] + (line.pause if line.pause is not None else (GAP_HEAVY if prev.tone in ("重い", "しみじみ") else GAP))
         voice.append((t, t + sec))
         prev = line
-    total = round(voice[-1][1] + END_HOLD, 3)
+    total = round(voice[-1][1] + END_HOLD + end_extra(voice[-1][1]), 3)
     blocks: list[Block] = []
     part_first: list[tuple[int, int]] = []              # (ブロック番号, 行番号)
     for i, line in enumerate(lines):
@@ -665,7 +679,8 @@ def draw_label(img: Image.Image, font_of, y: int = 40, right: bool = False) -> N
     d.text((x0 + 16, y + 26), AI_LABEL, font=f, fill=(255, 255, 255, 235), anchor="lm")
 
 
-def draw_cta(img: Image.Image, font_of, y: int | None = None) -> None:
+def draw_cta(img: Image.Image, font_of, y: int | None = None, sub_y: int | None = None) -> None:
+    """締めの表示：「本編は概要欄から」の白枠の札と、その上に小さく登録のお願い（枠なしの半透明の黒地。札より目立たせない）。"""
     f = font_of(62)
     tw = int(f.getlength(CTA_TEXT))
     d = ImageDraw.Draw(img, "RGBA")
@@ -673,6 +688,11 @@ def draw_cta(img: Image.Image, font_of, y: int | None = None) -> None:
     d.rounded_rectangle([W / 2 - tw / 2 - 36, y, W / 2 + tw / 2 + 36, y + 110], radius=55, fill=(0, 0, 0, 150),
                         outline=(255, 255, 255, 220), width=3)
     d.text((W / 2, y + 55), CTA_TEXT, font=f, fill=(255, 255, 255, 255), anchor="mm")
+    fs = font_of(42)
+    sw = int(fs.getlength(SUB_TEXT))
+    sy = y - 92 if sub_y is None else sub_y
+    d.rounded_rectangle([W / 2 - sw / 2 - 28, sy, W / 2 + sw / 2 + 28, sy + 72], radius=36, fill=(0, 0, 0, 130))
+    d.text((W / 2, sy + 36), SUB_TEXT, font=fs, fill=(255, 255, 255, 240), anchor="mm")
 
 
 def make_font_of(fonts: dict):
@@ -1035,6 +1055,7 @@ class Overlay:
         self.credit_y1 = 1840 if s == "C" else 1736
         self.label_y = {"A": 30, "B": 30, "C": 24}.get(s)
         self.cta_y = 1700 if s == "C" else int(H * 0.80)
+        self.sub_y = 1530 if s == "C" else None          # 登録のお願いの y（C は下に年表バー 1640 があるので、その上に置く）
 
     def header_layer(self) -> Image.Image | None:
         if not self.header:
@@ -1304,8 +1325,10 @@ class Renderer:
     絵の替わり目は FADE 秒の溶け合い。"""
 
     def __init__(self, blocks: list, spans: list, doc: dict, config: dict, assets: Path, art_dir: Path, total: float,
-                 dips: list | None = None):
+                 dips: list | None = None, voice_end: float | None = None):
         self.blocks, self.total = blocks, total
+        # 締めの表示が出る時刻。voice_end（最後の声の終わり）が分かれば 0.4秒の余白のあと、無ければ最後の CTA_SECONDS 秒
+        self.cta_start = cta_start(voice_end) if voice_end is not None else total - CTA_SECONDS
         self.assets = assets
         self.hook_clear = float(doc.get("hook_clear", HOOK_CLEAR))
         self.dips = dips or []                          # 頂点の直前に絵を暗くする区間 (開始, 終了)
@@ -1359,7 +1382,7 @@ class Renderer:
                 y = min(y, ov.text_y_max)
             self.text.append(block_layers(b, self.font_of, int(H * y), box=bool(shot.get("text_box"))))
         self.cta = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-        draw_cta(self.cta, self.font_of, ov.cta_y)
+        draw_cta(self.cta, self.font_of, ov.cta_y, ov.sub_y)
         self._first = None
 
     def _picture(self, k: int, t: float, n: int) -> Image.Image:
@@ -1455,7 +1478,7 @@ class Renderer:
                 img.alpha_composite(_fade_layer(self.bars[cur[2]], e * ramp))
         for j, u, a in self.text_state(t):
             self._put(img, j, u, a)
-        if t >= self.total - CTA_SECONDS:
+        if t >= self.cta_start:
             img.alpha_composite(self.cta)
         return img.convert("RGB")
 
@@ -1504,7 +1527,7 @@ def stills(path, config: dict, out: Path) -> Path:
     doc = load(path)
     lines = lines_of(doc)
     _v, blocks, spans, total = plan(lines, estimate_seconds(lines), None, float(doc.get("min_block", MIN_BLOCK)))
-    r = Renderer(blocks, spans, doc, config, assets_dir(config), art_dir_of(doc, path), total)
+    r = Renderer(blocks, spans, doc, config, assets_dir(config), art_dir_of(doc, path), total, voice_end=_v[-1][1])
     ims = []
     for b in blocks:
         n = int(((b.start + b.end) / 2) * FPS)
@@ -1545,7 +1568,8 @@ def frames(path, config: dict, voices: dict, readings: dict, out_dir: Path, work
         d2 = dict(doc)
         if styles:
             d2["header_style"] = st
-        r = Renderer(blocks, spans, d2, config, assets_dir(config), art_dir_of(doc, path), total, dips_of(lines, voice_t))
+        r = Renderer(blocks, spans, d2, config, assets_dir(config), art_dir_of(doc, path), total, dips_of(lines, voice_t),
+                     voice_end=voice_t[-1][1])
         for t in times:
             n = min(int(t * FPS), int(total * FPS) - 1)
             tag = f"_{st}" if styles else ""
@@ -1729,7 +1753,8 @@ def build(path, config: dict, voices: dict, readings: dict, out_dir: Path, work_
                                             risers=riser_times(lines, voice_t) if sfx else [], hushes=dips_of(lines, voice_t) if sfx else [])
     (out_dir / f"{stem_out}_audio.md").write_text(voice_report(engine, lines, lvoice, readings, spoken, wd / "voice.wav", bgm_info, doc),
                                                   encoding="utf-8")
-    r = Renderer(blocks, spans, doc, config, assets_dir(config), art_dir_of(doc, path), total, dips_of(lines, voice_t))
+    r = Renderer(blocks, spans, doc, config, assets_dir(config), art_dir_of(doc, path), total, dips_of(lines, voice_t),
+                 voice_end=voice_t[-1][1])
     (out_dir / f"{stem_out}_sync.md").write_text(
         f"# {stem_out} 画面の文字と声の時刻（ブロックを一度に出す）\n\n画面のブロックをつなげると語り（「、」「。」を除く）と一致する。"
         "時刻は合成に渡した audio_query のモーラ長から求めたブロックの話し始め（0.2秒のフェードで丸ごと出て、次のブロックが始まるまで残る）。\n\n"
