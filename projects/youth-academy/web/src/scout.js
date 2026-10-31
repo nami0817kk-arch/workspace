@@ -142,7 +142,7 @@
     S.intOpen = true;
     for (let i = 0; i < 12; i++) genCand(w, r, 'int');
     for (const c of S.cands) if (c.kind === 'int') c.seen = Math.min(3, c.seen + 1);
-    w.inbox.push({ week: 0, year: 1, tier: 1, text: `最初の高1の12人を決めます（クラブ→スカウト）。セレクション（応募${n}人）は3人まで、スカウトは3人まで、U-15の内部昇格（候補12人）は8人まで選べます。選ばなかった分は一般入団で埋まります` });
+    w.inbox.push({ week: 0, year: 1, tier: 1, text: `最初の高1の12人を決めます（クラブ→スカウト）。決める順番は、U-15の内部昇格（候補12人から8人まで）、スカウト（3人まで）、セレクション（応募${n}人から3人まで）です。選ばなかった分は一般入団で埋まります` });
   };
   // セレクションを終える：最初にいた高1を、合格者と一般入団の12人に入れ替える
   YA.finishFirstSelection = function (w) {
