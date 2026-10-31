@@ -51,6 +51,14 @@ enum PurchaseOutcome {
   /// ストアに繋がらない、商品が見つからない。
   unavailable,
 
+  /// 復元を問い合わせたが、戻せる購入が1つも無かった。
+  ///
+  /// **「ストアに繋がらない」と混ぜない。** StoreKit 2 は復元の対象が無いと
+  /// 空のリストを1回流すだけなので、以前は20秒待ってから
+  /// 「ストアに繋がりませんでした」と出していた——買っていない人が
+  /// 押すと、壊れているように見える。
+  nothingToRestore,
+
   /// ストアから失敗が返った。
   failed,
 }
@@ -124,7 +132,28 @@ class NoPurchaseService implements PurchaseService {
 
 /// ストアの課金基盤を使う実装。
 class StorePurchaseService implements PurchaseService {
-  final InAppPurchase _iap = InAppPurchase.instance;
+  /// [iap] と待ち時間はテストで差し替えるためのもの。
+  StorePurchaseService({
+    InAppPurchase? iap,
+    this.restoreGrace = const Duration(seconds: 3),
+    this.restoreLimit = const Duration(seconds: 20),
+  }) : _iap = iap ?? InAppPurchase.instance;
+
+  final InAppPurchase _iap;
+
+  /// 復元の呼び出しが終わってから、届くのを待つ時間。
+  ///
+  /// 復元できる購入があれば、呼び出しが終わる頃にはストリームに流れている。
+  /// **何も来なければ「対象なし」**で、20秒待たせない。
+  final Duration restoreGrace;
+
+  /// 復元の呼び出しそのものの上限。ここを越えたら「繋がらない」。
+  /// 届き始めた購入の受け取り（保存）を待つ上限も兼ねる。
+  final Duration restoreLimit;
+
+  /// 待っている商品の通知が、ストリームに届き始めたか。
+  /// 受け取り（保存）の途中で待ち時間が切れても「対象なし」と言わないため。
+  bool _arrived = false;
 
   /// 届いたものの渡し先。`initialize` で必ず受け取る。
   Future<void> Function(Product product)? _onDelivered;
@@ -148,6 +177,7 @@ class StorePurchaseService implements PurchaseService {
       return false;
     }
   }
+
   StreamSubscription<List<PurchaseDetails>>? _subscription;
 
   /// 購入・復元の完了を待つ受け皿。結果はストリームで非同期に返ってくるので、
@@ -180,6 +210,10 @@ class StorePurchaseService implements PurchaseService {
       // 知らない商品IDは触らない。取り違えて別のものを渡さないため。
       final product = Product.byId(purchase.productID);
       if (product == null) continue;
+      if (_pending != null &&
+          (_pendingId == null || purchase.productID == _pendingId)) {
+        _arrived = true;
+      }
 
       // 家族の承認待ち（Ask to Buy）。**取りやめではない。**
       // 承認されたら改めて届くので、ここでは待っている側にそう伝えるだけ。
@@ -190,7 +224,8 @@ class StorePurchaseService implements PurchaseService {
         continue;
       }
 
-      final delivered = purchase.status == PurchaseStatus.purchased ||
+      final delivered =
+          purchase.status == PurchaseStatus.purchased ||
           purchase.status == PurchaseStatus.restored;
 
       // 返金された取引。**「購入」として流れてくる**ので、渡す前に見分ける。
@@ -319,24 +354,47 @@ class StorePurchaseService implements PurchaseService {
 
   @override
   Future<PurchaseOutcome> restore() async {
+    final completer = Completer<PurchaseOutcome>();
+    void release() {
+      if (identical(_pending, completer)) {
+        _pending = null;
+        _pendingId = null;
+      }
+    }
+
     try {
-      final completer = Completer<PurchaseOutcome>();
       _pending = completer;
       // **復元で戻るのは「広告を消す」だけ。** 応援は消耗型なので戻らない。
       // ここを null にすると、残っていた応援の通知で広告が消えかねない。
       _pendingId = Product.noAds.id;
-      await _iap.restorePurchases();
-      // 履歴が無い場合はストリームに何も流れないので、待ち続けずに
-      // 「対象なし」で返す。
-      return await completer.future.timeout(
-        const Duration(seconds: 20),
-        onTimeout: () => PurchaseOutcome.unavailable,
-      );
+      _arrived = false;
+      await _iap.restorePurchases().timeout(restoreLimit);
+    } on TimeoutException {
+      release();
+      return PurchaseOutcome.unavailable;
     } catch (_) {
-      _pending = null;
-      _pendingId = null;
+      release();
       return PurchaseOutcome.failed;
     }
+
+    // 呼び出しが終わった。戻せる購入があれば、もう流れているか、すぐ来る。
+    // **履歴が無いと StoreKit 2 は空のリストを1回流すだけ**なので、
+    // 短く待って何も来なければ「対象なし」で返す。
+    final outcome = await completer.future.timeout(
+      restoreGrace,
+      onTimeout: () => PurchaseOutcome.nothingToRestore,
+    );
+    if (outcome != PurchaseOutcome.nothingToRestore || !_arrived) {
+      release();
+      return outcome;
+    }
+    // 届き始めてはいる（受け取りの保存を待っている）。対象なしとは言わない。
+    final afterArrival = await completer.future.timeout(
+      restoreLimit,
+      onTimeout: () => PurchaseOutcome.failed,
+    );
+    release();
+    return afterArrival;
   }
 
   @override

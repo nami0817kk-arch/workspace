@@ -228,6 +228,7 @@ class CareerState {
     this.calledUp = false,
     this.simStyle = SimStyle.balanced,
     this.retired = false,
+    this.seasonEndResolved = false,
   });
 
   Player player;
@@ -775,6 +776,15 @@ class CareerState {
   /// 引退済みなら true。以後は試合をせず、通算成績だけを見せる。
   bool retired;
 
+  /// 今季の季末処理（`CareerEngine.resolveSeasonEnd`）を済ませたか。
+  ///
+  /// 季末の画面は開くたびに季末処理を呼ぶ。契約・引退を選ぶ前にアプリが
+  /// 落ちて起動し直すと、もう一度走って世界大会が引き直され、代表キャップが
+  /// 二重に入っていた。**1シーズン1回だけ**にするための印で、2回目からは
+  /// 保存した結果（大会の到達ラウンド・キャップ）をそのまま見せる。
+  /// 翌季の状態は新しく作られるので、そこで false に戻る。
+  bool seasonEndResolved;
+
   /// リーグ戦の結果だけ。代表戦は節に数えない。
   /// リーグ戦だけ。順位表・平均評価・目標・約束はここで数える。
   ///
@@ -873,6 +883,7 @@ class CareerState {
 
   Map<String, dynamic> toJson() => {
     'retired': retired,
+    'seasonEndResolved': seasonEndResolved,
     'player': player.toJson(),
     'club': club.toJson(),
     'league': league.map((c) => c.toJson()).toList(),
@@ -1142,6 +1153,7 @@ class CareerState {
           ? SimStyle.values.byName(json['simStyle'] as String)
           : SimStyle.balanced,
       retired: json['retired'] as bool? ?? false,
+      seasonEndResolved: json['seasonEndResolved'] as bool? ?? false,
     );
   }
 }
