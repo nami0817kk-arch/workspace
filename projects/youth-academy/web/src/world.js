@@ -192,7 +192,6 @@
     YA.relations(w);
     YA.yearStart(w);
     YA.autoPlan(w);
-    if (opts.firstSel) YA.beginFirstSelection(w);
     w.inbox.push({ week: 0, year: 1, tier: 2, text: '指導者として着任しました。高1〜高3の36人を預かります。まずは練習を組んで、週を進めましょう。' });
     return w;
   };
@@ -969,7 +968,6 @@
       const b = YA.simulateB(w);
       w.lastB = b;
     }
-    YA.resolveOffers(w);
     if (sch.t === 'league' && sch.n === 22) {
       const le = YA.leagueEnd(w);
       if (le) YA.noteTier(w, 1, `リーグ戦が終わりました。最終順位は${le.rank}位` + (le.move < 0 ? '（上位2位。来年は一つ上のリーグへ昇格）' : le.move > 0 ? '（下位2位。来年は一つ下のリーグへ降格）' : '') );

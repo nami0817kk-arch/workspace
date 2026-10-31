@@ -29,14 +29,8 @@ function playYear(w, opts) {
     if (opts.auto !== false) YA.autoPlan(w);
     if (opts.talk) { const p = Object.values(w.players)[w.week % 30]; YA.talk(w, p.id, 'praise'); }
     if (w.week === 26 && opts.camp) w.campChoice = opts.camp;
-    // スカウト：候補に声をかける・セレクション・内部昇格
-    if (opts.scout && w.scouting) {
-      const S = w.scouting;
-      for (const c of S.cands.filter((x) => x.kind === 'scout' && x.status === 'open').slice(0, 2)) YA.signCand(w, c.id);
-      if (S.selOpen && !S.testsDone) YA.runSelection(w, ['紅白戦', '面接']);
-      if (S.selOpen) for (const c of S.cands.filter((x) => x.kind === 'sel' && x.status === 'open').slice(0, 4)) YA.signCand(w, c.id);
-      if (S.intOpen) for (const c of S.cands.filter((x) => x.kind === 'int' && x.status === 'open').slice(0, 5)) YA.signCand(w, c.id);
-    }
+    // スカウト：暦に合わせて自動で（4〜11月に出て、11月に内部昇格、1月にセレクション）
+    if (opts.scout && w.scouting) YA.autoScout(w);
     YA.startWeek(w);
     injuries += w.inbox.filter((n) => n.week === w.week && n.year === w.year && /怪我/.test(n.text)).length;
     for (const e of w.events.slice()) {
@@ -166,12 +160,79 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
     ok(!YA.talk(w6, sen.id, 'praise').ok, '同じ週に2回は話せない');
   }
 }
-// 初回のセレクション：応募者から高1を選び、足りない分は一般入団で12人に
+// 入団の暦：初年度は決められない。内部昇格は11月・スカウトは4〜11月に月3回まで（返事は12月）・セレクションは1月
 {
-  const wf = YA.newWorld(21, Object.assign(YA.makeStart({ name: '点検', career: 0, club: 2, points: {}, noFire: false }), { firstSel: true }));
-  ok(wf.firstSel === true, '初回のセレクションが始まる');
+  const mk = (seed) => YA.newWorld(seed, YA.makeStart({ name: '点検', career: 0, club: 2, points: {}, noFire: false }));
+  const wf = mk(21);
+  ok(!wf.firstSel && Object.keys(wf.players).length === 36, '始めた時点ではセレクションを開かない');
+  ok(wf.scouting.cands.length === 0 && !wf.scouting.intOpen && !wf.scouting.selOpen, '初年度の始めは候補がいない');
+  ok(!YA.scoutHint(mk(1)) || /スカウトに出る/.test(YA.scoutHint(mk(1))), '4月はスカウトに出られる');
+  // スカウトに出る：月3回まで
+  wf.week = 10;
+  const bud = YA.budget(wf).scout;
+  ok(bud >= 30, 'スカウトの予算がある ' + bud);
+  let outs = 0;
+  for (const d of ['local', 'local', 'strong']) if (YA.scoutOut(wf, d).ok) outs++;
+  ok(outs === 3 && YA.scoutActsLeft(wf) === 0, 'スカウトは月に3回出られる ' + outs);
+  const over = YA.scoutOut(wf, 'local');
+  ok(!over.ok && /3回/.test(over.msg), '4回目は出られない：' + over.msg);
+  const sc0 = wf.scouting.cands.filter((c) => c.kind === 'scout');
+  ok(sc0.length >= 3 && sc0.every((c) => c.where && c.seen >= 1 && c.status === 'open'), '会えた子に行き先と最初の印象がある ' + sc0.length);
+  ok(wf.club.spent.scout >= 5 + 5 + 12, 'スカウトの経費がかかる ' + wf.club.spent.scout);
+  wf.week = 15;
+  ok(YA.scoutActsLeft(wf) === 3, '月が替わると3回に戻る');
+  wf.week = 20;
+  wf.club.total = 99999; // 予算の制限は別の点検
+  for (let i = 0; i < 6; i++) { wf.week = 15 + i * 2; wf.club.spent.scout = 0; YA.scoutOut(wf, 'wide'); }
+  ok(wf.scouting.cands.filter((c) => c.kind === 'scout' && c.status === 'open').length <= 12, '候補は12人まで');
+  // 期間外は決められない
+  wf.week = 10;
+  const sk = wf.scouting.cands.find((c) => c.kind === 'scout' && c.status === 'open');
+  const pv = YA.candView(wf, sk);
+  ok(/^[SABCDE]$/.test(pv.rank), 'ランクが付く ' + pv.rank);
+  const v0 = sk.seen;
+  wf.week = 15 + 2; // 別の月：回数が戻っている
+  ok(YA.scoutVisit(wf, sk.id).ok && sk.seen === v0 + 1, '見に行くと見える範囲が広がる');
+  ok(YA.passCand(wf, wf.scouting.cands.find((c) => c.kind === 'scout' && c.status === 'open' && c !== sk).id).ok, '見送れる');
+  // 声かけは3人まで・返事は12月（28週）
+  wf.week = 20;
+  let offered = 0;
+  for (const c of wf.scouting.cands.filter((x) => x.kind === 'scout' && x.status === 'open')) if (YA.signCand(wf, c.id).ok) offered++;
+  ok(offered === 3, 'スカウトは3人まで声をかけられる ' + offered);
+  ok(wf.scouting.cands.filter((c) => c.status === 'offered').length === 3, '返事待ちになる');
+  // 内部昇格は11月（25〜27週）
+  const ic0 = wf.scouting.cands.filter((c) => c.kind === 'int');
+  ok(ic0.length === 0, '11月までは内部昇格の候補がいない');
+  wf.week = 25;
+  YA.weekExtras(wf);
+  const ic = wf.scouting.cands.filter((c) => c.kind === 'int');
+  ok(ic.length === 20 && wf.scouting.intOpen && ic.every((c) => c.seen >= 1), '25週（11月）に内部昇格の候補が20人出る');
+  wf.week = 24;
+  ok(!YA.signCand(wf, ic[0].id).ok, '11月より前は内部昇格を決められない');
+  wf.week = 26;
+  YA.weekExtras(wf);
+  ok(ic.every((c) => c.persSeen), '26週の申し送りで性格が見える');
+  let oki = 0;
+  for (const c of ic) if (YA.signCand(wf, c.id).ok) oki++;
+  ok(oki === 8 - 0 || oki === 12 - 3 && oki <= 8, '内部昇格は8人まで、全体12人の枠内 ' + oki);
+  ok(YA.signedCount(wf, 'int') <= 8, '内部昇格は8人まで');
+  // 12月：スカウトの返事
+  wf.week = 28;
+  YA.weekExtras(wf);
+  ok(wf.scouting.cands.filter((c) => c.status === 'offered').length === 0, '28週（12月）に返事が届く');
+  ok(wf.scouting.cands.filter((c) => c.kind === 'scout' && (c.status === 'signed' || c.status === 'declined')).length === 3, 'スカウトの返事は入団か辞退');
+  wf.week = 29;
+  ok(!YA.signCand(wf, ic.find((c) => c.status === 'open').id).ok, '12月以降は内部昇格を変えられない');
+  const sg = ic.find((c) => c.status === 'signed');
+  YA.unsign(wf, sg.id);
+  ok(sg.status === 'signed', '期間が過ぎたら取り消せない');
+  // 1月：セレクション
+  wf.week = 30;
+  ok(!wf.scouting.selOpen, '1月前はセレクションが開かない');
+  wf.week = 31;
+  YA.weekExtras(wf);
   const cands = wf.scouting.cands.filter((c) => c.kind === 'sel');
-  ok(cands.length >= 16, '応募者が16人以上 ' + cands.length);
+  ok(cands.length >= 14, '31週（1月）に応募者が14人以上 ' + cands.length);
   const prof = (k) => cands.filter((c) => c.prof === k).length;
   ok(prof('raw') + prof('low') + prof('mis') === cands.length, '応募者は原石・低め・位置ちがいのどれか');
   const raw = cands.filter((c) => c.prof === 'raw');
@@ -180,34 +241,28 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   ok(raw.every((c) => YA.ovr(c.p) < 9), '原石は今の力が低い');
   ok(mis.every((c) => c.p.pos !== 'GK' && c.p.apt[c.p.main] <= c.p.apt[c.p.best] - 1), '位置ちがいは登録が合っていない');
   let okc = 0;
-  for (const c of cands.slice(0, 6)) if (YA.signCand(wf, c.id).ok) okc++;
-  ok(okc === 3, 'セレクションからは3人まで ' + okc);
-  const sc = wf.scouting.cands.filter((c) => c.kind === 'scout');
-  const ic = wf.scouting.cands.filter((c) => c.kind === 'int');
-  ok(sc.length >= 6 && ic.length === 12 && wf.scouting.intOpen, '初年度からスカウトと内部昇格の候補がいる');
-  let oks = 0;
-  for (const c of sc) if (YA.signCand(wf, c.id).ok) oks++;
-  ok(oks === 3, 'スカウトは3人まで ' + oks);
-  let oki = 0;
-  for (const c of ic) if (YA.signCand(wf, c.id).ok) oki++;
-  ok(oki === 6, '内部昇格は8人まで、ただし全体12人の枠内（残り6人） ' + oki);
-  {
-    const wq = YA.newWorld(23, Object.assign(YA.makeStart({ name: '点検', career: 0, club: 2, points: {}, noFire: false }), { firstSel: true }));
-    let k = 0;
-    for (const c of wq.scouting.cands.filter((x) => x.kind === 'int')) if (YA.signCand(wq, c.id).ok) k++;
-    ok(k === 8, '内部昇格だけなら8人まで ' + k);
-  }
-  const names = cands.slice(0, 3).map((c) => c.p.name).concat(ic.filter((c) => c.status === 'signed').map((c) => c.p.name));
-  const n = YA.finishFirstSelection(wf);
+  for (const c of cands.slice(0, 8)) if (YA.signCand(wf, c.id).ok) okc++;
+  ok(okc >= 1 && okc <= 3 && YA.signedCount(wf, 'sel') <= 3, 'セレクションからは3人まで ' + okc);
+  const held = wf.scouting.cands.filter((c) => c.status === 'signed').length;
+  ok(held <= 12, '新入生は12人まで ' + held);
+  wf.week = 35;
+  YA.weekExtras(wf);
+  const lateSel = cands.find((c) => c.status === 'open');
+  ok(!YA.signCand(wf, lateSel.id).ok, '1月が過ぎたらセレクションの合否を変えられない');
+  // 1年を通して：3月の入団で高1が12人になる
+  const names = wf.scouting.cands.filter((c) => c.status === 'signed').map((c) => c.p.name);
+  wf.week = 40;
+  const lg = wf.leagueLevel;
+  const grad = YA.endWeek(wf);
   const g1 = Object.values(wf.players).filter((p) => p.grade === 1);
-  ok(n === 12 && g1.length === 12, '高1が12人になる ' + g1.length);
-  ok(names.every((nm) => g1.some((p) => p.name === nm)), '合格者が高1に入る');
-  ok(Object.keys(wf.players).length === 36, '全体36人 ' + Object.keys(wf.players).length);
-  ok(wf.lineupA.every((s) => wf.players[s.pid]) && wf.lineupB.every((s) => wf.players[s.pid]), '先発の選手がそろっている');
-  ok(!wf.firstSel, 'セレクションが終わる');
-  const wg = YA.newWorld(22, Object.assign(YA.makeStart({ name: '点検', career: 0, club: 2, points: {}, noFire: false }), { firstSel: true }));
-  YA.simulate(wg, { until: 'week', stopOnImportant: false });
-  ok(!wg.firstSel && Object.keys(wg.players).length === 36, 'おまかせ進行ではセレクションを飛ばす');
+  ok(g1.length === 12 && Object.keys(wf.players).length === 36, '3月に高1が12人 ' + g1.length);
+  ok(names.every((nm) => g1.some((p) => p.name === nm)), '決めた子が高1に入る');
+  // おまかせ進行でも暦どおり決まる
+  const wg = mk(22);
+  YA.simulate(wg, { until: 'year', stopOnImportant: false });
+  const gg = Object.values(wg.players);
+  ok(wg.year === 2 && gg.filter((p) => p.grade === 1).length === 12 && gg.length >= 36, 'おまかせ進行で1年回しても高1が12人');
+  ok(gg.filter((p) => p.grade === 1 && p.hist.some((x) => /で入団/.test(x.t) && !/一般/.test(x.t))).length >= 3, 'おまかせでも内部昇格・スカウト・セレクションから入団する');
 }
 // 試合の経験：出た選手に、出場時間・採点・頭の経験値などの記録が残る
 {
@@ -553,9 +608,10 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
     let years = 0;
     for (let sd = 1; sd <= 60; sd++) {
       const wc = YA.newWorld(sd);
-      for (let wk = 4; wk <= 32; wk += 4) {
+      wc.club.total = 99999;
+      for (const wk of [1, 5, 8, 11, 15, 18, 21, 25]) {
         wc.week = wk;
-        YA.scoutReport(wc);
+        for (let k = 0; k < 3; k++) { wc.club.spent.scout = 0; YA.scoutOut(wc, k === 0 ? 'wide' : 'local'); }
       }
       const f = wc.scouting.cands.filter((c) => c.foreign);
       ok(f.length <= 1, '外国籍の候補は年に1人まで');
@@ -636,15 +692,15 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
     ok(tm.tactic.type === 'カウンター' || !YA.TACTICS['カウンター'], 'Bの戦い方が試合用のチームに反映される');
     const b = YA.simulateB(w4);
     ok(w4.resultsB.length === 1 && typeof b.gf === 'number', 'Bの結果が残る');
-    // 中3の練習参加：34週に候補が出て、見えている度合いが上がる
+    // 中3の練習参加：25週（11月）に候補が出て、見えている度合いが上がる
     const w5 = YA.newWorld(32);
-    w5.week = 34;
+    w5.week = 25;
     YA.weekExtras(w5);
     const ints = w5.scouting.cands.filter((c) => c.kind === 'int');
-    ok(ints.length === 12 && ints.every((c) => c.seen >= 1), '34週に中3が練習に参加して候補になる');
-    w5.week = 36;
+    ok(ints.length === 20 && ints.every((c) => c.seen >= 1), '25週に中3が練習に参加して候補になる');
+    w5.week = 26;
     YA.weekExtras(w5);
-    ok(w5.scouting.cands.filter((c) => c.kind === 'int').every((c) => c.persSeen), '36週の申し送りで性格が見える');
+    ok(w5.scouting.cands.filter((c) => c.kind === 'int').every((c) => c.persSeen), '26週の申し送りで性格が見える');
     // U-21代表
     let u21 = 0;
     for (let sd = 1; sd <= 30; sd++) {

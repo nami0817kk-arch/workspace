@@ -7,16 +7,13 @@
 
   // ---------- 1年の日程（40週）----------
   // 1〜9週 リーグ前半／10〜12週 夏の全国大会／13〜25週 リーグ後半／26週 夏合宿／27〜30週 冬の大会
-  // 33週 セレクション／36週 U-15の内部昇格の相談／40週 卒業式
+  // 40週 卒業式。入団の暦は scout.js（25〜27週 内部昇格／1〜27週 スカウト・28週に返事／31〜34週 セレクション）
   YA.SCHED = function (week) {
     if (week <= 9) return { t: 'league', n: week };
     if (week <= 12) return { t: 'cup', cup: 'summer', round: week - 9 };
     if (week <= 25) return { t: 'league', n: week - 3 };
     if (week === 26) return { t: 'camp' };
     if (week >= 27 && week <= 30) return { t: 'cup', cup: 'winter', round: week - 26 };
-    if (week === 33) return { t: 'selection' };
-    if (week === 34) return { t: 'junior' };
-    if (week === 36) return { t: 'internal' };
     if (week === 40) return { t: 'ceremony' };
     return { t: 'none' };
   };
@@ -24,7 +21,14 @@
     const s = YA.SCHED(w.week);
     if (s.t === 'league') return `リーグ第${s.n}節`;
     if (s.t === 'cup') return (s.cup === 'summer' ? '夏の全国大会' : '冬のカップ戦') + ` ${s.round}回戦`;
-    return { camp: '夏合宿・遠征', selection: 'セレクション', junior: '中3の練習参加', internal: 'U-15の内部昇格', ceremony: '卒業式', none: '' }[s.t];
+    const lab = { camp: '夏合宿・遠征', ceremony: '卒業式', none: '' }[s.t];
+    if (lab) return lab;
+    if (YA.scoutWindow && w.scouting) {
+      const wn = YA.scoutWindow(w);
+      if (wn.sel) return 'セレクション（1月）';
+      if (w.week === YA.SCOUT_RESULT_WEEK) return 'スカウトの返事（12月）';
+    }
+    return '';
   };
   // 今週あるA戦。なければ null
   YA.matchOf = function (w) {

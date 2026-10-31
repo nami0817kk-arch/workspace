@@ -93,14 +93,14 @@ async function clearEvents() {
   btn('遅刻をしない').click();
   btn('この1年を始める').click();
   ok(!d.querySelector('.sheet') && A.w.rules.length === 1 && !A.w.yearIntro, '目標と約束事を決めて始める');
-  // 最初のセレクション：開く画面があり、終えるまで週は進められない
-  ok(A.w.firstSel && txt().includes('最初のセレクション') && !!btn('セレクションを開く') && !btn('練習を確定して週を進める'), '最初のセレクションがホームに出る');
-  btn('セレクションを開く').click();
-  ok(A.tab === 'club' && A.ct === 'scout' && txt().includes('セレクションの応募者'), 'スカウトにセレクションの応募者');
+  // 始めたらすぐ練習を組める（最初のセレクションはない）。入団の暦はホームに案内が出る
+  ok(!A.w.firstSel && Object.values(A.w.players).filter((p) => p.grade === 1).length === 12, '始めた時点で高1が12人いる');
+  ok(!!btn('スカウトに出る'), '4月はホームにスカウトに出る案内がある');
+  btn('スカウトに出る').click();
+  ok(A.tab === 'club' && A.ct === 'scout' && txt().includes('スカウトに出る') && txt().includes('内部昇格') && txt().includes('セレクション'), 'スカウトの画面に暦と行き先が出る');
+  btn('地元の中学・クラブ').click();
+  ok(A.w.scouting.cands.some((c) => c.kind === 'scout') && txt().includes('今月あと'), '行き先を選ぶとスカウトに出られる');
   A.ct = 'over'; A.tab = 'home'; rail('ホーム');
-  btn('セレクションを終えて新入生を決める').click();
-  btn('決める', d.querySelector('.sheet')).click();
-  ok(!A.w.firstSel && Object.values(A.w.players).filter((p) => p.grade === 1).length === 12, 'セレクションを終えると高1が12人');
   // ホーム
   ok(txt().includes('1年目') && txt().includes('4月第1週') && txt().includes('リーグ'), 'ホームに年と週');
   ok(!!btn('練習を確定して週を進める') && !!btn('練習を組む'), 'ホームの操作');
@@ -142,7 +142,7 @@ async function clearEvents() {
     await sleep(10);
     if (k === '予算と施設') ok(txt().includes('今年の予算') && txt().includes('施設レベル'), '予算の画面');
     if (k === 'スタッフ') ok(txt().includes('技術コーチ') && txt().includes('スタッフ候補'), 'スタッフの画面');
-    if (k === 'スカウト') ok(txt().includes('来年の入団予定'), 'スカウトの画面');
+    if (k === 'スカウト') ok(txt().includes('来年の高1') && txt().includes('スカウトに出る'), 'スカウトの画面');
     if (k === '順位と日程') ok(txt().includes('全国リーグ') || txt().includes('地域リーグ') || txt().includes('県リーグ'), '順位表');
   }
   rail('ほか');

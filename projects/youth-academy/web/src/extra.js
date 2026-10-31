@@ -35,14 +35,21 @@
       w.yearIntro = false;
     }
   };
-  // スカウト：声かけ・セレクション・内部昇格を、既定の数だけ決める
+  // スカウト：暦に合わせて、既定の数だけ自動で決める（4〜11月は月3回出て、11月に有望な子へ声をかける／11月に内部昇格／1月にセレクション）
   YA.autoScout = function (w) {
     const S = w.scouting;
     if (!S) return;
-    for (const c of S.cands.filter((x) => x.kind === 'scout' && x.status === 'open').slice(0, 3)) YA.signCand(w, c.id);
-    if (S.selOpen && !S.testsDone) YA.runSelection(w, ['紅白戦', '面接']);
-    if (S.selOpen) for (const c of S.cands.filter((x) => x.kind === 'sel' && x.status === 'open').sort((a, b) => YA.ovr(b.p) - YA.ovr(a.p)).slice(0, 4)) YA.signCand(w, c.id);
-    if (S.intOpen) for (const c of S.cands.filter((x) => x.kind === 'int' && x.status === 'open').sort((a, b) => YA.ovr(b.p) - YA.ovr(a.p)).slice(0, 5)) YA.signCand(w, c.id);
+    const wn = YA.scoutWindow(w);
+    const best = (kind) => S.cands.filter((x) => x.kind === kind && x.status === 'open').sort((a, b) => (YA.ovr(b.p) + (b.p.pot - YA.abSum(b.p)) / 60) - (YA.ovr(a.p) + (a.p.pot - YA.abSum(a.p)) / 60));
+    if (wn.scout) {
+      for (let i = 0; i < 3 && YA.scoutActsLeft(w) > 0; i++) if (!YA.scoutOut(w, YA.DEST_ORDER[(w.week + i) % 3]).ok) break;
+      if (w.week === 27) for (const c of best('scout').slice(0, 3)) YA.signCand(w, c.id);
+    }
+    if (wn.int) for (const c of best('int').slice(0, 5)) YA.signCand(w, c.id);
+    if (wn.sel) {
+      if (S.selOpen && !S.testsDone) YA.runSelection(w, ['紅白戦', '面接']);
+      for (const c of best('sel').slice(0, 3)) YA.signCand(w, c.id);
+    }
   };
   // A戦を自動で回して結果を名簿に戻す
   YA.playAuto = function (w) {
@@ -65,7 +72,6 @@
   function step(w, o, log) {
     const ph = w.phase;
     if (ph === 'plan') {
-      if (w.firstSel) YA.skipFirstSelection(w);
       // 年度はじめ・契約満了・指導者の成長は、止まる設定なら自分で決める
       if (o.stopOnImportant && (w.pendingContract || w.pendingCoach || w.yearIntro)) return { stop: w.pendingContract ? '契約満了の相談' : w.pendingCoach ? '指導者の成長' : '年度はじめの目標' };
       YA.autoPrompts(w, log.notes);
@@ -240,7 +246,6 @@
   YA.tutorialText = function (w) {
     if (!w || !w.tut || !w.tut.on || w.year > 1 || w.week > 4) return null;
     if (w.yearIntro) return '最初に、クラブの目標とチームの約束事を決めます。難しい目標は評価が高く出ますが、信頼度が低いと変えられません。';
-    if (w.firstSel) return '最初のセレクションです。「セレクションを開く」でU-15の内部昇格・スカウト・セレクションの順に候補を見て、高1の12人を決めます（内部昇格8人・スカウト3人・セレクション3人まで。足りない分は一般入団）。決めたら「新入生を決める」。';
     const ph = w.phase;
     if (ph === 'plan') return w.week === 1
       ? '① 今週の練習を組みます。「練習」タブで月〜金のメニューを決め、選手ごとの重点を決めます（「おまかせ」でも大丈夫）。決まったら「練習を確定して週を進める」。'
