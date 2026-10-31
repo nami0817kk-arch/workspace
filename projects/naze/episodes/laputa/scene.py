@@ -1263,7 +1263,7 @@ def sc_column(img, box, t, k, P):
     cx = x0 + bw * 0.5
     u = _ease(k * 1.3)
     cw = 60 * S
-    top = py(1207 * u)
+    top = min(py(1207 * u), gy - 22 * S)
     d.rectangle([cx - cw / 2, top, cx + cw / 2, gy - 20 * S], fill=(150, 196, 236), outline=O.WHITE)
     island(img, cx, gy - 10 * S, cw)
     d = ImageDraw.Draw(img)
@@ -1558,7 +1558,7 @@ def sc_area(img, box, t, k, P):
         cs = [(-0.37, -0.37), (0.37, -0.37), (-0.37, 0.37), (0.37, 0.37), (0, 0)]
         shown = 5 if st >= 2 else int(1 + 4.99 * _ease(k * 1.6))
         for i, (a, b) in enumerate(cs[:shown]):
-            ox, oy = cx + a * sd * 0.62, cy + b * sd * 0.62
+            ox, oy = cx + a * sd * 0.5, cy + b * sd * 0.5
             d.ellipse([ox - r, oy - r * 0.75, ox + r, oy + r * 0.75], outline=(110, 220, 140), width=max(3, int(6 * S)))
     if st >= 2:
         rr = 9.25 * pxkm * (_ease(k * 1.5))
