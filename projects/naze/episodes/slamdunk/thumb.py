@@ -45,7 +45,7 @@ def line(x, y, parts, size, stroke=None):
 x = 60
 line(x, 40, [("山王戦ラスト", WHITE)], 140)
 line(x, 170, [("スラムダンク", YEL)], 270)
-line(x, 880, [("残り1秒で", WHITE), ("間に合う？", RED)], 215)
-line(x, 1140, [("計算で確かめる", CYAN)], 215)
+line(x, 880, [("残り1秒で", WHITE)], 215)
+line(x, 1140, [("シュートは", WHITE), ("可能？", RED)], 215)
 img.convert("RGB").resize((1280, 720), Image.LANCZOS).save(OUT / "thumb_long.jpg", quality=93)
 print(OUT / "thumb_long.jpg")
