@@ -205,6 +205,23 @@ async function clearEvents() {
     // 控え外：選んで入れ替える
     const res = [...d.querySelectorAll('.pitem.sq')].slice(9);
     ok(res.length >= 10, '控え外の選手が並ぶ ' + res.length);
+    // 控え外 → ベンチ：Bの選手を入れると、入れ替わった選手はBに回り、Bの並びからも抜ける
+    const bpick = [...d.querySelectorAll('.pitem.sq')].slice(0, 9).find((b) => !b.textContent.includes('GK'));
+    const rpick = [...d.querySelectorAll('.pitem.sq')].slice(9).find((b) => !b.textContent.includes('GK') && !b.textContent.includes('怪'));
+    const inB = (id) => A.w.lineupB.some((s) => s.pid === id) || A.w.benchB.includes(id);
+    const benchBefore = A.w.benchA.slice();
+    bpick.click();
+    rpick.click();
+    const outId = benchBefore.find((id) => !A.w.benchA.includes(id));
+    const inId = A.w.benchA.find((id) => !benchBefore.includes(id));
+    ok(outId && inId, '控え外の選手がベンチに入る');
+    if (outId && inId) {
+      const pin = A.w.players[inId];
+      const pout = A.w.players[outId];
+      ok(pin.team === 'A' && pout.team === 'B', '入った選手はA・外れた選手はB');
+      ok(!inB(inId) && inB(outId), 'Bの並びも入れ替わる（Bに入ったままの選手が出ない）');
+      ok(new Set(A.w.lineupA.map((s) => s.pid).concat(A.w.benchA)).size === 20, '控え外から入れたあとも重複なし');
+    }
   }
   btn('戦い方').click();
   ok(txt().includes('クロスの種類') && txt().includes('セットプレーのキッカー') && txt().includes('戦い方の浸透') && d.querySelectorAll('#main select').length === 3, '戦術の細かい設定（クロス・キッカー・浸透）');

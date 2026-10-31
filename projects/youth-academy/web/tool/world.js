@@ -683,5 +683,17 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   YA.setBCtl(wb, { policy: 'best' });
   ok(wb.lineupB.length === 11, '方針を戻すと自動で組み直す');
 }
+// Aのベンチが全員怪我でも、怪我の先発（フィールド）はBから上がった健康な選手で埋まる
+{
+  const wi = YA.newWorld(3);
+  for (const id of wi.benchA) wi.players[id].inj = 5;
+  const hurt = wi.lineupA[5].pid;
+  wi.players[hurt].inj = 5;
+  YA.repairLineup(wi, 'A');
+  const now = wi.players[wi.lineupA[5].pid];
+  ok(now.id !== hurt && now.inj <= 0 && now.team === 'A', '怪我の先発がBの健康な選手で埋まる');
+  ok(wi.players[hurt].team === 'B', '抜けた選手はBへ回る');
+  ok(new Set(wi.lineupA.map((s) => s.pid).concat(wi.benchA)).size === 20, '穴埋めのあとも重複がない');
+}
 console.log(fails ? '失敗 ' + fails : '育成の点検: すべて通過');
 process.exit(fails ? 1 : 0);

@@ -297,7 +297,27 @@
         });
         if (k2 >= 0) k = k2;
       }
-      if (k < 0) return;
+      if (k < 0) {
+        // Aのベンチに代わりがいない：Bのベンチから動ける選手を上げ、抜けた選手はBへ回す
+        if (which !== 'A' || !w.benchB) return;
+        const p15 = YA.pos15OfSlot(s, i);
+        let up = null;
+        let bvb = -1;
+        for (const q of Object.values(w.players)) {
+          if (q.team !== 'B' || !healthy(q) || (q.pos === 'GK') !== (pos === 'GK') || w.lineupB.some((x) => x.pid === q.id)) continue;
+          const v = (q.apt ? q.apt[p15] : 10) + (w.benchB.indexOf(q.id) >= 0 ? 0.1 : 0);
+          if (v > bvb) { bvb = v; up = q; }
+        }
+        if (!up) return;
+        const kb = w.benchB.indexOf(up.id);
+        if (kb >= 0) w.benchB[kb] = s.pid;
+        if (p) p.team = 'B';
+        up.team = 'A';
+        s.pid = up.id;
+        YA.fixSlotRole(s, i);
+        swaps.push([p, up]);
+        return;
+      }
       const inId = bench[k];
       bench[k] = s.pid;
       s.pid = inId;
