@@ -1,0 +1,27 @@
+{
+ "long": {
+  "id": "4LDMjVldVkY",
+  "publish_at": "2026-11-02T19:00:00+09:00",
+  "thumb": "out/slamdunk/thumb_long.jpg"
+ },
+ "s1": {
+  "id": "4mx6I_krk-U",
+  "publish_at": "2026-11-03T11:00:00+09:00"
+ },
+ "s2": {
+  "id": "8TP4ZYWAbh0",
+  "publish_at": "2026-11-03T12:00:00+09:00"
+ },
+ "s3": {
+  "id": "18rS0ktliec",
+  "publish_at": "2026-11-03T13:00:00+09:00"
+ },
+ "s4": {
+  "id": "yyWXzObiL3Y",
+  "publish_at": "2026-11-03T14:00:00+09:00"
+ },
+ "s5": {
+  "id": "jwydLxQ9ofQ",
+  "publish_at": "2026-11-03T16:00:00+09:00"
+ }
+}
