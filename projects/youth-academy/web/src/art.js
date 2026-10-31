@@ -17,25 +17,37 @@
   YA.faceSrc = function (w, p) {
     const F = IMG().faces;
     if (!F.length || !p) return null;
-    if (p.face == null || p.face >= F.length) {
+    const N = F.length * 2; // 左右反転でもう1組
+    if (p.face == null || p.face >= N) {
+      // 同じ絵の反転も「同じ顔」として避ける（k と k＋枚数）
+      const base = (k) => k % F.length;
       const roster = new Set();
       const cands = new Set();
-      if (w) for (const q of Object.values(w.players)) if (q.face != null && q !== p) roster.add(q.face);
-      if (w && w.scouting) for (const c of w.scouting.cands) if (c.p !== p && c.p.face != null && c.status !== 'passed' && c.status !== 'declined') cands.add(c.p.face);
-      const start = YA.hash(p.name || String(p.id)) % F.length;
+      if (w) for (const q of Object.values(w.players)) if (q.face != null && q !== p) roster.add(base(q.face));
+      if (w && w.scouting) for (const c of w.scouting.cands) if (c.p !== p && c.p.face != null && c.status !== 'passed' && c.status !== 'declined') cands.add(base(c.p.face));
+      const start = YA.hash(p.name || String(p.id)) % N;
       const probe = (bad) => {
-        for (let i = 0; i < F.length; i++) { const k = (start + i) % F.length; if (!bad(k)) return k; }
+        for (let i = 0; i < N; i++) { const k = (start + i) % N; if (!bad(k)) return k; }
         return -1;
       };
-      let k = probe((x) => roster.has(x) || cands.has(x));
-      if (k < 0) k = probe((x) => roster.has(x));
+      // まず絵ごと重ならないように。足りなければ反転で別の顔に見せる
+      let k = probe((x) => roster.has(base(x)) || cands.has(base(x)));
+      if (k < 0) k = probe((x) => roster.has(base(x)));
+      if (k < 0) {
+        const used = new Set();
+        if (w) for (const q of Object.values(w.players)) if (q.face != null && q !== p) used.add(q.face);
+        k = probe((x) => used.has(x));
+      }
       p.face = k < 0 ? start : k;
     }
-    return F[p.face];
+    return F[p.face % F.length];
   };
   YA.faceEl = (w, p, px) => {
     const s = YA.faceSrc(w, p);
-    return s ? img(s, 'face', px || 28, p.name) : null;
+    if (!s) return null;
+    const e = img(s, 'face', px || 28, p.name);
+    if (p.face >= IMG().faces.length) e.style.transform = 'scaleX(-1)';
+    return e;
   };
   // クラブのエンブレム：同じリーグのクラブは重ならないよう、名前順に割り当てる
   const embCache = {};

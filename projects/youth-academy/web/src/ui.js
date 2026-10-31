@@ -249,9 +249,9 @@
         g.append(lab(-5.8, '#fff', 3.4, surname(p)));
         // ポジション名と適性は丸の右に（縦に並ぶ最終ラインでも、名前と重ならない）
         if (p15 !== 'GK') g.append(s('text', { x: 5.3, y: 1.1, 'text-anchor': 'start', fill: ring === '#fff' ? '#fff6c2' : ring, 'font-size': 2.8, 'font-weight': 900, stroke: 'rgba(0,0,0,.55)', 'stroke-width': 0.8, 'paint-order': 'stroke' }, YA.POS_LABEL[p15] + (p15 === 'GK' ? '' : grade)));
-        if (opts.showRole && opts.showRole()) {
+        if ((opts.showRole && opts.showRole()) || sel) {
           const fit = YA.Match.prototype.roleFit.call(null, t, i);
-          g.append(lab(8.2, fit < 0 ? '#ffb3b3' : fit > 0 ? '#fff3b0' : '#e8f5ec', 2.5, (sl.role.length > 5 ? sl.role.slice(0, 5) + '…' : sl.role) + (YA.DUTY[sl.duty] ? YA.DUTY[sl.duty].short : '')));
+          g.append(s('text', { x: 5.3, y: p15 === 'GK' ? 1.1 : 4.3, 'text-anchor': 'start', fill: fit < 0 ? '#ffb3b3' : fit > 0 ? '#fff3b0' : '#e8f5ec', 'font-size': 2.3, 'font-weight': 800, stroke: 'rgba(0,0,0,.55)', 'stroke-width': 0.7, 'paint-order': 'stroke' }, (sl.role.length > 4 ? sl.role.slice(0, 4) + '…' : sl.role) + (YA.DUTY[sl.duty] ? '・' + YA.DUTY[sl.duty].short : '')));
         }
         g.addEventListener('pointerdown', (ev) => {
           ev.preventDefault();
@@ -745,7 +745,7 @@
     const main = document.getElementById('main');
     // 同じ画面のまま作り直すとき（ボタンを押した直後など）は、スクロール位置を覚えておいて戻す
     const sameView = renderKey === app.tab + '|' + app.view + '|' + (app.ct || '');
-    const scrollers = () => [...main.querySelectorAll('*')].filter((e) => e.scrollHeight > e.clientHeight + 2 && /auto|scroll/.test(getComputedStyle(e).overflowY));
+    const scrollers = () => [...main.querySelectorAll('.pbody, .scroll, .plist, .sheet-in')].filter((e) => e.scrollHeight > e.clientHeight + 2 && /auto|scroll/.test(getComputedStyle(e).overflowY));
     const keep = sameView ? scrollers().map((e) => e.scrollTop) : [];
     renderKey = app.tab + '|' + app.view + '|' + (app.ct || '');
     const restore = () => { if (keep.length) scrollers().forEach((e, i) => { if (keep[i]) e.scrollTop = keep[i]; }); };

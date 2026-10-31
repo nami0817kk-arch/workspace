@@ -188,12 +188,12 @@
     const w = W();
     const ui = U().app;
     ui.tf = ui.tf || 'all';
-    const wrap = h('div', { style: 'flex:1;min-height:0;display:flex;flex-direction:column;gap:6px' });
+    const wrap = h('div', { style: 'flex:1;min-height:0;display:flex;flex-direction:column;gap:4px' });
     // 曜日
     const days = h('div', { class: 'days', style: 'display:flex;gap:5px' });
     w.plan.days.forEach((d, i) => {
       const m = YA.MENUS[d.menu];
-      days.append(h('button', { class: 'card', style: 'flex:1;padding:6px 8px;text-align:left;min-width:0', onclick: () => pickMenu(i) }, h('div', { class: 'row' }, h('b', { style: 'color:var(--blue-d)' }, DAYS[i]), h('span', { class: 'grow' }), h('span', { class: 'chip ' + (d.int === 'hard' ? 'instr' : d.int === 'light' ? 'gray' : 'pers') }, YA.INTENS_NAMES[d.int])), h('div', { class: 'h', style: 'font-size:13px;margin-top:1px' }, d.menu), h('div', { class: 'note' }, m.note)));
+      days.append(h('button', { class: 'card', title: m.note, style: 'flex:1;padding:3px 7px;text-align:left;min-width:0;display:flex;align-items:center;gap:4px', onclick: () => pickMenu(i) }, h('b', { style: 'color:var(--blue-d)' }, DAYS[i]), h('span', { class: 'grow', style: 'font-weight:800;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis' }, d.menu), h('span', { class: 'chip ' + (d.int === 'hard' ? 'instr' : d.int === 'light' ? 'gray' : 'pers'), style: 'font-size:9.5px' }, YA.INTENS_NAMES[d.int])));
     });
     const bulk = h('div', { class: 'row bulk', style: 'flex-wrap:wrap;gap:4px' },
       h('button', { class: 'btn sm', onclick: () => { if (w.lastPlan) { w.plan = JSON.parse(JSON.stringify(w.lastPlan)); YA.saveWorld(); rerender(); } } }, '先週と同じ'),
@@ -223,9 +223,9 @@
       const tp = p.train.trait;
       const lt = tp ? YA.learnable(p).find((x) => x.t === tp) : null;
       const wk = tp ? Math.max(1, Math.ceil((100 - (p.tprog[tp] || 0)) / (lt ? 100 / lt.weeks : 1))) : 0;
-      table.append(h('div', { class: 'pitem', style: 'cursor:default' },
+      table.append(h('div', { class: 'pitem trainrow', style: 'cursor:default' },
         posc(p),
-        YA.faceEl(W(), p, 26),
+        YA.faceEl(W(), p, 22),
         h('span', { class: 'num' }, p.num),
         h('span', { class: 'nm grow', style: 'min-width:0;overflow:hidden;text-overflow:ellipsis' }, p.name, ' ', h('span', { class: 'sub', style: 'font-weight:600' }, gradeName(p.grade) + (p.team === 'A' ? ' A' : ' B')), ' ', flags(p)),
         fatBar(p, 42),

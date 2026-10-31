@@ -817,8 +817,8 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   const live = wa.scouting.cands.filter((c) => c.status === 'open');
   live.forEach((c) => YA.faceSrc(wa, c.p));
   const room = YA.IMG.faces.length - Object.keys(wa.players).length;
-  const cf = live.slice(0, room).map((c) => c.p.face);
-  const rf = new Set(Object.values(wa.players).map((p) => p.face));
+  const cf = live.slice(0, room).map((c) => c.p.face % YA.IMG.faces.length);
+  const rf = new Set(Object.values(wa.players).map((p) => p.face % YA.IMG.faces.length));
   ok(new Set(cf).size === cf.length && cf.every((f) => !rf.has(f)), '候補の顔は名簿の子・ほかの候補と重ならない');
   for (const c of wa.scouting.cands.filter((x) => x.kind === 'int').slice(0, 8)) YA.signCand(wa, c.id);
   wa.week = 40;

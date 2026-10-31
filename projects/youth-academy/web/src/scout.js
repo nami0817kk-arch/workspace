@@ -276,12 +276,13 @@
     const signed = S.cands.filter((c) => c.status === 'signed').slice(0, 12);
     const names = new Set(used);
     let n = 0;
-    const faces = new Set(Object.values(w.players).map((q) => q.face).filter((f) => f != null));
+    const FN = (YA.IMG && YA.IMG.faces.length) || 1;
+    const faces = new Set(Object.values(w.players).map((q) => q.face).filter((f) => f != null).map((f) => f % FN));
     for (const c of signed) {
       const p = c.p;
       // 候補のときの顔が、在籍の子と重なっていたら選び直す
-      if (p.face != null && faces.has(p.face)) p.face = null;
-      if (p.face != null) faces.add(p.face);
+      if (p.face != null && faces.has(p.face % FN)) p.face = null;
+      if (p.face != null) faces.add(p.face % FN);
       p.grade = 1;
       p.id = 'p' + ++w.nextId;
       p.team = 'B';
@@ -478,16 +479,18 @@
     }
     if (YA.rivalWeek) YA.rivalWeek(w);
     YA.refreshFocus(w);
+    let noticed = false;
     for (const p of Object.values(w.players)) {
       if (p.away > 0) p.away--;
       if (p.suspend > 0) p.suspend--;
       if (p.adapt > 0) p.adapt--;
       if (p.dorm) p.fat = clamp(p.fat - 2, 0, 100);
       // 本当に向いているポジションに気づく
-      if (p.pos !== 'GK' && !p.bestKnown && r() < 0.012 * (w.coach ? w.coach.eye / 10 : 1)) {
+      if (p.pos !== 'GK' && !p.bestKnown && !noticed && !(w.year === 1 && w.week <= 5) && r() < 0.012 * (w.coach ? w.coach.eye / 10 : 1)) {
         const best = p.best;
         if (best && best !== p.main && p.apt[best] - p.apt[p.main] > 1.0) {
           p.bestKnown = true;
+          noticed = true;
           YA.noteTier(w, 1, `${p.num}番 ${p.name} は、${YA.POS_LABEL[best]}のほうが向いているかもしれません（いまは${YA.POS_LABEL[p.main]}。ポジション変更を検討）`, p.id);
         }
       }
