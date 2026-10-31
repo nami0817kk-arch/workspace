@@ -1,0 +1,153 @@
+# 物語完結型ショート 源頼朝 s4（2026-10-30）。本編 scripts/yoritomo-story.yaml から（京都の日記は「急な病」・鎌倉は落馬という食い違い）。11/2 12:00 公開の本編 → 11/3 に投稿。
+# 形式は musashi_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし（本編の「頼朝想像」「重成想像」は使わない）。
+# 絵は本編の AI 絵（out/story/yoritomo/main/Q01〜Q15。人物は描かない）と実在の絵・写真（paintings/yoritomo_*）。新しい AI 絵は作らない。
+# 事実カード（dev/output/rekishi-chiso/research/源頼朝_facts_20261029.yaml）：yoritomo-07・12・15・45（明月記1/20・2/18、愚管抄は一次史料の翻刻）
+#   ・愚管抄・明月記の引用は個人サイトの翻刻（本文を開いた。12・15・45）。出どころ1つのもの（12・45）は「と書く」で言う。
+#   ・「落馬という言葉が京都の記事に無い」は「私たちが開いた京都の記事に」と限定して言う（本編と同じ）。
+# 理解テスト4問：
+#   ①誰の話か：源頼朝の死と、京都の日記・鎌倉の歴史書
+#   ②いつ・どこで何が：1199年1月、京都の『愚管抄』『明月記』は、11日出家・13日に亡くなったと書く。13年後に鎌倉の『吾妻鏡』が落馬を書く
+#   ③何と書いたか：定家は「おおよそ急な病か」と推測。京都の記事に落馬という言葉は無かった
+#   ④どうなったか：京都では病、鎌倉では落馬。同じ死が2つの姿で残った
+title: 源頼朝｜京都の日記は《急な病》、鎌倉の歴史書は《落馬》
+yt_title: 源頼朝の死　京都の日記は急な病、鎌倉の歴史書は落馬　食い違う記録
+description: |-
+  同じ人の死を、京都と鎌倉は、違う言葉で書きました。
+  1199年1月。慈円の『愚管抄』は、源頼朝が1月11日に出家して、13日に亡くなった、と書きます。藤原定家の『明月記』、1月20日の条は「前の将軍、去る11日に出家、13日に入滅（大略頓病か）」。定家は、急な病と推測しました。2月18日には、院の御所の御読経が、もっぱら頼朝の追善だったとも書いています。
+  調べた京都の記事に、落馬という言葉はありませんでした。落馬が出てくるのは、13年後、1212年の鎌倉。『吾妻鏡』の、橋の修理の記事の中です。
+  本編では、京都の日記と鎌倉の記事を並べて読んでいます。
+hashtags: ["#源頼朝", "#日本史", "#吾妻鏡"]
+ai_images: true
+ai_disclosure: この動画の情景の画像の多くは、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/yoritomo
+out: yoritomo_story_s4
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 源頼朝（鎌倉幕府の初代将軍）
+  title: "京都は《急な病》、鎌倉は《落馬》と書いた"
+now:
+  - {at: 1199年, text: "1199年1月　京都", point: 0}
+  - {at: 1212年, text: "1212年2月　鎌倉", point: 1}
+timeline:
+  - {label: "1199"}
+  - {label: "1212"}
+cards:
+  - type: table
+    title: 同じ死、2つの姿
+    from: 病と書いた京都
+    until: 残った
+    items:
+      - {at: 病と書いた京都, text: "京都の日記　急な病"}
+      - {at: 落馬と書いた鎌倉, text: "鎌倉の歴史書　落馬"}
+    text_y: 0.70
+shots:
+  Q04:
+    kind: ai
+    file: yoritomo/main/Q04.jpg
+    focus: [0.4, 0.5]
+    move: right
+    must: 雪の降る京の町並みと御所の屋根
+  Q05:
+    kind: ai
+    file: yoritomo/main/Q05.jpg
+    focus: [0.45, 0.5]
+    move: right
+    must: 灯の下の文机と巻物
+  Q04r:
+    kind: ai
+    file: yoritomo/main/Q04.jpg
+    focus: [0.65, 0.45]
+    move: left
+    zoom: 0.12
+    must: 京の屋根と雪
+  Q02:
+    kind: ai
+    file: yoritomo/main/Q02.jpg
+    focus: [0.5, 0.55]
+    move: in
+    must: 灯のもとで開かれた古い綴じ本
+  Q05r:
+    kind: ai
+    file: yoritomo/main/Q05.jpg
+    focus: [0.7, 0.55]
+    move: down
+    zoom: 0.12
+    must: 文机の灯と巻物
+  Q13:
+    kind: ai
+    file: yoritomo/main/Q13.jpg
+    focus: [0.5, 0.6]
+    move: in
+    must: 暗い部屋の灯と閉じた書物
+  Q08:
+    kind: ai
+    file: yoritomo/main/Q08.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 夕暮れの川にかかる長い木の橋
+  Q06:
+    kind: ai
+    file: yoritomo/main/Q06.jpg
+    focus: [0.5, 0.5]
+    move: right
+    must: 朝の広い板の間と文机
+  Q15:
+    kind: ai
+    file: yoritomo/main/Q15.jpg
+    focus: [0.4, 0.5]
+    move: in
+    text_y: 0.76
+    must: 夕暮れの川と橋の遠景
+lines:
+  - 語り: 同じ人の死を、京都と鎌倉は、まったく違う言葉で書いた。
+    shot: Q04
+    tone: 強調
+    pause: 0.12
+  # fact: yoritomo-12
+  - 語り: 1199年1月。慈円の『愚管抄』は、頼朝が11日に出家して、13日に亡くなった、と書く。
+    shot: Q05
+    tone: しみじみ
+    pause: 0.12
+  # fact: yoritomo-12
+  - 語り: 知らせが京に聞こえはじめたのは、15日、16日ごろからだった。
+    shot: Q05r
+    tone: しみじみ
+    pause: 0.12
+  # fact: yoritomo-15
+  - 語り: 藤原定家の日記、『明月記』の1月20日。「前の将軍、去る11日に出家、13日に入滅。おおよそ、急な病か」。
+    shot: Q02
+    tone: 重い
+    pause: 0.12
+  # fact: yoritomo-45
+  - 語り: 2月18日には、院の御所で、御読経が終わった。『明月記』は、もっぱら前の右大将の追善、と書く。
+    shot: Q04r
+    tone: しみじみ
+    pause: 0.12
+  - 語り: 私たちが開いた京都の記事に、落馬という言葉は、なかった。京都では、頼朝の死は、病だった。
+    shot: Q13
+    tone: 重い
+    pause: 0.12
+  # fact: yoritomo-07
+  - 語り: 落馬が出てくるのは、13年後、1212年の鎌倉。『吾妻鏡』の、橋の修理の記事の中だ。
+    shot: Q08
+    tone: 強調
+    pause: 0.12
+  - 語り: 病と書いた京都。落馬と書いた鎌倉。同じ頼朝の死が、2つの姿で、残った。
+    shot: Q06
+    tone: 重い
+    pause: 0.3
+    dip: true
+  - 語り: あなたは、どちらの記録を、信じますか。
+    shot: Q15
+    tone: 疑問
+    pause: 0.12

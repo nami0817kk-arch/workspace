@@ -1,0 +1,155 @@
+# 物語完結型ショート 源頼朝 s3（2026-10-30）。本編 scripts/yoritomo-story.yaml から（1923年に水田から出た橋脚）。11/2 12:00 公開の本編 → 11/3 に投稿。
+# 形式は musashi_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし（本編の「頼朝想像」「重成想像」は使わない）。
+# 絵は本編の AI 絵（out/story/yoritomo/main/Q01〜Q15。人物は描かない）と実在の絵・写真（paintings/yoritomo_*）。新しい AI 絵は作らない。
+# 事実カード（dev/output/rekishi-chiso/research/源頼朝_facts_20261029.yaml）：yoritomo-03・26・27・28・53・54
+#   ・橋脚の年代：年輪年代では伐採が1126〜1260年で、1198年に絞れない（28、さんたつ、出どころ1つ）→「という」。
+#   ・本編の「800年後」は使わない（1198→1923は約725年。年輪の幅もあるので年数は言わない）。
+#   ・和田清が写真を撮り沼田頼輔に託したのは茅ヶ崎市の季刊誌（53、出どころ1つ）。
+# 理解テスト4問：
+#   ①誰の話か：頼朝が渡ったとされる橋（稲毛重成が1198年に架けた）の橋脚
+#   ②いつ・どこで何が：1923年9月1日、関東大震災の液状化で茅ヶ崎の水田から木の柱が現れた
+#   ③何が分かったか：沼田頼輔が『吾妻鏡』をもとに重成の橋の橋脚と考証。1926年に国の史跡、発掘で10本、2013年に天然記念物
+#   ④どうなったか：ただし年輪年代では1126〜1260年で、1198年に絞れるわけではない
+title: 源頼朝｜橋の柱は、関東大震災で、水田から出てきた
+yt_title: 源頼朝の橋の橋脚は関東大震災で水田から出てきた　旧相模川橋脚の話
+description: |-
+  1923年9月1日、関東大震災の揺れで、茅ヶ崎の水田の中から、木の柱が地面に現れました。液状化現象が、地下の柱を押し上げたのです。
+  茅ヶ崎出身の和田清が実地を調べて写真を撮り、歴史学者の沼田頼輔に調査を託しました。沼田は、『吾妻鏡』などの記録をもとに、稲毛重成が1198年に架けた橋の橋脚だと考証しました。頼朝が供養の日に渡り、帰りに落馬したと『吾妻鏡』が書く橋です。
+  1926年に国の史跡に指定され、2013年には液状化現象の痕跡として、全国で初めて国の天然記念物にもなりました。ただし、年輪年代では伐採は1126年から1260年のあいだとされ、1198年に絞り込めるわけではありません。
+  本編では、橋の修理の記事から、橋脚が出てくるまでをたどっています。
+hashtags: ["#源頼朝", "#日本史", "#吾妻鏡"]
+ai_images: true
+ai_disclosure: この動画の情景の画像の多くは、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/yoritomo
+out: yoritomo_story_s3
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 旧相模川橋脚（神奈川県茅ヶ崎市）
+  title: "頼朝の橋の柱が、《水田》から出てきた"
+now:
+  - {at: 1923年, text: "1923年9月　茅ヶ崎", point: 0}
+  - {at: 1926年, text: "1926年　国の史跡", point: 1}
+timeline:
+  - {label: "1923"}
+  - {label: "1926"}
+cards:
+  - type: year
+    from: 1926年
+    until: 指定
+    big: 1926年
+    sub: 国の史跡に指定
+    text_y: 0.70
+shots:
+  Q10:
+    kind: ai
+    file: yoritomo/main/Q10.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 早朝の水田と地面から突き出た木の柱
+  Q10r:
+    kind: ai
+    file: yoritomo/main/Q10.jpg
+    focus: [0.35, 0.7]
+    move: down
+    zoom: 0.12
+    must: 水田の木の柱
+  Q05:
+    kind: ai
+    file: yoritomo/main/Q05.jpg
+    focus: [0.45, 0.5]
+    move: right
+    must: 灯の下の文机と巻物
+  Q02:
+    kind: ai
+    file: yoritomo/main/Q02.jpg
+    focus: [0.5, 0.55]
+    move: in
+    must: 灯のもとで開かれた古い綴じ本
+  Q08:
+    kind: ai
+    file: yoritomo/main/Q08.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 夕暮れの川にかかる長い木の橋
+  Pier:
+    kind: real
+    image: paintings/yoritomo_sagami_pier_gaikan.jpg
+    focus: [0.5, 0.4]
+    move: in
+    credit: "旧相模川橋脚（茅ヶ崎市）の現在の姿（ウィキメディア・コモンズ、CC0）"
+    must: 現在の旧相模川橋脚の池
+  Q11:
+    kind: ai
+    file: yoritomo/main/Q11.jpg
+    focus: [0.5, 0.6]
+    move: in
+    must: 水を張った池に並ぶ木の柱の影
+  Q13:
+    kind: ai
+    file: yoritomo/main/Q13.jpg
+    focus: [0.5, 0.6]
+    move: in
+    must: 暗い部屋の灯と閉じた書物
+  Q15:
+    kind: ai
+    file: yoritomo/main/Q15.jpg
+    focus: [0.4, 0.5]
+    move: in
+    text_y: 0.76
+    must: 夕暮れの川と橋の遠景
+lines:
+  # fact: yoritomo-26
+  - 語り: 1923年9月1日。関東大震災の揺れで、茅ヶ崎の水田の中から、木の柱が、地面に現れた。
+    shot: Q10
+    tone: 強調
+    pause: 0.12
+  # fact: yoritomo-26
+  - 語り: 液状化現象が、地下の柱を、押し上げたのだ。
+    shot: Q10r
+    tone: しみじみ
+    pause: 0.12
+  # fact: yoritomo-53
+  - 語り: 茅ヶ崎出身の和田清は、実地を調べて、写真を撮り、歴史学者の沼田頼輔に、調査を託した。
+    shot: Q05
+    tone: しみじみ
+    pause: 0.12
+  # fact: yoritomo-26
+  - 語り: 『吾妻鏡』などをもとに、沼田は、稲毛重成が架けた橋の橋脚だと、考証した。
+    shot: Q02
+    tone: しみじみ
+    pause: 0.12
+  # fact: yoritomo-03
+  - 語り: 重成が橋を架けたのは、1198年。供養の日に、頼朝が渡り、帰りに落馬した、と『吾妻鏡』が書く橋だ。
+    shot: Q08
+    tone: 重い
+    pause: 0.12
+  # fact: yoritomo-54
+  - 語り: 1926年、国の史跡に指定された。
+    shot: Pier
+    tone: しみじみ
+    pause: 0.12
+  # fact: yoritomo-27
+  - 語り: 2001年以降の発掘で、橋杭は10本、確認された。2013年には、全国で初めて、液状化現象の天然記念物になった。
+    shot: Q11
+    tone: しみじみ
+    pause: 0.12
+  # fact: yoritomo-28
+  - 語り: ただ、年輪年代では、伐採は1126年から1260年のあいだという。1198年に、絞り込めるわけではない。
+    shot: Q13
+    tone: 重い
+    pause: 0.3
+    dip: true
+  - 語り: 歴史書が、橋の修理の記事でしか語らなかった柱を、あなたは、どう読みますか。
+    shot: Q15
+    tone: 疑問
+    pause: 0.12

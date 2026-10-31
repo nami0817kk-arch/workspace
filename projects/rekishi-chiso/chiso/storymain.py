@@ -482,10 +482,16 @@ class Plan:
             out.append((parts[0], kind, ref, parts[2] if len(parts) > 2 else ("wide" if kind != "frame" else "a")))
         return out
 
-    def shot_of(self, idx: int) -> tuple:
+    @staticmethod
+    def _shot_key(frm) -> tuple:
+        """shots の先頭。「71」＝71行目から、「71.2」＝71行目の3つ目のブロック（0 始まりで 2）から（長い1行の途中で絵を替える）。"""
+        a, _, b = str(frm).partition(".")
+        return (int(a), int(b or 0))
+
+    def shot_of(self, idx: int, ui: int = 0) -> tuple:
         cur = None
         for frm, kind, ref, crop in self.shots:
-            if frm != "end" and int(frm) <= idx:
+            if frm != "end" and self._shot_key(frm) <= (idx, ui):
                 cur = (kind, ref, crop)
         return cur
 
@@ -494,8 +500,11 @@ class Plan:
         cuts: list[Cut] = []
         last_ai = "A01"
         groups = []                                      # (shot, dim, [units])
+        seen: dict[int, int] = {}
         for u in self.units:
-            shot = self.shot_of(u.line)
+            ui = seen.get(u.line, 0)
+            seen[u.line] = ui + 1
+            shot = self.shot_of(u.line, ui)
             dim = bool(self.fig(u.line))
             if groups and groups[-1][0] == shot and groups[-1][1] == dim and lines[groups[-1][2][-1].line].section == lines[u.line].section:
                 groups[-1][2].append(u)
