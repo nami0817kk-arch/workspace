@@ -205,7 +205,7 @@
       ? (wn[c.kind] ? h('button', { class: 'btn sm on', onclick: () => { YA.unsign(w, c.id); save(); rerender(); } }, `${signedLabel}（取り消す）`) : h('span', { class: 'fit good' }, signedLabel))
       : c.status === 'open' ? h('button', { class: 'btn sm', disabled: !wn[c.kind], onclick: () => say(YA.signCand(w, c.id)) }, yes) : null);
     // 内部昇格
-    sec('U-15の内部昇格（11月に8人まで決める）', S.intOpen ? '' : '11月になると、中3の12人が練習に参加して候補になります', S.cands.filter((c) => c.kind === 'int'), (c) => candCard(w, c, decide(c, '昇格させる', '昇格決定')));
+    sec('U-15の内部昇格（11月に8人まで決める）', S.intOpen ? '' : '11月になると、中3の20人が練習に参加して候補になります', S.cands.filter((c) => c.kind === 'int'), (c) => candCard(w, c, decide(c, '昇格させる', '昇格決定')));
     // スカウトの報告
     sec('スカウトの報告（会った子に声をかける。3人まで・返事は12月）', 'まだ会った子はいません。上の行き先を選んでスカウトに出てください', S.cands.filter((c) => c.kind === 'scout' && c.status !== 'passed').reverse(), (c) => candCard(w, c, h('div', { class: 'row' },
       c.status === 'declined' ? h('span', { class: 'fit bad' }, '断られた') : null,

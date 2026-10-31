@@ -25,6 +25,7 @@
   // 初年度も同じ暦で、決めた子は翌年の高1になる
   YA.SCOUT_RESULT_WEEK = 28;
   YA.SCOUT_PER_MONTH = 3;
+  YA.INT_CANDS = 20; // 内部昇格の候補（中3）。8人まで決める
   YA.scoutWindow = function (w) {
     const wk = w.week;
     return { int: wk >= 25 && wk <= 27, scout: wk <= 27, sel: wk >= 31 && wk <= 34 };
@@ -139,7 +140,7 @@
     for (let i = 0; i < n; i++) genCand(w, r, 'sel');
     YA.noteTier(w, 1, `セレクションの応募が${n}人ありました。1月のうちに、テストの内容を決めて入れる子を選んでください（クラブ→スカウト）`);
   };
-  // 中3の練習参加（11月の初め・25週）：内部昇格の候補12人がA・Bの練習に混ざる。実際に動きを見られるので見えている度合いが上がる。26週に指導者の申し送りで残りが見える
+  // 中3の練習参加（11月の初め・25週）：内部昇格の候補20人がA・Bの練習に混ざる。実際に動きを見られるので見えている度合いが上がる。26週に指導者の申し送りで残りが見える
   YA.openInternal = function (w, junior) {
     const S = w.scouting;
     if (S.intOpen) {
@@ -154,11 +155,11 @@
     }
     S.intOpen = true;
     const r = YA.rngOf(w.seed * 41 + w.year * 19);
-    for (let i = 0; i < 12; i++) genCand(w, r, 'int');
+    for (let i = 0; i < YA.INT_CANDS; i++) genCand(w, r, 'int');
     if (junior) {
       for (const c of S.cands) if (c.kind === 'int') c.seen = Math.min(3, c.seen + 1);
-      YA.noteTier(w, 1, '11月です。中3の12人が練習に参加しました。内部昇格の候補として動きを見られます。8人まで決められます（クラブ→スカウト）');
-    } else YA.noteTier(w, 1, 'U-15の指導者から、内部昇格の候補12人の申し送りが届きました（クラブ→スカウト）');
+      YA.noteTier(w, 1, '11月です。中3の20人が練習に参加しました。内部昇格の候補として動きを見られます。8人まで決められます（クラブ→スカウト）');
+    } else YA.noteTier(w, 1, 'U-15の指導者から、内部昇格の候補20人の申し送りが届きました（クラブ→スカウト）');
   };
   // 11月の終わり：内部昇格が決まる。12月の初め：スカウトの返事。1月の終わり：セレクションの合否が決まる
   YA.closeInternal = function (w) {

@@ -206,7 +206,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   wf.week = 25;
   YA.weekExtras(wf);
   const ic = wf.scouting.cands.filter((c) => c.kind === 'int');
-  ok(ic.length === 12 && wf.scouting.intOpen && ic.every((c) => c.seen >= 1), '25週（11月）に内部昇格の候補が12人出る');
+  ok(ic.length === 20 && wf.scouting.intOpen && ic.every((c) => c.seen >= 1), '25週（11月）に内部昇格の候補が20人出る');
   wf.week = 24;
   ok(!YA.signCand(wf, ic[0].id).ok, '11月より前は内部昇格を決められない');
   wf.week = 26;
@@ -697,7 +697,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
     w5.week = 25;
     YA.weekExtras(w5);
     const ints = w5.scouting.cands.filter((c) => c.kind === 'int');
-    ok(ints.length === 12 && ints.every((c) => c.seen >= 1), '25週に中3が練習に参加して候補になる');
+    ok(ints.length === 20 && ints.every((c) => c.seen >= 1), '25週に中3が練習に参加して候補になる');
     w5.week = 26;
     YA.weekExtras(w5);
     ok(w5.scouting.cands.filter((c) => c.kind === 'int').every((c) => c.persSeen), '26週の申し送りで性格が見える');

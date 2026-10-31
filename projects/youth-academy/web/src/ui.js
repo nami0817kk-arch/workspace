@@ -637,11 +637,16 @@
     const rail = document.getElementById('rail');
     rail.replaceChildren(h('div', { class: 'logo' }, 'ユースの', h('br'), '系譜'), ...TABS.map(([k, n, ic]) => h('button', { class: 'tab' + (app.tab === k ? ' on' : ''), onclick: () => { if (app.view === 'play') return; app.tab = k; render(); } }, h('i', {}, ic), n)));
   }
+  let renderKey = '';
   function render() {
     const root = document.getElementById('app');
     root.classList.toggle('full', app.view === 'play');
     renderRail();
     const main = document.getElementById('main');
+    // 同じ画面のまま作り直すとき（ボタンを押した直後など）は、スクロール位置を覚えておいて戻す
+    const sameView = renderKey === app.tab + '|' + app.view + '|' + (app.ct || '');
+    const keep = sameView ? [...main.querySelectorAll('*')].filter((e) => e.scrollTop > 0).map((e) => [e.className, e.scrollTop]) : [];
+    renderKey = app.tab + '|' + app.view + '|' + (app.ct || '');
     main.replaceChildren();
     cleanupPlay();
     if (!app.w) {
@@ -662,7 +667,8 @@
     else viewPlaceholder(main);
     // 最初の1か月の案内（決定77）
     const tt = app.view !== 'play' ? YA.tutorialText(app.w) : null;
-    if (tt) main.prepend(h('div', { class: 'tut' }, h('span', { class: 'tutb' }, '案内'), h('span', { class: 'grow' }, tt), h('button', { class: 'btn sm', onclick: () => { app.w.tut.on = false; YA.saveWorld(); render(); } }, '消す')));
+    if (tt) main.prepend(h('div', { class: 'tut' }, h('span', { class: 'tutb' }, '案内'), h('span', { class: 'grow' }, tt), h('button', { class: 'btn sm', onclick: () => { app.w.tut.on = false; YA.saveWorld(); render(); } }, '消す')));
+    for (const [cls, top] of keep) { const e = [...main.querySelectorAll('*')].find((x) => x.className === cls && x.scrollHeight > x.clientHeight); if (e) e.scrollTop = top; }
   }
 
   function viewPlaceholder(main) {
