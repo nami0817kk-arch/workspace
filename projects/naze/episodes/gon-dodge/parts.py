@@ -334,12 +334,16 @@ P["s5"] = dict(title="音より速い拳", lines=[
 
 
 # 読みの直し(kana の出力を全行見て、違う所だけ)。長い語から順に置き換えて say を作る(字幕は台本のまま)
-YOMI = [("『HUNTER×HUNTER』", "はんたーはんたー"), ("HUNTER×HUNTER", "はんたーはんたー"),   # 「かける」と読ませない
+YOMI = [("『HUNTER×HUNTER』のドッジボール。", "はんたーはんたーの、ドッジボール。"),   # ショートの頭。英字で字数が多く数えられ「速すぎる」に落ちるので、間を入れて少しゆっくり(SLOW)
+        ("『HUNTER×HUNTER』", "はんたーはんたー"), ("HUNTER×HUNTER", "はんたーはんたー"),   # 「かける」と読ませない
         ("ゴンは球を", "ゴンはたまを"),                # 「ゴン ハッキュウ」と続けて読んだ
         ("場の外", "ばのそと"),                        # 「体ごと場の外」を「ジョオノソト」と読んだ
         ("30cm引きながら", "30cmひきながら"),           # 「ビキナガラ」と濁った
         ("引いて止めた", "ひいてとめた"),               # 「ドメタ」と濁った
         ("℃", "度")]                                  # 「ドシイ」と読んだ
+
+
+SLOW = "『HUNTER×HUNTER』のドッジボール。"
 
 
 def yomi(text):
@@ -355,7 +359,10 @@ def ep_for(name: str) -> dict:
     res = []
     for l in p["lines"]:
         y = yomi(l["text"])
-        res.append(dict(l, say=y) if y != l["text"] else l)
+        l = dict(l, say=y) if y != l["text"] else l
+        if l["text"] == SLOW:
+            l = dict(l, speed=0.95)
+        res.append(l)
     p["lines"] = res
     short = name.startswith("s")
     return dict(kind="sim", aspect="portrait" if short else "landscape", credit=CREDIT_V if short else CREDIT, **p)
