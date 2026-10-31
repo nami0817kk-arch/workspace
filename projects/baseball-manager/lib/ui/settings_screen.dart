@@ -587,7 +587,8 @@ class _AdsSectionState extends State<_AdsSection> {
         ));
       }
     }
-    if (_storeAvailable && _prices.values.any((v) => v != null)) {
+    // 商品情報が取れなくても復元の入口は残す(審査で復元の導線が見えないと困る)。
+    if (_storeAvailable) {
       rows.add(ListTile(
         key: const Key('restore-purchases'),
         leading: const Icon(Icons.restore),

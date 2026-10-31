@@ -2028,8 +2028,11 @@ class Game {
   static const legendLine = int.fromEnvironment('BAL_LEGEND', defaultValue: 82);
 
   Ending _buildEnding() {
+    // 年末の処理を通らずに引退した(シーズン後に自分で決めた)ときは、その年の分がまだ数えられていない。
+    final playedProYears = max(proYears, _proYears);
+    peakOverall = max(peakOverall, overall(player).round());
     final String title;
-    if (!turnedPro && proYears == 0) {
+    if (!turnedPro && playedProYears == 0) {
       title = 'プロにはなれなかった';
     } else if (peakOverall >= legendLine) {
       title = 'レジェンド';
@@ -2043,7 +2046,7 @@ class Game {
     return Ending(
       title: title,
       madePro: turnedPro,
-      proYears: proYears,
+      proYears: playedProYears,
       peakOverall: peakOverall,
       championships: championships,
       wasTwoWay: _wasTwoWay,

@@ -82,8 +82,9 @@ class SeasonRecord {
   final int contract;
 
   bool get isLeague => rank != null;
+  // 二軍の年の1位は優勝に数えない(championships も増やさない)。
   bool get champion =>
-      isLeague ? rank == 1 : (rounds > 0 && roundsWon == rounds);
+      !farm && (isLeague ? rank == 1 : (rounds > 0 && roundsWon == rounds));
 
   /// 表の「結果」欄: 「全国優勝」「地方大会 決勝敗退」「リーグ優勝・日本一」「3位・CSファイナル敗退」など。
   String get resultText {
@@ -195,7 +196,7 @@ String describeGame(Line g) {
         '${g.rbi > 0 ? ' ${g.rbi}打点' : ''}');
   }
   if (g.faced > 0) {
-    parts.add('${g.inningsText}回 被安打${g.hitsAllowed} 奪三振${g.strikeouts}');
+    parts.add('${g.inningsText}回 被安打${g.totalHitsAllowed}奪三振${g.strikeouts}');
   }
   return parts.join(' / ');
 }

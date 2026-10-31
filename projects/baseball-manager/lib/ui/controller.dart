@@ -919,6 +919,8 @@ class GameController extends ChangeNotifier {
       final a = {
         for (final x in (m['achievements'] as List?) ?? const []) x as String,
       };
+      // 貼り付けで読み込む前のデータも控えに残す(間違えて上書きしても戻せる)。
+      autoBackup('読み込む前');
       game = g;
       history = h;
       unlocked = a;

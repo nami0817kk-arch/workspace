@@ -464,14 +464,21 @@ class _Grades extends StatelessWidget {
             const SizedBox(height: 6),
             Wrap(spacing: 10, runSpacing: 6, children: [
               for (final r in records)
-                InkWell(
-                  key: Key('grade-${r.age}'),
-                  onTap: () => _showSeason(context, r, all: records),
-                  child: Row(mainAxisSize: MainAxisSize.min, children: [
-                    RankBadge(value: r.line.rating.round()),
-                    const SizedBox(width: 4),
-                    Text('${r.age}歳', style: t.bodySmall),
-                  ]),
+                Semantics(
+                  button: true,
+                  child: InkWell(
+                    key: Key('grade-${r.age}'),
+                    onTap: () => _showSeason(context, r, all: records),
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(minHeight: 44),
+                      child:
+                          Row(mainAxisSize: MainAxisSize.min, children: [
+                        RankBadge(value: r.line.rating.round()),
+                        const SizedBox(width: 4),
+                        Text('${r.age}歳', style: t.bodySmall),
+                      ]),
+                    ),
+                  ),
                 ),
             ]),
           ],

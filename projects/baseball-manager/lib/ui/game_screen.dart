@@ -2099,11 +2099,13 @@ void _showAllLog(BuildContext context, Game game) {
     builder: (ctx) => AlertDialog(
       key: const Key('log-dialog'),
       title: const Text('これまでのできごと'),
+      // 一生分(数千行)を一度に作らないよう、高さを決めて必要な行だけ作る。
       content: SizedBox(
         width: double.maxFinite,
-        child: ListView(
-          shrinkWrap: true,
-          children: [for (final l in game.log) _logLine(ctx, l)],
+        height: MediaQuery.sizeOf(ctx).height * 0.6,
+        child: ListView.builder(
+          itemCount: game.log.length,
+          itemBuilder: (_, i) => _logLine(ctx, game.log[i]),
         ),
       ),
       actions: [
@@ -3068,12 +3070,14 @@ class _AdRewardTileState extends State<_AdRewardTile> {
   @override
   Widget build(BuildContext context) {
     final free = widget.controller.money?.adFree ?? false;
+    // 暗いテーマでは、明るい黄色の上に明るい文字が載って読めなくなる。
+    final dark = Theme.of(context).brightness == Brightness.dark;
     return Card(
-      color: const Color(0xFFFFF8E1),
+      color: dark ? const Color(0xFF3B3320) : const Color(0xFFFFF8E1),
       child: ListTile(
         dense: true,
         leading: Icon(free ? widget.icon : Icons.ondemand_video,
-            color: const Color(0xFFB26A00)),
+            color: dark ? const Color(0xFFFFB74D) : const Color(0xFFB26A00)),
         title: Text(free ? widget.title : '動画を見て ${widget.title}',
             style: const TextStyle(fontWeight: FontWeight.bold)),
         subtitle: Text(widget.subtitle),
