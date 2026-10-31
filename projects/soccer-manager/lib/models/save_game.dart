@@ -415,6 +415,55 @@ class SaveGame {
           if (l != null) ...l.teams,
       ];
 
+  /// セーブの中にいる全選手。**選手を持つ場所を足したら、ここにも足す。**
+  ///
+  /// 選手IDのカウンターは起動のたびに0へ戻り、読み込んだセーブの全選手IDを
+  /// 見て引き上げる。ここに漏れがあると(以前は移籍市場・大陸カップの海外
+  /// クラブが漏れていた)、再起動後に作った選手が既存の選手と同じIDになる。
+  Iterable<Player> get allPlayers sync* {
+    for (final t in allTeams) {
+      yield* t.players;
+    }
+    for (final t in continentalTeams) {
+      yield* t.players;
+    }
+    yield* youthProspects;
+    yield* retiredLegends;
+    yield* pendingYouthIntake;
+    yield* freeAgents;
+    yield* transferMarketPlayers;
+  }
+
+  /// 重複した選手IDを振り直す。振り直した選手の数を返す。
+  ///
+  /// **振り直すのは、IDで参照されない場所(ユース入団候補・フリーエージェント・
+  /// 移籍市場)にいる側だけ。** クラブの選手・有望株・殿堂入りは、先発・主将・
+  /// キッカー・ウォッチリスト・成績などからIDで参照されているので触らない
+  /// (どちらが参照先か分からなくなる)。[newId] は呼び出し側がカウンターを
+  /// 全選手より上に引き上げてから渡すこと。
+  int renumberDuplicatePlayerIds(String Function() newId) {
+    final seen = <String>{
+      for (final t in allTeams)
+        for (final p in t.players) p.id,
+      for (final t in continentalTeams)
+        for (final p in t.players) p.id,
+      for (final p in youthProspects) p.id,
+      for (final p in retiredLegends) p.id,
+    };
+    var renumbered = 0;
+    for (final pool in [pendingYouthIntake, freeAgents, transferMarketPlayers]) {
+      for (var i = 0; i < pool.length; i++) {
+        final p = pool[i];
+        if (seen.add(p.id)) continue;
+        final id = newId();
+        pool[i] = Player.fromJson({...p.toJson(), 'id': id});
+        seen.add(id);
+        renumbered++;
+      }
+    }
+    return renumbered;
+  }
+
   Map<String, dynamic> toJson() => {
         'clubName': clubName,
         'userTeamId': userTeamId,

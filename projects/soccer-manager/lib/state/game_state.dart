@@ -516,7 +516,7 @@ class GameState extends ChangeNotifier {
       final json = jsonDecode(raw) as Map<String, dynamic>;
       final restored = SaveGame.fromJson(json['save'] as Map<String, dynamic>);
       _save = restored;
-      _reseedPlayerIdCounter(restored);
+      _repairLoadedSave(restored);
       _migrateDivisionPyramidIfNeeded();
       _refreshScoutCandidates();
       // 戻す前の節の出来事を持ち越すと、戻した後にそれを知らせてしまう。
@@ -543,7 +543,7 @@ class GameState extends ChangeNotifier {
     currentSlot = prefs.getInt(_currentSlotKey) ?? 0;
     _save = await _loadSlotData(prefs, currentSlot);
     if (_save != null) {
-      _reseedPlayerIdCounter(_save!);
+      _repairLoadedSave(_save!);
       _migrateDivisionPyramidIfNeeded();
       // 市場はセーブに保存された顔ぶれを維持する(旧セーブ等で空の場合のみ
       // 新規生成する)。
@@ -556,17 +556,39 @@ class GameState extends ChangeNotifier {
     _notify();
   }
 
+  /// 読み込んだセーブを、遊べる状態に整える(読み込み口すべてから呼ぶ)。
+  ///
+  /// - 選手IDのカウンターを全選手より上へ引き上げ、既に重複したIDを振り直す。
+  /// - 相手クラブが今のリーグに居ない監督オファーを消す(残っているとホーム
+  ///   画面が開くたびに落ち、セーブが詰む)。
+  void _repairLoadedSave(SaveGame save) {
+    _reseedPlayerIdCounter(save);
+    save.renumberDuplicatePlayerIds(PlayerGenerator.nextPlayerId);
+    _dropDanglingJobOffer(save);
+  }
+
   /// セーブデータ内の全選手IDを集め、[PlayerGenerator]のIDカウンターへ反映する。
+  ///
+  /// **選手を持つ場所は [SaveGame.allPlayers] で漏れなく数える。** 移籍市場を
+  /// 数えていなかったため、再起動後に作った選手が市場の選手と同じIDになっていた。
+  /// スカウト候補はセーブに入らないが、メモリ上に残っていれば一緒に数える。
   void _reseedPlayerIdCounter(SaveGame save) {
-    final ids = <String>[
-      for (final t in save.allTeams)
-        for (final p in t.players) p.id,
-      for (final p in save.youthProspects) p.id,
-      for (final p in save.pendingYouthIntake) p.id,
-      for (final p in save.freeAgents) p.id,
-      for (final p in save.retiredLegends) p.id,
-    ];
-    PlayerGenerator.ensureIdCounterAbove(ids);
+    PlayerGenerator.ensureIdCounterAbove([
+      for (final p in save.allPlayers) p.id,
+      for (final p in scoutCandidates) p.id,
+    ]);
+  }
+
+  /// 相手クラブが今のリーグに居ない監督オファーを消す。
+  ///
+  /// 以前のバージョンで、保留中に相手が別のリーグへ移ったセーブは、ホーム
+  /// 画面が開くたびに落ちて先へ進めなくなっていた。読み込みで直す。
+  void _dropDanglingJobOffer(SaveGame save) {
+    final teamId = save.pendingJobOfferTeamId;
+    if (teamId == null) return;
+    if (_findTeam(save.league.teams, teamId) == null) {
+      save.pendingJobOfferTeamId = null;
+    }
   }
 
   /// [teams]から指定IDのチームを探す。見つからない場合はnull(移籍・世代交代
@@ -773,7 +795,7 @@ class GameState extends ChangeNotifier {
     await prefs.setInt(_currentSlotKey, slot);
     _save = await _loadSlotData(prefs, slot);
     if (_save != null) {
-      _reseedPlayerIdCounter(_save!);
+      _repairLoadedSave(_save!);
       _migrateDivisionPyramidIfNeeded();
       // 市場はセーブに保存された顔ぶれを維持する(旧セーブ等で空の場合のみ
       // 新規生成する)。
@@ -980,7 +1002,7 @@ class GameState extends ChangeNotifier {
       return false;
     }
     _save = restored;
-    _reseedPlayerIdCounter(restored);
+    _repairLoadedSave(restored);
     _migrateDivisionPyramidIfNeeded();
     transferMarket = TransferMarket.generate();
     _refreshScoutCandidates();

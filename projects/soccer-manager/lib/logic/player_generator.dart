@@ -23,6 +23,9 @@ class PlayerGenerator {
     }
   }
 
+  /// 新しい選手IDを1つ払い出す。読み込んだセーブの重複IDを振り直すときにも使う。
+  static String nextPlayerId() => 'pl${_idCounter++}';
+
   static const _gkStrong = {
     AttributeKeys.handling,
     AttributeKeys.reflexes,
@@ -280,7 +283,7 @@ class PlayerGenerator {
     int? ageOverride,
     Set<String>? avoidNames,
   }) {
-    final id = 'pl${_idCounter++}';
+    final id = nextPlayerId();
     final age = ageOverride ?? (17 + _rng.nextInt(18));
     final potential = (strengthTier + _rng.nextInt(21) - 10).clamp(40, 99);
 

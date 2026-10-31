@@ -70,17 +70,32 @@ extension GameStateFinance on GameState {
   }
 
   /// 他クラブから監督就任オファーが届いている場合、そのクラブ。
+  ///
+  /// **相手が今のリーグに居なければ、オファーを消して null を返す。**
+  /// 保留中に相手が昇降格で別のリーグへ移ると、`firstWhere` が投げて
+  /// ホーム画面が開くたびに落ち、セーブが詰んでいた。
   Team? get pendingJobOfferTeam {
-    final teamId = _save?.pendingJobOfferTeamId;
+    final save = _save;
+    if (save == null) return null;
+    final teamId = save.pendingJobOfferTeamId;
     if (teamId == null) return null;
-    return _save!.league.teams.firstWhere((t) => t.id == teamId);
+    final team = _findTeam(save.league.teams, teamId);
+    if (team == null) save.pendingJobOfferTeamId = null;
+    return team;
   }
 
   Future<bool> acceptJobOffer() async {
     if (_save == null || _save!.pendingJobOfferTeamId == null) return false;
     final newTeamId = _save!.pendingJobOfferTeamId!;
-    final newTeamName =
-        _save!.league.teams.firstWhere((t) => t.id == newTeamId).name;
+    final newTeam = _findTeam(_save!.league.teams, newTeamId);
+    if (newTeam == null) {
+      // 相手が別のリーグへ移った。オファーは成り立たないので消すだけ。
+      _save!.pendingJobOfferTeamId = null;
+      _notify();
+      await _persist();
+      return false;
+    }
+    final newTeamName = newTeam.name;
     _save!.userTeamId = newTeamId;
     _save!.pendingJobOfferTeamId = null;
     _save!.confidence = 60;
