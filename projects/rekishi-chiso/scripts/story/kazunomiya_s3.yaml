@@ -1,0 +1,173 @@
+# 物語完結型ショート 和宮 s3（2026-10-29）。本編 scripts/kazunomiya-story.yaml の第1章（婚約者のいた皇女）から。
+# 形式は rikyu_s1.yaml・hidetsugu_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし（本編の想像1「兄上のお心を」は使わない）。
+# 絵は本編の AI 絵（out/story/kazunomiya/main/W*.jpg）と実在の肖像（孝明天皇・熾仁親王・家茂）。
+# 事実カード（dev/output/rekishi-chiso/research/和宮_facts_20261028.yaml）：kazunomiya-05・08・09・10・16
+#   ・婚約が9年続いたのはエドウィン・リーの1967年の論文（kazunomiya-05）→ 名と年を言う。
+#   ・見返りの攘夷の約束はドナルド・キーンの明治天皇の伝記（kazunomiya-08）→ 名を言う。
+#   ・はじめ固く断った・重ねての説得で承知は『歴史資料珍奇集』（1922、kazunomiya-09）→ 本の名を言う。
+#   ・願いの箇条書は「と伝わる」（kazunomiya-10）。
+#   ・公武合体・数えで16歳・同い年は誰でも知っている流れ（本編も fact なし）。皇室は敬意をもって（貶める言い方をしない）。
+# 理解テスト4問：
+#   ①誰の話か：和宮（孝明天皇の妹）
+#   ②いつ・どこで何が：幕末、幕府が外国人を追い払う約束の見返りに、将軍家茂の妻として和宮を求めた。和宮には9年続いた婚約者・熾仁親王がいた
+#   ③何を選んだか、なぜか：はじめ固く断ったが、天皇の重ねての説得でようやく承知した。嫁ぐ前に、願いを箇条書きにして出した
+#   ④どうなったか：1861年に内親王の位を受け、婚約は取りやめ。数えで16歳で、会ったこともない同い年の将軍に嫁いだ
+title: 和宮｜婚約者がいた皇女は、将軍に嫁いだ
+yt_title: 皇女和宮には婚約者がいた　それでも将軍家茂に嫁いだのはなぜか
+description: |-
+  孝明天皇の妹、和宮には、幼いころからの婚約者、有栖川宮熾仁親王がいました。エドウィン・リーの1967年の論文によれば、婚約は9年続いていました。
+  黒船のあと、幕府は朝廷と手を結ぶため、将軍家茂の妻に皇女を求めます。ドナルド・キーンの明治天皇の伝記によれば、幕府は外国人を追い払うと約束し、その見返りに和宮を求めました。
+  大正11年の『歴史資料珍奇集』には、和宮ははじめ固く断り、天皇から重ねて言い聞かせがあって、ようやく承知したとあります。和宮の側からは、嫁ぐにあたっての願いを箇条書きにした文書が出された、と伝わります。
+  1861年、和宮は内親王の位を受けました。婚約は取りやめになり、数えで16歳の和宮は、会ったこともない同い年の将軍のもとへ嫁ぎます。
+hashtags: ["#和宮", "#日本史", "#幕末"]
+ai_images: true
+ai_disclosure: この動画の人物・情景の画像の多くは、画像生成AI（Google の Gemini・Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/kazunomiya
+out: kazunomiya_story_s3
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 和宮（孝明天皇の妹）
+  title: "婚約者がいたのに、《将軍》に嫁いだ"
+now:
+  - {at: 天皇の妹, text: "幕末　京の都", point: 0}
+  - {at: 黒船, text: "黒船のあと　江戸", point: 0}
+  - {at: 1861年, text: "1861年　京の都", point: 1}
+timeline:
+  - {label: "婚約"}
+  - {label: "1861"}
+cards:
+  - type: table                          # 降嫁が決まるまで（語った順に1行ずつ）
+    title: 和宮が嫁ぐまで
+    from: 和宮の側
+    until: 婚約は
+    items:
+      - {at: 和宮の側, text: "はじめは　固く断った"}
+      - {at: 和宮の側, text: "天皇の説得で　承知した"}
+      - {at: 箇条書き, text: "嫁ぐ願いを　箇条書きで出す"}
+shots:
+  W03f:                                  # 1文目：御所の縁側の少女の和宮（後ろ姿）
+    kind: ai
+    file: kazunomiya/main/W03.jpg
+    focus: [0.6, 0.45]
+    move: in
+    zoom: 0.12
+    must: 縁側の少女の後ろ姿
+  Taruhito:                              # 婚約者、熾仁親王
+    kind: real
+    image: paintings/kazu_arisugawa_taruhito.jpg
+    focus: [0.5, 0.35]
+    move: in
+    credit: "有栖川宮熾仁親王（昭和初期の刊行物より）"
+    must: 熾仁親王の写真
+  Iemochi:                               # 将軍家茂の妻に皇女を求めた
+    kind: real
+    image: paintings/kazu_iemochi_kano.jpg
+    crop: [0.15, 0.0, 0.85, 0.85]
+    focus: [0.5, 0.35]
+    move: down
+    credit: "徳川家茂（狩野派の絵師、19世紀）"
+    must: 家茂の肖像
+  Edo:                                   # 外国人を追い払う約束の見返り
+    kind: real
+    image: paintings/kira_edo_castle_beato.jpg
+    focus: [0.5, 0.5]
+    move: left
+    credit: "フェリーチェ・ベアト撮影《江戸城》1860年代"
+    must: 江戸城
+  W06:                                   # はじめ固く断った（輿の中の横顔）
+    kind: ai
+    file: kazunomiya/main/W06.jpg
+    focus: [0.6, 0.45]
+    move: in
+    must: 和宮の横顔
+  Komei:                                 # 天皇の重ねての説得
+    kind: real
+    image: paintings/kazu_komei_koyama_1902.png
+    focus: [0.5, 0.3]
+    move: in
+    credit: "孝明天皇（小山正太郎画、1902年）"
+    must: 孝明天皇の肖像
+  W10:                                   # 願いの箇条書
+    kind: ai
+    file: kazunomiya/main/W10.jpg
+    focus: [0.6, 0.55]
+    move: left
+    must: 文机の紙と筆
+  W03r:                                  # 1861年、内親王の位・婚約は取りやめ
+    kind: ai
+    file: kazunomiya/main/W03.jpg
+    focus: [0.35, 0.5]
+    move: right
+    must: 御所の庭
+  W09:                                   # 同い年の将軍のもとへ
+    kind: ai
+    file: kazunomiya/main/W09.jpg
+    focus: [0.6, 0.5]
+    move: in
+    must: 廊下を歩く若い夫婦の後ろ姿
+  W06q:                                  # 最後の問い：和宮の横顔
+    kind: ai
+    file: kazunomiya/main/W06.jpg
+    focus: [0.62, 0.38]
+    move: in
+    zoom: 0.18
+    text_y: 0.76
+    must: 和宮の横顔
+lines:
+  # fact: kazunomiya-05
+  - 語り: 天皇の妹、和宮。婚約者がいたのに、会ったこともない将軍に、《!嫁いだ》。
+    shot: W03f
+    tone: 強調
+  # fact: kazunomiya-05
+  - 語り: 婚約者は、有栖川宮熾仁親王。エドウィン・リーの1967年の論文によれば、婚約は9年続いていた。
+    shot: Taruhito
+    tone: しみじみ
+    pause: 0.12
+  - 語り: 黒船のあと、力の揺らいだ幕府は、将軍家茂の妻に、皇女を求めた。
+    shot: Iemochi
+    tone: しみじみ
+    pause: 0.12
+  # fact: kazunomiya-08
+  - 語り: ドナルド・キーンの明治天皇の伝記によれば、幕府は、外国人を追い払うと約束して、その見返りに、和宮を求めた。
+    shot: Edo
+    tone: しみじみ
+    pause: 0.12
+  # fact: kazunomiya-09
+  - 語り: 大正11年の本、歴史資料珍奇集には、和宮は、はじめ《固く断って》、従わなかった、とある。
+    shot: W06
+    tone: 強調
+    pause: 0.12
+  # fact: kazunomiya-09
+  - 語り: 天皇から重ねて言い聞かせがあり、ようやく、承知した。
+    shot: Komei
+    tone: 重い
+    pause: 0.15
+  # fact: kazunomiya-10
+  - 語り: 和宮の側からは、嫁ぐにあたっての願いを、箇条書きにした文書が出された、と伝わる。
+    shot: W10
+    tone: しみじみ
+    pause: 0.12
+  # fact: kazunomiya-16
+  - 語り: 1861年、和宮は、天皇の命で、内親王の位を受けた。そして婚約は、《!取りやめ》になった。
+    shot: W03r
+    tone: 重い
+    pause: 0.3
+    dip: true
+  - 語り: 数えで16歳。和宮は、同い年の将軍のもとへ、嫁いでいった。
+    shot: W09
+    tone: しみじみ
+    pause: 0.15
+  - 語り: あなたなら、兄に重ねて頼まれて、婚約を、《あきらめられますか》。
+    shot: W06q
+    tone: 疑問
+    pause: 0.15

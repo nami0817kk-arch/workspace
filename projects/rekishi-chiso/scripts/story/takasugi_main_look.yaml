@@ -1,0 +1,239 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：高杉晋作（scripts/takasugi-story.yaml）。chiso/storymain.py が読む。
+# 10-29 作成（10/31 19:00 公開）。hijikata_main_look.yaml を写した。台本には手を入れない（承認のあと。変えると控えが外れる）。決まりは docs/story-main.md・スキル rekishi-story-screen。
+# 絵の方針：AI 絵は 15 枚（T01〜T15。H は秀次、J は土方の回で使った）。同じ絵を時間をずらして使い回す（続けて 20 秒まで）。
+#   人物は AI 絵の後ろ姿・手もと・遠景が主役。実在の肖像写真（『近世名士写真 其2』1934〜35年、パブリックドメイン。出典は台本の portrait の caption と下の credits）は額（frame:）。
+#   絵図・錦絵・写真は絵図の一部（part:）。
+#   この回の決まり：AI 絵に高杉の顔は描かない（後ろ姿か遠景・手もと）。実在の肖像写真・俳優に似せない。顔が分かるのは実在の肖像写真の額だけ。戦の場面・刀を抜く場面・死の場面は描かない。
+# AI 絵の指示の一覧（英語・姿の設定）：dev/output/rekishi-chiso/research/takasugi_ai_images.md
+# 届く前は art_dir の仮の絵（T01.jpg〜、番号と場面だけ書いた灰色の板）で代える。届いたら main_art_dir に T01.jpg〜を置くだけ。
+#   仮の絵は out/ にあり git に入らない。無ければ 1376×768 の灰色の板に「T01（仮）」と場面を書いて作り直す。
+script: scripts/takasugi-story.yaml
+out: takasugi_story_main
+art_dir: out/story/takasugi/ph          # 仮の絵（placeholder）
+main_art_dir: out/story/takasugi/main   # Gemini の 16:9 の絵（T01.jpg〜T15.jpg）
+ai_disclosure: この動画の人物・情景の画像の多くは、画像生成AI（Google の Gemini・Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+
+# 章ごとの左上の札「いま｜章題」。台本の語りは和暦と西暦が混じるので、語りが言った形のまま。
+# dates＝語りがその年・月日を言った行から替える（研究・報告・展示・報道の年は物語の「いま」ではないので替えない。null で章題だけ）
+chapters:
+  0: {label: 序章 墓に刻まれなかった遺言, now: null,
+      dates: {3: 2016年, 4: null, 7: 慶応3年4月, 9: 1884年, 10: null}}
+  1: {label: 第1章 23歳の高杉は上海で何を見たのか, now: 文久2年,
+      dates: {13: 文久2年4月, 24: 文久2年12月}}
+  2: {label: 第2章 身分を問わない奇兵隊は本当に身分を問わなかったのか, now: 文久3年,
+      dates: {26: 文久3年3月, 27: 文久3年5月, 30: 文久3年6月, 32: 文久3年8月, 33: null, 39: 元治元年3月, 40: 元治元年7月, 41: 元治元年8月, 44: 元治元年冬}}
+  3: {label: 第3章 80人で藩に挙兵した夜、高杉は何と言ったのか, now: 元治元年11月,
+      dates: {45: 元治元年11月, 50: 元治元年11月25日, 53: 元治元年12月15日, 64: 元治元年12月26日, 65: 元治2年1月}}
+  4: {label: 第4章 軍艦を勝手に買った男は四境戦争で何をしたのか, now: 慶応2年,
+      dates: {68: 慶応2年3月, 70: 慶応2年6月, 74: 慶応2年8月, 76: 慶応2年9月, 77: 慶応2年10月, 78: 慶応3年3月}}
+  5: {label: 第5章 「おもしろきこともなき世を」は辞世だったのか, now: 慶応3年,
+      dates: {81: null, 98: 慶応3年11月, 99: 慶応3年4月16日}}
+  6: {label: まとめ 墓碑銘は、なぜ刻まれなかったのか, now: null,
+      dates: {}}
+
+# 概要欄「■ 参考にした資料」（事実カード 高杉晋作_facts_20261029.yaml のうち本文を開いた主なもの。10-29）
+references:
+  - 東行墓、墓碑銘（高杉晋作Museum）　https://shinsaku-m.com/history/bohimei/
+  - 年表（高杉晋作Museum）　https://shinsaku-m.com/era/
+  - 平尾山荘（野村望東尼山荘）（高杉晋作Museum）　https://shinsaku-m.com/history-cat/fukuoka/
+  - 高杉晋作は何をした人？（山口県観光連盟）　https://yamaguchi-tourism.jp/feature/shinsaku
+  - 功山寺（山口県観光連盟）　https://yamaguchi-tourism.jp/spot/detail_10468.html
+  - 東行庵（山口県観光連盟）　https://yamaguchi-tourism.jp/spot/detail_15193.html
+  - 長州男児の肝っ玉・高杉晋作の功山寺挙兵（歴史街道）　https://rekishikaido.php.co.jp/detail/2454
+  - Kozanji Temple（国土交通省 多言語解説文データベース）　https://www.mlit.go.jp/tagengo-db/en/R5-00677.html
+  - 「おもしろきこともなき世をおもしろく・・・。」とかいう高杉晋作の辞世の句について調べたい（レファレンス協同データベース、南アルプス市立図書館 2012）　https://crd.ndl.go.jp/reference/entry/index.php?id=1000113560&page=ref_view
+  - 梅溪昇『人物叢書 高杉晋作』302頁（個人ブログによる引用）　https://wheatbaku.exblog.jp/26719207/
+  - 奇兵隊・高杉晋作（コトバンク：世界大百科事典・日本人名大辞典ほか）　https://kotobank.jp/word/高杉晋作
+  - 「中国に対する誤解」は日本人の歴史的な病い？ 高杉晋作の上海体験を読み解く（Wedge ONLINE 2018）　https://wedge.ismedia.jp/articles/-/13575
+  - 高杉晋作（明治維新人物調べ方案内 No.14、山口県立図書館）　https://library.pref.yamaguchi.lg.jp/how_to_investigate/takasugi_shinsaku/
+  - File:Takasugi Shinsaku.jpg（ウィキメディア・コモンズ）　https://commons.wikimedia.org/wiki/File:Takasugi_Shinsaku.jpg
+no_tag_from: 109                     # 締め（冒頭の三文字に戻る所）から札を出さない
+
+# AI 絵（16:9 横・15枚）。scene は日本語の要約（英語の指示は research/takasugi_ai_images.md）。
+# pan：h＝左右（既定）・v＝上下・zoom＝ゆっくり寄る（顔の感情の場面だけ。この回は顔を描かないので手もとの場面に）。crops＝切り出し [倍率, 中心x, 中心y]
+# 位置（crops・focus・fx の region）は仮の値。届いた絵を見て合わせる
+ai:
+  T01: {scene: 夕暮れの丘の上の、文字の無い古い墓石（人物なし）, pan: v, crops: {left: [1.18, 0.40, 0.5], right: [1.18, 0.60, 0.5]}}
+  T02: {scene: 夜の海に出た帆船の甲板、遠くを見つめる若い男の後ろ姿, pan: h, crops: {left: [1.18, 0.38, 0.5], right: [1.18, 0.62, 0.5], face: [1.3, 0.45, 0.45]}}
+  T03: {scene: 夜明けの下関の海峡、砲台のある岬の遠景（人物なし）, pan: h, crops: {left: [1.18, 0.40, 0.5], right: [1.18, 0.60, 0.5]}}
+  T04: {scene: 雪の夜、寺の山門へ続く石段の遠景（人物なし）, pan: v, crops: {left: [1.18, 0.40, 0.5], right: [1.18, 0.60, 0.5]}}
+  T05: {scene: 長崎の港、停泊する蒸気船の遠景（人物なし）, pan: h, crops: {right: [1.18, 0.60, 0.5]}}
+  T06: {scene: 窓の外に海が見える、灯の落ちた座敷（人物なし）, pan: h, crops: {left: [1.18, 0.40, 0.5], right: [1.18, 0.60, 0.5]}}
+  T07: {scene: 朝の木立の中、苔むした古い墓石に差す光（人物なし）, pan: v, crops: {left: [1.18, 0.40, 0.5], right: [1.18, 0.60, 0.5]}}
+  T08: {scene: 帆柱が林立する上海の河岸の夜明け、遠くの洋館の列（人物なし）, pan: h, crops: {left: [1.18, 0.40, 0.5], right: [1.18, 0.60, 0.5]}}
+  T09: {scene: 雪の山道を進む、数十人の小さな一行の後ろ姿（遠景）, pan: h, crops: {left: [1.18, 0.40, 0.5], right: [1.18, 0.60, 0.5]}}
+  T10: {scene: 行灯の下、書状に筆を走らせる手もと（顔なし）, pan: zoom, crops: {face: [1.3, 0.50, 0.50], left: [1.18, 0.40, 0.5], right: [1.18, 0.60, 0.5]}}
+  T11: {scene: 山荘の縁側、夜なべで着物を縫う女性の手もと（顔なし）, pan: zoom, crops: {face: [1.3, 0.50, 0.50], left: [1.18, 0.40, 0.5], right: [1.18, 0.60, 0.5]}}
+  T12: {scene: 海辺の陣屋の広場、武家も農民も混じる若者たちの後ろ姿（遠景）, pan: h, crops: {left: [1.18, 0.40, 0.5], right: [1.18, 0.60, 0.5]}}
+  T13: {scene: 夜の港に停泊する三隻の洋式帆船の影（人物なし）, pan: h, crops: {left: [1.18, 0.40, 0.5], right: [1.18, 0.60, 0.5]}}
+  T14: {scene: 海を望む庵の縁側、置かれた筆と紙と湯のみ（人物なし）, pan: h, crops: {left: [1.18, 0.40, 0.5], right: [1.18, 0.60, 0.5]}}
+  T15: {scene: 終了画面用。夕暮れの下関の海（右半分を空けた構図）, lock: [1.0, 0.5, 0.5]}
+
+# 実在の絵の手当て（元の画像は変えない）
+paint_fx: {}
+
+# 台本に出てこない実在の絵の出典（左下の字・概要欄）
+credits:
+  paintings/ryoma_takasugi_shinsaku.jpg: 高杉晋作の肖像（『近世名士写真 其2』1934〜35年。ウィキメディア・コモンズ、パブリックドメイン）
+  paintings/ryoma_shimonoseki_view_lacma_1865.jpg: 下関の景（1865年ごろ。ロサンゼルス郡立美術館）
+  paintings/ryoma_choshu_hiroshige_shimonoseki.jpg: 歌川広重《六十余州名所図会 長門 下之関》
+  paintings/ryoma_choshu_hiroshige2_nagato.jpg: 二代歌川広重《六十余州名所図会 長門》
+  paintings/ryoma_shimonoseki_battery_beato_1864.jpg: 下関の砲台（フェリーチェ・ベアト撮影、1864年）
+  paintings/ryoma_shimonoseki_fleet_painting_1864.jpg: 下関で戦う四国艦隊の絵（1864年）
+  paintings/ryoma_shimonoseki_strait_map_1864.jpg: 下関海峡の地図（1864年）
+  paintings/ryoma_nagasaki_1865_harbor.jpg: 長崎の港（1865年ごろの写真）
+  paintings/ryoma_nagasaki_beato_ships_offshore.jpg: 長崎港外の船（フェリーチェ・ベアト撮影、1860年代）
+  paintings/ryoma_doc_letter_1867.jpg: 同じ時代の書状（坂本龍馬の書状、1867年）
+  paintings/ryoma_sanjo_sanetomi.jpg: 三条実美（五卿の一人）
+  paintings/yoshinobu_choshu_modern_troops_1865.jpg: 第二次長州征討の長州の洋式軍隊の絵（1865年）
+
+# 絵の割り当て：「行の番号 種類:絵 [切り出し]」。次の行の指定まで続く。図（figure）の出る行は、その時の絵を暗くして図を置く（自動）
+shots:
+  # 序章（0〜12）：墓石の三文字 → 墓誌を書いた → 2016年 → 墓碑銘 → 墓・おうの・東行庵 → なぜ
+  - 0 ai:T01 wide                                  # 墓石に三文字（最初のカットは AI 絵にする：額の下地に要る）
+  - 1 ai:T10 wide                                  # 挙兵の直前に書いた（書状）
+  - 2 ai:T10 face                                  # 大庭伝七あての書状
+  - 3 ai:T01 right                                 # 2016年 碑が建つ
+  - 4 ai:T07 wide                                  # 墓碑銘を読む（史料の札）
+  - 5 ai:T07 left                                  # 裏の文
+  - 6 frame:paintings/ryoma_takasugi_shinsaku.jpg   # 奇兵隊開闢総督と名乗る
+  - 7 part:paintings/ryoma_choshu_hiroshige_shimonoseki.jpg   # 慶応3年4月・清水山に葬られる
+  - 8 ai:T07 right                                 # おうの・梅処
+  - 9 ai:T01 left                                  # 東行庵 1884年
+  - 10 ai:T01 wide                                 # 刻まれなかった
+  - 11 ai:T07 wide                                 # なぜ（問い）
+  - 12 ai:T08 wide                                 # 話は上海から
+  # 第1章（13〜25）：上海
+  - 13 ai:T02 wide                                 # 1862年4月 千歳丸
+  - 14 part:paintings/ryoma_nagasaki_beato_ships_offshore.jpg   # 清国の情勢を探る
+  - 15 ai:T02 right                                # 船の中で眠れない
+  - 16 ai:T08 left                                 # 『遊清五録』
+  - 17 ai:T08 right                                # 漢文・著作集
+  - 18 part:paintings/ryoma_nagasaki_1865_harbor.jpg   # 内情探索録 幕府の役人を批判
+  - 19 ai:T08 wide                                 # 孔子廟のイギリス軍
+  - 20 ai:T02 left                                 # 同じ道をたどってはならない
+  - 21 ai:T02 face                                 # 【想像1】……日本を、こうしては、ならぬ
+  - 22 part:paintings/ryoma_nagasaki_beato_ships_offshore.jpg   # 五代才助・蒸気船と帆船
+  - 23 part:paintings/ryoma_shimonoseki_fleet_painting_1864.jpg   # その年の暮れ
+  - 24 part:paintings/ryoma_shimonoseki_view_lacma_1865.jpg   # 御殿山の焼き討ち
+  - 25 ai:T12 wide                                 # 身分を問わない軍隊
+  # 第2章（26〜44）：奇兵隊の検証
+  - 26 ai:T14 wide                                 # 東行と号す
+  - 27 part:paintings/ryoma_shimonoseki_battery_beato_1864.jpg   # 5月10日 攘夷の期限
+  - 28 part:paintings/ryoma_shimonoseki_fleet_painting_1864.jpg   # 報復で砲台が壊される
+  - 29 ai:T03 wide                                 # 身分を問わない隊の提案
+  - 30 ai:T12 wide                                 # 6月7日 結成
+  - 31 ai:T12 right                                # 総督
+  - 32 ai:T03 left                                 # 8月16日 罷免
+  - 33 ai:T12 left                                 # 隊の人数
+  - 34 ai:T12 wide                                 # どんな人がいたのか
+  - 35 ai:T12 right                                # 559名の身分（台本の図）35〜37
+  - 38 ai:T14 left                                 # 将軍暗殺の計画
+  - 39 ai:T14 right                                # 野山獄
+  - 40 part:paintings/ryoma_shimonoseki_view_lacma_1865.jpg   # 禁門の変
+  - 41 part:paintings/ryoma_shimonoseki_fleet_painting_1864.jpg   # 四国艦隊の砲撃・講和
+  - 42 ai:T03 right                                # 賠償金300万ドル
+  - 43 ai:T04 wide                                 # 長州から逃げ出す
+  - 44 ai:T09 wide                                 # 年の暮れ、長州へ戻る
+  # 第3章（45〜67）：功山寺挙兵
+  - 45 ai:T11 wide                                 # 11月11日 平尾山荘
+  - 46 part:paintings/ryoma_choshu_hiroshige2_nagato.jpg   # 望東尼が10日あまりかくまう
+  - 47 ai:T11 face                                 # 一晩で着物を縫う
+  - 48 ai:T11 left                                 # 歌（史料の札）
+  - 49 ai:T11 face                                 # 【想像2】……かたじけない
+  - 50 ai:T09 left                                 # 11月25日 下関へ戻る
+  - 51 part:paintings/ryoma_doc_letter_1867.jpg     # 決起の直前の書状（墓碑銘）
+  - 52 ai:T10 face                                 # 【想像3】……墓には、これを、刻んでくれ
+  - 53 ai:T04 wide                                 # 12月15日 雪の夜
+  - 54 frame:paintings/ryoma_sanjo_sanetomi.jpg     # 五卿
+  - 55 ai:T04 left                                 # 人数の書き方（台本の図）55〜57
+  - 58 ai:T09 right                                # 出発の言葉
+  - 59 ai:T09 wide                                 # 言葉の食い違い（台本の図）59〜61
+  - 62 ai:T03 wide                                 # 新地会所を占拠
+  - 63 ai:T13 wide                                 # 三田尻で軍艦3隻
+  - 64 ai:T13 right                                # 12月26日 3,800
+  - 65 part:paintings/yoshinobu_choshu_modern_troops_1865.jpg   # 1月7日 絵堂
+  - 66 ai:T13 left                                 # 幕府と戦う道へ
+  - 67 part:paintings/ryoma_nagasaki_beato_ships_offshore.jpg   # ある船を買う
+  # 第4章（68〜79）：四境戦争
+  - 68 ai:T05 wide                                 # 3月21日 オテントー丸
+  - 69 ai:T05 right                                # 蒸気船と帆船の差
+  - 70 part:paintings/yoshinobu_choshu_modern_troops_1865.jpg   # 第二次長州征討
+  - 71 ai:T13 wide                                 # 大島口 奇襲
+  - 72 part:paintings/ryoma_shimonoseki_fleet_painting_1864.jpg   # Wikipedia：目立った戦果はなかった
+  - 73 part:paintings/ryoma_shimonoseki_strait_map_1864.jpg   # 小倉口 1千と2万
+  - 74 part:paintings/ryoma_shimonoseki_battery_beato_1864.jpg   # 小倉城が炎上
+  - 75 ai:T14 wide                                 # 結核が悪化
+  - 76 part:paintings/ryoma_choshu_hiroshige_shimonoseki.jpg   # 望東尼を救い出す
+  - 77 ai:T14 right                                # 桜山で療養
+  - 78 ai:T06 wide                                 # 谷家を創設
+  - 79 ai:T06 left                                 # 梅之進
+  - 80 ai:T14 left                                 # 病の床の句
+  # 第5章（80〜99）：辞世の検証
+  - 81 ai:T14 wide                                 # 上の句と下の句
+  - 82 ai:T06 wide                                 # 南アルプス市立図書館の回答
+  - 83 ai:T14 right                                # 表記の違い
+  - 84 ai:T06 left                                 # 世を／世に・直筆なし
+  - 85 ai:T10 wide                                 # 臨終の作ではない、という書き方も
+  - 86 ai:T10 left                                 # 梅溪昇・302頁（台本の図）85〜
+  - 89 part:paintings/ryoma_shimonoseki_view_lacma_1865.jpg   # 山口県観光連盟の日付
+  - 91 ai:T14 right                                # 記録はそろっていない
+  - 93 ai:T06 wide                                 # 命日（台本の図）92〜95
+  - 95 part:paintings/ryoma_shimonoseki_view_lacma_1865.jpg   # 13日の深夜・相続の時間
+  - 96 ai:T14 wide                                 # 一坂太郎さんの本・確かめられない
+  - 97 ai:T06 left                                 # 臨終に立ち会った人
+  - 98 ai:T14 left                                 # 望東尼も11月に亡くなる
+  - 99 ai:T01 wide                                 # 4月16日 清水山に葬られる
+  - 100 ai:T07 wide                                 # なぜ三文字だけ
+  # まとめ（100〜110）：答え → 冒頭に戻る
+  - 101 ai:T07 left                                # 墓誌は葬儀の後に見つかった
+  - 102 ai:T01 right                               # 2016年4月14日
+  - 103 frame:paintings/ryoma_takasugi_shinsaku.jpg   # 奇兵隊開闢総督と自分を名乗る
+  - 104 ai:T07 right                               # おうのが墓を守る
+  - 105 ai:T10 wide                                # なぜ書いたかは確かめられない
+  - 106 frame:paintings/ryoma_takasugi_shinsaku.jpg   # 肖像の出どころ
+  - 107 ai:T14 wide                                # 日記・手紙・『高杉晋作史料』
+  - 108 ai:T01 wide                                # 150年のあいだ石に刻まれなかった
+  - 109 ai:T14 left                                # 臨終に詠んだのか分からない歌
+  - 110 frame:paintings/ryoma_takasugi_shinsaku.jpg   # 締め：冒頭の三文字に戻る
+  - 111 ai:T15 wide
+  - end ai:T15 wide
+
+# look だけで足す図（台本には無い）
+figures: []
+
+# 語りがその物・人を言うと、カットの終わりにそれが主役になる所で止まる。位置は仮（届いた絵で合わせる）
+focus:
+  T10: {書状|筆|手紙: [1.3, 0.50, 0.50]}
+  T11: {着物|針|縫: [1.3, 0.50, 0.50]}
+  paintings/ryoma_takasugi_shinsaku.jpg: {顔|肖像|写真: [1.3, 0.5, 0.33]}
+
+# 絵の一部だけを動かす（話に合う絵だけ・控えめに。顔・人物にはかけない）。範囲は仮（届いた絵で見て直す）
+fx:
+  T03: {mist: {region: [0, 0.35, 1, 0.65], alpha: 0.10, speed: 4}}      # 夜明けの海峡の霧
+  T10: {lamp: {region: [0.60, 0.20, 0.85, 0.50]}}                        # 行灯
+  T06: {lamp: {region: [0.10, 0.45, 0.30, 0.75]}}                        # 座敷の残り灯
+  T15: {water: {region: [0, 0.65, 1, 1.0]}}                              # 夕暮れの海面
+  T04: {mist: {region: [0, 0.60, 1, 1.0], alpha: 0.08, speed: 3}}       # 雪の夜の山門の靄
+
+# 部品（from〜to の行、0 始まり。出ている間は絵を暗くする）
+parts:
+  - {type: quote, from: 4, to: 5, label: 史料, text: 故奇兵隊開闢総督高杉晋作則／西海一狂生東行墓／遊撃将軍谷梅之助也,
+     source: 高杉の墓誌（高杉晋作Museum「東行墓、墓碑銘」）}
+  - {type: quote, from: 48, to: 49, label: 史料, text: まごころを　つくしのきぬは　国のため／たちかえるべき　衣手にせよ,
+     source: 野村望東尼が贈った歌（高杉晋作Museum「平尾山荘」）}
+  - {type: quote, from: 91, to: 92, label: 要点, text: いつ詠まれたか＝3つの記録で割れる,
+     source: 南アルプス市立図書館 2012／山口県観光連盟／梅溪昇『人物叢書 高杉晋作』}
+
+# 静止画（story-main を --frames なしで回したとき。簡易の描き方で、パン・部品は出ない。目で見るのは --frames の方）
+stills:
+  - {line: 0, note: 冒頭（0秒）墓石の三文字（T01）と肖像の額}
+  - {line: 4, note: 序章 墓碑銘（史料の札）}
+  - {line: 21, note: 第1章 想像の台詞}
+  - {line: 35, note: 第2章 奇兵隊士559名の身分}
+  - {line: 55, note: 第3章 功山寺 人数の書き方の食い違い}
+  - {line: 59, note: 第3章 出発の言葉の食い違い}
+  - {line: 87, note: 第5章 辞世の句 いつ詠まれたか}
+  - {line: 93, note: 第5章 命日の食い違い}
+  - {line: 110, note: まとめ 冒頭の三文字に戻る}
+  - {end: true, note: 終了画面の空き}

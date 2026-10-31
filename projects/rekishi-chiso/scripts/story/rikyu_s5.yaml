@@ -1,0 +1,182 @@
+# 物語完結型ショート 千利休 s5（2026-10-28）。本編 scripts/rikyu-story.yaml の第5章（その後：少庵・宗旦・三千家・聚光院）から。投稿しない。
+# 形式は kazumasa_s4.yaml（子の代の話）を写した。決まりは docs/story-shorts.md。想像の台詞なし。絵は本編の AI 絵（out/story/rikyu/main/R*.jpg・K05）を縦に切り出す。
+# 事実カード（dev/output/rekishi-chiso/research/千利休_facts_20261028.yaml）：rikyu-01・18・19・20
+#   ・少庵：会津の蒲生氏郷のもとに蟄居 → 文禄3年、徳川家康と蒲生氏郷のとりなしで秀吉に許され京に戻り、千家を興した（rikyu-18、ニッポン旅マガジン 2021）。
+#   ・宗旦：大徳寺にいたのを少庵が還俗させ、寛永10年ごろに不審菴を再建。宗旦の子らが三千家の祖（rikyu-19）。
+#   ・墓は大徳寺の塔頭・聚光院、三千家の菩提寺、ふだん非公開（rikyu-20）。
+#   ・不審菴の絵は R12（茶室を建て直す大工たち）。宗旦その人の顔は描かない。
+# 理解テスト4問：
+#   ①誰の話か：千利休の家（養子の少庵と、その子の宗旦）
+#   ②いつ・どこで何が：天正19年に利休が世を去ると、少庵は京を離れ、会津の蒲生氏郷のもとでこもって暮らした
+#   ③どうやって戻ったか：文禄3年、徳川家康と蒲生氏郷のとりなしで秀吉に許され、京に戻って千家を興し直した
+#   ④どうなったか：子の宗旦が寛永10年ごろ不審菴を建て直し、宗旦の子らが表・裏・武者小路の三千家の祖になった。利休の墓は大徳寺の聚光院にある
+title: 千利休｜罰せられた家は、途切れなかった
+yt_title: 秀吉に罰せられた千利休の家は、なぜ今も続くのか　会津に逃れた養子・少庵
+description: |-
+  天正19年、豊臣秀吉に罰せられた茶人・千利休が世を去ると、養子の少庵は京を離れ、会津の蒲生氏郷のもとで、ひっそりとこもって暮らしました。
+  許しが出たのは文禄3年。徳川家康と蒲生氏郷のとりなしでした。少庵は京に戻り、千家をもう一度興します。
+  少庵は、大徳寺で僧になっていた子の宗旦を、ふつうの暮らしに戻させました。その宗旦が寛永10年ごろに建て直したのが、茶室「不審菴」です。宗旦の子どもたちが、表千家・裏千家・武者小路千家の、三つの千家の祖になりました。
+  利休の墓は、大徳寺の聚光院にあります。三つの千家の菩提寺で、ふだんは公開されていません。
+hashtags: ["#千利休", "#日本史", "#茶道"]
+ai_images: true
+art_dir: out/story/rikyu
+out: rikyu_story_s5
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 千利休（豊臣秀吉に仕えた茶人）
+  title: "罰せられた家は、《途切れなかった》"
+now:
+  - {at: 秀吉に罰せられた, text: "天正19年　京", point: 0}
+  - {at: 会津の, text: "天正19年〜　会津", point: 0}
+  - {at: 文禄3年, text: "文禄3年　京", point: 1}
+  - {at: 寛永10年, text: "寛永10年ごろ　京", point: 2}
+  - {at: 利休の墓は, text: "いま　大徳寺 聚光院", point: 2}
+timeline:
+  - {label: "天正19"}
+  - {label: "文禄3"}
+  - {label: "寛永10"}
+cards:
+  - type: table                          # 利休のあとの千家（語った順に1行ずつ）
+    title: 利休のあとの千家
+    from: 文禄3年
+    until: 利休の墓は
+    items:
+      - {at: 文禄3年, text: "文禄3年　少庵が許され京へ"}
+      - {at: 寛永10年, text: "寛永10年ごろ　宗旦が不審菴を再建"}
+      - {at: 表千家, text: "宗旦の子ら　三つの千家の祖"}
+shots:
+  R01f:                                  # 1文目：利休の顔
+    kind: ai
+    file: rikyu/main/R01.jpg
+    focus: [0.5, 0.0]
+    move: in
+    zoom: 0.5
+    text_y: 0.80
+    must: 利休の顔
+  R11:                                   # 会津でこもる少庵（雪の屋敷。少庵は右 0.78）
+    kind: ai
+    file: rikyu/main/R11.jpg
+    focus: [0.69, 0.4]
+    move: right
+    must: 雪の屋敷で座る少庵
+  R11s:                                  # 会津の雪（外の景色）
+    kind: ai
+    file: rikyu/main/R11.jpg
+    focus: [0.2, 0.45]
+    move: left
+    must: 雪の城下
+  K05:                                   # 秀吉の許し
+    kind: ai
+    file: rikyu/main/K05.jpg
+    focus: [0.5, 0.45]
+    move: in
+    must: 秀吉
+  R14:                                   # 京に戻る（夕暮れの京の川と橋。R02 は頭が表の下に隠れたので替えた）
+    kind: ai
+    file: rikyu/main/R14.jpg
+    focus: [0.25, 0.55]
+    move: right
+    must: 京の川と橋
+  R05:                                   # 大徳寺で僧になっていた宗旦
+    kind: ai
+    file: rikyu/main/R05.jpg
+    focus: [0.5, 0.45]
+    move: up
+    must: 大徳寺の三門
+  R12:                                   # 不審菴を建て直す
+    kind: ai
+    file: rikyu/main/R12.jpg
+    focus: [0.3, 0.55]
+    move: right
+    must: 茶室を建てる大工
+  R09:                                   # 三つの千家（茶碗と茶筅）
+    kind: ai
+    file: rikyu/main/R09.jpg
+    focus: [0.35, 0.6]
+    move: right
+    must: 黒い茶碗と茶筅
+  R13:                                   # 聚光院の墓（苔むした石塔）
+    kind: ai
+    file: rikyu/main/R13.jpg
+    focus: [0.6, 0.5]
+    move: in
+    must: 寺の庭の石塔
+  R05w:                                  # あの大徳寺の中に眠る
+    kind: ai
+    file: rikyu/main/R05.jpg
+    focus: [0.5, 0.35]
+    move: out
+    zoom: 0.15
+    must: 大徳寺の三門
+  R13q:                                  # 最後の問い（石塔に寄る）
+    kind: ai
+    file: rikyu/main/R13.jpg
+    focus: [0.6, 0.45]
+    move: in
+    zoom: 0.3
+    must: 石塔
+lines:
+  # fact: rikyu-18, rikyu-19
+  - 語り: 秀吉に罰せられた茶人、千利休。その家は、《!途切れなかった》。
+    shot: R01f
+    tone: 強調
+  # fact: rikyu-18
+  - 語り: 天正19年、利休が世を去ると、養子の少庵は、京を離れた。
+    shot: R11
+    tone: しみじみ
+    pause: 0.12
+  # fact: rikyu-18
+  - 語り: 身を寄せたのは、会津の蒲生氏郷のもと。少庵は、そこで、ひっそりとこもって暮らした。
+    shot: R11s
+    tone: 重い
+    pause: 0.15
+  # fact: rikyu-18
+  - 語り: 秀吉の許しが出たのは、文禄3年。徳川家康と、蒲生氏郷の、《とりなし》だった。
+    shot: K05
+    tone: 強調
+    pause: 0.3
+    dip: true
+  # fact: rikyu-18
+  - 語り: 少庵は京に戻り、千家を、もう一度、興した。
+    shot: R14
+    tone: しみじみ
+    pause: 0.12
+  # fact: rikyu-19
+  - 語り: そして、大徳寺で僧になっていた息子の宗旦を、ふつうの暮らしに戻させた。
+    shot: R05
+    tone: しみじみ
+    pause: 0.12
+  # fact: rikyu-19
+  - 語り: 寛永10年ごろ、その宗旦が建て直したのが、茶室、「不審菴」だ。
+    shot: R12
+    tone: しみじみ
+    pause: 0.12
+  # fact: rikyu-19
+  - 語り: 宗旦の子どもたちは、表千家、裏千家、武者小路千家。いまに続く、《三つの千家》の祖になった。
+    shot: R09
+    tone: 強調
+    pause: 0.15
+  # fact: rikyu-20
+  - 語り: 利休の墓は、大徳寺の聚光院にある。三つの千家の菩提寺で、ふだんは公開されていない。
+    shot: R13
+    tone: しみじみ
+    pause: 0.15
+  # fact: rikyu-02, rikyu-20
+  - 語り: 木像が罪になった、あの大徳寺の中に、利休は眠っている。
+    shot: R05w
+    tone: 重い
+    pause: 0.15
+  - 語り: あなたなら、罰を受けた家を、もう一度、《興せますか》。
+    shot: R13q
+    tone: 疑問
+    pause: 0.15

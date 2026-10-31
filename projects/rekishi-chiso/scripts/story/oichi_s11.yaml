@@ -1,0 +1,196 @@
+# 物語完結型ショート s11（2026-10-25）。本編 scripts/oichi-story.yaml（10/26 19:00 予約）の第6章から。投稿しない（ユーザーが決める）。
+# 形式は oichi_s10.yaml を写した（案Bの見出し帯・「いま」札と年表・語りそのままのブロック文字）。決まりは docs/story-shorts.md。
+# 切り口：三人の娘は、大坂の陣で敵と味方に分かれた（茶々は城に、初は和議の使い、江は徳川の妻）。茶々の最期まで。想像の台詞なし。
+# 理解テスト4問（語りの字だけで答えられること）：
+#   ①誰の話か：お市の方（織田信長の妹）の三人の娘、茶々・初・江
+#   ②いつ・どこで何が：1614〜1615年、大坂の陣。大坂城の茶々・徳川の側の江・和議の使いの初
+#   ③なぜ分かれたか：嫁ぎ先が分かれた（茶々＝豊臣秀吉の妻、初＝京極高次の妻、江＝徳川秀忠の妻）
+#   ④どうなったか：1615年、大坂城は落ち、茶々は城とともに最期。母と同じく夫の家の城で
+# 事実の出どころ（research/oichi_facts.md 5章・oichi-story.yaml 第6章）：茶々＝秀吉の妻・1593 秀頼 [W淀]／初＝京極高次の妻・冬の陣で和議 [W初]／
+#   江＝1595 秀忠の妻 [W江]／千姫は江の娘で秀頼の妻・落城の前に城を出された（Wikipedia「千姫」、oichi-story 第6章）／1615 淀殿、大坂城とともに [W淀]。母の死（1583）から大坂の陣（1614）まで31年。
+title: お市の方の三人の娘｜大坂の陣で、敵と味方に
+yt_title: お市の方の三人の娘は、大坂の陣で敵と味方に分かれた【茶々・初・江】
+description: |-
+  1583年、お市の方は北ノ庄城に残り、三人の娘だけを城の外へ送り出しました。
+  長女の茶々は豊臣秀吉の妻に、次女の初は京極高次の妻に、三女の江は徳川秀忠の妻になります。
+  1614年、大坂の陣。大坂城には茶々と子の秀頼、徳川の側には江、そのあいだを和議の使いとして初が行き来しました。
+  1615年、大坂城は落ち、茶々は城とともに最期を迎えます。母と同じように、夫の家の城で。
+ai_images: true
+art_dir: out/story/oichi3
+out: oichi_story_s11
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 12
+max_ai: 8
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: お市の方の三人の娘
+  title: "大坂の陣で、《敵と味方》に"
+now:
+  - {at: 三人の娘は, text: "1615年　大坂城", point: 2}
+  - {at: 1583年, text: "1583年　北ノ庄城", point: 0}
+  - {at: 長女の茶々は, text: "1586〜95年　嫁ぎ先", point: 1}
+  - {at: 1614年, text: "1614年　大坂の陣", point: 2}
+timeline:
+  - {label: "1583 北ノ庄"}
+  - {label: "1595 嫁ぎ先"}
+  - {label: "1615 大坂"}
+cards:
+  - type: table                          # 三姉妹の行き先（語った順に1行ずつ書き込む）
+    title: 三人の娘の嫁ぎ先
+    from: 長女の茶々は
+    until: 1614年
+    items:
+      - {at: 長女の茶々は, text: "茶々　→　豊臣秀吉の妻"}
+      - {at: 次女の初は, text: "初　→　京極高次の妻"}
+      - {at: 三女の江は, text: "江　→　徳川秀忠の妻"}
+  - type: table                          # 大坂の陣での立ち位置（語った順に1行ずつ）
+    title: 1614年　大坂の陣
+    from: 大坂城には
+    until: 秀頼の妻の千姫は
+    items:
+      - {at: 大坂城には, text: "茶々　大坂城（豊臣）"}
+      - {at: 徳川の側には, text: "江　徳川の側（将軍の妻）"}
+      - {at: 次女の初は和議, text: "初　和議の使い"}
+  - type: year
+    from: 1615年
+    until: 江の娘の千姫は
+    big: 1615年
+    sub: 大坂城が落ちる
+    text_y: 0.70
+shots:
+  G:                                     # 1文目：三人の娘（実在の肖像3枚）
+    kind: composite
+    move: out
+    phrase_y: 0.76
+    images:
+      - {image: paintings/oichi_chacha_yodo_portrait.jpg, crop: [0.0, 0.3, 1.0, 1.0], label: 茶々}
+      - {image: paintings/oichi_hatsu_jokoin.jpg, crop: [0.0, 0.3, 1.0, 1.0], label: 初}
+      - {image: paintings/oichi_go_sugenin.jpg, crop: [0.0, 0.0, 1.0, 1.0], focus: [0.58, 0.5], label: 江}
+    credit: "伝 淀殿（奈良県立美術館蔵）／常高院像／崇源院像（いずれも江戸時代ごろ、Wikimedia Commons・パブリックドメイン）"
+    must: 茶々・初・江の肖像
+  A22:                                   # 炎上する大坂城（結末予告）
+    kind: ai
+    file: oichi3/main/A22.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 炎上する大坂城の遠景（天守が縦の中央）
+  A20:                                   # 1583年、母が娘3人を送り出す（後ろ姿）
+    kind: ai
+    file: oichi3/main/A20.jpg
+    focus: [0.36, 0.5]
+    move: right
+    must: お市の後ろ姿から、門の先の娘3人へ流す
+  Gosai:                                 # 茶々＝秀吉の妻（歌麿の太閤五妻）
+    kind: real
+    image: paintings/nene_taiko_gosai_lccn.jpg
+    focus: [0.5, 0.5]
+    move: left
+    bright: 0.8
+    text_box: true
+    credit: "喜多川歌麿《太閤五妻洛東遊観之図》1804〜06年ごろ（Wikimedia Commons・パブリックドメイン）"
+    must: 秀吉と妻たち
+  Hatsu:
+    kind: real
+    image: paintings/oichi_hatsu_jokoin.jpg
+    focus: [0.5, 0.35]
+    move: down
+    credit: "《常高院（初）像》江戸時代（Wikimedia Commons・パブリックドメイン）"
+    must: 初の肖像
+  Hidetada:
+    kind: real
+    image: paintings/oichi_hidetada.jpg
+    focus: [0.5, 0.35]
+    move: down
+    credit: "《徳川秀忠像》江戸時代（Wikimedia Commons・パブリックドメイン）"
+    must: 秀忠の肖像（江の夫）
+  Osaka:
+    kind: real
+    image: paintings/nene_osaka_castle_summer_screen_detail.jpg
+    focus: [0.16, 0.38]
+    move: right
+    credit: "大坂夏の陣図屏風（部分、大阪城天守閣蔵）17世紀前半（Wikimedia Commons・パブリックドメイン）"
+    must: 大坂城の天守と合戦
+  A23:                                   # 徳川の側の江（後ろ姿）
+    kind: ai
+    file: oichi3/main/A23.jpg
+    focus: [0.5, 0.5]
+    move: up
+    must: 知らせを聞く江の後ろ姿
+  Senhime:
+    kind: real
+    image: paintings/hideyori_senhime_portrait.jpg
+    focus: [0.5, 0.35]
+    move: down
+    credit: "《千姫姿絵》（部分、弘経寺蔵）江戸時代（Wikimedia Commons・パブリックドメイン）"
+    must: 千姫
+  A24:                                   # 最後の問い：光の門を出ていく三人の後ろ姿
+    kind: ai
+    file: oichi3/main/A24.jpg
+    focus: [0.5, 0.5]
+    move: up
+    text_y: 0.74
+    must: 光の門を出る娘3人の後ろ姿
+lines:
+  - 語り: お市の方の三人の娘は、大坂の陣で、《!敵と味方》に分かれた。
+    shot: G
+    tone: 強調
+  - 語り: 長女は、城とともに、《最期》を迎えた。
+    shot: A22
+    tone: 重い
+    pause: 0.12
+  - 語り: 1583年、お市は北ノ庄城に残り、三人の娘だけを、城の外へ送り出した。
+    shot: A20
+    tone: しみじみ
+    pause: 0.15
+  - 語り: 長女の茶々は、豊臣秀吉の妻になり、秀頼を産んだ。
+    shot: Gosai
+    tone: しみじみ
+    pause: 0.12
+  - 語り: 次女の初は、京極高次の妻になった。
+    shot: Hatsu
+    tone: しみじみ
+    pause: 0.12
+  - 語り: 三女の江は、徳川秀忠の妻になった。
+    shot: Hidetada
+    tone: しみじみ
+    pause: 0.12
+  - 語り: 1614年、徳川と豊臣の、大坂の陣が始まった。大坂城には、茶々と秀頼がいた。
+    shot: Osaka
+    tone: 重い
+    pause: 0.15
+  - 語り: 徳川の側には、将軍の妻として、江がいた。
+    shot: A23
+    tone: しみじみ
+    pause: 0.12
+  - 語り: 次女の初は和議の使いとして、二つの陣のあいだに立った。
+    shot: Hatsu
+    tone: しみじみ
+    pause: 0.12
+  - 語り: 秀頼の妻の千姫は、江の娘だった。
+    shot: Senhime
+    tone: しみじみ
+    pause: 0.12
+  - 語り: 1615年、大坂城は《落ちた》。茶々は、城とともに最期を迎えた。
+    shot: A22
+    tone: 重い
+    pause: 0.3
+    dip: true
+  - 語り: 江の娘の千姫は、城が落ちる前に、城の外へ出された。
+    shot: Senhime
+    tone: しみじみ
+    pause: 0.12
+  - 語り: 茶々は、母のお市と同じように、夫の家の城で、《生涯を閉じた》。
+    shot: G
+    tone: しみじみ
+    pause: 0.12
+  - 語り: あなたなら、姉のいる城と、夫の家の、どちらに立ちますか。
+    shot: A24
+    tone: 疑問
+    pause: 0.15

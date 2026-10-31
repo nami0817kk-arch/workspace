@@ -18,6 +18,31 @@ class VoicevoxError(RuntimeError):
     pass
 
 
+ENGINE_PATHS = ("~/AppData/Local/Programs/VOICEVOX/vv-engine/run.exe",)
+
+
+def ensure_engine(url: str = "http://127.0.0.1:50021", wait: float = 90.0) -> bool:
+    """エンジンが落ちていれば、入っている場所（ENGINE_PATHS）から起動して、つながるまで待つ。起動できたら True。"""
+    import subprocess
+    import time
+    from urllib.parse import urlparse
+    host, port = urlparse(url).hostname or "127.0.0.1", urlparse(url).port or 50021
+    exe = next((Path(p).expanduser() for p in ENGINE_PATHS if Path(p).expanduser().exists()), None)
+    if exe is None or host not in ("127.0.0.1", "localhost"):
+        return False
+    subprocess.Popen([str(exe), "--host", host, "--port", str(port)], cwd=str(exe.parent),
+                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                     creationflags=getattr(subprocess, "DETACHED_PROCESS", 0))
+    end = time.time() + wait
+    while time.time() < end:
+        try:
+            with urllib.request.urlopen(f"{url}/version", timeout=3):
+                return True
+        except OSError:
+            time.sleep(2)
+    return False
+
+
 @dataclass
 class Voicevox:
     url: str = "http://127.0.0.1:50021"
@@ -32,6 +57,11 @@ class Voicevox:
             with urllib.request.urlopen(req, timeout=self.timeout) as res:
                 return res.read()
         except OSError as e:  # 接続できない・タイムアウト
+            # 10-15：PC の再起動でエンジンが落ちていて、書き出し・概要欄が止まった。接続を断られたときだけ、
+            # 入っている場所のエンジンを自分で起動して、1回だけやり直す
+            if getattr(e, "reason", e).__class__.__name__ in ("ConnectionRefusedError", "ConnectionResetError")                     and ensure_engine(self.url):
+                with urllib.request.urlopen(req, timeout=self.timeout) as res:
+                    return res.read()
             raise VoicevoxError(f"VOICEVOX（{self.url}）に繋がりません。エンジンを起動してください: {e}") from e
 
     def query(self, text: str, style_id: int) -> dict:
@@ -63,16 +93,9 @@ def wav_seconds(data: bytes) -> float:
         return w.getnframes() / w.getframerate()
 
 
-def speak(engine: Voicevox, text: str, voice: Voice, tone: str, readings: dict[str, str],
-          cache_dir: Path) -> Spoken:
-    cache_dir.mkdir(parents=True, exist_ok=True)
-    key = line_key(text, voice, tone, readings)
-    target = cache_dir / f"{key}.wav"
-    meta = cache_dir / f"{key}.json"
-    if target.exists() and meta.exists():
-        info = json.loads(meta.read_text(encoding="utf-8"))
-        return Spoken(target, info["seconds"], info.get("missing", []))
-
+def final_query(engine: Voicevox, text: str, voice: Voice, tone: str, readings: dict[str, str]) -> tuple[dict, list[str]]:
+    """合成に渡す audio_query（読み・「ン」のつなぎ・調子・強調・語尾の上げまで入れたもの）と、見つからなかった強調語。
+    10-22：ショートの画面の文字を声の時刻に合わせるため、speak から取り出した（中身は変えていない）。"""
     plain, words = split_emphasis(text)
     spoken_text = apply_readings(plain, readings)
     query = engine.query(spoken_text, voice.style_id)
@@ -85,6 +108,20 @@ def speak(engine: Voicevox, text: str, voice: Voice, tone: str, readings: dict[s
         kanas = [kana_of(engine.query(apply_readings(w, readings), voice.style_id)) for w in words]
         query, missing = emphasize(query, kanas, voice.emphasis)
     query = end_rise(query, TONES[tone].get("end_rise", 0.0) * voice.tone_strength)
+    return query, missing
+
+
+def speak(engine: Voicevox, text: str, voice: Voice, tone: str, readings: dict[str, str],
+          cache_dir: Path) -> Spoken:
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    key = line_key(text, voice, tone, readings)
+    target = cache_dir / f"{key}.wav"
+    meta = cache_dir / f"{key}.json"
+    if target.exists() and meta.exists():
+        info = json.loads(meta.read_text(encoding="utf-8"))
+        return Spoken(target, info["seconds"], info.get("missing", []))
+
+    query, missing = final_query(engine, text, voice, tone, readings)
     data = engine.synthesize(query, voice.style_id)
     target.write_bytes(data)
     seconds = wav_seconds(data)

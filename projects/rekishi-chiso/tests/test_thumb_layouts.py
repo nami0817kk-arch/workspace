@@ -33,6 +33,8 @@ SPECS = {
                "right": {"image": "r.jpg", "name": "明智光秀"}},
     "number": {**BASE, "layout": "number", "image": "p.jpg", "crop": CROP, "number": "約168cm"},
     "map": {**BASE, "layout": "map", "map": {"route": ["コルシカ島", "パリ", "エルバ島"]}},
+    "mask": {"layout": "mask", "image": "p.jpg", "top": "本能寺の変がなかった世界", "main": ["もし光秀が", "動かなかったら"],
+             "blanks": [["秀頼は", 5], ["江戸幕府は", 3]], "tags": ["信長は？", "秀吉は？"]},
 }
 
 
@@ -174,3 +176,12 @@ def test_layout_streak_for_a_posted_script_counts_up_to_it(tmp_path):
     log, sd = _posted(tmp_path, [("a:main", "2026-10-08 19:00"), ("b:main", "2026-10-09 19:00")], {"a": None, "b": None})
     assert "classic" in check.layout_streak(log, sd, "c", "classic")[0]            # 書いていない台本は classic と数える
     assert check.layout_streak(tmp_path / "none.json", sd, "c", "classic") == []    # 控えが無くても止まらない
+
+
+def test_mask_problems():
+    ok = SPECS["mask"]
+    assert thumb.problems(ok) == []
+    assert thumb.problems({k: v for k, v in ok.items() if k != "blanks"})            # 伏せ字が無い
+    assert thumb.problems({**ok, "main": "文字列"})                                    # main は並び
+    assert thumb.problems({**ok, "blanks": [["秀頼は", 20]]})                            # 字数が多すぎる
+    assert thumb.problems({**ok, "tags": ["a", "b", "c", "d"]})                        # 札は3つまで

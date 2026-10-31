@@ -1,0 +1,147 @@
+# 物語完結型ショート 高杉晋作 s1（2026-10-29）。本編 scripts/takasugi-story.yaml の序章と第3章・まとめ（墓碑銘・「東行墓」）から。
+# 形式は hijikata_s1.yaml・yodo_s3.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし（本編の「高杉想像」の行は使わない）。
+# 絵は本編の AI 絵（out/story/takasugi/main/T*.jpg。Gemini のみ）と実在の絵図。この回の決まり：AI 絵に高杉の顔は描かない。最期（病床・死）の場面に人物の絵は当てない。
+# 事実カード（dev/output/rekishi-chiso/research/高杉晋作_facts_20261029.yaml）：takasugi-04・05・06・07・08
+#   ・墓誌を遺言として書いた書状（大庭伝七あて）・墓誌の文・2016年の建立は出どころが高杉晋作Museum 1つ（takasugi-05・06・07）→「によれば」「という」で言う。
+#   ・「東行墓」だけが刻まれた理由（葬儀の後に見つかった）は高杉晋作Museum・山口県観光連盟（takasugi-04）。清水山に葬られたのは takasugi-08。
+#   ・なぜ挙兵の前に書いたかは史料で確かめられていない → 言い切らない（問いで閉じる）。
+# 理解テスト4問：
+#   ①誰の話か：幕末の長州藩士、高杉晋作の墓と墓碑銘
+#   ②いつ・どこで何が：1864年12月、功山寺の挙兵の直前に、自分の墓に刻む言葉を大庭伝七あての書状に遺言として書いた。1867年に27歳で亡くなり、下関の清水山に葬られた
+#   ③なぜ刻まれなかったか：墓誌は葬儀の後に見つかったため、墓石には「東行墓」だけが刻まれた
+#   ④どうなったか：墓碑銘が碑になったのは、没後150年の2016年4月14日
+title: 高杉晋作｜墓に刻まれたのは、三文字だけだった
+yt_title: 高杉晋作の墓には「東行墓」の三文字だけ　自分で書いた墓碑銘は、150年後に碑になった
+description: |-
+  山口県下関市、東行庵。幕末の長州の英雄、高杉晋作の墓には、「東行墓」の三文字しか刻まれていません。ところが高杉は、自分の墓に刻む言葉を、自分で書き残していました。
+  高杉晋作Museumによれば、書いたのは、1864年12月、功山寺で挙兵する直前のことです。大庭伝七にあてた書状に、遺言として記したといいます。高杉晋作Museumが紹介する墓碑銘は、「故、奇兵隊開闢総督、高杉晋作、則ち、西海一狂生、東行の墓」。裏には、「毛利家、恩ある古臣、高杉某の、嫡子なり」とあります。
+  高杉が亡くなったのは1867年、27歳のとき。ところがその墓誌は葬儀の後に見つかったため、墓石には本人の号にちなんだ「東行墓」だけが刻まれた、といいます。墓碑銘が碑になったのは、没後150年の2016年4月14日でした。
+hashtags: ["#高杉晋作", "#日本史", "#幕末"]
+ai_images: true
+ai_disclosure: この動画の人物・情景の画像の多くは、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/takasugi
+out: takasugi_story_s1
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 高杉晋作（幕末の長州藩士）
+  title: "墓に刻まれたのは、《三文字》だけ"
+now:
+  - {at: 1864年12月, text: "1864年12月　功山寺", point: 0}
+  - {at: 1867年, text: "1867年　下関", point: 1}
+  - {at: 2016年4月14日, text: "2016年　東行庵", point: 2}
+timeline:
+  - {label: "1864"}
+  - {label: "1867"}
+  - {label: "2016"}
+cards:
+  - type: year                           # 没後150年
+    from: 没後150年
+    until: あなたなら
+    big: 2016年
+    sub: 墓碑銘の碑が建つ
+    text_y: 0.70
+shots:
+  T01:                                   # 墓石に三文字（文字の無い古い墓石）
+    kind: ai
+    file: takasugi/main/T01.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 夕暮れの丘の上の文字の無い墓石
+  T10:                                   # 挙兵の直前に書いた（書状に筆を走らせる手）
+    kind: ai
+    file: takasugi/main/T10.jpg
+    focus: [0.5, 0.5]
+    move: right
+    must: 書状に筆を走らせる手もと
+  T10c:                                  # 大庭伝七あての書状（手もと）
+    kind: ai
+    file: takasugi/main/T10.jpg
+    focus: [0.3, 0.55]
+    move: in
+    zoom: 0.14
+    must: 筆を持つ手と書状
+  T07:                                   # 墓碑銘（木立の古い墓石）
+    kind: ai
+    file: takasugi/main/T07.jpg
+    focus: [0.45, 0.55]
+    move: in
+    must: 木立の中の古い墓石
+  Shimo:                                 # 下関の清水山に葬られた（長門の名所図）
+    kind: real
+    image: paintings/ryoma_choshu_hiroshige_shimonoseki.jpg
+    focus: [0.5, 0.5]
+    move: right
+    credit: "歌川広重《六十余州名所図会 長門 下之関》"
+    must: 下関の港の浮世絵
+  Doc:                                   # 墓誌は葬儀の後に見つかった（同じ時代の書状）
+    kind: real
+    image: paintings/ryoma_doc_letter_1867.jpg
+    focus: [0.5, 0.5]
+    move: right
+    credit: "同じ時代の書状（坂本龍馬の書状、1867年）"
+    must: 同じ時代の書状
+  T01l:                                  # 2016年、碑が建つ（花の手前）
+    kind: ai
+    file: takasugi/main/T01.jpg
+    focus: [0.45, 0.8]
+    move: in
+    zoom: 0.1
+    must: 墓石の足もとの花
+  T14q:                                  # 最後の問い（筆と紙）
+    kind: ai
+    file: takasugi/main/T14.jpg
+    focus: [0.55, 0.7]
+    move: in
+    zoom: 0.2
+    text_y: 0.76
+    must: 机の筆と紙
+lines:
+  # fact: takasugi-04
+  - 語り: 高杉晋作の墓には、「東行墓」の、《!三文字》しか、刻まれていない。
+    shot: T01
+    tone: 強調
+  # fact: takasugi-07
+  - 語り: ところが高杉は、自分の墓に刻む言葉を、自分で書いていた。高杉晋作Museumによれば、1864年12月、功山寺で挙兵する、直前のことだという。
+    shot: T10
+    tone: しみじみ
+    pause: 0.12
+  # fact: takasugi-07
+  - 語り: 大庭伝七にあてた書状に、遺言として、記したという。
+    shot: T10c
+    tone: しみじみ
+    pause: 0.12
+  # fact: takasugi-06
+  - 語り: 高杉晋作Museumが紹介する墓碑銘は、こうだ。「故、奇兵隊開闢総督、高杉晋作、則ち、西海一狂生、東行の墓」。
+    shot: T07
+    tone: 強調
+    pause: 0.12
+  # fact: takasugi-08
+  - 語り: 高杉は、1867年、27歳で亡くなり、遺言によって、下関の清水山に、葬られた。
+    shot: Shimo
+    tone: 重い
+    pause: 0.12
+  # fact: takasugi-04
+  - 語り: ところが、その墓誌は、葬儀の後に、見つかった。そのため、墓石には、「東行墓」だけが、刻まれたという。
+    shot: Doc
+    tone: 重い
+    pause: 0.3
+    dip: true
+  # fact: takasugi-05
+  - 語り: 墓碑銘が、碑になったのは、没後150年の、2016年4月14日だという。
+    shot: T01l
+    tone: しみじみ
+    pause: 0.12
+  - 語り: あなたなら、自分の墓に、どんな言葉を、刻んでほしいですか。
+    shot: T14q
+    tone: 疑問
+    pause: 0.15

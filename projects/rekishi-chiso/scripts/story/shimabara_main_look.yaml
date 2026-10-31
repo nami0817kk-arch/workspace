@@ -1,0 +1,290 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：島原の乱（scripts/shimabara-story.yaml）。chiso/storymain.py が読む。
+# 10-30 作成（11/03 19:00 公開）。yoritomo_main_look.yaml を写した。台本には手を入れない（承認のあと。変えると控えが外れる）。決まりは docs/story-main.md・スキル rekishi-story-screen。
+# 絵の方針：AI 絵は 15 枚（P01〜P15）。同じ絵を時間をずらして使い回す（続けて 20 秒まで）。
+#   AI 絵に人物は描かない（遠景の影もなし。全部が景色・物・灯・遺跡）。実在の絵・写真は、原城と寄せ手の陣を描いた絵図・島原の乱の陣図（どちらも17世紀・PD）と、
+#   原城跡の写真2枚（CC BY-SA）を絵図の一部（part:）として使う。戦闘を描いた屏風（人が戦う姿が画面いっぱい）は使わない。
+#   この回の決まり：戦闘・負傷・遺体・炎は描かない。文字・紋・旗・十字架の文字を描かせない。実在の誰か・俳優に似せない。人物の最期（板倉重昌の戦死・四郎の最期）の場面に人物の絵を当てない。
+# AI 絵の指示の一覧（英語・姿の設定）：dev/output/rekishi-chiso/research/shimabara_ai_images.md
+# 届く前は art_dir の仮の絵（P01.jpg〜、番号と場面だけ書いた灰色の板）で代える。届いたら main_art_dir に P01.jpg〜を置くだけ。
+#   仮の絵は out/ にあり git に入らない。無ければ 1376×768 の灰色の板に「P01（仮）」と場面を書いて作り直す。
+script: scripts/shimabara-story.yaml
+out: shimabara_story_main
+art_dir: out/story/shimabara/ph          # 仮の絵（placeholder）
+main_art_dir: out/story/shimabara/main   # Gemini の 16:9 の絵（P01.jpg〜P15.jpg）
+ai_disclosure: この動画の情景の画像の多くは、画像生成AI（Google の Gemini・Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+
+# 章ごとの左上の札「いま｜章題」。日本側の記録は旧暦（寛永）、オランダの日記は新暦。語りが言った形のまま。
+# dates＝語りがその年・月日を言った行から替える（研究・報告・発掘・報道の年は物語の「いま」ではないので替えない。null で章題だけ）
+chapters:
+  0: {label: 序章 城の中には、何人いたのか, now: null,
+      dates: {1: 寛永15年2月4日, 8: 寛永14年, 10: null}}
+  1: {label: 第1章 なぜ、百姓たちは、武器を取ったのか, now: 寛永14年,
+      dates: {13: 寛永14年10月下旬, 19: 寛永14年10月30日, 21: 元和2年, 24: null}}
+  2: {label: 第2章 なぜ、廃城になった原城に、籠もったのか, now: 寛永14年12月,
+      dates: {30: null, 35: 寛永14年12月27日, 38: null}}
+  3: {label: 第3章 なぜ、幕府の上使は、元日に戦死したのか, now: 寛永14年11月,
+      dates: {52: 寛永15年1月1日, 56: 寛永15年1月26日, 58: null}}
+  4: {label: 第4章 語られてきた話は本当か　宗教の一揆か、年貢の一揆か, now: null,
+      dates: {}}
+  5: {label: 第5章 城の中には、何人いたのか, now: null,
+      dates: {75: 寛永15年2月4日, 76: null}}
+  6: {label: 第6章 なぜ、城は持ちこたえ、そして落ちたのか, now: 寛永15年2月,
+      dates: {95: 1638年2月（新暦）, 101: 寛永15年2月, 106: 寛永15年2月27日, 108: 1638年4月17日（新暦）, 109: 寛永15年4月, 110: null}}
+  7: {label: 第7章 原城跡は、何を語るのか, now: null,
+      dates: {113: 2021年8月, 114: 2000年, 116: null, 121: 2018年, 122: null}}
+  8: {label: まとめ 城の中の人数と、3か月近く落とせなかった理由, now: null,
+      dates: {}}
+
+# 概要欄「■ 参考にした資料」（事実カード shimabara_facts_20261030.yaml のうち本文を開いた主なもの。10-30）
+references:
+  - 『細川家史料』12・21・22・6、『大日本古文書 伊達家文書』3、『日本関係海外史料 オランダ商館長日記』の和訳（東京大学史料編纂所 Historiographical Image Page Search、NDL OCR テキスト。CC BY-NC-SA 4.0）　https://dip-s.lab.hi.u-tokyo.ac.jp/
+  - 原城跡二ノ丸 発掘調査 現地公開資料（南島原市教育委員会、2024年4月28日）　https://www.city.minamishimabara.lg.jp/kiji00311306/index.html
+  - 史跡原城跡 整備基本計画書（南島原市教育委員会、2022年11月）　https://www.city.minamishimabara.lg.jp/kiji00310371/3_10371_55102_up_5erl8aon.pdf
+  - 原城跡発掘情報（南島原市）　https://www.city.minamishimabara.lg.jp/kyouiku/kiji0031574/index.html
+  - 原城跡 国指定文化財（南島原市）　https://www.city.minamishimabara.lg.jp/kyouiku/kiji0034730/index.html
+  - 長崎県の文化財データベース 原城跡　https://www.pref.nagasaki.jp/bunkadb/index.php/view/204
+  - 「原城跡」の発掘調査 鉛製の十字架や鋳型出土（長崎新聞、2024年4月24日）
+  - 綸子地著色聖体秘蹟図指物（天草四郎陣中旗）（天草市）　https://www.city.amakusa.kumamoto.jp/kiji0031396/index.html
+  - 天草四郎陣中旗を特別公開します（天草市）　https://www.city.amakusa.kumamoto.jp/kiji00312504/index.html
+  - 有馬キリシタン遺産記念館・島原城・出島和蘭商館跡の多言語解説文（観光庁、2020年）　https://www.mlit.go.jp/tagengo-db/R2-00438.html
+  - 世界遺産推薦書 Chapter 3 Justification for Inscription（日本政府、2016年）　https://www.bunka.go.jp/seisaku/bunkazai/shokai/sekai_isan/ichiran/pdf/suisensho_03.pdf
+  - 細川キリシタン群像（稲葉継陽、熊本日日新聞、2023〜2024年。会員限定のため冒頭と写真の説明のみ）　https://www.kumanichi.com/articles/1176080
+  - 島原の乱（世界大百科事典、中村質）・原城跡（日本歴史地名大系）（コトバンク）　https://kotobank.jp/word/%E5%B3%B6%E5%8E%9F%E3%81%AE%E4%B9%B1-75168
+  - 島原の乱 講義紹介（長崎大学 木村直樹）　https://telemail.jp/shingaku/academics-research/lecture/g006108
+  - 島原市 ふるさと再発見（学芸員 吉田信也）　https://www.city.shimabara.lg.jp/page17321.html
+  - 十七世紀前半西南諸藩における大規模軍事動員（科研費 23520801 成果、東京大学史料編纂所）　https://kaken.nii.ac.jp/ja/report/KAKENHI-PROJECT-23520801/23520801seika
+  - Gil Fons ほか、México y la Cuenca del Pacífico（2017、大橋幸泰 2010 の引用）　https://www.mexicoylacuencadelpacifico.cucsh.udg.mx/index.php/mc/article/view/501
+  - Geoffrey C. Gunn, The Duarte Correa Manuscript and the Shimabara Rebellion　https://www.uwosh.edu/faculty_staff/earns/correa.html
+  - File:Siege of Hara castle.jpg（ウィキメディア・コモンズ、パブリックドメイン）　https://commons.wikimedia.org/wiki/File:Siege_of_Hara_castle.jpg
+  - File:Shimabara-Battle-Map-c17th-century.png（ウィキメディア・コモンズ、パブリックドメイン）　https://commons.wikimedia.org/wiki/File:Shimabara-Battle-Map-c17th-century.png
+  - File:Remains of Hara castle as seen from the sea.JPG（ウィキメディア・コモンズ、CC BY-SA 3.0）　https://commons.wikimedia.org/wiki/File:Remains_of_Hara_castle_as_seen_from_the_sea.JPG
+  - File:HaraJou01.jpg（Kuma83、ウィキメディア・コモンズ、CC BY-SA 4.0）　https://commons.wikimedia.org/wiki/File:HaraJou01.jpg
+no_tag_from: 124                      # 締め（「なぜ落とせなかったのか」の答えから）から札を出さない
+
+# AI 絵（16:9 横・15枚）。scene は日本語の要約（英語の指示は research/shimabara_ai_images.md）。
+# pan：h＝左右（既定）・v＝上下・zoom＝ゆっくり寄る（顔の感情の場面だけ。この回は顔を描かないので使わない）。crops＝切り出し [倍率, 中心x, 中心y]
+# 位置（crops・focus・fx の region）は仮の値。届いた絵を見て合わせる
+ai:
+  P01: {scene: 夜明けの有明海に突き出す台地と古い石垣の遠景（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  P02: {scene: 秋の棚田と、実りの少ない畑（人物なし）, pan: h, crops: {left: [1.18, 0.4, 0.55], right: [1.18, 0.6, 0.55]}}
+  P03: {scene: 山あいの村の藁ぶき屋根と夕暮れの煙（人物なし）, pan: h, crops: {left: [1.18, 0.4, 0.55], right: [1.18, 0.6, 0.55]}}
+  P04: {scene: 荒れる前の暗い海と灰色の雲（人物なし）, pan: h, crops: {left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  P05: {scene: 霧の朝の大きな城と堀の遠景（島原城のような城。人物なし）, pan: h, crops: {wide: [1.7, 0.55, 0.66], left: [1.7, 0.35, 0.66], right: [1.7, 0.7, 0.66]}}
+  P06: {scene: 夜の山の斜面に点々と灯る火の遠景（人物なし）, pan: h, crops: {left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  P07: {scene: 草に覆われた石垣と崩れた門の跡（人物なし）, pan: h, crops: {left: [1.18, 0.4, 0.55], right: [1.18, 0.6, 0.55]}}
+  P08: {scene: 朝の高台に並ぶ竹の柵と筵の囲い（陣の跡のような景色。人物なし）, pan: h, crops: {left: [1.18, 0.4, 0.55], right: [1.18, 0.6, 0.55]}}
+  P09: {scene: 浜に引き上げられた小舟と干した網（人物なし）, pan: h, crops: {left: [1.18, 0.4, 0.55], right: [1.18, 0.6, 0.55]}}
+  P10: {scene: 灯のもとの文机と、開いた書状の巻物（人物なし）, pan: h, crops: {left: [1.18, 0.4, 0.58], right: [1.18, 0.6, 0.55]}}
+  P11: {scene: 発掘の溝と土の層。現代。道具だけ置かれた現場（人物なし）, pan: h, crops: {left: [1.18, 0.4, 0.55], right: [1.18, 0.6, 0.55]}}
+  P12: {scene: 現代の原城跡のような草の斜面と青い海（人物なし）, pan: h, crops: {left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  P13: {scene: 湾に停泊する17世紀の帆船。夕暮れの遠景（人物なし）, pan: h, crops: {wide: [1.6, 0.62, 0.58], left: [1.6, 0.58, 0.58], right: [1.6, 0.66, 0.58]}}
+  P14: {scene: 夜明けの海岸線と霧に沈む城跡（人物なし）, pan: h, crops: {left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  P15: {scene: 終了画面用。夕暮れの海と台地の遠景（右半分を空けた構図）, lock: [1.0, 0.5, 0.5]}
+
+# 実在の絵の手当て（元の画像は変えない）
+paint_fx: {}
+
+# 台本に出てこない実在の絵の出典（左下の字・概要欄）
+credits:
+  paintings/shimabara_siege_hara_castle_screen.jpg: 原城と寄せ手の陣を描いた絵図（17世紀、作者不詳。ウィキメディア・コモンズ、パブリックドメイン）
+  paintings/shimabara_battle_map_c17.jpg: 島原の乱の陣図（17世紀ごろ、作者不詳。ウィキメディア・コモンズ、パブリックドメイン）
+  paintings/shimabara_hara_from_sea.jpg: 海から見た原城跡（ウィキメディア・コモンズ、CC BY-SA 3.0）
+  paintings/shimabara_harajo_kuma83_2015.jpg: 原城跡（Kuma83撮影、2015年。ウィキメディア・コモンズ、CC BY-SA 4.0）
+
+# 絵の割り当て：「行の番号 種類:絵 [切り出し]」。次の行の指定まで続く。図（figure）の出る行は、その時の絵を暗くして図を置く（自動）
+shots:
+  # 行の番号は台本の語りの行（0 始まり。想像の人物の行も数える）。章の切れ目は札で分かる
+  - 0 ai:P01 wide                                                   # 原城に立てこもった人は何人か
+  - 1 part:paintings/shimabara_siege_hara_castle_screen.jpg         # 細川家の覚書 5〜6万か1万4〜5千か
+  - 2 ai:P10 wide                                                   # 3万7千＝2万4千＋1万3千
+  - 3 part:paintings/shimabara_siege_hara_castle_screen.jpg         # 同じ項に別の数
+  - 4 ai:P08 wide                                                   # 幕府軍12万
+  - 5 ai:P10 right                                                  # 史料編纂所の数え直し
+  - 6 ai:P11 wide                                                   # 2024年の発掘
+  - 7 part:paintings/shimabara_harajo_kuma83_2015.jpg               # 鉛の弾を溶かして十字架に
+  - 8 ai:P01 left                                                   # 一揆と古い城
+  - 9 ai:P11 right                                                  # 食い違う数・鉛の十字架・総大将
+  - 10 ai:P01 right                                                  # なぜ落とせなかったのか
+  - 11 ai:P02 wide                                                   # 弾圧と飢饉
+  - 12 ai:P03 wide                                                   # 転びキリシタン
+  - 13 ai:P02 left                                                   # 寛永14年10月下旬 立ち帰る
+  - 14 ai:P10 wide                                                   # 細川忠利の書状
+  - 15 ai:P06 wide                                                   # 発端の日の食い違い
+  - 16 ai:P03 left                                                   # 2万5千人に膨れ上がる
+  - 17 ai:P02 right                                                  # 天草の須子村
+  - 18 ai:P06 left                                                   # 今はデウスの御代にて候
+  - 19 ai:P09 wide                                                   # 10月30日 舟津
+  - 20 ai:P04 left                                                   # 松倉の側から（P05 は姫路城に似るので島原城の行から外す）
+  - 21 part:paintings/shimabara_battle_map_c17.jpg right             # 松倉重政 島原城
+  - 22 ai:P05 right                                                  # 4万石に不相応な城
+  - 23 part:paintings/shimabara_battle_map_c17.jpg                   # 築城の年の言い方
+  - 24 ai:P13 wide                                                   # コレアの手紙
+  - 25 ai:P10 left                                                   # 年貢の中身
+  - 26 ai:P02 right                                                  # 【想像1】百姓
+  - 27 ai:P10 right                                                  # 吉田信也
+  - 28 ai:P04 wide                                                   # 年貢か信仰か
+  - 29 ai:P14 wide                                                   # 原城
+  - 30 part:paintings/shimabara_hara_from_sea.jpg                    # 総石垣 慶長4〜9年
+  - 31 part:paintings/shimabara_siege_hara_castle_screen.jpg left    # 南北1.3km
+  - 32 ai:P07 wide                                                   # 廃城の年（図）
+  - 33 ai:P07 left                                                   # 資料ごとの年（図）
+  - 34 ai:P07 right                                                  # 一国一城令の前後
+  - 35 ai:P10 wide                                                   # 12月27日 原の古城
+  - 36 ai:P08 left                                                   # 松倉・鍋島の負傷
+  - 37 ai:P14 left                                                   # オランダ日記 海辺の廃城
+  - 38 ai:P11 wide                                                   # 1992年 発掘
+  - 39 part:paintings/shimabara_harajo_kuma83_2015.jpg right         # 二ノ丸の竪穴・鉛の十字架
+  - 40 ai:P11 right                                                  # コイン状の鉛製品
+  - 41 ai:P08 right                                                  # 堀＝塹壕
+  - 42 ai:P09 wide                                                   # 網のおもり
+  - 43 part:paintings/shimabara_harajo_kuma83_2015.jpg               # 掘立柱建物
+  - 44 ai:P01 wide                                                   # 準備か、あるものか
+  - 45 ai:P10 left                                                   # 上使が江戸から
+  - 46 ai:P14 right                                                  # 元日に討ち死に
+  - 47 ai:P10 right                                                  # 上使 板倉・石谷
+  - 48 ai:P08 wide                                                   # 寄せ集めの軍
+  - 49 part:paintings/shimabara_battle_map_c17.jpg left              # 21日と30日（図）
+  - 50 ai:P08 left                                                   # 信綱が着いた日に知らせ
+  - 51 ai:P14 left                                                   # 暦の断り
+  - 52 ai:P10 left                                                   # 1月1日 総攻め失敗（史料の札）
+  - 53 ai:P14 wide                                                   # 今の言葉にすると
+  - 54 ai:P08 right                                                  # 細川勢は間に合わず
+  - 55 ai:P05 wide                                                   # 信綱6万石・重矩は加増なし
+  - 56 ai:P07 wide                                                   # 坑道
+  - 57 ai:P04 left                                                   # ねずみのふん
+  - 58 ai:P03 right                                                  # 城の中の様子
+  - 59 ai:P14 wide                                                   # 研究者の見方は割れる
+  - 60 ai:P10 wide                                                   # 農民一揆説が有力
+  - 61 ai:P02 left                                                   # 木村直樹
+  - 62 ai:P04 wide                                                   # 稲葉継陽
+  - 63 ai:P10 right                                                  # 大橋幸泰
+  - 64 ai:P03 right                                                  # 信綱は不満を知っていた
+  - 65 ai:P12 left                                                   # 神田千里の紹介
+  - 66 ai:P05 left                                                   # 見方の比べ（図）
+  - 67 ai:P03 left                                                   # デウスの御代
+  - 68 ai:P08 left                                                   # 牢人
+  - 69 ai:P10 right                                                  # 忠利の本音
+  - 70 ai:P05 right                                                  # 処分
+  - 71 ai:P14 left                                                   # 殉教者と認められない
+  - 71.3 ai:P12 left                                                 # 文春オンライン：いまも殉教者と認めていない（同じ絵が20秒続かないよう途中で替える）
+  - 72 ai:P01 right                                                  # 決められない
+  - 73 ai:P01 left                                                   # 数の問い
+  - 74 ai:P01 right                                                  # 数えたものではない
+  - 75 ai:P10 left                                                   # 覚書（史料の札）
+  - 76 ai:P10 wide                                                   # 現代語（図）
+  - 77 ai:P13 wide                                                   # オランダ日記の数
+  - 78 ai:P10 right                                                  # 辞典の数（図）
+  - 79 ai:P13 left                                                   # ブリタニカ1911
+  - 80 ai:P12 left                                                   # スペイン語論文
+  - 81 ai:P10 wide                                                   # 3万7千の元
+  - 82 ai:P08 wide                                                   # 幕府軍の数（図）
+  - 83 ai:P13 right                                                  # 5712人
+  - 84 ai:P12 right                                                  # 2000余
+  - 85 ai:P10 left                                                   # 12万の理論値
+  - 86 part:paintings/shimabara_battle_map_c17.jpg right             # 224藩
+  - 86.3 ai:P07 wide                                                 # 仙台・水戸・和歌山・土佐（途中で替える）
+  - 87 ai:P08 left                                                   # 全国規模の一揆
+  - 88 ai:P10 right                                                  # 後世は増幅とは限らない
+  - 89 ai:P04 right                                                  # 籠城の長さ
+  - 90 ai:P14 wide                                                   # 数えられなかった
+  - 91 ai:P01 wide                                                   # 籠城の様子へ
+  - 92 ai:P10 wide                                                   # 矢文
+  - 93 ai:P08 left                                                   # 四郎の親類
+  - 94 ai:P13 wide                                                   # 城からの矢文
+  - 94.2 ai:P10 left                                                 # 矢文の文面（途中で替える）
+  - 95 part:paintings/shimabara_siege_hara_castle_screen.jpg right   # 大砲5門
+  - 96 ai:P04 right                                                  # 【想像2】商館の人
+  - 97 part:paintings/shimabara_battle_map_c17.jpg left              # 発射数（絵図のオランダ船）
+  - 98 ai:P04 wide                                                   # 3月7日・10日
+  - 99 ai:P13 right                                                  # 死者の数の食い違い
+  - 100 ai:P14 left                                                   # 旧暦では
+  - 101 ai:P10 left                                                   # 兵糧・玉薬・薪（史料の札）
+  - 102 ai:P07 wide                                                   # 落人の話
+  - 103 ai:P10 right                                                  # 兵糧が尽きれば（史料の札）
+  - 104 ai:P06 wide                                                   # 夜討ち
+  - 105 ai:P08 right                                                  # 強気の話
+  - 106 ai:P14 right                                                  # 2月27日 総攻撃
+  - 107 ai:P01 left                                                   # 落城
+  - 108 part:paintings/shimabara_siege_hara_castle_screen.jpg left    # 日記 4月17日
+  - 109 ai:P13 left                                                   # 信綱 平戸
+  - 110 ai:P01 wide                                                   # なぜ落とせなかったか
+  - 111 part:paintings/shimabara_battle_map_c17.jpg                   # 4つの見方（絵図）
+  - 112 ai:P07 left                                                   # 持久戦
+  - 113 ai:P12 wide                                                   # 2021年 陥没
+  - 114 part:paintings/shimabara_harajo_kuma83_2015.jpg left          # 本丸の虎口
+  - 115 ai:P11 right                                                  # 花十字紋瓦
+  - 116 part:paintings/shimabara_hara_from_sea.jpg right              # メダイ
+  - 116.2 ai:P14 wide                                                # 禁教令のあと密かに持ち込まれた（途中で替える）
+  - 117 ai:P07 right                                                  # 破却
+  - 118 ai:P10 wide                                                   # 陣中旗
+  - 119 ai:P01 left                                                   # 旗の来歴
+  - 120 ai:P12 left                                                   # 公開日数の食い違い
+  - 121 part:paintings/shimabara_hara_from_sea.jpg left               # 世界遺産
+  - 122 ai:P12 right                                                  # 壊されたことも遺産
+  - 123 ai:P14 wide                                                   # 冒頭の問いへ
+  - 124 ai:P01 wide                                                   # 答え
+  - 125 ai:P03 wide                                                   # 宗教か年貢か
+  - 126 part:paintings/shimabara_siege_hara_castle_screen.jpg         # 推量仕り候
+  - 127 ai:P14 right                                                  # 数え切れなかった
+  - 128 ai:P15 wide                                                   # 締め
+  - end ai:P15 wide
+# look だけで足す図（台本には無い）
+# 台本の図の項目名が長く、3列の見出しが重なるので短くする（中身は台本のまま。10-30）
+figures:
+  - {from: 77, to: 77, spec: {"items": [["捕虜の話", "5〜6万", "寛永15年2月4日"], ["書き手の見積もり", "男女で1万4〜5千", "「推量仕り候」"], ["日本歴史地名大系", "3万7千", "2万4千＋1万3千の内訳"]], "title": "城の中の人数　記録ごとの違い", "type": "stats", "upto": 2}}
+  - {from: 83, to: 83, spec: {"items": [["辞典など", "12万〜12万4千", "十数万とも"], ["スペイン語の論文", "約15万", "Hall 1991 は14万5千"], ["オランダの覚書", "8万", "2度の攻撃の戦死5,712人"]], "title": "幕府軍の人数　記録ごとの違い", "type": "stats", "upto": 3}}
+  - {from: 32, to: 32, spec: {"items": [["教育委員会の資料", "1616年", "元和2年"], ["文化財のページ", "1615年以降", "一国一城令"], ["世界遺産のページ", "1615年", "転封の翌年"]], "title": "原城が廃城になった年　資料ごとの違い", "type": "stats", "upto": 1}}
+  - {from: 33, to: 33, spec: {"grow_from": 1, "items": [["教育委員会の資料", "1616年", "元和2年"], ["文化財のページ", "1615年以降", "一国一城令"], ["世界遺産のページ", "1615年", "転封の翌年"]], "title": "原城が廃城になった年　資料ごとの違い", "type": "stats", "upto": 3}}
+  - {from: 34, to: 34, spec: {"grow_from": 1, "items": [["教育委員会の資料", "1616年", "元和2年"], ["文化財のページ", "1615年以降", "一国一城令"], ["世界遺産のページ", "1615年", "転封の翌年"]], "title": "原城が廃城になった年　資料ごとの違い", "type": "stats", "upto": 3}}
+  - {from: 66, to: 66, spec: {"items": [["中村質さん", "農民一揆説が有力", "年貢の減免などの要求"], ["大橋幸泰さん", "両方が圧力", "領主への不満も信仰の防衛も"], ["神田千里さん", "宗教一揆の実像", "民衆・牢人・再改宗者が絡む"]], "title": "一揆の見方　研究者ごとの違い", "type": "stats", "upto": 3}}
+  - {from: 76, to: 76, spec: {"items": [["捕虜の話", "5〜6万", "寛永15年2月4日"], ["書き手の見積もり", "男女で1万4〜5千", "「推量仕り候」"], ["日本歴史地名大系", "3万7千", "2万4千＋1万3千の内訳"]], "title": "城の中の人数　記録ごとの違い", "type": "stats", "upto": 2}}
+  - {from: 78, to: 78, spec: {"grow_from": 2, "items": [["捕虜の話", "5〜6万", "寛永15年2月4日"], ["書き手の見積もり", "男女で1万4〜5千", "「推量仕り候」"], ["日本歴史地名大系", "3万7千", "2万4千＋1万3千の内訳"]], "title": "城の中の人数　記録ごとの違い", "type": "stats", "upto": 3}}
+  - {from: 82, to: 82, spec: {"items": [["辞典など", "12万〜12万4千", "十数万とも"], ["スペイン語の論文", "約15万", "Hall 1991 は14万5千"], ["オランダの覚書", "8万", "2度の攻撃の戦死5,712人"]], "title": "幕府軍の人数　記録ごとの違い", "type": "stats", "upto": 3}}
+
+# 語りがその物・人を言うと、カットの終わりにそれが主役になる所で止まる。位置は仮（届いた絵で合わせる）
+focus:
+  P05: {城|島原城: [1.7, 0.45, 0.66]}
+  P09: {網|舟|小舟: [1.3, 0.55, 0.62]}
+  P10: {書状|書|覚書|日記: [1.3, 0.55, 0.66]}
+  P11: {発掘|竪穴|遺構: [1.3, 0.5, 0.6]}
+  P13: {船|オランダ|レイプ: [1.7, 0.64, 0.58]}
+  paintings/shimabara_siege_hara_castle_screen.jpg: {原城|城: [1.3, 0.5, 0.78]}
+
+# 絵の一部だけを動かす（話に合う絵だけ・控えめに。顔・人物にはかけない）。範囲は仮（届いた絵で見て直す）
+fx:
+  P01: {water: {region: [0, 0.60, 1, 0.95]}}                          # 夜明けの海面
+  P10: {lamp: {region: [0.60, 0.15, 0.74, 0.37]}}                      # 文机の灯
+  P13: {water: {region: [0, 0.65, 1, 1.0]}}                           # 湾の水面（船は外す）
+  P14: {mist: {region: [0, 0.35, 1, 0.80], alpha: 0.08, speed: 3}}    # 海岸の霧
+  P15: {water: {region: [0, 0.70, 1, 1.0]}}                           # 夕暮れの海面
+
+# 部品（from〜to の行、0 始まり。出ている間は絵を暗くする）。史料の文字は OCR の文字起こしをそのまま（読み違いの可能性あり）
+parts:
+  - {type: quote, from: 18, to: 18, label: 史料, text: 今はデウスの御代にて候,
+     source: 細川忠利の弟の書状の写し（熊本日日新聞、稲葉継陽「細川キリシタン群像」⑰ 2024年）}
+  - {type: quote, from: 52, to: 52, label: 史料, text: 島原當月朔日惣攻仕、攻損候／手負・死人餘多御座候、板倉内膳討死被仕,
+     source: 細川忠利の書状案 寛永15年1月12日（『細川家史料12』。史料編纂所の OCR 文字起こし）}
+  - {type: quote, from: 75, to: 75, label: 史料, text: 城中の人數五萬ノ六萬のと申候間／いかさま男女一萬四五千も御座候哉と推量仕候,
+     source: 細川家の覚書案 寛永15年2月4日（『細川家史料12』。史料編纂所の OCR 文字起こし）}
+  - {type: quote, from: 83, to: 83, label: 史料, text: 二度の攻撃において、皇帝軍の兵員のうち五七一二人が戦死した,
+     source: 『オランダ商館長日記』の和訳 1638年3月の条（OCR 文字起こし。数字の一部は読み取りが不確か）}
+  - {type: quote, from: 101, to: 101, label: 史料, text: 兵粮・玉藥・薪不自由ニ罷成／二月中比迄は續兼可申,
+     source: 細川家の覚書案 寛永15年2月4日（『細川家史料12』。史料編纂所の OCR 文字起こし）}
+  - {type: quote, from: 103, to: 103, label: 史料, text: 城中兵粮つき候はゞ必出可申と被存,
+     source: 細川三斎（忠興）の書状（『細川家史料6』。史料編纂所の OCR 文字起こし）}
+  - {type: quote, from: 126, to: 126, label: 要点, text: 城の中の人数は、いまも確かめられていない／記録は1万4千から5万以上まで,
+     source: 私たちの調べ（細川家の覚書・オランダ商館長日記・辞典・地名大系）}
+
+# 静止画（story-main を --frames なしで回したとき。簡易の描き方で、パン・部品は出ない。目で見るのは --frames の方）
+stills:
+  - {line: 0, note: 冒頭（0秒）夜明けの台地の遠景（P01）}
+  - {line: 18, note: 第1章 今はデウスの御代にて候（史料の札）}
+  - {line: 32, note: 第2章 廃城の年の食い違い（図）}
+  - {line: 49, note: 第3章 上使と老中の旅（図）}
+  - {line: 52, note: 第3章 元日の総攻め（史料の札）}
+  - {line: 66, note: 第4章 一揆の見方の比べ（図）}
+  - {line: 76, note: 第5章 城の中の人数（図）}
+  - {line: 82, note: 第5章 幕府軍の人数（図）}
+  - {line: 103, note: 第6章 兵糧が尽きれば（史料の札）}
+  - {line: 114, note: 第7章 本丸の虎口（写真の部分）}
+  - {end: true, note: 終了画面の空き}

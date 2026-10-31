@@ -1,0 +1,1575 @@
+# B（歴史の転換点の if ストーリー）。型：事実（西南戦争＝私学校・挙兵・熊本城・田原坂・衝背軍・城山）→ 史料に残る別の道（強攻で落とす／熊本を抑えて東上／上陸を防ぐ）→ 「こうなった可能性」（理由つき）。
+# 事実の出どころは dev/output/rekishi-chiso/research/saigo_if_facts.md（確実／有力／説／未確認の区分もそこ）。絵の一覧は saigo_if_assets.md。夜のA（大久保利通）は別のエージェント。西郷と大久保の対比は夜の回に譲る。
+# 決まり：B は昼12時・約30分／題名は「もし〇〇だったら｜…どうなったか」／再生リストは A と分ける（歴史のif）／想像の部分は画面に「ここから想像」の札
+#   人物のセリフは B では想像のセリフを入れてよい。①「ここから想像」の札が出ている節（想像①②③）だけ ②字幕に「（想像）」（roles の桐野想像・西郷想像・山県想像・参謀想像・池上想像）
+#   ③記録のセリフは本編に置かない。同じ幕で声が重ならない：第1幕＝桐野（玄野武宏）と西郷（麒ヶ島宗麟）／第2幕＝山県（雀松朱司）と参謀（離途）／第3幕＝西郷（麒ヶ島宗麟）と池上（黒沢冴白）
+# 分岐点は1つだけ：2月22日の強攻で熊本城が落ちたら。ほかは史実のまま（征討の詔は2月19日・政府の電信と海軍・天守の焼失は2月19日）。勝ちは「政府が薩軍を倒しきれず、九州で向き合ったまま戦いが止まること」。
+# 想像の部分は言い切る。確かさは画面の札（高い／ありうる／ほぼ妄想）で正直に出す。声に出す型は「可能性は、〜、です」「札は、〜、です」。
+#   高い＝政府は兵を送り続ける（詔は落城前・10個旅団・軍艦13隻・電信）／熊本城天守の焼失は2月19日で仮定の落城より前／
+#   ありうる＝熊本城が落ちる（約4千対約1万4千・段山占領）／戦いが長引く／博愛社の動きが変わる／西郷が熊本を拠点に戦う／
+#   ほぼ妄想＝鎮台兵のその後・政府の弾薬が続くか・薩軍の補給・ほかの士族の呼応・徴兵制の行方・西郷が勝てたか。
+# 研究：「薩軍が勝っていたら」を正面から論じた研究は見つかっていない（冒頭と想像の節で断る）。小川原正道『西南戦争』（中公新書）は存在を断るだけで未読。田原坂・熊本城の評価は連載記事・Wikipedia 経由。
+# 数字は「何の数か」を言う：兵数は記述により幅（薩軍2万〜3万・私学校党約1万3千）／政府の陸軍は集計（時期で動く）／弾薬は約8万4千発接収・約300万発説／死者は二次の集計。
+# 年齢：西郷は数えで50歳（1828生）。「政府に尋問の筋これあり」は徳富蘇峰の紹介の形で、原文は未確認と断る。「敬天愛人」「清正公に負けた」は事実として使わない。
+# 使わない話：暗殺指示の有無の断定／清正公の発言／「敬天愛人」を西郷の言葉として／田原坂の歌詞／城山の最期の細部・首／戦死者の描写／薩軍の勝ち方の断定／大久保との対比（夜の回）。
+# 画面の決まり：背景に人物の肖像・拡大絵を使わない（肖像と錦絵は額）／錦絵は三連で継ぎ目があるので額だけ／現代の写真（熊本城2009年）は credit と語りで「建て直された天守」と断る／1865年の絵・写真は年を credit に書く。
+title: もし西郷隆盛が西南戦争で勝っていたら｜熊本城が落ちた日、日本はどうなったか
+series: ''
+playlists:
+- 歴史のif（もしもの地層）
+- 幕末・明治を掘る
+shorts_playlists:
+- 歴史のifショート
+shorts_badge: もしもの話
+tags:
+- もし西郷隆盛が西南戦争で勝っていたら
+- 西郷隆盛
+- 西南戦争
+- 熊本城
+- 田原坂
+- 桐野利秋
+- 山県有朋
+- 谷干城
+- 私学校
+- 士族反乱
+- 歴史if
+- 明治維新
+- 日本史
+- 歴史解説
+- 歴史の地層
+en:
+  title: What If Saigo Takamori Had Won the Satsuma Rebellion? | The Day Kumamoto Castle Fell
+  description: 'On February 15, 1877, about 13,000 men left Kagoshima in the heaviest snow in 60 years. On September 24, about 372 remained on Mount Shiroyama. This video asks: what if the Satsuma army had taken Kumamoto Castle on February 22?
+
+
+    We keep records, theories and imagination apart. First, what the sources say: Saigo''s resignation in 1873, the samurai uprisings of 1874 and 1876, the arms-seizure incident and the rumored assassination plot, troop and rifle numbers, the fire in Kumamoto Castle on February 19, the siege, Takase and Tabaruzaka, the landing behind the Satsuma lines, and the last days at Shiroyama. We also note that no photograph of Saigo is known to survive.
+
+
+    Then, clearly marked imagination with reasons: the night Kumamoto Castle falls, Yamagata Aritomo at Hakata, the Satsuma headquarters running short of ammunition, a table of fates, and how Japan might differ. In imagined parts we speak plainly, and the on-screen label tells you how likely it is: likely, possible, or nearly fantasy. We found no study that argues this counterfactual directly, and we say so.
+
+
+    Facts follow summaries on Wikipedia and similar sources; we have not checked the original texts.
+
+
+    A Japanese history video to listen to while you work (Japanese audio).'
+  chapters:
+  - 'February 15, 1877: 13,000 Men Leave Snowy Kagoshima'
+  - '1873-1874: Saigo Goes Home, and the Face We Do Not Have'
+  - '1874-1876: Saga, Shinpuren, Hagi: The Samurai Uprisings'
+  - 'January-February 1877: Ammunition, a Rumor, and the Departure'
+  - 'Numbers and Weapons: Satsuma vs the Government'
+  - 'February 19-22: Kumamoto Castle Burns, Satsuma Attacks'
+  - 'February 25-March 20: Takase and Tabaruzaka'
+  - 'March-April: The Army Behind, and the Siege Lifted'
+  - 'April-September 24: Hitoyoshi, Nobeoka, Shiroyama'
+  - 'Other Paths in the Sources: Three Ways Satsuma Could Win'
+  - 'Imagination 1: The Night Kumamoto Castle Falls'
+  - 'Imagination 2: Yamagata Aritomo at Hakata'
+  - 'Imagination 3: Satsuma Headquarters, Early March'
+  - 'Imagination 4: A Table of Fates'
+  - 'Imagination 5: How Japan Changes, and the Chains to Today'
+  - 'Summary: Saigo Takamori and the Fork at Kumamoto Castle'
+texture: true
+recap: true
+timeline:
+  start: 1870
+  end: 1890
+  events:
+  - - 1873
+    - 下野
+  - - 1874
+    - 佐賀の乱
+  - - 1876
+    - 神風連
+  - - 1877
+    - 西南戦争
+  - - 1889
+    - 赦免
+terms:
+  私学校: 西郷が鹿児島に作った学校。のちの挙兵の中心になる
+  鎮台: 明治初めの陸軍の地方部隊。熊本鎮台など
+  参軍: 総督を補佐する、軍の副司令官
+  長囲戦: 城を囲み、兵糧が尽きるのを待つ戦い方
+  抜刀隊: 警視隊から選んだ、剣術の達者な隊
+  衝背軍: 薩軍の背後を突く政府軍。八代に上陸
+  三州盤踞策: 薩摩・大隅・日向に拠って戦う方針
+  党薩諸隊: 西郷軍に加わった各地の隊
+  武者返し: 熊本城の、上が反り返った石垣
+  征討の詔: 政府が薩軍を討つと定めた天皇の命令
+shorts:
+  s1:
+    title: 雪の出発／西南戦争
+    yt_title: 西南戦争は、なぜ起きた？｜西郷隆盛が雪の鹿児島を出た日
+    hook: 西南戦争の出発と最後で、／薩軍は何人だった？
+    tease: じゃあ、薩軍と政府軍の／兵の数は、どれくらい違った？
+    lead: 西南戦争、約7か月の話です。
+    tags:
+    - 西南戦争
+    - 西郷隆盛
+    - 歴史if
+    - もし西郷隆盛が西南戦争で勝っていたら
+  s2:
+    title: 肖像画／西郷の顔
+    yt_title: 西郷隆盛の写真は、なぜ現存しない？｜キヨッソーネの肖像画の話
+    hook: 西郷隆盛の顔は、／本当に本人の顔？
+    tease: 助けを求めた江藤新平に、／西郷は何と答えた？
+    lead: 西郷隆盛の肖像の話です。
+    tags:
+    - 西郷隆盛
+    - キヨッソーネ
+    - 肖像画
+    - 歴史if
+  s3:
+    title: 熊本城の籠城／2月の火事
+    yt_title: 熊本城の天守は誰が燃やした？｜西南戦争、籠城前の火事
+    hook: 熊本城の天守は、／誰が燃やした？
+    tease: じゃあ、強攻に失敗した薩軍は、／どんな作戦に変えた？
+    lead: 熊本城、籠城の話です。
+    tags:
+    - 熊本城
+    - 西南戦争
+    - 谷干城
+    - 歴史if
+  s4:
+    title: 田原坂／抜刀隊の3月
+    yt_title: 田原坂の抜刀隊とは？｜政府軍は1日に何発撃ったのか
+    hook: 田原坂で、政府軍は／1日に何発撃った？
+    tease: じゃあ、田原坂を抜かれた薩軍の／背後には、何がいた？
+    lead: 西南戦争、田原坂の話です。
+    tags:
+    - 田原坂
+    - 抜刀隊
+    - 西南戦争
+    - 歴史if
+  s5:
+    title: もしも／熊本城の夜
+    yt_title: もし熊本城が落ちていたら？｜桐野利秋と西郷隆盛の想像劇場
+    hook: 熊本城が落ちた夜、／西郷は何を決めた？
+    tease: じゃあ、政府は、そこで／兵を引いた？
+    lead: 2月22日の夜、熊本城の外で、想像劇場です。
+    tags:
+    - もし西郷隆盛が西南戦争で勝っていたら
+    - 桐野利秋
+    - 西郷隆盛
+    - 歴史if
+next:
+  title: 次の「もしも」
+  series: ''
+  teaser: あなたが気になる歴史の分かれ道を、コメントで教えてください。
+thumbnail:
+  layout: mask
+  image: paintings/saigo_takamori_portrait.jpg
+  top: 熊本城が落ちた世界
+  main:
+  - もし西郷が
+  - 勝っていたら
+  blanks:
+  - - 政府は
+    - 5
+  - - 戦いは
+    - 3
+  tags:
+  - 熊本城は？
+  - 山県は？
+  name: 西郷隆盛
+sections:
+- title: 2月15日 雪の鹿児島を出た本隊
+  background: &id001
+    image: paintings/saigo_bg_tabaru_smoke.jpg
+    credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  year: 1877
+  lines:
+  - 語り: 1877年2月15日、鹿児島は、60年ぶりの大雪でした。その雪のなかを、約1万3千人の本隊が、北へ向けて出発します。
+    portrait: &id005
+      image: paintings/saigo_nishiki_kagoshima_departure_yoshitoshi.jpg
+      caption: 鹿児島暴徒出陣図（月岡芳年の錦絵、1879年）
+      age: false
+    card:
+      head: 2月15日
+      body: 鹿児島を出発
+    short: s1
+    background: *id001
+  - 語り: それから7か月あまり。9月24日の朝、鹿児島の城山に最後まで残ったのは、約372人とされます。そのあいだに、降伏や解散で去った人もいました。
+    card:
+      head: 9月24日
+      body: 城山に残った 約372人
+    figure:
+      type: stats
+      title: 薩軍の数
+      items:
+      - - 出発の日
+        - 約1万3千人
+        - 2月15日 本隊
+      - - 最後の日
+        - 約372人
+        - 9月24日 城山に残った数
+      - - 戦いの長さ
+        - 約7か月
+        - 2月から9月
+    short: s1
+    background:
+      image: paintings/saigo_tabaru_storehouse_1880.jpg
+      credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+  - 聞き: え、7か月で、何が起きたの？ 減りかたが、すごいね。
+    tone: 驚き
+  - 語り: 率いたのは、西郷隆盛。数えで50歳でした。維新の功労者が、なぜ、政府に刃を向けたのか。今日は、西南戦争を掘ります。
+    portrait: &id002
+      image: paintings/saigo_takamori_portrait.jpg
+      caption: 西郷隆盛（キヨッソーネ系の肖像画。本人の写真は現存しない）
+      age: false
+    card:
+      head: 西郷隆盛
+      body: 1828年〜1877年
+    figure: null
+    short: s1
+    background:
+      image: paintings/saigo_bg_tabaru_pines.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  - 聞き: 教科書で見た、あの太い眉の顔だよね。維新のヒーローが政府と戦ったなんて、ちょっと信じられないな。
+  - 語り: そこで、今日の問いです。もし、薩軍が、政府軍に勝っていたら。仮定は、ひとつだけ。2月22日、熊本城が、薩軍の手に落ちた、とします。
+    portrait: null
+    background:
+      image: paintings/saigo_bg_tabaru_smoke.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+    card:
+      head: 今日の仮定
+      body: 2月22日 熊本城が落ちた
+  - 語り: ここでいう勝ちは、政府が薩軍を倒しきれず、九州で向き合ったまま、戦いが止まること、とします。問いは3つです。
+    card:
+      head: 今日の3つの問い
+      body: 戦いは？ 政府は？ 西郷は？
+  - 語り: 1つ目。戦いは、長引いたのか。2つ目。政府は、兵を送り続けたのか。3つ目。西郷は、勝てたのか。
+    background:
+      image: paintings/saigo_tabaru_storehouse_1880.jpg
+      credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+  - 聞き: 熊本城が落ちた世界の話だね。こういう「もしも」を調べた研究って、あるの？
+    tone: 疑問
+  - 語り: 先に断ります。正面から論じた学術研究は、今回の調査では見つかりませんでした。西南戦争の本は、小川原正道さんの中公新書などがありますが、読めていません。
+    background:
+      image: paintings/saigo_tabaru_storehouse_1880.jpg
+      credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+    card:
+      head: 最初の断り
+      body: 論じた研究は見つからない
+  - 語り: 約束が2つ。事実と想像は分けます。想像のあいだは《ここから想像》の札を出し、可能性を、高い、ありうる、ほぼ妄想の3段階で示します。まずは、西郷が鹿児島に戻った、1873年から掘ります。
+    card:
+      head: この回の約束
+      body: 事実と想像を分け、可能性を付ける
+    background:
+      image: paintings/saigo_bg_tabaru_pines.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+- title: 1873年〜1874年 西郷は、鹿児島へ帰った
+  background: &id003
+    image: paintings/saigo_tabaru_storehouse_1880.jpg
+    credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+  year: 1873
+  lines:
+  - 語り: 1873年10月23日、西郷隆盛は、参議の辞表を出します。朝鮮への使節派遣をめぐる、政府内の対立のすえでした。24日に受理され、西郷は、政府を去ります。
+    portrait: *id002
+    card:
+      head: 10月23日
+      body: 参議の辞表を出す
+    background: *id003
+  - 語り: 11月10日、鹿児島に帰り着きます。翌1874年6月ごろ、鹿児島に、私学校が作られました。若い士族を育てる学校で、県令の大山綱良が、支えたとされます。
+    card:
+      head: 1874年6月ごろ
+      body: 鹿児島に私学校
+    background:
+      image: paintings/saigo_bg_tabaru_smoke.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  - 語り: 西郷隆盛の顔について、断っておきます。画面の肖像は、キヨッソーネが描いた絵の系統です。西郷が写真を撮った記録はなく、本人の写真は、現存が確認されていません。
+    background:
+      image: paintings/saigo_tabaru_storehouse_1880.jpg
+      credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+    card:
+      head: 西郷の顔
+      body: 本人の写真は現存しない
+    short: s2
+  - 聞き: え、写真がないの！？ あの顔、本人と違うかもしれないってこと？
+    tone: 驚き
+    short: s2
+    background:
+      image: paintings/saigo_bg_tabaru_pines.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  - 語り: 1883年、エドアルド・キヨッソーネが、弟の西郷従道と大山巌の顔を組み合わせて描いた、と言われます。つまり、画面の顔は、ほかの人の顔を重ねて描いた絵だと言われています。
+    short: s2
+  - 語り: それでも、西郷の名は、残りました。
+    short: s2
+    background:
+      image: paintings/saigo_tabaru_storehouse_1880.jpg
+      credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+  - 聞き: 顔も分からないのに、みんなが知ってる人なんだね。……その西郷が鹿児島にいるあいだ、ほかの士族は、おとなしくしてたの？
+    tone: しみじみ
+    hook: true
+  - 語り: 次は、西郷のいない場所で起きた、士族の反乱です。
+    hook: true
+    background:
+      image: paintings/saigo_bg_tabaru_smoke.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+- title: 1874年〜1876年 佐賀・神風連・萩 士族の反乱
+  background:
+    image: paintings/saigo_tabaru_storehouse_1880.jpg
+    credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+  year: 1874
+  lines:
+  - 語り: 1874年2月の佐賀の乱では、江藤新平と島義勇が立ちました。江藤は、西郷にも助けを求めましたが、西郷は、断ったとされます。4月13日、江藤と島は、斬首の刑になります。
+    portrait: null
+    card:
+      head: 西郷は加わらず
+      body: 江藤の求めを断る
+  - 聞き: 西郷は、このときは、動かなかったの？ 政府は、どうやって抑えたんだろう。
+    tone: 疑問
+    background:
+      image: paintings/saigo_bg_tabaru_pines.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  - 語り: 政府は、大久保利通に全権を任せ、東京・大阪・熊本・広島の鎮台兵を、電信と汽船で送りました。
+  - 語り: 1876年10月には、熊本の神風連、福岡の秋月、山口の萩で、相次いで反乱が起きます。神風連は、熊本鎮台を襲いましたが、翌朝、児玉源太郎らが反撃し、鎮められました。
+    card:
+      head: 10月24日
+      body: 神風連の乱 約170人
+    figure:
+      type: stats
+      title: 士族の反乱
+      items:
+      - - 佐賀の乱
+        - 1874年2月
+        - 江藤新平・島義勇
+      - - 神風連の乱
+        - 1876年10月24日
+        - 熊本・約170人
+      - - 萩の乱
+        - 1876年10月28日
+        - 前原一誠
+    background:
+      image: paintings/saigo_bg_tabaru_smoke.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  - 聞き: どれも鎮められたなら、西郷のいる鹿児島は、まだ動いてないの？
+    tone: 疑問
+    hook: true
+    background:
+      image: paintings/saigo_tabaru_storehouse_1880.jpg
+      credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+  - 語り: 次は、1877年の1月です。
+    hook: true
+- title: 1877年1月〜2月 弾薬事件・暗殺の風説・出発
+  background: &id004
+    image: paintings/saigo_bg_tabaru_pines.jpg
+    credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  year: 1877
+  lines:
+  - 語り: 1877年1月29日、政府が鹿児島の弾薬製造の設備を運び出そうとし、私学校の生徒たちが、火薬庫を襲います。
+    portrait: null
+    card:
+      head: 1月29日
+      body: 火薬庫を襲い弾薬を得る
+    figure: null
+    background: *id004
+  - 語り: 約8万4千発を手に入れ、薩軍が使える弾薬を、約300万発とする説もあります。
+  - 聞き: 弾薬を奪った時点で、もう、引き返せない感じがするね。
+    tone: しみじみ
+    background:
+      image: paintings/saigo_bg_tabaru_smoke.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  - 語り: 続いて、西郷暗殺計画の風説が広まります。中原尚雄ら60人あまりが捕まり、拷問のあとの自白書に、川路利良大警視の暗殺指示が語られた、とされます。
+    card:
+      head: 2月3日
+      body: 西郷暗殺計画の風説
+  - 語り: 本当に指示があったのかは、裏づけが取れていません。
+    background:
+      image: paintings/saigo_tabaru_storehouse_1880.jpg
+      credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+  - 語り: 西郷は、2月初め、小根占で報せを聞き、4日夜に鹿児島へ戻ります。2月5日の大評議で、桐野利秋の「断の一字」により、出兵が決まりました。
+    card:
+      head: 2月5日
+      body: 大評議で出兵が決まる
+  - 語り: 作戦は、池上四郎の案で、熊本城には抑えを置き、主力は、陸路で東へ上る、というものです。
+    card:
+      head: 2月6日
+      body: 熊本城は抑え、主力は東上
+    background:
+      image: paintings/saigo_bg_tabaru_pines.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  - 語り: 2月15日、大雪のなか出発。挙兵の名分として伝わるのが、「政府へ尋問の筋これあり」。徳富蘇峰の本で紹介される形で、原文は未確認です。
+    portrait: *id005
+    background:
+      image: paintings/saigo_bg_tabaru_pines.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  - 聞き: 問いただす、って、戦争を始める理由にしては穏やかだね。……それで、薩軍と政府軍は、兵の数も道具も、どれくらい違ったの？
+    tone: 疑問
+    hook: true
+  - 語り: 次は、数字で比べます。
+    hook: true
+    background:
+      image: paintings/saigo_bg_tabaru_smoke.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+- title: 1877年 兵の数と装備 薩軍と政府軍
+  background:
+    image: paintings/saigo_bg_tabaru_pines.jpg
+    credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  year: 1877
+  lines:
+  - 語り: 薩軍は、私学校党が約1万3千人。協力した各地の隊を足して、約3万人とされます。
+    portrait: null
+  - 語り: 政府軍の陸軍は、全国の集計で5万8千人あまり。10個の旅団で、小銃は約4万6千挺、砲は109門です。私学校党は、小銃約1万3千挺、砲60門。数は、時期で動きます。
+    card:
+      head: 小銃の数
+      body: 約1万3千挺と約4万6千挺
+    figure:
+      type: bars
+      title: 小銃の数（挺）
+      bars:
+      - - 私学校党
+        - 13000
+      - - 政府軍の陸軍
+        - 45721
+      labels:
+      - 約1万3千挺
+      - 約4万6千挺
+    background:
+      image: paintings/saigo_bg_tabaru_pines.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  - 聞き: 小銃で、政府が3倍以上。それなのに、すぐ決着しなかったのは、なんで？
+    tone: 疑問
+    background:
+      image: paintings/saigo_bg_tabaru_smoke.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  - 語り: 政府軍の兵は、徴兵で集めた兵が中心でした。2月22日、植木で、乃木希典の隊が薩軍と出会い、軍旗を奪われた、とされます。
+    card:
+      head: 2月22日
+      body: 植木で乃木隊が薩軍と出会う
+    figure: null
+  - 語り: ところが、政府軍には、電信と海軍がありました。東京と熊本は電信でつながり、2月19日には、征討の詔が出ています。鹿児島には、当時、電信が通っていませんでした。
+    background:
+      image: paintings/saigo_bg_tabaru_pines.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+    card:
+      head: 電信
+      body: 東京と熊本は電信でつながる
+  - 語り: 海軍は、2千人あまりと軍艦13隻。薩軍に海軍があった、という記述は、見つかっていません。
+    background:
+      image: paintings/saigo_bg_tabaru_smoke.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+    card:
+      head: 海軍
+      body: 軍艦13隻
+  - 語り: 一方、政府軍の弱点は、弾薬でした。歩兵の弾薬の調達に問題があり、スナイドル銃の弾が足りなくなります。
+  - 聞き: その政府軍と薩軍が、いよいよ、熊本でぶつかるんだよね。
+    tone: 疑問
+    hook: true
+    background:
+      image: paintings/saigo_bg_tabaru_pines.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  - 語り: 次は、熊本城です。
+    hook: true
+- title: 2月19日〜22日 熊本城が焼け、薩軍が攻める
+  background: &id006
+    image: paintings/saigo_tabaru_storehouse_1880.jpg
+    credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+  year: 1877
+  lines:
+  - 語り: 鹿児島を出た薩軍は、北へ進み、熊本に着きます。熊本城には、熊本鎮台の兵がいました。
+    portrait: null
+    background: *id006
+    figure:
+      type: map
+      title: 薩軍の進路（1877年2月）
+      bounds:
+      - 129.3
+      - 132.2
+      - 31.2
+      - 33.9
+      places:
+      - - 鹿児島
+        - 130.56
+        - 31.6
+      - - 熊本
+        - 130.71
+        - 32.8
+      - - 八代
+        - 130.6
+        - 32.51
+      - - 人吉
+        - 130.76
+        - 32.21
+      - - 延岡
+        - 131.66
+        - 32.58
+      - - 長崎
+        - 129.87
+        - 32.75
+      - - 博多
+        - 130.41
+        - 33.59
+      route:
+      - 鹿児島
+      - 熊本
+      note: 2月15日に鹿児島を出発
+  - 語り: 熊本鎮台の司令官は、谷干城。2月14日の夜の会議で、籠城が決まります。城の兵は約4千人、攻める薩軍は約1万4千人、とされます。
+    portrait: &id013
+      image: paintings/saigo_tani_tateki.jpg
+      caption: 谷干城（のちの写真）
+      age: false
+    background:
+      image: paintings/saigo_bg_tabaru_smoke.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+    card:
+      head: 2月14日
+      body: 熊本鎮台が籠城を決める
+    figure: null
+    short: s3
+  - 語り: 2月19日、その熊本城で、火事が起きます。大天守も、小天守も、本丸御殿も焼けました。原因は、はっきり分かっていません。画面は、2009年に撮られた、建て直された天守です。
+    background:
+      image: paintings/saigo_kumamoto_castle_2009.jpg
+      credit: 現在の熊本城（2009年撮影、663highland、CC BY 2.5。天守は建て直されたもの）
+    card:
+      head: 2月19日
+      body: 熊本城で火災
+    short: s3
+  - 聞き: え、お城が燃えたの？ 敵が火をつけたんじゃないの？
+    tone: 驚き
+    short: s3
+    background:
+      image: paintings/saigo_bg_tabaru_smoke.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  - 語り: 熊本城の公式サイトは、谷の命で、児玉源太郎が火を付けた、とする説を、いまは有力と紹介します。鎮台が、自分で焼いた説です。確かな史料までは、見ていません。
+    short: s3
+  - 語り: 2月22日、薩軍が、熊本城を攻めます。段山を占領しましたが、歩兵第13連隊長が狙撃され、翌日亡くなります。城は、落ちませんでした。
+    background:
+      image: paintings/saigo_bg_tabaru_smoke.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+    card:
+      head: 2月22日
+      body: 熊本城を強攻 落ちず
+  - 聞き: 3倍以上の兵がいて、落ちなかったんだね。薩軍は、そのあと、どうしたの？
+    tone: 疑問
+  - 語り: 薩軍は、強攻をやめ、長囲戦に変えます。兵糧が尽きるまで囲む作戦です。強攻の中止を決めたのは西郷、とする記述もありますが、原典は読んでいません。
+    card:
+      head: 長囲戦
+      body: 兵糧が尽きるまで囲む
+    background:
+      image: paintings/saigo_bg_tabaru_pines.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  - 聞き: 落とせなかった薩軍は、そのあと、どこで政府軍とぶつかるの？
+    tone: 疑問
+    hook: true
+  - 語り: 次は、3月の高瀬と田原坂です。
+    hook: true
+    background:
+      image: paintings/saigo_tabaru_storehouse_1880.jpg
+      credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+- title: 2月25日〜3月20日 高瀬と田原坂
+  background:
+    image: paintings/saigo_bg_tabaru_pines.jpg
+    credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  year: 1877
+  lines:
+  - 語り: 2月25日から27日、高瀬で、政府軍と薩軍がぶつかります。薩軍が野戦で攻めに出たのは、この戦いだけとされ、弾薬が足りず、中央隊が勝手に退いた、との記述もあります。
+    portrait:
+      image: paintings/saigo_nishiki_saigo_fighting.jpg
+      caption: 西南戦争の錦絵（中央が西郷隆盛と伝わる）
+      age: false
+    card:
+      head: 2月25日〜27日
+      body: 高瀬の戦い
+  - 語り: 3月4日、政府軍が全面攻勢に出ます。主攻は田原。吉次峠では、薩軍の篠原国幹が、狙撃されて戦死しました。
+    card:
+      head: 3月4日
+      body: 政府軍の全面攻勢
+    background:
+      image: paintings/saigo_bg_tabaru_pines.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  - 語り: 田原坂は、高さ100メートルほどの台地を通る、切通しの坂道でした。薩軍は、約7千人を田原に置いた、とされます。
+    background:
+      image: paintings/saigo_tabaru_storehouse_1880.jpg
+      credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+    short: s4
+  - 語り: 3月13日、警視隊から、剣術の達者な警察官110人あまりを選び、抜刀隊が作られます。14日の第一次は、3つの堡塁を奪いますが、後が続かず退きます。
+    portrait:
+      image: paintings/saigo_nishiki_tabaruzaka_1877.jpg
+      caption: 田原坂の戦い（錦絵、1877年）
+      age: false
+    card:
+      head: 3月13日
+      body: 抜刀隊が作られる
+    background:
+      image: paintings/saigo_bg_tabaru_pines.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  - 語り: 15日の横平山が、いちばんの激戦でした。警視隊から選ばれた第二次の抜刀隊50人のうち、無傷だったのは、2人だけです。
+    short: s4
+    background:
+      image: paintings/saigo_tabaru_storehouse_1880.jpg
+      credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+  - 聞き: ……50人のうち、2人。そんなに、厳しい戦いだったんだ。
+    tone: 重い
+    short: s4
+  - 語り: 政府軍が撃った弾は、1日平均32万発。多い日は、60万発に達した、とされます。
+    portrait:
+      image: paintings/saigo_nishiki_tabaruzaka_eitaku.jpg
+      caption: 田原坂激戦之図（小林永濯の錦絵、1877年）
+      age: false
+    background:
+      image: paintings/saigo_bg_tabaru_pines.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+    card:
+      head: 弾薬
+      body: 1日平均32万発
+    figure:
+      type: bars
+      title: 政府軍の弾薬 1日あたり（万発）
+      bars:
+      - - 平均
+        - 32
+      - - 多い日
+        - 60
+      labels:
+      - 32万発
+      - 60万発
+    short: s4
+  - 聞き: 1日に、32万発。数えきれない数だね。薩軍の弾は、足りたのかな。
+    tone: しみじみ
+    short: s4
+  - 語り: 3月20日、豪雨と霧のなか、政府軍は二方面から総攻撃をかけ、田原坂を突破します。政府軍の田原方面の戦死は、3月4日からの合計で2401人。20日だけで495人でした。
+    portrait: null
+    background:
+      image: paintings/saigo_tabaru_storehouse_1880.jpg
+      credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+    card:
+      head: 3月20日
+      body: 田原坂を突破
+    figure: null
+  - 聞き: ほかにも、決め手があったってこと？
+    tone: 疑問
+    hook: true
+    background:
+      image: paintings/saigo_bg_tabaru_pines.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  - 語り: 実は、ほぼ同じ時期、薩軍の背後に、別の軍が上陸していました。
+    hook: true
+- title: 3月〜4月 背後から来た軍 熊本城の解囲
+  background: &id007
+    image: paintings/ryoma_nagasaki_1865_harbor.jpg
+    credit: 長崎港（1865年。西南戦争より前の姿）
+  year: 1877
+  lines:
+  - 語り: 3月14日、黒田清隆が参軍に任命され、衝背軍が作られます。薩軍の背後を突く軍です。3月18日に長崎を出て、19日、八代の南に上陸しました。
+    portrait: null
+    card:
+      head: 3月19日
+      body: 衝背軍が八代へ上陸
+    figure:
+      type: map
+      title: 衝背軍の進路（1877年3月〜4月）
+      bounds:
+      - 129.3
+      - 132.2
+      - 31.2
+      - 33.9
+      places:
+      - - 鹿児島
+        - 130.56
+        - 31.6
+      - - 熊本
+        - 130.71
+        - 32.8
+      - - 八代
+        - 130.6
+        - 32.51
+      - - 人吉
+        - 130.76
+        - 32.21
+      - - 延岡
+        - 131.66
+        - 32.58
+      - - 長崎
+        - 129.87
+        - 32.75
+      - - 博多
+        - 130.41
+        - 33.59
+      route:
+      - 長崎
+      - 八代
+      - 熊本
+      note: 3月19日に八代の南へ上陸
+    background: *id007
+  - 聞き: 正面の田原坂を攻めながら、背中に回り込む軍まで送ってたの？ 政府、本気だね。
+    tone: 驚き
+  - 語り: 3月25日には、山田顕義と川路利良の旅団が加わり、約8千人に。4月1日に宇土を占領し、4月13日から14日にかけて、山川浩が、熊本城に入ります。
+    background:
+      image: paintings/saigo_tabaru_storehouse_1880.jpg
+      credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+    figure: null
+  - 語り: 13日から14日にかけて、薩軍は、熊本城の包囲を解いて退きました。熊本城は、籠城を、守りきります。
+    background:
+      image: paintings/saigo_bg_tabaru_smoke.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+    card:
+      head: 4月13日〜14日
+      body: 薩軍が熊本城の包囲を解く
+  - 語り: 4月19日と20日の城東会戦は、政府軍約3万人、薩軍約8千人。そのあと、薩軍は、人吉を根拠地とする、三州盤踞策を採ります。
+    background:
+      image: paintings/saigo_bg_tabaru_smoke.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+    figure:
+      type: stats
+      title: 城東会戦（4月19日〜20日）
+      items:
+      - - 政府軍
+        - 約3万人
+        - 記述による
+      - - 薩軍
+        - 約8千人
+        - 記述による
+  - 聞き: 3万対8千……。出発のときは、1万3千だったよね。
+    tone: 重い
+    hook: true
+  - 語り: ここから薩軍は、南へ南へと追われます。
+    figure: null
+    hook: true
+    background:
+      image: paintings/saigo_tabaru_storehouse_1880.jpg
+      credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+- title: 4月〜9月24日 人吉・延岡・城山
+  background:
+    image: paintings/saigo_tabaru_storehouse_1880.jpg
+    credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+  year: 1877
+  lines:
+  - 語り: 4月の終わり、薩軍は、人吉に本営を置きます。5月には、佐野常民らが、博愛社を作ります。日本赤十字社の前身です。
+    portrait: null
+    card:
+      head: 5月
+      body: 博愛社が作られる
+  - 語り: 6月に人吉と大口が落ち、7月24日には都城も陥落します。8月14日、政府軍は延岡を占領し、15日、西郷の軍は、延岡の北で囲まれました。
+    background:
+      image: paintings/saigo_tabaru_storehouse_1880.jpg
+      credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+    figure:
+      type: map
+      title: 薩軍の退路（4月〜9月）
+      bounds:
+      - 129.3
+      - 132.2
+      - 31.2
+      - 33.9
+      places:
+      - - 鹿児島
+        - 130.56
+        - 31.6
+      - - 熊本
+        - 130.71
+        - 32.8
+      - - 八代
+        - 130.6
+        - 32.51
+      - - 人吉
+        - 130.76
+        - 32.21
+      - - 延岡
+        - 131.66
+        - 32.58
+      - - 長崎
+        - 129.87
+        - 32.75
+      - - 博多
+        - 130.41
+        - 33.59
+      route:
+      - 熊本
+      - 人吉
+      - 延岡
+      - 鹿児島
+      note: 人吉から延岡、鹿児島の城山へ
+  - 語り: この和田越の戦いで、西郷は、初めて陣頭に立った、とされます。総司令は桐野利秋で、西郷は、盟主として出陣した、と整理されます。
+    card:
+      head: 8月15日
+      body: 和田越 西郷が初めて陣頭に
+    background:
+      image: paintings/saigo_bg_tabaru_pines.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  - 語り: 8月16日、西郷の指示で、解散令が出ます。党薩諸隊は、相次いで降伏しました。18日、西郷ら約300人は、可愛岳を突破します。軍夫を含めて、約400人でした。
+    background:
+      image: paintings/saigo_bg_tabaru_pines.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+    card:
+      head: 8月16日
+      body: 西郷が解散令を出す
+    figure: null
+  - 聞き: ……軍を解く指示を、出したんだ。
+    tone: 重い
+    background:
+      image: paintings/saigo_tabaru_storehouse_1880.jpg
+      credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+  - 語り: 9月1日、薩軍は、鹿児島の城山に立てこもりました。9月23日、投降を勧められた西郷は、「回答の要なし」と答えた、とされます。
+    background:
+      image: paintings/saigo_bg_tabaru_pines.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  - 語り: 9月24日の午前4時、政府軍の総攻撃が始まります。西郷は自刃した、とされます。午前7時、岩崎口が落ち、戦争は終わりました。
+    card:
+      head: 9月24日
+      body: 城山で戦争が終わる
+  - 聞き: ……。最後まで見ると、あの戦争の分かれ道って、どこだったのかな。
+    tone: 重い
+    hook: true
+    background:
+      image: paintings/saigo_tabaru_storehouse_1880.jpg
+      credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+  - 語り: 史料に残る別の道を、見ます。
+    hook: true
+- title: 史料に残る別の道 薩軍が勝つ道は3つ
+  background: &id008
+    image: paintings/saigo_bg_tabaru_smoke.jpg
+    credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  year: 1877
+  lines:
+  - 語り: 想像の前に、薩軍が勝つ道を、史料の範囲で3つ挙げます。当時の人が、実際に選べた道だけです。1つ目。2月22日の強攻で、熊本城を落とす道。
+    portrait: null
+    card:
+      head: 別の道 1
+      body: 熊本城を強攻で落とす
+    figure: null
+    background: *id008
+  - 語り: 2つ目。熊本城を抑えにとどめ、主力が東へ上る道です。2月6日の作戦会議で、池上四郎が出した案でした。実際には、熊本城攻めに時間を使い、小倉への強襲は、中止されます。
+    background:
+      image: paintings/saigo_tabaru_storehouse_1880.jpg
+      credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+    card:
+      head: 別の道 2
+      body: 熊本を抑えて東上
+  - 語り: 3つ目。衝背軍の上陸を許さない道です。ただ、薩軍の船があった記述は、ありません。この道は、材料が、ほとんどありません。
+    background:
+      image: paintings/saigo_tabaru_storehouse_1880.jpg
+      credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+    card:
+      head: 別の道 3
+      body: 衝背軍の上陸を防ぐ
+  - 聞き: じゃあ、現実的なのは、1つ目か、2つ目だね。
+    background:
+      image: paintings/saigo_tabaru_storehouse_1880.jpg
+      credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+  - 語り: どれか1つで勝てたのかは、分かりません。今日の仮定は、1つ目。2月22日に、熊本城が落ちた、とします。
+    background:
+      image: paintings/saigo_bg_tabaru_smoke.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  - 聞き: もし落ちてたら、その夜、城の外で、何が話されたのかな。
+    tone: 疑問
+    hook: true
+  - 語り: 想像劇場、第1幕から見ます。
+    hook: true
+    background:
+      image: paintings/saigo_tabaru_storehouse_1880.jpg
+      credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+- title: 想像① 2月22日の夜 熊本城が落ちた
+  background:
+    image: paintings/saigo_bg_tabaru_pines.jpg
+    credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  year: 1877
+  lines:
+  - 語り: ここから先は、想像です。仮定は、ひとつ。2月22日、熊本城が、薩軍の手に落ちます。ほかは、史実のままです。
+    portrait: null
+    card:
+      head: ここから想像
+      body: 熊本城が落ちた
+    figure: null
+  - 語り: 想像劇場、第1幕。2月22日の夜、熊本城の外。桐野利秋と西郷隆盛が、向き合います。2人の言葉は、実在の発言ではなく、想像です。
+    card:
+      head: 想像劇場 第1幕
+      body: 2月22日夜 熊本城の外
+    short: s5
+    background:
+      image: paintings/saigo_bg_tabaru_smoke.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  - 人物: 先生、熊本の城が、落ちました
+    who: 桐野想像
+    portrait: null
+    short: s5
+  - 人物: 天守は、焼けたと聞いたが
+    who: 西郷想像
+    portrait: *id002
+    short: s5
+    background:
+      image: paintings/saigo_tabaru_storehouse_1880.jpg
+      credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+  - 人物: はい。大天守も、本丸御殿も、焼けております。それでも、石垣は、残りました
+    who: 桐野想像
+    portrait: null
+    short: s5
+  - 人物: 鎮台の兵は、どうしておる
+    who: 西郷想像
+    portrait: *id002
+    background:
+      image: paintings/saigo_tabaru_storehouse_1880.jpg
+      credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+  - 人物: 城を出ました。その先は、まだ分かりませぬ
+    who: 桐野想像
+    portrait: null
+  - 人物: 城の蔵は、これから確かめるのだな。北から来る政府軍は、どうする。東へ上るのではなかったか
+    who: 西郷想像
+    portrait: *id002
+    short: s5
+  - 人物: ……東へ上る前に、熊本を固めねば、背中を突かれます
+    who: 桐野想像
+    portrait: null
+    short: s5
+    background:
+      image: paintings/saigo_bg_tabaru_pines.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  - 人物: うむ。ならば、先に熊本を固めよう。東へは、そのあとじゃ
+    who: 西郷想像
+    portrait: *id002
+    short: s5
+  - 人物: 桐野、おぬしは、勝てると思うか
+    who: 西郷想像
+    portrait: *id002
+  - 人物: 城を取った今なら、政府も、簡単には来られますまい
+    who: 桐野想像
+    portrait: null
+  - 人物: 簡単には、か。簡単でなければ、どうなる
+    who: 西郷想像
+    portrait: *id002
+    background:
+      image: paintings/saigo_bg_tabaru_smoke.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  - 人物: 長引きます。そのときは、弾と兵糧が、勝負を決めます
+    who: 桐野想像
+    portrait: null
+  - 聞き: 桐野さん、わりと冷静だね。むしろ、西郷のほうが、東へ行きたそうに聞こえるよ。
+    tone: 納得
+    portrait: null
+  - 人物: 兵たちは、疲れております。今夜は、休ませてよろしいでしょうか
+    who: 桐野想像
+    portrait: null
+    background:
+      image: paintings/saigo_tabaru_storehouse_1880.jpg
+      credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+  - 人物: よい。傷ついた者には、手当てを。見張りは、怠るな
+    who: 西郷想像
+    portrait: *id002
+  - 人物: はっ。夜が明けたら、北へ偵察を出します
+    who: 桐野想像
+    portrait: null
+  - 人物: 明日の朝、城に入ってみよう
+    who: 西郷想像
+    portrait: *id002
+  - 人物: お供いたします
+    who: 桐野想像
+    portrait: null
+    background:
+      image: paintings/saigo_bg_tabaru_pines.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  - 聞き: 落ちた城でも、熊本は、薩軍の拠点になるんだね。……でも、東へ上るのは、後回しになっちゃうの？
+    tone: 疑問
+    portrait: null
+  - 語り: この場面の台詞も、想像です。ここで、史実を確かめます。鎮台は約4千人、薩軍は約1万4千人で、段山も、すでに占領していました。
+    background:
+      image: paintings/saigo_bg_tabaru_smoke.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+    card:
+      head: ここは史実
+      body: 鎮台約4千 薩軍約1万4千
+  - 語り: そのうえで、熊本城が落ちる、と想像します。札は、ありうる。
+    card:
+      head: ありうる
+      body: 熊本城が落ちる
+  - 聞き: 鎮台の兵って、4千人もいたんだよね。その人たちが、どうなったのか。気になるな。
+    tone: 疑問
+    background:
+      image: paintings/saigo_tabaru_storehouse_1880.jpg
+      credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+  - 語り: けれど、鎮台兵の行方は、降伏か、退却か。根拠がなく、ほぼ妄想です。熊本の人たちの暮らしも、同じです。
+    card:
+      head: ほぼ妄想
+      body: 鎮台兵のその後は材料なし
+  - 聞き: 城が落ちたって聞いたら、山県は、どうするんだろう。
+    tone: 疑問
+    hook: true
+    background:
+      image: paintings/saigo_bg_tabaru_pines.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  - 語り: 場面を、博多に移します。
+    hook: true
+- title: 想像② 2月25日 博多の山県有朋
+  background: &id009
+    image: paintings/saigo_tabaru_storehouse_1880.jpg
+    credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+  year: 1877
+  lines:
+  - 語り: 想像劇場、第2幕。2月25日、博多。山県有朋が、参軍として、博多に着きます。ここまでは、史実です。
+    portrait: &id010
+      image: paintings/saigo_yamagata_aritomo_1887.jpg
+      caption: 山県有朋（1887年の写真。この場面の10年後）
+      age: false
+    card:
+      head: 史実
+      body: 2月25日 山県が博多に着く
+    background: *id009
+  - 語り: ここから先は、2人の言葉も、熊本城が落ちたという報せも、想像です。
+    card:
+      head: ここから想像
+      body: 第2幕 落城の報せが博多へ
+  - 人物: 閣下、熊本城が、薩軍の手に落ちた、との報せです
+    who: 参謀想像
+    portrait: null
+    background:
+      image: paintings/saigo_bg_tabaru_smoke.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  - 人物: 落ちたか。……それで、征討の命令が、変わるのか
+    who: 山県想像
+    portrait: *id010
+  - 人物: いいえ。詔は、2月19日に出ております。城の落ちる前です
+    who: 参謀想像
+    portrait: null
+    background:
+      image: paintings/saigo_tabaru_storehouse_1880.jpg
+      credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+  - 人物: ならば、やることは同じだ。囲んで、守りを固める。攻めるのは、そのあとだ
+    who: 山県想像
+    portrait: *id010
+  - 人物: 兵は、足りますか
+    who: 参謀想像
+    portrait: null
+  - 人物: 足りるかどうかではない。足りるまで、集めるのだ
+    who: 山県想像
+    portrait: *id010
+  - 聞き: 足りるまで集める、って、すごい言い切りだね。政府の強さって、そこなのかな。
+    tone: 疑問
+    portrait: null
+    background:
+      image: paintings/saigo_bg_tabaru_pines.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  - 人物: 船は、ありますか
+    who: 参謀想像
+    portrait: null
+    background:
+      image: paintings/saigo_bg_tabaru_pines.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  - 人物: 東京から、船で送らせる。海は、こちらのものだ
+    who: 山県想像
+    portrait: *id010
+  - 人物: 薩軍の背中へ、別の軍を回すことは、できますか
+    who: 参謀想像
+    portrait: null
+  - 人物: 長崎から回す手を、考えておる。弾薬が足りるかが、頭の痛いところだがな
+    who: 山県想像
+    portrait: *id010
+  - 人物: 薩軍の弾薬は、どれほどでしょう
+    who: 参謀想像
+    portrait: null
+    background:
+      image: paintings/saigo_tabaru_storehouse_1880.jpg
+      credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+  - 人物: 城を取った以上、少しは増えただろう。だが、運ぶ船は持たぬ
+    who: 山県想像
+    portrait: *id010
+  - 人物: 我らの弾は
+    who: 参謀想像
+    portrait: null
+  - 人物: 船で、東京から運べる。そこが、こちらの強みだ
+    who: 山県想像
+    portrait: *id010
+  - 人物: 薩軍は、熊本から動くでしょうか
+    who: 参謀想像
+    portrait: null
+  - 人物: 動く前に、こちらが先に動く。北から、一歩ずつ押し込むのだ
+    who: 山県想像
+    portrait: *id010
+    background:
+      image: paintings/saigo_bg_tabaru_smoke.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  - 人物: 電信は、こちらの耳であり、口でもある。薩軍には、それが無い
+    who: 山県想像
+    portrait: *id010
+  - 人物: 確かに、薩軍の動きは、遅れて伝わります。承知しました。電信で、各旅団に伝えます
+    who: 参謀想像
+    portrait: null
+  - 聞き: 山県、全然あわてないけど、落ちても予定は変わらないの？
+    tone: 疑問
+    portrait: null
+    background:
+      image: paintings/saigo_bg_tabaru_pines.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  - 語り: ここでは、政府が兵を送り続ける、と想像します。征討の詔は、熊本城の落ちる前に出ていました。
+    background:
+      image: paintings/saigo_bg_tabaru_smoke.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+    card:
+      head: 高い
+      body: 政府は兵を送り続ける
+  - 語り: のちの集計では、陸軍に10個旅団、海軍に軍艦13隻があり、電信で東京ともつながっていました。可能性は、高いと見ます。
+  - 聞き: ふーん。じゃあ、政府の兵や弾薬は、ずっと足りるの？
+    tone: 疑問
+    background:
+      image: paintings/saigo_tabaru_storehouse_1880.jpg
+      credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+  - 語り: そこは、手がかりがありません。史実でも、政府軍は弾薬の調達に苦しみましたが、どこまで続けられたかは、ほぼ妄想です。
+    card:
+      head: ほぼ妄想
+      body: 政府の弾薬が続くかは材料なし
+  - 聞き: 政府が引かないなら、薩軍の弾は、どれくらいもつのかな。
+    tone: 疑問
+    hook: true
+    background:
+      image: paintings/saigo_bg_tabaru_smoke.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  - 語り: 次は、熊本の薩軍の本営に、場面を移します。
+    hook: true
+- title: 想像③ 3月はじめ 熊本の薩軍本営
+  background: &id011
+    image: paintings/saigo_bg_tabaru_pines.jpg
+    credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  year: 1877
+  lines:
+  - 語り: 想像劇場、第3幕。3月はじめ、熊本の薩軍の本営。西郷隆盛と、参謀の池上四郎が、弾薬の話をします。2人の言葉は、想像です。
+    portrait: *id002
+    card:
+      head: ここから想像
+      body: 第3幕 3月はじめ 熊本の本営
+    background: *id011
+  - 人物: 先生、弾薬の数を、数えました。思ったより、減っております
+    who: 池上想像
+    portrait: null
+  - 人物: 高瀬では、弾が足らず、退いた隊もあったと聞く
+    who: 西郷想像
+    portrait: *id002
+    background:
+      image: paintings/saigo_tabaru_storehouse_1880.jpg
+      credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+  - 人物: はい。城の蔵に弾があれば、足せますが
+    who: 池上想像
+    portrait: null
+    background:
+      image: paintings/saigo_tabaru_storehouse_1880.jpg
+      credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+  - 人物: 鎮台の蔵は、どうじゃ
+    who: 西郷想像
+    portrait: *id002
+  - 人物: おこめは、焼けた分が多うございます。弾は、まだ調べております
+    who: 池上想像
+    portrait: null
+  - 人物: 兵糧は、どこから出す
+    who: 西郷想像
+    portrait: *id002
+  - 人物: 熊本の町は、すでに戦で傷んでおります。多くは、望めませぬ
+    who: 池上想像
+    portrait: null
+  - 人物: 北の守りは、どこに置く
+    who: 西郷想像
+    portrait: *id002
+    background:
+      image: paintings/saigo_bg_tabaru_pines.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  - 人物: 田原と吉次の、二つの坂に置きます。切通しで、攻めにくい道にございます
+    who: 池上想像
+    portrait: null
+  - 人物: ならば、そこで、政府に弾を使わせよう
+    who: 西郷想像
+    portrait: *id002
+  - 聞き: 守って、弾を使わせる。うまい作戦に聞こえるけど、薩軍の弾は、大丈夫なの？
+    tone: 疑問
+    portrait: null
+  - 人物: ただ、政府は、船で弾を運べます。こちらには、船がありませぬ
+    who: 池上想像
+    portrait: null
+    background:
+      image: paintings/saigo_bg_tabaru_smoke.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  - 人物: 政府の弾より先に、こちらの弾が尽きるか
+    who: 西郷想像
+    portrait: *id002
+  - 人物: 先生、城を取ったのは、まだ入り口にすぎませぬ
+    who: 池上想像
+    portrait: null
+  - 人物: ……分かっておる
+    who: 西郷想像
+    portrait: *id002
+  - 人物: 東へ上るのは、いつにいたしましょう
+    who: 池上想像
+    portrait: null
+    background:
+      image: paintings/saigo_bg_tabaru_pines.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  - 人物: 政府の出方を見てからじゃ。慌てるな
+    who: 西郷想像
+    portrait: *id002
+  - 人物: ですが、待つほど、政府の兵は増えます
+    who: 池上想像
+    portrait: null
+  - 人物: それも分かっておる。だが、熊本を捨てて東へ出る道は、ない
+    who: 西郷想像
+    portrait: *id002
+  - 人物: 傷ついた者が、日に日に増えております
+    who: 池上想像
+    portrait: null
+    background:
+      image: paintings/saigo_tabaru_storehouse_1880.jpg
+      credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+  - 人物: 手当ては、町の医者に頼めぬか
+    who: 西郷想像
+    portrait: *id002
+  - 人物: すでに、何人かが、手を貸しております
+    who: 池上想像
+    portrait: null
+  - 人物: 頼む。弾の数は、毎日、知らせよ
+    who: 西郷想像
+    portrait: *id002
+  - 聞き: つまり、坂で守って、政府に弾を使わせる作戦、ってこと？ 弾の数くらべになるのか。
+    tone: 疑問
+    portrait: null
+  - 語り: ここでは、戦いが長引く、と想像します。史実では、薩軍は長囲戦に変え、田原坂は、3月4日から20日まで続く激戦になりました。
+    background:
+      image: paintings/saigo_bg_tabaru_smoke.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+    card:
+      head: ありうる
+      body: 戦いは長引く
+  - 語り: 熊本が薩軍の手にあれば、政府軍は、熊本を取り返すまで、戦いを続けることになります。ありうる、という札です。
+  - 聞き: 取り返すまで、やめない、ってことか。……そのぶん、熊本の町の人たちは、大変だよね。
+    tone: しみじみ
+    background:
+      image: paintings/saigo_bg_tabaru_pines.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  - 語り: 史実の政府軍は、1日平均32万発を撃ちました。長引くなら、政府の弾も、先に細るかもしれません。
+    background:
+      image: paintings/saigo_tabaru_storehouse_1880.jpg
+      credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+  - 語り: しかし、長引いたとして、薩軍の弾薬と食糧が続くのか。補給の根拠は、見つからず、ほぼ妄想です。
+    card:
+      head: ほぼ妄想
+      body: 薩軍の補給が続くかは材料なし
+  - 聞き: ふーん、じゃあ、薩軍が勝てたのかどうかは、どうなの？
+    tone: 疑問
+    hook: true
+    background:
+      image: paintings/saigo_bg_tabaru_smoke.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  - 語り: 次は、人や勢力の運命を、表にします。
+    hook: true
+- title: 想像④ 1877年 人と勢力の運命表
+  background: &id012
+    image: paintings/saigo_bg_tabaru_pines.jpg
+    credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  year: 1877
+  lines:
+  - 語り: ここが、今日いちばんの見どころです。前提は、ひとつ。2月22日、熊本城が落ちた。ほかは、史実のままです。
+    portrait: null
+    card:
+      head: ここから想像
+      body: 人と勢力の運命表
+    figure: null
+    background: *id012
+  - 聞き: 表で見られるの？ 誰がどうなるのか、気になる。材料が少ない分、どこまで言えるのかも、ちゃんと見たいな。
+    tone: 疑問
+  - 語り: 材料は、これまで見た事実だけです。表は、4つにしぼります。
+    background:
+      image: paintings/saigo_tabaru_storehouse_1880.jpg
+      credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+  - 語り: 1つ目は、西郷隆盛。史実では、8月に解散令が出て、9月24日に城山で自刃します。もしもは、熊本を拠点に、戦い続けます。
+    portrait: *id002
+    background:
+      image: paintings/saigo_tabaru_storehouse_1880.jpg
+      credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+    figure:
+      type: table
+      title: 人と勢力の運命表（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows: &id014
+      - - 西郷隆盛
+        - 城山で自刃（9/24）
+        - 熊本で戦い続ける
+        - ありうる
+      - - 熊本鎮台
+        - 籠城し4月に解囲
+        - 城を失う
+        - ありうる
+      - - 政府軍
+        - 兵を増やし勝つ
+        - 兵を送り続ける
+        - 高い
+      - - ほかの士族
+        - すでに鎮圧済み
+        - 呼応は不明
+        - ほぼ妄想
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 1
+  - 語り: 熊本が薩軍の手にあれば、本営を熊本に置けるからです。ありうる、という札です。
+  - 聞き: 城山に追われるのと、熊本で戦うのとでは、だいぶ違うよね。最期の場所まで、変わるのかな。
+    tone: しみじみ
+    background:
+      image: paintings/saigo_bg_tabaru_smoke.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  - 語り: 2つ目は、熊本鎮台と谷干城。史実では、籠城を守りきり、4月に包囲が解かれます。もしもは、城を失います。仮定そのものなので、ありうる、のままです。
+    portrait: *id013
+    background:
+      image: paintings/saigo_bg_tabaru_smoke.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+    figure:
+      type: table
+      title: 人と勢力の運命表（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows: *id014
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 2
+  - 語り: 3つ目は、政府軍と山県有朋。史実では、兵を増やして勝ちます。もしもは、兵を送り続けます。詔が落城の前に出ていたので、札は、高い、です。
+    portrait: *id010
+    background:
+      image: paintings/saigo_bg_tabaru_pines.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+    figure:
+      type: table
+      title: 人と勢力の運命表（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows: *id014
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 3
+  - 聞き: ふーん。政府って、どっちの世界でも、引かない前提なの？ でも、弾薬は、そのうち足りなくなるんじゃないの？
+    tone: 疑問
+  - 語り: 4つ目は、ほかの士族。史実では、佐賀・神風連・萩は、すでに鎮められていました。もしも、呼応が広がるか。根拠が見つからず、ほぼ妄想です。
+    portrait: null
+    figure:
+      type: table
+      title: 人と勢力の運命表（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows: *id014
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 4
+    background:
+      image: paintings/saigo_tabaru_storehouse_1880.jpg
+      credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+  - 聞き: 表で見ると、はっきりしてるのは政府の動きだけ。日本の形は、どう変わるのかな。
+    tone: 疑問
+    hook: true
+  - 語り: 次は、日本の変化点と、現代への鎖です。
+    hook: true
+    background:
+      image: paintings/saigo_bg_tabaru_smoke.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+- title: 想像⑤ 日本の変化点と、現代につながる鎖
+  background:
+    image: paintings/saigo_bg_tabaru_smoke.jpg
+    credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  year: 1877
+  lines:
+  - 語り: ここからは、さらに遠い想像です。熊本城が落ちたなら、日本は、どう変わるのか。
+    portrait: null
+    card:
+      head: ここから想像
+      body: 熊本城が落ちたなら
+    figure: null
+  - 聞き: 勝つかどうかも、ほぼ妄想なのに、その先まで考えるの？ ちゃんと断ってくれるなら、聞いてみたいな。
+    tone: 疑問
+  - 語り: 1つ目は、徴兵制の軍です。史実では、徴兵の軍が士族の軍に勝ち、定着した、と整理されます。もしも、勝敗が変わったら。そこは、根拠がなく、ほぼ妄想です。
+    card:
+      head: ほぼ妄想
+      body: 徴兵制の行方は材料なし
+    figure:
+      type: table
+      title: 日本の変化点（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows: &id015
+      - - 徴兵制の軍
+        - 士族に勝ち定着
+        - 勝敗次第で変わる
+        - ほぼ妄想
+      - - 博愛社
+        - 5月3日に認可
+        - 熊本次第で変わる
+        - ありうる
+      - - 熊本城の天守
+        - 2月19日に焼失
+        - 焼失は変わらない
+        - 史実
+      - - 城下の民家
+        - 約千軒が焼けた
+        - 焼失は変わらない
+        - 史実
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 1
+    background:
+      image: paintings/saigo_bg_tabaru_pines.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  - 聞き: 士族の軍が勝ってたら、徴兵の軍の評判も、変わってたのかな。
+    tone: 疑問
+  - 語り: 2つ目は、博愛社です。史実では、5月に熊本で願い出て、5月3日に認められ、日本赤十字社の前身になります。
+    background:
+      image: paintings/saigo_tabaru_storehouse_1880.jpg
+      credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+    card:
+      head: 現代への鎖
+      body: 博愛社は日本赤十字社の前身
+    figure:
+      type: table
+      title: 日本の変化点（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows: *id015
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 2
+  - 語り: 熊本が薩軍の手にあれば、この動きは変わります。戦いが長引けば、傷ついた人も増えます。
+  - 聞き: 戦いが長引くほど、助けが必要な人も増えるよね。赤十字の前身って、そんな時に生まれたんだ。
+    tone: しみじみ
+    background:
+      image: paintings/saigo_bg_tabaru_smoke.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  - 語り: 3つ目は、熊本城の天守です。史実では、2月19日に焼けました。仮定の落城は22日で、その前です。だから、焼失は、変わりません。
+    background:
+      image: paintings/saigo_bg_tabaru_smoke.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+    card:
+      head: 史実
+      body: 天守の焼失は2月19日
+    figure:
+      type: table
+      title: 日本の変化点（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows: *id015
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 3
+  - 聞き: あ、お城が燃えるのは、変わらないのか。落ちた日より前だもんね。
+    tone: 納得
+  - 語り: 4つ目は、熊本城下の民家です。火事で、約千軒が焼けた、とする記述があります。落城の仮定より前なので、これも、変わりません。
+    card:
+      head: 史実
+      body: 城下の民家 約千軒が焼けた
+    figure:
+      type: table
+      title: 日本の変化点（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows: *id015
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 4
+    background:
+      image: paintings/saigo_bg_tabaru_pines.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  - 聞き: 城下の家まで焼けてたんだ……。お城だけの話じゃなかったんだね。
+    tone: 重い
+  - 語り: 想像の多くは、ありうるか、ほぼ妄想でした。高いと言えたのは、政府が兵を送り続けることだけです。天守の焼失は、史実です。だから最後に、史実で言えることを整理します。
+    figure: null
+    hook: true
+    background:
+      image: paintings/saigo_tabaru_storehouse_1880.jpg
+      credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+  - 聞き: 史実で、何が言えるのか、もう一回、整理してほしいな。
+    tone: 疑問
+    hook: true
+    background:
+      image: paintings/saigo_bg_tabaru_smoke.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+- title: まとめ：西郷隆盛と熊本城の分かれ道
+  background:
+    image: paintings/saigo_bg_tabaru_smoke.jpg
+    credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  year: 1877
+  lines:
+  - 語り: 冒頭の3つの問いに答えます。1つ目。戦いは、長引いたのか。想像では、長引きます。札は、ありうる、です。
+    portrait: null
+    figure:
+      type: stats
+      title: 3つの問いの答え（想像）
+      items: &id016
+      - - 戦いは？
+        - 長引く
+        - ありうる
+      - - 政府は？
+        - 送り続ける
+        - 高い
+      - - 西郷は？
+        - 勝てたかは不明
+        - ほぼ妄想
+      upto: 1
+  - 語り: 2つ目。政府は、兵を送り続けたのか。想像では、送り続けます。征討の詔が、熊本城の落ちる前に出ていたからです。札は、高い、です。
+    background:
+      image: paintings/saigo_tabaru_storehouse_1880.jpg
+      credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+    figure:
+      type: stats
+      title: 3つの問いの答え（想像）
+      items: *id016
+      upto: 2
+  - 語り: 3つ目。西郷は、勝てたのか。想像では、勝てたかは不明です。補給も、政府の弾薬も、根拠がなく、ほぼ妄想です。
+    background:
+      image: paintings/saigo_bg_tabaru_pines.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+    figure:
+      type: stats
+      title: 3つの問いの答え（想像）
+      items: *id016
+      upto: 3
+  - 聞き: はっきり言えたのって、結局、どこなの？ 材料がある所と、無い所で、札が分かれたのかな。
+    tone: 疑問
+  - 語り: 要点を、番号で。1つ目。西郷は、1873年に下野し、鹿児島に戻りました。写真は現存せず、いまの顔は、肖像画です。
+    portrait: *id002
+    background:
+      image: paintings/saigo_bg_tabaru_smoke.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+    figure: null
+  - 語り: 2つ目。薩軍は、約1万3千人の本隊で出発し、小銃は約1万3千挺。政府軍は、小銃約4万6千挺と、電信、海軍がありました。
+  - 聞き: 1つ目は、顔が絵だってこと。2つ目は、数と道具の差だね。
+    background:
+      image: paintings/saigo_tabaru_storehouse_1880.jpg
+      credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+  - 語り: 3つ目。熊本城は落ちず、薩軍は長囲戦に変えます。3月の田原坂では、政府軍が1日平均32万発を撃ちました。4つ目。背後から衝背軍が上陸し、薩軍は、人吉、延岡、城山へ追われました。
+    portrait: null
+    background:
+      image: paintings/saigo_tabaru_storehouse_1880.jpg
+      credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+  - 聞き: 3つ目は、落とせなかった熊本城。4つ目は、背中から来た軍、だね。
+    background:
+      image: paintings/saigo_bg_tabaru_pines.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  - 語り: さきほどの3つの答えは、全部、想像です。史実で言えるのは、熊本城は落ちなかったこと、田原坂が3月20日に破られたこと、9月24日に城山で戦争が終わったことです。
+    background:
+      image: paintings/saigo_bg_tabaru_pines.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+    card:
+      head: 史実で言えること
+      body: 熊本城は落ちなかった
+  - 聞き: ここまでで、西郷の人柄が分かる話は、ないの？ 将軍というより、ちょっと近い感じがしてきたかも。
+    tone: 疑問
+    background:
+      image: paintings/saigo_bg_tabaru_smoke.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+  - 語り: 1つ挙げます。8月16日、西郷の指示で、解散令が出ました。降伏する隊が相次ぐなか、残った約300人と、可愛岳を越えます。西郷の最後の選択の一つです。
+    portrait: *id002
+    background:
+      image: paintings/saigo_bg_tabaru_smoke.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
+    card:
+      head: 8月16日
+      body: 西郷の指示で解散令が出る
+  - 聞き: ……みんなを帰して、自分は、残ったんだ。
+    tone: 重い
+  - 語り: もう1つ。西郷の言葉として知られる「敬天愛人」は、今回は確かめきれていないので、ここでは扱いません。
+    background:
+      image: paintings/saigo_tabaru_storehouse_1880.jpg
+      credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+  - 聞き: 確かめてない言葉は、言わない。……それ、大事だよね。
+    tone: しみじみ
+  - 語り: 今日の地層は、ここまでです。
+    portrait: null
+    background:
+      image: paintings/saigo_tabaru_storehouse_1880.jpg
+      credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
+    card: null
+  - 聞き: 今夜19時は、大久保利通の回だよ。聞きに来てね。
+    tone: 明るい
+  - 語り: あなたが気になる、歴史の分かれ道を、コメントで教えてください。
+  - 二人: また一緒に、掘りましょう！
+    tone: 明るい
+    background:
+      image: paintings/saigo_bg_tabaru_smoke.jpg
+      credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）

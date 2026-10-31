@@ -27,10 +27,12 @@ RULE = (190, 160, 110)       # 区切りの線
 GOLD = (214, 178, 110)
 
 
-def _fmt(v) -> str:
-    """値を画面の数字に（1000 → 1,000、2.5 → 2.5）。文字ならそのまま。"""
+def _fmt(v, unit: str = "") -> str:
+    """値を画面の数字に（1000 → 1,000、2.5 → 2.5）。文字ならそのまま。単位が「年」なら桁区切りは付けない（1579年）。"""
     if isinstance(v, bool) or not isinstance(v, (int, float)):
         return str(v)
+    if unit == "年" and float(v).is_integer():
+        return str(int(v))
     if float(v).is_integer():
         return f"{int(v):,}"
     return f"{v:,}"
@@ -166,7 +168,7 @@ def draw_numberline(painter, img, spec, t):
     for k, v in (("min", lo_v), ("max", hi_v)):
         if k in spec:                                            # 端の目盛りは min・max を書いたときだけ
             dr.line([(X(v), ly - 14), (X(v), ly + 14)], fill=COAST, width=3)
-            dr.text((X(v), ly + 24), f"{_fmt(v)}{unit}", font=sf, fill=SUB, anchor="mt")
+            dr.text((X(v), ly + 24), f"{_fmt(v, unit)}{unit}", font=sf, fill=SUB, anchor="mt")
     lo, hi = _grow(spec, n)
     steps = _steps(t, lo, hi)
     order = sorted(range(n), key=lambda i: vals[i])
@@ -178,7 +180,7 @@ def draw_numberline(painter, img, spec, t):
         px = X(vals[i])
         u = up[i]
 
-        _num = str(it["note"]) or f"{_fmt(it['value'])}{unit}"
+        _num = str(it["note"]) or f"{_fmt(it['value'], unit)}{unit}"
         _nw = number_width(painter, _num, 58 if hot else 46) / 2 + 6
         note_item(i, (px - _nw, ly - 200, px + _nw, ly - 104) if u else (px - _nw, ly + 104, px + _nw, ly + 200))
 
@@ -188,7 +190,7 @@ def draw_numberline(painter, img, spec, t):
             d.line([(px, ly), (px, ly - stem)], fill=col, width=4)
             d.ellipse([px - r, ly - r, px + r, ly + r], fill=col, outline=PAPER, width=4)
             lf = painter.font("serif", 38 if hot else 32, bold=True)
-            num = str(it["note"]) or f"{_fmt(it['value'])}{unit}"
+            num = str(it["note"]) or f"{_fmt(it['value'], unit)}{unit}"
             size = 58 if hot else 46
             nw = number_width(painter, num, size)
             if u:
@@ -266,7 +268,7 @@ def draw_line(painter, img, spec, t):
         hot = i == hot_i
         r = 16 if hot else 10
         dr.ellipse([x - r, y - r, x + r, y + r], fill=RED if hot else PAPER, outline=RED, width=4)
-        num = str(pts_raw[i]["note"]) or f"{_fmt(pts_raw[i]['value'])}{unit}"
+        num = str(pts_raw[i]["note"]) or f"{_fmt(pts_raw[i]['value'], unit)}{unit}"
         size = 64 if hot else 38
         w = number_width(painter, num, size)
         nx = min(max(x - w / 2, ax0 + 10), ax1 - 10 - w)
@@ -363,3 +365,56 @@ def draw_versus(painter, img, spec, t):
     if credit:
         dr.text((W / 2, H - 14), credit, font=painter.font("serif", 18), fill=(176, 164, 140), anchor="ms",
                 stroke_width=2, stroke_fill=(12, 10, 8))
+
+# --- 史実と「もしも」を並べる表（B：ifストーリー用。10-14） ----------------------------------
+ODDS = {"高い": (176, 40, 40), "ありうる": (206, 140, 40), "ほぼ妄想": (120, 110, 100)}
+
+
+def _fit_text(painter, text: str, size: int, width: float, floor: int = 22):
+    """幅に収まるまで字を小さくする。"""
+    f = painter.font("gothic", size)
+    while size > floor and f.getlength(text) > width:
+        size -= 2
+        f = painter.font("gothic", size)
+    return f
+
+
+def draw_table(painter, img, spec, t):
+    """行ごとに「項目／史実／もしも／可能性」。rows: [[項目, 史実, もしも, 高い|ありうる|ほぼ妄想], …]。
+    cols で列の題を変えられる（既定は 史実・もしも）。upto で先頭から何行を出すか。"""
+    dr, box = _panel(painter, img, spec.get("title", ""))
+    ax0, ay0, ax1, ay1 = box
+    rows = [list(r) + [""] * (4 - len(r)) for r in spec["rows"]]
+    cols = list(spec.get("cols") or ["史実", "もしも"])
+    n = len(rows)
+    lo, hi = _grow(spec, n)
+    steps = _steps(t, lo, hi)
+    w = ax1 - ax0
+    lw, ow = 190, 170
+    cw = (w - lw - ow) / 2
+    xs = [ax0, ax0 + lw, ax0 + lw + cw, ax0 + lw + 2 * cw]
+    head_h = 54
+    dr.text(((xs[1] + xs[2]) / 2, ay0 + 26), str(cols[0]), font=painter.font("gothic", 34, bold=True), fill=SUB, anchor="mm")
+    dr.text(((xs[2] + xs[3]) / 2, ay0 + 26), str(cols[1]), font=painter.font("gothic", 34, bold=True), fill=RED, anchor="mm")
+    if any(r[3] for r in rows):
+        dr.text((xs[3] + ow / 2, ay0 + 26), "可能性", font=painter.font("gothic", 30), fill=SUB, anchor="mm")
+    dr.line([(ax0, ay0 + head_h), (ax1, ay0 + head_h)], fill=RULE, width=3)
+    top = ay0 + head_h + 6
+    rh = min(112.0, (ay1 - top - (40 if spec.get("note") else 0)) / max(n, 1))
+    for i, r in enumerate(rows[:hi]):
+        y0 = top + i * rh
+        cy = y0 + rh / 2
+
+        def one(d, dy, r=r, y0=y0, cy=cy, i=i):
+            if i:
+                d.line([(ax0, y0), (ax1, y0)], fill=RULE, width=1)
+            d.text((xs[0] + 8, cy + dy), str(r[0]), font=_fit_text(painter, str(r[0]), 34, lw - 16), fill=INKD, anchor="lm")
+            d.text(((xs[1] + xs[2]) / 2, cy + dy), str(r[1]), font=_fit_text(painter, str(r[1]), 32, cw - 24), fill=SUB, anchor="mm")
+            d.text(((xs[2] + xs[3]) / 2, cy + dy), str(r[2]), font=_fit_text(painter, str(r[2]), 32, cw - 24), fill=INKD, anchor="mm")
+            if r[3]:
+                col = ODDS.get(str(r[3]), (120, 110, 100))
+                bx0, bx1 = xs[3] + 14, xs[3] + ow - 14
+                d.rounded_rectangle([bx0, cy - 24 + dy, bx1, cy + 24 + dy], radius=24, fill=col + (235,))
+                d.text(((bx0 + bx1) / 2, cy + dy), str(r[3]), font=painter.font("gothic", 28, bold=True), fill=(255, 255, 255), anchor="mm")
+        _fade(img, steps[i], one)
+    _note(painter, ImageDraw.Draw(img, "RGBA"), spec, box, t >= 1 and hi >= n)

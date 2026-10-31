@@ -94,7 +94,11 @@ def options(config: dict) -> tuple[bool, bool]:
 # 声は本編と同じ cast の聞き手の設定・readings.yaml を通す（tts.speak_line）。
 TEASER = "聞き"            # hook・tease を読む話者（config の cast のキー）
 TEASE_GAP = 0.6            # 最後の行から tease までの間（秒）
-TEASE_AFTER = 2.2          # tease を読み終えてから画面を残す秒数（下の2行を読む時間）
+TEASE_AFTER = 2.0          # 最後の声を読み終えてから画面を残す秒数（下の3行を読む時間。10-21 に登録のお願いを足して声も入れた）
+# 10-21 ユーザー決定：最後の問いのあとに「高評価とチャンネル登録も、お願いします。」を聞き手の声で読み、画面にも出す。
+CTA_SPOKEN = "高評価とチャンネル登録、お願いします。"
+CTA_SCREEN = "高評価・チャンネル登録もお願いします"
+CTA_GAP = 0.3              # 最後の問いからお願いまでの間（秒）
 TEASE_SIZES = (104, 94, 84, 76, 68)
 TEASE_MAX_ROWS = 4
 HOOK_AFTER = 0.3           # hook を読み終えてから縮み始めるまで
@@ -144,6 +148,15 @@ def extra_lines(lines: list, meta: dict, say_hook: bool) -> tuple:
     if tease_text(meta):
         tease = replace(lines[-1], index=-2, text=spoken(tease_text(meta)), pause=TEASE_GAP, **common)
     return hook, tease
+
+
+def cta_line(lines: list, meta: dict):
+    """最後の問い（tease）のあとの「高評価とチャンネル登録」の行。tease が無い回は付けない。画面の状態は最後の行と同じ。"""
+    from dataclasses import replace
+    if not lines or not tease_text(meta):
+        return None
+    return replace(lines[-1], index=-3, text=CTA_SPOKEN, speaker=TEASER, tone="明るい", reaction=None, mark=None,
+                   bubble=None, icon=None, hook=False, pause=CTA_GAP)
 
 
 def hook_text(meta: dict) -> str:
@@ -252,6 +265,22 @@ class ShortPainter(Painter):
             dr.text((W / 2, y + 200), card_head(state.card.head), font=self.font("gothic", 48), fill=GOLD, anchor="mt")
             if state.card.body:
                 dr.text((W / 2, y + 275), state.card.body, font=self.font("serif", 52), fill=INK, anchor="mt")
+        badge = getattr(self.script, "shorts_badge", "")
+        if badge:                                   # B作品（if）：「もしもの話」の札を肖像・図の左上に斜めに貼る（10-15）
+            img = img.convert("RGBA")
+            bf = self.font("gothic", 56, bold=True)
+            bw, bh = int(bf.getlength(badge)) + 64, 96
+            lay = Image.new("RGBA", (bw + 40, bh + 40), (0, 0, 0, 0))
+            ld = ImageDraw.Draw(lay)
+            ld.rounded_rectangle([20, 20, 20 + bw, 20 + bh], radius=12, fill=(205, 30, 40, 255),
+                                 outline=(255, 255, 255, 255), width=6)
+            ld.text((20 + bw // 2, 20 + bh // 2 + 2), badge, font=bf, fill=(255, 255, 255, 255), anchor="mm",
+                    stroke_width=2, stroke_fill=(110, 0, 10, 255))
+            sh = Image.new("RGBA", lay.size, (0, 0, 0, 0))
+            sh.paste((0, 0, 0, 140), (7, 7), lay.split()[3])
+            lay = Image.alpha_composite(sh, lay).rotate(8, expand=True, resample=Image.BICUBIC)
+            img.alpha_composite(lay, (28, y + 40))
+            dr = ImageDraw.Draw(img, "RGBA")
         names = [f"VOICEVOX:{n}" for n in people.credit_names(self.config, self.script)]
         cf = self.font("serif", 24)
         for i, row in enumerate(credit_rows(names, cf, W - 80)):
@@ -313,6 +342,9 @@ class ShortPainter(Painter):
         dr.rounded_rectangle([W / 2 - 270, y, W / 2 + 270, y + 120], radius=18, fill=(176, 40, 40))
         dr.text((W / 2, y + 60), "答えは本編で", font=self.font("gothic", 66), fill=(255, 255, 255), anchor="mm")
         dr.text((W / 2, y + 160), "本編は概要欄から", font=self.font("gothic", 52), fill=INK, anchor="mt")
+        # 10-21 ユーザー決定：登録者を増やすため、最後の画面に登録のお願いを足す（声は足さない。60秒を食わない）
+        dr.rounded_rectangle([W / 2 - 330, y + 250, W / 2 + 330, y + 340], radius=45, outline=GOLD, width=5)
+        dr.text((W / 2, y + 295), CTA_SCREEN, font=self.font("gothic", 44), fill=GOLD, anchor="mm")
         return img
 
     def end_card(self, background) -> Image.Image:

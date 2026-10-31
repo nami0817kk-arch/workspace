@@ -1,0 +1,585 @@
+# 物語型の本編（10-22 の見直し・scripts/_template_story.yaml の型。見本は scripts/asahi-story.yaml）。千利休。2026-10-28 下書き（reading-ok・approve はまだ）。
+# 公開の予定は 10/28 12:00。
+# 型：1本に1つの「なぜ」＝「なぜ利休は切腹させられたのか――本当に切腹したのか」。語り手は剣崎1人（つむぎは出ない）。
+#   冒頭は天正19年2月の京の場面（伊達家に届いた書状の言葉＝木像の磔）から。0〜10秒に知らない事実（木像が罪人として磔にされた）。
+#   最後の章で「その後」（少庵・宗旦・聚光院・高岡の新収蔵の書状・いまの三門の像は2代目）まで語り、冒頭の橋に戻って閉じる。
+#   締めは余韻の一文＋登録のお願い。次回予告なし（story: true）。
+# 記録の食い違いを表で並べたのは3か所：①利休の最期（北野社家日記「成敗」／多聞院日記「切腹のうわさ」と「高野山へ追放」／千利休由緒書の切腹の場面）
+#   ②切腹の理由（公に示された罪／権力争い／三成の讒言／娘の話）③切腹したのか、生きていたのか（由緒書の辞世／中村修也さんの読む秀吉の書状）。
+# 「首を木像に踏ませた」は一次史料が無い（rikyu-04、出どころ0）ので使わない。首がさらされた話も、福井幸男さんの論文の抄録だけなので言わない。
+#
+# 事実は事実カード（dev/output/rekishi-chiso/research/千利休_facts_20261028.yaml、rikyu-01〜22）にあるものだけ。行の上に `# fact: rikyu-NN`。
+#   カードに無い「誰でも知っている前置き」（利休は秀吉に仕えた茶人・堺の出・宗易は利休の前の名・秀吉の天下統一）は短く使い、# fact を付けない。
+#   中村修也さんの説の年（2015）はカードに無いので言わない（紹介した田中仙堂さんの記事の 2017 年だけ言う）。朝尾の名はカードで誤記の疑いがあるので言わない。
+#   『北野社家日記』の仲裁（rikyu-17）は「大徳寺の僧も罰せよという声」と「大政所・秀長の後室のとりなし」だけ。誰をとりなしたかは断定しない。
+#
+# 台詞の決まり（10-24）：記録の言葉＋想像の台詞。
+#   記録＝出どころを語りで言ってから読む。伊達家文書・北野社家日記・多聞院日記・由緒書は語りの中で読む。秀吉の書状の一節は who: 秀吉書状。
+#   想像＝ 3か所（利休想像。気持ちの言葉だけ、新しい事実を足さない）。各台詞のコメントに【記録】／【想像】と、食い違わない記録を書いた。
+#
+# 絵：paintings/ の既存の絵で仮置き。一条戻橋・金毛閣・聚楽の屋敷の警固・茶杓を削る手・聚光院などの足りない場面は「AI絵：<英語の指示>」をコメントに。
+# 広告の配慮：切腹は「腹を切る」「命を絶つ」まで。磔は木像のことだけ。死は「亡くなった」。
+facts: 千利休_facts_20261028.yaml
+story: true
+title: 千利休｜なぜ切腹させられたのか　本当に切腹したのか　磔にされた木像と食い違う記録
+series: ""
+playlists: [日本史を掘る（聞き流し）, 戦国時代を掘る]
+shorts_playlists: [日本史ショート]
+tags: [千利休, 利休, 宗易, 豊臣秀吉, 切腹, 大徳寺, 金毛閣, 一条戻橋, 北野社家日記, 多聞院日記, 千利休由緒書, 江岑宗左, 中村修也, 田中仙堂, 石田三成, 豊臣秀長, 少庵, 宗旦, 不審菴, 聚光院, 三千家, 茶の湯, 東京国立博物館, 大徳寺展, 戦国時代, 日本史, 歴史, 再現ドラマ, 歴史の地層]
+
+# 日本語の概要欄の頭（describe が一番上に出す）
+description_head: |-
+  天正19年、1591年の2月。京の都の橋のたもとで、一体の木像が、罪人として磔にされました。見物の人は、身分を問わず、際限なく集まったといいます。木像の主は、茶人、千利休でした。
+  そして利休本人も、この月、命を落とします。けれど、同じ時代の記録は、その最期を、同じ言葉では書いていません。
+  なぜ利休は、切腹させられたのか。そして、本当に、切腹したのか。
+  この動画でわかること
+  ・『北野社家日記』の「成敗」、『多聞院日記』の「うわさ」と「高野山へ追放」――食い違う同時代の記録
+  ・切腹の場面を詳しく書いたのは、後の時代の『千利休由緒書』だったこと
+  ・公に示された罪と、権力争い・朝鮮出兵・娘の話の諸説
+  ・「利休は生きていた」という新説と、その根拠の秀吉の書状
+  ・2026年に初めて公開された三門の利休像と、新たに見つかったかもしれない利休の手紙
+description_note: |-
+  再現の場面の台詞の一部は、記録をもとにした想像です。画面に「想像」の札と「（想像）」の名札を出しています。
+  記録に残る言葉は、出どころ（伊達家に届いた書状、『北野社家日記』『多聞院日記』『千利休由緒書』、秀吉の書状など）を語りで示してから読んでいます。
+
+en:
+  title: "Sen no Rikyu: Why Was He Ordered to Die, and Did He Really Commit Seppuku?"
+  description: |-
+    In the 2nd month of 1591, a wooden statue was crucified like a criminal by a bridge in Kyoto, and crowds of every rank came to see it. The statue was of the tea master Sen no Rikyu.
+    That same month Rikyu himself died. Yet the records of the time do not describe his end in the same words.
+    Why was Rikyu ordered to commit seppuku, and did he really do it?
+    In this video you will learn:
+    - How the Kitano Shake Nikki says he was "punished," while the Tamon-in Nikki calls his seppuku a rumor and also reports he was exiled to Mount Koya
+    - That the detailed scene of his seppuku comes from a later document, the Sen no Rikyu Yuishogaki
+    - The official charges and the competing theories about the real reason
+    - The theory that Rikyu survived, and the Hideyoshi letter it rests on
+    - The Rikyu statue from Daitokuji's gate shown to the public for the first time in 2026, and a letter that may be a new discovery
+    Some lines in the re-enacted scenes are imagined and marked "imagined" on screen; recorded words are read with their sources.
+    Japanese-language history video to listen to while you work (Japanese audio).
+  chapters:
+    - "Why Was Rikyu's Statue Crucified by a Bridge? Kyoto, 1591"
+    - "Did Rikyu Really Commit Seppuku? Three Records That Disagree"
+    - "Why Was a Wooden Statue a Crime? The Gate of Daitokuji"
+    - "What Was the Real Reason? Four Theories"
+    - "Was Rikyu Still Alive? Hideyoshi's Letter About Rikyu's Tea"
+    - "Where Does Rikyu Rest? Shoan, Sotan and the Statue of Today"
+
+texture: true
+recap: true
+
+timeline:
+  start: 1580
+  end: 1640
+  events: [[1591, 木像の磔・利休の死], [1594, 少庵が許される], [1633, 宗旦が不審菴を再建]]
+
+terms:
+  磔: 罪人を柱や板にしばりつけて、さらす刑
+  楼上: 二階建ての門や建物の、上の階
+  塔頭: 大きな寺の境内にある小さな寺
+  蟄居: 家にこもらせて、外へ出さない罰
+  還俗: 僧が僧をやめて、ふつうの人に戻ること
+  讒言: 人を陥れるために、事実でない悪口を告げること
+  菩提寺: 一家の墓を置き、供養をする寺
+  由緒書: 家や物の起こり・いわれを書いて差し出した文書
+
+# ショートは後で決める
+shorts: {}
+
+# 次回予告は出さない（物語型、10-24 ユーザー決定）。next: は書かない
+
+thumbnail:
+  layout: face
+  side: right
+  image: paintings/hidenaga_rikyu_tohaku.jpg
+  name: 千利休
+  crop: [0, 300, 1920, 1900]
+  lead: 本当に切腹したのか
+  main: 木像が磔に
+  # 2段：上に小さい問い（lead）、下に特大の一言（main）。木像の磔は冒頭の10秒以内に出る（rikyu-03）。
+  # 構図は asahi-story（face）→ kazumasa-story（scene）のあと。face は2回続かない
+
+sections:
+  # ================================================================ 導入（冒頭 約2分）
+  - title: なぜ利休の木像は、橋の上で磔にされたのか　天正19年2月 京
+    background: {image: paintings/akechi_rakuchu_rakugai_uesugi_right.jpg, credit: "狩野永徳《洛中洛外図屏風》（上杉本）右隻"}
+    # AI絵：a small wooden bridge over a narrow canal in Kyoto in late winter, 1590s Japan, a crowd of townspeople in the distance gathered around a wooden frame holding a statue of a seated old man in black robes, a wooden notice board beside it, overcast sky, muted colors, painterly, no gore, faces not detailed
+    year: 1591
+    lines:
+      # 0〜10秒：場面から（あいさつなし）。木像の磔（伊達家文書・観光庁の解説・Impress Watch）
+      # fact: rikyu-03
+      - 語り: 京の都の、橋のたもと。一体の木像が、罪人として、《磔》にされました。
+        tone: 重い
+        card: {head: "木像が磔に", body: 京の一条戻橋}
+      # fact: rikyu-03, rikyu-01
+      - 語り: 天正19年、1591年の2月。場所は、一条戻橋。聚楽第の大門の近くにあった橋です。
+        card: {head: "天正19年2月", body: 一条戻橋}
+      # 伊達家に届いた書状（大日本古文書 伊達家文書之二）
+      # fact: rikyu-10
+      - 語り: 遠く奥州の、伊達家に届いた書状は、この様子を、こう伝えています。京の中では、「まことに、《前代未聞》」と言い合っている。
+        tone: しみじみ
+        card: {head: "伊達家に届いた書状", body: 「前代未聞」}
+      # fact: rikyu-10
+      - 語り: 見物に来る人は、身分の高い者も低い者も、際限がない。そして木像の脇には、罪を書き連ねた札が、立てられた、と。
+        card: {head: "木像の脇に", body: 罪を書いた札}
+      # fact: rikyu-16
+      - 語り: 木像の姿は、ひとりの茶人のものでした。宗易、のちの名を、千利休。豊臣秀吉に仕えた、茶の湯の第一人者です。
+        portrait: {image: paintings/hidenaga_rikyu_tohaku.jpg, caption: "千利休（長谷川等伯画、1595年）"}
+      # fact: rikyu-02
+      - 語り: この木像は、もともと京の大徳寺の、大きな門の上に、置かれていたものでした。
+        background: {image: paintings/hidenaga_daitokuji_shoko_yoshitoshi.jpg, credit: "月岡芳年《紫野大徳寺焼香之図》1877年ごろ（信長の葬儀で焼香に進む秀吉）"}
+        card: {head: "大徳寺の門の上", body: 利休の木像}
+      - 語り: 人ではなく、像が、罰を受けた。それだけでも、ただごとではありません。
+        tone: しみじみ
+      # fact: rikyu-01
+      - 語り: そして同じ月、利休本人も、秀吉の命で、腹を切った、と伝えられてきました。
+        tone: 重い
+        portrait: null
+      # fact: rikyu-07
+      - 語り: ところが、北野天満宮の『北野社家日記』は、「切腹」とは書いていません。書いてあるのは、利休が、「《成敗》された」。
+        tone: 強調
+        background: {image: paintings/akechi_rakuchu_rakugai_uesugi_left.jpg, credit: "《上杉本洛中洛外図屏風》（上杉家蔵）"}
+        card: {head: "北野社家日記", body: 「成敗された」}
+      # fact: rikyu-06
+      - 語り: 奈良の興福寺の僧が書いた『多聞院日記』は、2月28日の切腹を、「うわさ」として書きました。しかも同じ日記に、利休は高野山に追放された、という話まで、載せているんです。
+        card: {head: "多聞院日記", body: 切腹は「うわさ」・高野山へ追放とも}
+      # fact: rikyu-08
+      - 語り: 切腹の場面を、天気や、見張りの様子まで詳しく書いた記録は、ずっと後の時代に、利休の子孫が差し出した文書でした。
+        card: {head: "切腹の場面", body: 後の時代の文書が詳しく書く}
+      # 40〜80秒：「なぜ」を1文
+      - 語り: なぜ利休は、切腹させられたのか。そして、本当に、切腹したのか。
+        tone: 疑問
+        pause: 0.8
+        background: {image: paintings/akechi_rakuchu_rakugai_uesugi_right.jpg, credit: "狩野永徳《洛中洛外図屏風》（上杉本）右隻"}
+      # 答えのかけら：中村修也さんの生存説と秀吉の書状（第4章）
+      # fact: rikyu-09
+      - 語り: 実は、「利休は切腹せずに、生きていた」という説まで、唱えられています。根拠は、利休の死の翌年に書かれたという、秀吉の《1通の手紙》です。
+        tone: 強調
+        card: {head: "新説", body: 利休は生きていた？}
+      # その後の予告（第5章）
+      # fact: rikyu-13, rikyu-14
+      - 語り: そして2026年の秋。いま大徳寺の門の上にある利休の像が、東京国立博物館で、初めて公開されました。その像は、磔にされた木像では、ありません。
+        card: {head: "2026年の秋", body: 三門の利休像を初公開}
+        portrait: {image: paintings/hidenaga_rikyu_tohaku.jpg, caption: "千利休（長谷川等伯画、1595年）"}
+      # 約束の1文
+      - 語り: これは、天下人に仕えた茶人の最期を、食い違う記録の中から、掘り出していく物語です。
+        tone: しみじみ
+        pause: 0.6
+        portrait: null
+      # 橋渡し
+      - 語り: まずは、利休の最期を書いた、三つの記録から、見ていきましょう。
+        pause: 0.6
+
+  # ================================================================ 第1章 三つの記録（①同時代の記録の食い違い）
+  - title: 利休は、本当に切腹したのか　三つの記録の食い違い
+    background: {image: paintings/hidenaga_jurakudai_screen.jpg, credit: "《聚楽第図屏風》桃山時代（三井記念美術館蔵）"}
+    year: 1591
+    lines:
+      # 前置き（誰でも知っている流れ。fact は付けない）
+      - 語り: 千利休は、堺の商人の家に生まれ、茶の湯で名を上げた人です。織田信長に、そして豊臣秀吉に仕えました。
+        portrait: {image: paintings/hidenaga_rikyu_tohaku.jpg, caption: "千利休（長谷川等伯画、1595年）"}
+        background: {image: paintings/ieyasu_sakai_montanus_engraving.jpg, credit: "モンタヌス『日本誌』「堺」1669年ごろ"}
+      - 語り: 秀吉が天下をほぼ手にしたころ、その茶の席を取り仕切っていたのが、利休でした。
+        background: {image: paintings/hidenaga_jurakudai_screen.jpg, credit: "《聚楽第図屏風》桃山時代（三井記念美術館蔵）"}
+      # fact: rikyu-01
+      - 語り: その利休が、天正19年、1591年の2月、秀吉の命で、腹を切った。多くの解説には、そう書かれています。
+        portrait: null
+        card: {head: "天正19年2月", body: 秀吉の命で切腹}
+      # 田中仙堂（PRESIDENT Online 2017）
+      # fact: rikyu-06, rikyu-07
+      - 語り: けれど、大日本茶道学会の会長、田中仙堂さんは、2017年の記事で、そのころの記録を並べ直しています。そこから見えてくるのは、ひとつに定まらない、利休の最期です。
+        tone: 強調
+      # fact: rikyu-07
+      - 語り: ひとつ目は、北野天満宮の『北野社家日記』。神社に仕える家の日記です。
+        background: {image: paintings/akechi_rakuchu_rakugai_uesugi_left.jpg, credit: "《上杉本洛中洛外図屏風》（上杉家蔵）"}
+      # fact: rikyu-07
+      - 語り: そこには、利休は「成敗された」とあります。成敗は、罰として命を取られた、という言葉です。けれど、自分で腹を切ったとは、書いていません。
+        card: {head: "北野社家日記", body: 「成敗された」}
+        figure: {type: stats, title: 利休の最期　記録はどう書いたか, items: [[北野社家日記, 成敗された, 同じ時代の京の日記]], upto: 1}
+      # 前置き（誰でも知っている流れ：北野大茶湯。fact は付けない）
+      - 語り: 北野天満宮といえば、天正15年に、秀吉が、身分を問わず人を招いて、大きな茶会を開いた場所です。その茶会を支えた茶人の一人が、利休でした。
+        figure: null
+        background: {image: paintings/hideyoshi_daigo_hanami_screen.jpg, credit: "《醍醐花見図屏風》桃山時代（国立歴史民俗博物館蔵）"}
+      - 語り: それから4年。同じ北野の日記が、利休の最期を、「成敗」という短い言葉で、書き留めたことになります。
+        tone: しみじみ
+      # fact: rikyu-06
+      - 語り: ふたつ目は、奈良の興福寺の僧たちが書き継いだ、『多聞院日記』です。
+        background: {image: paintings/hideyoshi_daibutsu_okyo.jpg, credit: "円山応挙《京大仏図》1796年以前（方広寺の大仏殿、江戸時代に建て直した姿）"}
+      # fact: rikyu-06
+      - 語り: この日記は、2月28日に利休が切腹した、と書きます。ただし、それは、「うわさ」としてでした。
+        tone: しみじみ
+        card: {head: "多聞院日記", body: 2月28日の切腹は「うわさ」}
+      # fact: rikyu-06
+      - 語り: しかも同じ日記には、利休は、高野山に追放された、という話も、載っています。切腹と、追放。同じ日記の中で、話が食い違っているんです。
+        tone: 強調
+        figure: {type: stats, title: 利休の最期　記録はどう書いたか, items: [[北野社家日記, 成敗された, 同じ時代の京の日記], [多聞院日記, 切腹は「うわさ」, 高野山へ追放の話も]], upto: 2}
+      - 語り: 京から少し離れた奈良の寺には、確かな知らせではなく、うわさが届いていた。それほど、京の外からは、何が起きたのか、見えにくかったのかもしれません。
+        tone: しみじみ
+      # 千利休由緒書（田中仙堂 2017）
+      # fact: rikyu-08
+      - 語り: では、私たちがよく知る、利休の切腹の場面は、どこから来たのでしょうか。
+        tone: 疑問
+        background: {image: paintings/hidenaga_rikyu_death_poem_met.jpg, credit: "《千利休像》辞世の偈入り、17世紀前半（メトロポリタン美術館）"}
+      # fact: rikyu-08
+      - 語り: 三つ目の記録、『千利休由緒書』です。その日の天気や、見張りの様子まで、場面を詳しく書いているのは、この文書なんです。
+        card: {head: "千利休由緒書", body: 切腹の場面を詳しく書く}
+      # fact: rikyu-08
+      - 語り: ところが、これを書いて差し出したのは、千家の4代目、江岑宗左。利休の、ひ孫の世代にあたる人です。
+        tone: 強調
+      # fact: rikyu-08
+      - 語り: 江岑宗左は、紀州の徳川家に仕えていました。その紀州徳川家に命じられて、家の由来を書いて出したのが、この由緒書でした。
+        figure: {type: stats, title: 利休の最期　記録はどう書いたか, items: [[北野社家日記, 成敗された, 同じ時代の京の日記], [多聞院日記, 切腹は「うわさ」, 高野山へ追放の話も], [千利休由緒書, 切腹の場面を詳しく, ひ孫の世代が後年に]], upto: 3}
+      - 語り: 同じ時代の記録は、「成敗」と「うわさ」。場面を詳しく語るのは、何十年も後に、子孫が書いた文書。記録が、時代を下るほど、詳しくなっていくんです。
+        tone: しみじみ
+      - 語り: 家の始まりの人の最期を、子孫が、仕える大名家に向けて書く。その文書が、いちばん詳しく場面を描いている。このことは、覚えておいてよいでしょう。
+        background: {image: paintings/hidenaga_jurakudai_mitsui.jpg, credit: "《聚楽第図屏風》桃山時代（三井記念美術館蔵）"}
+      # fact: rikyu-08
+      - 語り: 利休の辞世として知られる歌も、この由緒書に出てきます。「利休めは、とかく果報の、ものぞかし。菅丞相に、なると思えば」。
+        figure: null
+        card: {head: "由緒書の辞世", body: 「菅丞相になるとおもへば」}
+      - 語り: 菅丞相とは、菅原道真のことです。罪を着せられて都を追われ、のちに神として祀られた人。その人に、自分をなぞらえた歌でした。
+        background: {image: paintings/akechi_rakuchu_rakugai_uesugi_left.jpg, credit: "《上杉本洛中洛外図屏風》（上杉家蔵）"}
+      # 竹茶杓 銘 泪（徳川美術館の解説、文化遺産オンライン）
+      # fact: rikyu-01
+      - 語り: もうひとつ、利休の最期にまつわる品が、名古屋の徳川美術館に伝わっています。竹の茶杓、銘は「《泪》」。
+        card: {head: "竹茶杓 銘 泪", body: 徳川美術館}
+        # AI絵：an old Japanese tea master in black robes quietly carving a thin bamboo tea scoop with a small knife, seated in a dim tearoom, 1590s Japan, soft window light, painterly, face not detailed
+      # fact: rikyu-01
+      - 語り: 美術館の解説によれば、切腹を命じられた利休は、自分でこの茶杓を削りました。最後の茶会に使って、弟子の古田織部に与えた、と伝わります。
+        tone: しみじみ
+      # 【想像1】利休。記録：切腹を命じられた利休が自ら茶杓を削り、最後の茶会に用いた（rikyu-01、徳川美術館の解説）。気持ちの言葉だけ
+      - 人物: 「……これで、よい」
+        who: 利休想像
+        imagined: true
+        tone: しみじみ
+        portrait: {image: paintings/hidenaga_rikyu_tohaku.jpg, caption: "千利休（長谷川等伯画、1595年）"}
+      - 語り: 罰を受けた、と書く記録と、うわさと書く記録。そして、静かな最期を語る、後の時代の文書と品。利休の最期は、ひとつの形には、まとまっていません。
+        portrait: null
+        tone: しみじみ
+      - 語り: ただ、ひとつだけ、どの話にも共通することがあります。秀吉の怒りを買った、ということです。
+        hook: true
+      - 語り: その怒りが、なぜか、まず向けられたのは、利休本人ではなく、寺の門の上の、木の像でした。
+        tone: 重い
+        hook: true
+
+  # ================================================================ 第2章 木像と金毛閣（④木像の磔・公に示された罪）
+  - title: なぜ木の像が罪になったのか　大徳寺の三門 金毛閣
+    background: {image: paintings/hidenaga_daitokuji_shoko_yoshitoshi.jpg, credit: "月岡芳年《紫野大徳寺焼香之図》1877年ごろ（信長の葬儀で焼香に進む秀吉）"}
+    # AI絵：a large two-story Zen temple gate with a red upper story in Kyoto, late winter morning, mist, monks walking under it, seen from below, muted colors, painterly, no faces
+    year: 1591
+    lines:
+      # 山本兼一（プレジデント 2009）
+      # fact: rikyu-02
+      - 語り: 京の北、紫野にある、大徳寺。その入り口には、2階建ての、大きな門があります。三門です。
+        card: {head: "大徳寺の三門", body: 2階建ての大きな門}
+      # fact: rikyu-02
+      - 語り: 作家の山本兼一さんが、2009年に雑誌プレジデントに書いた記事によれば、門の上の階、「《金毛閣》」は、大徳寺で禅を学んでいた利休の寄進で、完成しました。
+        card: {head: "金毛閣", body: 利休の寄進で完成}
+      - 語り: 利休がお金を出して、門の上の階を、仕上げた。寺にとっては、ありがたい寄進だったはずです。
+        tone: しみじみ
+      - 語り: 利休にとっても、禅を学んだ寺への、心をこめた贈り物だったのかもしれません。その門が、やがて、利休の命取りになっていきます。
+        tone: 重い
+        background: {image: paintings/hideyoshi_daitokuji_funeral_yoshitoshi.jpg, credit: "月岡芳年《紫野大徳寺焼香之図》1877年ごろ（三法師を抱く秀吉、後世の場面）"}
+      # 伊達家文書（rikyu-02 の伊達家文書の引用・rikyu-16 和樂web の引用）
+      # fact: rikyu-16, rikyu-02
+      - 語り: その門の上に、利休の像が、置かれます。伊達家に届いた書状には、こうあります。「宗易、その身の形を、木像に作り立て、紫野大徳寺に、納められ候」。
+        portrait: {image: paintings/hidenaga_rikyu_tohaku.jpg, caption: "千利休（長谷川等伯画、1595年）"}
+        card: {head: "伊達家に届いた書状", body: 「その身の形を木像に」}
+      - 語り: 宗易とは、利休のことです。自分の姿を写した木の像が、門の上の階に、納められたんです。
+      # fact: rikyu-02
+      - 語り: 書状は続けます。その木像を、「殿下様」、つまり秀吉が、召し上げた。
+        tone: 強調
+        portrait: {image: paintings/akechi_hideyoshi_kodaiji.jpg, caption: "豊臣秀吉（狩野光信画、高台寺蔵）", age: false}
+      # fact: rikyu-03
+      - 語り: そして、「聚楽の大門、もどり橋と申す所に、張付に、かけさせられ候」。張付とは、磔のことです。
+        tone: 重い
+        background: {image: paintings/hideyoshi_jurakudai_3.jpg, credit: "《聚楽古城之図》江戸時代中期〜末期"}
+        card: {head: "伊達家に届いた書状", body: 「もどり橋…張付に」}
+        portrait: null
+      # fact: rikyu-03
+      - 語り: もどり橋は、いまの一条戻橋。秀吉の屋敷、聚楽第の大門の近くです。明治の終わりに、この書状を活字にした東京帝国大学の編者は、その頭に、「秀吉、利休の木像を磔す」と、注を付けました。
+      # fact: rikyu-10
+      - 語り: 木像の脇には、罪を書き並べた札。見物の人は、際限なく集まった。京の人たちは、口々に、前代未聞だ、と言い合った。
+        tone: しみじみ
+        card: {head: "京の人々", body: 「前代未聞」}
+      - 語り: 人を罰する前に、まず、その人の姿をした像を、罪人のように、人目にさらす。見せるための罰でした。
+        tone: 重い
+      - 語り: しかも、この知らせは、京から遠く離れた、奥州の伊達家にまで、書状で届けられています。京の出来事として、それだけ大きく受け止められていたんです。
+        background: {image: paintings/akechi_rakuchu_rakugai_uesugi_left.jpg, credit: "《上杉本洛中洛外図屏風》（上杉家蔵）"}
+      # 【想像2】利休。記録：利休の木像が一条戻橋で磔にされ、見物人が際限なく集まった（rikyu-03・rikyu-10）。気持ちの言葉だけ（その場にいたとは言わない）
+      - 人物: 「わしの姿が、橋の上で、さらされておるか……」
+        who: 利休想像
+        imagined: true
+        tone: 重い
+        portrait: {image: paintings/hidenaga_rikyu_tohaku.jpg, caption: "千利休（長谷川等伯画、1595年）"}
+      # 福井幸男（桃山学院大学 2011）：公に示された罪
+      # fact: rikyu-05
+      - 語り: では、札に書かれた罪とは、何だったのか。桃山学院大学の福井幸男さんは、2011年の論文で、公に示された罪を、こうまとめています。
+        portrait: null
+        background: {image: paintings/hidenaga_daitokuji_shoko_yoshitoshi.jpg, credit: "月岡芳年《紫野大徳寺焼香之図》1877年ごろ（信長の葬儀で焼香に進む秀吉）"}
+      # fact: rikyu-05
+      - 語り: ひとつは、秀吉と、天皇への、不敬。門の上の階を造り、そこに自分の木像を置いたことも、この不敬に入る、と。
+        card: {head: "公に示された罪①", body: 秀吉と天皇への不敬}
+      # fact: rikyu-05
+      - 語り: もうひとつは、茶道具に、不当な値を付けて、売り買いしたこと。
+        card: {head: "公に示された罪②", body: 茶道具の不当な売買}
+      - 語り: 天皇や秀吉もくぐる門の上から、自分の像が、見下ろしている。そう受け取られたのなら、門の寄進は、たちまち罪に変わります。
+        tone: しみじみ
+      # fact: rikyu-13
+      - 語り: 磔にされた初代の木像は、そのあと壊された、と言われています。
+      - 語り: 木像の罪と、茶道具の罪。表向きの理由は、この二つでした。けれど、多くの人が、それだけでは、腑に落ちないと考えてきました。
+        hook: true
+      - 語り: 木の像ひとつで、天下一の茶人が、命を落とすだろうか。理由をめぐる説は、ここから、いくつにも枝分かれしていきます。
+        tone: 疑問
+        hook: true
+
+  # ================================================================ 第3章 理由の諸説（②・⑤）
+  - title: 本当の理由は何だったのか　秀長の死と四つの説
+    background: {image: paintings/hidenaga_jurakudai_screen.jpg, credit: "《聚楽第図屏風》桃山時代（三井記念美術館蔵）"}
+    year: 1591
+    lines:
+      # 和樂web（2026）：秀長の病死と北野社家日記の仲裁
+      # fact: rikyu-17
+      - 語り: 話を、少しだけ、さかのぼります。利休が亡くなる、およそ1か月前。天正19年の1月22日に、秀吉の弟、豊臣秀長が、病で亡くなっていました。
+        portrait: {image: paintings/hidenaga_portrait_shungakuin.jpg, caption: "豊臣秀長（春岳院蔵とされる肖像、江戸時代）"}
+        card: {head: "天正19年1月22日", body: 秀長が病死}
+      - 語り: 秀長は、兄の秀吉を、そばで支え続けた人でした。その弟が、この年の初めに、世を去ったんです。
+        tone: しみじみ
+      - 語り: 秀長の死から、ひと月あまり。利休の一件は、そのあいだに起きました。兄を支えてきた弟は、もう、いなかったんです。
+        tone: しみじみ
+        background: {image: paintings/hidenaga_jurakudai_mitsui.jpg, credit: "《聚楽第図屏風》桃山時代（三井記念美術館蔵）"}
+      # fact: rikyu-17
+      - 語り: そして、利休の一件のさなか。『北野社家日記』には、大徳寺の僧たちまで、処刑せよ、という声があったことが書かれています。
+        portrait: null
+        background: {image: paintings/hidenaga_daitokuji_shoko_yoshitoshi.jpg, credit: "月岡芳年《紫野大徳寺焼香之図》1877年ごろ（信長の葬儀で焼香に進む秀吉）"}
+      # fact: rikyu-17
+      - 語り: その怒りの間に入ったのは、秀吉の母の大政所と、亡くなった秀長の妻でした。ふたりが、とりなしに入ったと、日記は記します。
+        portrait: {image: paintings/hidenaga_omandokoro.jpg, caption: "大政所（秀吉・秀長の母、江戸時代の肖像）"}
+        card: {head: "北野社家日記", body: 大政所と秀長の後室がとりなす}
+      - 語り: 秀吉を止められるのは、もう、母と、亡き弟の妻だけだったのかもしれません。
+        tone: しみじみ
+        portrait: null
+      # 説①：公に示された罪（福井 2011）
+      # fact: rikyu-05
+      - 語り: では、利休は、なぜ罰せられたのか。ひとつ目は、さきほどの、公に示された罪、そのままだとする見方です。木像の不敬と、茶道具の売り買い。
+        background: {image: paintings/hidenaga_jurakudai_screen.jpg, credit: "《聚楽第図屏風》桃山時代（三井記念美術館蔵）"}
+        figure: {type: stats, title: 利休が罰せられた理由　諸説, items: [[公に示された罪, 木像の不敬・茶道具の売買, 福井幸男さんのまとめ]], upto: 1}
+      # 説②：権力争い（田中仙堂 2017 の2ページ目）
+      # fact: rikyu-05
+      - 語り: ふたつ目は、権力争いの説です。田中仙堂さんは、利休が失脚した原因については、「秀吉政権の、権力争い」とする説が有力だ、と書いています。
+        figure: {type: stats, title: 利休が罰せられた理由　諸説, items: [[公に示された罪, 木像の不敬・茶道具の売買, 福井幸男さんのまとめ], [権力争い, 秀吉政権の中の争い, 田中仙堂さんが有力と紹介]], upto: 2}
+      - 語り: 茶の席は、大名たちが顔を合わせる場でもありました。そこを取り仕切る利休が、政権の争いと、無縁でいられたとは、考えにくい、ということです。
+        tone: しみじみ
+      # 説③：朝鮮出兵と三成の讒言（福井 2012）
+      # fact: rikyu-11
+      - 語り: 三つ目は、福井幸男さんが、2012年の続きの論文で示した説です。真の原因は、朝鮮への出兵をめぐる、石田三成の、讒言だった。
+        portrait: {image: paintings/ieyasu_ishida_mitsunari_portrait.jpg, caption: "石田三成（江戸時代の肖像画）", age: false}
+        card: {head: "福井幸男さん 2012年", body: 三成の讒言が真因}
+      # fact: rikyu-11
+      - 語り: 福井さんが目を向けたのは、切腹の前に、《3,000》の兵が、利休の屋敷を固めた、という異様な処置でした。
+        tone: 強調
+        portrait: null
+        background: {image: paintings/hideyoshi_jurakudai_3.jpg, credit: "《聚楽古城之図》江戸時代中期〜末期"}
+        card: {head: "利休の屋敷", body: 3,000の兵が固める}
+        # AI絵：many armored soldiers with spears standing in rows around a quiet walled residence in Kyoto at dawn, 1590s Japan, late winter, seen from far above, muted colors, painterly, no faces
+      # fact: rikyu-11
+      - 語り: ひとりの茶人に、3,000の兵。福井さんは、これを、出兵に力を貸すよう求められていた、諸大名への、無言の警告だった、と読みます。
+        figure: {type: stats, title: 利休が罰せられた理由　諸説, items: [[公に示された罪, 木像の不敬・茶道具の売買, 福井幸男さんのまとめ], [権力争い, 秀吉政権の中の争い, 田中仙堂さんが有力と紹介], [三成の讒言, 朝鮮出兵をめぐって, 福井幸男さん 2012年]], upto: 3}
+      - 語り: 逆らえば、天下一の茶人でも、こうなる。見せしめだったとすれば、木像を橋でさらしたことも、同じ筋の上に乗ってきます。
+        tone: しみじみ
+      - 語り: 翌年には、秀吉の軍勢が、海を渡ります。その前の年の京で、茶人の屋敷を、兵が取り巻いていた。福井さんは、そこに、出兵へ向かう政権の、張りつめた空気を見ているんです。
+        background: {image: paintings/mitsunari_busanjin_1592.jpg, credit: "《釜山鎮殉節図》（1592年の釜山の戦いを描いた後世の絵）"}
+      # 説④：娘の話（近古史談、大槻磐渓）
+      # fact: rikyu-12
+      - 語り: そして四つ目。江戸時代の終わりごろ、学者の大槻磐渓が書いた『近古史談』は、理由を、三つ並べています。
+        figure: null
+        background: {image: paintings/hideyoshi_five_wives_utamaro_met.jpg, credit: "喜多川歌麿《太閤五妻洛東遊観之図》1804年ごろ（メトロポリタン美術館）"}
+      # fact: rikyu-12
+      - 語り: 門の木像の無礼。茶の器の値に、私心があったこと。そして、もうひとつ。利休が、自分の娘を、秀吉に差し出さなかったこと。
+        tone: 強調
+        card: {head: "近古史談", body: 娘を差し出さなかった}
+      # fact: rikyu-12
+      - 語り: 『近古史談』は、山門は、天子をはじめ、皆が通る所。その頭の上に、像を置くのは、無礼だ、と書いています。
+      - 語り: ただ、これは、江戸時代の終わりごろに書かれた本です。娘の話が、同じ時代の記録に出てくるわけでは、ありません。
+        tone: しみじみ
+      - 語り: 公に示された罪。権力争い。三成の讒言。そして、娘の話。理由は、時代と、書き手によって、少しずつ姿を変えてきました。
+        tone: しみじみ
+        background: {image: paintings/hidenaga_jurakudai_screen.jpg, credit: "《聚楽第図屏風》桃山時代（三井記念美術館蔵）"}
+      # fact: rikyu-05
+      - 語り: 切腹の理由は、今も、はっきりしていません。どの説も、決め手を欠いたまま、並んでいるんです。
+      - 語り: けれど、そもそもの前提を、ひっくり返す説があります。利休は、腹を切っていない、という説です。
+        tone: 疑問
+        hook: true
+      - 語り: その根拠になったのは、秀吉自身が書いた、短い一行でした。
+        hook: true
+
+  # ================================================================ 第4章 生存説（③）
+  - title: 利休は生きていたのか　「きのふりきうの茶にて」の書状
+    background: {image: paintings/mitsunari_hideyoshi_letter_shuin.jpg, credit: "豊臣秀吉の朱印状（桃山時代）"}
+    # AI絵：an old Japanese letter written in flowing brush calligraphy on washi paper, lying on a dark wooden desk beside a tea bowl, close-up, soft lamp light, no readable text
+    year: 1592
+    lines:
+      # 中村修也（文教大）の説、田中仙堂 2017 が紹介
+      # fact: rikyu-09
+      - 語り: 「千利休は、自刃せずに、生きていた」。田中仙堂さんは、2017年の記事で、この新説が話題を集めている、と書きました。
+        card: {head: "新説", body: 利休は生きていた}
+      # fact: rikyu-09
+      - 語り: 唱えたのは、文教大学の、中村修也さんです。
+      # fact: rikyu-09
+      - 語り: 根拠は、利休の死の翌年に書かれたという、秀吉の書状。そこに、こんな一文があるんです。
+        tone: 強調
+        portrait: {image: paintings/akechi_hideyoshi_kodaiji.jpg, caption: "豊臣秀吉（狩野光信画、高台寺蔵）", age: false}
+      # 【記録】秀吉書状「きのふりきうの茶にて御せんもあがり」（田中仙堂 2017 が引く）。今の言葉にして秀吉の声で
+      # fact: rikyu-09
+      - 人物: 「昨日、利休の茶で、膳も、すすんだ」
+        who: 秀吉書状
+        tone: しみじみ
+      # fact: rikyu-09
+      - 語り: 原文は、「きのふ、りきうの茶にて、御膳も、あがり」。昨日は、利休の茶で、食事も進んだ。今の言葉にすると、そうなります。
+        card: {head: "秀吉の書状", body: 「きのふりきうの茶にて」}
+      - 語り: 死んだはずの利休の茶を、その翌年に、秀吉が飲んでいる。もし書状の年が、そのとおりなら、利休は、生きていたことになります。
+        tone: 強調
+        portrait: null
+      - 語り: もしそうなら、あの木像の磔も、違って見えてきます。人を罰する代わりに、姿を写した像を罰したのか。それとも、像を罰したあとで、人も罰したのか。
+        tone: 疑問
+        background: {image: paintings/akechi_rakuchu_rakugai_uesugi_right.jpg, credit: "狩野永徳《洛中洛外図屏風》（上杉本）右隻"}
+      - 語り: 同じ時代の記録が、「切腹」と言い切っていない以上、この問いは、簡単には、閉じられません。
+        tone: しみじみ
+      # fact: rikyu-09, rikyu-08
+      - 語り: 一方には、切腹の場面と辞世を詳しく書いた、千家の由緒書。もう一方には、翌年に利休の茶を楽しむ、秀吉の手紙。
+        figure: {type: stats, title: 利休は切腹したのか, items: [[千利休由緒書, 切腹の場面と辞世, 千家4代 江岑宗左が後年に], [秀吉の書状, 「きのふりきうの茶にて」, 利休の死の翌年とされる], [多聞院日記, 切腹は「うわさ」, 高野山へ追放の話も]], upto: 3}
+      - 語り: ここでも、記録は、ふたつの話を、並べたままです。
+        tone: しみじみ
+      # fact: rikyu-09
+      - 語り: ただ、気をつけたいのは、この書状の年が、「翌年に書かれたという」見立てだ、ということです。手紙の年が一つずれれば、利休の生前の茶の話になります。
+        figure: null
+      # fact: rikyu-09
+      - 語り: 田中仙堂さんの記事の題は、「千利休は、切腹せず生きていた？」。最後に、問いの印が付いています。
+        tone: しみじみ
+      - 語り: 新説を、新説として紹介しながら、言い切ってはいない。題の終わりの、たった一文字が、この話の難しさを、物語っています。
+      - 語り: 切腹の場面を詳しく書いたのは、後の時代の、子孫の文書。生きていたという説の根拠は、年が一つずれれば崩れる、一通の手紙。どちらの側にも、確かな決め手は、ありません。
+        background: {image: paintings/hidenaga_rikyu_death_poem_met.jpg, credit: "《千利休像》辞世の偈入り、17世紀前半（メトロポリタン美術館）"}
+        tone: しみじみ
+      # fact: rikyu-06
+      - 語り: 思い出してください。同じ時代の『多聞院日記』は、切腹を「うわさ」と書き、高野山へ追放された、という話も載せていました。
+        background: {image: paintings/hideyoshi_daibutsu_okyo.jpg, credit: "円山応挙《京大仏図》1796年以前（方広寺の大仏殿、江戸時代に建て直した姿）"}
+      - 語り: 追放された利休が、どこかで、生きていたのか。それとも、うわさは、うわさに過ぎなかったのか。記録だけでは、まだ、決めきれません。
+        tone: しみじみ
+      # 【想像3】利休。記録：秀吉の書状「きのふりきうの茶にて御せんもあがり」（rikyu-09）。茶を点てる人としての気持ちの言葉だけ（生きていたとは言わない）
+      - 人物: 「……一服、いかがでございましょう」
+        who: 利休想像
+        imagined: true
+        tone: しみじみ
+        portrait: {image: paintings/hidenaga_rikyu_tohaku.jpg, caption: "千利休（長谷川等伯画、1595年）"}
+      - 語り: 利休が、どこで、どう世を去ったのか。確かなのは、この年を境に、利休が、秀吉の茶の席から、姿を消したことです。
+        portrait: null
+        hook: true
+      - 語り: そして、残された家族には、長い冬が、始まりました。
+        tone: 重い
+        hook: true
+
+  # ================================================================ 第5章 その後（⑥）
+  - title: まとめ：利休はどこに眠るのか　1594年 少庵の許しといまの像
+    background: {image: paintings/akechi_rakuchu_rakugai_uesugi_right.jpg, credit: "狩野永徳《洛中洛外図屏風》（上杉本）右隻"}
+    year: 1594
+    lines:
+      # ニッポン旅マガジン（2021）
+      # fact: rikyu-18
+      - 語り: 利休の死のあと、跡を継ぐはずだった養子の少庵は、京を離れ、会津の蒲生氏郷のもとで、ひっそりと、こもって暮らしました。
+        card: {head: "少庵", body: 会津の蒲生氏郷のもとに蟄居}
+        # AI絵：a quiet snowy castle town in northern Japan, 1590s, a lone man in plain robes walking along a wooden corridor, seen from far away, muted colors, painterly, no faces
+      # fact: rikyu-18
+      - 語り: 許しが出たのは、文禄3年、1594年。徳川家康と、蒲生氏郷のとりなしでした。少庵は京に戻り、千家を、もう一度、興します。
+        card: {head: "文禄3年 1594年", body: 家康と氏郷のとりなしで許される}
+      - 語り: 利休の死から、3年。茶の家は、途切れずに、つながりました。
+        tone: しみじみ
+      - 語り: 罰を受けた茶人の跡継ぎを、大名たちが、とりなして京へ戻した。利休の茶は、秀吉に罰せられたあとも、大名たちの間で、求められ続けていたのかもしれません。
+        background: {image: paintings/hidenaga_jurakudai_screen.jpg, credit: "《聚楽第図屏風》桃山時代（三井記念美術館蔵）"}
+      # fact: rikyu-19
+      - 語り: 少庵は、大徳寺で僧になっていた、息子の宗旦を、ふつうの暮らしに戻させます。
+        background: {image: paintings/hidenaga_daitokuji_shoko_yoshitoshi.jpg, credit: "月岡芳年《紫野大徳寺焼香之図》1877年ごろ（信長の葬儀で焼香に進む秀吉）"}
+      # fact: rikyu-19
+      - 語り: その宗旦が、寛永10年、1633年ごろに建て直したのが、茶室、「《不審菴》」です。
+        card: {head: "1633年ごろ", body: 宗旦が不審菴を再建}
+      # fact: rikyu-19
+      - 語り: そして、宗旦の子どもたちが、表千家、裏千家、武者小路千家。いまに続く、三つの千家の祖となりました。
+        figure: {type: stats, title: 利休のあとの千家, items: [[少庵, 1594年に許され京へ, 家康と蒲生氏郷のとりなし], [宗旦, 1633年ごろ不審菴を再建, 大徳寺から還俗], [宗旦の子ら, 表・裏・武者小路, 三千家の祖]], upto: 3}
+      # fact: rikyu-20
+      - 語り: 利休の墓は、大徳寺の中の小さな寺、聚光院にあります。聚光院は、三つの千家の菩提寺で、ふだんは、公開されていません。
+        figure: null
+        card: {head: "聚光院", body: 利休の墓・三千家の菩提寺}
+        # AI絵：a small quiet Zen subtemple garden inside a large Kyoto temple complex, moss and stone lanterns, a simple stone grave marker under trees, autumn, soft light, painterly, no people
+      - 語り: 木像が罪になった、あの大徳寺。その同じ寺の中に、利休は、眠っているんです。
+        tone: しみじみ
+      # 堺市・ニッポン旅マガジン
+      # fact: rikyu-22
+      - 語り: 生まれた町の堺には、利休の屋敷の跡が、残っています。ただし、ここは、あくまで、言い伝えの地として、市の史跡になっている場所です。
+        background: {image: paintings/ieyasu_sakai_montanus_engraving.jpg, credit: "モンタヌス『日本誌』「堺」1669年ごろ"}
+        card: {head: "堺の屋敷跡", body: 伝承地として市の史跡}
+      # fact: rikyu-22
+      - 語り: そこに残る、椿の井戸。その井戸の屋根は、大徳寺の門の、古い材木で建てた、と伝わります。
+        tone: しみじみ
+      # 高岡市立博物館・文化遺産オンライン（2026）
+      # fact: rikyu-21
+      - 語り: そして、2026年の9月。富山県の高岡市立博物館が、宗易、つまり利休の書状を、新たに収めました。
+        card: {head: "2026年9月", body: 高岡市立博物館が利休の書状を収蔵}
+        background: {image: paintings/hidenaga_letter_1586.jpg, credit: "豊臣秀長の書状（寿福院宛）1586年"}
+      # fact: rikyu-21
+      - 語り: 日付は、2月10日。年は、わかっていません。宛先は、徳川家の重臣、榊原康政と考えられています。
+      # fact: rikyu-21
+      - 語り: この書状は、これまでの史料集にも、利休の手紙を集めた研究書にも、載っていません。博物館は、「新発見史料の、可能性がある」としています。
+        tone: 強調
+        card: {head: "利休の書状", body: 新発見の可能性}
+      - 語り: 400年以上たった今も、利休の言葉は、まだ、見つかり続けているんです。
+        tone: しみじみ
+      # 東博の大徳寺展（2026）
+      # fact: rikyu-14
+      - 語り: そして、この秋。東京国立博物館の特別展「大徳寺」では、ふだんは入れない、三門の上の階、金毛閣の中が、再現されています。会期は、2026年10月14日から、12月6日まで。
+        background: {image: paintings/hidenaga_daitokuji_shoko_yoshitoshi.jpg, credit: "月岡芳年《紫野大徳寺焼香之図》1877年ごろ（信長の葬儀で焼香に進む秀吉）"}
+        card: {head: "東京国立博物館", body: 特別展「大徳寺」10/14〜12/6}
+      # fact: rikyu-14, rikyu-13
+      - 語り: そこで、初めて公開されたのが、いま金毛閣に置かれている、千利休の立像です。
+        portrait: {image: paintings/hidenaga_rikyu_tohaku.jpg, caption: "千利休（長谷川等伯画、1595年）"}
+        card: {head: "初公開", body: 三門の千利休立像}
+        # AI絵：a carved wooden statue of an old Japanese tea master in black robes standing on a pedestal inside a dim museum gallery, soft spotlight, 2020s, seen from a distance, painterly, no visitors' faces
+      # fact: rikyu-13, rikyu-15
+      - 語り: ただし、この像は、磔にされた初代ではありません。2代目です。頭の部分は、天保11年、1840年。体の部分は、明治2年、1869年に、田中浄慶が作りました。
+        tone: 強調
+        figure: {type: stats, title: 三門の利休像, items: [[初代の木像, 1591年, 秀吉が磔に], [今の像の頭, 1840年, 天保11年], [今の像の体, 1869年, 明治2年 田中浄慶の作]], upto: 3}
+      - 語り: 秀吉が罪とした、門の上の利休の像。それを、寺は、200年以上ののちに、もう一度、門の上に戻したんです。
+        tone: しみじみ
+        figure: null
+        portrait: null
+      # 締め：冒頭の場面（一条戻橋）と問いに戻る
+      # fact: rikyu-03
+      - 語り: 天正19年、1591年の2月。一条戻橋で、利休の木像は、罪人として、さらされました。
+        tone: しみじみ
+        background: {image: paintings/akechi_rakuchu_rakugai_uesugi_right.jpg, credit: "狩野永徳《洛中洛外図屏風》（上杉本）右隻"}
+        card: {head: "天正19年2月", body: 一条戻橋}
+      - 語り: なぜ利休は、切腹させられたのか。公に示された罪のほかに、権力争い、三成の讒言、娘の話と、答えは、今も一つに定まりません。
+        tone: しみじみ
+        card: {head: "なぜ", body: 理由は今も定まらない}
+      - 語り: そして、本当に切腹したのか。同じ時代の記録は、「成敗」と「うわさ」。詳しい場面は、後の時代の文書の中にだけ、ありました。
+        tone: しみじみ
+        card: {head: "本当に切腹したのか", body: 「成敗」と「うわさ」}
+      - 語り: 磔にされた木像は、もう残っていません。けれど、門の上には、今も、利休が立っています。
+        portrait: {image: paintings/hidenaga_rikyu_tohaku.jpg, caption: "千利休（長谷川等伯画、1595年）"}
+        tone: しみじみ
+        pause: 0.8
+
+      # 締め（物語型、10-24 ユーザー決定）：余韻の一文のあと、登録のお願いを短く
+      - 語り: 感想は、コメントで聞かせてください。チャンネル登録も、よろしくお願いします。
+        portrait: null
+        background: {image: paintings/hidenaga_daitokuji_shoko_yoshitoshi.jpg, credit: "月岡芳年《紫野大徳寺焼香之図》1877年ごろ（信長の葬儀で焼香に進む秀吉）"}
+
+# ============================================================================
+# 台詞の一覧（記録／想像）
+# 記録（出どころを語りで言ってから読む）：
+#   - 秀吉「昨日、利休の茶で、膳も、すすんだ」……利休の死の翌年とされる書状「きのふりきうの茶にて御せんもあがり」（田中仙堂 2017 が引く、rikyu-09）。今の言葉にした。原文も語りで読む
+#   - 語りの中の記録：伊達家に届いた書状「宗易、其身之形を木像ニ作立、紫野大徳寺ニ被納候ヲ殿下様より被召上」「聚楽之大門もどり橋と申候所ニ、張付ニかけさせられ候」
+#     「誠々前代未聞之由、於京中申事ニ候、見物之貴賤無際限候、右八付之脇ニ、色々ノ科共被遊御札ヲ被相立候」（rikyu-02・03・10・16）／
+#     北野社家日記「成敗」（rikyu-07）／多聞院日記「うわさ」「高野山に追放」（rikyu-06）／千利休由緒書の辞世「利休めはとかく果報のものぞかし　菅丞相になるとおもへば」（rikyu-08）／
+#     近古史談「山門は天子を始として通らせ給ふ頭上にしかする事、無禮なり」（rikyu-12）
+# 想像（3か所。roles の利休想像＋imagined: true）：
+#   1 利休「……これで、よい」（茶杓 泪を削る場面）……徳川美術館の解説（rikyu-01）。気持ちだけ
+#   2 利休「わしの姿が、橋の上で、さらされておるか……」……木像の磔（rikyu-03・10）。その場にいたとは言わない。気持ちだけ
+#   3 利休「……一服、いかがでございましょう」……秀吉の書状の「利休の茶」（rikyu-09）。生きていたとは言わない。気持ちだけ

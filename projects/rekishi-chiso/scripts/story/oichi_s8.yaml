@@ -1,0 +1,212 @@
+# 物語完結型ショート 第8版（10-22 ユーザー「もう少し早口で、あと変な効果音はいらない」。第7版から2点だけ直した）。投稿しない。
+# 第8版：①効果音（ライザー・低い響き・一拍の無音）は全部やめた（sfx: false が既定）。BGM（弦・ピアノ）だけ残し、声との差を9→11LU・立ち上がりをなだらかに・ビブラートを弱め・和音を単純に。
+#   ②声の速さ：基準1.38、しみじみ1.45・重い1.47・強調1.54・疑問1.38（実効は 1.29〜1.40。tone_speed）、速さの上限1.5。間は転換の前0.3秒・ほかは0.12〜0.15秒。
+#   1.0秒未満のブロックは、声の時刻を見て隣のブロックと結ぶ（plan の merge_short_blocks）。
+# 以下は第7版の説明：投稿しない。
+# 伸びている他チャンネルのショートの手法を取り入れた：
+#   (A) 絵は3〜5秒ごとに別の絵（14カット）。表情のあるAI人物絵（P1〜P5）・AI情景絵（S1〜S4）・実在の絵を混ぜる。同じ絵が続くときは寄り・パンで別の部分を見せる。
+#   (B) 感情を言い切る語り口（「別れ」「悲劇」「最期」「生涯」）。伝承は「と伝わる」を残し、創作の心理描写は断定しない。
+#   (C) 声の基本 1.25 倍・語り313字・毎分約350字。(D) BGM は弦（チェロ・ヴァイオリン風）＋静かなピアノ＋転換前に上がる音＋低い響き＋頂点の一拍の無音（すべて numpy 合成）。
+#   (E) 図解は最大3つ：地図カード（北ノ庄と小谷は近い）・数の対比カード（送り出した娘3人と残ったお市1人）・年号カード（1615年）。見出し帯は常時。
+#   (F) 冒頭は第6版の水準（0秒から声・文字・絵・低い響き）。絵は P1（表情のある絵）に差し替える形。
+# 絵は Gemini（無料版・同じ会話の中で作って人物をそろえた）で作った out/story/oichi3/gem/（768x1376）。P5・P5b・P3・P3b は実在の女優に似て見えるため使わない。顔は P2 に寄せて作り直した P6（断る）と P5c（最後の問い）。
+# 台本案（2つ書いて B7 を選んだ）：
+#   案A7「縦の線」…1573年の小谷落城（夫の最期）から10年、北ノ庄、娘たち、大坂の陣までを14カットで追う。カットは多いが、年が2つ並び説明に寄る。
+#   案B7「ひと晩の場面＋その後」…冒頭の別れの夜（歌）→1583年の北ノ庄→勧められる→だが断る→十年前の悔い→娘を送り出す（11歳）→行き先は秀吉のもと→
+#       最後の酒宴→生涯を閉じた→悲劇は続く（敵と味方）→大坂の陣→問い。感情の1本線で、場面ごとに絵が替わる。★選んだ
+# 書き方：shots＝絵の定義（kind: ai／real／composite、file: out/story/ からの絵、placeholder: 仮の絵）。lines＝語り（｜は絵の替わり目）と shot／shots。
+# 事実の出どころは scripts/oichi.yaml の行（out/oichi_story_s7_facts.md に照合表）。
+title: お市の方｜逃げなかった姫と三人の娘（第8版）
+yt_title: 別れの夜、お市は城を出なかった｜お市の方と三人の娘
+ai_images: true
+art_dir: out/story/oichi3
+out: oichi_story_s8
+cta: 本編は概要欄から
+bgm: true
+sfx: false                            # 効果音（上がる音・低い響き・一拍の無音）は入れない
+bgm_diff_lu: 11                       # BGM は声より11LU小さく
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.54, 疑問: 1.38}
+max_shots: 16
+max_ai: 10
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: お市の方
+  title: "《逃げなかった》姫と三人の娘"
+cards:
+  - type: map                            # 地図：北ノ庄城と小谷城は近い（同じあたりで二度）。1583年の北ノ庄のところ
+    from: 北ノ庄城
+    until: 勝家は
+    bounds: [134.7, 137.7, 34.6, 36.7]
+    places: [[北ノ庄, 136.22, 36.06], [小谷, 136.28, 35.46]]
+    hot: 北ノ庄
+  - type: versus                         # 送り出した娘3人と、城に残ったお市1人
+    from: 三人の娘だけを
+    until: 行き先は
+    left: {tag: 送り出した娘, big: 3人, dots: 3, color: blue}
+    right: {tag: 残ったお市, big: 1人, dots: 1, color: red}
+    mid: 対
+    text_y: 0.57
+  - type: year                           # 1615年（赤い下線が左から引かれる）
+    from: 1615年
+    until: 茶々も城と
+    big: 1615年
+    sub: 大坂の陣
+    text_y: 0.84
+shots:
+  P1:                                    # 冒頭：城内の見張り台に立つお市と、城を出るよう勧める武士（決意・正面）
+    kind: ai
+    file: oichi3/gem/P1.jpg
+    move: in
+    focus: [0.5, 0.35]
+    ease: fast
+    must: 冒頭：お市（正面・決意）と勧める武士
+  S1:
+    kind: ai
+    file: oichi3/gem/S1.jpg
+    move: in
+    focus: [0.5, 0.4]
+    must: 篝火に囲まれた夜の天守
+  S3:
+    kind: ai
+    file: oichi3/gem/S3.jpg
+    move: left
+    must: 霧の戦場に向き合う旗の列（秀吉の軍）
+  Ck:
+    kind: real
+    image: paintings/oichi_katsuie_utamaro.jpg
+    crop: [0.0, 0.0, 1.0, 0.62]
+    focus: [0.55, 0.45]
+    move: in
+    credit: "喜多川歌麿《柴田修理進勝家と小谷の方》1803〜04年ごろ（Wikimedia Commons・パブリックドメイン）"
+    must: 鎧の勝家
+  P6:                                    # 決意の表情（やや斜め・強い視線・口元を結ぶ）。P2 の顔に寄せて作り直した絵（断る）
+    kind: ai
+    file: oichi3/gem/P6.jpg
+    move: in
+    zoom: 0.14
+    focus: [0.45, 0.4]
+    text_y: 0.74
+    must: 決意の表情のお市（断る）
+  B:
+    kind: real
+    image: paintings/oichi_odani_castle_map.jpg
+    crop: [0.0, 0.0, 1.0, 0.62]
+    focus: [0.5, 0.3]
+    move: down
+    credit: "《小谷城図》江戸時代（Wikimedia Commons・パブリックドメイン）"
+    must: 小谷城の古絵図
+  P2:
+    kind: ai
+    file: oichi3/gem/P2.jpg
+    move: in
+    focus: [0.5, 0.4]
+    text_y: 0.74
+    must: うつむくお市（悔い）、遠くに燃える城
+  S2:
+    kind: ai
+    file: oichi3/gem/S2.jpg
+    move: out
+    zoom: 0.12
+    must: 光の門を出る赤・藍・緑の少女3人の後ろ姿
+  S4:
+    kind: ai
+    file: oichi3/gem/S4.jpg
+    move: in
+    focus: [0.5, 0.45]
+    text_y: 0.30
+    must: 板廊下を行く少女3人と、奥の武士の影（行き先）
+  S1z:                                   # S1 の同じ絵の天守（灯のともる最上階）へ寄る
+    kind: ai
+    file: oichi3/gem/S1.jpg
+    move: in
+    zoom: 0.2
+    focus: [0.5, 0.3]
+    must: 灯のともる天守（最後の酒宴）
+  P4:
+    kind: ai
+    file: oichi3/gem/P4.jpg
+    move: in
+    focus: [0.7, 0.4]
+    must: 窓辺で燃える城下を見るお市の横顔（最期）
+  G:
+    kind: composite
+    move: out
+    phrase_y: 0.76
+    images:
+      - {image: paintings/oichi_chacha_yodo_portrait.jpg, crop: [0.0, 0.3, 1.0, 1.0], label: 茶々}
+      - {image: paintings/oichi_hatsu_jokoin.jpg, crop: [0.0, 0.3, 1.0, 1.0], label: 初}
+      - {image: paintings/oichi_go_sugenin.jpg, crop: [0.0, 0.0, 1.0, 1.0], focus: [0.58, 0.5], label: 江}
+    credit: "伝 淀殿（奈良県立美術館蔵）／常高院像／崇源院像（いずれも江戸時代ごろ、Wikimedia Commons・パブリックドメイン）"
+    must: 茶々・初・江の肖像（3人）
+  E:
+    kind: real
+    image: paintings/nene_osaka_castle_summer_screen_detail.jpg
+    focus: [0.16, 0.38]
+    move: in
+    credit: "大坂夏の陣図屏風（部分、大阪城天守閣蔵）17世紀前半（Wikimedia Commons・パブリックドメイン）"
+    must: 大坂城の天守と合戦
+  P5c:                                   # 涙の目でこちらを見る顔のアップ（最後の問い）。P2 の顔に寄せて作り直した絵
+    kind: ai
+    file: oichi3/gem/P5c.jpg
+    move: in
+    focus: [0.5, 0.45]
+    text_y: 0.74                         # 「本編は概要欄から」（縦80%）と重ならない
+    must: こちらを見るお市（問いかけ）
+lines:
+  - 語り: 逃げた女は、《二度目》、《!逃げなかった》。
+    shot: P1
+    tone: 強調
+    zoom: 0.14
+  - 語り: 《別れ》の夜、囲まれた城から、歌が聞こえたという。
+    shot: S1
+    tone: しみじみ
+    pause: 0.15
+  - 語り: 北ノ庄城。秀吉の軍が、城を囲んだ。
+    shot: S3
+    tone: しみじみ
+    pause: 0.15
+  - 語り: 勝家は、お市に、城を出るよう勧めたと伝わる。
+    shot: Ck
+    tone: しみじみ
+    pause: 0.12
+  - 語り: だが、お市は《!断った》。
+    shot: P6
+    tone: 強調
+    pause: 0.3
+    dip: true
+  - 語り: 十年前、小谷城が落ちた。
+    shot: B
+    tone: しみじみ
+    pause: 0.15
+  - 語り: あの日、逃げたことを、お市は《悔やんで》いたと伝わる。
+    shot: P2
+    tone: しみじみ
+    pause: 0.12
+  - 語り: 三人の娘だけを、城から《!送り出した》。いちばん下の江は、まだ11歳だった。
+    shot: S2
+    tone: 重い
+    pause: 0.15
+    dip: true
+  - 語り: 行き先は、夫の城を落とした、秀吉のもとだった。
+    shot: S4
+    tone: しみじみ
+  - 語り: その夜、天守で、最後の酒宴が開かれたと伝わる。
+    shot: S1z
+    tone: しみじみ
+    pause: 0.15
+  - 語り: お市は、勝家とともに、37歳の《生涯を閉じた》。
+    shot: P4
+    tone: 重い
+    pause: 0.15
+  - 語り: 《悲劇》は続く。母を失った三人の娘は、のちに、《敵と味方》に分かれる。
+    shot: G
+    tone: しみじみ
+    pause: 0.15
+  - 語り: 1615年、大坂の陣。茶々も、城とともに《最期》を迎えた。
+    shot: E
+    tone: 重い
+    pause: 0.12
+  - 語り: あなたなら、娘を送り出して、《逃げずに》いられますか。
+    shot: P5c
+    tone: 疑問
+    pause: 0.15

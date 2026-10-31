@@ -1,0 +1,220 @@
+# 物語完結型ショート 第9版（10-22 ユーザー「これだとなんの話をしているかわからない」）。投稿しない。
+# 第9版：初めて見る人が見終わって4つの問いに答えられることを最優先に、台本を作り直した。
+#   ①誰の話か（お市の方＝織田信長の妹）②いつ・どこで何が起きたか（1583年、夫・柴田勝家の北ノ庄城が秀吉の軍に囲まれた）
+#   ③お市は何を選んだか、なぜか（城を出ず残る。十年前、最初の夫・浅井長政の小谷城が落ちたときに逃げたことを悔やんでいたと伝わる）
+#   ④どうなったか（娘3人だけを城から出し、お市は勝家とともに37歳で生涯を閉じた。娘たちはのちに敵と味方に分かれ、茶々は大坂城とともに最期）
+#   1文に1つの出来事・主語を落とさない・代名詞だけで済ませない。「別れの夜、歌が聞こえた」「最後の酒宴」などの挿話は筋に必須でないので外した。
+#   見出し帯は0秒から（「お市の方（織田信長の妹）」）。年表カード（二度の落城）・対比カード（3人 対 1人）・年号カード（1615年）。声は剣崎（約1.3倍）、効果音なし、BGM は第8版のまま。
+#   Q&A の表は out/oichi_story_s9_qa.md、事実の照合は out/oichi_story_s9_facts.md。
+title: お市の方（織田信長の妹）｜二度目の落城で逃げなかった姫（第9版）
+yt_title: 信長の妹・お市の方は、なぜ二度目の落城で逃げなかったのか
+ai_images: true
+art_dir: out/story/oichi3
+out: oichi_story_s9
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 16
+max_ai: 10
+hook_clear: 0                         # 見出し帯・「AI生成画像」・出典は0秒から（掴みより分かりやすさを優先）
+min_block: 1.2                        # 1.2秒未満のブロックは隣と結ぶ
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}      # 実効は約1.3倍（1.4倍を超えない）
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: お市の方（織田信長の妹）
+  title: "《二度目の落城》で、逃げなかった"
+# 常に画面に出ている情報（どの瞬間に見始めても「誰の、いつ・どこの話か」が分かる）：見出し帯・「いま」の札・年表のバー。
+now:                                     # 語りがその年・場所を言う（または語りの場面が変わる）瞬間に0.2秒で切り替わる
+  - {at: 信長の妹, text: "1583年　北ノ庄城", point: 1}
+  - {at: 十年前, text: "1573年　小谷城（十年前）", point: 0}
+  - {at: お市はそのとき, text: "1583年　北ノ庄城", point: 1}
+  - {at: 1615年, text: "1615年　大坂城", point: 2}
+timeline:
+  - {label: "1573 小谷"}
+  - {label: "1583 北ノ庄"}
+  - {label: "1615 大坂"}
+cards:
+  - type: table                          # 年表：二度の落城（小谷城＝夫・浅井長政、北ノ庄城＝夫・柴田勝家）
+    from: 十年前
+    until: 三人の娘茶々
+    items:
+      - {at: 十年前, text: "1573年　小谷城（夫・浅井長政）落城"}
+      - {at: そのとき, text: "1583年　北ノ庄城（夫・柴田勝家）落城"}
+  - type: versus                         # 送り出した娘3人と、城に残ったお市1人
+    from: 三人の娘茶々
+    until: いちばん下の江は
+    left: {tag: 送り出した娘, big: 3人, dots: 3, color: blue}
+    right: {tag: 残ったお市, big: 1人, dots: 1, color: red}
+    mid: 対
+    text_y: 0.57
+  - type: year                           # 1615年（赤い下線が左から引かれる）
+    from: 1615年
+    until: 長女の茶々は
+    big: 1615年
+    sub: 大坂の陣
+    text_y: 0.84
+shots:
+  P1:                                    # 冒頭：城内の見張り台に立つお市と、城を出るよう勧める武士（決意・正面）
+    kind: ai
+    file: oichi3/gem/P1.jpg
+    move: in
+    focus: [0.5, 0.35]
+    ease: fast
+    must: 冒頭：お市（正面・決意）と勧める武士
+  P1b:                                   # P1 の同じ絵の左（勧める武士）へ寄る。カット4「勝家は、お市に、城を出るよう勧めた」
+    kind: ai
+    file: oichi3/gem/P1.jpg
+    move: right
+    zoom: 0.18
+    focus: [0.3, 0.45]
+    must: 城を出るよう勧める武士（勝家）とお市
+  S1:
+    kind: ai
+    file: oichi3/gem/S1.jpg
+    move: in
+    focus: [0.5, 0.4]
+    must: 篝火に囲まれた夜の天守
+  S3:
+    kind: ai
+    file: oichi3/gem/S3.jpg
+    move: left
+    must: 霧の戦場に向き合う旗の列（秀吉の軍）
+  Ck:
+    kind: real
+    image: paintings/oichi_katsuie_utamaro.jpg
+    focus: [0.5, 0.5]
+    bright: 0.78                          # 明るい絵なので少し暗くして、白い文字を読みやすく
+    move: in
+    credit: "喜多川歌麿《柴田修理進勝家と小谷の方》1803〜04年ごろ（Wikimedia Commons・パブリックドメイン）"
+    must: 鎧の勝家
+  P6:                                    # 決意の表情（やや斜め・強い視線・口元を結ぶ）。P2 の顔に寄せて作り直した絵（断る）
+    kind: ai
+    file: oichi3/gem/P6.jpg
+    move: in
+    zoom: 0.14
+    focus: [0.45, 0.4]
+    text_y: 0.74
+    must: 決意の表情のお市（断る）
+  B:
+    kind: real
+    image: paintings/oichi_odani_castle_map.jpg
+    bright: 0.82
+    crop: [0.0, 0.0, 1.0, 0.62]
+    focus: [0.5, 0.3]
+    move: down
+    credit: "《小谷城図》江戸時代（Wikimedia Commons・パブリックドメイン）"
+    must: 小谷城の古絵図
+  P2:
+    kind: ai
+    file: oichi3/gem/P2.jpg
+    move: in
+    focus: [0.5, 0.4]
+    text_y: 0.74
+    must: うつむくお市（悔い）、遠くに燃える城
+  S2:
+    kind: ai
+    file: oichi3/gem/S2.jpg
+    move: out
+    zoom: 0.12
+    must: 光の門を出る赤・藍・緑の少女3人の後ろ姿
+  S4:
+    kind: ai
+    file: oichi3/gem/S4.jpg
+    move: in
+    focus: [0.5, 0.45]
+    text_y: 0.30
+    must: 板廊下を行く少女3人と、奥の武士の影（行き先）
+  S1z:                                   # S1 の同じ絵の天守（灯のともる最上階）へ寄る
+    kind: ai
+    file: oichi3/gem/S1.jpg
+    move: in
+    zoom: 0.2
+    focus: [0.5, 0.3]
+    must: 灯のともる天守（最後の酒宴）
+  P4:
+    kind: ai
+    file: oichi3/gem/P4.jpg
+    move: in
+    focus: [0.7, 0.4]
+    must: 窓辺で燃える城下を見るお市の横顔（最期）
+  G:
+    kind: composite
+    move: out
+    phrase_y: 0.76
+    images:
+      - {image: paintings/oichi_chacha_yodo_portrait.jpg, crop: [0.0, 0.3, 1.0, 1.0], label: 茶々}
+      - {image: paintings/oichi_hatsu_jokoin.jpg, crop: [0.0, 0.3, 1.0, 1.0], label: 初}
+      - {image: paintings/oichi_go_sugenin.jpg, crop: [0.0, 0.0, 1.0, 1.0], focus: [0.58, 0.5], label: 江}
+    credit: "伝 淀殿（奈良県立美術館蔵）／常高院像／崇源院像（いずれも江戸時代ごろ、Wikimedia Commons・パブリックドメイン）"
+    must: 茶々・初・江の肖像（3人）
+  E:
+    kind: real
+    image: paintings/nene_osaka_castle_summer_screen_detail.jpg
+    focus: [0.16, 0.38]
+    move: in
+    credit: "大坂夏の陣図屏風（部分、大阪城天守閣蔵）17世紀前半（Wikimedia Commons・パブリックドメイン）"
+    must: 大坂城の天守と合戦
+  P5c:                                   # 涙の目でこちらを見る顔のアップ（最後の問い）。P2 の顔に寄せて作り直した絵
+    kind: ai
+    file: oichi3/gem/P5c.jpg
+    move: in
+    focus: [0.5, 0.45]
+    text_y: 0.74                         # 「本編は概要欄から」（縦80%）と重ならない
+    must: こちらを見るお市（問いかけ）
+lines:
+  - 語り: 信長の妹、お市の方は、《二度目の落城》で、《!逃げなかった》。
+    shot: P1
+    tone: 強調
+    zoom: 0.14
+  - 語り: お市は、信長の死後、柴田勝家と再婚した。
+    shot: Ck
+    tone: しみじみ
+    pause: 0.12
+  - 語り: 1583年、勝家の北ノ庄城は、秀吉の軍に囲まれた。
+    shot: S3
+    tone: しみじみ
+    pause: 0.12
+  - 語り: 勝家は、お市に、城を出るよう勧めたと伝わる。
+    shot: P1b
+    tone: しみじみ
+    pause: 0.12
+  - 語り: だが、お市は《!断った》。
+    shot: P6
+    tone: 強調
+    pause: 0.3
+    dip: true
+    zoom: 0.14
+  - 語り: 十年前、お市の最初の夫・浅井長政の小谷城が落ち、お市は娘たちと城を出た。
+    shot: B
+    tone: しみじみ
+    pause: 0.15
+  - 語り: お市は、そのとき逃げたことを、《悔やんで》いたと伝わる。
+    shot: P2
+    tone: しみじみ
+    pause: 0.12
+  - 語り: お市は、三人の娘、茶々・初・江だけを、城から《!送り出した》。いちばん下の江は、まだ11歳だった。
+    shot: S2
+    tone: 重い
+    pause: 0.15
+    dip: true
+  - 語り: 娘たちが向かったのは、十年前に小谷城を落とした、秀吉のもとだった。
+    shot: S4
+    tone: しみじみ
+    pause: 0.12
+  - 語り: お市は、夫の勝家とともに、37歳の《生涯を閉じた》。
+    shot: P4
+    tone: 重い
+    pause: 0.15
+  - 語り: 母を失った三人の娘は、のちに、《敵と味方》に分かれる。茶々は秀吉の妻に、江は徳川秀忠の妻になった。
+    shot: G
+    tone: しみじみ
+    pause: 0.15
+  - 語り: 1615年、大坂の陣で、長女の茶々は、大坂城とともに《最期》を迎えた。
+    shot: E
+    tone: 重い
+    pause: 0.12
+  - 語り: あなたなら、娘を送り出して、《逃げずに》いられますか。
+    shot: P5c
+    tone: 疑問
+    pause: 0.15

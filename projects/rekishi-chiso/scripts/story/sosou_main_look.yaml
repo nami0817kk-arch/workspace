@@ -1,0 +1,252 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：曹操（scripts/sosou-story.yaml）。chiso/storymain.py が読む。
+# 10-29 作成（11/01 19:00 公開）。takasugi_main_look.yaml を写した。台本には手を入れない（承認のあと。変えると控えが外れる）。決まりは docs/story-main.md・スキル rekishi-story-screen。
+# 絵の方針：AI 絵は 15 枚（S01〜S15）。同じ絵を時間をずらして使い回す（続けて 20 秒まで）。
+#   人物は AI 絵の手もと・後ろ姿・遠景だけ。曹操の顔は描かない。肖像は実在の古画（『三才図会』の魏太祖像、1607年ごろ、パブリックドメイン）の額（frame:）。
+#   清代の『三国志演義』の挿絵（パブリックドメイン）は額、西高穴2号墓の墓道の写真（Rolfmueller、CC BY-SA 3.0）は絵図の一部（part:）。
+#   この回の決まり：戦闘・遺体・白骨・血は描かない。曹操の最期（死・葬儀）の場面に人物の絵を当てない。実在の俳優・ドラマ・ゲームの曹操に似せない。石牌・墓・門に文字を描かない。
+# AI 絵の指示の一覧（英語・姿の設定）：dev/output/rekishi-chiso/research/sosou_ai_images.md
+# 届く前は art_dir の仮の絵（S01.jpg〜、番号と場面だけ書いた灰色の板）で代える。届いたら main_art_dir に S01.jpg〜を置くだけ。
+#   仮の絵は out/ にあり git に入らない。無ければ 1376×768 の灰色の板に「S01（仮）」と場面を書いて作り直す。
+script: scripts/sosou-story.yaml
+out: sosou_story_main
+art_dir: out/story/sosou/ph          # 仮の絵（placeholder）
+main_art_dir: out/story/sosou/main   # Gemini の 16:9 の絵（S01.jpg〜S15.jpg）
+ai_disclosure: この動画の人物・情景の画像の多くは、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+
+# 章ごとの左上の札「いま｜章題」。dates＝語りがその年・月日を言った行から替える（研究・報告・展示・報道の年は物語の「いま」ではないので替えない。null で章題だけ）
+chapters:
+  0: {label: 序章 墓の上の御殿は壊された, now: null,
+      dates: {2: 222年, 3: 2009年, 8: null, 11: 2023年, 12: null}}
+  1: {label: 第1章 金も玉も入れるな, now: 建安25年,
+      dates: {14: 建安25年正月, 20: 建安10年, 22: 建安23年6月, 25: 298年, 38: null}}
+  2: {label: 第2章 曹丕はなぜ御殿を壊させたのか, now: 220年冬,
+      dates: {41: 黄初3年, 43: 222年10月, 51: 2016年11月, 56: null}}
+  3: {label: 第3章 曹操は墓を掘った人か隠した人か, now: null,
+      dates: {}}
+  4: {label: 第4章 3枚の銭と魏武王の石の札, now: 2008年12月,
+      dates: {80: 2009年12月}}
+  5: {label: 第5章 この墓は本当に曹操の墓なのか, now: 2009年12月,
+      dates: {}}
+  6: {label: まとめ 柱の穴が語ること, now: null,
+      dates: {}}
+
+# 概要欄「■ 参考にした資料」（事実カード 曹操_facts_20261029.yaml のうち本文を開いた主なもの。10-29）
+references:
+  - 『三国志』魏書・武帝紀、文帝紀（Wikisource）　https://zh.wikisource.org/wiki/三國志/卷01
+  - 陸機「弔魏武帝文」（『文選』巻60、Wikisource）　https://zh.wikisource.org/wiki/弔魏武帝文
+  - 『晋書』礼志中（Wikisource）　https://zh.wikisource.org/wiki/晉書/卷020
+  - 『宋書』礼志（Wikisource）　https://zh.wikisource.org/wiki/宋書/卷15
+  - 陳琳「為袁紹檄豫州文」（『文選』巻44、Wikisource）　https://zh.wikisource.org/wiki/為袁紹檄豫州文
+  - 专家:墓志北魏后才成定制 曹操曾下过禁碑令（中国新聞網 2009-12-30）　https://www.chinanews.com/cul/news/2009/12-30/2046692.shtml
+  - 河南"曹操高陵考古发现说明会"详细释疑解惑（中国新聞網 2010-01-01）　https://www.chinanews.com/cul/news/2010/01-01/2050299.shtml
+  - 社科院论坛：公布专家认定“曹操墓”九大证据（中国新聞網 2010-01-14）　https://www.chinanews.com/cul/news/2010/01-14/2071458.shtml
+  - 学者称确认曹操墓葬证据不足 6大依据非铁证（重慶晩報、社会科学網転載 2010-01-02）　https://www.sinoss.net/c/2010-01-02/526675.shtml
+  - 曹操墓有新进展:曹操遗骸基本被确认（澎湃新聞、人民政協網転載 2018-03-27）　https://www.rmzxw.com.cn/c/2018-03-27/2007778.shtml
+  - 真的有曹操“七十二疑冢”吗？（北京青年報、中国作家網 2023-05-18）　https://www.chinawriter.com.cn/n1/2023/0518/c442005-32689048.html
+  - 河南安阳曹操高陵遗址博物馆开馆（新華社、新華網 2023-04-28）　https://www.xinhuanet.com/culture/20230428/557a773faaad4484acbfd8ce75034230/c.html
+  - 大橋修一「後漢末期における書の諸相―西高穴二号墓を中心として」（『書学書道史研究』23、2013、J-STAGE）　https://www.jstage.jst.go.jp/article/shogakushodoshi/2013/23/2013_1/_article/-char/ja
+  - File:Cao Cao scth.jpg・File:Cao Cao Portrait ROTK.jpg・File:Xigaoxue tomb no 2 front.jpg（ウィキメディア・コモンズ）　https://commons.wikimedia.org/wiki/File:Cao_Cao_scth.jpg
+no_tag_from: 116                     # 締め（冒頭の柱の穴に戻る所）から札を出さない
+
+# AI 絵（16:9 横・15枚）。scene は日本語の要約（英語の指示は research/sosou_ai_images.md）。
+# pan：h＝左右（既定）・v＝上下・zoom＝ゆっくり寄る（顔の感情の場面だけ。この回は顔を描かないので手もとの場面に）。crops＝切り出し [倍率, 中心x, 中心y]
+# 位置（crops・focus・fx の region）は仮の値。届いた絵を見て合わせる
+ai:
+  S01: {scene: 夕暮れの黄土の野原に、等間隔に並ぶ丸い柱の穴の跡（人物なし）, pan: h, crops: {left: [1.18, 0.40, 0.5], right: [1.18, 0.60, 0.5]}}
+  S02: {scene: 宮中の書庫、竹簡の棚が並ぶ薄暗い部屋（人物なし）, pan: h, crops: {left: [1.18, 0.40, 0.5], right: [1.18, 0.60, 0.5]}}
+  S03: {scene: 夜の洛陽の城壁と、城内にともる灯（人物なし）, pan: h, crops: {left: [1.18, 0.40, 0.5], right: [1.18, 0.60, 0.5]}}
+  S04: {scene: 灯の下で長い竹簡に筆を走らせる手もと（顔なし）, pan: zoom, crops: {face: [1.3, 0.50, 0.50], left: [1.18, 0.40, 0.5], right: [1.18, 0.60, 0.5]}}
+  S05: {scene: 朝霧の漳河の流れる黄土の原。遠くに小さな祠（人物なし）, pan: h, crops: {left: [1.18, 0.40, 0.5], right: [1.18, 0.60, 0.5]}}
+  S06: {scene: 丘の上に建つ瓦屋根の祭りの御殿（人物なし）, pan: h, crops: {left: [1.18, 0.40, 0.5], right: [1.18, 0.60, 0.5]}}
+  S07: {scene: 屋根を外され梁と柱だけが残る御殿。積まれた瓦（人物なし）, pan: h, crops: {left: [1.18, 0.40, 0.5], right: [1.18, 0.60, 0.5]}}
+  S08: {scene: 掘られた大きな墳丘の黒い穴と、散らばる壊れた石（骨は描かない）, pan: h, crops: {left: [1.18, 0.40, 0.5], right: [1.18, 0.60, 0.5]}}
+  S09: {scene: 軍営の幕の中で、灯のもとに筆を執る文人の後ろ姿, pan: h, crops: {left: [1.18, 0.40, 0.5], right: [1.18, 0.60, 0.5]}}
+  S10: {scene: 霧のかかった平野に点々と並ぶ小さな塚（人物なし）, pan: h, crops: {left: [1.18, 0.40, 0.5], right: [1.18, 0.60, 0.5]}}
+  S11: {scene: 黄土の台地の長い墓道と、奥の石の入口（人物なし）, pan: v, crops: {left: [1.18, 0.40, 0.5], right: [1.18, 0.60, 0.5]}}
+  S12: {scene: 暗い石の墓室。素焼きの器が散らばる（骨は描かない）, pan: v, crops: {left: [1.18, 0.40, 0.5], right: [1.18, 0.60, 0.5]}}
+  S13: {scene: 何も刻まれていない石牌が、銅の鎖でつながれて布の上に並ぶ, pan: h, crops: {left: [1.18, 0.40, 0.5], right: [1.18, 0.60, 0.5]}}
+  S14: {scene: 素焼きの小さな鼎の列と、金糸・銀の環・玉の小皿, pan: h, crops: {left: [1.18, 0.40, 0.5], right: [1.18, 0.60, 0.5]}}
+  S15: {scene: 終了画面用。夕暮れの黄土の平原（右半分を空けた構図）, lock: [1.0, 0.5, 0.5]}
+
+# 実在の絵の手当て（元の画像は変えない）
+paint_fx: {}
+
+# 台本に出てこない実在の絵の出典（左下の字・概要欄）
+credits:
+  paintings/sosou_portrait_sancai_tuhui_1607.jpg: 魏太祖（曹操）の像（『三才図会』1607年ごろ。ウィキメディア・コモンズ、パブリックドメイン）
+  paintings/sosou_portrait_romance_qing.jpg: 清代の『三国志演義』の挿絵（ウィキメディア・コモンズ、パブリックドメイン）
+  paintings/sosou_xigaoxue_tomb2_front_2013.jpg: 西高穴2号墓の墓道（2013年、Rolfmueller撮影、CC BY-SA 3.0、ウィキメディア・コモンズ）
+
+# 絵の割り当て：「行の番号 種類:絵 [切り出し]」。次の行の指定まで続く。図（figure）の出る行は、その時の絵を暗くして図を置く（自動）
+shots:
+  - 0 ai:S01 wide                                  # 御殿は息子の命令で壊された（最初のカットは AI 絵にする：額の下地に要る）
+  - 1 ai:S06 wide                                  # 『晋書』の理由
+  - 2 ai:S07 wide                                  # 222年 曹丕の詔
+  - 3 part:paintings/sosou_xigaoxue_tomb2_front_2013.jpg   # 2009年 墓の発表
+  - 4 ai:S12 wide                                  # 銭は3枚
+  - 5 ai:S13 wide                                  # 石の札「黄豆二升」
+  - 6 ai:S13 right                                 # 魏武王の石牌8枚
+  - 7 frame:paintings/sosou_portrait_sancai_tuhui_1607.jpg   # 骨は60歳ほど・曹操は66歳
+  - 8 ai:S04 wide                                  # 遺令（史料の札）
+  - 9 ai:S04 face                                  # ふだんの服で
+  - 10 ai:S14 wide                                 # 金の糸・銀の環
+  - 11 ai:S14 right                                # 12件の陶鼎
+  - 12 ai:S11 wide                                 # なぜ隠されなければならなかったのか
+  - 13 ai:S08 wide                                 # 墓を掘ったと責められた人
+  - 14 ai:S03 wide                                 # 220年正月 洛陽で亡くなる
+  - 15 ai:S02 wide                                 # 武帝紀の遺令
+  - 16 ai:S02 right                                # 天下は安定していない
+  - 17 ai:S04 wide                                 # 金玉珍宝を蔵むること無かれ（史料の札）
+  - 18 ai:S04 face                                 # 【想像1】……飾りは、いらぬ
+  - 19 ai:S05 wide                                 # 武王・高陵に葬る
+  - 20 ai:S05 left                                 # 205年 厚葬を禁じる
+  - 21 ai:S02 left                                 # 『宋書』礼志
+  - 22 ai:S05 right                                # 218年 寿陵
+  - 23 ai:S05 wide                                 # 土を盛らず木も植えるな
+  - 24 ai:S02 wide                                 # もうひとつの姿
+  - 25 ai:S02 right                                # 298年 陸機
+  - 26 ai:S04 right                                # 余った香
+  - 27 ai:S04 wide                                 # 履組（史料の札）
+  - 28 ai:S02 left                                 # 印の組紐
+  - 29 ai:S03 wide
+  - 30 ai:S03 right
+  - 31 ai:S05 left
+  - 32 ai:S04 face                                 # 【想像2】……あとは、頼む
+  - 33 ai:S02 wide                                 # 遺令の2つの姿（台本の図）30〜31
+  - 35 ai:S04 right
+  - 36 ai:S02 right
+  - 37 ai:S04 wide
+  - 38 ai:S03 wide                                 # 守られたのか
+  - 39 ai:S06 left                                 # 曹丕が魏の皇帝に
+  - 40 ai:S06 wide                                 # 役人が陵の上に殿を建てた
+  - 41 ai:S07 wide                                 # 黄初3年の詔（史料の札）
+  - 42 ai:S07 right                                # 役人と息子
+  - 43 ai:S08 wide                                 # 終制
+  - 44 ai:S04 left
+  - 45 ai:S08 right                                # 漢の陵は皆掘られた（史料の札）
+  - 46 ai:S05 left
+  - 47 ai:S08 wide
+  - 48 ai:S04 left
+  - 49 ai:S05 wide                                 # 場所を知られないように
+  - 50 ai:S05 left                                 # 倹約と備え
+  - 51 part:paintings/sosou_xigaoxue_tomb2_front_2013.jpg   # 2016〜17年の発掘
+  - 52 ai:S01 wide                                 # 地上建築の跡
+  - 53 ai:S07 right
+  - 54 ai:S01 left
+  - 55 ai:S06 left
+  - 56 ai:S01 wide                                 # 解釈の割れ（台本の図）47〜49
+  - 59 ai:S08 right                                # 墓を守る側だったのか
+  - 60 frame:paintings/sosou_portrait_romance_qing.jpg   # 2つの通説（演義の挿絵）
+  - 61 ai:S09 wide                                 # 陳琳の檄文
+  - 62 ai:S09 right                                # 梁の孝王の墓（史料の札）
+  - 63 ai:S08 left
+  - 64 ai:S09 wide                                 # 敵方の文書
+  - 65 part:paintings/sosou_xigaoxue_tomb2_front_2013.jpg   # 張志清副所長
+  - 66 ai:S08 wide                                 # 梁王の墓を掘った考古学者
+  - 67 ai:S10 wide                                 # 七十二疑塚
+  - 68 ai:S05 left
+  - 69 ai:S10 right                                # 兪応符
+  - 70 ai:S10 wide                                 # 宋の世の空気
+  - 71 ai:S02 left
+  - 72 ai:S05 wide
+  - 73 ai:S08 right
+  - 74 ai:S10 left
+  - 75 ai:S08 left
+  - 76 ai:S05 wide                                 # 史書に残る墓はひとつ
+  - 77 ai:S08 left                                 # 掘られた・隠された
+  - 78 ai:S11 wide                                 # 墓が見つかるところへ
+  - 79 ai:S11 wide                                 # 2008年12月 救済発掘
+  - 80 ai:S05 right
+  - 81 ai:S12 wide                                 # いつから盗まれたか
+  - 82 ai:S12 left                                 # 盗掘の年の食い違い（台本の図）68〜69
+  - 84 ai:S12 right                                # 銭は3枚
+  - 85 ai:S14 left                                 # 金の糸・銀の環
+  - 86 ai:S13 wide                                 # 魏武王常所用挌虎大戟（史料の札）
+  - 87 ai:S13 right                                # 圭の形の石牌8件
+  - 88 ai:S12 left
+  - 89 ai:S13 right
+  - 90 ai:S14 left
+  - 91 ai:S12 wide                                 # 骨は3体
+  - 92 ai:S14 wide                                 # 博物館・12件の陶鼎
+  - 93 ai:S14 right                                # 帝王の格
+  - 94 ai:S11 left                                 # 遺言と墓の姿
+  - 95 ai:S13 right                                # ほんとうに曹操の墓なのか
+  - 96 ai:S13 wide                                 # 決め手は石の札
+  - 97 ai:S12 wide
+  - 98 ai:S13 right                                # 後から置かれた可能性
+  - 99 ai:S02 wide                                 # 渡邉義浩さん・大橋修一さん
+  - 100 ai:S04 left
+  - 101 ai:S11 wide                                 # 墓誌がない
+  - 102 ai:S11 right                                # 張志清さんの説明
+  - 103 ai:S02 right                                # 205年の禁碑
+  - 104 ai:S05 wide                                 # 魯潜の墓誌
+  - 105 ai:S12 left                                 # 女性の骨・卞氏
+  - 106 ai:S11 left                                 # 認定した側の見方
+  - 107 ai:S13 wide                                 # 決着はしていない
+  - 108 ai:S03 wide                                 # 最初の問いへ
+  - 109 ai:S01 wide                                 # 答えは2つ
+  - 110 ai:S03 right                                # 倹約
+  - 111 ai:S08 wide                                 # 守るため
+  - 112 ai:S02 left                                 # 曹操の胸の内は分からない
+  - 113 ai:S01 right                                # 柱の穴が出てきた
+  - 114 ai:S10 wide                                 # 疑塚はなかった
+  - 115 frame:paintings/sosou_portrait_sancai_tuhui_1607.jpg   # 残っていたのは3枚の銭
+  - 116 ai:S01 wide                                # 締め：冒頭の柱の穴に戻る
+  - 117 ai:S15 wide
+  - end ai:S15 wide
+
+# look だけで足す図（台本には無い）
+figures: []
+
+# 語りがその物・人を言うと、カットの終わりにそれが主役になる所で止まる。位置は仮（届いた絵で合わせる）
+focus:
+  S04: {筆|竹簡|手: [1.3, 0.50, 0.50]}
+  S13: {石牌|石の札|石の枕: [1.3, 0.50, 0.50]}
+  S14: {鼎|金の糸|銀の環: [1.3, 0.50, 0.50]}
+  paintings/sosou_portrait_sancai_tuhui_1607.jpg: {顔|肖像|像: [1.3, 0.5, 0.33]}
+
+# 絵の一部だけを動かす（話に合う絵だけ・控えめに。顔・人物にはかけない）。範囲は仮（届いた絵で見て直す）
+fx:
+  S04: {lamp: {region: [0.30, 0.20, 0.70, 0.60]}}                        # 油の灯
+  S09: {lamp: {region: [0.55, 0.30, 0.80, 0.60]}}                        # 幕の中の灯
+  S05: {mist: {region: [0, 0.40, 1, 0.70], alpha: 0.10, speed: 4}}      # 朝霧
+  S10: {mist: {region: [0, 0.35, 1, 0.75], alpha: 0.10, speed: 3}}      # 平野の霧
+
+# 部品（from〜to の行、0 始まり。出ている間は絵を暗くする）
+parts:
+  - {type: quote, from: 8, to: 9, label: 史料, text: 斂以時服／無藏金玉珍寶,
+     source: 『三国志』魏書・武帝紀（曹操の遺令）}
+  - {type: quote, from: 17, to: 17, label: 史料, text: 斂以時服／無藏金玉珍寶,
+     source: 『三国志』魏書・武帝紀（曹操の遺令）}
+  - {type: quote, from: 27, to: 28, label: 史料, text: 諸舍中無所為／學作履組賣也,
+     source: 陸機「弔魏武帝文」序（『文選』巻60）が引く遺令}
+  - {type: quote, from: 41, to: 42, label: 史料, text: 高陵上殿皆毀壞／以從先帝儉德之志,
+     source: 『晋書』礼志中（曹丕の詔、黄初3年）}
+  - {type: quote, from: 44, to: 44, label: 史料, text: 自古及今未有不亡之國／亦無不掘之墓也,
+     source: 『三国志』魏書・文帝紀（曹丕の終制）}
+  - {type: quote, from: 45, to: 45, label: 史料, text: 喪亂以來／漢氏諸陵無不發掘,
+     source: 『三国志』魏書・文帝紀（曹丕の終制）}
+  - {type: quote, from: 62, to: 63, label: 史料, text: 親臨發掘破棺裸屍／特置發丘中郎將摸金校尉,
+     source: 陳琳「為袁紹檄豫州文」（『文選』巻44）}
+  - {type: quote, from: 68, to: 68, label: 史料, text: 城外有操疑冢七十二,
+     source: 范成大『攬轡録』（北京青年報の引用）}
+  - {type: quote, from: 86, to: 86, label: 史料, text: 魏武王常所用挌虎大戟,
+     source: 石牌の刻銘（中国新聞網）}
+  - {type: quote, from: 88, to: 88, label: 史料, text: 魏武王常所用慰項石,
+     source: 石枕の刻銘（中国新聞網）}
+  - {type: quote, from: 90, to: 90, label: 史料, text: 黄豆二升／刀尺一,
+     source: 石牌の刻銘（中国新聞網）}
+
+# 静止画（story-main を --frames なしで回したとき。簡易の描き方で、パン・部品は出ない。目で見るのは --frames の方）
+stills:
+  - {line: 0, note: 冒頭（0秒）御殿は息子が壊した（S01）}
+  - {line: 8, note: 序章 遺令（史料の札）}
+  - {line: 18, note: 第1章 想像の台詞}
+  - {line: 33, note: 第1章 遺令の2つの姿（図）}
+  - {line: 41, note: 第2章 曹丕の詔（史料の札）}
+  - {line: 56, note: 第2章 周立剛さんと潘偉斌さんの見方（図）}
+  - {line: 62, note: 第3章 陳琳の檄文（史料の札）}
+  - {line: 82, note: 第4章 盗掘が始まった年（図）}
+  - {line: 90, note: 第4章 石牌の刻銘}
+  - {line: 115, note: まとめ 肖像の額}
+  - {end: true, note: 終了画面の空き}

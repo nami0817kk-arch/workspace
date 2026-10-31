@@ -1,0 +1,134 @@
+# 物語完結型ショート 宮本武蔵 s1（2026-10-29）。本編 scripts/musashi-story.yaml の第7章（『五輪書』）から。
+# 形式は takasugi_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。
+# 絵は本編の AI 絵（out/story/musashi/main/M*.jpg。Gemini のみ。人物は描かない）と実在の自画像とされる絵（島田美術館蔵）。
+# 事実カード（dev/output/rekishi-chiso/research/宮本武蔵_facts_20261029.yaml）：musashi-02・39・40・41
+#   ・巌流島に触れた箇所が無いのは山口県観光連盟・レファレンス協同データベース（musashi-02）。60余度の全勝は国立国会図書館などの回答（musashi-41）。
+#   ・1週間前に完成は「という」で言う（musashi-40）。なぜ書かなかったかは史料で確かめられていない → 言い切らない（問いで閉じる）。
+# 理解テスト4問：
+#   ①誰の話か：宮本武蔵と、武蔵が書いた『五輪書』
+#   ②いつ・どこで何が：1643年10月10日、熊本の霊巌洞にこもって書き始め、1645年5月に亡くなる1週間前に完成したという
+#   ③『五輪書』は何を書き、何を書かなかったか：60余度の勝負に全勝したと書き、巌流島の決闘には触れた箇所がない。若い藩主や家老のための兵法の書
+#   ④どうなったか：なぜ書かなかったかを語った史料は、調べた範囲では見つからなかった
+title: 宮本武蔵｜『五輪書』に、巌流島は一行も出てこない
+yt_title: 宮本武蔵の『五輪書』に巌流島は一行も出てこない　60余度の勝負に全勝と書いた本
+description: |-
+  巌流島の決闘に勝った宮本武蔵。その武蔵が自分で書いた『五輪書』に、巌流島は出てきません。
+  武蔵は、1643年10月10日、熊本の霊巌洞にこもって『五輪書』を書き始めます。60余度の勝負に全勝したと記しますが、決闘に触れた箇所はない、と山口県観光連盟は書いています。亡くなったのは1645年5月。『五輪書』は、その1週間前に完成したといいます。
+  若い藩主や家老のために書かれた兵法の書に、なぜ巌流島は書かれなかったのか。それを語った史料は、調べた範囲では見つかりませんでした。
+hashtags: ["#宮本武蔵", "#日本史", "#五輪書"]
+ai_images: true
+ai_disclosure: この動画の人物・情景の画像の多くは、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/musashi
+out: musashi_story_s1
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 宮本武蔵（江戸初期の剣豪）
+  title: "『五輪書』に、巌流島は《一行も》ない"
+now:
+  - {at: 1643年, text: "1643年10月　霊巌洞", point: 0}
+  - {at: 1645年, text: "1645年5月　熊本", point: 1}
+timeline:
+  - {label: "1643"}
+  - {label: "1645"}
+shots:
+  M06:
+    kind: ai
+    file: musashi/main/M06.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 灯の下の古い書物と筆
+  M11:
+    kind: ai
+    file: musashi/main/M11.jpg
+    focus: [0.5, 0.55]
+    move: in
+    must: 岩山の洞窟の入口
+  M12:
+    kind: ai
+    file: musashi/main/M12.jpg
+    focus: [0.5, 0.5]
+    move: right
+    must: 洞窟の中の灯と机の後ろ姿
+  M01:
+    kind: ai
+    file: musashi/main/M01.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 朝の海に浮かぶ小さな島
+  Portrait:
+    kind: real
+    image: paintings/musashi_self_portrait_shimada_bust.jpg
+    focus: [0.5, 0.3]
+    move: down
+    credit: "宮本武蔵の自画像とされる絵（島田美術館蔵）"
+    must: 自画像とされる絵
+  M13:
+    kind: ai
+    file: musashi/main/M13.jpg
+    focus: [0.5, 0.5]
+    move: right
+    must: 墨の鳥の絵が立てられた座敷
+  M01r:
+    kind: ai
+    file: musashi/main/M01.jpg
+    focus: [0.7, 0.55]
+    move: right
+    zoom: 0.12
+    must: 島の遠景
+  M14:
+    kind: ai
+    file: musashi/main/M14.jpg
+    focus: [0.5, 0.5]
+    move: in
+    text_y: 0.76
+    must: 夕暮れの高台から見る遠い島と海
+lines:
+  # fact: musashi-02
+  - 語り: 宮本武蔵が自分で書いた『五輪書』に、巌流島は、《!一行も》出てこない。
+    shot: M06
+    tone: 強調
+    pause: 0.12
+  # fact: musashi-39
+  - 語り: 武蔵は、1643年、10月10日、熊本の霊巌洞にこもって、『五輪書』を、書き始めた。
+    shot: M11
+    tone: しみじみ
+    pause: 0.12
+  # fact: musashi-41
+  - 語り: 『五輪書』は、60余度の勝負に、全勝したと記す。国立国会図書館などの回答が、そう紹介している。
+    shot: M12
+    tone: しみじみ
+    pause: 0.12
+  # fact: musashi-02
+  - 語り: その60余度の中に、巌流島の名はない。決闘に触れた箇所はない、と山口県観光連盟は書いている。
+    shot: M01
+    tone: 強調
+    pause: 0.12
+  # fact: musashi-40
+  - 語り: 亡くなったのは、熊本。正保2年、1645年の5月だ。『五輪書』は、その1週間前に、完成した、という。
+    shot: Portrait
+    tone: 重い
+    pause: 0.12
+  # fact: musashi-41
+  - 語り: 『五輪書』は、若い藩主や家老のために書かれた、兵法の書だと紹介されている。決闘の記録帳ではない。
+    shot: M13
+    tone: しみじみ
+    pause: 0.12
+  - 語り: なぜ巌流島を書かなかったのか。それを語った史料は、私たちの調べでは、見つからなかった。
+    shot: M01r
+    tone: 重い
+    pause: 0.3
+    dip: true
+  - 語り: あなたなら、自分の本に、いちばん有名な勝負を、書きますか。
+    shot: M14
+    tone: 疑問
+    pause: 0.15

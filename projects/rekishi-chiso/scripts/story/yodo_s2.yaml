@@ -1,0 +1,151 @@
+# 物語完結型ショート 淀殿 s2（2026-10-29）。本編 scripts/yodo-story.yaml の第1章（二度の落城と父の寺・養源院の血天井）から。投稿しない。
+# 形式は masamune_s1.yaml を写した。想像の台詞なし。絵は本編の AI 絵（Gemini のみ）と実在の絵。最期・落城の場面に人物の絵は当てない（小谷は後ろ姿の少女と遠景、北ノ庄は遠景）。
+# 事実カード：yodo-02・17・19。『当代記』の「二人」は記録の言葉として出どころ（江戸時代の初めの記録）を語りで言う。血天井の血は観光庁の解説のとおり「徳川の家臣たち」。
+# 理解テスト4問：①誰の話か＝浅井長政の娘、茶々（のちの淀殿）②いつ・どこで何が＝1573年小谷落城・1583年北ノ庄落城、1594年に京都で父の寺（養源院）を建てた ③何を選んだか＝父を攻めた秀吉のもとへ行きながら父の寺を建てた ④どうなった＝焼けた寺を1621年に妹のお江が建て直し、血天井が今も残る
+title: 淀殿｜父の寺の天井に、血のしみた板
+yt_title: 淀殿が父のために建てた寺の天井には、血のしみた板が張られている　養源院の血天井
+description: |-
+  浅井長政の娘、茶々。のちの淀殿が、父のために京都に建てた寺が、養源院です。文禄3年、1594年のことでした。
+  天正元年、1573年、織田信長に攻められて小谷城が落ち、父の長政は命を絶ちました。10年後の1583年には、母のお市が嫁いだ柴田勝家の北ノ庄城も、秀吉に攻められて落ちます。江戸時代の初めの記録『当代記』は、このとき越前で難を逃れた浅井の娘を「二人」と数え、姉は、のちに秀吉に嫁いだ、と続けています。
+  養源院は1619年に火事で焼け、1621年に妹のお江が建て直しました。観光庁の解説によれば、そのとき徳川の家臣たちの血のしみた城の床板を祀り、いまも天井に張られて血天井と呼ばれています。
+hashtags: ["#淀殿", "#日本史", "#戦国時代"]
+ai_images: true
+ai_disclosure: この動画の人物・情景の画像の多くは、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/yodo
+out: yodo_story_s2
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 淀殿（茶々。豊臣秀頼の母）
+  title: "父の寺の天井に、《血のしみた板》"
+now:
+  - {at: 父のために, text: "1594年　京都", point: 3}
+  - {at: 1573年, text: "1573年　小谷城", point: 0}
+  - {at: 10年後, text: "1583年　北ノ庄城", point: 1}
+  - {at: 江戸時代の初め, text: "江戸初め　越前", point: 1}
+  - {at: 茶々は京都, text: "1594年　養源院", point: 2}
+  - {at: 1619年, text: "1621年　建て直し", point: 3}
+timeline:
+  - {label: "1573"}
+  - {label: "1583"}
+  - {label: "1594"}
+  - {label: "1621"}
+shots:
+  Y05f:
+    kind: ai
+    file: yodo/main/Y05.jpg
+    focus: [0.7, 0.45]
+    move: in
+    zoom: 0.14
+    must: 蝋燭と位牌の台
+  Odani:
+    kind: real
+    image: paintings/yodo_odani_castle_ezu.jpg
+    focus: [0.5, 0.5]
+    move: right
+    credit: "小谷城の絵図（江戸時代）"
+    must: 小谷城の絵図
+  Y02:
+    kind: ai
+    file: yodo/main/Y02.jpg
+    focus: [0.62, 0.5]
+    move: in
+    zoom: 0.12
+    must: 遠くの山城から上る煙を見る三人の少女の後ろ姿
+  Y04:
+    kind: ai
+    file: yodo/main/Y04.jpg
+    focus: [0.62, 0.55]
+    move: right
+    must: 雪の北ノ庄を出る列
+  Fukui:
+    kind: real
+    image: paintings/yodo_kitanosho_fukui_map.jpg
+    focus: [0.5, 0.5]
+    move: down
+    credit: "福井城図（江戸時代）"
+    must: 城の絵図
+  Hideyoshi:
+    kind: real
+    image: paintings/yodo_hideyoshi_portrait.jpg
+    focus: [0.5, 0.5]
+    move: down
+    credit: "豊臣秀吉像（狩野光信筆、高台寺）"
+    must: 秀吉の像の全身
+  Y05l:
+    kind: ai
+    file: yodo/main/Y05.jpg
+    focus: [0.9, 0.5]
+    move: right
+    must: 京の寺の本堂の広間
+  Nagamasa:
+    kind: real
+    image: paintings/yodo_nagamasa.jpg
+    focus: [0.5, 0.45]
+    move: down
+    text_box: true
+    credit: "浅井長政像（持明院蔵）"
+    must: 長政の像の全身
+  Y05q:
+    kind: ai
+    file: yodo/main/Y05.jpg
+    focus: [0.7, 0.45]
+    move: in
+    zoom: 0.2
+    must: 蝋燭
+lines:
+  # fact: yodo-02, yodo-19
+  - 語り: 茶々が、父のために建てた寺。その天井には、血のしみた板が、張られている。
+    shot: Y05f
+    tone: 強調
+  - 語り: 1573年。織田信長に攻められて小谷城は落ち、父の浅井長政は、城で命を絶った。
+    shot: Odani
+    tone: 重い
+    pause: 0.12
+  - 語り: 10年後、1583年。柴田勝家の北ノ庄城も落ち、母のお市は、勝家とともに亡くなった。
+    shot: Y04
+    tone: 重い
+    pause: 0.12
+  # fact: yodo-17
+  - 語り: 江戸時代の初めの記録、『当代記』には、こうある。浅井の娘が、《「二人」》、越前で難を逃れた。
+    shot: Fukui
+    tone: 強調
+    pause: 0.12
+  # fact: yodo-17
+  - 語り: 三人姉妹と言われるのに、記録が数えたのは二人。姉は、のちに秀吉公に嫁いだ、と続ける。
+    shot: Y02
+    tone: しみじみ
+    pause: 0.12
+  - 語り: 母を攻めた秀吉のもとへ、姉の茶々は行く。
+    shot: Hideyoshi
+    tone: 重い
+    pause: 0.15
+  # fact: yodo-02
+  - 語り: 1594年。茶々は京都に、父の菩提を弔う養源院を建てた。
+    shot: Nagamasa
+    tone: しみじみ
+    pause: 0.12
+  # fact: yodo-19
+  - 語り: 養源院は1619年に焼け、1621年に建て直したのは、妹のお江だった。
+    shot: Y05l
+    tone: しみじみ
+    pause: 0.12
+  # fact: yodo-19
+  - 語り: 徳川の家臣たちの血のしみた城の床板を祀った、と観光庁の解説にある。いまも天井に張られ、血天井と呼ぶ。
+    shot: Y05f
+    tone: 重い
+    pause: 0.3
+    dip: true
+  - 語り: 姉が建て、妹が直した寺。あなたなら、父を攻めた男のそばで、寺を建てられますか。
+    shot: Y02
+    tone: 疑問
+    pause: 0.15

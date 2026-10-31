@@ -1,0 +1,170 @@
+# 物語完結型ショート s13（2026-10-25）。本編 scripts/oichi-story.yaml の第2章（小谷落城）と第5章（渓心院文）から。投稿しない。
+# 形式は oichi_s10.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし（記録の言葉は出どころを語りで言ってから引く）。
+# s10（二度目の落城で逃げなかった）と重ならないよう、主役は「十年前の小谷城の夜」と、そのときの悔い。
+# 理解テスト4問：
+#   ①誰の話か：お市の方（織田信長の妹）。最初の夫は浅井長政
+#   ②いつ・どこで何が：1573年、小谷城が兄・信長の大軍に囲まれ、長政は城に残り、お市は娘たちと城を出た
+#   ③なぜ悔やんだか：夫を残して自分だけ城を出たことを（『渓心院文』の言葉）
+#   ④どうなったか：十年後、北ノ庄城では城を出ず、勝家とともに37歳で生涯を閉じた
+# 事実の出どころ：小谷 1573/8〜9/1、長政がお市と娘3人を織田方へ引き渡す、9/1 長政最期（29）[W小谷]／江はこの年に生まれた [W江]／
+#   1583 勝家が城を出るよう勧めた（『柴田合戦記』[小林][W市]）／『渓心院文』＝初に仕えた女房の系統の覚書、言葉は現代語訳 [クレインス]・
+#   小谷を出されたことを「御くやしく候」[小林]／お市 37歳で北ノ庄城で生涯を閉じる [W市][コト]
+title: お市の方｜十年前の小谷城を、悔やんでいた
+yt_title: お市の方は、十年前に小谷城を出たことを悔やんでいた【お市の方・浅井長政】
+description: |-
+  1573年、お市の方の最初の夫・浅井長政の小谷城は、兄・織田信長の大軍に囲まれました。
+  長政は妻と三人の娘を城の外へ出し、自分は城に残って、9月1日に最期を迎えます。
+  十年後の1583年、北ノ庄城で、お市は城を出るよう勧められても断りました。
+  娘の初に仕えた人たちの覚書『渓心院文』には、「浅井の家のときに逃げ出したことさえ、今も悔やまれる」という言葉が残っています。
+  お市は三人の娘だけを送り出し、37歳で生涯を閉じました。
+ai_images: true
+art_dir: out/story/oichi3
+out: oichi_story_s13
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 12
+max_ai: 10
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: お市の方（織田信長の妹）
+  title: "《十年前の小谷城》を、悔やんでいた"
+now:
+  - {at: お市の方は, text: "1583年　北ノ庄城", point: 1}
+  - {at: 1573年, text: "1573年　小谷城", point: 0}
+  - {at: 十年後の1583年, text: "1583年　北ノ庄城", point: 1}
+timeline:
+  - {label: "1573 小谷"}
+  - {label: "1583 北ノ庄"}
+cards:
+  - type: table                          # 年表：二度の落城（語った順に1行ずつ）
+    title: お市の二度の落城
+    from: 十年後の1583年
+    until: 娘の初に仕えた
+    items:
+      - {at: 十年後の1583年, text: "1573年　小谷城　お市は娘と城を出た"}
+      - {at: 勝家はお市に, text: "1583年　北ノ庄城　城を出るよう勧められた"}
+  - type: versus                         # 夫は残り、自分は出た
+    from: 夫を城に残して
+    until: 十年後の1583年
+    left: {tag: 城に残った夫, big: 長政, dots: 1, color: red}
+    right: {tag: 城を出た妻と娘, big: 4人, dots: 4, color: blue}
+    mid: 対
+    text_y: 0.57
+shots:
+  P2:                                    # 1文目：うつむくお市（悔い）、遠くに燃える城
+    kind: ai
+    file: oichi3/gem/P2.jpg
+    move: in
+    focus: [0.5, 0.4]
+    text_y: 0.74
+    must: うつむくお市
+  A11:                                   # 1573年、夜の山城を囲む大軍の篝火
+    kind: ai
+    file: oichi3/main/A11.jpg
+    focus: [0.5, 0.45]
+    move: in
+    must: 山城と、囲む篝火
+  A12:                                   # 赤子を抱くお市と幼い娘2人
+    kind: ai
+    file: oichi3/main/A12.jpg
+    focus: [0.45, 0.55]
+    move: down
+    must: 赤子を抱くお市と幼い娘2人
+  A13:                                   # 長政が妻に告げる（武将の後ろ姿→お市へ流す）
+    kind: ai
+    file: oichi3/main/A13.jpg
+    focus: [0.35, 0.5]
+    move: right
+    must: 武将の後ろ姿からお市へ
+  A14:                                   # 夜明けの城門を出ていく母と娘（後ろ姿）
+    kind: ai
+    file: oichi3/main/A14.jpg
+    focus: [0.5, 0.5]
+    move: up
+    must: 城門を出る母と娘たちの後ろ姿
+  Nagamasa:
+    kind: real
+    image: paintings/oichi_nagamasa_portrait_full.jpg
+    focus: [0.5, 0.35]
+    move: down
+    credit: "《浅井長政像》（高野山持明院蔵）1580年代（Wikimedia Commons・パブリックドメイン）"
+    must: 長政の肖像
+  P1b:                                   # 十年後、勝家が城を出るよう勧める
+    kind: ai
+    file: oichi3/gem/P1.jpg
+    move: right
+    zoom: 0.18
+    focus: [0.3, 0.45]
+    must: 城を出るよう勧める武士とお市
+  A21:                                   # 『渓心院文』＝書き留める女房の手元
+    kind: ai
+    file: oichi3/main/A21.jpg
+    focus: [0.45, 0.6]
+    move: down
+    must: 巻紙に書く手元と灯
+  P6:                                    # 決意の表情（城を出ない）
+    kind: ai
+    file: oichi3/gem/P6.jpg
+    move: in
+    zoom: 0.14
+    focus: [0.45, 0.4]
+    text_y: 0.74
+    must: 決意の表情のお市
+  P5c:                                   # 最後の問い
+    kind: ai
+    file: oichi3/gem/P5c.jpg
+    move: in
+    focus: [0.5, 0.45]
+    text_y: 0.74
+    must: こちらを見るお市
+lines:
+  - 語り: お市の方は、十年前に城から《!逃げた》ことを、ずっと悔やんでいた。
+    shot: P2
+    tone: 強調
+  - 語り: 1573年、最初の夫・浅井長政の小谷城は、兄・織田信長の大軍に囲まれた。
+    shot: A11
+    tone: 重い
+    pause: 0.15
+  - 語り: この年、お市は三女の江を産んでいた。娘は三人になった。
+    shot: A12
+    tone: しみじみ
+    pause: 0.12
+  - 語り: 長政は、妻のお市と三人の娘を、織田の側へ引き渡した。
+    shot: A13
+    tone: しみじみ
+    pause: 0.12
+  - 語り: お市は、夫を城に残して、娘たちと、城を出た。
+    shot: A14
+    tone: しみじみ
+    pause: 0.12
+  - 語り: 9月1日、長政は小谷城で《最期》を迎えた。数えで29歳だった。
+    shot: Nagamasa
+    tone: 重い
+    pause: 0.3
+    dip: true
+  - 語り: 十年後の1583年、二人目の夫・柴田勝家の北ノ庄城が、秀吉の軍に囲まれた。勝家は、お市に城を出るよう勧めた。
+    shot: P1b
+    tone: しみじみ
+    pause: 0.15
+  - 語り: 娘の初に仕えた人たちの覚書、『渓心院文』には、このときのお市の言葉が残る。
+    shot: A21
+    tone: しみじみ
+    pause: 0.12
+  - 語り: 「浅井の家のときに逃げ出したことさえ、今も《悔やまれる》。どうして今度も、逃げ出せようか」。
+    shot: P6
+    tone: 強調
+    pause: 0.3
+  - 語り: お市は、三人の娘だけを送り出し、勝家とともに、37歳で《生涯を閉じた》。
+    shot: P2
+    tone: 重い
+    pause: 0.15
+  - 語り: あなたなら、一度逃げた日のことを、許せますか。
+    shot: P5c
+    tone: 疑問
+    pause: 0.15

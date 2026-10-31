@@ -1,0 +1,638 @@
+# 武田信玄（A作品）。型：掘り下げ型（冒頭＝旗の四句と「風林火山」の四字 → 生まれから順・節ごとに1つの山場 → 最後は「まとめ：武田信玄とは何者だったのか」）
+# 冒頭の一点：旗に書かれているのは『孫子』の四句（疾如風・徐如林・侵掠如火・不動如山）。「風林火山」という四字の語は文献に見当たらず、現代の創作とみる研究者がいる（ウィキペディア「風林火山」の整理。
+#   高橋賢一＝現代の創作とみる／鈴木眞哉＝小説『風林火山』が最初ではと推測）。古い記録は「孫子の旗」。『甲陽軍鑑』は永禄4年から使ったと書くが、旗が作られた時期を示す確かな記録は無い。
+#   「小説が最初」は推測と断る。旗の年代鑑定は未確認なので何も言わない（答えはこの節で出し、まとめで冒頭に戻る）。
+# 事実の出どころは dev/output/rekishi-chiso/research/shingen_facts.md（確実／有力／説／後世の話／未確認の区分もそこ）。素材は research/shingen_assets.md と mikatagahara_assets.md（三方ヶ原は既存の絵のみ）。
+# 決まり：①日付は和暦で言う。西暦は年表・card の年（year:）にだけ出し、語りでは「西暦だと」と言わない。生まれは「大永元年11月3日」（和暦）、没は「元亀4年4月12日」。年齢は数え（享年53）。肖像の「この時○歳」は出さない（age: false）。
+#   ②使わない話（入れない）：影武者説（信廉）・黒澤『影武者』／遺体を諏訪湖に沈めよ／諏訪頼重の自害の場面・諏訪御料人の描写／勝頼の自刃の描写（日付と場所だけ）／恵林寺の焼き討ちの描写と快川の遺偈／
+#     「人は城」を信玄本人の言葉として断定（まとめで「『甲陽軍鑑』にあるとされる」まで）／信虎の追放を暗殺・暴君の断定／「敵に塩を送る」を信玄に結びつける／120万石・9カ国／家康の空城計・脱糞・顰像（家康回の領分）／
+#     野田城の笛の音／武田二十四将を実在の制度として／山本勘助を軍師として／啄木鳥戦法を成功した作戦として／一騎打ちを事実として／風林火山を「信玄の標語」として／ネットの個人ブログ・小説・ドラマの場面。
+#   ③後世の話（出典名を言う）：啄木鳥戦法・山本勘助の軍師像・「三年間は死を秘せ」の遺言・一騎打ち・武田二十四将・五戦説・「信玄堤」の名（江戸後期）・信虎の暴君像（可能性）。
+#     ウィキペディア経由の情報は「ウィキペディアの整理では」と断る（風林火山の語・義信の死因・西上の目的・勝頼評価など）。『甲陽軍鑑』『妙法寺記』『高白斎記』の本文は未読。
+#   ④数字は何の数かを言う。砥石崩れの7,000・500・2,000・約1,000、西上の2万2,000、三方ヶ原の約2,000・約200、長篠の兵は二次の数字で割れる。川中島の第四次の日付・兵力は言わない（未確認）。
+#   ⑤人物のセリフは入れない。遺言は『甲陽軍鑑』の話と断る。⑥背景に人物の肖像・拡大絵を使わない。NDL 系の絵図は使わない（色票・黒帯）。血・遺体・首・切腹の絵は使わない（天目山の絵は使わない）。
+#   ⑦現代の写真は「画面は現在の〜」とその行で断る。城の絵図・肖像はすべて後世のもの。
+#   ⑧家康回（10/16）と重ならない：三方ヶ原は信玄の側から（西上の途中の一戦）。家康の敗走の逸話は繰り返さない。
+#   読みの注意：武田信玄＝たけだしんげん／晴信＝はるのぶ／信虎＝のぶとら／義信＝よしのぶ／勝頼＝かつより／信繁＝のぶしげ／諏訪頼重＝すわよりしげ／村上義清＝むらかみよしきよ／板垣信方＝いたがきのぶかた／甘利虎泰＝あまりとらやす／
+#     真田幸隆＝さなだゆきたか／上田原＝うえだはら／砥石＝といし／川中島＝かわなかじま／八幡原＝はちまんばら／甲陽軍鑑＝こうようぐんかん／山県昌景＝やまがたまさかげ／馬場信春は出さない／恵林寺＝えりんじ／快川紹喜＝かいせんじょうき／
+#     信玄堤＝しんげんづつみ／御勅使川＝みだいがわ／釜無川＝かまなしがわ／竜王＝りゅうおう／二俣城＝ふたまたじょう／野田城＝のだじょう／駒場＝こまんば／三方ヶ原＝みかたがはら／長篠＝ながしの／高天神城＝たかてんじんじょう／
+#     疾きこと＝はやきこと／徐かなること＝しずかなること／侵掠＝しんりゃく／孫子＝そんし／上洛＝じょうらく／御内書＝ごないしょ／後詰＝ごづめ／調略＝ちょうりゃく。
+title: 武田信玄｜「風林火山」の旗に書かれていたのは、四字ではなく四つの句だった
+series: ""
+playlists: [日本史を掘る（聞き流し）, 戦国時代を掘る]
+shorts_playlists: [日本史ショート]
+tags: [武田信玄, 風林火山, 孫子の旗, 川中島の戦い, 三方ヶ原の戦い, 西上作戦, 甲陽軍鑑, 信玄堤, 武田勝頼, 戦国時代, 日本史, 歴史, 歴史解説, 歴史の地層]
+en:
+  title: "Takeda Shingen: The Banner Bore Four Lines from Sunzi, Not the Four Characters 'Furinkazan'"
+  description: |-
+    The word "Furinkazan" (wind, forest, fire, mountain) is famous as Takeda Shingen's slogan, but the surviving banners do not carry those four characters. They carry four phrases from Sunzi's Art of War. According to Wikipedia's summary, some researchers think the four-character word itself does not appear in old texts and is a modern creation; old records call it the "Sunzi banner". The Koyo Gunkan says he used it from 1561, but no firm record shows when the banners were made.
+    This video digs into Shingen's life from his birth in 1521 to the fall of the Takeda clan in 1582, and separates what documents show from what later books say: the exile of his father Nobutora at 21, the two defeats against Murakami Yoshikiyo before he turned thirty, the Battles of Kawanakajima (the "five battles" count comes from Edo-period war tales, and the famous duel has no firm source), the Kai-Sagami-Suruga alliance and its collapse, the Koshu Hatto code and the name "Shingen Embankment" (which appears only in the late Edo period), the western campaign and Mikatagahara, his death in 1573 (place and illness are disputed) and the "keep my death secret for three years" will (a story from the Koyo Gunkan), and the fall of his son Katsuyori.
+    We say plainly where sources disagree. Dates are in the Japanese calendar of the time.
+    A Japanese history video to listen to while you work (Japanese audio).
+  chapters:
+    - "The Banner Bore Four Phrases, and the Four Characters 'Furinkazan'"
+    - "1541: Exiling His Father at 21"
+    - "1548: Two Defeats at Ueda-hara and Toishi, and a Sanada Scheme"
+    - "1553: Kawanakajima, and the Duel No Document Records"
+    - "1554: The Three-Way Alliance, Yoshinobu's Death and the Invasion of Suruga"
+    - "1547: The Koshu Hatto Code and the Name 'Shingen Embankment'"
+    - "1572: The Western Campaign and Mikatagahara"
+    - "1573: Death, and the 'Keep It Secret for Three Years' Will"
+    - "1575: Nagashino, Takatenjin and the Fall of the Takeda"
+    - "Summary: Who Was Takeda Shingen?"
+
+texture: true
+recap: true
+
+people:
+  武田信玄: {born: 1521-12-01, died: 1573-05-13, match: [信玄, 晴信, 武田晴信]}
+  上杉謙信: {born: 1530-02-18, died: 1578-04-19, match: [謙信, 長尾景虎]}
+  織田信長: {born: 1534-06-23, died: 1582-06-21, match: [信長]}
+  徳川家康: {born: 1543-01-31, died: 1616-06-01, match: [家康]}
+
+timeline:
+  start: 1515
+  end: 1590
+  events: [[1521, 誕生], [1541, 父を追放], [1548, 上田原], [1561, 川中島], [1568, 駿河侵攻], [1573, 没], [1582, 滅亡]]
+
+terms:
+  軍記: 戦いを物語の形で書いた本。江戸時代に多く作られた
+  軍学書: 兵法を教えるための本。江戸時代に盛んに書かれた
+  軍配: 大将が戦の指揮に使った、うちわの形の道具
+  家督: 家を継ぐ権利。大名なら、領国と家臣を引き継ぐこと
+  甲陽軍鑑: 武田家の話をまとめた軍学書。信玄の死の約半世紀後にできた
+  孫子: 中国の古い兵法書。旗の四句は、その軍争篇の言葉
+  調略: 戦わずに、敵の中の人を味方につける手
+  後詰: 攻められている城を助けに行く援軍
+  御内書: 将軍が出す、手紙の形の命令書
+  甲州法度之次第: 武田家の領国の法律。55条で始まり、のち57条
+  喧嘩両成敗: 争った双方を同じように罰する決まり
+  朱印状: 朱の印を押した、戦国大名の文書
+
+shorts:
+  s1:
+    title: "信玄の旗／四字じゃない？"
+    yt_title: "武田信玄の旗に「風林火山」とは書かれていない？｜書かれていたのは『孫子』の四句"
+    hook: "信玄の旗には、／「風林火山」と／書いてあった？"
+    tease: "じゃあ、この旗の字を／書いたと言われる、／恵林寺の僧は、誰？"
+    lead: "「風林火山」。21歳で父を追い出し、30歳までに二度負けた武将、いま伝わる武田信玄の旗には、この四字は書かれていません。旗に書かれているのは、『孫子』の四つの句です。"
+    tags: [武田信玄, 風林火山, 孫子の旗, 歴史の地層]
+  s2:
+    title: "21歳の家督／父の追放"
+    yt_title: "武田信玄は21歳で父を追放した？｜信虎は本当に暴君だったのか"
+    hook: "21歳の信玄が、／父を国の外へ／追い出した？"
+    tease: "じゃあ、追い出された父は、／信玄より先に亡くなった？"
+    lead: "大永元年11月3日、武田信玄は、甲斐の国で、武田信虎の嫡男として生まれました。そして天文10年6月、21歳の信玄は、父の信虎を、国の外へ追い出します。"
+    tags: [武田信玄, 武田信虎, 信虎追放, 歴史の地層]
+  s3:
+    title: "戦国最強の二度の負け／上田原と砥石"
+    yt_title: "武田信玄は30歳までに二度負けた？｜村上義清に敗れた上田原と砥石崩れ"
+    hook: "「戦国最強」の信玄が、／30歳までに、／二度負けた？"
+    tease: "じゃあ、砥石城を、／力ではなく調略で／取ったのは、誰？"
+    lead: "村上義清は、信濃北部の有力な領主です。諏訪のあと、信玄の前に立ちはだかりました。"
+    tags: [武田信玄, 村上義清, 上田原の戦い, 砥石崩れ, 歴史の地層]
+  s4:
+    title: "川中島は5回？／数え方の話"
+    yt_title: "川中島の戦いは本当に5回？｜江戸の軍記に始まる数え方と、実際に戦った2回"
+    hook: "川中島の戦いは、／本当に5回だった？"
+    tease: "じゃあ、信玄の軍師と言われる／山本勘助は、軍師と呼ばれていた？"
+    lead: "越後の大名、上杉謙信と信玄が戦った、川中島の戦い。天文22年から永禄7年までに、5回戦った、とよく言われます。"
+    tags: [川中島の戦い, 武田信玄, 上杉謙信, 一騎打ち, 歴史の地層]
+  s5:
+    title: "「三年間は死を秘せ」／誰の言葉？"
+    yt_title: "信玄の遺言「三年間は私の死を秘せ」は本当？｜『甲陽軍鑑』の話と、文書で確かめられること"
+    hook: "「三年間は、／私の死を秘せ」。／信玄は、本当に言った？"
+    tease: "じゃあ、信玄の葬儀が／営まれたのは、いつ？"
+    lead: "武田信玄の遺言として有名なのが、「三年間は、私の死を秘せ」です。ところが、これは『甲陽軍鑑』の話です。"
+    tags: [武田信玄, 信玄の死, 甲陽軍鑑, 遺言, 歴史の地層]
+
+next:
+  title: 真田幸村
+  series: ""
+  teaser: 砥石城を取った真田幸隆の孫、幸村。その像も、後の本が作ったのか。
+
+thumbnail:
+  layout: scene
+  image: paintings/shingen_kawanakajima_yukai_bm.jpg
+  crop: [60, 62, 1560, 905]
+  band: bottom
+  name: 武田信玄
+  lead: 「風林火山」の旗は
+  main: 四字じゃない
+
+sections:
+  # ---------------------------------------------------------------- 1 導入
+  - title: 武田信玄の旗の四句と、「風林火山」という四字の語
+    background: {image: paintings/shingen_kawanakajima_lccn_large.jpg, credit: "歌川芳員《川中島の合戦図》三枚続 1857年"}
+    year: 1561
+    lines:
+      - 語り: 「風林火山」。21歳で父を追い出し、30歳までに二度負けた武将、いま伝わる武田信玄の旗には、この四字は書かれていません。旗に書かれているのは、『孫子』の《四つの句》です。
+        portrait: {image: paintings/ieyasu_takeda_shingen_portrait_detail.jpg, caption: "武田信玄（江戸時代の肖像画）", age: false}
+        card: {head: 旗の字, body: 『孫子』の四つの句}
+        tone: 重い
+        short: s1
+      - 聞き: え、マジ？ 旗って、大きく「風林火山」って書いてあるイメージだったよ。
+        tone: 驚き
+        short: s1
+      - 語り: 旗は、山梨県の雲峰寺などに伝わります。江戸時代の『旗印図』の写しには、黒地に金の字の旗が描かれ、「世に孫子の旗という」と書き添えてあります。
+        portrait: null
+        background: {image: paintings/shingen_hatajirushi_takeda_kenshin.jpg, credit: "戸沢盛徳《旗印図》1800年ごろ（江戸時代の写し図）"}
+        detail: {box: [0.54, 0.14, 0.81, 0.80], label: 『旗印図』の黒い旗}
+        card: {head: 孫子の旗, body: 黒地に金の四句。古い呼び名}
+        short: s1
+      - 語り: 疾きこと風の如く、徐かなること林の如く、侵掠すること火の如く、動かざること山の如し。『孫子』の軍争篇にある言葉です。
+        short: s1
+        background: {image: paintings/shingen_kawanakajima_yukai_bm_trim.jpg, credit: "歌川国芳《勇魁三十六合戦 川中島》1851-52年ごろ（大英博物館蔵）"}
+        detail: {box: [980, 0, 1340, 338], label: 国芳の川中島の絵の旗}
+        card: {head: 旗の四句, body: 疾如風・徐如林・侵掠如火・不動如山}
+      - 聞き: 四字じゃなくて、四つの文なの？ じゃあ、いつから「風林火山」になったの？
+        tone: 疑問
+        short: s1
+      - 語り: ウィキペディアの整理では、四字の語は文献に見当たらず、現代の創作ではないか、と考える研究者がいます。古い記録の呼び名は、「孫子の旗」です。
+        background: {image: paintings/shingen_kawanakajima_triptych_blue.jpg, credit: "春亭原画・広重模写とされる《信州川中嶋合戦之図》1845年"}
+        card: {head: 四字の語, body: 現代の創作とみる研究者がいる}
+      - 聞き: 現代の創作？ 小説やドラマで広まったってこと？
+        tone: 疑問
+      - 語り: 小説『風林火山』が最初ではないか、と推測する人もいます。決め手はありません。
+      - 語り: 『甲陽軍鑑』は、永禄4年から使い始めた、と書きます。旗は、僧の快川紹喜に書かせたと言われますが、作られた時期を示す確かな記録は、ありません。
+        background: {image: paintings/shingen_hatajirushi_takeda_banners.jpg, credit: "戸沢盛徳《旗印図》1800年ごろ（江戸時代の写し図）"}
+        card: {head: 甲陽軍鑑, body: 信玄の死の約半世紀後にできた軍学書}
+      - 聞き: 旗はあるけど、いつ作られたかは分からないんだ。四字の語は、あとからの可能性があるのか。信玄って、そういう話が多いの？
+      - 語り: 多いのです。信玄の逸話の多くは、『甲陽軍鑑』と、それをもとにした江戸の軍学書や講談、小説から来ています。ただ、使える記録だとみる研究者もいます。
+        background: {image: paintings/shingen_kawanakajima_lccn_large.jpg, credit: "歌川芳員《川中島の合戦図》三枚続 1857年"}
+        card: {head: 逸話の出どころ, body: 多くは軍鑑と江戸の軍学書}
+      - 語り: だから今日は、この旗の持ち主を、生まれから掘ります。記録で言えることと、後の書が語ることを、分けながら。
+      - 聞き: 記録の信玄と、本の信玄を分けるんだね。じゃあ、まずは生まれから？
+
+  # ---------------------------------------------------------------- 2 家督
+  - title: 1541年 21歳の家督と、父・武田信虎の追放
+    background: {image: paintings/shingen_kai_fuji_hiroshige_1852.jpg, credit: "歌川広重《不二三十六景 甲斐 夢山裏富士》1852年"}
+    year: 1521
+    lines:
+      - 語り: 武田信玄は、大永元年11月3日、甲斐の国に生まれました。いまの山梨県です。父は、甲斐を治める守護の武田信虎。幼い名は、勝千代です。
+        portrait: {image: paintings/shingen_portrait_edo_seated.jpg, caption: "武田信玄像（江戸時代）", age: false}
+        card: {head: 大永元年11月3日, body: 甲斐に生まれる（生誕地は二説）}
+        short: s2
+      - 聞き: 山梨の生まれなの？ 生まれたときから、跡継ぎだったの？
+      - 語り: 兄の竹松が早くに亡くなり、信玄が嫡男になりました。嫡男は、跡継ぎの長男です。元服は、天文5年。将軍の足利義晴から、晴という字をもらい、名は晴信になります。
+        card: {head: 天文5年, body: 将軍の「晴」の字をもらい晴信に}
+      - 聞き: 将軍の名前から一字って、有名ブランドの名前をもらうみたいなものかな。
+      - 語り: 信玄と名乗るのは、永禄2年に出家してからです。ここでは、信玄で通します。
+        background: {image: paintings/shingen_kai_saruhashi_hiroshige.jpg, credit: "歌川広重《六十余州名所図会 甲斐 猿橋》1853年"}
+        portrait: {image: paintings/shingen_portrait_hatakeyama.jpg, caption: "武田信玄像（江戸時代）", age: false}
+      - 語り: そして天文10年6月。21歳の信玄は、父の信虎を、国の外へ追い出します。
+        year: 1541
+        background: {image: paintings/yoshinobu_suruga_castle_map.jpg, credit: "《駿府城絵図》（江戸時代）"}
+        card: {head: 天文10年6月, body: 21歳の信玄が父・信虎を駿河へ追放}
+        figure: {type: people, title: 追放をめぐる三人, nodes: [[武田信玄, 21歳の嫡男], [武田信虎, 甲斐の守護], [今川義元, 駿河の大名。信虎の娘の夫]], edges: [[武田信玄, 武田信虎, 追放], [武田信虎, 今川義元, 娘が嫁ぐ]]}
+        short: s2
+      - 語り: 信虎が、娘婿の今川義元のもとへ向かう途中、信玄が国境を閉ざした、と伝わります。
+        portrait: null
+        short: s2
+      - 聞き: 21歳で！？ お父さんを追い出したの？
+        short: s2
+      - 語り: 山梨県の観光ページは、息子が父を追放する、前代未聞のクーデターと紹介しています。
+        figure: null
+      - 聞き: 信虎って、ひどい暴君だったから、追い出されたんでしょ？
+        short: s2
+      - 語り: そう語られてきました。でも、理由は三つの説に割れています。ひとつは、外へ攻め続けた負担と、飢饉や重い税に注目する説です。
+        short: s2
+      - 語り: ふたつ目は、『甲陽軍鑑』が書く、信虎と今川義元の共謀。三つ目は、『甲斐国志』が書く、双方が合意した隠居です。
+        short: s2
+        background: {image: paintings/shingen_kai_kajikazawa_hokusai.jpg, credit: "葛飾北斎《冨嶽三十六景 甲州石班沢》1830年ごろ（メトロポリタン美術館蔵）"}
+        card: {head: 追放の理由, body: 飢饉と税・共謀・合意の隠居。割れている}
+      - 聞き: 説が3つもあるの？ じゃあ、暴君だったって話は、どこから？
+      - 語り: 信虎の悪行の話は、『甲陽軍鑑』や軍学書で作られ、追放を正当化するのに使われた可能性が、指摘されています。
+        card: {head: 暴君像, body: 後の書が作った可能性がある}
+      - 聞き: じゃあ、追い出された側が悪者に描かれた可能性があるってこと？ 悪い話を盛って、正当化したのかな。
+      - 語り: 信虎のその後です。駿河で今川義元のもとに身を寄せ、義父として厚遇されたと伝わります。天文12年に出家し、のちに京へ移りました。
+        portrait: {image: paintings/ieyasu_imagawa_yoshimoto_yoshiiku.jpg, caption: "今川義元（落合芳幾、1867年）", age: false}
+      - 聞き: 追い出されたのに、義元のところでお世話になってたの？ 義元にとっては、奥さんのお父さんだもんね。
+        background: {image: paintings/ieyasu_fuchu_abe_river_hiroshige_1833.jpg, credit: "歌川広重《東海道五十三次之内 府中 安部川》1833年ごろ"}
+        card: {head: 追放後の信虎, body: 義元のもとで厚遇。天文12年に出家}
+      - 語り: 父を追った21歳の信玄が、最初に向かった先は、隣の信濃でした。
+        portrait: null
+        hook: true
+      - 聞き: 信濃って、いまの長野県でしょ？ そこで何があったの？
+        hook: true
+
+  # ---------------------------------------------------------------- 3 諏訪と二度の負け
+  - title: 1548年 上田原と砥石崩れ、二度の負けと真田幸隆の調略
+    background: {image: paintings/shingen_suwa_lake_eisen.jpg, credit: "渓斎英泉《木曽街道 塩尻峠 諏訪ノ湖水眺望》1830年代"}
+    year: 1542
+    lines:
+      - 語り: 天文11年、信玄は、信濃の諏訪を攻めます。諏訪頼重は、信玄の妹の夫でしたが、甲府へ連れて来られ、自害しました。頼重の娘との子が、のちの武田勝頼です。
+        card: {head: 天文11年, body: 諏訪を攻め、諏訪頼重が自害}
+        figure: {type: map, title: 信玄の信濃への道, bounds: [137.6, 139.2, 35.4, 36.9], route: [甲府, 諏訪, 上田], places: [[甲府, 138.57, 35.66], [諏訪, 138.12, 36.04], [上田, 138.25, 36.40]], note: 甲府から諏訪、そして北へ}
+      - 聞き: 妹の夫を攻めたの？ 戦国って、家族でも関係ないじゃん。
+      - 語り: 村上義清は、信濃北部の有力な領主です。諏訪のあと、信玄の前に立ちはだかりました。
+        figure: null
+        background: {image: paintings/shingen_shinano_sarashina_hiroshige.jpg, credit: "歌川広重《本朝名所 信州更科田毎之月》1835年ごろ"}
+        short: s3
+      - 聞き: 信玄って、戦国最強なんでしょ？ 村上さんにも、楽勝だったんじゃない？
+        tone: 疑問
+        short: s3
+      - 語り: 天文17年2月、上田原の戦い。信玄は、村上義清に敗れました。重臣の板垣信方と甘利虎泰が、戦死します。
+        year: 1548
+        portrait: {image: paintings/shingen_itagaki_nobukata_portrait.jpg, caption: "板垣信方（松本楓湖、近代の絵）", age: false}
+        card: {head: 天文17年2月, body: 上田原の戦いで村上義清に敗れる}
+        short: s3
+      - 聞き: 信玄が負けたの？ しかも、頼りになる重臣が、二人も。
+        short: s3
+      - 語り: 負けは、これで終わりません。天文19年9月、砥石城攻め。武田軍は約7,000、城の兵は約500。そこへ村上の約2,000が救援に来て、挟まれます。
+        year: 1550
+        portrait: null
+        background: {image: paintings/shingen_ueda_castle_map_trim.jpg, credit: "『日本古城絵図』信州上田城図の部分（江戸時代、国立国会図書館蔵。信玄の頃の城ではない）"}
+        card: {head: 天文19年9月, body: 砥石城攻めに失敗（砥石崩れ）}
+        figure: {type: bars, title: 砥石崩れの兵の数（二次の数字）, bars: [[武田軍, 7000], [村上の救援, 2000], [城の兵, 500]], labels: [約7000人, 約2000人, 約500人]}
+        short: s3
+      - 聞き: 7,000対500なんて、14倍だよ？ それで負けるの、ありえなくない？
+        tone: 驚き
+        reaction: {number: 約14倍, lead: 砥石城の兵の差, say: それで負けたの？}
+        short: s3
+      - 語り: 武田の損害は約1,000人。ウィキペディアは、『妙法寺記』の数字として挙げています。大軍で攻めて退けられた点は、確かです。
+        figure: null
+        card: {head: 『妙法寺記』, body: 甲斐の寺に伝わる年代記}
+      - 聞き: それでも、7,000人で攻めて退けられたのは、痛かっただろうね。
+      - 語り: ところが翌年、天文20年5月26日。砥石城は、落ちます。落としたのは、信濃の領主の真田幸隆でした。
+        year: 1551
+        background: {image: paintings/shingen_shinano_sarashina_hiroshige.jpg, credit: "歌川広重《本朝名所 信州更科田毎之月》1835年ごろ"}
+        card: {head: 天文20年5月26日, body: 真田幸隆が調略で砥石城を取る}
+      - 語り: 力で取れなかった城を、調略で取りました。調略は、敵の中の人を味方につける手です。『高白斎記』に、「砥石の城、真田乗っ取り」の一行がある、と紹介されています。
+        card: {head: 『高白斎記』, body: 「砥石ノ城真田乗取」の一行}
+      - 聞き: 力で落とせなかった城を、人の手配りで取ったのか。将棋で、相手の駒を寝返らせるみたいじゃん。
+      - 語り: 天文22年、村上義清は、越後へ逃れます。信玄は、30歳までに二度負けて、それでも、信濃の北へ進む足がかりを得ました。
+        year: 1553
+        background: {image: paintings/shingen_ueda_castle_map_trim.jpg, credit: "『日本古城絵図』信州上田城図の部分（江戸時代、国立国会図書館蔵。信玄の頃の城ではない）"}
+        card: {head: 天文22年, body: 村上義清が越後へ逃れる}
+      - 聞き: 負けから始まった人じゃん。「最強」のイメージ、ちょっと変わってきたよ。
+      - 語り: その越後には、のちに信玄の最大の相手になる人物がいました。
+        background: {image: paintings/shingen_kawanakajima_triptych_blue.jpg, credit: "春亭原画・広重模写とされる《信州川中嶋合戦之図》1845年"}
+        hook: true
+      - 聞き: それって、もしかして、川中島の……？
+        hook: true
+
+  # ---------------------------------------------------------------- 4 川中島
+  - title: 1553年 川中島の戦いと、江戸の軍記に始まる五回の数え方
+    background: {image: paintings/shingen_kawanakajima_river_lacma.jpg, credit: "月岡芳年《川中島合戦図》三枚続 1866年（ロサンゼルス郡立美術館蔵）"}
+    year: 1553
+    lines:
+      - 語り: 越後の大名、上杉謙信と信玄が戦ったのが、川中島の戦いです。当時の名は長尾景虎ですが、ここでは謙信で通します。10年あまりで、5回戦った、とよく言われます。
+        portrait: {image: paintings/shingen_kenshin_rinsenji.jpg, caption: "上杉謙信像（林泉寺蔵とされる）", age: false}
+        card: {head: 天文22年〜永禄7年, body: 川中島での一連の対陣}
+        short: s4
+      - 聞き: 5回って、毎回、大きな合戦をしたの？
+        short: s4
+      - 語り: 実際に戦いがあったのは、弘治元年の第二次と、永禄4年の第四次だけ、と言われます。画面は、現在の八幡社です。
+        portrait: null
+        background: {image: paintings/shingen_kawanakajima_hachimansha_photo.jpg, credit: "Fg2撮影《川中島古戦場の八幡社》2008年"}
+        card: {head: 画面は現在の八幡社, body: 川中島古戦場にある社。戦いは第二次と第四次}
+        short: s4
+      - 語り: 第二次は、約200日にらみ合い、今川義元の仲介で和睦しました。
+      - 聞き: 200日もにらみ合って、戦いにはならなかったの？
+      - 語り: 回数の数え方は、研究者で割れています。2回、6回、8回と数える人がいます。
+        figure: {type: bars, title: 川中島の戦いの数え方, bars: [[田中義成の説, 2], [江戸の軍記, 5], [六戦説, 6], [八回説, 8]], labels: [2回, 5回, 6回, 8回]}
+        card: {head: 五戦説, body: 5回は江戸の軍記に始まる数え方}
+        short: s4
+      - 聞き: 回数まで割れてるの？ 数え方なんて、決まってそうなのに。
+        short: s4
+      - 語り: 「5回」という数え方は、《江戸時代の軍記》に始まります。
+        figure: null
+        year: 1553
+      - 聞き: 川中島って言えば、信玄と謙信の一騎打ちでしょ？ あれは、本当にあったの？
+        tone: 疑問
+        background: {image: paintings/shingen_kawanakajima_triptych_blue.jpg, credit: "春亭原画・広重模写とされる《信州川中嶋合戦之図》1845年"}
+      - 語り: 謙信が馬で斬りかかり、信玄が軍配で受けた、という有名な場面です。ただ、確かな史料では、確かめられていません。江戸の軍記や絵が描いた場面です。
+        portrait: {image: paintings/shingen_kawanakajima_duel.jpg, caption: "一騎打ちの刷物（18世紀、後世の絵）", age: false}
+        card: {head: 一騎打ち, body: 確かな史料に無い。後世の軍記と絵が描いた}
+      - 聞き: 軍記と絵が作った名場面かあ。ドラマの印象が強くて、本当にあったと思ってたよ。
+      - 語り: 永禄4年の第四次では、信玄の弟の武田信繁が、戦死します。信玄に仕えた山本勘助も、この戦いで亡くなった、と『甲陽軍鑑』は書きます。
+        year: 1561
+        portrait: {image: paintings/shingen_takeda_nobushige_kuniyoshi.jpg, caption: "武田信繁（歌川国芳、後世の想像図）", age: false}
+        background: {image: paintings/shingen_kawanakajima_yukai_bm_trim.jpg, credit: "歌川国芳《勇魁三十六合戦 川中島》1851-52年ごろ（大英博物館蔵）"}
+        card: {head: 永禄4年, body: 第四次。弟の武田信繁が戦死}
+      - 聞き: 山本勘助って、信玄の軍師で、啄木鳥の作戦を立てた人じゃないの？
+        portrait: null
+      - 語り: 啄木鳥戦法は、別動隊で上杉軍を追い出し、挟み撃ちにする作戦です。伝えるのは『甲陽軍鑑』などの軍記で、地形的に実行は難しい、という疑問も出ています。
+        background: {image: paintings/shingen_kawanakajima_lccn_large.jpg, credit: "歌川芳員《川中島の合戦図》三枚続 1857年"}
+        card: {head: 啄木鳥戦法, body: 『甲陽軍鑑』の説明。実行性に疑問}
+      - 聞き: 挟み撃ちって、聞くと頭よさそうだけど、地形的にきついなら、机の上だけの作戦だったのかな。
+      - 語り: 文書に出るのは、草かんむりの字を使った、山本菅助という名です。勘助と同じ人とみられていますが、断定はできません。
+        background: {image: paintings/shingen_kawanakajima_yukai_bm_trim.jpg, credit: "歌川国芳《勇魁三十六合戦 川中島》1851-52年ごろ（大英博物館蔵）"}
+      - 語り: 文書から見える姿は、信玄に近い使者や側近です。「軍師」とは、『甲陽軍鑑』も呼びません。
+        card: {head: 山本勘助, body: 文書の字は「菅助」。軍師とは呼ばれない}
+      - 聞き: 軍師の勘助も、本が作った像なのか。ドラマと全然ちがうじゃん。
+      - 語り: 第四次は、両軍が勝利を主張し、決着はつきませんでした。そのあと信玄は、関東や東海へ、向きを変えます。
+        background: {image: paintings/shingen_kawanakajima_river_lacma.jpg, credit: "月岡芳年《川中島合戦図》三枚続 1866年（ロサンゼルス郡立美術館蔵）"}
+      - 語り: 川中島のあいだ、信玄の足元では、三つの国の同盟が、揺れ始めていました。
+        hook: true
+      - 聞き: 三つの国の同盟って、誰と誰のこと？
+        hook: true
+
+  # ---------------------------------------------------------------- 5 三国同盟
+  - title: 1554年 甲相駿三国同盟と、義信の死・駿河への侵攻
+    background: {image: paintings/shingen_odawara_sakawa_hiroshige.jpg, credit: "歌川広重《東海道五拾三次之内 小田原 酒匂川》1833年ごろ"}
+    year: 1554
+    lines:
+      - 語り: 信玄は、隣の二つの大名と結んでいました。駿河、いまの静岡県中部の今川義元と、相模、いまの神奈川県の北条氏康です。
+      - 語り: 天文23年までに婚姻を重ね、甲相駿三国同盟が成りました。
+        card: {head: 天文23年, body: 甲相駿三国同盟が成る}
+        figure: {type: people, title: 三国同盟の婚姻, nodes: [[武田信玄, 甲斐], [今川義元, 駿河], [北条氏康, 相模]], edges: [[武田信玄, 今川義元, 婚姻], [今川義元, 北条氏康, 婚姻], [北条氏康, 武田信玄, 婚姻]]}
+      - 聞き: 結婚で、三つの大名が手を結んだのか。今でいうと、会社どうしの業務提携みたいなもの？
+      - 語り: 近い形です。背後が安全になれば、それぞれ別の方向へ兵を向けられます。
+        figure: null
+      - 語り: ところが、永禄3年、桶狭間の戦いで、織田信長に今川義元が討たれると、今川の領国は揺れ始めたのです。
+        year: 1560
+        portrait: {image: paintings/ieyasu_imagawa_yoshimoto_yoshiiku.jpg, caption: "今川義元（落合芳幾、1867年）", age: false}
+        background: {image: paintings/shingen_suruga_satta_hiroshige.jpg, credit: "歌川広重《冨士三十六景 駿河薩埵海上》1858年"}
+        card: {head: 永禄3年, body: 桶狭間で今川義元が討たれる}
+      - 聞き: 義元が討たれて、同盟はどうなったの？
+        portrait: null
+      - 語り: 同盟は続きました。しかし永禄8年、信玄の家で、事件が起きます。信玄の嫡男の義信が、東光寺に幽閉されたのです。義信事件です。
+        year: 1565
+        background: {image: paintings/shingen_kai_inume_hiroshige_1858.jpg, credit: "歌川広重《冨士三十六景 甲斐犬目峠》1858年"}
+        card: {head: 永禄8年, body: 嫡男の義信が東光寺に幽閉される}
+      - 聞き: 自分の息子を、閉じ込めたの？ 理由は？
+      - 語り: 理由には、いくつかの説があります。従来は、今川との外交をめぐる対立、と説明されてきました。
+      - 語り: ウィキペディアによれば、黒田基樹さんの見方は、家の内部の問題です。家督、つまり家を継ぐ権利が、28歳でも譲られない焦りと、約2年続いた飢饉です。
+        background: {image: paintings/shingen_kai_kajikazawa_hokusai.jpg, credit: "葛飾北斎《冨嶽三十六景 甲州石班沢》1830年ごろ（メトロポリタン美術館蔵）"}
+        card: {head: 義信事件の原因, body: 外交対立か、家の内部の問題か。割れている}
+      - 語り: 丸島和洋さんは、織田との同盟が背景だと指摘します。
+      - 聞き: 親子の対立の理由まで、研究者が割れてるんだね。
+      - 語り: 永禄10年10月19日、義信は、東光寺で死去しました。30歳でした。ウィキペディアの整理では、病死とみる説が、いまの主流です。
+        background: {image: paintings/shingen_kai_saruhashi_hiroshige.jpg, credit: "歌川広重《六十余州名所図会 甲斐 猿橋》1853年"}
+        year: 1567
+        card: {head: 永禄10年10月19日, body: 義信が東光寺で死去（30歳）}
+      - 語り: ウィキペディアが紹介するところでは、自害したという見方は、そのころから今川の側にあった、ということです。
+      - 聞き: 病気だったとみる説が主流だけど、自害という見方もあったんだね。食い違ったまま、翌年を迎えたのか。
+      - 語り: 同じ永禄10年、義元の子の今川氏真は、甲斐への塩を止めます。そして永禄11年12月6日、信玄は、三河の徳川家康と手を組み、今川の領国、駿河へ攻め込みました。
+        year: 1568
+        background: {image: paintings/shingen_suruga_oi_river_hiroshige.jpg, credit: "歌川広重《冨士三十六景 駿河と遠江の間の大井川》1858年"}
+        card: {head: 永禄11年12月6日, body: 武田と徳川が今川領の駿河へ攻め込む}
+        figure: {type: numberline, title: 義信の幽閉から駿河侵攻まで, items: [[義信を幽閉, 1565], [義信が死去, 1567], [駿河へ侵攻, 1568]], unit: 年, focus: 駿河へ侵攻, note: 息子の死の翌年}
+      - 聞き: 同盟してた今川に、攻め込んだの！？ 北条は、怒らなかったの？
+        tone: 驚き
+      - 語り: 北条氏康は、氏真の妻で自分の娘の早川殿が、掛川へ逃れたことに激怒し、氏真を支援した、とウィキペディアは書きます。甲相同盟も、崩れます。
+        figure: null
+        background: {image: paintings/shingen_odawara_sakawa_hiroshige.jpg, credit: "歌川広重《東海道五拾三次之内 小田原 酒匂川》1833年ごろ"}
+        card: {head: 三国同盟の崩れ, body: 北条も今川を支援。甲相同盟が崩れる}
+      - 語り: 三国同盟は、信玄が息子を亡くした翌年に、自分の手で壊したことになります。
+      - 聞き: 同盟を壊してまで、駿河を取ったのか。そのあいだ、信玄の国の中は、どうなってたんだろう。
+        hook: true
+      - 語り: 戦ばかりの人ではありません。信玄は、自分の国の法律も、作っていました。
+        hook: true
+
+  # ---------------------------------------------------------------- 6 領国
+  - title: 1547年 甲州法度之次第と、「信玄堤」の名の出どころ
+    background: {image: paintings/shingen_kai_kajikazawa_hokusai.jpg, credit: "葛飾北斎《冨嶽三十六景 甲州石班沢》1830年ごろ（メトロポリタン美術館蔵）"}
+    year: 1547
+    lines:
+      - 語り: 時間を少し戻して、国の中を見ます。天文16年、信玄は、領国の法律を定めました。
+      - 語り: ウィキペディアでは、名は甲州法度之次第。55条で始まり、のちに2条が足されて、57条になりました。
+        card: {head: 天文16年, body: 甲州法度之次第（55条、のち57条）}
+        figure: {type: stats, title: 甲州法度之次第の条数, items: [[当初の条文, 55条, 天文16年], [追加のあと, 57条, 2条が増えた]]}
+      - 聞き: 戦国大名が、法律を作ってたの？ どんな決まりがあったの？
+      - 語り: たとえば、家臣が勝手に他国と同盟を結ぶことや、許しなく他国へ手紙を出すことは、禁止です。喧嘩両成敗も、17条にあります。
+        figure: null
+        background: {image: paintings/shingen_kai_fuji_hiroshige_1852.jpg, credit: "歌川広重《不二三十六景 甲斐 夢山裏富士》1852年"}
+        card: {head: 勝手な同盟や手紙, body: 家臣が他国とやり取りするのを禁じる}
+      - 聞き: 勝手に手紙を送るのも、ダメなの？ 今でいう、情報漏えい対策じゃん。
+      - 語り: そして、最後の条文です。信玄自身も、法に背けば誰でも申し立てよ、と読める条文だと言います。ただ、実際に守られたかは、分かりません。
+        background: {image: paintings/shingen_kai_inume_hiroshige_1858.jpg, credit: "歌川広重《冨士三十六景 甲斐犬目峠》1858年"}
+        card: {head: 最後の条文, body: 信玄自身も法に背けば申し立てよ、と読める}
+      - 聞き: 自分も縛る一文を、置いたのか。ほんとに守られてたら、すごいけどね。
+      - 語り: 領国では、もう一つ有名なものがあります。信玄堤です。ウィキペディアでは、釜無川と御勅使川が合流する、竜王のあたりの堤で、信玄が洪水を防いだ、と語られます。
+        background: {image: paintings/shingen_kai_saruhashi_hiroshige.jpg, credit: "歌川広重《六十余州名所図会 甲斐 猿橋》1853年"}
+        card: {head: 信玄堤, body: 釜無川と御勅使川の合流点の堤}
+      - 聞き: 信玄が作った堤だから、信玄堤でしょ？ 違うの？
+        tone: 疑問
+      - 語り: 信玄が関わった、と直接示す記録は、残っていません。いちばん古い文書は、永禄3年の朱印状で、「龍王之川除」に住む人の役を免除する内容です。そのころ、堤はすでにあったとみられます。
+        year: 1560
+        background: {image: paintings/shingen_kai_inume_hiroshige_1858.jpg, credit: "歌川広重《冨士三十六景 甲斐犬目峠》1858年"}
+        card: {head: 永禄3年の朱印状, body: 「龍王之川除」の文字。信玄の名は無い}
+      - 語り: 当時の呼び名は、「竜王川除場」。「信玄堤」という名が出てくるのは、《江戸時代の後ろのほう》です。
+        card: {head: 「信玄堤」の名, body: 江戸後期に出てくる呼び名}
+      - 聞き: 「龍王之川除」には、信玄の名前が出てこないんだ。じゃあ、誰の命令で作ったのかも、分からないの？
+        background: {image: paintings/shingen_kai_kajikazawa_hokusai.jpg, credit: "葛飾北斎《冨嶽三十六景 甲州石班沢》1830年ごろ（メトロポリタン美術館蔵）"}
+      - 語り: そこは、記録が残っていません。
+      - 聞き: 信玄の名前がつくと、全部、信玄の手柄みたいに見えちゃうよね。法律も堤も、本当はどこまで信玄なんだろう。
+      - 語り: 法と、堤。信玄の領国経営の評判です。その信玄が、ついに、西へ向けて動きます。
+        year: 1572
+        hook: true
+      - 聞き: 西って、京都を目指したってこと？
+        hook: true
+
+  # ---------------------------------------------------------------- 7 西上と三方ヶ原
+  - title: 1572年 西上作戦と三方ヶ原の戦い
+    background: {image: paintings/mikata_shingen_departure_yoshitora_1.jpg, credit: "歌川芳虎《武田信玄の出陣》三枚続 1863年（フランス国立図書館蔵）"}
+    year: 1572
+    lines:
+      - 語り: 元亀3年10月3日、信玄は、甲府を出陣します。西へ向かう、西上作戦です。本隊は約2万2,000と言われますが、この数字には、確定できない部分があります。
+        card: {head: 元亀3年10月3日, body: 甲府を出陣（西上作戦）}
+        figure: {type: map, title: 西上作戦の道のり, bounds: [137.0, 139.0, 34.4, 35.9], route: [甲府, 二俣, 浜松, 野田], places: [[甲府, 138.57, 35.66], [二俣, 137.82, 34.88], [浜松, 137.73, 34.71], [野田, 137.51, 34.96]], note: 甲府から遠江・三河へ}
+      - 聞き: 2万2,000人って、東京ドームの観客の半分弱くらいかな。そんな大軍で、どこへ向かったの？
+        figure: null
+      - 語り: 目的には、二つの説があります。京都へ上る、上洛が目的だったとする説。遠江と三河を取る局地戦だとする説。ウィキペディアでは、研究者が、両方に分かれています。
+        background: {image: paintings/shingen_totomi_kuniezu_trim.jpg, credit: "《天保国絵図 遠江国》1838年の部分（国立公文書館蔵）"}
+        card: {head: 西上の目的, body: 上洛か、遠江・三河の局地戦か。割れている}
+      - 語り: 将軍の足利義昭は、信長に担がれた将軍で、信長と不仲でした。その義昭が、信長を討つよう求めた御内書が、上洛説の根拠のひとつです。
+      - 語り: ただ、その手紙の年を元亀4年とみる説もあり、西上の原因か結果かも、議論が続いています。
+        portrait: {image: paintings/nobunaga_yoshiaki_portrait.jpg, caption: "足利義昭（江戸時代の写し）", age: false}
+        card: {head: 足利義昭の御内書, body: 信長を討てと求める手紙。年は議論中}
+      - 聞き: 手紙の年しだいで、原因と結果が入れ替わるのか。信長を倒しに行ったのか、領土を広げに行ったのか。目的が違うと、見え方が全然ちがうね。
+        portrait: null
+      - 語り: そして12月22日、三方ヶ原。徳川家康と織田の援軍が、信玄に敗れました。
+        year: 1573
+        background: {image: paintings/ieyasu_mikatagahara_yoshitora_triptych.jpg, credit: "歌川芳虎《三方ヶ原の戦い》1874年"}
+        card: {head: 元亀3年12月22日, body: 三方ヶ原の戦い。徳川・織田軍が敗れる}
+      - 聞き: 家康が信玄に負けた戦いだよね。どんな戦いだったの？
+      - 語り: 武田軍は、浜松城の前を通り過ぎるように進み、家康が追撃に出ます。日没前に、徳川が敗走しました。
+        background: {image: paintings/mikata_hamamatsu_hiroshige_1855.jpg, credit: "歌川広重《東海道五十三次之内 浜松》1848年ごろ"}
+      - 語り: 家康の側は、家康の回で掘りました。
+      - 語り: 死者は、徳川方が500から数千、武田方が100から500と、史料で幅があります。よく挙げられるのは、約2,000と約200です。
+        background: {image: paintings/ieyasu_mikatagahara_yoshitora_triptych.jpg, credit: "歌川芳虎《三方ヶ原の戦い》1874年"}
+        card: {head: 三方ヶ原の死者, body: よく挙げられる数は約2000と約200}
+        figure: {type: bars, title: 三方ヶ原の死者（よく挙げられる数）, bars: [[徳川方, 2000], [武田方, 200]], labels: [約2000人, 約200人]}
+      - 聞き: 約2,000と約200って、10倍も違うじゃん。武田の圧勝か。
+        tone: 驚き
+      - 語り: 死者の数は、史料で差があります。圧勝と言い切れるかは、別です。
+      - 語り: 年が明けて、元亀4年1月。信玄は三河へ入り、野田城を包囲します。2月に城は降伏。守兵は約400から500で、資料で割れる数字です。
+        figure: {type: map, title: 野田城へ, bounds: [137.0, 139.0, 34.4, 35.9], route: [浜松, 野田], places: [[甲府, 138.57, 35.66], [浜松, 137.73, 34.71], [野田, 137.51, 34.96]], note: 三河の野田城を囲む}
+        card: {head: 元亀4年2月, body: 野田城が降伏（守兵は約400〜500）}
+      - 聞き: 勝ち続けてたのに、そこで止まったの？
+      - 語り: 止まります。信玄は、吐血を繰り返し、病状が悪化した、と言われます。野田城の包囲が長引いたのも、病のためという見方があります。
+        figure: null
+        background: {image: paintings/shingen_totomi_kuniezu_trim.jpg, credit: "《天保国絵図 遠江国》1838年の部分（国立公文書館蔵）"}
+        hook: true
+      - 聞き: 最大の勝ち戦のあとに、そんなことが……。そのあと、どうなったの？
+        hook: true
+
+  # ---------------------------------------------------------------- 8 死と遺言
+  - title: 1573年 信玄の死と、「三年間は秘せ」の遺言
+    background: {image: paintings/shingen_takeda_shrine_torii_photo.jpg, credit: "《武田神社の大鳥居》現代の写真"}
+    year: 1573
+    lines:
+      - 語り: 元亀4年4月12日。武田信玄は、帰国の途中、信濃の駒場で亡くなった、とされます。数えで53歳です。画面は、信玄を祀る、現在の武田神社です。
+        portrait: {image: paintings/ieyasu_takeda_shingen_kuniyoshi.jpg, caption: "武田信玄（歌川国芳「明将」、江戸時代）", age: false}
+        card: {head: 元亀4年4月12日, body: 駒場で死去（数え53歳）}
+      - 聞き: 駒場って、どのあたり？ 本当にそこで亡くなったの？
+      - 語り: 駒場は、いまの長野県阿智村です。ただ、近くの浪合や根羽とする説もあり、場所ははっきりしません。
+        card: {head: 死の場所と病名, body: どちらも割れている}
+      - 語り: 病名も、説が分かれます。結核、肺炎、胃がん、食道がんなどの説があります。
+      - 聞き: 場所も病気も分からないって、そんなことあるの？ 野田城で撃たれた、って話を聞いたことあるよ。
+        background: {image: paintings/shingen_totomi_kuniezu_trim.jpg, credit: "《天保国絵図 遠江国》1838年の部分（国立公文書館蔵）"}
+      - 語り: 狙撃された、という話は、『松平記』の逸話です。ただ、これは巷説として扱われています。
+        background: {image: paintings/shingen_shinano_sarashina_hiroshige.jpg, credit: "歌川広重《本朝名所 信州更科田毎之月》1835年ごろ"}
+        card: {head: 狙撃説, body: 『松平記』の逸話。巷説として扱われる}
+      - 聞き: 撃たれたのが原因、って説もあるの？ でも、はっきりしてないでしょ？
+      - 語り: 武田信玄の遺言として有名なのが、「三年間は、私の死を秘せ」です。ところが、これは『甲陽軍鑑』の話です。
+        background: {image: paintings/shingen_kawanakajima_lccn_large.jpg, credit: "歌川芳員《川中島の合戦図》三枚続 1857年"}
+        card: {head: 遺言, body: 「三年間は秘せ」は『甲陽軍鑑』の話}
+        short: s5
+      - 聞き: 自分が死んだことを、3年も隠せって言ったの？ なんで？
+        short: s5
+      - 語り: 山梨県の観光ページは、3年は死を秘し、対外戦争を避けて国力を整えるよう遺言した、と伝えています。ただ、遺言そのものは、軍鑑に書かれる話です。
+        short: s5
+      - 聞き: じゃあ、信玄の死は、本当に隠されたの？
+        short: s5
+      - 語り: ウィキペディアによれば、死を伏せて、表向きは、信玄が隠居して勝頼が継ぐと発表したことは、文書で確かめられます。隠そうとした形跡は、あるのです。
+        background: {image: paintings/shingen_kawanakajima_triptych_blue.jpg, credit: "春亭原画・広重模写とされる《信州川中嶋合戦之図》1845年"}
+        card: {head: 隠居の発表, body: 文書で確かめられる}
+        short: s5
+      - 聞き: 遺言は怪しいけど、隠そうとしたのは本当なんだ。その区別が、今日の肝って感じだね。
+      - 語り: 葬儀が営まれたのは、天正3年4月。恵林寺で、喪主は勝頼、導師は快川紹喜でした。快川は、旗の字を書いた僧と、言われる人です。
+        year: 1575
+        background: {image: paintings/shingen_hatajirushi_takeda_banners.jpg, credit: "戸沢盛徳《旗印図》1800年ごろ（江戸時代の写し図）"}
+        card: {head: 天正3年4月, body: 恵林寺で葬儀。導師は快川紹喜}
+      - 聞き: 亡くなってから、葬儀まで約2年もあったんだ。
+      - 語り: 『甲陽軍鑑』には、ほかにも、勝頼は謙信を頼れ、重臣の山県昌景は瀬田に旗を立てよ、という遺言が書かれています。
+        card: {head: 『甲陽軍鑑』の遺言, body: 勝頼は謙信を頼れ。山県昌景は瀬田に旗}
+      - 聞き: 昔の敵の謙信を頼れ、なんて言ったのかな。軍鑑の話だとしても、ちょっと不思議だね。
+      - 語り: 信玄の死は、武田の運命の分かれ目でした。跡を継いだのは、勝頼です。
+        hook: true
+      - 聞き: 勝頼って、あの諏訪頼重の娘の子の？
+        hook: true
+
+  # ---------------------------------------------------------------- 9 勝頼と滅亡
+  - title: 1575年 長篠と高天神城、そして天正10年の武田氏の滅亡
+    background: {image: paintings/nobunaga_nagashino_screen_full.jpg, credit: "《長篠合戦図屏風》（江戸時代）"}
+    year: 1575
+    lines:
+      - 語り: そうです。勝頼は、信玄の四男で、長男の義信が亡くなったあと、跡継ぎになりました。
+        portrait: {image: paintings/nobunaga_katsuyori_portrait.jpg, caption: "武田勝頼像（16世紀後半）", age: false}
+      - 聞き: 強い父親のあとって、プレッシャーすごそう。しかも、勝頼のお母さんは、信玄が攻めた諏訪の人でしょ？
+      - 語り: 天正3年5月21日、長篠の戦い。武田方は1万5,000とも、8,000から1万とも言われ、織田・徳川方は約3万8,000とも言われます。武田軍は敗れ、損害も諸説あります。
+        portrait: null
+        card: {head: 天正3年5月21日, body: 長篠の戦い。兵の数は割れる}
+        figure: {type: bars, title: 長篠の兵の数（諸説ある）, bars: [[武田方の多い説, 15000], [武田方の少ない説, 10000], [織田・徳川方, 38000]], labels: [約1万5000人, 8000〜1万人, 約3万8000人]}
+      - 聞き: 長篠って、有名だよね。それが、武田の終わりの始まりなの？
+        background: {image: paintings/ieyasu_nagashino_baba_nobuharu_screen.jpg, credit: "《長篠合戦図屏風》（徳川美術館蔵、18世紀）"}
+        tone: 疑問
+      - 語り: そう語られがちです。ウィキペディアによれば、小説家の伊東潤さんは、次の2点を、滅亡の最大の原因とみます。
+      - 語り: 御館の乱のあとの甲相同盟の破綻と、高天神城の後詰の不備です。後詰は、城を助ける援軍のこと。
+        figure: null
+      - 語り: 長篠は、それより小さい、と言うのです。
+        figure: null
+        background: {image: paintings/nobunaga_nagashino_screen_toyota.jpg, credit: "《長篠合戦図屏風》（豊田市郷土資料館蔵、江戸時代）"}
+      - 聞き: 負けた戦いより、助けに行かなかったことのほうが、響いたってこと？
+      - 語り: 高天神城は、天正2年に勝頼が奪った、遠江の城です。天正9年3月22日、徳川が攻めて、城は落ちます。
+        background: {image: paintings/shingen_takatenjin_zue.jpg, credit: "『遠江古蹟図会』《高天神山之図》江戸時代（国立国会図書館蔵）"}
+        year: 1581
+      - 語り: このとき勝頼は、信長との和睦を探り、後詰を送りませんでした。
+        card: {head: 後詰を送らず, body: 勝頼は城を助けに行かなかった}
+      - 聞き: 助けに行かなかったら、味方が「この大将で大丈夫？」ってなるよね。
+      - 語り: その見殺しが、勝頼の威信を損なう結果になりました。
+      - 語り: 天正10年2月、勝頼の親戚の木曽義昌が、織田に通じます。討伐に向かった約1万の軍は、雪で進めませんでした。
+        year: 1582
+        background: {image: paintings/shingen_kai_inume_hiroshige_1858.jpg, credit: "歌川広重《冨士三十六景 甲斐犬目峠》1858年"}
+        card: {head: 天正10年2月, body: 木曽義昌が織田に通じる}
+      - 語り: 2月14日、織田軍が侵攻を始めます。同じ日、浅間山が噴火しました。
+        background: {image: paintings/shingen_kai_fuji_hiroshige_1852.jpg, credit: "歌川広重《不二三十六景 甲斐 夢山裏富士》1852年"}
+        figure: {type: stats, title: 武田氏の滅亡までの日付（天正10年）, items: [[織田軍の侵攻, 2月14日, 同じ日に浅間山が噴火], [新府城を放棄, 3月3日, 火を放って逃れる], [勝頼の最期, 3月11日, 田野で自害]], upto: 1}
+        card: {head: 天正10年2月14日, body: 織田軍が武田領へ攻め込む}
+      - 語り: 3月3日、勝頼は、築いている途中の新府城に火を放ち、逃れます。新府城は、甲斐の韮崎に築いた、新しい本拠でした。
+        figure: {type: stats, title: 武田氏の滅亡までの日付（天正10年）, items: [[織田軍の侵攻, 2月14日, 同じ日に浅間山が噴火], [新府城を放棄, 3月3日, 火を放って逃れる], [勝頼の最期, 3月11日, 田野で自害]], upto: 2}
+      - 聞き: 2月14日から3月11日って、すぐじゃん。
+      - 語り: 天正10年3月11日、勝頼は、甲斐東部の山あいの田野で、自ら命を絶ちました。侵攻の開始から、約1か月。信玄の死から数えて、9年です。武田氏は、ここで終わります。
+        background: {image: paintings/shingen_kai_saruhashi_hiroshige.jpg, credit: "歌川広重《六十余州名所図会 甲斐 猿橋》1853年"}
+        figure: {type: stats, title: 武田氏の滅亡までの日付（天正10年）, items: [[織田軍の侵攻, 2月14日, 同じ日に浅間山が噴火], [新府城を放棄, 3月3日, 火を放って逃れる], [勝頼の最期, 3月11日, 田野で自害]], upto: 3}
+        card: {head: 天正10年3月11日, body: 田野で勝頼が自害。武田氏の滅亡}
+      - 聞き: 約1か月で、あれだけの大名が。勝頼って、やっぱり、ダメな大将だったの？
+      - 語り: ウィキペディアの整理では、江戸時代以降は、家を滅ぼした暗愚の将、という評価が定着しました。近年は見直しが進み、酷評する研究者も、新府城の価値を高く評価する研究者もいます。
+        figure: null
+        card: {head: 勝頼の評価, body: 暗愚という評価と、見直し。割れている}
+      - 聞き: 同じ人でも、評価が真逆になるのか。
+      - 語り: ここまでの話は、記録と、後の本が語ったことが、混ざっていました。
+        background: {image: paintings/shingen_hatajirushi_takeda_banners.jpg, credit: "戸沢盛徳《旗印図》1800年ごろ（江戸時代の写し図）"}
+        hook: true
+      - 聞き: いよいよ、まとめだね。記録と本、頭の中で整理しとかなきゃ。
+        hook: true
+
+  # ---------------------------------------------------------------- 10 まとめ
+  - title: まとめ：武田信玄とは何者だったのか
+    background: {image: paintings/shingen_kofu_city_from_castle_photo.jpg, credit: "Wakuwaku99撮影《甲府城跡から見た甲府市街》2025年"}
+    portrait: {image: paintings/ieyasu_takeda_shingen_portrait_detail.jpg, caption: "武田信玄（江戸時代の肖像画）", age: false}
+    year: 1573
+    lines:
+      - 語り: まとめます。点は三つです。画面は、現在の甲府です。1つ目は、功績。法を定め、信濃の北へ進み、西へも兵を進めました。
+        card: {head: 1つ目 功績, body: 法・信濃・西への遠征}
+        figure: {type: stats, title: 信玄のまとめ, items: [[功績, 法と信濃, 領国の整備と拡大], [失敗, 負けと同盟, 二度の負けと三国同盟の崩れ], [後に残った像, 本が作った像, 軍鑑・絵・小説]], upto: 1}
+      - 聞き: 法律を作ったり、信濃を取ったり、西にも兵を出したり。意外と、働き者の大名だったね。
+      - 語り: 2つ目は、失敗です。上田原と砥石で二度負け、そして、三国同盟を自分の手で壊しました。
+        background: {image: paintings/shingen_kawanakajima_lccn_large.jpg, credit: "歌川芳員《川中島の合戦図》三枚続 1857年"}
+        card: {head: 2つ目 失敗, body: 二度の負けと同盟の崩れ}
+        figure: {type: stats, title: 信玄のまとめ, items: [[功績, 法と信濃, 領国の整備と拡大], [失敗, 負けと同盟, 二度の負けと三国同盟の崩れ], [後に残った像, 本が作った像, 軍鑑・絵・小説]], upto: 2}
+      - 聞き: 「最強」って言われるのに、負けも、同盟を壊したのも、本当にあったことなんでしょ？
+      - 語り: 3つ目は、後の時代に残った像です。軍師としての勘助は、後の本の像です。啄木鳥戦法と「三年間は秘せ」の遺言は、『甲陽軍鑑』の話でした。
+        background: {image: paintings/shingen_hatajirushi_takeda_banners.jpg, credit: "戸沢盛徳《旗印図》1800年ごろ（江戸時代の写し図）"}
+        card: {head: 3つ目 後に残った像, body: 軍師の勘助は後の本の像。作戦と遺言は軍鑑}
+        figure: {type: stats, title: 信玄のまとめ, items: [[功績, 法と信濃, 領国の整備と拡大], [失敗, 負けと同盟, 二度の負けと三国同盟の崩れ], [後に残った像, 本が作った像, 軍鑑・絵・小説]], upto: 3}
+      - 聞き: 軍師の勘助は後の本の像で、作戦と遺言は軍鑑の話なんだ。軍鑑のネタ、多すぎでしょ。
+      - 語り: 江戸の絵も、像を作りました。武田二十四将は、江戸時代の絵の題材で、戦国の頃にあった役職ではありません。一騎打ちの絵も、同じです。
+        figure: null
+        portrait: {image: paintings/shingen_24generals_takeda24syou.jpg, caption: "武田二十四将図（後世の絵）", age: false}
+        card: {head: 江戸の絵, body: 二十四将は後世の呼び名}
+      - 語り: いまの信玄像が広まったのも、江戸の後ろのほうです。赤い法衣と軍配の姿は江戸の像で、同時代の肖像は、別にあります。
+        portrait: {image: paintings/ieyasu_takeda_shingen_portrait_detail.jpg, caption: "武田信玄（江戸時代の肖像画）", age: false}
+        background: {image: paintings/shingen_hatajirushi_takeda_kenshin.jpg, credit: "戸沢盛徳《旗印図》1800年ごろ（江戸時代の写し図）"}
+      - 聞き: ヒーローにも、軍師の大将にもできる話ばっかりでしょ？ あの肖像まで、江戸の像だったの？
+      - 語り: 現代の小説の影響もあるかもしれません。「風林火山」という四字の語は、小説が最初ではないか、という推測があります。
+        portrait: null
+        background: {image: paintings/shingen_kawanakajima_triptych_blue.jpg, credit: "春亭原画・広重模写とされる《信州川中嶋合戦之図》1845年"}
+        card: {head: 現代の小説, body: 四字の語は小説が最初か（推測）}
+      - 語り: 「人は城、人は石垣、人は堀」も、信玄の言葉として有名です。ただ、『甲陽軍鑑』に出ると言われる言葉で、信玄本人の言葉だと裏づける史料は、確かめられていません。
+        card: {head: 「人は城」, body: 『甲陽軍鑑』にあるとされる言葉}
+      - 聞き: 有名な言葉も、本人が言ったかは分からないのか。旗の話も、冒頭から一周したね。
+      - 語り: 冒頭に戻ります。伝わる旗に書かれていたのは、『孫子』の四句です。四字の語は、あとから付いた名前かもしれません。
+        year: 1561
+        background: {image: paintings/shingen_kawanakajima_yukai_bm_trim.jpg, credit: "歌川国芳《勇魁三十六合戦 川中島》1851-52年ごろ（大英博物館蔵）"}
+        detail: {box: [980, 0, 1340, 338], label: 旗に書かれた四句}
+        card: {head: 冒頭の問い, body: 旗の字は四句。四字の語は後か}
+      - 語り: では、像の下にある、記録で言える信玄は、どんな人だったのか。つむぎさんなら、信玄をどんな人と言いますか。
+        year: 1548
+        background: {image: paintings/shingen_kai_fuji_hiroshige_1852.jpg, credit: "歌川広重《不二三十六景 甲斐 夢山裏富士》1852年"}
+      - 聞き: 21歳で父を追い出して、二度負けて。それでも国を持ち直した人、かな。
+      - 語り: 負けも、同盟の崩れもあった人ですね。法を定め、西へ向かい、その遠征の帰り道に、世を去りました。
+        year: 1573
+        background: {image: paintings/shingen_kai_kajikazawa_hokusai.jpg, credit: "葛飾北斎《冨嶽三十六景 甲州石班沢》1830年ごろ（メトロポリタン美術館蔵）"}
+      - 聞き: 「最強の名将」っていうより、負けて、迷って、選んで動いた人、って感じ。あーしは、そのほうが人間っぽくて好きだな。
+        tone: しみじみ
+      - 語り: 西上の目的は、割れたままです。上洛したかったのか、答えは出しません。
+        background: {image: paintings/shingen_totomi_kuniezu_trim.jpg, credit: "《天保国絵図 遠江国》1838年の部分（国立公文書館蔵）"}
+      - 語り: 並べられるのは、日付だけです。元亀3年12月22日の三方ヶ原。元亀4年4月12日の死。天正10年2月14日と、3月11日。
+        card: {head: 並べられる日付, body: 三方ヶ原・没・滅亡の日付}
+      - 聞き: 日付だけだと、上洛を目指したのか、決められないね。決められないって分かることが、いちばん正しいのかも。
+        tone: しみじみ
+      - 語り: 信玄が追い出した父の信虎は、信玄の死の翌年、天正2年に、81歳で死去しました。父は、息子より、長く生きたのです。
+        year: 1574
+        background: {image: paintings/ieyasu_fuchu_abe_river_hiroshige_1833.jpg, credit: "歌川広重《東海道五十三次之内 府中 安部川》1833年ごろ"}
+        card: {head: 天正2年, body: 信虎が81歳で死去。信玄の死の翌年}
+      - 聞き: 追い出した父のほうが、あとまで生きてたのか。なんか、胸にくるね。
+        tone: しみじみ
+      - 語り: 今日の地層は、ここまでです。
+        background: {image: paintings/shingen_kai_fuji_hiroshige_1852.jpg, credit: "歌川広重《不二三十六景 甲斐 夢山裏富士》1852年"}
+      - 聞き: 次回は、真田幸村。砥石城を取った真田幸隆の、孫だよね。その幸村の像も、後の本が作ったの？
+        tone: 疑問
+      - 語り: 知っている通説があれば、コメントで教えてください。
+      - 二人: また一緒に、掘りましょう！
+        tone: 明るい

@@ -1,0 +1,135 @@
+# 物語完結型ショート ジャンヌ・ダルク s1（2026-10-30）。本編 scripts/jeanne-story.yaml（11/2 19:00 公開）から。切り口：許された6日後に処刑。
+# 形式は musashi_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。処刑・火刑の描写なし（絵にも当てない）。
+# 絵は本編の AI 絵（out/story/jeanne/main/N01〜N15。人物なし）だけ。新しい絵は作らない。
+# 事実カード（dev/output/rekishi-chiso/research/ジャンヌ・ダルク_facts_20261029.yaml）：jeanne-01・02・10（5/24 終身の牢の判決、5/28 男の服、5/30 再犯の判決・処刑は jeanne-01）。理由には踏み込まない（問いで閉じる）。
+# 理解テスト4問：
+#   ①誰の話か：ジャンヌ・ダルク
+#   ②いつ・どこで何が：1431年5月24日ルーアンの墓地で署名し終身の牢。28日に男の服に戻り、30日に再犯の判決、同日処刑
+#   ③何を選んだか：署名のあと、男の服を着て牢にいた（理由は語らない）
+#   ④どうなったか：許された6日後に処刑された。決め手は男の服だったのか、は問いで閉じる
+# 語りの字数（句読点を除く）：336
+title: ジャンヌ・ダルク｜許された6日後に、処刑された
+yt_title: ジャンヌ・ダルクは一度許された　処刑はその6日後だった
+description: |-
+  ジャンヌ・ダルクは、一度、許されていました。処刑されたのは、その6日後です。
+  1431年5月24日、ルーアンの墓地で、およそ19歳のジャンヌは誓約書に署名します。裁判記録には名前と十字が写されていて、判決は死刑ではなく、終身の牢でした。ところが28日、判事たちが牢を訪ねると、ジャンヌはまた男の服を着ていました。30日の判決は「再犯の異端者」。その日、ジャンヌは処刑されます。
+  たった6日で、何が変わったのか。男の服は、本当に決め手だったのか。この問いに、記録と証言から迫った本編は、概要欄のリンクからどうぞ。
+hashtags: ['#ジャンヌ・ダルク', '#世界史', '#百年戦争']
+ai_images: true
+ai_disclosure: この動画の人物・情景の画像の多くは、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/jeanne
+out: jeanne_story_s1
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: ジャンヌ・ダルク（百年戦争のフランスの少女）
+  title: "許された《6日後》に、処刑された"
+now:
+  - {at: 5月24日, text: "1431年5月24日　ルーアン", point: 0}
+  - {at: 5月28日, text: "1431年5月28日　牢", point: 1}
+  - {at: 5月30日, text: "1431年5月30日　ルーアン", point: 2}
+timeline:
+  - {label: "5/24"}
+  - {label: "5/28"}
+  - {label: "5/30"}
+shots:
+  N01:
+    kind: ai
+    file: jeanne/main/N01.jpg
+    focus: [0.28, 0.55]
+    move: in
+    must: 朝の墓地の石の十字架と空の木の台
+  N07:
+    kind: ai
+    file: jeanne/main/N07.jpg
+    focus: [0.5, 0.55]
+    move: right
+    must: 墓地に組まれた木の台
+  N08:
+    kind: ai
+    file: jeanne/main/N08.jpg
+    focus: [0.5, 0.65]
+    move: in
+    must: 机の上の2通の白紙の書状
+  N09:
+    kind: ai
+    file: jeanne/main/N09.jpg
+    focus: [0.3, 0.6]
+    move: in
+    must: 床の布の袋とたたまれた布
+  N04:
+    kind: ai
+    file: jeanne/main/N04.jpg
+    focus: [0.5, 0.45]
+    move: in
+    must: 牢の部屋の小窓と鎖
+  N12:
+    kind: ai
+    file: jeanne/main/N12.jpg
+    focus: [0.3, 0.5]
+    move: right
+    must: 大聖堂の内部の石の柱
+  N11:
+    kind: ai
+    file: jeanne/main/N11.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 朝の広場の石畳と家並み
+  N15:
+    kind: ai
+    file: jeanne/main/N15.jpg
+    focus: [0.3, 0.55]
+    move: in
+    text_y: 0.74
+    must: 夕暮れの石畳の広場
+lines:
+  # fact: jeanne-01
+  - 語り: ジャンヌ・ダルクは、一度、許された。そして、その《!6日後》に、処刑された。
+    shot: N01
+    tone: 強調
+    pause: 0.12
+  # fact: jeanne-01, jeanne-07
+  - 語り: 1431年5月24日。フランスのルーアンの墓地で、およそ19歳のジャンヌは、一枚の誓約書に、署名した。
+    shot: N07
+    tone: しみじみ
+    pause: 0.12
+  # fact: jeanne-01, jeanne-02
+  - 語り: 署名といっても、記録に残るのは、名前と、十字だ。判決は、死刑ではなく、終身の牢だった。
+    shot: N08
+    tone: しみじみ
+    pause: 0.12
+  # fact: jeanne-01
+  - 語り: その日の午後、副異端審問官が牢を訪ねると、ジャンヌは、男の服を脱いで、女の服に着替えた。
+    shot: N09
+    tone: しみじみ
+    pause: 0.12
+  # fact: jeanne-10
+  - 語り: ところが、4日後の5月28日、月曜。判事たちが牢を訪ねると、ジャンヌは、また、男の服を着ていた。
+    shot: N04
+    tone: 重い
+    pause: 0.12
+  # fact: jeanne-01
+  - 語り: 5月30日、判決が出る。「あなたは、再び、もとの誤りに落ちた。再犯の異端者である」。
+    shot: N12
+    tone: 重い
+    pause: 0.12
+  # fact: jeanne-01
+  - 語り: この日、ルーアンの旧市場の広場で、ジャンヌは、処刑された。19歳ほどだった。
+    shot: N11
+    tone: 重い
+    pause: 0.3
+    dip: true
+  # fact: （本編へ）
+  - 語り: たった6日で、何が、変わったのか。男の服は、本当に、決め手だったのか。
+    shot: N15
+    tone: 疑問
+    pause: 0.15

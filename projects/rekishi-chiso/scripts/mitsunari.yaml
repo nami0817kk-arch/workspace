@@ -1,0 +1,601 @@
+# 石田三成（A作品・10/21 19時公開予定）。型：掘り下げ型（生まれから順・節ごとに1つの山場・最後は「まとめ：石田三成とは何者だったのか」）
+# 冒頭の一点：徳川方の医師・板坂卜斎は『慶長年中卜斎記』に、佐和山城（19万4千石）には金銀の蓄えがまったくなかった、と書いた。蓄えは無かった、とだけ言う（使い道は分かっていない。9/12増田あて書状の「兵に使った」は未確認なので使わない）。
+#   もう一つの問い：三献茶は『武将感状記』（1716）＝死の約116年あとの書。吉継の茶会は福本日南『英雄論』（1911）。名場面は後の層、と分ける（答えは第2・4節、まとめで冒頭の問いに戻る）。
+# 事実の出どころは dev/output/rekishi-chiso/research/mitsunari_facts.md（確実／有力／説／後世の話／未確認の区分もそこ）。素材は research/mitsunari_assets.md。
+# 決まり：①日付は和暦で言う。西暦は『武将感状記』の1716年・『英雄論』の1911年と、年表・card の年だけ。誕生日は不明なので「永禄3年」。
+#   ②使わない話（入れない）：水口4万石／島左近の禄の数字／「問い鉄砲」を事実として／島津の夜襲案を事実として／首・斬首・晒し首の細部／「大一大万大吉」の意味の断定／
+#     処刑前の「大義を思う者は…」のせりふ／七将の動機の断定（朝鮮での処分への不満説などがある、と言うだけ）／ネットの個人ブログ。
+#   ③三献茶（武将感状記1716）・吉継の茶会（英雄論1911）・干し柿（明良洪範）・甲子夜話の質素な居間・岩淵夜話の「家康邸に逃げた」・吉継の辞世（常山紀談）は後世の話（出典名を言う）。
+#   ④七将の顔ぶれ・動機・襲撃か訴訟か・家康の関与は割れる。兵数は石田隊「約6,000」と西軍全体「諸説」。石田堤28kmは行田市の紹介。忍城は落ちなかった（水攻めは三成だけの判断か疑問）。
+#   ⑤人物のセリフは入れない。辞世は「伝わる歌」。⑥年齢は数え。肖像の「この時○歳」は出さない（誕生日が不明のため）。
+#   ⑦背景に人物の肖像・拡大絵を使わない。NDL 系は detail の box で枠内だけ。血・遺体・首・切腹の絵は使わない。
+#   ⑧三成を悪人扱いしない。「嫌われ者」を事実としては言わない（「と語られてきた」）。
+#   読みの注意：石田三成＝いしだみつなり／佐和山＝さわやま／板坂卜斎＝ばんざかぼくさい／慶長年中卜斎記＝けいちょうねんじゅうぼくさいき／武将感状記＝ぶしょうかんじょうき／
+#     明良洪範＝めいりょうこうはん／常山紀談＝じょうざんきだん／甲子夜話＝かっしやわ／桃源遺事＝とうげんいじ／甫庵太閤記＝ほあんたいこうき／大谷吉継＝おおたによしつぐ／
+#     治部少輔＝じぶしょうゆう／忍城＝おしじょう／今在家村＝いまざいけむら／水口＝みなくち／長束正家＝なつかまさいえ／増田長盛＝ましたながもり／前田玄以＝まえだげんい／
+#     碧蹄館＝へきていかん／幸州山城＝こうしゅうさんじょう／岩淵夜話＝いわぶちやわ／結城秀康＝ゆうきひでやす／古橋村＝ふるはしむら／六条河原＝ろくじょうがわら。
+title: 石田三成｜19万4千石の城に、金銀の蓄えは無かった
+series: ""
+playlists: [日本史を掘る（聞き流し）, 戦国時代を掘る]
+shorts_playlists: [日本史ショート]
+tags: [石田三成, 三成, 佐和山城, 三献茶, 大谷吉継, 太閤検地, 七将襲撃事件, 関ヶ原の戦い, 五奉行, 忍城, 板坂卜斎, 戦国時代, 日本史, 歴史, 歴史解説, 歴史の地層]
+en:
+  title: "Ishida Mitsunari: A 194,000-koku Castle With No Stored Gold or Silver"
+  description: |-
+    A physician on the Tokugawa side, Banzaka Bokusai, wrote that Mitsunari's Sawayama Castle held no stored gold or silver at all, although its lord held 194,000 koku. This video digs into the life of Ishida Mitsunari and separates what records show from what later books say. The famous story of the three cups of tea appears in the Busho Kanjoki, completed in 1716, about 116 years after his death; the tea-party story about Otani Yoshitsugu has its oldest confirmed record in a 1911 essay.
+    We follow him from his birth in Omi Province to his work as a land-survey magistrate, the reconstruction of Hakata, the failed flooding of Oshi Castle, the Korean campaign, the Seven Generals incident, Sekigahara, his capture at Furuhashi village and his death at Rokujo riverbed. We say plainly where sources disagree. Dates are in the Japanese calendar of the time.
+    A Japanese history video to listen to while you work (Japanese audio).
+  chapters:
+    - "1600: A Castle Without Gold, and Stories Told Later"
+    - "1560: Born in Omi, Serving Hideyoshi and the Three Cups of Tea"
+    - "1584: Land Surveys, Hakata and the Flooding of Oshi Castle"
+    - "1592: The Korean Campaign and Otani Yoshitsugu"
+    - "1595: Sawayama Castle and the Five Magistrates"
+    - "1599: The Seven Generals Incident"
+    - "1600: The Road to Sekigahara"
+    - "1600: Capture and Death at Rokujo Riverbed"
+    - "Summary: Who Was Ishida Mitsunari?"
+
+texture: true
+recap: true
+
+timeline:
+  start: 1555
+  end: 1605
+  events: [[1560, 誕生], [1583, 賤ヶ岳], [1584, 検地], [1590, 忍城], [1595, 佐和山], [1599, 七将], [1600, 関ヶ原]]
+
+terms:
+  治部少輔: 秀吉の政権で三成が名乗った官職名。「治部少」とも呼ばれる
+  検地: 田畑の広さと収穫量を測って、帳簿に記すこと
+  石高: 米の収穫量で表す、領地の大きさ
+  兵站: 戦場へ食料や武器を運ぶ仕事
+  落首: 世相を皮肉って、匿名で詠まれた歌
+  五奉行: 秀吉の政権の実務を担った5人。当時はこの呼び名はなかった
+
+shorts:
+  s1:
+    title: "寺小姓の三杯のお茶／いつの本？"
+    yt_title: "石田三成の「三献茶」は本当にあった？｜秀吉に見出された話の出どころ"
+    hook: "三成を秀吉に見出させた／三献茶は、／本当にあった話？"
+    tease: "じゃあ、三成が本当に務めた／秀吉の家臣としての仕事は、何？"
+    lead: "石田三成の出世の入り口として語られる、三献茶。その話は、いつの本に出てくるのでしょうか。"
+    tags: [石田三成, 三献茶, 武将感状記, 歴史の地層]
+  s2:
+    title: "戦場の外の仕事／石田三成の名"
+    yt_title: "石田三成は戦の人ではなかった？｜検地・兵糧・博多の町づくり"
+    hook: "秀吉の天下取りを、／戦場の外で支えた／三成の仕事とは？"
+    tease: "じゃあ、三成が水攻めにした／忍城は、本当に落ちた？"
+    lead: "石田三成の仕事は、戦の外にありました。その最初の大きな仕事が、検地です。"
+    tags: [石田三成, 太閤検地, 博多, 歴史の地層]
+  s3:
+    title: "大谷吉継と三成／茶会の話"
+    yt_title: "石田三成と大谷吉継の茶会の話は本当？｜典拠は明治の本"
+    hook: "吉継が口をつけた茶を、／三成だけが飲んだ話は、／本当にあった？"
+    tease: "じゃあ、関ヶ原のとき、／吉継は誰の意思で西軍についた？"
+    lead: "大谷吉継と石田三成。二人の友情を語る名場面が、茶会の話として知られています。"
+    tags: [大谷吉継, 石田三成, 英雄論, 歴史の地層]
+  s4:
+    title: "七将の襲撃／逃げ込んだ先"
+    yt_title: "七将襲撃で三成は家康の屋敷に逃げた？｜書かれた本の時期を確かめる"
+    hook: "七将に襲われた三成は、／家康の屋敷に逃げ込んだ？"
+    tease: "じゃあ、三成を佐和山へ／送り届けたのは、誰？"
+    lead: "前田利家が亡くなった夜、石田三成が、武将たちに狙われたと伝わります。七将襲撃事件の話です。"
+    tags: [七将襲撃事件, 石田三成, 岩淵夜話, 歴史の地層]
+  s5:
+    title: "佐和山の城／敵の医師の記録"
+    yt_title: "石田三成の佐和山城に金銀はなかった？｜徳川方の医師の記録"
+    hook: "19万4千石の三成の城に、／金銀の蓄えは無かった？"
+    tease: "じゃあ、その佐和山城は、／三成の死のあと、どうなった？"
+    lead: "佐和山19万4千石。石田三成が城主になった、その城の中の話です。"
+    tags: [佐和山城, 石田三成, 板坂卜斎, 歴史の地層]
+
+next:
+  title: ねね
+  series: ""
+  teaser: 秀吉を支えた正妻、ねね。その人物像も、後の本が作ったのか。
+
+thumbnail:
+  layout: number
+  image: paintings/ieyasu_sekigahara_zubyobu.jpg
+  crop: [400, 0, 2833, 1369]
+  number: 19万4千石
+  name: 石田三成
+  lead: 佐和山の城に
+  main: 金銀が無い
+
+sections:
+  # ---------------------------------------------------------------- 1 導入
+  - title: 1600年 佐和山城に金銀は無かった、と徳川方の医師は書いた
+    background: {image: paintings/mitsunari_sawayama_castle_zu.jpg, credit: "《佐和山城図》（江戸時代の絵図。三成の頃の姿そのままではない）"}
+    year: 1600
+    lines:
+      - 語り: 徳川方の医師、板坂卜斎は『慶長年中卜斎記』に、石田三成の佐和山城には、金銀の蓄えが《まったく》なかった、と書きました。三成は、19万4千石の城主でした。
+        portrait: {image: paintings/ieyasu_ishida_mitsunari_portrait.jpg, caption: "石田三成の肖像（18〜19世紀ごろ）", age: false}
+        card: {head: 19万4千石の城, body: 金銀の蓄えは無かったと徳川方の医師が書く}
+        tone: 重い
+      - 聞き: え、19万石の大名のお城なのに、お金が無かったの？ そのお金、どこに行ったんだろ。
+        tone: 疑問
+      - 語り: 今日掘るのは、石田三成。秀吉の側近で、関ヶ原で西軍の中心になって敗れた人です。切れ者だが、嫌われた官僚。そう語られてきました。
+        detail: {box: [0.0, 0.0, 0.34, 1.0], label: 関ヶ原合戦図屏風の部分}
+        portrait: null
+        background: {image: paintings/ieyasu_sekigahara_zubyobu.jpg, credit: "《関ヶ原合戦図屏風》（江戸時代）"}
+        card: {head: 慶長5年, body: 関ヶ原で西軍の中心になり敗れる}
+      - 聞き: 偉そうで、人望がなかった、ってイメージだよね。あーしも、そんな感じで覚えてた。
+        detail: {box: [0.0, 0.0, 0.34, 1.0], label: 関ヶ原合戦図屏風の部分}
+      - 語り: もう一つ有名なのが、秀吉に見出された三献茶の話です。この話の出どころは、江戸時代の書物です。
+        background: {image: paintings/mitsunari_omi_hakkei_seta_hiroshige.jpg, credit: "歌川広重《近江八景 瀬田夕照》1857年ごろ（メトロポリタン美術館蔵）"}
+        card: {head: 三献茶, body: 出どころは江戸時代の書物}
+      - 聞き: 名場面って、後の時代の本が作ることもあるの？ 三成って、どこまでが本当なんだろう。
+        tone: 疑問
+      - 語り: 同じ時代の記録と、後の本を分けながら、生まれから順に掘ります。まずは、琵琶湖のそば、近江の石田村へ。
+        background: {image: paintings/hanbei_nagahama_map.jpg, credit: "《長浜町絵図》（江戸時代、長浜城と城下）"}
+      - 聞き: 関ヶ原で負けた人、ってことしか知らないや。生まれから聞くの、初めてかも。
+
+  # ---------------------------------------------------------------- 2 生まれと秀吉
+  - title: 1560年 近江の石田村に生まれ、秀吉に仕える
+    background: {image: paintings/hanbei_nagahama_map.jpg, credit: "《長浜町絵図》（江戸時代、長浜城と城下）"}
+    year: 1560
+    lines:
+      - 語り: 三成は、永禄3年、近江国の坂田郡、石田村に生まれました。いまの滋賀県長浜市のあたりです。幼い名は、佐吉。父は石田正継です。
+        card: {head: 永禄3年, body: 近江の石田村に生まれる（幼名は佐吉）}
+        portrait: {image: paintings/ieyasu_ishida_mitsunari_portrait.jpg, caption: "石田三成の肖像（18〜19世紀ごろ）", age: false}
+      - 聞き: 琵琶湖のそばの生まれなのか。それで、いつから秀吉のところにいたの？
+        tone: 疑問
+      - 語り: 秀吉に仕えたのは、元亀2年ごろ、とみられています。父と次兄がまず仕え、三成も続いた、という推定で、はっきりした日付は残っていません。
+        portrait: null
+        background: {image: paintings/mitsunari_omi_hakkei_seta_hiroshige.jpg, credit: "歌川広重《近江八景 瀬田夕照》1857年ごろ（メトロポリタン美術館蔵）"}
+        year: 1571
+      - 聞き: 11歳か12歳くらいで、もう秀吉のところにいたんだ。今でいえば、小学生の終わりから中学生くらいで、社会に出てた感じだね。
+      - 語り: 画面は、喜多川歌麿が江戸時代に描いた、秀吉と三成の絵です。秀吉は、名前を変えて描かれています。二人が近い関係だった、という印象は、のちの時代にも広く伝わりました。
+        portrait: {image: paintings/hideyoshi_utamaro_mashiba.jpg, caption: "喜多川歌麿《真柴久吉と寵臣石田三成》（1804年ごろ）", age: false}
+        background: {image: paintings/mitsunari_omi_hakkei_awazu_zeze_hiroshige.jpg, credit: "歌川広重《近江八景 粟津晴嵐》1857年（メトロポリタン美術館蔵）"}
+      - 聞き: 江戸の人たちにも、秀吉と三成のコンビは、おなじみだったのか。
+      - 語り: 石田三成には、有名な逸話があります。お寺の小姓だった佐吉が、秀吉に、温度の違う茶を、三杯出して見出された、という話です。
+        portrait: null
+        background: {image: paintings/akechi_karasaki_night_rain_hiroshige.jpg, credit: "歌川広重《近江八景之内 唐崎夜雨》1834年ごろ"}
+        card: {head: 三献茶, body: 温度の違う茶で秀吉に見出される}
+        short: s1
+      - 聞き: 気が利く人だった、っていう話だよね。ドラマで見たことある！ 三杯とも、温度を変えて出したってことだよね。
+        short: s1
+      - 語り: ただし出どころは、正徳6年にできた『武将感状記』など、江戸時代の書です。同じ時代の記録では、確かめられていません。後世の創作だとする説もあります。
+        year: 1716
+        card: {head: 後世の話, body: 『武将感状記』は1716年の書}
+        figure: {type: numberline, title: 三献茶の話が書かれるまで, items: [[三成の死, 1600], [『武将感状記』, 1716]], unit: 年, focus: 『武将感状記』, note: 三成の死の約116年あと}
+        short: s1
+      - 聞き: 116年あとかあ。有名な話ほど、あとから磨かれたりするよね。
+        short: s1
+      - 語り: 天正9年の11月、淡路島の攻略に同行しています。『広田家文書』によれば、仙石や広田の戦功を、秀吉に取り次ぎました。
+        figure: null
+        year: 1581
+        background: {image: paintings/hanbei_harima_map.jpg, credit: "《播磨国絵図》江戸時代（フランス国立図書館蔵）"}
+        card: {head: 天正9年11月, body: 淡路攻めで戦功を秀吉に取り次ぐ}
+      - 聞き: 自分が手柄を立てるんじゃなくて、手柄を伝える係なんだ。
+      - 語り: 天正11年の賤ヶ岳の戦いでは、偵察を担当しました。『一柳家記』には、先駆けの一人として、名が見えます。
+        year: 1583
+        background: {image: paintings/mitsunari_omi_hakkei_katata_hiroshige.jpg, credit: "歌川広重《近江八景 堅田落雁》1857年（メトロポリタン美術館蔵）"}
+        card: {head: 天正11年, body: 賤ヶ岳の戦いで偵察を担う}
+      - 語り: ここまでの三成は、先頭で戦うより、取り次ぎや偵察の役目で名が出ます。
+      - 聞き: 武将っていうより、連絡係って感じだね。
+      - 語り: その役目が、のちに、日本中の田畑を測る、大きな仕事へつながります。
+        hook: true
+      - 聞き: 田畑を測るって、何をどうやって測るの？
+        hook: true
+
+  # ---------------------------------------------------------------- 3 検地・博多・忍城
+  - title: 1584年 太閤検地と博多の再興、落ちなかった忍城
+    background: {image: paintings/nobunaga_azuchi_castle_zu.jpg, credit: "《近江国蒲生郡安土城之図》（1855年原図の明治の写し）"}
+    year: 1584
+    lines:
+      - 語り: 天正12年の11月、三成は近江の蒲生郡で、太閤検地の奉行を務めます。今在家村の検地帳には、「石田左吉」の名が記録されています。
+        background: {image: paintings/nobunaga_azuchi_castle_zu.jpg, credit: "《近江国蒲生郡安土城之図》（1855年原図の明治の写し）"}
+        year: 1584
+        card: {head: 天正12年11月, body: 検地帳に「石田左吉」の名が残る}
+        short: s2
+      - 聞き: 検地って、学校で習ったけど、結局、何をしたの？
+        tone: 疑問
+        short: s2
+      - 語り: 田畑の広さと、取れる米の量を測って、帳簿にまとめる仕事です。のちに、6尺3寸を1間とする物差しや、京枡で、全国をそろえていきました。
+        card: {head: 太閤検地, body: 物差しと升をそろえて米の量で測る}
+        detail: {box: [0.15, 0.15, 0.85, 0.75], label: 蒲生郡の絵図}
+        short: s2
+      - 聞き: 物差しがバラバラだと、お店ごとにレートが違う両替みたいになっちゃうもんね。
+      - 語り: 天正13年7月、秀吉が関白になったのにともない、26歳で、従五位下・治部少輔に叙任。呼び名の「治部少」は、この官職です。
+        year: 1585
+        background: {image: paintings/hideyoshi_jurakudai_screen_mitsui.jpg, credit: "《聚楽第図屏風》（桃山時代）"}
+        card: {head: 天正13年7月, body: 治部少輔に叙任される（26歳）}
+      - 聞き: 26歳で官位かあ。ずいぶん早い出世だね。
+      - 語り: 天正14年の6月、三成は、上杉景勝と直江兼続の上洛を取り次ぎます。同じ月の14日には、堺奉行に就任しました。堺は、当時の大きな貿易の町です。
+        background: {image: paintings/nene_osaka_castle_summer_screen_detail.jpg, credit: "《大坂夏の陣図屏風》大坂城の部分（江戸時代）"}
+        card: {head: 天正14年6月, body: 上杉景勝の上洛を取り次ぎ、堺奉行に}
+      - 聞き: 人と人をつなぐ窓口役もやってたのか。貿易の町の責任者なんて、責任重大そう。
+      - 語り: 天正15年、九州征伐では、大谷吉継、長束正家とともに、兵糧と弾薬の補給を担当しました。実務の力が評価されています。
+        year: 1587
+        background: {image: paintings/kanbei_chikuzen_hakozaki_hiroshige.jpg, credit: "歌川広重《六十余州名所図会 筑前 筥崎海中の道》1855年"}
+        card: {head: 天正15年, body: 九州征伐の兵糧と弾薬を補給する}
+        figure: {type: stats, title: 三成の裏方の仕事, items: [[検地奉行, 天正12年, 近江の蒲生郡], [博多奉行, 6月7日, 天正15年], [兵站の担当, 天正15年, 九州征伐の兵糧と弾薬]]}
+        short: s2
+      - 聞き: 戦場でいちばん大事なのは、ご飯と弾ってことか。足りなくなったら、強くても動けないもんね。
+      - 語り: 同じ年の6月7日、博多奉行に任じられ、荒れた博多の町の再興にあたります。
+        figure: null
+        detail: {box: [0.05, 0.45, 0.95, 0.95], label: 博多湾}
+        card: {head: 天正15年6月7日, body: 博多奉行に任じられる}
+      - 語り: 『甫庵太閤記』によれば、古くからの特権をやめて、自由な商売を認め、地子や諸役を免除しました。とはいえ、これは江戸時代の書で、細部は後の記述に頼る話です。
+        background: {image: paintings/nobunaga_azuchi_castle_zu.jpg, credit: "《近江国蒲生郡安土城之図》（1855年原図の明治の写し）"}
+        card: {head: 『甫庵太閤記』, body: 自由な商売を認め、地子を免除した、と書く}
+      - 聞き: 商売しやすい町にした、ってこと？ 今でいう、規制緩和と減税か。
+      - 語り: 天正17年には、美濃国の検地にも関わります。先ほどの物差しがはっきり使われた最初の検地は、この美濃国の検地とされます。
+        year: 1589
+        background: {image: paintings/nobunaga_azuchi_castle_zu.jpg, credit: "《近江国蒲生郡安土城之図》（1855年原図の明治の写し）"}
+        card: {head: 天正17年, body: 美濃国の検地。物差しを使った最初とされる}
+      - 聞き: 物差しがそろった最初が、美濃なんだ。全国の田んぼを同じ定規で測り直すなんて、気が遠くなるね。
+      - 語り: 天正18年、小田原攻め。三成は、武蔵の忍城を攻めました。約3万の兵を率いましたが、自前の兵は約1,500です。
+        year: 1590
+        background: {image: paintings/shingen_odawara_castle_map.jpg, credit: "《小田原城絵図》（江戸時代）"}
+        card: {head: 天正18年, body: 武蔵の忍城を攻める}
+        figure: {type: bars, title: 忍城をめぐる人数, bars: [[豊臣方の兵, 30000], [三成自前の兵, 1500], [城に立てこもった人, 3000]], labels: [約3万, 約1500, 約3000]}
+      - 聞き: 3万人の大将なのに、自分の兵は1,500人なんだ。ほとんど、寄せ集めか。
+      - 語り: 利根川の水を使った水攻めで、築いた堤が「石田堤」です。総延長28kmと、行田市教育委員会が紹介しています。画面は、秀吉の別の水攻めを描いた、紀州の太田城の絵です。
+        figure: null
+        background: {image: paintings/hidenaga_ota_castle_flood_map.jpg, credit: "《総光寺由来太田城水責図》（江戸時代、紀州・太田城の水攻め）"}
+        card: {head: 石田堤, body: 総延長28kmと行田市が紹介}
+      - 聞き: 28km！ 東京駅から横浜駅くらいの長さの堤か。すごい工事だね。
+        tone: 驚き
+        reaction: {number: 28km, lead: 石田堤の総延長, say: ほんとに28km？}
+      - 語り: ところが、忍城は落ちませんでした。小田原城が先に落ちたので、忍城は開城しました。
+        background: {image: paintings/shingen_odawara_castle_map.jpg, credit: "《小田原城絵図》（江戸時代）"}
+        card: {head: 忍城は落ちなかった, body: 小田原城が先に落ち、開城}
+      - 語り: 三成は、水攻めを批判する書状を残しています。一方、浅野長政には、秀吉から、水攻めを続けよという命令が届いていました。三成だけの判断だったかは、疑問が残ります。
+        card: {head: 『浅野家文書』, body: 秀吉が水攻めの続行を命じた}
+      - 聞き: 失敗した人にされがちだけど、誰が決めたのかは、はっきりしないんだ。決めつけちゃだめだね。
+      - 語り: 三成の力は、剣の勝ち負けより、現場を回す腕でした。その腕が、海を渡る大きな戦で、試されます。
+        hook: true
+      - 聞き: 海を渡る戦って、どこの戦？
+        hook: true
+
+  # ---------------------------------------------------------------- 4 朝鮮と吉継
+  - title: 1592年 朝鮮出兵の三奉行と、大谷吉継との友情
+    background: {image: paintings/hideyoshi_nagoya_departure_yoshitoshi_met.jpg, credit: "月岡芳年《真柴秀吉公名護屋陣先手諸将繰出之図》19世紀"}
+    year: 1592
+    lines:
+      - 語り: 文禄元年の3月、朝鮮出兵が決まります。三成は船奉行として、兵站と船の管理を担いました。
+        detail: {box: [0.0, 0.0, 0.34, 1.0], label: 名護屋出陣の図の部分}
+        card: {head: 文禄元年3月, body: 船奉行として兵站と船を管理する}
+      - 語り: 6月3日には、増田長盛、大谷吉継とともに三奉行として朝鮮へ渡り、7月16日、漢城、いまのソウルに着きます。
+        year: 1592
+        background: {image: paintings/mitsunari_busanjin_1592.jpg, credit: "釜山鎮の戦い（1592年）を描いた朝鮮の絵（朝鮮時代）"}
+        card: {head: 文禄元年7月16日, body: 三奉行が漢城に着く}
+        figure: {type: map, title: 三奉行の渡海, bounds: [126.3, 131.4, 32.5, 38.0], route: [名護屋, 釜山, 漢城], places: [[名護屋, 129.87, 33.53], [釜山, 129.04, 35.10], [漢城, 126.98, 37.57]], note: 海を渡る}
+      - 聞き: 戦う係じゃなくて、現場の管理役として行ったんだ。
+      - 語り: 8月7日の漢城会議で、三成は慎重論を主張しました。軍を漢城のまわりに集める方針が、採られたといいます。
+        figure: null
+        background: {image: paintings/kanbei_korea_campaign_map.jpg, credit: "『大日本読史地図』より《文禄・慶長の役》1935年"}
+        card: {head: 文禄元年8月7日, body: 漢城会議で慎重論を主張}
+      - 聞き: 強気に攻め込めって人じゃなかったのか。
+      - 語り: 文禄2年1月の碧蹄館では鉄砲隊の配置を助言し、2月の幸州山城では負傷した、と伝わります。どちらも、伝わる話です。5月15日、名護屋へ戻りました。
+        year: 1593
+        background: {image: paintings/kanbei_korea_castle_screen.jpg, credit: "《蔚山城攻防図屏風》（江戸時代）"}
+        card: {head: 文禄2年5月15日, body: 名護屋へ帰還}
+      - 語り: この朝鮮に、三奉行の一人として一緒に渡ったのが、大谷吉継です。三成の友人として知られる人です。
+        portrait: {image: paintings/sanada_otani_yoshitsugu_yoshiiku.jpg, caption: "大谷吉継（『太平記英勇伝』、後世の想像図）", age: false}
+        background: {image: paintings/hideyoshi_nagoya_departure_yoshitoshi_met.jpg, credit: "月岡芳年《真柴秀吉公名護屋陣先手諸将繰出之図》19世紀"}
+        card: {head: 大谷吉継, body: 三奉行の一人として朝鮮へ渡る}
+      - 聞き: 病気の吉継と三成の、お茶の話、有名だよね。
+      - 語り: 茶会で、吉継が口をつけた茶碗を、ほかの人は飲まず、三成だけが飲み干した。そういう話です。
+        background: {image: paintings/hideyoshi_jurakudai_screen_mitsui.jpg, credit: "《聚楽第図屏風》（桃山時代）"}
+        short: s3
+      - 語り: 典拠は不明とされます。確認できる最古の記録は、福本日南の『英雄論』、1911年です。しかも、そこでは、三成ではなく秀吉の話になっています。
+        year: 1911
+        card: {head: 後世の話, body: 『英雄論』は1911年の書}
+        short: s3
+      - 聞き: 明治の終わりの本なのに、定番の場面みたいに語られてるんだ。
+        short: s3
+      - 語り: 吉継の病は、ハンセン病と断定はされていません。一方、文禄3年の直江兼続への書状に、目の病を理由に印判を使った、とあり、目を病んでいたのは確かとみられます。
+        year: 1594
+        background: {image: paintings/nene_osaka_castle_summer_screen_detail.jpg, credit: "《大坂夏の陣図屏風》大坂城の部分（江戸時代）"}
+        card: {head: 文禄3年の書状, body: 目の病を理由に印判を使う}
+        short: s3
+      - 聞き: 書状に残ってるのは、お茶の話じゃなくて、目の病気のほうか。じゃあ、二人の友情は、何で分かるの？
+        tone: 疑問
+      - 語り: 二人は、九州でも朝鮮でも、同じ役目を並んで務めました。言えるのは、同じ現場を何度も共にした、ということです。友情の中身までは、史料から言い切れません。
+        portrait: null
+        background: {image: paintings/kanbei_nagoya_jinei_map.jpg, credit: "吉村茂三郎《西肥名古屋城豊太閤陣営図》1934年（近代の絵地図）"}
+      - 聞き: 同じ現場を何度もくぐった仲、か。それなら、信頼していても、おかしくないね。
+      - 語り: 石高でも比べておきます。吉継は、天正18年の加増のあと、「敦賀5万石」と呼ばれる領地を持ちました。三成の19万4千石の、約4分の1です。
+        year: 1595
+        background: {image: paintings/nene_osaka_castle_summer_screen_detail.jpg, credit: "《大坂夏の陣図屏風》大坂城の部分（江戸時代）"}
+        card: {head: 敦賀5万石, body: 三成の19万4千石の約4分の1}
+        figure: {type: bars, title: 友人同士の石高（石）, bars: [[石田三成, 194000], [大谷吉継, 50000]], labels: [約19万4千, 約5万]}
+      - 聞き: 親友って言われても、領地の大きさは、だいぶ違ったんだね。
+      - 語り: 文禄4年、三成は、大きな領地を与えられます。ところが、その城には、冒頭の話が待っていました。
+        figure: null
+        background: {image: paintings/mitsunari_sawayama_castle_zu.jpg, credit: "《佐和山城図》（江戸時代の絵図。三成の頃の姿そのままではない）"}
+        hook: true
+      - 聞き: 金銀が無かった、っていう、あの城だよね？
+        hook: true
+
+  # ---------------------------------------------------------------- 5 佐和山と五奉行
+  - title: 1595年 佐和山19万4千石と、五奉行のなかの三成
+    background: {image: paintings/mitsunari_sawayama_castle_zu.jpg, credit: "《佐和山城図》（江戸時代の絵図。三成の頃の姿そのままではない）"}
+    year: 1595
+    lines:
+      - 語り: 文禄3年9月3日、母の瑞岳院が亡くなると、三成は、佐和山の城下に、瑞岳寺を建てました。
+        year: 1594
+        card: {head: 文禄3年9月3日, body: 母が死去。城下に瑞岳寺を建てる}
+      - 聞き: 母の供養のためにお寺を建てたんだ。家族思いな一面もあったのかな。
+      - 語り: 文禄4年、秀吉の甥の秀次が失脚した事件のあと、三成は、秀次の旧領、近江の7万石を、代官地として預かります。さらに、佐和山19万4千石を与えられ、城主になりました。
+        background: {image: paintings/mitsunari_omi_hakkei_awazu_zeze_hiroshige.jpg, credit: "歌川広重《近江八景 粟津晴嵐》1857年（メトロポリタン美術館蔵）"}
+        card: {head: 文禄4年, body: 佐和山19万4千石の城主になる}
+      - 聞き: 19万4千石って、ほかの人と比べると、どうなの？
+        tone: 疑問
+      - 語り: 五奉行の石高を並べます。ある整理に出てくる数字で、およその値です。
+        background: {image: paintings/nene_osaka_castle_summer_screen_detail.jpg, credit: "《大坂夏の陣図屏風》大坂城の部分（江戸時代）"}
+        figure: {type: bars, title: 五奉行の石高（石）, bars: [[浅野長政, 220000], [増田長盛, 220000], [石田三成, 194000], [長束正家, 50000], [前田玄以, 50000]], labels: [約22万, 約22万, 約19万4千, 約5万, 約5万]}
+      - 聞き: 三成は、3番目なんだ。上に2人いるのか。
+      - 語り: 5人の石高を足すと、約73.4万石。三成は、その約26%です。長束正家や前田玄以の、約3.9倍にあたります。
+        card: {head: 5人で約73.4万石, body: 三成は約26%。長束・前田の約3.9倍}
+      - 聞き: 4分の1ちょっとか。長束さんたちと比べると、だいぶ大きいんだね。
+      - 語り: ただし、「五奉行」という呼び名は、当時は無く、「奉行」「年寄」と呼ばれた、と研究者は指摘します。成立の時期も割れます。天正13年とする説と、慶長3年7月とする説です。
+        background: {image: paintings/nene_kyoto_map_1696.jpg, credit: "《京都の地図》元禄9年（1696年）"}
+        figure: null
+        card: {head: 五奉行の呼び名, body: 当時は「奉行」「年寄」と呼ばれた}
+      - 聞き: 呼び名は、あとから付いたのか。それなら、5人って数も、あとから決まったのかな。5人の役割は、決まってたの？
+      - 語り: 浅野が司法、前田が宗教、三成が行政、増田が土木、長束が財政、とされます。
+        figure: {type: people, title: 五奉行とされる5人, nodes: [[石田三成, 行政], [浅野長政, 司法], [増田長盛, 土木], [長束正家, 財政], [前田玄以, 宗教]], edges: [[石田三成, 浅野長政, 同僚], [石田三成, 増田長盛, 同僚], [石田三成, 長束正家, 同僚], [石田三成, 前田玄以, 同僚]]}
+      - 語り: 佐和山の城には、こんな落首が伝わります。「三成に過ぎたるものが二つあり、島の左近と佐和山の城」。島左近は、三成の有能な家臣です。いつの落首かは、はっきりしません。
+        figure: null
+        background: {image: paintings/mitsunari_sawayama_castle_zu.jpg, credit: "《佐和山城図》（江戸時代の絵図。三成の頃の姿そのままではない）"}
+        card: {head: 落首, body: 「島の左近と佐和山の城」が過ぎたものと詠む}
+      - 聞き: 家臣と城が、主人にはもったいない、って意味？ ほめてるのか、からかってるのか、微妙だね。
+      - 語り: 荒れていた城に大改修を加え、山頂に天守を持つ城にした、とされます。一方、三成は伏見で奉行の仕事をすることが多く、城を実際に任されていたのは、父の正継でした。
+        short: s5
+      - 語り: 城の中は、居間の多くが板張りで、壁は塗り残し、手水鉢は粗末な石だった、と江戸後期の随筆『甲子夜話』は書きます。後世の話です。
+        background: {image: paintings/akechi_karasaki_night_rain_hiroshige.jpg, credit: "歌川広重《近江八景之内 唐崎夜雨》1834年ごろ"}
+        card: {head: 『甲子夜話』, body: 江戸後期の随筆。居間は板張りと書く}
+        short: s5
+      - 聞き: 19万石の城の中なのに、板張りの居間かあ。
+        short: s5
+      - 語り: 一方、冒頭の『慶長年中卜斎記』は、敵方の医師の記録です。金銀の蓄えは、まったくなかった、とあります。
+        card: {head: 『慶長年中卜斎記』, body: 徳川方の医師の記録。金銀の蓄えは無し}
+        short: s5
+      - 聞き: 敵の側の人が書いてるなら、ほめるために盛る必要はないよね。
+        short: s5
+      - 語り: 19万4千石の収入を、三成が何に使ったのか。それは、分かっていません。
+        background: {image: paintings/mitsunari_sawayama_castle_zu.jpg, credit: "《佐和山城図》（江戸時代の絵図。三成の頃の姿そのままではない）"}
+        card: {head: 使い道, body: 金銀の蓄えは無し。使い道は分かっていない}
+      - 聞き: 医師の記録だけだと、お金の使い道までは分からないのか。
+      - 語り: 慶長元年には京都奉行も務め、キリシタンの取り締まりに関わりました。一方、捕まえる人の数を減らすよう努めた、といいます。
+        year: 1596
+        background: {image: paintings/nene_kyoto_map_1696.jpg, credit: "《京都の地図》元禄9年（1696年）"}
+        card: {head: 慶長元年, body: 京都奉行。捕縛者を減らすよう努めたとされる}
+      - 聞き: 取り締まる側なのに、減らそうとしたの？
+      - 語り: 慶長3年4月、小早川秀秋の旧領、筑前一国と筑後の二郡が、秀吉の直轄地になります。三成は、約20万石の代官支配を命じられ、6月16日に博多へ着きました。
+        year: 1598
+        background: {image: paintings/kanbei_chikuzen_hakozaki_hiroshige.jpg, credit: "歌川広重《六十余州名所図会 筑前 筥崎海中の道》1855年"}
+        card: {head: 慶長3年4月, body: 筑前・筑後の約20万石の代官支配を命じられる}
+      - 聞き: 秀吉の直轄の土地を、まるごと預かるってことか。
+      - 語り: 慶長3年8月18日、その秀吉が、伏見城で亡くなります。ここから、三成の立場は、一気に揺れはじめるのです。
+        year: 1598
+        background: {image: paintings/nene_kyoto_map_1696.jpg, credit: "《京都の地図》元禄9年（1696年）"}
+        card: {head: 慶長3年8月18日, body: 秀吉が伏見城で死去}
+        hook: true
+      - 聞き: 秀吉がいなくなって、周りの人たちが、動き出すのか。
+        hook: true
+
+  # ---------------------------------------------------------------- 6 七将襲撃
+  - title: 1599年 前田利家の死、七将襲撃事件と佐和山への引退
+    background: {image: paintings/nene_osaka_castle_summer_screen_detail.jpg, credit: "《大坂夏の陣図屏風》大坂城の部分（江戸時代）"}
+    year: 1599
+    lines:
+      - 語り: 慶長4年の閏3月3日、五大老の一人、前田利家が大坂で亡くなります。その夜、武将たちが三成を襲おうとした、と伝わるのが、七将襲撃事件です。
+        card: {head: 慶長4年閏3月3日, body: 前田利家が死去。七将襲撃事件}
+        short: s4
+      - 聞き: 七人の武将が、一人を襲うってこと？ かなり物騒じゃん。
+      - 語り: 顔ぶれは、史料で割れます。一般には、加藤清正、黒田長政、細川忠興、池田輝政、藤堂高虎、福島正則、浅野幸長の7人です。
+        portrait: {image: paintings/kanbei_kato_kiyomasa_portrait.jpg, caption: "加藤清正の肖像（江戸時代とされる）", age: false}
+        card: {head: 七将の顔ぶれ, body: 清正・長政・忠興・輝政・高虎・正則・幸長}
+        short: s4
+      - 語り: ただし『慶長年中卜斎記』では、顔ぶれが少し違い、脇坂安治と加藤嘉明の名が挙がります。
+        portrait: null
+        background: {image: paintings/nene_kyoto_map_1696.jpg, credit: "《京都の地図》元禄9年（1696年）"}
+        card: {head: 史料ごとに違う顔ぶれ, body: 脇坂安治・加藤嘉明も挙がる}
+        short: s4
+      - 聞き: 七人っていう数からして、決まってないのか。どうして三成が狙われたの？
+      - 語り: 動機も、一つには言い切れません。朝鮮での処分をめぐる不満が背景にあった、という説などがあります。
+        detail: {box: [0.0, 0.0, 1.0, 0.5], label: 洛中洛外図屏風の部分}
+        background: {image: paintings/mitsunari_rakuchu_rakugai_pair.jpg, credit: "《洛中洛外図屏風》（17世紀初め）"}
+        card: {head: 襲撃の動機, body: 朝鮮での処分への不満説など}
+      - 聞き: 朝鮮の戦場での不満が、国内でぶつかったってこと？ 海の向こうの戦が、国内の争いにつながったなんて、ちょっと複雑だね。
+        detail: {box: [0.0, 0.0, 1.0, 0.5], label: 洛中洛外図屏風の部分}
+      - 語り: そう読む説もあります。ただ、七将の動機を、一つの史料で言い切ることは、できません。
+        detail: {box: [0.0, 0.0, 1.0, 0.5], label: 洛中洛外図屏風の部分}
+      - 語り: 三成の動きも割れます。従来は、家康の伏見の屋敷に逃げ込んだ、と語られました。ところが、この話の初出は江戸時代の『岩淵夜話』で、同じ時代の史料には出てきません。
+        portrait: null
+        background: {image: paintings/hideyoshi_jurakudai_screen_mitsui.jpg, credit: "《聚楽第図屏風》（桃山時代）"}
+        card: {head: 家康の屋敷に逃げた？, body: 初出は江戸時代の『岩淵夜話』}
+        short: s4
+      - 聞き: 家康の屋敷に逃げた、って話も、あとから出てきたの？ 定番の場面だと思ってた。
+      - 語り: 白峰旬は、武力の襲撃はなく、法的な「訴訟」だったと見ます。これに反論する研究者もいます。決着は、ついていません。
+        card: {head: 襲撃か訴訟か, body: 研究者のあいだで見方が割れる}
+      - 聞き: 同じ事件なのに、研究でも見方が割れるんだ。襲撃か訴訟かで、ずいぶん印象が変わるよね。
+      - 語り: 記録で言えるのは、結果です。閏3月9日、家康が裁定を示し、10日、結城秀康が、三成を佐和山へ送り届けました。
+        year: 1599
+        background: {image: paintings/mitsunari_sawayama_castle_zu.jpg, credit: "《佐和山城図》（江戸時代の絵図。三成の頃の姿そのままではない）"}
+        card: {head: 閏3月10日, body: 結城秀康が三成を佐和山へ送る}
+        figure: {type: stats, title: 七将襲撃事件のあと, items: [[前田利家の死, 閏3月3日, 慶長4年], [三成の裁定, 閏3月9日, 家康が示す], [佐和山へ, 閏3月10日, 結城秀康が送る]]}
+      - 語り: 別れ際、三成は、名刀『石田正宗』を、秀康に贈った、といわれます。
+        figure: null
+        card: {head: 石田正宗, body: 別れ際に秀康に贈ったと伝わる}
+      - 聞き: 送ってくれた人に、名刀をあげたんだ。律儀な人だね。
+      - 語り: 三成は政務から退き、佐和山で隠居します。五奉行の体制は、事実上崩れました。
+        background: {image: paintings/mitsunari_omi_hakkei_katata_hiroshige.jpg, credit: "歌川広重《近江八景 堅田落雁》1857年（メトロポリタン美術館蔵）"}
+        card: {head: 慶長4年, body: 奉行を退き、佐和山で隠居}
+      - 語り: 隠居は、約1年。次に三成が動いたのは、家康が、会津へ向かったときでした。
+        hook: true
+      - 聞き: 引退したはずなのに、また動いたんだ。
+        hook: true
+
+  # ---------------------------------------------------------------- 7 関ヶ原
+  - title: 1600年 挙兵から関ヶ原の本戦まで、笹尾山の石田隊
+    background: {image: paintings/kanbei_sekigahara_map_midmorning.jpg, credit: "藤井治左衛門《関ヶ原の戦い午前中の戦況図》1926年（近代の戦史地図）"}
+    year: 1600
+    lines:
+      - 語り: 慶長5年の6月16日、家康が、会津の上杉景勝を討つために出陣します。そのころ、敦賀の大谷吉継も、家康の軍に加わろうと、出発していました。
+        card: {head: 慶長5年6月16日, body: 家康が会津征伐に出陣}
+      - 語り: 7月10日ごろ、吉継は佐和山で、三成から挙兵の計画を聞き、同意して西軍に加わった、と説明されます。
+        year: 1600
+        background: {image: paintings/mitsunari_sawayama_castle_zu.jpg, credit: "《佐和山城図》（江戸時代の絵図。三成の頃の姿そのままではない）"}
+        portrait: {image: paintings/sanada_otani_yoshitsugu_yoshiiku.jpg, caption: "大谷吉継（『太平記英勇伝』、後世の想像図）", age: false}
+        card: {head: 7月10日ごろ, body: 吉継が佐和山で挙兵の計画を聞く}
+      - 聞き: 家康の側に行こうとしてたのに、変えたんだ。
+      - 語り: 『常山紀談』などの軍記は、吉継が三成をいさめ、考えた末に同意した、と書きます。とはいえ、軍記は後の時代の編纂物です。石畑匡基は、家康との対立から、吉継自身の意思だった、と見ます。
+        background: {image: paintings/akechi_karasaki_night_rain_hiroshige.jpg, credit: "歌川広重《近江八景之内 唐崎夜雨》1834年ごろ"}
+        card: {head: 吉継が西軍についた理由, body: 軍記と研究者で見方が割れる}
+      - 聞き: 友情だけじゃなくて、吉継にも自分の事情があった、っていう見方もあるんだ。
+      - 語り: 7月17日、三奉行の連名で、家康の違反を並べた「内府ちがいの条々」が出ます。三成の名はありませんが、実質的に三成が主導した、と考えられています。
+        portrait: null
+        background: {image: paintings/ieyasu_sekigahara_zubyobu.jpg, credit: "《関ヶ原合戦図屏風》（江戸時代）"}
+        detail: {box: [0.0, 0.0, 0.34, 1.0], label: 関ヶ原合戦図屏風の部分}
+        card: {head: 慶長5年7月17日, body: 「内府ちがいの条々」が出される}
+      - 語り: ただし、西軍の総大将は、毛利輝元でした。三成は、総大将ではありません。
+        portrait: {image: paintings/sekigahara_mori_terumoto.jpg, caption: "毛利輝元の肖像（江戸初期）", age: false}
+        background: {image: paintings/kanbei_sekigahara_map_midmorning.jpg, credit: "藤井治左衛門《関ヶ原の戦い午前中の戦況図》1926年（近代の戦史地図）"}
+        card: {head: 西軍の総大将, body: 毛利輝元。三成は総大将ではない}
+      - 聞き: え、三成が総大将じゃなかったの？ 西軍の大将って、てっきり三成だと思ってた。
+        tone: 疑問
+      - 語り: 三成は8月10日、大垣城に入ります。9月14日には、家臣の島左近が、杭瀬川で東軍に仕掛けました。落首にも詠まれた、あの左近です。
+        year: 1600
+        portrait: null
+        background: {image: paintings/kanbei_sekigahara_map_midmorning.jpg, credit: "藤井治左衛門《関ヶ原の戦い午前中の戦況図》1926年（近代の戦史地図）"}
+        card: {head: 慶長5年9月14日, body: 島左近が杭瀬川で東軍に仕掛ける}
+      - 聞き: 「三成に過ぎたる」って言われた左近だよね。ここで、出番だったんだ。
+      - 語り: そして9月15日。関ヶ原です。三成は笹尾山に布陣し、約6,000の兵と整理されます。忍城のときの自前の兵、約1,500の、4倍です。西軍全体の数は、8万以上など、諸説あります。
+        year: 1600
+        background: {image: paintings/nene_sekigahara_screen_gifu.jpg, credit: "《関ヶ原合戦図屏風》（江戸後期）"}
+        card: {head: 慶長5年9月15日, body: "関ヶ原の本戦。石田隊は約6,000"}
+        figure: {type: stats, title: 関ヶ原の石田隊, items: [[石田隊, "約6,000人", 数字は諸説], [本戦の日, 9月15日, 慶長5年], [佐和山の落城, 9月18日, 東軍が攻め入る]]}
+      - 聞き: 6,000人かあ。西軍全体では、8万以上かあ。
+      - 語り: 毛利隊は動かず、小早川秀秋は戦いの途中で西軍に襲いかかった、といいます。きっかけといわれる「問い鉄砲」は、合戦直後の書状には出てきません。
+        figure: null
+        portrait: {image: paintings/ieyasu_kobayakawa_hideaki_yoshiiku.jpg, caption: "小早川秀秋（『太平記拾遺』、後世の想像図）", age: false}
+        background: {image: paintings/ieyasu_sekigahara_senjinzu_toiteppo.jpg, credit: "《関ヶ原戦陣図屏風》の一部（19世紀）"}
+        card: {head: 問い鉄砲, body: 合戦直後の書状には出てこない}
+      - 聞き: ドラマで見る「問い鉄砲」の場面は、本当にあったのかな。
+      - 語り: 吉継は、秀秋の裏切りを受けて敗れ、自害します。介錯は、湯浅五助でした。辞世は、江戸の『常山紀談』に伝わります。
+        portrait: {image: paintings/sanada_otani_yoshitsugu_yoshiiku.jpg, caption: "大谷吉継（『太平記英勇伝』、後世の想像図）", age: false}
+        background: {image: paintings/nene_sekigahara_screen_gifu.jpg, credit: "《関ヶ原合戦図屏風》（江戸後期）"}
+        card: {head: 9月15日, body: 大谷吉継が自害（介錯は湯浅五助）}
+      - 聞き: 最後まで、戦場にいたんだ。……三成は、どうなったの？
+        tone: しみじみ
+      - 語り: 西軍は崩れ、三成は、伊吹山の方面へ逃れます。
+        portrait: null
+        background: {image: paintings/kanbei_sekigahara_map_midmorning.jpg, credit: "藤井治左衛門《関ヶ原の戦い午前中の戦況図》1926年（近代の戦史地図）"}
+        hook: true
+      - 聞き: 逃げた三成は、どこで見つかったんだろう。
+        hook: true
+
+  # ---------------------------------------------------------------- 8 最期
+  - title: 1600年 古橋村での捕縛と、六条河原の最期
+    background: {image: paintings/mitsunari_sawayama_castle_zu.jpg, credit: "《佐和山城図》（江戸時代の絵図。三成の頃の姿そのままではない）"}
+    year: 1600
+    lines:
+      - 語り: 9月18日の早朝、留守の佐和山城は、田中吉政の隊が天守へ攻め入り、落城します。兄の石田正澄らが自刃し、三成の子で三男の佐吉は、助命されました。
+        card: {head: 慶長5年9月18日, body: 佐和山城が落ちる}
+      - 語り: 9月21日、近江の古橋村で、三成は田中吉政の兵に捕らえられます。匿われていた隠れ場所の農民らが危ないと知ると、自分から身分を明かした、と伝わります。
+        year: 1600
+        background: {image: paintings/akechi_karasaki_night_rain_hiroshige.jpg, credit: "歌川広重《近江八景之内 唐崎夜雨》1834年ごろ"}
+        card: {head: 慶長5年9月21日, body: 古橋村で田中吉政の兵に捕まる}
+        figure: {type: map, title: 三成の最後の道のり, bounds: [135.7, 136.8, 34.9, 35.6], route: [関ヶ原, 古橋, 大津], places: [[関ヶ原, 136.47, 35.37], [古橋, 136.2, 35.5], [大津, 135.87, 35.0]], note: 古橋村で捕らえられ、大津へ}
+      - 聞き: 匿ってくれた人に迷惑をかけないように、自分で名乗ったのか。逃げ回るより、人を守るほうを選んだんだね。
+        tone: しみじみ
+      - 語り: 9月22日、大津へ送られます。福島正則は罵声を浴びせ、黒田長政と浅野幸長は、労りの言葉をかけた、と伝わります。
+        figure: null
+        portrait: {image: paintings/hanbei_nagamasa_kuroda2.jpg, caption: "黒田長政（1911年の模写）", age: false}
+        background: {image: paintings/mitsunari_omi_hakkei_awazu_zeze_hiroshige.jpg, credit: "歌川広重《近江八景 粟津晴嵐》1857年（メトロポリタン美術館蔵）"}
+        card: {head: 大津で、武将たちの態度, body: 罵声と労りの言葉、と伝わる}
+      - 聞き: 同じ武将でも、態度が分かれたんだ。三成って、ただの嫌われ者じゃなかった、ってことかな。
+      - 語り: 9月25日、大津城で家康と会見。そして10月1日、京都の六条河原で、小西行長、安国寺恵瓊とともに処刑されました。数えで41歳です。
+        background: {image: paintings/nene_kyoto_map_1696.jpg, credit: "《京都の地図》元禄9年（1696年）"}
+        portrait: null
+        year: 1600
+        card: {head: 慶長5年10月1日, body: 六条河原で処刑（数えで41歳）}
+        figure: {type: stats, title: 捕まってから最期まで, items: [[捕縛, 9月21日, 古橋村], [家康と会見, 9月25日, 大津城], [最期, 10月1日, 六条河原]]}
+      - 聞き: 小西さんたちも、一緒だったんだ。
+      - 語り: 処刑の直前の逸話があります。柿を勧められ、痰の毒になるから、と断った、という話です。『明良洪範』が伝える、江戸中期の書の話です。
+        figure: null
+        background: {image: paintings/nobunaga_azuchi_castle_zu.jpg, credit: "《近江国蒲生郡安土城之図》（1855年原図の明治の写し）"}
+        card: {head: 後世の話, body: 柿を断った話は『明良洪範』の逸話}
+      - 聞き: 死ぬ直前に、体のことを気にしたの？ それって、いつの本に出てくる話なの？
+      - 語り: 辞世として伝わる歌は、「筑摩江や、芦間に灯す、かがり火と、ともに消えゆく、我が身なりけり」。琵琶湖の入り江の、芦の間のかがり火のように、自分も消えていく、という意味です。
+        background: {image: paintings/akechi_karasaki_night_rain_hiroshige.jpg, credit: "歌川広重《近江八景之内 唐崎夜雨》1834年ごろ"}
+        card: {head: 伝わる辞世, body: 「芦間に灯すかがり火とともに消えゆく」}
+      - 聞き: 最後に出てくるのが、故郷の湖か。生まれた近江の風景を、最後に思い浮かべたのかな。
+      - 語り: 三成の娘の辰姫は、のちに、津軽信枚の妻になります。
+        year: 1600
+        background: {image: paintings/akechi_karasaki_night_rain_hiroshige.jpg, credit: "歌川広重《近江八景之内 唐崎夜雨》1834年ごろ"}
+        card: {head: 辰姫, body: 三成の娘。津軽信枚の妻になる}
+      - 聞き: 津軽って、青森だよね。遠くまで嫁いだんだね。
+      - 語り: 遺骸は、春屋宗園と沢庵宗彭が引き取り、大徳寺の三玄院に葬られた、とされます。
+        background: {image: paintings/nene_kyoto_map_1696.jpg, credit: "《京都の地図》元禄9年（1696年）"}
+        card: {head: 大徳寺三玄院, body: 遺骸は春屋宗園・沢庵宗彭が引き取ったとされる}
+      - 語り: 佐和山城には、のちに井伊直政が入り、慶長11年に廃城になります。城の材料は、彦根城の築城に使われました。
+        year: 1606
+        background: {image: paintings/mitsunari_hikone_castle_ndl_114_trim.jpg, credit: "《日本古城絵図 近江国彦根城》（国立国会図書館蔵、色票などを切り抜いた版）"}
+        card: {head: 慶長11年, body: 佐和山城は廃城。材料は彦根城へ}
+      - 語り: 落城についても、見方があります。中井均は、瓦に焼けた跡が無く、翌年には井伊直政が入っていることから、落城というより開城に近い、と指摘します。
+        background: {image: paintings/mitsunari_sawayama_castle_zu.jpg, credit: "《佐和山城図》（江戸時代の絵図。三成の頃の姿そのままではない）"}
+        card: {head: 落城か開城か, body: 瓦に焼けた跡が無い（中井均）}
+      - 聞き: 冒頭の、金銀の無かった城は、落城というより開城に近い、という見方もあるのか。
+      - 語り: 負けた三成は、後の時代に、どう語られたのか。最後に、層ごとに見直しましょう。
+        background: {image: paintings/akechi_karasaki_night_rain_hiroshige.jpg, credit: "歌川広重《近江八景之内 唐崎夜雨》1834年ごろ"}
+        hook: true
+      - 聞き: いよいよ、まとめだね。
+        hook: true
+
+  # ---------------------------------------------------------------- 9 まとめ
+  - title: まとめ：石田三成とは何者だったのか
+    background: {image: paintings/mitsunari_sawayama_castle_zu.jpg, credit: "《佐和山城図》（江戸時代の絵図。三成の頃の姿そのままではない）"}
+    portrait: {image: paintings/ieyasu_ishida_mitsunari_portrait.jpg, caption: "石田三成の肖像（18〜19世紀ごろ）", age: false}
+    year: 1600
+    lines:
+      - 語り: 三成の像は、層でできていました。1つ目は、書状や検地帳など、同じ時代の記録。検地奉行、博多奉行、船奉行。段取りと数字で、秀吉を支えた人の姿です。
+        card: {head: 1つ目の層, body: 同じ時代の記録（書状・検地帳）}
+        figure: {type: people, title: 三成の像をつくった層, nodes: [[同じ時代の記録, 書状・検地帳], [江戸の書, 三献茶・柿・辞世], [明治以降の本, 吉継の茶会]], edges: [], upto: 1}
+      - 聞き: 戦場の人じゃなくて、裏方の仕事人、って感じだね。目立たないけど、いちばん大事な係だ。
+      - 語り: 2つ目は、江戸の書です。三献茶は、三成の死の約116年あとの『武将感状記』。柿の逸話は『明良洪範』。『常山紀談』には、吉継の辞世が出てきます。
+        background: {image: paintings/akechi_karasaki_night_rain_hiroshige.jpg, credit: "歌川広重《近江八景之内 唐崎夜雨》1834年ごろ"}
+        card: {head: 2つ目の層, body: 江戸の書（三献茶・柿・辞世）}
+        figure: {type: people, title: 三成の像をつくった層, nodes: [[同じ時代の記録, 書状・検地帳], [江戸の書, 三献茶・柿・辞世], [明治以降の本, 吉継の茶会]], edges: [], upto: 2}
+      - 聞き: 名場面って、どの層から出てくることが多いの？
+      - 語り: 3つ目は、明治以降です。吉継の茶会の話は、確認できる最古が、福本日南の『英雄論』、1911年でした。
+        background: {image: paintings/hideyoshi_nagoya_departure_yoshitoshi_met.jpg, credit: "月岡芳年《真柴秀吉公名護屋陣先手諸将繰出之図》19世紀"}
+        card: {head: 3つ目の層, body: 明治以降（吉継の茶会は1911年）}
+        figure: {type: people, title: 三成の像をつくった層, nodes: [[同じ時代の記録, 書状・検地帳], [江戸の書, 三献茶・柿・辞世], [明治以降の本, 吉継の茶会]], edges: [], upto: 3}
+      - 聞き: 層ごとに、見えてる三成の顔が違うよ。
+      - 語り: 冒頭の問いに戻ります。19万4千石の城に、金銀の蓄えは無かった、と徳川方の医師は書きました。
+        figure: null
+        background: {image: paintings/mitsunari_sawayama_castle_zu.jpg, credit: "《佐和山城図》（江戸時代の絵図。三成の頃の姿そのままではない）"}
+        card: {head: 冒頭の問い, body: 金銀の蓄えは無し。使い道は分からない}
+      - 語り: ただ、三成が何に使ったのかは、分かっていません。分からないことは、分からないまま置いておきます。
+      - 語り: 徳川光圀の『桃源遺事』は、三成を、義を貫いた人として、憎むべきではない、と評しました。
+        card: {head: 『桃源遺事』, body: 義を貫いた人、憎むべきではないと評す}
+      - 語り: 毛利輝元や島津義弘の書状も、三成の影響力の大きさを示すものとして、紹介されています。
+        background: {image: paintings/mitsunari_hikone_castle_ndl_114_trim.jpg, credit: "《日本古城絵図 近江国彦根城》（国立国会図書館蔵、色票などを切り抜いた版）"}
+        card: {head: 輝元と義弘の書状, body: 三成の影響力の大きさを示すと紹介される}
+      - 聞き: 勝った側の徳川の人が、悪く言うな、って書いてるのか。
+      - 語り: 秀吉の死から関ヶ原まで、約2年1か月。奉行としての実権は、そのうち約7か月でした。
+        year: 1600
+        card: {head: 約2年1か月, body: 秀吉の死から関ヶ原まで。実権は約7か月}
+      - 聞き: 2年のうち、7か月だけか。短い時間で、あれだけ動いたんだね。
+      - 語り: 悪人か、忠臣か。その評価は、出しません。並べられるのは、残っている材料です。検地帳に残る名前、そして六条河原。板張りの居間や、古橋村の場面は、後に伝わる話です。
+        background: {image: paintings/akechi_karasaki_night_rain_hiroshige.jpg, credit: "歌川広重《近江八景之内 唐崎夜雨》1834年ごろ"}
+        year: 1600
+      - 聞き: 検地帳の名前と、六条河原かあ。あーしが言い直すなら、段取りで人を支えた人。でも、その人の物語を、後の時代がいろいろ足してきたのかも。
+        tone: しみじみ
+      - 語り: 今日の地層は、ここまでです。
+        background: {image: paintings/mitsunari_sawayama_castle_zu.jpg, credit: "《佐和山城図》（江戸時代の絵図。三成の頃の姿そのままではない）"}
+      - 聞き: 次回は、ねね。秀吉を支えた正妻だけど、その人物像も、後の本が作ったのかな？
+        card: {head: 次回, body: ねね}
+        tone: 疑問
+      - 語り: 知っている通説があれば、コメントで教えてください。
+      - 二人: また一緒に、掘りましょう！
+        tone: 明るい

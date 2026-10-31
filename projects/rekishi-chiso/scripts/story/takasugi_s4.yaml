@@ -1,0 +1,158 @@
+# 物語完結型ショート 高杉晋作 s4（2026-10-29）。本編 scripts/takasugi-story.yaml の第3章（功山寺挙兵）から。
+# 形式は hijikata_s1.yaml・yodo_s3.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし（本編の「……墓には、これを、刻んでくれ」ほかは使わない）。
+# 絵は本編の AI 絵（T04・T09・T13。Gemini のみ・人物は遠景の後ろ姿）と実在の絵。戦闘・刀を抜く場面は描かない。
+# 事実カード（dev/output/rekishi-chiso/research/高杉晋作_facts_20261029.yaml）：takasugi-24・25・26・27・28
+#   ・人数は書き方が分かれる（山口県観光連盟「わずか80名」・歴史街道「80人」・国交省「80多人」。takasugi-24）→ 「80人ほど」と言う。
+#   ・出発の言葉は歴史街道と山口県観光連盟で違う（takasugi-25）→ 出どころを言ってから読み、違いを言う。
+#   ・正規軍3,800の出発12月26日・絵堂の勝利は1月7日未明（takasugi-28）。「諸隊は」と言う。
+# 理解テスト4問：
+#   ①誰の話か：高杉晋作
+#   ②いつ・どこで何が：1864年12月15日、雪の夜、長府の功山寺で、80人ほどで長州藩に挙兵した
+#   ③何を言ったか：歴史街道は「長州男児の肝っ玉をお目にかけます」、山口県観光連盟は「長州男児の腕前お目にかけ申すべし」と書く
+#   ④どうなったか：新地会所を占拠、三田尻で軍艦3隻を奪い、12月26日に藩の正規軍3,800が出発、翌年1月7日未明に諸隊が絵堂で奇襲して勝った
+title: 高杉晋作｜雪の夜、80人ほどで藩に挙兵した
+yt_title: 高杉晋作の功山寺挙兵　雪の夜、80人ほどで藩に挙兵　出発の言葉は、肝っ玉か、腕前か
+description: |-
+  1864年12月15日、雪の降る深夜。高杉晋作は、長府の功山寺で、80人ほどを率いて、長州藩に挙兵しました。功山寺には、京都を追われた五人の公家がかくまわれていました。従ったのは、のちの伊藤博文、伊藤俊輔の力士隊と、遊撃隊などです。
+  出発のときの言葉は、書く人で少しずつ違います。歴史街道は、馬に乗った高杉が、見送りの五卿に、「これより、長州男児の、肝っ玉を、お目にかけます」と叫んだと書きます。山口県観光連盟は、「長州男児の、腕前、お目にかけ申すべし」と書いています。
+  一行は未明に、藩の新地会所を占拠し、高杉は海路で三田尻へ行って、藩の軍艦3隻を奪って戻りました。12月26日、藩の正規軍3,800が萩を出発し、年が明けた1月7日の未明、諸隊は絵堂で藩の軍を奇襲して、勝ちました。
+hashtags: ["#高杉晋作", "#功山寺", "#日本史", "#幕末"]
+ai_images: true
+ai_disclosure: この動画の人物・情景の画像の多くは、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/takasugi
+out: takasugi_story_s4
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 高杉晋作（長州藩の挙兵）
+  title: "雪の夜、《80人ほど》で挙兵した"
+now:
+  - {at: 1864年12月15日, text: "1864年12月　功山寺", point: 0}
+  - {at: 新地会所, text: "未明　下関", point: 0}
+  - {at: 年が明けた1月7日, text: "1865年1月　絵堂", point: 1}
+timeline:
+  - {label: "1864"}
+  - {label: "1865"}
+cards:
+  - type: table                          # 出発の言葉の書き方（語った順に1行ずつ）
+    title: 出発の言葉の書き方
+    from: 歴史街道によれば
+    until: 同じ夜の言葉
+    items:
+      - {at: 歴史街道によれば, text: "歴史街道　肝っ玉をお目にかけます"}
+      - {at: 山口県観光連盟は, text: "山口県観光連盟　腕前お目にかけ申すべし"}
+shots:
+  T04:                                   # 雪の夜の山門と石段
+    kind: ai
+    file: takasugi/main/T04.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 雪の夜の山門と石段
+  Sanjo:                                 # 五卿の一人（実在の肖像）
+    kind: real
+    image: paintings/ryoma_sanjo_sanetomi.jpg
+    focus: [0.5, 0.4]
+    move: in
+    credit: "三条実美（五卿の一人）"
+    must: 三条実美の肖像
+  T09r:                                  # 出発の言葉（一行の先頭）
+    kind: ai
+    file: takasugi/main/T09.jpg
+    focus: [0.8, 0.6]
+    move: left
+    must: 雪道を行く一行の先頭
+  T04l:                                  # 同じ夜の言葉（山門の灯）
+    kind: ai
+    file: takasugi/main/T04.jpg
+    focus: [0.5, 0.35]
+    move: in
+    zoom: 0.14
+    must: 山門の灯
+  Shimo:                                 # 新地会所のある下関
+    kind: real
+    image: paintings/ryoma_shimonoseki_view_lacma_1865.jpg
+    focus: [0.5, 0.5]
+    move: right
+    credit: "下関の景（1865年ごろ。ロサンゼルス郡立美術館）"
+    must: 下関の景
+  T13:                                   # 三田尻の軍艦3隻（影）
+    kind: ai
+    file: takasugi/main/T13.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 夜の港に停泊する三隻の洋式帆船の影
+  T13r:                                  # 正規軍3,800（港の船の影）
+    kind: ai
+    file: takasugi/main/T13.jpg
+    focus: [0.75, 0.55]
+    move: left
+    must: 月夜の港の船の影
+  Troops:                                # 絵堂・長州の洋式軍隊の絵
+    kind: real
+    image: paintings/yoshinobu_choshu_modern_troops_1865.jpg
+    focus: [0.5, 0.5]
+    move: right
+    credit: "第二次長州征討の長州の洋式軍隊の絵（1865年）"
+    must: 長州の洋式軍隊の絵
+  T04q:                                  # 最後の問い
+    kind: ai
+    file: takasugi/main/T04.jpg
+    focus: [0.5, 0.5]
+    move: in
+    zoom: 0.2
+    text_y: 0.76
+    must: 雪の夜の山門
+lines:
+  # fact: takasugi-24
+  - 語り: 雪の夜。高杉晋作は、《!80人》ほどで、長州藩に、挙兵した。
+    shot: T04
+    tone: 強調
+  # fact: takasugi-24
+  - 語り: 1864年12月15日、場所は、長府の功山寺。京都を追われた、五人の公家が、かくまわれていた。
+    shot: Sanjo
+    tone: しみじみ
+    pause: 0.12
+  # fact: takasugi-25
+  - 語り: 歴史街道によれば、馬に乗った高杉は、見送りの五卿に、「これより、長州男児の、肝っ玉を、お目にかけます」と叫んだ。
+    shot: T09r
+    tone: 強調
+    pause: 0.12
+  # fact: takasugi-25
+  - 語り: 山口県観光連盟は、「長州男児の、腕前、お目にかけ申すべし」と書く。同じ夜の言葉でも、書く人で、少しずつ違う。
+    shot: T04l
+    tone: しみじみ
+    pause: 0.12
+  # fact: takasugi-27
+  - 語り: 一行は、雪の中を、下関へ向かい、未明に、藩の新地会所を、占拠した。
+    shot: Shimo
+    tone: しみじみ
+    pause: 0.12
+  # fact: takasugi-27
+  - 語り: 高杉は、海路で三田尻へ行き、藩の軍艦3隻を、奪って、戻った。
+    shot: T13
+    tone: しみじみ
+    pause: 0.12
+  # fact: takasugi-28
+  - 語り: 12月26日、藩の正規軍、3,800が、萩を出発する。
+    shot: T13r
+    tone: 重い
+    pause: 0.3
+    dip: true
+  # fact: takasugi-28
+  - 語り: 年が明けた1月7日の未明、諸隊は、絵堂で、藩の軍を奇襲して、勝った。
+    shot: Troops
+    tone: 強調
+    pause: 0.12
+  - 語り: あなたなら、80人ほどで、藩に、挑めますか。
+    shot: T04q
+    tone: 疑問
+    pause: 0.15

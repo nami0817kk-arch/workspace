@@ -1,0 +1,509 @@
+# 徳川家康（10/16 19時公開予定）。型：掘り下げ型（生まれから順・節ごとに1つの山場・最後は「まとめ：徳川家康とは何者だったのか」）
+# 冒頭の一点：「鳴かぬなら」の句は、家康が詠んだ記録がない（最古級は没後160年以上あとの随筆『耳嚢』）。しかみ像は三方ヶ原の節で。
+# 事実の出どころは dev/output/rekishi-chiso/research/ieyasu_facts.md（確実／有力／説／後世の話／未確認の区分もそこ）。素材は research/ieyasu_assets.md。
+# 決まり：①日付は和暦の月日で言う。生年の西暦（1542年か1543年か）は言わず「天文11年の暮れ」。西暦の無い日付（桶狭間・将軍宣下・夏の陣）は西暦を言わない。
+#   ②しかみ像・鳴かぬなら・狸親父・伊賀越えの半蔵・問い鉄砲・堀の詐術は「後世の話」と先に断ってから言う。
+#   ③兵力・死者・石高は何の数かを言い、割れていれば割れていると言う。④小山評定・秀秋の裏切りの時刻・大坂の陣の家康の意図は「研究者の間で割れている」で、どちらも事実のように言わない。
+#   ⑤人物のセリフは入れない（記録に残る本人の言葉だけ。家康自身の書状の言葉「追い出し申し候」だけ引く）。⑥年齢は数え。肖像の「この時○歳」は出さない（生年の西暦が割れるため）。
+#   ⑦残酷な場面（信康・築山殿の最期、秀頼・淀殿の最期、国松の処刑）は事実の1行だけ。影武者説・黒幕説・脱糞の話は使わない。
+title: 徳川家康｜「忍耐」「狸」「謀略」「神君」…その札は、本人が付けたものではなかった
+series: ""
+playlists: [日本史を掘る（聞き流し）, 戦国時代を掘る]
+shorts_playlists: [日本史ショート]
+tags: [徳川家康, 家康, しかみ像, 三方ヶ原の戦い, 伊賀越え, 関ヶ原の戦い, 大坂の陣, 鳴かぬなら, 江戸幕府, 戦国時代, 日本史, 歴史, 歴史解説, 歴史の地層]
+en:
+  title: "Tokugawa Ieyasu: 'Patient', 'Tanuki', 'Schemer', 'Divine Lord' - Labels He Never Gave Himself"
+  description: |-
+    "If the cuckoo does not sing, wait until it sings." This poem is said to describe Tokugawa Ieyasu, but no record shows he wrote it; the oldest known version appears in an essay written more than 160 years after his death.
+    This video digs into Ieyasu's life from childhood hostage to the shogun's seat and the Siege of Osaka, and separates what the records show from the stories added later: the "shikami" portrait that was not tied to the Battle of Mikatagahara until the 1930s, the escape through Iga, the Battle of Sekigahara (the Komine council, the "inquiry shot" at Kobayakawa Hideaki, and the time of the betrayal that scholars still dispute) and the Osaka moats.
+    We say plainly where historians disagree. Dates are in the Japanese calendar of the time.
+    A Japanese history video to listen to while you work (Japanese audio).
+  chapters:
+    - "1616: The Death of Ieyasu and Four Labels"
+    - "1547: A Six-Year-Old Hostage"
+    - "1560: After Okehazama, Back to Okazaki Castle"
+    - "1573: Mikatagahara and the Shikami Portrait"
+    - "1575: Nagashino and the Wound Inside the Family"
+    - "1582: The Escape Through Iga"
+    - "1584-90: Komaki-Nagakute, Submission and the Kantō Transfer"
+    - "1600: Sekigahara"
+    - "1603-15: The Shogunate and the Siege of Osaka"
+    - "Summary: Who Was Tokugawa Ieyasu?"
+
+texture: true
+recap: true
+
+people:
+  徳川家康: {born: 1543-01-31, died: 1616-06-01, match: [家康, 竹千代, 松平元康]}
+  豊臣秀吉: {born: 1537-03-17, died: 1598-09-18, match: [秀吉]}
+  織田信長: {born: 1534-06-23, died: 1582-06-21, match: [信長]}
+
+timeline:
+  start: 1540
+  end: 1620
+  events: [[1547, 人質に], [1560, 桶狭間], [1573, 三方ヶ原], [1582, 本能寺], [1600, 関ヶ原], [1603, 幕府], [1615, 夏の陣], [1616, 没]]
+
+terms:
+  人質: 同盟や服従のしるしに、相手の家へ預けられる子や家族
+  しかみ像: 家康が顔をしかめて座る絵。徳川美術館が持つ「徳川家康三方ヶ原戦役画像」
+  神君: 江戸時代、家康を神として敬った呼び名
+  惣構: 城と城下を囲む外側の大きな堀や土塁
+  小山評定: 関ヶ原の前、家康が諸大名と開いたとされる会議。あったかどうかに論争がある
+
+shorts:
+  s1:
+    title: "家康の句／本当に詠んだ？"
+    yt_title: "「鳴くまで待とう」は家康の句ではない？｜最古の記録は没後160年あと"
+    hook: "『鳴くまで待とう、／ホトトギス』は、／家康が詠んだ句だった？"
+    tease: "じゃあ、家康が三方ヶ原のあとに描かせた／と言われる絵は、いつ結びついた？"
+    lead: "「鳴かぬなら鳴くまで待とうホトトギス」。家康を表す句として有名です。ところが、家康がこの句を詠んだ記録はありません。"
+    tags: [徳川家康, 鳴かぬなら, 耳嚢, 歴史の地層]
+  s2:
+    title: "しかみ像／三方ヶ原の絵？"
+    yt_title: "徳川家康のしかみ像は三方ヶ原の戒めの絵ではない？｜結びつきは後の話"
+    hook: "家康は三方ヶ原の／負けのあとに、／自分で描かせた絵？"
+    tease: "じゃあ、その絵を最初に三方ヶ原と／結びつけた記述は、何年？"
+    lead: "三方ヶ原で武田信玄に大敗した家康が、戒めのために自分の姿を描かせた。しかみ像には、そんな話が伝わっています。"
+    tags: [しかみ像, 三方ヶ原の戦い, 徳川家康, 歴史の地層]
+  s3:
+    title: "神君伊賀越え／どの峠？"
+    yt_title: "家康の伊賀越えはどの道を通った？｜史料で割れる生涯最大の危機"
+    hook: "家康の神君伊賀越え。／越えた峠は、／史料で一致している？"
+    tease: "じゃあ、家康を守り抜いたと言われる／服部半蔵の話は、いつの史料？"
+    lead: "天正10年6月、本能寺の変のとき、堺にいた家康は、三河まで逃げ帰ります。神君伊賀越えです。"
+    tags: [神君伊賀越え, 本能寺の変, 徳川家康, 歴史の地層]
+  s4:
+    title: "関ヶ原／秀秋の裏切りの時刻"
+    yt_title: "関ヶ原の小早川秀秋の裏切りは何時？｜研究者で割れる問い鉄砲"
+    hook: "関ヶ原で、／家康が撃ち込んだ鉄砲が／秀秋の裏切りを決めた？"
+    tease: "じゃあ、その『問い鉄砲』が／初めて本に出てくるのは何年？"
+    lead: "関ヶ原で、家康は松尾山の小早川秀秋に鉄砲を撃ち込み、秀秋が裏切った。有名な、問い鉄砲の話です。"
+    tags: [関ヶ原の戦い, 小早川秀秋, 問い鉄砲, 歴史の地層]
+  s5:
+    title: "大坂の堀を／全部埋めた？"
+    yt_title: "家康は大坂城の堀を全部埋めた？｜詐術は同時代の記録にない"
+    hook: "家康は、講和の約束を／破って、大坂城の堀を／全部埋めた？"
+    tease: "じゃあ、豊臣秀頼の最期を決めたのは／家康と秀忠のどちら？"
+    lead: "大坂冬の陣のあと、家康は「惣堀を埋める」を言いがかりにして、大坂城の堀をすべて埋めた。そう語られてきました。"
+    tags: [大坂の陣, 大坂城, 徳川家康, 歴史の地層]
+
+next:
+  title: 黒田官兵衛
+  series: ""
+  teaser: 半兵衛と並べて「両兵衛」と呼ばれた官兵衛。その像は、どの本が作ったのか。
+
+thumbnail:
+  layout: number
+  image: paintings/ieyasu_portrait_toshodaigongen.jpg
+  crop: [0, 0, 1340, 754]
+  number: 4つの札
+  name: 徳川家康
+  lead: 忍耐・狸・謀略・神君
+  main: 本人が付けた？
+
+sections:
+  # ---------------------------------------------------------------- 1 導入
+  - title: 1616年 徳川家康の死と、四つの札
+    background: {image: paintings/ieyasu_yoshitoshi_meishokagami.jpg, credit: "月岡芳年《大日本名将鑑 徳川家康公》1878年"}
+    portrait: {image: paintings/nene_ieyasu_portrait.jpg, caption: "徳川家康（狩野探幽画、17世紀）", age: false}
+    year: 1616
+    lines:
+      - 語り: 「鳴かぬなら、鳴くまで待とう、ホトトギス」。家康を表す句として、誰もが知っています。ところが、家康がこの句を詠んだ、という記録は、ありません。
+        card: {head: 鳴かぬなら, body: 家康が詠んだ記録はない}
+        short: s1
+      - 聞き: え、家康の句じゃないの？ 教科書みたいに、当たり前に聞いてきたのに。
+        tone: 驚き
+        short: s1
+      - 語り: 最古級の記録は、ねぎしやすもりの随筆『耳嚢』です。天明年間、1780年代から書き継がれた本で、家康の死から、160年以上あとになります。
+        background: {image: paintings/ieyasu_edo_zu_byobu_castle_detail.jpg, credit: "《江戸図屏風》江戸城の部分（17世紀）"}
+        short: s1
+      - 聞き: 160年も後？ じゃあ、家康本人が言ったかどうかは、分からないんだね。
+        short: s1
+      - 語り: 家康には、後から付けられた札が、いくつもあります。「忍耐」。「狸親父」。「謀略」。そして、「神君」。今日は、この4つの《札》を、一枚ずつ剥がして、記録で言える家康を掘ります。
+        background: {image: paintings/ieyasu_nikko_yomeimon_kiyochika_1897.jpg, credit: "小林清親《日本名勝図絵 陽明門》1897年"}
+      - 聞き: 札を剥がす、か。家康が実際に言ったことと、後の人が言ったことを、分ける作業だね。
+      - 語り: 元和2年4月17日。家康は、駿府城で亡くなります。数えで75歳。では、その生涯を、生まれから順に掘りましょう。
+        background: {image: paintings/yoshinobu_suruga_castle_map.jpg, credit: "《駿州府中之城図》駿府城の絵図（1935年の版）"}
+      - 聞き: 数えで75歳って、今の感覚でも長生きだよね。その生涯を、順に掘っていくんだ。
+
+  # ---------------------------------------------------------------- 2 人質
+  - title: 1547年 6歳の人質と、尾張の2年
+    background: {image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg, credit: "《龍城図》岡崎城（江戸時代）"}
+    year: 1547
+    lines:
+      - 語り: 家康は、天文11年の暮れ、三河の岡崎城で生まれました。幼い名は、竹千代。父は、松平広忠です。
+        portrait: {image: paintings/ieyasu_takechiyo_kiyochika.jpg, caption: "竹千代（のちの家康、明治の逸話画）", age: false}
+        card: {head: 天文11年の暮れ, body: 三河の岡崎城に生まれる}
+      - 聞き: いつ生まれたの？
+        tone: 疑問
+      - 語り: 天文11年の暮れです。そして、天文16年、数えで6歳。家康は、今川家へ、人質に出されます。
+        background: {image: paintings/yoshinobu_suruga_castle_map.jpg, credit: "《駿州府中之城図》駿府城の絵図（1935年の版）"}
+      - 聞き: 6歳で人質。それは、つらい子ども時代だったんだろうな。
+      - 語り: ところが、途中の田原城で、戸田氏の裏切りに遭います。家康は、今川ではなく、織田信秀のもとへ送られてしまうのです。
+        background: {image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg, credit: "《龍城図》岡崎城（江戸時代）"}
+        portrait: null
+      - 聞き: 行き先が、いきなり敵の家に変わったんだ。
+      - 語り: 織田家には、約2年います。尾張の熱田の屋敷に、留め置かれました。幼い信長と会って、親しくなった、という話もありますが、史料には、ありません。
+        card: {head: 約2年, body: 尾張の熱田で人質に}
+      - 聞き: 信長との出会いは、伝承なんだ。
+      - 語り: 天文18年の人質交換で、家康は駿府へ移ります。14歳で元服し、のちに、今川一門の築山殿を、妻に迎えます。
+        background: {image: paintings/ieyasu_fuchu_abe_river_hiroshige_1833.jpg, credit: "歌川広重《東海道五十三次之内 府中 安部川》1833年ごろ"}
+      - 聞き: 14歳で元服して、今川一門の人と結婚か。今でいうと、中学生で結婚する感じだよね。
+      - 語り: 「幼いころの苦労が、忍耐の人を作った」。これが、一つ目の札です。ただし、研究者の柴裕之さんは、人質という見方そのものに、疑問を投げています。
+        background: {image: paintings/yoshinobu_suruga_castle_map.jpg, credit: "《駿州府中之城図》駿府城の絵図（1935年の版）"}
+        card: {head: 一つ目の札, body: 忍耐の人}
+      - 聞き: 苦労した子ども、っていうストーリーは、後からのほうが作りやすいもんね。
+      - 語り: 6歳で出た子は、駿府で、どんな扱いを受けたのか。そして、今川義元が討たれた日、何をしたのか。次は、桶狭間のあとです。
+        hook: true
+      - 聞き: 桶狭間で義元が死んだあと、家康は、すぐ独立したんだよね。
+        hook: true
+
+  # ---------------------------------------------------------------- 3 桶狭間のあと
+  - title: 1560年 桶狭間のあと、岡崎城へ
+    background: {image: paintings/ieyasu_okehazama_toshihide_triptych.jpg, credit: "右田年英《今川義元 桶狭間大合戦之図》"}
+    year: 1560
+    lines:
+      - 語り: 永禄3年5月18日。家康は、鷲津と丸根の砦の間を抜けて、大高城に兵糧を運び入れます。翌19日に、桶狭間の戦い。今川義元が、討たれました。
+        card: {head: 永禄3年5月19日, body: 桶狭間の戦い 義元が討たれる}
+      - 聞き: 家康は、このとき、何歳だったの？
+        tone: 疑問
+      - 語り: 数えで19歳です。そして、わずか数日後の23日には、自分の城、岡崎城に入っています。
+        background: {image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg, credit: "《龍城図》岡崎城（江戸時代）"}
+        portrait: {image: paintings/nene_ieyasu_portrait.jpg, caption: "徳川家康（狩野探幽画、17世紀）", age: false}
+      - 聞き: 数日で、もう帰ってたんだ。
+      - 語り: このとき、家康は「捨城ならば拾おう」と言った、という話があります。ただ、出典は、昭和9年に出た本です。同じ時代の言葉とは、確かめられません。
+        card: {head: 後世の話, body: 「捨城ならば拾はん」は昭和9年の本}
+      - 聞き: 名言っぽいけど、昭和の本に出てくる言葉なんだ。昔の人が言ったとは、確かめられないんだね。
+      - 語り: 家康は、そのあと織田信長と、同盟を結びます。清洲同盟です。永禄4年とも5年とも、割れています。永禄7年には、三河一向一揆。これを、鎮めました。
+        background: {image: paintings/ieyasu_yoshitoshi_meishokagami.jpg, credit: "月岡芳年《大日本名将鑑 徳川家康公》1878年"}
+        portrait: {image: paintings/nobunaga_chokoji_bust.jpg, caption: "織田信長（狩野宗秀画、長興寺蔵、1583年）", age: false}
+      - 聞き: 信長と家康の同盟って、あとの天下の形に、そのままつながりそうだよね。
+      - 語り: 永禄9年の暮れ、松平から徳川に、姓を改めます。三河守になり、朝廷の許しを得ました。ここで初めて、「徳川家康」が、世に出ます。
+        background: {image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg, credit: "《龍城図》岡崎城（江戸時代）"}
+        portrait: null
+        card: {head: 永禄9年12月, body: 松平から徳川に改姓}
+      - 聞き: 徳川って名乗ったのは、このときからなんだ。
+      - 語り: 三河を固めた家康は、遠江へ進みます。そこで、生涯最大の敗戦が、待っていました。三方ヶ原です。
+        background: {image: paintings/ieyasu_hamamatsu_hiroshige_1834.jpg, credit: "歌川広重《東海道五十三次之内 濱松 冬枯の図》1834年ごろ"}
+        hook: true
+      - 聞き: 信玄に、ぼろ負けしたやつだ。
+        hook: true
+
+  # ---------------------------------------------------------------- 4 三方ヶ原
+  - title: 1573年 三方ヶ原の戦いとしかみ像
+    background: {image: paintings/ieyasu_mikatagahara_yoshitora_triptych.jpg, credit: "歌川芳虎《三方ヶ原の戦い》1874年"}
+    year: 1573
+    lines:
+      - 語り: 元亀3年の10月、武田信玄が、西へ向けて軍を動かします。12月に二俣城が落ち、22日、三方ヶ原で、徳川と織田の連合軍は、信玄と戦います。
+        portrait: {image: paintings/ieyasu_takeda_shingen_portrait_detail.jpg, caption: "武田信玄（江戸時代の肖像画）", age: false}
+        card: {head: 元亀3年12月22日, body: 三方ヶ原の戦い 家康が大敗}
+        short: s2
+      - 聞き: 家康は、浜松城で守る作戦じゃなかったの？
+        tone: 疑問
+      - 語り: 家康は、籠城をやめて、出陣しました。理由は、挑発に乗ったという通説のほか、信玄の狙いに応じた、という新しい説もあって、割れています。
+        background: {image: paintings/ieyasu_mikatagahara_map_1935.jpg, credit: "《三方原役図》1935年（近代の戦史地図）"}
+        portrait: {image: paintings/nene_ieyasu_portrait.jpg, caption: "徳川家康（狩野探幽画、17世紀）", age: false}
+      - 聞き: 浜松城に籠もっていれば、まだ守れたかもしれないのに。なんで出ちゃったんだろう。
+      - 語り: 戦いは、日没までの約2時間ほどで、徳川と織田の側が敗れます。家康は、浜松へ逃げ帰ります。
+        background: {image: paintings/ieyasu_hamamatsu_hiroshige_1834.jpg, credit: "歌川広重《東海道五十三次之内 濱松 冬枯の図》1834年ごろ"}
+        short: s2
+      - 聞き: 2時間で大敗か。信玄の軍が、どれだけ強かったか、ってことだよね。 そして、有名なのが、あの絵だよね。家康が、負けたあとの顔を、描かせたっていう。教科書にも載ってた気がする。
+        background: {image: paintings/ieyasu_mikatagahara_yoshitora_triptych.jpg, credit: "歌川芳虎《三方ヶ原の戦い》1874年"}
+      - 語り: 徳川美術館にある、しかみ像です。顔をしかめて座る家康の姿を、「三方ヶ原で負けた家康が、戒めのために描かせた」と語るのが、通説でした。
+        background: {image: paintings/ieyasu_hamamatsu_hiroshige_1834.jpg, credit: "歌川広重《東海道五十三次之内 濱松 冬枯の図》1834年ごろ"}
+        portrait: null
+        card: {head: しかみ像, body: 「戒めの像」と語られてきた}
+        short: s2
+      - 聞き: 負けた自分を忘れないために、描かせた。いい話だなあ。
+        short: s2
+      - 語り: ところが、徳川美術館自身が、この伝承に「史料的な根拠はない」と書いています。1880年の目録では、「長篠戦役の陣中の像」。1910年の『国華』も、長篠です。
+        background: {image: paintings/ieyasu_nagashino_baba_nobuharu_screen.jpg, credit: "《長篠合戦図屏風》（徳川美術館蔵、18世紀）"}
+        card: {head: 目録の題, body: 昔は「長篠戦役」とあった}
+      - 聞き: え、三方ヶ原じゃなくて、長篠だったの？
+        tone: 驚き
+      - 語り: 三方ヶ原と結びつけた記述は、1936年の新聞記事まで、さかのぼれません。「家康自身が描かせた」という説明が加わるのは、1972年の図録です。
+        background: {image: paintings/ieyasu_nagashino_baba_nobuharu_screen.jpg, credit: "《長篠合戦図屏風》（徳川美術館蔵、18世紀）"}
+        card: {head: 1936年, body: 三方ヶ原と結んだ最古の記述}
+        figure: {type: numberline, title: しかみ像が三方ヶ原と結びつくまで, items: [[三方ヶ原の戦い, 1573], [目録「長篠戦役」, 1880], [新聞記事で三方ヶ原と結ぶ, 1936], [図録「自ら描かせた」, 1972]], unit: 年, focus: 新聞記事で三方ヶ原と結ぶ, note: 結びついたのは戦いの360年以上あと}
+      - 聞き: 昭和になってから、そういう話になったんだ。じゃあ、絵は、いつの時代の？
+      - 語り: 制作は、徳川美術館が17世紀ごろとしています。幕府が家康を神として祀る中で描かれた、礼拝の像だ、という見方が有力です。
+        figure: null
+        background: {image: paintings/ieyasu_nikko_yomeimon_kiyochika_1897.jpg, credit: "小林清親《日本名勝図絵 陽明門》1897年"}
+      - 聞き: 幕府が家康を神様にしていく中で描かれた絵なら、礼拝用の肖像みたいなものかな。
+      - 語り: 負けても立ち上がる、忍耐の人。この像に、後の時代の人たちが、そんなイメージを重ねた、と研究者の千田嘉博さんは、指摘しています。
+        background: {image: paintings/ieyasu_kunozan_kunitsuna_1863.jpg, credit: "歌川国綱《東海道名所之内 久能山》1863年"}
+        detail: {box: [90, 60, 410, 340], label: しかみ像の顔}
+      - 聞き: 忍耐の札は、絵にまで貼られてたんだね。
+      - 語り: この戦には、逃げ方の逸話が、多く残っています。どれも、出典が後世か、不明確なので、使いません。
+        background: {image: paintings/ieyasu_mikatagahara_yoshitora_triptych.jpg, credit: "歌川芳虎《三方ヶ原の戦い》1874年"}
+      - 聞き: 逸話は多くても、記録に残るかどうかが、大事ってことだね。
+      - 語り: 三方ヶ原のあと、信玄は、西へ向かう途中で亡くなります。家康は、織田信長とともに、武田勝頼と、長篠で向き合います。
+        background: {image: paintings/ieyasu_mikatagahara_map_1935.jpg, credit: "《三方原役図》1935年（近代の戦史地図）"}
+        hook: true
+      - 聞き: 鉄砲の三段撃ちで勝ったやつだね。
+        hook: true
+
+  # ---------------------------------------------------------------- 5 長篠と信康
+  - title: 1575年 長篠の戦いと、家の中の傷
+    background: {image: paintings/nobunaga_nagashino_screen_full.jpg, credit: "《長篠合戦図屏風》（江戸時代）"}
+    year: 1575
+    lines:
+      - 語り: 天正3年5月21日。長篠の戦いで、織田と徳川の連合軍が、武田勝頼に勝ちます。兵力は、織田と徳川が約3万8千、武田が約1万5千、とされます。数は、割れています。
+        card: {head: 天正3年5月21日, body: 長篠の戦い 武田に勝つ}
+      - 聞き: 信長の三段撃ちで勝った、って習ったけど。
+        tone: 疑問
+      - 語り: 三段撃ちは、江戸時代の創作が広まったもので、実際に行われたかは、疑わしい、と見られています。鉄砲の数は、約1000挺が有力です。
+        background: {image: paintings/nobunaga_nagashino_teppo_ashigaru.jpg, credit: "長篠合戦図屏風（部分、江戸時代）"}
+        card: {head: 後世の話, body: 三段撃ちは疑わしい}
+      - 聞き: 教科書の定番が、疑わしいなんて。
+      - 語り: しかも長篠城は、家康の領国の城です。奥平貞昌が少ない兵で守り、鳥居強右衛門が援軍を呼びに走って、捕らえられ、処刑されました。
+        background: {image: paintings/nobunaga_nagashino_screen_toyota.jpg, credit: "長篠合戦図屏風（豊田市郷土資料館蔵、江戸時代）"}
+      - 聞き: 信長の戦、というより、徳川の戦いでもあったんだね。家康にとって、長篠は、自分の領国を守る戦いだったんだ。
+      - 語り: その大勝利の4年後。天正7年。家康は、正妻の築山殿と、嫡男の信康を、失います。信康事件です。
+        background: {image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg, credit: "《龍城図》岡崎城（江戸時代）"}
+        card: {head: 天正7年, body: 信康事件}
+      - 聞き: 信長に命令された、って聞いたことがある。
+        tone: 疑問
+      - 語り: 通説は、信長の詰問を受けて、築山殿を殺し、信康を切腹させた、というものです。ところが、信長は「家康の思い通りにせよ」と述べた、とする史料もあります。
+        background: {image: paintings/ieyasu_hamamatsu_hiroshige_1834.jpg, credit: "歌川広重《東海道五十三次之内 濱松 冬枯の図》1834年ごろ"}
+        portrait: {image: paintings/nobunaga_chokoji_bust.jpg, caption: "織田信長（狩野宗秀画、長興寺蔵、1583年）", age: false}
+      - 聞き: 「思い通りにせよ」って言ったなら、信長は、そこまで求めてなかったのかも。
+      - 語り: 家康自身の書状には、「去る四日、岡崎を追い出し申し候」と、あります。信康を、岡崎から追い出した、という書状です。何が原因だったのか。武田との内通説、家康と信康の対立説。研究者の間でも、割れています。
+        background: {image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg, credit: "《龍城図》岡崎城（江戸時代）"}
+        detail: {box: [0, 800, 2000, 1750], label: 岡崎城の絵図（江戸時代）}
+        portrait: null
+        card: {head: 家康の書状, body: 「岡崎を追い出し申し候」}
+      - 聞き: 「追い出した」って、家康本人が書いてるのか。重い。
+      - 語り: 大勝利の4年後に、家の中の傷を、負った。「忍耐の人」という札の裏に、そんな年が、あったのです。
+        background: {image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg, credit: "《龍城図》岡崎城（江戸時代）"}
+      - 聞き: 我慢強い、っていう言葉で、片づけられない話だね。
+      - 語り: そして天正10年。家康は、生涯最大の危機に、直面します。本能寺の変の日、家康は、堺にいました。
+        year: 1582
+        background: {image: paintings/akechi_honnoji_nobukazu_1893.jpg, credit: "楊斎延一《本能寺焼討之図》1893年"}
+        hook: true
+      - 聞き: 神君伊賀越えだ。
+        hook: true
+
+  # ---------------------------------------------------------------- 6 伊賀越え
+  - title: 1582年 神君伊賀越え
+    background: {image: paintings/akechi_honnoji_nobukazu_1893.jpg, credit: "楊斎延一《本能寺焼討之図》1893年"}
+    year: 1582
+    lines:
+      - 語り: 天正10年5月、家康は、安土で、明智光秀の接待を受けます。そのあと、信長の勧めで、京や堺を見物していました。6月2日。本能寺の変が、起こります。
+        card: {head: 天正10年6月2日, body: 本能寺の変 家康は堺にいた}
+        short: s3
+      - 聞き: 信長が死んだとき、家康は近くにいたんだ。
+        background: {image: paintings/ieyasu_sakai_montanus_engraving.jpg, credit: "モンタヌス『日本誌』「堺」1669年ごろ"}
+        short: s3
+      - 語り: 家康は、京へ戻ることも考えた、と伝わります。しかし、家臣に説得されて、三河へ帰る道を選びます。これが、「神君伊賀越え」です。
+        background: {image: paintings/nene_rakuchu_funaki_1.jpg, credit: "《洛中洛外図屏風》（江戸時代初期）"}
+        portrait: {image: paintings/ieyasu_portrait_toshodaigongen.jpg, caption: "徳川家康（東照大権現像）", age: false}
+      - 聞き: 敵だらけの中を、逃げたんだよね。
+      - 語り: 随行は、約34人、とされます。酒井忠次、本多忠勝、服部半蔵らの名が挙がります。ただし、この人数と顔ぶれは、江戸時代の史料によるもので、確実とは言えません。
+        background: {image: paintings/ieyasu_iga_hiroshige2_nabari.jpg, credit: "二代 歌川広重《諸国六十八景 伊賀》1862年"}
+        portrait: {image: paintings/ieyasu_honda_tadakatsu_portrait.jpg, caption: "本多忠勝（17世紀前半の肖像画）", age: false}
+        card: {head: 随行は約34人, body: 後世の史料による}
+      - 聞き: 人数まで後世の史料だと、ほんとは何人だったかも、分からないのかな。
+      - 語り: では、どの道を通ったのか。『石川忠総留書』は、桜峠。『徳川実紀』は、別の峠。『戸田本三河記』は、甲賀経由。史料の間で、割れているのです。
+        background: {image: paintings/ieyasu_sakai_montanus_engraving.jpg, credit: "モンタヌス『日本誌』「堺」1669年ごろ"}
+        detail: {box: [300, 1900, 2700, 3100], label: 伊賀の山と川（名張）}
+        card: {head: 経路は割れる, body: 峠も道すじも史料で違う}
+        short: s3
+      - 聞き: 生涯最大の危機なのに、どこを通ったかも、はっきりしないの？
+        tone: 驚き
+        short: s3
+      - 語り: 服部半蔵と伊賀者が、家康を守り抜いた、という話も有名です。ただ、研究者の藤田達生さんは、江戸時代に伊賀者の地位を高めようとする意図の反映、と見ています。
+        background: {image: paintings/ieyasu_iga_hiroshige2_nabari.jpg, credit: "二代 歌川広重《諸国六十八景 伊賀》1862年"}
+        portrait: null
+      - 聞き: 伊賀者の評判を上げるための話だった、ってことか。
+      - 語り: 伊勢の商人、角屋七郎次郎が船を出して、海路で三河へ渡った、という話もあります。これも、後世の史料です。無事に岡崎へ着いたことは、確かです。
+        background: {image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg, credit: "《龍城図》岡崎城（江戸時代）"}
+      - 聞き: 海路は、峠のあとの話だよね。どこを通ったかは、やっぱり分からないんだ。 神君の札が、貼られた場面なのに、中身は薄いんだ。
+      - 語り: 信長の死で、天下は、大きく動きます。家康は、羽柴秀吉と、戦うことになります。小牧・長久手です。
+        portrait: {image: paintings/akechi_hideyoshi_kodaiji.jpg, caption: "豊臣秀吉（狩野光信画、高台寺蔵）", age: false}
+        hook: true
+      - 聞き: 家康が、秀吉に勝った戦だよね。
+        hook: true
+
+  # ---------------------------------------------------------------- 7 小牧・長久手から関東へ
+  - title: 1584年 小牧・長久手の戦いと臣従
+    background: {image: paintings/hidenaga_komaki_nagakute_screen.jpg, credit: "《小牧・長久手合戦図屏風》（江戸時代）"}
+    year: 1584
+    lines:
+      - 語り: 天正12年3月、池田恒興が羽柴方に付いて犬山城を占拠。家康は、小牧山に入ります。4月9日、長久手。ここで、家康の軍は、羽柴方に勝ちました。
+        portrait: {image: paintings/ieyasu_nagakute_yasunobu.jpg, caption: "徳川家康（狩野安信画、徳川美術館蔵）", age: false}
+        card: {head: 天正12年4月9日, body: 長久手 家康方が勝つ}
+      - 聞き: 秀吉に、勝ったんだね。
+      - 語り: 羽柴方は、池田恒興と森長可が戦死。死者は約2千5百、織田・徳川方は約590、とされます。ただ、兵力は、羽柴約10万、織田・徳川約3万と、数が割れています。
+        background: {image: paintings/hidenaga_komaki_nagakute_screen.jpg, credit: "《小牧・長久手合戦図屏風》（江戸時代）"}
+        portrait: null
+      - 聞き: 勝ったのは、局地戦、ってことかな。
+      - 語り: そのとおりです。11月、秀吉は、織田信雄と単独で講和します。戦う理由を失った家康も、講和し、息子の於義丸を、秀吉の養子に出しました。
+        background: {image: paintings/hideyoshi_komaki_chikanobu.jpg, credit: "楊洲周延《小牧山 康政秀吉追ふ》明治時代"}
+        portrait: {image: paintings/akechi_hideyoshi_kodaiji.jpg, caption: "豊臣秀吉（狩野光信画、高台寺蔵）", age: false}
+        card: {head: 天正12年11月, body: 秀吉が信雄と単独講和}
+      - 聞き: 戦には勝ったのに、政治で負けた、みたい。
+      - 語り: この時期、家康の重臣、石川数正が、秀吉のもとへ出奔します。天正14年の10月27日。家康は、大坂城で秀吉に会い、臣従を表明しました。
+        background: {image: paintings/nene_osaka_zu_byobu.jpg, credit: "《大坂図屏風》1607〜15年ごろ（豊臣期の大坂城と城下）"}
+        card: {head: 天正14年10月27日, body: 大坂城で秀吉に臣従}
+      - 聞き: 戦で勝った相手に、2年後に頭を下げるんだ。悔しくなかったのかな。
+      - 語り: ここで言えるのは、研究者の間でも、評価が割れていることです。局地戦は家康、戦略は秀吉。「家康が優位だった」という通説とは、別の見方です。
+        background: {image: paintings/hidenaga_komaki_nagakute_screen.jpg, credit: "《小牧・長久手合戦図屏風》（江戸時代）"}
+        portrait: {image: paintings/ieyasu_nagakute_yasunobu.jpg, caption: "徳川家康（狩野安信画、徳川美術館蔵）", age: false}
+      - 聞き: 勝ち負けの評価も、見方で変わるんだね。戦と政治で、物差しが違う感じ。
+      - 語り: 天正18年7月、北条氏が降伏。家康は、長年の領国の5か国を、取り上げられます。そして8月1日、関東へ移され、江戸城に入りました。
+        background: {image: paintings/ieyasu_edo_keicho_ezu_1608.jpg, credit: "《慶長江戸図》1608年（東京都立中央図書館蔵）"}
+        portrait: null
+        card: {head: 天正18年8月1日, body: 関東へ移され、江戸城に入る}
+      - 聞き: 取り上げられて間もなく、江戸に入ったんだ。
+      - 語り: 豊臣政権の中で、いちばんの大名になった家康。秀吉の死のあと、天下の形が、また動きます。関ヶ原です。
+        year: 1590
+        background: {image: paintings/nene_osaka_zu_byobu.jpg, credit: "《大坂図屏風》1607〜15年ごろ（豊臣期の大坂城と城下）"}
+        hook: true
+      - 聞き: 謀略の達人、の札が貼られた戦いだ。
+        hook: true
+
+  # ---------------------------------------------------------------- 8 関ヶ原
+  - title: 1600年 関ヶ原の戦い 謀略の達人の像
+    background: {image: paintings/nene_osaka_zu_byobu.jpg, credit: "《大坂図屏風》1607〜15年ごろ（豊臣期の大坂城と城下）"}
+    year: 1600
+    lines:
+      - 語り: 慶長5年7月17日、三奉行の名で、家康を責める「内府ちがひの条々」が、諸大名に送られます。このころ、毛利輝元が大坂城へ入り、伏見城への攻撃も始まります。
+        portrait: {image: paintings/ieyasu_ishida_mitsunari_portrait.jpg, caption: "石田三成（江戸時代の肖像画）", age: false}
+        card: {head: 慶長5年7月, body: 西軍が挙兵}
+      - 聞き: 家康は、そのとき関東にいたんだよね。
+      - 語り: 家康は、7月25日、小山で、会議を開いて、諸将の心をつかんだ、と語られてきました。いわゆる、小山評定です。ただし、この会議があったかどうかは、研究者の間で、論争中です。
+        background: {image: paintings/ieyasu_edo_keicho_ezu_1608.jpg, credit: "《慶長江戸図》1608年（東京都立中央図書館蔵）"}
+        portrait: {image: paintings/nene_ieyasu_portrait.jpg, caption: "徳川家康（狩野探幽画、17世紀）", age: false}
+        card: {head: 小山評定, body: あったかどうかは論争中}
+      - 聞き: 有名な場面が、あったかどうか、割れてるの？
+        tone: 驚き
+      - 語り: 白峰旬さんは、根拠の史料の成立時期が不明で、一次史料と食い違うと疑います。一方、本多隆成さん、笠谷和比古さんたちは、実在を主張しています。
+        detail: {box: [2200, 40, 3300, 760], label: 江戸図屏風の江戸城（右上）}
+      - 聞き: あったか、なかったかで、研究者が分かれるなんて、関ヶ原は、まだ決着してない話なんだね。
+      - 語り: 9月15日、関ヶ原。兵力は、東軍が7万4千から10万4千、西軍が8万以上、などの諸説があります。どちらの数字も、推定です。
+        background: {image: paintings/nene_sekigahara_screen_gifu.jpg, credit: "《関ヶ原合戦図屏風》（江戸時代）"}
+        portrait: null
+        card: {head: 慶長5年9月15日, body: 関ヶ原の戦い}
+      - 聞き: 勝負を決めたのは、小早川秀秋の裏切りだよね。
+      - 語り: その裏切りの時刻が、割れています。笠谷さんは、開戦から数時間たった、昼ごろ。白峰さんは、開戦直後、午前10時ごろ、と見ています。2時間ほど、違います。
+        background: {image: paintings/ieyasu_sekigahara_screen_1854_replica.jpg, credit: "《関ヶ原合戦図屏風》（1854年の模写）"}
+        portrait: {image: paintings/ieyasu_kobayakawa_hideaki_yoshiiku.jpg, caption: "小早川秀秋（幕末の武者絵・想像図）", age: false}
+        card: {head: 秀秋の裏切り, body: 時刻は研究者で割れる}
+        short: s4
+      - 聞き: 2時間も違うんだ。それで、有名なのが、あの鉄砲の話か。
+        short: s4
+      - 語り: 家康が、松尾山の秀秋に鉄砲を撃ち込んで、決断を迫った、という話が語られてきました。問い鉄砲です。ところが、同時代に近い『内府公軍記』にも、『当代記』にも、『三河物語』にも、ありません。
+        background: {image: paintings/ieyasu_sekigahara_senjinzu_toiteppo.jpg, credit: "《関ヶ原戦陣図屏風》部分（19世紀）"}
+        portrait: null
+        card: {head: 問い鉄砲, body: 同時代の記録にはない}
+        short: s4
+      - 聞き: 撃ち込んだ話が、書かれてないなんて。
+        short: s4
+      - 語り: 初めて載るのは、寛文3年、1663年の『慶長軍記』と、呉座勇一さんは指摘しています。今の形になるのは、1727年の『落穂集』です。
+        background: {image: paintings/ieyasu_sekigahara_zubyobu.jpg, credit: "《関ヶ原合戦図屏風》（江戸時代）"}
+      - 聞き: どちらにしても、「撃った」とまでは、言い切れないってことだ。
+      - 語り: 戦いは、東軍、つまり家康方の勝ち。西軍を率いた石田三成は、のちに捕らえられて、処刑されます。
+      - 聞き: 勝った家康は、何をもらったの？
+      - 語り: 戦後の領地を見ます。石高は、米の収穫量で表した、領地の大きさです。戦後処理で、家康の領地は、255万石から400万石へ。毛利は120万石から30万石へ。上杉は、120万石から30万石へ。数字は、「諸説あり」とされます。
+        background: {image: paintings/ieyasu_edo_zu_byobu_castle_detail.jpg, credit: "《江戸図屏風》江戸城の部分（17世紀）"}
+        card: {head: 家康領, body: 255万石から400万石へ（諸説）}
+        figure: {type: bars, title: 関ヶ原の前後の石高（万石・諸説あり）, bars: [[毛利 前, 120.5], [毛利 後, 29.8], [上杉 前, 120], [上杉 後, 30], [家康 前, 255], [家康 後, 400]], labels: [約120万, 約30万, 120万, 30万, 255万, 400万]}
+      - 聞き: 数字がすごく大きく動くけど、どれも「諸説あり」なんだね。 謀略の達人っていうより、不安定な情勢の中で、勝ちをつかんだ感じ。 江戸幕府だね。
+        hook: true
+
+  # ---------------------------------------------------------------- 9 幕府と大坂の陣
+  - title: 1603年 江戸幕府と大坂の陣
+    background: {image: paintings/ieyasu_yoshitoshi_meishokagami.jpg, credit: "月岡芳年《大日本名将鑑 徳川家康公》1878年"}
+    year: 1603
+    lines:
+      - 語り: 慶長8年2月12日。家康は、伏見城で、征夷大将軍の宣旨を受けます。右大臣や源氏長者も、同時に、与えられました。
+        card: {head: 慶長8年2月12日, body: 征夷大将軍の宣旨}
+      - 聞き: 将軍って、具体的に何をする人なの？
+        tone: 疑問
+      - 語り: 征夷大将軍は、武士の頂点に立って、幕府を開く人です。朝廷から任じられる形で、家康は、江戸に幕府を開いたことになります。
+        background: {image: paintings/ieyasu_edo_keicho_ezu_1608.jpg, credit: "《慶長江戸図》1608年（東京都立中央図書館蔵）"}
+      - 聞き: 将軍は、朝廷に任命される形なんだ。武士のトップだけど、形の上では、天皇の下なんだね。
+      - 語り: 慶長10年4月16日。将軍職は、息子の秀忠に譲られ、世襲が示されます。家康は、のちに駿府を拠点に、大御所として、政治を続けます。大御所は、将軍をやめた実力者の呼び名です。
+        background: {image: paintings/yoshinobu_suruga_castle_map.jpg, credit: "《駿州府中之城図》駿府城の絵図（1935年の版）"}
+        portrait: null
+        card: {head: 慶長10年4月16日, body: 秀忠が将軍に 家康は大御所に}
+      - 聞き: 将軍をやめても、権力は手放さなかったんだ。
+      - 語り: そして、慶長19年。方広寺の鐘の銘文に、京都五山の長老が、不敬だと判断します。「国家安康」の字が、家康の名を切っている、という言いがかりだった、と言われてきた事件です。
+        background: {image: paintings/nene_rakuchu_funaki_1.jpg, credit: "《洛中洛外図屏風》（江戸時代初期）"}
+        portrait: null
+        card: {head: 方広寺の鐘銘事件, body: 慶長19年8月18日}
+      - 聞き: 家康が、わざとケチをつけた、って習ったよ。
+      - 語り: 通説は、家康と以心崇伝が仕組んだ謀略、でした。ただ、近年は、崇伝の関与はなかった、とされます。河内将芳さんは、家康が銘を削る内意を示した記録を、指摘しています。
+        background: {image: paintings/nene_rakuchu_funaki_2.jpg, credit: "《洛中洛外図屏風》（江戸時代初期）"}
+      - 聞き: 謀略だった、とも、そうじゃなかった、とも、言い切れないんだ。
+      - 語り: この事件を機に、同じ年の11月、家康は、秀吉の子、豊臣秀頼のいる大坂城を攻めます。冬の陣です。
+        background: {image: paintings/ieyasu_osaka_winter_siege_map_1614.jpg, credit: "《大坂城仕寄之図》（江戸時代）"}
+      - 語り: 冬の陣の講和で、大坂城の堀を埋めた話は、有名です。「惣堀を埋める」を、家康が「すべて」と解釈して、内堀まで埋めた、という、詐術の話です。
+        background: {image: paintings/ieyasu_osaka_winter_siege_map_1614.jpg, credit: "《大坂城仕寄之図》（江戸時代）"}
+        card: {head: 後世の話, body: 堀の詐術は同時代の記録にない}
+        short: s5
+      - 聞き: 約束を、ずるく解釈した、って話だよね。
+        short: s5
+      - 語り: ところが、この詐術の話は、後の書物にしか見えません。伊達政宗や細川忠利らの書状にも、紛争の形跡は、ありません。講和で城の外側を壊す合意はあったとされますが、その範囲は、史料でも割れます。
+        background: {image: paintings/nene_osaka_zu_byobu.jpg, credit: "《大坂図屏風》1607〜15年ごろ（豊臣期の大坂城と城下）"}
+        short: s5
+      - 聞き: 全部埋めたかどうかは、はっきりしないのか。
+        short: s5
+      - 語り: 翌年の夏の陣。慶長20年5月7日、天王寺と岡山で戦い。翌8日、秀吉の子の秀頼と、母の淀殿らが、自害します。ここで、有名な逸話が、もう一つあります。真田信繁が、家康の本陣に迫った、という話です。どこまで迫ったかは、諸説あります。
+        background: {image: paintings/ieyasu_osaka_summer_screen_kuroda.jpg, credit: "《大坂夏の陣図屏風》右隻（黒田屏風、大阪城天守閣蔵、17世紀）"}
+        portrait: {image: paintings/nene_hideyori_yogenin.jpg, caption: "豊臣秀頼（養源院）", age: false}
+        card: {head: 慶長20年5月8日, body: 秀頼らが自害}
+      - 聞き: 家康の本陣に迫った、ってやつだ。
+        background: {image: paintings/ieyasu_osaka_summer_screen_kuroda.jpg, credit: "《大坂夏の陣図屏風》右隻（黒田屏風、大阪城天守閣蔵、17世紀）"}
+        portrait: null
+      - 語り: そして、秀頼の最期を決めたのは、実は、家康ではなく、将軍の秀忠の判断だった、と伝わります。千姫は、秀頼の妻で、秀忠の娘、つまり家康の孫です。その千姫を通じて、秀頼と淀殿の助命を求められた家康は、判断を、秀忠に委ねました。
+        background: {image: paintings/nene_osaka_castle_summer_screen_detail.jpg, credit: "《大坂夏の陣図屏風》部分（17世紀前半、大阪城天守閣蔵）"}
+        portrait: {image: paintings/oichi_hidetada.jpg, caption: "徳川秀忠（江戸時代）", age: false}
+        card: {head: 秀頼の最期, body: 決めたのは秀忠の判断とされる}
+      - 聞き: じゃあ、家康が一人で決めたわけじゃない、ってこと？
+      - 語り: 大坂の陣の翌年。家康は、駿府で、病に倒れます。
+        background: {image: paintings/ieyasu_fuchu_abe_river_hiroshige_1833.jpg, credit: "歌川広重《東海道五十三次之内 府中 安部川》1833年ごろ"}
+        portrait: null
+        hook: true
+      - 聞き: 鯛の天ぷらで死んだ、っていう話、聞いたことある。
+        hook: true
+
+  # ---------------------------------------------------------------- 10 まとめ
+  - title: まとめ：徳川家康とは何者だったのか
+    background: {image: paintings/ieyasu_kunozan_kunitsuna_1863.jpg, credit: "歌川国綱《東海道名所之内 久能山》1863年"}
+    portrait: {image: paintings/ieyasu_portrait_toshodaigongen.jpg, caption: "徳川家康（東照大権現像）", age: false}
+    year: 1616
+    lines:
+      - 語り: ここで、家康の最期をもう一度見ます。鯛の天ぷらを食べたのは、元和2年1月21日で、死去の4月17日まで、3か月ほど離れています。今は、胃癌説が、主流です。
+        card: {head: 元和2年4月17日, body: 駿府城で死去（数え75）}
+      - 聞き: 天ぷらの話も、日が合わないんだ。
+      - 語り: 病名は、断定しません。『徳川実紀』には、吐血や黒い便、腹のしこりの記録があります。死後の家康は、神として祀られ、江戸時代は、否定的な評価が禁じられていました。
+        background: {image: paintings/ieyasu_nikko_yomeimon_kiyochika_1897.jpg, credit: "小林清親《日本名勝図絵 陽明門》1897年"}
+      - 聞き: 悪口を言えない時代が、250年以上も続いたんだね。
+      - 語り: 近代の像も、見てみます。山岡荘八の小説は、忍耐の求道者。司馬遼太郎の小説は、「戦が強くはなかったが戦上手」。2000年の朝日新聞社の企画では、日本の顔10人で、1位でした。
+        background: {image: paintings/ieyasu_edo_zu_byobu_castle_detail.jpg, credit: "《江戸図屏風》江戸城の部分（17世紀）"}
+      - 聞き: 狸の札は、どこから来たの？
+      - 語り: 小説やドラマで定番になった、と言われます。起源は、はっきり分かっていません。
+      - 語り: では、4つの札を、記録で言えることに、直します。1つ目、「忍耐」。今川へ出されたことは記録にありますが、「苦労が人格を作った」は、後の像です。しかみ像も、1936年より前に、三方ヶ原と結ぶ記述は、見つかっていません。鳴くまで待とうの句も、家康が詠んだ記録はありません。
+        background: {image: paintings/ieyasu_nikko_yomeimon_kiyochika_1897.jpg, credit: "小林清親《日本名勝図絵 陽明門》1897年"}
+      - 聞き: 整理すると、札ごとに「記録で言えること」が、意外と少ないね。 逆に言うと、記録のほうが、ずっと面白いのかも。
+      - 語り: 2つ目、「狸」と、3つ目の「謀略」。小山評定、問い鉄砲、堀の詐術、鐘銘事件。どれも、研究者の間で、割れているか、後世の話です。
+        background: {image: paintings/ieyasu_sekigahara_senjinzu_toiteppo.jpg, credit: "《関ヶ原戦陣図屏風》部分（19世紀）"}
+      - 聞き: 謀略の逸話は、「家康はずるい」って印象を、作るためのものだったのかな。
+      - 語り: 4つ目、「神君」。伊賀越えは、道すじさえ、一致しません。服部半蔵の話は、江戸の史料。神君の札は、幕府が、家康を神にする中で、付けられました。
+        background: {image: paintings/ieyasu_iga_hiroshige2_nabari.jpg, credit: "二代 歌川広重《諸国六十八景 伊賀》1862年"}
+      - 聞き: 忍耐、狸、謀略、神君。記録のうえでは、後の人が付けた札、なんだね。
+        figure: {type: people, title: 家康に札を貼った人たち, nodes: [[徳川家康, 札を貼られた人], [忍耐, 江戸〜昭和の本・絵], [狸, 小説・ドラマ], [謀略, 軍記・俗説], [神君, 江戸幕府]], edges: [[徳川家康, 忍耐, 後から], [徳川家康, 狸, 後から], [徳川家康, 謀略, 後から], [徳川家康, 神君, 後から]]}
+      - 語り: そうです。江戸の編纂者、随筆家、小説家、美術館。いろんな人が、いろんな時代に、家康に札を貼りました。剥がしても、家康は、消えません。残るのは、史料に書かれた、一人の人間です。
+        background: {image: paintings/ieyasu_edo_zu_byobu_castle_detail.jpg, credit: "《江戸図屏風》江戸城の部分（17世紀）"}
+      - 聞き: 6歳で人質に出て、妻と息子を失って、勝った相手に頭を下げて、数えで75歳まで生き抜いた。あーしは、その長さのほうが、札より重く感じるかな。
+        background: {image: paintings/ieyasu_edo_keicho_ezu_1608.jpg, credit: "《慶長江戸図》1608年（東京都立中央図書館蔵）"}
+        portrait: null
+        tone: しみじみ
+      - 語り: 今日の地層は、ここまでです。
+      - 聞き: 次回は、黒田官兵衛。半兵衛と並んで「両兵衛」って言われてるけど……その像は、誰が作ったの？
+        tone: 疑問
+      - 語り: 知っている通説があれば、コメントで教えてください。
+      - 二人: また一緒に、掘りましょう！
+        tone: 明るい

@@ -1,0 +1,142 @@
+# 物語完結型ショート 宮本武蔵 s3（2026-10-29）。本編 scripts/musashi-story.yaml の第2章（『沼田家記』）から。
+# 形式は takasugi_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。
+# 絵は本編の AI 絵（M*.jpg。人物なし）と実在の絵図（豊後国絵図、臼杵市歴史資料館蔵）。決闘・負傷の場面に人物の絵は当てない。
+# 事実カード：musashi-14・16・17・18・19
+#   ・『沼田家記』の原文は個人の記事（カクヨム）が引く翻刻が根拠 → 「個人の記事が引く翻刻では」「と読める」で言う。
+#   ・「豊後の無二斎のもとへ送った」「小次郎の弟子たちに追われた」は言わない。豊後へ送らせた、は翻刻の「城に置き、豊後へ送らせた」の範囲で言う。
+# 理解テスト4問：
+#   ①誰の話か：宮本武蔵と、『沼田家記』
+#   ②いつ・どこで何が：決闘の約60年後の1672年、門司城代だった沼田延元の子孫が『沼田家記』をまとめた。武蔵が門司へ逃げて来た、と書く
+#   ③何が書かれているか：弟子は来ない約束だったのに武蔵の弟子たちが隠れていて、蘇生した小次郎を打ち殺した。武蔵は逃れがたく門司へ逃げ、延元が請け合った
+#   ④どうなったか：魚住孝至教授は、助けた側の子孫の書物だからドラマティックに書いたのではないか、と話す
+title: 宮本武蔵｜勝った武蔵は、門司へ逃げたと書かれた
+yt_title: 巌流島で勝った武蔵が門司へ逃げた？　60年後の『沼田家記』に書かれた弟子と小次郎
+description: |-
+  勝ったはずの宮本武蔵が、門司へ逃げた。そう書いた記録があります。
+  決闘のおよそ60年後、寛文12年、1672年。門司城代だった沼田延元の子孫が、『沼田家記』をまとめました。個人の記事が引く翻刻では、双方とも弟子は一人も来ない約束でしたが、島には武蔵の弟子たちが来て隠れていた、とあります。武蔵に打たれた小次郎はいったん蘇生し、弟子たちがあとから打ち殺した、と読めます。
+  国際武道大学の魚住孝至教授は、延元の業績を子孫が残した書物だから、ドラマティックに書いたのではないか、と話しています。
+hashtags: ["#宮本武蔵", "#日本史", "#巌流島"]
+ai_images: true
+ai_disclosure: この動画の人物・情景の画像の多くは、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/musashi
+out: musashi_story_s3
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 宮本武蔵（江戸初期の剣豪）
+  title: "勝った武蔵が、《門司へ逃げた》"
+now:
+  - {at: 1672年, text: "1672年　門司", point: 1}
+timeline:
+  - {label: "1612"}
+  - {label: "1672"}
+cards:
+  - type: year                           # 沼田家記
+    from: 寛文12年
+    until: 個人の記事が
+    big: 1672年
+    sub: 『沼田家記』ができる
+    text_y: 0.70
+shots:
+  M04:
+    kind: ai
+    file: musashi/main/M04.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 夜の海峡を渡る小さな舟の影
+  M05:
+    kind: ai
+    file: musashi/main/M05.jpg
+    focus: [0.5, 0.5]
+    move: right
+    must: 石垣の上の城と門
+  M08:
+    kind: ai
+    file: musashi/main/M08.jpg
+    focus: [0.5, 0.55]
+    move: in
+    must: 砂浜と松のある小さな島
+  M06:
+    kind: ai
+    file: musashi/main/M06.jpg
+    focus: [0.55, 0.55]
+    move: right
+    must: 灯の下の古い書物と筆
+  M04r:
+    kind: ai
+    file: musashi/main/M04.jpg
+    focus: [0.7, 0.6]
+    move: left
+    zoom: 0.12
+    must: 夜の海峡と舟の影
+  Bungo:
+    kind: real
+    image: paintings/kanbei_bungo_kuniezu.jpg
+    focus: [0.5, 0.5]
+    move: right
+    credit: "豊後国絵図（慶長10年ごろの下図。臼杵市歴史資料館蔵）"
+    must: 豊後の国絵図
+  M05r:
+    kind: ai
+    file: musashi/main/M05.jpg
+    focus: [0.3, 0.5]
+    move: left
+    zoom: 0.12
+    must: 城の石垣
+  M01:
+    kind: ai
+    file: musashi/main/M01.jpg
+    focus: [0.5, 0.5]
+    move: in
+    text_y: 0.76
+    must: 朝の海に浮かぶ島
+lines:
+  # fact: musashi-18
+  - 語り: 勝ったはずの宮本武蔵が、門司へ逃げた。そう書いた記録が、《!ある》。
+    shot: M04
+    tone: 強調
+    pause: 0.12
+  # fact: musashi-14
+  - 語り: 決闘のおよそ60年後、寛文12年、1672年。門司城代だった沼田延元の子孫が、『沼田家記』を、まとめた。
+    shot: M05
+    tone: しみじみ
+    pause: 0.12
+  # fact: musashi-16
+  - 語り: 個人の記事が引く翻刻では、双方とも、弟子は一人も来ない約束だった。ところが、島には、武蔵の弟子たちが、来て隠れていた。
+    shot: M08
+    tone: 強調
+    pause: 0.12
+  # fact: musashi-17
+  - 語り: 武蔵に打たれた小次郎は、いったん蘇生した。すると、弟子たちが、あとから打ち殺した、と読める。
+    shot: M06
+    tone: 重い
+    pause: 0.12
+  # fact: musashi-18
+  - 語り: 武蔵は、逃れがたく、門司へ逃げて来て、延元に、ひとえに願った、と翻刻は続ける。
+    shot: M04r
+    tone: しみじみ
+    pause: 0.12
+  # fact: musashi-18
+  - 語り: 延元は請け合い、武蔵を城に置いて、豊後へ送らせた、という。
+    shot: Bungo
+    tone: しみじみ
+    pause: 0.12
+  # fact: musashi-19
+  - 語り: 国際武道大学の魚住孝至教授は、延元の業績を子孫が残した書物だから、ドラマティックに書いたのではないか、と話している。
+    shot: M05r
+    tone: しみじみ
+    pause: 0.3
+    dip: true
+  - 語り: 助けた側の子孫が、60年後に書いた話を、あなたは、どこまで信じますか。
+    shot: M01
+    tone: 疑問
+    pause: 0.15

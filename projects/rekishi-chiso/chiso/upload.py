@@ -24,6 +24,7 @@ from pathlib import Path
 SCOPES = [
     "https://www.googleapis.com/auth/youtube.upload",
     "https://www.googleapis.com/auth/youtube.force-ssl",     # 字幕・概要欄の直し・再生リスト・英語の題名（videos.update）
+    "https://www.googleapis.com/auth/yt-analytics.readonly",  # 10-15：再生・視聴時間・流入元をAPIで読む（読み取りのみ）。表示回数・クリック率はAPIに無い
 ]
 # 再生リスト（playlists.insert・playlistItems.insert）と videos.update はどちらかが要る。
 # force-ssl で足りるので youtube は求めない（足すと今の許可の更新が invalid_scope で落ちる）
@@ -36,6 +37,19 @@ REAUTH = ("許可を取り直す必要があります（ブラウザでの同意
           "  python -m chiso.cli reauth   … ブラウザが開くので、Google アカウントを選び、"
           "「歴史の地層」のチャンネルを選んで、すべての項目を許可する。\n"
           "  古い許可は secrets/token.<日時>.json.old に残ります")
+
+
+# 10-22：AI生成画像を使う動画（物語完結型ショート chiso/storyshort.py）は、YouTube の「改変・合成されたコンテンツ」の申告を付ける
+# （videos.insert の status.containsSyntheticMedia）。概要欄にも次の開示文を入れる。既定は今までどおり申告なし
+AI_DISCLOSURE = ("この動画の画像は画像生成AI（FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません。")
+
+
+def status_body(publish_at: str, made_for_kids: bool = False, synthetic_media: bool = False) -> dict:
+    """videos.insert の status。synthetic_media=True で containsSyntheticMedia を付ける。"""
+    body = {"privacyStatus": "private", "publishAt": publish_at, "selfDeclaredMadeForKids": made_for_kids}
+    if synthetic_media:
+        body["containsSyntheticMedia"] = True
+    return body
 
 
 class UploadError(RuntimeError):
@@ -167,8 +181,9 @@ def recently_uploaded(svc, title: str, minutes: int = 180) -> str | None:
 
 def upload(svc, video: Path, title: str, description: str, tags: list[str], publish_at: str,
            thumbnail: Path | None = None, captions: Path | None = None, made_for_kids: bool = False,
-           localizations: dict | None = None) -> str:
-    """予約投稿して videoId を返す。サムネイルと字幕は落ちても警告だけ（あとで付け直せる）。"""
+           localizations: dict | None = None, synthetic_media: bool = False) -> str:
+    """予約投稿して videoId を返す。サムネイルと字幕は落ちても警告だけ（あとで付け直せる）。
+    synthetic_media=True（AI生成画像を使う動画）で「改変・合成されたコンテンツ」の申告を付ける。"""
     *_, MediaFileUpload = _deps()
     if not video.exists():
         raise UploadError(f"動画がありません: {video}")
@@ -178,8 +193,7 @@ def upload(svc, video: Path, title: str, description: str, tags: list[str], publ
     body = {
         "snippet": {"title": title[:100], "description": description[:5000], "tags": tags[:30],
                     "categoryId": CATEGORY_EDUCATION, "defaultLanguage": "ja", "defaultAudioLanguage": "ja"},
-        "status": {"privacyStatus": "private", "publishAt": publish_at,
-                   "selfDeclaredMadeForKids": made_for_kids},
+        "status": status_body(publish_at, made_for_kids, synthetic_media),
     }
     part = "snippet,status"
     if localizations:                      # 英語の題名と説明（日本語が既定の言語）

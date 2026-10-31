@@ -7,9 +7,12 @@
     python -m chiso.cli approve scripts/x.yaml          # 台本の承認を控える（自分の確認を回しきったあとだけ。reading-ok が要る）
     python -m chiso.cli build   scripts/x.yaml          # 本番の動画。承認した台本の中身と一致しないと動かない
     python -m chiso.cli shorts  scripts/x.yaml [--draft]  # short: を付けた行からショートを全部作る
+    python -m chiso.cli story-short scripts/story/x.yaml [--kana]   # 物語完結型のショート（10-22。絵は tools/gen_story_art.py）
+    python -m chiso.cli story-main scripts/story/x_main_look.yaml  # 物語型の本編（横）の見た目の静止画（10-24。chiso/storymain.py）
     python -m chiso.cli describe scripts/x.yaml [--keywords]   # 概要欄（章・クレジット・絵の出典。--keywords で扱う語）
     python -m chiso.cli assign  scripts/x.yaml --assets research/x_assets.md   # 絵の割り当ての下書き（out/x_assign.md）
     python -m chiso.cli keywords "織田信長" [--all]      # YouTube の検索候補でよく続く語・題名とタグの候補
+    python -m chiso.cli research 伊達政宗 --kw 遺言 --phrase 政宗の木像 --fact "文::語 語"   # 出どころの候補（NDL・J-STAGE ほか）と知らない度
     python -m chiso.cli kana    scripts/x.yaml          # 全行の読みをカタカナで書き出す（読み違いの点検）
     python -m chiso.cli thumb   scripts/x.yaml [--variants]   # サムネイル（--variants で3案 a・b・c と一覧の大きさの確認用）
     python -m chiso.cli screen  scripts/x.yaml          # 本番の動画を見てもらった控え（ユーザーの OK のあとだけ）
@@ -17,6 +20,8 @@
     python -m chiso.cli whoami                          # 許可したチャンネルの名前を出す（取り違えの確認）
     python -m chiso.cli playlists [--sync]              # 投稿済みを台本の playlists:／series:／shorts_playlists: の再生リストへ
     python -m chiso.cli localize scripts/x.yaml [--dry-run]   # 投稿済みの本編に台本の en:（英語の題名と説明）を付ける
+    python -m chiso.cli preview  scripts/x.yaml     # 画面だけの静止コマ確認（3×3 の一覧。音声・映像の組み立てを待たない）→ out/x_preview/
+    python -m chiso.cli clean [--apply]                 # 投稿・予約が済んだ台本の frames・bg を消す（書き出しの前に空きが少なければ自動）
     python -m chiso.cli reauth                          # 許可の取り直し（ブラウザで同意する。ユーザーが打つ）
     python -m chiso.cli check   scripts/x.yaml          # 素材の有無・書きすぎ・抑揚の張りつきを点検
     python -m chiso.cli qc      scripts/x.yaml [--video out/x.mp4]   # 出来上がった動画の点検（一覧・画面の替わり方・音）
@@ -190,7 +195,12 @@ def preflight(sc, config) -> bool:
         painter = Painter(config, sc, assets_dir(config), (1920, 1080))
         errors += check_mod.section_title_fit(painter)
         warns += check_mod.timeline_crowding(painter)
+    e, w = check_mod.render_risks(sc, assets_dir(config))
+    errors += e
+    warns += w
     warns += check_mod.lint(sc, config.get("short", {}).get("max_seconds", 60))
+    from . import factcheck                              # 台本と事実カードの突き合わせ（10-26。カードも # fact: も無い台本では何もしない）
+    warns += factcheck.check(sc, Path(sc.path).read_text(encoding="utf-8"), assets_dir(config).parent / "research")
     from . import reading                                # 読み違い（10-10）：辞書との食い違い・割れる字・辞書の巻き込み
     e, w = reading.notes(sc, load_readings(ROOT / "readings.yaml"), kana_source(config))
     errors += e
@@ -249,11 +259,12 @@ def voicevox_guard(config) -> None:
     if os.name != "nt":
         return
     port = str(config["voicevox_url"]).rstrip("/").rsplit(":", 1)[-1]
-    ps = ("$p = Get-CimInstance Win32_Process -Filter \"Name='run.exe'\" | "
+    ps = ("[Console]::OutputEncoding = [Text.Encoding]::UTF8; "
+          "$p = Get-CimInstance Win32_Process -Filter \"Name='run.exe'\" | "
           f"Where-Object {{ $_.CommandLine -like '*vv-engine*' -and $_.CommandLine -like '*{port}*' }} | Select-Object -First 1; "
           "if ($p) { '{0}|{1}|{2}' -f $p.ProcessId, $p.PrivatePageCount, $p.ExecutablePath }")
     try:
-        out = subprocess.run(["powershell", "-NoProfile", "-Command", ps], capture_output=True, text=True,
+        out = subprocess.run(["powershell", "-NoProfile", "-Command", ps], capture_output=True, text=True, encoding="utf-8", errors="replace",
                              timeout=60).stdout.strip()
     except Exception:
         return
@@ -264,9 +275,11 @@ def voicevox_guard(config) -> None:
     if gb < VOICEVOX_MAX_GB:
         return
     print(f"VOICEVOX のエンジンが {gb:.1f}GB 抱えているので立ち上げ直します")
+    # 道のりは環境変数で渡す（10-25：コマンドの文字列に「なみ」の入った道のりを書くと ? に化けて、止めたまま起動できなかった）
     subprocess.run(["powershell", "-NoProfile", "-Command",
-                    f"Stop-Process -Id {pid} -Force; Start-Process -FilePath '{exe}' "
-                    f"-ArgumentList '--host','127.0.0.1','--port','{port}' -WindowStyle Hidden"], timeout=60)
+                    f"Stop-Process -Id {pid} -Force; Start-Process -FilePath $env:VV_EXE "
+                    f"-ArgumentList '--host','127.0.0.1','--port','{port}' -WindowStyle Hidden"], timeout=60,
+                   env={**os.environ, "VV_EXE": exe})
     import time, urllib.request
     for _ in range(60):
         time.sleep(2)
@@ -322,6 +335,8 @@ def _stamp(painter_cls):
 
 def make_video(args, draft: bool) -> int:
     config = load_config()
+    if not ensure_disk(config):
+        return 2
     path = Path(args.script)
     sc = script_mod.load(path)
     limit = getattr(args, "lines", None)
@@ -371,7 +386,7 @@ def make_video(args, draft: bool) -> int:
     lst = wd / "overlay.txt"
     lst.write_text(render.concat_list(items), encoding="utf-8")
     print("重ねています…")
-    video.compose(ffmpeg(), bg, lst, audio, target, v["fps"], preset="veryfast" if draft else "medium")
+    video.compose(ffmpeg(), bg, lst, audio, target, v["fps"], preset="veryfast")
     clock.lap("重ね")
     got = video.media_seconds(ffmpeg(), target)
     if got is None or abs(got - total) > 2.0:               # 10-05：3分しかない本編が「30.7分」と出て通っていた
@@ -419,12 +434,144 @@ def cmd_draft(args) -> int:
     return make_video(args, draft=True)
 
 
+# --- ディスク（10-15：work/<台本>/ の frames・bg が1本10〜28GB。C: が満杯になって書き出しが落ちた）--------------
+
+DISK_AUTO_CLEAN_GB = 60      # 空きがこれより少なければ、投稿済み・予約済みの中間ファイルを自動で消す
+DISK_MIN_GB = 30             # それでもこれより少なければ書き出さない
+
+
+def clean_targets() -> list[Path]:
+    """予約・公開が済んだ（posted.json に本編がある）台本の、作り直せる中間ファイル。音声（voice）は残す。"""
+    posted = ROOT / "posted.json"
+    stems = set()
+    if posted.exists():
+        for p in json.loads(posted.read_text(encoding="utf-8")):
+            if str(p.get("key", "")).endswith(":main"):
+                stems.add(str(p["key"]).split(":")[0])
+    out = []
+    for stem in sorted(stems):
+        for sub in ("frames", "frames-draft", "bg"):
+            d = ROOT / "work" / stem / sub
+            if d.exists():
+                out.append(d)
+    return out
+
+
+def _du(path: Path) -> int:
+    return sum(f.stat().st_size for f in path.rglob("*") if f.is_file())
+
+
+def disk_free_gb() -> float:
+    import shutil
+    return shutil.disk_usage(ROOT).free / 1e9
+
+
+def ensure_disk(config=None) -> bool:
+    """作る前に空きを見る。少なければ予約済みの中間ファイルを消し、それでも足りなければ False。"""
+    import shutil
+    free = disk_free_gb()
+    if free >= DISK_AUTO_CLEAN_GB:
+        return True
+    print(f"  ! ディスクの空きが{free:.0f}GBです（{DISK_AUTO_CLEAN_GB}GB未満）。予約済みの中間ファイルを消します")
+    for d in clean_targets():
+        shutil.rmtree(d, ignore_errors=True)
+    free = disk_free_gb()
+    print(f"  空き {free:.0f}GB")
+    if free < DISK_MIN_GB:
+        print(f"  × ディスクの空きが{DISK_MIN_GB}GB未満のため、書き出しません（途中で落ちて壊れたコマが残るため）")
+        return False
+    return True
+
+
+def cmd_clean(args) -> int:
+    """投稿・予約が済んだ台本の frames・frames-draft・bg を消す（--apply。付けなければ一覧だけ）。"""
+    import shutil
+    targets = clean_targets()
+    total = 0
+    for d in targets:
+        n = _du(d)
+        total += n
+        print(f"  {n / 1e9:6.1f}GB  {d.relative_to(ROOT)}")
+        if args.apply:
+            shutil.rmtree(d, ignore_errors=True)
+    print(f"{'消しました' if args.apply else '消せます（--apply で消す）'}：合計 {total / 1e9:.1f}GB／いまの空き {disk_free_gb():.0f}GB")
+    return 0
+
+
 def cmd_build(args) -> int:
     return make_video(args, draft=False)
 
 
+def cmd_preview(args) -> int:
+    """画面だけの静止コマ確認（10-15）。音声の組み立て・映像の組み立て（ffmpeg）を待たずに、行ごとの画面を 3×3 の一覧にする。
+    前景の描き直しと背景の絵は本番の書き出し（build）と同じ控え（work/<台本>/frames・bg）を使うので、あとで build しても無駄にならない。
+    音声は読みの控え（voice）を使う（無ければここで作る）。out/<台本>_preview/sheetNN.jpg ができる。"""
+    from PIL import Image, ImageDraw
+    config = load_config()
+    path = Path(args.script)
+    sc = script_mod.load(path)
+    if not ensure_disk(config):
+        return 2
+    if not preflight(sc, config):
+        return 3
+    clock = Clock()
+    cues, total = synthesize(sc, config)
+    clock.lap("音声")
+    if sc.next:
+        total += render.END_SECONDS
+    wd = work_dir(sc)
+    v = config["video"]
+    size = (v["width"], v["height"])
+    painter = render.Painter(config, sc, assets_dir(config), size)
+    painter.layered = True
+    print("前景を描いています…")
+    fg = render.frames(painter, cues, total, wd / "frames", v["fps"], end_card=bool(sc.next))
+    clock.lap("前景")
+    print("背景を並べています…")
+    runs = video.runs_of(cues, total)
+    bg = video.still_frames(ffmpeg(), painter, runs, wd / "bg", v["fps"], size, workers=v.get("bg_workers", 5))
+    clock.lap("背景")
+
+    def at(items, t):
+        acc = 0.0
+        for path_, dur in items:
+            acc += dur
+            if t < acc:
+                return path_
+        return items[-1][0]
+    out = out_dir() / f"{path.stem}_preview"
+    out.mkdir(exist_ok=True)
+    for old in out.glob("sheet*.jpg"):
+        old.unlink()
+    font = painter.font("gothic", 26, bold=True)
+    W, H = 800, 450
+    names = {k: people.label(config, k) for k in list(config["cast"]) + sc.roles}
+    tiles = []
+    for n, cue in enumerate(cues, 1):
+        t = (cue.start + cue.end) / 2
+        base = Image.open(at(bg, t)).convert("RGBA").resize(size)
+        top = Image.open(at(fg, t)).convert("RGBA").resize(size)
+        im = Image.alpha_composite(base, top).convert("RGB").resize((W, H))
+        d = ImageDraw.Draw(im)
+        who = names.get(cue.line.speaker, cue.line.speaker)
+        d.rectangle([0, 0, W, 34], fill=(0, 0, 0))
+        d.text((4, 2), f"#{n} {int(t // 60)}:{int(t % 60):02d} {who}：{cue.line.text[:14]}", font=font, fill=(255, 255, 0))
+        tiles.append(im)
+    for k in range(0, len(tiles), 9):
+        sheet = Image.new("RGB", (W * 3, H * 3))
+        for j, im in enumerate(tiles[k:k + 9]):
+            sheet.paste(im, ((j % 3) * W, (j // 3) * H))
+        sheet.save(out / f"sheet{k // 9 + 1:02d}.jpg", quality=88)
+    print(f"{out}（{len(tiles)}コマ・{(len(tiles) + 8) // 9}枚）")
+    print(f"かかった時間：{clock}")
+    remind_mismatch(sc)
+    return 0
+
+
 def cmd_shorts(args) -> int:
     config = load_config()
+    if not ensure_disk(config):
+        return 2
     path = Path(args.script)
     sc = script_mod.load(path)
     if not args.draft and not is_approved(path):
@@ -446,7 +593,8 @@ def cmd_shorts(args) -> int:
             continue
         body = sc.short_lines(sid)
         hook_line, tease_line = shorts_mod.extra_lines(body, meta, say_hook and hook_on)
-        lines = ([hook_line] if hook_line else []) + body + ([tease_line] if tease_line else [])
+        cta = shorts_mod.cta_line(body, meta)
+        lines = ([hook_line] if hook_line else []) + body + ([tease_line] if tease_line else []) + ([cta] if cta else [])
         spoken = {line.index: tts.speak_line(engine, line, vs, readings, cache)
                   for line in lines}
         # ショートの中では節の切れ目の長い間を入れない
@@ -459,8 +607,9 @@ def cmd_shorts(args) -> int:
         shown = [replace(c, line=replace(c.line, text="")) if c.line.index == -1 else c for c in cues]
         hold = (cues[0].end + shorts_mod.HOOK_AFTER) if hook_line else shorts_mod.HOOK_HOLD
         if tease_line:                                      # 最後のもう一つの疑問（10-08）。「続きは本編で」とループの画の代わり
+            cc = shown.pop() if cta else None               # 最後の「高評価とチャンネル登録」（10-21）。画面は問いのまま
             tc = shown.pop()
-            total = tc.end + shorts_mod.TEASE_AFTER
+            total = (cc or tc).end + shorts_mod.TEASE_AFTER
             items = render.frames(painter, shown, tc.start, wd / "frames", fps, with_text=True)
             items = shorts_mod.finish(items, painter, shorts_mod.hook_text(meta) if hook_on else "", wd / "hook",
                                       fps, False, hold=hold)
@@ -486,6 +635,90 @@ def cmd_shorts(args) -> int:
     return 0
 
 
+def cmd_story_main(args) -> int:
+    """物語型の本編（横 16:9）の見た目を静止画で（10-24。動画はまだ書き出さない）。look の stills: の時点を PNG と一覧に、
+    shots: から全カットの表（out/<名前>_shotlist.md）も。"""
+    from . import storymain
+    config = load_config()
+    if args.build:
+        if not ensure_disk(config) or disk_free_gb() < 30:
+            print("  × ディスクの空きが30GB未満なので書き出しません")
+            return 2
+        r = storymain.build(Path(args.look), config, out_dir(), limit=args.limit or None, workers=args.workers,
+                            name=args.name or None)
+        print(f"{r['target']}（{r['seconds']:.1f}秒・カット{r['cuts']}）")
+        for k, v in r["times"].items():
+            print(f"  {k}: {v / 60:.1f}分")
+        print("  BGM:", {k: (round(v, 2) if isinstance(v, float) else v) for k, v in r["bgm"].items()})
+        return 0
+    if args.frames:                                       # 書き出しと同じ描き方で、指定の時点のコマだけ（10-26）
+        pngs, sheet = storymain.frames_at(Path(args.look), config, args.frames.split(","), out_dir(),
+                                          Path(args.sheet) if args.sheet else None)
+        for p in pngs:
+            print(p)
+        print(sheet)
+        return 0
+    pngs, sheet, infos = storymain.stills(Path(args.look), config, out_dir(), f"_{args.ver}")
+    for p, info in zip(pngs, infos):
+        print(f"{p}  {info}")
+    print(sheet)
+    look = storymain.yaml.safe_load(Path(args.look).read_text(encoding="utf-8"))
+    sm = storymain.shotlist(Path(args.look), config, out_dir() / f"{look.get('out', 'story_main')}_shotlist.md")
+    print({k: v for k, v in sm.items() if k != "share"})
+    print({k: f"{v / 60:.1f}分" for k, v in sm["share"].items()})
+    return 0
+
+
+def cmd_story_short(args) -> int:
+    """物語完結型のショート（10-22）。scripts/story/*.yaml → out/<名前>_story_<番号>.mp4。--kana で読みだけ。"""
+    from . import storyshort
+    config = load_config()
+    path = Path(args.script)
+    doc = storyshort.load(path)
+    errs = storyshort.problems(doc)
+    for e in errs:
+        print(f"  × {e}")
+    readings = load_readings(ROOT / "readings.yaml")
+    vs = voices(config)
+    if args.kana:
+        for row in storyshort.kana_report(doc, config, readings, tts.Voicevox(config["voicevox_url"]), vs["語り"]):
+            print(row)
+        return 1 if errs else 0
+    if errs:
+        return 3
+    if not ensure_disk(config):
+        return 2
+    if args.stills:
+        print(storyshort.stills(path, config, out_dir() / f"{path.stem}_stills.jpg"))
+        return 0
+    if args.frames:
+        times = [float(x) for x in args.frames.split(",") if x.strip()]
+        styles = [x.strip().upper() for x in args.layouts.split(",")] if args.layouts else None
+        stem = doc.get("out") or path.stem
+        single = out_dir() / f"{stem}_frames"
+        single.mkdir(parents=True, exist_ok=True)
+        pngs = storyshort.frames(path, config, vs, readings, single, ROOT / "work", times, styles)
+        if styles:
+            labels = [f"案{s}  {t:g}秒" for s in styles for t in times]
+            sheet = storyshort.grid(pngs, len(times), out_dir() / f"{stem}_layouts.jpg", labels, font=config["fonts"]["gothic"])
+        else:
+            labels = [f"{t:g}秒" for t in times]
+            sheet = storyshort.grid(pngs, 3, out_dir() / f"{stem}_stills.jpg", labels, font=config["fonts"]["gothic"])
+        for x in pngs:
+            print(x)
+        print(sheet)
+        return 0
+    target, total = storyshort.build(path, config, vs, readings, out_dir(), ROOT / "work", draft=args.draft)
+    if storyshort.PLACEHOLDERS_USED:
+        print(f"  ! 仮の絵で書き出しました（確認用）: {', '.join(dict.fromkeys(storyshort.PLACEHOLDERS_USED))}")
+    print(f"{target}（{total:.1f}秒）")
+    if total > storyshort.MAX_SECONDS:
+        print(f"  ! {total:.1f}秒で、上限 {storyshort.MAX_SECONDS:.0f}秒を超えています")
+    sheet = storyshort.contact_sheet(ffmpeg(), target, out_dir() / f"{target.stem}_sheet.jpg", font=config["fonts"]["gothic"])
+    print(sheet)
+    return 0
+
+
 def _same_section(line):
     return replace(line, section=0)
 
@@ -493,8 +726,16 @@ def _same_section(line):
 # --- 概要欄 -------------------------------------------------------------
 
 def description(sc, config, cues, reserve: int = 0) -> str:
-    """reserve：あとに足す行（この動画で扱うこと）の字数。そのぶん絵の出典の欄を詰める。"""
+    """reserve：あとに足す行（この動画で扱うこと）の字数。そのぶん絵の出典の欄を詰める。
+    物語型（10-24）：台本の description_head（物語の冒頭数行＋この動画でわかること）を一番上に、
+    description_note（想像の台詞の断り）を目次の前に出す。"""
     out = []
+    head = getattr(sc, "description_head", "") or ""
+    note = getattr(sc, "description_note", "") or ""
+    if head:
+        out += [head, ""]
+    if note:
+        out += ["■ この動画の台詞について", note, ""]
     if cues:
         chs = mix.chapters(cues, [s.title for s in sc.sections])
         starts = sorted({c.line.section: c.start for c in reversed(cues)}.values())
@@ -594,9 +835,38 @@ def full_description(sc, config, cues, keywords: bool = True) -> str:
     return text + ("\n" + line + "\n" if line else "")
 
 
+def story_main_parts(path: Path, config) -> tuple | None:
+    """物語型の本編（scripts/story/*_main_look.yaml がある台本）なら (概要欄, 字幕の道のり, 並び)。旧型なら None。
+    目次・字幕の時刻は storymain の実際の並び（章題カード・本物の声の長さ）から出す（旧型の描画の時刻とは食い違うため。10-25）。"""
+    from . import storymain
+    look = storymain.look_for(path)
+    if look is None:
+        return None
+    plan = storymain.timeline(look, config)
+    for prob in storymain.chapter_problems(plan):
+        print(f"  ! 章：{prob}")
+    srt_p = out_dir() / f"{path.stem}.srt"
+    srt_p.write_text(storymain.srt(plan), encoding="utf-8")
+    return storymain.description(plan, config), srt_p, plan
+
+
+def synthetic_media_of(path: Path, sc) -> bool:
+    """AI の絵を使う動画か（containsSyntheticMedia を付ける）：物語型（story: true）か、台本の ai_images: true。"""
+    raw = yaml.safe_load(Path(path).read_text(encoding="utf-8")) or {}
+    return bool(getattr(sc, "story", False) or raw.get("ai_images"))
+
+
 def cmd_describe(args) -> int:
     config = load_config()
     sc = script_mod.load(args.script)
+    story = story_main_parts(Path(args.script), config)
+    if story is not None:
+        text = story[0]
+        target = out_dir() / f"{sc.path.stem}_description.txt"
+        target.write_text(text, encoding="utf-8")
+        print(text)
+        print(f"（物語型の本編：目次と字幕は storymain の並びから。字幕 {story[1].name}・{len(text)}字）")
+        return 0
     cues = []
     if not args.no_voice:
         cues, _ = synthesize(sc, config)
@@ -810,6 +1080,72 @@ def cmd_upload_shorts(args) -> int:
     return 0
 
 
+def story_short_screened(path: Path) -> Path:
+    return ROOT / "approvals" / f"{path.stem}.screened.json"
+
+
+def cmd_story_short_screen(args) -> int:
+    """物語型ショートの本番の動画をユーザーが見て OK と言ったときだけ打つ（台本を何本でも）。動画のハッシュを控える。"""
+    from . import storyshort
+    for raw in args.scripts:
+        path = Path(raw)
+        video = storyshort.video_of(path)
+        if not video.exists():
+            print(f"本番の動画がありません: {video}（story-short を先に）")
+            return 1
+        story_short_screened(path).write_text(json.dumps({"video": video.name, "sha256": _sha(video)}, ensure_ascii=False) + chr(10),
+                                              encoding="utf-8")
+        print(f"動画の確認を控えました: {path.stem}（{video.name}）")
+    return 0
+
+
+def cmd_story_short_upload(args) -> int:
+    """物語型ショートを順に予約投稿する（10-25）。--at から --every 分ごと。posted.json の鍵は <本編>:short:<s10 など>。
+    containsSyntheticMedia を付ける。題名は台本の yt_title、概要欄は storyshort.post_description、再生リストは本編の台本の shorts_playlists。"""
+    from . import shortpost, storyshort, upload as up
+    config = load_config()
+    paths = [Path(p) for p in args.scripts]
+    log = ROOT / "posted.json"
+    main_stem = args.main
+    main_sc = script_mod.load(ROOT / "scripts" / f"{main_stem}.yaml")
+    main = up.already_posted(log, f"{main_stem}:main")
+    if not main:
+        print(f"本編 {main_stem}:main が posted.json にありません（本編へのリンクが作れない）")
+        return 2
+    for path in paths:
+        a = story_short_screened(path)
+        v = storyshort.video_of(path)
+        if not a.exists() or not v.exists() or json.loads(a.read_text(encoding="utf-8"))["sha256"] != _sha(v):
+            print(f"{path.stem}: 本番の動画を見せて OK をもらってから story-short-screen（作り直したら確認し直し）")
+            if not args.dry_run:
+                return 2
+    times = shortpost.schedule(args.at, args.every, len(paths))
+    svc = None if args.dry_run else _service(need_manage=bool(main_sc.shorts_playlists))
+    if svc is None and not args.dry_run:
+        return 2
+    for path, at in zip(paths, times):
+        doc = storyshort.load(path)
+        sid = path.stem.rsplit("_", 1)[-1]
+        key = f"{main_stem}:short:{sid}"
+        done = up.already_posted(log, key)
+        if done:
+            print(f"{sid}: もう投稿してあります https://youtu.be/{done['video_id']}")
+            continue
+        title = str(doc.get("yt_title") or doc.get("title"))[:100]
+        known = {pic.image: (pic.credit or pic.caption) for line in main_sc.lines for pic in (line.background, line.portrait) if pic}
+        desc = storyshort.post_description(doc, config, main["video_id"], known)
+        tags = list(dict.fromkeys(TAGS + list(main_sc.tags)))[:30]
+        print(f"{sid}: {title}（{at}）")
+        if args.dry_run:
+            print(desc)
+            continue
+        vid = up.upload(svc, storyshort.video_of(path, doc), title, desc, tags, up.publish_time(at), synthetic_media=True)
+        up.record(log, {"key": key, "video_id": vid, "title": title, "publish_at": at})
+        print(f"  予約しました: https://youtu.be/{vid}")
+        _into_playlists(svc, main_sc.shorts_playlists, key, vid)
+    return 0
+
+
 def cmd_upload(args) -> int:
     from . import upload as up
     config = load_config()
@@ -830,13 +1166,18 @@ def cmd_upload(args) -> int:
         print(f"もう投稿してあります: https://youtu.be/{done['video_id']}（{done['publish_at']}）")
         return 1
     publish_at = up.publish_time(args.at)
-    cues, _ = synthesize(sc, config)
-    desc = full_description(sc, config, cues)
+    story = story_main_parts(path, config)
+    if story is not None:                                 # 物語型の本編：概要欄・目次・字幕は storymain の並びから
+        desc, srt_story, _plan = story
+    else:
+        cues, _ = synthesize(sc, config)
+        desc = full_description(sc, config, cues)
+    synthetic = synthetic_media_of(path, sc)
     thumb_p = out_dir() / f"{path.stem}_thumbnail.png"
     if not thumb_p.exists():
         from . import thumb
         thumb.make(sc, config, assets_dir(config), work_dir(sc)).save(thumb_p)
-    srt = out_dir() / f"{path.stem}.srt"
+    srt = srt_story if story is not None else out_dir() / f"{path.stem}.srt"   # 無ければ字幕なしで上がる（upload は有るときだけ付ける）
     tags = list(dict.fromkeys(TAGS + list(sc.tags) + [x for x in (sc.series, sc.thumbnail.get("name", "")) if x]))
     from . import channel
     loc = channel.localizations(sc.en, desc) if sc.en else None     # 章の数の食い違いは投稿の前に止める
@@ -844,7 +1185,9 @@ def cmd_upload(args) -> int:
     if svc is None:
         return 2
     print(f"投稿します：{sc.title}"); print(f"  公開 {args.at}（日本時間）")
-    vid = up.upload(svc, video, sc.title, desc, tags, publish_at, thumb_p, srt, localizations=loc)
+    if synthetic:
+        print("  改変・合成されたコンテンツ（containsSyntheticMedia）を申告します")
+    vid = up.upload(svc, video, sc.title, desc, tags, publish_at, thumb_p, srt, localizations=loc, synthetic_media=synthetic)
     up.record(log, {"key": key, "video_id": vid, "title": sc.title, "publish_at": args.at})
     print(f"予約しました: https://youtu.be/{vid}")
     _into_playlists(svc, sc.playlists, key, vid)
@@ -1012,6 +1355,37 @@ def cmd_prepare_characters(args) -> int:
     return 0
 
 
+def cmd_research(args) -> int:
+    """出どころの候補を入口（NDL・J-STAGE・ジャパンサーチ・Wikisource）から集め、知らない度と食い違いの欄を付けて md に。"""
+    from . import research
+    out = Path(args.out) if args.out else assets_dir(load_config()).parent / "research"
+    token = Path(args.token) if args.token else assets_dir(load_config()).parent / "secrets" / "token.json"
+    path = research.run(args.topic, args.kw, args.phrase, args.fact, out, name=args.name,
+                        wiki_title=args.wiki, world=args.world, slug=args.slug, cards=args.cards or bool(args.cards_in),
+                        pdfs=args.pdf, cards_in=args.cards_in, yt=args.yt, yt_budget=args.yt_budget, token=token,
+                        plan=args.plan, chain=args.chain, naj=not args.no_naj)
+    print(f"書き出しました: {path}")
+    return 0
+
+
+def cmd_fact_check(args) -> int:
+    """台本の `# fact:` と事実カードのつながり・冒頭3分の知らない事実の数（chiso/factcheck.py）。"""
+    from . import factcheck
+    sc = script_mod.load(args.script)
+    text = Path(args.script).read_text(encoding="utf-8")
+    research_dir = Path(args.research) if args.research else assets_dir(load_config()).parent / "research"
+    rows = factcheck.summary(sc, text, research_dir)
+    warns = factcheck.check(sc, text, research_dir)
+    if not rows and not warns:
+        print("事実カードも # fact: もありません（点検しません）")
+        return 0
+    for r in rows:
+        print(f"  {r}")
+    for w in warns:
+        print(f"  ! {w}")
+    return 0
+
+
 def main(argv=None) -> int:
     p = argparse.ArgumentParser(prog="chiso")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -1026,6 +1400,24 @@ def main(argv=None) -> int:
     s.add_argument("--draft", action="store_true")
     s.add_argument("--only", help="作るショートだけ（例 s1,s3）")
     s.set_defaults(fn=cmd_shorts)
+    s = sub.add_parser("story-main")
+    s.add_argument("look")
+    s.add_argument("--ver", default="v3", help="静止画の版（out/<名前>_stills_<版>.jpg）")
+    s.add_argument("--build", action="store_true", help="本編（横）を書き出す（音声・BGM 込み）")
+    s.add_argument("--limit", type=float, default=0, help="--build と一緒に：頭の何秒だけ書き出す（試し）")
+    s.add_argument("--workers", type=int, default=4, help="--build：並行で描く本数")
+    s.add_argument("--name", default="", help="--build：出力の名前（既定は台本の名前。out/<名前>.mp4）")
+    s.add_argument("--frames", default="", help="書き出さず、書き出しと同じ描き方でこの時点のコマを PNG と一覧に（秒・L行・L行+秒・C章・end。例 L0,L19+3,C2,end）")
+    s.add_argument("--sheet", default="", help="--frames の一覧の置き場（既定 out/<名前>_frames.jpg）")
+    s.set_defaults(fn=cmd_story_main)
+    s = sub.add_parser("story-short")
+    s.add_argument("script")
+    s.add_argument("--kana", action="store_true", help="読みをカタカナで出すだけ（音は作らない）")
+    s.add_argument("--draft", action="store_true", help="届いていない絵（shot の file）を placeholder の仮の絵で置き換えて、確認用（_draft）に書き出す")
+    s.add_argument("--frames", default="", help="動画を書き出さず、本番の声の時刻でこの秒のコマを PNG と一覧に（例 0,4,18）")
+    s.add_argument("--layouts", default="", help="--frames と一緒に：上の常時表示の案を並べる（例 A,B,C）")
+    s.add_argument("--stills", action="store_true", help="声を作らず、各フレーズの途中の1コマの一覧だけ作る（絵の確認用）")
+    s.set_defaults(fn=cmd_story_short)
     s = sub.add_parser("describe")
     s.add_argument("script")
     s.add_argument("--no-voice", action="store_true", help="章の時刻を出さない（音声を作らない）")
@@ -1039,6 +1431,33 @@ def main(argv=None) -> int:
     s.add_argument("name", help="人物・出来事の名前（例：織田信長）")
     s.add_argument("--all", action="store_true", help="頭文字をあ〜ん全部（46回）。既定は各行の頭の10回")
     s.set_defaults(fn=cmd_keywords)
+    s = sub.add_parser("research", help="出どころの候補を無料の入口から集めて research/<題>_sources_YYYYMMDD.md に（chiso/research.py）")
+    s.add_argument("topic", help="人物・出来事の名前（例：伊達政宗）")
+    s.add_argument("--kw", action="append", default=[], help="名前と組み合わせて探す語（何度でも。例 --kw 瑞鳳殿 --kw 遺言）")
+    s.add_argument("--phrase", action="append", default=[],
+                   help="NDL デジタルの全文で探す句（空白なしの1句。旧字の本も多い。例 --phrase 政宗の木像）")
+    s.add_argument("--fact", action="append", default=[],
+                   help="知らない度を測る事実の候補「表示の文::語1 語2」（語が全部 Wikipedia に出るかを見る）")
+    s.add_argument("--name", default="", help="ファイル名の題（省けば topic）")
+    s.add_argument("--wiki", default="", help="Wikipedia の記事名が topic と違うとき")
+    s.add_argument("--world", action="store_true", help="世界史：英語の Wikisource も探す")
+    s.add_argument("--out", default="", help="書き出す場所（省けば assets_dir の隣の research/）")
+    s.add_argument("--cards", action="store_true", help="事実カード research/<題>_facts_YYYYMMDD.yaml を作る（--fact ごとに1枚。chiso/facts.py）")
+    s.add_argument("--slug", default="", help="カードの ID の頭（例 masamune → masamune-01）")
+    s.add_argument("--pdf", action="append", default=[],
+                   help="人が開いた PDF の URL（「URL::題」も可）。道具が本文を読んで該当箇所を抜く（全国遺跡報告総覧・J-STAGE の PDF など）")
+    s.add_argument("--cards-in", action="append", default=[], help="Agent が WebSearch・WebFetch で集めた事実カード（同じ形の YAML）を合わせる")
+    s.add_argument("--yt", action="store_true", help="他チャンネルでの既出を YouTube Data API で測る（読み取りのみ・単位を出す）")
+    s.add_argument("--yt-budget", type=int, default=1000, help="YouTube Data API の単位の上限（検索1回100）")
+    s.add_argument("--token", default="", help="YouTube の token.json（省けば secrets/token.json）")
+    s.add_argument("--plan", action="store_true", help="別名・旧字・和暦・史料名・研究者名・英語名と、種類ごとの site: 検索語を research/<題>_plan_YYYYMMDD.md に")
+    s.add_argument("--chain", action="store_true", help="Wikipedia の脚注と J-STAGE 論文の参考文献から、まだ無い文献をたどる（2段まで）")
+    s.add_argument("--no-naj", action="store_true", help="国立公文書館デジタルアーカイブを叩かない（Crawl-delay 30 秒）")
+    s.set_defaults(fn=cmd_research)
+    s = sub.add_parser("fact-check", help="台本の # fact: と事実カード（research/<題>_facts_*.yaml）の突き合わせ")
+    s.add_argument("script")
+    s.add_argument("--research", default="", help="カードの置き場（省けば assets_dir の隣の research/）")
+    s.set_defaults(fn=cmd_fact_check)
     s = sub.add_parser("thumb")
     s.add_argument("script")
     s.add_argument("--variants", action="store_true", help="3案（a・b・c）と一覧の大きさの確認用を作る")
@@ -1065,6 +1484,16 @@ def main(argv=None) -> int:
     s.add_argument("--every", type=int, default=60, help="何分ごとに出すか")
     s.add_argument("--only", default="", help="s1,s3 のように一部だけ")
     s.set_defaults(fn=cmd_upload_shorts)
+    s = sub.add_parser("story-short-screen")
+    s.add_argument("scripts", nargs="+")
+    s.set_defaults(fn=cmd_story_short_screen)
+    s = sub.add_parser("story-short-upload")
+    s.add_argument("scripts", nargs="+")
+    s.add_argument("--at", required=True, help="最初の公開時刻（日本時間）'YYYY-MM-DD HH:MM'")
+    s.add_argument("--every", type=int, default=60, help="何分ごとに出すか")
+    s.add_argument("--main", default="oichi-story", help="本編の台本の名前（posted.json の <名前>:main から本編のリンクを引く）")
+    s.add_argument("--dry-run", action="store_true", help="投稿せず、題名・時刻・概要欄だけ出す")
+    s.set_defaults(fn=cmd_story_short_upload)
     s = sub.add_parser("whoami")
     s.set_defaults(fn=cmd_whoami)
     s = sub.add_parser("playlists")
@@ -1076,6 +1505,12 @@ def main(argv=None) -> int:
     s.add_argument("script")
     s.add_argument("--dry-run", action="store_true", help="今の概要欄から英語の説明を作って見せるだけ（videos.list 1 単位）")
     s.set_defaults(fn=cmd_localize)
+    s = sub.add_parser("clean")
+    s.add_argument("--apply", action="store_true", help="消す（付けなければ一覧だけ）")
+    s.set_defaults(fn=cmd_clean)
+    s = sub.add_parser("preview")
+    s.add_argument("script")
+    s.set_defaults(fn=cmd_preview)
     s = sub.add_parser("reauth")
     s.set_defaults(fn=cmd_reauth)
     s = sub.add_parser("prepare-characters")

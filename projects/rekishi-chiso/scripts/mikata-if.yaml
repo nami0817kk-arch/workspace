@@ -1,0 +1,1777 @@
+# B（歴史の転換点の if ストーリー）の4本目。型：事実（三方ヶ原の戦い・家康が浜松城を出た理由の諸説＝分かれ道）→ 史料に残る別の道（籠城／織田の援軍／上杉謙信）→ 「こうなった可能性」（理由つき）。
+# 事実の出どころは dev/output/rekishi-chiso/research/mikatagahara_if_facts.md（確実／有力／説／未確認の区分もそこ）。絵の一覧は mikatagahara_assets.md。既存：ieyasu_facts.md・scripts/ieyasu.yaml（昨日公開のA作品。しかみ像・三方ヶ原の節は繰り返さず、Bの問いに集中する）
+# 決まり：B は昼12時・約30分／題名は「もし〇〇だったら｜…どうなったか」／再生リストは A と分ける（歴史のif）／想像の部分は画面に「ここから想像」の札
+#   人物のセリフは B では想像のセリフを入れてよい。①「ここから想像」の札が出ている節（想像①②③）だけ ②字幕に「（想像）」（roles の忠勝想像・忠次想像・信康想像・信長想像）
+#   ③記録のセリフは本編に置かない（想像の節に記録のセリフを混ぜない）
+#   同じ幕で声が重ならない：第1幕＝忠勝（黒沢冴白）と忠次（離途）／第2幕＝忠次（離途）と信康（満別花丸・ボーイ）／第3幕＝忠次（離途）と信長（青山龍星）
+# 想像の部分は言い切る。確かさは画面の札（高い／ありうる／ほぼ妄想）で正直に出す。札の名は声に出す型を「可能性は、〜、です」に統一。事実の部分は「分かっていません」「と伝わります」を使い分ける。
+#   夏目吉信の身代わり（『寛政重脩諸家譜』）・犀ヶ崖の夜襲・空城の計・戦死の噂（『武徳大成記』は二次の紹介で原本未確認）は、いずれも後世の話・二次と断る。
+# 冒頭の強い一点：下調べの推奨どおり C「信玄は浜松城を素通りしていた（家康が出なければあの夕方は起きなかった）」を問いに、A「家康の跡を継げる息子で名が分かるのは数え14歳の信康だけ」を山にした（冒頭〜第1節、運命表）。
+#   B「戦死の噂」は二次の紹介のみなので、冒頭にせず第5節で出典の弱さを断って使った。秀康（1574生）・秀忠（1579生）は assets 一覧の生年。画面の前に原本で再確認してよい。
+# 範囲は 史実（西上の目的が割れる→一言坂・二俣城→浜松城を出た理由の5説→日没までの約2時間・逃げ帰った夜→史料に残る別の道）→ 想像（浜松城の夜・岡崎の14歳・信長・信玄の約108日）→ 運命表 → 日本の変化点 → 現代の鎖 → まとめ。
+# 数字は「何の数か」を言う（武田の総数の見積もり／徳川が遠江に回せた数／織田の援軍は史料ごとの記述）。「約3倍」と言い切らない。日付は和暦の月日、西暦は換算。元亀3年12月22日＝1573年1月25日。
+#   信玄の死（元亀4年4月12日）までの約108日は西暦で数えた自分の計算（1573/1/25→5/13）。元亀4年の日付の西暦換算は確かめていないので台本では和暦だけを言う。
+# 使わない話：脱糞・小豆餅・酒井忠次の太鼓・味噌／空城の計と犀ヶ崖の夜襲を事実として／しかみ像を敗戦の戒めとして／夏目吉信ら身代わりの最期の描写／信玄の狙撃説（笛の音）／『甲陽軍鑑』の「天下を狙った」を事実として／
+#   「三ヶ年の鬱憤」の意味の断定／「家康が死んでいれば江戸幕府は無かった」「徳川幕府は信玄が作った」／影武者説／ネット掲示板・知恵袋・個人ブログ・note の「もし家康が〜」／信康事件・築山殿の最期／信玄の遺骸を諏訪湖に沈める話／鳥居忠広（事実未確認）。
+# 決めた札の理由：
+#   高い＝家康の跡を継げる息子で名が分かるのは信康だけ（岡崎城主は事実）／家康が居なければ伊賀越えの道を通る人が居ない／信玄の病が計画を左右した（事実の並置）。
+#   ありうる＝酒井忠次を軸に重臣の合議が先に動く（役職は事実）／戦死の噂が夜のうちに広がる（記録は二次の紹介）／直政は家康に見出される道が消えても別の道が残る／三河の国衆の一部は様子見（信玄の書状が三河の国衆に宛てられた）／信長は援軍を増やし東美濃・岐阜を固める（実際にあった選択肢）／病で止まる流れは変わらない（病は事実・家康の死との関係は研究が見つからない）／勝頼は攻めやすい／秀吉の山場が消える。
+#   ほぼ妄想＝家臣団が最後までまとまるか／誰が離れ誰が残るか（個別の記録なし・築山殿の材料なし）／信長が岡崎を直接預かる（史料で見つからなかった）／病の前に信玄がどこまで進むか／長篠の結果／江戸幕府の有無。
+#   研究は見つからない（正面から論じたもの）を冒頭で、香原・河合の「見立て」（信玄があと1年生きていれば／野戦以外の選択肢はなかった）は第6節で論者名つきで断った。
+# 画面の決まり：背景に人物の肖像・人物の拡大絵を使わない（肖像は額）／極端に横長の絵（縦横比2.4:1以上）は使わない／NDL系の絵図（色票・定規・黒帯が写る）は背景に全面で使わない（今回は使っていない）／血・遺体・首の絵は使わない／
+#   現代の写真（浜松城・三方原古戦場碑・吉田城・武田氏館跡）は credit に「現在の〜」と書き、語りでもその行で断る。岡崎城の古写真は天守が江戸期のものと断る。信玄の出陣・川中島の絵は後世の想像図と断る。
+title: もし徳川家康が三方ヶ原で討ち死にしていたら｜跡継ぎは数え14歳、信玄の死は約108日後、日本はどうなったか
+series: ''
+playlists:
+- 歴史のif（もしもの地層）
+- 戦国時代を掘る
+shorts_playlists:
+- 歴史のifショート
+shorts_badge: もしもの話
+tags:
+- もし徳川家康が三方ヶ原で討ち死にしていたら
+- もし徳川家康が死んでいたら
+- 徳川家康 if
+- 徳川家康
+- 三方ヶ原の戦い
+- 武田信玄
+- 松平信康
+- 酒井忠次
+- 本多忠勝
+- 浜松城
+- 信長包囲網
+- 戦国時代
+- 歴史if
+- 日本史
+- 歴史解説
+- 歴史の地層
+en:
+  title: What If Tokugawa Ieyasu Had Died at Mikatagahara? | His Heir Was 14, Shingen Died 108 Days Later
+  description: 'On the 22nd day of the 12th month of Genki 3 (January 25, 1573), the army of Takeda Shingen marched past Hamamatsu Castle, just north of Tokugawa Ieyasu. Ieyasu left the castle anyway and lost the Battle of Mikatagahara in about two hours. At that moment the only son of his whose name we know was Nobuyasu, aged 14 by Japanese count, holding Okazaki. This video asks: what if Ieyasu had died that evening?
+
+
+    We keep records, theories and imagination apart. First, what the sources say: Shingen''s march west and why historians disagree on its aim, the fights at Hitokotozaka and Futamata, the five competing explanations for why Ieyasu left the castle, the two hours at Mikatagahara, and three other paths that really existed (staying inside the castle, Oda reinforcements, the alliance with Uesugi Kenshin).
+
+
+    Then, clearly marked imagination with reasons: the night in Hamamatsu Castle, a 14-year-old lord at Okazaki, Oda Nobunaga''s choices, Shingen''s last 108 days, a table of fates, how Japan would differ, and the chains to modern Japan.
+
+
+    In imagined parts we speak plainly, and the on-screen label tells you how likely it is: likely, possible, or nearly fantasy. We found no study that argues this counterfactual directly, and we say so.
+
+
+    The accounts of competing theories (the five explanations, and the aim of Shingen''s march) follow summaries on Wikipedia and similar sources; we have not checked the original texts.
+
+
+    A Japanese history video to listen to while you work (Japanese audio).'
+  chapters:
+  - 'January 25, 1573: Shingen Marches Past Hamamatsu Castle'
+  - 'October 1572: Shingen''s Westward March, Hitokotozaka and Futamata'
+  - 'December 22: Why Did Ieyasu Leave the Castle? Five Competing Theories'
+  - The Two Hours at Mikatagahara and the Night He Fled Back
+  - 'Other Paths in the Sources: Staying In, Oda Aid, Uesugi Kenshin'
+  - 'Imagination 1: The Night News of His Death Reaches Hamamatsu'
+  - 'Imagination 2: A 14-Year-Old at Okazaki and the Mikawa Lords'
+  - 'Imagination 3: What Would Nobunaga Send East?'
+  - 'Imagination 4: Shingen''s 108 Days and Katsuyori at Takatenjin'
+  - 'Imagination 5: A Table of Fates - Who Becomes What?'
+  - 'Imagination 6: How Japan Changes, and the Chains to Today'
+  - 'Summary: The Fork Before Hamamatsu Castle'
+texture: true
+recap: true
+timeline:
+  start: 1570
+  end: 1604
+  events:
+  - - 1573
+    - 三方ヶ原
+  - - 1575
+    - 長篠
+  - - 1582
+    - 本能寺
+  - - 1603
+    - 江戸幕府
+terms:
+  魚鱗の陣: 魚のうろこの形に兵を並べ、先頭に力を集める陣形
+  鶴翼の陣: 鶴が翼を広げた形に並べ、敵を左右から包む陣形
+  西上作戦: 信玄の遠江・三河への進軍。目的は割れている
+  信長包囲網: 信長に対抗する大名・寺社・将軍の連携
+  祝田の坂: 三方ヶ原台地の西の坂。武田軍が下る所を狙った、という説がある
+  籠城: 城にこもって守ること
+  野戦: 城の外の戦場で戦うこと
+  異見十七ヶ条: 信長が将軍・足利義昭に突きつけた、17か条の意見書
+  御内書: 将軍が出す、私的な形の命令書
+  開城: 城を明け渡すこと
+shorts:
+  s1:
+    title: 素通りされた城／岡崎の跡継ぎ
+    yt_title: 徳川家康が三方ヶ原で討ち死にしたら跡継ぎは？｜数え14歳の信康と、浜松城の素通り
+    hook: 家康が討ち死にしたら、／跡継ぎは何歳？
+    tease: じゃあ、家康は／なぜ素通りされた城を出た？
+    lead: 元亀3年12月22日、西暦1573年1月25日、三方ヶ原の話です。
+    tags:
+    - もし徳川家康が三方ヶ原で討ち死にしていたら
+    - 徳川家康
+    - 三方ヶ原の戦い
+    - 松平信康
+    - 歴史if
+  s2:
+    title: 出なかった道／家康が城を出た理由
+    yt_title: 徳川家康はなぜ浜松城を出たのか？｜三方ヶ原の素通りと、割れる説
+    hook: 素通りされた家康は、／なぜ城を出た？
+    tease: じゃあ、家康が出なければ、／あの夕方の戦は起きなかった？
+    lead: 元亀3年12月22日、武田信玄は浜松城のすぐ北を通ります。
+    tags:
+    - 徳川家康
+    - 三方ヶ原の戦い
+    - 浜松城
+    - 武田信玄
+    - 歴史if
+  s3:
+    title: もしも／浜松城の夜
+    yt_title: もし徳川家康が三方ヶ原で討ち死にしたら？｜本多忠勝と酒井忠次の想像劇場
+    hook: 家康の死を知った浜松城で、／家臣は何を決める？
+    tease: じゃあ、信長は／岡崎を預かった？
+    lead: ここから先は想像です。仮定は、ひとつだけ。
+    tags:
+    - もし徳川家康が討ち死にしたら
+    - 本多忠勝
+    - 酒井忠次
+    - 三方ヶ原の戦い
+    - 歴史if
+  s4:
+    title: 信玄の最期／野田城のあと
+    yt_title: 武田信玄は三方ヶ原の何日後に死んだ？｜野田城のあとの病と、止まった西上
+    hook: 信玄は、三方ヶ原の／何日後に死んだ？
+    tease: じゃあ、家康が死んでいても／信玄は止まった？
+    lead: 三方ヶ原は元亀3年12月22日。信玄の死は、その約108日後です。
+    tags:
+    - 武田信玄
+    - 野田城
+    - 三方ヶ原の戦い
+    - 西上作戦
+    - 歴史if
+  s5:
+    title: 籠城の道／史料に残る別の選択
+    yt_title: 三方ヶ原で家康が籠城していたら？｜史料に残る籠城の道
+    hook: 家康が籠城していたら、／浜松城は落ちた？
+    tease: じゃあ、家康が討ち死にしたら／何が起きた？
+    lead: 三方ヶ原の前、家康には史料に残る別の道がありました。その1つ目が籠城です。
+    tags:
+    - 徳川家康
+    - 籠城
+    - 三方ヶ原の戦い
+    - 浜松城
+    - 歴史if
+next:
+  title: 次の「もしも」
+  series: ''
+  teaser: あなたが気になる歴史の分かれ道を、コメントで教えてください。
+thumbnail:
+  layout: mask
+  image: paintings/ieyasu_yoshitora_mikawa_eiyuden.jpg
+  top: 信玄の死まで約108日
+  main:
+  - もし家康が
+  - 討ち死にしたら
+  blanks:
+  - - 当主は
+    - 2
+  - - 信玄は
+    - 5
+  tags:
+  - 信長は？
+  - 忠次は？
+  name: 徳川家康
+sections:
+- title: 元亀3年12月22日 信玄は浜松城の北を通り過ぎた
+  background:
+    image: paintings/ieyasu_hamamatsu_hiroshige_1834.jpg
+    credit: 歌川広重《東海道五十三次之内 濱松 冬枯の図》1834年ごろ
+  year: 1573
+  lines:
+  - 語り: 元亀3年12月22日、西暦では1573年1月25日。武田信玄の軍勢は、徳川家康のいる浜松城の、すぐ北を通り過ぎていきました。
+    portrait:
+      image: paintings/ieyasu_yoshitora_mikawa_eiyuden.jpg
+      caption: 徳川家康（武将姿、歌川芳虎画）
+      age: false
+    card:
+      head: 元亀3年12月22日
+      body: 三方ヶ原の戦い（1573年1月25日）
+    short: s1
+  - 語り: 素通りされたのに、家康は城を出ました。そして、日没までの約2時間で大敗します。数え31歳の、冬の夕方でした。
+    short: s1
+  - 語り: 三方ヶ原は、浜松城のすぐ北に広がる台地です。いまの静岡県浜松市にあたります。
+  - 聞き: 素通りされたのに、自分から出て行ったの？ 籠もってれば、守れたんじゃない？
+    tone: 疑問
+  - 語り: ただ、もっと重い数字が、別の城にあります。岡崎城。城主は家康の長男、信康。数え14歳です。
+    portrait:
+      image: paintings/mikata_matsudaira_nobuyasu_portrait.jpg
+      caption: 松平信康（江戸時代の肖像）
+      age: false
+    background:
+      image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg
+      credit: 《龍城図》岡崎城（江戸時代）
+    card:
+      head: 岡崎城主・信康
+      body: 数え14歳
+    figure:
+      type: stats
+      title: 三方ヶ原の年（数え）
+      items:
+      - - 家康
+        - 31歳
+        - 数え。浜松城
+      - - 信康
+        - 14歳
+        - 数え。岡崎城主
+      - - 信玄
+        - 52歳
+        - 数え。西へ進軍
+      upto: 2
+    short: s1
+  - 語り: この日、家康の跡を継げる息子で、名が分かるのは信康だけです。秀康は1574年、のちの二代将軍、秀忠は1579年の生まれです。
+    short: s1
+  - 聞き: え、のちの二代将軍も、まだ生まれてないの？ 今でいう中学1年生くらいの子に、徳川が乗っかっちゃうってこと？
+    tone: 驚き
+  - 語り: 対する武田信玄は、数え52歳。甲府を約2万2千で出て、北条の援軍2千と別働隊を加え、総数は約2万7千と見積もられます。画面は後世の想像図です。
+    portrait:
+      image: paintings/ieyasu_takeda_shingen_portrait_detail.jpg
+      caption: 武田信玄（江戸時代の肖像画）
+      age: false
+    background:
+      image: paintings/mikata_shingen_departure_yoshitora_1.jpg
+      credit: 歌川芳虎《武田信玄の出陣》1863年（フランス国立図書館蔵）
+    figure:
+      type: stats
+      title: 三方ヶ原の年（数え）
+      items:
+      - - 家康
+        - 31歳
+        - 数え。浜松城
+      - - 信康
+        - 14歳
+        - 数え。岡崎城主
+      - - 信玄
+        - 52歳
+        - 数え。西へ進軍
+  - 聞き: 52歳で、それだけの軍を引き連れて西へ、か。気力がすごいよね。
+  - 語り: もし、この夕方に家康が討ち死にしていたら。跡を継ぐ最有力は、この14歳です。
+    portrait:
+      image: paintings/mikata_matsudaira_nobuyasu_portrait.jpg
+      caption: 松平信康（江戸時代の肖像）
+      age: false
+    background:
+      image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg
+      credit: 《龍城図》岡崎城（江戸時代）
+    figure: null
+  - 語り: そこで、今日の問いです。家康が三方ヶ原で討ち死にしていたら、どうなったのか。問いは3つあります。
+    portrait: null
+    background:
+      image: paintings/mikata_hamamatsu_hiroshige_met_dp122910.jpg
+      credit: 歌川広重《東海道五十三次 はま松》1840年ごろ
+    card:
+      head: 今日の3つの問い
+      body: 徳川は？ 信長は？ 信玄は？
+    figure: null
+  - 語り: 14歳の信康で、徳川は持ちこたえたのか。信長は、東の守りをどうしたのか。そして、信玄の西上は、止まったのか。
+  - 聞き: 歴史に「もしも」はない、ってよく言うけど……家康の場合は、考える材料があるの？
+    tone: 疑問
+  - 語り: あります。ただ、先に断ります。家康が三方ヶ原で討ち死にした場合を、正面から論じた学術研究は、今回の調査では見つかりませんでした。
+    background:
+      image: paintings/mikata_mitsuke_tenryu_cleveland.jpg
+      credit: 歌川広重《東海道五十三次之内 見附 天竜川》1833年ごろ
+    card:
+      head: 最初の断り
+      body: 論じた研究は見つからない
+  - 聞き: え、研究者もまだ誰も触ってないの？ 逆にワクワクじゃん。材料は、慎重に選ばなきゃだけど。
+  - 語り: 約束が2つ。事実と想像は分けます。想像のあいだは《ここから想像》の札を出し、可能性を、高い、ありうる、ほぼ妄想の3段階で示します。
+    background:
+      image: paintings/mikata_hamamatsu_hiroshige_1855.jpg
+      credit: 歌川広重《東海道五十三次之内 浜松》1848年ごろ
+    card:
+      head: この回の約束
+      body: 事実と想像を分け、可能性を付ける
+  - 聞き: 材料は、本物だけなんだよね？
+    tone: 疑問
+  - 語り: はい。当時の人が実際に考えていた選択肢と、史料に残る動きだけです。まずは、信玄がなぜ西へ来たのかから、掘ります。
+- title: 元亀3年10月 信玄の西上、一言坂、二俣城
+  background:
+    image: paintings/mikata_shingen_departure_yoshitora_1.jpg
+    credit: 歌川芳虎《武田信玄の出陣》1863年（フランス国立図書館蔵）
+  year: 1572
+  lines:
+  - 語り: 元亀3年10月3日。武田信玄は、甲府を出陣します。率いるのは約2万2千、とされます。朝倉義景へ宛てた書状の原本が、今も残っています。
+    portrait:
+      image: paintings/ieyasu_takeda_shingen_portrait_detail.jpg
+      caption: 武田信玄（江戸時代の肖像画）
+      age: false
+    card:
+      head: 元亀3年10月3日
+      body: 信玄、甲府を出陣
+  - 聞き: 約2万2千かあ。画面は想像図だけど、すごい行列だよね。目的は、やっぱり京都に上ること？
+    tone: 疑問
+  - 語り: 画面は、江戸末期の想像図です。実際の軍勢の姿ではありません。西上の目的は、割れています。上洛説と、局地戦説です。
+    card:
+      head: 西上の目的
+      body: 上洛説と局地戦説で割れる
+  - 語り: 上洛説は、足利義昭が信長を討てと命じた御内書を、根拠の一つにします。ただ、その発給年は、元亀3年か4年かで割れます。画面は、武田の旗印の図です。
+    background:
+      image: paintings/mikata_takeda_hatajirushi.jpg
+      credit: 戸澤盛徳《旗印図》1800年ごろ
+  - 語り: もう一つの根拠は、11月19日付の朝倉宛の覚書です。翌年5月までの在陣を求めています。
+  - 聞き: 5月までって、長期戦のつもりだよね。あーし、上洛説のほうがありそうだと思うけどなあ。
+  - 語り: 一方、局地戦説は、長年の徳川との戦いの延長で、遠江を取るのが主目的だと見ます。上洛は、宣伝にすぎなかったという立場です。
+  - 聞き: 同じ手紙で読み方が割れるとか、マジ？ 決め手はないの？
+    tone: 疑問
+  - 語り: 決め手になりそうな『甲陽軍鑑』は、史料としての価値に疑問があります。信長の動きと合わない記述があるからです。画面は、1561年の川中島の戦いの絵です。
+    background:
+      image: paintings/mikata_kawanakajima_screen_1845.jpg
+      credit: 《信州川中嶋合戦之図》1845年ごろ
+    card:
+      head: 『甲陽軍鑑』
+      body: 史料としての価値に疑問
+  - 聞き: 武田側の本が、いちばんあてにならないって、皮肉だなあ。
+  - 語り: では、信長の側を見ます。元亀3年、信長は西で浅井・朝倉と、京で将軍の足利義昭と争っていました。そこへ東から武田が加わり、三方向です。
+    portrait: null
+    background:
+      image: paintings/oichi_odani_castle_ezu.jpg
+      credit: 《小谷城跡絵図》江戸時代
+    card:
+      head: 元亀3年
+      body: 信長は三方向に敵
+  - 語り: この連携を、信長包囲網と呼びます。朝倉義景は、12月3日に、雪と疲れを理由に越前へ引き揚げました。
+  - 聞き: 西にも京にも敵がいて、そこへ東から信玄か……。信長、ぎりぎりだね。
+  - 語り: 信玄の進む先は、家康の領国、遠江と三河です。画面の地図は、元亀3年の暮れの戦場です。
+    portrait: null
+    background:
+      image: paintings/mikata_totomi_kuniezu_1838.jpg
+      credit: 《天保国絵図 遠江国》1838年（国立公文書館蔵）
+    card:
+      head: 元亀3年の暮れ
+      body: 戦場は遠江と三河
+    figure:
+      type: map
+      title: 元亀3年暮れの戦場
+      bounds:
+      - 137.0
+      - 138.8
+      - 34.5
+      - 35.9
+      places:
+      - - 甲府
+        - 138.57
+        - 35.66
+      - - 二俣城
+        - 137.82
+        - 34.87
+      - - 浜松城
+        - 137.72
+        - 34.71
+      - - 堀江城
+        - 137.61
+        - 34.78
+      - - 吉田城
+        - 137.39
+        - 34.77
+      - - 岡崎城
+        - 137.16
+        - 34.96
+      note: 武田の進軍の道すじは、研究で見直されている
+  - 聞き: 信長の東の盾が、家康、ってことなんだね。信玄は、その盾をどう崩していったの？
+    tone: 疑問
+  - 語り: 10月14日、家康は自ら一言坂で戦い、敗走します。本多忠勝と大久保忠佐が、退く軍の後ろを守った、とされます。
+    figure: null
+    portrait:
+      image: paintings/ieyasu_honda_tadakatsu_portrait.jpg
+      caption: 本多忠勝（17世紀前半の肖像画）
+      age: false
+    background:
+      image: paintings/mikata_mitsuke_tenryu_cleveland.jpg
+      credit: 歌川広重《東海道五十三次之内 見附 天竜川》1833年ごろ
+    card:
+      head: 元亀3年10月14日
+      body: 一言坂の戦い、家康は敗走
+  - 聞き: 本多忠勝は、のちの徳川四天王の一人だよね。このとき何歳なの？
+    tone: 疑問
+  - 語り: 数え25歳です。その前日の13日には、徳川方の城がひと日で落ちました。城名までは、確かめていません。武田の重臣、山県昌景の隊が、信玄の本隊と合流します。
+  - 聞き: しんがりを任されるくらい、家康に頼りにされてたんだね。
+  - 語り: そして12月19日、二俣城が開城します。遠江の北部は、武田のものになりました。三方ヶ原の、わずか3日前です。
+    portrait: null
+    background:
+      image: paintings/mikata_totomi_kuniezu_1838.jpg
+      credit: 《天保国絵図 遠江国》1838年（国立公文書館蔵）
+    card:
+      head: 12月19日
+      body: 二俣城が開城
+    figure:
+      type: stats
+      title: 三方ヶ原までの日数
+      items:
+      - - 出陣から三方ヶ原
+        - 約80日
+        - 10月3日→12月22日
+      - - 二俣城の開城から
+        - 3日
+        - 12月19日→22日
+      - - 三方ヶ原から信玄の死
+        - 約108日
+        - →元亀4年4月12日
+      upto: 2
+  - 語り: 出陣からは約80日。旧暦は月の大小があるので、数日は前後します。
+  - 聞き: 3日前に北の守りが落ちて、そのまま決戦か。約80日、ずっと押されっぱなしじゃん。家康、もう後がないよね。
+  - 語り: 家康は、元亀元年に浜松城を本城にしたばかりでした。画面は現在の浜松城です。天守は1958年の再建で、家康の頃の姿ではありません。
+    portrait:
+      image: paintings/ieyasu_yoshitora_mikawa_eiyuden.jpg
+      caption: 徳川家康（武将姿、歌川芳虎画）
+      age: false
+    background:
+      image: paintings/mikata_hamamatsu_castle_tenshu_photo.jpg
+      credit: Saigen Jiro 浜松城の天守（現在の写真、2020年）
+    card:
+      head: 元亀元年
+      body: 家康が浜松城を本城に
+    figure: null
+  - 聞き: 引っ越してきたばかりの城で、武田に迫られたのか。
+  - 語り: 数の面でも、厳しい状況でした。武田軍は約2万7千という見積もり。徳川が遠江の防衛に回せたのは、8千余です。画面は、現在の浜松城跡です。
+    background:
+      image: paintings/mikata_hamamatsu_castle_honmaru_photo.jpg
+      credit: Saigen Jiro 浜松城跡の本丸（現在の写真、2020年）
+    card:
+      head: 兵の数
+      body: 武田約2万7千 対 徳川8千余
+  - 聞き: 2万7千と8千余か。数字だけなら、あーしでも籠城したくなるなあ。
+  - 語り: ただ、何の数かが違います。総数の見積もりと、現地に回せた数なので、「約3倍」とは言い切りません。
+    background:
+      image: paintings/mikata_hamamatsu_hiroshige_met_dp122910.jpg
+      credit: 歌川広重《東海道五十三次 はま松》1840年ごろ
+  - 聞き: 数え方が違うと、比べにくいね。それでも、浜松城に籠もったんじゃないの？
+    tone: 疑問
+    hook: true
+  - 語り: 12月22日、家康は城を出ます。理由は、5つの説に割れています。
+    hook: true
+- title: 12月22日 家康が浜松城を出た理由 5つに割れる説
+  background:
+    image: paintings/ieyasu_mikatagahara_map_1935.jpg
+    credit: 《三方原役図》1935年（近代の戦史地図）
+  year: 1573
+  lines:
+  - 語り: 12月22日。武田軍は二俣城を出て西へ進み、浜松城のすぐ北を通って、三方ヶ原の台地へ上がります。素通りでした。
+    card:
+      head: 12月22日
+      body: 武田軍は浜松城を素通り
+    short: s2
+  - 聞き: 結局、城を出たんだよね。理由は、はっきりしてるの？
+    tone: 疑問
+    short: s2
+  - 語り: 理由は、分かっていません。説は、少なくとも5つあります。以下はウィキペディアなどの紹介で、原本は確かめていません。
+    short: s2
+  - 語り: 1つ目。城のすぐ北を素通りされ、挑発に乗った。通説です。
+    portrait:
+      image: paintings/ieyasu_yoshitora_mikawa_eiyuden.jpg
+      caption: 徳川家康（武将姿、歌川芳虎画）
+      age: false
+    card:
+      head: 出た理由 1
+      body: 挑発に乗った（通説）
+    short: s2
+  - 語り: 2つ目。武田が来ても籠もるだけの大将では、遠江の国衆がついてこなくなる。家臣や国衆の信頼を守るために出た、という見方です。
+    background:
+      image: paintings/mikata_hamamatsu_hiroshige_met_dp122910.jpg
+      credit: 歌川広重《東海道五十三次 はま松》1840年ごろ
+    card:
+      head: 出た理由 2
+      body: 国衆の信頼を守る
+    short: s2
+  - 聞き: 上に立つ人が動かないと、下がついてこない。会社でもあるよね。
+    short: s2
+  - 語り: 3つ目は、染谷光廣さんの説。武田軍が祝田の坂を下るところを狙った、一撃離脱です。祝田の坂は、三方ヶ原台地の西の坂です。
+    portrait: null
+    background:
+      image: paintings/ieyasu_mikatagahara_map_1935.jpg
+      credit: 《三方原役図》1935年（近代の戦史地図）
+    card:
+      head: 出た理由 3
+      body: 祝田の坂で一撃離脱
+  - 聞き: 坂を下るところを狙うって、待ち伏せみたいだよね。うまくいけば強そう。
+  - 語り: 4つ目。戦うつもりはなく、物見の小競り合いに巻き込まれた。『当代記』などに、そうした記述がある、とされます。
+    background:
+      image: paintings/mikata_hamamatsu_hiroshige_1855.jpg
+      credit: 歌川広重《東海道五十三次之内 浜松》1848年ごろ
+    card:
+      head: 出た理由 4
+      body: 物見の小競り合いに巻き込まれた
+  - 聞き: 戦うつもりじゃなかったのに、気づいたら本番、か。いちばん地味だけど、ありそうで怖いなあ。
+  - 語り: 5つ目は、平山優さんの新説です。武田の狙いは、浜名湖のほとりの堀江城で、落とされれば、浜松城が孤立する。それを防ぐために出た、という見方です。
+    background:
+      image: paintings/mikata_maisaka_imagire_met.jpg
+      credit: 歌川広重《東海道五十三次之内 舞坂 今切真景》1834年ごろ
+    card:
+      head: 出た理由 5
+      body: 堀江城を守るため
+  - 聞き: 城が1つ落ちると、浜松が孤立する、って読みなんだね。5つも説があるのに、決め手はないの？
+    tone: 疑問
+  - 語り: ありません。分かっているのは、家康が城を出たことと、結果です。出なかった道があった。それが、この回の最初の分かれ道です。
+  - 聞き: 出た先で、何が待ってたの？
+    tone: 疑問
+    hook: true
+  - 語り: 日没までの約2時間を、順に見ます。
+    hook: true
+- title: 三方ヶ原の約2時間 数のずれと、浜松城へ逃げ帰った夜
+  background:
+    image: paintings/ieyasu_mikatagahara_yoshitora_triptych.jpg
+    credit: 歌川芳虎《三方ヶ原の戦い》1874年
+  year: 1573
+  lines:
+  - 語り: 夕方、三方ヶ原に着くと、武田軍は魚鱗の陣で待っていた、とされます。徳川と織田の連合軍は、鶴翼の陣で応じました。
+    portrait:
+      image: paintings/ieyasu_yoshitora_mikawa_eiyuden.jpg
+      caption: 徳川家康（武将姿、歌川芳虎画）
+      age: false
+    card:
+      head: 12月22日の夕方
+      body: 魚鱗の陣 対 鶴翼の陣
+  - 語り: ただ、どちらの陣も、兵の数に対する定石とは逆の形でした。なぜそうしたのかは、確定していません。
+    background:
+      image: paintings/ieyasu_mikatagahara_map_1935.jpg
+      credit: 《三方原役図》1935年（近代の戦史地図）
+  - 聞き: どっちも逆の形で戦ったんだ。何か考えがあったのかな。
+  - 語り: 織田の援軍の数も、史料でばらばらです。『織田軍記』は3千、『明智軍記』は5千。磯田道史さんの文献調査では、2万です。
+    portrait: null
+    card:
+      head: 織田の援軍
+      body: 3千から2万まで割れる
+    figure:
+      type: bars
+      title: 織田の援軍の数（史料ごとの記述）
+      bars:
+      - - 『織田軍記』
+        - 3000
+      - - 『明智軍記』
+        - 5000
+      - - 『前橋酒井家旧蔵聞書』ほか
+        - 20000
+      labels:
+      - 3,000
+      - 5,000
+      - 20,000
+  - 聞き: 最大で7倍近い差って、もう別の戦だよ。何人いたのかも、分からないのか。
+  - 語り: 戦いは、日没までの約2時間。連合軍は敗れ、徳川方の死者は、『松平記』の500から、『甲斐国志』の数千まで、史料で幅があります。画面は、現在の三方原古戦場碑です。
+    background:
+      image: paintings/mikata_sekihi_mikatahara_photo.jpg
+      credit: Saigen Jiro 三方原古戦場碑（現在の写真、2020年）
+    figure: null
+  - 語り: 戦場の位置は、特定されていません。碑の向こうには、いまの建物が写っています。
+  - 聞き: あの広い台地のどこかで戦ったのに、場所も決まってないの？
+  - 語り: 家康は、浜松城へ逃げ帰ります。画面は、現在の浜松城跡です。この夜には有名な逸話が多いのですが、出どころが後世で、今日は使いません。
+    portrait:
+      image: paintings/ieyasu_yoshitora_mikawa_eiyuden.jpg
+      caption: 徳川家康（武将姿、歌川芳虎画）
+      age: false
+    background:
+      image: paintings/mikata_hamamatsu_castle_honmaru_photo.jpg
+      credit: Saigen Jiro 浜松城跡の本丸（現在の写真、2020年）
+    card:
+      head: この夜の逸話
+      body: 出どころは後世。今日は使わない
+  - 語り: もう一つ。江戸幕府がまとめた『武徳大成記』に、浜松城内で家康の戦死の噂が広まった、と書かれていると紹介されています。原本までは、確かめていません。
+    background:
+      image: paintings/ieyasu_hamamatsu_hiroshige_1834.jpg
+      credit: 歌川広重《東海道五十三次之内 濱松 冬枯の図》1834年ごろ
+    card:
+      head: 戦死の噂
+      body: 『武徳大成記』と紹介（二次）
+  - 聞き: 噂が本当に広まってたなら、実際の夜に、もしもの入り口があったってことだよね。
+    tone: しみじみ
+  - 語り: そうです。ただ、家康は生きて戻りました。では、史料には、どんな別の道が残っていたのか。
+    hook: true
+  - 聞き: 出なかった道、だね。籠城のほかにもあったの？
+    tone: 疑問
+    hook: true
+- title: 史料に残る別の道 籠城・織田の援軍・上杉謙信
+  background:
+    image: paintings/mikata_hamamatsu_hiroshige_1855.jpg
+    credit: 歌川広重《東海道五十三次之内 浜松》1848年ごろ
+  year: 1573
+  lines:
+  - 語り: 想像の前に、史料に残る別の道を、3つ見ます。当時の人が実際に考えていた選択肢だけです。1つ目。籠城して、武田軍を通す道。
+    card:
+      head: 別の道 1
+      body: 籠城して武田軍を通す
+    short: s5
+  - 語り: これは、半分、起きていました。武田軍は、浜松城を素通りしたからです。家康が出なければ、あの夕方の戦は、起きなかったとも言えます。
+    short: s5
+  - 聞き: じゃあ、籠城が正解だったの？
+    tone: 疑問
+  - 語り: 河合敦さんは、籠城の利点に、浜松城の堅さと、信長の援軍、謙信の後方攪乱を挙げます。
+    short: s5
+  - 語り: ただ同じ筆者は、野戦以外の選択肢はなかった、とも主張します。その理由は、読めた範囲には書かれていません。
+    background:
+      image: paintings/mikata_totomi_kuniezu_1838.jpg
+      credit: 《天保国絵図 遠江国》1838年（国立公文書館蔵）
+  - 聞き: 籠城にも、出陣にも、それぞれ理由があるんだね。
+  - 語り: 信玄が浜松城を落とせたのかは、研究が見当たりません。目安は、一言坂から二俣城の開城まで約2か月。包囲の期間は未確認です。三河の野田城は、約500人の城に約1か月かかりました。
+    short: s5
+  - 聞き: 一言坂から開城まで2か月、野田城は1か月。信玄でも、城は簡単に落とせなかったんだ。
+  - 語り: 2つ目。織田と連携する道です。信長は援軍を出しました。数は3千とも2万とも割れ、佐久間信盛らは早々に撤退したとも伝わります。画面は、姉川の戦いの絵です。
+    portrait:
+      image: paintings/nobunaga_portrait_eitoku_daitokuji.jpg
+      caption: 織田信長（狩野永徳（伝）画、大徳寺 総見院、1584年）
+      age: false
+    background:
+      image: paintings/nobunaga_anegawa_screen.jpg
+      credit: 姉川合戦図屏風（部分、江戸時代）
+    card:
+      head: 別の道 2
+      body: 織田の援軍
+  - 語り: 11月20日、信長は上杉謙信に、武田と義絶したと伝えています。西には浅井・朝倉もいました。信長は、西にも敵を抱えたまま、援軍を出したことになります。
+  - 聞き: 信長も、東と西の両方で手がいっぱいだったのか。会社でいえば、本店と支店で同時にトラブルが起きた感じかな。
+  - 語り: 3つ目。上杉謙信との同盟です。家康は元亀元年の10月に、謙信と結んでいました。ただ、謙信が元亀3年の末に実際に動いたかは、今回は確かめられていません。
+    portrait: null
+    background:
+      image: paintings/mikata_takeda_hatajirushi.jpg
+      credit: 戸澤盛徳《旗印図》1800年ごろ
+    card:
+      head: 別の道 3
+      body: 上杉謙信と同盟
+  - 聞き: 頼みの綱が来たかどうかも、はっきりしないのか。籠城も援軍も同盟も、全部、相手がいる話だよね。
+  - 語り: そして、家康が亡くなったあとの徳川の継ぎ方を書いた史料は、見当たりません。
+  - 聞き: 史料が無いなら、どうやって考えるの？
+    tone: 疑問
+    background:
+      image: paintings/mikata_hamamatsu_hiroshige_met_dp122910.jpg
+      credit: 歌川広重《東海道五十三次 はま松》1840年ごろ
+    hook: true
+  - 語り: 当時の人の選択肢を土台に、想像で掘ります。
+    hook: true
+- title: 想像① 12月22日の夜 浜松城に届く知らせ
+  background:
+    image: paintings/ieyasu_hamamatsu_hiroshige_1834.jpg
+    credit: 歌川広重《東海道五十三次之内 濱松 冬枯の図》1834年ごろ
+  year: 1573
+  lines:
+  - 語り: ここから先は、想像です。仮定は、ひとつだけ。12月22日の夕方、三方ヶ原で、家康は討ち死にします。
+    portrait:
+      image: paintings/ieyasu_yoshitora_mikawa_eiyuden.jpg
+      caption: 徳川家康（武将姿、歌川芳虎画）
+      age: false
+    card:
+      head: ここから想像
+      body: 家康は三方ヶ原で討ち死に
+    short: s3
+  - 語り: この場面を正面から論じた研究は、見つかっていません。細かい描写もしません。大事なのは、そのあと、誰が何を決めるかです。
+  - 聞き: え、全部を想像で作るの？ 材料はあるんだよね。で、浜松城の人たちは、いつ、それを知るの？
+    tone: 疑問
+  - 語り: 日没のあと、生き残った兵が、浜松城へ戻ってきます。大将が戻らないことは、その夜のうちに、城の中へ広がります。
+  - 語り: 噂が広まった、と紹介される記録があります。ただ、二次の紹介です。可能性は、ありうる、です。画面は、現在の浜松城跡です。
+    background:
+      image: paintings/mikata_hamamatsu_castle_honmaru_photo.jpg
+      credit: Saigen Jiro 浜松城跡の本丸（現在の写真、2020年）
+    card:
+      head: ありうる
+      body: 討ち死には夜のうちに城へ広がる
+  - 語り: もう一つ、前提を足します。酒井忠次は、本来は東三河の吉田城を預かる家老です。この夜は、浜松城にいたことにします。
+    portrait:
+      image: paintings/mikata_sakai_tadatsugu_portrait.jpg
+      caption: 酒井忠次（16世紀末〜17世紀初の肖像）
+      age: false
+    card:
+      head: 足す前提
+      body: 忠次はこの夜、浜松城にいる
+  - 聞き: それで、浜松の夜は、どうなるの？
+    tone: 疑問
+  - 語り: 想像劇場、第1幕です。12月22日の夜、浜松城。本多忠勝と酒井忠次が、向き合います。
+    background:
+      image: paintings/ieyasu_hamamatsu_hiroshige_1834.jpg
+      credit: 歌川広重《東海道五十三次之内 濱松 冬枯の図》1834年ごろ
+    card:
+      head: 想像劇場 第1幕
+      body: 12月22日夜 浜松城
+    short: s3
+  - 人物: 「殿が戻られぬ。このまま、夜を越すのか」
+    who: 忠勝想像
+    portrait:
+      image: paintings/ieyasu_honda_tadakatsu_portrait.jpg
+      caption: 本多忠勝（17世紀前半の肖像画）
+      age: false
+    short: s3
+  - 人物: 「戻られぬと決まったわけではない。じゃが、備えは要る。まず、門を固めよ」
+    who: 忠次想像
+    portrait:
+      image: paintings/mikata_sakai_tadatsugu_portrait.jpg
+      caption: 酒井忠次（16世紀末〜17世紀初の肖像）
+      age: false
+    short: s3
+  - 人物: 「殿の行方は、確かめねばならぬ。夜が明けたら、わしが出る」
+    who: 忠勝想像
+    portrait:
+      image: paintings/ieyasu_honda_tadakatsu_portrait.jpg
+      caption: 本多忠勝（17世紀前半の肖像画）
+      age: false
+  - 人物: 「それまで、城内には口を慎ませよ。大将が居ないと知れれば、兵が崩れる」
+    who: 忠次想像
+    portrait:
+      image: paintings/mikata_sakai_tadatsugu_portrait.jpg
+      caption: 酒井忠次（16世紀末〜17世紀初の肖像）
+      age: false
+  - 人物: 「武田は、すぐ城を囲むか」
+    who: 忠勝想像
+    portrait:
+      image: paintings/ieyasu_honda_tadakatsu_portrait.jpg
+      caption: 本多忠勝（17世紀前半の肖像画）
+      age: false
+  - 人物: 「信玄は、一言坂から二俣の開城まで、およそ二か月かけた。急ぐまい。だが、三河の国衆は、明日にも揺れる」
+    who: 忠次想像
+    portrait:
+      image: paintings/mikata_sakai_tadatsugu_portrait.jpg
+      caption: 酒井忠次（16世紀末〜17世紀初の肖像）
+      age: false
+    background:
+      image: paintings/mikata_hamamatsu_hiroshige_1855.jpg
+      credit: 歌川広重《東海道五十三次之内 浜松》1848年ごろ
+    short: s3
+  - 人物: 「岡崎の若殿は、わずか十四じゃ」
+    who: 忠勝想像
+    portrait:
+      image: paintings/ieyasu_honda_tadakatsu_portrait.jpg
+      caption: 本多忠勝（17世紀前半の肖像画）
+      age: false
+    short: s3
+  - 人物: 「だから、われらが決める。岡崎へ使いを走らせよ。若殿を、お支えせよ、とな」
+    who: 忠次想像
+    portrait:
+      image: paintings/mikata_sakai_tadatsugu_portrait.jpg
+      caption: 酒井忠次（16世紀末〜17世紀初の肖像）
+      age: false
+  - 人物: 「城を預かる者同士が割れれば、終わりじゃぞ」
+    who: 忠勝想像
+    portrait:
+      image: paintings/ieyasu_honda_tadakatsu_portrait.jpg
+      caption: 本多忠勝（17世紀前半の肖像画）
+      age: false
+  - 人物: 「割れぬ。割れぬように、今夜のうちに決める」
+    who: 忠次想像
+    portrait:
+      image: paintings/mikata_sakai_tadatsugu_portrait.jpg
+      caption: 酒井忠次（16世紀末〜17世紀初の肖像）
+      age: false
+  - 聞き: 家臣たちが、ちゃんと話し合えるのかな。
+    portrait: null
+  - 語り: ここでは、忠次を軸に、重臣の合議が先に動くと想像します。当主が急にいなくなれば、まず動くのは、筆頭の家老だからです。可能性は、ありうる、です。
+    background:
+      image: paintings/ieyasu_hamamatsu_hiroshige_1834.jpg
+      credit: 歌川広重《東海道五十三次之内 濱松 冬枯の図》1834年ごろ
+    card:
+      head: ありうる
+      body: 忠次を軸に重臣の合議が動く
+  - 語り: ただ、家臣団が最後までまとまるかは、材料がありません。可能性は、ほぼ妄想、です。
+    card:
+      head: ほぼ妄想
+      body: 家臣団がまとまるかは材料なし
+  - 聞き: 浜松は決まったね。でも、岡崎の14歳には、誰が知らせるの？
+    tone: 疑問
+    hook: true
+  - 語り: 場面は、翌日の岡崎城に移ります。
+    hook: true
+- title: 想像② 岡崎の14歳と三河の国衆
+  background:
+    image: paintings/mikata_okazaki_castle_photo_2012.jpg
+    credit: 《取り壊し前の岡崎城》（古写真、撮影年不詳）
+  year: 1573
+  lines:
+  - 語り: 想像劇場、第2幕です。12月23日。岡崎城。数え14歳の信康のもとへ、酒井忠次が着きます。画面は、取り壊し前の岡崎城の古写真です。
+    portrait:
+      image: paintings/mikata_matsudaira_nobuyasu_portrait.jpg
+      caption: 松平信康（江戸時代の肖像）
+      age: false
+    card:
+      head: 想像劇場 第2幕
+      body: 12月23日 岡崎城
+  - 語り: 写る天守は江戸時代のもので、家康の頃のものではありません。この場面も、正面から論じた研究は、見つかっていません。
+  - 聞き: 14歳と筆頭家老の会話か。ちょっと、ドキドキするなあ。
+  - 人物: 「若殿。父君が、三方ヶ原で討たれた、との知らせです」
+    who: 忠次想像
+    portrait:
+      image: paintings/mikata_sakai_tadatsugu_portrait.jpg
+      caption: 酒井忠次（16世紀末〜17世紀初の肖像）
+      age: false
+  - 人物: 「……父上が。では、わしは、どうすればよい」
+    who: 信康想像
+    portrait:
+      image: paintings/mikata_matsudaira_nobuyasu_portrait.jpg
+      caption: 松平信康（江戸時代の肖像）
+      age: false
+  - 人物: 「徳川の当主に、おなりくだされ。ただし、まつりごとは、われら重臣がお支えいたす」
+    who: 忠次想像
+    portrait:
+      image: paintings/mikata_sakai_tadatsugu_portrait.jpg
+      caption: 酒井忠次（16世紀末〜17世紀初の肖像）
+      age: false
+  - 人物: 「わしは、飾りか」
+    who: 信康想像
+    portrait:
+      image: paintings/mikata_matsudaira_nobuyasu_portrait.jpg
+      caption: 松平信康（江戸時代の肖像）
+      age: false
+    background:
+      image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg
+      credit: 《龍城図》岡崎城（江戸時代）
+  - 人物: 「飾りではござらぬ。ですが、今、若殿お一人で決めれば、国衆は信じませぬ」
+    who: 忠次想像
+    portrait:
+      image: paintings/mikata_sakai_tadatsugu_portrait.jpg
+      caption: 酒井忠次（16世紀末〜17世紀初の肖像）
+      age: false
+  - 人物: 「……父上の戦を、わしは見ておらぬ。見ておらぬ者に、誰がついてくる」
+    who: 信康想像
+    portrait:
+      image: paintings/mikata_matsudaira_nobuyasu_portrait.jpg
+      caption: 松平信康（江戸時代の肖像）
+      age: false
+  - 人物: 「国衆の様子を探らせます。まずは、使いを出して……」
+    detail:
+      image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg
+      box: [0.55, 0.35, 0.92, 0.8]
+      label: 《龍城図》岡崎城の曲輪（江戸時代）
+    who: 忠次想像
+    portrait:
+      image: paintings/mikata_sakai_tadatsugu_portrait.jpg
+      caption: 酒井忠次（16世紀末〜17世紀初の肖像）
+      age: false
+  - 人物: 「探るだけでは足りぬ。わしの顔を、見せるのじゃ。若いと見られるなら、なおさらじゃ」
+    detail:
+      image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg
+      box: [0.55, 0.35, 0.92, 0.8]
+      label: 《龍城図》岡崎城の曲輪（江戸時代）
+    who: 信康想像
+    portrait:
+      image: paintings/mikata_matsudaira_nobuyasu_portrait.jpg
+      caption: 松平信康（江戸時代の肖像）
+      age: false
+  - 人物: 「だからこそ、われらがおります。まずは岡崎を、固めましょう」
+    who: 忠次想像
+    portrait:
+      image: paintings/mikata_sakai_tadatsugu_portrait.jpg
+      caption: 酒井忠次（16世紀末〜17世紀初の肖像）
+      age: false
+  - 聞き: 14歳が、いきなり当主かあ……。重いよね。
+    tone: しみじみ
+    portrait: null
+  - 語り: 信康は、永禄10年に元服し、元亀元年から岡崎城主でした。家康の跡を継ぐ人として、当主の座に最も近いことは、事実から言えます。可能性は、高い、です。
+    background:
+      image: paintings/mikata_okazaki_castle_photo_2012.jpg
+      credit: 《取り壊し前の岡崎城》（古写真、撮影年不詳）
+    card:
+      head: 高い
+      body: 当主の座に最も近いのは信康
+  - 語り: 問題は、周りです。三河の奥平道紋に宛てた信玄の書状が、紹介されています。浜松へ向かうと知らせる内容です。画面は、現在の吉田城の鉄櫓です。
+    background:
+      image: paintings/mikata_yoshida_castle_tetsuyagura_photo.jpg
+      credit: Mocchy 吉田城の鉄櫓（復興、現在の写真、2011年）
+  - 語り: 武田が三河の国衆にも、手を伸ばしていたことは、うかがえます。ただし、原本の確認は、まだできていません。
+  - 聞き: 国衆が武田に傾いたら、14歳には、重すぎるよね。
+  - 語り: 想像です。当主が若いと見た国衆の一部は、しばらく様子を見ます。可能性は、ありうる、です。
+    background:
+      image: paintings/mikata_okazaki_castle_photo_2012.jpg
+      credit: 《取り壊し前の岡崎城》（古写真、撮影年不詳）
+    card:
+      head: ありうる
+      body: 国衆の一部は様子見に回る
+  - 語り: 誰が離れて、誰が残るのか。信康の母、築山殿の動きも、記録がありません。可能性は、ほぼ妄想、です。
+    portrait:
+      image: paintings/mikata_tsukiyama_dono_portrait.jpg
+      caption: 築山殿（近代の絵、想像画）
+      age: false
+    card:
+      head: ほぼ妄想
+      body: 誰が離れ誰が残るか材料なし
+  - 聞き: 14歳と家臣団だけで、信玄を止められるの？ 信長は、黙って見てるの？
+    tone: 疑問
+    hook: true
+  - 語り: 場面は、信長のもとへ移ります。
+    hook: true
+- title: 想像③ 元亀3年12月末 信長と東美濃の援軍
+  background:
+    image: paintings/mikata_genki_map.jpg
+    credit: 《元亀元年（1570年）頃の戦国大名版図》（現代の作図）
+  year: 1573
+  lines:
+  - 語り: 想像劇場、第3幕です。12月の末。信長のもとへ、徳川の使いが着きます。場所は決めません。使者は、酒井忠次にします。画面は、現代の作図の地図です。
+    portrait:
+      image: paintings/nobunaga_portrait_eitoku_daitokuji.jpg
+      caption: 織田信長（狩野永徳（伝）画、大徳寺 総見院、1584年）
+      age: false
+    card:
+      head: 想像劇場 第3幕
+      body: 12月末 信長のもと
+  - 語り: この場面を正面から論じた研究も、見つかっていません。
+    background:
+      image: paintings/kira_okazaki_hiroshige.jpg
+      credit: 歌川広重《東海道五十三次 岡崎》1833年ごろ
+  - 聞き: 信長と忠次、ふたりきりの場面なんだね。信長はどう答えるんだろう。
+    tone: 疑問
+  - 人物: 「徳川殿が、三方ヶ原で討たれました。武田は、なお西へ進んでおります」
+    who: 忠次想像
+    portrait:
+      image: paintings/mikata_sakai_tadatsugu_portrait.jpg
+      caption: 酒井忠次（16世紀末〜17世紀初の肖像）
+      age: false
+  - 人物: 「……やむを得ぬ。三河に、兵はどれほど残っておる」
+    who: 信長想像
+    portrait:
+      image: paintings/nobunaga_portrait_eitoku_daitokuji.jpg
+      caption: 織田信長（狩野永徳（伝）画、大徳寺 総見院、1584年）
+      age: false
+  - 人物: 「浜松に残る兵は、わずか。岡崎には、十四の若殿がおられるのみ」
+    who: 忠次想像
+    portrait:
+      image: paintings/mikata_sakai_tadatsugu_portrait.jpg
+      caption: 酒井忠次（16世紀末〜17世紀初の肖像）
+      age: false
+    background:
+      image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg
+      credit: 《龍城図》岡崎城（江戸時代）
+  - 人物: 「十四か。わしの嫡男と、いくつも違わぬ」
+    who: 信長想像
+    portrait:
+      image: paintings/nobunaga_portrait_eitoku_daitokuji.jpg
+      caption: 織田信長（狩野永徳（伝）画、大徳寺 総見院、1584年）
+      age: false
+  - 人物: 「何とぞ、援軍をお増やしくだされ。岡崎の守りも、お願い申す」
+    who: 忠次想像
+    portrait:
+      image: paintings/mikata_sakai_tadatsugu_portrait.jpg
+      caption: 酒井忠次（16世紀末〜17世紀初の肖像）
+      age: false
+  - 人物: 「援軍は出す。じゃが、東美濃は岩村が落ちておる。岡崎まで、わしが背負う余裕はない」
+    who: 信長想像
+    portrait:
+      image: paintings/nobunaga_portrait_eitoku_daitokuji.jpg
+      caption: 織田信長（狩野永徳（伝）画、大徳寺 総見院、1584年）
+      age: false
+    background:
+      image: paintings/hanbei_gifu_castle_zu.jpg
+      credit: 《岐阜城図》（江戸時代）
+  - 人物: 「では、徳川は、徳川の力で守れと」
+    who: 忠次想像
+    portrait:
+      image: paintings/mikata_sakai_tadatsugu_portrait.jpg
+      caption: 酒井忠次（16世紀末〜17世紀初の肖像）
+      age: false
+  - 人物: 「そうじゃ。家康が育てた家臣がおろう。その力を、見せよ」
+    who: 信長想像
+    portrait:
+      image: paintings/nobunaga_portrait_eitoku_daitokuji.jpg
+      caption: 織田信長（狩野永徳（伝）画、大徳寺 総見院、1584年）
+      age: false
+  - 人物: 「承知いたしました。岡崎の若殿にも、そうお伝えいたします」
+    who: 忠次想像
+    portrait:
+      image: paintings/mikata_sakai_tadatsugu_portrait.jpg
+      caption: 酒井忠次（16世紀末〜17世紀初の肖像）
+      age: false
+  - 人物: 「東美濃も岐阜も、わしが固める。頼むぞ、忠次」
+    who: 信長想像
+    portrait:
+      image: paintings/nobunaga_portrait_eitoku_daitokuji.jpg
+      caption: 織田信長（狩野永徳（伝）画、大徳寺 総見院、1584年）
+      age: false
+  - 聞き: 見捨てはしないけど、全部は背負わない、ってことか。
+    portrait: null
+  - 語り: ここでは、信長は援軍を増やし、東美濃と岐阜を固める、と想像します。東美濃の岩村城は、11月に武田方が攻め落としていました。
+    background:
+      image: paintings/mikata_hamamatsu_hiroshige_1855.jpg
+      credit: 歌川広重《東海道五十三次之内 浜松》1848年ごろ
+  - 語り: どちらも、当時の信長が考えた選択肢です。可能性は、ありうる、です。
+    card:
+      head: ありうる
+      body: 援軍を増やし東美濃と岐阜を固める
+  - 語り: 一方、信長が岡崎を直接預かる案は、史料で見つかっていません。可能性は、ほぼ妄想、です。
+    background:
+      image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg
+      credit: 《龍城図》岡崎城（江戸時代）
+    card:
+      head: ほぼ妄想
+      body: 信長が岡崎を預かる案は史料なし
+  - 聞き: 信長って、もともと三方向に敵がいたんだよね。そこにもう1つ、穴が増えるんだ。
+  - 語り: そうです。信長の相手は、すでに浅井・朝倉、足利義昭、武田の三方向でした。家康の死は、東の盾を弱めます。ただ、東に割ける兵には、限りがありました。
+    portrait:
+      image: paintings/mikata_ashikaga_yoshiaki_yoshiaki.jpg
+      caption: 足利義昭（江戸時代の肖像）
+      age: false
+    background:
+      image: paintings/oichi_odani_castle_ezu.jpg
+      credit: 《小谷城跡絵図》江戸時代
+    figure:
+      type: stats
+      title: 信長が抱えた三方向
+      items:
+      - - 西
+        - 浅井・朝倉
+        - 信長と対立
+      - - 都
+        - 足利義昭
+        - 異見十七ヶ条で対立
+      - - 東
+        - 武田信玄
+        - 遠江・三河へ進軍
+  - 聞き: 信長が動いても、信玄は進むよね。止まるとしたら、いつ？
+    tone: 疑問
+    hook: true
+  - 語り: 信玄の時間は、あと約108日でした。
+    hook: true
+- title: 想像④ 信玄の約108日と、勝頼の高天神城
+  background:
+    image: paintings/mikata_totomi_kuniezu_1838.jpg
+    credit: 《天保国絵図 遠江国》1838年（国立公文書館蔵）
+  year: 1573
+  lines:
+  - 語り: 日付を並べます。三方ヶ原は元亀3年12月22日。信玄が亡くなるのは、元亀4年4月12日。約108日後です。
+    portrait:
+      image: paintings/ieyasu_takeda_shingen_portrait_detail.jpg
+      caption: 武田信玄（江戸時代の肖像画）
+      age: false
+    card:
+      head: 元亀4年4月12日
+      body: 信玄が病死（数え53歳）
+    short: s4
+  - 語り: 年が明けて、元亀4年。信玄は、三河の野田城を囲みます。開城は2月16日。約500人の城に、約1か月かかりました。
+    portrait: null
+    background:
+      image: paintings/mikata_totomi_kuniezu_1838.jpg
+      credit: 《天保国絵図 遠江国》1838年（国立公文書館蔵）
+    short: s4
+  - 語り: そのあと、信玄は喀血を繰り返し、進軍は止まった、とされます。長篠で療養し、4月の初めに、甲斐へ戻ると決まりました。
+    short: s4
+  - 語り: 病名は、肺結核や胃癌などの説があり、決まっていません。画面は、現在の武田氏館跡です。
+    background:
+      image: paintings/mikata_kofu_tsutsujigasaki_photo.jpg
+      credit: 前田左衛門佐 躑躅ヶ崎館（武田氏館跡、現在の写真、2005年）
+    short: s4
+  - 聞き: 病気で止まったのか。信玄が元気だったら、どこまで行ってたんだろう。
+    short: s4
+  - 語り: ここからは、想像です。この点を正面から論じた研究も、見つかっていません。
+    card:
+      head: ここから想像
+      body: 家康が亡くなっていたら
+  - 語り: では、家康が亡くなっていたら。病そのものは、家康の生死とは関係がありません。野田城のあとで止まる流れは、変わらなかったと想像します。可能性は、ありうる、です。
+    background:
+      image: paintings/mikata_totomi_kuniezu_1838.jpg
+      credit: 《天保国絵図 遠江国》1838年（国立公文書館蔵）
+    card:
+      head: ありうる
+      body: 病で止まる流れは変わらない
+  - 聞き: 家康が生きてても死んでても、信玄の体は同じ、ってことだよね。そこは変わらないのか。
+  - 語り: ただ、止まる前の進み方は、変わったかもしれません。抵抗が弱ければ、吉田城や岡崎へ、早く届きます。どこまで届いたかは、研究が見つかっていません。可能性は、ほぼ妄想、です。
+    card:
+      head: ほぼ妄想
+      body: 病の前にどこまで進むかは材料なし
+  - 語り: 信玄は、死を3年間隠すよう遺言し、勝頼はそれを守った、とされます。その勝頼が遠江で動くのは、天正2年6月。信玄が落とせなかった高天神城を、落とします。
+    portrait:
+      image: paintings/nobunaga_katsuyori_portrait.jpg
+      caption: 武田勝頼（高野山持明院蔵の像の部分）
+      age: false
+    background:
+      image: paintings/mikata_takatenjin_totomi_koseki.jpg
+      credit: 藤長庚編《遠江古蹟図会》「高天神山之図」1803年
+    card:
+      head: 天正2年6月
+      body: 勝頼が高天神城を落とす
+    year: 1574
+  - 聞き: 信玄が落とせなかったお城を、息子が落としたんだ。家康がいなかったら、勝頼の相手は、誰になるの？ 14歳の信康？
+    tone: 疑問
+  - 語り: 天正2年、信康は数え16歳です。家康のいない徳川を前にした勝頼は、史実よりも、攻めやすかったでしょう。可能性は、ありうる、です。
+    card:
+      head: ありうる
+      body: 勝頼は史実より攻めやすい
+  - 語り: 天正3年5月21日、長篠。史実では、織田・徳川が勝ちます。信康は数え17歳。その徳川が、同じ戦いをできたのか。材料は、ありません。可能性は、ほぼ妄想、です。
+    portrait: null
+    background:
+      image: paintings/nobunaga_nagashino_screen_full.jpg
+      credit: 《長篠合戦図屏風》（江戸時代）
+    card:
+      head: ほぼ妄想
+      body: 長篠の結果は材料なし
+    year: 1575
+  - 聞き: ここまでで、人の動きがだいぶ見えたね。表にまとめて見たいな。
+    hook: true
+  - 語り: 次は、人の運命を、表にします。
+    hook: true
+- title: 想像⑤ 家康が討ち死にした世界の運命表
+  background:
+    image: paintings/mikata_totomi_kuniezu_1838.jpg
+    credit: 《天保国絵図 遠江国》1838年（国立公文書館蔵）
+  year: 1573
+  lines:
+  - 語り: ここが、今日いちばんの見どころです。前提は、ひとつ。史実の家康は、浜松城へ生きて戻りました。もしも、戻らなかったら。あの人たちは、どうなるのか。
+    portrait: null
+    card:
+      head: ここから想像
+      body: 人物の運命表
+  - 聞き: 誰がどうなるのか、一覧で見られるの？ この表も、研究はあるのかな。
+    tone: 疑問
+  - 語り: この表を正面から論じた研究も、見つかっていません。材料は、これまで見た事実だけです。
+  - 語り: 1人目は、松平信康。史実では、数え14歳の岡崎城主です。もしもは、徳川の当主の座に、最も近い人になります。可能性は、高い、です。
+    portrait:
+      image: paintings/mikata_matsudaira_nobuyasu_portrait.jpg
+      caption: 松平信康（江戸時代の肖像）
+      age: false
+    background:
+      image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg
+      credit: 《龍城図》岡崎城（江戸時代）
+    figure:
+      type: table
+      title: 人物の運命表（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows:
+      - - 松平信康
+        - 数え14歳の岡崎城主
+        - 当主の座に最も近い
+        - 高い
+      - - 酒井忠次
+        - 吉田城代・筆頭家老
+        - 合議の筆頭になる
+        - ありうる
+      - - 井伊直政
+        - 1575年に家康に見出される
+        - 家康に見出される道は消える
+        - ありうる
+      - - 織田信長
+        - 援軍を出し三方向を抱える
+        - 東の守りを増やす
+        - ありうる
+      - - 本多忠勝
+        - 数え25歳で一言坂の殿
+        - 武田と戦う中心の一人
+        - ありうる
+      - - 武田信玄
+        - 約108日後に病死
+        - やはり病で止まる
+        - ありうる
+      - - 武田勝頼
+        - 高天神を落とし長篠で敗れる
+        - 戦う相手が変わる
+        - ありうる
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 1
+  - 聞き: じゃあ、それを支える人たちは？
+  - 語り: 2人目は、酒井忠次。史実では、吉田城代で、東三河をまとめる筆頭家老でした。もしもは、合議の筆頭になります。札は、表のとおりです。画面は、現在の吉田城の鉄櫓です。
+    portrait:
+      image: paintings/mikata_sakai_tadatsugu_portrait.jpg
+      caption: 酒井忠次（16世紀末〜17世紀初の肖像）
+      age: false
+    background:
+      image: paintings/mikata_yoshida_castle_tetsuyagura_photo.jpg
+      credit: Mocchy 吉田城の鉄櫓（復興、現在の写真、2011年）
+    figure:
+      type: table
+      title: 人物の運命表（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows:
+      - - 松平信康
+        - 数え14歳の岡崎城主
+        - 当主の座に最も近い
+        - 高い
+      - - 酒井忠次
+        - 吉田城代・筆頭家老
+        - 合議の筆頭になる
+        - ありうる
+      - - 井伊直政
+        - 1575年に家康に見出される
+        - 家康に見出される道は消える
+        - ありうる
+      - - 織田信長
+        - 援軍を出し三方向を抱える
+        - 東の守りを増やす
+        - ありうる
+      - - 本多忠勝
+        - 数え25歳で一言坂の殿
+        - 武田と戦う中心の一人
+        - ありうる
+      - - 武田信玄
+        - 約108日後に病死
+        - やはり病で止まる
+        - ありうる
+      - - 武田勝頼
+        - 高天神を落とし長篠で敗れる
+        - 戦う相手が変わる
+        - ありうる
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 2
+  - 聞き: じゃあ、のちの名将の直政は、どうなるの？
+  - 語り: 3人目は、井伊直政。数え12歳で、居場所は分かっていません。史実では、1575年に家康に見出されて家臣になります。もしもは、その道が消えます。可能性は、ありうる、です。
+    portrait:
+      image: paintings/ieyasu_ii_naomasa_portrait.jpg
+      caption: 井伊直政（江戸時代の肖像画）
+      age: false
+    background:
+      image: paintings/mikata_totomi_kuniezu_1838.jpg
+      credit: 《天保国絵図 遠江国》1838年（国立公文書館蔵）
+    figure:
+      type: table
+      title: 人物の運命表（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows:
+      - - 松平信康
+        - 数え14歳の岡崎城主
+        - 当主の座に最も近い
+        - 高い
+      - - 酒井忠次
+        - 吉田城代・筆頭家老
+        - 合議の筆頭になる
+        - ありうる
+      - - 井伊直政
+        - 1575年に家康に見出される
+        - 家康に見出される道は消える
+        - ありうる
+      - - 織田信長
+        - 援軍を出し三方向を抱える
+        - 東の守りを増やす
+        - ありうる
+      - - 本多忠勝
+        - 数え25歳で一言坂の殿
+        - 武田と戦う中心の一人
+        - ありうる
+      - - 武田信玄
+        - 約108日後に病死
+        - やはり病で止まる
+        - ありうる
+      - - 武田勝頼
+        - 高天神を落とし長篠で敗れる
+        - 戦う相手が変わる
+        - ありうる
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 3
+  - 聞き: 家康と出会えないと、のちの名将は、世に出ないってこと？
+    tone: 驚き
+  - 語り: そこまでは言えません。そのあとの直政が、どうなるかは、材料がありません。見出す人が、家康だったことだけが、事実から言えます。
+  - 語り: 4人目は、織田信長。史実では、援軍を出しつつ、三方向を抱えていました。もしもは、東の守りを増やします。札は、表のとおりです。
+    portrait:
+      image: paintings/nobunaga_portrait_eitoku_daitokuji.jpg
+      caption: 織田信長（狩野永徳（伝）画、大徳寺 総見院、1584年）
+      age: false
+    background:
+      image: paintings/mikata_arai_ferry_met.jpg
+      credit: 歌川広重《東海道五十三次之内 荒井 海上壱里半舟渡之図》1842年ごろ
+    figure:
+      type: table
+      title: 人物の運命表（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows:
+      - - 松平信康
+        - 数え14歳の岡崎城主
+        - 当主の座に最も近い
+        - 高い
+      - - 酒井忠次
+        - 吉田城代・筆頭家老
+        - 合議の筆頭になる
+        - ありうる
+      - - 井伊直政
+        - 1575年に家康に見出される
+        - 家康に見出される道は消える
+        - ありうる
+      - - 織田信長
+        - 援軍を出し三方向を抱える
+        - 東の守りを増やす
+        - ありうる
+      - - 本多忠勝
+        - 数え25歳で一言坂の殿
+        - 武田と戦う中心の一人
+        - ありうる
+      - - 武田信玄
+        - 約108日後に病死
+        - やはり病で止まる
+        - ありうる
+      - - 武田勝頼
+        - 高天神を落とし長篠で敗れる
+        - 戦う相手が変わる
+        - ありうる
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 4
+  - 聞き: 残りの3人は、どうなるの？ 忠勝と、信玄と、勝頼。
+    tone: 疑問
+  - 語り: あとの、本多忠勝、武田信玄、武田勝頼は、表のとおりです。札は、どれも、ありうる、です。根拠は、忠勝の事実の働き、信玄の病気、勝頼の相手の変化です。
+    portrait:
+      image: paintings/nobunaga_katsuyori_portrait.jpg
+      caption: 武田勝頼（高野山持明院蔵の像の部分）
+      age: false
+    background:
+      image: paintings/mikata_takatenjin_totomi_koseki.jpg
+      credit: 藤長庚編《遠江古蹟図会》「高天神山之図」1803年
+    figure:
+      type: table
+      title: 人物の運命表（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows:
+      - - 松平信康
+        - 数え14歳の岡崎城主
+        - 当主の座に最も近い
+        - 高い
+      - - 酒井忠次
+        - 吉田城代・筆頭家老
+        - 合議の筆頭になる
+        - ありうる
+      - - 井伊直政
+        - 1575年に家康に見出される
+        - 家康に見出される道は消える
+        - ありうる
+      - - 織田信長
+        - 援軍を出し三方向を抱える
+        - 東の守りを増やす
+        - ありうる
+      - - 本多忠勝
+        - 数え25歳で一言坂の殿
+        - 武田と戦う中心の一人
+        - ありうる
+      - - 武田信玄
+        - 約108日後に病死
+        - やはり病で止まる
+        - ありうる
+      - - 武田勝頼
+        - 高天神を落とし長篠で敗れる
+        - 戦う相手が変わる
+        - ありうる
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 7
+  - 聞き: じゃあ、人じゃなくて、日本そのものは、どこまで変わるの？
+    tone: 疑問
+    hook: true
+  - 語り: 確かなのは、近い人の運命ほど動き、遠い歴史ほど動かない、ということです。次は、日本の形を、史実と並べます。
+    hook: true
+- title: 想像⑥ 日本の変化点と、現代につながる鎖
+  background:
+    image: paintings/mikata_totomi_kuniezu_1838.jpg
+    credit: 《天保国絵図 遠江国》1838年（国立公文書館蔵）
+  year: 1573
+  lines:
+  - 語り: 日本の変化点を、史実と並べます。この変化も、正面から論じた研究は、見つかっていません。
+    portrait: null
+    card:
+      head: ここから想像
+      body: 日本の変化点（史実との比較）
+  - 聞き: 日本の形が変わるかどうか、いよいよ本題だね。どこから変わるの？
+    tone: 疑問
+  - 語り: まず、徳川の当主。史実の家康は、浜松で生き残りました。もしもは、14歳の信康が、当主の座に最も近い人です。可能性は、高い、です。
+    background:
+      image: paintings/mikata_totomi_kuniezu_1838.jpg
+      credit: 《天保国絵図 遠江国》1838年（国立公文書館蔵）
+    figure:
+      type: table
+      title: 日本の変化点（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows:
+      - - 徳川の当主
+        - 家康が浜松で生き残る
+        - 信康が当主の座に最も近い
+        - 高い
+      - - 武田の西上
+        - 野田城のあと病で止まり没
+        - やはり病で止まる
+        - ありうる
+      - - 長篠の戦い
+        - 織田・徳川が武田に勝つ
+        - 勝敗は分からない
+        - ほぼ妄想
+      - - 本能寺の変
+        - 家康は堺にいて伊賀越え
+        - 家康はいない
+        - 高い
+      - - 小牧・長久手
+        - 秀吉と戦い、のちに臣従
+        - この山場が無い
+        - ありうる
+      - - 江戸幕府
+        - 1603年に家康が開く
+        - 開き方は分からない
+        - ほぼ妄想
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 1
+  - 語り: 次に、武田の西上。想像でも、野田城のあと病で止まります。家康の生死は、信玄の体を変えないからです。札は、表のとおりです。画面は、武田の旗印の図です。
+    background:
+      image: paintings/mikata_takeda_hatajirushi.jpg
+      credit: 戸澤盛徳《旗印図》1800年ごろ
+    figure:
+      type: table
+      title: 日本の変化点（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows:
+      - - 徳川の当主
+        - 家康が浜松で生き残る
+        - 信康が当主の座に最も近い
+        - 高い
+      - - 武田の西上
+        - 野田城のあと病で止まり没
+        - やはり病で止まる
+        - ありうる
+      - - 長篠の戦い
+        - 織田・徳川が武田に勝つ
+        - 勝敗は分からない
+        - ほぼ妄想
+      - - 本能寺の変
+        - 家康は堺にいて伊賀越え
+        - 家康はいない
+        - 高い
+      - - 小牧・長久手
+        - 秀吉と戦い、のちに臣従
+        - この山場が無い
+        - ありうる
+      - - 江戸幕府
+        - 1603年に家康が開く
+        - 開き方は分からない
+        - ほぼ妄想
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 2
+  - 聞き: 家康がいなくても、信玄は止まるのか。ちょっと、意外。
+  - 語り: 長篠の戦いは、勝敗が分かりません。戦う顔ぶれも、兵の数も、史実と同じとは限らないからです。材料がないので、可能性は、ほぼ妄想、です。
+    background:
+      image: paintings/nobunaga_nagashino_screen_full.jpg
+      credit: 《長篠合戦図屏風》（江戸時代）
+    figure:
+      type: table
+      title: 日本の変化点（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows:
+      - - 徳川の当主
+        - 家康が浜松で生き残る
+        - 信康が当主の座に最も近い
+        - 高い
+      - - 武田の西上
+        - 野田城のあと病で止まり没
+        - やはり病で止まる
+        - ありうる
+      - - 長篠の戦い
+        - 織田・徳川が武田に勝つ
+        - 勝敗は分からない
+        - ほぼ妄想
+      - - 本能寺の変
+        - 家康は堺にいて伊賀越え
+        - 家康はいない
+        - 高い
+      - - 小牧・長久手
+        - 秀吉と戦い、のちに臣従
+        - この山場が無い
+        - ありうる
+      - - 江戸幕府
+        - 1603年に家康が開く
+        - 開き方は分からない
+        - ほぼ妄想
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 3
+    year: 1575
+  - 語り: 本能寺の変。天正10年6月、史実の家康は堺にいて、伊賀を通る逃避行、伊賀越えで三河へ戻ります。亡くなっていれば、その道を通る人がいません。可能性は、高い、です。
+    background:
+      image: paintings/ieyasu_iga_hiroshige2_nabari.jpg
+      credit: 二代 歌川広重《諸国六十八景 伊賀》1862年
+    figure:
+      type: table
+      title: 日本の変化点（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows:
+      - - 徳川の当主
+        - 家康が浜松で生き残る
+        - 信康が当主の座に最も近い
+        - 高い
+      - - 武田の西上
+        - 野田城のあと病で止まり没
+        - やはり病で止まる
+        - ありうる
+      - - 長篠の戦い
+        - 織田・徳川が武田に勝つ
+        - 勝敗は分からない
+        - ほぼ妄想
+      - - 本能寺の変
+        - 家康は堺にいて伊賀越え
+        - 家康はいない
+        - 高い
+      - - 小牧・長久手
+        - 秀吉と戦い、のちに臣従
+        - この山場が無い
+        - ありうる
+      - - 江戸幕府
+        - 1603年に家康が開く
+        - 開き方は分からない
+        - ほぼ妄想
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 4
+    year: 1582
+  - 聞き: あの有名な逃げ道が、そもそも無くなっちゃうのか。
+  - 語り: 小牧・長久手は、天正12年の、秀吉との戦いです。史実では、家康はここで戦い、のちに秀吉へ臣従します。もしもは、この山場が無くなります。
+    year: 1584
+    portrait:
+      image: paintings/hideyoshi_portrait_osaka_city_1600.jpg
+      caption: 豊臣秀吉（大阪市立美術館蔵、1600年）
+      age: false
+    background:
+      image: paintings/hidenaga_komaki_nagakute_screen.jpg
+      credit: 《小牧長久手合戦図屏風》18世紀（豊田市郷土資料館保管）
+    figure:
+      type: table
+      title: 日本の変化点（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows:
+      - - 徳川の当主
+        - 家康が浜松で生き残る
+        - 信康が当主の座に最も近い
+        - 高い
+      - - 武田の西上
+        - 野田城のあと病で止まり没
+        - やはり病で止まる
+        - ありうる
+      - - 長篠の戦い
+        - 織田・徳川が武田に勝つ
+        - 勝敗は分からない
+        - ほぼ妄想
+      - - 本能寺の変
+        - 家康は堺にいて伊賀越え
+        - 家康はいない
+        - 高い
+      - - 小牧・長久手
+        - 秀吉と戦い、のちに臣従
+        - この山場が無い
+        - ありうる
+      - - 江戸幕府
+        - 1603年に家康が開く
+        - 開き方は分からない
+        - ほぼ妄想
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 5
+    year: 1584
+  - 語り: ただ、家康の代わりに織田信雄らが戦う道も残ります。だから、可能性は、ありうる、です。
+  - 聞き: 山場が1つ消えると、秀吉の天下の形も、変わるのかな。
+  - 語り: 最後に、江戸幕府。家康が1603年に開いた、とされます。想像で、無かったとまでは言えません。当時の人が考えた選択肢が見当たらないので、可能性は、ほぼ妄想、です。
+    portrait: null
+    background:
+      image: paintings/ieyasu_edo_keicho_ezu_1608.jpg
+      credit: 《慶長江戸図》1608年（東京都立中央図書館蔵）
+    figure:
+      type: table
+      title: 日本の変化点（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows:
+      - - 徳川の当主
+        - 家康が浜松で生き残る
+        - 信康が当主の座に最も近い
+        - 高い
+      - - 武田の西上
+        - 野田城のあと病で止まり没
+        - やはり病で止まる
+        - ありうる
+      - - 長篠の戦い
+        - 織田・徳川が武田に勝つ
+        - 勝敗は分からない
+        - ほぼ妄想
+      - - 本能寺の変
+        - 家康は堺にいて伊賀越え
+        - 家康はいない
+        - 高い
+      - - 小牧・長久手
+        - 秀吉と戦い、のちに臣従
+        - この山場が無い
+        - ありうる
+      - - 江戸幕府
+        - 1603年に家康が開く
+        - 開き方は分からない
+        - ほぼ妄想
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 6
+    year: 1603
+  - 聞き: 幕府が無かった、とは言い切れないのか。
+    tone: しみじみ
+  - 語り: 最後に、現代へ鎖をつなぎます。1つ目。急にトップが居なくなった時に、誰が決めるか。14歳の信康と筆頭家老の忠次。会社でも、同じ問いが最初に来ます。可能性は、ありうる、です。
+    background:
+      image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg
+      credit: 《龍城図》岡崎城（江戸時代）
+    card:
+      head: 現代への鎖 1本目
+      body: 急に居なくなった時、誰が決めるか
+    figure:
+      type: table
+      title: 現代日本への鎖（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows:
+      - - 急な代替わり
+        - 家康は生きて戻った
+        - 14歳と重臣が決める
+        - ありうる
+      - - 止まる計画
+        - 信玄の病で西上は止まる
+        - 健康が計画を左右する
+        - 高い
+      - - 先に届く噂
+        - 戦死の噂が広まったとされる
+        - 噂で判断が動く
+        - ありうる
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 1
+    year: 1573
+  - 聞き: あー、社長が急に倒れた会社とか、そうなりそう。誰が決めるのかが、最初に問われるよね。
+  - 語り: 2つ目。計画は、人の健康に左右される。信玄の西上は、約3か月半後の病で止まりました。可能性は、高い、です。画面は、現在の武田氏館跡です。
+    background:
+      image: paintings/mikata_kofu_tsutsujigasaki_photo.jpg
+      credit: 前田左衛門佐 躑躅ヶ崎館（武田氏館跡、現在の写真、2005年）
+    card:
+      head: 現代への鎖 2本目
+      body: 計画は、人の健康に左右される
+    figure:
+      type: table
+      title: 現代日本への鎖（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows:
+      - - 急な代替わり
+        - 家康は生きて戻った
+        - 14歳と重臣が決める
+        - ありうる
+      - - 止まる計画
+        - 信玄の病で西上は止まる
+        - 健康が計画を左右する
+        - 高い
+      - - 先に届く噂
+        - 戦死の噂が広まったとされる
+        - 噂で判断が動く
+        - ありうる
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 2
+  - 語り: 3つ目。噂は、事実より先に届く。戦死の噂が城に広がった、と紹介されています。出どころは二次の紹介なので、札は、表のとおりです。
+    background:
+      image: paintings/ieyasu_hamamatsu_hiroshige_1834.jpg
+      credit: 歌川広重《東海道五十三次之内 濱松 冬枯の図》1834年ごろ
+    card:
+      head: 現代への鎖 3本目
+      body: 噂は事実より先に届く
+    figure:
+      type: table
+      title: 現代日本への鎖（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows:
+      - - 急な代替わり
+        - 家康は生きて戻った
+        - 14歳と重臣が決める
+        - ありうる
+      - - 止まる計画
+        - 信玄の病で西上は止まる
+        - 健康が計画を左右する
+        - 高い
+      - - 先に届く噂
+        - 戦死の噂が広まったとされる
+        - 噂で判断が動く
+        - ありうる
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 3
+  - 聞き: 鎖は、これで3本。じゃあ、最初の3つの問いの答え、まとめてもらえる？
+    tone: 疑問
+    figure: null
+    hook: true
+  - 語り: では、順に答えます。
+    hook: true
+- title: まとめ：元亀3年12月22日 浜松城の前の分かれ道
+  background:
+    image: paintings/ieyasu_mikatagahara_map_1935.jpg
+    credit: 《三方原役図》1935年（近代の戦史地図）
+  year: 1573
+  lines:
+  - 語り: 冒頭の3つの問いに答えます。1つ目。14歳の信康で、徳川は持ちこたえたのか。想像では、当主の座は信康に渡ります。可能性は、高い、です。
+    portrait: null
+    figure:
+      type: stats
+      title: 3つの問いの答え（想像）
+      items:
+      - - 徳川は？
+        - 当主は信康
+        - 高い
+      - - 信長は？
+        - 援軍を増やす
+        - ありうる
+      - - 信玄は？
+        - 病で止まる
+        - ありうる
+      upto: 1
+  - 語り: 重臣の合議の軸は、酒井忠次です。こちらは、ありうる、です。ただ、持ちこたえたかは、分かりません。分かるのは、最初に座る人が14歳だったことです。この答えは、ほぼ妄想です。
+  - 語り: 2つ目。信長は、東の守りをどうしたのか。想像では、援軍を増やし、東美濃と岐阜を固めます。岡崎を直接預かる案は、ほぼ妄想です。
+    background:
+      image: paintings/hanbei_gifu_castle_zu.jpg
+      credit: 《岐阜城図》（江戸時代）
+    figure:
+      type: stats
+      title: 3つの問いの答え（想像）
+      items:
+      - - 徳川は？
+        - 当主は信康
+        - 高い
+      - - 信長は？
+        - 援軍を増やす
+        - ありうる
+      - - 信玄は？
+        - 病で止まる
+        - ありうる
+      upto: 2
+  - 語り: 3つ目。信玄の西上は、止まったのか。想像では、止まります。家康の生死に関わらず、元亀4年4月12日は来るからです。可能性は、ありうる、です。画面は、現在の武田氏館跡です。
+    background:
+      image: paintings/mikata_kofu_tsutsujigasaki_photo.jpg
+      credit: 前田左衛門佐 躑躅ヶ崎館（武田氏館跡、現在の写真、2005年）
+    figure:
+      type: stats
+      title: 3つの問いの答え（想像）
+      items:
+      - - 徳川は？
+        - 当主は信康
+        - 高い
+      - - 信長は？
+        - 援軍を増やす
+        - ありうる
+      - - 信玄は？
+        - 病で止まる
+        - ありうる
+  - 聞き: 当主の座は、はっきりしてるんだね。
+  - 語り: いまの3つの答えは、全部、想像。史実で言えるのは、元亀3年12月22日、武田軍が浜松城の北を素通りし、家康が城を出て、生きて戻ったことです。
+    portrait:
+      image: paintings/ieyasu_yoshitora_mikawa_eiyuden.jpg
+      caption: 徳川家康（武将姿、歌川芳虎画）
+      age: false
+    background:
+      image: paintings/ieyasu_hamamatsu_hiroshige_1834.jpg
+      credit: 歌川広重《東海道五十三次之内 濱松 冬枯の図》1834年ごろ
+    figure: null
+  - 語り: 家康は、危うかった人でした。その夜の判断が、どんな意味を持つのか。語り継ぐ形は、後の人が決めました。
+    card:
+      head: 史実で言えること
+      body: 家康は生きて戻った
+  - 聞き: 生き残った人の記録が、残っていくのか。討ち死にしてたら、家康の評判を書く人も、違ってたのかな。
+  - 語り: 分かれ道を一つ挙げるなら、城のすぐ北を素通りされた、あの夕方です。出るか、籠もるか。画面は、現在の三方原古戦場碑です。
+    portrait: null
+    background:
+      image: paintings/mikata_sekihi_mikatahara_photo.jpg
+      credit: Saigen Jiro 三方原古戦場碑（現在の写真、2020年）
+  - 聞き: もしあのとき、城に籠もってたら……って、つい考えちゃうね。
+  - 語り: 今日の地層は、ここまでです。
+  - 聞き: 次の「もしも」は、誰の、どの分かれ道かな。
+    tone: 疑問
+  - 語り: あなたが気になる、歴史の分かれ道を、コメントで教えてください。
+  - 二人: また一緒に、掘りましょう！
+    tone: 明るい

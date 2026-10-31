@@ -1,0 +1,249 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：ジャンヌ・ダルク（scripts/jeanne-story.yaml）。chiso/storymain.py が読む。
+# 10-29 作成（11/02 19:00 公開）。sosou_main_look.yaml を写した。台本には手を入れない（承認のあと。変えると控えが外れる）。決まりは docs/story-main.md・スキル rekishi-story-screen。
+# 絵の方針：AI 絵は 15 枚（N01〜N15）。同じ絵を時間をずらして使い回す（続けて 20 秒まで）。
+#   人物は AI 絵では1枚（N10 の書記の後ろ姿）だけ。ジャンヌの顔は描かない。最期（処刑）の場面には人物の絵を当てない（N11 は広場だけ）。
+#   実在の絵：パリ高等法院の記録の余白の絵（1429年5月10日、書記フォーカンベルグ。国立公文書館・コモンズ、PD）＝額（frame:）、
+#   『シャルル7世の通夜』の挿絵（1484年ごろ、PD）＝額、『貴婦人の擁護者』の挿絵（1451年ごろ、PD）＝額（肖像）。
+#   この回の決まり：戦闘・遺体・炎・負傷は描かない。実在の俳優・映画・絵画のジャンヌに似せない。紋・旗の字・看板・書類の字を描かない。
+# AI 絵の指示の一覧（英語・姿の設定）：dev/output/rekishi-chiso/research/jeanne_ai_images.md
+# 届く前は art_dir の仮の絵（N01.jpg〜、番号と場面だけ書いた灰色の板）で代える。届いたら main_art_dir に N01.jpg〜を置くだけ。
+#   仮の絵は out/ にあり git に入らない。無ければ 1376×768 の灰色の板に「N01（仮）」と場面を書いて作り直す。
+script: scripts/jeanne-story.yaml
+out: jeanne_story_main
+art_dir: out/story/jeanne/ph          # 仮の絵（placeholder）
+main_art_dir: out/story/jeanne/main   # Gemini の 16:9 の絵（N01.jpg〜N15.jpg）
+ai_disclosure: この動画の人物・情景の画像の多くは、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+
+# 章ごとの左上の札「いま｜章題」。dates＝語りがその年・月日を言った行から替える（証言・研究・報道の年は物語の「いま」ではないので替えない。null で章題だけ）
+chapters:
+  0: {label: 序章 許された6日後, now: null,
+      dates: {1: 1431年5月24日, 5: 3月25日, 6: 5月28日, 9: 5月30日, 10: null}}
+  1: {label: 第1章 売られた少女, now: 1429年5月,
+      dates: {14: null, 16: 1430年5月23日, 17: 5月26日, 18: 7月14日, 21: 9月, 22: 1431年1月, 23: null, 24: 1431年3月14日, 25: null}}
+  2: {label: 第2章 教会の牢ではなく, now: 1431年2月,
+      dates: {31: 2月21日, 33: 2月24日, 35: 3月25日, 38: null}}
+  3: {label: 第3章 署名すれば助かる, now: 1431年5月24日,
+      dates: {}}
+  4: {label: 第4章 男の服に戻ったから処刑された、は本当か, now: 1431年5月27日,
+      dates: {65: 5月28日, 71: 5月29日, 77: 5月30日, 78: null}}
+  5: {label: 第5章 司教さま、あなたのせいで, now: 1431年5月30日,
+      dates: {87: 1450年2月, 90: 1455年11月, 92: 1456年7月7日}}
+  6: {label: 第6章 ミイラと猫の骨, now: null,
+      dates: {}}
+  7: {label: まとめ 紙の上の十字, now: null,
+      dates: {}}
+
+# 概要欄「■ 参考にした資料」（事実カード ジャンヌ・ダルク_facts_20261029.yaml のうち本文を開いた主なもの。10-29）
+references:
+  - "Jules Quicherat 編『Procès de condamnation et de réhabilitation de Jeanne d'Arc』第1巻（1841。5月28日の尋問は p.456、コーションの要求書は pp.13-15）　https://archive.org/details/procsdecondam01joanuoft"
+  - "T. Douglas Murray 訳『Jeanne d'Arc, Maid of Orleans, Deliverer of France』（1902。裁判記録と、復権のための調べ・判決の英訳）　https://www.gutenberg.org/ebooks/57389"
+  - "Joan of Arc Archive: The Issue of Joan of Arc's Cross-dressing（復権のための証言の抜粋）　https://archive.joan-of-arc.org/joanofarc_male_clothing.html"
+  - "Joan of Arc Archive: Testimony on the Condemnation Trial's motives and conduct　http://archive.joan-of-arc.org/joanofarc_Condemnation_Trial_Motives_Conduct.html"
+  - "Joan of Arc Archive: English government records（1430〜31年のイングランド側の支払い）　http://archive.joan-of-arc.org/joanofarc_english_records.html"
+  - "Joan of Arc Archive: 1456 July 7（復権の判決）　http://archive.joan-of-arc.org/joanofarc_1456_july_7.html"
+  - "Trial Transcripts of St. Joan of Arc, Book IV（Kolbe Foundation。5月28〜30日の記録の英訳）　https://kolbefoundation.org/gbookswebsite/studentlibrary/greatestbooks/aaabooks/joanofarc/sessions4.html"
+  - "Joan of Arc relics are fake, scientists say（AP、NBC News 2007-04-04）　https://www.nbcnews.com/news/amp/wbna17950078"
+  - "Charlier P ほか「The 'relics of Joan of Arc': a forensic multidisciplinary analysis」（Forensic Science International 2010、DOI 10.1016/j.forsciint.2009.09.006）　https://doi.org/10.1016/j.forsciint.2009.09.006"
+  - "”Joan of Arc” ring unveiled at French theme park（The History Blog 2016-03-21）　https://www.thehistoryblog.com/archives/date/2016/03/21"
+  - "File:Jeanne d'Arc-Fauquembergue.jpg・File:Jeanne d'Arc - Martin le Franc - le champion des dames.jpg・File:Vigiles de Charles VII, fol. 70r（ウィキメディア・コモンズ）　https://commons.wikimedia.org/wiki/File:Jeanne_d%27Arc-Fauquembergue.jpg"
+no_tag_from: 111                     # 締め（冒頭の十字に戻る所）から札を出さない
+
+# AI 絵（16:9 横・15枚）。scene は日本語の要約（英語の指示は research/jeanne_ai_images.md）。
+# pan：h＝左右（既定）・v＝上下・zoom＝ゆっくり寄る（顔の感情の場面だけ。この回は顔を描かない）。crops＝切り出し [倍率, 中心x, 中心y]
+# 位置（crops・focus・fx の region）は仮の値。届いた絵を見て合わせる
+ai:
+  N01: {scene: 朝の墓地。石の十字架と、空の木の台（人物なし）, pan: h, crops: {left: [1.2, 0.28, 0.55], right: [1.2, 0.75, 0.45]}}
+  N02: {scene: 灯のもとの机に重なる白紙の羊皮紙と羽根ペン（人物なし）, pan: h, crops: {left: [1.25, 0.35, 0.5], right: [1.25, 0.72, 0.4]}}
+  N03: {scene: 霧のかかる城壁の外の野原。遠景だけ（人物なし）, pan: h, crops: {left: [1.2, 0.3, 0.55], right: [1.2, 0.72, 0.5]}}
+  N04: {scene: 石造りの牢の部屋。小窓の光と、床に置かれた鉄の鎖（人物なし）, pan: v, crops: {left: [1.2, 0.3, 0.45], right: [1.2, 0.72, 0.65]}}
+  N05: {scene: 城の中庭を、鉄格子の窓越しに見る（人物なし）, pan: h, crops: {left: [1.2, 0.3, 0.5], right: [1.2, 0.7, 0.5]}}
+  N06: {scene: 川沿いの北フランスの町と石橋。朝霧（遠景・人物なし）, pan: h, crops: {left: [1.2, 0.3, 0.5], right: [1.2, 0.7, 0.5]}}
+  N07: {scene: 墓地に組まれた木の台。誰もいない朝（人物なし）, pan: h, crops: {left: [1.2, 0.3, 0.6], right: [1.2, 0.7, 0.5]}}
+  N08: {scene: 机の上に置かれた2通の封のない白紙の書状（人物なし）, pan: h, crops: {wide: [1.3, 0.5, 0.65], left: [1.3, 0.35, 0.65], right: [1.3, 0.65, 0.65]}}
+  N09: {scene: 朝の牢の部屋。床の布の袋とたたまれた布（人物なし）, pan: v, crops: {left: [1.2, 0.3, 0.6], right: [1.2, 0.72, 0.6]}}
+  N10: {scene: 灯のもとで書類を書く書記の後ろ姿（顔なし）, pan: h, crops: {left: [1.2, 0.3, 0.45], right: [1.2, 0.62, 0.55]}}
+  N11: {scene: 朝の旧市場の広場の遠景。石畳と家並みだけ（人物なし）, pan: h, crops: {left: [1.18, 0.40, 0.5], right: [1.18, 0.60, 0.5]}}
+  N12: {scene: 大聖堂の内部。石の柱と高窓の光（人物なし）, pan: v, crops: {left: [1.2, 0.3, 0.5], right: [1.2, 0.72, 0.5]}}
+  N13: {scene: 古い薬壜の並ぶ木の棚。ラベルは描かない（人物なし）, pan: h, crops: {left: [1.2, 0.3, 0.6], right: [1.2, 0.7, 0.6]}}
+  N14: {scene: 布の上に置かれた小さな指輪。文字は描かない（人物なし）, pan: h, crops: {left: [1.2, 0.4, 0.55], right: [1.2, 0.55, 0.55]}}
+  N15: {scene: 終了画面用。夕暮れの石畳の広場（右半分を空けた構図）, lock: [1.0, 0.5, 0.5]}
+
+# 実在の絵の手当て（元の画像は変えない）
+paint_fx: {}
+
+# 台本に出てこない実在の絵の出典（左下の字・概要欄）
+credits:
+  paintings/jeanne_fauquembergue_1429.jpg: パリ高等法院の記録の余白の絵（1429年5月10日、書記クレマン・ド・フォーカンベルグ。フランス国立公文書館 AE II 447。ウィキメディア・コモンズ、パブリックドメイン）
+  paintings/jeanne_vigiles_compiegne_c1484.jpg: 『シャルル7世の通夜』の挿絵「乙女はコンピエーニュの前で捕らえられ、イングランドに売られた」（マルシャル・ドーヴェルニュ、1484年ごろ。ウィキメディア・コモンズ、パブリックドメイン）
+  paintings/jeanne_lefranc_champion_des_dames_c1451.jpg: 『貴婦人の擁護者』の挿絵（マルタン・ル・フラン、1451年ごろ。ウィキメディア・コモンズ、パブリックドメイン）
+
+# 絵の割り当て：「行の番号 種類:絵 [切り出し]」。次の行の指定まで続く。図（figure）の出る行は、その時の絵を暗くして図を置く（自動）
+shots:
+  - 0 ai:N01 wide                                  # 許された6日後
+  - 1 ai:N07 wide                                  # 5月24日 墓地で署名
+  - 2 ai:N08 wide                                  # 署名は十字（史料の札）
+  - 3 ai:N04 wide                                  # 終身の牢
+  - 4 ai:N09 left                                  # 午後、女の服に着替える
+  - 5 ai:N12 wide                                  # 3月25日 枝の主日
+  - 6 ai:N09 wide                                  # 5月28日 男の服に戻っていた
+  - 7 ai:N04 left                                  # 本人の答え（史料の札）
+  - 8 ai:N09 right                                 # 証言は違う話を
+  - 9 ai:N05 wide                                  # 処刑の朝・司教に
+  - 10 ai:N02 wide                                 # 決め手は服か
+  - 11 ai:N03 wide                                 # 1年前から
+  - 12 frame:paintings/jeanne_fauquembergue_1429.jpg   # 生前の絵はたった1枚
+  - 13 ai:N02 left
+  - 14 ai:N10 wide                                 # 書記は本人を見ていない
+  - 15 frame:paintings/jeanne_fauquembergue_1429.jpg                                # スカート姿で描いた
+  - 16 frame:paintings/jeanne_vigiles_compiegne_c1484.jpg   # 1430年5月23日 捕らえられる
+  - 17 ai:N02 wide                                 # 26日の手紙
+  - 18 ai:N03 left                                 # 7月14日 コーションの要求
+  - 19 ai:N02 right                                # 6000フラン（図）
+  - 20 ai:N02 left                                 # 1万フラン（図）
+  - 21 ai:N06 wide                                 # ノルマンディーの課税
+  - 22 ai:N02 wide                                 # 765リーヴル
+  - 23 ai:N05 right                                # ボーレヴォワールの塔
+  - 24 ai:N04 wide                                 # 3月14日「売られたと知っていた」
+  - 25 ai:N06 right                                # ルーアンへ
+  - 26 ai:N05 left                                 # 書類と法
+  - 27 ai:N05 wide                                 # 教会の牢ではなかった
+  - 28 ai:N05 right
+  - 29 ai:N04 left                                 # イングランド兵の見張り
+  - 30 ai:N04 right                                # 見張りは何人か（図）
+  - 31 ai:N02 left                                 # 2月21日 最初の尋問
+  - 32 ai:N06 left                                 # 父の名・母の名
+  - 33 ai:N12 wide                                 # 2月24日「神の恵みの中に」
+  - 34 ai:N12 right
+  - 35 ai:N05 left                                 # 3月25日
+  - 36 ai:N12 left                                 # 服は変えられない
+  - 37 ai:N02 right                                # 検事が公文書に
+  - 38 ai:N10 wide                                 # 3人の公証人
+  - 39 ai:N05 right                                # 隠れて書く者
+  - 40 ai:N02 left
+  - 41 ai:N07 wide                                 # 5月24日 墓地へ
+  - 42 ai:N05 wide
+  - 43 ai:N07 wide                                 # 5月24日の朝
+  - 44 ai:N02 right                                 # ロワズルールの言葉
+  - 45 ai:N08 wide                                 # 判決文2通
+  - 46 ai:N07 right                                # エラールが書面を読む
+  - 47 ai:N08 left                                 # マシューの助言
+  - 48 ai:N07 wide                                 # 「今すぐ誓え」
+  - 49 ai:N04 left                                 # 【想像1】……教会の牢に、行けるのですね
+  - 50 ai:N07 left                                 # 笑った
+  - 51 ai:N08 right                                # 誓約書の長さ（図）
+  - 52 ai:N08 wide                                 # （図）
+  - 53 ai:N02 wide                                 # （図）
+  - 54 ai:N10 left                                 # タケル
+  - 55 ai:N04 wide                                 # 終身の牢の判決
+  - 56 ai:N07 right                                # 教会の牢に移したい
+  - 57 ai:N05 wide                                 # 午後・ルメートル
+  - 58 ai:N04 right
+  - 59 ai:N09 wide                                 # 意志だったのか
+  - 60 ai:N05 left                                 # 通説
+  - 61 ai:N04 wide                                 # 5月27日の朝
+  - 62 ai:N09 wide                                 # 服を取り上げ
+  - 63 ai:N04 right                                # 禁じられている
+  - 64 ai:N09 left
+  - 65 ai:N09 wide                                 # 4つの記録（図）
+  - 66 ai:N04 right                                # （図）
+  - 67 ai:N05 wide                                 # （図）
+  - 68 ai:N05 right                                # （図）
+  - 69 ai:N09 left                                 # 4通りの語り
+  - 70 ai:N02 wide                                 # 証言を取った時期
+  - 71 ai:N12 wide                                 # 5月29日 再犯の理由
+  - 72 ai:N02 left                                # 服と声
+  - 73 ai:N04 wide                                 # 声の答え
+  - 74 ai:N05 left                                 # 火が怖くて（史料の札）
+  - 75 ai:N10 wide                                 # 欄外「致命的な答え」（史料の札）
+  - 76 ai:N02 right                                # 服よりも声
+  - 77 ai:N12 left                                 # 30日の判決
+  - 78 ai:N02 right                                # 口実
+  - 79 ai:N10 left                                 # 半分は正しく
+  - 80 ai:N05 wide                                 # 朝・修道士
+  - 81 ai:N04 wide                                 # 5月30日の朝
+  - 82 ai:N09 right
+  - 83 ai:N05 right                                # 司教さま（史料の札）
+  - 84 ai:N04 left
+  - 85 ai:N05 left
+  - 86 ai:N11 wide                                 # 旧市場の広場（遠景だけ）
+  - 87 ai:N06 wide                                 # 19年後 1450年
+  - 88 ai:N02 left                                 # マレーの説明
+  - 89 ai:N06 left
+  - 90 ai:N12 wide                                 # 1455年 ノートルダム
+  - 91 ai:N01 left                                 # 【想像2】……あの子の名を、返してください
+  - 92 ai:N10 right                                # 1456年7月7日
+  - 93 ai:N10 wide                                 # 12箇条は偽り
+  - 94 ai:N02 wide                                 # 無効（史料の札）
+  - 95 ai:N10 left                                 # からくり
+  - 96 ai:N12 left
+  - 97 ai:N13 wide                                 # 遺物はどこに
+  - 98 ai:N13 wide                                 # 肋骨・布・猫の骨
+  - 99 ai:N02 wide                                # 2007年の分析
+  - 100 ai:N13 left                                # 調香師
+  - 101 ai:N02 wide                                # 2010年の論文
+  - 102 ai:N14 wide                                # 指輪（史料の札）
+  - 103 ai:N02 right                               # 2016年の競売
+  - 104 ai:N14 left                                # 記録は無い
+  - 105 ai:N10 wide                                # 残っているのは書類
+  - 106 ai:N02 wide
+  - 107 ai:N01 wide                                # まとめ：答えは2つ
+  - 108 ai:N04 wide                                # 服の食い違い
+  - 109 ai:N05 wide                                # 教会の牢ではなかった
+  - 110 frame:paintings/jeanne_lefranc_champion_des_dames_c1451.jpg   # 顔は余白の絵1枚
+  - 111 ai:N07 wide                                # 締め：紙の上の十字
+  - 112 ai:N01 right
+  - 113 ai:N15 wide
+  - end ai:N15 wide
+
+# look だけで足す図（台本には無い）
+figures: []
+
+# 語りがその物・人を言うと、カットの終わりにそれが主役になる所で止まる。位置は仮（届いた絵で合わせる）
+focus:
+  N02: {羽根ペン: [1.3, 0.82, 0.30], 羊皮紙|書類|紙: [1.3, 0.50, 0.45]}
+  N04: {鎖: [1.3, 0.88, 0.80], 牢: [1.2, 0.45, 0.50]}
+  N09: {袋|服: [1.3, 0.30, 0.70], 鎖: [1.3, 0.75, 0.70]}
+  N13: {肋骨|骨|瓶: [1.3, 0.70, 0.55]}
+  N14: {指輪: [1.3, 0.45, 0.55]}
+  paintings/jeanne_fauquembergue_1429.jpg: {絵|人物|旗|余白|小さな: [2.2, 0.12, 0.14]}
+  paintings/jeanne_vigiles_compiegne_c1484.jpg: {コンピエーニュ|捕らえ: [1.4, 0.50, 0.40], 手をかけ|弓兵: [1.5, 0.68, 0.40]}
+  paintings/jeanne_lefranc_champion_des_dames_c1451.jpg: {顔|絵|像: [1.5, 0.78, 0.38]}
+
+# 絵の一部だけを動かす（話に合う絵だけ・控えめに。顔・人物にはかけない）。範囲は仮（届いた絵で見て直す）
+fx:
+  N02: {lamp: {region: [0.74, 0.08, 0.96, 0.40]}}                        # 机の灯（右上の蝋燭）
+  N10: {lamp: {region: [0.10, 0.25, 0.28, 0.50]}}                        # 書記の灯（左の蝋燭）
+  N03: {mist: {region: [0, 0.40, 1, 0.70], alpha: 0.10, speed: 4}}      # 野原の霧
+  N06: {mist: {region: [0, 0.40, 1, 0.75], alpha: 0.10, speed: 3}}      # 川の朝霧
+
+# 部品（from〜to の行、0 始まり。出ている間は絵を暗くする）
+parts:
+  - {type: quote, from: 2, to: 2, label: 史料, text: Jehanne ＋,
+     source: 1431年5月24日の誓約書の署名（裁判記録）}
+  - {type: quote, from: 7, to: 7, label: 史料, text: 自分の意志で／着ました,
+     source: ジャンヌの答え 1431年5月28日（裁判記録・日本語訳）}
+  - {type: quote, from: 74, to: 74, label: 史料, text: 火が怖くて／言ったことです,
+     source: ジャンヌの答え 1431年5月28日（裁判記録・日本語訳）}
+  - {type: quote, from: 75, to: 75, label: 史料, text: Responsio mortifera／致命的な答え,
+     source: 5月28日の記録の欄外の書き込み（ケシュラ版 第1巻 p.456 の脚注）}
+  - {type: quote, from: 83, to: 83, label: 史料, text: 司教さま、わたしは／あなたのせいで死ぬのです,
+     source: ジャン・トゥトムイエの証言 1450年（日本語訳）}
+  - {type: quote, from: 94, to: 94, label: 史料, text: 無効・無きもの／効力なし,
+     source: 復権の判決 1456年7月7日（Murray 英訳・日本語訳）}
+  - {type: quote, from: 102, to: 102, label: 史料, text: ジェズス・マリア,
+     source: ジャンヌの答え 1431年（裁判記録・日本語訳）}
+
+# 静止画（story-main を --frames なしで回したとき。簡易の描き方で、パン・部品は出ない。目で見るのは --frames の方）
+stills:
+  - {line: 0, note: 冒頭（0秒）許された6日後（N01）}
+  - {line: 2, note: 序章 署名は十字（史料の札）}
+  - {line: 12, note: 第1章 生前の絵（額）}
+  - {line: 19, note: 第1章 6000フランと1万フラン（図）}
+  - {line: 30, note: 第2章 見張りは何人か（図）}
+  - {line: 49, note: 第3章 想像の台詞}
+  - {line: 52, note: 第3章 誓約書の長さ（図）}
+  - {line: 66, note: 第4章 4つの記録（図）}
+  - {line: 75, note: 第4章 欄外の書き込み（史料の札）}
+  - {line: 83, note: 第5章 司教さま（史料の札）}
+  - {line: 110, note: まとめ 肖像の額}
+  - {end: true, note: 終了画面の空き}
