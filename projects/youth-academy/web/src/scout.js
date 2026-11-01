@@ -575,6 +575,7 @@
     if (YA.rivalWeek) YA.rivalWeek(w);
     YA.refreshFocus(w);
     YA.checkPromises(w);
+    YA.awakeWeek(w);
     // 年代別日本代表：活動の週に、選考ラインを超えた子へ招集
     if (YA.NAT_WEEKS && YA.NAT_WEEKS.indexOf(w.week) >= 0) {
       const picks = YA.natPicks(w);

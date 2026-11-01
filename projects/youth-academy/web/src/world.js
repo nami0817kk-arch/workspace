@@ -563,7 +563,7 @@
       const diligence = anyP(p, '真面目') ? 1.08 : anyP(p, '練習嫌い') ? 0.9 : 1;
       for (const [a, e] of Object.entries(exp)) {
         const aff = p.aff[a] || 1;
-        const g = e * 0.17 * p.rate * aff * roomF * cond * diligence * heightK(p, a) * stateK(p) * (YA.staffMult ? YA.staffMult(w, p, a) * YA.coachMult(w) * (w.campMult || 1) * dscMult : 1) * (p.adapt > 0 ? 0.92 : 1);
+        const g = e * 0.17 * p.rate * aff * roomF * cond * diligence * heightK(p, a) * stateK(p) * (YA.staffMult ? YA.staffMult(w, p, a) * YA.coachMult(w) * (w.campMult || 1) * dscMult : 1) * (p.adapt > 0 ? 0.92 : 1) * (p.awake ? 1.2 : 1);
         // 高い値ほど伸びにくい
         const hard = clamp(1.25 - p.ab[a] / 22, 0.25, 1) * (p.ab[a] >= 15 ? clamp(1 - (p.ab[a] - 14) * 0.15, 0.1, 1) : 1);
         p.prog[a] = (p.prog[a] || 0) + g * hard;
@@ -1235,6 +1235,7 @@
     const small = apply(p, res);
     // えこひいき：話す相手が偏ると他の子が感じる（面談が多い子が3人を超える）
     p.talks = (p.talks || 0) + 1;
+    if (YA.addCare) YA.addCare(w, p, 3);
     return { ok: true, line: res.line, small, extra };
   };
 

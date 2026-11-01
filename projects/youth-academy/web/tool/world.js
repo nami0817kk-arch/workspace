@@ -923,6 +923,35 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   ok(q.youthCaps === 1 && q.away === 1, '送り出すと代表の回数が増え、1週間離れる');
   const a = YA.alumniEntry(wn2, q, 'test'); ok(a.nat === 0 && a.youthCaps === 1, '卒業生の日本代表（A代表）に、ユース年代の回数は混ぜない');
 }
+// 覚醒：年に1〜2人。★注目の印を付けた子ほど起きやすく、出来事で知らせる
+{
+  let n = 0, yrs = 0, star = 0;
+  for (const seed of [8, 21]) {
+    const wa = YA.newWorld(seed);
+    for (let y = 0; y < 3; y++) {
+      const yy = wa.year; let g = 0; yrs++;
+      Object.values(wa.players).filter((p) => !p.star && !p.awake && p.grade < 3).slice(0, 2).forEach((p) => { p.star = true; });
+      while (wa.year === yy && g++ < 60) {
+        wa.phase = wa.phase || 'plan';
+        YA.simulate(wa, { until: 'week', stopOnImportant: false });
+      }
+      const k = wa.awakeN && wa.awakeN.y === yy ? wa.awakeN.n : 0;
+      ok(k <= YA.AWAKE_MAX, '覚醒は1年に2人まで ' + k);
+      n += k;
+    }
+    star += [...Object.values(wa.players), ...(wa.alumni || [])].filter((p) => p.awake && p.awake.why === 'star').length;
+  }
+  ok(n >= yrs * 0.8 && n <= yrs * 2, '覚醒はならして1年に1〜2人 ' + n + '/' + yrs);
+  const wb = YA.newWorld(4);
+  const q = Object.values(wb.players).find((x) => x.grade === 1);
+  q.star = true; wb.week = 20; const r0 = YA.rating(q);
+  YA.awaken(wb, q, YA.rngOf(1));
+  ok(q.awake && YA.rating(q) > r0 + 5 && q.awake.why === 'star', '覚醒すると総合力が一段上がる ' + r0 + '→' + YA.rating(q));
+  const ev = (wb.forced || []).find((e) => e.id === 'awake');
+  const v = ev && YA.eventView(wb, ev);
+  ok(v && /覚醒/.test(v.text) && /★注目/.test(v.text) && !/undefined|null|NaN/.test(v.text) && v.opts.length === 2, '覚醒の知らせ ' + (v && v.text));
+  ok(star >= 1, '★の子が覚醒する ' + star);
+}
 // クラブを移った（契約満了・解任）あとも、入団の暦まで止まらずに1年回せる
 {
   const wm = YA.newWorld(5);
