@@ -106,7 +106,7 @@ class Player {
   Batter toBatter() => Batter(
       contact: of(Ability.contact),
       power: ((of(Ability.power) * 7 + of(Ability.trajectory) * 3) / 10).round(),
-      eye: of(Ability.contact));
+      eye: _eyeOf(of(Ability.contact)));
   Pitcher toPitcher() =>
       Pitcher(control: of(Ability.control), stuff: of(Ability.stuff));
 
@@ -162,6 +162,13 @@ class Player {
     );
   }
 }
+
+/// 四球の選びやすさ(`Batter.eye`)をミートから決める割合(%)。100でミートそのまま、0で一定(50)。
+/// 選球眼をなくしたので、ミートが高いほど四球が増えすぎないよう弱めてある。`tool/balance.dart` で決めた。
+const eyeFromContact = int.fromEnvironment('BAL_EYE', defaultValue: 50);
+
+int _eyeOf(int contact) =>
+    (50 + (contact - 50) * eyeFromContact / 100).round().clamp(0, 99);
 
 /// 転向で新しく持つ能力の初期値。ゼロからではないが、本職よりは低い。
 const switchStartLevel = 25;
