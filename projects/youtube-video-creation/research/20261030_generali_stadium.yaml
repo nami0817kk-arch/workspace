@@ -1,0 +1,159 @@
+# 取材メモ（2026年10月30日）ミランとインテルの新スタジアム「ジェネラリ・スタジアム」。命名権の額（情報筋）と、設計者マニカの言葉（ニュースのショート。見せ方 Y＝設計者本人の言葉から始める）
+# 取材: 2026-10-30。requests（ブラウザUA）で本文を全部読んだ。ESPN は記事API（now.core.api.espn.com/v1/sports/news/50317859）。
+#   ・ESPN「Sources: New Milan, Inter stadium gets $725M naming rights deal with Generali」（10/29）— 題材の元。
+#       地の文: 木曜（29日）のクラブ発表で命名権をジェネラリに売ったと発表。クラブは「世界のスポーツで最大級の命名権契約の一つ」と説明。
+#       「Sources confirmed to ESPN that the deal is worth €650 million ($725 million) over 20 years.」＝金額は情報筋（クラブの発表の文言ではない）。
+#       2021年11月、Crypto.com がロサンゼルスの競技場（レイカーズ等の本拠）に20年で約7億ドルと報じられ、当時は史上最高額と見られていた。
+#       新スタジアムは7万1500席、設計はフォスター＋パートナーズとMANICA（ウェンブリーを一緒に設計）。着工は2028年、最初の試合は2031-32シーズンが目標（許認可しだい）。
+#       デザインはミラノのドゥオーモの職人技に着想、2層の360度のすり鉢、傾斜は最大37度。サン・シーロは1926年開場、1990年W杯のために改修。
+#       クラブが昨年11月に土地を1億9700万ユーロで買った（今日は使わない。10/4 の本と重なる）。
+#   ・Football Italia「Architect insists new Generali Stadium ‘will be even more San Siro’ than it is today」（10/29 発表の夜）
+#       マニカ: 「The most important thing that we realised when we designed this project is that San Siro is a feeling」
+#               「It’s more than a building, it’s a feeling. We brought all the seats as close as possible to the field. They could not be any closer, it’ll actually feel as though you’re sitting on the grass.」
+#               記事の地の文: 「even more San Siro than it is today」にすると保証した。
+#       フォスター: 「low in the body, and rises up at either end」（ゴール裏の両端が立ち上がる形）。
+#       発表は「ダービーの数日前」、ダービーは土曜（10/31）。
+#   ・Football Italia「OFFICIAL: Generali Stadium presented」（10/29）— 一次の声明の紹介。欧州の大会では「Milano Stadium」と呼ぶ。
+#       命名権は「報じられたところでは年2600万ユーロ×25年＝6億5000万ユーロ」と書く（ESPNは20年）。→ 年数が食い違うので、台本は総額だけ言い、年数は「20年」を ESPN の情報筋の形で言う。
+#       外観はドゥオーモに着想のX字の構造と2重曲線の屋根。外側のLEDで試合ごとに色を変えられる。2層・傾斜37度。
+#       着工は2028年（別の記事は2027年と書いていたが、ESPN と声明の紹介は2028年。2028年を使う）。
+#   ・Guardian「Inter and Milan unveil plans for new shared stadium to replace San Siro」（10/29）
+#       建設費は12億ユーロ（約10億ポンド）の見込み（ガーディアンの報道）。7万1500席。2031-32シーズンからサン・シーロに代わる。
+#       発表の場（カステッロ・スフォルツェスコ）にインテルのファンの一団が入り、「you will never extinguish the lights at San Siro」の横断幕を広げ、「hands off San Siro」と叫んだ。
+#       いまのサン・シーロは7万5000席。EURO 2032（イタリアとトルコの共催）の会場候補。
+# 言わないこと: 命名権の年数（20年か25年かで報道が食い違う）。ミランとインテルの収入の話（財政の回と重ねない）。サン・シーロの買い取り額（10/4）。曲線席の席数（1万1500と1万1700で食い違う）。
+#   ダービーの結果（土曜の試合で未出）。ジェネラリがどんな会社かの細部。
+# 本人の言葉: 設計者マニカの言葉（2紙で一致）。ミラン・インテルの選手・監督の言葉は今日の本文に無い。反応: 0件（作らない。approve は --no-voices で）。
+# 訳はこちらの自訳（英語から）。確度: 発表（名前・設計・席数・着工と開業の目標）は 報道（ESPN・Football Italia・Guardian の3紙で一致）。金額は 報道（情報筋）。建設費12億ユーロは 報道（1紙）。見立ては 背景。
+# 写真: Commons のサン・シーロ（いまの競技場）。新スタジアムの完成予想図（Foster + Partners 提供）は使わない（クレジットが配信元）。サン・シーロの写真なので「新スタジアムの写真」とは言わない。
+slot: serie_a
+date: "2026年10月30日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [ミラン, インテル, デビッド・マニカ, ノーマン・フォスター]
+
+short_style: Y
+short_hook_quote: サン・シーロは、感覚です。
+short_question: 新しいスタジアムは、サン・シーロより良くなると思いますか。
+short_hook: 新スタジアムの名前はジェネラリ。設計者が語ったのは、サン・シーロでした。
+short_telops:
+  - {match: 設計者の言葉, text: 設計者マニカ/「サン・シーロは感覚」}
+  - {match: ジェネラリ・スタジアム, text: 新スタジアムの名前は/ジェネラリ・スタジアム}
+  - {match: 6億5000万ユーロ, text: 情報筋の話では/総額6億5000万ユーロ}
+  - {match: 約7億ドル, text: 20年契約の比べ/7億2500万ドル 対 約7億ドル}
+  - {match: ウェンブリー, text: 設計/ウェンブリーのフォスターとマニカ}
+  - {match: 7万1500, text: 席数は7万1500/いまは約7万5000}
+  - {match: 横断幕, text: 発表の場に/インテルのファンの横断幕}
+  - {match: ミラノ・スタジアム, text: 欧州の大会では/ミラノ・スタジアム}
+  - {match: 半分ほど, text: 建設費12億ユーロ/命名権は約半分}
+  - {match: 土曜, text: 土曜は/ミラノダービー}
+
+theme:
+  id: generali_stadium
+  league: italy
+  league_name: セリエA
+  prefix: ""
+  title: ミランとインテルの新スタジアムに命名権。設計者が語ったサン・シーロ
+  hook: ""
+  question: ミランとインテルの新スタジアムは何という名前になり、設計者は何を語ったのか
+  takeaway: 命名権の額が報じられたとおりなら、12億ユーロと報じられる建設費の約半分。欧州の大会ではジェネラリでもサン・シーロでもなく「ミラノ・スタジアム」と呼ばれ、着工は2028年、最初の試合は2031年から32年のシーズンが目標
+
+thumbnail:
+  line1: ミラン・インテル新スタジアム
+  line2: 「サン・シーロは感覚」
+  tags: [ミラン, インテル, サン・シーロ]
+  layout: scene
+  photo: assets/images/20261030_generali_stadium/03_w.jpg
+  short_photo: assets/images/20261030_generali_stadium/03_v.jpg
+
+answer: 名前はジェネラリ・スタジアム。命名権は情報筋の話で総額6億5000万ユーロ。設計者は「サン・シーロは感覚」と話した
+watch: 土曜のミラノダービー
+
+short_photos:
+  - assets/images/20261030_generali_stadium/03_v.jpg
+  - assets/images/20261030_generali_stadium/01_v.jpg
+  - assets/images/20261030_generali_stadium/02_v.jpg
+  - assets/images/20261030_generali_stadium/05_v.jpg
+  - assets/images/20261030_generali_stadium/04_v.jpg
+
+sections:
+  - id: what
+    main: true
+    heading: 設計者が語ったこと
+    tier: 報道
+    telop: 新スタジアムの設計者「サン・シーロは感覚」
+    say:
+      - voice: マニカ
+        text: サン・シーロは、感覚です。
+        short_voice: true
+        image: assets/images/20261030_generali_stadium/03_w.jpg
+      - voice: マニカ
+        text: 建物以上のものなんです。
+        cont: true
+        image: assets/images/20261030_generali_stadium/03_w.jpg
+      - text: ミランとインテルが、新スタジアムの完成予想図を発表しました。設計者の言葉です。
+        image: assets/images/20261030_generali_stadium/01_w.jpg
+      - text: 名前は、ジェネラリ・スタジアム。イタリア最大の保険会社が、命名権を買いました。
+        image: assets/images/20261030_generali_stadium/01_w.jpg
+      - text: 情報筋の話では、総額6億5000万ユーロ、約7億2500万ドルです。
+        image: assets/images/20261030_generali_stadium/02_w.jpg
+      - text: 20年契約で、2021年にロサンゼルスの競技場で報じられた約7億ドルを上回ります。
+        image: assets/images/20261030_generali_stadium/02_w.jpg
+      - text: ただし金額は情報筋の話で、確定ではありません。
+        image: assets/images/20261030_generali_stadium/05_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50317859/milan-inter-new-stadium-generali-naming-rights-new-san-siro
+      - https://football-italia.net/architect-generali-stadium-more-san-siro-today/
+      - https://football-italia.net/official-generali-stadium-present-inter-milan/
+
+  - id: design
+    heading: 新スタジアムは、どんな形か
+    tier: 報道
+    telop: 設計はウェンブリーのフォスターとマニカ。7万1500席
+    say:
+      - text: ミランとインテルの新スタジアムは、ウェンブリーのフォスターとマニカの設計です。
+        image: assets/images/20261030_generali_stadium/04_w.jpg
+      - voice: マニカ
+        text: すべての席を、ピッチにできるだけ近づけました。
+        image: assets/images/20261030_generali_stadium/04_w.jpg
+      - voice: マニカ
+        text: 芝の上に座っているように感じるはずです。
+        cont: true
+        image: assets/images/20261030_generali_stadium/05_w.jpg
+      - text: 席数は7万1500。いまのサン・シーロは、約7万5000席です。
+        image: assets/images/20261030_generali_stadium/05_w.jpg
+      - text: 外側の照明は、その日に戦うクラブに合わせた色にできます。
+        image: assets/images/20261030_generali_stadium/08_w.jpg
+    official: false
+    sources:
+      - https://football-italia.net/architect-generali-stadium-more-san-siro-today/
+      - https://football-italia.net/official-generali-stadium-present-inter-milan/
+      - https://www.theguardian.com/football/2026/oct/29/inter-milan-generali-stadium-new-venue-san-siro-protests
+
+  - id: view
+    viewpoint: true
+    heading: 名前とお金は、サン・シーロをどう変えるか
+    tier: 背景
+    telop: 建設費12億ユーロのうち、命名権は約半分
+    say:
+      - text: ここからは見立てです。
+        image: assets/images/20261030_generali_stadium/08_w.jpg
+      - text: 発表の場には、インテルのファンが入ってきて、横断幕を広げました。
+        image: assets/images/20261030_generali_stadium/09_w.jpg
+      - text: 「サン・シーロの灯りは、決して消せない」。そう書かれていました。
+        image: assets/images/20261030_generali_stadium/09_w.jpg
+      - text: 欧州の大会では、名前は「ミラノ・スタジアム」になります。
+        image: assets/images/20261030_generali_stadium/03_w.jpg
+      - text: 建設費は、報道で12億ユーロ。命名権が報じられた額なら、その半分ほどにあたります。
+        image: assets/images/20261030_generali_stadium/03_w.jpg
+      - text: 着工は2028年。最初の試合は、2031年から32年のシーズンが目標です。
+        image: assets/images/20261030_generali_stadium/01_w.jpg
+      - text: 土曜には、ミランとインテルのミラノダービーがあります。
+        image: assets/images/20261030_generali_stadium/02_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50317859/milan-inter-new-stadium-generali-naming-rights-new-san-siro
+      - https://www.theguardian.com/football/2026/oct/29/inter-milan-generali-stadium-new-venue-san-siro-protests
+      - https://football-italia.net/official-generali-stadium-present-inter-milan/
+short_title: "ミランとインテルの新スタジアムに命名権。設計者が語ったサン・シーロ"

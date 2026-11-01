@@ -1,0 +1,461 @@
+# アレッサンドロ・デル・ピエロ（元イタリア代表FW）の紹介。シリーズ「レジェンドの紹介（世界）」2026-11-02。型は 10/29 のトッティと同じ9節（フック→基礎DATA→日本との接点→歩み→持ち味→あの試合→現役を終えたあと→マル秘話→見立て）。
+# **FotMob・DataMB・FBref・Sofascore・Transfermarkt は不使用**。数字は英語版 Wikipedia（Alessandro Del Piero の成績表・本文、1996 Intercontinental Cup、2002 FIFA World Cup Group G）と、自分で足した・割った値だけ。引退の確認だけ The Guardian 2015-10-12 本文を requests で取得。
+# **私生活・法的な問題は入れない**（2005・06年のスクデット剥奪と2006年の降格の「理由」、1999年の薬物疑惑と無罪、家族、父の死は使わない。2部への降格は「クラブが2部へ落ちた」という事実の一言だけ）。女子サッカーは入れない。
+#
+# **重なりの確認（11/2 作成時、日付は 10/31）**：scripts/・research/covered.yaml・research/posted.json を「デル・ピエロ／デルピエロ／Del Piero」で grep。主役の回は無し（10/18 中田英寿の回に「開始4分、デル・ピエロ」が1行、10/28 ピルロの回に 2006年W杯準決勝の得点者として名前が出る）。レジェンド既出（ジダン・ロナウジーニョ・シャビ・イニエスタ・ベッカム・ロナウド・アンリ・イブラヒモビッチ・マルディーニ・カカ・ジェラード・ドログバ・ピルロ・トッティ）と重ならない。11/1 以降の同日分はカシージャス（10/31）。
+# **山場の選び方**：2006年W杯準決勝（ドイツ戦）は 10/28 ピルロの山場なので使わない。山場は **1996-11-26 東京・国立競技場のクラブ世界一決定戦（トヨタカップ）**。日本との接点の節では 少年期のキャプテン翼・2002-06-13 大分のメキシコ戦の同点ヘッドを扱い、東京の試合は山場で深掘りする。
+# **引退の確認**：**英語版 Wikipedia は「2015年10月に引退を公式に伝えた」とするが、出典の Guardian（2015-10-12）本文は「Del Piero officially hung up his boots after a brief stint in the inaugural Indian Super League with Delhi Dynamos, calling it a day at the end of the 2014 season」。日付が食い違う → 台本は「2014年のシーズンを最後に現役を終えた」とだけ言い、2015年10月の発表とは言わない。イタリア語版 Wikipedia「Dopo il ritiro」は「2015年から Sky Sport の解説者」。→ **選手としては現役ではない（51歳）**。いまの立場：解説者（2015〜、Wikipedia 英・伊）、2025年にUEFAプロライセンス（伊語版 Wikipedia のみ・確度は報道止まり）。
+# **日本との接点**：①少年期の憧れの1つが日本のサッカー漫画『キャプテン翼』（英語版 Wikipedia 本文）。②2002-06-13 大分ビッグアイ、日韓W杯 G組 メキシコ1-1イタリア、メキシコが34分に先制、途中出場のデル・ピエロが85分にヘディングで同点（試合表と本文。引き分けでイタリアは決勝トーナメントへ）。③**1996-11-26 東京・国立競技場、Intercontinental Cup（日本ではトヨタカップ。英語版の脚注が "Toyota Cup" と呼ぶ）ユヴェントス1-0リーベル・プレート、81分デル・ピエロ、試合の最優秀選手、観客48,305人、前半0-0、後半ディ・リーヴィオのCKをジダンが頭で、こぼれをデル・ピエロが決める**（英語版 "1996 Intercontinental Cup"、試合表 81'）。
+# **数字の出どころと自分で足した値**
+# - 成績表（Wikipedia、公式戦）：ユヴェントス 705試合290点（Total 行。出場クラブ記録・得点クラブ記録）、うちセリエA 478試合188点（本文、2部の35試合20点を除く）、2部セリエB 2006-07 35試合20点、欧州 127試合51点。パドヴァ 14試合1点、シドニーFC 48試合24点、デリー 10試合1点（Career total 777試合316点と一致）。他の3クラブ＝14+48+10＝72試合、1+24+1＝26点（自分で足した値）。
+# - イタリア代表 91試合27点（Wikipedia）。クラブと代表の合計 868試合343点（自分で足した値：777+91＝868、316+27＝343）。**Wikipedia 冒頭の「462 goals」とは数え方が違う（親善試合・年代別などを含む）。台本・サムネは自分で足した343点に統一し、「公式戦のクラブと代表の合計」と断る。**
+# - ユヴェントスのチャンピオンズリーグ 92試合44点＝クラブ歴代1位（得点）、出場はブッフォンに次ぐ2位（Wikipedia）。
+# - アシスト：ユヴェントスの公式戦134、セリエA歴代3位（トッティ・バッジョに次ぐ。Wikipedia）。1999-2000 はセリエA14アシストでリーグ最多（Wikipedia）。
+# - フリーキック：クラブ46＋代表6＝52点、イタリア人で歴代1位（Wikipedia）。
+# - 見立て（自分で割った値）：1997-98 セリエA 32試合21点＝0.656→0.66、2007-08 セリエA 37試合21点＝0.568→0.57、ユヴェントスのセリエA通算 478試合188点＝0.393→0.39。0.57÷0.39＝1.46、0.66÷0.39＝1.69。1997-98 は23歳（1974-11-09生まれ、シーズン途中の11月に23歳）、2007-08 は33歳。2007-08 は21点でセリエA得点王（トレゼゲ20・ボッリエッロ19を上回る。Wikipedia）。2006-07 のセリエBも20点で得点王。2001-02・2002-03 は各16点（成績表）。
+# - 1992-03-15 メッシーナ戦でパドヴァの17歳デビュー（途中出場）。1993 ユヴェントスへ移籍金50億リラ。1994-95 初のスクデット（9年ぶり）で8点。1995 バッジョの10番を継ぐ。1995-96 CL優勝、6点で大会2位の得点。1998-11-08 ウディネーゼ戦で膝を大けが。2001 主将（リッピの復帰時）。2006 クラブが2部へ→主将のまま残留、1年で復帰。2012-05-20 コッパ・イタリア決勝（ナポリに0-2）が最後の試合で67分に交代（以上 Wikipedia）。
+# - 本人の言葉：2012-06-30 のファンへの手紙（Wikipedia が英訳を引用）「From tomorrow I will no longer be a Juventus player, but I will always be one of you」。10番の永久欠番を断った言葉（同 Wikipedia）「I've really had so much that I would never want it to be retired, this way, every child can dream one day of wearing it」。**原文のイタリア語は未確認。訳は Wikipedia の英訳から。**
+# - マル秘話：子どもの頃にゴールキーパー（母が汗をかかない・けがしにくいと考えた。兄が攻撃向きと言ってFWに）／あだ名ピントゥリッキオ（アニェッリ会長が、バッジョを「ラファエロ」にたとえた流れで、その弟子の画家の名を与えた）／10番の永久欠番を断った（Wikipedia）。
+# **入れなかったもの**：スクデット剥奪と降格の理由、薬物疑惑、家族・父の死、ツイッターなどの発言、Wikipedia の「Personal life」、2000年の年俸世界一、2000年決勝のミス。
+# **読みで怪しいもの**：デル・ピエロ（ピエーロと読まれないか）、リーベル・プレート、ディ・リーヴィオ、ジダン、コネリアーノ、パドヴァ、ピントゥリッキオ、ラファエロ、キャプテン翼、コッパ・イタリア、スカイ・スポーツ、大分。「最多」は使わず「いちばん多い」。「2007年から08年」は「ニセンナナ、ゼロハチ」と読まれないよう年号を言い換える。
+title: デル・ピエロは、どんな選手だった？ 東京の1点から11年、なぜ点を取れたのか
+format: news
+short_title: デル・ピエロは、どんな選手だった？
+series: レジェンドの紹介
+topic: アレッサンドロ・デル・ピエロ
+date: 2026年11月2日
+slot: other_1
+people: [アレッサンドロ・デル・ピエロ]
+watch: 毎日、数字でサッカーを読み解きます
+theme: {id: legend_delpiero, league: italy, league_name: セリエA, kind: other, topic: アレッサンドロ・デル・ピエロ, title: デル・ピエロは、どんな選手だった？ 東京の1点から11年、なぜ点を取れたのか, question: 東京で決勝点を挙げたデル・ピエロは、そのあとの11年、なぜ点を取れたのか, takeaway: セリエAの得点ペースはユヴェントス通算で1試合0.39点。23歳の季は21点（0.66）、33歳の季も21点（0.57）で得点王。けがと2部を挟んでも、点の力は同じ21点に戻った,
+  nameplate: アレッサンドロ・デル・ピエロ｜元イタリア代表 FW, opening_image: assets/images/20261102_delpiero_legend/11_w.jpg, end_bg: assets/images/20261102_delpiero_legend/13_w.jpg, bgm: assets/audio/bgm_calm.wav, outro_title: 毎日、数字でサッカーを読み解きます}
+thumbnail:
+  line1: デル・ピエロ、通算343点
+  line2: ユーベ290点はクラブ記録
+  tags: [ユベントス]
+  photo: assets/images/20261102_delpiero_legend/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261102_delpiero_legend/03_v.jpg
+sections:
+- id: hook
+  heading: ユヴェントスで、デル・ピエロは何点を取ったのか
+  tier: 報道
+  telop: ユヴェントス19シーズンの記録
+  card: &hk
+    type: stats
+    title: デル・ピエロ 元FW（51歳）
+    items:
+    - ['705', 試合, ユヴェントスの公式戦]
+    - ['290', 点, ユヴェントスの公式戦]
+    - ['19', シーズン, ユヴェントスで過ごした季]
+    focus: 1
+  say:
+  - {text: ユヴェントスで過ごしたのは、19シーズン。, card: none, image: assets/images/20261102_delpiero_legend/11_w.jpg}
+  - {text: 背番号10を付けて、点も、アシストも生んだ人です。, card: none}
+  - {text: 残したのは、705試合で290点。クラブの歴史で、これを上回る人はいません。, card: none, image: assets/images/20261102_delpiero_legend/03_w.jpg, emph: true}
+  - text: アレッサンドロ・デル・ピエロ。ヨーロッパの大会の得点も、クラブの1位です。
+    card: *hk
+    image: assets/images/20261102_delpiero_legend/02_w.jpg
+    callword: 290点
+  - text: 代表では、2006年のワールドカップを制した、世界王者の1人です。
+    card:
+      type: stats
+      title: デル・ピエロ 元FW（51歳）
+      items:
+      - ['705', 試合, ユヴェントスの公式戦]
+      - ['290', 点, ユヴェントスの公式戦]
+      - ['19', シーズン, ユヴェントスで過ごした季]
+      focus: 2
+    image: assets/images/20261102_delpiero_legend/13_w.jpg
+  - {text: そのなかに、東京で決めた1点があります。, card: none, image: assets/images/20261102_delpiero_legend/12_w.jpg}
+  - {text: そこから11年、点はどう積み上がったのか。数字でたどります。, card: none}
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Alessandro_Del_Piero', 'https://it.wikipedia.org/wiki/Alessandro_Del_Piero']
+- id: data
+  heading: デル・ピエロは、いつ、どこで生まれ、どんな選手か
+  tier: 報道
+  telop: デル・ピエロの基礎DATA
+  card: &dt
+    type: table
+    title: アレッサンドロ・デル・ピエロ
+    columns: [項目, 内容]
+    rows: &dtr
+    - [生年月日, 1974年11月9日・イタリア]
+    - [ポジション, フォワード・攻撃の2列目]
+    - [クラブ, ユヴェントス（1993〜2012年）ほか3つ]
+    - [代表, 91試合27得点・W杯優勝]
+    - [現役を終えた, 2014年のシーズン]
+    source: Wikipedia
+    highlight_row: 0
+  say:
+  - text: デル・ピエロは、1974年11月9日、イタリア北東部のコネリアーノに生まれました。
+    card: *dt
+    image: assets/images/20261102_delpiero_legend/13_w.jpg
+  - text: ポジションはフォワード。点を取る人の1つ後ろで、攻撃を操る役もこなしました。
+    card:
+      type: table
+      title: アレッサンドロ・デル・ピエロ
+      columns: [項目, 内容]
+      rows: *dtr
+      source: Wikipedia
+      highlight_row: 1
+    image: assets/images/20261102_delpiero_legend/03_w.jpg
+  - text: ユヴェントスには1993年から2012年まで。ほかに3つのクラブでプレーしました。
+    card:
+      type: table
+      title: アレッサンドロ・デル・ピエロ
+      columns: [項目, 内容]
+      rows: *dtr
+      source: Wikipedia
+      highlight_row: 2
+    image: assets/images/20261102_delpiero_legend/04_w.jpg
+  - text: イタリア代表の成績は、91試合で27得点です。
+    card:
+      type: table
+      title: アレッサンドロ・デル・ピエロ
+      columns: [項目, 内容]
+      rows: *dtr
+      source: Wikipedia
+      highlight_row: 3
+    image: assets/images/20261102_delpiero_legend/13_w.jpg
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Alessandro_Del_Piero', 'https://it.wikipedia.org/wiki/Alessandro_Del_Piero']
+- id: japan
+  heading: デル・ピエロと日本には、どんな縁があったのか
+  tier: 報道
+  telop: キャプテン翼と、大分のヘディング
+  say:
+  - {text: 縁は少年時代から。憧れの1つは、サッカー漫画『キャプテン翼』でした。, card: none, image: assets/images/20261102_delpiero_legend/03_w.jpg}
+  - text: そして2002年6月13日。日韓ワールドカップで、大分のスタジアムに立ちます。
+    card: &jp
+      type: timeline
+      title: 日本で決めた、デル・ピエロの2点
+      rows: &jpr
+      - [2002年6月, 大分で、W杯のメキシコ戦。同点ヘッド]
+      - [1996年11月, 東京で、クラブ世界一決定戦。決勝点]
+      focus: 0
+      highlight_row: 0
+    image: assets/images/20261102_delpiero_legend/12_w.jpg
+  - {text: 相手はメキシコ。34分に先制されて、イタリアは1点を追っていました。, card: none, image: assets/images/20261102_delpiero_legend/04_w.jpg}
+  - text: 85分、途中から入ったデル・ピエロが、ヘディングで同点ゴール。
+    card:
+      type: timeline
+      title: 日本で決めた、デル・ピエロの2点
+      rows: *jpr
+      focus: 0
+      highlight_row: 0
+    image: assets/images/20261102_delpiero_legend/03_w.jpg
+    emph: true
+  - {text: 1対1。この引き分けで、イタリアは決勝トーナメントへ進みました。, card: none, image: assets/images/20261102_delpiero_legend/13_w.jpg}
+  - text: ただ、日本でのいちばん大きな1点は、その6年前。東京で決まっています。
+    card:
+      type: timeline
+      title: 日本で決めた、デル・ピエロの2点
+      rows: *jpr
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261102_delpiero_legend/12_w.jpg
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Alessandro_Del_Piero', 'https://en.wikipedia.org/wiki/2002_FIFA_World_Cup_Group_G']
+- id: career
+  heading: 17歳でデビューしたデル・ピエロは、どうやって主将になったのか
+  tier: 報道
+  telop: 17歳のデビューから、主将へ
+  card: &cr
+    type: timeline
+    title: 歩んできた道
+    rows: &crr
+    - ['1992', 17歳でプロデビュー]
+    - ['1993', ユヴェントスへ]
+    - ['1996', チャンピオンズリーグ優勝]
+    - ['1998', 膝の大けが]
+    - ['2006', クラブが2部へ。主将のまま残る]
+    - ['2012', ユヴェントス最後の試合]
+    focus: 0
+  say:
+  - text: デビューは1992年3月15日。17歳で、パドヴァの試合に途中から出ました。
+    card: *cr
+    image: assets/images/20261102_delpiero_legend/03_w.jpg
+  - text: 1993年、デル・ピエロはユヴェントスへ。移籍金は50億リラでした。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *crr
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261102_delpiero_legend/04_w.jpg
+  - {text: 1994年から95年のシーズン。クラブ9年ぶりのリーグ優勝で、8点を決めています。, card: none, image: assets/images/20261102_delpiero_legend/04_w.jpg}
+  - {text: 1995年、バッジョがミランへ去り、その背番号10を受け継ぎます。, card: none, image: assets/images/20261102_delpiero_legend/12_w.jpg, emph: true}
+  - text: 1996年、チャンピオンズリーグで優勝。6点を挙げ、大会で2番目の得点でした。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *crr
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261102_delpiero_legend/13_w.jpg
+  - text: 1998年11月、膝に大けが。そのシーズンは、ほとんど戦列を離れました。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *crr
+      focus: 3
+      highlight_row: 0
+    image: assets/images/20261102_delpiero_legend/03_w.jpg
+  - {text: 2001年に主将になり、2006年にクラブが2部へ落ちても、主将を続けました。, card: none, image: assets/images/20261102_delpiero_legend/11_w.jpg}
+  - text: 2部では20点で得点王。チームは1年で1部へ戻りました。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *crr
+      focus: 4
+      highlight_row: 0
+    image: assets/images/20261102_delpiero_legend/04_w.jpg
+  - text: 最後の試合は2012年5月20日。カップ戦の決勝で、67分に交代しました。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *crr
+      focus: 5
+      highlight_row: 0
+    image: assets/images/20261102_delpiero_legend/12_w.jpg
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Alessandro_Del_Piero', 'https://it.wikipedia.org/wiki/Alessandro_Del_Piero']
+- id: style
+  heading: デル・ピエロは、何で相手を上回ったのか
+  tier: 報道
+  telop: 落ちるフリーキックと、巻くシュート
+  card: &st
+    type: table
+    title: デル・ピエロの持ち味
+    columns: [項目, 中身]
+    rows: &str
+    - [武器1, 高く越えて落ちるフリーキック]
+    - [武器2, 左から切れ込み、遠い隅へ巻くシュート]
+    - [武器3, 点も、アシストも生む]
+    - [記録, フリーキック52点はイタリア人で1位]
+    source: Wikipedia
+    highlight_row: 0
+  say:
+  - text: デル・ピエロの武器、まずはフリーキック。壁を高く越えて、急に落ちる弾道でした。
+    card: *st
+    image: assets/images/20261102_delpiero_legend/02_w.jpg
+  - text: 公式戦のフリーキックの得点は、クラブと代表で52点。イタリア人の1位です。
+    card: none
+    image: assets/images/20261102_delpiero_legend/13_w.jpg
+    emph: true
+  - text: 次に、左から切れ込み、遠い隅へ巻く形。あの位置は「デル・ピエロ・ゾーン」。
+    card:
+      type: table
+      title: デル・ピエロの持ち味
+      columns: [項目, 中身]
+      rows: *str
+      source: Wikipedia
+      highlight_row: 1
+    image: assets/images/20261102_delpiero_legend/03_w.jpg
+  - text: そして、アシスト。ユヴェントスの公式戦で134本、セリエA歴代3番目です。
+    card:
+      type: table
+      title: デル・ピエロの持ち味
+      columns: [項目, 中身]
+      rows: *str
+      source: Wikipedia
+      highlight_row: 2
+    image: assets/images/20261102_delpiero_legend/04_w.jpg
+  - {text: 「ファンタジスタ」。点も、パスも、1人で生む選手を、イタリアではそう呼びます。, card: none, image: assets/images/20261102_delpiero_legend/02_w.jpg}
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Alessandro_Del_Piero', 'https://it.wikipedia.org/wiki/Alessandro_Del_Piero']
+- id: match
+  heading: 1996年の東京で、デル・ピエロは何をしたのか
+  tier: 報道
+  main: true
+  telop: 東京・国立競技場の81分
+  card: &mt
+    type: timeline
+    title: 1996年11月26日 クラブ世界一決定戦
+    rows: &mtr
+    - [前半, 0対0。枠内シュートは8本対2本]
+    - [81分, コーナーキックからデル・ピエロが決める]
+    - [試合後, 1対0。最優秀選手に選ばれる]
+    focus: 0
+    highlight_row: 0
+  say:
+  - {text: デル・ピエロ。, short_only: true, card: none, image: assets/images/20261102_delpiero_legend/11_w.jpg}
+  - {text: 日本との縁がいちばん深いのは、1996年の東京です。, short_only: true, card: none, image: assets/images/20261102_delpiero_legend/11_w.jpg}
+  - {text: 1996年11月26日、東京の国立競技場。, card: none, image: assets/images/20261102_delpiero_legend/03_w.jpg}
+  - {text: ヨーロッパ王者のユヴェントスと、南米王者のリーベル・プレートが戦います。, card: none}
+  - {text: 当時のクラブ世界一を決める試合で、日本ではトヨタカップと呼ばれました。, card: none}
+  - text: 前半は0対0の同点。枠内シュートはユヴェントス8本、リーベル2本です。
+    card: *mt
+    image: assets/images/20261102_delpiero_legend/12_w.jpg
+  - text: 後半81分、コーナーキック。ジダンが頭で合わせ、こぼれ球がデル・ピエロの前へ。
+    card:
+      type: timeline
+      title: 1996年11月26日 クラブ世界一決定戦
+      rows: *mtr
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261102_delpiero_legend/02_w.jpg
+    emph: true
+    callword: 81分
+  - {text: ゴール前で打ち込んで、これが決勝点になりました。, card: none, image: assets/images/20261102_delpiero_legend/13_w.jpg}
+  - text: 1対0でユヴェントスの勝ち。この試合の最優秀選手は、デル・ピエロでした。
+    card:
+      type: timeline
+      title: 1996年11月26日 クラブ世界一決定戦
+      rows: *mtr
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261102_delpiero_legend/13_w.jpg
+  - {text: 日本の人たちの前で決めた、クラブ世界一の1点でした。, card: none, image: assets/images/20261102_delpiero_legend/12_w.jpg}
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/1996_Intercontinental_Cup', 'https://en.wikipedia.org/wiki/Alessandro_Del_Piero']
+- id: after
+  heading: 現役を終えたあと、デル・ピエロは何をしてきたのか
+  tier: 報道
+  telop: ファンへの手紙と、そのあと
+  card: &af
+    type: timeline
+    title: 現役のあと
+    rows: &afr
+    - [2012年6月, ファンへ手紙を書く]
+    - [2012〜14年, シドニーFCで24点]
+    - [2014年, インドのデリーで現役を終える]
+    - [2015年, 解説者に]
+    focus: 0
+    highlight_row: 0
+  say:
+  - text: ユヴェントスを去る2012年6月30日。デル・ピエロは、ファンへ手紙を書きました。
+    card: *af
+    image: assets/images/20261102_delpiero_legend/13_w.jpg
+  - {voice: デル・ピエロ, text: 明日からは、もうユヴェントスの選手ではありません。, card: none, pause: 0.6}
+  - {voice: デル・ピエロ, text: でも、これからもずっと、あなたたちの仲間です。, card: none, cont: true}
+  - {text: そのあとは、オーストラリアのシドニーFCへ。, card: none, image: assets/images/20261102_delpiero_legend/06_w.jpg}
+  - text: 1年目の14点は、クラブの1シーズンの記録。2年目は10点でした。
+    card:
+      type: timeline
+      title: 現役のあと
+      rows: *afr
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261102_delpiero_legend/06_w.jpg
+  - text: 最後のクラブはインドのデリー。2014年のシーズンを最後に、現役を終えます。
+    card:
+      type: timeline
+      title: 現役のあと
+      rows: *afr
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261102_delpiero_legend/10_w.jpg
+  - text: 2015年からは、イタリアのテレビ局で、解説者を務めています。
+    card:
+      type: timeline
+      title: 現役のあと
+      rows: *afr
+      focus: 3
+      highlight_row: 0
+    image: assets/images/20261102_delpiero_legend/07_w.jpg
+  - {text: いまの肩書きは、2026年10月30日時点のものです。, card: none, image: assets/images/20261102_delpiero_legend/07_w.jpg}
+  quotes_from: ['https://en.wikipedia.org/wiki/Alessandro_Del_Piero']
+  sources: ['https://en.wikipedia.org/wiki/Alessandro_Del_Piero', 'https://www.theguardian.com/football/2015/oct/12/alessandro-del-piero-and-roberto-carlos-touted-for-a-league-coaching-roles']
+- id: secret
+  heading: デル・ピエロは、なぜ10番を永久欠番にしなかったのか
+  tier: 報道
+  telop: ゴールキーパー、画家、そして10番
+  card: &sc
+    type: table
+    title: 知られざる、3つの話
+    columns: [いつ, 何があったか]
+    rows: &scr
+    - [子どものころ, ゴールキーパーをしていた]
+    - [1994〜95年, 会長が「ピントゥリッキオ」と呼ぶ]
+    - [2012年, 10番の永久欠番を断る]
+    source: Wikipedia
+    highlight_row: 0
+  say:
+  - {text: デル・ピエロには、意外な話が3つあります。, card: none, image: assets/images/20261102_delpiero_legend/04_w.jpg}
+  - text: 1つ目。子どものころは、ゴールキーパー。母は、汗もけがも少ないと考えました。
+    card: *sc
+    image: assets/images/20261102_delpiero_legend/04_w.jpg
+  - {text: 兄が「その腕前なら、攻撃向きだ」と母に話して、フォワードになりました。, card: none}
+  - text: 2つ目。あだ名は「ピントゥリッキオ」。ルネサンスの画家になぞらえた名です。
+    card:
+      type: table
+      title: 知られざる、3つの話
+      columns: [いつ, 何があったか]
+      rows: *scr
+      source: Wikipedia
+      highlight_row: 1
+    image: assets/images/20261102_delpiero_legend/03_w.jpg
+    emph: true
+  - {text: 会長はバッジョをラファエロにたとえ、その弟子の名を贈りました。, card: none, image: assets/images/20261102_delpiero_legend/03_w.jpg}
+  - text: 3つ目。2012年、クラブから背番号10を永久欠番にする申し出がありました。
+    card:
+      type: table
+      title: 知られざる、3つの話
+      columns: [いつ, 何があったか]
+      rows: *scr
+      source: Wikipedia
+      highlight_row: 2
+    image: assets/images/20261102_delpiero_legend/02_w.jpg
+  - {voice: デル・ピエロ, text: 僕は、もう十分すぎるものをもらいました。欠番にはしたくない。, card: none, pause: 0.6, image: assets/images/20261102_delpiero_legend/11_w.jpg}
+  - {voice: デル・ピエロ, text: そうすれば、どんな子どもも、, card: none, cont: true}
+  - {voice: デル・ピエロ, text: いつかこの番号を着る夢を見られるから。, card: none, cont: true}
+  - {text: 背番号に、自分の名前を閉じ込めない。デル・ピエロらしい断り方でした。, card: none, image: assets/images/20261102_delpiero_legend/13_w.jpg}
+  quotes_from: ['https://en.wikipedia.org/wiki/Alessandro_Del_Piero']
+  sources: ['https://en.wikipedia.org/wiki/Alessandro_Del_Piero', 'https://it.wikipedia.org/wiki/Alessandro_Del_Piero']
+- id: view
+  heading: 東京の1点から11年、デル・ピエロの点はなぜ減らなかったのか
+  tier: 背景
+  viewpoint: true
+  telop: 23歳も33歳も、同じ21点
+  card: &vw
+    type: table
+    title: デル・ピエロ セリエAの得点ペース
+    columns: [期間, 試合, 得点, 1試合あたり]
+    rows: &vwr
+    - [ユヴェントス通算, '478', '188', '0.39']
+    - [23歳の季, '32', '21', '0.66']
+    - [33歳の季, '37', '21', '0.57']
+    source: Wikipedia
+    highlight_row: 0
+  say:
+  - text: 最後に、デル・ピエロのセリエAの得点ペースを、3つの数字で比べます。
+    card: *vw
+    image: assets/images/20261102_delpiero_legend/04_w.jpg
+  - text: ユヴェントスでのセリエA通算は、478試合で188点。1試合0.39点です。
+    card:
+      type: table
+      title: デル・ピエロ セリエAの得点ペース
+      columns: [期間, 試合, 得点, 1試合あたり]
+      rows: *vwr
+      source: Wikipedia
+      highlight_row: 0
+    image: assets/images/20261102_delpiero_legend/04_w.jpg
+  - text: 23歳のシーズンは、32試合で21点。1試合あたり0.66点です。
+    card:
+      type: table
+      title: デル・ピエロ セリエAの得点ペース
+      columns: [期間, 試合, 得点, 1試合あたり]
+      rows: *vwr
+      source: Wikipedia
+      highlight_row: 1
+    image: assets/images/20261102_delpiero_legend/03_w.jpg
+    emph: true
+    mark: {kind: circle, row: 1, col: 3}
+  - text: そして10年後、33歳の季。37試合で、またも21点。1試合0.57点でした。
+    card:
+      type: table
+      title: デル・ピエロ セリエAの得点ペース
+      columns: [期間, 試合, 得点, 1試合あたり]
+      rows: *vwr
+      source: Wikipedia
+      highlight_row: 2
+    image: assets/images/20261102_delpiero_legend/13_w.jpg
+  - {text: どちらも通算の1.4倍を超えるペース。33歳の季は、得点王にも立ちました。, card: none, image: assets/images/20261102_delpiero_legend/12_w.jpg}
+  - {text: けがのあと、1999年から2000年は、点より先にアシスト。, card: none, image: assets/images/20261102_delpiero_legend/13_w.jpg}
+  - {text: 14本は、セリエAでいちばん多い数でした。, card: none}
+  - {text: 役を変えて、また点へ。2001年から2002年も、次の年も、16点ずつでした。, card: none, image: assets/images/20261102_delpiero_legend/11_w.jpg}
+  - {text: 役を変えながら、同じ21点まで戻る。デル・ピエロの点は、そうして減らなかった。, card: none, image: assets/images/20261102_delpiero_legend/03_w.jpg}
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Alessandro_Del_Piero', 'https://it.wikipedia.org/wiki/Alessandro_Del_Piero']

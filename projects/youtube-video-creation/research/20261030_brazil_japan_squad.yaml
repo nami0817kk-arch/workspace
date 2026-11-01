@@ -1,0 +1,158 @@
+# 取材メモ（2026年10月30日）ブラジル代表が日本戦（11/14）に向けた26人を発表。ニュースのショート。型 Y（アンチェロッティ監督の言葉）
+# 取材: 2026-10-30。requests（ブラウザUA）で本文を全文読んだ。検索エンジンのAI要約は使っていない。
+#   ・サッカーキング 2026-10-30「ブラジル代表、11月の日本戦に臨むメンバー26名を発表！」（https://www.soccer-king.jp/news/japan/national/20261030/2222497.html 全文）:
+#       CBFが29日、11月のシンガポール遠征の26人を発表。日本戦は11月14日（土）日本時間19時15分、シンガポール戦は17日（火）19時。
+#       国内組は「クラブとの事前協議を経て、ダニーロ（ボタフォゴ）らブラジル国内組6名がメンバー入り」。アラン（マンC）ら5名が初招集。
+#       名簿（所属つき）が全員分ある。
+#   ・ゲキサカ 2026-10-30「森保Jとの再戦に臨むブラジル代表メンバー26人発表!!」（https://web.gekisaka.jp/news/japan/detail/?462063-462063-fl 全文）:
+#       W杯ラウンド32の日本戦に出た選手のうち7人（先発 ヴィニシウス・ガブリエル・ドグラス・サントス・ブルーノ・ギマランイス・ラヤン、途中出場 ダニーロ・エンドリッキ）が招集。
+#       初招集5人の年齢: アラン22歳（マンC）・マルロン・ゴメス22歳（シャフタール）・アリソン・サンターナ21歳（シャフタール）・ジョナタン・ジェズス22歳（クルゼイロ）・アンドレ・ルイス20歳（コリンチャンス）。
+#       日本にとって昨年10月のキリンチャレンジ杯（3-2で日本の勝ち）、今年6月のW杯ラウンド32（1-2）に続き、1年間余りで3度目のブラジル戦。
+#       9月に招集されたマルキーニョス（PSG）とジョアン・ペドロ（チェルシー）は負傷のため選外。
+#   ・サッカーキング 2026-10-30「アンチェロッティ監督、日本戦へ『興味深く、厳しい試合になる』」（https://www.soccer-king.jp/news/japan/national/20261030/2222730.html 全文）:
+#       26人のうち23歳未満が15人。監督は会見で「バランスが取れていて、非常に若いチームです。オリンピック世代の選手が9人、23歳未満の選手が15人います。将来を強く見据えたチームです」。
+#       日本について「日本代表については、よく分かっています。非常に競争力があり、組織的なチームです。以前に日本で行った国際親善試合でも、ワールドカップでも、その力を示していました。
+#       我々にとって興味深く、厳しい試合になるでしょう。勝利を目指して戦わなければならない相手です」。
+#   ・サッカーキング 2026-10-30「ブラジル代表、11月の日本戦は主将マルキーニョス不在…」（https://www.soccer-king.jp/news/world/southamerica/20261030/2222726.html 全文）:
+#       マルキーニョス（PSG）はブラジル代表のキャプテンで歴代6位の112キャップ。CLのバルセロナ戦で右太ももを負傷し途中交代していた。
+#       首位フラメンゴのサムエウ・リーノらは招集見送り。9・10月の招集から外れた選手にペドロ（フラメンゴ）。
+#   ・フットボールチャンネル 2026-10-30（https://www.footballchannel.jp/2026/10/30/post1042731/ 全文。ブラジルメディア『Terra』経由＝報道）:
+#       監督「次の親善試合では、オーストラリア戦と同じような形になると思う。エンドリッキ、ラフィーニャ、ヴィニシウス……。複数のポジションでプレーできる選手がいることも考慮しなければならない」
+#       「今後の試合でも、中盤3人という考え方を継続していく」。「マルキーニョス、ガブリエウ・マガリャンイス、ブルーノ・ギマランイス、ヴィニシウス、ラフィーニャ……。彼らは今後数年間、ブラジル代表の中心となる選手たちだ」。
+#       ※記事は「29日の再戦」と書くが日付の意味が曖昧（9月の再戦のことと読める）。台本では使わない。
+#   ・ESPN（content.core.api.espn.com 見出し・要約のみ。AP配信）: 「アンチェロッティは若さに大きく傾いた招集で代表の刷新を続ける」。
+#   ・A Bola（ポルトガル語、本文冒頭を読んだ）: 見出し「アンチェロッティ、5人のデビューで驚かせる」。日本側の記事と同じ内容で、新しい事実は無かったので使っていない。
+# 【自分で数えたもの（名簿の所属から）】26人の所属国: イングランド9（ガブリエウ・ブルーノ=アーセナル2、ジャイール・クーニャ=フォレスト、ヴィトール・レイス・アラン=マンC2、アンドレイ・サントス=マンU、ジョアン・ゴメス=ヴィラ、エステヴァン=チェルシー、ラヤン=ボーンマス）／
+#   ブラジル国内6（ペドロ・モリスコ・アルトゥール・ディアス・ジョナタン・ジェズス・アンドレ・ルイス・ダニーロ・ガブリエウ・ボンテンポ）／スペイン3（ヴィニシウス・エンドリッキ・ラフィーニャ）／イタリア3（ルーカス・ペリ・カルロス・アウグスト・ウェズレイ）／
+#   ウクライナ2（マルロン・ゴメス・アリソン・サンターナ）／サウジ1（ベント）／ロシア1（ドウグラス・サントス）／モナコ1（ヴァンデルソン）= 26。ポジション内訳 GK3・DF9・MF7・FW7。
+#   「9月・10月は国内組が11人」は10/27 の本（ゲキサカ 10/26 の報道）の数字。今回の6人と比べるだけに使う（確度は報道止まり）。
+# 確度: 26人の名簿・日本戦の日時・初招集5人は確定（CBF発表を日本の媒体が伝達。CBF公式サイトは見ていない→「確定」でなく報道扱いにとどめる）。監督の言葉は報道（会見の発言を日本の媒体が訳したもの。先発構想はTerra経由で報道止まり）。
+# 【言わないこと】媒体名／「日本が勝てる」などの予想／ヴィニシウスらの個人成績／10/27 の本で言った「第36節」「フラメンゴ4人」の細部／9月の若手優先の発言／日本の初勝利の細部。
+# 本人の言葉: アンチェロッティ監督の会見の言葉は実在（上）。選手の言葉は無い。→ 型 Y（監督の言葉）。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年10月30日"
+format: news
+no_main: true
+people: [ブラジル代表, 日本代表, カルロ・アンチェロッティ, ヴィニシウス, ラフィーニャ, エンドリッキ, マルキーニョス, ブルーノ・ギマランイス]
+
+short_style: Y
+short_hook_quote: 日本代表については、よく分かっています
+short_question: 若手が中心のブラジルを相手に、日本代表はどんな試合をしてほしいですか。
+short_telops:
+  - {match: 非常に競争力があり, text: アンチェロッティ監督/言葉は日本語の訳}
+  - {match: 初招集は5人, text: ブラジル代表 11月の初招集/22歳以下の5人}
+  - {match: 6人, text: 国内組6人/イングランド組は9人}
+  - {match: 中盤は3人, text: アンチェロッティ監督/言葉は日本語の訳}
+
+theme:
+  id: brazil_japan_squad
+  league: ""
+  league_name: 日本代表
+  prefix: ""
+  title: ブラジル代表の日本戦26人。いちばん多く選ばれたのは、どの国のクラブの選手か
+  hook: ""
+  question: 11月14日に日本と戦うブラジル代表の26人は、どんな顔ぶれか
+  takeaway: 26人のうち国内組は6人、最も多いのはイングランドのクラブの9人。23歳未満が15人で、日本が戦うのは欧州育ちの若いブラジルになる
+
+thumbnail:
+  layout: face
+  line1: ブラジル代表、日本戦の26人
+  line2: 国内組は6人だけ？
+  tags: [ブラジル代表, 日本代表, アンチェロッティ]
+  photo: assets/images/20261030_brazil_japan_squad/06_w.jpg
+  short_photo: assets/images/20261030_brazil_japan_squad/06_v.jpg
+
+answer: 国内組は6人。いちばん多いのはイングランドのクラブの9人
+watch: 11月14日（土）日本時間19時15分、日本対ブラジル
+
+sections:
+  - id: words
+    heading: 監督が話した、日本の印象
+    tier: 報道
+    telop: アンチェロッティ監督「非常に競争力があり、組織的なチームです」
+    say:
+      - text: ブラジル代表が、11月14日の日本戦に向けた26人を発表しました。
+        image: assets/images/20261030_brazil_japan_squad/06_w.jpg
+        card: none
+      - text: 会見で、アンチェロッティ監督は日本について、こう話しました。
+        image: assets/images/20261030_brazil_japan_squad/02_w.jpg
+        card: none
+      - voice: アンチェロッティ監督
+        text: 日本代表については、よく分かっています。
+        image: assets/images/20261030_brazil_japan_squad/07_w.jpg
+      - voice: アンチェロッティ監督
+        text: 非常に競争力があり、組織的なチームです。
+        emph: true
+        cont: true
+        image: assets/images/20261030_brazil_japan_squad/07_w.jpg
+      - voice: アンチェロッティ監督
+        text: 興味深く、厳しい試合になるでしょう。
+        cont: true
+        image: assets/images/20261030_brazil_japan_squad/01_w.jpg
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20261030/2222730.html
+
+  - id: what
+    main: true
+    heading: 26人の顔ぶれ
+    tier: 報道
+    telop: 初招集は5人。23歳未満が15人
+    say:
+      - text: ブラジル代表と日本の試合は、11月14日、シンガポール。
+        image: assets/images/20261030_brazil_japan_squad/03_w.jpg
+        card: none
+      - text: 日本時間の午後7時15分に、キックオフします。
+        image: assets/images/20261030_brazil_japan_squad/02_w.jpg
+        card: none
+      - text: 6月のワールドカップで日本と戦った選手は、26人のうち7人。
+        image: assets/images/20261030_brazil_japan_squad/06_w.jpg
+        card: {type: stats, title: 日本戦に出た選手, items: [[7, 人, 6月のW杯で日本と戦った], [26, 人, 今回の招集メンバー]], focus: 0}
+      - text: ヴィニシウスや、ブルーノ・ギマランイスらです。
+        image: assets/images/20261030_brazil_japan_squad/03_w.jpg
+        card: none
+      - text: 一方で、初招集は5人。いちばん若いのは、20歳のアンドレ・ルイス。
+        emph: true
+        image: assets/images/20261030_brazil_japan_squad/01_w.jpg
+        card: {type: table, title: 初招集の5人, columns: [所属, 名前, 位置, 年齢], rows: [[マンチェスター・C, アラン, FW, 22], [シャフタール, マルロン・ゴメス, MF, 22], [シャフタール, アリソン・サンターナ, FW, 21], [クルゼイロ, ジョナタン・ジェズス, DF, 22], [コリンチャンス, アンドレ・ルイス, MF, 20]]}
+      - text: 23歳未満は、26人のうち15人です。
+        image: assets/images/20261030_brazil_japan_squad/05_w.jpg
+        card: none
+      - text: 主将のマルキーニョスは、右太ももの負傷で外れました。
+        image: assets/images/20261030_brazil_japan_squad/02_w.jpg
+        card: none
+      - text: 歴代6位の、112試合に出た選手です。
+        image: assets/images/20261030_brazil_japan_squad/06_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?462063-462063-fl
+      - https://www.soccer-king.jp/news/japan/national/20261030/2222497.html
+      - https://www.soccer-king.jp/news/world/southamerica/20261030/2222726.html
+
+  - id: view
+    viewpoint: true
+    heading: 日本が戦うのは、どんなブラジルか
+    tier: 報道
+    telop: 国内組6人、イングランド組9人
+    say:
+      - text: 見立てです。所属のクラブで数えると、いちばん多いのはイングランドの9人。
+        image: assets/images/20261030_brazil_japan_squad/02_w.jpg
+        card: {type: bars, title: 招集26人の所属（人）, unit: 人, items: [{label: イングランド, value: 9, highlight: true}, {label: ブラジル国内, value: 6}, {label: スペイン, value: 3}, {label: イタリア, value: 3}, {label: ウクライナ, value: 2}, {label: ほか, value: 3}]}
+      - text: ブラジル国内のクラブは6人で、9月と10月は11人だったと報じられていました。
+        image: assets/images/20261030_brazil_japan_squad/03_w.jpg
+        card: {type: calc, title: ブラジル国内組の人数, terms: [[11, 9月・10月], [5, 減った人数], [6, 今回]], ops: [−, ＝]}
+      - text: 先発の構想では、エンドリッキ、ラフィーニャ、ヴィニシウスの名前が出ました。
+        image: assets/images/20261030_brazil_japan_squad/01_w.jpg
+        card: none
+      - voice: アンチェロッティ監督
+        text: 今後の試合でも、中盤は3人という考え方を続けていきます。
+        image: assets/images/20261030_brazil_japan_squad/07_w.jpg
+      - text: 若さと欧州育ちの顔ぶれで来るブラジルを、日本はどう迎えるのか。試合は14日です。
+        image: assets/images/20261030_brazil_japan_squad/05_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/10/30/post1042731/
+      - https://www.soccer-king.jp/news/japan/national/20261030/2222497.html

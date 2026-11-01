@@ -1,0 +1,525 @@
+# 監督紹介：トゥヘル（10/31 土、シリーズ「監督紹介」、key: manager_tuchel、型は news）。9節の型（2026-10-20 決定）。見本は 20261029_manager_ferguson。
+# 順：フック→基礎DATA→日本との接点（基礎DATAの次）→歩みと転機→戦術の色（実例の試合1つ）→数字で見る→本人の言葉→マル秘話→見立て。
+#
+# **重なりの確認（2026-10-31 に自分で）**：scripts/・research/covered.yaml・research/posted.json を grep。
+#   トゥヘルを主役にした回は無い（posted.json に「トゥヘル」0件）。scripts は脇役の名前（イングランド代表の紹介・ケインの記録・トレント・クロアチア戦・マインツのクラブ紹介など）。
+#   covered.yaml は試合・記録のニュースで別題。既出の監督紹介：グアルディオラ・アンチェロッティ・モウリーニョ・クロップ・シメオネ・アルテタ・フリック・ベンゲル・ファーガソン。
+#
+# **いまの立場（一次情報で確かめた）**：イングランド代表監督。
+#   ○ イングランドサッカー協会（FA）公式 2026-02-12「Thomas Tuchel extends England stay to EURO 2028」＝2028年の欧州選手権まで契約を延長（研究控え research/raw/20261031_fa_ext.txt）。
+#   ○ 同日のFA公式インタビュー（research/raw/20261031_fa_int.txt）。本人の言葉はここから。
+#   ○ FA公式 2026-10-05「Tuchel: Kane hitting 'highest level'」の見出し下に「The England head coach」。FA の記事一覧に 2026-10-30「Squad announcement details for England's November games」＝10/31 の時点で現職。
+#
+# **通算（台本とサムネをそろえる）**＝英語版 Wikipedia「Managerial record by team and tenure」（updated: match played 6 October 2026。10/6 以降にイングランド代表の試合は無い＝FA の一覧で確認）。
+#   **トップチームのみ**（アウグスブルクII＝34試合20勝8分6敗は下部の2軍なので除く。2026-10-20 の決まり）。
+#   マインツ 184試合 72勝46分66敗／ドルトムント 107試合 67勝23分17敗／PSG 127試合 95勝13分19敗／チェルシー 100試合 60勝24分16敗／バイエルン 61試合 37勝8分16敗／イングランド代表 26試合 20勝2分4敗。
+#   合計 605試合 351勝 116分 138敗（表の Career total 639−34 と、各行の足し算で一致）。勝率（自分で割った）：合計58.0%、マインツ39.1%、ドルトムント62.6%、PSG74.8%、チェルシー60.0%、バイエルン60.7%、代表76.9%。
+#   ※本文の「マインツ182試合 39.56%」「ドルトムント108試合」「PSG 75.6%」は表と食い違う。**台本は表の値で自分で割ったものだけ**を使い、本文の勝率は使わない。
+#   タイトル（Honours から自分で数えた、トップチームの監督として）：ドルトムント DFBポカール2016-17＝1／PSG リーグ・アン2回（2018-19・2019-20）・クープ・ドゥ・フランス2019-20・クープ・ドゥ・ラ・リーグ2019-20・トロフェ・デ・シャンピオン2018・2019＝6／チェルシー CL2020-21・UEFAスーパーカップ2021・クラブW杯2021＝3／バイエルン ブンデスリーガ2022-23＝1 → 合計11。リーグ優勝は3回（リーグ・アン2＋ブンデス1）。代表は2026年W杯3位（タイトルには数えない）。
+#   在任の長さ（表の From/To から自分で割った。代表は 2025-01-01〜2026-10-31）：マインツ 4.8年（1742日）／ドルトムント 1.9年／PSG 2.6年／チェルシー 1.6年／バイエルン 1.2年／代表 1.8年。1年あたりのタイトル：PSG 6÷2.61＝2.3、チェルシー 3÷1.61＝1.9。
+#
+# **基礎**：1973-08-29 西ドイツ・バイエルン州クルンバッハ生まれ（53歳）。DF、通算77試合3得点（Stuttgarter Kickers 8-1／SSV Ulm 69-2）。1998年、25歳でひざの軟骨のけがで引退→2000年までバー勤め。
+#   2000 VfBシュトゥットガルトの育成コーチ（ラルフ・ラングニック採用）、U19で2004-05にリーグ優勝。2007-08 アウグスブルクII。2009 マインツ（1年目9位・2年目5位・13位・13位・7位）。
+#   2015-04-19 ドルトムント就任発表、2017-05-30 退任。2018-05 PSG、2020-12-24 退任。2021-01-26 チェルシー就任（ドイツ人初）、2022-09-07 退任。2023-03-24 バイエルン、2024-05-18 退任。2025-01-01 イングランド代表。
+#   CL：PSGで2020年に決勝（クラブ初）、チェルシーで2021年に優勝（5/29、ポルト、マンCに1-0）、バイエルンで2024年に準決勝。「ドイツ人の監督で3つの違うクラブでCL準決勝へ」は Wikipedia 本文（first German coach to reach that stage with three different clubs）。
+#   2026年W杯：8試合（6勝…イングランド側の記録は team_england を参照）、3位決定戦でフランスに6-4、準決勝はアルゼンチンに1-2。1966年以来の最高成績。
+#
+# **日本との接点（サッカーの縁だけ）**：
+#   ・岡崎慎司：2013-07-01 マインツ加入（岡崎の英語版）、2013-14 ブンデス15得点（トゥヘルの英語版「scoring 15 goals in the Bundesliga, a record for a Japanese player」。Sky Sports の試合記事も「日本人のシーズン最多」と書く）。マインツはその季7位でEL出場権。トゥヘルの最後のシーズン。
+#   ・香川真司：2014-08-31 ドルトムント復帰、契約は2018-06-30まで（香川の英語版）＝トゥヘル在任（2015-17）と重なる。トゥヘルの英語版は 4-2-3-1 で相手の列の間に入る選手として香川・ムヒタリアン・オーバメヤンを挙げる。**出場試合数は確かめていない＝言わない。**
+#   ・2026-03-31 ウェンブリー（KIRIN WORLD CHALLENGE 2026）日本1-0イングランド、三笘薫23分。**research/20261025_team_england.yaml で JFA（4/1 日本時間）と ESPN で確認済み**。トゥヘルの代表の負けは26試合で4（表）。
+#
+# **戦術の色**＝2021-05-29 CL決勝（ポルト）チェルシー1-0マンチェスター・シティ、ハヴァーツ42分、マウントのパス（英語版「2021 UEFA Champions League final」の Summary と Football box）。
+#   チェルシー先発：メンディ／アスピリクエタ・ティアゴ・シウバ（39分に負傷交代でクリステンセン）・リュディガー／ジェームズ・チルウェル（ウイングバック）／ジョルジーニョ・カンテ／ハヴァーツ・マウント／ヴェルナー。シティは後半の立ち上がりを支配。
+#   就任からのチェルシー：14試合負けなし、**1,260分で2失点**（Tuchel の英語版）。3-4-2-1。「Tactical chameleon」の呼び名（同）。
+#
+# **本人の言葉**＝FA公式インタビュー（2026-02-12、research/raw/20261031_fa_int.txt。英語の原文を訳した）：
+#   ①"It was me in the beginning that wanted a short-term contract only for 18 months because I was not sure what's coming in international football... But very soon, I fell in love with the job and the role"
+#   ②2021年（チェルシー監督のころ）、ウェンブリーでの欧州選手権の熱気を感じて、マネージャーに電話した："wow, this is my dream – I want to win as many titles as possible with Chelsea and then let's try to become English national coach" → 返事は"this will not happen, that's not very likely to happen!" → "I'm very sure that he was wrong and we could prove him wrong."
+#
+# **マル秘話**（英語版 Tuchel の本文）：2008 アウグスブルクIIでナーゲルスマンを指導（けがの多い選手だった彼にスカウトを命じ、のちに監督へ）。2023 バイエルンで後任（"replacing his former player Julian Nagelsmann"）。
+#   2009 マインツの育成年代と山を自転車で登り、クラブのバッジを埋めて「U19が決勝に進んだら掘り出す」と約束→掘り出した。守備の練習でテニスボールを持たせる。ハンドボールのクラブと約1か月練習。アーチェリーやキックボクシングの練習も取り入れた。
+#
+# **入れなかったもの**：離婚・家族・私生活・健康・各クラブとの対立と解任の経緯・審判への批判と罰金・選手との口論・「厳しすぎる」という批判・イングランド起用の賛否・ケインのバロンドール・ニュースの反応・女子・お金。
+date: 2026年10月31日
+slot: other_1
+format: news
+series: 監督紹介
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- トゥヘル
+- 岡崎慎司
+- 香川真司
+- 三笘薫
+theme:
+  end_bg: assets/images/20261031_manager_tuchel/06_w.jpg
+  id: manager_tuchel
+  league: japan
+  league_name: イングランド代表
+  kind: other
+  topic: トゥヘル
+  title: トゥヘル監督ってどんな人？3つのクラブでCL4強、短い時間で何を残してきたのか
+  question: イングランド代表のトゥヘル監督は、どんな人なのか。3つの違うクラブをチャンピオンズリーグの準決勝へ導いた監督は、短い時間で何を残してきたのか
+  lead: イングランド代表監督、トーマス・トゥヘル。
+  opening_image: assets/images/20261031_manager_tuchel/01_w.jpg
+  takeaway: 通算605試合351勝、勝率58.0%。タイトル11個のうち9個は、パリとチェルシーでの合わせて4年ほどで取った。在任が5年近いのはマインツだけで、代表との契約は2028年まで。短い時間で形を作る監督が、3年半をどう使うか
+  short_title: トゥヘル、3つのクラブでCL4強
+  nameplate: トゥヘル｜イングランド代表監督
+thumbnail:
+  line1: トゥヘル、通算351勝
+  line2: 3クラブでCL4強、タイトル11
+  tags:
+  - イングランド
+  photo: assets/images/20261031_manager_tuchel/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261031_manager_tuchel/01_v.jpg
+sections:
+- id: hook
+  main: true
+  heading: 3つのクラブをCL4強へ。トゥヘルとは、どんな監督なのか
+  tier: 報道
+  telop: 3つの違うクラブで、チャンピオンズリーグの準決勝へ
+  narrator: 解説
+  card: &hook_stats
+    type: stats
+    title: トゥヘルの監督通算（トップチーム）
+    items:
+    - ['3', クラブ, CL準決勝以上]
+    - ['11', 個, タイトル]
+    - ['605', 試合, 351勝]
+    focus: 0
+  say:
+  - text: 3つの違うクラブを、CLの準決勝へ。
+    image: assets/images/20261031_manager_tuchel/01_w.jpg
+    emph: true
+    card: none
+  - text: CLとは、ヨーロッパの王者を決める大会です。
+    image: assets/images/20261031_manager_tuchel/02_w.jpg
+    card: none
+  - text: ドイツ人の監督では、トゥヘルが初めてです。
+    image: assets/images/20261031_manager_tuchel/02_w.jpg
+    card:
+      <<: *hook_stats
+      focus: 0
+  - text: トップチームで取ったタイトルは11個、リーグ優勝は3回。
+    card:
+      <<: *hook_stats
+      focus: 1
+  - text: 率いているのは、イングランド代表。トーマス・トゥヘルです。
+    image: assets/images/20261031_manager_tuchel/05_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Thomas_Tuchel
+  - https://www.englandfootball.com/articles/2026/Feb/12/thomas-tuchel-extends-england-mens-contract-to-euro-2028-20261202
+- id: data
+  heading: トゥヘルは、いつ、どこで、どんな道を歩いた人か
+  tier: 報道
+  telop: トゥヘルの基礎DATA
+  narrator: 解説
+  card: &data_table
+    type: table
+    title: トゥヘル（53歳）の基礎DATA
+    columns: [項目, 中身]
+    rows:
+    - [生年月日, 1973年8月29日（ドイツ・クルンバッハ）]
+    - [選手のころ, DF。77試合3得点、25歳で引退]
+    - [監督, 5つのクラブを経て、いまは代表]
+    - [いま, イングランド代表（2028年まで）]
+    highlight_row: 0
+    source: 英語版Wikipedia・FA
+  say:
+  - text: トゥヘルは1973年8月29日、ドイツ南部のバイエルン州、クルンバッハ生まれ。
+    image: assets/images/20261031_manager_tuchel/05_w.jpg
+    card:
+      <<: *data_table
+      highlight_row: 0
+  - text: 選手のころはディフェンダー。通算77試合で3得点でした。
+    card:
+      <<: *data_table
+      highlight_row: 1
+  - text: 監督としては、5つのクラブを率いました。
+    card:
+      <<: *data_table
+      highlight_row: 2
+  - text: そして2025年から、イングランド代表の監督です。
+    card:
+      <<: *data_table
+      highlight_row: 3
+  - text: 契約は、2028年の欧州選手権まで延びています。
+    image: assets/images/20261031_manager_tuchel/06_w.jpg
+    emph: true
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Thomas_Tuchel
+  - https://www.englandfootball.com/articles/2026/Feb/12/thomas-tuchel-extends-england-mens-contract-to-euro-2028-20261202
+- id: japan
+  heading: トゥヘルと日本の縁は、どこにあるのか
+  tier: 報道
+  telop: 岡崎慎司、香川真司、そして三笘薫
+  narrator: 解説
+  card: &jp_table
+    type: timeline
+    title: トゥヘルと日本
+    rows:
+    - [2013年, マインツで岡崎慎司が15得点]
+    - [2015年から, ドルトムントで香川真司と]
+    - [2026年3月, ウェンブリーで日本に0対1]
+    focus: 0
+  say:
+  - text: トゥヘルと日本には、縁が重なる場面があります。
+    image: assets/images/20261031_manager_tuchel/01_w.jpg
+    card: none
+  - text: まずは、2013年。ドイツのクラブ、マインツです。
+    card: none
+  - text: この年のチームに、岡崎慎司が加わりました。
+    card: none
+  - text: ブンデスリーガで15得点。
+    emph: true
+    card: none
+  - text: 当時、日本人のシーズン最多でした。
+    card: none
+  - text: 次は、2015年に就任したドルトムント。
+    image: assets/images/20261031_manager_tuchel/01_w.jpg
+    card: none
+  - text: 香川真司も在籍していました。
+    card: none
+  - text: そして、2026年3月31日。
+    image: assets/images/20261031_manager_tuchel/06_w.jpg
+    card:
+      <<: *jp_table
+      focus: 2
+  - text: ロンドンのウェンブリーで、イングランド代表は日本と戦いました。
+    card:
+      <<: *jp_table
+      focus: 2
+  - text: 23分に三笘薫が決めて、日本の勝ち。1対0でした。
+    emph: true
+    card:
+      <<: *jp_table
+      focus: 2
+  - text: トゥヘルのイングランド代表が、これまでに喫した4つの負けのひとつです。
+    image: assets/images/20261031_manager_tuchel/01_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Thomas_Tuchel
+  - https://en.wikipedia.org/wiki/Shinji_Okazaki
+  - https://en.wikipedia.org/wiki/Shinji_Kagawa
+  - https://www.jfa.jp/national_team/samuraiblue/
+- id: career
+  heading: 25歳で引退した元選手は、どうやって欧州王者の監督になったのか
+  tier: 背景
+  telop: 歩みと転機。マインツ、パリ、そしてチェルシーへ
+  narrator: 解説
+  card: &career_tl
+    type: timeline
+    title: トゥヘルの歩み
+    rows:
+    - [1998年, 25歳。ひざのけがで現役を引退]
+    - [2009年, マインツの監督に]
+    - [2018年, パリ・サンジェルマンの監督に]
+    - [2021年, 就任123日でチェルシーが欧州王者に]
+    focus: 0
+  say:
+  - text: 選手としては、長く続きませんでした。
+    image: assets/images/20261031_manager_tuchel/05_w.jpg
+    card: none
+  - text: 1998年、ひざの軟骨を痛めて、25歳で引退します。
+    card:
+      <<: *career_tl
+      focus: 0
+  - text: 2000年、シュトゥットガルトの育成年代のコーチに。
+    image: assets/images/20261031_manager_tuchel/01_w.jpg
+    card: none
+  - text: 採用したのは、ラルフ・ラングニックです。
+    card: none
+  - text: 2009年、マインツの監督になります。
+    image: assets/images/20261031_manager_tuchel/05_w.jpg
+    card:
+      <<: *career_tl
+      focus: 1
+  - text: 1年目は9位、2年目は5位。ヨーロッパリーグの出場権を取りました。
+    card:
+      <<: *career_tl
+      focus: 1
+  - text: 2017年には、ドルトムントでドイツのカップ戦を制しています。
+    image: assets/images/20261031_manager_tuchel/03_w.jpg
+    card: none
+  - text: 2018年、パリ・サンジェルマンへ。
+    card:
+      <<: *career_tl
+      focus: 2
+  - text: リーグ優勝2回。2020年には、クラブ初のチャンピオンズリーグ決勝まで進みました。
+    image: assets/images/20261031_manager_tuchel/02_w.jpg
+    card:
+      <<: *career_tl
+      focus: 2
+  - text: そして2021年1月、チェルシーの監督に就任します。
+    image: assets/images/20261031_manager_tuchel/06_w.jpg
+    card:
+      <<: *career_tl
+      focus: 3
+  - text: 就任から123日。チェルシーはヨーロッパの王者になりました。
+    emph: true
+    card:
+      <<: *career_tl
+      focus: 3
+  sources:
+  - https://en.wikipedia.org/wiki/Thomas_Tuchel
+- id: style
+  heading: 最終ラインに3人のチェルシーは、決勝でどう勝ったのか
+  tier: 報道
+  telop: 戦術の色。2021年、マンチェスター・シティとの決勝
+  narrator: 解説
+  card: &style_doc
+    type: document
+    label: 2021年5月29日 チャンピオンズリーグ決勝（ポルト）
+    paragraphs:
+    - チェルシーは最終ラインに3人。両サイドにジェームズとチルウェル。
+    - 前半42分、マウントのパスからハヴァーツが決める。
+    - 後半はシティが押し込む。それでも1対0で守り切った。
+    highlight:
+    - 最終ラインに3人
+    - 1対0で守り切った
+  say:
+  - text: トゥヘルらしさが出たのが、2021年5月、チャンピオンズリーグの決勝です。
+    image: assets/images/20261031_manager_tuchel/06_w.jpg
+    card: *style_doc
+  - text: 相手はマンチェスター・シティ。トゥヘルは、最終ラインに3人を置きました。
+    card: *style_doc
+  - text: 両サイドのジェームズとチルウェルが、攻めにも守りにも走ります。
+    card: *style_doc
+  - text: 前半42分、マウントのパスから、ハヴァーツが決めました。
+    image: assets/images/20261031_manager_tuchel/06_w.jpg
+    card: *style_doc
+  - text: 後半はシティに押し込まれても、1対0で勝ち切ります。
+    emph: true
+    card: none
+  - text: この形で、就任から最初の14試合は負けなし。失点は、わずか2でした。
+    image: assets/images/20261031_manager_tuchel/01_w.jpg
+    card: none
+  - text: 相手に合わせて形を変える。ついた呼び名は、戦術のカメレオンです。
+    image: assets/images/20261031_manager_tuchel/02_w.jpg
+    emph: true
+    callword: カメレオン
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/2021_UEFA_Champions_League_final
+  - https://en.wikipedia.org/wiki/Thomas_Tuchel
+- id: numbers
+  heading: 通算605試合、勝率はどのクラブで高かったのか
+  tier: 報道
+  telop: 通算351勝。勝率はマインツ39.1%、パリ74.8%、代表76.9%
+  narrator: 解説
+  card: &rate_bars
+    type: bars
+    title: トゥヘルの勝率（トップチーム、%）
+    unit: '%'
+    items:
+    - label: マインツ
+      value: 39.1
+    - label: ドルトムント
+      value: 62.6
+    - label: パリ
+      value: 74.8
+    - label: チェルシー
+      value: 60.0
+    - label: バイエルン
+      value: 60.7
+    - label: イングランド代表
+      value: 76.9
+      highlight: true
+  say:
+  - text: まず、トゥヘルの通算成績です。
+    image: assets/images/20261031_manager_tuchel/02_w.jpg
+    card: &total_stats
+      type: stats
+      title: トゥヘルの監督通算（2009〜2026年）
+      items:
+      - ['605', 試合, 5クラブと代表]
+      - ['351', 勝, 引き分け116・負け138]
+      - ['58.0', '%', 勝率]
+      focus: 1
+  - text: 5つのクラブとイングランド代表で605試合、351勝。勝率は58.0%です。
+    emph: true
+    card:
+      <<: *total_stats
+      focus: 1
+  - text: クラブごとに見ると、マインツは184試合で39.1%。
+    image: assets/images/20261031_manager_tuchel/05_w.jpg
+    card: *rate_bars
+  - text: ドルトムントで62.6%、パリで74.8%まで上がります。
+    card: *rate_bars
+  - text: チェルシーが60.0%、バイエルンが60.7%。
+    card: *rate_bars
+  - text: そしてイングランド代表は、26試合で20勝、勝率76.9%です。
+    image: assets/images/20261031_manager_tuchel/06_w.jpg
+    emph: true
+    card: *rate_bars
+  sources:
+  - https://en.wikipedia.org/wiki/Thomas_Tuchel
+- id: words
+  heading: 本人は、代表監督になる夢をどう語ったのか
+  tier: 報道
+  telop: トゥヘルの言葉。2026年2月12日
+  narrator: 解説
+  card: &words_doc
+    type: document
+    label: トゥヘルの言葉（訳）2026年2月12日 FA公式インタビュー
+    paragraphs:
+    - 最初に18か月の短い契約を望んだのは、私のほうだった。
+    - でも、すぐにこの仕事に恋をした。
+    - チェルシーで多くのタイトルを取って、そのあと代表の監督を目指そう。
+    highlight:
+    - 恋をした
+    - 代表の監督を目指そう
+  say:
+  - text: 本人の言葉です。イングランド代表との契約を延ばした日の、公式インタビュー。
+    image: assets/images/20261031_manager_tuchel/06_w.jpg
+    card: *words_doc
+  - voice: トゥヘル
+    text: 最初に18か月の短い契約を望んだのは、私のほうだった。
+  - voice: トゥヘル
+    text: 代表で何が待っているのか、分からなかったからだ。
+    cont: true
+  - voice: トゥヘル
+    text: でも、すぐにこの仕事に恋をした。
+    cont: true
+    pause: 0.5
+  - text: 代表の監督は、チェルシー時代からの夢でした。
+    image: assets/images/20261031_manager_tuchel/01_w.jpg
+    card: *words_doc
+  - text: 2021年、ウェンブリーの欧州選手権の熱気を感じて、
+    card: *words_doc
+  - text: マネージャーに電話したといいます。
+    card: *words_doc
+  - voice: トゥヘル
+    text: これが私の夢だ。
+  - voice: トゥヘル
+    text: チェルシーでできるだけ多くのタイトルを取って、
+    cont: true
+  - voice: トゥヘル
+    text: そのあとイングランド代表の監督を目指そう、と。
+    cont: true
+    pause: 0.5
+  - text: 返ってきたのは、「それは起こりそうにない」という言葉。
+    image: assets/images/20261031_manager_tuchel/01_w.jpg
+    card: *words_doc
+  - voice: トゥヘル
+    text: 彼が間違っていたと、私たちは証明できると確信している。
+    pause: 0.5
+  quotes_from:
+  - https://www.englandfootball.com/articles/2026/Feb/12/thomas-tuchel-england-mens-head-coach-contract-extension-interview-20261202
+  sources:
+  - https://www.englandfootball.com/articles/2026/Feb/12/thomas-tuchel-england-mens-head-coach-contract-extension-interview-20261202
+- id: secret
+  heading: 数字の外にある話。山にバッジを埋めた日
+  tier: 背景
+  telop: ナーゲルスマン、山のバッジ、テニスボール
+  narrator: 解説
+  card: &sec_table
+    type: table
+    title: 数字の外にある話
+    columns: [いつ, 何があったか]
+    rows:
+    - [2008年, 教え子にのちの監督ナーゲルスマン]
+    - [2009年, クラブのバッジを山に埋める]
+    - [マインツ時代, 守備の練習でテニスボール]
+    - [マインツ時代, ハンドボールのクラブと練習]
+    highlight_row: 0
+    source: 英語版Wikipedia
+  say:
+  - text: 次は、数字の外の話を。
+    image: assets/images/20261031_manager_tuchel/05_w.jpg
+    card: none
+  - text: 2008年、アウグスブルクのセカンドチームに、のちの監督ナーゲルスマンがいました。
+    card:
+      <<: *sec_table
+      highlight_row: 0
+  - text: けがの多かった彼に、相手の分析を任せたのがトゥヘルです。
+    card:
+      <<: *sec_table
+      highlight_row: 0
+  - text: そのナーゲルスマンの後任として、2023年にバイエルンの監督になりました。
+    emph: true
+    card:
+      <<: *sec_table
+      highlight_row: 0
+  - text: 2009年、マインツの育成年代の選手と、山へ自転車で登った日。
+    image: assets/images/20261031_manager_tuchel/05_w.jpg
+    card:
+      <<: *sec_table
+      highlight_row: 1
+  - text: クラブのバッジを山に埋めて、決勝に進んだら掘り出す、と約束します。
+    card:
+      <<: *sec_table
+      highlight_row: 1
+  - text: 結果は決勝進出。トゥヘルは、バッジを掘り出しました。
+    emph: true
+    card:
+      <<: *sec_table
+      highlight_row: 1
+  - text: 守備の練習では、選手にテニスボールを持たせました。余計な反則を減らすためです。
+    image: assets/images/20261031_manager_tuchel/02_w.jpg
+    card:
+      <<: *sec_table
+      highlight_row: 2
+  - text: マインツの選手が、ハンドボールのクラブと1か月近く練習したこともあります。
+    card:
+      <<: *sec_table
+      highlight_row: 3
+  sources:
+  - https://en.wikipedia.org/wiki/Thomas_Tuchel
+- id: view
+  viewpoint: true
+  heading: 見立て・短い時間で結果を出す監督は、代表で何を残せるのか
+  tier: 背景
+  telop: 在任はマインツの4.8年だけが長い。代表は2028年まで
+  narrator: 解説
+  card: &view_table
+    type: table
+    title: 自分で数えてみた（在任の長さとタイトル）
+    columns: [所属, 在任（年）, タイトル]
+    rows:
+    - [マインツ, '4.8', '0']
+    - [ドルトムント, '1.9', '1']
+    - [パリ, '2.6', '6']
+    - [チェルシー, '1.6', '3']
+    - [バイエルン, '1.2', '1']
+    - [イングランド代表, '1.8', '0']
+    highlight_row: 0
+  say:
+  - text: 見立てです。トゥヘルの仕事を、在任の長さとタイトルで並べました。
+    image: assets/images/20261031_manager_tuchel/01_w.jpg
+    card: *view_table
+  - text: 5年近く続いたのは、マインツだけです。
+    card:
+      <<: *view_table
+      highlight_row: 0
+  - text: ほかは、1年あまりから3年足らず。
+    card:
+      <<: *view_table
+      highlight_row: 3
+  - text: その短い時間で、パリでは6つ、チェルシーでは3つのタイトルを取りました。
+    emph: true
+    mark: {kind: circle, row: 2, col: 2}
+    card:
+      <<: *view_table
+      highlight_row: 2
+  - text: 1年あたりに直すと、パリが2.3個、チェルシーが1.9個です。
+    card:
+      <<: *view_table
+      highlight_row: 3
+  - text: 代表との契約どおりなら、およそ3年半。
+    image: assets/images/20261031_manager_tuchel/06_w.jpg
+    card: none
+  - text: マインツ以来の、長い仕事になります。
+    card: none
+  - text: 11月は、12日にクロアチア、15日にスペインとの試合が待っています。
+    image: assets/images/20261031_manager_tuchel/01_w.jpg
+    card: none
+  - text: 短い時間で形を作る監督が、3年半をどう使うのか。そこが見どころだと見ています。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Thomas_Tuchel
+  - https://www.englandfootball.com/articles/2026/Feb/12/thomas-tuchel-extends-england-mens-contract-to-euro-2028-20261202

@@ -1,0 +1,393 @@
+# 取材メモ（11/1 日、シリーズ「比べる」、key: compare_369081_451276）。フェデリコ・バルベルデ（レアル・マドリード・28歳）×ドミニク・ソボスライ（リバプール・26歳）。
+# **情報の時点は 2026-10-30**（10/31 の試合結果が出る前）。**FotMob・DataMB は使っていない**。数字は Transfermarkt（2026-10-31 取得。控え: research/raw/20261101_valverde_tm.json・20261101_szoboszlai_tm.json）。
+#   Transfermarkt 番号：バルベルデ 369081・ソボスライ 451276。API（tmapi-alpha）の player・performance-season（2021〜2026）・performance-game・market-value-history を2.5秒あけて取得。
+# **選んだ理由**：同じ2人の組は直近30日に無い（scripts/*compare*・research/*compare*・posted.json・covered.yaml を grep。バルベルデ・ソボスライとも比べる回は一度も出ていない）。
+#   昨季（2025/26）、クラブの全大会で「得点＋アシスト」を出場時間で割ると**2人とも約189分に1つ**（4158÷22＝189.0／4736÷25＝189.4）。数字が揃うので題の問いが立つ。
+#   外した候補：クヴァラツヘリア（手術で今季絶望＝10/26 の本が出ている）・ジュリアン・アルバレス（ラ・リーガ 263分で450分未満＝10/29 に外した理由と同じ）・
+#   ユルディズ（今季リーグ69分）・フォーデン（プレミア 341分）・マック・アリスター（昨季の数字が揃わない）。ヤマル・ハーランド・エムバペ・ライス・サカ・ペドリ・ベリンガムなどは直近30日の比べに出ている。
+# **2人とも今季も扱うリーグの1部**：レアル（ラ・リーガ 3位）・リバプール（プレミアリーグ）。今季のリーグ：バルベルデ 10試合801分、ソボスライ 6試合473分（**どちらも450分を超え、900分には届かない or 全大会でも591分 → 「いまの時点」と言う**）。
+# **使った数**（TM の大会別。クラブの全大会＝リーグ・CL・国内カップ・スーパーカップ・クラブW杯。**代表戦は混ぜない**）
+#   25/26 バルベルデ：ES1 33試合2747分5点8A（チーム67）・CL 13試合1163分3点4A（28）・SUC 2試合158分1点1A（4）・CDR 1試合90分0点0A（2）
+#         → 49試合・先発47・4158分・9点13A＝22・チーム101。4158÷22＝189.0
+#   25/26 ソボスライ：GB1 36試合3233分6点7A（60）・CL 12試合1053分5点4A（23）・FAC 4試合360分2点0A（10）・GBCS 1試合90分0点1A（2）・CGB 0試合
+#         → 53試合・先発53・4736分・13点12A＝25・チーム95。4736÷25＝189.4
+#   リーグだけ：バルベルデ 13つ・2747分→約211分、ソボスライ 13つ・3233分→約249分。CL：バルベルデ 7つ・1163分→約166分、ソボスライ 9つ・1053分→約117分。
+#   国内カップなど：バルベルデ 2つ（スーパーカップ）、ソボスライ 3つ（FAカップ2・コミュニティ・シールド1）。13＋7＋2＝22、13＋9＋3＝25。
+#   本人の絡んだ割合：22÷101＝21.8%、25÷95＝26.3%。
+#   4つの季（全大会、分÷（得点＋アシスト））：バルベルデ 23/24 4280÷11＝389・24/25 5556÷19＝292・25/26 189・26/27 1071÷3＝357。
+#         ソボスライ 23/24 2704÷12＝225・24/25 3430÷17＝202・25/26 189・26/27 591÷3＝197。
+#   26/27（10月28日までの試合）：バルベルデ 13試合1071分1点2A（リーグ 10試合801分0点2A・CL 3試合270分1点0A）、ソボスライ 8試合591分3点0A（リーグ 6試合473分1点0A・CL 1試合90分1点・リーグカップ 1試合28分1点）。
+#         1つ増えれば 1071÷4＝約268分、591÷4＝約148分。
+#   ソボスライは今季 5試合を欠場（TM の記録）。**理由は台本に入れない**（出場時間の数字だけで言う）。
+# プロフィール（TM）：バルベルデ 1998-07-22 生・ウルグアイ（二重国籍スペイン）・右足・182cm・背番号8・レアルの主将（TM の記録）・契約 2029-06-30・市場価値 9000万€（2026-06-05。最高 1億3000万€＝2024-10-11〜2025-06-09）。
+#   ソボスライ 2000-10-25 生・ハンガリー・右足・187cm・背番号8・契約 2031-06-30（2026-07 更新）・市場価値 1億€（2026-06-03）、2025-05-30 は 8000万€。
+# 日本との接点：見つからない（確かめていない。入れない）。
+# 日程（ESPN、控え: research/raw/20261101_real_espn_schedule.json・20261101_liverpool_espn_schedule.json）：
+#   レアル：2026-11-01 15:15 UTC＝日本時間11月2日 0:15 ラシン・サンタンデール（アウェー、ラ・リーガ）。リバプール：2026-11-01 16:30 UTC＝日本時間11月2日 1:30 アーセナル戦（ホーム、プレミアリーグ）。
+# 写真：下の「写真」の欄。
+slot: other_1
+date: "2026年11月1日"
+format: news
+series: 比べる
+people:
+  - フェデリコ・バルベルデ
+  - ドミニク・ソボスライ
+  - レアル・マドリード
+  - リバプール
+
+theme:
+  end_bg: assets/images/20261101_compare_369081_451276/pair_c/01.jpg
+  id: compare_369081_451276
+  league: england
+  kind: other
+  topic: バルベルデとソボスライ
+  prefix: ""
+  title: バルベルデとソボスライ、昨季は同じ約189分に1つ。差は、どの大会に出たのか
+  hook: ""
+  question: 2025年から26年、クラブの全大会で約189分に1つ点に絡んだ2人。同じ速さの中身は、どの大会で分かれていたのか
+  takeaway: 昨季は2人とも約189分に1つ。リーグはバルベルデが約211分で約249分のソボスライより速く、チャンピオンズリーグはソボスライが約117分で約166分のバルベルデより速い
+  league_name: ラ・リーガとプレミアリーグ
+  opening_image: assets/images/20261101_compare_369081_451276/pair_c/01.jpg
+
+short_title: バルベルデとソボスライ、昨季は同じ約189分に1つ
+
+thumbnail:
+  photo: assets/images/20261101_compare_369081_451276/pair_a/01.jpg
+  photos:
+    - assets/images/20261101_compare_369081_451276/v2/01_t.jpg
+    - assets/images/20261101_compare_369081_451276/s2/01_t.jpg
+  short_photo: assets/images/20261101_compare_369081_451276/pair_c/01_v.jpg
+  face_link: VS
+  line1: バルベルデとソボスライ
+  line2: 昨季ともに189分に1つ
+  tags: [バルベルデ, ソボスライ, レアル・マドリード, リバプール]
+
+answer: 昨季は2人とも約189分に1つ。リーグはバルベルデが速く、チャンピオンズリーグはソボスライが速い
+watch: 毎日、数字でサッカーを読み解きます
+
+sections:
+  - id: hook
+    heading: 2025年から26年、2人が絡んだ点の数はいくつだったのか
+    tier: 報道
+    telop: 2025年から26年 クラブの全大会
+    narrator: 解説
+    card: &hookcard
+      type: stats
+      title: 25/26 得点＋アシスト（クラブの全大会）
+      items:
+        - ["22", つ, バルベルデ]
+        - ["25", つ, ソボスライ]
+        - ["189", 分に1つ, 2人とも]
+      focus: 2
+    say:
+      - text: レアル・マドリードのバルベルデと、リバプールのソボスライ。
+        image: assets/images/20261101_compare_369081_451276/pair_a/01.jpg
+        card: none
+      - text: 10月30日の時点の数字で、2人を並べます。
+        image: assets/images/20261101_compare_369081_451276/pair_a/01.jpg
+        card: none
+      - text: 2025年から26年のシーズン。リーグもカップも合わせた、全大会の数字です。
+        image: assets/images/20261101_compare_369081_451276/v2/01.jpg
+        card: {<<: *hookcard, focus: 0}
+      - text: 得点とアシストを足した数は、バルベルデが22。
+        image: assets/images/20261101_compare_369081_451276/v2/01.jpg
+        card: {<<: *hookcard, focus: 0}
+      - text: ソボスライは25で、バルベルデより3多い。出場時間も、578分長い。
+        image: assets/images/20261101_compare_369081_451276/s2/01.jpg
+        card: {<<: *hookcard, focus: 1}
+      - text: ところが、出場時間で割ると、点に絡む速さがぴたりと揃います。
+        emph: true
+        image: assets/images/20261101_compare_369081_451276/v3/01.jpg
+        card: {<<: *hookcard, focus: 2}
+      - text: 同じ速さの2人は、どの大会で差がついていたのでしょうか。
+        image: assets/images/20261101_compare_369081_451276/s3/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/federico-valverde/leistungsdaten/spieler/369081
+      - https://www.transfermarkt.com/dominik-szoboszlai/leistungsdaten/spieler/451276
+
+  - id: data
+    heading: バルベルデとソボスライは、何歳で、いくらの選手なのか
+    tier: 報道
+    telop: 2人とも背番号8
+    narrator: 解説
+    card: &datacard
+      type: duel
+      left: {name: バルベルデ, club: レアル, photo: assets/images/20261101_compare_369081_451276/v1/01_sq.jpg, color: "#febe10"}
+      right: {name: ソボスライ, club: リバプール, photo: assets/images/20261101_compare_369081_451276/s1/01_sq.jpg, color: "#c8102e"}
+      rows:
+        - [年齢, 28歳, 26歳]
+        - [代表, ウルグアイ, ハンガリー]
+        - [位置, セントラルMF, 攻撃的MF]
+        - [身長, 182cm, 187cm]
+        - [背番号, "8", "8"]
+        - [市場価値（2025年6月）, 1億3000万€, 8000万€]
+        - [市場価値（2026年6月）, 9000万€, 1億€]
+      bars: false
+      note: 市場価値は Transfermarkt。年齢は2026年10月30日の時点
+    say:
+      - text: バルベルデは28歳。ウルグアイ代表で、レアルの背番号8です。
+        image: assets/images/20261101_compare_369081_451276/v2/01.jpg
+        card: {<<: *datacard, highlight_row: 年齢}
+      - text: ソボスライは26歳。ハンガリー代表で、リバプールの背番号も8。
+        image: assets/images/20261101_compare_369081_451276/s2/01.jpg
+        card: {<<: *datacard, highlight_row: 背番号}
+      - text: 市場価値は、2025年6月の時点で、1億3000万ユーロと8000万ユーロ。
+        image: assets/images/20261101_compare_369081_451276/pair_b/01.jpg
+        card: none
+      - text: 2026年6月は、9000万ユーロと1億ユーロ。順番が入れ替わりました。
+        emph: true
+        image: assets/images/20261101_compare_369081_451276/pair_b/01.jpg
+        card: {<<: *datacard, highlight_row: 市場価値（2026年6月）}
+    sources:
+      - https://www.transfermarkt.com/federico-valverde/profil/spieler/369081
+      - https://www.transfermarkt.com/dominik-szoboszlai/profil/spieler/451276
+
+  - id: season
+    heading: 2025年から26年、2人の数字はどこまで並んでいたのか
+    tier: 報道
+    main: true
+    telop: 25/26 クラブの全大会
+    narrator: 解説
+    card: &seasoncard
+      type: duel
+      left: {name: バルベルデ, club: 25/26, photo: assets/images/20261101_compare_369081_451276/v1/01_sq.jpg, color: "#febe10"}
+      right: {name: ソボスライ, club: 25/26, photo: assets/images/20261101_compare_369081_451276/s1/01_sq.jpg, color: "#c8102e"}
+      rows:
+        - [試合, "49", "53"]
+        - [先発, "47", "53"]
+        - [出場時間, 4158分, 4736分]
+        - [得点, "9", "13"]
+        - [アシスト, "13", "12"]
+        - [得点＋アシスト, "22", "25"]
+        - [1つ絡むのにかかった時間, 約189分, 約189分]
+      bars: [出場時間, 得点, アシスト, 得点＋アシスト]
+      lower: [1つ絡むのにかかった時間]
+      note: クラブの全大会（リーグ・チャンピオンズリーグ・国内カップ・スーパーカップ）。かかった時間は出場時間÷（得点＋アシスト）で、自分で計算した値
+    say:
+      - text: バルベルデとソボスライ。昨季、クラブの全大会で絡んだ点の数は22と25。
+        short_only: true
+        image: assets/images/20261101_compare_369081_451276/v2/01.jpg
+        card: none
+      - text: その季の出場は、49試合と53試合。先発は47と53です。
+        image: assets/images/20261101_compare_369081_451276/pair_b/01.jpg
+        card: none
+      - text: 得点は9と13。アシストは13と12。足して、22と25になります。
+        image: assets/images/20261101_compare_369081_451276/s3/01.jpg
+        card: none
+      - text: 出場時間は、4158分と4736分。割ると、約189分と約189分です。
+        emph: true
+        image: assets/images/20261101_compare_369081_451276/s3/01.jpg
+        card: {<<: *seasoncard, highlight_row: 1つ絡むのにかかった時間}
+      - text: 25と22の差は、出場時間の差とほぼ釣り合っていました。
+        image: assets/images/20261101_compare_369081_451276/pair_b/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/federico-valverde/leistungsdaten/spieler/369081
+      - https://www.transfermarkt.com/dominik-szoboszlai/leistungsdaten/spieler/451276
+
+  - id: where
+    heading: 同じ約189分でも、リーグとチャンピオンズリーグで何が違ったのか
+    tier: 報道
+    telop: 大会別 1つ絡むのにかかった時間
+    narrator: 解説
+    card: &wherecard
+      type: duel
+      left: {name: バルベルデ, club: 25/26, photo: assets/images/20261101_compare_369081_451276/v1/01_sq.jpg, color: "#febe10"}
+      right: {name: ソボスライ, club: 25/26, photo: assets/images/20261101_compare_369081_451276/s1/01_sq.jpg, color: "#c8102e"}
+      rows:
+        - [リーグ 絡んだ数, "13", "13"]
+        - [リーグ 出場時間, 2747分, 3233分]
+        - [リーグ 1つ絡む時間, 約211分, 約249分]
+        - [CL 絡んだ数, "7", "9"]
+        - [CL 出場時間, 1163分, 1053分]
+        - [CL 1つ絡む時間, 約166分, 約117分]
+      bars: [リーグ 出場時間, CL 出場時間]
+      lower: [リーグ 1つ絡む時間, CL 1つ絡む時間]
+      note: ラ・リーガとプレミアリーグ、チャンピオンズリーグ。かかった時間は出場時間÷（得点＋アシスト）で、自分で計算した値
+    say:
+      - text: 大会に分けてみます。まず国内リーグ。ラ・リーガとプレミアリーグです。
+        image: assets/images/20261101_compare_369081_451276/v2/01.jpg
+        card: none
+      - text: 絡んだ数は、どちらも13です。
+        image: assets/images/20261101_compare_369081_451276/s2/01.jpg
+        card: {<<: *wherecard, highlight_row: リーグ 絡んだ数}
+      - text: 出場時間は2747分と3233分なので、リーグでは約211分と約249分。
+        image: assets/images/20261101_compare_369081_451276/s2/01.jpg
+        card: {<<: *wherecard, highlight_row: リーグ 1つ絡む時間}
+      - text: リーグでの速さは、バルベルデが上でした。
+        image: assets/images/20261101_compare_369081_451276/v3/01.jpg
+        card: {<<: *wherecard, highlight_row: リーグ 1つ絡む時間}
+      - text: 一方、チャンピオンズリーグは、バルベルデが7、ソボスライが9。
+        image: assets/images/20261101_compare_369081_451276/s3/01.jpg
+        card: {<<: *wherecard, highlight_row: CL 絡んだ数}
+      - text: 出場時間は1163分と1053分。割ると、約166分と約117分になります。
+        emph: true
+        image: assets/images/20261101_compare_369081_451276/pair_b/01.jpg
+        card: {<<: *wherecard, highlight_row: CL 1つ絡む時間}
+      - text: 残りは、国内カップなどの数。バルベルデが2つ、ソボスライが3つです。
+        image: assets/images/20261101_compare_369081_451276/pair_c/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/federico-valverde/leistungsdaten/spieler/369081
+      - https://www.transfermarkt.com/dominik-szoboszlai/leistungsdaten/spieler/451276
+
+  - id: share
+    heading: チームの点のうち、2人はどれだけに絡んでいたのか
+    tier: 報道
+    telop: ピッチにいるあいだのチームの得点
+    narrator: 解説
+    card: &sharecard
+      type: duel
+      left: {name: バルベルデ, club: レアル, photo: assets/images/20261101_compare_369081_451276/v1/01_sq.jpg, color: "#febe10"}
+      right: {name: ソボスライ, club: リバプール, photo: assets/images/20261101_compare_369081_451276/s1/01_sq.jpg, color: "#c8102e"}
+      rows:
+        - [25/26 出場中のチームの得点, "101", "95"]
+        - [25/26 本人が絡んだ数, "22", "25"]
+        - [25/26 本人が絡んだ割合, 22%, 26%]
+      bars: [25/26 出場中のチームの得点]
+      note: クラブの全大会（Transfermarkt）。出場中のチームの得点は、本人がピッチにいたあいだにチームが決めた点。割合は得点＋アシスト÷チームの得点で、自分で割った値
+    say:
+      - text: 2人が出ているあいだに、チームは何点を挙げていたのか。
+        image: assets/images/20261101_compare_369081_451276/v2/01.jpg
+        card: none
+      - text: 昨季、バルベルデのレアルは101点、ソボスライのリバプールは95点。
+        image: assets/images/20261101_compare_369081_451276/s2/01.jpg
+        card: {<<: *sharecard, highlight_row: 25/26 出場中のチームの得点}
+      - text: そのうち、本人が得点かアシストで絡んだ割合は、22%と26%。
+        image: assets/images/20261101_compare_369081_451276/v3/01.jpg
+        card: {<<: *sharecard, highlight_row: 25/26 本人が絡んだ割合}
+      - text: ソボスライは、チームの点の4分の1を超える数に関わっていました。
+        image: assets/images/20261101_compare_369081_451276/pair_b/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/federico-valverde/leistungsdaten/spieler/369081
+      - https://www.transfermarkt.com/dominik-szoboszlai/leistungsdaten/spieler/451276
+
+  - id: trend
+    heading: 1つ絡むのにかかった時間は、4つの季でどう動いたのか
+    tier: 報道
+    telop: 1つ絡むのにかかった時間（分）
+    narrator: 解説
+    card: &trendcard
+      type: line
+      title: 1つ絡むのにかかった時間（分、クラブの全大会、季ごと）
+      x: [23/24, 24/25, 25/26, 26/27]
+      series:
+        - [バルベルデ, [389, 292, 189, 357]]
+        - [ソボスライ, [225, 202, 189, 197]]
+      focus: バルベルデ
+      note: 出場時間÷（得点＋アシスト）で、自分で計算した値。26/27 は10月28日まで（2人とも絡んだ数は3つ）
+    say:
+      - text: 4つの季の、点に絡む速さを線にします。大会は全部合わせた数字です。
+        image: assets/images/20261101_compare_369081_451276/v2/01.jpg
+        card: *trendcard
+      - text: 2023年から24年は、バルベルデが約389分、ソボスライが約225分。
+        image: assets/images/20261101_compare_369081_451276/s2/01.jpg
+        card: {<<: *trendcard, highlight: 23/24}
+      - text: 2024年から25年は、約292分と約202分でした。
+        image: assets/images/20261101_compare_369081_451276/v3/01.jpg
+        card: {<<: *trendcard, highlight: 24/25}
+      - text: そして昨季、2人は約189分で重なります。どちらも、4つの季でいちばん速い値です。
+        emph: true
+        image: assets/images/20261101_compare_369081_451276/s3/01.jpg
+        card: {<<: *trendcard, highlight: 25/26}
+      - text: 今季のここまでは、次の節で見ます。
+        image: assets/images/20261101_compare_369081_451276/pair_a/01.jpg
+        card: {<<: *trendcard, highlight: 26/27}
+    sources:
+      - https://www.transfermarkt.com/federico-valverde/leistungsdaten/spieler/369081
+      - https://www.transfermarkt.com/dominik-szoboszlai/leistungsdaten/spieler/451276
+
+  - id: now
+    heading: 今季のここまで、2人は何分に1つ絡んでいるのか
+    tier: 報道
+    telop: 26/27 のいまの時点
+    narrator: 解説
+    card: &nowcard
+      type: duel
+      left: {name: バルベルデ, club: 26/27, photo: assets/images/20261101_compare_369081_451276/v1/01_sq.jpg, color: "#febe10"}
+      right: {name: ソボスライ, club: 26/27, photo: assets/images/20261101_compare_369081_451276/s1/01_sq.jpg, color: "#c8102e"}
+      rows:
+        - [試合, "13", "8"]
+        - [出場時間, 1071分, 591分]
+        - [得点, "1", "3"]
+        - [アシスト, "2", "0"]
+        - [1つ絡むのにかかった時間, 約357分, 約197分]
+      bars: [出場時間, 得点, アシスト]
+      lower: [1つ絡むのにかかった時間]
+      note: 26/27 のクラブの全大会（10月28日まで）。かかった時間は出場時間÷（得点＋アシスト）で、自分で計算した値。ソボスライは900分に届かないので、いまの時点の数字
+    say:
+      - text: 今季は、10月28日までの試合で数えます。
+        image: assets/images/20261101_compare_369081_451276/v2/01.jpg
+        card: {<<: *nowcard, highlight_row: 試合}
+      - text: 出た試合は、バルベルデが13、ソボスライが8。
+        image: assets/images/20261101_compare_369081_451276/v2/01.jpg
+        card: {<<: *nowcard, highlight_row: 試合}
+      - text: バルベルデは1得点2アシスト。ソボスライは3得点で、アシストは0です。
+        image: assets/images/20261101_compare_369081_451276/s2/01.jpg
+        card: {<<: *nowcard, highlight_row: 得点}
+      - text: 点に絡む速さは、約357分と約197分。
+        emph: true
+        image: assets/images/20261101_compare_369081_451276/v3/01.jpg
+        card: {<<: *nowcard, highlight_row: 1つ絡むのにかかった時間}
+      - text: ただ、2人とも、まだ3つしか絡んでいません。
+        image: assets/images/20261101_compare_369081_451276/s3/01.jpg
+        card: none
+      - text: もう1つ増えれば、約268分と約148分に動きます。
+        image: assets/images/20261101_compare_369081_451276/s3/01.jpg
+        card: none
+      - text: ソボスライの出場は、まだ591分。いまの時点の数字です。
+        image: assets/images/20261101_compare_369081_451276/pair_b/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/federico-valverde/leistungsdaten/spieler/369081
+      - https://www.transfermarkt.com/dominik-szoboszlai/leistungsdaten/spieler/451276
+
+  - id: view
+    heading: 見立て・同じ約189分の2人は、どの大会で差がついたのか
+    tier: 背景
+    viewpoint: true
+    narrator: 解説
+    telop: 数字の違いが示すもの
+    card: &viewcard
+      type: duel
+      left: {name: バルベルデ, club: レアル, photo: assets/images/20261101_compare_369081_451276/v1/01_sq.jpg, color: "#febe10"}
+      right: {name: ソボスライ, club: リバプール, photo: assets/images/20261101_compare_369081_451276/s1/01_sq.jpg, color: "#c8102e"}
+      rows:
+        - [25/26 の1つ絡む時間（全大会）, 約189分, 約189分]
+        - [25/26 の1つ絡む時間（リーグ）, 約211分, 約249分]
+        - [25/26 の1つ絡む時間（CL）, 約166分, 約117分]
+        - [25/26 チームの点に絡んだ割合, 22%, 26%]
+      lower: [25/26 の1つ絡む時間（全大会）, 25/26 の1つ絡む時間（リーグ）, 25/26 の1つ絡む時間（CL）]
+      bars: false
+      note: クラブの全大会（Transfermarkt）。かかった時間は出場時間÷（得点＋アシスト）で、自分で計算した値
+    say:
+      - text: 見立てです。昨季の速さは、全大会では並びました。
+        image: assets/images/20261101_compare_369081_451276/v2/01.jpg
+        card: {<<: *viewcard, highlight_row: 25/26 の1つ絡む時間（全大会）}
+      - text: 中身を分けると、リーグではバルベルデが速く、その差は約38分。
+        mark: {kind: circle, row: 1}
+        image: assets/images/20261101_compare_369081_451276/s2/01.jpg
+        card: {<<: *viewcard, highlight_row: 25/26 の1つ絡む時間（リーグ）}
+      - text: 反対にチャンピオンズリーグでは、ソボスライが速く、差は約49分。向きが逆でした。
+        emph: true
+        image: assets/images/20261101_compare_369081_451276/v3/01.jpg
+        card: {<<: *viewcard, highlight_row: 25/26 の1つ絡む時間（CL）}
+      - text: 次のリーグ戦です。
+        image: assets/images/20261101_compare_369081_451276/v2/01.jpg
+        card: none
+      - text: レアルは日本時間11月2日の0時15分から、アウェーでラシン・サンタンデール戦。
+        image: assets/images/20261101_compare_369081_451276/v2/01.jpg
+        card: none
+      - text: リバプールは、1時30分から、ホームでアーセナル戦です。
+        image: assets/images/20261101_compare_369081_451276/s2/01.jpg
+        card: none
+      - text: 今季の数字が、次の試合でどう動くのか、注目です。
+        image: assets/images/20261101_compare_369081_451276/pair_c/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/federico-valverde/leistungsdaten/spieler/369081
+      - https://www.transfermarkt.com/dominik-szoboszlai/leistungsdaten/spieler/451276
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/all/teams/86/schedule?fixture=true
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/all/teams/364/schedule?fixture=true
