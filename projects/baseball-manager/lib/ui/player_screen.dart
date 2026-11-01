@@ -715,7 +715,10 @@ class _AbilityRow extends StatelessWidget {
         const SizedBox(width: 10),
         Expanded(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Row(children: [
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Row(mainAxisSize: MainAxisSize.min, children: [
               Tooltip(
                 message: gift == 0
                     ? abilityHint(a)
@@ -736,7 +739,8 @@ class _AbilityRow extends StatelessWidget {
                   const Icon(Icons.north_east,
                       size: 14, color: Color(0xFFEF6C00)),
               ],
-            ]),
+              ]),
+            ),
             const SizedBox(height: 3),
             ClipRRect(
               borderRadius: BorderRadius.circular(4),
@@ -752,13 +756,17 @@ class _AbilityRow extends StatelessWidget {
         ),
         const SizedBox(width: 10),
         SizedBox(
-          width: 40,
-          child: Text('$v',
-              textAlign: TextAlign.right,
-              style: const TextStyle(
-                  fontWeight: FontWeight.w900,
-                  fontSize: 24,
-                  fontFeatures: [FontFeature.tabularFigures()])),
+          width: 44,
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerRight,
+            child: Text('$v',
+                textAlign: TextAlign.right,
+                style: const TextStyle(
+                    fontWeight: FontWeight.w900,
+                    fontSize: 24,
+                    fontFeatures: [FontFeature.tabularFigures()])),
+          ),
         ),
       ]),
     );
