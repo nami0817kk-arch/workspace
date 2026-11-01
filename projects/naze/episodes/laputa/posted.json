@@ -1,0 +1,27 @@
+{
+ "long": {
+  "id": "uwU9b831xOg",
+  "publish_at": "2026-11-03T19:00:00+09:00",
+  "thumb": "out/laputa/thumb_long.jpg"
+ },
+ "s1": {
+  "id": "VdyOrVG1-pI",
+  "publish_at": "2026-11-04T11:00:00+09:00"
+ },
+ "s2": {
+  "id": "xqUbbM-XulI",
+  "publish_at": "2026-11-04T12:00:00+09:00"
+ },
+ "s3": {
+  "id": "J6gP7Eq4jy4",
+  "publish_at": "2026-11-04T13:00:00+09:00"
+ },
+ "s4": {
+  "id": "n6gaLGm7Vjw",
+  "publish_at": "2026-11-04T14:00:00+09:00"
+ },
+ "s5": {
+  "id": "48mrwNAXXKE",
+  "publish_at": "2026-11-04T16:00:00+09:00"
+ }
+}
