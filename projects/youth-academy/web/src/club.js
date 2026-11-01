@@ -324,9 +324,9 @@
       o('「大一番に必要だ」と断る', 'firm', (w, p) => { p.conf = clamp(p.conf - 6, 0, 100); p.unrest += 1.5; YA.addRep(w, -1); }),
     ] });
   // 年代別の日本代表（U-16＝高1・U-17＝高2・U-18＝高3）。年に3回の活動で、選考ライン（総合力）を超えた子が選ばれる
-  YA.YOUTH_NAT = { 1: ['U-16日本代表', 100], 2: ['U-17日本代表', 110], 3: ['U-18日本代表', 118] };
-  YA.NAT_WEEKS = [7, 17, 33];
-  YA.natPicks = (w) => Object.values(w.players).filter((p) => p.inj <= 0 && YA.YOUTH_NAT[p.grade] && YA.rating(p) >= YA.YOUTH_NAT[p.grade][1]).sort((a, b) => YA.rating(b) - YA.rating(a)).slice(0, 5);
+  YA.YOUTH_NAT = { 1: ['U-16日本代表', 112], 2: ['U-17日本代表', 120], 3: ['U-18日本代表', 128] };
+  YA.NAT_WEEKS = [7, 33]; // 年2回（5月・1月）
+  YA.natPicks = (w) => Object.values(w.players).filter((p) => p.inj <= 0 && YA.YOUTH_NAT[p.grade] && YA.rating(p) >= YA.YOUTH_NAT[p.grade][1]).sort((a, b) => YA.rating(b) - YA.rating(a)).filter((p, i, arr) => p.pos !== 'GK' || arr.findIndex((q) => q.pos === 'GK') === i).slice(0, 2); // 1回に2人まで（GKは1人まで）
   const natSend = (w, p) => {
     const [team] = YA.YOUTH_NAT[p.grade];
     p.away = 1;
@@ -348,7 +348,7 @@
       o('全員断る（試合を優先する）', 'firm', null, (w) => { const ids = (w._natCall || []).filter((id) => w.players[id]); for (const id of ids) { w.players[id].unrest += 1.5; w.players[id].conf = clamp(w.players[id].conf - 6, 0, 100); } YA.addRep(w, -ids.length); return { line: '代表の招集を断った。協会からの評判と、本人たちの気持ちが下がった', small: `評判 -${ids.length}` }; }),
     ] });
   YA.EVENT_ABOUT = YA.EVENT_ABOUT || {};
-  YA.EVENT_ABOUT.natcall = '年に3回（5月・7月・1月）、選考ラインを超えた子が年代別の代表に選ばれます。送り出すと本人は伸び、クラブの評判が上がります。';
+  YA.EVENT_ABOUT.natcall = '年に2回（5月・1月）、選考ラインを超えた子が年代別の代表に選ばれます。送り出すと本人は伸び、クラブの評判が上がります。';
   const CLUB_REQ = [
     { text: 'クラブから要望が届いた。「若手を育てる方針のため、高1をもっと試合で使ってほしい」', yes: (w) => { w.club.reqYoung = 6; }, yesMsg: '今後6週、高1を使う約束', trust: [4, -6] },
     { text: 'クラブから要望が届いた。「スポンサー行事に、主力を2人出してほしい」', yes: (w) => { const ps = Object.values(w.players).filter((p) => p.team === 'A' && !away(p)).sort((a, b) => YA.ovr(b) - YA.ovr(a)).slice(0, 2); ps.forEach((p) => (p.away = 1)); }, yesMsg: '主力2人が今週は不在になる', trust: [5, -5] },

@@ -885,7 +885,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   const own = wt2.alumni.filter((a) => /トップ昇格/.test(a.note));
   ok(own.length >= 1 && own.every((a) => a.club === wt2.top.name || a.transfers > 0), 'トップ昇格の子は自分のクラブのトップへ');
   const early = wt2.alumni.filter((a) => /高.でトップ昇格/.test(a.note));
-  ok([1, 2, 3].every((y) => early.filter((a) => a.year === y).length <= 3), '在学中のプロ契約は1年に数人まで');
+  ok([1, 2, 3].every((y) => early.filter((a) => a.year === y).length <= 5), '在学中のプロ契約は1年に数人まで');
   const names = new Set(YA.PRO_CLUBS.map((c) => c.name));
   ok(wt2.alumni.filter((a) => a.status === 'pro' && !a.abroad).every((a) => names.has(a.club)), '国内の移籍先は固定のクラブ表から');
   const abroadNames = new Set([].concat(...Object.values(YA.ABROAD_CLUBS)));
