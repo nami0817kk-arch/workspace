@@ -25,6 +25,7 @@ String trainingMenu(Ability a) => switch (a) {
       Ability.stuff => 'ブルペンで投げ込み',
       Ability.control => '的を狙うコントロール練習',
       Ability.stamina => 'ランニングと投げ込み',
+      Ability.breaking => '変化球の握りと投げ込み',
     };
 
 const _youthTeams = [
@@ -217,10 +218,24 @@ enum Pos {
   }),
   dh('指名打者',
       {Ability.power: .35, Ability.contact: .35, Ability.trajectory: .3}),
-  starter('先発', {Ability.stamina: .4, Ability.control: .3, Ability.stuff: .3}),
-  reliever(
-      '中継ぎ', {Ability.stuff: .4, Ability.control: .35, Ability.stamina: .25}),
-  closer('抑え', {Ability.stuff: .55, Ability.control: .3, Ability.stamina: .15});
+  starter('先発', {
+    Ability.stamina: .35,
+    Ability.control: .25,
+    Ability.stuff: .25,
+    Ability.breaking: .15
+  }),
+  reliever('中継ぎ', {
+    Ability.stuff: .35,
+    Ability.control: .3,
+    Ability.breaking: .2,
+    Ability.stamina: .15
+  }),
+  closer('抑え', {
+    Ability.stuff: .5,
+    Ability.control: .25,
+    Ability.breaking: .15,
+    Ability.stamina: .1
+  });
 
   const Pos(this.label, this.weights);
   final String label;

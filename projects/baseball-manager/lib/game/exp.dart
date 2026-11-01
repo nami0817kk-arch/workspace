@@ -21,7 +21,11 @@ Category categoryOf(Ability a) => switch (a) {
       Ability.fielding ||
       Ability.catching =>
         Category.running,
-      Ability.stuff || Ability.control || Ability.stamina => Category.pitching,
+      Ability.stuff ||
+      Ability.control ||
+      Ability.stamina ||
+      Ability.breaking =>
+        Category.pitching,
     };
 
 /// その役割が実際に使える経験点の種類(投手の「打撃」のように、使い道が無いものは除く)。
@@ -38,19 +42,30 @@ Map<Category, int> spreadExp(Role r, int n) =>
 /// 役割ごとの補正。能力が少ない投手は、重点以外に割く分が少なく、1能力あたりの伸びが
 /// 打者より速くなってしまう(重点1＋他0.25×(n-1) を n で割った値が、打者と揃うようにする)。
 /// 二刀流は逆に能力が多く薄まるので補正が上がるが、練習の分散(×0.6)は別に掛かる。
-double roleExpFactor(Role r) {
-  final n = abilitiesOf(r).length;
-  const batterShare = (1 + 0.25 * 4) / 5;
-  return batterShare /
-      ((1 + 0.25 * (n - 1)) / n) *
-      (r == Role.pitcher ? pitcherPace : batterPace);
+double roleExpFactor(Role r, [Ability? a]) {
+  // 投手の打撃・守備の能力は、投球とは別の数え方(打者の7つぶんの伸び × 投手の打撃の補正)
+  if (r == Role.pitcher && a != null && !pitcherAbilities.contains(a)) {
+    return _perAbilityFactor(batterAbilities.length) * batterPace * pitcherBatPace;
+  }
+  final n = r == Role.pitcher ? pitcherAbilities.length : abilitiesOf(r).length;
+  return _perAbilityFactor(n) * (r == Role.pitcher ? pitcherPace : batterPace);
 }
+
+double _perAbilityFactor(int n) {
+  const batterShare = (1 + 0.25 * 4) / 5;
+  return batterShare / ((1 + 0.25 * (n - 1)) / n);
+}
+
+/// 投手の打撃・守備の伸びの補正(2026-11-01)。投手は投球が本業なので、打者より遅く伸びる。
+const pitcherBatPace = int.fromEnvironment('BAL_PBAT', defaultValue: 50) / 100;
 
 /// 投手の伸びの補正(2026-10-21)。経験点を1能力あたりで揃えても、投手は打者よりプロに入りやすく
 /// レジェンドも多かった(`tool/balance.dart 600 normal`: 平凡のプロ入り 打者43%/投手62%、レジェンド 3%/19%)。
 /// 能力が3つで底上げが効き、投球の経験点が1つの種類に集まるため。0.85 にすると揃う
 /// (平凡 43.3%/43.8%・レジェンド 3.0%/4.0%、上手い 47.2%/46.2%・レジェンド 23.2%/21.5%)。0.75 だと投手が低すぎる(31%)。
-const pitcherPace = int.fromEnvironment('BAL_PPACE', defaultValue: 82) / 100;
+/// 2026-11-01: 投手の能力を4つ(球速・コントロール・スタミナ・変化球)＋打撃・守備にしたので、104 に上げて揃え直した
+/// (`balance.dart 900 normal`: 平凡 プロ入り 45%・レジェンド 7%、上手い 58%・レジェンド 25%。旧は 43%・3%、56%・34%)。
+const pitcherPace = int.fromEnvironment('BAL_PPACE', defaultValue: 104) / 100;
 
 /// 打者・二刀流の伸びの補正(2026-11-01)。打者の能力を5つから7つ(パワプロと同じ)にしたら、
 /// 重点の1つが平均に占める割合が薄まり、プロ入り率が下がった。`tool/balance.dart` で揃えた。

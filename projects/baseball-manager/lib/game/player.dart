@@ -17,7 +17,8 @@ enum Ability {
   catching,
   stuff,
   control,
-  stamina;
+  stamina,
+  breaking;
 
   static Ability? parse(String s) {
     for (final a in Ability.values) {
@@ -37,9 +38,23 @@ const batterAbilities = [
   Ability.fielding,
   Ability.catching,
 ];
-const pitcherAbilities = [Ability.stuff, Ability.control, Ability.stamina];
+/// 投手の能力(パワプロと同じ。球速・コントロール・スタミナ・変化球)。
+const pitcherAbilities = [
+  Ability.stuff,
+  Ability.control,
+  Ability.stamina,
+  Ability.breaking,
+];
 
 List<Ability> abilitiesOf(Role r) => switch (r) {
+      Role.batter => batterAbilities,
+      // 投手も打撃・守備の能力を持つ(パワプロと同じ)。先に投球、あとに打撃・守備。
+      Role.pitcher => [...pitcherAbilities, ...batterAbilities],
+      Role.twoWay => [...batterAbilities, ...pitcherAbilities],
+    };
+
+/// 役割の本業の能力(総合評価・才能の平均・弱点の判定に使う)。投手の打撃・守備は含めない。
+List<Ability> mainAbilitiesOf(Role r) => switch (r) {
       Role.batter => batterAbilities,
       Role.pitcher => pitcherAbilities,
       Role.twoWay => [...batterAbilities, ...pitcherAbilities],
@@ -107,8 +122,10 @@ class Player {
       contact: of(Ability.contact),
       power: ((of(Ability.power) * 7 + of(Ability.trajectory) * 3) / 10).round(),
       eye: _eyeOf(of(Ability.contact)));
-  Pitcher toPitcher() =>
-      Pitcher(control: of(Ability.control), stuff: of(Ability.stuff));
+  /// 打席の計算に使う形。変化球は球威に3割まぜる(球速だけでも、変化球だけでも抑えきれない)。
+  Pitcher toPitcher() => Pitcher(
+      control: of(Ability.control),
+      stuff: ((of(Ability.stuff) * 7 + of(Ability.breaking) * 3) / 10).round());
 
   Map<String, dynamic> toJson() => {
         'name': name,
@@ -134,12 +151,23 @@ class Player {
       if (a != null) ab[a] = (e.value as num).toInt();
     }
     // 古いセーブ(能力が5つだった頃)は、足りない打者の能力を今ある能力から補う。選球眼は無くなった。
-    if (ab.isNotEmpty && role != Role.pitcher) {
+    if (ab.isNotEmpty) {
       final c = ab[Ability.contact] ?? 20, pw = ab[Ability.power] ?? 20;
       final f = ab[Ability.fielding] ?? 20;
-      ab.putIfAbsent(Ability.trajectory, () => ((c + pw) / 2).round());
-      ab.putIfAbsent(Ability.arm, () => f);
-      ab.putIfAbsent(Ability.catching, () => f);
+      // 投手(能力が投球だけだった頃)は、打撃・守備を低い値で足す
+      for (final a in batterAbilities) {
+        if (role == Role.pitcher) ab.putIfAbsent(a, () => 20);
+      }
+      if (role != Role.pitcher) {
+        ab.putIfAbsent(Ability.trajectory, () => ((c + pw) / 2).round());
+        ab.putIfAbsent(Ability.arm, () => f);
+        ab.putIfAbsent(Ability.catching, () => f);
+      }
+      // 変化球は、球威と制球の平均から
+      if (role != Role.batter) {
+        ab.putIfAbsent(Ability.breaking,
+            () => (((ab[Ability.stuff] ?? 20) + (ab[Ability.control] ?? 20)) / 2).round());
+      }
     }
     return Player(
       name: (j['name'] as String?) ?? '名無し',

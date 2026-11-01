@@ -1206,7 +1206,7 @@ class _PositionCard extends StatelessWidget {
 }
 
 Ability _weakest(Player p) =>
-    abilitiesOf(p.role).reduce((x, y) => p.of(y) < p.of(x) ? y : x);
+    mainAbilitiesOf(p.role).reduce((x, y) => p.of(y) < p.of(x) ? y : x);
 
 /// 能力の行の小さな注記: いちばん低い能力は「伸ばしどころ」、他は次のランクまでの差。
 String _abilityNote(Player p, Ability a) {
@@ -1214,7 +1214,7 @@ String _abilityNote(Player p, Ability a) {
   // 年齢による上限(体の限界)がかかっていれば、それを先に知らせる
   final cap = ageCeiling(p, a);
   if (cap < abilityCap) return v >= cap ? '年齢の上限' : '上限$cap';
-  if (a == _weakest(p) && abilitiesOf(p.role).length > 1) return '伸ばしどころ';
+  if (a == _weakest(p) && mainAbilitiesOf(p.role).length > 1) return '伸ばしどころ';
   if (v >= 90) return 'S';
   final next = (v ~/ 10 + 1) * 10;
   return 'あと+${next - v}';
@@ -1261,7 +1261,7 @@ class _AbilityCard extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 4),
                 child: Text(
                     '${p.age}歳。体の衰えで、能力に年齢の上限がある(経験点でもそれより上には上げられない)。'
-                    'パワー・走力・肩力・守備・球威・スタミナは早く、ミート・弾道・捕球・制球はゆっくり下がる。',
+                    'パワー・走力・肩力・守備・球速・スタミナは早く、ミート・弾道・捕球・コントロール・変化球はゆっくり下がる。',
                     key: const Key('age-cap-note'),
                     style: const TextStyle(
                         fontSize: 11, color: Color(0xFFC62828))),

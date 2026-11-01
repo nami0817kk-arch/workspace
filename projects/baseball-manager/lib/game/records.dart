@@ -247,7 +247,7 @@ int salaryOf(SeasonRecord r) {
   final base = 500 * pow(1.065, r.line.rating - 30);
   // 投手は勝ち星と防御率でも評価される(評価の数字だけだと、19勝の投手が2000万円台だった)。
   final l = r.line;
-  final pitcherOnly = l.hasPitching && !l.hasBatting;
+  final pitcherOnly = l.hasPitching && (!l.hasBatting || l.pitcherBat);
   final pitch = !pitcherOnly
       ? 1.0
       : (1 + 0.12 * max(0, l.wins - 5)).clamp(1.0, 3.0) *

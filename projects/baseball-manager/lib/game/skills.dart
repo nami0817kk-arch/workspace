@@ -195,9 +195,10 @@ String effectText(Skill s) {
         Ability.arm => '肩力',
         Ability.fielding => '守備',
         Ability.catching => '捕球',
-        Ability.stuff => '球威',
-        Ability.control => '制球',
+        Ability.stuff => '球速',
+        Ability.control => 'コントロール',
         Ability.stamina => 'スタミナ',
+        Ability.breaking => '変化球',
       };
   final parts = [
     if (s.effects.isNotEmpty)
@@ -401,7 +402,7 @@ SkillImpact skillImpact(Player p, Skill s, Stage stage, {int games = 250}) {
       }
     }
     if (p.role != Role.batter && a.outs > 0) {
-      if (has(Ability.stuff) || has(Ability.control)) {
+      if (has(Ability.stuff) || has(Ability.control) || has(Ability.breaking)) {
         final d = b.runsAllowed * 27 / max(1, b.outs) - a.runsAllowed * 27 / a.outs;
         if (d.abs() >= 0.02) lines.add('防御率 ${sg(d, 2)}');
       }

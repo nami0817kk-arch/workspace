@@ -53,7 +53,7 @@ String giftStars(int gift) => starsOf(giftStarCount(gift));
 /// 能力 `a` の天賦を1段階上げる(上限 +2)。役割で使わない能力・もう上限の能力なら、
 /// 使う能力のうち天賦がいちばん低いものを上げる。使う能力が全部上限なら変わらない。
 Player giftUp(Player p, Ability a) {
-  final mine = abilitiesOf(p.role);
+  final mine = mainAbilitiesOf(p.role);
   var target = mine.contains(a) && p.gift(a) < giftMax ? a : null;
   if (target == null) {
     final low = [...mine]..sort((x, y) => p.gift(x).compareTo(p.gift(y)));
@@ -84,7 +84,7 @@ String giftHint(int g) {
 
 /// 役割で使う能力の、天賦の平均(「才能の塊」の判定など。打者は7能力・投手は3能力で数が違うので平均で見る)。
 double giftAverage(Role r, Map<Ability, int> gifts) {
-  final abs = abilitiesOf(r);
+  final abs = mainAbilitiesOf(r);
   return abs.fold<int>(0, (a, x) => a + (gifts[x] ?? 0)) / abs.length;
 }
 

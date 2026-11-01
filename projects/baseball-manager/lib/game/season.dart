@@ -29,6 +29,7 @@ class Line {
     this.battingStrikeouts = 0,
     this.rbi = 0,
     this.stolenBases = 0,
+    this.pitcherBat = false,
   });
 
   /// 出場した試合数(打者または投手として)。
@@ -39,6 +40,9 @@ class Line {
 
   /// 打者の詳しい記録: 二塁打・三塁打・三振・打点・盗塁。
   final int doubles, triples, battingStrikeouts, rbi, stolenBases;
+
+  /// 投手の打席(投手が先発した試合の打席だけ)。評価・年俸・タイトルの判断には入れない。
+  final bool pitcherBat;
 
   // 投手
   final int faced, outs, strikeouts, walksGiven, hitsAllowed, homeRunsAllowed;
@@ -69,6 +73,7 @@ class Line {
         battingStrikeouts: battingStrikeouts + o.battingStrikeouts,
         rbi: rbi + o.rbi,
         stolenBases: stolenBases + o.stolenBases,
+        pitcherBat: pitcherBat || o.pitcherBat,
       );
 
   Line withDecision({bool win = false, bool loss = false}) => Line(
@@ -93,6 +98,7 @@ class Line {
         battingStrikeouts: battingStrikeouts,
         rbi: rbi,
         stolenBases: stolenBases,
+        pitcherBat: pitcherBat,
       );
 
   // ── 打者の指標 ──
@@ -199,7 +205,10 @@ class Line {
 
   /// 個人の評価。二刀流は両方の平均。
   double get rating {
-    final r = [battingRating, pitchingRating].whereType<double>().toList();
+    // 投手の打席は評価に入れない(打者が本業ではないので、投球の評価を下げない)
+    final r = [pitcherBat ? null : battingRating, pitchingRating]
+        .whereType<double>()
+        .toList();
     return r.isEmpty ? 50 : r.reduce((a, b) => a + b) / r.length;
   }
 
@@ -225,6 +234,7 @@ class Line {
         'battingStrikeouts': battingStrikeouts,
         'rbi': rbi,
         'stolenBases': stolenBases,
+        if (pitcherBat) 'pitcherBat': true,
       };
 
   /// 項目を足すときは既定値を置く。
@@ -252,6 +262,7 @@ class Line {
       battingStrikeouts: i('battingStrikeouts'),
       rbi: i('rbi'),
       stolenBases: i('stolenBases'),
+      pitcherBat: j['pitcherBat'] == true,
     );
   }
 }
@@ -289,6 +300,7 @@ double _runValue(AtBatResult r) => switch (r) {
     };
 
 const _batterTurns = 4; // 1試合の打席
+const _pitcherTurns = 2; // 投手が先発した試合の打席
 const _pitcherFaced = 18; // 1試合の対戦打者(先発1人ぶんの目安)
 
 /// アマの大会で、エースが1試合に対戦する打者の基準(スタミナで0.75〜1倍ほど)。
@@ -318,10 +330,12 @@ Line playGame(
   var line = const Line();
   var appeared = false;
   var started = 0;
-  if (bat && p.role != Role.pitcher) {
+  // 投手は、先発した試合にだけ打席に立つ(2打席)。
+  final pitcherBats = p.role == Role.pitcher && pitch;
+  if (bat && (p.role != Role.pitcher || pitcherBats)) {
     appeared = true;
     final foe = Pitcher(control: opp, stuff: opp);
-    for (var i = 0; i < _batterTurns; i++) {
+    for (var i = 0; i < (pitcherBats ? _pitcherTurns : _batterTurns); i++) {
       final r = simulateAtBat(foe, p.toBatter(), rng, ownBatter: true);
       final onBase = r == AtBatResult.walk || r == AtBatResult.single;
       line += Line(
@@ -353,6 +367,7 @@ Line playGame(
           _ => 0,
         },
         homeRuns: r == AtBatResult.homeRun ? 1 : 0,
+        pitcherBat: pitcherBats,
       );
     }
   }
@@ -683,7 +698,7 @@ LeagueProgress playLeagueChunk(
     }
     final starts = p.role != Role.batter && g % startInterval == 0;
     final game = playGame(p, opp, rng,
-        bat: p.role != Role.pitcher, pitch: starts, facedBase: 27);
+        bat: true, pitch: starts, facedBase: 27);
     final pWin = (0.5 +
             (teamLevel - opp) / 100 +
             (game.rating - 50) / 400 +
@@ -738,7 +753,7 @@ LeagueSeason playLeagueSeason(
     final opp = opponents[g % opponents.length];
     final starts = p.role != Role.batter && g % startInterval == 0;
     final game = playGame(p, opp, rng,
-        bat: p.role != Role.pitcher, pitch: starts, facedBase: 27);
+        bat: true, pitch: starts, facedBase: 27);
     final pWin = (0.5 +
             (teamLevel - opp) / 100 +
             (game.rating - 50) / 400 +

@@ -113,8 +113,8 @@ class _VersusScreenState extends State<VersusScreen> {
         Ability.contact => 'ミート',
         Ability.power => 'パワー',
         Ability.trajectory => '弾道',
-        Ability.stuff => '球威',
-        Ability.control => '制球',
+        Ability.stuff => '球速',
+        Ability.control => 'コントロール',
         _ => a.name,
       };
 

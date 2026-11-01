@@ -36,9 +36,10 @@ String _abilityShort(Ability a) => switch (a) {
       Ability.arm => '肩力',
       Ability.fielding => '守備',
       Ability.catching => '捕球',
-      Ability.stuff => '球威',
-      Ability.control => '制球',
+      Ability.stuff => '球速',
+      Ability.control => 'コントロール',
       Ability.stamina => 'スタミナ',
+      Ability.breaking => '変化球',
     };
 
 /// 決勝の見せ場の出来事。ラベルに、使う能力の値を添える(どれが得意か分かる)。
