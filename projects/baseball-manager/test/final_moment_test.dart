@@ -57,7 +57,7 @@ void main() {
       expect(b.choices[1].label, contains('ミート 77'));
       final pitcher = finalMomentEvent(_p(Role.pitcher, v: 40));
       expect(pitcher.choices[0].label, contains('球速 40'));
-      expect(pitcher.choices[1].label, contains('制球 40'));
+      expect(pitcher.choices[1].label, contains('コントロール 40'));
     });
 
     test('使う能力が高いほど、勝つ確率の上乗せが大きい(安全な作戦は毎回同じ)', () {
