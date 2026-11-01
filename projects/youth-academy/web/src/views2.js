@@ -183,6 +183,11 @@
       h('b', { style: 'width:30px;text-align:right' }, x.rating),
       h('span', { class: 'sub', style: 'width:52px' }, i < 11 ? '主力' : i < 18 ? '控え' : '若手・控え')))));
     const right = h('div', { style: 'flex:1;min-width:0' });
+    const now = YA.topNow(w);
+    right.append(card(h('div', { class: 'row' }, h('b', { class: 'grow' }, `${now.league}　第${now.round}節`), h('span', { class: 'chip trait' }, `${now.rank}位・勝点${now.pts}`)),
+      h('div', { class: 'pitem', style: 'cursor:default;background:none;font-size:10px;color:var(--sub);font-weight:800' }, h('span', { style: 'width:18px' }, '順'), h('span', { class: 'grow' }, 'クラブ'), ...['勝', '分', '敗', '差', '点'].map((x) => h('span', { style: 'width:24px;text-align:right' }, x))),
+      ...now.rows.map((x) => h('div', { class: 'pitem', style: 'cursor:default;font-size:11px;padding-top:1px;padding-bottom:1px;' + (x.me ? 'background:#fff7d6;border-color:#f0cf55' : '') + (x.rank <= 2 && now.j > 1 ? 'box-shadow:inset 3px 0 #16a34a;' : '') + (x.rank >= 18 && now.j < 3 ? 'box-shadow:inset 3px 0 #d63a3a;' : '') }, h('b', { style: 'width:18px' }, x.rank), h('span', { class: 'nm grow', style: 'min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap' }, x.name), ...[x.w, x.d, x.l, x.gd, x.pts].map((v, i) => h(i === 4 ? 'b' : 'span', { style: 'width:24px;text-align:right' }, v)))),
+      h('div', { class: 'note', style: 'margin-top:3px' }, (now.j > 1 ? '上位2つは昇格（緑）。' : '') + (now.j < 3 ? '下位3つは降格（赤）。' : '') + 'ユースの1年に合わせて節が進みます。')));
     right.append(card(title('順位の履歴'), ...(t.hist.length ? t.hist.slice().reverse().map((x) => h('div', { class: 'row', style: 'padding:2px 0' }, h('span', { class: 'sub', style: 'width:54px' }, `${x.y}年目`), h('span', { class: 'grow' }, YA.J_NAME[x.j]), h('b', {}, `${x.rank}位`))) : [h('div', { class: 'note' }, '1年目の終わりに、最初の順位が出ます')])));
     // ユースのいちばん力のある子たちが、トップの中で何番目くらいか
     const tops = Object.values(w.players).sort((a, b) => YA.rating(b) - YA.rating(a)).slice(0, 5);

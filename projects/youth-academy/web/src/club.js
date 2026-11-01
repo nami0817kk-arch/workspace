@@ -423,20 +423,58 @@
     const ac = YA.topAcademy(w).map((a) => ({ name: a.name, pos: a.main || a.pos, age: a.age, rating: YA.rate(a.ovr), academy: true, ref: a }));
     return w.top.squad.concat(ac).sort((a, b) => b.rating - a.rating);
   };
-  // 1年の終わり：トップの順位（強さ＝上位14人の平均と、その部の水準の差）、昇格・降格、年齢と入れ替わり
+  YA.J_GAMES = 38;
+  // 今の節（ユースの1年＝40週で、Jリーグの38節を進める）
+  YA.topRound = (w) => Math.min(YA.J_GAMES, Math.round((Math.min(w.week, 40) / 40) * YA.J_GAMES));
+  YA.topStrength = function (w) {
+    const sq = YA.topSquad(w);
+    return sq.slice(0, 14).reduce((s2, x) => s2 + x.rating, 0) / Math.min(14, sq.length || 1);
+  };
+  YA.topTable = function (w, games) {
+    if (!w.top) YA.initTop(w);
+    const t = w.top;
+    const k = games == null ? YA.topRound(w) : games;
+    const others = YA.PRO_CLUBS.filter((c) => c.tier === t.j && c.name !== t.name).map((c) => c.name);
+    const TOWNS = ['青森', '富山', '福井', '佐賀', '和歌山', '島根', '香川', '沖縄', '八戸', '浜松', '静岡', '岩手'];
+    for (let i = 0; others.length < 19 && i < TOWNS.length; i++) others.push(TOWNS[i] + ' FC');
+    const teams = others.slice(0, 19).map((name) => ({ name, str: J_AVG[t.j] + ((YA.hash(name + w.year) % 100) / 100 - 0.5) * 22 }));
+    teams.push({ name: t.name, str: YA.topStrength(w), me: true });
+    const rows = teams.map((tm) => {
+      const r = YA.rngOf(YA.hash(tm.name) * 7 + w.year * 131 + t.j);
+      const dev = (r() - 0.5) * 16; // その年のぶれ（勝点、38節あたり）
+      const ppg = clamp(1.35 + (tm.str - J_AVG[t.j]) * 0.055, 0.45, 2.5);
+      let pts = Math.max(0, Math.round(ppg * k + dev * (k / YA.J_GAMES)));
+      const d = Math.round(k * (0.22 + r() * 0.08));
+      let wn = Math.max(0, Math.min(k - d, Math.round((pts - d) / 3)));
+      const dd = clamp(pts - wn * 3, 0, k - wn);
+      pts = wn * 3 + dd;
+      const gf = Math.round(k * (1.1 + (tm.str - J_AVG[t.j]) * 0.03 + r() * 0.3));
+      const ga = Math.max(0, Math.round(gf - (wn - (k - wn - dd)) * 1.05));
+      return { name: tm.name, me: !!tm.me, p: k, w: wn, d: dd, l: k - wn - dd, gf, ga, gd: gf - ga, pts };
+    });
+    rows.sort((a, b) => b.pts - a.pts || b.gd - a.gd || b.gf - a.gf);
+    rows.forEach((x, i) => (x.rank = i + 1));
+    return rows;
+  };
+  YA.topNow = function (w) {
+    const rows = YA.topTable(w);
+    const me = rows.find((x) => x.me);
+    return { j: w.top.j, league: J_NAME[w.top.j], round: YA.topRound(w), rank: me.rank, pts: me.pts, rows };
+  };
+  // 1年の終わり：トップの順位（38節の順位表）、昇格・降格、年齢と入れ替わり
   YA.topSeason = function (w) {
     if (!w.top) YA.initTop(w);
     const t = w.top;
     const r = YA.rngOf(w.seed * 43 + w.year * 19 + 3);
-    const sq = YA.topSquad(w);
-    const str = sq.slice(0, 14).reduce((s, x) => s + x.rating, 0) / Math.min(14, sq.length || 1);
-    const teams = t.j === 1 ? 20 : t.j === 2 ? 20 : 20;
-    const rank = clamp(Math.round(teams / 2 + 0.5 - (str - J_AVG[t.j]) * 0.7 + (r() - 0.5) * 8), 1, teams);
+    const str = YA.topStrength(w);
+    const teams = 20;
+    const fin = YA.topTable(w, YA.J_GAMES).find((x) => x.me);
+    const rank = fin.rank;
     let move = 0;
     if (t.j > 1 && rank <= 2) move = -1;
     else if (t.j < 3 && rank >= teams - 2) move = 1;
-    t.hist.push({ y: w.year, j: t.j, rank, str: Math.round(str) });
-    YA.noteTier(w, 1, `トップチーム（${t.name}）は${J_NAME[t.j]}で${rank}位` + (move < 0 ? `。${J_NAME[t.j - 1]}へ昇格します` : move > 0 ? `。${J_NAME[t.j + 1]}へ降格します` : ''));
+    t.hist.push({ y: w.year, j: t.j, rank, str: Math.round(str), pts: fin.pts });
+    YA.noteTier(w, 1, `トップチーム（${t.name}）は${J_NAME[t.j]}で${rank}位（勝点${fin.pts}）` + (move < 0 ? `。${J_NAME[t.j - 1]}へ昇格します` : move > 0 ? `。${J_NAME[t.j + 1]}へ降格します` : ''));
     t.j += move;
     // 年齢と力の変化、引退・移籍
     const used = new Set(t.squad.map((x) => x.name));
