@@ -51,7 +51,14 @@ void main() {
   });
 
   test('戦力外の警告は、プロで総合が低い年が続いているときだけ', () {
-    final g = _until((g) => g.stage == Stage.pro && g.phase == Phase.term);
+    // プロ入りできる乱数の種を探す(能力の入れ替えなどで、プロ入りする種が変わるため)
+    Game? found;
+    for (var seed = 1; seed <= 30 && found == null; seed++) {
+      final x = _until((g) => g.stage == Stage.pro && g.phase == Phase.term,
+          seed: seed);
+      if (x.stage == Stage.pro && x.phase == Phase.term) found = x;
+    }
+    final g = found!;
     expect(g.stage, Stage.pro);
     g.lowYears = 0;
     expect(g.releaseWarning, isNull);
