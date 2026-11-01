@@ -7,9 +7,9 @@
 
   // ---------- おまかせ進行（決定57：止まる条件を決めて、練習・起用をおまかせで何週も進める）----------
   // 必ず止める出来事（決定76 の①）。おまかせの途中でもここでは止まって、自分で選ぶ
-  YA.SIM_IMPORTANT = ['quit', 'injury', 'top', 'nat', 'early'];
+  YA.SIM_IMPORTANT = ['quit', 'injury', 'top', 'nat', 'early', 'natcall'];
   // おまかせのときの選び方（出来事ごとの既定。無難な側）
-  const AUTO_CHOICE = { rival: 1, late: 1, fight: 1, slack: 1, quit: 0, injury: 0, top: 0, nat: 0, early: 0 };
+  const AUTO_CHOICE = { rival: 1, late: 1, fight: 1, slack: 1, quit: 0, injury: 0, top: 0, nat: 0, early: 0, natcall: 0 };
   YA.autoChoice = (id) => (AUTO_CHOICE[id] != null ? AUTO_CHOICE[id] : 0);
 
   // 年度はじめ・成長・契約の画面で出る選択を、既定で済ませる

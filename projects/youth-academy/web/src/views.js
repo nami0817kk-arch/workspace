@@ -44,7 +44,7 @@
   const gradeName = (g) => '高' + g;
   const fatColor = (v) => (v > 75 ? '#d63a3a' : v > 50 ? '#f0a020' : '#1a9d57');
   const fatBar = (p, wd) => h('div', { class: 'bar', style: `width:${wd || 40}px` }, h('i', { style: `width:${p.fat}%;background:${fatColor(p.fat)}` }));
-  const flags = (p) => [p.inj > 0 ? h('span', { class: 'fit bad' }, '怪我' + p.inj + '週') : null, p.spurt > 0 ? h('span', { class: 'fit good' }, '成長期') : null, p.state && p.state.w > 0 ? h('span', { class: 'fit ' + (p.state.k === 'peak' ? 'good' : 'bad') }, p.state.k === 'peak' ? '伸び盛り' : '壁') : null, p.star ? h('span', { class: 'chip trait' }, '★注目') : null, p.unrest >= 3 ? h('span', { class: 'fit bad' }, '不満') : null];
+  const flags = (p) => [p.inj > 0 ? h('span', { class: 'fit bad' }, '怪我' + p.inj + '週') : null, p.spurt > 0 ? h('span', { class: 'fit good' }, '成長期') : null, p.state && p.state.w > 0 ? h('span', { class: 'fit ' + (p.state.k === 'peak' ? 'good' : 'bad') }, p.state.k === 'peak' ? '伸び盛り' : '壁') : null, p.star ? h('span', { class: 'chip trait' }, '★注目') : null, p.youthCaps ? h('span', { class: 'chip pers' }, `${p.youthTeam || '年代別代表'} ${p.youthCaps}回`) : null, p.unrest >= 3 ? h('span', { class: 'fit bad' }, '不満') : null];
 
   // ---------- ホーム ----------
   function viewHome(main) {

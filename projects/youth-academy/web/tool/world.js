@@ -906,6 +906,20 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   ok(p.conf > c1 && p.unrest === 0, 'Aで使えば約束を守ったことになる');
   for (const e of YA.EVENTS.filter((x) => x.weight > 0 && !x.club)) { const q = e.pick(we, YA.rngOf(5)); if (!q || !q.id) continue; const vv = YA.eventView(we, { id: e.id, pid: q.id, week: we.week, year: we.year }); ok(vv && !/undefined|null|NaN/.test(vv.text), '出来事の文 ' + e.id); }
 }
+// 年代別日本代表：活動の週（5月・7月・1月）に、選考ラインを超えた子へ必ず招集が届く
+{
+  const wn2 = YA.newWorld(14);
+  const q = Object.values(wn2.players).find((x) => x.grade === 2 && x.pos !== 'GK');
+  for (const n of YA.AB_FIELD) q.ab[n] = Math.min(20, q.ab[n] + 4);
+  ok(YA.rating(q) >= YA.YOUTH_NAT[2][1], '選考ラインを超えた ' + YA.rating(q));
+  wn2.week = YA.NAT_WEEKS[0]; wn2.phase = 'plan'; YA.startWeek(wn2);
+  const ev = wn2.events.find((e) => e.id === 'natcall');
+  ok(!!ev && wn2._natCall.indexOf(q.id) >= 0, '活動の週に招集が届く');
+  const v = YA.eventView(wn2, ev); ok(v && /U-17日本代表/.test(v.text) && !/undefined|null|NaN/.test(v.text), '招集の文 ' + (v && v.text));
+  YA.resolveEvent(wn2, ev, 0);
+  ok(q.youthCaps === 1 && q.away === 1, '送り出すと代表の回数が増え、1週間離れる');
+  const a = YA.alumniEntry(wn2, q, 'test'); ok(a.nat === 0 && a.youthCaps === 1, '卒業生の日本代表（A代表）に、ユース年代の回数は混ぜない');
+}
 // クラブを移った（契約満了・解任）あとも、入団の暦まで止まらずに1年回せる
 {
   const wm = YA.newWorld(5);

@@ -363,7 +363,7 @@
     return { name: p.name, pos: p.pos, main: p.main, year: w.year, ovr: o, note, grade: 3, age: 18, status,
       club: status === 'pro' ? (own ? w.top.name : ab ? abroadClub(r, ab[1]) : jClub(w, r, dl)) : status === 'univ' ? r.pick(UNIV) : '社会人',
       league: status === 'pro' ? (own ? YA.J_NAME[w.top.j] : ab ? ab[1] : dl) : status === 'univ' ? '大学リーグ' : '社会人リーグ',
-      apps: 0, goals: 0, nat: p.nat || 0, natGoals: 0, transfers: 0, retired: false, traits: p.traits.slice(), pushed: p._push || null, abroad, seasons: [], titles: [], awards: [] };
+      apps: 0, goals: 0, nat: 0, youthCaps: (p.youthCaps || 0) + (p.nat || 0), natGoals: 0, transfers: 0, retired: false, traits: p.traits.slice(), pushed: p._push || null, abroad, seasons: [], titles: [], awards: [] };
   };
   // 1年ぶんの経歴：出場・得点・タイトル・個人の賞。卒業生名鑑で年ごとに見られる
   function careerSeason(w, a, r) {
@@ -575,6 +575,14 @@
     if (YA.rivalWeek) YA.rivalWeek(w);
     YA.refreshFocus(w);
     YA.checkPromises(w);
+    // 年代別日本代表：活動の週に、選考ラインを超えた子へ招集
+    if (YA.NAT_WEEKS && YA.NAT_WEEKS.indexOf(w.week) >= 0) {
+      const picks = YA.natPicks(w);
+      if (picks.length) {
+        w._natCall = picks.map((p) => p.id);
+        w.forced = (w.forced || []).concat([{ id: 'natcall', pid: null, week: w.week, year: w.year }]);
+      }
+    }
     // トップの打診の線を10以上上回った子には、その週に必ずトップから打診が来る
     if (w.top && YA.earlyProLine) {
       const line = YA.earlyProLine(w) + 10;

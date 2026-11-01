@@ -316,13 +316,39 @@
       o('応じる（今週は不在。本人は大きく伸びる）', 'push', (w, p) => { p.away = 1; p.conf = clamp(p.conf + 6, 0, 100); for (const a of ['判断', '予測', 'ファーストタッチ', 'パス']) p.prog[a] = (p.prog[a] || 0) + 0.9; YA.addTrust(w, 3, 'トップへの協力'); YA.addRep(w, 1); }),
       o('断る（試合を優先する）', 'firm', (w, p) => { YA.addTrust(w, -7, 'トップの打診を断った'); p.conf = clamp(p.conf - 3, 0, 100); }),
     ] });
-  E.push({ id: 'nat', name: '代表への招集', weight: 0.55,
+  E.push({ id: 'nat', name: '代表への招集', weight: 0,
     pick: (w, r) => { const p = best(w, (q) => q.grade >= 2 && !away(q) && YA.ovr(q) >= 11.8 && !q.natThisYear); return p && r.chance(0.5) ? p : null; },
     text: (p) => `${pname(p)}にU-18代表から招集がかかった。2週間チームを離れることになる`,
     opts: [
       o('送り出す（本人は伸び、クラブの評判が上がる）', 'push', (w, p) => { p.away = 2; p.natThisYear = true; p.nat = (p.nat || 0) + 1; p.conf = clamp(p.conf + 8, 0, 100); p.spurt = Math.max(p.spurt, 6); YA.addRep(w, 2); p.hist.unshift({ y: w.year, w: w.week, t: 'U-18代表に招集された' }); YA.noteTier(w, 1, pname(p) + ' がU-18代表に招集された（2週間不在）', p.id); }),
       o('「大一番に必要だ」と断る', 'firm', (w, p) => { p.conf = clamp(p.conf - 6, 0, 100); p.unrest += 1.5; YA.addRep(w, -1); }),
     ] });
+  // 年代別の日本代表（U-16＝高1・U-17＝高2・U-18＝高3）。年に3回の活動で、選考ライン（総合力）を超えた子が選ばれる
+  YA.YOUTH_NAT = { 1: ['U-16日本代表', 100], 2: ['U-17日本代表', 110], 3: ['U-18日本代表', 118] };
+  YA.NAT_WEEKS = [7, 17, 33];
+  YA.natPicks = (w) => Object.values(w.players).filter((p) => p.inj <= 0 && YA.YOUTH_NAT[p.grade] && YA.rating(p) >= YA.YOUTH_NAT[p.grade][1]).sort((a, b) => YA.rating(b) - YA.rating(a)).slice(0, 5);
+  const natSend = (w, p) => {
+    const [team] = YA.YOUTH_NAT[p.grade];
+    p.away = 1;
+    p.youthCaps = (p.youthCaps || 0) + 1;
+    p.youthTeam = team;
+    p.conf = clamp(p.conf + 6, 0, 100);
+    p.spurt = Math.max(p.spurt, 4);
+    p.hist.unshift({ y: w.year, w: w.week, t: team + 'に選ばれた' });
+  };
+  E.push({ id: 'natcall', name: '年代別日本代表の招集', weight: 0, club: true,
+    pick: () => null,
+    text: (p, w) => {
+      const ids = (w._natCall || []).filter((id) => w.players[id]);
+      return '年代別の日本代表から招集が届いた（1週間チームを離れる）。' + ids.map((id) => { const q = w.players[id]; return `${q.num}番 ${q.name}（${YA.YOUTH_NAT[q.grade][0]}・総合力${YA.rating(q)}）`; }).join('、') + `。選考ラインは U-16 ${YA.YOUTH_NAT[1][1]}・U-17 ${YA.YOUTH_NAT[2][1]}・U-18 ${YA.YOUTH_NAT[3][1]}`;
+    },
+    opts: [
+      o('全員送り出す（本人は伸び、クラブの評判が上がる）', 'push', null, (w) => { const ids = (w._natCall || []).filter((id) => w.players[id]); for (const id of ids) natSend(w, w.players[id]); YA.addRep(w, ids.length); return { line: `${ids.length}人を送り出した。それぞれ1週間チームを離れる`, small: `評判 +${ids.length}・自信 +6` }; }),
+      o('Aの先発の子だけ残し、ほかは送り出す', 'wait', null, (w) => { const ids = (w._natCall || []).filter((id) => w.players[id]); const st = new Set((w.lineupA || []).map((x) => x.pid)); const go = ids.filter((id) => !st.has(id)); for (const id of go) natSend(w, w.players[id]); for (const id of ids.filter((x) => st.has(x))) { w.players[id].unrest += 1.5; w.players[id].conf = clamp(w.players[id].conf - 4, 0, 100); } YA.addRep(w, go.length - (ids.length - go.length) * 0.5); return { line: `${go.length}人を送り出し、${ids.length - go.length}人を残した。残った子は少し不満そうだ`, small: '' }; }),
+      o('全員断る（試合を優先する）', 'firm', null, (w) => { const ids = (w._natCall || []).filter((id) => w.players[id]); for (const id of ids) { w.players[id].unrest += 1.5; w.players[id].conf = clamp(w.players[id].conf - 6, 0, 100); } YA.addRep(w, -ids.length); return { line: '代表の招集を断った。協会からの評判と、本人たちの気持ちが下がった', small: `評判 -${ids.length}` }; }),
+    ] });
+  YA.EVENT_ABOUT = YA.EVENT_ABOUT || {};
+  YA.EVENT_ABOUT.natcall = '年に3回（5月・7月・1月）、選考ラインを超えた子が年代別の代表に選ばれます。送り出すと本人は伸び、クラブの評判が上がります。';
   const CLUB_REQ = [
     { text: 'クラブから要望が届いた。「若手を育てる方針のため、高1をもっと試合で使ってほしい」', yes: (w) => { w.club.reqYoung = 6; }, yesMsg: '今後6週、高1を使う約束', trust: [4, -6] },
     { text: 'クラブから要望が届いた。「スポンサー行事に、主力を2人出してほしい」', yes: (w) => { const ps = Object.values(w.players).filter((p) => p.team === 'A' && !away(p)).sort((a, b) => YA.ovr(b) - YA.ovr(a)).slice(0, 2); ps.forEach((p) => (p.away = 1)); }, yesMsg: '主力2人が今週は不在になる', trust: [5, -5] },

@@ -382,6 +382,7 @@
         h('span', { class: 'chip trait' }, `通算 ${a.apps}試合・${a.goals}得点`),
         a.nat ? h('span', { class: 'chip trait' }, `日本代表 ${a.nat}回` + (a.natGoals ? `・${a.natGoals}得点` : '')) : null,
         a.u21 ? h('span', { class: 'chip gray' }, `U-21代表 ${a.u21}回`) : null,
+        a.youthCaps ? h('span', { class: 'chip gray' }, `ユース年代の代表 ${a.youthCaps}回`) : null,
         a.transfers ? h('span', { class: 'chip gray' }, `移籍 ${a.transfers}回`) : null),
       (a.titles || []).length ? h('div', {}, h('div', { class: 'h' }, `タイトル（${a.titles.length}）`), h('div', { class: 'row', style: 'flex-wrap:wrap;gap:4px' }, count(a.titles).map((x) => h('span', { class: 'chip trait' }, x)))) : null,
       (a.awards || []).length ? h('div', {}, h('div', { class: 'h' }, '個人の賞・代表'), h('div', { class: 'row', style: 'flex-wrap:wrap;gap:4px' }, count(a.awards).map((x) => h('span', { class: 'chip pers' }, x)))) : null,
