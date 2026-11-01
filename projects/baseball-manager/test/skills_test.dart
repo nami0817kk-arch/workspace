@@ -170,7 +170,8 @@ void main() {
       g.skillTips[Skill.chance] = 3;
       g.setStudyTarget(Skill.chance);
       final back = Game.fromJson(g.toJson(), Random(1));
-      expect(back.player.skills, {Skill.stealer});
+      expect(back.player.skills, g.player.skills); // 生まれつきの弱点も残る
+      expect(back.player.skills, contains(Skill.stealer));
       expect(back.skillTips[Skill.chance], 3);
       expect(back.studyTarget, Skill.chance);
       // 古いセーブ: 項目が無い / 昔の特性の名前

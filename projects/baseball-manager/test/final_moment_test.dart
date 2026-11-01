@@ -56,7 +56,7 @@ void main() {
       expect(b.choices[0].label, contains('賭け'));
       expect(b.choices[1].label, contains('ミート 77'));
       final pitcher = finalMomentEvent(_p(Role.pitcher, v: 40));
-      expect(pitcher.choices[0].label, contains('球威 40'));
+      expect(pitcher.choices[0].label, contains('球速 40'));
       expect(pitcher.choices[1].label, contains('制球 40'));
     });
 
@@ -178,7 +178,7 @@ void main() {
 
     test('投手でも決勝の見せ場が出て、最後まで遊べる', () {
       final g = _final(role: Role.pitcher);
-      expect(g.pendingEvent!.choices[0].label, contains('球威'));
+      expect(g.pendingEvent!.choices[0].label, contains('球速'));
       var guard = 0;
       while (g.phase != Phase.retired && guard++ < 4000) {
         switch (g.phase) {

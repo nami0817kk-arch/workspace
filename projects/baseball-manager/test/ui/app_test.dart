@@ -132,7 +132,7 @@ void main() {
     expect(find.textContaining('6歳'), findsOneWidget);
     expect(find.textContaining('春'), findsWidgets);
     expect(find.text('球速'), findsWidgets); // 投手の能力
-    expect(find.text('ミート'), findsNothing);
+    expect(find.text('変化球'), findsWidgets);
   });
 
   testWidgets('練習すると季節が進み、経験点が貯まり、能力に振り分けられる', (t) async {
