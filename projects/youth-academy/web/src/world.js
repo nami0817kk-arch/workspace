@@ -84,6 +84,15 @@
   };
 
   // 学年 g=1,2,3。quality は -2〜+2 の素質
+  YA.randName = function (rng, used) {
+    let name;
+    for (let k = 0; k < 50; k++) {
+      name = rng.pick(SUR) + ' ' + rng.pick(GIV);
+      if (!used || !used.has(name)) break;
+    }
+    if (used) used.add(name);
+    return name;
+  };
   YA.genPlayer = function (rng, id, grade, pos, quality, used) {
     let name;
     for (;;) {
@@ -170,7 +179,7 @@
   YA.newWorld = function (seed, opts) {
     opts = opts || {};
     const rng = YA.rngOf(seed);
-    const w = { v: 1, seed, year: 1, week: 1, nextId: 0, players: {}, plan: null, inbox: [], events: [], alumni: [], results: [], rec: { w: 0, d: 0, l: 0, gf: 0, ga: 0 }, phase: 'plan', captain: null, formation: '4-3-3', lineupA: null, benchA: null, lineupB: null, tactic: null, lastWeek: null, season: 1, notes: [], clubName: 'レガーレ湘南U-18', matchDone: false, log: [] };
+    const w = { v: 1, seed, year: 1, week: 1, nextId: 0, players: {}, plan: null, inbox: [], events: [], alumni: [], results: [], rec: { w: 0, d: 0, l: 0, gf: 0, ga: 0 }, phase: 'plan', captain: null, formation: '4-3-3', lineupA: null, benchA: null, lineupB: null, tactic: null, lastWeek: null, season: 1, notes: [], clubName: '湘南 レガーレU-18', matchDone: false, log: [] };
     w.tierQ = (2 - (opts.tier || 2)) * 0.5; // 上の部のクラブほど、素質のある子が集まる
     const used = new Set();
     for (const g of [1, 2, 3]) genGrade(rng, w, g, used);
@@ -189,6 +198,7 @@
     w.rel = [];
     YA.newClub(w, opts.tier || 2, opts.clubName || w.clubName);
     w.club.noFire = !!opts.noFire;
+    YA.initTop(w);
     if (opts.repAdj) YA.addRep(w, opts.repAdj);
     YA.relations(w);
     YA.yearStart(w);
@@ -423,7 +433,7 @@
       p.friends = (w.rel || []).filter((x) => x.k === 'friend' && (x.a === id || x.b === id)).map((x) => (x.a === id ? x.b : x.a));
       players[id] = p;
     }
-    return { id: 'me', name: w.clubName + (which === 'B' ? ' B' : ''), short: which === 'B' ? 'レガーレB' : 'レガーレ', color: '#1f6feb', isUser: true, players, lineup: JSON.parse(JSON.stringify(lineup)), bench: bench.slice(), tactic: which === 'B' && w.bCtl && w.bCtl.tactic && YA.TACTICS[w.bCtl.tactic] ? Object.assign({ type: w.bCtl.tactic }, YA.TACTICS[w.bCtl.tactic]) : w.tactic ? JSON.parse(JSON.stringify(w.tactic)) : Object.assign({ type: 'ポゼッション' }, YA.TACTICS['ポゼッション']), instr: {}, subsUsed: 0, windowsUsed: 0, formation: w.formation, prep: YA.analysisLevel ? YA.analysisLevel(w) : 0, coachTactic: w.coach ? w.coach.tactic : 10, disc: w.disc, tactRep: YA.tactRepOf(w) };
+    return { id: 'me', name: w.clubName + (which === 'B' ? ' B' : ''), short: YA.shortName(w.clubName) + (which === 'B' ? 'B' : ''), color: '#1f6feb', isUser: true, players, lineup: JSON.parse(JSON.stringify(lineup)), bench: bench.slice(), tactic: which === 'B' && w.bCtl && w.bCtl.tactic && YA.TACTICS[w.bCtl.tactic] ? Object.assign({ type: w.bCtl.tactic }, YA.TACTICS[w.bCtl.tactic]) : w.tactic ? JSON.parse(JSON.stringify(w.tactic)) : Object.assign({ type: 'ポゼッション' }, YA.TACTICS['ポゼッション']), instr: {}, subsUsed: 0, windowsUsed: 0, formation: w.formation, prep: YA.analysisLevel ? YA.analysisLevel(w) : 0, coachTactic: w.coach ? w.coach.tactic : 10, disc: w.disc, tactRep: YA.tactRepOf(w) };
   };
 
   // 相手（週ごとに決まる）。年とともに強くなる
@@ -866,6 +876,7 @@
     }
   }
   YA.autoTeamsKeep = autoTeamsKeep;
+  YA.newcomer = (w, rng, grade, forcePos) => newcomer(w, rng, grade, forcePos);
   function newcomer(w, rng, grade, forcePos) {
     const used = new Set(Object.values(w.players).map((p) => p.name));
     // GKが足りなくなったら、途中加入はGK
@@ -1082,6 +1093,7 @@
     const rng = YA.rngOf(w.seed * 71 + w.year * 12345);
     const out = [];
     const grads = [];
+    if (YA.topSeason) YA.topSeason(w); // トップチームの1年（順位・昇格降格・入れ替わり）
     YA.alumniTick(w);
     // その年の卒業生を力の順に並べ、上位からプロ契約（人数は評判で変わる）。突出して高い子は上限を超えてプロへ
     const seniors = Object.values(w.players).filter((q) => q.grade === 3).sort((a, b) => YA.ovr(b) - YA.ovr(a));
@@ -1107,7 +1119,10 @@
     });
     // プロ入りは、その年の目安（K人）まで。突出した子（16以上）だけ1人多く取れる。下から大学へ回す
     const pros = seniors.filter((q) => q._path === 'pro');
-    const cap = K + (pros[K] && YA.ovr(pros[K]) >= 16 ? 1 : 0);
+    // 在学中にトップと契約した子がいれば、そのぶん卒業時の枠は減る（その年のプロ入りの合計が目安に収まるように）
+    const early = (w.alumni || []).filter((a) => a.year === w.year && /高.でトップ昇格/.test(a.note || '')).length;
+    const K2 = Math.max(0, K - early);
+    const cap = K2 + (pros[K2] && YA.ovr(pros[K2]) >= 16 ? 1 : 0);
     for (const q of pros.slice(cap)) {
       q._path = 'univ';
       if (q._sold) q._sold = false;

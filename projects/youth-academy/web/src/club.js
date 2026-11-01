@@ -293,6 +293,7 @@
     w.club.rep = rep;
     w.club.eval = keepEval;
     if (offer.budgetAdj) w.club.budgetAdj = offer.budgetAdj;
+    YA.initTop(w);
     w.pendingContract = null;
     w.plan = YA.defaultPlan();
     YA.autoPlan(w);
@@ -392,4 +393,134 @@
       YA.noteTier(w, 1, '海外遠征で大きな経験を積んだ（練習1.6倍・評判 +3）');
     }
   };
+
+  // ---------- 自分のクラブのトップチーム（Jリーグ）----------
+  // 名前はユースの名前から「U-18」を除いたもの。部はユースの部に合わせて始まり、毎年の順位で昇格・降格する
+  const J_NAME = { 1: 'J1リーグ', 2: 'J2リーグ', 3: 'J3リーグ' };
+  YA.J_NAME = J_NAME;
+  const J_AVG = { 1: 138, 2: 122, 3: 108 }; // その部の選手の総合力のめやす（200点）
+  YA.topName = (w) => String(w.clubName || '').replace(/U-18$/, '').trim();
+  function proPlayer(w, r, j, pos, used, age) {
+    const name = YA.randName(r, used);
+    const a = age || r.int(19, 33);
+    const rating = Math.round(clamp(J_AVG[j] + (r() - 0.5) * 30 - (a <= 21 ? 8 : 0) - (a >= 32 ? 5 : 0), 80, 175));
+    return { name, pos, age: a, rating, academy: false };
+  }
+  const TOP_POS = ['GK', 'GK', 'GK', 'CB', 'CB', 'CB', 'CB', 'LB', 'RB', 'LB', 'RB', 'DM', 'DM', 'CM', 'CM', 'CM', 'AM', 'AM', 'LW', 'RW', 'LW', 'RW', 'ST', 'ST', 'ST', 'SS'];
+  YA.initTop = function (w) {
+    const r = YA.rngOf(w.seed * 31 + w.year * 7 + 5);
+    const pc = YA.proClubOf(w.clubName);
+    const j = pc ? pc.tier : w.club ? w.club.tier : 2;
+    const used = new Set(Object.values(w.players).map((p) => p.name));
+    w.top = { name: YA.topName(w), j, squad: TOP_POS.map((pos) => proPlayer(w, r, j, pos, used)), hist: [] };
+    return w.top;
+  };
+  // ユースから上がった子（卒業生のうち、いまトップにいる子）
+  YA.topAcademy = (w) => (w.alumni || []).filter((a) => !a.retired && a.status === 'pro' && w.top && a.club === w.top.name);
+  // トップの顔ぶれ：生え抜き（卒業生）と、ほかから来たプロ。総合力の順
+  YA.topSquad = function (w) {
+    if (!w.top) YA.initTop(w);
+    const ac = YA.topAcademy(w).map((a) => ({ name: a.name, pos: a.main || a.pos, age: a.age, rating: YA.rate(a.ovr), academy: true, ref: a }));
+    return w.top.squad.concat(ac).sort((a, b) => b.rating - a.rating);
+  };
+  // 1年の終わり：トップの順位（強さ＝上位14人の平均と、その部の水準の差）、昇格・降格、年齢と入れ替わり
+  YA.topSeason = function (w) {
+    if (!w.top) YA.initTop(w);
+    const t = w.top;
+    const r = YA.rngOf(w.seed * 43 + w.year * 19 + 3);
+    const sq = YA.topSquad(w);
+    const str = sq.slice(0, 14).reduce((s, x) => s + x.rating, 0) / Math.min(14, sq.length || 1);
+    const teams = t.j === 1 ? 20 : t.j === 2 ? 20 : 20;
+    const rank = clamp(Math.round(teams / 2 + 0.5 - (str - J_AVG[t.j]) * 0.7 + (r() - 0.5) * 8), 1, teams);
+    let move = 0;
+    if (t.j > 1 && rank <= 2) move = -1;
+    else if (t.j < 3 && rank >= teams - 2) move = 1;
+    t.hist.push({ y: w.year, j: t.j, rank, str: Math.round(str) });
+    YA.noteTier(w, 1, `トップチーム（${t.name}）は${J_NAME[t.j]}で${rank}位` + (move < 0 ? `。${J_NAME[t.j - 1]}へ昇格します` : move > 0 ? `。${J_NAME[t.j + 1]}へ降格します` : ''));
+    t.j += move;
+    // 年齢と力の変化、引退・移籍
+    const used = new Set(t.squad.map((x) => x.name));
+    for (const x of t.squad) {
+      x.age++;
+      x.rating = Math.round(clamp(x.rating + (x.age <= 24 ? r.int(0, 6) : x.age >= 31 ? -r.int(1, 6) : r.int(-3, 3)), 70, 185));
+    }
+    t.squad = t.squad.filter((x) => !(x.age >= 35 || (x.age >= 31 && r() < 0.25) || r() < 0.08));
+    // 生え抜きは12人まで。あふれた子（力の下の子から）は、出場の機会を求めてほかのJクラブへ移る
+    const ac = YA.topAcademy(w).sort((a, b) => b.ovr - a.ovr);
+    for (const a of ac.slice(12)) {
+      const rt = YA.rate(a.ovr);
+      const tier = rt >= 125 ? 1 : rt >= 112 ? 2 : 3;
+      const pool = YA.PRO_CLUBS.filter((c) => c.tier === tier && c.name !== t.name);
+      a.club = (pool.length ? r.pick(pool) : r.pick(YA.PRO_CLUBS)).name;
+      a.league = J_NAME[tier];
+      a.transfers = (a.transfers || 0) + 1;
+      YA.noteTier(w, 2, `生え抜きの${a.name}が、出場の機会を求めて${a.club}（${a.league}）へ移籍しました`);
+    }
+    // 足りない枠は、その部の水準の選手を取る（ユースから上がった子がいれば、その分は取らない）
+    const need = 26 - YA.topAcademy(w).length;
+    const cnt = (pos) => t.squad.filter((x) => x.pos === pos).length + YA.topAcademy(w).filter((a) => (a.main || a.pos) === pos).length;
+    let g = 0;
+    while (t.squad.length < need && g++ < 60) {
+      const pos = TOP_POS.find((p, i) => cnt(p) < TOP_POS.filter((q) => q === p).length) || r.pick(TOP_POS);
+      t.squad.push(proPlayer(w, r, t.j, pos, used));
+    }
+    while (t.squad.length > need) t.squad.splice(t.squad.reduce((m, x, i, arr) => (x.rating < arr[m].rating ? i : m), 0), 1);
+    return { rank, move };
+  };
+  // トップの登録に入れる力（26人の中で下から5番目の子と並ぶ）
+  YA.topCutLine = function (w) {
+    const sq = YA.topSquad(w);
+    const k = Math.max(0, sq.length - 5);
+    return sq[k] ? sq[k].rating : J_AVG[w.top.j] - 12;
+  };
+  // いまのユースの子が、トップの中で何番目くらいか（同じポジション）
+  YA.topRankFor = function (w, p) {
+    const sq = YA.topSquad(w).filter((x) => YA.GROUP[x.pos] === p.pos);
+    const r0 = YA.rating(p);
+    return { n: sq.filter((x) => x.rating > r0).length + 1, of: sq.length + 1 };
+  };
+  // 在学中のプロ契約（トップ昇格）：トップの主力と並ぶ力の子は、早めにトップが取りにくる
+  YA.earlyProLine = (w) => {
+    if (!w.top) YA.initTop(w);
+    const sq = YA.topSquad(w);
+    const k = Math.min(5, sq.length - 1); // トップの主力（上位6人）と並ぶ力
+    // J1でやれる〜主力の水準（132〜140）。トップが強くても、日本代表に近い子をユースに置いたままにはしない
+    return clamp(sq[k] ? sq[k].rating : J_AVG[w.top.j] + 10, 132, 140);
+  };
+  YA.earlyPro = function (w, pid) {
+    const p = w.players[pid];
+    if (!p) return null;
+    if (!w.top) YA.initTop(w);
+    const a = YA.alumniEntry(w, Object.assign({}, p, { _path: 'pro' }), `プロ契約（高${p.grade}でトップ昇格）`);
+    a.age = 15 + p.grade;
+    a.grade = p.grade;
+    a.club = w.top.name;
+    a.league = J_NAME[w.top.j];
+    a.abroad = false;
+    w.alumni.push(a);
+    delete w.players[pid];
+    YA.autoTeamsKeep(w);
+    w._earlyN = w._earlyY === w.year ? (w._earlyN || 0) + 1 : 1;
+    w._earlyY = w.year;
+    YA.addRep(w, 2);
+    YA.addTrust(w, 2, 'ユースからトップへ選手を送り出した');
+    return a;
+  };
+
+  // 出来事：トップチームからのプロ契約の打診（トップの主力と並ぶ力の子。高1はさらに上の子だけ）
+  YA.EVENTS.push({ id: 'early', name: 'トップチームからのプロ契約の打診', weight: 3,
+    pick: (w, r) => {
+      if (!w.top) return null;
+      const line = YA.earlyProLine(w);
+      // 在学中の契約はふつう1年に1人まで。主力をはっきり上回る子（+12）は、いつでも取りにくる
+      const c = Object.values(w.players).filter((p) => !(p.away > 0) && p.inj <= 0 && YA.rating(p) >= line + (p.grade >= 2 ? 0 : 12) + ((w._earlyN || 0) >= 2 && w._earlyY === w.year ? 12 : 0) && !(p._earlyNo && w.year * 100 + w.week - p._earlyNo < 10));
+      return c.length ? c.sort((a, b) => YA.rating(b) - YA.rating(a))[0] : null;
+    },
+    text: (p, w) => `トップチーム（${w.top.name}・${YA.J_NAME[w.top.j]}）が、${p.num}番 ${p.name}（高${p.grade}・総合力${YA.rating(p)}）にプロ契約を打診してきた。トップの主力と並ぶ力だ`,
+    opts: [
+      { label: '送り出す（プロ契約。ユースからは抜ける）', kind: 'push', run: (w, p, r) => { YA.earlyPro(w, p.id); const fill = Object.keys(w.players).length < 36; if (fill) YA.newcomer(w, r, 1); return { line: 'プロ契約を結び、トップチームへ上がった' + (fill ? '。空いた枠には、U-15から1人上がった' : ''), small: '評判 +2・信頼度 +2' }; } },
+      { label: '卒業まではユースで育てる', kind: 'firm', run: (w, p) => { p.unrest += 2; p._earlyNo = w.year * 100 + w.week; YA.addTrust(w, -2, 'トップの打診を断った'); return { line: '残ることになった。本人は少し不満そうだ', small: '信頼度 -2・不満 +2' }; } },
+    ] });
+  YA.EVENT_ABOUT = YA.EVENT_ABOUT || {};
+  YA.EVENT_ABOUT.early = 'トップの主力と並ぶ力の子は、卒業を待たずにトップが取りにきます。送り出すと評判と信頼度が上がり、ユースの戦力は下がります。';
 })();

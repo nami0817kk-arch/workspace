@@ -163,7 +163,7 @@
             o.kind ? h('span', { class: 'chip gray', style: 'font-size:10px;flex:none' }, YA.KIND_LABEL[o.kind]) : null,
             h('span', { class: 'grow' }, o.label),
             o.hint === 'good' ? h('span', { class: 'fit good', style: 'flex:none' }, '響きそう') : o.hint === 'bad' ? h('span', { class: 'fit bad', style: 'flex:none' }, '逆効果かも') : null)),
-          p ? h('div', { class: 'note' }, '「響きそう」「逆効果かも」は、見えている性格からの目安です。同じ言葉でも、性格で受け止め方が変わります。') : null,
+          p && v.info.some((x) => x.kind) ? h('div', { class: 'note' }, '「響きそう」「逆効果かも」は、見えている性格からの目安です。同じ言葉でも、性格で受け止め方が変わります。') : null,
         );
       };
       const choose = (i) => {

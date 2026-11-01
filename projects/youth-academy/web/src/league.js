@@ -59,28 +59,70 @@
   YA.LEVEL_NAMES = ['全国リーグ', '地域リーグ', '県リーグ'];
   YA.LEVEL_EXP = [1, 0.8, 0.6]; // 試合の経験値（決定62：全国＞地域＞県）
 
-  // 60クラブ（決定83）：各部20。名前・作風・監督・強さの癖（名門か新興か）は固定で、毎年そこから11を選ぶ
-  YA.CLUB60 = (function () {
-    const r = YA.rngOf(60601);
-    const used = new Set();
+  // ---------- プロクラブの表（地域名は実在の町、愛称は固定）。トップチーム・卒業生の移籍先・ユースのリーグの相手に使う ----------
+  // [町, 地域, 愛称, はじめの部（1=J1・2=J2・3=J3）]
+  YA.REGIONS = ['北海道・東北', '関東', '中部', '関西', '中国・四国', '九州'];
+  YA.PRO_CLUBS = [
+    ['札幌', 0, 'ボレアス', 1], ['仙台', 0, 'ルーチェ', 2], ['山形', 0, 'モンテ', 2], ['秋田', 0, 'ブルーノ', 3], ['盛岡', 0, 'フェッロ', 3], ['福島', 0, 'ヴィアーレ', 3],
+    ['横浜', 1, 'オンダス', 1], ['川崎', 1, 'ヴェローチェ', 1], ['浦和', 1, 'ロッソーネ', 1], ['鹿島', 1, 'アルマーダ', 1], ['柏', 1, 'フォーリア', 1], ['東京', 1, 'カピターレ', 1], ['町田', 1, 'コリーナ', 1],
+    ['湘南', 1, 'レガーレ', 2], ['千葉', 1, 'マーレ', 2], ['大宮', 1, 'アルコ', 2], ['水戸', 1, 'ヴィータ', 2], ['甲府', 1, 'ウーヴァ', 2], ['栃木', 1, 'カステロ', 3], ['群馬', 1, 'ヴェント', 3], ['相模原', 1, 'ステッラ', 3],
+    ['新潟', 2, 'アルベ', 1], ['清水', 2, 'オーラ', 1], ['名古屋', 2, 'グランデ', 1], ['磐田', 2, 'スピーガ', 2], ['藤枝', 2, 'ラーマ', 2], ['金沢', 2, 'オーロ', 3], ['松本', 2, 'モンターニャ', 3], ['長野', 2, 'ネーヴェ', 3], ['岐阜', 2, 'フィウメ', 3],
+    ['大阪', 3, 'ソーレ', 1], ['京都', 3, 'アンティカ', 1], ['神戸', 3, 'ブリッツァ', 1], ['奈良', 3, 'ルーナ', 3], ['滋賀', 3, 'ラーゴ', 3],
+    ['岡山', 4, 'ペスカ', 1], ['広島', 4, 'フェニーチェ', 1], ['徳島', 4, 'コルサ', 2], ['愛媛', 4, 'アランチャ', 2], ['山口', 4, 'ローザ', 2], ['今治', 4, 'ナーヴェ', 2], ['高知', 4, 'マレア', 3], ['鳥取', 4, 'ドゥーナ', 3],
+    ['福岡', 5, 'ヴェルデ', 1], ['長崎', 5, 'ナーヴィ', 1], ['鳥栖', 5, 'ステラーレ', 2], ['大分', 5, 'フォンテ', 2], ['熊本', 5, 'カステッロ', 2], ['北九州', 5, 'アッチャイオ', 3], ['鹿児島', 5, 'ヴルカーノ', 3], ['宮崎', 5, 'パルマ', 3],
+  ].map(([city, region, nick, tier]) => ({ city, region, nick, tier, name: city + ' ' + nick }));
+  // 地域ごとの、Jクラブのない町（高校の名前に使う）
+  const REGION_TOWNS = [
+    ['青森', '八戸', '函館', '旭川', '郡山', 'いわき', '石巻', '酒田'],
+    ['船橋', '藤沢', '八王子', '前橋', '宇都宮', '川越', '市原', '平塚', '流山', '越谷'],
+    ['富山', '福井', '浜松', '豊田', '四日市', '静岡', '上田', '沼津'],
+    ['堺', '西宮', '姫路', '和歌山', '大津', '尼崎', '枚方', '宇治'],
+    ['倉敷', '福山', '松江', '下関', '高松', '松山', '呉', '米子'],
+    ['佐賀', '久留米', '那覇', '延岡', '佐世保', '日田', '飯塚', '都城'],
+  ];
+  YA.regionOf = function (clubName) {
+    const n = String(clubName || '').replace(/U-18$/, '').trim();
+    const c = YA.PRO_CLUBS.find((x) => n === x.name) || YA.PRO_CLUBS.find((x) => n.indexOf(x.city) === 0);
+    return c ? c.region : 1;
+  };
+  YA.proClubOf = function (clubName) {
+    const n = String(clubName || '').replace(/U-18$/, '').trim();
+    return YA.PRO_CLUBS.find((x) => n === x.name) || null;
+  };
+  // ユースのリーグの相手：全国＝全地域のJクラブのユースと強豪校、地域・県＝同じ地域のクラブと高校
+  const POOLS = {};
+  YA.clubPool = function (region) {
+    if (POOLS[region]) return POOLS[region];
+    const r = YA.rngOf(60601 + region * 97);
     const out = [];
-    for (let i = 0; i < 60; i++) {
-      const kind = i % 20 < 11 ? 'club' : 'high';
-      let name;
-      do name = kind === 'club' ? r.pick(AREAS) + ' ' + r.pick(NICK) + 'ユース' : r.pick(AREAS) + r.pick(HS);
-      while (used.has(name) || (kind === 'club' && used.has('n:' + name.split(' ')[1])));
+    const used = new Set();
+    const add = (name, kind, level) => {
+      if (used.has(name)) return;
       used.add(name);
-      if (kind === 'club') used.add('n:' + name.split(' ')[1]); // 愛称は60クラブで重ならない
       const style = r.pick(['power', 'tech', 'defend']);
       const ck = r.pick(COACH_KIND);
-      out.push({
-        id: 'k' + i, name, kind, style, level: Math.floor(i / 20) + 1,
-        edge: Math.round((r() - 0.5) * 1.6 * 10) / 10,
-        coach: { name: r.pick(COACH_SUR) + ' ' + r.pick(['監督', 'コーチ']), kind: ck[0], note: ck[1] },
-      });
-    }
+      out.push({ id: 'R' + region + '-' + out.length, name, kind, style, level, edge: Math.round((r() - 0.5) * 1.6 * 10) / 10, coach: { name: r.pick(COACH_SUR) + ' ' + r.pick(['監督', 'コーチ']), kind: ck[0], note: ck[1] } });
+    };
+    // 全国（1部）：J1のユース11と、各地の強豪校
+    const j1 = YA.PRO_CLUBS.filter((c) => c.tier === 1);
+    for (const c of j1.map((c) => ({ c, k: r() })).sort((a, b) => a.k - b.k).slice(0, 12).map((x) => x.c)) add(c.name + 'U-18', 'club', 1);
+    while (out.filter((x) => x.level === 1).length < 20) add(r.pick(REGION_TOWNS[r.int(0, 5)]) + r.pick(HS), 'high', 1);
+    // 地域（2部）：同じ地域のJクラブのユースと、地域の高校
+    const mine = YA.PRO_CLUBS.filter((c) => c.region === region);
+    for (const c of mine) add(c.name + 'U-18', 'club', 2);
+    let g = 0;
+    while (out.filter((x) => x.level === 2).length < 20 && g++ < 200) add(r.pick(REGION_TOWNS[region].concat(mine.map((c) => c.city))) + r.pick(HS), 'high', 2);
+    // 県（3部）：地域の高校と、Jクラブの2つ目のチーム
+    for (const c of mine.slice(0, 4)) add(c.name + 'U-18 B', 'club', 3);
+    g = 0;
+    while (out.filter((x) => x.level === 3).length < 20 && g++ < 300) add(r.pick(REGION_TOWNS[region].concat(mine.map((c) => c.city))) + r.pick(HS), 'high', 3);
+    POOLS[region] = out;
     return out;
-  })();
+  };
+  // 自分のクラブの地域の60クラブ（各部20）。古い名前（CLUB60）は関東の表を指す
+  Object.defineProperty(YA, 'CLUB60', { get: () => YA.clubPool(1), configurable: true });
+  // チームの短い名前（愛称）
+  YA.shortName = (name) => String(name || '').replace(/U-18$/, '').split(' ').pop() || name;
 
   YA.newLeague = function (w) {
     const r = YA.rngOf(w.seed * 91 + w.year * 313 + (w.level || 2) * 7);
@@ -88,7 +130,7 @@
     const used = new Set();
     const teams = [];
     // 同じ部の20クラブから11を選ぶ（自分のクラブと同名は除く）。名前の書き換えは w.rename に残る
-    const pool = YA.CLUB60.filter((c) => c.level === level && c.name !== w.clubName);
+    const pool = YA.clubPool(YA.regionOf(w.clubName)).filter((c) => c.level === level && c.name !== w.clubName);
     const pick = pool.map((c) => ({ c, k: r() })).sort((a, b) => a.k - b.k).slice(0, 11).map((x) => x.c);
     for (let i = 0; i < 11; i++) {
       const c = pick[i];
@@ -105,7 +147,7 @@
         coach: { name: c.coach.name, kind: ck[0], note: ck[1] },
       });
     }
-    teams.push({ id: 'me', name: w.clubName, short: 'レガーレ', me: true });
+    teams.push({ id: 'me', name: w.clubName, short: YA.shortName(w.clubName), me: true });
     // 総当たり（サークル法）。22節
     const ids = teams.map((t) => t.id);
     const rounds = [];
@@ -131,7 +173,9 @@
   YA.newCup = function (w) {
     const r = YA.rngOf(w.seed * 57 + w.year * 211);
     const mk = (n, base) => Array.from({ length: n }, (_, i) => {
-      const name = r() < 0.5 ? r.pick(AREAS) + r.pick(HS) : r.pick(AREAS) + ' ' + r.pick(NICK) + 'ユース';
+      // 大会は全国から：Jクラブのユースか、各地の高校
+      const pool = YA.clubPool(r.int(0, 5));
+      const name = r.pick(pool.filter((c) => c.level <= 2 && c.name !== w.clubName)).name;
       const style = r.pick(['power', 'tech', 'defend']);
       return { id: 'c' + i, name, short: name.length > 9 ? name.slice(0, 9) : name, style, lvl: Math.round((base + i * 0.55 + (r() - 0.5)) * 10) / 10, formation: r.pick(['4-4-2', '4-3-3', '5-3-2']), tactic: { power: 'ハイプレス', tech: 'ポゼッション', defend: '堅守' }[style], color: r.pick(['#c0392b', '#2c3e50', '#8e44ad', '#d35400']), coach: { name: r.pick(COACH_SUR) + ' 監督', kind: r.pick(COACH_KIND)[0], note: '' } };
     });

@@ -84,7 +84,7 @@
   };
 
   // ---------- クラブ ----------
-  const SUBS = [['over', '概要'], ['money', '予算と施設'], ['staff', 'スタッフ'], ['int', '内部昇格'], ['scout', 'スカウト'], ['sel', 'セレクション'], ['table', '順位と日程']];
+  const SUBS = [['over', '概要'], ['top', 'トップ'], ['money', '予算と施設'], ['staff', 'スタッフ'], ['int', '内部昇格'], ['scout', 'スカウト'], ['sel', 'セレクション'], ['table', '順位と日程']];
   function viewClub(main) {
     const w = W();
     const ui = U().app;
@@ -92,7 +92,7 @@
     const tabs = h('div', { class: 'tabs', style: 'flex:none' }, SUBS.map(([k, n]) => h('button', { class: 'btn' + (ui.ct === k ? ' on' : ''), onclick: () => { ui.ct = k; rerender(); } }, n)));
     const body = h('div', { class: 'card pbody', style: 'flex:1;min-height:0' });
     if (!SUBS.some((x) => x[0] === ui.ct)) ui.ct = 'over';
-    ({ over: over, money: money, staff: staff, int: (b, w2) => recruit(b, w2, 'int'), scout: (b, w2) => recruit(b, w2, 'scout'), sel: (b, w2) => recruit(b, w2, 'sel'), table: table })[ui.ct](body, w);
+    ({ over: over, top: topView, money: money, staff: staff, int: (b, w2) => recruit(b, w2, 'int'), scout: (b, w2) => recruit(b, w2, 'scout'), sel: (b, w2) => recruit(b, w2, 'sel'), table: table })[ui.ct](body, w);
     main.append(h('div', { style: 'flex:1;min-height:0;display:flex;flex-direction:column;gap:6px' }, tabs, body));
   }
 
@@ -162,6 +162,32 @@
     const msg = h('div', { class: 'msglog' });
     for (const m of w.market) right.append(card(h('div', { class: 'row' }, h('span', { class: 'chip pers', style: 'min-width:78px;justify-content:center' }, m.role), h('b', { class: 'grow' }, m.name + (m.ob ? '（OB）' : '')), h('span', { class: 'chip trait' }, '能力 ' + m.ab), h('span', { class: 'sub' }, m.salary + '万'), h('button', { class: 'btn sm', disabled: left2 <= 0, onclick: () => { const r = YA.hire(w, m.id); if (r.ok) { save(); rerender(); } else { msg.replaceChildren(h('div', {}, r.msg)); } } }, '採用'))));
     right.append(msg);
+    body.append(h('div', { style: 'display:flex;gap:8px;align-items:flex-start' }, left, right));
+  }
+
+  // ---------- トップチーム：部・順位の履歴・選手（生え抜きに印）。ユースの子がトップの中でどのあたりか ----------
+  function topView(body, w) {
+    const sq = YA.topSquad(w);
+    const t = w.top;
+    const ac = sq.filter((x) => x.academy).length;
+    const last = t.hist[t.hist.length - 1];
+    const left = h('div', { style: 'flex:1.25;min-width:0' });
+    left.append(h('div', { class: 'row', style: 'gap:6px;flex-wrap:wrap;margin-bottom:4px' }, YA.emblemEl(w, w.clubName, 22), h('b', { style: 'font-size:15px' }, t.name), h('span', { class: 'chip trait' }, YA.J_NAME[t.j]), last ? h('span', { class: 'chip gray' }, `昨季 ${YA.J_NAME[last.j]} ${last.rank}位`) : null, h('span', { class: 'chip pers' }, `生え抜き ${ac}人／${sq.length}人`)));
+    left.append(h('div', { class: 'note', style: 'margin-bottom:4px' }, `トップに上がった子は、ここでプロとしてプレーします。登録に入れるのは総合力 ${YA.topCutLine(w)} ほどから、主力は ${sq[5] ? sq[5].rating : '-'} ほどから。`));
+    left.append(h('div', { class: 'plist' }, sq.map((x, i) => h('div', { class: 'pitem', style: 'cursor:default;' + (x.academy ? 'background:#fff7d6;border-color:#f0cf55' : '') },
+      h('span', { class: 'sub', style: 'width:18px' }, i + 1),
+      h('span', { class: 'pos ' + (YA.GROUP[x.pos] || x.pos) }, YA.POS_LABEL[x.pos] || x.pos),
+      h('span', { class: 'nm grow' }, x.name),
+      x.academy ? h('span', { class: 'chip trait' }, 'ユース出身') : null,
+      h('span', { class: 'sub' }, `${x.age}歳`),
+      h('b', { style: 'width:30px;text-align:right' }, x.rating),
+      h('span', { class: 'sub', style: 'width:52px' }, i < 11 ? '主力' : i < 18 ? '控え' : '若手・控え')))));
+    const right = h('div', { style: 'flex:1;min-width:0' });
+    right.append(card(title('順位の履歴'), ...(t.hist.length ? t.hist.slice().reverse().map((x) => h('div', { class: 'row', style: 'padding:2px 0' }, h('span', { class: 'sub', style: 'width:54px' }, `${x.y}年目`), h('span', { class: 'grow' }, YA.J_NAME[x.j]), h('b', {}, `${x.rank}位`))) : [h('div', { class: 'note' }, '1年目の終わりに、最初の順位が出ます')])));
+    // ユースのいちばん力のある子たちが、トップの中で何番目くらいか
+    const tops = Object.values(w.players).sort((a, b) => YA.rating(b) - YA.rating(a)).slice(0, 5);
+    right.append(card(title('ユースの上位とトップの差'), ...tops.map((p) => { const k = YA.topRankFor(w, p); return h('div', { class: 'row', style: 'padding:2px 0;gap:5px' }, h('span', { class: 'pos ' + p.pos }, YA.POS_LABEL[p.main] || p.pos), h('span', { class: 'grow' }, `${p.name}（高${p.grade}）`), h('b', {}, YA.rating(p)), h('span', { class: 'sub', style: 'white-space:nowrap' }, `トップの${k.n}番手`)); }),
+      h('div', { class: 'note', style: 'margin-top:3px' }, `トップの主力と並ぶ力（総合力${YA.earlyProLine(w)}ほど）になると、卒業を待たずにプロ契約の打診が来ます。`)));
     body.append(h('div', { style: 'display:flex;gap:8px;align-items:flex-start' }, left, right));
   }
 

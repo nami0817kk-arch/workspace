@@ -84,7 +84,7 @@ async function clearEvents() {
   nameBox.dispatchEvent(new w.Event('input', { bubbles: true }));
   btn('高校で指導していた').click();
   for (let i = 0; i < 3; i++) [...d.querySelectorAll('#main button')].filter((b) => b.textContent === '＋')[0].click();
-  btn('千葉 アルバトロスU-18').click();
+  btn('千葉 マーレU-18').click();
   btn('この指導者で始める').click();
   await sleep(50);
   ok(A.w && A.w.coachName === 'テスト監督' && A.w.club.tier === 2 && A.w.clubName.indexOf('千葉') >= 0 && A.w.coach.exp === 3, '選んだ内容で世界が始まる');

@@ -332,15 +332,25 @@
   const domLeague = (o) => (o >= 13.6 ? 'J1リーグ' : o >= 12.2 ? 'J2リーグ' : 'J3リーグ');
   // リーグの水準（その中で目立つかの物差し）
   const LV = { J1リーグ: 14.6, J2リーグ: 13, J3リーグ: 11.6, 大学リーグ: 11.2, 社会人リーグ: 9.5, プレミアリーグ: 16.2, ラ・リーガ: 16, ブンデスリーガ: 15.7, セリエA: 15.7, リーグ・アン: 15.3, エールディビジ: 14.6, 'ジュピラー・プロ・リーグ': 14.3, プリメイラ・リーガ: 14.6 };
+  // Jクラブを1つ選ぶ（固定の表から。自分のクラブは除く）
+  function jClub(w, r, league) {
+    const t = league === 'J1リーグ' ? 1 : league === 'J2リーグ' ? 2 : 3;
+    const own = w.top ? w.top.name : '';
+    const pool = YA.PRO_CLUBS.filter((c) => c.tier === t && c.name !== own);
+    return (pool.length ? r.pick(pool) : r.pick(YA.PRO_CLUBS)).name;
+  }
   YA.alumniEntry = function (w, p, note) {
     const o = Math.round(YA.ovr(p) * 10) / 10;
     const r = YA.rngOf(w.seed + p.num * 7 + w.year);
     const status = p._path || (o >= 13.2 ? 'pro' : o >= 10.5 ? 'univ' : 'amateur');
     const abroad = !!(p._sold && o >= 13);
     const ab = abroad ? r.pick(ABROAD.filter((x) => !x[2])) : null;
+    // トップ昇格はこのクラブのトップへ。ほかへ売り込んだ子は、力に合う部のクラブへ
+    const own = status === 'pro' && !p._sold && w.top && YA.rate(o) >= YA.topCutLine(w);
+    const dl = domLeague(o);
     return { name: p.name, pos: p.pos, main: p.main, year: w.year, ovr: o, note, grade: 3, age: 18, status,
-      club: status === 'pro' ? (ab ? ab[0] + '・' + r.pick(PRO_N) : r.pick(PRO) + ' ' + r.pick(PRO_N)) : status === 'univ' ? r.pick(UNIV) : '社会人',
-      league: status === 'pro' ? (ab ? ab[1] : domLeague(o)) : status === 'univ' ? '大学リーグ' : '社会人リーグ',
+      club: status === 'pro' ? (own ? w.top.name : ab ? ab[0] + '・' + r.pick(PRO_N) : jClub(w, r, dl)) : status === 'univ' ? r.pick(UNIV) : '社会人',
+      league: status === 'pro' ? (own ? YA.J_NAME[w.top.j] : ab ? ab[1] : dl) : status === 'univ' ? '大学リーグ' : '社会人リーグ',
       apps: 0, goals: 0, nat: p.nat || 0, natGoals: 0, transfers: 0, retired: false, traits: p.traits.slice(), pushed: p._push || null, abroad, seasons: [], titles: [], awards: [] };
   };
   // 1年ぶんの経歴：出場・得点・タイトル・個人の賞。卒業生名鑑で年ごとに見られる
@@ -404,12 +414,14 @@
       else if (a.age >= 30) a.ovr = Math.round((a.ovr - r() * 0.5) * 10) / 10;
       if (a.status === 'univ' && a.age >= 22 && a.ovr >= 12.4 && r() < (a.pushed === 'univ' ? 0.6 : 0.4)) {
         a.status = 'pro';
-        a.club = r.pick(PRO) + ' ' + r.pick(PRO_N);
         a.league = domLeague(a.ovr);
+        a.club = jClub(w, r, a.league);
         YA.noteTier(w, 2, `卒業生の${a.name}が大学を経てプロ入りしました（${a.club}・${a.league}）`);
       }
       if (a.status === 'pro') {
-        if (!a.abroad) a.league = domLeague(a.ovr); // 国内は力で昇格・降格のあるリーグへ
+        // 国内は力で昇格・降格のあるリーグへ。このクラブのトップにいる子は、トップの部で出る
+        if (w.top && a.club === w.top.name) a.league = YA.J_NAME[w.top.j];
+        else if (!a.abroad) a.league = domLeague(a.ovr);
         // 力のある選手ほど移籍が多く、海外へ出やすい（とても力があれば5大リーグ）
         if (a.age >= 19 && a.age <= 30 && r() < 0.17 + clamp((a.ovr - 15) * 0.06, 0, 0.3) * (a.abroad ? 0.4 : 1)) {
           const abroad = a.ovr >= 13.8 && a.age <= 27 && r() < clamp(0.35 + (a.ovr - 15) * 0.12, 0.35, 0.9);
@@ -423,9 +435,9 @@
             a.league = ab[1];
             a.abroad = true;
           } else {
-            a.club = r.pick(PRO) + ' ' + r.pick(PRO_N);
             if (a.abroad) a.abroad = false; // 国内へ戻る
             a.league = domLeague(a.ovr);
+            a.club = jClub(w, r, a.league);
           }
           contrib += share;
           YA.noteTier(w, 1, `卒業生の${a.name}が${a.club}（${a.league}）へ${abroad ? '海外移籍' : '移籍'}（移籍金およそ${fee}万円）。連帯貢献金 +${share}万円がクラブに入ります`);
@@ -550,6 +562,12 @@
     }
     if (YA.rivalWeek) YA.rivalWeek(w);
     YA.refreshFocus(w);
+    // トップの打診の線を10以上上回った子には、その週に必ずトップから打診が来る
+    if (w.top && YA.earlyProLine) {
+      const line = YA.earlyProLine(w) + 10;
+      const hot = Object.values(w.players).filter((p) => YA.rating(p) >= line && !(p._earlyNo && w.year * 100 + w.week - p._earlyNo < 10)).sort((a, b) => YA.rating(b) - YA.rating(a))[0];
+      if (hot && !(w.forced || []).some((f) => f.id === 'early')) w.forced = (w.forced || []).concat([{ id: 'early', pid: hot.id, week: w.week, year: w.year }]);
+    }
     let noticed = false;
     for (const p of Object.values(w.players)) {
       if (p.away > 0) p.away--;

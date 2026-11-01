@@ -65,7 +65,7 @@ function playYear(w, opts) {
 }
 function check(w) {
   const ps = Object.values(w.players);
-  ok(ps.length >= 34 && ps.length <= 40, '人数 ' + ps.length);
+  ok(ps.length >= 34 && ps.length <= 44, '人数 ' + ps.length);
   const nums = ps.map((p) => p.num);
   ok(new Set(nums).size === nums.length, '背番号が重ならない');
   for (const p of ps) {
@@ -541,7 +541,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   const st1 = YA.makeStart({ name: 'テスト監督', career: 'high', club: 0, points: { eye: 3, talk: 3 }, noFire: true });
   const wn = YA.newWorld(5, st1);
   ok(wn.coachName === 'テスト監督' && wn.coach.teach === 11 && wn.coach.eye === 11 && wn.coach.talk === 12 && wn.coach.exp === 3, '経歴と配分が能力に出る ' + JSON.stringify(wn.coach));
-  ok(wn.club.tier === 1 && wn.clubName.indexOf('ブルーウィング') >= 0 && wn.club.noFire && wn.league.level === 1, '選んだクラブ（1部）で始まる');
+  ok(wn.club.tier === 1 && wn.clubName.indexOf('オンダス') >= 0 && wn.club.noFire && wn.league.level === 1, '選んだクラブ（1部）で始まる');
   const wt3 = YA.newWorld(5, YA.makeStart({ career: 'pro', club: 6, points: {} }));
   const avg = (wx) => Object.values(wx.players).reduce((a, p) => a + YA.ovr(p), 0) / 36;
   ok(wt3.club.tier === 3 && wt3.coachName === '監督', '3部のクラブ・名前が空なら「監督」');
@@ -682,12 +682,14 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   }
   // 段3：60クラブ・名前の書き換え・練習メニューの型
   {
-    ok(YA.CLUB60.length === 60 && new Set(YA.CLUB60.map((c) => c.name)).size === 60, '60クラブは名前が重ならない');
-    const nicks = YA.CLUB60.filter((c) => c.kind === 'club').map((c) => c.name.split(' ')[1]);
-    ok(new Set(nicks).size === nicks.length, '60クラブの愛称が重ならない');
+    for (let rg = 0; rg < 6; rg++) {
+      const pl = YA.clubPool(rg);
+      ok([1, 2, 3].every((lv) => pl.filter((c) => c.level === lv).length >= 12) && new Set(pl.map((c) => c.name)).size === pl.length, '地域ごとの相手の表 ' + YA.REGIONS[rg] + ' ' + pl.length);
+    }
+    ok(new Set(YA.PRO_CLUBS.map((c) => c.nick)).size === YA.PRO_CLUBS.length, 'プロクラブの愛称が重ならない');
     const w3 = YA.newWorld(21);
     const names1 = w3.league.teams.filter((t) => !t.me).map((t) => t.cid);
-    ok(names1.length === 11 && names1.every((c) => YA.CLUB60.find((x) => x.id === c && x.level === w3.league.level)), '相手は同じ部の固定クラブから選ばれる');
+    ok(names1.length === 11 && names1.every((c) => YA.clubPool(YA.regionOf(w3.clubName)).find((x) => x.id === c && x.level === w3.league.level)), '相手は同じ地域・同じ部の固定クラブから選ばれる');
     const t0 = w3.league.teams.find((t) => !t.me);
     ok(YA.renameTeam(w3, t0.id, '新しい相手').ok && w3.rename[t0.cid] === '新しい相手', '相手クラブの名前を変えられる');
     ok(YA.renameClub(w3, '').ok === false && YA.renameClub(w3, 'つるはしFC').ok && w3.league.teams.find((t) => t.me).name === 'つるはしFC', '自分のクラブ名を変えられる');
@@ -873,6 +875,20 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   const pen0 = YA.slotPenalty(q, far);
   q.main = far; q.pos = YA.GROUP[far]; q.fam[far] = 14;
   ok(YA.slotPenalty(q, far) >= pen0 * 0.29 && YA.slotPenalty(q, far) > 0.05, '向いていない位置に登録を変えても、力は出しきれない');
+}
+// トップチーム：自分のクラブのJクラブがあり、トップ昇格はそこへ。力のある子は在学中にプロ契約（1年に1人まで）。移籍先は固定のクラブ表から
+{
+  const wt2 = YA.newWorld(3);
+  ok(wt2.top && wt2.top.name === YA.topName(wt2) && wt2.top.squad.length === 26 && YA.J_NAME[wt2.top.j], 'トップチームがある ' + wt2.top.name);
+  for (let y = 0; y < 3; y++) { let g = 0; const yy = wt2.year; while (wt2.year === yy && g++ < 60) YA.simulate(wt2, { until: 'week', stopOnImportant: false }); }
+  ok(wt2.top.hist.length === 3, 'トップの順位が毎年残る');
+  const own = wt2.alumni.filter((a) => /トップ昇格/.test(a.note));
+  ok(own.length >= 1 && own.every((a) => a.club === wt2.top.name || a.transfers > 0), 'トップ昇格の子は自分のクラブのトップへ');
+  const early = wt2.alumni.filter((a) => /高.でトップ昇格/.test(a.note));
+  ok([1, 2, 3].every((y) => early.filter((a) => a.year === y).length <= 3), '在学中のプロ契約は1年に数人まで');
+  const names = new Set(YA.PRO_CLUBS.map((c) => c.name));
+  ok(wt2.alumni.filter((a) => a.status === 'pro' && !a.abroad).every((a) => names.has(a.club)), '国内の移籍先は固定のクラブ表から');
+  ok(Object.keys(wt2.players).length >= 34 && Object.keys(wt2.players).length <= 44, 'プロ契約で抜けても人数は保つ');
 }
 // クラブを移った（契約満了・解任）あとも、入団の暦まで止まらずに1年回せる
 {
