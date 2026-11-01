@@ -22,7 +22,7 @@ enum Skill {
   averageHitter('アベレージヒッター', 'ヒットを打つのがうまい。', Category.batting, 40,
       effects: {Ability.contact: 6}),
   eyePlus('選球眼○', 'ボール球に手を出さない。', Category.batting, 35,
-      effects: {Ability.eye: 6, Ability.contact: 1}),
+      effects: {Ability.contact: 4, Ability.trajectory: 3}),
   wideAngle('広角打法', 'どの方向にも強い打球が打てる。', Category.batting, 45,
       effects: {Ability.contact: 3, Ability.power: 3}),
   // ── 打者(守備走塁) ──
@@ -31,10 +31,10 @@ enum Skill {
   fieldMaster('守備職人', '打球への反応が速い。', Category.running, 30,
       effects: {Ability.fielding: 6}),
   strongArm('強肩', '矢のような送球。', Category.running, 35,
-      effects: {Ability.fielding: 3, Ability.speed: 3}),
+      effects: {Ability.arm: 6}),
   // ── 打者の金特 ──
   geniusBat('天才打者', '金の特殊能力。打撃のすべてが一段上。', Category.batting, 120,
-      effects: {Ability.contact: 8, Ability.power: 4, Ability.eye: 4},
+      effects: {Ability.contact: 8, Ability.power: 4, Ability.trajectory: 4},
       gold: true,
       requiresName: 'averageHitter'),
   artist('アーチスト', '金の特殊能力。本塁打を量産する。', Category.batting, 120,
@@ -67,7 +67,7 @@ enum Skill {
   pullHitter('プルヒッター', '引っ張って強い打球を飛ばす。', Category.batting, 35,
       effects: {Ability.power: 4}),
   tenacious('粘り打ち', '追い込まれても粘る。', Category.batting, 35,
-      effects: {Ability.eye: 4, Ability.contact: 1}),
+      effects: {Ability.contact: 5}),
   multiHit('固め打ち', '当たり出すと止まらない。', Category.batting, 40,
       effects: {Ability.contact: 3, Ability.power: 1}),
   walkOff('サヨナラ男', '試合の最後に強い。', Category.batting, 30, match: 4),
@@ -77,7 +77,7 @@ enum Skill {
   infieldHit('内野安打○', '足で内野安打をもぎ取る。', Category.running, 35,
       effects: {Ability.speed: 3, Ability.contact: 1}),
   throwing('送球○', '送球がそれない。', Category.running, 30,
-      effects: {Ability.fielding: 4}),
+      effects: {Ability.arm: 4}),
   // ── 追加(打者の金特) ──
   hitMachine('安打製造機', '金の特殊能力。ヒットを打ち続ける。', Category.batting, 120,
       effects: {Ability.contact: 12}, gold: true, requiresName: 'wideAngle'),
@@ -190,9 +190,11 @@ String effectText(Skill s) {
   String jp(Ability a) => switch (a) {
         Ability.contact => 'ミート',
         Ability.power => 'パワー',
-        Ability.eye => '選球眼',
+        Ability.trajectory => '弾道',
         Ability.speed => '走力',
+        Ability.arm => '肩力',
         Ability.fielding => '守備',
+        Ability.catching => '捕球',
         Ability.stuff => '球威',
         Ability.control => '制球',
         Ability.stamina => 'スタミナ',
@@ -380,7 +382,9 @@ SkillImpact skillImpact(Player p, Skill s, Stage stage, {int games = 250}) {
     final e = s.effects.keys.toSet();
     bool has(Ability x) => e.contains(x);
     if (p.role != Role.pitcher && a.atBats > 0) {
-      if (has(Ability.contact) || has(Ability.eye) || has(Ability.power)) {
+      if (has(Ability.contact) ||
+          has(Ability.trajectory) ||
+          has(Ability.power)) {
         final d = b.hits / max(1, b.atBats) - a.hits / a.atBats;
         if (d.abs() >= 0.0015) {
           lines.add(
@@ -394,10 +398,6 @@ SkillImpact skillImpact(Player p, Skill s, Stage stage, {int games = 250}) {
       if (has(Ability.speed)) {
         final sb = (b.stolenBases - a.stolenBases) * per;
         if (sb.abs() >= 0.5) lines.add('盗塁 ${sg(sb, 0)}');
-      }
-      if (has(Ability.eye)) {
-        final bb = (b.walks - a.walks) * per;
-        if (bb.abs() >= 1) lines.add('四球 ${sg(bb, 0)}');
       }
     }
     if (p.role != Role.batter && a.outs > 0) {
@@ -418,7 +418,10 @@ SkillImpact skillImpact(Player p, Skill s, Stage stage, {int games = 250}) {
         if (ip.abs() >= 0.5) lines.add('投球回 ${sg(ip, 0)}');
       }
     }
-    if (lines.isEmpty && s.effects.containsKey(Ability.fielding)) {
+    if (lines.isEmpty &&
+        (s.effects.containsKey(Ability.fielding) ||
+            s.effects.containsKey(Ability.arm) ||
+            s.effects.containsKey(Ability.catching))) {
       lines.add('守備率が上がる(失策が減る)');
     }
     if (lines.isEmpty) lines.add('打席・投球の数字はほぼ変わらない');

@@ -121,10 +121,10 @@ void main() {
       expect(e.choices.length, greaterThanOrEqualTo(2), reason: e.id);
       for (final ch in e.choices) {
         final r = ch.apply(
-            _p(), const Condition(fatigue: 95, morale: 95), Ability.eye);
+            _p(), const Condition(fatigue: 95, morale: 95), Ability.contact);
         expect(r.condition.fatigue, inInclusiveRange(0, 100), reason: e.id);
         expect(r.condition.morale, inInclusiveRange(0, 100), reason: e.id);
-        expect(r.player.of(Ability.eye), inInclusiveRange(0, abilityCap));
+        expect(r.player.of(Ability.contact), inInclusiveRange(0, abilityCap));
       }
     }
   });

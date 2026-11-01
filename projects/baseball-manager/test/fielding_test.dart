@@ -14,7 +14,7 @@ import 'package:flutter_test/flutter_test.dart';
 Player _p(int fielding, {Role role = Role.batter, String name = 'テスト'}) =>
     Player(name: name, role: role, age: 25, potential: 60, abilities: {
       for (final a in abilitiesOf(role))
-        a: a == Ability.fielding ? fielding : 50
+        a: a == Ability.fielding || a == Ability.catching ? fielding : 50
     });
 
 void main() {

@@ -54,7 +54,7 @@ void main() {
           bestPosition(_bat(
               {Ability.speed: 90, Ability.fielding: 55, Ability.power: 30})),
           Pos.center);
-      expect(bestPosition(_bat({Ability.fielding: 85, Ability.eye: 70})),
+      expect(bestPosition(_bat({Ability.catching: 85, Ability.arm: 70, Ability.fielding: 60})),
           Pos.catcher);
       expect(bestPosition(_pit({Ability.stamina: 80, Ability.control: 60})),
           Pos.starter);

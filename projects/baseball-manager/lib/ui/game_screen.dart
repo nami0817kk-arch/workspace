@@ -24,7 +24,6 @@ import '../game/life.dart';
 import '../game/path.dart';
 import '../game/player.dart';
 import 'art/avatar.dart';
-import 'art/radar.dart';
 import 'art/scene.dart';
 import 'art/badge_icon.dart';
 import 'art/story_image.dart';
@@ -1257,13 +1256,12 @@ class _AbilityCard extends StatelessWidget {
                 ),
                 child: const Text('経験点が貯まっています。「+1」で能力に振り分けましょう。'),
               ),
-            AbilityRadar(player: p),
             if (abilitiesOf(p.role).any((a) => ageCeiling(p, a) < abilityCap))
               Padding(
                 padding: const EdgeInsets.only(top: 4),
                 child: Text(
                     '${p.age}歳。体の衰えで、能力に年齢の上限がある(経験点でもそれより上には上げられない)。'
-                    'パワー・走力・守備・球威・スタミナは早く、ミート・選球眼・制球はゆっくり下がる。',
+                    'パワー・走力・肩力・守備・球威・スタミナは早く、ミート・弾道・捕球・制球はゆっくり下がる。',
                     key: const Key('age-cap-note'),
                     style: const TextStyle(
                         fontSize: 11, color: Color(0xFFC62828))),

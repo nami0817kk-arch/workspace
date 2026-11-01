@@ -15,8 +15,12 @@ enum Category {
 }
 
 Category categoryOf(Ability a) => switch (a) {
-      Ability.contact || Ability.power || Ability.eye => Category.batting,
-      Ability.speed || Ability.fielding => Category.running,
+      Ability.contact || Ability.power || Ability.trajectory => Category.batting,
+      Ability.speed ||
+      Ability.arm ||
+      Ability.fielding ||
+      Ability.catching =>
+        Category.running,
       Ability.stuff || Ability.control || Ability.stamina => Category.pitching,
     };
 
@@ -37,7 +41,9 @@ Map<Category, int> spreadExp(Role r, int n) =>
 double roleExpFactor(Role r) {
   final n = abilitiesOf(r).length;
   const batterShare = (1 + 0.25 * 4) / 5;
-  return batterShare / ((1 + 0.25 * (n - 1)) / n) * (r == Role.pitcher ? pitcherPace : 1.0);
+  return batterShare /
+      ((1 + 0.25 * (n - 1)) / n) *
+      (r == Role.pitcher ? pitcherPace : batterPace);
 }
 
 /// 投手の伸びの補正(2026-10-21)。経験点を1能力あたりで揃えても、投手は打者よりプロに入りやすく
@@ -45,6 +51,12 @@ double roleExpFactor(Role r) {
 /// 能力が3つで底上げが効き、投球の経験点が1つの種類に集まるため。0.85 にすると揃う
 /// (平凡 43.3%/43.8%・レジェンド 3.0%/4.0%、上手い 47.2%/46.2%・レジェンド 23.2%/21.5%)。0.75 だと投手が低すぎる(31%)。
 const pitcherPace = int.fromEnvironment('BAL_PPACE', defaultValue: 82) / 100;
+
+/// 打者・二刀流の伸びの補正(2026-11-01)。打者の能力を5つから7つ(パワプロと同じ)にしたら、
+/// 重点の1つが平均に占める割合が薄まり、プロ入り率が下がった。`tool/balance.dart` で揃えた。
+/// 114 にすると、平凡の打者のプロ入り率が約46%(旧42.5%)、上手い打者が約46%(旧47%)に揃う
+/// (`balance.dart 900 normal`)。レジェンドは能力が7つの平均で見るぶん出にくい(上手い 27.5%→約16%)。
+const batterPace = int.fromEnvironment('BAL_BPACE', defaultValue: 114) / 100;
 
 /// 能力1ぶん(基準)を経験点にしたときの量。練習の伸びはこれを掛けて貯まる。
 const expPerPoint = 8;

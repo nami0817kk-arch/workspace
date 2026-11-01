@@ -45,8 +45,11 @@ VersusResult runVersus({
       ((m[a] ?? 0) + (skillAbilityDelta(t)[a] ?? 0)).clamp(0, gameAbilityCap);
   final b = Batter(
     contact: adj(bat, batSkills, Ability.contact),
-    power: adj(bat, batSkills, Ability.power),
-    eye: adj(bat, batSkills, Ability.eye),
+    power: ((adj(bat, batSkills, Ability.power) * 7 +
+                adj(bat, batSkills, Ability.trajectory) * 3) /
+            10)
+        .round(),
+    eye: adj(bat, batSkills, Ability.contact),
   );
   final p = Pitcher(
     control: adj(pit, pitSkills, Ability.control),
@@ -82,7 +85,7 @@ class _VersusScreenState extends State<VersusScreen> {
   final Map<Ability, double> _bat = {
     Ability.contact: 99,
     Ability.power: 99,
-    Ability.eye: 99,
+    Ability.trajectory: 99,
   };
   final Map<Ability, double> _pit = {
     Ability.stuff: 10,
@@ -109,7 +112,7 @@ class _VersusScreenState extends State<VersusScreen> {
   static String _abilityName(Ability a) => switch (a) {
         Ability.contact => 'ミート',
         Ability.power => 'パワー',
-        Ability.eye => '選球眼',
+        Ability.trajectory => '弾道',
         Ability.stuff => '球威',
         Ability.control => '制球',
         _ => a.name,

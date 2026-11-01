@@ -110,7 +110,7 @@ final List<ChildhoodStep> childhoodSteps = [
           (p) => _byRole(p, Ability.contact, Ability.control, 1)),
       _c('鬼ごっこで、走り回る', (p) => _byRole(p, Ability.speed, Ability.stamina, 1)),
       _c('図鑑や本を読んで、野球のことを調べる',
-          (p) => _byRole(p, Ability.eye, Ability.control, 1),
+          (p) => _byRole(p, Ability.contact, Ability.control, 1),
           morale: 8),
     ]),
     const ['壁あてが好きな子だった', '走り回るのが好きな子だった', '野球のことを調べるのが好きな子だった'],
@@ -123,7 +123,7 @@ final List<ChildhoodStep> childhoodSteps = [
           fatigue: 5),
       _c('空手(頑丈になる)', (p) => _trait(_gain(p, Ability.power, 1), Trait.sturdy),
           fatigue: 5),
-      _c('書道・そろばん(集中力がつく)', (p) => _byRole(p, Ability.eye, Ability.control, 1)),
+      _c('書道・そろばん(集中力がつく)', (p) => _byRole(p, Ability.contact, Ability.control, 1)),
       _c('習い事はせず、好きなだけ遊ぶ', (p) => p, morale: 20),
     ]),
     const ['水泳を習っていた', '空手を習っていた', '書道・そろばんを習っていた', '習い事はせず、のびのび育った'],
@@ -287,7 +287,7 @@ final List<ChildhoodStep> childhoodSteps = [
   ChildhoodStep(
     20,
     GameEvent('turn-route-slump', '思うように結果が出ない時期が来た。どうする?', [
-      _c('原因を分析して、フォームを見直す', (p) => _byRole(p, Ability.eye, Ability.control, 1),
+      _c('原因を分析して、フォームを見直す', (p) => _byRole(p, Ability.contact, Ability.control, 1),
           morale: -3),
       _c('仲間と話して、気分を変える', (p) => p, morale: 12),
       _c('量をこなして、乗り越える', (p) => _trait(p, Trait.hardWorker), fatigue: 12),
@@ -312,7 +312,7 @@ final List<ChildhoodStep> childhoodSteps = [
     9,
     GameEvent('kid-stadium', '家族が、球場に試合を見に連れて行ってくれた。何をする?', [
       _c('グラウンドの動きを、食い入るように見る',
-          (p) => _byRole(p, Ability.eye, Ability.control, 1),
+          (p) => _byRole(p, Ability.contact, Ability.control, 1),
           morale: 3),
       _c('大声で応援して、思いきり楽しむ', (p) => p, morale: 15),
       _c('帰り道に、家族とたくさん話す', (p) => p,

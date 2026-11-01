@@ -82,7 +82,7 @@ String giftHint(int g) {
   return g > 0 ? '才能がある。上げるのに要る経験点が$pct%少ない。' : '苦手。上げるのに要る経験点が$pct%多い。';
 }
 
-/// 役割で使う能力の、天賦の平均(「才能の塊」の判定など。打者は5能力・投手は3能力で数が違うので平均で見る)。
+/// 役割で使う能力の、天賦の平均(「才能の塊」の判定など。打者は7能力・投手は3能力で数が違うので平均で見る)。
 double giftAverage(Role r, Map<Ability, int> gifts) {
   final abs = abilitiesOf(r);
   return abs.fold<int>(0, (a, x) => a + (gifts[x] ?? 0)) / abs.length;

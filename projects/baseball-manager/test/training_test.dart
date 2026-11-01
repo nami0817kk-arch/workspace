@@ -64,7 +64,7 @@ void main() {
   });
 
   test('保存して読み直しても同じ。欠けた項目は既定値で読める', () {
-    final p = _years(_kid(), Ability.eye, 3, 5);
+    final p = _years(_kid(), Ability.contact, 3, 5);
     final q = Player.fromJson(p.toJson());
     expect(q.age, p.age);
     expect(q.abilities, p.abilities);
