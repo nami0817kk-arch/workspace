@@ -888,6 +888,8 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   ok([1, 2, 3].every((y) => early.filter((a) => a.year === y).length <= 3), '在学中のプロ契約は1年に数人まで');
   const names = new Set(YA.PRO_CLUBS.map((c) => c.name));
   ok(wt2.alumni.filter((a) => a.status === 'pro' && !a.abroad).every((a) => names.has(a.club)), '国内の移籍先は固定のクラブ表から');
+  const abroadNames = new Set([].concat(...Object.values(YA.ABROAD_CLUBS)));
+  ok(wt2.alumni.filter((a) => a.status === 'pro' && a.abroad).every((a) => abroadNames.has(a.club)), '海外の移籍先も固定のクラブ表から');
   ok(Object.keys(wt2.players).length >= 34 && Object.keys(wt2.players).length <= 44, 'プロ契約で抜けても人数は保つ');
 }
 // クラブを移った（契約満了・解任）あとも、入団の暦まで止まらずに1年回せる
