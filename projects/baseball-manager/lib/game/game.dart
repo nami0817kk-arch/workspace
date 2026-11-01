@@ -1293,9 +1293,10 @@ class Game {
         Ability.arm => '肩力',
         Ability.fielding => '守備',
         Ability.catching => '捕球',
-        Ability.stuff => '球威',
-        Ability.control => '制球',
+        Ability.stuff => '球速',
+        Ability.control => 'コントロール',
         Ability.stamina => 'スタミナ',
+        Ability.breaking => '変化球',
       };
 
   /// 友情タッグ・コーチ・恋人/家族への影響。経験点の量を返す。
@@ -1332,7 +1333,7 @@ class Game {
       final k = categoryOf(focus);
       final extra = (min(tLessonGapCap, tLessonGap * (gap - 1)) *
               slotShare(stage) *
-              roleExpFactor(player.role))
+              roleExpFactor(player.role, focus))
           .round();
       if (extra > 0) out[k] = (out[k] ?? 0) + extra;
     }

@@ -81,9 +81,11 @@ void main() {
       expect(g.games, 1);
       expect(g.starts, 1);
     }
-    // 打者は投げない・投手は打たない。
+    // 打者は投げない。投手は先発の試合に2打席だけ立つ。
     expect(playGame(_p(Role.batter, 60), 50, Random(1)).faced, 0);
-    expect(playGame(_p(Role.pitcher, 60), 50, Random(1)).atBats, 0);
+    final pg = playGame(_p(Role.pitcher, 60), 50, Random(1));
+    expect(pg.atBats + pg.walks, 2);
+    expect(pg.pitcherBat, isTrue);
     // 登板しない試合では投げない。
     final rest = playGame(_p(Role.pitcher, 60), 50, Random(1), pitch: false);
     expect((rest.faced, rest.games), (0, 0));
@@ -103,7 +105,8 @@ void main() {
     test('投手は5試合に1度先発し、勝敗は先発の数まで', () {
       final s = _season(_p(Role.pitcher, 70), 2);
       expect(s.line.starts, (143 / startInterval).ceil());
-      expect(s.line.atBats, 0);
+      expect(s.line.pitcherBat, isTrue);
+      expect(s.line.plateAppearances, lessThanOrEqualTo(2 * s.line.starts));
       expect(s.line.wins + s.line.losses, lessThanOrEqualTo(s.line.starts));
       expect(s.line.inningsPitched, greaterThan(80));
       expect(s.line.era, inInclusiveRange(1.0, 8.0));

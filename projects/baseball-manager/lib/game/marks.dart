@@ -88,6 +88,7 @@ String nicknameOf(Player p) {
     Ability.stuff => '剛腕',
     Ability.control => '精密機械',
     Ability.stamina => '鉄腕',
+    Ability.breaking => '魔球使い',
   };
 }
 
@@ -133,14 +134,15 @@ const _abilityWord = {
   Ability.arm: '肩力',
   Ability.fielding: '守備',
   Ability.catching: '捕球',
-  Ability.stuff: '球威',
-  Ability.control: '制球',
+  Ability.stuff: '球速',
+  Ability.control: 'コントロール',
   Ability.stamina: 'スタミナ',
+  Ability.breaking: '変化球',
 };
 
 /// 1年の終わりのコーチのひとこと。いちばん低い能力を磨くよう勧める。
 String coachWordOf(Player p) {
-  final weakest = abilitiesOf(p.role)
+  final weakest = mainAbilitiesOf(p.role)
       .reduce((a, b) => (p.abilities[b] ?? 0) < (p.abilities[a] ?? 0) ? b : a);
   return 'コーチ「来年は${_abilityWord[weakest]}を磨こう」';
 }
@@ -355,6 +357,7 @@ String mottoOf(Player p) {
     Ability.stuff => '「腕を振りきれ」',
     Ability.control => '「丁寧に低めへ」',
     Ability.stamina => '「最後に立っている者が勝つ」',
+    Ability.breaking => '「曲がりは裏切らない」',
   };
 }
 

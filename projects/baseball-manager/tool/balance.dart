@@ -29,7 +29,7 @@ void plain(Game g) {
 
 /// 特訓ばかり(疲れたら休む)。極端な遊び方でも、普通より大きく有利にならないかを見る。
 void grind(Game g) {
-  final abilities = abilitiesOf(g.player.role);
+  final abilities = mainAbilitiesOf(g.player.role);
   final focus = ([...abilities]
         ..sort((a, b) => g.player.of(a).compareTo(g.player.of(b))))
       .first;
@@ -91,7 +91,7 @@ void skilledEasyGoal(Game g) {
 }
 
 void skilled(Game g) {
-  final abilities = abilitiesOf(g.player.role);
+  final abilities = mainAbilitiesOf(g.player.role);
   // いちばん低い能力を重点にする(総合評価は平均なので、底上げが効率的)。
   final focus = ([...abilities]
         ..sort((a, b) => g.player.of(a).compareTo(g.player.of(b))))

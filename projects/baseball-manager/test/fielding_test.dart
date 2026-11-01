@@ -28,7 +28,7 @@ void main() {
     }
   });
 
-  test('投手と指名打者は守備の記録が無い。野手は守備機会と守備率が出る', () {
+  test('指名打者は守備の記録が無い。投手は少し、野手は守備機会と守備率が出る', () {
     expect(
         fieldingOf(
                 player: _p(60, role: Role.pitcher),
@@ -36,7 +36,7 @@ void main() {
                 games: 30,
                 age: 25)
             .chances,
-        0);
+        (0.9 * 30).round());
     expect(fieldingOf(player: _p(60), pos: Pos.dh, games: 143, age: 25).chances,
         0);
     final f =

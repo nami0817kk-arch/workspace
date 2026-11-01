@@ -17,9 +17,10 @@ String abilityLabel(Ability a) => switch (a) {
       Ability.arm => '肩力',
       Ability.fielding => '守備',
       Ability.catching => '捕球',
-      Ability.stuff => '球威',
-      Ability.control => '制球',
+      Ability.stuff => '球速',
+      Ability.control => 'コントロール',
       Ability.stamina => 'スタミナ',
+      Ability.breaking => '変化球',
     };
 
 /// 能力が何に効くかの説明(ラベルの長押し・タップで出す)。
@@ -31,9 +32,10 @@ String abilityHint(Ability a) => switch (a) {
       Ability.arm => '肩力: 送球の強さ。外野・三塁・遊撃・捕手の適性に効く。',
       Ability.fielding => '守備: 打球をさばく力。失策が減る。',
       Ability.catching => '捕球: 球をつかむ力。失策が減り、捕手・一塁手の適性に効く。',
-      Ability.stuff => '球威: 球の威力。三振が増え、打たれにくくなる。',
-      Ability.control => '制球: 狙ったところへ投げる力。四球が減る。',
+      Ability.stuff => '球速: 球の速さ・威力。三振が増え、打たれにくくなる。',
+      Ability.control => 'コントロール: 狙ったところへ投げる力。四球が減る。',
       Ability.stamina => 'スタミナ: 長く投げられる。疲れにくくもなる。',
+      Ability.breaking => '変化球: 曲がり・落ちる球の切れ。球速に合わせて打ち取りやすくなる。',
     };
 
 String roleLabel(Role r) => switch (r) {

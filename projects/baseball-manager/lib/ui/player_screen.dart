@@ -121,13 +121,13 @@ Player _playerOf(PlayerSnapshot s) => Player(
     abilities: s.abilities);
 
 Ability _best(PlayerSnapshot s) {
-  final a = abilitiesOf(s.role);
+  final a = mainAbilitiesOf(s.role);
   return a
       .reduce((x, y) => (s.abilities[y] ?? 0) > (s.abilities[x] ?? 0) ? y : x);
 }
 
 Ability _worst(PlayerSnapshot s) {
-  final a = abilitiesOf(s.role);
+  final a = mainAbilitiesOf(s.role);
   return a
       .reduce((x, y) => (s.abilities[y] ?? 0) < (s.abilities[x] ?? 0) ? y : x);
 }
@@ -613,12 +613,12 @@ class _AbilityPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = snapshot;
-    final batting = s.role == Role.twoWay
-        ? batterAbilities
-        : (s.role == Role.pitcher ? <Ability>[] : abilitiesOf(s.role));
-    final pitching = s.role == Role.batter
-        ? <Ability>[]
-        : pitcherAbilities;
+    // 打者は打撃・守備、投手は投球が先で打撃・守備があと、二刀流は打者と投手。
+    final groups = switch (s.role) {
+      Role.batter => [('', batterAbilities)],
+      Role.pitcher => [('投手', pitcherAbilities), ('打撃・守備', batterAbilities)],
+      Role.twoWay => [('打者', batterAbilities), ('投手', pitcherAbilities)],
+    };
     return Card(
       key: const Key('ability-panel'),
       clipBehavior: Clip.antiAlias,
@@ -642,10 +642,10 @@ class _AbilityPanel extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.fromLTRB(12, 8, 12, 10),
           child: Column(children: [
-            if (s.role == Role.twoWay) const _GroupLabel('打者'),
-            for (final a in batting) _AbilityRow(snapshot: s, ability: a),
-            if (s.role == Role.twoWay) const _GroupLabel('投手'),
-            for (final a in pitching) _AbilityRow(snapshot: s, ability: a),
+            for (final g in groups) ...[
+              if (g.$1.isNotEmpty) _GroupLabel(g.$1),
+              for (final a in g.$2) _AbilityRow(snapshot: s, ability: a),
+            ],
           ]),
         ),
       ]),

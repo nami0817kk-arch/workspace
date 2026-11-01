@@ -46,12 +46,14 @@ void main() {
         greaterThan(_avgAch(_p(Role.batter, 60), 30)));
   });
 
-  test('打者は投手成績を、投手は打撃成績を持たない。二刀流は両方', () {
+  test('打者は投手成績を持たない。投手は先発の試合に2打席だけ立つ。二刀流は両方', () {
     final b = playGame(_p(Role.batter, 60), 50, Random(1));
     final p = playGame(_p(Role.pitcher, 60), 50, Random(1));
     final t = playGame(_p(Role.twoWay, 60), 50, Random(1));
     expect(b.faced, 0);
-    expect(p.atBats + p.walks, 0);
+    expect(p.atBats + p.walks, 2);
+    expect(p.pitcherBat, isTrue);
+    expect(playGame(_p(Role.pitcher, 60), 50, Random(1), pitch: false).atBats, 0);
     expect(t.faced, greaterThan(0));
     expect(t.atBats + t.walks, greaterThan(0));
   });

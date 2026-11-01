@@ -171,17 +171,18 @@ TermResult playTerm(
   final gained = <Category, int>{};
   for (final a in abilitiesOf(p.role)) {
     // 練習試合は特定の能力に偏らない。
-    final f = action == Plan.match ? a : focus;
+    // (投手の打撃・守備の能力は、練習試合でも重点にしない)
+    final f = action == Plan.match && !(p.role == Role.pitcher && !pitcherAbilities.contains(a)) ? a : focus;
     var x = yearlyDelta(p, a, f) * e.scale * share;
     // 練習試合は全部の能力が重点扱いなので、能力の数で割る補正(roleExpFactor)を戻す
-    if (tMatchFix && action == Plan.match && p.role == Role.pitcher) {
-      x *= pitcherPace / roleExpFactor(p.role);
+    if (tMatchFix && action == Plan.match && p.role == Role.pitcher && pitcherAbilities.contains(a)) {
+      x *= pitcherPace / roleExpFactor(p.role, a);
     }
     if (x > 0) x *= trainBonus; // 投資(専属トレーナー)
     if (x >= 0) {
       final cat = categoryOf(a);
       gained[cat] = (gained[cat] ?? 0) +
-          (x * expPerPoint * motiv * roleExpFactor(p.role)).round();
+          (x * expPerPoint * motiv * roleExpFactor(p.role, a)).round();
     } else {
       // 衰えは経験点を通さず直接下がる。端数は確率で切り上げる。
       final whole = x.truncate();
@@ -230,7 +231,7 @@ Map<Category, int> focusExpOf(
     categoryOf(f): (x *
             expPerPoint *
             motivationOf(morale).expMultiplier *
-            roleExpFactor(p.role))
+            roleExpFactor(p.role, f))
         .round(),
   };
 }

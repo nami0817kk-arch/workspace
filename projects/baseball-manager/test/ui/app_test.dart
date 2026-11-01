@@ -131,8 +131,8 @@ void main() {
     expect(find.textContaining('ひなた'), findsWidgets);
     expect(find.textContaining('6歳'), findsOneWidget);
     expect(find.textContaining('春'), findsWidgets);
-    expect(find.text('球威'), findsWidgets); // 投手の能力
-    expect(find.text('ミート'), findsNothing);
+    expect(find.text('球速'), findsWidgets); // 投手の能力
+    expect(find.text('変化球'), findsWidgets);
   });
 
   testWidgets('練習すると季節が進み、経験点が貯まり、能力に振り分けられる', (t) async {
@@ -281,7 +281,7 @@ void main() {
     await t.pumpAndSettle();
     expect(c.game!.player.role, Role.twoWay);
     await _tab(t, 'ability');
-    expect(find.text('球威'), findsWidgets); // 投手の能力も並ぶ
+    expect(find.text('球速'), findsWidgets); // 投手の能力も並ぶ
     expect(find.text('ミート'), findsWidgets);
     await _tab(t, 'career');
     await t.tap(find.byKey(const Key('retire')));
@@ -607,7 +607,7 @@ void _rankTests() {
     expect(find.textContaining('通算'), findsWidgets);
   });
 
-  testWidgets('成績: 投手は勝敗・防御率・奪三振の欄が出る。打者の欄は出ない', (t) async {
+  testWidgets('成績: 投手は勝敗・防御率・奪三振の欄が出る', (t) async {
     final c = await _start(t);
     final g = Game.newGame(
         name: '投手', role: Role.pitcher, rng: Random(2), potential: 70);
@@ -625,7 +625,6 @@ void _rankTests() {
     await t.pumpAndSettle();
     expect(find.text('防御率'), findsWidgets);
     expect(find.text('奪三振'), findsWidgets);
-    expect(find.text('打率'), findsNothing);
   });
 
   testWidgets('成績: プロのシーズンは順位とプロ通算が出る', (t) async {
@@ -787,7 +786,7 @@ void _rankTests() {
     expect(find.byKey(const Key('trait-clutch')), findsOneWidget);
     expect(find.byKey(const Key('trait-sturdy')), findsOneWidget);
     expect(find.textContaining('大会での体調が'), findsOneWidget); // 特性の説明が読める
-    expect(find.text('球威'), findsWidgets);
+    expect(find.text('球速'), findsWidgets);
     expect(find.text('いまの状態'), findsOneWidget); // 育成中だけ出る
 
     await t.tap(find.byKey(const Key('tab-records')));
@@ -1232,7 +1231,7 @@ void _rankTests() {
       const c0 = Condition(fatigue: 10, morale: 50);
       final p1 = p0.copyWith(abilities: {...p0.abilities, Ability.stuff: 33});
       final c1 = c0.copyWith(morale: 58, fatigue: 6);
-      expect(eventResultText(p0, c0, p1, c1), '球威 +3 / やる気 +8 / 疲れ -4');
+      expect(eventResultText(p0, c0, p1, c1), '球速 +3 / やる気 +8 / 疲れ -4');
       expect(eventResultText(p0, c0, p0, c0), '');
       expect(
           eventResultText(p0, c0, p0.copyWith(traits: {Trait.hardWorker}), c0,

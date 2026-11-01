@@ -76,7 +76,7 @@ EventChoice _giftChoice(String label, {int fatigue = 0, int morale = 0}) =>
 /// いちばん低い能力を+1にする。
 Player _trait(Player p, Trait t) {
   if (canGain(p.traits, t)) return p.copyWith(traits: gain(p.traits, t));
-  final abilities = [...abilitiesOf(p.role)]
+  final abilities = [...mainAbilitiesOf(p.role)]
     ..sort((a, b) => p.of(a).compareTo(p.of(b)));
   return _gain(p, abilities.first, 1);
 }

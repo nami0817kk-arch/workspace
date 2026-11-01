@@ -14,9 +14,17 @@ void main() {
       Ability.catching,
     ]);
     expect(Ability.parse('eye'), isNull);
-    expect(pitcherAbilities.length, 3);
-    // 二刀流は打者7＋投手3
-    expect(abilitiesOf(Role.twoWay).length, 10);
+    expect(pitcherAbilities, [
+      Ability.stuff,
+      Ability.control,
+      Ability.stamina,
+      Ability.breaking,
+    ]);
+    // 投手も打撃・守備の能力を持つ(投球が先)。二刀流は打者7＋投手4
+    expect(abilitiesOf(Role.pitcher).length, 11);
+    expect(abilitiesOf(Role.pitcher).first, Ability.stuff);
+    expect(mainAbilitiesOf(Role.pitcher), pitcherAbilities);
+    expect(abilitiesOf(Role.twoWay).length, 11);
   });
 
   test('経験点の種類: 弾道は打撃、肩力・捕球は守備走塁', () {
@@ -46,13 +54,15 @@ void main() {
     expect(p.abilities.length, 7);
   });
 
-  test('投手のセーブには打者の能力を足さない', () {
+  test('投球だけだった頃の投手のセーブは、変化球と打撃・守備を補って読む', () {
     final p = Player.fromJson({
       'name': 'x',
       'role': 'pitcher',
       'abilities': {'stuff': 60, 'control': 50, 'stamina': 40},
     });
-    expect(p.abilities.length, 3);
+    expect(p.abilities.length, 11);
+    expect(p.of(Ability.breaking), 55); // 球威と制球の平均
+    expect(p.of(Ability.contact), 20);
   });
 
   test('弾道は長打に、捕球は守備力に効く', () {
