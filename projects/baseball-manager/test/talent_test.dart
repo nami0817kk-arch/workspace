@@ -320,7 +320,7 @@ void main() {
           })),
           isNot(contains('gifted')));
       expect(giftAverage(Role.pitcher, {Ability.stuff: 2, Ability.control: 1}),
-          closeTo(1.0, 1e-9));
+          closeTo(0.75, 1e-9)); // 投球の4つの平均
       // 使わない能力(投手の打撃など)の天賦は数えない
       expect(giftAverage(Role.pitcher, {Ability.contact: 2}), 0);
     });

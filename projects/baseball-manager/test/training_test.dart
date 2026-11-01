@@ -126,7 +126,7 @@ void _twoWayTests() {
   test('二刀流は打者にも投手にもなれ、本職に戻せる', () {
     final t = switchRole(pro(), Role.twoWay, Stage.pro);
     expect(t.toBatter().contact, switchStartLevel);
-    expect(t.toPitcher().stuff, 70);
+    expect(t.of(Ability.stuff), 70);
     final back = switchRole(t, Role.batter, Stage.pro);
     expect(back.abilities.keys.toSet(), batterAbilities.toSet());
   });

@@ -127,7 +127,8 @@ void _roleFactorTests() {
   test('役割が違っても、1能力あたりの経験点の貯まり方が揃う', () {
     // 重点1つ(1.0)とそれ以外(0.25)の合計を、能力の数で割った平均が打者と同じになる。
     double perAbility(Role r) {
-      final n = abilitiesOf(r).length;
+      // 投手の伸びは、投球の4つで数える(打撃・守備は別の補正)
+      final n = r == Role.pitcher ? pitcherAbilities.length : abilitiesOf(r).length;
       return (1 + 0.25 * (n - 1)) / n * roleExpFactor(r);
     }
 
@@ -156,8 +157,8 @@ void _seasonTests() {
   });
 
   group('役割ごとに使える経験点', () {
-    test('投手に打撃の経験点は使えない。打者に投球は使えない。二刀流は全部', () {
-      expect(usableCategories(Role.pitcher), isNot(contains(Category.batting)));
+    test('投手も打撃・守備の経験点を使える(パワプロと同じ)。打者に投球は使えない。二刀流は全部', () {
+      expect(usableCategories(Role.pitcher), Category.values);
       expect(usableCategories(Role.batter), isNot(contains(Category.pitching)));
       expect(usableCategories(Role.twoWay), Category.values);
     });

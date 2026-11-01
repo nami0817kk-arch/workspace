@@ -34,6 +34,12 @@ List<Category> usableCategories(Role r) => [
         if (abilitiesOf(r).any((a) => categoryOf(a) == c)) c
     ];
 
+/// 役割の本業の経験点の種類(投手なら投球だけ。特殊能力の対象を決めるのに使う)。
+List<Category> mainCategories(Role r) => [
+      for (final c in Category.values)
+        if (mainAbilitiesOf(r).any((a) => categoryOf(a) == c)) c
+    ];
+
 /// 「全種類に n」という報酬を、使える種類にだけ配る(使えない種類は増やさない)。
 /// 実際に使える量は変えない(バランスはそのまま)。
 Map<Category, int> spreadExp(Role r, int n) =>

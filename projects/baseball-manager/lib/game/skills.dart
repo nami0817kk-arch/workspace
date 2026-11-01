@@ -168,7 +168,7 @@ enum Skill {
   Skill? get requires => requiresName == null ? null : Skill.parse(requiresName!);
 
   /// この役割の選手が取れるか(打者の特殊能力は投手には取れない。二刀流は両方)。
-  bool appliesTo(Role r) => usableCategories(r).contains(category);
+  bool appliesTo(Role r) => mainCategories(r).contains(category);
 
   /// 大会の勝負どころに効く(練習試合でコツが貯まりやすい)特殊能力か。
   bool get forMatches =>
