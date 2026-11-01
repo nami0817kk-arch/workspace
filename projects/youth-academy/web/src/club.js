@@ -323,12 +323,13 @@
       o('送り出す（本人は伸び、クラブの評判が上がる）', 'push', (w, p) => { p.away = 2; p.natThisYear = true; p.nat = (p.nat || 0) + 1; p.conf = clamp(p.conf + 8, 0, 100); p.spurt = Math.max(p.spurt, 6); YA.addRep(w, 2); p.hist.unshift({ y: w.year, w: w.week, t: 'U-18代表に招集された' }); YA.noteTier(w, 1, pname(p) + ' がU-18代表に招集された（2週間不在）', p.id); }),
       o('「大一番に必要だ」と断る', 'firm', (w, p) => { p.conf = clamp(p.conf - 6, 0, 100); p.unrest += 1.5; YA.addRep(w, -1); }),
     ] });
-  // 年代別の日本代表（U-16＝高1・U-17＝高2・U-18＝高3）。年に3回の活動で、選考ライン（総合力）を超えた子が選ばれる
-  YA.YOUTH_NAT = { 1: ['U-16日本代表', 112], 2: ['U-17日本代表', 120], 3: ['U-18日本代表', 128] };
+  // 年代別の日本代表は U-18 と U-21 の2つだけ（学年は問わない）。選考ライン（総合力）を超えた子が選ばれ、高いほうを優先
+  YA.YOUTH_NAT = [['U-21日本代表', 140], ['U-18日本代表', 126]];
+  YA.natTeamOf = (p) => YA.YOUTH_NAT.find((t) => YA.rating(p) >= t[1]) || null;
   YA.NAT_WEEKS = [7, 33]; // 年2回（5月・1月）
-  YA.natPicks = (w) => Object.values(w.players).filter((p) => p.inj <= 0 && YA.YOUTH_NAT[p.grade] && YA.rating(p) >= YA.YOUTH_NAT[p.grade][1]).sort((a, b) => YA.rating(b) - YA.rating(a)).filter((p, i, arr) => p.pos !== 'GK' || arr.findIndex((q) => q.pos === 'GK') === i).slice(0, 2); // 1回に2人まで（GKは1人まで）
+  YA.natPicks = (w) => Object.values(w.players).filter((p) => p.inj <= 0 && YA.natTeamOf(p)).sort((a, b) => YA.rating(b) - YA.rating(a)).filter((p, i, arr) => p.pos !== 'GK' || arr.findIndex((q) => q.pos === 'GK') === i).slice(0, 2); // 1回に2人まで（GKは1人まで）
   const natSend = (w, p) => {
-    const [team] = YA.YOUTH_NAT[p.grade];
+    const [team] = YA.natTeamOf(p);
     p.away = 1;
     p.youthCaps = (p.youthCaps || 0) + 1;
     p.youthTeam = team;
@@ -340,7 +341,7 @@
     pick: () => null,
     text: (p, w) => {
       const ids = (w._natCall || []).filter((id) => w.players[id]);
-      return '年代別の日本代表から招集が届いた（1週間チームを離れる）。' + ids.map((id) => { const q = w.players[id]; return `${q.num}番 ${q.name}（${YA.YOUTH_NAT[q.grade][0]}・総合力${YA.rating(q)}）`; }).join('、') + `。選考ラインは U-16 ${YA.YOUTH_NAT[1][1]}・U-17 ${YA.YOUTH_NAT[2][1]}・U-18 ${YA.YOUTH_NAT[3][1]}`;
+      return '年代別の日本代表から招集が届いた（1週間チームを離れる）。' + ids.map((id) => { const q = w.players[id]; return `${q.num}番 ${q.name}（${YA.natTeamOf(q)[0]}・総合力${YA.rating(q)}）`; }).join('、') + `。選考ラインは U-18 ${YA.YOUTH_NAT[1][1]}・U-21 ${YA.YOUTH_NAT[0][1]}`;
     },
     opts: [
       o('全員送り出す（本人は伸び、クラブの評判が上がる）', 'push', null, (w) => { const ids = (w._natCall || []).filter((id) => w.players[id]); for (const id of ids) natSend(w, w.players[id]); YA.addRep(w, ids.length); return { line: `${ids.length}人を送り出した。それぞれ1週間チームを離れる`, small: `評判 +${ids.length}・自信 +6` }; }),

@@ -34,6 +34,8 @@ function playYear(w, opts) {
     YA.startWeek(w);
     injuries += w.inbox.filter((n) => n.week === w.week && n.year === w.year && /怪我/.test(n.text)).length;
     for (const e of w.events.slice()) {
+      // 同じ週の別の出来事で抜けた子（プロ契約など）宛ては、画面と同じく飛ばす
+      if (e.pid && !w.players[e.pid]) { w.events.splice(w.events.indexOf(e), 1); continue; }
       const v = YA.eventView(w, e);
       ok(v && v.text && v.opts.length >= 2, '出来事の表示 ' + e.id);
       const r = YA.resolveEvent(w, e, ((e.pid ? e.pid.length : 3) + w.week) % v.opts.length);
@@ -910,12 +912,13 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
 {
   const wn2 = YA.newWorld(14);
   const q = Object.values(wn2.players).find((x) => x.grade === 2 && x.pos !== 'GK');
-  for (const n of YA.AB_FIELD) q.ab[n] = Math.min(20, q.ab[n] + 4);
-  ok(YA.rating(q) >= YA.YOUTH_NAT[2][1], '選考ラインを超えた ' + YA.rating(q));
+  ok(YA.YOUTH_NAT.length === 2 && YA.YOUTH_NAT.every((t) => /U-(18|21)/.test(t[0])), '年代別代表は U-18 と U-21 だけ');
+  for (let k = 0; k < 8 && YA.rating(q) < YA.YOUTH_NAT[1][1]; k++) for (const n of YA.AB_FIELD) q.ab[n] = Math.min(20, q.ab[n] + 1);
+  ok(!!YA.natTeamOf(q), '選考ラインを超えた ' + YA.rating(q));
   wn2.week = YA.NAT_WEEKS[0]; wn2.phase = 'plan'; YA.startWeek(wn2);
   const ev = wn2.events.find((e) => e.id === 'natcall');
   ok(!!ev && wn2._natCall.indexOf(q.id) >= 0, '活動の週に招集が届く');
-  const v = YA.eventView(wn2, ev); ok(v && /U-17日本代表/.test(v.text) && !/undefined|null|NaN/.test(v.text), '招集の文 ' + (v && v.text));
+  const v = YA.eventView(wn2, ev); ok(v && v.text.indexOf(YA.natTeamOf(q)[0]) >= 0 && !/U-1[67]/.test(v.text) && !/undefined|null|NaN/.test(v.text), '招集の文 ' + (v && v.text));
   YA.resolveEvent(wn2, ev, 0);
   ok(q.youthCaps === 1 && q.away === 1, '送り出すと代表の回数が増え、1週間離れる');
   const a = YA.alumniEntry(wn2, q, 'test'); ok(a.nat === 0 && a.youthCaps === 1, '卒業生の日本代表（A代表）に、ユース年代の回数は混ぜない');
