@@ -541,7 +541,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   const st1 = YA.makeStart({ name: 'テスト監督', career: 'high', club: 0, points: { eye: 3, talk: 3 }, noFire: true });
   const wn = YA.newWorld(5, st1);
   ok(wn.coachName === 'テスト監督' && wn.coach.teach === 11 && wn.coach.eye === 11 && wn.coach.talk === 12 && wn.coach.exp === 3, '経歴と配分が能力に出る ' + JSON.stringify(wn.coach));
-  ok(wn.club.tier === 1 && wn.clubName.indexOf('オンダス') >= 0 && wn.club.noFire && wn.league.level === 1, '選んだクラブ（1部）で始まる');
+  ok(wn.club.tier === 1 && wn.clubName.indexOf('マリーナス') >= 0 && wn.club.noFire && wn.league.level === 1, '選んだクラブ（1部）で始まる');
   const wt3 = YA.newWorld(5, YA.makeStart({ career: 'pro', club: 6, points: {} }));
   const avg = (wx) => Object.values(wx.players).reduce((a, p) => a + YA.ovr(p), 0) / 36;
   ok(wt3.club.tier === 3 && wt3.coachName === '監督', '3部のクラブ・名前が空なら「監督」');

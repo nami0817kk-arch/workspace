@@ -36,9 +36,9 @@
   YA.achievements = function (w) {
     const al = w.alumni;
     const list = [
-      { k: 'champ', name: '全国リーグで優勝', note: '1部（全国リーグ）で1位', done: (w.leagueHist || []).some((x) => x.level === 1 && x.rank === 1) },
-      { k: 'summer', name: '夏の全国大会で優勝', done: (w.trophies || []).some((t) => t.name === '夏の全国大会') },
-      { k: 'winter', name: '冬のカップ戦で優勝', done: (w.trophies || []).some((t) => t.name === '冬のカップ戦') },
+      { k: 'champ', name: 'プレミアリーグで優勝', note: '1部（高円宮杯U-18 プレミアリーグ）で1位', done: (w.leagueHist || []).some((x) => x.level === 1 && x.rank === 1) },
+      { k: 'summer', name: '日本クラブユース選手権で優勝', done: (w.trophies || []).some((t) => t.name === '夏の全国大会' || t.name === YA.CUP_NAME.summer) },
+      { k: 'winter', name: 'Jユースカップで優勝', done: (w.trophies || []).some((t) => t.name === '冬のカップ戦' || t.name === YA.CUP_NAME.winter) },
       { k: 'nat10', name: '代表経験者を10人出す', cur: al.filter((a) => a.nat > 0).length, goal: 10 },
       { k: 'u21', name: 'U-21代表を出す', note: '卒業生がU-21日本代表に選ばれる', done: al.some((a) => a.u21 > 0) },
       { k: 'full', name: 'フル代表を出す', note: '卒業生が日本代表に選ばれる', done: al.some((a) => a.status === 'pro' && a.nat > 0 && a.ovr >= 14) },

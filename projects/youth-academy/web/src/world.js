@@ -179,7 +179,7 @@
   YA.newWorld = function (seed, opts) {
     opts = opts || {};
     const rng = YA.rngOf(seed);
-    const w = { v: 1, seed, year: 1, week: 1, nextId: 0, players: {}, plan: null, inbox: [], events: [], alumni: [], results: [], rec: { w: 0, d: 0, l: 0, gf: 0, ga: 0 }, phase: 'plan', captain: null, formation: '4-3-3', lineupA: null, benchA: null, lineupB: null, tactic: null, lastWeek: null, season: 1, notes: [], clubName: '湘南 レガーレU-18', matchDone: false, log: [] };
+    const w = { v: 1, seed, year: 1, week: 1, nextId: 0, players: {}, plan: null, inbox: [], events: [], alumni: [], results: [], rec: { w: 0, d: 0, l: 0, gf: 0, ga: 0 }, phase: 'plan', captain: null, formation: '4-3-3', lineupA: null, benchA: null, lineupB: null, tactic: null, lastWeek: null, season: 1, notes: [], clubName: '湘南 ベルマリーナU-18', matchDone: false, log: [] };
     w.tierQ = (2 - (opts.tier || 2)) * 0.5; // 上の部のクラブほど、素質のある子が集まる
     const used = new Set();
     for (const g of [1, 2, 3]) genGrade(rng, w, g, used);

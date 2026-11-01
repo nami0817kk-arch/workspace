@@ -84,7 +84,7 @@ async function clearEvents() {
   nameBox.dispatchEvent(new w.Event('input', { bubbles: true }));
   btn('高校で指導していた').click();
   for (let i = 0; i < 3; i++) [...d.querySelectorAll('#main button')].filter((b) => b.textContent === '＋')[0].click();
-  btn('千葉 マーレU-18').click();
+  btn('千葉 ジェフィーズU-18').click();
   btn('この指導者で始める').click();
   await sleep(50);
   ok(A.w && A.w.coachName === 'テスト監督' && A.w.club.tier === 2 && A.w.clubName.indexOf('千葉') >= 0 && A.w.coach.exp === 3, '選んだ内容で世界が始まる');
@@ -143,7 +143,7 @@ async function clearEvents() {
     if (k === '予算と施設') ok(txt().includes('今年の予算') && txt().includes('施設レベル'), '予算の画面');
     if (k === 'スタッフ') ok(txt().includes('技術コーチ') && txt().includes('スタッフ候補'), 'スタッフの画面');
     if (k === 'スカウト') ok(txt().includes('来年の高1') && txt().includes('スカウトに出る'), 'スカウトの画面');
-    if (k === '順位と日程') ok(txt().includes('全国リーグ') || txt().includes('地域リーグ') || txt().includes('県リーグ'), '順位表');
+    if (k === '順位と日程') ok(txt().includes('プレミアリーグ') || txt().includes('プリンスリーグ') || txt().includes('県リーグ'), '順位表');
   }
   rail('ほか');
   btn('記録').click();
@@ -381,7 +381,7 @@ async function clearEvents() {
     ok(A.w.bCtl && A.w.bCtl.policy === 'young', 'Bの起用方針を選べる');
     rail('ほか');
     btn('実績と引退').click();
-    ok(txt().includes('実績') && txt().includes('引退する') && txt().includes('全国リーグで優勝'), '実績と引退の画面');
+    ok(txt().includes('実績') && txt().includes('引退する') && txt().includes('プレミアリーグで優勝'), '実績と引退の画面');
     // フリー対戦（成績に残らない）
     rail('選手');
     btn('操作と履歴').click();
