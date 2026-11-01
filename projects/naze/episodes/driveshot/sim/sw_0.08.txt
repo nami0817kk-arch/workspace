@@ -1,0 +1,1 @@
+d=    8cm window 41.50-48.18 width 6.68 center 44.84 speed 24.56 spin 8.51rps wall 2.57 goal 1.22 footz 0.069
