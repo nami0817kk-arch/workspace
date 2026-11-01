@@ -7,9 +7,9 @@
 
   // ---------- おまかせ進行（決定57：止まる条件を決めて、練習・起用をおまかせで何週も進める）----------
   // 必ず止める出来事（決定76 の①）。おまかせの途中でもここでは止まって、自分で選ぶ
-  YA.SIM_IMPORTANT = ['quit', 'injury', 'top', 'nat'];
+  YA.SIM_IMPORTANT = ['quit', 'injury', 'top', 'nat', 'early', 'natcall', 'awake'];
   // おまかせのときの選び方（出来事ごとの既定。無難な側）
-  const AUTO_CHOICE = { rival: 1, late: 1, fight: 1, slack: 1, quit: 0, injury: 0, top: 0, nat: 0 };
+  const AUTO_CHOICE = { rival: 1, late: 1, fight: 1, slack: 1, quit: 0, injury: 0, top: 0, nat: 0, early: 0, natcall: 0, awake: 0 };
   YA.autoChoice = (id) => (AUTO_CHOICE[id] != null ? AUTO_CHOICE[id] : 0);
 
   // 年度はじめ・成長・契約の画面で出る選択を、既定で済ませる
@@ -228,14 +228,14 @@
   ];
   YA.CAREER_POINTS = 6;
   YA.START_CLUBS = [
-    { tier: 1, name: '横浜 ブルーウィングU-18', note: '1部。予算が大きく、期待も大きい' },
-    { tier: 1, name: '名古屋 シルバーホークU-18', note: '1部。育成に定評がある' },
-    { tier: 2, name: '湘南 レガーレU-18', note: '2部。標準的な始まり' },
-    { tier: 2, name: '千葉 アルバトロスU-18', note: '2部。堅実なクラブ' },
-    { tier: 2, name: '仙台 ノースウィンドU-18', note: '2部。若手を使う方針' },
-    { tier: 3, name: '新潟 ミストラルU-18', note: '3部。予算は小さいが、のびのび育てられる' },
-    { tier: 3, name: '岡山 クレセントU-18', note: '3部。設備は古い' },
-    { tier: 3, name: '福岡 サンライズU-18', note: '3部。地元の期待は静か' },
+    { tier: 1, name: '横浜 マリーナスU-18', note: '1部。トップはJ1。予算が大きく、期待も大きい' },
+    { tier: 1, name: '名古屋 グランパレスU-18', note: '1部。トップはJ1。育成に定評がある' },
+    { tier: 2, name: '湘南 ベルマリーナU-18', note: '2部。トップはJ2。標準的な始まり' },
+    { tier: 2, name: '千葉 ジェフィーズU-18', note: '2部。トップはJ2。堅実なクラブ' },
+    { tier: 2, name: '仙台 ベガルスU-18', note: '2部。トップはJ2。若手を使う方針' },
+    { tier: 3, name: '松本 アルプスU-18', note: '3部。トップはJ3。予算は小さいが、のびのび育てられる' },
+    { tier: 3, name: '高知 ドルフィンズU-18', note: '3部。トップはJ3。設備は古い' },
+    { tier: 3, name: '鹿児島 ボルケーノU-18', note: '3部。トップはJ3。地元の期待は静か' },
   ];
   // 画面で選んだ内容から、新しい世界の設定を作る
   YA.makeStart = function (form) {

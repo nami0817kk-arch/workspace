@@ -36,9 +36,9 @@
   YA.achievements = function (w) {
     const al = w.alumni;
     const list = [
-      { k: 'champ', name: '全国リーグで優勝', note: '1部（全国リーグ）で1位', done: (w.leagueHist || []).some((x) => x.level === 1 && x.rank === 1) },
-      { k: 'summer', name: '夏の全国大会で優勝', done: (w.trophies || []).some((t) => t.name === '夏の全国大会') },
-      { k: 'winter', name: '冬のカップ戦で優勝', done: (w.trophies || []).some((t) => t.name === '冬のカップ戦') },
+      { k: 'champ', name: 'プレミアリーグで優勝', note: '1部（高円宮杯U-18 プレミアリーグ）で1位', done: (w.leagueHist || []).some((x) => x.level === 1 && x.rank === 1) },
+      { k: 'summer', name: '日本クラブユース選手権で優勝', done: (w.trophies || []).some((t) => t.name === '夏の全国大会' || t.name === YA.CUP_NAME.summer) },
+      { k: 'winter', name: 'Jユースカップで優勝', done: (w.trophies || []).some((t) => t.name === '冬のカップ戦' || t.name === YA.CUP_NAME.winter) },
       { k: 'nat10', name: '代表経験者を10人出す', cur: al.filter((a) => a.nat > 0).length, goal: 10 },
       { k: 'u21', name: 'U-21代表を出す', note: '卒業生がU-21日本代表に選ばれる', done: al.some((a) => a.u21 > 0) },
       { k: 'full', name: 'フル代表を出す', note: '卒業生が日本代表に選ばれる', done: al.some((a) => a.status === 'pro' && a.nat > 0 && a.ovr >= 14) },
@@ -134,10 +134,10 @@
   YA.EVENTS.push({
     id: 'parent', name: '保護者の相談', weight: 0.6,
     pick: (w, r) => { const c = Object.values(w.players).filter((p) => p.team === 'B' && p.mins < 200 && p.grade >= 2); return c.length ? r.pick(c) : null; },
-    text: (p) => `${p.num}番 ${p.name}の保護者から、「もう少し試合に出られないでしょうか」と連絡が来た。`,
+    text: (p) => `${p.num}番 ${p.name}（高${p.grade}・B）の保護者から連絡が来た。「今年はAの試合に${Math.round(p.minsA || 0)}分しか出ていません。もう少し出られないでしょうか」`,
     opts: [
       { label: '現状と課題を丁寧に説明する', kind: 'warm', extra: (w, p) => { p.unrest = Math.max(0, p.unrest - 0.5); } },
-      { label: '起用を約束する', kind: 'push', extra: (w, p) => { p.train.promise = true; YA.addTrust && YA.addTrust(w, -1, '保護者に起用を約束した'); } },
+      { label: '3週のうちにAで使う、と約束する', kind: 'push', extra: (w, p) => { YA.addPromise(w, p, 3, '保護者に、Aで使う'); YA.addTrust && YA.addTrust(w, -1, '保護者に起用を約束した'); } },
       { label: '一律の方針だと断る', kind: 'firm', extra: (w, p) => { p.unrest += 1; w.disc = Math.min(100, (w.disc == null ? 60 : w.disc) + 1); } },
     ],
   });

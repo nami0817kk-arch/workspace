@@ -54,7 +54,7 @@
         const lv = YA.trustLevel(w);
         bx.replaceChildren(
           h('div', { class: 'h', style: 'font-size:16px' }, `${w.year}年目の始まり：クラブの目標と、チームの約束事`),
-          h('div', { class: 'note' }, `${w.clubName}（${YA.TIER_NAME[c.tier]}・${YA.LEVEL_NAMES[w.league.level - 1]}）。信頼度は${YA.TRUST_NAME[lv]}（${Math.round(c.trust)}）。目標を変えられる数：あと${c.goalChanges}つ`),
+          h('div', { class: 'note' }, `${w.clubName}（${YA.TIER_NAME[c.tier]}・${YA.levelNames(w)[w.league.level - 1]}）。信頼度は${YA.TRUST_NAME[lv]}（${Math.round(c.trust)}）。目標を変えられる数：あと${c.goalChanges}つ`),
           ...c.goals.map((g, i) => h('div', { class: 'card', style: 'padding:4px 10px;display:flex;align-items:center;gap:6px' }, h('span', { class: 'chip trait' }, YA.GOAL_DEF[g.k].label), h('span', { class: 'grow', style: 'font-weight:700' }, YA.goalText(g)), h('button', { class: 'btn sm', disabled: c.goalChanges <= 0, onclick: () => { YA.changeGoal(w, i, -1); draw(); } }, '易しく'), h('button', { class: 'btn sm', disabled: c.goalChanges <= 0, onclick: () => { YA.changeGoal(w, i, 1); draw(); } }, '難しく'))),
           h('div', { class: 'note' }, '難しい目標を達成すると評価が上がります。信頼度が低いと、目標はそのまま受け入れるしかありません。'),
           h('div', { class: 'h', style: 'margin-top:4px' }, `チームの約束事（3つまで：${w.rules.length}）`),
@@ -84,7 +84,7 @@
   };
 
   // ---------- クラブ ----------
-  const SUBS = [['over', '概要'], ['money', '予算と施設'], ['staff', 'スタッフ'], ['int', '内部昇格'], ['scout', 'スカウト'], ['sel', 'セレクション'], ['table', '順位と日程']];
+  const SUBS = [['over', '概要'], ['top', 'トップ'], ['money', '予算と施設'], ['staff', 'スタッフ'], ['int', '内部昇格'], ['scout', 'スカウト'], ['sel', 'セレクション'], ['table', '順位と日程']];
   function viewClub(main) {
     const w = W();
     const ui = U().app;
@@ -92,7 +92,7 @@
     const tabs = h('div', { class: 'tabs', style: 'flex:none' }, SUBS.map(([k, n]) => h('button', { class: 'btn' + (ui.ct === k ? ' on' : ''), onclick: () => { ui.ct = k; rerender(); } }, n)));
     const body = h('div', { class: 'card pbody', style: 'flex:1;min-height:0' });
     if (!SUBS.some((x) => x[0] === ui.ct)) ui.ct = 'over';
-    ({ over: over, money: money, staff: staff, int: (b, w2) => recruit(b, w2, 'int'), scout: (b, w2) => recruit(b, w2, 'scout'), sel: (b, w2) => recruit(b, w2, 'sel'), table: table })[ui.ct](body, w);
+    ({ over: over, top: topView, money: money, staff: staff, int: (b, w2) => recruit(b, w2, 'int'), scout: (b, w2) => recruit(b, w2, 'scout'), sel: (b, w2) => recruit(b, w2, 'sel'), table: table })[ui.ct](body, w);
     main.append(h('div', { style: 'flex:1;min-height:0;display:flex;flex-direction:column;gap:6px' }, tabs, body));
   }
 
@@ -105,7 +105,7 @@
     const g1 = Object.values(w.players).filter((p) => p.grade === 1).reduce((s, p) => s + (p.minsA || 0), 0);
     const left = h('div', { style: 'flex:1;min-width:0' });
     left.append(
-      card(h('div', { class: 'row' }, h('b', { class: 'grow' }, w.clubName), h('span', { class: 'chip gray' }, `${YA.TIER_NAME[c.tier]} / ${YA.LEVEL_NAMES[w.league.level - 1]}`)),
+      card(h('div', { class: 'row' }, h('b', { class: 'grow' }, w.clubName), h('span', { class: 'chip gray' }, `${YA.TIER_NAME[c.tier]} / ${YA.levelNames(w)[w.league.level - 1]}`)),
         h('div', { class: 'note', style: 'margin-top:5px' }, `クラブからの信頼度：${YA.TRUST_NAME[lv]}（${Math.round(c.trust)}）`), meter(c.trust, c.trust >= 70 ? '#1a9d57' : c.trust >= 40 ? '#1f6feb' : '#d63a3a'),
         h('div', { class: 'note', style: 'margin-top:5px' }, `クラブの評判：${Math.round(c.rep)}`), meter(c.rep, '#e6a800'),
         h('div', { class: 'note', style: 'margin-top:6px' }, `契約：あと${c.contract.left}年 ／ 指導者 ${YA.licenseOf(w)}（教える${w.coach.teach}・見る目${w.coach.eye}・話す${w.coach.talk}・戦術${w.coach.tactic}）`),
@@ -162,6 +162,37 @@
     const msg = h('div', { class: 'msglog' });
     for (const m of w.market) right.append(card(h('div', { class: 'row' }, h('span', { class: 'chip pers', style: 'min-width:78px;justify-content:center' }, m.role), h('b', { class: 'grow' }, m.name + (m.ob ? '（OB）' : '')), h('span', { class: 'chip trait' }, '能力 ' + m.ab), h('span', { class: 'sub' }, m.salary + '万'), h('button', { class: 'btn sm', disabled: left2 <= 0, onclick: () => { const r = YA.hire(w, m.id); if (r.ok) { save(); rerender(); } else { msg.replaceChildren(h('div', {}, r.msg)); } } }, '採用'))));
     right.append(msg);
+    body.append(h('div', { style: 'display:flex;gap:8px;align-items:flex-start' }, left, right));
+  }
+
+  // ---------- トップチーム：部・順位の履歴・選手（生え抜きに印）。ユースの子がトップの中でどのあたりか ----------
+  function topView(body, w) {
+    const sq = YA.topSquad(w);
+    const t = w.top;
+    const ac = sq.filter((x) => x.academy).length;
+    const last = t.hist[t.hist.length - 1];
+    const left = h('div', { style: 'flex:1.25;min-width:0' });
+    left.append(h('div', { class: 'row', style: 'gap:6px;flex-wrap:wrap;margin-bottom:4px' }, YA.emblemEl(w, w.clubName, 22), h('b', { style: 'font-size:15px' }, t.name), h('span', { class: 'chip trait' }, YA.J_NAME[t.j]), last ? h('span', { class: 'chip gray' }, `昨季 ${YA.J_NAME[last.j]} ${last.rank}位`) : null, h('span', { class: 'chip pers' }, `生え抜き ${ac}人／${sq.length}人`)));
+    left.append(h('div', { class: 'note', style: 'margin-bottom:4px' }, `トップに上がった子は、ここでプロとしてプレーします。登録に入れるのは総合力 ${YA.topCutLine(w)} ほどから、主力は ${sq[5] ? sq[5].rating : '-'} ほどから。`));
+    left.append(h('div', { class: 'plist' }, sq.map((x, i) => h('div', { class: 'pitem', style: 'cursor:default;' + (x.academy ? 'background:#fff7d6;border-color:#f0cf55' : '') },
+      h('span', { class: 'sub', style: 'width:18px' }, i + 1),
+      h('span', { class: 'pos ' + (YA.GROUP[x.pos] || x.pos) }, YA.POS_LABEL[x.pos] || x.pos),
+      h('span', { class: 'nm grow' }, x.name),
+      x.academy ? h('span', { class: 'chip trait' }, 'ユース出身') : null,
+      h('span', { class: 'sub' }, `${x.age}歳`),
+      h('b', { style: 'width:30px;text-align:right' }, x.rating),
+      h('span', { class: 'sub', style: 'width:52px' }, i < 11 ? '主力' : i < 18 ? '控え' : '若手・控え')))));
+    const right = h('div', { style: 'flex:1;min-width:0' });
+    const now = YA.topNow(w);
+    right.append(card(h('div', { class: 'row' }, h('b', { class: 'grow' }, `${now.league}　第${now.round}節`), h('span', { class: 'chip trait' }, `${now.rank}位・勝点${now.pts}`)),
+      h('div', { class: 'pitem', style: 'cursor:default;background:none;font-size:10px;color:var(--sub);font-weight:800' }, h('span', { style: 'width:18px' }, '順'), h('span', { class: 'grow' }, 'クラブ'), ...['勝', '分', '敗', '差', '点'].map((x) => h('span', { style: 'width:24px;text-align:right' }, x))),
+      ...now.rows.map((x) => h('div', { class: 'pitem', style: 'cursor:default;font-size:11px;padding-top:1px;padding-bottom:1px;' + (x.me ? 'background:#fff7d6;border-color:#f0cf55' : '') + (x.rank <= 2 && now.j > 1 ? 'box-shadow:inset 3px 0 #16a34a;' : '') + (x.rank >= 18 && now.j < 3 ? 'box-shadow:inset 3px 0 #d63a3a;' : '') }, h('b', { style: 'width:18px' }, x.rank), h('span', { class: 'nm grow', style: 'min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap' }, x.name), ...[x.w, x.d, x.l, x.gd, x.pts].map((v, i) => h(i === 4 ? 'b' : 'span', { style: 'width:24px;text-align:right' }, v)))),
+      h('div', { class: 'note', style: 'margin-top:3px' }, (now.j > 1 ? '上位2つは昇格（緑）。' : '') + (now.j < 3 ? '下位3つは降格（赤）。' : '') + 'ユースの1年に合わせて節が進みます。')));
+    right.append(card(title('順位の履歴'), ...(t.hist.length ? t.hist.slice().reverse().map((x) => h('div', { class: 'row', style: 'padding:2px 0' }, h('span', { class: 'sub', style: 'width:54px' }, `${x.y}年目`), h('span', { class: 'grow' }, YA.J_NAME[x.j]), h('b', {}, `${x.rank}位`))) : [h('div', { class: 'note' }, '1年目の終わりに、最初の順位が出ます')])));
+    // ユースのいちばん力のある子たちが、トップの中で何番目くらいか
+    const tops = Object.values(w.players).sort((a, b) => YA.rating(b) - YA.rating(a)).slice(0, 5);
+    right.append(card(title('ユースの上位とトップの差'), ...tops.map((p) => { const k = YA.topRankFor(w, p); return h('div', { class: 'row', style: 'padding:2px 0;gap:5px' }, h('span', { class: 'pos ' + p.pos }, YA.POS_LABEL[p.main] || p.pos), h('span', { class: 'grow' }, `${p.name}（高${p.grade}）`), h('b', {}, YA.rating(p)), h('span', { class: 'sub', style: 'white-space:nowrap' }, `トップの${k.n}番手`)); }),
+      h('div', { class: 'note', style: 'margin-top:3px' }, `トップの主力と並ぶ力（総合力${YA.earlyProLine(w)}ほど）になると、卒業を待たずにプロ契約の打診が来ます。`)));
     body.append(h('div', { style: 'display:flex;gap:8px;align-items:flex-start' }, left, right));
   }
 
@@ -272,14 +303,14 @@
     const rows = YA.standings(w);
     const L = w.league;
     const left = h('div', { style: 'flex:1.3;min-width:0' });
-    left.append(title(`${YA.LEVEL_NAMES[L.level - 1]}　${w.year}年目（${L.done}/22節）`));
+    left.append(title(`${YA.levelNames(w)[L.level - 1]}　${w.year}年目（${L.done}/22節）`));
     left.append(h('div', { class: 'pitem', style: 'background:none;font-size:10px;color:var(--sub);font-weight:800' }, h('span', { style: 'width:20px' }, '順'), h('span', { class: 'grow' }, 'チーム'), ...['勝', '分', '敗', '得失', '点'].map((x) => h('span', { style: 'width:32px;text-align:right' }, x))));
     for (const r of rows) left.append(h('div', { class: 'pitem', style: 'cursor:default;' + (r.me ? 'background:#fff7d6;border-color:#f0cf55' : '') }, h('b', { style: 'width:20px' }, r.rank), YA.emblemEl(w, r.name, 16), h('span', { class: 'nm grow', style: 'overflow:hidden;text-overflow:ellipsis;white-space:nowrap' }, r.name), ...[r.w, r.d, r.l, r.gd, r.p].map((x, i) => h(i === 4 ? 'b' : 'span', { style: 'width:32px;text-align:right' }, x))));
     left.append(h('div', { class: 'note', style: 'margin-top:4px' }, '上位2チームは翌年に一つ上のリーグへ、下位2チームは一つ下のリーグへ。'));
     const right = h('div', { style: 'flex:1;min-width:0' });
     const cupRow = (name, c) => h('div', { class: 'row', style: 'padding:3px 0' }, h('b', { style: 'width:104px' }, name), h('span', { class: 'grow' }, c.result ? c.result : c.alive ? (c.round ? `${c.round}回戦を突破中` : 'これから') : ''));
-    right.append(card(title('大会'), cupRow('夏の全国大会', w.cup.summer), cupRow('冬のカップ戦', w.cup.winter), h('div', { class: 'note' }, '負けたら終わりのトーナメントです（10〜12週・27〜30週）。')));
-    right.append(card(title('今年の日程'), h('div', { class: 'note', style: 'line-height:1.7' }, '1〜9週 リーグ前半／10〜12週 夏の全国大会／13〜25週 リーグ後半／26週 夏合宿・遠征／27〜30週 冬のカップ戦／25〜27週（11月）内部昇格／1〜27週（4〜11月）スカウト・28週（12月）に返事／31〜34週（1月）セレクション／40週 卒業式')));
+    right.append(card(title('大会'), cupRow(YA.CUP_NAME.summer, w.cup.summer), cupRow(YA.CUP_NAME.winter, w.cup.winter), h('div', { class: 'note' }, '負けたら終わりのトーナメントです（10〜12週・27〜30週）。')));
+    right.append(card(title('今年の日程'), h('div', { class: 'note', style: 'line-height:1.7' }, '1〜9週 リーグ前半／10〜12週 日本クラブユース選手権／13〜25週 リーグ後半／26週 夏合宿・遠征／27〜30週 Jユースカップ／25〜27週（11月）内部昇格／1〜27週（4〜11月）スカウト・28週（12月）に返事／31〜34週（1月）セレクション／40週 卒業式')));
     right.append(card(title('通算の対戦成績'), ...(Object.keys(w.h2h || {}).length ? Object.entries(w.h2h).slice(-6).map(([n, v]) => h('div', { class: 'row', style: 'padding:2px 0;font-size:11px' }, h('span', { class: 'grow' }, n), h('span', { class: 'sub' }, `${v[0]}勝${v[1]}分${v[2]}敗`))) : [h('div', { class: 'note' }, 'まだありません')])));
     body.append(h('div', { style: 'display:flex;gap:8px;align-items:flex-start' }, left, right));
   }
@@ -351,6 +382,7 @@
         h('span', { class: 'chip trait' }, `通算 ${a.apps}試合・${a.goals}得点`),
         a.nat ? h('span', { class: 'chip trait' }, `日本代表 ${a.nat}回` + (a.natGoals ? `・${a.natGoals}得点` : '')) : null,
         a.u21 ? h('span', { class: 'chip gray' }, `U-21代表 ${a.u21}回`) : null,
+        a.youthCaps ? h('span', { class: 'chip gray' }, `ユース年代の代表 ${a.youthCaps}回`) : null,
         a.transfers ? h('span', { class: 'chip gray' }, `移籍 ${a.transfers}回`) : null),
       (a.titles || []).length ? h('div', {}, h('div', { class: 'h' }, `タイトル（${a.titles.length}）`), h('div', { class: 'row', style: 'flex-wrap:wrap;gap:4px' }, count(a.titles).map((x) => h('span', { class: 'chip trait' }, x)))) : null,
       (a.awards || []).length ? h('div', {}, h('div', { class: 'h' }, '個人の賞・代表'), h('div', { class: 'row', style: 'flex-wrap:wrap;gap:4px' }, count(a.awards).map((x) => h('span', { class: 'chip pers' }, x)))) : null,
@@ -390,7 +422,7 @@
     } else if (ui.mt === 'rec') {
       body.append(title('主な記録'), h('div', { class: 'row', style: 'flex-wrap:wrap;gap:5px;margin-bottom:6px' }, h('span', { class: 'chip trait' }, `Aチーム ${w.rec.w}勝${w.rec.d}分${w.rec.l}敗`), h('span', { class: 'chip gray' }, `プロ入り ${w.alumni.filter((a) => a.status === 'pro').length}人`), h('span', { class: 'chip gray' }, `代表経験 ${w.alumni.filter((a) => a.nat).length}人`), h('span', { class: 'chip gray' }, `連帯貢献金 ${w.club.solidarityLast || 0}万円（今年）`)));
       body.append(title('獲得した大会'), ...(w.trophies && w.trophies.length ? w.trophies.map((t) => h('div', { class: 'pitem', style: 'cursor:default' }, h('span', { class: 'chip trait' }, t.rank), h('span', { class: 'nm grow' }, t.name), h('span', { class: 'sub' }, `${t.year}年目`))) : [h('div', { class: 'note' }, 'まだありません')]));
-      body.append(title('リーグの履歴'), ...((w.leagueHist || []).slice().reverse().map((x) => h('div', { class: 'pitem', style: 'cursor:default' }, h('span', { class: 'sub', style: 'width:54px' }, `${x.year}年目`), h('span', { class: 'nm grow' }, YA.LEVEL_NAMES[x.level - 1]), h('b', {}, `${x.rank}位（勝点${x.pts}）`)))));
+      body.append(title('リーグの履歴'), ...((w.leagueHist || []).slice().reverse().map((x) => h('div', { class: 'pitem', style: 'cursor:default' }, h('span', { class: 'sub', style: 'width:54px' }, `${x.year}年目`), h('span', { class: 'nm grow' }, YA.levelNames(w)[x.level - 1]), h('b', {}, `${x.rank}位（勝点${x.pts}）`)))));
       body.append(title('最近の試合'), ...w.results.slice(-10).reverse().map((r) => h('div', { class: 'pitem', style: 'cursor:default' }, h('span', { class: 'sub', style: 'width:68px' }, `${r.year}年目${r.week}週`), h('span', { class: 'nm grow' }, (r.kind ? r.kind + ' ' : '') + r.opp), h('b', { style: `color:${r.gf > r.ga ? '#1a9d57' : r.gf < r.ga ? '#d63a3a' : 'inherit'}` }, `${r.gf}-${r.ga}`))));
     } else if (ui.mt === 'bteam') {
       YA.bBlock(body);

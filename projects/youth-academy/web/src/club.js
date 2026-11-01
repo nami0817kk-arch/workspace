@@ -161,7 +161,7 @@
     c.goalChanges--;
     return true;
   };
-  YA.RULES = ['遅刻をしない', '挨拶と片付けを徹底する', '練習は全力で走る', 'SNSは控える', '試合の日は早く寝る'];
+  YA.RULES = ['挨拶と片付けを徹底する', '練習は全力で走る', 'SNSは控える', '試合の日は早く寝る'];
 
   // 年度はじめ（4月）に呼ぶ
   YA.yearStart = function (w) {
@@ -293,6 +293,7 @@
     w.club.rep = rep;
     w.club.eval = keepEval;
     if (offer.budgetAdj) w.club.budgetAdj = offer.budgetAdj;
+    YA.initTop(w);
     w.pendingContract = null;
     w.plan = YA.defaultPlan();
     YA.autoPlan(w);
@@ -310,18 +311,88 @@
 
   E.push({ id: 'top', name: 'トップチームの打診', weight: 0.9,
     pick: (w, r) => { const p = best(w, (q) => q.grade >= 2 && !away(q) && q.team === 'A' && YA.ovr(q) >= 10.8); return p && r.chance(0.7) ? p : null; },
-    text: (p, w) => `トップチームの監督から連絡があった。「${pname(p)}を練習に参加させてほしい」（好みの型：${w.top ? w.top.likes : '技術のある選手'}）`,
+    text: (p, w) => `トップチーム（${w.top ? w.top.name + '・' + YA.J_NAME[w.top.j] : 'トップ'}）の監督から連絡があった。「${pname(p)}（総合力${YA.rating(p)}）を、今週の練習に参加させてほしい」`,
     opts: [
       o('応じる（今週は不在。本人は大きく伸びる）', 'push', (w, p) => { p.away = 1; p.conf = clamp(p.conf + 6, 0, 100); for (const a of ['判断', '予測', 'ファーストタッチ', 'パス']) p.prog[a] = (p.prog[a] || 0) + 0.9; YA.addTrust(w, 3, 'トップへの協力'); YA.addRep(w, 1); }),
       o('断る（試合を優先する）', 'firm', (w, p) => { YA.addTrust(w, -7, 'トップの打診を断った'); p.conf = clamp(p.conf - 3, 0, 100); }),
     ] });
-  E.push({ id: 'nat', name: '代表への招集', weight: 0.55,
+  E.push({ id: 'nat', name: '代表への招集', weight: 0,
     pick: (w, r) => { const p = best(w, (q) => q.grade >= 2 && !away(q) && YA.ovr(q) >= 11.8 && !q.natThisYear); return p && r.chance(0.5) ? p : null; },
     text: (p) => `${pname(p)}にU-18代表から招集がかかった。2週間チームを離れることになる`,
     opts: [
       o('送り出す（本人は伸び、クラブの評判が上がる）', 'push', (w, p) => { p.away = 2; p.natThisYear = true; p.nat = (p.nat || 0) + 1; p.conf = clamp(p.conf + 8, 0, 100); p.spurt = Math.max(p.spurt, 6); YA.addRep(w, 2); p.hist.unshift({ y: w.year, w: w.week, t: 'U-18代表に招集された' }); YA.noteTier(w, 1, pname(p) + ' がU-18代表に招集された（2週間不在）', p.id); }),
       o('「大一番に必要だ」と断る', 'firm', (w, p) => { p.conf = clamp(p.conf - 6, 0, 100); p.unrest += 1.5; YA.addRep(w, -1); }),
     ] });
+  // 年代別の日本代表は U-18 と U-21 の2つだけ（学年は問わない）。選考ライン（総合力）を超えた子が選ばれ、高いほうを優先
+  YA.YOUTH_NAT = [['U-21日本代表', 140], ['U-18日本代表', 126]];
+  YA.natTeamOf = (p) => YA.YOUTH_NAT.find((t) => YA.rating(p) >= t[1]) || null;
+  YA.NAT_WEEKS = [7, 33]; // 年2回（5月・1月）
+  YA.natPicks = (w) => Object.values(w.players).filter((p) => p.inj <= 0 && YA.natTeamOf(p)).sort((a, b) => YA.rating(b) - YA.rating(a)).filter((p, i, arr) => p.pos !== 'GK' || arr.findIndex((q) => q.pos === 'GK') === i).slice(0, 2); // 1回に2人まで（GKは1人まで）
+  const natSend = (w, p) => {
+    const [team] = YA.natTeamOf(p) || YA.YOUTH_NAT[1];
+    p.away = 1;
+    p.youthCaps = (p.youthCaps || 0) + 1;
+    p.youthTeam = team;
+    p.conf = clamp(p.conf + 6, 0, 100);
+    p.spurt = Math.max(p.spurt, 4);
+    p.hist.unshift({ y: w.year, w: w.week, t: team + 'に選ばれた' });
+  };
+  E.push({ id: 'natcall', name: '年代別日本代表の招集', weight: 0, club: true,
+    pick: () => null,
+    text: (p, w) => {
+      const ids = (w._natCall || []).filter((id) => w.players[id]);
+      return '年代別の日本代表から招集が届いた（1週間チームを離れる）。' + ids.map((id) => { const q = w.players[id]; return `${q.num}番 ${q.name}（${(YA.natTeamOf(q) || YA.YOUTH_NAT[1])[0]}・総合力${YA.rating(q)}）`; }).join('、') + `。選考ラインは U-18 ${YA.YOUTH_NAT[1][1]}・U-21 ${YA.YOUTH_NAT[0][1]}`;
+    },
+    opts: [
+      o('全員送り出す（本人は伸び、クラブの評判が上がる）', 'push', null, (w) => { const ids = (w._natCall || []).filter((id) => w.players[id]); for (const id of ids) natSend(w, w.players[id]); YA.addRep(w, ids.length); return { line: `${ids.length}人を送り出した。それぞれ1週間チームを離れる`, small: `評判 +${ids.length}・自信 +6` }; }),
+      o('Aの先発の子だけ残し、ほかは送り出す', 'wait', null, (w) => { const ids = (w._natCall || []).filter((id) => w.players[id]); const st = new Set((w.lineupA || []).map((x) => x.pid)); const go = ids.filter((id) => !st.has(id)); for (const id of go) natSend(w, w.players[id]); for (const id of ids.filter((x) => st.has(x))) { w.players[id].unrest += 1.5; w.players[id].conf = clamp(w.players[id].conf - 4, 0, 100); } YA.addRep(w, go.length - (ids.length - go.length) * 0.5); return { line: `${go.length}人を送り出し、${ids.length - go.length}人を残した。残った子は少し不満そうだ`, small: '' }; }),
+      o('全員断る（試合を優先する）', 'firm', null, (w) => { const ids = (w._natCall || []).filter((id) => w.players[id]); for (const id of ids) { w.players[id].unrest += 1.5; w.players[id].conf = clamp(w.players[id].conf - 6, 0, 100); } YA.addRep(w, -ids.length); return { line: '代表の招集を断った。協会からの評判と、本人たちの気持ちが下がった', small: `評判 -${ids.length}` }; }),
+    ] });
+  YA.EVENT_ABOUT = YA.EVENT_ABOUT || {};
+  YA.EVENT_ABOUT.natcall = '年に2回（5月・1月）、選考ラインを超えた子が年代別の代表に選ばれます。送り出すと本人は伸び、クラブの評判が上がります。';
+  // 覚醒：年に1〜2人。目をかけている子（★注目の印・面談・Aでの出場）ほど起きやすい
+  YA.AWAKE_MAX = 2;
+  YA.addCare = (w, p, x) => { if (p.careY !== w.year) { p.careY = w.year; p.care = 0; } p.care += x; };
+  YA.careOf = (w, p) => (p.careY === w.year ? p.care : 0) + (p.minsA || 0) / 900;
+  YA.awakeWeek = function (w) {
+    for (const p of Object.values(w.players)) if (p.star) YA.addCare(w, p, 1);
+    if (w.week < 6 || w.week > 37) return null;
+    const cnt = w.awakeN && w.awakeN.y === w.year ? w.awakeN.n : 0;
+    if (cnt >= YA.AWAKE_MAX) return null;
+    const r = YA.rngOf(w.seed * 71 + w.year * 613 + w.week * 17);
+    // 6〜37週の32週で、ならして1年に1.5人ほど。後半まで0人なら起きやすく
+    if (!r.chance(cnt === 0 && w.week >= 22 ? 0.2 : 0.055)) return null;
+    const cands = Object.values(w.players).filter((p) => !p.awake && !(p.inj > 0) && !(p.away > 0) && YA.rating(p) < 150);
+    if (!cands.length) return null;
+    const wt = cands.map((p) => 0.05 + Math.pow(YA.careOf(w, p), 1.6));
+    let x = r() * wt.reduce((a, b) => a + b, 0);
+    let i = 0;
+    while (i < wt.length - 1 && x > wt[i]) { x -= wt[i]; i++; }
+    return YA.awaken(w, cands[i], r);
+  };
+  YA.awaken = function (w, p, r) {
+    const from = YA.rating(p);
+    const why = p.star ? 'star' : (p.talks || 0) >= 3 ? 'talk' : (p.minsA || 0) >= 450 ? 'mins' : 'none';
+    // ポジションに要る能力が一気に上がり、伸びしろも広がる。そのあとも伸び方が一段上（育成の計算で1.2倍）
+    for (const a of YA.POS_ABS15[p.main] || []) if (p.ab[a] != null) p.ab[a] = Math.min(20, p.ab[a] + (r.chance(0.35) ? 2 : 1));
+    p.pot += 70;
+    p.awake = { y: w.year, w: w.week, from, to: YA.rating(p), why };
+    p.state = { k: 'peak', w: 12 };
+    p.conf = clamp(p.conf + 15, 0, 100);
+    p.hist.unshift({ y: w.year, w: w.week, t: `覚醒した（総合力 ${from}→${p.awake.to}）` });
+    w.awakeN = { y: w.year, n: (w.awakeN && w.awakeN.y === w.year ? w.awakeN.n : 0) + 1 };
+    w.forced = (w.forced || []).concat([{ id: 'awake', pid: p.id, week: w.week, year: w.year }]);
+    return p;
+  };
+  const AWAKE_WHY = { star: '★注目の印を付けて、ずっと見てきた子だ。', talk: '面談で何度も話してきた子だ。', mins: 'Aで使い続けてきた子だ。', none: '誰も予想していなかった。' };
+  E.push({ id: 'awake', name: '覚醒', weight: 0,
+    pick: () => null,
+    text: (p) => { const a = p.awake || {}; return `${pname(p)}（高${p.grade}・${YA.POS_NAME15 ? YA.POS_NAME15[p.main] || p.main : p.main}）が覚醒した。総合力 ${a.from}→${a.to}。${AWAKE_WHY[a.why] || ''}練習での動きが別人のようで、これからの伸び方も一段上がる`; },
+    opts: [
+      o('大いに褒めて乗せる（伸び盛りが長く続く）', 'push', null, (w, p) => { p.state = { k: 'peak', w: 16 }; p.conf = clamp(p.conf + 5, 0, 100); return { line: `${p.name.split(' ')[0]}は目を輝かせた。伸び盛りがしばらく続きそうだ`, small: '伸び盛り 16週・自信 +5' }; }),
+      o('「ここからが勝負だ」と気を引き締める（地力を固める）', 'firm', null, (w, p) => { for (const a of ['予測', 'ポジショニング', 'チームワーク']) if (p.ab[a] != null) p.prog[a] = (p.prog[a] || 0) + 0.9; return { line: `${p.name.split(' ')[0]}は黙ってうなずき、練習に戻った`, small: '予測・ポジショニング・チームワークが伸びやすくなった' }; }),
+    ] });
+  YA.EVENT_ABOUT.awake = '年に1〜2人、急に一段上の選手になる子が出ます。★注目の印を付けた子・面談でよく話す子・Aで使い続けている子ほど起きやすくなります。';
   const CLUB_REQ = [
     { text: 'クラブから要望が届いた。「若手を育てる方針のため、高1をもっと試合で使ってほしい」', yes: (w) => { w.club.reqYoung = 6; }, yesMsg: '今後6週、高1を使う約束', trust: [4, -6] },
     { text: 'クラブから要望が届いた。「スポンサー行事に、主力を2人出してほしい」', yes: (w) => { const ps = Object.values(w.players).filter((p) => p.team === 'A' && !away(p)).sort((a, b) => YA.ovr(b) - YA.ovr(a)).slice(0, 2); ps.forEach((p) => (p.away = 1)); }, yesMsg: '主力2人が今週は不在になる', trust: [5, -5] },
@@ -357,7 +428,6 @@
       o('練習を厳しくする（全員）', 'wait', (w) => { for (const q of Object.values(w.players)) { q.fat = clamp(q.fat + 5, 0, 100); } w.disc = clamp((w.disc == null ? 60 : w.disc) + 4, 0, 100); }),
       o('約束どおり処分する', 'firm', (w, p) => { const has = (w.rules || []).indexOf(rule) >= 0; w.disc = clamp((w.disc == null ? 60 : w.disc) + (has ? 8 : 3), 0, 100); if (has) YA.addTrust(w, 1); if (p.team === 'A' && YA.ovr(p) > 11.5) p.suspend = 1; }),
     ] });
-  E.push(DISC('late', '遅刻', (p) => `${pname(p)}が練習に遅刻してきた。理由は寝坊だという`, '遅刻をしない', (p) => p.pers['練習への向き合い'] === '練習嫌い', 0.06));
   E.push(DISC('fight', 'もめごと', (p) => `${pname(p)}が練習中に仲間と言い合いになった。周りが止めに入った`, '挨拶と片付けを徹底する', (p) => p.pers['感情の波'] === '短気' || p.pers['プレーの気質'] === '闘争的' || p.pers['気持ちの強さ'] === '負けず嫌い'));
   E.push(DISC('slack', '練習の手抜き', (p) => `${pname(p)}の練習が明らかに手抜きになっている。コーチが指摘してきた`, '練習は全力で走る', (p) => p.pers['練習への向き合い'] === '練習嫌い' || p.unrest > 2));
 
@@ -392,4 +462,172 @@
       YA.noteTier(w, 1, '海外遠征で大きな経験を積んだ（練習1.6倍・評判 +3）');
     }
   };
+
+  // ---------- 自分のクラブのトップチーム（Jリーグ）----------
+  // 名前はユースの名前から「U-18」を除いたもの。部はユースの部に合わせて始まり、毎年の順位で昇格・降格する
+  const J_NAME = { 1: 'J1リーグ', 2: 'J2リーグ', 3: 'J3リーグ' };
+  YA.J_NAME = J_NAME;
+  const J_AVG = { 1: 138, 2: 122, 3: 108 }; // その部の選手の総合力のめやす（200点）
+  YA.topName = (w) => String(w.clubName || '').replace(/U-18$/, '').trim();
+  function proPlayer(w, r, j, pos, used, age) {
+    const name = YA.randName(r, used);
+    const a = age || r.int(19, 33);
+    const rating = Math.round(clamp(J_AVG[j] + (r() - 0.5) * 30 - (a <= 21 ? 8 : 0) - (a >= 32 ? 5 : 0), 80, 175));
+    return { name, pos, age: a, rating, academy: false };
+  }
+  const TOP_POS = ['GK', 'GK', 'GK', 'CB', 'CB', 'CB', 'CB', 'LB', 'RB', 'LB', 'RB', 'DM', 'DM', 'CM', 'CM', 'CM', 'AM', 'AM', 'LW', 'RW', 'LW', 'RW', 'ST', 'ST', 'ST', 'SS'];
+  YA.initTop = function (w) {
+    const r = YA.rngOf(w.seed * 31 + w.year * 7 + 5);
+    const pc = YA.proClubOf(w.clubName);
+    const j = pc ? pc.tier : w.club ? w.club.tier : 2;
+    const used = new Set(Object.values(w.players).map((p) => p.name));
+    w.top = { name: YA.topName(w), j, squad: TOP_POS.map((pos) => proPlayer(w, r, j, pos, used)), hist: [] };
+    return w.top;
+  };
+  // ユースから上がった子（卒業生のうち、いまトップにいる子）
+  YA.topAcademy = (w) => (w.alumni || []).filter((a) => !a.retired && a.status === 'pro' && w.top && a.club === w.top.name);
+  // トップの顔ぶれ：生え抜き（卒業生）と、ほかから来たプロ。総合力の順
+  YA.topSquad = function (w) {
+    if (!w.top) YA.initTop(w);
+    const ac = YA.topAcademy(w).map((a) => ({ name: a.name, pos: a.main || a.pos, age: a.age, rating: YA.rate(a.ovr), academy: true, ref: a }));
+    return w.top.squad.concat(ac).sort((a, b) => b.rating - a.rating);
+  };
+  YA.J_GAMES = 38;
+  // 今の節（ユースの1年＝40週で、Jリーグの38節を進める）
+  YA.topRound = (w) => Math.min(YA.J_GAMES, Math.round((Math.min(w.week, 40) / 40) * YA.J_GAMES));
+  YA.topStrength = function (w) {
+    const sq = YA.topSquad(w);
+    return sq.slice(0, 14).reduce((s2, x) => s2 + x.rating, 0) / Math.min(14, sq.length || 1);
+  };
+  YA.topTable = function (w, games) {
+    if (!w.top) YA.initTop(w);
+    const t = w.top;
+    const k = games == null ? YA.topRound(w) : games;
+    const others = YA.PRO_CLUBS.filter((c) => c.tier === t.j && c.name !== t.name).map((c) => c.name);
+    const TOWNS = ['青森', '富山', '福井', '佐賀', '和歌山', '島根', '香川', '沖縄', '八戸', '浜松', '静岡', '岩手'];
+    for (let i = 0; others.length < 19 && i < TOWNS.length; i++) others.push(TOWNS[i] + ' FC');
+    const teams = others.slice(0, 19).map((name) => ({ name, str: J_AVG[t.j] + ((YA.hash(name + w.year) % 100) / 100 - 0.5) * 22 }));
+    teams.push({ name: t.name, str: YA.topStrength(w), me: true });
+    const rows = teams.map((tm) => {
+      const r = YA.rngOf(YA.hash(tm.name) * 7 + w.year * 131 + t.j);
+      const dev = (r() - 0.5) * 16; // その年のぶれ（勝点、38節あたり）
+      const ppg = clamp(1.35 + (tm.str - J_AVG[t.j]) * 0.055, 0.45, 2.5);
+      let pts = Math.max(0, Math.round(ppg * k + dev * (k / YA.J_GAMES)));
+      const d = Math.round(k * (0.22 + r() * 0.08));
+      let wn = Math.max(0, Math.min(k - d, Math.round((pts - d) / 3)));
+      const dd = clamp(pts - wn * 3, 0, k - wn);
+      pts = wn * 3 + dd;
+      const gf = Math.round(k * (1.1 + (tm.str - J_AVG[t.j]) * 0.03 + r() * 0.3));
+      const ga = Math.max(0, Math.round(gf - (wn - (k - wn - dd)) * 1.05));
+      return { name: tm.name, me: !!tm.me, p: k, w: wn, d: dd, l: k - wn - dd, gf, ga, gd: gf - ga, pts };
+    });
+    rows.sort((a, b) => b.pts - a.pts || b.gd - a.gd || b.gf - a.gf);
+    rows.forEach((x, i) => (x.rank = i + 1));
+    return rows;
+  };
+  YA.topNow = function (w) {
+    const rows = YA.topTable(w);
+    const me = rows.find((x) => x.me);
+    return { j: w.top.j, league: J_NAME[w.top.j], round: YA.topRound(w), rank: me.rank, pts: me.pts, rows };
+  };
+  // 1年の終わり：トップの順位（38節の順位表）、昇格・降格、年齢と入れ替わり
+  YA.topSeason = function (w) {
+    if (!w.top) YA.initTop(w);
+    const t = w.top;
+    const r = YA.rngOf(w.seed * 43 + w.year * 19 + 3);
+    const str = YA.topStrength(w);
+    const teams = 20;
+    const fin = YA.topTable(w, YA.J_GAMES).find((x) => x.me);
+    const rank = fin.rank;
+    let move = 0;
+    if (t.j > 1 && rank <= 2) move = -1;
+    else if (t.j < 3 && rank >= teams - 2) move = 1;
+    t.hist.push({ y: w.year, j: t.j, rank, str: Math.round(str), pts: fin.pts });
+    YA.noteTier(w, 1, `トップチーム（${t.name}）は${J_NAME[t.j]}で${rank}位（勝点${fin.pts}）` + (move < 0 ? `。${J_NAME[t.j - 1]}へ昇格します` : move > 0 ? `。${J_NAME[t.j + 1]}へ降格します` : ''));
+    t.j += move;
+    // 年齢と力の変化、引退・移籍
+    const used = new Set(t.squad.map((x) => x.name));
+    for (const x of t.squad) {
+      x.age++;
+      x.rating = Math.round(clamp(x.rating + (x.age <= 24 ? r.int(0, 6) : x.age >= 31 ? -r.int(1, 6) : r.int(-3, 3)), 70, 185));
+    }
+    t.squad = t.squad.filter((x) => !(x.age >= 35 || (x.age >= 31 && r() < 0.25) || r() < 0.08));
+    // 生え抜きは12人まで。あふれた子（力の下の子から）は、出場の機会を求めてほかのJクラブへ移る
+    const ac = YA.topAcademy(w).sort((a, b) => b.ovr - a.ovr);
+    for (const a of ac.slice(12)) {
+      const rt = YA.rate(a.ovr);
+      const tier = rt >= 125 ? 1 : rt >= 112 ? 2 : 3;
+      const pool = YA.PRO_CLUBS.filter((c) => c.tier === tier && c.name !== t.name);
+      a.club = (pool.length ? r.pick(pool) : r.pick(YA.PRO_CLUBS)).name;
+      a.league = J_NAME[tier];
+      a.transfers = (a.transfers || 0) + 1;
+      YA.noteTier(w, 2, `生え抜きの${a.name}が、出場の機会を求めて${a.club}（${a.league}）へ移籍しました`);
+    }
+    // 足りない枠は、その部の水準の選手を取る（ユースから上がった子がいれば、その分は取らない）
+    const need = 26 - YA.topAcademy(w).length;
+    const cnt = (pos) => t.squad.filter((x) => x.pos === pos).length + YA.topAcademy(w).filter((a) => (a.main || a.pos) === pos).length;
+    let g = 0;
+    while (t.squad.length < need && g++ < 60) {
+      const pos = TOP_POS.find((p, i) => cnt(p) < TOP_POS.filter((q) => q === p).length) || r.pick(TOP_POS);
+      t.squad.push(proPlayer(w, r, t.j, pos, used));
+    }
+    while (t.squad.length > need) t.squad.splice(t.squad.reduce((m, x, i, arr) => (x.rating < arr[m].rating ? i : m), 0), 1);
+    return { rank, move };
+  };
+  // トップの登録に入れる力（26人の中で下から5番目の子と並ぶ）
+  YA.topCutLine = function (w) {
+    const sq = YA.topSquad(w);
+    const k = Math.max(0, sq.length - 5);
+    return sq[k] ? sq[k].rating : J_AVG[w.top.j] - 12;
+  };
+  // いまのユースの子が、トップの中で何番目くらいか（同じポジション）
+  YA.topRankFor = function (w, p) {
+    const sq = YA.topSquad(w).filter((x) => YA.GROUP[x.pos] === p.pos);
+    const r0 = YA.rating(p);
+    return { n: sq.filter((x) => x.rating > r0).length + 1, of: sq.length + 1 };
+  };
+  // 在学中のプロ契約（トップ昇格）：トップの主力と並ぶ力の子は、早めにトップが取りにくる
+  YA.earlyProLine = (w) => {
+    if (!w.top) YA.initTop(w);
+    const sq = YA.topSquad(w);
+    const k = Math.min(5, sq.length - 1); // トップの主力（上位6人）と並ぶ力
+    // J1でやれる〜主力の水準（132〜140）。トップが強くても、日本代表に近い子をユースに置いたままにはしない
+    return clamp(sq[k] ? sq[k].rating : J_AVG[w.top.j] + 10, 132, 140);
+  };
+  YA.earlyPro = function (w, pid) {
+    const p = w.players[pid];
+    if (!p) return null;
+    if (!w.top) YA.initTop(w);
+    const a = YA.alumniEntry(w, Object.assign({}, p, { _path: 'pro' }), `プロ契約（高${p.grade}でトップ昇格）`);
+    a.age = 15 + p.grade;
+    a.grade = p.grade;
+    a.club = w.top.name;
+    a.league = J_NAME[w.top.j];
+    a.abroad = false;
+    w.alumni.push(a);
+    delete w.players[pid];
+    YA.autoTeamsKeep(w);
+    w._earlyN = w._earlyY === w.year ? (w._earlyN || 0) + 1 : 1;
+    w._earlyY = w.year;
+    YA.addRep(w, 2);
+    YA.addTrust(w, 2, 'ユースからトップへ選手を送り出した');
+    return a;
+  };
+
+  // 出来事：トップチームからのプロ契約の打診（トップの主力と並ぶ力の子。高1はさらに上の子だけ）
+  YA.EVENTS.push({ id: 'early', name: 'トップチームからのプロ契約の打診', weight: 3,
+    pick: (w, r) => {
+      if (!w.top) return null;
+      const line = YA.earlyProLine(w);
+      // 在学中の契約はふつう1年に1人まで。主力をはっきり上回る子（+12）は、いつでも取りにくる
+      const c = Object.values(w.players).filter((p) => !(p.away > 0) && p.inj <= 0 && YA.rating(p) >= line + (p.grade >= 2 ? 0 : 12) + ((w._earlyN || 0) >= 2 && w._earlyY === w.year ? 12 : 0) && !(p._earlyNo && w.year * 100 + w.week - p._earlyNo < 10));
+      return c.length ? c.sort((a, b) => YA.rating(b) - YA.rating(a))[0] : null;
+    },
+    text: (p, w) => `トップチーム（${w.top.name}・${YA.J_NAME[w.top.j]}）が、${p.num}番 ${p.name}（高${p.grade}・総合力${YA.rating(p)}）にプロ契約を打診してきた。トップの主力と並ぶ力だ`,
+    opts: [
+      { label: '送り出す（プロ契約。ユースからは抜ける）', kind: 'push', run: (w, p, r) => { YA.earlyPro(w, p.id); const fill = Object.keys(w.players).length < 36; if (fill) YA.newcomer(w, r, 1); return { line: 'プロ契約を結び、トップチームへ上がった' + (fill ? '。空いた枠には、U-15から1人上がった' : ''), small: '評判 +2・信頼度 +2' }; } },
+      { label: '卒業まではユースで育てる', kind: 'firm', run: (w, p) => { p.unrest += 2; p._earlyNo = w.year * 100 + w.week; YA.addTrust(w, -2, 'トップの打診を断った'); return { line: '残ることになった。本人は少し不満そうだ', small: '信頼度 -2・不満 +2' }; } },
+    ] });
+  YA.EVENT_ABOUT = YA.EVENT_ABOUT || {};
+  YA.EVENT_ABOUT.early = 'トップの主力と並ぶ力の子は、卒業を待たずにトップが取りにきます。送り出すと評判と信頼度が上がり、ユースの戦力は下がります。';
 })();

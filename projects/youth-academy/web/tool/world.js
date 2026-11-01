@@ -34,6 +34,8 @@ function playYear(w, opts) {
     YA.startWeek(w);
     injuries += w.inbox.filter((n) => n.week === w.week && n.year === w.year && /怪我/.test(n.text)).length;
     for (const e of w.events.slice()) {
+      // 同じ週の別の出来事で抜けた子（プロ契約など）宛ては、画面と同じく飛ばす
+      if (e.pid && !w.players[e.pid]) { w.events.splice(w.events.indexOf(e), 1); continue; }
       const v = YA.eventView(w, e);
       ok(v && v.text && v.opts.length >= 2, '出来事の表示 ' + e.id);
       const r = YA.resolveEvent(w, e, ((e.pid ? e.pid.length : 3) + w.week) % v.opts.length);
@@ -65,7 +67,7 @@ function playYear(w, opts) {
 }
 function check(w) {
   const ps = Object.values(w.players);
-  ok(ps.length >= 34 && ps.length <= 40, '人数 ' + ps.length);
+  ok(ps.length >= 34 && ps.length <= 44, '人数 ' + ps.length);
   const nums = ps.map((p) => p.num);
   ok(new Set(nums).size === nums.length, '背番号が重ならない');
   for (const p of ps) {
@@ -541,7 +543,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   const st1 = YA.makeStart({ name: 'テスト監督', career: 'high', club: 0, points: { eye: 3, talk: 3 }, noFire: true });
   const wn = YA.newWorld(5, st1);
   ok(wn.coachName === 'テスト監督' && wn.coach.teach === 11 && wn.coach.eye === 11 && wn.coach.talk === 12 && wn.coach.exp === 3, '経歴と配分が能力に出る ' + JSON.stringify(wn.coach));
-  ok(wn.club.tier === 1 && wn.clubName.indexOf('ブルーウィング') >= 0 && wn.club.noFire && wn.league.level === 1, '選んだクラブ（1部）で始まる');
+  ok(wn.club.tier === 1 && wn.clubName.indexOf('マリーナス') >= 0 && wn.club.noFire && wn.league.level === 1, '選んだクラブ（1部）で始まる');
   const wt3 = YA.newWorld(5, YA.makeStart({ career: 'pro', club: 6, points: {} }));
   const avg = (wx) => Object.values(wx.players).reduce((a, p) => a + YA.ovr(p), 0) / 36;
   ok(wt3.club.tier === 3 && wt3.coachName === '監督', '3部のクラブ・名前が空なら「監督」');
@@ -682,12 +684,14 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   }
   // 段3：60クラブ・名前の書き換え・練習メニューの型
   {
-    ok(YA.CLUB60.length === 60 && new Set(YA.CLUB60.map((c) => c.name)).size === 60, '60クラブは名前が重ならない');
-    const nicks = YA.CLUB60.filter((c) => c.kind === 'club').map((c) => c.name.split(' ')[1]);
-    ok(new Set(nicks).size === nicks.length, '60クラブの愛称が重ならない');
+    for (let rg = 0; rg < 6; rg++) {
+      const pl = YA.clubPool(rg);
+      ok([1, 2, 3].every((lv) => pl.filter((c) => c.level === lv).length >= 12) && new Set(pl.map((c) => c.name)).size === pl.length, '地域ごとの相手の表 ' + YA.REGIONS[rg] + ' ' + pl.length);
+    }
+    ok(new Set(YA.PRO_CLUBS.map((c) => c.nick)).size === YA.PRO_CLUBS.length, 'プロクラブの愛称が重ならない');
     const w3 = YA.newWorld(21);
     const names1 = w3.league.teams.filter((t) => !t.me).map((t) => t.cid);
-    ok(names1.length === 11 && names1.every((c) => YA.CLUB60.find((x) => x.id === c && x.level === w3.league.level)), '相手は同じ部の固定クラブから選ばれる');
+    ok(names1.length === 11 && names1.every((c) => YA.clubPool(YA.regionOf(w3.clubName)).find((x) => x.id === c && x.level === w3.league.level)), '相手は同じ地域・同じ部の固定クラブから選ばれる');
     const t0 = w3.league.teams.find((t) => !t.me);
     ok(YA.renameTeam(w3, t0.id, '新しい相手').ok && w3.rename[t0.cid] === '新しい相手', '相手クラブの名前を変えられる');
     ok(YA.renameClub(w3, '').ok === false && YA.renameClub(w3, 'つるはしFC').ok && w3.league.teams.find((t) => t.me).name === 'つるはしFC', '自分のクラブ名を変えられる');
@@ -862,7 +866,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   const s0 = YA.starsOf(q).join();
   for (const n of YA.AB_FIELD) q.ab[n] = Math.min(20, q.ab[n] + 3);
   ok(YA.starsOf(q).join() === s0, '能力が伸びても星は減らない');
-  ok(YA.EVENTS.find((e) => e.id === 'late').weight <= 0.1, '遅刻はほとんど起きない');
+  ok(!YA.EVENTS.some((e) => e.id === 'late') && YA.RULES.indexOf('遅刻をしない') < 0, '遅刻の出来事はない');
   const wn = YA.newWorld(67); let nat = 0;
   for (let k = 0; k < 30; k++) { const a = YA.alumniEntry(wn, q, 'プロ'); a.name = '代表' + k; a.status = 'pro'; a.ovr = 14.5; wn.alumni.push(a); }
   for (let y = 0; y < 4; y++) { wn.year = 2 + y; YA.alumniTick(wn); for (const a of wn.alumni) a.ovr = Math.min(a.ovr, 15); }
@@ -873,6 +877,80 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   const pen0 = YA.slotPenalty(q, far);
   q.main = far; q.pos = YA.GROUP[far]; q.fam[far] = 14;
   ok(YA.slotPenalty(q, far) >= pen0 * 0.29 && YA.slotPenalty(q, far) > 0.05, '向いていない位置に登録を変えても、力は出しきれない');
+}
+// トップチーム：自分のクラブのJクラブがあり、トップ昇格はそこへ。力のある子は在学中にプロ契約（1年に1人まで）。移籍先は固定のクラブ表から
+{
+  const wt2 = YA.newWorld(3);
+  ok(wt2.top && wt2.top.name === YA.topName(wt2) && wt2.top.squad.length === 26 && YA.J_NAME[wt2.top.j], 'トップチームがある ' + wt2.top.name);
+  for (let y = 0; y < 3; y++) { let g = 0; const yy = wt2.year; while (wt2.year === yy && g++ < 60) YA.simulate(wt2, { until: 'week', stopOnImportant: false }); }
+  ok(wt2.top.hist.length === 3, 'トップの順位が毎年残る');
+  const own = wt2.alumni.filter((a) => /トップ昇格/.test(a.note));
+  ok(own.length >= 1 && own.every((a) => a.club === wt2.top.name || a.transfers > 0), 'トップ昇格の子は自分のクラブのトップへ');
+  const early = wt2.alumni.filter((a) => /高.でトップ昇格/.test(a.note));
+  ok([1, 2, 3].every((y) => early.filter((a) => a.year === y).length <= 5), '在学中のプロ契約は1年に数人まで');
+  const names = new Set(YA.PRO_CLUBS.map((c) => c.name));
+  ok(wt2.alumni.filter((a) => a.status === 'pro' && !a.abroad).every((a) => names.has(a.club)), '国内の移籍先は固定のクラブ表から');
+  const abroadNames = new Set([].concat(...Object.values(YA.ABROAD_CLUBS)));
+  ok(wt2.alumni.filter((a) => a.status === 'pro' && a.abroad).every((a) => abroadNames.has(a.club)), '海外の移籍先も固定のクラブ表から');
+  ok(Object.keys(wt2.players).length >= 34 && Object.keys(wt2.players).length <= 44, 'プロ契約で抜けても人数は保つ');
+}
+// 出来事：その子の様子（出場・ポジション）が文に入り、約束は守れたかで結果が出る
+{
+  const we = YA.newWorld(12);
+  const p = Object.values(we.players).find((x) => x.team === 'B' && x.pos !== 'GK');
+  const v = YA.eventView(we, { id: 'unrest', pid: p.id, week: 1, year: 1 });
+  ok(/分/.test(v.text) && !/undefined|null|NaN/.test(v.text), '出番の不満の文に出場時間が入る：' + v.text);
+  YA.resolveEvent(we, { id: 'unrest', pid: p.id, week: 1, year: 1 }, 0);
+  ok((we.promises || []).some((x) => x.pid === p.id), '「Aで使う」と約束すると、約束が残る');
+  const c0 = p.conf; we.week = 6; YA.checkPromises(we);
+  ok(!(we.promises || []).length && p.conf < c0 && p.unrest >= 3, '約束を守れないと、自信が下がり不満が増える');
+  YA.addPromise(we, p, 3, 'Aで使う'); p.lm = { y: we.year, w: we.week + 1, mins: 30 }; we.week += 2; const c1 = p.conf; YA.checkPromises(we);
+  ok(p.conf > c1 && p.unrest === 0, 'Aで使えば約束を守ったことになる');
+  for (const e of YA.EVENTS.filter((x) => x.weight > 0 && !x.club)) { const q = e.pick(we, YA.rngOf(5)); if (!q || !q.id) continue; const vv = YA.eventView(we, { id: e.id, pid: q.id, week: we.week, year: we.year }); ok(vv && !/undefined|null|NaN/.test(vv.text), '出来事の文 ' + e.id); }
+}
+// 年代別日本代表：活動の週（5月・7月・1月）に、選考ラインを超えた子へ必ず招集が届く
+{
+  const wn2 = YA.newWorld(14);
+  const q = Object.values(wn2.players).find((x) => x.grade === 2 && x.pos !== 'GK');
+  ok(YA.YOUTH_NAT.length === 2 && YA.YOUTH_NAT.every((t) => /U-(18|21)/.test(t[0])), '年代別代表は U-18 と U-21 だけ');
+  for (let k = 0; k < 8 && YA.rating(q) < YA.YOUTH_NAT[1][1]; k++) for (const n of YA.AB_FIELD) q.ab[n] = Math.min(20, q.ab[n] + 1);
+  ok(!!YA.natTeamOf(q), '選考ラインを超えた ' + YA.rating(q));
+  wn2.week = YA.NAT_WEEKS[0]; wn2.phase = 'plan'; YA.startWeek(wn2);
+  const ev = wn2.events.find((e) => e.id === 'natcall');
+  ok(!!ev && wn2._natCall.indexOf(q.id) >= 0, '活動の週に招集が届く');
+  const v = YA.eventView(wn2, ev); ok(v && v.text.indexOf(YA.natTeamOf(q)[0]) >= 0 && !/U-1[67]/.test(v.text) && !/undefined|null|NaN/.test(v.text), '招集の文 ' + (v && v.text));
+  YA.resolveEvent(wn2, ev, 0);
+  ok(q.youthCaps === 1 && q.away === 1, '送り出すと代表の回数が増え、1週間離れる');
+  const a = YA.alumniEntry(wn2, q, 'test'); ok(a.nat === 0 && a.youthCaps === 1, '卒業生の日本代表（A代表）に、ユース年代の回数は混ぜない');
+}
+// 覚醒：年に1〜2人。★注目の印を付けた子ほど起きやすく、出来事で知らせる
+{
+  let n = 0, yrs = 0, star = 0;
+  for (const seed of [8, 21]) {
+    const wa = YA.newWorld(seed);
+    for (let y = 0; y < 3; y++) {
+      const yy = wa.year; let g = 0; yrs++;
+      Object.values(wa.players).filter((p) => !p.star && !p.awake && p.grade < 3).slice(0, 2).forEach((p) => { p.star = true; });
+      while (wa.year === yy && g++ < 60) {
+        wa.phase = wa.phase || 'plan';
+        YA.simulate(wa, { until: 'week', stopOnImportant: false });
+      }
+      const k = wa.awakeN && wa.awakeN.y === yy ? wa.awakeN.n : 0;
+      ok(k <= YA.AWAKE_MAX, '覚醒は1年に2人まで ' + k);
+      n += k;
+    }
+    star += [...Object.values(wa.players), ...(wa.alumni || [])].filter((p) => p.awake && p.awake.why === 'star').length;
+  }
+  ok(n >= yrs * 0.8 && n <= yrs * 2, '覚醒はならして1年に1〜2人 ' + n + '/' + yrs);
+  const wb = YA.newWorld(4);
+  const q = Object.values(wb.players).find((x) => x.grade === 1);
+  q.star = true; wb.week = 20; const r0 = YA.rating(q);
+  YA.awaken(wb, q, YA.rngOf(1));
+  ok(q.awake && YA.rating(q) > r0 + 5 && q.awake.why === 'star', '覚醒すると総合力が一段上がる ' + r0 + '→' + YA.rating(q));
+  const ev = (wb.forced || []).find((e) => e.id === 'awake');
+  const v = ev && YA.eventView(wb, ev);
+  ok(v && /覚醒/.test(v.text) && /★注目/.test(v.text) && !/undefined|null|NaN/.test(v.text) && v.opts.length === 2, '覚醒の知らせ ' + (v && v.text));
+  ok(star >= 1, '★の子が覚醒する ' + star);
 }
 // クラブを移った（契約満了・解任）あとも、入団の暦まで止まらずに1年回せる
 {
