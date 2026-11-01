@@ -574,6 +574,7 @@
     }
     if (YA.rivalWeek) YA.rivalWeek(w);
     YA.refreshFocus(w);
+    YA.checkPromises(w);
     // トップの打診の線を10以上上回った子には、その週に必ずトップから打診が来る
     if (w.top && YA.earlyProLine) {
       const line = YA.earlyProLine(w) + 10;

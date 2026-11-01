@@ -134,10 +134,10 @@
   YA.EVENTS.push({
     id: 'parent', name: '保護者の相談', weight: 0.6,
     pick: (w, r) => { const c = Object.values(w.players).filter((p) => p.team === 'B' && p.mins < 200 && p.grade >= 2); return c.length ? r.pick(c) : null; },
-    text: (p) => `${p.num}番 ${p.name}の保護者から、「もう少し試合に出られないでしょうか」と連絡が来た。`,
+    text: (p) => `${p.num}番 ${p.name}（高${p.grade}・B）の保護者から連絡が来た。「今年はAの試合に${Math.round(p.minsA || 0)}分しか出ていません。もう少し出られないでしょうか」`,
     opts: [
       { label: '現状と課題を丁寧に説明する', kind: 'warm', extra: (w, p) => { p.unrest = Math.max(0, p.unrest - 0.5); } },
-      { label: '起用を約束する', kind: 'push', extra: (w, p) => { p.train.promise = true; YA.addTrust && YA.addTrust(w, -1, '保護者に起用を約束した'); } },
+      { label: '3週のうちにAで使う、と約束する', kind: 'push', extra: (w, p) => { YA.addPromise(w, p, 3, '保護者に、Aで使う'); YA.addTrust && YA.addTrust(w, -1, '保護者に起用を約束した'); } },
       { label: '一律の方針だと断る', kind: 'firm', extra: (w, p) => { p.unrest += 1; w.disc = Math.min(100, (w.disc == null ? 60 : w.disc) + 1); } },
     ],
   });

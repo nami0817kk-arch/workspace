@@ -90,7 +90,7 @@ async function clearEvents() {
   ok(A.w && A.w.coachName === 'テスト監督' && A.w.club.tier === 2 && A.w.clubName.indexOf('千葉') >= 0 && A.w.coach.exp === 3, '選んだ内容で世界が始まる');
   // 年度はじめ：クラブの目標と約束事
   ok(txt().includes('クラブの目標') && txt().includes('この1年を始める') && txt().includes('易しく'), '年度はじめの目標の画面');
-  btn('遅刻をしない').click();
+  btn('挨拶と片付けを徹底する').click();
   btn('この1年を始める').click();
   ok(!d.querySelector('.sheet') && A.w.rules.length === 1 && !A.w.yearIntro, '目標と約束事を決めて始める');
   // 始めたらすぐ練習を組める（最初のセレクションはない）。入団の暦はホームに案内が出る

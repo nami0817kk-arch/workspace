@@ -864,7 +864,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   const s0 = YA.starsOf(q).join();
   for (const n of YA.AB_FIELD) q.ab[n] = Math.min(20, q.ab[n] + 3);
   ok(YA.starsOf(q).join() === s0, '能力が伸びても星は減らない');
-  ok(YA.EVENTS.find((e) => e.id === 'late').weight <= 0.1, '遅刻はほとんど起きない');
+  ok(!YA.EVENTS.some((e) => e.id === 'late') && YA.RULES.indexOf('遅刻をしない') < 0, '遅刻の出来事はない');
   const wn = YA.newWorld(67); let nat = 0;
   for (let k = 0; k < 30; k++) { const a = YA.alumniEntry(wn, q, 'プロ'); a.name = '代表' + k; a.status = 'pro'; a.ovr = 14.5; wn.alumni.push(a); }
   for (let y = 0; y < 4; y++) { wn.year = 2 + y; YA.alumniTick(wn); for (const a of wn.alumni) a.ovr = Math.min(a.ovr, 15); }
@@ -891,6 +891,20 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   const abroadNames = new Set([].concat(...Object.values(YA.ABROAD_CLUBS)));
   ok(wt2.alumni.filter((a) => a.status === 'pro' && a.abroad).every((a) => abroadNames.has(a.club)), '海外の移籍先も固定のクラブ表から');
   ok(Object.keys(wt2.players).length >= 34 && Object.keys(wt2.players).length <= 44, 'プロ契約で抜けても人数は保つ');
+}
+// 出来事：その子の様子（出場・ポジション）が文に入り、約束は守れたかで結果が出る
+{
+  const we = YA.newWorld(12);
+  const p = Object.values(we.players).find((x) => x.team === 'B' && x.pos !== 'GK');
+  const v = YA.eventView(we, { id: 'unrest', pid: p.id, week: 1, year: 1 });
+  ok(/分/.test(v.text) && !/undefined|null|NaN/.test(v.text), '出番の不満の文に出場時間が入る：' + v.text);
+  YA.resolveEvent(we, { id: 'unrest', pid: p.id, week: 1, year: 1 }, 0);
+  ok((we.promises || []).some((x) => x.pid === p.id), '「Aで使う」と約束すると、約束が残る');
+  const c0 = p.conf; we.week = 6; YA.checkPromises(we);
+  ok(!(we.promises || []).length && p.conf < c0 && p.unrest >= 3, '約束を守れないと、自信が下がり不満が増える');
+  YA.addPromise(we, p, 3, 'Aで使う'); p.lm = { y: we.year, w: we.week + 1, mins: 30 }; we.week += 2; const c1 = p.conf; YA.checkPromises(we);
+  ok(p.conf > c1 && p.unrest === 0, 'Aで使えば約束を守ったことになる');
+  for (const e of YA.EVENTS.filter((x) => x.weight > 0 && !x.club)) { const q = e.pick(we, YA.rngOf(5)); if (!q || !q.id) continue; const vv = YA.eventView(we, { id: e.id, pid: q.id, week: we.week, year: we.year }); ok(vv && !/undefined|null|NaN/.test(vv.text), '出来事の文 ' + e.id); }
 }
 // クラブを移った（契約満了・解任）あとも、入団の暦まで止まらずに1年回せる
 {

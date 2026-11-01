@@ -161,7 +161,7 @@
     c.goalChanges--;
     return true;
   };
-  YA.RULES = ['遅刻をしない', '挨拶と片付けを徹底する', '練習は全力で走る', 'SNSは控える', '試合の日は早く寝る'];
+  YA.RULES = ['挨拶と片付けを徹底する', '練習は全力で走る', 'SNSは控える', '試合の日は早く寝る'];
 
   // 年度はじめ（4月）に呼ぶ
   YA.yearStart = function (w) {
@@ -311,7 +311,7 @@
 
   E.push({ id: 'top', name: 'トップチームの打診', weight: 0.9,
     pick: (w, r) => { const p = best(w, (q) => q.grade >= 2 && !away(q) && q.team === 'A' && YA.ovr(q) >= 10.8); return p && r.chance(0.7) ? p : null; },
-    text: (p, w) => `トップチームの監督から連絡があった。「${pname(p)}を練習に参加させてほしい」（好みの型：${w.top ? w.top.likes : '技術のある選手'}）`,
+    text: (p, w) => `トップチーム（${w.top ? w.top.name + '・' + YA.J_NAME[w.top.j] : 'トップ'}）の監督から連絡があった。「${pname(p)}（総合力${YA.rating(p)}）を、今週の練習に参加させてほしい」`,
     opts: [
       o('応じる（今週は不在。本人は大きく伸びる）', 'push', (w, p) => { p.away = 1; p.conf = clamp(p.conf + 6, 0, 100); for (const a of ['判断', '予測', 'ファーストタッチ', 'パス']) p.prog[a] = (p.prog[a] || 0) + 0.9; YA.addTrust(w, 3, 'トップへの協力'); YA.addRep(w, 1); }),
       o('断る（試合を優先する）', 'firm', (w, p) => { YA.addTrust(w, -7, 'トップの打診を断った'); p.conf = clamp(p.conf - 3, 0, 100); }),
@@ -358,7 +358,6 @@
       o('練習を厳しくする（全員）', 'wait', (w) => { for (const q of Object.values(w.players)) { q.fat = clamp(q.fat + 5, 0, 100); } w.disc = clamp((w.disc == null ? 60 : w.disc) + 4, 0, 100); }),
       o('約束どおり処分する', 'firm', (w, p) => { const has = (w.rules || []).indexOf(rule) >= 0; w.disc = clamp((w.disc == null ? 60 : w.disc) + (has ? 8 : 3), 0, 100); if (has) YA.addTrust(w, 1); if (p.team === 'A' && YA.ovr(p) > 11.5) p.suspend = 1; }),
     ] });
-  E.push(DISC('late', '遅刻', (p) => `${pname(p)}が練習に遅刻してきた。理由は寝坊だという`, '遅刻をしない', (p) => p.pers['練習への向き合い'] === '練習嫌い', 0.06));
   E.push(DISC('fight', 'もめごと', (p) => `${pname(p)}が練習中に仲間と言い合いになった。周りが止めに入った`, '挨拶と片付けを徹底する', (p) => p.pers['感情の波'] === '短気' || p.pers['プレーの気質'] === '闘争的' || p.pers['気持ちの強さ'] === '負けず嫌い'));
   E.push(DISC('slack', '練習の手抜き', (p) => `${pname(p)}の練習が明らかに手抜きになっている。コーチが指摘してきた`, '練習は全力で走る', (p) => p.pers['練習への向き合い'] === '練習嫌い' || p.unrest > 2));
 

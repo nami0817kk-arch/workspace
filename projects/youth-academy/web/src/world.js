@@ -668,45 +668,87 @@
   }
   const opt = (label, kind, extra) => ({ label, kind, extra });
 
+  // その子の今の様子（出来事の文に書き込む）：ポジション・Aでの出場・同じ位置で先発している子・今月の伸び
+  function ctx(w, p) {
+    const pos = YA.POS_LABEL[p.main] || p.pos;
+    const minsA = Math.round(p.minsA || 0);
+    const inA = (w.lineupA || []).some((s) => s.pid === p.id);
+    const rivalSl = (w.lineupA || []).map((s) => w.players[s.pid]).find((q) => q && q.id !== p.id && q.main === p.main);
+    const gain = Object.values(p.gain || {}).reduce((a, b) => a + b, 0);
+    const last = p.lm && p.lm.y === w.year ? p.lm : null;
+    return { pos, minsA, inA, rival: rivalSl, gain, last, r: YA.rating(p), sur: p.name.split(' ')[0] };
+  }
+  // 文を何通りかから選ぶ（同じ出来事でも毎回同じ文にならないように）
+  const pickT = (p, list) => list[YA.hash(p.id + (p.minsA || 0) + (p.conf | 0)) % list.length];
+  // 約束：「Aの試合で使う」を、何週かのうちに守れたか
+  YA.addPromise = function (w, p, weeks, why) {
+    w.promises = (w.promises || []).filter((x) => x.pid !== p.id);
+    w.promises.push({ pid: p.id, name: p.name, from: w.year * 100 + w.week, until: w.week + weeks - 1, year: w.year, why }); // 今週を含めて weeks 週
+  };
+  YA.checkPromises = function (w) {
+    const keep = [];
+    for (const x of w.promises || []) {
+      const p = w.players[x.pid];
+      if (!p || x.year !== w.year) continue;
+      const played = p.lm && p.lm.y * 100 + p.lm.w > x.from && p.lm.mins > 0;
+      if (played) {
+        conf(p, 6);
+        p.unrest = 0;
+        noteTier(w, 2, `${pname(p)}との約束（${x.why}）を守った。本人の表情が明るくなった`, p.id);
+      } else if (w.week > x.until) {
+        conf(p, -10);
+        p.unrest += 3;
+        noteTier(w, 1, `${pname(p)}との約束（${x.why}）を守れなかった。信頼を失い、不満が大きくなっている`, p.id);
+      } else keep.push(x);
+    }
+    w.promises = keep;
+  };
+
   const QUIT_OK = { 不満: 0.62, 怪我: 0.72, 能力: 0.42, 家庭: 0.35 };
   const QUIT_NAME = { 不満: '不満', 怪我: '怪我', 能力: '能力的に厳しく', 家庭: '家庭の事情' };
   YA.EVENTS = [
     { id: 'unrest', name: '出番の不満', weight: 1.4,
-      pick: (w, r) => { const c = Object.values(w.players).filter((p) => p.team === 'B' && p.mins < 60 && YA.ovr(p) > 8.5 && p.inj <= 0 && w.year * 40 + w.week > 6); return c.length ? r.pick(c) : null; },
-      text: (p) => pname(p) + 'が声をかけてきた。「最近、試合に出られていません。何が足りないんでしょうか」',
-      opts: [opt('次の機会は必ず作る、と約束する', 'warm', (w, p) => { p.unrest = Math.max(0, p.unrest - 2); }), opt('練習で見せろ、と求める', 'push', (w, p) => { p.train.promise = true; }), opt('今は我慢の時期だと伝える', 'firm', (w, p) => { p.unrest += 2; })] },
-    { id: 'lowconf', name: '自信喪失', weight: 2,
+      pick: (w, r) => { const c = Object.values(w.players).filter((p) => p.team === 'B' && p.mins < 60 && YA.ovr(p) > 8.5 && p.inj <= 0 && w.year * 40 + w.week > 6 && !(w.promises || []).some((x) => x.pid === p.id)); return c.length ? r.pick(c) : null; },
+      text: (p, w) => { const c = ctx(w, p); return pname(p) + 'が声をかけてきた。' + pickT(p, [
+        `「今年、Aではまだ${c.minsA}分しか出ていません。${c.rival ? c.rival.name.split(' ')[0] + 'さんとの差は何ですか」（' + c.pos + 'で先発しているのは' + c.rival.name + '）' : '何が足りないんでしょうか」'}`,
+        `「練習ではやれている手応えがあります。${c.pos}で、一度チャンスをください」（今年のAの出場${c.minsA}分・総合力${c.r}）`,
+        `「Bでずっと試合に出ていても、上に行ける気がしません」（Aの出場${c.minsA}分）`]); },
+      opts: [opt('次の3週のうちにAで使う、と約束する', 'warm', (w, p) => { p.unrest = Math.max(0, p.unrest - 2); YA.addPromise(w, p, 3, 'Aで使う'); }), opt('練習で見せろ、と求める', 'push', (w, p) => { p.train.promise = true; }), opt('今は我慢の時期だと伝える', 'firm', (w, p) => { p.unrest += 2; })] },
+    { id: 'lowconf', name: '自信喪失', weight: 1.6,
       pick: (w, r) => { const c = Object.values(w.players).filter((p) => p.conf < 38 && p.inj <= 0); return c.length ? r.pick(c) : null; },
-      text: (p) => pname(p) + 'の表情が暗い。「自分には、無理なんじゃないかと思って…」',
+      text: (p, w) => { const c = ctx(w, p); return pname(p) + pickT(p, [
+        `の表情が暗い。${c.last && c.last.rating < 6 ? `この前の試合の採点は${c.last.rating.toFixed(1)}。` : ''}「自分には、無理なんじゃないかと思って…」`,
+        `が練習のあと、一人でボールを蹴っている。「ミスが怖くて、前みたいにプレーできないんです」`,
+        `が「${c.rival ? c.rival.name.split(' ')[0] + 'さんみたいには、なれない気がします' : 'このまま続けていいのか分からなくなりました'}」とこぼした（自信${Math.round(p.conf)}）`]); },
       opts: [opt('ゆっくり話を聞いて励ます', 'warm'), opt('弱点と、できていることを具体的に示す', 'push'), opt('少し休んで気持ちを切り替えさせる', 'wait', (w, p) => { p.rest = 'light'; p.fat = clamp(p.fat - 12, 0, 100); })] },
-    { id: 'tired', name: '疲れ・練習のしすぎ', weight: 2,
+    { id: 'tired', name: '疲れ・練習のしすぎ', weight: 1.4,
       pick: (w, r) => { const c = Object.values(w.players).filter((p) => p.fat > 72 && p.inj <= 0); return c.length ? r.pick(c) : null; },
-      text: (p) => pname(p) + 'の動きが重い。トレーナーが「疲れが溜まっています」と報告してきた',
+      text: (p, w) => { const c = ctx(w, p); return `${pname(p)}の動きが重い。トレーナーが報告してきた。「疲れが${Math.round(p.fat)}まで溜まっています。` + (c.inA ? 'Aの先発ですが、このままだと怪我の恐れがあります」' : 'このままだと怪我の恐れがあります」'); },
       opts: [opt('今週は休ませる', 'warm', (w, p) => { p.rest = 'rest'; }), opt('軽めのメニューに替える', 'wait', (w, p) => { p.rest = 'light'; }), opt('このまま続けさせる', 'firm', (w, p) => { p.fat += 4; })] },
-    { id: 'injury', name: '怪我の相談', weight: 1.6,
+    { id: 'injury', name: '怪我の相談', weight: 1.4,
       pick: (w, r) => { const c = Object.values(w.players).filter((p) => p.inj >= 2); return c.length ? r.pick(c) : null; },
-      text: (p) => pname(p) + 'の怪我について、トレーナーが相談してきた。「早く戻すこともできますが、再発の恐れがあります」',
-      opts: [opt('慎重に治す', 'warm', (w, p) => { p.inj += 1; }), opt('早く戻す', 'push', (w, p, r) => { p.inj = Math.max(1, p.inj - 1); if (r() < 0.3) { p.inj += 3; noteTier(w, 1, pname(p) + ' が無理をして再発した', p.id); } }), opt('本人に任せる', 'wait')] },
-    { id: 'rival', name: '張り合い', weight: 1.3,
-      pick: (w, r) => { const A = Object.values(w.players); const c = A.filter((p) => p.pos !== 'GK' && p.team === 'B' && A.some((q) => q.team === 'A' && q.pos === p.pos && Math.abs(YA.ovr(q) - YA.ovr(p)) < 1.4)); return c.length ? r.pick(c) : null; },
-      text: (p) => pname(p) + 'は、同じポジションのAチームの選手を強く意識している。練習で張り合う場面が増えた',
+      text: (p, w) => { const c = ctx(w, p); return `${pname(p)}の怪我について、トレーナーが相談してきた。「いまの見込みは、あと${p.inj}週です。早く戻すこともできますが、再発の恐れがあります」` + (c.inA ? `（Aの${c.pos}の先発）` : ''); },
+      opts: [opt('慎重に治す（1週のびる）', 'warm', (w, p) => { p.inj += 1; }), opt('早く戻す（3割で再発）', 'push', (w, p, r) => { p.inj = Math.max(1, p.inj - 1); if (r() < 0.3) { p.inj += 3; noteTier(w, 1, pname(p) + ' が無理をして再発した', p.id); } }), opt('本人に任せる', 'wait')] },
+    { id: 'rival', name: '張り合い', weight: 1.1,
+      pick: (w, r) => { const A = Object.values(w.players); const c = A.filter((p) => p.pos !== 'GK' && p.team === 'B' && A.some((q) => q.team === 'A' && q.main === p.main && Math.abs(YA.ovr(q) - YA.ovr(p)) < 1.4)); return c.length ? r.pick(c) : null; },
+      text: (p, w) => { const A = Object.values(w.players); const q = A.find((x) => x.team === 'A' && x.main === p.main && Math.abs(YA.ovr(x) - YA.ovr(p)) < 1.4); return `${pname(p)}（B・総合力${YA.rating(p)}）が、Aの${YA.POS_LABEL[p.main]}の${q ? q.name + '（総合力' + YA.rating(q) + '）' : '先輩'}を強く意識している。練習で張り合う場面が増えた`; },
       opts: [opt('競わせて伸ばす', 'push'), opt('それぞれ役割を分けて育てる', 'warm'), opt('特に何も言わない', 'wait')] },
-    { id: 'senpai', name: '先輩の助言', weight: 1.2,
+    { id: 'senpai', name: '先輩の助言', weight: 1,
       pick: (w, r) => { const c = Object.values(w.players).filter((p) => p.grade === 3 && (ST(p, '人との関わり', '世話好き') || ST(p, '人との関わり', 'リーダー気質') || ST(p, '人との関わり', '仲間思い'))); return c.length ? r.pick(c) : null; },
-      text: (p) => pname(p) + 'が、後輩にプレーのアドバイスをしている。いい雰囲気だ',
-      opts: [opt('後輩を任せて、もっと教えさせる', 'warm', (w, p, r) => { const k = Object.values(w.players).filter((q) => q.grade === 1 && q.pos === p.pos && q.team !== undefined); if (k.length) { const q = r.pick(k); q.prog.判断 = (q.prog.判断 || 0) + 0.8; q.prog.予測 = (q.prog.予測 || 0) + 0.8; } }), opt('見守る', 'wait')] },
-    { id: 'family', name: '家庭の事情', weight: 1,
+      text: (p, w) => { const k = Object.values(w.players).filter((q) => q.grade === 1 && q.pos === p.pos); return `${pname(p)}（高3）が、${k.length ? k[0].name + 'ら高1の' + (p.pos === 'GK' ? 'GK' : p.pos) + 'に' : '後輩に'}プレーのアドバイスをしている。いい雰囲気だ`; },
+      opts: [opt('後輩を任せて、もっと教えさせる（高1の判断・予測が伸びる）', 'warm', (w, p, r) => { const k = Object.values(w.players).filter((q) => q.grade === 1 && q.pos === p.pos && q.team !== undefined); if (k.length) { const q = r.pick(k); q.prog.判断 = (q.prog.判断 || 0) + 0.8; q.prog.予測 = (q.prog.予測 || 0) + 0.8; } }), opt('見守る', 'wait')] },
+    { id: 'family', name: '家庭の事情', weight: 0.8,
       pick: (w, r) => { const c = Object.values(w.players).filter((p) => ST(p, '目指すもの', '家族思い') || r() < 0.04); return c.length ? r.pick(c) : null; },
-      text: (p) => pname(p) + 'の家庭で、遠征費のことが話題になっているという。本人は気にしている様子だ',
+      text: (p) => pname(p) + pickT(p, ['の家庭で、遠征費のことが話題になっているという。本人は気にしている様子だ', 'の家族が引っ越すかもしれない、と本人から聞いた。気持ちが揺れているようだ', 'の家で、進路のことで意見が分かれているらしい。練習に集中できていない']),
       opts: [opt('本人の話を聞く', 'warm'), opt('クラブに相談してみる、と伝える', 'push'), opt('そっとしておく', 'wait')] },
-    { id: 'homesick', name: 'ホームシック', weight: 0.9,
+    { id: 'homesick', name: 'ホームシック', weight: 0.8,
       pick: (w, r) => { const c = Object.values(w.players).filter((p) => (ST(p, '目指すもの', '寂しがり') || ST(p, '人との関わり', '人見知り')) && p.dorm !== false); return c.length ? r.pick(c) : null; },
-      text: (p) => pname(p) + 'は、チームにまだ馴染みきれていないようだ。一人でいることが多い',
+      text: (p) => pname(p) + pickT(p, ['は、チームにまだ馴染みきれていないようだ。一人でいることが多い', 'は、寮の夜に家へ電話をかけることが増えたらしい。練習にも元気がない', 'は、休みの日も部屋にこもっているという']),
       opts: [opt('仲の良い選手とペアで練習させる', 'warm', (w, p) => { p.unrest = Math.max(0, p.unrest - 1); }), opt('声をかけて背中を押す', 'push'), opt('様子を見る', 'wait')] },
-    { id: 'hot', name: '絶好調', weight: 1.3,
+    { id: 'hot', name: '絶好調', weight: 1.1,
       pick: (w, r) => { const c = Object.values(w.players).filter((p) => p.form >= 1 || p.conf > 80); return c.length ? r.pick(c) : null; },
-      text: (p) => pname(p) + 'が絶好調だ。練習でも目立っている',
-      opts: [opt('褒めて、さらに上を求める', 'push', (w, p) => { p.spurt = Math.max(p.spurt, 3); }), opt('調子に乗らないよう戒める', 'firm'), opt('そのまま伸ばす', 'wait')] },
+      text: (p, w) => { const c = ctx(w, p); return `${pname(p)}が絶好調だ。` + (c.last && c.last.mins > 0 ? `この前の試合は採点${c.last.rating.toFixed(1)}。` : '') + (c.gain ? `今月は能力が${c.gain}上がった。` : '練習でも目立っている。') + (c.inA ? '' : 'まだBの子だ'); },
+      opts: [opt('褒めて、さらに上を求める（伸び盛りに入りやすい）', 'push', (w, p) => { p.spurt = Math.max(p.spurt, 3); }), opt('調子に乗らないよう戒める', 'firm'), opt('そのまま伸ばす', 'wait')] },
     { id: 'quit', name: '退団の相談', weight: 0.7,
       pick: (w, r) => {
         const c = Object.values(w.players).filter((p) => (p.unrest >= 4 || (p.conf < 25 && p.mins < 120) || p.inj >= 8 || (p.grade >= 2 && YA.ovr(p) < 9 && p.mins < 150) || (ST(p, '目指すもの', '家族思い') && r() < 0.03)) && Object.keys(w.players).length > 32);
@@ -716,11 +758,11 @@
         p._qr = p.inj >= 8 ? '怪我' : p.grade >= 2 && YA.ovr(p) < 9 && p.mins < 150 ? '能力' : p.unrest < 4 && ST(p, '目指すもの', '家族思い') ? '家庭' : '不満';
         return p;
       },
-      text: (p) => pname(p) + 'が思い詰めた様子で来た。「' + ({ 怪我: '怪我が長引いて、続けられる自信がなくなりました', 能力: 'みんなについていけません。サッカーを続けるのは厳しいと思います', 家庭: '家の事情で、続けるのが難しくなりました', 不満: 'チームを辞めようと思っています。試合に出られず、悔しくて' }[p._qr || '不満']) + '」',
+      text: (p, w) => pname(p) + 'が思い詰めた様子で来た。「' + ({ 怪我: `怪我が長引いて（あと${p.inj}週）、続けられる自信がなくなりました`, 能力: 'みんなについていけません。サッカーを続けるのは厳しいと思います', 家庭: '家の事情で、続けるのが難しくなりました', 不満: `チームを辞めようと思っています。今年のAの出場は${Math.round(p.minsA || 0)}分で、悔しくて` }[p._qr || '不満']) + '」',
       opts: [
         opt('引き止める（本気で話し合う）', 'warm', (w, p, r) => { if (r() < QUIT_OK[p._qr || '不満']) { p.unrest = 0; conf(p, 8); } else p._leave = true; }),
         opt('本人の意思を尊重して送り出す', 'wait', (w, p) => { p._leave = true; }),
-        opt('起用の機会を約束して残ってもらう', 'push', (w, p, r) => { if (r() < QUIT_OK[p._qr || '不満'] * 0.9) { p.unrest = 0; p.train.promise = true; } else p._leave = true; }),
+        opt('3週のうちにAで使う、と約束して残ってもらう', 'push', (w, p, r) => { if (r() < QUIT_OK[p._qr || '不満'] * 0.95) { p.unrest = 0; YA.addPromise(w, p, 3, 'Aで使う'); } else p._leave = true; }),
       ] },
     { id: 'change', name: '性格が変わる', weight: 0, pick: () => null, text: () => '', opts: [] },
   ];
@@ -728,7 +770,7 @@
   // 今週の出来事を作る（1〜2件。必ず止まる）
   YA.rollEvents = function (w) {
     const r = YA.rngOf(w.seed * 17 + w.year * 555 + w.week * 11);
-    const n = r.chance(0.6) ? 1 : r.chance(0.5) ? 2 : 0;
+    const n = r.chance(0.42) ? 1 : r.chance(0.12) ? 2 : 0;
     const out = [];
     for (const f of w.forced || []) out.push(f);
     w.forced = [];
