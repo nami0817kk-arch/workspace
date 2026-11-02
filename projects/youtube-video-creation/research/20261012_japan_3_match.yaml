@@ -1,0 +1,145 @@
+# 日本人選手 の取材メモ（2026年10月12日）
+# 試合記録は ESPN（event 401874764）：20分 マルディーニ、81分 コロ・ムアニ（頭）。69分 菅原 IN（マルディーニ OUT）。
+#   シュート 4対22、枠内 2対10、支配率 28.4対71.6。順位は ESPN（カリアリ 4位 勝ち点13、失点3はローマと並んで最少）。
+# 93分の場面は TMW の記事（元審判マレッリの解説）の原文：
+#   "Al 93' c'è una leggera trattenuta di Sugaware su Zhegrova. Marcenaro vede perfettamente l'entità: c'è stata, ma dobbiamo
+#    metterci d'accordo. In queste prime giornate abbiamo visto lasciar correre molto e non si possono chiedere questi rigori.
+#    I calciatori devono capire che queste cadute non portano a dei rigori. Correttamente il Var non è intervenuto"
+# ピサカーネ監督（TMW）："Fadera, Sugawara e Nzola sono entrati bene, sono soddisfatto"
+# 両監督の退席は TMW「Spalletti e Pisacane vengono entrambi espulsi」。何への抗議かは書かれていないので、93分の場面とは結びつけない。
+# 反応は X の個人の投稿（全文）：@ROKUELtan6・@kadoya2106dcd（自分の投稿への続き）。報道・まとめのアカウントは外した。
+# 写真：Commons の CC0（Timmy96、2024-12-22、サウサンプトン時代）。Wikidata に被写体の記載が無く portrait が断ったので、
+#   ファイル名と目で本人と確かめて手で取り込んだ。16:9 は横長の1枚（顔が右）、縦は別の1枚（顔の大写し）。
+#   本編の冒頭は顔がうつむいているので preview4 の顔の検出が × を出すが、絵では顔がはっきり写っている（検出の取りこぼし）。
+slot: japan
+date: "2026年10月12日"
+topic: "菅原由勢"
+people:
+  - "菅原由勢"
+
+theme:
+  id: "sugawara_juve"
+  league: "italy"
+  prefix: ""
+  title: "菅原由勢がユヴェントス戦の93分にしたこと"
+  hook: ""
+  question: "途中出場の菅原由勢は、ユヴェントス戦の最後に何をして、それはどう判断されたのか"
+  takeaway: "シュートを22本受けて失点は1。カリアリの6試合で3失点はローマと並んでリーグ最少で、菅原はその守りの最後の21分を任された"
+  opening_image: assets/images/20261012_japan_3_sugawara/01_w.jpg
+
+thumbnail:
+  layout: face
+  photo: assets/images/20261012_japan_3_sugawara/01_w.jpg
+  short_photo: assets/images/20261012_japan_3_sugawara/02_v.jpg
+  line1: "菅原由勢 93分"
+  line2: "ユーヴェ戦で●●"
+  tags:
+    - "菅原由勢"
+    - "カリアリ"
+
+answer: "93分、エリア内でジェグロヴァを軽くつかんだが、主審はPKを取らず、VARも入らなかった。元審判も判定を正しいと見た"
+watch: "カリアリが4位を守れるか。菅原が先発に入るか"
+
+sections:
+  - id: score
+    heading: 試合はこうなった
+    tier: 報道
+    telop: "カリアリ1-1ユヴェントス"
+    say:
+      - "カリアリは、ホームでユヴェントスと1対1で引き分けました。"
+      - "20分にマルディーニが先制し、81分にコロ・ムアニに頭で追いつかれました。"
+      - "菅原由勢は69分、先制点のマルディーニと代わって入りました。"
+      - "カリアリは勝ち点13で、4位を守っています。"
+    official: false
+    sources:
+      - "https://www.espn.com/soccer/match/_/gameId/401874764"
+      - "https://www.tuttomercatoweb.com/serie-a/cagliari-mister-pisacane-2282353"
+
+  - id: coach
+    heading: 監督の評価
+    tier: 報道
+    telop: "ピサカーネ監督の言葉"
+    say:
+      - "試合後、カリアリのピサカーネ監督は、途中から入った選手をこう評価しました。"
+      - voice: ピサカーネ監督
+        text: "ファデラ、菅原、ンゾラはよく入ってくれた。"
+      - voice: ピサカーネ監督
+        text: "満足している。"
+        cont: true
+    official: false
+    sources:
+      - "https://www.tuttomercatoweb.com/serie-a/cagliari-mister-pisacane-2282353"
+
+  - id: minute93
+    heading: 93分の場面
+    tier: 報道
+    telop: "93分　エリア内の菅原とジェグロヴァ"
+    main: true
+    say:
+      - text: "菅原由勢は、ユヴェントス戦の93分にペナルティーキックを取られかけました。"
+        short_only: true
+      - "93分、ユヴェントスのジェグロヴァがゴール前に迫り、倒れました。"
+      - "主審はペナルティーキックを取らず、ビデオ判定も入りませんでした。"
+      - "元審判で、判定を解説するマレッリ氏の見方です。"
+      - voice: マレッリ氏
+        text: "93分、菅原がジェグロヴァを軽くつかんでいる。"
+      - voice: マレッリ氏
+        text: "主審はその強さをはっきり見ていた。"
+        cont: true
+      - voice: マレッリ氏
+        text: "こういう倒れ方では、ペナルティーキックにならない。"
+      - voice: マレッリ氏
+        text: "ビデオ判定が入らなかったのは正しい。"
+        cont: true
+      - "試合の最後は抗議が続き、両チームの監督が退席処分になっています。"
+    official: false
+    sources:
+      - "https://www.tuttomercatoweb.com/serie-a/marelli-sugawara-zhegrova-rigore-giusto-fischiarli-cadute-2282354"
+      - "https://www.tuttomercatoweb.com/serie-a/cagliari-finisce-proteste-spalletti-pisacane-vengono-espulsi-2282341"
+
+  - id: numbers
+    heading: 22本を受けて1失点
+    tier: 報道
+    telop: "シュート4本対22本"
+    viewpoint: true
+    say:
+      - text: "シュートはカリアリの4本に対して、ユヴェントスは5倍以上の22本。"
+        card: {type: table, title: 試合の数字, columns: [項目, カリアリ, ユヴェントス], rows: [['シュート', '4', '22'], ['枠内シュート', '2', '10'], ['ボール保持', '28%', '72%']], highlight_row: 0}
+        main_only: true
+      - text: "それでも、枠内の10本のうち入ったのは1本だけでした。"
+        card: {type: table, title: 試合の数字, columns: [項目, カリアリ, ユヴェントス], rows: [['シュート', '4', '22'], ['枠内シュート', '2', '10'], ['ボール保持', '28%', '72%']], highlight_row: 1}
+        main_only: true
+      - text: "カリアリは6試合で3失点。ローマと並んでリーグ最少です。"
+        card: none
+      - "相手のユヴェントスは、ここまで5失点でした。"
+      - "菅原は、その守りの最後の21分を任されました。"
+    official: false
+    sources:
+      - "https://www.espn.com/soccer/match/_/gameId/401874764"
+      - "https://www.espn.com/soccer/standings/_/league/ita.1"
+
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: "「気持ちが複雑」"
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: 69分菅原由勢投入。
+        short_voice: true
+      - voice: ネット民
+        text: 菅原を相手にすることが初めてすぎて気持ちが複雑。
+        cont: true
+      - voice: ネット民
+        text: 日本人に一杯食わされてるユーヴェの歴史、アップデート。
+        main_only: true
+      - voice: ネット民
+        text: “クローザー・サイドバック”菅原由勢を擁するカリアリに、
+        main_only: true
+        cont: true
+      - voice: ネット民
+        text: 監督退席のオマケ付きでどうにか追い付いてドローのユーヴェ。
+        main_only: true
+        cont: true
+    sources:
+      - "https://x.com/search?q=%E8%8F%85%E5%8E%9F%E7%94%B1%E5%8B%A2%20-filter%3Alinks%20lang%3Aja&f=live"
