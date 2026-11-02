@@ -1,0 +1,154 @@
+# 取材メモ（2026年10月29日）松木玖生。土曜は2月に2点を決めたQPR戦。報じられた「今季10点」まで（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-10-29。requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約は使っていない。
+# 題材の元: Football TRIBE 2026-10-28「松木玖生に絶好のチャンス？…」（本文を全部読んだ。Saints Marching の孫引き。主写真は AFLO＝使わない）。
+# 【題材の一覧の番号】呼び出しの「6」は題材ページの番号では 7（松木）。6 は「上田・遠藤を指導した指揮官のマンU行き」で別の題材。ここでは松木を作った。
+# 出典で確かめたこと:
+#   ・BBC Sport チャンピオンシップ得点ランキング（2026-10-29 に取得）: 松木 リーグ戦 3得点1アシスト・12試合・264分に1点（BBC の列「Minutes per Goal」）。
+#       → 3×264＝約792分、12試合で割ると1試合約66分。順位表（BBC）: サウサンプトン 6位 勝点20（7勝3分2敗・失点12）、QPR 8位 勝点20（5勝5分2敗・失点12）。
+#   ・BBC 24日の試合記録: ウェストハム2-3サウサンプトン、松木 2分（得点者の欄）。クラブ公式の試合レポートも 2分・リバウンドを左下隅へ。
+#   ・クラブ公式（southamptonfc.com）14日ノリッジ0-1サウサンプトンのレポート: 後半9分（＝54分）、ジャンダーの低いシュートをGKが弾いたところを松木が決めた。
+#   ・クラブ公式 2026-02-24「Matsuki: It was a great moment」（QPR戦5-0のあとの松木本人の談話。英語原文）:
+#       "Obviously, it was a great moment for me because I scored my first goal in the Championship. I'm very happy to do that."
+#       "I like this football. The gaffer gave me the confidence, so I just want more goals and assists. We have so many great players, so obviously I enjoy it. But we need to get more points and score more goals."
+#       → 日本語はこちらで訳した（原文は英語。台本は「訳」と画面の札で断る）。2月24日、リーグ戦初ゴールを含む2得点（前半終了間際と後半開始直後）。5-0。
+#   ・FanSided Saints Marching（Paul Blake 2026-10-28）「Eckert tips Southampton star for ten goals…」・LiveScore（Saints Marching 転載 10-27）:
+#       エッケルト監督は9月に松木が今季チャンピオンシップ10ゴールに届くと予想した（"reportedly"）。元は Daily Echo 9/19 の有料記事で、監督の言葉そのものは読めていない。
+#       → 台本は「報じられている」。監督の言葉は作らない。確度は報道。
+#   ・QPR戦: 現地10月31日（土）、ホームのセント・メリーズ（BBC 日程。試合は台本の公開後なので結果の前の内容）。
+# 食い違い（台本に入れない）: クラブ公式の24日のレポートは松木の2分のゴールを「今季4点目」と書く。BBC の得点ランキングは リーグ3点。
+#   → 差は大会（カップ戦）の数え方かクラブ側の数え違いか、確かめられていない。台本は「リーグ戦3点」（BBC）だけ。
+#   ・ドビンの得点は BBC 34分、クラブ公式 35分で割れている → 台本に入れない。
+# 自分で数えたもの（見立て・背景）: 10点まであと7点。7×264＝1,848分。1試合66分なら28試合ぶん。リーグ戦は46試合で、12試合を終えて残り34。
+#   「今のペースが続けば」の計算で、出場時間（途中出場・途中交代あり）が前提。予言ではない。
+# 前の本との重なり: scripts/20261015_matsuki_southampton（ノリッジ戦の決勝弾・7位・30試合連続得点）／09-25・09-30 の松木（代表）。
+#   → ノリッジ戦は「14日」と一言だけ。7位・30試合連続は言わない。2月の談話・QPR・10点の話は今回が初。scripts/20261024〜20261028 を grep → 松木の本は無し。
+# 本人の言葉: 2月の談話（上）。直近の言葉は無い（BBC・クラブ公式・Tribe のどれにも無い）。→ 8か月前の言葉と、画面の札で断る。
+# 反応: 0件（作らない。まとめ4サイトで探したが、この話への書き込みは無く、代表デビューの古いスレだけ。approve は --no-voices）。
+# 写真（クラブ公式サイトの写真。撮影はクラブ側。代理店の記載・透かしは無い）: assets/images/20261029_matsuki_chance/（credits.json）
+#   01＝日本代表のウルグアイ戦（9/24）の得点のあとの松木（クラブ公式の記事の主写真。横顔・顔検出は外れたので --center で手切り）／
+#   02＝2月24日のQPR戦の松木（その談話の記事の主写真。ガッツポーズ）／03＝2024年の加入発表の写真（笑顔・クラブのシャツ）／
+#   04＝14日ノリッジ戦（背番号27、小さい。16:9だけ）／05＝24日ウェストハム戦の祝福（背番号27の後ろ姿。使わない）。
+#   10/15 の本の写真（Commons の2022年）とは重ならない。Commons は 429（アクセス制限）で今日は引けなかった。
+slot: japanese
+date: "2026年10月29日"
+format: news
+no_main: true
+people: [松木玖生, サウサンプトン, エッケルト監督, クイーンズ・パーク・レンジャーズ]
+
+short_style: Y
+short_hook_quote: 監督が自信をくれた。だから、もっとゴールとアシストが欲しい。
+short_photos:
+  - assets/images/20261029_matsuki_chance/01_v.jpg
+  - assets/images/20261029_matsuki_chance/02_v.jpg
+  - assets/images/20261029_matsuki_chance/03_v.jpg
+short_question: 松木玖生は、今季いくつまで伸ばすと思いますか。
+short_telops:
+  - {match: 監督が自信をくれた, text: 松木玖生 2月の談話/英語の談話を訳したもの}
+  - {match: 3点を決めています, text: 今季のリーグ戦/12試合で3得点}
+  - {match: 14日のノリッジ戦, text: 10月の2点/14日 決勝弾・24日 開始2分}
+  - {match: 10点に届く, text: 報じられた予想/「今季10点」}
+  - {match: 5対0, text: 2月24日 QPR戦/リーグ戦初ゴールを含む2点}
+  - {match: 勝ち点20, text: 土曜の相手QPR/8位・勝ち点20}
+  - {match: 264分に1点, text: リーグ戦/約264分に1点}
+  - {match: 28試合ぶん, text: '10点まで7点/約1,848分'}
+
+theme:
+  id: matsuki_chance
+  league: england
+  league_name: イングランド2部
+  prefix: ""
+  title: 松木玖生、土曜はQPR戦。報じられた「今季10点」は届くのか
+  hook: ""
+  question: 報じられた「今季10点」まで、松木玖生はあと何点で、どれだけの出場が要るのか
+  takeaway: 松木はリーグ戦12試合で3点、約264分に1点。10点まであと7点は約1,848分で、1試合66分なら28試合ぶん。残り34試合のうちに収まる計算で、鍵は出場時間
+
+thumbnail:
+  layout: face
+  line1: 松木玖生 リーグ3点
+  line2: 土曜は2点奪ったQPR戦
+  tags: [松木玖生, サウサンプトン]
+  photo: assets/images/20261029_matsuki_chance/02_w.jpg
+  short_photo: assets/images/20261029_matsuki_chance/01_v.jpg
+
+answer: 10点まであと7点。今の264分に1点、1試合66分のペースなら、残り34試合のうち28試合ぶんで足りる計算
+watch: 現地31日（土）、ホームでQPR戦
+
+sections:
+  - id: what
+    main: true
+    heading: 松木玖生は、2月にも決めた相手を迎える
+    tier: 報道
+    telop: 松木玖生、土曜はホームでQPR戦
+    say:
+      - text: 土曜は、松木玖生が2月にゴールを決めた相手との試合です。
+        image: assets/images/20261029_matsuki_chance/01_w.jpg
+      - text: 2月の5対0の勝利のあとの談話です。英語を訳しました。
+        image: assets/images/20261029_matsuki_chance/02_w.jpg
+      - voice: 松木玖生
+        text: 監督が自信をくれた。だから、もっとゴールとアシストが欲しい。
+        emph: true
+        image: assets/images/20261029_matsuki_chance/02_w.jpg
+      - voice: 松木玖生
+        text: このサッカーが好きです。
+        cont: true
+        image: assets/images/20261029_matsuki_chance/02_w.jpg
+      - text: 相手は、クイーンズ・パーク・レンジャーズ。
+        image: assets/images/20261029_matsuki_chance/02_w.jpg
+      - text: 5対0で勝った夜は、リーグ戦初ゴールを含む2点でした。
+        image: assets/images/20261029_matsuki_chance/02_w.jpg
+      - text: 今季、松木はリーグ戦で3点を決めています。
+        image: assets/images/20261029_matsuki_chance/03_w.jpg
+      - text: 10月だけで2点。3点のうち2点が、今月です。
+        image: assets/images/20261029_matsuki_chance/01_w.jpg
+      - text: 14日のノリッジ戦と、24日のウェストハム戦でした。
+      - text: ウェストハム戦は、開始2分の先制点でした。
+        image: assets/images/20261029_matsuki_chance/02_w.jpg
+    official: false
+    sources:
+      - https://www.southamptonfc.com/en/news/article/matsuki-it-was-a-great-moment
+      - https://www.southamptonfc.com/en/news/article/saints-hold-firm-against-hammers-in-statement-win
+      - https://www.southamptonfc.com/en/news/article/report-matsuki-strikes-to-give-saints-first-away-win
+      - https://www.bbc.com/sport/football/championship/top-scorers
+      - https://football-tribe.com/japan/2026/10/28/360738/
+
+  - id: forecast
+    heading: 報じられた「今季10点」
+    tier: 報道
+    telop: エッケルト監督は「今季10点」と予想と報じられる
+    say:
+      - text: 現地の報道です。エッケルト監督は9月に、
+        image: assets/images/20261029_matsuki_chance/03_w.jpg
+      - text: 松木が今季10ゴールに届くと予想した、と伝えられています。
+        image: assets/images/20261029_matsuki_chance/01_w.jpg
+    official: false
+    sources:
+      - https://saintsmarching.com/eckert-tips-southampton-star-for-ten-goals-this-season-and-qpr-is-next
+      - https://www.livescore.com/en/news/football/england-championship/this-southampton-star-has-a-perfect-chance-to-keep-the-goals-flowing-against-qpr-saints-marching/
+
+  - id: view
+    viewpoint: true
+    heading: 10点まで、どれだけの出場が要るか
+    tier: 背景
+    telop: 10点まであと7点。約1,848分、28試合ぶん
+    say:
+      - text: 見立て。松木はリーグ戦12試合で3点、約264分に1点のペース。
+        image: assets/images/20261029_matsuki_chance/02_w.jpg
+        card: {type: table, title: 松木玖生 リーグ戦, columns: [項目, 数字], rows: [[試合, 12], [得点, 3], [1点あたり, 約264分], [1試合の出場, 約66分]], highlight_row: 1}
+      - text: 10点まで、あと7点。264分に1点なら、約1,848分。
+        card: {type: table, title: 松木玖生 リーグ戦, columns: [項目, 数字], rows: [[試合, 12], [得点, 3], [1点あたり, 約264分], [1試合の出場, 約66分]], highlight_row: 2}
+      - text: 1試合66分なら、28試合ぶん。リーグ戦は残り34試合です。
+        emph: true
+        image: assets/images/20261029_matsuki_chance/01_w.jpg
+        card: none
+      - text: 今のペースが続けば、届く計算です。
+        image: assets/images/20261029_matsuki_chance/03_w.jpg
+      - text: 鍵は出場時間。途中出場や途中交代が続けば、変わります。
+        image: assets/images/20261029_matsuki_chance/03_w.jpg
+      - text: 土曜の相手は8位。勝ち点20で、6位のサウサンプトンと並びます。
+        image: assets/images/20261029_matsuki_chance/02_w.jpg
+    official: false
+    sources:
+      - https://www.bbc.com/sport/football/championship/top-scorers
+      - https://www.bbc.com/sport/football/championship/table
+      - https://www.bbc.com/sport/football/teams/southampton
+short_title: "松木玖生、土曜はQPR戦。報じられた「今季10点」は届くのか"

@@ -1,0 +1,460 @@
+# 代表チーム紹介 メキシコ代表（11/2 作成。固定シリーズ9「代表チーム紹介」。見本は 10/29 のベルギー代表 scripts/20261029_team_belgium.md）。7節：フック→基礎DATA（板）→日本との関係（早い節へ）→歴史と転機（年表）→看板選手（表）→いまのチーム→見立て。
+# **軸（2026-10-31）**：「2026年W杯で自国開催のメキシコは5試合4勝・10得点3失点と、1大会の得点も勝利数も過去最多だった。それでも16強で止まり、1970年・1986年の8強に届かなかった。数字は過去最高なのに、なぜか」。答えは見立ての節（自国開催3大会の1試合あたりの得点・失点を自分で割って比べる。3失点は16強のイングランド戦だけ）。
+# **日本との接点**：国際Aマッチ7試合、日本から見て1勝1分5敗（日本の勝ちは1996年のキリンカップ3対2だけ。2005年・2013年はコンフェデ杯で1対2）。もう1つ、2026年W杯でメキシコを率いたアギーレは2014〜15年の日本代表監督。基礎DATAの次の節に置いた。
+# **重なりの確認（2026-10-31）**：scripts/・research/covered.yaml・research/posted.json を grep。メキシコ代表の「紹介」回・メキシコが主役の回は無い（scripts にメキシコが出るのは、ほかの回の脇の言及だけ）。代表チーム紹介の既出はエクアドル・ニュージーランド・ブラジル・ドイツ・スペイン・アルゼンチン・フランス・イングランド・ポルトガル・オランダ・ウルグアイ・ベルギー（11/2 の担当は 10/31 のスウェーデンと重ならない）。クロアチア代表は日本との対戦（2022年W杯16強でPK負け）で強いが、10/4 に「イングランド戦0対7」の本編・ショート（england_croatia）を出していて直近30日に重なるので外した。
+# ---- 確かめたこと（2026-10-31。WebFetch の要約は使わず、requests で Wikipedia の生の wikitext を読んだ）----
+#  ・FIFAランク：10位（Module:SportsRankings/data/FIFA World Rankings、updated 7 October 2026、Mexico 10・前回比0・1738.48）。日本は17位（同じ表）。**FIFA 公式の2026年10月分は取れなかった**（inside.fifa.com は2025年10月までの履歴しか返さず、ranking-overview の API は空）。点数は書かない。
+#  ・W杯：1930年から出場（出場17大会＋2026年）。最高は1970年と1986年の8強（Mexico at the FIFA World Cup「Best Result」・Overall record の表）。**自国開催は1970・1986・2026年**（表で赤い枠）。
+#  ・Mexico at the FIFA World Cup の表：1970年 8強・4試合2勝1分1敗・6得点4失点／1986年 8強・5試合3勝2分0敗・6得点2失点（準々決勝は西ドイツと0対0、PK戦1対4）／2026年 16強・5試合4勝0分1敗・10得点3失点。1994〜2018年の7大会はすべて16強（表）。2022年は1次リーグ敗退（1978年大会以来。Mexico national football team 2020s の本文）。本文「Since they finished in the quarter-finals in 1986, Mexico have failed to advance beyond the round of 16」。
+#  ・自分で割った（検算した）：1970年 6÷4=1.50・4÷4=1.00／1986年 6÷5=1.20・2÷5=0.40／2026年 10÷5=2.00・3÷5=0.60。1大会の得点は表の最多が1998年の8（4試合）で、2026年の10が最多。勝利数は表の最多が1986年の3で、2026年の4が最多。
+#  ・2026年W杯の5試合（Mexico national football team の試合一覧。16強は 2026 FIFA World Cup knockout stage で突き合わせ）：6/11 南アフリカ2-0（キニョネス9分・ヒメネス67分）、6/18 韓国1-0（ロモ50分）、6/24 チェコ3-0（M.チャベス55分、キニョネス61分、フィダルゴ90+4分）、6/30 32強 エクアドル2-0（キニョネス22分、ヒメネス31分）、7/5 16強 イングランド2-3（アステカ。ベリンガム36分・38分、ケイン60分PK／キニョネス42分、ヒメネス69分PK。イングランドは54分に退場者）。3失点はすべてイングランド戦、ほかの4試合は無失点。キニョネスが4点・ラウール・ヒメネスが3点（10点の中身）。
+#  ・knockout stage の本文：メキシコがW杯の試合をアステカで落としたのは初めて、自国開催で8強に届かなかったのも初めて（1970年・1986年の大会に及ばなかった）。
+#  ・監督：ラファエル・マルケス（Rafael Márquez の記事・Mexico national football team の Coaching staff、updated 28 August 2026）。2026年7月8日に就任（前任はアギーレ。アギーレの記事の Managerial statistics で Mexico 2024-07-22〜2026-07-07）。選手としてメキシコ代表147試合17得点（記事の表）、バルセロナでCL2度優勝（2005-06・2008-09。Honours）。監督としては4試合0勝2分2敗・2得点7失点（Managerial record、match played 6 October 2026）。
+#  ・アギーレ：2026年9月23日からバレンシアの監督（記事本文）。2014年8月に日本代表の監督に就き、2015年アジアカップは1次リーグ3戦全勝（7得点0失点）で準々決勝UAE戦で敗退（記事の Japan 節）。
+#  ・主将：ヨハン・バスケス（Current squad の印 captain。ジェノア、DF、1998-10-22=28歳、53試合3得点）。名簿の数字は「Caps and goals correct as of 6 October 2026」。2026-10-30 時点の年齢（生年月日から計算）：バスケス28、サンティアゴ・ヒメネス（ポルト、FW、2001-04-18）25・54試合6得点、ピネダ（モンテレイ、MF、1996-03-24）30・97試合12得点、フィダルゴ（ベティス、MF、1997-04-09）29、バルガス（アトレティコ・マドリード、MF、2005-08-05）21、キニョネス（アル・カーディシーヤ、FW、1997-03-24）29（Recent call-ups。最後の招集は2026年W杯）、ラウール・ヒメネス（1991-05-05）35。
+#  ・愛称：El Tri / El Tricolor（infobox）。
+#  ・W杯のあと（親善試合。Mexico national football team の試合一覧でスコア・場所を確認）：9/26 コロンビア1-1（ボルチモア。モラ62分／スアレス9分）、9/29 ペルー1-1（ニュージャージー）、10/3 アメリカ0-3（グレンデール）、10/6 チリ0-2（ロサンゼルス）＝0勝2分2敗・2得点7失点（マルケスの Managerial record と一致）。次は 11/14 ジャマイカ（キングストン）、11/17 メキシコ（グアダルーペ）＝CONCACAFネーションズリーグ A 準々決勝（2試合）。
+#  ・日本との対戦：国際Aマッチ7試合、日本から見て1勝1分5敗・6得点11失点（Japan national football team records and statistics の Head-to-head：MEX 1996–2025 7・1・1・5・6・11）。試合は Japan national football team results の各表：1996-05-29 キリンカップ 3-2（福岡）／1998-05-31 親善試合 1-2（ローザンヌ）／2000-02-05 旧正月カップ 0-1（香港）／2005-06-16 コンフェデ杯 1-2（ハノーバー）／2013-06-22 コンフェデ杯 1-2（ベロオリゾンテ）／2020-11-17 親善試合 0-2（グラーツ）／2025-09-06 親善試合 0-0（オークランド）。
+# ---- 言わないもの ----
+#  ・怪我／出場停止（名簿の印）／私生活／背番号／戦術の説明／監督の契約の金額／アギーレの日本代表契約が終わった事情（事実の言い切りができないので、就任とアジアカップの成績だけ）／オチョアの代表引退（名簿の表記が曖昧）。
+# ---- 写真（assets/images/20261102_team_mexico/、出典は credits.json）----
+#  ・b01_opening：Commons CC BY-SA 4.0（Omar David Sandoval Sida）2026-06-11 W杯開幕戦の日のアステカ（全景）。b02_azteca：CC BY 4.0（ProtoplasmaKid）2026-07-04 アステカの外観。b03_eng：CC BY-SA 4.0（Morogris）2026-07-05 メキシコ対イングランドのピッチの国旗装飾（768x1024、横に切ると768x432で約1.7倍に伸びる）。b04_marquez：CC BY 2.0（大統領府）2014年のマルケス（選手時代）。b05_team2018：CC BY-SA 3.0（Sadovnikov）2018-06-17 の先発11人。b08〜b12：メキシコサッカー連盟の公式写真（Commons、CC BY 3.0。幅376〜617pxと小さく、並べると約1.7〜2.5倍に伸びる）。代理店・放送映像は使っていない。
+date: 2026年11月2日（情報は10月30日時点）
+slot: other_1
+format: news
+series: 代表チーム紹介
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- メキシコ代表
+- ラファエル・マルケス
+- ヨハン・バスケス
+- サンティアゴ・ヒメネス
+- フリアン・キニョネス
+theme:
+  id: team_mexico
+  league: japan
+  league_name: メキシコ代表
+  kind: preview
+  topic: メキシコ代表
+  title: メキシコ代表は、W杯で過去最多の10点。自国開催で、なぜ16強で止まったのか
+  question: 2026年W杯で自国開催のメキシコは、1大会の得点も勝利数も過去最多だったのに、なぜ1970年・1986年の8強に届かなかったのか
+  lead: W杯で過去最多の10点を取った、自国開催の国。
+  hook: ''
+  opening_image: assets/stats/tb_mexico_data_t.png
+  end_bg: assets/images/20261102_team_mexico/b01_opening.jpg
+  takeaway: メキシコは自国開催の2026年W杯で5試合4勝、10得点3失点。1試合あたり2.00得点・0.60失点で、得点は1970年（1.50）・1986年（1.20）より多く、失点は1986年（0.40）に次いで少ない。それでも16強で止まったのは、3失点が16強のイングランド戦に集中したため。ほかの4試合は無失点だった。マルケス監督の4試合は0勝2分2敗で7失点。11月のネーションズリーグ準々決勝が最初の確かめになる。
+thumbnail:
+  board: assets/stats/tb_mexico_data.png
+  line1: メキシコ代表
+  line2: W杯10点でも16強
+  crest_main:
+  - メキシコ
+  tags:
+  - メキシコ代表
+  - ワールドカップ
+  - 日本代表
+  - アギーレ
+  - マルケス
+  - 代表チーム紹介
+sections:
+- id: hook
+  heading: 自国開催で、過去最多の10点。それでも、なぜ16強で止まったのか
+  main: true
+  tier: 背景
+  telop: 自国開催のW杯で10得点。それでも16強
+  narrator: 解説
+  say:
+  - text: 2026年のワールドカップで、メキシコは5試合で**10点**を取りました。
+    image: assets/stats/tb_mexico_data_r1.png
+    no_telop: true
+    emph: true
+  - text: 1大会の得点としては、メキシコの歴代最多。4勝も、これまでで最多です。
+    image: assets/stats/tb_mexico_data2.png
+    no_telop: true
+  - text: 5試合のうち、4試合は無失点でした。
+    image: assets/stats/tb_mexico_data_r1.png
+    no_telop: true
+  - text: それでも自国開催の大会は、16強で終わりました。
+    image: assets/stats/tb_mexico_data2.png
+    no_telop: true
+  - text: 日本とも7度戦ったメキシコは、数字が最高なのに、なぜ止まったのでしょうか。
+    image: assets/stats/tb_mexico_data_t.png
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Mexico_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/Mexico_national_football_team
+- id: data
+  heading: メキシコ代表は、どんな数字を持つ国なのか
+  tier: 背景
+  telop: メキシコ代表の基礎DATA
+  narrator: 解説
+  say:
+  - text: メキシコのフィファランクは、10月7日の発表で**10位**。
+    image: assets/stats/tb_mexico_data0.png
+    no_telop: true
+  - text: ワールドカップの最高成績は、1970年と1986年の8強。どちらも自国開催の大会です。
+    image: assets/stats/tb_mexico_data1.png
+    no_telop: true
+  - text: 監督は、元メキシコ代表の主将、ラファエル・マルケス。今年の7月に就きました。
+    image: assets/stats/tb_mexico_data4.png
+    no_telop: true
+  - text: 主将は、守備のヨハン・バスケスです。
+    image: assets/stats/tb_mexico_data5.png
+    no_telop: true
+  - text: 愛称は、エル・トリ。三色、という意味の呼び名です。
+    image: assets/stats/tb_mexico_data6.png
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Module:SportsRankings/data/FIFA_World_Rankings
+  - https://en.wikipedia.org/wiki/Mexico_national_football_team
+  - https://en.wikipedia.org/wiki/Rafael_M%C3%A1rquez
+- id: japan
+  heading: 日本は、メキシコとどう戦ってきたのか
+  tier: 背景
+  telop: 通算7試合、日本から見て1勝1分5敗
+  narrator: 解説
+  card: &id_jp
+    type: table
+    title: 日本とメキシコの国際Aマッチ（全7試合）
+    columns:
+    - 年月
+    - 大会
+    - 日本から見た結果
+    rows:
+    - - 1996年5月
+      - キリンカップ
+      - 3-2
+    - - 1998年5月
+      - 親善試合
+      - 1-2
+    - - 2000年2月
+      - 旧正月カップ
+      - 0-1
+    - - 2005年6月
+      - コンフェデ杯
+      - 1-2
+    - - 2013年6月
+      - コンフェデ杯
+      - 1-2
+    - - 2020年11月
+      - 親善試合
+      - 0-2
+    - - 2025年9月
+      - 親善試合
+      - 0-0
+  say:
+  - text: 日本とメキシコの国際Aマッチは、これまで7試合。
+    image: assets/stats/tb_mexico_data7.png
+    no_telop: true
+  - text: 日本から見て、1勝1引き分け5敗。日本の勝ちは、1度だけです。
+    image: assets/images/20261102_team_mexico/b02_w/01.jpg
+    card: *id_jp
+  - text: その1勝は、1996年5月のキリンカップ。福岡で、3対2でした。
+    card:
+      <<: *id_jp
+      highlight_row: 0
+  - text: 2005年と2013年は、どちらもコンフェデレーションズカップ。
+    card:
+      <<: *id_jp
+      highlight_row: 3
+  - text: 各大陸の王者が集まる大会で、ともに1対2の負けでした。
+    card:
+      <<: *id_jp
+      highlight_row: 4
+  - text: 直近は、2025年9月6日。アメリカのオークランドで、0対0の引き分けでした。
+    card:
+      <<: *id_jp
+      highlight_row: 6
+  - text: もう一つ、日本との縁があります。
+    image: assets/images/20261102_team_mexico/b01_opening.jpg
+    card: none
+  - text: 2026年のワールドカップでメキシコを率いたハビエル・アギーレは、
+    card: none
+  - text: 2014年8月に、日本代表の監督に就いた人です。
+    card: none
+  - text: 2015年のアジアカップでは、1次リーグ3試合に勝って7得点、無失点。
+    card: none
+  - text: 準々決勝でアラブ首長国連邦に敗れ、大会を終えました。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_records_and_statistics
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(1990%E2%80%931999)
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(2000%E2%80%932009)
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(2010%E2%80%932019)
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(2020%E2%80%93present)
+  - https://en.wikipedia.org/wiki/Javier_Aguirre
+- id: history
+  heading: メキシコは、どこまで勝ち上がってきたのか
+  tier: 背景
+  telop: 1970年・1986年は自国開催で8強。1994年から7大会は16強
+  narrator: 解説
+  card: &id_hist
+    type: timeline
+    title: メキシコ代表のW杯の歩み
+    rows:
+    - - 1930年
+      - 第1回のW杯に出場
+    - - 1970年
+      - 自国開催で8強
+    - - 1986年
+      - 自国開催で8強
+    - - 1994年
+      - 16強。2018年まで7大会連続
+    - - 2022年
+      - 1次リーグで敗退
+    - - 2026年
+      - 自国開催で16強
+    focus: 2026年
+  say:
+  - text: ワールドカップへの出場は、1930年の第1回大会から。
+    image: assets/images/20261102_team_mexico/b05_w/01.jpg
+    card: *id_hist
+  - text: 自国開催の1970年と1986年は、どちらも8強。最高成績です。
+    card:
+      <<: *id_hist
+      highlight_row: 1
+  - text: 1986年は5試合で、失った点は2。
+    card:
+      <<: *id_hist
+      highlight_row: 2
+  - text: 準々決勝は、西ドイツと0対0のあと、PK戦で1対4でした。
+    card:
+      <<: *id_hist
+      highlight_row: 2
+  - text: 1994年から2018年までの7大会は、すべて16強で止まっています。
+    image: assets/images/20261102_team_mexico/b02_w/01.jpg
+    card:
+      <<: *id_hist
+      highlight_row: 3
+  - text: 2022年は、1次リーグで敗退。1978年大会以来のことでした。
+    card: none
+  - text: そして2026年は、アメリカ、カナダとの共催で、3度目の自国開催。
+    image: assets/images/20261102_team_mexico/b01_opening.jpg
+    card: none
+  - text: 初戦から、南アフリカ、韓国、チェコに3連勝。
+    emph: true
+    card:
+      <<: *id_hist
+      highlight_row: 5
+  - text: 決勝トーナメント1回戦でもエクアドルに2対0で勝ち、16強へ進みました。
+    card:
+      <<: *id_hist
+      highlight_row: 5
+  sources:
+  - https://en.wikipedia.org/wiki/Mexico_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/Mexico_national_football_team
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_knockout_stage
+- id: players
+  heading: いまの看板選手は、誰なのか
+  tier: 背景
+  telop: 看板選手を、所属・名前・位置・年齢で
+  narrator: 解説
+  card: &id_pl
+    type: table
+    title: メキシコ代表の看板選手
+    columns:
+    - 所属
+    - 名前
+    - 位置
+    - 年齢
+    rows:
+    - - ジェノア
+      - ヨハン・バスケス
+      - DF
+      - '28'
+    - - ポルト
+      - サンティアゴ・ヒメネス
+      - FW
+      - '25'
+    - - モンテレイ
+      - オルベリン・ピネダ
+      - MF
+      - '30'
+    - - ベティス
+      - アルバロ・フィダルゴ
+      - MF
+      - '29'
+    - - アトレティコ・マドリード
+      - オベド・バルガス
+      - MF
+      - '21'
+    - - アル・カーディシーヤ
+      - フリアン・キニョネス
+      - FW
+      - '29'
+  say:
+  - text: いまのメキシコを引っ張る6人。
+    image: assets/images/20261102_team_mexico/b02_w/01.jpg
+    card: *id_pl
+  - text: 年齢は、10月30日現在のものです。
+    card: *id_pl
+  - text: 主将は、ジェノアのバスケス。28歳の守備の選手で、代表53試合。
+    image: assets/images/20261102_team_mexico/pair_cap/01.jpg
+    card:
+      <<: *id_pl
+      highlight_row: 0
+  - text: 中盤のピネダは30歳。代表97試合で、12得点を挙げています。
+    card: none
+  - text: 前線のサンティアゴ・ヒメネスは、ポルトの25歳。代表54試合で6得点。
+    image: assets/images/20261102_team_mexico/pair_fw/01.jpg
+    card:
+      <<: *id_pl
+      highlight_row: 1
+  - text: ワールドカップで最も点を取ったのは、キニョネスの4点。10点のうち4割です。
+    emph: true
+    card:
+      <<: *id_pl
+      highlight_row: 5
+  - text: ほかにも、35歳のラウール・ヒメネスが3点を決めています。
+    card: none
+  - text: 21歳のバルガスは、アトレティコ・マドリードの中盤。若い世代も育っています。
+    image: assets/images/20261102_team_mexico/b05_w/01.jpg
+    card:
+      <<: *id_pl
+      highlight_row: 4
+  sources:
+  - https://en.wikipedia.org/wiki/Mexico_national_football_team
+  - https://en.wikipedia.org/wiki/Johan_V%C3%A1squez_(footballer,_born_1998)
+  - https://en.wikipedia.org/wiki/Santiago_Gim%C3%A9nez
+  - https://en.wikipedia.org/wiki/Julián_Quiñones
+  - https://en.wikipedia.org/wiki/Ra%C3%BAl_Jim%C3%A9nez
+- id: now
+  heading: マルケス監督のメキシコは、W杯のあとをどう戦っているのか
+  tier: 背景
+  telop: マルケス監督の4試合は、0勝2分2敗
+  narrator: 解説
+  card: &id_nw
+    type: table
+    title: W杯のあと メキシコの4試合（親善試合）
+    columns:
+    - 日付
+    - 相手
+    - メキシコの結果
+    rows:
+    - - 9月26日
+      - コロンビア
+      - 1-1
+    - - 9月29日
+      - ペルー
+      - 1-1
+    - - 10月3日
+      - アメリカ
+      - 0-3
+    - - 10月6日
+      - チリ
+      - 0-2
+  say:
+  - text: 7月8日、ラファエル・マルケスがメキシコの監督に就きました。
+    image: assets/images/20261102_team_mexico/pair_coach/01.jpg
+    card: none
+  - text: 前の監督のアギーレは、自国開催のワールドカップを率いた人です。
+    card: none
+  - text: マルケスは選手として、代表147試合。歴代4位タイで、17得点。
+    card: none
+  - text: バルセロナでは、欧州チャンピオンズリーグを2度制した守備の名手でした。
+    card: none
+  - text: 就任後は、親善試合4試合で0勝2引き分け2敗。
+    image: assets/images/20261102_team_mexico/b02_w/01.jpg
+    card: *id_nw
+  - text: コロンビアとペルーとは、どちらも1対1の引き分け。
+    card:
+      <<: *id_nw
+      highlight_row: 0
+  - text: ところがアメリカには0対3、チリにも0対2で負けました。
+    card:
+      <<: *id_nw
+      highlight_row: 2
+  - text: 4試合で2得点7失点。その7失点のうち、5失点はアメリカとチリ戦でした。
+    image: assets/images/20261102_team_mexico/pair_coach/01.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Mexico_national_football_team
+  - https://en.wikipedia.org/wiki/Rafael_M%C3%A1rquez
+  - https://en.wikipedia.org/wiki/Javier_Aguirre
+- id: viewpoint
+  viewpoint: true
+  heading: 過去最高の数字で、なぜ自国開催の8強に届かなかったのか
+  tier: 背景
+  telop: 1試合の得点は1.50、1.20、2.00。失点は1.00、0.40、0.60
+  narrator: 解説
+  card: &id_vp
+    type: table
+    title: メキシコの自国開催W杯 1試合あたりの得点と失点
+    columns:
+    - 大会
+    - 試合
+    - 勝ち
+    - 得点
+    - 失点
+    rows:
+    - - 1970年（8強）
+      - '4'
+      - '2'
+      - '1.50'
+      - '1.00'
+    - - 1986年（8強）
+      - '5'
+      - '3'
+      - '1.20'
+      - '0.40'
+    - - 2026年（16強）
+      - '5'
+      - '4'
+      - '2.00'
+      - '0.60'
+  say:
+  - text: 見立てに入ります。自国開催の3大会を、並べます。
+    image: assets/images/20261102_team_mexico/b01_opening.jpg
+    card: none
+  - text: 1970年は4試合で2勝。6点取って、4点を失いました。
+    card:
+      <<: *id_vp
+      highlight_row: 0
+  - text: 1986年は5試合で3勝。6点取って、失点は2。
+    card:
+      <<: *id_vp
+      highlight_row: 1
+  - text: 2026年は5試合で4勝。取った点は10、失った点は3。
+    card:
+      <<: *id_vp
+      highlight_row: 2
+  - text: 1試合あたりでは、得点は1.50、1.20、2.00。2026年がいちばん多い。
+    mark:
+      kind: circle
+      row: 2
+      col: 3
+    card:
+      <<: *id_vp
+      highlight_row: 2
+  - text: 失点も0.60。0.40の1986年に次ぐ少なさです。
+    emph: true
+    mark:
+      kind: circle
+      row: 2
+      col: 4
+    card:
+      <<: *id_vp
+      highlight_row: 2
+  - text: その3失点は、すべて16強のイングランド戦でした。ほかの4試合は、無失点です。
+    image: assets/images/20261102_team_mexico/b02_w/01.jpg
+    card: none
+  - text: 36分と38分に2点を取られ、60分にはPKで3点目。
+    card: none
+  - text: 2対3の負けで、アステカでのワールドカップ初黒星でした。
+    card: none
+  - text: 数字は過去最高でも、勝ち上がりは1試合で止まる。
+    card: none
+  - text: 8強に届かなかった理由は、あの1試合の3失点です。
+    card: none
+  - text: 次の確かめは、北中米のネーションズリーグ。準々決勝です。
+    image: assets/images/20261102_team_mexico/pair_coach/01.jpg
+    card: none
+  - text: 11月14日にジャマイカ、17日に国内で戦います。
+    card: none
+  - text: 失点が止まるのか。そこが、マルケスのメキシコの最初の分かれ目です。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Mexico_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_knockout_stage
+  - https://en.wikipedia.org/wiki/Mexico_national_football_team

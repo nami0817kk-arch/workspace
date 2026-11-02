@@ -1,0 +1,514 @@
+# 中村憲剛（元日本代表MF）の紹介。シリーズ「レジェンドの紹介（日本）」2026-11-01。型は 10/29 の阿部勇樹と同じ8節。
+# **情報の時点は 2026-10-30。**（公開は 11/1。年齢は書かない。10/31 に誕生日を迎えるため）
+# **FotMob・DataMB・FBref・Sofascore・Transfermarkt は不使用**。数字は川崎フロンターレ公式（引退のお知らせ）・JFA・英語版/日本語版 Wikipedia・ゲキサカ・Sportiva だけ。
+# **私生活（家族・息子）は入れない。女子サッカーは入れない**。Jリーグは経歴の事実だけで、サムネの主役にしない。
+#
+# **題材を選んだ理由**：直近30日に未出の大物（10/18〜10/29 のレジェンド国内は 中田・長谷部・俊輔・内田・川口・小野・稲本・遠藤・大久保・岡崎・松井・阿部・宮本）。
+#   中村憲剛は 日本代表68試合・2010年W杯の81分の出番・引退会見・2026年7月のヘッドコーチ就任 と、話の柱が全部一次情報で確かめられる。
+#   候補から外したもの：中澤佑二（110試合の大物で引退も確認済みだが、Commons の写真が小さい/ウォーターマーク付きで、全面写真のサムネが組めない）、川島永嗣（2026年も磐田と契約更新で現役）、本田・香川・長友（現役または引退未確認）。
+# **重なりの確認（2026-10-31）**：scripts/・research/covered.yaml・research/posted.json を「中村憲剛」「憲剛」で grep → 阿部勇樹の台本が「中村憲剛と交代」と1か所書いているだけ。本が重なるのは W杯パラグアイ戦だけなので、
+#   こちらは「憲剛の側から見た81分」に絞り、阿部の台本と同じ言い回しを使わない。
+# **引退の確認**：川崎フロンターレ公式「中村憲剛選手 現役引退のお知らせ」（2020-11-01）と特設サイト「2003-2020 中村憲剛選手引退」。11/1 15時のオンライン会見。→ **現役ではない**。
+# **いまの立場**：ゲキサカ 2026-01-04「デベロップメントコーチ就任」、ゲキサカ 2026-07-02「ヘッドコーチに就任」（長谷部茂利監督体制の3シーズン目）。**川崎フロンターレ公式ページには辿れなかった**（報道2社＋Wikipedia 日本語版が一致）。
+# **日本との接点**：全体が日本代表・W杯の話。
+#
+# **数字の出どころ**
+# - 生年月日 1980-10-31・東京都小平市・背番号14・MF・175cm/66kg（川崎公式）。
+# - 日本代表 68試合6得点（2006〜2013）：川崎公式の「日本代表通算」＝68試合／6得点。年別は 英語版/日本語版 Wikipedia
+#   2006=3(1) 2007=13(0) 2008=13(2) 2009=12(2) 2010=11(0) 2011=4(1) 2012=7(0) 2013=5(0)。区切りは自分で足した：
+#   2006〜2009 = 41試合5得点、2010〜2013 = 27試合1得点、2011〜2013 = 16試合1得点。
+# - デビュー 2006-10-04 ガーナ戦（途中出場。日本語版・複数媒体）→ 生年月日から **25歳**（誕生日は10/31）。初ゴール 2006-10-11 インド戦（アジアカップ予選・3-0）。得点の分数は資料で食い違う（81分／後半37分）ので言わない。
+# - 2010年W杯：JFA「ワールドカップヒストリー第14回」＝2010-06-29 プレトリア・パラグアイ戦 0-0（PK 3-5）、**81分 阿部勇樹→中村憲剛（今大会初めて起用）**、65分 松井大輔→岡崎慎司、106分 大久保嘉人→玉田圭司。
+#   出場は 81分〜120分＝**およそ39分間**（自分で引いた）。グループリーグ3戦は出番なし（Sportiva 2023-12-20）。29歳（誕生日から計算）。
+# - 川崎公式：J1通算463試合74得点・J2通算75試合9得点（2020-11-01現在）、J1優勝2017・2018、J2優勝2004、Jリーグ最優秀選手賞2016。英語版：リーグ戦通算 546試合83得点（2003〜2020）。日本語版：2016年は歴代最年長の36歳での受賞。
+#   2003年にテスト生として参加→正式入団（日本語版・ゲキサカ）。18年間川崎ひと筋（ゲキサカ 2026-01-04）。
+# - 本人の言葉：Sportiva 2023-12-20（取材・文 佐藤俊）。「これならやれる」／「自分が決める」「チームを助けたいという気持ちが強かったんで、ワクワクしかなかった」／
+#   延長後半の玉田のクロスに飛び込んだ場面「今でも、ボールが目の前を通り過ぎていくのを思い出します」／「ここで終わりかぁ」。
+#   引退会見（川崎公式の特設サイトが引く）「私、川崎フロンターレ中村憲剛は、今季限りで引退することを発表します」。
+#   2026-01 の就任コメント（ゲキサカが引くクラブ発表）「そのすべてをこれからのフロンターレのために発揮できたらと思っています」。
+# - 引退：10/31 FC東京戦で40歳の誕生日を自ら祝うゴール（川崎公式の特設サイト）→ 翌11/1 15時に会見。引退後：FRO（2021〜）・JFAロールモデルコーチ・中央大テクニカルアドバイザー（ゲキサカ）。
+#
+# **入れなかったもの**：家族・息子、延長前半のミドルシュート（媒体1つだけ）、2007年アジアカップの出場数（確かめきれず）、2014年W杯の選外の理由、引退試合の詳細、
+#   2020年のJ1優勝（川崎公式の表は 11/1 時点）、Jリーグの連続記録。
+# **写真**：assets/images/20261101_nakamura_kengo_legend/ — 02 = ゲキサカ 2026-01-04 の記事の主写真（DAZN の解説の場面、撮影 Koki Nagahama/GEKISAKA、2560x1920。左下に撮影者名が焼き込まれているので 16:9 切り出しで外す）、
+#   04 = J.LEAGUE（川崎14番、640x426、小さい）、06 = Commons「Nakamura Kengo.jpg」（2016年4月、CC BY-SA 4.0、Whispered11）、07 = Commons「Kengo Nakamura.jpg」（2010年9月、CC BY-SA 2.0、TAKA@P.P.R.S、431x828）、
+#   08 = Commons「Japan national team anthem vs Paraguay.jpg」（2008年5月、CC BY-SA 2.0、Kennosuke Yamaguchi、日本代表の場面。人物は特定しない）、01 = Commons Flickr tpower1978（2009年・仰向けで頭を抱える。顔が半分隠れるため使わない）。
+#   W杯の写真は使えるものが無い（行で「その試合の写真」と言わない）。代理店の写真は無し。
+watch: 毎日、数字でサッカーを読み解きます
+title: 中村憲剛は、どんな選手だった？ 81分に呼ばれた男の8年間
+format: news
+short_title: 中村憲剛は、どんな選手だった？
+series: レジェンドの紹介
+topic: 中村憲剛
+date: 2026年11月1日
+slot: other_1
+people:
+- 中村憲剛
+theme:
+  id: legend_nakamura_kengo
+  league: japan
+  league_name: ワールドカップ
+  kind: other
+  topic: 中村憲剛
+  title: 中村憲剛は、どんな選手だった？ 81分に呼ばれた男の8年間
+  question: 25歳で日本代表に初めて呼ばれ、2010年のワールドカップでは81分にベンチから呼ばれた中村憲剛は、どんな選手で、いまは何をしているのか
+  takeaway: 中村憲剛の日本代表68試合のうち、最初の4年が41試合、次の4年が27試合。ワールドカップの出番は2010年の81分からの約39分間。川崎ひと筋の司令塔は、2026年7月に川崎のヘッドコーチになった
+  nameplate: 中村憲剛｜元日本代表 MF
+  opening_image: assets/images/20261101_nakamura_kengo_legend/02_w.jpg
+  end_bg: assets/images/20261101_nakamura_kengo_legend/02_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+  outro_title: 毎日、数字でサッカーを読み解きます
+thumbnail:
+  line1: 中村憲剛、代表68試合6点
+  line2: 南アW杯、81分に登場
+  tags: []
+  photo: assets/images/20261101_nakamura_kengo_legend/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261101_nakamura_kengo_legend/02c_v.jpg
+sections:
+- id: hook
+  heading: 2010年のワールドカップ、81分に日本のベンチが呼んだのは誰か
+  tier: 報道
+  telop: 2010年6月29日、南アフリカ大会
+  card: &hookcard
+    type: stats
+    title: 中村憲剛 元日本代表MF
+    items:
+    - - '68'
+      - 試合
+      - 日本代表（2006〜2013年）
+    - - '25'
+      - 歳
+      - 日本代表デビューの年齢
+    - - '81'
+      - 分
+      - W杯で初めてピッチに呼ばれた時刻
+    focus: 2
+  say:
+  - text: 2010年6月29日、南アフリカ。ワールドカップの決勝トーナメント1回戦です。
+    image: assets/images/20261101_nakamura_kengo_legend/02_w.jpg
+    card: none
+  - text: 日本対パラグアイは、得点の入らないまま、81分を迎えました。
+    card: none
+  - text: 日本のベンチが、動きます。
+    card: none
+    emph: true
+  - text: 呼ばれたのは、この大会でまだ1分もピッチに立っていなかった選手。
+    image: assets/images/20261101_nakamura_kengo_legend/02_w.jpg
+    card: none
+  - text: 中村憲剛でした。
+    card: {<<: *hookcard, focus: 2}
+    callword: 81分
+  - text: 日本代表では68試合。25歳で初めて代表に呼ばれた、川崎ひと筋の司令塔です。
+    card: {<<: *hookcard, focus: 0}
+  - text: その道のりを、見ていきます。
+    card: {<<: *hookcard, focus: 1}
+  quotes_from: []
+  sources:
+  - https://www.jfa.jp/national_team/news/00017760/
+  - https://www.frontale.co.jp/info/2020/1101_2.html
+  - https://ja.wikipedia.org/wiki/%E4%B8%AD%E6%9D%91%E6%86%B2%E5%89%9B
+- id: data
+  heading: 中村憲剛は、どこでプレーし、いま何をしている選手か
+  tier: 報道
+  telop: 中村憲剛の基礎DATA
+  card: &datacard
+    type: table
+    title: 中村憲剛
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 生年月日
+      - 1980年10月31日・東京都生まれ
+    - - ポジション
+      - MF（司令塔）
+    - - 日本代表
+      - 68試合6得点（2006〜2013）
+    - - ワールドカップ
+      - 2010年（81分から出場）
+    - - クラブ
+      - 川崎フロンターレひと筋
+    - - 引退
+      - 2020年11月1日に発表
+    - - いま
+      - 川崎のヘッドコーチ（2026年7月〜）
+    source: 川崎フロンターレ公式・JFA・ゲキサカ
+    highlight_row: 0
+  say:
+  - text: 中村憲剛の生まれは、1980年10月31日。東京都の出身です。
+    image: assets/images/20261101_nakamura_kengo_legend/02_w.jpg
+    card: {<<: *datacard, highlight_row: 0}
+  - text: ポジションは、ミッドフィールダー。攻撃を組み立てる司令塔でした。
+    card: {<<: *datacard, highlight_row: 1}
+  - text: 日本代表の得点は6つ。2006年から2013年まで、8年にわたって戦いました。
+    card: {<<: *datacard, highlight_row: 2}
+  - text: クラブは、2003年から2020年まで、川崎フロンターレただ1つ。
+    card: {<<: *datacard, highlight_row: 4}
+  - text: いまは、その川崎のヘッドコーチ。2026年7月に就任しました。
+    image: assets/images/20261101_nakamura_kengo_legend/02_w.jpg
+    card: {<<: *datacard, highlight_row: 6}
+    emph: true
+  quotes_from: []
+  sources:
+  - https://www.frontale.co.jp/info/2020/1101_2.html
+  - https://web.gekisaka.jp/news/jleague/detail/?454785-454785-fl=
+  - https://www.jfa.jp/national_team/news/00017760/
+- id: japan
+  heading: 中村憲剛の代表は、25歳からどう積み上がったのか
+  tier: 報道
+  telop: 日本代表で68試合6得点
+  card: &jpncard
+    type: table
+    title: 中村憲剛 日本代表の出場と得点
+    columns:
+    - 年
+    - 試合
+    - 得点
+    rows:
+    - - 2006〜2009
+      - '41'
+      - '5'
+    - - '2010'
+      - '11'
+      - '0'
+    - - 2011〜2013
+      - '16'
+      - '1'
+    - - 合計
+      - '68'
+      - '6'
+    source: Wikipedia・川崎フロンターレ公式
+    highlight_row: 3
+  say:
+  - text: 中村憲剛の代表歴は、25歳で始まります。
+    image: assets/images/20261101_nakamura_kengo_legend/02_w.jpg
+    card: {<<: *jpncard, highlight_row: 3}
+  - text: デビューは2006年10月4日。オシム監督の下、ガーナ戦の途中出場でした。
+    card: none
+  - text: 1週間後のインド戦で、代表初ゴール。後半、強烈なミドルシュートでした。
+    image: assets/images/20261101_nakamura_kengo_legend/02_w.jpg
+    card: none
+    emph: true
+  - text: 最初の4年間、2006年から2009年で、41試合5得点。
+    card: {<<: *jpncard, highlight_row: 0}
+  - text: 代表での6得点のうち、5つは、この時期に取っています。
+    card: {<<: *jpncard, highlight_row: 0}
+  - text: そして2010年。ワールドカップの年の出場は、11試合です。
+    card: {<<: *jpncard, highlight_row: 1}
+    emph: true
+  - text: ただ、ワールドカップの本番でピッチに立つのは、1試合です。
+    image: assets/images/20261101_nakamura_kengo_legend/02_w.jpg
+    card: none
+  quotes_from: []
+  sources:
+  - https://ja.wikipedia.org/wiki/%E4%B8%AD%E6%9D%91%E6%86%B2%E5%89%9B
+  - https://en.wikipedia.org/wiki/Kengo_Nakamura
+  - https://www.frontale.co.jp/info/2020/1101_2.html
+- id: career
+  heading: テスト生から入った中村憲剛は、どう川崎の顔になったのか
+  tier: 報道
+  telop: 中央大学から、川崎ひと筋で18年
+  card: &careercard
+    type: table
+    title: 歩んできた道
+    columns:
+    - 年
+    - できごと
+    rows:
+    - - 2003
+      - 中央大学から、川崎に入団（J2）
+    - - 2004
+      - J2優勝、J1へ昇格
+    - - 2006
+      - 日本代表に初選出
+    - - 2016
+      - Jリーグ最優秀選手賞
+    - - 2017・2018
+      - 川崎がJ1連覇
+    source: 川崎フロンターレ公式・Wikipedia
+    highlight_row: 0
+  say:
+  - text: 中村憲剛は、中央大学を出て、2003年に川崎フロンターレへ入ります。
+    image: assets/images/20261101_nakamura_kengo_legend/02_w.jpg
+    card: {<<: *careercard, highlight_row: 0}
+  - text: テスト生として練習に参加した末に入団。当時の川崎は、Jリーグの2部、J2です。
+    card: none
+  - text: 入団2年目の2004年に、J2で優勝。チームはJ1へ上がります。
+    card: {<<: *careercard, highlight_row: 1}
+    emph: true
+  - text: そして2年後、日本代表に初めて選ばれました。
+    card: {<<: *careercard, highlight_row: 2}
+  - text: 2016年には、Jリーグの最優秀選手に。36歳での受賞は、歴代で最年長です。
+    image: assets/images/20261101_nakamura_kengo_legend/02_w.jpg
+    card: {<<: *careercard, highlight_row: 3}
+  - text: 川崎は2017年、2018年と、J1を連続で制しました。
+    card: {<<: *careercard, highlight_row: 4}
+  - text: リーグ戦は2003年から2020年まで、546試合で83得点。
+    card: none
+  - text: 18年間、ずっと川崎のユニフォームでした。
+    card: none
+    emph: true
+  quotes_from: []
+  sources:
+  - https://www.frontale.co.jp/info/2020/1101_2.html
+  - https://ja.wikipedia.org/wiki/%E4%B8%AD%E6%9D%91%E6%86%B2%E5%89%9B
+  - https://en.wikipedia.org/wiki/Kengo_Nakamura
+- id: match
+  heading: 81分に呼ばれた中村憲剛は、決勝トーナメントで何をしたのか
+  tier: 報道
+  telop: 2010年W杯、81分からの出場
+  main: true
+  card: &wccard
+    type: table
+    title: 2010年6月29日 日本対パラグアイ
+    columns:
+    - 時間
+    - できごと
+    rows:
+    - - 65分
+      - 松井大輔に代わり、岡崎慎司
+    - - 81分
+      - 阿部勇樹に代わり、中村憲剛
+    - - 90分
+      - 0対0。延長戦へ
+    - - 120分
+      - 0対0。PK戦へ
+    - - PK戦
+      - 3対5で敗退
+    highlight_row: 1
+  say:
+  - text: 元日本代表のミッドフィールダー、中村憲剛。
+    image: assets/images/20261101_nakamura_kengo_legend/02_w.jpg
+    card: none
+    short_only: true
+  - text: 2010年の南アフリカ大会。中村憲剛は、29歳でした。
+    image: assets/images/20261101_nakamura_kengo_legend/02_w.jpg
+    card: none
+  - text: グループリーグの3試合は、出番がありませんでした。
+    card: none
+  - text: 決勝トーナメント1回戦、相手はパラグアイ。
+    card: none
+  - text: 試合は、得点が入らないまま、時計は81分。
+    card: {<<: *wccard, highlight_row: 0}
+  - text: 日本のベンチは、阿部勇樹を下げて、中村憲剛を送り出しました。
+    card: {<<: *wccard, highlight_row: 1}
+    emph: true
+  - text: 入ったのは、攻撃の中心になるトップ下。最初のタッチは、長友佑都へのパスでした。
+    card: none
+  - text: そこからクロスが上がり、日本はチャンスをつくります。
+    card: none
+  - text: それでも、点は入りません。延長戦に入ります。
+    image: assets/images/20261101_nakamura_kengo_legend/02_w.jpg
+    card: {<<: *wccard, highlight_row: 2}
+  - text: 延長後半、玉田圭司のクロスに、中村憲剛が飛び込みます。
+    card: none
+    callword: 延長後半
+  - text: 触れば、1点になる場面でした。
+    card: none
+    emph: true
+  - text: しかし、ボールは、目の前を通り過ぎていきました。
+    card: none
+  - text: 試合は120分を戦って、0対0の引き分け。
+    card: {<<: *wccard, highlight_row: 3}
+  - text: PK戦は3対5で敗れ、日本は16強で大会を終えました。
+    card: {<<: *wccard, highlight_row: 4}
+  - text: 中村憲剛がピッチにいたのは、81分から120分までの、およそ39分間でした。
+    card: none
+    emph: true
+  - text: 120分の試合の、およそ3分の1です。
+    card: none
+  quotes_from:
+  - https://sportiva.shueisha.co.jp/clm/football/jfootball/2023/12/20/post_135/
+  sources:
+  - https://www.jfa.jp/national_team/news/00017760/
+  - https://sportiva.shueisha.co.jp/clm/football/jfootball/2023/12/20/post_135/
+- id: secret
+  heading: 出番を信じていた中村憲剛は、試合の前に何を感じていたのか
+  tier: 報道
+  telop: 数字の外にある、試合前日の話
+  card: &secretcard
+    type: table
+    title: 数字の外にある、3つの話
+    columns:
+    - いつ
+    - 何があったか
+    rows:
+    - - 試合の前日
+      - 体のキレが、いつになく良かった
+    - - 出場の瞬間
+      - ワクワクしかなかった
+    - - 試合の後
+      - 見返すたび、延長後半の1本が浮かぶ
+    source: Sportiva
+    highlight_row: 0
+  say:
+  - text: 中村憲剛の、数字の外にある話を。
+    image: assets/images/20261101_nakamura_kengo_legend/02_w.jpg
+    card: {<<: *secretcard, highlight_row: 0}
+  - text: パラグアイ戦の前日、中村憲剛は、自分でも驚くほど体のキレを感じていたといいます。
+    card: {<<: *secretcard, highlight_row: 0}
+  - text: ベンチの裏で走りながら、こう思っていたそうです。
+    card: none
+  - voice: 中村憲剛
+    text: これならやれる。
+    card: none
+  - text: 名前を呼ばれて、ピッチに出たときの気持ちも、話しています。
+    image: assets/images/20261101_nakamura_kengo_legend/02_w.jpg
+    card: {<<: *secretcard, highlight_row: 1}
+  - voice: 中村憲剛
+    text: 自分が決める、チームを助けたいという気持ちが強かったんで、
+    card: none
+  - voice: 中村憲剛
+    text: ワクワクしかなかった。
+    card: none
+    cont: true
+  - text: 敗れた瞬間、そのチームは解散になる。二度と、このメンバーでは戦えません。
+    card: none
+    emph: true
+  - voice: 中村憲剛
+    text: ここで終わりかぁと思うと、悲しかった。
+    card: none
+  - text: 日本に戻って、試合の映像を何度も見返した中村憲剛。
+    card: {<<: *secretcard, highlight_row: 2}
+  - text: 浮かぶのは、延長後半の、あの1本でした。
+    card: none
+  - voice: 中村憲剛
+    text: 今でも、ボールが目の前を通り過ぎていくのを思い出します。
+    card: none
+  quotes_from:
+  - https://sportiva.shueisha.co.jp/clm/football/jfootball/2023/12/20/post_135/
+  sources:
+  - https://sportiva.shueisha.co.jp/clm/football/jfootball/2023/12/20/post_135/
+- id: after
+  heading: 引退した中村憲剛は、いま、どこで何をしているのか
+  tier: 報道
+  telop: 引退会見から、ヘッドコーチへ
+  card: &aftercard
+    type: table
+    title: 引退と、そのあと
+    columns:
+    - いつ
+    - 何があったか
+    rows:
+    - - 2020年11月1日
+      - オンライン会見で引退を発表
+    - - 2021年〜
+      - クラブの役職、日本協会のコーチなど
+    - - 2026年1月
+      - 川崎のデベロップメントコーチに
+    - - 2026年7月
+      - 川崎のヘッドコーチに
+    highlight_row: 0
+  say:
+  - text: 2020年10月31日、40歳の誕生日。FC東京戦で、ゴールを決めました。
+    image: assets/images/20261101_nakamura_kengo_legend/02_w.jpg
+    card: {<<: *aftercard, highlight_row: 0}
+  - text: 翌11月1日の午後3時。オンライン会見に現れた中村憲剛は、こう切り出しました。
+    card: none
+  - voice: 中村憲剛
+    text: 私、川崎フロンターレ中村憲剛は、
+    card: none
+  - voice: 中村憲剛
+    text: 今季限りで引退することを発表します。
+    card: none
+    cont: true
+  - text: 川崎ひと筋、18年。ユニフォームを替えない選手人生でした。
+    card: none
+    emph: true
+  - text: 引退を発表した2020年、川崎は史上最速でJ1を制しました。
+    card: none
+  - text: 2024年12月14日には、等々力で引退試合が開かれました。
+    image: assets/images/20261101_nakamura_kengo_legend/12_w.jpg
+    card: none
+  - text: 集まったのは、2万2014人です。
+    image: assets/images/20261101_nakamura_kengo_legend/13_w.jpg
+    card: none
+    emph: true
+  - text: その売り上げの一部から、1000万円を川崎市サッカー協会に寄付しました。
+    image: assets/images/20261101_nakamura_kengo_legend/02_w.jpg
+    card: none
+  - text: 引退後は、クラブの役職や日本サッカー協会のコーチなど、いくつもの顔で活動します。
+    image: assets/images/20261101_nakamura_kengo_legend/02_w.jpg
+    card: {<<: *aftercard, highlight_row: 1}
+  - text: 2026年1月、トップチームのデベロップメントコーチに。
+    card: {<<: *aftercard, highlight_row: 2}
+  - text: 選手の技術やメンタルの育成を、受け持つ役目です。
+    card: none
+  - text: そして7月2日、長谷部茂利監督を支えるヘッドコーチに就任しました。
+    card: {<<: *aftercard, highlight_row: 3}
+    emph: true
+  - voice: 中村憲剛
+    text: そのすべてをこれからのフロンターレのために、
+    card: none
+  - voice: 中村憲剛
+    text: 発揮できたらと思っています。
+    card: none
+    cont: true
+  - text: ここまでは、2026年10月30日時点の情報です。
+    card: none
+  quotes_from:
+  - https://www.frontale.co.jp/one_four_kengo/
+  - https://web.gekisaka.jp/news/jleague/detail/?444259-444259-fl=
+  sources:
+  - https://www.frontale.co.jp/one_four_kengo/
+  - https://web.gekisaka.jp/news/jleague/detail/?444259-444259-fl=
+  - https://web.gekisaka.jp/news/soccer/detail/?439235-439235-fl=
+  - https://www4.targma.jp/tetsumaga/2024/12/19/post36282/
+  - https://www.frontale.co.jp/one_four_kengo/history.html
+  - https://web.gekisaka.jp/news/jleague/detail/?454785-454785-fl=
+- id: view
+  heading: 中村憲剛の68試合は、いつ、どれだけ積み上がったのか
+  tier: 背景
+  telop: 代表68試合と、本番の81分
+  viewpoint: true
+  card: &viewcard
+    type: table
+    title: 中村憲剛の数字を並べる
+    columns:
+    - 場面
+    - 試合
+    - 得点
+    rows:
+    - - 代表 2006〜2009
+      - '41'
+      - '5'
+    - - 代表 2010〜2013
+      - '27'
+      - '1'
+    - - W杯 2010
+      - '1'
+      - '0'
+    source: Wikipedia・川崎フロンターレ公式
+    highlight_row: 0
+  say:
+  - text: 最後に、中村憲剛の数字を並べます。
+    image: assets/images/20261101_nakamura_kengo_legend/02_w.jpg
+    card: {<<: *viewcard, highlight_row: 0}
+  - text: 代表の最初の4年、2006年から2009年は、1年あたり、10試合ほど。
+    card: {<<: *viewcard, highlight_row: 0}
+  - text: 2010年から2013年は、1年あたり、7試合ほどになります。
+    card: {<<: *viewcard, highlight_row: 1}
+    mark:
+      kind: circle
+      row: 1
+      col: 試合
+  - text: 出場の数は、25歳で入った最初の4年にいちばん積み上がっています。
+    card: {<<: *viewcard, highlight_row: 1}
+    emph: true
+  - text: 一方、ワールドカップは2010年の1試合。81分から立った、およそ39分間です。
+    image: assets/images/20261101_nakamura_kengo_legend/02_w.jpg
+    card: {<<: *viewcard, highlight_row: 2}
+  - text: その中の1本のクロスを、本人は後のインタビューでも語っています。
+    card: none
+  - text: 試合数と、心に残る時間の長さは、同じではない。
+    card: none
+    emph: true
+  - text: 呼ばれて立った側から、選手を送り出す側へ。それが、いまの中村憲剛です。
+    image: assets/images/20261101_nakamura_kengo_legend/02_w.jpg
+    card: none
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Kengo_Nakamura
+  - https://www.frontale.co.jp/info/2020/1101_2.html
+  - https://www.jfa.jp/national_team/news/00017760/
