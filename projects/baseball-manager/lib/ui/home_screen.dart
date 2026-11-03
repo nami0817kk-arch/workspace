@@ -578,11 +578,11 @@ class _BirthPreview extends StatelessWidget {
         if (p.skills.contains(k)) k
     ];
     final good = [
-      for (final a in abilitiesOf(role))
+      for (final a in mainAbilitiesOf(role))
         if (p.gift(a) >= 1) a
     ];
     final bad = [
-      for (final a in abilitiesOf(role))
+      for (final a in mainAbilitiesOf(role))
         if (p.gift(a) <= -1) a
     ];
     return Card(

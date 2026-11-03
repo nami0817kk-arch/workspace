@@ -1,5 +1,6 @@
 import 'package:baseball_manager/game/exp.dart';
 import 'package:baseball_manager/game/player.dart';
+import 'package:baseball_manager/ui/labels.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -80,5 +81,17 @@ void main() {
     expect(bat(90, 50).toBatter().power, greaterThan(bat(10, 50).toBatter().power));
     expect(bat(50, 90).defense, greaterThan(bat(50, 10).defense));
     expect(bat(50, 50).defense, 50);
+  });
+
+  test('投手の生まれの知らせは、投球の能力の天賦だけを言う(打撃・守備の不得手は言わない)', () {
+    final p = Player(
+        name: 't',
+        role: Role.pitcher,
+        age: 6,
+        potential: 50,
+        gifts: {Ability.stuff: 2, Ability.catching: -2});
+    final notes = birthTalentNotes(p).join('/');
+    expect(notes, contains('球速'));
+    expect(notes, isNot(contains('捕球')));
   });
 }
