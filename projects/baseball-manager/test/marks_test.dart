@@ -54,6 +54,17 @@ void main() {
     expect(injuryNameOf(20, 3), injuryNameOf(20, 3));
     expect(injuryNameOf(20, 3), isNotEmpty);
     expect(coachWordOf(_p(Role.batter, {Ability.speed: 10})), contains('走力'));
+    // 年齢で言い回しが替わり、4年続けて同じ一文にはならない(どれも弱い能力の名前は入る)
+    final words = {
+      for (var age = 20; age < 24; age++)
+        coachWordOf(_p(Role.batter, {Ability.speed: 10}).copyWith(age: age))
+    };
+    expect(words.length, 4);
+    for (final w in words) {
+      expect(w, contains('走力'));
+    }
+    // 得意との差が小さければ、釣り合いをほめる
+    expect(coachWordOf(_p(Role.batter, {})), contains('釣り合って'));
   });
 }
 

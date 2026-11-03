@@ -141,10 +141,22 @@ const _abilityWord = {
 };
 
 /// 1年の終わりのコーチのひとこと。いちばん低い能力を磨くよう勧める。
+/// 毎年同じ一文が並ばないよう、年齢で言い回しを替え、得意との差が小さければ釣り合いをほめる(2026-11-03)。
 String coachWordOf(Player p) {
-  final weakest = mainAbilitiesOf(p.role)
-      .reduce((a, b) => (p.abilities[b] ?? 0) < (p.abilities[a] ?? 0) ? b : a);
-  return 'コーチ「来年は${_abilityWord[weakest]}を磨こう」';
+  final main = mainAbilitiesOf(p.role);
+  int v(Ability a) => p.abilities[a] ?? 0;
+  final weakest = main.reduce((a, b) => v(b) < v(a) ? b : a);
+  final best = main.reduce((a, b) => v(b) > v(a) ? b : a);
+  final w = _abilityWord[weakest];
+  if (v(best) - v(weakest) <= 4) {
+    return 'コーチ「どの力も釣り合ってきた。この調子で、全部を少しずつ上げよう」';
+  }
+  return switch (p.age % 4) {
+    0 => 'コーチ「来年は$wを磨こう」',
+    1 => 'コーチ「$wにまだ伸びしろがある。来年はそこを鍛えよう」',
+    2 => 'コーチ「${_abilityWord[best]}はもう武器だ。あとは$wだな」',
+    _ => 'コーチ「$wが上がれば、もう一段上に行ける」',
+  };
 }
 
 /// 殊勲の試合の理由(ログの「★殊勲(猛打賞)」)。試合の中身から決める。
