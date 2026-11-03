@@ -1,3 +1,4 @@
+import 'package:baseball_manager/game/characters.dart';
 import 'package:baseball_manager/game/exp.dart';
 import 'package:baseball_manager/game/player.dart';
 import 'package:baseball_manager/game/snapshot.dart';
@@ -116,5 +117,14 @@ void main() {
       'abilities': {'stuff': 80, 'control': 60, 'stamina': 70},
     });
     expect(p.of(Ability.breaking), 70);
+  });
+
+  test('選球眼が得意だった仲間は、ミートが得意として読む', () {
+    final m = Character.fromJson(
+        {'id': 'm', 'name': '仲間', 'kind': 'teammate', 'specialty': 'eye'});
+    expect(m.specialty, Ability.contact);
+    final n = Character.fromJson(
+        {'id': 'n', 'name': '仲間', 'kind': 'teammate', 'specialty': 'speed'});
+    expect(n.specialty, Ability.speed);
   });
 }
