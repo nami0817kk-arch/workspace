@@ -1300,6 +1300,22 @@ void _rankTests() {
       expect(line, contains('投'));
     });
 
+    testWidgets('能力タブ: 投手は「投手」「打撃・守備」の見出しで分かれる。打者は見出しなし', (t) async {
+      final c = await _start(t);
+      c.newGame('テスト', Role.pitcher);
+      await t.pumpAndSettle();
+      await _tab(t, 'ability');
+      expect(find.byKey(const Key('ability-group-stuff')), findsOneWidget);
+      await t.scrollUntilVisible(
+          find.byKey(const Key('ability-group-contact')), 200,
+          scrollable: find.byType(Scrollable).first);
+      expect(find.byKey(const Key('ability-group-contact')), findsOneWidget);
+      c.newGame('テスト', Role.batter);
+      await t.pumpAndSettle();
+      await _tab(t, 'ability');
+      expect(find.byKey(const Key('ability-group-contact')), findsNothing);
+    });
+
     testWidgets('練習の名前は重点の能力で変わる(素振り→ノック)', (t) async {
       final c = await _start(t);
       c.newGame('テスト', Role.batter);

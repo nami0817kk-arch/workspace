@@ -1267,7 +1267,16 @@ class _AbilityCard extends StatelessWidget {
                         fontSize: 11, color: Color(0xFFC62828))),
               ),
             const SizedBox(height: 4),
-            for (final a in abilitiesOf(p.role))
+            for (final a in abilitiesOf(p.role)) ...[
+              if (_groupCaption(p.role, a) != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 6, bottom: 2),
+                  child: Text(_groupCaption(p.role, a)!,
+                      key: Key('ability-group-${a.name}'),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.primary)),
+                ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 2),
                 child: Row(children: [
@@ -1361,6 +1370,7 @@ class _AbilityCard extends StatelessWidget {
                   ),
                 ]),
               ),
+            ],
           ],
         ),
       ),
@@ -1493,6 +1503,17 @@ class _ActionCard extends StatelessWidget {
     );
   }
 }
+
+/// 能力の一覧の区切りの見出し(投手は「投手」「打撃・守備」、二刀流は「打者」「投手」)。打者は出さない。
+String? _groupCaption(Role r, Ability a) => switch (r) {
+      Role.batter => null,
+      Role.pitcher => a == pitcherAbilities.first
+          ? '投手'
+          : (a == batterAbilities.first ? '打撃・守備(先発した試合の打席と守備に効く)' : null),
+      Role.twoWay => a == batterAbilities.first
+          ? '打者'
+          : (a == pitcherAbilities.first ? '投手' : null),
+    };
 
 /// 連携の印の色(行動のどの色とも重ならない紫がかった青)。
 const _comboColor = Color(0xFF3949AB);
