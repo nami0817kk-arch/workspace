@@ -152,6 +152,14 @@ void markTests3() {
             pitcherBat: true));
     expect(pitcherBad, contains('競り負けた'));
     expect(rivalDuelLine(s, 15, 1, const Line()), isNull); // まだプロでない
+    // 毎年同じ一文にならない(年で言い回しが替わる)
+    final lines = {
+      for (var age = 22; age < 25; age++)
+        rivalDuelLine(s, age, 1,
+            const Line(atBats: 80, hits: 35, totalBases: 70, walks: 10))
+    };
+    expect(lines.length, 3);
+    expect(lines.every((l) => l!.contains('上回った')), isTrue);
     expect(paradeCrowd(80), greaterThan(paradeCrowd(0)));
     // 観客は球場の大きさで頭打ち(満員4.5万人)
     expect(attendanceOf(100, 0.7), 4.5);

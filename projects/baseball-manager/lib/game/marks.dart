@@ -259,7 +259,21 @@ String? rivalDuelLine(RivalStory s, int age, int slot, Line month) {
       (month.hasBatting && !month.pitcherBat && (month.ops ?? 0) >= 0.800) ||
           (month.hasPitching && (month.era ?? 99) <= 3.00);
   final n = s.name;
-  return good ? '${s.team}の$nとの直接対決。気迫で上回った!' : '${s.team}の$nとの直接対決。ここは競り負けた…';
+  // 一生で30回ほど出るので、年と月で言い回しを替える(2026-11-03)
+  final i = (age * 2 + slot) % 3;
+  final t = s.team;
+  if (good) {
+    return switch (i) {
+      0 => '$tの$nとの直接対決。気迫で上回った!',
+      1 => '$tの$nと火花を散らし、今月はこちらが上回った!',
+      _ => '$n($t)との対決を制し、気迫で上回った!',
+    };
+  }
+  return switch (i) {
+    0 => '$tの$nとの直接対決。ここは競り負けた…',
+    1 => '$n($t)に意地を見せられ、今月は競り負けた…',
+    _ => '$tの$nとの直接対決。わずかに競り負けた…',
+  };
 }
 
 /// 1試合の平均の観客数(万人)。人気と勝率から。球場の大きさがあるので、満員(4.5万人)で頭打ち
