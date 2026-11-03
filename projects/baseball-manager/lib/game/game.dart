@@ -673,6 +673,9 @@ class Game {
   /// 今年の練習(練習・特訓)と休養の回数。年末にログに出して戻す。
   /// 今季ここまでの月ごとの成績(4〜9月)。シーズンの記録に写して空にする。
   List<String> monthRows = [];
+
+  /// 最後にログに出した観客動員(万人)。保存しない(読み直したら次の月に一度出る)。
+  double? _lastCrowd;
   int trainCount = 0;
 
   /// 幼少期の分かれ道で選んだもの(出来事のid → 選択肢の番号)。
@@ -1503,8 +1506,15 @@ class Game {
         isInterleagueMonth(slotName) && !overseas ? '$slotName(交流戦)' : slotName;
     log.add('$month: ${d.isEmpty ? '' : '$d。'}チームは${m.wins}勝${m.losses}敗。');
     monthRows.add('$month: ${d.isEmpty ? '出場なし' : d} / ${m.wins}勝${m.losses}敗');
-    log.add(attendanceLine(popularityOf(records, worldRecords),
-        m.wins + m.losses == 0 ? 0.5 : m.wins / (m.wins + m.losses)));
+    // 観客動員は毎月出すと同じ数字が並ぶので、開幕の月・満員・大きく動いた月だけ出す
+    final pop = popularityOf(records, worldRecords);
+    final winPct = m.wins + m.losses == 0 ? 0.5 : m.wins / (m.wins + m.losses);
+    final crowd = attendanceOf(pop, winPct);
+    final last = _lastCrowd;
+    if (last == null || slot == 0 || crowd >= 4.5 || (crowd - last).abs() >= 0.3) {
+      log.add(attendanceLine(pop, winPct));
+      _lastCrowd = crowd;
+    }
     final rs = storyOfCharacter(cast.rival)?.avoiding(proTeam);
     final duel =
         rs == null ? null : rivalDuelLine(rs, player.age, slot, m.line);
