@@ -2756,8 +2756,10 @@ class _AdRecoveryButtonState extends State<_AdRecoveryButton> {
     final messenger = ScaffoldMessenger.maybeOf(context);
     final text = await widget.controller.recoverByAd();
     if (mounted) setState(() => _busy = false);
-    messenger?.hideCurrentSnackBar();
-    messenger?.showSnackBar(SnackBar(content: Text(text)));
+    // 動画を見ている間にアプリの画面ごと閉じられていたら出さない(特典はコントローラーが渡し済み)
+    if (messenger == null || !messenger.mounted) return;
+    messenger.hideCurrentSnackBar();
+    messenger.showSnackBar(SnackBar(content: Text(text)));
   }
 
   @override
@@ -3086,8 +3088,10 @@ class _AdRewardTileState extends State<_AdRewardTile> {
     final messenger = ScaffoldMessenger.maybeOf(context);
     final text = await widget.run();
     if (mounted) setState(() => _busy = false);
-    messenger?.hideCurrentSnackBar();
-    messenger?.showSnackBar(SnackBar(content: Text(text)));
+    // 動画を見ている間にアプリの画面ごと閉じられていたら出さない(特典はコントローラーが渡し済み)
+    if (messenger == null || !messenger.mounted) return;
+    messenger.hideCurrentSnackBar();
+    messenger.showSnackBar(SnackBar(content: Text(text)));
   }
 
   @override

@@ -653,6 +653,7 @@ soccer-manager / soccer-career の野球版。**中核は「試合中の采配�
 - **iOS ビルドは未検証**: google_mobile_ads / in_app_purchase を足したので、初回の CI ビルドで Pods が通るか見る。実機の広告・購入は TestFlight(Sandbox)で確かめる。
 - **ユーザーがやること**(ios-app-release スキル A-4 / A-5 / A-6): ① App Store Connect で課金アイテムを作る(製品ID・価格370円・審査用スクリーンショット) ② AdMob にアプリと広告ユニット(リワード・インタースティシャル)を作る ③ Secrets 3つ。公開前は本番の広告が届かないのが普通。
 - 踏まないこと(`docs/app-pitfalls.md`): 購入通知は待ち手がいなくても受け取る／報酬は `mounted` を見ない位置で渡す／広告は55分で捨てる／`await Ad.load` で待たない(`test/monetization_test.dart` が原文を見張る)。
+- 確かめるテストは3本(2026-11-03 に念入りにした): `test/monetization_test.dart`(決まり)・`test/store_purchase_test.dart`(本物の購入処理を偽の App Store につなぐ。届いた購入の受け取り・完了の順番・返金・承認待ち・2度押し・復元)・`test/ad_flow_test.dart`(動画は閉じるまで戻らない形の偽物で、見ている間に画面を離れる・広告を消すが届く・2度押し・アプリが裏・返金で広告が戻る・設定画面の案内)。広告や課金を触ったら3本とも通す。
 
 ### 11. 投手と打者のバランスを揃えた(2026-10-21 全体の品質点検)
 - `tool/balance.dart 600 normal` で、投手が打者よりプロに入りやすく(平凡 43%→62%)レジェンドも多い(3%→19%)偏りが出ていた。経験点は1能力あたりで揃っているが、投手は能力が3つで底上げが効き、経験点が1つの種類(投球)に集まるため。
