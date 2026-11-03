@@ -169,6 +169,8 @@ class Game {
               0x3fffffff);
     g.overallHistory.add(overall(p).round());
     g.yearStart = Map.of(p.abilities);
+    // 最初の年にも年齢の見出しを付ける(2年目からしか無く、ログの頭が見出しなしで始まっていた)
+    g.log.add('── ${p.age}歳 ──');
     g._note('stage', '${stageNameOf(Stage.youth)}を始めた');
     if (parent != null) {
       g._note('stage', '${parent.name}の子として生まれた(二世)');
