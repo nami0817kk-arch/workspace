@@ -1593,7 +1593,7 @@ class _PlanTile extends StatelessWidget {
               child: Column(mainAxisSize: MainAxisSize.min, children: [
                 Stack(clipBehavior: Clip.none, children: [
                   BadgeIcon(
-                    asset: planBadgeAsset(plan),
+                    asset: planBadgeAsset(plan, focus),
                     size: 34,
                     fallback: Container(
                       width: 34,
