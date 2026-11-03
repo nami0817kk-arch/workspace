@@ -38,13 +38,13 @@ void main() {
   });
 
   group('知らせ', () {
-    test('進路の知らせは19歳に1回、引退の知らせは引退の翌年に1回', () {
+    test('進路の知らせは18歳に1回、引退の知らせは引退の翌年に1回', () {
       for (final t in [45, 60, 75, 90]) {
         final s = storyOf('宮坂 凛', t);
         final all = <int, List<String>>{
           for (var age = 6; age <= 50; age++) age: rivalNews(s, age),
         };
-        expect(all[19], hasLength(1), reason: 'talent $t');
+        expect(all[18], hasLength(1), reason: 'talent $t');
         expect(
             all.values.expand((x) => x).where((l) => l.contains('引退')).length,
             1,
@@ -57,14 +57,14 @@ void main() {
       }
     });
 
-    test('高卒プロは19歳に入団の知らせ、大学組は大学進学→23歳に入団', () {
+    test('高卒プロは18歳に入団の知らせ、大学組は大学進学→22歳に入団(入団したその年)', () {
       final high = storyOf('宮坂 凛', 85);
-      expect(rivalNews(high, 19).single, contains('ドラフト1位で入団'));
+      expect(rivalNews(high, 18).single, contains('ドラフト1位で入団'));
       final mid = storyOf('宮坂 凛', 60);
-      expect(rivalNews(mid, 19).single, contains('大学に進学'));
-      expect(rivalNews(mid, 23).single, contains('${mid.team}にドラフト'));
+      expect(rivalNews(mid, 18).single, contains('大学に進学'));
+      expect(rivalNews(mid, 22).single, contains('${mid.team}にドラフト'));
       final low = storyOf('宮坂 凛', 45);
-      expect(rivalNews(low, 19).single, contains('社会人'));
+      expect(rivalNews(low, 18).single, contains('社会人'));
     });
 
     test('プロの途中は5年ごとに活躍を伝える', () {
