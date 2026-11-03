@@ -34,13 +34,35 @@ class MilestoneDialog extends StatelessWidget {
       milestone.kind == MilestoneKind.national ||
       milestone.kind == MilestoneKind.world;
 
-  /// 節目ごとの絵(ドラフト・優勝)。無ければアイコンを出す。
+  /// 節目ごとの絵。無ければアイコンを出す。
   (String, String)? get _image => switch (milestone.kind) {
         MilestoneKind.draft => (
             draftImageAsset,
             '指名の日の机。新しいユニフォーム・キャップ・グラブ・ボールが並んでいる'
           ),
         MilestoneKind.champion => (championImageAsset, '優勝カップと優勝旗。金色の紙吹雪が舞う球場'),
+        MilestoneKind.title => (
+            titleImageAsset,
+            'スポットライトの当たる赤い台に、金色のバットのトロフィーと金メダル'
+          ),
+        MilestoneKind.national => (
+            nationalImageAsset,
+            'ロッカールームのベンチに、たたんだユニフォームと帽子とグローブ。日の丸の小旗'
+          ),
+        // 「海を渡る!」(海外移籍)も同じ種類なので、世界一のときだけ
+        MilestoneKind.world when milestone.title == '世界一!' => (
+            worldImageAsset,
+            '花火の上がる夜の球場のマウンドに、金色の優勝カップ'
+          ),
+        // 「一軍昇格!」も同じ種類なので、進学(「○○へ」)のときだけ
+        MilestoneKind.stage when milestone.title.endsWith('へ') => (
+            stageImageAsset,
+            '満開の桜並木の先に学校の正門。ベンチに新しいバッグとグローブ'
+          ),
+        MilestoneKind.trait => (
+            traitImageAsset,
+            '夜のブルペンで、ホームベースの上の野球ボールが金色に光っている'
+          ),
         _ => null,
       };
 

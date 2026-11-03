@@ -39,6 +39,13 @@ const retireImageAsset = 'assets/images/ending_retire.jpg';
 const draftImageAsset = 'assets/images/ms_draft.jpg';
 const championImageAsset = 'assets/images/ms_champion.jpg';
 
+// 2026-11-03 に足した節目の絵(Gemini で作り、900x502 にそろえた。人物・文字なし)
+const titleImageAsset = 'assets/images/ms_title.jpg';
+const nationalImageAsset = 'assets/images/ms_national.jpg';
+const worldImageAsset = 'assets/images/ms_world.jpg';
+const stageImageAsset = 'assets/images/ms_stage.jpg';
+const traitImageAsset = 'assets/images/ms_trait.jpg';
+
 /// 段階ごとの背景の絵(育成画面の見出し)。段階が変わると、背景も変わる。
 String backdropAssetOf(Stage s) => switch (s) {
       Stage.youth => 'assets/images/bg_youth.jpg',
