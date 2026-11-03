@@ -58,7 +58,7 @@ Game play(int seed, Role role,
     switch (g.phase) {
       case Phase.term:
         g.autoSpend();
-        final abilities = abilitiesOf(g.player.role);
+        final abilities = mainAbilitiesOf(g.player.role);
         final focus = ([...abilities]
               ..sort((a, b) => g.player.of(a).compareTo(g.player.of(b))))
             .first;

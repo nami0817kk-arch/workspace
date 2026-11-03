@@ -85,7 +85,7 @@ void main(List<String> a) {
           if (g.canChooseGoal && r.nextInt(3) == 0) {
             g.chooseGoalLevel(r.nextInt(3));
           }
-          final ab = abilitiesOf(g.player.role);
+          final ab = mainAbilitiesOf(g.player.role);
           final plan = g.condition.fatigue >= 60
               ? Plan.rest
               : [

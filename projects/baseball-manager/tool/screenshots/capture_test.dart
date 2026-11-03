@@ -229,8 +229,8 @@ Game _until(bool Function(Game) stop,
       case Phase.term:
         g.choose(
             g.condition.fatigue >= 60 ? Plan.rest : Plan.train,
-            abilitiesOf(
-                g.player.role)[guard % abilitiesOf(g.player.role).length]);
+            mainAbilitiesOf(
+                g.player.role)[guard % mainAbilitiesOf(g.player.role).length]);
       case Phase.event:
         if (g.pendingEvent!.id == finalMomentId && stop(g)) return g;
         g.resolveEvent(g.pendingEvent!.id == finalMomentId ? 1 : 0);
