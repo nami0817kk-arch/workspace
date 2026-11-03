@@ -1530,7 +1530,10 @@ class Game {
     }
     final rs = storyOfCharacter(cast.rival)?.avoiding(proTeam);
     final duel =
-        rs == null ? null : rivalDuelLine(rs, player.age, slot, m.line);
+        // 二軍の年は一軍のライバルと当たらない(育成契約の1年目に「直接対決」が出ていた)
+        rs == null || onFarm
+            ? null
+            : rivalDuelLine(rs, player.age, slot, m.line);
     if (duel != null) log.add(duel);
     if (monthlyMvp(m.line, player.name, player.age, slot) && !onFarm) {
       log.add('$slotNameの月間MVPに選ばれた!');
