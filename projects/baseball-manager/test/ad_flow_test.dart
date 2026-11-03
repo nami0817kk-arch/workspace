@@ -10,6 +10,7 @@ import 'dart:math';
 import 'package:baseball_manager/game/game.dart' show Phase;
 import 'package:baseball_manager/game/life.dart';
 import 'package:baseball_manager/game/player.dart';
+import 'package:baseball_manager/game/talent.dart' show legacyPointsOf;
 import 'package:baseball_manager/monetization/ad_service.dart';
 import 'package:baseball_manager/monetization/monetization.dart';
 import 'package:baseball_manager/monetization/purchase_service.dart';
@@ -312,6 +313,42 @@ void main() {
     expect(displayPrice('\uFFE5370'), '\uFFE5370');
     expect(displayPrice(r'$2.99'), r'$2.99');
     expect(displayPrice(null), isNull);
+  });
+
+  test('継承ブーストを持っていると、引退の継承ポイントが2倍になり、そう表示する印が立つ', () async {
+    Future<GameController> retired({required bool boost}) async {
+      final (m, _, store) = await _open();
+      if (boost) await store.delivered!(PurchaseService.legacyBoostId);
+      final c = GameController(rng: Random(5), money: m);
+      c.newGame('継承', Role.batter);
+      final g = c.game!;
+      var n = 0;
+      while (g.phase != Phase.retired && n++ < 3000) {
+        switch (g.phase) {
+          case Phase.term:
+            c.act(Plan.train);
+          case Phase.event:
+            c.chooseEvent(0);
+          case Phase.pathChoice:
+            c.giveUp();
+          case Phase.retired:
+            break;
+        }
+      }
+      expect(c.game!.phase, Phase.retired);
+      return c;
+    }
+
+    final plain = await retired(boost: false);
+    final boosted = await retired(boost: true);
+    final e = boosted.game!.ending!;
+    final base = legacyPointsOf(madePro: e.madePro, title: e.title);
+    expect(base, greaterThan(0));
+    expect(plain.lastLegacyGain, legacyPointsOf(
+        madePro: plain.game!.ending!.madePro, title: plain.game!.ending!.title));
+    expect(plain.lastLegacyBoosted, isFalse);
+    expect(boosted.lastLegacyGain, base * 2);
+    expect(boosted.lastLegacyBoosted, isTrue);
   });
 
   group('設定画面の購入', () {

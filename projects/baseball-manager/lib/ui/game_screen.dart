@@ -2384,6 +2384,7 @@ class EndingView extends StatelessWidget {
                     leading: const Icon(Icons.card_giftcard,
                         color: Color(0xFFD84315)),
                     title: Text('継承ポイント +${controller.lastLegacyGain}'
+                        '${controller.lastLegacyBoosted ? '(継承ブーストで2倍)' : ''}'
                         '(いま ${controller.legacyPoints}pt)'),
                     subtitle: const Text(
                         '次の選手を始めるとき、図鑑にある特性を生まれつき持たせられます(良い特性3pt、レア8pt)。'),

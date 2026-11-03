@@ -841,6 +841,9 @@ class GameController extends ChangeNotifier {
   int legacyPoints = 0;
   int lastLegacyGain = 0;
 
+  /// 今回の引退の継承ポイントが、継承ブースト(買い切り)で2倍になったか(引退画面で効き目を見せる)。
+  bool lastLegacyBoosted = false;
+
   /// いま継承できる特性(図鑑にあり、役割に合い、ポイントが足りるもの)。
   List<Trait> carryCandidates(Role role) => [
         for (final t in Trait.values)
@@ -986,6 +989,7 @@ class GameController extends ChangeNotifier {
       Trait? carry]) {
     newlyUnlocked = const [];
     lastLegacyGain = 0;
+    lastLegacyBoosted = false;
     // 育成中の選手がいるなら、始め直す前に控えをとる。
     if (game != null && game!.phase != Phase.retired) {
       autoBackup('${game!.player.name}を始め直す前');
@@ -1462,6 +1466,7 @@ class GameController extends ChangeNotifier {
     seenTraits = {};
     legacyPoints = 0;
     lastLegacyGain = 0;
+    lastLegacyBoosted = false;
     newlyUnlocked = const [];
     recent = const [];
     pending.clear();
@@ -1562,8 +1567,9 @@ class GameController extends ChangeNotifier {
       autoBackup('${g.player.name}が引退したとき');
       final e = g.ending;
       if (e != null) {
+        lastLegacyBoosted = money?.legacyBoost == true;
         lastLegacyGain = legacyPointsOf(madePro: e.madePro, title: e.title) *
-            (money?.legacyBoost == true ? 2 : 1); // 継承ブースト(買い切り)は2倍
+            (lastLegacyBoosted ? 2 : 1); // 継承ブースト(買い切り)は2倍
         legacyPoints += lastLegacyGain;
         store.saveLegacy(legacyPoints);
       }
