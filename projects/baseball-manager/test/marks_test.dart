@@ -170,6 +170,11 @@ void markTests3() {
     };
     expect(lines.length, 3);
     expect(lines.every((l) => l!.contains('上回った')), isTrue);
+    // 同じ年の2回(5月・8月)も別の言い回しにする
+    const hot = Line(atBats: 80, hits: 35, totalBases: 70, walks: 10);
+    for (var age = 22; age < 30; age++) {
+      expect(rivalDuelLine(s, age, 1, hot), isNot(rivalDuelLine(s, age, 4, hot)));
+    }
     expect(paradeCrowd(80), greaterThan(paradeCrowd(0)));
     // 観客は球場の大きさで頭打ち(満員4.5万人)
     expect(attendanceOf(100, 0.7), 4.5);

@@ -269,7 +269,8 @@ String? rivalDuelLine(RivalStory s, int age, int slot, Line month) {
           (month.hasPitching && (month.era ?? 99) <= 3.00);
   final n = s.name;
   // 一生で30回ほど出るので、年と月で言い回しを替える(2026-11-03)
-  final i = (age * 2 + slot) % 3;
+  // 対決は5月(slot 1)と8月(slot 4)。slot の差が3なので % 3 では同じ年の2回が同じ文になっていた
+  final i = (age + (slot >= 4 ? 1 : 0)) % 3;
   final t = s.team;
   if (good) {
     return switch (i) {
