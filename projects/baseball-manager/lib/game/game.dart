@@ -1331,7 +1331,10 @@ class Game {
         // 同じ仲間とのタッグは、その年の最初の1回だけログに出す(一生で75回並んでいた)。
         // 頼んだ自主練(forced)は毎回出す。
         if (forced != null || _taggedThisYear.add(mate.id)) {
-          log.add('${mate.name}と友情タッグ練習!');
+          // 何を一緒に鍛えたか・どれだけ息が合っているかを添える(毎年同じ一文が並ばないように)
+          log.add(mate.bond >= 80
+              ? '${mate.name}と友情タッグ練習!(${_abilityJp(focus)}を一緒に。息がぴったりだ)'
+              : '${mate.name}と友情タッグ練習!(${_abilityJp(focus)}を一緒に)');
         }
       }
     }
