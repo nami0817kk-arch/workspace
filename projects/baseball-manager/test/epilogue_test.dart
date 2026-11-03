@@ -35,6 +35,12 @@ void main() {
     expect(t, isNot(contains('ユニフォームを脱いだ')));
   });
 
+  test('プロになれなくても、優勝やライバルとの日々を添える', () {
+    final t = epilogueOf(_e(madePro: false, proYears: 0, rw: 6, rl: 2), 'ユウタ');
+    expect(t, contains('優勝'));
+    expect(t, contains('ライバル'));
+  });
+
   test('称号ごとに文が変わる', () {
     final legend = epilogueOf(_e(title: 'レジェンド'), 'ユウタ');
     final regular = epilogueOf(_e(title: 'レギュラー'), 'ユウタ');
