@@ -242,8 +242,10 @@ String? rivalDuelLine(RivalStory s, int age, int slot, Line month) {
   final pa = s.proAge;
   if (pa == null || age < pa || age > s.retireAge) return null;
   if (slot != 1 && slot != 4) return null;
-  final good = (month.hasBatting && (month.ops ?? 0) >= 0.800) ||
-      (month.hasPitching && (month.era ?? 99) <= 3.00);
+  // 投手の打席(月に数打席)のOPSでは決めない(投球が悪くても「上回った」になっていた)
+  final good =
+      (month.hasBatting && !month.pitcherBat && (month.ops ?? 0) >= 0.800) ||
+          (month.hasPitching && (month.era ?? 99) <= 3.00);
   final n = s.name;
   return good ? '${s.team}の$nとの直接対決。気迫で上回った!' : '${s.team}の$nとの直接対決。ここは競り負けた…';
 }

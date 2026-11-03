@@ -126,6 +126,20 @@ void markTests3() {
     expect(good, contains('上回った'));
     expect(bad, contains('競り負け'));
     expect(rivalDuelLine(s, 22, 0, const Line()), isNull); // 対決は決まった月だけ
+    // 投手の打席がよくても、投球が悪ければ競り負け(打席の数が少ないので見ない)
+    final pitcherBad = rivalDuelLine(
+        s,
+        22,
+        1,
+        const Line(
+            faced: 120,
+            outs: 60,
+            runsRaw: 40,
+            atBats: 6,
+            hits: 4,
+            totalBases: 8,
+            pitcherBat: true));
+    expect(pitcherBad, contains('競り負けた'));
     expect(rivalDuelLine(s, 15, 1, const Line()), isNull); // まだプロでない
     expect(paradeCrowd(80), greaterThan(paradeCrowd(0)));
     // 観客は球場の大きさで頭打ち(満員4.5万人)

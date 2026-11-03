@@ -1543,7 +1543,8 @@ class Game {
     }
     final l = prog.line;
     final pop = popularityOf(records, worldRecords);
-    final good = (l.hasBatting && (l.ops ?? 0) >= 0.800) ||
+    // 投手の打席(数打席)のOPSでは選ばない
+    final good = (l.hasBatting && !l.pitcherBat && (l.ops ?? 0) >= 0.800) ||
         (l.hasPitching && (l.era ?? 99) <= 3.00);
     if (!good && pop < 55) return;
     log.add('ファン投票とリーグ推薦で、オールスターに選ばれた!');
