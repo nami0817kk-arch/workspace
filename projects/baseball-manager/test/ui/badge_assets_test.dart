@@ -26,17 +26,10 @@ void main() {
       stageImageAsset,
       traitImageAsset,
     ];
-    var total = 0;
+    // 絵の大きさ・合計には上限を設けない(2026-11-03 ユーザー指示)。あるかだけ確かめる。
     for (final a in paths.toSet()) {
-      final f = File(a);
-      expect(f.existsSync(), isTrue, reason: a);
-      final size = f.lengthSync();
-      expect(size, lessThan(200 * 1024), reason: '$a が重い');
-      total += size;
+      expect(File(a).existsSync(), isTrue, reason: a);
     }
-    // 全部で 1.6MB を超えない(アプリを重くしない)。2026-11-03 に節目の絵5枚と投手の練習の絵を足して
-    // 約1.4MB になったので 1.2MB から上げた(同梱のフォントは約12MBあり、絵はその1割ほど)。
-    expect(total, lessThan(1600 * 1024));
   });
 
   test('投球の能力を重点にした「練習」は投げる絵、打撃なら打つ絵', () {
