@@ -39,7 +39,10 @@ void main() {
         await _hasImage(t, const Milestone(MilestoneKind.stage, '一軍昇格!', 'x')),
         isTrue);
     expect(
-        await _hasImage(t, const Milestone(MilestoneKind.world, '準優勝', 'x')),
+        await _hasImage(
+            t, const Milestone(MilestoneKind.achievement, '育成ミッション達成!', 'x')),
+        isTrue);
+    expect(await _hasImage(t, const Milestone(MilestoneKind.world, '準優勝', 'x')),
         isFalse);
     expect(t.takeException(), isNull);
   });

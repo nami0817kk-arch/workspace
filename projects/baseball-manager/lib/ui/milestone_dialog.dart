@@ -67,6 +67,10 @@ class MilestoneDialog extends StatelessWidget {
             stageImageAsset,
             '満開の桜並木の先に学校の正門。ベンチに新しいバッグとグローブ'
           ),
+        MilestoneKind.achievement => (
+            missionImageAsset,
+            '夕焼けのグラウンドのベンチに、使い込んだグローブとボールと金色の星のメダル'
+          ),
         MilestoneKind.trait => (
             traitImageAsset,
             '夜のブルペンで、ホームベースの上の野球ボールが金色に光っている'
