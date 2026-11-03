@@ -478,7 +478,8 @@ final List<GameEvent> events = [
           '付き合う',
           (p, c, f) => (
             player: _gain(p, f, 1),
-            condition: c.copyWith(morale: c.morale + 8)
+            // 2026-11-03: 疲れなしで能力1・やる気8は、遊ぶ(やる気6・疲れ-5)より明らかに得だった
+            condition: c.copyWith(morale: c.morale + 5, fatigue: c.fatigue + 5)
           ),
           (cast, rng) => cast.family?.addBond(10),
         ),
@@ -776,7 +777,8 @@ final List<GameEvent> events = [
           '毎日手入れして使い込む',
           (p, c, f) => (
             player: _gain(p, Ability.fielding, 2),
-            condition: c.copyWith(morale: c.morale + 10)
+            // 2026-11-03: 能力2とやる気10で、自慢(やる気14)を選ぶ理由がなかった
+            condition: c.copyWith(morale: c.morale + 4)
           ),
         ),
         EventChoice(
@@ -1109,12 +1111,15 @@ final List<GameEvent> events = [
             'じっくり話し込む',
             (p, c, f) => (
                   player: _gain(p, Ability.control, 2),
-                  condition: c.copyWith(morale: c.morale + 4)
+                  // 2026-11-03: 疲れなしで能力2・やる気4は、ほぼ一択だった
+                  condition: c.copyWith(morale: c.morale + 2, fatigue: c.fatigue + 6)
                 )),
         EventChoice(
             '自分の感覚を信じて投げる',
-            (p, c, f) =>
-                (player: p, condition: c.copyWith(morale: c.morale + 6))),
+            (p, c, f) => (
+                  player: _gain(p, Ability.stuff, 1),
+                  condition: c.copyWith(morale: c.morale + 8)
+                )),
       ],
       roles: const {Role.pitcher, Role.twoWay},
       weight: 0.5),
