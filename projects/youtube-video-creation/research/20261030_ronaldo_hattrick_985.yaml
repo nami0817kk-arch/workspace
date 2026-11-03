@@ -1,0 +1,167 @@
+# 取材メモ（2026年10月30日）C・ロナウド、15分間のハットトリック。通算985点、1000点まで残り15（ショートだけ・見せ方 Y＝本人の一言から始める）
+# 取材: 2026-10-30。題材の元は 20261030_topics_src.yaml の 11。出典URLは 20261030_candidates.yaml の添字 14・47・61・25・135・214。
+#   本文を実際に読んだもの（requests、ブラウザUA。ESPN は記事API now.core.api.espn.com/v1/sports/news/50321759 で本文全部）:
+#   ・ESPN「Ronaldo 15 shy of 1,000 career goals after 15-minute hat trick」（添字14）— 5-3、66・72・81分、通算985、メッシ936で49差、
+#       ハットトリック通算67回（レアル44・代表10・アル・ナスル7・ユナイテッド3・ユベントス3）、フェリックス4アシスト、アル・ナスルは勝ち点28で2位、
+#       試合後のSNS投稿「Great win, great team performance. Happy to help with a hat-trick!」。PA の情報を使った記事。
+#   ・サッカーキング（添字47、2222783）— スコアと得点者の全部、前半にVARで取り消し、66分フェリックスのお膳立て、72分ヘディング、81分マネの折り返し、41歳。
+#   ・フットボールチャンネル（添字61）— 前半に2度ネットを揺らしたがどちらもオフサイド、後半の15分間のハットトリック、公式戦通算985（クラブと代表）。
+#   ・A Bola（添字214、abola.pt）— ハットトリック67回目。前回は2024年5月4日、アル・ウィフダ戦（2年半前）。前半の2ゴールがオフサイドで取り消し（1つはVARの精密な判定）。
+#       フェリックスが4アシスト（マネが決められなかった81分の場面で、マネ→ロナウドのアシストになった）。
+#   ・キッカー（添字25）・AS（添字135）は403で本文は読めず（見出しだけ）→ 使っていない。
+#   試合: サウジ・プロリーグ第12節 アル・ナスル 5-3 アル・ホロード・クラブ（現地29日、ESPN は「Thursday」）。
+#   得点: 16分ドミンゲス（ホロード）0-1／24分アンジェロ 1-1／38分マネ 2-1／45+2分エソンバ（ホロード）2-2／66分・72分・81分ロナウド 5-2／90+4分ドミンゲス（PK、ESPNとFC）5-3。
+#   自分で数えたこと: 66→81分＝15分間。ハットトリックの内訳 44+10+7+3+3＝67（足して確かめた）。985−936＝49（ESPNの「49差」と一致）。
+#       1000−985＝15、15÷3＝3点のハットトリック5回分。
+# 言わないこと: 今日・明日の試合の予定（次のアル・ナスルの試合は読んでいない）、ポルトガル代表の招集（見出しだけ）、B.O.A.T.（10/29 の ronaldo_2008_boat）、
+#   メッシとの優劣、「衰え」「まだ」など選手を小さく見せる言い方、ロナウドがオフサイドの判定に不満を見せた様子（A Bola にあるが個人の態度なので触れない）、
+#   10/10 の980点・10/24 の982点（サッカーキングの見出しだけ。ペースの計算には使わない）、反応（作らない）。
+# 本人の言葉: ある → 型は Y。ESPN が「試合後にSNSに投稿した」と書いた英語の一文を訳した（原文のまま、足し引きなし）。
+#   原文: "Great win, great team performance. Happy to help with a hat-trick!" → 「素晴らしい勝利。チームの出来も素晴らしかった。ハットトリックで力になれて、うれしい。」
+#   投稿の原本（Xなど）は読んでいない。ESPN の引用による。
+# 確度: 試合の結果・得点・時間は 確定に近い報道（ESPN・サッカーキング・フットボールチャンネルで一致）。通算985・67回・内訳は報道（ESPN・A Bola・FC の985が一致）。
+#   2年半ぶり（前回2024年5月4日）は A Bola 1社＝報道。見立て（5回分）は自分で数えたもの＝背景。
+# 反応: 作らない（0件）。承認は --no-voices。
+# 写真: Commons から本人名指しで4枚（CC0 の2025年1枚＋CC BY の2023年3枚）。10/29 の ronaldo_2008_boat の写真（2026年7月のポルトガル代表2枚・ユナイテッド1枚）とは重ならない。
+#   アル・ナスルの黄色いユニフォームの写真。2023年のものは3年前（今季ではない）。
+slot: other_1
+date: "2026年10月30日"
+format: news
+no_main: true
+people: [クリスティアーノ・ロナウド]
+
+short_style: Y
+short_hook_quote: 素晴らしい勝利でした。
+short_photos:
+  - assets/images/20261030_ronaldo_hattrick_985/01_v.jpg
+  - assets/images/20261030_ronaldo_hattrick_985/02_v.jpg
+  - assets/images/20261030_ronaldo_hattrick_985/03_v.jpg
+
+short_question: あなたは、1000点に届くのはいつ頃だと思いますか。
+short_hook: ロナウド、15分間のハットトリック。
+short_telops:
+  - {match: 素晴らしい勝利でした, text: ロナウド/試合後の投稿}
+  - {match: 5対3, text: アル・ナスル 5-3 アル・ホロード/サウジ・プロリーグ第12節}
+  - {match: 15分間, text: 66分・72分・81分/15分間のハットトリック}
+  - {match: オフサイド, text: 前半は2度/オフサイドで取り消し}
+  - {match: 4アシスト, text: フェリックス/4アシスト}
+  - {match: 67回目, text: ハットトリックは通算67回目/前回は2024年5月4日}
+  - {match: 985, text: 通算985ゴール/1000まで残り15}
+  - {match: 5回分, text: 残り15点/ハットトリック5回分}
+
+theme:
+  id: ronaldo_hattrick_985
+  league: ""
+  league_name: ""
+  prefix: ""
+  title: ロナウド、15分間のハットトリック。試合後に本人が投稿した言葉
+  hook: ""
+  question: 15分間のハットトリックのあと、ロナウドは何を投稿し、1000点まであと何点なのか
+  takeaway: 通算985点は、1000点まで15点。ハットトリック5回分で、2位との差は49点
+
+thumbnail:
+  line1: ロナウド 通算985点
+  line2: 15分間のハットトリック
+  tags: [クリスティアーノ・ロナウド]
+  photo: assets/images/20261030_ronaldo_hattrick_985/01_w.jpg
+  short_photo: assets/images/20261030_ronaldo_hattrick_985/01_v.jpg
+
+answer: 15分間で3点。通算985点で、1000点まで残り15
+watch: ロナウドの通算1000点まで残り15
+
+sections:
+  - id: what
+    main: true
+    heading: 何が起きたか
+    tier: 報道
+    telop: ロナウド、15分間のハットトリック
+    say:
+      - text: 29日のアル・ナスル対アル・ホロード戦のあと、ロナウドはこう投稿しました。
+        image: assets/images/20261030_ronaldo_hattrick_985/01_w.jpg
+      - voice: ロナウド
+        text: 素晴らしい勝利でした。
+        short_voice: true
+        image: assets/images/20261030_ronaldo_hattrick_985/02_w.jpg
+      - voice: ロナウド
+        text: チームの出来も、素晴らしかった。
+        cont: true
+      - voice: ロナウド
+        text: ハットトリックで力になれて、うれしいです。
+        cont: true
+      - text: 同点で迎えた後半、66分、72分、81分にゴール。
+        image: assets/images/20261030_ronaldo_hattrick_985/03_w.jpg
+      - text: わずか15分間のハットトリックで、アル・ナスルが2点差をつけて勝ちました。
+        image: assets/images/20261030_ronaldo_hattrick_985/01_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50321759/ronaldo-15-shy-1000-goals-15-minute-hat-trick
+      - https://www.soccer-king.jp/news/world/asia/20261030/2222783.html
+
+  - id: goals
+    heading: 3つのゴール
+    tier: 報道
+    telop: 前半の2ゴールは取り消し。後半に3ゴール
+    say:
+      - text: ロナウドは前半、2度ネットを揺らしました。
+        image: assets/images/20261030_ronaldo_hattrick_985/02_w.jpg
+      - text: ただ、どちらもオフサイドで、取り消されています。
+        image: assets/images/20261030_ronaldo_hattrick_985/01_w.jpg
+      - text: 後半の66分は、ジョアン・フェリックスのパスから決めました。
+        image: assets/images/20261030_ronaldo_hattrick_985/03_w.jpg
+        card:
+          type: table
+          title: ロナウドの3ゴール
+          columns: [時間, ゴール, きっかけ]
+          rows:
+            - ["66分", "ゴール前で決める", "フェリックスのパス"]
+            - ["72分", "ヘディング", "フェリックスのクロス"]
+            - ["81分", "ゴール前で決める", "マネの折り返し"]
+          highlight_row: 0
+      - text: 72分は、跳び上がってのヘディングです。
+        image: assets/images/20261030_ronaldo_hattrick_985/01_w.jpg
+        card:
+          type: table
+          title: ロナウドの3ゴール
+          columns: [時間, ゴール, きっかけ]
+          rows:
+            - ["66分", "ゴール前で決める", "フェリックスのパス"]
+            - ["72分", "ヘディング", "フェリックスのクロス"]
+            - ["81分", "ゴール前で決める", "マネの折り返し"]
+          highlight_row: 1
+      - text: 81分は、マネが相手GKを引きつけて折り返したボールを、押し込みました。
+        image: assets/images/20261030_ronaldo_hattrick_985/02_w.jpg
+        card:
+          type: table
+          title: ロナウドの3ゴール
+          columns: [時間, ゴール, きっかけ]
+          rows:
+            - ["66分", "ゴール前で決める", "フェリックスのパス"]
+            - ["72分", "ヘディング", "フェリックスのクロス"]
+            - ["81分", "ゴール前で決める", "マネの折り返し"]
+          highlight_row: 2
+      - text: フェリックスはこの試合、4アシストでした。
+        image: assets/images/20261030_ronaldo_hattrick_985/03_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/10/30/post1042701/
+      - https://www.abola.pt/noticias/cristiano-ronaldo-volta-aos-hat-tricks-dois-anos-e-meio-depois-videos-2026102919514922935
+
+  - id: view
+    viewpoint: true
+    heading: ロナウドの1000点まで、あと15点
+    tier: 背景
+    telop: 通算985点。残り15点は、ハットトリック5回分
+    say:
+      - text: これで、ロナウドは通算985ゴール。1000点まで、残り15です。
+        image: assets/images/20261030_ronaldo_hattrick_985/01_w.jpg
+      - text: ハットトリックは、通算67回目。前回は2024年5月4日で、2年半ぶりでした。
+        image: assets/images/20261030_ronaldo_hattrick_985/02_w.jpg
+      - text: 見立てです。残り15点は、3点ずつなら、ハットトリック5回分です。
+        image: assets/images/20261030_ronaldo_hattrick_985/03_w.jpg
+      - text: 通算得点の2位、メッシは936点。ロナウドとの差は49点あります。
+        image: assets/images/20261030_ronaldo_hattrick_985/01_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50321759/ronaldo-15-shy-1000-goals-15-minute-hat-trick
+short_title: "ロナウド、15分間のハットトリック。試合後に本人が投稿した言葉"

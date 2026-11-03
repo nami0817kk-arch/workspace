@@ -1,0 +1,151 @@
+# 取材メモ（2026年10月30日）フランス協会がベンゲルをFIFA会長選の対抗馬に推す（ショートだけ・見せ方 X＝冒頭に強い一言）
+# 取材: 2026-10-30。題材の元は 20261030_topics_src.yaml の 20、記事は candidates[180]（vi.nl「Frankrijk steunt Wenger als uitdager van Infantino」、29日16:39。requests で本文を全部読んだ）。
+#   vi.nl の本文で確かめたこと:
+#     ・フランス協会（FFF）のフィリップ・ディアロ会長が木曜（29日）、「同国人のベンゲルが、インファンティーノに挑む理想の候補だと協会は考える」と明かした。
+#     ・選挙は2027年3月。ヨーロッパの加盟協会はインファンティーノに厳しい。「本気の対抗馬はまだ居ない」。
+#     ・ディアロ会長の言葉（オランダ語に訳された形で読んだ。原文はウエスト・フランス紙とされる。直接の原文は開けず）:
+#         「時間は刻々と過ぎている」「UEFAは複数の候補に声をかけ、人物像を作ったと思う。11月18日までに候補が出ると見込む」（11月18日は立候補の締め切り）
+#         「彼の資質は疑いようがない。国際的な知名度もあり、多くの条件に合う」「ただ、こうしたことは個人の判断が大きい。（要求の大きい役目に）身を投じたいのか。最後は本人が決めること」
+#     ・ベンゲル本人の発言・立候補の表明は、本文に無い。ディアロ会長の「本人が決めること」が本文のいちばん近い箇所。→ 台本は「推した」までにとどめ、「本人は表明していない」と言う。
+#     ・勝ち目: 最近アジア連盟が考えを変え、インファンティーノは過半数に向かっているように見える。いま挑んでいるのは同国人（スイス人）のラモン・ベガ（元トッテナムのDF）だけで、本気の脅威には見えない（本文）。
+#   確かめた裏づけ（本人の不表明）:
+#     ・Gulf News（BBC Sport の10/15の報を引く。requests で本文を読んだ）: ベンゲルは立候補の意思を示していない。2019年からFIFAの「グローバル・フットボール・ディベロップメント」責任者。ベガが名乗りを上げている唯一の人。
+#     ・Voetbalkrant（10/17、L'Équipe を引くとある。本文を読んだ）: 選挙は2027年3月18日（ラバト）、候補の届け出は11月18日まで。ディアロ会長はベンゲルの国際的な存在感を認め、対抗馬探しに協力したい、とも。
+#     ・Arseblog（8月4日）: ベンゲル自身の声明は「FIFAの商業の子会社の計画に関わっておらず、中止は絶対に必要だった」。→ 今回は使わない（話が広がる）。
+#   FFFの一次: フランス協会は9月10日にインファンティーノの再選支持を取り下げた（Irish Times。ディアロ会長が「フットボールのイメージと団結を深く傷つけた」と）。→ 台本には入れない（時間が足りず、今回の題から離れる）。
+#   L'Équipe の本文・ウエスト・フランスの原文・FFFの発表は、検索と直接の取得で見つからず（WebSearch で一次の記事は出ず、Ouest-France は未取得）。→ ディアロ会長の言葉は vi.nl（オランダ語）経由の「報道」。
+# 言わないこと: ベンゲルが立候補する／しない（本人は未表明）、勝ち目の予想、UEFA が誰に声をかけたか（vi.nl に名前なし）、「FIFAのトップを批判した」などの本人の言葉（無い）、
+#   名古屋の話（10/28 の監督紹介で扱った）、任期の三期上限をめぐる争い（時間が足りない）、W杯の持ち分を売る計画の細部（今回の題から離れる）。
+# 本人の言葉: 無い（ベンゲル本人の言葉は取れていない）。ディアロ会長の言葉は取れたが、会長は題の「本人・監督」ではない → 型は X。
+# 確度: 協会が推したこと・ディアロ会長の言葉は報道（vi.nl 1社。Voetbalkrant の10/17の報と一致）。本人の不表明は報道（Gulf News/BBC、Voetbalkrant）。選挙日・締め切りは報道2社の一致。
+#   「19日」は自分で数えた（10月30日→11月18日）。
+# 反応: 作らない（0件）。
+# 写真: Commons から本人と確認できる写真を取った（10/28 の監督紹介の7枚とは別のファイル）。
+slot: other_2
+date: "2026年10月30日"
+format: news
+no_main: true
+people: [ベンゲル, ディアロ, インファンティーノ, ラモン・ベガ]
+
+short_style: X
+short_hook_word: 対抗馬
+short_photos:
+  - assets/images/20261030_wenger_fifa/01_v.jpg
+  - assets/images/20261030_wenger_fifa/02_v.jpg
+  - assets/images/20261030_wenger_fifa/03_v.jpg
+  - assets/images/20261030_wenger_fifa/04_v.jpg
+
+short_question: ベンゲルがFIFA会長に挑む姿を見たいですか。
+short_hook: フランス協会が、ベンゲルをFIFA会長選の対抗馬に推しました。本人は、まだ何も言っていません。
+short_telops:
+  - {match: 対抗馬, text: ベンゲルを推す/FIFA会長選}
+  - {match: 11月18日, text: 立候補の締め切り/11月18日}
+  - {match: 表明, text: ベンゲル本人/立候補は未表明}
+
+theme:
+  id: wenger_fifa
+  league: ""
+  league_name: ""
+  prefix: ""
+  title: ベンゲルをFIFA会長選の対抗馬に、フランス協会が推す。本人は？
+  hook: ""
+  question: ベンゲルは、FIFA会長選に出るのか
+  takeaway: フランス協会が推しただけで、ベンゲル本人は立候補を表明していない。候補の届け出の締め切りは11月18日、残りは19日
+
+thumbnail:
+  line1: ベンゲルを対抗馬に
+  line2: FIFA会長選、本人は？
+  tags: [ベンゲル]
+  photo: assets/images/20261030_wenger_fifa/01_w.jpg
+  short_photo: assets/images/20261030_wenger_fifa/01_v.jpg
+
+answer: フランス協会がベンゲルを推した。ベンゲル本人は立候補を表明していない
+watch: ベンゲルがFIFA会長選に出るのか
+
+sections:
+  - id: what
+    main: true
+    heading: フランス協会が、ベンゲルを推した
+    tier: 報道
+    telop: フランス協会が、ベンゲルを推す
+    say:
+      - text: フィファの会長選挙は、来年3月です。
+        short_only: true
+        image: assets/images/20261030_wenger_fifa/04_w.jpg
+        card: none
+      - text: いまのところ、現職のインファンティーノ会長に挑む有力な対抗馬は、決まっていません。
+        short_only: true
+        image: assets/images/20261030_wenger_fifa/04_w.jpg
+        card: none
+      - text: 29日、フランスサッカー協会のディアロ会長が、ベンゲルを推すと明かしました。
+        emph: true
+        image: assets/images/20261030_wenger_fifa/01_w.jpg
+        card: none
+      - voice: ディアロ会長
+        text: 彼の資質は疑いようがない。国際的な知名度もある。
+        image: assets/images/20261030_wenger_fifa/01_w.jpg
+        card: none
+      - text: 協会は、元アーセナル監督のベンゲルが、理想の挑戦者だと考えています。
+        image: assets/images/20261030_wenger_fifa/02_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.vi.nl/nieuws/frankrijk-steunt-wenger-als-uitdager-van-infantino
+      - https://www.voetbalkrant.com/nieuws/2026-10-17/opvallend-arsene-wenger-kan-gianni-infantino-van-fifa-voorzitterschap-houden
+
+  - id: himself
+    heading: ベンゲル本人は、どう言っているのか
+    tier: 報道
+    telop: 本人は、立候補を表明していない
+    say:
+      - text: ではベンゲル本人は、どうなのか。立候補は、表明していません。
+        image: assets/images/20261030_wenger_fifa/02_w.jpg
+        card: none
+      - text: ディアロ会長も、最後は本人が決めることだと話しています。
+        image: assets/images/20261030_wenger_fifa/03_w.jpg
+        card: none
+      - text: ベンゲルは2019年から、フィファで世界のサッカーの発展を担っています。
+        image: assets/images/20261030_wenger_fifa/03_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.vi.nl/nieuws/frankrijk-steunt-wenger-als-uitdager-van-infantino
+      - https://gulfnews.com/sport/is-wenger-going-to-challenge-infantino-for-fifa-presidency-1.500711903
+      - https://www.voetbalkrant.com/nieuws/2026-10-17/opvallend-arsene-wenger-kan-gianni-infantino-van-fifa-voorzitterschap-houden
+
+  - id: view
+    viewpoint: true
+    heading: 届け出の締め切りまで、あと19日
+    tier: 背景
+    telop: 締め切りは11月18日、あと19日
+    say:
+      - text: 見立てです。焦点は、候補者の届け出の締め切りです。
+        image: assets/images/20261030_wenger_fifa/04_w.jpg
+        card: none
+      - text: 締め切りは11月18日。10月30日から数えて、あと19日です。
+        emph: true
+        image: assets/images/20261030_wenger_fifa/04_w.jpg
+        card: {type: table, title: 会長選のスケジュール, columns: [いつ, 何が], rows: [[11月18日, 立候補の締め切り], [2027年3月, 会長選挙]], highlight_row: 0}
+      - text: ディアロ会長は、それまでに候補が出ると見込んでいます。
+        image: assets/images/20261030_wenger_fifa/01_w.jpg
+        card: none
+      - text: いま名乗りを上げているのは、元トッテナムのディフェンダー、ラモン・ベガ1人です。
+        image: assets/images/20261030_wenger_fifa/02_w.jpg
+        card: none
+      - text: 一方、アジア連盟が考えを変えた、とも報じられています。
+        image: assets/images/20261030_wenger_fifa/03_w.jpg
+        card: none
+      - text: 現職のインファンティーノ会長が、過半数に近づいたといいます。
+        image: assets/images/20261030_wenger_fifa/03_w.jpg
+        card: none
+      - text: ベンゲルが出れば、いまの職場のトップに挑む形です。
+        image: assets/images/20261030_wenger_fifa/04_w.jpg
+        card: none
+      - text: 出るかどうかは、本人の決断しだいです。
+        image: assets/images/20261030_wenger_fifa/04_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.vi.nl/nieuws/frankrijk-steunt-wenger-als-uitdager-van-infantino
+      - https://gulfnews.com/sport/is-wenger-going-to-challenge-infantino-for-fifa-presidency-1.500711903
+short_title: "ベンゲルをFIFA会長選の対抗馬に、フランス協会が推す。本人は？"
