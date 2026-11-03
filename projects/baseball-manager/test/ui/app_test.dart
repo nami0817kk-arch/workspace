@@ -1298,6 +1298,25 @@ void _rankTests() {
       expect(line, contains('投'));
     });
 
+    testWidgets('投手の重点は投球の4つが先に出て、「打撃・守備」で開くと打撃の7つが出る', (t) async {
+      final c = await _start(t);
+      c.newGame('テスト', Role.pitcher);
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('focus-stuff')), findsOneWidget);
+      expect(find.byKey(const Key('focus-breaking')), findsOneWidget);
+      expect(find.byKey(const Key('focus-contact')), findsNothing);
+      await t.ensureVisible(find.byKey(const Key('focus-more')));
+      await t.tap(find.byKey(const Key('focus-more')));
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('focus-contact')), findsOneWidget);
+      expect(find.byKey(const Key('focus-catching')), findsOneWidget);
+      // 打者は最初から全部出る(開く札は無い)
+      c.newGame('テスト', Role.batter);
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('focus-more')), findsNothing);
+      expect(find.byKey(const Key('focus-catching')), findsOneWidget);
+    });
+
     testWidgets('練習の名前は重点の能力で変わる(素振り→ノック)', (t) async {
       final c = await _start(t);
       c.newGame('テスト', Role.batter);
