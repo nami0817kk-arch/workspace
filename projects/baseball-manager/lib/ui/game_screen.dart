@@ -1429,22 +1429,8 @@ class _ActionCard extends StatelessWidget {
                 onPressed: () => _showYearPlan(context, game),
               ),
             ]),
-            Wrap(
-                spacing: 4,
-                crossAxisAlignment: WrapCrossAlignment.center,
-                children: [
-                  Text('重点', style: Theme.of(context).textTheme.labelMedium),
-                  for (final a in abilities)
-                    ChoiceChip(
-                      key: Key('focus-${a.name}'),
-                      visualDensity: VisualDensity.compact,
-                      showCheckmark: false,
-                      labelPadding: EdgeInsets.zero,
-                      label: Text(abilityLabel(a)),
-                      selected: a == focus,
-                      onSelected: (_) => controller.setFocus(a),
-                    ),
-                ]),
+            _FocusChips(
+                controller: controller, role: game.player.role, focus: focus),
             if (combos.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.only(top: 4),
@@ -1514,6 +1500,61 @@ String? _groupCaption(Role r, Ability a) => switch (r) {
           ? '打者'
           : (a == pitcherAbilities.first ? '投手' : null),
     };
+
+/// 重点の能力のチップ。投手は投球の4つだけ先に出し、打撃・守備(7つ)は「打撃・守備」で開く
+/// (11個並ぶと3行になって、行動のタイルが画面の下に押し出されるため)。
+class _FocusChips extends StatefulWidget {
+  const _FocusChips(
+      {required this.controller, required this.role, required this.focus});
+  final GameController controller;
+  final Role role;
+  final Ability focus;
+
+  @override
+  State<_FocusChips> createState() => _FocusChipsState();
+}
+
+class _FocusChipsState extends State<_FocusChips> {
+  bool _open = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final main = mainAbilitiesOf(widget.role);
+    final extra = [
+      for (final a in abilitiesOf(widget.role))
+        if (!main.contains(a)) a
+    ];
+    final showExtra = _open || extra.contains(widget.focus);
+    Widget chip(Ability a) => ChoiceChip(
+          key: Key('focus-${a.name}'),
+          visualDensity: VisualDensity.compact,
+          showCheckmark: false,
+          labelPadding: EdgeInsets.zero,
+          label: Text(abilityLabel(a)),
+          selected: a == widget.focus,
+          onSelected: (_) => widget.controller.setFocus(a),
+        );
+    return Wrap(
+        spacing: 4,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: [
+          Text('重点', style: Theme.of(context).textTheme.labelMedium),
+          for (final a in main) chip(a),
+          if (extra.isNotEmpty) ...[
+            ActionChip(
+              key: const Key('focus-more'),
+              visualDensity: VisualDensity.compact,
+              labelPadding: EdgeInsets.zero,
+              avatar: Icon(showExtra ? Icons.expand_less : Icons.expand_more,
+                  size: 18),
+              label: const Text('打撃・守備'),
+              onPressed: () => setState(() => _open = !showExtra),
+            ),
+            if (showExtra) for (final a in extra) chip(a),
+          ],
+        ]);
+  }
+}
 
 /// 連携の印の色(行動のどの色とも重ならない紫がかった青)。
 const _comboColor = Color(0xFF3949AB);

@@ -287,6 +287,9 @@ void main() {
     ), after: () async {
       await t.tap(find.byKey(const Key('tab-ability')));
       await t.pumpAndSettle();
+      // 能力が7つになったので、最後(捕球)まで見えるように少し送る
+      await t.drag(find.byType(ListView).first, const Offset(0, -60));
+      await t.pumpAndSettle();
     });
 
     // 3. 決勝の見せ場。
