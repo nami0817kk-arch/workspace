@@ -45,7 +45,7 @@ dependencies:
   url_launcher: ^6.3.1
   package_info_plus: ^10.2.1
   google_mobile_ads: ^9.1.0
-  in_app_purchase: ^3.3.0
+  in_app_purchase: ^3.3.1
   # ストアの評価をその場で頼む(OSの小さな窓)。年3回までOS側が制限する。
   in_app_review: ^2.0.9
 
