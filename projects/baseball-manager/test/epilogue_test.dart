@@ -43,6 +43,12 @@ void main() {
     expect(legend, isNot(regular));
   });
 
+  test('引退後の道も称号で分かれる(独身で10年以上のとき)', () {
+    expect(epilogueOf(_e(title: 'レジェンド'), 'ユウタ'), contains('解説者'));
+    expect(epilogueOf(_e(title: '一流選手'), 'ユウタ'), contains('コーチ'));
+    expect(epilogueOf(_e(title: 'レギュラー'), 'ユウタ'), contains('少年野球'));
+  });
+
   test('二刀流・ライバル・結婚の一文が足される', () {
     final t =
         epilogueOf(_e(twoWay: true, rw: 8, rl: 2, partner: '宮坂 葵'), 'ユウタ');

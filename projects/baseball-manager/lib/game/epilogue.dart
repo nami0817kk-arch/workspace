@@ -76,7 +76,12 @@ String epilogueOf(Ending e, String name,
     final kids = childrenOf(e.partnerName!);
     parts.add('引退後は、${e.partnerName}と$kids人の子どもに囲まれて、穏やかな毎日を送っている。');
   } else if (e.madePro && e.proYears >= 10) {
-    parts.add('引退後は、少年野球の子どもたちに教える日々が待っている。');
+    // 称号で引退後の道を分ける(どの一生でも同じ一文になっていた。2026-11-03)
+    parts.add(switch (e.title) {
+      'レジェンド' => '引退後は、解説者として野球の奥深さを伝え、いつか監督として球場に戻る日を待たれている。',
+      '一流選手' => '引退後は、コーチとして若い選手を育てる道へ進んだ。',
+      _ => '引退後は、少年野球の子どもたちに教える日々が待っている。',
+    });
   }
   return parts.join('\n');
 }
