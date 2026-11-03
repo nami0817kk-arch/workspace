@@ -7,7 +7,7 @@ import 'skills.dart';
 /// 良いものだけでなく、代償のあるもの・悪いものもある。
 enum Trait {
   lateBloomer('大器晩成', '少年期は伸びが鈍いが、高校から大きく伸び、衰えも遅い。', true),
-  earlyBloomer('早熟', '若いうちは伸びが大きいが、衰えも早い。', false),
+  earlyBloomer('早熟', '若いうちは伸びが大きいが、20歳から伸びが鈍り、衰えも早い。', false),
   hardWorker('努力家', '練習の伸びが1割増える。', true),
   genius('天才肌', '伸びが2割増える。', true),
   sturdy('頑丈', '怪我をしにくい。', true),
@@ -30,7 +30,7 @@ enum Trait {
   studious('研究熱心', '「研究」で貯まる特殊能力のコツが1つ多い。', true),
   moody('ムラっ気', '気持ちの上下が激しい(上がるのも下がるのも1.3倍)。', false),
   slowRecovery('疲れが抜けにくい', '休養で疲れが抜けにくい(0.6倍)。', false),
-  lonely('一匹狼', '友情タッグの経験点が減る(0.6倍)が、練習の伸びは1割増える。', false),
+  lonely('一匹狼', '友情タッグの経験点が減る(0.6倍)が、練習の伸びは2割増える。', false),
 
   // ── レア特性(生まれつき4%、または節目の「覚醒」でしか手に入らない) ──
   monster('怪物', '規格外。伸びが1割ほど増え、衰えも1割ゆるやか。', true),
@@ -173,13 +173,17 @@ double growthMultiplier(Set<Trait> t, int age) {
   // 中学までは鈍く(0.85倍)、高校(16歳)から大きく伸び(1.4倍)、衰えも遅い(`declineMultiplier`)。
   // talent_audit: プロ入りは特性なしと同じくらい、レジェンドは多い(打者 7%・投手 11%、基準 1〜2%)。
   if (t.contains(Trait.lateBloomer)) m *= age < 16 ? 0.85 : 1.4;
-  if (t.contains(Trait.earlyBloomer)) m *= age < 16 ? 1.3 : 1.0;
+  // 2026-11-03: 早熟は「若いうちだけ」のはずが、16歳までの1.3倍だけで全特性で最も強い部類だった
+  // (プロ入り 62〜68%・レジェンド 21〜23%)。16歳までは1.15倍、20歳からは鈍る(0.8倍)形にした。
+  // talent_audit: プロ入りしやすい(打者 46%・投手 55%)が、レジェンドにはなりにくい(3〜4%)。
+  if (t.contains(Trait.earlyBloomer)) m *= age < 16 ? 1.15 : (age < 20 ? 1.0 : 0.8);
   if (t.contains(Trait.hardWorker)) m *= 1.1;
   if (t.contains(Trait.genius)) m *= 1.2;
   if (t.contains(Trait.monster)) m *= 1.12;
   // 2026-11-03: 1.15倍だと怪我(1.8倍)を差し引いても特性なしより強かった(悪い特性なのにプロ入り +10pt)。
   if (t.contains(Trait.glassBody)) m *= 1.05;
-  if (t.contains(Trait.lonely)) m *= 1.1;
+  // 一匹狼は、友情タッグ0.6倍に対して1.1倍では足りず、特性なしよりプロ入りが11pt低かった(2026-11-03)
+  if (t.contains(Trait.lonely)) m *= 1.2;
   return m;
 }
 

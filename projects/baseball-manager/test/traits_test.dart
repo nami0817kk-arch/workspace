@@ -273,8 +273,13 @@ void main() {
       expect(worldBonus({Trait.worldStage}), 10);
       expect(moraleGainMultiplier({Trait.moody}), greaterThan(1));
       expect(moraleLossMultiplier({Trait.moody}), greaterThan(1));
-      // 一匹狼は練習の伸びが1割増える
-      expect(growthMultiplier({Trait.lonely}, 20), closeTo(1.1, 1e-9));
+      // 一匹狼は練習の伸びが2割増える
+      expect(growthMultiplier({Trait.lonely}, 20), closeTo(1.2, 1e-9));
+      // 早熟は若いうちだけ伸び、20歳からは鈍る
+      expect(growthMultiplier({Trait.earlyBloomer}, 12), greaterThan(1.0));
+      expect(growthMultiplier({Trait.earlyBloomer}, 22), lessThan(1.0));
+      // 大器晩成は高校から大きく伸びる
+      expect(growthMultiplier({Trait.lateBloomer}, 17), greaterThan(1.0));
     });
 
     test('コーチは、役割に合わない特殊能力を教えない', () {
