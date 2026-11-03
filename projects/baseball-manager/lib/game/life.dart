@@ -1054,9 +1054,12 @@ final List<GameEvent> events = [
                       c.copyWith(morale: c.morale + 8, fatigue: c.fatigue + 3)
                 )),
         EventChoice(
+            // 2026-11-03: やる気+1だけで、話を聞く(やる気+8)の一択だった。浮いた時間で練習できる
             '自分で考えろと伝える',
-            (p, c, f) =>
-                (player: p, condition: c.copyWith(morale: c.morale + 1))),
+            (p, c, f) => (
+                  player: _gain(p, f, 1),
+                  condition: c.copyWith(morale: c.morale + 1)
+                )),
       ],
       when: (stage, cast) => stage == Stage.pro || stage == Stage.highSchool,
       weight: 0.5),
