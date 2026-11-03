@@ -284,8 +284,8 @@ class Game {
   int peakAbility = 0;
 
   /// いまの能力まで含めた peakAbility。
-  int get peakAbilityNow => max(peakAbility,
-      player.abilities.values.fold<int>(0, (a, v) => max(a, v)));
+  int get peakAbilityNow => max(
+      peakAbility, player.abilities.values.fold<int>(0, (a, v) => max(a, v)));
   int championships = 0;
   bool _wasTwoWay = false;
   final List<double> achievements = []; // アマの大会ごとの実績
@@ -658,7 +658,8 @@ class Game {
 
   /// 最近起きた出来事(同じものが続かないように。保存はしない)。
   final List<String> _recentEvents = [];
-  static const _recentEventWindow = int.fromEnvironment('BAL_EVWIN', defaultValue: 12);
+  static const _recentEventWindow =
+      int.fromEnvironment('BAL_EVWIN', defaultValue: 12);
 
   /// 今年の目標。年の初めに決まり、大会(プロはシーズン)の成績で達成かどうかが決まる。
   Goal? goal;
@@ -684,7 +685,6 @@ class Game {
   /// 幼少期の分かれ道で選んだもの(出来事のid → 選択肢の番号)。
   final Map<String, int> childhood = {};
   int restCount = 0;
-
 
   /// 特殊能力のコツ(0〜`maxSkillTips`)。貯まるほど安く取れる。
   Map<Skill, int> skillTips = {};
@@ -1518,7 +1518,10 @@ class Game {
     final winPct = m.wins + m.losses == 0 ? 0.5 : m.wins / (m.wins + m.losses);
     final crowd = attendanceOf(pop, winPct);
     final last = _lastCrowd;
-    if (last == null || slot == 0 || crowd >= 4.5 || (crowd - last).abs() >= 0.3) {
+    if (last == null ||
+        slot == 0 ||
+        crowd >= 4.5 ||
+        (crowd - last).abs() >= 0.3) {
       log.add(attendanceLine(pop, winPct));
       _lastCrowd = crowd;
     }
@@ -1616,12 +1619,14 @@ class Game {
         cast.rivalWins++;
         ach = min(100, ach + 5);
         condition = condition.copyWith(morale: condition.morale + 10);
-        rivalLine = 'ライバルの${rival.name}との今年の勝負は、こちらの勝ち!';
+        rivalLine = rivalYearLine(rival.name,
+            won: true, wins: cast.rivalWins, losses: cast.rivalLosses);
       } else {
         rivalWon = false;
         cast.rivalLosses++;
         condition = condition.copyWith(morale: condition.morale - 8);
-        rivalLine = 'ライバルの${rival.name}との今年の勝負は、向こうの勝ち…';
+        rivalLine = rivalYearLine(rival.name,
+            won: false, wins: cast.rivalWins, losses: cast.rivalLosses);
       }
       rival.addBond(5);
     }
@@ -1889,7 +1894,8 @@ class Game {
       final total = ups.fold<int>(0, (t, u) => t + u.$3 - u.$2);
       if (total > 0) {
         // 伸びた能力が多い(投手は11個)と一行が長すぎるので、8つ以上なら伸びの大きい5つまでにする
-        final top = [...ups]..sort((x, y) => (y.$3 - y.$2).compareTo(x.$3 - x.$2));
+        final top = [...ups]
+          ..sort((x, y) => (y.$3 - y.$2).compareTo(x.$3 - x.$2));
         // 打者(7つ)は全部出す。「ほか2能力」のために切るとかえって読みにくい
         final shown = top.take(ups.length <= 7 ? ups.length : 5).toList();
         final more = ups.length - shown.length;

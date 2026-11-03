@@ -635,3 +635,38 @@ String profileText(PlayerSnapshot s) {
     if (s.endingTitle != null) '称号: ${s.endingTitle}',
   ].join('\n');
 }
+
+/// ライバルとの1年の勝負の行。通算の勝敗を添え、流れ(初対決・五分に戻す・抜き返す・連勝)で言い方を変える。
+/// [wins]/[losses] は今年の分を足したあとの通算。毎年同じ一文が30回並ぶのを避ける(2026-11-03)。
+String rivalYearLine(String name,
+    {required bool won, required int wins, required int losses}) {
+  final tally = '(通算$wins勝$losses敗)';
+  final total = wins + losses;
+  if (total == 1) {
+    return won
+        ? 'ライバルの$nameとの初めての勝負は、こちらの勝ち! $tally'
+        : 'ライバルの$nameとの初めての勝負は、向こうの勝ち… $tally';
+  }
+  if (won) {
+    if (wins == losses) return 'ライバルの$nameに勝ち、五分に戻した! $tally';
+    if (wins == losses + 1) return 'ライバルの$nameに勝ち、通算で抜き返した! $tally';
+    if (losses == 0 && wins % 5 == 0) {
+      return 'ライバルの$nameに$wins年続けて勝った。負け知らず! $tally';
+    }
+    return switch (total % 3) {
+      0 => 'ライバルの$nameとの今年の勝負は、こちらの勝ち! $tally',
+      1 => '今年もライバルの$nameを上回った! $tally',
+      _ => 'ライバルの$nameとの競り合いを制した! $tally',
+    };
+  }
+  if (wins == losses) return 'ライバルの$nameに敗れ、五分に戻された… $tally';
+  if (losses == wins + 1) return 'ライバルの$nameに敗れ、通算で抜かれた… $tally';
+  if (wins == 0 && losses % 5 == 0) {
+    return 'ライバルの$nameに$losses年続けて敗れた… $tally';
+  }
+  return switch (total % 3) {
+    0 => 'ライバルの$nameとの今年の勝負は、向こうの勝ち… $tally',
+    1 => '今年はライバルの$nameに一歩及ばなかった… $tally',
+    _ => 'ライバルの$nameとの競り合いに敗れた… $tally',
+  };
+}
