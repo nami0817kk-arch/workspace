@@ -1,0 +1,156 @@
+# 日本人以外の大きい話 の取材メモ（2026年10月12日）
+# 1本＝1テーマ。まとめではなく、1つの話を掘る
+# 埋めたら python -m src.cli draft このファイル で台本になる
+slot: world
+date: "2026年10月12日"
+topic: "ラツィオ"
+people:
+  - "ガットゥーゾ"
+
+# 試合記録は ESPN（event 401874951）で確かめた：3分 Nuno Tavares、23分 Isaksen、35分 Lucchesi 退場、
+#   46分 Goglichidze（頭）、88分 Pinamonti。会場はオリンピコ。
+# 順位は ESPN の順位表（6試合 勝ち点16、インテルも16）と Corriere の「インテルと並んで首位（in vetta insieme all'Inter）」。
+# 発言の原文：
+#   Corriere（ラジオ）"E' sembrata la fotocopia della partita col Milan. Il primo tempo poteva finire anche essere quattro a zero
+#     per noi, mentre nel secondo tempo pronti, via e abbiamo preso il gol e poi è stata solo sofferenza. ... mezzo e mezzo non si può fare."
+#   TMW 会見 "non mi è mai capitato di cambiare due centrali in una partita, ho oltre 300 partite in carriera e non mi è mai successo."
+#   TMW 会見 "Li ho sostituiti perché erano ammoniti ... rischiavamo di rimanere in dieci"
+#   TMW 会見 "non dobbiamo guardare alla classifica altrimenti gira la testa"
+# 反応は X の個人の投稿（イタリア語、全文）を訳した。報道・転載のアカウントは外した。
+#   @LazialiVeg "Una Lazio spenta nel secondo tempo, nonostante il Monza giochi in 10… Ma purtroppo per chi gufa… #Pinamonti ha segnato"
+#   @Galla_SSL "Non mi è piaciuto per niente il secondo tempo, troppi svarioni, per fortuna l'abbiamo chiusa. Pedalare, forza #Lazio"
+#   @matteoduranti10 "Se siamo intelligenti questa è una vittoria che ti forgia per come è arrivata dopo questo secondo tempo."
+# 写真：ガットゥーゾは Commons の2013年（シオン時代、CC BY-SA 3.0 / Ludovic Péron）。監督になってからの自由な写真が無い。
+#   記事の写真は TMW が Image Photo Agency（代理店）、Corriere は出どころ不明なので使わない。
+#   縦長で16:9に顔が入らないので、オリンピコ（Commons、CC BY 2.0 / filip bossuyt）と2枚並べた（tools/pairphoto.py）。
+#   ショートはガットゥーゾ1人の縦写真。切った絵は開いて頭と顎が入っているのを見た。
+
+theme:
+  id: "lazio_gattuso"
+  league: "italy"
+  prefix: ""
+  title: "ラツィオ、3対1で勝ってもガットゥーゾ監督が許さなかったこと"
+  hook: ""
+  question: "前半2対0で勝っていたのに、監督が後半を許さなかったのは何が起きたからか"
+  takeaway: "11人対11人の35分で2点。相手が10人になってからの55分あまりは1対1。数で上回った時間のほうが、点の差は開かなかった"
+  opening_image: assets/images/20261012_world_1_lazio_pair/01.jpg
+
+thumbnail:
+  photo: assets/images/20261012_world_1_lazio_pair/01.jpg
+  short_photo: assets/images/20261012_world_1_lazio/01_v.jpg
+  line1: "ガットゥーゾが激怒"
+  line2: "3対1で勝ったのに●●"
+  tags:
+    - "ラツィオ"
+    - "ガットゥーゾ"
+
+answer: "相手が10人になってからの55分あまりを1対1で終えた。監督は、後半の入り方をミラン戦の繰り返しと見ている"
+watch: "次の試合で、後半の入り方が変わるか"
+
+sections:
+  - id: score
+    heading: 試合はこうなった
+    tier: 報道
+    telop: "3対1　オリンピコ"
+    say:
+      - "ガットゥーゾ監督のラツィオは、ホームでモンツァを3対1で破りました。"
+      - "3分にヌーノ・タヴァレス、23分にイサクセンが決めて、前半は2対0のリード。"
+      - "35分には、モンツァのルッケージが退場しました。"
+    official: false
+    sources:
+      - "https://www.espn.com/soccer/report/_/gameId/401874951"
+
+  - id: count
+    heading: 11人対10人で、何が起きたか
+    tier: 報道
+    telop: "11人対11人で2対0、11人対10人で1対1"
+    viewpoint: true
+    say:
+      - text: "数えてみると、11人対11人だった最初の35分で、ラツィオは2点。"
+        card: {type: table, title: 人数ごとのスコア, columns: [時間, 人数, ラツィオ, モンツァ], rows: [['0〜35分', '11対11', '2', '0'], ['35分〜終了', '11対10', '1', '1']], highlight_row: 0}
+      - text: "ところが相手が10人になってからの55分あまりは、1対1の引き分けでした。"
+        card: {type: table, title: 人数ごとのスコア, columns: [時間, 人数, ラツィオ, モンツァ], rows: [['0〜35分', '11対11', '2', '0'], ['35分〜終了', '11対10', '1', '1']], highlight_row: 1}
+      - text: "数で上回っていた時間のほうが、点の差は開かなかったのです。"
+        card: {type: table, title: 人数ごとのスコア, columns: [時間, 人数, ラツィオ, モンツァ], rows: [['0〜35分', '11対11', '2', '0'], ['35分〜終了', '11対10', '1', '1']], highlight_row: 1}
+    official: false
+    sources:
+      - "https://www.espn.com/soccer/report/_/gameId/401874951"
+
+  - id: words
+    heading: 監督が許さなかった後半
+    tier: 報道
+    telop: "ガットゥーゾ監督の言葉"
+    main: true
+    say:
+      - text: "ラツィオは3対1で勝ちましたが、ガットゥーゾ監督は後半に怒っていました。"
+        short_only: true
+      - "試合後、ガットゥーゾ監督は後半をこう振り返りました。"
+      - voice: ガットゥーゾ監督
+        text: "後半にこうなるのは、初めてじゃない。"
+      - voice: ガットゥーゾ監督
+        text: "ミラン戦のコピーのようだった。"
+        cont: true
+      - voice: ガットゥーゾ監督
+        text: "前半は4対0で終わってもおかしくなかった。"
+        cont: true
+      - voice: ガットゥーゾ監督
+        text: "なのに後半は、始まってすぐに失点した。"
+        cont: true
+      - voice: ガットゥーゾ監督
+        text: "あとは苦しむだけだった。"
+        cont: true
+      - voice: ガットゥーゾ監督
+        text: "半分だけ良い試合では、だめなんだ。"
+    official: false
+    sources:
+      - "https://www.corrieredellosport.it/news/calcio/serie-a/lazio/2026/10/11-151812247/gattuso_dopo_il_tris_al_monza_siamo_stati_ancora_fortunati_ma_alla_prossima_saremo_puniti"
+      - "https://www.tuttomercatoweb.com/serie-a/lazio-gattuso-2282153"
+
+  - id: centrebacks
+    heading: 後半に起きたこと
+    tier: 報道
+    telop: "46分に失点、センターバックを2人とも交代"
+    say:
+      - text: "46分、モンツァのゴグリチゼに頭で1点を返されました。"
+        card: {type: table, title: 後半の得点, columns: [分, チーム, 得点した選手], rows: [['46分', 'モンツァ', 'ゴグリチゼ'], ['88分', 'ラツィオ', 'ピナモンティ']], highlight_row: 0}
+      - text: "88分のピナモンティのゴールで、ようやく3対1で勝ち切りました。"
+        card: {type: table, title: 後半の得点, columns: [分, チーム, 得点した選手], rows: [['46分', 'モンツァ', 'ゴグリチゼ'], ['88分', 'ラツィオ', 'ピナモンティ']], highlight_row: 1}
+      - text: "後半、ガットゥーゾ監督はセンターバックを2人とも代えました。"
+        card: none
+      - "2人とも警告を受けていて、こちらも10人になる危険があったからです。"
+      - voice: ガットゥーゾ監督
+        text: "300試合以上やってきて、"
+      - voice: ガットゥーゾ監督
+        text: "センターバックを2人とも代えたのは初めてだ。"
+        cont: true
+    official: false
+    sources:
+      - "https://www.tuttomercatoweb.com/serie-a/lazio-conferenza-stampa-gennaro-gattuso-2282180"
+
+  - id: table
+    heading: インテルと並んで首位
+    tier: 報道
+    telop: "勝ち点16　インテルと並んで首位"
+    say:
+      - "この勝利でラツィオは勝ち点16。インテルと並んで首位に立ちました。"
+      - voice: ガットゥーゾ監督
+        text: "順位表は見ちゃいけない。頭がくらくらするから。"
+    official: false
+    sources:
+      - "https://www.corrieredellosport.it/news/calcio/serie-a/lazio/2026/10/11-151812247/gattuso_dopo_il_tris_al_monza_siamo_stati_ancora_fortunati_ma_alla_prossima_saremo_puniti"
+      - "https://www.tuttomercatoweb.com/serie-a/lazio-conferenza-stampa-gennaro-gattuso-2282180"
+
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: "「後半は全然好きじゃない」"
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: モンツァが10人なのに後半は消えてた…でも負けを願う人には残念、ピナモンティが決めた
+      - voice: ネット民
+        text: 後半は全然好きじゃない。ミスが多すぎた。運よく締めたけど。走れ、行けラツィオ
+      - voice: ネット民
+        text: 賢ければ、あの後半のあとに取ったこの勝利は、チームを鍛えてくれる
+    sources:
+      - "https://x.com/search?q=%23LazioMonza%20secondo%20tempo%20-filter%3Alinks%20lang%3Ait&f=live"

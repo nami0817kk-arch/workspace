@@ -1,0 +1,137 @@
+# 日本人選手 の取材メモ（2026年10月12日）
+# 試合記録は ESPN（event 401884778）：10分 エッゲシュタイン、30分 カラマン、49分 鈴木に警告、64分 鈴木に2枚目の警告で退場、
+#   69分 後藤 IN、83分 グリフォ IN、85分 後藤（頭、グリフォのクロス）。後藤のシュートはこの1本だけ。
+# 後藤のブンデスリーガの記録は ESPN の選手別の試合記録（2026-27）：8/30・9/5・9/12・9/19・10/11 の5試合で、得点は今回の1点だけ。
+#   ドイツのリーグは今季のフライブルクが初めて（それまではアンデルレヒト・シント＝トロイデン）。
+# 順位は ESPN（フライブルク 5試合 勝ち点13で1位）。
+# 鈴木の言葉は開幕戦（8/30 ブレーメン戦 4-1、ハットトリック）のあと：
+#   "Today was perfect. We want to continue like that"（theScore の記事）
+# 反応は X の個人の投稿（全文）：@tjmjpjwm・@asrada_gsx・@iemoy19。報道・まとめのアカウントは外した。
+# 写真：鈴木は Commons（File:Suzuki buteur.jpg、CC BY-SA 4.0 / Hugob67、ストラスブール時代）。顔が横の85〜92%にあるので本編の板と重ならない。
+#   後藤は Commons が 429 を返して取れていない。
+#   後藤の話（69分の行）からは、鈴木の顔を映し続けないよう、また反応の白い箱が顔にかからないよう本拠地の外観（Commons、CC BY-SA 4.0 / Andreas Schwarzkopf）に1回だけ切り替える。後藤の写真は Commons に無い（同名のプロレスラーしか出ない）。
+#   facecrop は右端のチームメイトを主役と取り違えたので、縦は --center 0.53 で鈴木を真ん中にした（開いて見た）。
+slot: japan
+date: "2026年10月12日"
+topic: "鈴木唯人"
+people:
+  - "鈴木唯人"
+  - "後藤啓介"
+
+theme:
+  id: "freiburg_suzuki_goto"
+  league: "germany"
+  prefix: ""
+  title: "鈴木唯人が退場した10人のフライブルク、決勝点を決めたのは"
+  hook: ""
+  question: "鈴木唯人の退場で10人になったフライブルクは、どうやって勝ち切ったのか"
+  takeaway: "退場から21分後の85分に決勝点。決めたのは後藤啓介で、ブンデスリーガ5試合目の初ゴール。シュートはこの1本だけだった"
+  opening_image: assets/images/20261012_japan_1_yuito/01_w.jpg
+
+thumbnail:
+  photo: assets/images/20261012_japan_1_yuito/01_w.jpg
+  short_photo: assets/images/20261012_japan_1_yuito/01_v.jpg
+  line1: "鈴木唯人 退場"
+  line2: "10人で決めたのは●●"
+  tags:
+    - "鈴木唯人"
+    - "後藤啓介"
+
+answer: "69分に入った後藤啓介が、85分にグリフォのクロスを頭で決めた。フライブルクは2対1で勝ち、首位に立った"
+watch: "後藤が次の試合で先発に入るか。鈴木が出場停止明けにどう戻るか"
+
+sections:
+  - id: score
+    heading: 試合はこうなった
+    tier: 報道
+    telop: "フライブルク2-1シャルケ"
+    say:
+      - "フライブルクは、ホームでシャルケに2対1で勝ちました。"
+      - "10分に先制し、30分に同点にされました。"
+    official: false
+    sources:
+      - "https://www.espn.com/soccer/match/_/gameId/401884778"
+
+  - id: opener
+    heading: 開幕戦の主役
+    tier: 報道
+    telop: "開幕戦でハットトリック"
+    say:
+      - "鈴木唯人は8月の開幕戦でハットトリック。そのあとの言葉です。"
+      - voice: 鈴木唯人
+        text: "今日は完璧だった。"
+      - voice: 鈴木唯人
+        text: "この調子を続けたい。"
+        cont: true
+    official: false
+    sources:
+      - "https://www.thescore.com/news/3588765"
+
+  - id: redcard
+    heading: 64分の退場
+    tier: 報道
+    telop: "64分　2枚目の警告で退場"
+    say:
+      - "その鈴木が、この日は49分に警告を受けます。"
+      - "そして64分、2枚目の警告で退場になりました。"
+      - "フライブルクは残りの30分ほどを、10人で戦うことになります。"
+    official: false
+    sources:
+      - "https://www.espn.com/soccer/match/_/gameId/401884778"
+
+  - id: goal
+    heading: 10人で決めた決勝点
+    tier: 報道
+    telop: "85分　後藤啓介の決勝点"
+    main: true
+    say:
+      - text: "鈴木唯人の退場で10人になったフライブルクを、21歳の後藤啓介が救いました。"
+        short_only: true
+      - text: "69分、後藤啓介がピッチに入ります。"
+        image: assets/images/20261012_japan_1_yuito/stadium_w.jpg
+      - "83分には、グリフォも入りました。"
+      - "そして85分。グリフォのクロスを、後藤が頭で決めました。"
+      - "後藤にとっては、ブンデスリーガ5試合目の初ゴールです。"
+    official: false
+    sources:
+      - "https://www.espn.com/soccer/match/_/gameId/401884778"
+
+  - id: numbers
+    heading: 1本のシュートで決勝点
+    tier: 報道
+    telop: "シュート1本で1点"
+    viewpoint: true
+    say:
+      - text: "後藤がこの試合で打ったシュートは、決勝点の1本だけでした。"
+        card: {type: table, title: 後藤啓介のブンデスリーガ, columns: [項目, 数], rows: [['出場', '5試合'], ['得点', '1'], ['この試合のシュート', '1本'], ['この試合の出場', '約21分']], highlight_row: 2}
+        main_only: true
+      - text: "出場した21分あまりで、ただ1本のシュートを決めきったことになります。"
+        card: {type: table, title: 後藤啓介のブンデスリーガ, columns: [項目, 数], rows: [['出場', '5試合'], ['得点', '1'], ['この試合のシュート', '1本'], ['この試合の出場', '約21分']], highlight_row: 3}
+        main_only: true
+      - text: "この勝利で、フライブルクは5試合を終えて首位に立ちました。"
+        card: none
+    official: false
+    sources:
+      - "https://www.espn.com/soccer/player/_/id/346208/keisuke-goto"
+      - "https://www.espn.com/soccer/standings/_/league/ger.1"
+
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: "「気持ち良すぎる」"
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: 鈴木唯人さん退場からの後藤啓介さんの得点
+      - voice: ネット民
+        text: 気持ち良すぎる
+        cont: true
+      - voice: ネット民
+        text: 鈴木唯人の退場は痛かったが、後藤のゴールでフライブルク勝利
+      - voice: ネット民
+        text: 首位だよ
+        cont: true
+      - voice: ネット民
+        text: その数的不利は鈴木唯人の退場らしくて草
+    sources:
+      - "https://x.com/search?q=%E9%88%B4%E6%9C%A8%E5%94%AF%E4%BA%BA%20%E9%80%80%E5%A0%B4%20-filter%3Alinks%20lang%3Aja&f=live"
