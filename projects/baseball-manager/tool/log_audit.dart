@@ -8,8 +8,12 @@ import 'package:baseball_manager/game/player.dart';
 
 void main(List<String> a) {
   final seed = a.isEmpty ? 3 : int.parse(a[0]);
+  // 2つめに batter / twoWay を渡すと、その役割で始める(既定は投手)
+  final role = a.length > 1
+      ? Role.values.firstWhere((r) => r.name == a[1], orElse: () => Role.pitcher)
+      : Role.pitcher;
   final g = Game.newGame(
-      name: 'ユウタ', role: Role.pitcher, rng: Random(seed), potential: 95);
+      name: 'ユウタ', role: role, rng: Random(seed), potential: 95);
   var n = 0;
   while (g.phase != Phase.retired && n++ < 5000) {
     g.autoSpend();

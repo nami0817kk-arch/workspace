@@ -1887,9 +1887,10 @@ class Game {
       ];
       final total = ups.fold<int>(0, (t, u) => t + u.$3 - u.$2);
       if (total > 0) {
-        // 伸びた能力が多い(投手は11個)と一行が長すぎるので、伸びの大きい5つまでにする
+        // 伸びた能力が多い(投手は11個)と一行が長すぎるので、8つ以上なら伸びの大きい5つまでにする
         final top = [...ups]..sort((x, y) => (y.$3 - y.$2).compareTo(x.$3 - x.$2));
-        final shown = top.take(5).toList();
+        // 打者(7つ)は全部出す。「ほか2能力」のために切るとかえって読みにくい
+        final shown = top.take(ups.length <= 7 ? ups.length : 5).toList();
         final more = ups.length - shown.length;
         log.add('この1年の成長: ${[
           for (final u in shown) '${_abilityJp(u.$1)} ${u.$2}→${u.$3}'
