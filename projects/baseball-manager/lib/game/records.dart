@@ -174,9 +174,11 @@ String fmtPlus(int? v) => v == null ? '-' : '$v';
 String fmtEra(double? v) => v == null ? '-' : v.toStringAsFixed(2);
 
 /// 成績の短い説明(画面のログ用)。打者・投手のどちらか、または両方。
+/// 投手の打席(先発の試合に2打席)は、打率が.000でも見せる意味が薄いので、安打があるときだけ投球のあとに添える。
 String describeLine(Line l) {
   final parts = <String>[];
-  if (l.hasBatting) {
+  final pitcherBat = l.pitcherBat && l.hasPitching;
+  if (l.hasBatting && !pitcherBat) {
     parts.add(
         '打率${fmtRate(l.battingAverage)} 本塁打${l.homeRuns} OPS${fmtRate(l.ops)}');
   }
@@ -184,20 +186,25 @@ String describeLine(Line l) {
     final wl = (l.wins + l.losses) > 0 ? '${l.wins}勝${l.losses}敗 ' : '';
     parts.add('$wl防御率${fmtEra(l.era)} 奪三振${l.strikeouts}');
   }
+  if (l.hasBatting && pitcherBat && l.hits > 0) {
+    parts.add('打撃 打率${fmtRate(l.battingAverage)} 本塁打${l.homeRuns}');
+  }
   return parts.join(' / ');
 }
 
 /// 1試合の中身を短く(「3打数2安打 1本塁打」「6回 被安打2 奪三振7」)。
+/// 投手の打席は、投球のあとに、安打があるときだけ添える(「2打数0安打」が毎試合続くと読みづらいため)。
 String describeGame(Line g) {
   final parts = <String>[];
-  if (g.atBats + g.walks > 0) {
-    parts.add('${g.atBats}打数${g.hits}安打'
-        '${g.homeRuns > 0 ? ' ${g.homeRuns}本塁打' : ''}'
-        '${g.rbi > 0 ? ' ${g.rbi}打点' : ''}');
-  }
+  final pitcherBat = g.pitcherBat && g.faced > 0;
+  final bat = '${g.atBats}打数${g.hits}安打'
+      '${g.homeRuns > 0 ? ' ${g.homeRuns}本塁打' : ''}'
+      '${g.rbi > 0 ? ' ${g.rbi}打点' : ''}';
+  if (!pitcherBat && g.atBats + g.walks > 0) parts.add(bat);
   if (g.faced > 0) {
     parts.add('${g.inningsText}回 被安打${g.totalHitsAllowed} 奪三振${g.strikeouts}');
   }
+  if (pitcherBat && g.hits > 0) parts.add('打撃 $bat');
   return parts.join(' / ');
 }
 

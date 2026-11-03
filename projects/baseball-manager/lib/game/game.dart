@@ -658,6 +658,7 @@ class Game {
 
   /// 最近起きた出来事(同じものが続かないように。保存はしない)。
   final List<String> _recentEvents = [];
+  static const _recentEventWindow = int.fromEnvironment('BAL_EVWIN', defaultValue: 12);
 
   /// 今年の目標。年の初めに決まり、大会(プロはシーズン)の成績で達成かどうかが決まる。
   Goal? goal;
@@ -878,7 +879,8 @@ class Game {
       pendingEvent = e;
       _lastEventId = e.id;
       _recentEvents.add(e.id);
-      if (_recentEvents.length > 4) _recentEvents.removeAt(0);
+      // 同じ出来事が一生に何度も出る(家族・ライバルなどが最大6〜9回)のを減らすため、避ける範囲を広げた
+      if (_recentEvents.length > _recentEventWindow) _recentEvents.removeAt(0);
       _eventFocus = f;
       phase = Phase.event;
     }
@@ -1867,9 +1869,13 @@ class Game {
       ];
       final total = ups.fold<int>(0, (t, u) => t + u.$3 - u.$2);
       if (total > 0) {
+        // 伸びた能力が多い(投手は11個)と一行が長すぎるので、伸びの大きい5つまでにする
+        final top = [...ups]..sort((x, y) => (y.$3 - y.$2).compareTo(x.$3 - x.$2));
+        final shown = top.take(5).toList();
+        final more = ups.length - shown.length;
         log.add('この1年の成長: ${[
-          for (final u in ups) '${_abilityJp(u.$1)} ${u.$2}→${u.$3}'
-        ].join('・')}(合計+$total)');
+          for (final u in shown) '${_abilityJp(u.$1)} ${u.$2}→${u.$3}'
+        ].join('・')}${more > 0 ? '・ほか$more能力' : ''}(合計+$total)');
         if (total > bestYearGain) {
           if (bestYearGain > 0) {
             log.add('これまでで一番伸びた1年! (自己ベスト +$total)');
