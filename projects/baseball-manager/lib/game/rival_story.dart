@@ -70,6 +70,7 @@ RivalStory storyOf(String name, int talent) {
 List<String> rivalNews(RivalStory s, int age) {
   final n = s.name;
   final out = <String>[];
+  // 知らせは、その年齢になる直前(前の年のログの最後)に出る。高卒のドラフトは18歳の秋なので19歳で。
   if (age == 19) {
     // 進路が決まった年(高校を卒業した年)。
     if (s.proAge == 18) {
@@ -81,7 +82,8 @@ List<String> rivalNews(RivalStory s, int age) {
     }
   }
   final pa = s.proAge;
-  if (pa == 22 && age == 23) {
+  // 大卒は21歳の秋のドラフトで22歳から(23歳で出すと、もう直接対決をした後に「入団した」と出ていた。2026-11-03)
+  if (pa == 22 && age == 22) {
     out.add('ライバルの$nは、大学から${s.team}にドラフト${s.draftRound}位で入団した。');
   }
   if (pa != null && age > pa + 1 && age < s.retireAge && (age - pa) % 5 == 0) {

@@ -16,6 +16,17 @@ String epilogueOf(Ending e, String name,
   final parts = <String>[];
   if (!e.madePro) {
     parts.add('$nameはプロの舞台には立てなかったが、野球で学んだことを胸に、新しい道を歩き始めた。');
+    // プロになれなかった一生も、残したものを添える(1行だけで終わっていた。2026-11-03)
+    if (e.championships > 0) {
+      parts.add(e.championships >= 2
+          ? '仲間と${e.championships}度つかんだ優勝は、いまも$nameの一番の思い出だ。'
+          : '仲間とつかんだ優勝は、いまも$nameの一番の思い出だ。');
+    }
+    if (e.rivalWins + e.rivalLosses >= 5) {
+      parts.add(e.rivalWins > e.rivalLosses
+          ? 'ライバルとの勝負は最後まで勝ち越した。その日々は$nameの誇りだ。'
+          : '競い合ったライバルのことを、いまも一番のファンとして気にかけている。');
+    }
   } else {
     parts.add(switch (e.title) {
       'レジェンド' => '$nameの名は、野球の歴史に長く語り継がれることになった。',
@@ -75,8 +86,8 @@ String epilogueOf(Ending e, String name,
   if (e.married) {
     final kids = childrenOf(e.partnerName!);
     parts.add('引退後は、${e.partnerName}と$kids人の子どもに囲まれて、穏やかな毎日を送っている。');
-  } else if (e.madePro && e.proYears >= 10) {
-    parts.add('引退後は、少年野球の子どもたちに教える日々が待っている。');
   }
+  // 独身の引退後の道は書かない: 引退画面の「その後:」(afterCareerOf)が必ず伝える。
+  // ここにも書くと「少年野球で教える」と「解説者になる」が並んで食い違っていた(2026-11-04)。
   return parts.join('\n');
 }

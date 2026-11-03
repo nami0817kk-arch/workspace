@@ -58,7 +58,7 @@ Game play(int seed, Role role,
     switch (g.phase) {
       case Phase.term:
         g.autoSpend();
-        final abilities = abilitiesOf(g.player.role);
+        final abilities = mainAbilitiesOf(g.player.role);
         final focus = ([...abilities]
               ..sort((a, b) => g.player.of(a).compareTo(g.player.of(b))))
             .first;
@@ -76,6 +76,13 @@ Game play(int seed, Role role,
 
 void main(List<String> args) {
   final n = args.isNotEmpty ? int.parse(args[0]) : 300;
+  // `all` を付けると、ふつうの特性も1つずつ測る(dart run tool/talent_audit.dart 150 all)
+  final allTraits = args.contains('all');
+  // `only=大器晩成` で、その特性だけ測る(速い)
+  final only = [
+    for (final a in args)
+      if (a.startsWith('only=')) a.substring(5)
+  ];
   for (final role in [Role.batter, Role.pitcher]) {
     print('── ${role == Role.batter ? '打者' : '投手'} ──');
     Result run({Set<Trait>? traits, Map<Ability, int>? gifts, int offset = 0}) {
@@ -88,11 +95,13 @@ void main(List<String> args) {
 
     final base = run(traits: const {});
     print('基準(特性なし・天賦なし)   ${base.line()}');
-    for (final t in rareTraits) {
+    for (final t in allTraits || only.isNotEmpty ? Trait.values : rareTraits) {
       if (!t.appliesTo(role)) continue;
+      if (only.isNotEmpty && !only.contains(t.label)) continue;
       final r = run(traits: {t});
       print('${t.label.padRight(8, '　')}${r.line()}');
     }
+    if (only.isNotEmpty) continue; // 1つの特性だけ測るときは、天賦・ふつうの開始は省く
     final all = {for (final a in Ability.values) a: 2};
     final none = {for (final a in Ability.values) a: -2};
     print('天賦すべて+2           ${run(traits: const {}, gifts: all).line()}');

@@ -150,25 +150,7 @@ class Player {
       final a = Ability.parse(e.key as String);
       if (a != null) ab[a] = (e.value as num).toInt();
     }
-    // 古いセーブ(能力が5つだった頃)は、足りない打者の能力を今ある能力から補う。選球眼は無くなった。
-    if (ab.isNotEmpty) {
-      final c = ab[Ability.contact] ?? 20, pw = ab[Ability.power] ?? 20;
-      final f = ab[Ability.fielding] ?? 20;
-      // 投手(能力が投球だけだった頃)は、打撃・守備を低い値で足す
-      for (final a in batterAbilities) {
-        if (role == Role.pitcher) ab.putIfAbsent(a, () => 20);
-      }
-      if (role != Role.pitcher) {
-        ab.putIfAbsent(Ability.trajectory, () => ((c + pw) / 2).round());
-        ab.putIfAbsent(Ability.arm, () => f);
-        ab.putIfAbsent(Ability.catching, () => f);
-      }
-      // 変化球は、球威と制球の平均から
-      if (role != Role.batter) {
-        ab.putIfAbsent(Ability.breaking,
-            () => (((ab[Ability.stuff] ?? 20) + (ab[Ability.control] ?? 20)) / 2).round());
-      }
-    }
+    fillMissingAbilities(role, ab);
     return Player(
       name: (j['name'] as String?) ?? '名無し',
       role: role,
@@ -197,6 +179,30 @@ const eyeFromContact = int.fromEnvironment('BAL_EYE', defaultValue: 50);
 
 int _eyeOf(int contact) =>
     (50 + (contact - 50) * eyeFromContact / 100).round().clamp(0, 99);
+
+/// 古いセーブ・殿堂の記録で足りない能力を補う(能力が5つだった頃・投手が投球だけだった頃)。
+/// 選球眼は無くなったので捨てる。空なら何もしない(既定の値を使う)。
+void fillMissingAbilities(Role role, Map<Ability, int> ab) {
+  // 古いセーブ(能力が5つだった頃)は、足りない打者の能力を今ある能力から補う。選球眼は無くなった。
+  if (ab.isNotEmpty) {
+    final c = ab[Ability.contact] ?? 20, pw = ab[Ability.power] ?? 20;
+    final f = ab[Ability.fielding] ?? 20;
+    // 投手(能力が投球だけだった頃)は、打撃・守備を低い値で足す
+    for (final a in batterAbilities) {
+      if (role == Role.pitcher) ab.putIfAbsent(a, () => 20);
+    }
+    if (role != Role.pitcher) {
+      ab.putIfAbsent(Ability.trajectory, () => ((c + pw) / 2).round());
+      ab.putIfAbsent(Ability.arm, () => f);
+      ab.putIfAbsent(Ability.catching, () => f);
+    }
+    // 変化球は、球威と制球の平均から
+    if (role != Role.batter) {
+      ab.putIfAbsent(Ability.breaking,
+          () => (((ab[Ability.stuff] ?? 20) + (ab[Ability.control] ?? 20)) / 2).round());
+    }
+  }
+}
 
 /// 転向で新しく持つ能力の初期値。ゼロからではないが、本職よりは低い。
 const switchStartLevel = 25;

@@ -69,7 +69,9 @@ class Character {
         kind: Kind.values.firstWhere((k) => k.name == j['kind'],
             orElse: () => Kind.teammate),
         bond: (j['bond'] as num?)?.toInt() ?? 0,
-        specialty: Ability.parse((j['specialty'] as String?) ?? ''),
+        // 選球眼(能力が5つだった頃)が得意だった仲間は、ミートが得意として読む(空だとタッグの相手に選ばれない)
+        specialty: Ability.parse((j['specialty'] as String?) ?? '') ??
+            (j['specialty'] == 'eye' ? Ability.contact : null),
         teaches: Skill.parse((j['teaches'] as String?) ?? ''),
         tips: (j['tips'] as num?)?.toInt() ?? 0,
         talent: (j['talent'] as num?)?.toInt() ?? 0,

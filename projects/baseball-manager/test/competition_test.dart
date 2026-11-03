@@ -32,7 +32,9 @@ void main() {
     });
 
     test('結果の文: 初戦・途中・準優勝・優勝', () {
-      expect(amateurLossLine(Stage.highSchool, 0, 5), '夏の大会は初戦で敗れた。');
+      // 初戦でも、呼び名が準決勝なら「初戦で」とは言わない
+      expect(amateurLossLine(Stage.highSchool, 0, 5), '夏の大会は地方大会の準決勝で敗れた。');
+      expect(amateurLossLine(Stage.youth, 0, 9), '夏の学童大会は初戦で敗れた。');
       expect(amateurLossLine(Stage.highSchool, 1, 5), '夏の大会は地方大会の決勝で敗れた。');
       expect(amateurLossLine(Stage.highSchool, 4, 5), '夏の大会は準優勝。');
       // 大会名と段の名前が同じなら重ねない

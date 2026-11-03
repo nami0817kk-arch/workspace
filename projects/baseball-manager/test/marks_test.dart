@@ -54,6 +54,27 @@ void main() {
     expect(injuryNameOf(20, 3), injuryNameOf(20, 3));
     expect(injuryNameOf(20, 3), isNotEmpty);
     expect(coachWordOf(_p(Role.batter, {Ability.speed: 10})), contains('走力'));
+    // 年齢で言い回しが替わり、4年続けて同じ一文にはならない(どれも弱い能力の名前は入る)
+    final words = {
+      for (var age = 20; age < 24; age++)
+        coachWordOf(_p(Role.batter, {Ability.speed: 10}).copyWith(age: age))
+    };
+    expect(words.length, 4);
+    for (final w in words) {
+      expect(w, contains('走力'));
+    }
+    // 得意との差が小さければ、釣り合いをほめる
+    // 釣り合いをほめるのは1年おき(続けて同じ一言にしない)
+    expect(coachWordOf(_p(Role.batter, {}).copyWith(age: 24)), contains('釣り合って'));
+    expect(coachWordOf(_p(Role.batter, {}).copyWith(age: 25)),
+        isNot(contains('釣り合って')));
+    // ベテランには「上に行ける」と言わず、保つ言葉をかける
+    for (var age = 34; age < 41; age++) {
+      final w = coachWordOf(
+          _p(Role.batter, {Ability.speed: 10}).copyWith(age: age));
+      expect(w, contains('走力'));
+      expect(w, isNot(contains('一段上')));
+    }
   });
 }
 
@@ -82,6 +103,23 @@ void markTests2() {
     expect(h.firstWhere((e) => e.label == '本塁打').age, 26);
     expect(h.firstWhere((e) => e.label == '打率').value, '.325');
     expect(h.any((e) => e.label == '勝利'), isFalse);
+    // 投手の打席は打撃のキャリアハイに数えない
+    final ph = careerHighs([
+      SeasonRecord(
+          age: 25,
+          stage: Stage.pro,
+          line: const Line(
+              faced: 700,
+              outs: 500,
+              wins: 15,
+              atBats: 50,
+              hits: 10,
+              homeRuns: 1,
+              rbi: 3,
+              pitcherBat: true)),
+    ]);
+    expect(ph.any((e) => e.label == '本塁打' || e.label == '打点'), isFalse);
+    expect(ph.any((e) => e.label == '勝利'), isTrue);
     expect(declineAge(), 30);
     expect(fanClubOf(0), 0);
     expect(fanClubOf(80), greaterThan(fanClubOf(40)));
@@ -109,7 +147,34 @@ void markTests3() {
     expect(good, contains('上回った'));
     expect(bad, contains('競り負け'));
     expect(rivalDuelLine(s, 22, 0, const Line()), isNull); // 対決は決まった月だけ
+    // 投手の打席がよくても、投球が悪ければ競り負け(打席の数が少ないので見ない)
+    final pitcherBad = rivalDuelLine(
+        s,
+        22,
+        1,
+        const Line(
+            faced: 120,
+            outs: 60,
+            runsRaw: 40,
+            atBats: 6,
+            hits: 4,
+            totalBases: 8,
+            pitcherBat: true));
+    expect(pitcherBad, contains('競り負けた'));
     expect(rivalDuelLine(s, 15, 1, const Line()), isNull); // まだプロでない
+    // 毎年同じ一文にならない(年で言い回しが替わる)
+    final lines = {
+      for (var age = 22; age < 25; age++)
+        rivalDuelLine(s, age, 1,
+            const Line(atBats: 80, hits: 35, totalBases: 70, walks: 10))
+    };
+    expect(lines.length, 3);
+    expect(lines.every((l) => l!.contains('上回った')), isTrue);
+    // 同じ年の2回(5月・8月)も別の言い回しにする
+    const hot = Line(atBats: 80, hits: 35, totalBases: 70, walks: 10);
+    for (var age = 22; age < 30; age++) {
+      expect(rivalDuelLine(s, age, 1, hot), isNot(rivalDuelLine(s, age, 4, hot)));
+    }
     expect(paradeCrowd(80), greaterThan(paradeCrowd(0)));
     // 観客は球場の大きさで頭打ち(満員4.5万人)
     expect(attendanceOf(100, 0.7), 4.5);

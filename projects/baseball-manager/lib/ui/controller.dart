@@ -468,6 +468,10 @@ class GameController extends ChangeNotifier {
   /// 前の操作のときの歳(年が変わった瞬間を見つける)。
   int _adAge = -1;
 
+  /// 年は変わったが、出来事・進路の選択の途中だったので、まだ出していない全画面広告の歳。
+  /// 選択肢を押そうとした指が広告に当たらないよう、季節の選択に戻ってから出す(2026-11-03)。
+  int _adDueAge = -1;
+
   /// 動画で疲れを取れる状態か(疲れが70以上・怪我でない・その歳にまだ使っていない)。
   bool get canRecoverByAd {
     final g = game;
@@ -837,6 +841,9 @@ class GameController extends ChangeNotifier {
   int legacyPoints = 0;
   int lastLegacyGain = 0;
 
+  /// 今回の引退の継承ポイントが、継承ブースト(買い切り)で2倍になったか(引退画面で効き目を見せる)。
+  bool lastLegacyBoosted = false;
+
   /// いま継承できる特性(図鑑にあり、役割に合い、ポイントが足りるもの)。
   List<Trait> carryCandidates(Role role) => [
         for (final t in Trait.values)
@@ -982,12 +989,14 @@ class GameController extends ChangeNotifier {
       Trait? carry]) {
     newlyUnlocked = const [];
     lastLegacyGain = 0;
+    lastLegacyBoosted = false;
     // 育成中の選手がいるなら、始め直す前に控えをとる。
     if (game != null && game!.phase != Phase.retired) {
       autoBackup('${game!.player.name}を始め直す前');
     }
     _backedAge = -1;
     _adAge = -1;
+    _adDueAge = -1;
     _recoveredAge = -1;
     _expAdAge = -1;
     _legacyAdUsed = false;
@@ -1457,6 +1466,7 @@ class GameController extends ChangeNotifier {
     seenTraits = {};
     legacyPoints = 0;
     lastLegacyGain = 0;
+    lastLegacyBoosted = false;
     newlyUnlocked = const [];
     recent = const [];
     pending.clear();
@@ -1511,17 +1521,25 @@ class GameController extends ChangeNotifier {
     final m = money;
     if (m != null && g != null && g.phase != Phase.retired) {
       final age = g.player.age;
-      if (_adAge >= 0 && age == _adAge + 1) {
+      if (_adAge >= 0 && age == _adAge + 1) _adDueAge = age;
+      _adAge = age;
+      // 出来事・進路の選択中は出さない(選択肢の上に広告が被さると、押し間違えで広告を開いてしまう)
+      if (_adDueAge >= 0 && g.phase == Phase.term) {
+        final due = _adDueAge;
+        _adDueAge = -1;
         // 年を進めたタップの指が広告に当たらないよう、少し置いてから出す
         Future<void>.delayed(const Duration(milliseconds: 900), () async {
-          if (identical(game, g) && g.phase != Phase.retired) {
-            await m.afterYear(age);
+          if (!identical(game, g) || g.phase == Phase.retired) return;
+          if (g.phase != Phase.term) {
+            _adDueAge = due; // 待つ間に選択が始まった。次に戻ったときに出す
+            return;
           }
+          await m.afterYear(due);
         });
       }
-      _adAge = age;
     } else if (g == null || g.phase == Phase.retired) {
       _adAge = -1;
+      _adDueAge = -1;
     }
     // 4歳ごとの節目で、自動バックアップ(同じ歳では1度だけ)。
     if (g != null && g.phase != Phase.retired && g.player.age != _backedAge) {
@@ -1549,8 +1567,9 @@ class GameController extends ChangeNotifier {
       autoBackup('${g.player.name}が引退したとき');
       final e = g.ending;
       if (e != null) {
+        lastLegacyBoosted = money?.legacyBoost == true;
         lastLegacyGain = legacyPointsOf(madePro: e.madePro, title: e.title) *
-            (money?.legacyBoost == true ? 2 : 1); // 継承ブースト(買い切り)は2倍
+            (lastLegacyBoosted ? 2 : 1); // 継承ブースト(買い切り)は2倍
         legacyPoints += lastLegacyGain;
         store.saveLegacy(legacyPoints);
       }

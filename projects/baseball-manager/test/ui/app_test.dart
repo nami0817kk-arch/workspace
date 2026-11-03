@@ -607,7 +607,7 @@ void _rankTests() {
     expect(find.textContaining('通算'), findsWidgets);
   });
 
-  testWidgets('成績: 投手は勝敗・防御率・奪三振の欄が出る', (t) async {
+  testWidgets('成績: 投手は勝敗・防御率・奪三振の欄が出る。打撃は投球のあとに小さく出る', (t) async {
     final c = await _start(t);
     final g = Game.newGame(
         name: '投手', role: Role.pitcher, rng: Random(2), potential: 70);
@@ -625,6 +625,8 @@ void _rankTests() {
     await t.pumpAndSettle();
     expect(find.text('防御率'), findsWidgets);
     expect(find.text('奪三振'), findsWidgets);
+    expect(find.byKey(const Key('pitcher-batting')), findsOneWidget);
+    expect(find.text('OPS'), findsNothing); // 投手の打席の指標は出さない
   });
 
   testWidgets('成績: プロのシーズンは順位とプロ通算が出る', (t) async {
@@ -1296,6 +1298,22 @@ void _rankTests() {
       final line = t.widget<Text>(find.byKey(const Key('profile-card'))).data!;
       expect(line, contains('背番号'));
       expect(line, contains('投'));
+    });
+
+    testWidgets('能力タブ: 投手は「投手」「打撃・守備」の見出しで分かれる。打者は見出しなし', (t) async {
+      final c = await _start(t);
+      c.newGame('テスト', Role.pitcher);
+      await t.pumpAndSettle();
+      await _tab(t, 'ability');
+      expect(find.byKey(const Key('ability-group-stuff')), findsOneWidget);
+      await t.scrollUntilVisible(
+          find.byKey(const Key('ability-group-contact')), 200,
+          scrollable: find.byType(Scrollable).first);
+      expect(find.byKey(const Key('ability-group-contact')), findsOneWidget);
+      c.newGame('テスト', Role.batter);
+      await t.pumpAndSettle();
+      await _tab(t, 'ability');
+      expect(find.byKey(const Key('ability-group-contact')), findsNothing);
     });
 
     testWidgets('投手の重点は投球の4つが先に出て、「打撃・守備」で開くと打撃の7つが出る', (t) async {
@@ -2189,7 +2207,12 @@ void _rankTests() {
     expect(find.byType(Image), findsWidgets);
     expect(t.takeException(), isNull, reason: '画像の読み込み');
     // プロを引退したエンディングに絵が出る
-    final done = _until((g) => false, seed: 3, potential: 95);
+    // プロ入りして引退する乱数の種を探す(バランスを変えると、プロ入りする種が変わるため)
+    var seed = 3;
+    var done = _until((g) => false, seed: seed, potential: 95);
+    while (!done.ending!.madePro && seed < 40) {
+      done = _until((g) => false, seed: ++seed, potential: 95);
+    }
     expect(done.ending!.madePro, isTrue);
     c.adopt(done);
     await t.pumpAndSettle();

@@ -109,12 +109,12 @@ void main() {
     expect(avg({Trait.nervy}), lessThan(avg({})));
   });
 
-  test('華がある選手はドラフトの点数が5高い', () {
+  test('華がある選手はドラフトの点数が2高い', () {
     final p = _p(age: 18, v: 60);
     expect(
         draftScore(p.copyWith(traits: {Trait.starPower}), 50) -
             draftScore(p, 50),
-        5);
+        2);
   });
 
   test('特性は保存して読み直せる。欠けていれば空、未知の名前は無視', () {
@@ -268,13 +268,18 @@ void main() {
       expect(recoveryMultiplier({Trait.quickRecovery}), 1.5);
       expect(recoveryMultiplier({Trait.slowRecovery}), 0.6);
       expect(recoveryMultiplier({}), 1.0);
-      expect(tagTraitMultiplier({Trait.moodMaker}), 1.5);
+      expect(tagTraitMultiplier({Trait.moodMaker}), 1.25);
       expect(tagTraitMultiplier({Trait.lonely}), 0.6);
       expect(worldBonus({Trait.worldStage}), 10);
       expect(moraleGainMultiplier({Trait.moody}), greaterThan(1));
       expect(moraleLossMultiplier({Trait.moody}), greaterThan(1));
-      // 一匹狼は練習の伸びが1割増える
-      expect(growthMultiplier({Trait.lonely}, 20), closeTo(1.1, 1e-9));
+      // 一匹狼は練習の伸びが2割増える
+      expect(growthMultiplier({Trait.lonely}, 20), closeTo(1.2, 1e-9));
+      // 早熟は若いうちだけ伸び、20歳からは鈍る
+      expect(growthMultiplier({Trait.earlyBloomer}, 12), greaterThan(1.0));
+      expect(growthMultiplier({Trait.earlyBloomer}, 22), lessThan(1.0));
+      // 大器晩成は高校から大きく伸びる
+      expect(growthMultiplier({Trait.lateBloomer}, 17), greaterThan(1.0));
     });
 
     test('コーチは、役割に合わない特殊能力を教えない', () {

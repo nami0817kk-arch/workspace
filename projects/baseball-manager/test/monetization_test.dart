@@ -241,6 +241,10 @@ void main() {
       expect(ads.interstitials, 0); // 年の変わり目ではない
       g.player = g.player.copyWith(age: 16);
       rest(); // 15 → 16歳
+      // 年替わりの直後に出来事が出ていたら、答え終えてから出る(ad_flow_test で見張る)
+      while (g.phase == Phase.event) {
+        c.chooseEvent(0);
+      }
       await Future<void>.delayed(const Duration(milliseconds: 1200));
       expect(ads.interstitials, 1);
     });
@@ -366,7 +370,7 @@ void main() {
       final remove = find.byKey(const Key('remove-ads'));
       await t.scrollUntilVisible(remove, 200,
           scrollable: find.byType(Scrollable).last);
-      expect(find.text('¥370'), findsOneWidget);
+      expect(find.text('\uFFE5370'), findsOneWidget);
       expect(find.byKey(const Key('restore-purchases')), findsOneWidget);
       await t.tap(remove);
       await t.pumpAndSettle();

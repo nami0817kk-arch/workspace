@@ -71,13 +71,15 @@ const pitcherBatPace = int.fromEnvironment('BAL_PBAT', defaultValue: 50) / 100;
 /// (平凡 43.3%/43.8%・レジェンド 3.0%/4.0%、上手い 47.2%/46.2%・レジェンド 23.2%/21.5%)。0.75 だと投手が低すぎる(31%)。
 /// 2026-11-01: 投手の能力を4つ(球速・コントロール・スタミナ・変化球)＋打撃・守備にしたので、104 に上げて揃え直した
 /// (`balance.dart 900 normal`: 平凡 プロ入り 45%・レジェンド 7%、上手い 58%・レジェンド 25%。旧は 43%・3%、56%・34%)。
-const pitcherPace = int.fromEnvironment('BAL_PPACE', defaultValue: 104) / 100;
+/// 2026-11-03: 同じ理由で 101 に(900人: 平凡 47%・上手い 58%)。
+const pitcherPace = int.fromEnvironment('BAL_PPACE', defaultValue: 101) / 100;
 
 /// 打者・二刀流の伸びの補正(2026-11-01)。打者の能力を5つから7つ(パワプロと同じ)にしたら、
 /// 重点の1つが平均に占める割合が薄まり、プロ入り率が下がった。`tool/balance.dart` で揃えた。
 /// 114 にすると、平凡の打者のプロ入り率が約46%(旧42.5%)、上手い打者が約46%(旧47%)に揃う
 /// (`balance.dart 900 normal`)。レジェンドは能力が7つの平均で見るぶん出にくい(上手い 27.5%→約16%)。
-const batterPace = int.fromEnvironment('BAL_BPACE', defaultValue: 114) / 100;
+/// 2026-11-03: 特性(大器晩成・一匹狼・千両役者)と出来事を直したあとにプロ入り率が約5pt上がったので 111 に戻した。
+const batterPace = int.fromEnvironment('BAL_BPACE', defaultValue: 111) / 100;
 
 /// 能力1ぶん(基準)を経験点にしたときの量。練習の伸びはこれを掛けて貯まる。
 const expPerPoint = 8;

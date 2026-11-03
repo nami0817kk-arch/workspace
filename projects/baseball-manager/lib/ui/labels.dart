@@ -109,11 +109,12 @@ List<String> birthTalentNotes(Player p) {
     lines.add('レア特性「${t.label}」を持って生まれた!');
   }
   final top = [
-    for (final a in abilitiesOf(p.role))
+    // 投手の打撃・守備の天賦は、生まれの知らせには出さない(本業の能力だけ)
+    for (final a in mainAbilitiesOf(p.role))
       if (p.gift(a) >= 2) abilityLabel(a)
   ];
   final low = [
-    for (final a in abilitiesOf(p.role))
+    for (final a in mainAbilitiesOf(p.role))
       if (p.gift(a) <= -2) abilityLabel(a)
   ];
   if (top.isNotEmpty) lines.add('天賦の才: ${top.join('・')}(経験点が少なくて済む)');

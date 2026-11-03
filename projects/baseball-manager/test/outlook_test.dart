@@ -72,9 +72,10 @@ void logTests() {
   test('年が変わるたびに、ログに「── N歳 ──」の見出しが入る', () {
     final g = _until((g) => g.player.age >= 9);
     final heads = g.log.where((l) => l.startsWith('── ')).toList();
+    expect(g.log.first, '── 6歳 ──'); // 最初の年にも見出し
     expect(heads, contains('── 7歳 ──'));
     expect(heads, contains('── 8歳 ──'));
-    expect(heads.length, g.player.age - 6);
+    expect(heads.length, g.player.age - 5);
   });
 }
 

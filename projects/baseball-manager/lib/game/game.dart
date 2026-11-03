@@ -169,6 +169,8 @@ class Game {
               0x3fffffff);
     g.overallHistory.add(overall(p).round());
     g.yearStart = Map.of(p.abilities);
+    // 最初の年にも年齢の見出しを付ける(2年目からしか無く、ログの頭が見出しなしで始まっていた)
+    g.log.add('── ${p.age}歳 ──');
     g._note('stage', '${stageNameOf(Stage.youth)}を始めた');
     if (parent != null) {
       g._note('stage', '${parent.name}の子として生まれた(二世)');
@@ -284,8 +286,8 @@ class Game {
   int peakAbility = 0;
 
   /// いまの能力まで含めた peakAbility。
-  int get peakAbilityNow => max(peakAbility,
-      player.abilities.values.fold<int>(0, (a, v) => max(a, v)));
+  int get peakAbilityNow => max(
+      peakAbility, player.abilities.values.fold<int>(0, (a, v) => max(a, v)));
   int championships = 0;
   bool _wasTwoWay = false;
   final List<double> achievements = []; // アマの大会ごとの実績
@@ -658,6 +660,8 @@ class Game {
 
   /// 最近起きた出来事(同じものが続かないように。保存はしない)。
   final List<String> _recentEvents = [];
+  static const _recentEventWindow =
+      int.fromEnvironment('BAL_EVWIN', defaultValue: 12);
 
   /// 今年の目標。年の初めに決まり、大会(プロはシーズン)の成績で達成かどうかが決まる。
   Goal? goal;
@@ -672,12 +676,20 @@ class Game {
   /// 今年の練習(練習・特訓)と休養の回数。年末にログに出して戻す。
   /// 今季ここまでの月ごとの成績(4〜9月)。シーズンの記録に写して空にする。
   List<String> monthRows = [];
+
+  /// 最後にログに出した観客動員(万人)。保存しない(読み直したら次の月に一度出る)。
+  double? _lastCrowd;
+
+  /// 前の年のCM出演料(ログに出すのは額が変わった年だけ。保存しない: 読み直した年は1度出るだけ)。
+  int? _lastCm;
   int trainCount = 0;
+
+  /// 今年すでにログに出した友情タッグの相手。年末に空にする(保存しない)。
+  final Set<String> _taggedThisYear = {};
 
   /// 幼少期の分かれ道で選んだもの(出来事のid → 選択肢の番号)。
   final Map<String, int> childhood = {};
   int restCount = 0;
-
 
   /// 特殊能力のコツ(0〜`maxSkillTips`)。貯まるほど安く取れる。
   Map<Skill, int> skillTips = {};
@@ -871,6 +883,7 @@ class Game {
             stage: stage,
             cast: cast,
             exclude: _lastEventId,
+            role: player.role,
             recent: _recentEvents.toSet());
     if (e == null) {
       _nextSlot();
@@ -878,7 +891,8 @@ class Game {
       pendingEvent = e;
       _lastEventId = e.id;
       _recentEvents.add(e.id);
-      if (_recentEvents.length > 4) _recentEvents.removeAt(0);
+      // 同じ出来事が一生に何度も出る(家族・ライバルなどが最大6〜9回)のを減らすため、避ける範囲を広げた
+      if (_recentEvents.length > _recentEventWindow) _recentEvents.removeAt(0);
       _eventFocus = f;
       phase = Phase.event;
     }
@@ -1319,7 +1333,14 @@ class Game {
               .round();
         }
         mate.addBond(8);
-        log.add('${mate.name}と友情タッグ練習!');
+        // 同じ仲間とのタッグは、その年の最初の1回だけログに出す(一生で75回並んでいた)。
+        // 頼んだ自主練(forced)は毎回出す。
+        if (forced != null || _taggedThisYear.add(mate.id)) {
+          // 何を一緒に鍛えたか・どれだけ息が合っているかを添える(毎年同じ一文が並ばないように)
+          log.add(mate.bond >= 80
+              ? '${mate.name}と友情タッグ練習!(${_abilityJp(focus)}を一緒に。息がぴったりだ)'
+              : '${mate.name}と友情タッグ練習!(${_abilityJp(focus)}を一緒に)');
+        }
       }
     }
     if (action == Plan.lesson &&
@@ -1487,10 +1508,10 @@ class Game {
   }
 
   /// 月ごとの成績をログに残す。出来が飛び抜けていれば「月間MVP」。
-  void _monthlyReport(LeagueProgress m) {
+  void _monthlyReport(LeagueProgress m, [int games = 20]) {
     _allStar();
-    final d = describeLine(m.line);
-    if (m.missed >= 20) {
+    final d = describeLine(m.line, brief: true);
+    if (m.missed >= games) {
       monthRows.add('$slotName: 怪我で全休 / ${m.wins}勝${m.losses}敗');
       log.add('$slotName: 怪我で全試合を欠場。チームは${m.wins}勝${m.losses}敗。');
       return;
@@ -1500,11 +1521,24 @@ class Game {
         isInterleagueMonth(slotName) && !overseas ? '$slotName(交流戦)' : slotName;
     log.add('$month: ${d.isEmpty ? '' : '$d。'}チームは${m.wins}勝${m.losses}敗。');
     monthRows.add('$month: ${d.isEmpty ? '出場なし' : d} / ${m.wins}勝${m.losses}敗');
-    log.add(attendanceLine(popularityOf(records, worldRecords),
-        m.wins + m.losses == 0 ? 0.5 : m.wins / (m.wins + m.losses)));
+    // 観客動員は毎月出すと同じ数字が並ぶので、開幕の月・満員・大きく動いた月だけ出す
+    final pop = popularityOf(records, worldRecords);
+    final winPct = m.wins + m.losses == 0 ? 0.5 : m.wins / (m.wins + m.losses);
+    final crowd = attendanceOf(pop, winPct);
+    final last = _lastCrowd;
+    if (last == null ||
+        slot == 0 ||
+        crowd >= 4.5 ||
+        (crowd - last).abs() >= 0.3) {
+      log.add(attendanceLine(pop, winPct));
+      _lastCrowd = crowd;
+    }
     final rs = storyOfCharacter(cast.rival)?.avoiding(proTeam);
     final duel =
-        rs == null ? null : rivalDuelLine(rs, player.age, slot, m.line);
+        // 二軍の年は一軍のライバルと当たらない(育成契約の1年目に「直接対決」が出ていた)
+        rs == null || onFarm
+            ? null
+            : rivalDuelLine(rs, player.age, slot, m.line);
     if (duel != null) log.add(duel);
     if (monthlyMvp(m.line, player.name, player.age, slot) && !onFarm) {
       log.add('$slotNameの月間MVPに選ばれた!');
@@ -1523,7 +1557,8 @@ class Game {
     }
     final l = prog.line;
     final pop = popularityOf(records, worldRecords);
-    final good = (l.hasBatting && (l.ops ?? 0) >= 0.800) ||
+    // 投手の打席(数打席)のOPSでは選ばない
+    final good = (l.hasBatting && !l.pitcherBat && (l.ops ?? 0) >= 0.800) ||
         (l.hasPitching && (l.era ?? 99) <= 3.00);
     if (!good && pop < 55) return;
     log.add('ファン投票とリーグ推薦で、オールスターに選ばれた!');
@@ -1536,9 +1571,11 @@ class Game {
     var prog = seasonProgress ?? const LeagueProgress();
     final rest = leagueGames - prog.games;
     if (rest > 0) {
-      prog = playLeagueChunk(
+      // 10月の残り試合も、ほかの月と同じく1か月ぶんとしてログに出す
+      // (出さないと、月ごとの勝敗を足しても年間の成績にならない。2026-11-03)
+      final month = playLeagueChunk(
         fighter,
-        prog,
+        LeagueProgress(games: prog.games),
         teamLevel: team,
         opponents: opponents,
         rng: rng,
@@ -1546,6 +1583,16 @@ class Game {
         condition: condition.value,
         available: !condition.injured,
       );
+      prog = LeagueProgress(
+        games: month.games,
+        wins: prog.wins + month.wins,
+        losses: prog.losses + month.losses,
+        line: prog.line + month.line,
+        missed: prog.missed + month.missed,
+      );
+      seasonProgress = prog;
+      // 月を回していない年(途中から始めた年など)は、まとめて1行にしない
+      if (prog.games > rest) _monthlyReport(month, rest);
     }
     seasonProgress = null;
     return prog.toSeason();
@@ -1595,12 +1642,14 @@ class Game {
         cast.rivalWins++;
         ach = min(100, ach + 5);
         condition = condition.copyWith(morale: condition.morale + 10);
-        rivalLine = 'ライバルの${rival.name}との今年の勝負は、こちらの勝ち!';
+        rivalLine = rivalYearLine(rival.name,
+            won: true, wins: cast.rivalWins, losses: cast.rivalLosses);
       } else {
         rivalWon = false;
         cast.rivalLosses++;
         condition = condition.copyWith(morale: condition.morale - 8);
-        rivalLine = 'ライバルの${rival.name}との今年の勝負は、向こうの勝ち…';
+        rivalLine = rivalYearLine(rival.name,
+            won: false, wins: cast.rivalWins, losses: cast.rivalLosses);
       }
       rival.addBond(5);
     }
@@ -1703,6 +1752,9 @@ class Game {
         _tryAwaken(0.04, '優勝を経験した今季、');
       }
       for (final w in awards) {
+        // 日本一(全米制覇)は日本シリーズの行で「日本一に輝いた!」と出ているので、表彰には重ねない
+        // (記録の表彰には残す。実績の判定に使う)
+        if (w == '日本一' || w == '全米制覇') continue;
         log.add('表彰: $w!');
       }
       // 通算の記録(プロ初安打など)は一軍の成績だけで数える(実際のプロ野球と同じ)。
@@ -1726,8 +1778,15 @@ class Game {
       final cm = cmFeeOf(popularityOf(records, worldRecords));
       if (cm > 0) {
         money += cm;
-        log.add('CM出演料: ${fmtMoney(cm)}');
+        // 毎年同じ額が並ぶので(一生で18回)、額が変わった年だけ出す。お金は毎年入る
+        final last = _lastCm;
+        if (last != cm) {
+          log.add(last == null || last == 0
+              ? 'CM出演料: ${fmtMoney(cm)}(CMに出るようになった)'
+              : 'CM出演料: ${fmtMoney(cm)}(${cm > last ? '増額' : '減額'})');
+        }
       }
+      _lastCm = cm;
       // 契約更改: 今季の成績で、来季の年俸が決まる。
       final next = renewSalary(now, rec);
       nextSalary = next;
@@ -1758,9 +1817,6 @@ class Game {
       );
       records.add(rec);
       _logRounds(tournament);
-      for (final w in ampAwards) {
-        log.add('表彰: $w!'); // 経歴には、成績の表彰として出る(_note すると重なる)
-      }
       if (tournament.champion) {
         championships++;
         log.add(amateurChampionLine(stage, corporate: corp));
@@ -1772,6 +1828,10 @@ class Game {
       }
       final d = describeLine(tournament.line);
       if (d.isNotEmpty) log.add('大会成績: $d');
+      // 表彰は、大会の結果と成績のあとに(結果より先に「優秀選手」と出ていた)
+      for (final w in ampAwards) {
+        log.add('表彰: $w!'); // 経歴には、成績の表彰として出る(_note すると重なる)
+      }
       _judgeGoal(rec);
       if (rivalLine != null) log.add(rivalLine);
     }
@@ -1867,9 +1927,15 @@ class Game {
       ];
       final total = ups.fold<int>(0, (t, u) => t + u.$3 - u.$2);
       if (total > 0) {
+        // 伸びた能力が多い(投手は11個)と一行が長すぎるので、8つ以上なら伸びの大きい5つまでにする
+        final top = [...ups]
+          ..sort((x, y) => (y.$3 - y.$2).compareTo(x.$3 - x.$2));
+        // 打者(7つ)は全部出す。「ほか2能力」のために切るとかえって読みにくい
+        final shown = top.take(ups.length <= 7 ? ups.length : 5).toList();
+        final more = ups.length - shown.length;
         log.add('この1年の成長: ${[
-          for (final u in ups) '${_abilityJp(u.$1)} ${u.$2}→${u.$3}'
-        ].join('・')}(合計+$total)');
+          for (final u in shown) '${_abilityJp(u.$1)} ${u.$2}→${u.$3}'
+        ].join('・')}${more > 0 ? '・ほか$more能力' : ''}(合計+$total)');
         if (total > bestYearGain) {
           if (bestYearGain > 0) {
             log.add('これまでで一番伸びた1年! (自己ベスト +$total)');
@@ -1900,6 +1966,7 @@ class Game {
     }
     comboCount = 0;
     trainCount = 0;
+    _taggedThisYear.clear();
     restCount = 0;
     peakOverall = max(peakOverall, overall(player).round());
     peakAbility = peakAbilityNow;

@@ -92,7 +92,7 @@ double giftAverage(Role r, Map<Ability, int> gifts) {
 /// 受け継ぐとその能力の天賦が+1(上限+2)になる。無ければ null。
 Ability? inheritedGift(Random rng, Role childRole, Map<Ability, int> parent) {
   final cands = [
-    for (final a in abilitiesOf(childRole))
+    for (final a in mainAbilitiesOf(childRole))
       if ((parent[a] ?? 0) >= 1) a,
   ];
   if (cands.isEmpty || rng.nextDouble() >= 0.5) return null;

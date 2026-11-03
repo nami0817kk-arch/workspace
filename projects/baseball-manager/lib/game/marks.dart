@@ -141,10 +141,31 @@ const _abilityWord = {
 };
 
 /// 1年の終わりのコーチのひとこと。いちばん低い能力を磨くよう勧める。
+/// 毎年同じ一文が並ばないよう、年齢で言い回しを替え、得意との差が小さければ釣り合いをほめる(2026-11-03)。
 String coachWordOf(Player p) {
-  final weakest = mainAbilitiesOf(p.role)
-      .reduce((a, b) => (p.abilities[b] ?? 0) < (p.abilities[a] ?? 0) ? b : a);
-  return 'コーチ「来年は${_abilityWord[weakest]}を磨こう」';
+  final main = mainAbilitiesOf(p.role);
+  int v(Ability a) => p.abilities[a] ?? 0;
+  final weakest = main.reduce((a, b) => v(b) < v(a) ? b : a);
+  final best = main.reduce((a, b) => v(b) > v(a) ? b : a);
+  final w = _abilityWord[weakest];
+  // 投手は4つを均等に鍛えがちで、釣り合いの一言が毎年続いた。ほめるのは1年おき
+  if (v(best) - v(weakest) <= 4 && p.age.isEven) {
+    return 'コーチ「どの力も釣り合ってきた。この調子で、全部を少しずつ上げよう」';
+  }
+  // 衰えと向き合う年齢には、伸ばすより保つ言葉をかける(39歳に「もう一段上に行ける」と言っていた)
+  if (p.age >= 34) {
+    return switch (p.age % 3) {
+      0 => 'コーチ「無理はするな。$wを落とさないよう、手入れを続けよう」',
+      1 => 'コーチ「経験は武器だ。$wの衰えは、頭で補っていこう」',
+      _ => 'コーチ「体と相談しながらでいい。$wだけは保っておこう」',
+    };
+  }
+  return switch (p.age % 4) {
+    0 => 'コーチ「来年は$wを磨こう」',
+    1 => 'コーチ「$wにまだ伸びしろがある。来年はそこを鍛えよう」',
+    2 => 'コーチ「${_abilityWord[best]}はもう武器だ。あとは$wだな」',
+    _ => 'コーチ「$wが上がれば、もう一段上に行ける」',
+  };
 }
 
 /// 殊勲の試合の理由(ログの「★殊勲(猛打賞)」)。試合の中身から決める。
@@ -182,11 +203,13 @@ List<({String label, String value, int age})> careerHighs(
     }
   }
 
+  // 投手の打席(先発の試合に2打席)は、打撃のキャリアハイに数えない(「本塁打 1本」が並んでいた)
+  bool bat(SeasonRecord r) => !r.line.pitcherBat;
   best('打率', (r) => r.line.battingAverage, (v) => fmtRate(v.toDouble()),
-      ok: (r) => r.line.atBats >= 100);
-  best('本塁打', (r) => r.line.homeRuns, (v) => '$v本');
-  best('打点', (r) => r.line.rbi, (v) => '$v');
-  best('盗塁', (r) => r.line.stolenBases, (v) => '$v');
+      ok: (r) => r.line.atBats >= 100 && bat(r));
+  best('本塁打', (r) => r.line.homeRuns, (v) => '$v本', ok: bat);
+  best('打点', (r) => r.line.rbi, (v) => '$v', ok: bat);
+  best('盗塁', (r) => r.line.stolenBases, (v) => '$v', ok: bat);
   best('勝利', (r) => r.line.wins, (v) => '$v勝');
   best('奪三振', (r) => r.line.strikeouts, (v) => '$v');
   best('防御率', (r) => r.line.era, (v) => fmtEra(v.toDouble()),
@@ -240,10 +263,27 @@ String? rivalDuelLine(RivalStory s, int age, int slot, Line month) {
   final pa = s.proAge;
   if (pa == null || age < pa || age > s.retireAge) return null;
   if (slot != 1 && slot != 4) return null;
-  final good = (month.hasBatting && (month.ops ?? 0) >= 0.800) ||
-      (month.hasPitching && (month.era ?? 99) <= 3.00);
+  // 投手の打席(月に数打席)のOPSでは決めない(投球が悪くても「上回った」になっていた)
+  final good =
+      (month.hasBatting && !month.pitcherBat && (month.ops ?? 0) >= 0.800) ||
+          (month.hasPitching && (month.era ?? 99) <= 3.00);
   final n = s.name;
-  return good ? '${s.team}の$nとの直接対決。気迫で上回った!' : '${s.team}の$nとの直接対決。ここは競り負けた…';
+  // 一生で30回ほど出るので、年と月で言い回しを替える(2026-11-03)
+  // 対決は5月(slot 1)と8月(slot 4)。slot の差が3なので % 3 では同じ年の2回が同じ文になっていた
+  final i = (age + (slot >= 4 ? 1 : 0)) % 3;
+  final t = s.team;
+  if (good) {
+    return switch (i) {
+      0 => '$tの$nとの直接対決。気迫で上回った!',
+      1 => '$tの$nと火花を散らし、今月はこちらが上回った!',
+      _ => '$n($t)との対決を制し、気迫で上回った!',
+    };
+  }
+  return switch (i) {
+    0 => '$tの$nとの直接対決。ここは競り負けた…',
+    1 => '$n($t)に意地を見せられ、今月は競り負けた…',
+    _ => '$tの$nとの直接対決。わずかに競り負けた…',
+  };
 }
 
 /// 1試合の平均の観客数(万人)。人気と勝率から。球場の大きさがあるので、満員(4.5万人)で頭打ち
@@ -630,4 +670,39 @@ String profileText(PlayerSnapshot s) {
     if (s.traits.isNotEmpty) '特性: ${s.traits.map((t) => t.label).join('・')}',
     if (s.endingTitle != null) '称号: ${s.endingTitle}',
   ].join('\n');
+}
+
+/// ライバルとの1年の勝負の行。通算の勝敗を添え、流れ(初対決・五分に戻す・抜き返す・連勝)で言い方を変える。
+/// [wins]/[losses] は今年の分を足したあとの通算。毎年同じ一文が30回並ぶのを避ける(2026-11-03)。
+String rivalYearLine(String name,
+    {required bool won, required int wins, required int losses}) {
+  final tally = '(通算$wins勝$losses敗)';
+  final total = wins + losses;
+  if (total == 1) {
+    return won
+        ? 'ライバルの$nameとの初めての勝負は、こちらの勝ち! $tally'
+        : 'ライバルの$nameとの初めての勝負は、向こうの勝ち… $tally';
+  }
+  if (won) {
+    if (wins == losses) return 'ライバルの$nameに勝ち、五分に戻した! $tally';
+    if (wins == losses + 1) return 'ライバルの$nameに勝ち、通算で抜き返した! $tally';
+    if (losses == 0 && wins % 5 == 0) {
+      return 'ライバルの$nameに$wins年続けて勝った。負け知らず! $tally';
+    }
+    return switch (total % 3) {
+      0 => 'ライバルの$nameとの今年の勝負は、こちらの勝ち! $tally',
+      1 => '今年もライバルの$nameを上回った! $tally',
+      _ => 'ライバルの$nameとの競り合いを制した! $tally',
+    };
+  }
+  if (wins == losses) return 'ライバルの$nameに敗れ、五分に戻された… $tally';
+  if (losses == wins + 1) return 'ライバルの$nameに敗れ、通算で抜かれた… $tally';
+  if (wins == 0 && losses % 5 == 0) {
+    return 'ライバルの$nameに$losses年続けて敗れた… $tally';
+  }
+  return switch (total % 3) {
+    0 => 'ライバルの$nameとの今年の勝負は、向こうの勝ち… $tally',
+    1 => '今年はライバルの$nameに一歩及ばなかった… $tally',
+    _ => 'ライバルの$nameとの競り合いに敗れた… $tally',
+  };
 }

@@ -208,10 +208,13 @@ class PlayerSnapshot {
       final a = Ability.parse(e.key as String);
       if (a != null) ab[a] = (e.value as num).toInt();
     }
+    final role = Role.values
+        .firstWhere((r) => r.name == j['role'], orElse: () => Role.batter);
+    // 能力が5つだった頃に引退した選手は、弾道・肩力・捕球が無く 0(G)と出ていた
+    fillMissingAbilities(role, ab);
     return PlayerSnapshot(
       name: (j['name'] as String?) ?? '名無し',
-      role: Role.values
-          .firstWhere((r) => r.name == j['role'], orElse: () => Role.batter),
+      role: role,
       age: (j['age'] as num?)?.toInt() ?? 0,
       stage: Stage.values
           .firstWhere((s) => s.name == j['stage'], orElse: () => Stage.retired),

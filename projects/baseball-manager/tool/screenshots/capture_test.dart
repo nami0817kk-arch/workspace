@@ -227,10 +227,10 @@ Game _until(bool Function(Game) stop,
     g.autoSpend();
     switch (g.phase) {
       case Phase.term:
-        g.choose(
-            g.condition.fatigue >= 60 ? Plan.rest : Plan.train,
-            abilitiesOf(
-                g.player.role)[guard % abilitiesOf(g.player.role).length]);
+        // 主な能力の先頭3つ(打者はミート・パワー・弾道)を順に鍛える。7つを均等に回すと
+        // 守備や肩にも散って、タイトルを重ねたプロ選手が見つからなかった(2026-11-04)
+        g.choose(g.condition.fatigue >= 60 ? Plan.rest : Plan.train,
+            mainAbilitiesOf(g.player.role)[guard % 3]);
       case Phase.event:
         if (g.pendingEvent!.id == finalMomentId && stop(g)) return g;
         g.resolveEvent(g.pendingEvent!.id == finalMomentId ? 1 : 0);

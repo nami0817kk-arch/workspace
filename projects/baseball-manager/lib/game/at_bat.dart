@@ -17,6 +17,12 @@ class Batter {
   final int eye; // 選球眼
 }
 
+/// 育てている打者の、ミートの高いところの上乗せと、ミートの効き(調整用。`-DBAL_TOPC=` `-DBAL_CSLOPE=`)。
+/// 2026-11-03: ミートだけを鍛えると打率の中央が .402・首位打者が77%のシーズンで取れていた(上乗せ .060・効き 0.20)。
+/// 上乗せ 0・効き 0.16 で、ミートだけ .327・首位打者 32%・上位1% .393、弱点を底上げする遊び方 .270(200人)。
+const ownTopContact = int.fromEnvironment('BAL_TOPC', defaultValue: 0) / 1000;
+const ownContactSlope = int.fromEnvironment('BAL_CSLOPE', defaultValue: 16) / 100;
+
 /// 1打席を決める。乱数は注入できる（テストで再現するため）。
 ///
 /// [ownBatter] は育てている選手が打席に立つとき。ふつうの一流(能力60〜80)の打率を
@@ -47,10 +53,10 @@ AtBatResult simulateAtBat(Pitcher p, Batter b, Random rng,
   // ミートがずば抜けた打者は、プロの相手にも4割に届くよう、上のほうを上乗せする
   // (能力70未満は0、99で+.045。2乗でなだらかに増える。相手の打者に使う80未満ではほぼ0)。
   final topContact = pow(((b.contact - 70) / 29).clamp(0.0, 1.0), 2) *
-      (ownBatter ? 0.060 : 0.045);
+      (ownBatter ? ownTopContact : 0.045);
   var hitP = ((ownBatter ? 0.225 : 0.24) +
           topContact +
-          d(b.contact) * 0.20 -
+          d(b.contact) * (ownBatter ? ownContactSlope : 0.20) -
           d(p.stuff) * 0.10 -
           eo * (eo < 0 ? 0.40 : 0.16))
       .clamp(0.0, 1.0);

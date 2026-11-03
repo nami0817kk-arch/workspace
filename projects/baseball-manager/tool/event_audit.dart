@@ -13,6 +13,15 @@ void main() {
       abilities: {for (final a in batterAbilities) a: 50});
   const c = Condition(fatigue: 50, morale: 50);
   for (final e in events) {
+    final role = e.roles?.first ?? Role.batter;
+    final q = role == Role.batter
+        ? p
+        : Player(
+            name: 't',
+            role: role,
+            age: 20,
+            potential: 50,
+            abilities: {for (final a in abilitiesOf(role)) a: 50});
     final rows = <String>[];
     final scores = <List<double>>[];
     for (final ch in e.choices) {
@@ -20,9 +29,9 @@ void main() {
       const n = 200;
       for (var i = 0; i < n; i++) {
         final r = ch.risky != null
-            ? ch.risky!(p, c, Ability.contact, Random(i))
-            : ch.apply(p, c, Ability.contact);
-        ab += abilitiesOf(Role.batter)
+            ? ch.risky!(q, c, Ability.contact, Random(i))
+            : ch.apply(q, c, Ability.contact);
+        ab += abilitiesOf(role)
             .fold<int>(0, (s, a) => s + r.player.of(a) - 50);
         fa += r.condition.fatigue - 50;
         mo += r.condition.morale - 50;
@@ -44,6 +53,9 @@ void main() {
         if (better && strictly) dom = true;
       }
     }
-    print('${dom ? '!! ' : '   '}${e.id}  ${rows.join(' | ')}');
+    // 特性の獲得・コーチのコツは、ここで測れない利益がある(テストと同じ除外)
+    const hidden = {'winter-menu', 'coach-extra'};
+    final mark = !dom ? '   ' : (hidden.contains(e.id) ? '(隠れた利益) ' : '!! ');
+    print('$mark${e.id}  ${rows.join(' | ')}');
   }
 }

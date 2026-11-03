@@ -206,7 +206,7 @@ void main() {
     });
   });
 
-  test('プロで全能力99の打者は、毎年ほぼ4割を打つ。90でも4割には届かない', () {
+  test('プロで全能力99の打者は3割5分前後。4割はめったに出ない(2026-11-03 に上を抑えた)', () {
     double mean(int v) {
       final p = Player(
           name: 't',
@@ -225,8 +225,8 @@ void main() {
       return xs.reduce((a, b) => a + b) / xs.length;
     }
 
-    expect(mean(99), greaterThan(0.42));
-    expect(mean(90), lessThan(0.40));
+    expect(mean(99), inInclusiveRange(0.33, 0.40));
+    expect(mean(90), lessThan(0.33));
     expect(mean(70), inInclusiveRange(0.26, 0.32)); // ふつうの一流は変わらない
   });
 

@@ -57,12 +57,12 @@ void main() {
       }
     });
 
-    test('高卒プロは19歳に入団の知らせ、大学組は大学進学→23歳に入団', () {
+    test('高卒プロは19歳に入団の知らせ、大学組は大学進学→22歳に入団(入団したその年)', () {
       final high = storyOf('宮坂 凛', 85);
       expect(rivalNews(high, 19).single, contains('ドラフト1位で入団'));
       final mid = storyOf('宮坂 凛', 60);
       expect(rivalNews(mid, 19).single, contains('大学に進学'));
-      expect(rivalNews(mid, 23).single, contains('${mid.team}にドラフト'));
+      expect(rivalNews(mid, 22).single, contains('${mid.team}にドラフト'));
       final low = storyOf('宮坂 凛', 45);
       expect(rivalNews(low, 19).single, contains('社会人'));
     });

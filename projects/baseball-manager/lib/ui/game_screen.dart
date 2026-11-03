@@ -1267,7 +1267,16 @@ class _AbilityCard extends StatelessWidget {
                         fontSize: 11, color: Color(0xFFC62828))),
               ),
             const SizedBox(height: 4),
-            for (final a in abilitiesOf(p.role))
+            for (final a in abilitiesOf(p.role)) ...[
+              if (_groupCaption(p.role, a) != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 6, bottom: 2),
+                  child: Text(_groupCaption(p.role, a)!,
+                      key: Key('ability-group-${a.name}'),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.primary)),
+                ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 2),
                 child: Row(children: [
@@ -1361,6 +1370,7 @@ class _AbilityCard extends StatelessWidget {
                   ),
                 ]),
               ),
+            ],
           ],
         ),
       ),
@@ -1479,6 +1489,17 @@ class _ActionCard extends StatelessWidget {
     );
   }
 }
+
+/// 能力の一覧の区切りの見出し(投手は「投手」「打撃・守備」、二刀流は「打者」「投手」)。打者は出さない。
+String? _groupCaption(Role r, Ability a) => switch (r) {
+      Role.batter => null,
+      Role.pitcher => a == pitcherAbilities.first
+          ? '投手'
+          : (a == batterAbilities.first ? '打撃・守備(先発した試合の打席と守備に効く)' : null),
+      Role.twoWay => a == batterAbilities.first
+          ? '打者'
+          : (a == pitcherAbilities.first ? '投手' : null),
+    };
 
 /// 重点の能力のチップ。投手は投球の4つだけ先に出し、打撃・守備(7つ)は「打撃・守備」で開く
 /// (11個並ぶと3行になって、行動のタイルが画面の下に押し出されるため)。
@@ -1613,7 +1634,7 @@ class _PlanTile extends StatelessWidget {
               child: Column(mainAxisSize: MainAxisSize.min, children: [
                 Stack(clipBehavior: Clip.none, children: [
                   BadgeIcon(
-                    asset: planBadgeAsset(plan),
+                    asset: planBadgeAsset(plan, focus),
                     size: 34,
                     fallback: Container(
                       width: 34,
@@ -1834,6 +1855,7 @@ class _EventCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final e = game.pendingEvent!;
+    final art = eventImageOf(e.id);
     return Card(
       color: Theme.of(context).colorScheme.secondaryContainer,
       child: Padding(
@@ -1841,6 +1863,15 @@ class _EventCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            if (art != null) ...[
+              StoryImage(
+                key: const Key('event-image'),
+                asset: art.$1,
+                semanticLabel: art.$2,
+                fallback: const SizedBox.shrink(),
+              ),
+              const SizedBox(height: 8),
+            ],
             Text(_eventKind(e.id, game.stage),
                 key: const Key('event-kind'),
                 style: Theme.of(context).textTheme.labelMedium),
@@ -2404,6 +2435,7 @@ class EndingView extends StatelessWidget {
                     leading: const Icon(Icons.card_giftcard,
                         color: Color(0xFFD84315)),
                     title: Text('継承ポイント +${controller.lastLegacyGain}'
+                        '${controller.lastLegacyBoosted ? '(継承ブーストで2倍)' : ''}'
                         '(いま ${controller.legacyPoints}pt)'),
                     subtitle: const Text(
                         '次の選手を始めるとき、図鑑にある特性を生まれつき持たせられます(良い特性3pt、レア8pt)。'),
@@ -2738,6 +2770,10 @@ String endingShareText(Game game) {
         ? '${game.proTeam == null ? '' : '${game.proTeam}で'}プロで${e.proYears}年間プレー'
         : 'プロの舞台には立てなかった',
     '最高の総合評価 ${e.peakOverall}・優勝${e.championships}回・タイトル${e.titles.length}個',
+    '最後の能力: ${[
+      for (final a in mainAbilitiesOf(p.role))
+        '${abilityLabel(a)}${rankOf(p.of(a))}${p.of(a)}'
+    ].join('・')}',
     if (pro.isNotEmpty) careerSummary(game.records),
     if (p.traits.isNotEmpty)
       '特性: ${[
@@ -2772,8 +2808,10 @@ class _AdRecoveryButtonState extends State<_AdRecoveryButton> {
     final messenger = ScaffoldMessenger.maybeOf(context);
     final text = await widget.controller.recoverByAd();
     if (mounted) setState(() => _busy = false);
-    messenger?.hideCurrentSnackBar();
-    messenger?.showSnackBar(SnackBar(content: Text(text)));
+    // 動画を見ている間にアプリの画面ごと閉じられていたら出さない(特典はコントローラーが渡し済み)
+    if (messenger == null || !messenger.mounted) return;
+    messenger.hideCurrentSnackBar();
+    messenger.showSnackBar(SnackBar(content: Text(text)));
   }
 
   @override
@@ -3102,8 +3140,10 @@ class _AdRewardTileState extends State<_AdRewardTile> {
     final messenger = ScaffoldMessenger.maybeOf(context);
     final text = await widget.run();
     if (mounted) setState(() => _busy = false);
-    messenger?.hideCurrentSnackBar();
-    messenger?.showSnackBar(SnackBar(content: Text(text)));
+    // 動画を見ている間にアプリの画面ごと閉じられていたら出さない(特典はコントローラーが渡し済み)
+    if (messenger == null || !messenger.mounted) return;
+    messenger.hideCurrentSnackBar();
+    messenger.showSnackBar(SnackBar(content: Text(text)));
   }
 
   @override

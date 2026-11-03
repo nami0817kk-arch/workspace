@@ -169,8 +169,11 @@ void main() {
       expect(declineMultiplier({Trait.steelBody}), lessThan(0.7));
       expect(fatigueMultiplier({Trait.steelBody}), lessThan(1));
       expect(injuryMultiplier({Trait.ironWill}), lessThan(0.5));
-      expect(tournamentBonus({Trait.stagePresence}), 8);
+      expect(tournamentBonus({Trait.stagePresence}), 20);
+      expect(tournamentBonus({Trait.stagePresence}),
+          greaterThan(tournamentBonus({Trait.clutch}))); // レアはふつうの勝負強いより強い
       expect(tournamentBonus({Trait.ironWill}), 5);
+      expect(draftBonus({Trait.stagePresence}), 2); // スカウトの評価にも少し効く
     });
 
     test('金の特殊能力(天才打者・天才投手)は試合中だけ能力が上がる', () {

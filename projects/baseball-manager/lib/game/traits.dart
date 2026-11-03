@@ -6,17 +6,17 @@ import 'skills.dart';
 /// 特性。能力とは別に、選手の個性として効き方を変える。
 /// 良いものだけでなく、代償のあるもの・悪いものもある。
 enum Trait {
-  lateBloomer('大器晩成', '少年期は伸びが鈍いが、19歳以降に大きく伸びる。', true),
-  earlyBloomer('早熟', '若いうちは伸びが大きいが、衰えも早い。', false),
+  lateBloomer('大器晩成', '少年期は伸びが鈍いが、高校から大きく伸び、衰えも遅い。', true),
+  earlyBloomer('早熟', '若いうちは伸びが大きいが、20歳から伸びが鈍り、衰えも早い。', false),
   hardWorker('努力家', '練習の伸びが1割増える。', true),
-  genius('天才肌', '伸びが2割増える。', true),
+  genius('天才肌', '伸びが1割増える。', true),
   sturdy('頑丈', '怪我をしにくい。', true),
-  glassBody('ガラスの肉体', '怪我をしやすいが、伸びは1.15倍。', false),
+  glassBody('ガラスの肉体', '怪我をしやすいが、伸びは少し大きい(1.05倍)。', false),
   ironMan('鉄人', '疲れが溜まりにくい。', true),
   sunny('前向き', '気持ちが上がりやすく、下がりにくい。', true),
   clutch('勝負強い', '大会での体調が+10相当になる。', true),
   nervy('ノミの心臓', '大会での体調が-10相当になる。', false),
-  starPower('華がある', 'ドラフトの評価に+5。', true),
+  starPower('華がある', 'ドラフトの評価に+2。', true),
   longevity('長持ち', '衰えがゆるやか。', true),
 
   // 試合の能力を足すもの(長距離砲・剛腕など)は、2026-10-24 に特殊能力(`skills.dart`)へ移した。
@@ -24,19 +24,19 @@ enum Trait {
 
   // ── 誰でも ──
   leader('キャプテンシー', 'チームをまとめ、大会・シーズンのチーム力が+3。', true),
-  moodMaker('ムードメーカー', '友情タッグの経験点が増える(1.5倍)。', true),
+  moodMaker('ムードメーカー', '友情タッグの経験点が増える(1.25倍)。', true),
   quickRecovery('回復力', '休養で疲れがよく抜ける(1.5倍)。', true),
   worldStage('国際舞台に強い', '世界大会での体調が+10相当になる。', true),
   studious('研究熱心', '「研究」で貯まる特殊能力のコツが1つ多い。', true),
   moody('ムラっ気', '気持ちの上下が激しい(上がるのも下がるのも1.3倍)。', false),
   slowRecovery('疲れが抜けにくい', '休養で疲れが抜けにくい(0.6倍)。', false),
-  lonely('一匹狼', '友情タッグの経験点が減る(0.6倍)が、練習の伸びは1割増える。', false),
+  lonely('一匹狼', '友情タッグの経験点が減る(0.6倍)が、練習の伸びは2割増える。', false),
 
   // ── レア特性(生まれつき4%、または節目の「覚醒」でしか手に入らない) ──
   monster('怪物', '規格外。伸びが1割ほど増え、衰えも1割ゆるやか。', true),
   steelBody('鋼の肉体', '衰えがゆるやか(0.6倍)。疲れも溜まりにくい(0.8倍)。', true),
   ironWill('不屈', '怪我の影響が半分以下(0.4倍)。大会での体調が+5相当になる。', true),
-  stagePresence('千両役者', '大会(世界大会も)での体調が+8相当になる。', true),
+  stagePresence('千両役者', '大会(世界大会も)での体調が+20相当になり、大舞台に強いとスカウトの評価も上がる。', true),
   fortune('強運', '練習の「失敗」が半分に、「大成功」が1.6倍出る。', true);
 
   const Trait(this.label, this.description, this.positive);
@@ -169,13 +169,22 @@ Set<Trait> rollBirthRare(Random rng, Set<Trait> have, Role role) {
 /// 伸びる年(成長率 >= 0)の倍率。`age` は今の年齢。
 double growthMultiplier(Set<Trait> t, int age) {
   var m = 1.0;
-  if (t.contains(Trait.lateBloomer)) m *= age < 19 ? 0.7 : 1.4;
-  if (t.contains(Trait.earlyBloomer)) m *= age < 16 ? 1.3 : 1.0;
+  // 2026-11-03: 19歳まで0.7倍だと18歳のドラフトに間に合わず、プロ入り 8〜14%・レジェンド 0% だった。
+  // 中学までは鈍く(0.85倍)、高校(16歳)から大きく伸び(1.4倍)、衰えも遅い(`declineMultiplier`)。
+  // talent_audit: プロ入りは特性なしと同じくらい、レジェンドは多い(打者 7%・投手 11%、基準 1〜2%)。
+  if (t.contains(Trait.lateBloomer)) m *= age < 16 ? 0.85 : 1.4;
+  // 2026-11-03: 早熟は「若いうちだけ」のはずが、16歳までの1.3倍だけで全特性で最も強い部類だった
+  // (プロ入り 62〜68%・レジェンド 21〜23%)。16歳までは1.15倍、20歳からは鈍る(0.8倍)形にした。
+  // talent_audit: プロ入りしやすい(打者 46%・投手 55%)が、レジェンドにはなりにくい(3〜4%)。
+  if (t.contains(Trait.earlyBloomer)) m *= age < 16 ? 1.15 : (age < 20 ? 1.0 : 0.8);
   if (t.contains(Trait.hardWorker)) m *= 1.1;
-  if (t.contains(Trait.genius)) m *= 1.2;
+  // 2026-11-03: 1.2倍はレア特性の怪物(1.12倍)より強く、プロ入り 60〜65%・レジェンド 27% だった
+  if (t.contains(Trait.genius)) m *= 1.1;
   if (t.contains(Trait.monster)) m *= 1.12;
-  if (t.contains(Trait.glassBody)) m *= 1.15;
-  if (t.contains(Trait.lonely)) m *= 1.1;
+  // 2026-11-03: 1.15倍だと怪我(1.8倍)を差し引いても特性なしより強かった(悪い特性なのにプロ入り +10pt)。
+  if (t.contains(Trait.glassBody)) m *= 1.05;
+  // 一匹狼は、友情タッグ0.6倍に対して1.1倍では足りず、特性なしよりプロ入りが11pt低かった(2026-11-03)
+  if (t.contains(Trait.lonely)) m *= 1.2;
   return m;
 }
 
@@ -183,6 +192,7 @@ double growthMultiplier(Set<Trait> t, int age) {
 double declineMultiplier(Set<Trait> t) {
   var m = 1.0;
   if (t.contains(Trait.earlyBloomer)) m *= 1.3;
+  if (t.contains(Trait.lateBloomer)) m *= 0.8;
   if (t.contains(Trait.longevity)) m *= 0.6;
   if (t.contains(Trait.monster)) m *= 0.9;
   if (t.contains(Trait.steelBody)) m *= 0.6;
@@ -215,10 +225,15 @@ int tournamentBonus(Set<Trait> t) =>
     (t.contains(Trait.clutch) ? 10 : 0) -
     (t.contains(Trait.nervy) ? 10 : 0) +
     (t.contains(Trait.ironWill) ? 5 : 0) +
-    (t.contains(Trait.stagePresence) ? 8 : 0);
+    // レア特性なのに、ふつうの「勝負強い」(+10)より弱かった(+8)。才能の監査でプロ入り率が特性なしと変わらなかったので +20 に(2026-11-03)
+    (t.contains(Trait.stagePresence) ? 20 : 0);
 
 /// ドラフトの点数に足す値。
-double draftBonus(Set<Trait> t) => t.contains(Trait.starPower) ? 5 : 0;
+double draftBonus(Set<Trait> t) =>
+    // 2026-11-03: +5 だとプロ入り 56〜63% で、レア特性の千両役者(+2)より強かった
+    (t.contains(Trait.starPower) ? 2 : 0) +
+    // 千両役者は大会の体調だけではドラフトにほぼ効かなかった(才能の監査)ので、スカウトの評価にも効かせる
+    (t.contains(Trait.stagePresence) ? 2 : 0);
 
 // ── 新しい特性の効き方 ──
 
@@ -246,7 +261,8 @@ double recoveryMultiplier(Set<Trait> t) =>
 
 /// 友情タッグの経験点の倍率(基本の倍率に掛ける)。
 double tagTraitMultiplier(Set<Trait> t) =>
-    (t.contains(Trait.moodMaker) ? 1.5 : 1.0) *
+    // 2026-11-03: 1.5倍だとプロ入り 56〜60%・レジェンド 26% で、レア特性より強かった
+    (t.contains(Trait.moodMaker) ? 1.25 : 1.0) *
     (t.contains(Trait.lonely) ? 0.6 : 1.0);
 
 /// 世界大会の体調に足す値。
