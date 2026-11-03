@@ -678,6 +678,9 @@ class Game {
   double? _lastCrowd;
   int trainCount = 0;
 
+  /// 今年すでにログに出した友情タッグの相手。年末に空にする(保存しない)。
+  final Set<String> _taggedThisYear = {};
+
   /// 幼少期の分かれ道で選んだもの(出来事のid → 選択肢の番号)。
   final Map<String, int> childhood = {};
   int restCount = 0;
@@ -1325,7 +1328,11 @@ class Game {
               .round();
         }
         mate.addBond(8);
-        log.add('${mate.name}と友情タッグ練習!');
+        // 同じ仲間とのタッグは、その年の最初の1回だけログに出す(一生で75回並んでいた)。
+        // 頼んだ自主練(forced)は毎回出す。
+        if (forced != null || _taggedThisYear.add(mate.id)) {
+          log.add('${mate.name}と友情タッグ練習!');
+        }
       }
     }
     if (action == Plan.lesson &&
@@ -1917,6 +1924,7 @@ class Game {
     }
     comboCount = 0;
     trainCount = 0;
+    _taggedThisYear.clear();
     restCount = 0;
     peakOverall = max(peakOverall, overall(player).round());
     peakAbility = peakAbilityNow;
