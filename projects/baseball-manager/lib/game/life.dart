@@ -865,8 +865,9 @@ final List<GameEvent> events = [
           },
         ),
         EventChoice(
-          '放っておく',
-          (p, c, f) => (player: p, condition: c),
+          // 2026-11-03: 絆が下がるだけで得るものが無く、選ぶ意味がなかった。自分の練習に戻れる
+          '放っておいて、自分の練習に戻る',
+          (p, c, f) => (player: _gain(p, f, 1), condition: c),
           (cast, rng) {
             for (final m in cast.teammates) {
               m.addBond(-4);
