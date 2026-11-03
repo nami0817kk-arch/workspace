@@ -25,6 +25,8 @@ void main() {
       worldImageAsset,
       stageImageAsset,
       traitImageAsset,
+      firstTeamImageAsset,
+      overseasImageAsset,
     ];
     // 絵の大きさ・合計には上限を設けない(2026-11-03 ユーザー指示)。あるかだけ確かめる。
     for (final a in paths.toSet()) {

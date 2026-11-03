@@ -49,6 +49,14 @@ class MilestoneDialog extends StatelessWidget {
             nationalImageAsset,
             'ロッカールームのベンチに、たたんだユニフォームと帽子とグローブ。日の丸の小旗'
           ),
+        MilestoneKind.world when milestone.title == '海を渡る!' => (
+            overseasImageAsset,
+            '夕焼けの空港の窓の前で、スーツケースとバットケースを持った選手の後ろ姿。飛び立つ旅客機'
+          ),
+        MilestoneKind.stage when milestone.title == '一軍昇格!' => (
+            firstTeamImageAsset,
+            '満員のドーム球場で、ベンチ前に立って照明とスタンドを見上げる選手の後ろ姿'
+          ),
         // 「海を渡る!」(海外移籍)も同じ種類なので、世界一のときだけ
         MilestoneKind.world when milestone.title == '世界一!' => (
             worldImageAsset,

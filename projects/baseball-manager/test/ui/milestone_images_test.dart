@@ -31,12 +31,16 @@ void main() {
     expect(t.takeException(), isNull);
   });
 
-  testWidgets('同じ種類でも絵が合わない節目には出さない(海外移籍・一軍昇格)', (t) async {
+  testWidgets('海外移籍・一軍昇格にも絵が出る(2026-11-03 夜)。合う絵の無い節目には出さない', (t) async {
     expect(
         await _hasImage(t, const Milestone(MilestoneKind.world, '海を渡る!', 'x')),
-        isFalse);
+        isTrue);
     expect(
         await _hasImage(t, const Milestone(MilestoneKind.stage, '一軍昇格!', 'x')),
+        isTrue);
+    expect(
+        await _hasImage(t, const Milestone(MilestoneKind.world, '準優勝', 'x')),
         isFalse);
+    expect(t.takeException(), isNull);
   });
 }

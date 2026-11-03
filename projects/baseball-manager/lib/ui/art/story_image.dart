@@ -46,6 +46,10 @@ const worldImageAsset = 'assets/images/ms_world.jpg';
 const stageImageAsset = 'assets/images/ms_stage.jpg';
 const traitImageAsset = 'assets/images/ms_trait.jpg';
 
+// 2026-11-03 夜に足した節目の絵(Gemini。選手は後ろ姿・文字やロゴなし。1280x720)
+const firstTeamImageAsset = 'assets/images/ms_firstteam.jpg';
+const overseasImageAsset = 'assets/images/ms_overseas.jpg';
+
 /// 段階ごとの背景の絵(育成画面の見出し)。段階が変わると、背景も変わる。
 String backdropAssetOf(Stage s) => switch (s) {
       Stage.youth => 'assets/images/bg_youth.jpg',
