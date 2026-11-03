@@ -686,7 +686,8 @@ class _RankSquare extends StatelessWidget {
       decoration: BoxDecoration(
         color: rankColor(r),
         borderRadius: BorderRadius.circular(size * 0.22),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.7), width: 1.5),
+        border:
+            Border.all(color: Colors.white.withValues(alpha: 0.7), width: 1.5),
       ),
       child: Text(r,
           style: TextStyle(
@@ -708,67 +709,76 @@ class _AbilityRow extends StatelessWidget {
     final a = ability;
     final v = snapshot.of(a);
     final gift = snapshot.gifts[a] ?? 0;
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 3),
-      child: Row(children: [
-        _RankSquare(value: v),
-        const SizedBox(width: 10),
-        Expanded(
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              alignment: Alignment.centerLeft,
-              child: Row(mainAxisSize: MainAxisSize.min, children: [
-              Tooltip(
-                message: gift == 0
-                    ? abilityHint(a)
-                    : '${abilityHint(a)} 才能: ${giftHint(gift)}',
-                triggerMode: TooltipTriggerMode.tap,
-                child: Text(abilityLabel(a),
-                    key: Key('gift-${a.name}'),
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 15)),
+    // 読み上げでは「ミート Dランク 51。才能★3。…」の1つにまとめる(文字・星・数字がばらばらに読まれていた)
+    return Semantics(
+      container: true,
+      label: '${abilityLabel(a)} ${rankOf(v)}ランク $v。才能${giftStarCount(gift)}つ星。'
+          '${a == Ability.trajectory ? '弾道${trajectoryLevel(v)}。' : ''}${abilityHint(a)}',
+      excludeSemantics: true,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 3),
+        child: Row(children: [
+          _RankSquare(value: v),
+          const SizedBox(width: 10),
+          Expanded(
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Row(mainAxisSize: MainAxisSize.min, children: [
+                  Tooltip(
+                    message: gift == 0
+                        ? abilityHint(a)
+                        : '${abilityHint(a)} 才能: ${giftHint(gift)}',
+                    triggerMode: TooltipTriggerMode.tap,
+                    child: Text(abilityLabel(a),
+                        key: Key('gift-${a.name}'),
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 15)),
+                  ),
+                  const SizedBox(width: 4),
+                  Text(giftStars(gift),
+                      key: Key('gift-stars-${a.name}'),
+                      style: const TextStyle(
+                          fontSize: 10, color: Color(0xFFF9A825))),
+                  if (a == Ability.trajectory) ...[
+                    const SizedBox(width: 4),
+                    for (var i = 0; i < trajectoryLevel(v); i++)
+                      const Icon(Icons.north_east,
+                          size: 14, color: Color(0xFFEF6C00)),
+                  ],
+                ]),
               ),
-              const SizedBox(width: 4),
-              Text(giftStars(gift),
-                  key: Key('gift-stars-${a.name}'),
-                  style: const TextStyle(fontSize: 10, color: Color(0xFFF9A825))),
-              if (a == Ability.trajectory) ...[
-                const SizedBox(width: 4),
-                for (var i = 0; i < trajectoryLevel(v); i++)
-                  const Icon(Icons.north_east,
-                      size: 14, color: Color(0xFFEF6C00)),
-              ],
-              ]),
-            ),
-            const SizedBox(height: 3),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(4),
-              child: LinearProgressIndicator(
-                value: v / 99,
-                minHeight: 8,
-                color: rankColor(rankOf(v)),
-                backgroundColor:
-                    Theme.of(context).colorScheme.surfaceContainerHighest,
+              const SizedBox(height: 3),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: LinearProgressIndicator(
+                  value: v / 99,
+                  minHeight: 8,
+                  color: rankColor(rankOf(v)),
+                  backgroundColor:
+                      Theme.of(context).colorScheme.surfaceContainerHighest,
+                ),
               ),
-            ),
-          ]),
-        ),
-        const SizedBox(width: 10),
-        SizedBox(
-          width: 44,
-          child: FittedBox(
-            fit: BoxFit.scaleDown,
-            alignment: Alignment.centerRight,
-            child: Text('$v',
-                textAlign: TextAlign.right,
-                style: const TextStyle(
-                    fontWeight: FontWeight.w900,
-                    fontSize: 24,
-                    fontFeatures: [FontFeature.tabularFigures()])),
+            ]),
           ),
-        ),
-      ]),
+          const SizedBox(width: 10),
+          SizedBox(
+            width: 44,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerRight,
+              child: Text('$v',
+                  textAlign: TextAlign.right,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w900,
+                      fontSize: 24,
+                      fontFeatures: [FontFeature.tabularFigures()])),
+            ),
+          ),
+        ]),
+      ),
     );
   }
 }
@@ -796,7 +806,8 @@ class _SkillPill extends StatelessWidget {
           color: bg,
           borderRadius: BorderRadius.circular(6),
           border: Border.all(
-              color: k.gold ? const Color(0xFFC9A227) : fg.withValues(alpha: 0.5)),
+              color:
+                  k.gold ? const Color(0xFFC9A227) : fg.withValues(alpha: 0.5)),
         ),
         child: Row(mainAxisSize: MainAxisSize.min, children: [
           Icon(
