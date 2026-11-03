@@ -169,7 +169,8 @@ class _Summary extends StatelessWidget {
             Text(isPro ? 'プロ通算 (${pro.length}年)' : 'アマチュア通算 (大会)',
                 style: Theme.of(context).textTheme.titleSmall),
             const SizedBox(height: 10),
-            if (l.hasBatting)
+            // 投手の打席(先発した試合だけ)は、投球のあとに小さく出す
+            if (l.hasBatting && !(l.pitcherBat && l.hasPitching))
               Wrap(spacing: 20, runSpacing: 8, children: [
                 _Stat('試合', '${l.games}'),
                 _Stat('打率', fmtRate(l.battingAverage)),
@@ -177,7 +178,8 @@ class _Summary extends StatelessWidget {
                 _Stat('本塁打', '${l.homeRuns}'),
                 _Stat('OPS', fmtRate(l.ops)),
               ]),
-            if (l.hasBatting && l.hasPitching) const SizedBox(height: 10),
+            if (l.hasBatting && l.hasPitching && !l.pitcherBat)
+              const SizedBox(height: 10),
             if (l.hasPitching)
               Wrap(spacing: 20, runSpacing: 8, children: [
                 _Stat('登板', '${l.starts}'),
@@ -186,6 +188,19 @@ class _Summary extends StatelessWidget {
                 _Stat('奪三振', '${l.strikeouts}'),
                 _Stat('投球回', l.inningsText),
               ]),
+            if (l.hasBatting && l.pitcherBat && l.hasPitching) ...[
+              const SizedBox(height: 10),
+              Text('打撃(先発した試合の打席)',
+                  key: const Key('pitcher-batting'),
+                  style: Theme.of(context).textTheme.labelMedium),
+              const SizedBox(height: 4),
+              Wrap(spacing: 20, runSpacing: 8, children: [
+                _Stat('打率', fmtRate(l.battingAverage)),
+                _Stat('安打', '${l.hits}'),
+                _Stat('本塁打', '${l.homeRuns}'),
+                _Stat('打点', '${l.rbi}'),
+              ]),
+            ],
             if (isPro) ...[
               const SizedBox(height: 10),
               _Stat('通算収入', fmtSalary(careerEarnings(pro))),
@@ -236,7 +251,8 @@ class _Metrics extends StatelessWidget {
           children: [
             Text(pro ? '指標(プロ通算)' : '指標(大会通算)', style: t.titleSmall),
             Text('項目をタップすると意味が出ます。100が平均の指標は、大きいほど良い。', style: t.bodySmall),
-            if (l.hasBatting) ...[
+            // 投手の打席は数が少なく、指標が極端になるので出さない
+            if (l.hasBatting && !(l.pitcherBat && l.hasPitching)) ...[
               const SizedBox(height: 10),
               Text('打者', style: t.labelLarge),
               const SizedBox(height: 4),
@@ -310,7 +326,8 @@ class _Table extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bat = records.any((r) => r.line.hasBatting);
+    // 投手の打席(先発の試合だけ)は年度別の表には出さない(通算の欄に小さく出す)
+    final bat = records.any((r) => r.line.hasBatting && !r.line.pitcherBat);
     final pit = records.any((r) => r.line.hasPitching);
     final cs = Theme.of(context).colorScheme;
     DataColumn col(String s, {bool num = false}) =>

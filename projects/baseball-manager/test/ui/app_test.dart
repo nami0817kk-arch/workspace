@@ -607,7 +607,7 @@ void _rankTests() {
     expect(find.textContaining('通算'), findsWidgets);
   });
 
-  testWidgets('成績: 投手は勝敗・防御率・奪三振の欄が出る', (t) async {
+  testWidgets('成績: 投手は勝敗・防御率・奪三振の欄が出る。打撃は投球のあとに小さく出る', (t) async {
     final c = await _start(t);
     final g = Game.newGame(
         name: '投手', role: Role.pitcher, rng: Random(2), potential: 70);
@@ -625,6 +625,8 @@ void _rankTests() {
     await t.pumpAndSettle();
     expect(find.text('防御率'), findsWidgets);
     expect(find.text('奪三振'), findsWidgets);
+    expect(find.byKey(const Key('pitcher-batting')), findsOneWidget);
+    expect(find.text('OPS'), findsNothing); // 投手の打席の指標は出さない
   });
 
   testWidgets('成績: プロのシーズンは順位とプロ通算が出る', (t) async {
