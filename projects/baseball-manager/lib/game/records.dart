@@ -175,7 +175,8 @@ String fmtEra(double? v) => v == null ? '-' : v.toStringAsFixed(2);
 
 /// 成績の短い説明(画面のログ用)。打者・投手のどちらか、または両方。
 /// 投手の打席(先発の試合に2打席)は、打率が.000でも見せる意味が薄いので、安打があるときだけ投球のあとに添える。
-String describeLine(Line l) {
+/// `brief`(月ごとの記録など)では、投手の打席は本塁打があるときだけ「打撃 本塁打1」と添える。
+String describeLine(Line l, {bool brief = false}) {
   final parts = <String>[];
   final pitcherBat = l.pitcherBat && l.hasPitching;
   if (l.hasBatting && !pitcherBat) {
@@ -187,7 +188,11 @@ String describeLine(Line l) {
     parts.add('$wl防御率${fmtEra(l.era)} 奪三振${l.strikeouts}');
   }
   if (l.hasBatting && pitcherBat && l.hits > 0) {
-    parts.add('打撃 打率${fmtRate(l.battingAverage)} 本塁打${l.homeRuns}');
+    if (!brief) {
+      parts.add('打撃 打率${fmtRate(l.battingAverage)} 本塁打${l.homeRuns}');
+    } else if (l.homeRuns > 0) {
+      parts.add('打撃 本塁打${l.homeRuns}');
+    }
   }
   return parts.join(' / ');
 }

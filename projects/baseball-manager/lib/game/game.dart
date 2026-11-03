@@ -1492,7 +1492,7 @@ class Game {
   /// 月ごとの成績をログに残す。出来が飛び抜けていれば「月間MVP」。
   void _monthlyReport(LeagueProgress m) {
     _allStar();
-    final d = describeLine(m.line);
+    final d = describeLine(m.line, brief: true);
     if (m.missed >= 20) {
       monthRows.add('$slotName: 怪我で全休 / ${m.wins}勝${m.losses}敗');
       log.add('$slotName: 怪我で全試合を欠場。チームは${m.wins}勝${m.losses}敗。');

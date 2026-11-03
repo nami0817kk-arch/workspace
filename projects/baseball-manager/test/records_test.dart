@@ -248,6 +248,21 @@ void main() {
           allOf(contains('3勝1敗'), contains('防御率'), contains('奪三振40')));
       expect(describeLine(const Line()), '');
     });
+
+    test('投手の打席: 投球が先、打撃は安打があるときだけ。月ごと(brief)は本塁打のときだけ', () {
+      const hit = Line(
+          faced: 100, outs: 60, strikeouts: 30, atBats: 8, hits: 2,
+          totalBases: 2, pitcherBat: true);
+      expect(describeLine(hit), startsWith('防御率'));
+      expect(describeLine(hit), contains('打撃 打率.250'));
+      expect(describeLine(hit, brief: true), isNot(contains('打撃')));
+      const hr = Line(
+          faced: 100, outs: 60, atBats: 8, hits: 1, totalBases: 4,
+          homeRuns: 1, pitcherBat: true);
+      expect(describeLine(hr, brief: true), contains('打撃 本塁打1'));
+      const none = Line(faced: 100, outs: 60, atBats: 8, pitcherBat: true);
+      expect(describeLine(none), isNot(contains('打撃')));
+    });
   });
 
   group('ゲームの中の成績', () {
