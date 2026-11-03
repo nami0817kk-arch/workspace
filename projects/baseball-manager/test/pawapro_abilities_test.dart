@@ -3,6 +3,7 @@ import 'package:baseball_manager/game/exp.dart';
 import 'package:baseball_manager/game/player.dart';
 import 'package:baseball_manager/game/snapshot.dart';
 import 'package:baseball_manager/ui/labels.dart';
+import 'package:baseball_manager/ui/player_screen.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -126,5 +127,23 @@ void main() {
     final n = Character.fromJson(
         {'id': 'n', 'name': '仲間', 'kind': 'teammate', 'specialty': 'speed'});
     expect(n.specialty, Ability.speed);
+  });
+
+  test('コピーする選手カードに、本業の能力がランクと数字で入る', () {
+    final s = PlayerSnapshot.fromJson({
+      'name': 'カード',
+      'role': 'pitcher',
+      'age': 25,
+      'abilities': {
+        'stuff': 75,
+        'control': 62,
+        'stamina': 55,
+        'breaking': 48,
+        'contact': 30,
+      },
+    });
+    final t = profileCardText(s);
+    expect(t, contains('能力: 球速B75・コントロールC62・スタミナD55・変化球E48'));
+    expect(t, isNot(contains('ミート'))); // 投手の打撃は入れない
   });
 }

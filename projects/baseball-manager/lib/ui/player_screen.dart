@@ -52,7 +52,7 @@ class PlayerScreen extends StatelessWidget {
                 onPressed: () async {
                   final m = ScaffoldMessenger.of(context);
                   await Clipboard.setData(
-                      ClipboardData(text: profileText(snapshot)));
+                      ClipboardData(text: profileCardText(snapshot)));
                   m.showSnackBar(
                       const SnackBar(content: Text('選手カードをコピーしました')));
                 },
@@ -85,6 +85,16 @@ class PlayerScreen extends StatelessWidget {
     );
   }
 }
+
+/// コピーする選手カード。プロフィールに、本業の能力をランクと数字で添える
+/// (「能力: ミートC61・パワーD55・…」。パワプロの選手カードのように)。
+String profileCardText(PlayerSnapshot s) => [
+      profileText(s),
+      '能力: ${[
+        for (final a in mainAbilitiesOf(s.role))
+          '${abilityLabel(a)}${rankOf(s.of(a))}${s.of(a)}'
+      ].join('・')}',
+    ].join('\n');
 
 class _Scroll extends StatelessWidget {
   const _Scroll({required this.child});
