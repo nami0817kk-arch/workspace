@@ -110,9 +110,10 @@ String amateurLossText(Stage stage, int roundsWon, int total,
 String amateurLossLine(Stage stage, int roundsWon, int total,
     {bool corporate = false}) {
   final name = amateurEventName(stage, corporate: corporate);
-  if (roundsWon == 0) return '$nameは初戦で敗れた。';
   if (roundsWon == total - 1) return '$nameは準優勝。';
   var label = amateurRoundLabel(stage, roundsWon, total, corporate: corporate);
+  // 初戦でも、呼び名が準決勝などなら「初戦で」とは言わない(2026-11-03。「準決勝」の1行のあとに「初戦で敗れた」と出ていた)
+  if (roundsWon == 0 && label.contains('回戦')) return '$nameは初戦で敗れた。';
   // 「大学選手権は大学選手権の準々決勝」のような重なりを避ける
   label = label.startsWith('$name ')
       ? label.substring(name.length + 1)
