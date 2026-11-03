@@ -1,3 +1,4 @@
+import 'package:baseball_manager/ui/art/story_image.dart';
 import 'package:baseball_manager/ui/controller.dart';
 import 'package:baseball_manager/ui/milestone_dialog.dart';
 import 'package:flutter/material.dart';
@@ -45,5 +46,11 @@ void main() {
     expect(await _hasImage(t, const Milestone(MilestoneKind.world, '準優勝', 'x')),
         isFalse);
     expect(t.takeException(), isNull);
+  });
+
+  test('山場の出来事(決勝の見せ場・戦力外通告)にだけ絵を添える', () {
+    expect(eventImageOf('final-moment')?.$1, finalMomentImageAsset);
+    expect(eventImageOf('tryout')?.$1, tryoutImageAsset);
+    expect(eventImageOf('rain-day'), isNull);
   });
 }

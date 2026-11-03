@@ -1814,6 +1814,7 @@ class _EventCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final e = game.pendingEvent!;
+    final art = eventImageOf(e.id);
     return Card(
       color: Theme.of(context).colorScheme.secondaryContainer,
       child: Padding(
@@ -1821,6 +1822,15 @@ class _EventCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            if (art != null) ...[
+              StoryImage(
+                key: const Key('event-image'),
+                asset: art.$1,
+                semanticLabel: art.$2,
+                fallback: const SizedBox.shrink(),
+              ),
+              const SizedBox(height: 8),
+            ],
             Text(_eventKind(e.id, game.stage),
                 key: const Key('event-kind'),
                 style: Theme.of(context).textTheme.labelMedium),

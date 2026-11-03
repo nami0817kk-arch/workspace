@@ -51,6 +51,23 @@ const firstTeamImageAsset = 'assets/images/ms_firstteam.jpg';
 const overseasImageAsset = 'assets/images/ms_overseas.jpg';
 const missionImageAsset = 'assets/images/ms_mission.jpg';
 
+// 山場の出来事の絵(2026-11-03 夜。Gemini。選手は後ろ姿・文字やロゴなし)
+const finalMomentImageAsset = 'assets/images/ev_final.jpg';
+const tryoutImageAsset = 'assets/images/ev_tryout.jpg';
+
+/// 出来事の札に添える絵と、読み上げの説明。山場(決勝の見せ場・戦力外通告)だけ。
+(String, String)? eventImageOf(String id) => switch (id) {
+      'final-moment' => (
+          finalMomentImageAsset,
+          '夕暮れの満員の球場。マウンドの投手が帽子のつばに手をやり、打者と向き合う'
+        ),
+      'tryout' => (
+          tryoutImageAsset,
+          '冬の夕方、誰もいない球場のスタンドにひとり座る選手の後ろ姿。足元にバッグとグローブ'
+        ),
+      _ => null,
+    };
+
 /// 段階ごとの背景の絵(育成画面の見出し)。段階が変わると、背景も変わる。
 String backdropAssetOf(Stage s) => switch (s) {
       Stage.youth => 'assets/images/bg_youth.jpg',
