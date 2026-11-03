@@ -2,6 +2,27 @@ part of 'game_state.dart';
 
 /// スカッド運用: 育成・トレーニング設定、施設/スタッフ強化、戦術、ラインナップ。
 extension GameStateSquad on GameState {
+  /// 週の練習枠[slot](0始まり)にメニューを入れる。初めて触るときは、いま
+  /// のチーム既定方針で全枠を埋めてから該当の枠だけ差し替える。
+  void setWeeklyMenuSlot(int slot, TrainingFocus focus) {
+    if (_save == null) return;
+    if (slot < 0 || slot >= Team.weeklyMenuSlots) return;
+    final menu = List<TrainingFocus>.of(userTeam.weeklyMenu ??
+        List.filled(Team.weeklyMenuSlots, userTeam.defaultTrainingFocus));
+    menu[slot] = focus;
+    userTeam.weeklyMenu = menu;
+    _notify();
+    _persist();
+  }
+
+  /// 練習枠メニューをやめ、従来の「チーム既定方針を1週まるごと」に戻す。
+  void clearWeeklyMenu() {
+    if (_save == null) return;
+    userTeam.weeklyMenu = null;
+    _notify();
+    _persist();
+  }
+
   /// チーム既定のトレーニング方針を設定する（個別方針未設定の選手に適用される）。
   void setTeamTrainingFocus(TrainingFocus focus) {
     if (_save == null) return;
