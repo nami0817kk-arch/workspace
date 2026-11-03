@@ -366,7 +366,7 @@ void main() {
       final remove = find.byKey(const Key('remove-ads'));
       await t.scrollUntilVisible(remove, 200,
           scrollable: find.byType(Scrollable).last);
-      expect(find.text('¥370'), findsOneWidget);
+      expect(find.text('\uFFE5370'), findsOneWidget);
       expect(find.byKey(const Key('restore-purchases')), findsOneWidget);
       await t.tap(remove);
       await t.pumpAndSettle();

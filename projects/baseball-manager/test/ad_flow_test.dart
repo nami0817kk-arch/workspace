@@ -275,6 +275,13 @@ void main() {
     });
   });
 
+  test('ストアの半角の円記号は、同梱フォントにある全角で出す(docs/app-pitfalls.md 6番)', () {
+    expect(displayPrice('\u00A5370'), '\uFFE5370');
+    expect(displayPrice('\uFFE5370'), '\uFFE5370');
+    expect(displayPrice(r'$2.99'), r'$2.99');
+    expect(displayPrice(null), isNull);
+  });
+
   group('設定画面の購入', () {
     Future<(GameController, FakeStore)> openSettings(WidgetTester t,
         {void Function(FakeStore)? tweak}) async {
@@ -305,7 +312,7 @@ void main() {
       const key = Key('buy-${PurchaseService.legacyBoostId}');
       await t.scrollUntilVisible(find.byKey(key), 200,
           scrollable: find.byType(Scrollable).last);
-      expect(find.text('¥250'), findsOneWidget);
+      expect(find.text('\uFFE5250'), findsOneWidget);
       await tapItem(t, key);
       expect(store.bought, [PurchaseService.legacyBoostId]);
       expect(c.money!.legacyBoost, isTrue);

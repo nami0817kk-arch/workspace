@@ -192,11 +192,12 @@ class Monetization extends ChangeNotifier {
   bool get needsAd => !adFree;
 
   Future<bool> get canBuy async => !adFree && await store.isAvailable();
-  Future<String?> get price => store.priceLabel(PurchaseService.removeAdsId);
+  Future<String?> get price => priceOf(PurchaseService.removeAdsId);
 
   /// ストアに繋がるか(購入の項目を出すか)。
   Future<bool> get storeAvailable => store.isAvailable();
-  Future<String?> priceOf(String id) => store.priceLabel(id);
+  Future<String?> priceOf(String id) async =>
+      displayPrice(await store.priceLabel(id));
 
   /// 広告を消す を買う(前からの呼び名)。
   Future<PurchaseOutcome> buy() => buyItem(PurchaseService.removeAdsId);
@@ -211,3 +212,8 @@ class Monetization extends ChangeNotifier {
   /// 全部の商品を復元する(届いたぶんは onDelivered で付く)。
   Future<PurchaseOutcome> restore() => store.restore();
 }
+
+/// ストアの価格を、同梱フォント(NotoSansJP)にある字で出す。
+/// App Store は日本の価格を半角の「¥」(U+00A5)で返すが、同梱フォントには無い(全角の「￥」はある)。
+/// 端末のフォントが補う見込みでも当て推量にしない(docs/app-pitfalls.md 6番。2026-11-03)。
+String? displayPrice(String? p) => p?.replaceAll('\u00A5', '\uFFE5');
