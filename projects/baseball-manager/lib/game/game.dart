@@ -1500,10 +1500,10 @@ class Game {
   }
 
   /// 月ごとの成績をログに残す。出来が飛び抜けていれば「月間MVP」。
-  void _monthlyReport(LeagueProgress m) {
+  void _monthlyReport(LeagueProgress m, [int games = 20]) {
     _allStar();
     final d = describeLine(m.line, brief: true);
-    if (m.missed >= 20) {
+    if (m.missed >= games) {
       monthRows.add('$slotName: 怪我で全休 / ${m.wins}勝${m.losses}敗');
       log.add('$slotName: 怪我で全試合を欠場。チームは${m.wins}勝${m.losses}敗。');
       return;
@@ -1560,9 +1560,11 @@ class Game {
     var prog = seasonProgress ?? const LeagueProgress();
     final rest = leagueGames - prog.games;
     if (rest > 0) {
-      prog = playLeagueChunk(
+      // 10月の残り試合も、ほかの月と同じく1か月ぶんとしてログに出す
+      // (出さないと、月ごとの勝敗を足しても年間の成績にならない。2026-11-03)
+      final month = playLeagueChunk(
         fighter,
-        prog,
+        LeagueProgress(games: prog.games),
         teamLevel: team,
         opponents: opponents,
         rng: rng,
@@ -1570,6 +1572,16 @@ class Game {
         condition: condition.value,
         available: !condition.injured,
       );
+      prog = LeagueProgress(
+        games: month.games,
+        wins: prog.wins + month.wins,
+        losses: prog.losses + month.losses,
+        line: prog.line + month.line,
+        missed: prog.missed + month.missed,
+      );
+      seasonProgress = prog;
+      // 月を回していない年(途中から始めた年など)は、まとめて1行にしない
+      if (prog.games > rest) _monthlyReport(month, rest);
     }
     seasonProgress = null;
     return prog.toSeason();
