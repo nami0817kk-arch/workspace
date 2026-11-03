@@ -65,6 +65,13 @@ void main() {
     }
     // 得意との差が小さければ、釣り合いをほめる
     expect(coachWordOf(_p(Role.batter, {})), contains('釣り合って'));
+    // ベテランには「上に行ける」と言わず、保つ言葉をかける
+    for (var age = 34; age < 41; age++) {
+      final w = coachWordOf(
+          _p(Role.batter, {Ability.speed: 10}).copyWith(age: age));
+      expect(w, contains('走力'));
+      expect(w, isNot(contains('一段上')));
+    }
   });
 }
 
