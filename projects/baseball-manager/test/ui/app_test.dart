@@ -2188,7 +2188,12 @@ void _rankTests() {
     expect(find.byType(Image), findsWidgets);
     expect(t.takeException(), isNull, reason: '画像の読み込み');
     // プロを引退したエンディングに絵が出る
-    final done = _until((g) => false, seed: 3, potential: 95);
+    // プロ入りして引退する乱数の種を探す(バランスを変えると、プロ入りする種が変わるため)
+    var seed = 3;
+    var done = _until((g) => false, seed: seed, potential: 95);
+    while (!done.ending!.madePro && seed < 40) {
+      done = _until((g) => false, seed: ++seed, potential: 95);
+    }
     expect(done.ending!.madePro, isTrue);
     c.adopt(done);
     await t.pumpAndSettle();

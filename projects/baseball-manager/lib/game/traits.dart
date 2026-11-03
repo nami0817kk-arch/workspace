@@ -9,14 +9,14 @@ enum Trait {
   lateBloomer('大器晩成', '少年期は伸びが鈍いが、高校から大きく伸び、衰えも遅い。', true),
   earlyBloomer('早熟', '若いうちは伸びが大きいが、20歳から伸びが鈍り、衰えも早い。', false),
   hardWorker('努力家', '練習の伸びが1割増える。', true),
-  genius('天才肌', '伸びが2割増える。', true),
+  genius('天才肌', '伸びが1割増える。', true),
   sturdy('頑丈', '怪我をしにくい。', true),
   glassBody('ガラスの肉体', '怪我をしやすいが、伸びは少し大きい(1.05倍)。', false),
   ironMan('鉄人', '疲れが溜まりにくい。', true),
   sunny('前向き', '気持ちが上がりやすく、下がりにくい。', true),
   clutch('勝負強い', '大会での体調が+10相当になる。', true),
   nervy('ノミの心臓', '大会での体調が-10相当になる。', false),
-  starPower('華がある', 'ドラフトの評価に+5。', true),
+  starPower('華がある', 'ドラフトの評価に+2。', true),
   longevity('長持ち', '衰えがゆるやか。', true),
 
   // 試合の能力を足すもの(長距離砲・剛腕など)は、2026-10-24 に特殊能力(`skills.dart`)へ移した。
@@ -24,7 +24,7 @@ enum Trait {
 
   // ── 誰でも ──
   leader('キャプテンシー', 'チームをまとめ、大会・シーズンのチーム力が+3。', true),
-  moodMaker('ムードメーカー', '友情タッグの経験点が増える(1.5倍)。', true),
+  moodMaker('ムードメーカー', '友情タッグの経験点が増える(1.25倍)。', true),
   quickRecovery('回復力', '休養で疲れがよく抜ける(1.5倍)。', true),
   worldStage('国際舞台に強い', '世界大会での体調が+10相当になる。', true),
   studious('研究熱心', '「研究」で貯まる特殊能力のコツが1つ多い。', true),
@@ -178,7 +178,8 @@ double growthMultiplier(Set<Trait> t, int age) {
   // talent_audit: プロ入りしやすい(打者 46%・投手 55%)が、レジェンドにはなりにくい(3〜4%)。
   if (t.contains(Trait.earlyBloomer)) m *= age < 16 ? 1.15 : (age < 20 ? 1.0 : 0.8);
   if (t.contains(Trait.hardWorker)) m *= 1.1;
-  if (t.contains(Trait.genius)) m *= 1.2;
+  // 2026-11-03: 1.2倍はレア特性の怪物(1.12倍)より強く、プロ入り 60〜65%・レジェンド 27% だった
+  if (t.contains(Trait.genius)) m *= 1.1;
   if (t.contains(Trait.monster)) m *= 1.12;
   // 2026-11-03: 1.15倍だと怪我(1.8倍)を差し引いても特性なしより強かった(悪い特性なのにプロ入り +10pt)。
   if (t.contains(Trait.glassBody)) m *= 1.05;
@@ -229,7 +230,8 @@ int tournamentBonus(Set<Trait> t) =>
 
 /// ドラフトの点数に足す値。
 double draftBonus(Set<Trait> t) =>
-    (t.contains(Trait.starPower) ? 5 : 0) +
+    // 2026-11-03: +5 だとプロ入り 56〜63% で、レア特性の千両役者(+2)より強かった
+    (t.contains(Trait.starPower) ? 2 : 0) +
     // 千両役者は大会の体調だけではドラフトにほぼ効かなかった(才能の監査)ので、スカウトの評価にも効かせる
     (t.contains(Trait.stagePresence) ? 2 : 0);
 
@@ -259,7 +261,8 @@ double recoveryMultiplier(Set<Trait> t) =>
 
 /// 友情タッグの経験点の倍率(基本の倍率に掛ける)。
 double tagTraitMultiplier(Set<Trait> t) =>
-    (t.contains(Trait.moodMaker) ? 1.5 : 1.0) *
+    // 2026-11-03: 1.5倍だとプロ入り 56〜60%・レジェンド 26% で、レア特性より強かった
+    (t.contains(Trait.moodMaker) ? 1.25 : 1.0) *
     (t.contains(Trait.lonely) ? 0.6 : 1.0);
 
 /// 世界大会の体調に足す値。
