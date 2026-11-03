@@ -1,0 +1,1 @@
+d=    6cm window 33.82-39.02 width 5.20 center 36.42 speed 26.12 spin 6.38rps wall 2.34 goal 1.47 footz 0.070
