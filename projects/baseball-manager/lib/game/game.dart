@@ -1812,9 +1812,6 @@ class Game {
       );
       records.add(rec);
       _logRounds(tournament);
-      for (final w in ampAwards) {
-        log.add('表彰: $w!'); // 経歴には、成績の表彰として出る(_note すると重なる)
-      }
       if (tournament.champion) {
         championships++;
         log.add(amateurChampionLine(stage, corporate: corp));
@@ -1826,6 +1823,10 @@ class Game {
       }
       final d = describeLine(tournament.line);
       if (d.isNotEmpty) log.add('大会成績: $d');
+      // 表彰は、大会の結果と成績のあとに(結果より先に「優秀選手」と出ていた)
+      for (final w in ampAwards) {
+        log.add('表彰: $w!'); // 経歴には、成績の表彰として出る(_note すると重なる)
+      }
       _judgeGoal(rec);
       if (rivalLine != null) log.add(rivalLine);
     }
