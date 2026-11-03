@@ -197,7 +197,8 @@ String describeLine(Line l, {bool brief = false}) {
   return parts.join(' / ');
 }
 
-/// 1試合の中身を短く(「3打数2安打 1本塁打」「6回 被安打2 奪三振7」)。
+/// 1試合の中身を短く(「3打数2安打 1本塁打」「6回 被安打2 失点1 奪三振7」)。
+/// 失点は推定値を丸めたもの。負けた試合で「被安打4」だけだと何点取られたか分からないため添える。
 /// 投手の打席は、投球のあとに、安打があるときだけ添える(「2打数0安打」が毎試合続くと読みづらいため)。
 String describeGame(Line g) {
   final parts = <String>[];
@@ -207,7 +208,8 @@ String describeGame(Line g) {
       '${g.rbi > 0 ? ' ${g.rbi}打点' : ''}';
   if (!pitcherBat && g.atBats + g.walks > 0) parts.add(bat);
   if (g.faced > 0) {
-    parts.add('${g.inningsText}回 被安打${g.totalHitsAllowed} 奪三振${g.strikeouts}');
+    parts.add('${g.inningsText}回 被安打${g.totalHitsAllowed} '
+        '失点${g.runsAllowed.round()} 奪三振${g.strikeouts}');
   }
   if (pitcherBat && g.hits > 0) parts.add('打撃 $bat');
   return parts.join(' / ');

@@ -64,10 +64,8 @@ void main() {
       expect(describeGame(const Line(atBats: 4, hits: 2, homeRuns: 1, rbi: 3)),
           '4打数2安打 1本塁打 3打点');
       expect(describeGame(const Line(atBats: 3, hits: 0)), '3打数0安打');
-      expect(
-          describeGame(
-              const Line(faced: 24, outs: 18, hitsAllowed: 3, strikeouts: 9)),
-          '6回 被安打3 奪三振9');
+      const p = Line(faced: 24, outs: 18, hitsAllowed: 3, strikeouts: 9);
+      expect(describeGame(p), '6回 被安打3 失点${p.runsAllowed.round()} 奪三振9');
       expect(describeGame(const Line()), '');
     });
 
