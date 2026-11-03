@@ -1,5 +1,6 @@
 import 'package:baseball_manager/game/exp.dart';
 import 'package:baseball_manager/game/player.dart';
+import 'package:baseball_manager/game/snapshot.dart';
 import 'package:baseball_manager/ui/labels.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -93,5 +94,27 @@ void main() {
     final notes = birthTalentNotes(p).join('/');
     expect(notes, contains('球速'));
     expect(notes, isNot(contains('捕球')));
+  });
+
+  test('能力が5つだった頃に引退した殿堂の選手も、弾道・肩力・捕球を補って読む(0にならない)', () {
+    final s = PlayerSnapshot.fromJson({
+      'name': 'むかし',
+      'role': 'batter',
+      'abilities': {
+        'contact': 80,
+        'power': 60,
+        'speed': 50,
+        'fielding': 70,
+        'eye': 65,
+      },
+    });
+    expect(s.of(Ability.trajectory), 70);
+    expect(s.of(Ability.arm), 70);
+    expect(s.of(Ability.catching), 70);
+    final p = PlayerSnapshot.fromJson({
+      'role': 'pitcher',
+      'abilities': {'stuff': 80, 'control': 60, 'stamina': 70},
+    });
+    expect(p.of(Ability.breaking), 70);
   });
 }
