@@ -677,6 +677,9 @@ class Game {
 
   /// 最後にログに出した観客動員(万人)。保存しない(読み直したら次の月に一度出る)。
   double? _lastCrowd;
+
+  /// 前の年のCM出演料(ログに出すのは額が変わった年だけ。保存しない: 読み直した年は1度出るだけ)。
+  int? _lastCm;
   int trainCount = 0;
 
   /// 今年すでにログに出した友情タッグの相手。年末に空にする(保存しない)。
@@ -1770,8 +1773,15 @@ class Game {
       final cm = cmFeeOf(popularityOf(records, worldRecords));
       if (cm > 0) {
         money += cm;
-        log.add('CM出演料: ${fmtMoney(cm)}');
+        // 毎年同じ額が並ぶので(一生で18回)、額が変わった年だけ出す。お金は毎年入る
+        final last = _lastCm;
+        if (last != cm) {
+          log.add(last == null || last == 0
+              ? 'CM出演料: ${fmtMoney(cm)}(CMに出るようになった)'
+              : 'CM出演料: ${fmtMoney(cm)}(${cm > last ? '増額' : '減額'})');
+        }
       }
+      _lastCm = cm;
       // 契約更改: 今季の成績で、来季の年俸が決まる。
       final next = renewSalary(now, rec);
       nextSalary = next;
