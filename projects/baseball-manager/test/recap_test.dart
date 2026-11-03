@@ -65,7 +65,7 @@ void main() {
           '4打数2安打 1本塁打 3打点');
       expect(describeGame(const Line(atBats: 3, hits: 0)), '3打数0安打');
       const p = Line(faced: 24, outs: 18, hitsAllowed: 3, strikeouts: 9);
-      expect(describeGame(p), '6回 被安打3 失点${p.runsAllowed.round()} 奪三振9');
+      expect(describeGame(p), '6回 被安打3 奪三振9'); // 失点は出さない(防御率と食い違うため)
       expect(describeGame(const Line()), '');
     });
 
