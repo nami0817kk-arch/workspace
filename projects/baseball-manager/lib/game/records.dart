@@ -227,7 +227,9 @@ List<String> titlesOf(Line l, {required int games, required int rank}) {
   if (l.homeRuns >= 40) t.add('本塁打王');
   if (qualifiedPitch && (l.era ?? 99) <= 1.60) t.add('最優秀防御率');
   if (l.wins >= 21) t.add('最多勝');
-  if (l.strikeouts >= 250) t.add('最多奪三振');
+  // 2026-11-03: 250 だと約3,000シーズンで1回しか出ず、投手三冠が誰にも取れなかった。
+  // 最多勝(約6%)・最優秀防御率(約5%)と同じくらいの出やすさになる 205 に下げた(tool の測定で上位約7%)。
+  if (l.strikeouts >= 205) t.add('最多奪三振');
   if (t.length >= 2 || (t.isNotEmpty && rank == 1)) t.add('MVP');
   return t;
 }
