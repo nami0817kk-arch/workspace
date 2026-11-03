@@ -49,10 +49,11 @@ void main() {
     expect(legend, isNot(regular));
   });
 
-  test('引退後の道も称号で分かれる(独身で10年以上のとき)', () {
-    expect(epilogueOf(_e(title: 'レジェンド'), 'ユウタ'), contains('解説者'));
-    expect(epilogueOf(_e(title: '一流選手'), 'ユウタ'), contains('コーチ'));
-    expect(epilogueOf(_e(title: 'レギュラー'), 'ユウタ'), contains('少年野球'));
+  test('独身の引退後の道は書かない(引退画面の「その後」と食い違わないように)', () {
+    for (final t in ['レジェンド', '一流選手', 'レギュラー']) {
+      final text = epilogueOf(_e(title: t), 'ユウタ');
+      expect(text, isNot(contains('引退後は')), reason: t);
+    }
   });
 
   test('二刀流・ライバル・結婚の一文が足される', () {
