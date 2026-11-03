@@ -36,7 +36,7 @@ enum Trait {
   monster('怪物', '規格外。伸びが1割ほど増え、衰えも1割ゆるやか。', true),
   steelBody('鋼の肉体', '衰えがゆるやか(0.6倍)。疲れも溜まりにくい(0.8倍)。', true),
   ironWill('不屈', '怪我の影響が半分以下(0.4倍)。大会での体調が+5相当になる。', true),
-  stagePresence('千両役者', '大会(世界大会も)での体調が+8相当になる。', true),
+  stagePresence('千両役者', '大会(世界大会も)での体調が+20相当になり、大舞台に強いとスカウトの評価も上がる。', true),
   fortune('強運', '練習の「失敗」が半分に、「大成功」が1.6倍出る。', true);
 
   const Trait(this.label, this.description, this.positive);
@@ -215,10 +215,14 @@ int tournamentBonus(Set<Trait> t) =>
     (t.contains(Trait.clutch) ? 10 : 0) -
     (t.contains(Trait.nervy) ? 10 : 0) +
     (t.contains(Trait.ironWill) ? 5 : 0) +
-    (t.contains(Trait.stagePresence) ? 8 : 0);
+    // レア特性なのに、ふつうの「勝負強い」(+10)より弱かった(+8)。才能の監査でプロ入り率が特性なしと変わらなかったので +20 に(2026-11-03)
+    (t.contains(Trait.stagePresence) ? 20 : 0);
 
 /// ドラフトの点数に足す値。
-double draftBonus(Set<Trait> t) => t.contains(Trait.starPower) ? 5 : 0;
+double draftBonus(Set<Trait> t) =>
+    (t.contains(Trait.starPower) ? 5 : 0) +
+    // 千両役者は大会の体調だけではドラフトにほぼ効かなかった(才能の監査)ので、スカウトの評価にも効かせる
+    (t.contains(Trait.stagePresence) ? 2 : 0);
 
 // ── 新しい特性の効き方 ──
 
