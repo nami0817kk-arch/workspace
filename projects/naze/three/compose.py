@@ -59,6 +59,29 @@ def bloom(img: Image.Image, thr: float = 0.82, radius: int = 18, gain: float = 0
     return Image.fromarray((out * 255).astype(np.uint8))
 
 
+def answer_value(plan: dict) -> int:
+    """答えの数字(時速、km の整数)。打ち出しの速さ=拳と球の衝突の計算の値。"""
+    return int(round(kmh(plan["v0"])))
+
+
+def draw_answer(base: Image.Image, plan: dict, sc: dict, k: float) -> Image.Image:
+    """答えの画面: 最後のコマを暗くぼかした上に「答え」と「時速○km」。k は出てからの秒数(最初の 0.12 秒で出る)。"""
+    a = min(1.0, k / 0.12)
+    img = base.filter(ImageFilter.GaussianBlur(6 * a)).convert("RGBA")
+    layer = Image.new("RGBA", img.size, (0, 0, 0, 0))
+    ImageDraw.Draw(layer).rectangle([0, 0, W, H], fill=ov.NAVY + (int(150 * a),))
+    img.alpha_composite(layer)
+    dr = ImageDraw.Draw(img)
+    ans = sc.get("answer", {})
+    ov.rows(dr, ans.get("head", "答え"), 300, 84, stroke=8)
+    num = f"時速【{answer_value(plan)}km】"
+    pop = 1.0 + 0.12 * max(0.0, 1 - k / 0.15)
+    ov.rows(dr, num, 520, int(210 * pop), maxw=1700, stroke=12)
+    if ans.get("note"):
+        ov.rows(dr, ans["note"], 760, 40, maxw=1700, color=ov.DIM, stroke=6)
+    return img.convert("RGB")
+
+
 def draw_frame(src: Path, fr: dict, plan: dict, sc: dict, grey: bool) -> Image.Image:
     img = Image.open(src).convert("RGB")
     if img.size != (W, H):
@@ -88,7 +111,7 @@ def draw_frame(src: Path, fr: dict, plan: dict, sc: dict, grey: bool) -> Image.I
     dr.text((xr - wu - 14 - wn, y1 - 26 - 104), num, font=fn, fill=ov.YEL, stroke_width=3, stroke_fill=ov.NAVY)
     walls = [e for e in plan["events"] if e["kind"] == "mat"]
     if walls and t >= walls[0]["v"]:
-        peak = f"最高 {kmh(plan['v0']):,.0f} km/h"
+        peak = f"打ち出し {answer_value(plan)} km/h"
         f3 = ov.font(34)
         dr.text((x1 - f3.getlength(peak), y1 + 14), peak, font=f3, fill=ov.WHITE, stroke_width=5, stroke_fill=ov.NAVY)
     # スローの表示
@@ -144,8 +167,14 @@ def snd_tok(sr, strength):
     return strength * (np.sin(2 * np.pi * 180 * t) * np.exp(-t / 0.03) + 0.3 * _lp(_noise(n, 5), 0.3) * np.exp(-t / 0.01))
 
 
+def snd_chime(sr):
+    n = int(0.9 * sr)
+    t = np.arange(n) / sr
+    return (np.sin(2 * np.pi * 880 * t) + 0.6 * np.sin(2 * np.pi * 1320 * t) + 0.3 * np.sin(2 * np.pi * 1760 * t)) * np.exp(-t / 0.25) * np.minimum(1, t / 0.005)
+
+
 def audio(plan: dict, out: Path, sr: int = 48000) -> Path:
-    n = int((plan["n"] / plan["fps"] + 0.5) * sr)
+    n = int(((plan["n"] + plan.get("n_answer", 0)) / plan["fps"] + 0.3) * sr)
     a = np.zeros(n)
 
     def put(t, s, g):
@@ -161,6 +190,8 @@ def audio(plan: dict, out: Path, sr: int = 48000) -> Path:
             put(e["v"] + 0.02, snd_whoosh(sr, 1.4), 0.35)
         elif e["kind"] == "mat":
             put(e["v"], snd_thud(sr, min(1.0, e["speed"] / 30)), 0.9)
+        elif e["kind"] == "answer":
+            put(e["v"], snd_chime(sr), 0.45)
         elif e["kind"] == "floor" and floor_n < 6:
             put(e["v"], snd_tok(sr, min(1.0, e["speed"] / 8)), 0.5)
             floor_n += 1
@@ -178,12 +209,25 @@ def audio(plan: dict, out: Path, sr: int = 48000) -> Path:
 
 def compose(frames_dir: Path, comp_dir: Path, plan: dict, sc: dict, grey: bool, video: Path) -> Path:
     comp_dir.mkdir(parents=True, exist_ok=True)
+    for old in comp_dir.glob("*.jpg"):          # 前の回のコマが尾に残らないように
+        old.unlink()
     for fr in plan["frames"]:
         src = frames_dir / f"{fr['i']:05d}.png"
         dst = comp_dir / f"{fr['i']:05d}.jpg"
         if not src.exists():
             continue
         draw_frame(src, fr, plan, sc, grey).save(dst, quality=93)
+    # 答えの画面(最後のコマの下地の上に)
+    na = plan.get("n_answer", 0)
+    last = frames_dir / f"{plan['n'] - 1:05d}.png"
+    if na and last.exists():
+        base = Image.open(last).convert("RGB")
+        if base.size != (W, H):
+            base = base.resize((W, H), Image.LANCZOS)
+        if not grey:
+            base = bloom(base)
+        for j in range(na):
+            draw_answer(base, plan, sc, j / plan["fps"]).save(comp_dir / f"{plan['n'] + j:05d}.jpg", quality=93)
     wav = audio(plan, video.with_suffix(".wav"))
     cmd = [ffmpeg(), "-y", "-loglevel", "error", "-framerate", str(plan["fps"]), "-i", str(comp_dir / "%05d.jpg"), "-i", str(wav),
            "-vf", "scale=in_range=pc:out_range=tv", "-c:v", "libx264", "-pix_fmt", "yuv420p", "-color_range", "tv", "-crf", "18", "-preset", "medium", "-c:a", "aac", "-b:a", "192k", "-shortest", str(video)]
@@ -193,13 +237,14 @@ def compose(frames_dir: Path, comp_dir: Path, plan: dict, sc: dict, grey: bool, 
 
 def sheet(comp_dir: Path, plan: dict, out: Path, picks: list[int] | None = None, cols: int = 4, tw: int = 480) -> Path:
     """書き出したコマから数枚を抜いて1枚に並べる(目で見る用)。"""
-    n = plan["n"]
-    a, b = plan["cuts"]
+    n = plan["n"] + plan.get("n_answer", 0)
+    a, b = plan["cuts"][:2]
+    d0 = plan["cuts"][2] if len(plan["cuts"]) > 2 else n - 1
     hit = int(round(plan["v_hit"] * plan["fps"]))
     walls = [int(round(e["v"] * plan["fps"])) for e in plan["events"] if e["kind"] == "mat"]
     w = walls[0] if walls else b + 10
     if picks is None:
-        picks = [0, hit - 12, hit - 2, hit, hit + 3, hit + 10, a + 1, (a + b) // 2, b + 1, w - 2, w + 3, n - 1]
+        picks = [hit - 12, hit - 1, hit + 2, hit + 6, a + 1, (a + b) // 2, b + 2, w, w + 3, d0 + 2, plan["n"] - 1, n - 1]
     picks = [min(max(0, p), n - 1) for p in picks]
     th = tw * 9 // 16
     rows = math.ceil(len(picks) / cols)
@@ -212,7 +257,11 @@ def sheet(comp_dir: Path, plan: dict, out: Path, picks: list[int] | None = None,
         im = Image.open(f).resize((tw, th))
         x, y = (k % cols) * tw, (k // cols) * (th + 30)
         S.paste(im, (x, y + 30))
-        fr = plan["frames"][p]
-        d.text((x + 6, y + 4), f"#{p} {p / plan['fps']:.2f}s 場面{fr['shot']} 物理{fr['s']:.3f}s", font=ov.font(20), fill=(230, 230, 230))
+        if p < plan["n"]:
+            fr = plan["frames"][p]
+            cap = f"#{p} {p / plan['fps']:.2f}s 場面{fr['shot']} 物理{fr['s']:.3f}s"
+        else:
+            cap = f"#{p} {p / plan['fps']:.2f}s 答え"
+        d.text((x + 6, y + 4), cap, font=ov.font(20), fill=(230, 230, 230))
     S.save(out, quality=92)
     return out

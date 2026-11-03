@@ -52,7 +52,7 @@ def smooth(k: float) -> float:
 
 
 def camera(shot: str, s: float, k: float, tr: Track, sc: dict) -> dict:
-    """shot: A=殴る所の寄り, B=球を追う, C=当たる所の固定。k はその場面の進み(0〜1)。"""
+    """shot: A=殴る所の寄り, B=球を追う, C=当たる所の固定, D=止まった球への静かな寄り。k はその場面の進み(0〜1)。"""
     p, _, _ = tr.at(s)
     if shot == "A":
         b0 = np.array(tr.d["start"])
@@ -61,10 +61,14 @@ def camera(shot: str, s: float, k: float, tr: Track, sc: dict) -> dict:
         return dict(loc=loc, target=tgt, lens=32.0)
     if shot == "B":
         bx = float(p[0])
-        return dict(loc=[bx - 1.3, -2.6, 1.25], target=[bx + 0.7, float(p[1]) * 0.5, 0.45 * float(p[2]) + 0.55], lens=30.0)
+        return dict(loc=[bx - 1.2, -2.5, 1.05], target=[bx + 0.6, float(p[1]) * 0.5, 0.45 * float(p[2]) + 0.35], lens=28.0)
     mf = tr.d["mat_front"]
-    loc = _mix([mf - 4.4, -3.0, 1.25], [mf - 3.9, -2.6, 1.15], smooth(k))
-    return dict(loc=loc, target=[mf - 1.3, -0.1, 0.75], lens=30.0)
+    if shot == "C":
+        loc = _mix([mf - 3.9, -2.9, 1.2], [mf - 3.6, -2.6, 1.15], smooth(k))
+        return dict(loc=loc, target=[mf - 1.15, 0.0, 0.9], lens=30.0)
+    ps = tr.at(tr.d["t_stop"])[0]
+    loc = _mix((ps + [-0.95, -1.25, 0.42]).tolist(), (ps + [-0.62, -0.82, 0.28]).tolist(), smooth(k))
+    return dict(loc=loc, target=(ps + [0.12, 0.0, 0.06]).tolist(), lens=40.0)
 
 
 # ---------------- 効果 ----------------
@@ -74,55 +78,72 @@ def _age(s, t0, dur):
     return a / dur if 0 <= a < dur else None
 
 
-def effects(s: float, tr: Track, sc: dict) -> dict:
+def dent_series(tr: Track, recover: float = 0.07):
+    """マットのへこみの深さ(時刻ごと)。球が入り込んだ深さに沿い、離れたあとは recover 秒でゆっくり戻る。"""
+    pen = np.maximum(0.0, tr.pos[:, 0] + tr.r - tr.d["mat_front"])
+    out = np.zeros_like(pen)
+    cur = 0.0
+    for i in range(len(pen)):
+        dt = tr.t[i] - tr.t[i - 1] if i else 0.0
+        cur = max(pen[i], cur * math.exp(-dt / recover))
+        out[i] = cur
+    return out
+
+
+def effects(s: float, tr: Track, sc: dict, dent=None) -> dict:
     r = tr.r
     st = np.array(tr.d["start"])
     pc = (st - [r, 0, 0]).tolist()                 # 拳と球の当たる所
-    fx = dict(rings=[], flashes=[], trail=[], lines=[], light=None, squash=0.0)
+    fx = dict(rings=[], flashes=[], trail=None, lines=[], squash=0.0, dent=None)
     th = tr.t_hit
     for delay, big in ((0.0, 1.0), (0.014, 0.7)):
         k = _age(s, th + delay, 0.11)
         if k is not None:
-            fx["rings"].append(dict(pos=[pc[0] + 0.35 * k, pc[1], pc[2]], radius=0.10 + 1.7 * big * k ** 0.55,
+            fx["rings"].append(dict(pos=[pc[0] + 0.35 * k, pc[1], pc[2]], radius=0.10 + 1.5 * big * k ** 0.55,
                                     alpha=0.8 * (1 - k) ** 1.6, thick=0.025 * (1 - 0.6 * k), axis="x"))
     k = _age(s, th, 0.03)
     if k is not None:
         fx["flashes"].append(dict(pos=pc, scale=0.05 + 0.22 * k, alpha=0.55 * (1 - k) ** 2))
-    k = _age(s, th, 0.014)
+    k = _age(s, th, 0.002)
     if k is not None:
-        fx["squash"] = 0.22 * math.sin(math.pi * k)
+        fx["squash"] = 0.18 * math.sin(math.pi * k)
     walls = tr.event("mat")
     if walls:
         w = walls[0]
         wp = [tr.d["mat_front"] - 0.02, w["pos"][1], w["pos"][2]]
-        for delay, big in ((0.0, 1.0), (0.02, 0.65)):
+        for delay, big in ((0.0, 1.0), (0.025, 0.65)):
             k = _age(s, w["t"] + delay, 0.16)
             if k is not None:
-                fx["rings"].append(dict(pos=[wp[0] - 0.25 * k, wp[1], wp[2]], radius=0.12 + 1.3 * big * k ** 0.5,
-                                        alpha=0.9 * (1 - k) ** 1.4, thick=0.03 * (1 - 0.5 * k), axis="x"))
-        k = _age(s, w["t"], 0.06)
+                fx["rings"].append(dict(pos=[wp[0] - 0.2 * k, wp[1], wp[2]], radius=0.12 + 0.9 * big * k ** 0.5,
+                                        alpha=0.85 * (1 - k) ** 1.4, thick=0.025 * (1 - 0.5 * k), axis="x"))
+        k = _age(s, w["t"], 0.05)
         if k is not None:
-            fx["flashes"].append(dict(pos=wp, scale=0.05 + 0.2 * k, alpha=0.5 * (1 - k) ** 2))
-        k = _age(s, w["t"], 0.035)
+            fx["flashes"].append(dict(pos=wp, scale=0.05 + 0.18 * k, alpha=0.45 * (1 - k) ** 2))
+        k = _age(s, w["t"], 0.07)
         if k is not None:
-            fx["squash"] = 0.28 * math.sin(math.pi * k)
+            fx["squash"] = 0.10 * math.sin(math.pi * k)
+        if dent is not None:
+            d = float(np.interp(s, tr.t, dent))
+            if d > 0.001:
+                fx["dent"] = dict(depth=d, y=w["pos"][1], z=w["pos"][2], sigma=0.2)
     if s > th:
         p, _, v = tr.at(s)
         sp = float(np.linalg.norm(v))
         gone = s - th
-        a_trail = min(1.0, max(0.0, (sp - 8.0) / 12.0)) * min(1.0, gone / 0.01)
+        a_trail = min(1.0, max(0.0, (sp - 3.0) / 5.0)) * min(1.0, gone / 0.01)
         if a_trail > 0.01:
-            # 光の筋: 球の後ろへ細くなる円すい 1 本(材質で尾の方ほど薄くする)。長さは飛んだ距離まで
-            length = min(2.6, float(np.linalg.norm(p - st)))
-            tail = tr.at(max(th, s - length / max(sp, 1e-3)))[0]
-            fx["trail"].append(dict(a=p.tolist(), b=tail.tolist(), radius=r * 0.6, alpha=0.38 * a_trail))
-        a_lines = min(1.0, max(0.0, (sp - 15.0) / 10.0)) * min(1.0, gone / 0.03)
+            # 光の筋: 球が通った道に沿った帯(Blender でカメラの方へ向けて作る)。先は球の太さ、尾ほど細く薄い
+            length = min(2.4, float(np.linalg.norm(p - st)))
+            back = length / max(sp, 1e-3)
+            pts = [tr.at(max(th, s - back * j / 24))[0].tolist() for j in range(25)]
+            fx["trail"] = dict(points=pts, width=r * 0.85, alpha=0.75 * a_trail)
+        a_lines = min(1.0, max(0.0, (sp - 7.0) / 4.0)) * min(1.0, gone / 0.03)
         if a_lines > 0.01:
             d = v / max(sp, 1e-6)
-            length = min(0.09 * sp, float(np.linalg.norm(p - st)))
+            length = min(0.12 * sp, float(np.linalg.norm(p - st)))
             for i in range(6):
                 ang = math.radians(15 + 60 * i)
-                rad = 0.30 + 0.08 * (i % 3)
+                rad = 0.26 + 0.07 * (i % 3)
                 off = np.array([0.0, math.cos(ang) * rad, math.sin(ang) * rad])
                 head = p + off - d * (0.15 + 0.1 * (i % 2))
                 fx["lines"].append(dict(a=head.tolist(), b=(head - d * length).tolist(), alpha=0.4 * a_lines))
@@ -137,21 +158,33 @@ def plan(tr: Track, sc: dict, fps: int, out: Path) -> dict:
     ss, rates = warp(tr, tm, s_start, fps)
     st = np.array(tr.d["start"])
     mf = tr.d["mat_front"]
+    dent = dent_series(tr)
     # 切り替えの時刻(物理の時刻で)
     s_ab = next(s for s in ss if s > tr.t_hit and tr.at(s)[0][0] - st[0] > sc["cut"]["follow_after"])
     s_bc = next(s for s in ss if s > s_ab and tr.at(s)[0][0] > mf - sc["cut"]["fixed_before"])
-    i_ab, i_bc = int(np.searchsorted(ss, s_ab)), int(np.searchsorted(ss, s_bc))
+    s_cd = tr.d["t_stop"]
+    i_ab, i_bc, i_cd = (int(np.searchsorted(ss, x)) for x in (s_ab, s_bc, s_cd))
     frames = []
     for i, (s, rt) in enumerate(zip(ss, rates)):
-        shot, i0, i1 = ("A", 0, i_ab) if i < i_ab else ("B", i_ab, i_bc) if i < i_bc else ("C", i_bc, len(ss))
+        if i < i_ab:
+            shot, i0, i1 = "A", 0, i_ab
+        elif i < i_bc:
+            shot, i0, i1 = "B", i_ab, i_bc
+        elif i < i_cd:
+            shot, i0, i1 = "C", i_bc, i_cd
+        else:
+            shot, i0, i1 = "D", i_cd, len(ss)
         k = (i - i0) / max(1, i1 - i0 - 1)
         p, q, v = tr.at(float(s))
         frames.append(dict(i=i, s=float(s), rate=float(rt), shot=shot, cam=camera(shot, float(s), k, tr, sc),
-                           ball=dict(pos=p.tolist(), quat=q.tolist(), speed=float(np.linalg.norm(v))), fx=effects(float(s), tr, sc)))
+                           ball=dict(pos=p.tolist(), quat=q.tolist(), speed=float(np.linalg.norm(v))), fx=effects(float(s), tr, sc, dent)))
     v_of = lambda s_ev: float(np.interp(s_ev, ss, np.arange(len(ss)) / fps))
     events = [dict(v=v_of(tr.t_hit), kind="hit", speed=tr.d["v0"])]
     events += [dict(v=v_of(e["t"]), kind=e["kind"], speed=e["speed"]) for e in tr.d["events"]]
-    d = dict(fps=fps, n=len(frames), cuts=[i_ab, i_bc], frames=frames, events=events, t_hit=tr.t_hit,
-             v_hit=v_of(tr.t_hit), v0=tr.d["v0"], ball_start=tr.d["start"], radius=tr.r, mat_front=mf, mat=tr.d["mat"])
+    n_answer = int(round(tm.get("answer", 0) * fps))
+    events.append(dict(v=len(frames) / fps, kind="answer", speed=0))
+    d = dict(fps=fps, n=len(frames), n_answer=n_answer, cuts=[i_ab, i_bc, i_cd], frames=frames, events=events, t_hit=tr.t_hit,
+             v_hit=v_of(tr.t_hit), v0=tr.d["v0"], launch=tr.d.get("launch"), ball_start=tr.d["start"], radius=tr.r,
+             mat_front=mf, mat=tr.d["mat"], marks=sc.get("marks"))
     out.write_text(json.dumps(d), encoding="utf-8")
     return d

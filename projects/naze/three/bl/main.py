@@ -51,7 +51,8 @@ plan = json.loads(Path(job["plan"]).read_text(encoding="utf-8"))
 R = plan["radius"]
 sdir = scene.world(None if grey else job["assets"]["sky"], look.get("sun_dir", (0.35, -1)), grey)
 scene.ground(look["ground"], grey)
-scene.mat_wall(plan["mat"] if "mat" in plan else sc_def["mat"], look["mat"], grey)
+mat_obj = scene.mat_wall(plan["mat"] if "mat" in plan else sc_def["mat"], look["mat"], grey)
+scene.marks(plan["ball_start"][0], plan["mat_front"], plan.get("marks"), grey)
 scene.tee(plan["ball_start"], R, grey)
 ball_root, ball = scene.ball(R, look["ball"], look["ball_band"], grey)
 cam = scene.camera()
@@ -92,8 +93,9 @@ for fr in plan["frames"]:
     ball.rotation_quaternion = b["quat"]
     c = fr["cam"]
     scene.aim(cam, c["loc"], c["target"], c["lens"])
+    scene.dent(mat_obj, plan["mat_front"], fr["fx"].get("dent"))
     if fx:
-        fx.apply(fr["fx"])
+        fx.apply(fr["fx"], c["loc"])
     # 点検の数字
     bpy.context.view_layer.update()
     verts = rig.eval_verts(body)
@@ -110,7 +112,7 @@ for fr in plan["frames"]:
     d_all = np.linalg.norm(verts - bp, axis=1)
     checks.append(dict(i=i, s=s, shot=fr["shot"], gap=float(np.linalg.norm(np.array(front) - bp) - R), body_in_ball=int((d_all < R * 0.97).sum()),
                        front=front, ball=b["pos"], ball_px=[float(bc[0]), float(bc[1])], ball_rpx=float(abs(be[0] - bc[0])), ball_z=float(bc[2]),
-                       body_px=body_box, facing=rig.facing(arm)))
+                       body_px=body_box, facing=rig.facing(arm), dent=(fr["fx"].get("dent") or {}).get("depth", 0.0)))
     out = frames_dir / f"{i:05d}.png"
     if not job.get("no_render") and not (job.get("skip_existing") and out.exists()):
         S.render.filepath = str(out)

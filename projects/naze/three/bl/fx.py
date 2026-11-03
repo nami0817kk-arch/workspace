@@ -29,10 +29,15 @@ class FX:
     def __init__(self, color=(1.0, 0.93, 0.7), n_rings=4, n_flash=2, n_trail=1, n_lines=6):
         self.color = color
         self.mat = glow_material("fx")
-        self.mat_trail = glow_material("fx_trail", fade_z=True)
+        self.mat_trail = glow_material("fx_trail", fade_uv=True)
         self.rings = [self._make("ring", lambda: bpy.ops.mesh.primitive_torus_add(major_radius=1.0, minor_radius=0.03, major_segments=64, minor_segments=8)) for _ in range(n_rings)]
         self.flashes = [self._make("flash", lambda: bpy.ops.mesh.primitive_ico_sphere_add(radius=1.0, subdivisions=3)) for _ in range(n_flash)]
-        self.trail = [self._make("trail", lambda: bpy.ops.mesh.primitive_cone_add(radius1=1.0, radius2=0.0, depth=1.0, vertices=24), self.mat_trail) for _ in range(n_trail)]
+        me = bpy.data.meshes.new("trail")
+        self.trail = bpy.data.objects.new("trail", me)
+        bpy.context.scene.collection.objects.link(self.trail)
+        me.materials.append(self.mat_trail)
+        _no_shadow(self.trail)
+        _hide(self.trail, True)
         self.lines = [self._make("line", lambda: bpy.ops.mesh.primitive_cylinder_add(radius=1.0, depth=1.0, vertices=8)) for _ in range(n_lines)]
         ld = bpy.data.lights.new("fxlight", "POINT")
         ld.shadow_soft_size = 0.2
@@ -53,6 +58,37 @@ class FX:
         _hide(o, True)
         return o
 
+    def ribbon(self, tr, cam_loc):
+        """球が通った道に沿う帯。点ごとにカメラの方を向く幅を付ける(太い筒に見えないように平たい帯にする)。"""
+        o, me = self.trail, self.trail.data
+        me.clear_geometry()
+        if not tr or tr["alpha"] <= 0.005 or len(tr["points"]) < 2:
+            _hide(o, True)
+            return
+        pts = [Vector(p) for p in tr["points"]]
+        n = len(pts)
+        cam = Vector(cam_loc)
+        verts, uvs = [], []
+        for j, p in enumerate(pts):
+            t = (pts[min(j + 1, n - 1)] - pts[max(j - 1, 0)])
+            if t.length < 1e-6:
+                t = Vector((1, 0, 0))
+            side = t.cross(cam - p)
+            side = side.normalized() if side.length > 1e-9 else Vector((0, 0, 1))
+            u = j / (n - 1)
+            w = tr["width"] * (1 - u) ** 0.8 + 0.002
+            verts += [p + side * w, p - side * w]
+            uvs += [(u, 0.0), (u, 1.0)]
+        faces = [(2 * j, 2 * j + 1, 2 * j + 3, 2 * j + 2) for j in range(n - 1)]
+        me.from_pydata([tuple(v) for v in verts], [], faces)
+        uv = me.uv_layers.new(name="UVMap")
+        for poly in me.polygons:
+            for li in poly.loop_indices:
+                uv.data[li].uv = uvs[me.loops[li].vertex_index]
+        me.update()
+        o.color = (*self.color, tr["alpha"])
+        _hide(o, False)
+
     def _seg(self, o, a, b, radius, alpha):
         a, b = Vector(a), Vector(b)
         d = b - a
@@ -65,7 +101,7 @@ class FX:
         o.color = (*self.color, alpha)
         _hide(o, False)
 
-    def apply(self, fx: dict):
+    def apply(self, fx: dict, cam_loc=(0, 0, 0)):
         for o, r in zip(self.rings, fx["rings"] + [None] * len(self.rings)):
             if r is None:
                 _hide(o, True)
@@ -83,12 +119,7 @@ class FX:
             o.scale = (f["scale"],) * 3
             o.color = (*self.color, f["alpha"])
             _hide(o, False)
-        tr = fx["trail"]
-        for j, o in enumerate(self.trail):
-            if j < len(tr):
-                self._seg(o, tr[j]["a"], tr[j]["b"], tr[j]["radius"], tr[j]["alpha"])
-            else:
-                _hide(o, True)
+        self.ribbon(fx.get("trail"), cam_loc)
         ln = fx["lines"]
         for j, o in enumerate(self.lines):
             if j < len(ln):

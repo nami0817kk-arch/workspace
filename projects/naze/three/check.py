@@ -6,6 +6,7 @@
   めり込み  … 人形のどの頂点も球の中に入らない・球がマットや床にめり込まない
   主役      … 場面A は人形と球、B は球が画面の中に収まっているか。C は球が入ってきたら外れないか
   字        … 問いとカウンターの箱が主役(球・場面A の人形)に重ならないか
+  数字      … 打ち出しの速さが拳と球の衝突の計算(MuJoCo)の値で、式とも合っているか(カウンターと答えはこの値を出す)
 """
 from __future__ import annotations
 
@@ -48,9 +49,21 @@ def run(plan: dict, checks: dict, sc: dict, out_md: Path) -> list[str]:
     inside = [r["i"] for r in rows if r["body_in_ball"] > 0]
     if inside:
         fails.append(f"めり込み: 人形の頂点が球の中にあるコマ {inside[:8]}")
-    wall = [r["i"] for r in rows if r["ball"][0] + R > mf + 0.05]
+    # マットはへこむ。球の先がへこんだ面より奥に行かないか
+    wall = [r["i"] for r in rows if r["ball"][0] + R > mf + r.get("dent", 0.0) + 0.01]
     if wall:
-        fails.append(f"めり込み: 球がマットに 5 cm を超えて入るコマ {wall[:8]}")
+        fails.append(f"めり込み: 球がマットのへこみより奥に入るコマ {wall[:8]}")
+    dmax = max((r.get("dent", 0.0) for r in rows), default=0.0)
+    notes.append(f"マットのへこみ: 最大 {dmax * 100:.1f} cm")
+    ln = plan.get("launch")
+    if ln:
+        notes.append(f"打ち出し: 拳 秒速{ln['fist_speed']}m・有効質量{ln['eff_mass']}kg・e={ln['e']} → MuJoCo 秒速{ln['v_ball']:.2f}m(時速{ln['v_ball'] * 3.6:.1f}km)、式 時速{ln['v_formula'] * 3.6:.1f}km、接触 {ln['contact_ms']:.1f} ms")
+        if abs(ln["v_ball"] - ln["v_formula"]) * 3.6 > 0.1:
+            fails.append("数字: MuJoCo の打ち出しの速さが式と 0.1km/h 以上ずれる")
+        if abs(plan["v0"] - ln["v_ball"]) > 1e-6:
+            fails.append("数字: 球に与えた速さが衝突の計算の値と違う")
+    else:
+        notes.append("打ち出しの速さは仮の値(拳の衝突を計算していない)")
     flo = [r["i"] for r in rows if r["ball"][2] - R < -0.02]
     if flo:
         fails.append(f"めり込み: 球が床に入るコマ {flo[:8]}")
@@ -68,7 +81,8 @@ def run(plan: dict, checks: dict, sc: dict, out_md: Path) -> list[str]:
             seen = True
         elif seen:
             out_c.append(r["i"])
-    for name, lst in (("場面A の球", out_a), ("場面A の人形", body_out), ("場面B の球(端から 1 割より内)", out_b), ("場面C の球", out_c)):
+    out_d = [r["i"] for r in rows if r["shot"] == "D" and not ball_in(r, -0.15 * W)]
+    for name, lst in (("場面A の球", out_a), ("場面A の人形", body_out), ("場面B の球(端から 1 割より内)", out_b), ("場面C の球", out_c), ("場面D の球(端から 15% より内)", out_d)):
         if lst:
             fails.append(f"主役: {name}が画面から外れるコマ {lst[:8]}(計 {len(lst)})")
     # 字との重なり

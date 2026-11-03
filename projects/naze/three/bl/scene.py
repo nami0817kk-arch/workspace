@@ -49,9 +49,10 @@ def material(name: str, color=(0.8, 0.8, 0.8), rough: float = 0.6, emission=None
     return m
 
 
-def glow_material(name: str = "fx", fade_z: bool = False):
+def glow_material(name: str = "fx", fade_z: bool = False, fade_uv: bool = False):
     """透ける光の材質。色と濃さは物体の color(RGBA)で決める(Object Info)。
-    fade_z=True は物体の z の向き(生成座標 0→1)に沿って薄くなる(光の筋の円すい用)。"""
+    fade_z=True は物体の z の向き(生成座標 0→1)に沿って薄くなる。
+    fade_uv=True は帯用: U(0=先→1=尾)で薄くなり、V の両端(帯の縁)もぼかす。"""
     m = bpy.data.materials.new(name)
     try:
         m.use_nodes = True
@@ -80,6 +81,28 @@ def glow_material(name: str = "fx", fade_z: bool = False):
         nt.links.new(pw.outputs[0], mul.inputs[0])
         nt.links.new(alpha, mul.inputs[1])
         alpha = mul.outputs[0]
+    if fade_uv:
+        uv = nt.nodes.new("ShaderNodeUVMap")
+        sep = nt.nodes.new("ShaderNodeSeparateXYZ")
+        nt.links.new(uv.outputs["UV"], sep.inputs[0])
+        inv = nt.nodes.new("ShaderNodeMath"); inv.operation = "SUBTRACT"; inv.inputs[0].default_value = 1.0
+        nt.links.new(sep.outputs["X"], inv.inputs[1])
+        pw = nt.nodes.new("ShaderNodeMath"); pw.operation = "POWER"; pw.inputs[1].default_value = 1.5
+        nt.links.new(inv.outputs[0], pw.inputs[0])
+        # 縁: 1 - |2V-1| を 0.7 乗
+        v2 = nt.nodes.new("ShaderNodeMath"); v2.operation = "MULTIPLY_ADD"; v2.inputs[1].default_value = 2.0; v2.inputs[2].default_value = -1.0
+        nt.links.new(sep.outputs["Y"], v2.inputs[0])
+        ab = nt.nodes.new("ShaderNodeMath"); ab.operation = "ABSOLUTE"
+        nt.links.new(v2.outputs[0], ab.inputs[0])
+        ed = nt.nodes.new("ShaderNodeMath"); ed.operation = "SUBTRACT"; ed.inputs[0].default_value = 1.0
+        nt.links.new(ab.outputs[0], ed.inputs[1])
+        ep = nt.nodes.new("ShaderNodeMath"); ep.operation = "POWER"; ep.inputs[1].default_value = 0.7
+        nt.links.new(ed.outputs[0], ep.inputs[0])
+        m1 = nt.nodes.new("ShaderNodeMath"); m1.operation = "MULTIPLY"
+        nt.links.new(pw.outputs[0], m1.inputs[0]); nt.links.new(ep.outputs[0], m1.inputs[1])
+        m2 = nt.nodes.new("ShaderNodeMath"); m2.operation = "MULTIPLY"
+        nt.links.new(m1.outputs[0], m2.inputs[0]); nt.links.new(alpha, m2.inputs[1])
+        alpha = m2.outputs[0]
     nt.links.new(alpha, mix.inputs["Fac"])
     nt.links.new(tr.outputs[0], mix.inputs[1])
     nt.links.new(em.outputs[0], mix.inputs[2])
@@ -179,6 +202,34 @@ def ground(colors, grey: bool = False, size: float = 400.0):
     return g
 
 
+def marks(x0: float, x1: float, spec: dict, grey=False):
+    """床の距離の目盛り: x0(拳の当たった所)から minor m ごとに細い線、major m ごとに太い線、label_every m ごとに「Nm」の字。"""
+    if not spec:
+        return
+    thin = material("mark", (0.42, 0.44, 0.48), 0.8)
+    bold = material("mark_bold", (0.16, 0.18, 0.24), 0.8)
+    k = 1
+    while x0 + k * spec["minor"] < x1 - 0.02:
+        d = k * spec["minor"]
+        major = abs(d / spec["major"] - round(d / spec["major"])) < 1e-6
+        w, ln = (0.07, 3.6) if major else (0.025, 2.6)
+        bpy.ops.mesh.primitive_plane_add(size=1, location=(x0 + d, 0, 0.002))
+        o = bpy.context.active_object
+        o.name = f"mark_{d:g}"
+        o.scale = (w, ln, 1)
+        o.data.materials.append(bold if major else thin)
+        if abs(d / spec["label_every"] - round(d / spec["label_every"])) < 1e-6:
+            cu = bpy.data.curves.new(f"lab_{d:g}", "FONT")
+            cu.body = f"{d:g}m"
+            cu.size = 0.55 if major else 0.42
+            cu.align_x = "CENTER"
+            t = bpy.data.objects.new(f"lab_{d:g}", cu)
+            bpy.context.scene.collection.objects.link(t)
+            t.location = (x0 + d, ln / 2 + 0.25, 0.003)     # 道の奥側(追うカメラから読める向き)
+            t.data.materials.append(bold)
+        k += 1
+
+
 def box(name, center, size, color, rough=0.8):
     bpy.ops.mesh.primitive_cube_add(size=1, location=center)
     o = bpy.context.active_object
@@ -192,14 +243,47 @@ def box(name, center, size, color, rough=0.8):
     return o
 
 
-def mat_wall(mat: dict, color, grey=False):
+def mat_wall(mat: dict, color, grey=False, cuts: int = 40):
+    """止めるマット。前の面を細かく割っておき、当たった所をへこませる(dent)。"""
+    import bmesh
+    import numpy as np
     sx, sy, sz = mat["size"]
     o = box("mat", (mat["x"], 0, sz / 2), (sx, sy, sz), (0.7, 0.7, 0.7) if grey else color, 0.95)
+    bm = bmesh.new()
+    bm.from_mesh(o.data)
+    front = [f for f in bm.faces if f.normal.x < -0.9]
+    edges = list({e for f in front for e in f.edges})
+    bmesh.ops.subdivide_edges(bm, edges=edges, cuts=cuts, use_grid_fill=True)
+    for f in bm.faces:                       # 前の面だけなめらかに塗る(へこみが陰で見える)
+        f.smooth = f.normal.x < -0.9
+    bm.to_mesh(o.data)
+    bm.free()
+    co = np.empty(len(o.data.vertices) * 3, np.float32)
+    o.data.vertices.foreach_get("co", co)
+    o["base_co"] = co.tolist()
     # 角を丸める(柔らかいマットらしく)
     mod = o.modifiers.new("bevel", "BEVEL")
-    mod.width = 0.06
-    mod.segments = 4
+    mod.width = 0.05
+    mod.segments = 3
+    try:
+        mod.limit_method = "ANGLE"
+    except Exception:
+        pass
     return o
+
+
+def dent(o, mf: float, d):
+    """マットの前の面を、(y, z) を中心にガウス形にへこませる(d=None で元に戻す)。"""
+    import numpy as np
+    base = np.array(o["base_co"], np.float32).reshape(-1, 3)
+    co = base.copy()
+    if d:
+        wx = base[:, 0] + o.location.x
+        front = np.abs(wx - mf) < 1e-3
+        r2 = (base[:, 1] + o.location.y - d["y"]) ** 2 + (base[:, 2] + o.location.z - d["z"]) ** 2
+        co[front, 0] += d["depth"] * np.exp(-r2[front] / (2 * d["sigma"] ** 2))
+    o.data.vertices.foreach_set("co", co.ravel())
+    o.data.update()
 
 
 def tee(ball_pos, radius, grey=False):

@@ -24,6 +24,17 @@
 - 声は VOICEVOX の剣崎雌雄（id 21、2026-10-26 ユーザーが選んだ）。読みは `kana` で全行を見て、違えば `say` で直す。概要欄に「VOICEVOX:剣崎雌雄」
 - 投稿: `python -m naze.upload 動画 --title … --desc-file … --publish-at 2026-10-27T19:00:00+09:00 [--thumb サムネ.jpg]`（カテゴリ教育）。本編は 19 時、翌日にショート 5 本を 11・12・13・14・16 時
 
+## 3D の回（three/、2026-11-03 試作）
+
+顔のない人形＋物理計算で技を見せる場面（青空・白っぽい床・衝撃の輪・光の筋）。場面の設定は `three/scenes/<場面>.py` の `SCENE`（見本は `punch`）。
+- 素材は git の外 `C:\Users\なみ\dev\assets3d`（出どころ・ライセンスは同じ場所の `SOURCES.md`。どれも CC0）。パスは `three/config.py` の一か所。
+  人形と動きは Quaternius の Universal Animation Library 無料版（殴る・走る・跳ぶなど 43 本）。**蹴る・投げるは無料版に無い**（有料の Pro 版か UAL2）
+- `python -m three all <場面> [--grey]`（probe → sim → plan → render → check → compose → sheet）。出力は `out/three/<場面>[_grey]/`
+- 先に `--grey`（色・効果なし・半分の大きさ・0.5 秒/コマ）で動き・当たり・カメラを確かめてから本番（1920×1080・EEVEE・約 1 秒/コマ＋合成 1 秒/コマ）。
+  一部だけ描き直すのは `render --only 1,2,3`、点検の数字だけ取り直すのは `render --check-only`
+- 球の打ち出しは拳と球の衝突を MuJoCo で解く（`physics.punch_launch`。式 v=(1+e)MV/(M+m) と一致）。カウンターと答えの数字はこの値
+- **点検**（`check.md`）を全部通し、`sheet.jpg` と当たる瞬間の拡大を目で見てから見せる: 向き・拳と球の隙間・めり込み（人形と球・マットのへこみ・床）・主役が画面から外れない・字と重ならない・数字が計算の値
+
 ## ショート（縦 1080×1920・3 分以内）と本編（横 1920×1080・15 分前後）
 
 - 縦か横かは `ep.py` の `aspect="landscape"` で決まる（無ければ縦）。字幕などの位置は `config.LAYOUT`
