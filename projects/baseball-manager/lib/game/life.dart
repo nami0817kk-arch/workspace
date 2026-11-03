@@ -598,12 +598,13 @@ final List<GameEvent> events = [
           '教えを聞く',
           (p, c, f) => (
             player: _gain(p, f, 2),
-            condition: c.copyWith(morale: c.morale + 5)
+            // 2026-11-03: 能力2・やる気5と、貫く(やる気8)では聞くのが一択だった。教わるのは少し疲れる
+            condition: c.copyWith(morale: c.morale + 2, fatigue: c.fatigue + 5)
           ),
         ),
         EventChoice(
           '自分のやり方を貫く',
-          (p, c, f) => (player: p, condition: c.copyWith(morale: c.morale + 8)),
+          (p, c, f) => (player: p, condition: c.copyWith(morale: c.morale + 10)),
         ),
       ],
       when: (stage, cast) => stage == Stage.pro),
