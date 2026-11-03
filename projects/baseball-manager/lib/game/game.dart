@@ -872,6 +872,7 @@ class Game {
             stage: stage,
             cast: cast,
             exclude: _lastEventId,
+            role: player.role,
             recent: _recentEvents.toSet());
     if (e == null) {
       _nextSlot();

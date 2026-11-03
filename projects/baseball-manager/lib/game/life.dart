@@ -273,7 +273,7 @@ class EventChoice {
 
 class GameEvent {
   const GameEvent(this.id, this.text, this.choices,
-      {this.when, this.weight = 1.0});
+      {this.when, this.weight = 1.0, this.roles});
   final String id;
   final String text;
   final List<EventChoice> choices;
@@ -283,6 +283,9 @@ class GameEvent {
 
   /// 選ばれやすさ(既定1)。足した出来事は低くして、既存の出来事の頻度を薄めない。
   final double weight;
+
+  /// 起きる役割(変化球・遠投のように、役割に合う出来事だけ)。省略なら誰にでも。
+  final Set<Role>? roles;
 }
 
 Player _gain(Player p, Ability a, int n) {
@@ -1077,6 +1080,105 @@ final List<GameEvent> events = [
       ],
       when: (stage, cast) => stage != Stage.youth,
       weight: 0.5),
+  // ── 2026-11-03: 弾道・肩力・捕球・変化球(パワプロと同じにした能力)に関わる出来事 ──
+  GameEvent(
+      'new-pitch',
+      'ブルペンで、新しい変化球の握りを教わった。',
+      [
+        EventChoice(
+            '投げ込んで自分のものにする',
+            (p, c, f) => (
+                  player: _gain(p, Ability.breaking, 2),
+                  condition: c.copyWith(fatigue: c.fatigue + 10)
+                )),
+        EventChoice(
+            '今の球種を磨く',
+            (p, c, f) => (
+                  player: _gain(p, Ability.control, 1),
+                  condition: c.copyWith(morale: c.morale + 3)
+                )),
+      ],
+      roles: const {Role.pitcher, Role.twoWay},
+      when: (stage, cast) => stage != Stage.youth,
+      weight: 0.5),
+  GameEvent(
+      'catcher-signs',
+      '捕手から、配球を一緒に考えようと誘われた。',
+      [
+        EventChoice(
+            'じっくり話し込む',
+            (p, c, f) => (
+                  player: _gain(p, Ability.control, 2),
+                  condition: c.copyWith(morale: c.morale + 4)
+                )),
+        EventChoice(
+            '自分の感覚を信じて投げる',
+            (p, c, f) =>
+                (player: p, condition: c.copyWith(morale: c.morale + 6))),
+      ],
+      roles: const {Role.pitcher, Role.twoWay},
+      weight: 0.5),
+  GameEvent(
+      'long-toss',
+      '遠投で、肩の強さをコーチにほめられた。',
+      [
+        EventChoice(
+            '遠投を毎日の日課にする',
+            (p, c, f) => (
+                  player: _gain(p, Ability.arm, 2),
+                  condition: c.copyWith(fatigue: c.fatigue + 8)
+                )),
+        EventChoice(
+            '肩を休めて、捕る練習に回す',
+            (p, c, f) => (
+                  player: _gain(p, Ability.catching, 1),
+                  condition: c.copyWith(morale: c.morale + 3)
+                )),
+      ],
+      roles: const {Role.batter, Role.twoWay},
+      weight: 0.5),
+  GameEvent(
+      'launch-angle',
+      '打球の角度を測る機械で、自分の打球を見せてもらった。',
+      [
+        EventChoice.risky('角度を上げる打ち方に挑む', (p, c, f, rng) {
+          if (rng.nextDouble() < 0.6) {
+            return (
+              player: _gain(p, Ability.trajectory, 3),
+              condition: c.copyWith(morale: c.morale + 5)
+            );
+          }
+          return (
+            player: p,
+            condition: c.copyWith(morale: c.morale - 5, fatigue: c.fatigue + 5)
+          );
+        }),
+        EventChoice(
+            '今の打ち方を固める',
+            (p, c, f) => (
+                  player: _gain(p, Ability.contact, 1),
+                  condition: c.copyWith(morale: c.morale + 2)
+                )),
+      ],
+      roles: const {Role.batter, Role.twoWay},
+      when: (stage, cast) => stage != Stage.youth,
+      weight: 0.5),
+  GameEvent(
+      'ground-balls',
+      'ゴロ捕球の特守(特別な守備練習)に誘われた。',
+      [
+        EventChoice(
+            '泥だらけになって受ける',
+            (p, c, f) => (
+                  player: _gain(p, Ability.catching, 2),
+                  condition: c.copyWith(fatigue: c.fatigue + 12)
+                )),
+        EventChoice(
+            '今日は遠慮する',
+            (p, c, f) =>
+                (player: p, condition: c.copyWith(morale: c.morale + 3))),
+      ],
+      weight: 0.5),
 ];
 
 /// 出来事の起きる確率(1季節あたり)。
@@ -1089,12 +1191,14 @@ GameEvent? drawEvent(Random rng,
     Stage? stage,
     Cast? cast,
     String? exclude,
+    Role? role,
     Set<String> recent = const {}}) {
   if (rng.nextDouble() >= eventChance * share) return null;
   final pool = [
     for (final e in events)
-      if (e.when == null ||
-          (stage != null && cast != null && e.when!(stage, cast)))
+      if ((e.when == null ||
+              (stage != null && cast != null && e.when!(stage, cast))) &&
+          (e.roles == null || (role != null && e.roles!.contains(role))))
         e,
   ];
   // 直前と同じ出来事、最近起きた出来事は避ける(候補が無くなるなら、避けるのをやめる)。
