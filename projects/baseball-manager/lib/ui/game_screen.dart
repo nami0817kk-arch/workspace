@@ -2718,6 +2718,10 @@ String endingShareText(Game game) {
         ? '${game.proTeam == null ? '' : '${game.proTeam}で'}プロで${e.proYears}年間プレー'
         : 'プロの舞台には立てなかった',
     '最高の総合評価 ${e.peakOverall}・優勝${e.championships}回・タイトル${e.titles.length}個',
+    '最後の能力: ${[
+      for (final a in mainAbilitiesOf(p.role))
+        '${abilityLabel(a)}${rankOf(p.of(a))}${p.of(a)}'
+    ].join('・')}',
     if (pro.isNotEmpty) careerSummary(game.records),
     if (p.traits.isNotEmpty)
       '特性: ${[
