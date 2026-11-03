@@ -182,11 +182,13 @@ List<({String label, String value, int age})> careerHighs(
     }
   }
 
+  // 投手の打席(先発の試合に2打席)は、打撃のキャリアハイに数えない(「本塁打 1本」が並んでいた)
+  bool bat(SeasonRecord r) => !r.line.pitcherBat;
   best('打率', (r) => r.line.battingAverage, (v) => fmtRate(v.toDouble()),
-      ok: (r) => r.line.atBats >= 100);
-  best('本塁打', (r) => r.line.homeRuns, (v) => '$v本');
-  best('打点', (r) => r.line.rbi, (v) => '$v');
-  best('盗塁', (r) => r.line.stolenBases, (v) => '$v');
+      ok: (r) => r.line.atBats >= 100 && bat(r));
+  best('本塁打', (r) => r.line.homeRuns, (v) => '$v本', ok: bat);
+  best('打点', (r) => r.line.rbi, (v) => '$v', ok: bat);
+  best('盗塁', (r) => r.line.stolenBases, (v) => '$v', ok: bat);
   best('勝利', (r) => r.line.wins, (v) => '$v勝');
   best('奪三振', (r) => r.line.strikeouts, (v) => '$v');
   best('防御率', (r) => r.line.era, (v) => fmtEra(v.toDouble()),

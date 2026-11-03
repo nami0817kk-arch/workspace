@@ -82,6 +82,23 @@ void markTests2() {
     expect(h.firstWhere((e) => e.label == '本塁打').age, 26);
     expect(h.firstWhere((e) => e.label == '打率').value, '.325');
     expect(h.any((e) => e.label == '勝利'), isFalse);
+    // 投手の打席は打撃のキャリアハイに数えない
+    final ph = careerHighs([
+      SeasonRecord(
+          age: 25,
+          stage: Stage.pro,
+          line: const Line(
+              faced: 700,
+              outs: 500,
+              wins: 15,
+              atBats: 50,
+              hits: 10,
+              homeRuns: 1,
+              rbi: 3,
+              pitcherBat: true)),
+    ]);
+    expect(ph.any((e) => e.label == '本塁打' || e.label == '打点'), isFalse);
+    expect(ph.any((e) => e.label == '勝利'), isTrue);
     expect(declineAge(), 30);
     expect(fanClubOf(0), 0);
     expect(fanClubOf(80), greaterThan(fanClubOf(40)));
