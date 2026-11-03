@@ -7,6 +7,8 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:baseball_manager/game/game.dart' show Phase;
+import 'package:baseball_manager/game/life.dart';
 import 'package:baseball_manager/game/player.dart';
 import 'package:baseball_manager/monetization/ad_service.dart';
 import 'package:baseball_manager/monetization/monetization.dart';
@@ -203,6 +205,36 @@ void main() {
       t.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
       expect(await t.runAsync(() => m.afterYear(21)), isTrue);
       expect(ads.interstitials, 1);
+    });
+
+    test('年が変わった直後に出来事の選択肢が出ていたら、答えて季節の選択に戻ってから出す', () async {
+      // 年替わりの直後に出来事が出る選手を探す(選択肢の上に広告が被さると、押し間違えで広告を開いてしまう)
+      for (var seed = 0; seed < 200; seed++) {
+        final (m, ads, _) = await _open({'baseball_yearsSinceAd': 3});
+        final c = GameController(rng: Random(seed), money: m);
+        c.newGame('節目', Role.batter);
+        final g = c.game!;
+        g.player = g.player.copyWith(age: 15);
+        while (g.phase == Phase.event) {
+          c.chooseEvent(0);
+        }
+        c.act(Plan.rest); // 15歳として覚える
+        while (g.phase == Phase.event) {
+          c.chooseEvent(0);
+        }
+        g.player = g.player.copyWith(age: 16);
+        c.act(Plan.rest); // 16歳になった
+        if (g.phase != Phase.event) continue;
+        await Future<void>.delayed(const Duration(milliseconds: 1200));
+        expect(ads.interstitials, 0, reason: '出来事の選択中に出した(seed $seed)');
+        while (g.phase == Phase.event) {
+          c.chooseEvent(0);
+        }
+        await Future<void>.delayed(const Duration(milliseconds: 1200));
+        expect(ads.interstitials, 1, reason: '選択が終わっても出ていない(seed $seed)');
+        return;
+      }
+      fail('年替わりの直後に出来事が出る選手が見つからなかった');
     });
 
     test('出そうとして失敗したら数えは戻さず、次の年にもう一度試す', () async {

@@ -241,6 +241,10 @@ void main() {
       expect(ads.interstitials, 0); // 年の変わり目ではない
       g.player = g.player.copyWith(age: 16);
       rest(); // 15 → 16歳
+      // 年替わりの直後に出来事が出ていたら、答え終えてから出る(ad_flow_test で見張る)
+      while (g.phase == Phase.event) {
+        c.chooseEvent(0);
+      }
       await Future<void>.delayed(const Duration(milliseconds: 1200));
       expect(ads.interstitials, 1);
     });
