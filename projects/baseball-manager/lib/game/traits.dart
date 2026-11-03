@@ -6,12 +6,12 @@ import 'skills.dart';
 /// 特性。能力とは別に、選手の個性として効き方を変える。
 /// 良いものだけでなく、代償のあるもの・悪いものもある。
 enum Trait {
-  lateBloomer('大器晩成', '少年期は伸びが鈍いが、19歳以降に大きく伸びる。', true),
+  lateBloomer('大器晩成', '少年期は伸びが鈍いが、高校から大きく伸び、衰えも遅い。', true),
   earlyBloomer('早熟', '若いうちは伸びが大きいが、衰えも早い。', false),
   hardWorker('努力家', '練習の伸びが1割増える。', true),
   genius('天才肌', '伸びが2割増える。', true),
   sturdy('頑丈', '怪我をしにくい。', true),
-  glassBody('ガラスの肉体', '怪我をしやすいが、伸びは1.15倍。', false),
+  glassBody('ガラスの肉体', '怪我をしやすいが、伸びは少し大きい(1.05倍)。', false),
   ironMan('鉄人', '疲れが溜まりにくい。', true),
   sunny('前向き', '気持ちが上がりやすく、下がりにくい。', true),
   clutch('勝負強い', '大会での体調が+10相当になる。', true),
@@ -169,12 +169,16 @@ Set<Trait> rollBirthRare(Random rng, Set<Trait> have, Role role) {
 /// 伸びる年(成長率 >= 0)の倍率。`age` は今の年齢。
 double growthMultiplier(Set<Trait> t, int age) {
   var m = 1.0;
-  if (t.contains(Trait.lateBloomer)) m *= age < 19 ? 0.7 : 1.4;
+  // 2026-11-03: 19歳まで0.7倍だと18歳のドラフトに間に合わず、プロ入り 8〜14%・レジェンド 0% だった。
+  // 中学までは鈍く(0.85倍)、高校(16歳)から大きく伸び(1.4倍)、衰えも遅い(`declineMultiplier`)。
+  // talent_audit: プロ入りは特性なしと同じくらい、レジェンドは多い(打者 7%・投手 11%、基準 1〜2%)。
+  if (t.contains(Trait.lateBloomer)) m *= age < 16 ? 0.85 : 1.4;
   if (t.contains(Trait.earlyBloomer)) m *= age < 16 ? 1.3 : 1.0;
   if (t.contains(Trait.hardWorker)) m *= 1.1;
   if (t.contains(Trait.genius)) m *= 1.2;
   if (t.contains(Trait.monster)) m *= 1.12;
-  if (t.contains(Trait.glassBody)) m *= 1.15;
+  // 2026-11-03: 1.15倍だと怪我(1.8倍)を差し引いても特性なしより強かった(悪い特性なのにプロ入り +10pt)。
+  if (t.contains(Trait.glassBody)) m *= 1.05;
   if (t.contains(Trait.lonely)) m *= 1.1;
   return m;
 }
@@ -183,6 +187,7 @@ double growthMultiplier(Set<Trait> t, int age) {
 double declineMultiplier(Set<Trait> t) {
   var m = 1.0;
   if (t.contains(Trait.earlyBloomer)) m *= 1.3;
+  if (t.contains(Trait.lateBloomer)) m *= 0.8;
   if (t.contains(Trait.longevity)) m *= 0.6;
   if (t.contains(Trait.monster)) m *= 0.9;
   if (t.contains(Trait.steelBody)) m *= 0.6;
