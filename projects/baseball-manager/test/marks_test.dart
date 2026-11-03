@@ -64,7 +64,10 @@ void main() {
       expect(w, contains('走力'));
     }
     // 得意との差が小さければ、釣り合いをほめる
-    expect(coachWordOf(_p(Role.batter, {})), contains('釣り合って'));
+    // 釣り合いをほめるのは1年おき(続けて同じ一言にしない)
+    expect(coachWordOf(_p(Role.batter, {}).copyWith(age: 24)), contains('釣り合って'));
+    expect(coachWordOf(_p(Role.batter, {}).copyWith(age: 25)),
+        isNot(contains('釣り合って')));
     // ベテランには「上に行ける」と言わず、保つ言葉をかける
     for (var age = 34; age < 41; age++) {
       final w = coachWordOf(

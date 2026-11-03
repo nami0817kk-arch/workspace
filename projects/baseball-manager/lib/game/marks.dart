@@ -148,7 +148,8 @@ String coachWordOf(Player p) {
   final weakest = main.reduce((a, b) => v(b) < v(a) ? b : a);
   final best = main.reduce((a, b) => v(b) > v(a) ? b : a);
   final w = _abilityWord[weakest];
-  if (v(best) - v(weakest) <= 4) {
+  // 投手は4つを均等に鍛えがちで、釣り合いの一言が毎年続いた。ほめるのは1年おき
+  if (v(best) - v(weakest) <= 4 && p.age.isEven) {
     return 'コーチ「どの力も釣り合ってきた。この調子で、全部を少しずつ上げよう」';
   }
   // 衰えと向き合う年齢には、伸ばすより保つ言葉をかける(39歳に「もう一段上に行ける」と言っていた)
