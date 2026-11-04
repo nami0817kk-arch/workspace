@@ -69,6 +69,7 @@ class GameScreen extends StatelessWidget {
             constraints: BoxConstraints(maxWidth: contentMaxWidth(context)),
             child: switch (game.phase) {
               Phase.season => _SeasonView(controller: controller, game: game),
+              Phase.plan => _PlanView(controller: controller, game: game),
               Phase.halftime =>
                 _HalftimeView(controller: controller, game: game),
               Phase.clutch => _ClutchView(controller: controller, game: game),
@@ -1447,6 +1448,88 @@ class _Note extends StatelessWidget {
 }
 
 // ── ハーフタイム ──
+
+/// 大一番(決勝・プレーオフ決勝)の前に、作戦を選ぶ画面。
+class _PlanView extends StatelessWidget {
+  const _PlanView({required this.controller, required this.game});
+  final GameController controller;
+  final Game game;
+
+  static String _strength(double v) => v >= 0.12
+      ? '効き目: 大'
+      : v >= 0.06
+          ? '効き目: 中'
+          : v > 0.01
+              ? '効き目: 小'
+              : v < -0.01
+                  ? '逆効果'
+                  : '効き目: ほぼなし';
+
+  @override
+  Widget build(BuildContext context) {
+    final run = game.run!;
+    final effects = game.planInfo!;
+    final rec = bestPlanOf(effects);
+    final cs = Theme.of(context).colorScheme;
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        CourtHeader(game: game, height: 110),
+        const SizedBox(height: 12),
+        Card(
+          color: cs.primaryContainer,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('大一番  ${run.league.label} ${run.roundLabel(run.round)}',
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 4),
+                Text(run.inPlayoffs ? 'このシリーズを取れば頂点だ。どう戦う？' : '勝てば頂点。どう戦う？'),
+                const SizedBox(height: 4),
+                Text('守り ${game.player.of(Ability.defense)}・総合 ${game.player.overall.round()}・'
+                    'チームワーク ${game.teamwork}・パス ${game.player.of(Ability.pass)}',
+                    style: const TextStyle(fontSize: 12)),
+                const SizedBox(height: 12),
+                for (final k in BigGamePlan.values)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: FilledButton(
+                      onPressed: () => controller.playPlan(k),
+                      style: k == rec
+                          ? null
+                          : FilledButton.styleFrom(
+                              backgroundColor: cs.secondaryContainer,
+                              foregroundColor: cs.onSecondaryContainer),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(k == rec ? '${k.label}  (おすすめ)' : k.label,
+                                style: const TextStyle(fontWeight: FontWeight.bold)),
+                            Text(k.description,
+                                textAlign: TextAlign.center, style: const TextStyle(fontSize: 12)),
+                            Text(_strength(planValue(effects[k]!)),
+                                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+        if (controller.recent.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          _RecentCard(lines: controller.recent),
+        ],
+      ],
+    );
+  }
+}
 
 class _HalftimeView extends StatelessWidget {
   const _HalftimeView({required this.controller, required this.game});

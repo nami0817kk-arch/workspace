@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:basketball_career/game/events.dart';
 import 'package:basketball_career/game/game.dart';
+import 'package:basketball_career/game/season.dart';
 import 'package:basketball_career/game/life.dart';
 import 'package:basketball_career/game/match.dart';
 import 'package:basketball_career/game/path.dart';
@@ -47,6 +48,8 @@ void main() {
             case Phase.season:
               g.choose(Action.practice, Ability.threePoint);
               if (g.lastPositionNote != null) notes++;
+            case Phase.plan:
+              g.resolvePlan(bestPlanOf(g.planInfo!));
             case Phase.halftime:
               g.resolveHalftime(Halftime.keep);
             case Phase.clutch:

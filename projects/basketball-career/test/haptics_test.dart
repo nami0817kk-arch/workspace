@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:basketball_career/game/game.dart';
+import 'package:basketball_career/game/season.dart';
 import 'package:basketball_career/game/life.dart';
 import 'package:basketball_career/game/match.dart';
 import 'package:basketball_career/ui/controller.dart';
@@ -28,6 +29,8 @@ void main() {
         switch (c.game!.phase) {
           case Phase.season:
             c.act(Action.practice);
+          case Phase.plan:
+            await c.playPlan(bestPlanOf(c.game!.planInfo!));
           case Phase.halftime:
             await c.playHalftime(Halftime.keep);
           case Phase.clutch:

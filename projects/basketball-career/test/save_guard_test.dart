@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:basketball_career/game/game.dart';
+import 'package:basketball_career/game/season.dart';
 import 'package:basketball_career/game/life.dart';
 import 'package:basketball_career/game/match.dart';
 import 'package:basketball_career/game/player.dart';
@@ -25,6 +26,8 @@ void step(Game g) {
         askClutch: true,
       );
       if (g.canGoAbroad) g.goAbroad();
+    case Phase.plan:
+      g.resolvePlan(bestPlanOf(g.planInfo!));
     case Phase.halftime:
       g.resolveHalftime(Halftime.values[g.player.age % Halftime.values.length]);
     case Phase.clutch:

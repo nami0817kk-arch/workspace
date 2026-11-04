@@ -32,6 +32,8 @@ void _step(Game g, {int event = 0}) {
   switch (g.phase) {
     case Phase.season:
       g.choose(recommendedAction(g), recommendedFocus(g.player));
+    case Phase.plan:
+      g.resolvePlan(bestPlanOf(g.planInfo!));
     case Phase.halftime:
       g.resolveHalftime(bestHalftime(g.player, g.halftimeInfo!));
     case Phase.clutch:

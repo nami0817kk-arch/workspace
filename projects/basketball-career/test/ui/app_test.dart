@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:basketball_career/game/game.dart';
+import 'package:basketball_career/game/season.dart';
 import 'package:basketball_career/game/traits.dart';
 import 'package:basketball_career/game/life.dart';
 import 'package:basketball_career/game/match.dart';
@@ -465,6 +466,39 @@ void main() {
       final r = tester.getRect(find.textContaining(h.label).first);
       expect(r.bottom, lessThanOrEqualTo(844), reason: '${h.label} が画面の外');
     }
+    // 大一番の作戦(決勝の前)
+    GameController? plan;
+    for (var seed = 0; seed < 200 && plan == null; seed++) {
+      final c = GameController(store: _NullStore(), rng: Random(seed), events: false);
+      c.game = Game(
+        eventsEnabled: false,
+        player: Player(name: 'ケイ', age: 15, potential: 90, heightCm: 188, heightGenes: 0.5,
+            abilities: {for (final a in Ability.values) a: 90}),
+        rng: Random(seed),
+        slot: 1,
+      );
+      c.act(Action.rest);
+      var guard = 0;
+      while ((c.game!.phase == Phase.halftime || c.game!.phase == Phase.clutch) && guard++ < 30) {
+        if (c.game!.phase == Phase.halftime) c.game!.resolveHalftime(Halftime.keep);
+        if (c.game!.phase == Phase.clutch) c.game!.resolveClutch(Clutch.drive);
+      }
+      if (c.game!.phase == Phase.plan) plan = c;
+    }
+    expect(plan, isNotNull, reason: '大一番の作戦で止まる乱数が見つからない');
+    await tester.pumpWidget(const SizedBox());
+    await tester.pumpWidget(BasketballCareerApp(controller: plan!));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('大一番'), findsWidgets);
+    expect(find.textContaining('(おすすめ)'), findsOneWidget);
+    for (final k in BigGamePlan.values) {
+      final r = tester.getRect(find.textContaining(k.label).first);
+      expect(r.bottom, lessThanOrEqualTo(844), reason: '${k.label} が画面の外');
+    }
+    await tester.tap(find.textContaining(BigGamePlan.team.label).first);
+    await tester.pumpAndSettle();
+    expect(plan.game!.phase, isNot(Phase.plan));
+    expect(plan.game!.run?.plan ?? BigGamePlan.team, BigGamePlan.team);
     // 進路
     final p = GameController(store: _NullStore(), rng: Random(1), events: false);
     p.game = Game(

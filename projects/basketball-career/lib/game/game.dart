@@ -23,7 +23,7 @@ import 'traits.dart';
 import 'veteran.dart';
 
 /// 画面が見る局面。対応する操作だけを呼ぶ。
-enum Phase { season, halftime, clutch, event, path, retired }
+enum Phase { season, plan, halftime, clutch, event, path, retired }
 
 /// どこでプレーしているか。
 enum Track { school, university, corporate, pro }
@@ -926,7 +926,9 @@ class Game {
       ? Phase.retired
       : pathPending
           ? Phase.path
-          : (run?.pendingHalf != null)
+          : (run?.pendingPlan ?? false)
+              ? Phase.plan
+              : (run?.pendingHalf != null)
               ? Phase.halftime
               : (run?.pending != null)
                   ? Phase.clutch
@@ -1130,7 +1132,9 @@ class Game {
             timeouts: (national ? League.national : league).timeouts +
                 specialExtraTimeouts(player.specials),
             momentumMul: specialMomentumMultiplier(player.specials),
-            askHalftime: askHalftime && chooseClutch == null);
+            askHalftime: askHalftime && chooseClutch == null,
+            planEffects: planEffects,
+            askPlan: askHalftime && chooseClutch == null);
         cr.advance(
           player,
           form: formNow,
@@ -1139,8 +1143,8 @@ class Game {
           askClutch: askClutch && chooseClutch == null,
           pickOpponent: _picker(cr.league),
         );
-        if (cr.pending != null || cr.pendingHalf != null) {
-          // ハーフタイムの作戦か勝負どころで止まる。選ぶまで季節は進まない(`resolveHalftime` / `resolveClutch`)。
+        if (cr.pending != null || cr.pendingHalf != null || cr.pendingPlan) {
+          // 大一番の作戦・ハーフタイムの作戦・勝負どころで止まる。選ぶまで季節は進まない(`resolveHalftime` / `resolveClutch`)。
           run = cr;
           runWinter = winter;
           lastReport = null;
@@ -1202,9 +1206,29 @@ class Game {
     return _afterRun(cr);
   }
 
+  /// 大一番(決勝・プレーオフ決勝)の作戦ごとの効き目。守り・総合・チームワークとパスで変わる。
+  Map<BigGamePlan, PlanEffect> get planEffects => {
+        BigGamePlan.stopAce: (team: 0.0, opp: -(player.effective(Ability.defense) - 50) * 0.035),
+        BigGamePlan.attack: (team: (player.overall - 60) * 0.10, opp: 0.0),
+        BigGamePlan.team: (team: (teamwork - 50) * 0.05 + (player.of(Ability.pass) - 50) * 0.03, opp: 0.0),
+      };
+
+  /// 大一番の作戦を待っている大会の、作戦ごとの効き目(待っていなければ null)。
+  Map<BigGamePlan, PlanEffect>? get planInfo => (run?.pendingPlan ?? false) ? run!.planEffects : null;
+
+  /// 大一番の前で止まっている大会に、選んだ作戦を渡して続きを進める。
+  TermReport resolvePlan(BigGamePlan choice) {
+    final cr = run;
+    if (phase != Phase.plan || cr == null) {
+      throw StateError('今は大一番の前ではない: $phase');
+    }
+    cr.resolvePlan(player, choice, form: formNow, rng: rng, pickOpponent: _picker(cr.league));
+    return _afterRun(cr);
+  }
+
   /// 大会を進めたあと: また止まっていれば `paused`、終わっていれば記録してターンを締める。
   TermReport _afterRun(TournamentRun cr) {
-    if (cr.pending != null || cr.pendingHalf != null) {
+    if (cr.pending != null || cr.pendingHalf != null || cr.pendingPlan) {
       return TermReport(
           action: termAction, gotInjured: termInjured, paused: true);
     }

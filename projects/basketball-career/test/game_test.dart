@@ -372,7 +372,7 @@ void main() {
               if (g.canGoAbroad) g.goAbroad();
             case Phase.path:
               g.chooseRoute(g.availableRoutes.first);
-            case Phase.halftime || Phase.clutch || Phase.event || Phase.retired:
+            case Phase.plan || Phase.halftime || Phase.clutch || Phase.event || Phase.retired:
               break;
           }
         }
@@ -453,6 +453,8 @@ void main() {
                       ? Action.rest
                       : Action.practice,
                   Ability.values[guard % Ability.values.length]);
+            case Phase.plan:
+              g.resolvePlan(bestPlanOf(g.planInfo!));
             case Phase.halftime:
               g.resolveHalftime(Halftime.keep);
             case Phase.clutch:
@@ -2368,8 +2370,10 @@ void main() {
       expect(g.halftimeInfo!.margin.abs(), lessThanOrEqualTo(12));
       expect(() => g.choose(Action.rest, Ability.pass), throwsStateError);
       var guard = 0;
-      while ((g.phase == Phase.halftime || g.phase == Phase.clutch) && guard++ < 30) {
-        if (g.phase == Phase.halftime) {
+      while ((g.phase == Phase.halftime || g.phase == Phase.clutch || g.phase == Phase.plan) && guard++ < 30) {
+        if (g.phase == Phase.plan) {
+          g.resolvePlan(BigGamePlan.team);
+        } else if (g.phase == Phase.halftime) {
           g.resolveHalftime(Halftime.tempo);
         } else {
           g.resolveClutch(Clutch.drive);
@@ -2404,8 +2408,10 @@ void main() {
       expect(h.run!.pendingHalf!.team, g.run!.pendingHalf!.team);
       expect(h.run!.askHalftime, isTrue);
       var guard = 0;
-      while ((h.phase == Phase.halftime || h.phase == Phase.clutch) && guard++ < 30) {
-        if (h.phase == Phase.halftime) {
+      while ((h.phase == Phase.halftime || h.phase == Phase.clutch || h.phase == Phase.plan) && guard++ < 30) {
+        if (h.phase == Phase.plan) {
+          h.resolvePlan(BigGamePlan.stopAce);
+        } else if (h.phase == Phase.halftime) {
           h.resolveHalftime(Halftime.defense);
         } else {
           h.resolveClutch(Clutch.pass);
@@ -2651,6 +2657,8 @@ void main() {
             g.choose(Action.rest, Ability.pass);
           case Phase.event:
             g.resolveEvent(1);
+          case Phase.plan:
+            g.resolvePlan(bestPlanOf(g.planInfo!));
           case Phase.halftime:
             g.resolveHalftime(Halftime.keep);
           case Phase.clutch:

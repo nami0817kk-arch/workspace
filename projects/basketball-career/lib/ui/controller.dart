@@ -529,6 +529,24 @@ class GameController extends ChangeNotifier {
 
   /// 勝負どころで止まっている大会に、選んだプレーを渡す。大会が終われば広告の数えも進める。
   /// ハーフタイムの作戦を選ぶ。
+  /// 大一番(決勝・プレーオフ決勝)の作戦を選んで、大会の続きを進める。
+  Future<void> playPlan(BigGamePlan plan) async {
+    final g = game;
+    if (g == null || g.phase != Phase.plan) return;
+    final wasWinter = g.runWinter;
+    final ageBefore = g.player.age;
+    final r = g.resolvePlan(plan);
+    _pendingLines = [..._pendingLines, '大一番の作戦: ${plan.label}'];
+    if (r.paused) {
+      recent = _pendingLines;
+    } else {
+      recent = _termLines(_pendingLines, r, wasWinter, ageBefore, _pendingStage);
+      _pendingLines = const [];
+    }
+    _commit();
+    if (!r.paused) await money?.tournamentPlayed();
+  }
+
   Future<void> playHalftime(Halftime h) async {
     final g = game;
     if (g == null || g.phase != Phase.halftime) return;

@@ -7,6 +7,7 @@
 import 'dart:math';
 
 import 'package:basketball_career/game/game.dart';
+import 'package:basketball_career/game/season.dart';
 import 'package:basketball_career/game/life.dart';
 import 'package:basketball_career/game/match.dart';
 import 'package:basketball_career/game/path.dart';
@@ -73,6 +74,8 @@ class Policy {
             g.goAbroad();
             wentAbroad = true;
           }
+        case Phase.plan:
+          g.resolvePlan(bestPlanOf(g.planInfo!));
         case Phase.halftime:
           g.resolveHalftime(bestHalftime(g.player, g.halftimeInfo!));
         case Phase.clutch:

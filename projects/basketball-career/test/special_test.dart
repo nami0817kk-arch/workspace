@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:basketball_career/game/advice.dart';
 import 'package:basketball_career/game/game.dart';
+import 'package:basketball_career/game/season.dart';
 import 'package:basketball_career/game/life.dart';
 import 'package:basketball_career/game/match.dart';
 import 'package:basketball_career/game/path.dart';
@@ -13,6 +14,8 @@ void _step(Game g) {
   switch (g.phase) {
     case Phase.season:
       g.choose(recommendedAction(g), recommendedFocus(g.player));
+    case Phase.plan:
+      g.resolvePlan(bestPlanOf(g.planInfo!));
     case Phase.halftime:
       g.resolveHalftime(bestHalftime(g.player, g.halftimeInfo!));
     case Phase.clutch:
