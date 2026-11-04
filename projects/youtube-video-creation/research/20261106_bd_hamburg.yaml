@@ -1,0 +1,497 @@
+# ブンデスリーガ18クラブ紹介 ⑫ハンブルガーSV（2026-11-04 作成。情報は11月4日時点。見本は 11/2 のホッフェンハイム）。tools/plbuild.py（CLUB_LEAGUE=bundesliga）で組み立て。
+# 材料は research/bd_data/hamburg*.json・hamburg_say.yaml・hamburg_research.md。（出力名・theme.id・date・question・takeaway・people・season の表と viewpoint と出典・登録選手の読み上げ・watch は手で足した）
+format: news
+voice_min: 0
+slot: other_1
+date: 2026年11月4日
+people:
+- ハンブルガーSV
+- 高原直泰
+- 酒井高徳
+- メルリン・ポルツィン
+- エルンスト・ハッペル
+- フェリックス・マガト
+- ラファエル・ファン・デル・ファールト
+- ソン・フンミン
+- セルゲイ・バルバレス
+- ミロ・ムハイム
+short_title: ハンブルガーSV、なぜ1部に戻るまで7年
+series: ブンデスリーガチーム紹介
+theme:
+  id: bd_hamburg
+  league: germany
+  league_name: ブンデスリーガ
+  kind: other
+  topic: ハンブルガーSV
+  title: ハンブルガーSVは55年間、1部から落ちなかった。なぜ戻るまで7年かかったのか
+  question: ハンブルガーSVは、なぜ1部に戻るまで7年かかったのか
+  hook: 2018年、その時計は役目を終えます。
+  lead: ヨーロッパ王者、そしてブンデスリーガに55年。スタジアムには、その時間を刻む時計。
+  takeaway: 11月4日時点で、リーグ戦は8試合で勝ち点9。1試合あたり1.13は、昨季34試合の1.12とほぼ同じ。ただ失点は1試合2.4で昨季の1.6より多く、3つの勝ちはすべて1点差。55年落ちず、戻るまで7年かかったクラブが、失点を減らして2年目の残留を確かなものにできるかが次の物差し
+  opening_image: assets/stats/bd_hamburg_data_t.png
+thumbnail:
+  line1: 欧州王者ハンブルガーSV
+  line2: 55年落ちず、戻るまで7年
+  crest_main:
+  - ハンブルガーSV
+  tags:
+  - ハンブルガーSV
+  - HSV
+  - ブンデスリーガ
+  - 酒井高徳
+  - 高原直泰
+  - ソン・フンミン
+  - ファン・デル・ファールト
+  layout: classic
+  board: assets/stats/bd_hamburg_data_t.png
+  short_photo: assets/images/bd_hamburg_muheim/scene.jpg
+sections:
+- id: data
+  heading: いま見る理由と基礎DATA
+  main: true
+  tier: 背景
+  telop: 欧州王者のドイツのクラブは3つ。7年ぶりの1部で残留。今季の3勝はすべて1点差
+  narrator: キャスター
+  say:
+  - text: ヨーロッパの頂点に立ったドイツのクラブは3つ。ハンブルガーSVは、その1つです。
+    image: assets/stats/bd_hamburg_data_r1.png
+    no_telop: true
+  - text: 2018年に初めて2部へ。昨季、7年ぶりの1部で13位に入り、残りました。
+    image: assets/stats/bd_hamburg_data_r2.png
+    no_telop: true
+  - text: 11月4日の時点で、8試合を終えて3勝。勝った3試合は、どれも1点差です。
+    image: assets/stats/bd_hamburg_data_r3.png
+    no_telop: true
+  - image: assets/stats/bd_hamburg_data0.png
+    text: 創立は**1887年**。前身のクラブ、ゲルマニアから数えます。
+    no_telop: true
+  - image: assets/stats/bd_hamburg_data1.png
+    text: 愛称は「ローテ・ホーゼン」。ドイツ語で「赤いパンツ」です。
+    no_telop: true
+  - image: assets/stats/bd_hamburg_cups.png
+    text: ドイツ王者は**6回**。ドイツカップは3回。
+    no_telop: true
+  - image: assets/stats/bd_hamburg_data6.png
+    text: ヨーロッパの大会では、優勝が**2回**あります。
+    no_telop: true
+  - image: assets/stats/bd_hamburg_data8.png
+    text: 昨季は**13位**。勝ち点38で残りました。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Hamburger_SV
+  - https://en.wikipedia.org/wiki/2026–27_Hamburger_SV_season
+  - https://en.wikipedia.org/wiki/List_of_Hamburger_SV_seasons
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/teams/127/schedule?season=2026
+  - https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings
+  bg: assets/backgrounds/stadium_ハンブルガーSV_in.png
+  official: false
+- id: japan
+  heading: 東京での世界一決定戦から酒井高徳まで。ハンブルガーSVと日本は、どうつながってきたのか
+  tier: 背景
+  telop: 1983年に東京で南米王者と対戦。高原直泰、酒井高徳がプレー
+  narrator: 解説
+  say:
+  - text: 1983年12月11日。ハンブルガーSVは、東京の国立競技場にいました。
+    image: assets/backgrounds/stadium_ハンブルガーSV_in.png
+    card:
+      type: table
+      title: ハンブルガーSVと日本
+      columns:
+      - 年
+      - 出来事
+      rows:
+      - - 1983年
+        - 東京で南米王者と対戦
+      - - 2003年
+        - 高原直泰が加入
+      - - 2016年
+        - 酒井高徳が主将に
+      - - 2018年
+        - 初めての2部降格
+  - ヨーロッパ王者として、南米王者のグレミオと、クラブの世界一を争います。
+  - 85分に追いつくも、延長の93分に勝ち越され、1対2。世界一には届きません。
+  - text: 2003年には、高原直泰が加わります。
+    card: none
+    image: assets/images/bd_hamburg_pair_japan/01.jpg
+  - ブンデスリーガで**97試合13得点**。
+  - 2015年には、酒井高徳がシュツットガルトから加入。
+  - 翌2016年には、主将を任されます。
+  - 2018年、クラブが初めて2部に落ちたシーズンも、リーグ戦28試合に出ました。
+  - 2019年8月に神戸へ移るまで、リーグ戦は**114試合**でした。
+  sources:
+  - https://en.wikipedia.org/wiki/1983_Intercontinental_Cup
+  - https://en.wikipedia.org/wiki/Naohiro_Takahara
+  - https://en.wikipedia.org/wiki/Gotoku_Sakai
+  bg: assets/backgrounds/stadium_ハンブルガーSV_in.png
+  official: false
+- id: golden
+  heading: 55年落ちなかったクラブは、なぜ1部に戻るまで7年かかったのか
+  tier: 背景
+  telop: 2018年に初めて2部へ。4位が3回、入れ替え戦で2回敗れ、2025年に昇格
+  narrator: 解説
+  main: true
+  say:
+  - text: 1963年に始まったブンデスリーガ。ハンブルガーSVは、最初の16クラブの1つ。
+    image: assets/backgrounds/stadium_ハンブルガーSV.png
+  - 2001年、スタジアムの北側のスタンドの上に、大きな時計が付きます。
+  - 刻んでいたのは、1963年からブンデスリーガにいる時間。秒まで数えていました。
+  - 2014年と15年は16位。入れ替え戦に回り、どちらも残ります。
+  - 2018年5月12日の最終戦。ボルシアMGに勝ちますが、17位で初めての降格。
+  - 翌日から時計はクラブが生まれてからの時間を示し、翌年には外されました。
+  - text: 2部の1季目と2季目は、入れ替え戦に進める3位に、勝ち点1つ届きません。
+    card:
+      type: table
+      title: 2部での7季
+      columns:
+      - 季
+      - 順位
+      rows:
+      - - 1季目
+        - 4位
+      - - 2季目
+        - 4位
+      - - 3季目
+        - 4位
+      - - 4季目
+        - 3位、入れ替え戦で敗退
+      - - 5季目
+        - 3位、入れ替え戦で敗退
+      - - 6季目
+        - 4位
+      - - 7季目
+        - 2位で昇格
+  - 3季目も4位。4季目は3位に入りますが、入れ替え戦で1部のクラブに敗れます。
+  - text: 5季目は最終戦の追加時間に、競っていたクラブが2点を取り、2位以内を逃します。
+    card: none
+    image: assets/images/bd_hamburg_team2025/scene.jpg
+  - 3位からの入れ替え戦でも、また1部のクラブに敗れました。
+  - それでも観客は減りません。その年は、ヨーロッパの2部でいちばん多い平均観客でした。
+  - 7季目の2025年5月10日、ウルムに6対1で勝ちます。
+  - 1試合を残して、7年ぶりの昇格を決めました。
+  sources:
+  - https://en.wikipedia.org/wiki/Hamburger_SV
+  - https://de.wikipedia.org/wiki/Hamburger_SV
+  - https://en.wikipedia.org/wiki/List_of_Hamburger_SV_seasons
+  bg: assets/backgrounds/stadium_ハンブルガーSV_in.png
+  official: false
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 青は出航の旗。白いシャツと赤いパンツは市の色。会員は約15万人
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns: &id001
+    - ''
+    - ''
+    rows:
+    - &id002
+      - エンブレム
+      - 青は出航を知らせる旗
+  say:
+  - text: ハンブルガーSVの特徴の1つめは、エンブレムの色です。
+    image: assets/backgrounds/stadium_ハンブルガーSV_in.png
+  - text: 青地に、黒と白のひし形。前身のゲルマニアの色です。
+    card:
+      type: table
+      title: このクラブの特徴
+      columns: *id001
+      rows:
+      - *id002
+      - &id003
+        - ユニフォーム
+        - 白いシャツに赤いパンツ
+  - 青は、港町の船が掲げる信号旗から。「出航」を知らせる旗。
+  - text: 2つめは、ユニフォーム。白いシャツに、赤いパンツです。
+    card:
+      type: table
+      title: このクラブの特徴
+      columns: *id001
+      rows:
+      - *id002
+      - *id003
+      - - クラブの形
+        - 会員は約15万人
+  - ハンブルク市の色で、愛称もここから。
+  - 3つめは、クラブの形。会員が支えるクラブで、会員は約**15万人**です。
+  sources:
+  - https://en.wikipedia.org/wiki/Hamburger_SV
+  - https://de.wikipedia.org/wiki/Hamburger_SV
+  bg: assets/backgrounds/stadium_ハンブルガーSV_in.png
+  official: false
+- id: episode
+  heading: 1983年、ハンブルガーSVはなぜヨーロッパの頂点に立てたのか
+  tier: 背景
+  telop: 1981年にハッペルが監督に。36試合負けなし、1983年に欧州王者
+  narrator: 解説
+  card:
+    type: table
+    title: ハッペルのハンブルガーSV
+    columns: &id004
+    - ''
+    - ''
+    rows:
+    - - 1981年
+      - ハッペルが監督に
+    - - 1982年
+      - ブンデスリーガ優勝
+  say:
+  - text: 1981年、ハンブルガーSVの監督にエルンスト・ハッペルが就きます。
+    image: assets/images/bd_hamburg_pair_happel/01.jpg
+  - 1年目の1982年に、ブンデスリーガ優勝。
+  - 1982年1月から翌年1月まで、リーグ戦は**36試合**負けなし。
+  - text: 2013年11月にバイエルンが破るまで、ブンデスリーガ最長の記録でした。
+  - text: 1983年はブレーメンと争い、得失点差で連覇します。
+    card:
+      type: table
+      title: ハッペルのハンブルガーSV
+      columns: *id004
+      rows:
+      - - 1982〜83年
+        - 36試合負けなし
+      - - 1983年
+        - 連覇と欧州王者
+  - text: 5月25日、アテネでのチャンピオンズカップ決勝。相手はユヴェントスです。
+    card: none
+    image: assets/backgrounds/stadium_ハンブルガーSV_in.png
+  - 9分、フェリックス・マガトが決めた1点を守り、ヨーロッパの頂点に立ちました。
+  sources:
+  - https://en.wikipedia.org/wiki/Hamburger_SV
+  - https://en.wikipedia.org/wiki/1983_European_Cup_final
+  bg: assets/backgrounds/stadium_ハンブルガーSV_in.png
+  official: false
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - &id005
+      - ファン・デル・ファールト
+      - 2005-08、12-15
+      - リーグ152試合46得点
+  say:
+  - text: ファン・デル・ファールトは、オランダの攻撃的な中盤。
+    image: assets/photos/bd/hamburg/hamburg_legend_01b3a797.jpg
+  - 2005年にハンブルガーSVへ。2006年からは主将も務めました。
+  - 2度の在籍で、リーグ戦**152試合46得点**。
+  sources:
+  - https://en.wikipedia.org/wiki/Rafael_van_der_Vaart
+  - https://en.wikipedia.org/wiki/Son_Heung-min
+  - https://en.wikipedia.org/wiki/Sergej_Barbarez
+  bg: assets/backgrounds/stadium_ハンブルガーSV_in.png
+  official: false
+- id: legends2
+  heading: このクラブを語る3人（2人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id005
+    - &id006
+      - ソン・フンミン
+      - 2010-2013
+      - リーグ73試合20得点
+  say:
+  - text: ソン・フンミンは韓国のフォワード。16歳で、ハンブルガーSVの育成組織へ。
+    image: assets/photos/bd/hamburg/hamburg_legend_41006aeb.jpg
+  - 2010年10月30日のケルン戦で、ブンデスリーガ初ゴール。
+  - 18歳での得点は、クラブ最年少の記録でした。
+  - 2013年までに、リーグ戦**73試合20得点**。
+  sources:
+  - https://en.wikipedia.org/wiki/Rafael_van_der_Vaart
+  - https://en.wikipedia.org/wiki/Son_Heung-min
+  - https://en.wikipedia.org/wiki/Sergej_Barbarez
+  bg: assets/backgrounds/stadium_ハンブルガーSV_in.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id005
+    - *id006
+    - - バルバレス
+      - 2000-2006
+      - リーグ174試合65得点
+  say:
+  - text: バルバレスは、ボスニア・ヘルツェゴビナ代表のフォワード。
+    image: assets/photos/bd/hamburg/hamburg_legend_49969d24.jpg
+  - ハンブルガーSVに来た2000年から2001年のシーズンに**22得点**。
+  - リーグの得点王に並びました。
+  - 2006年まで、リーグ戦**174試合65得点**。
+  sources:
+  - https://en.wikipedia.org/wiki/Rafael_van_der_Vaart
+  - https://en.wikipedia.org/wiki/Son_Heung-min
+  - https://en.wikipedia.org/wiki/Sergej_Barbarez
+  - https://en.wikipedia.org/wiki/Hamburger_SV
+  bg: assets/backgrounds/stadium_ハンブルガーSV_in.png
+  official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はポルツィン。2024年12月に正式に就任
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - メルリン・ポルツィン
+    - - 就任
+      - 2024年12月22日
+    - - 前の仕事
+      - クラブのアシスタント
+  say:
+  - text: 今季の監督は、メルリン・ポルツィン。ハンブルク生まれの**35歳**です。
+    image: assets/images/bd_hamburg_pair_polzin/01.jpg
+  - 2011年から、クラブの育成組織でコーチを始めました。
+  - 2024年11月に暫定で指揮を執り、12月22日に正式な監督に。
+  - 2025年に1部への昇格を決め、昨季は13位で残留させました。
+  sources:
+  - https://en.wikipedia.org/wiki/Hamburger_SV
+  - https://en.wikipedia.org/wiki/Merlin_Polzin
+  bg: assets/backgrounds/stadium_ハンブルガーSV_in.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: ここからは、ハンブルガーSVの主な登録選手です。
+    image: assets/stats/bd_hamburg_gk.png
+    no_telop: true
+  - image: assets/stats/bd_hamburg_gk_f.png
+    text: まずはゴールキーパー。
+    no_telop: true
+  - image: assets/stats/bd_hamburg_df_f.png
+    text: ディフェンダーです。
+    no_telop: true
+  - image: assets/stats/bd_hamburg_df_f.png
+    text: ミロ・ムハイムはスイス代表で**13試合**。
+    no_telop: true
+  - image: assets/stats/bd_hamburg_mf_f.png
+    text: ミッドフィールダーです。
+    no_telop: true
+  - image: assets/stats/bd_hamburg_mf_f.png
+    text: 主将を務めるのが**ニコライ・レンベルク**。
+    no_telop: true
+  - image: assets/stats/bd_hamburg_mf_f.png
+    text: イマヌエル・ペライは、スリナム代表の中盤です。
+    no_telop: true
+  - image: assets/stats/bd_hamburg_fw_f.png
+    text: フォワードです。
+    no_telop: true
+  - image: assets/stats/bd_hamburg_fw_f.png
+    text: ユスフ・ポウルセンは、デンマーク代表で**86試合**。
+    no_telop: true
+  - image: assets/stats/bd_hamburg_fw_f.png
+    text: バカリー・ジャッタはリーグ戦で**213試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Hamburger_SV
+  bg: assets/backgrounds/stadium_ハンブルガーSV_in.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 11月4日時点で8試合3勝5敗。得点7、失点19。15位
+  narrator: 解説
+  card:
+    type: table
+    title: ブンデスリーガの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - ドルトムント（アウェー）
+      - 0対2
+    - - 第2節
+      - マインツ（ホーム）
+      - 0対5
+    - - 第3節
+      - ライプツィヒ（アウェー）
+      - 0対5
+    - - 第4節
+      - ケルン（ホーム）
+      - 2対1
+    - - 第5節
+      - ホッフェンハイム（アウェー）
+      - 3対2
+    - - 第6節
+      - シュツットガルト（ホーム）
+      - 1対0
+    - - 第7節
+      - パーダーボルン（アウェー）
+      - 0対1
+    - - 第8節
+      - フランクフルト（アウェー）
+      - 1対3
+  say:
+  - text: ハンブルガーSVは、ここまでの8試合で3勝5敗。勝ち点は9。
+    card:
+      type: stats
+      title: 今季のリーグ戦（8試合）
+      items:
+      - - '7'
+        - ''
+        - 得点
+      - - '3'
+        - ''
+        - 1点差の勝ち
+      - - '9'
+        - ''
+        - 勝ち点
+      focus: 1
+  - text: 3つの勝ちは、すべて**1点差**。
+    mark:
+      kind: circle
+      item: 1
+  - text: ホッフェンハイム戦は後半の追加時間、シュツットガルト戦は88分の決勝点。
+    card: none
+    image: assets/images/bd_hamburg_muheim/scene.jpg
+  - 決めたのは、どちらもミロ・ムハイムです。
+  - 勝ち点は1試合あたり**1.13**。昨季の1.12と、ほぼ同じです。
+  - 失点は1試合**2.4**。昨季の1.6より、増えています。
+  - text: 次は11月6日、ホームでボルシアMGと戦います。
+    image: assets/backgrounds/stadium_ハンブルガーSV_in.png
+  - 2018年の最終戦、勝っても降格が決まった試合の相手です。
+  sources:
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/teams/127/schedule?season=2026
+  - https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/summary?event=401884779
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/summary?event=401884767
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_Hamburger_SV_season
+  bg: assets/backgrounds/stadium_ハンブルガーSV_in.png
+  official: false
+  viewpoint: true
+watch: 毎日、数字でサッカーを読み解きます

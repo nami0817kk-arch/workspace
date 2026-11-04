@@ -1,0 +1,151 @@
+# 取材メモ（2026年10月30日）ラ・リーガ、今節から審判が試合後に話す（ショートだけ・見せ方 X＝冒頭に強い一言）
+# 取材: 2026-10-30。題材の元は 20261030_topics_src.yaml の 18（candidates[88]）。「対象の試合・方法・リーグの発表かを本文で確かめる」が条件。
+#   マルカ「Los árbitros hablarán después de los partidos desde esta jornada」（marca.com/…/2026/10/29/arbitros-hablaran-despues-partidos-jornada.html、
+#     29日23:19 CET。requests で本文を全部読んだ。本文は4段落と短い）:
+#     ・今季の中継で、審判が試合の前にインタビューを受けるのは初めて（審判委員会 CTA が進め、権利を持つ局の記者が担当）。
+#     ・ラ・リーガと CTA は、試合前に加えて試合後にも審判の声を聞けるようにする。「スペインサッカー史上初」。今週末から、「少なくとも2人」の審判。
+#     ・DAZN が伝えたところでは、その1試合は日曜21時（サン・マメス）のアスレティック対レアル・ソシエダ。試合後は主審が話す。
+#   AS「Los árbitros de LaLiga hablarán después de los partidos」（as.com/futbol/primera/…f202610-n/、29日23:50。requests で本文を全部読んだ）:
+#     ・第11節（今週末）から。DAZN が確認した。対象は「放映権を持つ局」だけ。「試合終了の笛のあとに、1節につき審判1人だけ」。第11節はアスレティック対レアル・ソシエダの審判。
+#     ・7月初めに、審判協会（AESAF）・ラ・リーガ・連盟が、1部・2部の審判が透明性を上げ、中継を良くすることで合意。見返りは「視聴覚ボーナス」。
+#     ・今季の開幕から、審判は試合前の取材に出ている。マルティネス・ムヌエラはクラシコの前に DAZN に話し、報道の騒音から自分を切り離そうとしていると語った（記事の言い換え。原文の発言ではないので引用にしない）。
+#     ・ラ・リーガは審判全体に50万ユーロの「ボーナスの枠」（bolsa）を出す。条件は2つ：「スペインサッカーの映像商品の価値を高めること」「審判の良い印象を守り育てること」（引用符つきの条件を自訳）。
+#     ・すでに VAR 担当審判の公開と、毎週の番組（議論の判定を分析し、ミスを認めることもある）をやっている。近く審判の「インサイド」ドキュメンタリーの放送が見込まれている。
+#   対象の試合・方法・リーグの発表か（確かめた結果）：
+#     ・対象の試合＝アスレティック対レアル・ソシエダ（日曜 11月1日 現地21時、サン・マメス。第11節）。2紙で一致。
+#     ・方法＝放映権を持つ局が、試合終了後に審判（主審）へ取材する。
+#     ・リーグの発表か＝本文は「ラ・リーガと CTA が進める」と書くが、ラ・リーガ自身の発表文は引いていない。確認したのは DAZN（2紙とも）。→ 確度は「報道」。確定とは言わない。
+#     ・2紙の食い違い：話す審判の数（マルカ「少なくとも2人」／AS「1節に1人だけ」）。台本では数を断定せず、食い違いを言う。
+# 言わないこと: 審判の名前を「話す人」として挙げること（主審はまだ発表されていない。マルカの写真の人物＝ムヌエラ・モンテーロは記事で話すとは書かれていない）、
+#   質問の中身・どこまで答えるか（本文に無い）、判定への影響の断定、他国リーグとの比較（読んでいない）、ボーナスの1人あたりの額（枠の総額のみ）、
+#   日曜の試合の結果（未開催。結果が出る前の内容）。
+# 重ならない確認: research/posted.json・covered.yaml・scripts/20261024〜20261029_* を「審判・主審・ホイッスル・ラ・リーガの審判」で grep。10/29 以前に審判の発言の題は無い（VAR 絡みの古い題だけ）。
+# 本人の言葉: 無い → 型は X。
+# 確度: 日程・対象の試合は報道（2紙一致）。ボーナスの額・条件は報道（AS）。人数は報道だが食い違う。見立てと「4つ目」の数え方は自分で数えたもの（背景）。
+# 反応: 作らない（0件）。approve は --no-voices で。
+slot: overseas
+date: "2026年10月30日"
+format: news
+no_main: true
+people: []
+
+short_style: X
+short_hook_word: スペイン史上初
+short_photos:
+  - assets/images/20261030_laliga_ref_speak/07_v.jpg
+  - assets/images/20261030_laliga_ref_speak/03_v.jpg
+  - assets/images/20261030_laliga_ref_speak/08_v.jpg
+  - assets/images/20261030_laliga_ref_speak/04_v.jpg
+
+short_question: 試合のあとに審判が説明する形を、あなたはどう思いますか。
+short_hook: ラ・リーガで、審判が試合のあとに話すことになりました。スペインのサッカーでは、史上初です。
+short_telops:
+  - {match: 史上初, text: ラ・リーガ/審判が試合後に話す・スペイン史上初}
+  - {match: アスレティック, text: 11月1日（日）夜9時（現地）/アスレティック対レアル・ソシエダ}
+  - {match: 放映権, text: 審判が話す相手/放映権を持つテレビ局}
+  - {match: 食い違って, text: 話す審判の数/1人か、少なくとも2人か}
+  - {match: 50万ユーロ, text: ラ・リーガが審判に/50万ユーロのボーナスの枠}
+  - {match: 4つ, text: 審判が表に出る場/試合後で4つ目}
+
+theme:
+  id: laliga_ref_speak
+  league: spain
+  league_name: ラ・リーガ
+  prefix: ""
+  title: ラ・リーガ、今節から審判が試合後に話す。スペイン史上初
+  hook: ""
+  question: ラ・リーガで審判が試合後に話すとは、どういう仕組みで、最初の試合はどれか
+  takeaway: 審判が表に出る場は、VAR担当の公開、毎週の番組、試合前の取材に続いて4つ目。最初はバスクのダービーで、50万ユーロのボーナスの枠が付く
+
+thumbnail:
+  line1: アスレティック・ビルバオ
+  line2: 審判が試合後に話す
+  tags: [ラ・リーガ, 審判, アスレティック, レアル・ソシエダ]
+  photo: assets/images/20261030_laliga_ref_speak/02_w.jpg
+  short_photo: assets/images/20261030_laliga_ref_speak/07_v.jpg
+
+answer: 今週末の第11節から、審判が試合後に話す。最初はアスレティック対レアル・ソシエダ（11月1日、現地夜9時）
+watch: 11月1日（日）、アスレティック対レアル・ソシエダの試合後
+
+sections:
+  - id: what
+    main: true
+    heading: 審判が、試合のあとに話す
+    tier: 報道
+    telop: ラ・リーガの審判が、試合後に話す。スペイン史上初
+    say:
+      - text: ラ・リーガで、審判が試合のあとに話すことになりました。
+        image: assets/images/20261030_laliga_ref_speak/02_w.jpg
+      - text: スペインのサッカーでは、史上初です。
+        image: assets/images/20261030_laliga_ref_speak/03_w.jpg
+      - text: 始まるのは、今週末の第11節からです。
+        image: assets/images/20261030_laliga_ref_speak/03_w.jpg
+      - text: 最初の試合は、11月1日の日曜、現地の夜9時。
+        image: assets/images/20261030_laliga_ref_speak/04_w.jpg
+      - text: サン・マメスで、アスレティック対レアル・ソシエダ。バスクのダービーだ。
+        image: assets/images/20261030_laliga_ref_speak/03_w.jpg
+      - text: この試合では、笛を吹いた主審が、終わったあとに話します。
+        image: assets/images/20261030_laliga_ref_speak/01_w.jpg
+      - text: 話す相手は、放映権を持つテレビ局です。
+        image: assets/images/20261030_laliga_ref_speak/02_w.jpg
+      - text: 試合前の取材は、今季の開幕から始まっていました。試合後は、今回が初めてです。
+        image: assets/images/20261030_laliga_ref_speak/03_w.jpg
+      - text: ただ、話す審判の数は、報道で食い違っています。
+        image: assets/images/20261030_laliga_ref_speak/01_w.jpg
+      - text: 1節に1人まで、という伝え方と、少なくとも2人、という伝え方があります。
+        image: assets/images/20261030_laliga_ref_speak/02_w.jpg
+    official: false
+    sources:
+      - https://www.marca.com/futbol/primera-division/2026/10/29/arbitros-hablaran-despues-partidos-jornada.html
+      - https://as.com/futbol/primera/los-arbitros-de-laliga-hablaran-despues-de-cada-partido-f202610-n/
+
+  - id: money
+    heading: 話す代わりに、50万ユーロの枠
+    tier: 報道
+    telop: 審判全体に、50万ユーロのボーナスの枠
+    say:
+      - text: 話す代わりに、ラ・リーガは審判全体に、50万ユーロのボーナス枠を用意しました。
+        image: assets/images/20261030_laliga_ref_speak/04_w.jpg
+      - text: 条件は2つ。スペインサッカーの映像の価値を高めること。
+        image: assets/images/20261030_laliga_ref_speak/01_w.jpg
+      - text: そして、審判のいい印象を守り、育てること。
+        image: assets/images/20261030_laliga_ref_speak/02_w.jpg
+      - text: 7月の初めには、審判の協会とラ・リーガと連盟が合意していました。
+        image: assets/images/20261030_laliga_ref_speak/02_w.jpg
+      - text: 審判が透明性を上げ、中継を良くする、という内容です。
+        image: assets/images/20261030_laliga_ref_speak/04_w.jpg
+    official: false
+    sources:
+      - https://as.com/futbol/primera/los-arbitros-de-laliga-hablaran-despues-de-cada-partido-f202610-n/
+
+  - id: view
+    viewpoint: true
+    heading: 審判が表に出る場は、これで4つ目
+    tier: 背景
+    telop: VAR担当の公開、毎週の番組、試合前の取材、そして試合後
+    say:
+      - text: ここからは見立てです。
+        image: assets/images/20261030_laliga_ref_speak/03_w.jpg
+      - text: 審判が表に出る場は、これまで3つ。そこへ試合後が加わり、4つになります。
+        image: assets/images/20261030_laliga_ref_speak/04_w.jpg
+      - text: ビデオ判定の担当の公開、毎週の番組、試合前の取材です。
+        image: assets/images/20261030_laliga_ref_speak/01_w.jpg
+        card: {type: timeline, title: 審判が表に出る場, rows: [[7月, 審判の協会などが合意], [今季の開幕, 試合前の取材], [今週末, 試合後の取材（初）], [近く, ドキュメンタリー放送の見込み]], focus: 今週末}
+      - text: 毎週の番組では、議論になった判定を振り返り、ミスを認めることもあります。
+        image: assets/images/20261030_laliga_ref_speak/02_w.jpg
+      - text: 審判を追うドキュメンタリーの放送も、近く見込まれています。
+        image: assets/images/20261030_laliga_ref_speak/03_w.jpg
+      - text: 判定の直後に、当事者が説明する。
+        image: assets/images/20261030_laliga_ref_speak/01_w.jpg
+        card: none
+      - text: 見る側の受け止め方が変わるのか。それとも、別の議論が生まれるのか。
+        image: assets/images/20261030_laliga_ref_speak/02_w.jpg
+      - text: 何を聞かれて、どこまで答えるのか。それは、日曜の最初の試合を見るまで分かりません。
+        image: assets/images/20261030_laliga_ref_speak/03_w.jpg
+      - text: 11月1日のアスレティック対レアル・ソシエダのあと、この形が続くのかも注目です。
+        image: assets/images/20261030_laliga_ref_speak/04_w.jpg
+    official: false
+    sources:
+      - https://as.com/futbol/primera/los-arbitros-de-laliga-hablaran-despues-de-cada-partido-f202610-n/
+      - https://www.marca.com/futbol/primera-division/2026/10/29/arbitros-hablaran-despues-partidos-jornada.html
+short_title: "ラ・リーガの審判が、試合後に話す。スペイン史上初"

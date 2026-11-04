@@ -1,0 +1,131 @@
+# 取材メモ（2026年11月4日）松木玖生、QPR戦で背を向けたまま反転ボレー。今季4点目で昨季のリーグ戦の得点に14試合で並んだ（ニュースのショート。見せ方 X＝冒頭1秒に強い一言）
+# 取材: 2026-11-04。requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約は事実に使っていない（URL探しにだけ使った）。
+# 題材の元: ゲキサカ 2026-11-01「松木玖生が鮮やかな“逆足”反転ボレー弾!! リーグキャリアハイに並ぶ今季4点目、直近4戦3発」（本文を全部読んだ）
+#   https://web.gekisaka.jp/news/world/detail/?462301-462301-fl
+#     10月31日、チャンピオンシップ第13節QPR戦。前半5分、左からの折り返しをゴール前フリーで左足ボレー→枠の上。
+#     前半11分、シエンザのカットインからのシュートが相手に当たり、ペナルティエリア内右の松木へ。相手の前に体を入れ、ゴールを背に左足でトラップ、
+#     反転しながら利き足と逆の右足で流し込んだ。直近4試合で3得点、今季4点目、昨季記録したリーグ戦キャリアハイに並んだ。4-1。直近5試合で4勝1分け。
+# 試合データで確かめたこと:
+#   ・ESPN summary 401880189（eng.2）: サウサンプトン4-1QPR、セント・メリーズ。11分 松木（右足・ボックス中央から左下隅）。55分ブラッグ、66分シュロッターベック、68分コネ（QPR）、90+5分ウェリントン。
+#     松木は先発、86分にエドジーと交代。シュート4本・枠内1。QPR は59分に斉藤光毅が途中出場（日本人対決。台本には入れない）。
+#   ・ESPN の全試合（サウサンプトンの日程と各試合の summary）: 松木のリーグ戦得点は 9/12 ブリストル・シティ戦、10/14 ノリッジ戦、10/24 ウェストハム戦、10/31 QPR戦＝4点。
+#     10/14〜10/31 の4試合（ノリッジ・ボルトン・ウェストハム・QPR）で3点 → ゲキサカの「直近4戦3発」と一致。
+#   ・ESPN summary 401880177: 11月3日（火）ウェスト・ブロム1-1サウサンプトン。松木は先発、88分に交代、得点・アシストなし。
+#     → 公開日の11/4時点では QPR 戦のあとにもう1試合ある。台本は「3日の試合も先発」と入れる（数字は14試合で4点）。
+#   ・クラブ公式の試合レポート（WBA 戦）https://www.southamptonfc.com/en/news/article/report-edozie-strikes-to-earn-saints-a-point
+#     後半8分、マニングのクロスを松木がファーサイドで高く跳んで頭で折り返し、エドジーが決めて1-1。→ アシストの記録は付いていない（ESPN）ので「アシスト」とは言わず「つないだ」。
+#   ・英語版 Wikipedia の通算成績（2026-11-03 更新、出典 Soccerway）: 2025-26 チャンピオンシップ 20試合4得点、2026-27 14試合4得点。FC東京は J1 で 2・1・2点、ギョズテペ 2点。
+#     → 「昨季のリーグ戦4点＝リーグ戦の最多」はゲキサカと一致。今季は14試合（ESPN の出場の数と一致）。
+#   ・Express & Star（PA）2026-10-31 https://www.expressandstar.com/uk-sports/tonda-eckert-quite-surprised-at-cameron-braggs-finishing-skills-9322482
+#     「Matsuki opened the scoring in the 11th minute, having already missed a sitter as he swivelled in his third goal in four games.」→ ゲキサカと一致。エッケルト監督の言葉は松木について無い。
+# 本人の言葉: 見つからなかった（ゲキサカ・クラブ公式（QPR 戦のレポートはニュース一覧に見当たらず、WBA 戦のレポートに談話なし）・Express & Star・検索）。→ X。
+# 【題材の一覧と違った点】一覧は「10月に日本代表初招集」とあるが、こちらの過去の本（research/20260915〜0925_matsuki）と Wikipedia では 9月に初招集・9/24 ウルグアイ戦で代表初ゴール。→ 台本では代表に触れない。
+# 【言わないこと】直近4試合3点は QPR 戦までの数え方なので、そのまま「4試合で3点」と言わず「10月14日からの4試合で3点」と日付を付ける。
+#   昨季の4点は J1 時代も含めた「リーグ戦の最多」だが、台本は「昨季のリーグ戦の4点に並んだ」とだけ言う（キャリアハイという語はゲキサカの語。言い換えた）。
+# 自分で数えたもの: 昨季 20試合4点 → 今季 14試合4点（6試合少なく並んだ）。チャンピオンシップは46試合で、14試合を終えて残り32試合。
+# 前の本との重なり: scripts/20261015_matsuki_southampton（ノリッジ戦の決勝弾）／scripts/20261029_matsuki_chance（QPR 戦の前・報じられた「今季10点」・2月の談話）。
+#   → ノリッジ戦は日付と相手の名前だけ。10点の話・2月の談話・264分に1点は繰り返さない。今回の初出: 反転ボレーの中身・今季4点目で昨季に並んだ・WBA 戦。
+# 反応: 0件（作らない）。approve は --no-voices。
+# 確度: ゴールの事実＝確定（試合データ）。ゴールの形の描写（トラップ・逆足）＝報道（ゲキサカ）。WBA 戦の折り返し＝確定（クラブ公式の試合レポート）。
+# 写真: assets/images/20261104_matsuki_volley_saints/（credits.json）
+#   今回の試合の写真は取れなかった：photopool の候補は Express & Star の主写真（エッケルト監督・PA 配信の見込み）、ゲキサカの主写真（松木本人だが撮影者の記載が無く、海外の試合の写真は代理店の配信の恐れ）、クラブ公式の WBA 戦の主写真（エドジー）→ 3枚とも外した。
+#   → 10/29 にクラブ公式サイトから取り込んだ松木の3枚を再掲（01＝代表のウルグアイ戦の得点後、02＝2月のQPR戦のガッツポーズ、03＝加入発表）。前日（11/3）の本では使っていない。
+slot: japanese
+date: "2026年11月4日"
+format: news
+no_main: true
+people: [松木玖生, サウサンプトン, クイーンズ・パーク・レンジャーズ, ウェスト・ブロム]
+
+short_style: X
+short_hook_word: 反転ボレー
+short_question: 松木玖生は、今季いくつまで点を伸ばすと思いますか。
+short_photos:
+  - assets/images/20261104_matsuki_volley_saints/02_v.jpg
+  - assets/images/20261104_matsuki_volley_saints/03_v.jpg
+  - assets/images/20261104_matsuki_volley_saints/01_v.jpg
+short_telops:
+  - {match: 6分前, text: 前半5分/フリーのボレーは枠の上}
+  - {match: 背を向けたまま, text: ゴールに背を向けて/左足でトラップ}
+  - {match: 右足, text: 反転して/利き足と逆の右足}
+  - {match: 4対1, text: サウサンプトン4-1QPR/松木は86分まで}
+  - {match: 早くも並び, text: 昨季 20試合4点/今季 14試合4点}
+  - {match: 頭で折り返し, text: 11月3日 ウェスト・ブロム戦/頭の折り返しで同点に}
+
+theme:
+  id: matsuki_volley_saints
+  league: england
+  league_name: イングランド2部
+  prefix: ""
+  title: 松木玖生、背を向けたまま反転ボレー。今季4点目で並んだ数字とは
+  hook: ""
+  question: 松木玖生の反転ボレーは、今季の数字の上で何に並んだのか
+  takeaway: 松木は外した6分後に反転ボレーで先制点。今季14試合で4点となり、昨季20試合のリーグ戦の4点に、6試合少なく並んだ。残りは32試合
+
+thumbnail:
+  layout: face
+  line1: 松木玖生
+  line2: 逆足の反転ボレー
+  tags: [松木玖生, サウサンプトン]
+  photo: assets/images/20261104_matsuki_volley_saints/02_w.jpg
+  short_photo: assets/images/20261104_matsuki_volley_saints/02_v.jpg
+
+answer: 今季4点目で、昨季のリーグ戦の4点（20試合）に14試合で並んだ
+watch: サウサンプトンの次のリーグ戦
+
+sections:
+  - id: what
+    main: true
+    heading: 松木玖生のゴールは、どう生まれたのか
+    tier: 報道
+    telop: 松木玖生、クイーンズ・パーク・レンジャーズ戦で反転ボレーの先制点
+    say:
+      - text: 10月31日のイングランド2部、クイーンズ・パーク・レンジャーズ戦。
+      - text: 松木玖生が、前半11分に先制点を決めました。
+      - text: 実はその6分前、ゴール前でフリーのボレーを、枠の上に外していました。
+        image: assets/images/20261104_matsuki_volley_saints/03_w.jpg
+      - text: そして11分。味方のシュートが相手に当たって、ペナルティエリアの右にいた松木へ。
+      - text: 相手の前に体を入れ、ゴールに背を向けたまま左足で止めます。
+      - text: そのまま反転し、利き足と逆の右足で流し込みました。
+        emph: true
+      - text: サウサンプトンは4対1で勝ち、松木は86分までプレーしました。
+      - text: これで今季のリーグ戦は4点目。昨季20試合で決めた数に、早くも並びました。
+        emph: true
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/world/detail/?462301-462301-fl
+      - https://www.espn.com/soccer/match/_/gameId/401880189
+  - id: recent
+    heading: 4点目のあとの松木玖生は、どうだったか
+    tier: 報道
+    telop: 11月3日 ウェスト・ブロム戦も先発。頭の折り返しで同点につなぐ
+    say:
+      - text: 4点のうち3点は、10月14日からの4試合で決めています。
+        image: assets/images/20261104_matsuki_volley_saints/01_w.jpg
+        card: none
+      - text: 続く11月3日のウェスト・ブロム戦も、松木は先発しました。
+      - text: 後半、ゴールの奥側で高く跳び、頭で中へ折り返します。
+      - text: そのボールを味方が押し込み、同点ゴールになりました。
+        image: assets/images/20261104_matsuki_volley_saints/02_w.jpg
+        emph: true
+      - text: 試合は1対1の引き分け。松木は88分に交代しています。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401880177
+      - https://www.southamptonfc.com/en/news/article/report-edozie-strikes-to-earn-saints-a-point
+      - https://www.expressandstar.com/uk-sports/tonda-eckert-quite-surprised-at-cameron-braggs-finishing-skills-9322482
+  - id: view
+    viewpoint: true
+    heading: 松木玖生の4点は、今季のどこにいるのか
+    tier: 背景
+    telop: 今季は14試合。イングランド2部の残りは32試合
+    say:
+      - text: 見立てです。松木玖生が今季出たのは14試合。
+        card: {type: table, title: 松木玖生 イングランド2部, columns: [季, 試合, 得点], rows: [[昨季, 20, 4], [今季, 14, 4]], highlight_row: 1}
+      - text: イングランド2部は全部で46試合あり、残りはまだ32試合です。
+        card: none
+      - text: 次の1点で、松木はリーグ戦の自己最多を更新します。
+        emph: true
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401880177
+short_title: "松木玖生、背を向けたまま反転ボレー。今季4点目で並んだ数字とは"

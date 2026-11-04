@@ -1,0 +1,472 @@
+# ユニフォームとエンブレムの歴史 フラム（11/4 作成、11/5 分）。雛形は 11/1 コヴェントリー回。
+# 題の問い：プレミアの胸から賭けの会社が消えた今季。24年前、最初に胸に入れたのはどこか（答え＝フラム。2002年から03年のベットフェア）。
+# 選んだ理由：プレミア⑪→⑳→①→⑩の並びで残っているのは ⑩ フラムだけ（scripts/*kit_* に 20 クラブ中 19 クラブ＋Hull・Ipswich・Coventry 済み）。
+#   2026-27 のプレミアの20クラブ＝スタジアム回の20本と同じ（ウェストハムは2部。ハル・イプスウィッチ・コヴェントリーが入る）。名前の大きいクラブは全部出し済み。
+#   フラムは「白いシャツが変わらない」ので色の話は薄い→今季の「胸の賭けの広告の禁止」と、フラムが最初だった話を主にした。
+# 重なり確認（2026-11-04）：scripts/*kit_*・research/covered.yaml・research/posted.json を grep。フラムのユニフォーム回は無し。
+#   20260920_pl10_fulham（クラブ紹介・45日前）、20261024_stadium_fulham（スタジアム・11日前）、20261024_inamoto_legend は別シリーズ。
+#   スタジアム回で言った「稲本のインタートトの4点」「ロフタス・ロードを借りた」「収容」はこの回では言わない。稲本は「ベットフェアの季にいた」の1行だけ。
+# 今季のリーグ：ウィキペディア en "Fulham F.C."（current = 2026–27 Fulham F.C. season、top tier）と "2026–27 Premier League"（参加クラブに Fulham）、ClickHouse の発表（2026/27 Premier League campaign）。
+# 取材：requests だけ。ブラウザ操作・JS実行・検索のAI要約は使っていない。
+#   読んだ：ウィキペディア en "Fulham F.C."（History・Kit の節とスポンサーの表）、"2026–27 Premier League"（胸の賭けの広告の禁止）、"Junichi Inamoto"、
+#     Historical Football Kitsの Fulham（色と紋章の年表）、ClickHouse の発表（2026-07-21）、
+#     BBC News 2018-09-22「Premier League shirts row」、BBC Sport 2025-04-18「Premier League shirt sponsors」、Guardian 2023-04-13 の禁止の記事。
+# ---- 食い違い・断ったこと ----
+#   ・白いシャツの年：ウィキペディアの Kit の節は「1896年から」、同じ記事の History の節と HFK は「1896年は赤と白、白と黒は1903年から」→ 1903年を使う。
+#   ・最初の色：HFK「明るい青と濃い青、1883年の記事では2色に分かれたシャツ」、ウィキペディア「1886–87に赤と白の半分ずつ」→ HFK の青を言い、赤と白は1896年の分だけ言う。
+#   ・「初めての賭けの会社の胸の広告」：ウィキペディアの文（出典 SBC News 2018・BBC 2018）。BBC 2018 は「2005年の法律より前にも、2002–03 のフラムのベットフェアがあった」とだけ書く
+#     →台本は「ウィキペディアは〜と書いています」と、言っている者を付けて言う。
+#   ・いまの紋章の年：HFK「最初のプレミアの季（2001年）に新しい紋章」、ウィキペディアの画像の説明は「2000年から」→「2001年、初めてプレミアに上がった季」。
+#   ・紋章の年表は HFK 1本だけ（クラブ公式の紋章の頁は読んでいない）。
+#   ・今季の胸：ウィキペディアのスポンサーの表の 2026–27 と ClickHouse の発表（7月21日、男子トップチームの胸、複数年）。
+#   ・袖などには賭けの会社を残せる：ウィキペディア "2026–27 Premier League"（Guardian・BBC を出典）。
+# ---- 自分で数えた数（ウィキペディアのスポンサーの表）----
+#   胸の会社：1984–85 William Younger／Prestige Travel／Emirates（1988）／TeleConnect／GMB／Demon Internet／Pizza Hut／Betfair／dabs.com／Pipex／LG／FxPro／
+#     Marathonbet／Visit Florida／Grosvenor Casinos／Dafabet／BetVictor／World Mobile／W88／SBOBET／ClickHouse ＝ 21社。1984–85〜2026–27 ＝ 43シーズン。43÷21≈2.0。
+#   賭けの会社だった季（2002–03〜2025–26 の24季）：Betfair 1・Marathonbet 2（2013–15）・Grosvenor 1・Dafabet 2・BetVictor 1・W88 1・SBOBET 3 ＝ 11季。11÷24＝45.8%→約46％。
+#   白：2026−1903＝123年。ベットフェアから：2026−2002＝24年。紋章 1951→1973＝22年。禁止を決めてから：2023年4月→2026年夏＝約3年。
+# ---- 日本との接点 ----
+#   稲本潤一が 2002年7月にガンバ大阪から加入（ウィキペディア、クラブ発表 2002-07-15）＝ベットフェアの季。写真の後ろに dabs.com の黒いシャツ（プーマ。表の 2003–05 と一致）。
+# ---- 写真（assets/images/20261105_kit_fulham/、出典は credits.json）----
+#   Commons の CC0（2024年9月のフラムの選手たち）、スタジアム回の Commons の写真3枚、稲本レジェンド回の記事写真1枚。代理店・放送映像・エンブレム画像は使っていない。
+date: 2026年11月4日
+slot: other_2
+format: news
+series: ユニフォームとエンブレムの歴史
+voice_min: 0
+people:
+- フラム
+- 稲本潤一
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  end_bg: assets/images/20261105_kit_fulham/s01_riverside_w.jpg
+  id: kit_fulham
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: フラム
+  title: フラムの胸から、賭けの会社が消えた。24年前、最初に付けたクラブは？
+  question: プレミアの胸の賭けの広告は、どこから始まり、フラムのシャツは何を守ってきたのか
+  opening_image: assets/images/20261105_kit_fulham/f03_match_w.jpg
+  lead: 白い、シャツ。
+  hook: ''
+  takeaway: 白いシャツと黒いパンツは1903年から123年変わらない。一方、胸の会社は1984年からの43シーズンで21社、約2シーズンに1社。2002年のベットフェアからの24季のうち11季（約46％）が賭けの会社で、今季、その胸から消えた
+  hook_unused: ''
+thumbnail:
+  layout: classic
+  callouts:
+  - 2002年ベットフェア
+  - 今季から胸は禁止
+  photo: assets/images/20261105_kit_fulham/f03_thumb_w.jpg
+  short_photo: assets/images/20261105_kit_fulham/f03_match_v.jpg
+  line1: フラムの胸から消えた
+  line2: 賭けの広告、最初はここ
+  tags:
+  - フラム
+  - ユニフォーム
+  - エンブレム
+  - 稲本潤一
+  - プレミアリーグ
+x-cards:
+  gamble: &gamble
+    type: timeline
+    title: プレミアの胸と賭けの会社
+    rows:
+    - - 1992年
+      - プレミア開幕。22クラブで0
+    - - 2002年
+      - フラムの胸に、ベットフェア
+    - - 2005年
+      - 法律で、テレビの賭けの広告が解禁
+    - - 2016年
+      - 半分のクラブが、賭けの会社
+    - - 2023年
+      - 胸の賭けの広告の禁止を決める
+    - - 2026年
+      - 今季から、胸は禁止
+    focus: 2002年
+    highlight_row: 1
+  first: &first
+    type: document
+    label: フラムFCの歩み（英語の記録を訳したもの）
+    paragraphs:
+    - 2002年から03年のベットフェアの胸の広告は、イングランドのサッカーで初めての、賭けの会社の胸の広告だった。
+    highlight:
+    - 初めての
+  colors: &colors
+    type: timeline
+    title: シャツの色の歩み
+    rows:
+    - - 1883年
+      - 明るい青と濃い青の、2色のシャツ
+    - - 1888年
+      - いまの名前に。次の季は黒と白の縦じま
+    - - 1896年
+      - いまの本拠地へ。赤と白
+    - - 1903年
+      - 白いシャツと、黒いパンツ
+    focus: 1903年
+    highlight_row: 0
+  crest: &crest
+    type: timeline
+    title: 胸の紋章の歩み
+    rows:
+    - - 1931年
+      - 本拠地の小屋、クレイヴン・コテージ
+    - - 1945年
+      - 昔のフラム区の紋章
+    - - 1973年
+      - 頭文字を組んだ印
+    - - 1977年
+      - ハマースミス・アンド・フラム区の紋章
+    - - 2001年
+      - 初めてのプレミアの季に、いまの紋章
+    focus: 2001年
+    highlight_row: 0
+  chest: &chest
+    type: timeline
+    title: 胸に入った会社
+    rows:
+    - - 1984年
+      - ビール会社、ウィリアム・ヤンガー
+    - - 1988年
+      - 航空会社、エミレーツ
+    - - 1993年
+      - 労働組合、ジーエムビー
+    - - 2001年
+      - ピザハット
+    - - 2002年
+      - 賭けの会社、ベットフェア
+    - - 2026年
+      - IT企業、クリックハウス
+    focus: 2002年
+    highlight_row: 0
+  view: &view
+    type: table
+    title: フラムのシャツを数える（自分で数えた）
+    columns:
+    - 何を
+    - 数
+    rows:
+    - - 白いシャツと黒いパンツ（1903年〜）
+      - 123年
+    - - 胸に入った会社（1984年〜今季）
+      - 43季で21社
+    - - 胸が賭けの会社だった季（2002年〜昨季）
+      - 24季で11季
+    - - ベットフェアから今季まで
+      - 24年
+    highlight_row: 0
+sections:
+- id: gamble
+  main: true
+  heading: プレミアの胸の賭けの広告は、どのクラブから始まったのか
+  bg: assets/images/20261105_kit_fulham/f03_match_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 2002年から2003年のフラムの胸にベットフェア。今季、プレミアの胸から賭けの会社が消えた
+  card: *gamble
+  say:
+  - text: 今回は、フラムの、白いシャツと、胸の紋章、そして胸の広告です。
+    image: assets/images/20261105_kit_fulham/f03_match_w.jpg
+    card: none
+  - text: 今季のプレミア。選手の胸に、賭けの会社の名前はありません。
+    image: assets/images/20261105_kit_fulham/f03_match_w.jpg
+    card: none
+    emph: true
+  - text: クラブどうしで決めた、自分たちの決まりです。合意は、2023年4月。
+    image: assets/images/20261105_kit_fulham/f03_match_w.jpg
+    card:
+      <<: *gamble
+      highlight_row: 4
+  - text: そのころは、フラムの胸も、賭けの会社。
+    image: assets/images/20261105_kit_fulham/s03_pitch_w.jpg
+    card: none
+  - text: 今季は、アメリカのIT企業、クリックハウスに替わっています。
+    image: assets/images/20261105_kit_fulham/s03_pitch_w.jpg
+    card: none
+  - text: プレミアが始まった1992年、胸が賭けの会社のクラブは、ゼロでした。
+    image: assets/images/20261105_kit_fulham/s03_pitch_w.jpg
+    card:
+      <<: *gamble
+      highlight_row: 0
+  - text: では、胸に賭けの広告を初めて入れたクラブは、どこだったのか。
+    image: assets/images/20261105_kit_fulham/s03_pitch_w.jpg
+    card: none
+  - text: 2002年から2003年にかけてのシーズン。
+    image: assets/images/20261105_kit_fulham/s03_pitch_w.jpg
+    card: none
+  - text: フラムの胸に入ったのは、ベットフェア。賭けの会社です。
+    image: assets/images/20261105_kit_fulham/s03_pitch_w.jpg
+    card:
+      <<: *gamble
+      highlight_row: 1
+    emph: true
+    callword: 始まりはフラム
+  - text: これが、イングランドのサッカーで初めての、賭けの会社の胸の広告とされています。
+    image: assets/images/20261105_kit_fulham/s03_pitch_w.jpg
+    card: *first
+  - text: その季、フラムには、稲本潤一がいました。
+    image: assets/images/20261105_kit_fulham/i01_inamoto_w.jpg
+    card: none
+  - text: 2002年の7月に、ガンバ大阪から加わっています。
+    image: assets/images/20261105_kit_fulham/i01_inamoto_w.jpg
+    card: none
+  - text: 稲本の後ろに並ぶ、黒いシャツの胸には、ダブス・ドットコム。
+    image: assets/images/20261105_kit_fulham/i01_inamoto_w.jpg
+    card: none
+  - text: フラムで、ベットフェアの次に胸に入った会社です。
+    image: assets/images/20261105_kit_fulham/i01_inamoto_w.jpg
+    card: none
+  - text: 当時、テレビやラジオで、賭けの広告は、まだ流せませんでした。
+    image: assets/images/20261105_kit_fulham/f03_match_w.jpg
+    card: none
+  - text: 流せるようになったのは、2005年の法律からです。
+    image: assets/images/20261105_kit_fulham/f03_match_w.jpg
+    card:
+      <<: *gamble
+      highlight_row: 2
+  - text: そこから、プレミアのシャツに、賭けの名前が増えていきます。
+    image: assets/images/20261105_kit_fulham/f03_match_w.jpg
+    card: none
+  - text: 2016年から17年のシーズンには、半分のクラブの胸が、賭けの会社でした。
+    image: assets/images/20261105_kit_fulham/f03_match_w.jpg
+    card:
+      <<: *gamble
+      highlight_row: 3
+  - text: 2025年4月の時点でも、20クラブのうち、11クラブです。
+    image: assets/images/20261105_kit_fulham/s01_riverside_w.jpg
+    card: none
+  - text: そして今季、胸からは、いなくなりました。袖や練習着には、まだ残せます。
+    image: assets/images/20261105_kit_fulham/s01_riverside_w.jpg
+    card:
+      <<: *gamble
+      highlight_row: 5
+  sources:
+  - https://en.wikipedia.org/wiki/Fulham_F.C.
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_Premier_League
+  - https://www.bbc.co.uk/news/business-45440347
+  - https://www.bbc.co.uk/sport/football/articles/cge1lp0734jo
+  - https://www.theguardian.com/football/2023/apr/13/premier-league-clubs-ban-gambling-sponsors-on-front-of-shirts-from-2026-27
+  - https://clickhouse.com/blog/clickhouse-announced-principal-partner-sponsor-fulham-fc
+  - https://en.wikipedia.org/wiki/Junichi_Inamoto
+- id: colors
+  heading: 白いシャツに黒いパンツは、いつからなのか
+  bg: assets/images/20261105_kit_fulham/s03_pitch_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 青い2色、黒と白の縦じま、赤と白。白いシャツと黒いパンツは1903年から
+  card: *colors
+  say:
+  - text: フラムのシャツは、白。パンツは、黒です。
+    image: assets/images/20261105_kit_fulham/f03_match_w.jpg
+    card: none
+  - text: ただ、最初から白だったわけではありません。
+    image: assets/images/20261105_kit_fulham/f03_match_w.jpg
+    card: none
+    emph: true
+  - text: 記録に残るいちばん古い色は、明るい青と、濃い青。
+    image: assets/images/20261105_kit_fulham/s02_haynes_w.jpg
+    card: none
+  - text: 1883年の試合では、2色に分かれたシャツでした。
+    image: assets/images/20261105_kit_fulham/s02_haynes_w.jpg
+    card:
+      <<: *colors
+      highlight_row: 0
+  - text: 1888年12月、いまの名前になり、次の季は、黒と白の縦じまです。
+    image: assets/images/20261105_kit_fulham/s02_haynes_w.jpg
+    card:
+      <<: *colors
+      highlight_row: 1
+  - text: 1896年、いまの本拠地で、初めての試合。そのころの色は、赤と白です。
+    image: assets/images/20261105_kit_fulham/s02_haynes_w.jpg
+    card:
+      <<: *colors
+      highlight_row: 2
+  - text: 白いシャツと黒いパンツになったのは、1903年。
+    image: assets/images/20261105_kit_fulham/s01_riverside_w.jpg
+    card:
+      <<: *colors
+      highlight_row: 3
+    emph: true
+    callword: 1903年から白
+  - text: イングランド南部のリーグで、上の部に上がった年でした。
+    image: assets/images/20261105_kit_fulham/s01_riverside_w.jpg
+    card:
+      <<: *colors
+      highlight_row: 3
+  - text: そのころは、横じまのソックスも、ほかに無いほど珍しかったといいます。
+    image: assets/images/20261105_kit_fulham/s01_riverside_w.jpg
+    card: none
+  - text: それから123年。シャツの白と、パンツの黒は、ずっと変わっていません。
+    image: assets/images/20261105_kit_fulham/f03_match_w.jpg
+    card: none
+    emph: true
+  sources:
+  - https://www.historicalkits.co.uk/Fulham/Fulham.htm
+  - https://en.wikipedia.org/wiki/Fulham_F.C.
+- id: crest
+  heading: 胸の紋章は、何を描いてきたのか
+  bg: assets/images/20261105_kit_fulham/s02_haynes_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 本拠地の小屋、フラム区の紋章、頭文字の印、ハマースミス・アンド・フラム区の紋章、そして2001年の新しい紋章
+  card: *crest
+  say:
+  - text: 胸の紋章は、白いシャツと違って、何度も替わっています。
+    image: assets/images/20261105_kit_fulham/s02_haynes_w.jpg
+    card: none
+  - text: シャツに初めて紋章が付いたのは、1931年。
+    image: assets/images/20261105_kit_fulham/s02_haynes_w.jpg
+    card:
+      <<: *crest
+      highlight_row: 0
+  - text: 描かれていたのは、本拠地の小屋、クレイヴン・コテージでした。
+    image: assets/images/20261105_kit_fulham/s02_haynes_w.jpg
+    card: none
+  - text: この紋章は、1939年、戦争が始まるまで付いていました。
+    image: assets/images/20261105_kit_fulham/s02_haynes_w.jpg
+    card: none
+  - text: 戦争のあとは、昔のフラム区の紋章。はじめは、とても大きな紋章でした。
+    image: assets/images/20261105_kit_fulham/s03_pitch_w.jpg
+    card:
+      <<: *crest
+      highlight_row: 1
+  - text: 1951年からは、白と黒の、小さな形になります。
+    image: assets/images/20261105_kit_fulham/s03_pitch_w.jpg
+    card: none
+  - text: この形は、1973年まで、20年あまり続きました。
+    image: assets/images/20261105_kit_fulham/s03_pitch_w.jpg
+  - text: そのあとは、古く見えるとして、頭文字を組み合わせた、珍しい書体の印に替わります。
+    image: assets/images/20261105_kit_fulham/s03_pitch_w.jpg
+    card:
+      <<: *crest
+      highlight_row: 2
+  - text: 1977年には、ハマースミス・アンド・フラム区の紋章を、簡単にした形へ。
+    image: assets/images/20261105_kit_fulham/s01_riverside_w.jpg
+    card:
+      <<: *crest
+      highlight_row: 3
+  - text: ところが、1季で丸いバッジに替わり、1984年に、また戻ってきます。
+    image: assets/images/20261105_kit_fulham/s01_riverside_w.jpg
+    card: none
+    emph: true
+  - text: そして2001年。初めてプレミアに上がった季です。
+    image: assets/images/20261105_kit_fulham/f03_match_w.jpg
+    card: none
+  - text: 伝統から離れた、新しい紋章が生まれました。
+    image: assets/images/20261105_kit_fulham/f03_match_w.jpg
+    card:
+      <<: *crest
+      highlight_row: 4
+  - text: いまの胸にあるのも、その紋章です。
+    image: assets/images/20261105_kit_fulham/f03_match_w.jpg
+    card: none
+  sources:
+  - https://www.historicalkits.co.uk/Fulham/Fulham.htm
+  - https://en.wikipedia.org/wiki/Fulham_F.C.
+- id: chest
+  heading: 胸には、どんな会社が入ってきたのか
+  bg: assets/images/20261105_kit_fulham/s01_riverside_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 1984年のビール会社から、航空会社、労働組合、ピザ、賭けの会社、そして今季のIT企業
+  card: *chest
+  say:
+  - text: 胸の広告にも、話があります。
+    image: assets/images/20261105_kit_fulham/s01_riverside_w.jpg
+    card: none
+  - text: フラムの胸に、初めて会社の名前が入ったのは、1984年。
+    image: assets/images/20261105_kit_fulham/s01_riverside_w.jpg
+    card:
+      <<: *chest
+      highlight_row: 0
+  - text: ビール会社の、ウィリアム・ヤンガーでした。
+    image: assets/images/20261105_kit_fulham/s01_riverside_w.jpg
+    card: none
+  - text: 1988年には、航空会社のエミレーツ。のちに、アーセナルの胸に入る会社です。
+    image: assets/images/20261105_kit_fulham/s01_riverside_w.jpg
+    card:
+      <<: *chest
+      highlight_row: 1
+  - text: 1993年からは、労働組合のジーエムビーが、胸に入りました。
+    image: assets/images/20261105_kit_fulham/s03_pitch_w.jpg
+    card:
+      <<: *chest
+      highlight_row: 2
+    emph: true
+  - text: 2001年は、ピザハット。その次の季が、ベットフェアです。
+    image: assets/images/20261105_kit_fulham/s03_pitch_w.jpg
+    card: none
+  - text: そして今季は、IT企業の、クリックハウス。
+    image: assets/images/20261105_kit_fulham/f03_match_w.jpg
+    card:
+      <<: *chest
+      highlight_row: 5
+  sources:
+  - https://en.wikipedia.org/wiki/Fulham_F.C.
+  - https://clickhouse.com/blog/clickhouse-announced-principal-partner-sponsor-fulham-fc
+- id: view
+  viewpoint: true
+  heading: 見立て・123年変わらない白の胸で、会社は何社替わったのか
+  bg: assets/images/20261105_kit_fulham/f03_match_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 白は123年。胸の会社は43季で21社。賭けの会社は24季のうち11季、約46％
+  card: *view
+  say:
+  - text: フラムのシャツを、数で並べます。
+    image: assets/images/20261105_kit_fulham/f03_match_w.jpg
+    card: none
+  - text: 白と黒の組み合わせは、1903年から、123年。
+    image: assets/images/20261105_kit_fulham/f03_match_w.jpg
+    card:
+      <<: *view
+      highlight_row: 0
+  - text: 胸の広告は、1984年から今季までの43シーズンで、21社。
+    image: assets/images/20261105_kit_fulham/f03_match_w.jpg
+    card:
+      <<: *view
+      highlight_row: 1
+    mark:
+      kind: circle
+      row: 1
+  - text: およそ2シーズンに1社、替わってきた計算です。
+    image: assets/images/20261105_kit_fulham/f03_match_w.jpg
+    card: none
+  - text: 2002年から昨季までの24シーズンで、胸が賭けの会社だったのは、11シーズン。
+    image: assets/images/20261105_kit_fulham/s03_pitch_w.jpg
+    card:
+      <<: *view
+      highlight_row: 2
+  - text: 割ると、約46％。半分近くの季で、胸に賭けの名前がありました。
+    image: assets/images/20261105_kit_fulham/s03_pitch_w.jpg
+    card:
+      type: calc
+      title: 賭けの会社だった季の割合（自分で割った）
+      terms:
+      - - 11季
+        - 賭けの会社
+      - - 24季
+        - 2002年から昨季
+      - - 約46％
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+    emph: true
+  - text: ベットフェアから、24年。始まりのクラブも、今季の胸は、IT企業。
+    image: assets/images/20261105_kit_fulham/s01_riverside_w.jpg
+    card:
+      <<: *view
+      highlight_row: 3
+  - text: 胸の会社1社の平均2シーズンに比べ、白は、その60倍を超える123年です。
+    image: assets/images/20261105_kit_fulham/s01_riverside_w.jpg
+    card: none
+  - text: 替わり続ける胸の下で、色だけは、守られてきたのです。
+    image: assets/images/20261105_kit_fulham/s01_riverside_w.jpg
+    card: none
+    emph: true
+  sources:
+  - https://en.wikipedia.org/wiki/Fulham_F.C.
+  - https://www.historicalkits.co.uk/Fulham/Fulham.htm

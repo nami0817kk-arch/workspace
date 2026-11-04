@@ -532,5 +532,23 @@
     "file": "オランダ.png",
     "source": "https://commons.wikimedia.org/wiki/File:Flag_of_the_Netherlands.svg",
     "note": "国旗（Commons: Public domain）。赤・白・青の3色を手元で描いた"
+  },
+  {
+    "club": "アヤックス",
+    "file": "アヤックス.png",
+    "source": "https://thumb.wikimedia.org/wikipedia/en/thumb/7/79/Ajax_Amsterdam.svg/330px-Ajax_Amsterdam.svg.png?utm_source=en.wikipedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "note": "権利は晴れていない。小さく添えるだけ"
+  },
+  {
+    "club": "メキシコ",
+    "file": "メキシコ.png",
+    "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Mexico.svg?width=960",
+    "note": "国旗（Flag of Mexico、パブリックドメイン）。小さく添えるだけ"
+  },
+  {
+    "club": "パラグアイ",
+    "file": "パラグアイ.png",
+    "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Paraguay.svg?width=960",
+    "note": "国旗（Flag of Paraguay、パブリックドメイン）。小さく添えるだけ"
   }
 ]

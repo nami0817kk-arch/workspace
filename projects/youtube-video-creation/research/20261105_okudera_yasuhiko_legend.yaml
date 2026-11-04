@@ -1,0 +1,531 @@
+# 奥寺康彦（元日本代表、ブンデスリーガ初の日本人選手）の紹介。シリーズ「レジェンドの紹介（日本）」2026-11-05。型は 11/1 の中村憲剛と同じ8節。
+# **情報の時点は 2026-11-04。**年齢は当時のものだけ（生年月日 1952-03-12 から計算）。いまの年齢は言わない。
+# **FotMob・DataMB・FBref・Sofascore・Transfermarkt は不使用**。数字は JFA 日本サッカー殿堂の掲額文・ブンデスリーガ公式日本語版のインタビュー・Sportiva のインタビュー・
+#   英語版/ドイツ語版/日本語版 Wikipedia の成績表と季の記事だけ。kicker・weltfussball・fussballdaten は 403 で読めなかった。
+# **私生活（家族・子ども）は入れない。女子サッカーは入れない**。Jリーグは引退後の役職の事実だけで、題材にしない。
+#
+# **題材を選んだ理由**：直近30日に未出の大物で、チャンネルの主題（海外サッカー）にいちばん近い日本人レジェンド。日本人で初めてブンデスリーガでプレーし、1年目にリーグとカップの二冠、
+#   欧州チャンピオンズカップでアジア人初の得点。ブンデスリーガ1部 234試合26得点は、得点は岡崎慎司（2014）、出場は長谷部誠（2017）が抜くまで日本人の最多。
+#   候補から外したもの：中澤佑二（Commons の写真が小さく全面のサムネが組めない、と 11/1 の担当が報告済み）、本田圭佑・香川真司・長友佑都・川島永嗣（現役または引退が確かめられない）、
+#   釜本邦茂（2025年に死去。追悼の回になるので見送り）、高原直泰（沖縄SVで選手登録が続いていたかを確かめきれない）。
+# **重なりの確認（2026-11-04）**：scripts/・research/covered.yaml・research/posted.json を「奥寺」で grep → 岡崎慎司の台本（10/27）が「奥寺康彦以来2人目」と1か所書いているだけ。主役の回は無い。
+#   research/20261105_picks.txt の他の担当（バリオス・ハキミとアレクサンダー＝アーノルド・バルセロナ・フラム・トーレス）とも重ならない。
+# **引退の確認**：JFA 日本サッカー殿堂（2012年 第9回 掲額）の掲額文「1986年に…古河電工に再加入」「（JSL）1970～77、86～88年」、Sportiva 2020-11-20「古河電工復帰後、88年に引退」、
+#   日本語版 Wikipedia「1987-88年シーズンを最後に現役を引退」。→ **現役ではない**（1988年に引退）。
+# **いまの立場**：日本語版 Wikipedia は「2022年1月に横浜FC会長を退任、2月からシニアアドバイザー」「2026年2月からヴィアティン三重の強化アドバイザー」と書くが、
+#   **一次情報（クラブの発表）まで辿れなかった**ので台本では言わない。言うのは「引退後、ジェフ市原の監督、横浜FCの社長・会長を務めた」（JFA の掲額文・Sportiva 2020・J リーグ公式 2017）と殿堂入りまで。
+# **日本との接点**：全体が日本人選手の海外挑戦の話。日本代表 32試合9得点（JFA）。
+#
+# **数字の出どころ**
+# - 生年月日 1952-03-12・秋田県生まれ（JFA 殿堂）。日本代表（国際Aマッチ）32試合9得点、1972〜1987年（JFA 殿堂の「国際Aマッチ32」「9」、英語版の年別表で 1987年が最後）。
+# - ブンデスリーガ1部：ケルン 75試合15得点、ブレーメン 159試合11得点、合計 234試合26得点（ドイツ語版 Statistik・英語版の成績表。合計は Sportiva・ブンデスリーガ公式日本語版の「234試合」とも一致）。
+#   2部：ヘルタ 25試合8得点（ドイツ語版・英語版）。JFA 殿堂の「ブンデスリーガ通算259試合34得点」は 1部234＋2部25、26＋8 で一致（自分で足した）。
+#   ブレーメンの季ごと：30・34・29・33・33（英語版）＝159。5季×34節＝170 のうち 159 → **約94%**（自分で計算）。
+#   1試合あたりの得点（自分で割った）：ケルン 75÷15＝**5試合に1点**、ブレーメン 159÷11＝**約14.5試合に1点**。
+# - 1年目（1977-78）：リーグ 20試合4得点（英語版）。本人「1年目はリーグ戦で4ゴール…すべてシーズン終盤」（ブンデスリーガ公式日本語版インタビュー前編の問いと答え）。
+# - 移籍：1977年夏、日本代表の西ドイツ合宿で、二宮寛監督とケルンのヘネス・バイスバイラー監督の縁でケルンの練習に参加（Sportiva 前編・ブンデスリーガ公式前編・JFA 殿堂）。
+#   紅白戦でスタメン組の左サイドのFW（Sportiva）。合宿の終わりにオファー（Sportiva）。日本リーグの100試合まで「あと2試合」で、10月に渡った（ブンデスリーガ公式前編）。25歳（生年月日から）。
+# - デビュー：1977-10-22 デュイスブルク戦、始まってすぐにファウルでPKを与え、GKシューマッハーが止めた（ブンデスリーガ公式前編の本人の言葉。日本語版 Wikipedia も 10月22日）。英語版の「10月5日」は採らない。
+# - 初得点：DFB杯準々決勝、シュヴァルツヴァイス・エッセン戦 9対0、2得点2アシスト（Sportiva 前編p3の本人の言葉。英語版も12月20日・2得点・9対0）。
+# - リーグ初得点：1978-04-08 カイザースラウテルン戦（英語版・日本語版）。
+# - 最終節 1978-04-29：ケルンはボルシアMGと勝ち点で並び、得失点差は10上。MG はドルトムントに12対0、ケルンはザンクトパウリに5対0、得失点差3でケルン優勝
+#   （英語版 1977–78 Bundesliga、Sportiva 後編p1 の本人の言葉「得失点差は10点開いていて」「12－０」「５－０」「得失点３差で優勝」）。
+#   奥寺は途中出場で2得点、2点目はダイビングヘッド（Sportiva 後編・日本語版）。ドイツ語版「Flugkopfball…zum 0:5-Endstand…wurde zum Tor des Monats gewählt」→ 月間最優秀ゴール。26歳。
+#   DFB杯も優勝で二冠（JFA 殿堂・英語版）。
+# - 1978-79 欧州チャンピオンズカップ準決勝、ノッティンガム・フォレスト戦の第1戦（敵地）3対3、後半から出て終了間際に同点ゴール（ブンデスリーガ公式後編の本人の言葉）。
+#   アジア人として大会で初めての得点（英語版・日本語版。日本語版は次のアジア人得点が16年後の1994-95季と書く）。第2戦はホームで0対1（日本語版）。フォレストはその季に優勝（英語版 1978–79 European Cup）。
+# - 1980年：バイスバイラーがニューヨーク・コスモスへ。後任の下で出番を失い、2部のヘルタへ（Sportiva 後編p2・ブンデスリーガ公式後編）。当時の外国人枠は2つ（Sportiva 後編p2 の本人の言葉）。
+#   ヘルタで右サイドバックに（試合当日に監督から。Sportiva 後編p3）。ブレーメンのオットー・レーハーゲルが呼び、右サイドバックで起用（同）。
+# - ブレーメン：在籍中に2位3回・5位2回（Sportiva 後編p4 の本人の言葉。英語版 Honours：準優勝 1982-83・1984-85・1985-86）。
+#   1985-86 はホームでバイエルンとの直接対決、終了間際のPKをクツォップがポストに当て、最終節で敗れて勝ち点で並ばれ得失点差で2位（Sportiva 後編p4）。
+# - 1986年：古河電工に戻り、スペシャル・ライセンス・プレーヤー（JFA「わが国初のプロ選手登録」）。同年アジアクラブ選手権優勝に貢献（JFA）。34歳。1988年に引退（36歳）。
+# - 記録：26得点は 2014年に岡崎慎司、234試合は 2017年に長谷部誠が抜く（Sportiva 前編プロフィール・ブンデスリーガ公式日本語版）。日本語版は日付まで（2014-09-13・2017-03-05）。
+#   最後のドイツでの得点 1986-03-15 → 2014-09 まで **28年あまり**、ドイツでの最終季 1986年 → 2017-03 まで **30年あまり**（自分で数えた）。
+# - 引退後：ジェフユナイテッド市原の監督（1996、JFA・英語版の監督成績）、横浜FCの GM・社長（JFA）、会長（Sportiva 2020・サッカーキング 2018）。2017年10月に横浜FCで1試合だけ暫定監督（J リーグ公式 2017-10-25）。
+#   日本サッカー殿堂 2012年（JFA）、アジアサッカー殿堂 2014年（英語版）。
+# - 愛称「東洋のコンピューター」（Sportiva 後編の前書き）。
+# - 本人の言葉（原文のまま、短く切る）：
+#   ①Sportiva 前編p3 バイスバイラーの言葉として「ケルンはお前を必要としている。だから来るべきなんだ」
+#   ②Sportiva 前編p4 バイスバイラーの言葉として「サッカー選手に国は関係ない」
+#   ③Sportiva 後編p1「あそこで僕が２点取れたのは大きかったと思いますね」
+#   ④Sportiva 後編p3「でも仕方なくやったら、これがめちゃくちゃ面白かった。」
+#   ⑤ブンデスリーガ公式後編「日本の選手のプロ化のきっかけを作れたことが、ドイツで9年間やってきたことの意義なのかなと思います。」
+#   ⑥ブンデスリーガ公式後編（長谷部に記録を抜かれて）「うれしいですね。長くやっていなければ破られない記録でしたし」
+#
+# **入れなかったもの**：家族・出産、プリマハムのCM、「日本人初のプロ」の異説（佐田繁理）、63試合連続出場（1つの資料だけ）、プリマス・アーガイルの役職、ヴィアティン三重（一次情報に辿れない）、
+#   ムルデカ大会の得点王、キャプテン翼、1986年キリンカップ、ソウル五輪予選の細部、年俸。
+# **写真**：assets/images/20261105_okudera_yasuhiko_legend/
+#   01・02 = ブンデスリーガ公式日本語版のインタビュー（前編・後編）の主写真（© Takehiko Noguchi、2017年の取材時、1920x1080）。代理店ではない。
+#   04（assets/images/20261105_okudera_koln1977/01.jpg に移した。ショートの写真の入れ替えに拾われて2.4倍に伸びるため）= Flickr「Yasuhiko Okudera 1977 from japan and Köln」（riyanroco、全権利保有、640x812）。ケルンのユニフォームで入場する場面、後ろに MSV（デュイスブルク）の選手。撮影者・試合日は不明なので「その試合の写真」と言わない。
+#   05 = Flickr（Sh@tei）ヴェルダー・ブレーメン博物館の展示（1984年の集合写真）。1024px で本編に敷くと1.88倍に伸びるので使わなかった（取り込んだが削除）。
+#   バイスバイラー = Commons「Vogts Weisweiler.jpg」（Pelz、CC BY-SA 3.0、1970年）を 04 と並べた 20261105_okudera_pair_weisweiler/01.jpg。
+#   03 = Sportiva 掲載の横浜FC提供写真（500x375 と小さく、三浦知良も写るので使わない）。Commons の「Yasuhiko Okudera.jpg」は YouTube 動画の切り出しなので使わない。
+#   ケルン・ブレーメン時代の写真で使えるものは他に無かった（Sportiva の写真は Getty、ブンデスリーガ公式の現役時代の写真は imago で、どちらも不可）。
+watch: 毎日、数字でサッカーを読み解きます
+title: 奥寺康彦は、どんな選手だった？ 西ドイツで「東洋のコンピューター」と呼ばれたわけ
+format: news
+short_title: 奥寺康彦は、どんな選手だった？
+series: レジェンドの紹介
+topic: 奥寺康彦
+date: 2026年11月5日
+slot: other_1
+people:
+- 奥寺康彦
+theme:
+  id: legend_okudera_yasuhiko
+  league: germany
+  league_name: ブンデスリーガ
+  kind: other
+  topic: 奥寺康彦
+  title: 奥寺康彦は、どんな選手だった？ 西ドイツで「東洋のコンピューター」と呼ばれたわけ
+  question: 1977年に日本人で初めてブンデスリーガへ渡った奥寺康彦は、どんな選手で、9年間で何を残したのか
+  takeaway: 奥寺康彦のブンデスリーガ1部は234試合26得点。ウイングだったケルンでは5試合に1点、サイドバックになったブレーメンでは5季170試合のうち159試合に出た。得点の記録は28年あまり、出場の記録は30年あまり、日本人の最多だった
+  nameplate: 奥寺康彦｜元日本代表
+  opening_image: assets/images/20261105_okudera_yasuhiko_legend/01_w.jpg
+  end_bg: assets/images/20261105_okudera_yasuhiko_legend/01_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+  outro_title: 毎日、数字でサッカーを読み解きます
+thumbnail:
+  line1: 奥寺康彦、234試合26点
+  line2: 日本人初のブンデス優勝
+  tags:
+  - ケルン
+  photo: assets/images/20261105_okudera_yasuhiko_legend/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261105_okudera_yasuhiko_legend/01_v.jpg
+sections:
+- id: hook
+  heading: 12対0の最終節、ケルンの優勝を引き寄せたのは誰だったのか
+  tier: 報道
+  telop: 1978年4月29日、ブンデスリーガ最終節
+  card: &hookcard
+    type: stats
+    title: 奥寺康彦 元日本代表
+    items:
+    - - '1977'
+      - 年
+      - 日本人で初めてブンデスリーガへ
+    - - '234'
+      - 試合
+      - ブンデスリーガ1部の出場
+    - - '26'
+      - 得点
+      - ブンデスリーガ1部の得点
+    focus: 0
+  say:
+  - text: 1978年4月29日。西ドイツ、ブンデスリーガの最終節です。
+    image: assets/images/20261105_okudera_yasuhiko_legend/01_w.jpg
+    card: none
+  - text: 首位のケルンと、2位のボルシアMGは、勝ち点で並んでいました。
+    card: none
+  - text: その日、ボルシアMGは、ドルトムントに12対0で勝ちます。
+    card: none
+    emph: true
+  - text: それでも、優勝したのはケルンでした。
+    card: none
+  - text: その日のケルンで2点を決めたのが、日本から来た26歳の左ウイングでした。
+    card: none
+  - text: 奥寺康彦。日本人で初めて、ブンデスリーガでプレーした選手です。
+    card: {<<: *hookcard, focus: 0}
+    callword: 奥寺康彦
+  - text: 西ドイツで9年。1部では234試合に出て、26得点を挙げました。
+    card: {<<: *hookcard, focus: 1}
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/1977%E2%80%9378_Bundesliga
+  - https://sportiva.shueisha.co.jp/clm/football/wfootball/2020/11/20/post_251/
+  - https://www.jfa.jp/about_jfa/hall_of_fame/member/OKUDERA_Yasuhiko.html
+- id: data
+  heading: 奥寺康彦は、どこでプレーし、どんな記録を残したのか
+  tier: 報道
+  telop: 奥寺康彦の基礎DATA
+  card: &datacard
+    type: table
+    title: 奥寺康彦
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 生年月日
+      - 1952年3月12日・秋田県生まれ
+    - - ポジション
+      - 左ウイング → サイドバックなど
+    - - 日本代表
+      - 32試合9得点（1972〜87年）
+    - - 西ドイツ
+      - ケルン → ヘルタ → ブレーメン
+    - - ブンデス1部
+      - 234試合26得点（1977〜86年）
+    - - 引退
+      - 1988年（古河電工）
+    source: JFA・ブンデスリーガ公式・Wikipedia
+    highlight_row: 0
+  say:
+  - text: 奥寺康彦の生まれは、1952年3月12日。秋田県の出身です。
+    image: assets/images/20261105_okudera_yasuhiko_legend/01_w.jpg
+    card: {<<: *datacard, highlight_row: 0}
+  - text: 日本代表では32試合で9得点。
+    card: {<<: *datacard, highlight_row: 2}
+  - text: 西ドイツでは、ケルン、ヘルタ・ベルリン、ブレーメンの3クラブを渡りました。
+    card: {<<: *datacard, highlight_row: 3}
+  - text: その賢いプレーぶりから、現地ではこう呼ばれます。「東洋のコンピューター」。
+    image: assets/images/20261105_okudera_yasuhiko_legend/02_w.jpg
+    card: none
+    emph: true
+  quotes_from: []
+  sources:
+  - https://www.jfa.jp/about_jfa/hall_of_fame/member/OKUDERA_Yasuhiko.html
+  - https://www.bundesliga.com/jp/bundesliga/news/20191022-okudera-interview01-7669
+  - https://sportiva.shueisha.co.jp/clm/football/wfootball/2020/11/20/post_251/
+  - https://de.wikipedia.org/wiki/Yasuhiko_Okudera
+- id: move
+  heading: プロリーグの無い日本から、奥寺康彦はなぜ西ドイツへ渡れたのか
+  tier: 報道
+  telop: 1977年夏、日本代表の西ドイツ合宿
+  card: &movecard
+    type: timeline
+    title: 西ドイツへ渡るまで
+    rows:
+    - - 1970年
+      - 古河電工に入る（日本リーグ）
+    - - 1977年夏
+      - 日本代表の合宿で、ケルンの練習に参加
+    - - 合宿の終わり
+      - ケルンから誘い
+    - - 1977年10月
+      - ケルンへ。日本人で初めて
+    highlight_row: 1
+  say:
+  - text: 1977年の夏。日本代表が、西ドイツで合宿を張ります。
+    image: assets/images/20261105_okudera_yasuhiko_legend/02_w.jpg
+    card: {<<: *movecard, highlight_row: 1}
+  - text: 監督の二宮寛は、ケルンの名将、バイスバイラー監督と親しい仲でした。
+    image: assets/images/20261105_okudera_pair_weisweiler/01.jpg
+    card: none
+  - text: その縁で、奥寺康彦はケルンの練習に加わります。
+    card: none
+  - text: 紅白戦では、レギュラー組の左のフォワードに入ります。
+    card: none
+  - text: 本人はあとで、あれは事実上の入団試験だったと振り返っています。
+    card: none
+  - text: 合宿の終わり、ケルンから誘いが届きます。
+    card: {<<: *movecard, highlight_row: 2}
+    emph: true
+  - text: 言葉も分からない国。迷う奥寺に、バイスバイラー監督はこう言いました。
+    card: none
+  - voice: バイスバイラー監督
+    text: ケルンはお前を必要としている。だから来るべきなんだ。
+    card: none
+  - text: なぜ日本人なのかと聞かれた監督は、こう答えたといいます。
+    card: none
+  - voice: バイスバイラー監督
+    text: サッカー選手に国は関係ない。
+    card: none
+    emph: true
+  - text: 1977年10月、奥寺康彦は25歳で、ケルンへ渡りました。
+    image: assets/images/20261105_okudera_yasuhiko_legend/01_w.jpg
+    card: {<<: *movecard, highlight_row: 3}
+  quotes_from:
+  - https://sportiva.shueisha.co.jp/clm/football/wfootball/2020/11/20/post_250/
+  sources:
+  - https://sportiva.shueisha.co.jp/clm/football/wfootball/2020/11/20/post_250/
+  - https://www.bundesliga.com/jp/bundesliga/news/20191022-okudera-interview01-7669
+  - https://www.jfa.jp/about_jfa/hall_of_fame/member/OKUDERA_Yasuhiko.html
+- id: koln
+  heading: パスが来なかった新人は、どうやってケルンの優勝に絡んだのか
+  tier: 報道
+  telop: 1977年から78年のシーズン、ケルン1年目
+  main: true
+  card: &finalcard
+    type: table
+    title: 1978年4月29日 最終節
+    columns:
+    - チーム
+    - できごと
+    rows:
+    - - 最終節の前
+      - 勝ち点で並び、得失点差はケルンが10上
+    - - ボルシアMG
+      - ドルトムントに12対0
+    - - ケルン
+      - ザンクトパウリに5対0（奥寺が2点）
+    - - 結果
+      - 得失点差3で、ケルンが優勝
+    highlight_row: 0
+  say:
+  - text: 日本人で初めてブンデスリーガでプレーした、奥寺康彦。
+    image: assets/images/20261105_okudera_yasuhiko_legend/01_w.jpg
+    card: none
+    short_only: true
+  - text: デビューは1977年10月22日、デュイスブルク戦。
+    image: assets/images/20261105_okudera_yasuhiko_legend/02_w.jpg
+    card: none
+  - text: 始まってすぐにファウルで、PKを与えてしまいます。
+    card: none
+  - text: キーパーが止めてくれたものの、しばらくは味方からパスが来ませんでした。
+    card: none
+  - text: 流れを変えたのは12月、カップ戦の準々決勝です。
+    card: none
+  - text: 2点を決めて、2点をお膳立て。9対0の大勝でした。
+    card: none
+    emph: true
+  - text: 最終節を前に、首位の2チームの差は得失点差だけでした。
+    image: assets/images/20261105_okudera_yasuhiko_legend/01_w.jpg
+    card: {<<: *finalcard, highlight_row: 0}
+  - text: 得点から失点を引いた差は、ケルンが10上。そこへボルシアMGが迫ります。
+    card: {<<: *finalcard, highlight_row: 1}
+  - text: ケルンの相手は、ザンクトパウリ。途中から入った奥寺が、2点を決めます。
+    card: {<<: *finalcard, highlight_row: 2}
+    callword: 2ゴール
+  - text: 2点目は、飛び込んでのダイビングヘッド。
+    card: none
+    emph: true
+  - text: このゴールは、その月の最優秀ゴールに選ばれました。
+    card: none
+  - text: 試合は5対0。得失点差3で、ケルンが優勝します。
+    card: {<<: *finalcard, highlight_row: 3}
+  - voice: 奥寺康彦
+    text: あそこで僕が２点取れたのは大きかったと思いますね。
+    card: none
+  - text: カップ戦も制して、二冠。ドイツに来て1年目の出来事でした。
+    image: assets/images/20261105_okudera_yasuhiko_legend/02_w.jpg
+    card: none
+  quotes_from:
+  - https://sportiva.shueisha.co.jp/clm/football/wfootball/2020/11/20/post_251/
+  sources:
+  - https://www.bundesliga.com/jp/bundesliga/news/20191022-okudera-interview01-7669
+  - https://sportiva.shueisha.co.jp/clm/football/wfootball/2020/11/20/post_250/
+  - https://sportiva.shueisha.co.jp/clm/football/wfootball/2020/11/20/post_251/
+  - https://en.wikipedia.org/wiki/1977%E2%80%9378_Bundesliga
+  - https://de.wikipedia.org/wiki/Yasuhiko_Okudera
+- id: europe
+  heading: 欧州の頂点に近づいた試合で、奥寺康彦は何を決めたのか
+  tier: 報道
+  telop: 1979年、欧州チャンピオンズカップ準決勝
+  card: &eurocard
+    type: table
+    title: 1979年 欧州チャンピオンズカップ準決勝
+    columns:
+    - 試合
+    - 結果
+    rows:
+    - - 第1戦（敵地）
+      - 3対3の引き分け。奥寺が同点ゴール
+    - - 第2戦（ホーム）
+      - 0対1の負け。決勝に届かず
+    - - フォレスト
+      - そのまま欧州王者に
+    highlight_row: 0
+  say:
+  - text: 2年目、ケルンは欧州チャンピオンズカップに出ます。いまのチャンピオンズリーグです。
+    image: assets/images/20261105_okudera_yasuhiko_legend/02_w.jpg
+    card: none
+  - text: 準決勝の相手は、イングランドのノッティンガム・フォレスト。
+    card: none
+  - text: 敵地での第1戦。後半から入った奥寺が、終了間際に同点ゴールを決めます。
+    card: {<<: *eurocard, highlight_row: 0}
+  - text: 試合は3対3の引き分けでした。
+    card: {<<: *eurocard, highlight_row: 0}
+    emph: true
+  - text: アジアの選手が、この大会で点を取ったのは、これが初めてでした。
+    card: none
+    callword: アジア人初
+  - text: ただ、ホームの第2戦は0対1の負け。決勝には届きません。
+    card: {<<: *eurocard, highlight_row: 1}
+  quotes_from: []
+  sources:
+  - https://www.bundesliga.com/jp/bundesliga/news/20191022-okudera-interview02-7670
+  - https://en.wikipedia.org/wiki/Yasuhiko_Okudera
+  - https://en.wikipedia.org/wiki/1978%E2%80%9379_European_Cup
+  - https://ja.wikipedia.org/wiki/%E5%A5%A5%E5%AF%BA%E5%BA%B7%E5%BD%A6
+- id: bremen
+  heading: ウイングの奥寺康彦は、なぜサイドバックとしてブレーメンに呼ばれたのか
+  tier: 報道
+  telop: ヘルタ・ベルリンから、ブレーメンへ
+  card: &bremencard
+    type: table
+    title: 西ドイツの3クラブ
+    columns:
+    - クラブ
+    - リーグ
+    - 試合
+    - 得点
+    rows:
+    - - ケルン
+      - 1部
+      - '75'
+      - '15'
+    - - ヘルタ
+      - 2部
+      - '25'
+      - '8'
+    - - ブレーメン
+      - 1部
+      - '159'
+      - '11'
+    source: Wikipedia（ドイツ語版・英語版）
+    highlight_row: 2
+  say:
+  - text: 1980年、バイスバイラー監督がアメリカのクラブへ去ります。
+    image: assets/images/20261105_okudera_yasuhiko_legend/02_w.jpg
+    card: none
+  - text: 当時、外国人の枠は2つ。新しい監督の下で、奥寺の出番は無くなりました。
+    card: none
+  - text: 自分から移籍を願い出て、向かったのは2部のヘルタ・ベルリン。
+    card: {<<: *bremencard, highlight_row: 1}
+  - text: ある試合の当日、右サイドバックの選手が病気で出られなくなります。
+    card: none
+  - text: 監督が代わりに指名したのは、奥寺でした。
+    card: none
+  - text: 守備の位置は、初めてでした。
+    card: none
+  - voice: 奥寺康彦
+    text: でも仕方なくやったら、これがめちゃくちゃ面白かった。
+    card: none
+    emph: true
+  - text: そのプレーを見ていたのが、ブレーメンの監督、オットー・レーハーゲル。
+    image: assets/images/20261105_okudera_yasuhiko_legend/01_w.jpg
+    card: none
+  - text: 相手に付いて回るマンツーマンが主流の時代に、場所で守れる奥寺に目を付けます。
+    card: none
+  - text: 1981年、奥寺はブレーメンへ。5季で、リーグ2位が3回ありました。
+    card: {<<: *bremencard, highlight_row: 2}
+    emph: true
+  - text: 最後の季は、バイエルンとの直接対決で、終了間際のPKが外れます。
+    card: none
+  - text: 最後は得失点差で、優勝を逃しました。
+    card: none
+  quotes_from:
+  - https://sportiva.shueisha.co.jp/clm/football/wfootball/2020/11/20/post_251/
+  sources:
+  - https://sportiva.shueisha.co.jp/clm/football/wfootball/2020/11/20/post_251/
+  - https://www.bundesliga.com/jp/bundesliga/news/20191022-okudera-interview02-7670
+  - https://en.wikipedia.org/wiki/Yasuhiko_Okudera
+  - https://de.wikipedia.org/wiki/Yasuhiko_Okudera
+- id: after
+  heading: 日本に戻った奥寺康彦は、何を変えたのか
+  tier: 報道
+  telop: 1986年、古河電工へ。日本で初めてのプロ選手登録
+  card: &aftercard
+    type: timeline
+    title: 日本に戻ってから
+    rows:
+    - - 1986年
+      - 古河電工へ。日本で初めてのプロ選手登録
+    - - 1988年
+      - 現役を引退
+    - - 2012年
+      - 日本サッカー殿堂に入る
+    - - 2014年・2017年
+      - 岡崎慎司が得点、長谷部誠が出場の記録を更新
+    highlight_row: 0
+  say:
+  - text: 1986年、34歳の奥寺康彦は、古巣の古河電工に戻ります。
+    image: assets/images/20261105_okudera_yasuhiko_legend/01_w.jpg
+    card: {<<: *aftercard, highlight_row: 0}
+  - text: 日本サッカー協会は、日本で初めてのプロ選手として登録しました。
+    card: {<<: *aftercard, highlight_row: 0}
+  - text: Jリーグができる、7年前のことです。
+    card: none
+    emph: true
+  - voice: 奥寺康彦
+    text: 日本の選手のプロ化のきっかけを作れたことが、
+    card: none
+  - voice: 奥寺康彦
+    text: ドイツで9年間やってきたことの意義なのかなと思います。
+    card: none
+    cont: true
+  - text: 1988年に、現役を引退します。
+    card: {<<: *aftercard, highlight_row: 1}
+  - text: そのあとは、ジェフ市原の監督や、横浜FCの社長、会長を務めました。
+    card: none
+  - text: 2012年には、日本サッカー殿堂に入っています。
+    card: {<<: *aftercard, highlight_row: 2}
+  - text: ドイツで残した数字は、長く破られませんでした。
+    image: assets/images/20261105_okudera_yasuhiko_legend/02_w.jpg
+    card: none
+  - text: 得点は2014年に岡崎慎司が、出場は2017年に長谷部誠が、ようやく上回ります。
+    card: {<<: *aftercard, highlight_row: 3}
+  - text: 長谷部に抜かれたとき、奥寺はこう話しています。
+    card: none
+  - voice: 奥寺康彦
+    text: うれしいですね。長くやっていなければ破られない記録でしたし。
+    card: none
+  - text: ここまでは、2026年11月4日時点の情報です。
+    card: none
+  quotes_from:
+  - https://www.bundesliga.com/jp/bundesliga/news/20191022-okudera-interview02-7670
+  sources:
+  - https://www.jfa.jp/about_jfa/hall_of_fame/member/OKUDERA_Yasuhiko.html
+  - https://www.bundesliga.com/jp/bundesliga/news/20191022-okudera-interview02-7670
+  - https://sportiva.shueisha.co.jp/clm/football/wfootball/2020/11/20/post_250/
+  - https://www.jleague.jp/sp/news/article/10460/
+- id: view
+  heading: 奥寺康彦の234試合は、ケルンとブレーメンでどう違ったのか
+  tier: 背景
+  telop: 点を取るウイングから、休まないサイドバックへ
+  viewpoint: true
+  card: &viewcard
+    type: table
+    title: ブンデスリーガ1部の奥寺康彦
+    columns:
+    - クラブ
+    - 試合
+    - 得点
+    - 1点あたり
+    rows:
+    - - ケルン
+      - '75'
+      - '15'
+      - 5試合
+    - - ブレーメン
+      - '159'
+      - '11'
+      - 約14.5試合
+    - - 合計
+      - '234'
+      - '26'
+      - 9試合
+    source: Wikipedia（ドイツ語版・英語版）から計算
+    highlight_row: 0
+  say:
+  - text: 最後に、奥寺康彦の数字を並べます。
+    image: assets/images/20261105_okudera_yasuhiko_legend/01_w.jpg
+    card: none
+  - text: ウイングだったケルンでは、75試合で15得点。5試合に1点のペースです。
+    card: {<<: *viewcard, highlight_row: 0}
+  - text: サイドバックになったブレーメンでは、159試合で11得点。
+    card: {<<: *viewcard, highlight_row: 1}
+  - text: およそ14.5試合に1点です。
+    card: {<<: *viewcard, highlight_row: 1}
+    mark:
+      kind: circle
+      row: 1
+      col: 1点あたり
+  - text: 一方で、ブレーメンの5季、170試合のうち、出たのは159試合。およそ94％です。
+    image: assets/images/20261105_okudera_yasuhiko_legend/02_w.jpg
+    card: none
+    emph: true
+  - text: 点を取る役から、休まずに出続ける役へ。
+    image: assets/images/20261105_okudera_yasuhiko_legend/02_w.jpg
+    card: none
+  - text: 奥寺の価値は、得点よりも出場の数に表れていました。
+    card: none
+  - text: どこに置いても働き、休まず出続ける。
+    card: none
+  - text: 「東洋のコンピューター」は、その賢さへの呼び名でした。
+    card: none
+    emph: true
+  - text: 得点の記録は28年あまり、出場の記録は30年あまり、日本人の最多でした。
+    card: none
+    emph: true
+  - text: 日本人がブンデスリーガでプレーするのは、いまや当たり前です。
+    card: none
+  - text: その道を最初に開いたのが、奥寺康彦でした。
+    image: assets/images/20261105_okudera_yasuhiko_legend/01_w.jpg
+    card: none
+  quotes_from: []
+  sources:
+  - https://de.wikipedia.org/wiki/Yasuhiko_Okudera
+  - https://en.wikipedia.org/wiki/Yasuhiko_Okudera
+  - https://ja.wikipedia.org/wiki/%E5%A5%A5%E5%AF%BA%E5%BA%B7%E5%BD%A6

@@ -1,0 +1,469 @@
+# 代表チーム紹介 パラグアイ代表（11/4 作成。固定シリーズ9「代表チーム紹介」。見本は 11/2 のメキシコ代表 scripts/20261102_team_mexico.md）。7節：フック→基礎DATA（板）→日本との関係（早い節へ）→歴史と転機（年表）→看板選手（表）→いまのチーム→見立て。
+# **選んだ理由**：日本は 11/17 にシンガポールでパラグアイと戦う（JFA 公式 2026-11-04 発表、https://www.jfa.jp/samuraiblue/news/00036974/ 。現地21:10）。パラグアイ代表は未出（scripts/・research/posted.json・research/covered.yaml を grep。代表チーム紹介の既出はエクアドル・ニュージーランド・ブラジル・ドイツ・スペイン・アルゼンチン・フランス・イングランド・ポルトガル・オランダ・ウルグアイ・ベルギー・スウェーデン・メキシコ）。パラグアイが出てくる過去の台本は日本代表の試合（2025-10 の2対2）などの脇の言及だけ。
+# **軸（2026-11-04）**：「パラグアイはW杯の決勝トーナメントで7試合1得点（1986〜2026年）。延長までに勝った試合は0なのに、PK戦で2度勝ち上がった（2010年は日本、2026年はドイツ）」。答えは見立ての節（日本の決勝トーナメント5試合と並べ、自分で数えて割る）。
+# ---- 確かめたこと（2026-11-04。requests で Wikipedia の生の wikitext を読んだ。WebFetch の要約は使っていない）----
+#  ・FIFAランク：33位（Module:SportsRankings/data/FIFA World Rankings、updated 7 October 2026、Paraguay 33・前回比1・1552.30）。日本は17位。点数は書かない。
+#  ・W杯：Paraguay at the FIFA World Cup の Overall record。出場9大会（1930・1950・1958・1986・1998・2002・2006・2010・2026）。最高は2010年の8強。2014・2018・2022年は予選敗退（2026年は「their first since 2010」＝16年ぶり。Paraguay national football team の本文）。
+#  ・決勝トーナメントの7試合（同じ記事の試合の表）：1986年16強 イングランド0-3／1998年16強 フランス0-1（ゴールデンゴール）／2002年16強 ドイツ0-1／2010年16強 日本0-0（延長、PK5-3）／2010年8強 スペイン0-1／2026年32強 ドイツ1-1（延長、PK4-3）／2026年16強 フランス0-1。→ 自分で数えた：7試合・1得点・8失点・延長までの勝ち0・PK戦2勝0敗。1試合あたり 1÷7=0.14得点、8÷7=1.14失点。負けた5試合のうち4試合は0対1。
+#  ・「エンシソの1点がパラグアイのW杯決勝トーナメントで初めての得点」：2026 FIFA World Cup round of 32 の Germany vs Paraguay 本文「was Paraguay's first ever goal in the knockout stages of the FIFA World Cup」。42分、右のCKのこぼれからエンシソが頭で。54分ハフェルツが頭で同点。PK戦は4対3（ドイツの1人目ハフェルツが失敗、6人目のター（Tah）がバーの上、パラグアイはカナレが決めて終わり）。ドイツにとってW杯で初めてのPK戦の負け（同じ本文）。パラグアイのペニャ大統領が翌日を祝日にした（同じ本文）。ジレット・スタジアム（フォックスボロ）、6月29日。
+#  ・2026年W杯の5試合（Paraguay national football team の2026年の試合一覧）：6/12 アメリカ1-4（イングルウッド。パラグアイの1点はマウリシオ73分）、6/19 トルコ1-0（サンタクララ。ガラルサ2分＝開始64秒。Group D の本文「After 64 seconds」）、6/25 オーストラリア0-0、6/29 32強 ドイツ1-1（PK4-3）、7/4 16強 フランス0-1（フィラデルフィア、エムバペ70分PK）。1勝2分2敗・3得点6失点。D組3位で、成績上位の3位として32強へ（Group D 本文「third-place team of Group D, Paraguay, advanced ... as one of the eight best third-place teams」）。
+#  ・日本との対戦：Japan national football team records and statistics の Head-to-head「PAR 1995 2025 12 5 5 2 17 12」＝12試合、日本から見て5勝5分2敗・17得点12失点。各試合は Japan national football team results の表：1995-09-20 親善 1-2（東京・国立）／1998-05-17 キリン杯 1-1／1999-07-02 コパ・アメリカ 0-4（アスンシオン）／2001-07-01 キリン杯 2-0（札幌）／2003-06-11 キリン杯 0-0／2008-05-27 キリン杯 0-0／2010-06-29 W杯16強 0-0（延長、PK3-5）／2010-09-04 親善 1-0（横浜）／2018-06-12 親善 4-2（インスブルック）／2019-09-05 親善 2-0（鹿嶋）／2022-06-02 キリン杯 4-1（札幌）／2025-10-10 キリン杯 2-2（吹田。パラグアイ：アルミロン20分・ディエゴ・ゴメス64分、日本：小川航基26分・上田綺世90+4分）。→ 負けは1995年と1999年だけ。2001年以降は9試合負けなし。直近4試合（2018・2019・2022・2025）は日本が毎回2点以上。
+#  ・2010年のPK戦（2010 FIFA World Cup knockout stage の Paraguay vs Japan）：プレトリア、日本は遠藤・長谷部が決め、3人目の駒野が失敗、本田が決めて3。パラグアイは5人全員が決めて5（最後はカルドソ）。※日本の結果の表は会場を Free State Stadium と書くが、2010年の記事は Loftus Versfeld。台本は「プレトリア」だけにした。
+#  ・日本のW杯決勝トーナメント5試合（Japan at the FIFA World Cup）：2002年16強 トルコ0-1／2010年16強 パラグアイ0-0（PK3-5）／2018年16強 ベルギー2-3／2022年16強 クロアチア1-1（PK1-3）／2026年32強 ブラジル1-2。→ 5試合・4得点・7失点・勝ち上がり0・PK戦0勝2敗。4÷5=0.80、7÷5=1.40。
+#  ・監督：グスタボ・アルファロ（Gustavo Alfaro の記事）。アルゼンチン出身、2024年8月13日就任。2022年W杯はエクアドル監督。パラグアイでは26試合12勝8分6敗・30得点22失点（Managerial statistics、updated match played 2 October 2026）。
+#  ・主将：グスタボ・ゴメス（Current squad の captain。パルメイラス、DF、1993-05-06、96試合4得点。「Caps and goals updated as of 3 October 2026」）。2026-11-04 時点の年齢（生年月日から計算）：G.ゴメス33、アルミロン（アトランタ・ユナイテッド、MF、1994-02-10）32・82試合12得点、ディエゴ・ゴメス（ブライトン、MF、2003-03-27）23・30試合3得点、エンシソ（イプスウィッチ、FW、2004-01-23）22・39試合5得点、アルデレテ（サンダーランド、DF、1996-12-26）29・42試合3得点、サナブリア（インテルナシオナル、FW、1996-03-04）30・50試合7得点。所属は各選手の記事の current_club でも確かめた。前田大然がイプスウィッチ所属なのは JFA の11/4発表の名簿で確認。
+#  ・愛称：La Albirroja（The White and Red。infobox）。コパ・アメリカ優勝は1953年・1979年（infobox の Regional cup best）。
+#  ・W杯のあと（2026年の試合一覧）：9/27 ボリビア2-0（ワシントン。アルミロン17分・50分）、10/2 コロンビア1-0（ハリソン。H.ベニテス56分）。次は 11/13 シンガポール、11/17 日本（どちらもシンガポール国立競技場）。
+# ---- 言わないもの ----
+#  ・怪我／私生活／背番号／戦術の説明／監督の契約／大統領の政治の話（祝日にした事実だけ）／2026年W杯の判定の細部（VAR で取り消したターの得点など）。
+# ---- 写真（assets/images/20261106_team_paraguay/、出典は credits.json）----
+#  ・Commons の 2026年7月4日 フランス対パラグアイ（Bryan Berlin、CC BY-SA 4.0）から、サポーター・試合・ディエゴ・ゴメス・マウリシオ。アルファロは Commons の写真。代理店・放送映像は使っていない。
+date: 2026年11月6日（情報は11月4日時点）
+slot: other_1
+format: news
+series: 代表チーム紹介
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+short_photos:
+- assets/images/20261106_team_paraguay/b01_fans_v.jpg
+- assets/images/20261106_team_paraguay/b04_mauricio_v.jpg
+people:
+- パラグアイ代表
+- グスタボ・アルファロ
+- グスタボ・ゴメス
+- フリオ・エンシソ
+- ミゲル・アルミロン
+- ディエゴ・ゴメス
+theme:
+  id: team_paraguay
+  league: japan
+  league_name: パラグアイ代表
+  kind: preview
+  topic: パラグアイ代表
+  title: パラグアイ代表は、W杯決勝トーナメント7試合1得点。なぜ日本とドイツを退けたのか
+  question: パラグアイはW杯の決勝トーナメントで7試合1得点、延長までに勝った試合は1つも無いのに、なぜ2010年の日本、2026年のドイツを退けて勝ち上がれたのか
+  lead: W杯の決勝トーナメントで、7試合1得点の国。
+  hook: ''
+  opening_image: assets/stats/tb_paraguay_data_t.png
+  end_bg: assets/images/20261106_team_paraguay/b01_fans_w.jpg
+  takeaway: パラグアイはW杯の決勝トーナメントで7試合1得点8失点、延長までの勝ちは0。それでも2010年は日本、2026年はドイツをPK戦で退け、PK戦は2勝0敗。日本は5試合4得点7失点で、得点は1試合0.80とパラグアイ（0.14）の約6倍なのに勝ち上がりは0、PK戦は0勝2敗。差は点の取り合いではなく、0対0や1対1で120分を終えてPK戦に持ち込む力にある。日本は直近4試合のパラグアイ戦で毎回2点以上を取っており、11月17日はその点を取れるかが見どころ。
+thumbnail:
+  board: assets/stats/tb_paraguay_data.png
+  short_photo: assets/images/20261106_team_paraguay/b03_dgomez_v.jpg
+  line1: パラグアイ代表
+  line2: W杯決勝Tで7試合1得点
+  crest_main:
+  - パラグアイ
+  tags:
+  - パラグアイ代表
+  - ワールドカップ
+  - 日本代表
+  - 日本対パラグアイ
+  - アルファロ
+  - 代表チーム紹介
+sections:
+- id: hook
+  heading: W杯の決勝トーナメントで7試合1得点。なぜ2度も勝ち上がれたのか
+  main: true
+  tier: 背景
+  telop: W杯の決勝トーナメントは7試合1得点
+  narrator: 解説
+  say:
+  - text: 南米のパラグアイ代表。フィファランクは33位の国です。
+    short_only: true
+    image: assets/stats/tb_paraguay_data_t.png
+    no_telop: true
+  - text: 2026年のワールドカップ、決勝トーナメント1回戦。
+    image: assets/stats/tb_paraguay_data2.png
+    no_telop: true
+  - text: パラグアイはドイツと1対1の引き分けで、延長を終えました。
+    image: assets/stats/tb_paraguay_data2.png
+    no_telop: true
+  - text: PK戦は4対3で、パラグアイの勝ち。ドイツにとって、ワールドカップのPK戦で初めての負けでした。
+    image: assets/stats/tb_paraguay_data_r1.png
+    no_telop: true
+  - text: パラグアイの1点は、フリオ・エンシソの頭。これが、ワールドカップの決勝トーナメントで初めての得点です。
+    image: assets/stats/tb_paraguay_data2.png
+    no_telop: true
+  - text: 1986年から数えて、決勝トーナメントは**7試合**。取った点は、この1点だけ。
+    image: assets/stats/tb_paraguay_data_r1.png
+    no_telop: true
+    emph: true
+  - text: それでも、勝ち上がったのは2度。もう1つの相手は、2010年の日本でした。
+    image: assets/stats/tb_paraguay_data_r2.png
+    no_telop: true
+  - text: 11月17日に日本と戦うパラグアイは、なぜ点を取らずに勝ち上がれるのでしょうか。
+    image: assets/stats/tb_paraguay_data_t.png
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_round_of_32
+  - https://en.wikipedia.org/wiki/Paraguay_at_the_FIFA_World_Cup
+- id: data
+  heading: パラグアイ代表は、どんな数字を持つ国なのか
+  tier: 背景
+  telop: パラグアイ代表の基礎DATA
+  narrator: 解説
+  say:
+  - text: パラグアイのフィファランクは、10月7日の発表で**33位**。日本は17位です。
+    image: assets/stats/tb_paraguay_data0.png
+    no_telop: true
+  - text: ワールドカップの最高成績は、2010年の8強。南アフリカ大会です。
+    image: assets/stats/tb_paraguay_data1.png
+    no_telop: true
+  - text: 監督は、アルゼンチン出身のグスタボ・アルファロ。2024年8月に就きました。
+    image: assets/stats/tb_paraguay_data4.png
+    no_telop: true
+  - text: 主将は、守備のグスタボ・ゴメスです。
+    image: assets/stats/tb_paraguay_data5.png
+    no_telop: true
+  - text: 愛称は、アルビロハ。白と赤、という意味の呼び名です。
+    image: assets/stats/tb_paraguay_data6.png
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Module:SportsRankings/data/FIFA_World_Rankings
+  - https://en.wikipedia.org/wiki/Paraguay_national_football_team
+  - https://en.wikipedia.org/wiki/Gustavo_Alfaro
+- id: japan
+  heading: 日本は、パラグアイとどう戦ってきたのか
+  tier: 背景
+  telop: 通算12試合、日本から見て5勝5分2敗
+  narrator: 解説
+  card: &id_jp
+    type: table
+    title: 日本とパラグアイの国際Aマッチ（12試合から6試合）
+    columns:
+    - 年月
+    - 大会
+    - 日本から見た結果
+    rows:
+    - - 1995年9月
+      - 親善試合
+      - 1-2
+    - - 1999年7月
+      - コパ・アメリカ
+      - 0-4
+    - - 2010年6月
+      - W杯 16強
+      - 0-0（PK3-5）
+    - - 2018年6月
+      - 親善試合
+      - 4-2
+    - - 2022年6月
+      - キリンカップ
+      - 4-1
+    - - 2025年10月
+      - キリンカップ
+      - 2-2
+  say:
+  - text: 日本とパラグアイの国際Aマッチは、これまで12試合。
+    image: assets/stats/tb_paraguay_data7.png
+    no_telop: true
+  - text: 日本から見て、5勝5引き分け2敗。負けは、1995年と1999年の2度だけです。
+    image: assets/images/20261106_team_paraguay/b02_match_w.jpg
+    card: *id_jp
+  - text: いちばん知られているのは、2010年のワールドカップ、南アフリカ大会の16強。
+    card:
+      <<: *id_jp
+      highlight_row: 2
+  - text: 0対0のまま延長でも決まらず、PK戦は3対5で日本の負け。
+    card:
+      <<: *id_jp
+      highlight_row: 2
+  - text: 日本は、3人目の駒野友一が外しました。
+    card:
+      <<: *id_jp
+      highlight_row: 2
+  - text: パラグアイは5人全員が決めて、初めての8強へ進みました。
+    image: assets/images/20261106_team_paraguay/b01_fans_w.jpg
+    card: none
+  - text: 直近は、2025年10月10日。大阪の吹田で、2対2の引き分けでした。
+    image: assets/images/20261106_team_paraguay/b02_match_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 5
+  - text: 1対2で負けていた日本は、後半のアディショナルタイムに、
+    card:
+      <<: *id_jp
+      highlight_row: 5
+  - text: 上田綺世が決めて追いつきました。
+    card:
+      <<: *id_jp
+      highlight_row: 5
+  sources:
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_records_and_statistics
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(1990%E2%80%931999)
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(2000%E2%80%932009)
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(2010%E2%80%932019)
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(2020%E2%80%93present)
+  - https://en.wikipedia.org/wiki/2010_FIFA_World_Cup_knockout_stage
+- id: history
+  heading: パラグアイは、どこまで勝ち上がってきたのか
+  tier: 背景
+  telop: 2010年に8強。2014年から3大会は出場を逃した
+  narrator: 解説
+  card: &id_hist
+    type: timeline
+    title: パラグアイ代表の歩み
+    rows:
+    - - 1930年
+      - 第1回のW杯に出場
+    - - 1979年
+      - コパ・アメリカで2度目の優勝
+    - - 2010年
+      - W杯で8強。いまも最高成績
+    - - 2014年
+      - ここから3大会、W杯を逃す
+    - - 2026年
+      - 16年ぶりのW杯で16強
+    focus: 2026年
+  say:
+  - text: 初めてのワールドカップは、1930年の第1回大会。
+    image: assets/images/20261106_team_paraguay/b04_mauricio_w.jpg
+    card: *id_hist
+  - text: 南米の大会、コパ・アメリカは、1953年と1979年に制しています。
+    card:
+      <<: *id_hist
+      highlight_row: 1
+  - text: 1998年から2010年は、ワールドカップに4大会続けて出場。南米の常連でした。
+    card:
+      <<: *id_hist
+      highlight_row: 2
+  - text: ところが2014年から3大会、ワールドカップを逃しました。
+    image: assets/images/20261106_team_paraguay/b02_match_w.jpg
+    card: none
+  - text: 戻ってきたのが2026年。16年ぶりの大会でした。
+    card:
+      <<: *id_hist
+      highlight_row: 4
+  - text: 初戦は、アメリカに1対4の負け。
+    card: none
+    image: assets/images/20261106_team_paraguay/b04_mauricio_w.jpg
+  - text: それでも次のトルコ戦は、開始64秒の1点を守りきって1対0の勝ち。
+    card: none
+    image: assets/images/20261106_team_paraguay/b04_mauricio_w.jpg
+  - text: オーストラリアとは0対0の引き分け。
+    card: none
+  - text: グループ3位でしたが、成績のいい3位に入り、勝ち残りました。
+    card: none
+  - text: ドイツを退けた翌日を、パラグアイの大統領は祝日にしています。
+    card:
+      <<: *id_hist
+      highlight_row: 4
+  sources:
+  - https://en.wikipedia.org/wiki/Paraguay_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/Paraguay_national_football_team
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_Group_D
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_round_of_32
+- id: players
+  heading: いまの看板選手は、誰なのか
+  tier: 背景
+  telop: 看板選手を、所属・名前・位置・年齢で
+  narrator: 解説
+  card: &id_pl
+    type: table
+    title: パラグアイ代表の看板選手
+    columns:
+    - 所属
+    - 名前
+    - 位置
+    - 年齢
+    rows:
+    - - パルメイラス
+      - グスタボ・ゴメス
+      - DF
+      - '33'
+    - - アトランタ・ユナイテッド
+      - ミゲル・アルミロン
+      - MF
+      - '32'
+    - - ブライトン
+      - ディエゴ・ゴメス
+      - MF
+      - '23'
+    - - イプスウィッチ
+      - フリオ・エンシソ
+      - FW
+      - '22'
+    - - サンダーランド
+      - オマル・アルデレテ
+      - DF
+      - '29'
+    - - インテルナシオナル
+      - アントニオ・サナブリア
+      - FW
+      - '30'
+  say:
+  - text: いまのパラグアイを支える6人。年齢は、11月4日に数えたものです。
+    image: assets/images/20261106_team_paraguay/b02_match_w.jpg
+    card: *id_pl
+  - text: 主将のグスタボ・ゴメスは、ブラジルのパルメイラスの33歳。代表96試合です。
+    card:
+      <<: *id_pl
+      highlight_row: 0
+  - text: 中盤のアルミロンは32歳。代表82試合で12得点。
+    card:
+      <<: *id_pl
+      highlight_row: 1
+  - text: 去年の日本戦でも、先に点を決めています。
+    card:
+      <<: *id_pl
+      highlight_row: 1
+  - text: 23歳のディエゴ・ゴメスは、イングランドのブライトン所属。
+    image: assets/images/20261106_team_paraguay/b03_dgomez_w.jpg
+    card: none
+  - text: その日本戦で、パラグアイの2点目を決めた選手です。
+    image: assets/images/20261106_team_paraguay/b03_dgomez_w.jpg
+    card: none
+  - text: ドイツ戦の1点を決めたエンシソは22歳。代表39試合で5得点。
+    image: assets/images/20261106_team_paraguay/b02_match_w.jpg
+    card:
+      <<: *id_pl
+      highlight_row: 3
+  - text: いまはイングランドのイプスウィッチで、日本代表の前田大然と同じクラブです。
+    emph: true
+    card:
+      <<: *id_pl
+      highlight_row: 3
+  - text: 守備のアルデレテは、イングランドのサンダーランド。代表42試合の29歳です。
+    card:
+      <<: *id_pl
+      highlight_row: 4
+  sources:
+  - https://en.wikipedia.org/wiki/Paraguay_national_football_team
+  - https://en.wikipedia.org/wiki/Gustavo_G%C3%B3mez
+  - https://en.wikipedia.org/wiki/Miguel_Almir%C3%B3n
+  - https://en.wikipedia.org/wiki/Diego_G%C3%B3mez_(Paraguayan_footballer)
+  - https://en.wikipedia.org/wiki/Julio_Enciso_(footballer,_born_2004)
+  - https://en.wikipedia.org/wiki/Omar_Alderete
+  - https://www.jfa.jp/samuraiblue/news/00036974/
+- id: now
+  heading: アルファロ監督のパラグアイは、W杯のあとをどう戦っているのか
+  tier: 背景
+  telop: W杯のあとの2試合は、2勝・3得点0失点
+  narrator: 解説
+  card: &id_nw
+    type: table
+    title: W杯のあと パラグアイの2試合（親善試合）
+    columns:
+    - 日付
+    - 相手
+    - パラグアイの結果
+    rows:
+    - - 9月27日
+      - ボリビア
+      - 2-0
+    - - 10月2日
+      - コロンビア
+      - 1-0
+  say:
+  - text: アルファロ監督は、2022年のワールドカップでエクアドルを率いた人です。
+    image: assets/images/20261106_team_paraguay/pair_coach/01.jpg
+    card: none
+  - text: パラグアイでは、10月2日の試合までに26試合で12勝8引き分け6敗。
+    card: none
+  - text: ワールドカップのあとの2試合は、どちらも勝っています。
+    image: assets/images/20261106_team_paraguay/b04_mauricio_w.jpg
+    card: *id_nw
+  - text: 9月27日は、ボリビアに2対0の勝ち。2点とも、アルミロンでした。
+    card:
+      <<: *id_nw
+      highlight_row: 0
+  - text: 10月2日は、コロンビアに1対0の勝ち。2試合続けて、失点は0です。
+    card:
+      <<: *id_nw
+      highlight_row: 1
+  - text: 次は11月13日にシンガポール、17日に日本と戦います。
+    image: assets/images/20261106_team_paraguay/pair_coach/01.jpg
+    card: none
+  - text: 会場はどちらも、シンガポールの国立競技場です。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Gustavo_Alfaro
+  - https://en.wikipedia.org/wiki/Paraguay_national_football_team
+  - https://www.jfa.jp/samuraiblue/news/00036974/
+- id: viewpoint
+  viewpoint: true
+  heading: 点を取らないパラグアイが、なぜ日本より勝ち上がれたのか
+  tier: 背景
+  telop: 決勝トーナメントの得点は1試合0.14と0.80。勝ち上がりは2度と0度
+  narrator: 解説
+  card: &id_vp
+    type: table
+    title: W杯の決勝トーナメント パラグアイと日本
+    columns:
+    - 国
+    - 試合
+    - 得点
+    - 失点
+    - 勝ち上がり
+    - PK戦
+    rows:
+    - - パラグアイ
+      - '7'
+      - '1'
+      - '8'
+      - '2'
+      - 2勝0敗
+    - - 日本
+      - '5'
+      - '4'
+      - '7'
+      - '0'
+      - 0勝2敗
+  say:
+  - text: 見立てに入ります。ワールドカップの決勝トーナメントを、日本と並べます。
+    image: assets/images/20261106_team_paraguay/b01_fans_w.jpg
+    card: none
+  - text: パラグアイは7試合で1得点8失点。それでも2度、次へ進みました。
+    card:
+      <<: *id_vp
+      highlight_row: 0
+  - text: 日本は5試合で4得点7失点。勝ち上がりは、まだ0です。
+    card:
+      <<: *id_vp
+      highlight_row: 1
+  - text: 1試合あたりにすると、日本の得点はパラグアイのおよそ6倍。点では、日本が上です。
+    mark:
+      kind: circle
+      row: 1
+      col: 得点
+    card:
+      <<: *id_vp
+      highlight_row: 1
+  - text: ところが、90分でも延長でも、勝った試合はどちらも1つもありません。
+    card:
+      <<: *id_vp
+      highlight_row: 0
+  - text: 分けたのはPK戦です。パラグアイは2勝0敗、日本は0勝2敗。
+    emph: true
+    mark:
+      kind: circle
+      row: 0
+      col: PK戦
+    card:
+      <<: *id_vp
+      highlight_row: 0
+  - text: パラグアイが負けた5試合のうち、4試合は0対1。大きくは崩れません。
+    image: assets/images/20261106_team_paraguay/b02_match_w.jpg
+    card: none
+  - text: 120分を引き分けで終えれば、PK戦に持ち込めます。
+    image: assets/images/20261106_team_paraguay/b02_match_w.jpg
+    card: none
+  - text: 点を取って勝つ国ではなく、点を与えずに残る国。
+    card: none
+  - text: パラグアイは、そうやって次へ進んできました。
+    card: none
+  - text: 一方の日本は、2018年からのパラグアイ戦4試合で、合わせて12点。
+    image: assets/images/20261106_team_paraguay/b04_mauricio_w.jpg
+    card: none
+  - text: 1試合あたり3点を取っています。
+    image: assets/images/20261106_team_paraguay/b04_mauricio_w.jpg
+    card: none
+  - text: 11月17日、シンガポール。日本が今回も2点を取れるのか。
+    card: none
+  - text: そこが、この試合の分かれ目です。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Paraguay_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/Japan_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_round_of_32

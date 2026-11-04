@@ -1,0 +1,429 @@
+# 取材メモ（11/5 木、シリーズ「比べる」、key: compare_398073_314353）。アクラフ・ハキミ（パリ・サンジェルマン・28歳）×トレント・アレクサンダー＝アーノルド（レアル・マドリード・28歳）。
+# **情報の時点は 2026-11-04**。**FotMob・DataMB は使っていない**。数字は Transfermarkt（2026-11-04 取得。控え: research/raw/20261105_hakimi_tm.json・20261105_trent_tm.json）。
+#   Transfermarkt 番号：ハキミ 398073・アレクサンダー＝アーノルド 314353。API（tmapi-alpha）の player・performance-season（2015〜2026）・performance-game（全試合）・market-value-history を2.5秒あけて取得。
+# **選んだ理由**：同じ1998年生まれ（11月4日と10月7日、4週違い）の右サイドバック。どちらもCL優勝の決勝に先発し、クラブのトップチームの公式戦で
+#   得点＋アシストが 128 と 123 とほぼ同じ。ところが中身は「得点52・アシスト76」と「得点23・アシスト100」で逆向き。題の問いが立つ。
+#   ハキミはレアルの下部組織育ち（TM formerClubsNote: Real Madrid 2006-2016）、アーノルドはいまレアルの選手。
+#   重なり：scripts/*compare*・posted.json・covered.yaml を grep。2人の比べは一度も出ていない。ハキミの選手紹介も無い。
+#   アーノルドは covered.yaml に 2026-09-27/28 のニュース（代理人が古巣に接触）が1本あるだけで、直近30日（10/5〜）には無い。
+#   picks（research/20261105_picks.txt）：選手紹介はバリオス、ほかはフラム・バルセロナ・トーレス。人名は重ならない。
+#   外した候補：クーニャとムベウモ（同じマンU・同じ27歳・同じ7500万€で面白いが、クーニャは 10/29 に選手紹介を出したばかり）・
+#   カイセドとアンダーソン（どちらも 10月に選手紹介を出している）・バストーニとシュロッターベック（選手紹介の担当が市場価値の順で次に取る恐れ）。
+# **2人とも今季も扱うリーグの1部**：PSG（リーグ・アン）・レアル（ラ・リーガ）。ESPN の日程で今季のリーグ戦を確かめた（research/raw/20261105_psg_espn_schedule.json・20261105_real_espn_schedule.json）。
+# **使った数**（TM の performance-season。クラブのトップチームの公式戦＝リーグ・CL・EL・国内カップ・スーパーカップ・クラブW杯。**代表戦・ユース（カスティージャ・U21 など）は混ぜない**）
+#   ハキミ：レアル 17/18 17試合 2点1A（ES1 9/757/2/0・CDR 5/289/0/1・CL 2/180・KLUB 1/90）
+#          ドルトムント 18/19 28試合 3点7A・19/20 45試合 9点10A → 73試合 12点17A
+#          インテル 20/21 45試合 7点11A
+#          PSG 21/22 41・4点6A／22/23 39・5点6A／23/24 40・5点7A／24/25 55・11点16A（夏のクラブW杯 7試合 2点2A を含む＝TM は 24/25 に数える）／25/26 32・3点9A／26/27 14・3点3A → 221試合 31点47A
+#          合計 356試合・28200分・52点・76A＝128。28200÷128＝220.3／28200÷52＝542.3／28200÷76＝371.1
+#   アーノルド：リバプール 16/17 12試合 0点1A／17/18 33・3点2A（CL予選含む）／18/19 40・1点16A／19/20 49・4点15A／20/21 45・2点9A／21/22 47・2点19A／
+#          22/23 47・4点11A／23/24 37・3点11A／24/25 44・4点8A → 354試合 23点92A
+#          レアル 24/25 のクラブW杯 5試合 0点2A・25/26 30試合 0点5A・26/27 8試合 0点1A → 43試合 0点8A
+#          合計 397試合・30795分・23点・100A＝123。30795÷123＝250.4／30795÷23＝1338.9／30795÷100＝308.0
+#   得点の割合：52÷128＝40.6%、23÷123＝18.7%。
+#   リバプールの 354試合23点 は Wikipedia の通算と同じ。レアルの公式サイト（2026-10-07「Trent turns 28」）は「レアルで40試合（リーグ25・CL10・クラブW杯5）」。TM では10/7 までで同じ40。
+#   季ごとの得点＋アシスト（全大会）：ハキミ 18/19 10・19/20 19・20/21 18・21/22 10・22/23 11・23/24 12・24/25 27・25/26 12
+#                                  アーノルド 18/19 17・19/20 19・20/21 11・21/22 21・22/23 15・23/24 14・24/25 14・25/26 5
+#   決勝（TM の試合ごとの記録）：2018-05-26 CL決勝 レアル3-1リバプール＝アーノルド 90分、ハキミ（当時レアル）はメンバー外。
+#                              2019-06-01 CL決勝 リバプール2-0トッテナム＝アーノルド 90分。
+#                              2025-05-31 CL決勝 PSG5-0インテル＝ハキミ 90分・12分に先制点（Wikipedia の決勝の記事でも確かめた）。
+#                              2025-07-09 クラブW杯準決勝 PSG4-0レアル＝ハキミ 90分1A、アーノルドは出場なし（理由は台本に入れない）。
+#   26/27（11月4日時点）：ハキミ 14試合1067分 3点3A（リーグ 8試合569分3点2A・CL 4試合318分0点1A・スーパーカップ2試合）。最後は 11/3 CL アウェー6-0。
+#          アーノルド 8試合435分 0点1A（リーグ 7試合356分0点1A・CL 1試合79分）。**450分に届かないので、今季の速さは比べない**。
+# プロフィール（TM）：ハキミ 1998-11-04 生（ヘタフェ）・モロッコ代表・右足・180cm・背番号2・契約 2029-06-30・市場価値 8000万€（2026-06-01。これが最高）。
+#   アーノルド 1998-10-07 生（リバプール）・イングランド代表・右足・180cm・背番号12（レアル）・契約 2031-06-30・市場価値 6000万€（2026-06-05）、最高 1億1000万€（2020-10-13）。
+#   移籍：アーノルドは 2025-06-01 からレアル（公式発表 2025-05-30・6季契約）。
+# 日本との接点：見つからない（入れない）。
+# 日程（ESPN）：レアル 2026-11-04 17:45 UTC＝日本時間11月5日 2:45 アウェーで AEK アテネ（CL）。**この数字には入らない**。
+#   PSG 2026-11-07 19:45 UTC＝日本時間11月8日 4:45 ホームでトロワ（リーグ・アン）。レアル 2026-11-07 20:00 UTC＝日本時間11月8日 5:00 アウェーでバレンシア（ラ・リーガ）。
+# 写真：h1 PSG 公式（2026-27 のユニフォーム）・h2/h3 Commons（2024-12 ザルツブルク戦、CC BY-SA 4.0 Werner100359）・h4 Commons（2024 モロッコ代表、CC BY-SA 4.0 MFonzatti）・
+#   t1 レアル公式（2026-10-07 の記事）・t2 レアル公式（2025-06 入団発表）・t3 Commons（2021 リバプール、CC BY-SA 4.0 Werner100359）・t4 Commons（2021 リバプール、CC BY-SA 4.0 Ardfern）。
+slot: other_1
+date: "2026年11月4日"
+format: news
+series: 比べる
+people:
+  - アクラフ・ハキミ
+  - トレント・アレクサンダー＝アーノルド
+  - パリ・サンジェルマン
+  - レアル・マドリード
+
+theme:
+  end_bg: assets/images/20261105_compare_398073_314353/pair_c/01.jpg
+  id: compare_398073_314353
+  league: france
+  kind: other
+  topic: ハキミとアレクサンダー＝アーノルド
+  prefix: ""
+  title: ハキミとアレクサンダー＝アーノルド、128と123。中身は何が違うのか
+  hook: ""
+  question: 同じ1998年生まれの右サイドバック2人。クラブで点に絡んだ数はほぼ同じなのに、中身はどう違うのか
+  takeaway: 通算で絡んだ点は128と123でほぼ同じ。中身はハキミが得点52でアシスト76、アーノルドは得点23でアシスト100。1つ絡むのにかかった時間は約220分と約250分で、ハキミが速い
+  league_name: リーグ・アンとラ・リーガ
+  opening_image: assets/images/20261105_compare_398073_314353/pair_a/01.jpg
+
+short_title: ハキミとアレクサンダー＝アーノルド、128と123
+
+thumbnail:
+  photo: assets/images/20261105_compare_398073_314353/pair_a/01.jpg
+  photos:
+    - assets/images/20261105_compare_398073_314353/h2/01_t.jpg
+    - assets/images/20261105_compare_398073_314353/t1/01_t.jpg
+  short_photo: assets/images/20261105_compare_398073_314353/pair_a/01_v.jpg
+  face_link: VS
+  line1: ハキミとアーノルド
+  line2: 絡んだ点は128と123
+  tags: [ハキミ, アレクサンダー＝アーノルド, パリ・サンジェルマン, レアル・マドリード]
+
+answer: 絡んだ数はほぼ同じ。ハキミは得点が多く、アーノルドはアシストが多い。1つ絡む速さはハキミが上
+watch: 毎日、数字でサッカーを読み解きます
+
+sections:
+  - id: hook
+    heading: 同じ年の右サイドバック2人は、いくつの点に絡んできたのか
+    tier: 報道
+    telop: クラブの公式戦 通算
+    narrator: 解説
+    card: &hookcard
+      type: stats
+      title: 得点＋アシスト（クラブのトップチームの公式戦 通算）
+      items:
+        - ["128", つ, ハキミ]
+        - ["123", つ, アレクサンダー＝アーノルド]
+        - ["5", つ差, 2人の差]
+      focus: 2
+    say:
+      - text: パリ・サンジェルマンの、アクラフ・ハキミ。
+        image: assets/images/20261105_compare_398073_314353/h2/01_w.jpg
+        card: none
+      - text: レアル・マドリードの、トレント・アレクサンダー＝アーノルド。
+        image: assets/images/20261105_compare_398073_314353/t1/01.jpg
+        card: none
+      - text: 生まれたのは同じ1998年。誕生日は4週違いの、右サイドバックです。
+        image: assets/images/20261105_compare_398073_314353/pair_a/01.jpg
+        card: none
+      - text: 11月4日の時点の数字で、2人を並べます。
+        image: assets/images/20261105_compare_398073_314353/h2/01_w.jpg
+        card: {<<: *hookcard, focus: 0}
+      - text: クラブで得点とアシストを合わせた数は、ハキミが128、アーノルドが123。
+        image: assets/images/20261105_compare_398073_314353/h2/01_w.jpg
+        card: {<<: *hookcard, focus: 1}
+      - text: 差は、わずか5つです。
+        emph: true
+        image: assets/images/20261105_compare_398073_314353/t1/01.jpg
+        card: {<<: *hookcard, focus: 2}
+      - text: ところが、その中身は、まるで逆の形をしていました。
+        image: assets/images/20261105_compare_398073_314353/pair_b/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/achraf-hakimi/leistungsdaten/spieler/398073
+      - https://www.transfermarkt.com/trent-alexander-arnold/leistungsdaten/spieler/314353
+
+  - id: data
+    heading: ハキミとアーノルドは、どこで育ち、いまいくらの選手なのか
+    tier: 報道
+    telop: 2人とも28歳
+    narrator: 解説
+    card: &datacard
+      type: duel
+      left: {name: ハキミ, club: パリSG, photo: assets/images/20261105_compare_398073_314353/h2/01_sq.jpg, color: "#004170"}
+      right: {name: アーノルド, club: レアル, photo: assets/images/20261105_compare_398073_314353/t1/01_sq.jpg, color: "#febe10"}
+      rows:
+        - [生まれた日, 1998年11月4日, 1998年10月7日]
+        - [代表, モロッコ, イングランド]
+        - [育ったクラブ, レアル・マドリード, リバプール]
+        - [背番号, "2", "12"]
+        - [市場価値（2026年6月）, 8000万€, 6000万€]
+        - [市場価値の最高, 8000万€, 1億1000万€]
+      bars: false
+      note: 育ったクラブは下部組織
+    say:
+      - text: ハキミは11月4日に28歳。モロッコ代表で、レアルの下部組織で育ちました。
+        image: assets/images/20261105_compare_398073_314353/h4/01_w.jpg
+        card: {<<: *datacard, highlight_row: 育ったクラブ}
+      - text: アーノルドは10月に28歳。イングランド代表で、地元リバプールの下部組織育ち。
+        image: assets/images/20261105_compare_398073_314353/t3/01_w.jpg
+        card: {<<: *datacard, highlight_row: 育ったクラブ}
+      - text: 2025年の夏にレアルへ移り、いまは背番号12。ハキミが育ったクラブです。
+        image: assets/images/20261105_compare_398073_314353/t2/01_w.jpg
+        card: none
+      - text: 市場価値は、2026年6月の時点で8000万ユーロと6000万ユーロ。
+        image: assets/images/20261105_compare_398073_314353/pair_a/01.jpg
+        card: {<<: *datacard, highlight_row: 市場価値（2026年6月）}
+      - text: いちばん高かったときは、アーノルドの1億1千万ユーロ。2020年の値です。
+        image: assets/images/20261105_compare_398073_314353/pair_c/01.jpg
+        card: {<<: *datacard, highlight_row: 市場価値の最高}
+    sources:
+      - https://www.transfermarkt.com/achraf-hakimi/profil/spieler/398073
+      - https://www.transfermarkt.com/trent-alexander-arnold/profil/spieler/314353
+      - https://www.realmadrid.com/en-US/news/football/first-team/latest-news/comunicado-oficial-30-05-2025
+
+  - id: clubs
+    heading: 2人は、どのクラブでいくつの点に絡んだのか
+    tier: 報道
+    telop: クラブごとの通算（公式戦）
+    narrator: 解説
+    card: &clubcard
+      type: table
+      title: クラブごとの通算（トップチームの公式戦）
+      columns: [選手, クラブ, 試合, 得点, アシスト]
+      rows:
+        - [ハキミ, レアル（17年〜18年）, "17", "2", "1"]
+        - [ハキミ, ドルトムント（18年〜20年）, "73", "12", "17"]
+        - [ハキミ, インテル（20年〜21年）, "45", "7", "11"]
+        - [ハキミ, パリSG（21年〜）, "221", "31", "47"]
+        - [アーノルド, リバプール（16年〜25年）, "354", "23", "92"]
+        - [アーノルド, レアル（25年〜）, "43", "0", "8"]
+      note: リーグ・欧州の大会・国内カップ・スーパーカップ・クラブW杯。11月4日の時点
+    say:
+      - text: クラブごとに分けてみます。ハキミは、4つのクラブを渡ってきました。
+        image: assets/images/20261105_compare_398073_314353/h3/01_w.jpg
+        card: {<<: *clubcard, highlight_row: 0}
+      - text: ドルトムントの2季で、73試合12点17アシスト。
+        image: assets/images/20261105_compare_398073_314353/h3/01_w.jpg
+        card: {<<: *clubcard, highlight_row: 1}
+      - text: インテルでは1季で、7点11アシストでした。
+        image: assets/images/20261105_compare_398073_314353/h4/01_w.jpg
+        card: none
+      - text: そしてパリで221試合。31点、47アシストです。
+        image: assets/images/20261105_compare_398073_314353/h2/01_w.jpg
+        card: {<<: *clubcard, highlight_row: 3}
+      - text: アーノルドは、リバプールで354試合。
+        image: assets/images/20261105_compare_398073_314353/t3/01_w.jpg
+        card: none
+      - text: アシストは92。ハキミが4つのクラブで積んだ76より、16多い数です。
+        emph: true
+        image: assets/images/20261105_compare_398073_314353/t3/01_w.jpg
+        card: {<<: *clubcard, highlight_row: 4}
+      - text: レアルでは43試合で8アシスト。合わせて、ちょうど100になります。
+        image: assets/images/20261105_compare_398073_314353/t2/01_w.jpg
+        card: {<<: *clubcard, highlight_row: 5}
+    sources:
+      - https://www.transfermarkt.com/achraf-hakimi/leistungsdaten/spieler/398073
+      - https://www.transfermarkt.com/trent-alexander-arnold/leistungsdaten/spieler/314353
+      - https://www.realmadrid.com/en-US/news/football/first-team/latest-news/trent-cumple-28-anos-07-10-2026
+
+  - id: split
+    heading: 点を取るハキミと、点を配るアーノルド。速さはどちらが上なのか
+    tier: 報道
+    main: true
+    telop: 通算 クラブの公式戦
+    narrator: 解説
+    card: &splitcard
+      type: duel
+      left: {name: ハキミ, club: 通算, photo: assets/images/20261105_compare_398073_314353/h2/01_sq.jpg, color: "#004170"}
+      right: {name: アーノルド, club: 通算, photo: assets/images/20261105_compare_398073_314353/t1/01_sq.jpg, color: "#febe10"}
+      rows:
+        - [出場時間, 28200分, 30795分]
+        - [得点, "52", "23"]
+        - [アシスト, "76", "100"]
+        - [得点＋アシスト, "128", "123"]
+        - [1点にかかった時間, 約542分, 約1339分]
+        - [1アシストにかかった時間, 約371分, 約308分]
+        - [1つ絡むのにかかった時間, 約220分, 約250分]
+      bars: [出場時間, 得点, アシスト, 得点＋アシスト]
+      lower: [1点にかかった時間, 1アシストにかかった時間, 1つ絡むのにかかった時間]
+      note: クラブのトップチームの公式戦。かかった時間は出場時間÷数で、自分で計算した値
+    say:
+      - text: 同じ28歳の右サイドバック、ハキミとアーノルド。絡んだ点は128と123。
+        short_only: true
+        image: assets/images/20261105_compare_398073_314353/pair_a/01.jpg
+        card: none
+      - text: 得点は、ハキミが52、アーノルドが23。ハキミが2倍以上です。
+        image: assets/images/20261105_compare_398073_314353/h2/01_w.jpg
+        card: none
+      - text: アシストは、ハキミが76、アーノルドが100。今度はアーノルドが24多い。
+        image: assets/images/20261105_compare_398073_314353/t1/01.jpg
+        card: {<<: *splitcard, highlight_row: アシスト}
+      - text: 出場時間で割ると、1点にかかった時間は約542分と約1339分。
+        image: assets/images/20261105_compare_398073_314353/pair_b/01.jpg
+        card: {<<: *splitcard, highlight_row: 1点にかかった時間}
+      - text: 1アシストは約371分と約308分で、こちらはアーノルドが速い。
+        image: assets/images/20261105_compare_398073_314353/pair_b/01.jpg
+        card: none
+      - text: 合わせて1つ絡むのにかかった時間は、約220分と約250分。
+        image: assets/images/20261105_compare_398073_314353/pair_b/01.jpg
+        card: {<<: *splitcard, highlight_row: 1つ絡むのにかかった時間}
+      - text: 点に絡む速さは、ハキミが上です。
+        emph: true
+        image: assets/images/20261105_compare_398073_314353/h4/01_w.jpg
+        card: none
+      - text: 絡んだ点のうち、自分で決めた割合は、ハキミが41%、アーノルドが19%でした。
+        image: assets/images/20261105_compare_398073_314353/t3/01_w.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/achraf-hakimi/leistungsdaten/spieler/398073
+      - https://www.transfermarkt.com/trent-alexander-arnold/leistungsdaten/spieler/314353
+
+  - id: trend
+    heading: 2人がいちばん多く点に絡んだのは、どの季だったのか
+    tier: 報道
+    telop: 季ごとの得点＋アシスト
+    narrator: 解説
+    card: &trendcard
+      type: line
+      title: 季ごとの得点＋アシスト（クラブの公式戦）
+      x: [18/19, 19/20, 20/21, 21/22, 22/23, 23/24, 24/25, 25/26]
+      series:
+        - [ハキミ, [10, 19, 18, 10, 11, 12, 27, 12]]
+        - [アーノルド, [17, 19, 11, 21, 15, 14, 14, 5]]
+      focus: ハキミ
+      note: 24/25 には2025年夏のクラブW杯を含む
+    say:
+      - text: 1つの季ごとに、絡んだ点の数を線にしてみます。
+        image: assets/images/20261105_compare_398073_314353/pair_c/01.jpg
+        card: *trendcard
+      - text: アーノルドの山は、2021年から22年。2点19アシストで、21に絡みました。
+        image: assets/images/20261105_compare_398073_314353/t3/01_w.jpg
+        card: {<<: *trendcard, highlight: 21/22}
+      - text: ハキミの山は、2024年から25年。11点16アシストで、27です。
+        emph: true
+        image: assets/images/20261105_compare_398073_314353/h2/01_w.jpg
+        card: {<<: *trendcard, highlight: 24/25}
+      - text: この数には、2025年夏のクラブワールドカップの7試合も入っています。
+        image: assets/images/20261105_compare_398073_314353/h3/01_w.jpg
+        card: none
+      - text: 2人の山は、3年ずれていました。
+        image: assets/images/20261105_compare_398073_314353/pair_a/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/achraf-hakimi/leistungsdaten/spieler/398073
+      - https://www.transfermarkt.com/trent-alexander-arnold/leistungsdaten/spieler/314353
+
+  - id: finals
+    heading: 大きな決勝の舞台で、2人はどうだったのか
+    tier: 報道
+    telop: 決勝と準決勝
+    narrator: 解説
+    card: &finalcard
+      type: timeline
+      title: 2人が関わった大きな試合
+      rows:
+        - ["2018年5月", "CL決勝 レアル3-1リバプール。アーノルドは90分出場"]
+        - ["2019年6月", "CL決勝 リバプール2-0トッテナム。アーノルドは90分、優勝"]
+        - ["2025年5月", "CL決勝 パリ5-0インテル。ハキミが12分に先制点"]
+        - ["2025年7月", "クラブW杯準決勝 パリ4-0レアル。ハキミが1アシスト"]
+      focus: 2
+    say:
+      - text: 2人とも、チャンピオンズリーグの決勝に先発しています。
+        image: assets/images/20261105_compare_398073_314353/pair_c/01.jpg
+        card: none
+      - text: アーノルドは2018年から2年続けて決勝に先発し、2019年に優勝。
+        image: assets/images/20261105_compare_398073_314353/t3/01_w.jpg
+        card: {<<: *finalcard, highlight_row: 1}
+      - text: 2018年の決勝の相手は、レアルでした。
+        image: assets/images/20261105_compare_398073_314353/t3/01_w.jpg
+        card: {<<: *finalcard, highlight_row: 0}
+      - text: ハキミは当時レアルの選手でしたが、決勝のメンバーには入っていません。
+        image: assets/images/20261105_compare_398073_314353/t2/01_w.jpg
+        card: none
+      - text: ハキミは2025年の決勝で、古巣インテルから12分に先制点。
+        image: assets/images/20261105_compare_398073_314353/h2/01_w.jpg
+        card: {<<: *finalcard, highlight_row: 2}
+      - text: パリは5対0で勝ち、初めての優勝を果たしました。
+        emph: true
+        image: assets/images/20261105_compare_398073_314353/h2/01_w.jpg
+        card: {<<: *finalcard, highlight_row: 2}
+      - text: その夏のクラブワールドカップ準決勝は、パリとレアル。
+        image: assets/images/20261105_compare_398073_314353/h3/01_w.jpg
+        card: none
+      - text: ハキミが1アシストし、パリが4対0の勝ち。
+        image: assets/images/20261105_compare_398073_314353/h3/01_w.jpg
+        card: {<<: *finalcard, highlight_row: 3}
+      - text: アーノルドは、この試合には出ていません。
+        image: assets/images/20261105_compare_398073_314353/t2/01_w.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/achraf-hakimi/leistungsdaten/spieler/398073
+      - https://www.transfermarkt.com/trent-alexander-arnold/leistungsdaten/spieler/314353
+      - https://en.wikipedia.org/wiki/2025_UEFA_Champions_League_final
+
+  - id: now
+    heading: 今季のここまで、2人はどれだけ出ているのか
+    tier: 報道
+    telop: 2026年から27年 11月4日時点
+    narrator: 解説
+    card: &nowcard
+      type: duel
+      left: {name: ハキミ, club: 今季, photo: assets/images/20261105_compare_398073_314353/h2/01_sq.jpg, color: "#004170"}
+      right: {name: アーノルド, club: 今季, photo: assets/images/20261105_compare_398073_314353/t1/01_sq.jpg, color: "#febe10"}
+      rows:
+        - [試合, "14", "8"]
+        - [出場時間, 1067分, 435分]
+        - [得点, "3", "0"]
+        - [アシスト, "3", "1"]
+      bars: [試合, 出場時間]
+      note: 今季のクラブの公式戦（11月4日時点）。アーノルドは450分に届かないので、速さは比べない
+    say:
+      - text: 今季は、11月4日までの試合で数えます。
+        image: assets/images/20261105_compare_398073_314353/pair_c/01.jpg
+        card: {<<: *nowcard, highlight_row: 試合}
+      - text: ハキミは14試合、1067分で、3点3アシスト。
+        image: assets/images/20261105_compare_398073_314353/h2/01_w.jpg
+        card: {<<: *nowcard, highlight_row: 得点}
+      - text: リーグ戦の3点は、もう昨季のリーグ戦の2点を超えました。
+        image: assets/images/20261105_compare_398073_314353/h4/01_w.jpg
+        card: none
+      - text: アーノルドは8試合、435分で1アシスト。
+        image: assets/images/20261105_compare_398073_314353/t1/01.jpg
+        card: {<<: *nowcard, highlight_row: 出場時間}
+      - text: 出場が450分に届いていないので、今季の速さは、まだ比べません。
+        image: assets/images/20261105_compare_398073_314353/t1/01.jpg
+        card: none
+      - text: 日本時間5日未明の、レアルの欧州カップ戦は、この数字に入りません。
+        image: assets/images/20261105_compare_398073_314353/t2/01_w.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/achraf-hakimi/leistungsdaten/spieler/398073
+      - https://www.transfermarkt.com/trent-alexander-arnold/leistungsdaten/spieler/314353
+
+  - id: view
+    heading: 見立て・同じ128と123の2人は、何で点に絡んできたのか
+    tier: 背景
+    viewpoint: true
+    narrator: 解説
+    telop: 数字の違いが示すもの
+    card: &viewcard
+      type: duel
+      left: {name: ハキミ, club: パリSG, photo: assets/images/20261105_compare_398073_314353/h2/01_sq.jpg, color: "#004170"}
+      right: {name: アーノルド, club: レアル, photo: assets/images/20261105_compare_398073_314353/t1/01_sq.jpg, color: "#febe10"}
+      rows:
+        - [得点＋アシスト（通算）, "128", "123"]
+        - [そのうち得点の割合, 41%, 19%]
+        - [1アシストにかかった時間, 約371分, 約308分]
+        - [1つ絡むのにかかった時間, 約220分, 約250分]
+      lower: [1アシストにかかった時間, 1つ絡むのにかかった時間]
+      bars: false
+      note: クラブのトップチームの公式戦。割合と時間は自分で計算した値
+    say:
+      - text: 見立てです。2人が絡んだ点の数は、128と123で、ほぼ並んでいます。
+        image: assets/images/20261105_compare_398073_314353/pair_a/01.jpg
+        card: {<<: *viewcard, highlight_row: 得点＋アシスト（通算）}
+      - text: ただ、ハキミは絡んだ点の41%を自分で決め、アーノルドは19%。
+        mark: {kind: circle, row: 1}
+        image: assets/images/20261105_compare_398073_314353/h4/01_w.jpg
+        card: {<<: *viewcard, highlight_row: そのうち得点の割合}
+      - text: アシストの速さはアーノルドが約63分速く、全体の速さはハキミが約30分速い。
+        emph: true
+        image: assets/images/20261105_compare_398073_314353/t3/01_w.jpg
+        card: {<<: *viewcard, highlight_row: 1つ絡むのにかかった時間}
+      - text: 同じ右サイドバックでも、ゴール前まで走って決める形と、後ろから配る形。
+        image: assets/images/20261105_compare_398073_314353/pair_b/01.jpg
+        card: none
+      - text: 数字は、はっきり分かれました。
+        image: assets/images/20261105_compare_398073_314353/pair_c/01.jpg
+        card: none
+      - text: 次の試合です。パリは日本時間11月8日の4時45分から、ホームでトロワ戦。
+        image: assets/images/20261105_compare_398073_314353/h2/01_w.jpg
+        card: none
+      - text: レアルは5時から、アウェーでバレンシア戦です。
+        image: assets/images/20261105_compare_398073_314353/t1/01.jpg
+        card: none
+      - text: 128と123。次にこの数を動かすのはどちらか、注目です。
+        image: assets/images/20261105_compare_398073_314353/pair_c/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/achraf-hakimi/leistungsdaten/spieler/398073
+      - https://www.transfermarkt.com/trent-alexander-arnold/leistungsdaten/spieler/314353
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/all/teams/160/schedule?fixture=true
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/all/teams/86/schedule?fixture=true

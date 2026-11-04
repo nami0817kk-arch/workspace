@@ -1,0 +1,644 @@
+# イゴール・チアゴ（ブレントフォード／ブラジル代表）の紹介。選手紹介の8節の型（2026-11-01 公開分、シリーズ「有名選手の紹介」。key: player_739443）。情報の時点は 2026-10-30。
+# **FotMob は使わない**（雛形が書いた radar/shots/heat の板と research/player_pool/fotmob_1302005.json は消した）。数字は Transfermarkt API の試合記録（控え research/raw/20261101_thiago_tm_season.json・20261101_thiago_tm_games.json）と、自分で割った90分あたり。
+# **選んだ理由・重なり確認（2026-10-31）**：player_pool.py list を市場価値の上位から見て、直近30日に紹介を出していない選手を探した。
+#   紹介済み（10/1〜10/29）：ヤマル10/2・オリーセ10/3・エムバペ10/4・ヴィティーニャ10/5・ベリンガム10/6・ネヴェス10/8・ペドリ10/9・ライス10/11・アルバレス10/12・アンダーソン10/14・サカ10/16・ヴィルツ10/18・ロジャーズ10/19・ソボスライ10/20・ムシアラ10/21・ラウタロ10/22・カイセド10/23・ユルドゥズ10/24・バストーニ10/25・コネ10/26・トナーリ10/27・ムベウモ10/28・クーニャ10/29。
+#   ハーランド（1位）は 10/1 に紹介済み（31日前）で、10/28 に比べる回、10/18 にも2本と直近で重なるので外した。マレン（ローマ）は比べる回（10/11）と得点王の回に出ているが紹介は未だ、ただし値が 5500万ユーロでチアゴ（6500万）より下。
+#   イゴール・チアゴ（29位・6500万ユーロ）は scripts/・research/posted.json・covered.yaml を「チアゴ／Thiago／739443」で grep：紹介・比べるは0件（クラブ紹介 pl04_brentford 9/16 と 9/19 チェルシーに名前が出るだけ）。
+#   今季もプレミアの1部：TM の試合記録で 26/27 のプレミア8試合（8/22〜10/25）、英語版Wikipedia（2026-09-18 更新）も current club = Brentford。現役。
+# **数字の軸**：トップチームと代表の通算（全公式戦）：クルゼイロ64試合10得点／ルドゴレツ（2軍含む）59・24／クラブ・ブルッヘ55・29／ブレントフォード59・28／ブラジル代表5・2 → 242試合93得点。
+#   （英語版Wikipedia の通算表＝2026-10-28 時点、と TM の試合記録が一致：ブレントフォード 8+40+11=59試合、0+25+3=28得点。ブルッヘ55・29。代表5・2。）
+#   昨季（25/26）プレミア：38試合・3287分・22得点1アシスト。90分あたり得点 0.60、シュート 2.30本（84本、枠内43本＝51%）。一試合の複数得点が6試合（ハットトリック1＋2得点5）で13点。
+#   今季（26/27、10/28 時点）：プレミア8試合・713分・1得点2アシスト。90分あたり 0.13点・2.27本（18本、枠内4本＝22%）。EFLカップ3試合・131分・2得点。
+#   市場価値（TM）：2021-12-03 に 40万ユーロ（クルゼイロ、20歳）→ 2023-06 400万 → 2024-03 2500万 → 2026-06-03 6500万（最高）。6500÷40＝162.5倍。
+# **一次情報・出典**：プレミアリーグ公式（2024-07-16 の入団時の取材、2025-11-20 の特集、2026-02-13 の1月の月間最優秀選手）、英語版Wikipedia（経歴・移籍金・タイトル・代表）、Wikipedia「2025–26 Premier League」の得点ランキング（1位ハーランド27、2位チアゴ22）、
+#   ESPN の試合記録（2026-06-29 W杯 ブラジル2-1日本でチアゴは出場なし）。
+#   本人の言葉：プレミアリーグ公式の記事から英語を訳した（2024-07-16「I want to make history here at Brentford.」、2025-11-20「Those jobs as a kid were really important for my growth.」）。
+# **入れなかったもの**：父の死・家族の話（私生活）、けがの詳しい経過（膝の感染症など）、ブルガリア国籍の話、処分・トラブル。
+# **写真**：Commons。ブレントフォード時代は Timmy96 の CC0、ルドゴレツ時代は Biser Todorov（CC BY-SA 4.0）、ブラジル代表は Bryan Berlin / YantsImages（CC BY-SA 4.0）。
+# **不安**：今季の数は 10/28 時点。移籍金（3000万ポンド）は報道の値。「ブレントフォードのリーグ得点記録を更新」は Wikipedia だけなので台本に入れていない。
+date: 2026年11月1日
+slot: other_1
+format: news
+series: 有名選手の紹介
+people:
+- イゴール・チアゴ
+theme:
+  id: player_739443
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: ブレントフォード
+  title: イゴール・チアゴってどんな選手？ レンガ積みの少年は、なぜ得点2位になれたのか
+  question: イゴール・チアゴは、どこで値を上げ、なぜ昨季のプレミアで22点を取れたのか
+  takeaway: 通算242試合93得点。昨季のプレミア22点は90分あたり0.60点で、13点は6試合の複数得点。今季は713分で1点（0.13点）。シュートは2.30本から2.27本と同じだが、枠内は51%から22%
+  nameplate: イゴール・チアゴ｜ブレントフォード FW／ブラジル代表
+  opening_image: assets/images/20261101_player_739443/a1/01_w.jpg
+  end_bg: assets/images/20261101_player_739443/w1/01_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+watch: 毎日、数字でサッカーを読み解きます
+short_title: イゴール・チアゴってどんな選手？
+thumbnail:
+  line1: チアゴ、通算242試合93点
+  line2: 22点でプレミア得点2位
+  tags:
+  - ブレントフォード
+  photo: assets/images/20261101_player_739443/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261101_player_739443/a1/01_v.jpg
+sections:
+- id: hook
+  heading: 40万ユーロの20歳は、なぜブレントフォードの9番になったのか
+  tier: 報道
+  telop: 40万ユーロから、6500万ユーロへ
+  narrator: 解説
+  card: &hook_card
+    type: stats
+    title: イゴール・チアゴの数字
+    items:
+    - - '40万'
+      - ユーロ
+      - 20歳のときの市場価値
+    - - '6500万'
+      - ユーロ
+      - いまの市場価値
+    - - '22'
+      - 得点
+      - 昨季のプレミア。2位
+    focus: 1
+  say:
+  - text: ブレントフォードの背番号9、イゴール・チアゴ。
+    image: assets/images/20261101_player_739443/a1/01_w.jpg
+    card: none
+  - text: 2021年、20歳のときの市場価値は、40万ユーロでした。
+    card:
+      <<: *hook_card
+      focus: 0
+  - text: いまは6500万ユーロ。およそ160倍です。
+    card:
+      <<: *hook_card
+      focus: 1
+    emph: true
+  - text: 昨季はプレミアで22得点。ハーランドの27点に次ぐ2位でした。
+    card:
+      <<: *hook_card
+      focus: 2
+  - text: 出発点は、プロのピッチではなく、果物を運ぶ仕事とレンガ積みの現場でした。
+    card: none
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/igor-thiago/profil/spieler/739443
+  - https://en.wikipedia.org/wiki/2025%E2%80%9326_Premier_League
+  - https://www.premierleague.com/en/news/4048755
+- id: data
+  heading: チアゴは、いまどこで、いくらと見られている選手か
+  tier: 報道
+  telop: イゴール・チアゴの基礎DATA
+  narrator: 解説
+  card: &data_card
+    type: table
+    title: イゴール・チアゴ（ブレントフォード）
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 所属
+      - ブレントフォード（9番）
+    - - ポジション
+      - センターフォワード
+    - - 生年月日
+      - 2001年6月26日（25歳）
+    - - 出身
+      - ブラジル・ガマ
+    - - 身長・利き足
+      - 1.90m・右足
+    - - 代表
+      - ブラジル（5試合2得点）
+    - - 契約・市場価値
+      - 2031年まで・6500万ユーロ
+    source: Transfermarkt
+  say:
+  - text: チアゴの持ち場は、前線の真ん中。センターフォワードです。
+    image: assets/images/20261101_player_739443/w1/01_w.jpg
+    card: none
+  - text: 生まれは2001年6月26日、ブラジルのガマ。いま25歳です。
+    card:
+      <<: *data_card
+      highlight_row: 2
+  - text: 身長は1メートル90、利き足は右。
+    card:
+      <<: *data_card
+      highlight_row: 4
+  - text: ブラジル代表では、5試合で2得点。
+    card:
+      <<: *data_card
+      highlight_row: 5
+  - text: ブレントフォードとの契約は、2031年の夏まで。
+    card:
+      <<: *data_card
+      highlight_row: 6
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/igor-thiago/profil/spieler/739443
+  - https://en.wikipedia.org/wiki/Igor_Thiago
+- id: career
+  heading: レンガ積みの少年は、どこで値を上げてきたのか
+  tier: 背景
+  telop: ブラジルから、ブルガリア、ベルギー、イングランドへ
+  narrator: 解説
+  card: &career_card
+    type: timeline
+    title: チアゴの歩み
+    rows:
+    - - '2020'
+      - 18歳でクルゼイロのプロデビュー
+    - - '2022'
+      - ブルガリアのルドゴレツへ
+    - - '2023'
+      - ベルギーのクラブ・ブルッヘへ
+    - - '2024'
+      - ブレントフォードが獲得を発表
+    - - '2025'
+      - 開幕戦でブレントフォード初ゴール
+    focus: '2020'
+  say:
+  - text: イゴール・チアゴは、母を支えるため、子どものころから働いていました。
+    image: assets/images/20261101_player_739443/w2/01_w.jpg
+    card: none
+  - text: 2019年にクルゼイロの下部組織へ。
+    card:
+      <<: *career_card
+      focus: '2020'
+  - text: 翌2020年1月、18歳でプロデビュー。
+    card:
+      <<: *career_card
+      focus: '2020'
+  - text: 2022年3月、ブルガリアのルドゴレツへ。
+    card:
+      <<: *career_card
+      focus: '2022'
+  - text: ブルガリアのリーグでは、2シーズン続けて優勝を経験します。
+    card:
+      <<: *career_card
+      focus: '2022'
+  - text: 2023年6月、ベルギーのクラブ・ブルッヘへ。
+    card:
+      <<: *career_card
+      focus: '2023'
+  - text: 2023年から24年のシーズンは、リーグ戦で18得点。
+    card:
+      <<: *career_card
+      focus: '2023'
+  - text: チームはベルギーのリーグを制しました。
+    card:
+      <<: *career_card
+      focus: '2023'
+  - text: カンファレンスリーグでは、最優秀若手選手にも選ばれました。
+    card:
+      <<: *career_card
+      focus: '2023'
+    emph: true
+  - text: 2024年2月、ブレントフォードが獲得を発表。
+    image: assets/images/20261101_player_739443/w2/01_w.jpg
+    card:
+      <<: *career_card
+      focus: '2024'
+  - text: 報道では、クラブ記録の約3000万ポンドでした。
+    card:
+      <<: *career_card
+      focus: '2024'
+  - text: ところが夏のプレシーズンで膝を痛め、1年目のプレミアは8試合、得点なしでした。
+    card:
+      <<: *career_card
+      focus: '2024'
+  - text: 2025年8月17日、ノッティンガム・フォレストとの開幕戦。
+    card:
+      <<: *career_card
+      focus: '2025'
+  - text: ここで、ブレントフォードでの初ゴールを決めます。
+    card:
+      <<: *career_card
+      focus: '2025'
+    emph: true
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Igor_Thiago
+  - https://www.premierleague.com/en/news/4048755
+  - https://www.premierleague.com/en/news/4466327/502500
+  - https://www.transfermarkt.com/igor-thiago/profil/spieler/739443
+- id: style
+  heading: チアゴの22点は、どんな試合で生まれたのか
+  tier: 報道
+  telop: 昨季の22点のうち13点は、6試合に
+  narrator: 解説
+  card: &style_card
+    type: table
+    title: チアゴ 昨季のプレミア 複数得点の6試合
+    columns:
+    - 日付
+    - 相手
+    - 得点
+    rows:
+    - - 2025年9月27日
+      - マンU（ホーム）
+      - 2点
+    - - 2025年11月9日
+      - ニューカッスル（ホーム）
+      - 2点
+    - - 2025年11月29日
+      - バーンリー（ホーム）
+      - 2点
+    - - 2026年1月4日
+      - エヴァートン（敵地）
+      - 3点
+    - - 2026年1月7日
+      - サンダーランド（ホーム）
+      - 2点
+    - - 2026年4月11日
+      - エヴァートン（ホーム）
+      - 2点
+    source: Transfermarkt
+    highlight_row: 0
+  say:
+  - text: イゴール・チアゴの昨季の得点のうち、13点は、たった6つの試合に集まっています。
+    image: assets/images/20261101_player_739443/w2/01_w.jpg
+    card: none
+  - text: 2025年9月27日、マンUとのホーム戦で2得点。3対1の勝ちです。
+    card:
+      <<: *style_card
+      highlight_row: 0
+  - text: 11月はニューカッスル戦とバーンリー戦で、2点ずつ。
+    card:
+      <<: *style_card
+      highlight_row: 2
+  - text: この月は、プレミアリーグの月間最優秀選手に選ばれました。
+    card: none
+  - text: 2026年1月4日、敵地のエヴァートン戦では、ハットトリック。
+    card:
+      <<: *style_card
+      highlight_row: 3
+    emph: true
+  - text: その3日後、サンダーランド戦でも2得点。ホームで3対0の勝利です。
+    card:
+      <<: *style_card
+      highlight_row: 4
+  - text: この2点で、シーズン16点目。
+    card: none
+  - text: ブラジル人のプレミア1季の最多得点記録を、それまでの15点から更新しました。
+    image: assets/images/20261101_player_739443/w1/01_w.jpg
+    card: none
+  - text: 1月の月間最優秀選手にも選出。
+    card: none
+  - text: ブラジル人として初めて、この賞を複数回受賞しました。
+    card: none
+  - text: 4月11日のエヴァートン戦でも2得点。
+    card:
+      <<: *style_card
+      highlight_row: 5
+  - text: 最終的に22点で、ハーランドに次ぐ2位でした。
+    card:
+      <<: *style_card
+      highlight_row: 5
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/igor-thiago/leistungsdatendetails/spieler/739443
+  - https://www.premierleague.com/en/news/4587125/thiago-makes-history-after-winning-ea-sports-player-of-the-month-award
+  - https://www.premierleague.com/en/news/4497486/thiago-wins-his-first-ea-sports-player-of-the-month-award
+  - https://en.wikipedia.org/wiki/2025%E2%80%9326_Premier_League
+- id: brazil
+  heading: イゴール・チアゴは、いつブラジル代表に呼ばれたのか
+  tier: 報道
+  telop: ブラジル代表の5試合
+  narrator: 解説
+  card: &brazil_card
+    type: table
+    title: チアゴのブラジル代表 5試合
+    columns:
+    - 日付
+    - 試合
+    - 出場
+    rows:
+    - - 3月26日
+      - フランス戦（親善）
+      - 途中19分
+    - - 3月31日
+      - クロアチア戦（親善）
+      - 途中23分・1得点
+    - - 5月31日
+      - パナマ戦（親善）
+      - 途中45分・1得点
+    - - 6月6日
+      - エジプト戦（親善）
+      - 先発45分
+    - - 6月13日
+      - W杯 モロッコ戦
+      - 先発62分
+    source: Transfermarkt
+    highlight_row: 0
+  say:
+  - text: イゴール・チアゴが初めてブラジル代表に呼ばれたのは、2026年3月。
+    image: assets/images/20261101_player_739443/b1/01_w.jpg
+    card: none
+  - text: プレミアの得点ランキングで、2位につけていた時期です。
+    image: assets/images/20261101_player_739443/b1/01_w.jpg
+    card: none
+  - text: 3月のフランス戦で、代表デビュー。
+    card:
+      <<: *brazil_card
+      highlight_row: 0
+  - text: 続くクロアチア戦では、途中出場でゴール。これが代表初得点です。
+    card:
+      <<: *brazil_card
+      highlight_row: 1
+    emph: true
+  - text: 5月18日、ワールドカップのメンバーに選ばれます。
+    card: none
+  - text: 5月31日のパナマ戦でも、途中出場で1得点。ブラジルは6対2で勝っています。
+    card:
+      <<: *brazil_card
+      highlight_row: 2
+  - text: 6月13日のワールドカップ初戦、モロッコ戦は先発で62分まで。
+    card:
+      <<: *brazil_card
+      highlight_row: 4
+  - text: 6月29日、日本と当たった決勝トーナメントの1回戦も、メンバーに入っていました。
+    card: none
+  - text: 出番はなく、試合はブラジルが2対1で勝っています。
+    card: none
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/igor-thiago/leistungsdatendetails/spieler/739443
+  - https://en.wikipedia.org/wiki/Igor_Thiago
+  - https://www.espn.com/soccer/match/_/gameId/760487
+- id: past
+  heading: チアゴは、各季で何試合に出て、いくつ点を取ったのか
+  tier: 報道
+  telop: ルドゴレツからブレントフォードまで5季
+  narrator: 解説
+  card: &past_card
+    type: table
+    title: チアゴ 各季の数字（全公式戦・クラブのみ）
+    columns:
+    - シーズン
+    - クラブ
+    - 試合
+    - 得点
+    - アシスト
+    rows:
+    - - 22/23
+      - ルドゴレツ
+      - '53'
+      - '20'
+      - '11'
+    - - 23/24
+      - クラブ・ブルッヘ
+      - '55'
+      - '29'
+      - '6'
+    - - 24/25
+      - ブレントフォード
+      - '8'
+      - '0'
+      - '0'
+    - - 25/26
+      - ブレントフォード
+      - '40'
+      - '25'
+      - '1'
+    - - 26/27
+      - ブレントフォード
+      - '11'
+      - '3'
+      - '2'
+    source: Transfermarkt
+    highlight_row: 0
+  say:
+  - text: イゴール・チアゴの各季です。
+    image: assets/images/20261101_player_739443/b1/01_w.jpg
+    card:
+      <<: *past_card
+      highlight_row: 0
+  - text: ルドゴレツの2022年から23年は、53試合で20得点。
+    card:
+      <<: *past_card
+      highlight_row: 0
+  - text: ブルッヘの2023年から24年は、55試合で29得点。
+    card:
+      <<: *past_card
+      highlight_row: 1
+  - text: これが1シーズンでの自己最多です。
+    card:
+      <<: *past_card
+      highlight_row: 1
+    emph: true
+  - text: そして2025年から26年は、40試合で25得点。
+    card:
+      <<: *past_card
+      highlight_row: 3
+  - text: プレミアの22点に、カップ戦の3点を足した数です。
+    card:
+      <<: *past_card
+      highlight_row: 3
+  - text: 続いて通算です。クルゼイロは64試合10得点。
+    image: assets/images/20261101_player_739443/w2/01_w.jpg
+    card: &total_card
+      type: table
+      title: チアゴ 通算（トップチームと代表）
+      columns:
+      - 所属
+      - 試合
+      - 得点
+      rows:
+      - - クルゼイロ
+        - '64'
+        - '10'
+      - - ルドゴレツ
+        - '59'
+        - '24'
+      - - クラブ・ブルッヘ
+        - '55'
+        - '29'
+      - - ブレントフォード
+        - '59'
+        - '28'
+      - - ブラジル代表
+        - '5'
+        - '2'
+      - - 合計
+        - '242'
+        - '93'
+      source: Transfermarkt
+      highlight_row: 0
+  - text: ブラジル代表を足すと、通算242試合で93得点になります。
+    card:
+      <<: *total_card
+      highlight_row: 5
+    emph: true
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/igor-thiago/leistungsdatendetails/spieler/739443
+  - https://en.wikipedia.org/wiki/Igor_Thiago
+- id: season
+  heading: 今季のチアゴは、ブレントフォードで何を見せているのか
+  tier: 報道
+  main: true
+  telop: 今季ここまで
+  narrator: 解説
+  card: &season_card
+    type: table
+    title: 今季のチアゴ（10月28日時点）
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - リーグ戦
+      - 8試合・713分・1得点2アシスト
+    - - リーグカップ
+      - 3試合・131分・2得点
+    source: Transfermarkt
+    highlight_row: 0
+  say:
+  - text: ブレントフォードの9番、チアゴ。今季ここまでの中身を見ます。
+    image: assets/images/20261101_player_739443/w1/01_w.jpg
+    card: none
+    short_only: true
+  - text: 今季のプレミアは、ここまで8試合に出場。昨季は同じ8試合で5得点でした。
+    image: assets/images/20261101_player_739443/a1/01_w.jpg
+    card: none
+  - text: 今季の得点は、9月18日、ホームのチェルシー戦の1点。3対0の勝利でした。
+    card:
+      <<: *season_card
+      highlight_row: 0
+  - text: 10月17日のリバプール戦と、25日のハル・シティ戦で、アシスト。
+    card:
+      <<: *season_card
+      highlight_row: 0
+  - text: リーグカップでは、3試合で2得点。
+    card:
+      <<: *season_card
+      highlight_row: 1
+  - text: 8月25日のバーミンガム戦と、10月28日のサンダーランド戦で、1点ずつです。
+    card: none
+  - text: 合わせて、今季は3得点、2アシスト。
+    image: assets/images/20261101_player_739443/a1/01_w.jpg
+    card: none
+  - text: リーグ戦の得点は、昨季の同じ時点の5分の1です。
+    image: assets/images/20261101_player_739443/a1/01_w.jpg
+    card: none
+    emph: true
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/igor-thiago/leistungsdatendetails/spieler/739443
+- id: words
+  heading: チアゴは、自分の歩みをどう語っているのか。本人の言葉
+  tier: 報道
+  telop: 本人の言葉
+  narrator: 解説
+  card: &words_card
+    type: document
+    label: プレミアリーグ公式サイトでの言葉（2024年7月・2025年11月）の訳
+    paragraphs:
+    - ここブレントフォードで、歴史を作りたい。
+    - 子どものころの仕事は、僕が成長するのにとても大切だった。
+    highlight:
+    - 歴史を作りたい
+    - とても大切
+  say:
+  - text: ブレントフォードに加わった2024年7月、チアゴはこう語りました。
+    image: assets/images/20261101_player_739443/w2/01_w.jpg
+    card: none
+  - voice: チアゴ
+    text: ここブレントフォードで、歴史を作りたい。
+    card: *words_card
+    pause: 0.5
+  - text: 2025年11月には、子どものころの仕事について、こう語りました。
+    image: assets/images/20261101_player_739443/a1/01_w.jpg
+    card: none
+  - voice: チアゴ
+    text: 子どものころの仕事は、僕が成長するのにとても大切だった。
+    card: *words_card
+    pause: 0.5
+  - text: 歴史を作りたい。その言葉は、2年目の昨季、22点という数字になりました。
+    image: assets/images/20261101_player_739443/w1/01_w.jpg
+    card: none
+  quotes_from:
+  - プレミアリーグ公式 https://www.premierleague.com/en/news/4048755
+  - プレミアリーグ公式 https://www.premierleague.com/en/news/4466327/502500
+  sources:
+  - https://www.premierleague.com/en/news/4048755
+  - https://www.premierleague.com/en/news/4466327/502500
+- id: view
+  heading: 昨季と今季で、チアゴの数字は何が変わったのか
+  tier: 背景
+  viewpoint: true
+  narrator: 解説
+  telop: プレミアの昨季と今季を、同じ物差しで
+  card: &view_card
+    type: table
+    title: チアゴ プレミアのリーグ戦（10月28日時点）
+    columns:
+    - 項目
+    - 昨季 25/26
+    - 今季 26/27
+    rows:
+    - - 出場
+      - 38試合
+      - 8試合
+    - - 出場時間
+      - 3287分
+      - 713分
+    - - 得点
+      - '22'
+      - '1'
+    - - 90分あたり得点
+      - '0.60'
+      - '0.13'
+    - - 90分あたりシュート
+      - 2.30本
+      - 2.27本
+    - - 枠内の割合
+      - 51%（84本中43本）
+      - 22%（18本中4本）
+    source: Transfermarkt
+    highlight_row: 0
+  say:
+  - text: 締めくくりに、イゴール・チアゴの昨季と今季を、同じ物差しで並べます。
+    image: assets/images/20261101_player_739443/w1/01_w.jpg
+    card:
+      <<: *view_card
+      highlight_row: 0
+  - text: 出場時間は、昨季の3287分に対して、今季はここまで713分。
+    card:
+      <<: *view_card
+      highlight_row: 1
+  - text: 90分あたりの得点は、昨季の0.6点から、今季は0.13点です。
+    card:
+      <<: *view_card
+      highlight_row: 3
+    emph: true
+    mark:
+      kind: circle
+      row: 3
+  - text: 一方、90分あたりのシュートは、2.30本と2.27本。
+    card:
+      <<: *view_card
+      highlight_row: 4
+  - text: 打つ回数は、ほとんど変わっていません。
+    card:
+      <<: *view_card
+      highlight_row: 4
+  - text: 差が出ているのは、枠に飛んだ割合です。昨季は51%、今季は22%。
+    card:
+      <<: *view_card
+      highlight_row: 5
+  - text: 打つ場面は作れているので、あとは枠に飛ぶ数が戻るかどうか。
+    card: none
+  - text: 数字は10月30日時点で、8試合の話です。
+    card: none
+  - text: 次は10月31日、ホームでのノッティンガム・フォレスト戦。
+    card: none
+  - text: 昨季の開幕戦で、ブレントフォード初ゴールを決めた相手です。
+    image: assets/images/20261101_player_739443/w2/01_w.jpg
+    card: none
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/igor-thiago/leistungsdatendetails/spieler/739443

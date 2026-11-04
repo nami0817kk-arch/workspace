@@ -1,0 +1,606 @@
+{{Short description|Football match in Porto, Portugal}}
+{{Use British English|date=June 2024}}
+{{Use dmy dates|date=June 2024}}
+{{Infobox football match
+| title              = 2021 UEFA Champions League final
+| image              = 2021 UEFA Champions League Final programme.png
+| image_size         = frameless
+| caption            = Match programme cover
+| event              = [[2020–21 UEFA Champions League]]
+| team1              = [[Manchester City F.C.|Manchester City]]
+| team1association   = {{fbaicon|ENG|size=30px}}
+| team1score         = 0
+| team2              = [[Chelsea F.C.|Chelsea]]
+| team2association   = {{fbaicon|ENG|size=30px}}
+| team2score         = 1
+| details            =
+| date               = {{Start date|2021|5|29|df=y}}
+| stadium            = [[Estádio do Dragão]]
+| city               = [[Porto]]
+| man_of_the_match1a = [[N'Golo Kanté]] (Chelsea)<ref name="MOTM">{{cite news |url=https://www.uefa.com/uefachampionsleague/news/0269-12650d446385-97137fef37d2-1000/ |title=Champions League final Player of the Match: N'Golo Kanté |website=UEFA.com|publisher=Union of European Football Associations |date=29 May 2021 |access-date=29 May 2021 |archive-date=30 May 2021 |archive-url=https://web.archive.org/web/20210530174001/https://www.uefa.com/uefachampionsleague/news/0269-12650d446385-97137fef37d2-1000/ |url-status=live}}</ref>
+| referee            = [[Antonio Mateu Lahoz]] ([[Royal Spanish Football Federation|Spain]])<ref name="officials">{{cite news |url=https://www.uefa.com/news-media/news/0269-12424b21d5b7-861f73160929-1000/ |title=Referee teams appointed for UEFA Champions League and UEFA Europa League finals |website=UEFA.com|publisher=Union of European Football Associations |date=12 May 2021 |access-date=12 May 2021 |archive-date=12 May 2021 |archive-url=https://web.archive.org/web/20210512165234/https://www.uefa.com/insideuefa/mediaservices/mediareleases/news/0269-12424b21d5b7-861f73160929-1000/ |url-status=live}}</ref>
+| attendance         = 14,110<ref name="full_time"/>
+| weather            = Clear night<br />{{convert|19|°C|°F|abbr=on}}<br />72% [[humidity]]<ref name="lineups">{{cite web |url=https://www.uefa.com/newsfiles/UCL/2021/2029498_LU.pdf |title=Tactical Line-ups – Final – Saturday 29 May 2021 |website=UEFA.com|publisher=Union of European Football Associations |date=29 May 2021 |access-date=29 May 2021 |archive-date=29 May 2021 |archive-url=https://web.archive.org/web/20210529180508/https://www.uefa.com/newsfiles/UCL/2021/2029498_LU.pdf |url-status=live}}</ref>
+| previous           = [[2020 UEFA Champions League final|2020]]
+| next               = [[2022 UEFA Champions League final|2022]]
+}}
+The '''2021 UEFA Champions League final''' was the final match of the [[2020–21 UEFA Champions League]], the 66th season of Europe's premier club football tournament organised by [[UEFA]], and the 29th season since it was renamed from the [[European Cup]] to the [[UEFA Champions League]]. It was played at the [[Estádio do Dragão]] in [[Porto]], Portugal on 29 May 2021,<ref name="Porto">{{cite news |url=https://www.uefa.com/news-media/news/0269-1243f864391e-53c7874f0ae0-1000/ |title=UEFA Champions League final to move to Portugal to allow 6,000 fans of each team to attend |website=UEFA.com|publisher=Union of European Football Associations |date=13 May 2021 |access-date=13 May 2021 |archive-date=13 May 2021 |archive-url=https://web.archive.org/web/20210513105402/https://www.uefa.com/insideuefa/mediaservices/mediareleases/news/0269-1243f864391e-53c7874f0ae0-1000/ |url-status=live}}</ref> between English clubs [[Manchester City F.C.|Manchester City]], in their first European Cup final, and [[2012 UEFA Champions League final|2012]] winners [[Chelsea F.C.|Chelsea]]. This was the third all-English final in the competition, after the [[2008 UEFA Champions League final|2008]] and [[2019 UEFA Champions League final|2019]] finals; and remains the most recent final in the competition in which two teams from the same association have met.
+
+The final was originally scheduled to be played at the [[Krestovsky Stadium]] in [[Saint Petersburg]], Russia. However, due to the postponement and relocation of the [[2020 UEFA Champions League final|2020 final]] to Lisbon as a result of the [[COVID-19 pandemic in Europe]], the final hosts were shifted back a year, with the [[Atatürk Olympic Stadium]] in [[Istanbul]], Turkey instead planning to host the 2021 final.<ref name="ExCo 17 June">{{cite news |url=https://www.uefa.com/news-media/news/025e-0fb6101cfdbf-8b878372d79d-1000--uefa-competitions-to-resume-in-august/ |title=UEFA competitions to resume in August |website=UEFA.com|publisher=Union of European Football Associations |date=17 June 2020 |access-date=17 June 2020 |archive-date=25 August 2020 |archive-url=https://web.archive.org/web/20200825183219/https://www.uefa.com/insideuefa/about-uefa/news/025e-0fb6101cfdbf-8b878372d79d-1000--uefa-competitions-to-resume-in-august/?referrer=%2finsideuefa%2fnews%2fnewsid%3d2642232 |url-status=live}}</ref> Two weeks before the final, UEFA announced that it would be relocated to Porto to allow a limited number of fans to attend the match.<ref name="Porto"/> A capacity limit of 33% was agreed for the 50,000-seater [[Estádio do Dragão]], resulting in an attendance of 14,110.<ref>{{Cite web |last=UEFA.com |date=29 May 2021 |title=2021 Champions League final: all you need to know |url=https://www.uefa.com/uefachampionsleague/news/0269-1243fd2b25a6-7ec1237e0e44-1000--final-all-you-need-to-know/ |access-date=5 May 2022 |website=UEFA.com|language=en}}</ref> This was the second consecutive final in Portugal.
+
+Chelsea won the final 1–0 for their second UEFA Champions League title, with [[Kai Havertz]] scoring the only goal of the game late in the first half.<ref>{{cite news |url=https://www.uefa.com/uefachampionsleague/news/0269-12650cedca55-37515f69768e-1000/ |title=Man. City 0–1 Chelsea: Havertz gives Blues second Champions League triumph |website=UEFA.com|publisher=Union of European Football Associations |date=29 May 2021 |access-date=29 May 2021}}</ref> As winners, they earned the right to play against the winners of the [[2020–21 UEFA Europa League]], [[Villarreal CF|Villarreal]], in the [[2021 UEFA Super Cup]], and also qualified for the [[2021 FIFA Club World Cup]], both of which they won. Chelsea also qualified for the [[2025 FIFA Club World Cup]], which they also won, through UEFA's champions pathway (the winners of the Champions League between 2021 and 2024).
+
+==Venue==
+[[File:Porto Estádio do Dragão 2.jpg|thumb|The [[Estádio do Dragão]] in [[Porto]] hosted the final.]]
+
+The match was the fourth European Cup/Champions League final to take place in Portugal, and the first to take place outside [[Lisbon]], which previously hosted finals in [[1967 European Cup final|1967]] at the [[Estádio Nacional]] and in [[2014 UEFA Champions League final|2014]] and [[2020 UEFA Champions League final|2020]] at the [[Estádio da Luz]]. This was the first time the European Cup/Champions League final took place in the same country in successive seasons.<ref name="finals">{{Cite web |year=2012 |title=European Champion Clubs' Cup – History: Finals |url=https://www.uefa.com/MultimediaFiles/Download/EuroExperience/competitions/Publications/01/88/50/84/1885084_DOWNLOAD.pdf |access-date=19 August 2020 |website=UEFA.com|publisher=Union of European Football Associations |archive-date=30 December 2017 |archive-url=https://web.archive.org/web/20171230120038/http://www.uefa.com/MultimediaFiles/Download/EuroExperience/competitions/Publications/01/88/50/84/1885084_DOWNLOAD.pdf |url-status=dead}}</ref> The [[Estádio do Dragão]] previously hosted matches at [[UEFA Euro 2004]] and the [[2019 UEFA Nations League Finals]]. Additionally, this final was the first since [[2004 UEFA Champions League final|2004]] to be held in a stadium with capacity lower than 60,000.{{citation needed|date=June 2021}}
+
+===Initial host selection===
+{{for|the details on the selection of Saint Petersburg as the original host for the final|2022 UEFA Champions League final#Host selection}}
+
+An open bidding process was launched on 22 September 2017 by UEFA to select the venues of the finals of the UEFA Champions League, UEFA Europa League, and UEFA Women's Champions League in 2020. Associations had until 31 October 2017 to express interest, and bid dossiers must be submitted by 1 March 2018. Associations hosting matches at [[UEFA Euro 2020]] were not allowed to bid for the 2020 UEFA Champions League final.{{citation needed|date=June 2021}}
+
+UEFA announced on 3 November 2017 that two associations had expressed interest in hosting the 2020 UEFA Champions League final.<ref>{{cite web |url=https://www.uefa.com/insideuefa/mediaservices/mediareleases/newsid=2516602.html |title=Six associations interested in hosting 2020 club finals |website=UEFA.com|publisher=Union of European Football Associations |date=3 November 2017 |access-date=17 June 2020 |archive-date=26 August 2018 |archive-url=https://web.archive.org/web/20180826214740/https://www.uefa.com/insideuefa/mediaservices/mediareleases/newsid=2516602.html |url-status=dead}}</ref>
+
+{| class="wikitable sortable"
+|+Bidding associations for final
+|-
+! Association !! Stadium !! City !! Capacity
+|-
+| {{fba|POR}} || [[Estádio da Luz]] || [[Lisbon]] || 65,647
+|- bgcolor=#ccffcc
+| {{fba|TUR}} || [[Atatürk Olympic Stadium]] || [[Istanbul]] || 76,092
+|}
+
+The [[Atatürk Olympic Stadium]] was selected by the UEFA Executive Committee during their meeting in [[Kyiv]] on 24 May 2018.<ref>{{cite web |url=https://www.uefa.com/insideuefa/mediaservices/newsid=2558085.html |title=UEFA Executive Committee agenda for Kyiv meeting |website=UEFA.com|publisher=Union of European Football Associations |date=8 May 2018 |access-date=17 June 2020 |archive-date=17 June 2020 |archive-url=https://web.archive.org/web/20200617133710/https://www.uefa.com/insideuefa/mediaservices/newsid=2558085.html |url-status=dead}}</ref><ref name="venue">{{cite news |url=https://www.uefa.com/insideuefa/mediaservices/newsid=2560806.html |title=Istanbul to host 2020 UEFA Champions League Final |website=UEFA.com|publisher=Union of European Football Associations |date=24 May 2018 |access-date=24 May 2018 |archive-date=15 July 2018 |archive-url=https://web.archive.org/web/20180715083548/https://www.uefa.com/insideuefa/mediaservices/newsid=2560806.html |url-status=dead}}</ref><ref>{{cite web |url=https://www.uefa.com/uefachampionsleague/news/0269-1243f90382d8-4436ab998b39-1000--2021-uefa-champions-league-final-porto/ |title=Istanbul to host 2020 UEFA Champions League final |website=UEFA.com|publisher=Union of European Football Associations |date=24 May 2018 |access-date=17 June 2020 |archive-date=9 October 2019 |archive-url=https://web.archive.org/web/20191009015542/https://www.uefa.com/uefachampionsleague/news/newsid=2560495.html |url-status=live}}</ref>
+
+On 17 June 2020, the UEFA Executive Committee announced that due to the postponement and relocation of the [[2020 UEFA Champions League final|2020 final]] to the Estádio da Luz, Istanbul would instead host the 2021 final.<ref name="ExCo 17 June"/>
+
+===Relocation to Porto===
+Due to the [[COVID-19 pandemic in Turkey]], Premier League side [[Aston Villa F.C.|Aston Villa]] offered to have [[Villa Park]] in [[Birmingham]] as the venue for the Champions League final instead of Istanbul to hold 8,000 English fans, which could be affected by travel limitations.<ref>{{Cite web |last=Dorsett |first=Rob |date=6 May 2021 |title=Champions League: Aston Villa to offer Villa Park for Manchester City v Chelsea final |url=https://www.skysports.com/football/news/11095/12298397/champions-league-aston-villa-to-offer-villa-park-for-manchester-city-v-chelsea-final|url-status=live |work=[[Sky Sports]]|access-date=6 May 2021|archive-date=6 May 2021|archive-url=https://web.archive.org/web/20210506151320/https://www.skysports.com/football/news/11095/12298397/champions-league-aston-villa-to-offer-villa-park-for-manchester-city-v-chelsea-final}}</ref> Villa Park has previously hosted the [[1999 UEFA Cup Winners' Cup Final|1999 Cup Winners' Cup Final]], the last final of that UEFA competition. It also hosted the [[2012 FA Community Shield]], also contested between Manchester City and Chelsea, due to [[Wembley Stadium]] – England's national stadium – hosting the [[Football at the 2012 Summer Olympics|Olympic football tournament]] finals in the previous days, being picked in part because of its equidistance between [[Manchester]] and [[London]]. On 7 May 2021, [[Secretary of State for Transport]] [[Grant Shapps]] advised against any fans travelling to Turkey for the game.<ref>{{Cite web |url=https://www.bbc.co.uk/sport/football/57029583 |date=7 May 2021 |title=Fans shouldn't travel to Turkey – Shapps |work=BBC Sport|access-date=29 May 2021|archive-date=11 May 2021|archive-url=https://web.archive.org/web/20210511144932/https://www.bbc.co.uk/sport/football/57029583|url-status=live}}</ref>
+
+In negotiations with the [[Department for Digital, Culture, Media and Sport]], UEFA would only consider Wembley as a potential venue within the United Kingdom, and required guarantees that their officials, sponsors and journalists would be exempt from the [[Travel restrictions related to the COVID-19 pandemic#Europe 2|UK COVID-19 travel restrictions]].<ref>{{cite web |url=https://www.independent.co.uk/sport/football/champions-league-final-london-wembley-b1844818.html |title=Champions League final set to be moved from Istanbul to London |last=Gardner |first=Jamie |date=10 May 2021 |website=www.independent.co.uk |publisher=Independent Digital News & Media Limited |access-date=29 May 2021 |archive-date=2 June 2021 |archive-url=https://web.archive.org/web/20210602212452/https://www.independent.co.uk/sport/football/champions-league-final-london-wembley-b1844818.html |url-status=live}}</ref> The British Government was unable to agree to this,<ref name="independent_19_may">{{cite web |url=https://www.independent.co.uk/sport/football/champions-league-final-tickets-man-city-chelsea-b1850324.html |title=Uefa 'strongly recommends' Man City and Chelsea fans travel on official club trips for Champions League final |last=Gardner |first=Jamie |date=19 May 2021 |website=www.independent.co.uk |publisher=Independent Digital News & Media Limited |access-date=29 May 2021 |archive-date=2 June 2021 |archive-url=https://web.archive.org/web/20210602214130/https://www.independent.co.uk/sport/football/champions-league-final-tickets-man-city-chelsea-b1850324.html |url-status=live}}</ref> and on 13 May 2021, UEFA announced the final was relocated to the [[Estádio do Dragão]] in [[Porto]], Portugal,<ref name="Porto"/> a country that was on the British "green list" for unrestricted travel during the pandemic.<ref name="independent_19_may"/>
+
+==Background==
+[[Manchester City F.C.|Manchester City]] were playing in their first European Cup/UEFA Champions League final. They had previously played in one European final, the [[1970 European Cup Winners' Cup final]], which they won. They became the ninth distinct English side to play in a European Cup/UEFA Champions League final. This was the third UEFA Champions League final for manager [[Pep Guardiola]], and his first since the two wins with [[FC Barcelona|Barcelona]] in [[2009 UEFA Champions League final|2009]] and [[2011 UEFA Champions League final|2011]], both against [[Manchester United F.C.|Manchester United]].<ref>{{cite web |first=Phil |last=McNulty |title=Man City 2–0 Paris St-Germain (4–1 on aggregate): City into first Champions League final |url=https://www.bbc.com/sport/football/56973031 |work=BBC Sport |date=4 May 2021 |access-date=7 May 2021 |archive-date=6 May 2021 |archive-url=https://web.archive.org/web/20210506200034/https://www.bbc.com/sport/football/56973031 |url-status=live}}</ref> City were seeking to become the first club to win its first European Cup/UEFA Champions League title since [[Chelsea F.C.|Chelsea]] in [[2012 UEFA Champions League final|2012]], with three clubs having failed to do in between.<ref>{{cite web |url=https://www.uefa.com/printoutfiles/competitions/uefachampionsleague/2021/E/E_2029498_PK.pdf |title=2021 UEFA Champions League Final Press Kit |date=29 May 2021 |website=UEFA.com|publisher=Union of European Football Associations |access-date=2 June 2021|archive-date=30 May 2021|archive-url=https://web.archive.org/web/20210530032601/https://www.uefa.com/printoutfiles/competitions/uefachampionsleague/2021/e/e_2029498_pk.pdf|url-status=dead}}</ref>
+
+[[Chelsea F.C.|Chelsea]] were playing in their third European Cup/UEFA Champions League final, and the first since their win in [[2012 UEFA Champions League final|2012]] away against [[FC Bayern Munich|Bayern Munich]]. In addition, they had previously played in the [[UEFA Cup Winners' Cup]] and [[UEFA Europa League]] finals twice each – winning all (the Cup Winners' Cup in [[1971 European Cup Winners' Cup final|1971]] and [[1998 UEFA Cup Winners' Cup final|1998]], the Europa League in [[2013 UEFA Europa League final|2013]] and [[2019 UEFA Europa League final|2019]]). In addition, Chelsea became the first club ever to see its men's and [[Chelsea F.C. Women|women's]] teams reach the Champions League final in the same season, having qualified for the [[2021 UEFA Women's Champions League final]] as well. Head coach [[Thomas Tuchel]] became the first manager to reach the European Cup/UEFA Champions League final in successive seasons with different clubs, having lost the [[2020 UEFA Champions League final|2020 final]] to [[FC Bayern Munich|Bayern Munich]] while coaching [[Paris Saint-Germain FC|Paris Saint-Germain]].<ref>{{cite web |first=Phil |last=McNulty |title=Chelsea 2–0 Real Madrid (agg 3–1): Thomas Tuchel's side set up all-English Champions League final |url=https://www.bbc.com/sport/football/56985477 |work=BBC Sport |date=5 May 2021 |access-date=7 May 2021 |archive-date=7 May 2021 |archive-url=https://web.archive.org/web/20210507011023/https://www.bbc.com/sport/football/56985477 |url-status=live}}</ref>
+
+This was the third all-English final in the history of the competition, after [[2008 UEFA Champions League final|2008]] in Moscow between Chelsea and [[Manchester United F.C.|Manchester United]] and [[2019 UEFA Champions League final|2019]] in Madrid between [[Liverpool F.C.|Liverpool]] and [[Tottenham Hotspur F.C.|Tottenham Hotspur]]. This was also the third consecutive Champions League final to feature a first-time finalist, after Tottenham in 2019 and Paris Saint-Germain in 2020.
+
+This was the third meeting between the teams in Europe, having previously met in the semi-finals of the [[1970–71 European Cup Winners' Cup]], where Chelsea won both legs 1–0 en route to their first European trophy. It was also the second major cup final between them, after the [[2019 EFL Cup final]], which City won on [[Penalty shoot-out (association football)|penalties]] following a goalless draw after extra time. The teams also met in two other title-deciding matches, the [[2012 FA Community Shield|2012]] and [[2018 FA Community Shield]]s, both ended in City's favor. They had met twice during [[2020–21 Premier League|the season's Premier League]], with each side winning away: City won the first match 3–1 at Stamford Bridge, while Chelsea won the second 2–1 at Etihad Stadium three weeks before the final. Three weeks before the second league encounter, Chelsea also beat City 1–0 in the [[2020–21 FA Cup|FA Cup]] semi-finals, denying City the chance of winning an unprecedented [[List of association football teams to have won four or more trophies in one season|quadruple]].<ref>{{cite web |title=Chelsea football club: record v Manchester City |url=https://www.11v11.com/teams/chelsea/tab/opposingTeams/opposition/Manchester%20City/ |website=11v11.com |access-date=7 May 2021 |archive-date=16 February 2021 |archive-url=https://web.archive.org/web/20210216171315/https://www.11v11.com/teams/chelsea/tab/opposingTeams/opposition/Manchester%20City/ |url-status=live}}</ref>
+
+===Previous finals===
+''In the following table, finals until 1992 were in the European Cup era, since 1993 were in the UEFA Champions League era.''
+
+{| class="wikitable"
+|-
+!Team
+!Previous final appearances (bold indicates winners)
+|-
+|{{fbaicon|ENG}} [[Manchester City F.C.|Manchester City]]
+|None
+|-
+|{{fbaicon|ENG}} [[Chelsea F.C.|Chelsea]]
+|2 ([[2008 UEFA Champions League final|2008]], '''[[2012 UEFA Champions League final|2012]]''')
+|}
+
+==Route to the final==
+{{Further|2020–21 UEFA Champions League}}
+
+''Note: In all results below, the score of the finalist is given first (H: home; A: away).''
+{| class="wikitable" style="text-align:center"
+|-
+!colspan="4"|{{fbaicon|ENG}} [[Manchester City F.C.|Manchester City]]
+!Round
+!colspan="4"|{{fbaicon|ENG}} [[Chelsea F.C.|Chelsea]]
+|- style="background:#C1E0FF"
+|Opponent
+|colspan="3"|Result
+|[[2020–21 UEFA Champions League group stage|Group stage]]
+|Opponent
+|colspan="3"|Result
+|-
+|style="text-align:left"|{{fbaicon|POR}} [[FC Porto|Porto]]
+|colspan="3"|[[2020–21 UEFA Champions League group stage#Manchester City v Porto|3–1]] (H)
+|style="background:#C1E0FF"|Matchday 1
+|style="text-align:left"|{{fbaicon|ESP}} [[Sevilla FC|Sevilla]]
+|colspan="3"|[[2020–21 UEFA Champions League group stage#Chelsea v Sevilla|0–0]] (H)
+|-
+|style="text-align:left"|{{fbaicon|FRA}} [[Olympique de Marseille|Marseille]]
+|colspan="3"|[[2020–21 UEFA Champions League group stage#Marseille v Manchester City|3–0]] (A)
+|style="background:#C1E0FF"|Matchday 2
+|style="text-align:left"|{{fbaicon|RUS}} [[FC Krasnodar|Krasnodar]]
+|colspan="3"|[[2020–21 UEFA Champions League group stage#Krasnodar v Chelsea|4–0]] (A)
+|-
+|style="text-align:left"|{{fbaicon|GRE}} [[Olympiacos F.C.|Olympiacos]]
+|colspan="3"|[[2020–21 UEFA Champions League group stage#Manchester City v Olympiacos|3–0]] (H)
+|style="background:#C1E0FF"|Matchday 3
+|style="text-align:left"|{{fbaicon|FRA}} [[Stade Rennais FC|Rennes]]
+|colspan="3"|[[2020–21 UEFA Champions League group stage#Chelsea v Rennes|3–0]] (H)
+|-
+|style="text-align:left"|{{fbaicon|GRE}} [[Olympiacos F.C.|Olympiacos]]
+|colspan="3"|[[2020–21 UEFA Champions League group stage#Olympiacos v Manchester City|1–0]] (A)
+|style="background:#C1E0FF"|Matchday 4
+|style="text-align:left"|{{fbaicon|FRA}} [[Stade Rennais FC|Rennes]]
+|colspan="3"|[[2020–21 UEFA Champions League group stage#Rennes v Chelsea|2–1]] (A)
+|-
+|style="text-align:left"|{{fbaicon|POR}} [[FC Porto|Porto]]
+|colspan="3"|[[2020–21 UEFA Champions League group stage#Porto v Manchester City|0–0]] (A)
+|style="background:#C1E0FF"|Matchday 5
+|style="text-align:left"|{{fbaicon|ESP}} [[Sevilla FC|Sevilla]]
+|colspan="3"|[[2020–21 UEFA Champions League group stage#Sevilla v Chelsea|4–0]] (A)
+|-
+|style="text-align:left"|{{fbaicon|FRA}} [[Olympique de Marseille|Marseille]]
+|colspan="3"|[[2020–21 UEFA Champions League group stage#Manchester City v Marseille|3–0]] (H)
+|style="background:#C1E0FF"|Matchday 6
+|style="text-align:left"|{{fbaicon|RUS}} [[FC Krasnodar|Krasnodar]]
+|colspan="3"|[[2020–21 UEFA Champions League group stage#Chelsea v Krasnodar|1–1]] (H)
+|-
+|colspan="4" style="vertical-align:top"|'''[[2020–21 UEFA Champions League group stage#Group C|Group C]] winners'''
+<div class="center">{{:2020–21 UEFA Champions League group stage|transcludesection=Group C|only_pld_pts=yes|show_matches=no|showteam=MCI}}</div>
+|style="background:#C1E0FF"|Final standings
+|colspan="4" style="vertical-align:top"|'''[[2020–21 UEFA Champions League group stage#Group E|Group E]] winners'''
+<div class="center">{{:2020–21 UEFA Champions League group stage|transcludesection=Group E|only_pld_pts=yes|show_matches=no|showteam=CHE}}</div>
+|- style="background:#C1E0FF"
+|Opponent
+|Agg.
+|1st leg
+|2nd leg
+|[[2020–21 UEFA Champions League knockout phase|Knockout phase]]
+|Opponent
+|Agg.
+|1st leg
+|2nd leg
+|-
+|style="text-align:left"|{{fbaicon|GER}} [[Borussia Mönchengladbach]]
+|4–0
+|[[2020–21 UEFA Champions League knockout phase#Borussia Mönchengladbach v Manchester City|2–0]] (A){{efn|name=MCI R16|Both legs of Manchester City's round of 16 tie against Borussia Mönchengladbach were played in [[Budapest]], Hungary due to [[travel restrictions related to the COVID-19 pandemic]] between Germany and the United Kingdom.<ref name="venue changes">{{cite news |url=https://www.uefa.com/uefachampionsleague/news/0266-118507f7b277-e0b239dfd239-1000/ |title=UEFA Champions League venue changes |website=UEFA.com|publisher=Union of European Football Associations |date=10 February 2021 |access-date=10 February 2021 |archive-date=6 May 2021 |archive-url=https://web.archive.org/web/20210506041304/https://www.uefa.com/uefachampionsleague/news/0266-118507f7b277-e0b239dfd239-1000/ |url-status=live}}</ref><ref>{{cite news |url=https://www.uefa.com/uefachampionsleague/news/0267-11c3321c2aaa-c74d24504e90-1000/ |title=Manchester City vs Borussia Mönchengladbach venue change confirmed |website=UEFA.com|publisher=Union of European Football Associations |date=10 March 2021 |access-date=10 March 2021 |archive-date=6 May 2021 |archive-url=https://web.archive.org/web/20210506042939/https://www.uefa.com/uefachampionsleague/news/0267-11c3321c2aaa-c74d24504e90-1000/ |url-status=live}}</ref>}}
+|[[2020–21 UEFA Champions League knockout phase#Manchester City v Borussia Mönchengladbach|2–0]] (H){{efn|name=MCI R16}}
+|style="background:#C1E0FF"|Round of 16
+|style="text-align:left"|{{fbaicon|ESP}} [[Atlético Madrid]]
+|3–0
+|[[2020–21 UEFA Champions League knockout phase#Atlético Madrid v Chelsea|1–0]] (A){{efn|The first leg away of Chelsea's round of 16 tie against Atlético Madrid was played in [[Bucharest]], Romania due to [[travel restrictions related to the COVID-19 pandemic]] from the United Kingdom to Spain.<ref name="venue changes"/>}}
+|[[2020–21 UEFA Champions League knockout phase#Chelsea v Atlético Madrid|2–0]] (H)
+|-
+|style="text-align:left"|{{fbaicon|GER}} [[Borussia Dortmund]]
+|4–2
+|[[2020–21 UEFA Champions League knockout phase#Manchester City v Borussia Dortmund|2–1]] (H)
+|[[2020–21 UEFA Champions League knockout phase#Borussia Dortmund v Manchester City|2–1]] (A)
+|style="background:#C1E0FF"|Quarter-finals
+|style="text-align:left"|{{fbaicon|POR}} [[FC Porto|Porto]]
+|2–1
+|[[2020–21 UEFA Champions League knockout phase#Porto v Chelsea|2–0]] (A){{efn|name=CHE QF|Both legs of Chelsea's quarter-final tie against Porto were played in [[Seville]], Spain due to [[travel restrictions related to the COVID-19 pandemic]] between Portugal and the United Kingdom.<ref>{{cite news |url=https://www.uefa.com/uefachampionsleague/news/0267-11ebb758081c-11eb8228434d-1000/ |title=Porto vs Chelsea games to be played in Seville |website=UEFA.com|publisher=Union of European Football Associations |date=30 March 2021 |access-date=30 March 2021 |archive-date=5 May 2021 |archive-url=https://web.archive.org/web/20210505205347/https://www.uefa.com/uefachampionsleague/news/0267-11ebb758081c-11eb8228434d-1000/ |url-status=live}}</ref>}}
+|[[2020–21 UEFA Champions League knockout phase#Chelsea v Porto|0–1]] (H){{efn|name=CHE QF}}
+|-
+|style="text-align:left"|{{fbaicon|FRA}} [[Paris Saint-Germain FC|Paris Saint-Germain]]
+|4–1
+|[[2020–21 UEFA Champions League knockout phase#Paris Saint-Germain v Manchester City|2–1]] (A)
+|[[2020–21 UEFA Champions League knockout phase#Manchester City v Paris Saint-Germain|2–0]] (H)
+|style="background:#C1E0FF"|Semi-finals
+|style="text-align:left"|{{fbaicon|ESP}} [[Real Madrid CF|Real Madrid]]
+|3–1
+|[[2020–21 UEFA Champions League knockout phase#Real Madrid v Chelsea|1–1]] (A)
+|[[2020–21 UEFA Champions League knockout phase#Chelsea v Real Madrid|2–0]] (H)
+|}
+'''Notes'''
+{{notelist}}
+
+==Pre-match==
+
+===Officials===
+[[File:20191002 Fußball, Männer, UEFA Champions League, RB Leipzig - Olympique Lyonnais by Stepro StP 0043-2.jpg|thumb|Spaniard [[Antonio Mateu Lahoz]] (centre) officiated the final along with assistants Roberto Díaz Pérez del Palomar (left) and Pau Cebrián Devís (right).]]
+
+On 12 May 2021, UEFA named Spaniard [[Antonio Mateu Lahoz]] as the referee for the final. Mateu Lahoz had been a [[FIFA International Referees List|FIFA referee]] since 2011, and was previously the fourth official in the [[2019 UEFA Champions League final]]. He officiated six prior matches in the 2020–21 Champions League season, with one match in the play-off round, four in the group stage and one quarter-final leg. He served as a referee at the [[2018 FIFA World Cup]] in Russia, and was selected as an official for [[UEFA Euro 2020]]. He was joined by six of his fellow countrymen, including assistant referees Pau Cebrián Devís and Roberto Díaz Pérez del Palomar. [[Carlos del Cerro Grande]] served as the fourth official, while [[Alejandro Hernández Hernández]] acted as the video assistant referee. [[Juan Martínez Munuera]] and Íñigo Prieto López de Cerain were appointed as assistant VAR officials, along with Polish referee [[Paweł Gil]].<ref name="officials"/>
+
+===Opening ceremony===
+American DJ and [[electronic music]] producer [[Marshmello]] performed a virtual show for the opening ceremony before the match, along with [[Selena Gomez]] and [[Khalid (American singer)|Khalid]].<ref>{{cite news |url=https://www.uefa.com/uefachampionsleague/news/0269-124e40807e0b-3b23056f6841-1000--marshmello-to-star-at-opening-ceremony/ |title=Marshmello to headline 2021 UEFA Champions League final opening ceremony, presented by Pepsi |website=UEFA.com|publisher=Union of European Football Associations |date=18 May 2021 |access-date=18 May 2021 |archive-date=18 May 2021 |archive-url=https://web.archive.org/web/20210518135220/https://www.uefa.com/uefachampionsleague/news/0269-124e40807e0b-3b23056f6841-1000--marshmello-to-star-at-opening-ceremony/ |url-status=live}}</ref>
+
+{{hidden
+| style = width: 20em;
+| headercss = background: #ccccff; font-size: 100%; width: 16em;
+| contentcss = text-align: left; font-size: 100%; width: 16em;
+| header = Marshmello's setlist<ref>{{Cite web |url=https://m.youtube.com/watch?v=RCJhg4QPMJw |title=Marshmello's UEFA Champions League Final 2020/21 Full Opening Ceremony Performance |website=[[YouTube]]}}</ref>
+| content = 
+# "[[Alone (Marshmello song)|Alone]]"
+# "[[Friends (Marshmello and Anne-Marie song)|Friends]]"
+# "[[Happier (Marshmello and Bastille song)|Happier]]"
+# "[[Wolves (Selena Gomez and Marshmello song)|Wolves]]" <small>(with [[Selena Gomez]])</small>
+# "[[Silence (Marshmello song)|Silence]]" <small>(with [[Khalid (American singer)|Khalid]])</small>
+}}
+
+==Match==
+===Summary===
+{{multiple image
+ | align = right
+ | direction = horizontal
+ | total_width = 300
+ | image1 = N'Golo Kanté.jpg
+ | image2 = Kai Havertz 2020.jpg
+ | footer = Chelsea midfielder [[N'Golo Kanté]] (left) was named [[Player of the match#Association football|man of the match]], while fellow midfielder [[Kai Havertz]] (right) scored the only goal of the match.
+}}
+
+The match kicked off around 8&nbsp;p.m. in front of a crowd of 14,110. In the fourth minute, [[Kai Havertz]] played the ball across the Manchester City penalty area but it was gathered by Ederson. Five minutes later, a long kick from Ederson found Sterling, who controlled the ball and was about to shoot when he was dispossessed by Reece James.<ref name=magician>{{Cite web |url=https://www.bbc.co.uk/sport/live/football/54074842?page=11 | access-date = 30 May 2021 |date=29 May 2021 |title='Tuchel is a magician' – reaction as Chelsea win Champions League final |website=[[BBC Sport]] | archive-date = 3 June 2021 | archive-url = https://web.archive.org/web/20210603183253/https://www.bbc.co.uk/sport/live/football/54074842/page/11 | url-status = live}}</ref>{{rp|11}} Havertz then passed to Werner, who missed the ball from close range when attempting to shoot. In the 15th minute, [[Mason Mount]] passed to Werner, who shot straight at Ederson, before then seeing a subsequent strike tipped away for a corner. Ben Chilwell played in a cross to the far post but N'Golo Kante's header went over the Manchester City bar.<ref name=magician/>{{rp|10}} In the 28th minute, Phil Foden was played in on goal and was about to shoot when [[Antonio Rüdiger]] tackled him. Two minutes later, Kyle Walker sent the ball across the Chelsea penalty area but it fizzed just out of Mahrez's reach. With ten minutes of the half remaining, [[İlkay Gündoğan]] became the first player to be booked after a foul on Mount.<ref name=magician/>{{rp|9}}
+
+In the 38th minute, Kante played the ball to Havertz, who was denied a shooting opportunity by a tackle from [[Oleksandr Zinchenko (footballer)|Oleksandr Zinchenko]]. A minute later, Chelsea were forced to make the first substitution of the match with the injured Thiago Silva being replaced by Andreas Christensen. Three minutes before half-time, Chelsea took the lead. Mount passed to Havertz, who went [[Glossary of association football terms#O|one-on-one]] with Ederson, and although the goalkeeper rushed out and deflected the ball away, Havertz passed it into an empty net to make it 1–0. There were three minutes of stoppage time.<ref name=magician/>{{rp|8}}
+
+Neither side made any line-up changes during the interval. Manchester City dominated the early stages of the second half.<ref name=magician/>{{rp|7}} Twelve minutes into the half, Rüdiger was booked for a foul on City's [[Kevin De Bruyne]], who was injured in the challenge, leaving the pitch due to the new concussion protocol, in tears, to be replaced by [[Gabriel Jesus]]. Two minutes later, Manchester City appealed for a penalty when the ball struck James on the arm in his own penalty area, but the VAR review decided against a foul, noting that the ball deflecting off James' chest first. In the 64th minute, [[Bernardo Silva]] was replaced by Fernandinho for Manchester City before [[Christian Pulisic]] came on for Werner for Chelsea.<ref name=magician/>{{rp|6}}
+
+With 21 minutes remaining, City pressed for an equaliser. Mahrez's cross to Gündoğan was cleared by [[César Azpilicueta]]. Four minutes later, Pulisic flicked the ball to Havertz, who passed it back to Pulisic, but his attempted shot rolled just past the City goalpost. In the 75th minute, Sterling passed to Jesus, but the ball was cleared by Chilwell. Manchester City made their third substitution when [[Sergio Agüero]], the club's [[List of Manchester City F.C. records and statistics#All-time top goalscorers|highest goalscorer of all time]] playing his last ever game, came on for Sterling.<ref name=magician/>{{rp|5}} [[Mateo Kovačić]] was brought on for Chelsea to replace Mount in the 80th minute, and five minutes later, Agüero attempted to find Foden with a lofted cross to the far post, but the ball was easily caught by [[Édouard Mendy]] in the Chelsea goal. A minute later, Walker played a cross-field out-swinging pass that narrowly missed both Agüero and Foden.
+
+Two minutes from the end of the match, Jesus was booked for a foul on Havertz before Christensen made a block to maintain his side's lead. At the end of regular time, the fourth official displayed that a minimum of seven minutes of stoppage would be played.<ref name=magician/>{{rp|4}} In the final minute, Mahrez's half-volley from the edge of the Chelsea penalty area went just over the crossbar, and the match was brought to an end with Chelsea winning 1–0.<ref name=magician/>{{rp|3}}
+
+===Details===
+A "home" team was determined, for "administrative purposes," through a special draw held on 19 March 2021,<ref name="QF_SF_F_draw">{{cite web |url=https://www.uefa.com/uefachampionsleague/news/0269-1243fd2b25a6-7ec1237e0e44-1000--final-all-you-need-to-know/ |title=UEFA Champions League quarter-final and semi-final draws |website=UEFA.com|date=29 May 2021 |publisher=Union of European Football Associations |access-date=31 May 2021 |archive-date=29 May 2021 |archive-url=https://web.archive.org/web/20210529160405/https://www.uefa.com/uefachampionsleague/news/0269-1243fd2b25a6-7ec1237e0e44-1000--final-all-you-need-to-know/ |url-status=live}}</ref> after the quarter-final and semi-final draws.
+
+<onlyinclude>{{Football box
+|date       = {{Start date|2021|5|29|df=y}}
+|time       = {{CEST|21:00|localtz=WEST}}<!--21:00 CEST, 20:00 WEST-->
+|team1      = [[Manchester City F.C.|Manchester City]] {{fbaicon|ENG}}
+|score      = 0–1
+|team2      = {{fbaicon|ENG}} [[Chelsea F.C.|Chelsea]]
+|goals1     =
+|goals2     =
+*[[Kai Havertz|Havertz]] {{goal|42}}
+|stadium    = [[Estádio do Dragão]], [[Porto]]
+|attendance = 14,110<ref name="full_time">{{cite web |url=https://www.uefa.com/newsfiles/UCL/2021/2029498_FR.pdf |title=Full Time Report Final – Manchester City v Chelsea |website=UEFA.com|publisher=Union of European Football Associations |date=29 May 2021 |access-date=29 May 2021 |archive-date=31 May 2021 |archive-url=https://web.archive.org/web/20210531174012/https://www.uefa.com/newsfiles/UCL/2021/2029498_FR.pdf |url-status=live}}</ref>
+|referee    = [[Antonio Mateu Lahoz]] ([[Royal Spanish Football Federation|Spain]])
+|report     = https://www.uefa.com/uefachampionsleague/match/2029498/
+}}</onlyinclude>
+
+{| width=92%
+|-
+|{{Football kit
+ |pattern_la = _mancity2021H
+ |pattern_b  = _mancity2021H
+ |pattern_ra = _mancity2021H
+ |pattern_sh = _mancity2021h
+ |pattern_so = _mancity2021h
+ |leftarm    = 77BBFF
+ |body       = 77BBFF
+ |rightarm   = 77BBFF
+ |shorts     = FFFFFF
+ |socks      = 77BBFF
+ |title      = {{nowrap|Manchester City}}<ref name="lineups"/>
+}}
+|{{Football kit
+ |pattern_la = _chelsea2021h
+ |pattern_b  = _chelsea2021H
+ |pattern_ra = _chelsea2021h
+ |pattern_sh = _chelsea2021h
+ |pattern_so =
+ |leftarm    = 0000FF
+ |body       = 0000FF
+ |rightarm   = 0000FF
+ |shorts     = 0000FF
+ |socks      = FFFFFF
+ |title      = Chelsea<ref name="lineups"/>
+}}
+|}
+
+{| width="100%"
+|valign="top" width="40%"|
+{| style="font-size:90%" cellspacing="0" cellpadding="0"
+|-
+!width=25| !!width=25|
+|-
+|GK ||'''31'''||{{flagicon|BRA}} [[Ederson (footballer, born 1993)|Ederson]]
+|-
+|RB ||'''2''' ||{{flagicon|ENG}} [[Kyle Walker]]
+|-
+|CB ||'''5''' ||{{flagicon|ENG}} [[John Stones]]
+|-
+|CB ||'''3''' ||{{flagicon|POR}} [[Rúben Dias]]
+|-
+|LB ||'''11'''||{{flagicon|UKR}} [[Oleksandr Zinchenko (footballer)|Oleksandr Zinchenko]]
+|-
+|CM ||'''20'''||{{flagicon|POR}} [[Bernardo Silva]] || || {{suboff|64}}
+|-
+|CM ||'''8''' ||{{flagicon|GER}} [[İlkay Gündoğan]] || {{yel|35}}
+|-
+|CM ||'''47'''||{{flagicon|ENG}} [[Phil Foden]]
+|-
+|AM ||'''17'''||{{flagicon|BEL}} [[Kevin De Bruyne]] ([[Captain (association football)|c]]) || || {{suboff|60}}
+|-
+|CF ||'''26'''||{{flagicon|ALG}} [[Riyad Mahrez]]
+|-
+|CF ||'''7''' ||{{flagicon|ENG}} [[Raheem Sterling]] || || {{suboff|77}}
+|-
+|colspan=3|'''Substitutes:'''
+|-
+|GK ||'''13'''||{{flagicon|USA}} [[Zack Steffen]]
+|-
+|GK ||'''33'''||{{flagicon|ENG}} [[Scott Carson]]
+|-
+|DF ||'''6''' ||{{flagicon|NED}} [[Nathan Aké]]
+|-
+|DF ||'''14'''||{{flagicon|ESP}} [[Aymeric Laporte]]
+|-
+|DF ||'''22'''||{{flagicon|FRA}} [[Benjamin Mendy]]
+|-
+|DF ||'''27'''||{{flagicon|POR}} [[João Cancelo]]
+|-
+|DF ||'''50'''||{{flagicon|ESP}} [[Eric García (footballer, born 2001)|Eric García]]
+|-
+|MF ||'''16'''||{{flagicon|ESP}} [[Rodri (footballer, born 1996)|Rodri]]
+|-
+|MF ||'''25'''||{{flagicon|BRA}} [[Fernandinho (footballer, born May 1985)|Fernandinho]] || || {{subon|64}}
+|-
+|FW ||'''9''' ||{{flagicon|BRA}} [[Gabriel Jesus]] || {{yel|88}} || {{subon|60}}
+|-
+|FW ||'''10'''||{{flagicon|ARG}} [[Sergio Agüero]] || || {{subon|77}}
+|-
+|FW ||'''21'''||{{flagicon|ESP}} [[Ferran Torres]]
+|-
+|colspan=3|'''Manager:'''
+|-
+|colspan=3|{{flagicon|ESP}} [[Pep Guardiola]]
+|}
+|valign="top"|[[File:Manchester City vs Chelsea 2021-05-29.svg|300px]]
+|valign="top" width="50%"|
+{| style="font-size:90%; margin:auto" cellspacing="0" cellpadding="0"
+|-
+!width=25| !!width=25|
+|-
+|GK ||'''16'''||{{flagicon|SEN}} [[Édouard Mendy]]
+|-
+|CB ||'''28'''||{{flagicon|ESP}} [[César Azpilicueta]] ([[Captain (association football)|c]])
+|-
+|CB ||'''6''' ||{{flagicon|BRA}} [[Thiago Silva]] || || {{suboff|39}}
+|-
+|CB ||'''2''' ||{{flagicon|GER}} [[Antonio Rüdiger]] || {{yel|57}}
+|-
+|RWB||'''24'''||{{flagicon|ENG}} [[Reece James (footballer, born 1999)|Reece James]]
+|-
+|LWB||'''21'''||{{flagicon|ENG}} [[Ben Chilwell]]
+|-
+|CM ||'''5''' ||{{flagicon|ITA}} [[Jorginho (footballer, born December 1991)|Jorginho]]
+|-
+|CM ||'''7''' ||{{flagicon|FRA}} [[N'Golo Kanté]]
+|-
+|AM ||'''29'''||{{flagicon|GER}} [[Kai Havertz]]
+|-
+|AM ||'''19'''||{{flagicon|ENG}} [[Mason Mount]] || || {{suboff|80}}
+|-
+|CF ||'''11'''||{{flagicon|GER}} [[Timo Werner]] || || {{suboff|66}}
+|-
+|colspan=3|'''Substitutes:'''
+|-
+|GK ||'''1''' ||{{flagicon|ESP}} [[Kepa Arrizabalaga]]
+|-
+|GK ||'''13'''||{{flagicon|ARG}} [[Willy Caballero]]
+|-
+|DF ||'''3''' ||{{flagicon|ESP}} [[Marcos Alonso (footballer, born 1990)|Marcos Alonso]]
+|-
+|DF ||'''4''' ||{{flagicon|DEN}} [[Andreas Christensen]] || || {{subon|39}}
+|-
+|DF ||'''15'''||{{flagicon|FRA}} [[Kurt Zouma]]
+|-
+|DF ||'''33'''||{{flagicon|ITA}} [[Emerson Palmieri]]
+|-
+|MF ||'''10'''||{{flagicon|USA}} [[Christian Pulisic]] || || {{subon|66}}
+|-
+|MF ||'''17'''||{{flagicon|CRO}} [[Mateo Kovačić]] || || {{subon|80}}
+|-
+|MF ||'''20'''||{{flagicon|ENG}} [[Callum Hudson-Odoi]]
+|-
+|MF ||'''22'''||{{flagicon|MAR}} [[Hakim Ziyech]]
+|-
+|MF ||'''23'''||{{flagicon|SCO}} [[Billy Gilmour (footballer)|Billy Gilmour]]
+|-
+|FW ||'''18'''||{{flagicon|FRA}} [[Olivier Giroud]]
+|-
+|colspan=3|'''Manager:'''
+|-
+|colspan=3|{{flagicon|GER}} [[Thomas Tuchel]]
+|}
+|}
+
+{| width=100% style="font-size:90%"
+|
+'''Man of the Match:'''
+<br />[[N'Golo Kanté]] (Chelsea)<ref name="MOTM"/>
+
+'''[[Assistant referee (association football)|Assistant referees]]:'''<ref name="officials"/>
+<br />Pau Cebrián Devís ([[Royal Spanish Football Federation|Spain]])
+<br />Roberto Díaz Pérez del Palomar ([[Royal Spanish Football Federation|Spain]])
+<br />'''[[Assistant referee (association football)#Fourth official|Fourth official]]:'''<ref name="officials"/>
+<br />[[Carlos del Cerro Grande]] ([[Royal Spanish Football Federation|Spain]])
+<br />'''[[Video assistant referee]]:'''<ref name="officials"/>
+<br />[[Alejandro Hernández Hernández]] ([[Royal Spanish Football Federation|Spain]])
+<br />'''[[Video assistant referee#Assistant video assistant referee|Assistant video assistant referees]]:'''<ref name="officials"/>
+<br />[[Juan Martínez Munuera]] ([[Royal Spanish Football Federation|Spain]])
+<br />Íñigo Prieto López de Cerain ([[Royal Spanish Football Federation|Spain]])
+<br />[[Paweł Gil]] ([[Polish Football Association|Poland]])
+|style="width:60%; vertical-align:top;"|
+'''Match rules'''<ref name="regulations">{{cite web |url=https://documents.uefa.com/reader/Cr6L8orm3~6ERVXBtInm8Q/root |title=Regulations of the UEFA Champions League, 2020/21 |website=UEFA.com|publisher=Union of European Football Associations |date=3 August 2020|access-date=25 August 2020|archive-date=9 September 2020|archive-url=https://web.archive.org/web/20200909060719/https://documents.uefa.com/reader/Cr6L8orm3~6ERVXBtInm8Q/root/|url-status=live}}</ref><ref>{{cite web |url=https://www.uefa.com/news-media/news/0261-107376966207-6a2ea096698b-1000/ |title=Two triple-headers approved for 2021 March and September national team windows |website=UEFA.com|publisher=Union of European Football Associations |date=24 September 2020 |access-date=24 September 2020 |archive-date=25 November 2020 |archive-url=https://web.archive.org/web/20201125043330/https://www.uefa.com/insideuefa/mediaservices/mediareleases/news/0261-107376966207-6a2ea096698b-1000/ |url-status=live}}</ref>
+*90 minutes
+*30 minutes of [[Overtime (sports)#Association football|extra time]] if necessary
+*[[Penalty shoot-out (association football)|Penalty shoot-out]] if scores still level
+*Twelve named substitutes
+*Maximum of five substitutions, with a sixth allowed in extra time{{refn|group=note|Each team was given only three opportunities to make substitutions, with a fourth opportunity in extra time, excluding substitutions made at half-time, before the start of extra time and at half-time in extra time.}}
+|}
+
+===Statistics===
+{{col-begin}}
+{{col-3}}
+{| class="wikitable plainrowheaders" style="text-align:center"
+|+First half<ref name="team statistics">{{cite web |url=https://www.uefa.com/newsfiles/UCL/2021/2029498_TS.pdf |title=Team statistics |website=UEFA.com|publisher=Union of European Football Associations |date=29 May 2021 |access-date=29 May 2021 |archive-date=29 May 2021 |archive-url=https://web.archive.org/web/20210529215706/https://www.uefa.com/newsfiles/UCL/2021/2029498_TS.pdf |url-status=live}}</ref>
+|-
+!scope="col" style="width:100px"|Statistic
+!scope="col" style="width:70px"|Manchester City
+!scope="col" style="width:70px"|Chelsea
+|-
+!scope=row|Goals scored
+|0
+|1
+|-
+!scope=row|Total shots
+|3
+|5
+|-
+!scope=row|Shots on target
+|1
+|2
+|-
+!scope=row|Saves
+|1
+|1
+|-
+!scope=row|Ball possession
+|53%
+|47%
+|-
+!scope=row|Corner kicks
+|1
+|1
+|-
+!scope=row|Fouls committed
+|7
+|6
+|-
+!scope=row|Offsides
+|1
+|2
+|-
+!scope=row|Yellow cards
+|1
+|0
+|-
+!scope=row|Red cards
+|0
+|0
+|}
+{{col-3}}
+{| class="wikitable plainrowheaders" style="text-align:center"
+|+Second half<ref name="team statistics"/>
+|-
+!scope="col" style="width:100px"|Statistic
+!scope="col" style="width:70px"|Manchester City
+!scope="col" style="width:70px"|Chelsea
+|-
+!scope=row|Goals scored
+|0
+|0
+|-
+!scope=row|Total shots
+|4
+|3
+|-
+!scope=row|Shots on target
+|0
+|0
+|-
+!scope=row|Saves
+|0
+|0
+|-
+!scope=row|Ball possession
+|64%
+|36%
+|-
+!scope=row|Corner kicks
+|2
+|0
+|-
+!scope=row|Fouls committed
+|7
+|7
+|-
+!scope=row|Offsides
+|0
+|1
+|-
+!scope=row|Yellow cards
+|1
+|1
+|-
+!scope=row|Red cards
+|0
+|0
+|}
+{{col-3}}
+{| class="wikitable plainrowheaders" style="text-align:center"
+|+Overall<ref name="team statistics"/>
+|-
+!scope="col" style="width:100px"|Statistic
+!scope="col" style="width:70px"|Manchester City
+!scope="col" style="width:70px"|Chelsea
+|-
+!scope=row|Goals scored
+|0
+|1
+|-
+!scope=row|Total shots
+|7
+|8
+|-
+!scope=row|Shots on target
+|1
+|2
+|-
+!scope=row|Saves
+|1
+|1
+|-
+!scope=row|Ball possession
+|58%
+|42%
+|-
+!scope=row|Corner kicks
+|3
+|1
+|-
+!scope=row|Fouls committed
+|14
+|13
+|-
+!scope=row|Offsides
+|1
+|3
+|-
+!scope=row|Yellow cards
+|2
+|1
+|-
+!scope=row|Red cards
+|0
+|0
+|}
+{{col-end}}
+
+==See also==
+*[[2021 UEFA Europa League final]]
+*[[2021 UEFA Women's Champions League final]]
+*[[2020–21 Chelsea F.C. season]]
+*[[2020–21 Manchester City F.C. season]]
+*[[Chelsea F.C. in international football]]
+*[[English football clubs in international competitions]]
+*[[List of football matches between British clubs in UEFA competitions]]
+*[[Manchester City F.C. in international football]]
+
+==Notes==
+{{reflist|group=note}}
+
+==References==
+{{reflist}}
+
+==External links==
+*{{Official website|https://www.uefa.com/uefachampionsleague/}}
+{{commons category}}
+{{UEFA Champions League seasons}}
+{{2020–21 in European football (UEFA)}}
+{{Manchester City F.C. matches}}
+{{Chelsea F.C. matches}}
+
+{{DEFAULTSORT:Uefa Champions League final 2021}}
+[[Category:UEFA Champions League finals|2021]]
+[[Category:2020–21 UEFA Champions League|Final]]
+[[Category:May 2021 sports events in Portugal]]
+[[Category:Manchester City F.C. matches|Champions League final 2021]]
+[[Category:Chelsea F.C. matches|Champions League final 2021]]
+[[Category:2020–21 in English men's football]]
+[[Category:Football matches in Porto|2021]]
+[[Category:2020–21 in Portuguese football]]
+[[Category:21st century in Porto]]
+[[Category:English football clubs in international competitions]]
