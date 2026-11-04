@@ -2,6 +2,7 @@ import 'package:flutter/material.dart' hide Action, Route;
 import 'package:flutter/services.dart';
 
 import '../game/advice.dart';
+import '../game/alltime.dart';
 import '../game/build.dart';
 import '../game/epilogue.dart';
 import '../game/game.dart';
@@ -13,6 +14,7 @@ import '../game/path.dart';
 import '../game/perks.dart';
 import '../game/player.dart';
 import '../game/season.dart';
+import 'alltime_sheet.dart';
 import 'art/court.dart';
 import 'art/title_art.dart';
 import 'art/growth_chart.dart';
@@ -447,6 +449,25 @@ class _PlayerCard extends StatelessWidget {
                   '年俸 ${moneyLabel(game.salary)}'
                   '${game.sponsor > 0 ? '  スポンサー 年${moneyLabel(game.sponsor)}' : ''}',
                   style: const TextStyle(fontSize: 12)),
+            // 歴代記録(プロになってから。伸びの小さい年でも追いかける目標)。
+            if (game.track == Track.pro && allTimeSummary(game.allTimeValues) != null)
+              Row(
+                children: [
+                  const Icon(Icons.emoji_events_outlined, size: 14, color: Color(0xFFB26A00)),
+                  const SizedBox(width: 4),
+                  Expanded(
+                    child: Text('歴代記録: ${allTimeSummary(game.allTimeValues)}',
+                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                  ),
+                  TextButton(
+                    onPressed: () => showAllTimeSheet(context, game),
+                    style: TextButton.styleFrom(
+                        visualDensity: VisualDensity.compact,
+                        padding: const EdgeInsets.symmetric(horizontal: 8)),
+                    child: const Text('表を見る', style: TextStyle(fontSize: 12)),
+                  ),
+                ],
+              ),
             if (game.track == Track.school && p.age >= 15 ||
                 game.track == Track.university ||
                 game.track == Track.corporate)

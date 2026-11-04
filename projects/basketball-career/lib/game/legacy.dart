@@ -1,3 +1,4 @@
+import 'alltime.dart';
 import 'build.dart';
 import 'honors.dart';
 import 'difficulty.dart';
@@ -126,6 +127,10 @@ final achievements = <Achievement>[
   Achievement('career_points_2000', '2,000得点', '通算2,000得点を取った。', (g) => g.totalPoints >= 2000),
   Achievement('career_points_3000', '3,000得点', '通算3,000得点を取った。', (g) => g.totalPoints >= 3000),
   Achievement('career_rebounds_1000', '1,000リバウンド', '通算1,000リバウンドを取った。', (g) => g.totalRebounds >= 1000),
+  Achievement('alltime_top10', '歴代の十傑', 'どれかの種目で歴代10位以内に入った。',
+      (g) => allTimeTop10Count(g.allTimeValues) > 0),
+  Achievement('alltime_first', '歴代最高', 'どれかの種目で歴代1位になった。',
+      (g) => g.allTimeValues.entries.any((e) => e.value > 0 && allTimeRank(e.key, e.value) == 1)),
   Achievement('career_assists_800', '800アシスト', '通算800アシストを記録した。', (g) => g.totalAssists >= 800),
   Achievement('honor_rookie', '新人王', 'プロ1年目で新人王に選ばれた。',
       (g) => (g.honorCounts[Honor.rookie] ?? 0) > 0),

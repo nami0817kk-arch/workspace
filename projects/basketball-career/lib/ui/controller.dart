@@ -495,6 +495,9 @@ class GameController extends ChangeNotifier {
     if (g.lastCareerLines.isNotEmpty) {
       pending.add(Milestone(MilestoneKind.award, '通算記録!', g.lastCareerLines.join('\n')));
     }
+    if (g.lastAllTimeLines.isNotEmpty) {
+      pending.add(Milestone(MilestoneKind.award, '歴代記録!', g.lastAllTimeLines.join('\n')));
+    }
     final dreamNote = g.lastDreamNote;
     if (dreamNote != null) {
       pending.add(Milestone(MilestoneKind.goal, '夢がかなった!', dreamNote));

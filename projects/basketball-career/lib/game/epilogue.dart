@@ -1,3 +1,4 @@
+import 'alltime.dart';
 import 'build.dart';
 import 'honors.dart';
 import 'money.dart';
@@ -94,12 +95,21 @@ String shareText(Game g) {
   if (p.specials.isNotEmpty) {
     b.writeln('特殊能力: ${p.specials.length}/${Special.values.length}個(${p.specials.take(3).map((s) => s.label).join('・')}${p.specials.length > 3 ? ' ほか' : ''})');
   }
+  final top = _allTimeTop(g);
+  if (top.isNotEmpty) b.writeln('歴代記録: ${top.join('・')}');
   if (g.rival.games > 0) {
     b.writeln('宿敵${g.rival.name}との通算 ${g.rival.wins}勝${g.rival.losses}敗');
   }
   b.write('#バスケ育成');
   return b.toString();
 }
+
+/// 歴代10位以内に入った種目(「通算得点 歴代3位」)。
+List<String> _allTimeTop(Game g) => [
+      for (final e in g.allTimeValues.entries)
+        if (e.value > 0 && allTimeRank(e.key, e.value) <= legends.length)
+          '${e.key.label} 歴代${allTimeRank(e.key, e.value)}位',
+    ];
 
 /// 舞台の格(全盛期を選ぶときの加点)。
 double _leagueWeight(League l) => switch (l) {
@@ -187,6 +197,10 @@ List<String> epilogueLines(Game g) {
   final cp = g.totalPoints;
   if (cp >= 500) {
     lines.add('通算${withComma(cp)}得点・${withComma(g.totalRebounds)}リバウンド・${withComma(g.totalAssists)}アシストを積み上げた。');
+  }
+  final allTime = _allTimeTop(g);
+  if (allTime.isNotEmpty) {
+    lines.add('歴代記録に名を刻んだ: ${allTime.join('・')}。');
   }
 
   if (g.draftPick == 1) {
