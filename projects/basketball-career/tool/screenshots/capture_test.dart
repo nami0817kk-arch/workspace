@@ -30,6 +30,7 @@ import 'package:basketball_career/game/honors.dart';
 import 'package:basketball_career/game/skills.dart';
 import 'package:basketball_career/game/special.dart';
 import 'package:basketball_career/game/traits.dart';
+import 'package:basketball_career/game/epilogue.dart';
 import 'package:basketball_career/game/game.dart';
 import 'package:basketball_career/game/life.dart';
 import 'package:basketball_career/game/match.dart';
@@ -378,10 +379,8 @@ void main() {
       final g = Game.start('ミナト', rng: Random(seed), events: false);
       _play(g, untilAge: 60);
       // プロで優勝した一生(ミニバスの優勝で数を満たした人を拾わない)。
-      if (g.phase == Phase.retired &&
-          g.records.any((r) =>
-              r.champion &&
-              (r.league == League.proAbroad || r.league == League.proDomestic || r.league == League.national))) {
+      // 栄光の結末(満員の体育館の絵)で、表彰もある一生。
+      if (g.phase == Phase.retired && gloriousEnding(g) && g.honorTotal > 0) {
         ending = _controller(g);
       }
     }
