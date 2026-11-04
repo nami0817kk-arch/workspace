@@ -20,6 +20,7 @@ import 'skills.dart';
 import 'special.dart';
 import 'season.dart';
 import 'traits.dart';
+import 'veteran.dart';
 
 /// 画面が見る局面。対応する操作だけを呼ぶ。
 enum Phase { season, halftime, clutch, event, path, retired }
@@ -272,6 +273,7 @@ class Game {
     Set<String>? usedEver,
     this.trainerTerms = 0,
     this.nutritionTerms = 0,
+    this.veteranRole,
     this.nextGrowthBoost = 1.0,
     this.recommendBonus = 0,
   })  : rng = rng ?? Random(),
@@ -395,6 +397,25 @@ class Game {
   /// 個人トレーナー・栄養士が効く残りのターン。
   int trainerTerms;
   int nutritionTerms;
+
+  /// ベテランの役割(プロの33歳から選べる。null はまだ選んでいない＝エースのまま)。
+  VeteranRole? veteranRole;
+
+  /// いま効いている役割(プロで33歳以上のときだけ)。
+  VeteranRole? get activeRole =>
+      track == Track.pro && player.age >= veteranAge ? (veteranRole ?? VeteranRole.ace) : null;
+
+  /// 役割を選べるか。
+  bool get canPickVeteranRole => track == Track.pro && player.age >= veteranAge && !retired;
+
+  /// 役割を選ぶ(null でエースのままに戻す)。
+  void setVeteranRole(VeteranRole? r) {
+    if (!canPickVeteranRole) throw StateError('ベテランの役割は、プロの$veteranAge歳から選べる');
+    veteranRole = r;
+  }
+
+  /// 33歳になった年の終わりの知らせ(画面に出す。保存はしない)。
+  String? lastVeteranNote;
 
   /// 次のターンの伸びの倍率(個別指導で 1.2)。
   double nextGrowthBoost;
@@ -994,6 +1015,7 @@ class Game {
     lastDreamNote = null;
     lastYearSummary = null;
     lastPositionNote = null;
+    lastVeteranNote = null;
     lastRoleNote = null;
     lastTournamentFatigue = 0;
     lastSpGain = 0;
@@ -1013,7 +1035,7 @@ class Game {
             (rut ? slumpScale : 1.0) *
             nextGrowthBoost *
             (trainerTerms > 0 ? trainerGrowth : 1.0),
-        declineScale: nutritionTerms > 0 ? nutritionDecline : 1.0,
+        declineScale: (nutritionTerms > 0 ? nutritionDecline : 1.0) * (activeRole?.decline ?? 1.0),
         injuryScale: nutritionTerms > 0 ? nutritionInjury : 1.0);
     nextGrowthBoost = 1.0;
     if (trainerTerms > 0) trainerTerms--;
@@ -1056,8 +1078,12 @@ class Game {
                 (6 * specialTeamworkGainMultiplier(player.specials)).round(),
               _ => 0,
             } -
-            specialTeamworkDecay(player.specials, teamworkDecay(player.traits)))
+            (activeRole?.keepsTeamwork ?? false
+                ? 0
+                : specialTeamworkDecay(player.specials, teamworkDecay(player.traits))))
         .clamp(0, 100);
+    // 若手の指導役は、コーチと話す機会が増える。
+    if (activeRole == VeteranRole.mentor) coachBond = (coachBond + 3).clamp(0, 100);
     if (action == Action.practice || action == Action.intense) {
       coachBond = (coachBond + specialCoachGain(player.specials)).clamp(0, 100);
     }
@@ -1072,7 +1098,8 @@ class Game {
         if (national) nationalPending = false; // 怪我で代表を辞退
       } else {
         final cr = TournamentRun(national ? League.national : league,
-            teamBonus: teamBonus + schoolBonus,
+            teamBonus: teamBonus + schoolBonus + (activeRole?.teamBonus ?? 0),
+            forceBench: !national && (activeRole?.bench ?? false),
             scout: scoutBonus,
             zones: player.specials.contains(Special.zone) ? 1 : 0,
             timeouts: (national ? League.national : league).timeouts +
@@ -1336,7 +1363,7 @@ class Game {
   int lastTournamentFatigue = 0;
 
   void _record(TournamentResult t, {bool winter = false}) {
-    lastTournamentFatigue = tournamentFatigue(t.games);
+    lastTournamentFatigue = (tournamentFatigue(t.games) * (activeRole?.tournamentFatigue ?? 1.0)).round();
     condition = condition.copyWith(fatigue: condition.fatigue + lastTournamentFatigue);
     if (t.league == League.national) {
       nationalPending = false;
@@ -1429,6 +1456,10 @@ class Game {
     slot = 0;
     player = ageUp(player, rng, habit: habit);
     if (positionReviewAges.contains(player.age)) _reviewPosition();
+    if (track == Track.pro && player.age == veteranAge && veteranRole == null) {
+      lastVeteranNote = 'ベテランと呼ばれる歳になった。これからの役割を選べる'
+          '(エースのまま／6人目の切り札／若手の指導役)。状態カードの「役割を選ぶ」から。';
+    }
     switch (track) {
       case Track.school:
         if (player.age >= 19) pathPending = true;
@@ -1867,6 +1898,7 @@ class Game {
         'usedEver': usedEver.toList(),
         'trainerTerms': trainerTerms,
         'nutritionTerms': nutritionTerms,
+        'veteranRole': veteranRole?.name,
         'nextGrowthBoost': nextGrowthBoost,
         'recommendBonus': recommendBonus,
       };
@@ -1986,6 +2018,7 @@ class Game {
         usedEver: _names(j['usedEver']),
         trainerTerms: (j['trainerTerms'] as num?)?.toInt() ?? 0,
         nutritionTerms: (j['nutritionTerms'] as num?)?.toInt() ?? 0,
+        veteranRole: VeteranRole.fromName(j['veteranRole']),
         nextGrowthBoost: (j['nextGrowthBoost'] as num?)?.toDouble() ?? 1.0,
         recommendBonus: (j['recommendBonus'] as num?)?.toDouble() ?? 0,
       );

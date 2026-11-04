@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../game/build.dart';
 import '../game/player.dart';
+import '../game/veteran.dart';
 import 'controller.dart';
 
 /// 目指すプレースタイル(ビルド)の選択。おまかせ＋7つの型を並べ、選んだ型の説明を出す。
@@ -140,6 +141,66 @@ class PositionSelector extends StatelessWidget {
       ],
     );
   }
+}
+
+/// ベテランの役割を選ぶダイアログ(プロの33歳から)。
+Future<void> showVeteranPicker(BuildContext context, GameController c) async {
+  final g = c.game;
+  if (g == null || !g.canPickVeteranRole) return;
+  var picked = g.veteranRole ?? VeteranRole.ace;
+  final suggested = suggestedVeteranRole(g.player.overall, g.league.benchLine);
+  final ok = await showDialog<bool>(
+    context: context,
+    builder: (ctx) => StatefulBuilder(
+      builder: (ctx, setState) => AlertDialog(
+        title: const Text('ベテランの役割'),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('総合 ${g.player.overall.round()}。いつでも選び直せる。',
+                  style: const TextStyle(fontSize: 12)),
+              const SizedBox(height: 8),
+              for (final r in VeteranRole.values)
+                Card(
+                  margin: const EdgeInsets.only(bottom: 8),
+                  color: r == picked ? Theme.of(ctx).colorScheme.primaryContainer : null,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(12),
+                    onTap: () => setState(() => picked = r),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Row(
+                        children: [
+                          Icon(r == picked ? Icons.radio_button_checked : Icons.radio_button_off, size: 20),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('${r.label}${r == suggested ? '(おすすめ)' : ''}',
+                                    style: const TextStyle(fontWeight: FontWeight.bold)),
+                                Text(r.description, style: const TextStyle(fontSize: 12)),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: const Text('やめる')),
+          FilledButton(onPressed: () => Navigator.of(ctx).pop(true), child: const Text('これで行く')),
+        ],
+      ),
+    ),
+  );
+  if (ok == true) c.setVeteranRole(picked);
 }
 
 /// 育成中にポジションを選び直すダイアログ。

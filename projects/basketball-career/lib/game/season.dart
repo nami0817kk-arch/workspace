@@ -229,6 +229,7 @@ class TournamentRun {
       this.pending,
       this.pendingHalf,
       this.askHalftime = false,
+      this.forceBench = false,
       this.scout = 0,
       this.teamBonus = 0,
       this.zones = 0,
@@ -258,6 +259,9 @@ class TournamentRun {
 
   /// ハーフタイムの作戦を自分で選ぶ大会か(続きの試合でも同じ)。
   final bool askHalftime;
+
+  /// ベテランの「6人目の切り札」: 総合によらず控えで出る。
+  final bool forceBench;
 
   /// チームワークによる、味方の強さへの上乗せ(−4〜+4くらい)。
   final double teamBonus;
@@ -370,7 +374,7 @@ class TournamentRun {
         p,
         scale: league.scoreScale,
         gameMinutes: league.quarterMinutes * 4,
-        benchBelow: league.benchLine,
+        benchBelow: forceBench ? 1000 : league.benchLine,
         teamStrength: league.teamStrength + teamBonus + momentum,
         oppStrength: strength,
         form: form,
@@ -524,6 +528,7 @@ class TournamentRun {
         'pending': pending?.toJson(),
         'pendingHalf': pendingHalf?.toJson(),
         'askHalftime': askHalftime,
+        'forceBench': forceBench,
       };
 
   factory TournamentRun.fromJson(Map<String, dynamic> j) => TournamentRun(
@@ -549,6 +554,7 @@ class TournamentRun {
         teamBonus: (j['teamBonus'] as num?)?.toDouble() ?? 0,
         scout: (j['scout'] as num?)?.toDouble() ?? 0,
         askHalftime: (j['askHalftime'] as bool?) ?? false,
+        forceBench: (j['forceBench'] as bool?) ?? false,
         pending: j['pending'] == null
             ? null
             : MatchState.fromJson((j['pending'] as Map).cast<String, dynamic>()),
