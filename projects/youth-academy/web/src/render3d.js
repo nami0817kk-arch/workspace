@@ -177,6 +177,7 @@
   // カメラ：後ろへ back m・高さ up m から、ボールの ahead m 先を見る
   YA.CAM3D = { back: 30, up: 22, ahead: 9 };
   YA.CAM3D_NEAR = { back: 17, up: 9.5, ahead: 8 };
+  YA.CAM3D_GOAL = { back: 11, up: 5.5, ahead: 0 };
   // 足元の接地の影（ふちがぼけた丸）
   let blobTex = null;
   const blob = () => blobTex || (blobTex = canvasTex(64, 64, (x, w, h) => {
@@ -265,10 +266,9 @@
     nm.position.set(0, -0.15, 1.2);
     body.add(nm);
     // パンツ
-    const sh = new T.Mesh(new T.CapsuleGeometry(0.12, 0.12, 3, 10), shorts);
-    sh.rotation.z = Math.PI / 2;
-    sh.scale.set(1, 1.55, 1);
-    sh.position.z = 0.84;
+    // パンツ：腰の部分と、脚と一緒に動く左右の筒
+    const sh = new T.Mesh(new T.BoxGeometry(0.4, 0.25, 0.16), shorts);
+    sh.position.z = 0.9;
     sh.castShadow = true;
     body.add(sh);
     // 頭
@@ -285,6 +285,9 @@
       hip.position.set(0.1 * sd, 0, 0.8);
       const thigh = cylZ(0.08, 0.065, 0.4, skin);
       thigh.position.z = -0.2;
+      const leg = cylZ(0.1, 0.094, 0.22, shorts);
+      leg.position.z = -0.07;
+      hip.add(leg);
       const knee = new T.Group();
       knee.position.z = -0.4;
       const shin = cylZ(0.062, 0.048, 0.36, socks);
@@ -412,12 +415,14 @@
       }
       for (let i = 0; i < 6; i++) board(-4 + i * 12.6 + 6.3, L + PY - 0.5, 12.5, 0, i + 1);
       // スタンド（観客の模様を貼った斜面）
+      this.crowdTex = [];
       const crowd = crowdTexture([kits.home.shirt, kits.home.shirt, kits.home.shirt, '#e8e8e8', '#2a2f3d', kits.away.shirt]);
       // 横のスタンドは「斜面の幅 × 長さ（y）」の板を y 軸まわりに、奥のスタンドは「長さ（x）× 斜面の幅」の板を x 軸まわりに傾ける
       const stand = (cx, cy, cz, gw, gh, rx, ry) => {
         const t = crowd.clone();
         t.needsUpdate = true;
         t.repeat.set(gw / 4, gh / 4);
+        this.crowdTex.push(t);
         const p = new T.Mesh(new T.PlaneGeometry(gw, gh), new T.MeshLambertMaterial({ map: t }));
         p.position.set(cx, cy, cz);
         p.rotation.set(rx, ry, 0);
@@ -437,6 +442,7 @@
       }
       // ゴール
       const post = lam('#f7f7f7');
+      this.nets = [];
       const netM = new T.MeshLambertMaterial({ map: netTexture(), transparent: true, side: T.DoubleSide, depthWrite: false });
       for (const [yy, dir] of [[0, -1], [L, 1]]) {
         const g = new T.Group();
@@ -458,7 +464,7 @@
           m.map = t;
           const n = new T.Mesh(new T.PlaneGeometry(w, h), m);
           n.position.set(px, py, pz);
-          if (kind === 'back') n.rotation.x = Math.PI / 2; // x と z に広がる
+          if (kind === 'back') { n.rotation.x = Math.PI / 2; this.nets.push({ back: n, y0: py, yy, dir, bulge: 0 }); } // x と z に広がる
           if (kind === 'side') { n.rotation.x = Math.PI / 2; n.rotateOnWorldAxis(new T.Vector3(0, 0, 1), Math.PI / 2); } // y と z
           g.add(n);
         };
@@ -538,15 +544,54 @@
         panel.lookAt(W / 2, L / 2, 0);
         sc.add(panel);
       }
+      // 主審（黒のユニフォーム・背番号なし）
+      const refKit = { shirt: '#161616', shorts: '#161616', socks: '#161616', acc: '#f2c200', gk: '#161616' };
+      const ro = makePlayer(refKit, { skin: '#e9b98c', hair: '#1a1410' }, false, '', 3);
+      sc.add(ro);
+      this.ref3 = { o: ro, pos: [26, 46] };
       this.built = true;
+    }
+
+    // 1人ぶんの姿勢：走り（膝・肘）、蹴る、GKの飛びつき、得点の喜び
+    pose(o, id, d, dir, sp, opt) {
+      const run = clamp(sp / 5.5, 0, 1);
+      const ph = (this.clock || 0) * (7 + run * 5) + (YA.hash ? YA.hash(String(id)) % 7 : 0);
+      const sw = Math.sin(ph) * 0.75 * run;
+      const u = o.userData;
+      if (opt.kick) u.kick = 0.38;
+      u.kick = Math.max(0, u.kick - this._dt);
+      const kk = u.kick > 0 ? Math.sin(((0.38 - u.kick) / 0.38) * Math.PI) : 0;
+      if (opt.dive) { u.dive = 0.9; u.diveSide = opt.dive; }
+      u.dive = Math.max(0, (u.dive || 0) - this._dt);
+      const dv = u.dive > 0 ? Math.min(1, Math.sin(((0.9 - u.dive) / 0.9) * Math.PI) * 1.6) : 0;
+      const cheer = opt.cheer && !dv;
+      for (let i = 0; i < 2; i++) {
+        // 脚：前に出すほど股を前へ。後ろへ蹴り上げるときに膝が曲がる
+        let fwd = i ? -sw : sw;
+        let bend = Math.max(0, -Math.sin(ph + (i ? Math.PI : 0))) * 1.1 * run + 0.08;
+        if (i === 1 && kk > 0) { fwd = 1.25 * kk - 0.5 * (1 - kk); bend = 0.9 * (1 - kk); }
+        if (cheer) { fwd = i ? 0.15 : -0.15; bend = 0.35 + Math.abs(Math.sin((this.clock || 0) * 8)) * 0.4; }
+        if (dv) { fwd = 0.2 * dv; bend = 0.5 * dv; }
+        u.legs[i].hip.rotation.x = fwd;
+        u.legs[i].knee.rotation.x = -bend;
+        // 腕は脚と逆に振り、肘を曲げる。喜び・飛びつきでは両手を上へ
+        u.arms[i].sho.rotation.x = cheer ? 2.75 + Math.sin((this.clock || 0) * 8 + i) * 0.2 : dv ? 2.8 * dv : -fwd * 0.8;
+        u.arms[i].elb.rotation.x = cheer || dv ? 0.15 : 0.25 + run * 0.9;
+      }
+      const side = u.diveSide || 1;
+      u.body.position.x = side * 0.75 * dv;
+      u.body.position.z = cheer ? Math.abs(Math.sin((this.clock || 0) * 8)) * 0.28 : Math.abs(Math.cos(ph)) * 0.06 * run + 0.28 * dv;
+      u.body.rotation.x = cheer ? 0 : -run * 0.14 + kk * 0.15; // 走るときは前かがみ、蹴るときは少し反る
+      u.body.rotation.y = side * 1.35 * dv;
     }
 
     syncPlayers() {
       const m = this.match;
       const kits = this.kitsOf();
       const seen = new Set();
+      const ball = this.ball;
       // ボールが急に速くなった瞬間を「蹴った」とみなす
-      const bv = this._lastBall ? Math.hypot(this.ball[0] - this._lastBall[0], this.ball[1] - this._lastBall[1]) / Math.max(1e-3, this._dt) : 0;
+      const bv = this._lastBall ? Math.hypot(ball[0] - this._lastBall[0], ball[1] - this._lastBall[1]) / Math.max(1e-3, this._dt) : 0;
       let kickBy = null;
       if (this.scene && bv > 9 && (this._lastBv || 0) < 6) {
         let best = 2.2;
@@ -557,8 +602,16 @@
           if (dist < best) { best = dist; kickBy = id; }
         }
       }
+      this._bv = bv;
       this._lastBv = bv;
-      this._lastBall = this.ball.slice();
+      this._lastBall = ball.slice();
+      // 得点：ボールがゴールラインを越えたら、決めた子のチームが喜ぶ
+      let cheer = null;
+      if (this.scene && this.scene.outcome === 'goal' && (ball[1] > L + 0.05 || ball[1] < -0.05)) {
+        const scorer = (this.focus || [])[0];
+        cheer = { team: scorer && this.base[scorer] ? this.base[scorer][2] : null, scorer };
+      }
+      this._cheer = cheer;
       for (const id of Object.keys(this.base)) {
         const b = this.base[id];
         const t = b[2];
@@ -574,33 +627,34 @@
         }
         const d = this.disp[id] || b;
         o.position.set(d[0], d[1], 0);
-        const it = { id, d };
-        const dir = this.dirOf(it);
+        const dir = this.dirOf({ id, d });
         o.rotation.z = Math.atan2(-dir[0], dir[1]);
         const sp = (this.speed && this.speed[id]) || 0;
-        const run = clamp(sp / 5.5, 0, 1);
-        const ph = (this.clock || 0) * (7 + run * 5) + (YA.hash ? YA.hash(String(id)) % 7 : 0);
-        const sw = Math.sin(ph) * 0.75 * run;
-        const u = o.userData;
-        // 蹴る：ボールが急に動き出したとき、いちばん近くにいた子が右脚を振る
-        if (kickBy === id) u.kick = 0.38;
-        u.kick = Math.max(0, u.kick - this._dt);
-        const kk = u.kick > 0 ? Math.sin(((0.38 - u.kick) / 0.38) * Math.PI) : 0;
-        for (let i = 0; i < 2; i++) {
-          // 脚：前に出すほど股を前へ。後ろへ蹴り上げるときに膝が曲がる
-          let fwd = i ? -sw : sw;
-          let bend = Math.max(0, -Math.sin(ph + (i ? Math.PI : 0))) * 1.1 * run + 0.08;
-          if (i === 1 && kk > 0) { fwd = 1.25 * kk - 0.5 * (1 - kk); bend = 0.9 * (1 - kk); }
-          u.legs[i].hip.rotation.x = fwd;
-          u.legs[i].knee.rotation.x = -bend;
-          // 腕は脚と逆に振り、肘を曲げる
-          u.arms[i].sho.rotation.x = -fwd * 0.8;
-          u.arms[i].elb.rotation.x = 0.25 + run * 0.9;
+        // GK：速いボールが近くに来たら、ボールの側へ飛びつく
+        let dive = 0;
+        if (gk && this.scene && bv > 8 && !(o.userData.dive > 0) && Math.hypot(ball[0] - d[0], ball[1] - d[1]) < 5) {
+          const rx = ball[0] - d[0], ry = ball[1] - d[1];
+          dive = rx * dir[1] - ry * dir[0] >= 0 ? 1 : -1;
         }
-        u.body.position.z = Math.abs(Math.cos(ph)) * 0.06 * run;
-        u.body.rotation.x = -run * 0.14 + kk * 0.15; // 走るときは前かがみ、蹴るときは少し反る
+        const near = cheer && cheer.team === t && (!cheer.scorer || !this.disp[cheer.scorer] || Math.hypot(d[0] - this.disp[cheer.scorer][0], d[1] - this.disp[cheer.scorer][1]) < 28);
+        this.pose(o, id, d, dir, sp, { kick: kickBy === id, dive, cheer: !!near && !gk });
       }
       for (const k of Object.keys(this.meshes)) if (!seen.has(k)) { this.scene3.remove(this.meshes[k]); delete this.meshes[k]; }
+      // 主審：ボールの斜め後ろを、少し遅れてついて走る
+      if (this.ref3) {
+        const r = this.ref3;
+        const tx = clamp(ball[0] - 9 * Math.sign(ball[0] - 34 || 1), 4, W - 4);
+        const ty = clamp(ball[1] - 7, 3, L - 3);
+        const k = 1 - Math.exp(-this._dt * 1.2);
+        const nx = r.pos[0] + (tx - r.pos[0]) * k, ny = r.pos[1] + (ty - r.pos[1]) * k;
+        const sp = Math.hypot(nx - r.pos[0], ny - r.pos[1]) / Math.max(1e-3, this._dt);
+        r.pos = [nx, ny];
+        r.o.position.set(nx, ny, 0);
+        const dx = ball[0] - nx, dy = ball[1] - ny, n = Math.hypot(dx, dy) || 1;
+        const dir = [dx / n, dy / n];
+        r.o.rotation.z = Math.atan2(-dir[0], dir[1]);
+        this.pose(r.o, 'ref', r.pos, dir, sp, {});
+      }
     }
 
     draw() {
@@ -609,49 +663,75 @@
       const now = (globalThis.performance && performance.now()) || Date.now();
       this._dt = this._lastT ? clamp((now - this._lastT) / 1000, 0, 0.1) : 0.016;
       this._lastT = now;
-      const cy = this.camY;
-      // カメラ：ふだんは中継の高さ、見どころの場面では寄る。ボールに合わせて少し横にも振る
-      const want = this.scene ? YA.CAM3D_NEAR : YA.CAM3D;
-      const cc = (this._cam = this._cam || Object.assign({}, YA.CAM3D, { x: 34 }));
-      const k = 1 - Math.exp(-this._dt * 1.8);
-      for (const key of ['back', 'up', 'ahead']) cc[key] += (want[key] - cc[key]) * k;
-      cc.x += (34 + (this.ball[0] - 34) * 0.4 - cc.x) * k;
-      this.camera.position.set(cc.x, cy - cc.back, cc.up);
-      this.camera.lookAt(34 + (cc.x - 34) * 1.3, cy + cc.ahead, 0);
-      // 影は見えている辺りだけ細かく
-      this.sun.position.set(34 - 40, cy + 55, 70);
-      this.sun.target.position.set(34, cy + 4, 0);
       this.syncPlayers();
+      const cheer = this._cheer;
+      const sd = cheer && cheer.scorer && this.disp[cheer.scorer];
+      // カメラ：ふだんは中継の高さ、見どころの場面では寄る、得点のあとは決めた子に寄る。ボールに合わせて横にも振る
+      const want = sd ? YA.CAM3D_GOAL : this.scene ? YA.CAM3D_NEAR : YA.CAM3D;
+      const cc = (this._cam = this._cam || Object.assign({}, YA.CAM3D, { x: 34, y: this.camY }));
+      const k = 1 - Math.exp(-this._dt * (sd ? 2.4 : 1.8));
+      for (const key of ['back', 'up', 'ahead']) cc[key] += (want[key] - cc[key]) * k;
+      cc.x += ((sd ? sd[0] : 34 + (this.ball[0] - 34) * 0.4) - cc.x) * k;
+      cc.y += ((sd ? sd[1] : this.camY) - cc.y) * (sd ? k : 1);
+      this.camera.position.set(cc.x, cc.y - cc.back, cc.up);
+      this.camera.lookAt(cc.x + (sd ? 0 : (cc.x - 34) * 0.3), cc.y + cc.ahead, sd ? 1 : 0);
+      // 影は見えている辺りだけ細かく
+      this.sun.position.set(cc.x - 40, cc.y + 55, 70);
+      this.sun.target.position.set(cc.x, cc.y + 4, 0);
       const b = this.ball;
       this.ball3.position.set(b[0], b[1], Math.max(0, b[2]) + 0.2);
       this.ball3.rotation.x = -b[1] * 1.8;
       this.ball3.rotation.y = b[0] * 1.8;
+      // ネット：ボールが入るとふくらみ、ゆっくり戻る
+      for (const nt of this.nets || []) {
+        const inside = b[0] > 34 - 3.7 && b[0] < 34 + 3.7 && Math.max(0, b[2]) < 2.5 && (b[1] - nt.yy) * nt.dir > 0.2;
+        nt.bulge += ((inside ? 0.75 : 0) - nt.bulge) * (1 - Math.exp(-this._dt * (inside ? 14 : 2.5)));
+        nt.back.position.y = nt.y0 + nt.dir * nt.bulge;
+        nt.back.scale.set(1 + nt.bulge * 0.06, 1, 1 - nt.bulge * 0.08);
+      }
+      // 観客：得点のあとは跳ねる
+      for (const t of this.crowdTex || []) t.offset.y = cheer ? Math.abs(Math.sin((this.clock || 0) * 9)) * 0.05 : 0;
       // 輪：主役は緑、守る側の主役は白
       const fo = (this.focus || []).map((id) => [id, 0x5cff6a]).concat((this.defFocus || []).map((id) => [id, 0xffffff]));
       this.rings.forEach((r, i) => {
         const f = fo[i];
         const d = f && this.disp[f[0]];
-        r.visible = !!d;
+        r.visible = !!d && !cheer;
         if (d) { r.position.set(d[0], d[1], 0.03); r.material.color.setHex(f[1]); }
       });
-      // 軌跡
-      const tr = this.trail || [];
+      // 軌跡：ボールの高さに沿う（浮き球・シュートは宙に弧を描く）
+      if (this.scene !== this._tr3Scene) { this._tr3Scene = this.scene; this.tr3 = []; }
+      const tr = (this.tr3 = this.tr3 || []);
+      if (this.scene) {
+        const last = tr[tr.length - 1];
+        if (!last || Math.hypot(b[0] - last[0], b[1] - last[1]) > 0.35) tr.push([b[0], b[1], Math.max(0.05, b[2] + 0.2)]);
+        if (last && Math.hypot(b[0] - last[0], b[1] - last[1]) < 0.04 && tr.length) tr.shift();
+        if (tr.length > 30) tr.shift();
+      } else tr.length = 0;
       const pos = this.trail3.geometry.attributes.position;
-      const n = Math.min(30, tr.length);
+      const n = tr.length;
       const moving = n > 2 && Math.hypot(tr[n - 1][0] - tr[0][0], tr[n - 1][1] - tr[0][1]) > 4;
-      for (let i = 0; i < n; i++) pos.setXYZ(i, tr[tr.length - n + i][0], tr[tr.length - n + i][1], 0.05);
+      for (let i = 0; i < n; i++) pos.setXYZ(i, tr[i][0], tr[i][1], tr[i][2]);
       pos.needsUpdate = true;
-      this.trail3.geometry.setDrawRange(0, moving ? n : 0);
+      this.trail3.geometry.setDrawRange(0, moving && !cheer ? n : 0);
       this.three.render(this.scene3, this.camera);
       this.drawOverlay();
     }
 
-    // 重ね板：名前の札と得点の光（2D）
+    // 重ね板：名前の札と得点の光（2D）。札は場面の見出し・特性の札と重ならないようにずらす
     drawOverlay() {
       const ctx = this.ctx;
       ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
       ctx.clearRect(0, 0, this.w, this.h);
       if (this.scene) {
+        const blocks = [];
+        const base = this.cv.getBoundingClientRect();
+        const par = this.cv.parentNode;
+        if (par) for (const el of par.querySelectorAll('.scene-title, .tagrow .tag, .ctl > *, .banner')) {
+          const r = el.getBoundingClientRect();
+          if (r.width > 0 && r.height > 0) blocks.push([r.left - base.left - 3, r.top - base.top - 3, r.right - base.left + 3, r.bottom - base.top + 3]);
+        }
+        const hit = (x, y, w, h) => blocks.some((b) => x < b[2] && x + w > b[0] && y < b[3] && y + h > b[1]);
         const v = new T.Vector3();
         for (const id of this.focus || []) {
           const d = this.disp[id];
@@ -664,8 +744,17 @@
           const label = p.num + ' ' + p.name.split(' ')[0];
           ctx.font = '800 11px system-ui, sans-serif';
           const tw = ctx.measureText(label).width + 10;
-          const x = clamp(x0 - tw / 2, 2, this.w - tw - 2);
-          const y = y0 - 18;
+          let x = clamp(x0 - tw / 2, 2, this.w - tw - 2);
+          let y = clamp(y0 - 18, 2, this.h - 18);
+          // 重なるなら、頭の右・左・下の順に逃がす
+          if (hit(x, y, tw, 16)) {
+            const tries = [[x0 + 14, y0 - 8], [x0 - tw - 14, y0 - 8], [x - 0, y0 + 26]];
+            for (const [tx, ty] of tries) {
+              const xx = clamp(tx, 2, this.w - tw - 2), yy = clamp(ty, 2, this.h - 18);
+              if (!hit(xx, yy, tw, 16)) { x = xx; y = yy; break; }
+            }
+          }
+          blocks.push([x, y, x + tw, y + 16]);
           ctx.fillStyle = 'rgba(15,25,40,.82)';
           this.rr(ctx, x, y, tw, 16, 5);
           ctx.fill();
