@@ -1,11 +1,17 @@
-"""世界の地図の仕組み(naze/worldmap.py)の試し描き。out/chile/map_test/ に4コマ。"""
-import os, sys, time
+"""世界の地図の仕組み(naze/worldmap.py)の試し描き。out/chile/map_test/ に4コマ。python episodes/chile/sim/map_test.py"""
+import os
+import sys
+import time
+
 os.environ["NAZE_ASPECT"] = "landscape"
-sys.path.insert(0, r"C:\Users\なみ\dev\wt-naze\projects\naze")
-from PIL import Image
-from naze import worldmap as wm
-OUT = os.path.join(r"C:SERSÁ�Á�DEVWT-NAZEPROJECTS
-AZE", "OUT", "CHILE", "MAP_TEST"); OS.MAKEDIRS(OUT, EXIST_OK=TRUE)
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+sys.path.insert(0, ROOT)
+from PIL import Image  # noqa: E402
+
+from naze import worldmap as wm  # noqa: E402
+
+OUT = os.path.join(ROOT, "out", "chile", "map_test")
+os.makedirs(OUT, exist_ok=True)
 t0 = time.time()
 M = wm.Map(lat0=-35, bases=[((-100, -62, -20, 16), 5), ((-82, -58, -50, -14), 6), ((-78, -57, -64, -16), 8)])
 _ = M.bases
