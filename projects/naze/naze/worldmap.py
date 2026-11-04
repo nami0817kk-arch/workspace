@@ -121,6 +121,28 @@ def countries() -> Dict[str, list]:
 
 
 @lru_cache(maxsize=1)
+def provinces() -> Dict[str, list]:
+    """州・地方の形。名前は "国:州"(例 "ARG:Mendoza"、"CHL:Antofagasta")。"""
+    gj = json.loads((NE / "ne_10m_admin_1_states_provinces.geojson").read_text(encoding="utf-8"))
+    out: Dict[str, list] = {}
+    for f in gj["features"]:
+        g = f["geometry"]
+        if not g:
+            continue
+        polys = g["coordinates"] if g["type"] == "MultiPolygon" else [g["coordinates"]]
+        out[f'{f["properties"]["adm0_a3"]}:{f["properties"]["name"]}'] = [p[0] for p in polys]
+    return out
+
+
+def shapes(code: str) -> list:
+    """国(ADM0_A3)か州("国:州")の外周の列。"+" でつなぐと合わせた形。"""
+    out = []
+    for c in code.split("+"):
+        out.extend(provinces()[c] if ":" in c else countries()[c])
+    return out
+
+
+@lru_cache(maxsize=1)
 def land_borders() -> List[Tuple[str, str, list]]:
     gj = json.loads((NE / "ne_10m_admin_0_boundary_lines_land.geojson").read_text(encoding="utf-8"))
     out = []
@@ -198,15 +220,27 @@ class Base:
     def mask(self, code: str, level: int) -> np.ndarray:
         import cv2
         if code not in self._masks:
+            clip = None
+            if "@" in code:                                   # "CHL:Antofagasta@-24,-21" で緯度の範囲に切る
+                code, rng = code.split("@")
+                clip = tuple(float(x) for x in rng.split(","))
+            key = code if clip is None else f"{code}@{clip}"
+            if key in self._masks:
+                return self._masks[key][level]
             h, w = self.levels[0].shape[:2]
             m = np.zeros((h, w), np.uint8)
-            for r in countries()[code]:
+            for r in shapes(code):
                 if self._near(r):
                     cv2.fillPoly(m, [np.array([self.xy(*p) for p in r], np.int32)], 255, lineType=cv2.LINE_AA)
+            if clip:
+                y_n, y_s = self.xy(0, clip[1])[1], self.xy(0, clip[0])[1]
+                m[: max(0, int(y_n))] = 0
+                m[int(y_s):] = 0
             ms = [m]
             while len(ms) < len(self.levels):
                 ms.append(cv2.pyrDown(ms[-1]))
-            self._masks[code] = ms
+            self._masks[key] = ms
+            return ms[level]
         return self._masks[code][level]
 
     def height_at(self, lon: float, lat: float) -> float:
@@ -402,7 +436,7 @@ class Map:
     @lru_cache(maxsize=8)
     def _ghost_km(self, code: str):
         """その国の形を、国の真ん中から東へ・北へ何 km かの点の列に(小さな島は省く)。"""
-        rings = [r for r in countries()[code] if len(r) > 8]
+        rings = [r for r in shapes(code) if len(r) > 8]
         lons = [p[0] for r in rings for p in r]
         lats = [p[1] for r in rings for p in r]
         c = ((min(lons) + max(lons)) / 2, (min(lats) + max(lats)) / 2)
@@ -479,7 +513,8 @@ class Map:
     def steps_band(img: Image.Image, items: Sequence[str], cur: int) -> None:
         f = ov.font(30)
         widths = [f.getlength(s) + 44 for s in items]
-        x = W / 2 - (sum(widths) + 10 * (len(items) - 1)) / 2
+        x0 = W - 36 - (sum(widths) + 10 * (len(items) - 1))
+        x = x0
         y0, y1 = 34, 84
         lay = Image.new("RGBA", img.size, (0, 0, 0, 0))
         d = ImageDraw.Draw(lay)
@@ -490,7 +525,7 @@ class Map:
             d.text((x + w / 2, (y0 + y1) / 2), s, font=f, fill=ov.NAVY if on else (200, 208, 222), anchor="mm")
             x += w + 10
         img.alpha_composite(lay)
-        ov.BOXES.append(("corner", (W / 2 - sum(widths) / 2, y0, W / 2 + sum(widths) / 2, y1), "帯", 1.0))
+        ov.BOXES.append(("corner", (x0, y0, W - 36, y1), "帯", 1.0))
 
     # -- 場面 --
     def scenes(self, lines, defs):
