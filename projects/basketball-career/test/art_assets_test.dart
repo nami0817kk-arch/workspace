@@ -2,6 +2,7 @@
 // pubspec.yaml の assets に無いと、実機では読み込めず代替の絵に戻るだけで気づきにくい。
 import 'dart:io';
 
+import 'package:basketball_career/game/alltime.dart';
 import 'package:basketball_career/game/life.dart';
 import 'package:basketball_career/game/match.dart';
 import 'package:basketball_career/game/game.dart';
@@ -25,6 +26,10 @@ void main() {
     'scene_pro',
     'scene_abroad',
     'scene_national',
+    // 大一番の会場・次の世代へ・歴代記録の表の絵。
+    'scene_final',
+    'next_gen',
+    'alltime',
   ];
 
   test('アプリ内の絵がすべて assets にあり、pubspec.yaml に宣言されている', () {
@@ -52,7 +57,7 @@ void main() {
       }
     }
     // 会場の絵は名前を組み立てて読む(`scene_$name`)ので、別のテストで全段階を確かめる。
-    used.remove('scene_');
+    used.removeWhere((n) => n.startsWith('scene_'));
     expect(used, arts.where((n) => !n.startsWith('scene_')).toSet());
   });
 
@@ -92,6 +97,27 @@ void main() {
             reason: '$t $age 歳 → $name');
       }
     }
+  });
+
+  test('動きのある選手の絵(シュート・ディフェンス・ダンク/ジャンプ)が、子ども・大人×7色そろう', () {
+    for (final kid in [true, false]) {
+      for (final p in Pose.values) {
+        for (final color in ['yellow', 'blue', 'red', 'green', 'teal', 'purple', 'dark']) {
+          final f = File('assets/art/players/${poseFile(p, kid: kid)}_$color.png');
+          expect(f.existsSync(), isTrue, reason: '${f.path} が無い');
+          expect(f.lengthSync(), lessThan(60 * 1024), reason: '${f.path} が重い');
+        }
+      }
+    }
+  });
+
+  test('歴代の名選手の顔が10人ぶんある', () {
+    for (final l in legends) {
+      final f = File(l.portrait);
+      expect(f.existsSync(), isTrue, reason: '${l.name} の顔が無い');
+      expect(f.lengthSync(), lessThan(40 * 1024));
+    }
+    expect(File('pubspec.yaml').readAsStringSync(), contains('assets/art/legends/'));
   });
 
   test('ボタンのアイコンが、過ごし方・勝負どころ・ハーフタイムの全種類にある', () {

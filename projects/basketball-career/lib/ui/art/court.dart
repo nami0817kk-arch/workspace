@@ -3,15 +3,32 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../../game/game.dart';
+import '../../game/match.dart';
+import '../../game/player.dart';
 import '../../game/season.dart';
 
 /// 育成画面の上に出す絵。体育館の床・ゴール・選手をコードで描く(画像は使わない)。
 /// 選手の大きさは身長に比例し、ユニフォームの色は所属で変わる。
 class CourtHeader extends StatelessWidget {
   const CourtHeader(
-      {super.key, required this.game, this.height = 190, this.versus = false});
+      {super.key,
+      required this.game,
+      this.height = 190,
+      this.versus = false,
+      this.pose = Pose.dribble,
+      this.scene,
+      this.season});
   final Game game;
   final double height;
+
+  /// 選手のポーズ(重点・勝負どころの選択・作戦に合わせて変える)。
+  final Pose pose;
+
+  /// 会場の絵を差し替える(大一番の会場など)。null なら段階ごとの会場。
+  final String? scene;
+
+  /// 過去の年を描く(成績カード): その年の舞台と年齢で、会場・子ども/大人・ユニフォームの色を決める。
+  final ({League league, int age, double heightCm})? season;
 
   /// ライバルとの対決で、向かい合う相手を描く。
   final bool versus;
@@ -29,7 +46,7 @@ class CourtHeader extends StatelessWidget {
             // 下地はコードで描いた体育館。絵が読み込めない間・失敗したときはこれが見える。
             CustomPaint(
               painter: _CourtPainter(
-                heightCm: game.player.heightCm,
+                heightCm: season?.heightCm ?? game.player.heightCm,
                 jersey: jerseyColor(game.track, game.player.age),
                 slot: game.slot,
                 versus: versus,
@@ -39,17 +56,17 @@ class CourtHeader extends StatelessWidget {
             ),
             // 段階ごとの会場の絵(Gemini で生成。`assets/art/scene_*.jpg`)。
             Image.asset(
-              sceneAsset(game),
+              scene ?? (season == null ? sceneAsset(game) : sceneForLeague(season!.league)),
               fit: BoxFit.cover,
               alignment: Alignment.bottomCenter,
               frameBuilder: (context, child, frame, sync) =>
                   (frame == null && !sync) ? const SizedBox.shrink() : child,
               errorBuilder: (_, __, ___) => const SizedBox.shrink(),
             ),
-            _Sprites(game: game, versus: versus),
+            _Sprites(game: game, versus: versus, pose: pose, season: season),
             CustomPaint(
               painter: _CourtPainter(
-                heightCm: game.player.heightCm,
+                heightCm: season?.heightCm ?? game.player.heightCm,
                 jersey: jerseyColor(game.track, game.player.age),
                 slot: game.slot,
                 versus: versus,
@@ -67,7 +84,12 @@ class CourtHeader extends StatelessWidget {
 /// いまの段階の会場の絵。大学・実業団・プロは所属、プロは海外、冬の代表招集は代表の会場。
 String sceneAsset(Game g) {
   final national = g.nationalPending && g.slot == 3 && g.track == Track.pro;
-  final name = switch (national ? League.national : g.league) {
+  return sceneForLeague(national ? League.national : g.league);
+}
+
+/// 舞台ごとの会場の絵。
+String sceneForLeague(League league) {
+  final name = switch (league) {
     League.minibasket => 'minibasket',
     League.juniorHigh => 'junior',
     League.highSchool => 'high',
@@ -82,6 +104,65 @@ String sceneAsset(Game g) {
 
 enum _Layer { background, foreground, fallback }
 
+/// 選手のポーズ(Gemini で作った絵。`tool/make_sprites.py` でマゼンタを抜いて7色にした)。
+/// 子どもはダンクの代わりに「思い切りジャンプ」(`kid_jump_*`)。
+enum Pose { dribble, shoot, defense, dunk }
+
+/// ポーズの絵のファイル名(色の前まで)。ドリブルは最初の絵(`kid_<色>` / `adult_<色>`)。
+String poseFile(Pose p, {required bool kid}) {
+  final k = kid ? 'kid' : 'adult';
+  return switch (p) {
+    Pose.dribble => k,
+    Pose.dunk => kid ? 'kid_jump' : 'adult_dunk',
+    _ => '${k}_${p.name}',
+  };
+}
+
+/// ポーズごとの絵の幅÷高さと、背番号を重ねる位置(絵の中の胴の中心、0〜1)。
+({double aspect, double nx, double ny}) poseLayout(Pose p, {required bool kid}) => switch ((p, kid)) {
+      (Pose.dribble, true) => (aspect: 0.815, nx: 0.58, ny: 0.52),
+      (Pose.dribble, false) => (aspect: 0.815, nx: 0.48, ny: 0.40),
+      (Pose.shoot, true) => (aspect: 0.433, nx: 0.55, ny: 0.55),
+      (Pose.shoot, false) => (aspect: 0.222, nx: 0.50, ny: 0.37),
+      (Pose.defense, true) => (aspect: 0.969, nx: 0.50, ny: 0.56),
+      (Pose.defense, false) => (aspect: 0.894, nx: 0.50, ny: 0.34),
+      (Pose.dunk, true) => (aspect: 0.569, nx: 0.46, ny: 0.54),
+      (Pose.dunk, false) => (aspect: 0.381, nx: 0.45, ny: 0.45),
+    };
+
+/// 重点の能力に合うポーズ(シュート系→シュート、守り・リバウンド→ディフェンス、ゴール下・体→ダンク)。
+Pose poseForFocus(Ability a) => switch (a) {
+      Ability.threePoint || Ability.midRange || Ability.freeThrow => Pose.shoot,
+      Ability.defense || Ability.rebound => Pose.defense,
+      Ability.inside || Ability.physical => Pose.dunk,
+      _ => Pose.dribble,
+    };
+
+/// 勝負どころのプレーに合うポーズ。
+Pose poseForClutch(Clutch c) => switch (c) {
+      Clutch.drive || Clutch.drawFoul => Pose.dunk,
+      Clutch.threePoint => Pose.shoot,
+      Clutch.defend => Pose.defense,
+      Clutch.pass => Pose.dribble,
+    };
+
+/// 大一番の作戦に合うポーズ。
+Pose poseForPlan(BigGamePlan p) => switch (p) {
+      BigGamePlan.stopAce => Pose.defense,
+      BigGamePlan.attack => Pose.dunk,
+      BigGamePlan.team => Pose.dribble,
+    };
+
+/// 舞台ごとのユニフォームの色名(過去の年を描くとき)。代表は青。
+String spriteColorForLeague(League l) => switch (l) {
+      League.minibasket => 'yellow',
+      League.juniorHigh || League.national => 'blue',
+      League.highSchool => 'red',
+      League.university => 'green',
+      League.corporate => 'teal',
+      League.proDomestic || League.proAbroad => 'purple',
+    };
+
 /// 選手の絵の色名(`assets/art/players/<kid|adult>_<色>.png`)。`jerseyColor` と同じ分け方。
 String spriteColorName(Track t, int age) => switch (t) {
       Track.school => age < 13 ? 'yellow' : age < 16 ? 'blue' : 'red',
@@ -94,21 +175,21 @@ String spriteColorName(Track t, int age) => switch (t) {
 /// ユニフォームの色は所属で変わる(絵は青を色相で替えた7色)。背番号は絵の上に文字で重ねる。
 /// 絵が読み込めないときは、コードで描いた選手に戻る。
 class _Sprites extends StatelessWidget {
-  const _Sprites({required this.game, required this.versus});
+  const _Sprites({required this.game, required this.versus, this.pose = Pose.dribble, this.season});
   final Game game;
   final bool versus;
-
-  /// 絵の幅÷高さ(子ども・大人でほぼ同じ)。
-  static const _aspect = 0.815;
+  final Pose pose;
+  final ({League league, int age, double heightCm})? season;
 
   @override
   Widget build(BuildContext context) {
     final p = game.player;
-    final kind = p.age < 13 ? 'kid' : 'adult';
-    final color = spriteColorName(game.track, p.age);
+    final age = season?.age ?? p.age;
+    final kind = age < 13 ? 'kid' : 'adult';
+    final color = season == null ? spriteColorName(game.track, p.age) : spriteColorForLeague(season!.league);
     return LayoutBuilder(builder: (context, c) {
       final w = c.maxWidth, h = c.maxHeight;
-      final scale = (p.heightCm / 210).clamp(0.5, 1.05);
+      final scale = ((season?.heightCm ?? p.heightCm) / 210).clamp(0.5, 1.05);
       final figH = h * 0.86 * scale;
       final bottom = h * 0.03;
       // 絵が読み込めなかったとき、その選手の枠の中にコードで描いた選手を出す。
@@ -122,11 +203,12 @@ class _Sprites extends StatelessWidget {
             ),
           );
       Widget sprite(String name, double cx, double hh,
-          {bool flip = false, int number = 0}) {
-        final ww = hh * _aspect;
-        // 背番号の位置(胴の中心)。ポーズが違うので子ども・大人で変える。
-        final tx = kind == 'kid' ? 0.58 : 0.48;
-        final ty = kind == 'kid' ? 0.52 : 0.40;
+          {bool flip = false, int number = 0, Pose pose = Pose.dribble, bool kid = false}) {
+        final lay = poseLayout(pose, kid: kid);
+        final ww = hh * lay.aspect;
+        // 背番号の位置(胴の中心)。ポーズごとに違う。
+        final tx = lay.nx;
+        final ty = lay.ny;
         return Positioned(
           left: cx - ww / 2,
           bottom: bottom,
@@ -164,8 +246,8 @@ class _Sprites extends StatelessWidget {
       }
 
       return Stack(fit: StackFit.expand, children: [
-        sprite('${kind}_$color', w * (versus ? 0.22 : 0.30), figH,
-            number: game.number),
+        sprite('${poseFile(pose, kid: kind == 'kid')}_$color', w * (versus ? 0.22 : 0.30), figH,
+            number: game.number, pose: pose, kid: kind == 'kid'),
         if (versus)
           sprite('adult_dark', w * 0.52, h * 0.86 * 0.98,
               flip: true),

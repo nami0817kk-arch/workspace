@@ -254,10 +254,15 @@ void main() {
     const purple = (Color(0xFF4A148C), Color(0xFF7B1FA2));
 
     // 1. 育成画面: 6年ぶんの成長のあと、春に練習した直後。
-    final a = Game.start('ミナト', rng: Random(11), events: false);
-    _play(a, untilAge: 12);
-    while (a.slot != 0 && a.phase == Phase.season) {
-      a.choose(Action.rest, recommendedFocus(a.player));
+    // 怪我や疲れで伸びない場面を撮らない(練習の伸びが見える状態の乱数を探す)。
+    late Game a;
+    for (var seed = 11; seed < 200; seed++) {
+      a = Game.start('ミナト', rng: Random(seed), events: false);
+      _play(a, untilAge: 12);
+      while (a.slot != 0 && a.phase == Phase.season) {
+        a.choose(Action.rest, recommendedFocus(a.player));
+      }
+      if (!a.condition.injured && a.condition.fatigue < 40) break;
     }
     // 春に1回練習した後(下の帯に「練習した。成長: …」が出る)。
     final c1 = _controller(a)..act(Action.practice);
@@ -439,6 +444,23 @@ void main() {
     });
   });
 
+  /// 勝負どころで止まった大人の選手(点検用)。
+  GameController clutchShot() {
+    for (var seed = 0; seed < 600; seed++) {
+      final g = Game(
+        eventsEnabled: false,
+        player: Player(name: 'ミナト', age: 24, potential: 70, heightCm: 192, heightGenes: 0.5,
+            abilities: {for (final a in Ability.values) a: 66}),
+        rng: Random(seed),
+        track: Track.pro,
+        slot: 1,
+      );
+      g.choose(Action.rest, Ability.pass, askClutch: true);
+      if (g.phase == Phase.clutch) return _controller(g);
+    }
+    throw StateError('勝負どころが見つからない');
+  }
+
   // 画面の点検用(掲載画像ではない)。新しい画面を目で見るため build/review/ に書き出す(git には入れない)。
   testWidgets('画面の点検用', (t) async {
     SharedPreferences.setMockInitialValues({'howtoSeen': true});
@@ -507,6 +529,24 @@ void main() {
       await t.scrollUntilVisible(find.text('まったく新しい選手を育てる'), 400, scrollable: find.byType(Scrollable).first);
       await t.pump(const Duration(milliseconds: 300));
     });
+    // 成績カード(エンディングの年ごとの成績から)。
+    await _shoot(t, 'r8_card', '成績カード', _controller(ending.game!), c1, outDir: out, act: (t) async {
+      final best = ending!.game!.records.lastWhere((r) => r.champion, orElse: () => ending!.game!.records.last);
+      final row = find.text('${best.age}歳');
+      await t.scrollUntilVisible(row, 300, scrollable: find.byType(Scrollable).first);
+      await t.pump(const Duration(milliseconds: 300));
+      await t.tap(row.first);
+      await t.pump(const Duration(milliseconds: 600));
+    });
+    // 重点が3Pなら育成画面の絵はシュート。勝負どころは成功率のいちばん高いプレーの絵。
+    final sh = Game.start('ミナト', rng: Random(11), events: false);
+    _play(sh, untilAge: 17);
+    while (sh.slot != 0 && sh.phase == Phase.season) {
+      sh.choose(Action.rest, Ability.threePoint);
+    }
+    final shc = _controller(sh)..focus = Ability.threePoint;
+    await _shoot(t, 'r9_shoot', '重点3Pの絵', shc, c1, outDir: out);
+    await _shoot(t, 'r10_clutch', '勝負どころ', clutchShot(), c1, outDir: out);
     final heir = _controller(ending.game!);
     await heir.startNextGeneration(HeirKind.child);
     await _shoot(t, 'r7_heir', '次の世代へ', heir, c1, outDir: out);

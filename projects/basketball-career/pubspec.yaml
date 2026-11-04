@@ -14,6 +14,7 @@ dependencies:
   in_app_purchase: ^3.3.1
   url_launcher: ^6.3.2
   in_app_purchase_storekit: ^0.4.13
+  share_plus: ^13.3.1
 
 dev_dependencies:
   flutter_test:
@@ -38,6 +39,10 @@ flutter:
     - assets/art/scene_pro.jpg
     - assets/art/scene_abroad.jpg
     - assets/art/scene_national.jpg
+    - assets/art/scene_final.jpg
+    - assets/art/next_gen.jpg
+    - assets/art/alltime.jpg
+    - assets/art/legends/
     - assets/art/icons/
     - assets/art/players/
 
