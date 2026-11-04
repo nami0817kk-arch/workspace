@@ -408,10 +408,19 @@ class _PlayerCard extends StatelessWidget {
           children: [
             Row(
               children: [
+                _OverallBadge(value: p.overall.round()),
+                const SizedBox(width: 12),
                 Expanded(
-                  child: Text('${trackLabel(game)}  ${game.number > 0 ? '#${game.number}  ' : ''}${p.position.label}'
-                      '${game.positionAuto ? '' : '(固定)'}  '
-                      '${p.heightCm.toStringAsFixed(1)}cm  総合 ${p.overall.round()}'),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('${trackLabel(game)}${game.number > 0 ? '  #${game.number}' : ''}',
+                          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                      Text('${p.position.label}${game.positionAuto ? '' : '(固定)'}  '
+                          '${p.heightCm.toStringAsFixed(1)}cm',
+                          style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurfaceVariant)),
+                    ],
+                  ),
                 ),
                 if (onPickPosition != null)
                   TextButton(
@@ -429,7 +438,7 @@ class _PlayerCard extends StatelessWidget {
                   Expanded(
                     child: Text(
                         p.style == null
-                            ? 'ビルド: ${buildOf(p)?.label ?? 'まだ決まっていない'}(おまかせ)'
+                            ? 'ビルド: ${buildOf(p)?.label ?? 'まだ決まっていない'}・おまかせ'
                             : '目指す型: ${buildOf(p)?.label ?? p.style!.label}',
                         style: const TextStyle(fontSize: 12)),
                   ),
@@ -1110,8 +1119,9 @@ class _AbilityCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('能力  (◎○△ ＝ ${p.position.label} で効く度合い / ◆ ＝ 目指す型 / ▲＝今回 / 緑＋＝今年の伸び / Lv・黄色の線＝熟練)',
-                style: const TextStyle(fontWeight: FontWeight.bold)),
+            const Text('能力', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            Text('◎○△ ${p.position.label}で効く度合い  ◆ 目指す型  ▲ 今回  緑＋ 今年  Lv 熟練',
+                style: TextStyle(fontSize: 11, color: Theme.of(context).colorScheme.onSurfaceVariant)),
             const SizedBox(height: 6),
             // 身長も能力の1つ(総合評価に入る。素質=ポテンシャルとは別)。
             Padding(
@@ -1125,6 +1135,7 @@ class _AbilityCard extends StatelessWidget {
                     child: LinearProgressIndicator(
                       value: (p.heightCm / 220).clamp(0.0, 1.0),
                       minHeight: 8,
+                      borderRadius: const BorderRadius.all(Radius.circular(4)),
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -1168,6 +1179,7 @@ class _AbilityCard extends StatelessWidget {
                           LinearProgressIndicator(
                             value: p.of(a) / abilityCap,
                             minHeight: 8,
+                      borderRadius: const BorderRadius.all(Radius.circular(4)),
                           ),
                           // 熟練度(次の段まで)。練習を重ねた分が、伸びの小さい年でも見える。
                           if ((game.mastery[a] ?? 0) > 0) ...[
@@ -1238,6 +1250,7 @@ class _Meter extends StatelessWidget {
             child: LinearProgressIndicator(
               value: value / 100,
               minHeight: 8,
+                      borderRadius: const BorderRadius.all(Radius.circular(4)),
               color: warn ? Colors.red : null,
             ),
           ),
@@ -1246,6 +1259,196 @@ class _Meter extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+/// エンディングの年ごとの成績の1行: 年齢の札・大会と勝敗(優勝は色付き)・個人成績。
+class _YearRow extends StatelessWidget {
+  const _YearRow({required this.record});
+  final YearRecord record;
+
+  @override
+  Widget build(BuildContext context) {
+    final r = record;
+    final cs = Theme.of(context).colorScheme;
+    final gold = r.champion;
+    return Container(
+      margin: const EdgeInsets.only(bottom: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+      decoration: BoxDecoration(
+        color: gold ? const Color(0x33FFC107) : null,
+        borderRadius: BorderRadius.circular(8),
+        border: Border(left: BorderSide(color: gold ? const Color(0xFFFFA000) : cs.outlineVariant, width: 3)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 40,
+            child: Text('${r.age}歳', style: const TextStyle(fontWeight: FontWeight.bold)),
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Flexible(
+                      child: Text(
+                          '${leagueLabel(r.league)}${r.winter ? '(冬)' : ''}  ${r.wins}勝${r.games - r.wins}敗'
+                          '${r.award == null ? '' : '  ${r.award}'}',
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                    ),
+                    if (gold) ...[
+                      const SizedBox(width: 4),
+                      const Icon(Icons.emoji_events, size: 16, color: Color(0xFFFFA000)),
+                      const Text('優勝', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFFB26A00))),
+                    ],
+                  ],
+                ),
+                Text(
+                    '${r.ppg.toStringAsFixed(1)}点 ${r.rpg.toStringAsFixed(1)}R ${r.apg.toStringAsFixed(1)}A'
+                    '${r.benchGames > 0 ? '  控え${r.benchGames}試合' : ''}',
+                    style: TextStyle(fontSize: 12, color: cs.onSurfaceVariant)),
+                if (!r.box.isEmpty)
+                  Text(shootingLine(r.box, r.threes, digits: 0),
+                      style: TextStyle(fontSize: 12, color: cs.onSurfaceVariant)),
+                if (r.honors.isNotEmpty)
+                  Text(r.honors.join('・'),
+                      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFFB26A00))),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// 総合評価の丸いバッジ(状態カードの左上)。
+class _OverallBadge extends StatelessWidget {
+  const _OverallBadge({required this.value});
+  final int value;
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return Container(
+      width: 56,
+      height: 56,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [cs.primary, Color.lerp(cs.primary, Colors.black, 0.25)!],
+        ),
+      ),
+      alignment: Alignment.center,
+      padding: const EdgeInsets.all(6),
+      // 文字を大きくする設定でも丸からはみ出さないよう、中身を縮めて収める。
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text('総合', style: TextStyle(fontSize: 10, color: cs.onPrimary, height: 1.0)),
+          Text('$value',
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: cs.onPrimary, height: 1.1)),
+        ],
+        ),
+      ),
+    );
+  }
+}
+
+/// エンディングの称号・背番号の札。
+class _Badge extends StatelessWidget {
+  const _Badge({required this.icon, required this.text, this.strong = false});
+  final IconData icon;
+  final String text;
+  final bool strong;
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final bg = strong ? const Color(0xFFFFE08A) : cs.primaryContainer;
+    final fg = strong ? const Color(0xFF5D4200) : cs.onPrimaryContainer;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(20)),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 16, color: fg),
+          const SizedBox(width: 4),
+          Flexible(child: Text(text, style: TextStyle(fontWeight: FontWeight.bold, color: fg))),
+        ],
+      ),
+    );
+  }
+}
+
+/// エンディングの大きな数字(通算得点・優勝・表彰・歴代の最高順位・生涯収入・キャリアハイ)。
+class _StatTiles extends StatelessWidget {
+  const _StatTiles({required this.game});
+  final Game game;
+
+  @override
+  Widget build(BuildContext context) {
+    final g = game;
+    int? bestRank;
+    String? bestLabel;
+    for (final e in g.allTimeValues.entries) {
+      if (e.value <= 0) continue;
+      final r = allTimeRank(e.key, e.value);
+      if (r <= legends.length && (bestRank == null || r < bestRank)) {
+        bestRank = r;
+        bestLabel = e.key.label.replaceFirst('通算', '');
+      }
+    }
+    final tiles = <(String, String)>[
+      ('通算得点', withComma(g.totalPoints)),
+      ('優勝', '${g.titles}回'),
+      ('表彰', '${g.honorTotal + g.awardCount}'),
+      if (bestRank != null) ('歴代記録', '$bestLabel $bestRank位'),
+      if (g.totalEarnings > 0) ('生涯収入', moneyLabel(g.totalEarnings)),
+      if (g.careerHigh != null) ('キャリアハイ', '${g.careerHigh!.points}点'),
+    ];
+    final cs = Theme.of(context).colorScheme;
+    return LayoutBuilder(builder: (context, box) {
+      final w = (box.maxWidth - 16) / 3;
+      return Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: [
+          for (final (label, value) in tiles)
+            Container(
+              width: w,
+              // 高さは決めず最小だけ(iPad は文字が1.25倍で、決めるとはみ出した)。
+              constraints: const BoxConstraints(minHeight: 68),
+              alignment: Alignment.center,
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+              decoration: BoxDecoration(
+                color: cs.surfaceContainerHighest.withValues(alpha: 0.6),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(value,
+                        maxLines: 1, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900)),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(label, style: TextStyle(fontSize: 11, color: cs.onSurfaceVariant)),
+                ],
+              ),
+            ),
+        ],
+      );
+    });
   }
 }
 
@@ -1362,7 +1565,7 @@ class _MatchRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                    '${m.tag.isNotEmpty ? m.tag : (league.playoffRounds > 0 && index >= league.rounds ? roundLabelOf(league, index) : '${index + 1}試合目')}  ${m.teamScore}-${m.oppScore}${m.overtimes > 0 ? '(延長${m.overtimes > 1 ? m.overtimes : ''})' : ''}${m.starter ? '' : '  控え'}'
+                    '${m.tag.isNotEmpty ? m.tag : (league.playoffRounds > 0 && index < league.rounds ? '${index + 1}試合目' : roundLabelOf(league, index))}  ${m.teamScore}-${m.oppScore}${m.overtimes > 0 ? '(延長${m.overtimes > 1 ? m.overtimes : ''})' : ''}${m.starter ? '' : '  控え'}'
                     '${m.opponent.isEmpty ? '' : '  vs ${m.vsRival ? 'ライバル ' : ''}${m.opponent}'}',
                     style: const TextStyle(fontWeight: FontWeight.bold)),
                 Text('得点${m.points} リバウンド${m.rebounds} アシスト${m.assists}'
@@ -1501,8 +1704,9 @@ class _PlanView extends StatelessWidget {
                       style: k == rec
                           ? null
                           : FilledButton.styleFrom(
-                              backgroundColor: cs.secondaryContainer,
-                              foregroundColor: cs.onSecondaryContainer),
+                              backgroundColor: cs.surface,
+                              foregroundColor: cs.onSurface,
+                              side: BorderSide(color: cs.primary.withValues(alpha: 0.5), width: 1.5)),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 4),
                         child: Column(
@@ -1943,15 +2147,26 @@ class _EndingView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('${p.name}の物語',
+                Text('${p.name}の物語${g.generation > 1 ? '(${g.generation}代目)' : ''}',
                     style: const TextStyle(
                         fontSize: 20, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 4),
-                Text('称号「${careerTitle(g)}」${g.difficulty == Difficulty.normal ? '' : '  (${g.difficulty.label})'}${g.number > 0 ? '\n背番号${g.number}${retiredNumber(g) ? '(永久欠番)' : ''}' : ''}',
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
-                        fontWeight: FontWeight.bold)),
-                const SizedBox(height: 10),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 6,
+                  children: [
+                    _Badge(icon: Icons.military_tech, text: '称号「${careerTitle(g)}」'),
+                    if (g.number > 0)
+                      _Badge(
+                          icon: Icons.checkroom,
+                          text: '背番号${g.number}${retiredNumber(g) ? '・永久欠番' : ''}',
+                          strong: retiredNumber(g)),
+                    if (g.difficulty != Difficulty.normal) _Badge(icon: Icons.tune, text: g.difficulty.label),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                _StatTiles(game: g),
+                const SizedBox(height: 12),
                 for (final line in epilogueLines(g))
                   Padding(
                     padding: const EdgeInsets.only(bottom: 6),
@@ -2005,16 +2220,7 @@ class _EndingView extends StatelessWidget {
                 const Text('年ごとの成績',
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 const SizedBox(height: 6),
-                for (final r in g.records)
-                  Text('${r.age}歳 ${leagueLabel(r.league)}${r.winter ? '(冬)' : ''} '
-                      '${r.wins}勝${r.games - r.wins}敗'
-                      '${r.champion ? ' 優勝' : ''}${r.award == null ? '' : ' [${r.award}]'}  '
-                      '${r.benchGames > 0 ? '(控え${r.benchGames}試合) ' : ''}'
-                      '${r.ppg.toStringAsFixed(1)}点 '
-                      '${r.rpg.toStringAsFixed(1)}R '
-                      '${r.apg.toStringAsFixed(1)}A'
-                      '${r.box.isEmpty ? '' : '  ${shootingLine(r.box, r.threes, digits: 0)}'}'
-                      '${r.honors.isEmpty ? '' : '  ${r.honors.join('・')}'}'),
+                for (final r in g.records) _YearRow(record: r),
               ],
             ),
           ),

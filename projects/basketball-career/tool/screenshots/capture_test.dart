@@ -35,6 +35,7 @@ import 'package:basketball_career/game/life.dart';
 import 'package:basketball_career/game/match.dart';
 import 'package:basketball_career/game/path.dart';
 import 'package:basketball_career/game/player.dart';
+import 'package:basketball_career/game/lineage.dart';
 import 'package:basketball_career/game/season.dart';
 import 'package:basketball_career/monetization/monetization.dart';
 import 'package:basketball_career/monetization/purchase_service.dart';
@@ -133,6 +134,7 @@ Future<void> _shoot(
   GameController c,
   (Color, Color) colors, {
   Future<void> Function(WidgetTester)? act,
+  String? outDir,
 }) async {
   t.view.physicalSize = _logical * _ratio;
   t.view.devicePixelRatio = _ratio;
@@ -178,7 +180,7 @@ Future<void> _shoot(
     // iPhone は論理 402x874 の3倍=1206x2622、iPad は論理 1032x1376 の2倍=2064x2752 で書き出す。
     final img = await b.toImage(pixelRatio: _ratio);
     final data = await img.toByteData(format: ui.ImageByteFormat.png);
-    final dir = Directory('marketing/screenshots/$_device')..createSync(recursive: true);
+    final dir = Directory(outDir ?? 'marketing/screenshots/$_device')..createSync(recursive: true);
     File('${dir.path}/$name.png').writeAsBytesSync(data!.buffer.asUint8List());
   });
 }
@@ -436,6 +438,79 @@ void main() {
       await t.tap(find.text('お金'));
       await t.pump(const Duration(milliseconds: 600));
     });
+  });
+
+  // 画面の点検用(掲載画像ではない)。新しい画面を目で見るため build/review/ に書き出す(git には入れない)。
+  testWidgets('画面の点検用', (t) async {
+    SharedPreferences.setMockInitialValues({'howtoSeen': true});
+    await _loadFonts();
+    addTearDown(t.view.reset);
+    const c1 = (Color(0xFF263238), Color(0xFF455A64));
+    final out = 'build/review/$_device';
+
+    // 大一番の作戦。
+    GameController? plan;
+    for (var seed = 0; seed < 300 && plan == null; seed++) {
+      final g = Game(
+        eventsEnabled: false,
+        player: Player(name: 'ミナト', age: 15, potential: 90, heightCm: 188, heightGenes: 0.5,
+            abilities: {for (final a in Ability.values) a: 88}),
+        rng: Random(seed),
+        slot: 1,
+      );
+      g.choose(Action.rest, Ability.pass, askClutch: true, askHalftime: true);
+      var guard = 0;
+      while ((g.phase == Phase.halftime || g.phase == Phase.clutch) && guard++ < 30) {
+        if (g.phase == Phase.halftime) g.resolveHalftime(Halftime.keep);
+        if (g.phase == Phase.clutch) g.resolveClutch(Clutch.drive);
+      }
+      if (g.phase == Phase.plan) plan = _controller(g);
+    }
+    await _shoot(t, 'r1_plan', '大一番の作戦', plan!, c1, outDir: out);
+
+    // プロ33歳の状態カード(歴代記録・ベテランの役割)と、歴代記録の表。
+    final base = Game.start('ミナト', rng: Random(3), events: false);
+    final vet = Game(
+      eventsEnabled: false,
+      player: base.player.copyWith(clearPositionLock: true, age: 33, heightCm: 194,
+          abilities: {for (final x in Ability.values) x: 72}),
+      rng: Random(4),
+      track: Track.pro,
+      number: 8,
+      salary: 9000,
+      sponsor: 900,
+      cash: 30000,
+    );
+    vet.records.add(YearRecord(age: 30, league: League.proDomestic, wins: 9, games: 120, ppg: 30, rpg: 9, apg: 9, champion: true, achievement: 80));
+    await _shoot(t, 'r2_vet', 'ベテランの状態', _controller(vet), c1, outDir: out);
+    await _shoot(t, 'r3_alltime', '歴代記録の表', _controller(vet), c1, outDir: out, act: (t) async {
+      await t.ensureVisible(find.text('表を見る'));
+      await t.pump(const Duration(milliseconds: 300));
+      await t.tap(find.text('表を見る'));
+      await t.pump(const Duration(milliseconds: 600));
+    });
+    await _shoot(t, 'r4_role', 'ベテランの役割', _controller(vet), c1, outDir: out, act: (t) async {
+      await t.ensureVisible(find.text('役割を選ぶ'));
+      await t.pump(const Duration(milliseconds: 300));
+      await t.tap(find.text('役割を選ぶ'));
+      await t.pump(const Duration(milliseconds: 600));
+    });
+
+    // エンディング(新しい見た目)と、次の世代へ。
+    GameController? ending;
+    for (var seed = 0; seed < 2000 && ending == null; seed++) {
+      final g = Game.start('ミナト', rng: Random(seed), events: false);
+      _play(g, untilAge: 60);
+      if (g.phase == Phase.retired && g.proTitles > 0) ending = _controller(g);
+    }
+    await _shoot(t, 'r5_ending', 'エンディング', ending!, c1, outDir: out);
+    await _shoot(t, 'r6_ending_bottom', 'エンディングの下', ending, c1, outDir: out, act: (t) async {
+      await t.scrollUntilVisible(find.text('まったく新しい選手を育てる'), 400, scrollable: find.byType(Scrollable).first);
+      await t.pump(const Duration(milliseconds: 300));
+    });
+    final heir = _controller(ending.game!);
+    await heir.startNextGeneration(HeirKind.child);
+    await _shoot(t, 'r7_heir', '次の世代へ', heir, c1, outDir: out);
   });
 
   // 課金アイテムの審査用(App Store Connect の「審査に関する情報」)。値段(¥370)が写った設定画面。

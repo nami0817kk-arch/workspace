@@ -235,7 +235,15 @@ String roundLabelOf(League league, int r) {
     };
     return '${league.playoffName}$name';
   }
-  return league.playoffRounds > 0 ? '${league.regularName} 第${r + 1}節' : '${r + 1}回戦';
+  if (league.playoffRounds > 0) return '${league.regularName} 第${r + 1}節';
+  // 勝ち抜き戦: 最後から 決勝・準決勝・準々決勝(4回戦以上あるとき)、それより前は回戦。
+  final fromEnd = league.rounds - 1 - r;
+  return switch (fromEnd) {
+    0 => '決勝',
+    1 => '準決勝',
+    2 when league.rounds >= 4 => '準々決勝',
+    _ => '${r + 1}回戦',
+  };
 }
 
 /// 個人の評価 0〜100(50 が平均)。得点・リバウンド・アシストの1試合平均から。

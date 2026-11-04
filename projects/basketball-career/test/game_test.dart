@@ -2437,7 +2437,11 @@ void main() {
       expect(roundLabelOf(League.proDomestic, 5), 'レギュラーシーズン 第6節');
       expect(roundLabelOf(League.proDomestic, 6), 'プレーオフ準決勝');
       expect(roundLabelOf(League.proDomestic, 7), 'プレーオフ決勝');
-      expect(roundLabelOf(League.highSchool, 3), '4回戦');
+      expect(roundLabelOf(League.highSchool, 0), '1回戦');
+      expect(roundLabelOf(League.highSchool, 2), '準々決勝');
+      expect(roundLabelOf(League.highSchool, 3), '準決勝');
+      expect(roundLabelOf(League.highSchool, 4), '決勝');
+      expect(roundLabelOf(League.minibasket, 0), '1回戦', reason: '3回戦までなら準々決勝は無い');
       expect(League.highSchool.playoffRounds, 0);
       expect(League.proAbroad.playoffRounds, 2);
       expect(League.proDomestic.qualifyWins, 3);
