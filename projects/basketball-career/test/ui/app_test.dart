@@ -165,9 +165,15 @@ void main() {
     await tester.pumpWidget(BasketballCareerApp(controller: c));
     await tester.pumpAndSettle();
     expect(find.text('ユウの物語'), findsOneWidget);
-    await tester.tap(find.text('新しい選手を育てる'));
+    // 「次の世代へ」(子ども)を押すと、受け継ぐもののカードつきの、はじめの画面になる。
+    await tester.scrollUntilVisible(find.text('子どもとして育てる'), 300, scrollable: find.byType(Scrollable).first);
+    await tester.tap(find.text('子どもとして育てる'));
     await tester.pumpAndSettle();
     expect(find.text('6歳から始める'), findsOneWidget);
+    expect(find.textContaining('2代目: ユウの子ども'), findsOneWidget);
+    await tester.tap(find.text('受け継がずに始める'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('2代目'), findsNothing);
   });
 
   test('操作のたびに保存され、読み戻せる', () async {
