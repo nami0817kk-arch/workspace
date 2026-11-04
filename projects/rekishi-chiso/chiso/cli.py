@@ -1243,6 +1243,9 @@ def cmd_playlists(args) -> int:
     log = ROOT / "posted.json"
     posted = json.loads(log.read_text(encoding="utf-8")) if log.exists() else []
     p = channel.plan(posted_scripts(), posted, args.only)
+    if args.mains_only:
+        p.lists = {n: [kv for kv in items if kv[0].endswith(":main")] for n, items in p.lists.items()}
+        p.lists = {n: items for n, items in p.lists.items() if items}
     if not p.lists:
         print("入れる再生リストがありません（台本に playlists:・series:・shorts_playlists: を書く）")
         return 0
@@ -1501,6 +1504,7 @@ def main(argv=None) -> int:
     s.add_argument("--sync", action="store_true", help="作って入れる（書き込み）。無ければ計画を出すだけ（API を使わない）")
     s.add_argument("--only", default="", help="1つの台本だけ（例 kira）")
     s.add_argument("--budget", type=int, default=3000, help="今回の書き込みで使ってよい単位（既定 3000＝約60本）")
+    s.add_argument("--mains-only", action="store_true", help="本編だけ（ショートの再生リストは触らない）")
     s.set_defaults(fn=cmd_playlists)
     s = sub.add_parser("localize")
     s.add_argument("script")
