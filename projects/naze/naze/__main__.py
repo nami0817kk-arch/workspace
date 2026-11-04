@@ -3,6 +3,7 @@
 手順(地形の回): kana(読みを出す)/ voice(声と時間割)/ prep(標高・色・カメラ)/ stills 1,60,120(確認用のコマ)/ render(全コマ)/ compose(mp4)/ all
 手順(計算の回): kana / voice / compose / all   … 画面は題材の ep.py の frame() が描く
 点検(両方): qc … compose のあと。通らなければ投稿できない(naze/qc.py)
+映像の点検(世界の地図の回): vqc … 描く前でも使える(naze/vqc.py)。qc の中でも走る
 """
 from __future__ import annotations
 
@@ -42,6 +43,9 @@ def main(argv=None) -> int:
     out = OUT / (folder.name if folder.parent.name == "episodes" else f"{folder.parent.name}_{folder.name}")
     out.mkdir(parents=True, exist_ok=True)
     kind = ep.get("kind", "terrain")
+    if step == "vqc":
+        from . import vqc
+        return 0 if vqc.run(ep, out, ep["_mod"].MAP) else 1
     if step == "qc":
         from . import qc
         from . import terrain_ep, sim_ep

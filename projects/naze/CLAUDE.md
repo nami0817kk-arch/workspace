@@ -21,8 +21,10 @@
   - `render` は途中から再開できる（できたコマは飛ばす）。`prep` で設定が変わると古いコマは捨てる
 - 計算の回（kind: sim）: `kana` → `voice` → `stills` → `compose`。画面は `ep.py` の `draw(img, dr, t, ctx)` が描く
 - 世界の地図の回（2026-11-04、チリの回から）: `naze/worldmap.py`。下地は1本のあいだ立体の地図1つ（寄り引き・手前に傾ける）、その上に層を足す（国の塗り・縁・2国の境・線・矢印・輪切り・札・点・日本の形を本当の大きさで重ねる・断面のパネル・上の章の帯）。
-  標高は Terrain Tiles（AWS の公開データ。アカウント不要で課金なし。海底も入る）、国境・都市は Natural Earth 10m。どちらも `cache/` に自動で取る。
-  概要欄に「標高: Terrain Tiles（AWS Open Data。USGS SRTM・GMTED2010、NOAA ETOPO1）／国境: Natural Earth」。書き方は worldmap.py の冒頭。1コマ約0.5秒
+  陸の色は NASA Blue Marble（GIBS、鍵不要・利用の制限なし）、標高は Terrain Tiles（AWS の公開データ。アカウント不要で課金なし。海底も入る）、国境・州・都市は Natural Earth 10m。どれも `cache/` に自動で取る。
+  概要欄に「地図: NASA Blue Marble（GIBS）、標高 Terrain Tiles（USGS SRTM・GMTED2010、NOAA ETOPO1）、国境 Natural Earth」。書き方は worldmap.py の冒頭
+  映像の質（2026-11-04）: 傾けると山が立ち上がる（手前が奥を隠す）・塗った国は影で浮いて縁が光る・札は弾んで出る・周りを少し暗く・細かい粒。1コマ 傾けて約0.9秒、真上から約0.35秒
+  **映像の点検** `python -m naze vqc episodes/<題材>/<章>`（naze/vqc.py。声の前でも使える。qc の中でも走る）: 何も足されない間（10秒で△・15秒で✖）・寄りすぎのぼけ・カメラの速さ・字の数・1分に足す数。場面を書いたら先にこれを通す
 - 3D の物理演算は MuJoCo（`pip install mujoco`、2026-10-31 導入。落下の試運転は理論値と一致）。pybullet はこの PC にコンパイラが無く入らない。2D は pymunk。計算の回の `draw()` から時間を進めて軌道を描く
 - 声は VOICEVOX の剣崎雌雄（id 21、2026-10-26 ユーザーが選んだ）。読みは `kana` で全行を見て、違えば `say` で直す。概要欄に「VOICEVOX:剣崎雌雄」
 - 投稿: `python -m naze.upload 動画 --title … --desc-file … --publish-at 2026-10-27T19:00:00+09:00 [--thumb サムネ.jpg]`（カテゴリ教育）。本編は 19 時、翌日にショート 5 本を 11・12・13・14・16 時

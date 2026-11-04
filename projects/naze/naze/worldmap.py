@@ -4,7 +4,15 @@
   terrarium/{z}/{x}/{y}.png  Terrain Tiles(AWS Open Data、アカウント不要で課金なし。陸は SRTM・GMTED2010(USGS)、海底は ETOPO1(NOAA))
                              高さ = R*256 + G + B/256 - 32768 (m)。初めて使う範囲は自動で取ってくる
   ne/ne_10m_*.geojson        Natural Earth 10m の国・国境・都市(著作権放棄)
-概要欄の出典: 「標高: Terrain Tiles(AWS Open Data。USGS SRTM・GMTED2010、NOAA ETOPO1)／国境: Natural Earth」
+  bluemarble/*.jpg           NASA Blue Marble Next Generation(陸の本当の色。GIBS の WMS、鍵不要・利用の制限なし)
+概要欄の出典: 「地図: NASA Blue Marble(GIBS)、標高 Terrain Tiles(USGS SRTM・GMTED2010、NOAA ETOPO1)、国境 Natural Earth」
+
+映像の質の仕組み(2026-11-04):
+  - 陸は衛星写真の本当の色に陰影を重ね、海は深さの色分け(海溝が見える)
+  - 傾けると山が本当に立ち上がる(高さで画面の上へずらし、手前の山が奥を隠す)。高さの強調は画面に対して一定(6,000m で画面の高さの relief 倍)
+  - 塗った国は影を落として浮き上がり、縁が光る。札は小さく弾んで出る。周りを少し暗くし、細かい粒を乗せる
+  - 層を描く位置も同じ高さで持ち上げるので、峰の上の国境が山とずれない
+  - 点検は naze/vqc.py(足す間隔・ぼけ・カメラの速さ・札の数)
 
 使い方(題材の scene.py か ep.py):
   M = worldmap.Map(lat0=-35, bases=[((-100, -62, -20, 16), 5), ((-78, -57, -64, -16), 8)])
@@ -27,6 +35,7 @@
 """
 from __future__ import annotations
 
+import io
 import json
 import math
 import urllib.request
@@ -43,6 +52,10 @@ from .config import CACHE, H, W
 TT = CACHE / "terrarium"
 NE = CACHE / "ne"
 TT_URL = "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png"
+BM = CACHE / "bluemarble"
+BM_URL = ("https://gibs.earthdata.nasa.gov/wms/epsg4326/best/wms.cgi?SERVICE=WMS&REQUEST=GetMap&VERSION=1.3.0"
+          "&LAYERS=BlueMarble_NextGeneration&STYLES=&CRS=EPSG:4326&BBOX={la0},{lo0},{la1},{lo1}&WIDTH={w}&HEIGHT={h}&FORMAT=image/jpeg")
+PAD = 360                                    # 山を持ち上げたときに下から入ってくる分(画面の下の外も描く)
 SKY0, SKY1 = (14, 22, 40), (40, 58, 86)
 SEA_EDGE = (16, 34, 64)
 SEA = [(-8000, (5, 12, 32)), (-6000, (9, 22, 52)), (-4000, (15, 38, 80)), (-2000, (22, 58, 110)),
@@ -88,6 +101,61 @@ def heights(bbox, z: int, ppd: float) -> np.ndarray:
     mx = ((lons + 180) / 360 * n - tx0 * 256).astype(np.float32)
     my = np.array([merc_y(la, n) for la in lats], np.float32) - ty0 * 256
     return cv2.remap(mos, np.tile(mx, (h, 1)), np.tile(my[:, None], (1, w)), cv2.INTER_LINEAR)
+
+
+def bluemarble(bbox, ppd: float) -> np.ndarray:
+    """bbox の衛星写真(本当の色)を、緯度経度が等間隔の格子(1 度に ppd 画素、上が北)で。2048 画素ずつ取ってつなぐ。"""
+    from concurrent.futures import ThreadPoolExecutor
+    lo0, la0, lo1, la1 = bbox
+    w, h = int((lo1 - lo0) * ppd), int((la1 - la0) * ppd)
+    key = BM / f"bm_{lo0}_{la0}_{lo1}_{la1}_{ppd:.2f}.jpg"
+    if key.exists():
+        return np.asarray(Image.open(key).convert("RGB"))
+    BM.mkdir(parents=True, exist_ok=True)
+    out = np.zeros((h, w, 3), np.uint8)
+    step = 2048
+    jobs = [(x, y) for y in range(0, h, step) for x in range(0, w, step)]
+
+    def get(j):
+        x, y = j
+        cw, ch = min(step, w - x), min(step, h - y)
+        url = BM_URL.format(lo0=lo0 + x / ppd, lo1=lo0 + (x + cw) / ppd, la1=la1 - y / ppd, la0=la1 - (y + ch) / ppd, w=cw, h=ch)
+        req = urllib.request.Request(url, headers={"User-Agent": "naze-worldmap"})
+        with urllib.request.urlopen(req, timeout=120) as r:
+            return np.asarray(Image.open(io.BytesIO(r.read())).convert("RGB"))
+
+    with ThreadPoolExecutor(4) as ex:
+        for (x, y), a in zip(jobs, ex.map(get, jobs)):
+            out[y:y + a.shape[0], x:x + a.shape[1]] = a
+    Image.fromarray(out).save(key, quality=92)
+    return out
+
+
+def shade_of(e: np.ndarray, px_m: float) -> np.ndarray:
+    """北西から光を当てた陰影(1 が平ら)。"""
+    gy, gx = np.gradient(e)
+    gx, gy = gx / px_m, -gy / px_m
+    ex = np.where(e < 0, 6.0, 3.0)
+    nx, ny = -gx * ex, -gy * ex
+    lx, ly, lz = -0.6, 0.6, 0.53
+    sh = (nx * lx + ny * ly + lz) / np.sqrt(nx * nx + ny * ny + 1)
+    return sh / lz
+
+
+def compose(e: np.ndarray, photo: np.ndarray, px_m: float) -> np.ndarray:
+    """陸は衛星写真に陰影を重ね、海は深さの色分けに陰影。境は少しぼかしてなじませる。"""
+    import cv2
+    sh = shade_of(e, px_m)
+    sea = np.zeros(e.shape + (3,), np.float32)
+    xs = [s[0] for s in SEA]
+    for c in range(3):
+        sea[..., c] = np.interp(np.minimum(e, 0), xs, [s[1][c] for s in SEA])
+    sea *= np.clip(0.55 + 0.45 * sh, 0.5, 1.3)[..., None]
+    land = photo.astype(np.float32)
+    land = (land - 128) * 1.08 + 128 + 6                     # 少しだけ締める
+    land *= np.clip(0.62 + 0.38 * sh, 0.55, 1.35)[..., None]
+    m = cv2.GaussianBlur((e > 0).astype(np.float32), (0, 0), 1.2)[..., None]
+    return np.clip(land * m + sea * (1 - m), 0, 255).astype(np.uint8)
 
 
 def colorize(e: np.ndarray, px_m: float, kx: float) -> np.ndarray:
@@ -189,7 +257,12 @@ class Base:
         self.w = int(w * kx)
         self.e = cv2.resize(self.e, (self.w, h), interpolation=cv2.INTER_AREA)
         self.kx = kx
-        col = colorize(self.e, 111320 / self.ppd, 1.0)
+        try:
+            photo = cv2.resize(bluemarble(bbox, self.ppd), (self.w, h), interpolation=cv2.INTER_AREA)
+            col = compose(self.e, photo, 111320 / self.ppd)
+        except Exception as e:                                # 写真が取れないときは色分けで描く
+            print("衛星写真が取れない:", e)
+            col = colorize(self.e, 111320 / self.ppd, 1.0)
         im = Image.fromarray(col)
         d = ImageDraw.Draw(im, "RGBA")
         lw = max(1, int(round(self.ppd / 60)))
@@ -201,8 +274,10 @@ class Base:
             if self._near(pts):
                 d.line([self.xy(*p) for p in pts], fill=(250, 250, 250, 170), width=lw + 1)
         self.levels = [np.asarray(im)]
+        self.elev = [np.maximum(self.e, 0)]
         while self.levels[-1].shape[1] > 1200:
             self.levels.append(cv2.pyrDown(self.levels[-1]))
+            self.elev.append(cv2.pyrDown(self.elev[-1]))
         self._masks: Dict[str, list] = {}
 
     def _near(self, pts) -> bool:
@@ -257,6 +332,9 @@ class View:
         self.s = W / (span * kx)                              # 平らにしたときの 1 度あたりの画素
         t = math.radians(tilt)
         D = 1.0 * H
+        self.D, self.sin = D, math.sin(t)
+        self.hfun = None                                      # 高さ(m)を返す関数。Map.draw が入れる
+        self.relief_px = 0.0                                  # 6,000m を真ん中で何画素持ち上げるか
         self.M = np.array([[D, (W / 2) * math.sin(t), (W / 2) * D],
                            [0, -D * math.cos(t) + (H / 2) * math.sin(t), (H / 2) * D],
                            [0, math.sin(t), D]], np.float64)
@@ -268,7 +346,10 @@ class View:
     def px(self, lon: float, lat: float) -> Tuple[float, float]:
         X, Y = self.ground(lon, lat)
         v = self.M @ np.array([X, Y, 1.0])
-        return v[0] / v[2], v[1] / v[2]
+        x, y = v[0] / v[2], v[1] / v[2]
+        if self.hfun is not None and self.relief_px > 0:
+            y -= max(0.0, self.hfun(lon, lat)) / 6000 * self.relief_px * self.D / v[2]
+        return x, y
 
     @staticmethod
     def lerp(a: "View", b: "View", u: float) -> "View":
@@ -282,10 +363,14 @@ def _ease(u: float) -> float:
 
 
 class Map:
-    def __init__(self, lat0: float, bases: Sequence[tuple]):
+    def __init__(self, lat0: float, bases: Sequence[tuple], relief: float = 0.06, finish: bool = True):
         self.kx = math.cos(math.radians(lat0))
         self.spec = list(bases)
         self._bases = None
+        self.relief = relief                                  # 6,000m の山を画面の高さの何倍持ち上げるか(傾けたとき)
+        self.finish = finish
+        self._R = None                                        # そのコマの「画面の画素 ← 下地の行」の対応(山の持ち上げ)
+        self._fin = None
 
     @property
     def bases(self) -> List[Base]:
@@ -297,13 +382,55 @@ class Map:
         return View(lon, lat, span, tilt, self.kx)
 
     # -- 下地 --
-    def _warp(self, b: Base, v: View, src: np.ndarray, level: int, border) -> np.ndarray:
+    def _warp(self, b: Base, v: View, src: np.ndarray, level: int, border, ext: bool = False) -> np.ndarray:
+        """下地の画素 → 画面。ext=True は画面の下の外(PAD 行)まで描く(山を持ち上げる前の絵)。"""
         import cv2
         f = 2 ** level
         bx, by = b.xy(v.lon, v.lat)
         k = v.s / b.ppd                                       # 下地の画素 → 平らな画面の画素
         T = np.array([[k * f, 0, -bx * k], [0, -k * f, by * k], [0, 0, 1]], np.float64)
-        return cv2.warpPerspective(src, v.M @ T, (W, H), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT, borderValue=border)
+        return cv2.warpPerspective(src, v.M @ T, (W, H + PAD if ext else H), flags=cv2.INTER_LINEAR,
+                                   borderMode=cv2.BORDER_CONSTANT, borderValue=border)
+
+    def _lift(self, v: View, elev: np.ndarray) -> np.ndarray:
+        """山の持ち上げ: 画面の各画素に、どの行(画面の下の外を含む)の色を置くか。手前の山が奥を隠す。空は -1。"""
+        hh = elev.shape[0]
+        rows = np.arange(hh, dtype=np.float32)
+        # 行ごとの奥行きの縮み(D / w)。地面の Y を逆算する
+        Minv = np.linalg.inv(v.M)
+        q = Minv @ np.vstack([np.full(hh, W / 2), rows, np.ones(hh)])
+        Y = q[1] / q[2]
+        wgt = v.D / np.maximum(v.D + Y * v.sin, 1e-3)
+        d = elev / 6000 * v.relief_px * wgt[:, None].astype(np.float32)
+        t = rows[:, None] - d
+        acc = np.minimum.accumulate(t[::-1], axis=0)[::-1]    # 下から見たいちばん上の届き
+        # 画面の行 y に届く行の数 = acc <= y の数(acc は列ごとに下ほど大きい)。数えるのは bincount でまとめて
+        f = np.clip(np.floor(acc), -1, H).astype(np.int64) + 1          # 0〜H+1
+        idx = (np.arange(W)[None, :] * (H + 2) + f).ravel()
+        cnt = np.bincount(idx, minlength=W * (H + 2)).reshape(W, H + 2)
+        cum = np.cumsum(cnt, axis=1)[:, 1:H + 1]                          # y=0..H-1 で acc <= y の数
+        return (cum.T - 1).astype(np.int32)
+
+    def _gather(self, ext: np.ndarray, fill=0) -> np.ndarray:
+        """画面の下の外まで描いた絵を、そのコマの持ち上げに合わせて並べ直す。"""
+        if self._R is None:
+            return ext[:H]
+        R = self._R
+        cols = np.arange(W)[None, :]
+        out = ext[np.maximum(R, 0), cols]
+        if fill is not None:
+            out[R < 0] = fill
+        return out
+
+    def _finish_arrays(self):
+        if self._fin is None:
+            yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
+            r = np.sqrt(((xx - W / 2) / (W / 2)) ** 2 + ((yy - H / 2) / (H / 2)) ** 2)
+            vig = 1 - 0.28 * np.clip((r - 0.55) / 0.85, 0, 1) ** 1.6
+            rng = np.random.default_rng(7)
+            grain = rng.normal(0, 3.2, (H + 64, W + 64)).astype(np.float32)
+            self._fin = (vig[..., None], grain)
+        return self._fin
 
     def _level(self, b: Base, v: View) -> int:
         k = v.s / b.ppd
@@ -312,31 +439,68 @@ class Map:
             lv += 1
         return lv
 
-    def base_img(self, v: View) -> np.ndarray:
+    def base_img(self, v: View, t: float = 0.0) -> np.ndarray:
         import cv2
-        out = None
-        for b in self.bases:
+        out = el = None
+        # 画面を丸ごと覆う細かい下地があれば、それより粗いものは描かない
+        hspan = v.span * self.kx * H / W * (1.8 if v.tilt > 1 else 1.1)
+        start = 0
+        for i, b in enumerate(self.bases):
+            lo0, la0, lo1, la1 = b.bbox
+            if (lo0 <= v.lon - v.span * 0.75 and v.lon + v.span * 0.75 <= lo1 and la0 <= v.lat - hspan and v.lat + hspan <= la1
+                    and v.s / b.ppd >= 0.35):
+                start = i
+        for b in self.bases[start:]:
             if out is not None and not b.covers(v.lon, v.lat, v.span * 0.6):
                 continue
             if out is not None and v.s / b.ppd < 0.35:        # 引いているときは細かい下地は要らない
                 continue
             lv = self._level(b, v)
-            r = self._warp(b, v, b.levels[lv], lv, SEA_EDGE)
+            r = self._warp(b, v, b.levels[lv], lv, SEA_EDGE, ext=True)
+            e = self._warp(b, v, b.elev[lv], lv, 0, ext=True)
             if out is None:
-                out = r
+                out, el = r, e
             else:
                 a = np.full(b.levels[lv].shape[:2], 255, np.uint8)
-                e = max(4, a.shape[1] // 40)
-                a[:e], a[-e:], a[:, :e], a[:, -e:] = 0, 0, 0, 0
-                m = cv2.GaussianBlur(self._warp(b, v, a, lv, 0), (0, 0), 6).astype(np.float32)[..., None] / 255
-                out = (r * m + out * (1 - m)).astype(np.uint8)
+                ed = max(4, a.shape[1] // 40)
+                a[:ed], a[-ed:], a[:, :ed], a[:, -ed:] = 0, 0, 0, 0
+                m = cv2.GaussianBlur(self._warp(b, v, a, lv, 0, ext=True), (0, 0), 6).astype(np.float32) / 255
+                out = cv2.blendLinear(r, out, m, 1 - m)
+                el = cv2.blendLinear(e, el, m, 1 - m)
+        # 山を持ち上げる(傾けたときだけ)
+        v.relief_px = self.relief * H * v.sin if v.tilt > 1 else 0.0
+        self._R = self._lift(v, el) if v.relief_px > 0.5 else None
+        import cv2
+        img = self._gather(out, fill=None)
+        if self._R is not None:
+            img[self._R < 0] = SKY0
+        # 仕上げは 1 回でまとめて: 色 × (周りの暗さ × (1-かすみ)) + 空の色 × かすみ × 周りの暗さ + 粒
+        vig, grain = self._finish_arrays() if self.finish else (None, None)
+        fog = None
         if v.tilt > 1:                                         # 奥をかすませて空に溶かす
             hz = v.px(v.lon, v.lat + 400)[1]
-            ys = np.arange(H, dtype=np.float32)[:, None]
-            fog = np.clip(1 - (ys - hz) / (H * 0.45), 0, 1) ** 2 * 0.75
-            sky = np.array(SKY1, np.float32)
-            out = (out * (1 - fog[..., None]) + sky * fog[..., None]).astype(np.uint8)
-        return out
+            ys = np.arange(H, dtype=np.float32)
+            fog = (np.clip(1 - (ys - hz) / (H * 0.45), 0, 1) ** 2 * 0.7)[:, None]
+        if vig is None and fog is None:
+            return img
+        a = np.ones((H, W), np.float32) if vig is None else vig[..., 0].copy()
+        if fog is not None:
+            add = (fog * a)[..., None] * np.array(SKY1, np.float32)
+            a *= (1 - fog)
+        else:
+            add = None
+        f = cv2.multiply(img.astype(np.float32), cv2.merge([a, a, a]))
+        if add is not None:
+            f += add
+        if grain is not None:
+            ox, oy = int(t * 37) % 64, int(t * 53) % 64      # 粒はコマごとにずらす
+            g = grain[oy:oy + H, ox:ox + W]
+            f += cv2.merge([g, g, g])
+        return np.clip(f, 0, 255).astype(np.uint8)
+
+    def height(self, lon: float, lat: float) -> float:
+        bb = next((x for x in reversed(self.bases) if x.bbox[0] <= lon <= x.bbox[2] and x.bbox[1] <= lat <= x.bbox[3]), self.bases[0])
+        return bb.height_at(lon, lat)
 
     def best(self, v: View) -> Tuple[Base, int]:
         b = next((b for b in reversed(self.bases) if b.covers(v.lon, v.lat, v.span * 0.6) and v.s / b.ppd >= 0.35), self.bases[0])
@@ -351,35 +515,58 @@ class Map:
         col = tuple(L.get("color", ov.RED))
         if kind in ("fill", "outline"):
             import cv2
-            out = np.zeros((H, W, 4), np.uint8)
-            for b in self.bases:
-                if b is not self.best(v)[0]:
-                    continue
-                lv = self._level(b, v)
-                m = self._warp(b, v, b.mask(L["code"], lv), lv, 0)
-                if kind == "outline":
-                    wd = L.get("width", 4)
-                    m = cv2.morphologyEx(m, cv2.MORPH_GRADIENT, np.ones((wd, wd), np.uint8))
+            b, lv = self.best(v)
+            m = self._gather(self._warp(b, v, b.mask(L["code"], lv), lv, 0, ext=True), fill=0)
+            if kind == "outline":
+                wd = L.get("width", 4)
+                m = cv2.morphologyEx(m, cv2.MORPH_GRADIENT, np.ones((wd, wd), np.uint8))
+                out = np.zeros((H, W, 4), np.uint8)
                 out[..., :3] = col
-                out[..., 3] = (m.astype(np.float32) * (L.get("alpha", 0.45) if kind == "fill" else 1.0) * a).astype(np.uint8)
+                out[..., 3] = (m.astype(np.float32) * a).astype(np.uint8)
+                img.alpha_composite(Image.fromarray(out, "RGBA"))
+                return
+            mf = m.astype(np.float32) / 255
+            lift = L.get("lift", 1.0)
+            if lift > 0:                                      # 影を落として浮かせる
+                sh = cv2.GaussianBlur(np.roll(mf, int(10 * lift), axis=0), (0, 0), 9) * (1 - mf)
+                shadow = np.zeros((H, W, 4), np.uint8)
+                shadow[..., 3] = (sh * 150 * a).astype(np.uint8)
+                img.alpha_composite(Image.fromarray(shadow, "RGBA"))
+            out = np.zeros((H, W, 4), np.uint8)
+            out[..., :3] = col
+            out[..., 3] = (mf * 255 * L.get("alpha", 0.45) * a).astype(np.uint8)
             img.alpha_composite(Image.fromarray(out, "RGBA"))
+            if L.get("edge", True):                           # 縁を光らせる
+                eg = cv2.morphologyEx(m, cv2.MORPH_GRADIENT, np.ones((3, 3), np.uint8)).astype(np.float32) / 255
+                glow = cv2.GaussianBlur(eg, (0, 0), 3) * 0.6 + eg
+                e4 = np.zeros((H, W, 4), np.uint8)
+                e4[..., :3] = tuple(min(255, int(c * 0.5 + 128)) for c in col)
+                e4[..., 3] = (np.clip(glow, 0, 1) * 230 * a).astype(np.uint8)
+                img.alpha_composite(Image.fromarray(e4, "RGBA"))
             return
         lay = Image.new("RGBA", img.size, (0, 0, 0, 0))
         d = ImageDraw.Draw(lay)
         if kind in ("border", "line"):
             pts = border_between(L["a"], L["b"]) if kind == "border" else list(L["pts"])
+            import cv2
             pts = self._dense(pts)
             n = max(2, int(len(pts) * k))
-            seg = []
+            segs, seg = [], []
             for p in pts[:n] + [None]:
                 if p is None:
                     if len(seg) > 1:
-                        if L.get("glow"):
-                            d.line(seg, fill=col + (int(A * 0.35),), width=L.get("width", 6) * 3, joint="curve")
-                        d.line(seg, fill=col + (A,), width=L.get("width", 6), joint="curve")
+                        segs.append(np.array(seg, np.int32))
                     seg = []
                 else:
-                    seg.append(v.px(*p))
+                    q = v.px(*p)
+                    if not seg or abs(q[0] - seg[-1][0]) + abs(q[1] - seg[-1][1]) >= 2:   # 2 画素より細かい点は省く
+                        seg.append(q)
+            arr = np.zeros((H, W, 4), np.uint8)
+            wd = L.get("width", 6)
+            if L.get("glow"):
+                cv2.polylines(arr, segs, False, col + (int(A * 0.35),), wd * 3, cv2.LINE_AA)
+            cv2.polylines(arr, segs, False, col + (A,), wd, cv2.LINE_AA)
+            lay.alpha_composite(Image.fromarray(arr, "RGBA"))
         elif kind == "arrow":
             x0, y0 = v.px(*L["a"])
             x1, y1 = v.px(*L["b"])
@@ -406,7 +593,8 @@ class Map:
         img.alpha_composite(lay)
         if kind == "label":
             x, y = v.px(*L["at_ll"])
-            f = ov.font(L.get("size", 44))
+            pop = 1.0 + 0.18 * math.sin(math.pi * min(1.0, a)) if a < 1 else 1.0
+            f = ov.font(int(L.get("size", 44) * pop))
             t = L["text"]
             col = tuple(L.get("color", ov.WHITE))
             dd = ImageDraw.Draw(img)
@@ -549,7 +737,9 @@ class Map:
         vp = self.view(*prev["view"]) if prev else vn
         v = View.lerp(vp, vn, _ease((t - cur["start"]) / 1.4)) if now is not prev else vn
         v = View(v.lon, v.lat, v.span * (1 - 0.025 * math.sin(2 * math.pi * t / 18.0)), v.tilt, v.kx)   # 画面を止めない
-        img.paste(Image.fromarray(self.base_img(v)).convert("RGBA"), (0, 0))
+        base = self.base_img(v, t)
+        v.hfun = self.height
+        img.paste(Image.fromarray(base).convert("RGBA"), (0, 0))
         dur = max(1e-6, cur["end"] - cur["start"])
         prev_ids = {L.get("id") for L in (prev or {}).get("layers", [])} if now is not prev else set()
         for L in now.get("layers", []):

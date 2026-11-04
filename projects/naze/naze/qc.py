@@ -210,6 +210,13 @@ def run(ep: dict, out: Path, kind_mod, name: str) -> bool:
     sf, sw, sst = sound(video)
     F += pf + sf
     Wn += pw + sw
+    mp = getattr(ep["_mod"], "MAP", None)
+    if mp is not None:                                        # 世界の地図の回は映像の点検も
+        from . import vqc
+        vf, vw, vst = vqc.check(ep, out, mp)
+        F += vf
+        Wn += vw
+        pst = {**pst, **vst}
     sh = sheet(ep, tl, fr, out)
     st = video.stat()
     res = dict(passed=not F, at=datetime.now().isoformat(timespec="seconds"), video=video.name, size=st.st_size, mtime=st.st_mtime,
