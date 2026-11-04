@@ -207,7 +207,8 @@ class _SeasonViewState extends State<_SeasonView> {
             game: g,
             onPickStyle: () => showStylePicker(context, c),
             onPickSpecial: () => showSpecialPicker(context, c),
-            onPickPosition: () => showPositionPicker(context, c)),
+            onPickPosition: () => showPositionPicker(context, c),
+            onPickVeteran: () => showVeteranPicker(context, c)),
         const SizedBox(height: 12),
         _GoalCard(controller: c, game: g),
         const SizedBox(height: 12),
@@ -378,8 +379,11 @@ class _SeasonViewState extends State<_SeasonView> {
 
 class _PlayerCard extends StatelessWidget {
   const _PlayerCard(
-      {required this.game, this.onPickStyle, this.onPickSpecial, this.onPickPosition});
+      {required this.game, this.onPickStyle, this.onPickSpecial, this.onPickPosition, this.onPickVeteran});
   final Game game;
+
+  /// ベテランの役割を選ぶ(プロの33歳から)。
+  final VoidCallback? onPickVeteran;
 
   /// 目指すプレースタイルを選び直す(育成画面だけ。無ければ出さない)。
   final VoidCallback? onPickStyle;
@@ -449,6 +453,22 @@ class _PlayerCard extends StatelessWidget {
                   '年俸 ${moneyLabel(game.salary)}'
                   '${game.sponsor > 0 ? '  スポンサー 年${moneyLabel(game.sponsor)}' : ''}',
                   style: const TextStyle(fontSize: 12)),
+            if (onPickVeteran != null && game.canPickVeteranRole)
+              Row(
+                children: [
+                  Expanded(
+                    child: Text('ベテランの役割: ${game.activeRole!.label}',
+                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                  ),
+                  TextButton(
+                    onPressed: onPickVeteran,
+                    style: TextButton.styleFrom(
+                        visualDensity: VisualDensity.compact,
+                        padding: const EdgeInsets.symmetric(horizontal: 8)),
+                    child: const Text('役割を選ぶ', style: TextStyle(fontSize: 12)),
+                  ),
+                ],
+              ),
             // 歴代記録(プロになってから。伸びの小さい年でも追いかける目標)。
             if (game.track == Track.pro && allTimeSummary(game.allTimeValues) != null)
               Row(

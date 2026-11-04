@@ -15,6 +15,7 @@ import 'package:basketball_career/game/match.dart';
 import 'package:basketball_career/game/path.dart';
 import 'package:basketball_career/game/perks.dart';
 import 'package:basketball_career/game/player.dart';
+import 'package:basketball_career/game/veteran.dart';
 import 'package:basketball_career/game/season.dart';
 
 void main(List<String> args) {
@@ -42,6 +43,8 @@ void main(List<String> args) {
   final specials = args.contains('--specials');
   // --perks: 頼みごと・お金の使い道を、使えるときに使う。
   final perks = args.any((a) => a.startsWith('--perks'));
+  final roleArg = args.where((a) => a.startsWith('--role=')).firstOrNull;
+  final role = roleArg?.substring('--role='.length);
   // --perks=lesson,camp のように名前を並べると、それだけを使う(どれが効いているかを見るため)。
   final perkOnly = args.where((a) => a.startsWith('--perks=')).map((a) => a.substring(8).split(',').toSet()).firstOrNull;
   bool perkOn(String name) => perkOnly == null || perkOnly.contains(name);
@@ -76,6 +79,12 @@ void main(List<String> args) {
             for (final x in [Spend.trainer, Spend.nutrition, Spend.camp, Spend.gear, Spend.parents, Spend.court, if (g.teamwork < 60) Spend.treat]) {
               if (perkOn(x.name) && g.spendBlock(x) == null) g.spend(x, focus: pf);
             }
+          }
+          // --role=sixth / mentor / suggest: ベテランの役割(33歳から)。
+          if (role != null && g.canPickVeteranRole) {
+            g.setVeteranRole(role == 'suggest'
+                ? suggestedVeteranRole(g.player.overall, g.league.benchLine)
+                : VeteranRole.values.byName(role));
           }
           final rest = g.condition.fatigue >= 60 || g.condition.injured;
           // 重点は今いちばん低い能力ではなく、ポジションに効く能力を順に回す。

@@ -22,6 +22,7 @@ import '../game/path.dart';
 import '../game/perks.dart';
 import '../game/player.dart';
 import '../game/season.dart';
+import '../game/veteran.dart';
 import 'labels.dart';
 import 'milestone_dialog.dart';
 
@@ -427,6 +428,11 @@ class GameController extends ChangeNotifier {
     if (r.yearEnded && g.lastGoalMessage != null) lines.add(g.lastGoalMessage!);
     if (r.yearEnded && g.lastYearSummary != null) lines.add(g.lastYearSummary!);
     if (r.yearEnded && g.lastPositionNote != null) lines.add(g.lastPositionNote!);
+    final vet = g.lastVeteranNote;
+    if (vet != null) {
+      lines.add(vet);
+      pending.add(Milestone(MilestoneKind.stage, 'ベテランの役割', vet));
+    }
     if (t != null && g.lastTournamentFatigue > 0) {
       lines.add('${t.games}試合の連戦で疲れが残った(疲れ +${g.lastTournamentFatigue})。');
     }
@@ -779,6 +785,14 @@ class GameController extends ChangeNotifier {
           ? 'プレースタイルをおまかせにした。'
           : '目指すプレースタイルを「${style.label}」にした。',
     ];
+    _commit();
+  }
+
+  void setVeteranRole(VeteranRole r) {
+    final g = game;
+    if (g == null || !g.canPickVeteranRole) return;
+    g.setVeteranRole(r);
+    recent = ['ベテランの役割を「${r.label}」にした。${r.description}'];
     _commit();
   }
 

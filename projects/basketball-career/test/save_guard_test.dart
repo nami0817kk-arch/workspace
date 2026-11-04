@@ -6,12 +6,17 @@ import 'package:basketball_career/game/game.dart';
 import 'package:basketball_career/game/life.dart';
 import 'package:basketball_career/game/match.dart';
 import 'package:basketball_career/game/player.dart';
+import 'package:basketball_career/game/veteran.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// 1手ぶん進める。選択は決まった規則(乱数を使わない)。
 void step(Game g) {
   switch (g.phase) {
     case Phase.season:
+      // ベテランの役割(年齢で決まった規則で選ぶ)。
+      if (g.canPickVeteranRole && g.veteranRole == null) {
+        g.setVeteranRole(VeteranRole.values[g.player.age % VeteranRole.values.length]);
+      }
       g.choose(
         g.condition.fatigue >= 60 || g.condition.injured
             ? Action.rest
@@ -68,6 +73,7 @@ String fingerprint(Game g) => jsonEncode({
       'school': g.schoolLabel,
       'ach': g.recentAchievements,
       'reason': g.retiredReason,
+      'veteran': g.veteranRole?.name,
     });
 
 void main() {
