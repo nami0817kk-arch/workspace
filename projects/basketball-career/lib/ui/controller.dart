@@ -16,6 +16,8 @@ import '../game/game.dart';
 import '../game/legacy.dart';
 import '../monetization/monetization.dart';
 import '../game/life.dart';
+import '../game/lineage.dart';
+import '../game/epilogue.dart';
 import '../game/mastery.dart';
 import '../game/match.dart';
 import '../game/path.dart';
@@ -239,7 +241,9 @@ class GameController extends ChangeNotifier {
         traits: traits,
         dream: dream,
         style: style,
-        number: number);
+        number: number,
+        heir: nextHeir);
+    nextHeir = null;
     _followRecommended();
     focusAuto = true;
     recent = const [];
@@ -830,6 +834,23 @@ class GameController extends ChangeNotifier {
   void retire() {
     game!.retire();
     _commit();
+  }
+
+  /// 「次の世代へ」で受け継ぐもの。はじめの画面に出し、始めると使い切る(null なら受け継がない)。
+  Heir? nextHeir;
+
+  /// 引退した選手の子ども・教え子として、次の選手を始める(はじめの画面へ)。
+  Future<void> startNextGeneration(HeirKind kind) async {
+    final g = game;
+    if (g == null || g.phase != Phase.retired) return;
+    nextHeir = heirOf(g, kind, _rng, title: careerTitle(g), legend: retiredNumber(g) || worldChampion(g));
+    await reset();
+  }
+
+  /// 受け継がずに始める。
+  void dropHeir() {
+    nextHeir = null;
+    notifyListeners();
   }
 
   /// 引退後、新しく始める。

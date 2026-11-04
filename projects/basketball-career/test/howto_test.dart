@@ -28,6 +28,11 @@ void main() {
       '熟練度',
       '頼る',
       'お金',
+      '大一番',
+      'ベテラン',
+      '練習施設',
+      '歴代記録',
+      '次の世代',
     ];
     for (final w in words) {
       expect(all, contains(w), reason: '遊び方に「$w」が載っていない');

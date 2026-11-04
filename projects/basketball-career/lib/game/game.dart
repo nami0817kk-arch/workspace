@@ -8,6 +8,7 @@ import 'events.dart';
 import 'goals.dart';
 import 'honors.dart';
 import 'life.dart';
+import 'lineage.dart';
 import 'mastery.dart';
 import 'match.dart';
 import 'alltime.dart';
@@ -275,6 +276,10 @@ class Game {
     this.nutritionTerms = 0,
     this.veteranRole,
     this.facility = 0,
+    this.generation = 1,
+    this.parentName,
+    this.parentTitle,
+    this.heirKind,
     this.nextGrowthBoost = 1.0,
     this.recommendBonus = 0,
   })  : rng = rng ?? Random(),
@@ -302,13 +307,21 @@ class Game {
       Dream dream = Dream.pro,
       Build? style,
       Set<Trait>? traits,
-      int? number}) {
+      int? number,
+      Heir? heir}) {
     final r = rng ?? Random();
-    final potential = (30 + r.nextInt(40) + r.nextInt(31)).clamp(30, 100);
-    final first = newPlayer(
-            name, potential, r.nextDouble(), traits ?? rollInnateTraits(r),
+    final potential =
+        ((30 + r.nextInt(40) + r.nextInt(31)) + (heir?.potentialBonus ?? 0)).clamp(30, 100);
+    final genes = r.nextDouble(); // 受け継ぐときも同じだけ乱数を引く(並びをそろえる)
+    var first = newPlayer(name, potential, heir?.heightGenes ?? genes,
+            withInherited(traits ?? rollInnateTraits(r), heir),
             bonus: legacyBonus)
         .copyWith(style: style);
+    final taught = heir?.taughtAbility;
+    if (taught != null) {
+      first = first.copyWith(
+          abilities: {...first.abilities, taught: (first.of(taught) + taughtBonus).clamp(0, abilityCap)});
+    }
     final g = Game(
       // ポジションは節目にしか見直さない(身長や能力が動くたびに入れ替わって弱くならないように)。
       player: first.copyWith(positionLock: first.suggestedPosition),
@@ -318,7 +331,12 @@ class Game {
       rng: r,
       eventsEnabled: events,
       number: number ?? popularNumbers[r.nextInt(popularNumbers.length)],
+      generation: heir?.generation ?? 1,
+      parentName: heir?.parentName,
+      parentTitle: heir?.parentTitle,
+      heirKind: heir?.kind,
     );
+    if (heir?.kind == HeirKind.pupil) g.coachBond = pupilCoachBond;
     g._rollGoalOptions();
     g._newTeamNames();
     return g;
@@ -398,6 +416,14 @@ class Game {
   /// 個人トレーナー・栄養士が効く残りのターン。
   int trainerTerms;
   int nutritionTerms;
+
+  /// 何代目の選手か(最初が1。「次の世代へ」で始めると親の次)。
+  int generation;
+
+  /// 親(師匠)の名前と称号、受け継いだ形(子ども・教え子)。最初の選手は null。
+  String? parentName;
+  String? parentTitle;
+  HeirKind? heirKind;
 
   /// 自分の練習施設の段(0〜5)。ずっと効く(伸び +2%・衰え −4% /段)。
   int facility;
@@ -1949,6 +1975,10 @@ class Game {
         'nutritionTerms': nutritionTerms,
         'veteranRole': veteranRole?.name,
         'facility': facility,
+        'generation': generation,
+        'parentName': parentName,
+        'parentTitle': parentTitle,
+        'heirKind': heirKind?.name,
         'nextGrowthBoost': nextGrowthBoost,
         'recommendBonus': recommendBonus,
       };
@@ -2070,6 +2100,10 @@ class Game {
         nutritionTerms: (j['nutritionTerms'] as num?)?.toInt() ?? 0,
         veteranRole: VeteranRole.fromName(j['veteranRole']),
         facility: ((j['facility'] as num?)?.toInt() ?? 0).clamp(0, facilityPrices.length),
+        generation: ((j['generation'] as num?)?.toInt() ?? 1).clamp(1, 999),
+        parentName: j['parentName'] as String?,
+        parentTitle: j['parentTitle'] as String?,
+        heirKind: HeirKind.fromName(j['heirKind']),
         nextGrowthBoost: (j['nextGrowthBoost'] as num?)?.toDouble() ?? 1.0,
         recommendBonus: (j['recommendBonus'] as num?)?.toDouble() ?? 0,
       );
