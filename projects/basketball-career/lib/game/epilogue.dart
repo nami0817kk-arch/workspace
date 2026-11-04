@@ -200,6 +200,9 @@ List<String> epilogueLines(Game g) {
     lines.add('通算${withComma(cp)}得点・${withComma(g.totalRebounds)}リバウンド・${withComma(g.totalAssists)}アシストを積み上げた。');
   }
   if (g.veteranRole != null && g.player.age > veteranAge) lines.add(g.veteranRole!.epilogue);
+  if (g.facility >= 3) {
+    lines.add('育ててきた自前の練習施設(Lv${g.facility})は、引退後、地元の子どもたちに開放された。');
+  }
   final allTime = _allTimeTop(g);
   if (allTime.isNotEmpty) {
     lines.add('歴代記録に名を刻んだ: ${allTime.join('・')}。');

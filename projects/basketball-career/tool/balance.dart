@@ -76,7 +76,7 @@ void main(List<String> args) {
             for (final f in [Favor.letter, Favor.rival, Favor.lesson, Favor.extra, if (g.condition.morale < 50) Favor.talk]) {
               if (perkOn(f.name) && g.favorBlock(f) == null) g.useFavor(f, focus: pf);
             }
-            for (final x in [Spend.trainer, Spend.nutrition, Spend.camp, Spend.gear, Spend.parents, Spend.court, if (g.teamwork < 60) Spend.treat]) {
+            for (final x in [Spend.facility, Spend.trainer, Spend.nutrition, Spend.camp, Spend.gear, Spend.parents, Spend.court, if (g.teamwork < 60) Spend.treat]) {
               if (perkOn(x.name) && g.spendBlock(x) == null) g.spend(x, focus: pf);
             }
           }

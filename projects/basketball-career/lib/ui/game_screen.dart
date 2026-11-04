@@ -821,9 +821,9 @@ class PerkSheet extends StatelessWidget {
       if (money)
         for (final s in Spend.values)
           (
-            title: g.fill(s.label),
-            cost: moneyLabel(s.price),
-            effect: s.effect.replaceAll('第1重点', controller.focus.label),
+            title: s == Spend.facility && g.facility > 0 ? '${g.fill(s.label)}(いま Lv${g.facility})' : g.fill(s.label),
+            cost: s == Spend.facility && g.facility >= facilityPrices.length ? '済み' : moneyLabel(g.priceOf(s)),
+            effect: g.spendEffect(s).replaceAll('第1重点', controller.focus.label),
             block: g.spendBlock(s),
             onUse: () => controller.spend(s),
           )
