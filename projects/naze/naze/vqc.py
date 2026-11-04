@@ -79,9 +79,10 @@ def check(ep: dict, out: Path, mp) -> Tuple[list, list, dict]:
                 zoom = max(a[2], b[2]) / min(a[2], b[2])
                 if move > MOVE_WARN or zoom > ZOOM_WARN:
                     warns.append(f"カメラが速い {l['start']:.1f}秒（{d['id']}）横 {move:.1f} 画面・寄り引き {zoom:.1f} 倍")
+        from .worldmap import start_of
         for x in sc.get("layers", []):
             if x.get("id") not in prev_ids or x.get("id") is None:
-                events.append(l["start"] + x.get("at", 0.0) * dur)
+                events.append(start_of(x, [l], l))                # on="言葉" は言い始めた瞬間
         P = sc.get("panel")
         if P and (prev is None or prev.get("panel") is not P):
             events.append(l["start"] + P.get("at", 0.0) * dur)
@@ -97,6 +98,8 @@ def check(ep: dict, out: Path, mp) -> Tuple[list, list, dict]:
         if n_lab >= LABELS_WARN:
             warns.append(f"字が多い {l['start']:.1f}秒（{d['id']}）{n_lab} 個")
         prev = sc
+    if "cta" in L:                                            # 結びのお願いはそれ自体が動く画面
+        events.append(L["cta"]["start"])
     events = sorted(set(round(e, 2) for e in events))
     pts = [0.0] + events + [total]
     for a, b in zip(pts, pts[1:]):

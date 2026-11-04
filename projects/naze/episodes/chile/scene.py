@@ -8,7 +8,7 @@ from naze import shots, worldmap
 from naze.config import H, W
 
 LAND = W > H
-MAP = worldmap.Map(lat0=-35, bases=[((-120, -70, 0, 20), 5), ((-96, -60, -30, 8), 6), ((-78, -57, -64, -16), 8)])
+MAP = worldmap.Map(lat0=-35, bases=[((-120, -70, 0, 20), 5), ((-96, -60, -30, 8), 6), ((-92, -58, -54, -10), 7), ((-78, -57, -64, -16), 8)])
 STEPS = ["1 測る", "2 東の壁", "3 西の海", "4 北", "5 南"]
 
 
@@ -24,6 +24,17 @@ def chile_rows(lats):
                     xs.append(x1 + (lat - y1) * (x2 - x1) / (y2 - y1))
         if xs:
             out.append((lat, min(xs), max(xs)))
+    return out
+
+
+def trench_line(lat0=-17.5, lat1=-45, step=0.5):
+    """海溝の線(各緯度で、沖のいちばん深い所の経度)。標高データから自分で引く。"""
+    import numpy as np
+    out = []
+    for lat in np.arange(lat0, lat1, -step):
+        lons = np.arange(-76.5, -70.0, 0.05)
+        hs = [MAP.height(lo, lat) for lo in lons]
+        out.append((float(lons[int(np.argmin(hs))]), float(lat)))
     return out
 
 

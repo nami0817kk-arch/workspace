@@ -331,28 +331,82 @@ def draw_card(img: Image.Image, mp, sc: dict, t: float, u: float) -> None:
     _blur_back(img, mp, sc, t)
     d = ImageDraw.Draw(img)
     a = _ease(u * 5)
-    size = int(sc.get("size", 230 if W > H else 190) * (1.15 - 0.15 * a))
-    cy = H * (0.40 if W > H else 0.36)
     big = sc["big"]
     if sc.get("count", True):
         from .worldmap import count_text
         big = count_text(big, min(1.0, u * sc.get("_dur", 3.0) / 0.9))     # 0.9 秒で数え上がる
-    d.text((W / 2, cy), big, font=ov.font(size), fill=tuple(sc.get("color", ov.YEL)) + (int(255 * a),), anchor="mm", stroke_width=10, stroke_fill=ov.NAVY)
-    ov.BOXES.append(("label", d.textbbox((W / 2, cy), big, font=ov.font(size), anchor="mm"), big, 1.0))
+    rows = sc["big"].split("\n")
+    size = sc.get("size", 230 if W > H else 190)
+    while size > 60 and max(ov.font(size).getlength(r) for r in rows) > W * 0.86:   # 幅に収める
+        size -= 6
+    size = int(size * (1.15 - 0.15 * a))
+    f = ov.font(size)
+    lh = size * 1.12
+    cy = H * (0.40 if W > H else 0.36)
+    y0 = cy - lh * (len(rows) - 1) / 2
+    for j, r in enumerate(big.split("\n")):
+        d.text((W / 2, y0 + j * lh), r, font=f, fill=tuple(sc.get("color", ov.YEL)) + (int(255 * a),), anchor="mm", stroke_width=10, stroke_fill=ov.NAVY)
+        ov.BOXES.append(("label", d.textbbox((W / 2, y0 + j * lh), r, font=f, anchor="mm"), r, 1.0))
+    top, bot = y0 - size * 0.5, y0 + lh * (len(rows) - 1) + size * 0.5
     if sc.get("sub"):
-        d.text((W / 2, cy - size * 0.78), sc["sub"], font=ov.font(56), fill=ov.DIM, anchor="mm")
+        d.text((W / 2, top - 52), sc["sub"], font=ov.font(56 if W > H else 48), fill=ov.DIM, anchor="mm")
     if sc.get("note"):
         b2 = _ease(u * 3 - 0.5)
-        d.text((W / 2, cy + size * 0.72), sc["note"], font=ov.font(60), fill=(255, 255, 255, int(255 * b2)), anchor="mm", stroke_width=6, stroke_fill=ov.NAVY)
+        d.text((W / 2, bot + 70), sc["note"], font=ov.font(60 if W > H else 50), fill=(255, 255, 255, int(255 * b2)), anchor="mm", stroke_width=6, stroke_fill=ov.NAVY)
     # 数字の下に伸びる線(動きを足す)
     L = W * 0.32 * _ease(u * 2.5)
-    d.line([(W / 2 - L / 2, cy + size * 0.48), (W / 2 + L / 2, cy + size * 0.48)], fill=ov.YEL, width=6)
+    d.line([(W / 2 - L / 2, bot + 8), (W / 2 + L / 2, bot + 8)], fill=ov.YEL, width=6)
+
+
+def draw_cards(img: Image.Image, mp, sc: dict, t: float, u: float) -> None:
+    """答えの並べ直し: 番号つきのカードを上から。items=[(題, 添え書き)]、n=いま何枚目まで、groups=[(最初, 最後, 括弧の字)]。"""
+    _blur_back(img, mp, sc, t)
+    items, n = sc["items"], sc.get("n", len(sc["items"]))
+    land = W > H
+    x0, x1 = (W * 0.18, W * 0.82) if land else (W * 0.07, W * 0.93)
+    top, gap = (H * 0.13, H * 0.155) if land else (H * 0.22, H * 0.12)
+    hh = gap * 0.8
+    d = ImageDraw.Draw(img, "RGBA")
+    for i, (title, sub) in enumerate(items[:n]):
+        a = 1.0 if i < n - 1 or sc.get("still") else _ease(u * 4)
+        y = top + i * gap + (1 - a) * 30
+        d.rounded_rectangle([x0, y, x1, y + hh], 18, fill=ov.NAVY + (int(225 * a),), outline=ov.YEL + (int(255 * a),) if i == n - 1 and not sc.get("still") else (255, 255, 255, int(110 * a)), width=3)
+        d.ellipse([x0 + 20, y + hh / 2 - 34, x0 + 88, y + hh / 2 + 34], fill=ov.YEL + (int(255 * a),))
+        d.text((x0 + 54, y + hh / 2), str(i + 1), font=ov.font(46), fill=ov.NAVY, anchor="mm")
+        d.text((x0 + 112, y + hh / 2 - (16 if sub else 0)), title, font=ov.font(46 if land else 40), fill=(255, 255, 255, int(255 * a)), anchor="lm")
+        if sub:
+            d.text((x0 + 112, y + hh / 2 + 30), sub, font=ov.font(30), fill=ov.DIM + (int(255 * a),), anchor="lm")
+        ov.BOXES.append(("label", (x0, y, x1, y + hh), title, 1.0))
+    for (i0, i1, text) in sc.get("groups", []):
+        if i1 >= n:
+            continue
+        ya, yb = top + i0 * gap, top + i1 * gap + hh
+        xb = x1 + 26
+        d.line([(xb - 14, ya), (xb, ya), (xb, yb), (xb - 14, yb)], fill=ov.YEL, width=5)
+        d.text((xb + 18, (ya + yb) / 2), text, font=ov.font(48 if land else 34), fill=ov.YEL, anchor="lm", stroke_width=5, stroke_fill=ov.NAVY)
 
 
 def draw_timeline(img: Image.Image, mp, sc: dict, t: float, u: float) -> None:
     _blur_back(img, mp, sc, t)
     items = sc["items"]
     cur = sc.get("cur", len(items) - 1)
+    if H > W:                                              # 縦の画面は年表を縦に並べる
+        d = ImageDraw.Draw(img)
+        x = W * 0.24
+        y0, y1 = H * 0.18, H * 0.70
+        grow = _ease(u * 2)
+        d.line([(x, y0), (x, y0 + (y1 - y0) * grow)], fill=(200, 210, 230), width=6)
+        for i, (yr, name) in enumerate(items):
+            y = y0 + (y1 - y0) * i / max(1, len(items) - 1)
+            if y > y0 + (y1 - y0) * grow + 1:
+                continue
+            on = i == cur
+            r = 20 if on else 12
+            d.ellipse([x - r, y - r, x + r, y + r], fill=ov.YEL if on else (220, 226, 240), outline=ov.NAVY, width=3)
+            d.text((x + 44, y - 4), str(yr), font=ov.font(64 if on else 46), fill=ov.YEL if on else ov.WHITE, anchor="ls", stroke_width=5, stroke_fill=ov.NAVY)
+            d.text((x + 44, y + 12), name, font=ov.font(42 if on else 34), fill=ov.WHITE if on else ov.DIM, anchor="lt", stroke_width=4, stroke_fill=ov.NAVY)
+            ov.BOXES.append(("label", (x + 44, y - 60, x + 500, y + 50), str(yr), 1.0))
+        return
     y0s = [it[0] for it in items]
     lo, hi = min(y0s), max(y0s)
     pad = W * 0.08
@@ -422,6 +476,8 @@ def render_one(img: Image.Image, mp, t: float, ctx: dict, i: int, steps=None) ->
         draw_card(img, mp, dict(sc, _dur=t1 - t0), t, u)
     elif shot == "timeline":
         draw_timeline(img, mp, sc, t, u)
+    elif shot == "cards":
+        draw_cards(img, mp, sc, t, (t - l["start"]) / max(1e-6, l["end"] - l["start"]))
     elif shot == "split":
         halves = []
         for side in ("left", "right"):

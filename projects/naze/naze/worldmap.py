@@ -343,6 +343,11 @@ class View:
         """平らな地面の上の、真ん中からの画素(X 東、Y 北)。"""
         return (lon - self.lon) * self.kx * self.s, (lat - self.lat) * self.s
 
+    def depth(self, lon: float, lat: float) -> float:
+        """カメラからの奥行き(小さいか負ならカメラの後ろ。線を描かない)。"""
+        X, Y = self.ground(lon, lat)
+        return float(self.M[2] @ np.array([X, Y, 1.0]))
+
     def px(self, lon: float, lat: float) -> Tuple[float, float]:
         X, Y = self.ground(lon, lat)
         v = self.M @ np.array([X, Y, 1.0])
@@ -611,6 +616,10 @@ class Map:
             segs, seg = [], []
             for p in pts[:n] + [None]:
                 if p is None:
+                    if len(seg) > 1:
+                        segs.append(np.array(seg, np.int32))
+                    seg = []
+                elif v.depth(*p) < v.D * 0.2:                    # カメラの後ろ・すぐ手前は切る
                     if len(seg) > 1:
                         segs.append(np.array(seg, np.int32))
                     seg = []

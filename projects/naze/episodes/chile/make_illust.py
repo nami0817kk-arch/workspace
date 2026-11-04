@@ -29,6 +29,10 @@ P = {
     "strait": "A small nineteenth century two-masted sailing schooner in a narrow cold channel, dark stormy sky, "
               "snowy jagged mountains on both shores, rough grey water, a wooden fort on a low hill",
     "vineyard": "Rows of grape vines in a dry sunny valley, irrigation channel, the massive snowy Andes wall in the background, late afternoon light",
+    "araucaria_b": "A forest of Araucaria araucana trees with tall bare trunks and flat umbrella-shaped crowns of spiky branches only at the top, "
+                   "on a volcanic slope in southern Chile, a snow-capped conical volcano behind, morning mist, no houses",
+    "king": "A lone nineteenth century European man in a dark frock coat and top hat seen from behind, standing at the edge of a wild southern forest, "
+            "looking toward distant smoke from small wooden houses, dramatic cloudy sky, faces not visible",
     "pampa": "Endless flat golden grassland of Patagonia under a huge sky, wind bending the grass, a distant line of mountains to the west",
 }
 cf = CloudflareImages()
