@@ -4,6 +4,7 @@
 import 'dart:math';
 
 import 'package:basketball_career/game/advice.dart';
+import 'package:basketball_career/game/alltime.dart';
 import 'package:basketball_career/game/build.dart';
 import 'package:basketball_career/game/difficulty.dart';
 import 'package:basketball_career/game/dream.dart';
@@ -31,6 +32,7 @@ void main(List<String> args) {
   final honorTotals = <String, int>{};
   // 段階ごとの、大会の数と優勝の数(プロの優勝が出ているかを見る)。
   final leagueSeasons = <League, int>{}, leagueTitles = <League, int>{};
+  var atTop10 = 0, atFirst = 0;
   // --easy / --hard で難易度を変えて測る。
   final diff = args.contains('--hard')
       ? Difficulty.hard
@@ -138,6 +140,8 @@ void main(List<String> args) {
     endAgeTotal += g.player.age;
     if (g.records.any((r) => r.league.name.startsWith('pro'))) pro++;
     titles += g.titles;
+    if (allTimeTop10Count(g.allTimeValues) > 0) atTop10++;
+    if (g.allTimeValues.entries.any((e) => e.value > 0 && allTimeRank(e.key, e.value) == 1)) atFirst++;
     for (final r in g.records) {
       leagueSeasons[r.league] = (leagueSeasons[r.league] ?? 0) + 1;
       if (r.champion) leagueTitles[r.league] = (leagueTitles[r.league] ?? 0) + 1;
@@ -206,6 +210,7 @@ void main(List<String> args) {
     print('夢「${d.label}」(${d.goalText})のかなう割合: ${pct(dreamHits[d]!)}');
   }
   print('平均タイトル数: ${(titles / n).toStringAsFixed(2)}');
+  print('歴代記録: 10位以内 ${pct(atTop10)}・1位 ${pct(atFirst)}(どれかの種目)');
   for (final l in League.values) {
     final s = leagueSeasons[l] ?? 0;
     if (s == 0) continue;

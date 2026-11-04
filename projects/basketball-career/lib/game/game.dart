@@ -10,6 +10,7 @@ import 'honors.dart';
 import 'life.dart';
 import 'mastery.dart';
 import 'match.dart';
+import 'alltime.dart';
 import 'money.dart';
 import 'perks.dart';
 import 'path.dart';
@@ -644,6 +645,17 @@ class Game {
   /// 直近の大会で超えた通算記録の節目(「通算1000得点を達成!」など)。画面に出す。保存はしない。
   List<String> lastCareerLines = const [];
 
+  /// 直近の大会で歴代の名選手を抜いた知らせ(「〇〇を抜き、通算得点で歴代6位に!」)。画面に出す。保存はしない。
+  List<String> lastAllTimeLines = const [];
+
+  /// 歴代記録の種目ごとの、自分の通算(得点・リバウンド・アシスト・プロ優勝)。
+  Map<AllTimeStat, int> get allTimeValues => {
+        AllTimeStat.points: totalPoints,
+        AllTimeStat.rebounds: totalRebounds,
+        AllTimeStat.assists: totalAssists,
+        AllTimeStat.titles: proTitles,
+      };
+
   /// 通算記録の節目(得点・リバウンド・アシスト)。
   static const careerLadder = <String, List<int>>{
     '得点': [500, 1000, 2000, 3000],
@@ -986,6 +998,7 @@ class Game {
     lastTournamentFatigue = 0;
     lastSpGain = 0;
     lastCareerLines = const [];
+    lastAllTimeLines = const [];
     lastMetRival = false;
     lastNewSkills = {};
     lastMasteryUps = const [];
@@ -1344,6 +1357,7 @@ class Game {
       }
     }
     final before = (totalPoints, totalRebounds, totalAssists);
+    final allTimeBefore = allTimeValues;
     final firstPro = !records.any(
         (r) => r.league == League.proDomestic || r.league == League.proAbroad);
     lastHonors = t.honors(rookie: firstPro);
@@ -1388,6 +1402,10 @@ class Game {
     crossed('リバウンド', before.$2, after.$2);
     crossed('アシスト', before.$3, after.$3);
     lastCareerLines = lines;
+    final allTimeAfter = allTimeValues;
+    lastAllTimeLines = [
+      for (final s in AllTimeStat.values) ...allTimeLines(s, allTimeBefore[s]!, allTimeAfter[s]!),
+    ];
     recentAchievements.add(t.achievement);
     while (recentAchievements.length > _recentCount) {
       recentAchievements.removeAt(0);
