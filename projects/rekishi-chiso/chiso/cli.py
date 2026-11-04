@@ -1242,6 +1242,14 @@ def cmd_playlists(args) -> int:
     from . import channel
     log = ROOT / "posted.json"
     posted = json.loads(log.read_text(encoding="utf-8")) if log.exists() else []
+    if args.update_meta:
+        svc = _service(need_manage=True)
+        if svc is None:
+            return 2
+        budget = channel.Budget(args.budget)
+        r = channel.update_meta(svc, channel.load_descriptions(ROOT / "playlists.yaml"), budget)
+        print(f"書き換えたリスト {len(r['updated'])}・見つからない {r['missing']}（使った単位 約{budget.used}）")
+        return 1 if r["stopped"] else 0
     p = channel.plan(posted_scripts(), posted, args.only)
     if args.mains_only:
         p.lists = {n: [kv for kv in items if kv[0].endswith(":main")] for n, items in p.lists.items()}
@@ -1505,6 +1513,7 @@ def main(argv=None) -> int:
     s.add_argument("--only", default="", help="1つの台本だけ（例 kira）")
     s.add_argument("--budget", type=int, default=3000, help="今回の書き込みで使ってよい単位（既定 3000＝約60本）")
     s.add_argument("--mains-only", action="store_true", help="本編だけ（ショートの再生リストは触らない）")
+    s.add_argument("--update-meta", action="store_true", help="playlists.yaml の名前・説明を今あるリストに書き込む（was: で改名）")
     s.set_defaults(fn=cmd_playlists)
     s = sub.add_parser("localize")
     s.add_argument("script")
