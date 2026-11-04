@@ -829,6 +829,7 @@
   let play = null;
   function cleanupPlay() {
     if (play && play.raf) cancelAnimationFrame(play.raf);
+    if (play && play.R && play.R.dispose) play.R.dispose();
     if (play) globalThis.removeEventListener('resize', play.onResize);
     play = null;
   }
@@ -895,7 +896,7 @@
     wrap.append(top, stage, comm);
     main.append(wrap);
 
-    const R = new YA.Renderer(cv);
+    const R = YA.makeRenderer ? YA.makeRenderer(cv) : new YA.Renderer(cv);
     R.setMatch(m);
     const S = (play = { m, R, mode: 'idle', clock: 0, paused: false, sheet: null, raf: 0, last: 0, shown: 0, pendingStop: false, speed: app.speed });
     S.onResize = () => R.resize();
@@ -1137,5 +1138,4 @@
     document.addEventListener('click', (e) => { if (e.target.closest && e.target.closest('button')) YA.sfx.play('tap'); });
     render();
   };
-  YA._ui = { app, render, store, h, playerCard, persChips, abBar, surname, persText, newOurs, persistTeam };
-})();
+  YA._ui = { ap
