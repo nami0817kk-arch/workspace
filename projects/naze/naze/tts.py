@@ -52,6 +52,37 @@ def _gap_after(l: dict) -> float:
     return GAP
 
 
+def sync_keys(l: dict) -> List[str]:
+    """行の場面のうち on="言葉" を書いた層・パネル・札の言葉(その言葉を言い始めた瞬間に出す)。"""
+    keys = list(l.get("marks", []))
+    sc = l.get("scene") or {}
+    for x in [sc] + list(sc.get("layers", [])) + ([sc["panel"]] if sc.get("panel") else []):
+        if isinstance(x, dict) and x.get("on"):
+            keys.append(x["on"])
+    return [k for k in dict.fromkeys(keys) if k in l["text"]]
+
+
+def _spoken(q: dict) -> float:
+    """audio_query の言い終わりまでの長さ(speedScale 1 のとき、前後の無音は除く)。"""
+    t = 0.0
+    for ap in q["accent_phrases"]:
+        for m in ap["moras"]:
+            t += (m.get("consonant_length") or 0.0) + m["vowel_length"]
+        if ap.get("pause_mora"):
+            t += ap["pause_mora"]["vowel_length"]
+    return t
+
+
+def marks(l: dict, style: int, speed: float) -> Dict[str, float]:
+    """行の頭から、その言葉を言い始めるまでの秒。言葉の前までを読ませて長さを測る。"""
+    res = {}
+    for k in sync_keys(l):
+        pre = l["text"][: l["text"].index(k)]
+        pre = re.sub(r"[、。,.!?！？\s]+$", "", pre)
+        res[k] = 0.05 + (_spoken(_query(_say(dict(text=pre)), style)) / speed if pre else 0.0)
+    return res
+
+
 def synth(lines: List[dict], out: Path, style: int = STYLE, speed: float = SPEED, lead: float = 0.15, tail: float = 1.2) -> Dict:
     """全行を合成して out/narration.wav を書き、行ごとの start/end を足した行の並びと全体の秒数を返す。"""
     out.mkdir(parents=True, exist_ok=True)
@@ -68,8 +99,9 @@ def synth(lines: List[dict], out: Path, style: int = STYLE, speed: float = SPEED
                                      headers={"Content-Type": "application/json"}, method="POST")
         w = wave.open(io.BytesIO(urllib.request.urlopen(req, timeout=120).read()))
         a = np.frombuffer(w.readframes(w.getnframes()), np.int16)
-        keep = {k: v for k, v in l.items() if k not in ("scene", "labels", "profile", "compare")}   # 時間割には場面の設定を入れない(関数が入っていると保存できない)
-        timed.append(dict(keep, start=round(t, 3), end=round(t + len(a) / sr, 3)))
+        keep = {k: v for k, v in l.items() if k not in ("scene", "labels", "profile", "compare", "marks")}   # 時間割には場面の設定を入れない(関数が入っていると保存できない)
+        mk = marks(l, style, float(l.get("speed", speed)))
+        timed.append(dict(keep, start=round(t, 3), end=round(t + len(a) / sr, 3), **({"marks": mk} if mk else {})))
         chunks.append((t, a))
         t += len(a) / sr + float(l.get("pause", _gap_after(l)))
     total = t + tail

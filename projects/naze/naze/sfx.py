@@ -60,9 +60,41 @@ def bonk(sr: int) -> np.ndarray:
     return (np.sin(2 * np.pi * 220 * x) + 0.5 * np.sin(2 * np.pi * 557 * x) + 0.3 * np.sin(2 * np.pi * 1130 * x)) * np.exp(-x * 9) * 0.6
 
 
-SOUNDS = {"whoosh": whoosh, "pop": pop, "thud": thud, "snap": snap, "bonk": bonk}
-GAIN.update(thud=0.20, snap=0.16, bonk=0.14)
-MIN_GAP.update(thud=0.8, snap=0.8, bonk=0.8)
+def impact(sr: int) -> np.ndarray:
+    """大きな数字の札が出る「ドン」(低い膨らみ＋短い打撃。小さく)。"""
+    n = int(0.6 * sr)
+    x = np.arange(n) / sr
+    ph = np.cumsum(2 * np.pi * (70 - 30 * np.minimum(1, x / 0.6)) / sr)
+    rnd = np.random.default_rng(9).uniform(-1, 1, n)
+    return (np.sin(ph) * np.exp(-x * 5) + rnd * 0.35 * np.exp(-x * 45)) * 0.9
+
+
+def tick(sr: int) -> np.ndarray:
+    """数字が数え上がる「カラカラ」(0.7 秒の細かい刻み)。"""
+    n = int(0.7 * sr)
+    out = np.zeros(n)
+    for i in range(14):
+        at = int(i / 14 * 0.65 * sr)
+        k = np.arange(int(0.012 * sr))
+        out[at:at + len(k)] += np.sin(2 * np.pi * 2400 * k / sr) * np.exp(-k / (0.003 * sr))
+    return out
+
+
+def swish(sr: int) -> np.ndarray:
+    """横に流す切り替えの速い「ヒュッ」。"""
+    n = int(0.25 * sr)
+    rnd = np.random.default_rng(13).uniform(-1, 1, n)
+    x = np.arange(n) / n
+    out, lp = np.zeros(n), 0.0
+    for i in range(n):
+        lp += (0.15 + 0.6 * x[i]) * (rnd[i] - lp)
+        out[i] = lp
+    return out * np.sin(np.pi * x) ** 2
+
+
+SOUNDS = {"whoosh": whoosh, "pop": pop, "thud": thud, "snap": snap, "bonk": bonk, "impact": impact, "tick": tick, "swish": swish}
+GAIN.update(thud=0.20, snap=0.16, bonk=0.14, impact=0.16, tick=0.035, swish=0.12)
+MIN_GAP.update(thud=0.8, snap=0.8, bonk=0.8, impact=1.5, tick=1.0, swish=1.0)
 
 
 def thin(events: List[Tuple[float, str]]) -> List[Tuple[float, str]]:

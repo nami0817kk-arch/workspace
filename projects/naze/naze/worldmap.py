@@ -362,6 +362,39 @@ def _ease(u: float) -> float:
     return u * u * (3 - 2 * u)
 
 
+GROW = ("border", "line", "arrow", "hlines", "route")
+
+
+def start_of(L: dict, lines: list, anchor: dict) -> float:
+    """層・パネルが出る時刻。on="言葉" ならその言葉を言い始めた瞬間(声の時間割の marks。無ければ字数の割合)、無ければ at(場面の頭の行の何割か)。"""
+    key = L.get("on")
+    if key:
+        for l in lines:
+            if key in l.get("text", ""):
+                mk = (l.get("marks") or {}).get(key)
+                if mk is None:
+                    mk = l["text"].index(key) / max(1, len(l["text"])) * (l["end"] - l["start"])
+                return l["start"] + mk
+    return anchor["start"] + L.get("at", 0.0) * max(1e-6, anchor["end"] - anchor["start"])
+
+
+def count_text(s: str, u: float) -> str:
+    """字の中の最初の数を、u(0〜1)に合わせて 0 から数え上げる(桁区切り・小数はそのまま)。"""
+    import re
+    m = re.search(r"\d[\d,]*(\.\d+)?", s)
+    if not m or u >= 1:
+        return s
+    raw = m.group(0)
+    dec = len(m.group(1)) - 1 if m.group(1) else 0
+    val = float(raw.replace(",", "")) * (1 - (1 - max(0.0, u)) ** 3)
+    txt = f"{val:,.{dec}f}" if "," in raw else f"{val:.{dec}f}"
+    return s[:m.start()] + txt + s[m.end():]
+
+
+def k_wipe(L: dict) -> float:
+    return _ease(L.get("_u", 9.0) / L.get("wipe_s", 1.6))
+
+
 class Map:
     def __init__(self, lat0: float, bases: Sequence[tuple], relief: float = 0.06, finish: bool = True):
         self.kx = math.cos(math.radians(lat0))
@@ -526,6 +559,21 @@ class Map:
                 img.alpha_composite(Image.fromarray(out, "RGBA"))
                 return
             mf = m.astype(np.float32) / 255
+            if L.get("wipe") and k_wipe(L) < 1:                # 領土が広がる: 画面の向きに沿って塗りが進む
+                ys, xs = np.nonzero(mf > 0.05)
+                if len(ys):
+                    kk = k_wipe(L)
+                    vert = L["wipe"] in ("north", "south")
+                    arr = ys if vert else xs
+                    lo_, hi_ = arr.min(), arr.max()
+                    pos = np.arange(H if vert else W, dtype=np.float32)
+                    if L["wipe"] in ("north", "west"):          # 下(右)から上(左)へ
+                        edge = hi_ - (hi_ - lo_) * kk
+                        ramp = np.clip((pos - edge) / 30 + 1, 0, 1)
+                    else:
+                        edge = lo_ + (hi_ - lo_) * kk
+                        ramp = np.clip((edge - pos) / 30 + 1, 0, 1)
+                    mf = mf * (ramp[:, None] if vert else ramp[None, :])
             lift = L.get("lift", 1.0)
             if lift > 0:                                      # 影を落として浮かせる
                 sh = cv2.GaussianBlur(np.roll(mf, int(10 * lift), axis=0), (0, 0), 9) * (1 - mf)
@@ -536,6 +584,15 @@ class Map:
             out[..., :3] = col
             out[..., 3] = (mf * 255 * L.get("alpha", 0.45) * a).astype(np.uint8)
             img.alpha_composite(Image.fromarray(out, "RGBA"))
+            su = L.get("_u", 9.0)
+            if L.get("sheen", True) and 0 <= su < 1.2:         # 出てすぐ、光が斜めに走る
+                yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
+                pos = (su / 1.2) * (W + H) - H
+                band = np.exp(-((xx + yy * 0.6 - pos - H * 0.3) / 60) ** 2) * mf
+                sh4 = np.zeros((H, W, 4), np.uint8)
+                sh4[..., :3] = 255
+                sh4[..., 3] = (np.clip(band, 0, 1) * 140).astype(np.uint8)
+                img.alpha_composite(Image.fromarray(sh4, "RGBA"))
             if L.get("edge", True):                           # 縁を光らせる
                 eg = cv2.morphologyEx(m, cv2.MORPH_GRADIENT, np.ones((3, 3), np.uint8)).astype(np.float32) / 255
                 glow = cv2.GaussianBlur(eg, (0, 0), 3) * 0.6 + eg
@@ -584,6 +641,16 @@ class Map:
             for i, (lat, w0, w1) in enumerate(rows[:n]):
                 last = i == n - 1
                 d.line([v.px(w0, lat), v.px(w1, lat)], fill=(ov.YEL if last else (255, 255, 255)) + (A if last else int(A * 0.55),), width=5 if last else 3)
+        elif kind == "route":                                   # 道筋: 点線が伸び、先に光る印(船・隊の進み)
+            pts = self._dense(list(L["pts"]))
+            n = max(2, int(len(pts) * k))
+            xy = [v.px(*p) for p in pts[:n]]
+            col = tuple(L.get("color", ov.YEL))
+            for i2 in range(0, len(xy) - 1, 2):
+                d.line([xy[i2], xy[i2 + 1]], fill=col + (A,), width=L.get("width", 6))
+            hx, hy = xy[-1]
+            for r_, al in ((26, 0.18), (16, 0.35), (9, 1.0)):
+                d.ellipse([hx - r_, hy - r_, hx + r_, hy + r_], fill=col + (int(A * al),))
         elif kind == "latline":
             pts = [v.px(lo, L["lat"]) for lo in np.linspace(v.lon - v.span, v.lon + v.span, 40)]
             for i in range(0, len(pts) - 1, 2):
@@ -596,6 +663,8 @@ class Map:
             pop = 1.0 + 0.18 * math.sin(math.pi * min(1.0, a)) if a < 1 else 1.0
             f = ov.font(int(L.get("size", 44) * pop))
             t = L["text"]
+            if L.get("count"):
+                t = count_text(t, L.get("_u", 9.0) / 0.9)
             col = tuple(L.get("color", ov.WHITE))
             dd = ImageDraw.Draw(img)
             anchor = L.get("anchor", "mm")
@@ -732,7 +801,14 @@ class Map:
         cur = ctx["cur"] or lines[0]
         i = next(j for j, l in enumerate(lines) if l["id"] == cur["id"])
         now = sc[i]
-        prev = sc[i - 1] if i > 0 else now
+        j0 = i
+        while j0 > 0 and sc[j0 - 1] is now:
+            j0 -= 1
+        k0 = i
+        while k0 + 1 < len(lines) and sc[k0 + 1] is now:
+            k0 += 1
+        anchor = lines[j0]
+        prev = sc[j0 - 1] if j0 > 0 else now
         if prev is not None and prev is not now and (prev.get("shot", "map") != "map" or "view" not in prev):
             prev = None                                       # 前が地図でなければ、カメラは移らず溶け合わせだけ(shots.py)
         vn = self.view(*now["view"])
@@ -747,7 +823,7 @@ class Map:
             u = max(0.0, min(1.0, (t - t0) / max(1e-6, t1 - t0)))
             vn = View.lerp(vn, self.view(*now["view_to"]), u * u * (3 - 2 * u) * 0.8 + u * 0.2)
         vp = self.view(*prev["view"]) if prev else vn
-        v = View.lerp(vp, vn, _ease((t - cur["start"]) / 1.4)) if (prev is not None and now is not prev) else vn
+        v = View.lerp(vp, vn, _ease((t - anchor["start"]) / 1.4)) if (prev is not None and now is not prev) else vn
         v = View(v.lon, v.lat, v.span * (1 - 0.025 * math.sin(2 * math.pi * t / 18.0)), v.tilt, v.kx)   # 画面を止めない
         relief0 = self.relief
         self.relief = now.get("relief", relief0)
@@ -755,31 +831,54 @@ class Map:
         self.relief = relief0
         v.hfun = self.height
         img.paste(Image.fromarray(base).convert("RGBA"), (0, 0))
-        dur = max(1e-6, cur["end"] - cur["start"])
+        dur = max(1e-6, anchor["end"] - anchor["start"])
         prev_ids = {L.get("id") for L in (prev or {}).get("layers", [])} if now is not prev else set()
         for L in now.get("layers", []):
             if ctx.get("cta") and L["kind"] in ("label", "pin"):
                 continue
             if L.get("id") in prev_ids:
-                a, k = 1.0, 1.0
+                a, k, u = 1.0, 1.0, 9.0
             else:
-                t0 = cur["start"] + L.get("at", 0.0) * dur
+                t0 = start_of(L, lines[j0:k0 + 1], anchor)
                 a = _ease((t - t0) / 0.5)
-                k = _ease((t - t0) / max(0.3, L.get("grow", 0.6) * dur)) if L["kind"] in ("border", "line", "arrow", "hlines") else 1.0
-            self.layer(img, v, L, a, k)
+                k = _ease((t - t0) / max(0.3, L.get("grow", 0.6) * dur)) if L["kind"] in GROW else 1.0
+                u = t - t0
+            self.layer(img, v, dict(L, _u=u, _t=t), a, k)
         P = now.get("panel")
         if P and not ctx.get("cta"):
             same = (prev or {}).get("panel") is P
-            t0 = cur["start"] + P.get("at", 0.0) * dur
+            t0 = start_of(P, lines[j0:k0 + 1], anchor)
             a, k = (1.0, 1.0) if same else (_ease((t - t0) / 0.4), _ease((t - t0) / max(0.4, P.get("grow", 1.4))))
             if a > 0:
                 if P["kind"] == "profile":
                     self.draw_profile(img, P, a, k, mapscene._box(P))
                 else:
                     mapscene.draw_panel(img, P, a, k)
+        if now.get("inset"):
+            self.inset(img, v)
         if steps and now.get("step") is not None:
             self.steps_band(img, steps, now["step"])
         return v
+
+    def inset(self, img: Image.Image, v: View) -> None:
+        """左下に小さな地球儀。いま見ている所に赤い枠(どこの話かを見失わせない)。"""
+        from . import shots
+        sz = int(H * 0.2)
+        c = (v.lon, max(-60, min(60, v.lat)))
+        g = shots.globe_small(c, sz)
+        x0, y0 = 30, H - sz - (150 if W > H else 520)
+        img.alpha_composite(g, (x0, y0))
+        d = ImageDraw.Draw(img)
+        R = sz / 2 * 0.92
+        hw = v.span / 2
+        hh = v.span * self.kx * H / W / 2
+        pts = []
+        for lo, la in ((v.lon - hw, v.lat - hh), (v.lon + hw, v.lat - hh), (v.lon + hw, v.lat + hh), (v.lon - hw, v.lat + hh)):
+            q = shots.ortho(lo, la, *c)
+            if q is None:
+                return
+            pts.append((x0 + sz / 2 + q[0] * R, y0 + sz / 2 - q[1] * R))
+        d.polygon(pts, outline=ov.RED, width=3)
 
 
 def sfx(lines_def: Sequence[dict], L: dict) -> list:

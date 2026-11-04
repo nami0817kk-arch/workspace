@@ -32,4 +32,4 @@ def draw(img, dr, t, ctx):
 
 
 def sfx_for(lines_def, L):
-    return worldmap.sfx(lines_def, L)
+    return shots.sfx(lines_def, L)

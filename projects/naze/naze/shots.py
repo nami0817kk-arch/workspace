@@ -10,6 +10,15 @@
   timeline  年表の帯。items=[(年, 名前)]、cur=いまの番号。後ろは地図をぼかしたもの
 
 ショットが変わる行の頭は 0.6 秒で溶け合わせる(地図どうしは worldmap のカメラの移りで)。
+
+編集の技(2026-11-04「動画編集のスキルはたくさんあるよね」):
+  tr        切り替え。"fade"(既定)・"zoom"(前の絵に寄って抜ける)・"whip"(横に流れてぶれる)・"flash"(白く光って変わる)
+  fx        粒。"snow"(雪)・"dust"(砂ぼこり)・"embers"(火の粉)。絵にも地図にも
+  grade     色。"old"(昔の場面: 色を抜いて茶色く)・"cold"・"warm"
+  on="言葉" 層・パネル・札をその言葉を言い始めた瞬間に出す(声の時間割の marks。worldmap.start_of)
+  count     札の数字が 0 から数え上がる(card は既定でそう。地図の label は count=True)
+  inset     地図の左下に小さな地球儀と、いま見ている所の赤い枠
+  地図の層: route(点線が伸びて先に光る印)・fill の wipe="north" など(領土が広がる)・塗りが出るとき光が走る
 """
 from __future__ import annotations
 
@@ -30,6 +39,84 @@ XF = 0.6
 def _ease(u: float) -> float:
     u = max(0.0, min(1.0, u))
     return u * u * (3 - 2 * u)
+
+
+def ortho(lon: float, lat: float, lon0: float, lat0: float):
+    """正射図法: 地球儀の上の (x, y)(半径 1)。裏側なら None。"""
+    la, lo, la0, lo0 = map(math.radians, (lat, lon, lat0, lon0))
+    cosc = math.sin(la0) * math.sin(la) + math.cos(la0) * math.cos(la) * math.cos(lo - lo0)
+    if cosc < 0:
+        return None
+    return math.cos(la) * math.sin(lo - lo0), math.cos(la0) * math.sin(la) - math.sin(la0) * math.cos(la) * math.cos(lo - lo0)
+
+
+@lru_cache(maxsize=64)
+def _globe_small_cached(lon: float, lat: float, sz: int) -> Image.Image:
+    import cv2
+    world, ppd = _world()
+    R = sz / 2 * 0.92
+    yy, xx = np.mgrid[0:sz, 0:sz].astype(np.float32)
+    x, y = (xx - sz / 2) / R, -(yy - sz / 2) / R
+    rho2 = x * x + y * y
+    z = np.sqrt(np.clip(1 - rho2, 0, 1))
+    la0, lo0 = math.radians(lat), math.radians(lon)
+    la = np.arcsin(np.clip(z * math.sin(la0) + y * math.cos(la0), -1, 1))
+    lo = lo0 + np.arctan2(x, z * math.cos(la0) - y * math.sin(la0))
+    mx = (((np.degrees(lo) + 180) % 360) * ppd).astype(np.float32)
+    my = ((90 - np.degrees(la)) * ppd).astype(np.float32)
+    col = cv2.remap(world, mx, my, cv2.INTER_LINEAR, borderMode=cv2.BORDER_WRAP)
+    col = col * np.clip(0.45 + 0.7 * (x * -0.4 + y * 0.3 + z * 0.85), 0.3, 1.15)[..., None]
+    a = np.clip((1 - np.sqrt(rho2)) * R, 0, 1) * 255
+    rgba = np.dstack([np.clip(col, 0, 255), a]).astype(np.uint8)
+    im = Image.fromarray(rgba, "RGBA")
+    ImageDraw.Draw(im).ellipse([sz / 2 - R, sz / 2 - R, sz / 2 + R, sz / 2 + R], outline=(140, 190, 255, 200), width=2)
+    return im
+
+
+def globe_small(center, sz: int) -> Image.Image:
+    return _globe_small_cached(round(center[0], 1), round(center[1], 1), sz)
+
+
+# ---- 粒・色 -------------------------------------------------------------------------------------
+
+def particles(img: Image.Image, kind: str, t: float) -> None:
+    """雪・砂ぼこり・火の粉。決まった乱数で、時刻だけで位置が決まる(どのコマから描いても同じ)。"""
+    rng = np.random.default_rng({"snow": 1, "dust": 2, "embers": 3}[kind])
+    n = {"snow": 260, "dust": 140, "embers": 90}[kind]
+    x0, y0 = rng.uniform(0, W, n), rng.uniform(0, H, n)
+    sp = rng.uniform(0.5, 1.5, n)
+    sz = rng.uniform(1.5, 4.5, n)
+    lay = Image.new("RGBA", img.size, (0, 0, 0, 0))
+    d = ImageDraw.Draw(lay)
+    if kind == "snow":
+        xs = (x0 + np.sin(t * 0.8 + x0) * 25 + t * 30 * sp) % W
+        ys = (y0 + t * 70 * sp) % H
+        col, al = (255, 255, 255), 0.85
+    elif kind == "dust":
+        xs = (x0 + t * 120 * sp) % W
+        ys = (y0 + np.sin(t * 0.5 + y0) * 20) % H
+        col, al = (230, 200, 150), 0.35
+        sz = sz * 1.6
+    else:
+        xs = (x0 + np.sin(t + x0) * 30) % W
+        ys = (y0 - t * 60 * sp) % H
+        col, al = (255, 170, 80), 0.8
+    for x, y, r, s_ in zip(xs, ys, sz, sp):
+        d.ellipse([x - r, y - r, x + r, y + r], fill=col + (int(255 * al * min(1, s_)),))
+    img.alpha_composite(lay.filter(ImageFilter.GaussianBlur(0.8)))
+
+
+def grade(img: Image.Image, kind: str) -> None:
+    a = np.asarray(img.convert("RGB")).astype(np.float32)
+    if kind == "old":
+        g = a @ np.array([0.30, 0.59, 0.11], np.float32)
+        sep = np.stack([g * 1.07 + 18, g * 0.95 + 8, g * 0.78], axis=-1)
+        a = a * 0.35 + sep * 0.65
+    elif kind == "cold":
+        a = a * np.array([0.92, 0.98, 1.08], np.float32)
+    elif kind == "warm":
+        a = a * np.array([1.08, 1.0, 0.9], np.float32)
+    img.paste(Image.fromarray(np.clip(a, 0, 255).astype(np.uint8)).convert("RGBA"), (0, 0))
 
 
 # ---- 地球儀 ---------------------------------------------------------------------------------
@@ -247,6 +334,9 @@ def draw_card(img: Image.Image, mp, sc: dict, t: float, u: float) -> None:
     size = int(sc.get("size", 230 if W > H else 190) * (1.15 - 0.15 * a))
     cy = H * (0.40 if W > H else 0.36)
     big = sc["big"]
+    if sc.get("count", True):
+        from .worldmap import count_text
+        big = count_text(big, min(1.0, u * sc.get("_dur", 3.0) / 0.9))     # 0.9 秒で数え上がる
     d.text((W / 2, cy), big, font=ov.font(size), fill=tuple(sc.get("color", ov.YEL)) + (int(255 * a),), anchor="mm", stroke_width=10, stroke_fill=ov.NAVY)
     ov.BOXES.append(("label", d.textbbox((W / 2, cy), big, font=ov.font(size), anchor="mm"), big, 1.0))
     if sc.get("sub"):
@@ -329,7 +419,7 @@ def render_one(img: Image.Image, mp, t: float, ctx: dict, i: int, steps=None) ->
     elif shot == "illust":
         draw_illust(img, sc, u)
     elif shot == "card":
-        draw_card(img, mp, sc, t, u)
+        draw_card(img, mp, dict(sc, _dur=t1 - t0), t, u)
     elif shot == "timeline":
         draw_timeline(img, mp, sc, t, u)
     elif shot == "split":
@@ -348,6 +438,10 @@ def render_one(img: Image.Image, mp, t: float, ctx: dict, i: int, steps=None) ->
             tt = sc[side].get("title")
             if tt:
                 d.text((W // 4 + k2 * W // 2, 120), tt, font=ov.font(64), fill=ov.YEL, anchor="mm", stroke_width=8, stroke_fill=ov.NAVY)
+    if (sc or {}).get("grade"):
+        grade(img, sc["grade"])
+    if (sc or {}).get("fx"):
+        particles(img, sc["fx"], t)
     if steps and (sc or {}).get("step") is not None and shot != "map":
         mp.steps_band(img, steps, sc["step"])
 
@@ -363,9 +457,75 @@ def draw(img: Image.Image, t: float, ctx: dict, mp, steps=None) -> None:
         a = (scs[i] or {}).get("shot", "map")
         b = (scs[i - 1] or {}).get("shot", "map")
         dt = t - cur["start"]
-        if (a != "map" or b != "map") and dt < XF:
+        tr = (scs[i] or {}).get("tr", "fade")
+        if ((a != "map" or b != "map") or tr != "fade") and dt < XF:
             prev = Image.new("RGBA", (W, H))
             bx = list(ov.BOXES)
             render_one(prev, mp, t, ctx, i - 1, steps)
             ov.BOXES[:] = bx
-            img.paste(Image.blend(prev, img, _ease(dt / XF)), (0, 0))
+            transition(img, prev, tr, dt / XF)
+
+
+def transition(img: Image.Image, prev: Image.Image, tr: str, u: float) -> None:
+    """前のショット prev から今の img へ。u は 0〜1。"""
+    k = _ease(u)
+    if tr == "zoom":                                       # 前の絵の真ん中へ寄って抜ける
+        z = 1 + 0.6 * k
+        cw, ch = W / z, H / z
+        pz = prev.resize((W, H), Image.BICUBIC, box=((W - cw) / 2, (H - ch) / 2, (W + cw) / 2, (H + ch) / 2))
+        cur = img.copy()
+        z2 = 1.25 - 0.25 * k                               # 今の絵は少し寄った所から戻る
+        cw, ch = W / z2, H / z2
+        cur = cur.resize((W, H), Image.BICUBIC, box=((W - cw) / 2, (H - ch) / 2, (W + cw) / 2, (H + ch) / 2))
+        img.paste(Image.blend(pz, cur, k), (0, 0))
+    elif tr == "whip":                                     # 横に流れてぶれる
+        off = int(W * k)
+        both = Image.new("RGBA", (W * 2, H))
+        both.paste(prev, (0, 0))
+        both.paste(img, (W, 0))
+        fr = both.crop((off, 0, off + W, H))
+        blur = int(60 * math.sin(math.pi * k))
+        if blur > 1:
+            import cv2
+            a = np.asarray(fr)
+            ker = np.ones((1, blur), np.float32) / blur
+            fr = Image.fromarray(cv2.filter2D(a, -1, ker))
+        img.paste(fr, (0, 0))
+    elif tr == "flash":                                    # 白く光って変わる
+        base = prev if k < 0.5 else img.copy()
+        w = 1 - abs(k - 0.5) * 2
+        white = Image.new("RGBA", (W, H), (255, 255, 255, 255))
+        img.paste(Image.blend(base, white, w * 0.85), (0, 0))
+    else:
+        img.paste(Image.blend(prev, img, k), (0, 0))
+
+
+def sfx(lines_def, L) -> list:
+    """ショートが変わる所(切り替えの種類で音を変える)・札や層が出る所・数字の札の「ドン」と数え上げ。"""
+    from . import worldmap as wm_
+    ev = []
+    prev = None
+    for d in lines_def:
+        sc = d.get("scene")
+        if d["id"] not in L or sc is None or sc is prev:
+            continue
+        l = L[d["id"]]
+        tr = sc.get("tr", "fade")
+        shot = sc.get("shot", "map")
+        if prev is not None:
+            ev.append((l["start"], {"whip": "swish", "flash": "impact"}.get(tr, "whoosh")))
+        if shot == "card":
+            ev.append((l["start"] + 0.05, "impact"))
+            if any(c.isdigit() for c in sc.get("big", "")):
+                ev.append((l["start"] + 0.1, "tick"))
+        prev_ids = {x.get("id") for x in (prev or {}).get("layers", [])}
+        for x in sc.get("layers", []):
+            if x.get("id") in prev_ids:
+                continue
+            t0 = wm_.start_of(x, [l], l)
+            if x["kind"] in ("label", "pin", "ghost", "fill"):
+                ev.append((t0, "pop"))
+            if x.get("count"):
+                ev.append((t0, "tick"))
+        prev = sc
+    return sorted(set(ev))
