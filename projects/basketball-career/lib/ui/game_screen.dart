@@ -16,6 +16,7 @@ import '../game/perks.dart';
 import '../game/player.dart';
 import '../game/season.dart';
 import 'alltime_sheet.dart';
+import 'season_card.dart';
 import 'art/court.dart';
 import 'art/title_art.dart';
 import 'art/growth_chart.dart';
@@ -186,8 +187,17 @@ class _SeasonViewState extends State<_SeasonView> {
       controller: _scroll,
       padding: const EdgeInsets.all(16),
       children: [
-        CourtHeader(game: g),
+        CourtHeader(game: g, pose: poseForFocus(c.focus)),
         const SizedBox(height: 12),
+        // 年が明けたら、去年の成績カードを見られる(画像で共有もできる)。
+        if (g.slot == 0 && seasonOf(g, g.player.age - 1) != null) ...[
+          OutlinedButton.icon(
+            onPressed: () => showSeasonCard(context, g, g.player.age - 1),
+            icon: const Icon(Icons.style_outlined, size: 18),
+            label: Text('${g.player.age - 1}歳のシーズンの成績カード'),
+          ),
+          const SizedBox(height: 12),
+        ],
         // 押した結果は、いちばん上(絵のすぐ下)に出す。下の帯を押すとここへ戻る。
         if (c.pathMessage != null) ...[
           _Note(text: c.pathMessage!),
@@ -1678,7 +1688,7 @@ class _PlanView extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        CourtHeader(game: game, height: 110),
+        CourtHeader(game: game, height: 130, pose: poseForPlan(rec), scene: 'assets/art/scene_final.jpg'),
         const SizedBox(height: 12),
         Card(
           color: cs.primaryContainer,
@@ -1886,7 +1896,11 @@ class _ClutchView extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        CourtHeader(game: game, height: 110, versus: s.vsRival),
+        CourtHeader(
+            game: game,
+            height: 110,
+            versus: s.vsRival,
+            pose: poseForClutch(info.chances.entries.reduce((a, b) => b.value > a.value ? b : a).key)),
         const SizedBox(height: 12),
         Card(
           color: Theme.of(context).colorScheme.primaryContainer,
@@ -2220,7 +2234,14 @@ class _EndingView extends StatelessWidget {
                 const Text('年ごとの成績',
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 const SizedBox(height: 6),
-                for (final r in g.records) _YearRow(record: r),
+                Text('押すと、その年の成績カード(画像で共有できる)', style: TextStyle(fontSize: 11, color: Theme.of(context).colorScheme.onSurfaceVariant)),
+                const SizedBox(height: 4),
+                for (final r in g.records)
+                  InkWell(
+                    borderRadius: BorderRadius.circular(8),
+                    onTap: () => showSeasonCard(context, g, r.age),
+                    child: _YearRow(record: r),
+                  ),
               ],
             ),
           ),
@@ -2248,6 +2269,8 @@ class _EndingView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                const ArtBanner('assets/art/next_gen.jpg', height: 120),
+                const SizedBox(height: 10),
                 const Text('次の世代へ', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 4),
                 Text('${p.name}の想いを継ぐ選手を、6歳から育てる(${g.generation + 1}代目)。',

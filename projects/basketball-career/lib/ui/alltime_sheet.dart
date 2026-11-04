@@ -30,9 +30,37 @@ class AllTimeSheet extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Padding(
-                padding: EdgeInsets.fromLTRB(16, 0, 16, 4),
-                child: Text('歴代記録', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(14),
+                  child: SizedBox(
+                    height: 96,
+                    width: double.infinity,
+                    child: Stack(fit: StackFit.expand, children: [
+                      Image.asset('assets/art/alltime.jpg',
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) => ColoredBox(color: cs.primaryContainer)),
+                      const DecoratedBox(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [Color(0x00000000), Color(0xAA000000)]),
+                        ),
+                      ),
+                      const Align(
+                        alignment: Alignment.bottomLeft,
+                        child: Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Text('歴代記録',
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white)),
+                        ),
+                      ),
+                    ]),
+                  ),
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
@@ -91,6 +119,23 @@ class _Table extends StatelessWidget {
             ),
             child: Row(
               children: [
+                // 名選手の顔(自分の行は人の形のアイコン)。
+                Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: ClipOval(
+                    child: SizedBox(
+                      width: 36,
+                      height: 36,
+                      child: r.legend == null
+                          ? ColoredBox(
+                              color: cs.primary,
+                              child: Icon(Icons.person, size: 24, color: cs.onPrimary))
+                          : Image.asset(r.legend!.portrait,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, __, ___) => ColoredBox(color: cs.surfaceContainerHighest)),
+                    ),
+                  ),
+                ),
                 SizedBox(
                   width: 40,
                   child: Text('${r.rank}位',

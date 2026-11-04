@@ -25,6 +25,9 @@ class Legend {
   final int assists;
   final int titles;
 
+  /// 肖像の絵(Gemini で作った架空の顔。`legends` の並びの番号)。
+  String get portrait => 'assets/art/legends/legend_${legends.indexOf(this)}.jpg';
+
   int of(AllTimeStat s) => switch (s) {
         AllTimeStat.points => points,
         AllTimeStat.rebounds => rebounds,
@@ -47,8 +50,8 @@ const legends = <Legend>[
   Legend('御子柴 航', 3000, 1000, 1000, 1),
 ];
 
-/// 歴代の表の1行。
-typedef AllTimeRow = ({int rank, String name, int value, bool me});
+/// 歴代の表の1行。`legend` は名選手(自分の行は null)。
+typedef AllTimeRow = ({int rank, String name, int value, bool me, Legend? legend});
 
 /// 自分を入れた順位(1始まり)。同じ数なら名選手が上(抜いたことにならない)。
 int allTimeRank(AllTimeStat s, int mine) => 1 + legends.where((l) => l.of(s) >= mine).length;
@@ -64,15 +67,18 @@ int allTimeRank(AllTimeStat s, int mine) => 1 + legends.where((l) => l.of(s) >= 
 
 /// 自分を入れた歴代の表(上から11行まで。自分が11位以下でも最後に入れる)。
 List<AllTimeRow> allTimeTable(AllTimeStat s, int mine, String myName) {
-  final rows = [
-    for (final l in legends) (name: l.name, value: l.of(s), me: false),
-    (name: myName, value: mine, me: true),
+  final rows = <({String name, int value, bool me, Legend? legend})>[
+    for (final l in legends) (name: l.name, value: l.of(s), me: false, legend: l),
+    (name: myName, value: mine, me: true, legend: null),
   ]..sort((a, b) {
       final c = b.value.compareTo(a.value);
       if (c != 0) return c;
       return a.me ? 1 : (b.me ? -1 : 0); // 同じ数なら名選手が上
     });
-  return [for (var i = 0; i < rows.length; i++) (rank: i + 1, name: rows[i].name, value: rows[i].value, me: rows[i].me)];
+  return [
+    for (var i = 0; i < rows.length; i++)
+      (rank: i + 1, name: rows[i].name, value: rows[i].value, me: rows[i].me, legend: rows[i].legend)
+  ];
 }
 
 /// `before` から `after` に増えたときに抜いた名選手の名前(上の順)。

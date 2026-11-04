@@ -116,7 +116,10 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.all(24),
               shrinkWrap: true,
               children: [
-                const TitleArt(),
+                // 次の世代として始めるときは、親子でコートに立つ絵。
+                widget.controller.nextHeir != null
+                    ? const ArtBanner('assets/art/next_gen.jpg', height: 190)
+                    : const TitleArt(),
                 const SizedBox(height: 16),
                 Text('バスケ育成',
                     textAlign: TextAlign.center,
