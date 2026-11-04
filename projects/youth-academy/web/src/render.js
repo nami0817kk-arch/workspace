@@ -73,7 +73,22 @@
     }
 
     startScene(sc) {
-      this.scene = sc;
+      const b0 = sc.frames && sc.frames[0] && sc.frames[0].ball;
+      const far = b0 ? Math.hypot(b0[0] - this.ball[0], b0[1] - this.ball[1]) : 0;
+      // 選手も、場面の最初の位置から遠い子がいれば切り替える（セットプレーの並びなど）
+      let pFar = 0;
+      const p0 = (sc.frames && sc.frames[0] && sc.frames[0].pos) || {};
+      for (const id of Object.keys(p0)) if (this.disp[id]) pFar = Math.max(pFar, Math.hypot(p0[id][0] - this.disp[id][0], p0[id][1] - this.disp[id][1]));
+      if (far > 8 || pFar > 6) {
+        // 遠い：一瞬暗くして場面へ切り替える（選手もカメラもその場へ）
+        this.cut = 0.45;
+        this.disp = {};
+        this.vel = {};
+        this._snapCam = true;
+        this._blend = null;
+      } else this._blend = { from: this.ball.slice(), t: 0, dur: clamp(far / 15, 0.2, 0.55), disp: Object.assign({}, this.disp) };
+      this.idle = null;
+      this.scene = this.paceScene(sc);
       this.t = 0;
       this.focus = [];
       for (const k of Object.keys(sc.actors || {})) this.focus.push(sc.actors[k]);
@@ -81,9 +96,124 @@
       this.flash = 0;
     }
     endScene() {
+      this.idle = null; // 場面のあとは、ボールのいちばん近くの子が持って続ける
       this.scene = null;
       this.focus = [];
       this.defFocus = [];
+    }
+
+    // 見どころの合間のボール：持つ子（carrier）が運び（dribble）、味方へ蹴る（pass）。ボールの位置を返す
+    idlePlay(dt) {
+      const m = this.match;
+      const ids = Object.keys(this.base || {});
+      if (!ids.length) return this.ball;
+      const posOf = (id) => this.disp[id] || this.base[id];
+      const teamOf = (id) => this.base[id][2];
+      const field = (id) => this.base[id][3] !== 0;
+      const nearest = (pt, f) => {
+        let best = null;
+        let bd = 1e9;
+        for (const id of ids) {
+          if (!f(id)) continue;
+          const q = posOf(id);
+          const d = Math.hypot(q[0] - pt[0], q[1] - pt[1]);
+          if (d < bd) { bd = d; best = id; }
+        }
+        return best;
+      };
+      let s = this.idle;
+      if (!s || !this.base[s.carrier || s.target]) {
+        const out = this.ball[0] < -0.5 || this.ball[0] > W + 0.5 || this.ball[1] < -0.5 || this.ball[1] > L + 0.5;
+        if (out) {
+          // ピッチの外（ゴールの中を含む）：一瞬暗くして、真ん中からの再開へ
+          this.cut = 0.45;
+          this.disp = {};
+          this.vel = {};
+          this._snapCam = true;
+          this.ball = [34, L / 2, 0];
+        }
+        const c = nearest(this.ball, field);
+        if (!c) return this.ball;
+        this.poss = teamOf(c) === m.home ? 'home' : 'away';
+        const q = posOf(c);
+        const d = Math.hypot(q[0] - this.ball[0], q[1] - this.ball[1]);
+        if (!out && d > 2.5) {
+          // 離れている子へは、ボールを転がして渡す（飛ばさない）
+          s = this.idle = { mode: 'pass', from: this.ball.slice(), to: [q[0], q[1]], target: c, t: 0, dur: clamp(d / 12, 0.3, 2.5), loft: 0 };
+        } else s = this.idle = { mode: 'dribble', carrier: c, t: 0, dur: 0.8 + Math.random() * 1.4 };
+        if (out) return this.ball;
+      }
+      s.t += dt;
+      const atk = this.poss === 'home' ? 1 : -1;
+      if (s.mode === 'dribble') {
+        const q = posOf(s.carrier);
+        // 少し前へ運ぶ（タッチラインに寄りすぎない）
+        s.runTo = [clamp(q[0] + (34 - q[0]) * 0.03, 4, W - 4), clamp(q[1] + atk * 1.8, 6, L - 6)];
+        const foot = [q[0], q[1] + atk * 0.75];
+        const k = 1 - Math.exp(-dt * 12);
+        const b = [lerp(this.ball[0], foot[0], k), lerp(this.ball[1], foot[1], k), 0];
+        if (s.t >= s.dur) {
+          const my = teamOf(s.carrier);
+          let tgt = null;
+          if (Math.random() < 0.16) tgt = nearest(q, (id) => teamOf(id) !== my && field(id)); // 相手に取られる
+          else {
+            const cands = ids.filter((id) => {
+              if (id === s.carrier || teamOf(id) !== my) return false;
+              const r = posOf(id);
+              const d = Math.hypot(r[0] - q[0], r[1] - q[1]);
+              return d > 7 && d < 30 && (r[1] - q[1]) * atk > -14;
+            });
+            tgt = cands.length ? cands[Math.floor(Math.random() * cands.length)] : null;
+          }
+          if (tgt) {
+            const r = posOf(tgt);
+            const to = [r[0], r[1] - atk * 0.6];
+            const d = Math.hypot(to[0] - b[0], to[1] - b[1]);
+            this.idle = { mode: 'pass', from: b.slice(), to, target: tgt, t: 0, dur: clamp(d / 15, 0.45, 2.2), loft: d > 24 ? Math.min(4, d * 0.1) : 0 };
+          } else s.t = 0;
+        }
+        return b;
+      }
+      // パス：減速しながら受け手の足元へ。長いパスは浮かせる
+      const u = clamp(s.t / s.dur, 0, 1);
+      const e = u * (2 - u);
+      const b = [lerp(s.from[0], s.to[0], e), lerp(s.from[1], s.to[1], e), Math.sin(u * Math.PI) * s.loft];
+      if (u >= 1) {
+        this.poss = teamOf(s.target) === m.home ? 'home' : 'away';
+        this.idle = { mode: 'dribble', carrier: s.target, t: 0, dur: 0.7 + Math.random() * 1.6 };
+      }
+      return b;
+    }
+
+    // 場面のコマの時間を配り直す：ボールが速すぎる区間（28m/s 超え）・選手が速すぎる区間（9m/s 超え）に、
+    // ゆっくりな区間と、最後のコマのあとの余り（場面の長さ sc.dur まで 0.6 秒を残す）から時間を回す
+    paceScene(sc) {
+      const fr = sc.frames || [];
+      if (fr.length < 3) return sc;
+      const seg = [];
+      for (let i = 1; i < fr.length; i++) {
+        const a = fr[i - 1], b = fr[i];
+        const dt0 = Math.max(0.001, b.t - a.t);
+        let need = Math.hypot(b.ball[0] - a.ball[0], b.ball[1] - a.ball[1]) / 28;
+        for (const id of Object.keys(b.pos)) if (a.pos[id]) need = Math.max(need, Math.hypot(b.pos[id][0] - a.pos[id][0], b.pos[id][1] - a.pos[id][1]) / 10);
+        seg.push({ dt0, need: Math.min(need, dt0 * 3) });
+      }
+      const extra = seg.reduce((x, g) => x + Math.max(0, g.need - g.dt0), 0);
+      const slack = seg.reduce((x, g) => x + Math.max(0, g.dt0 - Math.max(g.need, g.dt0 * 0.3)), 0);
+      const lastT = fr[fr.length - 1].t;
+      const room = sc.dur ? Math.max(0, sc.dur - 0.6 - lastT) : 0;
+      if (extra <= 0.001 || slack + room <= 0.001) return sc;
+      const give = Math.min(extra, slack + room);
+      const fx = give / extra;
+      const fs = slack > 0.001 ? Math.min(give, slack) / slack : 0;
+      let t = fr[0].t;
+      const out = [Object.assign({}, fr[0])];
+      seg.forEach((g, i) => {
+        const d = g.need > g.dt0 ? g.dt0 + (g.need - g.dt0) * fx : g.dt0 - Math.max(0, g.dt0 - Math.max(g.need, g.dt0 * 0.3)) * fs;
+        t += d;
+        out.push(Object.assign({}, fr[i + 1], { t }));
+      });
+      return Object.assign({}, sc, { frames: out });
     }
 
     // frames から時刻 t の位置を取る
@@ -100,7 +230,7 @@
             const a = fr[i - 1];
             const b = fr[i];
             const u = (t - a.t) / Math.max(0.001, b.t - a.t);
-            const e = ease(u);
+            const e = 0.5 * u + 0.5 * ease(u);
             const arc = Math.max(0, Math.min(a.ball[2], b.ball[2]) * 0 + Math.sin(u * Math.PI) * Math.min(3.2, Math.hypot(b.ball[0] - a.ball[0], b.ball[1] - a.ball[1]) * 0.06));
             ball = [lerp(a.ball[0], b.ball[0], e), lerp(a.ball[1], b.ball[1], e), lerp(a.ball[2], b.ball[2], e) + arc];
             break;
@@ -119,7 +249,8 @@
           else if (!b) b = f;
         }
         if (a && b) {
-          const u = ease((t - a.t) / Math.max(0.001, b.t - a.t));
+          const u0 = (t - a.t) / Math.max(0.001, b.t - a.t);
+          const u = 0.5 * u0 + 0.5 * ease(u0); // 走り出し・止まりはなめらかに、途中は速くなりすぎない
           pos[id] = [lerp(a.pos[id][0], b.pos[id][0], u), lerp(a.pos[id][1], b.pos[id][1], u)];
         } else if (a) pos[id] = a.pos[id];
         else if (b) pos[id] = null; // まだ出番前＝基本位置から動き始める
@@ -155,20 +286,20 @@
         this.cap = st.cap;
         const last = this.scene.frames[this.scene.frames.length - 1].t;
         if (this.t > last - 0.2 && this.scene.outcome === 'goal') this.flash = Math.min(1, this.flash + dt * 2);
-      } else {
-        // 見どころの合間：ボールはゆるく動く
-        this.idleT -= dt;
-        if (this.idleT <= 0) {
-          this.idleT = 1.2 + Math.random() * 1.2;
-          const atk = this.poss === 'home' ? 1 : -1;
-          this.idleTarget = [14 + Math.random() * 40, 52 + atk * (4 + Math.random() * 14)];
+        // 場面の始まり：それまでのボールの位置から 0.3 秒でつなぐ
+        if (this._blend) {
+          this._blend.t += dt;
+          const u = ease(clamp(this._blend.t / this._blend.dur, 0, 1));
+          ball = [lerp(this._blend.from[0], ball[0], u), lerp(this._blend.from[1], ball[1], u), lerp(this._blend.from[2] || 0, ball[2], u)];
+          if (this._blend.t >= Math.max(0.5, this._blend.dur * 2)) this._blend = null;
         }
-        const k = 1 - Math.exp(-dt * 1.6);
-        this.ball = [lerp(this.ball[0], this.idleTarget[0], k), lerp(this.ball[1], this.idleTarget[1], k), 0];
-        ball = this.ball;
+      } else {
+        // 見どころの合間：ボールだけが勝手に動かないよう、持っている子が運んで味方へパスする
+        ball = this.idlePlay(dt);
         this.cap = null;
         this.flash = 0;
       }
+      if (this.cut > 0) this.cut = Math.max(0, this.cut - dt);
       this.ball = ball;
       // パスの軌跡：場面のあいだのボールの通り道（場面が変わったら消す）
       if (this.scene !== this._trailScene) { this._trailScene = this.scene; this.trail = []; }
@@ -182,7 +313,8 @@
       } else this.trail = [];
       const away = this.scene && this.scene.flip;
       this.camTarget = away ? clamp(ball[1] - 3, 8, 92) : clamp(ball[1] + 4, 34, 92);
-      this.camY = lerp(this.camY, this.camTarget, 1 - Math.exp(-dt * (this.scene ? 3.5 : 1.5)));
+      this.camY = this._snapCam ? this.camTarget : lerp(this.camY, this.camTarget, 1 - Math.exp(-dt * (this.scene ? 3.5 : 1.5)));
+      if (this._snapCam && !this.is3D) this._snapCam = false; // 3D はカメラを合わせたあとで下ろす
       // 選手
       const ballY = ball[1];
       for (const id of Object.keys(this.base)) {
@@ -197,11 +329,27 @@
         if (scenePos && scenePos[id]) {
           target = scenePos[id];
           direct = true;
+        } else if (!this.scene && this.idle) {
+          // 合間：持っている子は前へ運び、パスの受け手はボールを迎えに行く
+          if (this.idle.mode === 'dribble' && this.idle.carrier === id && this.idle.runTo) target = this.idle.runTo;
+          if (this.idle.mode === 'pass' && this.idle.target === id) target = this.idle.to;
         }
         const cur = this.disp[id] || [tx, ty];
+        // 場面の始まり：場面の位置へは、いまいる所から少しずつ寄せる
+        if (direct && this._blend && this._blend.disp && this._blend.disp[id]) {
+          const f0 = this._blend.disp[id];
+          const u = ease(clamp(this._blend.t / Math.max(0.5, this._blend.dur * 2), 0, 1));
+          target = [lerp(f0[0], target[0], u), lerp(f0[1], target[1], u)];
+        }
         const k = direct ? 1 : 1 - Math.exp(-dt * 2.4);
-        const nx = lerp(cur[0], target[0], k);
-        const ny = lerp(cur[1], target[1], k);
+        let nx = lerp(cur[0], target[0], k);
+        let ny = lerp(cur[1], target[1], k);
+        // ふだんの動きは全力疾走（9m/s）まで。離れていても瞬間移動しない
+        if (!direct) {
+          const st = Math.hypot(nx - cur[0], ny - cur[1]);
+          const mx = 9 * dt;
+          if (st > mx) { nx = cur[0] + ((nx - cur[0]) * mx) / st; ny = cur[1] + ((ny - cur[1]) * mx) / st; }
+        }
         this.prev[id] = cur;
         this.disp[id] = [nx, ny];
         this.speed = this.speed || {};
@@ -475,6 +623,11 @@
       ctx.fillRect(0, 0, w, h);
       if (this.flash > 0) {
         ctx.fillStyle = 'rgba(255,255,255,' + 0.25 * Math.sin(this.flash * 3) + ')';
+        ctx.fillRect(0, 0, w, h);
+      }
+      // 場面の切り替え（遠い場面へ移るとき）は一瞬暗くする
+      if (this.cut > 0) {
+        ctx.fillStyle = 'rgba(8,12,20,' + clamp(this.cut / 0.3, 0, 1) + ')';
         ctx.fillRect(0, 0, w, h);
       }
     }

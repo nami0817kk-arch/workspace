@@ -663,6 +663,7 @@
       const now = (globalThis.performance && performance.now()) || Date.now();
       this._dt = this._lastT ? clamp((now - this._lastT) / 1000, 0, 0.1) : 0.016;
       this._lastT = now;
+      if (this._snapCam) { this._cam = null; this._snapCam = false; } // 場面の切り替え：カメラもその場へ
       this.syncPlayers();
       const cheer = this._cheer;
       const sd = cheer && cheer.scorer && this.disp[cheer.scorer];
@@ -765,6 +766,10 @@
       }
       if (this.flash > 0) {
         ctx.fillStyle = 'rgba(255,255,255,' + 0.25 * Math.sin(this.flash * 3) + ')';
+        ctx.fillRect(0, 0, this.w, this.h);
+      }
+      if (this.cut > 0) {
+        ctx.fillStyle = 'rgba(8,12,20,' + clamp(this.cut / 0.3, 0, 1) + ')';
         ctx.fillRect(0, 0, this.w, this.h);
       }
     }
