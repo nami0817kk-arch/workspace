@@ -14,6 +14,7 @@ import 'package:basketball_career/game/match.dart';
 import 'package:basketball_career/game/path.dart';
 import 'package:basketball_career/game/perks.dart';
 import 'package:basketball_career/game/player.dart';
+import 'package:basketball_career/game/season.dart';
 
 void main(List<String> args) {
   const n = 1000;
@@ -28,6 +29,8 @@ void main(List<String> args) {
   final dreamHits = <Dream, int>{for (final d in Dream.values) d: 0};
   final honorCareers = <String, int>{};
   final honorTotals = <String, int>{};
+  // 段階ごとの、大会の数と優勝の数(プロの優勝が出ているかを見る)。
+  final leagueSeasons = <League, int>{}, leagueTitles = <League, int>{};
   // --easy / --hard で難易度を変えて測る。
   final diff = args.contains('--hard')
       ? Difficulty.hard
@@ -135,6 +138,10 @@ void main(List<String> args) {
     endAgeTotal += g.player.age;
     if (g.records.any((r) => r.league.name.startsWith('pro'))) pro++;
     titles += g.titles;
+    for (final r in g.records) {
+      leagueSeasons[r.league] = (leagueSeasons[r.league] ?? 0) + 1;
+      if (r.champion) leagueTitles[r.league] = (leagueTitles[r.league] ?? 0) + 1;
+    }
     for (final d in Dream.values) {
       if (d.achieved(g.dreamStats)) dreamHits[d] = dreamHits[d]! + 1;
     }
@@ -199,5 +206,10 @@ void main(List<String> args) {
     print('夢「${d.label}」(${d.goalText})のかなう割合: ${pct(dreamHits[d]!)}');
   }
   print('平均タイトル数: ${(titles / n).toStringAsFixed(2)}');
+  for (final l in League.values) {
+    final s = leagueSeasons[l] ?? 0;
+    if (s == 0) continue;
+    print('  ${l.label}: 大会 $s回・優勝 ${leagueTitles[l] ?? 0}回(${((leagueTitles[l] ?? 0) / s * 100).toStringAsFixed(1)}%)');
+  }
   print('18歳の平均 総合 ${(ovrAt18 / n).toStringAsFixed(1)} / 身長 ${(heightAt18 / n).toStringAsFixed(1)}cm');
 }

@@ -50,20 +50,22 @@ int sponsorOf({
 }
 
 /// 「1億2,500万円」「850万円」のように読みやすく。
+/// 3桁ごとに「,」を入れた数(2009 → 2,009)。金額と通算記録で使う。
+String withComma(int v) {
+  if (v < 0) return '-${withComma(-v)}';
+  final s = v.toString();
+  final b = StringBuffer();
+  for (var i = 0; i < s.length; i++) {
+    if (i > 0 && (s.length - i) % 3 == 0) b.write(',');
+    b.write(s[i]);
+  }
+  return b.toString();
+}
+
 String moneyLabel(int man) {
   if (man <= 0) return '0円';
   final oku = man ~/ 10000;
   final rest = man % 10000;
-  String withComma(int v) {
-    final s = v.toString();
-    final b = StringBuffer();
-    for (var i = 0; i < s.length; i++) {
-      if (i > 0 && (s.length - i) % 3 == 0) b.write(',');
-      b.write(s[i]);
-    }
-    return b.toString();
-  }
-
   if (oku == 0) return '${withComma(rest)}万円';
   if (rest == 0) return '$oku億円';
   return '$oku億${withComma(rest)}万円';
