@@ -3,5 +3,25 @@
   "id": "F9IwP9tMEJY",
   "publish_at": "2026-11-04T19:00:00+09:00",
   "thumb": "out/elevator-fall/thumb_long.jpg"
+ },
+ "s1": {
+  "id": "J6DSHsvHBO0",
+  "publish_at": "2026-11-05T11:00:00+09:00"
+ },
+ "s2": {
+  "id": "DXuX4mZE7x4",
+  "publish_at": "2026-11-05T12:00:00+09:00"
+ },
+ "s3": {
+  "id": "emLCYevnsH0",
+  "publish_at": "2026-11-05T13:00:00+09:00"
+ },
+ "s4": {
+  "id": "T6s74bDk4-o",
+  "publish_at": "2026-11-05T14:00:00+09:00"
+ },
+ "s5": {
+  "id": "FPjqLbFQPWg",
+  "publish_at": "2026-11-05T16:00:00+09:00"
  }
 }
