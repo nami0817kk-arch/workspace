@@ -18,6 +18,7 @@ const html = read('shell.html')
   .replace('/*__CLUB__*/', () => read('club.js'))
   .replace('/*__SCOUT__*/', () => read('scout.js'))
   .replace('/*__RENDER__*/', () => read('render.js'))
+  .replace('/*__RENDER3D__*/', () => read('render3d.js'))
   .replace('/*__UI__*/', () => read('ui.js'))
   .replace('/*__VIEWS__*/', () => read('views.js'))
   .replace('/*__VIEWS2__*/', () => read('views2.js'))
@@ -41,7 +42,7 @@ const dom = new JSDOM(html, {
   url: 'http://localhost/',
   beforeParse(w) {
     // canvas は描かない（描画の呼び出しが落ちないことだけ確かめる）
-    const ctx = new Proxy(function () {}, { get: (t, k) => (k === 'measureText' ? () => ({ width: 10 }) : k === 'createLinearGradient' ? () => ({ addColorStop() {} }) : () => {}), set: () => true });
+    const ctx = new Proxy(function () {}, { get: (t, k) => (k === 'measureText' ? () => ({ width: 10 }) : k === 'createLinearGradient' || k === 'createRadialGradient' ? () => ({ addColorStop() {} }) : () => {}), set: () => true });
     w.HTMLCanvasElement.prototype.getContext = () => ctx;
     w.addEventListener('error', (e) => errors.push(String(e.error || e.message)));
     const ce = w.console.error;

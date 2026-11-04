@@ -829,6 +829,7 @@
   let play = null;
   function cleanupPlay() {
     if (play && play.raf) cancelAnimationFrame(play.raf);
+    if (play && play.R && play.R.dispose) play.R.dispose();
     if (play) globalThis.removeEventListener('resize', play.onResize);
     play = null;
   }
@@ -890,12 +891,12 @@
     const bannerBox = h('div', {});
     stage.append(cv, sceneHead, ctl, bannerBox);
     const commMin = h('span', { class: 'min' }, "0'");
-    const commTx = h('span', { class: 'tx' }, 'キックオフ。レガーレの攻撃で試合が始まります');
+    const commTx = h('span', { class: 'tx' }, 'キックオフ。' + m.home.short + 'の攻撃で試合が始まります');
     const comm = h('div', { class: 'comm' }, commMin, commTx, h('span', { class: 'grow' }), h('span', { class: 'sub', style: 'font-size:10px' }, 'タップで経過'));
     wrap.append(top, stage, comm);
     main.append(wrap);
 
-    const R = new YA.Renderer(cv);
+    const R = YA.makeRenderer ? YA.makeRenderer(cv) : new YA.Renderer(cv);
     R.setMatch(m);
     const S = (play = { m, R, mode: 'idle', clock: 0, paused: false, sheet: null, raf: 0, last: 0, shown: 0, pendingStop: false, speed: app.speed });
     S.onResize = () => R.resize();
@@ -1065,7 +1066,7 @@
     S.raf = requestAnimationFrame(frame);
     YA.sfx.play('whistle');
     // 場面のあとで止める：場面が終わったら次の step が stop を返す
-    setComm(0, 'キックオフ。レガーレの攻撃で試合が始まります');
+    setComm(0, 'キックオフ。' + m.home.short + 'の攻撃で試合が始まります');
   }
 
   // ---------- 試合後 ----------
