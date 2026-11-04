@@ -61,7 +61,7 @@ def bonk(sr: int) -> np.ndarray:
 
 
 SOUNDS = {"whoosh": whoosh, "pop": pop, "thud": thud, "snap": snap, "bonk": bonk}
-GAIN.update(thud=0.30, snap=0.16, bonk=0.14)
+GAIN.update(thud=0.20, snap=0.16, bonk=0.14)
 MIN_GAP.update(thud=0.8, snap=0.8, bonk=0.8)
 
 

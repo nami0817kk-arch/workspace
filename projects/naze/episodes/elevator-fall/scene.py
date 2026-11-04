@@ -266,7 +266,7 @@ def car_frame(img, car, off, catch=0.0, rails=False, bottom_px=None, snap=0.0, r
         d.rectangle([rx - 5 * S, ry0, rx + 5 * S, ry1], fill=(150, 156, 170))
     if bottom_px is not None:
         by = y1 + bottom_px
-        if by < ry1:
+        if by + 18 * S < ry1:
             d.rectangle([sx0, by + 18 * S, sx1, ry1], fill=(54, 58, 70))
             d.rectangle([(x0 + x1) / 2 - 40 * S, by, (x0 + x1) / 2 + 40 * S, by + 18 * S], fill=(200, 80, 60))
             d.rectangle([x0 + 0.12 * w, by, x0 + 0.12 * w + 30 * S, by + 18 * S], fill=(200, 80, 60))
@@ -496,7 +496,7 @@ def sc_shaft(img, box, t, ts, P):
     if mode == "scale":
         sx = fx + 0.02 * ppm
         d.rounded_rectangle([sx - 0.28 * ppm, floor - 0.07 * ppm, sx + 0.28 * ppm, floor], int(6 * S), fill=(230, 232, 240), outline=(60, 66, 84), width=max(2, int(3 * S)))
-        label(d, (side[0], side[1] - 60 * S), "体重計", 44, O.WHITE)
+        label(d, (side[0], side[1] - 100 * S), "体重計", 44, O.WHITE)
         big_label(img, (side[0], side[1] + 70 * S), "0kg", O.YEL, 150, ts / 0.6)
     if mode == "same":
         v = 9.81 * min(ts + 0.6, 2.4) * 3.6
@@ -517,7 +517,7 @@ def sc_shaft(img, box, t, ts, P):
         label(d, (x1 - 60 * S, y1 - 0.95 / CAR_H * (y1 - y0) - 50 * S), "手すり", 34, O.WHITE)
     if after is not None and hit_col is not None:
         flash(d, fx, floor, after / 0.5, 200, (255, 240, 200))
-    if slow and not still:
+    if slow and not still and not P.get("bare"):
         label(d, (x0 + 70 * S, y0 + 40 * S), "スロー", 30, O.DIM)
     overview(d, ov, max(0.0, h_car))
     if P.get("clock"):
@@ -694,8 +694,8 @@ def sc_kei(img, box, t, ts, P):
         text(d, (tx, (y0 + y1) / 2 + 60 * S), "60kg × 600倍", 44, O.WHITE, "mm", 4)
         text(d, (tx, (y0 + y1) / 2 + 120 * S), "軽自動車 30台以上", 44, O.YEL, "mm", 4)
     else:
-        big_label(img, ((x0 + x1) / 2, y0 + 150 * S), "36トン", O.RED, 110, ts / 0.6)
-        text(d, ((x0 + x1) / 2, y0 + 270 * S), "60kg × 600倍　軽自動車 30台以上", 40, O.WHITE, "mm", 4)
+        big_label(img, ((x0 + x1) / 2, y0 + 230 * S), "36トン", O.RED, 110, ts / 0.6)
+        text(d, ((x0 + x1) / 2, y0 + 350 * S), "60kg × 600倍　軽自動車 30台以上", 40, O.WHITE, "mm", 4)
     head(d, box, "60kgの体に", O.YEL)
 
 
