@@ -4,11 +4,11 @@ from __future__ import annotations
 
 import math
 
-from naze import worldmap
+from naze import shots, worldmap
 from naze.config import H, W
 
 LAND = W > H
-MAP = worldmap.Map(lat0=-35, bases=[((-110, -66, -10, 18), 5), ((-84, -58, -48, -12), 6), ((-78, -57, -64, -16), 8)])
+MAP = worldmap.Map(lat0=-35, bases=[((-120, -70, 0, 20), 5), ((-96, -60, -30, 8), 6), ((-78, -57, -64, -16), 8)])
 STEPS = ["1 測る", "2 東の壁", "3 西の海", "4 北", "5 南"]
 
 
@@ -28,7 +28,7 @@ def chile_rows(lats):
 
 
 def draw(img, dr, t, ctx):
-    MAP.draw(img, t, ctx, steps=STEPS if ctx.get("_steps", LAND) else None)
+    shots.draw(img, t, ctx, MAP, steps=STEPS if LAND else None)
 
 
 def sfx_for(lines_def, L):

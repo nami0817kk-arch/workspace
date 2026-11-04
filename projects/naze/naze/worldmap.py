@@ -733,11 +733,26 @@ class Map:
         i = next(j for j, l in enumerate(lines) if l["id"] == cur["id"])
         now = sc[i]
         prev = sc[i - 1] if i > 0 else now
+        if prev is not None and prev is not now and (prev.get("shot", "map") != "map" or "view" not in prev):
+            prev = None                                       # 前が地図でなければ、カメラは移らず溶け合わせだけ(shots.py)
         vn = self.view(*now["view"])
+        if now.get("view_to"):                                # 行のあいだ動き続ける(山並みに沿って飛ぶなど)
+            j = i
+            while j > 0 and sc[j - 1] is now:
+                j -= 1
+            k = i
+            while k + 1 < len(lines) and sc[k + 1] is now:
+                k += 1
+            t0, t1 = lines[j]["start"], lines[k]["end"]
+            u = max(0.0, min(1.0, (t - t0) / max(1e-6, t1 - t0)))
+            vn = View.lerp(vn, self.view(*now["view_to"]), u * u * (3 - 2 * u) * 0.8 + u * 0.2)
         vp = self.view(*prev["view"]) if prev else vn
-        v = View.lerp(vp, vn, _ease((t - cur["start"]) / 1.4)) if now is not prev else vn
+        v = View.lerp(vp, vn, _ease((t - cur["start"]) / 1.4)) if (prev is not None and now is not prev) else vn
         v = View(v.lon, v.lat, v.span * (1 - 0.025 * math.sin(2 * math.pi * t / 18.0)), v.tilt, v.kx)   # 画面を止めない
+        relief0 = self.relief
+        self.relief = now.get("relief", relief0)
         base = self.base_img(v, t)
+        self.relief = relief0
         v.hfun = self.height
         img.paste(Image.fromarray(base).convert("RGBA"), (0, 0))
         dur = max(1e-6, cur["end"] - cur["start"])
