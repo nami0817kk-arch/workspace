@@ -164,7 +164,7 @@ void main() {
     ));
     final lines = epilogueLines(g);
     expect(lines.any((l) => l.contains('生涯収入') && l.contains('5億4,000万円')), isTrue);
-    expect(lines.any((l) => l.contains('通算2200得点')), isTrue);
+    expect(lines.any((l) => l.contains('通算2,200得点')), isTrue);
     final ids = achievements.where((a) => a.earned(g)).map((a) => a.id).toSet();
     expect(ids, containsAll(['earn_5oku', 'career_points_2000']));
     expect(ids, isNot(contains('earn_20oku')));

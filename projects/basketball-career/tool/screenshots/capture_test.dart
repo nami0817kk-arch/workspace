@@ -35,6 +35,7 @@ import 'package:basketball_career/game/life.dart';
 import 'package:basketball_career/game/match.dart';
 import 'package:basketball_career/game/path.dart';
 import 'package:basketball_career/game/player.dart';
+import 'package:basketball_career/game/season.dart';
 import 'package:basketball_career/monetization/monetization.dart';
 import 'package:basketball_career/monetization/purchase_service.dart';
 import 'package:basketball_career/ui/settings_screen.dart';
@@ -369,10 +370,14 @@ void main() {
 
     // 7. エンディング: 海外に渡って優勝した一生。
     GameController? ending;
-    for (var seed = 0; seed < 400 && ending == null; seed++) {
+    for (var seed = 0; seed < 2000 && ending == null; seed++) {
       final g = Game.start('ミナト', rng: Random(seed), events: false);
       _play(g, untilAge: 60);
-      if (g.phase == Phase.retired && g.abroad && g.titles >= 2) {
+      // プロで優勝した一生(ミニバスの優勝で数を満たした人を拾わない)。
+      if (g.phase == Phase.retired &&
+          g.records.any((r) =>
+              r.champion &&
+              (r.league == League.proAbroad || r.league == League.proDomestic || r.league == League.national))) {
         ending = _controller(g);
       }
     }

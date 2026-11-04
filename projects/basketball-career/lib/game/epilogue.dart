@@ -35,7 +35,7 @@ String secondCareer(Game g) {
   if (py >= 5 && (g.coachBond >= 50 || g.teamwork >= 60)) {
     return '引退後は指導者の道へ。チームのコーチとして、次の世代の選手を育てている。';
   }
-  if (g.honorTotal >= 3 || worldChampion(g) || (g.abroad && g.titles > 0)) {
+  if (g.honorTotal >= 3 || worldChampion(g) || g.abroadTitles > 0) {
     return '引退後は解説者として、試合の中継で語り口が人気になった。$nameの解説を待つファンも多い。';
   }
   if (g.totalEarnings >= 100000) {
@@ -55,16 +55,16 @@ bool worldChampion(Game g) =>
 bool gloriousEnding(Game g) =>
     worldChampion(g) ||
     retiredNumber(g) ||
-    g.titles >= 3 ||
-    (g.abroad && g.titles >= 1);
+    g.proTitles >= 2 ||
+    g.abroadTitles >= 1;
 
 /// 一生につく称号。到達点で決まる。
 String careerTitle(Game g) {
   final nick = positionNickname(g.player.position);
   if (worldChampion(g)) return '世界王者の$nick';
-  if (g.abroad && g.titles > 0) return '世界を制した$nick';
+  if (g.abroadTitles > 0) return '世界を制した$nick';
   if (g.abroad) return '世界に挑んだ$nick';
-  if (_wentPro(g) && g.titles >= 3) return '常勝の$nick';
+  if (g.proTitles >= 2) return '常勝の$nick';
   if (_wentPro(g)) return 'プロで戦い抜いた$nick';
   if (g.titles > 0 && g.secondChance) return '学生王者の$nick';
   if (g.records.isEmpty) return '夢の途中の$nick';
@@ -75,7 +75,7 @@ String careerTitle(Game g) {
 bool retiredNumber(Game g) =>
     g.number > 0 &&
     _wentPro(g) &&
-    (g.titles >= 3 || (g.abroad && g.titles >= 1) || g.awardCount >= 4);
+    (g.proTitles >= 3 || g.abroadTitles >= 1 || g.awardCount >= 4);
 
 /// 共有用の短い文章(「結果をコピー」で使う)。
 String shareText(Game g) {
@@ -84,7 +84,7 @@ String shareText(Game g) {
     ..writeln('バスケ育成: ${p.name}の物語')
     ..writeln('称号「${careerTitle(g)}」${g.number > 0 ? ' 背番号${g.number}${retiredNumber(g) ? '(永久欠番)' : ''}' : ''}')
     ..writeln('${p.heightCm.toStringAsFixed(0)}cm ${positionNickname(p.position)} 総合${p.overall.round()}  ${p.age}歳で引退')
-    ..writeln('通算 ${g.totalGames}試合 ${g.totalPoints}得点 ${g.totalRebounds}リバウンド ${g.totalAssists}アシスト')
+    ..writeln('通算 ${withComma(g.totalGames)}試合 ${withComma(g.totalPoints)}得点 ${withComma(g.totalRebounds)}リバウンド ${withComma(g.totalAssists)}アシスト')
     ..writeln('スティール${g.totalSteals} ブロック${g.totalBlocks} 3P${g.totalThrees}本${g.careerHigh == null ? '' : ' キャリアハイ${g.careerHigh!.points}点'}')
     ..write(g.careerBox.isEmpty ? '' : '${shootingLine(g.careerBox, g.boxedThrees)}\n')
     ..writeln('優勝${g.titles}回 個人賞${g.awardCount}回${g.abroad ? ' 海外挑戦' : ''}');
@@ -132,8 +132,14 @@ List<String> epilogueLines(Game g) {
       '${p.heightCm.toStringAsFixed(0)}cmの${positionNickname(p.position)}になった。$traits');
 
   if (g.records.isNotEmpty) {
-    // 全盛期: 実績に、舞台の格(ミニバスより海外プロ)を加えて比べる。
-    double score(YearRecord r) => r.achievement + _leagueWeight(r.league);
+    // 全盛期: 舞台の格(ミニバスより海外プロ)・優勝・表彰・自分の成績(リーグの点数の規模で割った得点)・勝ち上がりで比べる。
+    // 以前は勝ち上がり(実績)が中心で、海外で平均19得点の年より、大学で勝ち上がった10得点の年が選ばれた。
+    double score(YearRecord r) =>
+        _leagueWeight(r.league) +
+        (r.champion ? 25 : 0) +
+        r.honors.length * 10 +
+        r.ppg / r.league.scoreScale * 1.5 +
+        r.achievement * 0.3;
     final best = g.records.reduce((a, b) => score(b) > score(a) ? b : a);
     lines.add('いちばん輝いたのは${best.age}歳、${best.league.label}'
         '${best.winter ? 'の冬' : ''}の大会。'
@@ -180,7 +186,7 @@ List<String> epilogueLines(Game g) {
 
   final cp = g.totalPoints;
   if (cp >= 500) {
-    lines.add('通算$cp得点・${g.totalRebounds}リバウンド・${g.totalAssists}アシストを積み上げた。');
+    lines.add('通算${withComma(cp)}得点・${withComma(g.totalRebounds)}リバウンド・${withComma(g.totalAssists)}アシストを積み上げた。');
   }
 
   if (g.draftPick == 1) {
@@ -195,7 +201,7 @@ List<String> epilogueLines(Game g) {
   final py = proYears(g);
   if (py > 0) {
     final forced = g.retiredReason == '戦力外通告を受けた';
-    if (py >= 10 && (g.titles > 0 || g.honorTotal > 0 || g.abroad)) {
+    if (py >= 10 && (g.proTitles > 0 || g.honorTotal > 0 || g.abroad)) {
       lines.add('引退セレモニーには満員のアリーナが詰めかけ、スタンディングオベーションで${p.name}を見送った。');
     } else if (py >= 5) {
       lines.add(forced
@@ -273,10 +279,10 @@ List<String> epilogueLines(Game g) {
 }
 
 String _closing(Game g) {
-  if (g.abroad && g.titles > 0) return '世界の舞台で戦い、勝ち取った栄光。語り継がれる選手になった。';
+  if (g.abroadTitles > 0) return '世界の舞台で戦い、勝ち取った栄光。語り継がれる選手になった。';
   if (g.abroad) return '海を渡り、世界最高峰に挑んだ。その経験は、なにものにも代えがたい。';
   if (_wentPro(g)) {
-    return g.titles > 0
+    return g.proTitles > 0
         ? 'プロとして頂点を知った。ファンの記憶に残る選手だった。'
         : 'プロの世界で戦い抜いた。コートに立ち続けた誇りがある。';
   }

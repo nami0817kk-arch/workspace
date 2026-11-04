@@ -2545,7 +2545,8 @@ void main() {
   });
 
   group('背番号と永久欠番', () {
-    Game proLife({int number = 23, int titles = 0, int awards = 0, bool abroad = false}) {
+    Game proLife(
+        {int number = 23, int titles = 0, int awards = 0, bool abroad = false, League titleLeague = League.proDomestic}) {
       final g = Game(
         eventsEnabled: false,
         player: strong().copyWith(age: 33),
@@ -2555,7 +2556,7 @@ void main() {
         abroad: abroad,
       );
       for (var i = 0; i < titles; i++) {
-        g.records.add(YearRecord(age: 25 + i, league: League.proDomestic, wins: 8, games: 8, ppg: 15, rpg: 5, apg: 4, champion: true, achievement: 90));
+        g.records.add(YearRecord(age: 25 + i, league: titleLeague, wins: 8, games: 8, ppg: 15, rpg: 5, apg: 4, champion: true, achievement: 90));
       }
       for (var i = 0; i < awards; i++) {
         g.records.add(YearRecord(age: 20 + i, league: League.proDomestic, wins: 4, games: 6, ppg: 15, rpg: 5, apg: 4, champion: false, achievement: 70, award: 'ベスト5'));
@@ -2578,10 +2579,25 @@ void main() {
 
     test('永久欠番: 優勝3回・海外で優勝・個人賞4回のどれか(プロで)', () {
       expect(retiredNumber(proLife(titles: 3)), isTrue);
-      expect(retiredNumber(proLife(titles: 1, abroad: true)), isTrue);
+      expect(retiredNumber(proLife(titles: 1, abroad: true, titleLeague: League.proAbroad)), isTrue);
+      expect(retiredNumber(proLife(titles: 1, abroad: true)), isFalse, reason: '海外に渡っても、優勝が国内なら1回では足りない');
       expect(retiredNumber(proLife(awards: 4)), isTrue);
       expect(retiredNumber(proLife(titles: 2)), isFalse);
       expect(retiredNumber(proLife()), isFalse);
+    });
+
+    test('ミニバスの優勝は、称号・永久欠番・下位からの成り上がりに数えない', () {
+      final g = proLife(titles: 3, abroad: true, titleLeague: League.minibasket);
+      expect(g.titles, 3);
+      expect(g.proTitles, 0);
+      expect(careerTitle(g), isNot(contains('世界を制した')));
+      expect(careerTitle(g), isNot(contains('常勝')));
+      expect(retiredNumber(g), isFalse);
+      expect(gloriousEnding(g), isFalse);
+      g.draftPick = 45;
+      expect(earnedBy(g), isNot(contains('draft_late')));
+      final abroad = proLife(titles: 1, abroad: true, titleLeague: League.proAbroad);
+      expect(careerTitle(abroad), contains('世界を制した'));
     });
 
     test('番号なし(古いセーブ)や学生では永久欠番にならない', () {

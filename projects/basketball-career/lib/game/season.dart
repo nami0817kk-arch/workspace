@@ -54,6 +54,8 @@ enum League {
         League.university => 0.9,
         League.corporate => 1.1,
         League.national => 1.5,
+        League.proDomestic => 1.2,
+        League.proAbroad => 1.8,
         _ => 2.5,
       };
   double get playoffStep => switch (this) {

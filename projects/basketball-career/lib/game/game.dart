@@ -1380,7 +1380,7 @@ class Game {
     final lines = <String>[];
     void crossed(String name, int b, int a) {
       for (final v in careerLadder[name]!) {
-        if (b < v && a >= v) lines.add('通算$v$name達成!');
+        if (b < v && a >= v) lines.add('通算${withComma(v)}$name達成!');
       }
     }
 
@@ -1772,6 +1772,13 @@ class Game {
       ? 0
       : records.fold(0.0, (s, r) => s + r.ppg * r.games) / totalGames;
   int get titles => records.where((r) => r.champion).length;
+
+  /// プロ(国内・海外)での優勝の数と、海外プロでの優勝の数。称号・永久欠番・実績はこちらで数える
+  /// (`titles` はミニバスの優勝も数えるので、「世界を制した」がミニバスの優勝でつく不具合があった)。
+  int get proTitles => records
+      .where((r) => r.champion && (r.league == League.proDomestic || r.league == League.proAbroad))
+      .length;
+  int get abroadTitles => records.where((r) => r.champion && r.league == League.proAbroad).length;
 
   // ── 保存 ──
 
