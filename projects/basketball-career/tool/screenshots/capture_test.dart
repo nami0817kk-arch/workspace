@@ -404,6 +404,31 @@ void main() {
       await t.tap(find.text('習得できる!'));
       await t.pump(const Duration(milliseconds: 400));
     });
+
+    // 10. 頼る・お金: プロの稼ぎで買い物をする一覧(ターンを使わない)。
+    final mbase = Game.start('ミナト', rng: Random(3), events: false);
+    final rich = Game(
+      eventsEnabled: false,
+      player: mbase.player.copyWith(
+        clearPositionLock: true,
+        age: 28,
+        heightCm: 193,
+        abilities: {for (final x in Ability.values) x: 74},
+      ),
+      rng: Random(4),
+      track: Track.pro,
+      number: 23,
+      salary: 15000,
+      sponsor: 2400,
+      cash: 7200,
+    );
+    rich.coachBond = 60;
+    rich.teamwork = 70;
+    await _shoot(t, '10_perks', 'お金と、人の縁を使う', _controller(rich), green,
+        act: (t) async {
+      await t.tap(find.text('お金'));
+      await t.pump(const Duration(milliseconds: 600));
+    });
   });
 
   // 課金アイテムの審査用(App Store Connect の「審査に関する情報」)。値段(¥370)が写った設定画面。

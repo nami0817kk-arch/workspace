@@ -404,6 +404,14 @@ class Game {
   /// このターンに頼みごとをしたか(1ターンに1つまで)。
   bool get favorUsedThisTerm => Favor.values.any((f) => usedTerm.contains(f.name));
 
+  /// 一覧に出す頼みごと(推薦状はプロになると使い道が無いので出さない)。
+  List<Favor> get shownFavors =>
+      [for (final f in Favor.values) if (!(f == Favor.letter && track == Track.pro)) f];
+
+  /// 今すぐ使える頼みごと・お金の使い道の数(下のバーのボタンに出して、使えることに気づけるように)。
+  int get favorsReady => shownFavors.where((f) => favorBlock(f) == null).length;
+  int get spendsReady => Spend.values.where((s) => spendBlock(s) == null).length;
+
   /// 頼みごとを使えない理由。使えるなら null。
   String? favorBlock(Favor f) {
     if (phase != Phase.season) return '今は頼めない';
