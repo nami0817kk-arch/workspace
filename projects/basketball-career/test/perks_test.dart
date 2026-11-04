@@ -128,6 +128,45 @@ void main() {
     expect(pro.spendsReady, 1, reason: '残り350万で買えるのは機材だけ');
   });
 
+  test('練習施設: 1年に1段、段ごとに値段が上がり、最高5段。保存され、伸びと衰えに効く', () {
+    final g = _game(track: Track.pro, age: 25, cash: 50000);
+    expect(g.priceOf(Spend.facility), facilityPrices[0]);
+    expect(g.spendEffect(Spend.facility), contains('Lv0→1'));
+    g.spend(Spend.facility);
+    expect(g.facility, 1);
+    expect(g.cash, 50000 - facilityPrices[0]);
+    expect(g.spendBlock(Spend.facility), contains('今年'));
+    expect(g.priceOf(Spend.facility), facilityPrices[1]);
+    g.facility = facilityPrices.length;
+    g.usedYear.clear();
+    expect(g.spendBlock(Spend.facility), contains('最高'));
+    expect(g.spendEffect(Spend.facility), contains('最高の段'));
+    expect(Game.fromJson(g.toJson()).facility, facilityPrices.length);
+    expect(Game.fromJson(g.toJson()..['facility'] = 99).facility, facilityPrices.length);
+    expect(Game.fromJson(g.toJson()..remove('facility')).facility, 0);
+
+    // 35歳の衰え: 施設5段なら小さい(同じ乱数で比べる)。
+    double lost(int level) {
+      var sum = 0.0;
+      for (var seed = 0; seed < 30; seed++) {
+        final x = Game(
+          eventsEnabled: false,
+          player: Player(name: 'x', age: 35, potential: 60, heightCm: 185, heightGenes: 0.5,
+              abilities: {for (final a in Ability.values) a: 70}),
+          rng: Random(seed),
+          track: Track.pro,
+          facility: level,
+        );
+        final before = x.player.overall;
+        x.choose(Action.rest, Ability.pass);
+        sum += before - x.player.overall;
+      }
+      return sum;
+    }
+
+    expect(lost(5), lessThan(lost(0)));
+  });
+
   test('コートを寄付すると、スポンサー契約の人気が上がる', () {
     int s(bool charity) => sponsorOf(
         overall: 70, honorsLastYear: 0, champion: false, star: false,

@@ -274,6 +274,7 @@ class Game {
     this.trainerTerms = 0,
     this.nutritionTerms = 0,
     this.veteranRole,
+    this.facility = 0,
     this.nextGrowthBoost = 1.0,
     this.recommendBonus = 0,
   })  : rng = rng ?? Random(),
@@ -398,6 +399,21 @@ class Game {
   int trainerTerms;
   int nutritionTerms;
 
+  /// 自分の練習施設の段(0〜5)。ずっと効く(伸び +2%・衰え −4% /段)。
+  int facility;
+
+  /// 使い道の値段(練習施設は段ごとに上がる)。
+  int priceOf(Spend s) =>
+      s == Spend.facility ? facilityPrices[facility.clamp(0, facilityPrices.length - 1)] : s.price;
+
+  /// 使い道の効き目の説明(練習施設は今の段と次の段)。
+  String spendEffect(Spend s) => s == Spend.facility
+      ? (facility >= facilityPrices.length
+          ? '最高の段(Lv${facilityPrices.length})。伸び +${(facility * facilityGrowthPerLevel * 100).round()}%・衰え −${(facility * facilityDeclinePerLevel * 100).round()}%。'
+          : 'Lv$facility→${facility + 1}: 伸び +${((facility + 1) * facilityGrowthPerLevel * 100).round()}%・'
+              '衰え −${((facility + 1) * facilityDeclinePerLevel * 100).round()}%(ずっと効く)。1年に1段。')
+      : s.effect;
+
   /// ベテランの役割(プロの33歳から選べる。null はまだ選んでいない＝エースのまま)。
   VeteranRole? veteranRole;
 
@@ -515,7 +531,8 @@ class Game {
         if (usedEver.contains(s.name)) return 'もう贈った';
     }
     if (s == Spend.camp && condition.injured) return '怪我の間は行けない';
-    if (cash < s.price) return 'お金が足りない(いま${moneyLabel(cash)})';
+    if (s == Spend.facility && facility >= facilityPrices.length) return 'もう最高の段';
+    if (cash < priceOf(s)) return 'お金が足りない(いま${moneyLabel(cash)})';
     return null;
   }
 
@@ -523,13 +540,14 @@ class Game {
   List<String> spend(Spend s, {Ability? focus}) {
     final why = spendBlock(s);
     if (why != null) throw StateError(why);
-    cash -= s.price;
-    spent += s.price;
+    final price = priceOf(s);
+    cash -= price;
+    spent += price;
     usedTerm.add(s.name);
     usedYear.add(s.name);
     usedEver.add(s.name);
     final on = focus ?? lastFocus;
-    final lines = <String>['${moneyLabel(s.price)}を使った(残り ${moneyLabel(cash)})。'];
+    final lines = <String>['${moneyLabel(price)}を使った(残り ${moneyLabel(cash)})。'];
     switch (s) {
       case Spend.treat:
         teamwork = (teamwork + 15).clamp(0, 100);
@@ -552,6 +570,10 @@ class Game {
         lines.add('両親に家を贈った。ずっと支えてくれた二人が、涙を流して喜んだ。気持ち +30。');
       case Spend.court:
         lines.add('地元にバスケコートを寄付した。評判が広まり、来年からスポンサー契約が増える。');
+      case Spend.facility:
+        facility++;
+        lines.add('自分の練習施設を広げた(Lv$facility)。これから ずっと、伸び +${(facility * facilityGrowthPerLevel * 100).round()}%・'
+            '衰え −${(facility * facilityDeclinePerLevel * 100).round()}%。');
     }
     return lines;
   }
@@ -1034,8 +1056,11 @@ class Game {
             coachBoost *
             (rut ? slumpScale : 1.0) *
             nextGrowthBoost *
-            (trainerTerms > 0 ? trainerGrowth : 1.0),
-        declineScale: (nutritionTerms > 0 ? nutritionDecline : 1.0) * (activeRole?.decline ?? 1.0),
+            (trainerTerms > 0 ? trainerGrowth : 1.0) *
+            (1 + facility * facilityGrowthPerLevel),
+        declineScale: (nutritionTerms > 0 ? nutritionDecline : 1.0) *
+            (activeRole?.decline ?? 1.0) *
+            (1 - facility * facilityDeclinePerLevel),
         injuryScale: nutritionTerms > 0 ? nutritionInjury : 1.0);
     nextGrowthBoost = 1.0;
     if (trainerTerms > 0) trainerTerms--;
@@ -1899,6 +1924,7 @@ class Game {
         'trainerTerms': trainerTerms,
         'nutritionTerms': nutritionTerms,
         'veteranRole': veteranRole?.name,
+        'facility': facility,
         'nextGrowthBoost': nextGrowthBoost,
         'recommendBonus': recommendBonus,
       };
@@ -2019,6 +2045,7 @@ class Game {
         trainerTerms: (j['trainerTerms'] as num?)?.toInt() ?? 0,
         nutritionTerms: (j['nutritionTerms'] as num?)?.toInt() ?? 0,
         veteranRole: VeteranRole.fromName(j['veteranRole']),
+        facility: ((j['facility'] as num?)?.toInt() ?? 0).clamp(0, facilityPrices.length),
         nextGrowthBoost: (j['nextGrowthBoost'] as num?)?.toDouble() ?? 1.0,
         recommendBonus: (j['recommendBonus'] as num?)?.toDouble() ?? 0,
       );

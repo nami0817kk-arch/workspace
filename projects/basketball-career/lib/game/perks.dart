@@ -44,7 +44,8 @@ enum Spend {
   nutrition('栄養士と契約する', 400, 'これから4ターン、衰えが2割減り、怪我をしにくい。', SpendLimit.active),
   camp('海外キャンプに参加する', 1000, '第1重点の熟練度 +3。疲れ +15。', SpendLimit.year),
   parents('両親に家を贈る', 5000, '気持ち +30。一生に1度。', SpendLimit.life),
-  court('地元にバスケコートを寄付する', 10000, '人気が上がり、来年からスポンサー契約が増える。一生に1度。', SpendLimit.life);
+  court('地元にバスケコートを寄付する', 10000, '人気が上がり、来年からスポンサー契約が増える。一生に1度。', SpendLimit.life),
+  facility('自分の練習施設を育てる', 0, '段が上がるほど伸びが増え、衰えが減る(ずっと効く)。1年に1段。', SpendLimit.year);
 
   const Spend(this.label, this.price, this.effect, this.limit);
   final String label;
@@ -52,6 +53,13 @@ enum Spend {
   final String effect;
   final SpendLimit limit;
 }
+
+/// 練習施設の段(1〜5)ごとの値段(万円)。プロで稼いだお金の長い使い道。
+const facilityPrices = [2000, 4000, 7000, 10000, 15000];
+
+/// 練習施設1段あたりの効き: 伸び +2%・衰え −4%(5段で 伸び+10%・衰え−20%)。
+const facilityGrowthPerLevel = 0.02;
+const facilityDeclinePerLevel = 0.04;
 
 /// 雇う・契約するものが効くターン数。
 const perkTerms = 4;

@@ -74,6 +74,7 @@ String fingerprint(Game g) => jsonEncode({
       'ach': g.recentAchievements,
       'reason': g.retiredReason,
       'veteran': g.veteranRole?.name,
+      'facility': g.facility,
     });
 
 void main() {
