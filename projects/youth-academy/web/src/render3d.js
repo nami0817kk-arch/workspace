@@ -176,29 +176,88 @@
   const BODY = 1.22;
   // カメラ：後ろへ back m・高さ up m から、ボールの ahead m 先を見る
   YA.CAM3D = { back: 30, up: 22, ahead: 9 };
-  function makePlayer(kit, look, gk, num) {
+  YA.CAM3D_NEAR = { back: 17, up: 9.5, ahead: 8 };
+  // 足元の接地の影（ふちがぼけた丸）
+  let blobTex = null;
+  const blob = () => blobTex || (blobTex = canvasTex(64, 64, (x, w, h) => {
+    const g = x.createRadialGradient(w / 2, h / 2, 2, w / 2, h / 2, w / 2);
+    g.addColorStop(0, 'rgba(0,0,0,0.55)');
+    g.addColorStop(1, 'rgba(0,0,0,0)');
+    x.fillStyle = g;
+    x.fillRect(0, 0, w, h);
+  }));
+  // 髪型（名前から決まる）：0 ふつう・1 立てた短髪・2 長め・3 坊主・4 ヘアバンド
+  function addHair(body, hairM, skinM, style) {
+    const cap = (r, th, z, tilt) => {
+      const g = new T.SphereGeometry(r, 16, 8, 0, Math.PI * 2, 0, Math.PI * th);
+      g.rotateX(Math.PI / 2);
+      const m = new T.Mesh(g, hairM);
+      m.position.set(0, -0.012, z);
+      m.rotation.x = tilt;
+      m.castShadow = true;
+      body.add(m);
+      return m;
+    };
+    if (style === 3) { cap(0.128, 0.5, 1.625, -0.25); return; }
+    cap(0.134, style === 2 ? 0.62 : 0.55, 1.635, -0.35);
+    if (style === 1) {
+      for (let i = 0; i < 7; i++) {
+        const c = new T.Mesh(new T.ConeGeometry(0.035, 0.09, 5), hairM);
+        c.rotation.x = Math.PI / 2 - 0.5 + (i % 3) * 0.2;
+        const an = (i / 7) * Math.PI * 2;
+        c.position.set(Math.cos(an) * 0.07, Math.sin(an) * 0.07 - 0.02, 1.75);
+        body.add(c);
+      }
+    }
+    if (style === 2) {
+      const back = new T.Mesh(new T.BoxGeometry(0.24, 0.07, 0.2), hairM);
+      back.position.set(0, -0.1, 1.55);
+      back.castShadow = true;
+      body.add(back);
+    }
+    if (style === 4) {
+      const band = new T.Mesh(new T.TorusGeometry(0.128, 0.018, 6, 20), lam('#f4f4f4'));
+      band.position.z = 1.67;
+      body.add(band);
+    }
+  }
+  // 選手の人形：胴・首・パンツ・頭と髪・腕（肩と肘）・脚（股と膝）。1.0 = 実寸
+  function makePlayer(kit, look, gk, num, style) {
     const shirt = lam(gk ? kit.gk : kit.shirt);
     const shorts = lam(gk ? '#1b1b1b' : kit.shorts);
     const socks = lam(gk ? kit.gk : kit.socks);
     const skin = lam(look.skin);
     const hair = lam(look.hair);
     const boot = lam('#151515');
+    const glove = lam(gk ? '#f4f4f4' : look.skin);
     const root = new T.Group();
+    const shadow = new T.Mesh(new T.PlaneGeometry(0.9, 0.9), new T.MeshBasicMaterial({ map: blob(), transparent: true, depthWrite: false }));
+    shadow.position.z = 0.02;
+    root.add(shadow);
     const body = new T.Group();
     body.scale.setScalar(BODY);
     root.add(body);
-    // 胴
-    const tg = new T.CapsuleGeometry(0.19, 0.3, 4, 10);
+    // 胴（胸を厚く、腰を細く）
+    const tg = new T.CapsuleGeometry(0.19, 0.3, 4, 12);
     tg.rotateX(Math.PI / 2);
     const torso = new T.Mesh(tg, shirt);
-    torso.scale.set(1.15, 0.72, 1);
+    torso.scale.set(1.15, 0.7, 1);
     torso.position.z = 1.17;
     torso.castShadow = true;
     body.add(torso);
-    // 肩の差し色
-    const trim = new T.Mesh(new T.BoxGeometry(0.46, 0.2, 0.04), lam(gk ? '#ffffff' : kit.acc));
-    trim.position.z = 1.43;
+    const chest = new T.Mesh(new T.SphereGeometry(0.2, 12, 8), shirt);
+    chest.scale.set(1.25, 0.72, 0.55);
+    chest.position.z = 1.36;
+    chest.castShadow = true;
+    body.add(chest);
+    // 襟と肩の差し色
+    const trim = new T.Mesh(new T.TorusGeometry(0.075, 0.018, 6, 16), lam(gk ? '#ffffff' : kit.acc));
+    trim.position.z = 1.48;
     body.add(trim);
+    // 首
+    const neck = cylZ(0.055, 0.06, 0.1, skin);
+    neck.position.z = 1.5;
+    body.add(neck);
     // 背番号（背中 = -y 側）
     const ink = YA.colorDist && YA.colorDist(gk ? kit.gk : kit.shirt, '#ffffff') < 120 ? '#1b2438' : '#ffffff';
     const nm = new T.Mesh(new T.PlaneGeometry(0.3, 0.3), new T.MeshBasicMaterial({ map: numberTexture(num, ink), transparent: true }));
@@ -206,52 +265,59 @@
     nm.position.set(0, -0.15, 1.2);
     body.add(nm);
     // パンツ
-    const sh = new T.Mesh(new T.BoxGeometry(0.42, 0.26, 0.26), shorts);
-    sh.position.z = 0.83;
+    const sh = new T.Mesh(new T.CapsuleGeometry(0.12, 0.12, 3, 10), shorts);
+    sh.rotation.z = Math.PI / 2;
+    sh.scale.set(1, 1.55, 1);
+    sh.position.z = 0.84;
     sh.castShadow = true;
     body.add(sh);
     // 頭
-    const head = new T.Mesh(new T.SphereGeometry(0.125, 14, 10), skin);
-    head.position.z = 1.62;
+    const head = new T.Mesh(new T.SphereGeometry(0.122, 16, 12), skin);
+    head.scale.set(0.95, 1, 1.08);
+    head.position.z = 1.63;
     head.castShadow = true;
     body.add(head);
-    const hg = new T.SphereGeometry(0.133, 14, 8, 0, Math.PI * 2, 0, Math.PI * 0.55);
-    hg.rotateX(Math.PI / 2);
-    const hr = new T.Mesh(hg, hair);
-    hr.position.set(0, -0.015, 1.635);
-    hr.rotation.x = -0.35;
-    body.add(hr);
-    // 脚
+    addHair(body, hair, skin, style);
+    // 脚：股（hip）→ 膝（knee）の2つの関節
     const legs = [];
     for (const sd of [-1, 1]) {
       const hip = new T.Group();
-      hip.position.set(0.1 * sd, 0, 0.78);
-      const thigh = cylZ(0.075, 0.065, 0.4, skin);
-      thigh.position.z = -0.18;
-      const shin = cylZ(0.062, 0.05, 0.36, socks);
-      shin.position.z = -0.55;
-      const bt = new T.Mesh(new T.BoxGeometry(0.1, 0.22, 0.07), boot);
-      bt.position.set(0, 0.04, -0.75);
+      hip.position.set(0.1 * sd, 0, 0.8);
+      const thigh = cylZ(0.08, 0.065, 0.4, skin);
+      thigh.position.z = -0.2;
+      const knee = new T.Group();
+      knee.position.z = -0.4;
+      const shin = cylZ(0.062, 0.048, 0.36, socks);
+      shin.position.z = -0.18;
+      const bt = new T.Mesh(new T.CapsuleGeometry(0.045, 0.14, 3, 8), boot);
+      bt.rotation.x = Math.PI / 2;
+      bt.position.set(0, 0.05, -0.37);
       bt.castShadow = true;
-      hip.add(thigh, shin, bt);
+      knee.add(shin, bt);
+      hip.add(thigh, knee);
       body.add(hip);
-      legs.push(hip);
+      legs.push({ hip, knee });
     }
-    // 腕
+    // 腕：肩（sho）→ 肘（elb）
     const arms = [];
     for (const sd of [-1, 1]) {
       const sho = new T.Group();
-      sho.position.set(0.26 * sd, 0, 1.38);
-      const up = cylZ(0.06, 0.055, 0.28, shirt);
+      sho.position.set(0.25 * sd, 0, 1.4);
+      const up = cylZ(0.062, 0.052, 0.26, shirt);
       up.position.z = -0.12;
-      const fo = cylZ(0.05, 0.042, 0.28, skin);
-      fo.position.z = -0.38;
-      sho.add(up, fo);
-      sho.rotation.y = 0.12 * sd;
+      const elb = new T.Group();
+      elb.position.z = -0.26;
+      const fo = cylZ(0.048, 0.04, 0.24, skin);
+      fo.position.z = -0.12;
+      const hand = new T.Mesh(new T.SphereGeometry(0.045, 8, 6), glove);
+      hand.position.z = -0.27;
+      elb.add(fo, hand);
+      sho.add(up, elb);
+      sho.rotation.y = 0.14 * sd;
       body.add(sho);
-      arms.push(sho);
+      arms.push({ sho, elb });
     }
-    root.userData = { legs, arms, body };
+    root.userData = { legs, arms, body, kick: 0 };
     return root;
   }
 
@@ -265,6 +331,9 @@
       this.gl = gl;
       this.three = new T.WebGLRenderer({ canvas: gl, antialias: true, powerPreference: 'high-performance' });
       this.three.outputEncoding = T.sRGBEncoding;
+      // 映画のような色の出方（明るい所が飛ばず、芝の緑が深くなる）
+      this.three.toneMapping = T.ACESFilmicToneMapping;
+      this.three.toneMappingExposure = 1.05;
       this.three.shadowMap.enabled = true;
       this.three.shadowMap.type = T.PCFSoftShadowMap;
       this.three.setClearColor(0x1b2030);
@@ -407,7 +476,7 @@
       // 場面の主役の輪
       this.rings = [];
       for (let i = 0; i < 6; i++) {
-        const r = new T.Mesh(new T.RingGeometry(0.75, 0.92, 36), new T.MeshBasicMaterial({ color: 0x6eff78, transparent: true, opacity: 0.95, depthWrite: false }));
+        const r = new T.Mesh(new T.RingGeometry(0.75, 0.92, 36), new T.MeshBasicMaterial({ color: 0x5cff6a, transparent: true, opacity: 0.95, depthWrite: false, toneMapped: false }));
         r.position.z = 0.03;
         r.visible = false;
         sc.add(r);
@@ -416,9 +485,59 @@
       // パスの軌跡
       const tg = new T.BufferGeometry();
       tg.setAttribute('position', new T.BufferAttribute(new Float32Array(30 * 3), 3));
-      this.trail3 = new T.Line(tg, new T.LineBasicMaterial({ color: 0x78ff6e, transparent: true, opacity: 0.85 }));
+      this.trail3 = new T.Line(tg, new T.LineBasicMaterial({ color: 0x78ff6e, transparent: true, opacity: 0.85, toneMapped: false }));
       this.trail3.frustumCulled = false;
       sc.add(this.trail3);
+      // コーナーフラッグ
+      for (const [x, y] of [[0, 0], [W, 0], [0, L], [W, L]]) {
+        const pole = cylZ(0.025, 0.025, 1.5, lam('#f4f4f4'));
+        pole.position.set(x, y, 0.75);
+        sc.add(pole);
+        const flag = new T.Mesh(new T.PlaneGeometry(0.45, 0.32), new T.MeshLambertMaterial({ color: new T.Color('#f2c200'), side: T.DoubleSide }));
+        flag.rotation.x = Math.PI / 2;
+        flag.position.set(x + (x ? -0.23 : 0.23), y, 1.32);
+        sc.add(flag);
+      }
+      // ベンチ（左のタッチラインの外。透明の屋根と座った控え）
+      for (const [yc, kit] of [[L / 2 - 9, kits.home], [L / 2 + 9, kits.away]]) {
+        const g = new T.Group();
+        const base = new T.Mesh(new T.BoxGeometry(1.6, 6, 0.5), lam('#2a3040'));
+        base.position.set(0, 0, 0.25);
+        const back = new T.Mesh(new T.BoxGeometry(0.15, 6, 1.6), lam('#3a4256'));
+        back.position.set(-0.8, 0, 0.8);
+        const roof = new T.Mesh(new T.BoxGeometry(1.9, 6.2, 0.06), new T.MeshLambertMaterial({ color: 0xbfd8ff, transparent: true, opacity: 0.35 }));
+        roof.position.set(0, 0, 1.75);
+        roof.rotation.y = -0.15;
+        g.add(base, back, roof);
+        for (let i = 0; i < 5; i++) {
+          const sub = new T.Mesh(new T.CapsuleGeometry(0.17, 0.35, 3, 8), lam(kit.shirt));
+          sub.rotation.x = Math.PI / 2;
+          sub.position.set(-0.3, -2.2 + i * 1.1, 0.95);
+          const hd = new T.Mesh(new T.SphereGeometry(0.12, 10, 8), lam('#e9b98c'));
+          hd.position.set(-0.3, -2.2 + i * 1.1, 1.38);
+          g.add(sub, hd);
+        }
+        g.position.set(-PX + 2.2, yc, 0);
+        g.traverse((o) => { if (o.isMesh) o.castShadow = true; });
+        sc.add(g);
+      }
+      // 屋根（スタンドの上にかかるひさし）と照明の塔
+      const roofM = lam('#141824');
+      for (const [x, y, lx, ly] of [[-PX - 21, L / 2, 16, L + 44], [W + PX + 21, L / 2, 16, L + 44], [W / 2, L + PY + 21, W + 44, 16]]) {
+        const r = new T.Mesh(new T.BoxGeometry(lx, ly, 0.5), roofM);
+        r.position.set(x, y, 17);
+        sc.add(r);
+      }
+      const lightM = new T.MeshBasicMaterial({ color: 0xfff6d8 });
+      for (const [x, y] of [[-PX - 14, -PY - 6], [W + PX + 14, -PY - 6], [-PX - 14, L + PY + 14], [W + PX + 14, L + PY + 14]]) {
+        const mast = cylZ(0.35, 0.6, 30, lam('#3a4256'));
+        mast.position.set(x, y, 15);
+        sc.add(mast);
+        const panel = new T.Mesh(new T.BoxGeometry(5, 0.4, 3), lightM);
+        panel.position.set(x, y, 31);
+        panel.lookAt(W / 2, L / 2, 0);
+        sc.add(panel);
+      }
       this.built = true;
     }
 
@@ -426,6 +545,20 @@
       const m = this.match;
       const kits = this.kitsOf();
       const seen = new Set();
+      // ボールが急に速くなった瞬間を「蹴った」とみなす
+      const bv = this._lastBall ? Math.hypot(this.ball[0] - this._lastBall[0], this.ball[1] - this._lastBall[1]) / Math.max(1e-3, this._dt) : 0;
+      let kickBy = null;
+      if (this.scene && bv > 9 && (this._lastBv || 0) < 6) {
+        let best = 2.2;
+        for (const id of Object.keys(this.base)) {
+          const d = this.disp[id];
+          if (!d || !this._lastBall) continue;
+          const dist = Math.hypot(d[0] - this._lastBall[0], d[1] - this._lastBall[1]);
+          if (dist < best) { best = dist; kickBy = id; }
+        }
+      }
+      this._lastBv = bv;
+      this._lastBall = this.ball.slice();
       for (const id of Object.keys(this.base)) {
         const b = this.base[id];
         const t = b[2];
@@ -436,7 +569,7 @@
         let o = this.meshes[key];
         if (!o) {
           const look = YA.lookOf ? YA.lookOf(p) : { skin: '#f1c9a5', hair: '#2b2118' };
-          o = this.meshes[key] = makePlayer(t === m.home ? kits.home : kits.away, look, gk, p.num);
+          o = this.meshes[key] = makePlayer(t === m.home ? kits.home : kits.away, look, gk, p.num, YA.hash ? YA.hash(String(p.name || id) + 'h') % 5 : 0);
           this.scene3.add(o);
         }
         const d = this.disp[id] || b;
@@ -449,12 +582,23 @@
         const ph = (this.clock || 0) * (7 + run * 5) + (YA.hash ? YA.hash(String(id)) % 7 : 0);
         const sw = Math.sin(ph) * 0.75 * run;
         const u = o.userData;
-        u.legs[0].rotation.x = sw;
-        u.legs[1].rotation.x = -sw;
-        u.arms[0].rotation.x = -sw * 0.8;
-        u.arms[1].rotation.x = sw * 0.8;
+        // 蹴る：ボールが急に動き出したとき、いちばん近くにいた子が右脚を振る
+        if (kickBy === id) u.kick = 0.38;
+        u.kick = Math.max(0, u.kick - this._dt);
+        const kk = u.kick > 0 ? Math.sin(((0.38 - u.kick) / 0.38) * Math.PI) : 0;
+        for (let i = 0; i < 2; i++) {
+          // 脚：前に出すほど股を前へ。後ろへ蹴り上げるときに膝が曲がる
+          let fwd = i ? -sw : sw;
+          let bend = Math.max(0, -Math.sin(ph + (i ? Math.PI : 0))) * 1.1 * run + 0.08;
+          if (i === 1 && kk > 0) { fwd = 1.25 * kk - 0.5 * (1 - kk); bend = 0.9 * (1 - kk); }
+          u.legs[i].hip.rotation.x = fwd;
+          u.legs[i].knee.rotation.x = -bend;
+          // 腕は脚と逆に振り、肘を曲げる
+          u.arms[i].sho.rotation.x = -fwd * 0.8;
+          u.arms[i].elb.rotation.x = 0.25 + run * 0.9;
+        }
         u.body.position.z = Math.abs(Math.cos(ph)) * 0.06 * run;
-        u.body.rotation.x = run * 0.12;
+        u.body.rotation.x = -run * 0.14 + kk * 0.15; // 走るときは前かがみ、蹴るときは少し反る
       }
       for (const k of Object.keys(this.meshes)) if (!seen.has(k)) { this.scene3.remove(this.meshes[k]); delete this.meshes[k]; }
     }
@@ -462,11 +606,18 @@
     draw() {
       if (!this.match) return;
       if (!this.built) this.build();
+      const now = (globalThis.performance && performance.now()) || Date.now();
+      this._dt = this._lastT ? clamp((now - this._lastT) / 1000, 0, 0.1) : 0.016;
+      this._lastT = now;
       const cy = this.camY;
-      // カメラは2Dと同じ位置（中継の高いカメラ）
-      const cam = YA.CAM3D;
-      this.camera.position.set(34, cy - cam.back, cam.up);
-      this.camera.lookAt(34, cy + cam.ahead, 0);
+      // カメラ：ふだんは中継の高さ、見どころの場面では寄る。ボールに合わせて少し横にも振る
+      const want = this.scene ? YA.CAM3D_NEAR : YA.CAM3D;
+      const cc = (this._cam = this._cam || Object.assign({}, YA.CAM3D, { x: 34 }));
+      const k = 1 - Math.exp(-this._dt * 1.8);
+      for (const key of ['back', 'up', 'ahead']) cc[key] += (want[key] - cc[key]) * k;
+      cc.x += (34 + (this.ball[0] - 34) * 0.4 - cc.x) * k;
+      this.camera.position.set(cc.x, cy - cc.back, cc.up);
+      this.camera.lookAt(34 + (cc.x - 34) * 1.3, cy + cc.ahead, 0);
       // 影は見えている辺りだけ細かく
       this.sun.position.set(34 - 40, cy + 55, 70);
       this.sun.target.position.set(34, cy + 4, 0);
@@ -476,7 +627,7 @@
       this.ball3.rotation.x = -b[1] * 1.8;
       this.ball3.rotation.y = b[0] * 1.8;
       // 輪：主役は緑、守る側の主役は白
-      const fo = (this.focus || []).map((id) => [id, 0x6eff78]).concat((this.defFocus || []).map((id) => [id, 0xffffff]));
+      const fo = (this.focus || []).map((id) => [id, 0x5cff6a]).concat((this.defFocus || []).map((id) => [id, 0xffffff]));
       this.rings.forEach((r, i) => {
         const f = fo[i];
         const d = f && this.disp[f[0]];
