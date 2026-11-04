@@ -6,6 +6,7 @@ import '../game/build.dart';
 import '../game/dream.dart';
 import '../game/game.dart';
 import '../game/legacy.dart';
+import '../game/lineage.dart';
 import '../game/traits.dart';
 import 'art/title_art.dart';
 import 'controller.dart';
@@ -14,6 +15,42 @@ import 'style_picker.dart';
 import 'howto_screen.dart';
 import 'settings_screen.dart';
 import 'layout.dart';
+
+/// 「次の世代へ」で受け継ぐもの。
+class _HeirCard extends StatelessWidget {
+  const _HeirCard({required this.heir, required this.onDrop});
+  final Heir heir;
+  final VoidCallback onDrop;
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return Card(
+      color: cs.tertiaryContainer,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('${heir.generation}代目: ${heir.parentName}の${heir.kind.label}',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: cs.onTertiaryContainer)),
+            if (heir.parentTitle.isNotEmpty)
+              Text('「${heir.parentTitle}」の想いを継ぐ。',
+                  style: TextStyle(fontSize: 12, color: cs.onTertiaryContainer)),
+            const SizedBox(height: 6),
+            Text('受け継ぐもの', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: cs.onTertiaryContainer)),
+            for (final s in heir.summary)
+              Text('・$s', style: TextStyle(fontSize: 12, color: cs.onTertiaryContainer)),
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton(onPressed: onDrop, child: const Text('受け継がずに始める')),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 /// はじめの画面。名前を決めて、6歳から始める。
 class HomeScreen extends StatefulWidget {
@@ -92,7 +129,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   '6歳から、ひとりの選手を育てる。\nミニバス、中学、高校、そして進路。\n身長と才能と運が、行き先を決める。',
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 24),
+                if (widget.controller.nextHeir != null) ...[
+                  _HeirCard(
+                      heir: widget.controller.nextHeir!,
+                      onDrop: () => setState(widget.controller.dropHeir)),
+                  const SizedBox(height: 16),
+                ],
                 TextField(
                   controller: _name,
                   maxLength: 10,

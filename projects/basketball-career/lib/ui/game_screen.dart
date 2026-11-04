@@ -7,6 +7,7 @@ import '../game/build.dart';
 import '../game/epilogue.dart';
 import '../game/game.dart';
 import '../game/life.dart';
+import '../game/lineage.dart';
 import '../game/mastery.dart';
 import '../game/match.dart';
 import '../game/money.dart';
@@ -2034,10 +2035,41 @@ class _EndingView extends StatelessWidget {
           icon: const Icon(Icons.copy),
           label: const Text('結果をコピー'),
         ),
+        const SizedBox(height: 16),
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Text('次の世代へ', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 4),
+                Text('${p.name}の想いを継ぐ選手を、6歳から育てる(${g.generation + 1}代目)。',
+                    style: const TextStyle(fontSize: 12)),
+                const SizedBox(height: 8),
+                for (final k in HeirKind.values) ...[
+                  FilledButton.tonal(
+                    onPressed: () => controller.startNextGeneration(k),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      child: Column(
+                        children: [
+                          Text('${k.label}として育てる', style: const TextStyle(fontWeight: FontWeight.bold)),
+                          Text(k.description, textAlign: TextAlign.center, style: const TextStyle(fontSize: 12)),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                ],
+              ],
+            ),
+          ),
+        ),
         const SizedBox(height: 8),
-        FilledButton(
+        OutlinedButton(
           onPressed: controller.reset,
-          child: const Text('新しい選手を育てる'),
+          child: const Text('まったく新しい選手を育てる'),
         ),
       ],
     );

@@ -9,6 +9,7 @@ import 'mastery.dart';
 import 'match.dart';
 import 'season.dart';
 import 'special.dart';
+import 'lineage.dart';
 import 'player.dart';
 import 'veteran.dart';
 
@@ -98,6 +99,9 @@ String shareText(Game g) {
   }
   final top = _allTimeTop(g);
   if (top.isNotEmpty) b.writeln('歴代記録: ${top.join('・')}');
+  if (g.generation > 1 && g.parentName != null) {
+    b.writeln('${g.generation}代目(${g.parentName}の${g.heirKind?.label ?? '後継ぎ'})');
+  }
   if (g.rival.games > 0) {
     b.writeln('宿敵${g.rival.name}との通算 ${g.rival.wins}勝${g.rival.losses}敗');
   }
@@ -139,6 +143,12 @@ List<String> epilogueLines(Game g) {
   final traits = p.traits.isEmpty
       ? ''
       : '「${p.traits.map((t) => t.label).join('」「')}」の持ち主だった。';
+  final parent = g.parentName;
+  if (parent != null && g.heirKind != null) {
+    lines.add('${g.generation}代目。'
+        '${g.parentTitle == null || g.parentTitle!.isEmpty ? '' : '「${g.parentTitle}」'}$parentの${g.heirKind!.label}として、'
+        '${g.heirKind == HeirKind.child ? '父(母)の背中を追ってボールを握った。' : '師の教えを胸にコートに立った。'}');
+  }
   lines.add('${_talent(p.potential)}${p.name}は、最終的に'
       '${p.heightCm.toStringAsFixed(0)}cmの${positionNickname(p.position)}になった。$traits');
 
