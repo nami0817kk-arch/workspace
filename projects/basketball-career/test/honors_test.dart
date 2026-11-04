@@ -150,6 +150,8 @@ void main() {
             case Phase.season:
               g.choose(recommendedAction(g), recommendedFocus(g.player));
               if (g.canGoAbroad) g.goAbroad();
+            case Phase.plan:
+              g.resolvePlan(bestPlanOf(g.planInfo!));
             case Phase.halftime:
               g.resolveHalftime(bestHalftime(g.player, g.halftimeInfo!));
             case Phase.clutch:

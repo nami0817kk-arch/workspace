@@ -7,6 +7,7 @@ import 'package:basketball_career/game/difficulty.dart';
 import 'package:basketball_career/game/dream.dart';
 import 'package:basketball_career/game/epilogue.dart';
 import 'package:basketball_career/game/game.dart';
+import 'package:basketball_career/game/season.dart';
 import 'package:basketball_career/game/life.dart';
 import 'package:basketball_career/game/match.dart';
 import 'package:basketball_career/game/perks.dart';
@@ -128,6 +129,8 @@ void main() {
                   r.nextInt(30) == 0) {
                 g.retire();
               }
+            case Phase.plan:
+              g.resolvePlan(BigGamePlan.values[r.nextInt(BigGamePlan.values.length)]);
             case Phase.halftime:
               g.resolveHalftime(Halftime.values[r.nextInt(Halftime.values.length)]);
             case Phase.clutch:

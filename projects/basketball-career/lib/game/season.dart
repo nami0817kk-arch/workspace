@@ -3,6 +3,36 @@ import 'dart:math';
 import 'match.dart';
 import 'player.dart';
 
+/// 大一番(決勝・プレーオフ決勝のシリーズ)の前に選ぶ作戦。効き目は自分の能力とチームの状態で変わる
+/// (`Game.planEffects`)。守りが強ければ「相手のエースを止める」、総合が高ければ「自分が攻める」、
+/// チームワークとパスが良ければ「チームで回す」が効く。
+enum BigGamePlan {
+  stopAce('相手のエースを止める', '自分がエースにつく。守りが強いほど効く。'),
+  attack('自分が攻める', 'ボールを自分に集める。総合が高いほど効き、低いと逆効果。'),
+  team('チームで回す', '全員で崩す。チームワークとパスが良いほど効く。');
+
+  const BigGamePlan(this.label, this.description);
+  final String label;
+  final String description;
+
+  static BigGamePlan? fromName(Object? name) {
+    for (final p in BigGamePlan.values) {
+      if (p.name == name) return p;
+    }
+    return null;
+  }
+}
+
+/// 作戦の効き目: 味方の強さと相手の強さへの加算。
+typedef PlanEffect = ({double team, double opp});
+
+/// 効き目のいちばん大きい作戦(相手の強さの減りは、味方の強さの増えより約1.7倍効く)。
+BigGamePlan bestPlanOf(Map<BigGamePlan, PlanEffect> e) =>
+    e.keys.reduce((a, b) => planValue(e[b]!) > planValue(e[a]!) ? b : a);
+
+/// 作戦の効き目を1つの数にしたもの(1クォーターあたりの点差の目安)。
+double planValue(PlanEffect e) => e.team * 0.6 * 0.12 - e.opp * 0.12;
+
 /// 大会の舞台。段階ごとに味方と相手の強さが違う。
 enum League {
   minibasket('ミニバス', 3, 34, 36),
@@ -230,6 +260,10 @@ class TournamentRun {
       this.pendingHalf,
       this.askHalftime = false,
       this.forceBench = false,
+      Map<BigGamePlan, PlanEffect>? planEffects,
+      this.askPlan = false,
+      this.plan,
+      this.pendingPlan = false,
       this.scout = 0,
       this.teamBonus = 0,
       this.zones = 0,
@@ -240,7 +274,8 @@ class TournamentRun {
       this.eliminated = false,
       this.seriesOpp})
       : timeouts = timeouts ?? league.timeouts,
-        matches = matches ?? [];
+        matches = matches ?? [],
+        planEffects = planEffects ?? const {};
 
   final League league;
 
@@ -262,6 +297,38 @@ class TournamentRun {
 
   /// ベテランの「6人目の切り札」: 総合によらず控えで出る。
   final bool forceBench;
+
+  /// 大一番の作戦ごとの効き目(大会を始めるときに `Game` が決める)。空なら作戦は無い。
+  final Map<BigGamePlan, PlanEffect> planEffects;
+
+  /// 大一番の作戦を自分で選ぶ大会か。
+  final bool askPlan;
+
+  /// 選んだ作戦(大一番のあいだ効く)。
+  BigGamePlan? plan;
+
+  /// 作戦を選ぶのを待っている。
+  bool pendingPlan;
+
+  /// いまが大一番か: 勝ち抜き戦の決勝、決勝トーナメント(プレーオフ)の最後のラウンド。
+  bool get atBigGame => league.elimination
+      ? round == league.rounds - 1
+      : (inPlayoffs && round == league.rounds + league.playoffRounds - 1);
+
+  /// 止まっていた大一番の作戦を決め、続きを進める。
+  void resolvePlan(
+    Player p,
+    BigGamePlan choice, {
+    required double form,
+    required Random rng,
+    OpponentPicker? pickOpponent,
+    bool askClutch = true,
+  }) {
+    if (!pendingPlan) throw StateError('大一番の作戦を待っていない');
+    pendingPlan = false;
+    plan = choice;
+    advance(p, form: form, rng: rng, askClutch: askClutch, pickOpponent: pickOpponent);
+  }
 
   /// チームワークによる、味方の強さへの上乗せ(−4〜+4くらい)。
   final double teamBonus;
@@ -294,7 +361,7 @@ class TournamentRun {
   MatchHalf? pendingHalf;
 
   bool get finished {
-    if (pending != null || pendingHalf != null) return false;
+    if (pending != null || pendingHalf != null || pendingPlan) return false;
     if (league.playoffRounds == 0) {
       return round >= league.rounds ||
           (league.elimination && matches.isNotEmpty && !matches.last.won);
@@ -346,7 +413,16 @@ class TournamentRun {
     OpponentPicker? pickOpponent,
     Halftime? Function(int margin)? chooseHalftime,
   }) {
-    while (pending == null && pendingHalf == null && !finished) {
+    while (pending == null && pendingHalf == null && !pendingPlan && !finished) {
+      // 大一番の前に作戦を決める(自分で選ぶ大会なら止まる。そうでなければいちばん効くもの)。
+      if (planEffects.isNotEmpty && plan == null && atBigGame) {
+        if (askPlan) {
+          pendingPlan = true;
+          return;
+        }
+        plan = bestPlanOf(planEffects);
+      }
+      final big = plan != null && atBigGame ? planEffects[plan]! : (team: 0.0, opp: 0.0);
       final isFinal = round == league.rounds - 1;
       final bool continuing = inPlayoffs && seriesOpp != null;
       final ({String name, bool rival, double bonus})? opp = continuing
@@ -375,8 +451,8 @@ class TournamentRun {
         scale: league.scoreScale,
         gameMinutes: league.quarterMinutes * 4,
         benchBelow: forceBench ? 1000 : league.benchLine,
-        teamStrength: league.teamStrength + teamBonus + momentum,
-        oppStrength: strength,
+        teamStrength: league.teamStrength + teamBonus + momentum + big.team,
+        oppStrength: strength + big.opp,
         form: form,
         rng: rng,
         opponent: opp?.name ?? '',
@@ -529,6 +605,10 @@ class TournamentRun {
         'pendingHalf': pendingHalf?.toJson(),
         'askHalftime': askHalftime,
         'forceBench': forceBench,
+        'planEffects': {for (final e in planEffects.entries) e.key.name: [e.value.team, e.value.opp]},
+        'askPlan': askPlan,
+        'plan': plan?.name,
+        'pendingPlan': pendingPlan,
       };
 
   factory TournamentRun.fromJson(Map<String, dynamic> j) => TournamentRun(
@@ -555,6 +635,10 @@ class TournamentRun {
         scout: (j['scout'] as num?)?.toDouble() ?? 0,
         askHalftime: (j['askHalftime'] as bool?) ?? false,
         forceBench: (j['forceBench'] as bool?) ?? false,
+        planEffects: _planEffectsFromJson(j['planEffects']),
+        askPlan: (j['askPlan'] as bool?) ?? false,
+        plan: BigGamePlan.fromName(j['plan']),
+        pendingPlan: (j['pendingPlan'] as bool?) ?? false,
         pending: j['pending'] == null
             ? null
             : MatchState.fromJson((j['pending'] as Map).cast<String, dynamic>()),
@@ -563,6 +647,19 @@ class TournamentRun {
             : MatchHalf.fromJson(
                 (j['pendingHalf'] as Map).cast<String, dynamic>()),
       );
+}
+
+/// 保存した作戦の効き目を読む(壊れていれば読めるものだけ)。
+Map<BigGamePlan, PlanEffect> _planEffectsFromJson(Object? j) {
+  final out = <BigGamePlan, PlanEffect>{};
+  if (j is! Map) return out;
+  for (final e in j.entries) {
+    final p = BigGamePlan.fromName(e.key);
+    final v = e.value;
+    if (p == null || v is! List || v.length != 2 || v[0] is! num || v[1] is! num) continue;
+    out[p] = (team: (v[0] as num).toDouble(), opp: (v[1] as num).toDouble());
+  }
+  return out;
 }
 
 /// 大会を戦う。勝ち抜きは負けたら終わり。
