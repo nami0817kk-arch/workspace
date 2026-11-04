@@ -106,3 +106,8 @@ print()
 print(f"南緯24度の海岸→いまの北の端 {gc(p24, north):.0f} km(国の長さの {gc(p24, north) / L * 100:.0f}%)")
 r24 = min(rows, key=lambda r: abs(r[0] + 24))
 print(f"南緯24度の幅 {r24[3]:.0f} km")
+
+# 南の真ん中(アラウカニア)
+santiago, concepcion = (-33.4489, -70.6693), (-36.8270, -73.0498)
+print()
+print(f"サンティアゴ→コンセプシオン(ビオビオ川の河口) {gc(santiago, concepcion):.0f} km")
