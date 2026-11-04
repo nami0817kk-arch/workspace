@@ -669,6 +669,7 @@ class _ActionBar extends StatelessWidget {
                         icon: Icons.handshake_outlined,
                         label: '頼る',
                         sub: '信頼${g.coachBond}・チーム${g.teamwork}',
+                        ready: g.favorsReady,
                         onPressed: () => openPerkSheet(context, c, money: false),
                       ),
                     ),
@@ -679,6 +680,7 @@ class _ActionBar extends StatelessWidget {
                           icon: Icons.payments_outlined,
                           label: 'お金',
                           sub: moneyLabel(g.cash),
+                          ready: g.spendsReady,
                           onPressed: () => openPerkSheet(context, c, money: true),
                         ),
                       ),
@@ -715,8 +717,12 @@ class _BarLink extends StatelessWidget {
 
 /// 下のバーの「頼る」「お金」。名前の横に、いまの値を小さく出す。
 class _PerkButton extends StatelessWidget {
-  const _PerkButton({required this.icon, required this.label, required this.sub, required this.onPressed});
+  const _PerkButton(
+      {required this.icon, required this.label, required this.sub, required this.ready, required this.onPressed});
   final IconData icon;
+
+  /// 今すぐ使えるものの数。0 なら印を出さない。
+  final int ready;
   final String label;
   final String sub;
   final VoidCallback onPressed;
@@ -735,6 +741,11 @@ class _PerkButton extends StatelessWidget {
             Icon(icon, size: 16),
             const SizedBox(width: 4),
             Text(label, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+            // 重ねる印(Badge)は iPad・大きい文字で字にかぶったので、横に並べる。
+            if (ready > 0) ...[
+              const SizedBox(width: 4),
+              Badge(label: Text('$ready')),
+            ],
             const SizedBox(width: 6),
             Flexible(
               child: Text(sub,
@@ -776,9 +787,7 @@ class PerkSheet extends StatelessWidget {
             onUse: () => controller.spend(s),
           )
       else
-        for (final f in Favor.values)
-          // 推薦状はプロになると使い道が無いので、出さない。
-          if (!(f == Favor.letter && g.track == Track.pro))
+        for (final f in g.shownFavors)
             (
               title: g.fill(f.label),
               cost: f.cost,
@@ -1076,10 +1085,11 @@ class _AbilityCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 8),
+                  // 能力の行と同じ幅にして、棒の右端をそろえる(52だと iPad・大きい文字で「193c/m」と割れた)。
                   SizedBox(
-                    width: 52,
+                    width: 118,
                     child: Text('${p.heightCm.round()}cm',
-                        textAlign: TextAlign.right),
+                        maxLines: 1, softWrap: false, textAlign: TextAlign.right),
                   ),
                 ],
               ),

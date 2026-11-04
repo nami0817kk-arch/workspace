@@ -9,6 +9,7 @@ import 'package:basketball_career/game/epilogue.dart';
 import 'package:basketball_career/game/game.dart';
 import 'package:basketball_career/game/life.dart';
 import 'package:basketball_career/game/match.dart';
+import 'package:basketball_career/game/perks.dart';
 import 'package:basketball_career/game/player.dart';
 import 'package:basketball_career/game/special.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -33,6 +34,11 @@ String? _violation(Game g) {
   if (g.player.positionLock == null) return 'ポジションが決まっていない';
   if (g.player.overall < 0 || g.player.overall > 99) return '総合が範囲外: ${g.player.overall}';
   if (g.salary < 0 || g.sponsor < 0 || g.totalEarnings < 0) return 'お金がマイナス';
+  if (g.cash < 0 || g.spent < 0) return '所持金・使った額がマイナス: ${g.cash} / ${g.spent}';
+  if (g.trainerTerms < 0 || g.trainerTerms > perkTerms || g.nutritionTerms < 0 || g.nutritionTerms > perkTerms) {
+    return '契約の残りターンが範囲外';
+  }
+  if (g.recommendBonus < 0 || g.nextGrowthBoost < 1) return '推薦状・伸びの上乗せが不自然';
   final run = g.run;
   if (run != null && (run.timeouts < 0 || run.zones < 0)) return 'タイムアウト・ゾーンの残りがマイナス';
   return null;
@@ -81,6 +87,36 @@ void main() {
                 g.adoptGoal(r.nextInt(g.goalOptions.length));
               }
               if (g.canRecover && r.nextInt(3) == 0) g.recover();
+              // 気まぐれに、人に頼る・お金を使う(使えないものは理由が出て、使うと例外にならない)。
+              final perkLines = <String>[];
+              if (r.nextInt(3) == 0) {
+                final fv = Favor.values[r.nextInt(Favor.values.length)];
+                final why = g.favorBlock(fv);
+                if (why == null) {
+                  perkLines.addAll(g.useFavor(fv, focus: f));
+                } else {
+                  perkLines.add(why);
+                }
+              }
+              for (var k = 0; k < 2; k++) {
+                final sp = Spend.values[r.nextInt(Spend.values.length)];
+                final why = g.spendBlock(sp);
+                if (why == null) {
+                  perkLines.addAll(g.spend(sp, focus: f));
+                } else {
+                  perkLines.add(why);
+                }
+              }
+              for (final fv in Favor.values) {
+                perkLines.add(g.fill(fv.label));
+              }
+              for (final sp in Spend.values) {
+                perkLines.add(g.fill(sp.label));
+              }
+              for (final t in perkLines) {
+                final bad = _badText(t);
+                if (bad != null) problems.add('seed $seed 頼る・お金: $bad');
+              }
               g.choose(ok[r.nextInt(ok.length)], f,
                   focus2: f2 == f ? null : f2,
                   askClutch: r.nextBool(),

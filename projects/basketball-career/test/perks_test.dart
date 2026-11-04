@@ -113,6 +113,21 @@ void main() {
     expect(lines.any((l) => l.startsWith('熟練アップ!')), isTrue);
   });
 
+  test('下のバーに出す「使える数」は、一覧で押せるものの数と同じ。推薦状はプロでは数えない', () {
+    final g = _game();
+    g.coachBond = 20;
+    g.teamwork = 40;
+    expect(g.favorsReady, 1, reason: '相談だけ使える');
+    g.useFavor(Favor.talk);
+    expect(g.favorsReady, 0, reason: '1ターンに1つまで');
+    final pro = _game(track: Track.pro, age: 25, cash: 400);
+    pro.coachBond = 90;
+    expect(pro.shownFavors, isNot(contains(Favor.letter)));
+    expect(pro.spendsReady, 3, reason: 'おごる・機材・栄養士(400万)まで');
+    pro.spend(Spend.treat);
+    expect(pro.spendsReady, 1, reason: '残り350万で買えるのは機材だけ');
+  });
+
   test('コートを寄付すると、スポンサー契約の人気が上がる', () {
     int s(bool charity) => sponsorOf(
         overall: 70, honorsLastYear: 0, champion: false, star: false,
