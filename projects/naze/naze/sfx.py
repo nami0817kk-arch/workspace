@@ -36,7 +36,33 @@ def pop(sr: int) -> np.ndarray:
     return np.sin(ph) * np.sin(np.pi * np.minimum(1.0, x * 6)) * (1 - x) ** 2
 
 
-SOUNDS = {"whoosh": whoosh, "pop": pop}
+def thud(sr: int) -> np.ndarray:
+    """落ちたものが底に当たる「ドン」(低い音がすぐ消える)。"""
+    n = int(0.35 * sr)
+    x = np.arange(n) / sr
+    ph = np.cumsum(2 * np.pi * (95 - 50 * x / 0.35) / sr)
+    rnd = np.random.default_rng(5).uniform(-1, 1, n)
+    return (np.sin(ph) * 0.9 + rnd * 0.25 * np.exp(-x * 60)) * np.exp(-x * 11)
+
+
+def snap(sr: int) -> np.ndarray:
+    """ロープが切れる「バチン」(短く乾いた音)。"""
+    n = int(0.18 * sr)
+    x = np.arange(n) / sr
+    rnd = np.random.default_rng(7).uniform(-1, 1, n)
+    return (rnd * 0.8 + np.sin(2 * np.pi * 1800 * x) * 0.3) * np.exp(-x * 38)
+
+
+def bonk(sr: int) -> np.ndarray:
+    """頭が天井に当たる「ゴン」(金属の箱を叩いた響き)。"""
+    n = int(0.5 * sr)
+    x = np.arange(n) / sr
+    return (np.sin(2 * np.pi * 220 * x) + 0.5 * np.sin(2 * np.pi * 557 * x) + 0.3 * np.sin(2 * np.pi * 1130 * x)) * np.exp(-x * 9) * 0.6
+
+
+SOUNDS = {"whoosh": whoosh, "pop": pop, "thud": thud, "snap": snap, "bonk": bonk}
+GAIN.update(thud=0.30, snap=0.16, bonk=0.14)
+MIN_GAP.update(thud=0.8, snap=0.8, bonk=0.8)
 
 
 def thin(events: List[Tuple[float, str]]) -> List[Tuple[float, str]]:
