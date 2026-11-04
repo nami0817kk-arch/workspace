@@ -253,6 +253,8 @@ class _TrainingScreenState extends State<TrainingScreen> {
                 );
               },
             ),
+            _WeeklyMenuCard(team: team),
+            const SizedBox(height: 8),
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(16),
@@ -1391,6 +1393,85 @@ class _PositionConvertPicker extends StatelessWidget {
                 .setPlayerTrainingConvertTarget(player.id, pos),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// 週の練習を[Team.weeklyMenuSlots]個の枠に分けて組むカード。
+/// 枠ごとにメニューを選ぶと、休養の枠が多いほど疲れにくく、
+/// 同じメニューを並べるほどそこへ偏って伸びる。
+class _WeeklyMenuCard extends StatelessWidget {
+  const _WeeklyMenuCard({required this.team});
+
+  final Team team;
+
+  @override
+  Widget build(BuildContext context) {
+    final menu = team.weeklyMenu;
+    final slots = menu ??
+        List<TrainingFocus>.filled(
+            Team.weeklyMenuSlots, team.defaultTrainingFocus);
+    final rest = slots.where((f) => f == TrainingFocus.rest).length;
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              Tr.pick('今週の練習メニュー', 'This week\'s menu'),
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              Tr.pick(
+                  '1週を${Team.weeklyMenuSlots}つの枠に分けて組む。同じメニューを並べるほどそこへ偏って伸び、休養の枠が多いほど疲れにくい。個別方針を設定した選手はそちらが優先される。',
+                  'Split the week into ${Team.weeklyMenuSlots} slots. Repeating a session focuses growth there; more rest slots mean less fatigue. Players with an individual focus ignore this.'),
+              style: TextStyle(color: SemanticColors.subtleText(context)),
+            ),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (var i = 0; i < slots.length; i++)
+                  PopupMenuButton<TrainingFocus>(
+                    tooltip: Tr.pick('${i + 1}枠目', 'Slot ${i + 1}'),
+                    onSelected: (f) => context
+                        .read<GameState>()
+                        .setWeeklyMenuSlot(i, f),
+                    itemBuilder: (_) => [
+                      for (final f in TrainingFocus.values)
+                        PopupMenuItem(value: f, child: Text(f.label)),
+                    ],
+                    child: Chip(
+                      avatar: CircleAvatar(child: Text('${i + 1}')),
+                      label: Text(slots[i].label),
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    Tr.pick('休養 $rest枠 / 練習 ${slots.length - rest}枠',
+                        'Rest $rest / Training ${slots.length - rest}'),
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                ),
+                if (menu != null)
+                  TextButton(
+                    onPressed: () =>
+                        context.read<GameState>().clearWeeklyMenu(),
+                    child: Text(Tr.pick('従来の1方針に戻す', 'Back to single focus')),
+                  ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
