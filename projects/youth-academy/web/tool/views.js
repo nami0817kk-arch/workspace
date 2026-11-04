@@ -41,7 +41,7 @@ const dom = new JSDOM(html, {
   url: 'http://localhost/',
   beforeParse(w) {
     // canvas は描かない（描画の呼び出しが落ちないことだけ確かめる）
-    const ctx = new Proxy(function () {}, { get: (t, k) => (k === 'measureText' ? () => ({ width: 10 }) : k === 'createLinearGradient' ? () => ({ addColorStop() {} }) : () => {}), set: () => true });
+    const ctx = new Proxy(function () {}, { get: (t, k) => (k === 'measureText' ? () => ({ width: 10 }) : k === 'createLinearGradient' || k === 'createRadialGradient' ? () => ({ addColorStop() {} }) : () => {}), set: () => true });
     w.HTMLCanvasElement.prototype.getContext = () => ctx;
     w.addEventListener('error', (e) => errors.push(String(e.error || e.message)));
     const ce = w.console.error;
