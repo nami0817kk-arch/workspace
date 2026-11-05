@@ -1,0 +1,238 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：徳川埋蔵金（scripts/maizo-story.yaml）。chiso/storymain.py が読む。
+# 11-05 作成（11/06 12:00 公開）。jingi_main_look.yaml を写した。台本には手を入れない（承認のあと）。決まりは docs/story-main.md・スキル rekishi-story-screen。
+# 絵の方針：AI 絵は16枚（M01〜M16）。Cloudflare Workers AI の FLUX.1 schnell（無料枠。1024 正方形から 16:9 を切り出し。Chrome・Gemini は使わない）。
+#   人物は描かない（城・蔵・山・村・寺・川・堀・船・帳簿）。実在の人物の顔は実在の写真・絵だけ（勝海舟・榎本武揚）。小栗忠順の肖像は使わない（19時の回と重ねない・手元に無い）。
+#   M04（赤城山）は富士山に似た峰が上に出るので、切り出しで下の稜線だけにする。
+#   実在の絵は、ベアトの江戸城の写真・バットの大坂城の水彩（1868年1月）・幕府軍艦の図（1868年）・月岡芳年の慶喜の図・小林清親の陽明門・江戸図屏風・駿府城の絵図（パブリックドメイン）。
+script: scripts/maizo-story.yaml
+out: maizo_story_main
+art_dir: out/story/maizo/ph
+main_art_dir: out/story/maizo/main
+ai_disclosure: この動画の情景の画像の多くは、画像生成AI（Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+
+chapters:
+  0: {label: 序章 消えた徳川の金, now: null, dates: {}}
+  1: {label: 第1章 1868年、幕府の金はどこにあったのか, now: 1868年1月, dates: {13: 1868年4月, 15: 1912年の本, 17: 1926年の本, 19: 1868年2月, 21: null}}
+  2: {label: 第2章 採点の決まりは3つ, now: null, dates: {}}
+  3: {label: 第3章 小栗忠順は金を上州へ運んだのか, now: 1868年3月, dates: {34: 1928年の本, 35: 1868年3月, 38: null, 40: 1868年閏4月, 43: 1931年の本, 44: 1868年閏4月, 46: 1928年の本, 47: null}}
+  4: {label: 第4章 赤城山を掘った三代, now: 明治時代, dates: {53: 1890年, 55: 1932年, 56: 1933年, 60: 1990年6月, 62: 2023年, 63: null}}
+  5: {label: 第5章 日光と浅草の堀, now: null, dates: {72: 1877年7月, 79: null}}
+  6: {label: 第6章 大坂城の18万両はどこへ運ばれたのか, now: 1868年1月, dates: {93: null}}
+  7: {label: 第7章 江戸城の金蔵は幕末にはもう空だったのか, now: 1616年, dates: {98: 1837年, 99: null, 101: 1860年, 102: 1863年, 103: null}}
+  8: {label: 第8章 採点の結果, now: null, dates: {}}
+  9: {label: まとめ 徳川埋蔵金は、どこへ消えたのか, now: null, dates: {}}
+
+references:
+  - 飯島千秋「江戸幕府の貯蓄米金に関する基礎的研究」（科研費 08610349 研究概要、1997年）　https://kaken.nii.ac.jp/grant/KAKENHI-PROJECT-08610349/
+  - 渋沢栄一『徳川慶喜公伝』巻4（1918年。国立国会図書館デジタルコレクション）
+  - 大阪市参事会 編『大阪市史』第2巻（1915年）／維新史料編纂事務局 編『維新史』第5巻（1941年）
+  - 竹越与三郎『日本経済史』第7巻（1925年）・『日本の真の姿』（1938年の講演録）
+  - 幸田成友『東と西』（1940年）
+  - 蜷川新『維新前後の政争と小栗上野の死』（1928年。権田村「覚書」の写しを収める）・『維新前後の政争と小栗上野』（1931年）
+  - 太政官 編『復古記』（総督府日記ほか）／『高崎市史』（1927年、小栗家分家の上申書）
+  - 丑木幸男「小栗上野介忠順と会津」（高崎市『市史のひろば』第7号）
+  - 法律新聞編輯部 編『判決要録』第25巻（1935年）「赤城山埋蔵金発掘事件二審判決」
+  - 東京都公文書館「古文書解読チャレンジ講座 第18回 探索、埋蔵金」（明治10年「埋メ金引上ケ願書」の解読）
+  - 春秋居士『評伝河村瑞賢』（1912年）・伊藤痴遊『維新前後の大西郷』（1926年）
+  - 大蔵省 編『日本財政経済史料』巻1（1925年）・『維新史』第1巻（1939年、久能御蔵金銀請取帳）
+  - 髙橋秀悦「幕末・金貨流出の経済学」（東北学院大学経済学論集 第185号、2015年）
+  - 文春オンライン（橋本昇・高木瑞穂、2025年）・デイリースポーツ（2023年）・週刊文春（2023年12月14日号）
+  - 山中廣稔『謎解き紀行 徳川埋蔵金 上』（随想舎）
+no_tag_from: 129
+
+# AI 絵（16:9 横・16枚）。pan：h＝左右（既定）。crops＝切り出し [倍率, 中心x, 中心y]
+ai:
+  M01: {scene: 夜の城の石垣と堀と灯, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  M02: {scene: 城の地下の石の蔵、空いた箱, pan: h, crops: {wide: [1.18, 0.5, 0.55], left: [1.18, 0.4, 0.55], right: [1.18, 0.6, 0.55]}}
+  M03: {scene: 暗い蔵の奥へ続く棚と灯, pan: v, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.45, 0.45], right: [1.18, 0.55, 0.55]}}
+  M04: {scene: 夕暮れの群馬の山並み（赤城山の代わり。上の峰は切る）, pan: h, crops: {wide: [1.4, 0.5, 0.66], left: [1.4, 0.42, 0.66], right: [1.4, 0.6, 0.66]}}
+  M05: {scene: 山の斜面の深い掘り跡と梯子, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  M06: {scene: 早春の山村の茅葺きの家と道, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  M07: {scene: 山村の小さな寺と大杉, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.25, 0.55, 0.45]}}
+  M08: {scene: 土間に置かれた長持, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  M09: {scene: 霧の川と岸の舟, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  M10: {scene: 杉並木と石灯籠, pan: v, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.45, 0.45], right: [1.18, 0.55, 0.55]}}
+  M11: {scene: 夜の堀と蔵の並び, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  M12: {scene: 夜明けの川向こうの城と荷車, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  M13: {scene: 夜の海をゆく蒸気の軍艦, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  M14: {scene: 船倉と縄で縛った箱、吊り灯, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  M15: {scene: 帳簿の山とそろばんと灯（字は読めない）, pan: h, crops: {wide: [1.18, 0.5, 0.55], left: [1.18, 0.4, 0.55], right: [1.18, 0.6, 0.55]}}
+  M16: {scene: 夜明けの海（終了画面）, lock: [1.0, 0.5, 0.5]}
+
+paint_fx: {}
+
+credits:
+  paintings/kira_edo_castle_beato.jpg: フェリーチェ・ベアト撮影《江戸城》1860年代（パブリックドメイン）
+  paintings/yoshinobu_beato_yedo_castle_moat.jpg: フェリーチェ・ベアト撮影《江戸城の濠》1863〜70年代初め（パブリックドメイン）
+  paintings/yoshinobu_osaka_palace_butt_1868.jpg: J.H.バット《大坂城》水彩、1868年1月（パブリックドメイン）
+  paintings/yoshinobu_tokugawa_warships_shinagawa.png: 小杉雅之進《幕府軍艦八隻の品川沖出帆の図》1868年（パブリックドメイン）
+  paintings/yoshinobu_escape_yoshitoshi.jpg: 月岡芳年《慶喜 大坂湾の小舟から軍艦へ》1877年ごろ（後世の場面。パブリックドメイン）
+  paintings/yoshinobu_katsu_kaishu.jpg: 勝海舟の肖像写真（パブリックドメイン）
+  paintings/yoshinobu_enomoto_portrait.jpg: 榎本武揚（晩年の写真。パブリックドメイン）
+  paintings/ieyasu_nikko_yomeimon_kiyochika_1897.jpg: 小林清親《日本名勝図絵 陽明門》1897年（パブリックドメイン）
+  paintings/ieyasu_edo_zu_byobu_castle_detail.jpg: 《江戸図屏風》江戸城の部分（17世紀。パブリックドメイン）
+  paintings/yoshinobu_suruga_castle_map.jpg: 《駿州府中之城図》駿府城の絵図（パブリックドメイン）
+
+shots:
+  - 0 ai:M01 wide
+  - 1 ai:M02 wide
+  - 2 part:paintings/kira_edo_castle_beato.jpg wide
+  - 3 ai:M04 wide
+  - 4 ai:M05 wide
+  - 5 part:paintings/yoshinobu_beato_yedo_castle_moat.jpg wide
+  - 6 ai:M03 wide
+  - 7 ai:M11 wide
+  - 8 ai:M02 left
+  - 9 ai:M15 wide
+  - 10 ai:M13 wide
+  - 11 ai:M01 right
+  - 12 frame:paintings/yoshinobu_escape_yoshitoshi.jpg a
+  - 13 part:paintings/kira_edo_castle_beato.jpg left
+  - 14 ai:M02 wide
+  - 15 ai:M15 left
+  - 16 frame:paintings/yoshinobu_katsu_kaishu.jpg a
+  - 17 part:paintings/yoshinobu_beato_yedo_castle_moat.jpg left
+  - 18 ai:M02 right
+  - 19 ai:M01 left
+  - 20 ai:M06 wide
+  - 21 ai:M15 right
+  - 22 ai:M15 wide
+  - 23 ai:M03 left
+  - 24 ai:M04 left
+  - 25 ai:M15 left
+  - 26 ai:M15 right
+  - 27 ai:M03 right
+  - 30 ai:M02 wide
+  - 31 ai:M04 wide
+  - 32 ai:M06 left
+  - 33 ai:M06 wide
+  - 34 ai:M08 wide
+  - 35 ai:M06 right
+  - 36 ai:M07 wide
+  - 37 ai:M08 left
+  - 38 ai:M15 wide
+  - 39 ai:M15 right
+  - 40 ai:M06 left
+  - 41 ai:M07 left
+  - 42 ai:M08 right
+  - 43 ai:M07 right
+  - 44 ai:M15 left
+  - 45 ai:M08 wide
+  - 46 ai:M07 wide
+  - 47 ai:M04 wide
+  - 48 ai:M05 wide
+  - 49 ai:M04 left
+  - 50 ai:M05 left
+  - 51 ai:M09 wide
+  - 52 ai:M09 right
+  - 53 ai:M05 right
+  - 54 ai:M03 left
+  - 55 ai:M05 wide
+  - 56 ai:M15 wide
+  - 57 ai:M04 right
+  - 58 ai:M15 left
+  - 59 ai:M03 right
+  - 60 ai:M05 left
+  - 61 ai:M05 right
+  - 62 ai:M04 wide
+  - 63 ai:M04 left
+  - 66 ai:M05 wide
+  - 67 ai:M10 wide
+  - 68 part:paintings/ieyasu_nikko_yomeimon_kiyochika_1897.jpg wide
+  - 69 ai:M10 left
+  - 70 ai:M10 right
+  - 71 part:paintings/ieyasu_nikko_yomeimon_kiyochika_1897.jpg left
+  - 72 ai:M11 wide
+  - 73 ai:M15 wide
+  - 74 ai:M11 left
+  - 75 ai:M11 right
+  - 76 ai:M15 left
+  - 77 ai:M11 wide
+  - 78 ai:M15 right
+  - 79 ai:M11 left
+  - 81 ai:M11 right
+  - 82 ai:M12 wide
+  - 83 part:paintings/yoshinobu_osaka_palace_butt_1868.jpg wide
+  - 84 frame:paintings/yoshinobu_enomoto_portrait.jpg a
+  - 85 ai:M12 left
+  - 86 part:paintings/yoshinobu_osaka_palace_butt_1868.jpg left
+  - 87 ai:M03 wide
+  - 88 ai:M14 wide
+  - 89 ai:M15 wide
+  - 90 frame:paintings/yoshinobu_tokugawa_warships_shinagawa.png a
+  - 91 ai:M13 wide
+  - 92 ai:M14 left
+  - 93 ai:M14 right
+  - 95 ai:M13 left
+  - 96 part:paintings/ieyasu_edo_zu_byobu_castle_detail.jpg wide
+  - 97 part:paintings/yoshinobu_suruga_castle_map.jpg wide
+  - 98 ai:M02 wide
+  - 99 ai:M03 wide
+  - 100 ai:M02 left
+  - 101 ai:M15 wide
+  - 102 ai:M15 left
+  - 103 ai:M15 right
+  - 104 ai:M02 right
+  - 106 ai:M03 left
+  - 107 part:paintings/ieyasu_edo_zu_byobu_castle_detail.jpg right
+  - 108 ai:M13 wide
+  - 109 ai:M13 left
+  - 110 ai:M02 wide
+  - 111 ai:M04 wide
+  - 112 part:paintings/yoshinobu_osaka_palace_butt_1868.jpg wide
+  - 113 ai:M14 wide
+  - 114 ai:M15 wide
+  - 115 ai:M15 left
+  - 116 ai:M03 wide
+  - 117 ai:M03 right
+  - 118 ai:M14 left
+  - 119 ai:M04 right
+  - 120 ai:M06 wide
+  - 121 ai:M05 wide
+  - 122 ai:M13 right
+  - 123 ai:M13 wide
+  - 124 ai:M13 left
+  - 125 ai:M14 wide
+  - 126 ai:M07 wide
+  - 127 ai:M04 wide
+  - 128 ai:M15 wide
+  - 129 ai:M06 wide
+  - 130 ai:M04 left
+  - 131 ai:M16 wide
+  - end ai:M16 wide
+
+focus: {}
+
+fx:
+  M01: {lamp: {region: [0.0, 0.4, 0.25, 0.6]}, water: {region: [0.0, 0.8, 1.0, 1.0]}}
+  M03: {lamp: {region: [0.5, 0.0, 0.6, 0.2]}}
+  M11: {water: {region: [0.25, 0.6, 0.75, 1.0]}}
+  M13: {water: {region: [0.0, 0.78, 1.0, 1.0]}}
+  M14: {lamp: {region: [0.36, 0.15, 0.46, 0.45]}}
+  M15: {lamp: {region: [0.2, 0.3, 0.32, 0.6]}}
+  M16: {water: {region: [0.0, 0.62, 1, 1.0]}}
+
+parts:
+  - {type: quote, from: 45, to: 45, label: 史料, text: 所持之諸道具…品々共／不残荷造致シ、何方ヘカ持越候, source: 小栗家の分家の上申書（慶応4年閏4月12日。『高崎市史』1927年所収）}
+  - {type: quote, from: 46, to: 46, label: 史料, text: 権田村には二三千両の…金を持ち行きしに過ぎずして, source: 蜷川新『維新前後の政争と小栗上野の死』（1928年）}
+  - {type: quote, from: 76, to: 76, label: 史料, text: 向後余人へ相語り候儀、／堅く差し留められ, source: 島村弥三郎「埋メ金引上ケ願書」（明治10年。東京都公文書館の解読による）}
+  - {type: quote, from: 84, to: 84, label: 史料, text: 其古金十八萬両をば、／榎本和泉守に嘱して, source: 渋沢栄一『徳川慶喜公伝』（1918年）}
+  - {type: quote, from: 89, to: 89, label: 史料, text: 大阪御金蔵の有する黄金の凡ては／此に尽きたりき, source: 竹越与三郎『日本経済史』第7巻（1925年）}
+  - {type: quote, from: 100, to: 100, label: 要点, text: それらは幕末期には使い果たされた, source: 飯島千秋「江戸幕府の貯蓄米金に関する基礎的研究」（科研費の研究概要、1997年）}
+  - {type: quote, from: 128, to: 128, label: 要点, text: 追えた金　大坂から軍艦で江戸へ／言えない　360万両の出どころ, source: この動画で見た記録から}
+
+stills:
+  - {line: 0, note: 冒頭（0秒）夜の江戸城}
+  - {line: 7, note: 候補の地図}
+  - {line: 27, note: 採点の決まり（図）}
+  - {line: 45, note: 分家の届けの札}
+  - {line: 66, note: 採点の途中（棒）}
+  - {line: 88, note: 大坂城の食い違い（図）}
+  - {line: 108, note: 採点の結果（棒）}
+  - {line: 118, note: 360万両の重さ（計算）}
+  - {line: 128, note: まとめの要点札}
+  - {end: true, note: 終了画面の空き}
+
+figures:
+  - {from: 7, to: 7, spec: {"type": "map", "title": "名前の挙がる場所", "bounds": [134.6, 140.8, 34.0, 37.4], "reveal": true, "places": [["赤城山", 139.19, 36.56], ["日光", 139.60, 36.75], ["浅草", 139.79, 35.71], ["大坂", 135.50, 34.69]]}}
+  - {from: 20, to: 20, spec: {"type": "map", "title": "小栗、江戸から権田村へ", "bounds": [137.4, 140.6, 35.2, 37.1], "places": [["江戸", 139.77, 35.69], ["権田村", 138.82, 36.43], ["赤城山", 139.19, 36.56]], "route": ["江戸", "権田村"]}}

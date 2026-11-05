@@ -1,0 +1,155 @@
+# 物語完結型ショート 三種の神器 s2（2026-11-05）。本編 scripts/jingi-story.yaml（11/5 19:00 公開、https://youtu.be/XmWN5pboKa4）の第1章から。11/6 12:30 公開。
+# 形式は sankin_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。絵は本編の AI 絵（人物なし）と本編で使った『尾張名所図会』だけ。新しい絵は作らない。
+# 切り口：草薙剣は668年に盗まれ、686年に「祟り」と占われて熱田へ送られた（日本書紀）。鏡（s1）・壇ノ浦（s3）・南北朝（s4）・勾玉（s5）には踏み込まない。
+# 神器の扱い：「祟り」は日本書紀の言葉として、出どころを付けて言う。清雪門・酔笑人神事は「伝わる」「といわれる」。
+# 事実カード：jingi-01・02・13・14・15。言い方は本編のまま。
+#   ・天智天皇7年＝668年、朱鳥元年＝686年を確かめた。668→686 は18年（本編と同じ）。
+#   ・戻った剣の置き場は日本書紀に無い → 「熱田の側の伝え」（jingi-13、本編と同じ）。
+# 理解テスト4問：
+#   ①誰の話か：三種の神器の剣、草薙剣
+#   ②いつ・どこで何が：668年に僧の道行が盗んで新羅へ逃げようとし、嵐で迷って戻った
+#   ③どうなったか：686年6月、天武天皇の病が草薙剣の祟りと占われ、その日のうちに尾張の熱田社へ送られた
+#   ④その後：熱田神宮の清雪門は「開かずの門」、5月4日の酔笑人神事は剣が戻った喜びを伝えるといわれる
+title: 三種の神器｜草薙剣は、一度盗まれた
+yt_title: 草薙剣は668年に一度盗まれていた　日本書紀が記す盗難と、18年後に熱田へ送られたわけ
+description: |-
+  三種の神器の剣、草薙剣は、一度、盗まれています。
+  668年、天智天皇の7年。『日本書紀』によれば、僧の道行が草薙剣を盗み、新羅へ逃げようとしましたが、風と雨にあって道に迷い、戻ってきました。戻った剣がどこにあったのか、『日本書紀』は書いていません。18年後の686年6月、天武天皇の病を占うと、草薙剣の祟りだと出て、剣はその日のうちに尾張国の熱田社、今の熱田神宮へ送られました。熱田神宮の清雪門は「開かずの門」と呼ばれ、毎年5月4日の夜の酔笑人神事は、剣が戻った喜びを伝えるといわれます。
+  剣が熱田へ移ったあと、天皇のそばには何が残ったのか。本編は概要欄のリンクからどうぞ。
+hashtags: ['#三種の神器', '#日本史', '#草薙剣']
+ai_images: true
+ai_disclosure: この動画の風景・室内・箱の画像は、画像生成AI（Google の Gemini）で作った想像上のイメージで、実在の神器・記録映像・写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/jingi
+out: jingi_story_s2
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 三種の神器（草薙剣）
+  title: "草薙剣は、一度《盗まれた》"
+now:
+  - {at: 668年, text: "668年　天智天皇7年", point: 0}
+  - {at: 686年, text: "686年　朱鳥元年", point: 1}
+  - {at: 熱田神宮の清雪門, text: "いま　熱田神宮", point: 2}
+timeline:
+  - {label: "668"}
+  - {label: "686"}
+  - {label: "いま"}
+cards:
+  - type: year
+    from: 18年後の686年
+    until: その日のうちに
+    big: 686年
+    sub: 剣は熱田へ
+    text_y: 0.70
+shots:
+  J01:
+    kind: ai
+    file: jingi/main/J01.jpg
+    focus: [0.45, 0.55]
+    move: in
+    must: 暗い殿舎の白い絹の箱
+  J08:
+    kind: ai
+    file: jingi/main/J08.jpg
+    focus: [0.5, 0.55]
+    move: right
+    must: 机の上の古い巻物と本
+  J04:
+    kind: ai
+    file: jingi/main/J04.jpg
+    focus: [0.5, 0.5]
+    move: left
+    must: 荒れた海と船
+  J11:
+    kind: ai
+    file: jingi/main/J11.jpg
+    focus: [0.5, 0.5]
+    move: right
+    must: 誰もいない広間
+  J01b:
+    kind: ai
+    file: jingi/main/J01.jpg
+    focus: [0.7, 0.55]
+    move: left
+    must: 灯の下の箱
+  Atsuta:
+    kind: real
+    image: paintings/toshiie_owari_atsuta_zue.jpg
+    crop: [0.15, 0.1, 0.7, 0.75]
+    focus: [0.5, 0.4]
+    move: in
+    credit: "岡田啓・野口道直『尾張名所図会』熱田大宮全図（1880年刊）"
+    must: 熱田の社の境内の絵
+  J03:
+    kind: ai
+    file: jingi/main/J03.jpg
+    focus: [0.6, 0.5]
+    move: in
+    must: 霧の森の社殿
+  J09:
+    kind: ai
+    file: jingi/main/J09.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 光の差す杉の参道
+  J11b:
+    kind: ai
+    file: jingi/main/J11.jpg
+    focus: [0.3, 0.5]
+    move: left
+    must: 広間の奥
+lines:
+  # fact: jingi-01
+  - 語り: 草薙剣は、一度、《!盗まれている》。
+    shot: J01
+    tone: 強調
+    pause: 0.12
+  # fact: jingi-01
+  - 語り: 668年、天智天皇の7年。『日本書紀』によれば、僧の道行が、草薙剣を盗み、新羅へ逃げようとした。
+    shot: J08
+    tone: しみじみ
+    pause: 0.12
+  # fact: jingi-01
+  - 語り: ところが途中で、風と雨にあい、道に迷って、戻ってきた。
+    shot: J04
+    tone: しみじみ
+    pause: 0.12
+  # fact: jingi-13
+  - 語り: 戻った剣が、どこにあったのか。『日本書紀』は、書いていない。宮中に留め置かれた、というのは、熱田の側の伝えだ。
+    shot: J11
+    tone: しみじみ
+    pause: 0.12
+  # fact: jingi-02
+  - 語り: 18年後の686年、6月。天武天皇の病を占うと、草薙剣の祟りだ、と出た。
+    shot: J01b
+    tone: 重い
+    pause: 0.12
+  # fact: jingi-02
+  - 語り: 剣は、その日のうちに、尾張国の熱田社へ送られた。今の名古屋の、熱田神宮だ。
+    shot: Atsuta
+    tone: しみじみ
+    pause: 0.12
+  # fact: jingi-14
+  - 語り: 熱田神宮の清雪門は、俗に、開かずの門と呼ばれてきた。剣を盗んだ僧が通った、不吉な門だから、とも伝わる。
+    shot: J03
+    tone: しみじみ
+    pause: 0.12
+  # fact: jingi-15
+  - 語り: 毎年5月4日の夜の酔笑人神事は、剣が戻ったときに、人々が喜び笑った様子を伝える、といわれる。
+    shot: J09
+    tone: しみじみ
+    pause: 0.3
+    dip: true
+  - 語り: 盗まれ、戻り、祟りとされて、熱田へ送られた剣。では、天皇のそばには、何が残ったのか。
+    shot: J11b
+    tone: 疑問
+    pause: 0.15
