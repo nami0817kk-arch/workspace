@@ -521,7 +521,7 @@ P["s3"] = dict(title="富士山4つ分の段差", lines=[
     dict(id="c1", text="チリでいちばん高い峰は、およそ6,900m。",
          scene=MAP((-68.3, -26.3, 5, 60), PIN(OJOS, "オホス・デル・サラード"), LABEL((-68.6, -25.2), "約6,900m", 96, YEL, on="6,900m", count=True), relief=0.13)),
     dict(id="c2", text="そこから西へ509km行くと、海の底は8,065m。",
-         scene=MAP((-70.0, -25.3, 8, 30), PIN(OJOS, "オホス・デル・サラード", id="po"), PIN(RICHARDS, "リチャーズ海淵", on="海の底"),
+         scene=MAP((-69.6, -25.3, 11.5, 30), PIN(OJOS, "オホス・デル・サラード", id="po"), PIN(RICHARDS, "リチャーズ海淵", on="海の底"),
                    ROUTE([OJOS, RICHARDS], id="go", on="西へ"), LABEL((-71.2, -21.6), "8,065m", 96, BLUE, on="8,065m", count=True), tr="zoom")),
     dict(id="c3", text="高さの差は、およそ1万5,000m。",
          scene=dict(shot="block", view=(-70.4, -23.4, 9.5, 58), lat=-25.2, lon=(-73.6, -67.2), tr="zoom",

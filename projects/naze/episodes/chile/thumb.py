@@ -45,7 +45,8 @@ def line_(x, y, parts, size, stroke=None):
 
 
 x = 900
-line_(x, 120, [("日本の", WHITE), ("2倍", YEL), ("の広さ", WHITE)], 96)
+line_(x, 124, [("チリは", RED), ("日本の", WHITE), ("2倍", YEL), ("の広さ", WHITE)], 84)
+line_(110, 500, [("チリ", WHITE)], 120, 12)                   # 赤い帯のすぐ西の海に国の名前
 line_(x, 270, [("なのに幅", WHITE)], 150)
 line_(x - 20, 450, [("93km", YEL)], 230)
 line_(x, 760, [("なぜ", WHITE), ("細い", RED), ("？", WHITE)], 150)
