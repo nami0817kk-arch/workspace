@@ -12,7 +12,7 @@ const YA = globalThis.YA;
 const cv = { getBoundingClientRect: () => ({ width: 844, height: 330 }), getContext: () => null, width: 0, height: 0 };
 let fails = 0;
 const ok = (c, msg) => { if (!c) { fails++; console.log('FAIL: ' + msg); } };
-const st = { goals: 0, goalIn: 0, missIn: 0, frames: 0, scenes: 0, ballMax: 0, jerk: 0, farFoot: 0, pMax: 0, accOver: 0, kicks: 0, stuck: 0, long: 0, places: 0, ffT: 0 };
+const st = { goals: 0, goalIn: 0, missIn: 0, frames: 0, scenes: 0, ballMax: 0, jerk: 0, farFoot: 0, pMax: 0, accOver: 0, kicks: 0, stuck: 0, long: 0, places: 0, ffT: 0, overlap: 0, ovScene: 0, measured: 0, tackles: 0, cuts: 0 };
 for (const seed of [3, 8, 21]) {
   const w = YA.newWorld(seed);
   const home = YA.teamFromWorld(w, 'A');
@@ -44,6 +44,9 @@ for (const seed of [3, 8, 21]) {
       const inNet = Math.abs(R.ball[0] - 34) < 3.7 && (R.ball[1] < 0 || R.ball[1] > 105); // 網に受け止められる
       if (dv > 6 && !touched && !afterCut && !inNet) st.jerk++;
       if (R.owner && R.disp[R.owner] && Math.hypot(R.disp[R.owner][0] - R.ball[0], R.disp[R.owner][1] - R.ball[1]) > 1.8 && R.owner === prevOwner) st.farFoot++;
+      const ids0 = Object.keys(R.disp);
+      for (let i = 0; i < ids0.length; i++) for (let j = i + 1; j < ids0.length; j++) if (Math.hypot(R.disp[ids0[i]][0] - R.disp[ids0[j]][0], R.disp[ids0[i]][1] - R.disp[ids0[j]][1]) < 1.0) { st.overlap++; if (R.scene) st.ovScene++; }
+      st.measured++;
       for (const id of Object.keys(R.disp)) {
         const p = R.disp[id];
         if (!prevP[id]) continue;
@@ -78,6 +81,8 @@ for (const seed of [3, 8, 21]) {
     for (let i = 0; i < 30; i++) step(); // 合間 0.5 秒
   }
   st.places += R.places || 0;
+  st.tackles += R.tackles || 0;
+  st.cuts += R.cuts || 0;
   st.kicks += R.kicks;
   st.stuck += R.stuck;
 }
@@ -91,7 +96,10 @@ ok(st.accOver === 0, '選手の加速の上限を超えたコマ ' + st.accOver)
 ok(st.stuck <= st.scenes * 0.08, '受け手が届かず進めた回数 ' + st.stuck + '／場面 ' + st.scenes);
 ok(st.long <= st.scenes * 0.05, '長すぎる場面 ' + st.long);
 // セットプレー（ライン際から始まる場面）と、誰も持っていない球から始まる場面は置き直してよい。残りはボールをつないで入る
-ok(st.places <= st.scenes * 0.35, '場面の入りで暗転して置き直した回数 ' + st.places + '／場面 ' + st.scenes);
+ok(st.places <= st.scenes * 0.15, '場面の入りで暗転して置き直した回数 ' + st.places + '／場面 ' + st.scenes);
+// 離れる動きを入れる前は 0.109
+ok(st.overlap / st.measured < 0.07, '選手どうしが1m未満に重なった組（1コマあたり ' + (st.overlap / st.measured).toFixed(3) + '）');
+ok(st.tackles + st.cuts > 4, '合間のタックル・パスカット ' + st.tackles + '・' + st.cuts);
 ok(st.ffT / st.scenes < 3, '場面の入りの早送りは1場面あたり3秒未満（' + (st.ffT / st.scenes).toFixed(2) + '秒）');
 ok(st.goals > 0 && st.goalIn === st.goals, '得点の場面でボールが網に入る ' + st.goalIn + '／' + st.goals);
 ok(st.missIn === 0, '外れの場面で網に入った ' + st.missIn);

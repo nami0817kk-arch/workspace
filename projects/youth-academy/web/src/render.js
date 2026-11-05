@@ -24,6 +24,8 @@
     shot: 25, // シュートの速さ
     maxGround: 23, // これより強く蹴らないと届かないなら浮かせる
     ff: 2.6, // 場面の入りの早送りの倍率
+    space: 2.2, // これより近づくと離れようとする
+    tackle: 2.4, // 寄せた子がこの距離に入ると、奪いにいく
   };
   YA.MOVE = MOVE;
 
@@ -157,6 +159,7 @@
     startScene(sc) {
       const fr = sc.frames || [];
       this.scene = sc;
+      this.setup = null;
       this.t = 0;
       this.idle = null;
       this.focus = Object.values(sc.actors || {});
@@ -213,6 +216,19 @@
         let eta = 0;
         for (const id of Object.keys(f0.pos)) if (this.disp[id]) eta = Math.max(eta, dist(this.disp[id], f0.pos[id]) / MOVE.sprint);
         const reachable = h0 && this.disp[h0] && dist(this.disp[h0], f0.ball) / MOVE.sprint < 9 && eta < 10;
+        // セットプレー：ボールをその場に置き、蹴る子と主役が持ち場へ走る（暗転しない）
+        const setOk = h0 && this.disp[h0] && dist(this.disp[h0], f0.ball) / MOVE.sprint < 14 && eta < 15; // セットプレーは速めの早送りなので遠くからでも間に合う
+        if (Object.keys(this.disp).length && this.cut <= 0 && setOk && edge && (f0.ball[2] || 0) < 0.5) {
+          this.pre = { t: 0, f0, h0, kicked: true, set: true };
+          this.ball = [f0.ball[0], f0.ball[1], 0];
+          this.bv = [0, 0];
+          this.fl = null;
+          this.owner = null;
+          this.expect = h0;
+          const set = new Set();
+          for (const f of fr) for (const id of Object.keys(f.pos)) if (!set.has(id)) { set.add(id); this.stgt[id] = f.pos[id]; }
+          return;
+        }
         if (Object.keys(this.disp).length && this.cut <= 0 && reachable && !edge && (f0.ball[2] || 0) < 0.5 && dist(f0.ball, this.ball) < 75) {
           this.pre = { t: 0, f0, h0, kicked: false };
           // 主役は場面に最初に出てくる所へ走り出す
@@ -244,7 +260,7 @@
             const d = dist(this.ball, p.f0.ball);
             const tFly = d > 30 ? d / MOVE.loft + 0.25 : d / 11;
             const eta = dist(this.disp[p.h0], p.f0.ball) / (MOVE.sprint * 0.85);
-            if (eta > tFly + 0.3 && p.t < 5) return;
+            if (eta > tFly - 0.2 && p.t < 5) return; // 受け手が先に着いて待つ（届く球が転がり過ぎない）
             p.kicked = true;
             this.kick([p.f0.ball[0], p.f0.ball[1], 0], p.h0, this.owner);
           }
@@ -255,7 +271,7 @@
       let ready = got;
       for (const id of Object.keys(p.f0.pos)) if (this.disp[id] && dist(this.disp[id], p.f0.pos[id]) > 3) ready = false;
       // 受け手が持てば、主役が少し遅れていても始める（台本のあいだに追いつく）
-      if (ready || (got && p.t > 1.2) || p.t > 10) this.endPre(this.owner !== p.h0 || dist(this.ball, p.f0.ball) > 8);
+      if (ready || (got && p.t > 1.2) || p.t > (p.set ? 16 : 10)) this.endPre(this.owner !== p.h0 || dist(this.ball, p.f0.ball) > 8);
     }
     endPre(cut) {
       this.pre = null;
@@ -307,7 +323,7 @@
       const e = this.ev[this.evI];
       if (!e) {
         // 台本の終わり：ボールが落ち着くのを少し待って場面を閉じる
-        this.settle = 0.9;
+        this.settle = 0.6;
         for (const bt of sc.beats || []) if (bt.at >= 1e9) bt.at = this.t;
         return;
       }
@@ -359,12 +375,15 @@
       }
       // 蹴ったあと：届いて受け手が触る（受け手がいなければ落ち着くまで）
       if (this.fl) return;
+      // 受け手がいるはずの球がラインを割った：待たずに次へ
+      const outB = this.ball[0] < -1.5 || this.ball[0] > W + 1.5 || this.ball[1] < -0.3 || this.ball[1] > L + 0.3;
+      if (outB && e.recv && this.owner !== e.recv) { this.expect = null; this.nextEvent(); return; }
       if (e.recv) {
         if (this.owner === e.recv) this.nextEvent();
         else if (e.t > 6) { this.stuck++; this.expect = null; this.nextEvent(); }
         return;
       }
-      if (Math.hypot(this.bv[0], this.bv[1]) < 2 || e.t > 4) this.nextEvent();
+      if (Math.hypot(this.bv[0], this.bv[1]) < 2 || e.t > 1.6) this.nextEvent();
     }
 
     // ----- ボール -----
@@ -392,7 +411,7 @@
         } else T = (v0 - MOVE.passEnd) / MOVE.fric;
       }
       const h = kind === 'loft' ? Math.min(9, 1.2 + d * 0.16) : kind === 'shot' ? Math.min(1.4, d * 0.04) : 0;
-      this.fl = { from, to: [to[0], to[1], Math.max(0, to[2] || 0)], d: Math.max(0.5, dist(from, to)), T: Math.max(0.15, T), t: 0, kind, v0, h, z0: from[2] || 0 };
+      this.fl = { by, from, to: [to[0], to[1], Math.max(0, to[2] || 0)], d: Math.max(0.5, dist(from, to)), T: Math.max(0.15, T), t: 0, kind, v0, h, z0: from[2] || 0 };
       if (by) this.lock[by] = 0.3;
       this.owner = null;
       this.expect = recv || null;
@@ -474,13 +493,15 @@
       if (this.fl) return;
       const zMax = this.scene && this.expect ? 3.6 : 1.3; // 場面の受け手は頭でも触る
       const b = this.ball;
-      const out = b[0] < -0.3 || b[0] > W + 0.3 || b[1] < -0.3 || b[1] > L + 0.3;
+      const mg = this.scene && this.expect ? 1.5 : 0.3; // 場面の受け手は、ラインを少し越えた球にも足を伸ばす
+      const out = b[0] < -mg || b[0] > W + mg || b[1] < -0.3 || b[1] > L + 0.3;
       if (out) return;
       let best = null;
       let bd = MOVE.reach;
       for (const id of Object.keys(this.disp)) {
         if (this.lock[id] > 0 || id === this.owner) continue;
-        if (this.scene && id !== this.expect) continue; // 場面では台本の子だけが触る
+        if (this.setup && id !== this.setup.who) continue; // 再開はボールを取りに来た子だけ
+        if (this.scene && id !== this.expect && !(id === this.chaser && this.ev && this.evI >= this.ev.length)) continue; // 場面では台本の子だけが触る（台本が終わったあとの球は追った子が拾う）
         if ((b[2] || 0) > zMax) continue;
         const d = dist(this.disp[id], b);
         if (d < bd) { bd = d; best = id; }
@@ -488,6 +509,7 @@
       if (!best) return;
       if (this.owner && !this.scene) return; // 合間は奪い合わない（相手に渡るのはパスの失敗だけ）
       this.owner = best;
+      if (this.setup) this.setup = null;
       this.poss = this.teamOf(best) === this.match.home ? 'home' : 'away';
       if (!this.scene && this.idle && this.idle.recv === best) this.idle = null;
     }
@@ -496,9 +518,55 @@
     idlePlay(dt) {
       const ids = Object.keys(this.base);
       const b = this.ball;
-      const out = b[0] < -0.5 || b[0] > W + 0.5 || b[1] < -0.5 || b[1] > L + 0.5;
+      const out = b[0] < -0.3 || b[0] > W + 0.3 || b[1] < -0.3 || b[1] > L + 0.3; // 拾える範囲（pickup）と同じ線
+      if (this.setup) {
+        this.setup.t += dt;
+        if (this.setup.t > 10 && this.disp[this.setup.who]) { this.disp[this.setup.who] = [b[0], b[1] - this.atkDir(this.setup.who)[1] * 0.6]; this.cut = 0.5; } // 念のため
+        return;
+      }
       if (out && !this.fl && this.cut <= 0) return this.restart();
+      // パスカット：地を這うパスの通り道にいる相手が、足を出して止める（1本につき1人1回だけ試す）
+      const fl = this.fl;
+      if (fl && fl.kind === 'ground' && fl.by && this.base[fl.by]) {
+        const my = this.teamOf(fl.by);
+        fl.tried = fl.tried || {};
+        for (const id of ids) {
+          if (this.teamOf(id) === my || fl.tried[id] || this.base[id][3] === 0) continue;
+          if (dist(this.disp[id], b) > MOVE.reach) continue;
+          fl.tried[id] = true;
+          if (Math.random() < 0.4) {
+            this.fl = null;
+            this.bv = [0, 0];
+            this.idle = null;
+            this.cuts = (this.cuts || 0) + 1;
+            this.kicked = true; // 触った
+            return;
+          }
+        }
+      }
       if (this.fl) return;
+      // タックル：寄せた子が間合いに入って少しすると、突いてボールを奪う（ボールは奪った子の足元へ転がる）
+      if (this.owner && this.pressers && this.base[this.owner] && this.base[this.owner][3] !== 0) { // GK からは奪わない
+        const q = this.disp[this.owner];
+        let near = null;
+        for (const id of Object.keys(this.pressers)) if (dist(this.disp[id], q) < MOVE.tackle) near = id;
+        if (near) {
+          this.duel = this.duel && this.duel.id === near && this.duel.on === this.owner ? this.duel : { id: near, on: this.owner, t: 0 };
+          this.duel.t += dt;
+          if (this.duel.t > 0.5 && Math.random() < dt * (0.4 + this.tacOf(near).press * 1.2)) {
+            const r = this.disp[near];
+            const d = Math.max(0.3, dist(r, b));
+            this.lock[this.owner] = 0.9;
+            this.owner = null;
+            this.idle = null;
+            this.bv = [((r[0] - b[0]) / d) * 4.5, ((r[1] - b[1]) / d) * 4.5];
+            this.tackles = (this.tackles || 0) + 1;
+            this.kicked = true; // 触った
+            this.duel = null;
+            return;
+          }
+        } else this.duel = null;
+      }
       if (!this.owner) return; // 誰かが拾いに行く（targets で）
       // 持ってから出すまでの時間は攻めの速さで決まる（縦に速いは早く、ポゼッションはためる）
       const tc = this.tacOf(this.owner);
@@ -514,7 +582,7 @@
       const far = depth < 30 ? 45 : 22 + tc.tempo * 14; // 速い攻めほど遠くへ蹴る。自陣の深くからは大きく蹴り出す
       let tgt = null;
       // 相手の陣の深くほど、相手に引っかかる（守りが固まっていて通らない）
-      if (Math.random() < 0.12 + 0.3 * clamp((depth - 60) / 40, 0, 1)) {
+      if (Math.random() < 0.06 + 0.25 * clamp((depth - 60) / 40, 0, 1)) {
         // 相手に渡ってしまうパス
         let bd = 30;
         for (const id of ids) if (this.teamOf(id) !== my && this.base[id][3] !== 0) { const d = dist(this.disp[id], q); if (d < bd && d > 5) { bd = d; tgt = id; } }
@@ -527,6 +595,7 @@
         });
         let c = pick(back, far);
         if (!c.length) c = pick(20, 30); // 前に出せる味方がいなければ戻してでもつなぐ
+        if (!c.length) c = pick(30, 65); // それでもいなければ大きく蹴る
         // 前の味方ほど選ばれやすい（速い攻めほど強く）
         const wt = c.map((id) => 1 + Math.max(0, (this.disp[id][1] - q[1]) * atk) * Math.max(tc.tempo, depth < 30 ? 0.9 : 0) * 0.2); // 自陣の深くからは前へ逃がす
         let r0 = Math.random() * wt.reduce((a, x) => a + x, 0);
@@ -552,7 +621,9 @@
       let pos;
       let who = null;
       const goal = Math.abs(b[0] - 34) < 3.7 && ((b[1] < 0 && b[1] > -2.3) || (b[1] > L && b[1] < L + 2.3));
-      for (const id of Object.keys(this.base)) { this.disp[id] = this.shapePos(id); this.vel[id] = [0, 0]; }
+      // 得点のあとだけ暗転して並び直す。ゴールキック・スローインは、ボールを置いて蹴る子が取りに走る（早送り）
+      if (!goal) this.cut = 0;
+      else for (const id of Object.keys(this.base)) { this.disp[id] = this.shapePos(id); this.vel[id] = [0, 0]; }
       if (goal) {
         pos = [34, L / 2];
         const conceded = b[1] < 0 ? m.home : m.away; // y=0 側はホームのゴール
@@ -567,6 +638,12 @@
         for (const id of Object.keys(this.base)) { const d = dist(this.disp[id], pos); if (d < bd && this.base[id][3] !== 0) { bd = d; who = id; } }
       }
       this.ball = [pos[0], pos[1], 0];
+      if (!goal && who) {
+        this.owner = null;
+        this.setup = { who, t: 0 };
+        this.ff = true; // 点検用：ボールを置き直したコマ
+        return;
+      }
       if (who) {
         this.disp[who] = [pos[0] + (pos[0] < 1 ? -0.6 : pos[0] > W - 1 ? 0.6 : 0), pos[1] - this.atkDir(who)[1] * 0.6];
         this.owner = who;
@@ -595,12 +672,14 @@
         if (this.fl) return [[this.fl.to[0], this.fl.to[1]], MOVE.sprint];
         return [[ball[0], ball[1]], MOVE.sprint];
       }
+      if (this.scene && this.chaser === id) return [[ball[0], ball[1]], MOVE.sprint];
       if (this.scene) {
         if (this.stgt[id]) return [this.stgt[id], MOVE.sprint];
         return [this.shapePos(id), MOVE.jog * 0.85];
       }
       // 合間：パスを受ける子は落ちる所へ。誰も持っていなければ、いちばん近い子が拾いに行く
       if (this.idle && this.idle.recv === id && this.fl) return [[this.fl.to[0], this.fl.to[1]], MOVE.sprint];
+      if (this.setup && this.setup.who === id) return [[ball[0], ball[1]], MOVE.sprint];
       if (!this.owner && !this.fl && this.chaser === id) return [[ball[0], ball[1]], MOVE.sprint];
       // プレス：持っている相手へ寄せる（1人目は正面、2人目は内側を切る）。奪いはしない
       const pr = this.pressers && this.pressers[id];
@@ -639,10 +718,18 @@
     }
     stepPlayers(dt) {
       // 誰も持っていない転がるボールを追う子（合間だけ）
+      // 場面でも、台本の受け手がいない転がる球（クリア・こぼれ球）は、いちばん近い子が追う。GK は自分のゴール前の球だけ
       this.chaser = null;
-      if (!this.scene && !this.owner) {
+      const bOut = this.ball[0] < -0.3 || this.ball[0] > W + 0.3 || this.ball[1] < -0.3 || this.ball[1] > L + 0.3;
+      if (!this.owner && !(this.scene && (this.expect || this.fl || this.pre || bOut))) { // 場面で外へ出た球（網の中など）は追わない
         let bd = 1e9;
-        for (const id of Object.keys(this.disp)) { const d = dist(this.disp[id], this.ball); if (d < bd && this.base[id] && this.base[id][3] !== 0) { bd = d; this.chaser = id; } }
+        for (const id of Object.keys(this.disp)) {
+          const b = this.base[id];
+          if (!b) continue;
+          if (b[3] === 0 && Math.abs(this.ball[1] - (this.atkDir(id)[1] > 0 ? 0 : L)) > 16) continue;
+          const d = dist(this.disp[id], this.ball);
+          if (d < bd) { bd = d; this.chaser = id; }
+        }
       }
       this.pressers = this.scene ? null : this.pressPlan();
       for (const id of Object.keys(this.base)) {
@@ -655,7 +742,20 @@
         const dd = Math.hypot(dx, dy);
         // 着く前に減速する（止まりたい所で止まれる速さ）
         const want = dd > 0.05 ? (thru ? vmax : Math.min(vmax, Math.sqrt(2 * MOVE.acc * 0.85 * dd))) : 0; // thru：通り道の点では止まらない
-        const dv = [(dd > 0.05 ? (dx / dd) * want : 0) - v[0], (dd > 0.05 ? (dy / dd) * want : 0) - v[1]];
+        const des = [dd > 0.05 ? (dx / dd) * want : 0, dd > 0.05 ? (dy / dd) * want : 0];
+        // 近すぎる子からは離れる（体が重ならない）。ボールに向かう子は押されにくい
+        const soft = id === this.owner || id === this.expect || (this.pressers && this.pressers[id]) ? 0.4 : 1;
+        for (const o of Object.keys(this.disp)) {
+          if (o === id || !this.base[o]) continue;
+          const q = this.disp[o];
+          const ox = p[0] - q[0];
+          const oy = p[1] - q[1];
+          const od = Math.hypot(ox, oy);
+          if (od < MOVE.space && od > 1e-3) { const f = ((MOVE.space - od) / MOVE.space) * 7 * soft; des[0] += (ox / od) * f; des[1] += (oy / od) * f; }
+        }
+        const dsp = Math.hypot(des[0], des[1]);
+        if (dsp > MOVE.sprint) { des[0] *= MOVE.sprint / dsp; des[1] *= MOVE.sprint / dsp; } // 押されても全力より速くは走らない
+        const dv = [des[0] - v[0], des[1] - v[1]];
         const dvn = Math.hypot(dv[0], dv[1]);
         const mx = MOVE.acc * dt;
         if (dvn > mx) { dv[0] *= mx / dvn; dv[1] *= mx / dvn; }
@@ -671,7 +771,7 @@
     update(dt) {
       if (!this.match) return;
       this.kicked = false;
-      const ff = this.scene && this.pre ? MOVE.ff : 1;
+      const ff = this.scene && this.pre ? (this.pre.set ? MOVE.ff * 1.6 : MOVE.ff) : this.setup && !this.scene ? MOVE.ff * 1.6 : 1;
       this.ff = ff > 1;
       const n = ff > 1 ? 3 : 1;
       for (let i = 0; i < n; i++) this.step1((dt * ff) / n);
@@ -914,7 +1014,7 @@
       // 早送りの印（場面の入り）
       if (this.ff) {
         ctx.font = '800 12px system-ui, sans-serif';
-        const tx = '▶▶ 場面へ';
+        const tx = this.scene ? '▶▶ 場面へ' : '▶▶ 再開';
         const tw = ctx.measureText(tx).width + 16;
         ctx.fillStyle = 'rgba(15,25,40,.8)';
         this.rr(ctx, (w - tw) / 2, h - 30, tw, 20, 10);
