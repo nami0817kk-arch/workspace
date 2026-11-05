@@ -146,6 +146,93 @@ void main() {
     });
   });
 
+  group('動画の直後は重ねない・広告を消す案内', () {
+    Future<void> due(Monetization m) async {
+      for (var i = 0; i < Monetization.interstitialEvery; i++) {
+        await m.tournamentPlayed();
+      }
+    }
+
+    test('動画を見た2分のあいだは全画面広告を出さず、番は次へ回す', () async {
+      final (m, ads, _) = await open();
+      var now = DateTime(2026, 11, 5, 12);
+      m.clock = () => now;
+      await due(m);
+      expect(await m.beforeRecover(), RecoverGate.granted);
+      now = now.add(const Duration(seconds: 30));
+      expect(await m.beforeAction(), isFalse);
+      expect(ads.interstitials, 0);
+      expect(m.interstitialDue, isTrue, reason: '番は消えない');
+      now = now.add(Monetization.rewardedCooldown);
+      expect(await m.beforeAction(), isTrue);
+      expect(ads.interstitials, 1);
+    });
+
+    test('途中で閉じた動画も「見た」に数える。出せなかった動画は数えない', () async {
+      final (m, ads, _) = await open();
+      final now = DateTime(2026, 11, 5, 12);
+      m.clock = () => now;
+      await due(m);
+      ads.rewardedReady = false;
+      expect(await m.beforeRecover(), RecoverGate.unavailable);
+      expect(await m.beforeAction(), isTrue, reason: '動画は出ていないので、全画面広告は出してよい');
+      await due(m);
+      ads
+        ..rewardedReady = true
+        ..watchToEnd = false;
+      expect(await m.beforeRecover(), RecoverGate.declined);
+      expect(await m.beforeAction(), isFalse);
+    });
+
+    test('案内は全画面広告の2回目と、その後4回ごとに1度だけ。出せなかった広告は数えない', () async {
+      final (m, ads, _) = await open();
+      final offers = <int>[];
+      for (var i = 1; i <= 10; i++) {
+        await due(m);
+        if (i == 4) {
+          ads.interstitialReady = false;
+          expect(await m.beforeAction(), isFalse);
+          ads.interstitialReady = true;
+        }
+        expect(await m.beforeAction(), isTrue);
+        if (m.removeAdsOfferDue) {
+          offers.add(m.interstitialsShown);
+          await m.markRemoveAdsOffered();
+          expect(m.removeAdsOfferDue, isFalse, reason: '同じ番で二度出さない');
+        }
+      }
+      expect(m.interstitialsShown, 10);
+      expect(offers, [2, 6, 10]);
+    });
+
+    test('数えは端末に残る(再起動しても同じ番で二度出さない)', () async {
+      final (m, _, _) = await open({'interstitialsShown': 2, 'removeAdsOfferedAt': 2});
+      expect(m.removeAdsOfferDue, isFalse);
+      final (m2, _, _) = await open({'interstitialsShown': 2});
+      expect(m2.removeAdsOfferDue, isTrue);
+    });
+
+    test('広告を消した人には案内しない', () async {
+      final (m, _, _) = await open({'interstitialsShown': 2, 'adFree': true});
+      expect(m.removeAdsOfferDue, isFalse);
+    });
+
+    test('コントローラ: 2回目の全画面広告のあとに案内が立つ。ストアに繋がらなければ立てない', () async {
+      for (final available in [true, false]) {
+        final (m, ads, store) = await open({'interstitialsShown': 1});
+        store.available = available;
+        final c = GameController(rng: Random(1), events: false, money: m);
+        c.setClutchPolicy(null);
+        c.game = Game(eventsEnabled: false, player: kid(), rng: Random(1), slot: 1);
+        await due(m);
+        await c.play(Action.rest);
+        expect(ads.interstitials, 1);
+        expect(c.offerRemoveAds, available, reason: 'ストア $available');
+        expect(m.removeAdsOfferDue, isFalse, reason: '出さなかったときも、同じ番では二度聞かない');
+      }
+    });
+  });
+
   group('動画で回復', () {
     test('最後まで見れば回復できる', () async {
       final (m, ads, _) = await open();
@@ -389,6 +476,32 @@ void main() {
       // ストアが返す半角の円記号は、同梱フォントにある全角の円記号で出す(displayPrice)。
       expect(find.text('広告を消す(￥370)'), findsOneWidget);
       expect(find.text('購入を復元'), findsOneWidget);
+    });
+
+    testWidgets('全画面広告のあとの案内から「広告を消す」を買える。「今はいい」なら何も起きない', (tester) async {
+      tester.view.physicalSize = const Size(800, 2400);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      for (final buy in [false, true]) {
+        final (m, ads, _) = await open({'interstitialsShown': 1, 'tournamentsSinceAd': Monetization.interstitialEvery});
+        final c = GameController(rng: Random(1), events: false, money: m);
+        c.setClutchPolicy(null);
+        c.game = Game(eventsEnabled: false, player: kid(), rng: Random(1), slot: 1);
+        await tester.pumpWidget(BasketballCareerApp(controller: c));
+        await tester.pumpAndSettle();
+        await tester.runAsync(() => c.play(Action.rest));
+        await tester.pumpAndSettle();
+        expect(ads.interstitials, 1);
+        expect(find.text('広告なしで遊ぶ'), findsOneWidget);
+        expect(find.text('広告を消す(￥370)'), findsOneWidget);
+        await tester.tap(find.text(buy ? '広告を消す(￥370)' : '今はいい'));
+        await tester.pumpAndSettle();
+        expect(find.text('広告なしで遊ぶ'), findsNothing);
+        expect(m.adFree, buy);
+        expect(c.offerRemoveAds, isFalse);
+        if (buy) expect(find.text('ありがとう! 広告が出なくなった。'), findsOneWidget);
+        await tester.pumpWidget(const SizedBox());
+      }
     });
 
     testWidgets('疲れていると「動画を見て元気になる」が出て、押すと回復する', (tester) async {
