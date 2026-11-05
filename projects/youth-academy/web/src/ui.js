@@ -105,7 +105,7 @@
     seed: (Date.now() % 100000) + 1,
     cfg: null, // 保存した布陣・役割・戦い方
     autoStop: true,
-    speed: '1',
+    speed: store.get('speed', '1'),
     selected: 0,
     ptab: 'tactic',
     match: null,
@@ -872,6 +872,8 @@
     render();
   }
 
+  // 試合を見る速さ：[キー, ボタンの字, 倍率]。「見どころ」は場面のあいだの時間を飛ばす
+  const SPEEDS = [['0.5', '½×', 0.5], ['1', '1×', 1], ['2', '2×', 2], ['4', '4×', 4], ['hl', '見どころ', 1]];
   function viewPlay(main) {
     const m = app.match;
     const wrap = h('div', { class: 'play' });
@@ -904,7 +906,7 @@
     setTimeout(() => R.resize(), 0);
 
     function refreshSpeeds() {
-      speeds.replaceChildren(...[['1', '1×'], ['2', '2×'], ['hl', '見どころ']].map(([k, n]) => h('button', { class: S.speed === k ? 'on' : '', onclick: () => { S.speed = k; app.speed = k; refreshSpeeds(); } }, n)));
+      speeds.replaceChildren(...SPEEDS.map(([k, n]) => h('button', { class: S.speed === k ? 'on' : '', onclick: () => { S.speed = k; app.speed = k; store.set('speed', k); refreshSpeeds(); } }, n)));
     }
     refreshSpeeds();
     function refreshAuto() {
@@ -1023,15 +1025,18 @@
     }
 
     S.acc = 0;
+    // 速さ：絵の動き・時計・場面がすべて同じ倍率で進む。速いときは物理を細かく刻む
+    const speedK = () => (SPEEDS.find((x) => x[0] === S.speed) || ['1', '', 1])[2];
+    const runR = (t) => {
+      for (let left = t; left > 1e-6; left -= 1 / 50) R.update(Math.min(left, 1 / 50));
+    };
     function frame(ts) {
       S.raf = requestAnimationFrame(frame);
       const dt = Math.min(0.05, ((ts - (S.last || ts)) / 1000) || 0.016);
       S.last = ts;
       if (!S.paused) {
         if (S.mode === 'scene') {
-          const k = S.speed === '2' ? 1.7 : 1;
-          const dts = dt * k;
-          R.update(dts);
+          runR(dt * speedK());
           const sc = S.sc;
           // 実況の進み
           for (let i = S.beatShown + 1; i < sc.beats.length; i++) if (R.t >= sc.beats[i].at) { setComm(sc.minute, sc.beats[i].text); S.beatShown = i; }
@@ -1043,7 +1048,7 @@
           }
           if (R.t >= sc.dur) endScene();
         } else {
-          R.update(dt);
+          runR(S.speed === 'hl' ? dt : dt * speedK()); // 見どころは合間を飛ばすだけで、動きは等倍
           if (S.hold > 0) S.hold -= dt;
           else {
             if (S.holdScene) {
@@ -1052,8 +1057,8 @@
               sceneHead.replaceChildren();
               bannerBox.replaceChildren();
             }
-            S.acc += dt;
-            const need = S.speed === '1' ? 0.8 : S.speed === '2' ? 0.4 : 0.035;
+            S.acc += S.speed === 'hl' ? dt : dt * speedK();
+            const need = S.speed === 'hl' ? 0.035 : 0.8;
             if (S.acc >= need) {
               S.acc = 0;
               handle(m.step());

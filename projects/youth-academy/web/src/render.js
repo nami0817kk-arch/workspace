@@ -100,6 +100,16 @@
     teamOf(id) {
       return this.base[id] && this.base[id][2];
     }
+    // 試合の流れ：そのチームが押している割合（0.2〜0.8）。エンジンの力の差・得点差・時間に、直前の場面の勢いを足す
+    shareOf(id) {
+      const t = this.teamOf(id);
+      const f = this.flow == null ? 0.5 : this.flow;
+      return t && this.match && t === this.match.away ? 1 - f : f;
+    }
+    // 次の見どころが近い（2分以内）とき、押している側が攻め上がる
+    surgeOf(id) {
+      return this.surge && this.shareOf(id) > 0.5;
+    }
     tacOf(id) {
       const t = this.teamOf(id);
       return Object.assign({ tempo: 0.5, width: 0.5, line: 0.5, press: 0.5 }, t && t.tactic);
@@ -123,7 +133,9 @@
       const tags = (YA.ROLE_DEF && YA.ROLE_DEF[s.role] && YA.ROLE_DEF[s.role].tags) || [];
       const has = (k) => tags.indexOf(k) >= 0;
       let x = b[0];
+      yr += (this.shareOf(id) - 0.5) * 22; // 押している側は全体が高く、押されている側は下がる
       if (mine) {
+        if (this.surgeOf(id)) yr += 5;
         // 攻め：全体が押し上げ、幅は戦い方の広さ（サイド攻撃は外に張る）
         yr += 3 + tc.tempo * 4;
         x = 34 + (x - 34) * (0.8 + tc.width * 0.6);
@@ -160,6 +172,7 @@
       const fr = sc.frames || [];
       this.scene = sc;
       this.setup = null;
+      this.mom = clamp((this.mom || 0) + (sc.side === 'away' ? -0.12 : 0.12) * (sc.goal ? 1.6 : 1), -0.25, 0.25);
       this.t = 0;
       this.idle = null;
       this.focus = Object.values(sc.actors || {});
@@ -534,7 +547,7 @@
           if (this.teamOf(id) === my || fl.tried[id] || this.base[id][3] === 0) continue;
           if (dist(this.disp[id], b) > MOVE.reach) continue;
           fl.tried[id] = true;
-          if (Math.random() < 0.4) {
+          if (Math.random() < 0.4 * (0.4 + this.shareOf(id) * 1.2)) {
             this.fl = null;
             this.bv = [0, 0];
             this.idle = null;
@@ -553,7 +566,7 @@
         if (near) {
           this.duel = this.duel && this.duel.id === near && this.duel.on === this.owner ? this.duel : { id: near, on: this.owner, t: 0 };
           this.duel.t += dt;
-          if (this.duel.t > 0.5 && Math.random() < dt * (0.4 + this.tacOf(near).press * 1.2)) {
+          if (this.duel.t > 0.5 && Math.random() < dt * (0.4 + this.tacOf(near).press * 1.2) * (0.4 + this.shareOf(near) * 1.2)) {
             const r = this.disp[near];
             const d = Math.max(0.3, dist(r, b));
             this.lock[this.owner] = 0.9;
@@ -570,7 +583,7 @@
       if (!this.owner) return; // 誰かが拾いに行く（targets で）
       // 持ってから出すまでの時間は攻めの速さで決まる（縦に速いは早く、ポゼッションはためる）
       const tc = this.tacOf(this.owner);
-      const s = (this.idle = this.idle && this.idle.carrier === this.owner ? this.idle : { carrier: this.owner, t: 0, dur: 0.35 + (1 - tc.tempo) * 1.0 + Math.random() * (0.4 + (1 - tc.tempo) * 0.8) });
+      const s = (this.idle = this.idle && this.idle.carrier === this.owner ? this.idle : { carrier: this.owner, t: 0, dur: (0.35 + (1 - tc.tempo) * 1.0 + Math.random() * (0.4 + (1 - tc.tempo) * 0.8)) * (this.surgeOf(this.owner) ? 0.7 : 1) });
       s.t += dt;
       if (s.t < s.dur) return;
       const me = this.owner;
@@ -582,7 +595,7 @@
       const far = depth < 30 ? 45 : 22 + tc.tempo * 14; // 速い攻めほど遠くへ蹴る。自陣の深くからは大きく蹴り出す
       let tgt = null;
       // 相手の陣の深くほど、相手に引っかかる（守りが固まっていて通らない）
-      if (Math.random() < 0.06 + 0.25 * clamp((depth - 60) / 40, 0, 1)) {
+      if (Math.random() < (0.06 + 0.25 * clamp((depth - 60) / 40, 0, 1)) * clamp(1.9 - this.shareOf(me) * 1.8, 0.5, 1.6)) { // 押している側はミスが少ない
         // 相手に渡ってしまうパス
         let bd = 30;
         for (const id of ids) if (this.teamOf(id) !== my && this.base[id][3] !== 0) { const d = dist(this.disp[id], q); if (d < bd && d > 5) { bd = d; tgt = id; } }
@@ -597,7 +610,7 @@
         if (!c.length) c = pick(20, 30); // 前に出せる味方がいなければ戻してでもつなぐ
         if (!c.length) c = pick(30, 65); // それでもいなければ大きく蹴る
         // 前の味方ほど選ばれやすい（速い攻めほど強く）
-        const wt = c.map((id) => 1 + Math.max(0, (this.disp[id][1] - q[1]) * atk) * Math.max(tc.tempo, depth < 30 ? 0.9 : 0) * 0.2); // 自陣の深くからは前へ逃がす
+        const wt = c.map((id) => 1 + Math.max(0, (this.disp[id][1] - q[1]) * atk) * Math.max(tc.tempo + (this.surgeOf(me) ? 0.6 : 0), depth < 30 ? 0.9 : 0) * 0.2); // 自陣の深くからは前へ逃がす。見どころの前は前へ
         let r0 = Math.random() * wt.reduce((a, x) => a + x, 0);
         for (let i = 0; i < c.length && !tgt; i++) if ((r0 -= wt[i]) <= 0) tgt = c[i];
         if (!tgt && c.length) tgt = c[c.length - 1];
@@ -778,6 +791,12 @@
     }
     step1(dt) {
       const m = this.match;
+      const share = m.homeShare ? m.homeShare() : 0.5;
+      this.mom = (this.mom || 0) * Math.exp(-dt / 8); // 場面の勢いは8秒ほどで薄れる
+      const want = clamp(share + this.mom, 0.2, 0.8);
+      this.flow = this.flow == null ? want : this.flow + (want - this.flow) * (1 - Math.exp(-dt / 2));
+      const nk = (m.keyMinutes || []).find((k) => k > m.min);
+      this.surge = !this.scene && nk != null && nk - m.min <= 2;
       this.clock = (this.clock || 0) + dt;
       this.base = this.basePositions();
       for (const id of Object.keys(this.disp)) if (!this.base[id]) { delete this.disp[id]; delete this.vel[id]; if (this.owner === id) this.owner = null; }
@@ -1010,6 +1029,26 @@
         ctx.textAlign = 'center';
         ctx.fillText(cp.text, w / 2, y + 16);
         ctx.globalAlpha = 1;
+      }
+      // 流れのバー（上の真ん中）：左がホーム、右がアウェイ。押している側が長い
+      if (kits && this.flow != null) {
+        const bw = Math.min(160, w * 0.3);
+        const bx = (w - bw) / 2;
+        const by = 6;
+        const fh = bw * this.flow;
+        ctx.fillStyle = 'rgba(10,18,30,.7)';
+        this.rr(ctx, bx - 3, by - 3, bw + 6, 12, 6);
+        ctx.fill();
+        ctx.fillStyle = kits.home.shirt;
+        ctx.fillRect(bx, by, fh, 6);
+        ctx.fillStyle = kits.away.shirt;
+        ctx.fillRect(bx + fh, by, bw - fh, 6);
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(bx + bw / 2 - 0.5, by - 2, 1, 10);
+        ctx.font = '700 9px system-ui, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillStyle = 'rgba(255,255,255,.85)';
+        ctx.fillText('流れ', w / 2, by + 17);
       }
       // 早送りの印（場面の入り）
       if (this.ff) {

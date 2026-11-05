@@ -23,6 +23,7 @@ const measure = (type) => {
     home.tactic = Object.assign({ type }, YA.TACTICS[type]);
     away.tactic = Object.assign({ type: 'ポゼッション' }, YA.TACTICS['ポゼッション']);
     const m = new YA.Match({ seed, home, away, settings: { autoStop: false } });
+    m.homeShare = () => 0.5; // 力の差による「流れ」は切り離して、戦い方の差だけを見る
     const R = new YA.Renderer(cv);
     R.setMatch(m);
     let held = 0;
@@ -59,5 +60,30 @@ ok(r['ハイプレス'].line - r['堅守'].line > 8, 'ハイプレスの最終�
 ok(r['サイド攻撃'].width - r['堅守'].width > 5, 'サイド攻撃の幅が堅守より 5m 以上広い（' + (r['サイド攻撃'].width - r['堅守'].width).toFixed(1) + 'm）');
 ok(r['堅守'].press - r['ハイプレス'].press > 2, 'ハイプレスは持っている相手に堅守より 2m 以上近い（' + (r['堅守'].press - r['ハイプレス'].press).toFixed(1) + 'm）');
 ok(r['ポゼッション'].hold > r['縦に速い'].hold * 1.4, 'ポゼッションは縦に速いより長く持つ（' + r['ポゼッション'].hold.toFixed(2) + '秒 / ' + r['縦に速い'].hold.toFixed(2) + '秒）');
+// 試合の流れ：押している側（homeShare が高い）ほどボールを持ち、相手陣にいる
+const flowOf = (share) => {
+  let poss = 0, n = 0, deep = 0, fr = 0;
+  for (const seed of [3, 8, 21]) {
+    const w = YA.newWorld(seed);
+    const home = YA.teamFromWorld(w, 'A');
+    const away = YA.makeOpponent(YA.opponentOf(w), seed * 7);
+    const m = new YA.Match({ seed, home, away, settings: { autoStop: false } });
+    m.homeShare = () => share;
+    const R = new YA.Renderer(cv);
+    R.setMatch(m);
+    for (let i = 0; i < 60 * 90; i++) {
+      R.update(1 / 60);
+      fr++;
+      if (R.owner) { n++; if (R.base[R.owner][2] === home) poss++; }
+      if (R.ball[1] > 70) deep++;
+    }
+  }
+  return { poss: poss / n, deep: deep / fr };
+};
+const lo = flowOf(0.3);
+const hi = flowOf(0.7);
+console.log('流れ 0.3：保持 ' + (lo.poss * 100).toFixed(0) + '% 相手陣の奥 ' + (lo.deep * 100).toFixed(0) + '%　流れ 0.7：保持 ' + (hi.poss * 100).toFixed(0) + '% 相手陣の奥 ' + (hi.deep * 100).toFixed(0) + '%');
+ok(hi.poss - lo.poss > 0.1, '押している側がボールを長く持つ');
+ok(hi.deep > lo.deep * 1.5, '押している側は相手陣の奥にいる時間が長い');
 console.log(fails ? '失敗 ' + fails : '戦い方の動きの点検: すべて通過');
 process.exit(fails ? 1 : 0);
