@@ -369,6 +369,10 @@
     }
 
     pickAttacker() {
+      return this.rng() < this.homeShare() ? this.home : this.away;
+    }
+    // いまホームが押している割合（0.22〜0.78）。場面の攻め手の選び方と、試合の絵の「流れ」に使う
+    homeShare() {
       const h = this.home;
       const a = this.away;
       let d = this.attPower(h) - this.defPower(a) - (this.attPower(a) - this.defPower(h));
@@ -377,8 +381,7 @@
       // 負けているほうが押し込む
       const sc = this.score.home - this.score.away;
       d += -sc * 0.3 * (this.min / 90);
-      const pHome = clamp(0.5 + d * 0.055, 0.22, 0.78);
-      return this.rng() < pHome ? h : a;
+      return clamp(0.5 + d * 0.055, 0.22, 0.78);
     }
 
     // 攻撃側の選手を、能力・特性・役割・指示で重み付けして選ぶ

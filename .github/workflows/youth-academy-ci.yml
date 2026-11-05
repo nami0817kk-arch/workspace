@@ -37,6 +37,8 @@ jobs:
         run: |
           node tool/sim.js
           node tool/ballmotion.js
+          node tool/tactics.js
+          node tool/offball.js
           node tool/world.js
           node tool/balance.js
 
