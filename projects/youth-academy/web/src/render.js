@@ -26,6 +26,7 @@
     ff: 2.6, // 場面の入りの早送りの倍率
     space: 2.2, // これより近づくと離れようとする
     tackle: 2.4, // 寄せた子がこの距離に入ると、奪いにいく
+    celeb: 3.2, // 得点の喜びの長さ（秒。ボールが網に入ってから再開まで）
   };
   YA.MOVE = MOVE;
 
@@ -61,6 +62,8 @@
       this.kicked = false; // 点検用：このコマで蹴った
       this.cam = { cy: L / 2, cx: W / 2, zoom: 1 };
       this.trails = [];
+      this.dive = null; // シュートに飛ぶ GK
+      this.celeb = null; // 得点の喜び
     }
 
     resize() {
@@ -327,6 +330,8 @@
     }
     startScene(sc) {
       const fr = sc.frames || [];
+      if (this.celeb) this.restart(); // 喜びの途中で次の場面が来たら、並び直してから
+      this.dive = null;
       this.scene = sc;
       this.setup = null;
       this.mom = clamp((this.mom || 0) + (sc.side === 'away' ? -0.12 : 0.12) * (sc.goal ? 1.6 : 1), -0.25, 0.25);
@@ -343,7 +348,8 @@
       for (let k = 0; k + 1 < fr.length; k++) {
         const a = fr[k];
         const b = fr[k + 1];
-        const ha = this.holderOf(a, true);
+        // 触る子：コマで持っている子。いなければ、ひとつ前の出来事の受け手（少し離れた所で合わせるヘディングなど）
+        const ha = this.holderOf(a, true) || (ev.length && ev[ev.length - 1].kind === 'kick' && ev[ev.length - 1].recv) || null;
         let hb = this.holderOf(b, true);
         // 少し離れていても、落ちる所のいちばん近くにいる子が受け手（走り込んで合わせる）
         if (!hb && (b.ball[2] || 0) <= 3.6 && b.ball[1] > 0 && b.ball[1] < L) {
@@ -563,10 +569,19 @@
       const d = Math.max(0.5, dist(from, to));
       const z1 = Math.max(0, to[2] || 0);
       const shotLike = to[1] < 0.5 || to[1] > L - 0.5;
+      // GK が止めるシュート：台本では GK の所へ蹴るだけなので、浮き球のパスに見えないようシュートの速さで飛ばす
+      const lastKick = this.ev && this.ev.slice(this.evI + 1).every((x) => x.kind !== 'kick');
+      const save = !shotLike && this.scene && this.scene.outcome === 'saved' && lastKick && recv && by && this.base[recv] && this.base[recv][3] === 0 && this.teamOf(recv) !== this.teamOf(by) && (to[1] < 7 || to[1] > L - 7) && dist(from, to) > 4;
       let kind = 'ground';
       let T;
       let v0 = 0;
-      if (shotLike) {
+      if (save) {
+        // 正面に蹴ると GK が前へ倒れるだけに見えるので、GK の左右どちらかへ少しずらして横っ飛びで止めさせる
+        const g = this.disp[recv];
+        if (g && Math.abs(to[0] - g[0]) < 1.4) to = [clamp(g[0] + (to[0] >= g[0] ? 1 : -1) * 1.7, 31, 37), to[1], to[2]];
+        kind = 'shot';
+        T = dist(from, to) / (MOVE.shot * 0.92);
+      } else if (shotLike) {
         kind = 'shot';
         // 結果に合わせて狙いを枠に収める：得点は枠の中、外れは枠の外（横か上）
         const oc = this.scene && this.scene.outcome;
@@ -581,8 +596,24 @@
         } else T = (v0 - MOVE.passEnd) / MOVE.fric;
       }
       const h = kind === 'loft' ? Math.min(9, 1.2 + d * 0.16) : kind === 'shot' ? Math.min(1.4, d * 0.04) : 0;
-      this.fl = { by, from, to: [to[0], to[1], Math.max(0, to[2] || 0)], d: Math.max(0.5, dist(from, to)), T: Math.max(0.15, T), t: 0, kind, v0, h, z0: from[2] || 0 };
+      this.fl = { by, from, to: [to[0], to[1], Math.max(0, to[2] || 0)], d: Math.max(0.5, dist(from, to)), T: Math.max(0.15, T), t: 0, kind, v0, h, z0: from[2] || 0, save };
       if (by) this.lock[by] = 0.3;
+      // シュートには守る側の GK が飛ぶ：止める場面は落ちる所へ届き、決まる場面は手が届かない（6割まで）
+      if (kind === 'shot' && by && this.base[by]) {
+        const gk = Object.keys(this.base).find((id) => this.base[id][3] === 0 && this.teamOf(id) !== this.teamOf(by));
+        const g = gk && this.disp[gk];
+        if (g) {
+          const gy = to[1] < L / 2 ? 0.8 : L - 0.8;
+          const u = Math.abs(to[1] - from[1]) > 0.5 ? clamp((gy - from[1]) / (to[1] - from[1]), 0, 1) : 1;
+          const cross = save ? [to[0], to[1]] : [from[0] + (to[0] - from[0]) * u, gy];
+          const reach = save ? 1 : 0.6;
+          // 飛ぶのは一瞬：球が着く少し前に伸びきるように飛び出し（早くても蹴られて 0.12 秒あと）、0.5 秒倒れている
+          const dur = clamp(T - 0.2, 0.18, 0.38);
+          const t0 = Math.max(0.12, T - dur - 0.06);
+          this.dive = { id: gk, from: g.slice(), tgt: [g[0] + (cross[0] - g[0]) * reach, g[1] + (cross[1] - g[1]) * reach], t: 0, t0, dur, end: t0 + dur + 0.5 };
+          this.dives = (this.dives || 0) + 1;
+        }
+      }
       this.owner = null;
       this.expect = recv || null;
       this.kicks++;
@@ -607,10 +638,24 @@
         if (u >= 1) {
           // 届いた：そのまま少し転がる（シュートはネットか、ラインの外へ）
           // 浮き球は弾んで少し遅くなるだけ（急に止まらない）
-          const vEnd = fl.kind === 'ground' ? MOVE.passEnd : fl.kind === 'loft' ? MOVE.loft * 0.72 : MOVE.shot * 0.95;
+          // GK が止めた球は手の中で止まる（触った扱い）
+          const vEnd = fl.save ? 0.8 : fl.kind === 'ground' ? MOVE.passEnd : fl.kind === 'loft' ? MOVE.loft * 0.72 : MOVE.shot * 0.95;
           this.bv = [dx * vEnd, dy * vEnd];
-          this.ball[2] = fl.kind === 'shot' ? fl.to[2] : 0;
+          this.ball[2] = fl.kind === 'shot' && !fl.save ? fl.to[2] : 0;
           this.fl = null;
+          if (fl.save) {
+            // 飛びついた GK がつかむ。届いていなければ手で弾く（どちらも触った扱い）
+            const gk = this.expect;
+            this.kicked = true;
+            this.kickHold = 2;
+            this.saves = (this.saves || 0) + 1;
+            if (gk && this.disp[gk] && dist(this.disp[gk], this.ball) < 1.6) {
+              this.catches = (this.catches || 0) + 1; // 点検用
+              this.owner = gk;
+              this.poss = this.teamOf(gk) === this.match.home ? 'home' : 'away';
+            }
+            return;
+          }
           // 届いたあとの残りの時間は転がす（届いたコマで止まって見えないように）
           const over = fl.t - fl.T;
           if (over > 0) this.roll(over);
@@ -694,6 +739,7 @@
         if (this.setup.t > 10 && this.disp[this.setup.who]) { this.disp[this.setup.who] = [b[0], b[1] - this.atkDir(this.setup.who)[1] * 0.6]; this.cut = 0.5; } // 念のため
         return;
       }
+      if (this.celeb && this.celeb.t < MOVE.celeb) return; // 喜んでいるあいだは再開しない
       if (out && !this.fl && this.cut <= 0) return this.restart();
       // パスカット：地を這うパスの通り道にいる相手が、足を出して止める（1本につき1人1回だけ試す）
       const fl = this.fl;
@@ -797,6 +843,7 @@
     restart() {
       const b = this.ball;
       const m = this.match;
+      this.celeb = null;
       this.cut = 0.5;
       this.bv = [0, 0];
       this.fl = null;
@@ -847,6 +894,25 @@
     targetOf(id) {
       const e = this.scene && this.ev && this.ev[this.evI];
       const ball = this.ball;
+      // シュートに飛ぶ GK
+      if (this.dive && this.dive.id === id && this.dive.t < this.dive.end) return [this.disp[id], 0]; // 飛ぶ動きは stepPlayers で決める
+      // 得点の喜び：決めた子はコーナーの方へ走り、味方が集まる。失点した側は持ち場へ歩いて戻る
+      const cb = this.celeb;
+      if (cb && this.base[cb.scorer]) {
+        const sp = this.disp[cb.scorer];
+        if (id === cb.scorer) return [cb.spot, MOVE.sprint * 0.9];
+        const mine = this.teamOf(id) === this.teamOf(cb.scorer);
+        if (mine && this.base[id][3] !== 0) {
+          const i = cb.mates.indexOf(id);
+          if (i >= 0) {
+            const a = (i / Math.max(1, cb.mates.length)) * Math.PI * 2 + 0.6;
+            return [[sp[0] + Math.cos(a) * 3, sp[1] + Math.sin(a) * 3], MOVE.sprint * 0.85];
+          }
+          return [this.shapePos(id), MOVE.jog * 0.6];
+        }
+        if (this.base[id][3] === 0) return [[34, this.atkDir(id)[1] > 0 ? 1.5 : L - 1.5], MOVE.jog * 0.35];
+        return [this.shapePos(id), MOVE.jog * 0.4];
+      }
       // ボールを持っている子
       if (id === this.owner) {
         if (this.pre && this.pre.kicked && id === this.pre.h0) return [[this.pre.f0.ball[0], this.pre.f0.ball[1]], MOVE.dribble];
@@ -949,6 +1015,18 @@
           const od = Math.hypot(ox, oy);
           if (od < MOVE.space && od > 1e-3) { const f = ((MOVE.space - od) / MOVE.space) * 7 * soft; des[0] += (ox / od) * f; des[1] += (oy / od) * f; }
         }
+        // シュートに飛ぶ GK：走るのではなく、0.12 秒おいて決まった時間で飛びつき、伸びたまま少し倒れている
+        const dvI = this.dive && this.dive.id === id && this.dive.t >= this.dive.t0 && this.dive.t < this.dive.end ? this.dive : null;
+        if (dvI) {
+          if (!dvI.go) { dvI.go = true; dvI.from = p.slice(); } // 飛び出す所
+          const u = clamp((dvI.t - dvI.t0) / dvI.dur, 0, 1);
+          const sm = u * u * (3 - 2 * u);
+          const np = [lerp(dvI.from[0], dvI.tgt[0], sm), lerp(dvI.from[1], dvI.tgt[1], sm)];
+          this.vel[id] = [(np[0] - p[0]) / Math.max(dt, 1e-3), (np[1] - p[1]) / Math.max(dt, 1e-3)];
+          this.disp[id] = np;
+          this.speed[id] = 0;
+          continue;
+        }
         const dsp = Math.hypot(des[0], des[1]);
         const vtop = MOVE.sprint * mk.run;
         if (dsp > vtop) { des[0] *= vtop / dsp; des[1] *= vtop / dsp; } // 押されても全力より速くは走らない
@@ -967,7 +1045,8 @@
     // 場面の入り（ボールを最初の位置へつなぐあいだ）は早送りで見せる。中身は同じ物理を細かく刻んで進める
     update(dt) {
       if (!this.match) return;
-      this.kicked = false;
+      this.kicked = this.kickHold > 0; // GK が止めた直後の数コマも触った扱い
+      if (this.kickHold > 0) this.kickHold--;
       const ff = this.scene && this.pre ? (this.pre.set ? MOVE.ff * 1.6 : MOVE.ff) : this.setup && !this.scene ? MOVE.ff * 1.6 : 1;
       this.ff = ff > 1;
       const n = ff > 1 ? 3 : 1;
@@ -992,14 +1071,33 @@
           this.t += dt;
           this.runEvent(dt);
         }
-        if (this.scene && this.scene.outcome === 'goal' && (this.ball[1] < -0.2 || this.ball[1] > L + 0.2)) this.flash = Math.min(1, this.flash + dt * 2);
+        if (this.scene && this.scene.outcome === 'goal' && Math.abs(this.ball[0] - 34) < 3.7 && (this.ball[1] < -0.2 || this.ball[1] > L + 0.2)) { // 網の中（コーナーの球では喜ばない）
+          this.flash = Math.min(1, this.flash + dt * 2);
+          const sc = this.scene;
+          if (!this.celeb && sc.scorer && this.disp[sc.scorer]) {
+            // 決めた子は近いほうのコーナーの手前へ。近くの味方から5人が駆け寄る
+            const p = this.disp[sc.scorer];
+            const end = this.ball[1] < 0 ? 0 : L;
+            const spot = [p[0] < 34 ? 5 : W - 5, end === 0 ? 9 : L - 9];
+            const mates = Object.keys(this.base).filter((id) => id !== sc.scorer && this.base[id][3] !== 0 && this.teamOf(id) === this.teamOf(sc.scorer)).sort((a, b) => dist(this.disp[a] || spot, p) - dist(this.disp[b] || spot, p)).slice(0, 5);
+            this.celeb = { scorer: sc.scorer, spot, mates, t: 0 };
+            this.celebs = (this.celebs || 0) + 1;
+          }
+        }
       } else {
         this.idlePlay(dt);
         this.flash = 0;
       }
       if (this.cut > 0) this.cut = Math.max(0, this.cut - dt);
+      if (this.dive && (this.dive.t += dt) > this.dive.end + 0.3) this.dive = null;
+      if (this.celeb) this.celeb.t += dt;
       this.stepPlayers(dt);
       this.stepBall(dt);
+      // 絵の尾のためのボールの少し前の位置（約0.1秒分）
+      this.bh = this.bh || [];
+      this.bh.push(this.ball.slice());
+      if (this.bh.length > 6) this.bh.shift();
+      if (this.cut > 0.3) this.bh = [];
       this.pickup();
       for (const tr of this.trails) tr.life -= dt * (this.fl ? 0.25 : 1.2);
       this.trails = this.trails.filter((tr) => tr.life > 0);
@@ -1146,9 +1244,15 @@
           ctx.lineTo(q[0] + f[1] * R * 0.7, q[1] - f[0] * R * 0.7);
           ctx.closePath();
           ctx.fill();
-          // 体（シャツの色）と縁（パンツの色）
+          // 体（シャツの色）と縁（パンツの色）。飛んでいる GK は飛ぶ向きに伸びる
+          const dv = this.dive && this.dive.id === id && this.dive.t >= this.dive.t0 && this.dive.t < this.dive.end ? this.dive : null;
           ctx.beginPath();
-          ctx.arc(q[0], q[1], R, 0, Math.PI * 2);
+          if (dv && ctx.ellipse) {
+            const st = Math.sin(clamp((dv.t - dv.t0) / dv.dur, 0, 1) * Math.PI / 2) * clamp((dv.end - dv.t) / 0.25, 0, 1); // 伸びて、倒れたまま、起き上がる
+            const dq = P(dv.tgt[0], dv.tgt[1]);
+            const d0 = P(dv.from[0], dv.from[1]); // 向きは飛び出した所から
+            ctx.ellipse(q[0], q[1], R * (1 + st * 0.75), R * (1 - st * 0.25), Math.atan2(dq[1] - d0[1], dq[0] - d0[0]), 0, Math.PI * 2);
+          } else ctx.arc(q[0], q[1], R, 0, Math.PI * 2);
           ctx.fill();
           ctx.strokeStyle = gk ? '#1b1b1b' : kit.shorts || '#ffffff';
           ctx.lineWidth = Math.max(1.5, R * 0.22);
@@ -1166,13 +1270,55 @@
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
           ctx.fillText(String(p ? p.num : ''), q[0], q[1] + 0.5);
-          if (isF && this.scene && p) labels.push({ q, text: p.num + ' ' + String(p.name).split(' ')[0] });
+          const cb = this.celeb && this.celeb.scorer === id;
+          if (cb) {
+            // 決めた子：広がる輪
+            const k = (this.celeb.t % 0.8) / 0.8;
+            ctx.strokeStyle = 'rgba(255,225,74,' + (1 - k) + ')';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ctx.arc(q[0], q[1], R + 3 + k * R * 1.6, 0, Math.PI * 2);
+            ctx.stroke();
+          }
+          if (((isF && this.scene) || cb) && p) labels.push({ q, text: (cb ? '⚽ ' : '') + p.num + ' ' + String(p.name).split(' ')[0], gold: cb });
         }
         // ボール（高いほど影から離れて大きく見える）
         const b = this.ball;
         const z = Math.max(0, b[2] || 0);
-        const g = P(b[0], b[1]);
-        const br = Math.max(3, s * 0.55) * (1 + z * 0.06);
+        let g = P(b[0], b[1]);
+        const br = Math.max(4, s * 0.68) * (1 + z * 0.06);
+        // 足元の球は丸の下に隠れるので、進む向きの丸の縁に見せる
+        if (this.owner && this.disp[this.owner] && !this.fl) {
+          const oq = P(this.disp[this.owner][0], this.disp[this.owner][1]);
+          const ox = g[0] - oq[0];
+          const oy = g[1] - oq[1];
+          const od = Math.hypot(ox, oy);
+          const want = R + br * 0.35;
+          if (od < want) {
+            const v = this.vel[this.owner] || [0, 0];
+            const sp = Math.hypot(v[0], v[1]);
+            const f = od > 0.5 ? [ox / od, oy / od] : sp > 0.4 ? [v[1] / sp, v[0] / sp] : this.atkDir(this.owner).slice().reverse();
+            g = [oq[0] + f[0] * want, oq[1] + f[1] * want];
+          }
+        }
+        // 速い球（シュート・強いパス）は少しの尾を引く
+        const bh = this.bh || [];
+        if (bh.length > 2 && !this.cut) {
+          const o = bh[0];
+          const sp = dist(o, b) / Math.max(0.02, (bh.length - 1) / 50);
+          if (sp > 12) {
+            const a = P(o[0], o[1]);
+            const gr = ctx.createLinearGradient ? ctx.createLinearGradient(a[0], a[1], g[0], g[1] - z * s * 0.55) : null;
+            if (gr) { gr.addColorStop(0, 'rgba(255,255,255,0)'); gr.addColorStop(1, 'rgba(255,255,255,.7)'); ctx.strokeStyle = gr; }
+            ctx.lineWidth = br * 1.3;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(a[0], a[1] - (o[2] || 0) * s * 0.55);
+            ctx.lineTo(g[0], g[1] - z * s * 0.55);
+            ctx.stroke();
+            ctx.lineCap = 'butt';
+          }
+        }
         ctx.fillStyle = 'rgba(0,0,0,' + clamp(0.4 - z * 0.03, 0.12, 0.4) + ')';
         ctx.beginPath();
         ctx.arc(g[0] + 1.5, g[1] + 1.5, br * 0.9, 0, Math.PI * 2);
@@ -1183,8 +1329,13 @@
         ctx.arc(bq[0], bq[1], br, 0, Math.PI * 2);
         ctx.fill();
         ctx.strokeStyle = '#111';
-        ctx.lineWidth = 1.2;
+        ctx.lineWidth = 1.6;
         ctx.stroke();
+        // 黒い五角の模様（白い縁の丸と見分ける）
+        ctx.fillStyle = '#1b1b1b';
+        ctx.beginPath();
+        ctx.arc(bq[0], bq[1], br * 0.38, 0, Math.PI * 2);
+        ctx.fill();
         // 名前の札（主役）
         ctx.font = '800 11px system-ui, sans-serif';
         ctx.textBaseline = 'alphabetic';
@@ -1192,10 +1343,10 @@
           const tw = ctx.measureText(lb.text).width + 10;
           const x = clamp(lb.q[0] - tw / 2, 2, w - tw - 2);
           const y = clamp(lb.q[1] - R - 22, 2, h - 18);
-          ctx.fillStyle = 'rgba(15,25,40,.85)';
+          ctx.fillStyle = lb.gold ? 'rgba(255,214,60,.95)' : 'rgba(15,25,40,.85)';
           this.rr(ctx, x, y, tw, 16, 5);
           ctx.fill();
-          ctx.fillStyle = '#ffffff';
+          ctx.fillStyle = lb.gold ? '#1b2438' : '#ffffff';
           ctx.textAlign = 'left';
           ctx.fillText(lb.text, x + 5, y + 12);
         }

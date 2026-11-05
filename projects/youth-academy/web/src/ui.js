@@ -989,7 +989,7 @@
         const sp = (sc.side === 'home' ? m.home : m.away).players[sc.scorer];
         const asp = sc.assist ? (sc.side === 'home' ? m.home : m.away).players[sc.assist] : null;
         bannerBox.replaceChildren(h('div', { class: 'banner' + (sc.side === 'away' ? ' opp' : '') }, h('div', { class: 'big' }, sc.side === 'home' ? 'GOAL!' : '失点'), h('div', { class: 'small' }, `${sp.num}番 ${sp.name}` + (asp ? `（アシスト ${surname(asp)}）` : ''))));
-        S.hold = 1.4;
+        S.hold = (YA.MOVE.celeb || 2.6) - 0.4; // 得点の喜び（render の celeb）が終わるまで次へ進まない
         YA.sfx.play(sc.side === 'home' ? 'goal' : 'concede');
       } else {
         S.hold = 0.5;
