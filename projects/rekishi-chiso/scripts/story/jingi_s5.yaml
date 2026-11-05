@@ -1,0 +1,167 @@
+# 物語完結型ショート 三種の神器 s5（2026-11-05）。本編 scripts/jingi-story.yaml（11/5 19:00 公開、https://youtu.be/XmWN5pboKa4）の第5章から。11/6 19:30 公開。
+# 形式は sankin_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。絵は本編の AI 絵（人物なし）だけ（国芳の太平記の絵は別人の名札が入るので外した）。新しい絵は作らない。
+# 切り口：1443年の禁闕の変で奪われた勾玉が、赤松家の遺臣の手で都に戻るまで。鏡（s1）・盗難（s2）・壇ノ浦（s3）・南北朝の似せ物（s4）には踏み込まない。
+# 事実カード：jingi-47・49。言い方は本編のまま。
+#   ・嘉吉3年＝1443年、長禄元年＝1457年（長禄への改元は1457年9月）、長禄2年＝1458年を確かめた。
+#   ・1443年9月23日 → 1458年8月末日は14年11か月 →「15年近く」は合う（本編の序章と同じ言い方）。
+#   ・長禄元年12月2日は、今の暦に直すと1458年の初めにあたるが、本編と同じく和暦の年を西暦の年に置き換えて言う。
+#   ・取り返しの経緯は『上月記』（1478年、生き残りの上月満吉らの記録）による → 出どころを語りで言う。
+# 理解テスト4問：
+#   ①誰の話か：三種の神器の勾玉と、それを取り戻した赤松家の家臣たち
+#   ②いつ・どこで何が：1443年9月23日の夜、内裏が襲われ剣と勾玉が奪われた（禁闕の変）。剣はすぐ戻り、勾玉は南朝の側に残った
+#   ③どうしたか：1457年12月2日、赤松家の生き残りの家臣が吉野の奥で勾玉を奪うが、村人に取り返され、もう一度取り戻した
+#   ④どうなったか：1458年8月の末日に勾玉は都に入り、赤松家は加賀の半国などを与えられた
+title: 三種の神器｜奪われた勾玉、15年の行方
+yt_title: 1443年に奪われた勾玉が都に戻るまで15年近く　禁闕の変と、取り戻した赤松家の家臣たち
+description: |-
+  奪われた勾玉が都に戻るまで、15年近くかかりました。
+  1443年、嘉吉3年9月23日の夜。内裏が襲われ、剣と勾玉が奪われます。禁闕の変です。剣は清水寺のそばに捨てられていたのを寺の僧が拾って届けましたが、勾玉だけは南朝の側に残りました。取り戻したのは、赤松家の生き残りの家臣たち。1478年に書かれた『上月記』によれば、1457年12月2日の夜半、吉野の奥で勾玉を奪いますが、追ってきた村人に取り返され、もう一度取り戻して、1458年8月の末日に都へ入れました。その功で、赤松家は加賀の半国などを与えられた、と伝えます。
+  では、熱田の剣を見た者はいたのか。本編は概要欄のリンクからどうぞ。
+hashtags: ['#三種の神器', '#日本史', '#室町時代']
+ai_images: true
+ai_disclosure: この動画の風景・室内・箱の画像は、画像生成AI（Google の Gemini）で作った想像上のイメージで、実在の神器・記録映像・写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/jingi
+out: jingi_story_s5
+header_style: B
+readings: {都に入った: みやこにはいった}
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 三種の神器（奪われた勾玉）
+  title: "奪われた勾玉、《15年》の行方"
+now:
+  - {at: 1443年, text: "1443年9月　禁闕の変", point: 0}
+  - {at: 1457年, text: "1457年12月　吉野の奥", point: 1}
+  - {at: 1458年, text: "1458年8月　都へ", point: 2}
+timeline:
+  - {label: "1443"}
+  - {label: "1457"}
+  - {label: "1458"}
+cards:
+  - type: year
+    from: 1458年
+    until: その功で
+    big: 1458年
+    sub: 勾玉が都に戻る
+    text_y: 0.70
+shots:
+  J07:
+    kind: ai
+    file: jingi/main/J07.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 夜の内裏の門と松明
+  J02:
+    kind: ai
+    file: jingi/main/J02.jpg
+    focus: [0.4, 0.45]
+    move: right
+    must: 夜に燃える宮殿
+  J03:
+    kind: ai
+    file: jingi/main/J03.jpg
+    focus: [0.6, 0.5]
+    move: left
+    must: 霧の森の社殿
+  J01:
+    kind: ai
+    file: jingi/main/J01.jpg
+    focus: [0.45, 0.55]
+    move: in
+    must: 暗い殿舎の白い絹の箱
+  J08:
+    kind: ai
+    file: jingi/main/J08.jpg
+    focus: [0.5, 0.55]
+    move: right
+    must: 机の上の古い巻物と本
+  J06:
+    kind: ai
+    file: jingi/main/J06.jpg
+    focus: [0.5, 0.6]
+    move: up
+    must: 夜の雪の山道
+  J06b:
+    kind: ai
+    file: jingi/main/J06.jpg
+    focus: [0.3, 0.5]
+    move: left
+    zoom: 0.12
+    must: 雪の森
+  J09:
+    kind: ai
+    file: jingi/main/J09.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 光の差す杉の参道
+  J01b:
+    kind: ai
+    file: jingi/main/J01.jpg
+    focus: [0.7, 0.55]
+    move: left
+    must: 灯の下の箱
+  J12:
+    kind: ai
+    file: jingi/main/J12.jpg
+    focus: [0.5, 0.5]
+    move: right
+    must: 夜明けの海
+lines:
+  # fact: jingi-47, jingi-49
+  - 語り: 奪われた勾玉が、都に戻るまで、《!15年近く》かかった。
+    shot: J07
+    tone: 強調
+    pause: 0.12
+  # fact: jingi-47
+  - 語り: 1443年、嘉吉3年9月23日の夜。内裏が襲われ、剣と勾玉が奪われた。禁闕の変だ。
+    shot: J02
+    tone: 重い
+    pause: 0.12
+  # fact: jingi-47
+  - 語り: 剣は、すぐに見つかる。清水寺のそばに捨てられていたのを、寺の僧が拾って、届けた。
+    shot: J03
+    tone: しみじみ
+    pause: 0.12
+  # fact: jingi-49
+  - 語り: 勾玉だけが、南朝の側に、残った。
+    shot: J01
+    tone: 重い
+    pause: 0.12
+  # fact: jingi-49
+  - 語り: 取り戻したのは、赤松家の、生き残りの家臣たちだった。1478年に書かれた『上月記』に、その経緯がある。
+    shot: J08
+    tone: しみじみ
+    pause: 0.12
+  # fact: jingi-49
+  - 語り: 長禄元年、1457年の12月2日、夜半。吉野の奥で、南朝の皇子を討ち、勾玉を奪う。
+    shot: J06
+    tone: 重い
+    pause: 0.12
+  # fact: jingi-49
+  - 語り: ところが、追ってきた吉野の村人に、取り返されてしまう。仲間が策をめぐらして、もう一度、取り戻した。
+    shot: J06b
+    tone: しみじみ
+    pause: 0.12
+  # fact: jingi-49
+  - 語り: 長禄2年、1458年の8月の末日。勾玉は、都に入った。
+    shot: J09
+    tone: しみじみ
+    pause: 0.12
+  # fact: jingi-49
+  - 語り: その功で、赤松家は、加賀の半国などを与えられた、と『上月記』は伝える。
+    shot: J01b
+    tone: しみじみ
+    pause: 0.3
+    dip: true
+  - 語り: 15年近くかけて、取り戻された勾玉。一度奪い返されても、あなたなら、また取りに行きますか。
+    shot: J12
+    tone: 疑問
+    pause: 0.15

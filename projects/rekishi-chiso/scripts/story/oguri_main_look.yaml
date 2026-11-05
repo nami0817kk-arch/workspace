@@ -1,0 +1,254 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：小栗忠順の最期（scripts/oguri-story.yaml）。chiso/storymain.py が読む。
+# 11-05 作成（11/06 19:00 公開）。jingi_main_look.yaml を写した。台本には手を入れない（承認のあと）。決まりは docs/story-main.md・スキル rekishi-story-screen。
+# 絵の方針：AI 絵（O01〜O17、Cloudflare Workers AI の FLUX.1 schnell、正方形を 16:9 に切って 1920x1080）は風景・室内・書類・後ろ姿だけ。小栗の顔は描かない。
+#   顔が分かるのは実在の肖像写真（小栗・慶喜）の額だけ。斬首の場面・刀・血は描かない（O13 は河原に立つ後ろ姿だけ）。O18（墓地）は墓石に字のような模様が出たので使わない。
+#   O10 は右上に送電塔が出たので left（右を切る）だけ。O12 はろうそくがガラスの器なので寄りすぎない。
+#   実在の写真：遣米使節の2枚（NH 51119・ブレイディ）、横須賀造船所の1872年（シュティルフリート）、ベアトの江戸城の堀・武士（yoshinobu_*）。
+# AI 絵の指示：C:/Users/なみ/AppData/Local/Temp/claude/C--Users----dev/df82e600-c987-43d3-9011-e46d3a15ee06/scratchpad/gen_oguri.py（out/story/oguri/raw に元の正方形）
+script: scripts/oguri-story.yaml
+out: oguri_story_main
+art_dir: out/story/oguri/main
+main_art_dir: out/story/oguri/main
+ai_disclosure: この動画の風景・室内・人物の後ろ姿の画像は、画像生成AI（Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+
+chapters:
+  0: {label: 序章 19歳と22歳の使い, now: 1868年閏4月, dates: {2: null}}
+  1: {label: 第1章 「土蔵付きの売家」, now: 1860年（万延元年）, dates: {16: 1860年代, 17: null, 19: 1865年11月, 21: 1871年, 22: null}}
+  2: {label: 第2章 「一たび懲らしめてから」, now: 1868年1月, dates: {30: 1868年2月, 31: 1868年3月}}
+  3: {label: 第3章 「陣屋厳重に構え」, now: 1868年3月4日, dates: {42: 1868年3月, 46: 1868年4月22日}}
+  4: {label: 第4章 命令書には何と書かれていたのか, now: 1868年4月22日, dates: {52: 1868年4月29日, 54: 1868年閏4月1日, 58: 1868年閏4月3日}}
+  5: {label: 第5章 謝罪は、なぜ退けられたのか, now: 1868年閏4月3日, dates: {63: 1868年閏4月4日, 75: 1868年閏4月5日}}
+  6: {label: 第6章 閏4月6日の朝, now: 1868年閏4月5日, dates: {80: 1868年閏4月6日, 90: 1868年閏4月7日}}
+  7: {label: 第7章 首はどこへ行ったのか, now: 1868年閏4月, dates: {102: 1868年閏4月12日, 103: 1868年, 104: 1868年6月14日, 105: null}}
+  8: {label: 第8章 碑が立つまでの64年, now: 1912年, dates: {110: null, 111: 1927年10月, 112: 1931年, 113: 1932年, 115: null}}
+  9: {label: まとめ 小栗忠順は、なぜ斬られたのか, now: null, dates: {}}
+no_tag_from: 130
+
+# 概要欄「■ 参考にした資料」（事実カード 小栗忠順_facts_20261105.yaml のうち本文を開いた主なもの）
+references:
+  - 復古記 第11冊（東山道戦記。総督府諸達留・総督府日記・吉井信謹家記・大河内輝声家記・安中藩記ほか）（太政官 編、1931）　https://dl.ndl.go.jp/pid/1148459/1/312
+  - 戊辰戦史 巻5（小栗仁右衛門上申書・小栗忠順小伝）（川崎三郎、1894）　https://dl.ndl.go.jp/pid/773512/1/6
+  - 高崎市史 上巻（高崎市 編、1927）　https://dl.ndl.go.jp/pid/1901369/1/250
+  - 群馬県史 第2巻（群馬県教育会 編、1927）　https://dl.ndl.go.jp/pid/1258734/1/162
+  - 読史余録（塚越芳太郎、1901）　https://dl.ndl.go.jp/pid/770278/1/101
+  - 維新前後の政争と小栗上野の死（蜷川新、1928）　https://dl.ndl.go.jp/pid/1186889
+  - 幕末政治家（福地源一郎、1900）
+  - 万延元年第一遣米使節日記（日米協会 編、1918。村垣範正の日記・監察小栗忠順略伝）　https://dl.ndl.go.jp/pid/1920882/1/222
+  - 小栗上野介忠順と会津（丑木幸男、高崎市立中央図書館『市史のひろば』第7号、2026）　https://lib.city.takasaki.gunma.jp/manage/contents/upload/69cb106160034.pdf
+  - 小栗上野介忠順終焉の地（高崎市 文化財情報）　https://www.city.takasaki.gunma.jp/site/cultural-assets/4351.html
+  - 本市ゆかりの幕臣・小栗上野介（高崎市）
+  - 群馬県立図書館 関連資料リスト 小栗上野介忠順（2012）
+  - 横須賀の誇り！横須賀製鉄所（造船所）（横須賀市）
+  - 真の歴史後世に伝える 小栗の顕彰慰霊碑（上毛新聞、2023）
+  - File:Oguri Kozukenosuke Tadamasa.jpg（ウィキメディア・コモンズ、パブリックドメイン）　https://commons.wikimedia.org/wiki/File:Oguri_Kozukenosuke_Tadamasa.jpg
+  - File:NH 51119 (17220543266).jpg（米国海軍、ウィキメディア・コモンズ、パブリックドメイン）　https://commons.wikimedia.org/wiki/File:NH_51119_(17220543266).jpg
+  - File:-Japanese Embassy, Navy Yard, Washington, DC- MET DP229934.jpg（メトロポリタン美術館、CC0）　https://commons.wikimedia.org/wiki/File:-Japanese_Embassy,_Navy_Yard,_Washington,_DC-_MET_DP229934.jpg
+  - File:Emperor Meiji Inaugurating Yokosuka Arsenal Jan 1 1872.png（ウィキメディア・コモンズ、パブリックドメイン）　https://commons.wikimedia.org/wiki/File:Emperor_Meiji_Inaugurating_Yokosuka_Arsenal_Jan_1_1872.png
+
+# AI 絵（16:9 横・17枚）。pan：h＝左右（既定）。crops＝切り出し [倍率, 中心x, 中心y]
+ai:
+  O01: {scene: 霧の朝の山あいの川と広い河原（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  O02: {scene: 城の誰もいない広間とろうそく, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  O03: {scene: 1860年ごろの外輪の蒸気軍艦（遠景）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  O04: {scene: 造幣局の実験室の天秤と金貨（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  O05: {scene: 入江の石造りのドックの工事（遠くに小さな人）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  O06: {scene: 山あいの村と寺の屋根（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  O07: {scene: 夜の谷を村へ向かう松明の列（遠景）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  O08: {scene: 丘の上の建ちかけの屋敷の骨組みと段々の田, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  O09: {scene: 山道を行く牛車の木箱と樽（後ろから）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  O10: {scene: 田の間の道を行く陣笠の兵の列（後ろから）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  O11: {scene: 夕暮れの寺の本堂と灯、遠くの兵の影, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  O12: {scene: 灯の下の机の白い書状と筆（字なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  O13: {scene: 霧の河原に立つ袴の男の後ろ姿, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  O14: {scene: 夜の山道を灯ひとつで行く女たちの後ろ姿, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  O15: {scene: 川辺の草地に立つ字のない石碑と花, pan: v, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  O16: {scene: 霧の海を行く明治の軍艦の艦隊（遠景）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  O17: {scene: 夕暮れの河原と浅い川, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  O19: {scene: 夕日の川面（O17 の右側を切り出した。終了画面）, lock: [1.0, 0.5, 0.5]}
+
+paint_fx:
+  paintings/oguri_portrait.jpg: {crop: [0.0, 0.0, 1.0, 0.9]}
+
+credits:
+  paintings/oguri_portrait.jpg: 小栗忠順の肖像（撮影年不明、1868年以前。ウィキメディア・コモンズ、パブリックドメイン）
+  paintings/oguri_embassy_navy_yard_nh51119.jpg: ワシントン海軍造船所の遣米使節団（1860年5月15日。米国海軍歴史センター NH 51119、パブリックドメイン）
+  paintings/oguri_embassy_brady_met.jpg: マシュー・ブレイディ撮影《ワシントン海軍造船所の日本使節団》（1860年。メトロポリタン美術館、CC0）
+  paintings/oguri_yokosuka_stillfried_1872.png: シュティルフリート撮影 横須賀造船所の明治天皇と一行（1872年1月1日。パブリックドメイン）
+  paintings/yoshinobu_beato_yedo_castle_moat.jpg: フェリーチェ・ベアト撮影 江戸城の堀（1860年代。パブリックドメイン）
+  paintings/yoshinobu_beato_yedo_inner_moat.jpg: フェリーチェ・ベアト撮影 江戸城の内堀（1860年代。パブリックドメイン）
+  paintings/yoshinobu_beato_samurai.jpg: フェリーチェ・ベアト撮影 武士たち（1860年代。パブリックドメイン）
+  paintings/yoshinobu_portrait_1867_1.jpg: 徳川慶喜（1867年ごろの写真。パブリックドメイン）
+
+shots:
+  - 0 ai:O01 wide
+  - 1 ai:O10 left
+  - 2 frame:paintings/oguri_portrait.jpg
+  - 3 ai:O01 right
+  - 4 ai:O15 wide
+  - 5 ai:O15 left
+  - 6 ai:O12 wide
+  - 7 ai:O12 right
+  - 8 ai:O11 wide
+  - 9 ai:O06 wide
+  - 10 frame:paintings/oguri_portrait.jpg
+  - 11 ai:O03 wide
+  - 12 ai:O03 right
+  - 13 part:paintings/oguri_embassy_navy_yard_nh51119.jpg wide
+  - 14 ai:O04 wide
+  - 15 part:paintings/oguri_embassy_brady_met.jpg wide
+  - 16 ai:O02 wide
+  - 17 ai:O12 left
+  - 18 ai:O02 left
+  - 19 ai:O05 wide
+  - 20 ai:O05 right
+  - 21 part:paintings/oguri_yokosuka_stillfried_1872.png wide
+  - 22 ai:O05 left
+  - 23 ai:O16 wide
+  - 24 part:paintings/yoshinobu_beato_yedo_castle_moat.jpg wide
+  - 25 frame:paintings/yoshinobu_portrait_1867_1.jpg
+  - 26 ai:O02 wide
+  - 27 ai:O02 right
+  - 28 ai:O12 wide
+  - 29 part:paintings/yoshinobu_beato_yedo_inner_moat.jpg wide
+  - 30 ai:O09 wide
+  - 31 ai:O06 wide
+  - 32 ai:O06 left
+  - 33 ai:O06 right
+  - 34 ai:O07 wide
+  - 35 ai:O07 left
+  - 36 ai:O07 right
+  - 37 ai:O07 wide
+  - 38 ai:O12 right
+  - 39 ai:O09 left
+  - 40 ai:O09 right
+  - 41 ai:O12 wide
+  - 42 ai:O08 wide
+  - 43 ai:O08 left
+  - 44 ai:O08 right
+  - 45 ai:O08 wide
+  - 46 ai:O12 left
+  - 47 ai:O12 right
+  - 48 ai:O10 left
+  - 49 ai:O12 wide
+  - 50 ai:O11 wide
+  - 51 ai:O12 left
+  - 52 ai:O10 right
+  - 53 ai:O06 right
+  - 54 ai:O11 wide
+  - 55 ai:O11 left
+  - 56 ai:O09 wide
+  - 57 ai:O06 wide
+  - 58 ai:O10 left
+  - 59 ai:O11 left
+  - 60 ai:O10 wide
+  - 61 ai:O02 left
+  - 62 ai:O12 right
+  - 63 ai:O02 right
+  - 64 ai:O12 wide
+  - 65 ai:O02 left
+  - 66 ai:O11 right
+  - 67 ai:O12 left
+  - 68 ai:O02 left
+  - 69 ai:O10 left
+  - 70 ai:O12 right
+  - 71 ai:O02 wide
+  - 72 ai:O06 left
+  - 73 ai:O02 right
+  - 74 ai:O12 wide
+  - 75 ai:O11 wide
+  - 76 ai:O14 wide
+  - 77 ai:O14 left
+  - 78 ai:O14 right
+  - 79 ai:O11 left
+  - 80 ai:O13 wide
+  - 81 ai:O01 wide
+  - 82 ai:O12 left
+  - 83 ai:O12 right
+  - 84 ai:O01 right
+  - 85 ai:O13 left
+  - 86 ai:O13 wide
+  - 87 ai:O01 left
+  - 88 ai:O12 wide
+  - 89 ai:O12 left
+  - 90 ai:O19 wide
+  - 91 ai:O01 right
+  - 92 ai:O01 wide
+  - 93 ai:O06 right
+  - 94 ai:O10 left
+  - 95 ai:O12 right
+  - 96 ai:O11 left
+  - 97 ai:O11 wide
+  - 98 ai:O06 wide
+  - 99 ai:O06 left
+  - 100 ai:O06 right
+  - 101 ai:O12 wide
+  - 102 ai:O11 right
+  - 103 ai:O14 wide
+  - 104 ai:O14 right
+  - 105 ai:O06 wide
+  - 106 frame:paintings/oguri_portrait.jpg
+  - 107 ai:O15 wide
+  - 108 ai:O16 wide
+  - 109 ai:O16 right
+  - 110 ai:O12 left
+  - 111 ai:O06 left
+  - 112 ai:O12 right
+  - 113 ai:O15 left
+  - 114 ai:O15 wide
+  - 115 ai:O06 right
+  - 116 part:paintings/oguri_yokosuka_stillfried_1872.png right
+  - 117 ai:O05 wide
+  - 118 ai:O06 wide
+  - 119 frame:paintings/oguri_portrait.jpg
+  - 120 ai:O11 left
+  - 121 ai:O01 wide
+  - 122 frame:paintings/oguri_portrait.jpg
+  - 123 ai:O12 wide
+  - 124 ai:O10 left
+  - 125 ai:O01 right
+  - 126 ai:O12 right
+  - 127 ai:O13 wide
+  - 128 ai:O15 left
+  - 129 ai:O06 wide
+  - 130 ai:O08 wide
+  - 131 ai:O15 wide
+  - 132 ai:O19 wide
+  - end ai:O19 wide
+
+focus: {}
+
+fx:
+  O02: {lamp: {region: [0.4, 0.75, 0.6, 1.0]}}
+  O07: {fire: {region: [0.4, 0.5, 1.0, 1.0]}}
+  O11: {lamp: {region: [0.0, 0.3, 1.0, 0.7]}}
+  O14: {lamp: {region: [0.6, 0.0, 0.85, 0.3]}}
+  O01: {mist: {region: [0.0, 0.3, 1.0, 0.75]}}
+  O19: {water: {region: [0.4, 0.55, 1.0, 1.0]}}
+
+parts:
+  - {type: quote, from: 4, to: 4, label: 碑, text: 偉人小栗上野介／罪なくして此所に斬らる, source: 烏川の河原の碑（1932年、地元の人々が建てた）}
+  - {type: quote, from: 22, to: 22, label: 史料, text: 熨斗を附けて他人に贈る迄も／土蔵附の売家たるは又快からずや, source: 福地源一郎『幕末政治家』（1900年）}
+  - {type: quote, from: 26, to: 26, label: 史料, text: 一タビ膺懲シテ而テ後恭順スルモ／未ダ遅シトセズ, source: 『高崎市史』上巻（1927年）}
+  - {type: quote, from: 49, to: 50, label: 史料, text: 陣屋等厳重ニ相搆へ、砲台ヲ築キ／逆謀判然, source: 東山道総督府の追捕の命令（『復古記』第11冊、慶応4年4月）}
+  - {type: versus3, from: 62, to: 62, items: [[丑木幸男（2026年）, 土佐と丹波], [高崎市史（1927年）, 2人とも長州藩士]], every: 1.6}
+  - {type: quote, from: 64, to: 64, label: 史料, text: 右上野ハ逆謀判然タリ／依テ父子共速ニ召捕可申旨, source: 吉井藩の記録（『復古記』第11冊）}
+  - {type: quote, from: 83, to: 83, label: 史料, text: 三之倉宿河原ニ於テ／更ニ尋ノ筋モ無之, source: 小栗仁右衛門の届け（閏4月12日。『戊辰戦史』巻5）}
+  - {type: quote, from: 86, to: 86, label: 史料, text: 此等婦女子には／寛典を望む, source: 蜷川新『維新前後の政争と小栗上野の死』（1928年）の伝え}
+  - {type: quote, from: 112, to: 112, label: 史料, text: 命じたる人…今日生存して居る／余の問に対しても事情を語らない, source: 蜷川新『維新前後の政争と小栗上野 続』（1931年）}
+  - {type: quote, from: 131, to: 131, label: 碑, text: 偉人小栗上野介／罪なくして此所に斬らる, source: 烏川の河原の碑（1932年）}
+
+# 台本の図の差し替え（stats は3列まで。台本を変えると承認が外れるので look で）
+figures:
+  - {from: 74, to: 74, spec: {"type": "stats", "title": "記録が挙げる「斬られた理由」", "upto": 3, "items": [["福地源一郎（1900年）", "出費を削った恨み", "幕末政治家"], ["高崎市史（1927年）", "使いが憎んでいた", "噂を機会に"], ["大音龍太郎の届け", "会津と通じた", "鉄砲を隠した"]]}}
+
+stills:
+  - {line: 0, note: 冒頭（0秒）霧の河原}
+  - {line: 2, note: 小栗の肖像の額}
+  - {line: 4, note: 碑の札}
+  - {line: 13, note: 遣米使節の写真}
+  - {line: 36, note: 暴徒の人数のくい違い}
+  - {line: 55, note: 差し出した武器（図）}
+  - {line: 74, note: 斬られた理由（図）}
+  - {line: 84, note: 取り調べ（図）}
+  - {line: 97, note: 首の行方（図）}
+  - {end: true, note: 終了画面の空き}

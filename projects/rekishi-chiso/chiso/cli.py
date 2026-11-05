@@ -1121,7 +1121,9 @@ def cmd_story_short_upload(args) -> int:
             if not args.dry_run:
                 return 2
     times = shortpost.schedule(args.at, args.every, len(paths))
-    svc = None if args.dry_run else _service(need_manage=bool(main_sc.shorts_playlists))
+    # ショートの再生リストは既定で入れない（11-04 ユーザー「ショートの再生リストは不要」）。入れるときだけ --playlists
+    lists = main_sc.shorts_playlists if args.playlists else []
+    svc = None if args.dry_run else _service(need_manage=bool(lists))
     if svc is None and not args.dry_run:
         return 2
     for path, at in zip(paths, times):
@@ -1143,7 +1145,8 @@ def cmd_story_short_upload(args) -> int:
         vid = up.upload(svc, storyshort.video_of(path, doc), title, desc, tags, up.publish_time(at), synthetic_media=True)
         up.record(log, {"key": key, "video_id": vid, "title": title, "publish_at": at})
         print(f"  予約しました: https://youtu.be/{vid}")
-        _into_playlists(svc, main_sc.shorts_playlists, key, vid)
+        if lists:
+            _into_playlists(svc, lists, key, vid)
     return 0
 
 
@@ -1505,6 +1508,7 @@ def main(argv=None) -> int:
     s.add_argument("--every", type=int, default=60, help="何分ごとに出すか")
     s.add_argument("--main", default="oichi-story", help="本編の台本の名前（posted.json の <名前>:main から本編のリンクを引く）")
     s.add_argument("--dry-run", action="store_true", help="投稿せず、題名・時刻・概要欄だけ出す")
+    s.add_argument("--playlists", action="store_true", help="本編の shorts_playlists の再生リストにも入れる（既定は入れない）")
     s.set_defaults(fn=cmd_story_short_upload)
     s = sub.add_parser("whoami")
     s.set_defaults(fn=cmd_whoami)
