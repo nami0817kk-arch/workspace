@@ -29,7 +29,8 @@ description: 解説チャンネル「理の書」（YouTube @kotowari_no_sho、�
 題材 → 下調べ → 台本6本 → 見せる(台本) → kana → voice → prep/stills(地形) → render → compose → qc → 見せる(動画) → upload(予約)
 ```
 
-1. **題材**: 候補は Google/YouTube の検索候補で「なぜ ○○」が実際に打たれているものから。番号を振ってユーザーに出し、○×はユーザーが付ける。
+1. **題材**: **先にスキル `kotowari-topic-types` を読み、問いの型と道具を 1 つずつ選ぶ**（2026-11-05。型 10 個と題材の強さは他チャンネル 80 チャンネルの調べ。正は `docs/topic-types.md`・`docs/topic-demand.md`）。
+   型の条件を満たした候補に番号を振ってユーザーに出し、○×はユーザーが付ける。
    `posted.json` が無い代わりに、チャンネルの投稿一覧と `episodes/` を見て、同じ題材を二度作らない
 2. **下調べ**: 数字は一次資料（官公庁・学会・公式）か自分の計算だけ。出どころは `episodes/<題材>/ep.py` の冒頭 docstring に書く。
    地形の回は国土地理院の標高タイル（`naze.dem`）、地点は国土地理院の地名検索（`msearch.gsi.go.jp`）。
