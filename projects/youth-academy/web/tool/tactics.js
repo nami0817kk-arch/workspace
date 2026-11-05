@@ -5,6 +5,8 @@
 // - 持っている相手にいちばん近い守り手との距離（ハイプレスは近い）
 // - 持ってから出すまでの時間（縦に速い・カウンターは短く、ポゼッションは長い）
 'use strict';
+// 合間の動きは Math.random を使うので、点検では毎回同じ乱数にして結果を揺らさない
+{ let r = 12345; Math.random = () => ((r = (r * 1103515245 + 12345) % 2147483648) / 2147483648); }
 for (const f of ['data', 'engine', 'world', 'league', 'club', 'scout', 'extra', 'more', 'render']) require('../src/' + f + '.js');
 const YA = globalThis.YA;
 const cv = { getBoundingClientRect: () => ({ width: 844, height: 330 }), getContext: () => null, width: 0, height: 0 };

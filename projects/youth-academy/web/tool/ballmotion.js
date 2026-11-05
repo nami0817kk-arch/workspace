@@ -5,6 +5,8 @@
 // - 選手は加速の上限を超えない（瞬間移動しない）。暗転の切り替えのコマは数えない
 // - 場面は受け手が届いて最後まで進む（詰まって打ち切る場面がほとんど無い）
 'use strict';
+// 合間の動きは Math.random を使うので、点検では毎回同じ乱数にして結果を揺らさない
+{ let r = 12345; Math.random = () => ((r = (r * 1103515245 + 12345) % 2147483648) / 2147483648); }
 for (const f of ['data', 'engine', 'world', 'league', 'club', 'scout', 'extra', 'more', 'render']) require('../src/' + f + '.js');
 const YA = globalThis.YA;
 const cv = { getBoundingClientRect: () => ({ width: 844, height: 330 }), getContext: () => null, width: 0, height: 0 };
