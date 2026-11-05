@@ -18,11 +18,12 @@
     dribble: 7.2, // ボールを運ぶ速さ
     acc: 7.5, // 加速・減速の強さ（m/s²）
     reach: 1.15, // この距離でボールに触れる
-    fric: 3.2, // 転がるボールの減速（m/s²）
-    passEnd: 3.4, // 地を這うパスが受け手に届くときの速さ
+    fric: 4, // 転がるボールの減速（m/s²）
+    passEnd: 11, // 地を這うパスが受け手に届くときの速さ（20m を約1.5秒で通す）
     loft: 19.5, // 浮き球の横の速さ
     shot: 25, // シュートの速さ
     maxGround: 23, // これより強く蹴らないと届かないなら浮かせる
+    ff: 2.6, // 場面の入りの早送りの倍率
   };
   YA.MOVE = MOVE;
 
@@ -199,11 +200,72 @@
         bt.at = bt.at0 <= 0 ? 0 : 1e9;
       }
       sc.dur = 1e9; // 終わりは動きが終わってから決める
-      // つなぎ方：場面の最初の位置が遠ければ、一瞬暗くして置き直す
+      // つなぎ方：場面の最初の位置が遠ければ、そこまでボールをつないで主役を走らせる（つなげないときだけ暗転して置き直す）
       const f0 = fr[0];
       let far = dist(f0.ball, this.ball);
       for (const id of Object.keys(f0.pos)) if (this.disp[id]) far = Math.max(far, dist(f0.pos[id], this.disp[id]) * 0.8);
+      this.pre = null;
+      this.capText = null;
       if (far > 7 || !Object.keys(this.disp).length) {
+        const h0 = this.holderOf(f0);
+        // つなげるのは、受け手と主役が3秒ほどで最初の位置に着けるとき。ライン際の球（セットプレー）は置き直す
+        const edge = f0.ball[0] < 1.5 || f0.ball[0] > W - 1.5 || f0.ball[1] < 1.5 || f0.ball[1] > L - 1.5;
+        let eta = 0;
+        for (const id of Object.keys(f0.pos)) if (this.disp[id]) eta = Math.max(eta, dist(this.disp[id], f0.pos[id]) / MOVE.sprint);
+        const reachable = h0 && this.disp[h0] && dist(this.disp[h0], f0.ball) / MOVE.sprint < 9 && eta < 10;
+        if (Object.keys(this.disp).length && this.cut <= 0 && reachable && !edge && (f0.ball[2] || 0) < 0.5 && dist(f0.ball, this.ball) < 75) {
+          this.pre = { t: 0, f0, h0, kicked: false };
+          // 主役は場面に最初に出てくる所へ走り出す
+          const set = new Set();
+          for (const f of fr) for (const id of Object.keys(f.pos)) if (!set.has(id)) { set.add(id); this.stgt[id] = f.pos[id]; }
+          // いま転がっている・飛んでいるボールは、受けるはずだった子が拾う
+          if (!this.owner) {
+            let best = this.idle && this.idle.recv;
+            const at = this.fl ? this.fl.to : this.ball;
+            if (!best || !this.disp[best]) { let bd = 1e9; for (const id of Object.keys(this.disp)) { const d = dist(this.disp[id], at); if (d < bd && this.base[id] && this.base[id][3] !== 0) { bd = d; best = id; } } }
+            this.expect = best;
+          }
+          return;
+        }
+        this.place(fr);
+      }
+      this.nextEvent();
+    }
+    // 場面の入り：持っている子が、場面の最初にボールがある所の子へ蹴る。届いて主役がそろえば台本を始める
+    runPre(dt) {
+      const p = this.pre;
+      p.t += dt;
+      const fr = this.scene.frames;
+      if (!p.kicked) {
+        if (this.owner) {
+          if (this.owner === p.h0) p.kicked = true; // もう持っている：そこまで運ぶ
+          else if (!(this.lock[this.owner] > 0)) {
+            // 受け手が落ちる所に間に合う時に蹴る（それまでは持って運ぶ）
+            const d = dist(this.ball, p.f0.ball);
+            const tFly = d > 30 ? d / MOVE.loft + 0.25 : d / 11;
+            const eta = dist(this.disp[p.h0], p.f0.ball) / (MOVE.sprint * 0.85);
+            if (eta > tFly + 0.3 && p.t < 5) return;
+            p.kicked = true;
+            this.kick([p.f0.ball[0], p.f0.ball[1], 0], p.h0, this.owner);
+          }
+        } else if (p.t > 4) return this.endPre(true);
+        return;
+      }
+      const got = !this.fl && this.owner === p.h0 && dist(this.ball, p.f0.ball) < 4;
+      let ready = got;
+      for (const id of Object.keys(p.f0.pos)) if (this.disp[id] && dist(this.disp[id], p.f0.pos[id]) > 3) ready = false;
+      // 受け手が持てば、主役が少し遅れていても始める（台本のあいだに追いつく）
+      if (ready || (got && p.t > 1.2) || p.t > 10) this.endPre(this.owner !== p.h0 || dist(this.ball, p.f0.ball) > 8);
+    }
+    endPre(cut) {
+      this.pre = null;
+      if (cut) this.place(this.scene.frames);
+      this.nextEvent();
+    }
+    place(fr) {
+      const f0 = fr[0];
+      this.places = (this.places || 0) + 1; // 点検用：暗転して置き直した回数
+      {
         this.cut = 0.5;
         this.ball = [f0.ball[0], f0.ball[1], f0.ball[2] || 0];
         this.bv = [0, 0];
@@ -228,11 +290,10 @@
         }
         this.owner = this.holderOf(f0);
       }
-      this.capText = null;
-      this.nextEvent();
     }
     endScene() {
       this.scene = null;
+      this.pre = null;
       this.ev = null;
       this.expect = null;
       this.focus = [];
@@ -441,17 +502,19 @@
       if (!this.owner) return; // 誰かが拾いに行く（targets で）
       // 持ってから出すまでの時間は攻めの速さで決まる（縦に速いは早く、ポゼッションはためる）
       const tc = this.tacOf(this.owner);
-      const s = (this.idle = this.idle && this.idle.carrier === this.owner ? this.idle : { carrier: this.owner, t: 0, dur: 0.5 + (1 - tc.tempo) * 1.6 + Math.random() * (0.6 + (1 - tc.tempo) * 1.2) });
+      const s = (this.idle = this.idle && this.idle.carrier === this.owner ? this.idle : { carrier: this.owner, t: 0, dur: 0.35 + (1 - tc.tempo) * 1.0 + Math.random() * (0.4 + (1 - tc.tempo) * 0.8) });
       s.t += dt;
       if (s.t < s.dur) return;
       const me = this.owner;
       const my = this.teamOf(me);
       const q = this.disp[me];
       const atk = this.atkDir(me)[1];
-      const back = 4 + (1 - tc.tempo) * 16; // 後ろへ戻してよい距離
-      const far = 22 + tc.tempo * 14; // 速い攻めほど遠くへ蹴る
+      const depth = atk > 0 ? q[1] : L - q[1]; // 自分のゴールからの深さ
+      const back = depth < 30 ? 2 : 4 + (1 - tc.tempo) * 16; // 後ろへ戻してよい距離（自陣の深くでは戻さない）
+      const far = depth < 30 ? 45 : 22 + tc.tempo * 14; // 速い攻めほど遠くへ蹴る。自陣の深くからは大きく蹴り出す
       let tgt = null;
-      if (Math.random() < 0.14) {
+      // 相手の陣の深くほど、相手に引っかかる（守りが固まっていて通らない）
+      if (Math.random() < 0.12 + 0.3 * clamp((depth - 60) / 40, 0, 1)) {
         // 相手に渡ってしまうパス
         let bd = 30;
         for (const id of ids) if (this.teamOf(id) !== my && this.base[id][3] !== 0) { const d = dist(this.disp[id], q); if (d < bd && d > 5) { bd = d; tgt = id; } }
@@ -465,7 +528,7 @@
         let c = pick(back, far);
         if (!c.length) c = pick(20, 30); // 前に出せる味方がいなければ戻してでもつなぐ
         // 前の味方ほど選ばれやすい（速い攻めほど強く）
-        const wt = c.map((id) => 1 + Math.max(0, (this.disp[id][1] - q[1]) * atk) * tc.tempo * 0.2);
+        const wt = c.map((id) => 1 + Math.max(0, (this.disp[id][1] - q[1]) * atk) * Math.max(tc.tempo, depth < 30 ? 0.9 : 0) * 0.2); // 自陣の深くからは前へ逃がす
         let r0 = Math.random() * wt.reduce((a, x) => a + x, 0);
         for (let i = 0; i < c.length && !tgt; i++) if ((r0 -= wt[i]) <= 0) tgt = c[i];
         if (!tgt && c.length) tgt = c[c.length - 1];
@@ -517,6 +580,7 @@
       const ball = this.ball;
       // ボールを持っている子
       if (id === this.owner) {
+        if (this.pre && this.pre.kicked && id === this.pre.h0) return [[this.pre.f0.ball[0], this.pre.f0.ball[1]], MOVE.dribble];
         if (e && (e.phase === 'dribble' || e.phase === 'reach') && e.kind === 'dribble' && e.kicker === id) return [e.to, MOVE.dribble, true];
         if (e && this.stgt[id] && e.kind !== 'kick') return [this.stgt[id], MOVE.dribble];
         if (!this.scene) {
@@ -545,9 +609,10 @@
     }
     // 守る側の誰が、どこまで寄せるか。プレスが強いほど遠くから・速く・2人で行く
     pressPlan() {
-      const me = this.owner;
-      const q = this.disp[me];
-      if (!q) return null;
+      // 持っている子へ。相手へのパスが出ていれば、受ける所へ先回りする（パスが合図）
+      const me = this.owner || (this.fl && this.idle && this.idle.recv);
+      const q = this.owner ? this.disp[me] : this.fl && [this.fl.to[0], this.fl.to[1]];
+      if (!me || !q || !this.disp[me]) return null;
       const my = this.teamOf(me);
       const ids = Object.keys(this.base).filter((id) => this.teamOf(id) !== my && this.base[id][3] !== 0 && this.disp[id]);
       if (!ids.length) return null;
@@ -579,7 +644,7 @@
         let bd = 1e9;
         for (const id of Object.keys(this.disp)) { const d = dist(this.disp[id], this.ball); if (d < bd && this.base[id] && this.base[id][3] !== 0) { bd = d; this.chaser = id; } }
       }
-      this.pressers = this.scene || !this.owner || this.fl ? null : this.pressPlan();
+      this.pressers = this.scene ? null : this.pressPlan();
       for (const id of Object.keys(this.base)) {
         if (!this.disp[id]) { this.disp[id] = this.shapePos(id); this.vel[id] = [0, 0]; }
         const p = this.disp[id];
@@ -602,16 +667,26 @@
       }
     }
 
+    // 場面の入り（ボールを最初の位置へつなぐあいだ）は早送りで見せる。中身は同じ物理を細かく刻んで進める
     update(dt) {
-      const m = this.match;
-      if (!m) return;
+      if (!this.match) return;
       this.kicked = false;
+      const ff = this.scene && this.pre ? MOVE.ff : 1;
+      this.ff = ff > 1;
+      const n = ff > 1 ? 3 : 1;
+      for (let i = 0; i < n; i++) this.step1((dt * ff) / n);
+    }
+    step1(dt) {
+      const m = this.match;
       this.clock = (this.clock || 0) + dt;
       this.base = this.basePositions();
       for (const id of Object.keys(this.disp)) if (!this.base[id]) { delete this.disp[id]; delete this.vel[id]; if (this.owner === id) this.owner = null; }
       if (this.scene) {
-        this.t += dt;
-        this.runEvent(dt);
+        if (this.pre) this.runPre(dt);
+        else {
+          this.t += dt;
+          this.runEvent(dt);
+        }
         if (this.scene && this.scene.outcome === 'goal' && (this.ball[1] < -0.2 || this.ball[1] > L + 0.2)) this.flash = Math.min(1, this.flash + dt * 2);
       } else {
         this.idlePlay(dt);
@@ -835,6 +910,18 @@
         ctx.textAlign = 'center';
         ctx.fillText(cp.text, w / 2, y + 16);
         ctx.globalAlpha = 1;
+      }
+      // 早送りの印（場面の入り）
+      if (this.ff) {
+        ctx.font = '800 12px system-ui, sans-serif';
+        const tx = '▶▶ 場面へ';
+        const tw = ctx.measureText(tx).width + 16;
+        ctx.fillStyle = 'rgba(15,25,40,.8)';
+        this.rr(ctx, (w - tw) / 2, h - 30, tw, 20, 10);
+        ctx.fill();
+        ctx.fillStyle = '#ffffff';
+        ctx.textAlign = 'center';
+        ctx.fillText(tx, w / 2, h - 16);
       }
       if (this.flash > 0) {
         ctx.fillStyle = 'rgba(255,255,255,' + 0.22 * Math.sin(this.flash * 3) + ')';
