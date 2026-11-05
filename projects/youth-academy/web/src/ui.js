@@ -896,7 +896,7 @@
     wrap.append(top, stage, comm);
     main.append(wrap);
 
-    const R = YA.makeRenderer ? YA.makeRenderer(cv) : new YA.Renderer(cv);
+    const R = new YA.Renderer(cv);
     R.setMatch(m);
     const S = (play = { m, R, mode: 'idle', clock: 0, paused: false, sheet: null, raf: 0, last: 0, shown: 0, pendingStop: false, speed: app.speed });
     S.onResize = () => R.resize();
