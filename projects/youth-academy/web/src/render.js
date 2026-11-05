@@ -110,6 +110,27 @@
     surgeOf(id) {
       return this.surge && this.shareOf(id) > 0.5;
     }
+    // 選手の能力（1〜20）。疲れ・調子・役割の合い方を含んだ試合での値（エンジンの eff と同じ）
+    abOf(id, n) {
+      const t = this.teamOf(id);
+      const p = t && t.players && t.players[id];
+      if (!p || !p.ab) return 10;
+      return YA.eff ? YA.eff(p, n, this.match) : p.ab[n] || 10;
+    }
+    // 能力から決まる動きの倍率（10 が基準）。最高速はスピード、加速は加速、運ぶ速さはドリブル
+    moveK(id) {
+      const c = (this._mk = this._mk || {});
+      const e = c[id];
+      if (e) return e; // 30 コマごとに読み直す（step1）
+      const k = (n, lo, hi) => clamp(lo + ((this.abOf(id, n) - 1) / 19) * (hi - lo), lo, hi);
+      const out = { run: k('スピード', 0.72, 1.12), acc: k('加速', 0.75, 1.2), drib: k('ドリブル', 0.78, 1.12) };
+      c[id] = out;
+      return out;
+    }
+    // 能力を 0〜1 に（1→0、20→1）
+    ab01(id, n) {
+      return clamp((this.abOf(id, n) - 1) / 19, 0, 1);
+    }
     tacOf(id) {
       const t = this.teamOf(id);
       return Object.assign({ tempo: 0.5, width: 0.5, line: 0.5, press: 0.5 }, t && t.tactic);
@@ -547,7 +568,7 @@
           if (this.teamOf(id) === my || fl.tried[id] || this.base[id][3] === 0) continue;
           if (dist(this.disp[id], b) > MOVE.reach) continue;
           fl.tried[id] = true;
-          if (Math.random() < 0.4 * (0.4 + this.shareOf(id) * 1.2)) {
+          if (Math.random() < 0.4 * (0.4 + this.shareOf(id) * 1.2) * (0.5 + this.ab01(id, '予測') + this.ab01(fl.by, 'パス') * -0.4 + 0.2)) { // 読みのいい子ほど止め、うまいパスほど通る
             this.fl = null;
             this.bv = [0, 0];
             this.idle = null;
@@ -566,7 +587,7 @@
         if (near) {
           this.duel = this.duel && this.duel.id === near && this.duel.on === this.owner ? this.duel : { id: near, on: this.owner, t: 0 };
           this.duel.t += dt;
-          if (this.duel.t > 0.5 && Math.random() < dt * (0.4 + this.tacOf(near).press * 1.2) * (0.4 + this.shareOf(near) * 1.2)) {
+          if (this.duel.t > 0.5 && Math.random() < dt * (0.4 + this.tacOf(near).press * 1.2) * (0.4 + this.shareOf(near) * 1.2) * (0.4 + this.ab01(near, 'タックル') * 1.2) * (1.6 - (this.ab01(this.owner, 'ドリブル') + this.ab01(this.owner, 'バランス') + this.ab01(this.owner, '強さ')) / 3 * 1.2)) {
             const r = this.disp[near];
             const d = Math.max(0.3, dist(r, b));
             this.lock[this.owner] = 0.9;
@@ -583,7 +604,7 @@
       if (!this.owner) return; // 誰かが拾いに行く（targets で）
       // 持ってから出すまでの時間は攻めの速さで決まる（縦に速いは早く、ポゼッションはためる）
       const tc = this.tacOf(this.owner);
-      const s = (this.idle = this.idle && this.idle.carrier === this.owner ? this.idle : { carrier: this.owner, t: 0, dur: (0.35 + (1 - tc.tempo) * 1.0 + Math.random() * (0.4 + (1 - tc.tempo) * 0.8)) * (this.surgeOf(this.owner) ? 0.7 : 1) });
+      const s = (this.idle = this.idle && this.idle.carrier === this.owner ? this.idle : { carrier: this.owner, t: 0, dur: (0.35 + (1 - tc.tempo) * 1.0 + Math.random() * (0.4 + (1 - tc.tempo) * 0.8)) * (this.surgeOf(this.owner) ? 0.7 : 1) * (1.3 - this.ab01(this.owner, '判断') * 0.6) }); // 判断の速い子は早く出す
       s.t += dt;
       if (s.t < s.dur) return;
       const me = this.owner;
@@ -592,10 +613,10 @@
       const atk = this.atkDir(me)[1];
       const depth = atk > 0 ? q[1] : L - q[1]; // 自分のゴールからの深さ
       const back = depth < 30 ? 2 : 4 + (1 - tc.tempo) * 16; // 後ろへ戻してよい距離（自陣の深くでは戻さない）
-      const far = depth < 30 ? 45 : 22 + tc.tempo * 14; // 速い攻めほど遠くへ蹴る。自陣の深くからは大きく蹴り出す
+      const far = (depth < 30 ? 45 : 22 + tc.tempo * 14) + (this.ab01(me, '視野') - 0.5) * 16; // 速い攻めほど遠くへ蹴る。自陣の深くからは大きく蹴り出す。視野の広い子は遠くの味方を見つける
       let tgt = null;
       // 相手の陣の深くほど、相手に引っかかる（守りが固まっていて通らない）
-      if (Math.random() < (0.06 + 0.25 * clamp((depth - 60) / 40, 0, 1)) * clamp(1.9 - this.shareOf(me) * 1.8, 0.5, 1.6)) { // 押している側はミスが少ない
+      if (Math.random() < (0.06 + 0.25 * clamp((depth - 60) / 40, 0, 1)) * clamp(1.9 - this.shareOf(me) * 1.8, 0.5, 1.6) * (1.6 - this.ab01(me, 'パス') * 1.2)) { // パスのうまい子はミスが少ない // 押している側はミスが少ない
         // 相手に渡ってしまうパス
         let bd = 30;
         for (const id of ids) if (this.teamOf(id) !== my && this.base[id][3] !== 0) { const d = dist(this.disp[id], q); if (d < bd && d > 5) { bd = d; tgt = id; } }
@@ -636,7 +657,16 @@
       const goal = Math.abs(b[0] - 34) < 3.7 && ((b[1] < 0 && b[1] > -2.3) || (b[1] > L && b[1] < L + 2.3));
       // 得点のあとだけ暗転して並び直す。ゴールキック・スローインは、ボールを置いて蹴る子が取りに走る（早送り）
       if (!goal) this.cut = 0;
-      else for (const id of Object.keys(this.base)) { this.disp[id] = this.shapePos(id); this.vel[id] = [0, 0]; }
+      else {
+        // キックオフ：両チームとも自分の陣地に並ぶ
+        this.poss = null;
+        for (const id of Object.keys(this.base)) {
+          const q = this.shapePos(id);
+          const home = this.teamOf(id) === m.home;
+          this.disp[id] = [q[0], home ? Math.min(q[1], L / 2 - 1.5) : Math.max(q[1], L / 2 + 1.5)];
+          this.vel[id] = [0, 0];
+        }
+      }
       if (goal) {
         pos = [34, L / 2];
         const conceded = b[1] < 0 ? m.home : m.away; // y=0 側はホームのゴール
@@ -749,12 +779,14 @@
         if (!this.disp[id]) { this.disp[id] = this.shapePos(id); this.vel[id] = [0, 0]; }
         const p = this.disp[id];
         const v = this.vel[id] || [0, 0];
-        const [tg, vmax, thru] = this.targetOf(id);
+        const mk = this.moveK(id);
+        const [tg, vmax0, thru] = this.targetOf(id);
+        const vmax = vmax0 * (id === this.owner ? mk.drib : mk.run); // 速い子は速く、運ぶのがうまい子は速く運ぶ
         const dx = tg[0] - p[0];
         const dy = tg[1] - p[1];
         const dd = Math.hypot(dx, dy);
         // 着く前に減速する（止まりたい所で止まれる速さ）
-        const want = dd > 0.05 ? (thru ? vmax : Math.min(vmax, Math.sqrt(2 * MOVE.acc * 0.85 * dd))) : 0; // thru：通り道の点では止まらない
+        const want = dd > 0.05 ? (thru ? vmax : Math.min(vmax, Math.sqrt(2 * MOVE.acc * mk.acc * 0.85 * dd))) : 0; // thru：通り道の点では止まらない
         const des = [dd > 0.05 ? (dx / dd) * want : 0, dd > 0.05 ? (dy / dd) * want : 0];
         // 近すぎる子からは離れる（体が重ならない）。ボールに向かう子は押されにくい
         const soft = id === this.owner || id === this.expect || (this.pressers && this.pressers[id]) ? 0.4 : 1;
@@ -767,10 +799,11 @@
           if (od < MOVE.space && od > 1e-3) { const f = ((MOVE.space - od) / MOVE.space) * 7 * soft; des[0] += (ox / od) * f; des[1] += (oy / od) * f; }
         }
         const dsp = Math.hypot(des[0], des[1]);
-        if (dsp > MOVE.sprint) { des[0] *= MOVE.sprint / dsp; des[1] *= MOVE.sprint / dsp; } // 押されても全力より速くは走らない
+        const vtop = MOVE.sprint * mk.run;
+        if (dsp > vtop) { des[0] *= vtop / dsp; des[1] *= vtop / dsp; } // 押されても全力より速くは走らない
         const dv = [des[0] - v[0], des[1] - v[1]];
         const dvn = Math.hypot(dv[0], dv[1]);
-        const mx = MOVE.acc * dt;
+        const mx = MOVE.acc * mk.acc * dt;
         if (dvn > mx) { dv[0] *= mx / dvn; dv[1] *= mx / dvn; }
         const nv = [v[0] + dv[0], v[1] + dv[1]];
         this.vel[id] = nv;
@@ -791,6 +824,8 @@
     }
     step1(dt) {
       const m = this.match;
+      this.clockI = (this.clockI || 0) + 1;
+      if (this.clockI % 30 === 0) this._mk = {}; // 疲れで変わるので時々読み直す
       const share = m.homeShare ? m.homeShare() : 0.5;
       this.mom = (this.mom || 0) * Math.exp(-dt / 8); // 場面の勢いは8秒ほどで薄れる
       const want = clamp(share + this.mom, 0.2, 0.8);

@@ -85,5 +85,50 @@ const hi = flowOf(0.7);
 console.log('流れ 0.3：保持 ' + (lo.poss * 100).toFixed(0) + '% 相手陣の奥 ' + (lo.deep * 100).toFixed(0) + '%　流れ 0.7：保持 ' + (hi.poss * 100).toFixed(0) + '% 相手陣の奥 ' + (hi.deep * 100).toFixed(0) + '%');
 ok(hi.poss - lo.poss > 0.1, '押している側がボールを長く持つ');
 ok(hi.deep > lo.deep * 1.5, '押している側は相手陣の奥にいる時間が長い');
+// 能力：速い子ほど速く走り、パスのうまい子ほどパスが通る
+{
+  const top = {};
+  const sp = {};
+  const pass = { hi: [0, 0], lo: [0, 0] };
+  for (const seed of [3, 8, 21, 34]) {
+    const w = YA.newWorld(seed);
+    const home = YA.teamFromWorld(w, 'A');
+    const away = YA.makeOpponent(YA.opponentOf(w), seed * 7);
+    const m = new YA.Match({ seed, home, away, settings: { autoStop: false } });
+    const R = new YA.Renderer(cv);
+    R.setMatch(m);
+    let lastFl = null;
+    let by = null;
+    for (let i = 0; i < 60 * 120; i++) {
+      R.update(1 / 60);
+      for (const id of Object.keys(R.disp)) {
+        const k = seed + ':' + id;
+        top[k] = Math.max(top[k] || 0, R.speed[id] || 0);
+        sp[k] = R.abOf(id, 'スピード');
+      }
+      if (R.fl && R.fl !== lastFl && R.fl.by) by = R.fl.by;
+      lastFl = R.fl;
+      if (by && R.owner && !R.fl) {
+        const pv = R.abOf(by, 'パス');
+        const okPass = R.teamOf(R.owner) === R.teamOf(by);
+        const g = pv >= 12 ? pass.hi : pv <= 9 ? pass.lo : null;
+        if (g) { g[0]++; if (okPass) g[1]++; }
+        by = null;
+      }
+    }
+  }
+  const ks = Object.keys(top).filter((k) => top[k] > 6.8); // 全力で走った子だけ（ジョグだけの子は比べられない）
+  const xs = ks.map((k) => sp[k]);
+  const ys = ks.map((k) => top[k]);
+  const mx = avg(xs);
+  const my = avg(ys);
+  const cov = xs.reduce((a, x, i) => a + (x - mx) * (ys[i] - my), 0);
+  const corr = cov / Math.sqrt(xs.reduce((a, x) => a + (x - mx) ** 2, 0) * ys.reduce((a, y) => a + (y - my) ** 2, 0));
+  const rHi = pass.hi[1] / Math.max(1, pass.hi[0]);
+  const rLo = pass.lo[1] / Math.max(1, pass.lo[0]);
+  console.log('スピードと最高速の相関 ' + corr.toFixed(2) + '　パスが通った割合 パス12以上 ' + (rHi * 100).toFixed(0) + '%（' + pass.hi[0] + '本） パス9以下 ' + (rLo * 100).toFixed(0) + '%（' + pass.lo[0] + '本）');
+  ok(corr > 0.4, 'スピードの高い子ほど速く走る');
+  ok(rHi > rLo + 0.04, 'パスのうまい子ほどパスが通る');
+}
 console.log(fails ? '失敗 ' + fails : '戦い方の動きの点検: すべて通過');
 process.exit(fails ? 1 : 0);
