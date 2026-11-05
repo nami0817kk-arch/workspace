@@ -189,7 +189,8 @@
   }));
   // 人の体の素材：少しつやのある布と肌（陰影がなめらかに出る）
   const smat = {};
-  const std = (hex, rough) => smat[hex + (rough || '')] || (smat[hex + (rough || '')] = new T.MeshStandardMaterial({ color: new T.Color(hex), roughness: rough || 0.78, metalness: 0 }));
+  // 太陽はカメラの向こう側（長い影を手前に落とす）。陰になる手前の面が黒くつぶれないよう、色の 22% を自分で光らせる
+  const std = (hex, rough) => smat[hex + (rough || '')] || (smat[hex + (rough || '')] = new T.MeshStandardMaterial({ color: new T.Color(hex), roughness: rough || 0.78, metalness: 0, emissive: new T.Color(hex).multiplyScalar(0.22) }));
   // 縦（Z）向きのカプセル：腕・脚の丸い棒
   const capZ = (r, len, m, seg) => {
     const g = new T.CapsuleGeometry(r, len, 6, seg || 14);
@@ -265,47 +266,63 @@
     const body = new T.Group();
     body.scale.setScalar(BODY);
     root.add(body);
+    const upper = new T.Group(); // 胴・腕・頭
+    body.add(upper);
+    const headG = new T.Group(); // 首から上
+    upper.add(headG);
     // 胴：腰からわき・胸・肩へ。前後は薄く
-    body.add(lathe([[0, 0.93], [0.15, 0.93], [0.152, 0.99], [0.142, 1.07], [0.15, 1.16], [0.172, 1.26], [0.186, 1.35], [0.175, 1.42], [0.13, 1.47], [0.07, 1.5], [0, 1.505]], shirt, 0.64));
+    upper.add(lathe([[0, 0.93], [0.15, 0.93], [0.152, 0.99], [0.142, 1.07], [0.15, 1.16], [0.172, 1.26], [0.186, 1.35], [0.175, 1.42], [0.13, 1.47], [0.07, 1.5], [0, 1.505]], shirt, 0.64));
     // パンツ：腰まわり
     body.add(lathe([[0, 0.76], [0.14, 0.76], [0.162, 0.83], [0.16, 0.9], [0.152, 0.96], [0, 0.96]], shorts, 0.7));
     // 肩の丸み
     for (const sd of [-1, 1]) {
-      const sh = new T.Mesh(new T.SphereGeometry(0.068, 18, 12), shirt);
-      sh.position.set(0.19 * sd, 0, 1.39);
-      sh.scale.set(1, 0.9, 0.85);
+      const sh = new T.Mesh(new T.SphereGeometry(0.06, 18, 12), shirt);
+      sh.position.set(0.185 * sd, 0, 1.375);
+      sh.scale.set(1, 0.85, 0.8);
       sh.castShadow = true;
-      body.add(sh);
+      upper.add(sh);
+      // 首から肩への筋（なで肩にしない）
+      const tr = new T.Mesh(new T.SphereGeometry(0.07, 14, 10), shirt);
+      tr.position.set(0.1 * sd, -0.01, 1.445);
+      tr.scale.set(1.1, 0.7, 0.4);
+      upper.add(tr);
+    }
+    // おしり（パンツの後ろの丸み）
+    for (const sd of [-1, 1]) {
+      const gl = new T.Mesh(new T.SphereGeometry(0.07, 14, 10), shorts);
+      gl.position.set(0.06 * sd, -0.04, 0.85);
+      gl.scale.set(1, 0.7, 1);
+      body.add(gl);
     }
     // 襟の差し色
     const trim = new T.Mesh(new T.TorusGeometry(0.062, 0.014, 8, 28), std(gk ? '#ffffff' : kit.acc));
     trim.scale.set(1, 0.85, 1);
     trim.position.z = 1.5;
-    body.add(trim);
+    upper.add(trim);
     // 背番号（背中 = -y 側）
     const ink = YA.colorDist && YA.colorDist(gk ? kit.gk : kit.shirt, '#ffffff') < 120 ? '#1b2438' : '#ffffff';
     const nm = new T.Mesh(new T.PlaneGeometry(0.24, 0.24), new T.MeshBasicMaterial({ map: numberTexture(num, ink), transparent: true }));
     nm.rotation.x = Math.PI / 2; // 背中（-y）を向く。後ろから見て字が正しく読める
     nm.position.set(0, -0.122, 1.24);
-    body.add(nm);
+    upper.add(nm);
     // 首と頭（あごが少し細い卵形）と耳
     const neck = capZ(0.048, 0.07, skin, 12);
     neck.position.z = 1.54;
-    body.add(neck);
+    headG.add(neck);
     const head = new T.Mesh(new T.SphereGeometry(0.112, 28, 20), skin);
     head.scale.set(0.9, 1, 1.12);
     head.position.z = 1.665;
     head.castShadow = true;
-    body.add(head);
+    headG.add(head);
     const jaw = new T.Mesh(new T.SphereGeometry(0.075, 18, 12), skin);
     jaw.scale.set(1, 1.05, 0.85);
     jaw.position.set(0, 0.025, 1.6);
-    body.add(jaw);
+    headG.add(jaw);
     for (const sd of [-1, 1]) {
       const ear = new T.Mesh(new T.SphereGeometry(0.024, 10, 8), skin);
       ear.scale.set(0.5, 1, 1.3);
       ear.position.set(0.1 * sd, -0.005, 1.66);
-      body.add(ear);
+      headG.add(ear);
     }
     // 顔（前 = +y）：目・眉・鼻・口。遠目にも顔の向きがわかる
     const eyeM = std('#1b1b1b', 0.3);
@@ -324,7 +341,7 @@
     const mouth = new T.Mesh(new T.BoxGeometry(0.034, 0.006, 0.007), std('#8a4a3a'));
     mouth.position.set(0, 0.096, 1.618);
     body.add(nose, mouth);
-    addHair(body, hair, style);
+    addHair(headG, hair, style);
     // 脚：股（hip）→ 膝（knee）。もも・膝の丸み・ふくらはぎ（ソックス）・スパイク
     const legs = [];
     for (const sd of [-1, 1]) {
@@ -348,7 +365,11 @@
       bt.scale.set(0.95, 1, 0.75);
       bt.position.set(0, 0.045, -0.385);
       bt.castShadow = true;
-      knee.add(kc, calf, ankle, bt);
+      const band = new T.Mesh(new T.TorusGeometry(0.06, 0.014, 6, 20), std(gk ? '#ffffff' : kit.acc));
+      band.position.z = -0.05;
+      const sole = new T.Mesh(new T.BoxGeometry(0.08, 0.22, 0.018), std('#e8e8e8', 0.6));
+      sole.position.set(0, 0.045, -0.418);
+      knee.add(kc, calf, ankle, bt, band, sole);
       hip.add(leg, thigh, knee);
       body.add(hip);
       legs.push({ hip, knee });
@@ -372,10 +393,10 @@
       elb.add(fo, hand);
       sho.add(sleeve, up, elb);
       sho.rotation.y = 0.1 * sd;
-      body.add(sho);
+      upper.add(sho);
       arms.push({ sho, elb });
     }
-    root.userData = { legs, arms, body, kick: 0, ph: Math.random() * 6, run: 0, yaw: null };
+    root.userData = { legs, arms, body, upper, headG, kick: 0, ph: Math.random() * 6, ph0: Math.random() * 6, run: 0, yaw: null };
     return root;
   }
 
@@ -646,6 +667,22 @@
         u.arms[i].elb.rotation.x = cheer || dv ? 0.15 : 0.25 + run * 0.9;
       }
       const side = u.diveSide || 1;
+      // 立ち止まり：膝を軽く曲げ、足を少し開いて構える。ゆっくり重心を左右に移す
+      const still = 1 - run;
+      const sway = Math.sin((this.clock || 0) * 1.3 + u.ph0) * still;
+      if (!cheer && !dv) for (let i = 0; i < 2; i++) {
+        const sd = i ? 1 : -1;
+        u.legs[i].hip.rotation.y = sd * (0.07 * still + 0.02);
+        u.legs[i].knee.rotation.x -= 0.18 * still;
+        u.legs[i].hip.rotation.x += 0.09 * still;
+        u.arms[i].sho.rotation.y = sd * (0.12 + 0.06 * still);
+      }
+      // ひねり：脚と逆に肩を回し、頭は進む向きに残す
+      const tw = cheer || dv ? 0 : Math.sin(ph) * 0.3 * run;
+      u.upper.rotation.z = -tw;
+      u.headG.rotation.z = tw * 0.8 + sway * 0.12;
+      u.upper.rotation.y = (cheer || dv ? 0 : Math.cos(ph) * 0.05 * run) + sway * 0.03;
+      u.upper.scale.z = 1 + Math.sin((this.clock || 0) * 2.4 + u.ph0) * 0.008 * still; // 息づかい
       u.body.position.x = side * 0.75 * dv;
       u.body.position.z = cheer ? Math.abs(Math.sin((this.clock || 0) * 8)) * 0.28 : Math.abs(Math.cos(ph)) * 0.06 * run + 0.28 * dv;
       u.body.rotation.x = cheer ? 0 : -run * 0.14 + kk * 0.15; // 走るときは前かがみ、蹴るときは少し反る
