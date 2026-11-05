@@ -5,6 +5,7 @@ import 'game_screen.dart';
 import 'home_screen.dart';
 import 'milestone_dialog.dart';
 import 'layout.dart';
+import 'team_colors.dart';
 
 class BasketballCareerApp extends StatefulWidget {
   const BasketballCareerApp({super.key, this.controller});
@@ -22,11 +23,19 @@ class _BasketballCareerAppState extends State<BasketballCareerApp> {
 
   @override
   Widget build(BuildContext context) {
+    // 画面の差し色は、いまの所属チームの色(始める前はバスケットボールの橙)。
+    return ListenableBuilder(
+      listenable: c,
+      builder: (context, _) => _app(c.game == null ? _ball : teamColorOfGame(c.game!).accent),
+    );
+  }
+
+  Widget _app(Color accent) {
     return MaterialApp(
       title: 'バスケ育成',
       debugShowCheckedModeBanner: false,
-      theme: _theme(Brightness.light),
-      darkTheme: _theme(Brightness.dark),
+      theme: _theme(Brightness.light, accent),
+      darkTheme: _theme(Brightness.dark, accent),
       // 幅の広い端末(iPad など)では文字を少し大きくする(小さく見えないように)。
       builder: (context, child) {
         final tablet = isTablet(context);
@@ -107,10 +116,16 @@ class _MilestoneHostState extends State<_MilestoneHost> {
   Widget build(BuildContext context) => widget.child;
 }
 
-ThemeData _theme(Brightness b) {
-  final scheme = ColorScheme.fromSeed(
-          seedColor: const Color(0xFFE65100), brightness: b)
-      .copyWith(primary: const Color(0xFFE65100), onPrimary: Colors.white);
+const _ball = Color(0xFFE65100);
+
+final _themes = <(Brightness, Color), ThemeData>{};
+
+ThemeData _theme(Brightness b, Color accent) =>
+    _themes.putIfAbsent((b, accent), () => _makeTheme(b, accent));
+
+ThemeData _makeTheme(Brightness b, Color accent) {
+  final scheme = ColorScheme.fromSeed(seedColor: accent, brightness: b)
+      .copyWith(primary: accent, onPrimary: Colors.white);
   return ThemeData(
     colorScheme: scheme,
     useMaterial3: true,

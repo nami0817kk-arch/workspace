@@ -68,7 +68,11 @@ class YearRecord {
     this.box = const BoxScore(),
     this.benchGames = 0,
     this.bestGame = '',
+    this.team = '',
   });
+
+  /// その年の所属チーム(ユニフォームの色を決める)。古いセーブは空。
+  final String team;
 
   /// その大会のベストゲーム(「34点12リバウンド vs ○○(勝ち)」)。古いセーブは空。
   final String bestGame;
@@ -109,6 +113,7 @@ class YearRecord {
         'box': box.toJson(),
         'bench': benchGames,
         'best': bestGame,
+        'team': team,
         'winter': winter,
         'award': award,
         'steals': steals,
@@ -149,6 +154,7 @@ class YearRecord {
         box: BoxScore.fromJson((j['box'] as Map?)?.cast<String, dynamic>()),
         benchGames: (j['bench'] as num?)?.toInt() ?? 0,
         bestGame: (j['best'] as String?) ?? '',
+        team: (j['team'] as String?) ?? '',
       );
 }
 
@@ -1425,8 +1431,13 @@ class Game {
           rival: true,
           bonus: rival.edgeAt(player.age) + difficulty.opponent + ease);
     }
+    // 自分のチームと同じ名前の相手は出さない(「東雲ホークス vs 東雲ホークス」になっていた)。
+    var name = opponentTeamName(l, rng);
+    for (var i = 0; name == teamName && i < 5; i++) {
+      name = opponentTeamName(l, rng);
+    }
     return (
-        name: opponentTeamName(l, rng),
+        name: name,
         rival: false,
         bonus: difficulty.opponent + ease);
   }
@@ -1483,6 +1494,7 @@ class Game {
       box: t.box,
       benchGames: t.matches.where((m) => !m.starter).length,
       bestGame: bestGameOf(t.matches),
+      team: teamName,
     ));
     // 控えから先発へ(同じリーグの前の大会は控えが多く、今回は全部先発)。
     final prevSame = records.reversed.skip(1).where((r) => r.league == t.league).firstOrNull;
