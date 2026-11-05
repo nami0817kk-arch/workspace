@@ -39,7 +39,7 @@ def _ease(u):
 
 def region():
     """図を置く範囲(字幕の上)。"""
-    return (0, 60, W, 920) if LAND else (0, 200, W, 1460)
+    return (0, 100, W, 925) if LAND else (0, 200, W, 1460)     # 横は左上の出典表記(y 40〜80)の下から
 
 
 # ---------------------------------------------------------------- 軌道の計算(太陽を原点、単位は天文単位と年)
@@ -551,8 +551,8 @@ def sc_vectors(img, sc, t, ctx, k):
     """太陽へ 10km/s、横へ 30km/s、合わさって斜め。"""
     d = ImageDraw.Draw(img)
     x0, y0, x1, y1 = region()
-    sc_k = (y1 - y0 - 260 * S) / 30 * (1.0 if LAND else 0.7)
-    ox, oy = x0 + (x1 - x0) * (0.22 if LAND else 0.12), y1 - 90 * S
+    sc_k = (y1 - y0 - 330 * S) / 30 * (1.0 if LAND else 0.7)
+    ox, oy = x0 + (x1 - x0) * (0.22 if LAND else 0.12), y1 - 170 * S
     vr = sc.get("vr", 10)
     a1 = _ease((t - sc["_t0"]) / 0.6)
     a2 = _ease((t - sc["_t0"] - 0.7) / 0.6)
