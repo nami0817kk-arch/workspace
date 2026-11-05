@@ -6,6 +6,7 @@ import '../../game/game.dart';
 import '../../game/match.dart';
 import '../../game/player.dart';
 import '../../game/season.dart';
+import '../team_colors.dart';
 
 /// 育成画面の上に出す絵。体育館の床・ゴール・選手をコードで描く(画像は使わない)。
 /// 選手の大きさは身長に比例し、ユニフォームの色は所属で変わる。
@@ -17,7 +18,8 @@ class CourtHeader extends StatelessWidget {
       this.versus = false,
       this.pose = Pose.dribble,
       this.scene,
-      this.season});
+      this.season,
+      this.opponent});
   final Game game;
   final double height;
 
@@ -28,10 +30,13 @@ class CourtHeader extends StatelessWidget {
   final String? scene;
 
   /// 過去の年を描く(成績カード): その年の舞台と年齢で、会場・子ども/大人・ユニフォームの色を決める。
-  final ({League league, int age, double heightCm})? season;
+  final ({League league, int age, double heightCm, String team})? season;
 
   /// ライバルとの対決で、向かい合う相手を描く。
   final bool versus;
+
+  /// 向かい合う相手の名前(相手のユニフォームの色を決める)。null なら黒っぽい色。
+  final String? opponent;
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +52,7 @@ class CourtHeader extends StatelessWidget {
             CustomPaint(
               painter: _CourtPainter(
                 heightCm: season?.heightCm ?? game.player.heightCm,
-                jersey: jerseyColor(game.track, game.player.age),
+                jersey: _colorOf(game, season).jersey,
                 slot: game.slot,
                 versus: versus,
                 number: game.number,
@@ -63,11 +68,11 @@ class CourtHeader extends StatelessWidget {
                   (frame == null && !sync) ? const SizedBox.shrink() : child,
               errorBuilder: (_, __, ___) => const SizedBox.shrink(),
             ),
-            _Sprites(game: game, versus: versus, pose: pose, season: season),
+            _Sprites(game: game, versus: versus, pose: pose, season: season, opponent: opponent),
             CustomPaint(
               painter: _CourtPainter(
                 heightCm: season?.heightCm ?? game.player.heightCm,
-                jersey: jerseyColor(game.track, game.player.age),
+                jersey: _colorOf(game, season).jersey,
                 slot: game.slot,
                 versus: versus,
                 number: game.number,
@@ -153,40 +158,30 @@ Pose poseForPlan(BigGamePlan p) => switch (p) {
       BigGamePlan.team => Pose.dribble,
     };
 
-/// 舞台ごとのユニフォームの色名(過去の年を描くとき)。代表は青。
-String spriteColorForLeague(League l) => switch (l) {
-      League.minibasket => 'yellow',
-      League.juniorHigh || League.national => 'blue',
-      League.highSchool => 'red',
-      League.university => 'green',
-      League.corporate => 'teal',
-      League.proDomestic || League.proAbroad => 'purple',
-    };
-
-/// 選手の絵の色名(`assets/art/players/<kid|adult>_<色>.png`)。`jerseyColor` と同じ分け方。
-String spriteColorName(Track t, int age) => switch (t) {
-      Track.school => age < 13 ? 'yellow' : age < 16 ? 'blue' : 'red',
-      Track.university => 'green',
-      Track.corporate => 'teal',
-      Track.pro => 'purple',
-    };
+/// ユニフォームの色(所属チームで決まる。過去の年はその年のチーム)。
+TeamColor _colorOf(Game g, ({League league, int age, double heightCm, String team})? season) =>
+    season == null ? teamColorOfGame(g) : teamColorOf(season.team, season.league);
 
 /// 選手の絵(Gemini 生成)。12歳までは子ども、それ以降は大人の絵。大きさは身長に比例し、
-/// ユニフォームの色は所属で変わる(絵は青を色相で替えた7色)。背番号は絵の上に文字で重ねる。
+/// ユニフォームの色は所属チームで変わる(絵は青を色相で替えた12色。`team_colors.dart`)。背番号は絵の上に文字で重ねる。
 /// 絵が読み込めないときは、コードで描いた選手に戻る。
 class _Sprites extends StatelessWidget {
-  const _Sprites({required this.game, required this.versus, this.pose = Pose.dribble, this.season});
+  const _Sprites(
+      {required this.game, required this.versus, this.pose = Pose.dribble, this.season, this.opponent});
   final Game game;
   final bool versus;
   final Pose pose;
-  final ({League league, int age, double heightCm})? season;
+  final ({League league, int age, double heightCm, String team})? season;
+  final String? opponent;
 
   @override
   Widget build(BuildContext context) {
     final p = game.player;
     final age = season?.age ?? p.age;
     final kind = age < 13 ? 'kid' : 'adult';
-    final color = season == null ? spriteColorName(game.track, p.age) : spriteColorForLeague(season!.league);
+    final ours = _colorOf(game, season);
+    final color = ours.sprite;
+    final theirs = opponent == null ? 'dark' : opponentColor(opponent!, ours).sprite;
     return LayoutBuilder(builder: (context, c) {
       final w = c.maxWidth, h = c.maxHeight;
       final scale = ((season?.heightCm ?? p.heightCm) / 210).clamp(0.5, 1.05);
@@ -196,7 +191,7 @@ class _Sprites extends StatelessWidget {
       Widget fallback() => CustomPaint(
             painter: _CourtPainter(
               heightCm: 210,
-              jersey: jerseyColor(game.track, p.age),
+              jersey: ours.jersey,
               slot: game.slot,
               number: game.number,
               layer: _Layer.fallback,
@@ -249,24 +244,12 @@ class _Sprites extends StatelessWidget {
         sprite('${poseFile(pose, kid: kind == 'kid')}_$color', w * (versus ? 0.22 : 0.30), figH,
             number: game.number, pose: pose, kid: kind == 'kid'),
         if (versus)
-          sprite('adult_dark', w * 0.52, h * 0.86 * 0.98,
+          sprite('adult_$theirs', w * 0.52, h * 0.86 * 0.98,
               flip: true),
       ]);
     });
   }
 }
-
-/// 所属ごとのユニフォーム色。
-Color jerseyColor(Track t, int age) => switch (t) {
-      Track.school => age < 13
-          ? const Color(0xFFF9A825)
-          : age < 16
-              ? const Color(0xFF1565C0)
-              : const Color(0xFFC62828),
-      Track.university => const Color(0xFF2E7D32),
-      Track.corporate => const Color(0xFF00838F),
-      Track.pro => const Color(0xFF6A1B9A),
-    };
 
 class _CourtPainter extends CustomPainter {
   _CourtPainter(

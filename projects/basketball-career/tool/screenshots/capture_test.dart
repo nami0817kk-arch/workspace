@@ -304,6 +304,8 @@ void main() {
         track: Track.pro,
         salary: 3000,
         slot: 1,
+        // ライバルの名前を入れないと「相手: ライバル ライバル」になる。
+        rival: base.rival,
       );
       g.choose(Action.rest, Ability.defense, askClutch: true, askHalftime: true);
       var guard = 0;

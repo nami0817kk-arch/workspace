@@ -100,7 +100,8 @@ String mateName(Random rng) =>
 /// コーチの名前(姓)。
 String coachName(Random rng) => _coachSurnames[rng.nextInt(_coachSurnames.length)];
 
-const _teamPrefix = [
+/// チーム名の頭(地名)。色は `lib/ui/team_colors.dart` の `teamPrefixColors` で決まる。
+const teamPrefixes = [
   '北嶺', '南陽', '東雲', '西浜', '青葉', '白鷺', '紅葉', '朝日', '双葉', '桜台',
   '星丘', '翠山', '蒼海', '大和', '緑風',
 ];
@@ -115,7 +116,7 @@ String countryName(Random rng) => _countries[rng.nextInt(_countries.length)];
 
 /// リーグに合った、架空の対戦チーム名。
 String opponentTeamName(League league, Random rng) {
-  final p = _teamPrefix[rng.nextInt(_teamPrefix.length)];
+  final p = teamPrefixes[rng.nextInt(teamPrefixes.length)];
   return switch (league) {
     League.minibasket => '$pミニバスクラブ',
     League.juniorHigh => '$p中学',

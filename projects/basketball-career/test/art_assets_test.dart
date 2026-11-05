@@ -4,8 +4,9 @@ import 'dart:io';
 
 import 'package:basketball_career/game/alltime.dart';
 import 'package:basketball_career/game/life.dart';
+import 'package:basketball_career/game/rival.dart';
+import 'package:basketball_career/ui/team_colors.dart';
 import 'package:basketball_career/game/match.dart';
-import 'package:basketball_career/game/game.dart';
 import 'package:basketball_career/game/season.dart';
 import 'package:basketball_career/ui/art/court.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -80,29 +81,25 @@ void main() {
     }
   });
 
-  test('選手の絵(子ども・大人×ユニフォーム7色)がそろい、所属ごとの色名で引ける', () {
+  test('選手の絵(子ども・大人×ユニフォーム12色)がそろい、所属チームの色名で引ける', () {
     for (final kind in ['kid', 'adult']) {
-      for (final color in ['yellow', 'blue', 'red', 'green', 'teal', 'purple', 'dark']) {
+      for (final color in [for (final c in TeamColor.values) c.sprite, 'dark']) {
         final f = File('assets/art/players/${kind}_$color.png');
         expect(f.existsSync(), isTrue, reason: '${kind}_$color.png が無い');
         expect(f.lengthSync(), lessThan(60 * 1024), reason: '${kind}_$color.png が重い');
       }
     }
     expect(File('pubspec.yaml').readAsStringSync(), contains('assets/art/players/'));
-    // 所属×年齢の組み合わせすべてで、置いてある色名になる。
-    for (final t in Track.values) {
-      for (final age in [8, 14, 17, 20, 25, 35]) {
-        final name = spriteColorName(t, age);
-        expect(File('assets/art/players/adult_$name.png').existsSync(), isTrue,
-            reason: '$t $age 歳 → $name');
-      }
+    // チーム名の頭はすべて色が決まっている(rival.dart の並びと揃える)。
+    for (final p in teamPrefixes) {
+      expect(teamPrefixColors.containsKey(p), isTrue, reason: '$p の色が無い');
     }
   });
 
-  test('動きのある選手の絵(シュート・ディフェンス・ダンク/ジャンプ)が、子ども・大人×7色そろう', () {
+  test('動きのある選手の絵(シュート・ディフェンス・ダンク/ジャンプ)が、子ども・大人×12色そろう', () {
     for (final kid in [true, false]) {
       for (final p in Pose.values) {
-        for (final color in ['yellow', 'blue', 'red', 'green', 'teal', 'purple', 'dark']) {
+        for (final color in [for (final c in TeamColor.values) c.sprite, 'dark']) {
           final f = File('assets/art/players/${poseFile(p, kid: kid)}_$color.png');
           expect(f.existsSync(), isTrue, reason: '${f.path} が無い');
           expect(f.lengthSync(), lessThan(60 * 1024), reason: '${f.path} が重い');

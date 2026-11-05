@@ -6,6 +6,7 @@ import 'package:share_plus/share_plus.dart';
 
 import '../game/game.dart';
 import '../game/money.dart';
+import '../game/season.dart';
 import 'art/court.dart';
 import 'labels.dart';
 
@@ -144,7 +145,7 @@ class SeasonCard extends StatelessWidget {
           CourtHeader(
             game: game,
             height: 150,
-            season: (league: first.league, age: age, heightCm: _heightAt(game, age)),
+            season: (league: first.league, age: age, heightCm: _heightAt(game, age), team: first.team),
             pose: s.ppg >= s.rpg * 2 ? Pose.shoot : (s.rpg > s.apg ? Pose.defense : Pose.dribble),
           ),
           Padding(
@@ -160,7 +161,9 @@ class SeasonCard extends StatelessWidget {
                           style: const TextStyle(fontSize: 12, color: Color(0xFF6D5A50))),
                       Text('${game.player.name}${game.number > 0 ? '  #${game.number}' : ''}',
                           style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: ink)),
-                      Text('${leagueLabel(first.league)}・${game.player.position.label}',
+                      Text(
+                          '${first.team.isEmpty || first.league == League.national ? leagueLabel(first.league) : first.team}'
+                          '・${game.player.position.label}',
                           style: const TextStyle(fontSize: 12, color: ink)),
                     ],
                   ),

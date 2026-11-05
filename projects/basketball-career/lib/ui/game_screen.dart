@@ -1765,7 +1765,7 @@ class _HalftimeView extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        CourtHeader(game: game, height: 110, versus: h.vsRival),
+        CourtHeader(game: game, height: 110, versus: h.vsRival, opponent: h.opponent),
         const SizedBox(height: 12),
         Card(
           color: Theme.of(context).colorScheme.primaryContainer,
@@ -1900,6 +1900,7 @@ class _ClutchView extends StatelessWidget {
             game: game,
             height: 110,
             versus: s.vsRival,
+            opponent: s.opponent,
             pose: poseForClutch(info.chances.entries.reduce((a, b) => b.value > a.value ? b : a).key)),
         const SizedBox(height: 12),
         Card(
