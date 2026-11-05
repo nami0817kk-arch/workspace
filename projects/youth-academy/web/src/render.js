@@ -136,6 +136,16 @@
       return Object.assign({ tempo: 0.5, width: 0.5, line: 0.5, press: 0.5 }, t && t.tactic);
     }
     // ボールの位置に合わせてチーム全体が寄る位置。戦い方と役割で、持っているときと守るときの形が変わる
+    // チームの並びの前後の幅（GK を除く、自分のゴールからの深さ）
+    spanOf(t) {
+      const c = (this._span = this._span && this._span.at === this.clockI ? this._span : { at: this.clockI });
+      const k = t === this.match.away ? 'away' : 'home';
+      if (c[k]) return c[k];
+      const away = k === 'away';
+      const ds = Object.keys(this.base).filter((id) => this.base[id][2] === t && this.base[id][3] !== 0).map((id) => (away ? L - this.base[id][1] : this.base[id][1]));
+      c[k] = { lo: Math.min(...ds), hi: Math.max(...ds) };
+      return c[k];
+    }
     shapePos(id) {
       const b = this.base[id];
       const t = b[2];
@@ -154,11 +164,21 @@
       const tags = (YA.ROLE_DEF && YA.ROLE_DEF[s.role] && YA.ROLE_DEF[s.role].tags) || [];
       const has = (k) => tags.indexOf(k) >= 0;
       let x = b[0];
-      yr += (this.shareOf(id) - 0.5) * 22; // 押している側は全体が高く、押されている側は下がる
+      // 縦の位置：並びの前後（0＝最終ライン、1＝最前線）を、ボールの位置で決まる「ブロック」に当てはめる。
+      //   守り：最終ラインはボールの 18〜34m 後ろ（ラインが高い戦い方ほど近い）、前後 26〜30m に固まる
+      //   攻め：最終ラインはボールの 18〜30m 後ろ、前は相手の最終ラインまで伸びる
+      const sp = this.spanOf(t);
+      const u = clamp((yr - sp.lo) / Math.max(1, sp.hi - sp.lo), 0, 1);
+      const fs = this.shareOf(id) - 0.5; // 押している側は全体が高い
       if (mine) {
-        if (this.surgeOf(id)) yr += 5;
-        // 攻め：全体が押し上げ、幅は戦い方の広さ（サイド攻撃は外に張る）
-        yr += 3 + tc.tempo * 4;
+        const lineD = clamp(br - 30 + tc.line * 12 + fs * 12 + (this.surgeOf(id) ? 5 : 0), 12, 58);
+        yr = lineD + u * clamp(62 - lineD * 0.35 + tc.tempo * 6, 30, 50);
+      } else {
+        const lineD = clamp(br - 18 - (1 - tc.line) * 16 + fs * 10, 9, 46);
+        yr = lineD + u * (26 + (1 - tc.press) * 4);
+      }
+      if (mine) {
+        // 攻め：幅は戦い方の広さ（サイド攻撃は外に張る）
         x = 34 + (x - 34) * (0.8 + tc.width * 0.6);
         if (s.duty === 'att') yr += has('wide') ? 10 : 5; // 攻撃の任務のサイドは追い越して上がる
         if (s.duty === 'def' || has('stay')) yr -= 5; // 守備の任務は残る
@@ -168,13 +188,129 @@
         if (has('wide') && s.duty === 'att') x = 34 + (x - 34) * 1.15;
         x = lerp(x, this.ball[0], 0.1);
       } else {
-        // 守り：最終ラインの高さは戦い方で決まる（ハイプレスは高く、堅守は低く）。横はボールへ絞る
-        yr += (tc.line - 0.5) * 18;
+        // 守り：横はボールへ絞る
         if (s.duty === 'att') yr += 4; // 攻撃の任務は戻りが遅い
         x = lerp(34 + (x - 34) * 0.85, this.ball[0], 0.22);
       }
-      const y = clamp(yr + (br - 52) * 0.3, mine ? 3 : 8, L - 6); // 守っていてもゴール前に張り付かない
+      const y = clamp(yr, mine ? 3 : 8, L - 6); // 守っていてもゴール前に張り付かない
       return [clamp(x, 2, W - 2), away ? L - y : y];
+    }
+
+    // ----- ボールを持っていない子の動き（オフザボール） -----
+    // 立ち位置（shapePos）に、そのときの相手と味方を見た動きを重ねる。
+    //   攻め：相手のいない所へずれる（オフザボール）・持っている子の近くで受ける・裏を狙う・オフサイドにならない
+    //   守り：近くの相手をゴール側から捕まえる（マーク）・最終ラインを横一列にそろえる（ポジショニング）
+    lineInfo() {
+      if (this._li && this._li.at === this.clockI) return this._li;
+      const m = this.match;
+      const out = { at: this.clockI, back: {}, lineD: {}, last: {} };
+      for (const t of [m.home, m.away]) {
+        const away = t === m.away;
+        const dep = (y) => (away ? L - y : y);
+        const ids = Object.keys(this.base).filter((id) => this.base[id][2] === t && this.base[id][3] !== 0 && this.disp[id]);
+        if (!ids.length) continue;
+        // 最終ライン：並びでいちばん後ろの子から 9m 以内（4バックなら4人、3バックなら3人）
+        const bd = ids.map((id) => [id, dep(this.base[id][1])]).sort((a, b) => a[1] - b[1]);
+        const back = bd.filter((x) => x[1] < bd[0][1] + 9).map((x) => x[0]);
+        for (const id of back) out.back[id] = true;
+        const sd = back.map((id) => dep(this.shapePos(id)[1]));
+        out.lineD[away ? 'away' : 'home'] = sd.reduce((a, x) => a + x, 0) / sd.length;
+        // 相手から見たこのチームの最後の守り手の位置（オフサイドの線）。いまの位置で見る
+        out.last[away ? 'away' : 'home'] = Math.min(...ids.map((id) => dep(this.disp[id][1])));
+      }
+      this._li = out;
+      return out;
+    }
+    offballPos(id) {
+      const base = this.shapePos(id);
+      const b = this.base[id];
+      if (!b || b[3] === 0 || !this.match) return base;
+      const my = b[2];
+      const away = my === this.match.away;
+      const key = away ? 'away' : 'home';
+      const okey = away ? 'home' : 'away';
+      const dep = (y) => (away ? L - y : y);
+      const li = this.lineInfo();
+      const opp = Object.keys(this.disp).filter((o) => this.base[o] && this.base[o][2] !== my && this.base[o][3] !== 0);
+      let x = base[0];
+      let d = dep(base[1]);
+      const mine = this.poss === key;
+      if (mine) {
+        const ko = this.ab01(id, 'オフザボール');
+        // 相手のいない所へ：近い相手から離れる（うまい子ほど大きく、横に多く動く）
+        for (const o of opp) {
+          const q = this.disp[o];
+          const dx = x - q[0];
+          const dd = d - dep(q[1]);
+          const r = Math.hypot(dx, dd);
+          if (r < 8 && r > 0.01) {
+            const f = ((8 - r) / 8) * (2.5 + ko * 5);
+            x += (dx / r) * f;
+            d += (dd / r) * f * 0.45;
+          }
+        }
+        // 持っている子の近くの2人は、パスを受けられる距離（10〜16m）まで寄る
+        const own = this.owner && this.base[this.owner] && this.base[this.owner][2] === my ? this.owner : null;
+        if (own && own !== id) {
+          const c = this.disp[own];
+          const mates = Object.keys(this.disp).filter((o) => o !== own && this.base[o] && this.base[o][2] === my && this.base[o][3] !== 0);
+          mates.sort((u, v) => dist(this.disp[u], c) - dist(this.disp[v], c));
+          if (mates.indexOf(id) >= 0 && mates.indexOf(id) < 2) {
+            const cd = Math.hypot(x - c[0], d - dep(c[1]));
+            const want = 13;
+            if (cd > 16 || cd < 8) {
+              const k = (cd - want) / Math.max(1, cd) * 0.7;
+              x -= (x - c[0]) * k;
+              d -= (d - dep(c[1])) * k;
+            }
+          }
+        }
+        // 裏を狙う：前の子は、相手の最終ラインの上に張りつく（オフザボールが高いほどぎりぎりまで）
+        const lastOpp = L - li.last[okey]; // 自分のゴールから見た、相手の最後の守り手の深さ
+        if (li.last[okey] != null) {
+          const runner = d > lastOpp - 14;
+          if (runner) d = Math.max(d, lastOpp - 3.5 + ko * 2.5);
+          // オフサイドにならない（パスが自分に出ていなければ、線より前に出ない）
+          if (!(this.fl && this.expect === id)) d = Math.min(d, lastOpp - 0.6);
+        }
+      } else {
+        // マーク：自分の持ち場の近くの相手を、ゴール側から捕まえる
+        const km = this.ab01(id, 'マーク');
+        const kp = this.ab01(id, 'ポジショニング');
+        let tgt = null;
+        let bd = 12 + kp * 4;
+        for (const o of opp) {
+          if (o === this.owner) continue; // 持っている子はプレスの子が見る
+          const r = Math.hypot(this.disp[o][0] - x, dep(this.disp[o][1]) - d);
+          if (r < bd) { bd = r; tgt = o; }
+        }
+        if (tgt) {
+          const q = this.disp[tgt];
+          const qd = dep(q[1]);
+          const gx = 34 - q[0];
+          const gd = -qd;
+          const gl = Math.hypot(gx, gd) || 1;
+          const gap = 1.4 + (1 - km) * 2.6; // マークのうまい子ほど近くにつく
+          const mx = q[0] + (gx / gl) * gap;
+          const md = qd + (gd / gl) * gap;
+          const wgt = 0.4 + km * 0.35;
+          x = lerp(x, mx, wgt);
+          d = lerp(d, md, wgt);
+        }
+        // 持っている相手には、プレスの子のほかは寄りすぎない（プレスの弱い戦い方ほど間を空けて待つ）
+        if (this.owner && this.disp[this.owner] && this.base[this.owner][2] !== my) {
+          const c = this.disp[this.owner];
+          const keep = 3 + (1 - this.tacOf(id).press) * 5;
+          const r = Math.hypot(x - c[0], d - dep(c[1]));
+          if (r < keep && r > 0.01) { const k = keep / r; x = c[0] + (x - c[0]) * k; d = dep(c[1]) + (d - dep(c[1])) * k; }
+        }
+        // 最終ラインは横一列にそろえる（ポジショニングが高いほどそろう）
+        if (li.back[id] && li.lineD[key] != null) {
+          const lim = 3.2 - kp * 2.2;
+          d = clamp(d, li.lineD[key] - lim, li.lineD[key] + lim * 0.6);
+        }
+      }
+      return [clamp(x, 2, W - 2), away ? L - clamp(d, 3, L - 3) : clamp(d, 3, L - 3)];
     }
 
     // ----- 場面：コマを台本にする -----
@@ -640,7 +776,20 @@
       // 受け手の少し前（走り込む先）へ
       const r = this.disp[tgt];
       const v = this.vel[tgt] || [0, 0];
-      const to = [clamp(r[0] + v[0] * 0.6, 1, W - 1), clamp(r[1] + v[1] * 0.6, 1, L - 1), 0];
+      let to = [clamp(r[0] + v[0] * 0.6, 1, W - 1), clamp(r[1] + v[1] * 0.6, 1, L - 1), 0];
+      // スルーパス：相手の最終ラインに張りついた味方へは、ラインの裏のスペースへ出す（視野の広い子ほど狙う）
+      if (this.teamOf(tgt) === my) {
+        const li = this.lineInfo();
+        const okey = this.teamOf(me) === this.match.home ? 'away' : 'home';
+        const lastOpp = li.last[okey] != null ? L - li.last[okey] : null; // 攻める側のゴールから見た相手の最後の守り手
+        const rd = atk > 0 ? r[1] : L - r[1];
+        if (lastOpp != null && rd > lastOpp - 6 && rd < L - 10 && Math.random() < 0.2 + this.ab01(me, '視野') * 0.4) {
+          const lead = 7 + this.ab01(tgt, 'オフザボール') * 5;
+          const ty = clamp(rd + lead, rd, L - 6);
+          to = [clamp(r[0] + (34 - r[0]) * 0.15, 3, W - 3), atk > 0 ? ty : L - ty, 0];
+          this.throughs = (this.throughs || 0) + 1;
+        }
+      }
       this.kick(to, tgt, me);
       this.idle = { recv: tgt, to };
     }
@@ -718,7 +867,7 @@
       if (this.scene && this.chaser === id) return [[ball[0], ball[1]], MOVE.sprint];
       if (this.scene) {
         if (this.stgt[id]) return [this.stgt[id], MOVE.sprint];
-        return [this.shapePos(id), MOVE.jog * 0.85];
+        return [this.offballPos(id), MOVE.jog * 0.85];
       }
       // 合間：パスを受ける子は落ちる所へ。誰も持っていなければ、いちばん近い子が拾いに行く
       if (this.idle && this.idle.recv === id && this.fl) return [[this.fl.to[0], this.fl.to[1]], MOVE.sprint];
@@ -727,7 +876,9 @@
       // プレス：持っている相手へ寄せる（1人目は正面、2人目は内側を切る）。奪いはしない
       const pr = this.pressers && this.pressers[id];
       if (pr) return pr;
-      return [this.shapePos(id), MOVE.jog];
+      // 裏へ抜ける子・寄る子は少し速く
+      const ob = this.offballPos(id);
+      return [ob, dist(ob, this.disp[id] || ob) > 6 ? MOVE.sprint * 0.85 : MOVE.jog];
     }
     // 守る側の誰が、どこまで寄せるか。プレスが強いほど遠くから・速く・2人で行く
     pressPlan() {
@@ -740,7 +891,7 @@
       if (!ids.length) return null;
       const tc = this.tacOf(ids[0]);
       const reach = 4 + tc.press * 30;
-      const gap = 1.6 + (1 - tc.press) * 3; // 弱いプレスは間合いを取って待つ
+      const gap = 1.6 + (1 - tc.press) * 4.5; // 弱いプレスは間合いを取って待つ
       const n = tc.press >= 0.7 ? 2 : 1;
       const score = (id) => {
         const s = this.base[id][4] || {};

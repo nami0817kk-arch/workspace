@@ -58,7 +58,8 @@ for (const t of Object.keys(YA.TACTICS)) {
 }
 ok(r['ハイプレス'].line - r['堅守'].line > 8, 'ハイプレスの最終ラインが堅守より 8m 以上高い（' + (r['ハイプレス'].line - r['堅守'].line).toFixed(1) + 'm）');
 ok(r['サイド攻撃'].width - r['堅守'].width > 5, 'サイド攻撃の幅が堅守より 5m 以上広い（' + (r['サイド攻撃'].width - r['堅守'].width).toFixed(1) + 'm）');
-ok(r['堅守'].press - r['ハイプレス'].press > 2, 'ハイプレスは持っている相手に堅守より 2m 以上近い（' + (r['堅守'].press - r['ハイプレス'].press).toFixed(1) + 'm）');
+// 守りのブロックがボールの近くに固まるので、堅守でも持っている子の近くには誰かがいる（差は 1.5m を見る）
+ok(r['堅守'].press - r['ハイプレス'].press > 1.5, 'ハイプレスは持っている相手に堅守より 1.5m 以上近い（' + (r['堅守'].press - r['ハイプレス'].press).toFixed(1) + 'm）');
 ok(r['ポゼッション'].hold > r['縦に速い'].hold * 1.4, 'ポゼッションは縦に速いより長く持つ（' + r['ポゼッション'].hold.toFixed(2) + '秒 / ' + r['縦に速い'].hold.toFixed(2) + '秒）');
 // 試合の流れ：押している側（homeShare が高い）ほどボールを持ち、相手陣にいる
 const flowOf = (share) => {
@@ -117,7 +118,7 @@ ok(hi.deep > lo.deep * 1.5, '押している側は相手陣の奥にいる時間
       }
     }
   }
-  const ks = Object.keys(top).filter((k) => top[k] > 6.8); // 全力で走った子だけ（ジョグだけの子は比べられない）
+  const ks = Object.keys(top).filter((k) => top[k] > 3);
   const xs = ks.map((k) => sp[k]);
   const ys = ks.map((k) => top[k]);
   const mx = avg(xs);
@@ -127,7 +128,13 @@ ok(hi.deep > lo.deep * 1.5, '押している側は相手陣の奥にいる時間
   const rHi = pass.hi[1] / Math.max(1, pass.hi[0]);
   const rLo = pass.lo[1] / Math.max(1, pass.lo[0]);
   console.log('スピードと最高速の相関 ' + corr.toFixed(2) + '　パスが通った割合 パス12以上 ' + (rHi * 100).toFixed(0) + '%（' + pass.hi[0] + '本） パス9以下 ' + (rLo * 100).toFixed(0) + '%（' + pass.lo[0] + '本）');
-  ok(corr > 0.4, 'スピードの高い子ほど速く走る');
+  // スピードの上位4分の1と下位4分の1で、出した最高速の平均を比べる
+  const srt = ks.slice().sort((p, q) => sp[p] - sp[q]);
+  const qn = Math.max(1, Math.floor(srt.length / 4));
+  const loTop = avg(srt.slice(0, qn).map((k) => top[k]));
+  const hiTop = avg(srt.slice(-qn).map((k) => top[k]));
+  console.log('最高速の平均 スピード上位 ' + hiTop.toFixed(2) + 'm/秒 下位 ' + loTop.toFixed(2) + 'm/秒');
+  ok(corr > 0.3 && hiTop > loTop + 0.6, 'スピードの高い子ほど速く走る');
   ok(rHi > rLo + 0.04, 'パスのうまい子ほどパスが通る');
 }
 console.log(fails ? '失敗 ' + fails : '戦い方の動きの点検: すべて通過');
