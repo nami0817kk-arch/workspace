@@ -4,6 +4,7 @@ import 'controller.dart';
 import 'game_screen.dart';
 import 'home_screen.dart';
 import 'milestone_dialog.dart';
+import 'remove_ads_offer.dart';
 import 'layout.dart';
 import 'team_colors.dart';
 
@@ -96,18 +97,25 @@ class _MilestoneHostState extends State<_MilestoneHost> {
   }
 
   void _check() {
-    if (_showing || widget.controller.pending.isEmpty) return;
+    final c = widget.controller;
+    if (_showing || (c.pending.isEmpty && !c.offerRemoveAds)) return;
     _showing = true;
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      while (mounted && widget.controller.pending.isNotEmpty) {
-        final m = widget.controller.pending.first;
+      while (mounted && c.pending.isNotEmpty) {
+        final m = c.pending.first;
         await showDialog<void>(
           context: context,
           barrierDismissible: false,
           builder: (ctx) => MilestoneDialog(milestone: m),
         );
-        widget.controller.dismissMilestone();
+        c.dismissMilestone();
       }
+      // 節目を見終えてから、「広告を消す」の案内(全画面広告のあと、ときどき)
+      final money = c.money;
+      if (mounted && c.offerRemoveAds && money != null) {
+        await showRemoveAdsOffer(context, money);
+      }
+      c.dismissRemoveAdsOffer();
       _showing = false;
     });
   }

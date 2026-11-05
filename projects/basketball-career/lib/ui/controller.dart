@@ -622,9 +622,34 @@ class GameController extends ChangeNotifier {
     } catch (_) {}
   }
 
+  /// 全画面広告のあとに「広告を消す」を案内するか(画面が見て、下から案内を出す)。
+  bool offerRemoveAds = false;
+
+  /// 次の操作の前。番なら全画面広告を出し、案内の番なら(買える状態のときだけ)案内を立てる。
+  Future<void> _beforeAction() async {
+    final m = money;
+    if (m == null) return;
+    if (!await m.beforeAction() || !m.removeAdsOfferDue) return;
+    await m.markRemoveAdsOffered();
+    try {
+      if (!await m.canBuy || await m.price == null) return;
+    } catch (_) {
+      return;
+    }
+    offerRemoveAds = true;
+    notifyListeners();
+  }
+
+  /// 案内を閉じた。
+  void dismissRemoveAdsOffer() {
+    if (!offerRemoveAds) return;
+    offerRemoveAds = false;
+    notifyListeners();
+  }
+
   /// 広告つきで過ごし方を選ぶ。大会が終わった後の次の操作で、番なら全画面広告が出る。
   Future<void> play(Action a) async {
-    await money?.beforeAction();
+    await _beforeAction();
     final r = act(a);
     if (r.paused) return; // 大会はまだ終わっていない(広告の数えは `playClutch` で)
     if (r.tournament != null || r.satOut) await money?.tournamentPlayed();
@@ -716,7 +741,7 @@ class GameController extends ChangeNotifier {
     if (g == null) return;
     final age = g.player.age;
     final lines = <String>[];
-    await money?.beforeAction();
+    await _beforeAction();
     // 目標は確実なほうを自動で選ぶ(選ぶ前なら)。
     if (g.goal == null && g.goalOptions.isNotEmpty && g.slot <= 2) g.adoptGoal(0);
     while (g.phase == Phase.season && g.player.age == age) {

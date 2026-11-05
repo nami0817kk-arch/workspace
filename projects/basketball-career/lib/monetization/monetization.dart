@@ -23,6 +23,8 @@ enum RecoverGate {
 ///   最初の1年(6歳の大会)と、広告を消した人には出さない。出せなければ進行を止めない。
 /// - 動画広告: 見ると疲れと気持ちが回復する(怪我も早く治る)。読み込めていなければ回復しない。
 /// - 広告を消す: 全画面広告が出なくなり、回復も動画なしで使える。
+/// - 動画を見た直後([rewardedCooldown] の間)は全画面広告を重ねない(番は次の操作に回す)。
+/// - 全画面広告の2回目と、その後4回ごとに、閉じたあと「広告を消す」を1度だけ案内する([removeAdsOfferDue])。
 class Monetization extends ChangeNotifier {
   Monetization(this._prefs, {AdService? ads, PurchaseService? store})
       : ads = ads ?? NoOpAdService(),
@@ -120,14 +122,37 @@ class Monetization extends ChangeNotifier {
   /// 在庫が無くて出せなければ、数えはそのままで次の機会に回す(進行は止めない)。
   Future<bool> beforeAction() async {
     if (!interstitialDue || !_foreground) return false;
+    // 動画を見たばかりなら、続けて全画面広告を出さない(番はそのまま次の操作へ)
+    final last = _lastRewardedAt;
+    if (last != null && clock().difference(last) < rewardedCooldown) return false;
     // 出す前に数え直す(広告の途中で終了されても、次の操作で続けて出ないように)
     await _prefs.setInt('tournamentsSinceAd', 0);
     final shown = await ads.showInterstitialAd();
     if (!shown) {
       await _prefs.setInt('tournamentsSinceAd', interstitialEvery);
+    } else {
+      await _prefs.setInt('interstitialsShown', interstitialsShown + 1);
     }
     return shown;
   }
+
+  /// 動画を見たあと、全画面広告を重ねない間。
+  static const rewardedCooldown = Duration(minutes: 2);
+
+  /// 最後に動画を出した時刻(見終えた・途中で閉じた。出せなかったときは数えない)。
+  DateTime? _lastRewardedAt;
+
+  /// これまでに出した全画面広告の数(端末に残る)。
+  int get interstitialsShown => _prefs.getInt('interstitialsShown') ?? 0;
+
+  /// 全画面広告のあとに「広告を消す」を案内する番か。2回目と、その後4回ごと(6・10・14…)に1度だけ。
+  bool get removeAdsOfferDue {
+    final n = interstitialsShown;
+    return !adFree && n >= 2 && (n - 2) % 4 == 0 && (_prefs.getInt('removeAdsOfferedAt') ?? 0) != n;
+  }
+
+  /// 案内を出した(または出さないと決めた)。同じ番では二度出さない。
+  Future<void> markRemoveAdsOffered() => _prefs.setInt('removeAdsOfferedAt', interstitialsShown);
 
   /// 「動画を見て元気になる」の前に呼ぶ。広告を消した人はそのまま、それ以外は動画を1本見てもらう。
   ///
@@ -181,6 +206,7 @@ class Monetization extends ChangeNotifier {
     // 待っている間にアプリを裏へ回したなら出さない(戻った瞬間に広告を差し込まない)
     if (!_foreground) return RecoverGate.unavailable;
     final r = await ads.showRewardedAd();
+    if (r == RewardResult.earned || r == RewardResult.closedEarly) _lastRewardedAt = clock();
     // 動画を見ている間に「広告を消す」が届いた(家族の承認など)なら、そのまま回復する
     if (adFree) return RecoverGate.granted;
     return switch (r) {

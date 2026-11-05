@@ -18,6 +18,7 @@ library;
 // @visibleForTesting の項目(setMockInitialValues)を使うと警告になる。実体は flutter test で走らせる生成器。
 // ignore_for_file: invalid_use_of_visible_for_testing_member
 
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
@@ -40,6 +41,7 @@ import 'package:basketball_career/game/lineage.dart';
 import 'package:basketball_career/game/season.dart';
 import 'package:basketball_career/monetization/monetization.dart';
 import 'package:basketball_career/monetization/purchase_service.dart';
+import 'package:basketball_career/ui/remove_ads_offer.dart';
 import 'package:basketball_career/ui/settings_screen.dart';
 import 'package:basketball_career/ui/app.dart';
 import 'package:basketball_career/ui/controller.dart';
@@ -549,6 +551,16 @@ void main() {
     final shc = _controller(sh)..focus = Ability.threePoint;
     await _shoot(t, 'r9_shoot', '重点3Pの絵', shc, c1, outDir: out);
     await _shoot(t, 'r10_clutch', '勝負どころ', clutchShot(), c1, outDir: out);
+    // 全画面広告のあとに、ときどき出す「広告を消す」の案内。
+    final offerMoney = Monetization(await SharedPreferences.getInstance(), store: _PricedStore());
+    final offer = GameController(store: _NullStore(), rng: Random(1), events: false, money: offerMoney)
+      ..game = sh;
+    await _shoot(t, 'r11_offer', '広告を消す案内', offer, c1, outDir: out, act: (t) async {
+      unawaited(showRemoveAdsOffer(t.element(find.byType(Scaffold).first), offerMoney));
+      await t.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 200)));
+      await t.pumpAndSettle();
+      expect(find.text('広告なしで遊ぶ'), findsOneWidget);
+    });
     final heir = _controller(ending.game!);
     await heir.startNextGeneration(HeirKind.child);
     await _shoot(t, 'r7_heir', '次の世代へ', heir, c1, outDir: out);

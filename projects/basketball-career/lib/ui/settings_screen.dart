@@ -5,6 +5,7 @@ import '../monetization/monetization.dart';
 import 'howto_screen.dart';
 import '../monetization/purchase_service.dart';
 import 'layout.dart';
+import 'remove_ads_offer.dart';
 
 /// 設定。広告を消す・購入の復元・プライバシー・問い合わせ・ライセンス。
 class SettingsScreen extends StatefulWidget {
@@ -70,14 +71,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     } finally {
       if (mounted) setState(() => _busy = false);
     }
-    final msg = switch (r) {
-      PurchaseOutcome.purchased =>
-        restore ? '購入を復元した。広告が出なくなった。' : 'ありがとう! 広告が出なくなった。',
-      PurchaseOutcome.pending => '承認待ち。承認されると広告が消える。',
-      PurchaseOutcome.canceled => null,
-      PurchaseOutcome.unavailable => restore ? '復元できる購入が見つからなかった。' : '購入できなかった。',
-      PurchaseOutcome.failed => restore ? '復元に失敗した。あとでもう一度。' : '購入に失敗した。あとでもう一度。',
-    };
+    final msg = purchaseMessage(r, restore: restore);
     if (msg != null) {
       messenger.removeCurrentSnackBar();
       messenger.showSnackBar(SnackBar(content: Text(msg)));

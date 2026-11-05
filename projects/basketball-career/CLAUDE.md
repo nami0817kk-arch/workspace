@@ -366,6 +366,10 @@ baseball-manager の骨格（年齢で局面が変わる一代記・季節ごと
 - 広告ユニットIDは `--dart-define=ADMOB_REWARDED_IOS` / `ADMOB_INTERSTITIAL_IOS`。**既定は Google のテスト用ID**。アプリIDは Info.plist の `GADApplicationIdentifier`（今はテスト用）。
 - 報酬の受け取りは `GameController.recover`（画面の `mounted` に依存しない）。広告の読み込みは `await` で待たず `Completer`（`docs/app-pitfalls.md` #1〜#3 を `test/monetization_test.dart` が検査）。
 - Web・テストでは NoOp（広告も課金も出ない）。
+- **2026-11-05 の手直し（ユーザー指示「広告と課金の仕組みを向上」）**:
+  - **動画の直後は全画面広告を重ねない**: 動画を出してから2分（`Monetization.rewardedCooldown`）は、全画面広告の番でも出さずに次の操作へ回す。出せなかった動画は数えない。
+  - **「広告を消す」の案内**: 全画面広告の2回目と、その後4回ごと（6・10・14…）に、閉じたあと下から1度だけ案内を出す（`removeAdsOfferDue`、`interstitialsShown`・`removeAdsOfferedAt` を端末に保存。`lib/ui/remove_ads_offer.dart`、出すのは `app.dart` の節目と同じ場所で、節目のあと）。ストアに繋がらない・値段が取れないときは出さない。購入の受け取りは今までどおり `onDelivered`。
+  - **本物の処理を通すテスト**: `test/store_purchase_test.dart`（`StorePurchaseService` を偽の App Store `InAppPurchasePlatform` につなぐ。野球育成のものを1商品に写した）、`test/ad_present_test.dart`（`AdMobAdService.presentRewarded`／`presentInterstitial` を、`show` がすぐ返り知らせが後から届く偽の広告で試す。app-pitfalls #9）。`monetization_test` の FakeAds・FakeStore は決まりを見る用で、待ち方は通らない。
 - `legal/` に**プライバシーポリシー・サポート・利用規約の原稿**（日英）。置き場所は `Links`（既定 `https://basketball-ikusei.pages.dev`、`--dart-define=LEGAL_BASE_URL` で差し替え）。
 
 ## 未着手（ユーザーの判断・作業が要る）
