@@ -374,9 +374,12 @@ baseball-manager の骨格（年齢で局面が変わる一代記・季節ごと
 
 ## 未着手（ユーザーの判断・作業が要る）
 
-1. **公開ページの置き場所**: `legal/` を公開する（Cloudflare Pages など。名義は `docs/public-identity.md`）。公開はユーザーの判断。決まったら `LEGAL_BASE_URL` を合わせる。
-2. **AdMob**: アプリを登録して本物の広告ユニットID・アプリIDを取り、CI の Secrets に入れる（`app-ads.txt` も）。
-3. **App Store Connect**: App ID・アプリ作成・アプリ内課金（`basketball_career_remove_ads`、370円）の登録。
+（2026-11-05 の点検: 公開ページ `basketball-ikusei.pages.dev`（robots.txt・app-ads.txt・404 も正しい）、AdMob の本番ID（Secrets 3つ）、
+App ID・プロファイル・App Store Connect のアプリ（6824529301）は**済み**。ビルド10（1.0.0）の IPA は本番の AdMob ID・`ja.lproj` 入りを確かめた。）
+
+1. ~~公開ページ~~ 済み
+2. ~~AdMob~~ 済み（公開後に「ストアを追加」と「アプリを確認」が残る）
+3. **App Store Connect**: アプリ内課金（`basketball_career_remove_ads`、370円）の登録。審査用画像は `marketing/iap_review/remove_ads.png`。
 4. **App Store 提出**（掲載文の下書きは `STORE_LISTING.md`、制限内かを `test/store_listing_test.dart` が検査）: `ios-app-release` スキルを読んでから。掲載文・スクリーンショット（落とし穴 #4: 読み込み中を撮らない）・プライバシーの答え。
    （`ja.lproj/InfoPlist.strings`（落とし穴 #5）は登録済み。`test/ios_localization_test.dart` が検査。**ビルドした IPA で `Payload/Runner.app/ja.lproj` を目で見る**のは提出時に必要）
 5. バランス調整（実際に遊んでから）。難易度の選択は未実装。
