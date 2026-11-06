@@ -59,7 +59,7 @@ void main() {
     await tester.tap(find.text('開幕する'));
     await tester.pumpAndSettle();
     expect(c.career!.phase, Phase.season);
-    await tester.tap(find.text('次の20試合を進める'));
+    await tester.tap(find.text('次の20試合へ'));
     await tester.pumpAndSettle();
     await _closeDialogs(tester);
     expect(c.career!.block, 1);
@@ -111,7 +111,7 @@ void main() {
     expect(find.textContaining('続きから'), findsOneWidget);
     await tester.tap(find.textContaining('続きから'));
     await tester.pumpAndSettle();
-    expect(find.text('次の20試合を進める'), findsOneWidget);
+    expect(find.text('次の20試合へ'), findsOneWidget);
     expect(c2.career!.me.roster.length, c.career!.me.roster.length);
   });
 

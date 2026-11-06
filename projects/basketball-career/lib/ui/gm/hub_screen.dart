@@ -15,7 +15,7 @@ import 'trade_tab.dart';
 
 String phaseLabel(Career c) => switch (c.phase) {
       Phase.preseason => 'シーズン前',
-      Phase.season => 'シーズン ${blockStart(c.block)}/$gamesPerSeason試合',
+      Phase.season => 'シーズン ${c.roundAt}/$gamesPerSeason試合',
       Phase.playoffs => 'プレーオフ前',
       Phase.seasonEnd => 'シーズン終了',
       Phase.draft => 'オフ・ドラフト',

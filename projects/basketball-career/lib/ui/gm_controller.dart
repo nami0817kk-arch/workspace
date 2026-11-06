@@ -149,9 +149,19 @@ class GmController extends ChangeNotifier {
   Future<void> playBlock() async {
     final c = career;
     if (c == null || c.phase != Phase.season || busy) return;
-    await _maybeInterstitial();
+    if (c.roundAt == blockStart(c.block)) await _maybeInterstitial();
     c.playBlock();
     await money?.tournamentPlayed();
+    _record(c);
+    _changed();
+  }
+
+  /// 1週間進める。全画面広告の番は、区切りの初めから進めるときだけ見る(週ごとに広告を出さない)。
+  Future<void> playWeek() async {
+    final c = career;
+    if (c == null || c.phase != Phase.season || busy) return;
+    if (c.roundAt == blockStart(c.block)) await _maybeInterstitial();
+    if (c.playWeek()) await money?.tournamentPlayed();
     _record(c);
     _changed();
   }

@@ -100,25 +100,39 @@ class ProgressTab extends StatelessWidget {
 
   List<Widget> _season(BuildContext context, Career car) {
     final me = car.me;
-    final played = blockStart(car.block);
-    final next = car.block < blocksPerSeason ? blockSizes[car.block] : 0;
+    final played = car.roundAt;
+    final next = car.block < blocksPerSeason ? blockStart(car.block + 1) - played : 0;
+    final week = next < Career.daysPerWeek ? next : Career.daysPerWeek;
     final last = car.lastGames.length;
     final conf = me.east ? '東地区' : '西地区';
     final deadline = car.block < tradeDeadlineBlock;
     final blockWins = car.lastGames.where((g) => g.winner == car.mine).length;
     return [
       _card([
-        _head(car.block == 0 ? '開幕' : '$played試合を終えて'),
+        _head(played == 0 ? '開幕' : '$played試合を終えて'),
         const SizedBox(height: 8),
         _kv('成績', '${me.wins}勝${me.losses}敗($conf ${car.confRank}位)'),
         _kv('オーナーの目標', '${car.target}勝', color: me.wins + (gamesPerSeason - played) < car.target ? GmColors.bad : null),
         _kv('トレード', deadline ? 'あと${tradeDeadlineBlock - car.block}区切りで締め切り' : '締め切りを過ぎた', color: deadline ? null : GmColors.sub),
         const SizedBox(height: 12),
-        FilledButton.icon(
-          onPressed: c.busy ? null : c.playBlock,
-          icon: const Icon(Icons.play_arrow_rounded),
-          label: Text('次の$next試合を進める'),
-        ),
+        Row(children: [
+          Expanded(
+            child: OutlinedButton(
+              onPressed: c.busy || next <= week ? null : c.playWeek,
+              // 文字が折り返さないように、狭い画面では縮める
+              child: FittedBox(fit: BoxFit.scaleDown, child: Text(week == Career.daysPerWeek ? '1週間' : '$week試合')),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            flex: 2,
+            child: FilledButton.icon(
+              onPressed: c.busy ? null : c.playBlock,
+              icon: const Icon(Icons.play_arrow_rounded),
+              label: Text('次の$next試合へ'),
+            ),
+          ),
+        ]),
       ]),
       ..._offerCard(context, car),
       _goalsCard(car),
