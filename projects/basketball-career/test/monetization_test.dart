@@ -2,6 +2,7 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:basketball_career/gm/bot.dart';
 import 'package:basketball_career/gm/career.dart';
 import 'package:basketball_career/gm/league.dart';
 import 'package:basketball_career/monetization/ad_service.dart';
@@ -100,7 +101,7 @@ Future<GmController> gmController(Monetization m) async =>
 /// シーズンの途中(1区切りも進めていない)まで進めたコントローラ。
 Future<GmController> inSeason(Monetization m) async {
   final c = await gmController(m);
-  c.newCareer(Scenario.middle);
+  c.newCareer(teamAtRank(1, 15), seed: 1);
   c.startSeason();
   return c;
 }
@@ -348,7 +349,7 @@ void main() {
       for (final adFree in [false, true]) {
         final (m, ads, _) = await open({if (adFree) 'adFree': true});
         final c = await gmController(m);
-        c.newCareer(Scenario.lastWindow);
+        c.newCareer(teamAtRank(1, 1), seed: 1);
         final car = c.career!;
         makeFired(car);
         expect(car.fired, isTrue);
@@ -363,7 +364,7 @@ void main() {
     test('広告の無い環境では、タダで説得させない', () async {
       SharedPreferences.setMockInitialValues({});
       final c = GmController(prefs: await SharedPreferences.getInstance(), seedSource: Random(1));
-      c.newCareer(Scenario.lastWindow);
+      c.newCareer(teamAtRank(1, 1), seed: 1);
       makeFired(c.career!);
       expect(await c.rescueWithAd(), RecoverGate.unavailable);
       expect(c.career!.fired, isTrue);
@@ -418,7 +419,7 @@ void main() {
       addTearDown(tester.view.reset);
       final (m, ads, _) = await open();
       final c = await gmController(m);
-      c.newCareer(Scenario.lastWindow);
+      c.newCareer(teamAtRank(1, 1), seed: 1);
       makeFired(c.career!);
       await tester.pumpWidget(BasketballCareerApp(controller: c));
       await tester.pumpAndSettle();

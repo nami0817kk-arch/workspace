@@ -54,7 +54,7 @@ class _HubScreenState extends State<HubScreen> {
       appBar: AppBar(
         titleSpacing: 12,
         title: Row(children: [
-          TeamBadge(team: Career.mine, size: 28),
+          TeamBadge(team: car.mine, size: 28),
           const SizedBox(width: 8),
           Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

@@ -105,9 +105,12 @@ class GmController extends ChangeNotifier {
     _save();
   }
 
-  /// 新しく任される。
-  void newCareer(Scenario s) {
-    career = Career.start(seed: _seeds.nextInt(0x7fffffff), scenario: s);
+  /// チームを選ぶ前に見せるリーグの種(選ぶ画面と、任されたあとで同じリーグになる)。
+  int newSeed() => _seeds.nextInt(0x7fffffff);
+
+  /// [seed] のリーグで、[team] のGMに任される。
+  void newCareer(int team, {int? seed}) {
+    career = Career.start(seed: seed ?? newSeed(), team: team);
     atHome = false;
     _changed();
   }

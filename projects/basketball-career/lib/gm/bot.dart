@@ -71,8 +71,8 @@ void _fillRoster(Career c) {
 }
 
 /// 任期の終わりまで進める。
-Career botPlayCareer(int seed, Scenario sc, {bool trades = false}) {
-  final c = Career.start(seed: seed, scenario: sc);
+Career botPlayCareer(int seed, {int team = 0, bool trades = false}) {
+  final c = Career.start(seed: seed, team: team);
   var guard = 0;
   while (c.phase != Phase.over && guard++ < 2000) {
     botStep(c, trades: trades);
@@ -82,3 +82,12 @@ Career botPlayCareer(int seed, Scenario sc, {bool trades = false}) {
 
 /// テスト用: 候補を見える幅の真ん中で並べる。
 List<Prospect> byMid(Career c) => c.prospects.where((p) => p.pickedBy == null).toList()..sort((a, b) => b.mid.compareTo(a.mid));
+
+/// [seed] のリーグで、強さが [rank] 番目(0始まり)のチーム。
+int teamAtRank(int seed, int rank) {
+  final c = Career.start(seed: seed);
+  return [for (var i = 0; i < c.teams.length; i++) i].firstWhere((i) => c.strengthRank(i) == rank);
+}
+
+/// テスト用: [seed] のリーグで、強さが [rank] 番目のチームを任されて始める。
+Career careerAt(int seed, int rank) => Career.start(seed: seed, team: teamAtRank(seed, rank));

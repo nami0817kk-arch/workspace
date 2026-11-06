@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../gm/career.dart';
-import '../../gm/league.dart';
 import '../../gm/profile.dart';
 import '../art/title_art.dart';
 import '../gm_controller.dart';
@@ -10,6 +8,7 @@ import '../layout.dart';
 import '../settings_screen.dart';
 import 'hub_screen.dart';
 import 'style.dart';
+import 'team_pick_screen.dart';
 
 /// アプリの名前(ホーム画面とタイトル)。
 const appTitle = 'バスケ編成室';
@@ -35,41 +34,14 @@ class GmHomeScreen extends StatelessWidget {
       );
       if (ok != true || !context.mounted) return;
     }
-    final s = await showModalBottomSheet<Scenario>(
-      context: context,
-      showDragHandle: true,
-      builder: (ctx) => SafeArea(
-        child: ListView(
-          shrinkWrap: true,
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-          children: [
-            const Text('どのチームを任される?', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 4),
-            Text('どれも${teamDefs[Career.mine].city}・${teamDefs[Career.mine].nick}のGM。チームの状態が違う。', style: const TextStyle(color: GmColors.sub)),
-            const SizedBox(height: 10),
-            for (final s in Scenario.values)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: Card(
-                  child: ListTile(
-                    contentPadding: const EdgeInsets.fromLTRB(14, 6, 10, 6),
-                    title: Text(s.label, style: const TextStyle(fontWeight: FontWeight.bold)),
-                    subtitle: Text(s.text, style: const TextStyle(height: 1.4)),
-                    trailing: const Icon(Icons.chevron_right_rounded),
-                    onTap: () => Navigator.pop(ctx, s),
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
-    if (s == null || !context.mounted) return;
+    final seed = c.newSeed();
+    final team = await Navigator.of(context).push<int>(MaterialPageRoute(builder: (_) => TeamPickScreen(seed: seed)));
+    if (team == null || !context.mounted) return;
     if (!c.howtoSeen) {
       await Navigator.of(context).push(MaterialPageRoute<void>(builder: (ctx) => HowToScreen(onStart: () => Navigator.pop(ctx))));
       await c.markHowtoSeen();
     }
-    c.newCareer(s);
+    c.newCareer(team, seed: seed);
   }
 
   @override

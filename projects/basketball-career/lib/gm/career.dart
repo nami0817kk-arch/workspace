@@ -10,19 +10,28 @@ import 'trade.dart';
 /// 任される年数。
 const careerSeasons = 10;
 
-/// 始め方(チームの状態)。
-enum Scenario {
-  rebuild('立て直し', '最下位のチーム。若手と年俸の空きはある。オーナーは気長に待ってくれる。', 55),
-  middle('中位から上へ', '真ん中のチーム。あと一押しで上位に届く。', 50),
-  lastWindow('最後の好機', '優勝を狙える力はあるが、主力は30歳を過ぎ、年俸も上限を超えている。オーナーは優勝を求めている。', 40);
+/// 任されたときのチームの状態(強さの順位から決まる。0始まり)。
+enum Outlook {
+  contender('優勝候補', '主力がそろい、すぐに優勝を狙える。オーナーの期待も高い。'),
+  playoff('プレーオフ圏', 'プレーオフには届く力。あと一押しで上を狙える。'),
+  bubble('瀬戸際', 'プレーオフに届くかどうか。補強しだいで上にも下にも行く。'),
+  rebuild('立て直し', '下位のチーム。若手を育て、指名権を集めて先を見る。オーナーは気長に待ってくれる。');
 
-  const Scenario(this.label, this.text, this.trust);
+  const Outlook(this.label, this.text);
   final String label;
   final String text;
 
-  /// 始めのオーナーの信頼。
-  final int trust;
+  static Outlook of(int rank) => rank < 6
+      ? Outlook.contender
+      : rank < 14
+          ? Outlook.playoff
+          : rank < 22
+              ? Outlook.bubble
+              : Outlook.rebuild;
 }
+
+/// はじめのオーナーの信頼。
+const startTrust = 50;
 
 /// 進み具合。
 enum Phase {
@@ -93,24 +102,28 @@ class Ask {
 
 /// GMの任期1回分。仕組みはすべてここにあり、画面はこれを呼ぶだけ。
 class Career {
-  Career._({required this.seed, required this.scenario, required this.rng, required this.teams});
+  Career._({required this.seed, required this.mine, required this.rng, required this.teams});
 
-  /// 新しく任される。
-  factory Career.start({required int seed, Scenario scenario = Scenario.rebuild}) {
+  /// 新しく任される。リーグは [seed] だけで決まる(どのチームを選んでも同じリーグになる)。[team] が自分のチーム。
+  factory Career.start({required int seed, int team = 0}) {
     final rng = Rng(seed);
-    final c = Career._(seed: seed, scenario: scenario, rng: rng, teams: []);
+    final c = Career._(seed: seed, mine: team.clamp(0, teamDefs.length - 1), rng: rng, teams: []);
     c._build();
+    c.startRank = c.strengthRank(c.mine);
     return c;
   }
 
   final int seed;
-  final Scenario scenario;
   final Rng rng;
   final List<Team> teams;
 
-  /// 自分のチーム(いつもシャーロット)。
-  static const mine = 0;
+  /// 自分のチーム。
+  final int mine;
   Team get me => teams[mine];
+
+  /// 任されたときの強さの順位(0始まり)と、そこから決まるチームの状態。
+  int startRank = 0;
+  Outlook get outlook => Outlook.of(startRank);
 
   int season = 1;
   Phase phase = Phase.preseason;
@@ -193,24 +206,17 @@ class Career {
   // ---------------------------------------------------------------- はじめ
 
   void _build() {
-    trust = scenario.trust;
-    final qualities = [for (var i = 0; i < teamDefs.length; i++) -4.5 + 9 * i / (teamDefs.length - 1)];
+    trust = startTrust;
+    final qualities = [for (var i = 0; i < teamDefs.length; i++) -5.5 + 10 * i / (teamDefs.length - 1)];
     rng.shuffle(qualities);
     for (var i = 0; i < teamDefs.length; i++) {
-      var q = qualities[i];
-      var style = 0;
-      if (i == mine) {
-        switch (scenario) {
-          case Scenario.rebuild:
-            q = -5;
-            style = 1;
-          case Scenario.middle:
-            q = 0;
-          case Scenario.lastWindow:
-            q = 4.5;
-            style = 2;
-        }
-      }
+      final q = qualities[i];
+      // 弱いチームは若く、強いチームの一部は主力が年寄りで年俸が高い(チームごとに違う状態にする)
+      final style = q <= -3 && rng.chance(0.7)
+          ? 1
+          : q >= 3 && rng.chance(0.5)
+              ? 2
+              : 0;
       teams.add(Team(index: i, roster: _makeRoster(q, style)));
     }
     for (final s in [season, season + 1]) {
@@ -220,11 +226,6 @@ class Career {
         }
       }
     }
-    if (scenario == Scenario.rebuild) {
-      // 前のGMが残した、ほかのチームの来年の1巡目
-      final i = picks.indexWhere((p) => p.season == season + 1 && p.round == 1 && p.from != mine && teams[p.from].strength > 70);
-      if (i >= 0) picks[i].owner = mine;
-    }
     freeAgents = [for (var i = 0; i < 12; i++) _filler()];
     _setModes();
   }
@@ -232,7 +233,14 @@ class Career {
   /// 14人の選手を作る。[q] はチームの強さのずれ、[style] は 1: 若い、2: 年寄りで年俸が高い。
   List<Player> _makeRoster(double q, int style) {
     const tmpl = [80, 75, 72, 70, 68, 66, 64, 62, 60, 57, 55, 53, 50, 48];
-    const posCycle = [Pos.pg, Pos.c, Pos.sf, Pos.sg, Pos.pf, Pos.pg, Pos.c, Pos.sf, Pos.sg, Pos.pf, Pos.sg, Pos.pf, Pos.sf, Pos.c];
+    // ポジションはチームごとに並べ替える(エースがどのチームも同じポジションにならないように)。
+    // 先発の5人は5つのポジションに1人ずつ、控えも2・3人ずつ
+    final posCycle = <Pos>[];
+    for (final n in [5, 5, 4]) {
+      final ps = [...Pos.values];
+      rng.shuffle(ps);
+      posCycle.addAll(ps.take(n));
+    }
     final roster = <Player>[];
     for (var k = 0; k < tmpl.length; k++) {
       final ovr = (tmpl[k] + q + rng.nextInt(5) - 2).round().clamp(42, 92);
@@ -259,15 +267,22 @@ class Career {
         years: 1 + rng.nextInt(4),
       ));
     }
-    // 年俸の合計が上限の外へ大きく出ないように整える
-    final limit = style == 2 ? hardCap - 80 : salaryCap - (style == 1 ? 260 : 20);
+    // 年俸の合計が上限の外へ大きく出ないように整える。チームごとに空きの大きさを散らす
+    final limit = style == 2 ? hardCap - 80 - rng.nextInt(120) : salaryCap - (style == 1 ? 260 : 20) - rng.nextInt(220) + 80;
     var total = roster.fold(0, (s, p) => s + p.salary);
     if (total > limit) {
       final f = limit / total;
       for (final p in roster) {
         p.salary = (p.salary * f).round().clamp(minSalary, maxSalary);
       }
-    } else if (style == 2) {
+    } else if (total < 950) {
+      // 若いチームでも、年俸の合計が少なすぎないようにする(上限の3分の2ほどまでは払っている)
+      final f = 950 / total;
+      for (final p in roster) {
+        p.salary = (p.salary * f).round().clamp(minSalary, maxSalary);
+      }
+    }
+    if (style == 2) {
       total = roster.fold(0, (s, p) => s + p.salary);
       if (total < salaryCap + 120) {
         final f = (salaryCap + 120) / total;
@@ -461,7 +476,7 @@ class Career {
   /// 前のシーズンの、オーナーの信頼の変わり方。
   int get lastTrustDelta {
     if (history.isEmpty) return 0;
-    final prev = history.length >= 2 ? history[history.length - 2].trustAfter : scenario.trust;
+    final prev = history.length >= 2 ? history[history.length - 2].trustAfter : startTrust;
     return history.last.trustAfter - prev;
   }
 
@@ -680,7 +695,7 @@ class Career {
     if (phase != Phase.contracts || p == null || !expiring.contains(id)) return;
     expiring.remove(id);
     me.roster.remove(p);
-    p.salary = askOf(p, teams[1]).salary;
+    p.salary = askOf(p, teams[(mine + 1) % teams.length]).salary;
     freeAgents
       ..add(p)
       ..sort((a, b) => b.ovr.compareTo(a.ovr));
@@ -716,7 +731,7 @@ class Career {
     me.roster.remove(p);
     me.deadCap += p.salary;
     p
-      ..salary = askOf(p, teams[1]).salary
+      ..salary = askOf(p, teams[(mine + 1) % teams.length]).salary
       ..years = 1;
     freeAgents
       ..add(p)
@@ -844,7 +859,8 @@ class Career {
   Map<String, dynamic> toJson() => {
         'v': 1,
         'seed': seed,
-        'sc': scenario.index,
+        'mine': mine,
+        'sr': startRank,
         'rng': rng.state,
         'teams': [for (final t in teams) t.toJson()],
         'season': season,
@@ -879,12 +895,13 @@ class Career {
     List<Map<String, dynamic>> maps(String k) => [for (final x in (j[k] as List? ?? const [])) Map<String, dynamic>.from(x as Map)];
     final c = Career._(
       seed: j['seed'] as int,
-      scenario: Scenario.values[((j['sc'] as int?) ?? 0).clamp(0, Scenario.values.length - 1)],
+      mine: ((j['mine'] as int?) ?? 0).clamp(0, teamDefs.length - 1),
       rng: Rng(j['seed'] as int)..state = j['rng'] as int,
       teams: [for (final t in maps('teams')) Team.fromJson(t)],
     );
     if (c.teams.length != teamDefs.length) throw const FormatException('teams');
     c
+      ..startRank = (j['sr'] as int?) ?? 0
       ..season = j['season'] as int
       ..phase = Phase.values[(j['phase'] as int).clamp(0, Phase.values.length - 1)]
       ..block = j['block'] as int

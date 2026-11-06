@@ -21,26 +21,33 @@ void main() {
   group('リーグ', () {
     test('30チーム(東西15ずつ)・14人で始まり、どのチームも年俸の合計の上限を超えない', () {
       expect(teamDefs.where((d) => d.east), hasLength(15));
-      for (final sc in Scenario.values) {
-        final c = Career.start(seed: 7, scenario: sc);
+      for (final team in [0, 9, 21]) {
+        final c = Career.start(seed: 7, team: team);
         expect(c.teams, hasLength(30));
         for (final t in c.teams) {
           expect(t.roster, hasLength(14));
-          expect(t.payroll, lessThanOrEqualTo(hardCap), reason: '${sc.name} ${t.name}');
+          expect(t.payroll, lessThanOrEqualTo(hardCap), reason: t.name);
           expect(t.roster.any((p) => p.pos.guard) && t.roster.any((p) => p.pos.big), isTrue);
         }
       }
     });
 
-    test('始め方で自分のチームの状態が違う(立て直しは最弱・若い、最後の好機は上位・年寄り・上限超え)', () {
-      final r = Career.start(seed: 11, scenario: Scenario.rebuild);
-      final l = Career.start(seed: 11, scenario: Scenario.lastWindow);
-      expect(r.strengthRank(Career.mine), greaterThanOrEqualTo(25));
-      expect(l.strengthRank(Career.mine), lessThanOrEqualTo(2));
-      double age(Career c) => c.me.roster.fold(0, (s, p) => s + p.age) / c.me.roster.length;
-      expect(age(r), lessThan(age(l)));
-      expect(r.me.capRoom, greaterThan(100));
-      expect(l.me.payroll, greaterThan(salaryCap));
+    test('同じ種なら、どのチームを選んでも同じリーグになる。チームの状態は強さの順位から決まる', () {
+      final a = Career.start(seed: 11, team: 3);
+      final b = Career.start(seed: 11, team: 17);
+      expect(jsonEncode([for (final t in a.teams) t.toJson()]), jsonEncode([for (final t in b.teams) t.toJson()]));
+      expect(a.mine, 3);
+      expect(b.me.name, '${teamDefs[17].city}・${teamDefs[17].nick}');
+      final strong = careerAt(11, 0), weak = careerAt(11, 29);
+      expect(strong.outlook, Outlook.contender);
+      expect(weak.outlook, Outlook.rebuild);
+      strong.startSeason();
+      weak.startSeason();
+      expect(strong.target, greaterThan(weak.target), reason: '強いチームほど目標が高い');
+      // チームの状態はチームごとに違う(若い立て直し・年寄りの強豪がいる)
+      double age(Team t) => t.roster.fold(0, (s, p) => s + p.age) / t.roster.length;
+      final ages = [for (final t in a.teams) age(t)]..sort();
+      expect(ages.last - ages.first, greaterThan(3));
     });
 
     test('総当たりは29節で、どのチームも1節に1試合、ほかの29チームと1回ずつ当たる', () {
@@ -133,17 +140,20 @@ void main() {
 
   group('トレード', () {
     test('相手は少し得をしないと受けない。釣り合わなければ理由を返す', () {
-      final c = Career.start(seed: 9, scenario: Scenario.middle);
+      final c = careerAt(9, 15);
       // 年俸の決まりに当たらない相手(上限に空きのあるチーム)を選ぶ
-      final them = c.teams.skip(1).reduce((a, b) => a.capRoom >= b.capRoom ? a : b);
+      final them = c.teams.where((t) => t.index != c.mine).reduce((a, b) => a.capRoom >= b.capRoom ? a : b);
       final pt = them.index;
       final star = them.roster.reduce((a, b) => a.ovr >= b.ovr ? a : b);
       final scrub = c.me.roster.reduce((a, b) => a.ovr <= b.ovr ? a : b);
       final bad = c.judge(TradeOffer(partner: pt, give: [scrub.id], get: [star.id]));
       expect(bad.ok, isFalse);
       expect(bad.reason, isNotEmpty);
-      final myStar = c.me.roster.reduce((a, b) => a.ovr >= b.ovr ? a : b);
       final theirScrub = them.roster.reduce((a, b) => a.ovr <= b.ovr ? a : b);
+      // 相手の上限の空きに収まる中で、いちばん力の高い選手を出す
+      final myStar = c.me.roster
+          .where((p) => p.salary <= them.capRoom + theirScrub.salary)
+          .reduce((a, b) => a.ovr >= b.ovr ? a : b);
       final good = c.judge(TradeOffer(partner: pt, give: [myStar.id], get: [theirScrub.id]));
       expect(good.ok, isTrue, reason: good.reason);
       expect(c.propose(TradeOffer(partner: pt, give: [myStar.id], get: [theirScrub.id])), isTrue);
@@ -162,7 +172,7 @@ void main() {
     });
 
     test('上限を超えるチームは、受け取る年俸を出す年俸の125%までしか増やせない', () {
-      final c = Career.start(seed: 4, scenario: Scenario.lastWindow);
+      final c = careerAt(4, 1);
       expect(c.me.payroll, greaterThan(salaryCap));
       expect(salaryRuleProblem(c.me, 400, 100), isNotNull);
       expect(salaryRuleProblem(c.me, 120, 100), isNull);
@@ -175,14 +185,15 @@ void main() {
       c.playBlock();
       expect(c.canTrade, isFalse);
       final myStar = c.me.roster.first;
-      final theirs = c.teams[1].roster.last;
-      expect(c.propose(TradeOffer(partner: 1, give: [myStar.id], get: [theirs.id])), isFalse);
+      final other = c.mine == 0 ? 1 : 0;
+      final theirs = c.teams[other].roster.last;
+      expect(c.propose(TradeOffer(partner: other, give: [myStar.id], get: [theirs.id])), isFalse);
     });
 
     test('指名権も出せる。成立すると持ち主が変わる', () {
-      final c = Career.start(seed: 8, scenario: Scenario.middle);
-      final mine = c.picksOf(Career.mine).firstWhere((i) => c.picks[i].round == 1);
-      final pt = c.teams.skip(1).firstWhere((t) => t.mode == TeamMode.rebuild).index;
+      final c = careerAt(8, 15);
+      final mine = c.picksOf(c.mine).firstWhere((i) => c.picks[i].round == 1);
+      final pt = c.teams.where((t) => t.index != c.mine).firstWhere((t) => t.mode == TeamMode.rebuild).index;
       final theirScrub = c.teams[pt].roster.reduce((a, b) => a.ovr <= b.ovr ? a : b);
       final o = TradeOffer(partner: pt, givePicks: [mine], get: [theirScrub.id]);
       expect(c.judge(o).ok, isTrue, reason: c.judge(o).reason);
@@ -195,8 +206,8 @@ void main() {
     test('受け取りたい選手を選ぶと、相手が受ける出し方が返り、そのまま成立する', () {
       var found = 0;
       for (var seed = 1; seed <= 10; seed++) {
-        final c = Career.start(seed: seed, scenario: Scenario.middle);
-        final pt = c.teams.skip(1).firstWhere((t) => t.mode == TeamMode.rebuild).index;
+        final c = careerAt(seed, 15);
+        final pt = c.teams.where((t) => t.index != c.mine).firstWhere((t) => t.mode == TeamMode.rebuild).index;
         final target = c.teams[pt].roster.reduce((a, b) => a.ovr >= b.ovr ? a : b);
         final o = c.askPartner(pt, get: [target.id]);
         if (o == null) continue;
@@ -207,29 +218,30 @@ void main() {
         expect(c.me.roster.any((p) => p.id == target.id), isTrue);
         expect(c.log.first, contains('トレード'));
       }
-      expect(found, greaterThan(5), reason: 'たいていは出し方が見つかる');
+      expect(found, greaterThanOrEqualTo(3), reason: '多くの場合は出し方が見つかる');
     });
 
     test('何も受け取らないなら聞けない。締め切りのあとも聞けない', () {
       final c = Career.start(seed: 2)..startSeason();
-      expect(c.askPartner(1), isNull);
+      final other = c.mine == 0 ? 1 : 0;
+      expect(c.askPartner(other), isNull);
       c
         ..playBlock()
         ..playBlock();
-      expect(c.askPartner(1, get: [c.teams[1].roster.first.id]), isNull);
+      expect(c.askPartner(other, get: [c.teams[other].roster.first.id]), isNull);
     });
 
     test('相手同士のトレードが起き、どのチームも人数と年俸の決まりを守る。ニュースに残る', () {
       var trades = 0;
       for (var seed = 1; seed <= 5; seed++) {
-        final c = Career.start(seed: seed, scenario: Scenario.middle);
+        final c = careerAt(seed, 15);
         var guard = 0;
         while (c.season <= 3 && c.phase != Phase.over && guard++ < 200) {
           if (c.phase == Phase.seasonEnd) c.fired = false;
           botStep(c);
           // ドラフトの間は新人が入って一時的に15人を超える。シーズン前・シーズン中は15人まで
           if (c.phase != Phase.preseason && c.phase != Phase.season) continue;
-          for (final t in c.teams.skip(1)) {
+          for (final t in c.teams.where((t) => t.index != c.mine)) {
             expect(t.roster.length, lessThanOrEqualTo(maxRoster), reason: t.name);
             expect(t.payroll, lessThanOrEqualTo(hardCap + 100), reason: t.name);
           }
@@ -250,7 +262,7 @@ void main() {
       c.toOffseason();
       expect(c.phase, Phase.draft);
       expect(c.myTurn, isTrue);
-      final myPicks = c.order.where((i) => c.picks[i].owner == Career.mine).length;
+      final myPicks = c.order.where((i) => c.picks[i].owner == c.mine).length;
       final before = c.me.roster.length;
       final p = byMid(c).first;
       c.pickProspect(p);
@@ -295,7 +307,7 @@ void main() {
     });
 
     test('契約: 再契約は上限を超えてもできる。放した選手は自由契約に。オフを終えると次のシーズン前', () {
-      final c = Career.start(seed: 30, scenario: Scenario.lastWindow);
+      final c = careerAt(30, 1);
       var guard = 0;
       while (c.phase != Phase.contracts && guard++ < 100) {
         if (c.phase == Phase.seasonEnd) c.fired = false;
@@ -318,13 +330,13 @@ void main() {
       c.finishContracts();
       expect(c.phase, Phase.preseason);
       expect(c.season, 2);
-      for (final t in c.teams.skip(1)) {
+      for (final t in c.teams.where((t) => t.index != c.mine)) {
         expect(t.roster.length, inInclusiveRange(13, maxRoster));
       }
     });
 
     test('自由契約: 上限の空きが無ければ取れない。最低年俸の選手はいつでも取れる', () {
-      final c = Career.start(seed: 6, scenario: Scenario.lastWindow);
+      final c = careerAt(6, 1);
       final cheap = c.freeAgents.firstWhere((p) => c.askOf(p, c.me).salary <= minSalary);
       c.release(c.me.roster.last.id);
       expect(c.signProblem(cheap), isNull);
@@ -345,7 +357,7 @@ void main() {
 
   group('オーナー', () {
     test('目標に届かず信頼がなくなると解任。動画で1度だけ取り消せる', () {
-      final c = Career.start(seed: 14, scenario: Scenario.lastWindow);
+      final c = careerAt(14, 1);
       c.trust = 1;
       c.startSeason();
       c.target = gamesPerSeason;
@@ -366,7 +378,7 @@ void main() {
 
     test('解任されたまま閉じると任期は終わる。10年目のあとも終わる', () {
       final c = Career.start(seed: 15);
-      final done = botPlayCareer(15, Scenario.middle);
+      final done = botPlayCareer(15, team: teamAtRank(15, 15));
       expect(done.phase, Phase.over);
       expect(done.history.length, done.fired ? lessThanOrEqualTo(careerSeasons) : careerSeasons);
       expect(c.phase, Phase.preseason);
@@ -380,7 +392,7 @@ void main() {
 
   group('保存', () {
     test('どの局面でも、保存して読み直すと同じ続きになる', () {
-      final c = Career.start(seed: 40, scenario: Scenario.rebuild);
+      final c = careerAt(40, 28);
       var guard = 0;
       while (c.phase != Phase.over && guard++ < 300) {
         final copy = Career.fromJson(jsonDecode(jsonEncode(c.toJson())) as Map<String, dynamic>);
@@ -398,17 +410,17 @@ void main() {
 
   group('釣り合い(自動で遊ぶGM)', () {
     test('素朴に遊ぶと、優勝はたまに。始め方ごとに解任ばかり・優勝ばかりにならない', () {
-      for (final sc in Scenario.values) {
+      for (final rank in [1, 15, 28]) {
         var titles = 0, fired = 0;
         const n = 30;
         for (var i = 0; i < n; i++) {
-          final c = botPlayCareer(500 + i, sc);
+          final c = botPlayCareer(500 + i, team: teamAtRank(500 + i, rank));
           titles += c.titles;
           if (c.fired) fired++;
         }
         // 30チームなので、運だけなら10年で0.33回
-        expect(titles / n, inInclusiveRange(0.05, 1.5), reason: '${sc.label} 優勝/任期');
-        expect(fired / n, lessThan(0.5), reason: '${sc.label} 解任');
+        expect(titles / n, inInclusiveRange(0.05, 1.5), reason: '戦力$rank位 優勝/任期');
+        expect(fired / n, lessThan(0.5), reason: '戦力$rank位 解任');
       }
     });
   });

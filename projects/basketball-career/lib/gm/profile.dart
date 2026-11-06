@@ -3,7 +3,7 @@ import 'career.dart';
 /// 実績。任期をまたいで端末に残る。
 enum Achievement {
   firstTitle('はじめての優勝', 'ファイナルで勝って優勝する'),
-  rebuildTitle('どん底からの頂点', '「立て直し」で始めて優勝する'),
+  rebuildTitle('どん底からの頂点', '「立て直し」のチームを任されて優勝する'),
   backToBack('連覇', '2年続けて優勝する'),
   dynasty('黄金期', '1回の任期で3回優勝する'),
   bigSeason('圧倒', 'レギュラーシーズンで60勝する'),
@@ -48,7 +48,7 @@ class Profile {
     if (h.champion) titles++;
     final got = <Achievement>[
       if (h.champion) Achievement.firstTitle,
-      if (h.champion && c.scenario == Scenario.rebuild) Achievement.rebuildTitle,
+      if (h.champion && c.outlook == Outlook.rebuild) Achievement.rebuildTitle,
       if (h.champion && c.history.length >= 2 && c.history[c.history.length - 2].champion) Achievement.backToBack,
       if (c.titles >= 3) Achievement.dynasty,
       if (h.wins >= 60) Achievement.bigSeason,
@@ -61,7 +61,7 @@ class Profile {
   /// 動きのたびに呼ぶ(トレード・ドラフトの順番)。
   List<Achievement> recordProgress(Career c) => _grant([
         if (c.tradesDone >= 8) Achievement.dealer,
-        if (c.phase == Phase.draft && c.order.isNotEmpty && c.picks[c.order.first].owner == Career.mine) Achievement.lottery,
+        if (c.phase == Phase.draft && c.order.isNotEmpty && c.picks[c.order.first].owner == c.mine) Achievement.lottery,
         if (c.me.roster.any((p) => c.draftedIds.contains(p.id) && p.ovr >= 80)) Achievement.homegrown,
       ]);
 

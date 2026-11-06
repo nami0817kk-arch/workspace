@@ -17,7 +17,7 @@ class RosterTab extends StatelessWidget {
     final car = c.career!;
     final me = car.me;
     final order = lineup(me.roster);
-    final rank = car.strengthRank(Career.mine) + 1;
+    final rank = car.strengthRank(car.mine) + 1;
     return ListView(
       padding: const EdgeInsets.fromLTRB(14, 8, 14, 24),
       children: [
@@ -26,7 +26,7 @@ class RosterTab extends StatelessWidget {
             padding: const EdgeInsets.all(14),
             child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
               Row(children: [
-                PlayerAvatar(team: Career.mine, size: 52, pose: 'dunk'),
+                PlayerAvatar(team: car.mine, size: 52, pose: 'dunk'),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -62,7 +62,7 @@ class RosterTab extends StatelessWidget {
         padding: const EdgeInsets.only(bottom: 6),
         child: PlayerRow(
           p: p,
-          team: Career.mine,
+          team: car.mine,
           showDelta: true,
           extra: car.draftedIds.contains(p.id) ? const Tag('生え抜き', color: GmColors.good) : null,
           onTap: () => _detail(context, car, p),
@@ -80,7 +80,7 @@ class RosterTab extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(18, 0, 18, 18),
               child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
                 Row(children: [
-                  PlayerAvatar(team: Career.mine, size: 72, pose: p.pos.big ? 'dunk' : 'shoot'),
+                  PlayerAvatar(team: car.mine, size: 72, pose: p.pos.big ? 'dunk' : 'shoot'),
                   const SizedBox(width: 14),
                   Expanded(
                     child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
