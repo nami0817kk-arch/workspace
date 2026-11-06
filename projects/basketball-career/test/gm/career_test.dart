@@ -230,8 +230,8 @@ void main() {
           // ドラフトの間は新人が入って一時的に15人を超える。シーズン前・シーズン中は15人まで
           if (c.phase != Phase.preseason && c.phase != Phase.season) continue;
           for (final t in c.teams.skip(1)) {
-            expect(t.roster.length, lessThanOrEqualTo(maxRoster), reason: '${t.name}');
-            expect(t.payroll, lessThanOrEqualTo(hardCap + 100), reason: '${t.name}');
+            expect(t.roster.length, lessThanOrEqualTo(maxRoster), reason: t.name);
+            expect(t.payroll, lessThanOrEqualTo(hardCap + 100), reason: t.name);
           }
         }
         trades += c.log.where((l) => l.contains('トレード:')).length;
