@@ -37,6 +37,41 @@ class LeagueTab extends StatelessWidget {
             ),
           ),
         ],
+        if (car.finals != null) ...[
+          const SectionTitle('プレーオフの山'),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                for (var round = 0; round <= 4; round++) ...[
+                  Padding(
+                    padding: const EdgeInsets.only(top: 6, bottom: 2),
+                    child: Text(const ['プレーイン', '1回戦', '2回戦', '地区決勝', 'ファイナル'][round],
+                        style: const TextStyle(fontWeight: FontWeight.bold, color: GmColors.ball)),
+                  ),
+                  for (final sr in car.playoffs.where((x) => x.round == round))
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 2),
+                      child: Row(children: [
+                        TeamBadge(team: sr.winner, size: 18),
+                        const SizedBox(width: 6),
+                        Expanded(
+                          child: Text(
+                              '${teamDefs[sr.winner].short} ${sr.winner == sr.high ? sr.highWins : sr.lowWins}-${sr.winner == sr.high ? sr.lowWins : sr.highWins} ${teamDefs[sr.loser].short}',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: sr.high == car.mine || sr.low == car.mine ? FontWeight.bold : null,
+                                  color: sr.high == car.mine || sr.low == car.mine ? GmColors.ball : null)),
+                        ),
+                      ]),
+                    ),
+                ],
+              ]),
+            ),
+          ),
+        ],
         if (car.leaders((s) => s.ppg).isNotEmpty) ...[
           const SectionTitle('個人成績の上位(1試合あたり)'),
           Card(

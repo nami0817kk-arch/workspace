@@ -28,6 +28,11 @@ void main() {
       'オーナーの信頼',
       '解任',
       '実績',
+      '先発と控え',
+      '気持ち',
+      '入場料',
+      'けが',
+      'トレーナー',
     ];
     for (final w in words) {
       expect(all, contains(w), reason: '遊び方に「$w」が載っていない');

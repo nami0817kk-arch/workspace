@@ -452,6 +452,40 @@ void main() {
     });
   });
 
+  group('1週間ずつ進める', () {
+    test('1週間は3試合。区切りの終わりは越えず、着いたら区切りが進む。結果の一覧は区切りの中で足していく', () {
+      final c = careerAt(9, 12)..startSeason();
+      expect(c.playWeek(), isFalse);
+      expect(c.roundAt, 3);
+      expect(c.lastGames, hasLength(3));
+      var guard = 0;
+      while (!c.playWeek() && guard++ < 20) {}
+      expect(c.roundAt, blockSizes[0]);
+      expect(c.block, 1);
+      expect(c.lastGames, hasLength(blockSizes[0]));
+      c.playWeek();
+      expect(c.lastGames, hasLength(3), reason: '次の区切りに入ったら一覧は空から');
+      // 途中で保存しても同じ続きになる
+      final copy = Career.fromJson(jsonDecode(jsonEncode(c.toJson())) as Map<String, dynamic>);
+      expect(copy.roundAt, c.roundAt);
+      c.playBlock();
+      copy.playBlock();
+      expect(jsonEncode(copy.toJson()), jsonEncode(c.toJson()));
+      expect(c.roundAt, blockStart(2));
+    });
+
+    test('シーズンの終わりには、プレーオフの山がそろう', () {
+      final c = careerAt(9, 12)..startSeason();
+      while (c.phase == Phase.season) {
+        c.playWeek();
+      }
+      expect(c.roundAt, gamesPerSeason);
+      expect(c.phase, Phase.playoffs);
+      c.playPlayoffs();
+      expect(c.finals, isNotNull);
+    });
+  });
+
   group('相手に聞く・相手同士のトレード・ニュース', () {
     test('受け取りたい選手を選ぶと、相手が受ける出し方が返り、そのまま成立する', () {
       var found = 0;

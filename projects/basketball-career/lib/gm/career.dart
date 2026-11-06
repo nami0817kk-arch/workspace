@@ -199,6 +199,9 @@ class Career {
   /// 今のシーズンで終えた区切り(0〜4)。
   int block = 0;
 
+  /// 今のシーズンで終えた節(試合の数。0〜82)。
+  int roundAt = 0;
+
   /// 直前の区切りの、自分のチームの試合。
   List<GameResult> lastGames = [];
 
@@ -283,7 +286,7 @@ class Career {
   int get _projectedProfit {
     // シーズンを閉じたあと(税もプレーオフの収入も入ったあと)は、そのままの収支
     if (finals != null) return profit;
-    final left = gamesPerSeason - blockStart(block);
+    final left = gamesPerSeason - roundAt;
     final perGameCost = me.payroll / gamesPerSeason;
     final tax = me.payroll > taxLine ? ((me.payroll - taxLine) * 1.5).round() : 0;
     final rest = (left / 2 * gatePerGame + baseIncome * left / gamesPerSeason - perGameCost * left).round();
@@ -304,7 +307,7 @@ class Career {
     final all = [
       for (final t in teams)
         for (final p in t.roster)
-          if (p.stats.gp >= math.max(1, (blockStart(block) * 0.5).round())) (p, t.index),
+          if (p.stats.gp >= math.max(1, (roundAt * 0.5).round())) (p, t.index),
     ]..sort((a, b) => key(b.$1.stats).compareTo(key(a.$1.stats)));
     return all.take(count).toList();
   }
@@ -521,6 +524,7 @@ class Career {
     final kind = r < 12 ? GoalKind.playoffs : r >= 22 ? GoalKind.youth : me.payroll > taxLine - 50 ? GoalKind.noTax : third[rng.nextInt(third.length)];
     goals = [OwnerGoal(GoalKind.wins), OwnerGoal(GoalKind.profit), OwnerGoal(kind)];
     block = 0;
+    roundAt = 0;
     lastGames = [];
     playoffs = [];
     incoming = null;
@@ -528,19 +532,34 @@ class Career {
   }
 
   /// 次の区切り(20〜21試合)を進める。
-  void playBlock() {
-    if (phase != Phase.season || block >= blocksPerSeason) return;
+  void playBlock() => _playRounds(blockStart(block + 1) - roundAt);
+
+  /// 1週間(3節)進める。区切りの終わりは越えない。区切りの終わりに着いたら true。
+  bool playWeek() {
+    final before = block;
+    _playRounds(math.min(daysPerWeek, blockStart(block + 1) - roundAt));
+    return block != before;
+  }
+
+  /// 1週間に進める節の数。
+  static const daysPerWeek = 3;
+
+  /// [n] 節進める。区切りの終わりに着いたら、区切りのあとの出来事(気持ち・相手同士のトレード・申し込み)を起こす。
+  void _playRounds(int n) {
+    if (phase != Phase.season || block >= blocksPerSeason || n <= 0) return;
     injuries.clear();
     incoming = null;
+    // 区切りの初めから進めるときは、結果の一覧を空にする(区切りの途中なら足していく)
+    if (roundAt == blockStart(block)) lastGames = [];
     final games = <GameResult>[];
-    final start = blockStart(block);
-    for (final round in seasonSchedule(teams.length).sublist(start, start + blockSizes[block])) {
+    for (final round in seasonSchedule(teams.length).sublist(roundAt, roundAt + n)) {
       for (final (h, a) in round) {
         final g = playGame(teams[h], teams[a], rng, mine: mine);
         if (g.involves(mine)) games.add(g);
       }
     }
-    lastGames = games;
+    roundAt += n;
+    lastGames = [...lastGames, ...games];
     final homeGames = games.where((g) => g.home == mine).length;
     revenue += homeGames * gatePerGame + (baseIncome * games.length / gamesPerSeason).round();
     costs += ((me.payroll + me.staffCost) * games.length / gamesPerSeason).round();
@@ -548,6 +567,7 @@ class Career {
       if (t == mine || p.ovr >= 76) _log('けが: ${p.name}(${teams[t].def.short})が${p.injured}試合欠場');
     }
     injuries.clear();
+    if (roundAt < blockStart(block + 1)) return;
     block++;
     _updateMorale();
     if (block <= tradeDeadlineBlock && rng.chance(0.5)) _aiTrades(1);
@@ -1152,6 +1172,7 @@ class Career {
         'season': season,
         'phase': phase.index,
         'block': block,
+        'ra': roundAt,
         'lg': [for (final g in lastGames) g.toJson()],
         'po': [for (final s in playoffs) s.toJson()],
         'fa': [for (final p in freeAgents) p.toJson()],
@@ -1199,6 +1220,7 @@ class Career {
       ..season = j['season'] as int
       ..phase = Phase.values[(j['phase'] as int).clamp(0, Phase.values.length - 1)]
       ..block = j['block'] as int
+      ..roundAt = (j['ra'] as int?) ?? blockStart((j['block'] as int).clamp(0, blocksPerSeason))
       ..lastGames = [for (final g in maps('lg')) GameResult.fromJson(g)]
       ..playoffs = [for (final s in maps('po')) Series.fromJson(s)]
       ..freeAgents = [for (final p in maps('fa')) Player.fromJson(p)]
