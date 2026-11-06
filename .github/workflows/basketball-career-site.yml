@@ -1,10 +1,10 @@
-# バスケ育成の公開ページ（法務ページ・app-ads.txt・紹介）を Cloudflare Pages の basketball-career に出す。
+# バスケデッキの公開ページ（法務ページ・app-ads.txt・紹介）を Cloudflare Pages の basketball-career に出す。
 # アプリの設定画面は https://basketball-ikusei.pages.dev/privacy.html と support.html を開く（lib/app/links.dart）。
 # ストアの「マーケティング URL」もここにするので、AdMob は直下の app-ads.txt を読みに来る。
 #
 # テスト用の Web版（basketball-career-web-test.yml → basketball-career-test）とは別のプロジェクト。
 # 必要な Secrets: CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID（soccer-pages.yml と同じ値）
-name: バスケ育成の公開ページ
+name: バスケデッキの公開ページ
 
 on:
   push:
@@ -65,7 +65,7 @@ jobs:
           for p in privacy.html support.html terms.html app-ads.txt; do
             curl -fsSL "https://basketball-ikusei.pages.dev/$p" -o /tmp/page || { echo "::error::https://basketball-ikusei.pages.dev/$p が開けません"; exit 1; }
           done
-          grep -q "バスケ育成" <(curl -fsSL https://basketball-ikusei.pages.dev/privacy.html) || { echo "::error::basketball-ikusei.pages.dev がバスケ育成のページではありません"; exit 1; }
+          grep -q "バスケデッキ" <(curl -fsSL https://basketball-ikusei.pages.dev/privacy.html) || { echo "::error::basketball-ikusei.pages.dev がバスケデッキのページではありません"; exit 1; }
           curl -fsSL https://basketball-ikusei.pages.dev/app-ads.txt
 
       # AdMob が app-ads.txt を確かめられる状態か（robots.txt がテキスト・app-ads.txt の行・無いパスは 404）。
