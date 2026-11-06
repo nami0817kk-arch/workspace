@@ -22,13 +22,13 @@ void main() {
       expect(dir.existsSync(), isTrue, reason: '${dir.path} が無い');
       final files = dir.listSync().whereType<File>().where((f) => f.path.endsWith('.png')).toList()
         ..sort((a, b) => a.path.compareTo(b.path));
-      expect(files.length, 8, reason: '8枚(01_battle〜08_collection)');
+      expect(files.length, 8, reason: '8枚(01_trade〜08_league)');
       for (final f in files) {
         expect(_size(f), e.value, reason: f.path);
         expect(f.lengthSync(), lessThan(8 * 1024 * 1024), reason: '${f.path} が大きすぎる(App Store の上限は8MB)');
       }
-      expect(files.first.path, contains('01_battle'));
-      expect(files.last.path, contains('08_collection'));
+      expect(files.first.path, contains('01_trade'));
+      expect(files.last.path, contains('08_league'));
     });
   }
 }

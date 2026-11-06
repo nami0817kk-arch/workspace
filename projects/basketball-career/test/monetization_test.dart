@@ -2,13 +2,12 @@
 import 'dart:io';
 import 'dart:math';
 
-import 'package:basketball_career/deck/bot.dart';
-import 'package:basketball_career/deck/cards.dart';
-import 'package:basketball_career/deck/run.dart';
+import 'package:basketball_career/gm/career.dart';
+import 'package:basketball_career/gm/league.dart';
 import 'package:basketball_career/monetization/ad_service.dart';
 import 'package:basketball_career/monetization/monetization.dart';
 import 'package:basketball_career/monetization/purchase_service.dart';
-import 'package:basketball_career/ui/deck_controller.dart';
+import 'package:basketball_career/ui/gm_controller.dart';
 import 'package:basketball_career/ui/app.dart';
 import 'package:basketball_career/ui/settings_screen.dart';
 import 'package:flutter/material.dart';
@@ -95,8 +94,27 @@ Future<(Monetization, FakeAds, FakeStore)> open(
   return (m, ads, store);
 }
 
-Future<DeckController> deckController(Monetization m) async =>
-    DeckController(money: m, prefs: await SharedPreferences.getInstance(), seedSource: Random(1));
+Future<GmController> gmController(Monetization m) async =>
+    GmController(money: m, prefs: await SharedPreferences.getInstance(), seedSource: Random(1));
+
+/// シーズンの途中(1区切りも進めていない)まで進めたコントローラ。
+Future<GmController> inSeason(Monetization m) async {
+  final c = await gmController(m);
+  c.newCareer(Scenario.middle);
+  c.startSeason();
+  return c;
+}
+
+/// 解任された直後の任期にする。
+void makeFired(Career car) {
+  car.trust = 1;
+  car.startSeason();
+  car.target = gamesPerSeason;
+  while (car.phase == Phase.season) {
+    car.playBlock();
+  }
+  car.playPlayoffs();
+}
 
 void main() {
   group('全画面広告', () {
@@ -211,10 +229,9 @@ void main() {
       for (final available in [true, false]) {
         final (m, ads, store) = await open({'interstitialsShown': 1});
         store.available = available;
-        final c = await deckController(m);
-        c.newRun();
+        final c = await inSeason(m);
         await due(m);
-        await c.choose(NodeType.game);
+        await c.playBlock();
         expect(ads.interstitials, 1);
         expect(c.offerRemoveAds, available, reason: 'ストア $available');
         expect(m.removeAdsOfferDue, isFalse, reason: '出さなかったときも、同じ番では二度聞かない');
@@ -291,69 +308,65 @@ void main() {
     });
   });
 
-  group('コントローラ(カードの試合)', () {
-    test('試合を3回終えた次の行き先を選ぶ前に、全画面広告が1回出る(試合の直後には出ない)', () async {
+  group('コントローラ(GMの任期)', () {
+    test('試合の区切りを3回終えたら、次の区切りを進める前に全画面広告が1回出る。区切りの直後には出ない', () async {
       final (m, ads, _) = await open();
-      final c = await deckController(m);
-      c.newRun();
-      for (var i = 0; i < Monetization.interstitialEvery; i++) {
-        expect(c.run!.phase, Phase.map);
-        await c.choose(c.run!.choices.firstWhere((t) => t == NodeType.game || t == NodeType.elite));
-        botPlayBattle(c.run!.battle!);
-        c.finishBattle();
-        expect(ads.interstitials, 0, reason: '試合の直後には出ない');
-        if (c.run!.phase == Phase.reward) c.takeReward(null);
-        if (c.run!.phase == Phase.mateReward) c.takeMate(null);
+      final c = await inSeason(m);
+      for (var i = 0; i < 3; i++) {
+        await c.playBlock();
       }
-      expect(c.run!.phase, Phase.map);
-      await c.choose(c.run!.choices.first);
+      expect(ads.interstitials, 0, reason: '3回目の区切りの直後には出ない');
+      expect(m.interstitialDue, isTrue);
+      await c.playBlock();
       expect(ads.interstitials, 1);
+      expect(c.career!.phase, Phase.playoffs, reason: '広告のあと、そのまま進む');
     });
 
-    test('動画を見終えると候補を引き直せる(1回だけ)。読み込めなければ変わらない', () async {
+    test('動画を見終えるとスカウトが2回増える(ドラフトごとに1回)。読み込めなければ増えない', () async {
       final (m, ads, _) = await open();
-      final c = await deckController(m);
-      c.newRun();
-      c.run!.phase = Phase.reward;
-      c.run!.rewardCards = [for (final id in ['drive', 'boxout', 'screen']) CardInstance(card(id))];
-      final before = [for (final x in c.run!.rewardCards) x.uid];
+      final c = await inSeason(m);
+      final car = c.career!;
+      while (car.phase == Phase.season) {
+        car.playBlock();
+      }
+      car.playPlayoffs();
+      car.fired = false;
+      c.toOffseason();
+      expect(car.phase, Phase.draft);
+      final before = car.scoutsLeft;
       ads.rewardedReady = false;
-      expect(await c.rerollWithAd(), RecoverGate.unavailable);
-      expect([for (final x in c.run!.rewardCards) x.uid], before);
+      expect(await c.scoutsWithAd(), RecoverGate.unavailable);
+      expect(car.scoutsLeft, before);
       ads.rewardedReady = true;
-      expect(await c.rerollWithAd(), RecoverGate.granted);
-      expect([for (final x in c.run!.rewardCards) x.uid], isNot(before));
-      expect(c.run!.rerolled, isTrue);
-      expect(await c.rerollWithAd(), RecoverGate.unavailable, reason: '1回の報酬につき1回');
+      expect(await c.scoutsWithAd(), RecoverGate.granted);
+      expect(car.scoutsLeft, before + 2);
+      expect(await c.scoutsWithAd(), RecoverGate.unavailable, reason: 'ドラフトごとに1回');
       expect(ads.rewarded, 1);
     });
 
-    test('決勝に負けたら、動画で1回だけやり直せる。広告を消した人は動画なし', () async {
+    test('解任されたら、動画で1回だけオーナーを説得できる。広告を消した人は動画なし', () async {
       for (final adFree in [false, true]) {
         final (m, ads, _) = await open({if (adFree) 'adFree': true});
-        final c = await deckController(m);
-        c.newRun();
-        final r = c.run!;
-        r.floor = RunState.floorsPerStage - 1;
-        await c.choose(NodeType.boss);
-        while (!r.battle!.over) {
-          c.endRound();
-        }
-        c.finishBattle();
-        expect(r.over, isTrue);
-        expect(await c.retryWithAd(), RecoverGate.granted);
-        expect(r.phase, Phase.battle);
+        final c = await gmController(m);
+        c.newCareer(Scenario.lastWindow);
+        final car = c.career!;
+        makeFired(car);
+        expect(car.fired, isTrue);
+        expect(await c.rescueWithAd(), RecoverGate.granted);
+        expect(car.fired, isFalse);
+        expect(car.trust, greaterThan(0));
         expect(ads.rewarded, adFree ? 0 : 1);
-        expect(r.canRetry, isFalse);
+        expect(car.canRescue, isFalse, reason: '1回の任期で1回だけ');
       }
     });
 
-    test('広告の無い環境では、タダで引き直させない', () async {
+    test('広告の無い環境では、タダで説得させない', () async {
       SharedPreferences.setMockInitialValues({});
-      final c = DeckController(prefs: await SharedPreferences.getInstance(), seedSource: Random(1));
-      c.newRun();
-      c.run!.phase = Phase.reward;
-      expect(await c.rerollWithAd(), RecoverGate.unavailable);
+      final c = GmController(prefs: await SharedPreferences.getInstance(), seedSource: Random(1));
+      c.newCareer(Scenario.lastWindow);
+      makeFired(c.career!);
+      expect(await c.rescueWithAd(), RecoverGate.unavailable);
+      expect(c.career!.fired, isTrue);
     });
   });
 
@@ -381,11 +394,10 @@ void main() {
       addTearDown(tester.view.reset);
       for (final buy in [false, true]) {
         final (m, ads, _) = await open({'interstitialsShown': 1, 'tournamentsSinceAd': Monetization.interstitialEvery});
-        final c = await deckController(m);
-        c.newRun();
+        final c = await inSeason(m);
         await tester.pumpWidget(BasketballCareerApp(controller: c));
         await tester.pumpAndSettle();
-        await tester.runAsync(() => c.choose(NodeType.game));
+        await tester.runAsync(() => c.playBlock());
         await tester.pumpAndSettle();
         expect(ads.interstitials, 1);
         expect(find.text('広告なしで遊ぶ'), findsOneWidget);
@@ -400,21 +412,25 @@ void main() {
       }
     });
 
-    testWidgets('勝ったあとの「動画を見て、候補を引き直す」を押すと引き直せる', (tester) async {
+    testWidgets('解任の画面の「動画を見て、オーナーを説得する」を押すと続けられる', (tester) async {
       tester.view.physicalSize = const Size(800, 2400);
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);
       final (m, ads, _) = await open();
-      final c = await deckController(m);
-      c.newRun();
-      c.run!.phase = Phase.reward;
-      c.run!.rewardCards = [for (final id in ['drive', 'boxout', 'screen']) CardInstance(card(id))];
+      final c = await gmController(m);
+      c.newCareer(Scenario.lastWindow);
+      makeFired(c.career!);
       await tester.pumpWidget(BasketballCareerApp(controller: c));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('動画を見て、候補を引き直す'));
+      while (find.text('OK').evaluate().isNotEmpty) {
+        await tester.tap(find.text('OK').first);
+        await tester.pumpAndSettle();
+      }
+      await tester.tap(find.text('動画を見て、オーナーを説得する(1回だけ)'));
       await tester.pumpAndSettle();
       expect(ads.rewarded, 1);
-      expect(find.text('動画を見て、候補を引き直す'), findsNothing, reason: '1回だけ');
+      expect(c.career!.fired, isFalse);
+      expect(find.text('動画を見て、オーナーを説得する(1回だけ)'), findsNothing);
       await tester.pumpWidget(const SizedBox());
     });
   });
@@ -436,10 +452,10 @@ void main() {
     });
 
     test('見終えた報酬を、画面を離れても受け取る(受け取りは mounted を見ない場所にある)', () {
-      final controller = File('lib/ui/deck_controller.dart').readAsStringSync();
+      final controller = File('lib/ui/gm_controller.dart').readAsStringSync();
       expect(controller.contains('mounted'), isFalse,
           reason: '報酬の受け取りを mounted の後ろに置かない');
-      for (final f in Directory('lib/ui/deck').listSync().whereType<File>()) {
+      for (final f in Directory('lib/ui/gm').listSync().whereType<File>()) {
         final ui = f.readAsStringSync();
         expect(ui.contains('beforeRecover') || ui.contains('beforeAction'), isFalse,
             reason: '${f.path} が広告を直接扱っている。受け取りはコントローラが持つ');
