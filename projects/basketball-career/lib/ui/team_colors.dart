@@ -20,30 +20,3 @@ enum TeamColor {
   final Color jersey;
   final Color accent;
 }
-
-/// チーム名の頭(地名)ごとの色。名前の字から連想する色にした。
-const teamPrefixColors = <String, TeamColor>{
-  '北嶺': TeamColor.navy,
-  '南陽': TeamColor.yellow,
-  '東雲': TeamColor.purple,
-  '西浜': TeamColor.sky,
-  '青葉': TeamColor.lime,
-  '白鷺': TeamColor.blue,
-  '紅葉': TeamColor.red,
-  '朝日': TeamColor.orange,
-  '双葉': TeamColor.green,
-  '桜台': TeamColor.pink,
-  '星丘': TeamColor.navy,
-  '翠山': TeamColor.green,
-  '蒼海': TeamColor.blue,
-  '大和': TeamColor.purple,
-  '緑風': TeamColor.teal,
-};
-
-/// 相手の色。名前から決め、こちらと同じ色にはしない。
-TeamColor opponentColor(String name, TeamColor ours) {
-  final all = TeamColor.values;
-  var i = name.codeUnits.fold(0, (s, c) => (s * 31 + c) & 0x7fffffff) % all.length;
-  if (all[i] == ours) i = (i + 1) % all.length;
-  return all[i];
-}

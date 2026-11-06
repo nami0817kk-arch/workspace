@@ -1,6 +1,6 @@
-# バスケデッキ / Basketball Deck — ストア掲載文の下書き(iOS のみ・日本だけ)
+# バスケ編成室 / Hoops Front Office — ストア掲載文の下書き(iOS のみ・日本だけ)
 
-2026-11-06 に作り変えた(もとは「バスケ育成：6歳から始める選手物語」。野球育成と同じ雛形に見えるので、カードで戦うゲームにした)。
+2026-11-06 に2度作り変えた(育成 → カードで戦う → GM)。今は、GM としてトレード・ドラフト・契約でチームを作るゲーム。
 公開名義は「つるはし社」。本名・nami・0817 は入れない(`docs/public-identity.md`)。
 **まだ提出していない。** 文面はユーザーが見て直してから App Store Connect に入れる。
 
@@ -8,68 +8,69 @@
 
 - **App Store Connect は一部の記号を「無効な文字」として弾く**(護送ボートの提出で確認済み)。★ ■ … ―― • — を使わない。
   見出しは【】、箇条書きは「・」にする。markdown の `*` を貼らない。
-- **リーグ名・チーム名・選手名・大会名は架空。** 実在の名称を掲載文・画像・キーワードに入れない(商標)。「バスケ」「バスケットボール」は一般名称。
-- 名前の候補は iTunes Search API で調べた(2026-11-06)。「ブザービーター」は英語名の同じアプリが複数あり、同名の漫画もあるので避けた。「バスケデッキ」は見当たらなかった。
-- 野球育成(同じ名義)と名前・説明・画像の作りが似ないようにする(審査 4.3)。「育成」「6歳から」「選手物語」「一代記」は使わない。
+- **リーグ名・チーム名・選手名は架空。** NBA に寄せているのは都市・地区・色・試合の仕組みまで。
+  NBA・実在のチームの愛称・選手の名前を、掲載文・画像・キーワードに入れない(商標、審査 5.2)。「NBA」もキーワードに入れない。
+- 名前の候補は iTunes Search API で調べた(2026-11-06)。「バスケ編成室」は見当たらなかった。「バスケGM」は同じ名前のアプリが複数あり、「Basketball GM」は既存のゲームなので避けた。
+- 野球育成・サカマネ(同じ名義)と名前・説明・画像の作りが似ないようにする(審査 4.3)。「育成」「選手物語」「一代記」「クラブ経営」は使わない。
 - 画面は日本語のみ。**配信は日本だけ**(2026-11-06 ユーザー決定)。英語の掲載情報は付けない。
 
 ## 名前・サブタイトル・キーワード
 
 | 項目 | 日本語 | English (US) |
 |---|---|---|
-| 名前(30字まで) | バスケデッキ：カードで勝ち抜く1シーズン(19字) | Basketball Deck（15字） |
-| サブタイトル(30字まで) | 予告を読んで、ラスト1本を決めろ(16字) | Read the play, hit the buzzer（29字） |
-| キーワード(100字まで) | バスケットボール,デッキ構築,ローグライク,カードゲーム,部活,高校,全国大会,戦略,作戦,ダンク,3P,オフライン,一人用,スポーツ | basketball,deckbuilder,roguelike,card,strategy,offline |
+| 名前(30字まで) | バスケ編成室：GMになってトレードとドラフト(21字) | Hoops Front Office（18字） |
+| サブタイトル(30字まで) | 30チームのリーグで、優勝チームを作れ(18字) | Build a champion as the GM（26字） |
+| キーワード(100字まで) | バスケットボール,ゼネラルマネージャー,マネジメント,シミュレーション,年俸,サラリーキャップ,プレーオフ,スポーツ,オフライン,一人用 | basketball,general manager,simulation,draft,trade,offline |
 
-- ホーム画面の表示名は「バスケデッキ」(`ios/Runner/ja.lproj/InfoPlist.strings`)。
+- ホーム画面の表示名は「バスケ編成室」(`ios/Runner/ja.lproj/InfoPlist.strings`)。
 - 英語の列は表の形を保つためだけに置いている(英語の掲載情報は出さない)。
 
 ## カテゴリ・年齢
 
-ゲーム ＞ カード(主)、ゲーム ＞ スポーツ(副)。年齢区分は 4+(暴力・賭け事・成人向けの表現なし。広告は全年齢向けに限る設定)。
+ゲーム ＞ スポーツ(主)、ゲーム ＞ シミュレーション(副)。年齢区分は 4+(暴力・賭け事・成人向けの表現なし。広告は全年齢向けに限る設定)。
 
 ## プロモーションテキスト(170字まで・審査なしで差し替えられる)
 
-相手の次の攻めは、予告で見えている。点を取るか、守るか。手札のカードで決める、バスケの勝ち抜きカードゲーム。地区予選から全国大会まで、デッキと仲間を強くして日本一をめざそう。
+あなたはGM。試合は選手にまかせて、勝てるチームを作るのが仕事。相手の考えを読んだトレード、指名するまで本当の力が分からないドラフト、年俸の上限とのにらみ合い。10年の任期で、何回優勝できるか。
 
 ## 説明文(日本語)
 
-相手が次に何をしてくるかは、予告で見えている。
-3Pで9点を狙ってくるなら、ブロックで止めるか、それ以上に点を取り返すか。
-手札のカードを切って試合を進める、バスケの勝ち抜きカードゲームです。
+あなたは、バスケットボールのチームのGM(ゼネラルマネージャー)。
+試合に口は出せない。できるのは、選手を集めて、勝てるチームを作ることだけ。
 
-【1試合は4クォーター】
-毎ラウンド手札を5枚引き、スタミナ3で好きなだけカードを出します。シュートで点を取り、守りで相手の点を削る。パスを出したあとのアリウープ、最後のラウンドだけ大きく決まるブザービーター、ドライブを止めるチャージング。組み合わせしだいで、点差は一気に動きます。
+【東西30チーム・82試合】
+東西の地区に分かれた30チームのリーグで、レギュラーシーズンは82試合。地区の上位6チームはプレーオフへ、7位から10位はプレーインで残りの2枠を争う。どの回戦も4勝で勝ち抜け、ファイナルを制すれば優勝。
 
-【勝つたびにデッキが強くなる】
-試合に勝つと、3枚の候補から新しいプレーを1枚選べます。練習でカードを強くし、部室では部費でカードを買ったり、弱いカードを外したり。強いデッキは、枚数が多ければいいとは限りません。
+【トレードは、相手の考えを読む】
+優勝を狙うチームは今すぐ勝てる選手を、立て直し中のチームは若手とドラフトの指名権を欲しがる。何を出して何を受け取るか、相手の反応は申し込む前に見える。シーズン中のトレードは41試合目まで。相手から申し込みが届くこともある。
 
-【仲間は5人まで】
-強豪校に勝つと、仲間が加わりたいと言ってきます。3Pが得意なシューター、毎ラウンド守ってくれるセンター、最初のラウンドに手札を増やす司令塔。誰を迎えるかで、戦い方が変わります。
+【ドラフトは、指名するまで分からない】
+候補の力は幅でしか見えない。スカウトを送ると幅が狭まる。プレーオフに出なかったチームは、くじで上位の指名を引ける。
 
-【地区予選から全国大会へ】
-大会ごとに8つの行き先を選びながら勝ち上がり、最後は決勝。普通の試合に負けると気持ちが減り、決勝に負けたらその場で敗退。全国大会で優勝すれば日本一です。
+【年俸の上限とのやりくり】
+年俸の合計には上限がある。自分の選手との再契約は上限を超えてもできるが、ぜいたく税の線を超えるとオーナーの信頼が下がる。主力の契約が切れる年に、残すか、放すか。
 
-【何度でも、違うシーズン】
-行き先・相手・手に入るカードは毎回変わります。実績を達成すると新しいカードと仲間が増え、日本一になると、ひとつ上の難しさに挑めます。
+【10年の任期】
+シーズンの初めに、オーナーが勝ち数の目標を決める。届かない年が続けば解任。始め方は「立て直し」「中位から上へ」「最後の好機」の3つ。
 
-・カード34種、仲間13人、出来事6つ、難しさ10段階
-・リーグ、チーム、選手、大会の名前はすべて架空です
+・東西30チーム、82試合、プレーインとプレーオフ
+・トレード、ドラフト(2巡・くじ)、再契約、自由契約、ぜいたく税
+・リーグ、チーム、選手の名前はすべて架空です
 ・オフラインで遊べます(広告と購入の確認には通信が必要)
-・広告つき。「広告を消す」(買い切り)で、全画面広告が出なくなり、カードの引き直しと決勝のやり直しも動画なしで使えます
+・広告つき。「広告を消す」(買い切り)で、全画面広告が出なくなり、スカウトの追加とオーナーの説得も動画なしで使えます
 
 ## スクリーンショット(iPhone 1206x2622・iPad 13インチ 2064x2752 の2組、各8枚。最初の3枚が検索結果に出る)
 
 `tool/screenshots/capture_test.dart` が作る(iPhone は `flutter test tool/screenshots/capture_test.dart`、iPad は `DEVICE=ipad` を付ける)。出力は `marketing/screenshots/iphone/` と `ipad/`。
 
-1. 「相手の予告を読んで、カードを切る」 … 試合(予告・パスのあとのアリウープ・手札)
-2. 「ラスト1本は、ブザービーター」 … 決勝の最後のラウンド(3点差・ブザービーター13点)
-3. 「行き先を選んで、勝ち抜く」 … 県大会の8つの行き先
-4. 「勝つたびに、デッキが強くなる」 … 勝ったあとのカード3枚
-5. 「仲間を5人そろえる」 … 強豪に勝ったあと仲間を迎える
-6. 「部費でプレーを買い足す」 … 部室
-7. 「めざせ、全国制覇」 … 優勝の画面
-8. 「34種のカードを集めよう」 … カード図鑑
+1. 「相手の考えを読んで、トレードを組む」 … トレードの画面(若手と指名権で主力を取りに行く・「受けてくれそう」)
+2. 「指名するまで、本当の力は分からない」 … ドラフト(全体1位の番・調査済みの候補)
+3. 「伸びる若手と、年俸のやりくり」 … チームの画面(年俸の帯・伸びしろ)
+4. 「82試合を進めて、プレーオフへ」 … シーズン中(41試合を終えて・試合の結果)
+5. 「相手から届く、トレードの申し込み」 … 届いた申し込み
+6. 「契約の切れた主力を、残すか放すか」 … オフの契約
+7. 「めざせ、ファイナル制覇」 … 優勝の画面
+8. 「東西30チームのリーグで、GMになる」 … 地区の順位
 
 **撮るときの決まり**(`docs/app-pitfalls.md` #4・Apple 2.3.2・2.3.7):
 - 読み込み中の画面を撮らない(生成器が検査する)。タイトル画面は撮らない。値段(¥370)を写さない。実在の名称を入れない。
@@ -77,12 +78,13 @@
 ## 審査メモ(App Review Information、英文で入れる)
 
 ```
-This is a single-player basketball card game. No account, login or server. Progress is saved only on the device.
-Each match has 8 rounds. Each round you draw 5 cards and spend 3 stamina; the opponent's next attack is shown in advance.
+This is a single-player basketball general manager simulation. No account, login or server. Progress is saved only on the device.
+Games are simulated automatically; the player manages the roster through trades, the draft, re-signing and free agents under a salary cap.
+All leagues, teams and players are fictional. Real city names are used only as locations; no real team names, logos or players are used.
 Ads are served by Google AdMob (limited to content suitable for all ages, no tracking permission requested).
 The only in-app purchase is "Remove Ads" (non-consumable, basketball_career_remove_ads), found in Settings (gear on the home screen) with "Restore Purchases". An offer sheet may also appear after some full-screen ads.
-Rewarded videos are optional: re-roll the card choices after a win, and retry a lost final once per season.
-All leagues, teams, players and tournaments are fictional. No gambling, cash prizes or random paid items.
+Rewarded videos are optional: two extra scouting reports during each draft, and convincing the owner once per career after being fired.
+No gambling, cash prizes or random paid items.
 Before release, production ads may not be delivered yet; if a video shows "not ready", the app is working as designed. The purchase can be tested in the Sandbox.
 ```
 

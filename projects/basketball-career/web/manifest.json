@@ -1,11 +1,11 @@
 {
-    "name": "バスケデッキ",
-    "short_name": "バスケデッキ",
+    "name": "バスケ編成室",
+    "short_name": "バスケ編成室",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "バスケットボールの選手育成シミュレーション。",
+    "description": "バスケットボールのGMになって、トレードとドラフトでチームを作るゲーム。",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
