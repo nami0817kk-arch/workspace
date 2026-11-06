@@ -19,10 +19,10 @@ enum RecoverGate {
 /// 広告と「広告を消す」の決まり（2026-10-19 ユーザー決定: 無料＋広告＋広告を消す 370円。
 /// 護送ボート・サカマネと同じ形）。
 ///
-/// - 全画面広告: 大会が終わって次の過ごし方を選ぶとき、[interstitialEvery] 回の大会ごとに1回。
-///   最初の1年(6歳の大会)と、広告を消した人には出さない。出せなければ進行を止めない。
-/// - 動画広告: 見ると疲れと気持ちが回復する(怪我も早く治る)。読み込めていなければ回復しない。
-/// - 広告を消す: 全画面広告が出なくなり、回復も動画なしで使える。
+/// - 全画面広告: 試合を [interstitialEvery] 回終えた次の行き先を選ぶときに1回。
+///   広告を消した人には出さない。出せなければ進行を止めない。
+/// - 動画広告: 勝ったあとのカードの候補を引き直す・決勝をやり直す(どちらも押したときだけ)。読み込めていなければ何もしない。
+/// - 広告を消す: 全画面広告が出なくなり、引き直し・やり直しも動画なしで使える(回数は同じ)。
 /// - 動画を見た直後([rewardedCooldown] の間)は全画面広告を重ねない(番は次の操作に回す)。
 /// - 全画面広告の2回目と、その後4回ごとに、閉じたあと「広告を消す」を1度だけ案内する([removeAdsOfferDue])。
 class Monetization extends ChangeNotifier {
@@ -30,7 +30,7 @@ class Monetization extends ChangeNotifier {
       : ads = ads ?? NoOpAdService(),
         store = store ?? NoOpPurchaseService();
 
-  /// 何回の大会ごとに全画面広告を出すか。
+  /// 何回の試合ごとに全画面広告を出すか。
   static const interstitialEvery = 3;
 
   final SharedPreferences _prefs;
@@ -104,7 +104,7 @@ class Monetization extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// 大会が1つ終わったときに呼ぶ。次の過ごし方を選ぶときに全画面広告を出す番を数える。
+  /// 試合が1つ終わったときに呼ぶ。次の行き先を選ぶときに全画面広告を出す番を数える。
   /// 次が広告の番なら、結果を見ている間に読み込んでおく。
   Future<void> tournamentPlayed() async {
     if (adFree) return;
@@ -117,7 +117,7 @@ class Monetization extends ChangeNotifier {
   bool get interstitialDue =>
       !adFree && (_prefs.getInt('tournamentsSinceAd') ?? 0) >= interstitialEvery;
 
-  /// 次の過ごし方を選ぶ直前に呼ぶ。番なら全画面広告を出し、閉じるまで待つ。出したら true。
+  /// 次の行き先を選ぶ直前に呼ぶ。番なら全画面広告を出し、閉じるまで待つ。出したら true。
   ///
   /// 在庫が無くて出せなければ、数えはそのままで次の機会に回す(進行は止めない)。
   Future<bool> beforeAction() async {
@@ -154,45 +154,14 @@ class Monetization extends ChangeNotifier {
   /// 案内を出した(または出さないと決めた)。同じ番では二度出さない。
   Future<void> markRemoveAdsOffered() => _prefs.setInt('removeAdsOfferedAt', interstitialsShown);
 
-  /// 「動画を見て元気になる」の前に呼ぶ。広告を消した人はそのまま、それ以外は動画を1本見てもらう。
+  /// 動画で何かを受け取る前に呼ぶ。広告を消した人はそのまま、それ以外は動画を1本見てもらう。
   ///
-  /// 動画を読み込み中なら少しだけ待つ([onWaiting] で「読み込み中」を出せる)。届かなければ回復しない。
+  /// 動画を読み込み中なら少しだけ待つ([onWaiting] で「読み込み中」を出せる)。届かなければ受け取れない。
   Future<RecoverGate> beforeRecover({void Function()? onWaiting}) =>
       _watchGate(onWaiting: onWaiting);
 
-  /// 1日に動画で特殊能力ポイントをもらえる回数。
-  static const spAdsPerDay = 3;
-
-  /// 日付の取り方(テストで差し替える)。
+  /// 時刻の取り方(テストで差し替える)。
   DateTime Function() clock = DateTime.now;
-
-  String get _today {
-    final n = clock();
-    return '${n.year}-${n.month}-${n.day}';
-  }
-
-  /// 今日あと何回、動画でポイントをもらえるか。日付が変わると戻る。
-  int get spAdsLeft => (_prefs.getString('spAdDay') == _today)
-      ? (spAdsPerDay - (_prefs.getInt('spAdCount') ?? 0)).clamp(0, spAdsPerDay)
-      : spAdsPerDay;
-
-  /// 「動画を見て特殊能力ポイント +1」の前に呼ぶ。広告を消した人はそのまま(動画なし)、
-  /// それ以外は動画を1本見てもらう。**今日の回数が残っているときだけ**。もらえたと答えたときだけ回数を使う
-  /// (途中で閉じた・読み込めなかったときは減らさない)。
-  Future<RecoverGate> claimSpReward({void Function()? onWaiting}) async {
-    if (spAdsLeft <= 0) return RecoverGate.unavailable;
-    final gate = await _watchGate(onWaiting: onWaiting);
-    if (gate == RecoverGate.granted) {
-      final today = _today;
-      final used = _prefs.getString('spAdDay') == today
-          ? (_prefs.getInt('spAdCount') ?? 0)
-          : 0;
-      await _prefs.setString('spAdDay', today);
-      await _prefs.setInt('spAdCount', used + 1);
-      notifyListeners();
-    }
-    return gate;
-  }
 
   Future<RecoverGate> _watchGate({void Function()? onWaiting}) async {
     if (adFree) return RecoverGate.granted;

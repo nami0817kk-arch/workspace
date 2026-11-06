@@ -1,37 +1,14 @@
-// アプリ内の絵(Gemini で生成)の置き忘れを止める。
-// pubspec.yaml の assets に無いと、実機では読み込めず代替の絵に戻るだけで気づきにくい。
+// 絵の置き忘れ・名前の食い違いを止める(読み込めないと黙って空白になる)。
 import 'dart:io';
 
-import 'package:basketball_career/game/alltime.dart';
-import 'package:basketball_career/game/life.dart';
-import 'package:basketball_career/game/rival.dart';
+import 'package:basketball_career/deck/cards.dart';
+import 'package:basketball_career/deck/mates.dart';
+import 'package:basketball_career/ui/deck/battle_screen.dart';
 import 'package:basketball_career/ui/team_colors.dart';
-import 'package:basketball_career/game/match.dart';
-import 'package:basketball_career/game/season.dart';
-import 'package:basketball_career/ui/art/court.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  const arts = [
-    'title',
-    'ending_glory',
-    'ending_quiet',
-    'path',
-    'hall',
-    // 段階ごとの会場(育成画面の上の絵。`sceneAsset` が選ぶ)。
-    'scene_minibasket',
-    'scene_junior',
-    'scene_high',
-    'scene_university',
-    'scene_corporate',
-    'scene_pro',
-    'scene_abroad',
-    'scene_national',
-    // 大一番の会場・次の世代へ・歴代記録の表の絵。
-    'scene_final',
-    'next_gen',
-    'alltime',
-  ];
+  const arts = ['title', 'scene_high', 'scene_university', 'scene_national', 'scene_final'];
 
   test('アプリ内の絵がすべて assets にあり、pubspec.yaml に宣言されている', () {
     final pubspec = File('pubspec.yaml').readAsStringSync();
@@ -43,100 +20,51 @@ void main() {
       expect(pubspec, contains('assets/art/$n.jpg'), reason: '$n.jpg が pubspec.yaml に無い');
       total += f.lengthSync();
     }
-    expect(total, lessThan(4 * 1024 * 1024), reason: '絵の合計でアプリを重くしない');
+    expect(total, lessThan(2 * 1024 * 1024), reason: '絵の合計でアプリを重くしない');
+    expect(pubspec, contains('assets/art/icons/'));
+    expect(pubspec, contains('assets/art/players/'));
   });
 
-  test('コードで使っている絵の名前が、置いてある絵と一致する', () {
+  test('コードで使っている jpg の名前が、置いてある絵と一致する', () {
     final used = <String>{};
-    for (final f in Directory('lib')
-        .listSync(recursive: true)
-        .whereType<File>()
-        .where((f) => f.path.endsWith('.dart'))) {
-      for (final m in RegExp(r"assets/art/([a-z_]+)\.jpg")
-          .allMatches(f.readAsStringSync())) {
+    for (final f in Directory('lib').listSync(recursive: true).whereType<File>().where((f) => f.path.endsWith('.dart'))) {
+      for (final m in RegExp(r"assets/art/([a-z_]+)\.jpg").allMatches(f.readAsStringSync())) {
         used.add(m.group(1)!);
       }
     }
-    // 会場の絵は名前を組み立てて読む(`scene_$name`)ので、別のテストで全段階を確かめる。
-    used.removeWhere((n) => n.startsWith('scene_'));
-    expect(used, arts.where((n) => !n.startsWith('scene_')).toSet());
+    expect(used, arts.toSet());
   });
 
-  test('どの段階でも会場の絵が決まり、その絵が置いてある', () {
-    for (final lg in League.values) {
-      expect(
-          File('assets/art/scene_${switch (lg) {
-            League.minibasket => 'minibasket',
-            League.juniorHigh => 'junior',
-            League.highSchool => 'high',
-            League.university => 'university',
-            League.corporate => 'corporate',
-            League.proDomestic => 'pro',
-            League.proAbroad => 'abroad',
-            League.national => 'national',
-          }}.jpg')
-              .existsSync(),
-          isTrue,
-          reason: '${lg.name} の会場の絵が無い');
-    }
-  });
-
-  test('選手の絵(子ども・大人×ユニフォーム12色)がそろい、所属チームの色名で引ける', () {
-    for (final kind in ['kid', 'adult']) {
-      for (final color in [for (final c in TeamColor.values) c.sprite, 'dark']) {
-        final f = File('assets/art/players/${kind}_$color.png');
-        expect(f.existsSync(), isTrue, reason: '${kind}_$color.png が無い');
-        expect(f.lengthSync(), lessThan(60 * 1024), reason: '${kind}_$color.png が重い');
-      }
-    }
-    expect(File('pubspec.yaml').readAsStringSync(), contains('assets/art/players/'));
-    // チーム名の頭はすべて色が決まっている(rival.dart の並びと揃える)。
-    for (final p in teamPrefixes) {
-      expect(teamPrefixColors.containsKey(p), isTrue, reason: '$p の色が無い');
-    }
-  });
-
-  test('動きのある選手の絵(シュート・ディフェンス・ダンク/ジャンプ)が、子ども・大人×12色そろう', () {
-    for (final kid in [true, false]) {
-      for (final p in Pose.values) {
-        for (final color in [for (final c in TeamColor.values) c.sprite, 'dark']) {
-          final f = File('assets/art/players/${poseFile(p, kid: kid)}_$color.png');
-          expect(f.existsSync(), isTrue, reason: '${f.path} が無い');
-          expect(f.lengthSync(), lessThan(60 * 1024), reason: '${f.path} が重い');
-        }
+  test('どの大会・決勝でも会場の絵が決まり、その絵が置いてある', () {
+    for (var s = 0; s < 3; s++) {
+      for (final boss in [false, true]) {
+        final path = ArenaView.sceneFor(s, boss: boss);
+        expect(File(path).existsSync(), isTrue, reason: path);
       }
     }
   });
 
-  test('歴代の名選手の顔が10人ぶんある', () {
-    for (final l in legends) {
-      final f = File(l.portrait);
-      expect(f.existsSync(), isTrue, reason: '${l.name} の顔が無い');
-      expect(f.lengthSync(), lessThan(40 * 1024));
+  test('選手の絵(4つの姿勢×ユニフォーム12色)がそろう', () {
+    for (final pose in ['adult', 'adult_shoot', 'adult_dunk', 'adult_defense']) {
+      for (final c in [...TeamColor.values.map((t) => t.sprite), 'dark']) {
+        expect(File('assets/art/players/${pose}_$c.png').existsSync(), isTrue, reason: '${pose}_$c');
+      }
     }
-    expect(File('pubspec.yaml').readAsStringSync(), contains('assets/art/legends/'));
   });
 
-  test('ボタンのアイコンが、過ごし方・勝負どころ・ハーフタイムの全種類にある', () {
-    final names = <String>[
-      for (final a in Action.values) 'act_${a.name}',
-      for (final c in Clutch.values) 'clutch_${c.name}',
-      for (final h in Halftime.values) 'half_${h.name}',
-    ];
-    expect(names.length, 15);
-    for (final n in names) {
-      final f = File('assets/art/icons/$n.png');
-      expect(f.existsSync(), isTrue, reason: '$n.png が無い');
-      expect(f.lengthSync(), lessThan(60 * 1024), reason: '$n.png が重い');
+  test('仲間の絵の姿勢が、置いてある絵の名前と合う', () {
+    for (final m in allMates) {
+      expect(File('assets/art/players/${m.sprite}_orange.png').existsSync(), isTrue, reason: m.id);
     }
-    expect(File('pubspec.yaml').readAsStringSync(), contains('assets/art/icons/'));
   });
 
-  test('アイコンの元の絵は 1024x1024', () {
-    final bytes = File('tool/icon_source.png').readAsBytesSync();
-    // PNG の IHDR: 幅と高さは 16〜23 バイト目(ビッグエンディアン)。
-    int be(int o) => (bytes[o] << 24) | (bytes[o + 1] << 16) | (bytes[o + 2] << 8) | bytes[o + 3];
-    expect(be(16), 1024);
-    expect(be(20), 1024);
+  test('カードの絵がすべてある', () {
+    for (final c in allCards) {
+      expect(File('assets/art/icons/${c.icon}.png').existsSync(), isTrue, reason: c.id);
+    }
+  });
+
+  test('自分の学校(朝日)の色が決まっている', () {
+    expect(teamPrefixColors['朝日'], isNotNull);
   });
 }

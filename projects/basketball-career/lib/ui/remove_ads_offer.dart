@@ -74,8 +74,8 @@ class _RemoveAdsOfferState extends State<RemoveAdsOffer> {
           children: [
             const Text('広告なしで遊ぶ', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
-            line(Icons.block_rounded, '大会のあとの全画面広告が出なくなる'),
-            line(Icons.bolt_rounded, '回復と特殊能力ポイントが、動画なしで受け取れる(回数は同じ)'),
+            line(Icons.block_rounded, '試合のあとの全画面広告が出なくなる'),
+            line(Icons.bolt_rounded, 'カードの引き直しと決勝のやり直しが、動画なしで使える(回数は同じ)'),
             line(Icons.all_inclusive_rounded, '一度買えばずっと。機種を変えても「購入を復元」で戻せる'),
             const SizedBox(height: 14),
             FilledButton(

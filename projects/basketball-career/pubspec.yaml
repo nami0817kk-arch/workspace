@@ -30,22 +30,10 @@ flutter:
   assets:
     - assets/fonts/OFL-NotoSansJP.txt
     - assets/art/title.jpg
-    - assets/art/ending_glory.jpg
-    - assets/art/ending_quiet.jpg
-    - assets/art/path.jpg
-    - assets/art/hall.jpg
-    - assets/art/scene_minibasket.jpg
-    - assets/art/scene_junior.jpg
     - assets/art/scene_high.jpg
     - assets/art/scene_university.jpg
-    - assets/art/scene_corporate.jpg
-    - assets/art/scene_pro.jpg
-    - assets/art/scene_abroad.jpg
     - assets/art/scene_national.jpg
     - assets/art/scene_final.jpg
-    - assets/art/next_gen.jpg
-    - assets/art/alltime.jpg
-    - assets/art/legends/
     - assets/art/icons/
     - assets/art/players/
 

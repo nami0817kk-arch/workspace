@@ -2,16 +2,16 @@
 import 'dart:io';
 import 'dart:math';
 
-import 'package:basketball_career/game/game.dart';
-import 'package:basketball_career/game/life.dart';
-import 'package:basketball_career/game/player.dart';
+import 'package:basketball_career/deck/bot.dart';
+import 'package:basketball_career/deck/cards.dart';
+import 'package:basketball_career/deck/run.dart';
 import 'package:basketball_career/monetization/ad_service.dart';
 import 'package:basketball_career/monetization/monetization.dart';
 import 'package:basketball_career/monetization/purchase_service.dart';
-import 'package:basketball_career/ui/controller.dart';
+import 'package:basketball_career/ui/deck_controller.dart';
 import 'package:basketball_career/ui/app.dart';
 import 'package:basketball_career/ui/settings_screen.dart';
-import 'package:flutter/material.dart' hide Action;
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -85,16 +85,6 @@ class FakeStore implements PurchaseService {
   void dispose() {}
 }
 
-/// 何も保存しない。
-class _NullStore extends SaveStore {
-  @override
-  Future<void> save(Map<String, dynamic> json) async {}
-  @override
-  Future<void> clear() async {}
-  @override
-  Future<Map<String, dynamic>?> load() async => null;
-}
-
 Future<(Monetization, FakeAds, FakeStore)> open(
     [Map<String, Object> saved = const {}]) async {
   SharedPreferences.setMockInitialValues(saved);
@@ -105,8 +95,8 @@ Future<(Monetization, FakeAds, FakeStore)> open(
   return (m, ads, store);
 }
 
-Player kid() => Player(
-    name: 'キッズ', age: 8, potential: 50, heightCm: 130, heightGenes: 0.5);
+Future<DeckController> deckController(Monetization m) async =>
+    DeckController(money: m, prefs: await SharedPreferences.getInstance(), seedSource: Random(1));
 
 void main() {
   group('全画面広告', () {
@@ -221,11 +211,10 @@ void main() {
       for (final available in [true, false]) {
         final (m, ads, store) = await open({'interstitialsShown': 1});
         store.available = available;
-        final c = GameController(rng: Random(1), events: false, money: m);
-        c.setClutchPolicy(null);
-        c.game = Game(eventsEnabled: false, player: kid(), rng: Random(1), slot: 1);
+        final c = await deckController(m);
+        c.newRun();
         await due(m);
-        await c.play(Action.rest);
+        await c.choose(NodeType.game);
         expect(ads.interstitials, 1);
         expect(c.offerRemoveAds, available, reason: 'ストア $available');
         expect(m.removeAdsOfferDue, isFalse, reason: '出さなかったときも、同じ番では二度聞かない');
@@ -258,72 +247,6 @@ void main() {
       final (m, ads, _) = await open({'adFree': true});
       expect(await m.beforeRecover(), RecoverGate.granted);
       expect(ads.rewarded, 0);
-    });
-  });
-
-  group('動画で特殊能力ポイント', () {
-    test('最後まで見るとポイントがもらえ、1日3回まで。日付が変わると戻る', () async {
-      final (m, ads, _) = await open();
-      var now = DateTime(2026, 10, 25, 12);
-      m.clock = () => now;
-      expect(m.spAdsLeft, 3);
-      for (var i = 0; i < 3; i++) {
-        expect(await m.claimSpReward(), RecoverGate.granted);
-      }
-      expect(m.spAdsLeft, 0);
-      expect(await m.claimSpReward(), RecoverGate.unavailable, reason: '4回目はもらえない');
-      expect(ads.rewarded, 3, reason: '回数を使い切ったら動画も出さない');
-      now = DateTime(2026, 10, 26, 0, 5);
-      expect(m.spAdsLeft, 3);
-      expect(await m.claimSpReward(), RecoverGate.granted);
-    });
-
-    test('途中で閉じた・読み込めないときは、回数を使わない', () async {
-      final (m, ads, _) = await open();
-      m.clock = () => DateTime(2026, 10, 25, 12);
-      ads.watchToEnd = false;
-      expect(await m.claimSpReward(), RecoverGate.declined);
-      ads.watchToEnd = true;
-      ads.rewardedReady = false;
-      expect(await m.claimSpReward(), RecoverGate.unavailable);
-      expect(m.spAdsLeft, 3);
-    });
-
-    test('広告を消した人は、動画なしでもらえる(回数の上限は同じ)', () async {
-      final (m, ads, _) = await open({'adFree': true});
-      m.clock = () => DateTime(2026, 10, 25, 12);
-      for (var i = 0; i < 3; i++) {
-        expect(await m.claimSpReward(), RecoverGate.granted);
-      }
-      expect(await m.claimSpReward(), RecoverGate.unavailable);
-      expect(ads.rewarded, 0);
-    });
-
-    test('回数は端末に残る(再起動しても使い切ったまま)', () async {
-      final (m, _, _) = await open();
-      m.clock = () => DateTime(2026, 10, 25, 12);
-      for (var i = 0; i < 3; i++) {
-        await m.claimSpReward();
-      }
-      final (m2, _, _) = await open({'spAdDay': '2026-10-25', 'spAdCount': 3});
-      m2.clock = () => DateTime(2026, 10, 25, 20);
-      expect(m2.spAdsLeft, 0);
-    });
-
-    test('コントローラが受け取ると、ポイントが+1される。使い切ったら増えない', () async {
-      SharedPreferences.setMockInitialValues({});
-      final prefs = await SharedPreferences.getInstance();
-      final ads = FakeAds();
-      final m = Monetization(prefs, ads: ads, store: FakeStore());
-      m.clock = () => DateTime(2026, 10, 25, 12);
-      final c = GameController(
-          store: _NullStore(), rng: Random(1), events: false, money: m);
-      c.game = Game.start('x', rng: Random(1), events: false);
-      final before = c.game!.sp;
-      for (var i = 0; i < 5; i++) {
-        await c.watchAdForSp();
-      }
-      expect(c.game!.sp, before + 3, reason: '1日3回まで');
     });
   });
 
@@ -368,95 +291,69 @@ void main() {
     });
   });
 
-  group('回復(ゲーム)', () {
-    Game tired() => Game(
-          eventsEnabled: false,
-          player: kid(),
-          rng: Random(1),
-          condition: const Condition(fatigue: 70, morale: 30),
-        );
-
-    test('1ターンに1回まで。ターンが変わると使える', () {
-      final g = tired();
-      expect(g.canRecover, isTrue);
-      g.recover();
-      expect(g.condition.fatigue, 30);
-      expect(g.condition.morale, 40);
-      expect(g.canRecover, isFalse);
-      expect(() => g.recover(), throwsStateError);
-      g.condition = const Condition(fatigue: 70);
-      g.choose(Action.rest, Ability.pass);
-      expect(g.canRecover, isTrue);
-    });
-
-    test('元気なときは使えない', () {
-      final g = Game(eventsEnabled: false, player: kid(), rng: Random(1));
-      expect(g.canRecover, isFalse);
-    });
-
-    test('怪我が1ターン早く治る', () {
-      final g = Game(
-        eventsEnabled: false,
-        player: kid(),
-        rng: Random(1),
-        condition: const Condition(injuredTerms: 3),
-      );
-      g.recover();
-      expect(g.condition.injuredTerms, 2);
-    });
-  });
-
-  group('コントローラ', () {
-    test('広告の無い環境では、タダで回復させない', () async {
-      final c = GameController(rng: Random(1), events: false);
-      c.game = Game(
-        eventsEnabled: false,
-        player: kid(),
-        rng: Random(1),
-        condition: const Condition(fatigue: 80),
-      );
-      await c.recover();
-      expect(c.game!.condition.fatigue, 80);
-    });
-
-    test('動画を見終えると回復し、読み込めなければ回復しない', () async {
+  group('コントローラ(カードの試合)', () {
+    test('試合を3回終えた次の行き先を選ぶ前に、全画面広告が1回出る(試合の直後には出ない)', () async {
       final (m, ads, _) = await open();
-      final c = GameController(rng: Random(1), events: false, money: m);
-      c.game = Game(
-        eventsEnabled: false,
-        player: kid(),
-        rng: Random(1),
-        condition: const Condition(fatigue: 80),
-      );
-      ads.rewardedReady = false;
-      await c.recover();
-      expect(c.game!.condition.fatigue, 80);
-      expect(c.recoverMessage, contains('読み込めなかった'));
-      ads.rewardedReady = true;
-      await c.recover();
-      expect(c.game!.condition.fatigue, 40);
-    });
-
-    test('大会を3回終えた次の操作で、全画面広告が1回出る', () async {
-      final (m, ads, _) = await open();
-      final c = GameController(rng: Random(1), events: false, money: m);
-      c.setClutchPolicy(null); // 勝負どころは自動で選ぶ(止まらない)
-      c.game = Game(
-        eventsEnabled: false,
-        player: kid(),
-        rng: Random(1),
-        slot: 1,
-      );
-      // 夏の大会を3回(3年ぶん)終える。広告は大会の直後ではなく、次の操作の前に出る。
-      for (var year = 0; year < 3; year++) {
-        while (c.game!.slot != 1) {
-          await c.play(Action.rest);
-        }
-        await c.play(Action.rest); // 夏(大会)
-        expect(ads.interstitials, 0, reason: '大会の直後には出ない');
+      final c = await deckController(m);
+      c.newRun();
+      for (var i = 0; i < Monetization.interstitialEvery; i++) {
+        expect(c.run!.phase, Phase.map);
+        await c.choose(c.run!.choices.firstWhere((t) => t == NodeType.game || t == NodeType.elite));
+        botPlayBattle(c.run!.battle!);
+        c.finishBattle();
+        expect(ads.interstitials, 0, reason: '試合の直後には出ない');
+        if (c.run!.phase == Phase.reward) c.takeReward(null);
+        if (c.run!.phase == Phase.mateReward) c.takeMate(null);
       }
-      await c.play(Action.rest); // 次の操作
+      expect(c.run!.phase, Phase.map);
+      await c.choose(c.run!.choices.first);
       expect(ads.interstitials, 1);
+    });
+
+    test('動画を見終えると候補を引き直せる(1回だけ)。読み込めなければ変わらない', () async {
+      final (m, ads, _) = await open();
+      final c = await deckController(m);
+      c.newRun();
+      c.run!.phase = Phase.reward;
+      c.run!.rewardCards = [for (final id in ['drive', 'boxout', 'screen']) CardInstance(card(id))];
+      final before = [for (final x in c.run!.rewardCards) x.uid];
+      ads.rewardedReady = false;
+      expect(await c.rerollWithAd(), RecoverGate.unavailable);
+      expect([for (final x in c.run!.rewardCards) x.uid], before);
+      ads.rewardedReady = true;
+      expect(await c.rerollWithAd(), RecoverGate.granted);
+      expect([for (final x in c.run!.rewardCards) x.uid], isNot(before));
+      expect(c.run!.rerolled, isTrue);
+      expect(await c.rerollWithAd(), RecoverGate.unavailable, reason: '1回の報酬につき1回');
+      expect(ads.rewarded, 1);
+    });
+
+    test('決勝に負けたら、動画で1回だけやり直せる。広告を消した人は動画なし', () async {
+      for (final adFree in [false, true]) {
+        final (m, ads, _) = await open({if (adFree) 'adFree': true});
+        final c = await deckController(m);
+        c.newRun();
+        final r = c.run!;
+        r.floor = RunState.floorsPerStage - 1;
+        await c.choose(NodeType.boss);
+        while (!r.battle!.over) {
+          c.endRound();
+        }
+        c.finishBattle();
+        expect(r.over, isTrue);
+        expect(await c.retryWithAd(), RecoverGate.granted);
+        expect(r.phase, Phase.battle);
+        expect(ads.rewarded, adFree ? 0 : 1);
+        expect(r.canRetry, isFalse);
+      }
+    });
+
+    test('広告の無い環境では、タダで引き直させない', () async {
+      SharedPreferences.setMockInitialValues({});
+      final c = DeckController(prefs: await SharedPreferences.getInstance(), seedSource: Random(1));
+      c.newRun();
+      c.run!.phase = Phase.reward;
+      expect(await c.rerollWithAd(), RecoverGate.unavailable);
     });
   });
 
@@ -484,12 +381,11 @@ void main() {
       addTearDown(tester.view.reset);
       for (final buy in [false, true]) {
         final (m, ads, _) = await open({'interstitialsShown': 1, 'tournamentsSinceAd': Monetization.interstitialEvery});
-        final c = GameController(rng: Random(1), events: false, money: m);
-        c.setClutchPolicy(null);
-        c.game = Game(eventsEnabled: false, player: kid(), rng: Random(1), slot: 1);
+        final c = await deckController(m);
+        c.newRun();
         await tester.pumpWidget(BasketballCareerApp(controller: c));
         await tester.pumpAndSettle();
-        await tester.runAsync(() => c.play(Action.rest));
+        await tester.runAsync(() => c.choose(NodeType.game));
         await tester.pumpAndSettle();
         expect(ads.interstitials, 1);
         expect(find.text('広告なしで遊ぶ'), findsOneWidget);
@@ -504,46 +400,22 @@ void main() {
       }
     });
 
-    testWidgets('疲れていると「動画を見て元気になる」が出て、押すと回復する', (tester) async {
-      tester.view.physicalSize = const Size(800, 4000);
+    testWidgets('勝ったあとの「動画を見て、候補を引き直す」を押すと引き直せる', (tester) async {
+      tester.view.physicalSize = const Size(800, 2400);
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);
       final (m, ads, _) = await open();
-      final c = GameController(rng: Random(1), events: false, money: m);
-      c.game = Game(
-        eventsEnabled: false,
-        player: kid(),
-        rng: Random(1),
-        condition: const Condition(fatigue: 80),
-      );
+      final c = await deckController(m);
+      c.newRun();
+      c.run!.phase = Phase.reward;
+      c.run!.rewardCards = [for (final id in ['drive', 'boxout', 'screen']) CardInstance(card(id))];
       await tester.pumpWidget(BasketballCareerApp(controller: c));
       await tester.pumpAndSettle();
-      expect(find.text('動画を見て元気になる'), findsOneWidget);
-      await tester.tap(find.text('動画を見て元気になる'));
+      await tester.tap(find.text('動画を見て、候補を引き直す'));
       await tester.pumpAndSettle();
       expect(ads.rewarded, 1);
-      expect(c.game!.condition.fatigue, 40);
-      expect(find.text('動画を見て元気になる'), findsNothing, reason: '1ターンに1回');
-    });
-
-    testWidgets('広告を消した人は動画なしで「元気になる」', (tester) async {
-      tester.view.physicalSize = const Size(800, 4000);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.reset);
-      final (m, ads, _) = await open({'adFree': true});
-      final c = GameController(rng: Random(1), events: false, money: m);
-      c.game = Game(
-        eventsEnabled: false,
-        player: kid(),
-        rng: Random(1),
-        condition: const Condition(fatigue: 80),
-      );
-      await tester.pumpWidget(BasketballCareerApp(controller: c));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('元気になる'));
-      await tester.pumpAndSettle();
-      expect(ads.rewarded, 0);
-      expect(c.game!.condition.fatigue, 40);
+      expect(find.text('動画を見て、候補を引き直す'), findsNothing, reason: '1回だけ');
+      await tester.pumpWidget(const SizedBox());
     });
   });
 
@@ -564,13 +436,13 @@ void main() {
     });
 
     test('見終えた報酬を、画面を離れても受け取る(受け取りは mounted を見ない場所にある)', () {
-      final controller = File('lib/ui/controller.dart').readAsStringSync();
+      final controller = File('lib/ui/deck_controller.dart').readAsStringSync();
       expect(controller.contains('mounted'), isFalse,
           reason: '報酬の受け取りを mounted の後ろに置かない');
-      for (final f in ['game_screen', 'home_screen', 'history_screen', 'special_picker']) {
-        final ui = File('lib/ui/$f.dart').readAsStringSync();
-        expect(ui.contains('beforeRecover') || ui.contains('claimSpReward'), isFalse,
-            reason: '$f が広告を直接扱っている。受け取りはコントローラが持つ');
+      for (final f in Directory('lib/ui/deck').listSync().whereType<File>()) {
+        final ui = f.readAsStringSync();
+        expect(ui.contains('beforeRecover') || ui.contains('beforeAction'), isFalse,
+            reason: '${f.path} が広告を直接扱っている。受け取りはコントローラが持つ');
       }
     });
   });

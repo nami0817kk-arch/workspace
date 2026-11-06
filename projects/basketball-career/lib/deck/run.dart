@@ -132,6 +132,7 @@ class RunState {
         lockedCards = {...lockedCards},
         lockedMates = {...lockedMates} {
     deck.addAll(starterDeck());
+    hearts = startHearts(difficulty);
     _makeStage();
   }
 
@@ -147,6 +148,12 @@ class RunState {
   int money = 60;
   int hearts = 3;
   static const maxHearts = 3;
+
+  /// 難しさ3からは、気持ち2で始まる。
+  static int startHearts(int difficulty) => difficulty >= 3 ? 2 : 3;
+
+  /// 報酬のカードを、動画を見て選び直したか(1回の報酬につき1回)。
+  bool rerolled = false;
   int stage = 0;
 
   /// いまの大会の何番目の行き先か(0〜7。7が決勝)。
@@ -266,6 +273,7 @@ class RunState {
       lastPrize = prize;
       rewardCards = _rollCards(mates.any((m) => m.effect == MateEffect.scout) ? 4 : 3,
           elite: current == NodeType.elite, boss: boss);
+      rerolled = false;
       phase = Phase.reward;
       if (boss && stage == stageNames.length - 1) {
         champion = true;
@@ -315,7 +323,8 @@ class RunState {
 
   /// 動画を見て、報酬のカードを選び直す。
   void rerollReward() {
-    if (phase != Phase.reward) return;
+    if (phase != Phase.reward || rerolled) return;
+    rerolled = true;
     rewardCards = _rollCards(rewardCards.length, elite: current == NodeType.elite, boss: current == NodeType.boss);
   }
 
@@ -518,6 +527,7 @@ class RunState {
         'losses': losses,
         'champion': champion,
         'retryUsed': retryUsed,
+        if (rerolled) 'rerolled': true,
         if (current != null) 'current': current!.name,
         if (opponent != null) 'opponent': opponent!.toJson(),
         if (battleSeed != null) 'battleSeed': battleSeed,
@@ -556,6 +566,7 @@ class RunState {
       r.losses = (j['losses'] as num?)?.toInt() ?? 0;
       r.champion = j['champion'] == true;
       r.retryUsed = j['retryUsed'] == true;
+      r.rerolled = j['rerolled'] == true;
       final cur = j['current'];
       r.current = cur == null ? null : NodeType.values.firstWhere((n) => n.name == cur);
       if (j['opponent'] is Map) r.opponent = Opponent.fromJson((j['opponent'] as Map).cast<String, dynamic>());

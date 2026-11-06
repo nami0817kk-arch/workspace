@@ -10,13 +10,13 @@ import 'package:flutter_test/flutter_test.dart';
 /// 決まった予告を出す相手(試すため)。
 class _FixedOpponent extends Opponent {
   _FixedOpponent(this.fixed) : super(name: '試し高校', style: OppStyle.balance, stage: 0);
-  final Intent fixed;
+  final Threat fixed;
   @override
-  Intent intentFor(int round, Rng rng) => fixed;
+  Threat intentFor(int round, Rng rng) => fixed;
 }
 
 Battle _battle(List<String> ids,
-    {Intent intent = const Intent(IntentKind.shot, [5]), List<MateDef> mates = const [], int seed = 1}) {
+    {Threat intent = const Threat(IntentKind.shot, [5]), List<MateDef> mates = const [], int seed = 1}) {
   final deck = [for (final id in ids) CardInstance(card(id))];
   return Battle(deck: deck, opponent: _FixedOpponent(intent), mates: mates, rng: Rng(seed));
 }
@@ -83,7 +83,7 @@ void main() {
     });
 
     test('守備は相手の点を前から削る。連続攻撃は1本ずつ', () {
-      final b = _battle(List.filled(10, 'defense'), intent: const Intent(IntentKind.combo, [4, 4]));
+      final b = _battle(List.filled(10, 'defense'), intent: const Threat(IntentKind.combo, [4, 4]));
       b.play(b.hand.first); // 守備3
       expect(b.projectedTheirs, 5);
       b.play(b.hand.first); // 守備6
@@ -107,20 +107,20 @@ void main() {
 
     test('堅い守りはシュートを減らす(最低1点)。フローターは邪魔されない', () {
       final b = _battle(['bank', 'floater', 'jumper', 'jumper', 'jumper'],
-          intent: const Intent(IntentKind.press, [2], press: 2));
+          intent: const Threat(IntentKind.press, [2], press: 2));
       expect(b.pointsOf(_inHand(b, 'bank')), 1);
       expect(b.pointsOf(_inHand(b, 'jumper')), 1);
       expect(b.pointsOf(_inHand(b, 'floater')), 3);
     });
 
     test('ダブルチームで半分、チャージングはドライブを止める', () {
-      final b = _battle(List.filled(10, 'doubleteam'), intent: const Intent(IntentKind.shot, [9]));
+      final b = _battle(List.filled(10, 'doubleteam'), intent: const Threat(IntentKind.shot, [9]));
       b.play(b.hand.first);
       expect(b.projectedTheirs, 4);
-      final c = _battle(List.filled(10, 'charge'), intent: const Intent(IntentKind.drive, [9]));
+      final c = _battle(List.filled(10, 'charge'), intent: const Threat(IntentKind.drive, [9]));
       c.play(c.hand.first);
       expect(c.projectedTheirs, 0);
-      final d = _battle(List.filled(10, 'charge'), intent: const Intent(IntentKind.three, [9]));
+      final d = _battle(List.filled(10, 'charge'), intent: const Threat(IntentKind.three, [9]));
       d.play(d.hand.first);
       expect(d.projectedTheirs, 9 - 2, reason: 'ドライブでなければ、ただの守備2');
     });
@@ -151,7 +151,7 @@ void main() {
     });
 
     test('8ラウンドで終わる。同点なら延長', () {
-      final b = _battle(List.filled(10, 'handsup'), intent: const Intent(IntentKind.shot, [0]));
+      final b = _battle(List.filled(10, 'handsup'), intent: const Threat(IntentKind.shot, [0]));
       for (var i = 0; i < 8; i++) {
         expect(b.over, isFalse);
         b.endRound();
@@ -174,7 +174,7 @@ void main() {
     });
 
     test('ブザービーターは最後のラウンドで大きい', () {
-      final b = _battle(List.filled(10, 'buzzer'), intent: const Intent(IntentKind.shot, [0]));
+      final b = _battle(List.filled(10, 'buzzer'), intent: const Threat(IntentKind.shot, [0]));
       expect(b.pointsOf(b.hand.first), 2);
       for (var i = 0; i < 7; i++) {
         b.endRound();

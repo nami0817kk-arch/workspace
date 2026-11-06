@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../game/game.dart';
-import '../game/season.dart';
-
 /// チームの色。`sprite` は選手の絵の色名(`assets/art/players/<絵>_<色名>.png`)、
 /// `jersey` はコードで描くときのユニフォームの色、`accent` は画面の差し色(白い字が読める濃さ)。
 enum TeamColor {
@@ -42,31 +39,6 @@ const teamPrefixColors = <String, TeamColor>{
   '大和': TeamColor.purple,
   '緑風': TeamColor.teal,
 };
-
-/// 段階ごとの色(チーム名が無い古いセーブ・知らない名前のとき)。代表は青。
-TeamColor stageColor(League l) => switch (l) {
-      League.minibasket => TeamColor.yellow,
-      League.juniorHigh || League.national => TeamColor.blue,
-      League.highSchool => TeamColor.red,
-      League.university => TeamColor.green,
-      League.corporate => TeamColor.teal,
-      League.proDomestic || League.proAbroad => TeamColor.purple,
-    };
-
-/// そのチームの色。代表戦は代表の青。
-TeamColor teamColorOf(String team, League league) {
-  if (league == League.national) return TeamColor.blue;
-  for (final e in teamPrefixColors.entries) {
-    if (team.startsWith(e.key)) return e.value;
-  }
-  return stageColor(league);
-}
-
-/// いまの所属の色(代表戦の前は代表の青)。
-TeamColor teamColorOfGame(Game g) {
-  final national = g.nationalPending && g.slot == 3 && g.track == Track.pro;
-  return teamColorOf(g.teamName, national ? League.national : g.league);
-}
 
 /// 相手の色。名前から決め、こちらと同じ色にはしない。
 TeamColor opponentColor(String name, TeamColor ours) {
