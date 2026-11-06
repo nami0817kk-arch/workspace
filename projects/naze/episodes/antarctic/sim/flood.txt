@@ -1,0 +1,65 @@
+海面 +10 m: 沈む陸 2.41 百万km2(陸の 1.8%)
+海面 +30 m: 沈む陸 6.17 百万km2(陸の 4.6%)
+海面 +58 m: 沈む陸 11.32 百万km2(陸の 8.4%)
+海面 +66 m: 沈む陸 13.37 百万km2(陸の 9.9%)
+南緯60〜北緯84の陸 134.6 百万km2
+58 m で沈む陸は 日本 29.9 個ぶん(日本 37.8万km2)
+人口500万人以上の都市 53 のうち、中心が 58 m より低い都市 34
+  沈む Tokyo(Japan) 人口 3568万 中心の高さ 36 m
+  沈む New York(United States of America) 人口 1904万 中心の高さ 23 m
+  残る Mexico City(Mexico) 人口 1903万 中心の高さ 2238 m
+  沈む Mumbai(India) 人口 1898万 中心の高さ 16 m
+  残る São Paulo(Brazil) 人口 1884万 中心の高さ 730 m
+  残る Delhi(India) 人口 1593万 中心の高さ 218 m
+  沈む Shanghai(China) 人口 1499万 中心の高さ 11 m
+  沈む Kolkata(India) 人口 1479万 中心の高さ 11 m
+  沈む Dhaka(Bangladesh) 人口 1280万 中心の高さ 16 m
+  沈む Buenos Aires(Argentina) 人口 1280万 中心の高さ 28 m
+  沈む Los Angeles(United States of America) 人口 1250万 中心の高さ 47 m
+  沈む Karachi(Pakistan) 人口 1213万 中心の高さ 14 m
+  沈む Cairo(Egypt) 人口 1189万 中心の高さ 22 m
+  沈む Rio de Janeiro(Brazil) 人口 1175万 中心の高さ 26 m
+  沈む Ōsaka(Japan) 人口 1129万 中心の高さ 5 m
+  沈む Beijing(China) 人口 1111万 中心の高さ 52 m
+  沈む Manila(Philippines) 人口 1110万 中心の高さ 9 m
+  残る Moscow(Russia) 人口 1045万 中心の高さ 137 m
+  残る Istanbul(Turkey) 人口 1006万 中心の高さ 85 m
+  沈む Paris(France) 人口 990万 中心の高さ 51 m
+  沈む Seoul(South Korea) 人口 980万 中心の高さ 30 m
+  沈む Lagos(Nigeria) 人口 947万 中心の高さ 0 m
+  沈む Jakarta(Indonesia) 人口 912万 中心の高さ 5 m
+  残る Chicago(United States of America) 人口 899万 中心の高さ 183 m
+  沈む Guangzhou(China) 人口 883万 中心の高さ 13 m
+  沈む London(United Kingdom) 人口 857万 中心の高さ 3 m
+  残る Lima(Peru) 人口 801万 中心の高さ 123 m
+  残る Tehran(Iran) 人口 787万 中心の高さ 1142 m
+  残る Kinshasa(Congo (Kinshasa)) 人口 784万 中心の高さ 281 m
+  残る Bogota(Colombia) 人口 777万 中心の高さ 2578 m
+  沈む Shenzhen(China) 人口 758万 中心の高さ 23 m
+  沈む Wuhan(China) 人口 724万 中心の高さ 23 m
+  沈む Hong Kong(Hong Kong S.A.R.) 人口 721万 中心の高さ 18 m
+  沈む Tianjin(China) 人口 718万 中心の高さ 6 m
+  沈む Chennai(India) 人口 716万 中心の高さ 14 m
+  沈む Taipei(Taiwan) 人口 690万 中心の高さ 14 m
+  残る Bengaluru(India) 人口 679万 中心の高さ 872 m
+  沈む Bangkok(Thailand) 人口 670万 中心の高さ 10 m
+  残る Lahore(Pakistan) 人口 658万 中心の高さ 219 m
+  残る Chongqing(China) 人口 646万 中心の高さ 229 m
+  残る Hyderabad(India) 人口 638万 中心の高さ 513 m
+  沈む Amaravati(India) 人口 580万 中心の高さ 23 m
+  残る Santiago(Chile) 人口 572万 中心の高さ 545 m
+  沈む Miami(United States of America) 人口 558万 中心の高さ 1 m
+  残る Belo Horizonte(Brazil) 人口 558万 中心の高さ 841 m
+  残る Madrid(Spain) 人口 557万 中心の高さ 615 m
+  沈む Philadelphia(United States of America) 人口 549万 中心の高さ 41 m
+  沈む Ahmedabad(India) 人口 538万 中心の高さ 55 m
+  沈む Ho Chi Minh City(Vietnam) 人口 531万 中心の高さ 15 m
+  残る Toronto(Canada) 人口 521万 中心の高さ 180 m
+  沈む Singapore(Singapore) 人口 518万 中心の高さ 23 m
+  残る Luanda(Angola) 人口 517万 中心の高さ 76 m
+  沈む Baghdad(Iraq) 人口 505万 中心の高さ 49 m
+人口500万人以上で中心が 58 m より低い都市の人口の合計 3.54 億人
+オランダ: 陸の 96% が 58 m より低い
+バングラデシュ: 陸の 91% が 58 m より低い
+フロリダ州: 陸の 95% が 58 m より低い
+デンマーク: 陸の 86% が 58 m より低い
