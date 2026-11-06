@@ -118,20 +118,20 @@ def station():
     return out.rotate(-9, resample=Image.BICUBIC, center=(W / 2, H / 2))
 
 
-base = space()
-# 左は冷たい青、右下は熱の赤みを少し
-a = np.asarray(base).astype(np.float32)
-xx = np.linspace(0, 1, W, dtype=np.float32)[None, :, None]
-yy = np.linspace(0, 1, H, dtype=np.float32)[:, None, None]
-cold = np.clip(1 - xx / 0.55, 0, 1)
-a[..., :3] = a[..., :3] * (1 - 0.35 * cold) + np.array([20, 60, 120], np.float32) * 0.35 * cold
-base = Image.fromarray(np.clip(a, 0, 255).astype(np.uint8))
-st = station()
-off = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-off.alpha_composite(st, (int(W * 0.285), -int(H * 0.21)))
-base.alpha_composite(off)
-ov.BOXES.clear()
-img = base.convert("RGB").resize((1280, 720), Image.LANCZOS).convert("RGBA")
+# 下地は Gemini で作った絵(assets/thumb_bg.jpg)。左に字の場所を空けるため、絵を右へずらし、左の 600px を横に少し伸ばして埋める
+bg = Image.open(HERE / "assets" / "thumb_bg.jpg").convert("RGB")
+bg = bg.resize((round(bg.width * 720 / bg.height), 720), Image.LANCZOS)
+SHIFT = 70
+X0 = 600                                                       # 左の 600px だけ横に伸ばす(継ぎ目を出さない)
+ox = np.arange(1280, dtype=np.float32)
+sx = np.where(ox < X0, ox * (X0 - SHIFT) / X0, ox - SHIFT)
+mx = np.broadcast_to(sx[None, :], (720, 1280)).astype(np.float32)
+my = np.broadcast_to(np.arange(720, dtype=np.float32)[:, None], (720, 1280)).astype(np.float32)
+a = cv2.remap(np.asarray(bg), mx, my, cv2.INTER_LANCZOS4).astype(np.float32)
+x = np.linspace(0, 1, 1280, dtype=np.float32)[None, :, None]
+cold = np.clip(1 - x / 0.5, 0, 1)                              # 左は冷たい青に
+a = a * (1 - 0.3 * cold) + np.array([20, 70, 140], np.float32) * 0.3 * cold
+img = Image.fromarray(np.clip(a, 0, 255).astype(np.uint8)).convert("RGBA")
 
 
 def font(size, weight="Black"):
@@ -159,12 +159,9 @@ def big(xy, s, size, col, stroke=12, grad=None):
     return ImageDraw.Draw(img).textbbox(xy, s, font=f, stroke_width=stroke)
 
 
-# 主役(放熱板)に赤い丸
-d = ImageDraw.Draw(img, "RGBA")
-d.ellipse([778, 132, 1082, 352], outline=(230, 30, 30), width=11)
-big((46, 26), "宇宙は", 84, WHITE)
-big((34, 112), "−270℃", 196, ICE, 13, grad=((235, 250, 255), (90, 190, 255)))
-r = big((50, 470), "なのに", 88, WHITE)
-big((r[2] + 8, 398), "冷えない", 196, YEL, 14)
+big((44, 22), "宇宙は", 80, WHITE)
+big((30, 98), "−270℃", 170, ICE, 13, grad=((235, 250, 255), (90, 190, 255)))
+big((48, 330), "なのに", 84, WHITE)
+big((30, 420), "冷えない", 172, YEL, 14)
 img.convert("RGB").save(OUT / "thumb_long.jpg", quality=93)
 print(OUT / "thumb_long.jpg")
