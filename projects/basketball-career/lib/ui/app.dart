@@ -27,7 +27,7 @@ class _BasketballCareerAppState extends State<BasketballCareerApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'ブザービーター',
+      title: 'バスケデッキ',
       debugShowCheckedModeBanner: false,
       theme: _theme,
       darkTheme: _theme,

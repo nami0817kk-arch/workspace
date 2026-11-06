@@ -147,7 +147,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         leading: const Icon(Icons.description_outlined),
                         title: const Text('ライセンス'),
                         onTap: () => showLicensePage(
-                            context: context, applicationName: 'バスケ育成'),
+                            context: context, applicationName: 'バスケデッキ'),
                       ),
                     ],
                   ),

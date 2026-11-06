@@ -56,7 +56,7 @@ class _DeckHomeScreenState extends State<DeckHomeScreen> {
                       right: 0,
                       bottom: 14,
                       child: Column(children: [
-                        Text('ブザービーター',
+                        Text('バスケデッキ',
                             style: TextStyle(
                               fontSize: 34,
                               fontWeight: FontWeight.bold,

@@ -28,7 +28,7 @@ void main() {
     final c = await _controller();
     await tester.pumpWidget(BasketballCareerApp(controller: c));
     await tester.pumpAndSettle();
-    expect(find.text('ブザービーター'), findsOneWidget);
+    expect(find.text('バスケデッキ'), findsOneWidget);
 
     await tester.tap(find.text('新しいシーズン'));
     await tester.pumpAndSettle();
