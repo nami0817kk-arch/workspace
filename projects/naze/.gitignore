@@ -3,3 +3,4 @@ out/
 __pycache__/
 *.pyc
 episodes/antarctic/sim/*.npz
+episodes/antarctic/assets/thumb_map.png
