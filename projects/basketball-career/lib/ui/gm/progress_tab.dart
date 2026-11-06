@@ -81,6 +81,8 @@ class ProgressTab extends StatelessWidget {
         ],
       ]),
       ..._offerCard(context, car),
+      _goalsCard(car),
+      _moneyCard(car),
     ];
   }
 
@@ -117,12 +119,15 @@ class ProgressTab extends StatelessWidget {
         ),
       ]),
       ..._offerCard(context, car),
+      _goalsCard(car),
+      // 試合の結果を先に見せ、経営はそのあと
       if (car.lastGames.isNotEmpty)
         _card([
           Text('この$last試合: $blockWins勝${last - blockWins}敗', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
           const SizedBox(height: 6),
           for (final g in car.lastGames) GameRow(g: g, mine: car.mine),
         ]),
+      _moneyCard(car),
     ];
   }
 
@@ -153,6 +158,51 @@ class ProgressTab extends StatelessWidget {
       ]),
     ];
   }
+
+  /// オーナーの目標(シーズン中は、いまの見込みで印を付ける)。
+  Widget _goalsCard(Career car) {
+    if (car.goals.isEmpty || car.phase != Phase.season) return const SizedBox.shrink();
+    return _card([
+      _head('オーナーの目標', icon: Icons.checklist_rounded),
+      const SizedBox(height: 6),
+      for (final g in car.goals)
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 3),
+          child: Row(children: [
+            Icon(car.goalOk(g) ? Icons.check_circle_rounded : Icons.radio_button_unchecked_rounded,
+                size: 18, color: car.goalOk(g) ? GmColors.good : GmColors.sub),
+            const SizedBox(width: 8),
+            Expanded(child: Text(g.kind == GoalKind.wins ? '${car.target}勝する(いま${car.me.wins}勝)' : g.kind.label)),
+          ]),
+        ),
+      const SizedBox(height: 4),
+      Text('果たすと信頼が+$goalTrust、外すと-$goalTrust(勝ち数は差の1.5倍)。', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
+    ]);
+  }
+
+  /// 入場料・観客の入り・人気・収支。
+  Widget _moneyCard(Career car) => _card([
+        _head('経営', icon: Icons.account_balance_rounded),
+        const SizedBox(height: 8),
+        const Text('入場料', style: TextStyle(color: GmColors.sub, fontSize: 13)),
+        const SizedBox(height: 4),
+        SegmentedButton<int>(
+          showSelectedIcon: false,
+          segments: [
+            for (var i = 0; i < ticketPrices.length; i++)
+              ButtonSegment(value: i, label: Text('${ticketLabels[i]}\n\$${ticketPrices[i]}', textAlign: TextAlign.center, style: const TextStyle(fontSize: 12))),
+          ],
+          selected: {car.priceLevel},
+          onSelectionChanged: (v) => c.setPrice(v.first),
+        ),
+        const SizedBox(height: 8),
+        _kv('観客の入り', '${(car.attendance * 100).round()}%(1試合 ${money(car.gatePerGame)})'),
+        _kv('人気', '${car.hype}'),
+        _kv('今季の収支', '${car.profit >= 0 ? '+' : ''}${money(car.profit)}(見込み ${car.projectedProfit >= 0 ? '+' : ''}${money(car.projectedProfit)})',
+            color: car.projectedProfit >= 0 ? GmColors.good : GmColors.bad),
+        const Text('人気が高いほど、入場料が安いほど客が入る。人気は勝ちとプレーオフで上がる。ぜいたく税は超えた分の1.5倍を払う。',
+            style: TextStyle(fontSize: 12, color: GmColors.sub, height: 1.4)),
+      ]);
 
   // ------------------------------------------------------------ プレーオフ
 
@@ -227,6 +277,10 @@ class ProgressTab extends StatelessWidget {
             color: h.wins >= h.target ? GmColors.good : GmColors.bad),
         _kv('プレーオフ', '${h.resultLabel}  ${_signed(resultTrust[h.result])}'),
         if (car.lastTax > 0) _kv('ぜいたく税', '年俸が${money(taxLine)}を超えた  ${_signed(-car.lastTax)}', color: GmColors.bad),
+        for (final g in car.goals.where((g) => g.kind != GoalKind.wins))
+          _kv(g.kind.label, '${g.met == true ? '果たした' : '果たせなかった'}  ${_signed(g.met == true ? goalTrust : -goalTrust)}',
+              color: g.met == true ? GmColors.good : GmColors.bad),
+        _kv('収支', '${car.lastProfit >= 0 ? '+' : ''}${money(car.lastProfit)}(人気 ${car.hype})', color: car.lastProfit >= 0 ? GmColors.good : GmColors.bad),
         const Divider(height: 18),
         _kv('信頼', '${car.trust}(${_signed(car.lastTrustDelta)})', color: car.trust >= 30 ? null : GmColors.bad),
       ]),

@@ -63,6 +63,7 @@ void main() {
     await tester.pumpAndSettle();
     await _closeDialogs(tester);
     expect(c.career!.block, 1);
+    await tester.scrollUntilVisible(find.textContaining('この20試合'), 300, scrollable: _vertical);
     expect(find.textContaining('この20試合'), findsOneWidget);
   });
 
