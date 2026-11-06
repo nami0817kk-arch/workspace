@@ -1,0 +1,172 @@
+# 物語完結型ショート 大奥の奥女中 s2（2026-11-06）。本編 scripts/ooku-story.yaml（11/8 19:00 公開、https://youtu.be/28M-XkATUuY）の第2章から。11/9 12:30 公開。
+# 形式は kakeizu_s2.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。
+# 絵は本編の AI 絵（out/story/ooku/main。FLUX、人物は後ろ姿・足もとだけ）と楊洲周延《千代田の大奥》。新しい絵は作らない。使わない絵は s1 の頭のコメント。
+# 切り口：いちばん位の高い上臈御年寄より、御年寄の合力金が多い。いちばん下とは40倍。勤め（s1）・部屋方（s3）には踏み込まない。
+#   別の記録の数（『御殿女中』の書付 100石・100両・15人扶持）は tease の答えとして本編に残す。
+# 事実カード：ooku-34・01・31・32・78。言い方は本編のまま。
+#   ・上臈御年寄 60両＜御年寄 80両 → 20両少ない。御半下 2両 → 80÷2＝40倍。本編どおり。
+#   ・円は本編と同じ前提（日本銀行貨幣博物館：18世紀の1両＝米価で約6万円・大工の賃金で約35万円、幕末＝米価で約4千〜1万円）。
+#     80×6万＝480万円、80×35万＝2800万円、80×4千〜1万＝32万〜80万円。合力金だけを換える（本編と同じ）。
+# 理解テスト4問：
+#   ①誰の話か：幕末の13代将軍家定付きの奥女中の給金
+#   ②何が決まっていたか：切米・合力金・扶持の3つ。御年寄は切米50石・合力金80両・10人扶持
+#   ③何が意外か：最も位の高い上臈御年寄の合力金は60両で、御年寄より20両少ない
+#   ④どれほどの差か：いちばん下の御半下は合力金2両で、御年寄と40倍の開き
+title: 大奥｜いちばん偉い女中が、いちばん多くもらったのか
+yt_title: 大奥でいちばん位の高い女中が、いちばん給金が多かったのか　家定付きの奥女中の給金の表
+description: |-
+  大奥でいちばん位の高い女中は、給金も、いちばん多かったのでしょうか。
+  奥女中の給金は、米で渡す切米、着物などのための金の合力金、毎日の米の扶持の3つでした。幕末の13代将軍家定付きの女中の表では、御年寄は切米50石・合力金80両・10人扶持。ところが、最も位の高い上臈御年寄の合力金は60両で、御年寄より20両少ないのです。いちばん下の御半下は、切米4石・合力金2両・1人扶持で、合力金は御年寄の40分の1でした。日本銀行貨幣博物館の目安で御年寄の80両だけを換えると、18世紀の米の値段なら約480万円、大工の賃金なら約2800万円、幕末の米の値段なら32万〜80万円。何と比べるか、いつの値段かで、桁まで変わります。
+  では、別の記録では、上臈御年寄の給金はいくらだったのか。本編は概要欄のリンクからどうぞ。
+hashtags: ['#大奥', '#日本史', '#江戸時代']
+ai_images: true
+ai_disclosure: この動画の室内・人物の後ろ姿や足もとの画像は、画像生成AI（Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/ooku
+out: ooku_story_s2
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 奥女中の給金（幕末）
+  title: "奥女中の給金は、《位の順だった？》"
+now:
+  - {at: 大奥で, text: "幕末　江戸城の大奥", point: 1}
+  - {at: 13代将軍, text: "幕末　家定付きの女中の表", point: 1}
+  - {at: 18世紀の, text: "18世紀の1両", point: 0}
+  - {at: 幕末の米, text: "幕末の1両", point: 1}
+timeline:
+  - {label: "18世紀"}
+  - {label: "幕末"}
+cards:
+  - type: table
+    title: 合力金（金の手当）
+    from: 御年寄は
+    until: 合力金で比べると
+    items:
+      - {at: 御年寄は, text: "御年寄　80両"}
+      - {at: 上臈御年寄は, text: "上臈御年寄　60両"}
+      - {at: 御半下は, text: "御半下　2両"}
+    text_y: 0.70
+shots:
+  Hina:
+    kind: real
+    image: paintings/ooku_chiyoda_379.jpg
+    focus: [0.5, 0.55]
+    move: right
+    credit: "楊洲周延《千代田の大奥》（1895年ごろ。メトロポリタン美術館、CC0）"
+    must: 着飾った女中たちの錦絵
+  O07:
+    kind: ai
+    file: ooku/main/O07.jpg
+    focus: [0.4, 0.55]
+    move: left
+    must: 帳面と小判と米俵と灯
+  O07b:
+    kind: ai
+    file: ooku/main/O07.jpg
+    focus: [0.3, 0.7]
+    move: in
+    must: 帳面と小判（手もとの寄り）
+  O16:
+    kind: ai
+    file: ooku/main/O16.jpg
+    focus: [0.45, 0.5]
+    move: right
+    must: 文机で書き物をする女中（後ろ姿）
+  O08:
+    kind: ai
+    file: ooku/main/O08.jpg
+    focus: [0.45, 0.5]
+    move: down
+    must: 金屏風の前に立つ上の女中（後ろ姿。右の屏風の字は切り出しで外す）
+  Jorou:
+    kind: real
+    image: paintings/ooku_chiyoda_375.jpg
+    focus: [0.36, 0.55]
+    move: left
+    credit: "楊洲周延《千代田の大奥》（1895年ごろ。メトロポリタン美術館、CC0）"
+    must: 豪華な打掛の女性の錦絵
+  O15:
+    kind: ai
+    file: ooku/main/O15.jpg
+    focus: [0.45, 0.55]
+    move: right
+    must: 濡れた石の床と草履の素足
+  O03:
+    kind: ai
+    file: ooku/main/O03.jpg
+    focus: [0.5, 0.5]
+    move: left
+    must: 廊下に並ぶ女中たち（後ろ姿）
+  O02:
+    kind: ai
+    file: ooku/main/O02.jpg
+    focus: [0.5, 0.5]
+    move: right
+    must: 朝もやの長局の屋根
+  O21:
+    kind: ai
+    file: ooku/main/O21.jpg
+    focus: [0.4, 0.5]
+    move: in
+    must: 書斎で記録を書き取る男
+lines:
+  # fact: ooku-31
+  - 語り: 大奥で、いちばん位の高い女中は、給金も、いちばん多かったのか。
+    shot: Hina
+    tone: 疑問
+    pause: 0.12
+  # fact: ooku-34
+  - 語り: 奥女中の給金は、3つ。米で渡す切米。着物などのための、合力金。そして、毎日の米の、扶持だ。
+    shot: O07
+    tone: しみじみ
+    pause: 0.12
+  # fact: ooku-01
+  - 語り: 幕末の13代将軍、家定付きの女中の表が、残っている。
+    shot: O16
+    tone: しみじみ
+    pause: 0.12
+  # fact: ooku-01
+  - 語り: 御年寄は、切米50石、合力金80両、10人扶持。
+    shot: O08
+    tone: しみじみ
+    pause: 0.12
+  # fact: ooku-31
+  - 語り: ところが、最も位の高い、上臈御年寄は、合力金60両。下の御年寄より、《!20両少ない》。
+    shot: Jorou
+    tone: 強調
+    pause: 0.12
+  # fact: ooku-32
+  - 語り: そして、いちばん下の御半下は、切米4石、合力金2両、1人扶持。
+    shot: O15
+    tone: しみじみ
+    pause: 0.12
+  # fact: ooku-01, ooku-32
+  - 語り: 合力金で比べると、御年寄とは、《40倍》の開きだ。
+    shot: O03
+    tone: 重い
+    pause: 0.3
+    dip: true
+  # fact: ooku-78, ooku-01
+  - 語り: 日本銀行の貨幣博物館の目安で、80両を換えると、18世紀の米の値段なら480万円、大工の賃金なら2800万円。
+    shot: O07b
+    tone: しみじみ
+    pause: 0.12
+  # fact: ooku-78
+  - 語り: 幕末の米の値段なら、32万円から80万円。何と比べるか、いつの値段かで、桁まで変わる。
+    shot: O02
+    tone: 重い
+    pause: 0.12
+  # fact: ooku-14（答えは本編の第2章）
+  - 語り: では、別の記録では、上臈御年寄の給金は、いくらと書かれていたのか。
+    shot: O21
+    tone: 疑問
+    pause: 0.15

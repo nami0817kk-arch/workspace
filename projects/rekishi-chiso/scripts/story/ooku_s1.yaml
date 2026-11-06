@@ -1,0 +1,163 @@
+# 物語完結型ショート 大奥の奥女中 s1（2026-11-06）。本編 scripts/ooku-story.yaml（11/8 19:00 公開、https://youtu.be/28M-XkATUuY）の第1章から。11/9 9:30 公開。
+# 形式は kakeizu_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし（本編にも無い）。
+# 絵は本編の AI 絵（out/story/ooku/main。FLUX、人物は後ろ姿だけ）と楊洲周延《千代田の大奥》。新しい絵は作らない。
+#   使わない絵：O04（着物に字）・O08（屏風の字。s2 で切り出して使う）。
+# 切り口：休日の無い勤めの表（八ッ出・明け番・泊り）。給金（s2）・部屋方（s3）・下働き（s4）・錦絵の年（s5）には踏み込まない。総触は使わない。
+# 事実カード（dev/output/rekishi-chiso/research/奥女中_facts_20261106.yaml）：ooku-64・65・66・67・11。言い方は本編のまま。
+#   ・八ッ出 14時→16時＝2時間。明け番 7時→10時＝3時間。お中臈の泊り 22時→翌10時＝12時間。本編どおり。
+#   ・ませ子の言葉は「1930年の本『御殿女中』」と出どころを言ってから引く（本編と同じ）。
+# 理解テスト4問：
+#   ①誰の話か：幕末の江戸城の大奥に勤めた奥女中（元女中の大岡ませ子の話）
+#   ②いつ・どこで何が：幕末の大奥。休日は無く、八ッ出（2時間）・明け番（3時間）・泊り（12時間）が回ってきた
+#   ③何が違ったか：早く帰れたのは御年寄と将軍付きのお中臈だけ。御台所付きは昼過ぎまで引けなかった
+#   ④どうなっていたか：休みの日の無い、交代の勤務表だった
+title: 大奥｜奥女中に休みの日はあったのか
+yt_title: 大奥の奥女中に休みの日はあったのか　元女中が語った「休日というものがありません」と勤めの表
+description: |-
+  華やかに見える大奥。そこで働いた奥女中に、休みの日はあったのでしょうか。
+  三田村鳶魚の1930年の本『御殿女中』に、元女中の大岡ませ子さんの話が残っています。「奥の者には、休日というものがありません。八ッ出と、明け番とが、あるだけです」。八ッ出は午後2時に出て午後4時に引く2時間の勤め。明け番は泊りの翌日で、午前6時にいったん帰り、7時に出て10時に引きます。お中臈の泊りは、夜の10時から翌朝の10時までの12時間でした。早く帰れたのは御年寄と将軍付きのお中臈だけで、御台所付きのお中臈は用が多く、昼過ぎでないと引けなかったといいます。
+  では、この勤めで、奥女中はいくらもらえたのか。本編は概要欄のリンクからどうぞ。
+hashtags: ['#大奥', '#日本史', '#江戸時代']
+ai_images: true
+ai_disclosure: この動画の室内・人物の後ろ姿の画像は、画像生成AI（Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/ooku
+out: ooku_story_s1
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 奥女中（江戸城の大奥）
+  title: "奥女中に、《休みの日はあったのか》"
+now:
+  - {at: 大奥の, text: "幕末　江戸城の大奥", point: 0}
+  - {at: 1930年, text: "1930年　『御殿女中』", point: 2}
+  - {at: 八ッ出は, text: "幕末　大奥の勤め", point: 0}
+timeline:
+  - {label: "1858"}
+  - {label: "1868"}
+  - {label: "1930"}
+cards:
+  - type: table
+    title: 大岡ませ子が語った勤めの表
+    from: 八ッ出は
+    until: しかも
+    items:
+      - {at: 八ッ出は, text: "八ッ出　2時間"}
+      - {at: 明け番は, text: "明け番　3時間"}
+      - {at: お中臈の泊りは, text: "泊り　12時間"}
+    text_y: 0.70
+shots:
+  Hanami:
+    kind: real
+    image: paintings/ooku_chiyoda_371.jpg
+    focus: [0.62, 0.55]
+    move: left
+    credit: "楊洲周延《千代田の大奥》（1895年ごろ。メトロポリタン美術館、CC0）"
+    must: 花見の錦絵
+  O21:
+    kind: ai
+    file: ooku/main/O21.jpg
+    focus: [0.4, 0.5]
+    move: right
+    must: 明治の書斎で話を書き取る男
+  O03:
+    kind: ai
+    file: ooku/main/O03.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 廊下に並ぶ女中たち（後ろ姿）
+  O01:
+    kind: ai
+    file: ooku/main/O01.jpg
+    focus: [0.55, 0.5]
+    move: left
+    must: 夜明けの長い板廊下を行く女中（後ろ姿）
+  O05:
+    kind: ai
+    file: ooku/main/O05.jpg
+    focus: [0.4, 0.55]
+    move: right
+    must: 行灯の夜の座敷で待つ女中（後ろ姿）
+  O09:
+    kind: ai
+    file: ooku/main/O09.jpg
+    focus: [0.5, 0.5]
+    move: left
+    must: 長局の一室の女中たち（後ろ姿）
+  O06:
+    kind: ai
+    file: ooku/main/O06.jpg
+    focus: [0.5, 0.55]
+    move: left
+    must: 赤い毛氈に並ぶ黒塗りの膳
+  O02:
+    kind: ai
+    file: ooku/main/O02.jpg
+    focus: [0.5, 0.5]
+    move: right
+    must: 朝もやの長局の屋根の並び
+  O07:
+    kind: ai
+    file: ooku/main/O07.jpg
+    focus: [0.35, 0.55]
+    move: in
+    must: 帳面と小判と米俵と灯
+lines:
+  # fact: ooku-64
+  - 語り: 大奥の奥女中に、休日は、あったのか。
+    shot: Hanami
+    tone: 疑問
+    pause: 0.12
+  # fact: ooku-64
+  - 語り: 1930年の本、『御殿女中』に、元女中の、大岡ませ子の話が残る。奥の者には、休日というものが、《!ありません》。
+    shot: O21
+    tone: 強調
+    pause: 0.12
+  # fact: ooku-64
+  - 語り: 八ッ出と、明け番とが、あるだけです。
+    shot: O03
+    tone: 重い
+    pause: 0.12
+  # fact: ooku-65
+  - 語り: 八ッ出は、午後2時に出て、午後4時に引く勤め。わずか、2時間だ。
+    shot: O03
+    tone: しみじみ
+    pause: 0.12
+  # fact: ooku-66
+  - 語り: 明け番は、泊りの翌日。午前6時に、いったん帰り、7時に出て、10時に引く。
+    shot: O01
+    tone: しみじみ
+    pause: 0.12
+  # fact: ooku-67
+  - 語り: 将軍や御台所のそばに仕える、お中臈の泊りは、夜の10時から、翌朝の10時まで。《12時間》だ。
+    shot: O05
+    tone: 重い
+    pause: 0.12
+  # fact: ooku-11
+  - 語り: 御年寄の泊りは、また違う。朝の10時に出て、午後2時に一度帰り、夜の8時に、また出る。
+    shot: O09
+    tone: しみじみ
+    pause: 0.12
+  # fact: ooku-66
+  - 語り: しかも、早く帰れたのは、御年寄と、将軍付きのお中臈だけ。御台所付きのお中臈は、用が多く、昼過ぎまで、引けなかった。
+    shot: O06
+    tone: しみじみ
+    pause: 0.12
+  - 語り: 休みの日は無く、短い勤めと、長い泊りが、順に回ってくる。今でいえば、《交代の勤務表》だ。
+    shot: O02
+    tone: 重い
+    pause: 0.3
+    dip: true
+  # fact: ooku-34（答えは本編の第2章）
+  - 語り: では、この勤めで、奥女中は、いくらもらえたのか。
+    shot: O07
+    tone: 疑問
+    pause: 0.15
