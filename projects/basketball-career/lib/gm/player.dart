@@ -134,6 +134,7 @@ class Player {
     Stats? prev,
     this.exp = 0,
     this.morale = 60,
+    this.injured = 0,
   })  : attrs = attrs ?? makeAttrs(pos, _idNoise(id)),
         stats = stats ?? Stats(),
         prev = prev ?? Stats();
@@ -183,6 +184,9 @@ class Player {
   /// 気持ち(0〜100)。出場時間が期待より少ない・チームが負けると下がる。低いと再契約で高く求め、20を切ると残らない。
   int morale;
 
+  /// けがで休む残りの試合数(0なら出られる)。
+  int injured;
+
   String get moraleLabel => morale >= 70
       ? '満足'
       : morale >= 45
@@ -228,6 +232,7 @@ class Player {
         if (prev.gp > 0) 'pv': prev.toJson(),
         if (exp != 0) 'ex': exp,
         if (morale != 60) 'mo': morale,
+        if (injured != 0) 'in': injured,
       };
 
   static Player fromJson(Map<String, dynamic> j) => Player(
@@ -246,6 +251,7 @@ class Player {
         prev: Stats.fromJson(j['pv']),
         exp: (j['ex'] as int?) ?? 0,
         morale: ((j['mo'] as int?) ?? 60).clamp(0, 100),
+        injured: ((j['in'] as int?) ?? 0).clamp(0, 99),
       );
 }
 

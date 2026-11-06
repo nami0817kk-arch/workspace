@@ -4,6 +4,7 @@ import '../../gm/career.dart';
 import '../../gm/player.dart';
 import '../gm_controller.dart';
 import 'common.dart';
+import 'negotiate_dialog.dart';
 import 'style.dart';
 
 /// 補強のタブ。自由契約の選手と契約する。
@@ -60,10 +61,7 @@ class MarketTab extends StatelessWidget {
           style: FilledButton.styleFrom(minimumSize: const Size(64, 36), padding: const EdgeInsets.symmetric(horizontal: 10)),
           onPressed: problem != null || c.busy
               ? null
-              : () async {
-                  final y = await pickYears(context, title: '${p.name}と契約', body: '年俸 ${money(ask.salary)}。何年にする?', maxYears: ask.maxYears);
-                  if (y != null) c.signFreeAgent(p.id, y);
-                },
+              : () => negotiate(context, c, p, freeAgent: true),
           child: const Text('契約'),
         ),
       ),

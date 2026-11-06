@@ -157,6 +157,7 @@ class PlayerRow extends StatelessWidget {
                   Text(salaryText ?? '${money(p.salary)}・${p.years <= 0 ? '契約切れ' : '残り${p.years}年'}',
                       style: const TextStyle(fontSize: 12, color: GmColors.sub)),
                   if (grade != '-') Tag('伸びしろ$grade', color: grade == 'S' || grade == 'A' ? GmColors.gold : GmColors.sub),
+                  if (p.injured > 0) Tag('けが あと${p.injured}試合', color: GmColors.bad),
                 ]),
                 if (p.stats.gp > 0 || p.prev.gp > 0)
                   Padding(
@@ -349,17 +350,3 @@ class GameRow extends StatelessWidget {
     );
   }
 }
-
-/// 年数を選ぶ。選ばなければ null。
-Future<int?> pickYears(BuildContext context, {required String title, required String body, required int maxYears}) =>
-    showDialog<int>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(title),
-        content: Text(body),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('やめる')),
-          for (var y = 1; y <= maxYears; y++) TextButton(onPressed: () => Navigator.pop(ctx, y), child: Text('$y年')),
-        ],
-      ),
-    );

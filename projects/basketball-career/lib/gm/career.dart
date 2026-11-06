@@ -530,6 +530,7 @@ class Career {
   /// 次の区切り(20〜21試合)を進める。
   void playBlock() {
     if (phase != Phase.season || block >= blocksPerSeason) return;
+    injuries.clear();
     incoming = null;
     final games = <GameResult>[];
     final start = blockStart(block);
@@ -542,7 +543,11 @@ class Career {
     lastGames = games;
     final homeGames = games.where((g) => g.home == mine).length;
     revenue += homeGames * gatePerGame + (baseIncome * games.length / gamesPerSeason).round();
-    costs += (me.payroll * games.length / gamesPerSeason).round();
+    costs += ((me.payroll + me.staffCost) * games.length / gamesPerSeason).round();
+    for (final (t, p) in injuries) {
+      if (t == mine || p.ovr >= 76) _log('けが: ${p.name}(${teams[t].def.short})が${p.injured}試合欠場');
+    }
+    injuries.clear();
     block++;
     _updateMorale();
     if (block <= tradeDeadlineBlock && rng.chance(0.5)) _aiTrades(1);
@@ -719,7 +724,19 @@ class Career {
       t.deadCap = 0;
       final retired = <Player>[];
       for (final p in t.roster) {
-        final d = ageOneYear(p, rng);
+        var d = ageOneYear(p, rng);
+        p.injured = 0;
+        // コーチの段階で若手の伸びが変わる(力が上がる年だけ)
+        final coach = t.staffLevel(Staff.coach);
+        if (p.age <= 26 && d >= 0) {
+          final b = coach == 3 && rng.chance(0.55) ? 1 : coach == 1 && rng.chance(0.4) ? -1 : 0;
+          if (b != 0) {
+            p.ovr = (p.ovr + b).clamp(35, 99);
+            if (p.pot < p.ovr) p.pot = p.ovr;
+            p.lastDelta += b;
+            d += b;
+          }
+        }
         p.years--;
         if (t.index == mine) {
           if (d >= 4) news.add('${p.name}が大きく伸びた(力 ${p.ovr}、+$d)');
@@ -744,7 +761,7 @@ class Career {
     prospects = makeProspects(rng, nextId, order.length + 8);
     draftAt = 0;
     draftLog = [];
-    scoutsLeft = 3;
+    scoutsLeft = 1 + me.staffLevel(Staff.scout);
     scoutAdUsed = false;
     phase = Phase.draft;
     _advanceDraft();
@@ -829,6 +846,7 @@ class Career {
   }
 
   void _startContracts() {
+    haggled = [];
     phase = Phase.contracts;
     expiring = [for (final p in me.roster) if (p.years <= 0) p.id];
     // 相手のチームの契約切れ
@@ -1029,6 +1047,54 @@ class Career {
     _log(_tradeText(from, o.partner, o, give, get));
   }
 
+  /// スタッフの段階を変えられるか(シーズン前とオフの契約のときだけ)。
+  bool get canChangeStaff => phase == Phase.preseason || phase == Phase.contracts;
+
+  void setStaff(Staff s, int level) {
+    if (!canChangeStaff) return;
+    me.staff[s.index] = level.clamp(1, 3);
+  }
+
+  /// 値切りを一度断った選手(このオフのあいだ、もう値切れない)。
+  List<int> haggled = [];
+
+  /// 値切ったときに受けてくれる見込み(0〜1)。気持ちが高い・チームが強いほど受ける。
+  double discountChance(Player p, {required bool freeAgent}) {
+    final base = freeAgent ? 0.35 + hype / 250 : 0.3 + p.morale / 200;
+    final win = history.isEmpty ? 0.0 : (history.last.wins / gamesPerSeason - 0.5) * 0.6;
+    return (base + win).clamp(0.1, 0.85);
+  }
+
+  /// 交渉の結果。
+  int _offerSalary(Player p, double factor) => (askOf(p, me).salary * factor).round().clamp(minSalary, maxSalary);
+
+  /// 契約を申し出る。[factor] は求める額に掛ける数(0.9 で1割安く、1.1 で1割高く)。受けたら true。
+  /// 1割安くを断られると気持ちが10下がり、このオフはもう値切れない。1割高くは気持ちが10上がる。
+  bool offer(int id, int years, double factor) {
+    final exp = expiring.contains(id);
+    final p = exp ? _mineById(id) : freeAgents.where((x) => x.id == id).firstOrNull;
+    if (p == null) return false;
+    if (factor < 1) {
+      if (haggled.contains(id)) return false;
+      if (!rng.chance(discountChance(p, freeAgent: !exp))) {
+        haggled.add(id);
+        p.morale = (p.morale - 10).clamp(0, 100);
+        return false;
+      }
+    }
+    final salary = _offerSalary(p, factor);
+    if (exp) {
+      if (resignProblem(p) != null || me.payroll - p.salary + salary > hardCap) return false;
+      resign(id, years);
+    } else {
+      if (signProblem(p) != null || (salary > minSalary && me.payroll + salary > salaryCap)) return false;
+      signFreeAgent(id, years);
+    }
+    p.salary = salary;
+    if (factor > 1) p.morale = (p.morale + 10).clamp(0, 100);
+    return true;
+  }
+
   /// 先発と控えの順を決める([ids] は上から。空なら自動に戻す)。
   void setRotation(List<int> ids) {
     if (phase == Phase.over) return;
@@ -1105,6 +1171,7 @@ class Career {
         'news': news,
         if (incoming != null) 'inc': incoming!.toJson(),
         'td': tradesDone,
+        'hg': haggled,
         'hy': hype,
         'pl': priceLevel,
         'rv': revenue,
@@ -1151,6 +1218,7 @@ class Career {
       ..news = [for (final x in (j['news'] as List? ?? const [])) x as String]
       ..incoming = j['inc'] == null ? null : TradeOffer.fromJson(Map<String, dynamic>.from(j['inc'] as Map))
       ..tradesDone = (j['td'] as int?) ?? 0
+      ..haggled = [for (final x in (j['hg'] as List? ?? const [])) x as int]
       ..hype = ((j['hy'] as int?) ?? 50).clamp(0, 100)
       ..priceLevel = ((j['pl'] as int?) ?? 1).clamp(0, ticketPrices.length - 1)
       ..revenue = (j['rv'] as int?) ?? 0
