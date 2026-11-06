@@ -26,7 +26,8 @@ A = HERE / "assets"
 LAND = W > H
 worldmap.land_borders = lambda: []        # 国境の白い線は、川(米加の境)を太い帯で隠すので描かない
 worldmap.countries = lambda: {}           # 国の縁の薄い線も同じ(この回は国の塗りを使わない)
-MAP = worldmap.Map(lat0=43, bases=[((-94, 39, -72, 50), 6), ((-84, 41, -76, 45.5), 8), ((-79.8, 42.5, -78.4, 43.6), 9)])
+MAP = worldmap.Map(lat0=43, bases=[((-94, 39, -72, 50), 6), ((-90, 40, -72, 48), 7), ((-84, 41, -76, 45.5), 8),
+                                   ((-82.2, 41.8, -76.8, 44.6), 10), ((-79.75, 42.55, -78.3, 43.55), 11)])
 STEPS = ["1 動く滝", "2 叩く力", "3 ブレーキ", "4 湖の出口", "5 答え"]
 RIVER = [(b, a) for a, b in json.loads((HERE / "sim" / "river.json").read_text(encoding="utf-8"))["pts"]]
 FALLS_LL = (-79.0755, 43.0775)
@@ -153,7 +154,7 @@ def draw_section(img, sc, t, u):
     if lab:
         text(d, P(right - 4, (top + cap_b) / 2), "硬い岩 約24m", fs, WHITE, "rm")
         text(d, P(right - 4, (cap_b + sh_b) / 2), "柔らかい岩 約18m", fs, WHITE, "rm")
-        text(d, P(max(20, edge - 60), -18), "滝つぼ", fs, FOAM, "mm")
+        text(d, P(max(xoff + 30, edge - 60), -18), "滝つぼ", fs, FOAM, "mm")
     if sc.get("height", False):
         hx = edge - 32
         d.line([P(hx, 0), P(hx, top)], fill=YEL, width=5)
@@ -165,7 +166,10 @@ def draw_section(img, sc, t, u):
         bx_, by_ = P(lip - 4, top + 9)
         d.line([(bx_, ay), (ax, ay)], fill=YEL, width=6)
         d.polygon([(ax + 22, ay), (ax, ay - 14), (ax, ay + 14)], fill=YEL)
-        text(d, (bx_ - 24, ay), "うしろ(上流)へ下がる", fs, YEL, "rm")
+        if LAND:
+            text(d, (bx_ - 24, ay), "うしろ(上流)へ下がる", fs, YEL, "rm")
+        else:
+            text(d, ((ax + bx_) / 2, ay - 46), "うしろへ下がる", fs, YEL)
     if sc.get("title"):
         text(d, (W / 2, y0 + 50), sc["title"], 60 if LAND else 52, YEL)
 
@@ -203,8 +207,10 @@ def draw_profile(img, sc, t, u):
     erie_bottom = 174.4 - 64
     d.polygon([P(k0, 173.4), P(0.3, 173.4), P(0.3, 168), P(-3, erie_bottom), P(-11, erie_bottom + 6), P(k0, 160)], fill=WATER + (230,))
     d.polygon([P(58.5, 74.6), P(k1, 74.6), P(k1, zb), P(60, zb)], fill=WATER + (230,))
-    text(d, P(-7, 186), "エリー湖", 50 if LAND else 40, WHITE)
-    text(d, P(61.5, 112 if LAND else 120), "オンタリオ湖", 50 if LAND else 40, WHITE)
+    if k0 < -3:
+        text(d, P(-7, 186), "エリー湖", 50 if LAND else 40, WHITE)
+    if k1 > 63:
+        text(d, P(61.5, 112 if LAND else 120), "オンタリオ湖", 50 if LAND else 40, WHITE)
     # 川の水(線の上に薄く)
     d.line([(x, y - 3) for x, y in pts], fill=WATER + (255,), width=6)
     # 滝の印
@@ -237,7 +243,7 @@ def draw_profile(img, sc, t, u):
         yy = py_ - 70
         d.line([(fx_ + 8, yy), (px_ - 8, yy)], fill=RED, width=6)
         d.polygon([(fx_ + 4, yy), (fx_ + 26, yy - 12), (fx_ + 26, yy + 12)], fill=RED)
-        text(d, ((fx_ + px_) / 2, yy - 36), "11km", 60, RED)
+        text(d, ((fx_ + px_) / 2, yy + 40), "11km", 60, RED)
     if "gorge" in marks:
         text(d, P(41, 120), "峡谷", fs, WHITE)
     if sc.get("title"):

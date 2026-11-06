@@ -10,7 +10,7 @@ one() {
   echo "$1 終了 $? $(date +%H:%M)"
 }
 export -f one 2>/dev/null
-for e in $eps; do echo $e; done | xargs -P 4 -I{} sh -c '
+for e in $eps; do echo $e; done | xargs -P ${NP:-3} -I{} sh -c '
   log="out/_niagara_build_{}.log"
   python -m naze compose "episodes/niagara/{}" > "$log" 2>&1 && python -m naze qc "episodes/niagara/{}" >> "$log" 2>&1
   echo "{} 終了 $? $(date +%H:%M)"'

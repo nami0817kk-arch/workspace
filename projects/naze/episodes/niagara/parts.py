@@ -5,7 +5,7 @@ import math
 
 from scene import FALLS_LL, RIVER
 
-CREDIT = "地図: NASA Blue Marble・Terrain Tiles・Natural Earth、川の線 OpenStreetMap"
+CREDIT = "地図: NASA・Terrain Tiles・OSM"
 RED, YEL, WHITE, BLUE = (240, 90, 80), (255, 214, 64), (255, 255, 255), (120, 190, 255)
 GREY = (170, 180, 200)
 
@@ -144,7 +144,7 @@ S_C10 = CARD("2,832トン", sub="1秒に落ちる水（観光の季節の昼）"
 S_C11 = ICONS("pool", 9, title="25mプール 9杯 ／ 1秒", note="プール1杯 300トンで計算", step=0)
 S_C12 = MAP(NIAG, LINE(UP, YEL, 8, id="up", grow=0.9), PIN(FALLS_LL, "滝", id="p_f"), PIN(ERIE_OUT, "エリー湖の出口", id="p_e"),
             LABEL((-78.82, 43.0), "35km", 70, YEL, on="35km", count=True), step=0)
-S_C14 = PROF("35km", "51m", title="エリー湖に届いたら、湖の水はどうなるのか", step=0, tr="flash")
+S_C14 = PROF("35km", title="エリー湖に届いたら、湖の水はどうなるのか", step=0, tr="flash")
 S_C17 = CARD("一気には抜けない", sub="答え", note="湖の高さを決めているのは、出口の岩", view=TWO, step=0, count=False, tr="flash")
 S_C19 = PROF("51m", "99m", "35km", title="落ちる水の力と、出ていく水の流れを計算する", step=0)
 
@@ -235,7 +235,7 @@ P["ch3"] = dict(title="第3章 人がかけたブレーキ", cta=False, lines=[
     dict(id="e9", text="力にすると、昼が142万kW、夜は71万kW。", scene=S_E9),
     dict(id="e10", text="もう1つ、変わったものがあります。", section=True, scene=S_E10),
     dict(id="e11", text="大きな滝は、馬のひづめの形に丸く広がりました。"),
-    dict(id="e12", text="縁の長さは、1842年の420mから、2000年には762mへ。"),
+    dict(id="e12", text="縁の長さは、1842年の420mから、2000年には762mへ。", scene=CARD("420m → 762m", sub="大きな滝の縁の長さ", note="1842年 → 2000年", view=NIAG, step=2, count=False)),
     dict(id="e13", text="水は減り、縁は伸びた。"),
     dict(id="e14", text="いまの大きな滝で、縁1mあたりの水は、1秒に2.09トン。", scene=S_E14),
     dict(id="e15", text="昔の物差しの、6分の1です。"),
@@ -243,7 +243,7 @@ P["ch3"] = dict(title="第3章 人がかけたブレーキ", cta=False, lines=[
     dict(id="e17", text="計算すると、1年に22cmです。"),
     dict(id="e18", text="水だけ抜いた場合は1年に39cm、縁が伸びただけなら71cm。", scene=S_E18),
     dict(id="e19", text="両方が重なって、ブレーキが強く効いています。"),
-    dict(id="e20", text="実際に測った後退も、いまは1年に10cmほどで、昔よりずっと遅くなっています。"),
+    dict(id="e20", text="実際に測った後退も、いまは1年に10cmほどで、昔よりずっと遅くなっています。", scene=CARD("1年に約10cm", sub="実際に測った、いまの後退", note="計算の22cmと同じく、昔よりずっと遅い", view=NIAG, step=2, count=False)),
 ])
 
 # ---- 第4章 湖の高さを決めるもの -----------------------------------------------------------------------
@@ -271,8 +271,8 @@ P["ch4"] = dict(title="第4章 湖の高さを決めるもの", cta=False, lines
     dict(id="f10", text="湖に入る水が2倍に増えても、5.0m。", scene=S_F10),
     dict(id="f11", text="エリー湖の高さは、出口の岩の高さで、ほとんど決まっているのです。"),
     dict(id="f12", text="普通は、滝が来れば、湖の水がそこから落ちていくと思うはずです。", scene=S_F12),
-    dict(id="f13", text="ところが、滝は崖をうしろへ削るもの。湖の出口の岩を、下へ掘るわけではありません。"),
-    dict(id="f14", text="湖が下がるのは、出口の岩そのものが低くなったときだけです。"),
+    dict(id="f13", text="ところが、滝は崖をうしろへ削るもの。湖の出口の岩を、下へ掘るわけではありません。", scene=SEC("retreat", step=3, title="滝はうしろへ削る")),
+    dict(id="f14", text="湖が下がるのは、出口の岩そのものが低くなったときだけです。", scene=WEIR("still", title="湖の高さ ＝ 出口の岩 ＋ 3.2m", step=3)),
     dict(id="f15", text="仮に、出口の岩が一気に10m削れたとします。", section=True, scene=S_F15),
     dict(id="f16", text="出ていく水は、いまの8倍。"),
     dict(id="f17", text="それでも、湖が5m下がるには52日かかります。"),
@@ -303,8 +303,8 @@ P["ch5"] = dict(title="第5章 届くのは、いつ。そして答え", lines=[
     dict(id="g3", text="およそ16万年です。", scene=S_G3),
     dict(id="g4", text="峡谷の11kmを削った1万2千年の、13倍です。"),
     dict(id="g5", text="もし人が水を抜かなかったら、1年71cmで、5万年。", scene=S_G5),
-    dict(id="g6", text="古い資料に「5万年ほど」とあるのは、この、水を抜かない速さの数字です。"),
-    dict(id="g7", text="人のブレーキが、届く日を3倍以上先にのばしました。"),
+    dict(id="g6", text="古い資料に「5万年ほど」とあるのは、この、水を抜かない速さの数字です。", scene=CARD("5万年", sub="古い資料の見積もり", note="水を抜かない速さの数字", view=TWO, step=4)),
+    dict(id="g7", text="人のブレーキが、届く日を3倍以上先にのばしました。", scene=CARD("3倍以上", sub="人のブレーキがのばした", note="16万年 ÷ 5万年", view=TWO, step=4)),
     dict(id="g8", text="まとめます。", section=True, scene=S_G8),
     dict(id="g9", text="1つ目。滝は、柔らかい岩をえぐられて、うしろへ下がる。"),
     dict(id="g10", text="2つ目。昔は発電所3基ぶんの力で叩き、1年に1.28m下がっていた。", scene=CARDS_N(2)),
