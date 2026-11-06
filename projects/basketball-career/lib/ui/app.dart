@@ -1,67 +1,52 @@
 import 'package:flutter/material.dart';
 
-import 'controller.dart';
-import 'game_screen.dart';
-import 'home_screen.dart';
-import 'milestone_dialog.dart';
-import 'remove_ads_offer.dart';
+import '../deck/profile.dart';
+import 'deck/battle_screen.dart';
+import 'deck/home_screen.dart';
+import 'deck/run_screens.dart';
+import 'deck/style.dart';
+import 'deck_controller.dart';
 import 'layout.dart';
-import 'team_colors.dart';
+import 'remove_ads_offer.dart';
 
 class BasketballCareerApp extends StatefulWidget {
   const BasketballCareerApp({super.key, this.controller});
 
   /// テストで差し替える。
-  final GameController? controller;
+  final DeckController? controller;
 
   @override
   State<BasketballCareerApp> createState() => _BasketballCareerAppState();
 }
 
 class _BasketballCareerAppState extends State<BasketballCareerApp> {
-  late final GameController c = widget.controller ?? GameController();
-  late final Future<bool> _loaded = c.loadSaved();
+  late final DeckController c = widget.controller ?? DeckController();
+  late final Future<bool> _loaded = c.load();
+  static final _theme = deckTheme();
 
   @override
   Widget build(BuildContext context) {
-    // 画面の差し色は、いまの所属チームの色(始める前はバスケットボールの橙)。
-    return ListenableBuilder(
-      listenable: c,
-      builder: (context, _) => _app(c.game == null ? _ball : teamColorOfGame(c.game!).accent),
-    );
-  }
-
-  Widget _app(Color accent) {
     return MaterialApp(
-      title: 'バスケ育成',
+      title: 'ブザービーター',
       debugShowCheckedModeBanner: false,
-      theme: _theme(Brightness.light, accent),
-      darkTheme: _theme(Brightness.dark, accent),
-      // 幅の広い端末(iPad など)では文字を少し大きくする(小さく見えないように)。
-      builder: (context, child) {
-        final tablet = isTablet(context);
-        if (!tablet || child == null) return child ?? const SizedBox.shrink();
-        final mq = MediaQuery.of(context);
-        return MediaQuery(
-          data: mq.copyWith(textScaler: TextScaler.linear(mq.textScaler.scale(1.0) * 1.25)),
-          child: child,
-        );
-      },
+      theme: _theme,
+      darkTheme: _theme,
+      // 幅の広い端末(iPad など)では、画面全体をそのまま大きくする(カードや絵が小さく、余白だらけにならないように)。
+      builder: (context, child) => TabletScale(child: child ?? const SizedBox.shrink()),
       home: FutureBuilder<bool>(
         future: _loaded,
         builder: (context, snap) {
           if (snap.connectionState != ConnectionState.done) {
-            return const Scaffold(
-                body: Center(child: CircularProgressIndicator()));
+            return const Scaffold(body: Center(child: CircularProgressIndicator()));
           }
-          return _MilestoneHost(
+          return _NoticeHost(
             controller: c,
             child: ListenableBuilder(
               listenable: c,
               builder: (context, _) {
-                final g = c.game;
-                if (g == null) return HomeScreen(controller: c);
-                return GameScreen(controller: c, game: g);
+                final r = c.run;
+                if (r == null || c.atHome) return DeckHomeScreen(c: c);
+                return RunScreen(c: c, run: r, battle: () => BattleScreen(c: c, run: r));
               },
             ),
           );
@@ -71,17 +56,17 @@ class _BasketballCareerAppState extends State<BasketballCareerApp> {
   }
 }
 
-/// 節目(優勝・個人賞・目標達成・進学・プロ契約・海外挑戦)が起きたら、ダイアログで見せる。
-class _MilestoneHost extends StatefulWidget {
-  const _MilestoneHost({required this.controller, required this.child});
-  final GameController controller;
+/// 実績の解放と「広告を消す」の案内を、ダイアログで見せる。
+class _NoticeHost extends StatefulWidget {
+  const _NoticeHost({required this.controller, required this.child});
+  final DeckController controller;
   final Widget child;
 
   @override
-  State<_MilestoneHost> createState() => _MilestoneHostState();
+  State<_NoticeHost> createState() => _NoticeHostState();
 }
 
-class _MilestoneHostState extends State<_MilestoneHost> {
+class _NoticeHostState extends State<_NoticeHost> {
   bool _showing = false;
 
   @override
@@ -102,15 +87,13 @@ class _MilestoneHostState extends State<_MilestoneHost> {
     _showing = true;
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       while (mounted && c.pending.isNotEmpty) {
-        final m = c.pending.first;
+        final a = c.pending.first;
         await showDialog<void>(
           context: context,
-          barrierDismissible: false,
-          builder: (ctx) => MilestoneDialog(milestone: m),
+          builder: (ctx) => AchievementDialog(achievement: a),
         );
-        c.dismissMilestone();
+        c.dismissAchievement();
       }
-      // 節目を見終えてから、「広告を消す」の案内(全画面広告のあと、ときどき)
       final money = c.money;
       if (mounted && c.offerRemoveAds && money != null) {
         await showRemoveAdsOffer(context, money);
@@ -124,46 +107,51 @@ class _MilestoneHostState extends State<_MilestoneHost> {
   Widget build(BuildContext context) => widget.child;
 }
 
-const _ball = Color(0xFFE65100);
+class AchievementDialog extends StatelessWidget {
+  const AchievementDialog({super.key, required this.achievement});
+  final Achievement achievement;
 
-final _themes = <(Brightness, Color), ThemeData>{};
+  @override
+  Widget build(BuildContext context) => AlertDialog(
+        icon: const Icon(Icons.emoji_events_rounded, color: DeckColors.gold, size: 44),
+        title: Text('実績「${achievement.title}」'),
+        content: Text(
+          [achievement.text, if (achievement.rewardText.isNotEmpty) achievement.rewardText].join('\n'),
+          textAlign: TextAlign.center,
+        ),
+        actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('OK'))],
+      );
+}
 
-ThemeData _theme(Brightness b, Color accent) =>
-    _themes.putIfAbsent((b, accent), () => _makeTheme(b, accent));
+/// 幅の広い端末では、[designWidth] の幅で作った画面を、拡大して全面に出す。押す位置も一緒に変わる。
+class TabletScale extends StatelessWidget {
+  const TabletScale({super.key, required this.child});
+  final Widget child;
 
-ThemeData _makeTheme(Brightness b, Color accent) {
-  final scheme = ColorScheme.fromSeed(seedColor: accent, brightness: b)
-      .copyWith(primary: accent, onPrimary: Colors.white);
-  return ThemeData(
-    colorScheme: scheme,
-    useMaterial3: true,
-    fontFamily: 'NotoSansJP',
-    scaffoldBackgroundColor:
-        b == Brightness.light ? const Color(0xFFFFF6EE) : scheme.surface,
-    appBarTheme: AppBarTheme(
-      backgroundColor: Colors.transparent,
-      scrolledUnderElevation: 0,
-      titleTextStyle: TextStyle(
-        fontFamily: 'NotoSansJP',
-        fontSize: 18,
-        fontWeight: FontWeight.bold,
-        color: scheme.onSurface,
+  static const designWidth = 620.0;
+
+  @override
+  Widget build(BuildContext context) {
+    final mq = MediaQuery.of(context);
+    if (mq.size.width < tabletWidth) return child;
+    final scale = (mq.size.width / designWidth).clamp(1.0, 1.8);
+    final size = mq.size / scale;
+    return FittedBox(
+      fit: BoxFit.fill,
+      alignment: Alignment.topLeft,
+      child: SizedBox(
+        width: size.width,
+        height: size.height,
+        child: MediaQuery(
+          data: mq.copyWith(
+            size: size,
+            padding: mq.padding / scale,
+            viewPadding: mq.viewPadding / scale,
+            viewInsets: mq.viewInsets / scale,
+          ),
+          child: child,
+        ),
       ),
-    ),
-    cardTheme: CardThemeData(
-      elevation: 0,
-      margin: EdgeInsets.zero,
-      color: b == Brightness.light ? Colors.white : scheme.surfaceContainer,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(18),
-        side: BorderSide(color: scheme.outlineVariant.withValues(alpha: 0.6)),
-      ),
-    ),
-    filledButtonTheme: FilledButtonThemeData(
-      style: FilledButton.styleFrom(
-        minimumSize: const Size.fromHeight(48),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-      ),
-    ),
-  );
+    );
+  }
 }

@@ -71,7 +71,7 @@ class Battle {
   bool doubleTeam = false;
   bool stopped = false;
   int _roundMine = 0;
-  late Intent intent;
+  late Threat intent;
   final rounds = <RoundScore>[];
   final events = <PlayEvent>[];
   bool over = false;

@@ -18,8 +18,8 @@ enum IntentKind {
 }
 
 /// 相手の1ラウンドの予告。[hits] は1本ずつの点(守備は前から順に削る)。
-class Intent {
-  const Intent(this.kind, this.hits, {this.press = 0});
+class Threat {
+  const Threat(this.kind, this.hits, {this.press = 0});
   final IntentKind kind;
   final List<int> hits;
 
@@ -81,19 +81,19 @@ class Opponent {
   String get tag => boss ? '決勝' : elite ? '強豪' : style.label;
 
   /// [round] は0から。決勝の相手は第4クォーターに勢いが付く。
-  Intent intentFor(int round, Rng rng) {
+  Threat intentFor(int round, Rng rng) {
     final kind = rng.weighted(_weights());
     var b = base + (boss && round >= 6 ? 2 : 0);
     int pts(double scale) => (b * scale + rng.nextInt(3) - 1).round().clamp(1, 99);
     return switch (kind) {
-      IntentKind.shot => Intent(kind, [pts(1.0)]),
-      IntentKind.three => Intent(kind, [pts(1.15)]),
-      IntentKind.drive => Intent(kind, [pts(1.05)]),
-      IntentKind.fast => Intent(kind, [pts(1.3)]),
-      IntentKind.post => Intent(kind, [pts(1.25)]),
-      IntentKind.combo => Intent(kind, [pts(0.6), pts(0.6)]),
-      IntentKind.press => Intent(kind, [pts(0.55)], press: stage >= 2 || boss ? 2 : 1),
-      IntentKind.ace => Intent(kind, [pts(1.8)]),
+      IntentKind.shot => Threat(kind, [pts(1.0)]),
+      IntentKind.three => Threat(kind, [pts(1.15)]),
+      IntentKind.drive => Threat(kind, [pts(1.05)]),
+      IntentKind.fast => Threat(kind, [pts(1.3)]),
+      IntentKind.post => Threat(kind, [pts(1.25)]),
+      IntentKind.combo => Threat(kind, [pts(0.6), pts(0.6)]),
+      IntentKind.press => Threat(kind, [pts(0.55)], press: stage >= 2 || boss ? 2 : 1),
+      IntentKind.ace => Threat(kind, [pts(1.8)]),
     };
   }
 
