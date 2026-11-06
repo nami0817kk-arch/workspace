@@ -9,7 +9,7 @@ script: scripts/oguri-story.yaml
 out: oguri_story_main
 art_dir: out/story/oguri/main
 main_art_dir: out/story/oguri/main
-ai_disclosure: この動画の風景・室内・人物の後ろ姿の画像は、画像生成AI（Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+ai_disclosure: この動画の風景・室内・人物の後ろ姿の画像は、画像生成AI（Google の Gemini・Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
 
 chapters:
   0: {label: 序章 19歳と22歳の使い, now: 1868年閏4月, dates: {2: null}}
@@ -65,6 +65,12 @@ ai:
   O16: {scene: 霧の海を行く明治の軍艦の艦隊（遠景）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
   O17: {scene: 夕暮れの河原と浅い川, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
   O19: {scene: 夕日の川面（O17 の右側を切り出した。終了画面）, lock: [1.0, 0.5, 0.5]}
+  G06: {scene: 霧の山あいの村と茅葺きの農家・寺（人物なし。Gemini）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  G08: {scene: 同じ村の丘の建てかけの屋敷の骨組みと材木（Gemini）, pan: h, crops: {wide: [1.18, 0.55, 0.5], left: [1.18, 0.45, 0.5], right: [1.18, 0.65, 0.5]}}
+  G09: {scene: 霧の山道を行く牛の荷車と長持・樽（Gemini）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  G10: {scene: 陣笠の兵の列を後ろから（Gemini）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  G12: {scene: 行灯の和室の文机と白紙の書状・筆（Gemini）, pan: h, crops: {wide: [1.25, 0.42, 0.56], left: [1.25, 0.36, 0.56], right: [1.25, 0.48, 0.58]}}
+  G13: {scene: 霧の河原に立つ丁髷の武士の後ろ姿（Gemini）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
 
 paint_fx:
   paintings/oguri_portrait.jpg: {crop: [0.0, 0.0, 1.0, 0.9]}
@@ -81,15 +87,15 @@ credits:
 
 shots:
   - 0 ai:O01 wide
-  - 1 ai:O10 left
+  - 1 ai:G10 left
   - 2 frame:paintings/oguri_portrait.jpg
   - 3 ai:O01 right
   - 4 ai:O15 wide
   - 5 ai:O15 left
-  - 6 ai:O12 wide
-  - 7 ai:O12 right
+  - 6 ai:G12 wide
+  - 7 ai:G12 right
   - 8 ai:O11 wide
-  - 9 ai:O06 wide
+  - 9 ai:G06 wide
   - 10 frame:paintings/oguri_portrait.jpg
   - 11 ai:O03 wide
   - 12 ai:O03 right
@@ -97,7 +103,7 @@ shots:
   - 14 ai:O04 wide
   - 15 part:paintings/oguri_embassy_brady_met.jpg wide
   - 16 ai:O02 wide
-  - 17 ai:O12 left
+  - 17 ai:G12 left
   - 18 ai:O02 left
   - 19 ai:O05 wide
   - 20 ai:O05 right
@@ -108,109 +114,109 @@ shots:
   - 25 frame:paintings/yoshinobu_portrait_1867_1.jpg
   - 26 ai:O02 wide
   - 27 ai:O02 right
-  - 28 ai:O12 wide
+  - 28 ai:G12 wide
   - 29 part:paintings/yoshinobu_beato_yedo_inner_moat.jpg wide
-  - 30 ai:O09 wide
-  - 31 ai:O06 wide
-  - 32 ai:O06 left
-  - 33 ai:O06 right
+  - 30 ai:G09 wide
+  - 31 ai:G06 wide
+  - 32 ai:G06 left
+  - 33 ai:G06 right
   - 34 ai:O07 wide
   - 35 ai:O07 left
   - 36 ai:O07 right
   - 37 ai:O07 wide
-  - 38 ai:O12 right
-  - 39 ai:O09 left
-  - 40 ai:O09 right
-  - 41 ai:O12 wide
-  - 42 ai:O08 wide
-  - 43 ai:O08 left
-  - 44 ai:O08 right
-  - 45 ai:O08 wide
-  - 46 ai:O12 left
-  - 47 ai:O12 right
-  - 48 ai:O10 left
-  - 49 ai:O12 wide
+  - 38 ai:G12 right
+  - 39 ai:G09 left
+  - 40 ai:G09 right
+  - 41 ai:G12 wide
+  - 42 ai:G08 wide
+  - 43 ai:G08 left
+  - 44 ai:G08 right
+  - 45 ai:G08 wide
+  - 46 ai:G12 left
+  - 47 ai:G12 right
+  - 48 ai:G10 left
+  - 49 ai:G12 wide
   - 50 ai:O11 wide
-  - 51 ai:O12 left
-  - 52 ai:O10 right
-  - 53 ai:O06 right
+  - 51 ai:G12 left
+  - 52 ai:G10 right
+  - 53 ai:G06 right
   - 54 ai:O11 wide
   - 55 ai:O11 left
-  - 56 ai:O09 wide
-  - 57 ai:O06 wide
-  - 58 ai:O10 left
+  - 56 ai:G09 wide
+  - 57 ai:G06 wide
+  - 58 ai:G10 left
   - 59 ai:O11 left
-  - 60 ai:O10 wide
+  - 60 ai:G10 wide
   - 61 ai:O02 left
-  - 62 ai:O12 right
+  - 62 ai:G12 right
   - 63 ai:O02 right
-  - 64 ai:O12 wide
+  - 64 ai:G12 wide
   - 65 ai:O02 left
   - 66 ai:O11 right
-  - 67 ai:O12 left
+  - 67 ai:G12 left
   - 68 ai:O02 left
-  - 69 ai:O10 left
-  - 70 ai:O12 right
+  - 69 ai:G10 left
+  - 70 ai:G12 right
   - 71 ai:O02 wide
-  - 72 ai:O06 left
+  - 72 ai:G06 left
   - 73 ai:O02 right
-  - 74 ai:O12 wide
+  - 74 ai:G12 wide
   - 75 ai:O11 wide
   - 76 ai:O14 wide
   - 77 ai:O14 left
   - 78 ai:O14 right
   - 79 ai:O11 left
-  - 80 ai:O13 wide
+  - 80 ai:G13 wide
   - 81 ai:O01 wide
-  - 82 ai:O12 left
-  - 83 ai:O12 right
+  - 82 ai:G12 left
+  - 83 ai:G12 right
   - 84 ai:O01 right
-  - 85 ai:O13 left
-  - 86 ai:O13 wide
+  - 85 ai:G13 left
+  - 86 ai:G13 wide
   - 87 ai:O01 left
-  - 88 ai:O12 wide
-  - 89 ai:O12 left
+  - 88 ai:G12 wide
+  - 89 ai:G12 left
   - 90 ai:O19 wide
   - 91 ai:O01 right
   - 92 ai:O01 wide
-  - 93 ai:O06 right
-  - 94 ai:O10 left
-  - 95 ai:O12 right
+  - 93 ai:G06 right
+  - 94 ai:G10 left
+  - 95 ai:G12 right
   - 96 ai:O11 left
   - 97 ai:O11 wide
-  - 98 ai:O06 wide
-  - 99 ai:O06 left
-  - 100 ai:O06 right
-  - 101 ai:O12 wide
+  - 98 ai:G06 wide
+  - 99 ai:G06 left
+  - 100 ai:G06 right
+  - 101 ai:G12 wide
   - 102 ai:O11 right
   - 103 ai:O14 wide
   - 104 ai:O14 right
-  - 105 ai:O06 wide
+  - 105 ai:G06 wide
   - 106 frame:paintings/oguri_portrait.jpg
   - 107 ai:O15 wide
   - 108 ai:O16 wide
   - 109 ai:O16 right
-  - 110 ai:O12 left
-  - 111 ai:O06 left
-  - 112 ai:O12 right
+  - 110 ai:G12 left
+  - 111 ai:G06 left
+  - 112 ai:G12 right
   - 113 ai:O15 left
   - 114 ai:O15 wide
-  - 115 ai:O06 right
+  - 115 ai:G06 right
   - 116 part:paintings/oguri_yokosuka_stillfried_1872.png right
   - 117 ai:O05 wide
-  - 118 ai:O06 wide
+  - 118 ai:G06 wide
   - 119 frame:paintings/oguri_portrait.jpg
   - 120 ai:O11 left
   - 121 ai:O01 wide
   - 122 frame:paintings/oguri_portrait.jpg
-  - 123 ai:O12 wide
-  - 124 ai:O10 left
+  - 123 ai:G12 wide
+  - 124 ai:G10 left
   - 125 ai:O01 right
-  - 126 ai:O12 right
-  - 127 ai:O13 wide
+  - 126 ai:G12 right
+  - 127 ai:G13 wide
   - 128 ai:O15 left
-  - 129 ai:O06 wide
-  - 130 ai:O08 wide
+  - 129 ai:G06 wide
+  - 130 ai:G08 wide
   - 131 ai:O15 wide
   - 132 ai:O19 wide
   - end ai:O19 wide

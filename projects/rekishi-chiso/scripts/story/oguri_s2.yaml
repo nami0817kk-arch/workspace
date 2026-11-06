@@ -1,0 +1,191 @@
+# 物語完結型ショート 小栗忠順 s2（2026-11-05）。本編 scripts/oguri-story.yaml（11/6 19:00 公開、https://youtu.be/kU5JH7ybcrI）の第6章から。11/7 12:30 公開。
+# 形式は jingi_s3.yaml（食い違いの表）を写した。決まりは docs/story-shorts.md。想像の台詞なし。斬首の場面の細部は描かない（首を斬りやすくした者の話・太刀・血は言わない、絵に出さない）。
+# 絵は本編の AI 絵（out/story/oguri/main。人物は後ろ姿・遠景だけ）と小栗の肖像だけ。新しい絵は作らない。時代違いの物がある絵（O08・O09・O10・O12・O13・O17・O18・O03）は使わない（s1 の頭のコメント）。
+# 切り口：取り調べはあったのか。藩の記録と小栗家の届けが正反対。「取り調べはなかった」とは言い切らない（両方を並べて、問いで閉じる）。
+#   使いの年齢（s1）・命令書（s3）・家族（s4）・碑（s5）には踏み込まない。
+# 事実カード：oguri-20・21・32・37・40・52。言い方は本編のまま。
+#   ・閏4月6日＝西暦1868年5月27日（4月は29日まで。4月11日＝5月3日から数えて、閏4月1日＝5月22日、閏4月6日＝5月27日）。高崎市の年表（oguri-52）と同じ。本編どおり。
+#   ・60秒に収めるため、届けの主の名（小栗仁右衛門）と3藩の名は語りから外した（概要欄には残す）。
+#   ・出どころが1つの事実（oguri-20・32・37・40）は、記録・本の名を語りで言ってから言う。最期の言葉は「本ごとに違う」と言い、どちらも本の名を付ける。
+# 理解テスト4問：
+#   ①誰の話か：幕府の切れ者、小栗忠順の最期
+#   ②いつ・どこで何が：1868年閏4月6日（今の暦で5月27日）の朝、上州の烏川の河原で斬られた
+#   ③何が分かれているか：3藩の記録は「問いただし、罪を認めた」、小栗家の届けと『高崎市史』は「少しの尋ねもなく」「一つも尋ねず」
+#   ④どうなったか：札の言葉・最期の言葉も記録ごとに違い、あの朝のことは今も一つに決まらない
+title: 小栗忠順｜取り調べは、あったのか
+yt_title: 小栗忠順は取り調べを受けたのか　藩の記録と小栗家の届けが正反対に書く1868年閏4月6日の朝
+description: |-
+  幕府の切れ者、小栗忠順の最期は、記録が正反対に分かれます。
+  1868年閏4月6日、今の暦で5月27日の朝、小栗は上州の烏川の河原に引き出されました。吉井・高崎・安中の3つの藩の記録は、どれも問いただしたと書き、吉井藩の記録では、3藩の隊長が立ち会い、小栗は罪を認めたとあります。一方、小栗家の親族、小栗仁右衛門の届けには「少しの尋ねもなく」とあり、1927年の『高崎市史』も「一つも尋ねず」と書きます。立てられた札の言葉も、最期の言葉も、記録や本ごとに違います。
+  記録ごとに違う「斬られた理由」は何だったのか。本編は概要欄のリンクからどうぞ。
+hashtags: ['#小栗忠順', '#日本史', '#幕末']
+ai_images: true
+ai_disclosure: この動画の風景・室内・人物の後ろ姿の画像は、画像生成AI（Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/oguri
+out: oguri_story_s2
+header_style: B
+readings:
+  札の言葉も: ふだの言葉も
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 小栗忠順（幕府の勘定奉行）
+  title: "取り調べは、《あったのか》"
+now:
+  - {at: 閏4月5日, text: "1868年閏4月5日　権田村", point: 0}
+  - {at: 翌6日, text: "1868年閏4月6日　烏川の河原", point: 1}
+  - {at: 1927年, text: "1927年　『高崎市史』", point: 2}
+  - {at: 札の言葉も, text: "1868年閏4月6日　烏川の河原", point: 1}
+  - {at: 蜷川新, text: "1928年・1931年　蜷川新の本", point: 2}
+  - {at: 藩の記録と, text: "1868年閏4月6日　烏川の河原", point: 1}
+timeline:
+  - {label: "閏4/5"}
+  - {label: "閏4/6"}
+  - {label: "昭和の本"}
+cards:
+  - type: table
+    title: 取り調べはあったのか
+    from: 3つの藩の記録
+    until: 札の言葉も
+    items:
+      - {at: 3つの藩の記録, text: "3藩の記録　問いただした"}
+      - {at: 小栗家の届け, text: "小栗家の届け　尋ねもなく"}
+      - {at: 1927年, text: "高崎市史　一つも尋ねず"}
+    text_y: 0.70
+shots:
+  O11:
+    kind: ai
+    file: oguri/main/O11.jpg
+    focus: [0.42, 0.55]
+    move: in
+    must: 夕暮れの寺の本堂と兵の影（提灯の字は外す）
+  O14:
+    kind: ai
+    file: oguri/main/O14.jpg
+    focus: [0.3, 0.6]
+    move: right
+    must: 夜の山道と灯
+  O01:
+    kind: ai
+    file: oguri/main/O01.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 霧の山あいの川と河原
+  O02:
+    kind: ai
+    file: oguri/main/O02.jpg
+    focus: [0.5, 0.6]
+    move: left
+    must: 誰もいない広間とろうそく
+  O11b:
+    kind: ai
+    file: oguri/main/O11.jpg
+    focus: [0.55, 0.7]
+    move: left
+    must: 寺の前に立つ兵の後ろ姿
+  O02b:
+    kind: ai
+    file: oguri/main/O02.jpg
+    focus: [0.5, 0.85]
+    move: up
+    zoom: 0.12
+    must: ろうそくの火
+  O06:
+    kind: ai
+    file: oguri/main/O06.jpg
+    focus: [0.8, 0.5]
+    move: right
+    must: 山あいの村の屋根（街灯は入れない）
+  O01b:
+    kind: ai
+    file: oguri/main/O01.jpg
+    focus: [0.35, 0.7]
+    move: right
+    zoom: 0.12
+    must: 霧の河原の石
+  Portrait:
+    kind: real
+    image: paintings/oguri_portrait.jpg
+    crop: [0.0, 0.0, 1.0, 0.9]
+    focus: [0.5, 0.4]
+    move: in
+    credit: "小栗忠順の肖像（撮影年不明、1868年以前。ウィキメディア・コモンズ、パブリックドメイン）"
+    must: 小栗の顔
+  O19:
+    kind: ai
+    file: oguri/main/O19.jpg
+    focus: [0.45, 0.5]
+    move: right
+    must: 夕日の川面
+  Samurai:
+    kind: real
+    image: paintings/yoshinobu_beato_samurai.jpg
+    focus: [0.5, 0.5]
+    move: down
+    credit: "フェリーチェ・ベアト撮影 武士（1860年代。ウィキメディア・コモンズ、パブリックドメイン）"
+    must: 幕末の武士の写真
+  O02c:
+    kind: ai
+    file: oguri/main/O02.jpg
+    focus: [0.5, 0.35]
+    move: down
+    must: 広間の奥の戸と庭
+lines:
+  # fact: oguri-32
+  - 語り: 小栗忠順の最期は、記録が、《!正反対》に分かれる。
+    shot: Portrait
+    tone: 強調
+    pause: 0.12
+  # fact: oguri-20
+  - 語り: 1868年閏4月5日、上州の権田村。吉井藩の記録では、藩の兵が、小栗と家来3人を捕らえた。
+    shot: O06
+    tone: しみじみ
+    pause: 0.12
+  # fact: oguri-21, oguri-52
+  - 語り: 翌6日の朝。今の暦で、5月27日。小栗は、烏川の河原に、引き出された。
+    shot: O01
+    tone: 重い
+    pause: 0.12
+  # fact: oguri-32
+  - 語り: では、取り調べは、あったのか。
+    shot: O02
+    tone: 疑問
+    pause: 0.12
+  # fact: oguri-32
+  - 語り: 3つの藩の記録は、どれも、問いただした、と書く。吉井藩の記録では、小栗は、罪を認めた。
+    shot: Samurai
+    tone: しみじみ
+    pause: 0.12
+  # fact: oguri-21
+  - 語り: 一方、小栗家の届けは、こうだ。少しの尋ねもなく、家来3人とともに、斬首。
+    shot: O02b
+    tone: 重い
+    pause: 0.12
+  # fact: oguri-32
+  - 語り: 1927年の、『高崎市史』も、一つも尋ねなかった、と書く。
+    shot: O02c
+    tone: しみじみ
+    pause: 0.12
+  # fact: oguri-40
+  - 語り: 札の言葉も、違う。藩の記録では、叛状明白。東善寺の記録では、大逆を企てた。
+    shot: O01b
+    tone: 重い
+    pause: 0.12
+  # fact: oguri-37
+  - 語り: 最期の言葉も、蜷川新の本ごとに違う。母と妻に寛大な扱いを、と頼んだ話。無礼をするな、と一喝した話。
+    shot: O14
+    tone: しみじみ
+    pause: 0.3
+    dip: true
+  - 語り: 藩の記録と、家の届け。どちらが、あの朝を、伝えているのか。
+    shot: O19
+    tone: 疑問
+    pause: 0.15

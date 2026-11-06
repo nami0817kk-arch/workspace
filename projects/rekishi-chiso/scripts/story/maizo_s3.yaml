@@ -1,0 +1,175 @@
+# 物語完結型ショート 徳川埋蔵金 s3（2026-11-05）。本編 scripts/maizo-story.yaml（11/6 12:00 公開）の第4章（1933年の事件）から。11/7 13:30 公開。
+# 形式は jingi_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。絵は本編の AI 絵（out/story/maizo/main/M*）と本編で使った実在の写真だけ。
+#   M08・M12・M13・M14・M15 は使わない（s1 の頭のとおり）。M04 は峰の頂が入らない端に寄せる（s2 の頭のとおり）。
+# 切り口：1933年、幕末の軍用金250万両が子持山に眠ると広告して、2,189人から約3万5,370円を集め、詐欺で二審有罪（懲役10か月）。根拠は水野家の銅板の写し。
+#   本編の答え（軍艦の金）は言わない。小栗忠順の最期には触れない（銅板の言い伝えの「小栗の部下」だけ、本編どおり）。
+#   人を貶めない：判決の記録にあることだけを言う（関儀一郎らが詐欺の罪に問われ、二審で有罪）。
+# 事実カード：maizo-33・34・35・58。言い方は本編のまま（「判決の題は、赤城山の埋蔵金の事件」も本編どおり）。
+# 計算（自分で計算し直した）：昭和8年＝1933年。判決要録は1935年（昭和10年版）。350万両は1928年の蜷川新の本（maizo-33）。
+#   事件の月は maizo-34 が3月・maizo-58 が2月で割れるので、月は言わない（本編も年だけ）。
+# 理解テスト4問：
+#   ①誰の話か：1933年に埋蔵金の発掘資金を集めた漢学者の関儀一郎ら
+#   ②いつ・どこで何が：1933年、幕末の軍用金250万両が群馬の子持山に眠ると新聞に広告し、2,189人から約3万5,370円を集めた
+#   ③何を根拠にしたか：赤城山を掘ってきた水野家の銅板の写し（小栗の部下が言い残し、井戸の底から引き揚げさせたもの、と趣意書）
+#   ④どうなったか：詐欺の罪で二審有罪、重い者で懲役10か月（1935年の『判決要録』）。額は1928年の本の350万両とも違う
+title: 埋蔵金の広告｜2,189人がお金を出した
+yt_title: 1933年、徳川埋蔵金の発掘の広告に2,189人がお金を出した　判決の題は「赤城山の埋蔵金の事件」
+description: |-
+  1933年、幕末の軍用金250万両が群馬の子持山に眠っている、という広告が新聞に出ました。
+  広告を出したのは漢学者の関儀一郎らで、発掘の資金として、2,189人から当時のお金で約3万5,370円を集めました。根拠に使われたのは、赤城山を掘ってきた水野家の銅板の写しです。趣意書は、この銅板を、小栗の部下が死ぬ前に言い残し、井戸の底から引き揚げさせたもの、と書いていました。関儀一郎らは詐欺の罪に問われ、二審で有罪とされました。重い者で懲役10か月。1935年の『判決要録』に載る判決で、題は赤城山の埋蔵金の事件です。
+  5つの説を記録で採点したら、最後に何が残ったのか。本編は概要欄のリンクからどうぞ。
+hashtags: ['#徳川埋蔵金', '#赤城山', '#日本史']
+ai_images: true
+ai_disclosure: この動画の情景の画像の多くは、画像生成AI（Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/maizo
+out: maizo_story_s3
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 1933年の埋蔵金の事件
+  title: "《2,189人》が、お金を出した"
+now:
+  - {at: 昭和8年, text: "1933年　新聞の広告", point: 0}
+  - {at: 群馬の子持山, text: "1933年　群馬・子持山", point: 0}
+  - {at: 1935年, text: "1935年　判決要録", point: 1}
+  - {at: 1928年の本, text: "1928年　本に書かれた額", point: 0}
+timeline:
+  - {label: "1933"}
+  - {label: "1935"}
+cards:
+  - type: year
+    from: 集まったのは
+    until: 関儀一郎らは
+    big: 2,189人
+    sub: 当時のお金で約3万5,370円
+    text_y: 0.70
+  - type: versus
+    from: 額は
+    until: 記録で
+    left: {tag: 1928年の本, big: 350万両, dots: 35, color: blue}
+    right: {tag: 1933年の広告, big: 250万両, dots: 25, color: red}
+    mid: 対
+    text_y: 0.66
+shots:
+  M04:
+    kind: ai
+    file: maizo/main/M04.jpg
+    focus: [0.9, 0.6]
+    move: in
+    must: 群馬の山並み
+  M06:
+    kind: ai
+    file: maizo/main/M06.jpg
+    focus: [0.5, 0.55]
+    move: left
+    must: 山村の道
+  Castle:
+    kind: real
+    image: paintings/kira_edo_castle_beato.jpg
+    focus: [0.75, 0.55]
+    move: right
+    credit: "フェリーチェ・ベアト撮影《江戸城》1860年代（パブリックドメイン）"
+    must: 幕府の城（幕末の軍用金）
+  M04b:
+    kind: ai
+    file: maizo/main/M04.jpg
+    focus: [0.12, 0.6]
+    move: left
+    must: 山の稜線（子持山の場面）
+  M05:
+    kind: ai
+    file: maizo/main/M05.jpg
+    focus: [0.5, 0.55]
+    move: in
+    must: 山の掘り跡と梯子
+  M02:
+    kind: ai
+    file: maizo/main/M02.jpg
+    focus: [0.5, 0.75]
+    move: down
+    zoom: 0.12
+    must: 暗い石の穴の底
+  M06b:
+    kind: ai
+    file: maizo/main/M06.jpg
+    focus: [0.7, 0.6]
+    move: right
+    must: 村を歩く人
+  M03:
+    kind: ai
+    file: maizo/main/M03.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 暗い蔵の奥（記録の場面）
+  M03b:
+    kind: ai
+    file: maizo/main/M03.jpg
+    focus: [0.3, 0.55]
+    move: left
+    must: 蔵の棚
+  M05b:
+    kind: ai
+    file: maizo/main/M05.jpg
+    focus: [0.55, 0.75]
+    move: out
+    must: 掘り跡の底
+lines:
+  # fact: maizo-34
+  - 語り: 埋蔵金の広告に、《!2,189人》が、お金を出した。
+    shot: M04
+    tone: 強調
+    pause: 0.12
+  # fact: maizo-34
+  - 語り: 昭和8年、1933年。漢学者の関儀一郎らが、新聞に広告を出した。
+    shot: M06
+    tone: しみじみ
+    pause: 0.12
+  # fact: maizo-34
+  - 語り: 幕末の軍用金、250万両が、群馬の子持山に眠っている。発掘の資金を出してほしい、と。
+    shot: M04b
+    tone: しみじみ
+    pause: 0.12
+  # fact: maizo-58
+  - 語り: 根拠に使われたのは、赤城山を掘ってきた水野家の、銅板の写しだった。
+    shot: M05
+    tone: しみじみ
+    pause: 0.12
+  # fact: maizo-35
+  - 語り: 趣意書は、この銅板を、小栗の部下が死ぬ前に言い残し、井戸の底から引き揚げさせたもの、と書いていた。
+    shot: M02
+    tone: しみじみ
+    pause: 0.12
+  # fact: maizo-34
+  - 語り: 集まったのは、2,189人から、当時のお金で、およそ3万5370円。
+    shot: M06b
+    tone: 重い
+    pause: 0.12
+  # fact: maizo-34
+  - 語り: 関儀一郎らは、詐欺の罪に問われ、二審で有罪とされた。重い者で、懲役10か月。
+    shot: M03
+    tone: 重い
+    pause: 0.12
+  # fact: maizo-34
+  - 語り: 1935年の判決要録に載る判決で、題は、赤城山の埋蔵金の事件だった。
+    shot: M03b
+    tone: しみじみ
+    pause: 0.12
+  # fact: maizo-34, maizo-33
+  - 語り: 額は、この広告では250万両。1928年の本では、350万両だった。
+    shot: Castle
+    tone: しみじみ
+    pause: 0.3
+    dip: true
+  - 語り: 記録で5つの説を採点したら、最後に残るのは、どこなのか。
+    shot: M05b
+    tone: 疑問
+    pause: 0.15

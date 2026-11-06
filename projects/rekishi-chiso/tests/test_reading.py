@@ -445,6 +445,25 @@ MISREADS = [
     ("oguri-story", "小栗家の親族", "おぐりけ", "オグリケ"),
     ("oguri-story", "朝廷に対し、叛状明白", "はんじょうめいはく", "ハンジョオ"),
     ("oguri-story", "上野、つまり小栗は", "こうずけ、つまり", "コオズケ"),
+    # 徳川将軍家（tokugawa-kakeizu-story、11-05）
+    ("tokugawa-kakeizu-story", "継いだのは、数えで6歳の", "ついだのは", "ツイダ"),
+    ("tokugawa-kakeizu-story", "江戸の田安家に、三男として", "タヤスケ", "タヤスケ"),
+    ("tokugawa-kakeizu-story", "南葵文庫を作り", "なんきぶんこ", "ナンキ"),
+    ("tokugawa-kakeizu-story", "18代目になります", "つねなり", "ツネナリ"),
+    ("tokugawa-kakeizu-story", "継宗の儀が開かれました", "けいそうのぎ", "ケイソオ"),
+    ("tokugawa-kakeizu-story", "浅間神社の神主の屋敷へ", "せんげんじんじゃ", "センゲン"),
+    ("tokugawa-kakeizu-story", "家英は、東北帝国大学に", "いえひで", "ヒデ"),
+    ("tokugawa-kakeizu-story", "孫の慶光、ひ孫の慶朝", "よしみつ", "ヨシミツ"),
+    # もしも鶴松（tsurumatsu-if-story、11-05）
+    ("tsurumatsu-if-story", "明の国へ攻め込む", "みんのくに", "ミンノ"),
+    ("tsurumatsu-if-story", "髻を切りました", "もとどりを", "モトドリ"),
+    ("tsurumatsu-if-story", "日記『三藐院記』", "さんみゃくいんき", "サンミャク"),
+    ("tsurumatsu-if-story", "はじめ、棄と呼ばれました", "すてとよばれ", "ステ"),
+    ("tsurumatsu-if-story", "知行3000石の宮家", "さんぜんごくの", "ゴクノ"),
+    ("tsurumatsu-if-story", "拾、のちの秀頼です", "ひろい、のちの", "ヒロイ"),
+    ("tsurumatsu-if-story", "実の子の鶴松が", "じつのこ", "ジツノ"),
+    ("tsurumatsu-if-story", "唐の国まで従わせる", "からのくに", "カラノ"),
+    ("tsurumatsu-if-story", "天和2年、1682年", "テンナ", "テンナ"),
 ]
 
 
