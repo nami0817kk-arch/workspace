@@ -1,0 +1,184 @@
+# 物語完結型ショート 小栗忠順 s3（2026-11-05）。本編 scripts/oguri-story.yaml（11/6 19:00 公開、https://youtu.be/kU5JH7ybcrI）の第2章の終わり・第3章・第4章の頭から。11/7 15:30 公開。
+# 形式は jingi_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。
+# 絵は本編の AI 絵（out/story/oguri/main。人物は後ろ姿・遠景だけ）と小栗の肖像だけ。新しい絵は作らない。時代違いの物がある絵（O08・O09・O10・O12・O13・O17・O18・O03）は使わない（s1 の頭のコメント）。
+#   建ちかけの屋敷の絵（O08）はガラス窓と電柱が出ているので使わない。屋敷は語りだけ（絵は村・広間・寺）。
+#   O07（松明の列）は夜の絵なので、3月4日の行では「朝」と言わない（本編は「3月4日の朝」。言わないだけで食い違いはない）。
+# 切り口：命令書が「陣屋を厳重に構え」と書いたのは、建ちかけの屋敷だった。しかも命令は「捕らえよ」だった。使い（s1）・取り調べ（s2）・家族（s4）・碑（s5）には踏み込まない。
+# 事実カード：oguri-14・15・16・24・53。言い方は本編のまま。
+#   ・3月1日（権田村に着く）→ 4月22日（命令書）：3月を30日として約51日＝「2か月たたないうち」。本編の「2か月もたたないうちに」と同じ。
+#   ・4月22日 → 閏4月6日：1868年の4月は29日まで → 7日＋6日＝13日＝「2週間たらず」。本編のまとめと同じ。
+#   ・出どころが1つの事実（oguri-24 の命令書の言葉、oguri-53 の観音山の普請）は、本の名・「と伝わる」を付ける。
+# 理解テスト4問：
+#   ①誰の話か：幕府の役を解かれた小栗忠順と、新政府の命令書
+#   ②いつ・どこで何が：1868年3月に上州の権田村へ移り、4月22日に新政府の軍の本営が3つの藩に命令書を出した
+#   ③命令書は何と書いたか：陣屋を厳重に構え、砲台を築き、逆謀ははっきりした。命じたのは「捕らえよ」（手に余れば討ち取る）
+#   ④どうなったか：屋敷は完成せず、命令書から2週間たらずで小栗は斬られた
+title: 小栗忠順｜命令書が「陣屋」と呼んだ家
+yt_title: 新政府の命令書が「陣屋を厳重に構え」と書いた小栗忠順の屋敷は建ちかけだった　命令は「捕らえよ」
+description: |-
+  新政府の命令書が「陣屋を厳重に構え」と書いた小栗忠順の屋敷は、建ちかけでした。
+  1868年3月1日、幕府の役を解かれた小栗は、家族を連れて上州の権田村に着きます。3月4日には大勢の人々に村を囲まれ、火を放たれますが、家来たちと追い払いました。そのあと小栗は、近くの観音山に田畑と水路を開き、屋敷の普請を始めたと伝わります。4月22日、新政府の軍の本営は、高崎・安中・吉井の3つの藩に命令書を出します。『復古記』に写された命令書は、陣屋を厳重に構え、砲台を築き、逆謀ははっきりしたと書きます。けれど、命じた言葉は「追捕」、捕らえよ、でした。屋敷は完成せず、命令書から2週間たらずで、小栗は斬られました。
+  捕らえよ、の命令は、なぜ斬首に変わったのか。本編は概要欄のリンクからどうぞ。
+hashtags: ['#小栗忠順', '#日本史', '#幕末']
+ai_images: true
+ai_disclosure: この動画の風景・室内・人物の後ろ姿の画像は、画像生成AI（Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/oguri
+out: oguri_story_s3
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 小栗忠順（幕府の勘定奉行）
+  title: "命令書が、《陣屋》と呼んだ家"
+now:
+  - {at: 3月1日, text: "1868年3月1日　上州 権田村", point: 0}
+  - {at: 4月22日, text: "1868年4月22日　新政府の命令書", point: 1}
+  - {at: 1928年, text: "1928年　蜷川新の本", point: 1}
+  - {at: 完成しなかった, text: "1868年閏4月6日　烏川", point: 2}
+timeline:
+  - {label: "3月"}
+  - {label: "4/22"}
+  - {label: "閏4/6"}
+cards:
+  - type: table
+    title: 命令書に書かれた罪
+    from: 陣屋などを
+    until: 1928年
+    items:
+      - {at: 陣屋などを, text: "陣屋を厳重に構え"}
+      - {at: 砲台を築き, text: "砲台を築き"}
+      - {at: 逆謀は, text: "逆謀　判然"}
+    text_y: 0.70
+shots:
+  Portrait:
+    kind: real
+    image: paintings/oguri_portrait.jpg
+    crop: [0.0, 0.0, 1.0, 0.9]
+    focus: [0.5, 0.4]
+    move: in
+    credit: "小栗忠順の肖像（撮影年不明、1868年以前。ウィキメディア・コモンズ、パブリックドメイン）"
+    must: 小栗の顔
+  O06:
+    kind: ai
+    file: oguri/main/O06.jpg
+    focus: [0.8, 0.5]
+    move: right
+    must: 山あいの村の屋根（街灯は入れない）
+  O07:
+    kind: ai
+    file: oguri/main/O07.jpg
+    focus: [0.5, 0.6]
+    move: up
+    must: 谷を村へ向かう松明の列
+  O06b:
+    kind: ai
+    file: oguri/main/O06.jpg
+    focus: [0.85, 0.75]
+    move: left
+    zoom: 0.12
+    must: 村の屋根と道（街灯は入れない）
+  O02:
+    kind: ai
+    file: oguri/main/O02.jpg
+    focus: [0.5, 0.6]
+    move: in
+    must: 誰もいない広間とろうそく
+  O02b:
+    kind: ai
+    file: oguri/main/O02.jpg
+    focus: [0.5, 0.85]
+    move: up
+    zoom: 0.12
+    must: ろうそくの火
+  O11:
+    kind: ai
+    file: oguri/main/O11.jpg
+    focus: [0.42, 0.55]
+    move: right
+    must: 夕暮れの寺の本堂と兵の影（提灯の字は外す）
+  Portrait2:
+    kind: real
+    image: paintings/oguri_portrait.jpg
+    crop: [0.1, 0.05, 0.9, 0.6]
+    focus: [0.5, 0.5]
+    move: in
+    credit: "小栗忠順の肖像（撮影年不明、1868年以前。ウィキメディア・コモンズ、パブリックドメイン）"
+    must: 小栗の顔に寄る
+  O01:
+    kind: ai
+    file: oguri/main/O01.jpg
+    focus: [0.5, 0.5]
+    move: left
+    must: 霧の山あいの川
+  O19:
+    kind: ai
+    file: oguri/main/O19.jpg
+    focus: [0.45, 0.5]
+    move: right
+    must: 夕日の川面
+  Samurai:
+    kind: real
+    image: paintings/yoshinobu_beato_samurai.jpg
+    focus: [0.5, 0.5]
+    move: down
+    credit: "フェリーチェ・ベアト撮影 武士（1860年代。ウィキメディア・コモンズ、パブリックドメイン）"
+    must: 幕末の武士の写真
+lines:
+  # fact: oguri-24, oguri-53
+  - 語り: 新政府が、陣屋と呼んだのは、《!建ちかけの屋敷》だった。
+    shot: Portrait
+    tone: 強調
+    pause: 0.12
+  # fact: oguri-14
+  - 語り: 1868年3月1日。小栗忠順は、家族と、上州の権田村に着いた。
+    shot: O06
+    tone: しみじみ
+    pause: 0.12
+  # fact: oguri-15
+  - 語り: 3月4日、大勢の人々が村を囲み、火を放った。小栗たちが、追い払った。
+    shot: O07
+    tone: 重い
+    pause: 0.12
+  # fact: oguri-53
+  - 語り: 騒ぎのあと、小栗は、近くの観音山に田畑と水路を開き、屋敷の普請を始めた、と伝わる。
+    shot: O06b
+    tone: しみじみ
+    pause: 0.12
+  # fact: oguri-16
+  - 語り: 4月22日。新政府の軍の本営は、3つの藩に、命令書を出した。
+    shot: O02
+    tone: しみじみ
+    pause: 0.12
+  # fact: oguri-24
+  - 語り: 『復古記』の命令書は、こうだ。陣屋などを、厳重に構え、砲台を築き、容易ならぬ企てがある。
+    shot: O02b
+    tone: 重い
+    pause: 0.12
+  # fact: oguri-24
+  - 語り: 逆謀は、はっきりした。けれど、命じた言葉は、追捕。捕らえよ、だった。
+    shot: Samurai
+    tone: 重い
+    pause: 0.12
+  # fact: oguri-24
+  - 語り: 1928年、蜷川新は、こう書いた。3藩への命令は、追捕であって、殺害の命ではなかった。
+    shot: Portrait2
+    tone: しみじみ
+    pause: 0.12
+  # fact: oguri-53, oguri-16, oguri-21
+  - 語り: 屋敷は、完成しなかった。命令書から、2週間たらずで、小栗は、斬られた。
+    shot: O01
+    tone: 重い
+    pause: 0.3
+    dip: true
+  - 語り: では、捕らえよ、の命令は、なぜ、斬首に変わったのか。
+    shot: O19
+    tone: 疑問
+    pause: 0.15

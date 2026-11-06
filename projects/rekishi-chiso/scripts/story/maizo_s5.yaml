@@ -1,0 +1,173 @@
+# 物語完結型ショート 徳川埋蔵金 s5（2026-11-05）。本編 scripts/maizo-story.yaml（11/6 12:00 公開）の第8章（360万両の重さ）から。11/7 18:30 公開。
+# 形式は jingi_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。絵は本編の AI 絵（out/story/maizo/main/M*）だけ。
+#   M08・M12・M13・M14・M15 は使わない（s1 の頭のとおり）。M04 は峰の頂が入らない端に寄せる（s2 の頭のとおり）。
+# 切り口：360万両は運べる重さだったのか。二分金で数えると21.6トン、牛8頭で千両箱16箱の運び方なら牛1,800頭。
+#   本編の答え（軍艦の金）は言わない。最後の問いは「記録に残る、運ばれた幕府の金はどこへ」で本編へ。
+# 事実カード：maizo-26（高崎市の冊子の7万両＝二分金14万枚＝420キロ）・maizo-62（八重野充弘が約30年前に聞いた、牛8頭に千両箱2箱ずつ）。
+# 計算（自分で計算し直した。前提は語りで言う）：
+#   二分金は2枚で1両・1枚3グラム（冊子の前提）。7万両×2＝14万枚、14万×3g＝420kg（冊子と合う）。
+#   360万両×2＝720万枚、720万×3g＝2,160万g＝21.6トン（本編と合う）。
+#   牛8頭×2箱＝16箱、16箱×1,000両（千両箱1つ千両として）＝1万6千両。360万÷1.6万＝225。牛8頭×225＝1,800頭（本編と合う）。
+# 理解テスト4問：
+#   ①誰の話か：徳川の埋蔵金として語られる360万両
+#   ②何を確かめるか：二分金（2枚で1両・1枚3グラム）で数えた重さ
+#   ③どうなるか：720万枚・21.6トン。聞き取りの牛8頭・千両箱16箱は1万6千両で360万両の225分の1、同じ運び方なら牛1,800頭
+#   ④結論：金が運ばれた話は残るが、語られる額を運んだという記録には行き当たらない
+title: 徳川埋蔵金｜360万両は、21.6トン
+yt_title: 徳川埋蔵金の360万両は運べたのか　二分金で数えると21.6トン、牛なら1,800頭
+description: |-
+  徳川の埋蔵金として語られる360万両は、そもそも運べる重さだったのか。
+  群馬県高崎市の冊子は、小栗忠順をめぐる噂の7万両を、二分金で14万枚、重さ420キロと計算しています。二分金は2枚で1両になる金貨で、1枚3グラム。同じ二分金で360万両を数えると720万枚、21.6トンになります。トレジャーハンターの八重野充弘さんは、約30年前に群馬で、幕末に牛8頭の背に千両箱を2箱ずつ積んだ一行が山へ向かった、と聞いたといいます。千両箱16箱は1万6千両で、360万両の225分の1。同じ運び方なら、牛が1,800頭いります。
+  では、記録に残る、本当に運ばれた幕府の金は、どこへ向かったのか。本編は概要欄のリンクからどうぞ。
+hashtags: ['#徳川埋蔵金', '#日本史', '#幕末']
+ai_images: true
+ai_disclosure: この動画の情景の画像は、画像生成AI（Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/maizo
+out: maizo_story_s5
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 徳川埋蔵金（語られる360万両）
+  title: "360万両は、《21.6トン》"
+now:
+  - {at: 高崎市の冊子, text: "群馬県高崎市の冊子", point: 1}
+  - {at: 八重野充弘さん, text: "約30年前　群馬で聞いた話", point: 1}
+  - {at: 幕末に, text: "幕末　群馬の山へ", point: 0}
+timeline:
+  - {label: "幕末"}
+  - {label: "いま"}
+cards:
+  - type: table
+    title: 二分金で数えると
+    from: 二分金は
+    until: トレジャーハンター
+    items:
+      - {at: 二分金は, text: "2枚で1両・1枚3グラム"}
+      - {at: 720万枚, text: "360万両＝720万枚"}
+      - {at: 重さは, text: "重さ　21.6トン"}
+    text_y: 0.70
+  - type: versus
+    from: 同じ運び方なら
+    until: 金が運ばれた
+    left: {tag: 聞き取りの一行, big: 牛8頭, dots: 8, color: blue}
+    right: {tag: 360万両なら, big: "1,800頭", dots: 180, color: red}
+    mid: 対
+    text_y: 0.66
+shots:
+  M02:
+    kind: ai
+    file: maizo/main/M02.jpg
+    focus: [0.5, 0.6]
+    move: in
+    must: 石の蔵の箱
+  M03:
+    kind: ai
+    file: maizo/main/M03.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 暗い蔵の奥（記録の場面）
+  M02b:
+    kind: ai
+    file: maizo/main/M02.jpg
+    focus: [0.3, 0.75]
+    move: right
+    zoom: 0.12
+    must: 蓋の開いた箱
+  M02c:
+    kind: ai
+    file: maizo/main/M02.jpg
+    focus: [0.75, 0.7]
+    move: left
+    must: 並ぶ箱
+  M06:
+    kind: ai
+    file: maizo/main/M06.jpg
+    focus: [0.5, 0.55]
+    move: in
+    must: 山村の道
+  M06b:
+    kind: ai
+    file: maizo/main/M06.jpg
+    focus: [0.5, 0.8]
+    move: up
+    must: 山へ向かう道
+  M04:
+    kind: ai
+    file: maizo/main/M04.jpg
+    focus: [0.9, 0.6]
+    move: left
+    must: 群馬の山並み
+  M04b:
+    kind: ai
+    file: maizo/main/M04.jpg
+    focus: [0.12, 0.65]
+    move: right
+    must: 山の稜線
+  M05:
+    kind: ai
+    file: maizo/main/M05.jpg
+    focus: [0.5, 0.55]
+    move: in
+    must: 山の掘り跡
+  M01:
+    kind: ai
+    file: maizo/main/M01.jpg
+    focus: [0.55, 0.5]
+    move: out
+    must: 夜の城と堀の灯
+lines:
+  # fact: maizo-26
+  - 語り: 埋蔵金、360万両。金貨で数えると、《!21.6トン》になる。
+    shot: M02
+    tone: 強調
+    pause: 0.12
+  # fact: maizo-26
+  - 語り: 群馬県高崎市の冊子は、小栗忠順をめぐる噂の7万両を、二分金で14万枚、重さ420キロ、と計算している。
+    shot: M03
+    tone: しみじみ
+    pause: 0.12
+  # fact: maizo-26
+  - 語り: 二分金は、2枚で1両になる金貨。1枚は、3グラムだ。
+    shot: M02b
+    tone: しみじみ
+    pause: 0.12
+  - 語り: 同じ二分金で、360万両を数えると、720万枚。重さは、21.6トンだ。
+    shot: M02c
+    tone: 重い
+    pause: 0.15
+  # fact: maizo-62
+  - 語り: トレジャーハンターの八重野充弘さんは、約30年前、群馬で、ある老人から聞いたという。
+    shot: M06
+    tone: しみじみ
+    pause: 0.12
+  # fact: maizo-62
+  - 語り: 幕末に、牛8頭の背に、千両箱を2箱ずつ積んだ一行が、山へ向かった、と。
+    shot: M06b
+    tone: しみじみ
+    pause: 0.12
+  - 語り: 千両箱16箱で、1万6千両。360万両の、225分の1だ。
+    shot: M04
+    tone: しみじみ
+    pause: 0.12
+  - 語り: 同じ運び方なら、360万両には、牛が1,800頭いる。
+    shot: M04b
+    tone: 重い
+    pause: 0.15
+  - 語り: 金が運ばれた話は、残っている。けれど、語られる額を運んだ、という記録には、行き当たらない。
+    shot: M05
+    tone: しみじみ
+    pause: 0.3
+    dip: true
+  - 語り: では、記録に残る、本当に運ばれた幕府の金は、どこへ向かったのか。
+    shot: M01
+    tone: 疑問
+    pause: 0.15

@@ -1,0 +1,271 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：徳川将軍家はその後どうなった？（scripts/tokugawa-kakeizu-story.yaml）。chiso/storymain.py が読む。
+# 11-05 作成（11/07 19:00 公開）。oguri_main_look.yaml を写した。台本には手を入れない（承認のあと）。決まりは docs/story-main.md・スキル rekishi-story-screen。
+# 絵の方針：11-05 は Cloudflare FLUX の無料枠がその日の分を使い切っていた（HTTP 429）ので、新しい AI 絵は作らず、ほかの回で作った既存の AI 絵を写して使う（K01〜K23・KEND）。
+#   写し元：K01=maizo M12／K02=oguri O02／K03=kazunomiya W09／K04=kazunomiya W13／K05=oguri O12／K06=sankin P01／K07=sankin P04／K08=asahi A09／
+#   K09=takasugi T05／K10=jingi J11／K11=oguri O16／K12=kazunomiya W15／K13=takasugi T07／K14=maizo M15／K15=jingi J08／K16=maizo M10／K17=jingi J09／
+#   K18=sankin P05／K19=kazunomiya W08／K20=takasugi T06／K22=maizo M09／K23=kazunomiya W10／KEND=kazunomiya W15（終了画面）。
+#   明治〜昭和・現代の場面は AI 絵にせず、パブリックドメインの写真・版画（家達・慶喜・慶久・容保・天璋院・好敏の写真、1921年のワシントン会議、帝国議事堂の版画、1940年の大会ポスター）を額と部分で出す。
+#   実在の人物の顔は実在の写真だけ（AI 絵の人物は後ろ姿・横顔・手もと。和宮の W09・W13 はその回の想像図）。
+script: scripts/tokugawa-kakeizu-story.yaml
+out: kakeizu_story_main
+art_dir: out/story/kakeizu/main
+main_art_dir: out/story/kakeizu/main
+ai_disclosure: この動画の風景・室内・人物の後ろ姿の画像の一部は、画像生成AI（Google の Gemini・Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+
+chapters:
+  0: {label: 序章 将軍は15代で終わった, now: null, dates: {}}
+  1: {label: 第1章 「田安の亀之助を」, now: 1863年, dates: {12: 1866年, 16: 1868年, 18: 1868年閏4月}}
+  2: {label: 第2章 「駿河府中七十万石」, now: 1868年5月, dates: {32: 1868年8月, 36: 1869年}}
+  3: {label: 第3章 千駄ヶ谷の天璋院, now: 1871年, dates: {43: 1877年, 46: 1882年, 47: 1883年, 48: 1884年}}
+  4: {label: 第4章 「十六代様」は総理を断った, now: 1903年, dates: {53: 1933年, 54: 1925年, 56: null, 57: 1914年, 60: 1921年, 63: 1923年, 64: 1933年}}
+  5: {label: 第5章 幻の東京五輪, now: 1936年, dates: {69: 2020年, 71: 1938年, 72: 1939年, 73: 1940年, 76: null}}
+  6: {label: 第6章 慶喜の家と御三家・御三卿, now: 1902年, dates: {81: 2017年, 84: 2023年, 85: 1935年, 86: null, 89: 1906年, 90: 1910年, 92: 1951年, 93: null}}
+  7: {label: 第7章 跡継ぎを失った17代と18代, now: 1909年, dates: {98: 1940年, 99: 1946年, 101: 1945年ごろ, 104: null, 105: 1963年, 106: null, 107: 2001年, 108: 2003年, 110: null}}
+  8: {label: 第8章 19代目の今, now: 2023年1月, dates: {115: 2010年, 116: 2021年, 117: 2023年1月, 120: null, 125: 2023年3月, 126: null}}
+  9: {label: まとめ 将軍の家は、どうやって続いたのか, now: null, dates: {}}
+no_tag_from: 134
+
+# 概要欄「■ 参考にした資料」（事実カード 徳川将軍家_facts_20261105.yaml のうち本文を開いた主なもの）
+references:
+  - 徳川家達｜近代日本人の肖像（国立国会図書館）　https://www.ndl.go.jp/portrait/datas/296
+  - 函館市史 通説編2「徳川宗家の処遇」（函館市）　https://adeac.jp/hakodate-city/texthtml/d100020/mp000010-100020/ht010950
+  - 西草深公園（徳川家達屋敷跡）～幼少の藩主～（静岡県立中央図書館）　https://www.tosyokan.pref.shizuoka.jp/contents/history/sisekiannai/siseki_8.html
+  - 公文書に学ぶ 大人の美文字講座（国立公文書館）
+  - 徳川亀之助新に府中藩主に任命せしことを通告（東京大学法学部附属図書館 英国公使館文書）
+  - 貴族院議長・徳川家達と明治立憲制の展開（原口大輔、九州大学 博士論文要旨、2014）　https://catalog.lib.kyushu-u.ac.jp/opac_download_md/1500465/lit0193_abstract.pdf
+  - 和宮親子内親王（鈴木厚、1943）　https://dl.ndl.go.jp/pid/1043210
+  - 児童年鑑 昭和9年（野ばら社、1933）　https://dl.ndl.go.jp/pid/1109503
+  - 新東京探見（時事新報社 編、1925）　https://dl.ndl.go.jp/pid/1018573
+  - 大正名器鑑 第1編（高橋義雄 編）　https://dl.ndl.go.jp/pid/1014837/1/15
+  - 御書状 橋本少将宛 慶応四年正月二十日（文化遺産オンライン）　https://online.bunka.go.jp/heritages/detail/280423
+  - Iesato Tokugawa（Olympedia）　https://www.olympedia.org/athletes/899361
+  - 幻の東京五輪 組織委員会会長の手紙（KSB瀬戸内海放送、2020）　https://news.ksb.co.jp/article/13850512
+  - 德川宗家について・財団概要・所蔵資料（公益財団法人德川記念財団）　https://www.tokugawa.ne.jp/
+  - 徳川宗家が60年ぶりに当主交代（東京報道新聞、2023）　https://tokyonewsmedia.com/archives/622
+  - 徳川家19代目当主インタビュー（文春オンライン、2023）　https://bunshun.jp/articles/-/62269
+  - 三田評論 Spotlight 徳川家広（慶應義塾、2023）
+  - 徳川慶喜公の墓じまい（山岸美喜、文藝春秋 2026年2月号）
+  - 徳川美術館・南葵音楽文庫（和歌山県）・茨城県立歴史館の公開資料
+  - File:Prince Tokugawa Iesato as President of the House of Peers.jpg ほか（ウィキメディア・コモンズ、パブリックドメイン）
+
+# AI 絵（既存の絵の写し）。pan：h＝左右（既定）。crops＝切り出し [倍率, 中心x, 中心y]
+ai:
+  K01: {scene: 夜明けの川向こうの城と荷車, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  K02: {scene: 城の誰もいない広間とろうそく, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  K03: {scene: 江戸城の奥の廊下を歩く若い夫婦（後ろ姿）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  K04: {scene: 灯の下で手紙を書く尼の姿の女性（横顔）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  K05: {scene: 灯の下の机の白い書状と筆（字なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  K06: {scene: 松並木の朝の街道（霧・人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  K07: {scene: 武家屋敷の白壁と門（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  K08: {scene: 駿府城と安倍川、遠くに富士（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  K09: {scene: 港に停泊する蒸気船の遠景（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  K10: {scene: 誰もいない広間と松の襖絵, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  K11: {scene: 霧の海を行く明治の軍艦の艦隊（遠景）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  K12: {scene: 夕暮れの寺の大屋根の遠景（左下の看板は切り出しで外す）, pan: h, crops: {sky: [1.4, 0.64, 0.4], sky2: [1.45, 0.6, 0.38]}}
+  K13: {scene: 朝の木立の中、苔むした古い墓石に差す光（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  K14: {scene: 帳簿の山とそろばんと灯（字は読めない）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  K15: {scene: 机の上の古い巻物と和綴じの本（字は読めない）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  K16: {scene: 杉並木と石灯籠, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  K17: {scene: 杉の森の玉砂利の参道, pan: v, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  K18: {scene: 灯のともる座敷（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  K19: {scene: 行灯の座敷に一人座る女性（後ろ姿）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  K20: {scene: 窓の外に海が見える、灯の落ちた座敷（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  K22: {scene: 霧の川と岸の舟, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  K23: {scene: 文机の上のかんざしと短冊（読めない筆の跡）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  KEND: {scene: 夕暮れの寺の遠景（右半分を空けた構図。終了画面。左下の看板を外す）, lock: [1.4, 0.64, 0.4]}
+
+credits:
+  paintings/kakeizu_iesato_child.jpg: 徳川家達の少年時代の写真（1940年以前。ウィキメディア・コモンズ、パブリックドメイン）
+  paintings/kakeizu_iesato_peers.jpg: 貴族院議長 公爵 徳川家達の写真（1940年以前。パブリックドメイン）
+  paintings/kakeizu_iesato_1922.jpg: 徳川家達（1922年1月7日。米国議会図書館、パブリックドメイン）
+  paintings/kakeizu_washington_1921.jpg: ワシントン会議の日本の全権たち（1921年。ハリス＆ユーイング、米国議会図書館、パブリックドメイン）
+  paintings/kakeizu_katamori.jpg: 松平容保の写真（1893年以前。パブリックドメイン）
+  paintings/kakeizu_yoshihisa_1913.jpg: 徳川慶久の写真（1913年10月。パブリックドメイン）
+  paintings/kakeizu_yoshitoshi.jpg: 徳川好敏の写真（パブリックドメイン）
+  paintings/kakeizu_olympic_poster_1940.jpg: 和田三造《第12回オリンピック東京大会のポスター》（1940年の組織委員会の報告書。パブリックドメイン）
+  paintings/kakeizu_diet_1891_wdl.png: 《帝国議会仮議事堂》（1891年の版画。米国議会図書館 World Digital Library、パブリックドメイン）
+  paintings/kakeizu_diet_nobukazu_1899.jpg: 楊洲周延《東京名所 帝国議事堂》（1899年。メトロポリタン美術館、CC0）
+  paintings/kakeizu_fuji_omiya_kimbei.png: 日下部金兵衛撮影《大宮からの富士》（1890年ごろ。静岡の明治の風景。パブリックドメイン）
+  paintings/kazu_tenshoin_photo.png: 天璋院の写真（1883年以前。パブリックドメイン）
+  paintings/yoshinobu_portrait_late_13.jpg: 晩年の徳川慶喜（大礼服。1913年以前。パブリックドメイン）
+  paintings/yoshinobu_portrait_1867_1.jpg: 徳川慶喜（1867年ごろの写真。パブリックドメイン）
+  paintings/yoshinobu_beato_yedo_castle_moat.jpg: フェリーチェ・ベアト撮影 江戸城の堀（1860年代。パブリックドメイン）
+  paintings/yoshinobu_beato_yedo_palace_kitlv.jpg: フェリーチェ・ベアト撮影《江戸の濠と石垣》（1863〜65年ごろ。パブリックドメイン）
+  paintings/yoshinobu_suruga_castle_map.jpg: 《駿州府中之城図》駿府城の絵図（1935年の版。パブリックドメイン）
+  paintings/ieyasu_fuchu_abe_river_hiroshige_1833.jpg: 歌川広重《東海道五十三次之内 府中 安部川》（1833年ごろ。パブリックドメイン）
+  paintings/kazu_zojoji_snow_hiroshige.jpg: 歌川広重《東都名所 芝増上寺雪中ノ図》（メトロポリタン美術館。パブリックドメイン）
+  paintings/kazu_zojoji_sannai_hiroshige.jpg: 歌川広重《東都名所 芝増上寺山内の図》（1833年ごろ。メトロポリタン美術館、パブリックドメイン）
+  paintings/ieyasu_nikko_yomeimon_kiyochika_1897.jpg: 小林清親《日本名勝図絵 陽明門》（1897年。パブリックドメイン）
+  paintings/ieyasu_kunozan_kunitsuna_1863.jpg: 歌川国綱《東海道名所之内 久能山》（1863年。パブリックドメイン）
+
+shots:
+  - 0 ai:K02 wide
+  - 1 part:paintings/yoshinobu_beato_yedo_castle_moat.jpg wide
+  - 2 frame:paintings/kakeizu_iesato_child.jpg
+  - 3 ai:K01 wide
+  - 4 ai:K10 wide
+  - 5 frame:paintings/yoshinobu_portrait_late_13.jpg
+  - 6 ai:K12 sky
+  - 7 ai:K02 right
+  - 8 ai:K15 wide
+  - 9 ai:K01 left
+  - 10 frame:paintings/kakeizu_iesato_child.jpg
+  - 11 ai:K07 wide
+  - 12 ai:K03 wide
+  - 13 ai:K10 left
+  - 14 frame:paintings/kazu_tenshoin_photo.png
+  - 15 frame:paintings/yoshinobu_portrait_1867_1.jpg
+  - 16 ai:K02 left
+  - 17 ai:K04 wide
+  - 18 ai:K05 wide
+  - 19 part:paintings/yoshinobu_beato_yedo_palace_kitlv.jpg wide
+  - 20 ai:K05 right
+  - 21 ai:K23 wide
+  - 22 frame:paintings/kakeizu_iesato_child.jpg
+  - 23 ai:K06 wide
+  - 24 ai:K06 right
+  - 25 ai:K08 wide
+  - 26 part:paintings/yoshinobu_suruga_castle_map.jpg wide
+  - 27 ai:K08 right
+  - 28 ai:K05 left
+  - 29 ai:K14 wide
+  - 30 ai:K09 wide
+  - 31 ai:K05 wide
+  - 32 part:paintings/ieyasu_fuchu_abe_river_hiroshige_1833.jpg wide
+  - 33 ai:K06 left
+  - 34 ai:K07 right
+  - 35 ai:K07 left
+  - 36 part:paintings/kakeizu_fuji_omiya_kimbei.png wide
+  - 37 ai:K08 left
+  - 38 ai:K19 wide
+  - 39 ai:K19 right
+  - 40 frame:paintings/kazu_tenshoin_photo.png
+  - 41 ai:K23 left
+  - 42 ai:K18 wide
+  - 43 ai:K09 right
+  - 44 ai:K20 wide
+  - 45 ai:K19 left
+  - 46 ai:K18 right
+  - 47 frame:paintings/kazu_tenshoin_photo.png
+  - 48 part:paintings/kakeizu_diet_1891_wdl.png wide
+  - 49 part:paintings/kakeizu_diet_nobukazu_1899.jpg wide
+  - 50 ai:K10 right
+  - 51 frame:paintings/kakeizu_iesato_peers.jpg
+  - 52 part:paintings/kakeizu_diet_nobukazu_1899.jpg right
+  - 53 ai:K15 left
+  - 54 ai:K14 left
+  - 55 ai:K14 wide
+  - 56 frame:paintings/kakeizu_iesato_1922.jpg
+  - 57 ai:K10 wide
+  - 58 frame:paintings/kakeizu_iesato_peers.jpg
+  - 59 ai:K05 right
+  - 60 part:paintings/kakeizu_washington_1921.jpg wide
+  - 61 ai:K11 wide
+  - 62 part:paintings/kakeizu_washington_1921.jpg right
+  - 63 ai:K14 right
+  - 64 ai:K10 left
+  - 65 frame:paintings/kakeizu_iesato_1922.jpg
+  - 66 frame:paintings/kakeizu_olympic_poster_1940.jpg
+  - 67 ai:K02 wide
+  - 68 ai:K15 wide
+  - 69 ai:K05 wide
+  - 70 frame:paintings/kakeizu_olympic_poster_1940.jpg
+  - 71 ai:K02 left
+  - 72 ai:K05 left
+  - 73 frame:paintings/kakeizu_iesato_peers.jpg
+  - 74 ai:K15 right
+  - 75 ai:K14 wide
+  - 76 ai:K10 left
+  - 77 ai:K01 right
+  - 78 frame:paintings/yoshinobu_portrait_late_13.jpg
+  - 79 frame:paintings/kakeizu_yoshihisa_1913.jpg
+  - 80 ai:K18 left
+  - 81 ai:K13 wide
+  - 82 ai:K23 right
+  - 83 ai:K13 right
+  - 84 ai:K13 left
+  - 85 ai:K16 wide
+  - 86 ai:K16 right
+  - 87 ai:K15 left
+  - 88 ai:K15 right
+  - 89 ai:K15 wide
+  - 90 frame:paintings/kakeizu_yoshitoshi.jpg
+  - 91 ai:K17 wide
+  - 92 ai:K05 wide
+  - 93 ai:K12 sky
+  - 94 ai:K02 left
+  - 95 ai:K09 left
+  - 96 ai:K20 wide
+  - 97 ai:K22 wide
+  - 98 frame:paintings/kakeizu_iesato_peers.jpg
+  - 99 part:paintings/kakeizu_diet_nobukazu_1899.jpg wide
+  - 100 ai:K14 right
+  - 101 ai:K18 wide
+  - 102 frame:paintings/kakeizu_katamori.jpg
+  - 103 ai:K15 wide
+  - 104 ai:K20 right
+  - 105 ai:K12 sky2
+  - 106 ai:K19 wide
+  - 107 ai:K09 wide
+  - 108 ai:K14 wide
+  - 109 ai:K15 left
+  - 110 ai:K22 right
+  - 111 ai:K12 sky
+  - 112 ai:K17 wide
+  - 113 part:paintings/kazu_zojoji_snow_hiroshige.jpg wide
+  - 114 ai:K20 left
+  - 115 ai:K15 right
+  - 116 ai:K14 left
+  - 117 ai:K12 sky
+  - 118 part:paintings/kazu_zojoji_sannai_hiroshige.jpg wide
+  - 119 ai:K17 right
+  - 120 part:paintings/ieyasu_nikko_yomeimon_kiyochika_1897.jpg wide
+  - 121 ai:K10 wide
+  - 122 ai:K05 wide
+  - 123 ai:K14 right
+  - 124 part:paintings/ieyasu_kunozan_kunitsuna_1863.jpg wide
+  - 125 ai:K16 right
+  - 126 ai:K15 wide
+  - 127 ai:K01 wide
+  - 128 ai:K02 wide
+  - 129 ai:K03 wide
+  - 130 ai:K08 wide
+  - 131 frame:paintings/kakeizu_iesato_peers.jpg
+  - 132 frame:paintings/kakeizu_katamori.jpg
+  - 133 ai:K13 wide
+  - 134 ai:K12 sky
+  - 135 ai:K01 wide
+  - 136 ai:KEND wide
+  - end ai:KEND wide
+
+focus: {}
+
+fx:
+  K02: {lamp: {region: [0.4, 0.75, 0.6, 1.0]}}
+  K22: {mist: {region: [0.0, 0.3, 1.0, 0.75]}}
+
+parts:
+  - {type: quote, from: 13, to: 13, label: 史料, text: 天璋院から、田安亀之助推挙／についての御意見を問はれた, source: 鈴木厚『和宮親子内親王』（1943年）}
+  - {type: versus3, from: 20, to: 20, items: [[函館市史, 数え6歳], [静岡新聞（2025年）, 5歳], [生まれた日から数えると, 満4歳]], every: 1.6}
+  - {type: quote, from: 53, to: 53, label: 要点, text: 名議長と三十年／十六代様という, source: 『児童年鑑 昭和9年』（1933年、野ばら社）の紹介}
+  - {type: quote, from: 55, to: 55, label: 史料, text: 徳川さんだつて／十六代様だらう, source: 時事新報社 編『新東京探見』（1925年）}
+  - {type: quote, from: 56, to: 56, label: 要点, text: 慶喜は徳川を潰した人／私は建てた人, source: サライ.jp「漱石と明治人のことば」（2017年）の伝え}
+  - {type: quote, from: 82, to: 82, label: 史料, text: あとは美喜ちゃん／よろしくね, source: 慶朝の書き置き（文春オンライン 2023年、美喜さんの話）}
+  - {type: quote, from: 119, to: 119, label: 要点, text: 改めて責任の重さに／身が引き締まる思い, source: 継宗の儀のあとの会見（2023年1月29日。東京報道新聞）}
+
+# 台本の図の差し替え（容保の行は写真を主役にし、図は次の行から）
+figures:
+  - {from: 102, to: 102, spec: null}
+
+stills:
+  - {line: 0, note: 冒頭（0秒）}
+  - {line: 8, note: 当主の数直線（？）}
+  - {line: 11, note: 田安家の兄弟（図）}
+  - {line: 20, note: 年齢のくい違い}
+  - {line: 26, note: 70万石の内訳（図）}
+  - {line: 60, note: ワシントン会議の写真}
+  - {line: 74, note: 家達の72年（図）}
+  - {line: 89, note: ほかの徳川の家（図）}
+  - {line: 102, note: 恒孝の家系図（図）}
+  - {line: 126, note: 当主の数直線（19代）}
+  - {end: true, note: 終了画面の空き}
