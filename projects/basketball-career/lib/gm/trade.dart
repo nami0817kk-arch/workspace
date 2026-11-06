@@ -58,8 +58,9 @@ double pickValue(DraftPick pick, TeamMode mode, int slotGuess, int nowSeason) {
 
 /// いまの強さの順から見た、そのチームの指名の見込みの順番(弱いほど早い)。
 int slotGuess(List<Team> teams, int from) {
-  final order = [...teams]..sort((a, b) => a.strength.compareTo(b.strength));
-  return order.indexWhere((t) => t.index == from) + 1;
+  // 強さは一度ずつだけ計算する(並べ替えの比べるたびに計算すると遅い)
+  final mine = teams[from].strength;
+  return teams.where((t) => t.index != from && t.strength < mine).length + 1;
 }
 
 /// トレードの中身。
@@ -115,7 +116,9 @@ String? salaryRuleProblem(Team t, int incoming, int outgoing) {
 }
 
 /// こちら([mine])からの申し込みを、相手がどう見るか。
-TradeVerdict judgeTrade(List<Team> teams, List<DraftPick> picks, int mine, TradeOffer o, int nowSeason) {
+///
+/// [slots] はチームごとの指名の見込みの順番(探す間は変わらないので、先に一度だけ計算して渡せる)。
+TradeVerdict judgeTrade(List<Team> teams, List<DraftPick> picks, int mine, TradeOffer o, int nowSeason, {Map<int, int>? slots}) {
   final me = teams[mine], them = teams[o.partner];
   final give = [for (final id in o.give) me.roster.firstWhere((p) => p.id == id)];
   final get = [for (final id in o.get) them.roster.firstWhere((p) => p.id == id)];
@@ -136,10 +139,10 @@ TradeVerdict judgeTrade(List<Team> teams, List<DraftPick> picks, int mine, Trade
   var inV = give.fold(0.0, (s, p) => s + playerValue(p, mode));
   var outV = get.fold(0.0, (s, p) => s + playerValue(p, mode));
   for (final i in o.givePicks) {
-    inV += pickValue(picks[i], mode, slotGuess(teams, picks[i].from), nowSeason);
+    inV += pickValue(picks[i], mode, slots?[picks[i].from] ?? slotGuess(teams, picks[i].from), nowSeason);
   }
   for (final i in o.getPicks) {
-    outV += pickValue(picks[i], mode, slotGuess(teams, picks[i].from), nowSeason);
+    outV += pickValue(picks[i], mode, slots?[picks[i].from] ?? slotGuess(teams, picks[i].from), nowSeason);
   }
   final need = requiredValue(outV);
   final ratio = need <= 0 ? 2.0 : inV / need;
@@ -186,4 +189,68 @@ TradeOffer? makeIncomingOffer(List<Team> teams, List<DraftPick> picks, int mine,
     }
   }
   return null;
+}
+
+/// [from] のチームから見た、出すものの惜しさ(小さいほど出しやすい)。
+double _cost(List<Team> teams, List<DraftPick> picks, int from, Object asset, int nowSeason, Map<int, int> slots) {
+  final mode = teams[from].mode;
+  if (asset is Player) return playerValue(asset, mode).clamp(0.5, 1e9);
+  final i = asset as int;
+  return pickValue(picks[i], mode, slots[picks[i].from]!, nowSeason);
+}
+
+/// 相手([partner])から [get] と [getPicks] を受け取るのに、[from] が出せばよい組み合わせを探す(「相手に聞く」)。
+/// 出すものは、[from] から見て惜しくない順に、1つ・2つ・3つの組み合わせを試す。[exclude] の選手は出さない。見つからなければ null。
+TradeOffer? findPackage(List<Team> teams, List<DraftPick> picks, int from, int partner,
+    {required List<int> get, List<int> getPicks = const [], List<int> exclude = const [], required int nowSeason}) {
+  final me = teams[from];
+  final assets = <Object>[
+    ...me.roster.where((p) => !exclude.contains(p.id)),
+    for (var i = 0; i < picks.length; i++)
+      if (picks[i].owner == from) i,
+  ];
+  if (assets.isEmpty) return null;
+  final st = {for (final t in teams) t.index: t.strength};
+  final slots = {for (final t in teams) t.index: teams.where((u) => st[u.index]! < st[t.index]!).length + 1};
+  final cost = {for (final a in assets) a: _cost(teams, picks, from, a, nowSeason, slots)};
+  assets.sort((a, b) => cost[a]!.compareTo(cost[b]!));
+  TradeOffer offerOf(List<Object> give) => TradeOffer(
+        partner: partner,
+        give: [for (final a in give) if (a is Player) a.id],
+        givePicks: [for (final a in give) if (a is int) a],
+        get: get,
+        getPicks: getPicks,
+      );
+  TradeOffer? best;
+  var bestCost = double.infinity;
+  void tryGive(List<Object> give) {
+    final c = give.fold(0.0, (s, a) => s + cost[a]!);
+    if (c >= bestCost) return;
+    final o = offerOf(give);
+    if (judgeTrade(teams, picks, from, o, nowSeason, slots: slots).ok) {
+      best = o;
+      bestCost = c;
+    }
+  }
+
+  // 1つなら全部を試す。2つ・3つの組み合わせは、膨らまないように惜しくない順の10個までで
+  for (final a in assets) {
+    tryGive([a]);
+  }
+  final small = assets.take(10).toList();
+  for (var i = 0; i < small.length; i++) {
+    for (var j = i + 1; j < small.length; j++) {
+      tryGive([small[i], small[j]]);
+    }
+  }
+  if (best == null) {
+    for (var i = 0; i < small.length; i++) {
+      for (var j = i + 1; j < small.length; j++) {
+        for (var k = j + 1; k < small.length; k++) {
+          tryGive([small[i], small[j], small[k]]);
+        }
+      }
+    }
+  }
+  return best;
 }

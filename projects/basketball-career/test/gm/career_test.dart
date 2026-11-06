@@ -191,6 +191,58 @@ void main() {
     });
   });
 
+  group('相手に聞く・相手同士のトレード・ニュース', () {
+    test('受け取りたい選手を選ぶと、相手が受ける出し方が返り、そのまま成立する', () {
+      var found = 0;
+      for (var seed = 1; seed <= 10; seed++) {
+        final c = Career.start(seed: seed, scenario: Scenario.middle);
+        final pt = c.teams.skip(1).firstWhere((t) => t.mode == TeamMode.rebuild).index;
+        final target = c.teams[pt].roster.reduce((a, b) => a.ovr >= b.ovr ? a : b);
+        final o = c.askPartner(pt, get: [target.id]);
+        if (o == null) continue;
+        found++;
+        expect(c.judge(o).ok, isTrue);
+        expect(o.give.length + o.givePicks.length, inInclusiveRange(1, 3));
+        expect(c.propose(o), isTrue);
+        expect(c.me.roster.any((p) => p.id == target.id), isTrue);
+        expect(c.log.first, contains('トレード'));
+      }
+      expect(found, greaterThan(5), reason: 'たいていは出し方が見つかる');
+    });
+
+    test('何も受け取らないなら聞けない。締め切りのあとも聞けない', () {
+      final c = Career.start(seed: 2)..startSeason();
+      expect(c.askPartner(1), isNull);
+      c
+        ..playBlock()
+        ..playBlock();
+      expect(c.askPartner(1, get: [c.teams[1].roster.first.id]), isNull);
+    });
+
+    test('相手同士のトレードが起き、どのチームも人数と年俸の決まりを守る。ニュースに残る', () {
+      var trades = 0;
+      for (var seed = 1; seed <= 5; seed++) {
+        final c = Career.start(seed: seed, scenario: Scenario.middle);
+        var guard = 0;
+        while (c.season <= 3 && c.phase != Phase.over && guard++ < 200) {
+          if (c.phase == Phase.seasonEnd) c.fired = false;
+          botStep(c);
+          // ドラフトの間は新人が入って一時的に15人を超える。シーズン前・シーズン中は15人まで
+          if (c.phase != Phase.preseason && c.phase != Phase.season) continue;
+          for (final t in c.teams.skip(1)) {
+            expect(t.roster.length, lessThanOrEqualTo(maxRoster), reason: t.name);
+            expect(t.payroll, lessThanOrEqualTo(hardCap + 100), reason: t.name);
+          }
+        }
+        trades += c.log.where((l) => l.contains('トレード:')).length;
+        expect(c.log.length, lessThanOrEqualTo(Career.logLimit));
+        expect(c.log.any((l) => l.contains('優勝:')), isTrue);
+        expect(c.log.any((l) => l.contains('ドラフト全体1位')), isTrue);
+      }
+      expect(trades, greaterThan(5));
+    });
+  });
+
   group('オフ', () {
     test('ドラフト: 自分の番まで相手が指名し、指名した選手は新人の契約で入る。全員の指名が終わると契約へ', () {
       final c = _toPlayoffs(Career.start(seed: 12))..playPlayoffs();
