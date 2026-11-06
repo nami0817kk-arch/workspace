@@ -1,0 +1,175 @@
+# 物語完結型ショート 徳川将軍家 s3（2026-11-06）。本編 scripts/tokugawa-kakeizu-story.yaml（11/7 19:00 公開、https://youtu.be/VrUQJ4sBdyA）の第4章から。11/8 15:30 公開。
+# 形式は oguri_s5.yaml（year のカード）を写した。決まりは docs/story-shorts.md。想像の台詞なし。
+# 絵は本編の AI 絵（out/story/kakeizu/main。人物なし）と実在の写真・版画（貴族院議長の家達・1922年の家達・帝国議事堂の版画）。新しい絵は作らない。使わない絵は s1 の頭のコメント。
+# 切り口：十六代様と呼ばれた家達は、総理大臣の話を受けたのか。ワシントン会議・オリンピック（本編5章）には踏み込まない。
+# 事実カード：kakeizu-27・30・40・113。言い方は本編のまま。
+#   ・貴族院議長 1903→1933＝30年（「およそ30年」）。本編どおり。
+#   ・家達の言葉（サライ 2017、出どころ1つ）は「と伝わる」と、雑誌の名を言ってから言う。年鑑は「1933年の子ども向けの年鑑」（『児童年鑑 昭和9年』）。
+# 理解テスト4問：
+#   ①誰の話か：「十六代様」と呼ばれた徳川宗家16代、徳川家達
+#   ②いつ・どこで何が：1903年から約30年、貴族院の議長。1914年、山本内閣の総辞職のあと、元老が次の総理に推した
+#   ③何を選んだか：辞退した（十六代様と呼ばれるのも嫌がったと伝わる）
+#   ④どうなったか：徳川内閣は未遂に終わった（原口大輔さんの博士論文）
+title: 徳川家達｜「十六代様」は、総理を受けたのか
+yt_title: 「十六代様」と呼ばれた徳川家達は総理大臣を受けたのか　1914年、元老が推した徳川内閣
+description: |-
+  将軍になるはずだった人として「十六代様」と呼ばれた、徳川宗家16代の徳川家達。総理大臣に推されたとき、受けたのでしょうか。
+  家達は1903年に貴族院の議長になり、およそ30年その席にいました。1933年の子ども向けの年鑑は、慶喜のあとを継いで将軍となるはずだった人なので十六代様という、と紹介しています。けれど本人は、そう呼ばれるのを嫌がったと伝わり、雑誌サライのウェブの連載によれば「慶喜は徳川をつぶした人、私は建てた人」と話していました。1914年、山本権兵衛の内閣が総辞職すると、元老たちは次の総理大臣に家達を推します。家達はそれを辞退し、原口大輔さんの博士論文は、徳川内閣は未遂に終わったと書いています。
+  議長の席を降りた家達を待っていた、もう1つの大きな役目とは。本編は概要欄のリンクからどうぞ。
+hashtags: ['#徳川家達', '#日本史', '#明治']
+ai_images: true
+ai_disclosure: この動画の風景・室内の画像は、画像生成AI（Google の Gemini・Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/kakeizu
+out: kakeizu_story_s3
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 徳川家達（徳川宗家16代）
+  title: "「十六代様」は、《総理を受けたのか》"
+now:
+  - {at: 1903年, text: "1903年　貴族院の議長に", point: 0}
+  - {at: 1933年, text: "1933年　子ども向けの年鑑", point: 2}
+  - {at: 雑誌サライ, text: "2017年　雑誌サライのウェブ", point: 2}
+  - {at: 1914年, text: "1914年　東京", point: 1}
+timeline:
+  - {label: "1903"}
+  - {label: "1914"}
+  - {label: "1933"}
+cards:
+  - type: year
+    from: 1914年
+    until: 受ければ
+    big: 1914年
+    sub: 総理大臣に推される
+    text_y: 0.70
+shots:
+  Peers:
+    kind: real
+    image: paintings/kakeizu_iesato_peers.jpg
+    crop: [0.0, 0.05, 1.0, 0.75]
+    focus: [0.5, 0.35]
+    move: in
+    credit: "貴族院議長 公爵 徳川家達の写真（1940年以前。パブリックドメイン）"
+    must: 議長のころの家達
+  Diet:
+    kind: real
+    image: paintings/kakeizu_diet_nobukazu_1899.jpg
+    focus: [0.5, 0.55]
+    move: right
+    text_box: true
+    credit: "楊洲周延《東京名所 帝国議事堂》（1899年。メトロポリタン美術館、CC0）"
+    must: 帝国議事堂の版画
+  K15:
+    kind: ai
+    file: kakeizu/main/K15.jpg
+    focus: [0.5, 0.55]
+    move: left
+    must: 机の上の古い巻物と和綴じの本
+  I1922:
+    kind: real
+    image: paintings/kakeizu_iesato_1922.jpg
+    crop: [0.1, 0.0, 0.9, 0.6]
+    focus: [0.5, 0.4]
+    move: down
+    credit: "徳川家達（1922年1月7日。米国議会図書館、パブリックドメイン）"
+    must: 1922年の家達
+  K10:
+    kind: ai
+    file: kakeizu/main/K10.jpg
+    focus: [0.5, 0.5]
+    move: right
+    must: 誰もいない広間と松の襖絵
+  Diet2:
+    kind: real
+    image: paintings/kakeizu_diet_1891_wdl.png
+    focus: [0.5, 0.5]
+    move: left
+    text_box: true
+    credit: "《帝国議会仮議事堂》（1891年の版画。米国議会図書館 World Digital Library、パブリックドメイン）"
+    must: 帝国議会の議事堂の版画
+  K02:
+    kind: ai
+    file: kakeizu/main/K02.jpg
+    focus: [0.5, 0.6]
+    move: in
+    must: 城の誰もいない広間とろうそく
+  Peers2:
+    kind: real
+    image: paintings/kakeizu_iesato_peers.jpg
+    crop: [0.0, 0.03, 1.0, 0.6]
+    focus: [0.5, 0.5]
+    move: in
+    credit: "貴族院議長 公爵 徳川家達の写真（1940年以前。パブリックドメイン）"
+    must: 家達の顔に寄る
+  K14:
+    kind: ai
+    file: kakeizu/main/K14.jpg
+    focus: [0.5, 0.55]
+    move: right
+    must: 帳簿の山と灯
+  K11:
+    kind: ai
+    file: kakeizu/main/K11.jpg
+    focus: [0.5, 0.5]
+    move: left
+    must: 霧の海の艦隊（遠景）
+lines:
+  # fact: kakeizu-113, kakeizu-30
+  - 語り: 十六代様と、呼ばれた徳川家達。総理大臣に推されたとき、受けたのか。
+    shot: Peers
+    tone: 疑問
+    pause: 0.12
+  # fact: kakeizu-27
+  - 語り: 1903年、家達は、貴族院の議長になる。その席にいたのは、およそ30年。
+    shot: Diet
+    tone: しみじみ
+    pause: 0.12
+  # fact: kakeizu-113
+  - 語り: 1933年の、子ども向けの年鑑は、こう書く。慶喜のあとを継いで、将軍となるはずだった人なので、十六代様という。
+    shot: K15
+    tone: しみじみ
+    pause: 0.12
+  # fact: kakeizu-40
+  - 語り: けれど、家達本人は、そう呼ばれるのを、嫌がった、と伝わる。
+    shot: I1922
+    tone: 重い
+    pause: 0.12
+  # fact: kakeizu-40
+  - 語り: 雑誌サライのウェブの連載によれば、家達は、こう話していた。
+    shot: K10
+    tone: しみじみ
+    pause: 0.12
+  # fact: kakeizu-40
+  - 語り: 慶喜は、徳川をつぶした人。私は、建てた人だ。
+    shot: K10
+    tone: しみじみ
+    pause: 0.12
+  # fact: kakeizu-30
+  - 語り: 1914年、山本権兵衛の内閣が、総辞職する。元老たちは、次の総理大臣に、家達を推した。
+    shot: Diet2
+    tone: しみじみ
+    pause: 0.12
+  # fact: kakeizu-30
+  - 語り: 受ければ、徳川内閣だ。けれど、家達は、《!辞退》した。
+    shot: Peers2
+    tone: 強調
+    pause: 0.3
+    dip: true
+  # fact: kakeizu-30
+  - 語り: 原口大輔さんの、博士論文は、徳川内閣は、未遂に終わった、と書いている。
+    shot: K14
+    tone: 重い
+    pause: 0.12
+  - 語り: では、議長の席を降りた、家達を、待っていた、もう1つの大きな役目とは、何だったのか。
+    shot: K02
+    tone: 疑問
+    pause: 0.15

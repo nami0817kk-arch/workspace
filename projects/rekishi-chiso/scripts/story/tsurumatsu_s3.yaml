@@ -1,0 +1,165 @@
+# 物語完結型ショート 鶴松 s3（2026-11-06）。本編 scripts/tsurumatsu-if-story.yaml（11/7 12:00 公開）の序章・第2章（1591年8月の死）から。11/8 13:30 公開。
+# 形式は maizo_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。「もしも」の部分は入れない（事実だけ）。
+# 絵は本編の AI 絵（out/story/tsurumatsu-if/main/T*）と本編で使った実在の屏風だけ。T07・T08・T29・T30 は使わない（s1 の頭のとおり）。
+# 切り口：鶴松の死の知らせ（毛利輝元の6日付の手紙）と、秀吉と大名たちが髻を切り、切った髻が塚のようになったこと（『三藐院記』）。
+#   遺品（小さな鎧・兜はいま妙心寺、おもちゃの船は玉鳳院。重要文化財）。本編の答え（18日後の明への出兵の決定）は言わない。
+# 事実カード：tsurumatsu-03・04・15・16・17・28・34。言い方は本編のまま。
+# 計算（自分で計算し直した）：天正19年＝1591年。1589年5月27日→1591年8月5日で2年2か月あまり、数えで3歳。
+#   『多聞院日記』の6日条は伝え聞き、8日条が東福寺と髪切りの記事（本編どおり、毛利輝元の手紙とは分けて言う）。
+# 理解テスト4問：
+#   ①誰の話か：豊臣秀吉の跡継ぎ、鶴松と、秀吉・大名たち
+#   ②いつ・どこで何が：1591年8月5日、鶴松が数え3歳で死に、秀吉は京都の東福寺で髻を切った
+#   ③何をしたか：大名たちも人に負けじと髻を切り、切った髻が塚のようになった（『三藐院記』）
+#   ④どうなったか：弔う寺・祥雲寺の工事が8月のうちに始まり、遺品はいまも京都の寺に残る。18日後の決定の問いで閉じる
+title: 鶴松の死｜大名たちは、髻を切った
+yt_title: 豊臣秀吉の跡継ぎ鶴松が3歳で死んだ日、大名たちは髻を切った　切った髻は塚のようになったと公家の日記
+description: |-
+  1591年8月5日、豊臣秀吉の跡継ぎ、鶴松が亡くなりました。数えで3歳でした。
+  毛利輝元が翌6日に一族の吉川広家へ書いた手紙には、若君様は昨日5日に亡くなられた、どうにもならないことです、とあります。秀吉はすぐに京都の東福寺へ出て、髻、つまり頭の上で結った髪を切りました。奈良の興福寺の僧、英俊の『多聞院日記』は、8日の記事に、大名も小名も、みな切ったそうだ、と書きます。公家の日記『三藐院記』によると、大名たちは人に負けじと髻を切り、切った髻は、塚を築いたようになりました。
+  8月のうちに、鶴松を弔う寺、祥雲寺の工事が始まります。鶴松の小さな鎧と兜は妙心寺に、おもちゃの船は妙心寺の中の玉鳳院に残り、今は国の重要文化財です。
+  もしも鶴松が生きていたら、豊臣家はどうなったのか。本編は概要欄のリンクからどうぞ。
+hashtags: ['#豊臣鶴松', '#豊臣秀吉', '#日本史']
+ai_images: true
+ai_disclosure: この動画の人物・情景の画像の多くは、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/tsurumatsu-if
+out: tsurumatsu_story_s3
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 豊臣鶴松（秀吉の跡継ぎ）
+  title: "大名たちは、《髻》を切った"
+now:
+  - {at: 1591年, text: "1591年　山城・淀城", point: 0}
+  - {at: 京都の東福寺, text: "1591年8月　京都・東福寺", point: 0}
+  - {at: 祥雲寺の工事, text: "1591年8月　京都・東山", point: 0}
+  - {at: 今は国の重要文化財, text: "いま　京都・妙心寺", point: 1}
+timeline:
+  - {label: "1591"}
+  - {label: "いま"}
+cards:
+  - type: year
+    from: 若君様は
+    until: 秀吉はすぐに
+    big: 8月5日
+    sub: 鶴松、数えで3歳で亡くなる
+    text_y: 0.70
+  - type: table
+    title: いまも京都に残る遺品
+    from: 鶴松の小さな鎧
+    until: 跡継ぎが死んで
+    items:
+      - {at: 鶴松の小さな鎧, text: "小さな鎧・兜　妙心寺"}
+      - {at: おもちゃの船, text: "おもちゃの船　玉鳳院"}
+    text_y: 0.72
+shots:
+  T06:
+    kind: ai
+    file: tsurumatsu-if/main/T06.jpg
+    focus: [0.55, 0.5]
+    move: in
+    must: 仏前に座る人々の後ろ姿（髻を切った大名たち）
+  T04:
+    kind: ai
+    file: tsurumatsu-if/main/T04.jpg
+    focus: [0.45, 0.5]
+    move: right
+    must: 仏前で手を合わせて祈る茶々（病む子のための祈り）
+  T09:
+    kind: ai
+    file: tsurumatsu-if/main/T09.jpg
+    focus: [0.6, 0.55]
+    move: in
+    must: 巻紙を開く手元（毛利輝元の手紙）
+  T05:
+    kind: ai
+    file: tsurumatsu-if/main/T05.jpg
+    focus: [0.5, 0.5]
+    move: up
+    must: 大きな禅寺の門（東福寺）
+  T10:
+    kind: ai
+    file: tsurumatsu-if/main/T10.jpg
+    focus: [0.45, 0.5]
+    move: right
+    must: 机の上の文書（僧の日記）
+  T06b:
+    kind: ai
+    file: tsurumatsu-if/main/T06.jpg
+    focus: [0.25, 0.55]
+    move: left
+    zoom: 0.12
+    must: 座る人々の後ろ姿（切った髻の塚）
+  Kyoto:
+    kind: real
+    image: paintings/akechi_rakuchu_rakugai_uesugi_right.jpg
+    focus: [0.75, 0.45]
+    move: left
+    credit: "狩野永徳《洛中洛外図屏風》（上杉本）右隻（パブリックドメイン）"
+    must: 京都の東山の寺々（祥雲寺の工事）
+  T19:
+    kind: ai
+    file: tsurumatsu-if/main/T19.jpg
+    focus: [0.45, 0.5]
+    move: right
+    must: 寺の庭（いまも京都の寺に残る）
+  T03:
+    kind: ai
+    file: tsurumatsu-if/main/T03.jpg
+    focus: [0.5, 0.45]
+    move: out
+    must: 御殿に座る秀吉（18日後の決定）
+lines:
+  # fact: tsurumatsu-04, tsurumatsu-16
+  - 語り: 3歳の子が死んだ日、なぜ、大名たちは、《!髻》を切ったのか。
+    shot: T06
+    tone: 強調
+    pause: 0.12
+  # fact: tsurumatsu-17
+  - 語り: 1591年。秀吉の跡継ぎ、鶴松は、淀城で病んでいた。いったん持ち直したが、8月2日から、また病む。
+    shot: T04
+    tone: しみじみ
+    pause: 0.12
+  # fact: tsurumatsu-03
+  - 語り: 毛利輝元が、6日に一族の吉川広家へ書いた手紙。若君様は、昨日5日に亡くなられた。どうにもならないことです。
+    shot: T09
+    tone: 重い
+    pause: 0.12
+  # fact: tsurumatsu-15
+  - 語り: 秀吉は、すぐに京都の東福寺へ出て、髪を切った。髻、つまり頭の上で結った髪だ。
+    shot: T05
+    tone: 重い
+    pause: 0.12
+  # fact: tsurumatsu-04
+  - 語り: 8日の多聞院日記には、秀吉の嘆きは目も当てられないほどで、大名も小名も、みな切ったそうだ、とある。
+    shot: T10
+    tone: しみじみ
+    pause: 0.12
+  # fact: tsurumatsu-16
+  - 語り: 公家の日記、三藐院記によると、大名たちは、人に負けじと髻を切り、切った髻は、塚を築いたようになった。
+    shot: T06b
+    tone: 重い
+    pause: 0.15
+  # fact: tsurumatsu-28
+  - 語り: 8月のうちに、東山で、鶴松を弔う寺、祥雲寺の工事が始まる。
+    shot: Kyoto
+    tone: しみじみ
+    pause: 0.12
+  # fact: tsurumatsu-34
+  - 語り: 鶴松の小さな鎧と兜は、妙心寺に。おもちゃの船は、妙心寺の中の玉鳳院に。どちらも、今は国の重要文化財だ。
+    shot: T19
+    tone: しみじみ
+    pause: 0.3
+    dip: true
+  - 語り: 跡継ぎが死んで、18日後。秀吉は、何を決めたのか。
+    shot: T03
+    tone: 疑問
+    pause: 0.15

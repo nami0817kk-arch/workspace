@@ -1,0 +1,231 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：大奥の奥女中（scripts/ooku-story.yaml）。chiso/storymain.py が読む。
+# 11-06 作成（11/08 19:00 公開）。kakeizu_main_look.yaml を写した。台本には手を入れない（承認のあと）。決まりは docs/story-main.md・スキル rekishi-story-screen。
+# 絵の方針：主役は AI 絵（O01〜O21・OEND。Cloudflare FLUX の無料枠で 11-06 に作った。正方形の中央を 16:9 に切った）。
+#   実在の絵は楊洲周延《千代田の大奥》（1895年ごろ、メトロポリタン美術館、CC0）を「屏風の一部」（part）で出す。華やかな像の側の絵として使う。
+#   和服の絵は反転しない。AI 絵の人物は後ろ姿・横顔・手もと・足もと（顔を主役にしない）。
+script: scripts/ooku-story.yaml
+out: ooku_story_main
+art_dir: out/story/ooku/main
+main_art_dir: out/story/ooku/main
+ai_disclosure: この動画の室内・人物の後ろ姿や手もとの画像の一部は、画像生成AI（Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+
+chapters:
+  0: {label: 序章 華やかな絵は、あとから描かれた, now: null, dates: {}}
+  1: {label: 第1章 朝十時の総触と勤めの表, now: 幕末, dates: {}}
+  2: {label: 第2章 給金はいくらだったのか, now: 幕末, dates: {39: null}}
+  3: {label: 第3章 女中が女中を雇っていた？, now: 幕末, dates: {}}
+  4: {label: 第4章 いちばん下の勤め, now: 幕末, dates: {}}
+  5: {label: 第5章 休みと手紙はどうしてた？, now: 1670年, dates: {72: 1721年, 76: null}}
+  6: {label: 第6章 出世はできたのか, now: 江戸の終わり, dates: {92: 1714年, 94: 1744年, 96: 1853年, 97: 1858年, 99: null}}
+  7: {label: 第7章 華やかな大奥は、どこから来たのか, now: 1651年, dates: {102: 1891年, 107: 1894年, 108: 2025年, 109: null}}
+  8: {label: まとめ 奥女中の1日, now: null, dates: {}}
+no_tag_from: 115
+
+# 概要欄「■ 参考にした資料」（事実カード 奥女中_facts_20261106.yaml のうち本文を開いた主なもの）
+references:
+  - 三田村鳶魚『御殿女中』（春陽堂、1930）　https://dl.ndl.go.jp/pid/1447416
+  - 神宮司庁 編『古事類苑』官位部二十（1914）　https://dl.ndl.go.jp/pid/897657
+  - 小林明「大奥の謎」（nippon.com、2022）
+  - 山本博文「華麗なる江戸城大奥の世界 ―仕事と生活―」（東京都立中央図書館の講座資料）
+  - 畑尚子 学位申請論文『徳川政権下の大奥と奥女中』審査要旨（國學院大學、2010）
+  - 福田千鶴「空間で読み解く近世社会 表向・奥向の視点から」（『加賀藩研究』10、講演録）
+  - 国立公文書館「旗本御家人III お仕事いろいろ」
+  - 国立国会図書館「本の万華鏡 第12回 江戸の双六」　https://www.ndl.go.jp/kaleido/entry/12/3.html
+  - 江戸東京博物館《奥奉公出世双六》（所蔵品）
+  - 日本銀行金融研究所 貨幣博物館「お金の歴史に関するFAQ」　https://www.imes.boj.or.jp/cm/history/historyfaq/answer.html
+  - 特別展「江戸☆大奥」（東京国立博物館、2025）の報告記事（美術手帖・インターネットミュージアム・ウォーカープラス）
+  - 楊洲周延《千代田の大奥》（メトロポリタン美術館、CC0）　https://www.metmuseum.org/art/collection/search/55821
+
+# AI 絵。pan：h＝左右（既定）・v＝上下。crops＝切り出し [倍率, 中心x, 中心y]
+ai:
+  O01: {scene: 夜明けの御殿の長い板廊下（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  O02: {scene: 朝もやの長局の屋根の並び（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  O03: {scene: 廊下に並んで平伏する女中たち（後ろ姿）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  O05: {scene: 行灯の夜の座敷で待つ女中（後ろ姿）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  O06: {scene: 赤い毛氈に並ぶ黒塗りの膳（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  O07: {scene: 帳面と小判と米俵と灯（字は読めない）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  O08: {scene: 金屏風の前に立つ上の女中（後ろ姿。右の屏風の字は切り出しで外す）, pan: v, crops: {wide: [1.7, 0.36, 0.5], left: [1.7, 0.33, 0.5], right: [1.7, 0.38, 0.55]}}
+  O09: {scene: 長局の一室で働く部屋方たち（後ろ姿）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  O10: {scene: 門の外を荷を持って行く男の使用人（後ろ姿）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  O11: {scene: 井戸で釣瓶の水を汲む二人（後ろ姿）, pan: v, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  O12: {scene: 杉丸太の棒で桶を担ぐ二人（後ろ姿）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  O13: {scene: 台所の天井まで水をかける大掃除（後ろ姿）, pan: v, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  O14: {scene: 大きなすり鉢で玄米を擂る手もと, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  O15: {scene: 濡れた石の床と草履の素足（足もと）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  O16: {scene: 文机で手紙を書く若い女中（横顔・後ろ姿）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  O17: {scene: 包みを抱えて城の門を出る女性（後ろ姿）, pan: v, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  O18: {scene: 物売りが広げた簪と櫛と小箱（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  O20: {scene: 髪を下ろして座る年老いた女性（後ろ姿）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  O21: {scene: 明治の書斎で話を書き取る男（後ろ姿）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  OEND: {scene: 夕暮れの江戸城の石垣と堀（右半分を空けた構図。終了画面）, lock: [1.0, 0.5, 0.5]}
+
+credits:
+  paintings/ooku_chiyoda_363.jpg: 楊洲周延《千代田の大奥》（1895年ごろ。メトロポリタン美術館、CC0）
+  paintings/ooku_chiyoda_364.jpg: 楊洲周延《千代田の大奥》（1895年ごろ。メトロポリタン美術館、CC0）
+  paintings/ooku_chiyoda_367.jpg: 楊洲周延《千代田の大奥》（1895年ごろ。メトロポリタン美術館、CC0）
+  paintings/ooku_chiyoda_369.jpg: 楊洲周延《千代田の大奥》（1895年ごろ。メトロポリタン美術館、CC0）
+  paintings/ooku_chiyoda_371.jpg: 楊洲周延《千代田の大奥》花見（1895年ごろ。メトロポリタン美術館、CC0）
+  paintings/ooku_chiyoda_372.jpg: 楊洲周延《千代田の大奥》雛祭（1895年ごろ。メトロポリタン美術館、CC0）
+  paintings/ooku_chiyoda_373.jpg: 楊洲周延《千代田の大奥》（1895年ごろ。メトロポリタン美術館、CC0）
+  paintings/ooku_chiyoda_375.jpg: 楊洲周延《千代田の大奥》（1895年ごろ。メトロポリタン美術館、CC0）
+  paintings/ooku_chiyoda_379.jpg: 楊洲周延《千代田の大奥》（1895年ごろ。メトロポリタン美術館、CC0）
+  paintings/ooku_chiyoda_384.jpg: 楊洲周延《千代田の大奥》（1895年ごろ。メトロポリタン美術館、CC0）
+  paintings/ooku_chiyoda_386.jpg: 楊洲周延《千代田の大奥》（1895年ごろ。メトロポリタン美術館、CC0）
+  paintings/ooku_chiyoda_390.jpg: 楊洲周延《千代田の大奥》（1895年ごろ。メトロポリタン美術館、CC0）
+  paintings/ooku_chiyoda_393.jpg: 楊洲周延《千代田の大奥》（1895年ごろ。メトロポリタン美術館、CC0）
+  paintings/ooku_chiyoda_394.jpg: 楊洲周延《千代田の大奥》（1895年ごろ。メトロポリタン美術館、CC0）
+  paintings/ooku_chiyoda_396.jpg: 楊洲周延《千代田の大奥》（1895年ごろ。メトロポリタン美術館、CC0）
+  paintings/ooku_chiyoda_398.jpg: 楊洲周延《千代田の大奥》（1895年ごろ。メトロポリタン美術館、CC0）
+  paintings/ooku_chiyoda_400.jpg: 楊洲周延《千代田の大奥》（1895年ごろ。メトロポリタン美術館、CC0）
+  paintings/ooku_chiyoda_402.jpg: 楊洲周延《千代田の大奥》御立退（1896年。メトロポリタン美術館、CC0）
+  paintings/ooku_gotenjochu_p91.jpg: 三田村鳶魚『御殿女中』（春陽堂、1930年）91頁（国立国会図書館デジタルコレクション）
+
+shots:
+  - 0 part:paintings/ooku_chiyoda_371.jpg wide
+  - 1 part:paintings/ooku_chiyoda_373.jpg wide
+  - 2 ai:O05 wide
+  - 3 ai:O15 wide
+  - 4 ai:O07 wide
+  - 5 ai:O09 wide
+  - 6 ai:O16 wide
+  - 7 ai:O17 wide
+  - 8 part:paintings/ooku_chiyoda_364.jpg wide
+  - 9 ai:O01 wide
+  - 10 ai:O02 wide
+  - 11 part:paintings/ooku_chiyoda_369.jpg wide
+  - 12 ai:O03 wide
+  - 13 ai:O03 right
+  - 14 ai:O21 wide
+  - 15 ai:O01 right
+  - 16 part:paintings/ooku_chiyoda_364.jpg right
+  - 17 part:paintings/ooku_chiyoda_394.jpg wide
+  - 18 ai:O05 left
+  - 19 ai:O05 right
+  - 20 ai:O01 left
+  - 21 ai:O05 wide
+  - 22 ai:O08 wide
+  - 23 ai:O03 left
+  - 24 ai:O06 wide
+  - 25 part:paintings/ooku_chiyoda_400.jpg wide
+  - 26 ai:O01 wide
+  - 27 ai:O07 left
+  - 28 ai:O07 right
+  - 29 part:paintings/ooku_chiyoda_379.jpg wide
+  - 30 ai:O07 wide
+  - 31 ai:O08 left
+  - 32 ai:O08 wide
+  - 33 ai:O08 right
+  - 34 ai:O07 left
+  - 35 ai:O15 left
+  - 36 ai:O07 right
+  - 37 part:paintings/ooku_chiyoda_363.jpg wide
+  - 38 ai:O08 left
+  - 39 ai:O07 wide
+  - 40 ai:O14 left
+  - 41 ai:O07 left
+  - 42 ai:O07 right
+  - 43 ai:O08 wide
+  - 44 ai:O09 right
+  - 45 ai:O09 wide
+  - 46 ai:O05 wide
+  - 47 ai:O09 left
+  - 48 ai:O15 wide
+  - 49 ai:O10 wide
+  - 50 ai:O07 left
+  - 51 ai:O10 left
+  - 52 ai:O07 wide
+  - 53 ai:O02 wide
+  - 54 ai:O12 left
+  - 55 ai:O11 wide
+  - 56 ai:O21 left
+  - 57 ai:O11 left
+  - 58 ai:O12 wide
+  - 59 ai:O13 wide
+  - 60 ai:O07 right
+  - 61 ai:O14 right
+  - 62 ai:O15 wide
+  - 63 part:paintings/ooku_chiyoda_386.jpg wide
+  - 64 ai:O17 left
+  - 65 ai:O09 right
+  - 66 part:paintings/ooku_chiyoda_371.jpg right
+  - 67 ai:O17 wide
+  - 68 ai:O16 left
+  - 69 ai:O17 right
+  - 70 ai:O02 left
+  - 71 ai:O16 wide
+  - 72 ai:O16 right
+  - 73 ai:O16 left
+  - 74 ai:O05 right
+  - 75 ai:O01 left
+  - 76 ai:O02 wide
+  - 77 part:paintings/ooku_chiyoda_369.jpg wide
+  - 78 ai:O10 wide
+  - 79 ai:O17 right
+  - 80 ai:O18 wide
+  - 81 ai:O18 right
+  - 82 ai:O08 left
+  - 83 ai:O08 right
+  - 84 ai:O09 left
+  - 85 ai:O03 right
+  - 86 part:paintings/ooku_chiyoda_372.jpg wide
+  - 87 ai:O16 wide
+  - 88 ai:O05 right
+  - 89 ai:O16 right
+  - 90 ai:O17 wide
+  - 91 part:paintings/ooku_chiyoda_398.jpg wide
+  - 92 ai:O21 right
+  - 93 part:paintings/ooku_chiyoda_384.jpg wide
+  - 94 ai:O07 right
+  - 95 ai:O20 wide
+  - 96 ai:O20 left
+  - 97 ai:O05 left
+  - 98 ai:O20 right
+  - 99 part:paintings/ooku_chiyoda_402.jpg wide
+  - 100 ai:O21 wide
+  - 101 part:paintings/ooku_chiyoda_367.jpg wide
+  - 102 ai:O21 left
+  - 103 part:paintings/ooku_chiyoda_384.jpg right
+  - 104 ai:O05 wide
+  - 105 part:paintings/ooku_chiyoda_375.jpg wide
+  - 106 ai:O21 wide
+  - 107 part:paintings/ooku_chiyoda_371.jpg wide
+  - 108 part:paintings/ooku_chiyoda_390.jpg wide
+  - 109 part:paintings/ooku_chiyoda_393.jpg wide
+  - 110 part:paintings/ooku_chiyoda_371.jpg left
+  - 111 part:paintings/ooku_chiyoda_371.jpg right
+  - 112 ai:O01 wide
+  - 113 ai:O12 wide
+  - 114 ai:O16 right
+  - 115 part:paintings/ooku_chiyoda_371.jpg wide
+  - 116 ai:O11 wide
+  - 117 ai:OEND wide
+  - end ai:OEND wide
+
+focus: {}
+
+fx:
+  O05: {lamp: {region: [0.0, 0.0, 0.5, 0.6]}}
+
+parts:
+  - {type: doc, from: 18, to: 18, image: paintings/ooku_gotenjochu_p91.jpg, box: [0.835, 0.04, 0.915, 0.97], source: 三田村鳶魚『御殿女中』（1930年）91頁, note: 「奥の者には休日といふものがありません」}
+  - {type: versus3, from: 37, to: 37, items: [[『御殿女中』の分限, 100石・100両], [『御老女衆記』, 50石・60両], [家定付きの表, 50石・60両]], every: 1.6}
+  - {type: quote, from: 50, to: 50, label: 史料, text: 女主人の物を盗むのが／仕事だと云はれて居りました, source: 大岡ませ子の談（三田村鳶魚『御殿女中』1930年）}
+  - {type: quote, from: 73, to: 73, label: 史料, text: 祖父祖母父母兄弟姉妹／伯父叔母甥姪子孫迄にかぎるべく候, source: 享保6年（1721年）4月の定（『御殿女中』所引）}
+  - {type: quote, from: 93, to: 93, label: 史料, text: 容色見にくき女は／人之妻にも望申間敷, source: 室鳩巣の書簡（正徳4年・1714年。『古事類苑』所引）}
+  - {type: quote, from: 104, to: 104, label: 史料, text: 父が二の丸に居たと／云ふのは嘘です, source: 大岡ませ子の談（三田村鳶魚『御殿女中』1930年）}
+
+# 台本の図の差し替え（上臈御年寄のくい違いは line 37 を部品（versus3）にして、図は 38 から）
+figures: []
+
+stills:
+  - {line: 0, note: 冒頭（0秒）}
+  - {line: 18, note: 史料の頁（休日なし）}
+  - {line: 21, note: 勤めの表（図）}
+  - {line: 32, note: 給金の表（図）}
+  - {line: 37, note: 上臈の給与のくい違い}
+  - {line: 41, note: 80両の換算（図）}
+  - {line: 46, note: 御年寄の部屋の使用人（図）}
+  - {line: 59, note: 大掃除}
+  - {line: 79, note: 閉じ込められていたのか（図）}
+  - {line: 104, note: 「嘘です」}
+  - {end: true, note: 終了画面の空き}
