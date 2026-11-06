@@ -67,6 +67,20 @@ const tradeDeadlineBlock = 2;
 const directSeeds = 6;
 const playInSeeds = 10;
 
+/// スタッフ。段階が上がるほど効くが、給料も高い。
+enum Staff {
+  coach('ヘッドコーチ', '若手の伸び'),
+  trainer('トレーナー', 'けがの少なさ・治りの早さ'),
+  scout('スカウト', 'ドラフトで送れるスカウトの数');
+
+  const Staff(this.label, this.effect);
+  final String label;
+  final String effect;
+}
+
+/// スタッフの段階ごとの1シーズンの給料(10万ドル)。
+const staffCosts = [10, 30, 60];
+
 /// チームの考え方。トレードで欲しがるものが変わる。
 enum TeamMode {
   contend('優勝を狙う', '今すぐ勝てる選手が欲しい'),
@@ -80,8 +94,9 @@ enum TeamMode {
 }
 
 class Team {
-  Team({required this.index, required this.roster, this.wins = 0, this.losses = 0, this.mode = TeamMode.balanced, this.deadCap = 0, List<int>? rotation})
-      : rotation = rotation ?? [];
+  Team({required this.index, required this.roster, this.wins = 0, this.losses = 0, this.mode = TeamMode.balanced, this.deadCap = 0, List<int>? rotation, List<int>? staff})
+      : rotation = rotation ?? [],
+        staff = staff ?? [2, 2, 2];
 
   final int index;
   final List<Player> roster;
@@ -92,16 +107,29 @@ class Team {
   /// 放出した選手の、今シーズン分の年俸(今季の合計に数える)。
   int deadCap;
 
+  /// スタッフの段階(1〜3)。[Staff] の順(コーチ・トレーナー・スカウト)。
+  List<int> staff;
+
+  int staffLevel(Staff s) => staff[s.index].clamp(1, 3);
+
+  /// スタッフに払う1シーズンの給料(10万ドル)。
+  int get staffCost => [for (final s in Staff.values) staffCosts[staffLevel(s) - 1]].fold(0, (a, b) => a + b);
+
+  /// けがをしていない選手。
+  List<Player> get healthy => [for (final p in roster) if (p.injured == 0) p];
+
   /// 先発と控えの順(選手の id)。空なら自動(力の高い順に、ガードとビッグを先発に入れる)。
   List<int> rotation;
 
   /// 出場の順(先発5人、控えの順)。[rotation] にいない選手は自動の順で後ろに付く。
+  /// けがの選手は出られないので、いちばん後ろに回す。
   List<Player> get order {
-    final auto = lineup(roster);
-    if (rotation.isEmpty) return auto;
-    final byId = {for (final p in roster) p.id: p};
+    final auto = lineup(healthy);
+    final hurt = [for (final p in roster) if (p.injured > 0) p];
+    if (rotation.isEmpty) return [...auto, ...hurt];
+    final byId = {for (final p in healthy) p.id: p};
     final fixed = [for (final id in rotation) if (byId[id] != null) byId[id]!];
-    return [...fixed, ...auto.where((p) => !fixed.contains(p))];
+    return [...fixed, ...auto.where((p) => !fixed.contains(p)), ...hurt];
   }
 
   TeamDef get def => teamDefs[index];
@@ -117,7 +145,7 @@ class Team {
 
   /// チームの強さ。力の高い順に9人を重み付きで平均し、ガードとビッグがいなければ下げる。
   /// 自分で順を決めたときは、その順で数える(力の低い選手を先発にすると弱くなる)。
-  double get strength => rotation.isEmpty ? teamStrength(roster) : orderStrength(order);
+  double get strength => rotation.isEmpty ? teamStrength(healthy) : orderStrength(order.where((p) => p.injured == 0).toList());
 
   Map<String, dynamic> toJson() => {
         'i': index,
@@ -127,6 +155,7 @@ class Team {
         'm': mode.index,
         if (deadCap != 0) 'dc': deadCap,
         if (rotation.isNotEmpty) 'ro': rotation,
+        'sf': staff,
       };
 
   static Team fromJson(Map<String, dynamic> j) => Team(
@@ -137,6 +166,7 @@ class Team {
         mode: TeamMode.values[((j['m'] as int?) ?? 1).clamp(0, TeamMode.values.length - 1)],
         deadCap: (j['dc'] as int?) ?? 0,
         rotation: [for (final x in (j['ro'] as List? ?? const [])) x as int],
+        staff: j['sf'] is List && (j['sf'] as List).length == Staff.values.length ? [for (final x in j['sf'] as List) (x as int).clamp(1, 3)] : null,
       );
 }
 
@@ -234,6 +264,9 @@ double winChance(double home, double away) => 1 / (1 + math.exp(-(home - away + 
 const _rebPos = {Pos.pg: 0.5, Pos.sg: 0.6, Pos.sf: 0.9, Pos.pf: 1.2, Pos.c: 1.35};
 const _astPos = {Pos.pg: 2.2, Pos.sg: 1.1, Pos.sf: 0.8, Pos.pf: 0.55, Pos.c: 0.45};
 
+/// この区切りで起きたけが(チームの番号と選手)。区切りを進める側が読んで空にする。
+final injuries = <(int, Player)>[];
+
 /// 出場時間の配分(先発から順に、分)。
 const minutesByOrder = [34, 33, 32, 30, 28, 22, 18, 14, 10, 8, 6, 3, 2, 0, 0];
 
@@ -243,7 +276,7 @@ const minutesByOrder = [34, 33, 32, 30, 28, 22, 18, 14, 10, 8, 6, 3, 2, 0, 0];
 (Player?, int) boxScore(Team t, int teamPts, Rng rng, {bool count = true}) {
   final order = t.order;
   if (order.isEmpty) return (null, 0);
-  final mins = [for (var i = 0; i < order.length; i++) i < minutesByOrder.length ? minutesByOrder[i] : 0];
+  final mins = [for (var i = 0; i < order.length; i++) i < minutesByOrder.length && order[i].injured == 0 ? minutesByOrder[i] : 0];
   List<int> share(int total, double Function(Player) skill) {
     final w = [for (var i = 0; i < order.length; i++) mins[i] * skill(order[i]) * (0.75 + rng.nextInt(50) / 100)];
     final sum = w.fold(0.0, (a, b) => a + b);
@@ -264,6 +297,21 @@ const minutesByOrder = [34, 33, 32, 30, 28, 22, 18, 14, 10, 8, 6, 3, 2, 0, 0];
   final pts = share(teamPts, (p) => pow((p.attr(Attr.outside) + p.attr(Attr.inside)) / 2 - 40, 1.7));
   final reb = share(38 + rng.nextInt(8), (p) => pow(p.attr(Attr.rebound) - 35, 1.3) * _rebPos[p.pos]!);
   final ast = share(20 + rng.nextInt(10), (p) => pow(p.attr(Attr.passing) - 35, 1.3) * _astPos[p.pos]!);
+  // けがの残りを1試合ぶん減らし、出た選手はけがの抽選(トレーナーが良いほど少なく、治りも早い)
+  final trainer = t.staffLevel(Staff.trainer);
+  final chance = const [0.0075, 0.005, 0.003][trainer - 1];
+  final speed = const [1.25, 1.0, 0.75][trainer - 1];
+  for (var i = 0; i < order.length; i++) {
+    final p = order[i];
+    if (p.injured > 0) {
+      p.injured--;
+    } else if (count && mins[i] > 0 && rng.nextInt(100000) < (chance * mins[i] / 30 * 100000).round()) {
+      final r = rng.nextInt(100);
+      final games = r < 80 ? 1 + rng.nextInt(6) : r < 97 ? 8 + rng.nextInt(15) : 30 + rng.nextInt(30);
+      p.injured = math.max(1, (games * speed).round());
+      injuries.add((t.index, p));
+    }
+  }
   var top = 0;
   for (var i = 0; i < order.length; i++) {
     if (pts[i] > pts[top]) top = i;

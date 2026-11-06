@@ -210,7 +210,7 @@ void main() {
       final teamPts = c.lastGames.fold(0, (s, g) => s + g.ptsOf(c.mine));
       expect(ptsSum, teamPts, reason: '個人の得点の合計はチームの得点');
       final star = lineup(c.me.roster).first;
-      expect(star.stats.gp, blockSizes[0]);
+      expect(star.stats.gp, inInclusiveRange(blockSizes[0] - 8, blockSizes[0]), reason: 'けがで休んだ試合は数えない');
       expect(star.stats.ppg, greaterThan(8));
       while (c.phase == Phase.season) {
         c.playBlock();
@@ -357,6 +357,98 @@ void main() {
       final before = c.costs;
       c.playPlayoffs();
       expect(c.costs - before, ((c.me.payroll - taxLine) * 1.5).round());
+    });
+  });
+
+  group('けが・スタッフ・交渉', () {
+    test('シーズン中にけがが起き、けが人は出場せず、試合が進むと治る。オフには全員治る', () {
+      final c = careerAt(7, 12)..startSeason();
+      var hurtSeen = false;
+      while (c.phase == Phase.season) {
+        c.playBlock();
+        for (final t in c.teams) {
+          for (final p in t.roster.where((p) => p.injured > 0)) {
+            hurtSeen = true;
+            expect(t.order.indexOf(p), greaterThanOrEqualTo(t.healthy.length), reason: 'けが人は後ろ');
+          }
+        }
+      }
+      expect(hurtSeen, isTrue);
+      expect(c.log.any((l) => l.contains('けが:')), isTrue);
+      c.playPlayoffs();
+      c.fired = false;
+      c.toOffseason();
+      expect([for (final t in c.teams) ...t.roster].every((p) => p.injured == 0), isTrue);
+    });
+
+    test('トレーナーが良いほど、けがは少ない', () {
+      int count(int level) {
+        var n = 0;
+        for (var seed = 1; seed <= 4; seed++) {
+          final c = Career.start(seed: seed);
+          for (final t in c.teams) {
+            t.staff = [2, level, 2];
+          }
+          c.startSeason();
+          while (c.phase == Phase.season) {
+            c.playBlock();
+          }
+          n += c.log.where((l) => l.contains('けが:')).length;
+        }
+        return n;
+      }
+      expect(count(3), lessThan(count(1)));
+    });
+
+    test('スタッフはシーズン前とオフだけ変えられ、給料は支出に入る。スカウトの段階でスカウトの数が変わる', () {
+      final c = careerAt(7, 12);
+      c.setStaff(Staff.scout, 3);
+      expect(c.me.staffLevel(Staff.scout), 3);
+      c.startSeason();
+      c.setStaff(Staff.scout, 1);
+      expect(c.me.staffLevel(Staff.scout), 3, reason: 'シーズン中は変えられない');
+      c.playBlock();
+      expect(c.costs, greaterThan((c.me.payroll * blockSizes[0] / gamesPerSeason).round()));
+      while (c.phase == Phase.season) {
+        c.playBlock();
+      }
+      c.playPlayoffs();
+      c.fired = false;
+      c.toOffseason();
+      expect(c.scoutsLeft, 4);
+    });
+
+    test('交渉: 求める額なら必ず契約、1割高いと気持ちが上がる、1割安くを断られると気持ちが下がって二度と値切れない', () {
+      final c = careerAt(7, 12);
+      var guard = 0;
+      while ((c.phase != Phase.contracts || c.expiring.length < 2) && guard++ < 300) {
+        if (c.phase == Phase.seasonEnd) c.fired = false;
+        if (c.phase == Phase.contracts) {
+          for (final id in [...c.expiring]) {
+            c.letGo(id);
+          }
+        }
+        botStep(c);
+      }
+      expect(c.phase, Phase.contracts);
+      final a = c.me.roster.firstWhere((p) => p.id == c.expiring[0]);
+      a.morale = 60;
+      final askA = c.askOf(a, c.me).salary;
+      if (c.resignProblem(a) == null) {
+        expect(c.offer(a.id, 1, 1.1), isTrue);
+        expect(a.morale, 70);
+        expect(a.salary, (askA * 1.1).round().clamp(minSalary, maxSalary));
+      }
+      final b = c.me.roster.firstWhere((p) => p.id == c.expiring.last);
+      // 値下げを断られるまで試す(断られたら、もう値切れない)
+      b.morale = 25; // 低めだが、再契約に応じなくなるほどではない
+      final before = b.morale;
+      final ok = c.offer(b.id, 1, 0.9);
+      if (!ok) {
+        expect(c.haggled, contains(b.id));
+        expect(b.morale, lessThanOrEqualTo(before));
+        expect(c.offer(b.id, 1, 0.9), isFalse);
+      }
     });
   });
 

@@ -7,6 +7,7 @@ import '../../monetization/monetization.dart';
 import '../art/title_art.dart';
 import '../gm_controller.dart';
 import 'common.dart';
+import 'negotiate_dialog.dart';
 import 'style.dart';
 
 /// 進行のタブ。いまやること・試合の結果・届いた申し込み・オフの知らせ。
@@ -83,6 +84,7 @@ class ProgressTab extends StatelessWidget {
       ..._offerCard(context, car),
       _goalsCard(car),
       _moneyCard(car),
+      _staffCard(car),
     ];
   }
 
@@ -120,6 +122,7 @@ class ProgressTab extends StatelessWidget {
       ]),
       ..._offerCard(context, car),
       _goalsCard(car),
+      ..._injuryCard(car),
       // 試合の結果を先に見せ、経営はそのあと
       if (car.lastGames.isNotEmpty)
         _card([
@@ -159,6 +162,19 @@ class ProgressTab extends StatelessWidget {
     ];
   }
 
+  /// けがで休んでいる自分の選手。
+  List<Widget> _injuryCard(Career car) {
+    final hurt = [for (final p in car.me.roster) if (p.injured > 0) p];
+    if (hurt.isEmpty) return const [];
+    return [
+      _card([
+        _head('けが人', icon: Icons.healing_rounded, color: GmColors.bad),
+        const SizedBox(height: 4),
+        for (final p in hurt) Text('・${p.name}(${p.pos.short}・力${p.ovr}) あと${p.injured}試合', style: const TextStyle(height: 1.6)),
+      ]),
+    ];
+  }
+
   /// オーナーの目標(シーズン中は、いまの見込みで印を付ける)。
   Widget _goalsCard(Career car) {
     if (car.goals.isEmpty || car.phase != Phase.season) return const SizedBox.shrink();
@@ -177,6 +193,30 @@ class ProgressTab extends StatelessWidget {
         ),
       const SizedBox(height: 4),
       Text('果たすと信頼が+$goalTrust、外すと-$goalTrust(勝ち数は差の1.5倍)。', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
+    ]);
+  }
+
+  /// スタッフ(シーズン前とオフの契約のときに変えられる)。
+  Widget _staffCard(Career car) {
+    if (!car.canChangeStaff) return const SizedBox.shrink();
+    return _card([
+      _head('スタッフ', icon: Icons.groups_2_rounded),
+      const SizedBox(height: 6),
+      for (final s in Staff.values) ...[
+        Text('${s.label}(${s.effect})', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+        const SizedBox(height: 4),
+        SegmentedButton<int>(
+          showSelectedIcon: false,
+          segments: [
+            for (var lv = 1; lv <= 3; lv++)
+              ButtonSegment(value: lv, label: Text('${const ['並', '良', '一流'][lv - 1]} ${money(staffCosts[lv - 1])}', style: const TextStyle(fontSize: 12))),
+          ],
+          selected: {car.me.staffLevel(s)},
+          onSelectionChanged: (v) => c.setStaff(s, v.first),
+        ),
+        const SizedBox(height: 8),
+      ],
+      Text('スタッフの給料 1シーズン ${money(car.me.staffCost)}(収支の支出に入る)', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
     ]);
   }
 
@@ -382,6 +422,7 @@ class ProgressTab extends StatelessWidget {
         _expiringRow(context, car, p),
         const SizedBox(height: 6),
       ],
+      _staffCard(car),
       const SizedBox(height: 10),
       OutlinedButton.icon(onPressed: () => goTab(3), icon: const Icon(Icons.person_add_alt_1_rounded), label: const Text('自由契約の選手を見る')),
       const SizedBox(height: 8),
@@ -407,11 +448,7 @@ class ProgressTab extends StatelessWidget {
             style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(36)),
             onPressed: problem != null
                 ? null
-                : () async {
-                    final y = await pickYears(context,
-                        title: '${p.name}と再契約', body: '年俸 ${money(ask.salary)}。何年にする?', maxYears: ask.maxYears);
-                    if (y != null) c.resign(p.id, y);
-                  },
+                : () => negotiate(context, c, p, freeAgent: false),
             child: const Text('再契約'),
           ),
         ),

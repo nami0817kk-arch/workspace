@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../gm/career.dart';
 import '../gm/draft.dart';
+import '../gm/league.dart';
 import '../gm/profile.dart';
 import '../gm/trade.dart';
 import '../monetization/monetization.dart';
@@ -177,6 +178,17 @@ class GmController extends ChangeNotifier {
   void finishContracts() => _act((c) => c.finishContracts());
   void setRotation(List<int> ids) => _act((c) => c.setRotation(ids));
   void setPrice(int level) => _act((c) => c.setPrice(level));
+  void setStaff(Staff s, int level) => _act((c) => c.setStaff(s, level));
+
+  /// 契約を申し出る(交渉)。受けたら true。
+  bool offer(int id, int years, double factor) {
+    final c = career;
+    if (c == null || busy) return false;
+    final ok = c.offer(id, years, factor);
+    _record(c);
+    _changed();
+    return ok;
+  }
   void acceptIncoming() => _act((c) => c.acceptIncoming());
   void declineIncoming() => _act((c) => c.declineIncoming());
 
