@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../gm/career.dart';
 import '../../gm/league.dart';
+import '../../gm/player.dart';
 import '../gm_controller.dart';
 import 'common.dart';
 import 'style.dart';
@@ -33,6 +34,57 @@ class LeagueTab extends StatelessWidget {
                   for (var i = 0; i < list.length; i++) _teamRow(context, car, list[i], i + 1, started),
                 ]);
               }),
+            ),
+          ),
+        ],
+        if (car.leaders((s) => s.ppg).isNotEmpty) ...[
+          const SectionTitle('個人成績の上位(1試合あたり)'),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                for (final (label, key) in <(String, double Function(Stats))>[
+                  ('得点', (s) => s.ppg),
+                  ('リバウンド', (s) => s.rpg),
+                  ('アシスト', (s) => s.apg),
+                ]) ...[
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4, bottom: 2),
+                    child: Text(label, style: const TextStyle(fontWeight: FontWeight.bold, color: GmColors.ball)),
+                  ),
+                  for (final (p, team) in car.leaders(key))
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 2),
+                      child: Row(children: [
+                        TeamBadge(team: team, size: 18),
+                        const SizedBox(width: 6),
+                        Expanded(
+                          child: Text(p.name,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(color: team == car.mine ? GmColors.ball : null, fontSize: 13)),
+                        ),
+                        Text(key(p.stats).toStringAsFixed(1), style: const TextStyle(fontWeight: FontWeight.bold)),
+                      ]),
+                    ),
+                ],
+              ]),
+            ),
+          ),
+        ],
+        if (car.awards.isNotEmpty) ...[
+          const SectionTitle('表彰の記録'),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                for (final a in car.awards.reversed.take(15))
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 2),
+                    child: Text('${a.season}年目 ${a.kind.label}: ${a.name}(${teamDefs[a.team].short})',
+                        style: TextStyle(fontSize: 13, color: a.team == car.mine ? GmColors.gold : null)),
+                  ),
+              ]),
             ),
           ),
         ],

@@ -11,7 +11,8 @@ enum Achievement {
   dealer('やり手', '1回の任期でトレードを8回成立させる'),
   fullTerm('10年の任期', '解任されずに10年を務める'),
   lottery('くじを引き当てる', 'ドラフトで全体1位の指名権を手にする'),
-  capMaster('身の丈経営', 'ぜいたく税を払わずに優勝する');
+  capMaster('身の丈経営', 'ぜいたく税を払わずに優勝する'),
+  mvp('MVPを育てる', '自分のチームの選手がMVPに選ばれる');
 
   const Achievement(this.title, this.text);
   final String title;
@@ -53,6 +54,7 @@ class Profile {
       if (c.titles >= 3) Achievement.dynasty,
       if (h.wins >= 60) Achievement.bigSeason,
       if (h.champion && c.lastTax == 0) Achievement.capMaster,
+      if (c.awardsOf(c.season).any((a) => a.kind == AwardKind.mvp && a.team == c.mine)) Achievement.mvp,
       if (c.me.roster.any((p) => c.draftedIds.contains(p.id) && p.ovr >= 80)) Achievement.homegrown,
     ];
     return _grant(got);

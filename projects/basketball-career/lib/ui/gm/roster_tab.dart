@@ -91,6 +91,11 @@ class RosterTab extends StatelessWidget {
                   OvrBadge(p.ovr, size: 56, delta: p.lastDelta),
                 ]),
                 const SizedBox(height: 12),
+                AttrBars(p: p),
+                const SizedBox(height: 10),
+                if (p.stats.gp > 0) _line('今季', '${p.stats.line}(${p.stats.gp}試合)'),
+                if (p.prev.gp > 0) _line('昨季', '${p.prev.line}(${p.prev.gp}試合)'),
+                for (final a in car.awards.where((a) => a.player == p.id)) _line('表彰', '${a.season}年目 ${a.kind.label}'),
                 _line('年俸', '${money(p.salary)}(残り${p.years}年)'),
                 _line('力に見合う年俸', money(fairSalary(p.ovr, p.age))),
                 _line('伸びしろ', switch (p.grade) {

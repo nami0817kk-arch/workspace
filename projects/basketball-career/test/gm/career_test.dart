@@ -202,6 +202,75 @@ void main() {
     });
   });
 
+  group('個人成績・能力・表彰', () {
+    test('試合のたびに個人の数字が配られ、チームの得点と合う。開幕で前のシーズンに移る', () {
+      final c = careerAt(3, 15)..startSeason();
+      c.playBlock();
+      final ptsSum = c.me.roster.fold(0, (s, p) => s + p.stats.pts);
+      final teamPts = c.lastGames.fold(0, (s, g) => s + g.ptsOf(c.mine));
+      expect(ptsSum, teamPts, reason: '個人の得点の合計はチームの得点');
+      final star = lineup(c.me.roster).first;
+      expect(star.stats.gp, blockSizes[0]);
+      expect(star.stats.ppg, greaterThan(8));
+      while (c.phase == Phase.season) {
+        c.playBlock();
+      }
+      c.playPlayoffs();
+      c.fired = false;
+      final line = star.stats.line;
+      c.toOffseason();
+      while (c.phase == Phase.draft) {
+        c.passPick();
+      }
+      c.finishContracts();
+      c.startSeason();
+      if (c.me.roster.contains(star)) {
+        expect(star.stats.gp, 0);
+        expect(star.prev.line, line);
+      }
+    });
+
+    test('ビッグはリバウンド、ガードはアシストを多く取る', () {
+      final c = careerAt(5, 10)..startSeason();
+      while (c.phase == Phase.season) {
+        c.playBlock();
+      }
+      final reb = c.leaders((s) => s.rpg, count: 10);
+      final ast = c.leaders((s) => s.apg, count: 10);
+      expect(reb.where((x) => x.$1.pos.big).length, greaterThanOrEqualTo(7));
+      expect(ast.where((x) => x.$1.pos.guard).length, greaterThanOrEqualTo(7));
+    });
+
+    test('能力の内訳はポジションの色が出る(センターはリバウンド、ポイントガードはパス)', () {
+      final c = Career.start(seed: 8);
+      final all = [for (final t in c.teams) ...t.roster];
+      double avg(Pos pos, Attr a) {
+        final ps = all.where((p) => p.pos == pos).toList();
+        return ps.fold(0, (s, p) => s + p.attrs[a.index]) / ps.length;
+      }
+      expect(avg(Pos.c, Attr.rebound), greaterThan(avg(Pos.pg, Attr.rebound) + 10));
+      expect(avg(Pos.pg, Attr.passing), greaterThan(avg(Pos.c, Attr.passing) + 10));
+    });
+
+    test('シーズンの終わりにMVP・最優秀守備選手が決まり、2年目からは新人王も決まる', () {
+      final c = careerAt(6, 12);
+      var guard = 0;
+      while (c.history.length < 2 && guard++ < 300) {
+        if (c.phase == Phase.seasonEnd) c.fired = false;
+        botStep(c);
+      }
+      expect(c.awardsOf(1).map((a) => a.kind), containsAll([AwardKind.mvp, AwardKind.dpoy]));
+      for (final roy in c.awards.where((a) => a.kind == AwardKind.roy)) {
+        final p = [for (final t in c.teams) ...t.roster, ...c.freeAgents].where((p) => p.id == roy.player);
+        if (p.isNotEmpty && roy.season == c.season) expect(p.first.exp, 0, reason: '新人王は1年目の選手');
+        expect(double.parse(roy.line.split('点').first), greaterThanOrEqualTo(5));
+      }
+      expect(c.log.any((l) => l.contains('MVP:')), isTrue);
+      final copy = Career.fromJson(jsonDecode(jsonEncode(c.toJson())) as Map<String, dynamic>);
+      expect(copy.awards.length, c.awards.length);
+    });
+  });
+
   group('相手に聞く・相手同士のトレード・ニュース', () {
     test('受け取りたい選手を選ぶと、相手が受ける出し方が返り、そのまま成立する', () {
       var found = 0;
