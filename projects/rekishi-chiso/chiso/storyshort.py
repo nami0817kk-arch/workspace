@@ -1895,7 +1895,7 @@ def post_description(doc: dict, config: dict, main_video: str | None, known: dic
         seen.update({url, lab} - {""})
         rows.append(f"{lab}　{url}" if url else lab)     # URL のすぐ後ろに字を付けない（リンクが壊れる）
     if rows:
-        out += ["■ 画面の絵と出典（Wikimedia Commons。著作権の切れた作品）"] + rows + [""]
+        out += ["■ 画面の絵と出典（著作権の切れた作品）"] + rows + [""]
     voice = (config.get("cast") or {}).get("語り", {}).get("name", "剣崎雌雄")
     out += ["■ 音声", f"VOICEVOX:{voice}", ""]
     tags = doc.get("hashtags") or ["#日本史", "#" + re.split(r"[（の]", str((doc.get("header") or {}).get("tag", "お市の方")) + "の")[0]

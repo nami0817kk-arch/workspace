@@ -39,6 +39,18 @@ def test_corner_tag_is_small_top_left():
     assert y1 - y0 <= M.MH * 0.06 and x1 <= M.MW * 0.45         # 全幅の帯ではなく、左上の小さな札（字は約2.8%、10-25）
 
 
+def test_long_chapter_title_fits_inside_the_card():
+    title = "まとめ：もしも北条氏政が秀吉に頭を下げていたら、北条家はどうなったのか"   # 11-06 に両端が切れた章題
+    assert M.split_title(title) == ["まとめ：もしも北条氏政が秀吉に頭を下げていたら、", "北条家はどうなったのか"]
+    assert M.split_title("分岐2　家康は江戸へ") == ["分岐2", "家康は江戸へ"]
+    if not Path(FONT).exists():
+        return
+    font_of = S.make_font_of({"gothic": FONT})
+    card = M.chapter_card(Image.new("RGB", (M.MW, M.MH), (200, 200, 200)), "まとめ", title, font_of, font_of)
+    x0, _, x1, _ = Image.eval(card.convert("L"), lambda v: 255 if v > 200 else 0).getbbox()
+    assert x0 > M.MW * 0.05 and x1 < M.MW * 0.95
+
+
 def test_plan_follows_shot_rules():
     look = yaml.safe_load(LOOK.read_text(encoding="utf-8"))
     sc = script.load(ROOT / look["script"])

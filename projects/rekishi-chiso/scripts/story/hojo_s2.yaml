@@ -1,0 +1,160 @@
+# 物語完結型ショート 北条 s2（2026-11-06）。本編 scripts/hojo-if-story.yaml（11/8 12:00 公開）の第1章（1588年、氏規の上洛）から。11/9 11:00 公開。
+# 形式は tsurumatsu_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。「もしも」の部分は入れない（事実だけ）。
+# 絵は本編の AI 絵（out/story/hojo-if/main/）と本編で使った実在の肖像・屏風だけ。H21 は姫路城に見えるので使わない。
+# 切り口：家康の起請文（1588年5月21日）に迫られて、京へ上ったのは当主の氏直でも父の氏政でもなく、弟の氏規。聚楽第の席では、衣冠の武家13人の中で、
+#   官位の無い氏規は烏帽子に直垂で末座（『吉川家史臣略記』を『日本戦史』が引く）。『多聞院日記』は「天下中が満足」。
+#   本編の答え（氏政の上洛の約束と引き換えに沼田の城を渡したこと）は言わない。
+#   謁見の日は15日／22日で割れるので言わない（本編どおり）。逸話（『続武家閑談』）は入れない。
+# 事実カード：hojo-18・21・129・89・88。言い方は本編のまま。
+# 計算（自分で計算し直した）：天正16年＝1588年。5月21日→8月で約3か月（台本では言わない。本編どおり）。
+# 理解テスト4問：
+#   ①誰の話か：北条家と、氏政の弟の北条氏規
+#   ②いつ・どこで何が：1588年5月21日、家康が氏政・氏直に起請文を送り、兄弟の誰かを京へ上らせるよう迫った
+#   ③誰が選ばれたか：8月、当主の氏直でも父の氏政でもなく、弟の氏規が京へ上り、聚楽第でいちばん下の席に座った
+#   ④どうなったか：京では東国の和談が整ったと喜ばれた。氏政本人の上洛の約束と引き換えに秀吉は何を渡したのか、の問いで閉じる（答えは本編）
+title: 北条氏規｜いちばん下の席に座った弟
+yt_title: 北条家で最初に秀吉の前に出たのは氏政の弟・氏規だった　1588年の聚楽第、烏帽子に直垂でいちばん下の席に
+description: |-
+  1588年の5月21日、徳川家康は、北条氏政と氏直に起請文を送りました。家康は、氏直の妻の父です。その月のうちに、氏政の兄弟の誰かを京へ上らせるよう迫りました。
+  8月、京へ上ったのは、当主の氏直でも、父の氏政でもなく、氏政の弟の北条氏規でした。秀吉と会った席の様子は、明治の参謀本部がまとめた『日本戦史』が引く『吉川家史臣略記』にあります。正装の衣冠を着た13人の武家が並ぶなか、官位の無い氏規は、烏帽子に直垂のふだんの武家の装いで、いちばん下の席に座りました。奈良の興福寺の僧、英俊の『多聞院日記』は、8月18日に、東国はすべて和談が整い、天下中が満足している、と書いています。
+  では、氏政本人の上洛の約束と引き換えに、秀吉は何を渡したのか。本編は概要欄のリンクからどうぞ。
+hashtags: ['#北条氏規', '#北条氏政', '#日本史']
+ai_images: true
+ai_disclosure: この動画の人物・情景の画像の多くは、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/hojo-if
+out: hojo_story_s2
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+readings: {『日本戦史』: 『にほんせんし』, 起請文を送った: キショウモンを送った}      # 台本ごとの読み替え（readings.yaml は変えない。ニッポンセンシ・キショウ／モンの区切りを避ける）
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 北条氏規（北条氏政の弟）
+  title: "京へ上ったのは、《当主ではなかった》"
+now:
+  - {at: 1588年の5月21日, text: "1588年5月　家康の起請文", point: 0}
+  - {at: そして8月, text: "1588年8月　京都・聚楽第", point: 1}
+timeline:
+  - {label: "1588年5月"}
+  - {label: "1588年8月"}
+cards:
+  - type: versus
+    from: 13人の武家が並ぶ
+    until: 奈良の興福寺の
+    left: {tag: 衣冠の武家, big: 13人, dots: 13, color: blue}
+    right: {tag: 烏帽子に直垂, big: 氏規, dots: 1, color: red}
+    mid: 対
+    text_y: 0.70
+shots:
+  H19:
+    kind: ai
+    file: hojo-if/main/H19.jpg
+    focus: [0.5, 0.5]
+    move: left
+    must: 聚楽第の遠景（秀吉の前に出た）
+  Ieyasu:
+    kind: real
+    image: paintings/ieyasu_portrait_toshodaigongen.jpg
+    focus: [0.5, 0.35]
+    move: down
+    text_y: 0.82
+    credit: "伝 狩野探幽《徳川家康像（東照大権現像）》江戸前期（パブリックドメイン）"
+    must: 家康の肖像（起請文）
+  H08:
+    kind: ai
+    file: hojo-if/main/H08.jpg
+    focus: [0.55, 0.55]
+    move: right
+    must: 街道を急ぐ使者（京へ上らせるよう迫る）
+  Ujimasa:
+    kind: real
+    image: paintings/shingen_hojo_ujimasa_portrait.jpg
+    focus: [0.5, 0.35]
+    move: down
+    text_y: 0.82
+    credit: "《北条氏政像》（パブリックドメイン）"
+    must: 氏政の肖像（当主の氏直でも、父の氏政でもない）
+  H17:
+    kind: ai
+    file: hojo-if/main/H17.jpg
+    focus: [0.45, 0.5]
+    move: left
+    must: 街道を行く輿と護衛（弟の氏規が京へ）
+  H04:
+    kind: ai
+    file: hojo-if/main/H04.jpg
+    focus: [0.45, 0.5]
+    move: right
+    must: 机の上の文書（『日本戦史』が引く記録）
+  Jurakudai:
+    kind: real
+    image: paintings/hideyoshi_jurakudai_screen_mitsui.jpg
+    focus: [0.35, 0.5]
+    move: right
+    credit: "《聚楽第図屏風》桃山時代 三井記念美術館蔵（パブリックドメイン）"
+    must: 聚楽第の屏風（席の様子）
+  H24:
+    kind: ai
+    file: hojo-if/main/H24.jpg
+    focus: [0.45, 0.5]
+    move: in
+    must: 灯のもとの文机と書状（多聞院日記）
+  H20:
+    kind: ai
+    file: hojo-if/main/H20.jpg
+    focus: [0.5, 0.5]
+    move: left
+    must: 上野の山並み（何を渡したのか）
+lines:
+  # fact: hojo-129
+  - 語り: 北条家で、最初に京へ上り、《!秀吉の前に出た》のは、誰だったのか。
+    shot: H19
+    tone: 強調
+    pause: 0.12
+  # fact: hojo-18
+  - 語り: 1588年の5月21日。徳川家康が、北条氏政と氏直に、起請文を送った。家康は、氏直の妻の父だ。
+    shot: Ieyasu
+    tone: しみじみ
+    pause: 0.12
+  # fact: hojo-18
+  - 語り: その月のうちに、氏政の兄弟の誰かを、京へ上らせるよう迫った。
+    shot: H08
+    tone: 重い
+    pause: 0.12
+  # fact: hojo-21
+  - 語り: そして8月。京へ上ったのは、当主の氏直でも、父の氏政でもない。
+    shot: Ujimasa
+    tone: 重い
+    pause: 0.12
+  # fact: hojo-21
+  - 語り: 氏政の弟、北条氏規だった。
+    shot: H17
+    tone: しみじみ
+    pause: 0.12
+  # fact: hojo-89
+  - 語り: 秀吉と会った席の様子は、明治の参謀本部がまとめた、『日本戦史』が引く記録にある。
+    shot: H04
+    tone: しみじみ
+    pause: 0.12
+  # fact: hojo-89
+  - 語り: 正装の衣冠を着た、13人の武家が並ぶ。官位の無い氏規は、烏帽子に直垂の、ふだんの武家の装いで、いちばん下の席に座った。
+    shot: Jurakudai
+    tone: 重い
+    pause: 0.12
+  # fact: hojo-88
+  - 語り: 奈良の興福寺の僧、英俊の『多聞院日記』は、8月18日に書いた。東国はすべて和談が整い、天下中が満足している。
+    shot: H24
+    tone: しみじみ
+    pause: 0.3
+    dip: true
+  - 語り: では、氏政本人の上洛の約束と引き換えに、秀吉は、何を渡したのか。
+    shot: H20
+    tone: 疑問
+    pause: 0.15
