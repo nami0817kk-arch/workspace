@@ -448,11 +448,32 @@ class Career {
     }
     lastGames = games;
     block++;
+    _updateMorale();
     if (block <= tradeDeadlineBlock && rng.chance(0.5)) _aiTrades(1);
     if (block >= blocksPerSeason) {
       phase = Phase.playoffs;
     } else if (rng.chance(0.6)) {
       _makeIncoming();
+    }
+  }
+
+  /// 自分のチームの選手の気持ちを、区切りごとに動かす。
+  /// 力の順位より出場の順が2つ以上下なら下がり、上なら上がる。チームの勝率でも動く。
+  void _updateMorale() {
+    final order = me.order;
+    final byOvr = [...me.roster]..sort((a, b) => b.ovr.compareTo(a.ovr));
+    final pct = me.winPct;
+    for (var i = 0; i < order.length; i++) {
+      final p = order[i];
+      final expected = byOvr.indexOf(p);
+      var d = 0;
+      if (i >= expected + 2 && expected < 9) d -= 3 + (i - expected);
+      if (i < expected) d += 2;
+      if (pct >= 0.6) d += 3;
+      if (pct < 0.4) d -= 3;
+      final before = p.morale;
+      p.morale = (p.morale + d).clamp(0, 100);
+      if (before >= 20 && p.morale < 20) _log('${p.name}(${me.def.short})がトレードを希望');
     }
   }
 
@@ -739,6 +760,8 @@ class Career {
         f = 1.12;
       }
     }
+    // 気持ちが低い選手は、残るなら高く求める
+    if (t.index == mine) f *= 1 + (60 - p.morale).clamp(0, 60) / 250;
     final sal = p.ovr < 58 ? minSalary : (fairSalary(p.ovr, p.age) * f).round().clamp(minSalary, maxSalary);
     final maxYears = p.age >= 33 ? 1 : p.age >= 30 ? 2 : 4;
     return Ask(sal, maxYears);
@@ -753,6 +776,7 @@ class Career {
 
   /// 契約切れの選手と再契約できない理由(できるなら null)。再契約は年俸の上限を超えてもよい(合計の上限までは)。
   String? resignProblem(Player p) {
+    if (p.morale < 20) return '${p.name}は移籍を希望していて、残らない';
     final ask = askOf(p, me);
     if (me.payroll - p.salary + ask.salary > hardCap) return '年俸の合計が上限(${money(hardCap)})を超える';
     return null;
@@ -799,6 +823,7 @@ class Career {
       ..salary = ask.salary
       ..years = years.clamp(1, ask.maxYears);
     freeAgents.removeAt(i);
+    p.morale = 65;
     me.roster.add(p);
   }
 
@@ -895,6 +920,12 @@ class Career {
     final give = [for (final id in o.give) teams[from].roster.firstWhere((p) => p.id == id)];
     final get = [for (final id in o.get) teams[o.partner].roster.firstWhere((p) => p.id == id)];
     _log(_tradeText(from, o.partner, o, give, get));
+  }
+
+  /// 先発と控えの順を決める([ids] は上から。空なら自動に戻す)。
+  void setRotation(List<int> ids) {
+    if (phase == Phase.over) return;
+    me.rotation = [for (final id in ids) if (me.roster.any((p) => p.id == id)) id];
   }
 
   /// 「相手に聞く」: [partner] から [get] を受け取るのに、こちらが出せばよい組み合わせ。契約の話し合い中の選手は出さない。

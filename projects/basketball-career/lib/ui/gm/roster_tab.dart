@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../../gm/career.dart';
-import '../../gm/league.dart';
 import '../../gm/player.dart';
 import '../gm_controller.dart';
 import 'common.dart';
+import 'rotation_screen.dart';
 import 'style.dart';
 
 /// チームのタブ。先発と控え、年俸。選手を押すと詳しく見て、放せる。
@@ -16,7 +16,7 @@ class RosterTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final car = c.career!;
     final me = car.me;
-    final order = lineup(me.roster);
+    final order = me.order;
     final rank = car.strengthRank(car.mine) + 1;
     return ListView(
       padding: const EdgeInsets.fromLTRB(14, 8, 14, 24),
@@ -50,6 +50,12 @@ class RosterTab extends StatelessWidget {
             ]),
           ),
         ),
+        const SizedBox(height: 10),
+        OutlinedButton.icon(
+          onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => RotationScreen(c: c))),
+          icon: const Icon(Icons.swap_vert_rounded),
+          label: Text(me.rotation.isEmpty ? '先発と控えの順を決める(いまは自動)' : '先発と控えの順を決める'),
+        ),
         const SectionTitle('先発'),
         for (final p in order.take(5)) _row(context, car, p),
         const SectionTitle('控え'),
@@ -64,6 +70,7 @@ class RosterTab extends StatelessWidget {
           p: p,
           team: car.mine,
           showDelta: true,
+          showMorale: true,
           extra: car.draftedIds.contains(p.id) ? const Tag('生え抜き', color: GmColors.good) : null,
           onTap: () => _detail(context, car, p),
         ),
@@ -96,6 +103,7 @@ class RosterTab extends StatelessWidget {
                 if (p.stats.gp > 0) _line('今季', '${p.stats.line}(${p.stats.gp}試合)'),
                 if (p.prev.gp > 0) _line('昨季', '${p.prev.line}(${p.prev.gp}試合)'),
                 for (final a in car.awards.where((a) => a.player == p.id)) _line('表彰', '${a.season}年目 ${a.kind.label}'),
+                _line('気持ち', '${p.moraleLabel}(${p.morale})'),
                 _line('年俸', '${money(p.salary)}(残り${p.years}年)'),
                 _line('力に見合う年俸', money(fairSalary(p.ovr, p.age))),
                 _line('伸びしろ', switch (p.grade) {

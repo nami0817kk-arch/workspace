@@ -114,6 +114,23 @@ void main() {
     expect(c2.career!.me.roster.length, c.career!.me.roster.length);
   });
 
+  testWidgets('先発と控えの順の画面を開いて、この順にする(小さいスマホでもはみ出さない)', (tester) async {
+    _size(tester, 360, 640);
+    final c = await _controller({'gmHowtoSeen': true});
+    c.newCareer(teamAtRank(1, 15), seed: 1);
+    await tester.pumpWidget(BasketballCareerApp(controller: c));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('チーム'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.textContaining('先発と控えの順を決める'));
+    await tester.pumpAndSettle();
+    expect(find.text('先発と控えの順'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+    await tester.tap(find.text('この順にする'));
+    await tester.pumpAndSettle();
+    expect(c.career!.me.rotation, isNotEmpty);
+  });
+
   group('どの画面も、小さいスマホ・大きいスマホ・iPad ではみ出さない', () {
     const sizes = [Size(360, 640), Size(390, 844), Size(430, 932), Size(1032, 1376)];
 

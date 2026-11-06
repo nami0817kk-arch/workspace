@@ -133,6 +133,7 @@ class Player {
     Stats? stats,
     Stats? prev,
     this.exp = 0,
+    this.morale = 60,
   })  : attrs = attrs ?? makeAttrs(pos, _idNoise(id)),
         stats = stats ?? Stats(),
         prev = prev ?? Stats();
@@ -179,6 +180,17 @@ class Player {
   /// リーグでの年数(新人は0)。
   int exp;
 
+  /// 気持ち(0〜100)。出場時間が期待より少ない・チームが負けると下がる。低いと再契約で高く求め、20を切ると残らない。
+  int morale;
+
+  String get moraleLabel => morale >= 70
+      ? '満足'
+      : morale >= 45
+          ? 'ふつう'
+          : morale >= 20
+              ? '不満'
+              : '移籍したい';
+
   /// 能力の値(25〜99)。
   int attr(Attr a) => (ovr + attrs[a.index]).clamp(25, 99);
 
@@ -215,6 +227,7 @@ class Player {
         if (stats.gp > 0) 'st': stats.toJson(),
         if (prev.gp > 0) 'pv': prev.toJson(),
         if (exp != 0) 'ex': exp,
+        if (morale != 60) 'mo': morale,
       };
 
   static Player fromJson(Map<String, dynamic> j) => Player(
@@ -232,6 +245,7 @@ class Player {
         stats: Stats.fromJson(j['st']),
         prev: Stats.fromJson(j['pv']),
         exp: (j['ex'] as int?) ?? 0,
+        morale: ((j['mo'] as int?) ?? 60).clamp(0, 100),
       );
 }
 
