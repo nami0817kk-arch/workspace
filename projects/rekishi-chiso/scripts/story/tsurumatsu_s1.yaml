@@ -1,0 +1,166 @@
+# 物語完結型ショート 鶴松 s1（2026-11-06）。本編 scripts/tsurumatsu-if-story.yaml（11/7 12:00 公開）の序章・第3章から。11/8 9:00 公開。
+# 形式は maizo_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし（本編にも無い）。「もしも」の部分は入れない（事実だけ）。
+# 絵は本編の AI 絵（out/story/tsurumatsu-if/main/T*。前の回の Gemini の絵）と、本編で使った実在の肖像・屏風だけ。新しい絵は作らない。
+#   使わない AI 絵：T07（白い腰掛けが今の物に見える）・T08（湾に今の養殖の筏）・T29・T30（しめ縄）。本編の look の頭のとおり。
+# 切り口：明への出兵の決定は、鶴松の死から18日後（池内宏 1914）。けれど「唐の国まで」の言葉は、鶴松が生まれる4年前、1585年の朱印状にある。
+#   研究者の読みは割れる（池内：互いに関わらない／徳富蘇峰：押し進めた力）。本編の答え（鶴松の死の5か月たたないうちに秀次が関白に）は言わない。
+# 事実カード（dev/output/rekishi-chiso/research/豊臣鶴松_facts_20261105.yaml）：tsurumatsu-03・09・10・13。言い方は本編のまま。
+# 計算（自分で計算し直した）：8月5日の18日後＝8月23日。1585年9月→1589年5月の誕生まで3年8か月（本編の言い方「生まれる4年前」のまま。年の差で4）。
+#   1591年に数えで3歳（1589・1590・1591）。
+# 理解テスト4問：
+#   ①誰の話か：豊臣秀吉と、跡継ぎの鶴松
+#   ②いつ・どこで何が：1591年8月5日に鶴松が数え3歳で死に、その18日後に明を討つ決定が発表された（池内宏）
+#   ③何が分かるか：「唐の国まで」の言葉は1585年の朱印状にもう出てくる。研究者は、死と唐入りの関わりを違う形に読む
+#   ④どうなったか：計画は死の前からあった。では死で何が変わったのか、の問いで閉じる（答えは本編）
+title: 鶴松の死｜18日後の出兵の決定
+yt_title: 豊臣秀吉が明への出兵を示したのは跡継ぎの鶴松が死んで18日後　けれど「唐の国まで」は4年前の手紙に
+description: |-
+  1591年8月5日、豊臣秀吉の跡継ぎ、鶴松が数えで3歳で亡くなりました。
+  1914年、池内宏の『文禄慶長の役』は、その18日後に、明を討つ決定が発表された、と書いています。悲しみをまぎらわすために海の向こうへ兵を出した、と書く本もあります。けれど、唐の国まで従わせるつもりだ、という秀吉の言葉は、鶴松が生まれる4年前、1585年9月3日の一柳末安あての朱印状に、もう出てきます。池内宏は、唐入りの決意と鶴松の死は互いに関わるものではない、と論じ、徳富蘇峰は、死は押し進めた力だった、と書きました。
+  もしも鶴松が生きていたら、豊臣家はどうなったのか。本編は概要欄のリンクからどうぞ。
+hashtags: ['#豊臣鶴松', '#豊臣秀吉', '#日本史']
+ai_images: true
+ai_disclosure: この動画の人物・情景の画像の多くは、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/tsurumatsu-if
+out: tsurumatsu_story_s1
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 豊臣鶴松（秀吉の跡継ぎ）
+  title: "跡継ぎの死から、《18日後》"
+now:
+  - {at: 1591年8月5日, text: "1591年8月　鶴松の死", point: 1}
+  - {at: 1585年の9月3日, text: "1585年　一柳末安への朱印状", point: 0}
+  - {at: 肥前の名護屋城, text: "1591年　肥前・名護屋", point: 1}
+timeline:
+  - {label: "1585"}
+  - {label: "1591"}
+cards:
+  - type: year
+    from: その18日後に
+    until: 悲しみを
+    big: 18日後
+    sub: 鶴松の死から、明を討つ決定へ
+    text_y: 0.70
+  - type: year
+    from: 1585年の9月3日
+    until: 池内宏は唐入り
+    big: 1585年
+    sub: 鶴松が生まれる4年前の朱印状
+    text_y: 0.70
+shots:
+  T03:
+    kind: ai
+    file: tsurumatsu-if/main/T03.jpg
+    focus: [0.5, 0.45]
+    move: in
+    must: 金の襖の御殿に座る秀吉
+  T06:
+    kind: ai
+    file: tsurumatsu-if/main/T06.jpg
+    focus: [0.55, 0.5]
+    move: left
+    must: 仏前に座る人々の後ろ姿（死の知らせ）
+  T10:
+    kind: ai
+    file: tsurumatsu-if/main/T10.jpg
+    focus: [0.45, 0.5]
+    move: right
+    must: 机の上の文書（研究書・記録）
+  Nagoya:
+    kind: real
+    image: paintings/kanbei_nagoya_jinei_map.jpg
+    focus: [0.3, 0.5]
+    move: left
+    credit: "吉村茂三郎《西肥名古屋城豊太閤陣営図》1934年（近代の絵地図）"
+    must: 名護屋の海と陣の絵地図（海の向こうへ兵を出す）
+  T09:
+    kind: ai
+    file: tsurumatsu-if/main/T09.jpg
+    focus: [0.5, 0.55]
+    move: in
+    must: 巻紙を開く手元（手紙）
+  Hideyoshi:
+    kind: real
+    image: paintings/hideyoshi_portrait_osaka_city_1600.jpg
+    crop: [0.0, 0.12, 1.0, 0.85]
+    focus: [0.5, 0.45]
+    move: down
+    text_y: 0.82
+    credit: "《豊臣秀吉像》1600年 大阪市立美術館蔵（パブリックドメイン）"
+    must: 秀吉の肖像（朱印状の言葉）
+  T10b:
+    kind: ai
+    file: tsurumatsu-if/main/T10.jpg
+    focus: [0.7, 0.5]
+    move: left
+    zoom: 0.12
+    must: 文書の文字（研究者の読み）
+  Nagoyab:
+    kind: real
+    image: paintings/kanbei_nagoya_jinei_map.jpg
+    focus: [0.6, 0.5]
+    move: right
+    credit: "吉村茂三郎《西肥名古屋城豊太閤陣営図》1934年（近代の絵地図）"
+    must: 名護屋城と陣の絵地図（築城）
+  T20:
+    kind: ai
+    file: tsurumatsu-if/main/T20.jpg
+    focus: [0.35, 0.5]
+    move: out
+    must: 夕暮れの石垣と堀（豊臣家の行く先）
+lines:
+  # fact: tsurumatsu-09
+  - 語り: 秀吉は、なぜ、跡継ぎが死んで《!18日後》に、明の国への出兵を示したのか。
+    shot: T03
+    tone: 強調
+    pause: 0.12
+  # fact: tsurumatsu-03
+  - 語り: 1591年8月5日、秀吉の跡継ぎ、鶴松が亡くなった。数えで3歳だった。
+    shot: T06
+    tone: 重い
+    pause: 0.12
+  # fact: tsurumatsu-09
+  - 語り: 1914年、歴史家の池内宏は、その18日後に、明を討つ決定が発表された、と書いた。
+    shot: T10
+    tone: しみじみ
+    pause: 0.12
+  # fact: tsurumatsu-09
+  - 語り: 悲しみをまぎらわすために、海の向こうへ兵を出した。そう書く本もある。
+    shot: Nagoya
+    tone: しみじみ
+    pause: 0.12
+  # fact: tsurumatsu-13
+  - 語り: けれど、明を攻める唐入りの言葉は、鶴松が生まれる4年前の手紙に、もう出てくる。
+    shot: T09
+    tone: 重い
+    pause: 0.12
+  # fact: tsurumatsu-13
+  - 語り: 1585年の9月3日、秀吉が家臣の一柳末安に宛てた朱印状。日本のことは言うまでもなく、唐の国まで従わせるつもりだ。
+    shot: Hideyoshi
+    tone: 重い
+    pause: 0.12
+  # fact: tsurumatsu-09
+  - 語り: 池内宏は、唐入りの決意と鶴松の死は、互いに関わるものではない、と論じた。徳富蘇峰は、死は、押し進めた力だった、と書く。
+    shot: T10b
+    tone: しみじみ
+    pause: 0.12
+  # fact: tsurumatsu-10
+  - 語り: 出兵の拠点、肥前の名護屋城の築城も、この年に始まった。
+    shot: Nagoyab
+    tone: しみじみ
+    pause: 0.3
+    dip: true
+  - 語り: 計画は、鶴松の死の前からあった。では、鶴松の死で、豊臣家の何が変わったのか。
+    shot: T20
+    tone: 疑問
+    pause: 0.15

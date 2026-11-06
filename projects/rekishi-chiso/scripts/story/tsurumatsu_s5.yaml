@@ -1,0 +1,168 @@
+# 物語完結型ショート 鶴松 s5（2026-11-06）。本編 scripts/tsurumatsu-if-story.yaml（11/7 12:00 公開）の第6章・第7章（秀吉の死と、その後）から。11/8 18:30 公開。
+# 形式は maizo_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。
+#   「もしも」の行は「ここからは、もしもの話」と言ってから、本編の数（数えで10歳・27歳）と本編の見立て（10歳で大名を率いることはできない）だけ。事実の行と混ぜない。
+# 絵は本編の AI 絵（out/story/tsurumatsu-if/main/T*）と本編で使った実在の肖像・屏風だけ。T07・T08・T29・T30 は使わない（s1 の頭のとおり）。
+#   戦・落城は遠景だけ（T17 の煙の上がる大坂城の遠景）。
+# 切り口：秀吉が死んだ1598年8月18日、跡継ぎの秀頼は数え6歳。死は伏せられ（8月25日の5奉行の書状）、翌年には家康の縁組みが責められる。
+#   もしも鶴松が生きていたら10歳、1615年に27歳。本編の答え（幼い跡継ぎのそばに残った大人＝秀次事件が起きなければ秀次）は言わない。
+# 事実カード：tsurumatsu-23・54・55・59。言い方は本編のまま。
+# 計算（自分で計算し直した）：天文6年（1537）生まれで1598年に数え62。秀頼（1593）は1598年に6・1615年に23。鶴松（1589）は1598年に10・1615年に27。
+#   8月18日の1週間後＝8月25日。
+# 理解テスト4問：
+#   ①誰の話か：豊臣秀吉の死と、跡継ぎ（史実の秀頼、もしもの鶴松）
+#   ②いつ・どこで何が：1598年8月18日、秀吉が伏見城で死に、秀頼は数え6歳。死は伏せられた
+#   ③何が起きたか：翌年正月、家康の勝手な縁組みが、秀吉の遺した命に背くと責められた
+#   ④どうなったか：1615年に豊臣家は滅び、秀頼は23歳。もしも鶴松なら10歳・27歳。そばに残った大人の問いで閉じる
+title: 秀吉の死｜跡継ぎは、6歳だった
+yt_title: 豊臣秀吉が死んだ日、跡継ぎの秀頼は数えで6歳　もしも兄の鶴松が生きていたら10歳だった
+description: |-
+  1598年の8月18日、豊臣秀吉は伏見城で亡くなりました。天文6年の生まれなら、数えで62歳です。跡継ぎの秀頼は、数えで6歳でした。
+  死の1週間後の8月25日、5人の奉行は、朝鮮にいた鍋島直茂に、太閤様のご病気はいよいよよくなられた、と書き送っています。秀吉の死は、伏せられていました。翌年の正月19日には、徳川家康が伊達政宗らと勝手に縁組みを結んだことを、ほかの年寄と奉行たちが、秀吉の遺した命に背く、と責めました。1615年、豊臣家は滅びます。秀頼は数えで23歳でした。
+  もしも、秀頼の兄の鶴松が生きていたら、秀吉が死んだ日に数えで10歳、1615年には27歳です。秀吉が死んだ日、幼い跡継ぎのそばには、大人の誰が残っていたのか。本編は概要欄のリンクからどうぞ。
+hashtags: ['#豊臣秀吉', '#豊臣秀頼', '#日本史']
+ai_images: true
+ai_disclosure: この動画の人物・情景の画像の多くは、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/tsurumatsu-if
+out: tsurumatsu_story_s5
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 豊臣秀吉の死（1598年）
+  title: "跡継ぎは、《6歳》だった"
+now:
+  - {at: 1598年の8月18日, text: "1598年8月　伏見城", point: 0}
+  - {at: 翌年の正月19日, text: "1599年正月　家康の縁組み", point: 1}
+  - {at: 豊臣家が滅んだ1615年, text: "1615年　大坂城", point: 2}
+timeline:
+  - {label: "1598"}
+  - {label: "1599"}
+  - {label: "1615"}
+cards:
+  - type: versus
+    from: 秀吉が死んだこの日
+    until: 豊臣家が滅んだ
+    left: {tag: 史実の秀頼, big: 6歳, dots: 6, color: blue}
+    right: {tag: もしもの鶴松, big: 10歳, dots: 10, color: red}
+    mid: 対
+    text_y: 0.70
+shots:
+  Hideyoshi:
+    kind: real
+    image: paintings/hideyoshi_portrait_osaka_city_1600.jpg
+    crop: [0.0, 0.12, 1.0, 0.85]
+    focus: [0.5, 0.45]
+    move: down
+    text_y: 0.82
+    credit: "《豊臣秀吉像》1600年 大阪市立美術館蔵（パブリックドメイン）"
+    must: 秀吉の肖像（秀吉の死）
+  Hideyori:
+    kind: real
+    image: paintings/oichi_hideyori.jpg
+    crop: [0.0, 0.3, 1.0, 0.95]
+    focus: [0.5, 0.5]
+    move: down
+    text_y: 0.82
+    credit: "伝《豊臣秀頼像》（養源院本の模写、1914年。パブリックドメイン）"
+    must: 秀頼の肖像（跡継ぎ）
+  T22:
+    kind: ai
+    file: tsurumatsu-if/main/T22.jpg
+    focus: [0.6, 0.55]
+    move: left
+    must: 街道を急ぐ使者（朝鮮への書状）
+  T21:
+    kind: ai
+    file: tsurumatsu-if/main/T21.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 灯の下の机と文書（伏せられた死）
+  Ieyasu:
+    kind: real
+    image: paintings/ieyasu_portrait_toshodaigongen.jpg
+    focus: [0.5, 0.35]
+    move: down
+    text_y: 0.82
+    credit: "伝 狩野探幽《徳川家康像（東照大権現像）》江戸前期（パブリックドメイン）"
+    must: 家康の肖像（縁組み）
+  T03:
+    kind: ai
+    file: tsurumatsu-if/main/T03.jpg
+    focus: [0.5, 0.45]
+    move: out
+    must: 御殿の秀吉（秀吉が死んだこの日、もしもの鶴松）
+  T20:
+    kind: ai
+    file: tsurumatsu-if/main/T20.jpg
+    focus: [0.35, 0.5]
+    move: right
+    must: 夕暮れの石垣と堀（幼い主）
+  T17:
+    kind: ai
+    file: tsurumatsu-if/main/T17.jpg
+    focus: [0.45, 0.5]
+    move: in
+    must: 煙の上がる大坂城の遠景（1615年）
+  T18:
+    kind: ai
+    file: tsurumatsu-if/main/T18.jpg
+    focus: [0.45, 0.5]
+    move: left
+    must: 人のいない城の奥の部屋（そばに誰が残っていたのか）
+lines:
+  - 語り: もしも鶴松が生きていたら、秀吉が死んだ日、《!何歳》だったのか。
+    shot: Hideyoshi
+    tone: 強調
+    pause: 0.12
+  - 語り: 1598年の8月18日、秀吉は、伏見城で亡くなった。
+    shot: Hideyoshi
+    tone: 重い
+    pause: 0.12
+  - 語り: 跡継ぎの秀頼は、数えで6歳だった。鶴松の弟だ。
+    shot: Hideyori
+    tone: しみじみ
+    pause: 0.12
+  # fact: tsurumatsu-54
+  - 語り: 死の1週間後の8月25日。5人の奉行は、朝鮮にいた鍋島直茂に、太閤様のご病気は、いよいよよくなられた、と書き送った。
+    shot: T22
+    tone: しみじみ
+    pause: 0.12
+  - 語り: 秀吉の死は、伏せられていたのだ。
+    shot: T21
+    tone: 重い
+    pause: 0.12
+  # fact: tsurumatsu-55
+  - 語り: 翌年の正月19日、徳川家康が、伊達政宗らと勝手に縁組みを結んだことを、ほかの年寄と奉行たちが、秀吉の遺した命に背く、と責めた。
+    shot: Ieyasu
+    tone: しみじみ
+    pause: 0.15
+  - 語り: ここからは、もしもの話。鶴松が生きていたら、秀吉が死んだこの日、数えで10歳。
+    shot: T03
+    tone: 疑問
+    pause: 0.12
+  - 語り: 秀頼より4つ年上でも、10歳の子が、大名たちを率いることはできない。
+    shot: T20
+    tone: しみじみ
+    pause: 0.12
+  # fact: tsurumatsu-59
+  - 語り: 史実では、豊臣家が滅んだ1615年、秀頼は、数えで23歳。
+    shot: T17
+    tone: 重い
+    pause: 0.12
+  - 語り: もしも鶴松なら、27歳だった。
+    shot: T17
+    tone: しみじみ
+    pause: 0.3
+    dip: true
+  - 語り: 秀吉が死んだ日、幼い跡継ぎのそばには、大人の誰が、残っていたのか。
+    shot: T18
+    tone: 疑問
+    pause: 0.15

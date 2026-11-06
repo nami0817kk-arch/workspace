@@ -1,0 +1,165 @@
+# 物語完結型ショート 徳川将軍家 s5（2026-11-06）。本編 scripts/tokugawa-kakeizu-story.yaml（11/7 19:00 公開、https://youtu.be/VrUQJ4sBdyA）の第7章から。11/8 19:30 公開。
+# 形式は oguri_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。
+# 絵は本編の AI 絵（out/story/kakeizu/main。人物は後ろ姿だけ）と実在の写真（松平容保・貴族院議長の家達）。新しい絵は作らない。使わない絵は s1 の頭のコメント。
+# 切り口：会津の殿様の曾孫が、なぜ徳川宗家を継いだのか。19代目・継宗の儀（本編8章）には踏み込まない。
+# 存命の人（徳川恒孝）は、本編で言った範囲だけ（1940年生まれ・系図・1963年に18代・およそ60年）。19代目の取材の話（子どものころ）は使わない。
+# 事実カード：kakeizu-41・42・43・46・47・49・50・51・57。言い方は本編のまま。
+#   ・曾孫を数え直した：容保→恒雄→一郎→恒孝（父方）、家達→家正→豊子→恒孝（母方）。どちらも曾孫。本編どおり。
+#   ・当主の年数：1963年2月→2022年12月末＝59年10か月余（「およそ60年」）。本編どおり。
+# 理解テスト4問：
+#   ①誰の話か：徳川宗家の17代家正と、18代恒孝
+#   ②いつ・どこで何が：家正の長男の家英が25歳で亡くなり、宗家の跡継ぎがいなくなった。1945年ごろ、家正は娘の子を養子にと考えた
+#   ③なぜ会津の血か：長女の豊子の夫が、会津藩主・松平容保の孫の松平一郎。その子が恒孝で、父方は容保の、母方は家達の曾孫
+#   ④どうなったか：1963年2月、家正が亡くなり、恒孝が18代目に。およそ60年当主でいた
+title: 徳川宗家｜会津の曾孫が、なぜ継いだ
+yt_title: 新政府と戦った会津の殿様 松平容保の曾孫が、なぜ徳川宗家の18代目になったのか　跡継ぎを失った17代
+description: |-
+  戊辰戦争で新政府と戦った会津の殿様、松平容保。その曾孫が、徳川宗家の18代目になりました。なぜだったのか。
+  17代目は、家達の長男で、外務省に入りトルコの大使も務めた家正です。ところが家正の長男の家英は、25歳の若さで病気で亡くなり、宗家の跡継ぎがいなくなりました。1945年ごろ、家正が考えたのは、娘の子を養子に迎えることでした。長女の豊子の夫は、会津藩主・松平容保の孫の松平一郎。2人の子が、1940年生まれの恒孝です。父方からたどれば容保の曾孫、母方からたどれば家達の曾孫でした。1963年2月、家正が亡くなり、恒孝は18代目になります。当主でいたのは、およそ60年でした。
+  2023年、19代目を迎えた徳川宗家が、150年あまりで初めて開いた式とは。本編は概要欄のリンクからどうぞ。
+hashtags: ['#徳川将軍家', '#日本史', '#会津']
+ai_images: true
+ai_disclosure: この動画の風景・室内・人物の後ろ姿の画像は、画像生成AI（Google の Gemini・Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/kakeizu
+out: kakeizu_story_s5
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 徳川宗家（17代・18代）
+  title: "会津の曾孫が、《なぜ継いだ》"
+now:
+  - {at: 17代目は, text: "1940年　17代 家正", point: 0}
+  - {at: 1945年ごろ, text: "1945年ごろ　跡継ぎを探す", point: 1}
+  - {at: 1963年2月, text: "1963年2月　18代 恒孝", point: 2}
+timeline:
+  - {label: "1940"}
+  - {label: "1945"}
+  - {label: "1963"}
+cards:
+  - type: table
+    title: 18代 恒孝の血筋
+    from: 父方から
+    until: 1963年2月
+    items:
+      - {at: 父方から, text: "父方　松平容保の曾孫"}
+      - {at: 母方から, text: "母方　徳川家達の曾孫"}
+    text_y: 0.70
+shots:
+  Katamori:
+    kind: real
+    image: paintings/kakeizu_katamori.jpg
+    crop: [0.0, 0.0, 1.0, 0.8]
+    focus: [0.5, 0.35]
+    move: in
+    credit: "松平容保の写真（1893年以前。パブリックドメイン）"
+    must: 会津藩主 松平容保
+  K09:
+    kind: ai
+    file: kakeizu/main/K09.jpg
+    focus: [0.5, 0.5]
+    move: right
+    must: 港の蒸気船の遠景（外交官の時代）
+  K13:
+    kind: ai
+    file: kakeizu/main/K13.jpg
+    focus: [0.5, 0.55]
+    move: in
+    must: 木立の中の古い墓石
+  K19:
+    kind: ai
+    file: kakeizu/main/K19.jpg
+    focus: [0.5, 0.5]
+    move: left
+    must: 行灯の座敷に一人座る女性の後ろ姿
+  Katamori2:
+    kind: real
+    image: paintings/kakeizu_katamori.jpg
+    crop: [0.0, 0.05, 1.0, 0.6]
+    focus: [0.5, 0.5]
+    move: in
+    credit: "松平容保の写真（1893年以前。パブリックドメイン）"
+    must: 容保の顔に寄る
+  K18:
+    kind: ai
+    file: kakeizu/main/K18.jpg
+    focus: [0.5, 0.6]
+    move: right
+    must: 灯のともる座敷
+  Peers:
+    kind: real
+    image: paintings/kakeizu_iesato_peers.jpg
+    crop: [0.0, 0.05, 1.0, 0.75]
+    focus: [0.5, 0.35]
+    move: down
+    credit: "貴族院議長 公爵 徳川家達の写真（1940年以前。パブリックドメイン）"
+    must: 16代 家達
+  K17:
+    kind: ai
+    file: kakeizu/main/K17.jpg
+    focus: [0.5, 0.5]
+    move: up
+    must: 杉の森の参道
+  Zojoji:
+    kind: real
+    image: paintings/kazu_zojoji_snow_hiroshige.jpg
+    crop: [0.03, 0.05, 0.97, 0.95]
+    focus: [0.5, 0.5]
+    move: right
+    text_box: true
+    credit: "歌川広重《東都名所 芝増上寺雪中ノ図》（メトロポリタン美術館。パブリックドメイン）"
+    must: 増上寺の雪の図
+lines:
+  # fact: kakeizu-51
+  - 語り: 戊辰戦争で、新政府と戦った会津の殿様、松平容保。その曾孫が、なぜ、徳川宗家を継いだのか。
+    shot: Katamori
+    tone: 疑問
+    pause: 0.12
+  # fact: kakeizu-41, kakeizu-42
+  - 語り: 17代目は、家達の長男の家正。外務省に入り、トルコの大使も務めた。
+    shot: K09
+    tone: しみじみ
+    pause: 0.12
+  # fact: kakeizu-46
+  - 語り: ところが、家正の長男、家英は、25歳の若さで、病気で亡くなる。宗家の、《!跡継ぎがいなくなった》。
+    shot: K13
+    tone: 強調
+    pause: 0.12
+  # fact: kakeizu-50, kakeizu-49
+  - 語り: 1945年ごろ、家正が考えたのは、娘の子を、養子に迎えることだった。
+    shot: K19
+    tone: しみじみ
+    pause: 0.12
+  # fact: kakeizu-49, kakeizu-51
+  - 語り: 長女の豊子の夫は、松平一郎。会津藩主、容保の孫だった。
+    shot: Katamori2
+    tone: しみじみ
+    pause: 0.12
+  # fact: kakeizu-49, kakeizu-50
+  - 語り: 2人の子が、1940年生まれの、恒孝だ。
+    shot: K18
+    tone: しみじみ
+    pause: 0.12
+  # fact: kakeizu-49, kakeizu-50
+  - 語り: 父方からたどれば、容保の曾孫。母方からたどれば、16代家達の曾孫。
+    shot: Peers
+    tone: 重い
+    pause: 0.12
+  # fact: kakeizu-47, kakeizu-57
+  - 語り: 1963年2月、家正が亡くなり、恒孝は、《18代目》になった。当主でいたのは、およそ60年。
+    shot: K17
+    tone: 重い
+    pause: 0.3
+    dip: true
+  - 語り: では、2023年、19代目を迎えた宗家が、150年あまりで初めて開いた式とは、何だったのか。
+    shot: Zojoji
+    tone: 疑問
+    pause: 0.15
