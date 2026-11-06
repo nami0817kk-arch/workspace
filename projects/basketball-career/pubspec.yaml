@@ -30,11 +30,8 @@ flutter:
   assets:
     - assets/fonts/OFL-NotoSansJP.txt
     - assets/art/title.jpg
-    - assets/art/scene_high.jpg
-    - assets/art/scene_university.jpg
     - assets/art/scene_national.jpg
     - assets/art/scene_final.jpg
-    - assets/art/icons/
     - assets/art/players/
 
   # 日本語フォントを同梱する(Web は足りない字形を外から取りに行って豆腐になる)。

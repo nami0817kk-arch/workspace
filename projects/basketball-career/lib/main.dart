@@ -9,7 +9,7 @@ import 'monetization/ad_service.dart';
 import 'monetization/monetization.dart';
 import 'monetization/purchase_service.dart';
 import 'ui/app.dart';
-import 'ui/deck_controller.dart';
+import 'ui/gm_controller.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,5 +26,5 @@ Future<void> main() async {
   unawaited(money.start());
   // 長く裏にいた後は手元の広告が期限切れになっている。戻ったら読み直す
   AppLifecycleListener(onResume: money.refreshAds);
-  runApp(BasketballCareerApp(controller: DeckController(money: money, prefs: prefs)));
+  runApp(BasketballCareerApp(controller: GmController(money: money, prefs: prefs)));
 }

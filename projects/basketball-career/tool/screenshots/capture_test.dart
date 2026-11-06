@@ -23,16 +23,15 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:ui' as ui;
 
-import 'package:basketball_career/deck/battle.dart';
-import 'package:basketball_career/deck/cards.dart';
-import 'package:basketball_career/deck/mates.dart';
-import 'package:basketball_career/deck/opponents.dart';
-import 'package:basketball_career/deck/run.dart';
+import 'package:basketball_career/gm/bot.dart';
+import 'package:basketball_career/gm/career.dart';
+import 'package:basketball_career/gm/league.dart';
+import 'package:basketball_career/gm/trade.dart';
 import 'package:basketball_career/monetization/monetization.dart';
 import 'package:basketball_career/monetization/purchase_service.dart';
 import 'package:basketball_career/ui/app.dart';
-import 'package:basketball_career/ui/deck/style.dart';
-import 'package:basketball_career/ui/deck_controller.dart';
+import 'package:basketball_career/ui/gm/style.dart';
+import 'package:basketball_career/ui/gm_controller.dart';
 import 'package:basketball_career/ui/remove_ads_offer.dart';
 import 'package:basketball_career/ui/settings_screen.dart';
 import 'package:flutter/material.dart';
@@ -72,7 +71,7 @@ Widget _framed(String caption, Widget app) {
   return Directionality(
     textDirection: TextDirection.ltr,
     child: ColoredBox(
-      color: DeckColors.bg,
+      color: GmColors.bg,
       child: Column(
         children: [
           SizedBox(
@@ -94,7 +93,7 @@ Widget _framed(String caption, Widget app) {
                   ),
                 ),
                 const SizedBox(height: 10),
-                Container(width: _ipad ? 90 : 60, height: 5, color: DeckColors.ball),
+                Container(width: _ipad ? 90 : 60, height: 5, color: GmColors.ball),
               ],
             ),
           ),
@@ -104,7 +103,7 @@ Widget _framed(String caption, Widget app) {
               clipBehavior: Clip.antiAlias,
               decoration: BoxDecoration(
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
-                border: Border.all(color: DeckColors.line, width: 2),
+                border: Border.all(color: GmColors.line, width: 2),
               ),
               child: app,
             ),
@@ -121,7 +120,7 @@ Future<void> _shoot(
   WidgetTester t,
   String name,
   String caption,
-  DeckController c, {
+  GmController c, {
   Future<void> Function(WidgetTester)? act,
   String? outDir,
 }) async {
@@ -146,7 +145,7 @@ Future<void> _shoot(
   await t.pump(const Duration(milliseconds: 100));
   await t.pump(const Duration(milliseconds: 100));
   if (act != null) await act(t);
-  // 絵・アイコン(assets の画像)の読み込みを待つ。待たないと空白で撮れる。
+  // 絵(assets の画像)の読み込みを待つ。待たないと空白で撮れる。
   await t.runAsync(() => Future.delayed(const Duration(milliseconds: 700)));
   await t.pump();
   await t.pump(const Duration(milliseconds: 200));
@@ -162,77 +161,132 @@ Future<void> _shoot(
   });
 }
 
-Future<DeckController> _controller() async =>
-    DeckController(prefs: await SharedPreferences.getInstance(), seedSource: Random(7));
+Future<GmController> _controller() async =>
+    GmController(prefs: await SharedPreferences.getInstance(), seedSource: Random(7));
 
-CardInstance _c(String id, {bool up = false}) => CardInstance(card(id), upgraded: up);
-
-/// 見栄えのする途中のシーズン(県大会・仲間3人・強くしたカード入り)。
-Future<DeckController> _midSeason({int stage = 1, int floor = 3}) async {
+Future<GmController> _with(Career car) async {
   final c = await _controller();
-  c.newRun(difficulty: 0);
-  final r = c.run!;
-  r.stage = stage;
-  r.floor = floor;
-  r.money = 146;
-  r.hearts = 2;
-  r.deck
-    ..clear()
-    ..addAll([
-      for (var i = 0; i < 3; i++) _c('jumper'),
-      _c('jumper', up: true),
-      for (var i = 0; i < 3; i++) _c('defense'),
-      _c('pass', up: true),
-      _c('three', up: true),
-      _c('alleyoop'),
-      _c('nolook'),
-      _c('block'),
-      _c('eurostep', up: true),
-      _c('hothand'),
-      _c('drive'),
-      _c('charge'),
-    ]);
-  r.mates.addAll([mateById['shooter']!, mateById['center']!, mateById['playmaker']!]);
+  c.setCareer(car);
+  c.pending.clear();
   return c;
 }
 
-/// 試合を、[round] ラウンド目の途中の形にする。
-void _setBattle(DeckController c,
-    {required int round,
-    required int mine,
-    required int theirs,
-    required Threat intent,
-    required List<CardInstance> hand,
-    List<String> playFirst = const [],
-    Opponent? opponent}) {
-  final r = c.run!;
-  r.map[r.floor] = [NodeType.game];
-  r.opponent = opponent ?? Opponent(name: '星丘工業', style: OppStyle.outside, stage: r.stage);
-  r.current = opponent?.boss == true ? NodeType.boss : NodeType.game;
-  r.battleSeed = 99;
-  r.startBattle();
-  final b = r.battle!;
-  // 前のラウンドの点(クォーターの表)
-  var m = 0, t = 0;
-  for (var i = 0; i < round; i++) {
-    final dm = i == round - 1 ? mine - m : (mine / round).round();
-    final dt = i == round - 1 ? theirs - t : (theirs / round).round();
-    b.rounds.add(RoundScore(dm, dt));
-    m += dm;
-    t += dt;
+/// 条件に合う局面が出るまで、種を変えて自動で進める。
+Career _find(Scenario sc, bool Function(Career) found, {int from = 1}) {
+  for (var seed = from; seed < from + 400; seed++) {
+    final car = Career.start(seed: seed, scenario: sc);
+    var guard = 0;
+    while (car.phase != Phase.over && guard++ < 400) {
+      if (found(car)) return car;
+      if (car.phase == Phase.seasonEnd) car.fired = false;
+      botStep(car);
+    }
   }
-  b.round = round;
-  b.mine = mine;
-  b.theirs = theirs;
-  b.intent = intent;
-  b.drawPile.addAll(b.hand);
-  b.hand
-    ..clear()
-    ..addAll(hand);
-  b.stamina = Battle.baseStamina;
-  for (final id in playFirst) {
-    b.play(b.hand.firstWhere((x) => x.def.id == id));
+  throw StateError('局面が見つからない');
+}
+
+Future<void> _tap(WidgetTester t, String text) async {
+  await t.tap(find.text(text).last);
+  await t.pump();
+  await t.pump(const Duration(milliseconds: 400));
+}
+
+Finder get _list => find.byType(Scrollable).last;
+
+/// 相手が受けてくれる、見栄えのするトレード(若手と指名権で、相手の主力を取りに行く)。
+(Career, TradeOffer) _tradeScene() {
+  for (var seed = 3; seed < 400; seed++) {
+    final car = Career.start(seed: seed, scenario: Scenario.rebuild);
+    for (var t = 1; t < teamDefs.length; t++) {
+      final them = car.teams[t];
+      if (them.mode != TeamMode.rebuild && them.mode != TeamMode.cutCost) continue;
+      final target = them.roster.reduce((a, b) => a.ovr >= b.ovr ? a : b);
+      if (target.age < 28 || target.ovr < 73) continue;
+      final young = [...car.me.roster]..sort((a, b) => b.pot.compareTo(a.pot));
+      final pick = car.picksOf(Career.mine).firstWhere((i) => car.picks[i].round == 1);
+      for (final y in young.take(5)) {
+        final o = TradeOffer(partner: t, give: [y.id], get: [target.id], givePicks: [pick]);
+        final v = car.judge(o);
+        if (v.ok && v.ratio < 1.3) return (car, o);
+      }
+    }
   }
+  throw StateError('トレードの局面が見つからない');
+}
+
+Future<void> _tradeShot(WidgetTester t, String name, String caption, {String? outDir}) async {
+  final (car, o) = _tradeScene();
+  final c = await _with(car);
+  final them = car.teams[o.partner];
+  await _shoot(t, name, caption, c, outDir: outDir, act: (t) async {
+    await _tap(t, 'トレード');
+    await _tap(t, them.city);
+    for (final id in o.get) {
+      final n = them.roster.firstWhere((p) => p.id == id).name;
+      await t.scrollUntilVisible(find.text(n).last, 200, scrollable: _list);
+      await _tap(t, n);
+    }
+    for (final id in o.give) {
+      final n = car.me.roster.firstWhere((p) => p.id == id).name;
+      await t.scrollUntilVisible(find.text(n).last, 200, scrollable: _list);
+      await _tap(t, n);
+    }
+    for (final i in o.givePicks) {
+      final label = '指名権 ${car.picks[i].label(car.teams, car.season)}';
+      await t.scrollUntilVisible(find.text(label).last, 200, scrollable: _list);
+      await _tap(t, label);
+    }
+    expect(find.text('受けてくれそう'), findsOneWidget);
+    // 受け取る選手が見える位置に戻す
+    final first = them.roster.firstWhere((p) => p.id == o.get.first).name;
+    await t.scrollUntilVisible(find.text(first).first, -300, scrollable: _list);
+    await t.pump(const Duration(milliseconds: 300));
+  });
+}
+
+Future<void> _draftShot(WidgetTester t, String name, String caption, {String? outDir}) async {
+  final car = _find(Scenario.rebuild, (c) => c.phase == Phase.draft && c.myTurn && c.draftAt <= 3, from: 5);
+  car.news.clear();
+  final open = byMid(car);
+  car.scoutProspect(open[0]);
+  car.scoutProspect(open[2]);
+  await _shoot(t, name, caption, await _with(car), outDir: outDir);
+}
+
+Future<void> _rosterShot(WidgetTester t, String name, String caption, {String? outDir}) async {
+  final car = _find(Scenario.rebuild, (c) => c.phase == Phase.preseason && c.season == 3, from: 9);
+  await _shoot(t, name, caption, await _with(car), outDir: outDir, act: (t) => _tap(t, 'チーム'));
+}
+
+Future<void> _seasonShot(WidgetTester t, String name, String caption, {String? outDir}) async {
+  final car = _find(Scenario.middle, (c) => c.phase == Phase.season && c.block == 2 && c.me.wins >= 24 && c.incoming == null, from: 2);
+  await _shoot(t, name, caption, await _with(car), outDir: outDir);
+}
+
+Future<void> _offerShot(WidgetTester t, String name, String caption, {String? outDir}) async {
+  final car = _find(Scenario.middle, (c) => c.phase == Phase.season && c.block == 1 && c.incoming != null, from: 4);
+  await _shoot(t, name, caption, await _with(car), outDir: outDir);
+}
+
+Future<void> _contractShot(WidgetTester t, String name, String caption, {String? outDir}) async {
+  final car = _find(
+      Scenario.lastWindow,
+      (c) =>
+          c.phase == Phase.contracts &&
+          c.expiring.length >= 2 &&
+          c.me.roster.where((p) => c.expiring.contains(p.id)).any((p) => p.ovr >= 72),
+      from: 3);
+  await _shoot(t, name, caption, await _with(car), outDir: outDir);
+}
+
+Future<void> _championShot(WidgetTester t, String name, String caption, {String? outDir}) async {
+  final car = _find(Scenario.lastWindow, (c) => c.phase == Phase.seasonEnd && c.myResult == 3 && !c.fired);
+  await _shoot(t, name, caption, await _with(car), outDir: outDir);
+}
+
+Future<void> _leagueShot(WidgetTester t, String name, String caption, {String? outDir}) async {
+  final car = _find(Scenario.middle, (c) => c.phase == Phase.playoffs && c.history.length >= 2, from: 6);
+  await _shoot(t, name, caption, await _with(car), outDir: outDir, act: (t) => _tap(t, 'リーグ'));
 }
 
 /// 課金アイテムの審査用: 値段(¥370)が出る設定画面を撮るための、偽のストア。
@@ -257,172 +311,51 @@ class _PricedStore implements PurchaseService {
   void dispose() {}
 }
 
-Future<void> _battleShot(WidgetTester t, String name, String caption, {String? outDir}) async {
-  final c = await _midSeason();
-  _setBattle(c,
-      round: 3,
-      mine: 24,
-      theirs: 22,
-      intent: const Threat(IntentKind.three, [9]),
-      hand: [_c('pass', up: true), _c('alleyoop'), _c('three', up: true), _c('block'), _c('defense')],
-      playFirst: ['pass']);
-  await _shoot(t, name, caption, c, outDir: outDir);
-}
-
-Future<void> _clutchShot(WidgetTester t, String name, String caption, {String? outDir}) async {
-  final c = await _midSeason(stage: 2, floor: RunState.floorsPerStage - 1);
-  c.run!.mates.add(mateById['closer']!);
-  _setBattle(c,
-      round: 7,
-      mine: 71,
-      theirs: 74,
-      intent: const Threat(IntentKind.ace, [15]),
-      hand: [_c('buzzer'), _c('block', up: true), _c('jumper'), _c('defense'), _c('handsup')],
-      opponent: Opponent(name: bossNames[2], style: OppStyle.height, stage: 2, boss: true));
-  await _shoot(t, name, caption, c, outDir: outDir);
-}
-
-Future<void> _mapShot(WidgetTester t, String name, String caption, {String? outDir}) async {
-  final c = await _midSeason(floor: 2);
-  final r = c.run!;
-  r.map = [
-    [NodeType.game],
-    [NodeType.game, NodeType.event],
-    [NodeType.game, NodeType.elite, NodeType.shop],
-    [NodeType.event, NodeType.game],
-    [NodeType.practice, NodeType.elite, NodeType.game],
-    [NodeType.game, NodeType.shop],
-    [NodeType.practice, NodeType.shop],
-    [NodeType.boss],
-  ];
-  await _shoot(t, name, caption, c, outDir: outDir);
-}
-
-Future<void> _rewardShot(WidgetTester t, String name, String caption, {String? outDir}) async {
-  final c = await _midSeason();
-  final r = c.run!;
-  r.phase = Phase.reward;
-  r.current = NodeType.game;
-  r.lastPrize = 38;
-  r.rewardCards = [_c('deepthree'), _c('pickroll'), _c('zone')];
-  r.rerolled = false;
-  await _shoot(t, name, caption, c, outDir: outDir);
-}
-
-Future<void> _mateShot(WidgetTester t, String name, String caption, {String? outDir}) async {
-  final c = await _midSeason();
-  final r = c.run!;
-  r.phase = Phase.mateReward;
-  r.current = NodeType.elite;
-  r.rewardMates = [mateById['ace']!, mateById['stopper']!];
-  await _shoot(t, name, caption, c, outDir: outDir);
-}
-
-Future<void> _shopShot(WidgetTester t, String name, String caption, {String? outDir}) async {
-  final c = await _midSeason();
-  final r = c.run!;
-  r.phase = Phase.shop;
-  r.money = 214;
-  r.shopItems = [
-    ShopItem.card(_c('steal'), 66),
-    ShopItem.card(_c('dunk'), 72),
-    ShopItem.card(_c('screen'), 44),
-    ShopItem.card(_c('floater'), 68),
-    ShopItem.card(_c('gamemaker'), 112),
-    ShopItem.mate(mateById['iron']!, 120),
-  ];
-  await _shoot(t, name, caption, c, outDir: outDir);
-}
-
-Future<void> _championShot(WidgetTester t, String name, String caption, {String? outDir}) async {
-  final c = await _midSeason(stage: 2, floor: RunState.floorsPerStage - 1);
-  final r = c.run!;
-  r.mates.addAll([mateById['ace']!, mateById['closer']!]);
-  r.phase = Phase.finished;
-  r.champion = true;
-  r.wins = 21;
-  r.losses = 2;
-  await _shoot(t, name, caption, c, outDir: outDir);
-}
-
-Future<void> _collectionShot(WidgetTester t, String name, String caption, {String? outDir}) async {
-  final c = await _controller();
-  final p = c.profile;
-  p.unlocked.addAll(['firstWin', 'stage1', 'stage2', 'champion', 'bigWin', 'fullTeam']);
-  p.seenCards.addAll(allCards.map((x) => x.id).where((id) => !['clutch', 'timeout', 'gamemaker'].contains(id)));
-  p.seasons = 9;
-  await _shoot(t, name, caption, c, outDir: outDir, act: (t) async {
-    await t.tap(find.text('カード図鑑'));
-    await t.pump();
-    await t.pump(const Duration(milliseconds: 400));
-  });
-}
-
-int get _cardKinds => allCards.where((x) => x.rarity != Rarity.status).length;
-
 void main() {
   testWidgets('ストア用スクリーンショット', (t) async {
-    SharedPreferences.setMockInitialValues({'deckHowtoSeen': true});
+    SharedPreferences.setMockInitialValues({'gmHowtoSeen': true});
     await _loadFonts();
     addTearDown(t.view.reset);
-    await _battleShot(t, '01_battle', '相手の予告を読んで、\nカードを切る');
-    await _clutchShot(t, '02_buzzer', 'ラスト1本は、\nブザービーター');
-    await _mapShot(t, '03_map', '行き先を選んで、\n勝ち抜く');
-    await _rewardShot(t, '04_reward', '勝つたびに、\nデッキが強くなる');
-    await _mateShot(t, '05_mates', '仲間を5人そろえる');
-    await _shopShot(t, '06_shop', '部費でプレーを\n買い足す');
-    await _championShot(t, '07_champion', 'めざせ、全国制覇');
-    await _collectionShot(t, '08_collection', '$_cardKinds種のカードを\n集めよう');
+    await _tradeShot(t, '01_trade', '相手の考えを読んで、\nトレードを組む');
+    await _draftShot(t, '02_draft', '指名するまで、\n本当の力は分からない');
+    await _rosterShot(t, '03_roster', '伸びる若手と、\n年俸のやりくり');
+    await _seasonShot(t, '04_season', '82試合を進めて、\nプレーオフへ');
+    await _offerShot(t, '05_offer', '相手から届く、\nトレードの申し込み');
+    await _contractShot(t, '06_contracts', '契約の切れた主力を、\n残すか放すか');
+    await _championShot(t, '07_champion', 'めざせ、ファイナル制覇');
+    await _leagueShot(t, '08_league', '東西30チームのリーグで、\nGMになる');
   });
 
   // 画面の点検用(掲載画像ではない)。build/review/ に書き出す(git には入れない)。
   testWidgets('画面の点検用', (t) async {
-    SharedPreferences.setMockInitialValues({'deckHowtoSeen': true});
+    SharedPreferences.setMockInitialValues({'gmHowtoSeen': true});
     await _loadFonts();
     addTearDown(t.view.reset);
     final out = 'build/review/$_device';
-    final home = await _controller();
-    await _shoot(t, 'r1_home', 'はじめの画面', home, outDir: out);
-    final pr = await _midSeason();
-    pr.run!.phase = Phase.practice;
-    await _shoot(t, 'r2_practice', '練習', pr, outDir: out);
-    final ev = await _midSeason();
-    ev.run!
-      ..phase = Phase.event
-      ..event = allEvents[3];
-    await _shoot(t, 'r3_event', '出来事', ev, outDir: out);
-    final lost = await _midSeason(stage: 1, floor: RunState.floorsPerStage - 1);
-    lost.run!
-      ..phase = Phase.finished
-      ..current = NodeType.boss
-      ..opponent = Opponent(name: bossNames[1], style: OppStyle.outside, stage: 1, boss: true);
-    await _shoot(t, 'r4_lost', '決勝で負けた', lost, outDir: out);
-    final over = await _midSeason();
-    _setBattle(over,
-        round: 7, mine: 60, theirs: 52, intent: const Threat(IntentKind.shot, [8]), hand: [_c('jumper')]);
-    over.run!.battle!.endRound();
-    await _shoot(t, 'r5_over', '試合終了', over, outDir: out);
+    await _shoot(t, 'r1_home', 'はじめの画面', await _controller(), outDir: out);
+    await _shoot(t, 'r2_preseason', 'シーズン前', await _with(Career.start(seed: 2, scenario: Scenario.rebuild)), outDir: out);
+    await _shoot(t, 'r3_market', '補強', await _with(Career.start(seed: 2)), outDir: out, act: (t) => _tap(t, '補強'));
+    await _shoot(t, 'r4_playoffs', 'プレーオフ前', await _with(_find(Scenario.lastWindow, (c) => c.phase == Phase.playoffs)), outDir: out);
+    final fired = _find(Scenario.lastWindow, (c) => c.phase == Phase.seasonEnd && c.fired);
+    await _shoot(t, 'r5_fired', '解任', await _with(fired), outDir: out);
+    await _shoot(t, 'r6_over', '任期の終わり', await _with(botPlayCareer(8, Scenario.middle)), outDir: out);
     final offer = await _controller();
-    SharedPreferences.setMockInitialValues({'deckHowtoSeen': true});
+    SharedPreferences.setMockInitialValues({'gmHowtoSeen': true});
     final m = Monetization(await SharedPreferences.getInstance(), store: _PricedStore());
-    await _shoot(t, 'r6_offer', '広告を消す案内', offer, outDir: out, act: (t) async {
-      final ctx = t.element(find.text('新しいシーズン'));
+    await _shoot(t, 'r7_offer', '広告を消す案内', offer, outDir: out, act: (t) async {
+      final ctx = t.element(find.text('GMに就任する'));
       showRemoveAdsOffer(ctx, m);
       await t.runAsync(() => Future.delayed(const Duration(milliseconds: 200)));
       await t.pump();
       await t.pump(const Duration(milliseconds: 400));
     });
-    await _shoot(t, 'r7_howto', '遊び方の画面', await _controller(), outDir: out, act: (t) async {
-      await t.tap(find.text('遊び方'));
-      await t.pump();
-      await t.pump(const Duration(milliseconds: 400));
-    });
+    await _shoot(t, 'r8_howto', '遊び方の画面', await _controller(), outDir: out, act: (t) => _tap(t, '遊び方'));
   });
 
   // 掲載画像ではないので、値段が写っていてよい。iPhone の寸法だけ作る。
   testWidgets('課金アイテムの審査用', (t) async {
     if (_ipad) return;
-    SharedPreferences.setMockInitialValues({'deckHowtoSeen': true});
+    SharedPreferences.setMockInitialValues({'gmHowtoSeen': true});
     await _loadFonts();
     addTearDown(t.view.reset);
     t.view.physicalSize = _logical * _ratio;
@@ -434,7 +367,7 @@ void main() {
         data: MediaQueryData(size: _logical, devicePixelRatio: _ratio),
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          theme: deckTheme(),
+          theme: gmTheme(),
           home: SettingsScreen(money: m),
         ),
       ),

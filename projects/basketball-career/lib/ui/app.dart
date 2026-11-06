@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../deck/profile.dart';
-import 'deck/battle_screen.dart';
-import 'deck/home_screen.dart';
-import 'deck/run_screens.dart';
-import 'deck/style.dart';
-import 'deck_controller.dart';
+import '../gm/profile.dart';
+import 'gm/home_screen.dart';
+import 'gm/hub_screen.dart';
+import 'gm/style.dart';
+import 'gm_controller.dart';
 import 'layout.dart';
 import 'remove_ads_offer.dart';
 
@@ -13,21 +12,21 @@ class BasketballCareerApp extends StatefulWidget {
   const BasketballCareerApp({super.key, this.controller});
 
   /// テストで差し替える。
-  final DeckController? controller;
+  final GmController? controller;
 
   @override
   State<BasketballCareerApp> createState() => _BasketballCareerAppState();
 }
 
 class _BasketballCareerAppState extends State<BasketballCareerApp> {
-  late final DeckController c = widget.controller ?? DeckController();
+  late final GmController c = widget.controller ?? GmController();
   late final Future<bool> _loaded = c.load();
-  static final _theme = deckTheme();
+  static final _theme = gmTheme();
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'バスケデッキ',
+      title: appTitle,
       debugShowCheckedModeBanner: false,
       theme: _theme,
       darkTheme: _theme,
@@ -44,9 +43,8 @@ class _BasketballCareerAppState extends State<BasketballCareerApp> {
             child: ListenableBuilder(
               listenable: c,
               builder: (context, _) {
-                final r = c.run;
-                if (r == null || c.atHome) return DeckHomeScreen(c: c);
-                return RunScreen(c: c, run: r, battle: () => BattleScreen(c: c, run: r));
+                if (c.career == null || c.atHome) return GmHomeScreen(c: c);
+                return HubScreen(c: c);
               },
             ),
           );
@@ -59,7 +57,7 @@ class _BasketballCareerAppState extends State<BasketballCareerApp> {
 /// 実績の解放と「広告を消す」の案内を、ダイアログで見せる。
 class _NoticeHost extends StatefulWidget {
   const _NoticeHost({required this.controller, required this.child});
-  final DeckController controller;
+  final GmController controller;
   final Widget child;
 
   @override
@@ -113,10 +111,10 @@ class AchievementDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-        icon: const Icon(Icons.emoji_events_rounded, color: DeckColors.gold, size: 44),
+        icon: const Icon(Icons.emoji_events_rounded, color: GmColors.gold, size: 44),
         title: Text('実績「${achievement.title}」'),
         content: Text(
-          [achievement.text, if (achievement.rewardText.isNotEmpty) achievement.rewardText].join('\n'),
+          achievement.text,
           textAlign: TextAlign.center,
         ),
         actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('OK'))],
