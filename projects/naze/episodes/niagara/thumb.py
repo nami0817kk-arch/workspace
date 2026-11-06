@@ -35,8 +35,8 @@ def big(xy, s, size, col):
     ImageDraw.Draw(img).text(xy, s, font=f, fill=col, stroke_width=12, stroke_fill=INK)
 
 
-big((48, 50), "ナイアガラの滝が湖に", 84, WHITE)
-big((40, 170), "16万年後", 210, YEL)
-big((52, 450), "届いても、水は抜けない", 76, WHITE)
+big((48, 50), "ナイアガラの滝がエリー湖に届くのは", 64, WHITE)
+big((40, 170), "〇〇年後", 210, YEL)
+big((52, 450), "それでも、湖の水は抜けない", 76, WHITE)
 img.convert("RGB").save(OUT / "thumb_long.jpg", quality=92)
 print(OUT / "thumb_long.jpg")

@@ -324,7 +324,7 @@ P["s1"] = dict(title="ナイアガラの滝は、1万2千年で11km動いた", l
     dict(id="a1", text="ナイアガラの滝は、同じ場所にありません。", scene=ILLUST("falls1", pan=(0.0, 0.0, 0.08, 0.0))),
     dict(id="a2", text="1万2千年前、滝はいまより11km下流にありました。",
          scene=MAP(NIAG_P, RIV, LINE(GORGE, RED, 9, id="gorge", grow=0.9), PIN(FALLS_LL, "いまの滝", id="p_now"),
-                   PIN(QUEENSTON, "1万2千年前", id="p_past", at=0.3), LABEL((-78.97, 43.12), "11km", 80, RED, on="11km", count=True), tr="zoom")),
+                   PIN(QUEENSTON, "1万2千年前", id="p_past", at=0.3), LABEL((-79.24, 43.12), "11km", 80, RED, on="11km", count=True), tr="zoom")),
     dict(id="a3", text="いまの滝から下流の崖まで、ずっと深い谷が続いています。", scene=ILLUST("gorge2", pan=(0.0, 0.0, 0.0, 0.06))),
     dict(id="a4", text="この谷は、滝が自分で削ったあとです。"),
     dict(id="a5", text="滝の縁が崩れるたびに、滝は少しずつ上流へ下がりました。", scene=SEC("retreat")),

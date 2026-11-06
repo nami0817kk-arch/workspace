@@ -10,7 +10,7 @@ OUT.mkdir(parents=True, exist_ok=True)
 LONG_ID = sys.argv[1] if len(sys.argv) > 1 else ""
 
 TITLES = {
-    "long": "ナイアガラの滝は毎年うしろへ下がる。16万年後にエリー湖へ届いても、湖の水は抜けない",
+    "long": "ナイアガラの滝は毎年うしろへ下がる。エリー湖へ届いても、湖の水は抜けない",
     "s1": "ナイアガラの滝は、1万2千年前は11km下流にあった #shorts",
     "s2": "ナイアガラの滝の力は288万kW。発電所3基ぶんで崖を叩く #shorts",
     "s3": "夜のナイアガラの滝は、水が半分。後退は6分の1に #shorts",
