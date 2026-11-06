@@ -215,18 +215,33 @@ def is_point_card(card) -> bool:
     return card is not None and not _DATE_HEAD.match(card.head)
 
 
+def split_title(title: str) -> list:
+    """章題を2行に：全角の空白 → 真ん中にいちばん近い「、」「：」（句読点は1行目の終わりに残す）→ 真ん中。"""
+    if "　" in title:
+        return title.split("　", 1)
+    mid = len(title) / 2
+    cuts = [i + 1 for i, ch in enumerate(title[:-1]) if ch in "、：，"]
+    cut = min(cuts, key=lambda i: abs(i - mid)) if cuts else round(mid)
+    return [title[:cut], title[cut:]]
+
+
 def chapter_card(backdrop: Image.Image, label: str, title: str, font_of, serif) -> Image.Image:
     """章題カード：暗くした絵に「第N章」（小）＋章題（大きな明朝）。"""
     img = Image.eval(backdrop.filter(ImageFilter.GaussianBlur(6)), lambda v: int(v * 0.28)).convert("RGBA")
     d = ImageDraw.Draw(img, "RGBA")
     d.text((MW / 2, MH * 0.36), label, font=font_of(40), fill=S.YELLOW + (255,), anchor="mm")
     d.line([(MW / 2 - 60, MH * 0.36 + 44), (MW / 2 + 60, MH * 0.36 + 44)], fill=S.RED + (255,), width=4)
+    def fits(rs, s):
+        return max(serif(s).getlength(r) for r in rs) <= MW * 0.8
+
     size = 92
     rows = [title]
-    while size > 56 and serif(size).getlength(title) > MW * 0.8:
+    while size > 56 and not fits(rows, size):
         size -= 4
-    if serif(size).getlength(title) > MW * 0.8 and "　" in title:
-        rows = title.split("　", 1)
+    if not fits(rows, size):                       # 11-06 北条if のまとめ（33字）が両端で切れた → 2行に割り、まだ長ければ縮める
+        rows, size = split_title(title), 92
+        while size > 32 and not fits(rows, size):
+            size -= 4
     for i, r in enumerate(rows):
         d.text((MW / 2, MH * 0.52 + i * size * 1.3), r, font=serif(size), fill=S.WHITE + (255,), anchor="mm")
     return img.convert("RGB")

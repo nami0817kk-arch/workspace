@@ -1,0 +1,265 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：徳川将軍の1日（scripts/shogun-story.yaml）。chiso/storymain.py が読む。
+# 11-06 作成（11/09 19:00 公開）。ooku_main_look.yaml を写した。台本には手を入れない（承認のあと）。決まりは docs/story-main.md・スキル rekishi-story-screen。
+# 絵の方針：将軍の場面の AI 絵（G01〜G13）は 11-06 に Gemini（Chrome、無料版）で作った。S01〜S15・SEND はほかの回の AI 絵の写し
+#   （S01=ooku O01／S02=ooku O02／S03=ooku O06／S04=sankin P05／S05=kakeizu K10／S06=maizo M10／S07=kakeizu K17／S08=sankin TH3／S09=sankin P03／
+#    S10=kakeizu K15／S11=sankin P06／S12=oguri O02／S13=maizo M15／S14=maizo M09／S15=kakeizu K12／SEND=kakeizu KEND）。
+#   将軍の顔は特定の肖像に似せない想像図。実在の肖像（家康・綱吉・家茂）は額（frame）で出す。和服の絵は反転しない。
+script: scripts/shogun-story.yaml
+out: shogun_story_main
+art_dir: out/story/shogun/main
+main_art_dir: out/story/shogun/main
+ai_disclosure: この動画の将軍の暮らしの場面・室内・人物の画像の一部は、画像生成AI（Google の Gemini・Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面の右上に「AI生成画像」と出しています）。
+
+chapters:
+  0: {label: 序章 朝ご飯のあいだも、ひとりではなかった, now: null, dates: {}}
+  1: {label: 第1章 明け六つの「モウ」, now: 幕末, dates: {}}
+  2: {label: 第2章 毎朝の鱚と毒見, now: 幕末, dates: {34: 1614年, 36: 幕末, 39: 吉宗の代, 43: 家斉の代, 48: 家慶の代, 51: null}}
+  3: {label: 第3章 食べながら髪を結う, now: 幕末, dates: {63: 家定の代, 66: null}}
+  4: {label: 第4章 「伺の通りたるべく候」, now: 幕末, dates: {77: 吉宗の代, 79: null, 80: 1693年, 82: 幕末}}
+  5: {label: 第5章 城の外へ出られたのか, now: 江戸時代, dates: {90: 家重の代, 93: 1687年, 94: 1716年, 95: 1722年, 96: 家斉の代, 97: null, 100: 1728年, 101: 1843年, 102: 1863年, 103: null}}
+  6: {label: 第6章 夜の将軍はどうしてた？, now: 幕末, dates: {114: 吉宗の代, 115: 家斉の代, 116: null}}
+  7: {label: 第7章 骨が語る将軍の毎日, now: null, dates: {}}
+  8: {label: まとめ 徳川将軍の1日, now: null, dates: {}}
+no_tag_from: 146
+
+# 概要欄「■ 参考にした資料」（事実カード 将軍の1日_facts_20261106.yaml のうち本文を開いた主なもの）
+references:
+  - 永島今四郎・太田贇雄 編『千代田城大奥』上・下（1892）　https://dl.ndl.go.jp/pid/772936
+  - 松平太郎『江戸時代制度の研究』上巻（1919）　https://dl.ndl.go.jp/pid/980847
+  - 高瀬羽皐『深秘徳川大奥』（1930）　https://dl.ndl.go.jp/pid/1189937
+  - 『東照宮御実紀附録』『有徳院殿御実紀附録』（国史研究会 刊本、1915〜16）　https://dl.ndl.go.jp/pid/953317
+  - 三田村鳶魚『御殿女中』（春陽堂、1930）　https://dl.ndl.go.jp/pid/1447416
+  - 『柳営秘鑑』（写本、国立国会図書館デジタルコレクション）
+  - 高正晴子「将軍の献立について―11代将軍徳川家斉の献立にみる特色―」（日本家政学会誌 45巻10号、1994）
+  - 鈴木尚「江戸時代における貴族形質の顕現」（人類学雑誌 93巻1号、1985）
+  - 馬場悠男ほか 科学研究費 研究成果報告書「徳川将軍親族遺体のデジタル保存と考古学的・人類学的分析」（2013）
+  - 根崎光男「享保期における幕府放鷹制度の復活とその政治的意図」（人間環境論集 7巻1号、2007）
+  - 宇都宮市教育委員会「日光社参と宇都宮城」・目黒区「目黒の鷹狩り」「駒場野の鷹狩り」・中央区「浜離宮恩賜庭園」・岐阜県歴史資料館「将軍家茂上洛に関する文書」
+  - 『御成』（写本）・『中野町誌』（1933）・『江戸時代落書類聚』（1915）・『東京市史稿』市街篇第十（1931）（国立国会図書館デジタルコレクション）
+
+# AI 絵。pan：h＝左右（既定）・v＝上下。crops＝切り出し [倍率, 中心x, 中心y]
+ai:
+  G01: {scene: 朝の膳を食べる将軍の髪を結う小姓たち（想像図）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  G02: {scene: 将軍の脈をとる奥医師たち（想像図）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  G03: {scene: 漆塗りの朝の膳と2尾の鱚（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  G04: {scene: 膳の毒見をする役人（横顔）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  G05: {scene: 次の間の大きな炉と鍋、膳を運ぶ係, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  G06: {scene: 天秤ばかりに載せた飯椀（手もと）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  G07: {scene: 書類を読み上げる側近と将軍（後ろ姿）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  G08: {scene: 錠の付いた木の箱と錦の巾着の鍵, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  G09: {scene: 戸を閉めた江戸の町を進む行列, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  G10: {scene: 野で鷹を据える鷹匠, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  G11: {scene: 湯上がりに白い浴衣を掛けられる将軍（後ろ姿）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  G12: {scene: 寝所で眠る将軍と脇の小姓2人（夜）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  G13: {scene: 枕元の獏の絵の掛け軸と枕, pan: v, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  G09T: {scene: 火の見櫓のある江戸の町と行列（G09 の上半分）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  G13P: {scene: 枕元に並べた5つの箱枕（G13 の下半分）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  S01: {scene: 夜明けの御殿の長い板廊下（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  S02: {scene: 朝もやの御殿の屋根の並び（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  S03: {scene: 赤い毛氈に並ぶ黒塗りの膳（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  S04: {scene: 灯のともる座敷と膳（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  S05: {scene: 金屏風の広間（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  S06: {scene: 石灯籠の並ぶ参道（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  S07: {scene: 杉木立の参道に差す光（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  S08: {scene: 富士を背に進む大名行列, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  S09: {scene: 提灯の並ぶ江戸の町（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  S10: {scene: 灯の下の書状と筆（字なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  S11: {scene: 夜の座敷の行灯と机（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  S12: {scene: ろうそくのともる広間（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  S13: {scene: 灯と積まれた帳面（字なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  S14: {scene: 霧の水辺の小舟（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  S15: {scene: 夕暮れの寺の屋根（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  SEND: {scene: 夕暮れの寺の屋根のシルエット（終了画面）, lock: [1.0, 0.5, 0.5]}
+
+credits:
+  paintings/kira_edo_castle_beato.jpg: フェリーチェ・ベアト《江戸城》（1860年代。パブリックドメイン）
+  paintings/ieyasu_portrait_toshodaigongen.jpg: 《東照大権現像》（徳川家康の肖像。パブリックドメイン）
+  paintings/kira_tsunayoshi_tosa.jpg: 《徳川綱吉像》（パブリックドメイン）
+  paintings/kazu_iemochi_kano.jpg: 《徳川家茂像》（パブリックドメイン）
+  paintings/ieyasu_nikko_yomeimon_kiyochika_1897.jpg: 小林清親《日光陽明門》（1897年。パブリックドメイン）
+  paintings/yoshinobu_beato_edo_panorama_1865.jpg: フェリーチェ・ベアト《江戸のパノラマ》（1865年ごろ。パブリックドメイン）
+shots:
+  - 0 part:paintings/kira_edo_castle_beato.jpg wide
+  - 1 ai:G01 wide
+  - 2 ai:G02 wide
+  - 3 ai:G06 wide
+  - 4 ai:G12 wide
+  - 5 ai:S07 wide
+  - 6 ai:S05 wide
+  - 7 ai:S01 wide
+  - 8 ai:S02 wide
+  - 9 part:paintings/kira_edo_castle_beato.jpg right
+  - 10 ai:S10 wide
+  - 11 ai:S04 wide
+  - 12 ai:G12 wide
+  - 13 ai:S10 wide
+  - 14 ai:G05 left
+  - 15 ai:S02 left
+  - 16 ai:S04 left
+  - 17 ai:S02 right
+  - 18 ai:S04 right
+  - 19 ai:S10 right
+  - 20 ai:S12 wide
+  - 21 ai:S05 left
+  - 22 ai:G03 wide
+  - 23 ai:G05 right
+  - 24 ai:G03 left
+  - 25 ai:G03 right
+  - 26 ai:S04 wide
+  - 27 ai:G03 wide
+  - 28 ai:S03 left
+  - 29 ai:S03 right
+  - 30 ai:G05 wide
+  - 31 ai:G04 wide
+  - 32 ai:G05 left
+  - 33 ai:G05 right
+  - 34 frame:paintings/ieyasu_portrait_toshodaigongen.jpg
+  - 35 ai:G04 left
+  - 36 ai:G01 right
+  - 37 ai:G06 left
+  - 38 ai:G06 right
+  - 39 ai:S10 left
+  - 40 ai:G03 left
+  - 41 ai:G04 right
+  - 42 ai:S12 left
+  - 43 ai:S10 left
+  - 44 ai:S10 wide
+  - 45 ai:S04 wide
+  - 46 ai:S09 wide
+  - 47 ai:G03 right
+  - 48 ai:G03 left
+  - 49 ai:S09 left
+  - 50 ai:S10 right
+  - 51 ai:G03 wide
+  - 52 ai:G01 wide
+  - 53 ai:G01 left
+  - 54 ai:G01 right
+  - 55 ai:S04 wide
+  - 56 ai:G01 wide
+  - 57 ai:G01 left
+  - 58 ai:S12 right
+  - 59 ai:G02 left
+  - 60 ai:G02 wide
+  - 61 ai:G02 right
+  - 62 ai:G06 wide
+  - 63 ai:S05 right
+  - 64 ai:S06 wide
+  - 65 ai:S05 wide
+  - 66 ai:G02 wide
+  - 67 ai:S10 wide
+  - 68 ai:G07 left
+  - 69 ai:S03 right
+  - 70 ai:G07 wide
+  - 71 ai:S10 left
+  - 72 ai:S04 left
+  - 73 ai:G07 left
+  - 74 ai:S10 right
+  - 75 ai:S12 wide
+  - 76 ai:G07 right
+  - 77 ai:G08 wide
+  - 78 ai:G08 right
+  - 79 ai:G07 wide
+  - 80 frame:paintings/kira_tsunayoshi_tosa.jpg
+  - 81 ai:S10 wide
+  - 82 ai:S04 right
+  - 83 ai:S02 wide
+  - 84 ai:S09 left
+  - 85 ai:S06 wide
+  - 86 ai:S07 wide
+  - 87 ai:S12 left
+  - 88 ai:G09T wide
+  - 89 ai:S09 right
+  - 90 ai:S15 wide
+  - 91 ai:G09T right
+  - 92 ai:S06 left
+  - 93 ai:G10 left
+  - 94 ai:S02 wide
+  - 95 ai:G10 right
+  - 96 ai:S14 wide
+  - 97 ai:S09 wide
+  - 98 part:paintings/ieyasu_nikko_yomeimon_kiyochika_1897.jpg wide
+  - 99 ai:S07 wide
+  - 100 ai:S07 left
+  - 101 part:paintings/ieyasu_nikko_yomeimon_kiyochika_1897.jpg right
+  - 102 frame:paintings/kazu_iemochi_kano.jpg
+  - 103 part:paintings/yoshinobu_beato_edo_panorama_1865.jpg wide
+  - 104 ai:G11 left
+  - 105 ai:S12 wide
+  - 106 ai:G11 wide
+  - 107 ai:S04 wide
+  - 108 ai:G11 right
+  - 109 ai:G11 left
+  - 110 ai:S12 left
+  - 111 ai:S01 left
+  - 112 ai:S01 wide
+  - 113 ai:S12 right
+  - 114 ai:S03 wide
+  - 115 ai:G03 left
+  - 116 frame:paintings/ieyasu_portrait_toshodaigongen.jpg
+  - 117 ai:S04 wide
+  - 118 ai:S01 right
+  - 119 ai:G12 left
+  - 120 ai:S04 wide
+  - 121 ai:G13P wide
+  - 122 ai:G12 wide
+  - 123 ai:G13P right
+  - 124 ai:G12 left
+  - 125 ai:G12 left
+  - 126 ai:G12 wide
+  - 127 ai:S01 wide
+  - 128 ai:S02 wide
+  - 129 ai:S06 left
+  - 130 ai:S06 right
+  - 131 ai:S15 wide
+  - 132 ai:S10 wide
+  - 133 ai:S12 wide
+  - 134 ai:G03 left
+  - 135 ai:S15 left
+  - 136 frame:paintings/kazu_iemochi_kano.jpg
+  - 137 ai:S05 wide
+  - 138 ai:S04 left
+  - 139 ai:S05 right
+  - 140 ai:G03 right
+  - 141 ai:S02 wide
+  - 142 ai:S01 wide
+  - 143 ai:G01 wide
+  - 144 ai:G02 wide
+  - 145 ai:G09T wide
+  - 146 ai:G03 wide
+  - 147 ai:G12 wide
+  - 148 part:paintings/kira_edo_castle_beato.jpg wide
+  - 149 ai:SEND wide
+  - end ai:SEND wide
+
+focus: {}
+
+fx:
+  S11: {lamp: {region: [0.0, 0.0, 0.6, 0.7]}}
+
+parts:
+  - {type: quote, from: 11, to: 11, label: 史料, text: 將軍は朝六ッ時／起出るを例とす, source: 『千代田城大奥』下「將軍の日課」（1892年）}
+  - {type: versus3, from: 16, to: 17, items: [[明治の本 1892年, 5時ごろ], [大正の本 1919年, 午前6時], [昭和の本 1930年, 六つと書かず]], every: 1.6}
+  - {type: quote, from: 37, to: 37, label: 史料, text: 跡にて何程召上りしやを／秤にかけて見るが掟なれば, source: 『千代田城大奥』下「將軍の日課」（1892年）}
+  - {type: quote, from: 71, to: 71, label: 史料, text: 伺の通りたる可く候, source: 『千代田城大奥』下「將軍の日課」（1892年）}
+  - {type: quote, from: 126, to: 126, label: 史料, text: 中々眠られたるものにあらず／猶更咳聲も出來ず, source: 御床番を勤めた小姓の話（『千代田城大奥』1892年）}
+  - {type: quote, from: 133, to: 133, label: 研究, text: 表面は宝石のように／美しい光沢があった, source: 鈴木尚「江戸時代における貴族形質の顕現」（1985年）}
+
+# 台本の図の差し替え（「六つ」の食い違いは line 16 を部品（versus3）にして、図は出さない）
+figures:
+  - {from: 16, to: 17, spec: null}
+  - {from: 110, to: 110, spec: null}
+
+stills:
+  - {line: 0, note: 冒頭（0秒）}
+  - {line: 1, note: 髪を結われながら朝食}
+  - {line: 11, note: 史料の札（六つ）}
+  - {line: 16, note: 六つのくい違い}
+  - {line: 32, note: 膳が届くまで（図）}
+  - {line: 37, note: 秤の史料}
+  - {line: 44, note: 家斉の献立（図）}
+  - {line: 61, note: 診察（図）}
+  - {line: 71, note: 伺の通り}
+  - {line: 102, note: 家茂の上洛（額）}
+  - {line: 124, note: 枕のくい違い（図）}
+  - {line: 139, note: 顔のわけ（図）}
+  - {end: true, note: 終了画面の空き}
