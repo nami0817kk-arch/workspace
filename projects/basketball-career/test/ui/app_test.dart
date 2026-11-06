@@ -40,7 +40,13 @@ void main() {
 
     await tester.tap(find.text('GMに就任する'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('中位から上へ'));
+    // チームを選ぶ: 西地区に切り替えて、いちばん上のチームを見て、GMになる
+    expect(find.text('どのチームを任される?'), findsOneWidget);
+    await tester.tap(find.text('西地区'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byIcon(Icons.chevron_right_rounded).first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.textContaining('のGMになる'));
     await tester.pumpAndSettle();
     // はじめてなら、先に遊び方
     expect(find.text('遊び方'), findsOneWidget);
@@ -48,6 +54,7 @@ void main() {
     await tester.tap(find.text('はじめる'));
     await tester.pumpAndSettle();
     expect(find.text('1年目のシーズン前'), findsOneWidget);
+    expect(c.career!.me.east, isFalse, reason: '西地区のチームを選んだ');
 
     await tester.tap(find.text('開幕する'));
     await tester.pumpAndSettle();
@@ -62,7 +69,7 @@ void main() {
   testWidgets('トレードの画面で選ぶと相手の反応が出て、釣り合えば成立する', (tester) async {
     _size(tester, 430, 932);
     final c = await _controller({'gmHowtoSeen': true});
-    c.newCareer(Scenario.middle);
+    c.newCareer(teamAtRank(1, 15), seed: 1);
     final car = c.career!;
     await tester.pumpWidget(BasketballCareerApp(controller: c));
     await tester.pumpAndSettle();
@@ -70,7 +77,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.textContaining('相手の反応が分かる'), findsOneWidget);
     // 相手のいちばん下の選手を、こちらのいちばんの選手で取りに行く(相手はきっと受ける)
-    final them = car.teams[1];
+    final them = car.teams[car.mine == 0 ? 1 : 0];
     final theirs = them.roster.reduce((a, b) => a.ovr <= b.ovr ? a : b);
     final ours = car.me.roster.reduce((a, b) => a.ovr >= b.ovr ? a : b);
     await tester.scrollUntilVisible(find.text(theirs.name), 200, scrollable: _vertical);
@@ -79,7 +86,7 @@ void main() {
     await tester.scrollUntilVisible(find.text(ours.name), 300, scrollable: _vertical);
     await tester.tap(find.text(ours.name).last);
     await tester.pumpAndSettle();
-    final v = car.judge(TradeOffer(partner: 1, give: [ours.id], get: [theirs.id]));
+    final v = car.judge(TradeOffer(partner: them.index, give: [ours.id], get: [theirs.id]));
     final ok = v.ok;
     expect(find.text(ok ? '受けてくれそう' : v.reason), findsOneWidget);
     if (ok) {
@@ -93,7 +100,7 @@ void main() {
   testWidgets('続きは保存され、起動するとはじめの画面から「続きから」で戻れる', (tester) async {
     _size(tester, 390, 844);
     final c = await _controller();
-    c.newCareer(Scenario.rebuild);
+    c.newCareer(teamAtRank(1, 28), seed: 1);
     c.startSeason();
     await tester.pumpWidget(const SizedBox());
     final prefs = await SharedPreferences.getInstance();
@@ -127,7 +134,7 @@ void main() {
       testWidgets('$s', (tester) async {
         final c = await _controller({'gmHowtoSeen': true});
         await show(tester, c, s); // はじめの画面
-        c.newCareer(Scenario.lastWindow);
+        c.newCareer(teamAtRank(1, 1), seed: 1);
         final car = c.career!;
         for (final tab in [null, 'チーム', 'トレード', '補強', 'リーグ']) {
           await show(tester, c, s, tab: tab);

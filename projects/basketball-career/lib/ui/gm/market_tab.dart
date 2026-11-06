@@ -52,7 +52,7 @@ class MarketTab extends StatelessWidget {
     final problem = car.signProblem(p);
     return PlayerRow(
       p: p,
-      team: 0,
+      team: car.mine,
       salaryText: '求める年俸 ${money(ask.salary)}',
       trailing: SizedBox(
         height: 36,

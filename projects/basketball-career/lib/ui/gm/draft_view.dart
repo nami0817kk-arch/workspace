@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../gm/career.dart';
 import '../../gm/draft.dart';
 import '../../gm/player.dart';
 import '../../monetization/monetization.dart';
@@ -20,7 +19,7 @@ class DraftView extends StatelessWidget {
     final open = car.prospects.where((p) => p.pickedBy == null).toList()..sort((a, b) => b.mid.compareTo(a.mid));
     final myPicks = [
       for (var k = car.draftAt; k < car.order.length; k++)
-        if (car.picks[car.order[k]].owner == Career.mine) k + 1,
+        if (car.picks[car.order[k]].owner == car.mine) k + 1,
     ];
     final taken = [for (var k = car.draftLog.length - 1; k >= 0; k--) (k + 1, car.prospects[car.draftLog[k]])];
     return ListView(

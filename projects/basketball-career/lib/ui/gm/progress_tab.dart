@@ -52,14 +52,14 @@ class ProgressTab extends StatelessWidget {
 
   List<Widget> _preseason(BuildContext context, Career car) {
     final problem = car.startProblem;
-    final rank = car.strengthRank(Career.mine) + 1;
+    final rank = car.strengthRank(car.mine) + 1;
     return [
       _card([
         _head('${car.season}年目のシーズン前'),
         const SizedBox(height: 8),
         Text(
             car.season == 1
-                ? '${car.scenario.text}\nトレードと補強で、勝てるチームを作ろう。準備ができたら開幕する。'
+                ? '${car.outlook.text}\nトレードと補強で、勝てるチームを作ろう。準備ができたら開幕する。'
                 : 'トレードと補強ができる。準備ができたら開幕する。',
             style: const TextStyle(color: GmColors.sub, height: 1.5)),
         const SizedBox(height: 10),
@@ -101,7 +101,7 @@ class ProgressTab extends StatelessWidget {
     final last = car.lastGames.length;
     final conf = me.east ? '東地区' : '西地区';
     final deadline = car.block < tradeDeadlineBlock;
-    final blockWins = car.lastGames.where((g) => g.winner == Career.mine).length;
+    final blockWins = car.lastGames.where((g) => g.winner == car.mine).length;
     return [
       _card([
         _head(car.block == 0 ? '開幕' : '$played試合を終えて'),
@@ -121,7 +121,7 @@ class ProgressTab extends StatelessWidget {
         _card([
           Text('この$last試合: $blockWins勝${last - blockWins}敗', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
           const SizedBox(height: 6),
-          for (final g in car.lastGames) GameRow(g: g, mine: Career.mine),
+          for (final g in car.lastGames) GameRow(g: g, mine: car.mine),
         ]),
     ];
   }
@@ -140,7 +140,7 @@ class ProgressTab extends StatelessWidget {
         Text('相手の考え: ${them.mode.label}。${them.mode.wants}。', style: const TextStyle(color: GmColors.sub, fontSize: 13)),
         const SizedBox(height: 8),
         const Text('出す', style: TextStyle(color: GmColors.bad, fontWeight: FontWeight.bold)),
-        for (final p in give) Padding(padding: const EdgeInsets.only(top: 4), child: PlayerRow(p: p, team: Career.mine)),
+        for (final p in give) Padding(padding: const EdgeInsets.only(top: 4), child: PlayerRow(p: p, team: car.mine)),
         const SizedBox(height: 8),
         const Text('受け取る', style: TextStyle(color: GmColors.good, fontWeight: FontWeight.bold)),
         for (final p in get) Padding(padding: const EdgeInsets.only(top: 4), child: PlayerRow(p: p, team: o.partner)),
@@ -187,7 +187,7 @@ class ProgressTab extends StatelessWidget {
                   child: Text(st[i].name,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontWeight: st[i].index == Career.mine ? FontWeight.bold : FontWeight.normal, color: st[i].index == Career.mine ? GmColors.ball : null))),
+                      style: TextStyle(fontWeight: st[i].index == car.mine ? FontWeight.bold : FontWeight.normal, color: st[i].index == car.mine ? GmColors.ball : null))),
               if (i == directSeeds) const Padding(padding: EdgeInsets.only(right: 6), child: Tag('プレーイン')),
               Text(record(st[i])),
             ]),
@@ -232,7 +232,7 @@ class ProgressTab extends StatelessWidget {
       ]),
       // 自分のチームの戦いと、ファイナル
       for (final s in car.playoffs)
-        if (s.high == Career.mine || s.low == Career.mine || s.round == 4) _seriesCard(car, s),
+        if (s.high == car.mine || s.low == car.mine || s.round == 4) _seriesCard(car, s),
       const SizedBox(height: 8),
       if (car.fired) ...[
         _card(edge: GmColors.bad, [
@@ -262,7 +262,7 @@ class ProgressTab extends StatelessWidget {
   String _signed(int v) => v > 0 ? '+$v' : '$v';
 
   Widget _seriesCard(Career car, Series s) {
-    final mineIn = s.high == Career.mine || s.low == Career.mine;
+    final mineIn = s.high == car.mine || s.low == car.mine;
     return _card(edge: mineIn ? GmColors.ball : null, [
       Text(s.label, style: const TextStyle(color: GmColors.sub, fontSize: 12)),
       const SizedBox(height: 4),
@@ -325,7 +325,7 @@ class ProgressTab extends StatelessWidget {
     final problem = car.resignProblem(p);
     return PlayerRow(
       p: p,
-      team: Career.mine,
+      team: car.mine,
       salaryText: '求める年俸 ${money(ask.salary)}(最長${ask.maxYears}年)',
       showDelta: true,
       extra: Row(children: [
@@ -382,7 +382,7 @@ class ProgressTab extends StatelessWidget {
       _card(edge: titles > 0 ? GmColors.gold : null, [
         _head(car.fired ? '解任された' : '任期を終えた', icon: titles > 0 ? Icons.emoji_events_rounded : Icons.flag_rounded, color: titles > 0 ? GmColors.gold : GmColors.ball),
         const SizedBox(height: 8),
-        _kv('始め方', car.scenario.label),
+        _kv('任されたとき', '${car.outlook.label}(戦力${car.startRank + 1}位)'),
         _kv('務めた年数', '${car.history.length}年'),
         _kv('優勝', '$titles回', color: titles > 0 ? GmColors.gold : null),
         _kv('通算', '$wins勝$losses敗'),

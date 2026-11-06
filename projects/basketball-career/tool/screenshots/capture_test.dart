@@ -172,9 +172,9 @@ Future<GmController> _with(Career car) async {
 }
 
 /// 条件に合う局面が出るまで、種を変えて自動で進める。
-Career _find(Scenario sc, bool Function(Career) found, {int from = 1}) {
+Career _find(int rank, bool Function(Career) found, {int from = 1}) {
   for (var seed = from; seed < from + 400; seed++) {
-    final car = Career.start(seed: seed, scenario: sc);
+    final car = careerAt(seed, rank);
     var guard = 0;
     while (car.phase != Phase.over && guard++ < 400) {
       if (found(car)) return car;
@@ -199,14 +199,15 @@ Finder get _list => find.byWidgetPredicate((w) => w is Scrollable && w.axisDirec
 /// 相手が受けてくれる、見栄えのするトレード(若手と指名権で、相手の主力を取りに行く)。
 (Career, TradeOffer) _tradeScene() {
   for (var seed = 3; seed < 400; seed++) {
-    final car = Career.start(seed: seed, scenario: Scenario.rebuild);
-    for (var t = 1; t < teamDefs.length; t++) {
+    final car = careerAt(seed, 28);
+    for (var t = 0; t < teamDefs.length; t++) {
+      if (t == car.mine) continue;
       final them = car.teams[t];
       if (them.mode != TeamMode.rebuild && them.mode != TeamMode.cutCost) continue;
       final target = them.roster.reduce((a, b) => a.ovr >= b.ovr ? a : b);
       if (target.age < 28 || target.ovr < 73) continue;
       final young = [...car.me.roster]..sort((a, b) => b.pot.compareTo(a.pot));
-      final pick = car.picksOf(Career.mine).firstWhere((i) => car.picks[i].round == 1);
+      final pick = car.picksOf(car.mine).firstWhere((i) => car.picks[i].round == 1);
       for (final y in young.take(5)) {
         final o = TradeOffer(partner: t, give: [y.id], get: [target.id], givePicks: [pick]);
         final v = car.judge(o);
@@ -223,7 +224,10 @@ Future<void> _tradeShot(WidgetTester t, String name, String caption, {String? ou
   final them = car.teams[o.partner];
   await _shoot(t, name, caption, c, outDir: outDir, act: (t) async {
     await _tap(t, 'トレード');
-    await _tap(t, them.city);
+    // 相手を選ぶ横の一覧は、見えていない分は作られていないので、送ってから押す
+    final row = find.byWidgetPredicate((w) => w is Scrollable && w.axisDirection == AxisDirection.right).first;
+    await t.scrollUntilVisible(find.text(them.def.short), 150, scrollable: row);
+    await _tap(t, them.def.short);
     for (final id in o.get) {
       final n = them.roster.firstWhere((p) => p.id == id).name;
       await t.scrollUntilVisible(find.text(n), 200, scrollable: _list);
@@ -248,7 +252,7 @@ Future<void> _tradeShot(WidgetTester t, String name, String caption, {String? ou
 }
 
 Future<void> _draftShot(WidgetTester t, String name, String caption, {String? outDir}) async {
-  final car = _find(Scenario.rebuild, (c) => c.phase == Phase.draft && c.myTurn && c.draftAt <= 3, from: 5);
+  final car = _find(28, (c) => c.phase == Phase.draft && c.myTurn && c.draftAt <= 3, from: 5);
   car.news.clear();
   final open = byMid(car);
   car.scoutProspect(open[0]);
@@ -257,23 +261,23 @@ Future<void> _draftShot(WidgetTester t, String name, String caption, {String? ou
 }
 
 Future<void> _rosterShot(WidgetTester t, String name, String caption, {String? outDir}) async {
-  final car = _find(Scenario.rebuild, (c) => c.phase == Phase.preseason && c.season == 3, from: 9);
+  final car = _find(28, (c) => c.phase == Phase.preseason && c.season == 3, from: 9);
   await _shoot(t, name, caption, await _with(car), outDir: outDir, act: (t) => _tap(t, 'チーム'));
 }
 
 Future<void> _seasonShot(WidgetTester t, String name, String caption, {String? outDir}) async {
-  final car = _find(Scenario.middle, (c) => c.phase == Phase.season && c.block == 2 && c.me.wins >= 24 && c.incoming == null, from: 2);
+  final car = _find(15, (c) => c.phase == Phase.season && c.block == 2 && c.me.wins >= 24 && c.incoming == null, from: 2);
   await _shoot(t, name, caption, await _with(car), outDir: outDir);
 }
 
 Future<void> _offerShot(WidgetTester t, String name, String caption, {String? outDir}) async {
-  final car = _find(Scenario.middle, (c) => c.phase == Phase.season && c.block == 1 && c.incoming != null, from: 4);
+  final car = _find(15, (c) => c.phase == Phase.season && c.block == 1 && c.incoming != null, from: 4);
   await _shoot(t, name, caption, await _with(car), outDir: outDir);
 }
 
 Future<void> _contractShot(WidgetTester t, String name, String caption, {String? outDir}) async {
   final car = _find(
-      Scenario.lastWindow,
+      1,
       (c) =>
           c.phase == Phase.contracts &&
           c.expiring.length >= 2 &&
@@ -283,12 +287,12 @@ Future<void> _contractShot(WidgetTester t, String name, String caption, {String?
 }
 
 Future<void> _championShot(WidgetTester t, String name, String caption, {String? outDir}) async {
-  final car = _find(Scenario.lastWindow, (c) => c.phase == Phase.seasonEnd && c.myResult == 5 && !c.fired);
+  final car = _find(1, (c) => c.phase == Phase.seasonEnd && c.myResult == 5 && !c.fired);
   await _shoot(t, name, caption, await _with(car), outDir: outDir);
 }
 
 Future<void> _leagueShot(WidgetTester t, String name, String caption, {String? outDir}) async {
-  final car = _find(Scenario.middle, (c) => c.phase == Phase.playoffs && c.history.length >= 2, from: 6);
+  final car = _find(15, (c) => c.phase == Phase.playoffs && c.history.length >= 2, from: 6);
   await _shoot(t, name, caption, await _with(car), outDir: outDir, act: (t) => _tap(t, 'リーグ'));
 }
 
@@ -336,11 +340,12 @@ void main() {
     addTearDown(t.view.reset);
     final out = 'build/review/$_device';
     await _shoot(t, 'r1_home', 'はじめの画面', await _controller(), outDir: out);
-    await _shoot(t, 'r2_preseason', 'シーズン前', await _with(Career.start(seed: 2, scenario: Scenario.rebuild)), outDir: out);
+    await _shoot(t, 'r1b_teampick', 'チームを選ぶ', await _controller(), outDir: out, act: (t) => _tap(t, 'GMに就任する'));
+    await _shoot(t, 'r2_preseason', 'シーズン前', await _with(careerAt(2, 28)), outDir: out);
     await _shoot(t, 'r3_market', '補強', await _with(Career.start(seed: 2)), outDir: out, act: (t) => _tap(t, '補強'));
-    await _shoot(t, 'r4_playoffs', 'プレーオフ前', await _with(_find(Scenario.lastWindow, (c) => c.phase == Phase.playoffs)), outDir: out);
+    await _shoot(t, 'r4_playoffs', 'プレーオフ前', await _with(_find(1, (c) => c.phase == Phase.playoffs)), outDir: out);
     // 解任の局面は、信頼を1にして目標に届かないシーズンを作る
-    final fired = Career.start(seed: 3, scenario: Scenario.lastWindow)
+    final fired = careerAt(3, 1)
       ..trust = 1
       ..startSeason()
       ..target = gamesPerSeason;
@@ -349,7 +354,7 @@ void main() {
     }
     fired.playPlayoffs();
     await _shoot(t, 'r5_fired', '解任', await _with(fired), outDir: out);
-    await _shoot(t, 'r6_over', '任期の終わり', await _with(botPlayCareer(8, Scenario.middle)), outDir: out);
+    await _shoot(t, 'r6_over', '任期の終わり', await _with(botPlayCareer(8, team: teamAtRank(8, 15))), outDir: out);
     final offer = await _controller();
     SharedPreferences.setMockInitialValues({'gmHowtoSeen': true});
     final m = Monetization(await SharedPreferences.getInstance(), store: _PricedStore());

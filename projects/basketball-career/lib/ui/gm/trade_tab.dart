@@ -19,7 +19,7 @@ class TradeTab extends StatefulWidget {
 }
 
 class _TradeTabState extends State<TradeTab> {
-  late int _partner = widget.initialPartner ?? widget.c.career?.incoming?.partner ?? 1;
+  late int _partner = widget.initialPartner ?? widget.c.career?.incoming?.partner ?? (widget.c.career!.mine == 0 ? 1 : 0);
   final _give = <int>{};
   final _get = <int>{};
   final _givePicks = <int>{};
@@ -46,7 +46,7 @@ class _TradeTabState extends State<TradeTab> {
     // 成立や放出で、選んでいた選手がいなくなっていたら外す
     _give.removeWhere((id) => !car.me.roster.any((p) => p.id == id));
     _get.removeWhere((id) => !car.teams[_partner].roster.any((p) => p.id == id));
-    _givePicks.removeWhere((i) => i >= car.picks.length || car.picks[i].owner != Career.mine);
+    _givePicks.removeWhere((i) => i >= car.picks.length || car.picks[i].owner != car.mine);
     _getPicks.removeWhere((i) => i >= car.picks.length || car.picks[i].owner != _partner);
     final them = car.teams[_partner];
     final o = _offer;
@@ -61,7 +61,8 @@ class _TradeTabState extends State<TradeTab> {
           scrollDirection: Axis.horizontal,
           padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
           children: [
-            for (var t = 1; t < teamDefs.length; t++)
+            for (var t = 0; t < teamDefs.length; t++)
+              if (t != car.mine)
               Padding(
                 padding: const EdgeInsets.only(right: 6),
                 child: ChoiceChip(
@@ -118,12 +119,12 @@ class _TradeTabState extends State<TradeTab> {
                   padding: const EdgeInsets.only(bottom: 6),
                   child: PlayerRow(
                     p: p,
-                    team: Career.mine,
+                    team: car.mine,
                     selected: _give.contains(p.id),
                     onTap: () => setState(() => _give.contains(p.id) ? _give.remove(p.id) : _give.add(p.id)),
                   ),
                 ),
-            _pickChips(car, Career.mine, _givePicks),
+            _pickChips(car, car.mine, _givePicks),
           ],
         ),
       ),

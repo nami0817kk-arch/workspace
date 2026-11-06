@@ -79,7 +79,7 @@ class LeagueTab extends StatelessWidget {
   }
 
   Widget _teamRow(BuildContext context, Career car, Team t, int n, bool started) {
-    final mine = t.index == Career.mine;
+    final mine = t.index == car.mine;
     return InkWell(
       onTap: () => _showTeam(context, car, t),
       child: Padding(
@@ -117,7 +117,7 @@ class LeagueTab extends StatelessWidget {
                 Expanded(child: Text(t.name, style: const TextStyle(fontSize: 19, fontWeight: FontWeight.bold))),
               ]),
               const SizedBox(height: 6),
-              if (t.index != Career.mine) Text('${t.mode.label}: ${t.mode.wants}', style: const TextStyle(color: GmColors.sub)),
+              if (t.index != car.mine) Text('${t.mode.label}: ${t.mode.wants}', style: const TextStyle(color: GmColors.sub)),
               const SizedBox(height: 8),
               PayrollBar(payroll: t.payroll),
               const SizedBox(height: 10),
