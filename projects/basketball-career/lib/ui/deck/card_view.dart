@@ -17,6 +17,7 @@ class CardView extends StatelessWidget {
     this.guard,
     this.selected = false,
     this.showUpgrade = false,
+    this.aspect = defaultAspect,
   });
 
   final CardInstance card;
@@ -31,7 +32,11 @@ class CardView extends StatelessWidget {
   /// 強くしたあとの文を出す(練習で選ぶとき)。
   final bool showUpgrade;
 
-  static const aspect = 1.42;
+  /// 縦÷横。手札は少し低くして、2段が1画面に収まるようにする。
+  final double aspect;
+
+  static const defaultAspect = 1.42;
+  static const handAspect = 1.3;
 
   @override
   Widget build(BuildContext context) {
