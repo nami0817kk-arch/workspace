@@ -1,0 +1,1 @@
+d=  0.0cm beta 11.92 psi 0.00 speed 28.00 spin 0.00rps(z) launch_az 0.00 launch_el 11.92 goal y 0.000 z 1.300 t 0.814 stroke 13.0cm

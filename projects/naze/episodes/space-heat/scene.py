@@ -406,15 +406,15 @@ def draw_sublim(img, sc, t, u):
     base = y1 - (120 if LAND else 260)
     hh = 70 if LAND else 80
     rows = [("体の熱(冷やす水の管)", (255, 140, 90)), ("水", (70, 150, 230)), ("細かい穴の板", (170, 175, 190)), ("氷", (215, 240, 255))]
-    shown = 1 + int(min(3, u * 5))
+    shown = sc["n"] if sc.get("n") else 1 + int(min(3, u * 5))
     for i, (nm, col) in enumerate(rows[:shown]):
         yb = base - i * hh
         d.rectangle([xa, yb - hh, xb, yb], fill=col + (235,), outline=NAVY, width=2)
         if i == 2:
             for x in np.arange(xa + 20, xb, 36):
                 d.rectangle([x, yb - hh + 8, x + 6, yb - 8], fill=(60, 64, 80))
-        text(d, (xb + 20, yb - hh / 2) if LAND else (W / 2, yb - hh / 2), nm, 40 if LAND else 36, WHITE if LAND else NAVY, "lm" if LAND else "mm", sw=6 if LAND else 0)
-    if shown >= 4:
+        text(d, (W / 2, yb - hh / 2), nm, 40 if LAND else 36, NAVY, "mm", sw=0)
+    if shown >= 4 and (not sc.get("n") or sc.get("vapor")):
         top = base - 4 * hh
         rng = np.random.default_rng(5)
         xs = rng.uniform(xa, xb, 60)

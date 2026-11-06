@@ -1,0 +1,1 @@
+d=   10cm window 49.42-56.29 width 6.87 center 52.85 speed 22.40 spin 10.63rps wall 2.86 goal 1.23 footz 0.071
