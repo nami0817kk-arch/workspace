@@ -199,30 +199,79 @@ class GameResult {
 /// 強さの差から、ホームが勝つ見込み。
 double winChance(double home, double away) => 1 / (1 + math.exp(-(home - away + 1.0) / 3.6));
 
-/// 1試合を進める。[mine] のチームの試合なら、いちばん点を取った選手も決める。
-GameResult playGame(Team home, Team away, Rng rng, {int? mine}) {
+/// リバウンドとアシストの、ポジションごとの取りやすさ(ビッグはリバウンド、ガードはアシスト)。
+const _rebPos = {Pos.pg: 0.5, Pos.sg: 0.6, Pos.sf: 0.9, Pos.pf: 1.2, Pos.c: 1.35};
+const _astPos = {Pos.pg: 2.2, Pos.sg: 1.1, Pos.sf: 0.8, Pos.pf: 0.55, Pos.c: 0.45};
+
+/// 出場時間の配分(先発から順に、分)。
+const minutesByOrder = [34, 33, 32, 30, 28, 22, 18, 14, 10, 8, 6, 3, 2, 0, 0];
+
+/// 1試合の個人の数字を配る。点はチームの得点を、外と中の得点の力と出場時間で分ける。
+/// リバウンドとアシストも同じように配る。[count] なら個人成績に足す(プレーオフは足さない)。
+/// いちばん点を取った選手と、その点を返す。
+(Player?, int) boxScore(Team t, int teamPts, Rng rng, {bool count = true}) {
+  final order = lineup(t.roster);
+  if (order.isEmpty) return (null, 0);
+  final mins = [for (var i = 0; i < order.length; i++) i < minutesByOrder.length ? minutesByOrder[i] : 0];
+  List<int> share(int total, double Function(Player) skill) {
+    final w = [for (var i = 0; i < order.length; i++) mins[i] * skill(order[i]) * (0.75 + rng.nextInt(50) / 100)];
+    final sum = w.fold(0.0, (a, b) => a + b);
+    if (sum <= 0) return List.filled(order.length, 0);
+    final out = [for (final x in w) (total * x / sum).floor()];
+    // 端数は、いちばん多く配られた選手へ
+    var left = total - out.fold(0, (a, b) => a + b);
+    var k = 0;
+    while (left > 0) {
+      out[k % out.length]++;
+      left--;
+      k++;
+    }
+    return out;
+  }
+
+  double pow(num x, double e) => math.pow(math.max(1, x), e).toDouble();
+  final pts = share(teamPts, (p) => pow((p.attr(Attr.outside) + p.attr(Attr.inside)) / 2 - 40, 1.7));
+  final reb = share(38 + rng.nextInt(8), (p) => pow(p.attr(Attr.rebound) - 35, 1.3) * _rebPos[p.pos]!);
+  final ast = share(20 + rng.nextInt(10), (p) => pow(p.attr(Attr.passing) - 35, 1.3) * _astPos[p.pos]!);
+  var top = 0;
+  for (var i = 0; i < order.length; i++) {
+    if (pts[i] > pts[top]) top = i;
+    if (count && mins[i] > 0) {
+      order[i].stats
+        ..gp += 1
+        ..pts += pts[i]
+        ..reb += reb[i]
+        ..ast += ast[i];
+    }
+  }
+  return (order[top], pts[top]);
+}
+
+/// 1試合を進める。どちらのチームにも個人の数字を配る([count] ならシーズンの成績に足す)。
+/// [mine] のチームの試合なら、いちばん点を取った選手を結果に残す。
+GameResult playGame(Team home, Team away, Rng rng, {int? mine, bool count = true}) {
   final p = winChance(home.strength, away.strength);
   final homeWins = rng.nextInt(10000) < (p * 10000).round();
-  final base = 72 + rng.nextInt(22);
-  final margin = 1 + rng.nextInt(rng.chance(0.3) ? 22 : 11);
+  final base = 92 + rng.nextInt(28);
+  final margin = 1 + rng.nextInt(rng.chance(0.3) ? 24 : 12);
   final w = base + margin, l = base;
+  final hp = homeWins ? w : l, ap = homeWins ? l : w;
+  final (hTop, hTopPts) = boxScore(home, hp, rng, count: count);
+  final (aTop, aTopPts) = boxScore(away, ap, rng, count: count);
   String? topName;
   var topPts = 0;
-  if (mine != null && (home.index == mine || away.index == mine)) {
-    final t = home.index == mine ? home : away;
-    final starters = lineup(t.roster).take(5).toList();
-    if (starters.isNotEmpty) {
-      final weights = {for (final s in starters) s: math.max(1, (s.ovr - 50) * (s.ovr - 50) ~/ 8)};
-      final top = rng.weighted(weights);
-      topName = top.name;
-      topPts = (14 + (top.ovr - 60) / 2.5 + rng.nextInt(12)).round().clamp(8, 48);
-    }
+  if (mine == home.index) {
+    topName = hTop?.name;
+    topPts = hTopPts;
+  } else if (mine == away.index) {
+    topName = aTop?.name;
+    topPts = aTopPts;
   }
   final r = GameResult(
     home: home.index,
     away: away.index,
-    homePts: homeWins ? w : l,
-    awayPts: homeWins ? l : w,
+    homePts: hp,
+    awayPts: ap,
     topName: topName,
     topPts: topPts,
   );
@@ -295,7 +344,7 @@ class Series {
       final highHome = n == 0 || n == 1 || n == 4 || n == 6;
       final h = teams[highHome ? high : low], a = teams[highHome ? low : high];
       final w0 = h.wins, l0 = h.losses, w1 = a.wins, l1 = a.losses;
-      final g = playGame(h, a, rng, mine: mine);
+      final g = playGame(h, a, rng, mine: mine, count: false);
       // プレーオフはシーズンの勝敗に数えない
       h.wins = w0;
       h.losses = l0;

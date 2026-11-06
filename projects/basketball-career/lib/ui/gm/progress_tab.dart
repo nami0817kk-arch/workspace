@@ -230,6 +230,25 @@ class ProgressTab extends StatelessWidget {
         const Divider(height: 18),
         _kv('信頼', '${car.trust}(${_signed(car.lastTrustDelta)})', color: car.trust >= 30 ? null : GmColors.bad),
       ]),
+      if (car.awardsOf(car.season).isNotEmpty)
+        _card([
+          _head('表彰', icon: Icons.military_tech_rounded, color: GmColors.gold),
+          const SizedBox(height: 6),
+          for (final a in car.awardsOf(car.season))
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 3),
+              child: Row(children: [
+                SizedBox(width: 104, child: Text(a.kind.label, style: const TextStyle(color: GmColors.sub))),
+                TeamBadge(team: a.team, size: 18),
+                const SizedBox(width: 6),
+                Expanded(
+                  child: Text('${a.name}  ${a.line}',
+                      maxLines: 2,
+                      style: TextStyle(fontWeight: FontWeight.bold, color: a.team == car.mine ? GmColors.gold : null)),
+                ),
+              ]),
+            ),
+        ]),
       // 自分のチームの戦いと、ファイナル
       for (final s in car.playoffs)
         if (s.high == car.mine || s.low == car.mine || s.round == 4) _seriesCard(car, s),

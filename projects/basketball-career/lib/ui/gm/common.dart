@@ -151,6 +151,12 @@ class PlayerRow extends StatelessWidget {
                       style: const TextStyle(fontSize: 12, color: GmColors.sub)),
                   if (grade != '-') Tag('伸びしろ$grade', color: grade == 'S' || grade == 'A' ? GmColors.gold : GmColors.sub),
                 ]),
+                if (p.stats.gp > 0 || p.prev.gp > 0)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 2),
+                    child: Text(p.stats.gp > 0 ? p.stats.line : '昨季 ${p.prev.line}',
+                        style: const TextStyle(fontSize: 12, color: GmColors.text, fontFeatures: [FontFeature.tabularFigures()])),
+                  ),
                 if (extra != null) ...[const SizedBox(height: 4), extra!],
               ]),
             ),
@@ -161,6 +167,36 @@ class PlayerRow extends StatelessWidget {
       ),
     );
   }
+}
+
+/// 能力の内訳(6つの帯)。
+class AttrBars extends StatelessWidget {
+  const AttrBars({super.key, required this.p});
+  final Player p;
+
+  @override
+  Widget build(BuildContext context) => Column(children: [
+        for (final a in Attr.values)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 3),
+            child: Row(children: [
+              SizedBox(width: 92, child: Text(a.label, style: const TextStyle(fontSize: 13, color: GmColors.sub))),
+              Expanded(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: LinearProgressIndicator(
+                    value: (p.attr(a) - 25) / 74,
+                    minHeight: 8,
+                    color: GmColors.ovr(p.attr(a)),
+                    backgroundColor: GmColors.line,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              SizedBox(width: 26, child: Text('${p.attr(a)}', textAlign: TextAlign.right, style: const TextStyle(fontWeight: FontWeight.bold))),
+            ]),
+          ),
+      ]);
 }
 
 /// 見出し。
@@ -273,12 +309,12 @@ class GameRow extends StatelessWidget {
         const SizedBox(width: 6),
         TeamBadge(team: opp, size: 20),
         const SizedBox(width: 6),
-        Expanded(child: Text(teamDefs[opp].short, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 13))),
+        Expanded(flex: 2, child: Text(teamDefs[opp].short, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 13))),
         Text('${g.ptsOf(mine)} - ${g.ptsAgainst(mine)}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, fontFeatures: [FontFeature.tabularFigures()])),
         if (g.topName != null) ...[
           const SizedBox(width: 8),
-          SizedBox(
-            width: 96,
+          Expanded(
+            flex: 3,
             child: Text('${g.topName} ${g.topPts}点',
                 textAlign: TextAlign.right, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 11, color: GmColors.sub)),
           ),

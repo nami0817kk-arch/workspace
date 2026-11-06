@@ -93,6 +93,38 @@ const resultLabels = ['プレーオフ届かず', '1回戦で敗退', '2回戦�
 /// プレーオフの結果ごとに増えるオーナーの信頼。
 const resultTrust = [0, 4, 8, 13, 19, 28];
 
+/// シーズンの表彰。
+enum AwardKind {
+  mvp('MVP'),
+  roy('新人王'),
+  dpoy('最優秀守備選手');
+
+  const AwardKind(this.label);
+  final String label;
+}
+
+class Award {
+  const Award({required this.season, required this.kind, required this.player, required this.name, required this.team, required this.line});
+  final int season;
+  final AwardKind kind;
+  final int player;
+  final String name;
+  final int team;
+
+  /// 受けたときの成績(「27.1点 8.0リ 6.2ア」)。
+  final String line;
+
+  Map<String, dynamic> toJson() => {'s': season, 'k': kind.index, 'p': player, 'n': name, 't': team, 'l': line};
+  static Award fromJson(Map<String, dynamic> j) => Award(
+        season: j['s'] as int,
+        kind: AwardKind.values[(j['k'] as int).clamp(0, AwardKind.values.length - 1)],
+        player: j['p'] as int,
+        name: j['n'] as String,
+        team: j['t'] as int,
+        line: (j['l'] as String?) ?? '',
+      );
+}
+
 /// 契約切れの選手が求める条件。
 class Ask {
   const Ask(this.salary, this.maxYears);
@@ -173,6 +205,46 @@ class Career {
   TradeOffer? incoming;
 
   int tradesDone = 0;
+
+  /// これまでの表彰(古い順)。
+  List<Award> awards = [];
+
+  /// [season] の表彰。
+  List<Award> awardsOf(int season) => [for (final a in awards) if (a.season == season) a];
+
+  /// 個人成績の上位([key] で並べる。試合の半分以上に出た選手だけ)。
+  List<(Player, int)> leaders(double Function(Stats) key, {int count = 5}) {
+    final all = [
+      for (final t in teams)
+        for (final p in t.roster)
+          if (p.stats.gp >= math.max(1, (blockStart(block) * 0.5).round())) (p, t.index),
+    ]..sort((a, b) => key(b.$1.stats).compareTo(key(a.$1.stats)));
+    return all.take(count).toList();
+  }
+
+  /// シーズンの終わりに表彰を決める(MVP・新人王・最優秀守備選手)。
+  void _giveAwards() {
+    final pool = [
+      for (final t in teams)
+        for (final p in t.roster)
+          if (p.stats.gp >= 50) (p, t),
+    ];
+    if (pool.isEmpty) return;
+    double mvp((Player, Team) x) => x.$1.stats.ppg + 0.6 * x.$1.stats.rpg + 0.9 * x.$1.stats.apg + x.$2.winPct * 12;
+    double dpoy((Player, Team) x) => x.$1.attr(Attr.defense) + x.$1.stats.rpg * 0.8 + x.$2.winPct * 4;
+    void give(AwardKind k, Iterable<(Player, Team)> cands, double Function((Player, Team)) score) {
+      final list = cands.toList();
+      if (list.isEmpty) return;
+      final best = list.reduce((a, b) => score(a) >= score(b) ? a : b);
+      awards.add(Award(season: season, kind: k, player: best.$1.id, name: best.$1.name, team: best.$2.index, line: best.$1.stats.line));
+      _log('${k.label}: ${best.$1.name}(${best.$2.def.short}・${best.$1.stats.line})');
+    }
+
+    give(AwardKind.mvp, pool, mvp);
+    // 新人王は、出場して点を取った新人がいるときだけ(控えの奥で出ていない新人には出さない)
+    give(AwardKind.roy, pool.where((x) => x.$1.exp == 0 && x.$1.stats.ppg >= 5), mvp);
+    give(AwardKind.dpoy, pool, dpoy);
+  }
 
   /// リーグのニュース(新しい順、[logLimit] 件まで)。トレード・大物の移籍・ドラフト1位・優勝・引退。
   List<String> log = [];
@@ -265,6 +337,7 @@ class Career {
         pot: pot,
         salary: sal.clamp(minSalary, maxSalary),
         years: 1 + rng.nextInt(4),
+        exp: math.max(1, age - 20),
       ));
     }
     // 年俸の合計が上限の外へ大きく出ないように整える。チームごとに空きの大きさを散らす
@@ -298,7 +371,7 @@ class Career {
   Player _filler() {
     final age = 23 + rng.nextInt(10);
     final ovr = 50 + rng.nextInt(9);
-    return Player(id: nextId(), name: randomName(rng), pos: Pos.values[rng.nextInt(5)], age: age, ovr: ovr, pot: ovr + (age < 26 ? rng.nextInt(5) : 0), salary: minSalary, years: 1);
+    return Player(id: nextId(), name: randomName(rng), pos: Pos.values[rng.nextInt(5)], age: age, ovr: ovr, pot: ovr + (age < 26 ? rng.nextInt(5) : 0), salary: minSalary, years: 1, exp: age - 21);
   }
 
   /// 各チームの考え方を、強さの順と年俸から決める。
@@ -345,6 +418,10 @@ class Career {
     for (final t in teams) {
       t.wins = 0;
       t.losses = 0;
+      for (final p in t.roster) {
+        p.prev = p.stats;
+        p.stats = Stats();
+      }
       if (t.index != mine) _aiTrim(t);
     }
     _setModes();
@@ -435,6 +512,7 @@ class Career {
     final all = standings(teams).map((t) => t.index).toList();
     final hi = all.indexOf(champs[0]) < all.indexOf(champs[1]) ? champs[0] : champs[1];
     _series(hi, hi == champs[0] ? champs[1] : champs[0], 4, 4);
+    _giveAwards();
     _closeSeason();
     _log('優勝: ${teams[champion].name}(ファイナルで${teams[finals!.loser].def.short}を${finals!.winner == finals!.high ? finals!.highWins : finals!.lowWins}勝${finals!.winner == finals!.high ? finals!.lowWins : finals!.highWins}敗)');
     phase = Phase.seasonEnd;
@@ -748,6 +826,10 @@ class Career {
     for (final t in teams) {
       if (t.index != mine) _aiTrim(t);
     }
+    // ドラフトの候補は、指名された選手とつながっている。シーズンに入る前に手放す(保存で別の物にならないように)
+    prospects = [];
+    order = [];
+    draftLog = [];
     season++;
     _setModes();
     _aiTrades(1);
@@ -885,6 +967,7 @@ class Career {
         'news': news,
         if (incoming != null) 'inc': incoming!.toJson(),
         'td': tradesDone,
+        'aw': [for (final a in awards) a.toJson()],
         'log': log,
         'tax': lastTax,
         'dr': draftedIds,
@@ -924,6 +1007,7 @@ class Career {
       ..news = [for (final x in (j['news'] as List? ?? const [])) x as String]
       ..incoming = j['inc'] == null ? null : TradeOffer.fromJson(Map<String, dynamic>.from(j['inc'] as Map))
       ..tradesDone = (j['td'] as int?) ?? 0
+      ..awards = [for (final a in maps('aw')) Award.fromJson(a)]
       ..log = [for (final x in (j['log'] as List? ?? const [])) x as String]
       ..lastTax = (j['tax'] as int?) ?? 0
       ..draftedIds = [for (final x in (j['dr'] as List? ?? const [])) x as int]

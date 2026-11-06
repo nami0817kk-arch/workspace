@@ -18,6 +18,52 @@ enum Pos {
   bool get big => this == pf || this == c;
 }
 
+/// 能力の内訳(6つ)。表示する値は「力＋ずれ」([Player.attr])。
+enum Attr {
+  outside('外のシュート'),
+  inside('中の得点'),
+  passing('パス'),
+  rebound('リバウンド'),
+  defense('守り'),
+  athletic('運動能力');
+
+  const Attr(this.label);
+  final String label;
+}
+
+/// ポジションごとの能力のずれ(外・中・パス・リバウンド・守り・運動)。
+const _posProfile = <Pos, List<int>>{
+  Pos.pg: [4, -3, 9, -9, 0, 3],
+  Pos.sg: [8, 0, 2, -6, 0, 2],
+  Pos.sf: [2, 2, 0, 0, 2, 2],
+  Pos.pf: [-4, 5, -3, 6, 2, 0],
+  Pos.c: [-9, 7, -5, 9, 4, -2],
+};
+
+/// 能力のずれを作る。[noise] は 0〜10 の数を6つ返す関数(種から決まる乱数)。
+List<int> makeAttrs(Pos pos, int Function() noise) => [for (final b in _posProfile[pos]!) b + noise() - 5];
+
+/// 1シーズンの個人成績(合計)。
+class Stats {
+  Stats({this.gp = 0, this.pts = 0, this.reb = 0, this.ast = 0});
+  int gp, pts, reb, ast;
+
+  double per(int v) => gp == 0 ? 0 : v / gp;
+  double get ppg => per(pts);
+  double get rpg => per(reb);
+  double get apg => per(ast);
+
+  /// 「18.2点 6.1リバウンド 3.4アシスト」を短く。
+  String get line => gp == 0 ? '' : '${ppg.toStringAsFixed(1)}点 ${rpg.toStringAsFixed(1)}リ ${apg.toStringAsFixed(1)}ア';
+
+  List<int> toJson() => [gp, pts, reb, ast];
+  static Stats fromJson(Object? j) {
+    final l = j is List ? j : const [];
+    int at(int i) => i < l.length ? l[i] as int : 0;
+    return Stats(gp: at(0), pts: at(1), reb: at(2), ast: at(3));
+  }
+}
+
 /// お金の単位は「10万ドル」(10 = 100万ドル)。画面では「4900万ドル」「1.4億ドル」のように見せる([money])。
 const salaryCap = 1400;
 
@@ -83,7 +129,22 @@ class Player {
     required this.years,
     this.drafted,
     this.lastDelta = 0,
-  });
+    List<int>? attrs,
+    Stats? stats,
+    Stats? prev,
+    this.exp = 0,
+  })  : attrs = attrs ?? makeAttrs(pos, _idNoise(id)),
+        stats = stats ?? Stats(),
+        prev = prev ?? Stats();
+
+  /// 保存に能力が無かったとき用: id から決まる揺らぎ。
+  static int Function() _idNoise(int id) {
+    var x = (id * 2654435761) & 0xFFFFFFFF;
+    return () {
+      x = (x * 1103515245 + 12345) & 0x7FFFFFFF;
+      return (x >> 8) % 11;
+    };
+  }
 
   final int id;
   final String name;
@@ -107,6 +168,19 @@ class Player {
 
   /// 前のオフに力がいくつ動いたか。
   int lastDelta;
+
+  /// 能力のずれ([Attr] の順)。
+  final List<int> attrs;
+
+  /// 今シーズンと前のシーズンの個人成績。
+  Stats stats;
+  Stats prev;
+
+  /// リーグでの年数(新人は0)。
+  int exp;
+
+  /// 能力の値(25〜99)。
+  int attr(Attr a) => (ovr + attrs[a.index]).clamp(25, 99);
 
   String get grade => potentialGrade(ovr, pot, age);
 
@@ -137,6 +211,10 @@ class Player {
         'y': years,
         if (drafted != null) 'd': drafted,
         if (lastDelta != 0) 'ld': lastDelta,
+        'at': attrs,
+        if (stats.gp > 0) 'st': stats.toJson(),
+        if (prev.gp > 0) 'pv': prev.toJson(),
+        if (exp != 0) 'ex': exp,
       };
 
   static Player fromJson(Map<String, dynamic> j) => Player(
@@ -150,12 +228,17 @@ class Player {
         years: j['y'] as int,
         drafted: j['d'] as String?,
         lastDelta: (j['ld'] as int?) ?? 0,
+        attrs: j['at'] is List && (j['at'] as List).length == Attr.values.length ? [for (final x in j['at'] as List) x as int] : null,
+        stats: Stats.fromJson(j['st']),
+        prev: Stats.fromJson(j['pv']),
+        exp: (j['ex'] as int?) ?? 0,
       );
 }
 
 /// オフに1年分の成長・衰えを入れる。力の変化を返す。
 int ageOneYear(Player p, Rng rng) {
   p.age++;
+  p.exp++;
   final before = p.ovr;
   int d;
   if (p.age <= 22) {
