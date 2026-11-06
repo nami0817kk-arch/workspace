@@ -27,7 +27,7 @@ LAND = W > H
 STEPS = ["1 沈む世界", "2 氷の量", "3 消えた11m", "4 とかす熱", "5 答え"]
 YEL, WHITE, NAVY, DIM = ov.YEL, ov.WHITE, ov.NAVY, ov.DIM
 RED, BLUE, ICE = (240, 90, 80), (120, 190, 255), (226, 238, 248)
-WATER = (34, 104, 186)
+WATER = (46, 150, 236)                                       # 沈んだ陸(いまの海より明るい青)
 LEVEL = 58.0
 
 
@@ -95,18 +95,18 @@ class FloodMap(worldmap.Map):
         m = cv2.GaussianBlur(m, (0, 0), 0.8)
         out = np.zeros((H, W, 4), np.uint8)
         out[..., :3] = L.get("color", WATER)
-        out[..., 3] = (m * 215 * a).astype(np.uint8)
+        out[..., 3] = (m * 225 * a).astype(np.uint8)
         img.alpha_composite(Image.fromarray(out, "RGBA"))
         eg = cv2.morphologyEx((m > 0.5).astype(np.uint8) * 255, cv2.MORPH_GRADIENT, np.ones((3, 3), np.uint8)).astype(np.float32) / 255
         e4 = np.zeros((H, W, 4), np.uint8)
-        e4[..., :3] = (170, 225, 255)
+        e4[..., :3] = (215, 245, 255)
         e4[..., 3] = (np.clip(cv2.GaussianBlur(eg, (0, 0), 2) * 0.8 + eg * 0.6, 0, 1) * 200 * a).astype(np.uint8)
         img.alpha_composite(Image.fromarray(e4, "RGBA"))
 
 
 MAP = FloodMap(lat0=32, bases=[((-180, -60, 179.99, 84), 4),
-                               ((-12, 40, 30, 62), 6), ((98, 15, 150, 50), 6), ((-100, 22, -64, 46), 6), ((65, 5, 100, 32), 6),
-                               ((131, 32, 142, 38.5), 8)])
+                               ((98, 15, 150, 50), 7), ((-12, 40, 30, 62), 7), ((-100, 22, -64, 46), 7),
+                               ((76, 14, 100, 30), 8), ((108, 27, 126, 43), 8), ((133, 33, 142, 37.5), 9)])
 
 # ---- 南極(ETOPO 2022) ------------------------------------------------------------------------------------
 E = CACHE / "etopo"
@@ -295,7 +295,7 @@ def draw_section(img, sc, t, u):
     poly_b = [(X[i], Y(bd[i])) for i in range(len(km))] + [(R_, bot), (L_, bot)]
     d.polygon(poly_b, fill=(110, 92, 74, 255))
     # 氷
-    rise = LEVEL * 25 * k                                     # 見えるように海面の上がりは強めて描く(25倍)
+    rise = 0.0                                                # 58m はこの縮尺では線の太さほど。海面は動かさず、氷が消えた所に海が入る
     if mode != "melt" or k < 1:
         ice_top = s * (1 - k) + np.maximum(bd, 0) * k
         poly_i = [(X[i], Y(ice_top[i])) for i in range(len(km))] + [(X[i], Y(max(bd[i], -9999) if s[i] - bd[i] > 1 else s[i])) for i in range(len(km) - 1, -1, -1)]
@@ -362,12 +362,27 @@ def draw_glass(img, sc, t, u):
         text(d, (W / 2, y1 - 6), sc["note"], 44 if LAND else 38, WHITE, "md")
 
 
+_JP = []
+
+
+def _japan():
+    """日本の大きい島の形を、真ん中 (0, 0)・半分の幅 1 に縮めた点の列で。"""
+    if not _JP:
+        rings = sorted(worldmap.shapes("JPN"), key=len, reverse=True)[:4]
+        pts = np.array([p for r in rings for p in r])
+        c = (pts.max(0) + pts.min(0)) / 2
+        k = 2 / (pts.max(0) - pts.min(0)).max()
+        for r in rings:
+            _JP.append([((x - c[0]) * k * 0.85, -(y - c[1]) * k) for x, y in r[::3]])
+    return _JP
+
+
 def _icon(d, kind, cx, cy, s, a, hl):
     A_ = int(255 * a)
     col = (BLUE if hl else (150, 160, 180))
-    if kind == "japan":
-        d.polygon([(cx + s * 0.55, cy - s * 0.7), (cx + s * 0.35, cy - s * 0.2), (cx + s * 0.1, cy + s * 0.05), (cx - s * 0.5, cy + s * 0.45),
-                   (cx - s * 0.65, cy + s * 0.3), (cx - s * 0.1, cy - s * 0.05), (cx + s * 0.2, cy - s * 0.4)], fill=(RED if hl else (230, 230, 240)) + (A_,))
+    if kind == "japan":                                       # 日本の形(Natural Earth の大きい島 4 つ)
+        for ring in _japan():
+            d.polygon([(cx + x * s, cy + y * s) for x, y in ring], fill=(RED if hl else (230, 230, 240)) + (A_,))
     elif kind == "city":
         for j, (dx, hh) in enumerate(((-0.6, 0.9), (-0.15, 1.4), (0.35, 1.1), (0.75, 0.7))):
             d.rectangle([cx + dx * s - s * 0.2, cy + s * 0.7 - hh * s, cx + dx * s + s * 0.2, cy + s * 0.7], fill=col + (A_,))
@@ -394,7 +409,7 @@ def draw_icons(img, sc, t, u):
             for wx in range(-bw + 14, bw - 10, 34):
                 d.rectangle([cx + wx, yb - s * 0.75, cx + wx + 16, yb - s * 0.3], fill=(90, 120, 170))
         wy = y1 - 30 - n * s * ease(u * 1.6)
-        d.rectangle([cx - bw - 60, wy, cx + bw + 60, y1 - 30], fill=(40, 110, 200, 120))
+        d.rectangle([cx - bw - 60, wy, cx + bw + 60, y1 - 30], fill=(40, 110, 200, 70), outline=BLUE + (200,), width=3)
         text(d, (cx + bw + 30, y1 - 30 - shown * s), f"{shown}階", 64 if LAND else 52, YEL, "lm")
     else:
         cols = sc.get("cols", (10 if LAND else 6) if n > 12 else min(n, 5 if LAND else 3))
