@@ -170,7 +170,7 @@ class _QuarterTable extends StatelessWidget {
 
 /// 会場の絵と、向かい合う2人の選手。最後に出したカードで姿勢が変わる。
 class ArenaView extends StatelessWidget {
-  const ArenaView({super.key, required this.battle, required this.opponent, required this.stage, this.height = 104});
+  const ArenaView({super.key, required this.battle, required this.opponent, required this.stage, this.height = 96});
   final Battle battle;
   final Opponent opponent;
   final int stage;
@@ -379,6 +379,7 @@ class HandView extends StatelessWidget {
               key: ValueKey(h.uid),
               card: h,
               width: w,
+              aspect: CardView.handAspect,
               enabled: b.canPlay(h),
               points: h.def.kind == CardKind.shot || h.stats.points > 0 ? b.pointsOf(h) : null,
               guard: b.guardOf(h),

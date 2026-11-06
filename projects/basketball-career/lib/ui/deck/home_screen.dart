@@ -281,7 +281,7 @@ class CollectionScreen extends StatelessWidget {
                       locked.contains(d.id)
                           ? SizedBox(
                               width: w,
-                              height: w * CardView.aspect,
+                              height: w * CardView.defaultAspect,
                               child: const Card(
                                 child: Center(child: Icon(Icons.lock_outline_rounded, color: DeckColors.line)),
                               ),
