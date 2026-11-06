@@ -30,6 +30,42 @@ enum Outlook {
               : Outlook.rebuild;
 }
 
+/// 入場料の段階(ドル)。
+const ticketPrices = [70, 100, 140, 180];
+const ticketLabels = ['安い', 'ふつう', '高い', 'とても高い'];
+
+/// 会場の席の数。
+const arenaSeats = 19000;
+
+/// 1シーズンの放映料など、勝ち負けによらない収入(10万ドル)。
+const baseIncome = 900;
+
+/// オーナーの目標の種類。
+enum GoalKind {
+  wins('勝ち数'),
+  profit('収支を黒字にする'),
+  playoffs('プレーオフに出る'),
+  youth('25歳以下を先発に2人'),
+  noTax('ぜいたく税を払わない');
+
+  const GoalKind(this.label);
+  final String label;
+}
+
+/// オーナーの目標1つ。[met] はシーズンの終わりに決まる。
+class OwnerGoal {
+  OwnerGoal(this.kind, {this.met});
+  final GoalKind kind;
+  bool? met;
+
+  Map<String, dynamic> toJson() => {'k': kind.index, if (met != null) 'm': met};
+  static OwnerGoal fromJson(Map<String, dynamic> j) =>
+      OwnerGoal(GoalKind.values[(j['k'] as int).clamp(0, GoalKind.values.length - 1)], met: j['m'] as bool?);
+}
+
+/// 目標を1つ果たすと増え、外すと減る信頼。
+const goalTrust = 6;
+
 /// はじめのオーナーの信頼。
 const startTrust = 50;
 
@@ -205,6 +241,57 @@ class Career {
   TradeOffer? incoming;
 
   int tradesDone = 0;
+
+  /// 人気(0〜100)。勝つ・プレーオフに出ると上がる。観客の入りに効く。
+  int hype = 50;
+
+  /// 入場料の段階([ticketPrices] の番号)。
+  int priceLevel = 1;
+
+  /// 今シーズンの収入と支出(10万ドル)。区切りごとに足していく。
+  int revenue = 0;
+  int costs = 0;
+  int get profit => revenue - costs;
+
+  /// 前のシーズンの収支。
+  int lastProfit = 0;
+
+  /// 今シーズンのオーナーの目標(勝ち数・収支・もう1つ)。
+  List<OwnerGoal> goals = [];
+
+  /// 観客の入り(0.3〜1.0)。人気が高いほど、値段が安いほど入る。
+  double get attendance => (0.55 + hype * 0.0045 - (ticketPrices[priceLevel] - 100) * 0.003).clamp(0.3, 1.0);
+
+  /// 1試合のホームの入場収入(10万ドル)。
+  int get gatePerGame => (arenaSeats * attendance * ticketPrices[priceLevel] / 100000).round();
+
+  void setPrice(int level) {
+    if (phase == Phase.over) return;
+    priceLevel = level.clamp(0, ticketPrices.length - 1);
+  }
+
+  /// 目標が果たせているか(シーズン中は見込み)。
+  bool goalOk(OwnerGoal g) => switch (g.kind) {
+        GoalKind.wins => me.wins >= target,
+        GoalKind.profit => _projectedProfit >= 0,
+        GoalKind.playoffs => confRank <= playInSeeds && (finals == null || myResult >= 1),
+        GoalKind.youth => me.order.take(5).where((p) => p.age <= 25).length >= 2,
+        GoalKind.noTax => me.payroll <= taxLine,
+      };
+
+  /// シーズンの終わりの収支の見込み(残りの試合を今の入りで数える)。
+  int get _projectedProfit {
+    // シーズンを閉じたあと(税もプレーオフの収入も入ったあと)は、そのままの収支
+    if (finals != null) return profit;
+    final left = gamesPerSeason - blockStart(block);
+    final perGameCost = me.payroll / gamesPerSeason;
+    final tax = me.payroll > taxLine ? ((me.payroll - taxLine) * 1.5).round() : 0;
+    final rest = (left / 2 * gatePerGame + baseIncome * left / gamesPerSeason - perGameCost * left).round();
+    return profit + rest - tax;
+  }
+
+  /// シーズンの終わりの収支の見込み(画面用)。
+  int get projectedProfit => _projectedProfit;
 
   /// これまでの表彰(古い順)。
   List<Award> awards = [];
@@ -427,6 +514,12 @@ class Career {
     _setModes();
     final r = strengthRank(mine);
     target = (gamesPerSeason * (0.72 - r * 0.016)).round();
+    revenue = 0;
+    costs = 0;
+    final third = [GoalKind.playoffs, GoalKind.youth, GoalKind.noTax];
+    // 強いチームにはプレーオフ、立て直しには若手、上限を大きく超えたチームには税を
+    final kind = r < 12 ? GoalKind.playoffs : r >= 22 ? GoalKind.youth : me.payroll > taxLine - 50 ? GoalKind.noTax : third[rng.nextInt(third.length)];
+    goals = [OwnerGoal(GoalKind.wins), OwnerGoal(GoalKind.profit), OwnerGoal(kind)];
     block = 0;
     lastGames = [];
     playoffs = [];
@@ -447,6 +540,9 @@ class Career {
       }
     }
     lastGames = games;
+    final homeGames = games.where((g) => g.home == mine).length;
+    revenue += homeGames * gatePerGame + (baseIncome * games.length / gamesPerSeason).round();
+    costs += (me.payroll * games.length / gamesPerSeason).round();
     block++;
     _updateMorale();
     if (block <= tradeDeadlineBlock && rng.chance(0.5)) _aiTrades(1);
@@ -566,7 +662,18 @@ class Career {
   void _closeSeason() {
     final res = myResult;
     lastTax = luxuryTaxTrust(me.payroll);
-    final delta = ((me.wins - target) * 1.5).round() + resultTrust[res] - lastTax;
+    // ぜいたく税は、超えた分の1.5倍を払う。プレーオフのホームの試合も入場収入になる
+    if (me.payroll > taxLine) costs += ((me.payroll - taxLine) * 1.5).round();
+    final poHome = playoffs.where((s) => s.round >= 1 && (s.high == mine || s.low == mine)).fold(0, (n, s) => n + (s.games.where((g) => g.home == mine).length));
+    revenue += poHome * (gatePerGame * 1.5).round();
+    lastProfit = profit;
+    for (final g in goals) {
+      g.met = goalOk(g);
+    }
+    final goalDelta = goals.where((g) => g.kind != GoalKind.wins).fold(0, (n, g) => n + (g.met! ? goalTrust : -goalTrust));
+    // 人気: 勝率とプレーオフで動く
+    hype = (hype + ((me.winPct - 0.5) * 40).round() + const [-4, 3, 6, 9, 12, 16][res]).clamp(0, 100);
+    final delta = ((me.wins - target) * 1.5).round() + resultTrust[res] - lastTax + goalDelta;
     trust = (trust + delta).clamp(0, 100);
     history.add(SeasonRecord(season: season, wins: me.wins, losses: me.losses, rank: confRank, result: res, trustAfter: trust, target: target));
     if (trust <= 0) fired = true;
@@ -998,6 +1105,12 @@ class Career {
         'news': news,
         if (incoming != null) 'inc': incoming!.toJson(),
         'td': tradesDone,
+        'hy': hype,
+        'pl': priceLevel,
+        'rv': revenue,
+        'cs': costs,
+        'lp': lastProfit,
+        'gl': [for (final g in goals) g.toJson()],
         'aw': [for (final a in awards) a.toJson()],
         'log': log,
         'tax': lastTax,
@@ -1038,6 +1151,12 @@ class Career {
       ..news = [for (final x in (j['news'] as List? ?? const [])) x as String]
       ..incoming = j['inc'] == null ? null : TradeOffer.fromJson(Map<String, dynamic>.from(j['inc'] as Map))
       ..tradesDone = (j['td'] as int?) ?? 0
+      ..hype = ((j['hy'] as int?) ?? 50).clamp(0, 100)
+      ..priceLevel = ((j['pl'] as int?) ?? 1).clamp(0, ticketPrices.length - 1)
+      ..revenue = (j['rv'] as int?) ?? 0
+      ..costs = (j['cs'] as int?) ?? 0
+      ..lastProfit = (j['lp'] as int?) ?? 0
+      ..goals = [for (final g in maps('gl')) OwnerGoal.fromJson(g)]
       ..awards = [for (final a in maps('aw')) Award.fromJson(a)]
       ..log = [for (final x in (j['log'] as List? ?? const [])) x as String]
       ..lastTax = (j['tax'] as int?) ?? 0

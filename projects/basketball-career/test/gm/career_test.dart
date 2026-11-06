@@ -313,6 +313,53 @@ void main() {
     });
   });
 
+  group('お金とオーナーの目標', () {
+    test('入場料が高いほど客は減る。人気が高いほど入る', () {
+      final c = careerAt(2, 10);
+      c.setPrice(0);
+      final cheap = c.attendance;
+      c.setPrice(3);
+      expect(c.attendance, lessThan(cheap));
+      c.hype = 90;
+      final hot = c.attendance;
+      c.hype = 10;
+      expect(c.attendance, lessThan(hot));
+    });
+
+    test('区切りごとに収入と年俸の支出が入り、シーズンの終わりに目標の結果と収支が決まる', () {
+      final c = careerAt(2, 10)..startSeason();
+      expect(c.goals, hasLength(3));
+      expect(c.goals.first.kind, GoalKind.wins);
+      expect(c.goals[1].kind, GoalKind.profit);
+      c.playBlock();
+      expect(c.revenue, greaterThan(0));
+      expect(c.costs, greaterThan(0));
+      while (c.phase == Phase.season) {
+        c.playBlock();
+      }
+      c.playPlayoffs();
+      expect(c.goals.every((g) => g.met != null), isTrue);
+      expect(c.lastProfit, c.profit);
+      final copy = Career.fromJson(jsonDecode(jsonEncode(c.toJson())) as Map<String, dynamic>);
+      expect(copy.goals.map((g) => g.met), c.goals.map((g) => g.met));
+      expect(copy.hype, c.hype);
+    });
+
+    test('ぜいたく税の線を超えたチームは、超えた分の1.5倍を支出に払う', () {
+      final c = careerAt(2, 0);
+      // 税の線を100だけ超える(合計の上限よりは下)
+      c.me.roster.first.salary += taxLine + 100 - c.me.payroll;
+      c.startSeason();
+      expect(c.phase, Phase.season);
+      while (c.phase == Phase.season) {
+        c.playBlock();
+      }
+      final before = c.costs;
+      c.playPlayoffs();
+      expect(c.costs - before, ((c.me.payroll - taxLine) * 1.5).round());
+    });
+  });
+
   group('相手に聞く・相手同士のトレード・ニュース', () {
     test('受け取りたい選手を選ぶと、相手が受ける出し方が返り、そのまま成立する', () {
       var found = 0;
