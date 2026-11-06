@@ -1,0 +1,112 @@
+# 取材メモ（2026年10月30日）鈴木彩艶の1月の不在を、ヴィラの現地メディアが心配（ニュースのショート。見せ方 X＝冒頭1秒に強い一言）
+# 取材: 2026-10-30。requests（ブラウザUA）で本文を全文読んだ。検索エンジンのAI要約は使っていない。
+#   ・フットボールチャンネル 2026-10-30 https://www.footballchannel.jp/2026/10/30/post1042725/ （題材の元。全文）
+#       カラバオカップ4回戦、ボーンマス対アストン・ヴィラ、現地28日。ヴィラ 0-3 で敗退。鈴木彩艶はベンチ入りで出場なし。先発GKはマルコ・ビゾット。
+#       24日のシティ戦から先発9人を変更。先制点は開始7分、2失点目は51分（ルイス・クックのクロス）、その後も失点。
+#       現地メディア（Aston Villa Review）は2失点目の場面を厳しく批判 → 台本では使わない（控えGK個人を貶さない）。
+#       地元紙（Express & Star）はビゾットの複数の好セーブを認めつつ、足元の不安定さを指摘。鈴木との比較で「大きなレベルの低下」→ 使わない（小さく見せる言い方）。
+#       Aston Villa Roundtable: 鈴木は「加入して以来、素晴らしいプレーを見せている」「短期間でこのチームで最も重要な選手の一人」。
+#         2027年1月のアジアカップに参加すれば、ヴィラは5〜7試合ほど鈴木を欠く可能性。その間ビゾットだけを頼る状況が不安。
+#         ビゾットが継続的に出れば調子を取り戻す可能性にも言及。提案は1月の移籍市場で経験豊富なGKのレンタル。
+#   ・アジア杯の日程・開催の可否は 10/27 の取材メモ research/20261027_asiancup_schedule.yaml（ゲキサカ 10/26・10/23 の全文を読んだ控え）から:
+#       2027年1月7日〜2月5日、サウジアラビア。日本はF組、初戦1月11日（インドネシア）。開催の可否は11月中旬にバンコクの理事会で最終決定する方針。
+# 自分で数えたこと: 10月30日→1月11日 は73日。アジア杯の期間は1月7日〜2月5日。
+# 【言わないこと】媒体名／ビゾットの失点の中身・「酷評」「レベルの低下」／試合の結果が出る前の31日の試合（触れない）／鈴木本人の言葉（無い。作らない）／
+#   10/25〜27 の鈴木の本の中身（6セーブ・パス45本・ディーニーのベスト11・キャッシュの言葉）。
+# 本人の言葉: 無い（X）。反応: 0件（作らない。approve は --no-voices）。
+# 前の本との重なり: scripts/20261024〜29・posted.json・covered.yaml を grep。鈴木彩艶の本は5本あるが、カップ戦の敗退・ビゾット・1月の不在は無い。
+# 確度: 試合結果とベンチ入りは報道。現地の見立て（5〜7試合・レンタル案）は 報道（現地メディアの意見）。開催の可否は未定。
+slot: japanese
+date: "2026年10月30日"
+format: news
+no_main: true
+people: [鈴木彩艶, アストン・ヴィラ, マルコ・ビゾット, ボーンマス]
+
+short_style: X
+short_hook_word: 不在5〜7試合
+short_question: 1月、鈴木彩艶がアジアカップで抜けるあいだ、ヴィラはどう備えるべきだと思いますか。
+short_photos:
+  - assets/images/20261030_suzuki_villa_gk/01_v.jpg
+  - assets/images/20261030_suzuki_villa_gk/02_v.jpg
+  - assets/images/20261030_suzuki_villa_gk/03_v.jpg
+short_telops:
+  - {match: 28日, text: カラバオカップ4回戦/ボーンマス 3-0 ヴィラ}
+  - {match: ベンチ, text: 鈴木彩艶はベンチ入り/出場なし}
+  - {match: 1月のアジアカップ, text: 2027年1月7日〜2月5日/日本の初戦は1月11日}
+  - {match: 5試合, text: 現地メディアの見立て/不在は5〜7試合}
+  - {match: 期限付き, text: 現地の提案/経験豊富なGKを1月にレンタル}
+  - {match: 73日, text: 日本の初戦まで/あと73日}
+
+theme:
+  id: suzuki_villa_gk
+  league: england
+  prefix: ""
+  title: 鈴木彩艶の1月の不在をヴィラ現地が心配。挙がった備えとは
+  hook: ""
+  question: ヴィラ現地は、鈴木彩艶が抜ける1月に何を心配しているのか
+  takeaway: 現地の数えでは、アジアカップで鈴木が抜けるのは5〜7試合。日本の初戦まで73日で、開催の可否が決まるのは11月中旬
+
+thumbnail:
+  layout: face
+  line1: 鈴木彩艶 1月の不在
+  line2: ヴィラ現地が挙げた備え
+  tags: [鈴木彩艶, アストン・ヴィラ]
+  photo: assets/images/20261030_suzuki_villa_gk/01_w.jpg
+  short_photo: assets/images/20261030_suzuki_villa_gk/01_v.jpg
+
+answer: 鈴木がアジアカップで抜ける5〜7試合を、ビゾット1人に任せるのは不安で、1月に経験豊富なGKを借りる案が出ている
+watch: 1月のアジアカップと、11月中旬の開催の決定
+
+sections:
+  - id: what
+    main: true
+    heading: カップ戦の敗退で、改めて語られたこと
+    tier: 報道
+    telop: カラバオカップ4回戦、ボーンマスに0対3
+    say:
+      - text: 28日のカラバオカップ4回戦、ボーンマス対アストン・ヴィラ。ヴィラは0対3で敗れ、大会を去りました。
+        image: assets/images/20261030_suzuki_villa_gk/01_w.jpg
+      - text: 24日のシティ戦から、先発は9人を入れ替え。鈴木彩艶はベンチに入りましたが、出番はありませんでした。
+      - text: ゴールを守ったのは、マルコ・ビゾット。複数の好セーブも見せていました。
+        image: assets/images/20261030_suzuki_villa_gk/02_w.jpg
+      - text: そのうえで現地のメディアは、鈴木について、加入して以来、素晴らしいプレーを見せていると評価しました。
+      - text: 短い期間で、このチームで最も重要な選手の一人になった、とも。
+        image: assets/images/20261030_suzuki_villa_gk/03_w.jpg
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/10/30/post1042725/
+
+  - id: worry
+    heading: 心配されているのは1月
+    tier: 報道
+    telop: 現地の見立て、アジアカップで5〜7試合の不在
+    say:
+      - text: 心配されているのは、来年1月のアジアカップです。
+        image: assets/images/20261030_suzuki_villa_gk/01_w.jpg
+      - text: 鈴木が日本代表として参加すれば、ヴィラは5試合から7試合ほど、鈴木を欠く可能性がある。これは現地メディアの見立てです。
+      - text: その間、ビゾット1人に頼る状況が不安だと言います。
+        image: assets/images/20261030_suzuki_villa_gk/02_w.jpg
+      - text: 一方で、ビゾットが出場を重ねて調子を取り戻す可能性にも触れています。
+      - text: 現地の提案は、1月の移籍市場で、経験豊富なゴールキーパーを期限付きで獲得することです。
+        image: assets/images/20261030_suzuki_villa_gk/03_w.jpg
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/10/30/post1042725/
+
+  - id: view
+    viewpoint: true
+    heading: 不在は何試合になるのか
+    tier: 背景
+    telop: アジアカップは2027年1月7日から2月5日
+    say:
+      - text: 見立てです。アジアカップは、1月7日から2月5日まで。日本の初戦は1月11日で、あと73日です。
+        image: assets/images/20261030_suzuki_villa_gk/01_w.jpg
+      - text: 現地の数えは5試合から7試合。日本が勝ち進むほど、決勝の2月5日に向けて不在は長くなります。
+        emph: true
+      - text: ただ、この大会を開くかどうかは、安全面から、11月中旬の理事会で最終決定される方針です。
+        image: assets/images/20261030_suzuki_villa_gk/02_w.jpg
+      - text: 備えが要るかどうかは、その決定を待つことになります。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/10/30/post1042725/
+      - https://web.gekisaka.jp/news/japan/detail/?461878-461878-fl

@@ -1,0 +1,141 @@
+# 取材メモ（2026年11月4日）鈴木彩艶、CL第4節でバルサに0-3。CL初黒星（ニュースのショート。見せ方 X＝冒頭1秒に強い一言）
+# 取材: 2026-11-04。requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。
+# 題材の元: ゲキサカ 2026-11-04「鈴木彩艶はCL初黒星、要所で好セーブもバルサに3失点…」（全文）。
+# 出典で確かめたこと:
+#   ・ESPN の試合データ（site.api.espn.com uefa.champions summary event=401915387、11/3 20:00 UTC）:
+#       バルセロナ 3-0 アストン・ヴィラ。7分 ヤマル／52分 ラフィーニャ（F・ロペスのアシスト）／64分 ラフィーニャ（カンセロのアシスト）。
+#       鈴木は先発・交代なし（フル出場）。セーブ5、失点3。バルサの枠内シュート8本、ヴィラの枠内1本。ボール保持 バルサ64.8%。
+#       鈴木のセーブ（実況の記録）: 26分 ゴードン／40分 F・ロペスの頭／46分 ヤマル／67分 F・ロペス／90+3分 ヤマル。
+#     食い違い: ゲキサカは終盤のヤマルのシュートを「後半44分」、ESPN は「90+3分」。→ 台本は「試合の終わり際」とぼかす。
+#     食い違い: サッカーキングは「6セーブ」、ESPN は5。→ 台本は ESPN の数え（枠内8本のうち5本）で、出典を ESPN にする。
+#     得点の分: ゲキサカの本文は「後半7分」「後半20分」、ゲキサカの得点欄と ESPN は52分・64分。→ 試合記録の 52分・64分を使う。
+#   ・ゲキサカ本文: 7分の先制は、鈴木を含む守備陣のビルドアップを狙われ、ジョアン・ゴメスから出たボールをヤマルがカット。26分、鈴木から出たボールを奪われたゴードンのシュートを鈴木が止めた。
+#       ヴィラは開幕3連勝（ブルージュ・フェネルバフチェ・ヴァイキング）で2位だった。
+#   ・BBC（Nick Mashiter, 2026-11-03）: 先制はジョアン・ゴメスのパスミスから。エメリ監督（試合後）:
+#       "The test was definitely not in the level we want to achieve but there are a lot of things to learn, a lot of experience for the players and us."
+#       "we must be ruthless in the attacking third, 3-0 is maybe more than we deserved, but we accept the defeat."
+#       （ゴメスについて "I am not blaming him."）
+#   ・Sky Sports ライブブログ（2026-11-03 22:53）見出し「Be ruthless and avoid mistakes」。エメリ監督が TNT Sports に:
+#       "Good experience, bad result. At this level, you must be ruthless and avoid mistakes."
+#       "We have nine points because we did good work. We should be realistic but, at the same time, feel good."
+#     → 台本の言葉は、この英語を私が日本語にしたもの。マルカの見出し（「本気で優勝を狙う相手との試合は…」）は本文を読めていないので使わない。
+#   ・フットボールチャンネル／サッカーダイジェスト: 鈴木はヴィラ加入後で最多の3失点。
+#   ・ESPN CL 順位（11/4 取得）: ヴィラは4試合3勝1敗 勝ち点9 で3位（試合数の違うチームがあるので暫定）。
+#   ・BBC: 次はアウェーのマンU戦（日曜）。
+# 【言わないこと】ヤマルの記録（別の本でやる。得点の事実だけ）／ミスを責める言い方・現地の採点（5点）・ジェラード氏などの批判／
+#   10/31 フラム戦のオウンゴールと監督の言葉（題の出来事より前）／アジアカップの延期（別の話）／
+#   10/22〜10/30 の鈴木の本の中身（ヴァイキング戦の枠内3本・シティ戦の6セーブ・ベスト11・1月の不在）。
+# 本人の言葉: 見つからなかった。当たった所: ゲキサカ・フットボールチャンネル・サッカーキング・サッカーダイジェスト・Football ZONE・theWORLD（日本語）、
+#   BBC・Sky Sports・Birmingham Mail（英語）。クラブ公式（avfc.co.uk）は中身がスクリプトで描かれていて requests では読めなかった。本人の X・Instagram は当たっていない（ブラウザ不可）。→ X。
+# 反応: 0件（作らない。approve は --no-voices）。
+# 前の本との重なり: research/covered.yaml を grep。鈴木彩艶の本は10/21〜10/30に9本。CL のバルサ戦・初黒星・エメリの試合後の言葉は無い。
+slot: japanese
+date: "2026年11月4日"
+format: news
+no_main: true
+people: [鈴木彩艶, アストン・ヴィラ, バルセロナ, エメリ監督, ラフィーニャ, ヤマル, ゴードン]
+
+short_style: X
+short_hook_word: CL初黒星
+short_question: 鈴木彩艶とヴィラは、この1敗から何を持ち帰れると思いますか。
+short_photos:
+  - assets/images/20261104_suzuki_barca_cl/01_v.jpg
+  - assets/images/20261104_suzuki_barca_cl/02_v.jpg
+  - assets/images/20261030_suzuki_villa_gk/01_v.jpg
+short_telops:
+  - {match: 0対3, text: CL第4節/バルセロナ 3-0 ヴィラ}
+  - {match: 5本, text: バルサの枠内シュート8本/鈴木は5本を止めた}
+  - {match: 勝ち点9, text: ヴィラはCL4試合で勝ち点9/暫定3位}
+
+theme:
+  id: suzuki_barca_cl
+  league: england
+  league_name: チャンピオンズリーグ
+  prefix: ""
+  title: 鈴木彩艶、カンプ・ノウでCL初黒星。エメリ監督が試合後に求めたこととは
+  hook: ""
+  question: バルサに0対3で敗れた夜、鈴木彩艶は何を止め、監督は何を求めたのか
+  takeaway: バルサの枠内シュートは8本で、鈴木はそのうち5本を止めた。ヴィラの枠内は1本。監督が冷酷さを求めたのは、ゴール前の場面。ヴィラは勝ち点9のまま、日曜にマンチェスター・ユナイテッド戦
+
+thumbnail:
+  layout: scene
+  line1: 鈴木彩艶 CL初黒星
+  line2: 枠内8本のうち5本を止めた
+  tags: [鈴木彩艶, アストン・ヴィラ]
+  photo: assets/images/20261104_suzuki_barca_cl/01_w.jpg
+  short_photo: assets/images/20261104_suzuki_barca_cl/01_v.jpg
+
+answer: 枠内8本のうち5本を止めて3失点。監督は「このレベルでは冷酷に、ミスをなくせ」と話した
+watch: 日曜のマンチェスター・ユナイテッド戦（アウェー）
+
+sections:
+  - id: what
+    main: true
+    heading: バルサに0対3。鈴木彩艶が止めたもの
+    tier: 報道
+    telop: CL第4節 バルセロナ 3-0 アストン・ヴィラ
+    say:
+      - text: 鈴木彩艶のヴィラが、CLでバルセロナに0対3で敗戦。
+      - text: エメリ監督は試合後、こう話しました。
+      - voice: エメリ監督
+        text: いい経験だが、結果は悪い。
+        emph: true
+      - voice: エメリ監督
+        text: このレベルでは、冷酷になり、ミスをなくさなければならない。
+        cont: true
+      - text: 開幕から3連勝していたヴィラにとって、初めての負け。
+        image: assets/images/20261030_suzuki_villa_gk/01_w.jpg
+      - text: 鈴木にとっても、CLで初黒星です。
+      - text: 先制は7分、ヤマル。後ろからパスをつなぐところを狙われました。
+      - text: 後半はラフィーニャに2点を決められました。
+      - text: それでも鈴木は、26分にバルサのゴードンのシュートを止めました。
+        image: assets/images/20261104_suzuki_barca_cl/02_w.jpg
+      - text: 試合の終わり際には、ヤマルのシュートも止めています。
+      - text: フル出場した鈴木は、バルサの枠内シュート8本のうち5本を止めました。
+        card: {type: table, title: バルセロナ 3-0 アストン・ヴィラ, columns: [項目, バルサ, ヴィラ], rows: [[枠内シュート, 8本, 1本], [セーブ, 1, 5（鈴木）], [ボール保持, 65%, 35%]], highlight_row: 1}
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401915387
+      - https://web.gekisaka.jp/news/ucl/detail/?462482-462482-fl
+      - https://www.soccer-king.jp/news/world/eng/20261104/2224287.html
+      - https://www.skysports.com/football/live-blog/13025491/aston-villa-transfer-news-rumours-and-gossip-live-updates-and-latest-on-deals-signings-loans-and-contracts
+  - id: coach
+    heading: 鈴木が守ったヴィラの敗戦を、エメリ監督はどう受け止めたか
+    tier: 報道
+    telop: エメリ監督「3対0は大きすぎる差かもしれない」
+    say:
+      - voice: エメリ監督
+        text: 3対0は、私たちの出来からすると大きすぎる差かもしれない。
+      - voice: エメリ監督
+        text: それでも、負けは受け入れる。
+        cont: true
+      - text: 鈴木がゴールを守るヴィラは、4試合で勝ち点9。順位は3位です。
+        image: assets/images/20261030_suzuki_villa_gk/03_w.jpg
+        card: {type: table, title: CLリーグフェーズ（4節終了時点）, columns: [順位, チーム, 勝ち点], rows: [[1位, パリ・サンジェルマン, 12], [2位, バルセロナ, 9], [3位, アストン・ヴィラ, 9]], highlight_row: 2}
+      - voice: エメリ監督
+        text: 勝ち点9は、いい仕事をしてきたから。
+        card: none
+      - voice: エメリ監督
+        text: 現実を見ながら、手応えも持っていい。
+        cont: true
+    official: false
+    sources:
+      - https://www.bbc.com/sport/football/articles/cjwy9496qe7ko
+      - https://www.skysports.com/football/live-blog/13025491/aston-villa-transfer-news-rumours-and-gossip-live-updates-and-latest-on-deals-signings-loans-and-contracts
+      - https://site.api.espn.com/apis/v2/sports/soccer/uefa.champions/standings
+  - id: view
+    viewpoint: true
+    heading: 枠内の数で見ると、鈴木のこの試合はどう見えるか
+    tier: 背景
+    telop: 枠内シュート バルサ8本・ヴィラ1本
+    say:
+      - text: 見立てです。鈴木が守ったこの試合、枠内シュートはバルサ8本に対し、ヴィラは1本。
+        card: {type: table, title: バルセロナ 3-0 アストン・ヴィラ, columns: [項目, バルサ, ヴィラ], rows: [[枠内シュート, 8本, 1本], [セーブ, 1, 5（鈴木）], [ボール保持, 65%, 35%]], highlight_row: 0}
+      - text: 監督は、冷酷さが要るのは攻める側のゴール前だとも話しています。
+        emph: true
+        card: none
+      - text: 次は日曜、アウェーのマンチェスター・ユナイテッド戦です。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401915387
+      - https://www.bbc.com/sport/football/articles/cjwy9496qe7ko

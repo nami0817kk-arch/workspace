@@ -1,0 +1,468 @@
+# スタジアム紹介シリーズ：バルセロナの本拠地（スポティファイ・カンプ・ノウ、11/5 予定）。雛形は 11/1 アトレティコの回。
+# 題材の選び方（2026-11-04）：プレミアの並びを出し終え、11/1 にアトレティコを出した。続きはラ・リーガの大きなクラブ。
+#   候補はレアル・マドリード（ベルナベウ）とバルセロナ（カンプ・ノウ）。
+#   レアル＝直近30日にクラブ紹介 ll17（10/17 公開）・財政 finance_realmadrid（10/9）・finance_real_barca（10/18）と3本出している。
+#     しかも改装後の収容が公式で取れない（11/1 の取材メモの控え：ラ・リーガ 8万3186〜8万4000、招致書類 7万8297、会長「8万人前後」）。→ 後ろへ回す。
+#   バルセロナ＝直近30日は finance_real_barca（10/18、財政の比べ）だけ。クラブ紹介 ll05 は 9/26 で30日の外。
+#     11/1 の控えは「収容が毎月動く」として外したが、2026年3月10日の段階1Cの許可で 6万2652 になり、9月16日時点でも同じ（beIN が RAC1 を引いて）。数字が言えるようになったので選ぶ。
+#   重なりの確認：scripts/*stadium_* にバルセロナ・カンプ・ノウは無し。covered.yaml・posted.json にも stadium_barcelona は無い。
+#     11/4 のショート「鈴木彩艶、カンプ・ノウでCL初黒星」（suzuki_barca_cl）と会場が同じ。この回では見立ての節で1行だけ触れ、試合の中身（枠内のシュート等）は言わない。
+#   picks（research/20261105_picks.txt）：他の担当はフラム・トーレス・バリオス（アトレティコ）・ハキミとアレクサンダー＝アーノルド・奥寺・スロット・ブライトン・ハンブルガーSV・パラグアイ。バルセロナと重ならない。
+# 今季のラ・リーガ所属（一次情報）：ESPN の ラ・リーガ（esp.1）2026-27 のバルセロナの日程（teams/83/schedule?season=2026）に 8/23〜10/31 の11試合。会場はスポティファイ・カンプ・ノウ。
+# 収容（一次・それに近いもの）：
+#   段階1A 2025年10月17日 2万5991（メインスタンドと南のゴール裏。クラブの声明 4384109、ウィキペディア en）
+#   段階1B 2025年11月17日 4万5401（ウィキペディア en、クラブの声明）／再開の試合 2025年11月22日 アスレティック 4対0、入場 4万5157（クラブの試合記事 4407322）
+#   段階1C 2026年3月10日 6万2652（ウィキペディア en。クラブの声明「the capacity of the Spotify Camp Nou is extended to 62,652」を検索の結果で確認）。北のゴール裏は3層のうち2層が閉じたまま
+#   2026年9月16日時点でも 6万2652（beIN、RAC1 を引いて。「2027年の初めに7万〜7万2000」はクラブの予定で確定ではないので台本では言わない）
+#   改装前 9万9354（ウィキペディア en・es の当時の収容）。開場時 10万6146、1982年W杯に向けて 12万1401。最多入場 12万（1986年3月5日 ユヴェントス戦）
+#   計算：62652÷99354=0.6306＝約63％／99354-62652=36702／105000-62652=42348
+# 費用：2014年の計画で約6億ユーロ（2017〜2021年の予定）。2020年10月に 7億2500万＋金融費用9000万。2021年10月に代議員総会が15億まで、12月に会員投票で承認。
+#   2026年9月19日の代議員総会で 5億1000万を追加承認（うち3億が完成のため）。見積りの総額は約20億ユーロ（ウィキペディア en・3cat・livescore/goal）。20億÷6億＝約3.3倍
+# 歩み（ウィキペディア en・es）：1954年3月28日着工、1957年9月24日開場（メルセの日）。1982年W杯の開幕戦（アルゼンチン0対1ベルギー、9万5000人）。1989年欧州杯決勝、1992年五輪の決勝、1999年CL決勝（マンU 2対1 バイエルン）。
+#   2007年9月18日 ノーマン・フォスターの案（10万5000・2億5000万ユーロ・2011-12季に完成予定）→ 2008年の金融危機で遅れ、2010年6月30日のロセイ会長の就任で終わる。
+#   2014年1月 理事会が新築ではなく改装を選ぶ（エスパイ・バルサ、10万5000）→ 2014年4月 会員投票で承認。
+#   2016年3月8日 日本の設計事務所、日建設計（Nikken Sekkei）とピンセル（Pascual i Ausió）の案が国際設計競技で選ばれる（en・es 一致）。2023年初めにトルコの Limak が元請け、日建設計は「デザインの守り手」として残る。
+#   2023年6月1日 工事開始。2023-24・2024-25 はモンジュイックの五輪スタジアム。2025-26 は最初の7試合をヨハン・クライフ・スタジアムと五輪スタジアムで。
+# これから（3cat 2026-09-19、会計責任者フェラン・オリベの総会での発言）：「5月に最後の試合が終わると屋根の取り付けを始める」「戻るのは2028年1月に決めた」「9万5000人で戻れば必要な収入が得られる」。
+#   最終の10万5000は2028-29季の前（ウィキペディア en。3cat は「2028年夏」）。台本では「2028年の夏ごろ」は言わず「2028-29季の前」と言う。
+#   2029年のCL決勝（2029年6月2日）の会場に決定：UEFA 2026年9月15日（ウィキペディア en・beIN）。
+# 入場（ESPN の試合記録・ラ・リーガ 2026-27、ホーム6試合。控え scratchpad の cn）：
+#   8/27 アスレティック 5万9326（2対0）／8/31 ラージョ 5万7768（5対2）／9/16 ラシン 5万568（7対2）／10/10 ヘタフェ 5万9465（3対0）／10/25 レアル・マドリード 6万2055（1対2）／10/31 アラベス 5万3523（6対1）
+#   合計34万2705・平均5万7117.5＝収容の91.2％。レアル戦 62055÷62652=0.9905＝99.0％、満員まで 597。
+#   CL 11/3 アストン・ヴィラ 5万2662（3対0。ESPN 20:00Z＝現地21時、日本時間4日早朝）。9/9 フェイエノールト戦は ESPN の入場が0（記録なし）なので使わない。
+# 日本との接点（サッカーの縁）：①設計は日本の日建設計（建物の縁。選手の縁ではないので、歩みの1行として言う。「日本との接点」として節は立てない）
+#   ②11/3 のCLでアストン・ヴィラの鈴木彩艶がこの本拠地のゴールを守った（11/4 のショートと会場が同じ。見立てで1行）。
+# 言わなかったもの：命名権の金額（報道の推定のみ）／2027年の初めに7万〜の予定（RAC1 の報道で確定ではない）／ベルナベウとの大きさの比べ（ベルナベウの収容が公式で取れない）／コンサート／女子の入場記録（女子は扱わない）／フェイエノールト戦の入場。
+# 写真：assets/images/20261105_stadium_barcelona/（credits.json）。5枚とも Commons（CC0・CC BY・CC BY-SA）。2026年の内観（Camp nou 2026.png）は 429 で取れなかった。
+date: 2026年11月4日
+slot: other_1
+format: news
+series: スタジアム紹介
+voice_min: 0
+people: []
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  id: stadium_barcelona
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: バルセロナ
+  title: バルセロナの本拠地カンプ・ノウ、工事中のまま戻って1年。満員になるのはいつ？
+  question: 2023年に改装に入ったカンプ・ノウは、なぜ工事が終わらないまま試合を始め、いつ10万人の器に戻るのか
+  lead: 戻ってきたのに、まだ工事中。
+  hook: ''
+  opening_image: assets/images/20261105_stadium_barcelona/01_w.jpg
+  end_bg: assets/images/20261105_stadium_barcelona/01_w.jpg
+  takeaway: カンプ・ノウの収容は、2026年3月から6万2652人。改装前の約63％で、工事は続いている。改装の費用は、2014年の計画の約6億ユーロから、約20億ユーロへと約3.3倍に増えた。今季のリーグのホーム6試合の平均は5万7118人で、収容の91.2％。10月25日のレアル・マドリード戦は6万2055人で、満員まで597席だった。クラブは2027年の夏に屋根の工事で一度出て、2028年1月に約9万5000人で戻る予定
+  short_title: カンプ・ノウ、工事中のまま戻って1年
+thumbnail:
+  layout: scene
+  bold: false
+  callouts:
+  - 費用は約20億ユーロ
+  - いまは6万2652席
+  photo: assets/images/20261105_stadium_barcelona/01_w.jpg
+  line1: バルサの本拠地カンプ・ノウ
+  line2: 10万人に戻るのは2028年
+  tags:
+  - バルセロナ
+  - ラ・リーガ
+  - スタジアム紹介
+sections:
+- id: data
+  main: true
+  heading: カンプ・ノウには、いま何人入るのか
+  bg: assets/images/20261105_stadium_barcelona/01_w.jpg
+  tier: 報道
+  telop: 収容は6万2652人。改装前の約63％で、工事はまだ続いている
+  narrator: 解説
+  card:
+    type: table
+    title: カンプ・ノウの基礎DATA
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 収容人数
+      - 6万2652人（2026年3月から）
+    - - いまの名前
+      - スポティファイ・カンプ・ノウ
+    - - 持ち主
+      - バルセロナ
+    - - 開場
+      - 1957年9月
+    - - 改装の工事
+      - 2023年6月から
+    - - 完成の予定
+      - 10万5000人（2028-29季の前）
+  say:
+  - text: バルセロナの本拠地、カンプ・ノウの話です。
+    short_only: true
+    image: assets/images/20261105_stadium_barcelona/01_w.jpg
+    card: none
+  - text: 戻って1年近く。カンプ・ノウは、いまも改装前の約63％の大きさで試合をしています。
+    emph: true
+    image: assets/images/20261105_stadium_barcelona/01_w.jpg
+    card: none
+  - text: いまの収容は、6万2652人。
+    image: assets/images/20261105_stadium_barcelona/01_w.jpg
+    card: &id_cap
+      type: stats
+      title: カンプ・ノウの収容、3つの時点
+      items:
+      - - '99354'
+        - 人
+        - 改装前
+      - - '62652'
+        - 人
+        - いま（2026年3月から）
+      - - '105000'
+        - 人
+        - 完成の予定
+      focus: 1
+  - text: 改装の前は、9万9354人入りました。
+    image: assets/images/20261105_stadium_barcelona/01_w.jpg
+    card:
+      <<: *id_cap
+      focus: 0
+  - text: 差は、3万6702席です。
+    image: assets/images/20261105_stadium_barcelona/02_w.jpg
+    card:
+      type: calc
+      title: 改装前との比べ（自分で割った）
+      terms:
+      - - 6万2652人
+        - いまの収容
+      - - 9万9354人
+        - 改装前の収容
+      - - 約63％
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: 完成すれば、10万5000人。いまより4万人以上多い器になります。
+    image: assets/images/20261105_stadium_barcelona/02_w.jpg
+    card:
+      <<: *id_cap
+      focus: 2
+  - text: その4万席あまりは、いまも工事の中です。
+    image: assets/images/20261105_stadium_barcelona/01_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Camp_Nou
+  - https://www.beinsports.com/en-us/soccer/la-liga/articles/camp-nou-to-surpass-70-000-spectators-in-2027-2026-09-16
+  - https://es.wikipedia.org/wiki/Camp_Nou
+- id: history
+  heading: カンプ・ノウは、なぜ「ヨーロッパ最大」と呼ばれてきたのか
+  bg: assets/images/20261105_stadium_barcelona/04_w.jpg
+  tier: 背景
+  telop: 開場は1957年。1982年のW杯で12万1401人の器に。最多の入場は12万人
+  narrator: 解説
+  card: &id_hist
+    type: timeline
+    title: カンプ・ノウの歩み
+    rows:
+    - - 1957年9月
+      - 開場。収容10万6146人
+    - - 1982年
+      - W杯に向けて12万1401人に
+    - - 1986年3月
+      - 最多の入場、12万人
+    - - 1992年
+      - バルセロナ五輪の決勝
+    - - 1999年5月
+      - CL決勝、マンUが逆転
+    focus: 1982年
+    highlight_row: 0
+  say:
+  - text: カンプ・ノウが開いたのは、1957年の9月です。
+    image: assets/images/20261105_stadium_barcelona/04_w.jpg
+    card:
+      <<: *id_hist
+      highlight_row: 0
+  - text: 開いたときの収容は、10万6146人。最初から、10万人を超える器でした。
+    image: assets/images/20261105_stadium_barcelona/04_w.jpg
+    card:
+      <<: *id_hist
+      highlight_row: 0
+  - text: 1982年には、スペインで開かれたワールドカップに向けて広げ、12万1401人に。
+    emph: true
+    image: assets/images/20261105_stadium_barcelona/04_w.jpg
+    card:
+      <<: *id_hist
+      highlight_row: 1
+  - text: その大会の開幕戦も、ここで開かれました。
+    image: assets/images/20261105_stadium_barcelona/04_w.jpg
+    card: none
+  - text: 最も多く入ったのは、1986年3月のユヴェントス戦。12万人です。
+    image: assets/images/20261105_stadium_barcelona/02_w.jpg
+    card:
+      <<: *id_hist
+      highlight_row: 2
+  - text: 1992年には、バルセロナ五輪のサッカーの決勝の舞台に。
+    image: assets/images/20261105_stadium_barcelona/02_w.jpg
+    card:
+      <<: *id_hist
+      highlight_row: 3
+  - text: 1999年には、チャンピオンズリーグの決勝。
+    image: assets/images/20261105_stadium_barcelona/02_w.jpg
+    card:
+      <<: *id_hist
+      highlight_row: 4
+  - text: マンチェスター・ユナイテッドが、バイエルンに2対1で逆転勝ちしました。
+    image: assets/images/20261105_stadium_barcelona/02_w.jpg
+    card:
+      <<: *id_hist
+      highlight_row: 4
+  - text: その器が、いま、大きく作り直されています。
+    image: assets/images/20261105_stadium_barcelona/05_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Camp_Nou
+  - https://es.wikipedia.org/wiki/Camp_Nou
+- id: plan
+  heading: 改装は、なぜ費用が3倍を超えるまで膨らんだのか
+  bg: assets/images/20261105_stadium_barcelona/05_w.jpg
+  tier: 背景
+  telop: 2014年の計画は約6億ユーロ。いまの見積りは約20億ユーロ。設計は日本の日建設計
+  narrator: 解説
+  card: &id_plan
+    type: timeline
+    title: 改装の計画の歩み
+    rows:
+    - - 2007年
+      - フォスターの案。2010年に取りやめ
+    - - 2014年4月
+      - 会員の投票で改装を承認。約6億ユーロ
+    - - 2016年3月
+      - 日建設計の案が設計競技で選ばれる
+    - - 2023年6月
+      - 工事が始まる
+    - - 2026年9月
+      - 5億1000万ユーロの追加を承認
+    focus: 2026年9月
+    highlight_row: 0
+  say:
+  - text: 改装の話は、20年近く前からありました。
+    image: assets/images/20261105_stadium_barcelona/05_w.jpg
+    card: none
+  - text: 2007年には、イギリスの建築家、ノーマン・フォスターの案が選ばれます。
+    image: assets/images/20261105_stadium_barcelona/05_w.jpg
+    card:
+      <<: *id_plan
+      highlight_row: 0
+  - text: でも金融危機で遅れ、2010年に会長が替わって、取りやめになりました。
+    image: assets/images/20261105_stadium_barcelona/05_w.jpg
+    card:
+      <<: *id_plan
+      highlight_row: 0
+  - text: 2014年4月、会員の投票で、いまの改装が決まります。
+    image: assets/images/20261105_stadium_barcelona/05_w.jpg
+    card:
+      <<: *id_plan
+      highlight_row: 1
+  - text: 費用は約6億ユーロ。2021年に終わる予定でした。
+    image: assets/images/20261105_stadium_barcelona/05_w.jpg
+    card:
+      <<: *id_plan
+      highlight_row: 1
+  - text: 2016年、設計の競技で選ばれたのは、日本の設計事務所、日建設計の案でした。
+    emph: true
+    image: assets/images/20261105_stadium_barcelona/03_w.jpg
+    card:
+      <<: *id_plan
+      highlight_row: 2
+  - text: ところが、工事が始まったのは、2023年の6月。投票から9年後です。
+    image: assets/images/20261105_stadium_barcelona/03_w.jpg
+    card:
+      <<: *id_plan
+      highlight_row: 3
+  - text: 2026年9月、クラブは、さらに5億1000万ユーロの借り入れを承認しました。
+    image: assets/images/20261105_stadium_barcelona/03_w.jpg
+    card:
+      <<: *id_plan
+      highlight_row: 4
+  - text: 見積りの総額は、約20億ユーロ。2014年の計画の、約3.3倍です。
+    emph: true
+    image: assets/images/20261105_stadium_barcelona/01_w.jpg
+    card:
+      type: calc
+      title: 計画との比べ（自分で割った）
+      terms:
+      - - 約20億ユーロ
+        - いまの見積り
+      - - 約6億ユーロ
+        - 2014年の計画
+      - - 約3.3倍
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  sources:
+  - https://en.wikipedia.org/wiki/Camp_Nou
+  - https://es.wikipedia.org/wiki/Camp_Nou
+  - https://www.livescore.com/en/news/football/laliga/why-barcelona-will-be-forced-to-vacate-camp-nou-again-next-season-after-510m-funding-approved-goal/
+- id: return
+  heading: バルサは、なぜ工事が終わる前に戻ってきたのか
+  bg: assets/images/20261105_stadium_barcelona/01_w.jpg
+  tier: 報道
+  telop: 2年あまりモンジュイックで戦い、2025年11月に4万5401席で戻った。2026年3月に6万2652席へ
+  narrator: 解説
+  card: &id_ret
+    type: timeline
+    title: 戻るまでと、戻ってから
+    rows:
+    - - 2023-24季
+      - モンジュイックの五輪スタジアムへ
+    - - 2025年11月
+      - 4万5401席で戻る。初戦4対0
+    - - 2026年3月
+      - 6万2652席に広がる
+    focus: 2025年11月
+    highlight_row: 0
+  say:
+  - text: 工事のあいだ、バルサは、街の丘モンジュイックにある、五輪のスタジアムで戦いました。
+    image: assets/images/20261105_stadium_barcelona/03_w.jpg
+    card:
+      <<: *id_ret
+      highlight_row: 0
+  - text: 2023年から2025年まで、2つのシーズンです。
+    image: assets/images/20261105_stadium_barcelona/03_w.jpg
+    card:
+      <<: *id_ret
+      highlight_row: 0
+  - text: 昨季の開幕にも、カンプ・ノウは間に合いませんでした。
+    image: assets/images/20261105_stadium_barcelona/03_w.jpg
+    card: none
+  - text: クラブは、席を区切って使う許可を、段階ごとに取る道を選びます。
+    image: assets/images/20261105_stadium_barcelona/01_w.jpg
+    card: none
+  - text: 2025年11月、4万5401席で戻りました。
+    emph: true
+    image: assets/images/20261105_stadium_barcelona/01_w.jpg
+    card:
+      <<: *id_ret
+      highlight_row: 1
+  - text: 戻って最初の試合は、11月22日のアスレティック・ビルバオ戦。4対0で勝ちました。
+    image: assets/images/20261105_stadium_barcelona/01_w.jpg
+    card:
+      <<: *id_ret
+      highlight_row: 1
+  - text: 2026年3月には、北のゴール裏が開いて、6万2652席に。
+    image: assets/images/20261105_stadium_barcelona/02_w.jpg
+    card:
+      <<: *id_ret
+      highlight_row: 2
+  - text: ただし、北のゴール裏は、3つの段のうち2つが、まだ閉じたままです。
+    image: assets/images/20261105_stadium_barcelona/05_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Camp_Nou
+  - https://www.fcbarcelona.com/en/football/first-team/news/4407322/fc-barcelona-4-0-athletic-club-triumphant-return
+- id: view
+  viewpoint: true
+  heading: 見立て・6万2652席は今季どこまで埋まり、満員はいつになるのか
+  bg: assets/images/20261105_stadium_barcelona/01_w.jpg
+  tier: 報道
+  telop: リーグのホーム6試合の平均は5万7118人、収容の91.2％。レアル戦は6万2055人で、満員まで597席
+  narrator: 解説
+  card: &id_view
+    type: table
+    title: 今季のリーグのホーム6試合の入場
+    columns:
+    - 相手
+    - 入場
+    rows:
+    - - アスレティック
+      - 5万9326人
+    - - ラージョ
+      - 5万7768人
+    - - ラシン
+      - 5万568人
+    - - ヘタフェ
+      - 5万9465人
+    - - レアル・マドリード
+      - 6万2055人
+    - - アラベス
+      - 5万3523人
+    - - 平均
+      - 5万7118人（収容の91.2％）
+    highlight_row: 6
+  say:
+  - text: では、今季のホームは、どこまで埋まっているのか。数字は、11月4日の時点です。
+    emph: true
+    image: assets/images/20261105_stadium_barcelona/02_w.jpg
+    card: none
+  - text: リーグのホームの6試合で、平均は5万7118人。収容の91.2％。
+    image: assets/images/20261105_stadium_barcelona/02_w.jpg
+    card:
+      <<: *id_view
+      highlight_row: 6
+    mark:
+      kind: circle
+      row: 6
+  - text: いちばん多かったのは、10月25日のレアル・マドリード戦で、6万2055人。
+    image: assets/images/20261105_stadium_barcelona/02_w.jpg
+    card:
+      <<: *id_view
+      highlight_row: 4
+  - text: 満員まで、あと597席。収容の99.0％でした。
+    image: assets/images/20261105_stadium_barcelona/02_w.jpg
+    card:
+      type: calc
+      title: 満員まであと何席か（自分で引いた）
+      terms:
+      - - 6万2652人
+        - いまの収容
+      - - 6万2055人
+        - レアル戦の入場
+      - - 597席
+        - 引いた答え
+      ops:
+      - −
+      - ＝
+  - text: 11月3日には、アストン・ヴィラの鈴木彩艶が、ここでゴールを守りました。
+    image: assets/images/20261105_stadium_barcelona/01_w.jpg
+    card: none
+  - text: その夜の入場は、5万2662人。リーグの平均より、4千人あまり少なめ。
+    image: assets/images/20261105_stadium_barcelona/01_w.jpg
+    card: none
+  - text: そして来年の夏、バルサは、もう一度ここを出ます。
+    emph: true
+    image: assets/images/20261105_stadium_barcelona/01_w.jpg
+    card: none
+  - text: 今季の最後の試合のあと、屋根を付ける工事に入るからです。
+    image: assets/images/20261105_stadium_barcelona/05_w.jpg
+    card:
+      type: timeline
+      title: 満員までの予定
+      rows:
+      - - 2027年5月
+        - 今季の最後の試合のあと、屋根の工事へ
+      - - 2028年1月
+        - 約9万5000人で戻る予定
+      - - 2028-29季の前
+        - 10万5000人で完成の予定
+      - - 2029年6月
+        - CL決勝の会場
+      focus: 2028年1月
+      highlight_row: 1
+  - text: 戻るのは2028年1月。席は約9万5000、とクラブは話しています。
+    image: assets/images/20261105_stadium_barcelona/05_w.jpg
+    card: none
+  - text: すべての席がそろうのは、2028年から29年のシーズンの前の予定です。
+    image: assets/images/20261105_stadium_barcelona/04_w.jpg
+    card: none
+  - text: 2029年6月には、チャンピオンズリーグの決勝も、ここで開かれます。
+    image: assets/images/20261105_stadium_barcelona/04_w.jpg
+    card: none
+  - text: 完成まで、あと2つのシーズン。工事と試合は、並んで続きます。
+    emph: true
+    image: assets/images/20261105_stadium_barcelona/01_w.jpg
+    card: none
+  sources:
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/teams/83/schedule?season=2026（2026-27 ラ・リーガ、バルセロナのホーム6試合）
+  - https://www.espn.com/soccer/match/_/gameId/401915387
+  - https://www.3cat.cat/esport3/el-barca-posa-data-a-la-tornada-definitiva-al-camp-nou/noticia/3429599/
+  - https://en.wikipedia.org/wiki/Camp_Nou
+  - https://www.beinsports.com/en-us/soccer/la-liga/articles/camp-nou-to-surpass-70-000-spectators-in-2027-2026-09-16
