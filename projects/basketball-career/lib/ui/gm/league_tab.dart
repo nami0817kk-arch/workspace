@@ -36,6 +36,21 @@ class LeagueTab extends StatelessWidget {
             ),
           ),
         ],
+        if (car.log.isNotEmpty) ...[
+          const SectionTitle('リーグのニュース'),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                for (final n in car.log.take(20))
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 3),
+                    child: Text(n, style: const TextStyle(fontSize: 13, height: 1.4)),
+                  ),
+              ]),
+            ),
+          ),
+        ],
         if (car.history.isNotEmpty) ...[
           const SectionTitle('これまでの成績'),
           Card(

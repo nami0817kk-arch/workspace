@@ -161,6 +161,26 @@ class Career {
 
   int tradesDone = 0;
 
+  /// リーグのニュース(新しい順、[logLimit] 件まで)。トレード・大物の移籍・ドラフト1位・優勝・引退。
+  List<String> log = [];
+  static const logLimit = 60;
+
+  void _log(String text) {
+    log.insert(0, '$season年目 $text');
+    if (log.length > logLimit) log.removeRange(logLimit, log.length);
+  }
+
+  String _names(List<Player> ps) => ps.map((p) => p.name).join('・');
+
+  /// トレードの中身を1行にする。
+  String _tradeText(int a, int b, TradeOffer o, List<Player> give, List<Player> get) {
+    String side(List<Player> ps, List<int> ix) => [
+          if (ps.isNotEmpty) _names(ps),
+          for (final i in ix) '指名権(${picks[i].label(teams, season)})',
+        ].join('・');
+    return 'トレード: ${teams[a].def.short}が${side(give, o.givePicks)}を出し、${teams[b].def.short}から${side(get, o.getPicks)}を獲得';
+  }
+
   /// 前のシーズンのぜいたく税で下がった信頼。
   int lastTax = 0;
 
@@ -268,7 +288,8 @@ class Career {
 
   /// 各チームの考え方を、強さの順と年俸から決める。
   void _setModes() {
-    final order = [...teams]..sort((a, b) => b.strength.compareTo(a.strength));
+    final st = {for (final t in teams) t.index: t.strength};
+    final order = [...teams]..sort((a, b) => st[b.index]!.compareTo(st[a.index]!));
     for (var r = 0; r < order.length; r++) {
       final t = order[r];
       if (t.payroll > salaryCap + 150 && r >= 6) {
@@ -285,8 +306,8 @@ class Career {
 
   /// 強さの順位(0が1位)。
   int strengthRank(int team) {
-    final order = [...teams]..sort((a, b) => b.strength.compareTo(a.strength));
-    return order.indexWhere((t) => t.index == team);
+    final mine = teams[team].strength;
+    return teams.where((t) => t.index != team && t.strength > mine).length;
   }
 
   // ---------------------------------------------------------------- シーズン
@@ -335,6 +356,7 @@ class Career {
     }
     lastGames = games;
     block++;
+    if (block <= tradeDeadlineBlock && rng.chance(0.5)) _aiTrades(1);
     if (block >= blocksPerSeason) {
       phase = Phase.playoffs;
     } else if (rng.chance(0.6)) {
@@ -361,6 +383,7 @@ class Career {
     if (o == null || !canTrade) return false;
     incoming = null;
     if (!judgeTrade(teams, picks, mine, o, season).ok) return false;
+    _logTrade(mine, o);
     applyTrade(teams, picks, mine, o);
     tradesDone++;
     return true;
@@ -398,6 +421,7 @@ class Career {
     final hi = all.indexOf(champs[0]) < all.indexOf(champs[1]) ? champs[0] : champs[1];
     _series(hi, hi == champs[0] ? champs[1] : champs[0], 4, 4);
     _closeSeason();
+    _log('優勝: ${teams[champion].name}(ファイナルで${teams[finals!.loser].def.short}を${finals!.winner == finals!.high ? finals!.highWins : finals!.lowWins}勝${finals!.winner == finals!.high ? finals!.lowWins : finals!.highWins}敗)');
     phase = Phase.seasonEnd;
   }
 
@@ -485,6 +509,7 @@ class Career {
       for (final p in retired) {
         t.roster.remove(p);
         if (t.index == mine) news.add('${p.name}(${p.age}歳)が引退した');
+        if (p.ovr >= 72 || t.index == mine) _log('引退: ${p.name}(${t.def.short}・${p.age}歳)');
       }
     }
     for (final p in freeAgents) {
@@ -524,6 +549,7 @@ class Career {
   void _sign(Team t, Prospect p, int overall) {
     p.pickedBy = t.index;
     draftLog.add(prospects.indexOf(p));
+    if (overall == 0) _log('ドラフト全体1位: ${p.player.name}(${t.def.short})');
     final (sal, yrs) = rookieContract(overall);
     p.player
       ..salary = sal
@@ -708,6 +734,8 @@ class Career {
       if (t.index != mine) _aiTrim(t);
     }
     season++;
+    _setModes();
+    _aiTrades(1);
     phase = Phase.preseason;
     _setModes();
   }
@@ -726,6 +754,7 @@ class Career {
           ..years = 1 + rng.nextInt(ask.maxYears);
         t.roster.add(p);
         freeAgents.remove(p);
+        if (p.ovr >= 70) _log('移籍: ${p.name}(力${p.ovr})が${t.def.short}と${p.years}年契約');
         break;
       }
     }
@@ -758,10 +787,53 @@ class Career {
   bool propose(TradeOffer o) {
     final v = judge(o);
     if (!v.ok) return false;
+    _logTrade(mine, o);
     applyTrade(teams, picks, mine, o);
     tradesDone++;
     incoming = null;
     return true;
+  }
+
+  void _logTrade(int from, TradeOffer o) {
+    final give = [for (final id in o.give) teams[from].roster.firstWhere((p) => p.id == id)];
+    final get = [for (final id in o.get) teams[o.partner].roster.firstWhere((p) => p.id == id)];
+    _log(_tradeText(from, o.partner, o, give, get));
+  }
+
+  /// 「相手に聞く」: [partner] から [get] を受け取るのに、こちらが出せばよい組み合わせ。契約の話し合い中の選手は出さない。
+  TradeOffer? askPartner(int partner, {List<int> get = const [], List<int> getPicks = const []}) {
+    if (!canTrade || (get.isEmpty && getPicks.isEmpty)) return null;
+    return findPackage(teams, picks, mine, partner, get: get, getPicks: getPicks, exclude: expiring, nowSeason: season);
+  }
+
+  /// 相手のチーム同士のトレード。優勝を狙うチームが、立て直し中・年俸を減らしたいチームのベテランを、若手や指名権で取る。
+  /// どちらの見方でも損にならないときだけ成立する。
+  void _aiTrades(int count) {
+    final buyers = [for (final t in teams) if (t.index != mine && (t.mode == TeamMode.contend || t.mode == TeamMode.balanced)) t.index];
+    final sellers = [for (final t in teams) if (t.index != mine && (t.mode == TeamMode.rebuild || t.mode == TeamMode.cutCost)) t.index];
+    rng.shuffle(buyers);
+    var done = 0;
+    // 探すのは重いので、試す組み合わせの数を絞る(買い手4つ×売り手2つまで)
+    for (final a in buyers.take(4)) {
+      if (done >= count) break;
+      rng.shuffle(sellers);
+      for (final b in sellers.take(2)) {
+        final vets = teams[b].roster.where((p) => p.age >= 27 && p.ovr >= 68).toList()..sort((x, y) => y.ovr.compareTo(x.ovr));
+        if (vets.isEmpty) continue;
+        final target = vets.first;
+        final o = findPackage(teams, picks, a, b, get: [target.id], nowSeason: season);
+        if (o == null) continue;
+        // 取る側から見ても得か
+        final give = [for (final id in o.give) teams[a].roster.firstWhere((p) => p.id == id)];
+        final out = give.fold(0.0, (s, p) => s + playerValue(p, teams[a].mode)) +
+            o.givePicks.fold(0.0, (s, i) => s + pickValue(picks[i], teams[a].mode, slotGuess(teams, picks[i].from), season));
+        if (playerValue(target, teams[a].mode) < out) continue;
+        _log(_tradeText(a, b, o, give, [target]));
+        applyTrade(teams, picks, a, o);
+        done++;
+        break;
+      }
+    }
   }
 
   /// 自分の持っている指名権(全体の並びでの番号)。
@@ -797,6 +869,7 @@ class Career {
         'news': news,
         if (incoming != null) 'inc': incoming!.toJson(),
         'td': tradesDone,
+        'log': log,
         'tax': lastTax,
         'dr': draftedIds,
         'nid': _nextId,
@@ -834,6 +907,7 @@ class Career {
       ..news = [for (final x in (j['news'] as List? ?? const [])) x as String]
       ..incoming = j['inc'] == null ? null : TradeOffer.fromJson(Map<String, dynamic>.from(j['inc'] as Map))
       ..tradesDone = (j['td'] as int?) ?? 0
+      ..log = [for (final x in (j['log'] as List? ?? const [])) x as String]
       ..lastTax = (j['tax'] as int?) ?? 0
       ..draftedIds = [for (final x in (j['dr'] as List? ?? const [])) x as int]
       .._nextId = (j['nid'] as int?) ?? 100000;

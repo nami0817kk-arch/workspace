@@ -139,11 +139,23 @@ class _TradeTabState extends State<TradeTab> {
           const SizedBox(height: 6),
           _Reaction(verdict: verdict),
           const SizedBox(height: 8),
-          FilledButton.icon(
-            onPressed: verdict != null && verdict.ok && !c.busy ? () => _propose(context) : null,
-            icon: const Icon(Icons.handshake_rounded),
-            label: const Text('申し込む'),
-          ),
+          Row(children: [
+            Expanded(
+              child: OutlinedButton.icon(
+                onPressed: (_get.isEmpty && _getPicks.isEmpty) || !car.canTrade || c.busy ? null : () => _ask(context),
+                icon: const Icon(Icons.forum_rounded, size: 20),
+                label: const Text('相手に聞く'),
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: FilledButton.icon(
+                onPressed: verdict != null && verdict.ok && !c.busy ? () => _propose(context) : null,
+                icon: const Icon(Icons.handshake_rounded),
+                label: const Text('申し込む'),
+              ),
+            ),
+          ]),
         ]),
       ),
     ]);
@@ -163,6 +175,26 @@ class _TradeTabState extends State<TradeTab> {
           ),
       ]),
     );
+  }
+
+  /// 受け取るものだけ選んだ状態で、相手が受けてくれる出し方を聞く。見つかったら、出すものの選択をそれに置き換える。
+  void _ask(BuildContext context) {
+    final car = widget.c.career!;
+    final o = car.askPartner(_partner, get: [..._get], getPicks: [..._getPicks]);
+    final messenger = ScaffoldMessenger.of(context);
+    if (o == null) {
+      messenger.showSnackBar(SnackBar(content: Text('${car.teams[_partner].def.short}は、この組み合わせではどう出されても受けない')));
+      return;
+    }
+    setState(() {
+      _give
+        ..clear()
+        ..addAll(o.give);
+      _givePicks
+        ..clear()
+        ..addAll(o.givePicks);
+    });
+    messenger.showSnackBar(SnackBar(content: Text('${car.teams[_partner].def.short}の答え: 「これなら受ける」(出す${o.give.length + o.givePicks.length}件を選んだ)')));
   }
 
   void _propose(BuildContext context) {
