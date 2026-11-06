@@ -438,7 +438,8 @@ def draw_bars(img, sc, t, u):
     items = sc["items"]
     vmax = max(v for _, v, _ in items)
     bx0 = x0 + (520 if LAND else 60)
-    bx1 = x1 - (320 if LAND else 260)
+    vw = max(d.textlength(sc.get("fmt", "{}").format(v), font=ov.font(50 if LAND else 44)) for _, v, _ in items)
+    bx1 = x1 - max(320 if LAND else 260, vw + 60)                # 値の字が右にはみ出さない幅を空ける
     top = y0 + (140 if sc.get("title") else 60)
     gap = min(150 if LAND else 220, (y1 - top) / len(items))
     for i, (name, v, col) in enumerate(items):

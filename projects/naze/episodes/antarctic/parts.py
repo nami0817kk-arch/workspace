@@ -10,7 +10,7 @@ EASIA = (122, 33, 34, 30)
 NCHINA = (119.5, 37.6, 16, 30)
 JAPAN = (137.2, 35.3, 9, 35)
 EUROPE = (5, 50, 22, 30)
-USAE = (-78, 33.5, 34, 12)
+USAE = (-78, 31.5, 52, 12)
 SASIA = (88.5, 23, 16, 30)
 
 TOKYO, OSAKA, SEOUL = (139.75, 35.69), (135.5, 34.69), (126.98, 37.57)
@@ -100,7 +100,7 @@ ANSWERS = [("海は58m上がり、大都市53のうち34が沈む", "沈む陸�
 P = {}
 
 # ---- 第1章 58mで沈む世界 -------------------------------------------------------------------------------
-S_C1 = MAP(WORLD, FLOOD(rise_s=4.0), LABEL((-105, -38), "海面 ＋58m", 72, YEL, on="58m", count=True), step=0)
+S_C1 = MAP(WORLD, FLOOD(rise_s=4.0), LABEL((-40, 35), "海面 ＋58m", 72, YEL, on="58m", count=True), step=0)
 S_C2 = ICONS("floor", 19, title="58m ＝ ビルの約19階", note="1階 3mで計算", step=0)
 S_C4 = CARD("1,134万平方km", sub="海の下になる陸", note="日本の30個ぶん", view=WORLD, step=0)
 S_C6 = ICONS("city", 53, title="人口500万人を超える都市 53", hl=34, note="青は、中心が58mより低い34都市", step=0, tr="zoom")
@@ -112,7 +112,7 @@ S_C11 = MAP(EASIA, FLOOD(id="f_ea"), PIN(WUHAN, "武漢 23m", id="p_wh"), PIN(SH
 S_C12 = MAP(EUROPE, FLOOD(rise_s=3.0, id="f_eu"), PIN(LONDON, "ロンドン 3m", id="p_ld"), PIN(PARIS, "パリ 51m", id="p_pr", at=0.3),
             LABEL((5.6, 52.9), "オランダ 96%", 50, YEL, on="オランダ"), step=0, tr="whip")
 S_C14 = MAP(USAE, FLOOD(rise_s=3.0, id="f_us"), PIN(NY, "ニューヨーク 23m", id="p_ny"), PIN(MIAMI, "マイアミ 1m", id="p_mi", at=0.3),
-            LABEL((-84.2, 28.2), "フロリダ 95%", 50, YEL, on="フロリダ"), step=0)
+            LABEL((-74.5, 29), "フロリダ 95%", 50, YEL, on="フロリダ"), step=0)
 S_C15 = MAP(SASIA, FLOOD(rise_s=3.0, id="f_sa"), PIN(DHAKA, "ダッカ 16m", id="p_dh"), PIN(KOLKATA, "コルカタ 11m", id="p_kk", at=0.3),
             LABEL((91.5, 25.6), "バングラデシュ 91%", 48, YEL, on="バングラデシュ"), step=0, tr="whip")
 S_C16 = POLAR("ice", step=0, tr="flash", title="南極の氷は、どれだけあって、とけるのに何年かかるのか")
@@ -151,7 +151,7 @@ S_D4 = SECT("ice", step=1, labels=[(0.26, 3300, "平均の厚さ 2,117m", YEL)])
 S_D6 = SECT("below", step=1, title="氷の下の地面の半分近くは、海面より低い")
 S_D8 = CARD("2,722万立方km", sub="南極の氷の体積", note="ETOPO 2022 の氷の表面と岩盤から計算", view=WORLD, step=1)
 S_D9 = CARD("2京5千兆トン", sub="南極の氷の重さ", view=WORLD, step=1, count=False)
-S_D10 = MAP(WORLD, LABEL((-105, -38), "海の広さ 3億6千万平方km", 56, WHITE, id="l_ocean"), step=1, tr="whip")
+S_D10 = MAP(WORLD, LABEL((-40, 32), "海の広さ 3億6千万平方km", 56, WHITE, id="l_ocean"), step=1, tr="whip")
 S_D11 = CARD("69m", sub="全部の氷を水にして、海の広さで割ると", view=WORLD, step=1)
 S_D12 = BARS([("単純に割ると", 69.0, GREY), ("データから正しく", 58.2, YEL)], title="海面が上がる高さ（計算）", fmt="{}m", step=1)
 S_D13 = CARD("11m", sub="足りない", note="69m − 58m", view=WORLD, step=1, tr="flash")

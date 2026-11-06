@@ -677,6 +677,13 @@ class Map:
             col = tuple(L.get("color", ov.WHITE))
             dd = ImageDraw.Draw(img)
             anchor = L.get("anchor", "mm")
+            bx = dd.textbbox((x, y), t, font=f, anchor=anchor, stroke_width=6)
+            m = 14                                              # 端にかかる札は内へ寄せる。半分以上外なら出さない
+            sx = max(0, m - bx[0]) - max(0, bx[2] - (W - m))
+            sy = max(0, m - bx[1]) - max(0, bx[3] - (H - m))
+            if abs(sx) > (bx[2] - bx[0]) * 0.5 or abs(sy) > (bx[3] - bx[1]) * 0.5:
+                return
+            x, y = x + sx, y + sy
             dd.text((x, y), t, font=f, fill=col + (A,), anchor=anchor, stroke_width=6, stroke_fill=ov.NAVY + (A,))
             if a > 0.5:
                 bx = dd.textbbox((x, y), t, font=f, anchor=anchor)

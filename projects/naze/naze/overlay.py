@@ -220,13 +220,20 @@ def compare(img: Image.Image, k: float, spec: dict, box) -> None:
 def pin(img: Image.Image, x: float, y: float, text: str, alpha: float = 0.85, size: int = 34) -> None:
     """地形の上に常に出す小さな地名(点と字だけ。札より目立たない)。"""
     f = font(size)
+    iw, ih = img.size
+    if not (8 <= x <= iw - 8 and size * 0.7 + 4 <= y <= ih - size * 0.6 - 4):   # 点が画面の外(寄り引きの途中)なら出さない
+        return
+    tw = f.getlength(text)
+    tx = x + 12 if x + 12 + tw <= iw - 8 else x - 12 - tw     # 右の端にかかるなら字を点の左へ
+    if tx < 8:
+        return
     ovl = Image.new("RGBA", img.size, (0, 0, 0, 0))
     od = ImageDraw.Draw(ovl)
     a = int(255 * alpha)
     od.ellipse([x - 6, y - 6, x + 6, y + 6], fill=(255, 255, 255, a), outline=NAVY + (a,), width=2)
-    od.text((x + 12, y - size * 0.7), text, font=f, fill=(255, 255, 255, a), stroke_width=4, stroke_fill=NAVY + (a,))
+    od.text((tx, y - size * 0.7), text, font=f, fill=(255, 255, 255, a), stroke_width=4, stroke_fill=NAVY + (a,))
     img.alpha_composite(ovl)
-    BOXES.append(("pin", (x - 6, y - size * 0.7, x + 12 + f.getlength(text), y + size * 0.6), text, 1.0))
+    BOXES.append(("pin", (min(x - 6, tx), y - size * 0.7, max(x + 6, tx + tw), y + size * 0.6), text, 1.0))
 
 
 CTA_TEXT = "チャンネル登録と高評価、よろしくお願いします。"
