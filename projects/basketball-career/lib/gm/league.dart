@@ -80,7 +80,8 @@ enum TeamMode {
 }
 
 class Team {
-  Team({required this.index, required this.roster, this.wins = 0, this.losses = 0, this.mode = TeamMode.balanced, this.deadCap = 0});
+  Team({required this.index, required this.roster, this.wins = 0, this.losses = 0, this.mode = TeamMode.balanced, this.deadCap = 0, List<int>? rotation})
+      : rotation = rotation ?? [];
 
   final int index;
   final List<Player> roster;
@@ -90,6 +91,18 @@ class Team {
 
   /// 放出した選手の、今シーズン分の年俸(今季の合計に数える)。
   int deadCap;
+
+  /// 先発と控えの順(選手の id)。空なら自動(力の高い順に、ガードとビッグを先発に入れる)。
+  List<int> rotation;
+
+  /// 出場の順(先発5人、控えの順)。[rotation] にいない選手は自動の順で後ろに付く。
+  List<Player> get order {
+    final auto = lineup(roster);
+    if (rotation.isEmpty) return auto;
+    final byId = {for (final p in roster) p.id: p};
+    final fixed = [for (final id in rotation) if (byId[id] != null) byId[id]!];
+    return [...fixed, ...auto.where((p) => !fixed.contains(p))];
+  }
 
   TeamDef get def => teamDefs[index];
   String get city => def.city;
@@ -103,7 +116,8 @@ class Team {
   double get winPct => wins + losses == 0 ? 0 : wins / (wins + losses);
 
   /// チームの強さ。力の高い順に9人を重み付きで平均し、ガードとビッグがいなければ下げる。
-  double get strength => teamStrength(roster);
+  /// 自分で順を決めたときは、その順で数える(力の低い選手を先発にすると弱くなる)。
+  double get strength => rotation.isEmpty ? teamStrength(roster) : orderStrength(order);
 
   Map<String, dynamic> toJson() => {
         'i': index,
@@ -112,6 +126,7 @@ class Team {
         'l': losses,
         'm': mode.index,
         if (deadCap != 0) 'dc': deadCap,
+        if (rotation.isNotEmpty) 'ro': rotation,
       };
 
   static Team fromJson(Map<String, dynamic> j) => Team(
@@ -121,6 +136,7 @@ class Team {
         losses: j['l'] as int,
         mode: TeamMode.values[((j['m'] as int?) ?? 1).clamp(0, TeamMode.values.length - 1)],
         deadCap: (j['dc'] as int?) ?? 0,
+        rotation: [for (final x in (j['ro'] as List? ?? const [])) x as int],
       );
 }
 
@@ -139,6 +155,21 @@ double teamStrength(List<Player> roster) {
   }
   var s = sum / wsum;
   final top = sorted.take(5);
+  if (!top.any((p) => p.pos.guard)) s -= 2.5;
+  if (!top.any((p) => p.pos.big)) s -= 2.5;
+  return s;
+}
+
+/// 決めた順のままの強さ(上から重みを付ける)。先発にガードとビッグがいなければ下げる。
+double orderStrength(List<Player> order) {
+  var sum = 0.0, wsum = 0.0;
+  for (var i = 0; i < _weights.length; i++) {
+    final o = i < order.length ? order[i].ovr : 38;
+    sum += o * _weights[i];
+    wsum += _weights[i];
+  }
+  var s = sum / wsum;
+  final top = order.take(5);
   if (!top.any((p) => p.pos.guard)) s -= 2.5;
   if (!top.any((p) => p.pos.big)) s -= 2.5;
   return s;
@@ -210,7 +241,7 @@ const minutesByOrder = [34, 33, 32, 30, 28, 22, 18, 14, 10, 8, 6, 3, 2, 0, 0];
 /// リバウンドとアシストも同じように配る。[count] なら個人成績に足す(プレーオフは足さない)。
 /// いちばん点を取った選手と、その点を返す。
 (Player?, int) boxScore(Team t, int teamPts, Rng rng, {bool count = true}) {
-  final order = lineup(t.roster);
+  final order = t.order;
   if (order.isEmpty) return (null, 0);
   final mins = [for (var i = 0; i < order.length; i++) i < minutesByOrder.length ? minutesByOrder[i] : 0];
   List<int> share(int total, double Function(Player) skill) {

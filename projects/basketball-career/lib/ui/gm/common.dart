@@ -109,6 +109,7 @@ class PlayerRow extends StatelessWidget {
     this.showDelta = false,
     this.salaryText,
     this.extra,
+    this.showMorale = false,
   });
 
   final Player p;
@@ -121,6 +122,9 @@ class PlayerRow extends StatelessWidget {
   /// 年俸の欄を差し替える(求める年俸など)。
   final String? salaryText;
   final Widget? extra;
+
+  /// 自分のチームの選手なら、気持ちの顔を出す。
+  final bool showMorale;
 
   @override
   Widget build(BuildContext context) {
@@ -142,7 +146,10 @@ class PlayerRow extends StatelessWidget {
             const SizedBox(width: 8),
             Expanded(
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(p.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14.5)),
+                Row(children: [
+                  Flexible(child: Text(p.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14.5))),
+                  if (showMorale) ...[const SizedBox(width: 4), MoraleIcon(p: p)],
+                ]),
                 const SizedBox(height: 2),
                 Wrap(spacing: 5, runSpacing: 2, crossAxisAlignment: WrapCrossAlignment.center, children: [
                   Tag(p.pos.short, color: p.pos.guard ? const Color(0xFF8FD3FF) : p.pos.big ? GmColors.good : GmColors.ball),
@@ -166,6 +173,25 @@ class PlayerRow extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+/// 気持ちの顔。
+class MoraleIcon extends StatelessWidget {
+  const MoraleIcon({super.key, required this.p, this.size = 16});
+  final Player p;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    final (icon, color) = p.morale >= 70
+        ? (Icons.sentiment_very_satisfied_rounded, GmColors.good)
+        : p.morale >= 45
+            ? (Icons.sentiment_neutral_rounded, GmColors.sub)
+            : p.morale >= 20
+                ? (Icons.sentiment_dissatisfied_rounded, GmColors.gold)
+                : (Icons.sentiment_very_dissatisfied_rounded, GmColors.bad);
+    return Tooltip(message: '気持ち: ${p.moraleLabel}', child: Icon(icon, size: size, color: color));
   }
 }
 

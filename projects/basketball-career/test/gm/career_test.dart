@@ -271,6 +271,48 @@ void main() {
     });
   });
 
+  group('ローテーションと気持ち', () {
+    test('順を決めると、その順で数える。力の低い選手を先発にすると弱くなり、自動に戻せる', () {
+      final c = careerAt(4, 10);
+      final auto = c.me.strength;
+      final weakFirst = [...c.me.roster]..sort((a, b) => a.ovr.compareTo(b.ovr));
+      c.setRotation([for (final p in weakFirst) p.id]);
+      expect(c.me.order.first, weakFirst.first);
+      expect(c.me.strength, lessThan(auto - 3));
+      c.setRotation(const []);
+      expect(c.me.strength, closeTo(auto, 0.001));
+    });
+
+    test('出番を減らされた主力は気持ちが下がり、20を切ると再契約に応じない', () {
+      final c = careerAt(4, 10)..startSeason();
+      final star = c.me.roster.reduce((a, b) => a.ovr >= b.ovr ? a : b);
+      c.setRotation([for (final p in [...c.me.roster.where((p) => p != star), star]) p.id]);
+      final before = star.morale;
+      c.playBlock();
+      expect(star.morale, lessThan(before));
+      star.morale = 10;
+      expect(c.resignProblem(star), isNotNull);
+      star.morale = 30;
+      final low = c.askOf(star, c.me).salary;
+      star.morale = 80;
+      expect(c.askOf(star, c.me).salary, lessThanOrEqualTo(low), reason: '気持ちが低いほど高く求める');
+    });
+
+    test('順と気持ちは保存される。いなくなった選手は順から外れる', () {
+      final c = careerAt(4, 10);
+      final ids = [for (final p in [...c.me.roster].reversed) p.id];
+      c.setRotation(ids);
+      c.me.roster.first.morale = 33;
+      final copy = Career.fromJson(jsonDecode(jsonEncode(c.toJson())) as Map<String, dynamic>);
+      expect(copy.me.rotation, ids);
+      expect(copy.me.roster.first.morale, 33);
+      final gone = c.me.order.first;
+      c.release(gone.id);
+      expect(c.me.order.contains(gone), isFalse);
+      expect(c.me.order.length, c.me.roster.length);
+    });
+  });
+
   group('相手に聞く・相手同士のトレード・ニュース', () {
     test('受け取りたい選手を選ぶと、相手が受ける出し方が返り、そのまま成立する', () {
       var found = 0;
