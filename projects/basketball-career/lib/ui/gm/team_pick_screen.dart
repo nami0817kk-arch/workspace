@@ -153,7 +153,7 @@ class _TeamCard extends StatelessWidget {
                   Text('戦力${rank + 1}位・平均${age.toStringAsFixed(1)}歳・年俸${money(t.payroll)}', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
                 ]),
                 const SizedBox(height: 3),
-                Text('エース ${star.name}(${star.pos.short}・力${star.ovr})',
+                Text('エース ${star.name}(${star.pos.short}・OVR${shown(star.ovr)})',
                     maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 12, color: GmColors.sub)),
               ]),
             ),

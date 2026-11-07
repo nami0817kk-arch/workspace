@@ -527,6 +527,53 @@ void main() {
     });
   });
 
+  group('見せる能力(2K の幅)', () {
+    test('見せる数字は、もとの力の順を保ったまま、控え70前後・スター90台の幅になる', () {
+      for (var v = 40; v < 99; v++) {
+        expect(shown(v + 1), greaterThanOrEqualTo(shown(v)));
+      }
+      expect(shown(50), inInclusiveRange(66, 72));
+      expect(shown(80), inInclusiveRange(86, 91));
+      expect(shown(92), greaterThanOrEqualTo(95));
+    });
+
+    test('細かい能力は24項目で、6つの分類のどれにも2つ以上ある。ポジションの色が出る', () {
+      expect(subRatings, hasLength(24));
+      for (final a in Attr.values) {
+        expect(subRatings.where((s) => s.attr == a).length, greaterThanOrEqualTo(2), reason: a.label);
+      }
+      final c = Career.start(seed: 4);
+      final all = [for (final t in c.teams) ...t.roster];
+      double avg(Pos pos, String label) {
+        final s = subRatings.firstWhere((x) => x.label == label);
+        final ps = all.where((p) => p.pos == pos).toList();
+        return ps.fold(0, (n, p) => n + subRating(p, s)) / ps.length;
+      }
+      expect(avg(Pos.c, 'ブロック'), greaterThan(avg(Pos.pg, 'ブロック') + 5));
+      expect(avg(Pos.pg, 'ボール運び'), greaterThan(avg(Pos.c, 'ボール運び') + 5));
+      for (final p in all) {
+        for (final s in subRatings) {
+          expect(subRating(p, s), inInclusiveRange(40, 99));
+        }
+      }
+    });
+
+    test('体格はポジションで違い(センターが高い)、ポテンシャルは5刻みの幅', () {
+      final c = Career.start(seed: 4);
+      final all = [for (final t in c.teams) ...t.roster];
+      double h(Pos pos) {
+        final ps = all.where((p) => p.pos == pos).toList();
+        return ps.fold(0, (n, p) => n + physicalOf(p).$1) / ps.length;
+      }
+      expect(h(Pos.c), greaterThan(h(Pos.pg) + 15));
+      for (final p in all) {
+        final (lo, hi) = potentialRange(p);
+        expect(lo % 5, 0);
+        expect(shown(p.pot), inInclusiveRange(lo, hi));
+      }
+    });
+  });
+
   group('選手の型とバッジ', () {
     test('ビッグとガードで型が分かれ、能力の高い選手ほどバッジが多く段階も高い', () {
       final c = Career.start(seed: 2);

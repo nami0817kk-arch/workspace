@@ -38,6 +38,10 @@ class PlayerCardHeader extends StatelessWidget {
               Text(p.name, maxLines: 2, style: const TextStyle(fontSize: 19, fontWeight: FontWeight.bold, color: Colors.white)),
               const SizedBox(height: 2),
               Text('${p.pos.short}・${p.age}歳・${p.exp == 0 ? '新人' : '${p.exp}年目'}', style: const TextStyle(color: Colors.white70)),
+              Text(() {
+                final (h, w, span) = physicalOf(p);
+                return '${h}cm・${w}kg・WS ${span}cm';
+              }(), style: const TextStyle(fontSize: 12, color: Colors.white70)),
               const SizedBox(height: 6),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
@@ -48,10 +52,16 @@ class PlayerCardHeader extends StatelessWidget {
           ),
           Column(children: [
             const Text('OVR', style: TextStyle(fontSize: 11, color: Colors.white70, fontWeight: FontWeight.bold)),
-            Text('${p.ovr}', style: TextStyle(fontSize: 40, height: 1.0, fontWeight: FontWeight.bold, color: GmColors.ovr(p.ovr))),
-            if (p.lastDelta != 0)
-              Text(p.lastDelta > 0 ? '+${p.lastDelta}' : '${p.lastDelta}',
+            Text('${shown(p.ovr)}', style: TextStyle(fontSize: 40, height: 1.0, fontWeight: FontWeight.bold, color: GmColors.ovr(p.ovr))),
+            if (shownDelta(p.ovr, p.lastDelta) != 0)
+              Text(shownDelta(p.ovr, p.lastDelta) > 0 ? '+${shownDelta(p.ovr, p.lastDelta)}' : '${shownDelta(p.ovr, p.lastDelta)}',
                   style: TextStyle(fontSize: 12, color: p.lastDelta > 0 ? GmColors.good : GmColors.bad)),
+            const SizedBox(height: 4),
+            const Text('POT', style: TextStyle(fontSize: 10, color: Colors.white70, fontWeight: FontWeight.bold)),
+            Text(() {
+              final (lo, hi) = potentialRange(p);
+              return '$lo〜$hi';
+            }(), style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.white)),
           ]),
         ]),
         if (badges.isNotEmpty) ...[
@@ -64,6 +74,53 @@ class PlayerCardHeader extends StatelessWidget {
     );
   }
 }
+
+/// 能力の一覧。6つの分類ごとに、分類の値と細かい能力を2列で並べる。
+class RatingsPanel extends StatelessWidget {
+  const RatingsPanel({super.key, required this.p});
+  final Player p;
+
+  @override
+  Widget build(BuildContext context) => Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        for (final a in Attr.values) ...[
+          Container(
+            margin: const EdgeInsets.only(top: 8),
+            padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+            decoration: BoxDecoration(color: GmColors.panelHi, borderRadius: BorderRadius.circular(12)),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+              Row(children: [
+                Expanded(child: Text(a.label, style: const TextStyle(fontWeight: FontWeight.bold))),
+                Text('${shown(p.attr(a))}', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: GmColors.ovr(p.attr(a)))),
+              ]),
+              const SizedBox(height: 4),
+              LayoutBuilder(builder: (context, cons) {
+                final w = (cons.maxWidth - 16) / 2;
+                return Wrap(spacing: 16, runSpacing: 2, children: [
+                  for (final s in subRatings.where((s) => s.attr == a))
+                    SizedBox(
+                      width: w,
+                      child: Row(children: [
+                        Expanded(child: Text(s.label, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 12, color: GmColors.sub))),
+                        Text('${subRating(p, s)}',
+                            style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: _subColor(subRating(p, s)), fontFeatures: const [FontFeature.tabularFigures()])),
+                      ]),
+                    ),
+                ]);
+              }),
+            ]),
+          ),
+        ],
+      ]);
+}
+
+/// 見せる数字の色(90以上が金、80台が橙、70台が水色)。
+Color _subColor(int v) => v >= 90
+    ? GmColors.gold
+    : v >= 80
+        ? GmColors.ball
+        : v >= 70
+            ? const Color(0xFF8FD3FF)
+            : GmColors.sub;
 
 class BadgeChip extends StatelessWidget {
   const BadgeChip({super.key, required this.name, required this.tier});
@@ -99,8 +156,7 @@ Future<void> showPlayerCard(BuildContext context, Career car, Player p, int team
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 18),
           child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
             PlayerCardHeader(p: p, team: team),
-            const SizedBox(height: 12),
-            AttrBars(p: p),
+            RatingsPanel(p: p),
             const SizedBox(height: 10),
             // シーズン前とオフは、今季の成績がまだ前のシーズンのもの
             if (p.stats.gp > 0) _line(car.seasonStarted ? '今季' : '昨季', '${p.stats.line}(${p.stats.gp}試合)'),

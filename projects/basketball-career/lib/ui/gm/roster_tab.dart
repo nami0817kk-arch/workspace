@@ -90,8 +90,7 @@ class RosterTab extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 18),
               child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
                 PlayerCardHeader(p: p, team: car.mine),
-                const SizedBox(height: 12),
-                AttrBars(p: p),
+                RatingsPanel(p: p),
                 const SizedBox(height: 10),
                 // シーズン前とオフは、今季の成績がまだ前のシーズンのもの
                 if (p.stats.gp > 0) _line(car.seasonStarted ? '今季' : '昨季', '${p.stats.line}(${p.stats.gp}試合)'),

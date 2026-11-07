@@ -130,9 +130,9 @@ class _ProspectRow extends StatelessWidget {
               if (p.scouted) ...[const SizedBox(width: 6), const Tag('調査済み', color: GmColors.gold)],
             ]),
             const SizedBox(height: 4),
-            _range('今の力', p.ovrLo, p.ovrHi),
+            _range('OVR', p.ovrLo, p.ovrHi),
             const SizedBox(height: 2),
-            _range('伸びしろ', p.potLo, p.potHi),
+            _range('POT', p.potLo, p.potHi),
           ]),
         ),
         const SizedBox(width: 6),
@@ -183,6 +183,6 @@ class _ProspectRow extends StatelessWidget {
           }),
         ),
         const SizedBox(width: 6),
-        SizedBox(width: 52, child: Text('$lo〜$hi', textAlign: TextAlign.right, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold))),
+        SizedBox(width: 52, child: Text('${shown(lo)}〜${shown(hi)}', textAlign: TextAlign.right, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold))),
       ]);
 }
