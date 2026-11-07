@@ -142,6 +142,7 @@ void main() {
       await tester.tap(find.text('チーム'));
       await tester.pumpAndSettle();
       final star = c.career!.me.order.first;
+      await tester.scrollUntilVisible(find.text(star.name), 200, scrollable: _vertical);
       await tester.tap(find.text(star.name).first);
       await tester.pumpAndSettle();
       expect(find.text('この選手を放す'), findsOneWidget);

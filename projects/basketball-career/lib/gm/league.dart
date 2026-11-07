@@ -168,8 +168,10 @@ class Team {
   /// 1試合の出場時間([order] の順)。決めた時間の合計が足りない(けが・移籍)ときは上から足し、多いときは下から削る。
   List<int> playMinutes() {
     final o = order;
-    if (minutes.isEmpty) return [for (var i = 0; i < o.length; i++) i < minutesByOrder.length && o[i].injured == 0 ? minutesByOrder[i] : 0];
-    final m = [for (final p in o) p.injured == 0 ? (minutes[p.id] ?? 0).clamp(0, maxMinutes) : 0];
+    // 自動のときも、出られる選手が少ない(けが人が多い)と時間が余るので、上から足して240分にする
+    final m = minutes.isEmpty
+        ? [for (var i = 0; i < o.length; i++) i < minutesByOrder.length && o[i].injured == 0 ? minutesByOrder[i] : 0]
+        : [for (final p in o) p.injured == 0 ? (minutes[p.id] ?? 0).clamp(0, maxMinutes) : 0];
     var total = m.fold(0, (a, b) => a + b);
     for (var i = 0; i < m.length && total < totalMinutes; i++) {
       if (o[i].injured > 0) continue;
@@ -344,13 +346,49 @@ List<Player> lineup(List<Player> roster) {
 /// 1試合の結果。
 /// ボックススコアの1行(自分のチームの試合だけ残す)。
 class BoxLine {
-  const BoxLine(this.name, this.pos, this.min, this.pts, this.reb, this.ast);
+  const BoxLine(this.name, this.pos, this.min, this.pts, this.reb, this.ast,
+      {this.fgm = 0, this.fga = 0, this.tpm = 0, this.tpa = 0, this.ftm = 0, this.fta = 0, this.stl = 0, this.blk = 0, this.tov = 0, this.pm = 0});
   final String name;
   final String pos;
   final int min, pts, reb, ast;
+  final int fgm, fga, tpm, tpa, ftm, fta, stl, blk, tov;
 
-  List<Object> toJson() => [name, pos, min, pts, reb, ast];
-  static BoxLine fromJson(List j) => BoxLine(j[0] as String, j[1] as String, j[2] as int, j[3] as int, j[4] as int, j[5] as int);
+  /// 出ているあいだの点差(プラスマイナス)。
+  final int pm;
+
+  /// 試合の働き(ゲームスコア。点・シュート・リバウンド・アシスト・スティール・ブロック・ミスから)。試合の最優秀選手を選ぶのに使う。
+  double get gameScore => pts + 0.4 * fgm - 0.7 * fga - 0.4 * (fta - ftm) + 0.5 * reb + stl + 0.7 * ast + 0.7 * blk - tov;
+
+  List<Object> toJson() => [name, pos, min, pts, reb, ast, fgm, fga, tpm, tpa, ftm, fta, stl, blk, tov, pm];
+  static BoxLine fromJson(List j) {
+    // 前の版の保存は6つだけ
+    int at(int i) => i < j.length ? j[i] as int : 0;
+    return BoxLine(j[0] as String, j[1] as String, at(2), at(3), at(4), at(5),
+        fgm: at(6), fga: at(7), tpm: at(8), tpa: at(9), ftm: at(10), fta: at(11), stl: at(12), blk: at(13), tov: at(14), pm: at(15));
+  }
+}
+
+/// 点から、シュートの内訳(成功と試投)を決める。点の合計は変えない。外のシュートが高いほど3ポイントが多く、よく入る。
+({int fgm, int fga, int tpm, int tpa, int ftm, int fta}) shootingOf(Player p, int pts, Rng r) {
+  final out = p.attr(Attr.outside), ins = p.attr(Attr.inside);
+  final share3 = ((out - 55) / 90 + (p.pos.guard ? 0.12 : p.pos == Pos.c ? -0.15 : 0)).clamp(0.0, 0.42);
+  var tpm = (pts * share3 / 3 * (0.7 + r.nextInt(60) / 100)).round();
+  tpm = math.min(tpm, pts ~/ 3);
+  final ftShare = (0.12 + (ins - 60) / 400).clamp(0.06, 0.25);
+  var ftm = math.min((pts * ftShare * (0.6 + r.nextInt(80) / 100)).round(), pts - 3 * tpm);
+  var rest = pts - 3 * tpm - ftm;
+  if (rest.isOdd) {
+    ftm++;
+    rest--;
+  }
+  final twom = rest ~/ 2;
+  final p2 = (0.46 + (ins - 70) / 250).clamp(0.38, 0.62);
+  final p3 = (0.34 + (out - 70) / 250).clamp(0.22, 0.45);
+  final pft = (0.74 + (out - 70) / 200).clamp(0.5, 0.92);
+  final twoA = twom == 0 ? r.nextInt(3) : math.max(twom, (twom / p2 * (0.9 + r.nextInt(20) / 100)).round());
+  final tpa = tpm == 0 ? (share3 > 0.1 ? r.nextInt(3) : 0) : math.max(tpm, (tpm / p3 * (0.9 + r.nextInt(20) / 100)).round());
+  final fta = ftm == 0 ? 0 : math.max(ftm, (ftm / pft).round());
+  return (fgm: twom + tpm, fga: twoA + tpa, tpm: tpm, tpa: tpa, ftm: ftm, fta: fta);
 }
 
 /// 試合の点を4つのクォーターに分ける(合計は変えない)。
@@ -372,7 +410,11 @@ class GameResult {
     this.topPts = 0,
     this.quarters = const [],
     this.box = const [],
+    this.oppBox = const [],
   });
+
+  /// 相手のチームのボックススコア(自分のチームの試合だけ)。
+  final List<BoxLine> oppBox;
 
   /// クォーターごとの点(ホームの4つ、アウェーの4つ)。自分のチームの試合だけ。
   final List<int> quarters;
@@ -404,6 +446,7 @@ class GameResult {
         if (topPts != 0) 'tp': topPts,
         if (quarters.isNotEmpty) 'q': quarters,
         if (box.isNotEmpty) 'bx': [for (final b in box) b.toJson()],
+        if (oppBox.isNotEmpty) 'ob': [for (final b in oppBox) b.toJson()],
       };
 
   static GameResult fromJson(Map<String, dynamic> j) => GameResult(
@@ -415,6 +458,7 @@ class GameResult {
         topPts: (j['tp'] as int?) ?? 0,
         quarters: [for (final x in (j['q'] as List? ?? const [])) x as int],
         box: [for (final x in (j['bx'] as List? ?? const [])) BoxLine.fromJson(x as List)],
+        oppBox: [for (final x in (j['ob'] as List? ?? const [])) BoxLine.fromJson(x as List)],
       );
 }
 
@@ -434,7 +478,7 @@ const minutesByOrder = [34, 33, 32, 30, 28, 22, 18, 14, 10, 8, 6, 3, 2, 0, 0];
 /// 1試合の個人の数字を配る。点はチームの得点を、外と中の得点の力と出場時間で分ける。
 /// リバウンドとアシストも同じように配る。[count] なら個人成績に足す(プレーオフは足さない)。
 /// いちばん点を取った選手と、その点を返す。
-(Player?, int) boxScore(Team t, int teamPts, Rng rng, {bool count = true, List<BoxLine>? lines}) {
+(Player?, int) boxScore(Team t, int teamPts, Rng rng, {bool count = true, List<BoxLine>? lines, int oppPts = 0}) {
   final order = t.order;
   if (order.isEmpty) return (null, 0);
   final mins = t.playMinutes();
@@ -474,16 +518,51 @@ const minutesByOrder = [34, 33, 32, 30, 28, 22, 18, 14, 10, 8, 6, 3, 2, 0, 0];
       injuries.add((t.index, p));
     }
   }
+  // 細かい数字(シュートの内訳・スティール・ブロック・ミス・点差)は、試合の乱数とは別の乱数で決める(リーグの勝ち負けを変えない)
+  final r = Rng(teamPts * 1000003 + oppPts * 7919 + order.first.id * 31 + t.wins * 131 + t.losses * 17 + t.index);
+  List<int> split(int total, double Function(Player) w) {
+    final ws = [for (var i = 0; i < order.length; i++) mins[i] * math.max(0.05, w(order[i])) * (0.6 + r.nextInt(80) / 100)];
+    final sum = ws.fold(0.0, (a, b) => a + b);
+    if (sum <= 0) return List.filled(order.length, 0);
+    final out = [for (final x in ws) (total * x / sum).floor()];
+    var left = total - out.fold(0, (a, b) => a + b);
+    for (var k = 0; left > 0; k++) {
+      if (mins[k % out.length] > 0) {
+        out[k % out.length]++;
+        left--;
+      }
+    }
+    return out;
+  }
+
+  final stl = split(5 + r.nextInt(6), (p) => pow(p.attr(Attr.defense) - 35, 1.2) * (p.pos.guard ? 1.3 : 0.8));
+  final blk = split(2 + r.nextInt(6), (p) => pow(p.attr(Attr.defense) - 35, 1.2) * const {Pos.pg: 0.25, Pos.sg: 0.35, Pos.sf: 0.7, Pos.pf: 1.3, Pos.c: 1.8}[p.pos]!);
+  final tov = split(10 + r.nextInt(7), (p) => 0.6 + p.attr(Attr.passing) / 100 * (p.pos == Pos.pg ? 1.4 : 1.0));
+  final margin = teamPts - oppPts;
   var top = 0;
   for (var i = 0; i < order.length; i++) {
-    if (lines != null && mins[i] > 0) lines.add(BoxLine(order[i].name, order[i].pos.short, mins[i], pts[i], reb[i], ast[i]));
     if (pts[i] > pts[top]) top = i;
-    if (count && mins[i] > 0) {
+    if (mins[i] <= 0) continue;
+    final sh = shootingOf(order[i], pts[i], r);
+    final pm = ((margin + r.nextInt(9) - 4) * mins[i] / 48).round();
+    lines?.add(BoxLine(order[i].name, order[i].pos.short, mins[i], pts[i], reb[i], ast[i],
+        fgm: sh.fgm, fga: sh.fga, tpm: sh.tpm, tpa: sh.tpa, ftm: sh.ftm, fta: sh.fta, stl: stl[i], blk: blk[i], tov: tov[i], pm: pm));
+    if (count) {
       order[i].stats
         ..gp += 1
         ..pts += pts[i]
         ..reb += reb[i]
-        ..ast += ast[i];
+        ..ast += ast[i]
+        ..min += mins[i]
+        ..fgm += sh.fgm
+        ..fga += sh.fga
+        ..tpm += sh.tpm
+        ..tpa += sh.tpa
+        ..ftm += sh.ftm
+        ..fta += sh.fta
+        ..stl += stl[i]
+        ..blk += blk[i]
+        ..tov += tov[i];
     }
   }
   return (order[top], pts[top]);
@@ -498,10 +577,10 @@ GameResult playGame(Team home, Team away, Rng rng, {int? mine, bool count = true
   final margin = 1 + rng.nextInt(rng.chance(0.3) ? 24 : 12);
   final w = base + margin, l = base;
   final hp = homeWins ? w : l, ap = homeWins ? l : w;
-  final myBox = <BoxLine>[];
-  final (hTop, hTopPts) = boxScore(home, hp, rng, count: count, lines: mine == home.index ? myBox : null);
-  final (aTop, aTopPts) = boxScore(away, ap, rng, count: count, lines: mine == away.index ? myBox : null);
+  final myBox = <BoxLine>[], oppBox = <BoxLine>[];
   final isMine = mine == home.index || mine == away.index;
+  final (hTop, hTopPts) = boxScore(home, hp, rng, count: count, oppPts: ap, lines: !isMine ? null : mine == home.index ? myBox : oppBox);
+  final (aTop, aTopPts) = boxScore(away, ap, rng, count: count, oppPts: hp, lines: !isMine ? null : mine == away.index ? myBox : oppBox);
   String? topName;
   var topPts = 0;
   if (mine == home.index) {
@@ -520,6 +599,7 @@ GameResult playGame(Team home, Team away, Rng rng, {int? mine, bool count = true
     topPts: topPts,
     quarters: isMine ? [...splitQuarters(hp, rng), ...splitQuarters(ap, rng)] : const [],
     box: myBox,
+    oppBox: oppBox,
   );
   if (homeWins) {
     home.wins++;

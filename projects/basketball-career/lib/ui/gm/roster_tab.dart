@@ -5,11 +5,13 @@ import '../../gm/league.dart';
 import '../../gm/player.dart';
 import '../gm_controller.dart';
 import 'coaches_screen.dart';
+import 'box_score.dart';
 import 'common.dart';
 import 'minutes_screen.dart';
 import 'negotiate_dialog.dart';
 import 'player_card.dart';
 import 'rotation_screen.dart';
+import 'stats_screen.dart';
 import 'style.dart';
 import 'training_screen.dart';
 
@@ -81,6 +83,12 @@ class RosterTab extends StatelessWidget {
           icon: const Icon(Icons.fitness_center_rounded),
           label: Text('練習(強さ ${trainingLabels[me.training]}・重点 ${me.roster.where((p) => p.focus != null).length}人)'),
         ),
+        const SizedBox(height: 6),
+        OutlinedButton.icon(
+          onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => StatsScreen(c: c))),
+          icon: const Icon(Icons.table_chart_rounded),
+          label: const Text('チームの成績(シュート・スティールなど)'),
+        ),
         const SectionTitle('先発'),
         for (final p in order.take(5)) _row(context, car, p),
         const SectionTitle('控え'),
@@ -115,6 +123,8 @@ class RosterTab extends StatelessWidget {
                 const SizedBox(height: 10),
                 // シーズン前とオフは、今季の成績がまだ前のシーズンのもの
                 if (p.stats.gp > 0) _line(car.seasonStarted ? '今季' : '昨季', '${p.stats.line}(${p.stats.gp}試合)'),
+                if (p.stats.fga > 0)
+                  _line('シュート', 'FG ${(p.stats.fgPct * 100).toStringAsFixed(1)}%・3P ${p.stats.tpa == 0 ? '-' : '${(p.stats.tpPct * 100).toStringAsFixed(1)}%'}・FT ${p.stats.fta == 0 ? '-' : '${(p.stats.ftPct * 100).toStringAsFixed(1)}%'}'),
                 if (p.prev.gp > 0) _line(car.seasonStarted ? '昨季' : '2季前', '${p.prev.line}(${p.prev.gp}試合)'),
                 if (awardsSummary(car, p).isNotEmpty) _line('表彰', awardsSummary(car, p)),
                 if (p.allStars > 0) _line('オールスター', '${p.allStars}回'),
@@ -129,6 +139,7 @@ class RosterTab extends StatelessWidget {
                   _ => p.age >= 30 ? 'なし(これから落ちていく)' : 'なし',
                 }),
                 if (p.drafted != null) _line('ドラフト', p.drafted!),
+                RecentGames(car: car, p: p),
                 if (p.career.isNotEmpty) CareerTable(p: p),
                 const SizedBox(height: 14),
                 if (car.extendProblem(p) == null)

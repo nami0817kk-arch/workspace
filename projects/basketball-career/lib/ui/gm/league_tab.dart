@@ -229,7 +229,16 @@ class LeagueTab extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  for (final (label, key) in <(String, double Function(Stats))>[('得点', (s) => s.ppg), ('リバウンド', (s) => s.rpg), ('アシスト', (s) => s.apg)]) ...[
+                  for (final (label, key) in <(String, double Function(Stats))>[
+                    ('得点', (s) => s.ppg),
+                    ('リバウンド', (s) => s.rpg),
+                    ('アシスト', (s) => s.apg),
+                    ('スティール', (s) => s.spg),
+                    ('ブロック', (s) => s.bpg),
+                    // 成功率は、1試合に5本(3ポイントは2本)以上打った選手だけ
+                    ('FG%', (s) => s.gp > 0 && s.fga / s.gp >= 5 ? s.fgPct * 100 : 0),
+                    ('3P%', (s) => s.gp > 0 && s.tpa / s.gp >= 2 ? s.tpPct * 100 : 0),
+                  ]) ...[
                     Padding(
                       padding: const EdgeInsets.only(top: 4, bottom: 2),
                       child: Text(

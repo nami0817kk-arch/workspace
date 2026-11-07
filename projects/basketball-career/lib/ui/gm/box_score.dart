@@ -1,47 +1,279 @@
 import 'package:flutter/material.dart';
 
+import '../../gm/career.dart';
 import '../../gm/league.dart';
+import '../../gm/player.dart';
 import 'common.dart';
 import 'style.dart';
 
-/// 1試合のボックススコア(クォーターごとの点と、自分のチームの選手の数字)。
+/// 1試合のボックススコア。クォーターごとの点・試合の最優秀選手・チームの比べ・両チームの選手の数字。
 Future<void> showBoxScore(BuildContext context, GameResult g, int mine) => showGmSheet<void>(
       context,
-      builder: (ctx) => SafeArea(
+      builder: (ctx) => SafeArea(child: _BoxScore(g: g, mine: mine)),
+    );
+
+class _BoxScore extends StatefulWidget {
+  const _BoxScore({required this.g, required this.mine});
+  final GameResult g;
+  final int mine;
+
+  @override
+  State<_BoxScore> createState() => _BoxScoreState();
+}
+
+class _BoxScoreState extends State<_BoxScore> {
+  bool _mineSide = true;
+
+  @override
+  Widget build(BuildContext context) {
+    final g = widget.g, mine = widget.mine;
+    final opp = g.opponentOf(mine);
+    final all = [for (final b in g.box) (b, mine), for (final b in g.oppBox) (b, opp)];
+    final best = all.isEmpty ? null : all.reduce((a, b) => a.$1.gameScore >= b.$1.gameScore ? a : b);
+    // 前の版の保存の試合には、シュートの内訳などが無い
+    final detail = g.box.any((b) => b.fga > 0);
+    return SingleChildScrollView(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 18),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        Text(g.winner == mine ? '勝ち' : '負け',
+            style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: g.winner == mine ? GmColors.good : GmColors.bad)),
+        const SizedBox(height: 6),
+        _QuarterTable(g: g),
+        if (best != null && detail) ...[
+          const SizedBox(height: 12),
+          _bestCard(best.$1, best.$2),
+        ],
+        if (detail && g.oppBox.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          _TeamCompare(mine: mine, opp: opp, a: g.box, b: g.oppBox),
+        ],
+        if (g.box.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          if (g.oppBox.isNotEmpty)
+            SegmentedButton<bool>(
+              showSelectedIcon: false,
+              segments: [
+                ButtonSegment(value: true, label: Text(teamDefs[mine].short, maxLines: 1, overflow: TextOverflow.ellipsis)),
+                ButtonSegment(value: false, label: Text(teamDefs[opp].short, maxLines: 1, overflow: TextOverflow.ellipsis)),
+              ],
+              selected: {_mineSide},
+              onSelectionChanged: (v) => setState(() => _mineSide = v.first),
+            ),
+          const SizedBox(height: 8),
+          BoxTable(lines: _mineSide ? g.box : g.oppBox, detail: detail),
+          if (detail)
+            const Padding(
+              padding: EdgeInsets.only(top: 6),
+              child: Text('数字は横に送れる(FG・3P・FT は成功-試投、奪: スティール、ブ: ブロック、失: ミス、±: 出ているあいだの点差)',
+                  style: TextStyle(fontSize: 11, color: GmColors.sub, height: 1.4)),
+            ),
+        ],
+      ]),
+    );
+  }
+
+  Widget _bestCard(BoxLine b, int team) => Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: GmColors.gold.withValues(alpha: 0.12),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: GmColors.gold.withValues(alpha: 0.6)),
+        ),
+        child: Row(children: [
+          const Icon(Icons.star_rounded, color: GmColors.gold),
+          const SizedBox(width: 6),
+          TeamBadge(team: team, size: 26),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              const Text('試合の最優秀選手', style: TextStyle(fontSize: 11, color: GmColors.gold, fontWeight: FontWeight.bold)),
+              Text(b.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+              Text('${b.pts}点 ${b.reb}リ ${b.ast}ア・FG ${b.fgm}/${b.fga}${b.tpa > 0 ? '・3P ${b.tpm}/${b.tpa}' : ''}',
+                  maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 12, color: GmColors.sub)),
+            ]),
+          ),
+        ]),
+      );
+}
+
+String _pct(int m, int a) => a == 0 ? '-' : '${(m * 100 / a).toStringAsFixed(1)}%';
+
+/// 2チームの数字を並べて比べる(良いほうを緑に)。
+class _TeamCompare extends StatelessWidget {
+  const _TeamCompare({required this.mine, required this.opp, required this.a, required this.b});
+  final int mine, opp;
+  final List<BoxLine> a, b;
+
+  @override
+  Widget build(BuildContext context) {
+    int sum(List<BoxLine> l, int Function(BoxLine) f) => l.fold(0, (n, x) => n + f(x));
+    double rate(List<BoxLine> l, int Function(BoxLine) m, int Function(BoxLine) at) => sum(l, at) == 0 ? 0 : sum(l, m) / sum(l, at);
+    final rows = <(String, String, String, double, double)>[
+      for (final (label, m, at) in <(String, int Function(BoxLine), int Function(BoxLine))>[
+        ('FG', (x) => x.fgm, (x) => x.fga),
+        ('3P', (x) => x.tpm, (x) => x.tpa),
+        ('FT', (x) => x.ftm, (x) => x.fta),
+      ])
+        (label, _pct(sum(a, m), sum(a, at)), _pct(sum(b, m), sum(b, at)), rate(a, m, at), rate(b, m, at)),
+      for (final (label, f, lowGood) in <(String, int Function(BoxLine), bool)>[
+        ('リバウンド', (x) => x.reb, false),
+        ('アシスト', (x) => x.ast, false),
+        ('スティール', (x) => x.stl, false),
+        ('ブロック', (x) => x.blk, false),
+        ('ミス', (x) => x.tov, true),
+      ])
+        (label, '${sum(a, f)}', '${sum(b, f)}', (lowGood ? -1 : 1) * sum(a, f).toDouble(), (lowGood ? -1 : 1) * sum(b, f).toDouble()),
+    ];
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(color: GmColors.panelHi, borderRadius: BorderRadius.circular(12)),
+      child: Column(children: [
+        Row(children: [
+          Expanded(
+              child: Text(teamDefs[mine].short,
+                  maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.bold, color: GmColors.ball))),
+          const Text('チームの数字', style: TextStyle(fontSize: 11, color: GmColors.sub)),
+          Expanded(
+              child: Text(teamDefs[opp].short,
+                  maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.right, style: const TextStyle(fontWeight: FontWeight.bold))),
+        ]),
+        const SizedBox(height: 4),
+        for (final (label, x, y, vx, vy) in rows)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 2),
+            child: Row(children: [
+              Expanded(child: Text(x, style: TextStyle(fontWeight: vx > vy ? FontWeight.bold : null, color: vx > vy ? GmColors.good : null))),
+              SizedBox(width: 90, child: Text(label, textAlign: TextAlign.center, style: const TextStyle(fontSize: 12, color: GmColors.sub))),
+              Expanded(
+                child: Text(y, textAlign: TextAlign.right, style: TextStyle(fontWeight: vy > vx ? FontWeight.bold : null, color: vy > vx ? GmColors.good : null)),
+              ),
+            ]),
+          ),
+      ]),
+    );
+  }
+}
+
+/// 選手ごとの数字の表。名前は左に止め、数字は横に送れる。
+class BoxTable extends StatelessWidget {
+  const BoxTable({super.key, required this.lines, this.detail = true});
+  final List<BoxLine> lines;
+
+  /// シュートの内訳などを出すか。
+  final bool detail;
+
+  @override
+  Widget build(BuildContext context) {
+    final head = detail ? const ['分', '点', 'リ', 'ア', 'FG', '3P', 'FT', '奪', 'ブ', '失', '±'] : const ['分', '点', 'リ', 'ア'];
+    List<String> cells(BoxLine b) => detail
+        ? [
+            '${b.min}',
+            '${b.pts}',
+            '${b.reb}',
+            '${b.ast}',
+            '${b.fgm}-${b.fga}',
+            '${b.tpm}-${b.tpa}',
+            '${b.ftm}-${b.fta}',
+            '${b.stl}',
+            '${b.blk}',
+            '${b.tov}',
+            b.pm > 0 ? '+${b.pm}' : '${b.pm}',
+          ]
+        : ['${b.min}', '${b.pts}', '${b.reb}', '${b.ast}'];
+    double width(int i) => detail && i >= 4 && i <= 6 ? 52 : 38;
+    const style = TextStyle(fontSize: 13, fontWeight: FontWeight.bold, fontFeatures: [FontFeature.tabularFigures()]);
+    const headStyle = TextStyle(fontSize: 11, color: GmColors.sub);
+    final top = lines.isEmpty ? 0 : lines.map((b) => b.pts).reduce((a, b) => a > b ? a : b);
+    Color? colorOf(int i, BoxLine b) {
+      if (i == 1 && b.pts == top) return GmColors.ball;
+      if (i == 10 && b.pm > 0) return GmColors.good;
+      if (i == 10 && b.pm < 0) return GmColors.bad;
+      return null;
+    }
+
+    return Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      SizedBox(
+        width: 124,
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          const SizedBox(height: 24, child: Text('選手', style: headStyle)),
+          for (final b in lines)
+            SizedBox(
+              height: 26,
+              child: Row(children: [
+                SizedBox(width: 26, child: Text(b.pos, style: const TextStyle(fontSize: 10, color: GmColors.sub))),
+                Expanded(child: Text(b.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 13))),
+              ]),
+            ),
+        ]),
+      ),
+      Expanded(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 18),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-            Text(g.winner == mine ? '勝ち' : '負け',
-                style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: g.winner == mine ? GmColors.good : GmColors.bad)),
-            const SizedBox(height: 6),
-            _QuarterTable(g: g),
-            if (g.box.isNotEmpty) ...[
-              const SizedBox(height: 14),
-              Text('${teamDefs[mine].short}の選手', style: const TextStyle(fontWeight: FontWeight.bold)),
-              const SizedBox(height: 6),
-              _row(const ['選手', '分', '点', 'リ', 'ア'], head: true),
-              for (final b in g.box) _row([b.name, '${b.min}', '${b.pts}', '${b.reb}', '${b.ast}'], pos: b.pos),
-            ],
+          scrollDirection: Axis.horizontal,
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            SizedBox(
+              height: 24,
+              child: Row(children: [
+                for (var i = 0; i < head.length; i++) SizedBox(width: width(i), child: Text(head[i], textAlign: TextAlign.right, style: headStyle)),
+              ]),
+            ),
+            for (final b in lines)
+              SizedBox(
+                height: 26,
+                child: Row(children: [
+                  for (var i = 0; i < head.length; i++)
+                    SizedBox(width: width(i), child: Text(cells(b)[i], textAlign: TextAlign.right, style: style.copyWith(color: colorOf(i, b)))),
+                ]),
+              ),
           ]),
         ),
       ),
-    );
+    ]);
+  }
+}
 
-Widget _row(List<String> cells, {bool head = false, String? pos}) {
-  final style = TextStyle(
-    fontSize: 13,
-    color: head ? GmColors.sub : GmColors.text,
-    fontWeight: head ? FontWeight.normal : FontWeight.bold,
-    fontFeatures: const [FontFeature.tabularFigures()],
-  );
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 3),
-    child: Row(children: [
-      if (pos != null) SizedBox(width: 30, child: Text(pos, style: const TextStyle(fontSize: 11, color: GmColors.sub))) else const SizedBox(width: 30),
-      Expanded(child: Text(cells[0], maxLines: 1, overflow: TextOverflow.ellipsis, style: style.copyWith(fontWeight: FontWeight.normal))),
-      for (final c in cells.skip(1)) SizedBox(width: 38, child: Text(c, textAlign: TextAlign.right, style: style)),
-    ]),
-  );
+/// 選手の最近の試合(この区切りの試合のうち、出たもの。新しい順に5つまで)。
+class RecentGames extends StatelessWidget {
+  const RecentGames({super.key, required this.car, required this.p});
+  final Career car;
+  final Player p;
+
+  @override
+  Widget build(BuildContext context) {
+    final rows = <(BoxLine, int)>[];
+    for (final g in car.lastGames.reversed) {
+      if (rows.length >= 5) break;
+      for (final b in g.box) {
+        if (b.name == p.name) rows.add((b, g.opponentOf(car.mine)));
+      }
+      for (final b in g.oppBox) {
+        if (b.name == p.name) rows.add((b, car.mine));
+      }
+    }
+    if (rows.isEmpty) return const SizedBox.shrink();
+    return Container(
+      margin: const EdgeInsets.only(top: 10),
+      padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+      decoration: BoxDecoration(color: GmColors.panelHi, borderRadius: BorderRadius.circular(12)),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        const Text('最近の試合', style: TextStyle(fontWeight: FontWeight.bold)),
+        const SizedBox(height: 4),
+        for (final (b, opp) in rows.take(5))
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 2),
+            child: Row(children: [
+              TeamBadge(team: opp, size: 18),
+              const SizedBox(width: 6),
+              SizedBox(width: 70, child: Text('vs ${teamDefs[opp].short}', maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 12))),
+              Expanded(
+                child: Text('${b.pts}点 ${b.reb}リ ${b.ast}ア${b.fga > 0 ? '・FG ${b.fgm}/${b.fga}' : ''}',
+                    maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+              ),
+              Text('${b.min}分', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
+            ]),
+          ),
+      ]),
+    );
+  }
 }
 
 class _QuarterTable extends StatelessWidget {
