@@ -32,7 +32,7 @@ class LeagueTab extends StatelessWidget {
                     ? standings(car.teams, east: east)
                     : ([...car.teams.where((t) => t.east == east)]..sort((a, b) => b.strength.compareTo(a.strength)));
                 return Column(children: [
-                  for (var i = 0; i < list.length; i++) _teamRow(context, car, list[i], i + 1, started),
+                  for (var i = 0; i < list.length; i++) _teamRow(context, car, list[i], i + 1, started, leader: started ? list.first : null),
                 ]);
               }),
             ),
@@ -213,8 +213,9 @@ class LeagueTab extends StatelessWidget {
     );
   }
 
-  Widget _teamRow(BuildContext context, Career car, Team t, int n, bool started) {
+  Widget _teamRow(BuildContext context, Career car, Team t, int n, bool started, {Team? leader}) {
     final mine = t.index == car.mine;
+    final gb = leader == null ? 0.0 : gamesBehind(leader, t);
     return InkWell(
       onTap: () => _showTeam(context, car, t),
       child: Padding(
@@ -229,7 +230,14 @@ class LeagueTab extends StatelessWidget {
               if (!mine) Text(t.mode.label, style: const TextStyle(fontSize: 11, color: GmColors.sub)),
             ]),
           ),
-          Text(started ? record(t) : '戦力 ${t.strength.toStringAsFixed(1)}', style: const TextStyle(fontWeight: FontWeight.bold)),
+          if (started)
+            Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+              Text(record(t), style: const TextStyle(fontWeight: FontWeight.bold)),
+              Text('${gb == 0 ? '-' : '${gb.toStringAsFixed(gb == gb.roundToDouble() ? 0 : 1)}差'}・${streakLabel(t.streak)}',
+                  style: TextStyle(fontSize: 11, color: t.streak >= 3 ? GmColors.good : t.streak <= -3 ? GmColors.bad : GmColors.sub)),
+            ])
+          else
+            Text('戦力 ${t.strength.toStringAsFixed(1)}', style: const TextStyle(fontWeight: FontWeight.bold)),
         ]),
       ),
     );

@@ -51,7 +51,8 @@ class Prospect {
 }
 
 /// その年の候補を作る(指名の数より多め)。
-List<Prospect> makeProspects(Rng rng, int Function() nextId, int count) {
+/// [name] を渡すと、その名前の作り方を使う(リーグの中で重ならないように)。
+List<Prospect> makeProspects(Rng rng, int Function() nextId, int count, {String Function()? name}) {
   final list = <Prospect>[];
   for (var i = 0; i < count; i++) {
     // 上位の候補ほど伸びしろが大きい。たまに隠れた逸材がいる
@@ -64,7 +65,7 @@ List<Prospect> makeProspects(Rng rng, int Function() nextId, int count) {
     pot = pot.clamp(ovr + 3, 95);
     final p = Player(
       id: nextId(),
-      name: randomName(rng),
+      name: name?.call() ?? randomName(rng),
       pos: Pos.values[rng.nextInt(Pos.values.length)],
       age: age,
       ovr: ovr,

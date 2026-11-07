@@ -118,6 +118,9 @@ class Team {
   /// けがをしていない選手。
   List<Player> get healthy => [for (final p in roster) if (p.injured == 0) p];
 
+  /// 連勝(+)・連敗(-)。
+  int streak = 0;
+
   /// 先発と控えの順(選手の id)。空なら自動(力の高い順に、ガードとビッグを先発に入れる)。
   List<int> rotation;
 
@@ -156,9 +159,12 @@ class Team {
         if (deadCap != 0) 'dc': deadCap,
         if (rotation.isNotEmpty) 'ro': rotation,
         'sf': staff,
+        if (streak != 0) 'sk': streak,
       };
 
-  static Team fromJson(Map<String, dynamic> j) => Team(
+  static Team fromJson(Map<String, dynamic> j) => _fromJson(j)..streak = (j['sk'] as int?) ?? 0;
+
+  static Team _fromJson(Map<String, dynamic> j) => Team(
         index: j['i'] as int,
         roster: [for (final p in j['r'] as List) Player.fromJson(Map<String, dynamic>.from(p as Map))],
         wins: j['w'] as int,
@@ -169,6 +175,11 @@ class Team {
         staff: j['sf'] is List && (j['sf'] as List).length == Staff.values.length ? [for (final x in j['sf'] as List) (x as int).clamp(1, 3)] : null,
       );
 }
+
+/// 首位とのゲーム差。
+double gamesBehind(Team leader, Team t) => ((leader.wins - t.wins) + (t.losses - leader.losses)) / 2;
+
+String streakLabel(int s) => s == 0 ? '-' : s > 0 ? '$s連勝' : '${-s}連敗';
 
 /// 勝ち数の見せ方。
 String record(Team t) => '${t.wins}勝${t.losses}敗';
@@ -227,8 +238,43 @@ List<Player> lineup(List<Player> roster) {
 }
 
 /// 1試合の結果。
+/// ボックススコアの1行(自分のチームの試合だけ残す)。
+class BoxLine {
+  const BoxLine(this.name, this.pos, this.min, this.pts, this.reb, this.ast);
+  final String name;
+  final String pos;
+  final int min, pts, reb, ast;
+
+  List<Object> toJson() => [name, pos, min, pts, reb, ast];
+  static BoxLine fromJson(List j) => BoxLine(j[0] as String, j[1] as String, j[2] as int, j[3] as int, j[4] as int, j[5] as int);
+}
+
+/// 試合の点を4つのクォーターに分ける(合計は変えない)。
+List<int> splitQuarters(int pts, Rng rng) {
+  final w = [for (var i = 0; i < 4; i++) 80 + rng.nextInt(40)];
+  final sum = w.fold(0, (a, b) => a + b);
+  final q = [for (final x in w) pts * x ~/ sum];
+  q[3] += pts - q.fold(0, (a, b) => a + b);
+  return q;
+}
+
 class GameResult {
-  GameResult({required this.home, required this.away, required this.homePts, required this.awayPts, this.topName, this.topPts = 0});
+  GameResult({
+    required this.home,
+    required this.away,
+    required this.homePts,
+    required this.awayPts,
+    this.topName,
+    this.topPts = 0,
+    this.quarters = const [],
+    this.box = const [],
+  });
+
+  /// クォーターごとの点(ホームの4つ、アウェーの4つ)。自分のチームの試合だけ。
+  final List<int> quarters;
+
+  /// 自分のチームのボックススコア(出場した選手)。
+  final List<BoxLine> box;
 
   final int home;
   final int away;
@@ -245,7 +291,16 @@ class GameResult {
   int ptsAgainst(int t) => t == home ? awayPts : homePts;
   int opponentOf(int t) => t == home ? away : home;
 
-  Map<String, dynamic> toJson() => {'h': home, 'a': away, 'hp': homePts, 'ap': awayPts, if (topName != null) 'tn': topName, if (topPts != 0) 'tp': topPts};
+  Map<String, dynamic> toJson() => {
+        'h': home,
+        'a': away,
+        'hp': homePts,
+        'ap': awayPts,
+        if (topName != null) 'tn': topName,
+        if (topPts != 0) 'tp': topPts,
+        if (quarters.isNotEmpty) 'q': quarters,
+        if (box.isNotEmpty) 'bx': [for (final b in box) b.toJson()],
+      };
 
   static GameResult fromJson(Map<String, dynamic> j) => GameResult(
         home: j['h'] as int,
@@ -254,6 +309,8 @@ class GameResult {
         awayPts: j['ap'] as int,
         topName: j['tn'] as String?,
         topPts: (j['tp'] as int?) ?? 0,
+        quarters: [for (final x in (j['q'] as List? ?? const [])) x as int],
+        box: [for (final x in (j['bx'] as List? ?? const [])) BoxLine.fromJson(x as List)],
       );
 }
 
@@ -273,7 +330,7 @@ const minutesByOrder = [34, 33, 32, 30, 28, 22, 18, 14, 10, 8, 6, 3, 2, 0, 0];
 /// 1試合の個人の数字を配る。点はチームの得点を、外と中の得点の力と出場時間で分ける。
 /// リバウンドとアシストも同じように配る。[count] なら個人成績に足す(プレーオフは足さない)。
 /// いちばん点を取った選手と、その点を返す。
-(Player?, int) boxScore(Team t, int teamPts, Rng rng, {bool count = true}) {
+(Player?, int) boxScore(Team t, int teamPts, Rng rng, {bool count = true, List<BoxLine>? lines}) {
   final order = t.order;
   if (order.isEmpty) return (null, 0);
   final mins = [for (var i = 0; i < order.length; i++) i < minutesByOrder.length && order[i].injured == 0 ? minutesByOrder[i] : 0];
@@ -314,6 +371,7 @@ const minutesByOrder = [34, 33, 32, 30, 28, 22, 18, 14, 10, 8, 6, 3, 2, 0, 0];
   }
   var top = 0;
   for (var i = 0; i < order.length; i++) {
+    if (lines != null && mins[i] > 0) lines.add(BoxLine(order[i].name, order[i].pos.short, mins[i], pts[i], reb[i], ast[i]));
     if (pts[i] > pts[top]) top = i;
     if (count && mins[i] > 0) {
       order[i].stats
@@ -335,8 +393,10 @@ GameResult playGame(Team home, Team away, Rng rng, {int? mine, bool count = true
   final margin = 1 + rng.nextInt(rng.chance(0.3) ? 24 : 12);
   final w = base + margin, l = base;
   final hp = homeWins ? w : l, ap = homeWins ? l : w;
-  final (hTop, hTopPts) = boxScore(home, hp, rng, count: count);
-  final (aTop, aTopPts) = boxScore(away, ap, rng, count: count);
+  final myBox = <BoxLine>[];
+  final (hTop, hTopPts) = boxScore(home, hp, rng, count: count, lines: mine == home.index ? myBox : null);
+  final (aTop, aTopPts) = boxScore(away, ap, rng, count: count, lines: mine == away.index ? myBox : null);
+  final isMine = mine == home.index || mine == away.index;
   String? topName;
   var topPts = 0;
   if (mine == home.index) {
@@ -353,6 +413,8 @@ GameResult playGame(Team home, Team away, Rng rng, {int? mine, bool count = true
     awayPts: ap,
     topName: topName,
     topPts: topPts,
+    quarters: isMine ? [...splitQuarters(hp, rng), ...splitQuarters(ap, rng)] : const [],
+    box: myBox,
   );
   if (homeWins) {
     home.wins++;
@@ -360,6 +422,12 @@ GameResult playGame(Team home, Team away, Rng rng, {int? mine, bool count = true
   } else {
     away.wins++;
     home.losses++;
+  }
+  if (count) {
+    // 連勝・連敗(+なら連勝、-なら連敗)
+    final (w, l) = homeWins ? (home, away) : (away, home);
+    w.streak = w.streak > 0 ? w.streak + 1 : 1;
+    l.streak = l.streak < 0 ? l.streak - 1 : -1;
   }
   return r;
 }

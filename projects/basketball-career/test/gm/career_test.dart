@@ -548,10 +548,52 @@ void main() {
     });
   });
 
+  group('ボックススコア・連勝・日程', () {
+    test('自分の試合はクォーターの点と選手の数字が残り、合計が試合の点と合う', () {
+      final c = careerAt(13, 10)..startSeason();
+      c.playBlock();
+      for (final g in c.lastGames) {
+        expect(g.quarters, hasLength(8));
+        expect(g.quarters.take(4).fold(0, (a, b) => a + b), g.homePts);
+        expect(g.quarters.skip(4).fold(0, (a, b) => a + b), g.awayPts);
+        expect(g.box.fold(0, (a, b) => a + b.pts), g.ptsOf(c.mine));
+        expect(g.box.every((b) => b.min > 0), isTrue);
+      }
+      final copy = Career.fromJson(jsonDecode(jsonEncode(c.toJson())) as Map<String, dynamic>);
+      expect(copy.lastGames.first.box.length, c.lastGames.first.box.length);
+    });
+
+    test('連勝・連敗は直近の結果の続き。ゲーム差は首位との差', () {
+      final c = careerAt(13, 10)..startSeason();
+      c.playBlock();
+      final mine = c.lastGames;
+      var expect0 = 0;
+      for (final g in mine) {
+        final won = g.winner == c.mine;
+        expect0 = won ? (expect0 > 0 ? expect0 + 1 : 1) : (expect0 < 0 ? expect0 - 1 : -1);
+      }
+      expect(c.me.streak, expect0);
+      final st = standings(c.teams, east: c.me.east);
+      expect(gamesBehind(st.first, st.first), 0);
+      expect(gamesBehind(st.first, st.last), greaterThan(0));
+    });
+
+    test('これからの日程は、次の節の相手から順に並ぶ', () {
+      final c = careerAt(13, 10)..startSeason();
+      c.playWeek();
+      final next = c.upcoming();
+      expect(next, hasLength(5));
+      final round = seasonSchedule(30)[c.roundAt];
+      final (h, a) = round.firstWhere((x) => x.$1 == c.mine || x.$2 == c.mine);
+      expect(next.first.$1, h == c.mine ? a : h);
+      expect(next.first.$2, h == c.mine);
+    });
+  });
+
   group('相手に聞く・相手同士のトレード・ニュース', () {
     test('受け取りたい選手を選ぶと、相手が受ける出し方が返り、そのまま成立する', () {
       var found = 0;
-      for (var seed = 1; seed <= 10; seed++) {
+      for (var seed = 1; seed <= 20; seed++) {
         final c = careerAt(seed, 15);
         final pt = c.teams.where((t) => t.index != c.mine).firstWhere((t) => t.mode == TeamMode.rebuild).index;
         final target = c.teams[pt].roster.reduce((a, b) => a.ovr >= b.ovr ? a : b);
@@ -564,7 +606,7 @@ void main() {
         expect(c.me.roster.any((p) => p.id == target.id), isTrue);
         expect(c.log.first, contains('トレード'));
       }
-      expect(found, greaterThanOrEqualTo(3), reason: '多くの場合は出し方が見つかる');
+      expect(found, greaterThanOrEqualTo(5), reason: '主力を取りに行っても、出し方が見つかることがよくある');
     });
 
     test('何も受け取らないなら聞けない。締め切りのあとも聞けない', () {

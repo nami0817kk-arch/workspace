@@ -6,6 +6,7 @@ import '../../gm/player.dart';
 import '../../monetization/monetization.dart';
 import '../art/title_art.dart';
 import '../gm_controller.dart';
+import 'box_score.dart';
 import 'common.dart';
 import 'inbox_screen.dart';
 import 'negotiate_dialog.dart';
@@ -137,6 +138,7 @@ class ProgressTab extends StatelessWidget {
       ]),
       ..._offerCard(context, car),
       ..._inboxCard(context, car),
+      ..._scheduleCard(car),
       _goalsCard(car),
       ..._injuryCard(car),
       // 試合の結果を先に見せ、経営はそのあと
@@ -144,7 +146,9 @@ class ProgressTab extends StatelessWidget {
         _card([
           Text('この$last試合: $blockWins勝${last - blockWins}敗', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
           const SizedBox(height: 6),
-          for (final g in car.lastGames) GameRow(g: g, mine: car.mine),
+          for (final g in car.lastGames)
+            InkWell(onTap: () => showBoxScore(context, g, car.mine), child: GameRow(g: g, mine: car.mine)),
+          const Text('試合を押すと、ボックススコアが見られる。', style: TextStyle(fontSize: 12, color: GmColors.sub)),
         ]),
       _moneyCard(car),
     ];
@@ -192,6 +196,30 @@ class ProgressTab extends StatelessWidget {
           onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => InboxScreen(c: c))),
           child: const Text('受信箱を開く'),
         ),
+      ]),
+    ];
+  }
+
+  /// これからの日程(次の5試合)。
+  List<Widget> _scheduleCard(Career car) {
+    final next = car.upcoming();
+    if (next.isEmpty) return const [];
+    return [
+      _card([
+        _head('これからの日程', icon: Icons.event_rounded),
+        const SizedBox(height: 4),
+        for (final (i, (opp, home)) in next.indexed)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 3),
+            child: Row(children: [
+              SizedBox(width: 44, child: Text('${car.roundAt + i + 1}戦目', style: const TextStyle(fontSize: 12, color: GmColors.sub))),
+              SizedBox(width: 22, child: Text(home ? 'vs' : '@', style: const TextStyle(fontSize: 12, color: GmColors.sub))),
+              TeamBadge(team: opp, size: 20),
+              const SizedBox(width: 6),
+              Expanded(child: Text(car.teams[opp].name, maxLines: 1, overflow: TextOverflow.ellipsis)),
+              Text(record(car.teams[opp]), style: const TextStyle(fontSize: 12, color: GmColors.sub)),
+            ]),
+          ),
       ]),
     ];
   }
