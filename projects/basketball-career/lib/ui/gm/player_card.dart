@@ -148,10 +148,8 @@ class BadgeChip extends StatelessWidget {
 }
 
 /// ほかのチームの選手のカードを見る(トレードやリーグの画面から)。
-Future<void> showPlayerCard(BuildContext context, Career car, Player p, int team) => showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      showDragHandle: true,
+Future<void> showPlayerCard(BuildContext context, Career car, Player p, int team) => showGmSheet<void>(
+      context,
       builder: (ctx) => SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 18),

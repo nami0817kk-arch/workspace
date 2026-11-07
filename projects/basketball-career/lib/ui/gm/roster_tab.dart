@@ -101,10 +101,8 @@ class RosterTab extends StatelessWidget {
         ),
       );
 
-  Future<void> _detail(BuildContext context, Career car, Player p) => showModalBottomSheet<void>(
-        context: context,
-        isScrollControlled: true,
-        showDragHandle: true,
+  Future<void> _detail(BuildContext context, Career car, Player p) => showGmSheet<void>(
+        context,
         builder: (ctx) {
           final canRelease = !car.expiring.contains(p.id) &&
               (car.phase == Phase.preseason || car.phase == Phase.season || car.phase == Phase.contracts);

@@ -5,10 +5,8 @@ import 'common.dart';
 import 'style.dart';
 
 /// 1試合のボックススコア(クォーターごとの点と、自分のチームの選手の数字)。
-Future<void> showBoxScore(BuildContext context, GameResult g, int mine) => showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      showDragHandle: true,
+Future<void> showBoxScore(BuildContext context, GameResult g, int mine) => showGmSheet<void>(
+      context,
       builder: (ctx) => SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 18),

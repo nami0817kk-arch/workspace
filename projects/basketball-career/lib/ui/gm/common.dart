@@ -351,3 +351,32 @@ class GameRow extends StatelessWidget {
     );
   }
 }
+
+/// 下から出る板。画面いっぱいにはせず(上に暗い所が残り、押すと閉じる)、右上に閉じるボタンを付ける。
+/// 中身が長いと板が画面を覆い、つまむ所も外の暗い所も無くなって戻れなかった(2026-11-07、TestFlight のビルド14)。
+Future<T?> showGmSheet<T>(BuildContext context, {required WidgetBuilder builder}) => showModalBottomSheet<T>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      constraints: BoxConstraints(maxHeight: MediaQuery.sizeOf(context).height * 0.88),
+      builder: (ctx) => Column(mainAxisSize: MainAxisSize.min, children: [
+        Row(children: [
+          const SizedBox(width: 48),
+          Expanded(
+            child: Center(
+              child: Container(
+                width: 36,
+                height: 4,
+                decoration: BoxDecoration(color: GmColors.sub.withValues(alpha: 0.5), borderRadius: BorderRadius.circular(2)),
+              ),
+            ),
+          ),
+          IconButton(
+            tooltip: '閉じる',
+            onPressed: () => Navigator.of(ctx).pop(),
+            icon: const Icon(Icons.close_rounded),
+          ),
+        ]),
+        Flexible(child: builder(ctx)),
+      ]),
+    );
