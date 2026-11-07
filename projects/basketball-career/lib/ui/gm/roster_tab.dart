@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 
 import '../../gm/career.dart';
+import '../../gm/league.dart';
 import '../../gm/player.dart';
 import '../gm_controller.dart';
+import 'coaches_screen.dart';
 import 'common.dart';
+import 'minutes_screen.dart';
 import 'negotiate_dialog.dart';
 import 'player_card.dart';
 import 'rotation_screen.dart';
@@ -58,6 +61,19 @@ class RosterTab extends StatelessWidget {
           onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => RotationScreen(c: c))),
           icon: const Icon(Icons.swap_vert_rounded),
           label: Text(me.rotation.isEmpty ? '先発と控えの順を決める(いまは自動)' : '先発と控えの順を決める'),
+        ),
+        const SizedBox(height: 6),
+        OutlinedButton.icon(
+          onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => MinutesScreen(c: c))),
+          icon: const Icon(Icons.timer_outlined),
+          label: Text(me.minutes.isEmpty ? '出場時間を決める(いまは自動)' : '出場時間を決める'),
+        ),
+        const SizedBox(height: 6),
+        OutlinedButton.icon(
+          onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => CoachesScreen(c: c))),
+          icon: const Icon(Icons.badge_rounded),
+          label: Text('コーチ陣(ヘッドコーチ ${me.coachOf(Staff.coach)?.name ?? coachLevelLabels[me.staffLevel(Staff.coach) - 1]})',
+              maxLines: 1, overflow: TextOverflow.ellipsis),
         ),
         const SizedBox(height: 6),
         OutlinedButton.icon(

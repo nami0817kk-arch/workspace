@@ -7,6 +7,7 @@ import '../../monetization/monetization.dart';
 import '../art/title_art.dart';
 import '../gm_controller.dart';
 import 'box_score.dart';
+import 'coaches_screen.dart';
 import 'common.dart';
 import 'inbox_screen.dart';
 import 'negotiate_dialog.dart';
@@ -86,7 +87,7 @@ class ProgressTab extends StatelessWidget {
       ..._offerCard(context, car),
       _goalsCard(car),
       _moneyCard(car),
-      _staffCard(car),
+      _staffCard(context, car),
     ];
   }
 
@@ -258,27 +259,36 @@ class ProgressTab extends StatelessWidget {
     ]);
   }
 
-  /// スタッフ(シーズン前とオフの契約のときに変えられる)。
-  Widget _staffCard(Career car) {
+  /// コーチ陣(シーズン前とオフの契約のときに入れ替えられる)。
+  Widget _staffCard(BuildContext context, Career car) {
     if (!car.canChangeStaff) return const SizedBox.shrink();
     return _card([
-      _head('スタッフ', icon: Icons.groups_2_rounded),
+      _head('コーチ陣', icon: Icons.groups_2_rounded),
       const SizedBox(height: 6),
-      for (final s in Staff.values) ...[
-        Text('${s.label}(${s.effect})', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-        const SizedBox(height: 4),
-        SegmentedButton<int>(
-          showSelectedIcon: false,
-          segments: [
-            for (var lv = 1; lv <= 3; lv++)
-              ButtonSegment(value: lv, label: Text('${const ['並', '良', '一流'][lv - 1]} ${money(staffCosts[lv - 1])}', style: const TextStyle(fontSize: 12))),
-          ],
-          selected: {car.me.staffLevel(s)},
-          onSelectionChanged: (v) => c.setStaff(s, v.first),
+      for (final s in Staff.values)
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 2),
+          child: Row(children: [
+            SizedBox(width: 104, child: Text(s.label, style: const TextStyle(fontSize: 13, color: GmColors.sub))),
+            Expanded(
+              child: Text(
+                  car.me.coachOf(s) == null
+                      ? coachLevelLabels[car.me.staffLevel(s) - 1]
+                      : '${car.me.coachOf(s)!.name}(${car.me.coachOf(s)!.rating})',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+            ),
+          ]),
         ),
-        const SizedBox(height: 8),
-      ],
-      Text('スタッフの給料 1シーズン ${money(car.me.staffCost)}(収支の支出に入る)', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
+      const SizedBox(height: 6),
+      Text('給料 1シーズン ${money(car.me.staffCost)}(収支の支出に入る)。いまなら入れ替えられる。', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
+      const SizedBox(height: 6),
+      OutlinedButton.icon(
+        onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => CoachesScreen(c: c))),
+        icon: const Icon(Icons.badge_rounded),
+        label: const Text('コーチを見る・雇う'),
+      ),
     ]);
   }
 
@@ -486,7 +496,7 @@ class ProgressTab extends StatelessWidget {
         _expiringRow(context, car, p),
         const SizedBox(height: 6),
       ],
-      _staffCard(car),
+      _staffCard(context, car),
       const SizedBox(height: 10),
       OutlinedButton.icon(onPressed: () => goTab(3), icon: const Icon(Icons.person_add_alt_1_rounded), label: const Text('自由契約の選手を見る')),
       const SizedBox(height: 8),

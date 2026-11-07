@@ -270,6 +270,11 @@ class Career {
     final rng = Rng(seed);
     final c = Career._(seed: seed, mine: team.clamp(0, teamDefs.length - 1), rng: rng, teams: []);
     c._build();
+    // はじめのコーチ陣はみな「良い」。ヘッドコーチは70ちょうど(強さを変えないので、どのチームを選んでも同じリーグ)
+    c.me.coaches = [
+      for (final x in c._makeCoaches(-1, start: true)) x.role == Staff.coach ? Coach(name: x.name, role: x.role, rating: 70) : x,
+    ];
+    c.coachPool = c._makeCoaches(0, start: false);
     c.startRank = c.strengthRank(c.mine);
     return c;
   }
@@ -926,7 +931,7 @@ class Career {
     }
     final f = p.focus;
     if (f != null) {
-      p.attrs[f.index] = math.min(p.attrs[f.index] + 2, 15);
+      p.attrs[f.index] = math.min(p.attrs[f.index] + (me.staffLevel(Staff.development) == 3 ? 3 : 2), 15);
       final others = [for (final a in Attr.values) if (a != f) a];
       final o = others[rng.nextInt(others.length)];
       p.attrs[o.index] = math.max(p.attrs[o.index] - 1, -20);
@@ -938,14 +943,22 @@ class Career {
   /// 力の順位より出場の順が2つ以上下なら下がり、上なら上がる。チームの勝率でも動く。
   void _updateMorale() {
     final order = me.order;
+    final mins = me.playMinutes();
     final byOvr = [...me.roster]..sort((a, b) => b.ovr.compareTo(a.ovr));
     final pct = me.winPct;
     for (var i = 0; i < order.length; i++) {
       final p = order[i];
       final expected = byOvr.indexOf(p);
       var d = 0;
-      if (i >= expected + 2 && expected < 9) d -= 3 + (i - expected);
-      if (i < expected) d += 2;
+      if (me.minutes.isEmpty) {
+        if (i >= expected + 2 && expected < 9) d -= 3 + (i - expected);
+        if (i < expected) d += 2;
+      } else {
+        // 出場時間を決めたときは、期待より何分少ないか・多いかで
+        final diff = mins[i] - expectedMinutes(p);
+        if (diff <= -6 && expectedMinutes(p) >= 8) d -= 3 + (-diff) ~/ 4;
+        if (diff >= 4) d += 2;
+      }
       if (pct >= 0.6) d += 3;
       if (pct < 0.4) d -= 3;
       d += const [1, 0, -1][me.training.clamp(0, 2)];
@@ -1115,7 +1128,7 @@ class Career {
         var d = ageOneYear(p, rng);
         p.injured = 0;
         // コーチの段階で若手の伸びが変わる(力が上がる年だけ)
-        final coach = t.staffLevel(Staff.coach);
+        final coach = t.staffLevel(Staff.development);
         if (p.age <= 26 && d >= 0) {
           final b = coach == 3 && rng.chance(0.55) ? 1 : coach == 1 && rng.chance(0.4) ? -1 : 0;
           if (b != 0) {
@@ -1275,6 +1288,7 @@ class Career {
     faDay = 0;
     bids = {};
     faLog = [];
+    coachPool = _makeCoaches(season, start: false);
   }
 
   /// 選手が求める年俸。弱いチームには高く、強いチームには少し安く言う。
@@ -1613,9 +1627,51 @@ class Career {
   /// スタッフの段階を変えられるか(シーズン前とオフの契約のときだけ)。
   bool get canChangeStaff => phase == Phase.preseason || phase == Phase.contracts;
 
-  void setStaff(Staff s, int level) {
-    if (!canChangeStaff) return;
-    me.staff[s.index] = level.clamp(1, 3);
+  /// 雇えるコーチ(オフごとに入れ替わる)。
+  List<Coach> coachPool = [];
+
+  /// コーチの候補を作る(試合の乱数とは別の種で。リーグの続きを変えない)。
+  List<Coach> _makeCoaches(int salt, {required bool start}) {
+    final r = Rng(seed * 7919 + salt);
+    return [
+      for (final s in Staff.values)
+        for (var k = 0; k < (start ? 1 : 3); k++) Coach(name: randomName(r), role: s, rating: start ? 66 + r.nextInt(9) : 50 + r.nextInt(46)),
+    ];
+  }
+
+  /// コーチを雇う(同じ役の今のコーチは辞め、給料の半年分を払う)。
+  bool hireCoach(int poolIndex) {
+    if (!canChangeStaff || poolIndex < 0 || poolIndex >= coachPool.length) return false;
+    final c = coachPool.removeAt(poolIndex);
+    final old = me.coachOf(c.role);
+    if (old != null) {
+      me.coaches.remove(old);
+      costs += old.salary ~/ 2;
+      coachPool.add(old);
+    }
+    me.coaches.add(c);
+    return true;
+  }
+
+  /// 雇ったときに払う、今のコーチへの違約金。
+  int buyoutOf(Staff s) => (me.coachOf(s)?.salary ?? 0) ~/ 2;
+
+  /// 出場時間を決める(空なら自動)。合計は [totalMinutes]、1人 [maxMinutes] まで。
+  void setMinutes(Map<int, int> m) {
+    if (m.isEmpty) {
+      me.minutes = {};
+      return;
+    }
+    final total = m.values.fold(0, (a, b) => a + b);
+    if (total != totalMinutes || m.values.any((v) => v < 0 || v > maxMinutes)) return;
+    me.minutes = {for (final e in m.entries) if (me.roster.any((p) => p.id == e.key)) e.key: e.value};
+  }
+
+  /// 選手が期待する出場時間(力の順位から)。
+  int expectedMinutes(Player p) {
+    final byOvr = [...me.roster]..sort((a, b) => b.ovr.compareTo(a.ovr));
+    final i = byOvr.indexOf(p);
+    return i >= 0 && i < minutesByOrder.length ? minutesByOrder[i] : 0;
   }
 
   /// 値切りを一度断った選手(このオフのあいだ、もう値切れない)。
@@ -1819,6 +1875,7 @@ class Career {
         'lp': lastProfit,
         'gl': [for (final g in goals) g.toJson()],
         'aw': [for (final a in awards) a.toJson()],
+        'cp': [for (final c in coachPool) c.toJson()],
         'gr': [for (final g in growth) g.toJson()],
         'fd': faDay,
         'bd': {for (final e in bids.entries) '${e.key}': [for (final b in e.value) b.toJson()]},
@@ -1877,6 +1934,7 @@ class Career {
       ..lastProfit = (j['lp'] as int?) ?? 0
       ..goals = [for (final g in maps('gl')) OwnerGoal.fromJson(g)]
       ..awards = [for (final a in maps('aw')) Award.fromJson(a)]
+      ..coachPool = [for (final x in maps('cp')) Coach.fromJson(x)]
       ..growth = [for (final g in maps('gr')) GrowthLine.fromJson(g)]
       ..faDay = ((j['fd'] as int?) ?? 0).clamp(0, faDays)
       ..bids = {
