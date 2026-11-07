@@ -110,6 +110,9 @@ class Team {
   /// スタッフの段階(1〜3)。[Staff] の順(コーチ・トレーナー・スカウト)。
   List<int> staff;
 
+  /// 練習の強さ(0: 軽め、1: ふつう、2: きつい)。自分のチームだけが変える。
+  int training = 1;
+
   int staffLevel(Staff s) => staff[s.index].clamp(1, 3);
 
   /// スタッフに払う1シーズンの給料(10万ドル)。
@@ -160,9 +163,12 @@ class Team {
         if (rotation.isNotEmpty) 'ro': rotation,
         'sf': staff,
         if (streak != 0) 'sk': streak,
+        if (training != 1) 'tr': training,
       };
 
-  static Team fromJson(Map<String, dynamic> j) => _fromJson(j)..streak = (j['sk'] as int?) ?? 0;
+  static Team fromJson(Map<String, dynamic> j) => _fromJson(j)
+    ..streak = (j['sk'] as int?) ?? 0
+    ..training = ((j['tr'] as int?) ?? 1).clamp(0, 2);
 
   static Team _fromJson(Map<String, dynamic> j) => Team(
         index: j['i'] as int,
@@ -356,7 +362,8 @@ const minutesByOrder = [34, 33, 32, 30, 28, 22, 18, 14, 10, 8, 6, 3, 2, 0, 0];
   final ast = share(20 + rng.nextInt(10), (p) => pow(p.attr(Attr.passing) - 35, 1.3) * _astPos[p.pos]!);
   // けがの残りを1試合ぶん減らし、出た選手はけがの抽選(トレーナーが良いほど少なく、治りも早い)
   final trainer = t.staffLevel(Staff.trainer);
-  final chance = const [0.0075, 0.005, 0.003][trainer - 1];
+  // 練習がきついほど、けがが増える
+  final chance = const [0.0075, 0.005, 0.003][trainer - 1] * const [0.8, 1.0, 1.35][t.training.clamp(0, 2)];
   final speed = const [1.25, 1.0, 0.75][trainer - 1];
   for (var i = 0; i < order.length; i++) {
     final p = order[i];

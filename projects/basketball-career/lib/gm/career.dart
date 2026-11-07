@@ -182,6 +182,37 @@ class HallEntry {
       );
 }
 
+/// 練習の強さ(軽め・ふつう・きつい)と、その効き目。
+const trainingLabels = ['軽め', 'ふつう', 'きつい'];
+const trainingNotes = [
+  'けがが少なく、気持ちが少し上がる。30歳を過ぎた選手が落ちにくい',
+  '',
+  '25歳以下が伸びやすい。けがが増え、気持ちが少し下がる',
+];
+
+/// オフの成長の記録(自分のチームの1人分)。
+class GrowthLine {
+  const GrowthLine({required this.name, required this.age, required this.before, required this.after, this.focus});
+  final String name;
+
+  /// 1つ年を取ったあとの年齢。
+  final int age;
+  final int before;
+  final int after;
+  final Attr? focus;
+
+  int get delta => after - before;
+
+  Map<String, dynamic> toJson() => {'n': name, 'a': age, 'b': before, 'f': after, if (focus != null) 'fo': focus!.index};
+  static GrowthLine fromJson(Map<String, dynamic> j) => GrowthLine(
+        name: j['n'] as String,
+        age: j['a'] as int,
+        before: j['b'] as int,
+        after: j['f'] as int,
+        focus: j['fo'] is int && (j['fo'] as int) >= 0 && (j['fo'] as int) < Attr.values.length ? Attr.values[j['fo'] as int] : null,
+      );
+}
+
 /// 殿堂に入る点の基準([Career.hallScore] がこれ以上)。
 const hallThreshold = 10;
 
@@ -873,6 +904,36 @@ class Career {
     }
   }
 
+  /// このオフの自分のチームの成長(年を取る前と後の力)。
+  List<GrowthLine> growth = [];
+
+  void setTraining(int level) => me.training = level.clamp(0, 2);
+
+  void setFocus(int id, Attr? a) {
+    final p = _mineById(id);
+    if (p != null) p.focus = a;
+  }
+
+  /// オフの練習の効き目。力の変わった分を返す(重点は能力のずれだけを動かす)。
+  int _train(Player p, int d) {
+    var b = 0;
+    if (me.training == 2 && p.age <= 25 && d >= 0 && p.ovr < p.pot && rng.chance(0.35)) b = 1;
+    if (me.training == 0 && p.age >= 30 && d < 0 && rng.chance(0.5)) b = 1;
+    if (b != 0) {
+      p.ovr = (p.ovr + b).clamp(35, 99);
+      if (p.pot < p.ovr) p.pot = p.ovr;
+      p.lastDelta += b;
+    }
+    final f = p.focus;
+    if (f != null) {
+      p.attrs[f.index] = math.min(p.attrs[f.index] + 2, 15);
+      final others = [for (final a in Attr.values) if (a != f) a];
+      final o = others[rng.nextInt(others.length)];
+      p.attrs[o.index] = math.max(p.attrs[o.index] - 1, -20);
+    }
+    return b;
+  }
+
   /// 自分のチームの選手の気持ちを、区切りごとに動かす。
   /// 力の順位より出場の順が2つ以上下なら下がり、上なら上がる。チームの勝率でも動く。
   void _updateMorale() {
@@ -887,6 +948,7 @@ class Career {
       if (i < expected) d += 2;
       if (pct >= 0.6) d += 3;
       if (pct < 0.4) d -= 3;
+      d += const [1, 0, -1][me.training.clamp(0, 2)];
       final before = p.morale;
       p.morale = (p.morale + d).clamp(0, 100);
       if (before >= 20 && p.morale < 20) _log('${p.name}(${me.def.short})がトレードを希望');
@@ -1044,10 +1106,12 @@ class Career {
       return;
     }
     news = [];
+    growth = [];
     for (final t in teams) {
       t.deadCap = 0;
       final retired = <Player>[];
       for (final p in t.roster) {
+        final start = p.ovr;
         var d = ageOneYear(p, rng);
         p.injured = 0;
         // コーチの段階で若手の伸びが変わる(力が上がる年だけ)
@@ -1060,6 +1124,10 @@ class Career {
             p.lastDelta += b;
             d += b;
           }
+        }
+        if (t.index == mine) {
+          d += _train(p, d);
+          growth.add(GrowthLine(name: p.name, age: p.age, before: start, after: p.ovr, focus: p.focus));
         }
         p.years--;
         if (p.nextSalary != null) {
@@ -1751,6 +1819,7 @@ class Career {
         'lp': lastProfit,
         'gl': [for (final g in goals) g.toJson()],
         'aw': [for (final a in awards) a.toJson()],
+        'gr': [for (final g in growth) g.toJson()],
         'fd': faDay,
         'bd': {for (final e in bids.entries) '${e.key}': [for (final b in e.value) b.toJson()]},
         'fl': faLog,
@@ -1808,6 +1877,7 @@ class Career {
       ..lastProfit = (j['lp'] as int?) ?? 0
       ..goals = [for (final g in maps('gl')) OwnerGoal.fromJson(g)]
       ..awards = [for (final a in maps('aw')) Award.fromJson(a)]
+      ..growth = [for (final g in maps('gr')) GrowthLine.fromJson(g)]
       ..faDay = ((j['fd'] as int?) ?? 0).clamp(0, faDays)
       ..bids = {
         for (final e in (j['bd'] as Map? ?? const {}).entries)

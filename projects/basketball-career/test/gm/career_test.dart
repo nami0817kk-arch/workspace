@@ -342,6 +342,56 @@ void main() {
     });
   });
 
+  group('練習', () {
+    Career toSeasonEnd(int seed, {int training = 1}) {
+      final c = careerAt(seed, 12)..setTraining(training);
+      var guard = 0;
+      while (c.phase != Phase.seasonEnd && guard++ < 50) {
+        botStep(c);
+      }
+      expect(c.phase, Phase.seasonEnd);
+      c.fired = false;
+      return c;
+    }
+
+    test('重点の能力はオフに伸び、成長の記録が残る。保存しても重点と強さは残る', () {
+      final c = toSeasonEnd(4, training: 2);
+      final p = c.me.roster.firstWhere((p) => p.attrs[Attr.defense.index] <= 10);
+      c.setFocus(p.id, Attr.defense);
+      final before = p.attrs[Attr.defense.index];
+      final copy = Career.fromJson(jsonDecode(jsonEncode(c.toJson())) as Map<String, dynamic>);
+      expect(copy.me.training, 2);
+      expect(copy.me.roster.firstWhere((x) => x.id == p.id).focus, Attr.defense);
+      c.toOffseason();
+      expect(p.attrs[Attr.defense.index], before + 2);
+      expect(c.growth.length, greaterThanOrEqualTo(c.me.roster.length));
+      final g = c.growth.firstWhere((g) => g.name == p.name);
+      expect(g.focus, Attr.defense);
+      expect(g.after, p.ovr);
+      final again = Career.fromJson(jsonDecode(jsonEncode(c.toJson())) as Map<String, dynamic>);
+      expect(again.growth.map((g) => g.after), c.growth.map((g) => g.after));
+    });
+
+    test('きつい練習はけがが増える(10チーム分のシーズンで比べる)', () {
+      int hurt(int training) {
+        var n = 0;
+        for (var seed = 20; seed < 30; seed++) {
+          final c = careerAt(seed, 12)..setTraining(training);
+          c.startSeason();
+          var guard = 0;
+          while (c.phase == Phase.season && guard++ < 10) {
+            c.playBlock();
+            n += c.log.where((l) => l.contains('けが:') && l.contains(c.me.def.short)).length;
+            c.log.clear();
+          }
+        }
+        return n;
+      }
+
+      expect(hurt(2), greaterThan(hurt(0)));
+    });
+  });
+
   group('自由契約の競り合い', () {
     Career toContracts(int seed) {
       final c = careerAt(seed, 12);

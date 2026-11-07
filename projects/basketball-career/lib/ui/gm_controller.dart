@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../gm/career.dart';
 import '../gm/draft.dart';
 import '../gm/league.dart';
+import '../gm/player.dart';
 import '../gm/profile.dart';
 import '../gm/trade.dart';
 import '../monetization/monetization.dart';
@@ -187,6 +188,8 @@ class GmController extends ChangeNotifier {
   void release(int id) => _act((c) => c.release(id));
   void finishContracts() => _act((c) => c.finishContracts());
   void nextFaDay() => _act((c) => c.nextFaDay());
+  void setTraining(int level) => _act((c) => c.setTraining(level));
+  void setFocus(int id, Attr? a) => _act((c) => c.setFocus(id, a));
   void withdrawBid(int id) => _act((c) => c.withdrawBid(id));
 
   /// 大物に申し込む。申し込めたら true。

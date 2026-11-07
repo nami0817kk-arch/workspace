@@ -138,6 +138,7 @@ class Player {
     this.allStars = 0,
     this.nextSalary,
     List<List<int>>? career,
+    this.focus,
   })  : career = career ?? [],
         attrs = attrs ?? makeAttrs(pos, _idNoise(id)),
         stats = stats ?? Stats(),
@@ -196,6 +197,9 @@ class Player {
 
   /// 延長した契約の、来季からの年俸(延長していなければ null)。
   int? nextSalary;
+
+  /// 練習の重点(自分のチームだけ。オフに、この能力が伸びてほかが少し落ちる)。
+  Attr? focus;
 
   /// このリーグでの年ごとの成績([シーズン, チーム, 試合, 得点, リバウンド, アシスト]、古い順)。
   final List<List<int>> career;
@@ -257,6 +261,7 @@ class Player {
         if (allStars != 0) 'as': allStars,
         if (nextSalary != null) 'ns': nextSalary,
         if (career.isNotEmpty) 'cr': career,
+        if (focus != null) 'fo': focus!.index,
       };
 
   static Player fromJson(Map<String, dynamic> j) => Player(
@@ -278,6 +283,7 @@ class Player {
         injured: ((j['in'] as int?) ?? 0).clamp(0, 99),
         allStars: (j['as'] as int?) ?? 0,
         nextSalary: j['ns'] as int?,
+        focus: j['fo'] is int && (j['fo'] as int) >= 0 && (j['fo'] as int) < Attr.values.length ? Attr.values[j['fo'] as int] : null,
         career: [
           for (final r in (j['cr'] as List? ?? const []))
             if (r is List && r.length == 6) [for (final x in r) x as int],
