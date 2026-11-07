@@ -360,6 +360,15 @@ void main() {
       await t.scrollUntilVisible(find.textContaining('ボックススコアが見られる'), 300, scrollable: _list);
       await _tap(t, opp);
     });
+    final faCar = _find(28, (c) => c.phase == Phase.contracts && c.freeAgents.any((p) => c.isBigFa(p) && c.bidProblem(p) == null), from: 3);
+    final target = faCar.freeAgents.firstWhere((p) => faCar.isBigFa(p) && faCar.bidProblem(p) == null);
+    faCar
+      ..nextFaDay()
+      ..bid(target.id, 2, 1.0);
+    await _shoot(t, 'r14_fa', '自由契約の競り合い', await _with(faCar), outDir: out, act: (t) async {
+      await _tap(t, '補強');
+      if (faCar.myBid(target.id) != null) await t.scrollUntilVisible(find.textContaining('申し込み中'), 300, scrollable: _list);
+    });
     final histCar = _find(15, (c) => c.phase == Phase.preseason && c.hall.isNotEmpty, from: 4);
     await _shoot(t, 'r12_history', 'リーグの歴史', await _with(histCar), outDir: out, act: (t) async {
       await _tap(t, 'リーグ');

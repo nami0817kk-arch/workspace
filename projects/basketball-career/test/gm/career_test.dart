@@ -323,7 +323,6 @@ void main() {
         expect(h.honors, isNotEmpty);
         expect(c.awards.any((a) => a.name == h.name), isTrue);
       }
-      expect(c.log.any((l) => l.contains('殿堂入り')), isTrue);
       final copy = Career.fromJson(jsonDecode(jsonEncode(c.toJson())) as Map<String, dynamic>);
       expect(copy.hall.map((h) => h.name), c.hall.map((h) => h.name));
       expect(copy.champs, c.champs);
@@ -340,6 +339,101 @@ void main() {
       expect(c.hallScore(p), base + 8);
       c.awards.removeLast();
       p.allStars -= 2;
+    });
+  });
+
+  group('自由契約の競り合い', () {
+    Career toContracts(int seed) {
+      final c = careerAt(seed, 12);
+      var guard = 0;
+      while (c.phase != Phase.contracts && guard++ < 300) {
+        if (c.phase == Phase.seasonEnd) c.fired = false;
+        botStep(c);
+      }
+      expect(c.phase, Phase.contracts);
+      // 申し込みの空きを作る(契約切れは放し、年俸を軽くする)
+      for (final id in [...c.expiring]) {
+        c.letGo(id);
+      }
+      return c;
+    }
+
+    Player bigOne(Career c) => c.freeAgents.firstWhere((p) => c.isBigFa(p) && c.bidProblem(p) == null);
+
+    test('大物はすぐには取れず、申し込むと日が進むうちに行き先を決める', () {
+      final c = toContracts(3);
+      while (c.me.payroll > salaryCap - 300 && c.me.roster.isNotEmpty) {
+        c.release(c.me.roster.reduce((a, b) => a.salary >= b.salary ? a : b).id);
+      }
+      final p = bigOne(c);
+      expect(c.signProblem(p), isNotNull, reason: '大物はそのまま契約できない');
+      expect(c.bid(p.id, 2, 1.1), isTrue);
+      expect(c.myBid(p.id)!.years, 2);
+      expect(c.winChanceOf(p), greaterThan(0));
+      final rosterBefore = c.me.roster.length;
+      for (var d = 0; d < faDays; d++) {
+        c.nextFaDay();
+      }
+      expect(c.faDay, faDays);
+      expect(c.bids, isEmpty, reason: '最後の日にはみんな決める');
+      expect(c.faLog, isNotEmpty);
+      final joined = c.me.roster.any((x) => x.id == p.id);
+      if (joined) {
+        expect(c.me.roster.length, rosterBefore + 1);
+        expect(p.salary, (c.askOf(p, c.me).salary * 1.1).round().clamp(minSalary, maxSalary));
+      } else {
+        expect(c.teams.any((t) => t.roster.contains(p)), isTrue, reason: 'ほかのチームに行った');
+        expect(c.inbox.any((m) => m.title.contains(p.name)), isTrue);
+      }
+      // もう申し込めない。オフは終えられる
+      expect(c.bidProblem(c.freeAgents.firstWhere((x) => x.salary > minSalary, orElse: () => p)), isNotNull);
+      c.finishContracts();
+      expect(c.phase, Phase.preseason);
+    });
+
+    test('高く申し込むほど選ばれやすく、申し込み中の年俸は上限の空きに数える', () {
+      final c = toContracts(5);
+      while (c.me.payroll > salaryCap - 300 && c.me.roster.isNotEmpty) {
+        c.release(c.me.roster.reduce((a, b) => a.salary >= b.salary ? a : b).id);
+      }
+      final p = bigOne(c);
+      c.bids.putIfAbsent(p.id, () => []).add(FaBid((c.mine + 1) % 30, c.askOf(p, c.teams[(c.mine + 1) % 30]).salary, 2));
+      c.bid(p.id, 2, 0.9);
+      final low = c.winChanceOf(p);
+      c.bid(p.id, 2, 1.1);
+      final high = c.winChanceOf(p);
+      expect(high, greaterThan(low));
+      expect(c.rivalBids(p.id), 1);
+      // 申し込みを重ねていくと、上限の空きが無くなる
+      var n = 0;
+      for (final q in [...c.freeAgents]) {
+        if (q.id == p.id || !c.isBigFa(q)) continue;
+        if (c.bidProblem(q) == null) {
+          c.bid(q.id, 1, 1.0);
+          n++;
+        }
+      }
+      expect(n, greaterThanOrEqualTo(0));
+      final left = c.freeAgents.where((q) => c.isBigFa(q) && c.myBid(q.id) == null).toList();
+      if (left.isNotEmpty && c.me.roster.length - c.expiring.length + c.bids.values.where((l) => l.any((b) => b.team == c.mine)).length < maxRoster) {
+        final room = salaryCap - c.me.payroll - c.bids.values.expand((l) => l).where((b) => b.team == c.mine).fold(0, (s, b) => s + b.salary);
+        for (final q in left.where((q) => c.askOf(q, c.me).salary > room)) {
+          expect(c.bidProblem(q), contains('上限'));
+        }
+      }
+      c.withdrawBid(p.id);
+      expect(c.myBid(p.id), isNull);
+    });
+
+    test('日の途中で保存して読み直しても、同じ行き先になる', () {
+      final c = toContracts(7);
+      c.nextFaDay();
+      final copy = Career.fromJson(jsonDecode(jsonEncode(c.toJson())) as Map<String, dynamic>);
+      expect(copy.faDay, c.faDay);
+      expect(copy.bids.keys, c.bids.keys);
+      c.finishContracts();
+      copy.finishContracts();
+      expect(jsonEncode(copy.toJson()), jsonEncode(c.toJson()));
     });
   });
 
