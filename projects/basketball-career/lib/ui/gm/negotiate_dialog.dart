@@ -27,12 +27,32 @@ Future<void> negotiate(BuildContext context, GmController c, Player p, {required
   ));
 }
 
+/// 契約の延長を申し出る(残り1年の選手)。来季からの年俸と、足す年数を決める。
+Future<void> negotiateExtension(BuildContext context, GmController c, Player p) async {
+  final car = c.career!;
+  final ask = car.extensionAsk(p);
+  final messenger = ScaffoldMessenger.of(context);
+  final picked = await showDialog<(int, double)>(
+    context: context,
+    builder: (ctx) => _NegotiateDialog(car: car, p: p, ask: ask, freeAgent: false, extension: true),
+  );
+  if (picked == null) return;
+  final (years, factor) = picked;
+  final ok = c.extend(p.id, years, factor);
+  messenger.showSnackBar(SnackBar(
+    content: Text(ok ? '${p.name}と$years年延長した(来季から${money(p.nextSalary ?? ask.salary)})' : '${p.name}は延長を断った(今季はもう申し出られない)'),
+  ));
+}
+
 class _NegotiateDialog extends StatefulWidget {
-  const _NegotiateDialog({required this.car, required this.p, required this.ask, required this.freeAgent});
+  const _NegotiateDialog({required this.car, required this.p, required this.ask, required this.freeAgent, this.extension = false});
   final Career car;
   final Player p;
   final Ask ask;
   final bool freeAgent;
+
+  /// 契約の延長(年数は今の契約のあとに足す。値下げは延長でも一度だけ)。
+  final bool extension;
 
   @override
   State<_NegotiateDialog> createState() => _NegotiateDialogState();
@@ -44,13 +64,18 @@ class _NegotiateDialogState extends State<_NegotiateDialog> {
   @override
   Widget build(BuildContext context) {
     final car = widget.car, p = widget.p, ask = widget.ask;
-    final canHaggle = !car.haggled.contains(p.id) && ask.salary > minSalary;
+    final canHaggle = !(widget.extension ? car.extAsked : car.haggled).contains(p.id) && ask.salary > minSalary;
     final chance = (car.discountChance(p, freeAgent: widget.freeAgent) * 100).round();
     int at(double f) => (ask.salary * f).round().clamp(minSalary, maxSalary);
     return AlertDialog(
-      title: Text('${p.name}と交渉'),
+      title: Text(widget.extension ? '${p.name}と延長の交渉' : '${p.name}と交渉'),
       content: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text('求める年俸 ${money(ask.salary)}・最長${ask.maxYears}年・気持ち ${p.moraleLabel}', style: const TextStyle(color: GmColors.sub)),
+        Text('${widget.extension ? '来季から' : ''}求める年俸 ${money(ask.salary)}・最長${ask.maxYears}年・気持ち ${p.moraleLabel}', style: const TextStyle(color: GmColors.sub)),
+        if (widget.extension)
+          const Padding(
+            padding: EdgeInsets.only(top: 4),
+            child: Text('年数は、今の契約(残り1年)のあとに足す。求める額でも断られることがある。', style: TextStyle(fontSize: 12, color: GmColors.sub)),
+          ),
         const SizedBox(height: 10),
         const Text('年数', style: TextStyle(fontWeight: FontWeight.bold)),
         const SizedBox(height: 4),
@@ -59,7 +84,7 @@ class _NegotiateDialogState extends State<_NegotiateDialog> {
             ChoiceChip(label: Text('$y年'), selected: _years == y, onSelected: (_) => setState(() => _years = y)),
         ]),
         const SizedBox(height: 12),
-        _option(context, '求める額で', '${money(ask.salary)}・必ず受ける', 1.0),
+        _option(context, '求める額で', '${money(ask.salary)}・${widget.extension ? 'たいてい受ける' : '必ず受ける'}', 1.0),
         _option(context, '1割高く', '${money(at(1.1))}・気持ちが上がる', 1.1),
         if (canHaggle)
           _option(context, '1割安く', '${money(at(0.9))}・受ける見込み$chance%', 0.9)

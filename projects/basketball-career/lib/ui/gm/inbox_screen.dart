@@ -8,6 +8,7 @@ import 'style.dart';
 IconData _senderIcon(Sender s) => switch (s) {
       Sender.owner => Icons.business_center_rounded,
       Sender.player => Icons.person_rounded,
+      Sender.agent => Icons.work_rounded,
       Sender.league => Icons.campaign_rounded,
       Sender.staff => Icons.groups_2_rounded,
     };

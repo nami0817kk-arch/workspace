@@ -4,6 +4,7 @@ import '../../gm/career.dart';
 import '../../gm/player.dart';
 import '../gm_controller.dart';
 import 'common.dart';
+import 'negotiate_dialog.dart';
 import 'player_card.dart';
 import 'rotation_screen.dart';
 import 'style.dart';
@@ -109,6 +110,24 @@ class RosterTab extends StatelessWidget {
                 }),
                 if (p.drafted != null) _line('ドラフト', p.drafted!),
                 const SizedBox(height: 14),
+                if (car.extendProblem(p) == null)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: FilledButton.icon(
+                      onPressed: () async {
+                        Navigator.pop(ctx);
+                        await negotiateExtension(context, c, p);
+                      },
+                      icon: const Icon(Icons.edit_document),
+                      label: const Text('契約の延長を申し出る'),
+                    ),
+                  )
+                else if (p.years == 1 && car.me.roster.contains(p))
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Text('延長: ${car.extendProblem(p)}', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
+                  ),
+                if (p.nextSalary != null) _line('延長', '来季から${money(p.nextSalary!)}(残り${p.years}年)'),
                 if (canRelease)
                   OutlinedButton.icon(
                     style: OutlinedButton.styleFrom(foregroundColor: GmColors.bad),
