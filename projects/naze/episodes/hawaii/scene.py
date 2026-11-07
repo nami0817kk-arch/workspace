@@ -136,8 +136,8 @@ def draw_slice(img, sc, t, u):
     for frac, z_, s, *c in sc.get("labels", []):
         if u > 0.2:
             text(d, (x0 + (x1 - x0) * frac, Y(z_)), s, 40 if LAND else 34, tuple(c[0]) if c else WHITE)
-    for frac, s in sc.get("ends", []):
-        text(d, (x0 + (x1 - x0) * frac, bot + 30), s, 34 if LAND else 30, DIM)
+    for frac, s in sc.get("ends", []):                                           # 端の字は内側へ寄せる(縦ではみ出さない)
+        text(d, (x0 if frac < 0.5 else x1, bot + 30), s, 34 if LAND else 30, DIM, "lm" if frac < 0.5 else "rm")
     if sc.get("title"):
         text(d, (W / 2, y0 + 55), sc["title"], 58 if LAND else 46, YEL)
     if sc.get("note"):
