@@ -1,0 +1,162 @@
+# 物語完結型ショート 邪馬台国はどこ？ s4（2026-11-07）。本編 scripts/yamatai-story.yaml（11/10 19:00 公開、https://youtu.be/cqLK1qEXpMw）の第5章（墓）から。11/11 17:30 公開。
+# 形式は shogun_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。絵は本編の AI 絵（Gemini）。新しい絵は作らない。
+# 切り口：247年の記事のあとの「卑弥呼以死、大作冢、径百余歩」、男王の乱と13歳の壹与、箸墓の大きさと2009年の年代。
+#   墓の点・順位には触れない。本編の答え（採点の1位・浮かび上がる場所）は明かさない。tease の答えは第6章（住まい：吉野ヶ里と纒向の建物）。
+# 事実カード：yamatai-26・17・40・41。言い方は本編のまま。「箸墓に葬られたのは誰か、言い切れない」はまとめの章のまま。
+# 理解テスト4問：
+#   ①誰の話か：卑弥呼の死と、その墓
+#   ②いつ・何が：247年、倭が狗奴国との争いを魏に訴えた記事のあとに、卑弥呼の死と径百余歩の塚、奴婢百人あまり
+#   ③そのあと：男の王で殺し合いになり、13歳の壹与を立てて治まった
+#   ④どうなっているか：奈良の箸墓古墳は後円部約165m、2009年に築造直後240〜260年と発表。葬られた人は言い切れない
+title: 卑弥呼｜死んだとき、どんな墓が造られたのか
+yt_title: 卑弥呼が死んだとき、どんな墓が造られたのか　『魏志倭人伝』の「径百余歩」と、奈良の箸墓古墳
+description: |-
+  卑弥呼が死んだとき、どんな墓が造られたのでしょうか。
+  正始8年、247年。倭は帯方郡に使いを送り、南の狗奴国と攻め合っていると訴えました。その記事のあとに、『魏志倭人伝』は書きます。卑弥呼、以て死す。大いに塚を作る。径、百余歩。奴婢、百人あまりが、ともに葬られた。男の王を立てると国中が従わず殺し合いになり、卑弥呼の一族の娘、13歳の壹与を王に立てると、国はようやく治まりました。奈良県桜井市の箸墓古墳は、文化庁の解説では墳丘の長さ290メートル前後、丸い後円部の直径は約165メートル。2009年、国立歴史民俗博物館は炭素14の測定から、築かれた直後を240年から260年と発表しました。
+  では、魏志が書いた女王の住まい、宮室と楼観と城柵。その跡は、九州と奈良の、どちらから出ているのか。本編は概要欄のリンクからどうぞ。
+hashtags: ['#卑弥呼', '#邪馬台国', '#日本史']
+ai_images: true
+ai_disclosure: この動画の情景・人物の画像は、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面に「AI生成画像」と出しています）。古墳の画像も、実際の箸墓古墳を写したものではありません。卑弥呼の姿も、特定の資料を写したものではありません。
+art_dir: out/story/yamatai
+readings: {以て死す: もってしす, 国中が: くにじゅうが}      # 台本ごとの読み替え（readings.yaml は変えない）
+out: yamatai_story_s4
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 卑弥呼の墓（『魏志倭人伝』）
+  title: "卑弥呼の墓は、《どんな墓か》"
+now:
+  - {at: 卑弥呼が死んだとき, text: "3世紀　倭", point: 0}
+  - {at: 正始8年, text: "247年　狗奴国", point: 0}
+  - {at: 奈良県桜井市, text: "いま　奈良県桜井市", point: 2}
+  - {at: 2009年, text: "2009年の発表", point: 1}
+timeline:
+  - {label: "247"}
+  - {label: "2009"}
+  - {label: "いま"}
+cards:
+  - type: table
+    title: 魏志の書く卑弥呼の死
+    from: その記事のあとに
+    until: 奈良県桜井市
+    items:
+      - {at: その記事のあとに, text: "径百余歩の塚"}
+      - {at: 奴婢, text: "奴婢百人あまりも葬る"}
+      - {at: 卑弥呼の一族の娘, text: "13歳の壹与が王に"}
+    text_y: 0.70
+  - type: year
+    from: 2009年
+    until: けれど
+    big: 2009年
+    sub: 箸墓の築造直後は240〜260年
+    text_y: 0.70
+shots:
+  H01:
+    kind: ai
+    file: yamatai/main/H01.jpg
+    focus: [0.2, 0.45]
+    move: up
+    must: 卑弥呼の想像図
+  Y21:
+    kind: ai
+    file: yamatai/main/Y21.jpg
+    focus: [0.6, 0.6]
+    move: right
+    must: 浜の舟（帯方郡への使い）
+  Y12:
+    kind: ai
+    file: yamatai/main/Y12.jpg
+    focus: [0.45, 0.55]
+    move: left
+    must: 灯の下の竹簡（魏志の記事）
+  Y19:
+    kind: ai
+    file: yamatai/main/Y19.jpg
+    focus: [0.55, 0.5]
+    move: in
+    must: 祭壇の火に向かう女王の後ろ姿
+  Y02:
+    kind: ai
+    file: yamatai/main/Y02.jpg
+    focus: [0.5, 0.5]
+    move: right
+    must: 環濠集落（国中）
+  Y08:
+    kind: ai
+    file: yamatai/main/Y08.jpg
+    focus: [0.3, 0.5]
+    move: left
+    must: 森に覆われた前方後円墳と周りの水
+  Y08b:
+    kind: ai
+    file: yamatai/main/Y08.jpg
+    focus: [0.45, 0.55]
+    move: in
+    must: 古墳の丸い後円部（寄り）
+  Y10:
+    kind: ai
+    file: yamatai/main/Y10.jpg
+    focus: [0.5, 0.6]
+    move: right
+    must: 発掘の穴（測定）
+  Y09:
+    kind: ai
+    file: yamatai/main/Y09.jpg
+    focus: [0.4, 0.5]
+    move: left
+    must: 柵に囲まれた大きな高床の建物
+lines:
+  - 語り: 卑弥呼が死んだとき、どんな墓が造られたのか。
+    shot: H01
+    tone: 疑問
+    pause: 0.12
+  # fact: yamatai-26
+  - 語り: 正始8年、247年。倭は、帯方郡に使いを送り、南の狗奴国と、攻め合っている、と訴えた。
+    shot: Y21
+    tone: 強調
+    pause: 0.12
+  # fact: yamatai-17
+  - 語り: その記事のあとに、魏志は書く。卑弥呼、以て死す。大いに塚を作る。径、百余歩。
+    shot: Y12
+    tone: 重い
+    pause: 0.12
+  # fact: yamatai-17
+  - 語り: 奴婢、百人あまりが、ともに葬られた。
+    shot: Y19
+    tone: 重い
+    pause: 0.12
+  # fact: yamatai-26
+  - 語り: 男の王を立てると、国中が従わず、殺し合いになった。卑弥呼の一族の娘、13歳の壹与を王に立てると、国は、ようやく治まった。
+    shot: Y02
+    tone: しみじみ
+    pause: 0.12
+  # fact: yamatai-40
+  - 語り: 奈良県桜井市の箸墓古墳。文化庁の解説では、墳丘の長さは、290メートル前後。丸い後円部の直径は、約165メートル。
+    shot: Y08
+    tone: 強調
+    pause: 0.12
+  # fact: yamatai-41
+  - 語り: 2009年、国立歴史民俗博物館は、炭素14の測定から、築かれた直後を、《240年から260年》と発表した。
+    shot: Y10
+    tone: 強調
+    pause: 0.3
+    dip: true
+  # （まとめの章のまま）
+  - 語り: けれど、箸墓に葬られたのは誰か。今の記録と出土品からは、《言い切れない》。
+    shot: Y08b
+    tone: 重い
+    pause: 0.15
+  # fact: yamatai-23（答えは本編の第6章：吉野ヶ里と纒向の建物）
+  - 語り: では、魏志が書いた、女王の住まい、宮室と楼観と城柵。その跡は、九州と奈良の、どちらから出ているのか。
+    shot: Y09
+    tone: 疑問
+    pause: 0.15

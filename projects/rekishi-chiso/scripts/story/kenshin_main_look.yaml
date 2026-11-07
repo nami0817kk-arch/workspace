@@ -1,0 +1,227 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：上杉謙信の最期（scripts/kenshin-story.yaml）。chiso/storymain.py が読む。
+# 11-07 作成（11/11 19:00 公開）。yamatai_main_look.yaml を写した。台本には手を入れない（承認のあと）。決まりは docs/story-main.md・スキル rekishi-story-screen。
+# 絵の方針：AI 絵（K01〜K22・KEND）は Gemini（Chrome、無料版）。指示の一覧は dev/output/rekishi-chiso/research/kenshin_ai_images.md。
+#   実在の絵（パブリックドメイン）は額（frame:）と屏風・浮世絵の一部（part:）。謙信の顔は実在の肖像に似せない想像図。
+script: scripts/kenshin-story.yaml
+out: kenshin_story_main
+art_dir: out/story/kenshin/main
+main_art_dir: out/story/kenshin/main
+ai_disclosure: この動画の情景・人物の画像の多くは、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面の右上に「AI生成画像」と出しています）。
+
+chapters:
+  0: {label: 序章 厠で倒れた越後の龍, now: 天正6年3月, dates: {}}
+  1: {label: 第1章 七尾城はなぜ1日で落ちたのか, now: 天正5年9月, dates: {}}
+  2: {label: 第2章 謙信は手取川で戦ったのか, now: 天正5年9月23日, dates: {}}
+  3: {label: 第3章 出陣は関東か、上洛か, now: 天正6年春, dates: {}}
+  4: {label: 第4章 景勝の手紙は何を書いたのか, now: 天正6年3月, dates: {}}
+  5: {label: 第5章 「厠で倒れた」はどこから来たのか, now: null, dates: {}}
+  6: {label: 第6章 脳卒中か、腹の病か, now: null, dates: {}}
+  7: {label: 第7章 謙信は遺言を残したのか, now: 天正6年3月, dates: {95: 天正7年}}
+  8: {label: 第8章 謙信の遺骸はどこへ行ったのか, now: 天正6年, dates: {105: 慶長3年, 106: null}}
+  9: {label: まとめ 越後の龍は、なぜ倒れたのか, now: null, dates: {}}
+no_tag_from: 119
+
+references:
+  - 上杉景勝書状（天正6年3月24日、小島六郎左衛門宛）：高橋義彦編『越佐史料』巻5（1930年）・『大日本古文書 家わけ第十二 上杉家文書』（国立国会図書館デジタルコレクション）
+  - 『北越軍記』（越後史料叢書『北越太平記』1914年・黒川真道編『越後史集』1917年）／『上杉家家譜』附録（『越佐史料』巻5）
+  - 田中香涯『医学以外の医学』1924年（『武徳編年集成』の引用）／布施秀治『上杉謙信伝』1917年／木村徳衛『直江兼続伝』1944年／栗岩英治『素描上杉謙信』1937年
+  - 竹間芳明「加賀一揆と越前」（『若越郷土研究』70巻1号、2025年）
+  - 乃至政彦（PRESIDENT Online・東洋経済オンライン・JBpress・SYNCHRONOUS の記事、2023〜2024年）
+  - 岩田裕斗「新刊紹介 萩原大輔著『謙信襲来』」（『加賀藩研究』11号、2021年）
+  - 文化庁 文化遺産オンライン（春日山城跡・鮫ヶ尾城跡・上杉家文書・長尾上杉氏印章）／観光庁 地域観光資源の多言語解説文データベース（七尾城跡）
+  - 上越市『上杉謙信公』（第100回謙信公祭記念パンフレット）／米沢市上杉博物館
+  - 鉄道省『先人の遺蹟』1939年／温古之栞刊行会『越後志料温古之栞』1936年
+
+credits:
+  paintings/akechi_rakuchu_rakugai_uesugi_left.jpg: 狩野永徳《洛中洛外図屏風》（上杉本）左隻
+  paintings/toshiie_letter_uesugi_kagekatsu_wul.jpg: 上杉景勝の文書（早稲田大学図書館蔵）
+
+ai:
+  K01: {scene: 雪の残る春先の春日山城（山の城、木の柵と板葺き）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.4]}}
+  K02: {scene: 灯の下の謙信・胸から上（白い頭巾）, pan: zoom, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.4, 0.58, 0.38]}}
+  K03: {scene: 夜、雪の中の細い渡り廊下と小さな離れ（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.4]}}
+  K04: {scene: 夜の城の廊下を灯を持って急ぐ家臣たち（後ろ姿）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.4]}}
+  K05: {scene: 病床の謙信と、そばに座る家臣たち, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.4, 0.78, 0.55]}}
+  K06: {scene: 灯の下で手紙を書く若い当主（景勝・横顔。左上の掛け軸の字を外す）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.2, 0.36, 0.48]}}
+  K07: {scene: 秋の山城（七尾城）を囲む陣（遠景）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.4]}}
+  K08: {scene: 月夜の陣営、盃を手に月を見る謙信と雁, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.4]}}
+  K09: {scene: 夜の雨の河口、松明を持った兵が川を渡る, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.4]}}
+  K10: {scene: 夜明けの河原に馬で着く謙信（霧）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.4]}}
+  K11: {scene: 雪の峠を越えて帰る軍勢の列, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.4]}}
+  K12: {scene: 雪の山城の大井戸と小さなお堂, pan: v, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.4]}}
+  K13: {scene: 夜、ひとりで酒を飲む謙信（梅干しの小皿）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.4, 0.32, 0.4]}}
+  K14: {scene: 広間で平伏する家臣たち（陣触れ）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.4]}}
+  K15: {scene: 灯の下で書物を書く江戸の学者の手元, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.4]}}
+  K16: {scene: 枕元で尋ねる年配の女性と、横たわる当主, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.35, 0.7, 0.45]}}
+  K17: {scene: 向き合う2人の若い武将（景勝と景虎）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.4]}}
+  K18: {scene: 夜、燃える山城（遠景）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.4]}}
+  K19: {scene: 薄暗いお堂の大きな甕と甲冑・蝋燭, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.35, 0.32, 0.5]}}
+  K20: {scene: 雪の山道を、覆いをかけた輿を担ぐ行列, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.4]}}
+  K21: {scene: 雪の城の本丸に建つ小さな御堂（米沢）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.4]}}
+  K22: {scene: 寺の墓所の古い石塔（秋・人物なし）, pan: v, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.4]}}
+  KEND: {scene: 終了画面用。夕暮れの山（右半分を空ける）, lock: [1.0, 0.5, 0.5]}
+
+paint_fx:
+  paintings/shingen_kenshin_yoshitoshi.jpg: {crop: [0.0, 0.12, 0.80, 0.92]}
+  paintings/toshiie_letter_uesugi_kagekatsu_wul.jpg: {crop: [0.16, 0.18, 0.84, 0.86]}
+
+shots:
+  - 0 ai:K03 wide
+  - 1 ai:K06 wide
+  - 2 ai:K06 right
+  - 3 ai:K03 left
+  - 4 ai:K01 wide
+  - 5 ai:K05 wide
+  - 6 ai:K04 wide
+  - 7 frame:paintings/shingen_kenshin_rinsenji.jpg
+  - 8 ai:K06 face
+  - 9 ai:K17 wide
+  - 10 ai:K07 wide
+  - 11 part:paintings/shingen_kawanakajima_yukai_bm_trim.jpg
+  - 12 ai:K02 face
+  - 13 ai:K07 left
+  - 14 part:paintings/toshiie_hiroshige_noto_takinoura.jpg
+  - 15 ai:K07 right
+  - 16 ai:K02 wide
+  - 17 part:paintings/akechi_rakuchu_rakugai_uesugi_right.jpg
+  - 18 ai:K07 wide
+  - 19 ai:K08 wide
+  - 20 ai:K15 wide
+  - 21 ai:K08 left
+  - 22 ai:K10 wide
+  - 23 ai:K09 wide
+  - 24 ai:K09 left
+  - 25 ai:K10 right
+  - 26 ai:K09 right
+  - 27 part:paintings/akechi_rakuchu_rakugai_uesugi_right.jpg
+  - 28 part:paintings/akechi_rakuchu_rakugai_uesugi_left.jpg
+  - 29 ai:K15 left
+  - 30 ai:K15 wide
+  - 31 ai:K07 wide
+  - 32 part:paintings/toshiie_hiroshige_noto_takinoura.jpg
+  - 33 ai:K22 wide
+  - 34 ai:K11 wide
+  - 35 ai:K01 left
+  - 36 ai:K01 wide
+  - 37 ai:K12 wide
+  - 38 ai:K12 right
+  - 39 ai:K14 wide
+  - 40 ai:K02 face
+  - 41 part:paintings/akechi_rakuchu_rakugai_uesugi_right.jpg
+  - 42 ai:K14 left
+  - 43 ai:K15 wide
+  - 44 ai:K13 wide
+  - 45 ai:K13 face
+  - 46 ai:K03 wide
+  - 47 ai:K06 wide
+  - 48 ai:K06 face
+  - 49 ai:K06 right
+  - 50 ai:K05 wide
+  - 51 ai:K01 right
+  - 52 ai:K11 left
+  - 53 ai:K06 left
+  - 54 ai:K04 wide
+  - 55 ai:K05 face
+  - 56 ai:K02 face
+  - 57 frame:paintings/shingen_kenshin_rinsenji.jpg
+  - 58 ai:K08 right
+  - 59 ai:K06 left
+  - 60 ai:K03 wide
+  - 61 ai:K03 right
+  - 62 ai:K15 wide
+  - 63 ai:K03 left
+  - 64 ai:K15 right
+  - 65 ai:K02 wide
+  - 66 ai:K15 wide
+  - 68 ai:K05 right
+  - 69 frame:paintings/shingen_kenshin_yoshitoshi.jpg
+  - 70 ai:K04 left
+  - 71 ai:K15 right
+  - 72 frame:paintings/shingen_kenshin_yoshitoshi.jpg
+  - 73 ai:K02 face
+  - 74 frame:paintings/mitsunari_uesugi_kagekatsu_armor.jpg
+  - 75 ai:K15 wide
+  - 76 ai:K13 wide
+  - 77 ai:K04 wide
+  - 78 ai:K01 wide
+  - 79 ai:K05 wide
+  - 80 ai:K02 face
+  - 81 ai:K06 wide
+  - 82 ai:K16 wide
+  - 83 ai:K05 left
+  - 84 ai:K16 right
+  - 85 ai:K17 wide
+  - 86 ai:K17 left
+  - 87 ai:K06 right
+  - 88 ai:K16 wide
+  - 89 ai:K16 face
+  - 90 ai:K14 wide
+  - 91 ai:K17 wide
+  - 92 frame:paintings/mitsunari_uesugi_kagekatsu_armor.jpg
+  - 93 ai:K17 right
+  - 94 ai:K07 left
+  - 95 ai:K18 wide
+  - 96 ai:K18 left
+  - 97 frame:paintings/toshiie_letter_uesugi_kagekatsu_wul.jpg
+  - 98 ai:K01 wide
+  - 99 ai:K19 wide
+  - 100 ai:K19 left
+  - 101 ai:K19 right
+  - 102 ai:K01 left
+  - 103 ai:K19 wide
+  - 104 ai:K19 face
+  - 105 ai:K20 wide
+  - 106 ai:K20 left
+  - 107 ai:K21 wide
+  - 108 ai:K22 wide
+  - 109 ai:K15 left
+  - 110 ai:K06 wide
+  - 111 ai:K06 face
+  - 112 frame:paintings/shingen_kenshin_rinsenji.jpg
+  - 113 ai:K15 wide
+  - 114 ai:K13 wide
+  - 115 ai:K05 wide
+  - 116 ai:K03 wide
+  - 117 ai:K16 right
+  - 118 ai:K06 face
+  - 119 ai:KEND wide
+  - 120 ai:KEND wide
+  - end ai:KEND wide
+
+focus: {}
+
+fx:
+  K02: {lamp: {region: [0.0, 0.0, 0.5, 0.6]}}
+  K03: {lamp: {region: [0.3, 0.2, 0.8, 0.7]}}
+  K06: {lamp: {region: [0.0, 0.0, 0.5, 0.6]}}
+  K13: {lamp: {region: [0.5, 0.0, 1.0, 0.6]}}
+  K18: {fire: {region: [0.2, 0.2, 0.8, 0.8]}}
+  K19: {lamp: {region: [0.0, 0.0, 1.0, 0.6]}}
+
+parts:
+  - {type: quote, from: 2, to: 2, label: 史料, text: 去十三日、謙信不慮之虫気／不被執直遠行, source: 上杉景勝書状（天正6年3月24日）}
+  - {type: quote, from: 16, to: 16, label: 史料, text: 今十五、一日之内ニ付落居, source: 上杉謙信書状（天正5年9月15日）}
+  - {type: versus3, from: 43, to: 43, items: [[乃至さん 2023年, 上洛の準備], [乃至さん 2024年, 関東への大遠征], [武徳編年集成, 信長と戦う]], every: 1.8}
+  - {type: quote, from: 49, to: 49, label: 史料, text: 去十三日、謙信不慮之虫気／不被執直遠行, source: 上杉景勝書状（天正6年3月24日、小島六郎左衛門宛）}
+  - {type: quote, from: 51, to: 51, label: 史料, text: 遺言之由候而、実城へ可移之由／各強而理候条、任其意候, source: 上杉景勝書状（天正6年3月24日）}
+  - {type: versus3, from: 56, to: 56, items: [[上杉家家譜 附録, 未の刻（昼過ぎ）], [日本史蹟大系（昭和11年）, 黄昏（夕方）]], every: 2.0}
+  - {type: quote, from: 57, to: 57, label: 辞世, text: 四十九年一睡夢／一期栄華一盃酒, source: 『上杉家家譜』附録・『北越軍記』ほか}
+  - {type: quote, from: 63, to: 63, label: 史料, text: 三月九日より腹痛を煩出／一説十一日に厠 昼より卒中風, source: 『北越軍記』（越後史料叢書『北越太平記』）}
+  - {type: quote, from: 74, to: 74, label: 史料, text: 事実は虫気即ち脳溢血である, source: 木村徳衛『直江兼続伝』（1944年）}
+  - {type: versus3, from: 103, to: 103, items: [[北越軍記の系統, 瓶に塩], [旧米沢藩士の話, 瓦の棺に朱の漆], [上杉謙信伝（大正6年）, 甲冑を着せて甕に]], every: 1.8}
+  - {type: quote, from: 115, to: 115, label: 要点, text: 同時代の言葉は「不慮の虫気」だけ／厠と卒中風は江戸の軍記から, source: この動画のまとめ}
+
+figures: []
+
+stills:
+  - {line: 0, note: 冒頭（0秒）}
+  - {line: 2, note: 景勝の手紙の史料}
+  - {line: 7, note: 謙信の肖像（額）}
+  - {line: 23, note: 地図}
+  - {line: 56, note: 時刻のくい違い}
+  - {line: 67, note: 倒れ方の表}
+  - {line: 91, note: 跡継ぎの表}
+  - {line: 103, note: 遺骸の納め方}
+  - {line: 106, note: 遺骸の旅の地図}
+  - {line: 115, note: 要点}
+  - {end: true, note: 終了画面の空き}
