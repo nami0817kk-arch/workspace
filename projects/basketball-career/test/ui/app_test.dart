@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:basketball_career/gm/bot.dart';
 import 'package:basketball_career/gm/career.dart';
+import 'package:basketball_career/gm/league.dart';
 import 'package:basketball_career/gm/trade.dart';
 import 'package:basketball_career/ui/app.dart';
 import 'package:basketball_career/ui/gm_controller.dart';
@@ -82,9 +83,14 @@ void main() {
     final theirs = them.roster.reduce((a, b) => a.ovr <= b.ovr ? a : b);
     final ours = car.me.roster.reduce((a, b) => a.ovr >= b.ovr ? a : b);
     await tester.scrollUntilVisible(find.text(theirs.name), 200, scrollable: _vertical);
+    // 下の申し込みの欄に隠れないよう、全体が見える所まで送ってから押す
+    await tester.ensureVisible(find.text(theirs.name).first);
+    await tester.pumpAndSettle();
     await tester.tap(find.text(theirs.name).first);
     await tester.pumpAndSettle();
     await tester.scrollUntilVisible(find.text(ours.name), 300, scrollable: _vertical);
+    await tester.ensureVisible(find.text(ours.name).last);
+    await tester.pumpAndSettle();
     await tester.tap(find.text(ours.name).last);
     await tester.pumpAndSettle();
     final v = car.judge(TradeOffer(partner: them.index, give: [ours.id], get: [theirs.id]));
@@ -130,6 +136,22 @@ void main() {
     await tester.tap(find.text('この順にする'));
     await tester.pumpAndSettle();
     expect(c.career!.me.rotation, isNotEmpty);
+  });
+
+  testWidgets('まとめて進める: 締め切りまで・シーズンの終わりまで(申し込みが届いたら止まる)', (tester) async {
+    final c = await _controller({'gmHowtoSeen': true});
+    c.newCareer(teamAtRank(2, 15), seed: 2);
+    c.startSeason();
+    await c.simAhead(toDeadline: true);
+    final car = c.career!;
+    expect(car.block >= tradeDeadlineBlock || car.incoming != null, isTrue);
+    var guard = 0;
+    while (car.phase == Phase.season && guard++ < 10) {
+      car.declineIncoming();
+      await c.simAhead(toDeadline: false);
+    }
+    expect(car.phase, Phase.playoffs);
+    expect(car.me.wins + car.me.losses, gamesPerSeason);
   });
 
   for (final s in const [Size(360, 640), Size(430, 932), Size(1032, 1376)]) {

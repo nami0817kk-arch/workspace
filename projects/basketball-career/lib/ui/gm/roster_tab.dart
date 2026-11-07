@@ -160,6 +160,20 @@ class RosterTab extends StatelessWidget {
                     child: Text('延長: ${car.extendProblem(p)}', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
                   ),
                 if (p.nextSalary != null) _line('延長', '来季から${money(p.nextSalary!)}(残り${p.years}年)'),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: OutlinedButton.icon(
+                    onPressed: () {
+                      final on = car.tradeBlock.contains(p.id);
+                      c.toggleTradeBlock(p.id);
+                      Navigator.pop(ctx);
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(on ? '${p.name}をトレードブロックから外した' : '${p.name}をトレードブロックに載せた。申し込みが届きやすくなる(本人の気持ちは少し下がる)')));
+                    },
+                    icon: Icon(car.tradeBlock.contains(p.id) ? Icons.remove_circle_outline_rounded : Icons.campaign_rounded),
+                    label: Text(car.tradeBlock.contains(p.id) ? 'トレードブロックから外す' : 'トレードブロックに載せる'),
+                  ),
+                ),
                 if (canRelease)
                   OutlinedButton.icon(
                     style: OutlinedButton.styleFrom(foregroundColor: GmColors.bad),

@@ -44,6 +44,83 @@ class _TradeTabState extends State<TradeTab> {
         getPicks: [..._getPicks],
       );
 
+  /// トレードブロック。載せた選手ごとに、いま届く申し込みを集めて見られる。
+  Widget _blockCard(BuildContext context, Career car) {
+    final onBlock = [for (final id in car.tradeBlock) ...car.me.roster.where((p) => p.id == id)];
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+          const Row(children: [
+            Icon(Icons.campaign_rounded, color: GmColors.ball, size: 20),
+            SizedBox(width: 6),
+            Text('トレードブロック', style: TextStyle(fontWeight: FontWeight.bold)),
+          ]),
+          const SizedBox(height: 4),
+          if (onBlock.isEmpty)
+            const Text('出してもよい選手を、チームの画面で選手を押して載せる。載せた選手には申し込みが届きやすくなる。', style: TextStyle(fontSize: 12, color: GmColors.sub, height: 1.4))
+          else
+            for (final p in onBlock)
+              Row(children: [
+                Expanded(child: Text('${p.name}(OVR ${shown(p.ovr)})', maxLines: 1, overflow: TextOverflow.ellipsis)),
+                TextButton(
+                  onPressed: !car.canTrade || widget.c.busy ? null : () => _showBlockOffers(context, car, p),
+                  child: const Text('申し込みを集める'),
+                ),
+              ]),
+        ]),
+      ),
+    );
+  }
+
+  Future<void> _showBlockOffers(BuildContext context, Career car, Player p) {
+    final offers = car.blockOffers(p.id);
+    String what(TradeOffer o) => [
+          for (final id in o.get)
+            ...car.teams[o.partner].roster.where((x) => x.id == id).map((x) => '${x.name}(OVR ${shown(x.ovr)}・${x.age}歳・${money(x.salary)})'),
+          for (final i in o.getPicks) car.picks[i].label(car.teams, car.season),
+        ].join('・');
+    return showGmSheet<void>(
+      context,
+      builder: (ctx) => SafeArea(
+        child: ListView(
+          shrinkWrap: true,
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 18),
+          children: [
+            Text('${p.name}への申し込み', style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+            Text(offers.isEmpty ? 'いまは、出してくれるチームがない。' : '${offers.length}チームが、これなら出すという。上ほどこちらに値打ちが高い。',
+                style: const TextStyle(fontSize: 12, color: GmColors.sub)),
+            const SizedBox(height: 8),
+            for (final o in offers.take(10))
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 8, 6, 8),
+                  child: Row(children: [
+                    TeamBadge(team: o.partner, size: 30),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                        Text(teamDefs[o.partner].short, style: const TextStyle(fontWeight: FontWeight.bold)),
+                        Text(what(o), style: const TextStyle(fontSize: 12, color: GmColors.sub, height: 1.4)),
+                      ]),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(ctx);
+                        final ok = widget.c.acceptBlockOffer(o);
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(ok ? 'トレードが成立した' : '成立しなかった(状況が変わった)')));
+                      },
+                      child: const Text('受ける'),
+                    ),
+                  ]),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final c = widget.c;
@@ -89,6 +166,7 @@ class _TradeTabState extends State<TradeTab> {
                 padding: EdgeInsets.only(bottom: 8),
                 child: Text('今はトレードできない(シーズン中は締め切りまで。オフの契約・シーズン前はできる)。', style: TextStyle(color: GmColors.bad)),
               ),
+            _blockCard(context, car),
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(12),

@@ -141,7 +141,8 @@ enum AwardKind {
   finalsMvp('ファイナルMVP'),
   allLeague1('オールリーグ1st'),
   allLeague2('オールリーグ2nd'),
-  allLeague3('オールリーグ3rd');
+  allLeague3('オールリーグ3rd'),
+  month('月間MVP');
 
   const AwardKind(this.label);
   final String label;
@@ -217,7 +218,7 @@ class GrowthLine {
 const hallThreshold = 10;
 
 class Award {
-  const Award({required this.season, required this.kind, required this.player, required this.name, required this.team, required this.line});
+  const Award({required this.season, required this.kind, required this.player, required this.name, required this.team, required this.line, this.block = 0});
   final int season;
   final AwardKind kind;
   final int player;
@@ -227,7 +228,10 @@ class Award {
   /// 受けたときの成績(「27.1点 8.0リ 6.2ア」)。
   final String line;
 
-  Map<String, dynamic> toJson() => {'s': season, 'k': kind.index, 'p': player, 'n': name, 't': team, 'l': line};
+  /// 月間MVP の、何区切り目か(1〜4。ほかの表彰は0)。
+  final int block;
+
+  Map<String, dynamic> toJson() => {'s': season, 'k': kind.index, 'p': player, 'n': name, 't': team, 'l': line, if (block != 0) 'b': block};
   static Award fromJson(Map<String, dynamic> j) => Award(
         season: j['s'] as int,
         kind: AwardKind.values[(j['k'] as int).clamp(0, AwardKind.values.length - 1)],
@@ -235,6 +239,7 @@ class Award {
         name: j['n'] as String,
         team: j['t'] as int,
         line: (j['l'] as String?) ?? '',
+        block: (j['b'] as int?) ?? 0,
       );
 }
 
@@ -542,6 +547,7 @@ class Career {
         AwardKind.allLeague1 => 3,
         AwardKind.dpoy || AwardKind.allLeague2 => 2,
         AwardKind.allLeague3 || AwardKind.roy || AwardKind.sixth || AwardKind.mip => 1,
+        AwardKind.month => 0,
       };
     }
     return n;
@@ -879,7 +885,10 @@ class Career {
     injuries.clear();
     incoming = null;
     // 区切りの初めから進めるときは、結果の一覧を空にする(区切りの途中なら足していく)
-    if (roundAt == blockStart(block)) lastGames = [];
+    if (roundAt == blockStart(block)) {
+      lastGames = [];
+      _snapshotBlock();
+    }
     final games = <GameResult>[];
     for (final round in seasonSchedule(teams.length).sublist(roundAt, roundAt + n)) {
       for (final (h, a) in round) {
@@ -899,6 +908,7 @@ class Career {
     if (roundAt < blockStart(block + 1)) return;
     block++;
     _updateMorale();
+    _giveMonthly();
     if (block == tradeDeadlineBlock) _pickAllStars();
     if (block < blocksPerSeason) _mailAfterBlock();
     if (block <= tradeDeadlineBlock && rng.chance(0.5)) _aiTrades(1);
@@ -972,6 +982,20 @@ class Career {
     if (block >= tradeDeadlineBlock) return;
     final others = [for (var i = 0; i < teams.length; i++) if (i != mine) i];
     rng.shuffle(others);
+    // トレードブロックに選手がいれば、まずその選手への申し込みを探す
+    final onBlock = tradeBlock.where((id) => me.roster.any((p) => p.id == id)).toList();
+    if (onBlock.isNotEmpty) {
+      final id = onBlock[rng.nextInt(onBlock.length)];
+      for (final t in others.take(8)) {
+        final o = blockOfferFrom(teams, picks, mine, t, id, season);
+        if (o != null) {
+          incoming = o;
+          final name = me.roster.firstWhere((p) => p.id == id).name;
+          _mail(Sender.league, '${teams[t].def.short}が$nameに申し込み', 'トレードブロックの$nameが欲しいという。進行の画面で中身を見て返事できる。');
+          return;
+        }
+      }
+    }
     for (final t in others.take(4)) {
       final o = makeIncomingOffer(teams, picks, mine, t, season);
       if (o != null) {
@@ -995,6 +1019,84 @@ class Career {
   }
 
   void declineIncoming() => incoming = null;
+
+  // ------------------------------------------------------------ トレードブロック
+
+  /// トレードブロック(出してもよいと周りに知らせた自分の選手の id)。区切りのあと、この選手への申し込みが届きやすい。
+  List<int> tradeBlock = [];
+
+  /// トレードブロックに載せる・外す。載せると、本人の気持ちが少し下がる。
+  void toggleTradeBlock(int id) {
+    final p = _mineById(id);
+    if (p == null) return;
+    if (tradeBlock.remove(id)) return;
+    tradeBlock.add(id);
+    p.morale = (p.morale - 5).clamp(0, 100);
+  }
+
+  /// トレードブロックの選手への、いま届く申し込み(チームごとに1つ。こちらに値打ちの高い順)。
+  List<TradeOffer> blockOffers(int id) {
+    if (!canTrade) return const [];
+    final out = [
+      for (var t = 0; t < teams.length; t++)
+        if (t != mine) blockOfferFrom(teams, picks, mine, t, id, season),
+    ].whereType<TradeOffer>().toList();
+    double value(TradeOffer o) =>
+        o.get.fold(0.0, (n, pid) => n + playerValue(teams[o.partner].roster.firstWhere((p) => p.id == pid), me.mode)) +
+        o.getPicks.fold(0.0, (n, i) => n + pickValue(picks[i], me.mode, 15, season));
+    out.sort((a, b) => value(b).compareTo(value(a)));
+    return out;
+  }
+
+  /// 申し込みを受けて成立させる(トレードブロックから選んだもの)。
+  bool acceptBlockOffer(TradeOffer o) {
+    final ok = propose(o);
+    if (ok) tradeBlock.removeWhere((id) => o.give.contains(id));
+    return ok;
+  }
+
+  // ------------------------------------------------------------ 月間MVP
+
+  /// 区切りの初めの、選手ごとの成績(id → [試合, 点, リバウンド, アシスト])。区切りの成績はここからの差。
+  Map<int, List<int>> blockBase = {};
+
+  /// 月間MVP(区切りごとに東西1人ずつ。古い順)。
+  List<Award> monthly = [];
+
+  void _snapshotBlock() {
+    blockBase = {
+      for (final t in teams)
+        for (final p in t.roster) p.id: [p.stats.gp, p.stats.pts, p.stats.reb, p.stats.ast],
+    };
+  }
+
+  /// 区切りを終えたら、東西で区切りのあいだいちばん良かった選手を選ぶ。
+  void _giveMonthly() {
+    for (final east in [true, false]) {
+      (Player, Team, double, String)? best;
+      for (final t in teams.where((t) => t.east == east)) {
+        for (final p in t.roster) {
+          final b = blockBase[p.id] ?? const [0, 0, 0, 0];
+          final gp = p.stats.gp - b[0];
+          if (gp < 10) continue;
+          final ppg = (p.stats.pts - b[1]) / gp, rpg = (p.stats.reb - b[2]) / gp, apg = (p.stats.ast - b[3]) / gp;
+          final score = ppg + 0.6 * rpg + 0.9 * apg + t.winPct * 10;
+          if (best == null || score > best.$3) {
+            best = (p, t, score, '${ppg.toStringAsFixed(1)}点 ${rpg.toStringAsFixed(1)}リ ${apg.toStringAsFixed(1)}ア');
+          }
+        }
+      }
+      if (best == null) continue;
+      monthly.add(Award(season: season, kind: AwardKind.month, player: best.$1.id, name: best.$1.name, team: best.$2.index, line: best.$4, block: block));
+      if (best.$2.index == mine) {
+        _mail(Sender.league, '${best.$1.name}が月間MVP', '${east ? '東' : '西'}地区の月間MVPに選ばれた。${best.$4}');
+        best.$1.morale = (best.$1.morale + 5).clamp(0, 100);
+      }
+    }
+  }
+
+  /// 試合をまとめて進める先。
+  bool get canSimToDeadline => phase == Phase.season && block < tradeDeadlineBlock;
 
   /// プレーオフ。地区ごとに1〜6位はそのまま、7〜10位はプレーインで2枠を争う。どの回戦も4勝で勝ち抜け。
   void playPlayoffs() {
@@ -1892,6 +1994,9 @@ class Career {
         'lp': lastProfit,
         'gl': [for (final g in goals) g.toJson()],
         'aw': [for (final a in awards) a.toJson()],
+        if (tradeBlock.isNotEmpty) 'tbk': tradeBlock,
+        'bbs': [for (final e in blockBase.entries) [e.key, ...e.value]],
+        'mvm': [for (final a in monthly) a.toJson()],
         'cp': [for (final c in coachPool) c.toJson()],
         'gr': [for (final g in growth) g.toJson()],
         'fd': faDay,
@@ -1952,6 +2057,12 @@ class Career {
       ..lastProfit = (j['lp'] as int?) ?? 0
       ..goals = [for (final g in maps('gl')) OwnerGoal.fromJson(g)]
       ..awards = [for (final a in maps('aw')) Award.fromJson(a)]
+      ..tradeBlock = [for (final x in (j['tbk'] as List? ?? const [])) x as int]
+      ..blockBase = {
+        for (final r in (j['bbs'] as List? ?? const []))
+          if (r is List && r.length == 5) r[0] as int: [for (final x in r.skip(1)) x as int],
+      }
+      ..monthly = [for (final a in maps('mvm')) Award.fromJson(a)]
       ..coachPool = [for (final x in maps('cp')) Coach.fromJson(x)]
       ..growth = [for (final g in maps('gr')) GrowthLine.fromJson(g)]
       ..faDay = ((j['fd'] as int?) ?? 0).clamp(0, faDays)

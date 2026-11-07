@@ -271,6 +271,67 @@ class LeagueTab extends StatelessWidget {
             ),
           ),
         ],
+        if (car.monthly.any((a) => a.season == car.season)) ...[
+          const SectionTitle('月間MVP'),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                for (final a in car.monthly.where((a) => a.season == car.season).toList().reversed)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 3),
+                    child: Row(children: [
+                      SizedBox(
+                        width: 74,
+                        child: Text('${a.block}区切り目・${teamDefs[a.team].east ? '東' : '西'}', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
+                      ),
+                      TeamBadge(team: a.team, size: 18),
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: Text('${a.name}  ${a.line}',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(fontSize: 13, color: a.team == car.mine ? GmColors.gold : null)),
+                      ),
+                    ]),
+                  ),
+              ]),
+            ),
+          ),
+        ],
+        if (started && car.teams.any((t) => t.roster.any((p) => p.injured > 0))) ...[
+          const SectionTitle('けが人'),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                for (final (t, p) in [
+                  for (final t in [car.me, ...car.teams.where((t) => t.index != car.mine)])
+                    for (final p in t.roster)
+                      if (p.injured > 0 && (t.index == car.mine || p.ovr >= 70)) (t, p),
+                ].take(14))
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 2),
+                    child: Row(children: [
+                      TeamBadge(team: t.index, size: 18),
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: Text('${p.name}(${p.pos.short}・OVR ${shown(p.ovr)})',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(fontSize: 13, color: t.index == car.mine ? GmColors.ball : null)),
+                      ),
+                      Text('あと${p.injured}試合', style: const TextStyle(fontSize: 12, color: GmColors.bad, fontWeight: FontWeight.bold)),
+                    ]),
+                  ),
+                const Padding(
+                  padding: EdgeInsets.only(top: 4),
+                  child: Text('自分のチームの全員と、ほかのチームの主力(OVR 82以上)。', style: TextStyle(fontSize: 11, color: GmColors.sub)),
+                ),
+              ]),
+            ),
+          ),
+        ],
         const SectionTitle('リーグの歴史'),
         Card(
           child: ListTile(

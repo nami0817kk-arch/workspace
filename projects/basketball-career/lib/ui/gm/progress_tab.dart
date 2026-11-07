@@ -136,6 +136,26 @@ class ProgressTab extends StatelessWidget {
             ),
           ),
         ]),
+        const SizedBox(height: 8),
+        // まとめて進める(申し込みが届いたら、そこで止まる)
+        Row(children: [
+          if (deadline) ...[
+            Expanded(
+              child: TextButton.icon(
+                onPressed: c.busy ? null : () => c.simAhead(toDeadline: true),
+                icon: const Icon(Icons.fast_forward_rounded, size: 18),
+                label: const Text('締め切りまで', style: TextStyle(fontSize: 13)),
+              ),
+            ),
+          ],
+          Expanded(
+            child: TextButton.icon(
+              onPressed: c.busy ? null : () => c.simAhead(toDeadline: false),
+              icon: const Icon(Icons.skip_next_rounded, size: 18),
+              label: const Text('シーズン終わりまで', maxLines: 1, style: TextStyle(fontSize: 13)),
+            ),
+          ),
+        ]),
       ]),
       ..._offerCard(context, car),
       ..._inboxCard(context, car),
