@@ -182,6 +182,7 @@ class GmController extends ChangeNotifier {
   void pickProspect(Prospect p) => _act((c) => c.pickProspect(p));
   void passPick() => _act((c) => c.passPick());
   void scoutProspect(Prospect p) => _act((c) => c.scoutProspect(p));
+  void toggleBoard(Prospect p) => _act((c) => c.toggleBoard(p));
   void resign(int id, int years) => _act((c) => c.resign(id, years));
   void letGo(int id) => _act((c) => c.letGo(id));
   void signFreeAgent(int id, int years) => _act((c) => c.signFreeAgent(id, years));

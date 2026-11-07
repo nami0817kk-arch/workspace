@@ -344,6 +344,68 @@ void main() {
     });
   });
 
+  group('ドラフトのボードと候補の情報', () {
+    Career toDraft(int seed) {
+      final c = careerAt(seed, 25);
+      var guard = 0;
+      while (c.phase != Phase.draft && guard++ < 100) {
+        if (c.phase == Phase.seasonEnd) c.fired = false;
+        botStep(c);
+      }
+      expect(c.phase, Phase.draft);
+      return c;
+    }
+
+    test('予想順位は1から順に重ならず、経歴・身体測定・去年の成績は何度見ても同じ', () {
+      final c = toDraft(3);
+      final ranks = mockRanks(c.prospects);
+      expect(ranks.values.toSet().length, ranks.length);
+      expect(ranks.values.reduce((a, b) => a < b ? a : b), 1);
+      final p = c.prospects.first;
+      expect(backgroundOf(p), backgroundOf(p));
+      expect(combineOf(p), combineOf(p));
+      expect(amateurStatsOf(p), amateurStatsOf(p));
+      for (final q in c.prospects) {
+        final cb = combineOf(q);
+        expect(cb.vertical, inInclusiveRange(45, 100));
+        expect(cb.sprint, inInclusiveRange(3.0, 3.8));
+        expect(backgroundOf(q), anyOf(startsWith('大学'), '海外のプロリーグ'));
+      }
+      // 運動能力が高い候補ほど、よく跳ぶ(平均で)
+      final byAth = [...c.prospects]..sort((a, b) => a.player.attr(Attr.athletic).compareTo(b.player.attr(Attr.athletic)));
+      final half = byAth.length ~/ 2;
+      double avg(Iterable<Prospect> l) => l.fold(0.0, (n, q) => n + combineOf(q).vertical) / l.length;
+      expect(avg(byAth.skip(half)), greaterThan(avg(byAth.take(half))));
+      // 予想順位は、見立てのいい候補ほど上(おおむね)
+      final top = ranks.entries.where((e) => e.value <= 5).map((e) => e.key.mid).reduce((a, b) => a + b) / 5;
+      final low = ranks.entries.where((e) => e.value > ranks.length - 5).map((e) => e.key.mid).reduce((a, b) => a + b) / 5;
+      expect(top, greaterThan(low));
+      // 自分のスカウトでは、予想順位は変わらない
+      final before = Map.of(ranks);
+      c.scoutProspect(c.prospects.firstWhere((q) => !q.scouted));
+      expect(mockRanks(c.prospects).values, before.values);
+      expect(mockRanks(c.prospects).keys, before.keys);
+    });
+
+    test('ボードに印を付け外しでき、保存しても残る。次の指名までの人数が分かる', () {
+      final c = toDraft(5);
+      final a = c.prospects[0], b = c.prospects[1];
+      c
+        ..toggleBoard(a)
+        ..toggleBoard(b);
+      expect(c.board, [a.player.id, b.player.id]);
+      c.toggleBoard(a);
+      expect(c.board, [b.player.id]);
+      final copy = Career.fromJson(jsonDecode(jsonEncode(c.toJson())) as Map<String, dynamic>);
+      expect(copy.board, c.board);
+      final before = c.picksBeforeMine();
+      if (before != null) {
+        expect(c.picks[c.order[c.draftAt + before]].owner, c.mine);
+        if (c.myTurn) expect(before, 0);
+      }
+    });
+  });
+
   group('試合の数字', () {
     test('ボックススコアは両チーム分。シュートの内訳は点と合い、成功は試投を超えない', () {
       final c = careerAt(6, 12)..startSeason();

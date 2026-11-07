@@ -1176,6 +1176,7 @@ class Career {
       _log('保護: ${teams[picks[i].from].def.short}の1巡目は上位${picks[i].protect}位に入ったので、${teams[picks[i].from].def.short}に戻った');
     }
     prospects = makeProspects(rng, nextId, order.length + 8, name: _uniqueName);
+    board = [];
     draftAt = 0;
     draftLog = [];
     scoutsLeft = 1 + me.staffLevel(Staff.scout);
@@ -1227,6 +1228,21 @@ class Career {
     if (!myTurn) return;
     draftAt++;
     _advanceDraft();
+  }
+
+  /// 自分のボード(注目の候補の選手 id。印を付けた順)。
+  List<int> board = [];
+
+  void toggleBoard(Prospect p) {
+    if (!board.remove(p.player.id)) board.add(p.player.id);
+  }
+
+  /// 次の自分の指名までに、ほかのチームが何人取るか(自分の番なら0、指名権が無ければ null)。
+  int? picksBeforeMine() {
+    for (var k = draftAt; k < order.length; k++) {
+      if (picks[order[k]].owner == mine) return k - draftAt;
+    }
+    return null;
   }
 
   void scoutProspect(Prospect p) {
@@ -1849,6 +1865,7 @@ class Career {
         'fa': [for (final p in freeAgents) p.toJson()],
         'picks': [for (final p in picks) p.toJson()],
         'pros': [for (final p in prospects) p.toJson()],
+        if (board.isNotEmpty) 'bb': board,
         'order': order,
         'da': draftAt,
         'dl': draftLog,
@@ -1908,6 +1925,7 @@ class Career {
       ..freeAgents = [for (final p in maps('fa')) Player.fromJson(p)]
       ..picks = [for (final p in maps('picks')) DraftPick.fromJson(p)]
       ..prospects = [for (final p in maps('pros')) Prospect.fromJson(p)]
+      ..board = [for (final x in (j['bb'] as List? ?? const [])) x as int]
       ..order = [for (final x in (j['order'] as List? ?? const [])) x as int]
       ..draftAt = (j['da'] as int?) ?? 0
       ..draftLog = [for (final x in (j['dl'] as List? ?? const [])) x as int]
