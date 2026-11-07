@@ -47,6 +47,9 @@
   契約の延長(`extend`、残り1年の選手。年俸は来季から `nextSalary`)。選手の名前はリーグの中で重ならない(`_uniqueName`)。
 - **選手の能力と指名権を 2K に寄せた**(ユーザー「選手能力とかも近づけて」「ドラフト権とかも」): 見せる数字は `shown()`(控え70前後・スター90台。計算はもとの数字のまま)、
   細かい能力24項目(`subRatings`、見せるだけ)・体格(`physicalOf`)・POT(`potentialRange`)。指名権は4回分のドラフト(`_fillPicks`)・保護(`DraftPick.protect`、範囲に入ると元へ)・くじの見込み(`lotteryOdds`)。
+- **リーグの歴史**(ユーザー「更に2kに近づける」): 表彰を9つに(シックスマン賞・躍進賞・ファイナルMVP・オールリーグ1st〜3rd を `AwardKind` の後ろに足した。保存は番号)、
+  選手の年ごとの成績(`Player.career`、シーズンの終わりにいたチームで)と通算(`careerTotals`)、殿堂(`hall`、引退した選手の `hallScore` が `hallThreshold` 以上。10年で2〜4人)、
+  歴代の優勝(`champs`)。画面は `history_screen.dart`(リーグのタブから)と、選手のカードの「年ごとの成績」。
 - **実績**(`profile.dart`): 11個。記録(任期・優勝・最多勝)は端末に残る。
 - **乱数は種から**(`rng.dart`)。状態を保存するので、読み直しても同じ続きになる(`test/gm/career_test.dart` が全局面で確かめる)。
 - **釣り合いは自動で遊ぶGMで測る**(`bot.dart`、`dart run tool/gm_balance.dart [回数]`)。
