@@ -369,8 +369,9 @@ void main() {
     await _shoot(t, 'r15_growth', 'オフの成長', await _with(trainCar), outDir: out);
     await _shoot(t, 'r16_training', '練習', await _with(trainCar), outDir: out, act: (t) async {
       await _tap(t, 'チーム');
-      await _tap(t, '練習(強さ きつい・重点 2人)');
+      await _tap(t, '練習');
     });
+    await _rosterShot(t, 'r23_roster', 'チーム(先発の並び)', outDir: out);
     final blockCar = _find(12, (c) => c.phase == Phase.season && c.block == 1 && c.incoming == null, from: 3);
     final onBlock = blockCar.me.order[3];
     blockCar.toggleTradeBlock(onBlock.id);
@@ -392,13 +393,12 @@ void main() {
     final statCar = _find(12, (c) => c.phase == Phase.season && c.block == 2, from: 3);
     await _shoot(t, 'r19_stats', 'チームの成績', await _with(statCar), outDir: out, act: (t) async {
       await _tap(t, 'チーム');
-      await t.scrollUntilVisible(find.textContaining('チームの成績(シュート'), 200, scrollable: _list);
-      await _tap(t, 'チームの成績(シュート・スティールなど)');
+      await _tap(t, 'チームの成績');
     });
     final minCar = careerAt(3, 12);
     await _shoot(t, 'r17_minutes', '出場時間', await _with(minCar), outDir: out, act: (t) async {
       await _tap(t, 'チーム');
-      await _tap(t, '出場時間を決める(いまは自動)');
+      await _tap(t, '出場時間');
       // 主力に長く出す(疲れる表示を見る)
       for (var k = 0; k < 5; k++) {
         await t.tap(find.byIcon(Icons.add_circle_outline_rounded).first);
@@ -408,8 +408,7 @@ void main() {
     final coachCar = careerAt(3, 12);
     await _shoot(t, 'r18_coaches', 'コーチ陣', await _with(coachCar), outDir: out, act: (t) async {
       await _tap(t, 'チーム');
-      await t.tap(find.textContaining('コーチ陣(ヘッドコーチ'));
-      await t.pumpAndSettle();
+      await _tap(t, 'コーチ陣');
     });
     final faCar = _find(28, (c) => c.phase == Phase.contracts && c.freeAgents.any((p) => c.isBigFa(p) && c.bidProblem(p) == null), from: 3);
     final target = faCar.freeAgents.firstWhere((p) => faCar.isBigFa(p) && faCar.bidProblem(p) == null);
@@ -430,6 +429,7 @@ void main() {
     await _shoot(t, 'r13_career', '選手の通算成績', await _with(vetCar), outDir: out, act: (t) async {
       await _tap(t, 'チーム');
       final p = vetCar.me.order.firstWhere((p) => p.career.length >= 2, orElse: () => vetCar.me.order.first);
+      await t.scrollUntilVisible(find.text(p.name), 200, scrollable: _list);
       await _tap(t, p.name);
       await t.scrollUntilVisible(find.text('年ごとの成績'), 300, scrollable: find.byType(Scrollable).last);
     });
