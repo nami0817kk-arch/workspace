@@ -1,6 +1,6 @@
 """トガリネズミの回の本編のサムネイル(1280×720)。python episodes/shrew/thumb.py → out/shrew/thumb_long.jpg
 下地は Gemini で作った絵(assets/gem_snow.jpg、雪の上のトガリネズミ。虫の絵はサムネに使わない(2026-11-07 指示)。隅に「イメージ」)。
-字は左に「体重2gで 毎日 体重の6倍 食べる」(体重の6倍 だけ黄色)。"""
+字は「見たら何がわかるか」を書く(2026-11-07 指示)。上に「毎日 自分の6倍を食べる」、大きく「小さい動物ほど 大食いな理由」(理由の行だけ黄色)。"""
 from pathlib import Path
 
 import numpy as np
@@ -36,10 +36,9 @@ def big(xy, s, size, col, stroke=12, anchor="la"):
     ImageDraw.Draw(img).text(xy, s, font=f, fill=col, anchor=anchor, stroke_width=stroke, stroke_fill=INK)
 
 
-big((34, 40), "体重2gで", 100, WHITE, 13)
-big((34, 175), "毎日", 90, WHITE, 13)
-big((26, 280), "体重の6倍", 160, YEL, 16)
-big((34, 490), "食べる", 110, WHITE, 13)
+big((34, 40), "毎日 自分の6倍を食べる", 60, WHITE, 11)                # 右下のトガリネズミを隠さないよう、字は左の 680px に収める
+big((34, 150), "小さい動物ほど", 90, WHITE, 13)
+big((28, 280), "大食いな理由", 104, YEL, 15)
 ImageDraw.Draw(img).text((1262, 706), "イメージ", font=font(24, "Bold"), fill=(255, 255, 255, 200), anchor="rd", stroke_width=3, stroke_fill=INK)
 img.convert("RGB").save(OUT / "thumb_long.jpg", quality=93)
 print(OUT / "thumb_long.jpg")

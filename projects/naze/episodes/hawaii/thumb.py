@@ -1,6 +1,6 @@
 """ハワイの回の本編のサムネイル(1280×720)。python episodes/hawaii/thumb.py → out/hawaii/thumb_long.jpg
 下地は Gemini で作った絵(assets/thumb_bg.jpg、カウアイ島の崖と滝と虹。隅に「イメージ」)。
-字は左に「海の真ん中に 1年に 1万mm の雨が降る山」(1万mm だけ黄色)。"""
+字は「見たら何がわかるか」を書く(2026-11-07 指示)。上に「日本の6倍の雨が降る山」、大きく「海の真ん中の島 水はどこから？」(問いの行だけ黄色)。"""
 from pathlib import Path
 
 import numpy as np
@@ -36,10 +36,9 @@ def big(xy, s, size, col, stroke=12, anchor="la"):
     ImageDraw.Draw(img).text(xy, s, font=f, fill=col, anchor=anchor, stroke_width=stroke, stroke_fill=INK)
 
 
-big((34, 34), "海の真ん中に", 92, WHITE, 13)
-big((34, 150), "1年に", 84, WHITE, 13)
-big((24, 240), "1万mm", 210, YEL, 16)
-big((34, 490), "の雨が降る山", 92, WHITE, 13)
+big((34, 40), "日本の6倍の雨が降る山", 74, WHITE, 12)
+big((34, 190), "海の真ん中の島", 116, WHITE, 14)
+big((26, 360), "水はどこから？", 150, YEL, 16)
 ImageDraw.Draw(img).text((1262, 706), "イメージ", font=font(24, "Bold"), fill=(255, 255, 255, 200), anchor="rd", stroke_width=3, stroke_fill=INK)
 img.convert("RGB").save(OUT / "thumb_long.jpg", quality=93)
 print(OUT / "thumb_long.jpg")
