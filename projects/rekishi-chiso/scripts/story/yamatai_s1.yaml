@@ -1,0 +1,163 @@
+# 物語完結型ショート 邪馬台国はどこ？ s1（2026-11-07）。本編 scripts/yamatai-story.yaml（11/10 19:00 公開、https://youtu.be/cqLK1qEXpMw）の序章・第1章から。11/11 9:30 公開。
+# 形式は shogun_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし（本編にも無い）。
+# 絵は本編の AI 絵（out/story/yamatai/main。Gemini）。新しい絵は作らない。
+# 切り口：国の名前の字（刊本の邪馬壹国・後漢書・隋書）と、最初の使いの年（238か239）の2つの食い違い。
+#   本編の答え（採点の1位・浮かび上がる場所）は明かさない。tease の答えは第8章（採点の結果）。
+# 事実カード（dev/output/rekishi-chiso/research/邪馬台国_facts_20261107.yaml）：yamatai-14・20・23・12（古田武彦の論文は長さのため外した）。言い方は本編のまま。
+#   ・239→2026 は1787年＝およそ1800年（本編どおり）。
+# 理解テスト4問：
+#   ①誰の話か：邪馬台国と、それを書いた『魏志倭人伝』（陳寿『三国志』の倭人の条）
+#   ②何が起きているか：今に残る刊本は「邪馬壹国」と刷る。後漢書は邪馬臺国、隋書は邪靡堆
+#   ③ほかに何が割れるか：卑弥呼の最初の使いの年。魏志は238年、日本書紀の注と梁書は239年
+#   ④どうなっているか：名前の字も場所も、およそ1800年決まっていない
+title: 邪馬台国｜名前は、記録のとおりなのか
+yt_title: 邪馬台国の名前は記録のとおりなのか　今に残る『魏志倭人伝』の刷り本は「邪馬壹国」、使いの年まで割れている
+description: |-
+  学校で誰もが習う「邪馬台国」。その名前は、記録のとおりなのでしょうか。
+  邪馬台国の名を記したいちばん古い記録は、3世紀の中国の歴史家、陳寿の『三国志』。日本で『魏志倭人伝』と呼ばれる部分です。ところが、今に残るその印刷された本には、「邪馬壹国」と刷られています。5世紀に書かれた『後漢書』は邪馬臺国、『隋書』は邪靡堆と書いて、魏志の言う邪馬臺だと添えます。
+  食い違いは名前だけではありません。卑弥呼が魏に初めて使いを送った年も、いま伝わる魏志の本文は景初2年（238年）、720年の『日本書紀』が魏志を引いた注と7世紀の『梁書』は景初3年（239年）です。
+  では、記録に書かれた「物」だけで説ごとに点を付けたら、どこが残るのか。本編は概要欄のリンクからどうぞ。
+hashtags: ['#邪馬台国', '#卑弥呼', '#日本史']
+ai_images: true
+ai_disclosure: この動画の情景・人物の画像は、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面に「AI生成画像」と出しています）。卑弥呼の姿も、特定の資料を写したものではありません。
+art_dir: out/story/yamatai
+readings: {邪靡堆: やびたい, 邪馬臺国: やまたいこく, 邪馬臺: やまたい}      # 台本ごとの読み替え（readings.yaml は変えない）
+out: yamatai_story_s1
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 邪馬台国（『魏志倭人伝』）
+  title: "邪馬台国の名前は、《記録のとおりか》"
+now:
+  - {at: 邪馬台国の名前は, text: "いま　教科書", point: 3}
+  - {at: 3世紀の, text: "3世紀　陳寿", point: 0}
+  - {at: 5世紀に, text: "5世紀　後漢書", point: 1}
+  - {at: 食い違いは, text: "最初の使い", point: 0}
+  - {at: 720年, text: "720年　日本書紀", point: 2}
+  - {at: 国の名前の字さえ, text: "いま", point: 3}
+timeline:
+  - {label: "239"}
+  - {label: "5世紀"}
+  - {label: "720"}
+  - {label: "いま"}
+cards:
+  - type: table
+    title: 国の名前の字
+    from: 刷られているのは
+    until: 食い違いは
+    items:
+      - {at: 刷られているのは, text: "魏志の刷り本　邪馬壹国"}
+      - {at: 5世紀に, text: "『後漢書』　邪馬臺国"}
+      - {at: 『隋書』は, text: "『隋書』　邪靡堆"}
+    text_y: 0.70
+  - type: versus
+    from: いま伝わる
+    until: 国の名前の字さえ
+    left: {tag: 魏志の本文, big: 238年, dots: 1, color: blue}
+    right: {tag: 書紀の注・梁書, big: 239年, dots: 1, color: red}
+    mid: 対
+    text_y: 0.66
+shots:
+  H01:
+    kind: ai
+    file: yamatai/main/H01.jpg
+    focus: [0.2, 0.5]
+    move: right
+    must: 卑弥呼の想像図
+  Y12:
+    kind: ai
+    file: yamatai/main/Y12.jpg
+    focus: [0.45, 0.55]
+    move: right
+    must: 灯の下の竹簡と筆
+  Y12b:
+    kind: ai
+    file: yamatai/main/Y12.jpg
+    focus: [0.35, 0.5]
+    move: in
+    must: 竹簡（寄り）
+  Y11:
+    kind: ai
+    file: yamatai/main/Y11.jpg
+    focus: [0.5, 0.5]
+    move: left
+    must: 中国の古い宮殿
+  Y21:
+    kind: ai
+    file: yamatai/main/Y21.jpg
+    focus: [0.6, 0.6]
+    move: left
+    must: 海辺の村と浜の舟（使いの船出）
+  Y11b:
+    kind: ai
+    file: yamatai/main/Y11.jpg
+    focus: [0.45, 0.45]
+    move: up
+    must: 中国の宮殿（魏の都）
+  Y02:
+    kind: ai
+    file: yamatai/main/Y02.jpg
+    focus: [0.5, 0.5]
+    move: right
+    must: 上空から見た環濠集落
+  Y07:
+    kind: ai
+    file: yamatai/main/Y07.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 銅鏡（記録に書かれた物）
+lines:
+  - 語り: 邪馬台国の名前は、記録のとおりなのか。
+    shot: H01
+    tone: 疑問
+    pause: 0.12
+  # fact: yamatai-20, yamatai-23
+  - 語り: その名を記した、いちばん古い記録は、3世紀の中国の歴史家、陳寿の『三国志』。日本では、この部分を、『魏志倭人伝』と呼ぶ。
+    shot: Y12
+    tone: 強調
+    pause: 0.12
+  # fact: yamatai-14
+  - 語り: ところが、今に残る、その印刷された本に、邪馬台国とは、書かれていない。
+    shot: Y12b
+    tone: 重い
+    pause: 0.12
+  # fact: yamatai-14
+  - 語り: 刷られているのは、《邪馬壹国》。台の字が、違う。
+    shot: Y12b
+    tone: 強調
+    pause: 0.12
+  # fact: yamatai-14
+  - 語り: 5世紀に書かれた、『後漢書』は、邪馬臺国。『隋書』は、邪靡堆と書いて、魏志の言う邪馬臺だ、と添える。
+    shot: Y11
+    tone: しみじみ
+    pause: 0.12
+  # fact: yamatai-12
+  - 語り: 食い違いは、名前だけではない。卑弥呼が、魏に、初めて使いを送った年も、割れている。
+    shot: Y21
+    tone: 重い
+    pause: 0.12
+  # fact: yamatai-12
+  - 語り: いま伝わる魏志の本文は、景初2年、238年。ところが、720年の、『日本書紀』が、魏志を引いた注と、7世紀の、『梁書』は、景初3年、239年とする。
+    shot: Y11b
+    tone: 強調
+    pause: 0.3
+    dip: true
+  # fact: yamatai-14
+  - 語り: 国の名前の字さえ、ひとつに決まらない。その国がどこにあったのかも、およそ1800年、《答えは出ていない》。
+    shot: Y02
+    tone: 重い
+    pause: 0.15
+  # （答えは本編の第8章：採点の結果）
+  - 語り: では、記録に書かれた「物」だけで、説ごとに点を付けたら、どこが残るのか。
+    shot: Y07
+    tone: 疑問
+    pause: 0.15
