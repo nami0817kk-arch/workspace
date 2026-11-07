@@ -36,7 +36,7 @@ void botStep(Career c, {bool trades = false, bool scouting = true}) {
           }
           open.sort((a, b) => b.mid.compareTo(a.mid));
         }
-        if (c.me.roster.length >= maxRoster) {
+        if (!c.canDraftPick) {
           c.passPick();
         } else {
           c.pickProspect(open.first);

@@ -68,7 +68,7 @@ class ProgressTab extends StatelessWidget {
             style: const TextStyle(color: GmColors.sub, height: 1.5)),
         const SizedBox(height: 10),
         _kv('いまの戦力', '30チーム中 $rank位'),
-        _kv('登録', '${car.me.roster.length}人($minRoster〜$maxRoster人)'),
+        _kv('登録', '${car.me.roster.length}人($minRoster〜$maxRoster人)', color: car.me.roster.length > maxRoster ? GmColors.bad : null),
         if (problem != null) ...[
           const SizedBox(height: 8),
           Text(problem, style: const TextStyle(color: GmColors.bad, fontWeight: FontWeight.bold)),

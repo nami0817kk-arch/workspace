@@ -59,52 +59,67 @@ class RosterTab extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 10),
-        OutlinedButton.icon(
-          onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => RotationScreen(c: c))),
-          icon: const Icon(Icons.swap_vert_rounded),
-          label: Text(me.rotation.isEmpty ? '先発と控えの順を決める(いまは自動)' : '先発と控えの順を決める'),
-        ),
-        const SizedBox(height: 6),
-        OutlinedButton.icon(
-          onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => MinutesScreen(c: c))),
-          icon: const Icon(Icons.timer_outlined),
-          label: Text(me.minutes.isEmpty ? '出場時間を決める(いまは自動)' : '出場時間を決める'),
-        ),
-        const SizedBox(height: 6),
-        OutlinedButton.icon(
-          onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => CoachesScreen(c: c))),
-          icon: const Icon(Icons.badge_rounded),
-          label: Text('コーチ陣(ヘッドコーチ ${me.coachOf(Staff.coach)?.name ?? coachLevelLabels[me.staffLevel(Staff.coach) - 1]})',
-              maxLines: 1, overflow: TextOverflow.ellipsis),
-        ),
-        const SizedBox(height: 6),
-        OutlinedButton.icon(
-          onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => TrainingScreen(c: c))),
-          icon: const Icon(Icons.fitness_center_rounded),
-          label: Text('練習(強さ ${trainingLabels[me.training]}・重点 ${me.roster.where((p) => p.focus != null).length}人)'),
-        ),
-        const SizedBox(height: 6),
-        OutlinedButton.icon(
-          onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => StatsScreen(c: c))),
-          icon: const Icon(Icons.table_chart_rounded),
-          label: const Text('チームの成績(シュート・スティールなど)'),
-        ),
+        // チームの設定は2列の小さな札にまとめる(先発が1画面目に見えるように)
+        LayoutBuilder(builder: (context, cons) {
+          final w = (cons.maxWidth - 8) / 2;
+          void go(Widget screen) => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => screen));
+          return Wrap(spacing: 8, runSpacing: 8, children: [
+            _tile(w, Icons.swap_vert_rounded, '先発と控えの順', me.rotation.isEmpty ? 'いまは自動' : '自分で決めた順', () => go(RotationScreen(c: c))),
+            _tile(w, Icons.timer_outlined, '出場時間', me.minutes.isEmpty ? 'いまは自動' : '自分で決めた時間', () => go(MinutesScreen(c: c))),
+            _tile(w, Icons.badge_rounded, 'コーチ陣', 'HC ${me.coachOf(Staff.coach)?.name ?? coachLevelLabels[me.staffLevel(Staff.coach) - 1]}',
+                () => go(CoachesScreen(c: c))),
+            _tile(w, Icons.fitness_center_rounded, '練習', '強さ ${trainingLabels[me.training]}・重点 ${me.roster.where((p) => p.focus != null).length}人',
+                () => go(TrainingScreen(c: c))),
+            _tile(w, Icons.table_chart_rounded, 'チームの成績', 'シュート・スティールなど', () => go(StatsScreen(c: c))),
+          ]);
+        }),
         const SectionTitle('先発'),
-        for (final p in order.take(5)) _row(context, car, p),
+        // PG・SG・SF・PF・C の順に。本来と違う位置で出る選手には、その位置を添える
+        for (final (slot, p) in bySlot(order.take(5).toList())) _row(context, car, p, slot: slot),
         const SectionTitle('控え'),
         for (final p in order.skip(5)) _row(context, car, p),
       ],
     );
   }
 
-  Widget _row(BuildContext context, Career car, Player p) => Padding(
+  Widget _tile(double w, IconData icon, String title, String sub, VoidCallback onTap) => SizedBox(
+        width: w,
+        child: Material(
+          color: GmColors.panel,
+          borderRadius: BorderRadius.circular(12),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(12),
+            onTap: onTap,
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(10, 8, 8, 8),
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), border: Border.all(color: GmColors.line)),
+              child: Row(children: [
+                Icon(icon, size: 20, color: GmColors.ball),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    Text(title, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                    Text(sub, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 11, color: GmColors.sub)),
+                  ]),
+                ),
+              ]),
+            ),
+          ),
+        ),
+      );
+
+  Widget _row(BuildContext context, Career car, Player p, {Pos? slot}) => Padding(
         padding: const EdgeInsets.only(bottom: 6),
         child: PlayerRow(
           p: p,
           team: car.mine,
           showDelta: true,
           showMorale: true,
-          extra: car.draftedIds.contains(p.id) ? const Tag('生え抜き', color: GmColors.good) : null,
+          extra: slot != null && slot != p.pos
+              ? Tag('${slot.short}で出る(本来は${p.pos.short})', color: GmColors.gold)
+              : car.draftedIds.contains(p.id)
+                  ? const Tag('生え抜き', color: GmColors.good)
+                  : null,
           onTap: () => _detail(context, car, p),
         ),
       );

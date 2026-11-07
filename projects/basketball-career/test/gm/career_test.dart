@@ -344,6 +344,64 @@ void main() {
     });
   });
 
+  group('ポジションと人数', () {
+    test('任期の終わりまで、ほかのチームはどのポジションにも選手がいて、先発は偏らない', () {
+      final c = botPlayCareer(3, team: teamAtRank(3, 12));
+      final others = c.teams.where((t) => t.index != c.mine).toList();
+      var skewed = 0;
+      for (final t in others) {
+        for (final pos in Pos.values) {
+          expect(t.roster.any((p) => p.pos == pos), isTrue, reason: '${t.def.short} に ${pos.short} がいない');
+        }
+        final five = t.order.take(5).map((p) => p.pos).toList();
+        if (five.toSet().length < 4) skewed++;
+      }
+      expect(skewed, lessThanOrEqualTo(3), reason: '先発で同じポジションが3人以上のチーム');
+    });
+
+    test('先発は本来のポジションの選手を選び、PG から C の順に当てはめられる。違う位置に出すと強さが下がる', () {
+      Player mk(int id, Pos pos, int ovr) => Player(id: id, name: 'p$id', pos: pos, age: 26, ovr: ovr, pot: ovr, salary: 50, years: 2);
+      final balanced = [mk(1, Pos.pg, 75), mk(2, Pos.sg, 74), mk(3, Pos.sf, 73), mk(4, Pos.pf, 72), mk(5, Pos.c, 71), mk(6, Pos.sg, 72), mk(7, Pos.sf, 70)];
+      final five = lineup(balanced).take(5).toList();
+      expect(five.map((p) => p.pos).toSet().length, 5);
+      expect(positionPenalty(five), 0);
+      expect(bySlot(five).map((x) => x.$1), Pos.values);
+      final guards = [mk(1, Pos.pg, 75), mk(2, Pos.pg, 75), mk(3, Pos.sg, 75), mk(4, Pos.sg, 75), mk(5, Pos.sg, 75)];
+      expect(positionPenalty(guards), greaterThan(3), reason: 'ガード5人はビッグの位置が大きく外れる');
+      // ずっと力の高い選手なら、隣のポジションでも先発に入る
+      final star = [mk(1, Pos.pg, 60), mk(2, Pos.sg, 90), mk(3, Pos.sg, 74), mk(4, Pos.sf, 73), mk(5, Pos.pf, 72), mk(6, Pos.c, 71)];
+      expect(lineup(star).take(5).map((p) => p.id), containsAll([2, 3]));
+    });
+
+    test('ドラフトでは契約が切れる選手を数えず、オフは17人まで指名できる。開幕は15人まで', () {
+      final c = careerAt(7, 27);
+      var guard = 0;
+      while (!(c.phase == Phase.draft && c.myTurn) && guard++ < 200) {
+        if (c.phase == Phase.seasonEnd) c.fired = false;
+        botStep(c);
+      }
+      expect(c.myTurn, isTrue);
+      // 15人いて、2人は契約が切れる
+      while (c.me.roster.length < maxRoster) {
+        c.me.roster.add(Player(id: 900000 + c.me.roster.length, name: 'x${c.me.roster.length}', pos: Pos.sf, age: 30, ovr: 50, pot: 50, salary: minSalary, years: 0));
+      }
+      for (final p in c.me.roster.take(2)) {
+        p.years = 0;
+      }
+      expect(c.me.roster.length, maxRoster);
+      expect(c.signedCount, lessThan(offseasonRoster));
+      expect(c.draftProblem, isNull, reason: '15人いても指名できる');
+      final before = c.me.roster.length;
+      c.pickProspect(byMid(c).first);
+      expect(c.me.roster.length, before + 1);
+      // 契約中が17人になったら、それ以上は指名できない
+      while (c.signedCount < offseasonRoster) {
+        c.me.roster.add(Player(id: 910000 + c.me.roster.length, name: 'y${c.me.roster.length}', pos: Pos.pf, age: 30, ovr: 50, pot: 50, salary: minSalary, years: 2));
+      }
+      expect(c.draftProblem, isNotNull);
+    });
+  });
+
   group('トレードブロックと月間MVP', () {
     test('トレードブロックに載せると気持ちが少し下がり、申し込みを集めて受けられる。保存しても残る', () {
       final c = careerAt(3, 12);
@@ -699,9 +757,14 @@ void main() {
     });
 
     test('高く申し込むほど選ばれやすく、申し込み中の年俸は上限の空きに数える', () {
-      final c = toContracts(5);
-      while (c.me.payroll > salaryCap - 300 && c.me.roster.isNotEmpty) {
-        c.release(c.me.roster.reduce((a, b) => a.salary >= b.salary ? a : b).id);
+      // 申し込める大物がいる局面を探す(種によっては、上限の空きを作っても誰も届かない)
+      late Career c;
+      for (var seed = 5;; seed++) {
+        c = toContracts(seed);
+        while (c.me.payroll > salaryCap - 300 && c.me.roster.isNotEmpty) {
+          c.release(c.me.roster.reduce((a, b) => a.salary >= b.salary ? a : b).id);
+        }
+        if (c.freeAgents.any((p) => c.isBigFa(p) && c.bidProblem(p) == null) || seed > 20) break;
       }
       final p = bigOne(c);
       c.bids.putIfAbsent(p.id, () => []).add(FaBid((c.mine + 1) % 30, c.askOf(p, c.teams[(c.mine + 1) % 30]).salary, 2));

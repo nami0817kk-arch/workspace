@@ -129,7 +129,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('チーム'));
     await tester.pumpAndSettle();
-    await tester.tap(find.textContaining('先発と控えの順を決める'));
+    await tester.tap(find.text('先発と控えの順'));
     await tester.pumpAndSettle();
     expect(find.text('先発と控えの順'), findsOneWidget);
     expect(tester.takeException(), isNull);

@@ -149,7 +149,7 @@ String? salaryRuleProblem(Team t, int incoming, int outgoing) {
 /// こちら([mine])からの申し込みを、相手がどう見るか。
 ///
 /// [slots] はチームごとの指名の見込みの順番(探す間は変わらないので、先に一度だけ計算して渡せる)。
-TradeVerdict judgeTrade(List<Team> teams, List<DraftPick> picks, int mine, TradeOffer o, int nowSeason, {Map<int, int>? slots}) {
+TradeVerdict judgeTrade(List<Team> teams, List<DraftPick> picks, int mine, TradeOffer o, int nowSeason, {Map<int, int>? slots, int rosterLimit = maxRoster}) {
   final me = teams[mine], them = teams[o.partner];
   final give = [for (final id in o.give) me.roster.firstWhere((p) => p.id == id)];
   final get = [for (final id in o.get) them.roster.firstWhere((p) => p.id == id)];
@@ -158,8 +158,8 @@ TradeVerdict judgeTrade(List<Team> teams, List<DraftPick> picks, int mine, Trade
   }
   final myAfter = me.roster.length - give.length + get.length;
   final theirAfter = them.roster.length - get.length + give.length;
-  if (myAfter > maxRoster) return const TradeVerdict(false, 'こちらの登録が15人を超える', 0);
-  if (theirAfter > maxRoster) return TradeVerdict(false, '${them.def.short}の登録が15人を超える', 0);
+  if (myAfter > rosterLimit) return TradeVerdict(false, 'こちらの登録が$rosterLimit人を超える', 0);
+  if (theirAfter > rosterLimit) return TradeVerdict(false, '${them.def.short}の登録が$rosterLimit人を超える', 0);
   if (theirAfter < minRoster) return TradeVerdict(false, '${them.def.short}の人数が足りなくなる', 0);
   final gs = give.fold(0, (s, p) => s + p.salary), ts = get.fold(0, (s, p) => s + p.salary);
   final mine1 = salaryRuleProblem(me, ts, gs);
