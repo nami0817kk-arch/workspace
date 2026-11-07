@@ -310,7 +310,7 @@ class LeagueTab extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
             children: [
               Row(children: [
-                TeamBadge(team: t.index, size: 34),
+                TeamBadge(team: t.index, size: 56),
                 const SizedBox(width: 10),
                 Expanded(child: Text(t.name, style: const TextStyle(fontSize: 19, fontWeight: FontWeight.bold))),
               ]),

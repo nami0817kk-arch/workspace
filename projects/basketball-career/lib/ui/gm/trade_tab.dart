@@ -93,7 +93,7 @@ class _TradeTabState extends State<TradeTab> {
               child: Padding(
                 padding: const EdgeInsets.all(12),
                 child: Row(children: [
-                  TeamBadge(team: _partner, size: 34),
+                  TeamBadge(team: _partner, size: 48),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
