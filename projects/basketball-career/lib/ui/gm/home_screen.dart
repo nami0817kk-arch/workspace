@@ -6,7 +6,6 @@ import '../gm_controller.dart';
 import '../howto_screen.dart';
 import '../layout.dart';
 import '../settings_screen.dart';
-import 'hub_screen.dart';
 import 'style.dart';
 import 'team_pick_screen.dart';
 
@@ -84,7 +83,7 @@ class GmHomeScreen extends StatelessWidget {
                   FilledButton.icon(
                     onPressed: c.resume,
                     icon: const Icon(Icons.play_arrow_rounded),
-                    label: Text('続きから(${car.season}年目・${phaseLabel(car)})'),
+                    label: Text('続きから(${car.season}年目・${car.me.def.short})', maxLines: 1, overflow: TextOverflow.ellipsis),
                   ),
                   const SizedBox(height: 10),
                 ],

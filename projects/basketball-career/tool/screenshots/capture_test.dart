@@ -30,6 +30,7 @@ import 'package:basketball_career/gm/trade.dart';
 import 'package:basketball_career/monetization/monetization.dart';
 import 'package:basketball_career/monetization/purchase_service.dart';
 import 'package:basketball_career/ui/app.dart';
+import 'package:basketball_career/ui/gm/common.dart';
 import 'package:basketball_career/ui/gm/style.dart';
 import 'package:basketball_career/ui/gm_controller.dart';
 import 'package:basketball_career/ui/remove_ads_offer.dart';
@@ -359,6 +360,8 @@ void main() {
       await t.scrollUntilVisible(find.textContaining('ボックススコアが見られる'), 300, scrollable: _list);
       await _tap(t, opp);
     });
+    // 前の撮影で保存された続きがあると「新しく任される?」が出るので、保存を空にしてから
+    SharedPreferences.setMockInitialValues({'gmHowtoSeen': true});
     await _shoot(t, 'r1b_teampick', 'チームを選ぶ', await _controller(), outDir: out, act: (t) => _tap(t, 'GMに就任する'));
     await _shoot(t, 'r2_preseason', 'シーズン前', await _with(careerAt(2, 28)), outDir: out);
     await _shoot(t, 'r3_market', '補強', await _with(Career.start(seed: 2)), outDir: out, act: (t) => _tap(t, '補強'));
@@ -387,6 +390,47 @@ void main() {
     await _shoot(t, 'r8_howto', '遊び方の画面', await _controller(), outDir: out, act: (t) async {
       await t.scrollUntilVisible(find.text('遊び方'), 200, scrollable: _list);
       await _tap(t, '遊び方');
+    });
+  });
+
+  // 30チームのロゴの一覧(点検用)。
+  testWidgets('ロゴの一覧', (t) async {
+    if (_ipad) return;
+    await _loadFonts();
+    addTearDown(t.view.reset);
+    t.view.physicalSize = const Size(402, 1100) * 2;
+    t.view.devicePixelRatio = 2;
+    await t.pumpWidget(RepaintBoundary(
+      key: _key,
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: gmTheme(),
+        home: Scaffold(
+          body: GridView.count(
+            crossAxisCount: 5,
+            padding: const EdgeInsets.all(8),
+            childAspectRatio: 0.62,
+            children: [
+              for (var i = 0; i < teamDefs.length; i++)
+                Column(children: [
+                  TeamBadge(team: i, size: 64),
+                  const SizedBox(height: 4),
+                  Text(teamDefs[i].nick, textAlign: TextAlign.center, maxLines: 2, style: const TextStyle(fontSize: 10)),
+                  const SizedBox(height: 4),
+                  TeamBadge(team: i, size: 22),
+                ]),
+            ],
+          ),
+        ),
+      ),
+    ));
+    await t.pump(const Duration(milliseconds: 300));
+    await t.runAsync(() async {
+      final b = _key.currentContext!.findRenderObject() as RenderRepaintBoundary;
+      final img = await b.toImage(pixelRatio: 2);
+      final data = await img.toByteData(format: ui.ImageByteFormat.png);
+      final dir = Directory('build/review')..createSync(recursive: true);
+      File('${dir.path}/logos.png').writeAsBytesSync(data!.buffer.asUint8List());
     });
   });
 

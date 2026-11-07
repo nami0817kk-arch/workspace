@@ -83,7 +83,7 @@ class _TeamPickScreenState extends State<TeamPickScreen> {
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
               children: [
                 Row(children: [
-                  TeamBadge(team: t.index, size: 36),
+                  TeamBadge(team: t.index, size: 60),
                   const SizedBox(width: 10),
                   Expanded(child: Text(t.name, style: const TextStyle(fontSize: 19, fontWeight: FontWeight.bold))),
                 ]),
@@ -142,7 +142,7 @@ class _TeamCard extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: Row(children: [
-            TeamBadge(team: t.index, size: 40),
+            TeamBadge(team: t.index, size: 52),
             const SizedBox(width: 10),
             Expanded(
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

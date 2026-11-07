@@ -4,6 +4,7 @@ import '../../gm/league.dart';
 import '../../gm/player.dart';
 import '../team_colors.dart';
 import 'style.dart';
+import 'team_logo.dart';
 
 TeamColor colorOf(int team) => TeamColor.values.firstWhere((c) => c.sprite == teamDefs[team].color, orElse: () => TeamColor.blue);
 
@@ -45,18 +46,9 @@ class TeamBadge extends StatelessWidget {
   final int team;
   final double size;
 
+  /// チームのロゴ(team_logo.dart)。
   @override
-  Widget build(BuildContext context) {
-    final c = colorOf(team);
-    return Container(
-      width: size,
-      height: size,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(color: c.accent, shape: BoxShape.circle),
-      child: Text(teamDefs[team].nick.substring(0, 1),
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: size * 0.5)),
-    );
-  }
+  Widget build(BuildContext context) => TeamLogo(team: team, size: size);
 }
 
 /// 力の数字。
