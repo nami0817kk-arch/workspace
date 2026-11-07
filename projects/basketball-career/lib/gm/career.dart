@@ -134,11 +134,56 @@ const resultTrust = [0, 4, 8, 13, 19, 28];
 enum AwardKind {
   mvp('MVP'),
   roy('新人王'),
-  dpoy('最優秀守備選手');
+  dpoy('最優秀守備選手'),
+  // ここから下は後から足した(保存は番号なので、足すときは後ろに)
+  sixth('シックスマン賞'),
+  mip('躍進賞'),
+  finalsMvp('ファイナルMVP'),
+  allLeague1('オールリーグ1st'),
+  allLeague2('オールリーグ2nd'),
+  allLeague3('オールリーグ3rd');
 
   const AwardKind(this.label);
   final String label;
+
+  bool get allLeague => this == allLeague1 || this == allLeague2 || this == allLeague3;
 }
+
+/// 殿堂に入った選手。
+class HallEntry {
+  const HallEntry({required this.name, required this.pos, required this.season, required this.team, required this.seasons, required this.line, required this.honors});
+  final String name;
+  final Pos pos;
+
+  /// 殿堂に入った年(引退した年)。
+  final int season;
+
+  /// 最後にいたチーム(-1 は自由契約のまま引退)。
+  final int team;
+
+  /// このリーグで出たシーズンの数。
+  final int seasons;
+
+  /// 通算の成績(「21.3点 7.0リ 4.1ア」)。
+  final String line;
+
+  /// 主な実績(「MVP 2回・オールスター 5回」)。
+  final String honors;
+
+  Map<String, dynamic> toJson() => {'n': name, 'p': pos.index, 's': season, 't': team, 'y': seasons, 'l': line, 'h': honors};
+  static HallEntry fromJson(Map<String, dynamic> j) => HallEntry(
+        name: j['n'] as String,
+        pos: Pos.values[((j['p'] as int?) ?? 0).clamp(0, Pos.values.length - 1)],
+        season: j['s'] as int,
+        team: ((j['t'] as int?) ?? -1).clamp(-1, teamDefs.length - 1),
+        seasons: (j['y'] as int?) ?? 0,
+        line: (j['l'] as String?) ?? '',
+        honors: (j['h'] as String?) ?? '',
+      );
+}
+
+/// 殿堂に入る点の基準([Career.hallScore] がこれ以上)。
+const hallThreshold = 10;
 
 class Award {
   const Award({required this.season, required this.kind, required this.player, required this.name, required this.team, required this.line});
@@ -429,7 +474,59 @@ class Career {
     return all.take(count).toList();
   }
 
-  /// シーズンの終わりに表彰を決める(MVP・新人王・最優秀守備選手)。
+  /// 歴代の優勝([シーズン, 優勝, ファイナルの相手]、古い順)。
+  List<List<int>> champs = [];
+
+  /// 殿堂(古い順)。
+  List<HallEntry> hall = [];
+
+  /// 殿堂に入る点。表彰・オールスター・優勝・通算得点から。
+  int hallScore(Player p) {
+    var n = p.allStars + p.careerTotals.pts ~/ 4000;
+    for (final a in awards.where((a) => a.player == p.id)) {
+      n += switch (a.kind) {
+        AwardKind.mvp => 6,
+        AwardKind.finalsMvp => 3,
+        AwardKind.allLeague1 => 3,
+        AwardKind.dpoy || AwardKind.allLeague2 => 2,
+        AwardKind.allLeague3 || AwardKind.roy || AwardKind.sixth || AwardKind.mip => 1,
+      };
+    }
+    return n;
+  }
+
+  /// 引退した選手が殿堂に入るか確かめる。
+  void _toHall(Player p, int team) {
+    if (hallScore(p) < hallThreshold) return;
+    final mine = awards.where((a) => a.player == p.id).toList();
+    String count(bool Function(Award) f, String label) {
+      final n = mine.where(f).length;
+      return n == 0 ? '' : '$label $n回';
+    }
+
+    final honors = [
+      count((a) => a.kind == AwardKind.mvp, 'MVP'),
+      count((a) => a.kind == AwardKind.finalsMvp, 'ファイナルMVP'),
+      count((a) => a.kind == AwardKind.dpoy, '最優秀守備'),
+      count((a) => a.kind.allLeague, 'オールリーグ'),
+      if (p.allStars > 0) 'オールスター ${p.allStars}回',
+    ].where((s) => s.isNotEmpty).join('・');
+    hall.add(HallEntry(name: p.name, pos: p.pos, season: season, team: team, seasons: p.career.length, line: p.careerTotals.line, honors: honors));
+    _log('殿堂入り: ${p.name}($honors)');
+    _mail(Sender.league, '${p.name}が殿堂入り', '${p.name}が引退し、殿堂に入った。通算 ${p.careerTotals.line}。$honors');
+  }
+
+  /// 現役の選手の通算成績の上位([key] で並べる)。
+  List<(Player, int)> careerLeaders(int Function(Stats) key, {int count = 5}) {
+    final all = [
+      for (final t in teams)
+        for (final p in t.roster)
+          if (p.career.isNotEmpty) (p, t.index),
+    ]..sort((a, b) => key(b.$1.careerTotals).compareTo(key(a.$1.careerTotals)));
+    return all.take(count).toList();
+  }
+
+  /// シーズンの終わりに表彰を決める(MVP・新人王・最優秀守備選手・シックスマン賞・躍進賞・ファイナルMVP・オールリーグ)。
   void _giveAwards() {
     final pool = [
       for (final t in teams)
@@ -452,6 +549,35 @@ class Career {
     // 新人王は、出場して点を取った新人がいるときだけ(控えの奥で出ていない新人には出さない)
     give(AwardKind.roy, pool.where((x) => x.$1.exp == 0 && x.$1.stats.ppg >= 5), mvp);
     give(AwardKind.dpoy, pool, dpoy);
+    // シックスマン賞は、シーズンの終わりに先発の5人に入っていない選手から
+    final starters = {for (final t in teams) ...t.order.take(5).map((p) => p.id)};
+    give(AwardKind.sixth, pool.where((x) => !starters.contains(x.$1.id)), (x) => x.$1.stats.ppg + 0.4 * x.$1.stats.rpg + 0.6 * x.$1.stats.apg);
+    // 躍進賞は、前のシーズンにも出ていた選手の伸び
+    double rise((Player, Team) x) => x.$1.stats.ppg - x.$1.prev.ppg + 0.5 * (x.$1.stats.rpg - x.$1.prev.rpg + x.$1.stats.apg - x.$1.prev.apg);
+    give(AwardKind.mip, pool.where((x) => x.$1.prev.gp >= 30 && rise(x) > 0), rise);
+    // ファイナルMVPは、優勝したチームでいちばんの選手
+    if (champion >= 0) {
+      give(AwardKind.finalsMvp, pool.where((x) => x.$2.index == champion), (x) => x.$1.stats.ppg + 0.6 * x.$1.stats.rpg + 0.9 * x.$1.stats.apg);
+    }
+    // オールリーグは3チーム。各チームにガード2人・フォワード2人・センター1人
+    final left = [...pool]..sort((a, b) => mvp(b).compareTo(mvp(a)));
+    final teamsOf = <List<(Player, Team)>>[];
+    for (var k = 0; k < 3; k++) {
+      final five = <(Player, Team)>[];
+      for (final (want, n) in [((Pos p) => p.guard, 2), ((Pos p) => p == Pos.sf || p == Pos.pf, 2), ((Pos p) => p == Pos.c, 1)]) {
+        five.addAll(left.where((x) => want(x.$1.pos)).take(n));
+        left.removeWhere(five.contains);
+      }
+      teamsOf.add(five);
+      for (final x in five) {
+        awards.add(Award(season: season, kind: AwardKind.values[AwardKind.allLeague1.index + k], player: x.$1.id, name: x.$1.name, team: x.$2.index, line: x.$1.stats.line));
+      }
+    }
+    if (teamsOf.first.isNotEmpty) {
+      _mail(Sender.league, 'オールリーグの発表', [
+        for (var k = 0; k < teamsOf.length; k++) '${AwardKind.values[AwardKind.allLeague1.index + k].label}: ${teamsOf[k].map((x) => '${x.$1.name}(${x.$2.def.short})').join('・')}',
+      ].join('\n'));
+    }
   }
 
   /// リーグのニュース(新しい順、[logLimit] 件まで)。トレード・大物の移籍・ドラフト1位・優勝・引退。
@@ -856,6 +982,14 @@ class Career {
     trust = (trust + delta).clamp(0, 100);
     history.add(SeasonRecord(season: season, wins: me.wins, losses: me.losses, rank: confRank, result: res, trustAfter: trust, target: target));
     if (trust <= 0) fired = true;
+    if (finals != null) champs.add([season, champion, finals!.loser]);
+    // 選手の年ごとの成績を残す(シーズンの終わりにいたチームで)
+    for (final t in teams) {
+      for (final p in t.roster) {
+        final s = p.stats;
+        if (s.gp > 0) p.career.add([season, t.index, s.gp, s.pts, s.reb, s.ast]);
+      }
+    }
   }
 
   /// 前のシーズンの、オーナーの信頼の変わり方。
@@ -924,6 +1058,7 @@ class Career {
       }
       for (final p in retired) {
         t.roster.remove(p);
+        _toHall(p, t.index);
         if (t.index == mine) news.add('${p.name}(${p.age}歳)が引退した');
         if (p.ovr >= 72 || t.index == mine) _log('引退: ${p.name}(${t.def.short}・${p.age}歳)');
       }
@@ -931,7 +1066,11 @@ class Career {
     for (final p in freeAgents) {
       ageOneYear(p, rng);
     }
-    freeAgents.removeWhere((p) => retires(p, rng) || p.ovr < 45);
+    freeAgents.removeWhere((p) {
+      final gone = retires(p, rng);
+      if (gone) _toHall(p, p.career.isEmpty ? -1 : p.career.last[1]);
+      return gone || p.ovr < 45;
+    });
     // ドラフト
     // 1回戦に出たチーム(プレーインを勝ち抜いたチームを含む)は、くじに入らない
     final inPlayoffs = {for (final s in playoffs.where((s) => s.round == 1)) ...[s.high, s.low]}.toList();
@@ -1433,6 +1572,8 @@ class Career {
         'lp': lastProfit,
         'gl': [for (final g in goals) g.toJson()],
         'aw': [for (final a in awards) a.toJson()],
+        'chp': champs,
+        'hof': [for (final h in hall) h.toJson()],
         'log': log,
         'tax': lastTax,
         'dr': draftedIds,
@@ -1485,6 +1626,11 @@ class Career {
       ..lastProfit = (j['lp'] as int?) ?? 0
       ..goals = [for (final g in maps('gl')) OwnerGoal.fromJson(g)]
       ..awards = [for (final a in maps('aw')) Award.fromJson(a)]
+      ..champs = [
+        for (final r in (j['chp'] as List? ?? const []))
+          if (r is List && r.length == 3) [for (final x in r) x as int],
+      ]
+      ..hall = [for (final h in maps('hof')) HallEntry.fromJson(h)]
       ..log = [for (final x in (j['log'] as List? ?? const [])) x as String]
       ..lastTax = (j['tax'] as int?) ?? 0
       ..draftedIds = [for (final x in (j['dr'] as List? ?? const [])) x as int]

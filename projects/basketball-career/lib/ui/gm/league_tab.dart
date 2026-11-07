@@ -6,6 +6,7 @@ import '../../gm/league.dart';
 import '../../gm/player.dart';
 import '../gm_controller.dart';
 import 'common.dart';
+import 'history_screen.dart';
 import 'player_card.dart';
 import 'style.dart';
 
@@ -210,22 +211,19 @@ class LeagueTab extends StatelessWidget {
             ),
           ),
         ],
-        if (car.awards.isNotEmpty) ...[
-          const SectionTitle('表彰の記録'),
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                for (final a in car.awards.reversed.take(15))
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 2),
-                    child: Text('${a.season}年目 ${a.kind.label}: ${a.name}(${teamDefs[a.team].short})',
-                        style: TextStyle(fontSize: 13, color: a.team == car.mine ? GmColors.gold : null)),
-                  ),
-              ]),
-            ),
+        const SectionTitle('リーグの歴史'),
+        Card(
+          child: ListTile(
+            leading: const Icon(Icons.account_balance_rounded, color: GmColors.gold),
+            title: const Text('歴代の優勝・表彰・殿堂', style: TextStyle(fontWeight: FontWeight.bold)),
+            subtitle: Text(
+                '優勝 ${car.champs.length}回分・殿堂 ${car.hall.length}人${car.awards.isEmpty ? '' : '・最新のMVP ${car.awards.lastWhere((a) => a.kind == AwardKind.mvp, orElse: () => car.awards.last).name}'}',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis),
+            trailing: const Icon(Icons.chevron_right_rounded),
+            onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => HistoryScreen(c: c))),
           ),
-        ],
+        ),
         if (car.log.isNotEmpty) ...[
           const SectionTitle('リーグのニュース'),
           Card(

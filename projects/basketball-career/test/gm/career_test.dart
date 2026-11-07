@@ -272,6 +272,77 @@ void main() {
     });
   });
 
+  group('表彰と歴史', () {
+    late Career c;
+    setUpAll(() {
+      c = careerAt(4, 15);
+      var guard = 0;
+      while (c.phase != Phase.over && guard++ < 1500) {
+        if (c.phase == Phase.seasonEnd) c.fired = false;
+        botStep(c);
+      }
+    });
+
+    test('毎シーズン、9つの表彰がそろい、オールリーグは3チーム×5人(ガード2・フォワード2・センター1)', () {
+      expect(c.champs.length, c.history.length);
+      for (final h in c.history) {
+        final aw = c.awardsOf(h.season);
+        for (final k in [AwardKind.mvp, AwardKind.dpoy, AwardKind.sixth, AwardKind.finalsMvp]) {
+          expect(aw.where((a) => a.kind == k).length, 1, reason: '${h.season}年目 ${k.label}');
+        }
+        for (final k in [AwardKind.allLeague1, AwardKind.allLeague2, AwardKind.allLeague3]) {
+          final five = aw.where((a) => a.kind == k).toList();
+          expect(five.length, 5, reason: '${h.season}年目 ${k.label}');
+          expect(five.map((a) => a.player).toSet().length, 5);
+        }
+        final al = aw.where((a) => a.kind.allLeague).map((a) => a.player).toSet();
+        expect(al.length, 15, reason: '同じ選手が2つのチームに入らない');
+        // ファイナルMVPは優勝したチームの選手
+        final fm = aw.firstWhere((a) => a.kind == AwardKind.finalsMvp);
+        expect(fm.team, c.champs.firstWhere((r) => r[0] == h.season)[1]);
+      }
+      expect(c.awards.where((a) => a.kind == AwardKind.mip), isNotEmpty);
+    });
+
+    test('選手に年ごとの成績が残り、通算は年ごとの合計', () {
+      final vets = [for (final t in c.teams) ...t.roster].where((p) => p.career.length >= 3).toList();
+      expect(vets, isNotEmpty);
+      for (final p in vets) {
+        expect(p.careerTotals.pts, p.career.fold<int>(0, (n, r) => n + r[3]));
+        final seasons = p.career.map((r) => r[0]).toList();
+        expect(seasons.toSet().length, seasons.length, reason: '同じ年が2回ない');
+      }
+      final top = c.careerLeaders((s) => s.pts, count: 3);
+      expect(top.length, 3);
+      expect(top.first.$1.careerTotals.pts, greaterThanOrEqualTo(top.last.$1.careerTotals.pts));
+    });
+
+    test('表彰を重ねて引退した選手は殿堂に入り、保存しても残る', () {
+      expect(c.hall, isNotEmpty);
+      for (final h in c.hall) {
+        expect(h.honors, isNotEmpty);
+        expect(c.awards.any((a) => a.name == h.name), isTrue);
+      }
+      expect(c.log.any((l) => l.contains('殿堂入り')), isTrue);
+      final copy = Career.fromJson(jsonDecode(jsonEncode(c.toJson())) as Map<String, dynamic>);
+      expect(copy.hall.map((h) => h.name), c.hall.map((h) => h.name));
+      expect(copy.champs, c.champs);
+      final p = c.careerLeaders((s) => s.pts, count: 1).first.$1;
+      final q = [for (final t in copy.teams) ...t.roster].firstWhere((x) => x.id == p.id);
+      expect(q.career, p.career);
+    });
+
+    test('殿堂の点: MVPは6点、オールスターは1回1点', () {
+      final p = c.teams.first.roster.first;
+      final base = c.hallScore(p);
+      c.awards.add(Award(season: 99, kind: AwardKind.mvp, player: p.id, name: p.name, team: 0, line: ''));
+      p.allStars += 2;
+      expect(c.hallScore(p), base + 8);
+      c.awards.removeLast();
+      p.allStars -= 2;
+    });
+  });
+
   group('ローテーションと気持ち', () {
     test('順を決めると、その順で数える。力の低い選手を先発にすると弱くなり、自動に戻せる', () {
       final c = careerAt(4, 10);

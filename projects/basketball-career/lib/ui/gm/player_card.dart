@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../gm/career.dart';
+import '../../gm/league.dart';
 import '../../gm/player.dart';
 import 'common.dart';
 import 'style.dart';
@@ -162,14 +163,69 @@ Future<void> showPlayerCard(BuildContext context, Career car, Player p, int team
             if (p.stats.gp > 0) _line(car.seasonStarted ? '今季' : '昨季', '${p.stats.line}(${p.stats.gp}試合)'),
             if (p.prev.gp > 0) _line(car.seasonStarted ? '昨季' : '2季前', '${p.prev.line}(${p.prev.gp}試合)'),
             if (p.allStars > 0) _line('オールスター', '${p.allStars}回'),
-            for (final a in car.awards.where((a) => a.player == p.id)) _line('表彰', '${a.season}年目 ${a.kind.label}'),
+            if (awardsSummary(car, p).isNotEmpty) _line('表彰', awardsSummary(car, p)),
             _line('年俸', '${money(p.salary)}(残り${p.years}年)'),
             _line('伸びしろ', p.grade == '-' ? 'なし' : p.grade),
             if (p.injured > 0) _line('けが', 'あと${p.injured}試合'),
+            if (p.career.isNotEmpty) CareerTable(p: p),
           ]),
         ),
       ),
     );
+
+/// 受けた表彰を種類ごとにまとめる(「MVP 2回・オールリーグ1st 3回」)。
+String awardsSummary(Career car, Player p) {
+  final mine = car.awards.where((a) => a.player == p.id).toList();
+  return [
+    for (final k in AwardKind.values)
+      if (mine.any((a) => a.kind == k)) '${k.label} ${mine.where((a) => a.kind == k).length}回',
+  ].join('・');
+}
+
+/// 年ごとの成績と通算(このリーグに来てから)。
+class CareerTable extends StatelessWidget {
+  const CareerTable({super.key, required this.p});
+  final Player p;
+
+  @override
+  Widget build(BuildContext context) {
+    Widget row(List<String> cells, {bool head = false, Color? color}) => Padding(
+          padding: const EdgeInsets.symmetric(vertical: 2),
+          child: Row(children: [
+            for (var i = 0; i < cells.length; i++)
+              Expanded(
+                flex: i == 1 ? 3 : 2,
+                child: Text(cells[i],
+                    textAlign: i <= 1 ? TextAlign.left : TextAlign.right,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: color ?? (head ? GmColors.sub : null),
+                      fontWeight: head ? null : FontWeight.bold,
+                      fontFeatures: const [FontFeature.tabularFigures()],
+                    )),
+              ),
+          ]),
+        );
+    String f(int v, int gp) => gp == 0 ? '-' : (v / gp).toStringAsFixed(1);
+    final t = p.careerTotals;
+    return Container(
+      margin: const EdgeInsets.only(top: 10),
+      padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+      decoration: BoxDecoration(color: GmColors.panelHi, borderRadius: BorderRadius.circular(12)),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        const Text('年ごとの成績', style: TextStyle(fontWeight: FontWeight.bold)),
+        const SizedBox(height: 4),
+        row(['年', 'チーム', '試合', '得点', 'リバ', 'アシ'], head: true),
+        for (final r in p.career)
+          row(['${r[0]}年目', teamDefs[r[1]].short, '${r[2]}', f(r[3], r[2]), f(r[4], r[2]), f(r[5], r[2])]),
+        const Divider(height: 10),
+        row(['通算', '${p.career.length}シーズン', '${t.gp}', f(t.pts, t.gp), f(t.reb, t.gp), f(t.ast, t.gp)], color: GmColors.gold),
+      ]),
+    );
+  }
+}
 
 Widget _line(String k, String v) => Padding(
       padding: const EdgeInsets.symmetric(vertical: 3),
