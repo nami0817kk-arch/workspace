@@ -300,11 +300,53 @@ double teamStrength(List<Player> roster) {
     sum += o * _weights[i];
     wsum += _weights[i];
   }
-  var s = sum / wsum;
-  final top = sorted.take(5);
-  if (!top.any((p) => p.pos.guard)) s -= 2.5;
-  if (!top.any((p) => p.pos.big)) s -= 2.5;
-  return s;
+  return sum / wsum - positionPenalty(lineup(roster).take(5).toList());
+}
+
+/// ポジションの離れ方(PG・SG・SF・PF・C の並びで、いくつ離れているか)ごとの、強さの引き。
+const _offPosition = [0.0, 0.5, 1.5, 2.5, 3.5];
+
+/// 先発の5人を5つのポジションに当てはめたときの、強さの引き(いちばん合う当てはめで数える)。
+/// ガードが1人もいない・ビッグが1人もいないと大きく下がる。
+double positionPenalty(List<Player> five) {
+  if (five.isEmpty) return 0;
+  var best = 1e9;
+  void go(int k, List<int> used, double acc) {
+    if (acc >= best) return;
+    if (k == five.length) {
+      best = acc;
+      return;
+    }
+    for (var s = 0; s < Pos.values.length; s++) {
+      if (used.contains(s)) continue;
+      go(k + 1, [...used, s], acc + _offPosition[(five[k].pos.index - s).abs()]);
+    }
+  }
+
+  go(0, const [], 0);
+  return best;
+}
+
+/// 先発の5人を、PG・SG・SF・PF・C の順に並べる(いちばん合う当てはめで)。画面で見せる用。
+List<(Pos, Player)> bySlot(List<Player> five) {
+  var best = 1e9;
+  var bestPerm = <int>[];
+  void go(int k, List<int> used, double acc) {
+    if (acc >= best) return;
+    if (k == five.length) {
+      best = acc;
+      bestPerm = used;
+      return;
+    }
+    for (var s = 0; s < Pos.values.length; s++) {
+      if (used.contains(s)) continue;
+      go(k + 1, [...used, s], acc + _offPosition[(five[k].pos.index - s).abs()]);
+    }
+  }
+
+  go(0, const [], 0);
+  final out = [for (var k = 0; k < five.length; k++) (Pos.values[bestPerm[k]], five[k])]..sort((a, b) => a.$1.index.compareTo(b.$1.index));
+  return out;
 }
 
 /// 決めた順のままの強さ(上から重みを付ける)。先発にガードとビッグがいなければ下げる。
@@ -315,31 +357,29 @@ double orderStrength(List<Player> order) {
     sum += o * _weights[i];
     wsum += _weights[i];
   }
-  var s = sum / wsum;
-  final top = order.take(5);
-  if (!top.any((p) => p.pos.guard)) s -= 2.5;
-  if (!top.any((p) => p.pos.big)) s -= 2.5;
-  return s;
+  return sum / wsum - positionPenalty(order.take(5).toList());
 }
 
 /// 先発の5人(ポジションが偏らないように選ぶ)と、控え。
 List<Player> lineup(List<Player> roster) {
   final sorted = [...roster]..sort((a, b) => b.ovr.compareTo(a.ovr));
+  // 5つのポジションの枠に、力からポジションの離れ方の引きを引いた値の高い組から順に入れる。
+  // 本来のポジションの選手を優先するが、ずっと力の高い選手なら隣のポジションでも先発にする
+  final cands = sorted.take(10).toList();
+  final pairs = [
+    for (final p in cands)
+      for (var s = 0; s < Pos.values.length; s++) (p, s, p.ovr - const [0, 6, 14, 20, 26][(p.pos.index - s).abs()]),
+  ]..sort((a, b) => b.$3.compareTo(a.$3));
   final starters = <Player>[];
-  void take(bool Function(Player) f) {
-    for (final p in sorted) {
-      if (!starters.contains(p) && f(p)) {
-        starters.add(p);
-        return;
-      }
-    }
+  final filled = <int>{};
+  for (final (p, s, _) in pairs) {
+    if (starters.length >= 5) break;
+    if (filled.contains(s) || starters.contains(p)) continue;
+    starters.add(p);
+    filled.add(s);
   }
-
-  take((p) => p.pos.guard);
-  take((p) => p.pos.big);
-  while (starters.length < 5 && starters.length < sorted.length) {
-    take((_) => true);
-  }
+  // 出場時間は上から長いので、先発の中は力の高い順
+  starters.sort((a, b) => b.ovr.compareTo(a.ovr));
   return [...starters, ...sorted.where((p) => !starters.contains(p))];
 }
 

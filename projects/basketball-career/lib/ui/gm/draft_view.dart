@@ -96,9 +96,12 @@ class _DraftViewState extends State<DraftView> {
                   const SizedBox(height: 6),
                   Text('次の指名まで、ほかのチームが$before人取る。予想$before位までの候補は、先に取られそう。', style: const TextStyle(fontSize: 12, color: GmColors.gold, height: 1.4)),
                 ],
-                if (car.myTurn && car.me.roster.length >= maxRoster) ...[
+                const SizedBox(height: 6),
+                Text('契約中の選手 ${car.signedCount}人(オフは$offseasonRoster人まで。契約が切れる選手は数えない。開幕までに$maxRoster人にする)',
+                    style: const TextStyle(fontSize: 12, color: GmColors.sub)),
+                if (car.myTurn && car.draftProblem != null) ...[
                   const SizedBox(height: 6),
-                  const Text('登録が15人いっぱい。指名するなら、先にチームの画面で選手を放す。', style: TextStyle(color: GmColors.bad)),
+                  Text(car.draftProblem!, style: const TextStyle(color: GmColors.bad)),
                   const SizedBox(height: 6),
                   OutlinedButton(onPressed: c.passPick, child: const Text('この指名を見送る')),
                 ],
@@ -167,7 +170,7 @@ class _ProspectRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final car = c.career!;
     final pl = p.player;
-    final canPick = car.myTurn && car.me.roster.length < maxRoster && !c.busy;
+    final canPick = car.canDraftPick && !c.busy;
     final starred = car.board.contains(pl.id);
     return InkWell(
       borderRadius: BorderRadius.circular(12),
@@ -408,7 +411,7 @@ Future<void> _showProspect(BuildContext context, GmController c, Prospect p, int
               if (car.myTurn && p.pickedBy == null) ...[
                 const SizedBox(height: 8),
                 FilledButton(
-                  onPressed: car.me.roster.length < maxRoster && !c.busy
+                  onPressed: car.canDraftPick && !c.busy
                       ? () {
                           Navigator.of(ctx).pop();
                           c.pickProspect(p);

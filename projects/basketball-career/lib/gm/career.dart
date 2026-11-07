@@ -779,10 +779,11 @@ class Career {
   }
 
   /// 最低年俸で来てくれる控えの選手。
-  Player _filler() {
+  Player _filler({Pos? pos}) {
     final age = 23 + rng.nextInt(10);
     final ovr = 50 + rng.nextInt(9);
-    return Player(id: nextId(), name: _uniqueName(), pos: Pos.values[rng.nextInt(5)], age: age, ovr: ovr, pot: ovr + (age < 26 ? rng.nextInt(5) : 0), salary: minSalary, years: 1, exp: age - 21);
+    final r = Pos.values[rng.nextInt(5)];
+    return Player(id: nextId(), name: _uniqueName(), pos: pos ?? r, age: age, ovr: ovr, pot: ovr + (age < 26 ? rng.nextInt(5) : 0), salary: minSalary, years: 1, exp: age - 21);
   }
 
   /// 各チームの考え方を、強さの順と年俸から決める。
@@ -1292,12 +1293,32 @@ class Career {
 
   bool get myTurn => currentPick?.owner == mine;
 
+  /// ドラフトで数える人数(契約が切れる選手は数えない)。
+  int get signedCount => me.roster.where((p) => p.years > 0).length;
+
+  /// 指名できない理由(できるなら null)。
+  String? get draftProblem {
+    if (signedCount >= offseasonRoster) return '契約中の選手が$offseasonRoster人いて、これ以上は指名できない。チームの画面で放すか、見送る';
+    return null;
+  }
+
+  bool get canDraftPick => myTurn && draftProblem == null;
+
+  /// チームのポジションごとの人数。
+  Map<Pos, int> posCounts(Team t) => {for (final p in Pos.values) p: t.roster.where((x) => x.pos == p).length};
+
+  /// いちばん人数の少ないポジション(同じなら PG から)。
+  Pos _neededPos(Team t) {
+    final c = posCounts(t);
+    return Pos.values.reduce((a, b) => c[b]! < c[a]! ? b : a);
+  }
+
   /// 自分の番まで、相手のチームの指名を進める。
   void _advanceDraft() {
     while (phase == Phase.draft && draftAt < order.length && picks[order[draftAt]].owner != mine) {
       final pick = picks[order[draftAt]];
       final t = teams[pick.owner];
-      final p = aiDraftChoice(prospects, t.mode, rng);
+      final p = aiDraftChoice(prospects, t.mode, rng, counts: posCounts(t));
       _sign(t, p, draftAt);
       draftAt++;
     }
@@ -1319,7 +1340,7 @@ class Career {
 
   /// 自分の番で、候補を指名する。
   void pickProspect(Prospect p) {
-    if (!myTurn || p.pickedBy != null) return;
+    if (!canDraftPick || p.pickedBy != null) return;
     _sign(me, p, draftAt);
     draftAt++;
     _advanceDraft();
@@ -1669,7 +1690,10 @@ class Career {
     bids = {};
     _aiFreeAgency();
     for (final t in teams) {
-      if (t.index != mine) _aiTrim(t);
+      if (t.index != mine) {
+        _aiBalance(t);
+        _aiTrim(t);
+      }
     }
     // ドラフトの候補は、指名された選手とつながっている。シーズンに入る前に手放す(保存で別の物にならないように)
     prospects = [];
@@ -1691,6 +1715,8 @@ class Career {
         if (t.roster.length >= 15) continue;
         if (ask.salary > minSalary && t.payroll + ask.salary > salaryCap) continue;
         if (p.ovr < 60 && t.roster.length >= 13) continue;
+        // 同じポジションが4人以上いれば取らない(よほどの選手でなければ)
+        if (p.ovr < 72 && t.roster.where((x) => x.pos == p.pos).length >= 4) continue;
         p
           ..salary = ask.salary
           ..years = 1 + rng.nextInt(ask.maxYears);
@@ -1702,7 +1728,7 @@ class Career {
     }
     for (final t in others) {
       while (t.roster.length < 13) {
-        t.roster.add(_filler());
+        t.roster.add(_filler(pos: _neededPos(t)));
       }
     }
     while (freeAgents.where((p) => p.salary <= minSalary).length < 6) {
@@ -1710,10 +1736,36 @@ class Career {
     }
   }
 
-  /// 相手のチームの人数を15人以内に保つ(力の低い順に放す)。
+  /// 相手のチームの、2人に満たないポジションを埋める(自由契約のその位置でいちばんの選手を最低年俸か上限の空きで。いなければ補充の選手)。
+  /// 15人いっぱいなら、4人以上いるポジションの力の低い選手を先に放す。
+  void _aiBalance(Team t) {
+    for (final pos in Pos.values) {
+      if (t.roster.where((p) => p.pos == pos).length >= 2) continue;
+      if (t.roster.length >= maxRoster) {
+        final c = posCounts(t);
+        final surplus = t.roster.where((p) => c[p.pos]! >= 4).toList();
+        if (surplus.isEmpty) continue;
+        t.roster.remove(surplus.reduce((a, b) => a.ovr <= b.ovr ? a : b));
+      }
+      final cands = freeAgents.where((p) => p.pos == pos && (p.salary <= minSalary || t.payroll + p.salary <= salaryCap)).toList()
+        ..sort((a, b) => b.ovr.compareTo(a.ovr));
+      if (cands.isNotEmpty) {
+        final p = cands.first;
+        freeAgents.remove(p);
+        p.years = 1 + rng.nextInt(2);
+        t.roster.add(p);
+      } else {
+        t.roster.add(_filler(pos: pos));
+      }
+    }
+  }
+
+  /// 相手のチームの人数を15人以内に保つ。3人以上いるポジションの、力の低い選手から放す。
   void _aiTrim(Team t) {
     while (t.roster.length > maxRoster) {
-      final worst = t.roster.reduce((a, b) => a.ovr <= b.ovr ? a : b);
+      final c = posCounts(t);
+      final pool = t.roster.where((p) => c[p.pos]! >= 3).toList();
+      final worst = (pool.isEmpty ? t.roster : pool).reduce((a, b) => a.ovr <= b.ovr ? a : b);
       t.roster.remove(worst);
     }
   }
@@ -1723,7 +1775,7 @@ class Career {
   TradeVerdict judge(TradeOffer o) {
     if (!canTrade) return const TradeVerdict(false, '今はトレードできない(締め切りを過ぎた)', 0);
     if (o.give.any(expiring.contains)) return const TradeVerdict(false, '契約の話し合い中の選手は出せない', 0);
-    return judgeTrade(teams, picks, mine, o, season);
+    return judgeTrade(teams, picks, mine, o, season, rosterLimit: phase == Phase.season ? maxRoster : offseasonRoster);
   }
 
   bool propose(TradeOffer o) {

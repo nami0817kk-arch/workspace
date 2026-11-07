@@ -128,6 +128,9 @@ const maxSalary = 490;
 /// 登録できる人数。
 const maxRoster = 15;
 
+/// オフ(ドラフト・契約・シーズン前)は、ここまで抱えてよい。シーズンを始めるまでに [maxRoster] 人にする。
+const offseasonRoster = 17;
+
 /// シーズンを始めるのに要る人数。
 const minRoster = 10;
 

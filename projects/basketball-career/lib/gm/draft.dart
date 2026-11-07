@@ -204,13 +204,16 @@ List<int> draftOrder(List<Team> teams, List<DraftPick> picks, int season, List<i
 }
 
 /// 相手のチームが選ぶ候補。本当の力を少しぶれて見ている。立て直し中のチームは伸びしろを重く見る。
-Prospect aiDraftChoice(List<Prospect> pool, TeamMode mode, Rng rng) {
+/// [counts] はそのチームのポジションごとの人数。足りないポジションの候補を少し高く見る。
+Prospect aiDraftChoice(List<Prospect> pool, TeamMode mode, Rng rng, {Map<Pos, int>? counts}) {
   final open = pool.where((p) => p.pickedBy == null).toList();
   Prospect? best;
   var bestScore = -1e9;
   for (final p in open) {
     final w = mode == TeamMode.rebuild ? 0.7 : mode == TeamMode.contend ? 0.45 : 0.6;
-    final s = p.player.ovr * (1 - w) + p.player.pot * w + rng.nextInt(9) - 4;
+    final have = counts?[p.player.pos] ?? 2;
+    final need = have == 0 ? 6 : have == 1 ? 3 : have >= 4 ? -4 : 0;
+    final s = p.player.ovr * (1 - w) + p.player.pot * w + rng.nextInt(9) - 4 + need;
     if (s > bestScore) {
       bestScore = s.toDouble();
       best = p;

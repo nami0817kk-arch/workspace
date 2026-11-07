@@ -90,21 +90,26 @@ class RosterTab extends StatelessWidget {
           label: const Text('チームの成績(シュート・スティールなど)'),
         ),
         const SectionTitle('先発'),
-        for (final p in order.take(5)) _row(context, car, p),
+        // PG・SG・SF・PF・C の順に。本来と違う位置で出る選手には、その位置を添える
+        for (final (slot, p) in bySlot(order.take(5).toList())) _row(context, car, p, slot: slot),
         const SectionTitle('控え'),
         for (final p in order.skip(5)) _row(context, car, p),
       ],
     );
   }
 
-  Widget _row(BuildContext context, Career car, Player p) => Padding(
+  Widget _row(BuildContext context, Career car, Player p, {Pos? slot}) => Padding(
         padding: const EdgeInsets.only(bottom: 6),
         child: PlayerRow(
           p: p,
           team: car.mine,
           showDelta: true,
           showMorale: true,
-          extra: car.draftedIds.contains(p.id) ? const Tag('生え抜き', color: GmColors.good) : null,
+          extra: slot != null && slot != p.pos
+              ? Tag('${slot.short}で出る(本来は${p.pos.short})', color: GmColors.gold)
+              : car.draftedIds.contains(p.id)
+                  ? const Tag('生え抜き', color: GmColors.good)
+                  : null,
           onTap: () => _detail(context, car, p),
         ),
       );
