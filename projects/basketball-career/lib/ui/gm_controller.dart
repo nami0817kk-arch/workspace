@@ -192,6 +192,15 @@ class GmController extends ChangeNotifier {
   void setPrice(int level) => _act((c) => c.setPrice(level));
   void setStaff(Staff s, int level) => _act((c) => c.setStaff(s, level));
 
+  /// 契約の延長を申し出る。受けたら true。
+  bool extend(int id, int years, double factor) {
+    final c = career;
+    if (c == null || busy) return false;
+    final ok = c.extend(id, years, factor);
+    _changed();
+    return ok;
+  }
+
   /// 契約を申し出る(交渉)。受けたら true。
   bool offer(int id, int years, double factor) {
     final c = career;

@@ -590,6 +590,62 @@ void main() {
     });
   });
 
+  group('契約の延長', () {
+    test('残り1年の選手と延長できる。年俸は来季から変わり、年数が足される', () {
+      final c = careerAt(17, 10);
+      final p = c.me.roster.firstWhere((x) => x.years > 1);
+      p.years = 1;
+      p.morale = 70;
+      expect(c.extendProblem(p), isNull);
+      final now = p.salary;
+      final ask = c.extensionAsk(p).salary;
+      final add = c.extensionAsk(p).maxYears < 3 ? c.extensionAsk(p).maxYears : 3;
+      expect(c.extend(p.id, 3, 1.1), isTrue, reason: '1割高くは必ず受ける');
+      expect(p.salary, now, reason: '今季の年俸はそのまま');
+      expect(p.nextSalary, (ask * 1.1).round().clamp(minSalary, maxSalary));
+      expect(p.years, 1 + add, reason: '年齢で延ばせる年数は変わる');
+      expect(c.extendProblem(p), isNotNull, reason: 'もう延長した');
+      final copy = Career.fromJson(jsonDecode(jsonEncode(c.toJson())) as Map<String, dynamic>);
+      expect(copy.me.roster.firstWhere((x) => x.id == p.id).nextSalary, p.nextSalary);
+      _toPlayoffs(c).playPlayoffs();
+      c.fired = false;
+      final next = p.nextSalary;
+      c.toOffseason();
+      if (c.me.roster.contains(p)) {
+        expect(p.salary, next);
+        expect(p.nextSalary, isNull);
+        expect(p.years, add);
+      }
+    });
+
+    test('残り1年でない選手・気持ちが低い選手とは延長できない。断られると今季はもう申し出られない', () {
+      final c = careerAt(17, 10);
+      final p = c.me.roster.firstWhere((x) => x.years > 1);
+      expect(c.extendProblem(p), isNotNull);
+      p.years = 1;
+      p.morale = 20;
+      expect(c.extendProblem(p), isNotNull);
+      p.morale = 36;
+      var refused = false;
+      for (var i = 0; i < 30 && !refused; i++) {
+        if (!c.extend(p.id, 1, 0.9)) refused = true;
+        if (p.nextSalary != null) break;
+      }
+      if (refused) {
+        expect(c.extAsked, contains(p.id));
+        expect(c.extendProblem(p), isNotNull);
+      }
+    });
+
+    test('開幕で、残り1年の主力の代理人から延長の話が届く', () {
+      final c = careerAt(17, 10);
+      final star = c.me.roster.reduce((a, b) => a.ovr >= b.ovr ? a : b);
+      star.years = 1;
+      c.startSeason();
+      expect(c.inbox.any((m) => m.from == Sender.agent && m.player == star.id), star.ovr >= 70);
+    });
+  });
+
   group('相手に聞く・相手同士のトレード・ニュース', () {
     test('受け取りたい選手を選ぶと、相手が受ける出し方が返り、そのまま成立する', () {
       var found = 0;

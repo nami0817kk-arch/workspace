@@ -3,7 +3,10 @@ enum Sender {
   owner('オーナー'),
   player('選手'),
   league('リーグ'),
-  staff('スタッフ');
+  staff('スタッフ'),
+
+  // 保存は番号なので、増やすときは後ろに足す
+  agent('代理人');
 
   const Sender(this.label);
   final String label;

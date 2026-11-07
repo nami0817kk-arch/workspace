@@ -664,6 +664,11 @@ class Career {
     final kind = r < 12 ? GoalKind.playoffs : r >= 22 ? GoalKind.youth : me.payroll > taxLine - 50 ? GoalKind.noTax : third[rng.nextInt(third.length)];
     goals = [OwnerGoal(GoalKind.wins), OwnerGoal(GoalKind.profit), OwnerGoal(kind)];
     allStarIds = [];
+    extAsked = [];
+    for (final p in me.roster.where((p) => p.years == 1 && p.ovr >= 70 && p.nextSalary == null)) {
+      _mail(Sender.agent, '${p.name}の代理人から', '${p.name}の契約は今季で切れる。延長の話をしたい(チームの画面で選手を押すと申し出られる)。'
+          '求める年俸は${money(extensionAsk(p).salary)}ほど。', player: p.id);
+    }
     _mail(Sender.owner, '$season年目の目標', [
       'オーナーからの今シーズンの目標:',
       for (final g in goals) '・${g.kind == GoalKind.wins ? '$target勝する' : g.kind.label}',
@@ -906,6 +911,10 @@ class Career {
           }
         }
         p.years--;
+        if (p.nextSalary != null) {
+          p.salary = p.nextSalary!;
+          p.nextSalary = null;
+        }
         if (t.index == mine) {
           if (d >= 4) news.add('${p.name}が大きく伸びた(力 ${p.ovr}、+$d)');
           if (d <= -4) news.add('${p.name}の力が落ちた(力 ${p.ovr}、$d)');
@@ -1277,6 +1286,48 @@ class Career {
     return out;
   }
 
+  /// このシーズンに延長を申し出て断られた選手(シーズンのあいだ、もう申し出られない)。
+  List<int> extAsked = [];
+
+  /// 契約の延長ができない理由(できるなら null)。残り1年の自分の選手だけ、シーズン前とシーズン中に申し出られる。
+  String? extendProblem(Player p) {
+    if (!(phase == Phase.preseason || phase == Phase.season)) return 'シーズン前かシーズン中だけ';
+    if (!me.roster.contains(p)) return '自分のチームの選手だけ';
+    if (p.years != 1) return '契約の残りが1年の選手だけ';
+    if (p.nextSalary != null) return 'もう延長した';
+    if (extAsked.contains(p.id)) return '今季はもう断られた';
+    if (p.morale < 35) return '${p.name}は今、延長の話に乗らない(気持ちが低い)';
+    return null;
+  }
+
+  /// 延長で求める年俸(早く決める分、少し高く求める。新人の延長は伸びしろも見る)。
+  Ask extensionAsk(Player p) {
+    final base = askOf(p, me);
+    final rookie = draftedIds.contains(p.id) && p.exp <= 3;
+    final f = rookie ? 1.0 + (p.pot - p.ovr).clamp(0, 20) / 100 : 1.05;
+    return Ask((base.salary * f).round().clamp(minSalary, maxSalary), base.maxYears);
+  }
+
+  /// 延長を申し出る。受けたら true。[years] は今の契約のあとに足す年数。
+  /// 1割安くは断られることがある(断られると今季はもう申し出られず、気持ちが下がる)。
+  bool extend(int id, int years, double factor) {
+    final p = me.roster.where((x) => x.id == id).firstOrNull;
+    if (p == null || extendProblem(p) != null) return false;
+    final ask = extensionAsk(p);
+    final chance = factor < 1 ? discountChance(p, freeAgent: false) : factor > 1 ? 1.0 : 0.85;
+    if (!rng.chance(chance)) {
+      extAsked.add(id);
+      p.morale = (p.morale - 8).clamp(0, 100);
+      return false;
+    }
+    p
+      ..nextSalary = (ask.salary * factor).round().clamp(minSalary, maxSalary)
+      ..years = 1 + years.clamp(1, ask.maxYears);
+    if (factor > 1) p.morale = (p.morale + 10).clamp(0, 100);
+    _log('延長: ${p.name}(${me.def.short})が$years年延長(来季から${money(p.nextSalary!)})');
+    return true;
+  }
+
   /// 先発と控えの順を決める([ids] は上から。空なら自動に戻す)。
   void setRotation(List<int> ids) {
     if (phase == Phase.over) return;
@@ -1354,6 +1405,7 @@ class Career {
         'news': news,
         if (incoming != null) 'inc': incoming!.toJson(),
         'td': tradesDone,
+        'ea': extAsked,
         'ib': [for (final m in inbox) m.toJson()],
         'mid': _msgId,
         'asi': allStarIds,
@@ -1405,6 +1457,7 @@ class Career {
       ..news = [for (final x in (j['news'] as List? ?? const [])) x as String]
       ..incoming = j['inc'] == null ? null : TradeOffer.fromJson(Map<String, dynamic>.from(j['inc'] as Map))
       ..tradesDone = (j['td'] as int?) ?? 0
+      ..extAsked = [for (final x in (j['ea'] as List? ?? const [])) x as int]
       ..inbox = [for (final m in maps('ib')) Message.fromJson(m)]
       .._msgId = (j['mid'] as int?) ?? 1
       ..allStarIds = [for (final x in (j['asi'] as List? ?? const [])) x as int]

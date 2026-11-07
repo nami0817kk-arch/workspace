@@ -136,6 +136,7 @@ class Player {
     this.morale = 60,
     this.injured = 0,
     this.allStars = 0,
+    this.nextSalary,
   })  : attrs = attrs ?? makeAttrs(pos, _idNoise(id)),
         stats = stats ?? Stats(),
         prev = prev ?? Stats();
@@ -191,6 +192,9 @@ class Player {
   /// オールスターに選ばれた回数。
   int allStars;
 
+  /// 延長した契約の、来季からの年俸(延長していなければ null)。
+  int? nextSalary;
+
   String get moraleLabel => morale >= 70
       ? '満足'
       : morale >= 45
@@ -238,6 +242,7 @@ class Player {
         if (morale != 60) 'mo': morale,
         if (injured != 0) 'in': injured,
         if (allStars != 0) 'as': allStars,
+        if (nextSalary != null) 'ns': nextSalary,
       };
 
   static Player fromJson(Map<String, dynamic> j) => Player(
@@ -258,6 +263,7 @@ class Player {
         morale: ((j['mo'] as int?) ?? 60).clamp(0, 100),
         injured: ((j['in'] as int?) ?? 0).clamp(0, 99),
         allStars: (j['as'] as int?) ?? 0,
+        nextSalary: j['ns'] as int?,
       );
 }
 
