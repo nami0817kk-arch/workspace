@@ -54,7 +54,12 @@ void botStep(Career c, {bool trades = false, bool scouting = true}) {
       // 空きがあれば、いちばん力の高い自由契約の選手を取る
       for (final p in [...c.freeAgents]) {
         if (c.me.roster.length >= 13) break;
-        if (p.ovr >= 60 && c.signProblem(p) == null) c.signFreeAgent(p.id, 2);
+        if (p.ovr < 60) continue;
+        if (c.signProblem(p) == null) {
+          c.signFreeAgent(p.id, 2);
+        } else if (c.bidProblem(p) == null && c.me.roster.length - c.expiring.length + c.bids.values.where((l) => l.any((b) => b.team == c.mine)).length < 13) {
+          c.bid(p.id, 2, 1.0);
+        }
       }
       c.finishContracts();
     case Phase.over:
@@ -86,7 +91,9 @@ List<Prospect> byMid(Career c) => c.prospects.where((p) => p.pickedBy == null).t
 /// [seed] のリーグで、強さが [rank] 番目(0始まり)のチーム。
 int teamAtRank(int seed, int rank) {
   final c = Career.start(seed: seed);
-  return [for (var i = 0; i < c.teams.length; i++) i].firstWhere((i) => c.strengthRank(i) == rank);
+  // 強さが同じチームがあると順位が抜けるので、並べてから数える
+  final order = [for (var i = 0; i < c.teams.length; i++) i]..sort((a, b) => c.strengthRank(a) != c.strengthRank(b) ? c.strengthRank(a) - c.strengthRank(b) : a - b);
+  return order[rank];
 }
 
 /// テスト用: [seed] のリーグで、強さが [rank] 番目のチームを任されて始める。

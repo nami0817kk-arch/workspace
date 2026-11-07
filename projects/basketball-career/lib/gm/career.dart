@@ -207,6 +207,22 @@ class Award {
       );
 }
 
+/// オフの自由契約の日数。大物(最低年俸より高く求める選手)は、この日数のあいだに申し込みを比べて決める。
+const faDays = 4;
+
+/// 日ごとの、大物が決める見込み(最後の日は必ず決める)。
+const faDecideChance = [0.25, 0.4, 0.6, 1.0];
+
+/// 自由契約の選手への申し込み。
+class FaBid {
+  const FaBid(this.team, this.salary, this.years);
+  final int team;
+  final int salary;
+  final int years;
+
+  List<int> toJson() => [team, salary, years];
+}
+
 /// 契約切れの選手が求める条件。
 class Ask {
   const Ask(this.salary, this.maxYears);
@@ -1188,6 +1204,9 @@ class Career {
       p.salary = askOf(p, me).salary;
     }
     freeAgents.sort((a, b) => b.ovr.compareTo(a.ovr));
+    faDay = 0;
+    bids = {};
+    faLog = [];
   }
 
   /// 選手が求める年俸。弱いチームには高く、強いチームには少し安く言う。
@@ -1250,6 +1269,7 @@ class Career {
     if (me.roster.length - expiring.length >= maxRoster) return '登録が15人いっぱい';
     final ask = askOf(p, me);
     if (phase == Phase.season && ask.salary > minSalary) return 'シーズン中は最低年俸の選手だけ';
+    if (phase == Phase.contracts && ask.salary > minSalary) return '申し込んで、返事を待つ(ほかのチームと競り合う)';
     if (ask.salary > minSalary && me.payroll + ask.salary > salaryCap) return '年俸の上限まで${money(math.max(0, me.capRoom))}しか空きがない';
     return null;
   }
@@ -1266,6 +1286,160 @@ class Career {
     freeAgents.removeAt(i);
     p.morale = 65;
     me.roster.add(p);
+  }
+
+  // ------------------------------------------------------------ 自由契約の競り合い
+
+  /// オフの自由契約の何日目か(0始まり。[faDays] で終わり)。
+  int faDay = 0;
+
+  /// 大物への申し込み(選手の id → 申し込んだチームごと)。
+  Map<int, List<FaBid>> bids = {};
+
+  /// このオフの自由契約の動き(新しい順)。
+  List<String> faLog = [];
+
+  /// 大物として競り合いになる選手か(オフの契約のあいだ、最低年俸より高く求める選手)。
+  bool isBigFa(Player p) => phase == Phase.contracts && freeAgents.contains(p) && askOf(p, me).salary > minSalary;
+
+  /// 自分の申し込み。
+  FaBid? myBid(int id) => bids[id]?.where((b) => b.team == mine).firstOrNull;
+
+  /// ほかのチームの申し込みの数。
+  int rivalBids(int id) => bids[id]?.where((b) => b.team != mine).length ?? 0;
+
+  List<(int, FaBid)> _bidsOf(int team) => [
+        for (final e in bids.entries)
+          for (final b in e.value)
+            if (b.team == team) (e.key, b),
+      ];
+
+  /// 申し込み中の年俸の合計(ほかの選手への分。[except] は数えない)。
+  int _bidTotal(int team, {int? except}) => _bidsOf(team).where((x) => x.$1 != except).fold(0, (n, x) => n + x.$2.salary);
+
+  /// 選手がチームに向ける関心(0〜100)。昨季の勝率・優勝を狙うか・出番(先発になれるか)・人気で決まる。
+  int interest(Player p, int team) {
+    final t = teams[team];
+    var v = 45.0 + (t.winPct - 0.5) * 80;
+    if (team != mine && t.mode == TeamMode.contend) v += 8;
+    final better = t.roster.where((x) => x.ovr > p.ovr && !(team == mine && expiring.contains(x.id))).length;
+    v += better < 3 ? 18 : better < 5 ? 10 : better < 8 ? 0 : -12;
+    if (team == mine) v += (hype - 50) / 5;
+    return v.round().clamp(0, 100);
+  }
+
+  /// 申し込みの値打ち(選手の目から)。関心に、求める額との差を足す。
+  double _bidScore(Player p, FaBid b) {
+    final ask = askOf(p, teams[b.team]).salary;
+    return interest(p, b.team) + (b.salary / ask - 1) * 220 + math.min(b.years, askOf(p, me).maxYears) * 1.5;
+  }
+
+  /// 今の申し込みで、自分のチームを選ぶ見込み(0〜1)。画面用の目安で、乱数は使わない。
+  double winChanceOf(Player p) {
+    final mineBid = myBid(p.id);
+    if (mineBid == null) return 0;
+    final others = bids[p.id]!.where((b) => b.team != mine).map((b) => _bidScore(p, b));
+    final best = others.isEmpty ? 0.0 : others.reduce(math.max);
+    final d = _bidScore(p, mineBid) - best;
+    return others.isEmpty ? 1 : (0.5 + d / 40).clamp(0.05, 0.95);
+  }
+
+  /// 大物に申し込めない理由(できるなら null)。
+  String? bidProblem(Player p, {double factor = 1}) {
+    if (phase != Phase.contracts || faDay >= faDays) return '今は申し込めない';
+    if (!isBigFa(p)) return '最低年俸の選手は、そのまま契約できる';
+    final others = _bidsOf(mine).where((x) => x.$1 != p.id).length;
+    if (me.roster.length - expiring.length + others >= maxRoster) return '登録が15人いっぱい(申し込み中も数える)';
+    final salary = _offerSalary(p, factor);
+    final room = salaryCap - me.payroll - _bidTotal(mine, except: p.id);
+    if (salary > room) return '年俸の上限まで${money(math.max(0, room))}しか空きがない(申し込み中も数える)';
+    return null;
+  }
+
+  /// 大物に申し込む(前の申し込みは置きかえる)。[factor] は求める額に掛ける数。返事は日が進むと来る。
+  bool bid(int id, int years, double factor) {
+    final p = freeAgents.where((x) => x.id == id).firstOrNull;
+    if (p == null || bidProblem(p, factor: factor) != null) return false;
+    final list = bids.putIfAbsent(id, () => [])..removeWhere((b) => b.team == mine);
+    list.add(FaBid(mine, _offerSalary(p, factor), years.clamp(1, askOf(p, me).maxYears)));
+    return true;
+  }
+
+  void withdrawBid(int id) {
+    bids[id]?.removeWhere((b) => b.team == mine);
+    if (bids[id]?.isEmpty ?? false) bids.remove(id);
+  }
+
+  /// 自由契約を1日進める。ほかのチームが申し込み、大物の一部が行き先を決める。
+  void nextFaDay() {
+    if (phase != Phase.contracts || faDay >= faDays) return;
+    _aiBids();
+    final chance = faDecideChance[faDay.clamp(0, faDecideChance.length - 1)];
+    for (final id in bids.keys.toList()) {
+      final p = freeAgents.where((x) => x.id == id).firstOrNull;
+      if (p == null) {
+        bids.remove(id);
+        continue;
+      }
+      // 決めるときに、まだ取れるチームの申し込みだけ
+      final list = bids[id]!.where((b) {
+        final t = teams[b.team];
+        final count = b.team == mine ? t.roster.length - expiring.length : t.roster.length;
+        return count < maxRoster && t.payroll + b.salary <= salaryCap;
+      }).toList();
+      if (list.isEmpty) {
+        bids.remove(id);
+        continue;
+      }
+      if (!rng.chance(chance)) continue;
+      final best = list.reduce((a, b) => _bidScore(p, a) >= _bidScore(p, b) ? a : b);
+      bids.remove(id);
+      _signBid(p, best);
+      if (best.team != mine && list.any((b) => b.team == mine)) {
+        _mail(Sender.agent, '${p.name}は${teams[best.team].def.short}を選んだ',
+            '申し込みに感謝しつつ、${teams[best.team].name}と${best.years}年 ${money(best.salary)}で契約した。');
+      }
+    }
+    faDay++;
+  }
+
+  void _signBid(Player p, FaBid b) {
+    freeAgents.remove(p);
+    p
+      ..salary = b.salary
+      ..years = b.years;
+    final t = teams[b.team];
+    t.roster.add(p);
+    final text = '${p.name}(OVR${shown(p.ovr)})が${t.def.short}と${b.years}年 ${money(b.salary)}';
+    faLog.insert(0, '${faDay + 1}日目 $text');
+    if (b.team == mine) {
+      p.morale = 65;
+      _mail(Sender.agent, '${p.name}が契約に合意', '${p.name}が申し込みを受けた。${b.years}年 ${money(b.salary)}。');
+      _log('移籍: $text');
+    } else if (p.ovr >= 70) {
+      _log('移籍: $text');
+    }
+  }
+
+  /// ほかのチームが大物に申し込む(1人に1日2チームまで)。
+  void _aiBids() {
+    final big = freeAgents.where((p) => askOf(p, me).salary > minSalary).toList()..sort((a, b) => b.ovr.compareTo(a.ovr));
+    final others = [for (final t in teams) if (t.index != mine) t];
+    for (final p in big.take(14)) {
+      rng.shuffle(others);
+      var added = 0;
+      for (final t in others) {
+        if (added >= 2) break;
+        if (bids[p.id]?.any((b) => b.team == t.index) ?? false) continue;
+        final ask = askOf(p, t);
+        if (t.roster.length + _bidsOf(t.index).length >= maxRoster) continue;
+        if (t.payroll + _bidTotal(t.index) + ask.salary > salaryCap) continue;
+        if (!rng.chance(t.mode == TeamMode.contend ? 0.45 : 0.3)) continue;
+        final salary = (ask.salary * (0.95 + rng.nextInt(4) * 0.05)).round().clamp(minSalary, maxSalary);
+        bids.putIfAbsent(p.id, () => []).add(FaBid(t.index, salary, 1 + rng.nextInt(ask.maxYears)));
+        added++;
+      }
+    }
   }
 
   /// 選手を放す。今シーズンの年俸は、そのまま合計に残る。
@@ -1288,6 +1462,11 @@ class Career {
     for (final id in [...expiring]) {
       letGo(id);
     }
+    // 残りの日を進めて、大物の行き先を決める
+    while (faDay < faDays) {
+      nextFaDay();
+    }
+    bids = {};
     _aiFreeAgency();
     for (final t in teams) {
       if (t.index != mine) _aiTrim(t);
@@ -1572,6 +1751,9 @@ class Career {
         'lp': lastProfit,
         'gl': [for (final g in goals) g.toJson()],
         'aw': [for (final a in awards) a.toJson()],
+        'fd': faDay,
+        'bd': {for (final e in bids.entries) '${e.key}': [for (final b in e.value) b.toJson()]},
+        'fl': faLog,
         'chp': champs,
         'hof': [for (final h in hall) h.toJson()],
         'log': log,
@@ -1626,6 +1808,15 @@ class Career {
       ..lastProfit = (j['lp'] as int?) ?? 0
       ..goals = [for (final g in maps('gl')) OwnerGoal.fromJson(g)]
       ..awards = [for (final a in maps('aw')) Award.fromJson(a)]
+      ..faDay = ((j['fd'] as int?) ?? 0).clamp(0, faDays)
+      ..bids = {
+        for (final e in (j['bd'] as Map? ?? const {}).entries)
+          int.parse(e.key as String): [
+            for (final b in e.value as List)
+              if (b is List && b.length == 3) FaBid((b[0] as int).clamp(0, teamDefs.length - 1), b[1] as int, b[2] as int),
+          ],
+      }
+      ..faLog = [for (final x in (j['fl'] as List? ?? const [])) x as String]
       ..champs = [
         for (final r in (j['chp'] as List? ?? const []))
           if (r is List && r.length == 3) [for (final x in r) x as int],

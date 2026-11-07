@@ -186,6 +186,17 @@ class GmController extends ChangeNotifier {
   void signFreeAgent(int id, int years) => _act((c) => c.signFreeAgent(id, years));
   void release(int id) => _act((c) => c.release(id));
   void finishContracts() => _act((c) => c.finishContracts());
+  void nextFaDay() => _act((c) => c.nextFaDay());
+  void withdrawBid(int id) => _act((c) => c.withdrawBid(id));
+
+  /// 大物に申し込む。申し込めたら true。
+  bool bid(int id, int years, double factor) {
+    final c = career;
+    if (c == null || busy) return false;
+    final ok = c.bid(id, years, factor);
+    _changed();
+    return ok;
+  }
   void setRotation(List<int> ids) => _act((c) => c.setRotation(ids));
   void readMessage(int id) => _act((c) => c.readMessage(id));
   void answer(int id, int choice) => _act((c) => c.answer(id, choice));
