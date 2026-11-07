@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:basketball_career/gm/bot.dart';
 import 'package:basketball_career/gm/career.dart';
 import 'package:basketball_career/gm/draft.dart';
+import 'package:basketball_career/gm/inbox.dart';
 import 'package:basketball_career/gm/league.dart';
 import 'package:basketball_career/gm/player.dart';
 import 'package:basketball_career/gm/rng.dart';
@@ -483,6 +484,46 @@ void main() {
       expect(c.phase, Phase.playoffs);
       c.playPlayoffs();
       expect(c.finals, isNotNull);
+    });
+  });
+
+  group('受信箱・MVP争い・オールスター', () {
+    test('開幕でオーナーの目標、区切りごとにMVP争いが届き、シーズンの半分でオールスター24人が決まる', () {
+      final c = careerAt(11, 8)..startSeason();
+      expect(c.inbox.first.from, Sender.owner);
+      c.playBlock();
+      expect(c.inbox.any((m) => m.title.startsWith('MVP争い')), isTrue);
+      expect(c.mvpRace(), hasLength(5));
+      c.playBlock();
+      expect(c.allStarIds, hasLength(24));
+      final stars = [for (final t in c.teams) ...t.roster.where((p) => c.allStarIds.contains(p.id))];
+      expect(stars.where((p) => c.teams.firstWhere((t) => t.roster.contains(p)).east), hasLength(12));
+      expect(stars.every((p) => p.allStars >= 1), isTrue);
+      expect(c.inbox.any((m) => m.title.contains('オールスター')), isTrue);
+      expect(c.inbox.length, lessThanOrEqualTo(Career.inboxLimit));
+    });
+
+    test('出番の不満に「先発に入れる」と返すと先発に入り気持ちが上がる。「今のまま」だと下がる', () {
+      for (final choice in [0, 1]) {
+        final c = careerAt(11, 8)..startSeason();
+        final p = lineup(c.me.roster)[1];
+        p.morale = 40;
+        c.setRotation([for (final x in [...c.me.order.where((x) => x != p), p]) x.id]);
+        c.playBlock();
+        final m = c.inbox.where((m) => m.kind == MsgKind.minutes && m.player == p.id).firstOrNull;
+        expect(m, isNotNull, reason: '先発の力なのに控えに回された選手から届く');
+        final before = p.morale;
+        c.answer(m!.id, choice);
+        expect(m.needsAnswer, isFalse);
+        if (choice == 0) {
+          expect(c.me.order.indexOf(p), lessThan(5));
+          expect(p.morale, before + 15);
+        } else {
+          expect(p.morale, before - 8);
+        }
+        final copy = Career.fromJson(jsonDecode(jsonEncode(c.toJson())) as Map<String, dynamic>);
+        expect(copy.inbox.firstWhere((x) => x.id == m.id).answer, choice);
+      }
     });
   });
 

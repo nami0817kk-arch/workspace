@@ -37,6 +37,53 @@ class LeagueTab extends StatelessWidget {
             ),
           ),
         ],
+        if (car.phase == Phase.season && car.mvpRace().isNotEmpty) ...[
+          const SectionTitle('MVP争い'),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(children: [
+                for (final (i, (p, team)) in car.mvpRace().indexed)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 3),
+                    child: Row(children: [
+                      SizedBox(width: 22, child: Text('${i + 1}', style: const TextStyle(color: GmColors.gold, fontWeight: FontWeight.bold))),
+                      TeamBadge(team: team, size: 20),
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: Text(p.name,
+                            maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: team == car.mine ? GmColors.ball : null)),
+                      ),
+                      Text(p.stats.line, style: const TextStyle(fontSize: 12, color: GmColors.sub)),
+                    ]),
+                  ),
+              ]),
+            ),
+          ),
+        ],
+        if (car.allStarIds.isNotEmpty) ...[
+          const SectionTitle('オールスター'),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                for (final east in [true, false]) ...[
+                  Text(east ? '東' : '西', style: const TextStyle(fontWeight: FontWeight.bold, color: GmColors.ball)),
+                  const SizedBox(height: 2),
+                  Text(
+                    [
+                      for (final t in car.teams.where((t) => t.east == east))
+                        for (final p in t.roster)
+                          if (car.allStarIds.contains(p.id)) '${p.name}(${t.def.short})',
+                    ].join('、'),
+                    style: const TextStyle(fontSize: 13, height: 1.5),
+                  ),
+                  const SizedBox(height: 6),
+                ],
+              ]),
+            ),
+          ),
+        ],
         if (car.finals != null) ...[
           const SectionTitle('プレーオフの山'),
           Card(

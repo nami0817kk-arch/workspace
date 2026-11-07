@@ -6,6 +6,7 @@ import '../gm_controller.dart';
 import '../layout.dart';
 import 'common.dart';
 import 'draft_view.dart';
+import 'inbox_screen.dart';
 import 'league_tab.dart';
 import 'market_tab.dart';
 import 'progress_tab.dart';
@@ -64,6 +65,15 @@ class _HubScreenState extends State<HubScreen> {
           ),
         ]),
         actions: [
+          IconButton(
+            tooltip: '受信箱',
+            onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => InboxScreen(c: c))),
+            icon: Badge(
+              isLabelVisible: car.unread > 0,
+              label: Text('${car.unread}'),
+              child: const Icon(Icons.mail_rounded),
+            ),
+          ),
           IconButton(tooltip: 'はじめの画面へ', onPressed: c.goHome, icon: const Icon(Icons.home_rounded)),
         ],
         bottom: PreferredSize(

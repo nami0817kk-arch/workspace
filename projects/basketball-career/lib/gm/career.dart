@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'draft.dart';
+import 'inbox.dart';
 import 'league.dart';
 import 'names.dart';
 import 'player.dart';
@@ -245,6 +246,122 @@ class Career {
 
   int tradesDone = 0;
 
+  /// 受信箱(新しい順、[inboxLimit] 件まで)。
+  List<Message> inbox = [];
+  static const inboxLimit = 40;
+  int _msgId = 1;
+
+  /// 返事を待っている知らせ・読んでいない知らせの数。
+  int get unread => inbox.where((m) => !m.read || m.needsAnswer).length;
+
+  void _mail(Sender from, String title, String body, {MsgKind kind = MsgKind.info, List<String> choices = const [], int? player}) {
+    inbox.insert(0, Message(id: _msgId++, season: season, from: from, title: title, body: body, kind: kind, choices: choices, player: player));
+    if (inbox.length > inboxLimit) inbox.removeRange(inboxLimit, inbox.length);
+  }
+
+  /// 知らせを読んだ。
+  void readMessage(int id) {
+    for (final m in inbox) {
+      if (m.id == id) m.read = true;
+    }
+  }
+
+  /// 知らせに返事をする。返事ごとの効き目(選手の気持ち・先発の順)をここで起こす。
+  void answer(int id, int choice) {
+    final m = inbox.where((x) => x.id == id).firstOrNull;
+    if (m == null || !m.needsAnswer || choice < 0 || choice >= m.choices.length) return;
+    m
+      ..answer = choice
+      ..read = true;
+    final p = m.player == null ? null : me.roster.where((x) => x.id == m.player).firstOrNull;
+    if (p == null) return;
+    switch (m.kind) {
+      case MsgKind.minutes:
+        if (choice == 0) {
+          // 先発に入れる: いまの順の5番目に入れる
+          final order = [for (final x in me.order) x.id]..remove(p.id);
+          order.insert(4.clamp(0, order.length), p.id);
+          me.rotation = order;
+          p.morale = (p.morale + 15).clamp(0, 100);
+        } else {
+          p.morale = (p.morale - 8).clamp(0, 100);
+        }
+      case MsgKind.tradeRequest:
+        p.morale = (p.morale + (choice == 0 ? 8 : -6)).clamp(0, 100);
+      case MsgKind.info:
+        break;
+    }
+  }
+
+  /// MVP争い(いまの成績での順位)。試合の半分以上に出た選手だけ。
+  List<(Player, int)> mvpRace({int count = 5}) {
+    final min = math.max(1, (roundAt * 0.5).round());
+    final all = [
+      for (final t in teams)
+        for (final p in t.roster)
+          if (p.stats.gp >= min) (p, t.index),
+    ];
+    double score((Player, int) x) => x.$1.stats.ppg + 0.6 * x.$1.stats.rpg + 0.9 * x.$1.stats.apg + teams[x.$2].winPct * 12;
+    all.sort((a, b) => score(b).compareTo(score(a)));
+    return all.take(count).toList();
+  }
+
+  /// 今シーズンのオールスター(選手の id)。
+  List<int> allStarIds = [];
+
+  /// オールスターを選ぶ(シーズンの半分、41試合のあと)。地区ごとに12人。
+  void _pickAllStars() {
+    allStarIds = [];
+    final race = mvpRace(count: 300);
+    for (final east in [true, false]) {
+      final picks = race.where((x) => teams[x.$2].east == east).take(12);
+      for (final (p, _) in picks) {
+        allStarIds.add(p.id);
+        p.allStars++;
+      }
+    }
+    final mine = [for (final p in me.roster) if (allStarIds.contains(p.id)) p];
+    for (final p in mine) {
+      p.morale = (p.morale + 10).clamp(0, 100);
+    }
+    _log('オールスター: 東西24人が決まった${mine.isEmpty ? '' : '(${me.def.short}から${mine.map((p) => p.name).join('・')})'}');
+    _mail(Sender.league, 'オールスターの選手が決まった',
+        mine.isEmpty ? '今年は${me.def.short}から選ばれた選手はいなかった。' : '${mine.map((p) => p.name).join('・')}が選ばれた。本人たちの気持ちも上がっている。');
+  }
+
+  /// 区切りのあとに届く知らせ(出番の不満・トレードの希望・MVP争い・オーナーの声)。
+  void _mailAfterBlock() {
+    final race = mvpRace(count: 5);
+    if (race.isNotEmpty) {
+      _mail(Sender.league, 'MVP争い($roundAt試合のあと)',
+          [for (var i = 0; i < race.length; i++) '${i + 1}. ${race[i].$1.name}(${teams[race[i].$2].def.short}) ${race[i].$1.stats.line}'].join('\n'));
+    }
+    // 出番の不満: 力の順位より2つ以上下で、気持ちが下がってきた選手から1人
+    final order = me.order;
+    final byOvr = [...me.roster]..sort((a, b) => b.ovr.compareTo(a.ovr));
+    final waiting = inbox.where((m) => m.needsAnswer).map((m) => m.player).toSet();
+    for (var i = 0; i < order.length; i++) {
+      final p = order[i];
+      final expected = byOvr.indexOf(p);
+      if (waiting.contains(p.id) || p.injured > 0) continue;
+      if (p.morale < 20) {
+        _mail(Sender.player, '${p.name}がトレードを希望', '${p.name}(力${p.ovr})「このチームでは先が見えない。よそでプレーしたい」',
+            kind: MsgKind.tradeRequest, choices: const ['相手を探すと約束する', '残ってほしいと伝える'], player: p.id);
+        break;
+      }
+      if (i >= 5 && expected < 5 && p.morale < 50) {
+        _mail(Sender.player, '${p.name}が出番を求めている', '${p.name}(力${p.ovr})「自分は先発で出られるはずだ。もっと出番がほしい」',
+            kind: MsgKind.minutes, choices: const ['先発に入れると約束する', '今の役割を続けてもらう'], player: p.id);
+        break;
+      }
+    }
+    // オーナー: 目標の勝ち数に遠いとき
+    final pace = roundAt == 0 ? 0.0 : me.wins / roundAt * gamesPerSeason;
+    if (roundAt >= blockStart(2) && pace < target - 6) {
+      _mail(Sender.owner, 'オーナーから', 'このままでは目標の$target勝に届かない(いまの勢いだと${pace.round()}勝)。何か手を打ってほしい。');
+    }
+  }
+
   /// 人気(0〜100)。勝つ・プレーオフに出ると上がる。観客の入りに効く。
   int hype = 50;
 
@@ -328,6 +445,7 @@ class Career {
       final best = list.reduce((a, b) => score(a) >= score(b) ? a : b);
       awards.add(Award(season: season, kind: k, player: best.$1.id, name: best.$1.name, team: best.$2.index, line: best.$1.stats.line));
       _log('${k.label}: ${best.$1.name}(${best.$2.def.short}・${best.$1.stats.line})');
+      _mail(Sender.league, '${k.label}の発表', '${best.$1.name}(${best.$2.def.short})が選ばれた。${best.$1.stats.line}');
     }
 
     give(AwardKind.mvp, pool, mvp);
@@ -523,6 +641,11 @@ class Career {
     // 強いチームにはプレーオフ、立て直しには若手、上限を大きく超えたチームには税を
     final kind = r < 12 ? GoalKind.playoffs : r >= 22 ? GoalKind.youth : me.payroll > taxLine - 50 ? GoalKind.noTax : third[rng.nextInt(third.length)];
     goals = [OwnerGoal(GoalKind.wins), OwnerGoal(GoalKind.profit), OwnerGoal(kind)];
+    allStarIds = [];
+    _mail(Sender.owner, '$season年目の目標', [
+      'オーナーからの今シーズンの目標:',
+      for (final g in goals) '・${g.kind == GoalKind.wins ? '$target勝する' : g.kind.label}',
+    ].join('\n'));
     block = 0;
     roundAt = 0;
     lastGames = [];
@@ -570,6 +693,8 @@ class Career {
     if (roundAt < blockStart(block + 1)) return;
     block++;
     _updateMorale();
+    if (block == tradeDeadlineBlock) _pickAllStars();
+    if (block < blocksPerSeason) _mailAfterBlock();
     if (block <= tradeDeadlineBlock && rng.chance(0.5)) _aiTrades(1);
     if (block >= blocksPerSeason) {
       phase = Phase.playoffs;
@@ -606,6 +731,7 @@ class Career {
       final o = makeIncomingOffer(teams, picks, mine, t, season);
       if (o != null) {
         incoming = o;
+        _mail(Sender.league, '${teams[t].def.short}からトレードの申し込み', '進行の画面で、出す選手と受け取る選手を見て返事できる。');
         return;
       }
     }
@@ -1192,6 +1318,9 @@ class Career {
         'news': news,
         if (incoming != null) 'inc': incoming!.toJson(),
         'td': tradesDone,
+        'ib': [for (final m in inbox) m.toJson()],
+        'mid': _msgId,
+        'asi': allStarIds,
         'hg': haggled,
         'hy': hype,
         'pl': priceLevel,
@@ -1240,6 +1369,9 @@ class Career {
       ..news = [for (final x in (j['news'] as List? ?? const [])) x as String]
       ..incoming = j['inc'] == null ? null : TradeOffer.fromJson(Map<String, dynamic>.from(j['inc'] as Map))
       ..tradesDone = (j['td'] as int?) ?? 0
+      ..inbox = [for (final m in maps('ib')) Message.fromJson(m)]
+      .._msgId = (j['mid'] as int?) ?? 1
+      ..allStarIds = [for (final x in (j['asi'] as List? ?? const [])) x as int]
       ..haggled = [for (final x in (j['hg'] as List? ?? const [])) x as int]
       ..hype = ((j['hy'] as int?) ?? 50).clamp(0, 100)
       ..priceLevel = ((j['pl'] as int?) ?? 1).clamp(0, ticketPrices.length - 1)

@@ -187,6 +187,8 @@ class GmController extends ChangeNotifier {
   void release(int id) => _act((c) => c.release(id));
   void finishContracts() => _act((c) => c.finishContracts());
   void setRotation(List<int> ids) => _act((c) => c.setRotation(ids));
+  void readMessage(int id) => _act((c) => c.readMessage(id));
+  void answer(int id, int choice) => _act((c) => c.answer(id, choice));
   void setPrice(int level) => _act((c) => c.setPrice(level));
   void setStaff(Staff s, int level) => _act((c) => c.setStaff(s, level));
 
