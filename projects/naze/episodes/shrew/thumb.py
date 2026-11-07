@@ -1,5 +1,5 @@
 """トガリネズミの回の本編のサムネイル(1280×720)。python episodes/shrew/thumb.py → out/shrew/thumb_long.jpg
-下地は Gemini で作った絵(assets/gem_pile.jpg、虫の山の前のトガリネズミ。隅に「イメージ」)。
+下地は Gemini で作った絵(assets/gem_snow.jpg、雪の上のトガリネズミ。虫の絵はサムネに使わない(2026-11-07 指示)。隅に「イメージ」)。
 字は左に「体重2gで 毎日 体重の6倍 食べる」(体重の6倍 だけ黄色)。"""
 from pathlib import Path
 
@@ -13,7 +13,7 @@ YEL, WHITE, INK, RED = (255, 222, 0), (255, 255, 255), (8, 10, 18), (240, 40, 40
 S = 1280 / 1920
 CITY = {"東京": (1589, 461), "北京": (562, 289), "上海": (727, 686)}   # thumb_bg.py の範囲(126, 34, 40, 30)での位置
 
-bg = Image.open(HERE / "assets" / "gem_pile.jpg").convert("RGB")    # Gemini で作った絵(虫の山の前のトガリネズミ)
+bg = Image.open(HERE / "assets" / "gem_snow.jpg").convert("RGB")    # Gemini で作った絵(雪の上のトガリネズミ)
 bg = bg.resize((round(bg.width * 720 / bg.height), 720), Image.LANCZOS)
 img = bg.crop((0, 0, 1280, 720))
 a = np.asarray(img).astype(np.float32)
