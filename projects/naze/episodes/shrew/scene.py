@@ -147,9 +147,15 @@ def draw_chart(img, sc, t, u):
         px, py = X(kg), Y(e(kg))
         d.ellipse([px - 14, py - 14, px + 14, py + 14], fill=YEL + (255,), outline=NAVY + (255,), width=3)
         lab = f"{name}"
-        text(d, (px + (20 if i < 2 else -20), py - 34), lab, 40 if LAND else 32, WHITE, "ld" if i < 2 else "rd")
+        if LAND or i >= 2:
+            text(d, (px + (20 if i < 2 else -20), py - 34), lab, 40 if LAND else 32, WHITE, "ld" if i < 2 else "rd")
+        else:                                                    # 縦は軸の字とぶつからないよう点の右下に
+            text(d, (px + 22, py + 14 + i * 4), lab, 32, WHITE, "lt")
     text(d, ((gx0 + gx1) / 2, gy1 + 50), "体の重さ（右ほど重い）", 40 if LAND else 34, DIM)
-    text(d, (gx0 - 20, (gy0 + gy1) / 2), "体重1gあたり\nのエネルギー", 36 if LAND else 30, DIM, "rm")
+    if LAND:
+        text(d, (gx0 - 20, (gy0 + gy1) / 2), "体重1gあたり\nのエネルギー", 36, DIM, "rm")
+    else:                                                        # 縦は左に場所が無いので、縦の軸の上に置く
+        text(d, (gx0, gy0 - 24), "↑ 体重1gあたりのエネルギー", 30, DIM, "ld")
     if sc.get("title"):
         text(d, (W / 2, y0 + 55), sc["title"], 58 if LAND else 46, YEL)
     if sc.get("note"):
