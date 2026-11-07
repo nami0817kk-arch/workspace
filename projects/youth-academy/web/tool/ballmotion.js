@@ -50,6 +50,7 @@ for (const seed of [3, 8, 21]) {
       for (const id of Object.keys(R.disp)) {
         const p = R.disp[id];
         if (!prevP[id]) continue;
+        if (R.dive && R.dive.id === id && R.dive.t >= R.dive.t0 && R.dive.t < R.dive.end + 0.1) { delete prevPV[id]; continue; } // シュートに飛ぶ GK は走りではない（一瞬で飛びつく）
         const pv = [(p[0] - prevP[id][0]) / dt, (p[1] - prevP[id][1]) / dt];
         st.pMax = Math.max(st.pMax, Math.hypot(pv[0], pv[1]));
         if (prevPV[id]) { const a = Math.hypot(pv[0] - prevPV[id][0], pv[1] - prevPV[id][1]) / dt; if (a > YA.MOVE.acc * 1.6) st.accOver++; }
@@ -81,6 +82,10 @@ for (const seed of [3, 8, 21]) {
     for (let i = 0; i < 30; i++) step(); // 合間 0.5 秒
   }
   st.places += R.places || 0;
+  st.celebs = (st.celebs || 0) + (R.celebs || 0);
+  st.dives = (st.dives || 0) + (R.dives || 0);
+  st.saves = (st.saves || 0) + (R.saves || 0);
+  st.catches = (st.catches || 0) + (R.catches || 0);
   st.tackles += R.tackles || 0;
   st.cuts += R.cuts || 0;
   st.kicks += R.kicks;
@@ -103,5 +108,8 @@ ok(st.tackles + st.cuts > 4, '合間のタックル・パスカット ' + st.tac
 ok(st.ffT / st.scenes < 3, '場面の入りの早送りは1場面あたり3秒未満（' + (st.ffT / st.scenes).toFixed(2) + '秒）');
 ok(st.goals > 0 && st.goalIn === st.goals, '得点の場面でボールが網に入る ' + st.goalIn + '／' + st.goals);
 ok(st.missIn === 0, '外れの場面で網に入った ' + st.missIn);
+ok(st.celebs === st.goals, '得点のたびに喜ぶ ' + st.celebs + '／' + st.goals);
+ok(st.dives >= st.goals, 'シュートに GK が飛ぶ ' + st.dives);
+ok(st.saves > 0 && st.catches >= st.saves * 0.8, '止める場面で GK が飛びついてつかむ ' + st.catches + '／' + st.saves);
 console.log(fails ? '失敗 ' + fails : 'ボールの動きの点検: すべて通過');
 process.exit(fails ? 1 : 0);
