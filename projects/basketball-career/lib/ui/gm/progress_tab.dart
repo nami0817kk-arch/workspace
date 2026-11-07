@@ -232,7 +232,7 @@ class ProgressTab extends StatelessWidget {
       _card([
         _head('けが人', icon: Icons.healing_rounded, color: GmColors.bad),
         const SizedBox(height: 4),
-        for (final p in hurt) Text('・${p.name}(${p.pos.short}・力${p.ovr}) あと${p.injured}試合', style: const TextStyle(height: 1.6)),
+        for (final p in hurt) Text('・${p.name}(${p.pos.short}・OVR${shown(p.ovr)}) あと${p.injured}試合', style: const TextStyle(height: 1.6)),
       ]),
     ];
   }

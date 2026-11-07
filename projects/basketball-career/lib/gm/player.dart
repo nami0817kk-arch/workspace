@@ -358,3 +358,68 @@ List<(String, int)> badgesOf(Player p) {
   out.sort((x, y) => y.$2.compareTo(x.$2));
   return out;
 }
+
+/// 画面に見せる力の数字(2K のような幅: 控えは70前後、主力は80台、スターは90台)。
+/// 試合や年俸の計算は、もとの数字([Player.ovr] など)で行う。
+int shown(int v) => (39 + v * 0.62).round().clamp(40, 99);
+
+/// 細かい能力(画面に見せるだけ。試合の計算は大きな分類 [Attr] で行う)。
+/// [tweak] はポジションごとのずれ(PG・SG・SF・PF・C の順)。
+class SubRating {
+  const SubRating(this.label, this.attr, this.tweak);
+  final String label;
+  final Attr attr;
+  final List<int> tweak;
+}
+
+const subRatings = <SubRating>[
+  SubRating('3ポイント', Attr.outside, [2, 3, 0, -2, -6]),
+  SubRating('ミドルレンジ', Attr.outside, [0, 2, 1, 0, -3]),
+  SubRating('フリースロー', Attr.outside, [3, 3, 0, -2, -6]),
+  SubRating('シュートの安定', Attr.outside, [0, 0, 0, 0, 0]),
+  SubRating('レイアップ', Attr.inside, [2, 1, 1, -1, -3]),
+  SubRating('ダンク', Attr.inside, [-10, -5, 0, 4, 6]),
+  SubRating('ポストの技', Attr.inside, [-8, -5, 0, 4, 6]),
+  SubRating('ゴール下', Attr.inside, [-4, -2, 0, 3, 5]),
+  SubRating('パスの正確さ', Attr.passing, [2, 0, 0, 0, -2]),
+  SubRating('ボール運び', Attr.passing, [4, 2, 0, -6, -10]),
+  SubRating('ドリブルの速さ', Attr.passing, [4, 2, 0, -5, -9]),
+  SubRating('視野', Attr.passing, [2, 0, 0, 0, 0]),
+  SubRating('攻めのリバウンド', Attr.rebound, [-3, -2, 0, 2, 3]),
+  SubRating('守りのリバウンド', Attr.rebound, [-2, -1, 0, 2, 4]),
+  SubRating('外の守り', Attr.defense, [4, 3, 2, -3, -8]),
+  SubRating('中の守り', Attr.defense, [-8, -5, 0, 4, 8]),
+  SubRating('スティール', Attr.defense, [4, 3, 1, -2, -5]),
+  SubRating('ブロック', Attr.defense, [-10, -6, 0, 5, 9]),
+  SubRating('守りの判断', Attr.defense, [0, 0, 0, 0, 0]),
+  SubRating('スピード', Attr.athletic, [5, 3, 0, -4, -8]),
+  SubRating('加速', Attr.athletic, [5, 3, 0, -4, -7]),
+  SubRating('跳躍', Attr.athletic, [0, 1, 1, 0, -1]),
+  SubRating('力強さ', Attr.athletic, [-8, -5, 0, 5, 9]),
+  SubRating('スタミナ', Attr.athletic, [2, 1, 0, -1, -2]),
+];
+
+/// 細かい能力の値(画面に見せる数字)。選手ごとに id から決まる揺らぎが付く。
+int subRating(Player p, SubRating s) {
+  final i = subRatings.indexOf(s);
+  final x = ((p.id * 2654435761 + i * 40503) & 0xFFFFFFFF) >> 13;
+  final noise = x % 11 - 5;
+  return shown((p.attr(s.attr) + s.tweak[p.pos.index] + noise).clamp(25, 99));
+}
+
+/// 身長(cm)・体重(kg)・ウイングスパン(cm)。ポジションと id から決まる。
+(int, int, int) physicalOf(Player p) {
+  const base = {Pos.pg: 187, Pos.sg: 193, Pos.sf: 201, Pos.pf: 206, Pos.c: 211};
+  final x = (p.id * 2246822519) & 0xFFFFFFFF;
+  final h = base[p.pos]! + (x % 9) - 3;
+  final w = (h - 100) + ((x >> 8) % 14) - 4;
+  final span = h + ((x >> 16) % 13) - 2;
+  return (h, w, span);
+}
+
+/// 伸びきったときの見込みの数字(5刻みの幅)。
+(int, int) potentialRange(Player p) {
+  final v = shown(p.pot);
+  final lo = v ~/ 5 * 5;
+  return (lo, (lo + 5).clamp(0, 99));
+}

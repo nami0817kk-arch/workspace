@@ -70,14 +70,18 @@ class OvrBadge extends StatelessWidget {
   Widget build(BuildContext context) => SizedBox(
         width: size,
         child: Column(mainAxisSize: MainAxisSize.min, children: [
-          Text('$ovr',
+          // 見せる数字は 2K の幅(shown)。色はもとの力で決める
+          Text('${shown(ovr)}',
               style: TextStyle(fontSize: size * 0.55, fontWeight: FontWeight.bold, color: GmColors.ovr(ovr), height: 1.1)),
-          if (delta != 0)
-            Text(delta > 0 ? '+$delta' : '$delta',
+          if (shownDelta(ovr, delta) != 0)
+            Text(shownDelta(ovr, delta) > 0 ? '+${shownDelta(ovr, delta)}' : '${shownDelta(ovr, delta)}',
                 style: TextStyle(fontSize: 11, color: delta > 0 ? GmColors.good : GmColors.bad, height: 1.1)),
         ]),
       );
 }
+
+/// 見せる数字での変化。
+int shownDelta(int ovr, int delta) => shown(ovr) - shown(ovr - delta);
 
 /// 小さな札。
 class Tag extends StatelessWidget {
@@ -217,7 +221,7 @@ class AttrBars extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(4),
                   child: LinearProgressIndicator(
-                    value: (p.attr(a) - 25) / 74,
+                    value: (shown(p.attr(a)) - 40) / 59,
                     minHeight: 8,
                     color: GmColors.ovr(p.attr(a)),
                     backgroundColor: GmColors.line,
@@ -225,7 +229,7 @@ class AttrBars extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 8),
-              SizedBox(width: 26, child: Text('${p.attr(a)}', textAlign: TextAlign.right, style: const TextStyle(fontWeight: FontWeight.bold))),
+              SizedBox(width: 26, child: Text('${shown(p.attr(a))}', textAlign: TextAlign.right, style: const TextStyle(fontWeight: FontWeight.bold))),
             ]),
           ),
       ]);

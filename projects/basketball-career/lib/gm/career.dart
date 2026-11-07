@@ -345,12 +345,12 @@ class Career {
       final expected = byOvr.indexOf(p);
       if (waiting.contains(p.id) || p.injured > 0) continue;
       if (p.morale < 20) {
-        _mail(Sender.player, '${p.name}がトレードを希望', '${p.name}(力${p.ovr})「このチームでは先が見えない。よそでプレーしたい」',
+        _mail(Sender.player, '${p.name}がトレードを希望', '${p.name}(OVR${shown(p.ovr)})「このチームでは先が見えない。よそでプレーしたい」',
             kind: MsgKind.tradeRequest, choices: const ['相手を探すと約束する', '残ってほしいと伝える'], player: p.id);
         break;
       }
       if (i >= 5 && expected < 5 && p.morale < 50) {
-        _mail(Sender.player, '${p.name}が出番を求めている', '${p.name}(力${p.ovr})「自分は先発で出られるはずだ。もっと出番がほしい」',
+        _mail(Sender.player, '${p.name}が出番を求めている', '${p.name}(OVR${shown(p.ovr)})「自分は先発で出られるはずだ。もっと出番がほしい」',
             kind: MsgKind.minutes, choices: const ['先発に入れると約束する', '今の役割を続けてもらう'], player: p.id);
         break;
       }
@@ -916,8 +916,8 @@ class Career {
           p.nextSalary = null;
         }
         if (t.index == mine) {
-          if (d >= 4) news.add('${p.name}が大きく伸びた(力 ${p.ovr}、+$d)');
-          if (d <= -4) news.add('${p.name}の力が落ちた(力 ${p.ovr}、$d)');
+          if (d >= 4) news.add('${p.name}が大きく伸びた(OVR ${shown(p.ovr)})');
+          if (d <= -4) news.add('${p.name}の力が落ちた(OVR ${shown(p.ovr)})');
         }
         if (retires(p, rng)) retired.add(p);
       }
@@ -1178,7 +1178,7 @@ class Career {
           ..years = 1 + rng.nextInt(ask.maxYears);
         t.roster.add(p);
         freeAgents.remove(p);
-        if (p.ovr >= 70) _log('移籍: ${p.name}(力${p.ovr})が${t.def.short}と${p.years}年契約');
+        if (p.ovr >= 70) _log('移籍: ${p.name}(OVR${shown(p.ovr)})が${t.def.short}と${p.years}年契約');
         break;
       }
     }
