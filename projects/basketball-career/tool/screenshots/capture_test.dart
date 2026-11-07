@@ -370,6 +370,22 @@ void main() {
       await _tap(t, 'チーム');
       await _tap(t, '練習(強さ きつい・重点 2人)');
     });
+    final minCar = careerAt(3, 12);
+    await _shoot(t, 'r17_minutes', '出場時間', await _with(minCar), outDir: out, act: (t) async {
+      await _tap(t, 'チーム');
+      await _tap(t, '出場時間を決める(いまは自動)');
+      // 主力に長く出す(疲れる表示を見る)
+      for (var k = 0; k < 5; k++) {
+        await t.tap(find.byIcon(Icons.add_circle_outline_rounded).first);
+        await t.pump();
+      }
+    });
+    final coachCar = careerAt(3, 12);
+    await _shoot(t, 'r18_coaches', 'コーチ陣', await _with(coachCar), outDir: out, act: (t) async {
+      await _tap(t, 'チーム');
+      await t.tap(find.textContaining('コーチ陣(ヘッドコーチ'));
+      await t.pumpAndSettle();
+    });
     final faCar = _find(28, (c) => c.phase == Phase.contracts && c.freeAgents.any((p) => c.isBigFa(p) && c.bidProblem(p) == null), from: 3);
     final target = faCar.freeAgents.firstWhere((p) => faCar.isBigFa(p) && faCar.bidProblem(p) == null);
     faCar

@@ -36,7 +36,9 @@ void main() {
     test('同じ種なら、どのチームを選んでも同じリーグになる。チームの状態は強さの順位から決まる', () {
       final a = Career.start(seed: 11, team: 3);
       final b = Career.start(seed: 11, team: 17);
-      expect(jsonEncode([for (final t in a.teams) t.toJson()]), jsonEncode([for (final t in b.teams) t.toJson()]));
+      // 自分のチームにだけ名前のあるコーチがいる(強さは変えない)ので、それを除いて比べる
+      String league(Career c) => jsonEncode([for (final t in c.teams) t.toJson()..remove('co')]);
+      expect(league(a), league(b));
       expect(a.mine, 3);
       expect(b.me.name, '${teamDefs[17].city}・${teamDefs[17].nick}');
       final strong = careerAt(11, 0), weak = careerAt(11, 29);
@@ -342,6 +344,80 @@ void main() {
     });
   });
 
+  group('出場時間とコーチ陣', () {
+    test('出場時間は合計240分。けがや移籍で足りないときは上から足す。36分を超えると戦力が落ちる', () {
+      final c = careerAt(3, 12);
+      final o = c.me.order;
+      final even = {for (var i = 0; i < o.length; i++) o[i].id: i < 10 ? 24 : 0};
+      c.setMinutes({...even, o.first.id: 10});
+      expect(c.me.minutes, isEmpty, reason: '合計が240分でないと決まらない');
+      c.setMinutes(even);
+      expect(c.me.minutes.length, o.length);
+      expect(c.me.playMinutes().fold<int>(0, (a, b) => a + b), totalMinutes);
+      final evenStrength = c.me.strength;
+      // 先発に44分ずつ(疲れる)
+      final heavy = {for (var i = 0; i < o.length; i++) o[i].id: i < 5 ? 44 : i == 5 ? 20 : 0};
+      c.setMinutes(heavy);
+      final t = c.me;
+      final heavyMinus = t.minutesEffect;
+      c.setMinutes({});
+      expect(c.me.minutesEffect, 0);
+      expect(heavyMinus, lessThan(1.5), reason: '疲れの分が引かれる');
+      expect(evenStrength, lessThan(c.me.strength), reason: '控えに長く出すと弱い');
+      // 主力がけがをしても、合計は240分のまま
+      c.setMinutes(even);
+      o.first.injured = 5;
+      final m = c.me.playMinutes();
+      expect(m.fold<int>(0, (a, b) => a + b), totalMinutes);
+      expect(m.last, 0, reason: 'けが人は出ない(順のいちばん後ろ)');
+      final copy = Career.fromJson(jsonDecode(jsonEncode(c.toJson())) as Map<String, dynamic>);
+      expect(copy.me.minutes, c.me.minutes);
+    });
+
+    test('期待より大きく少ない出場時間だと気持ちが下がる', () {
+      final c = careerAt(5, 12)..startSeason();
+      final o = c.me.order;
+      final star = o.first;
+      final m = {for (var i = 0; i < o.length; i++) o[i].id: i == 0 ? 4 : 0};
+      var left = totalMinutes - 4;
+      for (final p in o.skip(1)) {
+        final add = left.clamp(0, 40);
+        m[p.id] = add;
+        left -= add;
+      }
+      c.setMinutes(m);
+      expect(c.me.minutes, isNotEmpty);
+      star.morale = 60;
+      c.playBlock();
+      expect(star.morale, lessThan(60));
+    });
+
+    test('ヘッドコーチの力で戦力が変わり、保存しても残る。はじめのコーチは強さを変えない', () {
+      final c = careerAt(4, 12);
+      expect(c.me.coachBonus, 0);
+      final base = c.me.strength;
+      c.coachPool.add(const Coach(name: '名将', role: Staff.coach, rating: 95));
+      c.hireCoach(c.coachPool.length - 1);
+      expect(c.me.strength, closeTo(base + 0.75, 0.001));
+      final copy = Career.fromJson(jsonDecode(jsonEncode(c.toJson())) as Map<String, dynamic>);
+      expect(copy.me.coachOf(Staff.coach)!.name, '名将');
+      expect(copy.coachPool.length, c.coachPool.length);
+      expect(c.me.coachOf(Staff.coach)!.salary, greaterThan(staffCosts[2]));
+    });
+
+    test('前の版の保存(スタッフが3役)も読める', () {
+      final c = careerAt(4, 12);
+      final j = jsonDecode(jsonEncode(c.toJson())) as Map<String, dynamic>;
+      for (final t in j['teams'] as List) {
+        (t as Map)['sf'] = [3, 2, 1];
+        t.remove('co');
+      }
+      final old = Career.fromJson(j);
+      expect(old.me.staffLevel(Staff.coach), 3);
+      expect(old.me.staffLevel(Staff.development), 2);
+    });
+  });
+
   group('練習', () {
     Career toSeasonEnd(int seed, {int training = 1}) {
       final c = careerAt(seed, 12)..setTraining(training);
@@ -603,7 +679,8 @@ void main() {
         for (var seed = 1; seed <= 4; seed++) {
           final c = Career.start(seed: seed);
           for (final t in c.teams) {
-            t.staff = [2, level, 2];
+            t.staff = [2, level, 2, 2];
+            t.coaches = [];
           }
           c.startSeason();
           while (c.phase == Phase.season) {
@@ -616,13 +693,18 @@ void main() {
       expect(count(3), lessThan(count(1)));
     });
 
-    test('スタッフはシーズン前とオフだけ変えられ、給料は支出に入る。スカウトの段階でスカウトの数が変わる', () {
+    test('コーチはシーズン前とオフだけ雇え、給料は支出に入る。スカウトの力でスカウトの数が変わる', () {
       final c = careerAt(7, 12);
-      c.setStaff(Staff.scout, 3);
+      expect(c.me.coaches.length, Staff.values.length, reason: 'はじめから4人いる');
+      c.coachPool.add(const Coach(name: '名スカウト', role: Staff.scout, rating: 90));
+      expect(c.hireCoach(c.coachPool.length - 1), isTrue);
       expect(c.me.staffLevel(Staff.scout), 3);
+      expect(c.me.coaches.length, Staff.values.length, reason: '同じ役の前のコーチは辞める');
+      expect(c.coachPool.any((k) => k.role == Staff.scout && k.name != '名スカウト'), isTrue, reason: '辞めたコーチは候補に戻る');
+      final weak = c.coachPool.indexWhere((k) => k.role == Staff.scout && k.rating < 65);
       c.startSeason();
-      c.setStaff(Staff.scout, 1);
-      expect(c.me.staffLevel(Staff.scout), 3, reason: 'シーズン中は変えられない');
+      if (weak >= 0) expect(c.hireCoach(weak), isFalse, reason: 'シーズン中は替えられない');
+      expect(c.me.staffLevel(Staff.scout), 3);
       c.playBlock();
       expect(c.costs, greaterThan((c.me.payroll * blockSizes[0] / gamesPerSeason).round()));
       while (c.phase == Phase.season) {
