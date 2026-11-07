@@ -173,7 +173,7 @@ P["ch5"] = dict(title="第5章 答え", cta=True, lines=[
 ISLANDS_P = (-157.6, 20.6, 4.5, 30)
 KAUAI_P = (-159.52, 22.06, 0.8, 35)
 BIG_P = (-155.5, 19.6, 1.5, 35)
-OAHU_P = (-157.98, 21.47, 0.6, 35)
+OAHU_P = (-157.98, 21.47, 1.0, 35)
 
 P["s1"] = dict(title="同じ島なのに、雨の量が19倍ちがう", lines=[
     dict(id="a1", text="ハワイのカウアイ島では、同じ島なのに、雨の量が19倍ちがいます。", scene=MAP(KAUAI_P, PIN(WAIALEALE, "ワイアレアレ山"), PIN(MANA, "マナ", at=0.3))),
