@@ -360,6 +360,19 @@ void main() {
       await t.scrollUntilVisible(find.textContaining('ボックススコアが見られる'), 300, scrollable: _list);
       await _tap(t, opp);
     });
+    final histCar = _find(15, (c) => c.phase == Phase.preseason && c.hall.isNotEmpty, from: 4);
+    await _shoot(t, 'r12_history', 'リーグの歴史', await _with(histCar), outDir: out, act: (t) async {
+      await _tap(t, 'リーグ');
+      await t.scrollUntilVisible(find.text('歴代の優勝・表彰・殿堂'), 300, scrollable: _list);
+      await _tap(t, '歴代の優勝・表彰・殿堂');
+    });
+    final vetCar = _find(15, (c) => c.phase == Phase.preseason && c.season >= 4, from: 4);
+    await _shoot(t, 'r13_career', '選手の通算成績', await _with(vetCar), outDir: out, act: (t) async {
+      await _tap(t, 'チーム');
+      final p = vetCar.me.order.firstWhere((p) => p.career.length >= 2, orElse: () => vetCar.me.order.first);
+      await _tap(t, p.name);
+      await t.scrollUntilVisible(find.text('年ごとの成績'), 300, scrollable: find.byType(Scrollable).last);
+    });
     // 前の撮影で保存された続きがあると「新しく任される?」が出るので、保存を空にしてから
     SharedPreferences.setMockInitialValues({'gmHowtoSeen': true});
     await _shoot(t, 'r1b_teampick', 'チームを選ぶ', await _controller(), outDir: out, act: (t) => _tap(t, 'GMに就任する'));

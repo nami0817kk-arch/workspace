@@ -390,7 +390,8 @@ class ProgressTab extends StatelessWidget {
         _card([
           _head('表彰', icon: Icons.military_tech_rounded, color: GmColors.gold),
           const SizedBox(height: 6),
-          for (final a in car.awardsOf(car.season))
+          // オールリーグは15人いるので、自分の選手だけ(全員はリーグの歴史で見る)
+          for (final a in car.awardsOf(car.season).where((a) => !a.kind.allLeague || a.team == car.mine))
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 3),
               child: Row(children: [
