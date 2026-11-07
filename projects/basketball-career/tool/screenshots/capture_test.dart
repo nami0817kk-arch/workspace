@@ -340,6 +340,12 @@ void main() {
     addTearDown(t.view.reset);
     final out = 'build/review/$_device';
     await _shoot(t, 'r1_home', 'はじめの画面', await _controller(), outDir: out);
+    final mail = _find(15, (c) => c.phase == Phase.season && c.block == 2 && c.inbox.length >= 4, from: 3);
+    await _shoot(t, 'r9_inbox', '受信箱', await _with(mail), outDir: out, act: (t) async {
+      await t.tap(find.byIcon(Icons.mail_rounded).first);
+      await t.pump();
+      await t.pump(const Duration(milliseconds: 400));
+    });
     await _shoot(t, 'r1b_teampick', 'チームを選ぶ', await _controller(), outDir: out, act: (t) => _tap(t, 'GMに就任する'));
     await _shoot(t, 'r2_preseason', 'シーズン前', await _with(careerAt(2, 28)), outDir: out);
     await _shoot(t, 'r3_market', '補強', await _with(Career.start(seed: 2)), outDir: out, act: (t) => _tap(t, '補強'));

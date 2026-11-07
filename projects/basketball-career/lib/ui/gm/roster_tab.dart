@@ -103,6 +103,7 @@ class RosterTab extends StatelessWidget {
                 if (p.stats.gp > 0) _line('今季', '${p.stats.line}(${p.stats.gp}試合)'),
                 if (p.prev.gp > 0) _line('昨季', '${p.prev.line}(${p.prev.gp}試合)'),
                 for (final a in car.awards.where((a) => a.player == p.id)) _line('表彰', '${a.season}年目 ${a.kind.label}'),
+                if (p.allStars > 0) _line('オールスター', '${p.allStars}回'),
                 _line('気持ち', '${p.moraleLabel}(${p.morale})'),
                 _line('年俸', '${money(p.salary)}(残り${p.years}年)'),
                 _line('力に見合う年俸', money(fairSalary(p.ovr, p.age))),

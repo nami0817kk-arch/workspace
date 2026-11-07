@@ -7,6 +7,7 @@ import '../../monetization/monetization.dart';
 import '../art/title_art.dart';
 import '../gm_controller.dart';
 import 'common.dart';
+import 'inbox_screen.dart';
 import 'negotiate_dialog.dart';
 import 'style.dart';
 
@@ -135,6 +136,7 @@ class ProgressTab extends StatelessWidget {
         ]),
       ]),
       ..._offerCard(context, car),
+      ..._inboxCard(context, car),
       _goalsCard(car),
       ..._injuryCard(car),
       // 試合の結果を先に見せ、経営はそのあと
@@ -172,6 +174,24 @@ class ProgressTab extends StatelessWidget {
           const SizedBox(width: 10),
           Expanded(child: FilledButton(onPressed: c.acceptIncoming, child: const Text('受ける'))),
         ]),
+      ]),
+    ];
+  }
+
+  /// 返事を待っている知らせがあれば、受信箱への案内を出す。
+  List<Widget> _inboxCard(BuildContext context, Career car) {
+    final waiting = car.inbox.where((m) => m.needsAnswer).toList();
+    if (waiting.isEmpty) return const [];
+    return [
+      _card(edge: GmColors.gold, [
+        _head('返事を待っている知らせ ${waiting.length}件', icon: Icons.mail_rounded, color: GmColors.gold),
+        const SizedBox(height: 4),
+        for (final m in waiting.take(3)) Text('・${m.title}', style: const TextStyle(height: 1.6)),
+        const SizedBox(height: 8),
+        OutlinedButton(
+          onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => InboxScreen(c: c))),
+          child: const Text('受信箱を開く'),
+        ),
       ]),
     ];
   }
