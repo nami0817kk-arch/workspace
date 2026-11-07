@@ -110,6 +110,7 @@ class PlayerRow extends StatelessWidget {
     this.salaryText,
     this.extra,
     this.showMorale = false,
+    this.onLongPress,
   });
 
   final Player p;
@@ -126,6 +127,9 @@ class PlayerRow extends StatelessWidget {
   /// 自分のチームの選手なら、気持ちの顔を出す。
   final bool showMorale;
 
+  /// 長押し(選手のカードを開くなど)。
+  final VoidCallback? onLongPress;
+
   @override
   Widget build(BuildContext context) {
     final grade = p.grade;
@@ -135,6 +139,7 @@ class PlayerRow extends StatelessWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
         onTap: onTap,
+        onLongPress: onLongPress,
         child: Container(
           padding: const EdgeInsets.fromLTRB(8, 7, 8, 7),
           decoration: BoxDecoration(
@@ -153,7 +158,7 @@ class PlayerRow extends StatelessWidget {
                 const SizedBox(height: 2),
                 Wrap(spacing: 5, runSpacing: 2, crossAxisAlignment: WrapCrossAlignment.center, children: [
                   Tag(p.pos.short, color: p.pos.guard ? const Color(0xFF8FD3FF) : p.pos.big ? GmColors.good : GmColors.ball),
-                  Text('${p.age}歳', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
+                  Text('${p.age}歳・${archetypeOf(p)}', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
                   Text(salaryText ?? '${money(p.salary)}・${p.years <= 0 ? '契約切れ' : '残り${p.years}年'}',
                       style: const TextStyle(fontSize: 12, color: GmColors.sub)),
                   if (grade != '-') Tag('伸びしろ$grade', color: grade == 'S' || grade == 'A' ? GmColors.gold : GmColors.sub),

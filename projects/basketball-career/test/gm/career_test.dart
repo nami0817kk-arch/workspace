@@ -527,6 +527,27 @@ void main() {
     });
   });
 
+  group('選手の型とバッジ', () {
+    test('ビッグとガードで型が分かれ、能力の高い選手ほどバッジが多く段階も高い', () {
+      final c = Career.start(seed: 2);
+      final all = [for (final t in c.teams) ...t.roster];
+      const bigTypes = {'ストレッチビッグ', 'プレーメイクビッグ', 'リムプロテクター', 'ポストスコアラー'};
+      for (final p in all) {
+        expect(bigTypes.contains(archetypeOf(p)), p.pos.big, reason: '${p.pos} ${archetypeOf(p)}');
+      }
+      final stars = all.where((p) => p.ovr >= 82).toList();
+      final low = all.where((p) => p.ovr <= 60).toList();
+      double avg(List<Player> ps) => ps.fold(0, (s, p) => s + badgesOf(p).length) / ps.length;
+      expect(avg(stars), greaterThan(avg(low) + 1));
+      for (final p in all) {
+        final b = badgesOf(p);
+        for (var i = 1; i < b.length; i++) {
+          expect(b[i].$2, lessThanOrEqualTo(b[i - 1].$2), reason: '段階の高い順');
+        }
+      }
+    });
+  });
+
   group('相手に聞く・相手同士のトレード・ニュース', () {
     test('受け取りたい選手を選ぶと、相手が受ける出し方が返り、そのまま成立する', () {
       var found = 0;

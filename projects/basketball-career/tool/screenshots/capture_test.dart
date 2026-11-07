@@ -346,6 +346,11 @@ void main() {
       await t.pump();
       await t.pump(const Duration(milliseconds: 400));
     });
+    final cardCar = _find(5, (c) => c.phase == Phase.preseason && c.season == 3, from: 2);
+    await _shoot(t, 'r10_card', '選手のカード', await _with(cardCar), outDir: out, act: (t) async {
+      await _tap(t, 'チーム');
+      await _tap(t, cardCar.me.order.first.name);
+    });
     await _shoot(t, 'r1b_teampick', 'チームを選ぶ', await _controller(), outDir: out, act: (t) => _tap(t, 'GMに就任する'));
     await _shoot(t, 'r2_preseason', 'シーズン前', await _with(careerAt(2, 28)), outDir: out);
     await _shoot(t, 'r3_market', '補強', await _with(Career.start(seed: 2)), outDir: out, act: (t) => _tap(t, '補強'));

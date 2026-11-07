@@ -5,6 +5,7 @@ import '../../gm/league.dart';
 import '../../gm/player.dart';
 import '../gm_controller.dart';
 import 'common.dart';
+import 'player_card.dart';
 import 'style.dart';
 
 /// リーグのタブ。順位・各チームの考え・これまでの成績。
@@ -256,7 +257,9 @@ class LeagueTab extends StatelessWidget {
               PayrollBar(payroll: t.payroll),
               const SizedBox(height: 10),
               for (final p in lineup(t.roster))
-                Padding(padding: const EdgeInsets.only(bottom: 6), child: PlayerRow(p: p, team: t.index)),
+                Padding(
+                    padding: const EdgeInsets.only(bottom: 6),
+                    child: PlayerRow(p: p, team: t.index, onTap: () => showPlayerCard(context, car, p, t.index))),
             ],
           ),
         ),

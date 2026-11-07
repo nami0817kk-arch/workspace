@@ -4,6 +4,7 @@ import '../../gm/career.dart';
 import '../../gm/player.dart';
 import '../gm_controller.dart';
 import 'common.dart';
+import 'player_card.dart';
 import 'rotation_screen.dart';
 import 'style.dart';
 
@@ -78,30 +79,22 @@ class RosterTab extends StatelessWidget {
 
   Future<void> _detail(BuildContext context, Career car, Player p) => showModalBottomSheet<void>(
         context: context,
+        isScrollControlled: true,
         showDragHandle: true,
         builder: (ctx) {
           final canRelease = !car.expiring.contains(p.id) &&
               (car.phase == Phase.preseason || car.phase == Phase.season || car.phase == Phase.contracts);
           return SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(18, 0, 18, 18),
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 18),
               child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-                Row(children: [
-                  PlayerAvatar(team: car.mine, size: 72, pose: p.pos.big ? 'dunk' : 'shoot'),
-                  const SizedBox(width: 14),
-                  Expanded(
-                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      Text(p.name, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                      Text('${p.pos.label}・${p.age}歳', style: const TextStyle(color: GmColors.sub)),
-                    ]),
-                  ),
-                  OvrBadge(p.ovr, size: 56, delta: p.lastDelta),
-                ]),
+                PlayerCardHeader(p: p, team: car.mine),
                 const SizedBox(height: 12),
                 AttrBars(p: p),
                 const SizedBox(height: 10),
-                if (p.stats.gp > 0) _line('今季', '${p.stats.line}(${p.stats.gp}試合)'),
-                if (p.prev.gp > 0) _line('昨季', '${p.prev.line}(${p.prev.gp}試合)'),
+                // シーズン前とオフは、今季の成績がまだ前のシーズンのもの
+                if (p.stats.gp > 0) _line(car.seasonStarted ? '今季' : '昨季', '${p.stats.line}(${p.stats.gp}試合)'),
+                if (p.prev.gp > 0) _line(car.seasonStarted ? '昨季' : '2季前', '${p.prev.line}(${p.prev.gp}試合)'),
                 for (final a in car.awards.where((a) => a.player == p.id)) _line('表彰', '${a.season}年目 ${a.kind.label}'),
                 if (p.allStars > 0) _line('オールスター', '${p.allStars}回'),
                 _line('気持ち', '${p.moraleLabel}(${p.morale})'),
