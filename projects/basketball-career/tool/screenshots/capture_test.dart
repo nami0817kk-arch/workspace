@@ -26,6 +26,7 @@ import 'dart:ui' as ui;
 import 'package:basketball_career/gm/bot.dart';
 import 'package:basketball_career/gm/career.dart';
 import 'package:basketball_career/gm/league.dart';
+import 'package:basketball_career/gm/player.dart';
 import 'package:basketball_career/gm/trade.dart';
 import 'package:basketball_career/monetization/monetization.dart';
 import 'package:basketball_career/monetization/purchase_service.dart';
@@ -359,6 +360,15 @@ void main() {
       // 結果の一覧まで送ってから、最初の試合を押す
       await t.scrollUntilVisible(find.textContaining('ボックススコアが見られる'), 300, scrollable: _list);
       await _tap(t, opp);
+    });
+    final trainCar = _find(12, (c) => c.phase == Phase.contracts && c.season == 1, from: 3);
+    trainCar.setTraining(2);
+    trainCar.setFocus(trainCar.me.order.first.id, Attr.outside);
+    trainCar.setFocus(trainCar.me.order[2].id, Attr.defense);
+    await _shoot(t, 'r15_growth', 'オフの成長', await _with(trainCar), outDir: out);
+    await _shoot(t, 'r16_training', '練習', await _with(trainCar), outDir: out, act: (t) async {
+      await _tap(t, 'チーム');
+      await _tap(t, '練習(強さ きつい・重点 2人)');
     });
     final faCar = _find(28, (c) => c.phase == Phase.contracts && c.freeAgents.any((p) => c.isBigFa(p) && c.bidProblem(p) == null), from: 3);
     final target = faCar.freeAgents.firstWhere((p) => faCar.isBigFa(p) && faCar.bidProblem(p) == null);

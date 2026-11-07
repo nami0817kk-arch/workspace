@@ -8,6 +8,7 @@ import 'negotiate_dialog.dart';
 import 'player_card.dart';
 import 'rotation_screen.dart';
 import 'style.dart';
+import 'training_screen.dart';
 
 /// チームのタブ。先発と控え、年俸。選手を押すと詳しく見て、放せる。
 class RosterTab extends StatelessWidget {
@@ -57,6 +58,12 @@ class RosterTab extends StatelessWidget {
           onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => RotationScreen(c: c))),
           icon: const Icon(Icons.swap_vert_rounded),
           label: Text(me.rotation.isEmpty ? '先発と控えの順を決める(いまは自動)' : '先発と控えの順を決める'),
+        ),
+        const SizedBox(height: 6),
+        OutlinedButton.icon(
+          onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => TrainingScreen(c: c))),
+          icon: const Icon(Icons.fitness_center_rounded),
+          label: Text('練習(強さ ${trainingLabels[me.training]}・重点 ${me.roster.where((p) => p.focus != null).length}人)'),
         ),
         const SectionTitle('先発'),
         for (final p in order.take(5)) _row(context, car, p),

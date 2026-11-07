@@ -479,6 +479,7 @@ class ProgressTab extends StatelessWidget {
           for (final n in car.news) Text('・$n', style: const TextStyle(fontSize: 13, height: 1.5)),
         ],
       ]),
+      if (car.growth.isNotEmpty) _growthCard(car),
       SectionTitle('契約が切れた選手(${exp.length}人)'),
       if (exp.isEmpty) const Text('いない', style: TextStyle(color: GmColors.sub)),
       for (final p in exp) ...[
@@ -495,6 +496,40 @@ class ProgressTab extends StatelessWidget {
         label: const Text('オフを終えて、シーズン前へ'),
       ),
     ];
+  }
+
+  /// オフの成長の報告(伸びた順)。
+  Widget _growthCard(Career car) {
+    final list = [...car.growth]..sort((a, b) => b.delta.compareTo(a.delta));
+    return _card([
+      _head('オフの成長', icon: Icons.trending_up_rounded),
+      const SizedBox(height: 6),
+      for (final g in list)
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 2),
+          child: Row(children: [
+            Expanded(
+              child: Text('${g.name}(${g.age}歳)${g.focus == null ? '' : '・重点 ${g.focus!.label}'}',
+                  maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 13)),
+            ),
+            Text('${shown(g.before)} → ${shown(g.after)}', style: const TextStyle(fontSize: 13, color: GmColors.sub)),
+            SizedBox(
+              width: 40,
+              child: Text(
+                shown(g.after) - shown(g.before) == 0 ? '±0' : '${shown(g.after) > shown(g.before) ? '+' : ''}${shown(g.after) - shown(g.before)}',
+                textAlign: TextAlign.right,
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: g.delta > 0
+                        ? GmColors.good
+                        : g.delta < 0
+                            ? GmColors.bad
+                            : GmColors.sub),
+              ),
+            ),
+          ]),
+        ),
+    ]);
   }
 
   Widget _expiringRow(BuildContext context, Career car, Player p) {

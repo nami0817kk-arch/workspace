@@ -25,7 +25,7 @@ void main() {
       '締め切り',
       'ドラフト',
       'スカウト',
-      'くじ', '殿堂', '競り合い',
+      'くじ', '殿堂', '競り合い', '練習',
       '保護',
       '自由契約',
       '延長',
@@ -44,7 +44,7 @@ void main() {
   });
 
   test('項目は多すぎず、1つの説明は長すぎない(読まれるように)', () {
-    expect(HowToScreen.items.length, inInclusiveRange(6, 13));
+    expect(HowToScreen.items.length, inInclusiveRange(6, 14));
     for (final e in HowToScreen.items) {
       expect(e.$1.length, lessThanOrEqualTo(16), reason: e.$1);
       expect(e.$2.length, lessThanOrEqualTo(130), reason: e.$1);
