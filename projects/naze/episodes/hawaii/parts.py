@@ -199,7 +199,7 @@ P["s3"] = dict(title="4,000mの山頂は、ハワイで一番雨が少ない", l
     dict(id="h3", text="理由は、およそ2,000mの高さにある、雲のふたです。", scene=SLICE(B_A, B_B, inv=2000, title="ハワイ島を切る", **B_SLICE)),
     dict(id="h4", text="上の空気のほうが暖かく、下からの空気が上がれません。"),
     dict(id="h5", text="雲はふたの下に押さえられ、山の中腹で雨を落とします。", scene=SLICE(B_A, B_B, inv=2000, wind=True, wet=0.42, title="ハワイ島を切る", **B_SLICE)),
-    dict(id="h6", text="だから、山頂は乾いた空気の中にあるのです。"),
+    dict(id="h6", text="だから、山頂は乾いた空気の中にあるのです。", scene=MAP(BIG_P, PIN(MAUNAKEA, "マウナケア", id="p_mk2"), tr="whip")),
 ])
 
 P["s4"] = dict(title="島の地下では、真水が海水の上に浮いている", lines=[
