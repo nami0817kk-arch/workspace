@@ -122,7 +122,7 @@ P["ch2"] = dict(title="第2章 最初の200m", cta=False, lines=[
     dict(id="d8", text="次は、120mまで下げます。", section=True, scene=MAP(JPN, DRAIN(120, frm=50, fall_s=4.0, id="d_d8"), step=1, tr="zoom")),
     dict(id="d9", text="北海道は、59mでサハリンとつながります。", scene=MAP(JPN, DRAIN(120, frm=50, fall_s=0.1, id="d_d9"), PIN((143, 43.5), "北海道"), PIN((142.7, 49.5), "サハリン", at=0.3), step=1)),
     dict(id="d10", text="サハリンは、すぐに大陸と地続きです。"),
-    dict(id="d11", text="本州と北海道も、およそ120mでつながります。", scene=MAP(JPN, DRAIN(125, frm=100, fall_s=3.0, id="d_d11"), PIN((140.5, 39.5), "本州"), PIN((143, 43.5), "北海道", at=0.3), step=1)),
+    dict(id="d11", text="本州と北海道も、およそ120mでつながります。", scene=MAP(JPN, DRAIN(125, frm=100, fall_s=3.0, id="d_d11"), PIN((141.0, 40.9), "本州"), PIN((143, 43.5), "北海道", at=0.3), step=1)),
     dict(id="d12", text="実は2万年ほど前、海はいまより120m以上低かったのです。", scene=CARD("120m以上", sub="2万年ほど前の海は、いまより低かった", note="氷河期（Lambeck ほか 2014）", view=JPN, step=1, count=False)),
     dict(id="d13", text="それでも、海の水は、まだ97%残っています。", scene=CARD("97%", sub="120m下げても残る水", note="計算", view=WORLD, step=1)),
     dict(id="d14", text="海の水のほとんどは、もっと深い所にあるのです。", scene=MAP(WORLD, DRAIN(120, fall_s=0.1, id="d_d14"), step=1, view_to=(-30, 20, 200, 0))),
