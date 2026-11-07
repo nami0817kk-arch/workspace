@@ -132,6 +132,34 @@ void main() {
     expect(c.career!.me.rotation, isNotEmpty);
   });
 
+  for (final s in const [Size(360, 640), Size(430, 932), Size(1032, 1376)]) {
+    testWidgets('選手の画面は閉じるボタンと外を押して戻れ、画面いっぱいにならない($s)', (tester) async {
+      _size(tester, s.width, s.height);
+      final c = await _controller({'gmHowtoSeen': true});
+      c.newCareer(teamAtRank(1, 15), seed: 1);
+      await tester.pumpWidget(BasketballCareerApp(controller: c));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('チーム'));
+      await tester.pumpAndSettle();
+      final star = c.career!.me.order.first;
+      await tester.tap(find.text(star.name).first);
+      await tester.pumpAndSettle();
+      expect(find.text('この選手を放す'), findsOneWidget);
+      // 閉じるボタンで戻る
+      await tester.tap(find.byTooltip('閉じる'));
+      await tester.pumpAndSettle();
+      expect(find.text('この選手を放す'), findsNothing);
+      // 板の上に暗い所が残っていて、押すと閉じる
+      await tester.tap(find.text(star.name).first);
+      await tester.pumpAndSettle();
+      final sheet = tester.getRect(find.byType(BottomSheet));
+      expect(sheet.top, greaterThan(40), reason: '画面の上まで覆わない');
+      await tester.tapAt(Offset(s.width / 2, sheet.top / 2));
+      await tester.pumpAndSettle();
+      expect(find.text('この選手を放す'), findsNothing);
+    });
+  }
+
   group('どの画面も、小さいスマホ・大きいスマホ・iPad ではみ出さない', () {
     const sizes = [Size(360, 640), Size(390, 844), Size(430, 932), Size(1032, 1376)];
 
