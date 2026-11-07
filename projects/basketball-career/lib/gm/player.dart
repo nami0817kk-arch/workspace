@@ -302,3 +302,53 @@ bool retires(Player p, Rng rng) {
   if (p.age >= 33 && p.ovr < 55) return rng.chance(0.6);
   return false;
 }
+
+/// 選手の型(能力の偏りとポジションから決まる)。
+String archetypeOf(Player p) {
+  int a(Attr x) => p.attrs[x.index];
+  final out = a(Attr.outside), ins = a(Attr.inside), pas = a(Attr.passing), reb = a(Attr.rebound), def = a(Attr.defense), ath = a(Attr.athletic);
+  if (p.pos.big) {
+    if (out >= -3 && out >= ins - 6) return 'ストレッチビッグ';
+    if (pas >= -1) return 'プレーメイクビッグ';
+    if (def + reb >= ins * 2 + 4) return 'リムプロテクター';
+    return 'ポストスコアラー';
+  }
+  if (p.pos == Pos.pg && pas >= out) return 'プレーメーカー';
+  if (def >= 2 && out >= 3) return '3&D';
+  if (ath >= 4 && ins >= out - 2) return 'スラッシャー';
+  if (out >= 6) return 'シューター';
+  if (def >= 3) return 'ディフェンダー';
+  return p.pos == Pos.sf ? 'ツーウェイ' : 'スコアラー';
+}
+
+/// 特性のバッジ。能力の値が高いほど、銅・銀・金・殿堂と上がる。
+const badgeNames = {
+  Attr.outside: 'シューター',
+  Attr.inside: 'フィニッシャー',
+  Attr.passing: '司令塔',
+  Attr.rebound: 'リバウンダー',
+  Attr.defense: '鉄壁',
+  Attr.athletic: '身体能力',
+};
+
+const badgeTiers = ['銅', '銀', '金', '殿堂'];
+
+/// 選手の持つバッジ(名前と段階0〜3)。段階の高い順。
+List<(String, int)> badgesOf(Player p) {
+  final out = <(String, int)>[];
+  for (final a in Attr.values) {
+    final v = p.attr(a);
+    final tier = v >= 96
+        ? 3
+        : v >= 90
+            ? 2
+            : v >= 84
+                ? 1
+                : v >= 78
+                    ? 0
+                    : -1;
+    if (tier >= 0) out.add((badgeNames[a]!, tier));
+  }
+  out.sort((x, y) => y.$2.compareTo(x.$2));
+  return out;
+}

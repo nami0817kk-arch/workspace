@@ -6,6 +6,7 @@ import '../../gm/player.dart';
 import '../../gm/trade.dart';
 import '../gm_controller.dart';
 import 'common.dart';
+import 'player_card.dart';
 import 'style.dart';
 
 /// トレードのタブ。相手を選び、出すものと受け取るものを選んで申し込む。相手の反応は申し込む前から見える。
@@ -109,6 +110,7 @@ class _TradeTabState extends State<TradeTab> {
                   team: _partner,
                   selected: _get.contains(p.id),
                   onTap: () => setState(() => _get.contains(p.id) ? _get.remove(p.id) : _get.add(p.id)),
+                  onLongPress: () => showPlayerCard(context, car, p, _partner),
                 ),
               ),
             _pickChips(car, _partner, _getPicks),
@@ -122,6 +124,7 @@ class _TradeTabState extends State<TradeTab> {
                     team: car.mine,
                     selected: _give.contains(p.id),
                     onTap: () => setState(() => _give.contains(p.id) ? _give.remove(p.id) : _give.add(p.id)),
+                    onLongPress: () => showPlayerCard(context, car, p, car.mine),
                   ),
                 ),
             _pickChips(car, car.mine, _givePicks),
@@ -221,7 +224,7 @@ class _Reaction extends StatelessWidget {
   Widget build(BuildContext context) {
     final v = verdict;
     if (v == null) {
-      return const Text('受け取る選手と出す選手(指名権)を選ぶと、相手の反応が分かる。', style: TextStyle(fontSize: 13, color: GmColors.sub));
+      return const Text('受け取る選手と出す選手(指名権)を選ぶと、相手の反応が分かる。長押しで選手のカード。', style: TextStyle(fontSize: 13, color: GmColors.sub));
     }
     final f = v.ratio.clamp(0.0, 1.0);
     final color = v.ok ? GmColors.good : f >= 0.8 ? GmColors.gold : GmColors.bad;
