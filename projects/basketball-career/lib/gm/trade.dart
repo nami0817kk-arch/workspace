@@ -5,7 +5,7 @@ import 'player.dart';
 
 /// ドラフトの指名権。[from] のチームの順位で順番が決まり、[owner] が使う。
 class DraftPick {
-  DraftPick({required this.season, required this.round, required this.from, required this.owner});
+  DraftPick({required this.season, required this.round, required this.from, required this.owner, this.protect = 0});
 
   /// 何年目のシーズンのあとのドラフトか。
   final int season;
@@ -13,15 +13,22 @@ class DraftPick {
   final int from;
   int owner;
 
-  String label(List<Team> teams, int nowSeason) {
-    final when = season == nowSeason ? '今年' : '来年';
-    return '$when $round巡目(${teams[from].def.short})';
-  }
+  /// 上位いくつまで保護されているか(0なら保護なし)。保護の範囲に入ると、指名権は [from] のチームに戻る。
+  int protect;
 
-  Map<String, dynamic> toJson() => {'s': season, 'r': round, 'f': from, 'o': owner};
+  String when(int nowSeason) => switch (season - nowSeason) {
+        0 => '今年',
+        1 => '来年',
+        final d => '$d年後',
+      };
 
-  static DraftPick fromJson(Map<String, dynamic> j) =>
-      DraftPick(season: j['s'] as int, round: j['r'] as int, from: j['f'] as int, owner: j['o'] as int);
+  String label(List<Team> teams, int nowSeason) =>
+      '${when(nowSeason)} $round巡目(${teams[from].def.short})${protect > 0 ? '・上位$protect位保護' : ''}';
+
+  Map<String, dynamic> toJson() => {'s': season, 'r': round, 'f': from, 'o': owner, if (protect > 0) 'pr': protect};
+
+  static DraftPick fromJson(Map<String, dynamic> j) => DraftPick(
+      season: j['s'] as int, round: j['r'] as int, from: j['f'] as int, owner: j['o'] as int, protect: (j['pr'] as int?) ?? 0);
 }
 
 double _curve(int ovr) {
@@ -48,9 +55,15 @@ double playerValue(Player p, TeamMode mode) {
 }
 
 /// 指名権の値打ち。[slotGuess] は1〜30の見込みの順番(1がいちばん早い)。
-double pickValue(DraftPick pick, TeamMode mode, int slotGuess, int nowSeason) {
+double pickValue(DraftPick pick, TeamMode mode, int slotGuess, int nowSeason, {int? protect}) {
   var v = pick.round == 1 ? 58 - (slotGuess - 1) * 1.5 : 4.0;
-  if (pick.season > nowSeason) v *= 0.85;
+  // 先の年ほど割り引く(どうなるか分からない)。遠い年は順位の見込みも真ん中に寄せる
+  final years = (pick.season - nowSeason).clamp(0, 4);
+  if (years >= 2 && pick.round == 1) v = (v + 58 - 14 * 1.5) / 2;
+  v *= [1.0, 0.85, 0.75, 0.68, 0.62][years];
+  // 保護: 保護の範囲に入りそうなら、ほとんど値打ちがない
+  final pr = protect ?? pick.protect;
+  if (pr > 0 && pick.round == 1) v *= slotGuess <= pr && years == 0 ? 0.15 : 1 - pr / 40;
   if (mode == TeamMode.rebuild) v *= 1.45;
   if (mode == TeamMode.contend) v *= 0.7;
   return v;
@@ -65,7 +78,17 @@ int slotGuess(List<Team> teams, int from) {
 
 /// トレードの中身。
 class TradeOffer {
-  TradeOffer({required this.partner, this.give = const [], this.get = const [], this.givePicks = const [], this.getPicks = const []});
+  TradeOffer({
+    required this.partner,
+    this.give = const [],
+    this.get = const [],
+    this.givePicks = const [],
+    this.getPicks = const [],
+    this.protections = const {},
+  });
+
+  /// 出す指名権に付ける保護(指名権の番号 → 上位いくつ)。成立すると指名権に付く。
+  final Map<int, int> protections;
 
   final int partner;
 
@@ -79,7 +102,14 @@ class TradeOffer {
 
   bool get isEmpty => give.isEmpty && get.isEmpty && givePicks.isEmpty && getPicks.isEmpty;
 
-  Map<String, dynamic> toJson() => {'p': partner, 'g': give, 't': get, 'gp': givePicks, 'tp': getPicks};
+  Map<String, dynamic> toJson() => {
+        'p': partner,
+        'g': give,
+        't': get,
+        'gp': givePicks,
+        'tp': getPicks,
+        if (protections.isNotEmpty) 'pt': {for (final e in protections.entries) '${e.key}': e.value},
+      };
 
   static TradeOffer fromJson(Map<String, dynamic> j) => TradeOffer(
         partner: j['p'] as int,
@@ -87,6 +117,7 @@ class TradeOffer {
         get: [for (final x in j['t'] as List) x as int],
         givePicks: [for (final x in j['gp'] as List) x as int],
         getPicks: [for (final x in j['tp'] as List) x as int],
+        protections: {for (final e in ((j['pt'] as Map?) ?? const {}).entries) int.parse(e.key as String): e.value as int},
       );
 }
 
@@ -139,7 +170,7 @@ TradeVerdict judgeTrade(List<Team> teams, List<DraftPick> picks, int mine, Trade
   var inV = give.fold(0.0, (s, p) => s + playerValue(p, mode));
   var outV = get.fold(0.0, (s, p) => s + playerValue(p, mode));
   for (final i in o.givePicks) {
-    inV += pickValue(picks[i], mode, slots?[picks[i].from] ?? slotGuess(teams, picks[i].from), nowSeason);
+    inV += pickValue(picks[i], mode, slots?[picks[i].from] ?? slotGuess(teams, picks[i].from), nowSeason, protect: o.protections[i]);
   }
   for (final i in o.getPicks) {
     outV += pickValue(picks[i], mode, slots?[picks[i].from] ?? slotGuess(teams, picks[i].from), nowSeason);
@@ -163,6 +194,8 @@ void applyTrade(List<Team> teams, List<DraftPick> picks, int mine, TradeOffer o)
     ..addAll(give);
   for (final i in o.givePicks) {
     picks[i].owner = o.partner;
+    final pr = o.protections[i];
+    if (pr != null && picks[i].round == 1) picks[i].protect = pr;
   }
   for (final i in o.getPicks) {
     picks[i].owner = mine;

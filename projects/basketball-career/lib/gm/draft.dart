@@ -108,9 +108,24 @@ const lotteryWeights = [140, 140, 140, 125, 105, 90, 75, 60, 45, 30, 20, 15, 10,
 /// くじで決める順番の数。
 const lotteryPicks = 4;
 
+/// 直前の [draftOrder] で、保護のために元のチームへ戻った指名権(番号)。
+final conveyedBack = <int>[];
+
+/// いまの順位のままならの、くじで全体1位を引く見込み(チームの番号 → 0〜1)。
+/// 地区の上位8つ(6位までとプレーインの勝ち抜けの見込み)を除いた14チームで、成績の悪い順に重みを付ける。
+Map<int, double> lotteryOdds(List<Team> teams) {
+  final inPo = {
+    for (final east in [true, false]) ...standings(teams, east: east).take(8).map((t) => t.index),
+  };
+  final lottery = standings(teams).reversed.map((t) => t.index).where((i) => !inPo.contains(i)).toList();
+  final total = [for (var i = 0; i < lottery.length; i++) lotteryWeights[math.min(i, lotteryWeights.length - 1)]].fold(0, (a, b) => a + b);
+  return {for (var i = 0; i < lottery.length; i++) lottery[i]: lotteryWeights[math.min(i, lotteryWeights.length - 1)] / total};
+}
+
 /// ドラフトの順番(1巡目と2巡目)。くじで1〜4番を決め、残りは成績の悪い順。
 /// 返すのは、指名権の並び([picks])の番号の列。
 List<int> draftOrder(List<Team> teams, List<DraftPick> picks, int season, List<int> playoffTeamsIdx, Rng rng) {
+  conveyedBack.clear();
   // 成績の悪い順
   final worst = standings(teams).reversed.map((t) => t.index).toList();
   final lottery = worst.where((i) => !playoffTeamsIdx.contains(i)).toList();
@@ -126,9 +141,16 @@ List<int> draftOrder(List<Team> teams, List<DraftPick> picks, int season, List<i
   final secondRound = [...worst];
   final order = <int>[];
   for (final (round, list) in [(1, firstRound), (2, secondRound)]) {
-    for (final from in list) {
+    for (final (k, from) in list.indexed) {
       final i = picks.indexWhere((p) => p.season == season && p.round == round && p.from == from);
-      if (i >= 0) order.add(i);
+      if (i < 0) continue;
+      // 保護の範囲(上位 protect 位まで)に入ったら、指名権は元のチームに戻る
+      final pk = picks[i];
+      if (round == 1 && pk.protect > 0 && k < pk.protect && pk.owner != pk.from) {
+        pk.owner = pk.from;
+        conveyedBack.add(i);
+      }
+      order.add(i);
     }
   }
   return order;

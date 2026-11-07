@@ -26,6 +26,9 @@ class _TradeTabState extends State<TradeTab> {
   final _givePicks = <int>{};
   final _getPicks = <int>{};
 
+  /// 出す1巡目の指名権に付ける保護(指名権の番号 → 上位いくつ)。
+  final _protect = <int, int>{};
+
   void _setPartner(int t) => setState(() {
         _partner = t;
         _get.clear();
@@ -37,6 +40,7 @@ class _TradeTabState extends State<TradeTab> {
         give: [..._give],
         get: [..._get],
         givePicks: [..._givePicks],
+        protections: {for (final i in _givePicks) if ((_protect[i] ?? 0) > 0) i: _protect[i]!},
         getPicks: [..._getPicks],
       );
 
@@ -128,6 +132,26 @@ class _TradeTabState extends State<TradeTab> {
                   ),
                 ),
             _pickChips(car, car.mine, _givePicks),
+            for (final i in _givePicks.where((i) => car.picks[i].round == 1 && car.picks[i].protect == 0))
+              Padding(
+                padding: const EdgeInsets.only(bottom: 6),
+                child: Row(children: [
+                  Expanded(
+                    child: Text('${car.picks[i].when(car.season)}の1巡目の保護',
+                        style: const TextStyle(fontSize: 12, color: GmColors.sub)),
+                  ),
+                  for (final n in const [0, 5, 10, 14])
+                    Padding(
+                      padding: const EdgeInsets.only(left: 4),
+                      child: ChoiceChip(
+                        visualDensity: VisualDensity.compact,
+                        label: Text(n == 0 ? 'なし' : '上位$n', style: const TextStyle(fontSize: 12)),
+                        selected: (_protect[i] ?? 0) == n,
+                        onSelected: (_) => setState(() => _protect[i] = n),
+                      ),
+                    ),
+                ]),
+              ),
           ],
         ),
       ),
