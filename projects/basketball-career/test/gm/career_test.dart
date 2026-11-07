@@ -344,6 +344,57 @@ void main() {
     });
   });
 
+  group('試合の数字', () {
+    test('ボックススコアは両チーム分。シュートの内訳は点と合い、成功は試投を超えない', () {
+      final c = careerAt(6, 12)..startSeason();
+      c.playBlock();
+      final games = c.lastGames.where((g) => g.box.isNotEmpty).toList();
+      expect(games, isNotEmpty);
+      for (final g in games) {
+        expect(g.oppBox, isNotEmpty);
+        for (final (box, pts) in [(g.box, g.ptsOf(c.mine)), (g.oppBox, g.ptsAgainst(c.mine))]) {
+          expect(box.fold<int>(0, (n, b) => n + b.pts), pts);
+          expect(box.fold<int>(0, (n, b) => n + b.min), totalMinutes);
+          for (final b in box) {
+            expect(2 * (b.fgm - b.tpm) + 3 * b.tpm + b.ftm, b.pts, reason: b.name);
+            expect(b.fgm, lessThanOrEqualTo(b.fga));
+            expect(b.tpm, lessThanOrEqualTo(b.tpa));
+            expect(b.ftm, lessThanOrEqualTo(b.fta));
+            expect(b.tpa, lessThanOrEqualTo(b.fga));
+          }
+        }
+        final copy = GameResult.fromJson(jsonDecode(jsonEncode(g.toJson())) as Map<String, dynamic>);
+        expect(copy.oppBox.first.fga, g.oppBox.first.fga);
+        expect(copy.box.first.pm, g.box.first.pm);
+      }
+    });
+
+    test('シーズンの成績にシュート・スティール・ブロック・ミスがたまり、率は本当らしい', () {
+      final c = careerAt(6, 12)..startSeason();
+      while (c.phase == Phase.season) {
+        c.playBlock();
+      }
+      final regulars = [for (final t in c.teams) ...t.roster].where((p) => p.stats.gp >= 60 && p.stats.mpg >= 25).toList();
+      expect(regulars.length, greaterThan(60));
+      double avg(double Function(Stats) f) => regulars.fold(0.0, (n, p) => n + f(p.stats)) / regulars.length;
+      expect(avg((s) => s.fgPct), inInclusiveRange(0.40, 0.55));
+      expect(avg((s) => s.ftPct), inInclusiveRange(0.65, 0.85));
+      expect(avg((s) => s.spg), greaterThan(0.3));
+      expect(avg((s) => s.bpg), greaterThan(0.2));
+      expect(avg((s) => s.tpg), greaterThan(0.8));
+      // センターはガードより3ポイントを打たず、ブロックが多い
+      final cs = regulars.where((p) => p.pos == Pos.c).toList(), gs = regulars.where((p) => p.pos.guard).toList();
+      double of(List<Player> l, double Function(Stats) f) => l.fold(0.0, (n, p) => n + f(p.stats)) / l.length;
+      expect(of(cs, (s) => s.tpa / s.gp), lessThan(of(gs, (s) => s.tpa / s.gp)));
+      expect(of(cs, (s) => s.bpg), greaterThan(of(gs, (s) => s.bpg)));
+      // 保存しても残り、前の版の4つだけの成績も読める
+      final p = regulars.first;
+      expect(Stats.fromJson(p.stats.toJson()).fga, p.stats.fga);
+      final old = Stats.fromJson([10, 200, 50, 30]);
+      expect((old.ppg, old.fga, old.fgPct), (20.0, 0, 0.0));
+    });
+  });
+
   group('出場時間とコーチ陣', () {
     test('出場時間は合計240分。けがや移籍で足りないときは上から足す。36分を超えると戦力が落ちる', () {
       final c = careerAt(3, 12);

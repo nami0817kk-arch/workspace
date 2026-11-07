@@ -370,6 +370,12 @@ void main() {
       await _tap(t, 'チーム');
       await _tap(t, '練習(強さ きつい・重点 2人)');
     });
+    final statCar = _find(12, (c) => c.phase == Phase.season && c.block == 2, from: 3);
+    await _shoot(t, 'r19_stats', 'チームの成績', await _with(statCar), outDir: out, act: (t) async {
+      await _tap(t, 'チーム');
+      await t.scrollUntilVisible(find.textContaining('チームの成績(シュート'), 200, scrollable: _list);
+      await _tap(t, 'チームの成績(シュート・スティールなど)');
+    });
     final minCar = careerAt(3, 12);
     await _shoot(t, 'r17_minutes', '出場時間', await _with(minCar), outDir: out, act: (t) async {
       await _tap(t, 'チーム');

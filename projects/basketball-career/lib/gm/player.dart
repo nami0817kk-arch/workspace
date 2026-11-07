@@ -45,22 +45,65 @@ List<int> makeAttrs(Pos pos, int Function() noise) => [for (final b in _posProfi
 
 /// 1シーズンの個人成績(合計)。
 class Stats {
-  Stats({this.gp = 0, this.pts = 0, this.reb = 0, this.ast = 0});
+  Stats({
+    this.gp = 0,
+    this.pts = 0,
+    this.reb = 0,
+    this.ast = 0,
+    this.min = 0,
+    this.fgm = 0,
+    this.fga = 0,
+    this.tpm = 0,
+    this.tpa = 0,
+    this.ftm = 0,
+    this.fta = 0,
+    this.stl = 0,
+    this.blk = 0,
+    this.tov = 0,
+  });
   int gp, pts, reb, ast;
+
+  /// 出場時間・シュートの成功と試投(全体・3ポイント・フリースロー)・スティール・ブロック・ミス(ターンオーバー)。
+  int min, fgm, fga, tpm, tpa, ftm, fta, stl, blk, tov;
 
   double per(int v) => gp == 0 ? 0 : v / gp;
   double get ppg => per(pts);
   double get rpg => per(reb);
   double get apg => per(ast);
+  double get mpg => per(min);
+  double get spg => per(stl);
+  double get bpg => per(blk);
+  double get tpg => per(tov);
+
+  /// 成功率(0〜1)。試投が無ければ0。
+  double get fgPct => fga == 0 ? 0 : fgm / fga;
+  double get tpPct => tpa == 0 ? 0 : tpm / tpa;
+  double get ftPct => fta == 0 ? 0 : ftm / fta;
 
   /// 「18.2点 6.1リバウンド 3.4アシスト」を短く。
   String get line => gp == 0 ? '' : '${ppg.toStringAsFixed(1)}点 ${rpg.toStringAsFixed(1)}リ ${apg.toStringAsFixed(1)}ア';
 
-  List<int> toJson() => [gp, pts, reb, ast];
+  List<int> toJson() => [gp, pts, reb, ast, min, fgm, fga, tpm, tpa, ftm, fta, stl, blk, tov];
   static Stats fromJson(Object? j) {
+    // 前の版の保存は4つ(試合・点・リバウンド・アシスト)だけ。足りない所は0
     final l = j is List ? j : const [];
     int at(int i) => i < l.length ? l[i] as int : 0;
-    return Stats(gp: at(0), pts: at(1), reb: at(2), ast: at(3));
+    return Stats(
+      gp: at(0),
+      pts: at(1),
+      reb: at(2),
+      ast: at(3),
+      min: at(4),
+      fgm: at(5),
+      fga: at(6),
+      tpm: at(7),
+      tpa: at(8),
+      ftm: at(9),
+      fta: at(10),
+      stl: at(11),
+      blk: at(12),
+      tov: at(13),
+    );
   }
 }
 

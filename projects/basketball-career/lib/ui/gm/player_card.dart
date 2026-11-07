@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../gm/career.dart';
 import '../../gm/league.dart';
 import '../../gm/player.dart';
+import 'box_score.dart';
 import 'common.dart';
 import 'style.dart';
 
@@ -159,12 +160,15 @@ Future<void> showPlayerCard(BuildContext context, Career car, Player p, int team
             const SizedBox(height: 10),
             // シーズン前とオフは、今季の成績がまだ前のシーズンのもの
             if (p.stats.gp > 0) _line(car.seasonStarted ? '今季' : '昨季', '${p.stats.line}(${p.stats.gp}試合)'),
+            if (p.stats.fga > 0)
+              _line('シュート', 'FG ${(p.stats.fgPct * 100).toStringAsFixed(1)}%・3P ${p.stats.tpa == 0 ? '-' : '${(p.stats.tpPct * 100).toStringAsFixed(1)}%'}・FT ${p.stats.fta == 0 ? '-' : '${(p.stats.ftPct * 100).toStringAsFixed(1)}%'}'),
             if (p.prev.gp > 0) _line(car.seasonStarted ? '昨季' : '2季前', '${p.prev.line}(${p.prev.gp}試合)'),
             if (p.allStars > 0) _line('オールスター', '${p.allStars}回'),
             if (awardsSummary(car, p).isNotEmpty) _line('表彰', awardsSummary(car, p)),
             _line('年俸', '${money(p.salary)}(残り${p.years}年)'),
             _line('伸びしろ', p.grade == '-' ? 'なし' : p.grade),
             if (p.injured > 0) _line('けが', 'あと${p.injured}試合'),
+            RecentGames(car: car, p: p),
             if (p.career.isNotEmpty) CareerTable(p: p),
           ]),
         ),
