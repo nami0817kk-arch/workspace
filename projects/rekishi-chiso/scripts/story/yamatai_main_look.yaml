@@ -1,0 +1,236 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：邪馬台国はどこ？（scripts/yamatai-story.yaml）。chiso/storymain.py が読む。
+# 11-07 作成（11/10 19:00 公開）。maizo_main_look.yaml を写した。台本には手を入れない（承認のあと）。決まりは docs/story-main.md・スキル rekishi-story-screen。
+# 絵の方針：AI 絵（H01・Y02〜Y21 の16枚）は 11-07 に Gemini（Chrome、無料版）で作った（FLUX は 11-06 夜に無料枠が切れた）。終了画面 YEND は jingi の J12（FLUX）の写し。
+#   卑弥呼の顔は特定の資料を写さない想像図。弥生の服・建物（高床・環濠・物見やぐら）に合わせ、城・瓦・鎧は描かせない。実在の古画は使わない。
+script: scripts/yamatai-story.yaml
+out: yamatai_story_main
+art_dir: out/story/yamatai/main
+main_art_dir: out/story/yamatai/main
+ai_disclosure: この動画の情景・人物の画像は、画像生成AI（Google の Gemini・Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面の右上に「AI生成画像」と出しています）。
+
+chapters:
+  0: {label: 序章 名前の字さえ決まらない国, now: null, dates: {}}
+  1: {label: 第1章 『魏志倭人伝』には何が書かれているのか, now: 3世紀, dates: {25: 1910年, 27: null}}
+  2: {label: 第2章 採点の決まり, now: null, dates: {}}
+  3: {label: 第3章 鉄と絹はどこから出たのか, now: null, dates: {}}
+  4: {label: 第4章 「銅鏡百枚」はどこにあるのか, now: null, dates: {}}
+  5: {label: 第5章 「径百余歩」の墓はどこにあるのか, now: 247年, dates: {79: null}}
+  6: {label: 第6章 宮室・楼観・城柵はどこにあったのか, now: null, dates: {}}
+  7: {label: 第7章 「その山に丹あり」はどこか, now: null, dates: {}}
+  8: {label: 第8章 採点の結果, now: null, dates: {}}
+  9: {label: まとめ 邪馬台国は、どこにあったのか, now: null, dates: {}}
+no_tag_from: 137
+
+references:
+  - 陳寿『三国志』魏書 烏丸鮮卑東夷伝 倭人条（中文 Wikisource）　https://zh.wikisource.org/wiki/三國志/卷30
+  - 范曄『後漢書』東夷列伝・姚思廉『梁書』諸夷伝・魏徴ら『隋書』東夷伝・房玄齢ら『晋書』陳寿伝・『日本書紀』巻第九・『翰苑』（中文 Wikisource）
+  - 内藤湖南「卑弥呼考」（『藝文』1910年。青空文庫）／白鳥庫吉「倭女王卑弥呼考」（『東亞之光』1910年）
+  - 文化庁 文化遺産オンライン（纒向遺跡・箸墓古墳周濠・ホケノ山古墳出土品・黒塚古墳・唐古・鍵遺跡出土品・若杉山辰砂採掘遺跡出土石器・西谷墳墓群）
+  - 名古屋大学「奈良県纒向遺跡出土のモモの種の高精度14C年代測定と邪馬台国の所在地論争」（2018年）
+  - 国立歴史民俗博物館研究報告 第163集（2011年）／松木武彦（現代ビジネス、2025年）
+  - 佐賀県（吉野ヶ里遺跡の石棺墓の会見資料 2023年・特別公開の案内 2026年）・吉野ヶ里歴史公園『吉野ヶ里遺跡ガイドブック』
+  - 福岡県『グラフふくおか』2017夏号（平原遺跡）
+  - 野島永「近畿地方の弥生時代の鉄器について」（1996年）／小林青樹 科研費 18K01076 研究成果報告書（2022年）
+  - 岡山大学（楯築墳丘墓）・岡山市埋蔵文化財センター・島根県（西谷墳墓群・神原神社古墳）・鳥取県（青谷上寺地遺跡）・徳島県（若杉山遺跡・萩原一号墓・西山谷二号墳）
+  - 共同通信 ニュース用語解説「箸墓古墳」／岡山県立博物館「岡山の三角縁神獣鏡」（2019年）・福知山市（広峯15号墳の鏡、2023年）
+
+ai:
+  H01: {scene: 卑弥呼の想像図（銅鏡を持つ女王、背後に高床の宮殿と物見やぐら）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  Y02: {scene: 上空から見た環濠集落（堀・柵・物見やぐら・高床倉庫）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  Y03: {scene: 木の柵と堀の向こうの物見やぐら, pan: v, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  Y05: {scene: 竹の矢と鉄の鏃・骨の鏃（手もと）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  Y06: {scene: 赤と紫に染めた絹の布と繭と紡錘車, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  Y07: {scene: 緑青の銅鏡の背の文様, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  Y08: {scene: 森に覆われた前方後円墳と周りの水（上空）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], mtn: [1.5, 0.5, 0.3]}}
+  Y09: {scene: 柵に囲まれた大きな高床の建物と松明（夕暮れ）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  Y10: {scene: 発掘の穴の中の桃の種と土器のかけら, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  Y11: {scene: 中国の古い宮殿（魏の都の想像）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  Y12: {scene: 灯の下の竹簡と筆と硯（字は読めない）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  Y13: {scene: 丘の上の発掘現場の石の棺（蓋を外し、中は土）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  Y14: {scene: 四隅が突き出た形の墳丘墓（雪の山を背に）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  Y15: {scene: 赤い辰砂の筋が走る岩の採掘の穴, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], mortar: [1.6, 0.68, 0.76]}}
+  Y19: {scene: 祭壇の火と銅鏡に向かう女王の後ろ姿（想像図）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  Y21: {scene: 入り江の海辺の村と浜の舟（伊都国のあたりの想像）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], sea: [1.4, 0.7, 0.55]}}
+  YEND: {scene: 夜明けの海（終了画面）, lock: [1.0, 0.5, 0.5]}
+
+paint_fx: {}
+
+shots:
+  - 0 ai:H01 right
+  - 1 ai:Y12 wide
+  - 2 ai:Y08 mtn
+  - 3 ai:Y13 wide
+  - 4 ai:Y13 left
+  - 5 ai:Y10 wide
+  - 6 ai:Y10 right
+  - 7 ai:Y11 wide
+  - 8 ai:Y02 wide
+  - 9 ai:Y12 left
+  - 10 ai:Y14 wide
+  - 11 ai:Y21 sea
+  - 12 ai:Y12 right
+  - 13 ai:Y11 left
+  - 14 ai:Y12 wide
+  - 15 ai:Y11 right
+  - 16 ai:Y19 wide
+  - 17 ai:H01 left
+  - 18 ai:Y11 wide
+  - 19 ai:Y12 left
+  - 20 ai:Y12 right
+  - 21 ai:YEND wide
+  - 22 ai:Y21 wide
+  - 23 ai:Y11 right
+  - 24 ai:Y21 sea
+  - 25 ai:Y08 mtn
+  - 26 ai:Y02 left
+  - 27 ai:YEND wide
+  - 28 ai:Y02 right
+  - 29 ai:Y05 wide
+  - 30 ai:Y06 wide
+  - 31 ai:Y07 wide
+  - 32 ai:Y08 wide
+  - 33 ai:Y03 wide
+  - 34 ai:Y15 wide
+  - 35 ai:Y19 left
+  - 36 ai:Y02 wide
+  - 37 ai:Y15 left
+  - 38 ai:Y08 mtn
+  - 39 ai:Y14 wide
+  - 40 ai:Y02 right
+  - 41 ai:Y05 wide
+  - 42 ai:Y05 left
+  - 43 ai:Y12 wide
+  - 44 ai:Y02 wide
+  - 45 ai:Y08 left
+  - 46 ai:Y09 left
+  - 47 ai:Y14 wide
+  - 48 ai:Y05 right
+  - 49 ai:Y05 wide
+  - 50 ai:Y06 wide
+  - 51 ai:Y12 wide
+  - 52 ai:Y13 right
+  - 53 ai:Y06 right
+  - 54 ai:Y08 mtn
+  - 55 ai:Y09 wide
+  - 56 ai:Y21 right
+  - 57 ai:Y06 wide
+  - 58 ai:Y02 wide
+  - 59 ai:Y07 wide
+  - 60 ai:Y11 wide
+  - 61 ai:Y11 left
+  - 62 ai:Y21 wide
+  - 63 ai:Y07 left
+  - 64 ai:Y08 wide
+  - 65 ai:Y07 right
+  - 66 ai:Y07 wide
+  - 67 ai:Y14 left
+  - 68 ai:Y07 left
+  - 69 ai:Y08 right
+  - 70 ai:Y08 left
+  - 71 ai:Y02 right
+  - 72 ai:Y15 mortar
+  - 73 ai:Y07 wide
+  - 74 ai:Y08 mtn
+  - 75 ai:Y19 wide
+  - 76 ai:Y11 right
+  - 77 ai:Y19 left
+  - 78 ai:H01 wide
+  - 79 ai:Y08 wide
+  - 80 ai:Y12 left
+  - 81 ai:Y10 wide
+  - 82 ai:Y13 right
+  - 83 ai:Y02 right
+  - 84 ai:Y14 wide
+  - 85 ai:Y10 right
+  - 86 ai:Y02 wide
+  - 87 ai:Y13 wide
+  - 88 ai:Y21 left
+  - 89 ai:Y08 mtn
+  - 90 ai:Y08 wide
+  - 91 ai:Y02 right
+  - 92 ai:Y03 wide
+  - 93 ai:Y02 wide
+  - 94 ai:Y03 left
+  - 95 ai:Y02 left
+  - 96 ai:Y08 mtn
+  - 97 ai:Y09 wide
+  - 98 ai:Y09 left
+  - 99 ai:Y10 right
+  - 100 ai:Y10 left
+  - 101 ai:Y09 left
+  - 102 ai:Y14 right
+  - 103 ai:Y03 wide
+  - 104 ai:Y02 wide
+  - 105 ai:Y15 wide
+  - 106 ai:Y11 left
+  - 107 ai:Y15 wide
+  - 108 ai:Y02 left
+  - 109 ai:Y15 mortar
+  - 110 ai:Y15 right
+  - 111 ai:Y14 left
+  - 112 ai:Y15 wide
+  - 113 ai:Y08 mtn
+  - 114 ai:Y12 wide
+  - 115 ai:Y02 wide
+  - 116 ai:Y14 wide
+  - 117 ai:Y21 wide
+  - 118 ai:Y02 left
+  - 119 ai:Y05 left
+  - 120 ai:Y07 left
+  - 121 ai:Y21 wide
+  - 122 ai:Y12 right
+  - 123 ai:Y21 sea
+  - 124 ai:Y03 left
+  - 125 ai:Y21 left
+  - 126 ai:Y11 wide
+  - 127 ai:Y21 right
+  - 128 ai:Y08 mtn
+  - 129 ai:YEND wide
+  - 130 ai:Y21 wide
+  - 131 ai:Y12 left
+  - 132 ai:Y08 wide
+  - 133 ai:Y19 wide
+  - 134 ai:Y10 wide
+  - 135 ai:Y02 right
+  - 136 ai:H01 right
+  - 137 ai:Y21 sea
+  - 138 ai:YEND wide
+  - end ai:YEND wide
+
+focus: {}
+
+fx:
+  Y09: {lamp: {region: [0.0, 0.3, 1.0, 0.8]}}
+  Y12: {lamp: {region: [0.6, 0.0, 1.0, 0.5]}}
+  Y19: {fire: {region: [0.3, 0.4, 0.8, 1.0]}}
+  YEND: {water: {region: [0.0, 0.62, 1, 1.0]}}
+
+parts:
+  - {type: quote, from: 16, to: 16, label: 史料, text: 名曰卑彌呼／事鬼道、能惑衆, source: 陳寿『三国志』魏書 倭人条（3世紀末）}
+  - {type: versus3, from: 18, to: 18, items: [[魏志の本文, 景初2年 238年], [日本書紀の注, 景初3年 239年], [梁書, 景初3年 239年]], every: 1.8}
+  - {type: versus3, from: 19, to: 19, items: [[魏志の印刷本, 邪馬壹国], [後漢書, 邪馬臺国], [隋書, 邪靡堆]], every: 1.8}
+  - {type: quote, from: 22, to: 22, label: 史料, text: 有千餘戸…／郡使往來常所駐, source: 陳寿『三国志』魏書 倭人条（伊都国）}
+  - {type: versus3, from: 23, to: 23, items: [[魏志, 千余戸], [魏略（翰苑の引用）, 万余戸]], every: 2.0}
+  - {type: quote, from: 77, to: 77, label: 史料, text: 卑彌呼以死、大作冢／徑百餘步, source: 陳寿『三国志』魏書 倭人条}
+  - {type: quote, from: 106, to: 106, label: 史料, text: 出真珠、青玉／其山有丹, source: 陳寿『三国志』魏書 倭人条}
+  - {type: quote, from: 122, to: 122, label: 史料, text: 特置一大率、檢察諸國／常治伊都國, source: 陳寿『三国志』魏書 倭人条}
+  - {type: quote, from: 123, to: 123, label: 史料, text: 皆臨津搜露、傳送文書／賜遺之物詣女王, source: 陳寿『三国志』魏書 倭人条}
+  - {type: quote, from: 131, to: 131, label: 要点, text: 暮らしの手がかり　北部九州／卑弥呼の墓の手がかり　奈良の箸墓, source: この動画の採点から}
+
+figures:
+  - {from: 21, to: 21, spec: {"type": "map", "title": "魏志の道のり（伊都国まで）", "bounds": [125.6, 131.6, 32.9, 38.2], "places": [["帯方郡", 126.7, 37.9], ["対馬国", 129.3, 34.4], ["一支国", 129.7, 33.8], ["末盧国", 129.85, 33.4], ["伊都国", 130.25, 33.6]], "route": ["帯方郡", "対馬国", "一支国", "末盧国", "伊都国"]}}
+  - {from: 39, to: 39, spec: {"type": "map", "title": "5つの説", "bounds": [129.4, 136.9, 32.8, 36.3], "reveal": true, "places": [["北部九州", 130.4, 33.4], ["奈良盆地", 135.84, 34.54], ["吉備", 133.77, 34.66], ["山陰（出雲）", 132.75, 35.37], ["阿波", 134.55, 33.95]]}}
+  - {from: 119, to: 119, spec: {"type": "map", "title": "北部九州の点が出た所", "bounds": [129.6, 131.9, 32.6, 34.0], "reveal": true, "places": [["平原遺跡（伊都国）", 130.17, 33.56], ["吉野ヶ里遺跡", 130.38, 33.33], ["熊本の白川", 130.72, 32.82], ["大分の大野川", 131.6, 33.15]]}}
+
+stills:
+  - {line: 0, note: 冒頭（0秒）}
+  - {line: 18, note: 使いの年のくい違い}
+  - {line: 21, note: 道のりの地図}
+  - {line: 29, note: 6つの手がかり（表）}
+  - {line: 39, note: 5つの説の地図}
+  - {line: 57, note: 絹の点（表）}
+  - {line: 91, note: 並んだ（棒）}
+  - {line: 115, note: 結果（棒）}
+  - {line: 122, note: 一大率の史料}
+  - {line: 130, note: 答え}
+  - {end: true, note: 終了画面の空き}

@@ -1,0 +1,246 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：もしもモンゴル軍がヨーロッパから引き返さなかったら（scripts/mongol-if-story.yaml）。chiso/storymain.py が読む。
+# 11-07 作成（11/10 12:00 公開）。columbus_main_look.yaml を写した。台本には手を入れない（承認のあと）。
+# 絵の方針：AI 絵は全部この回のために Gemini（Chrome）で新しく作った（out/story/mongol-if/main/、out/ は git に入らない）。前の回の絵は使わない。
+#   人物は後ろ姿・遠景（実在の人物の顔は描かない）。戦い・負傷・遺体・ペストの死者は描かない。
+#   実在の絵は『聖ヘドヴィヒ伝』のレグニツァの戦い（1353年）・元朝の皇帝の肖像のオゴデイ（パブリックドメイン）。
+script: scripts/mongol-if-story.yaml
+out: mongol_if_story_main
+art_dir: out/story/mongol-if/ph
+main_art_dir: out/story/mongol-if/main
+ai_disclosure: この動画の人物・情景の画像の多くは、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+
+chapters:
+  0: {label: 序章 ニシンが安くなった年, now: 1238年, dates: {3: 1241年4月, 4: 1242年, 5: null}}
+  1: {label: 第1章 東の軍は、何人いたのか, now: null, dates: {13: 1227年, 14: 1235年, 16: 1234年, 17: null}}
+  2: {label: 第2章 1241年4月の3日間, now: 1241年4月9日, dates: {31: null, 33: 1241年4月11日, 37: 1241年7月3日, 39: null}}
+  3: {label: 第3章 ハンガリーで、冬を越す, now: 1241年, dates: {46: 1241〜42年の冬, 47: null, 51: 1242年, 52: 1242年3月, 56: null}}
+  4: {label: 第4章 なぜ、引き返したのか, now: 1241年12月, dates: {59: null}}
+  5: {label: 第5章 分岐1 城の壁を越えられたのか, now: 1246年, dates: {79: 1242〜1300年, 80: 1285年, 81: null}}
+  6: {label: 第6章 分岐2 教皇への手紙, now: 1245年, dates: {91: 1246年8月, 92: 1246年11月, 93: null, 96: 1253年, 98: 1287年, 100: null}}
+  7: {label: 第7章 分岐3 ペストと、西への航海, now: 1340年ごろ, dates: {107: 2022年, 108: 1338〜39年, 109: 1346年, 110: null}}
+  8: {label: 第8章 分岐4 日本まで届くのか, now: 1241年, dates: {124: 1259年, 126: null, 127: 1260年, 129: 1266年, 130: null}}
+  9: {label: まとめ もしも引き返さなかったら, now: null, dates: {}}
+
+references:
+  - "マシュー・パリス『大年代記』J. A. Giles 英訳（1852）　https://archive.org/details/matthewparisseng01pari"
+  - "プラノ・カルピニ／ルブルク W. W. Rockhill 英訳（1900）　https://archive.org/details/journeyofwilliam00will ・C. Dawson 編『The Mongol Mission』（1955）"
+  - "ジュヴァイニー J. A. Boyle 英訳（1958）・ラシード・ウッディーン『集史』Boyle 英訳『The Successors of Genghis Khan』（1971）"
+  - "ロゲリウス『悲しみの歌』（ラテン文、Bibliotheca Augustana）　https://www.tha.de/~harsch/Chronologia/Lspost13/RogeriusApulus/rog_caco.html"
+  - "『元史』（維基文庫）／イパーチー年代記（ПСРЛ 第2巻、1908）"
+  - "S. Pow, Deep Ditches and Well-built Walls（カルガリー大学 修士論文、2012）／J. Laszlovszky ほか, The Hungarian Historical Review 7/3（2018）"
+  - "U. Büntgen & N. Di Cosmo, Scientific Reports 6（2016）／Z. Pinke ほか, Scientific Reports 7（2017）"
+  - "M. Wheelis, Emerging Infectious Diseases 8(9)（2002）／M. A. Spyrou ほか, Nature 606（2022）"
+  - "第1リヨン公会議の決まり（1245）／ジョワンヴィルの回想録／ラッバン・サウマの旅の記録（Budge 英訳）／ペゴロッティ『商業指南』"
+  - "S. G. Haw, BSOAS 76(3)（2013）／米国議会図書館 Mongolia: A Country Study／国立公文書館「日本とモンゴル」／国立国会図書館デジタルコレクション（明治の教科書）"
+no_tag_from: 138
+
+ai:
+  T01: {scene: 13世紀のモンゴルの騎馬の軍が、明るい晴れたハンガリーの平原を駆ける（サムネと同じ絵）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A01: {scene: 13世紀のイングランドの港、積まれたニシンと人の少ない岸壁, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A02: {scene: 修道院の机で年代記を書く修道士（後ろ姿）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A03: {scene: 草原の尾根に並ぶモンゴルの騎馬の弓兵（後ろ・横から）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A04: {scene: 草原に広がるモンゴルの白い天幕の陣, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A05: {scene: 凍ったヴォルガ川を渡る騎馬の列（遠景）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A06: {scene: 春の野に並ぶヨーロッパの騎士と旗（戦いは描かない）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A07: {scene: 湿った平原の川にかかる木の橋と朝霧（シャヨー川の想像図）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A08: {scene: 丘の上から平原を見下ろす2人のモンゴルの将（後ろ姿）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A09: {scene: 川を見下ろす丘の上の石の城（エステルゴムの想像図）, pan: v, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A10: {scene: 丘の上の修道院（パンノンハルマの想像図）, pan: v, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A11: {scene: 平原で麦を刈る農民と、遠くの騎馬, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A12: {scene: 凍ったドナウ川を渡る騎馬（遠景）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A13: {scene: 森の小川のそばに身を隠す聖職者（後ろ姿）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A14: {scene: アドリア海の小島の石の町と、出ていく帆船, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A15: {scene: 草原を駆ける1騎の使い, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A16: {scene: 高原のハーンの大きな白い天幕と集まる騎馬（遠景）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A17: {scene: 雨のあとの水に浸かった草原と馬, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A18: {scene: 木の切り株の年輪, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A19: {scene: 草原を馬で行く修道士と案内の騎馬（後ろ姿）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A20: {scene: ゴシックの大聖堂で開かれる司教たちの会議（後ろから）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A21: {scene: 野営地に張られた真紅の礼拝堂の天幕, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A22: {scene: 宮殿の中庭の銀の木の噴水（カラコルムの想像図）, pan: v, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A23: {scene: 黒海の岸の城壁の港町と船（カッファの想像図）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A24: {scene: 山あいの道を行くラクダと馬の隊商, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A25: {scene: 人のいない中世の町の広場（ペストの遺体は描かない）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A26: {scene: 霧の山の上の城塞（釣魚山の想像図）, pan: v, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A27: {scene: 13世紀の日本の浜と石の壁、沖の船（遠景）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A28: {scene: 夕日の誰もいない草原（終了画面。右半分を空けた構図）, crops: {left: [1.12, 0.45, 0.5], wide: [1.12, 0.5, 0.5]}, lock: [1.0, 0.5, 0.5]}
+  A29: {scene: 机の上の封をした手紙と封蝋（字は描かない）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A30: {scene: 雪山に囲まれた湖と、草原の古い墓石（イシク・クルの想像図）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+
+credits:
+  paintings/mongol_legnica_hedwig.jpg: 『聖ヘドヴィヒ伝』の挿絵 レグニツァの戦い（1353年）
+  paintings/mongol_ogedei_portrait.jpg: 元朝の皇帝の肖像 オゴデイ（14世紀、台北・国立故宮博物院蔵）
+
+shots:
+  - 0 ai:A01 wide
+  - 1 ai:A01 right
+  - 2 ai:A02 wide
+  - 3 ai:A06 wide
+  - 4 ai:A03 right
+  - 5 frame:paintings/mongol_legnica_hedwig.jpg
+  - 6 ai:T01 wide
+  - 7 ai:A11 wide
+  - 8 ai:A27 wide
+  - 9 ai:A04 wide
+  - 10 ai:A02 left
+  - 11 ai:A02 right
+  - 12 ai:A04 left
+  - 13 ai:A03 left
+  - 14 frame:paintings/mongol_ogedei_portrait.jpg
+  - 15 ai:A26 wide
+  - 16 ai:A16 wide
+  - 17 ai:A05 wide
+  - 18 ai:A04 right
+  - 19 ai:A05 left
+  - 20 ai:A03 wide
+  - 21 ai:A08 wide
+  - 22 ai:A04 wide
+  - 23 ai:A03 right
+  - 24 ai:A16 left
+  - 25 ai:A06 left
+  - 26 ai:A08 left
+  - 27 part:paintings/mongol_legnica_hedwig.jpg
+  - 28 ai:A06 wide
+  - 29 ai:A06 right
+  - 30 ai:A09 left
+  - 31 frame:paintings/mongol_legnica_hedwig.jpg
+  - 32 ai:A02 wide
+  - 33 ai:A07 wide
+  - 34 ai:A07 left
+  - 35 ai:A08 wide
+  - 36 ai:A08 right
+  - 37 ai:A29 wide
+  - 38 ai:A29 left
+  - 39 ai:A09 wide
+  - 40 ai:A11 wide
+  - 41 ai:A13 wide
+  - 42 ai:A07 right
+  - 43 ai:A02 left
+  - 44 ai:A11 left
+  - 45 ai:A04 right
+  - 46 ai:A12 wide
+  - 47 ai:A09 wide
+  - 48 ai:A10 wide
+  - 49 ai:A09 right
+  - 50 ai:A10 left
+  - 51 ai:A14 wide
+  - 52 ai:A14 left
+  - 53 ai:A13 left
+  - 54 ai:A13 right
+  - 55 ai:A14 right
+  - 56 ai:A12 left
+  - 57 ai:A16 wide
+  - 58 frame:paintings/mongol_ogedei_portrait.jpg
+  - 59 ai:A16 left
+  - 60 ai:A19 wide
+  - 61 ai:A15 wide
+  - 62 ai:A02 right
+  - 63 ai:A16 right
+  - 64 ai:A15 left
+  - 65 ai:A19 left
+  - 66 ai:A05 right
+  - 67 ai:A17 wide
+  - 68 ai:A08 left
+  - 69 ai:A29 right
+  - 70 ai:A18 wide
+  - 71 ai:A17 left
+  - 72 ai:A17 right
+  - 73 ai:A09 left
+  - 74 ai:A03 wide
+  - 75 ai:A12 right
+  - 76 ai:A19 right
+  - 77 ai:A19 wide
+  - 78 ai:A03 left
+  - 79 ai:A09 right
+  - 80 ai:A10 wide
+  - 81 ai:T01 left
+  - 82 ai:A11 right
+  - 83 ai:A08 right
+  - 84 ai:A09 wide
+  - 85 ai:A10 right
+  - 86 ai:A06 left
+  - 87 ai:A20 wide
+  - 88 ai:A29 right
+  - 89 ai:A19 left
+  - 90 ai:A20 left
+  - 91 ai:A16 wide
+  - 92 ai:A29 wide
+  - 93 ai:A20 right
+  - 94 ai:A21 wide
+  - 95 ai:A21 left
+  - 96 ai:A22 wide
+  - 97 ai:A22 left
+  - 98 ai:A24 wide
+  - 99 ai:A20 wide
+  - 100 ai:A14 wide
+  - 101 ai:A29 left
+  - 102 ai:A20 right
+  - 103 ai:A24 left
+  - 104 ai:A25 left
+  - 105 ai:A23 wide
+  - 106 ai:A24 right
+  - 107 ai:A30 wide
+  - 108 ai:A30 left
+  - 109 ai:A23 left
+  - 110 ai:A02 right
+  - 111 ai:A25 wide
+  - 112 ai:A23 right
+  - 113 ai:A25 left
+  - 114 ai:A25 right
+  - 115 ai:A24 wide
+  - 116 ai:A02 left
+  - 117 ai:A24 left
+  - 118 ai:A30 right
+  - 119 ai:A23 wide
+  - 120 ai:A27 left
+  - 121 ai:A16 right
+  - 122 ai:A26 left
+  - 123 ai:A02 wide
+  - 124 ai:A26 wide
+  - 125 ai:A26 right
+  - 126 ai:A15 wide
+  - 127 ai:A04 left
+  - 128 ai:A16 wide
+  - 129 ai:A27 wide
+  - 130 ai:A29 wide
+  - 131 ai:A27 right
+  - 132 ai:A27 left
+  - 133 ai:A16 left
+  - 134 ai:A26 left
+  - 135 ai:A27 right
+  - 136 ai:A01 wide
+  - 137 ai:A01 left
+  - 138 ai:T01 wide
+  - 139 ai:A11 wide
+  - 140 ai:A20 left
+  - 141 ai:A27 wide
+  - 142 ai:A04 wide
+  - 143 ai:A01 right
+  - 144 ai:A28 wide
+  - 145 ai:A28 left
+  - end ai:A28 wide
+figures: []
+
+focus: {}
+
+fx:
+  A04: {smoke: {region: [0.0, 0.0, 1.0, 0.45]}}
+  A28: {mist: {region: [0.0, 0.55, 1.0, 1.0]}}
+
+paint_fx: {}
+
+parts:
+  - {type: quote, from: 36, to: 36, label: 史料, text: 帰りたいなら、自分で帰ればよい／ドナウ川の町に着くまで帰らない, source: 『元史』速不台伝（今の言葉に）}
+  - {type: quote, from: 45, to: 45, label: 史料, text: 彼らは、ここで／冬を越すつもりだ, source: ロゲリウス『悲しみの歌』第36章（今の言葉に）}
+  - {type: quote, from: 92, to: 92, label: 史料, text: 教皇自らが諸侯を率いて／すぐに仕えに来い, source: グユクの教皇インノケンティウス4世あての返書（1246年11月。今の言葉に）}
+  - {type: quote, from: 105, to: 105, label: 史料, text: タナから中国までの道は／昼も夜も安全だ, source: ペゴロッティ『商業指南』（1340年ごろ。今の言葉に）}
+
+stills:
+  - {line: 0, note: 冒頭（0秒）ニシンの港}
+  - {line: 21, note: 第1章 数の食い違い}
+  - {line: 27, note: 第2章 レグニツァの地図}
+  - {line: 62, note: 第4章 4つの記録}
+  - {line: 86, note: 第5章 もしもの表}
+  - {line: 114, note: 第7章 ペストの割合}
+  - {line: 134, note: 第8章 日本のもしもの表}
+  - {end: true, note: 終了画面の空き}
