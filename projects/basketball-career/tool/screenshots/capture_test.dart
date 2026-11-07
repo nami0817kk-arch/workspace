@@ -25,6 +25,7 @@ import 'dart:ui' as ui;
 
 import 'package:basketball_career/gm/bot.dart';
 import 'package:basketball_career/gm/career.dart';
+import 'package:basketball_career/gm/draft.dart';
 import 'package:basketball_career/gm/league.dart';
 import 'package:basketball_career/gm/player.dart';
 import 'package:basketball_career/gm/trade.dart';
@@ -369,6 +370,16 @@ void main() {
     await _shoot(t, 'r16_training', '練習', await _with(trainCar), outDir: out, act: (t) async {
       await _tap(t, 'チーム');
       await _tap(t, '練習(強さ きつい・重点 2人)');
+    });
+    final draftCar = _find(28, (c) => c.phase == Phase.draft && c.myTurn && c.draftAt <= 3, from: 5);
+    final ranks = mockRanks(draftCar.prospects);
+    final star = ranks.entries.firstWhere((e) => e.value == 1).key;
+    draftCar
+      ..toggleBoard(star)
+      ..scoutProspect(star);
+    await _shoot(t, 'r20_prospect', 'ドラフトの候補', await _with(draftCar), outDir: out, act: (t) async {
+      await t.scrollUntilVisible(find.text(star.player.name), 200, scrollable: _list);
+      await _tap(t, star.player.name);
     });
     final statCar = _find(12, (c) => c.phase == Phase.season && c.block == 2, from: 3);
     await _shoot(t, 'r19_stats', 'チームの成績', await _with(statCar), outDir: out, act: (t) async {

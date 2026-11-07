@@ -42,6 +42,53 @@ class Prospect {
       );
 }
 
+// ---------------------------------------------------------------- 候補の情報(試合の乱数は使わない。id から決める)
+
+/// id から決まる 0〜[n]-1 の数(同じ候補なら何度見ても同じ)。
+int _idBits(Prospect p, int salt, int n) => (((p.player.id * 2654435761) ^ (salt * 40503)) & 0x7FFFFFFF) % n;
+
+/// 経歴。年齢に合わせて、大学の学年か海外のリーグ。
+String backgroundOf(Prospect p) {
+  final age = p.player.age;
+  if (_idBits(p, 1, 100) < 18) return '海外のプロリーグ';
+  return '大学${(age - 18).clamp(1, 4)}年';
+}
+
+/// コンバイン(身体測定)。垂直跳び(cm)と、コートの4分の3を走る時間(秒)。運動能力が高いほど良い。
+({int vertical, double sprint}) combineOf(Prospect p) {
+  final ath = p.player.attr(Attr.athletic);
+  final big = p.player.pos.big ? 1 : 0;
+  final vertical = (58 + (ath - 50) * 0.55 - big * 4 + _idBits(p, 2, 9) - 4).round().clamp(45, 100);
+  final sprint = (3.55 - (ath - 50) * 0.008 + big * 0.08 + (_idBits(p, 3, 11) - 5) * 0.01).clamp(3.0, 3.8);
+  return (vertical: vertical, sprint: double.parse(sprint.toStringAsFixed(2)));
+}
+
+/// 去年の成績(大学か海外。1試合あたり)。力が高いほど良いが、ぶれる。
+({double ppg, double rpg, double apg}) amateurStatsOf(Prospect p) {
+  final pl = p.player;
+  double v(int salt, double base, double k, Attr a) => (base + (pl.attr(a) - 50) * k + (_idBits(p, salt, 21) - 10) * 0.25).clamp(0.5, 35.0);
+  final pts = v(4, 9, 0.42, pl.attr(Attr.outside) > pl.attr(Attr.inside) ? Attr.outside : Attr.inside);
+  final reb = v(5, pl.pos.big ? 6 : 3, pl.pos.big ? 0.18 : 0.08, Attr.rebound);
+  final ast = v(6, pl.pos.guard ? 3.5 : 1.2, pl.pos.guard ? 0.14 : 0.05, Attr.passing);
+  return (ppg: double.parse(pts.toStringAsFixed(1)), rpg: double.parse(reb.toStringAsFixed(1)), apg: double.parse(ast.toStringAsFixed(1)));
+}
+
+/// 得意と苦手(能力のずれの大きい2つと小さい1つ)。スカウトしたあとだけ見せる。
+(List<Attr>, Attr) strengthsOf(Player p) {
+  final order = [...Attr.values]..sort((a, b) => p.attrs[b.index].compareTo(p.attrs[a.index]));
+  return (order.take(2).toList(), order.last);
+}
+
+/// 世間の見立ての点(本当の力に、評判のぶれを足す)。模擬ドラフトの順はこの順。
+/// 自分のスカウトでは変わらない(世間の見立てなので)。ぶれは±8あるので、予想の上の候補が本当に上とは限らない。
+int consensusOf(Prospect p) => (p.player.ovr * 0.45 + p.player.pot * 0.55).round() + _idBits(p, 7, 17) - 8;
+
+/// 模擬ドラフトの予想順位(残っている候補の中で、1始まり)。
+Map<Prospect, int> mockRanks(List<Prospect> pool) {
+  final open = pool.where((p) => p.pickedBy == null).toList()..sort((a, b) => consensusOf(b).compareTo(consensusOf(a)));
+  return {for (var i = 0; i < open.length; i++) open[i]: i + 1};
+}
+
 /// 見える幅を作る。真ん中は本当の値から少しずれる(幅の中のどこに本当の値があるかは分からない)。
 (int, int) _range(Rng rng, int truth, int half) {
   final shift = rng.nextInt(half + 1) * (rng.chance(0.5) ? 1 : -1);
