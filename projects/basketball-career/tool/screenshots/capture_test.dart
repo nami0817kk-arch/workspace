@@ -371,6 +371,14 @@ void main() {
       await _tap(t, 'チーム');
       await _tap(t, '練習(強さ きつい・重点 2人)');
     });
+    final blockCar = _find(12, (c) => c.phase == Phase.season && c.block == 1 && c.incoming == null, from: 3);
+    final onBlock = blockCar.me.order[3];
+    blockCar.toggleTradeBlock(onBlock.id);
+    await _shoot(t, 'r21_block', 'トレードブロック', await _with(blockCar), outDir: out, act: (t) async {
+      await _tap(t, 'トレード');
+      await _tap(t, '申し込みを集める');
+    });
+    await _shoot(t, 'r22_season', 'まとめて進める', await _with(blockCar), outDir: out);
     final draftCar = _find(28, (c) => c.phase == Phase.draft && c.myTurn && c.draftAt <= 3, from: 5);
     final ranks = mockRanks(draftCar.prospects);
     final star = ranks.entries.firstWhere((e) => e.value == 1).key;

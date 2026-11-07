@@ -224,6 +224,31 @@ TradeOffer? makeIncomingOffer(List<Team> teams, List<DraftPick> picks, int mine,
   return null;
 }
 
+/// トレードブロックの選手([id])に、[partner] が出してくれるもの。選手1人か、指名権1つ(見つからなければ null)。
+/// 相手が受け、年俸の決まりも満たすものの中で、こちらに値打ちの高いものを選ぶ。
+TradeOffer? blockOfferFrom(List<Team> teams, List<DraftPick> picks, int mine, int partner, int id, int nowSeason) {
+  final me = teams[mine], them = teams[partner];
+  final target = me.roster.where((p) => p.id == id).firstOrNull;
+  if (target == null) return null;
+  final tv = playerValue(target, them.mode);
+  if (tv < 4) return null;
+  final pool = [...them.roster]..sort((a, b) => playerValue(b, me.mode).compareTo(playerValue(a, me.mode)));
+  for (final cand in pool) {
+    final cv = playerValue(cand, them.mode);
+    if (cv > tv * 0.95 || cv < tv * 0.35) continue;
+    final o = TradeOffer(partner: partner, give: [id], get: [cand.id]);
+    if (judgeTrade(teams, picks, mine, o, nowSeason).ok) return o;
+  }
+  // 選手が合わなければ、指名権(近い年の1巡目から)
+  final own = [for (var i = 0; i < picks.length; i++) if (picks[i].owner == partner) i]
+    ..sort((a, b) => picks[a].round != picks[b].round ? picks[a].round - picks[b].round : picks[a].season - picks[b].season);
+  for (final i in own) {
+    final o = TradeOffer(partner: partner, give: [id], getPicks: [i]);
+    if (judgeTrade(teams, picks, mine, o, nowSeason).ok) return o;
+  }
+  return null;
+}
+
 /// [from] のチームから見た、出すものの惜しさ(小さいほど出しやすい)。
 double _cost(List<Team> teams, List<DraftPick> picks, int from, Object asset, int nowSeason, Map<int, int> slots) {
   final mode = teams[from].mode;

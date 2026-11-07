@@ -344,6 +344,74 @@ void main() {
     });
   });
 
+  group('トレードブロックと月間MVP', () {
+    test('トレードブロックに載せると気持ちが少し下がり、申し込みを集めて受けられる。保存しても残る', () {
+      final c = careerAt(3, 12);
+      final p = c.me.order[4];
+      p.morale = 60;
+      c.toggleTradeBlock(p.id);
+      expect(c.tradeBlock, [p.id]);
+      expect(p.morale, 55);
+      final copy = Career.fromJson(jsonDecode(jsonEncode(c.toJson())) as Map<String, dynamic>);
+      expect(copy.tradeBlock, [p.id]);
+      final offers = c.blockOffers(p.id);
+      expect(offers, isNotEmpty, reason: '先発級なら、どこかは出してくれる');
+      expect(offers.map((o) => o.partner).toSet().length, offers.length, reason: 'チームごとに1つ');
+      for (final o in offers) {
+        expect(o.give, [p.id]);
+        expect(c.judge(o).ok, isTrue);
+      }
+      expect(c.acceptBlockOffer(offers.first), isTrue);
+      expect(c.me.roster.contains(p), isFalse);
+      expect(c.tradeBlock, isEmpty);
+      // 外すと戻る
+      final q = c.me.order[5];
+      c
+        ..toggleTradeBlock(q.id)
+        ..toggleTradeBlock(q.id);
+      expect(c.tradeBlock, isEmpty);
+    });
+
+    test('トレードブロックの選手には、区切りのあとの申し込みが届きやすい', () {
+      var toBlock = 0, total = 0;
+      for (var seed = 1; seed <= 12; seed++) {
+        final c = careerAt(seed, 12);
+        final p = c.me.order[3];
+        c
+          ..toggleTradeBlock(p.id)
+          ..startSeason();
+        while (c.phase == Phase.season && c.block < tradeDeadlineBlock) {
+          c.playBlock();
+          final o = c.incoming;
+          if (o != null) {
+            total++;
+            if (o.give.contains(p.id)) toBlock++;
+            c.declineIncoming();
+          }
+        }
+      }
+      expect(total, greaterThan(0));
+      expect(toBlock * 2, greaterThanOrEqualTo(total), reason: '申し込みの半分以上がブロックの選手');
+    });
+
+    test('区切りごとに東西の月間MVPが決まり、何区切り目かが残る', () {
+      final c = careerAt(4, 12)..startSeason();
+      while (c.phase == Phase.season) {
+        c.playBlock();
+      }
+      final m = c.monthly.where((a) => a.season == c.season).toList();
+      expect(m.length, blocksPerSeason * 2);
+      for (var b = 1; b <= blocksPerSeason; b++) {
+        final two = m.where((a) => a.block == b).toList();
+        expect(two.length, 2);
+        expect(two.map((a) => teamDefs[a.team].east).toSet(), {true, false});
+      }
+      final copy = Career.fromJson(jsonDecode(jsonEncode(c.toJson())) as Map<String, dynamic>);
+      expect(copy.monthly.map((a) => a.block), c.monthly.map((a) => a.block));
+      expect(copy.awards.where((a) => a.kind == AwardKind.month), isEmpty, reason: '月間MVPはシーズンの表彰とは別');
+    });
+  });
+
   group('ドラフトのボードと候補の情報', () {
     Career toDraft(int seed) {
       final c = careerAt(seed, 25);

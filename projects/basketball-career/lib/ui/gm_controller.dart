@@ -158,6 +158,33 @@ class GmController extends ChangeNotifier {
   }
 
   /// 1週間進める。全画面広告の番は、区切りの初めから進めるときだけ見る(週ごとに広告を出さない)。
+  /// 試合をまとめて進める([toDeadline] ならトレードの締め切りまで、でなければレギュラーシーズンの終わりまで)。
+  /// 全画面広告の番は最初に1回だけ見る。申し込みが届いたら、そこで止める(返事をしてもらうため)。
+  Future<void> simAhead({required bool toDeadline}) async {
+    final c = career;
+    if (c == null || c.phase != Phase.season || busy) return;
+    await _maybeInterstitial();
+    while (c.phase == Phase.season && (!toDeadline || c.block < tradeDeadlineBlock)) {
+      c.playBlock();
+      await money?.tournamentPlayed();
+      if (c.incoming != null) break;
+    }
+    _record(c);
+    _changed();
+  }
+
+  void toggleTradeBlock(int id) => _act((c) => c.toggleTradeBlock(id));
+
+  /// トレードブロックの申し込みを受ける。成立したら true。
+  bool acceptBlockOffer(TradeOffer o) {
+    final c = career;
+    if (c == null || busy) return false;
+    final ok = c.acceptBlockOffer(o);
+    _record(c);
+    _changed();
+    return ok;
+  }
+
   Future<void> playWeek() async {
     final c = career;
     if (c == null || c.phase != Phase.season || busy) return;
