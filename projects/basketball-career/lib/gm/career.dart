@@ -480,6 +480,24 @@ class Career {
   /// 指名して入団した選手の id(生え抜き)。
   List<int> draftedIds = [];
 
+  /// リーグの中で使っている名前(同じ名前の選手が2人いないように)。
+  Set<String> get _usedNames => {
+        for (final t in teams)
+          for (final p in t.roster) p.name,
+        for (final p in freeAgents) p.name,
+        for (final p in prospects) p.player.name,
+      };
+
+  /// まだ使われていない名前を作る(20回試して、だめなら重なってもよい)。
+  String _uniqueName([List<Player> building = const []]) {
+    final used = {..._usedNames, for (final p in building) p.name};
+    var n = randomName(rng);
+    for (var i = 0; i < 20 && used.contains(n); i++) {
+      n = randomName(rng);
+    }
+    return n;
+  }
+
   int _nextId = 1;
   int nextId() => _nextId++;
 
@@ -538,7 +556,7 @@ class Career {
       if (style == 2 && k < 5) sal = (sal * 1.2).round();
       roster.add(Player(
         id: nextId(),
-        name: randomName(rng),
+        name: _uniqueName(roster),
         pos: posCycle[k],
         age: age,
         ovr: ovr,
@@ -579,7 +597,7 @@ class Career {
   Player _filler() {
     final age = 23 + rng.nextInt(10);
     final ovr = 50 + rng.nextInt(9);
-    return Player(id: nextId(), name: randomName(rng), pos: Pos.values[rng.nextInt(5)], age: age, ovr: ovr, pot: ovr + (age < 26 ? rng.nextInt(5) : 0), salary: minSalary, years: 1, exp: age - 21);
+    return Player(id: nextId(), name: _uniqueName(), pos: Pos.values[rng.nextInt(5)], age: age, ovr: ovr, pot: ovr + (age < 26 ? rng.nextInt(5) : 0), salary: minSalary, years: 1, exp: age - 21);
   }
 
   /// 各チームの考え方を、強さの順と年俸から決める。
@@ -629,6 +647,7 @@ class Career {
     for (final t in teams) {
       t.wins = 0;
       t.losses = 0;
+      t.streak = 0;
       for (final p in t.roster) {
         p.prev = p.stats;
         p.stats = Stats();
@@ -907,7 +926,7 @@ class Career {
     // 1回戦に出たチーム(プレーインを勝ち抜いたチームを含む)は、くじに入らない
     final inPlayoffs = {for (final s in playoffs.where((s) => s.round == 1)) ...[s.high, s.low]}.toList();
     order = draftOrder(teams, picks, season, inPlayoffs, rng);
-    prospects = makeProspects(rng, nextId, order.length + 8);
+    prospects = makeProspects(rng, nextId, order.length + 8, name: _uniqueName);
     draftAt = 0;
     draftLog = [];
     scoutsLeft = 1 + me.staffLevel(Staff.scout);
@@ -1242,6 +1261,20 @@ class Career {
     p.salary = salary;
     if (factor > 1) p.morale = (p.morale + 10).clamp(0, 100);
     return true;
+  }
+
+  /// これからの自分のチームの試合(相手・ホームか)。今の節から [count] 試合。
+  List<(int, bool)> upcoming({int count = 5}) {
+    if (phase != Phase.season) return const [];
+    final out = <(int, bool)>[];
+    for (final round in seasonSchedule(teams.length).skip(roundAt)) {
+      for (final (h, a) in round) {
+        if (h == mine) out.add((a, true));
+        if (a == mine) out.add((h, false));
+      }
+      if (out.length >= count) break;
+    }
+    return out;
   }
 
   /// 先発と控えの順を決める([ids] は上から。空なら自動に戻す)。

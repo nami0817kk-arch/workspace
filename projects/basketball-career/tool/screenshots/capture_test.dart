@@ -351,6 +351,14 @@ void main() {
       await _tap(t, 'チーム');
       await _tap(t, cardCar.me.order.first.name);
     });
+    final boxCar = _find(15, (c) => c.phase == Phase.season && c.block == 1 && c.incoming == null, from: 3);
+    await _shoot(t, 'r11_box', 'ボックススコア', await _with(boxCar), outDir: out, act: (t) async {
+      final first = boxCar.lastGames.first;
+      final opp = teamDefs[first.opponentOf(boxCar.mine)].short;
+      // 結果の一覧まで送ってから、最初の試合を押す
+      await t.scrollUntilVisible(find.textContaining('ボックススコアが見られる'), 300, scrollable: _list);
+      await _tap(t, opp);
+    });
     await _shoot(t, 'r1b_teampick', 'チームを選ぶ', await _controller(), outDir: out, act: (t) => _tap(t, 'GMに就任する'));
     await _shoot(t, 'r2_preseason', 'シーズン前', await _with(careerAt(2, 28)), outDir: out);
     await _shoot(t, 'r3_market', '補強', await _with(Career.start(seed: 2)), outDir: out, act: (t) => _tap(t, '補強'));
