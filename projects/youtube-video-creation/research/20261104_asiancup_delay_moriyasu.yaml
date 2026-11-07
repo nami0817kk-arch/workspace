@@ -1,0 +1,155 @@
+# 取材メモ（2026年11月4日）アジア杯が1年延期。年内で退任と報じられる森保一監督は、集大成の大会を指揮しない見通し（ニュースのショート。見せ方 X＝冒頭1秒に強い一言。宮本会長の声明は山場の2行目）
+# 取材: 2026-11-04 午前（14時の代表メンバー発表会見の前）。requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約は使っていない。
+# 一次情報:
+#   ・AFC 公式 2026-11-03「Important update on AFC Asian Cup Saudi Arabia 2027™」（datePublished 2026-11-03。本文を全部読んだ）
+#     https://www.the-afc.com/en/national/afc_asian_cup.html/news/important-update-afc-asian-cup-saudi-arabia-2027™
+#       元の日程 2027年1月7日〜2月5日 → 2027年12月23日〜2028年1月21日。大会の組織委員会が日程の変更を承認。
+#       理由は「地域の情勢から生じた例外的な状況、物流の大きな難しさと移動の混乱」。新しい日程は FIFA に出して承認を受ける。
+#       → 延期そのものは確定（AFC の発表）。新しい日程は「FIFA の承認待ち」と必ず添える。
+# 報道（本文を全部読んだ）:
+#   ・スポーツ報知 2026-11-03「森保一監督は１１月で退任も…」 https://hochi.news/articles/20261103-OHT1T51292.html
+#       森保監督は従来日程のアジア杯までの契約。アジア杯を節目に退任することは決定済み、後任は大岩剛監督（現U-21）が内定。
+#       JFA 内では任期延長も検討されたが「現状では年内での勇退案が濃厚」。来年1月から大岩体制を繰り上げる方向が軸。
+#       今月14日ブラジル、17日パラグアイと対戦するシンガポール遠征が最後の指揮となる可能性。12月30日の国際親善試合（パナスタ）も開催が不透明。
+#       宮本会長の声明（下）。8年の長期政権で22年カタール・26年北中米の2度のW杯を率いた。
+#   ・スポーツ報知 2026-11-03「アジア杯１年延期で森保一監督は１１月がラスト指揮か…担当記者の目」 https://hochi.news/articles/20261103-OHT1T51293.html （背景の確認だけ）
+#   ・日刊スポーツ 2026-11-03 17:58（宮本会長の声明の全文） https://www.nikkansports.com/soccer/japan/news/202611030001235.html
+#       「選手、スタッフ、サポーター、メディアの安全を第一に考えたAFCのアジアカップ開催期間の変更について判断を尊重します。
+#        私たちは日本代表が大会に向けて最良の準備を行えるよう、引き続き関係各所と連携しながら対応していきます。
+#        これからもSAMURAI BLUEへのご声援をよろしくお願いいたします」
+#       → 台本は1文目だけ（声に出す都合で読点を1つ足し、2行に分けた。言葉は変えていない）。
+#   ・日刊スポーツ 2026-11-04 6:00（Yahoo!ニュース。題材の一覧の url） https://news.yahoo.co.jp/articles/9fb19148f203add57ccf12ef3e4b41104b57efb9
+#       森保監督は年内の活動をもって退任となる見込み。12月30日に大阪で壮行試合を予定していたが「実施は不透明」。
+#   ・日刊スポーツ 2026-11-03 15:41 https://www.nikkansports.com/soccer/japan/news/202611030000892.html （森保監督は同大会をもって退任し…の確認）
+# 【題材の一覧と違った点】一覧の url（Yahoo）は報知ではなく日刊スポーツの記事だった。報知の記事は上の2本を直接読んだ。
+# 【食い違い・言わないこと】
+#   ・大岩監督が指揮を執る時期: 日刊は「来年3月から兼任の見込み」、報知は「来年1月から繰り上げる方向が軸」。→ 台本は時期を言わない（「後任に内定」だけ）。
+#   ・AFC の説明の日本語（日刊・報知の訳はそれぞれ違う）→ 引用にせず、AFC 英語原文の要旨を地の文で言う。
+#   ・サウジの空港への攻撃・フーシ派の話は脇の背景なので台本に入れない（10/27 の本で触れた）。
+#   ・U-23アジア杯（ロス五輪予選）との重なり（題材7）・オランダ紙の話（題材9）は主題にしない。台本には入れない。
+#   ・今日14時のメンバー発表会見の中身は書かない（別の本）。台本は会見前の時点の事実だけ。
+#   ・ブラジル戦・パラグアイ戦のキックオフ時刻（確かめていない）は言わない。
+# 本人（森保監督）の言葉: 延期の発表のあとの言葉は見つからなかった（報知・日刊・Yahoo の3本に無い）。
+#   日刊の関連記事「森保監督『やらせてもらえれば』12月30日の国際親善試合実現に期待」は 10/10 の発言（延期の発表より前）なので使わない。
+#   → JFA 宮本会長の声明（発表当日）はある。指示どおり Y で作ったが、Y は冒頭に移した引用の行だけ縦版（_v）に差し替わらず、
+#     語る人＋主役の2枚並べ（pairphoto）の継ぎ目が冒頭3秒に出た（preview4 で確認）。→ X（冒頭に「1年延期」）にし、声明は山場の2行目で読む（16秒以内）。
+# 前の本との重なり: scripts/20261027_asiancup_schedule（宮本会長の 10/23 の言葉「開催は簡単じゃない」・日本の日程・空港の攻撃・外務省の勧告）。
+#   → 今回の初出: 延期の決定・新しい日程・声明・森保監督の年内退任の報道・残りの試合。10/27 の言葉・日程（インドネシア戦など）は繰り返さない。
+#   scripts/20261006_coach_moriyasu（シリーズ）とも中身は重ならない。posted.json・scripts 20261028〜1103 に森保・アジア杯の本は無い。
+# 自分で数えたもの: 元の開幕（2027年1月7日）→ 新しい開幕（2027年12月23日）は 350日後（約1年）。
+#   森保監督が指揮する予定として報じられているのは、14日のブラジル戦・17日のパラグアイ戦・開催が不透明な12月30日の親善試合。
+# 反応: 0件（作らない）。Yahoo のコメント欄は読み込めない形（JS）で、まとめサイトは探していない。approve は --no-voices。
+# 確度: 延期と新しい日程＝確定（AFC 公式。FIFA の承認待ちと添える）。年内退任・最後の指揮の可能性・親善試合が不透明＝報道。声明＝確定（JFA 会長の発表を記事が全文で伝えた）。
+# 写真: assets/images/20261104_asiancup_delay_moriyasu/（credits.json）
+#   01＝日刊スポーツ（Yahoo の主写真。ベネズエラ戦の君が代、撮影・前田充＝日刊の記者）／02・03＝スポーツ報知の記事の写真（説明に森保監督の名前）。3枚とも本人・透かし無しを _pool.png で目で見た。代理店の記載は無い。
+slot: japanese
+date: "2026年11月4日"
+format: news
+no_main: true
+people: [森保一, 宮本恒靖, 日本代表, 大岩剛]
+
+short_style: X
+short_hook_word: 1年延期
+short_question: 森保一監督の最後の指揮は、どの試合になると思いますか。
+short_photos:
+  - assets/images/20261104_asiancup_delay_moriyasu/02_v.jpg
+  - assets/images/20261104_asiancup_delay_moriyasu/01_v.jpg
+  - assets/images/20261104_asiancup_delay_moriyasu/04_v.jpg
+short_telops:
+  - {match: 3日, text: 3日 AFCが発表/アジア杯を約1年延期}
+  - {match: 2028年1月21日, text: 新しい日程/2027年12月23日〜2028年1月21日}
+  - {match: 承認, text: 新しい日程は/FIFAの承認待ち}
+  - {match: 年内, text: 森保一監督/年内で退任の見通しと報道}
+  - {match: パラグアイ, text: 14日 ブラジル戦/17日 パラグアイ戦（シンガポール）}
+  - {match: 12月30日, text: 12月30日の親善試合/開催は不透明と報道}
+
+theme:
+  id: asiancup_delay_moriyasu
+  league: japan
+  league_name: 日本代表
+  prefix: ""
+  title: 森保一監督、集大成のアジア杯が1年延期。最後の指揮はどの試合に
+  hook: ""
+  question: アジア杯が1年延期になり、森保一監督の最後の指揮はどの試合になりそうか
+  takeaway: アジア杯は2027年12月開幕に変わり、FIFAの承認待ち。森保監督は年内で退任の見通しと報じられ、残る予定は今月のブラジル戦とパラグアイ戦、開催が不透明な12月30日の親善試合
+
+thumbnail:
+  layout: face
+  line1: 森保一監督
+  line2: アジア杯が1年延期
+  tags: [森保一, 日本代表, アジアカップ]
+  photo: assets/images/20261104_asiancup_delay_moriyasu/02_w.jpg
+  short_photo: assets/images/20261104_asiancup_delay_moriyasu/02_v.jpg
+
+answer: アジア杯は2027年12月開幕に延期。森保監督は年内退任の見通しと報道。予定は今月の2試合
+watch: 14日のブラジル戦と17日のパラグアイ戦（シンガポール）
+
+sections:
+  - id: what
+    main: true
+    heading: 森保一監督の最後の指揮は、どの試合か
+    tier: 報道
+    telop: アジア杯が約1年延期。森保一監督は年内で退任の見通しと報道
+    say:
+      - text: 3日に決まったアジア杯の延期に、日本サッカー協会の宮本恒靖会長が声明を出しました。
+      - voice: 宮本恒靖
+        text: 選手、スタッフ、サポーター、メディアの安全を第一に考えた、
+        image: assets/images/20261104_pair_miyamoto_moriyasu/01.jpg
+        emph: true
+      - voice: 宮本恒靖
+        text: AFCのアジアカップ開催期間の変更について、
+        image: assets/images/20261104_pair_miyamoto_moriyasu/01.jpg
+        cont: true
+      - voice: 宮本恒靖
+        text: 判断を尊重します。
+        image: assets/images/20261104_pair_miyamoto_moriyasu/01.jpg
+        cont: true
+      - text: 2027年1月に始まるはずだった大会は、2027年12月の開幕に変わります。
+        card: {type: table, title: アジア杯 サウジアラビア大会, columns: [区分, 期間], rows: [[元の日程, 2027年1月7日〜2月5日], [新しい日程, 2027年12月23日〜2028年1月21日]], highlight_row: 1}
+      - text: 新しい日程は、これから国際サッカー連盟の承認を受けます。
+        card: {type: table, title: アジア杯 サウジアラビア大会, columns: [区分, 期間], rows: [[元の日程, 2027年1月7日〜2月5日], [新しい日程, 2027年12月23日〜2028年1月21日]], highlight_row: 1}
+      - text: 森保一監督が、最後に率いるはずだった大会です。
+        card: none
+      - text: その森保監督は、年内の活動で退任する見通しと報じられています。
+        emph: true
+      - text: 残る予定は、シンガポールで戦う今月14日のブラジル戦と、17日のパラグアイ戦。
+        card: {type: table, title: 森保ジャパン 予定されている試合, columns: [日付, 相手], rows: [[11月14日, ブラジル], [11月17日, パラグアイ], [12月30日, 親善試合（開催は不透明）]], highlight_row: 0}
+      - text: 12月30日の親善試合も、開催は不透明と伝えられています。
+        card: {type: table, title: 森保ジャパン 予定されている試合, columns: [日付, 相手], rows: [[11月14日, ブラジル], [11月17日, パラグアイ], [12月30日, 親善試合（開催は不透明）]], highlight_row: 2}
+    official: false
+    sources:
+      - https://www.nikkansports.com/soccer/japan/news/202611030001235.html
+      - https://hochi.news/articles/20261103-OHT1T51292.html
+      - https://news.yahoo.co.jp/articles/9fb19148f203add57ccf12ef3e4b41104b57efb9
+      - https://www.the-afc.com/en/national/afc_asian_cup.html/news/important-update-afc-asian-cup-saudi-arabia-2027™
+  - id: why
+    heading: 延期を受けて、森保一監督の任期はどう考えられたか
+    tier: 報道
+    telop: 任期の延長も検討されたが、年内で退任の案が軸と報道
+    say:
+      - text: アジアサッカー連盟が挙げた延期の理由は、2つ。
+      - text: 地域の情勢による物流の難しさと、移動の混乱です。
+        card: none
+      - text: 延期のうわさが出た段階で、協会の内部では、ある案も検討されたといいます。
+      - text: 森保一監督の任期を、延ばす案です。
+      - text: それでも今は、延長ではなく、年内での退任が軸になっているとされています。
+        emph: true
+      - text: 後任に内定している大岩剛監督の体制を、早めて始める方向です。
+    official: false
+    sources:
+      - https://hochi.news/articles/20261103-OHT1T51292.html
+      - https://www.the-afc.com/en/national/afc_asian_cup.html/news/important-update-afc-asian-cup-saudi-arabia-2027™
+  - id: view
+    viewpoint: true
+    heading: 森保一監督の8年は、どの試合で締めくくられそうか
+    tier: 背景
+    telop: シンガポールの2試合か、12月30日か
+    say:
+      - text: 見立てです。森保一監督は8年で、カタールと北中米、2度のW杯を率いました。
+      - text: 12月30日の試合が開かれなければ、シンガポールでの2試合が締めくくりになります。
+        emph: true
+      - text: 開かれれば、最後の1試合は日本でのその試合です。
+    official: false
+    sources:
+      - https://hochi.news/articles/20261103-OHT1T51292.html
+short_title: "森保一監督、集大成のアジア杯が1年延期。最後の指揮はどの試合に"

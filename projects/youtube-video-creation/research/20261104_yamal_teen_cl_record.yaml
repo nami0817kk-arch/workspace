@@ -1,0 +1,119 @@
+# 取材メモ（2026年11月4日）ヤマル、ムバッペを抜いてCLの10代の最多得点に（14点・37試合）。同じ試合でラフィーニャはバルサでのCL得点がレヴァンドフスキに並ぶ（ニュースのショート。見せ方 X＝冒頭1秒に強い一言）
+# 取材: 2026-11-04。python requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約は使っていない（記事を探すのに Google ニュースの RSS の見出し一覧だけ使った）。
+# 読んだ出典:
+#   ・ESPN 記事 50371754「Yamal breaks Mbappé's teenage Champions League goals record」（content.core.api.espn.com 経由で全部読んだ）
+#       - バルサ 3-0 ヴィラの7分の得点で、CL史上もっとも得点した10代に。CL14点目。ムバッペの10代の得点は13（ムバッペはいまCL通算72点）。14点は37試合。
+#       - 今季は公式戦15試合で13点・11アシスト。（ほかに、16歳83日でCL最年少先発・最年少で得点とアシスト・準決勝の最年少得点、など。今回は使わない）
+#       - 「19歳の誕生日までに11点」と書くが、バルサ公式は「19歳の誕生日までに10点（ムバッペと同じ）」→ 食い違うので使わない。
+#   ・FCバルセロナ公式「Lamine Yamal top Champions League scorer under 20 years of age」: 14点は20歳になる前の最多、ムバッペの13を上回った。37試合。**20歳になるのは来年7月**。
+#   ・FCバルセロナ公式の試合記事「FC Barcelona 3-0 Aston Villa: Three goals, three points」: 7分のヤマル、52分・64分のラフィーニャ。ラフィーニャはバルサでの通算得点94でロナウジーニョに並んだ（今回は使わない）。4試合で勝ち点9。
+#       ラフィーニャは試合後、テネリフェのヘスス・デ・ミゲル選手の死去を受けて「今日はサッカーの話をする日ではない」とだけ話した → 試合の話ではないので使わない。
+#   ・Opta Analyst「Barcelona 3-0 Aston Villa Stats」: ヤマルが10代のCL最多得点（14）、ムバッペ（13）を更新。**ラフィーニャはバルサでのCL得点がレヴァンドフスキに並び、上はメッシ（120）とスアレス（25）だけ**。
+#       → ラフィーニャのバルサでのCL得点は23（Opta の「23 goals, 14 assists」）＝レヴァンドフスキも23。
+#   ・ESPN の試合データ（site.api.espn.com .../uefa.champions/summary?event=401915387）: 7分 ヤマル（左足、ゴール左下）、52分 ラフィーニャ（アシスト フェルミン）、64分 ラフィーニャ（アシスト カンセロ）。
+# 食い違い: 7分の失点につながったパスを出したのは、ESPN と Opta は「ジョアン・ゴメス」、バルサ公式は「ブエンディア」。→ 台本は「相手のパス」とだけ言う。
+# 鈴木彩艶: 相手のGK。別の本で扱うので、この本では名前も出さない。
+# 本人の言葉: ヤマルの試合後の言葉は見つからなかった（バルサ公式の試合記事・記録の記事、ESPN、スペイン語の見出し一覧を当たった）。→ X。
+# 自分で数えたもの: 37÷14＝2.64 → 約2.6試合に1点。20歳まで（来年7月）約8か月。ラフィーニャ23点＝レヴァンドフスキ23点、スアレス25点まで2点。
+# 反応: 0件（X は道具の決まりで当たれず、Reddit は requests で 403。作らない。approve は --no-voices）。
+# 写真: バルサ公式の試合のフォトギャラリー（クラブのカメラマン）から6枚。01・02 ヤマル、03・04 ヤマルとラフィーニャ（背中の名前で確認）、05 ラフィーニャ（主将マーク）、06 ラフィーニャ（試合の最優秀選手の盾）。02_w は頭が切れているので使わない。代理店ではない。
+# 前の本との重なり: 20261024_yamal_mbappe_clasico_numbers（クラシコ前の数字の比べ）／20261027_yamal_kopa_cubarsi（コパ・トロフィー）／20261028_yamal_it_will_come（バロンドール3位の翌日の投稿）／20261023_raphinha_nine。
+#   → バロンドール3位・コパは言わない。ムバッペとの比べは「CLの10代の得点」だけ（10/24 はリーグの数字）。ラフィーニャの「9番への変身」は繰り返さない。
+slot: match
+date: "2026年11月4日"
+format: news
+no_main: true
+people: [ラミン・ヤマル, バルセロナ, ムバッペ, ラフィーニャ, レヴァンドフスキ, アストン・ヴィラ]
+
+short_style: X
+short_hook_word: ムバッペ超え
+short_question: ヤマルは10代のうちに、CLで何点まで伸ばすと思いますか。
+short_photos:
+  - assets/images/20261104_yamal_teen_cl_record/01_v.jpg
+  - assets/images/20261104_yamal_teen_cl_record/03_v.jpg
+  - assets/images/20261104_yamal_teen_cl_record/04_v.jpg
+  - assets/images/20261104_yamal_teen_cl_record/02_v.jpg
+short_telops: []
+
+theme:
+  id: yamal_teen_cl_record
+  league: spain
+  league_name: チャンピオンズリーグ
+  prefix: ""
+  title: ヤマル、ムバッペを抜いてCLの10代で最多得点に。19歳が塗り替えた数字とは
+  hook: ""
+  question: ヤマルは、チャンピオンズリーグの10代の得点で、ムバッペの記録をどう抜いたのか
+  takeaway: 14点は37試合で、約2.6試合に1点。20歳になる来年7月まで、10代の時間はまだ約8か月ある。同じ夜、ラフィーニャもバルサでのCL得点でレヴァンドフスキの23に並んだ
+
+thumbnail:
+  layout: face
+  line1: ヤマル、ムバッペ超え
+  line2: CLの10代で最多の14点
+  tags: [ヤマル, バルセロナ]
+  photo: assets/images/20261104_yamal_teen_cl_record/01_w.jpg
+  photos:
+    - assets/images/20261104_yamal_teen_cl_record/01_w.jpg
+    - assets/images/20261104_yamal_teen_cl_record/04_w.jpg
+  short_photo: assets/images/20261104_yamal_teen_cl_record/01_v.jpg
+
+answer: 7分の先制点がCL14点目。ムバッペの10代の13点を抜いた。37試合目
+watch: バルセロナはCL4試合で勝ち点9
+
+sections:
+  - id: what
+    main: true
+    heading: ヤマルは、どの記録でムバッペを抜いたのか
+    tier: 確定
+    telop: ヤマル、CLの10代で最多の14点。ムバッペの13点を抜く
+    say:
+      - text: 19歳のヤマルが、チャンピオンズリーグでムバッペの記録を抜きました。
+      - text: 現地3日、バルセロナがアストン・ヴィラに3対0で勝った試合です。
+      - text: 7分、ヤマルが相手のパスを拾い、左足でゴール左隅へ。先制点です。
+      - text: これがチャンピオンズリーグで14点目。
+        emph: true
+        card: {type: table, title: CLで10代のうちに決めた得点, columns: [選手, 得点], rows: [[ヤマル, 14], [ムバッペ, 13]], highlight_row: 0}
+      - text: 10代の選手として、大会の歴史で最も多い得点になりました。
+        card: {type: table, title: CLで10代のうちに決めた得点, columns: [選手, 得点], rows: [[ヤマル, 14], [ムバッペ, 13]], highlight_row: 0}
+      - text: それまでの記録は、ムバッペが10代で決めた13点でした。
+        card: {type: table, title: CLで10代のうちに決めた得点, columns: [選手, 得点], rows: [[ヤマル, 14], [ムバッペ, 13]], highlight_row: 1}
+      - text: ヤマルが14点に届くまでにかかったのは、37試合です。
+        card: none
+    official: true
+    sources:
+      - https://www.fcbarcelona.com/en/football/first-team/news/4603853/lamine-yamal-top-champions-league-scorer-under-20-years-of-age
+      - https://www.espn.com/soccer/story/_/id/50371754/yamal-breaks-mbappe-teenage-champions-league-goals-record
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915387
+  - id: raphinha
+    heading: ヤマルの先制のあと、ラフィーニャは誰に並んだのか
+    tier: 報道
+    telop: ラフィーニャ、バルサでのCL得点23。レヴァンドフスキに並ぶ
+    say:
+      - text: ヤマルの先制のあと、2点を加えたのは主将のラフィーニャです。52分と64分でした。
+      - text: これでバルセロナでのチャンピオンズリーグの得点が23。
+        card: {type: table, title: バルセロナでのCL得点, columns: [選手, 得点], rows: [[メッシ, 120], [スアレス, 25], [ラフィーニャ, 23], [レヴァンドフスキ, 23]], highlight_row: 2}
+      - text: レヴァンドフスキに並びました。
+        emph: true
+        card: {type: table, title: バルセロナでのCL得点, columns: [選手, 得点], rows: [[メッシ, 120], [スアレス, 25], [ラフィーニャ, 23], [レヴァンドフスキ, 23]], highlight_row: 3}
+      - text: 上にいるのは、メッシの120点と、スアレスの25点の2人です。
+        card: {type: table, title: バルセロナでのCL得点, columns: [選手, 得点], rows: [[メッシ, 120], [スアレス, 25], [ラフィーニャ, 23], [レヴァンドフスキ, 23]], highlight_row: 1}
+    official: false
+    sources:
+      - https://theanalyst.com/articles/barcelona-vs-aston-villa-stats-uefa-champions-league-11-2026
+      - https://www.fcbarcelona.com/en/football/first-team/news/4603860/fc-barcelona-3-0-aston-villa-three-goals-three-points
+  - id: view
+    viewpoint: true
+    heading: ヤマルの14点は、どんなペースで積み上がったのか
+    tier: 背景
+    telop: 37試合で14点。約2.6試合に1点
+    say:
+      - text: 見立てです。ヤマルの14点を試合の数で割ると、約2.6試合に1点のペース。
+      - text: 20歳になるのは来年の7月。10代の時間は、まだ8か月ほどあります。
+        emph: true
+      - text: 今シーズンは公式戦15試合で13点、11アシスト。
+      - text: バルセロナはこの勝利で、チャンピオンズリーグ4試合で勝ち点9としました。
+    official: false
+    sources:
+      - https://www.fcbarcelona.com/en/football/first-team/news/4603853/lamine-yamal-top-champions-league-scorer-under-20-years-of-age
+      - https://www.espn.com/soccer/story/_/id/50371754/yamal-breaks-mbappe-teenage-champions-league-goals-record
+      - https://www.fcbarcelona.com/en/football/first-team/news/4603860/fc-barcelona-3-0-aston-villa-three-goals-three-points
+short_title: "ヤマル、ムバッペを抜いてCLの10代で最多得点に。19歳が塗り替えた数字とは"

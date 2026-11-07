@@ -1,0 +1,24 @@
+{
+ "hamburg": {
+  "ファン・デル・ファールト": {
+   "role": "legend",
+   "file": "assets/photos/bd/hamburg/hamburg_legend_01b3a797.jpg",
+   "page": "Rafael van der Vaart"
+  },
+  "ソン・フンミン": {
+   "role": "legend",
+   "file": "assets/photos/bd/hamburg/hamburg_legend_41006aeb.jpg",
+   "page": "Son Heung-min"
+  },
+  "バルバレス": {
+   "role": "legend",
+   "file": "assets/photos/bd/hamburg/hamburg_legend_49969d24.jpg",
+   "page": "Sergej Barbarez"
+  },
+  "メルリン・ポルツィン": {
+   "role": "manager",
+   "file": "assets/photos/bd/hamburg/hamburg_manager_e8ac4e4b.jpg",
+   "page": "Merlin Polzin"
+  }
+ }
+}
