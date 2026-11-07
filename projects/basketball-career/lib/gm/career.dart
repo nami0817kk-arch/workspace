@@ -517,7 +517,8 @@ class Career {
               : 0;
       teams.add(Team(index: i, roster: _makeRoster(q, style)));
     }
-    for (final s in [season, season + 1]) {
+    // 指名権は今年から3年先まで(4回のドラフト)
+    for (final s in [season, season + 1, season + 2, season + 3]) {
       for (final r in [1, 2]) {
         for (var t = 0; t < teams.length; t++) {
           picks.add(DraftPick(season: s, round: r, from: t, owner: t));
@@ -935,6 +936,9 @@ class Career {
     // 1回戦に出たチーム(プレーインを勝ち抜いたチームを含む)は、くじに入らない
     final inPlayoffs = {for (final s in playoffs.where((s) => s.round == 1)) ...[s.high, s.low]}.toList();
     order = draftOrder(teams, picks, season, inPlayoffs, rng);
+    for (final i in conveyedBack) {
+      _log('保護: ${teams[picks[i].from].def.short}の1巡目は上位${picks[i].protect}位に入ったので、${teams[picks[i].from].def.short}に戻った');
+    }
     prospects = makeProspects(rng, nextId, order.length + 8, name: _uniqueName);
     draftAt = 0;
     draftLog = [];
@@ -1014,11 +1018,7 @@ class Career {
     }
     // 指名権を1年進める
     picks.removeWhere((p) => p.season <= season);
-    for (final r in [1, 2]) {
-      for (var t = 0; t < teams.length; t++) {
-        picks.add(DraftPick(season: season + 2, round: r, from: t, owner: t));
-      }
-    }
+    _fillPicks(season + 1);
     _startContracts();
   }
 
@@ -1370,6 +1370,22 @@ class Career {
     }
   }
 
+  /// [from] から4回分のドラフトの指名権がそろうように足す(前の保存で2年分しか無かったときも)。
+  void _fillPicks(int from) {
+    for (var s = from; s < from + 4; s++) {
+      for (final r in [1, 2]) {
+        for (var t = 0; t < teams.length; t++) {
+          if (!picks.any((p) => p.season == s && p.round == r && p.from == t)) {
+            picks.add(DraftPick(season: s, round: r, from: t, owner: t));
+          }
+        }
+      }
+    }
+  }
+
+  /// [team] が出した(ほかのチームが持っている)自分の指名権。
+  List<int> picksOwedBy(int team) => [for (var i = 0; i < picks.length; i++) if (picks[i].from == team && picks[i].owner != team) i];
+
   /// 自分の持っている指名権(全体の並びでの番号)。
   List<int> picksOf(int team) => [for (var i = 0; i < picks.length; i++) if (picks[i].owner == team) i];
 
@@ -1473,6 +1489,8 @@ class Career {
       ..lastTax = (j['tax'] as int?) ?? 0
       ..draftedIds = [for (final x in (j['dr'] as List? ?? const [])) x as int]
       .._nextId = (j['nid'] as int?) ?? 100000;
+    // 前の版の保存(指名権が2年分)でも、4年分そろえる
+    c._fillPicks(c.phase == Phase.contracts ? c.season + 1 : c.season);
     return c;
   }
 

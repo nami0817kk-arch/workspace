@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../gm/career.dart';
+import '../../gm/draft.dart';
 import '../../gm/league.dart';
 import '../../gm/player.dart';
 import '../gm_controller.dart';
@@ -85,6 +86,60 @@ class LeagueTab extends StatelessWidget {
             ),
           ),
         ],
+        if (car.phase == Phase.season || car.phase == Phase.playoffs) ...[
+          const SectionTitle('ドラフトのくじ(今の順位なら)'),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(children: [
+                for (final e in (lotteryOdds(car.teams).entries.toList()..sort((a, b) => b.value.compareTo(a.value))))
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 2),
+                    child: Row(children: [
+                      TeamBadge(team: e.key, size: 18),
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: Text(() {
+                          final pk = car.picks.where((p) => p.season == car.season && p.round == 1 && p.from == e.key).firstOrNull;
+                          final owner = pk == null || pk.owner == e.key ? '' : ' → ${teamDefs[pk.owner].short}が持つ';
+                          return '${teamDefs[e.key].short}$owner';
+                        }(),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(fontSize: 13, color: e.key == car.mine ? GmColors.ball : null)),
+                      ),
+                      Text('1位 ${(e.value * 100).toStringAsFixed(1)}%', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                    ]),
+                  ),
+                const Padding(
+                  padding: EdgeInsets.only(top: 4),
+                  child: Text('プレーオフに出ない14チームのくじで、上位4つの順番が決まる。成績が悪いほど見込みが高い。',
+                      style: TextStyle(fontSize: 12, color: GmColors.sub)),
+                ),
+              ]),
+            ),
+          ),
+        ],
+        const SectionTitle('指名権'),
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              const Text('持っている', style: TextStyle(fontWeight: FontWeight.bold, color: GmColors.good)),
+              for (final i in car.picksOf(car.mine)..sort((a, b) => car.picks[a].season.compareTo(car.picks[b].season)))
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 1),
+                  child: Text('・${car.picks[i].label(car.teams, car.season)}', style: const TextStyle(fontSize: 13)),
+                ),
+              if (car.picksOwedBy(car.mine).isNotEmpty) ...[
+                const SizedBox(height: 6),
+                const Text('ほかのチームに渡した', style: TextStyle(fontWeight: FontWeight.bold, color: GmColors.bad)),
+                for (final i in car.picksOwedBy(car.mine))
+                  Text('・${car.picks[i].label(car.teams, car.season)} → ${teamDefs[car.picks[i].owner].short}', style: const TextStyle(fontSize: 13)),
+              ],
+            ]),
+          ),
+        ),
         if (car.finals != null) ...[
           const SectionTitle('プレーオフの山'),
           Card(

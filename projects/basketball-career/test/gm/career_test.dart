@@ -693,6 +693,83 @@ void main() {
     });
   });
 
+  group('指名権(4年先まで・保護・くじの見込み)', () {
+    test('指名権は今年から3年先まで、1巡目と2巡目が30チーム分ある。ドラフトのあとも4年分そろう', () {
+      final c = careerAt(19, 10);
+      expect(c.picks, hasLength(4 * 2 * 30));
+      expect(c.picks.map((p) => p.season).toSet(), {1, 2, 3, 4});
+      _toPlayoffs(c).playPlayoffs();
+      c.fired = false;
+      c.toOffseason();
+      while (c.phase == Phase.draft) {
+        c.passPick();
+      }
+      expect(c.picks.map((p) => p.season).toSet(), {2, 3, 4, 5});
+      expect(c.picks, hasLength(4 * 2 * 30));
+    });
+
+    test('先の年ほど、保護が付くほど、指名権の値打ちは下がる', () {
+      final now = DraftPick(season: 1, round: 1, from: 3, owner: 3);
+      final later = DraftPick(season: 3, round: 1, from: 3, owner: 3);
+      expect(pickValue(later, TeamMode.balanced, 5, 1), lessThan(pickValue(now, TeamMode.balanced, 5, 1)));
+      expect(pickValue(now, TeamMode.balanced, 20, 1, protect: 10), lessThan(pickValue(now, TeamMode.balanced, 20, 1)));
+      expect(pickValue(now, TeamMode.balanced, 5, 1, protect: 10), lessThan(pickValue(now, TeamMode.balanced, 5, 1) * 0.3),
+          reason: '保護の範囲に入りそうな今年の指名権は、ほとんど値打ちがない');
+    });
+
+    test('保護付きで出した1巡目は、保護の範囲に入ると元のチームに戻り、ニュースに出る', () {
+      final c = careerAt(19, 28)..startSeason();
+      final i = c.picks.indexWhere((p) => p.season == 1 && p.round == 1 && p.from == c.mine);
+      final other = c.mine == 0 ? 1 : 0;
+      c.picks[i]
+        ..owner = other
+        ..protect = 30;
+      while (c.phase == Phase.season) {
+        c.playBlock();
+      }
+      c.playPlayoffs();
+      c.fired = false;
+      c.toOffseason();
+      expect(c.picks[i].owner, c.mine);
+      expect(c.log.any((l) => l.contains('保護:')), isTrue);
+    });
+
+    test('トレードで保護を付けて出せる。成立すると指名権に保護が付く', () {
+      final c = careerAt(19, 10);
+      final mine = c.picksOf(c.mine).firstWhere((i) => c.picks[i].round == 1 && c.picks[i].season == 2);
+      final pt = c.teams.where((t) => t.index != c.mine).firstWhere((t) => t.mode == TeamMode.rebuild).index;
+      final scrub = c.teams[pt].roster.reduce((a, b) => a.ovr <= b.ovr ? a : b);
+      final o = TradeOffer(partner: pt, givePicks: [mine], get: [scrub.id], protections: {mine: 10});
+      if (c.judge(o).ok) {
+        c.propose(o);
+        expect(c.picks[mine].owner, pt);
+        expect(c.picks[mine].protect, 10);
+        expect(c.picks[mine].label(c.teams, c.season), contains('上位10位保護'));
+      }
+      final copy = TradeOffer.fromJson(jsonDecode(jsonEncode(o.toJson())) as Map<String, dynamic>);
+      expect(copy.protections, {mine: 10});
+    });
+
+    test('くじの見込みは14チームで合わせて100%、成績の悪いチームほど高い', () {
+      final c = careerAt(19, 10)..startSeason();
+      c.playBlock();
+      final odds = lotteryOdds(c.teams);
+      expect(odds, hasLength(14));
+      expect(odds.values.fold(0.0, (a, b) => a + b), closeTo(1, 1e-9));
+      final worst = standings(c.teams).last.index;
+      expect(odds[worst], odds.values.reduce((a, b) => a > b ? a : b));
+    });
+
+    test('前の版の保存(指名権が2年分)を読んでも、4年分そろう', () {
+      final c = careerAt(19, 10);
+      final j = jsonDecode(jsonEncode(c.toJson())) as Map<String, dynamic>;
+      j['picks'] = [for (final p in j['picks'] as List) if ((p as Map)['s'] as int <= 2) p];
+      final copy = Career.fromJson(j);
+      expect(copy.picks.map((p) => p.season).toSet(), {1, 2, 3, 4});
+      expect(copy.picks, hasLength(240));
+    });
+  });
+
   group('相手に聞く・相手同士のトレード・ニュース', () {
     test('受け取りたい選手を選ぶと、相手が受ける出し方が返り、そのまま成立する', () {
       var found = 0;

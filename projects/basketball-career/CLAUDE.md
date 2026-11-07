@@ -45,6 +45,8 @@
 - **同日の2回目**(ユーザー「もっと2kに近づけて」): 受信箱(`inbox.dart`、返事で先発の順と気持ちが変わる)・MVP争い・オールスター(41試合のあと東西12人)、
   選手の型(`archetypeOf`)と特性のバッジ(`badgesOf`、銅〜殿堂)と選手のカード(`player_card.dart`)、ボックススコア(`BoxLine`・クォーターの点)・ゲーム差と連勝・日程(`upcoming`)、
   契約の延長(`extend`、残り1年の選手。年俸は来季から `nextSalary`)。選手の名前はリーグの中で重ならない(`_uniqueName`)。
+- **選手の能力と指名権を 2K に寄せた**(ユーザー「選手能力とかも近づけて」「ドラフト権とかも」): 見せる数字は `shown()`(控え70前後・スター90台。計算はもとの数字のまま)、
+  細かい能力24項目(`subRatings`、見せるだけ)・体格(`physicalOf`)・POT(`potentialRange`)。指名権は4回分のドラフト(`_fillPicks`)・保護(`DraftPick.protect`、範囲に入ると元へ)・くじの見込み(`lotteryOdds`)。
 - **実績**(`profile.dart`): 11個。記録(任期・優勝・最多勝)は端末に残る。
 - **乱数は種から**(`rng.dart`)。状態を保存するので、読み直しても同じ続きになる(`test/gm/career_test.dart` が全局面で確かめる)。
 - **釣り合いは自動で遊ぶGMで測る**(`bot.dart`、`dart run tool/gm_balance.dart [回数]`)。
