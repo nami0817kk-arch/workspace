@@ -1,0 +1,170 @@
+# 取材メモ（途中）2026年10月29日 塩貝健人2発・後藤啓介2発。DFBポカール2回戦 フライブルク3-2ヴォルフスブルク（28日）
+# 状態: 手元の3枚（後藤1・塩貝2）で作る（コーディネーター指示 10/29）。型 Y（シュスター監督）。後藤の出場は「後半の途中」とぼかす（67分/68分で出どころが割れる）。
+# 取材: 2026-10-29。requests（ブラウザUA）と ESPN API で本文を読んだ。検索エンジンのAI要約は使っていない。
+#   ・SCフライブルク公式 試合レポート（https://www.scfreiburg.com/en/latest/first-team/match-reports/2026-27/goto-fires-scf-into-dfb-pokal-round-of-16/ 全文）:
+#       得点 6分マタノビッチ(F) 8分塩貝(W) 43分塩貝(W) 75分後藤(F) 90+2分後藤(F)。観衆32,000。主審ストルクス。
+#       後藤は67分（クラブ表記。ESPN・ゲキサカは68分＝後半23分）に鈴木唯人に代わって出場。75分、グリフォのCKをヘッド。
+#       90+2分、ラインハートのロングパスに抜け出し、飛び出したGKの頭上を越すループ。鈴木唯人は先発（36分イエロー）。
+#       シュスター監督（クラブ英語版の記事より。日本語に訳す）: "Today showed once again that our substitutes are always ready. Kübi was, Keisuke was, and I'm really happy that we managed to turn this game around."
+#       → 「控えの選手は、いつでも準備ができていると、今日またあらためて示された。キュービもケイスケもそうだった。この試合をひっくり返せて本当にうれしい」
+#       前半について "we conceded both goals too easily" 。前半43分はCKから塩貝がフリーでヘッド。
+#       55分 PKがモニター確認で取り消し／58分 ギュンターのゴールがオフサイドで取り消し（フライブルク）。
+#   ・ESPN（site.api.espn.com summary event=401917036）: 得点時刻は上と同じ（後藤75分・90+2分）。シュート フライブルク17・ヴォルフスブルク6、枠内 3・2、支配率 60.8%・39.2%。
+#       後藤 シュート3・枠内2・得点2（交代出場）。塩貝 先発・シュート2・枠内2・得点2・68分イエロー→68分交代。
+#   ・ヴォルフスブルク公式（https://www.vfl-wolfsburg.de/newsdetails/news-detail/detail/news/spaeter-knockout）: 後藤の同点弾を76分、決勝を90+3分と記す（ESPN・フライブルク公式と1分ずれ→台本は ESPN・フライブルク公式の 75分・90+2分）。
+#       ヴォルフスブルクは2部（2.ブンデス）4位、フライブルクは1部3位。ヴォルフスブルク監督はシュトロブル。
+#   ・ゲキサカ（https://web.gekisaka.jp/news/world/detail/?462007-462007-fl 全文）: 塩貝は今季2部で無得点が続いていた→8分が待望の初ゴール。塩貝と後藤は同じ2005年度生まれ（ロス世代）。後藤は190cm。
+#   ・サッカーキング（https://www.soccer-king.jp/news/world/ger/20261029/2222452.html 全文）: 塩貝は今季公式戦10試合目で初ゴール。
+#   ・フットボールチャンネル（https://www.footballchannel.jp/2026/10/29/post1042098/ と post1042152。全文）: ドイツメディア『Get German Football News』
+#       （報道。確度は報道止まり）は後藤に両チーム単独最高の9点・MOM、「赤髪の魔術師」。「23分間。8回のボールタッチ。2ゴール」。後藤はシュート3本で2得点、xG 0.53、デュエル3回中2勝、空中戦2戦2勝。
+#       塩貝は7点でヴォルフスブルク単独最高。後藤は今季公式戦通算5ゴール（8月カンファレンス予選PO 2、10/11 シャルケ戦 決勝弾 1、今回 2）。
+# 【言わないこと】媒体名／鈴木唯人のこと（10/26 の本）／後藤の6月加入の経緯（10/27 のフライブルク紹介）／塩貝の代表の話（10/28 ウルグアイ戦）。
+# 本人の言葉: 後藤・塩貝の試合後の言葉は見つからなかった（ゲキサカ・フットボールチャンネル・サッカーキング・両クラブ公式・Web検索）。監督の言葉（シュスター）はある → 型は Y（監督の言葉）か X。推しは Y（short_hook_quote=「控えの選手は、いつでも準備ができている」）。
+# 題の案: 塩貝健人が前半に2発。残り23分で後藤啓介が試合をひっくり返した（答えを言い切るので、「何が起きたか」を伏せる形に直す）。
+# 反応: 0件（作らない。承認は --no-voices）。
+# 写真: 【足りない】assets/images/20261029_shiogai_goto_pokal/ に3枚（01 後藤=フライブルク公式 Achim Keller／02 塩貝シュート=ヴォルフスブルク公式／03 塩貝の喜び=同）。
+#       ただし 01 は後藤が小さく（顔検出0件・手前にGKのぼけ）、03 は 1050x591 と小さい。縦に伸ばすと 02_v が 608x1080（1.8倍）。後藤の写真が実質1枚。
+slot: japanese
+date: "2026年10月29日"
+format: news
+no_main: true
+people: [塩貝健人, 後藤啓介, ヴォルフスブルク, フライブルク, シュスター]
+
+short_style: Y
+short_hook_quote: 控えの選手は、いつでも準備ができている
+short_photos:
+  - assets/images/20261029_shiogai_goto_pokal/01_v.jpg
+  - assets/images/20261029_shiogai_goto_pokal/02_v.jpg
+short_question: 塩貝健人と後藤啓介、次に点を取るのはどちらだと思いますか。
+short_telops:
+  - {match: 準備ができている, text: シュスター監督/言葉は日本語の訳}
+  - {match: 日本人FWが4点, text: DFBポカール2回戦/フライブルク 3-2 ヴォルフスブルク}
+  - {match: 初ゴール, text: 塩貝健人 8分/今季公式戦10試合目で初ゴール}
+  - {match: 同点ゴール, text: 後藤啓介 75分/コーナーから頭で同点}
+  - {match: 頭上, text: 後藤啓介 90+2分/ループで勝ち越し}
+
+theme:
+  id: shiogai_goto_pokal
+  league: germany
+  prefix: ""
+  title: 塩貝健人が前半に2発。後藤啓介は、途中出場で何をしたのか
+  hook: ""
+  question: 前半に2点を取られたフライブルクを、途中出場の後藤啓介はどう救ったのか
+  takeaway: シュートは17本対6本でも得点は3対2。日本人FW2人は、5本のシュートで4点を取った
+
+thumbnail:
+  layout: face
+  line1: 塩貝健人2発、後藤啓介も2発
+  line2: 日本人FW、4点の夜
+  tags: [塩貝健人, 後藤啓介, フライブルク]
+  photo: assets/images/20261029_shiogai_goto_pokal/01_w.jpg
+  short_photo: assets/images/20261029_shiogai_goto_pokal/01_v.jpg
+
+answer: 後藤は途中出場から2ゴール。75分に同点、90+2分に勝ち越した
+watch: 31日のヴォルフスブルクの次の試合（2部のオスナブリュック戦）
+
+sections:
+  - id: words
+    heading: 監督が話した、控えの選手
+    tier: 確定
+    telop: シュスター監督「控えの選手は、いつでも準備ができている」
+    say:
+      - text: 28日のドイツカップ2回戦。フライブルク対ヴォルフスブルク。
+        image: assets/images/20261029_shiogai_goto_pokal/02_w.jpg
+        card: none
+      - text: 塩貝健人と後藤啓介が、点を取り合った試合です。
+        image: assets/images/20261029_shiogai_goto_pokal/01_w.jpg
+        card: none
+      - text: 試合のあと、フライブルクのシュスター監督は、こう述べました。
+        image: assets/images/20261029_shiogai_goto_pokal/02_w.jpg
+        card: none
+      - voice: シュスター監督
+        text: 控えの選手は、いつでも準備ができている。
+        emph: true
+        image: assets/images/20261029_shiogai_goto_pokal/01_w.jpg
+      - voice: シュスター監督
+        text: 今日もまた、それが示されました。
+        cont: true
+      - voice: シュスター監督
+        text: キュブラーもそうでしたし、ケイスケもそうでした。
+        image: assets/images/20261029_shiogai_goto_pokal/02_w.jpg
+      - voice: シュスター監督
+        text: この試合をひっくり返せて、本当にうれしいです。
+        image: assets/images/20261029_shiogai_goto_pokal/01_w.jpg
+    official: true
+    sources:
+      - https://www.scfreiburg.com/en/latest/first-team/match-reports/2026-27/goto-fires-scf-into-dfb-pokal-round-of-16/
+
+  - id: what
+    main: true
+    heading: 日本人FW、4点の試合
+    tier: 確定
+    telop: ドイツカップ2回戦 フライブルク3-2ヴォルフスブルク
+    say:
+      - text: 5つのゴールのうち、4つを日本人FWが決めた試合でした。
+        image: assets/images/20261029_shiogai_goto_pokal/01_w.jpg
+      - text: 2部のヴォルフスブルクで先発した塩貝健人は、前半8分に同点ゴール。
+        image: assets/images/20261029_shiogai_goto_pokal/02_w.jpg
+        card: {type: timeline, title: 5つのゴール, rows: [[6分, フライブルク　マタノビッチ], [8分, 塩貝健人], [43分, 塩貝健人], [75分, 後藤啓介], [90+2分, 後藤啓介]], highlight_row: 1}
+      - text: 今季の公式戦10試合目で、これが初ゴールでした。
+        image: assets/images/20261029_shiogai_goto_pokal/01_w.jpg
+        card: none
+      - text: 43分には、コーナーキックからヘディングで勝ち越します。
+        image: assets/images/20261029_shiogai_goto_pokal/02_w.jpg
+        card: {type: timeline, title: 5つのゴール, rows: [[6分, フライブルク　マタノビッチ], [8分, 塩貝健人], [43分, 塩貝健人], [75分, 後藤啓介], [90+2分, 後藤啓介]], highlight_row: 2}
+      - text: 1部のフライブルクは、リードを許したまま前半を終えます。
+        image: assets/images/20261029_shiogai_goto_pokal/01_w.jpg
+        card: none
+      - text: 後半の途中、ベンチから後藤啓介が入りました。
+        image: assets/images/20261029_shiogai_goto_pokal/02_w.jpg
+        card: none
+      - text: 75分、コーナーキックに頭で合わせて、同点に追いつきます。
+        emph: true
+        image: assets/images/20261029_shiogai_goto_pokal/01_w.jpg
+        card: {type: timeline, title: 5つのゴール, rows: [[6分, フライブルク　マタノビッチ], [8分, 塩貝健人], [43分, 塩貝健人], [75分, 後藤啓介], [90+2分, 後藤啓介]], highlight_row: 3}
+      - text: そして後半アディショナルタイム2分。ロングパスに抜け出します。
+        image: assets/images/20261029_shiogai_goto_pokal/02_w.jpg
+        card: none
+      - text: 飛び出したキーパーの頭上を越すループで、勝ち越しました。
+        emph: true
+        image: assets/images/20261029_shiogai_goto_pokal/01_w.jpg
+        card: {type: timeline, title: 5つのゴール, rows: [[6分, フライブルク　マタノビッチ], [8分, 塩貝健人], [43分, 塩貝健人], [75分, 後藤啓介], [90+2分, 後藤啓介]], highlight_row: 4}
+    official: true
+    sources:
+      - https://www.scfreiburg.com/en/latest/first-team/match-reports/2026-27/goto-fires-scf-into-dfb-pokal-round-of-16/
+      - https://www.espn.com/soccer/match/_/gameId/401917036
+      - https://web.gekisaka.jp/news/world/detail/?462007-462007-fl
+
+  - id: view
+    viewpoint: true
+    heading: 日本人FWのシュート、5本中4本がゴール
+    tier: 報道
+    telop: 後藤3本と塩貝2本のシュートで、4ゴール
+    say:
+      - text: 見立てです。シュートは、フライブルクが17本、ヴォルフスブルクが6本でした。
+        image: assets/images/20261029_shiogai_goto_pokal/02_w.jpg
+        card: none
+      - text: それでも、試合はフライブルクの3対2の勝ちです。
+        image: assets/images/20261029_shiogai_goto_pokal/01_w.jpg
+        card: none
+      - text: 日本人FW2人のシュートを、試合の記録で数えます。
+        image: assets/images/20261029_shiogai_goto_pokal/02_w.jpg
+        card: {type: stats, title: 日本人FWのシュート, items: [[5, 本, 後藤3本と塩貝2本], [4, 点, そのうちゴール], [17, 本, フライブルクの全シュート]], focus: 0}
+      - text: 後藤が3本、塩貝が2本。合わせて5本のうち、4本がゴールになりました。
+        emph: true
+        image: assets/images/20261029_shiogai_goto_pokal/01_w.jpg
+        card: {type: stats, title: 日本人FWのシュート, items: [[5, 本, 後藤3本と塩貝2本], [4, 点, そのうちゴール], [17, 本, フライブルクの全シュート]], focus: 1}
+      - text: フライブルクの17本のうち、後藤の2本が、勝ち越しと同点でした。
+        image: assets/images/20261029_shiogai_goto_pokal/02_w.jpg
+        card: {type: stats, title: 日本人FWのシュート, items: [[5, 本, 後藤3本と塩貝2本], [4, 点, そのうちゴール], [17, 本, フライブルクの全シュート]], focus: 2}
+      - text: 塩貝と後藤は、同じ2005年度生まれ。ロス世代の2人が、点を取り合った夜でした。
+        image: assets/images/20261029_shiogai_goto_pokal/01_w.jpg
+        card: none
+      - text: ヴォルフスブルクは、31日の土曜、2部のオスナブリュック戦です。
+        image: assets/images/20261029_shiogai_goto_pokal/02_w.jpg
+        card: none
+    official: true
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401917036
+      - https://web.gekisaka.jp/news/world/detail/?462007-462007-fl
+      - https://www.vfl-wolfsburg.de/newsdetails/news-detail/detail/news/spaeter-knockout

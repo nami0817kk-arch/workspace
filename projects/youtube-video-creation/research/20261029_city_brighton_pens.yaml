@@ -1,0 +1,152 @@
+# 取材メモ（2026年10月29日）シティ対ブライトン、PK戦。マレスカ「PKは一度も練習していない」（ニュースのショート。見せ方 Y＝監督の言葉から始める）
+# 取材: 2026-10-29。requests で本文を読んだ（検索エンジンのAI要約は使っていない）。
+#   ・Guardian「Rulli's heroics earn Manchester City shootout success against Brighton」（Jamie Jackson, 2026-10-28 21:58 GMT）— 本文を全文読んだ。
+#       地の文: PK戦は4-3でシティ。ルッリがダンクの5人目とアヤリの4人目を止めた。スティールがコヴァチッチのキックを止めた。
+#             ブライトンがヤルクイェとラターで2度リード、シティはコヴァチッチとヴィトール・レイスで追いついた（シェルキのFKにレイスが足を出し、スティールが逆を突かれた）。
+#             ドクは後半、アランに代わって出て流れを変えた。次は準々決勝でリーグ・ワンのブラッドフォード（12月14日の週）。土曜（31日）に同じ会場でリーグ戦の再戦。
+#       マレスカ（原文）: "Since I'm here we never practised penalties," / "It always happens that the one that scored in the 90 minutes [Kovacic] misses the penalty. I am very happy."
+#             "I watched all [Brighton's] Premier League games and since the first day they always go front foot, man to man, so they're going to be exactly the same on Saturday,"
+#             "We started just three months ago [together]. The game was chaotic but we controlled it quite good."
+#       ヒュルツェラー（原文）: "We lost in a shootout. We had enough chances to win the game – they had the luck today. We have to reset. We have a great chance on Saturday to take revenge,"
+#   ・フットボールチャンネル（2026-10-29 06:47、本文を全文読んだ。写真は Getty）: 得点の分（30分ヤルクイェ・40分コヴァチッチ・47分ラター・72分シェルキのFKがレイスに当たって）、
+#       シティはアストン・ヴィラ戦から9人入れ替え・ハーランドらはメンバー外、PK戦はシティ4人目コヴァチッチ失敗・ブライトン4人目アヤリ・5人目ダンクが失敗。
+#   ・ゲキサカ（見出しのみ確認）・Foot Mercato（2-2・PK戦でルッリが2つ止めた、を確認）。kicker は 403 で読めない。ESPN の本文は今回は使っていない。
+# 言わないこと: 試合時間の細かい描写以外（記事に無い得点の形）、得点者の別名、土曜の再戦の結果（公開時点で未開催）、ハーランドの不在の理由。
+# 重ならない確認: research/posted.json・covered.yaml・scripts/20261024〜20261029_* を grep。ブライトンは 10/24 グロス・10/26 ヒュルツェラー（リヴァプール戦）にあるが、
+#   シティ戦・PK戦・マレスカの言葉は無い。10/26 ヒュルツェラーの数字（支配率64%・枠内1本対4本）は使わない。
+# 訳はこちらの自訳（英語）。
+# 確度: 試合結果・得点者・PK戦は報道（Guardian＋フットボールチャンネル、2媒体一致）。言葉は報道（Guardian）。見立ては背景。
+# 反応: 0件。作らない。approve は --no-voices で。
+slot: overseas
+date: "2026年10月29日"
+format: news
+no_main: true
+people: [エンツォ・マレスカ]
+
+short_style: Y
+short_hook_quote: ここに来てから、PKの練習は一度もしていない。
+short_question: PKを一度も練習していないシティが勝った結果を、どう感じましたか。
+short_hook: シティが、ブライトンとのPK戦を制した。
+short_telops:
+  - {match: 一度もしていない, text: エンツォ・マレスカ監督/「PKの練習は一度もしていない」}
+  - {match: 外すんだ, text: マレスカ監督/「90分で決めた選手が、PKを外す」}
+  - {match: 4対3, text: カラバオ杯4回戦/シティ 4対3 ブライトン（PK戦）}
+  - {match: 2度リード, text: 90分は2対2/ブライトンが2度リード}
+  - {match: ルッリ, text: GKルッリ/4人目と5人目を止めた}
+  - {match: 土曜, text: 31日（土）/同じ会場でリーグ戦の再戦}
+
+theme:
+  id: city_brighton_pens
+  league: england
+  league_name: カラバオ杯
+  prefix: ""
+  title: シティのマレスカ監督、PK戦のあとに「一度も練習していない」
+  hook: ""
+  question: シティはブライトンとのPK戦で何が起き、マレスカ監督はそれをどう語ったのか
+  takeaway: 外したのは90分に同点ゴールを決めたコヴァチッチ。それでも止めたのはGKルッリで、シティが4対3。同じ相手と31日のリーグ戦で再び当たる
+
+thumbnail:
+  line1: マレスカ監督
+  line2: 「PKは練習していない」
+  tags: [マンチェスター・シティ, ブライトン, カラバオ杯]
+  layout: face
+  photo: assets/images/20261029_city_brighton_pens/02_w.jpg
+  short_photo: assets/images/20261029_city_brighton_pens/02_v.jpg
+
+answer: PK戦は4対3でシティ。マレスカ監督「ここに来てから、PKの練習は一度もしていない」
+watch: 31日、同じ会場でブライトンとのリーグ戦
+
+short_photos:
+  - assets/images/20261029_city_brighton_pens/02_v.jpg
+  - assets/images/20261029_city_brighton_pens/03_v.jpg
+  - assets/images/20261029_city_brighton_pens/04_v.jpg
+
+sections:
+  - id: what
+    main: true
+    heading: PK戦を制したシティと、マレスカ監督の言葉
+    tier: 報道
+    telop: シティがPK戦で4対3。監督は「練習していない」
+    say:
+      - text: 28日のカラバオ杯4回戦。シティはブライトンとのPK戦を、4対3で制しました。
+        image: assets/images/20261029_city_brighton_pens/01_w.jpg
+      - voice: マレスカ
+        text: ここに来てから、PKの練習は一度もしていない。
+        image: assets/images/20261029_city_brighton_pens/03_w.jpg
+      - voice: マレスカ
+        text: 90分で決めた選手が、PKを外すんだ。いつもそうなる。
+        cont: true
+        image: assets/images/20261029_city_brighton_pens/01_w.jpg
+      - voice: マレスカ
+        text: でも、とても嬉しいよ。
+        cont: true
+        image: assets/images/20261029_city_brighton_pens/04_w.jpg
+      - text: 外したのは、シティの4人目、コヴァチッチです。
+        image: assets/images/20261029_city_brighton_pens/01_w.jpg
+      - text: 90分では、40分に同点ゴールを決めていました。
+        image: assets/images/20261029_city_brighton_pens/03_w.jpg
+      - text: ブライトンが2度リードし、シティが2度追いついて、90分を2対2で終えました。
+        image: assets/images/20261029_city_brighton_pens/03_w.jpg
+    official: false
+    sources:
+      - https://www.theguardian.com/football/2026/oct/28/manchester-city-brighton-carabao-cup-fourth-round-match-report
+      - https://www.footballchannel.jp/2026/10/29/post1042041/
+
+  - id: shootout
+    heading: 4対3を決めた、二つのセーブ
+    tier: 報道
+    telop: ルッリが、ブライトンの4人目と5人目を止めた
+    say:
+      - text: シティの4人目は失敗しましたが、ブライトンも続きませんでした。
+        image: assets/images/20261029_city_brighton_pens/01_w.jpg
+      - text: 4人目のアヤリと、5人目のダンク。この2本を止めたのが、GKのルッリです。
+        image: assets/images/20261029_city_brighton_pens/04_w.jpg
+        card: {type: timeline, title: 90分の4ゴール, rows: [[30分, ブライトン ヤルクイェ], [40分, シティ コヴァチッチ], [47分, ブライトン ラター], [72分, シティ レイス], [PK戦, シティ 4対3]], focus: PK戦}
+      - text: ゴールは30分にブライトン、40分にシティ。
+        image: assets/images/20261029_city_brighton_pens/02_w.jpg
+        card: {type: timeline, title: 90分の4ゴール, rows: [[30分, ブライトン ヤルクイェ], [40分, シティ コヴァチッチ], [47分, ブライトン ラター], [72分, シティ レイス], [PK戦, シティ 4対3]], focus: PK戦}
+      - text: 47分にブライトン、72分にシティ。
+        image: assets/images/20261029_city_brighton_pens/03_w.jpg
+      - text: マレスカ監督は60分過ぎにドクを入れて、流れを変えにいきました。
+        image: assets/images/20261029_city_brighton_pens/04_w.jpg
+        card: none
+      - text: 72分は、シェルキのフリーキックがヴィトール・レイスに当たって入ったものです。
+        image: assets/images/20261029_city_brighton_pens/03_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.theguardian.com/football/2026/oct/28/manchester-city-brighton-carabao-cup-fourth-round-match-report
+      - https://www.footballchannel.jp/2026/10/29/post1042041/
+
+  - id: view
+    viewpoint: true
+    heading: 同じ相手と、3日後にまた当たる
+    tier: 背景
+    telop: 31日、同じ会場でリーグ戦の再戦
+    say:
+      - text: ここからは見立てです。
+        image: assets/images/20261029_city_brighton_pens/01_w.jpg
+      - text: マレスカ監督はこの試合、前のアストン・ヴィラ戦から9人を入れ替えました。
+        image: assets/images/20261029_city_brighton_pens/04_w.jpg
+      - text: ハーランドらを外し、ブライトンも7人を入れ替えています。
+        image: assets/images/20261029_city_brighton_pens/02_w.jpg
+      - text: それでも2度追いつき、PK戦を制してベスト8です。
+        image: assets/images/20261029_city_brighton_pens/02_w.jpg
+      - text: 次の相手は、3部のブラッドフォードです。
+        image: assets/images/20261029_city_brighton_pens/02_w.jpg
+      - text: ただ、マレスカ監督は、ブライトンは土曜も同じ戦い方で来るとみています。
+        image: assets/images/20261029_city_brighton_pens/01_w.jpg
+      - text: ブライトンとは31日にまた、同じ会場で当たります。
+        image: assets/images/20261029_city_brighton_pens/03_w.jpg
+      - voice: ヒュルツェラー
+        text: PK戦で負けた。勝つだけのチャンスはあった。
+        image: assets/images/20261029_city_brighton_pens/02_w.jpg
+      - voice: ヒュルツェラー
+        text: 土曜に仕返しをするいい機会がある。
+        cont: true
+        image: assets/images/20261029_city_brighton_pens/01_w.jpg
+    official: false
+    sources:
+      - https://www.theguardian.com/football/2026/oct/28/manchester-city-brighton-carabao-cup-fourth-round-match-report
+      - https://www.footballchannel.jp/2026/10/29/post1042041/
+short_title: "マレスカ監督、PK戦のあとに「一度も練習していない」"

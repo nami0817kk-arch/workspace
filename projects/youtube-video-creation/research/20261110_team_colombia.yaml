@@ -1,0 +1,473 @@
+# 代表チーム紹介 コロンビア代表（11/6 作成。固定シリーズ9「代表チーム紹介」。見本は 11/8 のクロアチア代表 scripts/20261108_team_croatia.md）。7節：フック→基礎DATA（板）→日本との関係（早い節へ）→歴史と転機（年表）→看板選手（表）→いまのチーム→見立て。
+# **選んだ理由**：日本がW杯で勝った、ただ1つの南米の国（Japan at the FIFA World Cup の試合表で、南米との対戦は1998アルゼンチン・2006ブラジル・2010パラグアイ・2014コロンビア・2018コロンビア・2026ブラジルの6試合、勝ちは2018年のコロンビア戦だけ）。同じ記事の本文「Japan became the first ever Asian nation to beat a side from South America」。日本とは国際Aマッチで6度（1勝1分4敗）、うちW杯で2度。代表チーム紹介は未出（scripts/・research/posted.json・research/covered.yaml を grep。コロンビアが主役の本は無い）。
+# **外した候補**：イタリア（同じ11/10にブッフォンのレジェンド回 buffon_legend が picks にあり、イタリア代表の話と重なるので替えた。W杯3大会続けて予選敗退という強い軸はある）、韓国・オーストラリア（日本とW杯での対戦が無い）。
+# **軸（2026-11-06）**：「日本は6度戦って1勝。その1勝は開始3分にコロンビアが10人になった試合で、ほかの5試合は2得点。コロンビアは2026年W杯でも5試合で失点1」。答えは見立ての節（自分で数えて割る）。
+# ---- 確かめたこと（2026-11-06。requests で Wikipedia の生の wikitext を読んだ。WebFetch の要約は使っていない）----
+#  ・FIFAランク：11位（Module:SportsRankings/data/FIFA World Rankings、updated 7 October 2026）。日本は17位。点数は書かない。
+#  ・日本とコロンビアの全対戦（Japan national football team records and statistics「COL 2003 2023 6 1 1 4 4 9」）：2003-06-22 コンフェデ杯 0-1（サンテティエンヌ。Japan national football team results (2000–2009)）／2007-06-05 キリンカップ 0-0（埼玉）／2014-06-24 W杯1次リーグ 1-4（クイアバ）／2018-06-19 W杯1次リーグ 2-1（サランスク）／2019-03-22 親善 0-1（横浜。Japan national football team results (2010–2019)）／2023-03-28 キリンチャレンジ杯 1-2（大阪。三笘3分、ドゥラン33分、ボレ61分。Japan national football team results (2020–present)）。日本の得点は0+0+1+2+0+1=4、失点は1+0+4+1+1+2=9（表と一致）。
+#  ・2014（2014 FIFA World Cup Group C の本文と試合の枠）：クアドラードのPK17分、岡崎45+1分（本田のクロスに頭）、ジャクソン・マルティネス55分・82分、ハメス90分。ハメスは後半から出て2アシスト1得点。日本は勝たなければ敗退の試合で、敗退。
+#  ・2018（2018 FIFA World Cup Group H の本文）：3分、香川のシュートをカルロス・サンチェスが腕で止めてPK・一発退場。香川がPK（6分）。キンテロのFK（39分、跳んだ壁の下）。大迫が本田の左CKを頭で（73分）。「Japan became the first Asian team to beat a side from South America in the competition's history」。
+#  ・→ 自分で数えた：日本の4得点のうち2点は2018年の1試合（相手が10人になったあと）。ほかの5試合では2得点（2014岡崎・2023三笘）で、0勝1分4敗。※ほかの5試合に退場があったかは確かめていないので「11人どうし」とは言わず「2018年をのぞく5試合」と言う。
+#  ・監督：ネストル・ロレンソ（Néstor Lorenzo の記事）。アルゼンチン出身、1966-02-26生まれ。1990年W杯の決勝に選手として出場。2012〜2019年はペケルマン監督のもとでコロンビアのコーチ（infobox）→2014年・2018年のW杯はコーチ。2022年6月2日に監督就任（Colombia national football team の本文）、2026年7月23日に契約延長。
+#  ・ロレンソのもとで28試合負けなし（ドイツ・スペインに初勝利）、2024年コパ・アメリカ準優勝（決勝でアルゼンチンに延長0-1、ラウタロ112分）。
+#  ・W杯：Colombia at the FIFA World Cup の Overall record。出場7大会（1962・1990・1994・1998・2014・2018・2026）、最高は2014年の8強。2014は5試合12得点4失点、ハメスが6得点で得点王（Golden Boot）。2026は5試合3勝2分0敗5得点1失点（16強）。1990は16強（1962以来28年ぶり）。
+#  ・2026年W杯（Colombia national football team の本文と試合の枠）：K組 ウズベキスタン3-1（ムニョス40・ディアス65・カンパス90+9）、DRコンゴ1-0（ムニョス76）、ポルトガル0-0で1位。32強 ガーナ1-0（アリアス14分、カンザスシティ）。16強 スイス0-0（延長、PK3-4。バンクーバー。D.サンチェスがバー、クーチョ・エルナンデスがコベルに止められた）。「Despite only conceding once across the entire World Cup」。
+#  ・コパ・アメリカ：2001年に自国で優勝、6戦全勝・失点0（本文）。
+#  ・ハメス・ロドリゲス：代表131試合31得点、国の歴代最多出場（スイス戦で更新）。2026年9月15日に代表引退。
+#  ・主将：ダビンソン・サンチェス（infobox Captain、ガラタサライ、DF、1996-06-12、代表87試合＝Current squad、6 October 2026 時点）。
+#  ・看板選手（年齢は2026-11-06時点、生年月日から計算。所属は各選手の記事の current_club）：ルイス・ディアス（バイエルン、FW、1997-01-13）29・79試合23得点（国の歴代4位。Top goalscorers の表）／ダビンソン・サンチェス 30／ダニエル・ムニョス（ノッティンガム・フォレスト、DF、1996-05-26）30・W杯2得点／ジョン・ルクミ（ユヴェントス、DF、1998-06-26）28／ジョン・アリアス（パルメイラス、MF、1997-09-21）29／ルイス・スアレス（スポルティング、FW、1997-12-02）28・2025年9月の予選ベネズエラ戦で4得点（6-3）。ディアスは9・10月の招集には入っていない（理由は確かめていないので言わない。「いまの招集」とは言わない）。
+#  ・W杯のあと（Colombia national football team の 2026 の試合の枠）：9/26 メキシコ1-1（ボルティモア）、10/2 パラグアイ0-1（ハリソン）、10/6 ペルー2-0（マイアミ・ガーデンズ）。→1勝1分1敗。次は 11/13 チリ（カリ）、11/17 チリ（サンティアゴ）。
+#  ・人口：52,695,952（2024年の推計。Colombia の infobox、DANE の推計）。
+#  ・愛称：Los Cafeteros（The Coffee Growers）。
+# ---- 言わないもの ----
+#  ・1994年のエスコバルの件／麻薬の時代／怪我／私生活／戦術の説明／2024年決勝の観客の騒ぎ／ディアスの招集外の理由。
+# ---- 写真（assets/images/20261110_team_colombia/、出典は credits.json）----
+#  ・2026年6月4日の壮行式と出発（コロンビア大統領府の公式写真、パブリックドメイン）。2014年W杯 日本対コロンビアの日本のサポーター（paulisson miura、CC BY 2.0）。2018年W杯16強のロレンソ（当時コーチ）とD.サンチェス（Voltmetro、CC BY-SA 4.0）。2022年のハメス（jmmuguerza、CC BY-SA 3.0）。代理店・放送映像は使っていない。
+#  ・基礎DATAの板の中身は research/raw/20261110_team_colombia_board.json（tools/clubdata.py で assets/stats/tb_colombia_data*.png を描いた）。
+date: 2026年11月10日（情報は11月6日時点）
+slot: other_1
+format: news
+series: 代表チーム紹介
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+short_photos:
+- assets/images/20261110_team_colombia/b01_sendoff_v.jpg
+- assets/images/20261110_team_colombia/b06_james_v.jpg
+people:
+- コロンビア代表
+- ネストル・ロレンソ
+- ハメス・ロドリゲス
+- ルイス・ディアス
+- ダビンソン・サンチェス
+- 大迫勇也
+theme:
+  id: team_colombia
+  league: japan
+  league_name: コロンビア代表
+  kind: preview
+  topic: コロンビア代表
+  title: コロンビア代表は、日本がW杯で勝った唯一の南米の国。なぜ6度戦って1勝なのか
+  question: 日本はコロンビアと6度戦って1勝1分4敗。W杯で南米の国に勝ったのはこの国だけなのに、なぜ勝ちが1つしかないのか
+  lead: 日本がワールドカップで、勝ったことのある南米の国。
+  hook: ''
+  opening_image: assets/stats/tb_colombia_data_t.png
+  end_bg: assets/images/20261110_team_colombia/b01_sendoff_w.jpg
+  takeaway: 日本がコロンビアから取った4点のうち2点は、開始3分に相手が10人になった2018年の1試合。それをのぞく5試合は2得点で0勝1分4敗。コロンビアは2026年W杯でも5試合で失点1と守りが崩れない。ただ点も5試合で5点と2014年（12点）の半分に届かず、ハメスが代表を退いたいま、11月のチリとの2連戦が点を取れるかの最初の試しになる。
+thumbnail:
+  board: assets/stats/tb_colombia_data.png
+  short_photo: assets/images/20261110_team_colombia/b01_sendoff_v.jpg
+  line1: コロンビア代表
+  line2: 日本がW杯で勝った南米の国
+  crest_main:
+  - コロンビア
+  tags:
+  - コロンビア代表
+  - ワールドカップ
+  - 日本代表
+  - 日本対コロンビア
+  - ハメス・ロドリゲス
+  - 代表チーム紹介
+sections:
+- id: hook
+  heading: 日本がW杯で勝った南米の国。なぜ6度で1勝なのか
+  main: true
+  tier: 背景
+  telop: 日本がW杯で勝った南米の国は、コロンビアだけ
+  narrator: 解説
+  say:
+  - text: 南米のコロンビア代表。フィファランクは11位の国です。
+    short_only: true
+    image: assets/stats/tb_colombia_data_t.png
+    no_telop: true
+  - text: 日本がワールドカップで勝ったことのある南米の国は、コロンビアだけです。
+    image: assets/stats/tb_colombia_data_t.png
+    no_telop: true
+  - text: 2018年のロシア大会、2対1。アジアの国が、ワールドカップで初めて南米の国を破った試合でした。
+    image: assets/stats/tb_colombia_data_r1.png
+    no_telop: true
+  - text: その4年前、2014年のブラジル大会では、1対4で敗れています。
+    image: assets/stats/tb_colombia_data_r1.png
+    no_telop: true
+  - text: 親善試合も入れると、両国は**6度**戦い、日本から見て1勝1分け4敗。
+    image: assets/images/20261110_team_colombia/b02_squad_w.jpg
+    no_telop: true
+    emph: true
+  - text: ワールドカップで勝った相手に、日本はなぜ勝ちきれないのでしょうか。
+    image: assets/stats/tb_colombia_data_t.png
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Japan_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_records_and_statistics
+- id: data
+  heading: コロンビア代表は、どんな数字を持つ国なのか
+  tier: 背景
+  telop: コロンビア代表の基礎DATA
+  narrator: 解説
+  say:
+  - text: コロンビアのフィファランクは、10月7日の発表で**11位**。日本は17位です。
+    image: assets/stats/tb_colombia_data0.png
+    no_telop: true
+  - text: ワールドカップは7度出場。いちばん上は、2014年の8強です。
+    image: assets/stats/tb_colombia_data1.png
+    no_telop: true
+  - text: 南米の大会、コパ・アメリカでは、2001年に優勝しました。
+    image: assets/stats/tb_colombia_data2.png
+    no_telop: true
+  - text: 監督は、アルゼンチン出身のネストル・ロレンソ。2022年から率いています。
+    image: assets/stats/tb_colombia_data4.png
+    no_telop: true
+  - text: 主将は、守備のダビンソン・サンチェスです。
+    image: assets/stats/tb_colombia_data5.png
+    no_telop: true
+  - text: 愛称のカフェテロスは、コーヒー農家たちという意味です。
+    image: assets/stats/tb_colombia_data6.png
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Module:SportsRankings/data/FIFA_World_Rankings
+  - https://en.wikipedia.org/wiki/Colombia_national_football_team
+  - https://en.wikipedia.org/wiki/N%C3%A9stor_Lorenzo
+- id: japan
+  heading: 日本は、コロンビアとどう戦ってきたのか
+  tier: 背景
+  telop: 通算6試合、日本から見て1勝1分4敗
+  narrator: 解説
+  card: &id_jp
+    type: table
+    title: 日本とコロンビアの国際Aマッチ（全6試合）
+    columns:
+    - 年月
+    - 大会
+    - 日本から見た結果
+    rows:
+    - - 2003年6月
+      - コンフェデ杯
+      - 0-1
+    - - 2007年6月
+      - キリンカップ
+      - 0-0
+    - - 2014年6月
+      - W杯 1次リーグ
+      - 1-4
+    - - 2018年6月
+      - W杯 1次リーグ
+      - 2-1
+    - - 2019年3月
+      - 親善試合
+      - 0-1
+    - - 2023年3月
+      - キリンチャレンジ杯
+      - 1-2
+  say:
+  - text: 6試合を、古い順に見ていきます。
+    image: assets/stats/tb_colombia_data8.png
+    card: *id_jp
+  - text: 最初は2003年、大陸王者が集うコンフェデレーションズカップで0対1の負け。
+    card:
+      <<: *id_jp
+      highlight_row: 0
+  - text: 2014年のワールドカップは、勝たなければ敗退という3戦目でした。
+    image: assets/images/20261110_team_colombia/b04_fan2014_w.jpg
+    card: none
+  - text: 前半の終わりに、岡崎慎司の頭で追いつきましたが、後半に3点を奪われます。
+    card:
+      <<: *id_jp
+      highlight_row: 2
+  - text: 後半から出たハメス・ロドリゲスが、2本のアシストと、最後の1点を決めました。
+    image: assets/images/20261110_team_colombia/b06_james_w.jpg
+    card: none
+  - text: 2018年は開始3分、香川真司のシュートを、カルロス・サンチェスが腕で止めて退場。
+    image: assets/images/20261110_team_colombia/b04_fan2014_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 3
+  - text: 香川がPKを決め、前半にフリーキックで追いつかれます。
+    card:
+      <<: *id_jp
+      highlight_row: 3
+  - text: 後半、大迫勇也が本田圭佑のコーナーキックを頭で決め、2対1の勝ち。
+    card:
+      <<: *id_jp
+      highlight_row: 3
+  - text: この2つの大会で、コーチとしてチームにいたのはロレンソ。いまの監督です。
+    emph: true
+    image: assets/images/20261110_team_colombia/b05_lorenzo2018_w.jpg
+    card: none
+  - text: 2023年の大阪では、三笘薫が開始3分に先に決めました。
+    card:
+      <<: *id_jp
+      highlight_row: 5
+  - text: それでも、ロレンソ監督のコロンビアに1対2の逆転負けです。
+    card:
+      <<: *id_jp
+      highlight_row: 5
+  sources:
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_records_and_statistics
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(2000%E2%80%932009)
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(2010%E2%80%932019)
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(2020%E2%80%93present)
+  - https://en.wikipedia.org/wiki/2014_FIFA_World_Cup_Group_C
+  - https://en.wikipedia.org/wiki/2018_FIFA_World_Cup_Group_H
+  - https://en.wikipedia.org/wiki/N%C3%A9stor_Lorenzo
+- id: history
+  heading: コロンビアは、どうやって南米の強豪になったのか
+  tier: 背景
+  telop: 2001年に南米王者、2014年にW杯8強
+  narrator: 解説
+  card: &id_hist
+    type: timeline
+    title: コロンビア代表の歩み
+    rows:
+    - - 1962年
+      - W杯に初出場
+    - - 1990年
+      - 28年ぶりのW杯で16強
+    - - 2001年
+      - コパ・アメリカ初優勝
+    - - 2014年
+      - W杯で初の8強
+    - - 2024年
+      - コパ・アメリカ準優勝
+    - - 2026年
+      - W杯16強。PK戦で敗退
+    focus: 2014年
+  say:
+  - text: コロンビアの最初のワールドカップは、1962年のチリ大会です。
+    image: assets/images/20261110_team_colombia/b01_sendoff_w.jpg
+    card: *id_hist
+  - text: その後は28年出られず、1990年に戻って16強へ進みました。
+    card:
+      <<: *id_hist
+      highlight_row: 1
+  - text: 2001年、自国で開いたコパ・アメリカで、6戦全勝、失点0の優勝です。
+    card:
+      <<: *id_hist
+      highlight_row: 2
+  - text: 2014年は初めての8強。ハメスが6点を決めて、大会の得点王になりました。
+    image: assets/images/20261110_team_colombia/b06_james_w.jpg
+    card: none
+  - text: 日本戦で決めた1点も、その6点の1つです。
+    card: none
+  - text: 2024年のコパ・アメリカは決勝へ。延長の末、アルゼンチンに0対1の負けでした。
+    image: assets/images/20261110_team_colombia/b02_squad_w.jpg
+    card:
+      <<: *id_hist
+      highlight_row: 4
+  - text: その決勝の前まで、ロレンソ監督のもとで28試合負けなし。
+    card:
+      <<: *id_hist
+      highlight_row: 4
+  - text: 2026年のワールドカップは16強。スイスとのPK戦に3対4で敗れました。
+    image: assets/images/20261110_team_colombia/b03_depart_w.jpg
+    card:
+      <<: *id_hist
+      highlight_row: 5
+  sources:
+  - https://en.wikipedia.org/wiki/Colombia_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/Colombia_national_football_team
+- id: players
+  heading: いまの看板選手は、誰なのか
+  tier: 背景
+  telop: 看板選手を、所属・名前・位置・年齢で
+  narrator: 解説
+  card: &id_pl
+    type: table
+    title: コロンビア代表の看板選手
+    columns:
+    - 所属
+    - 名前
+    - 位置
+    - 年齢
+    rows:
+    - - バイエルン
+      - ルイス・ディアス
+      - FW
+      - '29'
+    - - ガラタサライ
+      - ダビンソン・サンチェス
+      - DF
+      - '30'
+    - - フォレスト
+      - ダニエル・ムニョス
+      - DF
+      - '30'
+    - - ユヴェントス
+      - ジョン・ルクミ
+      - DF
+      - '28'
+    - - パルメイラス
+      - ジョン・アリアス
+      - MF
+      - '29'
+    - - スポルティング
+      - ルイス・スアレス
+      - FW
+      - '28'
+  say:
+  - text: 2026年のワールドカップを戦った、コロンビアの看板選手です。
+    image: assets/images/20261110_team_colombia/b02_squad_w.jpg
+    card: *id_pl
+  - text: 攻撃の中心は、バイエルンのルイス・ディアス。代表23得点は、国の歴代4位です。
+    card:
+      <<: *id_pl
+      highlight_row: 0
+  - text: ワールドカップでも、初戦のウズベキスタン戦でゴールを決めました。
+    image: assets/images/20261110_team_colombia/b01_sendoff_w.jpg
+    card: none
+  - text: 主将のダビンソン・サンチェスは代表87試合。10月の招集でいちばん多い数。
+    image: assets/images/20261110_team_colombia/b05_lorenzo2018_w.jpg
+    card:
+      <<: *id_pl
+      highlight_row: 1
+  - text: 守備のダニエル・ムニョスは、W杯の1次リーグで2点。チームの4点の半分です。
+    image: assets/images/20261110_team_colombia/b02_squad_w.jpg
+    card:
+      <<: *id_pl
+      highlight_row: 2
+  - text: 32強のガーナ戦で決勝点を決めたのは、パルメイラスのジョン・アリアス。
+    card:
+      <<: *id_pl
+      highlight_row: 4
+  - text: スポルティングのルイス・スアレスは、予選のベネズエラ戦で、1人で4点を取りました。
+    image: assets/images/20261110_team_colombia/b03_depart_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Colombia_national_football_team
+  - https://en.wikipedia.org/wiki/Luis_D%C3%ADaz_(footballer,_born_1997)
+  - https://en.wikipedia.org/wiki/Davinson_S%C3%A1nchez
+  - https://en.wikipedia.org/wiki/Daniel_Mu%C3%B1oz_(footballer)
+  - https://en.wikipedia.org/wiki/Jhon_Lucum%C3%AD
+  - https://en.wikipedia.org/wiki/Jhon_Arias_(footballer)
+  - https://en.wikipedia.org/wiki/Luis_Su%C3%A1rez_(Colombian_footballer)
+- id: now
+  heading: ハメスが去ったコロンビアは、いまどうなっているのか
+  tier: 背景
+  telop: W杯のあとの3試合は、1勝1分1敗
+  narrator: 解説
+  card: &id_nw
+    type: table
+    title: W杯のあと コロンビアの3試合（親善試合）
+    columns:
+    - 日付
+    - 相手
+    - コロンビアの結果
+    rows:
+    - - 9月26日
+      - メキシコ
+      - 1-1
+    - - 10月2日
+      - パラグアイ
+      - 0-1
+    - - 10月6日
+      - ペルー
+      - 2-0
+  say:
+  - text: ワールドカップのあと、9月15日に、ハメスが代表を退きました。
+    image: assets/images/20261110_team_colombia/b06_james_w.jpg
+    card: none
+  - text: 代表131試合は、コロンビアで誰よりも多い数です。
+    card: none
+  - text: ハメスのいないコロンビアの3試合は、1勝1分け1敗。
+    image: assets/images/20261110_team_colombia/b01_sendoff_w.jpg
+    card: *id_nw
+  - text: 9月26日のメキシコ戦は、1対1の引き分け。
+    card:
+      <<: *id_nw
+      highlight_row: 0
+  - text: 10月2日は、パラグアイに0対1の負け。
+    card:
+      <<: *id_nw
+      highlight_row: 1
+  - text: 10月6日のペルー戦は、2対0で勝っています。
+    card:
+      <<: *id_nw
+      highlight_row: 2
+  - text: ロレンソ監督の契約は、ワールドカップのあと、7月23日に延びました。
+    image: assets/images/20261110_team_colombia/b05_lorenzo2018_w.jpg
+    card: none
+  - text: 次は11月13日にカリ、17日にサンティアゴで、チリと2度戦います。
+    image: assets/images/20261110_team_colombia/b02_squad_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Colombia_national_football_team
+  - https://en.wikipedia.org/wiki/James_Rodr%C3%ADguez
+- id: viewpoint
+  viewpoint: true
+  heading: 日本は、なぜコロンビアに勝ちきれないのか
+  tier: 背景
+  telop: 日本の4点のうち2点は、相手が10人の1試合。コロンビアはW杯5試合で失点1
+  narrator: 解説
+  card: &id_vp
+    type: table
+    title: 日本とコロンビア 数えた点（2026年まで）
+    columns:
+    - 項目
+    - 試合
+    - 点
+    rows:
+    - - 日本の得点 2018年をのぞく5試合
+      - '5'
+      - '2'
+    - - 日本の得点 2018年の1試合
+      - '1'
+      - '2'
+    - - コロンビアの失点 2026年W杯
+      - '5'
+      - '1'
+    - - コロンビアの得点 2026年W杯
+      - '5'
+      - '5'
+    - - コロンビアの得点 2014年W杯
+      - '5'
+      - '12'
+  say:
+  - text: 見立てです。日本とコロンビアの6試合を、2つに分けて数えます。
+    image: assets/images/20261110_team_colombia/b04_fan2014_w.jpg
+    card: none
+  - text: 2018年をのぞく5試合で、日本が取った点は2点。2試合半に1点のペースです。
+    card:
+      <<: *id_vp
+      highlight_row: 0
+  - text: ところが2018年の1試合だけで、日本は2点を取りました。
+    emph: true
+    mark:
+      kind: circle
+      row: 1
+      col: 点
+    card:
+      <<: *id_vp
+      highlight_row: 1
+  - text: 2点とも、開始3分にコロンビアが10人になってからの点です。
+    card:
+      <<: *id_vp
+      highlight_row: 1
+  - text: 11人そろったコロンビアの守りから、日本はなかなか点を奪えていません。
+    image: assets/images/20261110_team_colombia/b05_lorenzo2018_w.jpg
+    card: none
+  - text: その守りは、2026年のワールドカップでも崩れませんでした。5試合で、失点は1。
+    mark:
+      kind: circle
+      row: 2
+      col: 点
+    card:
+      <<: *id_vp
+      highlight_row: 2
+  - text: ただ、取った点も5試合で5点。2014年の12点の、半分にも届きません。
+    card:
+      <<: *id_vp
+      highlight_row: 4
+  - text: 16強のスイス戦は、120分を0対0の引き分け。PK戦で敗れて大会を去りました。
+    image: assets/images/20261110_team_colombia/b03_depart_w.jpg
+    card: none
+  - text: 守りは崩れない。けれど、点が足りない。
+    card: none
+  - text: 2014年に、チームの12点のうち6点を取ったハメスは、もう代表にいません。
+    image: assets/images/20261110_team_colombia/b06_james_w.jpg
+    card: none
+  - text: 11月のチリとの2連戦で、点を取るのは誰か。それが次の注目点です。
+    image: assets/images/20261110_team_colombia/b01_sendoff_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_records_and_statistics
+  - https://en.wikipedia.org/wiki/2018_FIFA_World_Cup_Group_H
+  - https://en.wikipedia.org/wiki/Colombia_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/Colombia_national_football_team

@@ -1,0 +1,178 @@
+# 取材メモ（2026年10月29日）カラバオ杯8強の抽選。イラオラ監督「当たりたくない唯一のチームはボーンマス」（ニュースのショート。見せ方 Y＝監督本人の言葉から始める）
+# 取材: 2026-10-29。requests で本文を読んだ（ESPN は記事API content.core.api.espn.com と試合API site.api.espn.com、Daily Mail は記事の本文、フットボールチャンネルは WebFetch）。
+#   ・ESPN「Iraola on Bournemouth draw in Carabao Cup: 'Only team that I don't want'」（10/29 00:44Z）— 題材の元。試合後の会見。
+#       本人: "I was talking before the draw and I said: 'The only team that I don't want is Bournemouth.'"
+#             "For me it's special, but they know me very well, they are playing very well lately, in a good moment."
+#             "We haven't been very lucky with the draws. We played Spurs, Chelsea already, now Bournemouth, that is going to be obviously special for me."
+#             "we have to earn the right to be in the semi-finals and I hope we can do it here at home again."
+#       地の文: リヴァプールは水曜（28日）、チェルシーに1-1からPK戦で勝って8強。アンフィールドでボーンマス（イラオラ監督の古巣）をホームに迎える。
+#   ・ESPN「Carabao Cup quarterfinal draw」（10/28 23:44Z、PA 通信）: 8強の4カード。リヴァプールは「最多10回優勝」、マンCは「前回王者・9回優勝」。
+#       フリートウッドは4部の18位。パレス対サンダーランドは「プレミア同士」。8強の4試合は12月14日の週。
+#   ・Daily Mail「CARABAO CUP QUARTER-FINAL DRAW」（10/28 22:47 GMT）: フリートウッド対エヴァートンかニューカッスル（木曜に決まる）／マンC対ブラッドフォード（3部）／パレス対サンダーランド／リヴァプール対ボーンマス。
+#       ボーンマスはヴィラに3-0で8季ぶりの8強（"for the first time in eight seasons"）、公式戦5連勝（"fifth consecutive win in all competitions"）。
+#   ・ESPN 試合API（event 401921842 リヴァプール対チェルシー）: 40分 ロジャースのPK、43分 ガクポのPK、1-1。控えに遠藤航（交代5人の中に入らず、出番なし）。
+#   ・ESPN 試合API（event 401921841 フラム対パレス）: 37分 ヌケティア（エンケティア）で0-1。77分 鎌田大地がゲサンに代わって出場（ESPN の交代記録）。
+#   ・フットボールチャンネル（post1042137 抽選、post1042125 パレス）: 冨安健洋は負傷でメンバー外。パレスは公式戦5試合ぶりの勝利（直近4試合は3敗1分け）。
+# 言わないこと: フットボールチャンネルの「ホーム＆アウェー方式」（Daily Mail と ESPN は1試合の記述で食い違う）。遠藤の今季の出場時間（今日読んだ本文に無い）。エヴァートン対ニューカッスルの結果（木曜の試合で、まだ出ていない）。
+#   ボーンマスの「3試合続けての3-0」（相手がミラン・マンUの記述は今日の本文だけでは裏が取れない）。10/28 のフリートウッド対アーセナルの話の言い直し。
+# 訳はこちらの自訳（英語の会見）。
+# 確度: 報道（ESPN・Daily Mail。抽選の組み合わせは ESPN と Daily Mail と フットボールチャンネルで一致。試合の分と交代は ESPN の試合記録）。
+# 反応: 0件。作らない。approve は --no-voices で。
+# 写真: 01〜は Commons（AFC Bournemouth ほかの本人の写真）。ボーンマス監督時代のもので、今日の写真ではない（ESPN の主写真は Getty なので使わない）。
+slot: premier
+date: "2026年10月29日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [アンドニ・イラオラ]
+
+short_style: Y
+short_hook_quote: 当たりたくない唯一のチームは、ボーンマスだ。
+short_question: 古巣と当たるイラオラ監督、勝つのはどちらだと思いますか。
+short_hook: 抽選の前に口にしていた相手と、本当に当たった。
+short_telops:
+  - {match: 抽選の前に, text: イラオラ監督/抽選の前の言葉}
+  - {match: 6対5, text: チェルシーと1対1/PK戦 6対5}
+  - {match: ボーンマスに決まり, text: 8強の相手は/ボーンマス（古巣）}
+  - {match: ブラッドフォード, text: マンC対ブラッドフォード/（3部）}
+  - {match: サンダーランド, text: パレス対サンダーランド/プレミア同士}
+  - {match: 77分, text: 鎌田大地/77分から途中出場}
+  - {match: 遠藤航, text: 遠藤航/ベンチ入りで出番なし}
+  - {match: 8シーズン, text: ボーンマス/8季ぶりの8強}
+  - {match: 10回, text: 優勝回数/リヴァプール 10回（最多）}
+  - {match: 12月14日, text: 8強の4試合は/12月14日の週}
+
+theme:
+  id: cup_qf_draw
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: イラオラ「当たりたくない唯一のチームはボーンマス」。8強の抽選で何が決まったか
+  hook: ""
+  question: カラバオ杯8強の抽選で、リヴァプールと日本人選手のいるパレスの相手は誰に決まったのか
+  takeaway: 8強に残った8クラブのうち、プレミア以外は3部のブラッドフォードと4部のフリートウッドだけ。リヴァプールは優勝10回でいちばん多く、ボーンマスは8シーズンぶりの8強で5連勝中
+
+thumbnail:
+  line1: イラオラ
+  line2: 「当たりたくない唯一のチーム」
+  tags: [リヴァプール, ボーンマス, カラバオ杯]
+  layout: face
+  photo: assets/images/20261029_cup_qf_draw/01_w.jpg
+  short_photo: assets/images/20261029_cup_qf_draw/01_v.jpg
+
+answer: リヴァプールの相手は、イラオラ監督の古巣ボーンマス。パレスはサンダーランドと当たる
+watch: 12月14日の週に行われる、カラバオ杯の準々決勝
+
+short_photos:
+  - assets/images/20261029_cup_qf_draw/01_v.jpg
+  - assets/images/20261029_cup_qf_draw/02_v.jpg
+  - assets/images/20261029_cup_qf_draw/06_v.jpg
+  - assets/images/20261029_cup_qf_draw/03_v.jpg
+
+sections:
+  - id: what
+    main: true
+    heading: 抽選の前に話していたこと
+    tier: 報道
+    telop: リヴァプールの8強の相手は、イラオラ監督の古巣
+    say:
+      - text: リヴァプールは、リーグカップのカラバオ杯で、チェルシーに勝って8強。
+        image: assets/images/20261029_cup_qf_draw/01_w.jpg
+      - text: 1対1からのPK戦を、6対5で制しました。
+        image: assets/images/20261029_cup_qf_draw/01_w.jpg
+      - voice: イラオラ
+        text: 当たりたくない唯一のチームは、ボーンマスだ。
+        short_voice: true
+        image: assets/images/20261029_cup_qf_draw/01_w.jpg
+      - voice: イラオラ
+        text: 抽選の前に、そう話していたんです。
+        cont: true
+        image: assets/images/20261029_cup_qf_draw/01_w.jpg
+      - text: その抽選で、リヴァプールの相手はボーンマスに決まりました。
+        image: assets/images/20261029_cup_qf_draw/02_w.jpg
+      - text: イラオラ監督が、リヴァプールの前に率いていたクラブです。
+        image: assets/images/20261029_cup_qf_draw/02_w.jpg
+      - voice: イラオラ
+        text: 私にとっては特別な相手です。
+        image: assets/images/20261029_cup_qf_draw/06_w.jpg
+      - voice: イラオラ
+        text: ただ、向こうは私をよく知っているし、最近はとても調子がいい。
+        cont: true
+        image: assets/images/20261029_cup_qf_draw/06_w.jpg
+      - voice: イラオラ
+        text: 抽選には、あまり恵まれていない。
+        image: assets/images/20261029_cup_qf_draw/03_w.jpg
+      - voice: イラオラ
+        text: もうスパーズとチェルシーと当たって、今度はボーンマスだ。
+        cont: true
+        image: assets/images/20261029_cup_qf_draw/03_w.jpg
+      - text: 監督の言葉は英語の会見から、こちらで訳しています。
+        image: assets/images/20261029_cup_qf_draw/01_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50312281/iraola-bournemouth-draw-carabao-cup
+      - https://www.espn.com/soccer/story/_/id/50311784/carabao-cup-quarterfinal-draw-liverpool-bournemouth-fleetwood
+
+  - id: ties
+    heading: 8強の4カードと、日本人選手のいる2クラブ
+    tier: 報道
+    card: {type: table, title: カラバオ杯 8強の4カード, columns: [カード, メモ], rows: [[リヴァプール対ボーンマス, イラオラ監督の古巣], [シティ対ブラッドフォード, ブラッドフォードは3部], [パレス対サンダーランド, プレミア同士], [フリートウッド対エヴァートンかニューカッスル, フリートウッドは4部]]}
+    telop: マンCは3部、パレスはサンダーランドと対戦
+    say:
+      - text: 同じ抽選で決まった、ほかのカードです。
+        image: assets/images/20261029_cup_qf_draw/02_w.jpg
+      - text: イラオラ監督のリヴァプールは、アンフィールドでボーンマスを迎えます。
+        image: assets/images/20261029_cup_qf_draw/02_w.jpg
+      - text: 前回王者のシティは、3部のブラッドフォード・シティと当たります。
+        image: assets/images/20261029_cup_qf_draw/02_w.jpg
+      - text: クリスタル・パレスは、サンダーランドと。プレミアリーグのクラブどうしです。
+        image: assets/images/20261029_cup_qf_draw/06_w.jpg
+      - text: 4部のフリートウッドは、木曜のエヴァートン対ニューカッスルの勝者を迎えます。
+        image: assets/images/20261029_cup_qf_draw/03_w.jpg
+      - text: 日本人選手のいるクラブも、2つ残りました。
+        image: assets/images/20261029_cup_qf_draw/03_w.jpg
+      - text: パレスの鎌田大地は、フラム戦の77分から途中出場。
+        image: assets/images/20261029_cup_qf_draw/02_w.jpg
+      - text: 冨安健洋は、けがでメンバーに入っていません。
+        image: assets/images/20261029_cup_qf_draw/02_w.jpg
+      - text: リヴァプールの遠藤航は、チェルシー戦のベンチ入り。出番は来ませんでした。
+        image: assets/images/20261029_cup_qf_draw/06_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50311784/carabao-cup-quarterfinal-draw-liverpool-bournemouth-fleetwood
+      - https://www.dailymail.com/sport/football/article-16246873/fleetwood-arsenal-carabao-cup-everton-newcastle-quarter-final.html
+      - https://www.footballchannel.jp/2026/10/29/post1042125/
+      - https://www.footballchannel.jp/2026/10/29/post1042137/
+
+  - id: view
+    viewpoint: true
+    heading: 8強に残った8クラブで、プレミア以外はどこか
+    tier: 背景
+    telop: 8クラブのうち、プレミア以外は2つだけ
+    say:
+      - text: ここからは見立てです。
+        image: assets/images/20261029_cup_qf_draw/01_w.jpg
+      - text: 8強に残った8クラブのうち、プレミアリーグ以外は2つだけです。
+        image: assets/images/20261029_cup_qf_draw/02_w.jpg
+      - text: 3部のブラッドフォードと、4部のフリートウッド。
+        image: assets/images/20261029_cup_qf_draw/03_w.jpg
+      - text: 優勝回数は、リヴァプールが10回で、いちばん多い。シティは9回で、前回の王者。
+        image: assets/images/20261029_cup_qf_draw/02_w.jpg
+      - text: 一方のボーンマスは、8シーズンぶりの8強で、公式戦5連勝中。
+        image: assets/images/20261029_cup_qf_draw/06_w.jpg
+      - text: イラオラ監督にとって特別な相手は、勢いのある古巣です。
+        image: assets/images/20261029_cup_qf_draw/06_w.jpg
+      - text: 試合は12月14日の週に行われます。
+        image: assets/images/20261029_cup_qf_draw/01_w.jpg
+      - voice: イラオラ
+        text: 準決勝に進む資格は、自分たちで勝ち取らなければいけない。
+        image: assets/images/20261029_cup_qf_draw/03_w.jpg
+      - voice: イラオラ
+        text: またここ、ホームで、それができればいい。
+        cont: true
+        image: assets/images/20261029_cup_qf_draw/03_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50312281/iraola-bournemouth-draw-carabao-cup
+      - https://www.espn.com/soccer/story/_/id/50311784/carabao-cup-quarterfinal-draw-liverpool-bournemouth-fleetwood
+      - https://www.dailymail.com/sport/football/article-16246873/fleetwood-arsenal-carabao-cup-everton-newcastle-quarter-final.html
+short_title: "イラオラ「当たりたくない唯一のチームはボーンマス」。8強の抽選で何が決まったか"

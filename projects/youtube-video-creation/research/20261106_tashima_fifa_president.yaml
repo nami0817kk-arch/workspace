@@ -1,0 +1,155 @@
+# 取材メモ（2026年11月6日）田嶋幸三・JFA名誉会長がFIFA会長選への立候補の意思を表明（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-06。requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。
+# 題材の元: ゲキサカ 462574「JFA田嶋幸三名誉会長がFIFA会長選への電撃出馬を表明!!」（全文）。
+# 出典で確かめたこと:
+#   ・ゲキサカ 462574（全文）: 5日、東京都内で会見。来年3月の次回FIFA会長選挙に立候補する意向。日本からの立候補は史上初。JFAは同日の理事会で支持を決議。
+#       本人「勝つとか負けるとかではなく、日本サッカーが今まで築いてきた誠実で、健全で、高潔性のあるというものをしっかりと世界に発信ていかないといけない。
+#       今こそFIFAが必要なのは我々がずっと守ってきたこのことだと思っている。私はしっかりとそれを世界にアピールするためにFIFA会長に出馬することを決めた」
+#   ・ゲキサカ 462584（全文）: 選挙は来年3月18日。インファンティーノ会長は4選を目指す。出馬の最大の理由は今夏の北中米W杯の2つの問題（バログンの出場停止の猶予／イランの入国制限）。
+#       本人「今のところインファンティーノ会長に対抗する方が見えない。自分は選挙をしないで彼がまたそのまま続けるというのが最も良くないことで、FIFAが本当に自浄作用があるのかということが試されていると思い、決断した」
+#       本人「勝算ということに関してはまだ達していないと思っている。ただ、まず手を挙げてその場に乗ることが大切。…出るからには勝ちたいと思っているが、勝つ負けるよりももっと大切なことがあると思っている」
+#       立候補の期限は11月18日。単一協会の推薦状と、5協会以上のサポートレターが要る。JFA は推薦を満場一致で決議、残りは4協会以上。
+#   ・ガーディアン（2026-11-05、全文）: 3月の選挙はラバト。211協会のうち5協会の支持が要る。田嶋氏は元トッテナムのラモン・ベガに続く2人目の挑戦者。
+#       "The widely respected Tashima … is understood to have acted with the blessing of Uefa" "has many allies in Europe"
+#       AFC のサルマン会長は AFC 総会で現職の支持を表明（方針転換）。
+#   ・フットボールチャンネル post1055990（全文）: 欧州各国の報道を引く。
+#       スカイスポーツのカヴェ・ソルヘコル記者「田嶋氏が唯一の対抗馬となれば、欧州の圧倒的な支持を得られると思う。UEFA加盟55協会のほぼすべての票を期待できる」
+#       同記者「インファンティーノ氏を倒すために必要な支持を集められるかは分からない」
+#       ドイツ n-tv「UEFAが長い間、対抗候補を探していたところに、極東から挑戦状が届いた」／フランス So Foot「FIFAがあまりにも長い間忘れていた価値観だ」
+#       → 原文は読んでいない（訳はフットボールチャンネルの訳のまま）。
+# 記事どうしの食い違い:
+#   ・立候補の要件: ゲキサカ「単一協会の推薦状＋5協会以上のサポートレター」、フットボールチャンネル「11月18日までに5協会の推薦」、ガーディアン「5協会の支持」→ 台本は「5つ以上の協会の支持」と「11月18日」だけ言う。
+#   ・本人の「対抗する方が見えない」とガーディアンの「ベガに続く2人目」は食い違う（ベガは5協会の支持が未確認）。→ 本人の言葉はそのまま引き、ベガの話は台本に入れない（題から離れる）。
+# 自分で数えたもの: UEFA の55票は、FIFA の211協会のうち 55÷211＝26%（4分の1ほど）。
+# 前の本との重なり: 20261030_wenger_fifa（フランス協会がベンゲルを対抗馬に推した話）。→ 今回は田嶋氏本人の出馬表明と言葉で別の話。ベンゲルには触れない（その後の動きは確かめていない）。
+# 【言わないこと】岡田武史氏の副会長辞任・宮本会長との関係（関連記事の話。題から離れる）／バログン・イランの問題の細部（ショートに入らない）。
+#   → 台本の本人の言葉は記事のとおり。「発信ていかない」は記事の誤字とみて「発信していかない」に直した。長い文は読点で行を分けた（言葉は変えていない）。
+# 写真: 01 ゲキサカ（©Tatsuya TAKEUCHI/GEKISAKA、会見の写真）／02 Commons「Kozo Tashima with Japan National Football Team after Qatar World Cup (5)」CC BY 4.0 内閣官房内閣広報室（2022年、小さい 510x680）／
+#   03 Commons「FIFA and Philippine sports officials at the 2025 FIFA Futsal Women's World Cup」Public domain（2025年。田嶋氏とインファンティーノ会長が並ぶ。写っているのは観客席の役員だけ）を左右で切った。
+#   ガーディアンの写真（Anadolu/Getty）は代理店なので外した。
+# 本人の言葉: あり（ゲキサカ。日本語の会見）。Y。
+# 反応: ネット民 0件。欧州の報道の言葉を2件（記者・媒体の名前つき）。
+slot: japanese
+date: "2026年11月6日"
+format: news
+no_main: true
+people: [田嶋幸三, インファンティーノ, 日本サッカー協会, FIFA, UEFA]
+
+short_style: Y
+short_hook_quote: 今こそFIFAが必要なのは我々がずっと守ってきたこのことだと思っている。
+short_photos:
+  - assets/images/20261106_tashima_fifa_president/01_v.jpg
+  - assets/images/20261106_tashima_fifa_president/03_v.jpg
+  - assets/images/20261106_tashima_fifa_president/02_v.jpg
+short_question: 田嶋幸三氏は、FIFA会長選で現職に勝てると思いますか。
+short_telops: []
+
+theme:
+  id: tashima_fifa_president
+  league: japan
+  league_name: FIFA
+  prefix: ""
+  title: 田嶋幸三、日本人で初めてFIFA会長選へ。インファンティーノに挑む理由
+  hook: ""
+  question: 田嶋幸三・JFA名誉会長は、なぜFIFA会長選に名乗りを上げたのか
+  takeaway: 欧州の55票を全部取っても、FIFAの211協会の4分の1ほど。勝つには欧州の外からの票が要り、アジアの連盟は現職の支持を表明している
+
+thumbnail:
+  layout: face
+  line1: 田嶋幸三 FIFA会長選へ
+  line2: 日本人初、現職に挑む
+  tags: [田嶋幸三, FIFA]
+  photo: assets/images/20261106_tashima_fifa_president/01_w.jpg
+  short_photo: assets/images/20261106_tashima_fifa_president/01_v.jpg
+
+answer: 選挙をせずに現職がそのまま続くのが最も良くない。日本サッカーの誠実さを世界に発信するため
+watch: 11月18日の立候補の締め切り、来年3月18日の選挙
+
+sections:
+  - id: what
+    main: true
+    heading: 田嶋幸三は、なぜFIFA会長選に名乗りを上げたのか
+    tier: 報道
+    telop: 田嶋幸三「今こそFIFAが必要なのは、我々がずっと守ってきたこと」
+    say:
+      - text: 日本サッカー協会の田嶋幸三・名誉会長が、来年3月のフィファ会長選挙に、立候補する意向を表明しました。
+      - text: 日本からの立候補は、史上初めて。5日の会見で、こう話しています。
+      - voice: 田嶋幸三
+        text: 今こそFIFAが必要なのは我々がずっと守ってきたこのことだと思っている。
+        emph: true
+      - voice: 田嶋幸三
+        text: 日本サッカーが今まで築いてきた誠実で、健全で、
+        cont: true
+      - voice: 田嶋幸三
+        text: 高潔性のあるというものを、
+        cont: true
+      - voice: 田嶋幸三
+        text: しっかりと世界に発信していかないといけない。
+        cont: true
+      - text: 相手は、4選を目指すフィファの現職、インファンティーノ会長です。
+        image: assets/images/20261106_tashima_fifa_president/03_w.jpg
+      - text: 田嶋氏は、選挙をしないこと自体が問題だと言います。
+      - voice: 田嶋幸三
+        image: assets/images/20261106_tashima_fifa_president/01_w.jpg
+        text: 自分は選挙をしないで彼がまたそのまま続けるというのが
+      - voice: 田嶋幸三
+        text: 最も良くないことで、
+        cont: true
+      - voice: 田嶋幸三
+        text: FIFAが本当に自浄作用があるのかということが
+        cont: true
+      - voice: 田嶋幸三
+        text: 試されていると思い、決断した。
+        cont: true
+    official: false
+    quotes_from: [ゲキサカ]
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?462574-462574-fl
+      - https://web.gekisaka.jp/news/japan/detail/?462584-462584-fl
+  - id: europe
+    heading: ヨーロッパは、田嶋幸三の出馬をどう受け止めたか
+    tier: 報道
+    telop: 欧州の報道「UEFA加盟55協会のほぼすべての票を期待できる」
+    say:
+      - text: この表明を、ヨーロッパの報道も伝えました。欧州サッカー連盟、ウエファには55の協会が入っています。
+      - text: 田嶋氏は、ウエファの後押しを受けて動いたと伝えられています。
+      - text: イギリスのスカイスポーツの記者は、こう見ています。
+      - voice: スカイスポーツ記者
+        text: UEFA加盟55協会のほぼすべての票を期待できる。
+      - voice: スカイスポーツ記者
+        text: インファンティーノ氏を倒すために必要な支持を
+      - voice: スカイスポーツ記者
+        text: 集められるかは分からない。
+        cont: true
+      - text: フランスのソーフットは、田嶋氏の掲げた誠実さを、こう書きました。
+      - voice: ソーフット紙
+        text: FIFAがあまりにも長い間忘れていた価値観だ。
+    official: false
+    quotes_from: [フットボールチャンネル]
+    sources:
+      - https://www.footballchannel.jp/2026/11/06/post1055990/
+      - https://www.theguardian.com/football/2026/nov/05/japan-fa-head-kozo-tashima-stand-against-gianni-infantino-for-fifa-president
+  - id: view
+    viewpoint: true
+    heading: 欧州の票を全部取ったら、田嶋幸三は勝てるのか
+    tier: 背景
+    telop: 欧州55票は、211協会の約4分の1
+    say:
+      - text: 見立てです。フィファに加盟する協会は211。欧州の55票は、その26%です。
+        card: {type: calc, title: 欧州の票は、全体のどれだけか, terms: [[55, 欧州の協会], [211, FIFAの協会], [26%, 欧州の割合]], ops: [÷, ＝]}
+      - text: 勝つには、欧州の外からの票が要ります。
+      - text: ただ、アジアサッカー連盟の会長は、先月の総会で現職の支持を表明しています。
+        card: none
+      - voice: 田嶋幸三
+        text: 出るからには勝ちたいと思っているが、
+      - voice: 田嶋幸三
+        text: 勝つ負けるよりももっと大切なことがあると思っている。
+        cont: true
+      - text: 正式に立候補するには、11月18日の締め切りまでに、5つ以上の協会の支持が要ります。
+      - text: 選挙は来年3月18日です。
+    official: false
+    quotes_from: [ゲキサカ]
+    sources:
+      - https://www.theguardian.com/football/2026/nov/05/japan-fa-head-kozo-tashima-stand-against-gianni-infantino-for-fifa-president
+      - https://www.footballchannel.jp/2026/11/06/post1055990/
+      - https://web.gekisaka.jp/news/japan/detail/?462584-462584-fl

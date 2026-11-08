@@ -1,0 +1,24 @@
+{
+ "hoffenheim": {
+  "クラマリッチ": {
+   "role": "legend",
+   "file": "assets/photos/bd/hoffenheim/hoffenheim_legend_8adb7511.jpg",
+   "page": "Andrej Kramarić"
+  },
+  "フィルミーノ": {
+   "role": "legend",
+   "file": "assets/photos/bd/hoffenheim/hoffenheim_legend_26bfd981.jpg",
+   "page": "Roberto Firmino"
+  },
+  "イビシェヴィッチ": {
+   "role": "legend",
+   "file": "assets/photos/bd/hoffenheim/hoffenheim_legend_c79c5191.jpg",
+   "page": "Vedad Ibišević"
+  },
+  "クリスティアン・イルツァー": {
+   "role": "manager",
+   "file": "assets/photos/bd/hoffenheim/hoffenheim_manager_0e8dac72.jpg",
+   "page": "Christian Ilzer"
+  }
+ }
+}

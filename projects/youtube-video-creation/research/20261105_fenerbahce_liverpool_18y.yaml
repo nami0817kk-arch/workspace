@@ -1,0 +1,132 @@
+# 取材メモ（2026年11月5日）フェネルバフチェ3-2リヴァプール。CL本大会の白星は18年7カ月ぶり。カイト暫定監督（元リヴァプール）の言葉（ニュースのショート。見せ方 Y＝カイトの言葉から始める）
+# 取材: 2026-11-05。python requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。
+# 読んだ出典:
+#   ・ESPN の試合データ（site.api.espn.com .../uefa.champions/summary?event=401915382、11/4 17:45 UTC）:
+#       25分 ニョニ（リヴァプール）／29分 グリーンウッド（FK、右足、ゴール左下）／69分 イサク（ヘッド、アシスト ガクポ）／73分 ブラウン（CKの後）／79分 ムリキ（ヘッド、アシスト ブラウン）。3-2。
+#   ・サッカーキング 2224843（ムリキの談話。UEFA経由）: 「CL本大会の白星は18年7カ月ぶり」。最後の勝利は2008年4月2日（2007-08準々決勝1stレグ、チェルシー戦）。CL本大会は18シーズンぶり、最後に出た2008-09は未勝利。
+#       → 「18年7カ月ぶり」は報道のとおりに使う。2008年4月2日から2026年11月4日は18年7カ月で、こちらの数え直しとも合う。**ただし記事の「○2－0」というスコアは使わない**（確かめられていない）。
+#   ・サッカーキング 2224749（試合レポート）: 暫定監督はディルク・カイト（現役時代リヴァプール）。前任カルタルが先月末に辞任。フェネルバフチェは2分1敗でこの試合へ。リヴァプールは開幕3連勝中。
+#   ・ESPN 記事 50382957「Dirk Kuyt hails 'another miracle in Istanbul'…」（content.core.api.espn.com 経由で全部読んだ）: カイトは前週に就任（カルタル辞任のあと）。この勝利は今季CL初勝利で、どの大会でも4試合ぶりの勝ち。
+#       カイトの言葉（英語）: "It was a very special night…" "…to keep believing in ourselves, and that is something [which] I learned from another club [that] means a lot to me, and that was Liverpool, the club we played against tonight." "…that we made a miracle tonight." "we have a chance to bring another miracle in Istanbul"
+#       ESPN の地の文: 2005年のイスタンブールの決勝（リヴァプール対ミラン）の逆転優勝になぞらえた。カイトがリヴァプールに移ったのは翌2006年。
+#   ・ESPN 記事 50381609「Liverpool bemoan 'cheap, messy goals'…」（全部読んだ）＋リヴァプール公式 liverpoolfc.com の「Andoni Iraola press conference: Reaction to Fenerbahce 3-2 Liverpool」（クラブ公式の記者会見の書き起こし）:
+#       イラオラ: "Cheap goals. Messy goals." / "We conceded from a free kick, a corner, a long throw and that has hurt us." → 公式の書き起こしでも "they are cheap goals. They are messy goals." で一致。**確かめられた＝本人の言葉**。
+#       ESPN: リヴァプールのトルコでの成績は 1勝1分7敗（ESPN）。
+#   ・リヴァプール公式の試合レポート: 2点目は短いCKから、3点目は「短いスローインのあとの深いボール」と書く → イラオラは3点目を「ロングスロー」と言う。**食い違い**。台本は、細かい種類は本人の言葉のままにする。
+#   ・次の試合: フェネルバフチェは25日アウェーでシャフタール・ドネツク、リヴァプールは25日アウェーでクラブ・ブルッヘ（サッカーキング）。
+# 食い違い: ①得点の時間は ESPN データとサッカーキングで一致。②リヴァプール公式とイラオラで3点目の経緯が違う（上）。③サッカーキングの「○2－0」（2008年のチェルシー戦）は確かめられないので使わない。
+# 自分で数えたもの: リヴァプールの先制 25分→同点 29分＝4分。勝ち越し 69分→同点 73分＝4分。2度のリードがどちらも4分で消えた。
+# 本人の言葉: あり（カイト＝ESPN、英語を日本語にした／イラオラ＝クラブ公式の書き起こしとESPN）。Y。語順をなぞらず日本語として通るようにした。
+# 反応: 0件（X は道具の決まりで当たれず、Reddit は requests で 403。作らない。approve は --no-voices）。
+# 写真: リヴァプール公式・ESPN の記事から photopool で集める（Getty/AP/PA は使わない）。
+# 前の本との重なり: リヴァプール・イラオラ関連の直近の本は無し（posted.json の題を人名・クラブ名で引いた）。日本の接点は無し。
+slot: match
+date: "2026年11月5日"
+format: news
+no_main: true
+people: [ディルク・カイト, フェネルバフチェ, リヴァプール, イラオラ監督, ムリキ, グリーンウッド]
+
+short_style: Y
+short_hook_quote: 今夜、私たちは奇跡を起こしました。
+short_question: フェネルバフチェは、カイトのもとで今季の流れを変えられると思いますか。
+short_photos:
+  - assets/images/20261105_fenerbahce_liverpool_18y/01_v.jpg
+  - assets/images/20261105_fenerbahce_liverpool_18y/03_v.jpg
+  - assets/images/20261105_fenerbahce_liverpool_18y/04_v.jpg
+  - assets/images/20261105_fenerbahce_liverpool_18y/02_v.jpg
+short_telops: []
+
+theme:
+  id: fenerbahce_liverpool_18y
+  league: england
+  league_name: チャンピオンズリーグ
+  prefix: ""
+  title: フェネルバフチェ、CL18年7カ月ぶりの白星。カイトの言葉「奇跡」
+  hook: ""
+  question: フェネルバフチェはなぜ、18年7カ月ぶりのCLの白星をリヴァプール相手に手にできたのか
+  takeaway: リヴァプールのリードは2度とも、わずか4分で消えた。フェネルバフチェは次の25日、アウェーでシャフタールと対戦する
+
+thumbnail:
+  layout: face
+  line1: カイト「奇跡を起こした」
+  line2: フェネルバフチェ、CL18年ぶり白星
+  tags: [フェネルバフチェ, リヴァプール]
+  photo: assets/images/20261105_fenerbahce_liverpool_18y/01_w.jpg
+  photos:
+    - assets/images/20261105_fenerbahce_liverpool_18y/01_w.jpg
+    - assets/images/20261105_fenerbahce_liverpool_18y/05_w.jpg
+  short_photo: assets/images/20261105_fenerbahce_liverpool_18y/01_v.jpg
+
+answer: 暫定監督カイトのもと、2度の逆転でリヴァプールに3対2。CL本大会の白星は18年7カ月ぶり
+watch: 25日のシャフタール・ドネツク戦（アウェー）
+
+sections:
+  - id: what
+    main: true
+    heading: フェネルバフチェは、どうやってリヴァプールを倒したのか
+    tier: 報道
+    telop: フェネルバフチェ、CL18年7カ月ぶりの白星
+    say:
+      - text: フェネルバフチェが、2度の逆転でリヴァプールを3対2で下しました。
+      - text: 監督は先月末に辞任。いま暫定で率いるのは、元リヴァプールのディルク・カイトです。
+        image: assets/images/20261105_fenerbahce_liverpool_18y/01_w.jpg
+      - voice: ディルク・カイト
+        text: 今夜、私たちは奇跡を起こしました。
+        emph: true
+      - voice: ディルク・カイト
+        text: 自分たちを信じ続ける。
+        cont: true
+      - voice: ディルク・カイト
+        text: それは、今夜の相手のリヴァプールで学んだことです。
+        cont: true
+      - text: 今季のチャンピオンズリーグは、ここまで2分け1敗でした。
+        image: assets/images/20261105_fenerbahce_liverpool_18y/02_w.jpg
+      - text: 本大会での白星は、2008年4月以来です。
+      - text: 25分にリヴァプールが先制。29分、グリーンウッドがフリーキックで追いつきます。
+        image: assets/images/20261105_fenerbahce_liverpool_18y/04_w.jpg
+      - text: 69分にイサクが勝ち越し。73分には、ブラウンが同点ゴールを決めました。
+      - text: そして79分。ブラウンのクロスを、ムリキがヘディングで決めました。
+        image: assets/images/20261105_fenerbahce_liverpool_18y/03_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50382957/dirk-kuyt-another-miracle-istanbul-fenerbahce-liverpool
+      - https://www.soccer-king.jp/news/world/cl/20261105/2224843.html
+      - https://www.soccer-king.jp/news/world/cl/20261105/2224749.html
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915382
+  - id: iraola
+    heading: カイトのチームに負けたリヴァプールの監督は、何と言ったのか
+    tier: 報道
+    telop: イラオラ監督「不用意な失点だった」
+    say:
+      - text: カイトのチームに負けたリヴァプールのイラオラ監督は、試合後にこう話しました。
+        image: assets/images/20261105_fenerbahce_liverpool_18y/05_w.jpg
+      - voice: アンドニ・イラオラ
+        text: 不用意な失点でした。ばたついた失点でした。
+        emph: true
+      - voice: アンドニ・イラオラ
+        text: フリーキック、コーナー、ロングスロー。
+        cont: true
+      - voice: アンドニ・イラオラ
+        text: セットプレーからの失点が響きました。
+        cont: true
+      - text: リヴァプールはトルコで、これで1勝1分け7敗になりました。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50381609/liverpool-fenerbahce-andoni-iraola-uefa-champions-league
+      - https://www.liverpoolfc.com/news/andoni-iraola-fenerbahce-champions-league-press-conference
+      - https://www.liverpoolfc.com/news/liverpool-fenerbahce-champions-league-match-report
+  - id: view
+    viewpoint: true
+    heading: カイトのチームは、リヴァプールのリードを何分で消したのか
+    tier: 背景
+    telop: リヴァプールのリード、2度とも4分で消える
+    say:
+      - text: 見立てです。カイトのチームは、リヴァプールの2度のリードを、どちらも4分で消しました。
+        card: {type: table, title: リヴァプールのリードが続いた時間, columns: [先制から同点まで, 時間], rows: [[25分から29分, 4分], [69分から73分, 4分]], highlight_row: 1}
+      - text: フェネルバフチェの次の試合は25日、アウェーでのシャフタール・ドネツク戦です。
+        card: none
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915382
+      - https://www.soccer-king.jp/news/world/cl/20261105/2224749.html
+short_title: "フェネルバフチェ、CL18年7カ月ぶりの白星。カイトの言葉「奇跡」"

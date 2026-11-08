@@ -1,0 +1,145 @@
+# 取材メモ（2026年11月4日）マンU、0-2からローマに3-2で逆転。公式戦10試合ぶりの勝利。ベンチに外されていたブルーノが初めて取材に答えた（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-04。python requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約は使っていない（記事を探すのに Google ニュースの RSS の見出し一覧だけ使った）。
+# 読んだ出典:
+#   ・BBC「We don't need to save anyone's job, says Man Utd captain Fernandes」（bbc.co.uk/sport/football/articles/cqkg5dgvygr1o）本文を全部読んだ。
+#       - 0-2から3-2。9試合勝ちなし（＝10試合ぶりの勝利）。コモ戦（1-4）のあとに監督の戦術を公に批判し、ベンチに回されてから初めてメディアに話した。
+#       - ボーンマス戦（0-3）は出番なし、チェルシー戦（負け）で先発に戻った。58分のPKで反撃が始まった。32歳。
+#       - 本人（Amazon Prime への発言、BBC の書き起こし）: "We don't need to save anyone's job." "The club needed that win, the players needed that win." ...
+#         "Everyone thought that was a punishment for the words that I had. If it was, it was right. The manager is the one who makes the decisions."
+#       - マンUはプレミアで17位、9試合で1勝。CLは4試合で2勝目。
+#   ・マンU公式「Bruno sets record straight after tough period」（manutd.com）— 同じ発言のクラブの書き起こし。**台本はこちらの言い回しに合わせた（一次情報）**:
+#       "We don’t need to save anyone’s job. The club needed that win. The players needed that win. ..."
+#       "Between me and the manager, there were reports that we had cleared the air afterwards, when none of that happened. The manager made the decision to put me on the bench because I wasn’t performing that well."
+#       "Everyone felt that was a punishment for the words I’d said, and if it was, it was right. The manager is the one who makes the decisions. I have to accept them and move forward with that. ..."
+#       → 食い違い: BBC の書き起こしは「a lot of lies ... that we have cleared the air」で、和解の話し合いがあったようにも読める。クラブ公式は「話し合って和解したという報道があったが、そんなことは無かった」。
+#         → 和解の有無には触れない（読み違えやすい）。使うのは「職」「この勝利が必要」「ベンチはプレーが良くなかったから」「罰だと思われた。そうなら正しかった」「決めるのは監督」。
+#       - 公式の試合記事: 58分のPKは、最初のキックをバスケス（GK）が止めたが、ペナルティエリアへの侵入でやり直し。
+#   ・ESPN の試合データ（site.api.espn.com .../uefa.champions/summary?event=401915308）: マンU 3-2 ローマ（オールド・トラッフォード、73,747人）。
+#       11分 スーレ（ローマ）、17分 マレン（PK、ローマ）、58分 ブルーノ（PK）、83分 クーニャ、86分 クーニャ（アシスト シェイ・レイシー）。
+#       87分 クーニャに警告（得点後の喜び方＝ESPN 記事「シャツを脱いで観客席へ」）、90+1分 2枚目の警告で退場。88分 ブルーノはマウントと交代。
+#   ・ESPN の試合記事（同じ event の report）: 83分の同点はブルーノの浮き球のクロスをバレルディがバウンドを読み違え、クーニャが決めた。PKのやり直しはクリスタンテの侵入。
+#   ・サッカーキング 2026-11-04（2224270）: 得点者と分は一致。83分は「B・フェルナンデスのクロスがクリアミスもあってクーニャの足元へ」。90+1分にクーニャ退場。公式戦10試合ぶりの白星。次節は25日、アウェイでスポルティング。名前の表記（マティアス・スーレ／ドニエル・マレン／マテウス・クーニャ／シェイ・レイシー）はここに合わせた。
+# 確かめたこと: クーニャの2点（83分・86分）と退場（90+1分、2枚目の警告）は ESPN データとサッカーキングで一致＝事実。
+# 自分で数えたもの: マンUの3点のうち、ブルーノが絡んだのは2点（58分のPK・83分の同点につながったクロス）。反撃の3点は58分から86分までの28分。クーニャは2点目から5分で退場。
+# 本人の言葉: あり（上）。訳は自然な日本語に（語は足していない）。
+# 板: 山場に「コモ戦からローマ戦までのブルーノ」の表（BBC：コモ戦1-4の後に批判、ボーンマス戦0-3は出番なし、チェルシー戦で先発に戻り負け）。
+# 写真: 試合の写真は代理店（Getty。マンU公式の写真も「Manchester United via Getty Images」）しか無いので使わない。Commons（Bryan Berlin、CC BY-SA 4.0）の2026年のポルトガル代表戦の写真4枚（01・03・04・05）。本人と明記。マンUのユニフォームではない。
+# 反応: 0件（X は道具の決まりで当たれず、Reddit は requests で 403。作らない。approve は --no-voices）。
+# 前の本との重なり: 20261022_bruno_carrick_como（コモ戦後の批判の言葉「守備はスタッフの判断」）。→ 今回はその続き。批判の中身は繰り返さず「戦術を公に批判した」と一言だけ。キャリックの言葉は入れない。
+slot: match
+date: "2026年11月4日"
+format: news
+no_main: true
+people: [ブルーノ・フェルナンデス, マンチェスター・ユナイテッド, キャリック監督, マテウス・クーニャ, ローマ]
+
+short_style: Y
+short_hook_quote: 誰かの職を守る必要なんてない。
+short_question: ブルーノの言葉と逆転勝ちで、マンUはここから立て直せると思いますか。
+short_photos:
+  - assets/images/20261104_bruno_roma_comeback/01_v.jpg
+  - assets/images/20261104_bruno_roma_comeback/05_v.jpg
+  - assets/images/20261104_bruno_roma_comeback/03_v.jpg
+short_telops: []
+
+theme:
+  id: bruno_roma_comeback
+  league: england
+  league_name: チャンピオンズリーグ
+  prefix: ""
+  title: ブルーノ「誰かの職を守る必要はない」。ベンチに外された理由を、本人はどう語ったか
+  hook: ""
+  question: 監督批判のあとベンチに回されたブルーノは、逆転勝ちのあと何を語ったのか
+  takeaway: 反撃の3点は58分から86分までの28分。そのうち2点にブルーノが絡んだ（PKと同点につながったクロス）。マンUは公式戦10試合ぶりの勝利
+
+thumbnail:
+  layout: face
+  line1: ブルーノ、初めて語った
+  line2: ベンチは「罰なら正しかった」
+  tags: [ブルーノ, マンU]
+  photo: assets/images/20261104_bruno_roma_comeback/01_w.jpg
+  photos:
+    - assets/images/20261104_bruno_roma_comeback/01_w.jpg
+    - assets/images/20261104_bruno_roma_comeback/05_w.jpg
+  short_photo: assets/images/20261104_bruno_roma_comeback/01_v.jpg
+
+answer: ベンチはプレーが良くなかったから。罰だと思われたが、そうなら正しかった、決めるのは監督だ、と語った
+watch: CLの次節は25日、敵地でスポルティング戦
+
+sections:
+  - id: what
+    main: true
+    heading: ブルーノは、逆転勝ちのあと何を語ったのか
+    tier: 報道
+    telop: ブルーノ「誰かの職を守る必要なんてない」
+    say:
+      - text: マンU、0対2からローマに逆転勝ち。一時ベンチに回されたブルーノが口を開きました。
+      - voice: ブルーノ・フェルナンデス
+        text: 誰かの職を守る必要なんてない。
+        emph: true
+      - voice: ブルーノ・フェルナンデス
+        text: クラブにも、選手にも、この勝利が必要だった。
+        cont: true
+      - text: キャリック監督の職を救う勝利か、と聞かれての答えでした。
+      - voice: ブルーノ・フェルナンデス
+        text: 監督が僕をベンチに置いたのは、
+        image: assets/images/20261104_bruno_roma_comeback/04_w.jpg
+      - voice: ブルーノ・フェルナンデス
+        text: 僕のプレーが良くなかったからだ。
+        cont: true
+      - voice: ブルーノ・フェルナンデス
+        text: みんな、僕の発言への罰だと受け取った。
+        cont: true
+      - voice: ブルーノ・フェルナンデス
+        text: もしそうなら、それは正しかった。
+        image: assets/images/20261104_bruno_roma_comeback/03_w.jpg
+        emph: true
+        cont: true
+      - voice: ブルーノ・フェルナンデス
+        text: 決めるのは監督だ。
+        cont: true
+      - text: そのブルーノは58分にPKを決めて、反撃の口火を切りました。
+        card: {type: table, title: コモ戦からローマ戦までのブルーノ, columns: [試合, ブルーノ, 結果], rows: [[コモ戦, 試合後に戦術を批判, 1-4の負け], [ボーンマス戦, ベンチで出番なし, 0-3の負け], [チェルシー戦, 先発に戻る, 負け], [ローマ戦, 58分にPK, 3-2の勝ち]], highlight_row: 3}
+      - text: 監督の戦術を公に批判して外されてから、戻って2試合目のことです。
+        card: {type: table, title: コモ戦からローマ戦までのブルーノ, columns: [試合, ブルーノ, 結果], rows: [[コモ戦, 試合後に戦術を批判, 1-4の負け], [ボーンマス戦, ベンチで出番なし, 0-3の負け], [チェルシー戦, 先発に戻る, 負け], [ローマ戦, 58分にPK, 3-2の勝ち]], highlight_row: 1}
+    official: false
+    sources:
+      - https://www.bbc.co.uk/sport/football/articles/cqkg5dgvygr1o
+      - https://www.manutd.com/en/news/bruno-fernandes-old-trafford-came-alive-after-tough-period
+  - id: goals
+    heading: 0対2から、マンUの3点はどう生まれたのか
+    tier: 報道
+    telop: 58分ブルーノのPK、83分・86分クーニャ。クーニャは退場
+    say:
+      - text: 前半は、ローマが11分と17分に決めて2点をリードしました。
+        card: {type: table, title: マンU 3-2 ローマ, columns: [分, チーム, 得点], rows: [[11分, ローマ, スーレ], [17分, ローマ, マレン（PK）], [58分, マンU, ブルーノ（PK）], [83分, マンU, クーニャ], [86分, マンU, クーニャ]], highlight_row: 1}
+      - text: 58分のPKは、1本目がキーパーに止められていました。
+        card: {type: table, title: マンU 3-2 ローマ, columns: [分, チーム, 得点], rows: [[11分, ローマ, スーレ], [17分, ローマ, マレン（PK）], [58分, マンU, ブルーノ（PK）], [83分, マンU, クーニャ], [86分, マンU, クーニャ]], highlight_row: 2}
+      - text: ただ、蹴る前にローマの選手がペナルティエリアに入っていて、蹴り直しに。
+      - text: 83分は、ブルーノのクロスを相手が処理しきれず、クーニャが同点ゴール。
+        card: {type: table, title: マンU 3-2 ローマ, columns: [分, チーム, 得点], rows: [[11分, ローマ, スーレ], [17分, ローマ, マレン（PK）], [58分, マンU, ブルーノ（PK）], [83分, マンU, クーニャ], [86分, マンU, クーニャ]], highlight_row: 3}
+      - text: 86分、クーニャがもう1点決めて、逆転しました。
+        card: {type: table, title: マンU 3-2 ローマ, columns: [分, チーム, 得点], rows: [[11分, ローマ, スーレ], [17分, ローマ, マレン（PK）], [58分, マンU, ブルーノ（PK）], [83分, マンU, クーニャ], [86分, マンU, クーニャ]], highlight_row: 4}
+      - text: ただクーニャは喜び方で警告を受け、90分すぎに2枚目のイエローで退場。
+        card: none
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915308
+      - https://www.espn.com/soccer/report/_/gameId/401915308
+      - https://www.soccer-king.jp/news/world/cl/20261104/2224270.html
+  - id: view
+    viewpoint: true
+    heading: ブルーノは、逆転の3点のうちいくつに絡んだのか
+    tier: 背景
+    telop: 反撃の3点は28分間。ブルーノが絡んだのは2点
+    say:
+      - text: 見立てです。マンUの3点は、58分から86分までの28分で生まれました。
+      - text: そのうち2点に、ブルーノが絡んでいます。PKと、同点につながったクロスです。
+        emph: true
+      - text: それでもマンUは、国内のプレミアリーグでは9試合で1勝、17位にいます。
+      - text: チャンピオンズリーグの次は25日、敵地でスポルティングと戦います。
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915308
+      - https://www.bbc.co.uk/sport/football/articles/cqkg5dgvygr1o
+      - https://www.soccer-king.jp/news/world/cl/20261104/2224270.html
+short_title: "ブルーノ「誰かの職を守る必要はない」。ベンチに外された理由を、本人はどう語ったか"
