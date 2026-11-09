@@ -2,10 +2,10 @@
 
 このファイルは `growth-loop` ワークフローが自動生成している。手で編集しても次回上書きされる。
 
-- 最終更新: 2026-11-02
-- 平均成熟度: **80** `▁▄▁▇███▇▆▅▅▅▅`
-- これまでに解決: **122** 件
-- 未対応: **71** 件（ほかに判断待ち 1 件）
+- 最終更新: 2026-11-09
+- 平均成熟度: **80** `▁▄▁▇███▇▆▅▅▅▅▅`
+- これまでに解決: **123** 件
+- 未対応: **70** 件（ほかに判断待ち 1 件）
 
 ## プロジェクト別の成熟度
 
@@ -29,7 +29,7 @@
 | `workspace/projects/baseball-manager` | Flutter | 85 | ±0 | 3 |
 | `workspace/projects/rekishi-chiso` | Python | 85 | ±0 | 7 |
 | `workspace/projects/ipa-kakomon` | Python | 78 | ±0 | 3 |
-| `workspace/projects/basketball-career` | Flutter | 75 | ±0 | 3 |
+| `workspace/projects/basketball-career` | Flutter | 75 | ±0 | 2 |
 | `workspace/projects/dailyquarry-home` | Python | 75 | ±0 | 3 |
 | `workspace/projects/tenbin` | Flutter | 75 | ±0 | 6 |
 | `workspace/projects/working-holiday` | Python | 75 | ±0 | 4 |
@@ -44,16 +44,16 @@
 
 1. **[高] README が無い** — `workspace/projects/basketball-career`
    - README.md に「目的」「動かし方」「構成」の3節を書く。長さは要らない。 参考: workspace/projects/soccer-manager が既に同じことをやっているので、そこから写すのが早い。
-2. **[高] README が無い** — `workspace/projects/tsuruhashi`
+2. **[高] README が無い** — `workspace/projects/youth-academy`
    - README.md に「目的」「動かし方」「構成」の3節を書く。長さは要らない。 参考: workspace/projects/soccer-manager が既に同じことをやっているので、そこから写すのが早い。
-3. **[高] 環境変数を使っているのに .gitignore が .env を除外していない** — `workspace/projects/tsuruhashi`
+3. **[高] README が無い** — `workspace/projects/tsuruhashi`
+   - README.md に「目的」「動かし方」「構成」の3節を書く。長さは要らない。 参考: workspace/projects/soccer-manager が既に同じことをやっているので、そこから写すのが早い。
+4. **[高] 環境変数を使っているのに .gitignore が .env を除外していない** — `workspace/projects/tsuruhashi`
    - `.gitignore` に `.env` を追加する。1行で終わる割に事故の期待値が大きい。
-4. **[高] README が無い** — `workspace/projects/youth-academy`
-   - README.md に「目的」「動かし方」「構成」の3節を書く。長さは要らない。 参考: workspace/projects/soccer-manager が既に同じことをやっているので、そこから写すのが早い。
 5. **[高] README が無い** — `workspace/projects/working-holiday`
    - README.md に「目的」「動かし方」「構成」の3節を書く。長さは要らない。 参考: workspace/projects/soccer-manager が既に同じことをやっているので、そこから写すのが早い。
 
-詳細と依頼文は `docs/growth/2026-11-02.md` を見る。
+詳細と依頼文は `docs/growth/2026-11-09.md` を見る。
 
 ## あなたの判断が要るもの
 
@@ -62,6 +62,10 @@
 ## 保留中（理由あり）
 
 - `workspace/projects/cohabitation-budget` 雛形だけ作られて中身が無い — index.html 1枚で完結させることが価値の完成品。README に「完成・運用中／構成を分割しない」と明記済み
+
+## 直近で解決したもの
+
+- `workspace/projects/basketball-career` ドキュメントが存在しないファイルを載せている
 
 ## 使い方
 
