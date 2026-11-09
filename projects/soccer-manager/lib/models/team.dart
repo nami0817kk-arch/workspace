@@ -110,6 +110,12 @@ class Team {
   /// 個別方針を設定していない選手に適用されるチーム既定のトレーニング方針。
   TrainingFocus defaultTrainingFocus;
 
+  /// 週の練習枠([weeklyMenuSlots]個)に入れたメニュー。nullなら従来どおり
+  /// [defaultTrainingFocus]を1週まるごと行う。個別方針・ローテーションを
+  /// 持つ選手はこちらではなく、そちらを優先する。
+  List<TrainingFocus>? weeklyMenu;
+  static const int weeklyMenuSlots = 5;
+
   /// トレーニングの強度(軽め/通常/追い込み)。成長速度と疲労・怪我リスクの
   /// トレードオフを調整する。
   TrainingIntensity trainingIntensity;
@@ -217,6 +223,7 @@ class Team {
     this.formation = Formation.f442,
     List<String>? startingXI,
     this.defaultTrainingFocus = TrainingFocus.balanced,
+    this.weeklyMenu,
     this.trainingIntensity = TrainingIntensity.normal,
     this.trainingDayOfWeek = DateTime.tuesday,
     this.autoTrainingEnabled = false,
@@ -320,6 +327,8 @@ class Team {
         },
         'startingXI': startingXI,
         'defaultTrainingFocus': defaultTrainingFocus.name,
+        if (weeklyMenu != null)
+          'weeklyMenu': [for (final f in weeklyMenu!) f.name],
         'trainingIntensity': trainingIntensity.name,
         'trainingDayOfWeek': trainingDayOfWeek,
         'autoTrainingEnabled': autoTrainingEnabled,
@@ -377,6 +386,10 @@ class Team {
           json['defaultTrainingFocus'] as String?,
           TrainingFocus.balanced,
         ),
+        weeklyMenu: (json['weeklyMenu'] as List?)
+            ?.map((e) => enumFromName(
+                TrainingFocus.values, e as String?, TrainingFocus.balanced))
+            .toList(),
         trainingIntensity: enumFromName(
           TrainingIntensity.values,
           json['trainingIntensity'] as String?,
