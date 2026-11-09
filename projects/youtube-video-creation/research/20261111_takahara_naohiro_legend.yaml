@@ -1,0 +1,454 @@
+# 高原直泰（元日本代表 FW）の紹介。シリーズ「レジェンドの紹介（日本）」2026-11-11。型は 11/7 の中澤佑二・11/9 の槙野智章と同じ8節の変形。
+# **情報の時点は 2026-11-06。**年齢は当時のものだけ（生年月日 1979-06-04 から計算）。いまの仕事（沖縄SVの代表・監督、コーヒー）は言わない。
+# **FotMob・DataMB・FBref・Sofascore・Transfermarkt は不使用**。数字は DFB の記録（datencenter.dfb.de）・ゲキサカ／サッカーキングの引退の記事（2023-08-31）・
+#   Number（2007-04-05、木崎伸也）・サッカーキング（2026-09-08）・英語版/日本語版 Wikipedia の成績表と大会の記事だけ。
+# **病気（2002年W杯の前の病気）は入れない**（病気・私生活は入れない決まり）。2002年W杯は「出られなかった」とだけも言わない（理由を言わずに置くと聞く人が引っかかる）。私生活・CM も入れない。
+#
+# **題材を選んだ理由**：直近30日に未出の、欧州で戦った日本人FWの大物。ブンデスリーガ135試合25得点（DFB）。2006年12月に**ブンデスリーガで日本人初のハットトリック**。
+#   今季（2026-27）の開幕節で鈴木唯人（フライブルク）がハットトリックを決め、「2006年の高原直泰（フランクフルト）、2015年の武藤嘉紀（マインツ）以来、3人目」と報じられた（サッカーキング 2026-09-08）＝いま見る理由。
+#   日本代表57試合23得点、2006年W杯、2007年アジアカップ得点王。ヒットの条件（日本代表・W杯・本人の言葉）に当たる。
+#   11/7 の担当は「11/6 のハンブルガーSV・10/24 のフランクフルトのクラブ紹介に名前と節が出ている」ので外したが、どちらもクラブが主役の回で、高原は1行ずつ（「2003年には、高原直泰が加わります」「2年で12得点」）。
+#   11/11 なら HSV の回から5日あく。この回は**HSVとフランクフルトの差（なぜ点が増えたか）**に絞り、クラブの歴史は話さない。
+#   候補から外したもの：名波浩（現役時代の写真が無い）、柳沢敦・楢崎正剛（写真が無い）、中山雅史（「引退」と言っていない）、細貝萌（写真が小さい）、本田圭佑・香川真司（現役）。
+# **重なりの確認（2026-11-06）**：scripts/ を「高原」で grep → bd_hamburg（11/6）・bd_frankfurt（10/24）・bd_mainz（10/28）・okazaki_shinji_legend（10/27）に1行ずつ名前が出るだけ。題・サムネに高原の名前のある本は無い。
+#   research/posted.json に takahara を含む本は無い。research/20261109_picks.txt の他の担当（11/11 はマレン・ディアスとガクポ・メスタージャ・アトレティコのユニフォーム）とも重ならない。
+# **引退の確認**：沖縄SV が 2023-08-31 に「今季限りで選手を引退」と発表（ゲキサカ・サッカーキング 2023-08-31。クラブ公式の記事 okinawasv.com/news/detail/id/1325 は 503 で読めなかった）。英語版・日本語版 Wikipedia も同じ。→ **現役ではない**。
+#
+# **数字の出どころ**
+# - 生年月日 1979-06-04・静岡県三島市（日本語版・英語版）。FW。
+# - 1998年 ジュビロ磐田に入る（両版）。2001年8月 ボカ・ジュニアーズへ（期限付き）、アルゼンチン1部でプレーした初の日本人（英語版）。2002年 J1 で26得点、得点王と最優秀選手（英語版の表 27試合26得点・日本語版）。
+# - ブンデスリーガ（DFB の記録）：HSV 2002/03 16-3、03/04 29-2、04/05 31-7、05/06 21-1 ＝97試合13得点。フランクフルト 06/07 30-11、07/08 8-1 ＝38試合12得点。合計135試合25得点。
+# - ブンデスリーガ初出場 2003年1月 ハノーファー96戦、奥寺康彦・尾崎加寿夫に続く3人目の日本人（英語版、Japan Times 2003-01-27 を典拠）。初得点 2003-02-09 バイエルン戦（日本語版の略歴）。
+# - ハットトリック：2006-12-03 第15節 アレマニア・アーヘン 2対3 フランクフルト（14分・44分・62分、3点とも高原。英語版 2006-07 Eintracht Frankfurt season の試合記録）。日本人初（英語版・日本語版・サッカーキング 2026-09-08）。
+# - 2006-07 フランクフルト：リーグ11得点・公式戦17得点でチーム最多（英語版のシーズンの記事）。チームはリーグ14位で残留（同）。チームのリーグ得点は46（同）＝高原が約4分の1（自分で割った 11÷46＝0.24）。
+# - 日本代表 57試合23得点（サッカーキング 2023-08-31、英語版）。2000年2月デビュー（両版）。2000年アジアカップ優勝で5得点（英語版 2000 AFC Asian Cup の得点者）。2006年W杯 3試合出場（英語版）。
+#   2007年アジアカップ 4得点で得点王、日本人初（英語版・日本語版）。2008年5月が最後の招集（日本語版）。
+# - 引退：2023年シーズン限り。発表は 2023-08-31、44歳（ゲキサカ・サッカーキング）。
+# - 1試合あたりの得点（自分で割った）：HSV 13÷97＝約0.13、フランクフルト1年目 11÷30＝約0.37。約2.7倍。
+# - 本人の言葉（原文のまま、短く切る）：
+#   ①Number 2007-04-05「試合に出られる確証があるので、１週間の練習のなかで今日はガンガンやるとか、試合が近づいてきたら緩めるとか、コントロールできるようになった。」「だから、試合のときにトップに持っていける。」
+#   ②同「ハンブルクのときは毎日１００％でやんなきゃいけなくて、逆に試合のときにコンディションが悪くなってましたから。その差は大きいですよ」
+#   ③同「まあ、ベストゴールよりも、今シーズン何点取れるかが大事ですから。」
+#   ④ゲキサカ 2023-08-31（クラブを通じたコメント）「ここまで多くの方々に支えられて選手を続けることができ、幸せな選手生活でした。」
+#
+# **入れなかったもの**：2002年W杯の前の病気、沖縄SVの経営・コーヒー、浦和で監督と合わなかった話、清水・東京V・相模原の細かい経歴、K リーグ、移籍金と年俸、
+#   ボカがクラブの経済の事情で契約を切った話（日本語版だけ）、「スシボンバー」の愛称（出典の文脈を確かめられない）、2006年W杯の無得点の評価、ドイツ戦の2得点（日本語版だけ）。
+# **写真**：assets/images/20261111_takahara_naohiro_legend/（Commons だけ。報道写真は Getty・AFLO ばかりだった：ゲキサカの主写真は ©Getty Images、Sportiva の主写真は photo by AFLO）
+#   01 = 「Ito and Takahara, Omiya vs Shimizu 2012.jpg」（norio nakayama、CC BY-SA 2.0、5184x3456→1920、2012-06-30 清水エスパルス。右の笑っている人が高原、中央は伊藤翔）
+#   01_w = 01 の元の写真から高原のまわりを16:9で切った1枚（CC BY-SA なので切ってよい）
+#   02 = 「Takahara hannover.jpg」（2006年 HSV、800x600）は小さく、本編2.4倍・ショート3倍超に伸びるので**使わない**（2026-11-06 指示）。代わりに紋章の差し込み（日本・フランクフルト）と 01_c を使う
+#   01_c = 01 の元の写真（5184x3456）から本人の上半身を1280x720で切った1枚
+#   04 = 「Takahara Naohiro, Omiya vs Shimizu 2012 (cropped).jpg」（norio nakayama、CC BY-SA 2.0、941x1658、01 と同じ日）
+#   ほかに当たったもの：イラン戦2005（MEHR の透かしが入るので使わない）、琉球新報（引退後の農業の会見で使わない）。
+watch: 毎日、数字でサッカーを読み解きます
+title: 高原直泰は、どんな選手だった？ ドイツで日本人初のハットトリックを決めるまで
+format: news
+short_title: 高原直泰は、どんな選手だった？
+series: レジェンドの紹介
+topic: 高原直泰
+date: 2026年11月6日
+slot: other_1
+people:
+- 高原直泰
+theme:
+  id: legend_takahara_naohiro
+  league: germany
+  league_name: ブンデスリーガ
+  kind: other
+  topic: 高原直泰
+  title: 高原直泰は、どんな選手だった？ ドイツで日本人初のハットトリックを決めるまで
+  question: ハンブルクで4年に13点だった高原直泰は、なぜフランクフルトの1年目に11点を取り、ブンデスリーガで日本人初のハットトリックを決められたのか
+  takeaway: 高原直泰のブンデスリーガの得点は、ハンブルクで97試合13点（1試合あたり約0.13）、フランクフルトの1年目は30試合11点（約0.37）。約2.7倍。本人は「試合に出られる確証」で練習の強さを調整できたことを差に挙げた。日本人のハットトリックは、その20年後に鈴木唯人が3人目になった
+  nameplate: 高原直泰｜元日本代表 FW
+  opening_image: assets/images/20261111_takahara_naohiro_legend/01_w.jpg
+  end_bg: assets/images/20261111_takahara_naohiro_legend/01_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+  outro_title: 毎日、数字でサッカーを読み解きます
+thumbnail:
+  line1: 高原直泰、代表57戦23点
+  line2: ドイツで日本人初の1試合3点
+  tags:
+  - フランクフルト
+  photo: assets/images/20261111_takahara_naohiro_legend/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261111_takahara_naohiro_legend/01_w_v.jpg
+sections:
+- id: hook
+  heading: ドイツで日本人が初めてハットトリックを決めたのは、いつだったのか
+  tier: 報道
+  telop: 2006年12月3日、アーヘン対フランクフルト
+  card: &hookcard
+    type: stats
+    title: 高原直泰 元日本代表FW
+    items:
+    - - '3'
+      - 点
+      - 2006年12月 アーヘン戦
+    - - '135'
+      - 試合
+      - ブンデスリーガの出場
+    - - '25'
+      - 得点
+      - ブンデスリーガのゴール
+    focus: 0
+  say:
+  - text: 2006年12月3日、ドイツ西部のアーヘン。
+    image: assets/images/20261111_takahara_naohiro_legend/01_w.jpg
+    card: none
+  - text: フランクフルトが、アウェーで試合に臨んでいました。
+    card: none
+  - text: 14分、44分、62分。フランクフルトの3点は、1人の日本人がすべて決めます。
+    card: none
+    emph: true
+  - text: 試合は3対2の勝ち。ブンデスリーガで日本人のハットトリックは、これが初めてです。
+    card: none
+  - text: 今シーズンの開幕節、鈴木唯人がブレーメン相手に3点を取りました。
+    card: none
+  - text: これで、日本人では3人目です。
+    card: none
+  - text: その1人目が、高原直泰です。
+    image: assets/backgrounds/cut_フランクフルト.png
+    card: {<<: *hookcard, focus: 0}
+    callword: 高原直泰
+  - text: ドイツで135試合に立ち、25点を取ったストライカーでした。
+    image: assets/images/20261111_takahara_naohiro_legend/01_w.jpg
+    card: {<<: *hookcard, focus: 2}
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/2006%E2%80%9307_Eintracht_Frankfurt_season
+  - https://www.soccer-king.jp/news/japan/national/20260908/2202063.html
+  - https://datencenter.dfb.de/en/data-center/people/naohiro-takahara/player
+- id: data
+  heading: 高原直泰は、どこでプレーし、どんな数字を残したのか
+  tier: 報道
+  telop: 高原直泰の基礎DATA
+  card: &datacard
+    type: table
+    title: 高原直泰
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 生年月日
+      - 1979年6月4日・静岡県生まれ
+    - - ポジション
+      - フォワード
+    - - 海外のクラブ
+      - ボカ → ハンブルガーSV → フランクフルト
+    - - 日本代表
+      - 57試合23得点（2000〜2008年）
+    - - W杯
+      - 2006年
+    - - 引退
+      - 2023年シーズン限り（44歳）
+    highlight_row: 0
+  say:
+  - text: 高原直泰の生まれは、1979年6月4日。静岡県三島市の出身です。
+    image: assets/images/20261111_takahara_naohiro_legend/01_w.jpg
+    card: {<<: *datacard, highlight_row: 0}
+  - text: 海外のクラブは、ボカ、ハンブルガーSV、フランクフルトの3つです。
+    card: {<<: *datacard, highlight_row: 2}
+  - text: 日本代表では57試合で23点。2006年のワールドカップにも出ています。
+    card: {<<: *datacard, highlight_row: 3}
+  - text: 引退は2023年。プロとして26年、ゴールを狙い続けました。
+    image: assets/backgrounds/cut_日本.png
+    card: none
+  quotes_from: []
+  sources:
+  - https://ja.wikipedia.org/wiki/%E9%AB%98%E5%8E%9F%E7%9B%B4%E6%B3%B0
+  - https://en.wikipedia.org/wiki/Naohiro_Takahara
+  - https://web.gekisaka.jp/news/soccer/detail/?391008-391008-fl
+  - https://www.soccer-king.jp/news/japan/20230831/1804368.html
+- id: road
+  heading: 磐田の点取り屋は、どうやってドイツにたどり着いたのか
+  tier: 報道
+  telop: 磐田、ボカ、そしてハンブルク
+  card: &roadcard
+    type: timeline
+    title: 高原直泰の歩み
+    rows:
+    - - 1998年
+      - ジュビロ磐田でプロに
+    - - 2001年8月
+      - アルゼンチンのボカへ
+    - - 2002年
+      - J1で26得点、得点王とMVP
+    - - 2003年1月
+      - ハンブルガーSVでブンデスリーガ初出場
+    highlight_row: 0
+  say:
+  - text: 高原直泰は1998年、ジュビロ磐田でプロになりました。
+    image: assets/images/20261111_takahara_naohiro_legend/01_w.jpg
+    card: {<<: *roadcard, highlight_row: 0}
+  - text: 2000年には日本代表でアジアカップを制し、自身も5点を挙げます。
+    card: none
+  - text: 2001年、アルゼンチンの名門ボカ・ジュニアーズへ。
+    card: {<<: *roadcard, highlight_row: 1}
+  - text: アルゼンチン1部でプレーした、初めての日本人でした。
+    card: {<<: *roadcard, highlight_row: 1}
+  - text: 翌年は磐田に戻り、J1で26得点。得点王と最優秀選手を同時に手にします。
+    card: {<<: *roadcard, highlight_row: 2}
+  - text: そして2003年1月、ドイツのハンブルガーSVでブンデスリーガに立ちました。
+    image: assets/backgrounds/cut_ハンブルガーSV.png
+    card: {<<: *roadcard, highlight_row: 3}
+  - text: 日本人では、奥寺康彦、尾崎加寿夫に続く3人目です。
+    image: assets/images/20261111_takahara_naohiro_legend/01_w.jpg
+    card: none
+  - text: 初めてのゴールは、ミュンヘンでのバイエルン戦でした。
+    card: none
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Naohiro_Takahara
+  - https://ja.wikipedia.org/wiki/%E9%AB%98%E5%8E%9F%E7%9B%B4%E6%B3%B0
+  - https://en.wikipedia.org/wiki/2000_AFC_Asian_Cup
+- id: hamburg
+  heading: ハンブルクの4年間で、高原の点はなぜ伸びなかったのか
+  tier: 報道
+  telop: ハンブルガーSV、4シーズンで13得点
+  card: &hsvcard
+    type: table
+    title: ブンデスリーガの高原直泰
+    columns:
+    - シーズン
+    - クラブ
+    - 試合
+    - 得点
+    rows:
+    - - 2002/03
+      - ハンブルガーSV
+      - '16'
+      - '3'
+    - - 2003/04
+      - ハンブルガーSV
+      - '29'
+      - '2'
+    - - 2004/05
+      - ハンブルガーSV
+      - '31'
+      - '7'
+    - - 2005/06
+      - ハンブルガーSV
+      - '21'
+      - '1'
+    - - 2006/07
+      - フランクフルト
+      - '30'
+      - '11'
+    highlight_row: 0
+  say:
+  - text: ハンブルクでは4シーズン。リーグ戦97試合で、13点でした。
+    image: assets/images/20261111_takahara_naohiro_legend/01_c.jpg
+    card: {<<: *hsvcard, highlight_row: 0}
+  - text: いちばん多かったのは、2004年から2005年にかけてのシーズンの7点。
+    card: {<<: *hsvcard, highlight_row: 2}
+  - text: 翌シーズンは、1点に終わります。
+    card: {<<: *hsvcard, highlight_row: 3}
+  - text: 2006年、同じブンデスリーガのフランクフルトへ移りました。
+    image: assets/backgrounds/cut_フランクフルト.png
+    card: none
+  - text: すると、数字ががらりと変わります。
+    image: assets/images/20261111_takahara_naohiro_legend/01_w.jpg
+    card: none
+  - text: 1年目から、30試合で11点。チームで最も多い数字です。
+    card: {<<: *hsvcard, highlight_row: 4}
+    emph: true
+  - text: 何が変わったのか。シーズンの途中で、本人が理由を明かしています。
+    image: assets/images/20261111_takahara_naohiro_legend/01_w.jpg
+    card: none
+  - voice: 高原直泰
+    text: ハンブルクのときは、毎日100％でやんなきゃいけなくて、
+    card: none
+  - voice: 高原直泰
+    text: 逆に試合のときに、コンディションが悪くなってましたから。
+    card: none
+    cont: true
+  - voice: 高原直泰
+    text: その差は大きいですよ。
+    card: none
+    cont: true
+  quotes_from:
+  - https://number.bunshun.jp/articles/-/12073
+  sources:
+  - https://datencenter.dfb.de/en/data-center/people/naohiro-takahara/player
+  - https://number.bunshun.jp/articles/-/12073
+  - https://en.wikipedia.org/wiki/2006%E2%80%9307_Eintracht_Frankfurt_season
+- id: aachen
+  heading: アーヘンでの3点は、どんな試合で生まれたのか
+  tier: 報道
+  telop: 2006年12月3日、アーヘン2対3フランクフルト
+  main: true
+  card: &aachencard
+    type: table
+    title: 2006年12月3日 アーヘン対フランクフルト
+    columns:
+    - 時間
+    - できごと
+    rows:
+    - - 14分
+      - 高原が先制、0対1
+    - - 32分
+      - アーヘンが同点、1対1
+    - - 44分
+      - 高原が勝ち越し、1対2
+    - - 62分
+      - 高原が3点目、1対3
+    - - 80分
+      - アーヘンが1点返す、2対3
+    highlight_row: 0
+  say:
+  - text: 2006年12月のアーヘン戦。高原直泰は、フランクフルトに移って半年でした。
+    image: assets/images/20261111_takahara_naohiro_legend/01_w.jpg
+    card: none
+  - voice: 高原直泰
+    text: 試合に出られる確証があるので、
+    card: none
+  - voice: 高原直泰
+    text: 練習の中で、今日はガンガンやるとか、
+    card: none
+    cont: true
+  - voice: 高原直泰
+    text: 試合が近づいてきたら緩めるとか、
+    card: none
+    cont: true
+  - voice: 高原直泰
+    text: コントロールできるようになった。
+    card: none
+    cont: true
+  - voice: 高原直泰
+    text: だから、試合のときにトップに持っていける。
+    card: none
+    cont: true
+    emph: true
+  - text: その言葉どおりの試合でした。14分、高原直泰が先制します。
+    card: {<<: *aachencard, highlight_row: 0}
+  - text: 32分に追いつかれますが、44分、また決めます。
+    card: {<<: *aachencard, highlight_row: 2}
+  - text: 62分、3点目。ブンデスリーガで日本人初のハットトリックです。
+    card: {<<: *aachencard, highlight_row: 3}
+    emph: true
+  - text: 80分に1点を返されましたが、3対2で逃げ切り。フランクフルトの勝ちです。
+    card: {<<: *aachencard, highlight_row: 4}
+  - text: このシーズン、リーグで11点。チームはリーグ14位で、1部に残りました。
+    image: assets/backgrounds/cut_フランクフルト.png
+    card: none
+  quotes_from:
+  - https://number.bunshun.jp/articles/-/12073
+  sources:
+  - https://en.wikipedia.org/wiki/2006%E2%80%9307_Eintracht_Frankfurt_season
+  - https://number.bunshun.jp/articles/-/12073
+  - https://ja.wikipedia.org/wiki/%E9%AB%98%E5%8E%9F%E7%9B%B4%E6%B3%B0
+- id: japan
+  heading: 日本代表で、高原はどんな点取り屋だったのか
+  tier: 報道
+  telop: 日本代表57試合23得点
+  card: &jpcard
+    type: timeline
+    title: 日本代表の高原直泰
+    rows:
+    - - 2000年
+      - アジアカップ優勝、5得点
+    - - 2006年
+      - ドイツW杯、3試合に出場
+    - - 2007年
+      - アジアカップで4得点、得点王
+    - - 2008年
+      - 最後の代表戦
+    highlight_row: 0
+  say:
+  - text: 高原直泰の日本代表での23点は、2000年から2008年までのものです。
+    image: assets/backgrounds/cut_日本.png
+    card: none
+  - text: 21歳のアジアカップで5点。優勝の力になりました。
+    image: assets/images/20261111_takahara_naohiro_legend/01_w.jpg
+    card: {<<: *jpcard, highlight_row: 0}
+  - text: ドイツでプレーしていた2006年には、そのドイツでのワールドカップに出ます。
+    card: {<<: *jpcard, highlight_row: 1}
+  - text: そしてフランクフルトで11点を取った直後の2007年、アジアカップで4点。
+    card: {<<: *jpcard, highlight_row: 2}
+  - text: 日本人で初めて、アジアカップの得点王になりました。
+    card: none
+    emph: true
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Naohiro_Takahara
+  - https://en.wikipedia.org/wiki/2007_AFC_Asian_Cup
+  - https://ja.wikipedia.org/wiki/%E9%AB%98%E5%8E%9F%E7%9B%B4%E6%B3%B0
+- id: after
+  heading: 44歳まで続けた高原は、どんな言葉で現役を終えたのか
+  tier: 報道
+  telop: 2023年8月、今季限りでの引退を発表
+  say:
+  - text: 2008年に日本へ戻ったあとも、いくつものクラブで点を取り続けました。
+    image: assets/images/20261111_takahara_naohiro_legend/01_c.jpg
+    card: none
+  - text: 2023年8月、そのシーズン限りの引退を発表しました。
+    card: none
+  - text: 最後に残した言葉です。
+    card: none
+  - voice: 高原直泰
+    text: ここまで多くの方々に支えられて選手を続けることができ、
+    card: none
+  - voice: 高原直泰
+    text: 幸せな選手生活でした。
+    card: none
+    cont: true
+  quotes_from:
+  - https://web.gekisaka.jp/news/soccer/detail/?391008-391008-fl
+  sources:
+  - https://web.gekisaka.jp/news/soccer/detail/?391008-391008-fl
+  - https://www.soccer-king.jp/news/japan/20230831/1804368.html
+- id: view
+  heading: ハンブルクとフランクフルトで、高原の点はどれだけ変わったのか
+  tier: 背景
+  telop: 1試合あたりの得点は、約2.7倍に
+  viewpoint: true
+  card: &viewcard
+    type: table
+    title: ブンデスリーガの高原直泰
+    columns:
+    - クラブ
+    - 試合
+    - 得点
+    - 1試合あたり
+    rows:
+    - - ハンブルガーSV（4季）
+      - '97'
+      - '13'
+      - 約0.13
+    - - フランクフルト（1季目）
+      - '30'
+      - '11'
+      - 約0.37
+    highlight_row: 0
+  say:
+  - text: 最後に、ドイツでの数字を並べます。
+    image: assets/images/20261111_takahara_naohiro_legend/01_c.jpg
+    card: none
+  - text: ハンブルクの4シーズンは、1試合あたり約0.13点。
+    image: assets/images/20261111_takahara_naohiro_legend/01_w.jpg
+    card: {<<: *viewcard, highlight_row: 0}
+  - text: フランクフルトの1年目は、約0.37点です。
+    card: {<<: *viewcard, highlight_row: 1}
+  - text: 同じリーグで、点の取り方は約2.7倍になりました。
+    card: {<<: *viewcard, highlight_row: 1}
+    mark:
+      kind: circle
+      row: 1
+      col: 1試合あたり
+    emph: true
+  - text: チームのリーグ戦の46点のうち、およそ4分の1が高原直泰のゴールでした。
+    card: none
+  - text: 試合に出続けられるから、練習の強さを自分で決められた。
+    image: assets/images/20261111_takahara_naohiro_legend/01_w.jpg
+    card: none
+  - text: そして試合の日に、いちばん良い状態をつくれた。
+    card: none
+  - text: その答えが、アーヘンでの3点でした。
+    card: none
+  - text: 日本人の2人目が出るまで9年、3人目の鈴木唯人までは20年かかっています。
+    card: none
+  quotes_from: []
+  sources:
+  - https://datencenter.dfb.de/en/data-center/people/naohiro-takahara/player
+  - https://en.wikipedia.org/wiki/2006%E2%80%9307_Eintracht_Frankfurt_season
+  - https://www.soccer-king.jp/news/japan/national/20260908/2202063.html

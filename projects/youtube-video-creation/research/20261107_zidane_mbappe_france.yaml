@@ -1,0 +1,126 @@
+# 取材メモ（2026年11月7日）ジダン監督（フランス代表）「ムバッペを好きな位置に置くかもしれない」。メンバー発表の会見（ニュースのショート。見せ方 Y＝ジダン監督の言葉から始める）
+# 取材: 2026-11-07。WebFetch と python requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。
+# 前提の確認（ジダンが代表監督か・いつ発表か）:
+#   ・FFF 公式（fff.fr）は 403 で読めなかった（WebFetch・requests とも）。公式には当たれていない。
+#   ・Foot Mercato（フランスの報道）2本の本文を全部読んだ。
+#       「Zidane détaille les contours de sa deuxième liste」: 「ジネディーヌ・ジダンは、金曜（11月6日）にフランス代表監督としての2回目のリストを発表した。54歳」。
+#         会見で質問に答えた。欠場: デンベレ・マヌ・コネ・サリバ・クンデ・ラクロワ・アクリウシュ・レプール。初招集はパジス（パリFC、23歳）。復帰はチュアメニ・ギュスト・マルクス・テュラム。
+#         エルナンデス（PSG）は外れた。「トップ64人の名簿に入っていた。扉は開いている」。
+#       「revivez l'annonce de la liste」: 11月12日にイタリア（アウェー）、15日にトルコ戦。「準々決勝進出を決めるため」（Ligue des nations）。
+#   ・Marca（スペイン紙）2026-11-06 21:32 CET「Zidane: ¿Mbappé? Puede que le ponga en su posición favorita...」。本文は全部読んだ（ジダンの発言は会見。スペイン語に訳されたもの）。
+#       "Es un jugador que puede jugar en varias posiciones, puede que le ponga en la suya favorita, en punta, no hay ningún problema con ello. Cuando convoco a un jugador es para que juegue en su posición natural, pero Kylian ha jugado en varias", dijo 'Zizou' en rueda de prensa.
+#       見出し下の小見出し: "Puede jugar en distintas posiciones"。
+#       地の文: ムバッペは「ジダンの初陣のトルコ戦で、点を取ったあとに負傷」し、直前の代表ウィークは「3試合を欠場」。今回リストに戻った。位置は「中央（en punta）か、サイド（banda）か」まだ本人は知らない。
+#       → 台本の言葉は、ジダンのフランス語の会見が Marca でスペイン語になったものを、私が日本語にした。語順はなぞらず、日本語として通るように直した。
+#         （訳の連鎖: フランス語→スペイン語→日本語。「en punta」は「センターフォワード（最前線の先端）」と訳した）
+# ESPN の試合データ（site.api.espn.com .../uefa.nations/summary）:
+#   ・401861053 2026-09-25 トルコ 0-1 フランス: 54分 ムバッペ（アシスト オリーズ）、59分 ムバッペ→ドゥエ。先発 4-3-3: 左FW(11)ムバッペ・中央FW(9)デンベレ・右FW(10)オリーズ。
+#   ・401861081 09-28 ベルギー 0-1 フランス／401861103 10-02 フランス 1-1 イタリア／401861129 10-05 フランス 4-1 ベルギー: ムバッペは3試合ともメンバー表に名前が無い（＝出ていない）。
+#   ・日程 scoreboard: 11-12 19:45Z France at Italy（401861151）／11-15 19:45Z Türkiye at France（401861177）。
+# 自分で数えたもの: 初戦の3トップのうち、今回のリストに入らなかったのはデンベレ（中央）。ムバッペは初戦の後、3試合出ていない（ESPN の出場者名簿で確認。理由の「負傷」は Marca）。
+# 食い違い: 特になし。ジダンの発言の元言語（フランス語）の原文は見つけられなかった（Marca のスペイン語訳だけ）。
+# 前の本との重なり: scripts/20261105_real_aek_mbappe_6（レアルのゴール）・20261027_mbappe_second_madrid_back・20261024_team_france（代表紹介）。research/covered.yaml の zidane_first_squad（9/19）・zidane_mbappe_left（9/25 電話）・zidane_debut（9/26 初陣）。
+#   → 今回の初出: 2回目のメンバー発表・ムバッペの起用位置についての発言。電話の話・初陣の試合の中身（1-0の経過）は繰り返さない（初戦は「54分に点・59分交代」だけ）。
+# 本人の言葉: ジダン監督の発言（Marca が会見を引用）。Y。
+# 反応: 0件（作らない）。
+# 写真: assets/images/20261107_zidane_mbappe_france/（credits.json）。01〜03=ジダン（Foot Mercato の記事の主写真。03は会見の写真）、04=ドゥエ（Foot Mercato。PSG のユニフォーム。使わない）、05=ムバッペ（ESPN 記事の主写真、レアルのユニフォーム）。
+#   Marca の主写真は会見動画のコマで字幕が焼き込まれていたので外した。
+slot: other_2
+date: "2026年11月7日"
+format: news
+no_main: true
+people: [ジダン監督, ムバッペ, フランス代表, テュラム, デンベレ]
+
+short_style: Y
+short_hook_quote: 本人が好きな、センターフォワードに置くかもしれません。
+short_photos:
+  - assets/images/20261107_zidane_mbappe_france/02_v.jpg
+  - assets/images/20261107_zidane_mbappe_france/05_v.jpg
+  - assets/images/20261107_zidane_mbappe_france/03_v.jpg
+short_question: ムバッペは12日のイタリア戦で、中央と左のどちらで先発すると思いますか。
+short_telops: []
+
+theme:
+  id: zidane_mbappe_france
+  league: france
+  league_name: フランス代表
+  prefix: ""
+  title: ジダン監督、ムバッペの起用位置に言及。「好きなポジションに置くかもしれない」
+  hook: ""
+  question: ジダン監督はメンバー発表の会見で、ムバッペの起用位置について何と語ったのか
+  takeaway: 初戦でムバッペは左、中央はデンベレだった。そのデンベレが今回は外れ、ムバッペは初戦の後の3試合を欠場していた。ジダン監督は「好きな位置に置くかもしれない」と言った。12日のイタリア戦で、立つ場所に注目が集まる
+
+thumbnail:
+  layout: face
+  line1: ジダン監督 ムバッペ
+  line2: 好きな位置に置く
+  tags: [ジダン, ムバッペ, フランス代表]
+  photo: assets/images/20261107_zidane_mbappe_france/02_w.jpg
+  short_photo: assets/images/20261107_zidane_mbappe_france/02_v.jpg
+
+answer: いくつもの位置をこなせる。本人が好きなセンターフォワードに置くかもしれない
+watch: 12日（木）のイタリア戦（アウェー）、15日のトルコ戦
+
+sections:
+  - id: what
+    main: true
+    heading: ムバッペの起用位置について、ジダン監督は何と語ったのか
+    tier: 報道
+    telop: ジダン監督「好きなポジションに置くかもしれません」
+    say:
+      - text: フランス代表のジダン監督が、メンバー発表の会見でムバッペの起用位置に答えました。
+      - voice: ジダン監督
+        text: いくつものポジションをこなせる選手です。
+      - voice: ジダン監督
+        text: 本人が好きな、センターフォワードに置くかもしれません。
+        emph: true
+      - voice: ジダン監督
+        text: 何も問題はありません。
+        cont: true
+      - text: 9月25日の初戦、トルコ戦。ムバッペは54分に点を決め、59分に交代しました。
+        image: assets/images/20261107_zidane_mbappe_france/05_w.jpg
+      - text: そのあとの3試合には出ていません。今回、リストに戻りました。
+      - voice: ジダン監督
+        text: 選手を呼ぶのは、本来のポジションでやってもらうためです。
+      - voice: ジダン監督
+        text: でもキリアンは、いくつものポジションをやってきました。
+        cont: true
+        image: assets/images/20261107_zidane_mbappe_france/03_w.jpg
+    official: false
+    sources:
+      - https://www.marca.com/futbol/nations-league/2026/11/06/zidane-mbappe-le-ponga-posicion-favorita.html
+      - https://www.footmercato.net/a4759329859124952574-equipe-de-france-pagis-tchouameni-hernandez-thuram-zinedine-zidane-detaille-les-contours-de-sa-deuxieme-liste
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/summary?event=401861053
+  - id: list
+    heading: 2回目のメンバーで、フランス代表の前線はどう変わったのか
+    tier: 報道
+    telop: デンベレなどが欠場。テュラムが復帰
+    say:
+      - text: 6日の発表は、ジダン監督にとって2回目のメンバーです。
+        image: assets/images/20261107_zidane_mbappe_france/02_w.jpg
+      - text: デンベレは欠場。ほかにサリバやクンデも、今回は呼べませんでした。
+      - text: 前線には、インテルのテュラムが戻りました。
+      - text: 試合は、12日のイタリア戦と15日のトルコ戦。ネーションズリーグの準々決勝に進むための2試合です。
+    official: false
+    sources:
+      - https://www.footmercato.net/a8978401273297643675-equipe-de-france-revivez-lannonce-de-la-liste-de-zinedine-zidane
+      - https://www.footmercato.net/a4759329859124952574-equipe-de-france-pagis-tchouameni-hernandez-thuram-zinedine-zidane-detaille-les-contours-de-sa-deuxieme-liste
+  - id: view
+    viewpoint: true
+    heading: 12日のイタリア戦で、ムバッペはどこに立つのか
+    tier: 背景
+    telop: 初戦は左FW。中央はデンベレだった
+    say:
+      - text: 見立てです。9月25日の初戦、ムバッペは4-3-3の左に立ちました。中央はデンベレです。
+        card: {type: table, title: 9月25日 トルコ戦の3トップ, columns: [位置, 選手, 今回], rows: [[左FW, ムバッペ, リストに復帰], [中央FW, デンベレ, 欠場], [右FW, オリーズ, ―]], highlight_row: 0}
+      - text: その中央にいたデンベレが、今回はいません。
+        card: {type: table, title: 9月25日 トルコ戦の3トップ, columns: [位置, 選手, 今回], rows: [[左FW, ムバッペ, リストに復帰], [中央FW, デンベレ, 欠場], [右FW, オリーズ, ―]], highlight_row: 1}
+      - text: ジダン監督が口にした「好きな位置」は、センターフォワードでした。
+        card: none
+        emph: true
+      - text: 12日のイタリア戦で、ムバッペがどこに立つか。注目が集まります。
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/summary?event=401861053
+      - https://www.marca.com/futbol/nations-league/2026/11/06/zidane-mbappe-le-ponga-posicion-favorita.html
+short_title: "ジダン監督、ムバッペの起用位置に言及。「好きなポジションに置くかもしれない」"

@@ -1,0 +1,135 @@
+# 取材メモ（2026年11月6日）南野拓実、大ケガからの復帰後初アシスト＆初のフル出場。モナコはECL3連勝（ニュースのショート。見せ方 X＝強い一言を冒頭に）
+# 取材: 2026-11-06。requests（ブラウザUA）で本文を全文読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。
+# 題材の元: サッカーキング 2026-11-06「南野拓実、復帰後初アシスト記録＆フル出場！…モナコがノアシェランに完勝しECL3連勝」（全文）。
+# 出典で確かめたこと:
+#   ・ESPN の試合データ（site.api.espn.com uefa.europa.conf summary event=401915824、11/5 20:00 UTC キックオフ）:
+#       モナコ 2-0 ノアシェラン。33分 デトゥルベ（アシスト 南野拓実）／90+1分 アブリーヌ（アシスト デトゥルベ、カウンター）。
+#       南野は先発で交代なし（＝フル出場）。シュート3・アシスト1・オフサイド1。
+#   ・ゲキサカ 462607・462604（全文）: 右サイドハーフで先発。前半33分、テゼのワンタッチのスルーパスに反応してゴールエリア右へ抜け出し、
+#       ファーへ流れたボールをデトゥルベが押し込んだ。復帰後4試合目で初アシスト。公式戦のアシストは昨年10月19日のリーグ・アン第8節アンジェ戦以来、約1年ぶり。
+#       後半、ヘディングでネットを揺らしたがオフサイド（幻のゴール。昨年11月のパリSG戦以来の得点にはならず）。
+#       復帰後の出場は最長59分だった → この日は交代なしの90分。ECLは開幕2連勝で迎えた一戦（→3連勝）。
+#       ケガは昨年12月21日 フランス国内杯オセール戦の左膝前十字靱帯断裂、10月15日 ECL第1節CSKAソフィア戦で公式戦復帰。
+#   ・ASモナコ公式 試合の記録（compte rendu）: 「trois sur trois en Ligue Conférence」（ECL3戦3勝）。33分 南野のクロスをデトゥルベが押し込む。
+#       デトゥルベはモナコでの初得点。51分 南野のヘディングはオフサイドで取り消し。87分 南野のボレーは相手GKが止めた。
+#       → 取り消しの分は、クラブ51分／サッカーキング52分／ゲキサカ「後半7分」で食い違う。台本では分を言わない（「後半」とだけ言う）。
+#       → 33分の場面は、サッカーキング「折り返し」、ゲキサカ「シュート性のボール」、クラブ「クロス（Centre）」。台本は「送ったボール」とだけ言う。
+#   ・ASモナコ公式 フィリペ・ルイス監督の試合後の言葉（フランス語。全文を読んだ）:
+#       "Mais quand vous vous approchez, vous avez besoin de joueurs capables d'être dangereux, de tenter, et de faire des déplacements de manière verticale,
+#        comme l'a très bien fait Taki' (Minamino), qui a très bien attaqué les espaces."
+#       → 台本の言葉は私が日本語にしたもの。「Taki'」はクラブが括弧で（Minamino）と添えているので、台本では「南野」と書く。中身は変えていない。
+# 自分で数えたもの: 復帰後の出場の最長 59分（ゲキサカ）→ この日 90分。復帰後の最初の3試合のアシストは0（「4試合目で初アシスト」から）。
+# 本人の言葉: 無し（ゲキサカ2本・サッカーキング・クラブ公式・Detourbet と Mawissa の試合後の言葉の記事を当たった。南野本人の試合後の言葉は見つからなかった）。→ X。
+# 写真: assets/images/20261106_minamino_assist/（credits.json）。ASモナコ公式の試合の記録に載った、この試合の写真（842x561）。02＝デトゥルベとのハイタッチ（笑顔）、03＝ドリブル、04＝ボレー、05＝アシスト後に喜ぶ背中（18番）。
+#   サッカーキング・ゲキサカの写真は全部 Getty（キャプション・透かし）なので使わない。photopool が最初に置いた assets/images/20261106_minamino_first_assist/ の3枚は Getty なので使わない（消したいが、消す操作が止められたので残してある）。
+#   01.jpg は portrait が拾った2015年ザルツブルク時代の Commons 写真で、使わない。
+# 反応: 0件（作らない。approve は --no-voices）。
+# 前の本との重なり: 20261105_minamino_machida_return（代表復帰と森保監督の言葉）／20261016_minamino_el_return（298日ぶりの復帰）／20261019_minamino_monaco_first_loss。
+#   → 今回の初出: 復帰後初アシスト・初のフル出場・幻のゴール・ECL3連勝・フィリペ・ルイス監督の言葉。森保監督の言葉とケガの日付は繰り返さない。
+slot: japanese
+date: "2026年11月6日"
+format: news
+no_main: true
+people: [南野拓実, モナコ, ノアシェラン, フィリペ・ルイス監督, デトゥルベ]
+
+short_style: X
+short_hook_word: 約1年ぶり
+short_photos:
+  - assets/images/20261106_minamino_assist/02_v.jpg
+  - assets/images/20261106_minamino_assist/03_v.jpg
+  - assets/images/20261106_minamino_assist/04_v.jpg
+  - assets/images/20261106_minamino_assist/05_v.jpg
+short_question: 南野拓実は、代表のブラジル戦でも結果を残すと思いますか。
+short_telops: []
+
+theme:
+  id: minamino_first_assist
+  league: france
+  league_name: カンファレンスリーグ
+  prefix: ""
+  title: 南野拓実、復帰後初アシスト。最長59分だった出場時間が、この日変わったこと
+  hook: ""
+  question: 復帰後初のアシストを記録した南野拓実は、この試合で何を変えたのか
+  takeaway: 復帰後の出場は最長59分だった南野が、4試合目で初めて交代なしの90分を戦い、約1年ぶりのアシストを記録した。モナコはカンファレンスリーグで3戦3勝
+
+thumbnail:
+  layout: face
+  line1: 南野拓実 復帰後初アシスト
+  line2: 初めての90分
+  tags: [南野拓実, モナコ]
+  photo: assets/images/20261106_minamino_assist/02_w.jpg
+  short_photo: assets/images/20261106_minamino_assist/02_v.jpg
+
+answer: 復帰後初めて交代なしで90分を戦い、約1年ぶりのアシストを記録した
+watch: 来週の日本代表合流、11月14日のブラジル戦
+
+sections:
+  - id: what
+    main: true
+    heading: 南野拓実の復帰後初アシストと、監督が口にした評価
+    tier: 報道
+    telop: 南野拓実、復帰後初アシスト
+    say:
+      - text: モナコの南野拓実が、ヨーロッパの大会、カンファレンスリーグで復帰後初のアシスト。
+      - text: 試合後、監督はこう話しました。
+      - voice: フィリペ・ルイス監督
+        text: 前に出ていくときは、縦に動いて、危険になれる選手が必要です。
+        image: assets/images/20261106_minamino_assist/03_w.jpg
+      - voice: フィリペ・ルイス監督
+        text: 南野は、それをとてもうまくやってくれました。
+        cont: true
+        emph: true
+      - voice: フィリペ・ルイス監督
+        text: スペースを、本当にうまく突いていました。
+        cont: true
+      - text: 復帰後の出場は最長59分。この日は初めて、交代なしの90分を戦いました。
+        short_only: true
+      - text: アシストは前半33分。南野は、味方のテゼのスルーパスに抜け出しました。
+        card: {type: table, title: モナコ 2-0 ノアシェラン, columns: [分, 得点, アシスト], rows: [[33分, デトゥルベ, 南野拓実], ["90+1分", アブリーヌ, デトゥルベ]], highlight_row: 0}
+      - text: ゴールエリアの右から送ったボールを、デトゥルベが押し込みました。
+        image: assets/images/20261106_minamino_assist/05_w.jpg
+        card: none
+      - text: 公式戦でのアシストは、昨年10月のアンジェ戦以来、約1年ぶりです。
+      - text: 後半には、南野がヘディングでネットを揺らしました。
+        image: assets/images/20261106_minamino_assist/02_w.jpg
+      - text: しかし判定はオフサイド。復帰後初ゴールは、幻になりました。
+      - text: 終盤の87分にも、左足のボレー。これは相手のキーパーに止められました。
+        image: assets/images/20261106_minamino_assist/04_w.jpg
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/fra/20261106/2225041.html
+      - https://web.gekisaka.jp/news/world/detail/?462607-462607-fl
+      - https://web.gekisaka.jp/news/world/detail/?462604-462604-fl
+      - https://www.asmonaco.com/fr/news/reaction-monaco-nordsjaelland-filipe-luis-un-succes-tres-important-pour-l-equipe-et-pour-la-confiance
+      - https://www.asmonaco.com/fr/news/compte-rendu-applique-las-monaco-recu-trois-sur-trois-en-ligue-conference-face-a-nordsjlland
+      - https://www.espn.com/soccer/match/_/gameId/401915824
+  - id: full
+    heading: 最長59分だった南野が、交代なしで戦った90分
+    tier: 報道
+    telop: 復帰後初のフル出場。モナコはECL3連勝
+    say:
+      - text: 大ケガから戻って4試合目。この日の南野は交代なしで、初めて最後までピッチに立ちました。
+        image: assets/images/20261106_minamino_assist/03_w.jpg
+      - text: 試合はモナコが2対0で勝ち、カンファレンスリーグは3戦3勝です。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401915824
+      - https://web.gekisaka.jp/news/world/detail/?462607-462607-fl
+      - https://www.asmonaco.com/fr/news/compte-rendu-applique-las-monaco-recu-trois-sur-trois-en-ligue-conference-face-a-nordsjlland
+  - id: view
+    viewpoint: true
+    heading: 復帰後の3試合と比べて、この日の南野は何が変わったか
+    tier: 背景
+    telop: 出場の最長 59分→90分、アシスト 0→1
+    say:
+      - text: 見立てです。南野拓実の復帰後の3試合と比べると、出場の最長は59分から90分へ。
+        card: {type: table, title: 南野拓実 復帰後の3試合とこの日, columns: [項目, 復帰後3試合, この日], rows: [[出場の最長, 59分, 90分], [アシスト, "0", "1"]], highlight_row: 0}
+      - text: 時間が延びたその試合で、アシストという結果もついてきました。
+        card: {type: table, title: 南野拓実 復帰後の3試合とこの日, columns: [項目, 復帰後3試合, この日], rows: [[出場の最長, 59分, 90分], [アシスト, "0", "1"]], highlight_row: 1}
+        emph: true
+      - text: 次は来週の日本代表合流。11月14日には、ブラジル戦が待っています。
+        card: none
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/world/detail/?462607-462607-fl
+      - https://www.espn.com/soccer/match/_/gameId/401915824

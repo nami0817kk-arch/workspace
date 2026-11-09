@@ -1,0 +1,144 @@
+# 取材メモ（2026年11月4日）日本代表メンバー発表会見。森保一監督が初招集の福田師王について語ったこと（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-04 14:40〜15:20（14時の会見のあと）。requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。
+# 一次情報:
+#   ・JFA 公式 2026-11-04「SAMURAI BLUE（日本代表）メンバー・スケジュール MIZUHO BLUE CHALLENGE THE KALLANG FOOTBALL SERIES SINGAPORE」
+#     https://www.jfa.jp/samuraiblue/news/00036974/
+#       選手28人（GK3・DF8・MF/FW17）。初招集（*）は福田師王（カールスルーエSC／ドイツ）1人だけ。区分は GK / DF / MF/FW の3つ（表の「位置」はこの区分のまま）。
+#       11/14 ブラジル代表、11/17 パラグアイ代表（Singapore National Stadium）。
+# 報道（本文を読んだ）:
+#   ・日刊スポーツ 2026-11-04 15:01「福田師王が初招集、森保監督『インテンシティー高くブンデスの１部でも十分に通用』」
+#     https://www.nikkansports.com/soccer/japan/news/202611040000852.html
+#       「唯一、初招集となったのがFW福田師王（22＝カールスルーエ）」。ブンデスリーガ2部で成長を続けるFW。
+#       森保監督の言葉（原文のまま）:「ブンデスで非常に力をつけている、毎試合できることが増えていて、インテンシティー高くプレーしながらやれている。ブンデスの1部でも十分に通用する」（記事は「などと話した」で結ぶ。前後は載っていないので補わない）
+#       → 台本は読点・句点で4行に分けた。言葉は1字も変えていない。
+#   ・ゲキサカ 2026-11-04 14:00「森保Jシンガポール遠征メンバー発表!! 福田師王が初招集、南野・町田・坂元ら復帰、塩貝健人は選外」
+#     https://web.gekisaka.jp/news/japan/detail/?462496-462496-fl
+#       22歳のFW福田師王を初招集。膝の負傷による長期離脱で北中米W杯メンバー入りを逃した南野拓実（モナコ）・町田浩樹（ホッフェンハイム）が復帰。
+#       坂元達裕は2021年6月以来の復帰。菅原由勢・小川航基も復帰。負傷離脱中の上田綺世のほか、塩貝健人・佐藤龍之介らが選外。
+#   ・スポーツ報知 2026-11-04 14:19（町田浩樹は左膝前十字靱帯断裂から1年5か月ぶりの代表復帰） https://hochi.news/articles/20261104-OHT1T51134.html
+#   ・デイリースポーツ 2026-11-04（上田綺世は所属クラブで負傷して選外。「前回活動でも4試合で4ゴール」） https://www.daily.co.jp/soccer/2026/11/04/0020999416.shtml
+#       → 4試合4点は covered.yaml の 10/14ごろの本（「上田綺世、決勝の先制点で4試合4点」）とも合う。報道として使う。
+# 年齢: 生年月日（ja.wikipedia の生年月日）から 2026-11-04 時点で計算。
+#   福田師王 2004-04-08＝22／南野拓実 1995-01-16＝31／町田浩樹 1997-08-25＝29／坂元達裕 1996-10-22＝30／菅原由勢 2000-06-28＝26／
+#   小川航基 1997-08-08＝29／上田綺世 1998-08-28＝28／塩貝健人 2005-03-26＝21／佐藤龍之介 2006-10-16＝20
+# 【言わないこと】
+#   ・アジア杯の延期・新しい日程・宮本会長の声明・年内退任の報道・12月30日の親善試合は、12時のショート（20261104_asiancup_delay_moriyasu）で言った。ここでは言わない。
+#     会見の去就の言葉（「失われた7試合にならなくて良かったなとも思っている」ゲキサカ 462498、「契約期間の終了までベストを尽くす」日刊 864）は強いが、延期の説明が要るので入れない（主役は福田師王）。
+#   ・福田の今季の得点数など、記事で確かめていない数字は言わない（2部の成績は今回読んでいない）。
+#   ・ブラジルとの通算成績（報知の見出しと本文で数が食い違う）・W杯での対戦のスコアは言わない。キックオフ時刻も言わない。
+#   ・守田英正の選外（報知）は主題から離れるので入れない。坂元は午前のショート（初ゴール）があるので、表の1行だけ。
+# 本人の言葉: あり（上の日刊。森保監督が福田について）。Y。
+# 前の本との重なり: covered.yaml の fukuda_streak（9/8「福田師王が独2部で続けている記録」）は記録の話で、代表招集は初出。
+#   20261104_asiancup_delay_moriyasu（同じ日の12時）とは、メンバーと福田への言葉で重ならない。posted.json に今日の会見の本は無い。
+# 反応: 0件（作らない。approve は --no-voices）。
+# 写真: assets/images/20261104_japan_squad_brazil_paraguay/（credits.json）
+#   01＝ゲキサカの主写真（森保監督、会見の背景板。日付は記事に書かれていない）／02＝デイリーの主写真（alt「福田師王」、日本代表のユニフォーム）／
+#   03＝スポーツ報知の主写真（11/4 の会見、名札「森保一」）。3枚とも本人・透かし無しを目で見た。説明・URL に代理店の記載は無い。
+#   02（福田師王、デイリーの主写真）は元が 960x692 で小さく、本編2.0倍・ショート3.6倍に伸びるので外した（ファイルと credits の行も消した。ほかに大きい福田の写真は今日の記事に無かった）。
+#   03 は 03_w（1200x675）だとショートで2.8倍に伸びるので、行には元の 03.jpg（1200x1100）を置く。サムネは大きい 01_w（2560x1440）。
+#   01_w_v・03_w_v は 01_v・03_v の写し（ショートで横版の行を縦に敷くときの縦版）。
+slot: japanese
+date: "2026年11月4日"
+format: news
+no_main: true
+people: [森保一, 福田師王, 南野拓実, 町田浩樹, 上田綺世, 日本代表]
+
+short_style: Y
+short_hook_quote: ブンデスの1部でも十分に通用する。
+short_photos:
+  - assets/images/20261104_japan_squad_brazil_paraguay/03_v.jpg
+  - assets/images/20261104_japan_squad_brazil_paraguay/01_v.jpg
+short_question: 初招集の福田師王は、14日のブラジル戦でピッチに立つと思いますか。
+short_telops: []
+
+theme:
+  id: japan_squad_brazil_paraguay
+  league: japan
+  league_name: 日本代表
+  prefix: ""
+  title: 森保監督が初めて呼んだ22歳、福田師王。会見で語った招集の理由
+  hook: ""
+  question: 森保監督は、初招集の福田師王をなぜ呼んだのか
+  takeaway: 28人のうち初招集は福田師王ただ1人。前回4試合で4点の上田綺世がけがで外れた最前線に、ドイツ2部で力をつけた22歳が加わった
+
+thumbnail:
+  layout: face
+  line1: 森保監督 福田師王を初招集
+  line2: 「1部でも十分に通用」
+  tags: [森保一, 福田師王, 日本代表]
+  photo: assets/images/20261104_japan_squad_brazil_paraguay/01_w.jpg
+  short_photo: assets/images/20261104_japan_squad_brazil_paraguay/03_v.jpg
+
+answer: ドイツで力をつけ、毎試合できることが増え、強度の高いプレーができている。1部でも十分に通用する、と森保監督は話した
+watch: 14日のブラジル戦（シンガポール）
+
+sections:
+  - id: what
+    main: true
+    heading: 森保監督は、初招集の福田師王をどう見ているか
+    tier: 報道
+    telop: 初招集は福田師王ただ1人
+    say:
+      - text: 日本代表28人で、唯一の初招集は22歳の福田師王。
+      - text: 森保一監督は、理由をこう話しました。
+        image: assets/images/20261104_japan_squad_brazil_paraguay/03.jpg
+      - voice: 森保一
+        text: ブンデスで非常に力をつけている、
+        emph: true
+      - voice: 森保一
+        text: 毎試合できることが増えていて、
+        cont: true
+        image: assets/images/20261104_japan_squad_brazil_paraguay/01_w.jpg
+      - voice: 森保一
+        text: インテンシティー高くプレーしながらやれている。
+        cont: true
+      - voice: 森保一
+        text: ブンデスの1部でも十分に通用する。
+        image: assets/images/20261104_japan_squad_brazil_paraguay/03.jpg
+      - text: 福田がいまプレーしているのは、ドイツのブンデスリーガ2部、カールスルーエです。
+        image: assets/images/20261104_japan_squad_brazil_paraguay/03.jpg
+        card: {type: table, title: 唯一の初招集, columns: [所属, 名前, 位置, 年齢], rows: [[カールスルーエ, 福田師王, MF/FW, 22歳]], highlight_row: 0}
+      - text: インテンシティーは、球際の強さや走る量など、プレーの強度のことです。
+        card: none
+    official: false
+    sources:
+      - https://www.nikkansports.com/soccer/japan/news/202611040000852.html
+      - https://www.jfa.jp/samuraiblue/news/00036974/
+    quotes_from:
+      - 日刊スポーツ https://www.nikkansports.com/soccer/japan/news/202611040000852.html
+  - id: members
+    heading: 戻ってきた選手と、外れた選手は誰か
+    tier: 報道
+    telop: 南野拓実・町田浩樹が復帰。上田綺世はけがで選外
+    say:
+      - text: 森保一監督は、けがから戻った選手も呼びました。
+        image: assets/images/20261104_japan_squad_brazil_paraguay/01_w.jpg
+      - text: 膝の大けがで北中米W杯を逃した、南野拓実と町田浩樹です。
+        card: {type: table, title: 代表に戻ってきた主な選手, columns: [所属, 名前, 位置, 年齢], rows: [[モナコ, 南野拓実, MF/FW, 31歳], [ホッフェンハイム, 町田浩樹, DF, 29歳], [コベントリー, 坂元達裕, MF/FW, 30歳], [カリアリ, 菅原由勢, DF, 26歳], [町田, 小川航基, MF/FW, 29歳]], highlight_row: 0}
+      - text: 一方で、上田綺世はけがで外れました。
+        card: {type: table, title: 今回選ばれなかった主な選手, columns: [所属, 名前, 位置, 年齢], rows: [[リール, 上田綺世, MF/FW, 28歳], [ボルフスブルク, 塩貝健人, MF/FW, 21歳], [バレンシア, 佐藤龍之介, MF/FW, 20歳]], highlight_row: 0}
+      - text: 塩貝健人と佐藤龍之介も、今回は選ばれていません。
+        card: {type: table, title: 今回選ばれなかった主な選手, columns: [所属, 名前, 位置, 年齢], rows: [[リール, 上田綺世, MF/FW, 28歳], [ボルフスブルク, 塩貝健人, MF/FW, 21歳], [バレンシア, 佐藤龍之介, MF/FW, 20歳]], highlight_row: 1}
+    official: false
+    sources:
+      - https://www.jfa.jp/samuraiblue/news/00036974/
+      - https://web.gekisaka.jp/news/japan/detail/?462496-462496-fl
+      - https://hochi.news/articles/20261104-OHT1T51134.html
+      - https://www.daily.co.jp/soccer/2026/11/04/0020999416.shtml
+  - id: view
+    viewpoint: true
+    heading: 上田綺世のいない最前線に、22歳は割って入れるか
+    tier: 背景
+    telop: 前回4試合で4点の上田綺世が不在
+    say:
+      - text: 見立てです。前回の活動で、上田綺世は4試合で4点を挙げていました。
+        card: none
+      - text: 森保一監督は、その点取り屋がいない最前線に、
+        image: assets/images/20261104_japan_squad_brazil_paraguay/03.jpg
+      - text: ドイツ2部で力をつけた22歳を加えました。
+        emph: true
+      - text: 最初の相手は、14日のブラジルです。
+    official: false
+    sources:
+      - https://www.daily.co.jp/soccer/2026/11/04/0020999416.shtml
+      - https://www.jfa.jp/samuraiblue/news/00036974/

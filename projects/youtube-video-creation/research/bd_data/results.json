@@ -1,6 +1,6 @@
 {
  "source": "ESPN scoreboard (ger.1)",
- "fetched": "2026-09-28",
+ "fetched": "2026-11-04",
  "results": [
   [
    "28 August 2026",
@@ -70,7 +70,7 @@
    "2",
    "VfB Stuttgart",
    "4–1",
-   "1. Köln"
+   "1. FC Köln"
   ],
   [
    "5 September 2026",
@@ -255,20 +255,6 @@
    "TSG 1899 Hoffenheim"
   ],
   [
-   "10 October 2026",
-   "5",
-   "FC Augsburg",
-   "2–2",
-   "Bayern Munich"
-  ],
-  [
-   "17 October 2026",
-   "6",
-   "Bayern Munich",
-   "6–1",
-   "RB Leipzig"
-  ],
-  [
    "9 October 2026",
    "5",
    "Borussia Dortmund",
@@ -276,11 +262,18 @@
    "SV Werder Bremen"
   ],
   [
-   "17 October 2026",
-   "6",
+   "10 October 2026",
+   "5",
    "1. FC Union Berlin",
-   "0–0",
-   "Borussia Dortmund"
+   "1–0",
+   "SV Elversberg"
+  ],
+  [
+   "10 October 2026",
+   "5",
+   "FC Augsburg",
+   "2–2",
+   "FC Bayern Munich"
   ],
   [
    "10 October 2026",
@@ -290,11 +283,18 @@
    "Bayer 04 Leverkusen"
   ],
   [
-   "18 October 2026",
-   "6",
-   "Bayer 04 Leverkusen",
-   "2–1",
-   "SC Freiburg"
+   "10 October 2026",
+   "5",
+   "SC Paderborn 07",
+   "0–2",
+   "VfB Stuttgart"
+  ],
+  [
+   "10 October 2026",
+   "5",
+   "TSG 1899 Hoffenheim",
+   "2–3",
+   "Hamburger SV"
   ],
   [
    "10 October 2026",
@@ -304,18 +304,32 @@
    "Eintracht Frankfurt"
   ],
   [
+   "11 October 2026",
+   "5",
+   "1. FC Köln",
+   "2–1",
+   "Borussia Mönchengladbach"
+  ],
+  [
+   "11 October 2026",
+   "5",
+   "SC Freiburg",
+   "2–1",
+   "FC Schalke 04"
+  ],
+  [
    "16 October 2026",
    "6",
    "Eintracht Frankfurt",
    "1–0",
-   "1. Köln"
+   "1. FC Köln"
   ],
   [
-   "10 October 2026",
-   "5",
-   "SC Paderborn 07",
-   "0–2",
-   "VfB Stuttgart"
+   "17 October 2026",
+   "6",
+   "1. FC Union Berlin",
+   "0–0",
+   "Borussia Dortmund"
   ],
   [
    "17 October 2026",
@@ -323,6 +337,48 @@
    "Hamburger SV",
    "1–0",
    "VfB Stuttgart"
+  ],
+  [
+   "17 October 2026",
+   "6",
+   "FC Schalke 04",
+   "0–1",
+   "1. FSV Mainz 05"
+  ],
+  [
+   "17 October 2026",
+   "6",
+   "SV Elversberg",
+   "4–3",
+   "FC Augsburg"
+  ],
+  [
+   "17 October 2026",
+   "6",
+   "SV Werder Bremen",
+   "2–2",
+   "SC Paderborn 07"
+  ],
+  [
+   "17 October 2026",
+   "6",
+   "FC Bayern Munich",
+   "6–1",
+   "RB Leipzig"
+  ],
+  [
+   "18 October 2026",
+   "6",
+   "Bayer 04 Leverkusen",
+   "2–1",
+   "SC Freiburg"
+  ],
+  [
+   "18 October 2026",
+   "6",
+   "Borussia Mönchengladbach",
+   "1–2",
+   "TSG 1899 Hoffenheim"
   ],
   [
    "23 October 2026",
@@ -334,16 +390,51 @@
   [
    "24 October 2026",
    "7",
+   "FC Augsburg",
+   "1–1",
+   "1. FC Union Berlin"
+  ],
+  [
+   "24 October 2026",
+   "7",
+   "1. FC Köln",
+   "0–0",
+   "FC Schalke 04"
+  ],
+  [
+   "24 October 2026",
+   "7",
+   "1. FSV Mainz 05",
+   "2–3",
+   "SV Werder Bremen"
+  ],
+  [
+   "24 October 2026",
+   "7",
    "RB Leipzig",
    "4–0",
    "SV Elversberg"
   ],
   [
-   "11 October 2026",
-   "5",
-   "SC Freiburg",
-   "2–1",
-   "FC Schalke 04"
+   "24 October 2026",
+   "7",
+   "SC Paderborn 07",
+   "1–0",
+   "Hamburger SV"
+  ],
+  [
+   "24 October 2026",
+   "7",
+   "Borussia Dortmund",
+   "1–0",
+   "Eintracht Frankfurt"
+  ],
+  [
+   "25 October 2026",
+   "7",
+   "TSG 1899 Hoffenheim",
+   "3–0",
+   "Bayer 04 Leverkusen"
   ],
   [
    "25 October 2026",
@@ -351,10 +442,69 @@
    "SC Freiburg",
    "1–3",
    "FC Bayern Munich"
+  ],
+  [
+   "30 October 2026",
+   "8",
+   "SV Elversberg",
+   "4–1",
+   "1. FSV Mainz 05"
+  ],
+  [
+   "31 October 2026",
+   "8",
+   "Bayer 04 Leverkusen",
+   "2–4",
+   "VfB Stuttgart"
+  ],
+  [
+   "31 October 2026",
+   "8",
+   "Borussia Mönchengladbach",
+   "0–0",
+   "SC Paderborn 07"
+  ],
+  [
+   "31 October 2026",
+   "8",
+   "FC Augsburg",
+   "1–2",
+   "SC Freiburg"
+  ],
+  [
+   "31 October 2026",
+   "8",
+   "FC Schalke 04",
+   "0–2",
+   "RB Leipzig"
+  ],
+  [
+   "31 October 2026",
+   "8",
+   "SV Werder Bremen",
+   "2–0",
+   "TSG 1899 Hoffenheim"
+  ],
+  [
+   "31 October 2026",
+   "8",
+   "FC Bayern Munich",
+   "2–2",
+   "Borussia Dortmund"
+  ],
+  [
+   "1 November 2026",
+   "8",
+   "1. FC Union Berlin",
+   "1–1",
+   "1. FC Köln"
+  ],
+  [
+   "1 November 2026",
+   "8",
+   "Eintracht Frankfurt",
+   "3–1",
+   "Hamburger SV"
   ]
- ],
- "bayern_note": "バイエルンの第5・6節だけ追記（ESPN scoreboard の 2026-10-10・10-17、2026-10-20 取得）。ほかのクラブの第5節以降は未取得。",
- "leverkusen_note": "レバークーゼンの第5・6節だけ追記（ESPN scoreboard の 2026-10-10・10-18、2026-10-22 取得）。",
- "frankfurt_note": "フランクフルトの第5・6節は ESPN（site.api.espn.com/apis/site/v2/sports/soccer/all/teams/125/schedule、2026-10-23 取得）で追記。第5節 ライプツィヒに0-6（10/10 敵地）、第6節 ケルンに1-0（10/16 ホーム）。 第6節の相手は plbuild.club_matches が『1. FC Köln』を取りこぼす（' FC' を削って比べる）ため、results.json 上は『1. Köln』と書いた。",
- "stuttgart_note": "シュツットガルトの第5〜7節は ESPN（site.api.espn.com/apis/site/v2/sports/soccer/ger.1/teams/134/schedule?season=2026、2026-10-25 取得）で追記。第5節 パーダーボルンに2-0（10/10 敵地）、第6節 ハンブルガーSVに0-1（10/17 敵地）、第7節 ボルシアMGに2-3（10/23 ホーム）。英語版の 2026–27 VfB Stuttgart season とも結果は一致（第7節の日付は記事では24日、ESPN は 10/23 18:30 UTC）。 第2節の相手は plbuild.club_matches が『1. FC Köln』を取りこぼすため、フランクフルトの第6節と同じく『1. Köln』と書いた。"
+ ]
 }
