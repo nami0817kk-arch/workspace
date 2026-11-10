@@ -1,0 +1,134 @@
+# 取材メモ（2026年11月6日）ロナウドがポルトガル代表を引退。本人の声明と、ジェズス監督の言葉（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-06。python requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。
+# 出典で確かめたこと:
+#   ・ESPN 2026-11-05 17:53Z（now.core.api.espn.com/v1/sports/news/49266866 で本文を全部読んだ）:
+#       11/5（木）に Instagram の動画で代表引退を発表。23年。41歳。代表234試合146点（男子の最多得点・最多出場）。
+#       声明（英訳）: "the day has come to hand back the number seven shirt of the national team that belongs to us all. I never felt it was exclusively mine"
+#         "It was not an easy decision, because there are decisions that are not made solely with the head; they are also made with the heart."
+#         "Goals come and go, trophies end up in museums, and records are eventually broken. But there is one thing that time can never erase: the place we hold in people's hearts."
+#         "No captain walks alone and you're all part of my story."
+#       前の代表期間に合宿を離れ、協会から30日の出場停止。出場時間をめぐってジェズス監督と衝突（監督が約束を破ったと非難）。チームメイトには謝ったが、監督には謝っていない。
+#       翌日（11/6）にジェズス監督が、デンマーク・ウェールズとのネーションズリーグの招集を発表する。
+#       クラブ（アル・ナスル）では続ける。通算985点（1000点まで15）。
+#       記事は「10月4日のノルウェー戦で18年ぶりにベンチのまま」と書くが、ESPN の試合データでは、ロナウドがベンチのまま出なかったのは 9/27 のノルウェー戦（Ullevaal、2-1）。10/1・10/4 は登録外。→ 日付が食い違うので、この話は台本に入れない。
+#   ・ESPN 試合データ（uefa.nations summary 401861044）: 2026-09-24 ポルトガル 1-0 ウェールズ（エスタディオ・ジョゼ・アルヴァラーデ）。ロナウドは先発し途中交代。これが代表の最後の試合。
+#   ・A Bola 2026-11-05 14:02「Jorge Jesus quebra o silêncio sobre o adeus de Cristiano Ronaldo」（Canal 11 が撮った言葉。ポルトガル語の原文を読んだ）:
+#       «Tudo isto é uma decisão dele. Nós já tivemos a oportunidade de falar antes da primeira convocatória sobre isto. Eu pedi a ele para continuar, para continuar comigo porque precisava que ele estivesse ao pé de mim, mas tenho de aceitar a decisão dele»
+#       «Ele vai estar sempre no coração dos portugueses, na Seleção, e não há volta a dar porque ele será sempre uma referência do futebol português.»
+#       → 台本の言葉は、この原文を私が日本語にしたもの。
+#   ・Guardian（Jonathan Wilson の論評）: 合宿離脱の処分は255ユーロの罰金と30日の出場停止。→ 論評なので使わない。
+# 自分で数えたもの: 通算985点のうち代表は146点。985 ÷ 146 ＝ 約6.7 → 約7点に1点が代表のゴール。代表は234試合で146点 → 1試合あたり約0.62点。
+# 前の本との重なり: 20261002_ronaldo_walkout（合宿離脱）／20261008_ronaldo_statement（「監督は約束を破った」）／20261003_portugal_without／20261030_ronaldo_hattrick_985（985点）。
+#   → 今回の初出: 代表引退そのもの・引退の声明・ジェズス監督の「残ってほしいと頼んだ」。離脱の経緯は1行だけ。985点はクラブの話としてではなく「7点に1点」の比べで使う。
+# 本人の言葉: あり（Instagram の声明）。Y。
+# 反応: 0件（作らない）。
+slot: other_1
+date: "2026年11月6日"
+format: news
+no_main: true
+people: [クリスティアーノ・ロナウド, ジョルジェ・ジェズス監督, ポルトガル代表, アル・ナスル]
+
+short_style: Y
+short_hook_quote: 代表の7番のシャツを、返す日が来ました。
+short_photos:
+  - assets/images/20261106_ronaldo_portugal_retire/02_v.jpg
+  - assets/images/20261026_team_portugal/p01_ronaldo_v.jpg
+  - assets/images/20261106_ronaldo_portugal_retire/01_v.jpg
+short_question: ロナウドの代表引退、このタイミングは正しかったと思いますか。
+short_telops:
+  - {match: 7番のシャツ, text: ロナウド/代表引退の声明}
+  - {match: 234試合, text: 代表234試合146点/男子の最多出場・最多得点}
+  - {match: 残ってほしい, text: ジョルジェ・ジェズス監督/「続けてほしいと頼んだ」}
+  - {match: 7本に1本, text: 通算985点のうち146点/約7本に1本が代表}
+
+theme:
+  id: ronaldo_portugal_retire
+  league: ""
+  league_name: ""
+  prefix: ""
+  title: ロナウド、ポルトガル代表を引退。衝突が伝えられたジェズス監督が口にしたこと
+  hook: ""
+  question: 23年の代表に別れを告げたロナウドは何を語り、衝突が伝えられた監督は何と応えたのか
+  takeaway: 通算985点のうち、代表のゴールは146点。およそ7点に1点を、ロナウドはポルトガルのシャツで決めてきた。その7番が、23年で代表を離れる
+
+thumbnail:
+  layout: face
+  line1: ロナウド 代表引退
+  line2: 23年、7番を返す日
+  tags: [クリスティアーノ・ロナウド, ポルトガル代表]
+  photo: assets/images/20261106_ronaldo_portugal_retire/02_w.jpg
+  short_photo: assets/images/20261106_ronaldo_portugal_retire/02_v.jpg
+
+answer: 7番のシャツを未来に渡すと語り、監督は残ってほしいと頼んだが、決断を受け入れると答えた
+watch: 6日のポルトガル代表の招集発表
+
+sections:
+  - id: what
+    main: true
+    heading: 代表引退を決めたロナウドの声明と、ジェズス監督の答え
+    tier: 報道
+    telop: ロナウド「7番のシャツを、返す日が来ました」
+    say:
+      - text: 代表で男子の世界最多、146点。そのロナウドが、23年間の代表に別れを告げました。
+      - voice: クリスティアーノ・ロナウド
+        text: 代表の7番のシャツを、返す日が来ました。
+        emph: true
+      - voice: クリスティアーノ・ロナウド
+        text: 自分だけのシャツだと思ったことは、一度もありません。
+        cont: true
+      - voice: クリスティアーノ・ロナウド
+        text: 簡単な決断ではありませんでした。
+      - voice: クリスティアーノ・ロナウド
+        text: 頭だけでなく、心でも決めることだからです。
+        cont: true
+      - text: 9月末、出場時間をめぐって監督と衝突し、代表の合宿を離れたロナウド。
+        image: assets/images/20261106_ronaldo_portugal_retire/02_w.jpg
+      - text: ポルトガルのサッカー連盟から受けた30日間の出場停止が、明けた直後の発表です。
+      - text: その相手、ジョルジェ・ジェズス監督は、こう話しています。
+        image: assets/images/20261106_ronaldo_portugal_retire/01_w.jpg
+      - voice: ジョルジェ・ジェズス監督
+        text: 最初の招集の前に、このことは2人で話していました。
+      - voice: ジョルジェ・ジェズス監督
+        text: 続けてほしい、私のそばにいてほしいと頼みました。
+        cont: true
+        emph: true
+      - voice: ジョルジェ・ジェズス監督
+        text: でも、彼の決断を受け入れるしかありません。
+        cont: true
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/49266866/cristiano-ronaldo-portugal-jorge-jesus-retires-international
+      - https://www.abola.pt/noticias/jorge-jesus-quebra-o-silencio-sobre-o-adeus-de-cristiano-ronaldo-2026110514025776183
+      - https://www.espn.com/soccer/match/_/gameId/401861044
+      - https://www.abola.pt/noticias/adeus-ronaldo-ola-selecao-2026110511451716477
+      - https://www.abola.pt/noticias/os-anos-passam-por-todos-ate-por-cristiano-ronaldo-2026110514443625318
+      - https://www.record.pt/opiniao/cronistas/vitor-pinto/detalhe/cristiano-e-portugal
+  - id: record
+    heading: 23年のポルトガル代表で、ロナウドが残した数字
+    tier: 報道
+    telop: 代表234試合146点。男子の世界最多
+    say:
+      - text: ロナウドの代表デビューは、2003年8月。出場は234試合です。
+        image: assets/images/20261026_team_portugal/p01_ronaldo_w.jpg
+        card: {type: stats, title: ロナウドのポルトガル代表, items: [[23, 年, 2003年8月から], [234, 試合, 男子の世界最多], [146, 点, 男子の世界最多]], focus: 2}
+      - text: 得点に続いて、出場の数も男子の代表の世界最多です。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/49266866/cristiano-ronaldo-portugal-jorge-jesus-retires-international
+      - https://www.espn.com/soccer/match/_/gameId/401861044
+  - id: view
+    viewpoint: true
+    heading: 通算985点のうち、代表のゴールはどれだけを占めたか
+    tier: 背景
+    telop: 通算985点のうち、代表は146点
+    say:
+      - text: 見立てです。クラブと代表を合わせた、ロナウドの通算ゴールは985点。
+        image: assets/images/20261026_team_portugal/p01_ronaldo_w.jpg
+        card: {type: calc, title: ロナウドの通算と代表のゴール, terms: [[985点, 通算], [146点, 代表], [約6.7, 何点に1点か]], ops: [÷, ＝]}
+      - text: 通算ゴールの、およそ7本に1本が、ポルトガル代表で決めたものです。
+        emph: true
+      - text: 一方の代表は、ロナウド抜きの新しい招集メンバーを、6日に発表します。
+        card: none
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/49266866/cristiano-ronaldo-portugal-jorge-jesus-retires-international

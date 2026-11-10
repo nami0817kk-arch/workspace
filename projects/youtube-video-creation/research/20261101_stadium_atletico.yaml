@@ -1,0 +1,460 @@
+# スタジアム紹介シリーズ：アトレティコ・マドリードの本拠地（リヤド・エア・メトロポリターノ、11/1 予定）。雛形は 10/29 ハルの回。
+# 題材の選び方（2026-10-31）：プレミアは2026-27の20クラブのうち、イプスウィッチ以外の19クラブ＝出し済み（scripts/*stadium_*。ウェストハムは2部で別の回）。
+#   残りのイプスウィッチは小物なので「大物の名前を先に」でラ・リーガを先に。ラ・リーガの大きさ順に見たが、
+#   レアル・マドリード＝クラブが改装後の収容を公表していない（ラ・リーガは8万3186→8万4000、W杯招致の書類は7万8297、会長は「8万人前後」と食い違う。公式の一次が取れない）
+#   バルセロナ＝カンプ・ノウは工事中で収容が毎月動く（6万2000台〜と報じられるがクラブの公式の数字が取れない）
+#   → 数字が公式（クラブの発表）で言えて、物語が強いアトレティコを選ぶ。落としたのは上の2つと、イプスウィッチ（プレミアの最後の1つ。ハルの回の次の相手）。
+# 重なりの確認（2026-10-31）：scripts/*stadium_* は22本。アトレティコ無し。covered.yaml・posted.json にも stadium_atletico は無い。
+#   クラブ紹介 ll04（9/26）は「メトロポリターノ・7万813人・2番目」の1行だけ（同じ収容の数字）。財政 finance_atletico（10/22）は「2024年10月に名前がリヤド・エアに。2033年までの9年契約」の3行。
+#   この回は名前の節で Riyadh Air を1行だけ（金額・契約年数は言わない）。軸は「陸上競技場として生まれた」「引っ越しが9年近くかかった」「今季の入場」。
+# 今季のラ・リーガ所属（一次情報）：ESPN の ラ・リーガ（esp.1）2026-27 の試合記録にアトレティコ（2026-08-19〜10-31）。9/28 の順位表でも 2位。
+# 収容（クラブの発表）：2026年10月から 70,813（それまで 70,692＝2024年11月の増設後。2017年の開場時 68,456）。
+#   クラブの公式サイトは Cloudflare の確認で開けなかった（requests・WebFetch とも 403）。クラブの発表を引いた記事で確かめた：
+#     AtletiMedia（2026-09-23）「la capacidad máxima del estadio ... 70.813 localidades」／Goal（2026-09-22）「club confirmed in a statement on its official website ... full 70,813-seat capacity, just 299 fans short」／
+#     El Desmarque（2026-10-01）「70,813 ... announcement by Atlético through its official channels。70,692 から約121席増」。
+#   2024年10月の命名権のクラブ発表（Zawya に転載）は 70,460。2024年11月の増設で 70,692（ウィキペディア es がクラブの公式サイトを出典に）。
+# 入場（ESPN の試合記録・ラ・リーガ 2026-27、控え scratchpad の mad/laliga.json）：ホーム5試合
+#   8/19 マラガ 65,785（2対0）／8/23 ビジャレアル 61,978（2対2）／9/16 オサスナ 60,869（4対0）／9/20 レアル・マドリード 70,514（2対1）／10/24 デポルティーボ 68,674（1対0）。
+#   合計327,820・平均65,564＝収容の92.6％（65,564÷70,813=0.9259）。レアル戦 70,514÷70,813=0.9958＝99.6％、満員まで 70,813-70,514=299。
+#   レアル戦を除く4試合：合計257,306・平均64,326.5＝90.8％（64,326.5÷70,813=0.9084）。
+#   入場の新記録 70,514：クラブが公式サイトで発表（Goal 2026-09-22 が引用）。前の記録 70,112（昨季のレアルとのリーグ戦、AtletiMedia 2026-09-23）。
+# 前の本拠地ビセンテ・カルデロン（ウィキペディア en）：1966年10月2日に開場。閉場時の収容 54,907。計算：70,813-54,907=15,906／70,813÷54,907=1.2897＝約1.29倍。
+# 陸上競技場だった頃（ウィキペディア en・es）：1990年着工、1993年11月完成、費用 4200万ユーロ（es は「約70億ペセタ」＝ABC）。1994年9月（6日、es）に開場。収容 約2万、1段。愛称 ラ・ペイネタ（髪留めの櫛に似ている）。
+#   1997年の世界陸上の招致のために建てた。1995年に開催地がアテネに決まった。2004年に「2012年五輪の招致の計画のため」閉場。
+#   五輪の招致：2012年大会＝2005年に落選／2016年大会＝2009年に落選／2020年大会＝2013年9月に落選（en：Madrid's bid ... failed、es：2012・2016・2020の招致は実らず）。
+# 引っ越し（ウィキペディア en）：2008年12月、クラブの会長とマドリード市長が移る合意に署名。当初は2013年に移る予定が「五輪の招致と経済危機で何度も後ろへずれた」。
+#   2011年11月に最初の取り壊し工事、2012年春に下の客席と陸上のトラックを外す。2013年9月11日にクラブが計画を発表（2020年五輪の落選と同じ9月）。
+#   クラブが市から買い取ったのは2017年（en は3月・価格 3040万ユーロ、es は5月5日に登記。月と価格は食い違うので「2017年」だけ言う）。
+#   2017年9月16日に開場、マラガに1対0、最初のゴールはグリーズマン（en・es 一致）。
+# 名前（ウィキペディア en・es）：ワンダ・メトロポリターノ＝2016年12月に発表・2017〜2022年／シビタス・メトロポリターノ＝2022年7月19日から（不動産会社 Cívitas Pacensis）／リヤド・エア・メトロポリターノ＝2024年10月9日から、2033年まで（クラブの発表、Zawya）。
+# 決勝（ウィキペディア en・UEFA 理事会が2025年9月11日にティラナで決定）：2019年6月1日の決勝はリヴァプール 2-0 トッテナム、入場 63,272（en・es 一致）。2027年の決勝は 6月5日の予定（SI・ウィキペディア。スペインの観光サイトは日付未確定とする）。
+# 言わなかったもの：購入価格と建て直しの費用（en と es で食い違う）／コンサート（バッド・バニー8公演など）／女子の入場の世界記録（女子は扱わない）／スペイン代表の試合／ラ・リーガ内での大きさの順位（レアル・マドリード・バルセロナの収容が公式で取れない）。
+#   命名権の金額（クラブは公表していない）／昨季の平均入場（AtletiMedia の「6万855」は総数か平均か読み取れない）。
+# 日本との接点（サッカーの縁）：無し。アトレティコに日本人選手は在籍していない（ESPN・クラブの2026-27 名簿、検索で確認）。久保建英のレアル・ソシエダは9/13に敵地でアトレティコに0対3（本拠地ではない）。無理に入れない。
+# 写真：assets/images/20261101_stadium_atletico/（credits.json）。
+date: 2026年11月1日
+slot: other_1
+format: news
+series: スタジアム紹介
+voice_min: 0
+people: []
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  id: stadium_atletico
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: アトレティコ・マドリード
+  title: アトレティコ・マドリードの本拠地は、なぜ陸上競技場として生まれたのか
+  question: 2017年からアトレティコが使う本拠地は、なぜ陸上競技場として生まれ、五輪に3度落ちたあとでクラブの家になったのか
+  lead: 世界陸上のために建ち、五輪には3度落ちた。
+  hook: ''
+  opening_image: assets/images/20261101_stadium_atletico/01_w.jpg
+  end_bg: assets/images/20261101_stadium_atletico/01_w.jpg
+  takeaway: アトレティコの本拠地の収容は、2026年10月から7万813人。前の本拠地カルデロンの約1.29倍で、建物は1994年に陸上競技場として開いた。五輪の招致に3度落ち、移る合意から引っ越しまで9年近くかかった。今季のホーム5試合の平均は6万5564人で収容の92.6％。9月20日のレアル・マドリード戦は7万514人で、満員まで299席だった
+  short_title: アトレティコの本拠地、元は陸上競技場
+thumbnail:
+  layout: scene
+  bold: false
+  callouts:
+  - 五輪に3度落選
+  - 7万813人
+  photo: assets/images/20261101_stadium_atletico/01_w.jpg
+  line1: アトレティコの本拠地
+  line2: 元は陸上競技場
+  tags:
+  - アトレティコ・マドリード
+  - ラ・リーガ
+  - スタジアム紹介
+sections:
+- id: data
+  main: true
+  heading: アトレティコの本拠地には、何人入るのか
+  bg: assets/images/20261101_stadium_atletico/01_w.jpg
+  tier: 報道
+  telop: 収容は7万813人。2026年10月に121席増えた。2017年からアトレティコ・マドリードの本拠地
+  narrator: 解説
+  card:
+    type: table
+    title: アトレティコの本拠地の基礎DATA
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 収容人数
+      - 7万813人（2026年10月から）
+    - - いまの名前
+      - リヤド・エア・メトロポリターノ
+    - - 持ち主
+      - アトレティコ（2017年から）
+    - - 建物が開いたのは
+      - 1994年（陸上競技場として）
+    - - 本拠地として
+      - 2017年9月から
+    - - 前の本拠地
+      - ビセンテ・カルデロン
+  say:
+  - text: アトレティコ・マドリードの本拠地の話です。
+    short_only: true
+    image: assets/images/20261101_stadium_atletico/01_w.jpg
+    card: none
+  - text: 収容は、7万813人。2026年10月に、121席増えました。
+    emph: true
+    image: assets/images/20261101_stadium_atletico/01_w.jpg
+    card: &id_cap
+      type: stats
+      title: 本拠地の収容、3つの時点
+      items:
+      - - '54907'
+        - 人
+        - 前の本拠地カルデロン（閉場時）
+      - - '68456'
+        - 人
+        - 2017年の開場時
+      - - '70813'
+        - 人
+        - いまの収容
+      focus: 2
+  - text: 2017年に開いたときは、6万8456人でした。
+    image: assets/images/20261101_stadium_atletico/01_w.jpg
+    card:
+      <<: *id_cap
+      focus: 1
+  - text: その前の本拠地、ビセンテ・カルデロンは、閉じるときで5万4907人。
+    image: assets/images/20261101_stadium_atletico/01_w.jpg
+    card:
+      <<: *id_cap
+      focus: 0
+  - text: いまの収容は、カルデロンの約1.29倍です。
+    image: assets/images/20261101_stadium_atletico/02_w.jpg
+    card:
+      type: calc
+      title: カルデロンとの比べ（自分で割った）
+      terms:
+      - - 7万813人
+        - いまの収容
+      - - 5万4907人
+        - カルデロンの収容
+      - - 1.29倍
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: 持ち主は、アトレティコ自身です。
+    image: assets/images/20261101_stadium_atletico/02_w.jpg
+    card: none
+  - text: ところが、この建物は、サッカーのために生まれたのではありません。
+    emph: true
+    image: assets/images/20261101_stadium_atletico/02_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Metropolitano_Stadium
+  - https://en.wikipedia.org/wiki/Vicente_Calder%C3%B3n_Stadium
+  - https://www.eldesmarque.com/futbol/liga-1a-division/20261001/nuevo-aforo-metropolitano-estadio-atletico-madrid-nueva-ampliacion_18_020326193.html
+  - https://atletimedia.com/el-metropolitano-vuelve-a-batir-records-con-el-real-madrid/
+- id: origin
+  heading: この建物は、なぜ陸上競技場として生まれたのか
+  bg: assets/images/20261101_stadium_atletico/01_w.jpg
+  tier: 背景
+  telop: 開いたのは1994年9月。世界陸上の招致のために建てた。愛称は「ラ・ペイネタ」
+  narrator: 解説
+  card: &id_origin
+    type: timeline
+    title: 本拠地になる前の歩み（ウィキペディア）
+    rows:
+    - - 1994年9月
+      - 陸上競技場として開場
+    - - 2004年
+      - 閉場。五輪の招致の計画のため
+    - - 2005年
+      - 2012年大会の招致に落選
+    - - 2009年
+      - 2016年大会の招致に落選
+    - - 2013年9月
+      - 2020年大会の招致に落選
+    focus: 2013年9月
+    highlight_row: 0
+  say:
+  - text: いまの本拠地は、もとは、陸上競技場でした。
+    image: assets/images/20261101_stadium_atletico/01_w.jpg
+    card:
+      <<: *id_origin
+      highlight_row: 0
+  - text: 開いたのは、1994年9月。サッカーではなく、陸上のための競技場です。
+    image: assets/images/20261101_stadium_atletico/03_w.jpg
+    card:
+      <<: *id_origin
+      highlight_row: 0
+  - text: 狙いは、1997年の世界陸上。マドリードが開催を目指して、建てました。
+    image: assets/images/20261101_stadium_atletico/03_w.jpg
+    card: none
+  - text: ところが開催地は、アテネに決まります。
+    image: assets/images/20261101_stadium_atletico/03_w.jpg
+    card: none
+  - text: 客席は、1階だけで約2万席。いまの収容の、3割に届かない大きさでした。
+    image: assets/images/20261101_stadium_atletico/04_w.jpg
+    card: none
+  - text: 愛称は、ラ・ペイネタ。スペイン語で、髪留めの櫛のこと。形が似ていたからです。
+    image: assets/images/20261101_stadium_atletico/04_w.jpg
+    card: none
+  - text: 2004年、競技場は閉まります。次のオリンピックの招致に向けた、計画のためです。
+    image: assets/images/20261101_stadium_atletico/04_w.jpg
+    card:
+      <<: *id_origin
+      highlight_row: 1
+  - text: ところが、マドリードは、8年のあいだに、五輪の招致に3度落ちます。
+    emph: true
+    image: assets/images/20261101_stadium_atletico/03_w.jpg
+    card:
+      <<: *id_origin
+      highlight_row: 2
+  - text: 2012年大会は、2005年に落選。
+    image: assets/images/20261101_stadium_atletico/03_w.jpg
+    card:
+      <<: *id_origin
+      highlight_row: 2
+  - text: 2016年大会は、2009年に落選。
+    image: assets/images/20261101_stadium_atletico/03_w.jpg
+    card:
+      <<: *id_origin
+      highlight_row: 3
+  - text: 2020年大会は、2013年の9月に落選しました。
+    emph: true
+    image: assets/images/20261101_stadium_atletico/03_w.jpg
+    card:
+      <<: *id_origin
+      highlight_row: 4
+  - text: 競技場は、3度とも、オリンピックの舞台にはなりませんでした。
+    image: assets/images/20261101_stadium_atletico/01_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Metropolitano_Stadium
+  - https://es.wikipedia.org/wiki/Estadio_Metropolitano_(Madrid)
+- id: move
+  heading: アトレティコの引っ越しは、なぜ合意から9年近くかかったのか
+  bg: assets/images/20261101_stadium_atletico/01_w.jpg
+  tier: 背景
+  telop: 合意は2008年12月。移る日は五輪の招致と経済危機で何度も延び、開場は2017年9月
+  narrator: 解説
+  card: &id_move
+    type: timeline
+    title: 引っ越しまでの歩み（ウィキペディア）
+    rows:
+    - - 2008年12月
+      - クラブと市長が、移る合意に署名
+    - - 2012年春
+      - 下の客席と陸上のトラックを外す
+    - - 2013年9月
+      - クラブが、ここを本拠地にする計画を発表
+    - - 2017年
+      - クラブが市から買い取る
+    - - 2017年9月
+      - 改装して開場。マラガに1対0
+    focus: 2017年9月
+    highlight_row: 0
+  say:
+  - text: アトレティコが引っ越すと決まったのは、2008年12月です。
+    image: assets/images/20261101_stadium_atletico/02_w.jpg
+    card:
+      <<: *id_move
+      highlight_row: 0
+  - text: クラブの会長とマドリード市長が、合意に署名しました。
+    image: assets/images/20261101_stadium_atletico/02_w.jpg
+    card: none
+  - text: 当初の予定では、2013年に移るはずでした。
+    image: assets/images/20261101_stadium_atletico/02_w.jpg
+    card: none
+  - text: でも日付は、何度も後ろへずれます。理由は、五輪の招致と、経済危機でした。
+    emph: true
+    image: assets/images/20261101_stadium_atletico/01_w.jpg
+    card: none
+  - text: 2012年の春、下の客席と、陸上のトラックが外されます。
+    image: assets/images/20261101_stadium_atletico/04_w.jpg
+    card:
+      <<: *id_move
+      highlight_row: 1
+  - text: 2020年大会の落選と同じ月、2013年9月に、クラブは計画を発表します。
+    image: assets/images/20261101_stadium_atletico/04_w.jpg
+    card:
+      <<: *id_move
+      highlight_row: 2
+  - text: 2017年、クラブが市から、この建物を買い取ります。
+    image: assets/images/20261101_stadium_atletico/02_w.jpg
+    card:
+      <<: *id_move
+      highlight_row: 3
+  - text: そして2017年9月16日、改装した新しい本拠地が開きました。
+    emph: true
+    image: assets/images/20261101_stadium_atletico/02_w.jpg
+    card:
+      <<: *id_move
+      highlight_row: 4
+  - text: 相手はマラガ。アトレティコが、1対0で勝ちました。
+    image: assets/images/20261101_stadium_atletico/02_w.jpg
+    card:
+      <<: *id_move
+      highlight_row: 4
+  - text: 最初のゴールを決めたのは、グリーズマンでした。
+    image: assets/images/20261101_stadium_atletico/01_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Metropolitano_Stadium
+  - https://es.wikipedia.org/wiki/Estadio_Metropolitano_(Madrid)
+- id: name
+  heading: 本拠地の名前は、なぜ3回も変わったのか
+  bg: assets/images/20261101_stadium_atletico/01_w.jpg
+  tier: 背景
+  telop: 名前は、スポンサーの会社が変わるたびに変わった。ワンダ、シビタス、リヤド・エア
+  narrator: 解説
+  card: &id_name
+    type: timeline
+    title: 本拠地の名前（ウィキペディア）
+    rows:
+    - - 2017年
+      - ワンダ・メトロポリターノ
+    - - 2022年7月
+      - シビタス・メトロポリターノ
+    - - 2024年10月
+      - リヤド・エア・メトロポリターノ
+    focus: 2024年10月
+    highlight_row: 0
+  say:
+  - text: 本拠地の名前は、スポンサーの会社が変わるたびに、変わってきました。
+    image: assets/images/20261101_stadium_atletico/01_w.jpg
+    card: none
+  - text: 最初は、2017年の開場に合わせて、ワンダ・メトロポリターノ。
+    image: assets/images/20261101_stadium_atletico/02_w.jpg
+    card:
+      <<: *id_name
+      highlight_row: 0
+  - text: ワンダは、中国の企業グループの名前です。
+    image: assets/images/20261101_stadium_atletico/02_w.jpg
+    card: none
+  - text: 2022年7月からは、不動産会社の名前で、シビタス・メトロポリターノ。
+    image: assets/images/20261101_stadium_atletico/02_w.jpg
+    card:
+      <<: *id_name
+      highlight_row: 1
+  - text: 2024年10月からは、リヤド・エア・メトロポリターノ。
+    emph: true
+    image: assets/images/20261101_stadium_atletico/01_w.jpg
+    card:
+      <<: *id_name
+      highlight_row: 2
+  - text: リヤド・エアは、サウジアラビアの航空会社です。
+    image: assets/images/20261101_stadium_atletico/01_w.jpg
+    card:
+      <<: *id_name
+      highlight_row: 2
+  - text: 変わらないのは、真ん中の、メトロポリターノの部分です。
+    image: assets/images/20261101_stadium_atletico/01_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Metropolitano_Stadium
+  - https://es.wikipedia.org/wiki/Estadio_Metropolitano_(Madrid)
+  - https://www.zawya.com/en/press-release/companies-news/riyadh-air-the-new-national-airline-of-saudi-arabia-is-the-new-naming-partner-of-atletico-de-madrids-metropolitano-stadium-k26yptf8
+- id: view
+  viewpoint: true
+  heading: 見立て・7万813席の本拠地は、今季どこまで埋まっているのか
+  bg: assets/images/20261101_stadium_atletico/01_w.jpg
+  tier: 報道
+  telop: 今季のホーム5試合の平均は6万5564人、収容の92.6％。レアル・マドリード戦は7万514人で、満員まで299席
+  narrator: 解説
+  card: &id_view
+    type: table
+    title: 今季のホーム5試合の入場（ESPNの試合記録）
+    columns:
+    - 相手
+    - 入場
+    rows:
+    - - マラガ
+      - 6万5785人
+    - - ビジャレアル
+      - 6万1978人
+    - - オサスナ
+      - 6万869人
+    - - レアル・マドリード
+      - 7万514人
+    - - デポルティーボ
+      - 6万8674人
+    - - 平均
+      - 6万5564人（収容の92.6％）
+    highlight_row: 5
+  say:
+  - text: では、今季のホームは、どこまで埋まっているのか。数字は、10月30日の時点です。
+    emph: true
+    image: assets/images/20261101_stadium_atletico/01_w.jpg
+    card: none
+  - text: ホームの5試合の平均は、6万5564人。収容の92.6％。
+    image: assets/images/20261101_stadium_atletico/01_w.jpg
+    card:
+      <<: *id_view
+      highlight_row: 5
+    mark:
+      kind: circle
+      row: 5
+  - text: いちばん多かったのは、9月20日の、レアル・マドリードとの試合。7万514人です。
+    image: assets/images/20261101_stadium_atletico/02_w.jpg
+    card:
+      <<: *id_view
+      highlight_row: 3
+  - text: この本拠地の、入場の新記録。前の記録は、昨季のレアル戦の、7万112人でした。
+    emph: true
+    image: assets/images/20261101_stadium_atletico/02_w.jpg
+    card: none
+  - text: 満員まで、あと299席。
+    image: assets/images/20261101_stadium_atletico/02_w.jpg
+    card:
+      type: calc
+      title: 満員まであと何席か（自分で引いた）
+      terms:
+      - - 7万813人
+        - いまの収容
+      - - 7万514人
+        - レアル戦の入場
+      - - 299席
+        - 引いた答え
+      ops:
+      - −
+      - ＝
+  - text: ほかの4試合の平均は、収容の90.8％。レアル戦は、99.6％でした。
+    image: assets/images/20261101_stadium_atletico/01_w.jpg
+    card:
+      type: stats
+      title: 収容の何％が埋まったか（ESPNの試合記録から割った）
+      items:
+      - - '99.6'
+        - ％
+        - レアル・マドリード戦
+      - - '92.6'
+        - ％
+        - ホーム5試合の平均
+      - - '90.8'
+        - ％
+        - レアル戦を除く4試合の平均
+      focus: 0
+  - text: 来年、この本拠地で、チャンピオンズリーグの決勝が開かれます。
+    image: assets/images/20261101_stadium_atletico/01_w.jpg
+    card: none
+  - text: 予定は、2027年6月5日です。
+    image: assets/images/20261101_stadium_atletico/01_w.jpg
+    card: none
+  - text: 決勝の舞台になるのは、2019年に続いて、2度目です。
+    image: assets/images/20261101_stadium_atletico/02_w.jpg
+    card: none
+  - text: 2019年の決勝は、リヴァプールがトッテナムに2対0。
+    image: assets/images/20261101_stadium_atletico/02_w.jpg
+    card: none
+  - text: 入場は6万3272人。いまの収容より、7541人少ない数字でした。
+    image: assets/images/20261101_stadium_atletico/02_w.jpg
+    card: none
+  - text: 五輪の舞台にならなかった競技場は、2度目の決勝を、何人で迎えるのか。
+    emph: true
+    image: assets/images/20261101_stadium_atletico/01_w.jpg
+    card: none
+  sources:
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard（2026-27 ラ・リーガ、アトレティコのホーム5試合）
+  - https://www.goal.com/en/news/away-from-the-refereeing-controversy-atletico-madrid-celebrates-its-record/blt6c28caf29f6d3bb2
+  - https://atletimedia.com/el-metropolitano-vuelve-a-batir-records-con-el-real-madrid/
+  - https://en.wikipedia.org/wiki/2027_UEFA_Champions_League_final
+  - https://en.wikipedia.org/wiki/Metropolitano_Stadium

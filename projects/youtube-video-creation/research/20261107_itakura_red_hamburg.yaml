@@ -1,0 +1,119 @@
+# 取材メモ（2026年11月7日）板倉滉、5試合ぶりの先発で2枚目の警告（ニュースのショート。見せ方 X＝冒頭1秒の強い一言。本人・監督の言葉は取れなかった）
+# 取材: 2026-11-07。requests（ブラウザUA）と WebFetch で本文を読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: フットボールチャンネル 2026-11-07 06:27「ボルシアMG板倉滉、5試合ぶり先発復帰も痛恨の退場処分…」（1・2ページ全文を読んだ）。
+# 出典で確かめたこと:
+#   ・ESPN の試合データ（site.api.espn.com summary event=401884739、11/6 19:30 UTC キックオフ）:
+#       ハンブルガーSV 3-1 ボルシアMG。11分 ムハイム（HSV）／38分 板倉に警告（ESPN は "bad foul"）／44分 ボルシアMGが同点（1-1）／49分 板倉に2枚目の警告で退場
+#       ／59分 ナンジャ（HSV）／70分 グレンベク（HSV）。板倉は先発、アピアランス1、ファウル4、赤1。宇野禅斗・町野修斗も先発（81分に2人とも交代）。
+#       ボルシアMGの退場者は板倉だけ。チーム全体のファウルは ボルシアMG 16・HSV 6。
+#   ・フットボールチャンネル: 板倉は9月19日のマインツ戦を最後に負傷離脱 → 10月27日カールスルーエ戦（ポカール）で復帰 → 前節パーダーボルン戦は77分から途中出場 → 今回リーグ戦5試合ぶりの先発。
+#       退場は2023年4月29日のシュトゥットガルト戦以来、約3年半ぶり（→ 報道として使う。ESPN の試合記録までは遡っていない）。
+#       「左サイドから突破されそうになったところ、板倉が手を使って相手選手を倒した」（フットボールチャンネル）。
+#   ・独 dpa（zdfheute・Rheinpfalz）: 「49分、板倉は繰り返しのファウルで警告2枚の退場」「Nandja は1時間ごろに勝ち越し」。→ 49分で3社（ESPN・dpa・bmg-news）が一致。
+#   ・ESPN standings（ger.1、11/7 取得）: ボルシアMG 9試合 1勝1分7敗 勝ち点4 18位。17位シャルケ 8試合 勝ち点6。
+# 記録が食い違う所（台本では書かない）:
+#   ・44分の同点ゴールの得点者: フットボールチャンネル・dpa・bmg-news は「スカリー」、ESPN は「ハック（スカリーのシュートが当たった）」→ 名前は出さず「44分に追いつく」とだけ言う。
+#   ・2枚目の警告の相手: フットボールチャンネルは「左サイドから突破しようとした相手」、ZDF は「ムラー・ウォルフを手で止めた」、t-online ティッカーは「グレンベクを倒した」→ 相手の名前は出さない。「相手を手で止めた」とも言い切らない（「2枚目の警告で退場」だけ）。
+#   ・59分／60分、10分／11分のずれは出典で1分違う → ESPN の分を使い、語りでは「約20分」「10分あまり」と言う。
+# 取れなかったもの（正直に）:
+#   ・依頼にあった「ブレッシン監督『馬鹿げている』」の発言は、フットボールチャンネルの本文（1・2ページ）にも、ZDF・Rheinpfalz・tixio・bmg-news・sport.de・t-online・headtopics・ESPN・ゲキサカの試合記録にも無く、
+#     WebSearch でも見つからなかった（ゲキサカの板倉の記事は 11/7 朝の時点で未掲載）。→ 使わない。台本・題・サムネに入れない。出どころが見つかれば Y に変える。
+#   ・板倉本人の試合後コメントも取れなかった。反応（ネットの声）は0件（作らない）。approve は --no-voices。
+# 前の本との重なり: scripts/20261028_itakura_return_pokal（ポカールで77分に復帰）／20261017_itakura_return。→ 今回の初出は「5試合ぶりの先発・2枚目の警告での退場・退場後の失点」。復帰の経緯は一言だけ。
+# 本人の言葉: なし。X。
+slot: japanese
+date: "2026年11月7日"
+format: news
+no_main: true
+people: [板倉滉, ボルシアMG, ハンブルガーSV]
+
+short_style: X
+short_hook_word: 約3年半ぶりの退場
+short_photos:
+  - assets/images/20261107_itakura_red_hamburg/01_v.jpg
+  - assets/images/20261107_itakura_red_hamburg/03_v.jpg
+  - assets/images/20261107_itakura_red_hamburg/02_v.jpg
+short_question: 板倉滉の2枚目のイエローカードは、避けられたと思いますか。
+short_telops: []
+
+theme:
+  id: itakura_red_hamburg
+  league: germany
+  league_name: ブンデスリーガ
+  prefix: ""
+  title: 板倉滉の先発復帰戦。ハンブルガーSV戦の49分に何が起きたのか
+  hook: ""
+  question: 先発に戻った板倉滉は、ハンブルガーSV戦で何が起きたのか
+  takeaway: 板倉の退場までの49分間は1対1だった。退場から約20分のあいだに2点を失い、ボルシアMGは1対3で敗れた。9試合で1勝1分7敗、勝ち点4の18位のまま
+
+thumbnail:
+  layout: face
+  line1: 板倉滉 5試合ぶり先発
+  line2: 49分で2枚目の警告
+  tags: [板倉滉, ボルシアMG]
+  photo: assets/images/20261107_itakura_red_hamburg/03_w.jpg
+  short_photo: assets/images/20261107_itakura_red_hamburg/01_v.jpg
+
+answer: 板倉は5試合ぶりの先発で、49分に2枚目の警告を受けて退場。そのあと2点を失って1対3で負けた
+watch: 代表ウィークのあとのボルシアMGの試合
+
+sections:
+  - id: what
+    main: true
+    heading: 先発に戻った板倉滉に、何が起きたのか
+    tier: 報道
+    telop: 板倉滉、5試合ぶり先発の49分に退場
+    say:
+      - text: ボルシアMGの板倉滉が、ハンブルガーSV戦で退場になりました。
+      - text: 11月6日のブンデスリーガ第9節。板倉は、リーグ戦では5試合ぶりに先発しました。
+        image: assets/images/20261107_itakura_red_hamburg/01_w.jpg
+      - text: 9月19日のマインツ戦を最後に、負傷で離れていました。
+      - text: 10月27日のドイツ杯、国内のカップ戦で復帰。その次のリーグ戦は、77分からの途中出場でした。
+      - text: そして今回、先発に戻ってきたのです。
+        image: assets/images/20261107_itakura_red_hamburg/02_w.jpg
+      - text: 前半38分、板倉にイエローカード。
+      - text: そして後半の49分。報道では、相手の突破を止めようとして倒し、2枚目の警告で退場になりました。
+        emph: true
+        image: assets/images/20261107_itakura_red_hamburg/03_w.jpg
+      - text: 板倉の退場は、2023年4月のシュトゥットガルト戦以来、約3年半ぶりです。
+        image: assets/images/20261107_itakura_red_hamburg/01_w.jpg
+      - text: 退場の時点で、スコアは1対1。ボルシアMGはこのあと2点を失い、1対3で敗れました。
+        image: assets/images/20261107_itakura_red_hamburg/02_w.jpg
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/11/07/post1056156/
+      - https://www.espn.com/soccer/match/_/gameId/401884739
+      - https://www.zdfheute.de/sport/fussball-bundesliga/bundesliga-hamburger-sv-borussia-moenchengladbach-100.html
+  - id: game
+    heading: 退場の前と後で、スコアはどう動いたか
+    tier: 報道
+    telop: ハンブルガーSV 3-1 ボルシアMG
+    say:
+      - text: 板倉滉のボルシアMGは、前半11分に先制を許しながら、44分に追いつきました。
+        image: assets/images/20261107_itakura_red_hamburg/01_w.jpg
+        card: {type: table, title: ハンブルガーSV 3-1 ボルシアMG, columns: [分, できごと], rows: [[11分, ハンブルガーSVが先制], [38分, 板倉に警告], [44分, ボルシアMGが同点（1-1）], [49分, 板倉が2枚目の警告で退場], [59分, ハンブルガーSVが勝ち越し], [70分, ハンブルガーSVが3点目]], highlight_row: 3}
+      - text: 59分に勝ち越され、70分に3点目を許しました。
+        image: assets/images/20261107_itakura_red_hamburg/03_w.jpg
+        emph: true
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401884739
+      - https://www.rheinpfalz.de/sport/1-fussball-bundesliga_artikel,-hsv-stoppt-gladbachs-aufw%C3%A4rtstrend-_arid,5946205.html
+  - id: view
+    viewpoint: true
+    heading: 板倉の退場は、ボルシアMGの試合と順位にどう響いたか
+    tier: 背景
+    telop: 退場まで1対1、そのあと約20分で2失点
+    say:
+      - text: 見立てです。1対3で負けた試合ですが、板倉が退場するまでの49分間は1対1でした。
+        card: {type: table, title: ボルシアMG ブンデスリーガ9試合, columns: [項目, 数字], rows: [[成績, 1勝1分7敗], [勝ち点, 4], [順位, 18位], [17位シャルケ, 勝ち点6（8試合）]], highlight_row: 1}
+      - text: 退場の前は1対1、退場の後は0対2。
+      - text: 板倉のボルシアMGは9試合で1勝1分7敗。勝ち点4で、18チーム中18位のままです。
+        card: none
+      - text: 17位のシャルケとは、勝ち点で2の差があります。
+      - text: ボルシアMGの次の試合は、代表戦の期間のあとです。板倉滉は、その試合をどんな形で迎えるのか。
+        emph: true
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401884739
+      - https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings

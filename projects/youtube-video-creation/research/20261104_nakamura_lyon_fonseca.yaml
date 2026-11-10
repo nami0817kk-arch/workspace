@@ -1,0 +1,162 @@
+# 取材メモ（2026年11月4日）中村敬斗のリヨン、フォンセカ監督がスポルティングへ（ニュースのショート。見せ方 X＝冒頭に強い一言）
+# 取材: 2026-11-04（10時台 JST）。requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。
+# 題材の元: サッカーキング 2026-11-03「中村敬斗在籍のリヨン、スポルティング行き迫るフォンセカ監督の後任はペップの元副官か」（全文。レキップの報道）。
+# 出典で確かめたこと:
+#   ・ESPN の試合データ（fra.1 summary event=401876418、11/1 16:15 UTC）: リヨン 2-0 アンジェ。
+#       38分 ヌアマ（右足、アシスト トリソ）／86分 トリソのヘディング（"Assisted by Felix Bacher following a corner"）。
+#       中村は先発で交代なし（＝フル出場）。ESPN の中村のアシストは 0（記録上のアシストはバッハー）。
+#   ・サッカーキング 2026-11-02（2223786）: アンジェ戦でフル出場、「左コーナーキックからコランタン・トリッソのゴールをアシスト」。
+#       現地メディア（Olympique & Lyonnais）が「洗練された仕事人」、先制点の「起点」、ファイナルサードのパス成功率87%。
+#       → 記事は「加入後初アシスト」と書くが、ELで2アシスト（10/15 パレス戦、ESPN）があるので「初」は使わない。
+#       → アシストの数は記録（ESPN はバッハー）と報道で食い違うので、台本は「中村の左コーナーキックから」とだけ言う。アシストとは言わない。
+#   ・Football ZONE 682363: 「今季リーグ戦初先発でアシスト」「後半41分には左コーナーキックのキッカーに立って追加点を導いた」。→ リーグ戦初先発は ESPN の各試合でも確かめた（下）。
+#   ・Olympique & Lyonnais 411769（11/1 試合の採点）: 中村は「先制点につながる場面の起点。中央で起点になってから、左のアブネルへ展開」。34分の突破。
+#   ・Olympique & Lyonnais 411803（11/2）: アンジェ戦がフォンセカ監督のリヨンでの最後の試合。2点目のあと、先発の11人全員がベンチへ向かい監督の腕に飛び込んだ。
+#       日曜に選手たちへ（長くはいないと）伝えた。行き先はスポルティングとの契約。
+#   ・Olympique & Lyonnais 411773（11/1 試合後の会見）: フォンセカ監督 "J'aime beaucoup ce groupe, nous avons une connexion très forte.
+#       C'était seulement l'émotion d'une personne qui aime beaucoup ses joueurs."（2点目の喜び方を聞かれて）／去就は「正直、分からない」。
+#       → 台本の言葉は、このフランス語を私が日本語にしたもの（ce groupe は「このチーム」と訳した）。語順はなぞらず、日本語として通るように直した。
+#   ・Olympique & Lyonnais 411856（11/2）: 月曜に練習場で選手に別れを伝えた（RMC の報道を引用）。クラブの正式発表はまだ。
+#   ・Olympique & Lyonnais 411811（11/2）: リヨンでの47勝目が最後の勝利。契約は2027年6月まで。リヨンは3位（勝ち点17）。
+#       ESPN 順位表（11/4 取得）: 1位PSG 20、2位リール 18、3位リヨン 17（9試合）。
+#       ※サッカーキングの「勝ち点14の5位」はアンジェ戦の前の数字なので使わない。
+#   ・A Bola 2026-11-03 18:24「Paulo Fonseca já está em Lisboa para assinar pelo Sporting」: 火曜（3日）の夜にリスボンの空港に到着。リヨンを離れルイ・ボルジェスの後任に。
+#       言葉 "Depois teremos tempo de falar. … Sporting fez-me mudar de ideias quanto a um regresso a Portugal? Claro." 水曜に契約・お披露目の見込み。
+#       → 台本では「3日の夜にリスボンに着いた」事実だけ使う。言葉は短い挨拶なので使わない（題に答えない）。
+#   ・Record（ポルトガル）見出し: 「Paulo Fonseca chega hoje: treinador vai assinar até 2030」→ 契約年数は見出しだけなので使わない。
+#   ・Olympique & Lyonnais 411947（11/3）: 暫定でコーチのジョルジェ・マシエル氏が、5日のEL ソシエダ戦と9日のブレスト戦を指揮する。
+#   ・後任: サッカーキング（レキップ）／Olympique & Lyonnais 411800（A Bola）: カルロス・ビセンス氏（43歳）が有力。
+#       2021-22季から2025年6月までグアルディオラ監督のもとでシティのトップチームのコーチ。2025年7月から今年10月までブラガの監督。→ 報道。
+#   ・ESPN scoreboard 2026-11-05: Lyon at Real Sociedad（EL、レアレ・アレナ）。→ 久保建英との日本人対決は1行だけ（別の本で久保を扱う）。
+#   ・確度: 監督の退団・スポルティング行きは報道（11/4 10時 JST 時点でリヨン・スポルティングの正式発表は見つからない）。
+#       公開前に正式発表が出ていれば tier を確定にし、「報じられています」を直す。
+# 自分で数えたもの（ESPN の各試合の交代時刻。90分までで数えた。追加時間は入れない）:
+#   リーグ戦の中村: パリFC戦 75分から15分／レンヌ戦 79分から11分／ランス戦 60分から30分／ニース戦 61分から70分の退場まで9分 → 途中出場4試合で計65分。
+#   アンジェ戦 先発・交代なしで90分。→ 1試合で、それまでの4試合を足した65分を超えた。（ELは別。ELは3試合とも先発）
+# 前の本との重なり: scripts/20261010_lyon_nakamura（リヨンでの出場時間「3試合を足しても56分」）／20261016 ELで2アシスト／20261019〜1023 退場・謝罪・処分。
+#   → 今回の初出: 監督の退団・リーグ戦初先発の90分・2点目のCK・監督の試合後の言葉・暫定監督・後任候補。
+#   出場時間の数え方は10/10と同じ型だが、数字は4試合65分→初先発90分に更新した新しい比べ。退場の話は繰り返さない。
+# 本人の言葉: 無い。中村本人の発言（試合後・SNS）は、サッカーキング・Football ZONE（クラブ公式Xの喜ぶ映像の記事のみ）・ゲキサカ・Olympique & Lyonnais で見つからない。
+#   フォンセカ監督の中村評も見つからない（試合後の言葉は選手全体への言葉）。→ X。
+# 反応: 0件。Olympique & Lyonnais のコメント欄に中村を挙げた投稿が2件あったが、どちらも投稿の前半か後半が別の話（アジアカップ・他の選手）なので使わない。
+slot: japanese
+date: "2026年11月4日"
+format: news
+no_main: true
+people: [中村敬斗, リヨン, フォンセカ監督, スポルティング, アンジェ, マシエル, ビセンス, レアル・ソシエダ, 久保建英]
+
+short_style: X
+short_hook_word: 監督の最後の試合
+short_question: 監督が代わるリヨンで、中村敬斗は先発の座をつかめると思いますか。
+short_photos:
+  - assets/images/20261104_nakamura_lyon_fonseca/02_v.jpg
+  - assets/images/20261104_nakamura_lyon_fonseca/01_v.jpg
+  - assets/images/20261104_nakamura_lyon_fonseca/04_v.jpg
+  - assets/images/20261104_nakamura_lyon_fonseca/05_v.jpg
+  - assets/images/20261104_nakamura_lyon_fonseca/03_v.jpg
+short_telops:
+  - {match: ベンチへ, text: 2点目のあと/先発の11人がベンチへ}
+  - {match: 初めての先発, text: リーグ戦初先発/交代なしの90分}
+  - {match: 左コーナーキック, text: 86分の2点目/中村の左CKから}
+  - {match: リスボン, text: 3日夜/監督はリスボンに到着}
+
+theme:
+  id: nakamura_lyon_fonseca
+  league: france
+  league_name: リーグ・アン
+  prefix: ""
+  title: 中村敬斗、リーグ初先発で90分。その試合のあと、リヨンに起きたこと
+  hook: ""
+  question: 中村敬斗をリーグで初めて先発させた試合は、リヨンにとってどんな試合だったのか
+  takeaway: リーグ戦の中村は、途中出場の4試合を足して65分。アンジェ戦は先発で交代なしの90分で、1試合でそれまでの合計を超えた。その試合が、フォンセカ監督のリヨンでの最後の試合になった
+
+thumbnail:
+  layout: face
+  line1: 中村敬斗 初先発で90分
+  line2: その試合が監督の最後に
+  tags: [中村敬斗, リヨン]
+  photo: assets/images/20261104_nakamura_lyon_fonseca/02_w.jpg
+  short_photo: assets/images/20261104_nakamura_lyon_fonseca/02_v.jpg
+
+answer: フォンセカ監督のリヨンでの最後の試合。2点目のあと選手は監督と抱き合い、監督は2日後にリスボンへ
+watch: 5日のヨーロッパリーグ、ソシエダ戦（暫定はマシエル氏）
+
+sections:
+  - id: what
+    main: true
+    heading: 中村敬斗の初先発の試合は、監督の最後の試合だった
+    tier: 報道
+    telop: リヨンのフォンセカ監督がスポルティングへ
+    say:
+      - text: 中村敬斗のリヨンを、フォンセカ監督が去ると報じられました。
+        image: assets/images/20261104_pair_fonseca_nakamura/01.jpg
+      - text: 選手と抱き合った理由を、監督はこう話しています。
+      - voice: フォンセカ監督
+        text: このチームが大好きです。
+        emph: true
+      - voice: フォンセカ監督
+        text: 私たちには、とても強いつながりがあります。
+        cont: true
+      - voice: フォンセカ監督
+        text: 選手を深く愛している人間の、ただの感情でした。
+        cont: true
+      - text: 監督の最後の試合は、1日のアンジェ戦。
+        image: assets/images/20261104_nakamura_lyon_fonseca/01_w.jpg
+      - text: 2点目が入ると、先発の11人がベンチへ走りました。
+      - text: この試合で中村は、リーグ戦で初めての先発。交代なしで90分プレーしました。
+        card: {type: table, title: リヨン 2-0 アンジェ, columns: [分, 得点, 中村の場面], rows: [[38分, ヌアマ, 中央で起点に], [86分, トリソ, 左コーナーキック]], highlight_row: 1}
+      - text: 86分の2点目は、中村の左コーナーキックから生まれました。
+      - text: 先制点も、中村が中央で起点になり、左へ展開した場面からでした。
+      - text: そして3日の夜、監督はスポルティングと契約するため、リスボンに着いています。
+        card: none
+        image: assets/images/20261104_nakamura_lyon_fonseca/03_w.jpg
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/fra/20261103/2224140.html
+      - https://www.soccer-king.jp/news/world/fra/20261102/2223786.html
+      - https://www.olympique-et-lyonnais.com/entre-lol-et-fonseca-une-soiree-qui-avait-tout-dun-adieu,411803.html
+      - https://www.olympique-et-lyonnais.com/fonseca-rester-ou-partir-de-lol-on-va-voir-dans-les-prochains-jours,411773.html
+      - https://www.olympique-et-lyonnais.com/ol-angers-2-0-le-barometre-du-match-ce-quil-faut-retenir,411769.html
+      - https://www.abola.pt/noticias/paulo-fonseca-ja-esta-em-lisboa-para-assinar-pelo-sporting-teremos-tempo-de-falar-2026110318244056785
+      - https://www.football-zone.net/archives/682363
+      - https://www.espn.com/soccer/match/_/gameId/401876418
+  - id: next
+    heading: 監督が去ったあと、リヨンは誰が率いるのか
+    tier: 報道
+    telop: 暫定はマシエル氏。後任はビセンス氏が有力
+    say:
+      - text: 中村の次の試合は5日、ヨーロッパリーグの敵地でのソシエダ戦です。
+        image: assets/images/20261104_nakamura_lyon_fonseca/05_w.jpg
+      - text: この試合は、コーチのマシエル氏が暫定で指揮を執る見込みです。
+      - text: 後任には、ビセンス氏が有力とされています。
+      - text: グアルディオラ監督のもとでシティのコーチを務め、前はブラガを率いた43歳です。
+      - text: 相手のソシエダには久保建英がいて、日本人対決になるかもしれません。
+    official: false
+    sources:
+      - https://www.olympique-et-lyonnais.com/deuxieme-interim-a-lol-pour-jorge-maciel,411947.html
+      - https://www.soccer-king.jp/news/world/fra/20261103/2224140.html
+      - https://www.olympique-et-lyonnais.com/ol-un-ancien-adjoint-de-guardiola-pour-remplacer-fonseca,411800.html
+      - https://www.espn.com/soccer/scoreboard/_/date/20261105/league/uefa.europa
+  - id: view
+    viewpoint: true
+    heading: リーグ戦の中村の出場時間は、初先発でどう変わったか
+    tier: 背景
+    telop: リーグ戦の出場 途中出場4試合で65分→初先発で90分
+    say:
+      - text: 見立てです。リーグ戦の中村は、途中出場の4試合を足して65分でした。
+        image: assets/images/20261104_nakamura_lyon_fonseca/02_w.jpg
+        card: {type: table, title: 中村敬斗 リーグ戦の出場時間, columns: [相手, 出場], rows: [[パリFC, 15分], [レンヌ, 11分], [ランス, 30分], [ニース, 9分], [アンジェ（初先発）, 90分]], highlight_row: 4}
+      - text: アンジェ戦は1試合で90分。それまでの合計を超えました。
+      - text: 監督が最後に送り出した先発に、中村がいました。
+        image: assets/images/20261104_nakamura_lyon_fonseca/01_w.jpg
+        emph: true
+        card: none
+      - text: 新しい監督のもとで、先発が続くかに注目です。
+        image: assets/images/20261104_nakamura_lyon_fonseca/05_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401876418
+      - https://www.espn.com/soccer/match/_/gameId/401876460
+      - https://www.espn.com/soccer/match/_/gameId/401876454
+      - https://www.espn.com/soccer/match/_/gameId/401876447
+      - https://www.espn.com/soccer/match/_/gameId/401876434

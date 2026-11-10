@@ -1,0 +1,463 @@
+# ユニフォームとエンブレムの歴史 コヴェントリー（10/31 作成、11/1 分）。雛形は 10/29 ブレントフォード回。
+# 題の問い：コヴェントリーの空色のシャツは、いつから空色だったのか（答え＝最初の空色は1898〜1922年。そのあと約40年離れ、1962年にジミー・ヒルが全身の空色で呼び戻した）。
+# 選んだ理由：プレミア⑪→⑳→①→⑩の並びの続きは ⑦ コヴェントリー（残りは ⑦ と ⑩ フラム。Hull・Ipswich・Chelsea・Leeds・Arsenal 等は出し済み）。
+#   フラムは「1896年から白シャツ・黒パンツで変わらない」ため歴史の節が薄く、ウィキペディアの kit の節はほぼスポンサー表だけ。コヴェントリーは色・紋章・広告の3つに話がある。
+# 重なり確認（2026-10-31）：scripts/*kit_*・research/covered.yaml・research/posted.json を grep。コヴェントリーのユニフォーム回は無し。
+#   20260920_pl07_coventry（クラブ紹介・41日前）、20261028_stadium_coventry（スタジアム・4日前）は別シリーズ。
+#   スタジアム回は「ジミー・ヒルが1981年に客席を全部椅子にした」を言っている→この回では言わない。坂元達裕の話もそちらで済み→この回では言わない（シャツの話に自然に入る所が無い）。
+# 今季のリーグ：ウィキペディア en "2026–27 Coventry City F.C. season"（league = Premier League、2026-10 時点 19位）と "Coventry City F.C."（The club competes in the Premier League）。
+# 取材：requests だけ。ブラウザ操作・JS実行・検索のAI要約は使っていない。
+#   読んだ：ウィキペディア en "Coventry City F.C."（Kit の節＝Colours／Kit makers and sponsorship、History の節）、"Jimmy Hill"、"Talbot"（Coventry City の記述）、
+#     Historical Football Kits（HFK。ファンの資料サイトだが年表を明記）：Coventry City の Background、
+#     Coventry Live（旧コヴェントリー・テレグラフ 2013-06-06）のチョコレート色の記事、BBC Sport 2019-10-13 の2トーンのシャツの記事。
+#   読めなかった：クラブ公式（ccfc.co.uk の history ページは 404）。紋章の節は HFK 1本だけ→紋章の年・順は HFK の記述のまま、断定を弱めて言う。
+# ---- 食い違い・断ったこと ----
+#   ・タルボットの年：ウィキペディア「Coventry City」の表は 1980–81 から、「Talbot」の記事は「1981年から1983年」→「1980年代のはじめ」とだけ言う。
+#   ・名前を変える案を止めたのは誰か：「Coventry City」は FA、「Talbot」は Football League →「通りませんでした」とだけ言う。
+#   ・「リーグで最初の胸の広告」はウィキペディアの文だが、他の記録と食い違うおそれがあるので言わない。
+#   ・BBC が中継を断った話は HFK だけ（「胸の広告は BBC の中継で禁止」「カメラのある試合だけ別のシャツ」）。台本は事実の形で書き、取材メモに単独出典と残す。
+#   ・空色の年：ウィキペディア「1898年に初めて着て、1922年まで」「そのあと青と白の組み合わせが1960年代まで」。HFK の表と矛盾なし。1922→1962 は「およそ40年」と言う。
+#   ・1962：ウィキペディア「Colours」は「1962年にヒルが戻した」。HFK は「1961年11月〜1962年に新しい全身の空色」。「ヒルが監督になったのは1961年11月、空色は翌1962年」と言う。
+#   ・チョコレート色の復刻：ウィキペディアは「2008–09年の最終ホーム戦（ワトフォード戦）」、Coventry Live は「2009年に創立125周年の復刻版を1125枚限定」→「2009年」。
+#     その試合の結果（2点差を逆転された）は入れない。
+#   ・「最悪のシャツ」：Coventry Live「イギリスのサッカー史で最悪のおしゃれ、と何度も投票された」→「何度もひどいと名指しされてきた」。順位は言わない。
+# ---- 自分で数えた数 ----
+#   最初の空色：1922−1898＝24年。　離れていた期間：1962−1922＝40年（およそ）。　40÷24＝1.67→「約1.7倍」。
+#   空色が戻って初の1部：1967−1962＝5年。　1部にいた年数：ウィキペディア「34年連続」（1967〜2001）。
+#   チョコレート色→復刻：2009−1978＝31年。　創立125周年：1883＋125＝2008（復刻は2009）。
+#   紋章：2005年の発表→2008年の記念紋章＝3年後。
+# ---- 日本との接点 ----
+#   坂元達裕が在籍（research/pl_data/japan.json）。だが10/28 のスタジアム回で話した。ユニフォームの話と結ぶ自然な所が無いので入れない。
+# ---- 写真（assets/images/20261101_kit_coventry/、出典は credits.json）----
+#   10/28 のスタジアム回の Commons の写真を写したもの＋ジミー・ヒルの像など。エンブレム画像・放送映像・代理店の写真は使っていない。
+date: 2026年11月1日
+slot: other_2
+format: news
+series: ユニフォームとエンブレムの歴史
+voice_min: 0
+people:
+- コヴェントリー
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  end_bg: assets/images/20261101_kit_coventry/c01_derby_w.jpg
+  id: kit_coventry
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: コヴェントリー
+  title: コヴェントリーの空色のシャツは、いつから空色だったのか
+  question: コヴェントリーの空色は、いつ生まれ、なぜ一度消え、どう戻ったのか
+  opening_image: assets/images/20261101_kit_coventry/c01_derby_w.jpg
+  lead: 空色の、シャツ。
+  hook: ''
+  takeaway: 最初の空色は1898年から1922年までの24年。そのあと約40年は離れ、1962年にジミー・ヒルが全身の空色で呼び戻した。5年後の1967年に初めて1部へ。1978年の茶色いシャツは「最悪」と呼ばれたが、31年後に1125枚の復刻になった
+  hook_unused: ''
+thumbnail:
+  layout: classic
+  callouts:
+  - ヒルが呼び戻した
+  - 茶色のシャツ復刻
+  photo: assets/images/20261101_kit_coventry/c06_players_w.jpg
+  short_photo: assets/images/20261101_kit_coventry/c05_hill_v.jpg
+  line1: コヴェントリーの空色
+  line2: 一度、捨てていた
+  tags:
+  - コヴェントリー
+  - ユニフォーム
+  - エンブレム
+  - スカイブルーズ
+  - プレミアリーグ
+x-cards:
+  sky: &sky
+    type: timeline
+    title: 空色の歩み（ウィキペディア・HFK）
+    rows:
+    - - 1898年
+      - 最初の空色。1922年まで
+    - - 1922年
+      - 空色をやめ、青と白へ
+    - - 1959年
+      - 白いシャツと、小さな雄鶏の紋章
+    - - 1962年
+      - ジミー・ヒルが、全身を空色に
+    - - 1967年
+      - 初めて1部へ
+    focus: 1962年
+    highlight_row: 0
+  hill: &hill
+    type: document
+    label: ウィキペディア英語版「ジミー・ヒル」（訳）
+    paragraphs:
+    - ヒルは、ホームのシャツの色を空色に変え、「スカイブルーズ」という愛称を生んだ。
+    highlight:
+    - 空色
+    - スカイブルーズ
+  brown: &brown
+    type: timeline
+    title: 茶色いシャツの歩み（地元紙・ウィキペディア）
+    rows:
+    - - 1978年
+      - チョコレート色のアウェー。アドミラル製
+    - - 2008年
+      - 創立125年
+    - - 2009年
+      - 記念の復刻。1125枚だけ
+    focus: 1978年
+    highlight_row: 0
+  guilty: &guilty
+    type: document
+    label: 地元紙の記事（2013年6月・訳）
+    paragraphs:
+    - チョコレート色のシャツは、いつしか、空色のファンにとって「後ろめたい楽しみ」になった。
+    highlight:
+    - 後ろめたい楽しみ
+  twotone: &twotone
+    type: timeline
+    title: 白と黒のシャツ（BBC・ウィキペディア）
+    rows:
+    - - 1979年
+      - 街で、音楽レーベル「2トーン」が生まれる
+    - - 2019年
+      - 40周年。白と黒の3着目を着る
+    focus: 2019年
+    highlight_row: 1
+  talbot: &talbot
+    type: timeline
+    title: 胸の車のロゴの行方（ウィキペディア・HFK）
+    rows:
+    - - 1980年代の初め
+      - 胸に、車のメーカー「タルボット」
+    - - 改名案
+      - 会長のヒルが「コヴェントリー・タルボット」を提案
+    - - 中継
+      - 断られ、ロゴの無い別のシャツを用意
+    - - 1983年の夏まで
+      - タルボットとの関係が終わる
+    focus: 1980年代の初め
+    highlight_row: 0
+  crest: &crest
+    type: timeline
+    title: 紋章の歩み（HFK）
+    rows:
+    - - 1959年
+      - 小さな雄鶏、バンタムの紋章
+    - - 1969年
+      - 町の紋章から、象と城
+    - - 2005年
+      - 新しい紋章に、ファンが猛反対
+    - - 2008年
+      - 創立125年。ファンに聞いて決める
+    - - 2021年
+      - シャツに、昇る不死鳥
+    focus: 1969年
+    highlight_row: 0
+  view: &view
+    type: table
+    title: コヴェントリーの空色を数える
+    columns:
+    - 何を
+    - 数
+    rows:
+    - - 最初の空色（1898〜1922年）
+      - 24年
+    - - 空色を離れた期間（1922〜1962年）
+      - 約40年
+    - - 空色が戻ってから初の1部まで
+      - 5年
+    - - 1部に居続けた年数
+      - 34年
+    highlight_row: 0
+sections:
+- id: sky
+  main: true
+  heading: コヴェントリーの空色は、いつから空色だったのか
+  bg: assets/images/20261101_kit_coventry/c01_derby_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 最初の空色は1898年から。1922年に消え、1962年にジミー・ヒルが戻した
+  card: *sky
+  say:
+  - text: 今回は、コヴェントリーの、空色のシャツと、胸の紋章です。
+    image: assets/images/20261101_kit_coventry/c01_derby_w.jpg
+    card: none
+    emph: true
+  - text: コヴェントリーの愛称は、スカイブルーズ。空色のクラブです。
+    image: assets/images/20261101_kit_coventry/c01_derby_w.jpg
+    card: none
+  - text: ところが、この空色は、ずっと着てきた色ではありません。
+    image: assets/images/20261101_kit_coventry/c02_seats_w.jpg
+    card: none
+    emph: true
+  - text: 空色のシャツを最初に着たのは、1898年。いまのクラブの名前になった年です。
+    image: assets/images/20261101_kit_coventry/c03_ricoh2008_w.jpg
+    card:
+      <<: *sky
+      highlight_row: 0
+  - text: その空色は、1922年までで、いったん消えます。
+    image: assets/images/20261101_kit_coventry/c03_ricoh2008_w.jpg
+    card:
+      <<: *sky
+      highlight_row: 1
+  - text: そのあと、およそ40年は、青と白の組み合わせの時代が続きました。
+    image: assets/images/20261101_kit_coventry/c03_ricoh2008_w.jpg
+    card: none
+  - text: 1959年には、白いシャツに替えます。
+    image: assets/images/20261101_kit_coventry/c02_seats_w.jpg
+    card:
+      <<: *sky
+      highlight_row: 2
+  - text: 胸の紋章は、小さな雄鶏、バンタム。当時の愛称が、バンタムズだったからです。
+    image: assets/images/20261101_kit_coventry/c02_seats_w.jpg
+    card: none
+  - text: 変わったのは、1961年11月。元選手のジミー・ヒルが、監督になります。
+    image: assets/images/20261101_kit_coventry/c05_hill_w.jpg
+    card: none
+  - text: 翌1962年、シャツもパンツも、全身を空色に。愛称も、スカイブルーズに替えました。
+    image: assets/images/20261101_kit_coventry/c05_hill_w.jpg
+    card: *hill
+    emph: true
+    callword: 空色に戻す
+  - text: その5年後の1967年に、初めて、いまのプレミアにあたる1部へ上がります。
+    image: assets/images/20261101_kit_coventry/c04_sillett_w.jpg
+    card:
+      <<: *sky
+      highlight_row: 4
+  sources:
+  - https://en.wikipedia.org/wiki/Coventry_City_F.C.
+  - https://en.wikipedia.org/wiki/Jimmy_Hill
+  - https://www.historicalkits.co.uk/Coventry_City/Coventry_City.htm
+- id: brown
+  heading: 「最悪」と呼ばれた茶色いシャツを、なぜ復刻したのか
+  bg: assets/images/20261101_kit_coventry/c03_ricoh2008_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 1978年のチョコレート色は何度もひどいと言われ、2009年に1125枚で復刻
+  card: *brown
+  say:
+  - text: 空色のコヴェントリーには、有名な、茶色いシャツもあります。
+    image: assets/images/20261101_kit_coventry/c03_ricoh2008_w.jpg
+    card: none
+  - text: 1978年に出た、相手の本拠地で着る、アウェー用の、チョコレート色です。
+    image: assets/images/20261101_kit_coventry/c03_ricoh2008_w.jpg
+    card:
+      <<: *brown
+      highlight_row: 0
+  - text: アドミラル社の、有名なデザインを、茶色にしたシャツでした。
+    image: assets/images/20261101_kit_coventry/c01_derby_w.jpg
+    card: none
+  - text: イングランドのサッカー史で、いちばんひどいシャツだと、何度も言われてきました。
+    image: assets/images/20261101_kit_coventry/c01_derby_w.jpg
+    card: none
+    emph: true
+  - text: ところが、ファンには、愛されてもいます。
+    image: assets/images/20261101_kit_coventry/c02_seats_w.jpg
+    card: *guilty
+  - text: 2009年、創立125周年。このシャツが、31年ぶりに戻ります。
+    image: assets/images/20261101_kit_coventry/c02_seats_w.jpg
+    card:
+      <<: *brown
+      highlight_row: 2
+  - text: 限定は、1125枚。
+    image: assets/images/20261101_kit_coventry/c02_seats_w.jpg
+    card: none
+    emph: true
+  - text: しかも、そのシャツで、シーズン最後のホーム戦に出ました。
+    image: assets/images/20261101_kit_coventry/c03_ricoh2008_w.jpg
+    card: none
+  - text: ひどいと言われた色を、クラブは、自分から、着直したのです。
+    image: assets/images/20261101_kit_coventry/c03_ricoh2008_w.jpg
+    card: none
+    emph: true
+  sources:
+  - https://www.coventrytelegraph.net/sport/football/transfer-news/coventrys-infamous-chocolate-brown-kit-4066416
+  - https://en.wikipedia.org/wiki/Coventry_City_F.C.
+- id: talbot
+  heading: 胸の車のロゴは、なぜ中継を断られたのか
+  bg: assets/images/20261101_kit_coventry/c03_ricoh2008_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 1980年代の初め、胸にタルボット。改名案も出たが通らず、中継は断られた
+  card: *talbot
+  say:
+  - text: 1980年代のはじめ、胸に、車のメーカーの名前が入ります。タルボットです。
+    image: assets/images/20261101_kit_coventry/c03_ricoh2008_w.jpg
+    card:
+      <<: *talbot
+      highlight_row: 0
+  - text: コヴェントリーの工場で、車を作っていた会社でした。
+    image: assets/images/20261101_kit_coventry/c03_ricoh2008_w.jpg
+    card: none
+  - text: 当時の会長は、ジミー・ヒル。
+    image: assets/images/20261101_kit_coventry/c05_hill_w.jpg
+    card: none
+  - text: ヒルは、クラブの名前まで、コヴェントリー・タルボットに変えようとします。
+    image: assets/images/20261101_kit_coventry/c05_hill_w.jpg
+    card:
+      <<: *talbot
+      highlight_row: 1
+    emph: true
+  - text: けれど、この案は、通りませんでした。
+    image: assets/images/20261101_kit_coventry/c05_hill_w.jpg
+    card: none
+  - text: シャツのほうも、問題になります。
+    image: assets/images/20261101_kit_coventry/c02_seats_w.jpg
+    card:
+      <<: *talbot
+      highlight_row: 2
+  - text: イギリスの放送局、ビービーシーの中継では、胸の広告は認められていませんでした。
+    image: assets/images/20261101_kit_coventry/c02_seats_w.jpg
+    card: none
+  - text: ロゴの目立つシャツの試合を、ビービーシーは、中継しないと言います。
+    image: assets/images/20261101_kit_coventry/c02_seats_w.jpg
+    card: none
+  - text: そこでクラブは、カメラの入る試合のために、ロゴの無い別のシャツを用意しました。
+    image: assets/images/20261101_kit_coventry/c01_derby_w.jpg
+    card: none
+    emph: true
+  - text: タルボットとの関係は、1983年の夏までに終わります。
+    image: assets/images/20261101_kit_coventry/c01_derby_w.jpg
+    card:
+      <<: *talbot
+      highlight_row: 3
+  sources:
+  - https://en.wikipedia.org/wiki/Coventry_City_F.C.
+  - https://en.wikipedia.org/wiki/Talbot
+  - https://www.historicalkits.co.uk/Coventry_City/Coventry_City.htm
+- id: twotone
+  heading: 白と黒のシャツは、何の記念だったのか
+  bg: assets/images/20261101_kit_coventry/c02_seats_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 2019年の3着目は白と黒。街で生まれた音楽レーベル「2トーン」の40周年
+  card: *twotone
+  say:
+  - text: 2019年、コヴェントリーは、白と黒の、3着目のシャツを着ました。
+    image: assets/images/20261101_kit_coventry/c02_seats_w.jpg
+    card:
+      <<: *twotone
+      highlight_row: 1
+  - text: 記念したのは、街で生まれた音楽レーベル、2トーン。
+    image: assets/images/20261101_kit_coventry/c02_seats_w.jpg
+    card:
+      <<: *twotone
+      highlight_row: 0
+  - text: ザ・スペシャルズなどの音楽で知られ、ちょうど40周年でした。
+    image: assets/images/20261101_kit_coventry/c01_derby_w.jpg
+    card: none
+  - text: クラブは、シャツで、街の歴史も着るのです。
+    image: assets/images/20261101_kit_coventry/c01_derby_w.jpg
+    card: none
+    emph: true
+  sources:
+  - https://www.bbc.co.uk/sport/football/50027298
+  - https://en.wikipedia.org/wiki/Coventry_City_F.C.
+- id: crest
+  heading: 胸の紋章は、なぜ何度も替わったのか
+  bg: assets/images/20261101_kit_coventry/c04_sillett_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 小さな雄鶏、象と城、引っ込めた新案、ファンが決めた記念紋章、昇る不死鳥
+  card: *crest
+  say:
+  - text: コヴェントリーの胸の紋章も、何度も替わっています。
+    image: assets/images/20261101_kit_coventry/c04_sillett_w.jpg
+    card: none
+  - text: 1959年の胸には、雄鶏の紋章がありました。
+    image: assets/images/20261101_kit_coventry/c04_sillett_w.jpg
+    card:
+      <<: *crest
+      highlight_row: 0
+  - text: この紋章を着たのは、このときだけでした。
+    image: assets/images/20261101_kit_coventry/c04_sillett_w.jpg
+    card: none
+    emph: true
+  - text: 1969年には、町の紋章にいる、象と城が、胸に入ります。
+    image: assets/images/20261101_kit_coventry/c01_derby_w.jpg
+    card:
+      <<: *crest
+      highlight_row: 1
+  - text: 2005年、新しい本拠地に移る年に、新しい紋章を発表します。
+    image: assets/images/20261101_kit_coventry/c03_ricoh2008_w.jpg
+    card:
+      <<: *crest
+      highlight_row: 2
+  - text: ところが、ファンの猛反対で、クラブは引き下がりました。
+    image: assets/images/20261101_kit_coventry/c03_ricoh2008_w.jpg
+    card: none
+    emph: true
+  - text: 3年後、創立125年の記念の紋章は、ファンに聞いて決めます。
+    image: assets/images/20261101_kit_coventry/c01_derby_w.jpg
+    card:
+      <<: *crest
+      highlight_row: 3
+  - text: そして2021年、街に戻る季の最初のシャツには、昇る不死鳥が入りました。
+    image: assets/images/20261101_kit_coventry/c02_seats_w.jpg
+    card:
+      <<: *crest
+      highlight_row: 4
+    emph: true
+  sources:
+  - https://www.historicalkits.co.uk/Coventry_City/Coventry_City.htm
+  - https://en.wikipedia.org/wiki/Coventry_City_F.C.
+- id: view
+  viewpoint: true
+  heading: 見立て・空色を離れた期間は、最初の何倍だったか
+  bg: assets/images/20261101_kit_coventry/c01_derby_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 最初の空色は24年、離れたのは約40年。戻って5年で1部へ
+  card: *view
+  say:
+  - text: コヴェントリーの空色を、数で並べます。
+    image: assets/images/20261101_kit_coventry/c01_derby_w.jpg
+    card: none
+  - text: 最初の空色は、1898年から1922年までの、24年。
+    image: assets/images/20261101_kit_coventry/c01_derby_w.jpg
+    card:
+      <<: *view
+      highlight_row: 0
+  - text: そのあと、空色を離れていた期間は、およそ40年。
+    image: assets/images/20261101_kit_coventry/c01_derby_w.jpg
+    card:
+      <<: *view
+      highlight_row: 1
+    mark:
+      kind: circle
+      row: 1
+  - text: 離れていた期間は、最初に着ていた期間の、約1.7倍です。
+    image: assets/images/20261101_kit_coventry/c02_seats_w.jpg
+    card:
+      type: calc
+      title: 離れた期間は、最初の何倍か（自分で割った）
+      terms:
+      - - 40年
+        - 空色を離れた
+      - - 24年
+        - 最初の空色
+      - - 約1.7倍
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+    emph: true
+  - text: 空色が戻った1962年から、初めての1部まで、5年でした。
+    image: assets/images/20261101_kit_coventry/c04_sillett_w.jpg
+    card:
+      <<: *view
+      highlight_row: 2
+  - text: そこから2001年まで、34年間、1部にいました。
+    image: assets/images/20261101_kit_coventry/c04_sillett_w.jpg
+    card:
+      <<: *view
+      highlight_row: 3
+  - text: 「最悪」と言われた茶色いシャツは、31年後に、復刻されています。
+    image: assets/images/20261101_kit_coventry/c03_ricoh2008_w.jpg
+    card: none
+  - text: 一度離れた空色に、クラブは戻ってきました。いまの胸にも、その空色があります。
+    image: assets/images/20261101_kit_coventry/c03_ricoh2008_w.jpg
+    card: none
+    emph: true
+  sources:
+  - https://en.wikipedia.org/wiki/Coventry_City_F.C.
+  - https://www.historicalkits.co.uk/Coventry_City/Coventry_City.htm
+  - https://www.coventrytelegraph.net/sport/football/transfer-news/coventrys-infamous-chocolate-brown-kit-4066416
