@@ -103,35 +103,43 @@ def heights(bbox, z: int, ppd: float) -> np.ndarray:
     return cv2.remap(mos, np.tile(mx, (h, 1)), np.tile(my[:, None], (1, w)), cv2.INTER_LINEAR)
 
 
-GSI = CACHE / "gsiphoto"
+GSI = CACHE / "gsi"
 GSI_URL = "https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg"
+GSI_DEM_URL = "https://cyberjapandata.gsi.go.jp/xyz/dem_png/{z}/{x}/{y}.png"
 JAPAN = (122.0, 20.0, 154.0, 46.0)
 
 
-def gsi_photo(bbox, z: int, ppd: float) -> np.ndarray:
-    """日本の中の細かい範囲(z 11 以上)は、国土地理院のシームレス空中写真を等間隔の格子に置き直して使う。
-    Blue Marble は 1 画素 500m ほどで、小さい島が数画素になるため。概要欄に「空中写真: 国土地理院」。"""
+def _gsi_grid(bbox, z: int, ppd: float, kind: str) -> np.ndarray:
+    """国土地理院のタイル(kind="photo" はシームレス空中写真、"dem" は標高 dem_png。海は nan)を、等間隔の格子(上が北)に置き直す。"""
     import cv2
     from concurrent.futures import ThreadPoolExecutor
     lo0, la0, lo1, la1 = bbox
     n = 256 * 2 ** z
     tx0, tx1 = int((lo0 + 180) / 360 * 2 ** z), int((lo1 + 180) / 360 * 2 ** z)
     ty0, ty1 = int(merc_y(la1, 2 ** z)), int(merc_y(la0, 2 ** z))
+    ext, url = ("jpg", GSI_URL) if kind == "photo" else ("png", GSI_DEM_URL)
 
     def get(j):
         tx, ty = j
-        p = GSI / str(z) / str(tx) / f"{ty}.jpg"
+        p = GSI / kind / str(z) / str(tx) / f"{ty}.{ext}"
         if not p.exists():
             p.parent.mkdir(parents=True, exist_ok=True)
-            req = urllib.request.Request(GSI_URL.format(z=z, x=tx, y=ty), headers={"User-Agent": "naze-worldmap"})
+            req = urllib.request.Request(url.format(z=z, x=tx, y=ty), headers={"User-Agent": "naze-worldmap"})
             try:
                 with urllib.request.urlopen(req, timeout=60) as r:
                     p.write_bytes(r.read())
             except Exception:                                  # 海だけのタイルは無い
-                return np.full((256, 256, 3), 40, np.uint8)
-        return np.asarray(Image.open(p).convert("RGB"))
+                return np.full((256, 256, 3), 40, np.uint8) if kind == "photo" else np.full((256, 256), np.nan, np.float32)
+        a = np.asarray(Image.open(p).convert("RGB"))
+        if kind == "photo":
+            return a
+        x = a[..., 0].astype(np.int64) * 65536 + a[..., 1].astype(np.int64) * 256 + a[..., 2]
+        h = np.where(x < 2 ** 23, x * 0.01, (x - 2 ** 24) * 0.01).astype(np.float32)
+        h[x == 2 ** 23] = np.nan
+        return h
 
-    mos = np.zeros(((ty1 - ty0 + 1) * 256, (tx1 - tx0 + 1) * 256, 3), np.uint8)
+    shape = ((ty1 - ty0 + 1) * 256, (tx1 - tx0 + 1) * 256)
+    mos = np.zeros(shape + (3,), np.uint8) if kind == "photo" else np.full(shape, np.nan, np.float32)
     jobs = [(tx, ty) for ty in range(ty0, ty1 + 1) for tx in range(tx0, tx1 + 1)]
     with ThreadPoolExecutor(8) as ex:
         for (tx, ty), a in zip(jobs, ex.map(get, jobs)):
@@ -140,6 +148,22 @@ def gsi_photo(bbox, z: int, ppd: float) -> np.ndarray:
     mx = ((lo0 + (np.arange(w) + 0.5) / ppd + 180) / 360 * n - tx0 * 256).astype(np.float32)
     my = np.array([merc_y(la1 - (i + 0.5) / ppd, n) for i in range(h)], np.float32) - ty0 * 256
     return cv2.remap(mos, np.tile(mx, (h, 1)), np.tile(my[:, None], (1, w)), cv2.INTER_LINEAR)
+
+
+def gsi_photo(bbox, z: int, ppd: float) -> np.ndarray:
+    """日本の中の細かい範囲(z 11 以上)は、国土地理院のシームレス空中写真を使う。
+    Blue Marble は 1 画素 500m ほどで、小さい島が数画素になるため。概要欄に「空中写真: 国土地理院」。"""
+    return _gsi_grid(bbox, z, ppd, "photo")
+
+
+def gsi_land(bbox, z: int, ppd: float, e: np.ndarray) -> np.ndarray:
+    """日本の中の細かい範囲の高さ。陸は国土地理院の標高(z14 まで)、海は Terrain Tiles を強くならした浅い海にする
+    (Terrain Tiles の z15 は小さい島の岸に段があり、沖に縞が出るため)。"""
+    import cv2
+    g = _gsi_grid(bbox, min(z, 14), ppd, "dem")
+    g = cv2.resize(g, (e.shape[1], e.shape[0]), interpolation=cv2.INTER_LINEAR) if g.shape != e.shape else g
+    sea = cv2.GaussianBlur(np.minimum(e, -20).astype(np.float32), (0, 0), 40)
+    return np.where(np.isfinite(g) & (g > 0), g, np.minimum(sea, -20)).astype(np.float32)
 
 
 def in_japan(bbox) -> bool:
@@ -295,6 +319,8 @@ class Base:
             self.e = heights(bbox, z, self.ppd).astype(np.float32)
             np.savez_compressed(key, e=self.e.astype(np.int16))
         self.e = self.e.astype(np.float32)
+        if z >= 11 and in_japan(bbox):
+            self.e = gsi_land(bbox, z, self.ppd, self.e)
         h, w = self.e.shape
         # 東西に kx 倍縮めた格子に置き直す(画面で形が崩れないように)
         self.w = int(w * kx)
