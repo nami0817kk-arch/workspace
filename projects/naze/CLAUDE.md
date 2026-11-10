@@ -27,6 +27,7 @@
   **画面の種類**（2026-11-04「動画が一辺倒なのが良くない」）: `naze/shots.py`。行の scene に shot＝map（view_to で飛ぶ）・globe（地球儀）・block（地形の箱の断面、沈む板）・split（左右に2つ）・illust（場面の絵、隅に「イメージ」）・card（大きな数字）・timeline（年表）。**2〜3行ごとに種類を変える**。場面の絵は FLUX の無料枠（`episodes/chile/make_illust.py` が見本）。声の前の行ごとのコマは `episodes/chile/sim/sheet.py`
   **編集の技**（同日「動画編集のスキルはたくさんあるよね」）: 層・札に `on="言葉"` で**その言葉を言い始めた瞬間に出す**（`naze voice` が時間割に marks を書く）・数字の数え上げ（card は既定、label は count=True）・切り替え tr＝zoom/whip/flash・粒 fx＝snow/dust/embers・色 grade＝old/cold/warm・地図の inset（左下の小さな地球儀）・道筋 route・広がる塗り wipe・塗りに光が走る。効果音は切り替えの種類で変わり、数字の札は「ドン」と数え上げの音（naze/sfx.py の impact・tick・swish）
   **映像の点検** `python -m naze vqc episodes/<題材>/<章>`（naze/vqc.py。声の前でも使える。qc の中でも走る）: 何も足されない間（10秒で△・15秒で✖）・寄りすぎのぼけ・カメラの速さ・字の数・1分に足す数・同じ見せ方が続く長さ（30秒で△・45秒で✖）。場面を書いたら先にこれを通す
+- **図は立体で描く**（2026-11-11）: 断面・島の地下・棒は `naze/fig3d.py`（切った箱の奥に空中写真の地面・島と海の箱・直方体の棒。2 倍で描いて縮める）。使い方は冒頭、見本は `episodes/aogashima/scene.py`、1 行だけ見るのは `episodes/aogashima/sim/one.py`。日本の細かい範囲の地図は worldmap が国土地理院の空中写真と標高に自動で切り替える
 - 3D の物理演算は MuJoCo（`pip install mujoco`、2026-10-31 導入。落下の試運転は理論値と一致）。pybullet はこの PC にコンパイラが無く入らない。2D は pymunk。計算の回の `draw()` から時間を進めて軌道を描く
 - 声は VOICEVOX の剣崎雌雄（id 21、2026-10-26 ユーザーが選んだ）。読みは `kana` で全行を見て、違えば `say` で直す。概要欄に「VOICEVOX:剣崎雌雄」
 - 投稿: `python -m naze.upload 動画 --title … --desc-file … --publish-at 2026-10-27T19:00:00+09:00 [--thumb サムネ.jpg]`（カテゴリ教育）。**本編は毎日 2 本、19 時と 21 時**（2026-10-27 指示「1日2作」、2026-11-07 に守れていないと指摘され徹底）。ショートは翌日に 5 本ずつ、19 時の回は 11・12・13・14・16 時、21 時の回は 17・18・19・20・21 時。予約を入れたら、本編が毎日 2 本そろっているかを予約の一覧で確かめる（`docs/schedule.md`）
