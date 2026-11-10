@@ -91,7 +91,7 @@ P["ch1"] = dict(title="第1章 火口の村", cta=False, lines=[
     dict(id="a8", text="火山の中に、もう1つ火山がある島です。", scene=MAP(CALDERA, PIN(MARUYAMA, "丸山"), step=0, tr="zoom")),
     dict(id="a9", text="ここで暮らす人の水と電気と食べ物は、どうしているのか。", style="question", sub="火口の島の暮らし\n【水・電気・食べ物】は？", scene=MAP(AOGA_TOP, step=0)),
     dict(id="a10", text="答えを先に言います。", section=True),
-    dict(id="a11", text="水は、空から集めます。", scene=LENS(step=0, title="島の地下", lens_label="うすい真水")),
+    dict(id="a11", text="水は、空から集めます。", scene=SLICE(step=0, labels=S_LAB[:1] + [(0.33, 470, "雨を受ける斜面", BLUE)])),
     dict(id="a12", text="電気は、船で運ぶ油で作ります。", scene=MAP(HACHI, LINE([HACHIJO, VILLAGE], id="r_h1"), PIN(HACHIJO, "八丈島"), PIN(VILLAGE, "青ヶ島", id="p_v2"), step=0, tr="whip")),
     dict(id="a13", text="食べ物は、船と、火口の底の畑から。", scene=SLICE(step=0, labels=S_LAB + [(0.52, 330, "畑", GREEN)])),
     dict(id="a14", text="島の形と数字で、1つずつ確かめます。", scene=MAP(AOGA, step=0, view_to=(139.7635, 32.4575, 0.075, 25))),
@@ -102,7 +102,7 @@ P["ch2"] = dict(title="第2章 水", cta=False, lines=[
     dict(id="b1", text="青ヶ島に降る雨は、1年に約2,600mm。", scene=BARS([("青ヶ島", 2602, BLUE), ("日本の平均", 1700, GREY)], title="1年に降る雨（mm）", fmt="{:,}", step=1)),
     dict(id="b2", text="日本の平均の、約1.5倍です。"),
     dict(id="b3", text="ところが、島には真水の水源がありません。", scene=MAP(AOGA, step=1, tr="zoom")),
-    dict(id="b4", text="地下の水も、塩水なのです。", scene=LENS(step=1, title="島の地下", lens_label="うすい真水")),
+    dict(id="b4", text="地下の水も、塩水なのです。", scene=LENS(step=1, title="島の地下", lens_label="海水とまざる", lens_depth=0.08)),
     dict(id="b5", text="小さな島では、しみこんだ雨が、すぐに海の水とまざります。"),
     dict(id="b6", text="そこで島の人は、雨が地面にしみこむ前に受けます。", scene=SLICE(step=1, labels=S_LAB[:1] + [(0.33, 470, "雨を受ける斜面", BLUE)])),
     dict(id="b7", text="山の斜面をおおって、雨を水道の池へ流すのです。"),
@@ -190,7 +190,7 @@ P["s1"] = dict(title="火口の中に、148人が暮らす村がある", lines=[
 
 P["s2"] = dict(title="地下の水が塩水の島。水はサッカー場1面ぶんの斜面から", lines=[
     dict(id="m1", text="東京都の青ヶ島には、真水の水源がありません。", scene=MAP(AOGA_P, PIN(VILLAGE, "青ヶ島村", id="p_vm"))),
-    dict(id="m2", text="地下の水まで、塩水なのです。", scene=LENS(title="島の地下", lens_label="うすい真水")),
+    dict(id="m2", text="地下の水まで、塩水なのです。", scene=LENS(title="島の地下", lens_label="海水とまざる", lens_depth=0.08)),
     dict(id="m3", text="そこで、山の斜面をおおって、雨を水道の池へ流します。", scene=SLICE(labels=S_LAB[:1] + [(0.33, 470, "雨を受ける斜面", BLUE)])),
     dict(id="m4", text="148人が1年に使う水は、約1万2,400立方m。", scene=CARD("1万2,400立方m", sub="148人が1年に使う水", view=AOGA_P, count=False)),
     dict(id="m5", text="雨の少ない年でも、約7,500平方mで受ければ足ります。サッカー場1面ぶんです。", scene=BARS([("雨の少ない年", 7519, BLUE), ("サッカー場1面", 7140, GREEN)], title="雨を受ける広さ（平方m）", fmt="{:,}")),
