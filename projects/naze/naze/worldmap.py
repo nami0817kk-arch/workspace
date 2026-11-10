@@ -103,6 +103,49 @@ def heights(bbox, z: int, ppd: float) -> np.ndarray:
     return cv2.remap(mos, np.tile(mx, (h, 1)), np.tile(my[:, None], (1, w)), cv2.INTER_LINEAR)
 
 
+GSI = CACHE / "gsiphoto"
+GSI_URL = "https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg"
+JAPAN = (122.0, 20.0, 154.0, 46.0)
+
+
+def gsi_photo(bbox, z: int, ppd: float) -> np.ndarray:
+    """日本の中の細かい範囲(z 11 以上)は、国土地理院のシームレス空中写真を等間隔の格子に置き直して使う。
+    Blue Marble は 1 画素 500m ほどで、小さい島が数画素になるため。概要欄に「空中写真: 国土地理院」。"""
+    import cv2
+    from concurrent.futures import ThreadPoolExecutor
+    lo0, la0, lo1, la1 = bbox
+    n = 256 * 2 ** z
+    tx0, tx1 = int((lo0 + 180) / 360 * 2 ** z), int((lo1 + 180) / 360 * 2 ** z)
+    ty0, ty1 = int(merc_y(la1, 2 ** z)), int(merc_y(la0, 2 ** z))
+
+    def get(j):
+        tx, ty = j
+        p = GSI / str(z) / str(tx) / f"{ty}.jpg"
+        if not p.exists():
+            p.parent.mkdir(parents=True, exist_ok=True)
+            req = urllib.request.Request(GSI_URL.format(z=z, x=tx, y=ty), headers={"User-Agent": "naze-worldmap"})
+            try:
+                with urllib.request.urlopen(req, timeout=60) as r:
+                    p.write_bytes(r.read())
+            except Exception:                                  # 海だけのタイルは無い
+                return np.full((256, 256, 3), 40, np.uint8)
+        return np.asarray(Image.open(p).convert("RGB"))
+
+    mos = np.zeros(((ty1 - ty0 + 1) * 256, (tx1 - tx0 + 1) * 256, 3), np.uint8)
+    jobs = [(tx, ty) for ty in range(ty0, ty1 + 1) for tx in range(tx0, tx1 + 1)]
+    with ThreadPoolExecutor(8) as ex:
+        for (tx, ty), a in zip(jobs, ex.map(get, jobs)):
+            mos[(ty - ty0) * 256:(ty - ty0 + 1) * 256, (tx - tx0) * 256:(tx - tx0 + 1) * 256] = a
+    w, h = int((lo1 - lo0) * ppd), int((la1 - la0) * ppd)
+    mx = ((lo0 + (np.arange(w) + 0.5) / ppd + 180) / 360 * n - tx0 * 256).astype(np.float32)
+    my = np.array([merc_y(la1 - (i + 0.5) / ppd, n) for i in range(h)], np.float32) - ty0 * 256
+    return cv2.remap(mos, np.tile(mx, (h, 1)), np.tile(my[:, None], (1, w)), cv2.INTER_LINEAR)
+
+
+def in_japan(bbox) -> bool:
+    return JAPAN[0] <= bbox[0] and bbox[2] <= JAPAN[2] and JAPAN[1] <= bbox[1] and bbox[3] <= JAPAN[3]
+
+
 def bluemarble(bbox, ppd: float) -> np.ndarray:
     """bbox の衛星写真(本当の色)を、緯度経度が等間隔の格子(1 度に ppd 画素、上が北)で。2048 画素ずつ取ってつなぐ。"""
     from concurrent.futures import ThreadPoolExecutor
@@ -258,17 +301,18 @@ class Base:
         self.e = cv2.resize(self.e, (self.w, h), interpolation=cv2.INTER_AREA)
         self.kx = kx
         try:
-            photo = cv2.resize(bluemarble(bbox, self.ppd), (self.w, h), interpolation=cv2.INTER_AREA)
+            src = gsi_photo(bbox, z, self.ppd) if z >= 11 and in_japan(bbox) else bluemarble(bbox, self.ppd)
+            photo = cv2.resize(src, (self.w, h), interpolation=cv2.INTER_AREA)
             col = compose(self.e, photo, 111320 / self.ppd)
         except Exception as e:                                # 写真が取れないときは色分けで描く
             print("衛星写真が取れない:", e)
             col = colorize(self.e, 111320 / self.ppd, 1.0)
         im = Image.fromarray(col)
         d = ImageDraw.Draw(im, "RGBA")
-        lw = max(1, int(round(self.ppd / 60)))
+        lw = max(1, min(6, int(round(self.ppd / 60))))         # 細かい範囲(z15 で ppd 2万)で線が太くなりすぎない
         for code, rings in countries().items():
             for r in rings:
-                if self._near(r):
+                if z < 11 and self._near(r):                        # 細かい範囲では Natural Earth の粗い海岸線が島を横切る
                     d.line([self.xy(*p) for p in r], fill=(225, 232, 240, 70), width=lw)
         for _, _, pts in land_borders():
             if self._near(pts):
