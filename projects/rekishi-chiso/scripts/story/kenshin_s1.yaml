@@ -1,0 +1,169 @@
+# 物語完結型ショート 謙信 s1（2026-11-11）。本編 scripts/kenshin-story.yaml（11/11 19:00 公開）の第1章（七尾城はなぜ1日で落ちたのか）から。11/12 9:30 公開。
+# 形式は mongol_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし（本編にも無い）。死は「亡くなった」。遺骸の扱いは淡々と。景虎は「自ら命を絶った、と伝えられる」まで。
+# 絵は本編の AI 絵（out/story/kenshin/main/、Gemini）だけ。新しい絵は作らない。謙信の顔は実在の肖像に似せない想像図。
+# 切り口：七尾城。広さ約250ヘクタールの山城が、謙信の手紙では9月15日の1日のうちに落ちた。ただし囲んだ期間は解説で割れる（数か月／1年）。次は手取川（本編の第2章）。
+#   本編の答え（謙信の最期の理由＝同時代の言葉は虫気だけ・厠は江戸の軍記で一説・言えること言えないこと）は言わない。
+# 事実カード（dev/output/rekishi-chiso/research/上杉謙信_facts_20261107.yaml）：kenshin-59・40・58。言い方は本編のまま。
+# 計算（自分で計算し直した）：1577年9月15日の落城（手紙）。囲んだ期間は観光庁「1576年と1577年の数か月間」とnippon.com「1年」で割れる（本編は触れていない）。
+# 理解テスト4問：
+#   ①誰の話か：謙信が1577年に攻めた能登の七尾城
+#   ②いつ・どこで何が：1577年9月15日、謙信は北条高広・景広の父子に、七尾城が15日の1日のうちに落ちた、と手紙で知らせた
+#   ③なぜか：重臣の遊佐続光がひそかに謙信と通じ、筆頭の長続連を殺して門を開いた、と言われる。囲んだ期間は、数か月とも1年とも割れる
+#   ④どうなったか：北国はあとは越前だけ、と手紙は続く。織田の大軍が近づく加賀の戦場に、謙信はいたのか、の問いで閉じる（答えは本編の第2章）
+title: 七尾城｜難攻不落の山城は、なぜ1日で落ちたのか
+yt_title: 難攻不落の七尾城は、なぜ1日で落ちたのか　上杉謙信の手紙が告げた1577年9月15日と、内側から開いた門
+description: |-
+  能登の七尾城は、広さ約250ヘクタール。全国でも指折りの大きな山城です。観光庁の解説によれば、謙信の手に落ちるまで、まず占領されることはない、と考えられていました。
+  1577年9月15日、謙信は、味方の武将の北条高広と景広の親子に手紙を送ります。七尾城は、今15日、1日のうちに落ちた。城の重臣の遊佐続光が、ひそかに謙信と通じ、筆頭の家臣、長続連を殺して、門を開いた、と言われます。ただし、城を囲んでいた期間は、解説によって、数か月とも、1年とも書かれ、割れています。
+  同じ手紙は、織田信長が出陣した、とも書きますが、これは誤った知らせでした。手紙は、北国は、あとは越前だけだ、と続けます。
+  七尾城を落とした謙信の前に、織田の大軍が近づきます。謙信は、その戦場に、いたのか。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#上杉謙信"
+- "#戦国時代"
+- "#日本史"
+ai_images: true
+ai_disclosure: この動画の情景・人物の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面に「AI生成画像」と出しています）。謙信の姿も、特定の資料を写したものではありません。
+art_dir: out/story/kenshin
+out: kenshin_story_s1
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 七尾城の落城（1577年9月15日）
+  title: 難攻不落の七尾城は、なぜ《1日》で落ちたのか
+now:
+- {at: 9月15日, text: 1577年9月15日　能登 七尾城, point: 0}
+- {at: 北国は, text: 1577年9月　北国, point: 0}
+timeline:
+- {label: '1577'}
+- {label: '1578'}
+cards:
+- type: year
+  from: 1日のうちに
+  until: 城の重臣
+  big: 1日
+  sub: 七尾城が落ちた（1577年9月15日）
+  text_y: 0.7
+shots:
+  K07a:
+    kind: ai
+    file: kenshin/main/K07.jpg
+    focus: [0.3, 0.5]
+    move: right
+    must: 秋の山城（七尾城）を囲む陣（難攻不落の山城）
+  K07b:
+    kind: ai
+    file: kenshin/main/K07.jpg
+    focus: [0.75, 0.5]
+    move: left
+    must: 山城の広がり（広さ約250ヘクタール）
+  K08a:
+    kind: ai
+    file: kenshin/main/K08.jpg
+    focus: [0.6, 0.5]
+    move: in
+    must: 陣中の謙信（手紙で知らせる）
+  K07c:
+    kind: ai
+    file: kenshin/main/K07.jpg
+    focus: [0.5, 0.35]
+    move: down
+    must: 山城（占領される可能性はほとんどない）
+  K08b:
+    kind: ai
+    file: kenshin/main/K08.jpg
+    focus: [0.62, 0.55]
+    move: left
+    must: 陣中の謙信（9月15日・北条父子への手紙）
+  K07d:
+    kind: ai
+    file: kenshin/main/K07.jpg
+    focus: [0.6, 0.55]
+    move: up
+    must: 山城（1日のうちに落ちた）
+  K07e:
+    kind: ai
+    file: kenshin/main/K07.jpg
+    focus: [0.4, 0.6]
+    move: left
+    must: 山城の門（内通・門を開いた）
+  K08c:
+    kind: ai
+    file: kenshin/main/K08.jpg
+    focus: [0.7, 0.5]
+    move: left
+    must: 陣中の謙信（誤った知らせ・信長の出陣）
+  K11:
+    kind: ai
+    file: kenshin/main/K11.jpg
+    focus: [0.5, 0.55]
+    move: right
+    must: 雪の峠を行く軍勢（北国は、あとは越前だけ）
+  K09:
+    kind: ai
+    file: kenshin/main/K09.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 夜の河口を渡る兵と松明（織田の大軍が近づく加賀）
+lines:
+  # fact: kenshin-40
+- 語り: 難攻不落の七尾城は、なぜ、1日で落ちたのか。
+  shot: K07a
+  tone: 強調
+  pause: 0.12
+  # fact: kenshin-59
+- 語り: 広さ、約250ヘクタール。全国屈指の、山城だった。
+  shot: K07b
+  tone: 重い
+  pause: 0.12
+- 語り: その訳を、謙信の手紙から読む。
+  shot: K08a
+  tone: しみじみ
+  pause: 0.12
+  # fact: kenshin-59
+- 語り: 観光庁の解説によれば、この城は、謙信に落とされるまで、ほとんど占領されないと考えられていた。
+  shot: K07c
+  tone: しみじみ
+  pause: 0.12
+  # fact: kenshin-40
+- 語り: 1577年9月15日、謙信は、北条高広と景広の親子に、手紙を送る。
+  shot: K08b
+  tone: しみじみ
+  pause: 0.12
+  # fact: kenshin-40
+- 語り: 七尾城は、今15日、1日のうちに落ちた、と手紙は告げる。
+  shot: K07d
+  tone: 重い
+  pause: 0.12
+  # fact: kenshin-58
+- 語り: ただ、囲み始めてからは、数か月とも、1年とも、解説は割れる。
+  shot: K07b
+  tone: しみじみ
+  pause: 0.12
+  # fact: kenshin-58
+- 語り: 城の重臣、遊佐続光が、ひそかに謙信と通じ、筆頭の家臣、長続連を殺して、門を開いた、と言われる。
+  shot: K07e
+  tone: 重い
+  pause: 0.12
+  # fact: kenshin-40
+- 語り: 同じ手紙は、織田信長が出陣した、とも書く。でも、信長本人は、出てきていない。誤った知らせだった。
+  shot: K08c
+  tone: しみじみ
+  pause: 0.12
+  # fact: kenshin-40
+- 語り: そして手紙は、北国は、あとは越前だけだ、と続ける。
+  shot: K11
+  tone: しみじみ
+  pause: 0.12
+- 語り: その先の加賀へは、織田の大軍が近づく。謙信は、その戦場に、いたのか。
+  shot: K09
+  tone: 疑問
+  pause: 0.15

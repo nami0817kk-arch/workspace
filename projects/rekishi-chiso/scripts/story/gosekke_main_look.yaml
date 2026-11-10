@@ -1,0 +1,212 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：藤原道長の子孫・五摂家は今どうなっているか（scripts/gosekke-kakeizu-story.yaml）。chiso/storymain.py が読む。
+# 11-11 作成（11/12 19:00 公開）。kakeizu_main_look.yaml を写した。台本には手を入れない（承認のあと）。決まりは docs/story-main.md・スキル rekishi-story-screen。
+# 絵の方針：Gemini（Chrome）での新規の絵は、Chrome の操作が通らず作れなかった（11-11。FLUX には逃げない決まり）。AI 絵はすべて既存の絵の写し：K01〜K22・KEND は 11/7 の徳川将軍家の回、J01・J02・J06・J07 は神器の回、H07・H09・H14 は小早川秀秋の回の絵（屋敷・書状・巻物・参道・炎の汎用の場面）。
+#   AI 絵は合わせて21枚（J・H 7＋K 14）。人物は後ろ姿・遠景だけ。実在の人物の顔は実在の写真・肖像（パブリックドメイン）だけを額（frame）で出す。
+script: scripts/gosekke-kakeizu-story.yaml
+out: gosekke_story_main
+art_dir: out/story/gosekke/main
+main_art_dir: out/story/gosekke/main
+ai_disclosure: この動画の風景・室内・人物の後ろ姿の画像の一部は、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+
+chapters:
+  0: {label: 序章 道長の日記は今も子孫の家に, now: null, dates: {}}
+  1: {label: 第1章 「この世をば」の夜, now: 1018年10月, dates: {20: 1016年}}
+  2: {label: 第2章 一つの家が三つに, now: 1166年7月, dates: {27: 1183年11月, 28: 1184年1月, 32: 1508年, 34: null}}
+  3: {label: 第3章 「子孫とは認めない」, now: 1226年, dates: {38: 1246年, 39: 1250年, 40: 1252年, 44: 1273年, 45: 1287年, 46: null}}
+  4: {label: 第4章 33年途絶えた家, now: 1546年, dates: {52: 1579年, 55: 1634年, 56: 1641年, 57: 1646年, 58: null}}
+  5: {label: 第5章 見張られた五つの家, now: 1615年, dates: {62: 1737年, 64: 幕末, 65: 1858年, 66: 1856年, 67: null}}
+  6: {label: 第6章 最後の摂政と皇后, now: 1867年12月, dates: {73: 1884年, 75: null, 79: 1937年, 80: 1947年, 81: null}}
+  7: {label: 第7章 五つの家の今, now: 2026年, dates: {83: 1938年, 85: 2013年, 86: 2026年8月, 90: 2026年, 96: null}}
+  8: {label: まとめ 道長の日記は、なぜ今も子孫の家にあるのか, now: null, dates: {}}
+no_tag_from: 100
+
+# 概要欄「■ 参考にした資料」（事実カード 五摂家_facts_20261111.yaml のうち本文を開いた主なもの）
+references:
+  - 道長詠「この世をば」歌の背景（田島智子、『詞林』17号、1995）　https://doi.org/10.18910/67364
+  - 家格の秩序と二条家（三田武繁、東海大学紀要 文学部109輯、2018）　https://www.u-tokai.ac.jp/uploads/sites/9/2021/03/03.pdf
+  - 近世摂家の家臣統制と家内秩序（田中暁龍、東京大学史料編纂所研究紀要27号、2017）　https://www.hi.u-tokyo.ac.jp/publication/kiyo/27/kiyo0027-04.pdf
+  - 王政復古前後の政局と公議（青山忠正、佛教大学歴史学部論集10号、2020）　https://archives.bukkyo-u.ac.jp/rp-contents/RO/0010/RO00100R043.pdf
+  - 歴史資料紹介 陽明文庫（京都府立京都学・歴彩館、2018）　https://www.pref.kyoto.jp/rekisaikan/siryosyokai1811y.html
+  - 『御堂関白記』と『慶長遣欧使節関係資料』がユネスコ記憶遺産に登録（国立国会図書館 カレントアウェアネス）　https://current.ndl.go.jp/car/23775
+  - 国立国会図書館 レファレンス協働データベース「摂関家の家格の推移」　https://crd.ndl.go.jp/reference/modules/d3ndlcrdentry/index.php?id=1000264905&page=ref_view
+  - 諸家ニ於テ神社執奏ヲ止メ自今神祇事務局ニ於テ管轄処理ス（太政類典、国立公文書館 JACAR A15070139100）　https://www.jacar.archives.go.jp/das/meta/A15070139100
+  - 禁中並公家諸法度（ウィキソース）　https://ja.wikisource.org/wiki/禁中並公家諸法度
+  - 近代国家 日本の登場 12.華族制度（国立公文書館）　https://www.archives.go.jp/exhibition/digital/modean_state/contents/noble/index.html
+  - 日本法令索引 法律第14号（華族世襲財産法を廃止する法律）　https://jahis.law.nagoya-u.ac.jp/lawdb/l/322a0014en
+  - ご降誕｜昭憲皇太后さま（明治神宮）　https://www.meijijingu.or.jp/goitsuwa/?id=1649391781-000818
+  - 大正天皇の后 貞明皇后展（杉並区立郷土博物館、広報資料）　https://www.city.suginami.tokyo.jp/documents/2241/051031teimei2.pdf
+  - 杉並区 荻外荘関連ページ（陽明文庫・近衞文麿）　https://www.city.suginami.tokyo.jp/kyouiku/bunkazai/tekigaiso/1088637.html
+  - 京都御苑 歴史ふれあいの道（環境省）　https://www.env.go.jp/garden/content/900464726.pdf
+  - 近衞忠大インタビュー（serai.jp）・Forbes JAPAN 2026年8月14日の対談記事
+  - 役員紹介（儀礼文化学会）　https://girei.jp/gaiyou/officers/
+  - 防衛研究所 NIDSコメンタリー 第200号（近衛文麿）　https://www.nids.mod.go.jp/publication/commentary/pdf/commentary200.pdf
+  - File:Fujiwara no Michinaga.jpg ほか（ウィキメディア・コモンズ、パブリックドメイン）
+
+# AI 絵。pan：h＝左右（既定）。crops＝切り出し [倍率, 中心x, 中心y]
+ai:
+  J07: {scene: 夜の内裏の門と松明, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  H07: {scene: 書斎の机の上の巻物と行灯（手元だけ）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  H09: {scene: 縁側から庭を見る若い公達の後ろ姿, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  J02: {scene: 夜に燃える平安の宮殿, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  J06: {scene: 夜の雪の山道, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  J01: {scene: 宮殿の暗い殿舎、白い絹に包まれた箱（中身は見せない）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  H14: {scene: 静かな寺の境内（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  K01: {scene: 夜明けの川向こうの城と荷車, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  K02: {scene: 城の誰もいない広間とろうそく, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  K05: {scene: 灯の下の机の白い書状と筆（字なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  K06: {scene: 松並木の朝の街道（霧・人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  K07: {scene: 武家屋敷の白壁と門（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  K10: {scene: 誰もいない広間と松の襖絵, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  K13: {scene: 朝の木立の中、苔むした古い墓石に差す光（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  K14: {scene: 帳簿の山とそろばんと灯（字は読めない）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  K15: {scene: 机の上の古い巻物と和綴じの本（字は読めない）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  K16: {scene: 杉並木と石灯籠, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  K17: {scene: 杉の森の玉砂利の参道, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  K18: {scene: 灯のともる座敷（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  K22: {scene: 霧の川と岸の舟, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  KEND: {scene: 夕暮れの寺の遠景（右半分を空けた構図。終了画面。左下の看板を外す）, lock: [1.4, 0.64, 0.4]}
+
+credits:
+  paintings/gosekke_midokanpaku_diary.jpg: 藤原道長自筆『御堂関白記』（陽明文庫蔵。パブリックドメイン。ウィキメディア・コモンズ）
+  paintings/gosekke_murasaki_emaki_fujita.jpg: 《紫式部日記絵巻》（藤田美術館蔵。パブリックドメイン。ウィキメディア・コモンズ）
+  paintings/gosekke_murasaki_emaki_gotoh6.jpg: 《紫式部日記絵巻》（五島美術館蔵。パブリックドメイン。ウィキメディア・コモンズ）
+  paintings/gosekke_michinaga_a.jpg: 藤原道長の肖像（パブリックドメイン。ウィキメディア・コモンズ）
+  paintings/gosekke_kujo_michitaka.jpg: 九条道孝の肖像（パブリックドメイン。ウィキメディア・コモンズ）
+  paintings/gosekke_shoken.jpg: 昭憲皇太后の写真（パブリックドメイン。ウィキメディア・コモンズ）
+  paintings/gosekke_teimei.jpg: 貞明皇后の写真（パブリックドメイン。ウィキメディア・コモンズ）
+  paintings/gosekke_konoe_fumimaro.jpg: 近衛文麿（内閣情報部。パブリックドメイン。ウィキメディア・コモンズ）
+  paintings/gosekke_takatsukasa_wedding_1950.jpg: 鷹司平通と和子内親王の結婚の記念写真（1950年、毎日新聞社。パブリックドメイン。ウィキメディア・コモンズ）
+  paintings/kazu_tenshoin_photo.png: 天璋院（篤姫）の写真（1883年以前。パブリックドメイン）
+
+shots:
+  - 0 ai:H07 wide
+  - 1 frame:paintings/gosekke_midokanpaku_diary.jpg
+  - 2 ai:K07 wide
+  - 3 ai:H14 wide
+  - 4 ai:J07 wide
+  - 5 ai:K15 wide
+  - 6 ai:H09 left
+  - 7 ai:J01 wide
+  - 8 ai:K06 wide
+  - 9 ai:J07 left
+  - 10 part:paintings/gosekke_murasaki_emaki_fujita.jpg wide
+  - 11 ai:H09 wide
+  - 12 ai:H07 left
+  - 13 ai:J07 wide
+  - 14 ai:H09 right
+  - 15 ai:J07 right
+  - 16 part:paintings/gosekke_murasaki_emaki_gotoh6.jpg wide
+  - 17 ai:H07 right
+  - 18 frame:paintings/gosekke_midokanpaku_diary.jpg
+  - 19 ai:J07 wide
+  - 20 frame:paintings/gosekke_michinaga_a.jpg
+  - 21 ai:K06 right
+  - 22 ai:K18 wide
+  - 23 ai:K06 left
+  - 24 ai:K02 wide
+  - 25 ai:K05 wide
+  - 26 ai:K15 left
+  - 27 ai:J02 wide
+  - 28 ai:K15 left
+  - 29 ai:K13 wide
+  - 30 ai:K07 left
+  - 31 ai:K07 right
+  - 32 ai:J06 wide
+  - 33 ai:K18 right
+  - 34 ai:K10 wide
+  - 35 ai:K16 wide
+  - 36 ai:K02 right
+  - 37 ai:K10 left
+  - 38 ai:K02 left
+  - 39 ai:K05 left
+  - 40 ai:K05 right
+  - 41 ai:K07 wide
+  - 42 ai:K07 left
+  - 43 ai:K18 left
+  - 44 ai:K15 right
+  - 45 ai:K10 right
+  - 46 ai:K13 wide
+  - 47 ai:K07 wide
+  - 48 ai:J02 left
+  - 49 ai:K07 wide
+  - 50 ai:J06 right
+  - 51 ai:J06 left
+  - 52 ai:K22 wide
+  - 53 ai:K01 wide
+  - 54 ai:K22 left
+  - 55 ai:K07 right
+  - 56 ai:K15 wide
+  - 57 ai:K13 left
+  - 58 ai:K14 wide
+  - 59 ai:K17 wide
+  - 60 ai:K10 wide
+  - 61 ai:H14 left
+  - 62 ai:K18 wide
+  - 63 ai:K14 wide
+  - 64 ai:K14 left
+  - 65 ai:K10 left
+  - 66 frame:paintings/kazu_tenshoin_photo.png
+  - 67 ai:H14 right
+  - 68 ai:K16 wide
+  - 69 ai:K02 wide
+  - 70 frame:paintings/gosekke_kujo_michitaka.jpg
+  - 71 ai:K15 right
+  - 72 ai:K05 right
+  - 73 ai:K18 wide
+  - 74 ai:K10 right
+  - 75 frame:paintings/gosekke_shoken.jpg
+  - 76 ai:H14 wide
+  - 77 frame:paintings/gosekke_teimei.jpg
+  - 78 ai:K06 wide
+  - 79 frame:paintings/gosekke_konoe_fumimaro.jpg
+  - 80 ai:K10 wide
+  - 81 ai:K17 wide
+  - 82 ai:J01 wide
+  - 83 ai:J01 right
+  - 84 ai:J01 left
+  - 85 frame:paintings/gosekke_midokanpaku_diary.jpg
+  - 86 ai:H14 wide
+  - 87 ai:K17 wide
+  - 88 frame:paintings/gosekke_takatsukasa_wedding_1950.jpg
+  - 89 ai:K17 right
+  - 90 ai:K17 left
+  - 91 ai:K07 left
+  - 92 ai:K18 wide
+  - 93 ai:H14 right
+  - 94 ai:K22 right
+  - 95 ai:H07 left
+  - 96 ai:H07 right
+  - 97 ai:K10 wide
+  - 98 ai:J01 right
+  - 99 ai:H07 wide
+  - 100 ai:J07 wide
+  - 101 ai:K01 wide
+  - end ai:KEND wide
+
+focus: {}
+
+fx:
+  K02: {lamp: {region: [0.4, 0.75, 0.6, 1.0]}}
+  J02: {fire: {region: [0.3, 0.0, 1.0, 0.6]}, sparks: {region: [0.2, 0.0, 1.0, 0.5]}}
+  K22: {mist: {region: [0.0, 0.3, 1.0, 0.75]}}
+
+parts:
+  - {type: quote, from: 12, to: 12, label: 史料, text: 一家立三后、／未曾有なり, source: 藤原実資『小右記』（寛仁2年）}
+  - {type: quote, from: 15, to: 15, label: 史料, text: この世をば わが世とぞ思ふ／望月の 欠けたることも／なしと思へば, source: 藤原実資『小右記』が伝える道長の歌}
+  - {type: quote, from: 40, to: 40, label: 要点, text: 良実を自分の子孫とは／認めない, source: 三田武繁「家格の秩序と二条家」（2018年）の説明}
+  - {type: versus3, from: 44, to: 44, items: [[一方の見方, 1252年], [三田武繁さんの説, 1273年]], every: 1.8}
+  - {type: versus3, from: 76, to: 76, items: [[明治神宮, 1850年], [英語圏の資料, 1849年]], every: 1.8}
+
+stills:
+  - {line: 0, note: 冒頭（0秒）}
+  - {line: 3, note: 冒頭の答えの席}
+  - {line: 5, note: 五つの家の家系図（図）}
+  - {line: 12, note: 小右記の引用札}
+  - {line: 15, note: 歌の札}
+  - {line: 26, note: 三つに割れた（図）}
+  - {line: 40, note: 義絶の引用札}
+  - {line: 45, note: 21年・45年・33年（図）}
+  - {line: 64, note: 石高（図）}
+  - {line: 75, note: 昭憲皇太后の生年のくい違い}
+  - {line: 92, note: 五つの家の今（図）}
+  - {end: true, note: 終了画面の空き}

@@ -1,0 +1,179 @@
+# 物語完結型ショート 原爆if s4（2026-11-11）。本編 scripts/genbaku-if-story.yaml（11/11 12:00 公開）の第5章（浜辺の陣地と、山の地下）から。11/12 16:30 公開。
+# 形式は mongol_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。「もしも」の部分は入れない（史実の記録と研究者の見立ての紹介だけ）。
+# 絵は本編の AI 絵（out/story/genbaku-if/main/、Gemini）だけ。新しい絵は作らない。原爆の被害・遺体の絵は使わない。
+# 切り口：松代の地下壕（皇居・大本営の移転先）が終戦までに約8割できていたこと、大磯の坂田山の砲台に大砲が無かったこと、準備は正味4か月。
+#   本編の答え（降伏の時期の割れ方・もしもの世界の行方）は言わない。
+# 事実カード（dev/output/rekishi-chiso/research/原爆if_facts_20261107.yaml）：genbaku-35・36・68・73・75。言い方は本編のまま。
+# 計算（自分で計算し直した）：1944年11月11日→1945年8月15日＝9か月4日（約9か月）。松代の完成は長野市の頁で約8割（県政史は約75%と割れる→言わない）。
+# 理解テスト4問：
+#   ①誰の話か：終戦間際の日本の軍。松代の地下壕と、神奈川県大磯の陣地
+#   ②いつ・どこで何が：1944年11月（長野市は11月11日から）から終戦まで約9か月、長野県の松代に大本営・宮内省・皇居などを移す地下壕を掘った。大磯の坂田山の洞窟の砲台は5月10日ごろから8月上旬に掘り抜いた
+#   ③何が分かるか：松代は全体の約8割ができていた。大磯の砲台には大砲も砲弾も無かった。大磯の準備は正味4か月ほど
+#   ④どうなったか：3発目の原爆はいつ使えたのか、の問いで閉じる（答えは本編の第6章）
+title: 松代大本営｜皇居を移す地下壕は、どこまで出来たか
+yt_title: 皇居を移す地下壕は、終戦までにどこまで出来ていたのか　長野の松代と、大砲の無かった大磯の砲台
+description: |-
+  終戦の前、日本の軍は、大本営や政府を移すための地下壕を、長野県の松代で掘っていました。
+  長野市によれば、工事は1944年11月から終戦の日まで（11月11日からとする長野市の頁による）、およそ9か月。働く人と家族1万3千人のための飯場が247棟。移す先には、大本営や宮内省、皇居、日本放送協会や電話局まで、予定されていました。終戦までに、全体の約8割ができていた、と長野市は書いています。
+  一方、神奈川県の大磯の坂田山では、洞窟の砲台が、5月10日ごろから掘りはじめられ、8月の上旬に掘り抜かれました。けれど、掘った人の話では、大砲も砲弾も、無かった。大磯を調べた市原誠さんは、この方面の本土決戦の準備は、正味4か月ほどだった、と書いています。
+  同じころ、アメリカでは、原爆の準備が進んでいました。3発目は、いつ使えたのか。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#太平洋戦争"
+- "#昭和史"
+- "#日本史"
+ai_images: true
+ai_disclosure: この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/genbaku-if
+out: genbaku_story_s4
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 松代大本営と大磯の陣地（1945年）
+  title: 皇居を移す地下壕は、《どこまで》出来たか
+now:
+- {at: 1944年11月, text: 1944年11月　長野県 松代, point: 0}
+- {at: 5月10日, text: 1945年5月　神奈川県 大磯, point: 1}
+- {at: 8月上旬, text: 1945年8月上旬, point: 1}
+timeline:
+- {label: '1944'}
+- {label: '1945'}
+cards:
+- type: table
+  title: 松代の地下壕
+  from: 長野市によれば
+  until: 海辺の大磯
+  items:
+  - {at: 1944年11月, text: 1944年11月から　終戦まで約9か月}
+  - {at: 247棟, text: 飯場　247棟（1万3千人）}
+  - {at: 約8割, text: 終戦までに　全体の約8割}
+  text_y: 0.74
+shots:
+  B14a:
+    kind: ai
+    file: genbaku-if/main/B14.jpg
+    focus: [0.5, 0.5]
+    move: down
+    must: 岩を掘り抜いた長い地下壕（松代）
+  B14b:
+    kind: ai
+    file: genbaku-if/main/B14.jpg
+    focus: [0.5, 0.8]
+    move: up
+    must: 地下壕の奥（10キロメートルあまり）
+  B10:
+    kind: ai
+    file: genbaku-if/main/B10.jpg
+    focus: [0.5, 0.55]
+    move: right
+    must: 丘の斜面に坑道を掘る兵（掘り進む）
+  B14c:
+    kind: ai
+    file: genbaku-if/main/B14.jpg
+    focus: [0.3, 0.45]
+    move: right
+    must: 地下壕の灯（1944年11月から）
+  B14d:
+    kind: ai
+    file: genbaku-if/main/B14.jpg
+    focus: [0.7, 0.55]
+    move: left
+    must: 地下壕の支え木（飯場・働く人と家族）
+  B14e:
+    kind: ai
+    file: genbaku-if/main/B14.jpg
+    focus: [0.5, 0.3]
+    move: down
+    must: 地下壕の天井（大本営・宮内省・皇居の移転先）
+  B14f:
+    kind: ai
+    file: genbaku-if/main/B14.jpg
+    focus: [0.5, 0.7]
+    move: in
+    must: 地下壕の奥（約8割ができていた）
+  B08:
+    kind: ai
+    file: genbaku-if/main/B08.jpg
+    focus: [0.65, 0.5]
+    move: left
+    must: 相模湾の岩山と海辺の町（大磯）
+  B12a:
+    kind: ai
+    file: genbaku-if/main/B12.jpg
+    focus: [0.4, 0.5]
+    move: right
+    must: 岩の洞窟の砲台の跡（坂田山）
+  B12b:
+    kind: ai
+    file: genbaku-if/main/B12.jpg
+    focus: [0.7, 0.5]
+    move: left
+    must: 洞窟の砲台（大砲は無い）
+  B15:
+    kind: ai
+    file: genbaku-if/main/B15.jpg
+    focus: [0.55, 0.5]
+    move: in
+    must: 夜明けの砂漠と遠くの鉄塔（アメリカでは原爆の準備）
+lines:
+  # fact: genbaku-36
+- 語り: 皇居を移す地下壕は、終戦までに、どこまで掘れたのか。
+  shot: B14a
+  tone: 強調
+  pause: 0.12
+  # fact: genbaku-36
+- 語り: 長野県の松代に、10キロあまりの、地下壕を掘っていた。
+  shot: B14b
+  tone: 重い
+  pause: 0.12
+- 語り: その進み具合と、海辺の陣地を、見ていく。
+  shot: B10
+  tone: しみじみ
+  pause: 0.12
+  # fact: genbaku-35
+- 語り: 長野市によれば、工事は、1944年11月から、終戦の日まで。およそ9か月だ。
+  shot: B14c
+  tone: しみじみ
+  pause: 0.12
+  # fact: genbaku-36
+- 語り: 働く人と家族、1万3千人のための飯場が、247棟。
+  shot: B14d
+  tone: しみじみ
+  pause: 0.12
+  # fact: genbaku-36
+- 語り: 移す先には、大本営や宮内省、皇居、日本放送協会や電話局まで、予定されていた。
+  shot: B14e
+  tone: しみじみ
+  pause: 0.12
+  # fact: genbaku-36
+- 語り: 終戦までに、全体の約8割ができていた、と長野市は書く。
+  shot: B14f
+  tone: 重い
+  pause: 0.12
+  # fact: genbaku-73
+- 語り: 海辺の大磯では、坂田山の洞窟の砲台を、5月10日ごろから掘りはじめ、8月上旬に貫いた。
+  shot: B12a
+  tone: しみじみ
+  pause: 0.12
+  # fact: genbaku-73
+- 語り: けれど、掘った人の話では、大砲も、砲弾も、無かった。
+  shot: B12b
+  tone: 重い
+  pause: 0.12
+  # fact: genbaku-75
+- 語り: 調べた市原誠さんは、この方面の準備は、正味4か月ほどだった、と書く。
+  shot: B08
+  tone: しみじみ
+  pause: 0.12
+- 語り: 同じころ、アメリカでは、原爆の準備が進んでいた。3発目は、いつ使えたのか。
+  shot: B15
+  tone: 疑問
+  pause: 0.15
