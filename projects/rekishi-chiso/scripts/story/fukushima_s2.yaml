@@ -1,0 +1,143 @@
+# 物語完結型ショート 福島正則 s2（2026-11-11）。本編 scripts/fukushima-story.yaml（11/12 12:00 公開、https://youtu.be/5nCOD_MMO-s）から。11/13 に予約。
+# 形式は genbaku_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（dev/output/rekishi-chiso/research/福島正則_facts_20261111.yaml）と本編の # fact: だけ。
+# 絵は本編の AI 絵（out/story/fukushima/main、人物は後ろ姿・遠景）と実在の絵（パブリックドメイン）。新しい絵は作らない。死・遺体の場面に人物の絵は当てない。
+# 答えの席（死んだあとに取り上げられたもの）は言い切らない。
+# 切り口：賤ヶ岳の七本槍は本当に7人だったか。5千石から49万8千石へ（本編1章）。
+# 計算：1583→1600＝17年。49万8千÷5千＝99.6→約100倍。
+# 理解テスト4問：①福島正則 ②1583年賤ヶ岳。柴田退治記は9人・太閤記は7人。恩賞も割れる ③5千石とされた正則が関ヶ原のあと49万8千石 ④17年で約100倍。次は、なぜ城の修理で領地を失ったか（本編2〜3章）
+title: "福島正則｜七本槍は、本当に7人だったのか"
+yt_title: "賤ヶ岳の七本槍は本当に7人だったのか　福島正則の5千石は、17年で49万8千石になった"
+description: |-
+  賤ヶ岳の七本槍の一人とされる福島正則。ところが、手柄の人数は、記録で違います。1583年11月に大村由己が書いた『柴田退治記』は9人、江戸時代の初めの『太閤記』は7人。「七本槍」という言い方は、同時代の『柴田退治記』には出てきません。恩賞も、『柴田退治記』は「五千石か三千石」、『太閤記』は7人とも5千石と書きます。
+  5千石とされた正則は、関ヶ原のあと、安芸と備後の49万8千石を与えられました。賤ヶ岳から17年、およそ100倍です。
+  その49万8千石の大名が、なぜ、城の修理で領地を失ったのか。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#福島正則"
+- "#賤ヶ岳の七本槍"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景・人物の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面に「AI生成画像」と出しています）。"
+art_dir: out/story/fukushima
+out: fukushima_story_s2
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: "福島正則と賤ヶ岳の七本槍"
+  title: "七本槍は、《7人》だったのか"
+now:
+- {at: "1583年", text: "1583年　賤ヶ岳", point: 0}
+- {at: "関ヶ原のあと", text: "1600年　関ヶ原のあと", point: 1}
+timeline:
+- {label: "1583"}
+- {label: "1600"}
+shots:
+  Yo:
+    kind: "real"
+    image: "paintings/nene_fukushima_masanori_yoshiiku.jpg"
+    focus: [0.5, 0.3]
+    move: "in"
+    credit: "落合芳幾《福島正則》1867年（ウィキメディア・コモンズ、パブリックドメイン）"
+    must: "福島正則の浮世絵（顔まわり）"
+    crop: [0, 0, 1, 0.7]
+  Sz1:
+    kind: "real"
+    image: "paintings/hidenaga_shizugatake_screen_1.jpg"
+    focus: [0.3, 0.5]
+    move: "right"
+    credit: "《賤ヶ岳合戦図屏風》江戸時代（ウィキメディア・コモンズ、パブリックドメイン）"
+    must: "賤ヶ岳合戦図屏風"
+    crop: [0, 0, 0.6, 1]
+  Sz2:
+    kind: "real"
+    image: "paintings/hidenaga_shizugatake_screen_1.jpg"
+    focus: [0.7, 0.5]
+    move: "left"
+    credit: "《賤ヶ岳合戦図屏風》江戸時代（ウィキメディア・コモンズ、パブリックドメイン）"
+    must: "賤ヶ岳合戦図屏風（右半分）"
+    crop: [0.4, 0, 1, 1]
+  F17:
+    kind: "ai"
+    file: "fukushima/main/F17.jpg"
+    focus: [0.5, 0.55]
+    move: "in"
+    must: "槍を持つ若い武者の後ろ姿（七本槍）"
+  F14:
+    kind: "ai"
+    file: "fukushima/main/F14.jpg"
+    focus: [0.5, 0.55]
+    move: "right"
+    must: "帳簿に書き込む手元（恩賞）"
+  Sk:
+    kind: "real"
+    image: "paintings/ieyasu_sekigahara_zubyobu.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    credit: "《関ヶ原合戦図屏風》江戸時代（ウィキメディア・コモンズ、パブリックドメイン）"
+    must: "関ヶ原合戦図屏風"
+    crop: [0.15, 0, 0.7, 1]
+  F18:
+    kind: "ai"
+    file: "fukushima/main/F18.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "広島の城下町と川の舟（49万8千石）"
+  F03:
+    kind: "ai"
+    file: "fukushima/main/F03.jpg"
+    focus: [0.5, 0.55]
+    move: "left"
+    must: "石垣の修理（次の問い）"
+lines:
+- 語り: "賤ヶ岳の七本槍は、本当に、7人だったのか。"
+  shot: Yo
+  tone: 強調
+  pause: 0.12
+  # fact: fukushima-34
+- 語り: "1583年、賤ヶ岳の戦い。若い福島正則は、手柄を立てた一人だった。"
+  shot: Sz1
+  tone: しみじみ
+  pause: 0.12
+  # fact: fukushima-34
+- 語り: "同じ年の11月に、大村由己が書いた『柴田退治記』は、手柄の人を、9人と書く。"
+  shot: Sz2
+  tone: しみじみ
+  pause: 0.12
+  # fact: fukushima-34
+- 語り: "江戸時代の初め、小瀬甫庵の『太閤記』は、7人。"
+  shot: F17
+  tone: しみじみ
+  pause: 0.12
+  # fact: fukushima-34
+- 語り: "七本槍という言い方は、同時代の『柴田退治記』には、出てこない。"
+  shot: Sz1
+  tone: 重い
+  pause: 0.12
+  # fact: fukushima-35
+- 語り: "恩賞も割れる。『柴田退治記』は五千石か三千石、『太閤記』は7人とも5千石。"
+  shot: F14
+  tone: しみじみ
+  pause: 0.12
+  # fact: fukushima-36
+- 語り: "5千石とされた正則は、関ヶ原のあと、安芸と備後の、49万8千石を与えられた。"
+  shot: Sk
+  tone: 重い
+  pause: 0.12
+  # fact: fukushima-36
+- 語り: "賤ヶ岳から17年。およそ、100倍だった。"
+  shot: F18
+  tone: しみじみ
+  pause: 0.12
+  # fact: fukushima-09
+- 語り: "その49万8千石の大名が、なぜ、城の修理で、領地を失ったのか。"
+  shot: F03
+  tone: 疑問
+  pause: 0.15
