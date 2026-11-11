@@ -27,7 +27,7 @@ void main() {
         expect(c.teams, hasLength(30));
         for (final t in c.teams) {
           expect(t.roster, hasLength(14));
-          expect(t.payroll, lessThanOrEqualTo(hardCap), reason: t.name);
+          expect(t.payroll, lessThanOrEqualTo(secondApron), reason: t.name);
           expect(t.roster.any((p) => p.pos.guard) && t.roster.any((p) => p.pos.big), isTrue);
         }
       }
@@ -1352,7 +1352,7 @@ void main() {
           if (c.phase != Phase.preseason && c.phase != Phase.season) continue;
           for (final t in c.teams.where((t) => t.index != c.mine)) {
             expect(t.roster.length, lessThanOrEqualTo(maxRoster), reason: t.name);
-            expect(t.payroll, lessThanOrEqualTo(hardCap + 100), reason: t.name);
+            expect(t.payroll, lessThanOrEqualTo(secondApron + 100), reason: t.name);
           }
         }
         trades += c.log.where((l) => l.contains('トレード:')).length;

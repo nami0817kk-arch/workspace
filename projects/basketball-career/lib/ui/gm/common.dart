@@ -251,7 +251,9 @@ class PayrollBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final f = (payroll / hardCap).clamp(0.0, 1.0);
+    // 帯の右端は第2の壁の少し先(壁を超えても帯が突き抜けない)
+    const scale = secondApron * 1.04;
+    final f = (payroll / scale).clamp(0.0, 1.0);
     final color = payroll > taxLine ? GmColors.bad : payroll > salaryCap ? GmColors.gold : GmColors.good;
     final room = salaryCap - payroll;
     return Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
@@ -277,9 +279,11 @@ class PayrollBar extends StatelessWidget {
         return Stack(children: [
           Container(height: 8, decoration: BoxDecoration(color: GmColors.line, borderRadius: BorderRadius.circular(4))),
           Container(width: w * f, height: 8, decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(4))),
-          // 上限とぜいたく税の線
-          Positioned(left: w * salaryCap / hardCap - 1, child: Container(width: 2, height: 8, color: Colors.white70)),
-          Positioned(left: w * taxLine / hardCap - 1, child: Container(width: 2, height: 8, color: GmColors.bad)),
+          // 上限(白)・ぜいたく税(赤)・第1の壁(橙)・第2の壁(濃い赤)の線
+          Positioned(left: w * salaryCap / scale - 1, child: Container(width: 2, height: 8, color: Colors.white70)),
+          Positioned(left: w * taxLine / scale - 1, child: Container(width: 2, height: 8, color: GmColors.bad)),
+          Positioned(left: w * firstApron / scale - 1, child: Container(width: 2, height: 8, color: GmColors.ball)),
+          Positioned(left: w * secondApron / scale - 1, child: Container(width: 2, height: 8, color: const Color(0xFF8B1E2D))),
         ]);
       }),
     ]);

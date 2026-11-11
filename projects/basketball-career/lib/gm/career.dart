@@ -41,7 +41,7 @@ const ticketLabels = ['安い', 'ふつう', '高い', 'とても高い'];
 const arenaSeats = 19000;
 
 /// 1シーズンの放映料など、勝ち負けによらない収入(10万ドル)。
-const baseIncome = 900;
+final baseIncome = capScaled(900);
 
 /// オーナーの目標の種類。
 enum GoalKind {
@@ -490,7 +490,7 @@ class Career {
   double get attendance => (0.55 + hype * 0.0045 - (ticketPrices[priceLevel] - 100) * 0.003).clamp(0.3, 1.0);
 
   /// 1試合のホームの入場収入(10万ドル)。
-  int get gatePerGame => (arenaSeats * attendance * ticketPrices[priceLevel] / 100000).round();
+  int get gatePerGame => (arenaSeats * attendance * ticketPrices[priceLevel] * capScale / 100000).round();
 
   void setPrice(int level) {
     if (phase == Phase.over) return;
@@ -751,32 +751,32 @@ class Career {
         age: age,
         ovr: ovr,
         pot: pot,
-        salary: sal.clamp(minSalary, maxSalary),
+        salary: sal.clamp(minSalary, maxSalaryFor(math.max(1, age - 20))),
         years: 1 + rng.nextInt(4),
         exp: math.max(1, age - 20),
       ));
     }
     // 年俸の合計が上限の外へ大きく出ないように整える。チームごとに空きの大きさを散らす
-    final limit = style == 2 ? hardCap - 80 - rng.nextInt(120) : salaryCap - (style == 1 ? 260 : 20) - rng.nextInt(220) + 80;
+    final limit = style == 2 ? secondApron - capScaled(80) - rng.nextInt(capScaled(120)) : salaryCap - capScaled(style == 1 ? 260 : 20) - rng.nextInt(capScaled(220)) + capScaled(80);
     var total = roster.fold(0, (s, p) => s + p.salary);
     if (total > limit) {
       final f = limit / total;
       for (final p in roster) {
-        p.salary = (p.salary * f).round().clamp(minSalary, maxSalary);
+        p.salary = (p.salary * f).round().clamp(minSalary, maxSalaryFor(p.exp));
       }
-    } else if (total < 950) {
+    } else if (total < capScaled(950)) {
       // 若いチームでも、年俸の合計が少なすぎないようにする(上限の3分の2ほどまでは払っている)
-      final f = 950 / total;
+      final f = capScaled(950) / total;
       for (final p in roster) {
-        p.salary = (p.salary * f).round().clamp(minSalary, maxSalary);
+        p.salary = (p.salary * f).round().clamp(minSalary, maxSalaryFor(p.exp));
       }
     }
     if (style == 2) {
       total = roster.fold(0, (s, p) => s + p.salary);
-      if (total < salaryCap + 120) {
-        final f = (salaryCap + 120) / total;
+      if (total < salaryCap + capScaled(120)) {
+        final f = (salaryCap + capScaled(120)) / total;
         for (final p in roster.take(5)) {
-          p.salary = (p.salary * f).round().clamp(minSalary, maxSalary);
+          p.salary = (p.salary * f).round().clamp(minSalary, maxSalaryFor(p.exp));
         }
       }
     }
@@ -797,7 +797,7 @@ class Career {
     final order = [...teams]..sort((a, b) => st[b.index]!.compareTo(st[a.index]!));
     for (var r = 0; r < order.length; r++) {
       final t = order[r];
-      if (t.payroll > salaryCap + 150 && r >= 6) {
+      if (t.payroll > salaryCap + capScaled(150) && r >= 6) {
         t.mode = TeamMode.cutCost;
       } else if (r < 6) {
         t.mode = TeamMode.contend;
@@ -821,7 +821,6 @@ class Career {
   String? get startProblem {
     if (me.roster.length < minRoster) return '選手が$minRoster人そろっていない(いま${me.roster.length}人)';
     if (me.roster.length > maxRoster) return '選手が$maxRoster人を超えている(いま${me.roster.length}人)';
-    if (me.payroll > hardCap) return '年俸の合計が上限(${money(hardCap)})を超えている';
     return null;
   }
 
@@ -852,7 +851,7 @@ class Career {
     costs = 0;
     final third = [GoalKind.playoffs, GoalKind.youth, GoalKind.noTax];
     // 強いチームにはプレーオフ、立て直しには若手、上限を大きく超えたチームには税を
-    final kind = r < 12 ? GoalKind.playoffs : r >= 22 ? GoalKind.youth : me.payroll > taxLine - 50 ? GoalKind.noTax : third[rng.nextInt(third.length)];
+    final kind = r < 12 ? GoalKind.playoffs : r >= 22 ? GoalKind.youth : me.payroll > taxLine - capScaled(50) ? GoalKind.noTax : third[rng.nextInt(third.length)];
     goals = [OwnerGoal(GoalKind.wins), OwnerGoal(GoalKind.profit), OwnerGoal(kind)];
     allStarIds = [];
     extAsked = [];
@@ -1466,7 +1465,7 @@ class Career {
       if (t.index == mine) continue;
       for (final p in [...t.roster.where((p) => p.years <= 0)]) {
         final ask = askOf(p, t);
-        final keep = (p.ovr >= 62 || playerValue(p, t.mode) > 10) && t.payroll - p.salary + ask.salary <= hardCap - 40 && rng.chance(0.95);
+        final keep = (p.ovr >= 62 || playerValue(p, t.mode) > 10) && t.payroll - p.salary + ask.salary <= secondApron - capScaled(40) && rng.chance(0.95);
         if (keep) {
           p
             ..salary = ask.salary
@@ -1503,7 +1502,7 @@ class Career {
     }
     // 気持ちが低い選手は、残るなら高く求める
     if (t.index == mine) f *= 1 + (60 - p.morale).clamp(0, 60) / 250;
-    final sal = p.ovr < 58 ? minSalary : (fairSalary(p.ovr, p.age) * f).round().clamp(minSalary, maxSalary);
+    final sal = p.ovr < 58 ? minSalary : (fairSalary(p.ovr, p.age) * f).round().clamp(minSalary, maxSalaryFor(p.exp));
     final maxYears = p.age >= 33 ? 1 : p.age >= 30 ? 2 : 4;
     return Ask(sal, maxYears);
   }
@@ -1515,11 +1514,9 @@ class Career {
     return null;
   }
 
-  /// 契約切れの選手と再契約できない理由(できるなら null)。再契約は年俸の上限を超えてもよい(合計の上限までは)。
+  /// 契約切れの選手と再契約できない理由(できるなら null)。再契約は年俸の上限を超えてもよい(固い上限は無い。ぜいたく税と信頼で重くなる)。
   String? resignProblem(Player p) {
     if (p.morale < 20) return '${p.name}は移籍を希望していて、残らない';
-    final ask = askOf(p, me);
-    if (me.payroll - p.salary + ask.salary > hardCap) return '年俸の合計が上限(${money(hardCap)})を超える';
     return null;
   }
 
@@ -1716,7 +1713,7 @@ class Career {
         if (t.roster.length + _bidsOf(t.index).length >= maxRoster) continue;
         if (t.payroll + _bidTotal(t.index) + ask.salary > salaryCap) continue;
         if (!rng.chance(t.mode == TeamMode.contend ? 0.45 : 0.3)) continue;
-        final salary = (ask.salary * (0.95 + rng.nextInt(4) * 0.05)).round().clamp(minSalary, maxSalary);
+        final salary = (ask.salary * (0.95 + rng.nextInt(4) * 0.05)).round().clamp(minSalary, maxSalaryFor(p.exp));
         bids.putIfAbsent(p.id, () => []).add(FaBid(t.index, salary, 1 + rng.nextInt(ask.maxYears)));
         added++;
       }
@@ -1916,7 +1913,7 @@ class Career {
   }
 
   /// 交渉の結果。
-  int _offerSalary(Player p, double factor) => (askOf(p, me).salary * factor).round().clamp(minSalary, maxSalary);
+  int _offerSalary(Player p, double factor) => (askOf(p, me).salary * factor).round().clamp(minSalary, maxSalaryFor(p.exp));
 
   /// 契約を申し出る。[factor] は求める額に掛ける数(0.9 で1割安く、1.1 で1割高く)。受けたら true。
   /// 1割安くを断られると気持ちが10下がり、このオフはもう値切れない。1割高くは気持ちが10上がる。
@@ -1934,7 +1931,7 @@ class Career {
     }
     final salary = _offerSalary(p, factor);
     if (exp) {
-      if (resignProblem(p) != null || me.payroll - p.salary + salary > hardCap) return false;
+      if (resignProblem(p) != null || me.payroll - p.salary + salary > secondApron) return false;
       resign(id, years);
     } else {
       if (signProblem(p) != null || (salary > minSalary && me.payroll + salary > salaryCap)) return false;
@@ -1978,7 +1975,7 @@ class Career {
     final base = askOf(p, me);
     final rookie = draftedIds.contains(p.id) && p.exp <= 3;
     final f = rookie ? 1.0 + (p.pot - p.ovr).clamp(0, 20) / 100 : 1.05;
-    return Ask((base.salary * f).round().clamp(minSalary, maxSalary), base.maxYears);
+    return Ask((base.salary * f).round().clamp(minSalary, maxSalaryFor(p.exp)), base.maxYears);
   }
 
   /// 延長を申し出る。受けたら true。[years] は今の契約のあとに足す年数。
@@ -1994,7 +1991,7 @@ class Career {
       return false;
     }
     p
-      ..nextSalary = (ask.salary * factor).round().clamp(minSalary, maxSalary)
+      ..nextSalary = (ask.salary * factor).round().clamp(minSalary, maxSalaryFor(p.exp))
       ..years = 1 + years.clamp(1, ask.maxYears);
     if (factor > 1) p.morale = (p.morale + 10).clamp(0, 100);
     _log('延長: ${p.name}(${me.def.short})が$years年延長(来季から${money(p.nextSalary!)})');
