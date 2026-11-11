@@ -78,7 +78,42 @@ class RosterTab extends StatelessWidget {
         for (final (slot, p) in bySlot(order.take(5).toList())) _row(context, car, p, slot: slot),
         const SectionTitle('控え'),
         for (final p in order.skip(5)) _row(context, car, p),
+        SectionTitle('2ウェイ契約(${me.twoWay.length}/$twoWayMax人)'),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 6),
+          child: Text(
+              '若手(リーグ$twoWayMaxExp年目まで)を、登録の$maxRoster人と年俸の合計に数えずに抱える契約。試合には出ないが、育って、登録に空きがあれば上げられる。年俸は${money(twoWaySalary)}。',
+              style: const TextStyle(fontSize: 12, color: GmColors.sub, height: 1.5)),
+        ),
+        if (me.twoWay.isEmpty) const Text('いない(補強の画面で、自由契約の若手から取れる)', style: TextStyle(fontSize: 12, color: GmColors.sub)),
+        for (final p in me.twoWay) _twoWayRow(context, car, p),
       ],
+    );
+  }
+
+  Widget _twoWayRow(BuildContext context, Career car, Player p) {
+    final problem = car.promoteProblem(p);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: PlayerRow(
+        p: p,
+        team: car.mine,
+        showDelta: true,
+        salaryText: '2ウェイ ${money(p.salary)}(残り${p.years}年)',
+        extra: Wrap(spacing: 8, children: [
+          OutlinedButton(
+            style: OutlinedButton.styleFrom(minimumSize: const Size(0, 32), padding: const EdgeInsets.symmetric(horizontal: 10)),
+            onPressed: problem != null || c.busy ? null : () => c.promoteTwoWay(p.id),
+            child: Text(problem ?? '登録に上げる(${money(minSalary)}・2年)', style: const TextStyle(fontSize: 12)),
+          ),
+          TextButton(
+            style: TextButton.styleFrom(minimumSize: const Size(0, 32), padding: const EdgeInsets.symmetric(horizontal: 6), foregroundColor: GmColors.bad),
+            onPressed: c.busy ? null : () => c.waiveTwoWay(p.id),
+            child: const Text('放す', style: TextStyle(fontSize: 12)),
+          ),
+        ]),
+        onTap: () => _detail(context, car, p),
+      ),
     );
   }
 
@@ -189,7 +224,20 @@ class RosterTab extends StatelessWidget {
                     label: Text(car.tradeBlock.contains(p.id) ? 'トレードブロックから外す' : 'トレードブロックに載せる'),
                   ),
                 ),
-                if (canRelease)
+                if (car.me.roster.contains(p) && car.toTwoWayProblem(p) == null)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: OutlinedButton.icon(
+                      onPressed: () {
+                        c.toTwoWay(p.id);
+                        Navigator.pop(ctx);
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${p.name}を2ウェイ契約に下げた(登録に1人空く)')));
+                      },
+                      icon: const Icon(Icons.south_rounded),
+                      label: const Text('2ウェイ契約に下げる'),
+                    ),
+                  ),
+                if (canRelease && car.me.roster.contains(p))
                   OutlinedButton.icon(
                     style: OutlinedButton.styleFrom(foregroundColor: GmColors.bad),
                     onPressed: () async {

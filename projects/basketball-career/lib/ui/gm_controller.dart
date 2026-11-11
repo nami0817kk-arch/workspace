@@ -220,6 +220,10 @@ class GmController extends ChangeNotifier {
   void letGo(int id) => _act((c) => c.letGo(id));
   void signFreeAgent(int id, int years) => _act((c) => c.signFreeAgent(id, years));
   void release(int id) => _act((c) => c.release(id));
+  void signTwoWay(int id) => _act((c) => c.signTwoWay(id));
+  void toTwoWay(int id) => _act((c) => c.toTwoWay(id));
+  void promoteTwoWay(int id) => _act((c) => c.promoteTwoWay(id));
+  void waiveTwoWay(int id) => _act((c) => c.waiveTwoWay(id));
   void finishContracts() => _act((c) => c.finishContracts());
   void nextFaDay() => _act((c) => c.nextFaDay());
   void setTraining(int level) => _act((c) => c.setTraining(level));

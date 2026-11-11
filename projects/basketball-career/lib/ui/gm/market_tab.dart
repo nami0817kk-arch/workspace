@@ -36,7 +36,7 @@ class MarketTab extends StatelessWidget {
               const SizedBox(height: 10),
               PayrollBar(payroll: car.me.payroll),
               const SizedBox(height: 4),
-              Text('登録 ${car.me.roster.length - car.expiring.length}人 / $maxRoster人', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
+              Text('登録 ${car.me.roster.length - car.expiring.length}人 / $maxRoster人・2ウェイ ${car.me.twoWay.length}人 / $twoWayMax人', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
               if (car.phase == Phase.contracts) ...[
                 const Divider(height: 20),
                 Row(children: [
@@ -96,7 +96,21 @@ class MarketTab extends StatelessWidget {
           child: const Text('契約'),
         ),
       ),
-      extra: problem != null && car.canSign ? Text(problem, style: const TextStyle(fontSize: 11, color: GmColors.sub)) : null,
+      extra: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        if (problem != null && car.canSign) Text(problem, style: const TextStyle(fontSize: 11, color: GmColors.sub)),
+        _twoWayButton(car, p),
+      ]),
+    );
+  }
+
+  /// 若手には「2ウェイで」の札を出す(登録の人数に数えない)。
+  Widget _twoWayButton(Career car, Player p) {
+    if (p.exp > twoWayMaxExp || !car.canSign) return const SizedBox.shrink();
+    final problem = car.twoWayProblem(p);
+    return TextButton(
+      style: TextButton.styleFrom(minimumSize: const Size(0, 32), padding: EdgeInsets.zero, visualDensity: VisualDensity.compact),
+      onPressed: problem != null || c.busy ? null : () => c.signTwoWay(p.id),
+      child: Text(problem ?? '2ウェイで取る(${money(twoWaySalary)}・登録に数えない)', style: const TextStyle(fontSize: 12)),
     );
   }
 
@@ -120,6 +134,7 @@ class MarketTab extends StatelessWidget {
       extra: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text('関心 ${interestLabel(car.interest(p, car.mine))}・ほかの申し込み ${rivals == 0 ? 'なし' : '$rivalsチーム'}',
             style: TextStyle(fontSize: 12, color: rivals > 0 ? GmColors.gold : GmColors.sub)),
+        _twoWayButton(car, p),
         if (mine != null) ...[
           Text('申し込み中 ${mine.years}年 ${money(mine.salary)}・選ばれる見込み ${(car.winChanceOf(p) * 100).round()}%',
               style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: GmColors.good)),

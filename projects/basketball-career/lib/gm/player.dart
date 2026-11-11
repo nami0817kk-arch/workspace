@@ -147,6 +147,15 @@ const maxRoster = 15;
 /// オフ(ドラフト・契約・シーズン前)は、ここまで抱えてよい。シーズンを始めるまでに [maxRoster] 人にする。
 const offseasonRoster = 17;
 
+/// 2ウェイ契約の選手を抱えられる人数。登録の [maxRoster] 人には数えない。
+const twoWayMax = 3;
+
+/// 2ウェイ契約の年俸(上限にも合計にも数えない。オーナーの支出には入る)。
+const twoWaySalary = 7;
+
+/// 2ウェイ契約にできる、リーグでの年数の上限(若手のための契約)。
+const twoWayMaxExp = 3;
+
 /// シーズンを始めるのに要る人数。
 const minRoster = 10;
 
