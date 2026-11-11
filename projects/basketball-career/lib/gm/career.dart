@@ -252,6 +252,17 @@ const faDays = 4;
 const faDecideChance = [0.25, 0.4, 0.6, 1.0];
 
 /// 自由契約の選手への申し込み。
+/// 選手を放すときの年俸の残し方。
+enum ReleaseMode {
+  full('全額を払う', '残りの年俸を全部、契約どおりの年に払う'),
+  stretch('ストレッチ', '残りの年俸を、残り年数の2倍＋1年に均して払う。今季の負担は軽いが、長く残る'),
+  buyout('バイアウト', '選手が残りの年俸の3割を諦める。払いは契約どおりの年に、3割少ない');
+
+  const ReleaseMode(this.label, this.text);
+  final String label;
+  final String text;
+}
+
 /// バード権の段階。
 enum Bird {
   none('バード権なし'),
@@ -1312,7 +1323,7 @@ class Career {
     growth = [];
     optionPending = [];
     for (final t in teams) {
-      t.deadCap = 0;
+      t.deadCap = t.deadLater.isEmpty ? 0 : t.deadLater.removeAt(0);
       final retired = <Player>[];
       for (final p in t.roster) {
         final start = p.ovr;
@@ -1338,7 +1349,10 @@ class Career {
         if (p.nextSalary != null) {
           p.salary = p.nextSalary!;
           p.nextSalary = null;
+        } else if (p.raise > 0 && p.years > 0) {
+          p.salary = (p.salary * (1 + p.raise / 100)).round().clamp(minSalary, maxSalaryFor(p.exp));
         }
+        if (p.years <= 0) p.raise = 0;
         // 選択権の年が来た選手: 次の年を使うか決める(自分のチームは契約の画面で。相手はここで決める)
         if (p.optionYears > 0 && p.years == p.optionYears) {
           if (t.index == mine) {
@@ -1565,7 +1579,8 @@ class Career {
     // 気持ちが低い選手は、残るなら高く求める
     if (t.index == mine) f *= 1 + (60 - p.morale).clamp(0, 60) / 250;
     final sal = p.ovr < 58 ? minSalary : (fairSalary(p.ovr, p.age) * f).round().clamp(minSalary, maxSalaryFor(p.exp));
-    final maxYears = p.age >= 33 ? 1 : p.age >= 30 ? 2 : 4;
+    final own = t.index == mine && t.roster.contains(p);
+    final maxYears = p.age >= 33 ? 1 : p.age >= 30 ? 2 : own ? ownMaxYears : 4;
     return Ask(sal, maxYears);
   }
 
@@ -1640,6 +1655,7 @@ class Career {
     p
       ..salary = ask.salary
       ..years = years.clamp(1, ask.maxYears);
+    p.raise = p.years >= 2 ? ownRaisePct : 0;
     expiring.remove(id);
   }
 
@@ -1882,12 +1898,52 @@ class Career {
     }
   }
 
-  /// 選手を放す。今シーズンの年俸は、そのまま合計に残る。
-  void release(int id) {
+  /// 放した選手の年俸の残り方。[now] は今季の合計に残る分、[later] は来季以降に残る分(先頭が来季)。
+  ({int now, List<int> later}) releaseCost(Player p, ReleaseMode mode) {
+    final r = math.max(1, p.years);
+    switch (mode) {
+      case ReleaseMode.full:
+        return (now: p.salary, later: List.filled(r - 1, p.salary));
+      case ReleaseMode.stretch:
+        // 残りの年俸の全部を、残り年数の2倍＋1年に均して払う(今季の負担は軽く、長く残る)
+        final n = 2 * r + 1;
+        final per = (p.salary * r / n).ceil();
+        return (now: per, later: List.filled(n - 1, per));
+      case ReleaseMode.buyout:
+        // 選手が残りの年俸の3割を諦める。払いは全額のときと同じ形で、3割少ない
+        final each = (p.salary * 0.7).round();
+        return (now: each, later: List.filled(r - 1, each));
+    }
+  }
+
+  /// 選手を放せない理由(放せるなら null)。
+  String? releaseProblem(Player p, [ReleaseMode mode = ReleaseMode.full]) {
+    if (!me.roster.contains(p)) return '自分の登録選手だけ';
+    if (expiring.contains(p.id)) return '契約が切れる選手は放す必要がない';
+    if (!(phase == Phase.preseason || phase == Phase.season || phase == Phase.contracts)) return '今は放せない';
+    if (mode == ReleaseMode.stretch && p.years < 2) return '残りが1年の契約はストレッチできない(2年以上の契約だけ)';
+    if (mode == ReleaseMode.buyout) {
+      if (p.years < 2) return 'バイアウトは残りが2年以上の契約だけ';
+      if (p.morale < 45) return '${p.name}は今、年俸を諦める話に乗らない(気持ちが低い)';
+    }
+    return null;
+  }
+
+  /// 選手を放す。年俸は [mode] の形で合計に残る(全額・ストレッチ・バイアウト)。
+  void release(int id, {ReleaseMode mode = ReleaseMode.full}) {
     final p = _mineById(id);
-    if (p == null || expiring.contains(id) || !(phase == Phase.preseason || phase == Phase.season || phase == Phase.contracts)) return;
+    if (p == null || releaseProblem(p, mode) != null) return;
     me.roster.remove(p);
-    me.deadCap += p.salary;
+    final cost = releaseCost(p, mode);
+    me.deadCap += cost.now;
+    for (var i = 0; i < cost.later.length; i++) {
+      if (i < me.deadLater.length) {
+        me.deadLater[i] += cost.later[i];
+      } else {
+        me.deadLater.add(cost.later[i]);
+      }
+    }
+    p.raise = 0;
     p
       ..salary = askOf(p, teams[(mine + 1) % teams.length]).salary
       ..years = 1;
@@ -2239,7 +2295,8 @@ class Career {
     }
     p
       ..nextSalary = (ask.salary * factor).round().clamp(minSalary, maxSalaryFor(p.exp))
-      ..years = 1 + years.clamp(1, ask.maxYears);
+      ..years = 1 + years.clamp(1, ask.maxYears)
+      ..raise = ownRaisePct;
     if (factor > 1) p.morale = (p.morale + 10).clamp(0, 100);
     _log('延長: ${p.name}(${me.def.short})が$years年延長(来季から${money(p.nextSalary!)})');
     return true;

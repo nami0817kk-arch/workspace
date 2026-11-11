@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'career.dart';
 import 'draft.dart';
 import 'player.dart';
@@ -59,7 +61,7 @@ void botStep(Career c, {bool trades = false, bool scouting = true}) {
       for (final id in [...c.expiring]) {
         final p = c.me.roster.firstWhere((x) => x.id == id);
         if (p.ovr >= 62 && c.resignProblem(p) == null) {
-          c.resign(id, c.askOf(p, c.me).maxYears);
+          c.resign(id, math.min(4, c.askOf(p, c.me).maxYears));
         } else {
           c.letGo(id);
         }
