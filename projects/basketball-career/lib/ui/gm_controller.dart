@@ -207,6 +207,8 @@ class GmController extends ChangeNotifier {
   }
 
   void toOffseason() => _act((c) => c.toOffseason());
+  void exerciseOption(int id) => _act((c) => c.exerciseOption(id));
+  void declineOption(int id) => _act((c) => c.declineOption(id));
 
   /// 任期を自分で終える(任期に上限は無い)。
   void endCareer() => _act((c) => c.endCareer());

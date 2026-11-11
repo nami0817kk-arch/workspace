@@ -1282,6 +1282,7 @@ class Career {
     }
     news = [];
     growth = [];
+    optionPending = [];
     for (final t in teams) {
       t.deadCap = 0;
       final retired = <Player>[];
@@ -1308,6 +1309,18 @@ class Career {
         if (p.nextSalary != null) {
           p.salary = p.nextSalary!;
           p.nextSalary = null;
+        }
+        // 選択権の年が来た選手: 次の年を使うか決める(自分のチームは契約の画面で。相手はここで決める)
+        if (p.optionYears > 0 && p.years == p.optionYears) {
+          if (t.index == mine) {
+            optionPending.add(p.id);
+          } else if (p.ovr >= 55 || playerValue(p, t.mode) > 8) {
+            _exerciseOption(p);
+          } else {
+            p
+              ..years = 0
+              ..optionYears = 0;
+          }
         }
         if (t.index == mine) {
           if (d >= 4) news.add('${p.name}が大きく伸びた(OVR ${shown(p.ovr)})');
@@ -1392,6 +1405,7 @@ class Career {
     p.player
       ..salary = sal
       ..years = yrs
+      ..optionYears = rookieOptionYears(overall)
       ..drafted = t.name;
     t.roster.add(p.player);
     if (t.index == mine) draftedIds.add(p.player.id);
@@ -1528,6 +1542,39 @@ class Career {
       ..salary = ask.salary
       ..years = years.clamp(1, ask.maxYears);
     expiring.remove(id);
+  }
+
+  // ---------------------------------------------------------------- チームの選択権
+
+  /// チームの選択権の年が来て、使うか決める自分の選手(id)。決めないまま契約を終えると、使ったことになる。
+  List<int> optionPending = [];
+
+  /// 選択権を使ったときの年俸(新人の契約表で毎年少しずつ上がる)。
+  int optionSalary(Player p) => (p.salary * 1.08).round().clamp(minSalary, maxSalaryFor(p.exp));
+
+  void _exerciseOption(Player p) {
+    p
+      ..salary = optionSalary(p)
+      ..optionYears -= 1;
+  }
+
+  /// 選択権を使って、次の年も契約を続ける。
+  void exerciseOption(int id) {
+    final p = _mineById(id);
+    if (phase != Phase.contracts || p == null || !optionPending.contains(id)) return;
+    optionPending.remove(id);
+    _exerciseOption(p);
+  }
+
+  /// 選択権を使わない。契約は切れた扱いになり、再契約か、放すかを話し合う。
+  void declineOption(int id) {
+    final p = _mineById(id);
+    if (phase != Phase.contracts || p == null || !optionPending.contains(id)) return;
+    optionPending.remove(id);
+    p
+      ..years = 0
+      ..optionYears = 0;
+    expiring.add(id);
   }
 
   void letGo(int id) {
@@ -1737,6 +1784,9 @@ class Career {
   /// オフを終えてシーズン前へ。残った契約切れの選手は放し、相手のチームが自由契約の選手を取る。
   void finishContracts() {
     if (phase != Phase.contracts) return;
+    for (final id in [...optionPending]) {
+      exerciseOption(id);
+    }
     for (final id in [...expiring]) {
       letGo(id);
     }
@@ -1831,7 +1881,7 @@ class Career {
 
   TradeVerdict judge(TradeOffer o) {
     if (!canTrade) return const TradeVerdict(false, '今はトレードできない(締め切りを過ぎた)', 0);
-    if (o.give.any(expiring.contains)) return const TradeVerdict(false, '契約の話し合い中の選手は出せない', 0);
+    if (o.give.any((id) => expiring.contains(id) || optionPending.contains(id))) return const TradeVerdict(false, '契約の話し合い中の選手は出せない', 0);
     return judgeTrade(teams, picks, mine, o, season,
         rosterLimit: phase == Phase.season ? maxRoster : offseasonRoster, hardness: difficulty.tradeHardness);
   }
@@ -2090,6 +2140,7 @@ class Career {
         'sl': scoutsLeft,
         'sau': scoutAdUsed,
         'exp': expiring,
+        if (optionPending.isNotEmpty) 'opp': optionPending,
         'trust': trust,
         'target': target,
         'ru': rescueUsed,
@@ -2158,6 +2209,7 @@ class Career {
       ..scoutsLeft = (j['sl'] as int?) ?? 0
       ..scoutAdUsed = (j['sau'] as bool?) ?? false
       ..expiring = [for (final x in (j['exp'] as List? ?? const [])) x as int]
+      ..optionPending = [for (final x in (j['opp'] as List? ?? const [])) x as int]
       ..trust = (j['trust'] as int?) ?? 50
       ..target = (j['target'] as int?) ?? 0
       ..rescueUsed = (j['ru'] as bool?) ?? false

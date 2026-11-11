@@ -1376,7 +1376,7 @@ void main() {
       final p = byMid(c).first;
       c.pickProspect(p);
       expect(c.me.roster, contains(p.player));
-      expect(p.player.years, anyOf(2, 3));
+      expect(p.player.years, anyOf(2, 4), reason: '1巡は4年(選択権2年)、2巡は2年');
       expect(c.draftedIds, contains(p.player.id));
       expect(c.me.roster.length, before + 1);
       while (c.phase == Phase.draft) {

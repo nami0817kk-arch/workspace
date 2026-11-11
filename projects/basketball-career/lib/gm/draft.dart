@@ -141,13 +141,17 @@ void scout(Prospect p, Rng rng) {
     ..potHi = ph;
 }
 
-/// 新人の年俸(何番目の指名か、0始まり)。1巡目は3年、2巡目は2年。
+/// 新人の年俸と年数(何番目の指名か、0始まり)。1巡目は4年(最後の2年はチームの選択権、年俸は指名順)、2巡目は2年。
+/// 1番目で1,400万ドル、30番目で360万ドルほど(2025-26 の実際の新人の年俸の表に近い)。
 (int, int) rookieContract(int overall) {
   if (overall < teamDefs.length) {
-    return ((105 - overall * 2.8).round().clamp(22, 105), 3);
+    return ((140 - overall * 3.6).round().clamp(35, 140), 4);
   }
   return (minSalary, 2);
 }
+
+/// 新人の契約のうち、チームの選択権の年数(1巡目は最後の2年)。
+int rookieOptionYears(int overall) => overall < teamDefs.length ? 2 : 0;
 
 /// くじの重み(シーズンの成績が悪い順)。プレーオフに出なかった14チームで、上位4つの順番を決める。
 const lotteryWeights = [140, 140, 140, 125, 105, 90, 75, 60, 45, 30, 20, 15, 10, 5];
