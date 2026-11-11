@@ -14,7 +14,7 @@ void main() {
     expect(File('ios/Runner/en.lproj/InfoPlist.strings').readAsStringSync(),
         contains('CFBundleDisplayName'));
     expect(File('ios/Runner/ja.lproj/InfoPlist.strings').readAsStringSync(),
-        contains('バスケ編成室'));
+        contains('バスケGM'));
   });
 
   test('Xcode プロジェクトに登録されている(ファイル参照・変数グループ・リソース・言語)', () {

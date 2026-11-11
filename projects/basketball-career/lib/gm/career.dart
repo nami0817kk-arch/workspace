@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'difficulty.dart';
 import 'draft.dart';
 import 'inbox.dart';
 import 'league.dart';
@@ -271,9 +272,9 @@ class Career {
   Career._({required this.seed, required this.mine, required this.rng, required this.teams});
 
   /// 新しく任される。リーグは [seed] だけで決まる(どのチームを選んでも同じリーグになる)。[team] が自分のチーム。
-  factory Career.start({required int seed, int team = 0}) {
+  factory Career.start({required int seed, int team = 0, Difficulty difficulty = Difficulty.normal}) {
     final rng = Rng(seed);
-    final c = Career._(seed: seed, mine: team.clamp(0, teamDefs.length - 1), rng: rng, teams: []);
+    final c = Career._(seed: seed, mine: team.clamp(0, teamDefs.length - 1), rng: rng, teams: [])..difficulty = difficulty;
     c._build();
     // はじめのコーチ陣はみな「良い」。ヘッドコーチは70ちょうど(強さを変えないので、どのチームを選んでも同じリーグ)
     c.me.coaches = [
@@ -287,6 +288,9 @@ class Career {
   final int seed;
   final Rng rng;
   final List<Team> teams;
+
+  /// 難しさ(始めるときに選び、途中では変えない)。
+  Difficulty difficulty = Difficulty.normal;
 
   /// 自分のチーム。
   final int mine;
@@ -893,7 +897,7 @@ class Career {
     final games = <GameResult>[];
     for (final round in seasonSchedule(teams.length).sublist(roundAt, roundAt + n)) {
       for (final (h, a) in round) {
-        final g = playGame(teams[h], teams[a], rng, mine: mine);
+        final g = playGame(teams[h], teams[a], rng, mine: mine, injuryScale: difficulty.injury);
         if (g.involves(mine)) games.add(g);
       }
     }
@@ -988,7 +992,7 @@ class Career {
     if (onBlock.isNotEmpty) {
       final id = onBlock[rng.nextInt(onBlock.length)];
       for (final t in others.take(8)) {
-        final o = blockOfferFrom(teams, picks, mine, t, id, season);
+        final o = blockOfferFrom(teams, picks, mine, t, id, season, hardness: difficulty.tradeHardness);
         if (o != null) {
           incoming = o;
           final name = me.roster.firstWhere((p) => p.id == id).name;
@@ -998,7 +1002,7 @@ class Career {
       }
     }
     for (final t in others.take(4)) {
-      final o = makeIncomingOffer(teams, picks, mine, t, season);
+      final o = makeIncomingOffer(teams, picks, mine, t, season, hardness: difficulty.tradeHardness);
       if (o != null) {
         incoming = o;
         _mail(Sender.league, '${teams[t].def.short}からトレードの申し込み', '進行の画面で、出す選手と受け取る選手を見て返事できる。');
@@ -1012,7 +1016,7 @@ class Career {
     final o = incoming;
     if (o == null || !canTrade) return false;
     incoming = null;
-    if (!judgeTrade(teams, picks, mine, o, season).ok) return false;
+    if (!judgeTrade(teams, picks, mine, o, season, hardness: difficulty.tradeHardness).ok) return false;
     _logTrade(mine, o);
     applyTrade(teams, picks, mine, o);
     tradesDone++;
@@ -1040,7 +1044,7 @@ class Career {
     if (!canTrade) return const [];
     final out = [
       for (var t = 0; t < teams.length; t++)
-        if (t != mine) blockOfferFrom(teams, picks, mine, t, id, season),
+        if (t != mine) blockOfferFrom(teams, picks, mine, t, id, season, hardness: difficulty.tradeHardness),
     ].whereType<TradeOffer>().toList();
     double value(TradeOffer o) =>
         o.get.fold(0.0, (n, pid) => n + playerValue(teams[o.partner].roster.firstWhere((p) => p.id == pid), me.mode)) +
@@ -1172,7 +1176,9 @@ class Career {
     final goalDelta = goals.where((g) => g.kind != GoalKind.wins).fold(0, (n, g) => n + (g.met! ? goalTrust : -goalTrust));
     // 人気: 勝率とプレーオフで動く
     hype = (hype + ((me.winPct - 0.5) * 40).round() + const [-4, 3, 6, 9, 12, 16][res]).clamp(0, 100);
-    final delta = ((me.wins - target) * 1.5).round() + resultTrust[res] - lastTax + goalDelta;
+    final raw = ((me.wins - target) * 1.5).round() + resultTrust[res] - lastTax + goalDelta;
+    // オーナーの厳しさ: 信頼が減るときだけ、難しさの倍率をかける
+    final delta = raw < 0 ? (raw * difficulty.ownerStrict).round() : raw;
     trust = (trust + delta).clamp(0, 100);
     history.add(SeasonRecord(season: season, wins: me.wins, losses: me.losses, rank: confRank, result: res, trustAfter: trust, target: target));
     if (trust <= 0) fired = true;
@@ -1775,7 +1781,8 @@ class Career {
   TradeVerdict judge(TradeOffer o) {
     if (!canTrade) return const TradeVerdict(false, '今はトレードできない(締め切りを過ぎた)', 0);
     if (o.give.any(expiring.contains)) return const TradeVerdict(false, '契約の話し合い中の選手は出せない', 0);
-    return judgeTrade(teams, picks, mine, o, season, rosterLimit: phase == Phase.season ? maxRoster : offseasonRoster);
+    return judgeTrade(teams, picks, mine, o, season,
+        rosterLimit: phase == Phase.season ? maxRoster : offseasonRoster, hardness: difficulty.tradeHardness);
   }
 
   bool propose(TradeOffer o) {
@@ -1949,7 +1956,8 @@ class Career {
   /// 「相手に聞く」: [partner] から [get] を受け取るのに、こちらが出せばよい組み合わせ。契約の話し合い中の選手は出さない。
   TradeOffer? askPartner(int partner, {List<int> get = const [], List<int> getPicks = const []}) {
     if (!canTrade || (get.isEmpty && getPicks.isEmpty)) return null;
-    return findPackage(teams, picks, mine, partner, get: get, getPicks: getPicks, exclude: expiring, nowSeason: season);
+    return findPackage(teams, picks, mine, partner,
+        get: get, getPicks: getPicks, exclude: expiring, nowSeason: season, hardness: difficulty.tradeHardness);
   }
 
   /// 相手のチーム同士のトレード。優勝を狙うチームが、立て直し中・年俸を減らしたいチームのベテランを、若手や指名権で取る。
@@ -2008,6 +2016,7 @@ class Career {
         'seed': seed,
         'mine': mine,
         'sr': startRank,
+        'df': difficulty.index,
         'rng': rng.state,
         'teams': [for (final t in teams) t.toJson()],
         'season': season,
@@ -2073,6 +2082,7 @@ class Career {
     if (c.teams.length != teamDefs.length) throw const FormatException('teams');
     c
       ..startRank = (j['sr'] as int?) ?? 0
+      ..difficulty = Difficulty.fromIndex(j['df'])
       ..season = j['season'] as int
       ..phase = Phase.values[(j['phase'] as int).clamp(0, Phase.values.length - 1)]
       ..block = j['block'] as int

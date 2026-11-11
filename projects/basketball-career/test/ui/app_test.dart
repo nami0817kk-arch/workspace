@@ -5,6 +5,7 @@ import 'package:basketball_career/gm/career.dart';
 import 'package:basketball_career/gm/league.dart';
 import 'package:basketball_career/gm/trade.dart';
 import 'package:basketball_career/ui/app.dart';
+import 'package:basketball_career/ui/gm/progress_tab.dart';
 import 'package:basketball_career/ui/gm_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -31,13 +32,16 @@ Future<void> _closeDialogs(WidgetTester tester) async {
 /// 縦に流れる一覧(トレードの画面には、相手を選ぶ横の一覧もある)。
 final _vertical = find.byWidgetPredicate((w) => w is Scrollable && w.axisDirection == AxisDirection.down).last;
 
+/// ホームの左側(いまやること)の縦に流れる一覧。右の札の一覧や左のメニューとは別。
+final _progress = find.descendant(of: find.byType(ProgressTab), matching: find.byType(Scrollable)).first;
+
 void main() {
   testWidgets('はじめの画面から就任し、開幕して20試合を進める', (tester) async {
-    _size(tester, 430, 932);
+    _size(tester, 844, 390);
     final c = await _controller();
     await tester.pumpWidget(BasketballCareerApp(controller: c));
     await tester.pumpAndSettle();
-    expect(find.text('バスケ編成室'), findsOneWidget);
+    expect(find.text('バスケGM'), findsOneWidget);
 
     await tester.tap(find.text('GMに就任する'));
     await tester.pumpAndSettle();
@@ -64,18 +68,18 @@ void main() {
     await tester.pumpAndSettle();
     await _closeDialogs(tester);
     expect(c.career!.block, 1);
-    await tester.scrollUntilVisible(find.textContaining('この20試合'), 300, scrollable: _vertical);
+    await tester.scrollUntilVisible(find.textContaining('この20試合'), 300, scrollable: _progress);
     expect(find.textContaining('この20試合'), findsOneWidget);
   });
 
   testWidgets('トレードの画面で選ぶと相手の反応が出て、釣り合えば成立する', (tester) async {
-    _size(tester, 430, 932);
+    _size(tester, 844, 390);
     final c = await _controller({'gmHowtoSeen': true});
     c.newCareer(teamAtRank(1, 15), seed: 1);
     final car = c.career!;
     await tester.pumpWidget(BasketballCareerApp(controller: c));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('トレード'));
+    await tester.tap(find.text('トレード').first);
     await tester.pumpAndSettle();
     expect(find.textContaining('相手の反応が分かる'), findsOneWidget);
     // 相手のいちばん下の選手を、こちらのいちばんの選手で取りに行く(相手はきっと受ける)
@@ -105,7 +109,7 @@ void main() {
   });
 
   testWidgets('続きは保存され、起動するとはじめの画面から「続きから」で戻れる', (tester) async {
-    _size(tester, 390, 844);
+    _size(tester, 844, 390);
     final c = await _controller();
     c.newCareer(teamAtRank(1, 28), seed: 1);
     c.startSeason();
@@ -122,12 +126,12 @@ void main() {
   });
 
   testWidgets('先発と控えの順の画面を開いて、この順にする(小さいスマホでもはみ出さない)', (tester) async {
-    _size(tester, 360, 640);
+    _size(tester, 667, 375);
     final c = await _controller({'gmHowtoSeen': true});
     c.newCareer(teamAtRank(1, 15), seed: 1);
     await tester.pumpWidget(BasketballCareerApp(controller: c));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('チーム'));
+    await tester.tap(find.text('チーム').first);
     await tester.pumpAndSettle();
     await tester.tap(find.text('先発と控えの順'));
     await tester.pumpAndSettle();
@@ -154,14 +158,14 @@ void main() {
     expect(car.me.wins + car.me.losses, gamesPerSeason);
   });
 
-  for (final s in const [Size(360, 640), Size(430, 932), Size(1032, 1376)]) {
+  for (final s in const [Size(667, 375), Size(932, 430), Size(1376, 1032)]) {
     testWidgets('選手の画面は閉じるボタンと外を押して戻れ、画面いっぱいにならない($s)', (tester) async {
       _size(tester, s.width, s.height);
       final c = await _controller({'gmHowtoSeen': true});
       c.newCareer(teamAtRank(1, 15), seed: 1);
       await tester.pumpWidget(BasketballCareerApp(controller: c));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('チーム'));
+      await tester.tap(find.text('チーム').first);
       await tester.pumpAndSettle();
       final star = c.career!.me.order.first;
       await tester.scrollUntilVisible(find.text(star.name), 200, scrollable: _vertical);
@@ -184,7 +188,7 @@ void main() {
   }
 
   group('どの画面も、小さいスマホ・大きいスマホ・iPad ではみ出さない', () {
-    const sizes = [Size(360, 640), Size(390, 844), Size(430, 932), Size(1032, 1376)];
+    const sizes = [Size(667, 375), Size(844, 390), Size(932, 430), Size(1376, 1032)];
 
     Future<void> show(WidgetTester tester, GmController c, Size s, {String? tab}) async {
       _size(tester, s.width, s.height);
@@ -192,7 +196,7 @@ void main() {
       await tester.pumpAndSettle();
       await _closeDialogs(tester);
       if (tab != null) {
-        await tester.tap(find.text(tab));
+        await tester.tap(find.text(tab).first);
         await tester.pumpAndSettle();
       }
       expect(tester.takeException(), isNull, reason: '$s $tab ${c.career?.phase}');

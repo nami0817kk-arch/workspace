@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../gm/career.dart';
+import '../gm/difficulty.dart';
 import '../gm/draft.dart';
 import '../gm/league.dart';
 import '../gm/player.dart';
@@ -111,8 +112,8 @@ class GmController extends ChangeNotifier {
   int newSeed() => _seeds.nextInt(0x7fffffff);
 
   /// [seed] のリーグで、[team] のGMに任される。
-  void newCareer(int team, {int? seed}) {
-    career = Career.start(seed: seed ?? newSeed(), team: team);
+  void newCareer(int team, {int? seed, Difficulty difficulty = Difficulty.normal}) {
+    career = Career.start(seed: seed ?? newSeed(), team: team, difficulty: difficulty);
     atHome = false;
     _changed();
   }

@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
 import '../../gm/career.dart';
+import '../../gm/difficulty.dart';
 import '../../gm/league.dart';
 import '../../gm/player.dart';
 import '../layout.dart';
 import 'common.dart';
 import 'style.dart';
 
-/// どのチームのGMになるかを選ぶ。リーグは [seed] で決まり、選んだあとも同じリーグになる。選んだチームの番号を返す。
+/// どのチームのGMになるかと、難しさを選ぶ。リーグは [seed] で決まり、選んだあとも同じリーグになる。
+/// 選んだチームの番号と難しさを返す(難しさは始めてからは変えられない)。
 class TeamPickScreen extends StatefulWidget {
   const TeamPickScreen({super.key, required this.seed});
   final int seed;
@@ -19,6 +21,7 @@ class TeamPickScreen extends StatefulWidget {
 class _TeamPickScreenState extends State<TeamPickScreen> {
   late final Career _league = Career.start(seed: widget.seed);
   bool _east = true;
+  Difficulty _diff = Difficulty.normal;
 
   @override
   Widget build(BuildContext context) {
@@ -32,20 +35,34 @@ class _TeamPickScreenState extends State<TeamPickScreen> {
             constraints: BoxConstraints(maxWidth: contentMaxWidth(context)),
             child: Column(children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
-                child: SegmentedButton<bool>(
-                  segments: const [
-                    ButtonSegment(value: true, label: Text('東地区')),
-                    ButtonSegment(value: false, label: Text('西地区')),
-                  ],
-                  selected: {_east},
-                  onSelectionChanged: (v) => setState(() => _east = v.first),
-                ),
+                padding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
+                child: Row(children: [
+                  Expanded(
+                    child: SegmentedButton<bool>(
+                      showSelectedIcon: false,
+                      segments: const [
+                        ButtonSegment(value: true, label: Text('東地区')),
+                        ButtonSegment(value: false, label: Text('西地区')),
+                      ],
+                      selected: {_east},
+                      onSelectionChanged: (v) => setState(() => _east = v.first),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: SegmentedButton<Difficulty>(
+                      showSelectedIcon: false,
+                      segments: [for (final d in Difficulty.values) ButtonSegment(value: d, label: Text(d.label))],
+                      selected: {_diff},
+                      onSelectionChanged: (v) => setState(() => _diff = v.first),
+                    ),
+                  ),
+                ]),
               ),
-              const Padding(
-                padding: EdgeInsets.fromLTRB(18, 0, 18, 6),
-                child: Text('強いチームほどオーナーの期待(勝ち数の目標)が高い。弱いチームは指名権と年俸の空きで立て直す。',
-                    style: TextStyle(color: GmColors.sub, fontSize: 13, height: 1.4)),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(18, 0, 18, 6),
+                child: Text('難しさ「${_diff.label}」: ${_diff.text}始めたあとは変えられない。強いチームほどオーナーの期待が高く、弱いチームは指名権と年俸の空きで立て直す。',
+                    style: const TextStyle(color: GmColors.sub, fontSize: 12, height: 1.4)),
               ),
               Expanded(
                 child: ListView(
@@ -112,7 +129,7 @@ class _TeamPickScreenState extends State<TeamPickScreen> {
         ]),
       ),
     );
-    if (ok == true && context.mounted) Navigator.pop(context, t.index);
+    if (ok == true && context.mounted) Navigator.pop(context, (t.index, _diff));
   }
 }
 

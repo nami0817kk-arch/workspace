@@ -1,4 +1,4 @@
-# basketball-career(アプリ名「バスケ編成室」)
+# basketball-career(アプリ名「バスケGM：球団を勝たせろ」。旧「バスケ編成室」)
 
 バスケットボールの **GM(ゼネラルマネージャー)** のゲーム。Flutter の iOS アプリ(広告・課金・ストア公開前提)。
 試合は自動で進み、遊ぶ人はトレード・ドラフト・契約でチームを作る。
@@ -16,7 +16,9 @@
 - 広告・課金を触る前に `docs/app-pitfalls.md` を読む。
 - 仕組みは `lib/gm/` の純Dart(Flutter 非依存)に置き `test/gm/` で固定。保存データは `fromJson` に既定値、壊れていたら読まない。
 - テストは CI(`.github/workflows/basketball-ci.yml`)。**CI の `flutter analyze` は info でも落ちる。** 手元は `W:` から `dart analyze lib test tool` まで。
-- 出す先は iOS のみ。画面は日本語のみ(配信は日本だけ。2026-11-06 ユーザー決定)。
+- 出す先は iOS のみ。**2026-11-11 に仕様を作り直した**(正は仕様書 https://claude.ai/artifact/TGaLDo2xByJXcikWKagFr2 、画面の見本 https://claude.ai/artifact/9DH5ZE6Mv1FZFxNQxTaeGc )。
+  横画面だけ・英語対応・配信147か国・難しさ3段階・課金3種(広告を消す370円・保存の枠160円×最大5・自分の選手160円)などが決まっている。
+  作る順番は仕様書の「作る順番」。**1回目(横画面・左メニュー・新しい名前・難しさ)は実装済み。** 画面は今も日本語のみ(英語は7回目)。
 
 ## 遊び方(`lib/gm/`)
 
@@ -82,11 +84,19 @@
 
 - `gm_controller.dart`: 画面と任期をつなぐ。保存(`gmCareer`・`gmProfile`)、実績の知らせ、広告の番、動画の受け取り(画面に依らない)。
   `load()` は最初の1回だけ読み、読む前に手元で始めた局面は上書きしない(テスト・掲載画像の生成器のため)。起動ははじめの画面から(「続きから」)。
-- `gm/`: `home_screen`(はじめ・記録・実績)、`hub_screen`(下の5つの切り替え)、`progress_tab`(いまやること・試合の結果・申し込み・プレーオフ・シーズンの結果・契約・任期の終わり)、
+- `gm/`: `home_screen`(はじめ・記録・実績)、`hub_screen`(左の縦メニュー)、`progress_tab`(いまやること・試合の結果・申し込み・プレーオフ・シーズンの結果・契約・任期の終わり)、
   `roster_tab`・`trade_tab`・`market_tab`(自由契約)・`league_tab`(東西の順位)・`draft_view`、`common`(選手の行・年俸の帯・信頼の帯)、`style`(夜の体育館の色。暗い紺に橙)。
-- iPad は `TabletScale`(`app.dart`)で、幅620の画面をそのまま拡大する(余白だらけにしない)。
+- **横画面だけ**(`main.dart` の向きの固定と Info.plist。iPad は `UIRequiresFullScreen`)。基準は 844x390(小さい端末は 667x375 まで)。
+  `hub_screen.dart` が左の縦メニュー(ホーム・受信箱・チーム・トレード・補強・リーグ・タイトル)＋上の帯(勝敗・地区順位・信頼・年俸)＋中身。
+  ホームは左に「いまやること」(`ProgressTab`)、右に各画面への札。ドラフト中は札を出さず `DraftView` を全幅で。
+  日程(カレンダー)・経営・GM の項目と、日付・GM の格の帯は、それぞれの仕組みを作るときに足す。
+- 難しさ(`lib/gm/difficulty.dart`、やさしい/ふつう/きびしい。チームを選ぶ画面で選び、`Career.difficulty` に保存。途中では変えられない)。
+  今効くのは、自分のチームのけが(×0.7/1/1.3)・オーナーの信頼の減り方(×0.75/1/1.3)・トレードの通りやすさ(釣り合い ×0.92/1/1.1)。
+  要求年俸・新人の見立ての幅・GM の格の点は、仕組みを作るときに足す。始めのリーグは難しさに依らず同じ。
+- iPad は `TabletScale`(`app.dart`)で、幅1000以上のとき、幅844の画面をそのまま拡大する(余白だらけにしない)。
 - 絵: タイトル・会場2枚(`scene_national`・`scene_final`)・選手(4つの姿勢×11色。チームの色は `TeamDef.color`)。
-- 掲載画像は `tool/screenshots/capture_test.dart`(iPhone 1206x2622・iPad 2064x2752、8枚)。点検用は `build/review/`。撮ったら必ず目で見る。
+- 掲載画像は `tool/screenshots/capture_test.dart`(iPhone 1206x2622・iPad 2064x2752、8枚)。**縦画面の作りのまま古い。横画面の掲載画像は最後の回(提出前)に作り直す。**
+- 横画面の点検用は `tool/screenshots/review_landscape_test.dart`(`DEVICE=ipad` で iPad)。`build/review_landscape/` に出る。画面を触ったら撮って目で見る。
 
 ## 広告と課金(2026-10-19 ユーザー決定: 無料＋広告＋広告を消す370円)
 
@@ -102,7 +112,7 @@
 ## リリース
 
 - 公開ページ `basketball-ikusei.pages.dev`(`legal/`・`site/`)、AdMob の本番ID(Secrets)、App ID・プロファイル・App Store Connect のアプリ(6824529301)は済み。
-- **名前は「バスケ編成室：GMになってトレードとドラフト」**(ホーム画面は「バスケ編成室」)。掲載文は `STORE_LISTING.md`。App Store Connect のアプリ名も変える。
+- **名前は「バスケGM：球団を勝たせろ」**(2026-11-11。ホーム画面は「バスケGM」)。掲載文 `STORE_LISTING.md` は旧名の下書きのまま(書き直す)。App Store Connect のアプリ名も変える。
 - **公開ページ(`legal/`・`site/`)はまだ「バスケデッキ」(カードのゲーム)の説明のまま。** GM のゲームに書き直す(公開になるのでユーザーの OK を取ってから。
   リリースとサイトのワークフローが公開ページの「バスケデッキ」を確かめているので、書き直すときは一緒に直す)。
 - 残り: 公開ページの書き直し → TestFlight → 課金アイテムの登録 → 提出(`ios-app-release` スキル)。配信は日本だけ、プライバシーは Google の開示に合わせた6項目。

@@ -24,7 +24,12 @@ String phaseLabel(Career c) => switch (c.phase) {
       Phase.over => '任期の終わり',
     };
 
-/// 任期中の画面。下の5つの切り替えで、進行・チーム・トレード・補強・リーグ。
+/// 左のメニューの項目の高さ(横画面は縦が短いので、全部が1画面に入る大きさにする)。
+const _menuItemHeight = 50.0;
+const _menuWidth = 88.0;
+
+/// 任期中の画面(横画面)。左に縦のメニュー、上に帯(勝敗・順位・信頼・年俸)、残りが中身。
+/// メニュー: ホーム・受信箱・チーム・トレード・補強・リーグ・はじめの画面。
 class HubScreen extends StatefulWidget {
   const HubScreen({super.key, required this.c, this.initialTab = 0});
   final GmController c;
@@ -39,82 +44,207 @@ class _HubScreenState extends State<HubScreen> {
 
   void _go(int t) => setState(() => _tab = t);
 
+  void _openInbox() => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => InboxScreen(c: widget.c)));
+
   @override
   Widget build(BuildContext context) {
     final c = widget.c;
     final car = c.career!;
-    final me = car.me;
+    final drafting = car.phase == Phase.draft;
     final body = switch (_tab) {
-      0 => car.phase == Phase.draft ? DraftView(c: c) : ProgressTab(c: c, goTab: _go),
-      1 => RosterTab(c: c),
-      2 => TradeTab(c: c),
-      3 => MarketTab(c: c),
-      _ => LeagueTab(c: c),
+      0 => drafting ? DraftView(c: c) : _HomeTab(c: c, goTab: _go, openInbox: _openInbox),
+      1 => _centered(context, RosterTab(c: c)),
+      2 => _centered(context, TradeTab(c: c)),
+      3 => _centered(context, MarketTab(c: c)),
+      _ => _centered(context, LeagueTab(c: c)),
     };
     return Scaffold(
-      appBar: AppBar(
-        titleSpacing: 12,
-        title: Row(children: [
-          TeamBadge(team: car.mine, size: 34),
-          const SizedBox(width: 8),
+      body: SafeArea(
+        child: Row(children: [
+          _SideMenu(
+            selected: _tab,
+            onSelect: _go,
+            unread: car.unread,
+            hasOffer: car.incoming != null,
+            onInbox: _openInbox,
+            onTitle: c.goHome,
+          ),
+          const VerticalDivider(width: 1, color: GmColors.line),
           Expanded(
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text('${car.season}年目・${phaseLabel(car)}', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-              Text('${me.name}  ${record(me)}', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
+            child: Column(children: [
+              _TopBand(car: car),
+              const Divider(height: 1, color: GmColors.line),
+              Expanded(child: body),
             ]),
           ),
         ]),
-        actions: [
-          IconButton(
-            tooltip: '受信箱',
-            onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => InboxScreen(c: c))),
-            icon: Badge(
-              isLabelVisible: car.unread > 0,
-              label: Text('${car.unread}'),
-              child: const Icon(Icons.mail_rounded),
-            ),
-          ),
-          IconButton(tooltip: 'はじめの画面へ', onPressed: c.goHome, icon: const Icon(Icons.home_rounded)),
-        ],
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(48),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(14, 0, 14, 8),
-            child: Row(children: [
-              Expanded(child: TrustBar(trust: car.trust)),
-              const SizedBox(width: 14),
-              Expanded(child: PayrollBar(payroll: me.payroll, compact: true)),
-            ]),
-          ),
-        ),
-      ),
-      body: SafeArea(
-        top: false,
-        child: Center(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: contentMaxWidth(context, phone: 620)),
-            child: body,
-          ),
-        ),
-      ),
-      bottomNavigationBar: NavigationBar(
-        height: 64,
-        selectedIndex: _tab,
-        onDestinationSelected: _go,
-        backgroundColor: GmColors.panel,
-        indicatorColor: GmColors.ball.withValues(alpha: 0.3),
-        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-        destinations: [
-          const NavigationDestination(icon: Icon(Icons.flag_rounded), label: '進行'),
-          const NavigationDestination(icon: Icon(Icons.groups_rounded), label: 'チーム'),
-          NavigationDestination(
-            icon: Badge(isLabelVisible: car.incoming != null, child: const Icon(Icons.swap_horiz_rounded)),
-            label: 'トレード',
-          ),
-          const NavigationDestination(icon: Icon(Icons.person_add_alt_1_rounded), label: '補強'),
-          const NavigationDestination(icon: Icon(Icons.leaderboard_rounded), label: 'リーグ'),
-        ],
       ),
     );
   }
+
+  Widget _centered(BuildContext context, Widget child) => Center(
+        child: ConstrainedBox(constraints: BoxConstraints(maxWidth: contentMaxWidth(context, phone: 700)), child: child),
+      );
+}
+
+/// 上の帯。チームの名前・シーズン・勝敗と、オーナーの信頼・年俸。
+class _TopBand extends StatelessWidget {
+  const _TopBand({required this.car});
+  final Career car;
+
+  @override
+  Widget build(BuildContext context) {
+    final me = car.me;
+    return SizedBox(
+      height: 52,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        child: Row(children: [
+          TeamBadge(team: car.mine, size: 34),
+          const SizedBox(width: 8),
+          Expanded(
+            flex: 3,
+            child: Column(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text('${car.season}年目・${phaseLabel(car)}',
+                  maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+              Text('${me.def.short}  ${record(me)}・地区${car.confRank}位',
+                  maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 12, color: GmColors.sub)),
+            ]),
+          ),
+          const SizedBox(width: 12),
+          Expanded(flex: 2, child: TrustBar(trust: car.trust, compact: true)),
+          const SizedBox(width: 14),
+          Expanded(flex: 2, child: PayrollBar(payroll: me.payroll, compact: true)),
+        ]),
+      ),
+    );
+  }
+}
+
+/// 左の縦のメニュー。選んでいる項目に橙の印。受信箱は別の画面を開く(未読の数つき)。
+class _SideMenu extends StatelessWidget {
+  const _SideMenu({
+    required this.selected,
+    required this.onSelect,
+    required this.unread,
+    required this.hasOffer,
+    required this.onInbox,
+    required this.onTitle,
+  });
+  final int selected;
+  final ValueChanged<int> onSelect;
+  final int unread;
+  final bool hasOffer;
+  final VoidCallback onInbox;
+  final VoidCallback onTitle;
+
+  @override
+  Widget build(BuildContext context) {
+    Widget item(IconData icon, String label, {bool on = false, Widget? badge, required VoidCallback onTap}) => InkWell(
+          onTap: onTap,
+          child: Container(
+            height: _menuItemHeight,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: on ? GmColors.ball.withValues(alpha: 0.18) : null,
+              border: Border(left: BorderSide(color: on ? GmColors.ball : Colors.transparent, width: 3)),
+            ),
+            child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+              badge ?? Icon(icon, size: 22, color: on ? GmColors.ball : GmColors.sub),
+              const SizedBox(height: 2),
+              Text(label, style: TextStyle(fontSize: 11, fontWeight: on ? FontWeight.bold : FontWeight.normal, color: on ? GmColors.text : GmColors.sub)),
+            ]),
+          ),
+        );
+    return Container(
+      width: _menuWidth,
+      color: GmColors.panel,
+      child: Column(children: [
+        Expanded(
+          child: SingleChildScrollView(
+            child: Column(children: [
+              item(Icons.home_rounded, 'ホーム', on: selected == 0, onTap: () => onSelect(0)),
+              item(Icons.mail_rounded, '受信箱',
+                  badge: Badge(isLabelVisible: unread > 0, label: Text('$unread'), child: const Icon(Icons.mail_rounded, size: 22, color: GmColors.sub)),
+                  onTap: onInbox),
+              item(Icons.groups_rounded, 'チーム', on: selected == 1, onTap: () => onSelect(1)),
+              item(Icons.swap_horiz_rounded, 'トレード',
+                  on: selected == 2,
+                  badge: Badge(
+                      isLabelVisible: hasOffer,
+                      child: Icon(Icons.swap_horiz_rounded, size: 22, color: selected == 2 ? GmColors.ball : GmColors.sub)),
+                  onTap: () => onSelect(2)),
+              item(Icons.person_add_alt_1_rounded, '補強', on: selected == 3, onTap: () => onSelect(3)),
+              item(Icons.leaderboard_rounded, 'リーグ', on: selected == 4, onTap: () => onSelect(4)),
+            ]),
+          ),
+        ),
+        const Divider(height: 1, color: GmColors.line),
+        item(Icons.logout_rounded, 'タイトル', onTap: onTitle),
+      ]),
+    );
+  }
+}
+
+/// ホーム。左に「いまやること」(試合を進める・オフの手続き)、右に各画面への札(今の状態を小さく)。
+class _HomeTab extends StatelessWidget {
+  const _HomeTab({required this.c, required this.goTab, required this.openInbox});
+  final GmController c;
+  final ValueChanged<int> goTab;
+  final VoidCallback openInbox;
+
+  @override
+  Widget build(BuildContext context) {
+    final car = c.career!;
+    final cards = [
+      _Tile(Icons.groups_rounded, 'チーム', '戦力${car.strengthRank(car.mine) + 1}位・${car.me.roster.length}人', () => goTab(1)),
+      _Tile(Icons.swap_horiz_rounded, 'トレード', car.incoming != null ? '申し込みが届いている' : car.canTrade ? '受け付け中' : '締め切り後', () => goTab(2),
+          hot: car.incoming != null),
+      _Tile(Icons.person_add_alt_1_rounded, '補強', '自由契約 ${car.freeAgents.length}人', () => goTab(3)),
+      _Tile(Icons.leaderboard_rounded, 'リーグ', '地区${car.confRank}位', () => goTab(4)),
+      _Tile(Icons.mail_rounded, '受信箱', car.unread > 0 ? '未読${car.unread}件' : '新着なし', openInbox, hot: car.unread > 0),
+    ];
+    return Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Expanded(child: Center(child: ConstrainedBox(constraints: BoxConstraints(maxWidth: contentMaxWidth(context, phone: 520)), child: ProgressTab(c: c, goTab: goTab)))),
+      const VerticalDivider(width: 1, color: GmColors.line),
+      SizedBox(
+        width: 214,
+        child: ListView(
+          padding: const EdgeInsets.all(10),
+          children: [for (final t in cards) Padding(padding: const EdgeInsets.only(bottom: 8), child: t)],
+        ),
+      ),
+    ]);
+  }
+}
+
+class _Tile extends StatelessWidget {
+  const _Tile(this.icon, this.title, this.status, this.onTap, {this.hot = false});
+  final IconData icon;
+  final String title;
+  final String status;
+  final VoidCallback onTap;
+  final bool hot;
+
+  @override
+  Widget build(BuildContext context) => Card(
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            child: Row(children: [
+              Icon(icon, color: hot ? GmColors.ball : GmColors.sub),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                  Text(status, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 11, color: hot ? GmColors.ball : GmColors.sub)),
+                ]),
+              ),
+              const Icon(Icons.chevron_right_rounded, color: GmColors.sub, size: 18),
+            ]),
+          ),
+        ),
+      );
 }
