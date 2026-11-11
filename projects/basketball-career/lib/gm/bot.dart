@@ -48,6 +48,14 @@ void botStep(Career c, {bool trades = false, bool scouting = true}) {
         }
       }
     case Phase.contracts:
+      for (final id in [...c.optionPending]) {
+        final p = c.me.roster.firstWhere((x) => x.id == id);
+        if (p.ovr >= 55) {
+          c.exerciseOption(id);
+        } else {
+          c.declineOption(id);
+        }
+      }
       for (final id in [...c.expiring]) {
         final p = c.me.roster.firstWhere((x) => x.id == id);
         if (p.ovr >= 62 && c.resignProblem(p) == null) {

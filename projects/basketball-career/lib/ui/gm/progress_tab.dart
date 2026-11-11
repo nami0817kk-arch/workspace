@@ -12,6 +12,7 @@ import 'coaches_screen.dart';
 import 'common.dart';
 import 'inbox_screen.dart';
 import 'negotiate_dialog.dart';
+import 'player_card.dart';
 import 'style.dart';
 
 /// 進行のタブ。いまやること・試合の結果・届いた申し込み・オフの知らせ。
@@ -560,6 +561,16 @@ class ProgressTab extends StatelessWidget {
         ],
       ]),
       if (car.growth.isNotEmpty) _growthCard(car),
+      if (car.optionPending.isNotEmpty) ...[
+        SectionTitle('チームの選択権(${car.optionPending.length}人)'),
+        const Text('新人の契約の最後の年。使えば次の年も少し高い年俸で契約が続き、使わなければ契約が切れて、再契約か自由契約になる。',
+            style: TextStyle(color: GmColors.sub, fontSize: 12, height: 1.4)),
+        const SizedBox(height: 6),
+        for (final id in car.optionPending) ...[
+          _optionRow(context, car, car.me.roster.firstWhere((p) => p.id == id)),
+          const SizedBox(height: 6),
+        ],
+      ],
       SectionTitle('契約が切れた選手(${exp.length}人)'),
       if (exp.isEmpty) const Text('いない', style: TextStyle(color: GmColors.sub)),
       for (final p in exp) ...[
@@ -577,6 +588,34 @@ class ProgressTab extends StatelessWidget {
       ),
     ];
   }
+
+  Widget _optionRow(BuildContext context, Career car, Player p) => Card(
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+            PlayerRow(p: p, team: car.mine, onLongPress: () => showPlayerCard(context, car, p, car.mine)),
+            const SizedBox(height: 8),
+            Row(children: [
+              Expanded(
+                child: OutlinedButton(
+                  style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(40)),
+                  onPressed: c.busy ? null : () => c.declineOption(p.id),
+                  child: const Text('使わない'),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                flex: 2,
+                child: FilledButton(
+                  style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(40)),
+                  onPressed: c.busy ? null : () => c.exerciseOption(p.id),
+                  child: Text('使う(年俸 ${money(car.optionSalary(p))})'),
+                ),
+              ),
+            ]),
+          ]),
+        ),
+      );
 
   /// オフの成長の報告(伸びた順)。
   Widget _growthCard(Career car) {

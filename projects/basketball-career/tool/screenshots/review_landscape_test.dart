@@ -17,6 +17,7 @@ import 'dart:ui' as ui;
 
 import 'package:basketball_career/gm/bot.dart';
 import 'package:basketball_career/gm/career.dart';
+import 'package:basketball_career/gm/player.dart';
 import 'package:basketball_career/gm/rating.dart';
 import 'package:basketball_career/ui/app.dart';
 import 'package:basketball_career/ui/gm/progress_tab.dart';
@@ -127,6 +128,22 @@ void main() {
         act: (t) => t.scrollUntilVisible(find.text('GMの格 Lv${end.gmLevel}(${ratingNameOf(end.gmLevel)})'), 200, scrollable: progress));
     await _shoot(t, '14_seasonend_bottom', await _with(end),
         act: (t) => t.scrollUntilVisible(find.text('ここで任期を終える'), 300, scrollable: progress));
+    // 契約の画面(1巡目の新人の選択権が保留になっている)
+    final opt = careerAt(6, 8);
+    final rookie = opt.me.roster.reduce((a, b) => a.ovr >= b.ovr ? a : b)
+      ..years = 3
+      ..optionYears = 2
+      ..age = 21;
+    guard = 0;
+    while (opt.phase != Phase.seasonEnd && guard++ < 200) {
+      botStep(opt);
+    }
+    opt.toOffseason();
+    while (opt.phase != Phase.contracts && guard++ < 400) {
+      botStep(opt);
+    }
+    await _shoot(t, '15_contracts_option', await _with(opt),
+        act: (t) => t.scrollUntilVisible(find.text('使う(年俸 ${money(opt.optionSalary(rookie))})'), 200, scrollable: progress));
     final over = botPlayCareer(8, team: teamAtRank(8, 15));
     await _shoot(t, '11_over', await _with(over));
   });

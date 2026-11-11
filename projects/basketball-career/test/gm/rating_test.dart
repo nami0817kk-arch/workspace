@@ -19,6 +19,8 @@ Career _play(Career c, int n) {
       botStep(c);
     }
   }
+  // 最後のシーズンで解任されていても、続きを遊べるようにする(ここは任期の長さを見るテストではない)
+  c.fired = false;
   return c;
 }
 

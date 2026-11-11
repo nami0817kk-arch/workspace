@@ -199,6 +199,7 @@ class Player {
     this.injured = 0,
     this.allStars = 0,
     this.nextSalary,
+    this.optionYears = 0,
     List<List<int>>? career,
     this.focus,
   })  : career = career ?? [],
@@ -259,6 +260,10 @@ class Player {
 
   /// 延長した契約の、来季からの年俸(延長していなければ null)。
   int? nextSalary;
+
+  /// 契約の最後の何年がチームの選択権か(1巡目の新人は4年のうち最後の2年。0なら無い)。
+  /// 残りの年数がこれと同じになるオフに、チームが次の年を使うか決める。
+  int optionYears;
 
   /// 練習の重点(自分のチームだけ。オフに、この能力が伸びてほかが少し落ちる)。
   Attr? focus;
@@ -322,6 +327,7 @@ class Player {
         if (injured != 0) 'in': injured,
         if (allStars != 0) 'as': allStars,
         if (nextSalary != null) 'ns': nextSalary,
+        if (optionYears != 0) 'op': optionYears,
         if (career.isNotEmpty) 'cr': career,
         if (focus != null) 'fo': focus!.index,
       };
@@ -345,6 +351,7 @@ class Player {
         injured: ((j['in'] as int?) ?? 0).clamp(0, 99),
         allStars: (j['as'] as int?) ?? 0,
         nextSalary: j['ns'] as int?,
+        optionYears: ((j['op'] as int?) ?? 0).clamp(0, 4),
         focus: j['fo'] is int && (j['fo'] as int) >= 0 && (j['fo'] as int) < Attr.values.length ? Attr.values[j['fo'] as int] : null,
         career: [
           for (final r in (j['cr'] as List? ?? const []))
