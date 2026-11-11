@@ -551,7 +551,7 @@ class ProgressTab extends StatelessWidget {
       _card([
         _head('オフ・契約'),
         const SizedBox(height: 6),
-        const Text('契約が切れた選手と、残すか放すかを話し合う。自分の選手との再契約は、年俸の上限を超えてもできる(合計の上限まで)。',
+        const Text('契約が切れた選手と、残すか放すかを話し合う。自分の選手との再契約は、年俸の上限を超えてもできる(ぜいたく税と信頼には響く)。',
             style: TextStyle(color: GmColors.sub, height: 1.5)),
         if (car.news.isNotEmpty) ...[
           const SizedBox(height: 10),

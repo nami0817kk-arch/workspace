@@ -107,23 +107,39 @@ class Stats {
   }
 }
 
-/// お金の単位は「10万ドル」(10 = 100万ドル)。画面では「4900万ドル」「1.4億ドル」のように見せる([money])。
-const salaryCap = 1400;
+/// お金の単位は「10万ドル」(10 = 100万ドル)。画面では「4900万ドル」「1.6億ドル」のように見せる([money])。
+///
+/// 金額は 2026-27 シーズンの公式の値(NBA の発表: 上限 1億6,496万ドル・税 2億43万ドル・第1の壁 2億901万ドル・第2の壁 2億2,168万ドル)。
+/// https://pr.nba.com/2026-27-salary-cap/
+const salaryCap = 1650;
 
-/// これを超える年俸の合計にはできない(再契約・トレードでも)。
-const hardCap = 1890;
+/// 旧い版(上限 1.4億ドル)の金額を、いまの上限に合わせて直す倍率。収入・チームの作り方など、旧い数字に合わせて調整した値に掛ける。
+const capScale = 1650 / 1400;
+
+/// 旧い版の金額(10万ドル)を、いまの上限に合わせて直す。
+int capScaled(num legacy) => (legacy * capScale).round();
 
 /// これを超えた分にはぜいたく税がかかり、シーズンの終わりにオーナーの信頼が下がる([luxuryTaxTrust])。
-const taxLine = 1700;
+const taxLine = 2004;
+
+/// 第1の壁。これを超えるチームは、トレードで受け取る年俸を出す年俸の110%までにしなければならない。
+const firstApron = 2090;
+
+/// 第2の壁。これを超えるチームは、トレードで複数の選手の年俸を合わせて受け取る年俸に当てられない
+/// (受け取る年俸は、出す選手のうち最も高い1人の年俸まで)。年俸の合計に固い上限は無い(再契約はいつでもできる)。
+const secondApron = 2217;
 
 /// ぜいたく税で下がる信頼。
 int luxuryTaxTrust(int payroll) => payroll <= taxLine ? 0 : ((payroll - taxLine) / 10).ceil();
 
 /// 最低年俸。上限を超えていても、最低年俸の契約はいつでも結べる。
-const minSalary = 12;
+const minSalary = 14;
 
-/// 1人の年俸の上限。
-const maxSalary = 490;
+/// 1人の年俸の上限(いちばん高い段階)。実際の上限は在籍年数で変わる([maxSalaryFor])。
+const maxSalary = 577;
+
+/// 在籍年数(プロでの年数)ごとの1人の年俸の上限。上限額の25%(6年まで)・30%(7〜9年)・35%(10年から)。
+int maxSalaryFor(int exp) => exp >= 10 ? 577 : exp >= 7 ? 495 : 412;
 
 /// 登録できる人数。
 const maxRoster = 15;
@@ -147,7 +163,7 @@ String money(int m) {
 /// 力の数字から見た、ふつうの年俸。
 int fairSalary(int ovr, int age) {
   final over = math.max(0, ovr - 58);
-  var s = minSalary + over * over * 0.9;
+  var s = minSalary + over * over * 0.9 * capScale;
   if (age >= 31) s *= 0.85;
   if (age >= 34) s *= 0.8;
   return s.round().clamp(minSalary, maxSalary);

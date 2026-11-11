@@ -52,7 +52,7 @@ class RosterTab extends StatelessWidget {
               PayrollBar(payroll: me.payroll),
               const SizedBox(height: 6),
               Text(
-                  '上限 ${money(salaryCap)}・ぜいたく税 ${money(taxLine)}から・合計の上限 ${money(hardCap)}'
+                  '上限 ${money(salaryCap)}・ぜいたく税 ${money(taxLine)}から・第1の壁 ${money(firstApron)}・第2の壁 ${money(secondApron)}'
                   '${me.deadCap > 0 ? '\n放した選手の年俸 ${money(me.deadCap)}が今季の合計に残っている' : ''}',
                   style: const TextStyle(fontSize: 12, color: GmColors.sub, height: 1.5)),
             ]),
