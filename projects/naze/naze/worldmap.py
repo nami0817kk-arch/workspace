@@ -316,7 +316,7 @@ class Base:
         if key.exists():
             self.e = np.load(key)["e"]
         else:
-            self.e = heights(bbox, z, self.ppd).astype(np.float32)
+            self.e = heights(bbox, min(z, 15), self.ppd).astype(np.float32)   # Terrain Tiles は z15 まで(それより細かい下地は写真だけ細かい)
             np.savez_compressed(key, e=self.e.astype(np.int16))
         self.e = self.e.astype(np.float32)
         if z >= 11 and in_japan(bbox):
