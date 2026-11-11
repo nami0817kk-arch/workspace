@@ -193,6 +193,9 @@ void applyTrade(List<Team> teams, List<DraftPick> picks, int mine, TradeOffer o)
   final me = teams[mine], them = teams[o.partner];
   final give = [for (final id in o.give) me.roster.firstWhere((p) => p.id == id)];
   final get = [for (final id in o.get) them.roster.firstWhere((p) => p.id == id)];
+  for (final p in [...give, ...get]) {
+    p.tenure = 0;
+  }
   me.roster
     ..removeWhere(give.contains)
     ..addAll(get);

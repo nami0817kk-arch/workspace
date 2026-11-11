@@ -657,7 +657,7 @@ class ProgressTab extends StatelessWidget {
     return PlayerRow(
       p: p,
       team: car.mine,
-      salaryText: '求める年俸 ${money(ask.salary)}(最長${ask.maxYears}年)',
+      salaryText: '求める年俸 ${money(ask.salary)}(最長${ask.maxYears}年)・${car.birdOf(p).label}',
       showDelta: true,
       extra: Row(children: [
         Expanded(
