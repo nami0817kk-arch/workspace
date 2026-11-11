@@ -1338,7 +1338,10 @@ class Career {
         if (p.nextSalary != null) {
           p.salary = p.nextSalary!;
           p.nextSalary = null;
+        } else if (p.raise > 0 && p.years > 0) {
+          p.salary = (p.salary * (1 + p.raise / 100)).round().clamp(minSalary, maxSalaryFor(p.exp));
         }
+        if (p.years <= 0) p.raise = 0;
         // 選択権の年が来た選手: 次の年を使うか決める(自分のチームは契約の画面で。相手はここで決める)
         if (p.optionYears > 0 && p.years == p.optionYears) {
           if (t.index == mine) {
@@ -1565,7 +1568,8 @@ class Career {
     // 気持ちが低い選手は、残るなら高く求める
     if (t.index == mine) f *= 1 + (60 - p.morale).clamp(0, 60) / 250;
     final sal = p.ovr < 58 ? minSalary : (fairSalary(p.ovr, p.age) * f).round().clamp(minSalary, maxSalaryFor(p.exp));
-    final maxYears = p.age >= 33 ? 1 : p.age >= 30 ? 2 : 4;
+    final own = t.index == mine && t.roster.contains(p);
+    final maxYears = p.age >= 33 ? 1 : p.age >= 30 ? 2 : own ? ownMaxYears : 4;
     return Ask(sal, maxYears);
   }
 
@@ -1640,6 +1644,7 @@ class Career {
     p
       ..salary = ask.salary
       ..years = years.clamp(1, ask.maxYears);
+    p.raise = p.years >= 2 ? ownRaisePct : 0;
     expiring.remove(id);
   }
 
@@ -2239,7 +2244,8 @@ class Career {
     }
     p
       ..nextSalary = (ask.salary * factor).round().clamp(minSalary, maxSalaryFor(p.exp))
-      ..years = 1 + years.clamp(1, ask.maxYears);
+      ..years = 1 + years.clamp(1, ask.maxYears)
+      ..raise = ownRaisePct;
     if (factor > 1) p.morale = (p.morale + 10).clamp(0, 100);
     _log('延長: ${p.name}(${me.def.short})が$years年延長(来季から${money(p.nextSalary!)})');
     return true;
