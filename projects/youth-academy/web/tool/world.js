@@ -9,6 +9,7 @@ require(path.join(__dirname, '../src/club.js'));
 require(path.join(__dirname, '../src/scout.js'));
 require(path.join(__dirname, '../src/extra.js'));
 require(path.join(__dirname, '../src/more.js'));
+require(path.join(__dirname, '../src/core.js'));
 require(path.join(__dirname, '../src/imgdata.js'));
 require(path.join(__dirname, '../src/art.js'));
 const YA = globalThis.YA;
@@ -923,34 +924,50 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   ok(q.youthCaps === 1 && q.away === 1, '送り出すと代表の回数が増え、1週間離れる');
   const a = YA.alumniEntry(wn2, q, 'test'); ok(a.nat === 0 && a.youthCaps === 1, '卒業生の日本代表（A代表）に、ユース年代の回数は混ぜない');
 }
-// 覚醒：年に1〜2人。★注目の印を付けた子ほど起きやすく、出来事で知らせる
+// 覚醒（決定101〜110）：★の子だけが、隠れた鍵を満たして覚醒する。★は各学年4人まで、信頼は5段階
 {
-  let n = 0, yrs = 0, star = 0;
+  const w0 = YA.newWorld(8);
+  const g1 = Object.values(w0.players).filter((p) => p.grade === 1);
+  for (let i = 0; i < YA.STAR_MAX; i++) ok(YA.setStar(w0, g1[i], true).ok, '★を付けられる ' + i);
+  ok(!YA.setStar(w0, g1[YA.STAR_MAX], true).ok && !g1[YA.STAR_MAX].star, '★は各学年4人まで');
+  ok(YA.setStar(w0, g1[0], false).ok && YA.setStar(w0, g1[YA.STAR_MAX], true).ok, '外せば別の子に付け替えられる');
+  const ks = YA.keysOf(w0, g1[1]);
+  ok(ks.length >= 2 && ks.length <= 3 && new Set(ks.map((k) => k.sys)).size === ks.length, '鍵は2〜3個で系統が重ならない ' + ks.map((k) => k.id));
+  ok(JSON.stringify(YA.keysOf(w0, g1[1])) === JSON.stringify(ks), '同じ子の鍵は変わらない');
+  ok(ks.every((k) => /^？/.test(YA.keyText(w0, g1[1], k))), '最初は鍵が「？」');
+  ok(Object.values(w0.players).filter((p) => p.fast).length >= 1, '鍵の短い子が混ざっている');
+  ok(YA.trustLv(g1[1]) === 3, '信頼は「ふつう」から');
+  ok((w0.forced || []).some((e) => e.id === 'ms' && e.ms === 'star'), '★を付けると最初の会話が来る');
+  const e0 = w0.forced.find((e) => e.id === 'ms');
+  const v0 = YA.eventView(w0, e0);
+  ok(v0 && v0.opts.length === 3 && /信頼/.test(v0.text) && !/undefined|null|NaN/.test(v0.text), '節目の会話の文 ' + (v0 && v0.text));
+  // 鍵を全部満たすと覚醒し、形と特性が付く
+  const q = g1[2];
+  YA.keysOf(w0, q);
+  const r0 = YA.rating(q);
+  for (const k of q.keys) YA.keyProgress(w0, q, k.id, k.need);
+  if (q.keys.some((k) => k.id === 'conf' && !k.done)) q.keys.forEach((k) => { k.done = 1; });
+  w0.week = 10;
+  YA.awakeWeek(w0);
+  ok(q.awake && q.aw && q.aw.trait && YA.rating(q) > r0 + 3, '鍵がそろうと覚醒する ' + r0 + '→' + YA.rating(q) + ' ' + (q.aw && q.aw.form));
+  const ev = (w0.forced || []).find((e) => e.id === 'awake');
+  const v = ev && YA.eventView(w0, ev);
+  ok(v && /覚醒/.test(v.text) && v.text.indexOf(q.aw.trait) >= 0 && !/undefined|null|NaN/.test(v.text), '覚醒の知らせ ' + (v && v.text));
+  ok(YA.AWAKE_FORMS.length >= 20 && YA.AWAKE_FORMS.every((f) => f.as.every((t) => YA.TRAITS.indexOf(t) >= 0) && f.abs.every((a) => YA.AB_FIELD.concat(YA.AB_GK).indexOf(a) >= 0)), '覚醒の形は20種類・中身が正しい');
+  // ★の付いていない子は覚醒しない。おまかせで3年回すと★の子が何人か覚醒する
+  let star = 0, other = 0, yrs = 0;
   for (const seed of [8, 21]) {
     const wa = YA.newWorld(seed);
     for (let y = 0; y < 3; y++) {
       const yy = wa.year; let g = 0; yrs++;
-      Object.values(wa.players).filter((p) => !p.star && !p.awake && p.grade < 3).slice(0, 2).forEach((p) => { p.star = true; });
-      while (wa.year === yy && g++ < 60) {
-        wa.phase = wa.phase || 'plan';
-        YA.simulate(wa, { until: 'week', stopOnImportant: false });
-      }
-      const k = wa.awakeN && wa.awakeN.y === yy ? wa.awakeN.n : 0;
-      ok(k <= YA.AWAKE_MAX, '覚醒は1年に2人まで ' + k);
-      n += k;
+      while (wa.year === yy && g++ < 60) YA.simulate(wa, { until: 'week', stopOnImportant: false });
+      star += wa.awakeN && wa.awakeN.y === yy ? wa.awakeN.n : 0;
+      ok(Object.values(wa.players).every((p) => !p.star || YA.starsIn(wa, p.grade).length <= YA.STAR_MAX), '★は各学年4人まで（おまかせ）');
     }
-    star += [...Object.values(wa.players), ...(wa.alumni || [])].filter((p) => p.awake && p.awake.why === 'star').length;
+    other += Object.values(wa.players).filter((p) => p.awake && !p.awake.form).length;
   }
-  ok(n >= yrs * 0.8 && n <= yrs * 2, '覚醒はならして1年に1〜2人 ' + n + '/' + yrs);
-  const wb = YA.newWorld(4);
-  const q = Object.values(wb.players).find((x) => x.grade === 1);
-  q.star = true; wb.week = 20; const r0 = YA.rating(q);
-  YA.awaken(wb, q, YA.rngOf(1));
-  ok(q.awake && YA.rating(q) > r0 + 5 && q.awake.why === 'star', '覚醒すると総合力が一段上がる ' + r0 + '→' + YA.rating(q));
-  const ev = (wb.forced || []).find((e) => e.id === 'awake');
-  const v = ev && YA.eventView(wb, ev);
-  ok(v && /覚醒/.test(v.text) && /★注目/.test(v.text) && !/undefined|null|NaN/.test(v.text) && v.opts.length === 2, '覚醒の知らせ ' + (v && v.text));
-  ok(star >= 1, '★の子が覚醒する ' + star);
+  ok(other === 0, '★でない子の運任せの覚醒はない ' + other);
+  ok(star >= yrs * 0.8 && star <= yrs * 3.5, '覚醒はならして1年に1〜3人（' + star + '/' + yrs + '年）');
 }
 // クラブを移った（契約満了・解任）あとも、入団の暦まで止まらずに1年回せる
 {

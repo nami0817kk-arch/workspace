@@ -23,6 +23,7 @@ const html = read('shell.html')
   .replace('/*__VIEWS2__*/', () => read('views2.js'))
   .replace('/*__EXTRA__*/', () => read('extra.js'))
   .replace('/*__MORE__*/', () => read('more.js'))
+  .replace('/*__CORE__*/', () => read('core.js'))
   .replace('/*__VIEWS3__*/', () => read('views3.js'))
   .replace('/*__IMGDATA__*/', () => read('imgdata.js'))
   .replace('/*__ART__*/', () => read('art.js'));
