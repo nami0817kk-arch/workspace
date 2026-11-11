@@ -143,6 +143,9 @@ class Team {
   /// 放出した選手の、今シーズン分の年俸(今季の合計に数える)。
   int deadCap;
 
+  /// 放した選手の年俸のうち、来季以降に残る分(先頭が来季。放した選手の契約の残りと、ストレッチで延ばした分)。
+  List<int> deadLater = [];
+
   /// スタッフの段階(1〜3)。[Staff] の順(コーチ・トレーナー・スカウト)。
   List<int> staff;
 
@@ -254,6 +257,7 @@ class Team {
         'l': losses,
         'm': mode.index,
         if (deadCap != 0) 'dc': deadCap,
+        if (deadLater.isNotEmpty) 'dl': deadLater,
         if (rotation.isNotEmpty) 'ro': rotation,
         'sf': staff,
         if (twoWay.isNotEmpty) 'tw': [for (final p in twoWay) p.toJson()],
@@ -266,6 +270,7 @@ class Team {
   static Team fromJson(Map<String, dynamic> j) => _fromJson(j)
     ..streak = (j['sk'] as int?) ?? 0
     ..training = ((j['tr'] as int?) ?? 1).clamp(0, 2)
+    ..deadLater = [for (final x in (j['dl'] as List? ?? const [])) x as int]
     ..coaches = [for (final c in (j['co'] as List? ?? const [])) Coach.fromJson(Map<String, dynamic>.from(c as Map))]
     ..minutes = {
       for (final e in (j['mn'] as List? ?? const []))

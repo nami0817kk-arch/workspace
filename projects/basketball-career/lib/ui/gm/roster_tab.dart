@@ -53,7 +53,7 @@ class RosterTab extends StatelessWidget {
               const SizedBox(height: 6),
               Text(
                   '上限 ${money(salaryCap)}・ぜいたく税 ${money(taxLine)}から・第1の壁 ${money(firstApron)}・第2の壁 ${money(secondApron)}'
-                  '${me.deadCap > 0 ? '\n放した選手の年俸 ${money(me.deadCap)}が今季の合計に残っている' : ''}',
+                  '${me.deadCap > 0 ? '\n放した選手の年俸 ${money(me.deadCap)}が今季の合計に残っている' : ''}${me.deadLater.any((x) => x > 0) ? '(来季以降にも${me.deadLater.length}年分が残る)' : ''}',
                   style: const TextStyle(fontSize: 12, color: GmColors.sub, height: 1.5)),
             ]),
           ),
@@ -241,19 +241,33 @@ class RosterTab extends StatelessWidget {
                   OutlinedButton.icon(
                     style: OutlinedButton.styleFrom(foregroundColor: GmColors.bad),
                     onPressed: () async {
-                      final ok = await showDialog<bool>(
+                      final mode = await showDialog<ReleaseMode>(
                         context: ctx,
-                        builder: (d) => AlertDialog(
-                          title: Text('${p.name}を放す?'),
-                          content: Text('今シーズンの年俸 ${money(p.salary)}は、放しても今季の合計に残る。'),
-                          actions: [
-                            TextButton(onPressed: () => Navigator.pop(d, false), child: const Text('やめる')),
-                            TextButton(onPressed: () => Navigator.pop(d, true), child: const Text('放す')),
+                        builder: (d) => SimpleDialog(
+                          title: Text('${p.name}を放す(年俸 ${money(p.salary)}・残り${p.years}年)'),
+                          children: [
+                            for (final m in ReleaseMode.values)
+                              if (car.releaseProblem(p, m) == null)
+                                SimpleDialogOption(
+                                  onPressed: () => Navigator.pop(d, m),
+                                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                                    Text(m.label, style: const TextStyle(fontWeight: FontWeight.bold)),
+                                    Text(
+                                        '${m.text}\n今季 ${money(car.releaseCost(p, m).now)}・来季以降 合計 ${money(car.releaseCost(p, m).later.fold(0, (a, b) => a + b))}',
+                                        style: const TextStyle(fontSize: 12, color: GmColors.sub, height: 1.4)),
+                                  ]),
+                                )
+                              else
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 6),
+                                  child: Text('${m.label}: ${car.releaseProblem(p, m)}', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
+                                ),
+                            SimpleDialogOption(onPressed: () => Navigator.pop(d), child: const Text('やめる')),
                           ],
                         ),
                       );
-                      if (ok == true) {
-                        c.release(p.id);
+                      if (mode != null) {
+                        c.release(p.id, mode: mode);
                         if (ctx.mounted) Navigator.pop(ctx);
                       }
                     },
