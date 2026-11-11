@@ -50,7 +50,7 @@
   YA.MENUS['練習試合'] = M({ 判断: 0.7, 予測: 0.6, ファーストタッチ: 0.6, パス: 0.5, ドリブル: 0.5, 運動量: 0.5, 集中: 0.5, フィニッシュ: 0.4 }, 1.5, '出番の少ない子に試合の機会');
   YA.MENU_NAMES = Object.keys(YA.MENUS);
   const GK_TRAIN = { ハンドリング: 0.9, 反応: 0.9, '1対1': 0.8, 飛び出し: 0.8, 空中戦: 0.7, エリアの支配: 0.7, コーチング: 0.5, 配球: 0.6 };
-  const INTENS = { light: 0.65, normal: 1, hard: 1.4 };
+  const INTENS = { light: 0.65, normal: 1, hard: 1.3 }; // 決定104：きつい＝伸び約1.3倍（怪我のおそれは約2倍、下の risk）
   YA.INTENS_NAMES = { light: '軽め', normal: '普通', hard: 'きつい' };
 
   const MENTAL_SET = new Set(YA.AB_MENTAL);
@@ -100,7 +100,7 @@
       if (!used || !used.has(name)) break;
     }
     if (used) used.add(name);
-    const lvl = 7.4 + grade * 0.8 + quality * 0.9;
+    const lvl = 6.4 + grade * 0.8 + quality * 0.9; // 決定100：入学時は高1の平均（総合力62）に寄せる
     // pos は15個のうちの1つ。素質は3割で隣のポジション向き（登録とずれている＝あとで気づく）
     const grp = YA.GROUP[pos];
     const NEAR = { CB: ['DM', 'LB'], LB: ['LWB', 'CB'], RB: ['RWB', 'CB'], LWB: ['LB', 'LM'], RWB: ['RB', 'RM'], DM: ['CM', 'CB'], CM: ['DM', 'AM'], LM: ['LW', 'CM'], RM: ['RW', 'CM'], AM: ['CM', 'SS'], LW: ['LM', 'AM'], RW: ['RM', 'AM'], SS: ['AM', 'ST'], ST: ['SS', 'LW'] };
@@ -171,7 +171,8 @@
     const poss = base15.map((q) => (q !== 'GK' && rng.chance(0.3) ? NEARP[q][rng.int(0, 1)] : q));
     for (const pos of poss) {
       const id = 'p' + ++w.nextId;
-      const q = clamp(Math.round((rng() + rng() + rng() - 1.5) * 2.2) + (w.tierQ || 0), -2, 2.5);
+      // 始めた年の高2・高3は、前の指導者が選んで育ててきた子（入学時の水準を下げた分、1年目が弱くなりすぎないように）
+      const q = clamp(Math.round((rng() + rng() + rng() - 1.5) * 2.2) + (w.tierQ || 0) + (grade - 1) * 0.6, -2, 3);
       w.players[id] = YA.genPlayer(rng, id, grade, pos, q, used);
     }
   }
@@ -494,6 +495,9 @@
           for (const [a, wgt] of Object.entries(menu.ab)) exp[a] = (exp[a] || 0) + (wgt * k) / 5;
           if (p.pos === 'GK' && menu.fat > 0) for (const [a, wgt] of Object.entries(GK_TRAIN)) exp[a] = (exp[a] || 0) + (wgt * k * 0.55) / 5;
         }
+        // チームの重点（決定143）：全員のその分野が少し伸びやすい
+        const tfa = plan.teamFocus && YA.TEAM_FOCUS ? YA.TEAM_FOCUS[plan.teamFocus] : null;
+        if (tfa) for (const a of tfa) if (p.ab[a] != null) exp[a] = (exp[a] || 0) + 0.22 * (light ? 0.55 : 1);
         // 重点的に取り組む能力
         const f = p.train.focus;
         if (f && p.ab[f] != null) exp[f] = (exp[f] || 0) + 0.65 * (light ? 0.55 : 1);
@@ -523,7 +527,9 @@
       // 疲れ・怪我
       p.fat = clamp(p.fat + fatAdd * 2.4 * (w.campMult > 1 ? 1.15 : 1) - (rest ? 0 : 14 + tfx.recover), 0, 100);
       if (!rest) {
-        const risk = (0.003 + Math.max(0, p.fat - 55) / 100 * 0.035 + (p.spurt > 0 ? 0.01 : 0)) * tfx.inj * (w.campMult > 1.5 ? 1.5 : 1);
+        const tdays = plan.days.filter((d) => YA.MENUS[d.menu] && YA.MENUS[d.menu].fat > 0);
+        const hardShare = tdays.length ? tdays.filter((d) => d.int === 'hard').length / tdays.length : 0;
+        const risk = (1 + hardShare) * (0.003 + Math.max(0, p.fat - 55) / 100 * 0.035 + (p.spurt > 0 ? 0.01 : 0)) * tfx.inj * (w.campMult > 1.5 ? 1.5 : 1);
         if (rng() < risk * (light ? 0.5 : 1)) {
           p.inj = rng.int(1, p.fat > 80 ? 8 : 5);
           p._injLen = p.inj;
@@ -749,7 +755,7 @@
       pick: (w, r) => { const c = Object.values(w.players).filter((p) => p.form >= 1 || p.conf > 80); return c.length ? r.pick(c) : null; },
       text: (p, w) => { const c = ctx(w, p); return `${pname(p)}が絶好調だ。` + (c.last && c.last.mins > 0 ? `この前の試合は採点${c.last.rating.toFixed(1)}。` : '') + (c.gain ? `今月は能力が${c.gain}上がった。` : '練習でも目立っている。') + (c.inA ? '' : 'まだBの子だ'); },
       opts: [opt('褒めて、さらに上を求める（伸び盛りに入りやすい）', 'push', (w, p) => { p.spurt = Math.max(p.spurt, 3); }), opt('調子に乗らないよう戒める', 'firm'), opt('そのまま伸ばす', 'wait')] },
-    { id: 'quit', name: '退団の相談', weight: 0.7,
+    { id: 'quit', name: '退団の相談', weight: 2, // 決定99：退団は年1〜2人
       pick: (w, r) => {
         const c = Object.values(w.players).filter((p) => (p.unrest >= 4 || (p.conf < 25 && p.mins < 120) || p.inj >= 8 || (p.grade >= 2 && YA.ovr(p) < 9 && p.mins < 150) || (ST(p, '目指すもの', '家族思い') && r() < 0.03)) && Object.keys(w.players).length > 32);
         if (!c.length) return null;
@@ -906,6 +912,13 @@
             } else if (w[b].length) {
               s.pid = w[b][0];
               w[b].splice(0, 1);
+            } else {
+              // 控えが空：どの並びにも入っていない子を回し、それもいなければ新しく入団させる
+              const used = new Set([].concat(w.lineupA || [], w.lineupB || []).map((x) => x.pid).concat(w.benchA || [], w.benchB || []));
+              const free = Object.values(w.players).find((q) => !used.has(q.id) && q.pos !== 'GK');
+              s.pid = free ? free.id : newcomer(w, YA.rngOf(w.seed * 11 + w.year * 37 + w.week + i), 1, null).id;
+              const at = w[b].indexOf(s.pid);
+              if (at >= 0) w[b].splice(at, 1);
             }
             return;
           }
@@ -1094,7 +1107,8 @@
   YA.afterEvents = function (w) {
     w.events = [];
     const swaps = [repairLineup(w, 'A'), repairLineup(w, 'B')];
-    for (const s of swaps[0]) noteTier(w, 2, s[0].num + '番 ' + s[0].name + ' が出られないため、' + s[1].num + '番 ' + s[1].name + ' がAチームの先発に入った');
+    // 抜けた子がもうチームにいない（退団・卒業）こともある
+    for (const s of swaps[0]) if (s[1]) noteTier(w, 2, (s[0] ? s[0].num + '番 ' + s[0].name + ' が出られないため、' : '先発に空きが出たため、') + s[1].num + '番 ' + s[1].name + ' がAチームの先発に入った');
     w.phase = YA.hasMatch(w.week, w) ? 'match' : 'after';
   };
   YA.endWeek = function (w) {
@@ -1293,7 +1307,7 @@
   YA.potStars = function (p) {
     const n = (p.pos === 'GK' ? YA.AB_GK : YA.AB_FIELD).length;
     const v = p.pot / n;
-    return v >= 15.5 ? 5 : v >= 14 ? 4 : v >= 12.7 ? 3 : v >= 11.5 ? 2 : v >= 10.3 ? 1 : 0;
+    return v >= 17 ? 5 : v >= 14.4 ? 4 : v >= 12.4 ? 3 : v >= 10.8 ? 2 : v >= 9.3 ? 1 : 0; // 入学時の水準を下げた（決定100）のに合わせて目盛りを下げた
   };
   YA.starsOf = function (p) {
     // 見える伸びしろは★の幅。高学年ほど見極めがつき、幅が狭くなる

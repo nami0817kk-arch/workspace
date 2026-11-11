@@ -1,4 +1,4 @@
-// クラブ運営：信頼度・評判・予算・スタッフ・施設と寮・年度はじめの目標と約束事・年末の評価・契約と解任・
+// クラブ運営：信頼度・評判・予算・スタッフ・施設・年度はじめの目標と約束事・年末の評価・契約と解任・
 // トップ／代表／クラブの要望／規律の出来事・夏合宿と遠征。状態は w.club に入れる。
 (function () {
   'use strict';
@@ -113,7 +113,6 @@
     return true;
   };
   YA.facilityLevel = (w) => Math.floor((w.club.facPts || 0) / 600);
-  YA.dormCap = (w) => 10 + YA.facilityLevel(w) * 4;
 
   // ---------- クラブを作る ----------
   YA.newClub = function (w, tier, name) {
@@ -141,7 +140,9 @@
   YA.makeGoals = function (w) {
     const c = w.club;
     const lv = w.league ? w.league.level : 2;
-    c.goals = [{ k: 'result', n: lv === 1 ? 8 : 6 }, { k: 'develop', x: 22 }, { k: 'promise', t: 2400 }];
+    // 決定97：信頼度が上がるほどクラブの目標も上がる（評価と信頼度が張り付かない）
+    const up = Math.round(((c.trust || 50) - 50) / 15);
+    c.goals = [{ k: 'result', n: clamp((lv === 1 ? 8 : 6) - up, 2, 10) }, { k: 'develop', x: clamp(22 + up * 2, 16, 30) }, { k: 'promise', t: 2400 + Math.max(0, up) * 300 }];
     c.goalChanges = { low: 0, mid: 1, high: 2 }[YA.trustLevel(w)];
   };
   YA.goalText = (g) => GOAL_DEF[g.k].text(g);
@@ -176,7 +177,8 @@
     // 前の年の連帯貢献金などを予算に
     // 連帯貢献金は予算に足すが、クラブの本体にも回るので、育成の予算に入るのは基本予算の6割まで
     c.solidarityIn = Math.round(Math.min(c.solidarity || 0, TIER_BASE[c.tier] * 0.6));
-    c.total = Math.round(TIER_BASE[c.tier] * (0.85 + c.rep / 300) * (1 + (c.budgetAdj || 0)) + c.solidarityIn);
+    // 決定98：予算は部ごとの目安の上下3割まで
+    c.total = Math.round(clamp(TIER_BASE[c.tier] * (0.85 + c.rep / 300) * (1 + (c.budgetAdj || 0)) + c.solidarityIn, TIER_BASE[c.tier] * 0.7, TIER_BASE[c.tier] * 1.3));
     c.solidarityLast = c.solidarity || 0;
     c.solidarity = 0;
     c.facPts += YA.budget(w).facility;
@@ -189,15 +191,9 @@
     w.rules = [];
     w.campChoice = null;
     w.yearIntro = true; // ホームで目標と約束事の画面を出す
-    // 寮
-    const dorm = Object.values(w.players).filter((p) => p.dorm).length;
-    const cap = YA.dormCap(w);
+    // 寮生と自宅生（定員は決定87で削った。ホームシックの出来事は残す）
     const r = YA.rngOf(w.seed + w.year * 41);
-    let left = cap - dorm;
-    for (const p of Object.values(w.players)) if (p.dorm == null) {
-      p.dorm = left > 0 && r.chance(0.5);
-      if (p.dorm) left--;
-    }
+    for (const p of Object.values(w.players)) if (p.dorm == null) p.dorm = r.chance(0.5);
   };
 
   // ---------- 年末の評価 ----------

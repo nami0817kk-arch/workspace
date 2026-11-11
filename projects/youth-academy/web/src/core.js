@@ -92,6 +92,112 @@
     return gains;
   };
 
+  // ---------- 試合のあとの数字（決定89）：要点の数字・効いた戦術の一言・選手ごとの主な数字・攻めた方向 ----------
+  // 試合の中身は見どころの場面だけなので、合間のパスやタックルは出場時間・能力・流れから見積もる（同じ試合なら同じ数）
+  YA.matchNumbers = function (m) {
+    const hs = typeof m.homeShare === 'function' ? m.homeShare() : 0.5;
+    const mine = m.scenes.filter((sc) => sc.side === 'home');
+    const theirs = m.scenes.filter((sc) => sc.side === 'away');
+    const poss = clamp(Math.round(100 * (0.65 * hs + 0.35 * (mine.length / Math.max(1, m.scenes.length)))), 25, 75);
+    const pg = (id) => (m.home.players[id] ? m.home.players[id].pos : null);
+    const won = theirs.filter((sc) => ['dispossessed', 'intercepted'].includes(sc.outcome) && (sc.defs || []).some((d) => pg(d) === 'MF' || pg(d) === 'FW')).length + mine.filter((sc) => sc.type === 'steal').length;
+    // 攻めた方向：自分の見どころの最初のボールの横の位置（0〜68m）
+    const dir = { 左: 0, 中央: 0, 右: 0 };
+    for (const sc of mine) {
+      const fs = (sc.frames || []).filter((f) => f.ball);
+      if (!fs.length) continue;
+      const x0 = fs.reduce((t, f) => t + f.ball[0], 0) / fs.length;
+      const x = sc.flip ? 68 - x0 : x0;
+      dir[x < 23 ? '左' : x > 45 ? '右' : '中央']++;
+    }
+    const nd = Math.max(1, dir.左 + dir.中央 + dir.右);
+    const dirPct = { 左: Math.round((dir.左 / nd) * 100), 中央: Math.round((dir.中央 / nd) * 100), 右: Math.round((dir.右 / nd) * 100) };
+    const players = [];
+    for (const p of Object.values(m.home.players)) {
+      const st = p.st || {};
+      if (!(st.minutes > 0)) continue;
+      const r = YA.rngOf(m.scenes.length * 131 + YA.hash(p.id) * 17 + m.score.home * 7 + m.score.away);
+      const k = st.minutes / 90;
+      const ab = (n) => (p.ab && p.ab[n] != null ? p.ab[n] : 10);
+      const base = { GK: 22, DF: 42, MF: 52, FW: 24 }[p.pos] || 35;
+      const passes = Math.round(k * base * (0.6 + hs * 0.8) * (0.85 + r() * 0.3));
+      const pct = clamp(Math.round(58 + ((ab('パス') + ab('視野') + ab('判断')) / 3) * 1.6 + (hs - 0.5) * 18 + (r() - 0.5) * 8), 50, 96);
+      const tw = theirs.filter((sc) => (sc.defs || []).includes(p.id) && ['dispossessed', 'intercepted', 'stopped', 'blocked', 'cleared'].includes(sc.outcome)).length;
+      const tk = p.pos === 'GK' ? 0 : Math.round(k * ({ DF: 3, MF: 2.4, FW: 0.9 }[p.pos] || 1.5) * (1.4 - hs) * (ab('タックル') / 11) * (0.7 + r() * 0.6)) + (tw ? 1 : 0);
+      const steal = p.pos === 'GK' ? 0 : Math.round(k * ({ DF: 2.6, MF: 2.2, FW: 0.8 }[p.pos] || 1.5) * (1.4 - hs) * (ab('予測') / 11) * (0.7 + r() * 0.6)) + tw;
+      players.push({ id: p.id, num: p.num, name: p.name, pos: p.pos, mins: st.minutes, rating: st.rating, passes, pct, shots: st.shots || 0, goals: st.goals || 0, tackles: tk, steals: steal, saves: st.saves || 0 });
+    }
+    players.sort((a, b) => b.rating - a.rating);
+    // 効いた戦術の一言（決定114）
+    const type = (m.home.tactic && m.home.tactic.type) || '戦い方';
+    const good = mine.filter((sc) => sc.goal || sc.outcome === 'saved').length;
+    const topDir = Object.entries(dirPct).sort((a, b) => b[1] - a[1])[0];
+    const sh = m.stats.home;
+    let tactic;
+    if (good >= 3 && topDir[1] >= 45) tactic = `「${type}」がはまった。${topDir[0]}から崩す形が${dir[topDir[0]]}回できた`;
+    else if (won >= 4) tactic = `「${type}」で前から奪えた。相手陣で${won}回ボールを取った`;
+    else if (poss <= 40 && m.score.home >= m.score.away) tactic = `ボールは持たれたが、「${type}」で耐えて勝ち点を取った`;
+    else if (sh.shots <= 3) tactic = `「${type}」では崩しきれなかった。シュートは${sh.shots}本だけ`;
+    else tactic = `「${type}」は五分。${topDir[0]}からの攻めが多かった（${topDir[1]}%）`;
+    return { poss, shots: sh.shots, onTarget: sh.onTarget, oppShots: m.stats.away.shots, won, dir: dirPct, players, tactic };
+  };
+
+  // ---------- 練習の1枚（決定143）：チームの重点1つ・この週の見込み ----------
+  YA.TEAM_FOCUS = {
+    攻撃の形: ['オフザボール', 'パス', 'ファーストタッチ'],
+    守備の連係: ['ポジショニング', 'マーク', 'チームワーク'],
+    セットプレー: ['プレースキック', 'ヘディング', 'ジャンプ'],
+    走り込み: ['スタミナ', '運動量', '加速'],
+    '1対1': ['ドリブル', 'タックル', '敏しょう性'],
+    判断: ['判断', '予測', '視野'],
+  };
+  YA.weekOutlook = function (w) {
+    const days = (w.plan && w.plan.days) || [];
+    const k = { light: 0.65, normal: 1, hard: 1.3 };
+    const tr = days.filter((d) => YA.MENUS[d.menu] && YA.MENUS[d.menu].fat > 0);
+    const g = tr.reduce((s, d) => s + (k[d.int] || 1), 0);
+    const f = tr.reduce((s, d) => s + YA.MENUS[d.menu].fat * (k[d.int] || 1), 0);
+    const rest = Object.values(w.players).filter((p) => p.rest === 'rest').length;
+    const growth = g >= 5.5 ? '多い' : g >= 4 ? 'ふつう' : '少なめ';
+    const fatigue = f >= 34 ? '高い' : f >= 22 ? 'ふつう' : '低い';
+    const tired = Object.values(w.players).filter((p) => p.inj <= 0 && p.fat >= 70 && p.rest !== 'rest');
+    const wall = Object.values(w.players).filter((p) => p.state && p.state.k === 'wall' && p.state.w > 0);
+    const tip = tired.length >= 2 ? `疲れ70以上が${tired.length}人。休ませると怪我が減る` : fatigue === '高い' ? 'きつい週。怪我のおそれが上がる（きつい日は約2倍）' : wall.length ? `${wall[0].name.split(' ')[0]}が壁に当たっている。面談や重点の見直しを` : rest ? `休み${rest}人で疲れが抜ける` : '先週の組み方のままでよさそうだ';
+    return { growth, fatigue, tip };
+  };
+
+  // ---------- 教え方（決定128）----------
+  YA.INTRO = [
+    ['ユースの指導者になった', '高1〜高3の36人を預かり、3年かけて育てて送り出します。勝つことと、育てること。その両方を任されています。'],
+    ['★注目の子を選ぶ', '★は各学年4人まで。★の子だけが「覚醒の鍵」を持っています。面談や試合で鍵のヒントを見つけ、満たすと覚醒します。'],
+    ['毎週やること', '練習の画面を確かめて「この週で行く」。試合の週は布陣と戦い方を決めてキックオフ。出来事が起きたら、言葉をかけて選びます。'],
+    ['系譜を伸ばす', '卒業した子がプロや代表で活躍すると、あなたの系譜が伸びます。大きな移籍では連帯貢献金も入ります。'],
+  ];
+  // 画面を初めて開いたときだけ、アシスタントコーチが1〜2行で教える。二度目からは出ない
+  YA.COACH_TIPS = {
+    home: '左が今週やることです。困ったら右の「今週気にかけたい子」から見てください。',
+    players: '★を付けた子は、詳しい画面に覚醒の鍵が出ます。最初は「？」ですが、面談で少しずつ見えてきます。',
+    train: '7マスを押すとメニューが替わります。疲れの高い子は右下で休ませられます。決まったら「この週で行く」。',
+    match: '試合の前は相手の分析を見てから、並びと戦い方を。試合中は「止める」で交代と指示ができます。',
+    club: '予算・スタッフ・スカウトなど、クラブのことはここです。最初はクラブとコーチが決めてくれます。',
+    more: '卒業生の名鑑と記録はここです。育てた子のその後を追えます。',
+  };
+  YA.coachTip = function (w, tab) {
+    if (!w || !YA.COACH_TIPS[tab]) return null;
+    w.coachSeen = w.coachSeen || {};
+    if (w.coachSeen[tab]) return null;
+    let t = YA.COACH_TIPS[tab];
+    if (tab === 'players') { const r = YA.starRecommend(w); if (r) t += ' ' + r; }
+    return t;
+  };
+  // 最初の4週：鍵の短い子（見た目では分からない）に★を勧める
+  YA.starRecommend = function (w) {
+    if (!w || w.year > 1 || w.week > 4) return null;
+    const p = Object.values(w.players).find((q) => q.fast && !q.star);
+    if (!p) return null;
+    return `高${p.grade}の${p.name}は、何かきっかけがあれば早く化けそうです。★を付けてみては。`;
+  };
+
   // ---------- 信頼（決定110）：★の子ごとに5段階 ----------
   YA.TRUST_NAME = ['', '心を閉ざす', 'よそよそしい', 'ふつう', '信じている', '深く信頼'];
   YA.trustLv = (p) => 1 + Math.min(4, Math.floor(clamp(p.tr == null ? 50 : p.tr, 0, 100) / 20));

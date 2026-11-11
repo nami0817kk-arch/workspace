@@ -365,19 +365,14 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   check(w9);
 }
 {
-  // 分析と映像ミーティング
+  // 相手の分析
   const wA = YA.newWorld(31);
   const opp = YA.opponentOf(wA);
   const oppTeam = YA.makeOpponent(opp, 5);
   wA.club.staff.find((s) => s.role === '分析') ? (wA.club.staff.find((s) => s.role === '分析').ab = 15) : wA.club.staff.push({ role: '分析', ab: 15, salary: 200, name: 'x', id: 'x' });
   const an = YA.analysis(wA, oppTeam, opp);
   ok(an.length >= 6 && an.some((l) => /要注意/.test(l)) && an.some((l) => /おすすめ/.test(l)), '分析担当が良いと深く分かる ' + an.length);
-  const m = new YA.Match({ seed: 4, home: YA.teamFromWorld(wA, 'A'), away: oppTeam, settings: { autoStop: false } });
-  while (!m.finished) m.step();
-  const vo = YA.videoOptions(wA, m);
-  ok(vo.length >= 1, '映像の候補');
-  const msgs = YA.videoApply(wA, vo.slice(0, 2));
-  ok(msgs.length >= 1, '映像ミーティングの反応');
+  ok(!YA.videoOptions && !YA.videoButton, '映像ミーティングは削った（決定87）');
 }
 // ---- 15ポジションと役割 ----
 {

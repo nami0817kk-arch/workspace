@@ -1,4 +1,4 @@
-// クラブ運営・スカウト・順位と日程・年度はじめの画面・選手の追加操作・名鑑と記録・映像ミーティング。
+// クラブ運営・スカウト・順位と日程・年度はじめの画面・選手の追加操作・名鑑と記録。
 (function () {
   'use strict';
   const YA = (globalThis.YA = globalThis.YA || {});
@@ -130,7 +130,7 @@
     const left = h('div', { style: 'flex:1;min-width:0' });
     left.append(card(h('div', { class: 'row' }, h('b', { class: 'grow' }, `今年の予算 ${b.total}万円`), h('span', { class: 'chip gray' }, (c.solidarityIn != null && c.solidarityIn < (c.solidarityLast || 0)) ? `連帯貢献金 ${c.solidarityLast}万円のうち${c.solidarityIn}万円を含む` : `連帯貢献金 ${c.solidarityLast || 0}万円を含む`)),
       h('div', { class: 'note' }, `スタッフの給料 ${b.salaries}万円 → 残り ${b.free}万円を配分`), h('div', { class: 'note', style: 'color:var(--blue-d);margin-top:3px' }, info)));
-    for (const [k, n, note] of [['scout', 'スカウト', '候補の報告が増え、見に行ける'], ['camp', '合宿・遠征', '夏の合宿（26週）に使う'], ['facility', '施設・寮', '積み立てて寮の定員と回復力が上がる']]) {
+    for (const [k, n, note] of [['scout', 'スカウト', '候補の報告が増え、見に行ける'], ['camp', '合宿・遠征', '夏の合宿（26週）に使う'], ['facility', '施設', '積み立てて回復力が上がる']]) {
       const can = YA.canAlloc(w, k);
       const inp = h('input', { type: 'range', min: 0, max: 60, value: c.alloc[k], disabled: !can, style: 'flex:1' });
       const lab = h('b', { style: 'width:62px;text-align:right' }, `${b[k]}万`);
@@ -141,8 +141,8 @@
     const dorm = Object.values(w.players).filter((p) => p.dorm).length;
     const fl = YA.facilityLevel(w);
     const right = h('div', { style: 'flex:1;min-width:0' });
-    right.append(card(title('施設と寮'), h('div', { class: 'note' }, `施設レベル ${fl}（積み立て ${Math.round(c.facPts)}万円／600万円で次のレベル）`), meter(((c.facPts || 0) % 600) / 6, '#16a34a'),
-      h('div', { class: 'note', style: 'margin-top:6px' }, `寮：${dorm}人 / 定員${YA.dormCap(w)}人（残り${YA.dormCap(w) - dorm}）`), h('div', { class: 'note' }, '寮生は体を作りやすいがホームシックがある。自宅生は家庭の出来事と通学の疲れがある。'),
+    right.append(card(title('施設'), h('div', { class: 'note' }, `施設レベル ${fl}（積み立て ${Math.round(c.facPts)}万円／600万円で次のレベル）`), meter(((c.facPts || 0) % 600) / 6, '#16a34a'),
+      h('div', { class: 'note', style: 'margin-top:6px' }, `寮生 ${dorm}人。寮生は体を作りやすいがホームシックがある。自宅生は家庭の出来事と通学の疲れがある。`),
       h('div', { class: 'note', style: 'margin-top:6px' }, `今年の合宿費：${c.spent.camp || 0}万 / ${b.camp}万。スカウトの経費：${c.spent.scout || 0}万 / ${b.scout}万`)));
     body.append(h('div', { style: 'display:flex;gap:8px;align-items:flex-start' }, left, right));
   }
@@ -338,27 +338,6 @@
     return wrap;
   };
 
-  // ---------- 映像ミーティング（試合のあと）----------
-  YA.videoButton = function (m) {
-    const w = W();
-    return h('button', { class: 'btn', onclick: () => {
-      const opts = YA.videoOptions(w, m);
-      V().modal((close) => {
-        const picks = [];
-        const bx = box([]);
-        const draw = (done) => {
-          bx.replaceChildren(
-            h('div', { class: 'h', style: 'font-size:15px' }, '映像ミーティング：取り上げる場面を2つまで'),
-            h('div', { class: 'note' }, '成功の場面を褒めると自信が上がります。失敗の場面は課題が見えて戦術の理解が伸びますが、自信が下がることもあります（性格しだい）。'),
-            ...(done ? done.map((t) => h('div', { class: 'insight' }, t)) : opts.map((o) => { const p = w.players[o.pid]; const on = picks.indexOf(o) >= 0; return h('button', { class: 'btn' + (on ? ' on' : ''), style: 'justify-content:flex-start;text-align:left;gap:8px', onclick: () => { if (on) picks.splice(picks.indexOf(o), 1); else if (picks.length < 2) picks.push(o); draw(); } }, h('span', { class: 'chip ' + (o.good ? 'trait' : 'instr') }, o.good ? '成功' : '課題'), h('b', {}, o.minute + "'"), h('span', {}, `${p ? p.num + '番 ' + p.name.split(' ')[0] : ''}：${o.text}`)); })),
-            done ? h('button', { class: 'btn pri', onclick: () => { close(); rerender(); } }, '閉じる') : h('div', { class: 'row' }, h('button', { class: 'btn', onclick: close }, 'やめる'), h('button', { class: 'btn pri', disabled: !picks.length, onclick: () => { m.videoDone = true; const r = YA.videoApply(w, picks); save(); draw(r); } }, 'この場面を共有する')),
-          );
-        };
-        draw();
-        return bx;
-      });
-    } }, '映像ミーティング');
-  };
 
   // 卒業生のいちばんの勲章（一覧の札に出す）
   YA.alumniHighlight = function (a) {
