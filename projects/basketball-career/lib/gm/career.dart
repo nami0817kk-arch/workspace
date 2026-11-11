@@ -6,10 +6,11 @@ import 'inbox.dart';
 import 'league.dart';
 import 'names.dart';
 import 'player.dart';
+import 'rating.dart';
 import 'rng.dart';
 import 'trade.dart';
 
-/// 任される年数。
+/// 自動で遊ぶGM・点検が1回に進める年数。ゲームの任期に上限は無い(解任か、自分で終えるまで続く)。
 const careerSeasons = 10;
 
 /// 任されたときのチームの状態(強さの順位から決まる。0始まり)。
@@ -1182,6 +1183,7 @@ class Career {
     trust = (trust + delta).clamp(0, 100);
     history.add(SeasonRecord(season: season, wins: me.wins, losses: me.losses, rank: confRank, result: res, trustAfter: trust, target: target));
     if (trust <= 0) fired = true;
+    _awardRating(res);
     if (finals != null) champs.add([season, champion, finals!.loser]);
     // 選手の年ごとの成績を残す(シーズンの終わりにいたチームで)
     for (final t in teams) {
@@ -1218,12 +1220,64 @@ class Career {
     );
   }
 
+  /// 任期を自分で終える(シーズンの結果を見たあと)。任期に上限は無いので、やめたいときはここで。
+  void endCareer() {
+    if (phase == Phase.seasonEnd) phase = Phase.over;
+  }
+
+  // ---------------------------------------------------------------- GM の格
+
+  /// GM の格の通算の点と、最初の10シーズンで取った点(ランキングはこちらで比べる)。
+  int gmPoints = 0;
+  int gmPointsFirst10 = 0;
+
+  /// 直前のシーズンの点の内訳(難しさの倍率をかけたあと)。
+  List<RatingPart> lastRating = [];
+
+  int get gmLevel => ratingLevelOf(gmPoints);
+
+  /// 直前のシーズンで格が上がったか(上がる前の段階。上がっていなければ null)。
+  int? levelBefore;
+
+  /// シーズンの結果から点をつける。賞のあと、信頼を動かしたあとに呼ぶ。
+  void _awardRating(int res) {
+    final scale = difficulty.ratingScale;
+    final parts = <RatingPart>[];
+    void add(String label, int raw) {
+      final pts = (raw * scale).round();
+      if (pts > 0) parts.add(RatingPart(label, pts));
+    }
+
+    if (res > 0) add(res == 5 ? '優勝' : res == 4 ? 'ファイナルまで進んだ' : res == 3 ? '地区決勝まで進んだ' : res == 2 ? '2回戦まで進んだ' : 'プレーオフに出た', playoffPoints[res]);
+    if (me.wins > me.losses) add('勝ち越し', 5);
+    for (final a in awardsOf(season)) {
+      if (a.team != mine || !draftedIds.contains(a.player)) continue;
+      final raw = switch (a.kind) {
+        AwardKind.mvp || AwardKind.finalsMvp => 20,
+        AwardKind.month => 0,
+        AwardKind.allLeague1 || AwardKind.allLeague2 || AwardKind.allLeague3 => 5,
+        _ => 10,
+      };
+      if (raw > 0) add('自分で指名した${a.name}が${a.kind.label}', raw);
+    }
+    for (final g in goals) {
+      if (g.met == true) add('オーナーの目標「${g.kind.label}」', 5);
+    }
+    if (lastProfit > 0 && !goals.any((g) => g.kind == GoalKind.profit && g.met == true)) add('黒字', 5);
+    final before = gmLevel;
+    final total = parts.fold(0, (n, x) => n + x.points);
+    gmPoints += total;
+    if (history.length <= 10) gmPointsFirst10 += total;
+    lastRating = parts;
+    levelBefore = gmLevel > before ? before : null;
+  }
+
   // ---------------------------------------------------------------- オフ
 
   /// シーズンを閉じてオフへ(成長・引退・契約の年数を進め、ドラフトの準備をする)。
   void toOffseason() {
     if (phase != Phase.seasonEnd) return;
-    if (fired || season >= careerSeasons) {
+    if (fired) {
       phase = Phase.over;
       return;
     }
@@ -2017,6 +2071,10 @@ class Career {
         'mine': mine,
         'sr': startRank,
         'df': difficulty.index,
+        'gp': gmPoints,
+        'gp10': gmPointsFirst10,
+        'rp': [for (final x in lastRating) x.toJson()],
+        if (levelBefore != null) 'lvb': levelBefore,
         'rng': rng.state,
         'teams': [for (final t in teams) t.toJson()],
         'season': season,
@@ -2083,6 +2141,10 @@ class Career {
     c
       ..startRank = (j['sr'] as int?) ?? 0
       ..difficulty = Difficulty.fromIndex(j['df'])
+      ..gmPoints = (j['gp'] as int?) ?? 0
+      ..gmPointsFirst10 = (j['gp10'] as int?) ?? 0
+      ..lastRating = [for (final x in (j['rp'] as List? ?? const [])) RatingPart.fromJson(x as List)]
+      ..levelBefore = j['lvb'] as int?
       ..season = j['season'] as int
       ..phase = Phase.values[(j['phase'] as int).clamp(0, Phase.values.length - 1)]
       ..block = j['block'] as int

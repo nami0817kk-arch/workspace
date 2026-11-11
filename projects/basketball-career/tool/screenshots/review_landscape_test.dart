@@ -17,7 +17,9 @@ import 'dart:ui' as ui;
 
 import 'package:basketball_career/gm/bot.dart';
 import 'package:basketball_career/gm/career.dart';
+import 'package:basketball_career/gm/rating.dart';
 import 'package:basketball_career/ui/app.dart';
+import 'package:basketball_career/ui/gm/progress_tab.dart';
 import 'package:basketball_career/ui/gm_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -113,6 +115,18 @@ void main() {
       botStep(draft);
     }
     await _shoot(t, '10_draft', await _with(draft));
+    // シーズンの終わり(GM の格の内訳と、任期を終えるボタンまで送って撮る)
+    final end = careerAt(4, 3);
+    guard = 0;
+    while (end.phase != Phase.seasonEnd && guard++ < 100) {
+      botStep(end);
+    }
+    final progress = find.descendant(of: find.byType(ProgressTab), matching: find.byType(Scrollable)).first;
+    await _shoot(t, '12_seasonend_top', await _with(end));
+    await _shoot(t, '13_seasonend_rating', await _with(end),
+        act: (t) => t.scrollUntilVisible(find.text('GMの格 Lv${end.gmLevel}(${ratingNameOf(end.gmLevel)})'), 200, scrollable: progress));
+    await _shoot(t, '14_seasonend_bottom', await _with(end),
+        act: (t) => t.scrollUntilVisible(find.text('ここで任期を終える'), 300, scrollable: progress));
     final over = botPlayCareer(8, team: teamAtRank(8, 15));
     await _shoot(t, '11_over', await _with(over));
   });

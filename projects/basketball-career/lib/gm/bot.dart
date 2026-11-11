@@ -26,7 +26,12 @@ void botStep(Career c, {bool trades = false, bool scouting = true}) {
     case Phase.playoffs:
       c.playPlayoffs();
     case Phase.seasonEnd:
-      c.toOffseason();
+      // 任期に上限は無いので、釣り合いを測る・テストでは careerSeasons 年で打ち切る
+      if (c.history.length >= careerSeasons) {
+        c.endCareer();
+      } else {
+        c.toOffseason();
+      }
     case Phase.draft:
       if (c.myTurn) {
         final open = c.prospects.where((p) => p.pickedBy == null).toList()..sort((a, b) => b.mid.compareTo(a.mid));
