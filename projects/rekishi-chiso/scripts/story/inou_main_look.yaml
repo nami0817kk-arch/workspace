@@ -1,0 +1,206 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：伊能忠敬の旅の毎日（scripts/inou-story.yaml）。chiso/storymain.py が読む。
+# 11-11 作成（11/13 12:00 公開予定）。shogun_main_look.yaml を写した。台本には手を入れない。決まりは docs/story-main.md・スキル rekishi-story-screen。
+# 絵の方針：新しく作る時間が無かったため、AI 絵は『将軍の1日』（S01〜S15）と『参勤交代』（P01〜P09・TH2）の室内・街道・宿場・灯・行列（人物の顔なし）の写し。
+#   実在の絵は広重《名所江戸百景 日本橋》《東海道五十三次 土山》・メトロポリタン美術館の《大名行列》・国周《島田》・ベアト《長崎》を part / frame で出す。伊能忠敬の肖像・伊能図は使っていない（手元の素材に無い）。
+script: scripts/inou-story.yaml
+out: inou_story_main
+art_dir: out/story/inou/main
+main_art_dir: out/story/inou/main
+ai_disclosure: この動画の室内・街道・宿場の風景の画像の一部は、画像生成AI（Google の Gemini・Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面の右上に「AI生成画像」と出しています）。
+
+chapters:
+  0: {label: 序章 出発前の辞令には「浪人」とあった, now: null, dates: {}}
+  1: {label: 第1章 寛政12年閏4月　元百姓・浪人の出発, now: 1800年, dates: {7: 1800年, 18: 1800年}}
+  2: {label: 第2章 手当は1日銀7匁5分　旅の財布の中身, now: 1800年, dates: {24: 1800年, 34: 1801年, 36: 1800年}}
+  3: {label: 第3章 「一汁一菜で」　先触れと宿の毎日, now: 1802年, dates: {40: 1802年, 43: 1802年, 52: 1802年, 57: 1814年, 58: 1805年}}
+  4: {label: 第4章 人足400人と徹夜の道づくり　土佐藩士の日記, now: 1808年, dates: {61: 1808年, 76: 1806年}}
+  5: {label: 第5章 1806年　病に倒れた隊長と乱れた隊　薩摩と大村, now: 1805年, dates: {84: 1805年, 90: 1806年}}
+  6: {label: 第6章 1813年　旅先の手紙と、家に残した人たち, now: 1810年, dates: {104: 1810年, 105: 1813年, 113: 1815年}}
+  7: {label: まとめ 伊能忠敬の旅の毎日, now: null, dates: {}}
+no_tag_from: 123
+
+references:
+  - 大谷亮吉『伊能忠敬』（岩波書店、1917）　https://dl.ndl.go.jp/pid/1874853（辞令書・願書・高橋至時の手紙・忠敬の手紙・先触れ・奥宮正樹の日記・浜田藩士の記録を引く）
+  - 三重県環境生活部文化振興課「三重の文化」　https://www.bunka.pref.mie.lg.jp/rekishi/kenshi/asp/hakken/detail232.html（『御用留』文化2年）
+  - 歌川広重《名所江戸百景 日本橋》《東海道五十三次 土山》／ メトロポリタン美術館《大名行列》／ 国周《島田》／ フェリーチェ・ベアト《長崎》（いずれもパブリックドメイン）
+
+ai:
+  S01: {scene: 夜明けの御殿の長い板廊下（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  S02: {scene: 朝もやの御殿の屋根の並び（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  S03: {scene: 赤い毛氈に並ぶ黒塗りの膳（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  S04: {scene: 灯のともる座敷と膳（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  S05: {scene: 金屏風の広間（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  S07: {scene: 杉木立の参道に差す光（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  S09: {scene: 提灯の並ぶ江戸の町（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  S10: {scene: 灯の下の書状と筆（字なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  S11: {scene: 夜の座敷の行灯と机（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  S12: {scene: ろうそくのともる広間（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  S13: {scene: 灯と積まれた帳面（字なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  S14: {scene: 霧の水辺の小舟（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  S15: {scene: 夕暮れの寺の屋根（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  P01: {scene: 雨の山道（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  P02: {scene: 増水した川と仮の渡し（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  P03: {scene: 宵の宿場町（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  P04: {scene: 霧の宿場の門と白壁（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  P07: {scene: 雨の軒下に掛けた蓑と笠（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  P08: {scene: 土間に積んだ米俵（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  P09: {scene: 夕焼けの城下町の遠景（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  TH2: {scene: 富士を背に進む大行列, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  SEND: {scene: 夕暮れの寺の屋根のシルエット（終了画面）, lock: [1.0, 0.5, 0.5]}
+
+credits:
+  paintings/sankin_hoeido_nihonbashi_hiroshige.jpg: 歌川広重《名所江戸百景 日本橋》（1850年代。パブリックドメイン）
+  paintings/sankin_tsuchiyama_hiroshige_rain.jpg: 歌川広重《東海道五十三次 土山》（19世紀。パブリックドメイン）
+  paintings/sankin_hishikawa_daimyo_procession_met.jpg: 《大名行列》（メトロポリタン美術館蔵。パブリックドメイン）
+  paintings/sankin_shimada_kuniteru2_1863.jpg: 歌川国周《島田》（1863年。パブリックドメイン）
+  paintings/ryoma_nagasaki_beato_street.jpg: フェリーチェ・ベアト《長崎》（1860年代。パブリックドメイン）
+shots:
+  - 0 part:paintings/sankin_hoeido_nihonbashi_hiroshige.jpg wide
+  - 1 ai:S11 wide
+  - 2 ai:P07 wide
+  - 3 part:paintings/sankin_hishikawa_daimyo_procession_met.jpg wide
+  - 4 ai:S10 wide
+  - 5 ai:P07 wide
+  - 6 ai:S01 wide
+  - 7 ai:P01 wide
+  - 8 part:paintings/sankin_hoeido_nihonbashi_hiroshige.jpg right
+  - 9 ai:S10 left
+  - 10 ai:S11 wide
+  - 11 ai:P08 wide
+  - 12 ai:P08 left
+  - 13 ai:S04 wide
+  - 14 ai:S13 left
+  - 15 ai:P08 right
+  - 16 ai:P03 wide
+  - 17 ai:S10 right
+  - 18 part:paintings/sankin_hoeido_nihonbashi_hiroshige.jpg left
+  - 19 ai:S09 wide
+  - 20 ai:S11 right
+  - 21 ai:P07 wide
+  - 22 ai:P01 left
+  - 23 ai:S12 wide
+  - 24 ai:S13 wide
+  - 25 ai:S11 left
+  - 26 ai:S10 wide
+  - 27 ai:P08 left
+  - 28 ai:S13 right
+  - 29 ai:S04 wide
+  - 30 ai:P09 wide
+  - 31 ai:S11 wide
+  - 32 ai:S10 left
+  - 33 ai:P08 right
+  - 34 ai:S13 left
+  - 35 ai:P03 wide
+  - 36 ai:S10 wide
+  - 37 ai:S12 wide
+  - 38 ai:S04 right
+  - 39 ai:S13 wide
+  - 40 part:paintings/sankin_shimada_kuniteru2_1863.jpg wide
+  - 41 ai:P04 wide
+  - 42 ai:S09 left
+  - 43 ai:P03 right
+  - 44 ai:P07 wide
+  - 45 ai:S04 wide
+  - 46 ai:S03 wide
+  - 47 ai:P04 left
+  - 48 ai:P02 wide
+  - 49 ai:S09 wide
+  - 50 ai:S12 wide
+  - 51 ai:P07 left
+  - 52 ai:P04 right
+  - 53 ai:S11 wide
+  - 54 ai:P09 wide
+  - 55 ai:S03 wide
+  - 56 ai:P04 wide
+  - 57 frame:paintings/sankin_tsuchiyama_hiroshige_rain.jpg
+  - 58 ai:S03 right
+  - 59 ai:S09 left
+  - 60 ai:P03 right
+  - 61 part:paintings/sankin_hishikawa_daimyo_procession_met.jpg left
+  - 62 ai:P01 wide
+  - 63 ai:P07 left
+  - 64 ai:S07 wide
+  - 65 ai:P04 left
+  - 66 ai:S14 wide
+  - 67 ai:P01 right
+  - 68 ai:P02 wide
+  - 69 ai:S09 left
+  - 70 ai:P01 wide
+  - 71 ai:S04 wide
+  - 72 ai:S12 left
+  - 73 ai:P04 wide
+  - 74 ai:S14 left
+  - 75 ai:S07 right
+  - 76 part:paintings/ryoma_nagasaki_beato_street.jpg wide
+  - 77 ai:P02 right
+  - 78 ai:S01 wide
+  - 79 ai:P01 wide
+  - 80 ai:P07 left
+  - 81 ai:S07 wide
+  - 82 ai:S14 wide
+  - 83 ai:P01 right
+  - 84 ai:S12 wide
+  - 85 ai:S05 wide
+  - 86 ai:S04 left
+  - 87 ai:S09 wide
+  - 88 ai:S15 wide
+  - 89 ai:S05 left
+  - 90 ai:S01 left
+  - 91 ai:P09 wide
+  - 92 ai:S12 right
+  - 93 ai:S14 wide
+  - 94 ai:P03 wide
+  - 95 ai:S12 left
+  - 96 ai:S15 wide
+  - 97 ai:S05 right
+  - 98 ai:S09 left
+  - 99 ai:S05 wide
+  - 100 ai:S12 wide
+  - 101 ai:S05 wide
+  - 102 ai:S11 wide
+  - 103 ai:S01 wide
+  - 104 ai:S10 left
+  - 105 ai:S11 left
+  - 106 ai:S10 wide
+  - 107 ai:S13 wide
+  - 108 ai:S12 wide
+  - 109 ai:S04 wide
+  - 110 ai:S12 wide
+  - 111 ai:S15 wide
+  - 112 ai:S11 left
+  - 113 ai:S10 right
+  - 114 ai:S01 left
+  - 115 ai:S11 wide
+  - 116 ai:S01 wide
+  - 117 ai:S02 wide
+  - 118 ai:S11 wide
+  - 119 ai:S12 wide
+  - 120 ai:P09 wide
+  - 121 ai:S04 wide
+  - 122 ai:S15 wide
+  - 123 ai:S10 wide
+  - 124 ai:SEND wide
+  - 125 ai:SEND left
+  - end ai:SEND wide
+
+focus: {}
+
+parts:
+  - {type: quote, from: 9, to: 9, label: 史料, text: 元百姓浪人伊能勘解由／試みに測量／一日銀七匁五分宛被下之, source: 辞令書（寛政12年閏4月14日）大谷亮吉『伊能忠敬』（1917年）が引く}
+  - {type: versus3, from: 28, to: 29, items: [[道中の費用, 100両], [手当, 20両], [忠敬の自腹, 80両]], every: 1.6}
+  - {type: quote, from: 37, to: 37, label: 史料, text: 御用と申ものハ難有ものにて／宿々名主年寄送迎, source: 忠敬から景敬への手紙（寛政12年5月23日）大谷『伊能忠敬』が引く}
+  - {type: quote, from: 46, to: 46, label: 史料, text: 一汁一菜を外馳走ケ間敷儀／決而被致間敷候, source: 先触れ（享和2年6月10日）大谷『伊能忠敬』が引く}
+  - {type: quote, from: 74, to: 74, label: 史料, text: 甲浦を出しよりけふまで／一夜もいも寐す, source: 奥宮正樹の日記（文化5年）大谷『伊能忠敬』が引く}
+  - {type: quote, from: 106, to: 106, label: 史料, text: 何不自由も無之／江戸住宅より大ニ宜候, source: 忠敬から妙薫への手紙（文化10年正月）大谷『伊能忠敬』が引く}
+
+figures: []
+
+stills:
+  - {line: 0, note: 冒頭（0秒）}
+  - {line: 9, note: 辞令の札}
+  - {line: 28, note: 手当と自腹}
+  - {line: 44, note: 先触れ}
+  - {line: 74, note: 奥宮の日記}
+  - {line: 86, note: 隊の乱れ}
+  - {line: 106, note: 娘への手紙}
+  - {end: true, note: 終了画面の空き}
