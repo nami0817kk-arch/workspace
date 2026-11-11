@@ -905,7 +905,7 @@ class Career {
     lastGames = [...lastGames, ...games];
     final homeGames = games.where((g) => g.home == mine).length;
     revenue += homeGames * gatePerGame + (baseIncome * games.length / gamesPerSeason).round();
-    costs += ((me.payroll + me.staffCost) * games.length / gamesPerSeason).round();
+    costs += ((me.payroll + me.staffCost + me.twoWay.length * twoWaySalary) * games.length / gamesPerSeason).round();
     for (final (t, p) in injuries) {
       if (t == mine || p.ovr >= 76) _log('けが: ${p.name}(${teams[t].def.short})が${p.injured}試合欠場');
     }
@@ -1343,6 +1343,23 @@ class Career {
       if (gone) _toHall(p, p.career.isEmpty ? -1 : p.career.last[1]);
       return gone || p.ovr < 45;
     });
+    // 2ウェイの選手も年を取る。契約が切れたら自由契約に出る(戻したければ自由契約から取り直す)
+    for (final p in [...me.twoWay]) {
+      final start = p.ovr;
+      ageOneYear(p, rng);
+      p.years--;
+      if (retires(p, rng)) {
+        me.twoWay.remove(p);
+        news.add('${p.name}(${p.age}歳・2ウェイ)が引退した');
+      } else if (p.years <= 0) {
+        me.twoWay.remove(p);
+        p.salary = askOf(p, teams[(mine + 1) % teams.length]).salary;
+        freeAgents.add(p);
+        news.add('${p.name}の2ウェイ契約が切れた(自由契約へ)');
+      } else if (p.ovr - start >= 4) {
+        news.add('${p.name}(2ウェイ)が大きく伸びた(OVR ${shown(p.ovr)})');
+      }
+    }
     // ドラフト
     // 1回戦に出たチーム(プレーインを勝ち抜いたチームを含む)は、くじに入らない
     final inPlayoffs = {for (final s in playoffs.where((s) => s.round == 1)) ...[s.high, s.low]}.toList();
@@ -1776,6 +1793,88 @@ class Career {
     p
       ..salary = askOf(p, teams[(mine + 1) % teams.length]).salary
       ..years = 1;
+    freeAgents
+      ..add(p)
+      ..sort((a, b) => b.ovr.compareTo(a.ovr));
+  }
+
+  // ---------------------------------------------------------------- 2ウェイ契約
+
+  Player? _twoWayById(int id) {
+    for (final p in me.twoWay) {
+      if (p.id == id) return p;
+    }
+    return null;
+  }
+
+  /// 2ウェイ契約にできない理由(できるなら null)。若手(リーグでの年数が [twoWayMaxExp] 以下)だけ。
+  String? twoWayProblem(Player p) {
+    if (!canSign) return '今は契約できない';
+    if (me.twoWay.length >= twoWayMax) return '2ウェイは$twoWayMax人まで';
+    if (p.exp > twoWayMaxExp) return '2ウェイはリーグ$twoWayMaxExp年目までの若手だけ';
+    return null;
+  }
+
+  /// 自由契約の若手を2ウェイ契約で取る(登録の15人にも上限にも数えない。年俸は ${twoWaySalary * 10}万ドル。競り合いにならない)。
+  void signTwoWay(int id, {int years = 2}) {
+    final i = freeAgents.indexWhere((p) => p.id == id);
+    if (i < 0) return;
+    final p = freeAgents[i];
+    if (twoWayProblem(p) != null || bids[id]?.any((b) => b.team == mine) == true) return;
+    freeAgents.removeAt(i);
+    p
+      ..salary = twoWaySalary
+      ..years = years.clamp(1, 2)
+      ..optionYears = 0
+      ..morale = 65;
+    me.twoWay.add(p);
+  }
+
+  /// 登録の選手を2ウェイに変えられない理由(できるなら null)。契約を結んだままの年俸は払い終えた扱いで、デッドキャップは残らない。
+  String? toTwoWayProblem(Player p) {
+    if (!(phase == Phase.draft || phase == Phase.contracts || phase == Phase.preseason)) return 'オフとシーズン前だけ';
+    if (expiring.contains(p.id)) return '契約が切れる選手は、再契約か自由契約で決める';
+    return twoWayProblem(p);
+  }
+
+  /// 登録の若手を2ウェイに下げる(登録に空きができる)。
+  void toTwoWay(int id) {
+    final p = _mineById(id);
+    if (p == null || toTwoWayProblem(p) != null) return;
+    me.roster.remove(p);
+    me.rotation.remove(id);
+    me.minutes.remove(id);
+    p
+      ..salary = twoWaySalary
+      ..years = 2
+      ..optionYears = 0;
+    me.twoWay.add(p);
+  }
+
+  /// 2ウェイの選手を登録に上げられない理由(できるなら null)。
+  String? promoteProblem(Player p) {
+    if (!(phase == Phase.preseason || phase == Phase.season || phase == Phase.contracts)) return '今は登録に上げられない';
+    if (me.roster.length - expiring.length >= maxRoster) return '登録が$maxRoster人いっぱい';
+    return null;
+  }
+
+  /// 2ウェイの選手を登録に上げる(最低年俸の2年契約)。
+  void promoteTwoWay(int id) {
+    final p = _twoWayById(id);
+    if (p == null || promoteProblem(p) != null) return;
+    me.twoWay.remove(p);
+    p
+      ..salary = minSalary
+      ..years = 2;
+    me.roster.add(p);
+  }
+
+  /// 2ウェイの選手を自由契約にする(払うお金は残らない)。
+  void waiveTwoWay(int id) {
+    final p = _twoWayById(id);
+    if (p == null) return;
+    me.twoWay.remove(p);
+    p.salary = askOf(p, teams[(mine + 1) % teams.length]).salary;
     freeAgents
       ..add(p)
       ..sort((a, b) => b.ovr.compareTo(a.ovr));

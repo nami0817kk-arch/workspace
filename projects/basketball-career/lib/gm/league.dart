@@ -126,12 +126,16 @@ enum TeamMode {
 }
 
 class Team {
-  Team({required this.index, required this.roster, this.wins = 0, this.losses = 0, this.mode = TeamMode.balanced, this.deadCap = 0, List<int>? rotation, List<int>? staff})
+  Team({required this.index, required this.roster, this.wins = 0, this.losses = 0, this.mode = TeamMode.balanced, this.deadCap = 0, List<int>? rotation, List<int>? staff, List<Player>? twoWay})
       : rotation = rotation ?? [],
+        twoWay = twoWay ?? [],
         staff = staff ?? [2, 2, 2, 2];
 
   final int index;
   final List<Player> roster;
+
+  /// 2ウェイ契約の選手(自分のチームだけ。登録の15人と年俸の合計に数えず、試合には出ない)。
+  final List<Player> twoWay;
   int wins;
   int losses;
   TeamMode mode;
@@ -252,6 +256,7 @@ class Team {
         if (deadCap != 0) 'dc': deadCap,
         if (rotation.isNotEmpty) 'ro': rotation,
         'sf': staff,
+        if (twoWay.isNotEmpty) 'tw': [for (final p in twoWay) p.toJson()],
         if (streak != 0) 'sk': streak,
         if (training != 1) 'tr': training,
         if (coaches.isNotEmpty) 'co': [for (final c in coaches) c.toJson()],
@@ -274,6 +279,7 @@ class Team {
         losses: j['l'] as int,
         mode: TeamMode.values[((j['m'] as int?) ?? 1).clamp(0, TeamMode.values.length - 1)],
         deadCap: (j['dc'] as int?) ?? 0,
+        twoWay: [for (final p in (j['tw'] as List? ?? const [])) Player.fromJson(Map<String, dynamic>.from(p as Map))],
         rotation: [for (final x in (j['ro'] as List? ?? const [])) x as int],
         // 前の版の保存は3役(育成コーチが無い)。足りない役はふつう
         staff: j['sf'] is List && (j['sf'] as List).isNotEmpty
