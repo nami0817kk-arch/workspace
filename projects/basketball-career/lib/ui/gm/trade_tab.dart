@@ -235,33 +235,43 @@ class _TradeTabState extends State<TradeTab> {
       ),
       // 申し込みの欄(いつも下に見える)
       Container(
-        padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+        padding: const EdgeInsets.fromLTRB(14, 8, 14, 8),
         decoration: const BoxDecoration(color: GmColors.panelHi, border: Border(top: BorderSide(color: GmColors.line))),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, mainAxisSize: MainAxisSize.min, children: [
-          Row(children: [
-            Expanded(child: Text('出す ${_give.length + _givePicks.length}件(年俸 ${money(gs)})', style: const TextStyle(fontSize: 12, color: GmColors.bad))),
-            Expanded(child: Text('受け取る ${_get.length + _getPicks.length}件(年俸 ${money(ts)})', textAlign: TextAlign.right, style: const TextStyle(fontSize: 12, color: GmColors.good))),
-          ]),
-          const SizedBox(height: 6),
-          _Reaction(verdict: verdict),
-          const SizedBox(height: 8),
-          Row(children: [
-            Expanded(
-              child: OutlinedButton.icon(
-                onPressed: (_get.isEmpty && _getPicks.isEmpty) || !car.canTrade || c.busy ? null : () => _ask(context),
-                icon: const Icon(Icons.forum_rounded, size: 20),
-                label: const Text('相手に聞く'),
+        // 横画面は縦が短いので、左に件数と相手の反応、右にボタンを並べて、欄の高さを抑える
+        child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+          Expanded(
+            child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, mainAxisSize: MainAxisSize.min, children: [
+              Row(children: [
+                Expanded(child: Text('出す ${_give.length + _givePicks.length}件(年俸 ${money(gs)})', style: const TextStyle(fontSize: 12, color: GmColors.bad))),
+                Expanded(child: Text('受け取る ${_get.length + _getPicks.length}件(年俸 ${money(ts)})', textAlign: TextAlign.right, style: const TextStyle(fontSize: 12, color: GmColors.good))),
+              ]),
+              const SizedBox(height: 4),
+              _Reaction(verdict: verdict),
+            ]),
+          ),
+          const SizedBox(width: 14),
+          SizedBox(
+            width: 300,
+            child: Row(children: [
+              Expanded(
+                child: OutlinedButton.icon(
+                  style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(42)),
+                  onPressed: (_get.isEmpty && _getPicks.isEmpty) || !car.canTrade || c.busy ? null : () => _ask(context),
+                  icon: const Icon(Icons.forum_rounded, size: 20),
+                  label: const Text('相手に聞く'),
+                ),
               ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: FilledButton.icon(
-                onPressed: verdict != null && verdict.ok && !c.busy ? () => _propose(context) : null,
-                icon: const Icon(Icons.handshake_rounded),
-                label: const Text('申し込む'),
+              const SizedBox(width: 8),
+              Expanded(
+                child: FilledButton.icon(
+                  style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(42)),
+                  onPressed: verdict != null && verdict.ok && !c.busy ? () => _propose(context) : null,
+                  icon: const Icon(Icons.handshake_rounded),
+                  label: const Text('申し込む'),
+                ),
               ),
-            ),
-          ]),
+            ]),
+          ),
         ]),
       ),
     ]);

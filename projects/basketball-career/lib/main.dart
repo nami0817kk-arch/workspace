@@ -13,7 +13,8 @@ import 'ui/gm_controller.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  // 横画面だけ(左右どちら向きでも)
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
   // 同梱フォント(OFL)のライセンス文を「ライセンス」画面に載せる。OFL は同梱時に添付を求めている
   LicenseRegistry.addLicense(() async* {
     yield LicenseEntryWithLineBreaks(

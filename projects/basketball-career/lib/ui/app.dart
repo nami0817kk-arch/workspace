@@ -26,7 +26,7 @@ class _BasketballCareerAppState extends State<BasketballCareerApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: appTitle,
+      title: appFullName,
       debugShowCheckedModeBanner: false,
       theme: _theme,
       darkTheme: _theme,
@@ -121,12 +121,13 @@ class AchievementDialog extends StatelessWidget {
       );
 }
 
-/// 幅の広い端末では、[designWidth] の幅で作った画面を、拡大して全面に出す。押す位置も一緒に変わる。
+/// 幅の広い端末(iPad)では、[designWidth] の幅で作った画面を、拡大して全面に出す。押す位置も一緒に変わる。
+/// 作る基準は横向きのスマホ(844x390)。
 class TabletScale extends StatelessWidget {
   const TabletScale({super.key, required this.child});
   final Widget child;
 
-  static const designWidth = 620.0;
+  static const designWidth = 844.0;
 
   @override
   Widget build(BuildContext context) {

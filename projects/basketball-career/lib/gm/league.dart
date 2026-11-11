@@ -518,7 +518,7 @@ const minutesByOrder = [34, 33, 32, 30, 28, 22, 18, 14, 10, 8, 6, 3, 2, 0, 0];
 /// 1試合の個人の数字を配る。点はチームの得点を、外と中の得点の力と出場時間で分ける。
 /// リバウンドとアシストも同じように配る。[count] なら個人成績に足す(プレーオフは足さない)。
 /// いちばん点を取った選手と、その点を返す。
-(Player?, int) boxScore(Team t, int teamPts, Rng rng, {bool count = true, List<BoxLine>? lines, int oppPts = 0}) {
+(Player?, int) boxScore(Team t, int teamPts, Rng rng, {bool count = true, List<BoxLine>? lines, int oppPts = 0, double injuryScale = 1.0}) {
   final order = t.order;
   if (order.isEmpty) return (null, 0);
   final mins = t.playMinutes();
@@ -545,7 +545,7 @@ const minutesByOrder = [34, 33, 32, 30, 28, 22, 18, 14, 10, 8, 6, 3, 2, 0, 0];
   // けがの残りを1試合ぶん減らし、出た選手はけがの抽選(トレーナーが良いほど少なく、治りも早い)
   final trainer = t.staffLevel(Staff.trainer);
   // 練習がきついほど、けがが増える
-  final chance = const [0.0075, 0.005, 0.003][trainer - 1] * const [0.8, 1.0, 1.35][t.training.clamp(0, 2)];
+  final chance = const [0.0075, 0.005, 0.003][trainer - 1] * const [0.8, 1.0, 1.35][t.training.clamp(0, 2)] * injuryScale;
   final speed = const [1.25, 1.0, 0.75][trainer - 1];
   for (var i = 0; i < order.length; i++) {
     final p = order[i];
@@ -610,7 +610,8 @@ const minutesByOrder = [34, 33, 32, 30, 28, 22, 18, 14, 10, 8, 6, 3, 2, 0, 0];
 
 /// 1試合を進める。どちらのチームにも個人の数字を配る([count] ならシーズンの成績に足す)。
 /// [mine] のチームの試合なら、いちばん点を取った選手を結果に残す。
-GameResult playGame(Team home, Team away, Rng rng, {int? mine, bool count = true}) {
+/// [injuryScale] は、[mine] のチームのけがの起きやすさの倍率(難しさ)。
+GameResult playGame(Team home, Team away, Rng rng, {int? mine, bool count = true, double injuryScale = 1.0}) {
   final p = winChance(home.strength, away.strength);
   final homeWins = rng.nextInt(10000) < (p * 10000).round();
   final base = 92 + rng.nextInt(28);
@@ -619,8 +620,10 @@ GameResult playGame(Team home, Team away, Rng rng, {int? mine, bool count = true
   final hp = homeWins ? w : l, ap = homeWins ? l : w;
   final myBox = <BoxLine>[], oppBox = <BoxLine>[];
   final isMine = mine == home.index || mine == away.index;
-  final (hTop, hTopPts) = boxScore(home, hp, rng, count: count, oppPts: ap, lines: !isMine ? null : mine == home.index ? myBox : oppBox);
-  final (aTop, aTopPts) = boxScore(away, ap, rng, count: count, oppPts: hp, lines: !isMine ? null : mine == away.index ? myBox : oppBox);
+  final (hTop, hTopPts) = boxScore(home, hp, rng,
+      count: count, oppPts: ap, lines: !isMine ? null : mine == home.index ? myBox : oppBox, injuryScale: mine == home.index ? injuryScale : 1.0);
+  final (aTop, aTopPts) = boxScore(away, ap, rng,
+      count: count, oppPts: hp, lines: !isMine ? null : mine == away.index ? myBox : oppBox, injuryScale: mine == away.index ? injuryScale : 1.0);
   String? topName;
   var topPts = 0;
   if (mine == home.index) {

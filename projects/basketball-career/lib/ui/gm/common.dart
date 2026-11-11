@@ -288,8 +288,11 @@ class PayrollBar extends StatelessWidget {
 
 /// オーナーの信頼の帯。
 class TrustBar extends StatelessWidget {
-  const TrustBar({super.key, required this.trust});
+  const TrustBar({super.key, required this.trust, this.compact = false});
   final int trust;
+
+  /// 上の帯(狭い)では、名前を「信頼」だけにする。
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
@@ -297,7 +300,7 @@ class TrustBar extends StatelessWidget {
     return Row(children: [
       const Icon(Icons.handshake_rounded, size: 16, color: GmColors.sub),
       const SizedBox(width: 4),
-      const Text('オーナーの信頼', style: TextStyle(fontSize: 12, color: GmColors.sub)),
+      Text(compact ? '信頼' : 'オーナーの信頼', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
       const SizedBox(width: 6),
       Expanded(
         child: ClipRRect(

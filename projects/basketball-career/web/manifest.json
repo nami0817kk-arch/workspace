@@ -1,6 +1,6 @@
 {
-    "name": "バスケ編成室",
-    "short_name": "バスケ編成室",
+    "name": "バスケGM",
+    "short_name": "バスケGM",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
