@@ -105,6 +105,7 @@ class GmHomeScreen extends StatelessWidget {
                 _stat('優勝', '${p.titles}回'),
                 _stat('1任期の最多優勝', '${p.bestTitles}回'),
                 _stat('最多勝', '${p.bestWins}勝'),
+                _stat('最高の格', p.bestLevel == 0 ? '-' : 'Lv${p.bestLevel}'),
               ]),
             ]),
           ),

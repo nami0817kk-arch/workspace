@@ -7,7 +7,8 @@ void main() {
     final all = HowToScreen.items.map((e) => '${e.$1}${e.$2}').join('\n');
     const words = [
       'GM',
-      '10年',
+      'GMの格',
+      '難しさ',
       '82試合',
       'プレーイン',
       'ファイナル',

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../gm/career.dart';
 import '../../gm/league.dart';
 import '../../gm/player.dart';
+import '../../gm/rating.dart';
 import '../../monetization/monetization.dart';
 import '../art/title_art.dart';
 import '../gm_controller.dart';
@@ -389,7 +390,6 @@ class ProgressTab extends StatelessWidget {
   List<Widget> _seasonEnd(BuildContext context, Career car) {
     final h = car.history.last;
     final champ = h.champion;
-    final last = car.season >= careerSeasons;
     return [
       if (champ) ...[
         const ArtBanner('assets/art/scene_national.jpg', height: 130),
@@ -416,6 +416,7 @@ class ProgressTab extends StatelessWidget {
         const Divider(height: 18),
         _kv('信頼', '${car.trust}(${_signed(car.lastTrustDelta)})', color: car.trust >= 30 ? null : GmColors.bad),
       ]),
+      _ratingCard(car),
       if (car.awardsOf(car.season).isNotEmpty)
         _card([
           _head('表彰', icon: Icons.military_tech_rounded, color: GmColors.gold),
@@ -459,10 +460,59 @@ class ProgressTab extends StatelessWidget {
       ] else
         FilledButton.icon(
           onPressed: c.busy ? null : c.toOffseason,
-          icon: Icon(last ? Icons.flag_rounded : Icons.arrow_forward_rounded),
-          label: Text(last ? '10年の任期を終える' : 'オフへ(ドラフト・契約)'),
+          icon: const Icon(Icons.arrow_forward_rounded),
+          label: const Text('オフへ(ドラフト・契約)'),
         ),
+      if (!car.fired) ...[
+        const SizedBox(height: 8),
+        // 任期に上限は無い。やめたいときは、ここで自分から終える
+        OutlinedButton(onPressed: c.busy ? null : () => _confirmEnd(context), child: const Text('ここで任期を終える')),
+      ],
     ];
+  }
+
+  Future<void> _confirmEnd(BuildContext context) async {
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('任期を終える?'),
+        content: const Text('ここまでの成績と GM の格が記録に残り、はじめの画面に戻る。続きはできない。'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('続ける')),
+          TextButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('終える')),
+        ],
+      ),
+    );
+    if (ok == true) c.endCareer();
+  }
+
+  /// GM の格。このシーズンの点の内訳と、通算・次の段階。
+  Widget _ratingCard(Career car) {
+    final total = car.lastRating.fold(0, (n, x) => n + x.points);
+    final next = nextRatingFloor(car.gmPoints);
+    return _card([
+      _head('GMの格 Lv${car.gmLevel}(${ratingNameOf(car.gmLevel)})', icon: Icons.workspace_premium_rounded, color: GmColors.gold),
+      const SizedBox(height: 6),
+      if (car.levelBefore != null)
+        Padding(
+          padding: const EdgeInsets.only(bottom: 6),
+          child: Text('格が上がった! Lv${car.levelBefore} → Lv${car.gmLevel}', style: const TextStyle(color: GmColors.gold, fontWeight: FontWeight.bold)),
+        ),
+      if (car.lastRating.isEmpty)
+        const Text('このシーズンは点が入らなかった。', style: TextStyle(color: GmColors.sub))
+      else
+        for (final x in car.lastRating)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 2),
+            child: Row(children: [
+              Expanded(child: Text(x.label, style: const TextStyle(color: GmColors.sub))),
+              Text('+${x.points}', style: const TextStyle(fontWeight: FontWeight.bold)),
+            ]),
+          ),
+      const Divider(height: 18),
+      _kv('このシーズン', '+$total点'),
+      _kv('通算', next == null ? '${car.gmPoints}点(最高の段階)' : '${car.gmPoints}点(次の段階まで ${next - car.gmPoints}点)'),
+    ]);
   }
 
   String _signed(int v) => v > 0 ? '+$v' : '$v';
@@ -625,6 +675,7 @@ class ProgressTab extends StatelessWidget {
         _kv('優勝', '$titles回', color: titles > 0 ? GmColors.gold : null),
         _kv('通算', '$wins勝$losses敗'),
         _kv('トレード', '${car.tradesDone}回'),
+        _kv('GMの格', 'Lv${car.gmLevel}(${ratingNameOf(car.gmLevel)})・通算${car.gmPoints}点', color: GmColors.gold),
       ]),
       SectionTitle('年ごとの成績'),
       for (final h in car.history)

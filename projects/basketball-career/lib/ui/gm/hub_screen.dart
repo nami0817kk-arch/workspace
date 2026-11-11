@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../gm/career.dart';
 import '../../gm/league.dart';
+import '../../gm/rating.dart';
 import '../gm_controller.dart';
 import '../layout.dart';
 import 'common.dart';
@@ -111,6 +112,8 @@ class _TopBand extends StatelessWidget {
                   maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 12, color: GmColors.sub)),
             ]),
           ),
+          const SizedBox(width: 8),
+          _GmBadge(car: car),
           const SizedBox(width: 12),
           Expanded(flex: 2, child: TrustBar(trust: car.trust, compact: true)),
           const SizedBox(width: 14),
@@ -247,4 +250,31 @@ class _Tile extends StatelessWidget {
           ),
         ),
       );
+}
+
+/// 上の帯の GM の格。押すと名前と通算の点・次の段階までの点が出る。
+class _GmBadge extends StatelessWidget {
+  const _GmBadge({required this.car});
+  final Career car;
+
+  @override
+  Widget build(BuildContext context) {
+    final next = nextRatingFloor(car.gmPoints);
+    return Tooltip(
+      message: '${ratingNameOf(car.gmLevel)}・通算${car.gmPoints}点${next == null ? '' : '(次の段階まで${next - car.gmPoints}点)'}',
+      triggerMode: TooltipTriggerMode.tap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: GmColors.gold.withValues(alpha: 0.15),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: GmColors.gold.withValues(alpha: 0.6)),
+        ),
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          const Text('GMの格', style: TextStyle(fontSize: 9, color: GmColors.sub)),
+          Text('Lv${car.gmLevel}', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: GmColors.gold)),
+        ]),
+      ),
+    );
+  }
 }
