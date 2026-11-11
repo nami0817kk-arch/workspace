@@ -147,6 +147,15 @@ const maxRoster = 15;
 /// オフ(ドラフト・契約・シーズン前)は、ここまで抱えてよい。シーズンを始めるまでに [maxRoster] 人にする。
 const offseasonRoster = 17;
 
+/// 中くらいの例外枠(第1の壁までの間なら、上限を超えていても使える)の年俸の上限。上限額の約9%。
+const mleSalary = 150;
+
+/// 課税者向けの中くらいの例外枠(第1の壁を超えるチーム用)の年俸の上限。上限額の約3.7%。
+const taxMleSalary = 61;
+
+/// 2年ごとの例外枠(第1の壁までの間なら使える。前の年に使っていなければ)の年俸の上限。上限額の約3.3%。
+const biennialSalary = 54;
+
 /// 2ウェイ契約の選手を抱えられる人数。登録の [maxRoster] 人には数えない。
 const twoWayMax = 3;
 
@@ -209,6 +218,7 @@ class Player {
     this.allStars = 0,
     this.nextSalary,
     this.optionYears = 0,
+    this.tenure = 0,
     List<List<int>>? career,
     this.focus,
   })  : career = career ?? [],
@@ -274,6 +284,9 @@ class Player {
   /// 残りの年数がこれと同じになるオフに、チームが次の年を使うか決める。
   int optionYears;
 
+  /// 今のチームで過ごしたシーズン数(移籍・自由契約で取り直すと0。バード権の段階を決める)。
+  int tenure;
+
   /// 練習の重点(自分のチームだけ。オフに、この能力が伸びてほかが少し落ちる)。
   Attr? focus;
 
@@ -337,6 +350,7 @@ class Player {
         if (allStars != 0) 'as': allStars,
         if (nextSalary != null) 'ns': nextSalary,
         if (optionYears != 0) 'op': optionYears,
+        if (tenure != 0) 'tn': tenure,
         if (career.isNotEmpty) 'cr': career,
         if (focus != null) 'fo': focus!.index,
       };
@@ -361,6 +375,7 @@ class Player {
         allStars: (j['as'] as int?) ?? 0,
         nextSalary: j['ns'] as int?,
         optionYears: ((j['op'] as int?) ?? 0).clamp(0, 4),
+        tenure: ((j['tn'] as int?) ?? 0).clamp(0, 30),
         focus: j['fo'] is int && (j['fo'] as int) >= 0 && (j['fo'] as int) < Attr.values.length ? Attr.values[j['fo'] as int] : null,
         career: [
           for (final r in (j['cr'] as List? ?? const []))

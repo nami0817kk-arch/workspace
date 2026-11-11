@@ -36,6 +36,11 @@ class MarketTab extends StatelessWidget {
               const SizedBox(height: 10),
               PayrollBar(payroll: car.me.payroll),
               const SizedBox(height: 4),
+              Text(
+                  '例外枠(上限を超えても取れる): 中くらい(${money(mleSalary)}まで・課税者は${money(taxMleSalary)}まで)${car.mleUsed ? '使用済み' : '使える'}・'
+                  '2年ごと(${money(biennialSalary)}まで)${car.biennialReady ? '使える' : '去年使った'}。第1の壁(${money(firstApron)})を超えるチームは課税者用だけ、第2の壁を超えると使えない。',
+                  style: const TextStyle(fontSize: 12, color: GmColors.sub, height: 1.5)),
+              const SizedBox(height: 4),
               Text('登録 ${car.me.roster.length - car.expiring.length}人 / $maxRoster人・2ウェイ ${car.me.twoWay.length}人 / $twoWayMax人', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
               if (car.phase == Phase.contracts) ...[
                 const Divider(height: 20),

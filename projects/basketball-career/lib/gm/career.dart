@@ -252,6 +252,28 @@ const faDays = 4;
 const faDecideChance = [0.25, 0.4, 0.6, 1.0];
 
 /// 自由契約の選手への申し込み。
+/// バード権の段階。
+enum Bird {
+  none('バード権なし'),
+  early('アーリーバード権'),
+  full('フルバード権');
+
+  const Bird(this.label);
+  final String label;
+}
+
+/// 上限を超えて自由契約の選手を取るのに使う例外枠。
+enum CapException {
+  mle('中くらいの例外枠', mleSalary, 3),
+  taxMle('課税者の中くらいの例外枠', taxMleSalary, 2),
+  biennial('2年ごとの例外枠', biennialSalary, 2);
+
+  const CapException(this.label, this.limit, this.maxYears);
+  final String label;
+  final int limit;
+  final int maxYears;
+}
+
 class FaBid {
   const FaBid(this.team, this.salary, this.years);
   final int team;
@@ -705,6 +727,12 @@ class Career {
               ? 2
               : 0;
       teams.add(Team(index: i, roster: _makeRoster(q, style)));
+    }
+    // はじめの選手は、リーグでの年数だけ今のチームにいたことにする(新人は0)
+    for (final t in teams) {
+      for (final p in t.roster) {
+        p.tenure = math.min(p.exp, 4);
+      }
     }
     // 指名権は今年から3年先まで(4回のドラフト)
     for (final s in [season, season + 1, season + 2, season + 3]) {
@@ -1306,6 +1334,7 @@ class Career {
           growth.add(GrowthLine(name: p.name, age: p.age, before: start, after: p.ovr, focus: p.focus));
         }
         p.years--;
+        p.tenure++;
         if (p.nextSalary != null) {
           p.salary = p.nextSalary!;
           p.nextSalary = null;
@@ -1489,6 +1518,8 @@ class Career {
 
   void _startContracts() {
     haggled = [];
+    capYear++;
+    mleUsed = false;
     phase = Phase.contracts;
     expiring = [for (final p in me.roster) if (p.years <= 0) p.id];
     // 相手のチームの契約切れ
@@ -1546,9 +1577,60 @@ class Career {
   }
 
   /// 契約切れの選手と再契約できない理由(できるなら null)。再契約は年俸の上限を超えてもよい(固い上限は無い。ぜいたく税と信頼で重くなる)。
-  String? resignProblem(Player p) {
+  String? resignProblem(Player p, {int? salary}) {
     if (p.morale < 20) return '${p.name}は移籍を希望していて、残らない';
+    final sal = salary ?? askOf(p, me).salary;
+    final cap = birdLimit(p);
+    if (cap != null && me.payroll - p.salary + sal > salaryCap && sal > cap) {
+      return '${birdOf(p).label}では、上限を超えて再契約できるのは${money(cap)}まで(求める額は${money(sal)})';
+    }
     return null;
+  }
+
+  // ---------------------------------------------------------------- バード権と例外枠
+
+  /// 選手のバード権(在籍年数で決まる。上限を超えて再契約できる範囲が変わる)。
+  Bird birdOf(Player p) => p.tenure >= 3 ? Bird.full : p.tenure == 2 ? Bird.early : Bird.none;
+
+  /// 上限を超える再契約で出せる年俸の上限(フルバード権は無制限なので null)。
+  /// アーリーは前の年俸の175%、バード権なしは120%＋100万ドル。上限に空きがあれば、この制限は無い。
+  int? birdLimit(Player p) => switch (birdOf(p)) {
+        Bird.full => null,
+        Bird.early => math.max(minSalary, (p.salary * 1.75).round()),
+        Bird.none => math.max(minSalary, (p.salary * 1.2).round() + 10),
+      };
+
+  /// 今の例外枠の年(オフの契約が始まるたびに1つ進む)。
+  int capYear = 0;
+
+  /// 中くらいの例外枠(2種類のうち1つ)を、今の年に使ったか。
+  bool mleUsed = false;
+
+  /// 2年ごとの例外枠を最後に使った年([capYear])。
+  int biennialYear = -9;
+
+  bool get biennialReady => capYear - biennialYear >= 2;
+
+  /// 年俸 [salary] で自由契約の選手を取るのに使える例外枠(上限を超えるときだけ要る。使えなければ null)。
+  /// [base] は今の年俸の合計(申し込み中の分を足して数えるとき用)。第2の壁を超えると、どの例外枠も使えない。
+  CapException? exceptionFor(int salary, {int? base}) {
+    final after = (base ?? me.payroll) + salary;
+    if (after > secondApron) return null;
+    if (after <= firstApron) {
+      if (biennialReady && salary <= biennialSalary) return CapException.biennial;
+      if (!mleUsed && salary <= mleSalary) return CapException.mle;
+      return null;
+    }
+    if (!mleUsed && salary <= taxMleSalary) return CapException.taxMle;
+    return null;
+  }
+
+  void _useException(CapException e) {
+    if (e == CapException.biennial) {
+      biennialYear = capYear;
+    } else {
+      mleUsed = true;
+    }
   }
 
   void resign(int id, int years) {
@@ -1606,28 +1688,35 @@ class Career {
   }
 
   /// 自由契約の選手と契約できない理由。
-  String? signProblem(Player p) {
+  String? signProblem(Player p, {int? salary}) {
     if (!canSign) return '今は契約できない';
     if (me.roster.length - expiring.length >= maxRoster) return '登録が15人いっぱい';
     final ask = askOf(p, me);
+    final sal = salary ?? ask.salary;
     if (phase == Phase.season && ask.salary > minSalary) return 'シーズン中は最低年俸の選手だけ';
     if (phase == Phase.contracts && ask.salary > minSalary) return '申し込んで、返事を待つ(ほかのチームと競り合う)';
-    if (ask.salary > minSalary && me.payroll + ask.salary > salaryCap) return '年俸の上限まで${money(math.max(0, me.capRoom))}しか空きがない';
+    if (sal > minSalary && me.payroll + sal > salaryCap && exceptionFor(sal) == null) {
+      return '年俸の上限まで${money(math.max(0, me.capRoom))}しか空きがなく、使える例外枠も無い';
+    }
     return null;
   }
 
-  void signFreeAgent(int id, int years) {
+  void signFreeAgent(int id, int years, {int? salary}) {
     final i = freeAgents.indexWhere((p) => p.id == id);
     if (i < 0) return;
     final p = freeAgents[i];
-    if (signProblem(p) != null) return;
+    if (signProblem(p, salary: salary) != null) return;
     final ask = askOf(p, me);
+    final sal = salary ?? ask.salary;
+    final ex = sal > minSalary && me.payroll + sal > salaryCap ? exceptionFor(sal) : null;
     p
-      ..salary = ask.salary
-      ..years = years.clamp(1, ask.maxYears);
+      ..salary = sal
+      ..years = years.clamp(1, math.min(ask.maxYears, ex?.maxYears ?? 9))
+      ..tenure = 0;
     freeAgents.removeAt(i);
     p.morale = 65;
     me.roster.add(p);
+    if (ex != null) _useException(ex);
   }
 
   // ------------------------------------------------------------ 自由契約の競り合い
@@ -1694,7 +1783,9 @@ class Career {
     if (me.roster.length - expiring.length + others >= maxRoster) return '登録が15人いっぱい(申し込み中も数える)';
     final salary = _offerSalary(p, factor);
     final room = salaryCap - me.payroll - _bidTotal(mine, except: p.id);
-    if (salary > room) return '年俸の上限まで${money(math.max(0, room))}しか空きがない(申し込み中も数える)';
+    if (salary > room && exceptionFor(salary, base: me.payroll + _bidTotal(mine, except: p.id)) == null) {
+      return '年俸の上限まで${money(math.max(0, room))}しか空きがなく、使える例外枠も無い(申し込み中も数える)';
+    }
     return null;
   }
 
@@ -1727,7 +1818,9 @@ class Career {
       final list = bids[id]!.where((b) {
         final t = teams[b.team];
         final count = b.team == mine ? t.roster.length - expiring.length : t.roster.length;
-        return count < maxRoster && t.payroll + b.salary <= salaryCap;
+        if (count >= maxRoster) return false;
+        if (t.payroll + b.salary <= salaryCap) return true;
+        return b.team == mine && exceptionFor(b.salary) != null;
       }).toList();
       if (list.isEmpty) {
         bids.remove(id);
@@ -1751,6 +1844,11 @@ class Career {
       ..salary = b.salary
       ..years = b.years;
     final t = teams[b.team];
+    p.tenure = 0;
+    if (b.team == mine && t.payroll + b.salary > salaryCap) {
+      final ex = exceptionFor(b.salary);
+      if (ex != null) _useException(ex);
+    }
     t.roster.add(p);
     final text = '${p.name}(OVR${shown(p.ovr)})が${t.def.short}と${b.years}年 ${money(b.salary)}';
     faLog.insert(0, '${faDay + 1}日目 $text');
@@ -2080,11 +2178,11 @@ class Career {
     }
     final salary = _offerSalary(p, factor);
     if (exp) {
-      if (resignProblem(p) != null || me.payroll - p.salary + salary > secondApron) return false;
+      if (resignProblem(p, salary: salary) != null || me.payroll - p.salary + salary > secondApron) return false;
       resign(id, years);
     } else {
-      if (signProblem(p) != null || (salary > minSalary && me.payroll + salary > salaryCap)) return false;
-      signFreeAgent(id, years);
+      if (signProblem(p, salary: salary) != null) return false;
+      signFreeAgent(id, years, salary: salary);
     }
     p.salary = salary;
     if (factor > 1) p.morale = (p.morale + 10).clamp(0, 100);
@@ -2268,6 +2366,9 @@ class Career {
         'fd': faDay,
         'bd': {for (final e in bids.entries) '${e.key}': [for (final b in e.value) b.toJson()]},
         'fl': faLog,
+        if (capYear != 0) 'cy': capYear,
+        if (mleUsed) 'mu': true,
+        if (biennialYear != -9) 'by': biennialYear,
         'chp': champs,
         'hof': [for (final h in hall) h.toJson()],
         'log': log,
@@ -2346,6 +2447,9 @@ class Career {
           ],
       }
       ..faLog = [for (final x in (j['fl'] as List? ?? const [])) x as String]
+      ..capYear = (j['cy'] as int?) ?? 0
+      ..mleUsed = (j['mu'] as bool?) ?? false
+      ..biennialYear = (j['by'] as int?) ?? -9
       ..champs = [
         for (final r in (j['chp'] as List? ?? const []))
           if (r is List && r.length == 3) [for (final x in r) x as int],
