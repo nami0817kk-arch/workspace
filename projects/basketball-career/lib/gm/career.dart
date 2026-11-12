@@ -1050,6 +1050,7 @@ class Career {
     if (roundAt < blockStart(block + 1)) return;
     block++;
     _updateMorale();
+    _updateChem();
     _giveMonthly();
     if (block == tradeDeadlineBlock) _pickAllStars();
     if (block < blocksPerSeason) _mailAfterBlock();
@@ -1099,6 +1100,24 @@ class Career {
 
   /// 自分のチームの選手の気持ちを、区切りごとに動かす。
   /// 力の順位より出場の順が2つ以上下なら下がり、上なら上がる。チームの勝率でも動く。
+  /// 相性が決まる要素(先発から9人目まで)。続けて一緒にいる選手の割合・不満の人数・好調の人数・勝ち。
+  ({double continuity, int unhappy, int happy}) get chemFactors {
+    final top = me.order.take(9).toList();
+    if (top.isEmpty) return (continuity: 0.5, unhappy: 0, happy: 0);
+    return (
+      continuity: top.where((p) => p.tenure >= 1).length / top.length,
+      unhappy: top.where((p) => p.morale < 35).length,
+      happy: top.where((p) => p.morale >= 70).length,
+    );
+  }
+
+  /// 区切りごとに、相性を目標へ寄せる(新しい選手が多い・不満がある・負けが続くと下がる)。
+  void _updateChem() {
+    final f = chemFactors;
+    final target = 50 + (f.continuity - 0.5) * 30 + (me.winPct - 0.5) * 40 + (f.happy - 4) * 1.5 - f.unhappy * 6;
+    me.chem = (me.chem + ((target - me.chem) * 0.4).round()).clamp(0, 100);
+  }
+
   void _updateMorale() {
     final order = me.order;
     final mins = me.playMinutes();
@@ -1981,7 +2000,7 @@ class Career {
     if (team != mine && t.mode == TeamMode.contend) v += 8;
     final better = t.roster.where((x) => x.ovr > p.ovr && !(team == mine && expiring.contains(x.id))).length;
     v += better < 3 ? 18 : better < 5 ? 10 : better < 8 ? 0 : -12;
-    if (team == mine) v += (hype - 50) / 5;
+    if (team == mine) v += (hype - 50) / 5 + (me.chem - 50) / 10;
     return v.round().clamp(0, 100);
   }
 

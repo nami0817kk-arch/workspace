@@ -71,6 +71,7 @@ class RosterTab extends StatelessWidget {
                 () => go(CoachesScreen(c: c))),
             _tile(w, Icons.fitness_center_rounded, '練習', '強さ ${trainingLabels[me.training]}・重点 ${me.roster.where((p) => p.focus != null).length}人',
                 () => go(TrainingScreen(c: c))),
+            _tile(w, Icons.groups_rounded, 'チームの相性', '${me.chem}(強さ ${me.chemEffect >= 0 ? '+' : ''}${me.chemEffect.toStringAsFixed(1)})', () => _chemSheet(context, car)),
             _tile(w, Icons.tune_rounded, 'チームの方針', me.policy.every((x) => x == 1) ? 'いまは全部ふつう' : '強さ ${me.policyEffect >= 0 ? '+' : ''}${me.policyEffect.toStringAsFixed(1)}',
                 () => go(PolicyScreen(c: c))),
             _tile(w, Icons.table_chart_rounded, 'チームの成績', 'シュート・スティールなど', () => go(StatsScreen(c: c))),
@@ -91,6 +92,26 @@ class RosterTab extends StatelessWidget {
         if (me.twoWay.isEmpty) const Text('いない(補強の画面で、自由契約の若手から取れる)', style: TextStyle(fontSize: 12, color: GmColors.sub)),
         for (final p in me.twoWay) _twoWayRow(context, car, p),
       ],
+    );
+  }
+
+  /// 相性の中身(何で上がり下がりするか)。
+  void _chemSheet(BuildContext context, Career car) {
+    final f = car.chemFactors;
+    showDialog<void>(
+      context: context,
+      builder: (d) => AlertDialog(
+        title: Text('チームの相性 ${car.me.chem}'),
+        content: Text(
+            '選手どうしの相性。50がふつうで、強さに最大 ±1.5 が足される。区切りごとに目標へ寄っていく。\n\n'
+            '・今のチームに1年以上いる主力 ${(f.continuity * 100).round()}%(新しい選手が多いと下がる)\n'
+            '・気持ちが高い主力 ${f.happy}人(多いと上がる)\n'
+            '・不満を持つ主力 ${f.unhappy}人(1人ごとに下がる)\n'
+            '・勝ち(勝率が高いと上がる)\n\n'
+            '自由契約の選手が、このチームを選びやすいかにも効く。',
+            style: const TextStyle(height: 1.5)),
+        actions: [TextButton(onPressed: () => Navigator.pop(d), child: const Text('閉じる'))],
+      ),
     );
   }
 
