@@ -1461,9 +1461,41 @@ class Career {
     if (old != null) _log('記録更新: ${recordLabels[key]} ${recordText(key, v)}($name・前は${recordText(key, old.value)})');
   }
 
+  // ---------------------------------------------------------------- ライバル
+
+  /// 相手ごとの通算の対戦(チームの番号 → [勝ち, 負け, プレーオフで当たった回数, プレーオフの勝ち越し(勝ち−負け)])。
+  Map<int, List<int>> h2h = {};
+
+  List<int> _h2h(int opp) => h2h.putIfAbsent(opp, () => [0, 0, 0, 0]);
+
+  /// 宿敵(対戦が多く、プレーオフで当たった相手ほど上)。まだ決まらなければ null。
+  int? get rival {
+    int? best;
+    var bestScore = 5;
+    for (final e in h2h.entries) {
+      final r = e.value;
+      final score = r[0] + r[1] + r[2] * 6;
+      if (score > bestScore) {
+        bestScore = score;
+        best = e.key;
+      }
+    }
+    return best;
+  }
+
+  /// 宿敵との対戦の説明。
+  String rivalLine(int opp) {
+    final r = h2h[opp] ?? [0, 0, 0, 0];
+    return '通算 ${r[0]}勝${r[1]}敗・プレーオフで${r[2]}回対戦';
+  }
+
   /// 自分のチームの試合の、選手の数字から1試合の記録を見る。
   void _checkGameRecords(List<GameResult> games) {
     for (final g in games) {
+      if (g.involves(mine)) {
+        final opp = g.home == mine ? g.away : g.home;
+        _h2h(opp)[g.winner == mine ? 0 : 1]++;
+      }
       for (final l in [...g.box, ...g.oppBox]) {
         _setRecord('g_pts', l.pts.toDouble(), l.name);
         _setRecord('g_reb', l.reb.toDouble(), l.name);
@@ -1491,6 +1523,14 @@ class Career {
 
   void _closeSeason() {
     _checkSeasonRecords();
+    for (final s in playoffs) {
+      if (s.round >= 1 && (s.high == mine || s.low == mine)) {
+        final opp = s.high == mine ? s.low : s.high;
+        final r = _h2h(opp);
+        r[2]++;
+        r[3] += s.winner == mine ? 1 : -1;
+      }
+    }
     final res = myResult;
     lastTax = luxuryTaxTrust(me.payroll);
     // ぜいたく税は、超えた分の1.5倍を払う。プレーオフのホームの試合も入場収入になる
@@ -2864,6 +2904,7 @@ class Career {
         'exp': expiring,
         if (optionPending.isNotEmpty) 'opp': optionPending,
         'trust': trust,
+        if (h2h.isNotEmpty) 'h2h': {for (final e in h2h.entries) '${e.key}': e.value},
         if (headlines.isNotEmpty) 'hl': headlines,
         if (skills.any((x) => x != 0)) 'skl': skills,
         if (cupHistory.isNotEmpty) 'cup': cupHistory,
@@ -2949,6 +2990,7 @@ class Career {
       ..expiring = [for (final x in (j['exp'] as List? ?? const [])) x as int]
       ..optionPending = [for (final x in (j['opp'] as List? ?? const [])) x as int]
       ..trust = (j['trust'] as int?) ?? 50
+      ..h2h = {for (final e in ((j['h2h'] as Map?) ?? const {}).entries) int.parse(e.key as String): [for (final x in e.value as List) x as int]}
       ..headlines = [for (final x in (j['hl'] as List? ?? const [])) x as String]
       ..skills = [for (var i = 0; i < Skill.values.length; i++) i < ((j['skl'] as List?)?.length ?? 0) ? ((j['skl'] as List)[i] as int).clamp(0, skillMax) : 0]
       ..cupHistory = [for (final x in (j['cup'] as List? ?? const [])) [for (final y in x as List) y as int]]
