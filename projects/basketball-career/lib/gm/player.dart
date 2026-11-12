@@ -168,6 +168,10 @@ const twoWayMax = 3;
 /// 2ウェイ契約の年俸(上限にも合計にも数えない。オーナーの支出には入る)。
 const twoWaySalary = 7;
 
+/// 10日契約の長さ(試合数)と、そのあいだの年俸の合計への数え方(最低年俸の日割り)。
+const tenDayRounds = 5;
+const tenDaySalary = 3;
+
 /// 2ウェイ契約にできる、リーグでの年数の上限(若手のための契約)。
 const twoWayMaxExp = 3;
 
@@ -225,6 +229,8 @@ class Player {
     this.nextSalary,
     this.optionYears = 0,
     this.tenure = 0,
+    this.tenDay = 0,
+    this.tenDayCount = 0,
     this.raise = 0,
     List<List<int>>? career,
     this.focus,
@@ -294,6 +300,12 @@ class Player {
   /// 今のチームで過ごしたシーズン数(移籍・自由契約で取り直すと0。バード権の段階を決める)。
   int tenure;
 
+  /// 10日契約の残りの節の数(0は10日契約ではない)。
+  int tenDay;
+
+  /// 今季に自分のチームと10日契約を結んだ回数(3回目は今季の契約にするしかない)。
+  int tenDayCount;
+
   /// 毎年の昇給(%)。再契約と延長で付く(自分の選手5%)。契約の途中で年俸が上がっていく。
   int raise;
 
@@ -361,6 +373,8 @@ class Player {
         if (nextSalary != null) 'ns': nextSalary,
         if (optionYears != 0) 'op': optionYears,
         if (tenure != 0) 'tn': tenure,
+        if (tenDay != 0) 'td': tenDay,
+        if (tenDayCount != 0) 'tc': tenDayCount,
         if (raise != 0) 'rz': raise,
         if (career.isNotEmpty) 'cr': career,
         if (focus != null) 'fo': focus!.index,
@@ -387,6 +401,8 @@ class Player {
         nextSalary: j['ns'] as int?,
         optionYears: ((j['op'] as int?) ?? 0).clamp(0, 4),
         tenure: ((j['tn'] as int?) ?? 0).clamp(0, 30),
+        tenDay: ((j['td'] as int?) ?? 0).clamp(0, 20),
+        tenDayCount: ((j['tc'] as int?) ?? 0).clamp(0, 5),
         raise: ((j['rz'] as int?) ?? 0).clamp(0, 8),
         focus: j['fo'] is int && (j['fo'] as int) >= 0 && (j['fo'] as int) < Attr.values.length ? Attr.values[j['fo'] as int] : null,
         career: [

@@ -941,6 +941,7 @@ class Career {
       }
     }
     roundAt += n;
+    _tickTenDay(n);
     lastGames = [...lastGames, ...games];
     final homeGames = games.where((g) => g.home == mine).length;
     revenue += homeGames * gatePerGame + (baseIncome * games.length / gamesPerSeason).round();
@@ -1322,6 +1323,11 @@ class Career {
     news = [];
     growth = [];
     optionPending = [];
+    for (final p in [...freeAgents, ...me.roster]) {
+      p
+        ..tenDay = 0
+        ..tenDayCount = 0;
+    }
     for (final t in teams) {
       t.deadCap = t.deadLater.isEmpty ? 0 : t.deadLater.removeAt(0);
       final retired = <Player>[];
@@ -1703,6 +1709,52 @@ class Career {
       ..sort((a, b) => b.ovr.compareTo(a.ovr));
   }
 
+  // ---------------------------------------------------------------- 10日契約
+
+  /// 10日契約で取れない理由(取れるなら null)。シーズン中の、最低年俸の選手だけ。同じ選手とは今季2回まで。
+  String? tenDayProblem(Player p) {
+    if (phase != Phase.season) return '10日契約はシーズン中だけ';
+    if (me.roster.length - expiring.length >= maxRoster) return '登録が15人いっぱい';
+    if (askOf(p, me).salary > minSalary) return '10日契約は最低年俸の選手だけ';
+    if (p.tenDayCount >= 2) return '10日契約は2回まで。あとは今季の契約だけ';
+    return null;
+  }
+
+  /// 10日契約を結ぶ(5試合。年俸は日割りで合計に数える。切れたら自由契約に戻る)。
+  void signTenDay(int id) {
+    final i = freeAgents.indexWhere((p) => p.id == id);
+    if (i < 0) return;
+    final p = freeAgents[i];
+    if (tenDayProblem(p) != null) return;
+    p
+      ..salary = tenDaySalary
+      ..years = 1
+      ..tenDay = tenDayRounds
+      ..tenDayCount += 1
+      ..tenure = 0
+      ..morale = 65;
+    freeAgents.removeAt(i);
+    me.roster.add(p);
+  }
+
+  /// 10日契約の選手の残りの節を進める。切れたら自由契約に戻す。
+  void _tickTenDay(int n) {
+    for (final p in [...me.roster]) {
+      if (p.tenDay <= 0) continue;
+      p.tenDay -= n;
+      if (p.tenDay > 0) continue;
+      p.tenDay = 0;
+      me.roster.remove(p);
+      p
+        ..salary = askOf(p, me).salary
+        ..years = 1;
+      freeAgents
+        ..add(p)
+        ..sort((a, b) => b.ovr.compareTo(a.ovr));
+      _log('10日契約: ${p.name}の契約が切れた(あと${2 - p.tenDayCount}回まで10日契約を結べる)');
+    }
+  }
+
   /// 自由契約の選手と契約できない理由。
   String? signProblem(Player p, {int? salary}) {
     if (!canSign) return '今は契約できない';
@@ -1728,6 +1780,7 @@ class Career {
     p
       ..salary = sal
       ..years = years.clamp(1, math.min(ask.maxYears, ex?.maxYears ?? 9))
+      ..tenDay = 0
       ..tenure = 0;
     freeAgents.removeAt(i);
     p.morale = 65;
@@ -1929,10 +1982,30 @@ class Career {
     return null;
   }
 
+  /// ウェーバーで、ほかのチームが拾う確率(全額で放す選手だけ。力が高く年俸が安いほど拾われる)。
+  double waiverChance(Player p) {
+    if (p.salary > 100 || p.ovr < 58) return 0;
+    return (0.3 + (p.ovr - 58) * 0.03 - p.salary / 400).clamp(0.0, 0.85);
+  }
+
   /// 選手を放す。年俸は [mode] の形で合計に残る(全額・ストレッチ・バイアウト)。
-  void release(int id, {ReleaseMode mode = ReleaseMode.full}) {
+  /// 全額で放すと、まずウェーバーに出る。ほかのチームが拾えば、年俸の負担は残らない。拾われたら true。
+  bool release(int id, {ReleaseMode mode = ReleaseMode.full}) {
     final p = _mineById(id);
-    if (p == null || releaseProblem(p, mode) != null) return;
+    if (p == null || releaseProblem(p, mode) != null) return false;
+    // 拾われるかは乱数の列を使わず、選手と年から決める(同じ局面なら同じ結果で、ほかの出来事の乱数をずらさない)
+    final waived = phase != Phase.contracts && ((p.id * 7919 + season * 104729) % 100) / 100 < waiverChance(p);
+    if (mode == ReleaseMode.full && waived) {
+      final open = [for (final t in teams) if (t.index != mine && t.roster.length < maxRoster) t]..sort((a, b) => a.wins.compareTo(b.wins));
+      if (open.isNotEmpty) {
+        final t = open.first;
+        me.roster.remove(p);
+        p.tenure = 0;
+        t.roster.add(p);
+        _log('ウェーバー: ${p.name}を${t.def.short}が拾った(年俸の負担は残らない)');
+        return true;
+      }
+    }
     me.roster.remove(p);
     final cost = releaseCost(p, mode);
     me.deadCap += cost.now;
@@ -1950,6 +2023,7 @@ class Career {
     freeAgents
       ..add(p)
       ..sort((a, b) => b.ovr.compareTo(a.ovr));
+    return false;
   }
 
   // ---------------------------------------------------------------- 2ウェイ契約

@@ -104,7 +104,20 @@ class MarketTab extends StatelessWidget {
       extra: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         if (problem != null && car.canSign) Text(problem, style: const TextStyle(fontSize: 11, color: GmColors.sub)),
         _twoWayButton(car, p),
+        _tenDayButton(car, p),
       ]),
+    );
+  }
+
+  /// シーズン中、最低年俸の選手を5試合だけ取る(日割りの年俸・2回まで)。
+  Widget _tenDayButton(Career car, Player p) {
+    if (car.phase != Phase.season) return const SizedBox.shrink();
+    final problem = car.tenDayProblem(p);
+    if (problem != null && !problem.contains('2回まで')) return const SizedBox.shrink();
+    return TextButton(
+      style: TextButton.styleFrom(minimumSize: const Size(0, 32), padding: EdgeInsets.zero, visualDensity: VisualDensity.compact),
+      onPressed: problem != null || c.busy ? null : () => c.signTenDay(p.id),
+      child: Text(problem ?? '10日契約で取る($tenDayRounds試合・${money(tenDaySalary)})', style: const TextStyle(fontSize: 12)),
     );
   }
 

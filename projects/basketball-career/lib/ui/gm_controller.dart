@@ -221,6 +221,7 @@ class GmController extends ChangeNotifier {
   void signFreeAgent(int id, int years) => _act((c) => c.signFreeAgent(id, years));
   void release(int id, {ReleaseMode mode = ReleaseMode.full}) => _act((c) => c.release(id, mode: mode));
   void signTwoWay(int id) => _act((c) => c.signTwoWay(id));
+  void signTenDay(int id) => _act((c) => c.signTenDay(id));
   void toTwoWay(int id) => _act((c) => c.toTwoWay(id));
   void promoteTwoWay(int id) => _act((c) => c.promoteTwoWay(id));
   void waiveTwoWay(int id) => _act((c) => c.waiveTwoWay(id));
