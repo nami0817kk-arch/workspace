@@ -384,6 +384,45 @@ class Career {
   /// 直前の区切りの、自分のチームの試合。
   List<GameResult> lastGames = [];
 
+  /// 直近の自分の試合の点差(勝ちはプラス。新しいものが後ろ、[formLength] 試合まで)。シーズンが始まると空にする。
+  List<int> form = [];
+  static const formLength = 10;
+
+  /// 試合の見どころ(大勝・接戦・逆転・40点)。新しい順。
+  List<String> highlightsOf(List<GameResult> games) {
+    final out = <String>[];
+    for (final g in games.reversed) {
+      final opp = teams[g.opponentOf(mine)].def.short;
+      final diff = g.ptsOf(mine) - g.ptsAgainst(mine);
+      final score = '${g.ptsOf(mine)}-${g.ptsAgainst(mine)}';
+      if (g.quarters.length == 8) {
+        // 3クォーターまでの点差(自分から見て)
+        final h3 = g.quarters[0] + g.quarters[1] + g.quarters[2];
+        final a3 = g.quarters[4] + g.quarters[5] + g.quarters[6];
+        final lead3 = g.home == mine ? h3 - a3 : a3 - h3;
+        if (diff > 0 && lead3 <= -8) {
+          out.add('逆転勝ち: $opp戦、3Qまで${-lead3}点負けていたが $score');
+          continue;
+        }
+        if (diff < 0 && lead3 >= 8) {
+          out.add('逆転負け: $opp戦、3Qまで$lead3点勝っていたが $score');
+          continue;
+        }
+      }
+      if (diff >= 20) {
+        out.add('大勝: $opp戦 $score');
+      } else if (diff <= -20) {
+        out.add('大敗: $opp戦 $score');
+      } else if (diff.abs() <= 2) {
+        out.add('${diff > 0 ? '接戦を制した' : '接戦を落とした'}: $opp戦 $score');
+      }
+      for (final b in g.box) {
+        if (b.pts >= 40) out.add('${b.name}が${b.pts}点($opp戦)');
+      }
+    }
+    return out;
+  }
+
   /// プレーオフ(プレーイン・1回戦・2回戦・地区決勝・ファイナルの順)。
   List<Series> playoffs = [];
 
@@ -1199,6 +1238,7 @@ class Career {
     block = 0;
     roundAt = 0;
     lastGames = [];
+    form = [];
     playoffs = [];
     incoming = null;
     phase = Phase.season;
@@ -1237,6 +1277,8 @@ class Career {
     roundAt += n;
     _tickTenDay(n);
     lastGames = [...lastGames, ...games];
+    form = [...form, for (final g in games) g.ptsOf(mine) - g.ptsAgainst(mine)];
+    if (form.length > formLength) form = form.sublist(form.length - formLength);
     _checkGameRecords(games);
     final homeGames = games.where((g) => g.home == mine).length;
     _earn(Income.gate, homeGames * gatePerGame);
@@ -3022,6 +3064,7 @@ class Career {
         'block': block,
         'ra': roundAt,
         'lg': [for (final g in lastGames) g.toJson()],
+        if (form.isNotEmpty) 'frm': form,
         'po': [for (final s in playoffs) s.toJson()],
         'fa': [for (final p in freeAgents) p.toJson()],
         'picks': [for (final p in picks) p.toJson()],
@@ -3112,6 +3155,7 @@ class Career {
       ..block = j['block'] as int
       ..roundAt = (j['ra'] as int?) ?? blockStart((j['block'] as int).clamp(0, blocksPerSeason))
       ..lastGames = [for (final g in maps('lg')) GameResult.fromJson(g)]
+      ..form = [for (final x in (j['frm'] as List? ?? const [])) x as int]
       ..playoffs = [for (final s in maps('po')) Series.fromJson(s)]
       ..freeAgents = [for (final p in maps('fa')) Player.fromJson(p)]
       ..picks = [for (final p in maps('picks')) DraftPick.fromJson(p)]
