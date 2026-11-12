@@ -33,6 +33,7 @@ flutter:
     - assets/art/scene_national.jpg
     - assets/art/scene_final.jpg
     - assets/art/players/
+    - assets/art/logos/
 
   # 日本語フォントを同梱する(Web は足りない字形を外から取りに行って豆腐になる)。
   fonts:
