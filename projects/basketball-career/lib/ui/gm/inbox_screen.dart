@@ -15,9 +15,23 @@ IconData _senderIcon(Sender s) => switch (s) {
     };
 
 /// 受信箱。返事が要る知らせは上に出し、選ぶと効き目がすぐ起きる。
-class InboxScreen extends StatelessWidget {
+class InboxScreen extends StatefulWidget {
   const InboxScreen({super.key, required this.c});
   final GmController c;
+
+  @override
+  State<InboxScreen> createState() => _InboxScreenState();
+}
+
+class _InboxScreenState extends State<InboxScreen> {
+  GmController get c => widget.c;
+
+  @override
+  void dispose() {
+    // 受信箱を閉じたら、返事が要らない知らせは読んだことにする(開くたびに未読の数が残らない)
+    WidgetsBinding.instance.addPostFrameCallback((_) => c.readAllMessages());
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) => ListenableBuilder(
@@ -26,7 +40,17 @@ class InboxScreen extends StatelessWidget {
           final car = c.career!;
           final list = [...car.inbox]..sort((a, b) => (b.needsAnswer ? 1 : 0).compareTo(a.needsAnswer ? 1 : 0));
           return Scaffold(
-            appBar: AppBar(title: const Text('受信箱')),
+            appBar: AppBar(
+              title: const Text('受信箱'),
+              actions: [
+                if (car.inbox.any((m) => m.read && !m.needsAnswer))
+                  TextButton.icon(
+                    onPressed: c.clearReadMessages,
+                    icon: const Icon(Icons.delete_sweep_rounded),
+                    label: const Text('読んだ知らせを消す'),
+                  ),
+              ],
+            ),
             body: SafeArea(
               child: Center(
                 child: ConstrainedBox(

@@ -473,6 +473,20 @@ class Career {
     }
   }
 
+  /// 返事が要らない知らせを、全部読んだことにする(受信箱を閉じるとき)。
+  void readAllMessages() {
+    for (final m in inbox) {
+      if (!m.needsAnswer) m.read = true;
+    }
+  }
+
+  /// 読んだ知らせを消す(返事を待っている知らせは残す)。消した数を返す。
+  int clearReadMessages() {
+    final before = inbox.length;
+    inbox.removeWhere((m) => m.read && !m.needsAnswer);
+    return before - inbox.length;
+  }
+
   /// 知らせに返事をする。返事ごとの効き目(選手の気持ち・先発の順)をここで起こす。
   void answer(int id, int choice) {
     final m = inbox.where((x) => x.id == id).firstOrNull;
