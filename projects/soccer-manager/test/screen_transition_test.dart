@@ -47,6 +47,11 @@ void main() {
 
   testWidgets('tapping a quick-access tile twice opens only one screen',
       (WidgetTester tester) async {
+    // 既定の 800x600 は横長で2ペインになり、最初の Scrollable が左ペインに
+    // なって目当てのタイルへ届かない。縦長の1本リストで試す。
+    tester.view.physicalSize = const Size(800, 1200);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
     await createClub(tester);
 
     // ホームのクラブ運営タイルまでスクロールする。scrollUntilVisible は

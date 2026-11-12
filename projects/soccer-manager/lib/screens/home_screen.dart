@@ -1987,11 +1987,13 @@ class _ThisWeekCard extends StatelessWidget {
                       : Colors.orange,
                 ),
                 const SizedBox(width: 6),
-                Text(
-                  gameState.trainingDoneThisWeek
-                      ? Tr.pick('今週のトレーニングは実施済み', 'You have trained this week')
-                      : Tr.pick(
-                          '今週のトレーニングは未実施', 'You have not trained this week'),
+                Expanded(
+                  child: Text(
+                    gameState.trainingDoneThisWeek
+                        ? Tr.pick('今週のトレーニングは実施済み', 'You have trained this week')
+                        : Tr.pick('今週のトレーニングは未実施',
+                            'You have not trained this week'),
+                  ),
                 ),
               ],
             ),
