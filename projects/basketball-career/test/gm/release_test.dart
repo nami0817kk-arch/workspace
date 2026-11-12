@@ -13,6 +13,7 @@ void main() {
     c.me.deadLater = [];
     c.me.roster.first
       ..salary = salary
+      ..ovr = 50
       ..years = years
       ..morale = 70;
     return c;
