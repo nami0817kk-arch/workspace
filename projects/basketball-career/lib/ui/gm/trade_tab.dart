@@ -26,6 +26,10 @@ class _TradeTabState extends State<TradeTab> {
   final _givePicks = <int>{};
   final _getPicks = <int>{};
 
+  /// 入れ替え権(その年の1巡目)。出す・受け取る。
+  final _giveSwaps = <int>{};
+  final _getSwaps = <int>{};
+
   /// 出す1巡目の指名権に付ける保護(指名権の番号 → 上位いくつ)。
   final _protect = <int, int>{};
 
@@ -33,6 +37,7 @@ class _TradeTabState extends State<TradeTab> {
         _partner = t;
         _get.clear();
         _getPicks.clear();
+        _getSwaps.clear();
       });
 
   TradeOffer get _offer => TradeOffer(
@@ -42,6 +47,8 @@ class _TradeTabState extends State<TradeTab> {
         givePicks: [..._givePicks],
         protections: {for (final i in _givePicks) if ((_protect[i] ?? 0) > 0) i: _protect[i]!},
         getPicks: [..._getPicks],
+        giveSwaps: [..._giveSwaps],
+        getSwaps: [..._getSwaps],
       );
 
   /// トレードブロック。載せた選手ごとに、いま届く申し込みを集めて見られる。
@@ -197,6 +204,7 @@ class _TradeTabState extends State<TradeTab> {
                 ),
               ),
             _pickChips(car, _partner, _getPicks),
+            _swapChips(car, _getSwaps, '相手の1巡目と入れ替えられる権利を受け取る'),
             const SectionTitle('出す(自分のチーム)'),
             for (final p in lineup(car.me.roster))
               if (!car.expiring.contains(p.id))
@@ -211,6 +219,7 @@ class _TradeTabState extends State<TradeTab> {
                   ),
                 ),
             _pickChips(car, car.mine, _givePicks),
+            _swapChips(car, _giveSwaps, '自分の1巡目と入れ替えられる権利を渡す'),
             for (final i in _givePicks.where((i) => car.picks[i].round == 1 && car.picks[i].protect == 0))
               Padding(
                 padding: const EdgeInsets.only(bottom: 6),
@@ -277,6 +286,21 @@ class _TradeTabState extends State<TradeTab> {
       ),
     ]);
   }
+
+  /// 入れ替え権のチップ(今年から3年先まで)。
+  Widget _swapChips(Career car, Set<int> chosen, String note) => Padding(
+        padding: const EdgeInsets.only(bottom: 6),
+        child: Wrap(spacing: 6, runSpacing: 4, crossAxisAlignment: WrapCrossAlignment.center, children: [
+          Text('入れ替え権:', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
+          for (var k = 0; k < 3; k++)
+            FilterChip(
+              label: Text('${k == 0 ? '今年' : k == 1 ? '来年' : '$k年後'}の1巡目', style: const TextStyle(fontSize: 12)),
+              tooltip: note,
+              selected: chosen.contains(car.season + k),
+              onSelected: (v) => setState(() => v ? chosen.add(car.season + k) : chosen.remove(car.season + k)),
+            ),
+        ]),
+      );
 
   /// 先の年の指名権まで出すか(指名権は7年先まである。ふだんは近い4年だけ並べる)。
   bool _farPicks = false;

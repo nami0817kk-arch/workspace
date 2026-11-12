@@ -531,6 +531,29 @@ class Career {
   List<int> allStarIds = [];
 
   /// オールスターを選ぶ(シーズンの半分、41試合のあと)。地区ごとに12人。
+  // ---------------------------------------------------------------- 入れ替え権
+
+  /// 入れ替え権([その年, 権利を持つチーム, 入れ替えの相手のチーム])。ドラフトの順が決まったときに使う。
+  List<List<int>> swaps = [];
+
+  /// その年の1巡目の指名権の番号(無ければ -1)。
+  int _firstRound(int s, int from) => picks.indexWhere((p) => p.season == s && p.round == 1 && p.from == from);
+
+  /// ドラフトの順が決まったあと、入れ替え権を使う。権利を持つチームが自分の1巡目を持ったままで、相手の1巡目のほうが上位なら入れ替える。
+  void _applySwaps() {
+    for (final s in swaps.where((x) => x[0] == season)) {
+      final h = _firstRound(season, s[1]), t = _firstRound(season, s[2]);
+      if (h < 0 || t < 0 || picks[h].owner != s[1]) continue;
+      final ph = order.indexOf(h), pt = order.indexOf(t);
+      if (ph < 0 || pt < 0 || pt >= ph) continue;
+      final tOwner = picks[t].owner;
+      picks[t].owner = s[1];
+      picks[h].owner = tOwner;
+      _log('入れ替え権: ${teams[s[1]].def.short}が${teams[s[2]].def.short}の1巡目(${pt + 1}番目)と自分の1巡目(${ph + 1}番目)を入れ替えた');
+    }
+    swaps.removeWhere((x) => x[0] <= season);
+  }
+
   // ---------------------------------------------------------------- 締め切り日
 
   /// 締め切り日のまとめ(朝・昼・夕・直前の4つに分けて、今季のトレードを時間順に見せる)。乱数は使わない。
@@ -1851,6 +1874,7 @@ class Career {
     // 1回戦に出たチーム(プレーインを勝ち抜いたチームを含む)は、くじに入らない
     final inPlayoffs = {for (final s in playoffs.where((s) => s.round == 1)) ...[s.high, s.low]}.toList();
     order = draftOrder(teams, picks, season, inPlayoffs, rng);
+    _applySwaps();
     for (final i in conveyedBack) {
       _log('保護: ${teams[picks[i].from].def.short}の1巡目は上位${picks[i].protect}位に入ったので、${teams[picks[i].from].def.short}に戻った');
     }
@@ -2718,7 +2742,7 @@ class Career {
     final v = judge(o);
     if (!v.ok) return false;
     _logTrade(mine, o);
-    applyTrade(teams, picks, mine, o);
+    applyTrade(teams, picks, mine, o, swaps: swaps);
     tradesDone++;
     incoming = null;
     return true;
@@ -2997,6 +3021,7 @@ class Career {
         'exp': expiring,
         if (optionPending.isNotEmpty) 'opp': optionPending,
         'trust': trust,
+        if (swaps.isNotEmpty) 'swp': swaps,
         if (retirees.isNotEmpty) 'rtr': retirees,
         if (retiredNumbers.isNotEmpty) 'rnum': retiredNumbers,
         if (retiredNames.isNotEmpty) 'rnam': retiredNames,
@@ -3086,6 +3111,7 @@ class Career {
       ..expiring = [for (final x in (j['exp'] as List? ?? const [])) x as int]
       ..optionPending = [for (final x in (j['opp'] as List? ?? const [])) x as int]
       ..trust = (j['trust'] as int?) ?? 50
+      ..swaps = [for (final x in (j['swp'] as List? ?? const [])) [for (final y in x as List) y as int]]
       ..retirees = [for (final x in (j['rtr'] as List? ?? const [])) [(x as List)[0] as String, x[1] as int]]
       ..retiredNumbers = [for (final x in (j['rnum'] as List? ?? const [])) [for (final y in x as List) y as int]]
       ..retiredNames = [for (final x in (j['rnam'] as List? ?? const [])) x as String]
