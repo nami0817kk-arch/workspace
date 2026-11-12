@@ -7,15 +7,46 @@ import 'common.dart';
 import 'negotiate_dialog.dart';
 import 'style.dart';
 
+/// 自由契約の選手の並べ方。
+enum _FaSort { ovr, salary, age }
+
 /// 補強のタブ。自由契約の選手と契約する。
-class MarketTab extends StatelessWidget {
+class MarketTab extends StatefulWidget {
   const MarketTab({super.key, required this.c});
   final GmController c;
 
   @override
+  State<MarketTab> createState() => _MarketTabState();
+}
+
+class _MarketTabState extends State<MarketTab> {
+  GmController get c => widget.c;
+  Pos? _pos;
+  bool _onlyAvailable = false;
+  _FaSort _sort = _FaSort.ovr;
+
+  /// いま取れる(契約・申し込み・2ウェイ・10日契約のどれかができる)か。
+  bool _available(Career car, Player p) {
+    if (car.isBigFa(p)) return car.bidProblem(p) == null;
+    if (car.signProblem(p) == null) return true;
+    if (p.exp <= twoWayMaxExp && car.canSign && car.twoWayProblem(p) == null) return true;
+    return car.phase == Phase.season && car.tenDayProblem(p) == null;
+  }
+
+  @override
   Widget build(BuildContext context) {
     final car = c.career!;
-    final fa = [...car.freeAgents]..sort((a, b) => b.ovr.compareTo(a.ovr));
+    final askCache = <int, int>{};
+    int askOf(Player p) => askCache.putIfAbsent(p.id, () => car.askOf(p, car.me).salary);
+    final fa = [
+      for (final p in car.freeAgents)
+        if ((_pos == null || p.pos == _pos) && (!_onlyAvailable || _available(car, p))) p,
+    ]..sort(switch (_sort) {
+        _FaSort.ovr => (a, b) => b.ovr.compareTo(a.ovr),
+        _FaSort.salary => (a, b) => askOf(a).compareTo(askOf(b)),
+        _FaSort.age => (a, b) => a.age.compareTo(b.age),
+      });
+    final (maxOffer, maxFrom) = car.maxOfferNow;
     final note = switch (car.phase) {
       Phase.contracts => '大物(最低年俸より高く求める選手)は、ほかのチームと競り合う。申し込むと、日が進むたびに行き先を決める。'
           '最低年俸(${money(minSalary)})の選手は、上限を超えていてもすぐ取れる。',
@@ -36,10 +67,33 @@ class MarketTab extends StatelessWidget {
               const SizedBox(height: 10),
               PayrollBar(payroll: car.me.payroll),
               const SizedBox(height: 4),
-              Text(
-                  '例外枠(上限を超えても取れる): 中くらい(${money(mleSalary)}まで・課税者は${money(taxMleSalary)}まで)${car.mleUsed ? '使用済み' : '使える'}・'
-                  '2年ごと(${money(biennialSalary)}まで)${car.biennialReady ? '使える' : '去年使った'}。第1の壁(${money(firstApron)})を超えるチームは課税者用だけ、第2の壁を超えると使えない。',
-                  style: const TextStyle(fontSize: 12, color: GmColors.sub, height: 1.5)),
+              Row(children: [
+                Expanded(
+                  child: Text.rich(TextSpan(children: [
+                    const TextSpan(text: 'いま出せる年俸: ', style: TextStyle(color: GmColors.sub)),
+                    TextSpan(text: '最大 ${money(maxOffer)}', style: const TextStyle(fontWeight: FontWeight.bold, color: GmColors.gold, fontSize: 15)),
+                    TextSpan(text: '($maxFrom)', style: const TextStyle(color: GmColors.sub, fontSize: 12)),
+                  ])),
+                ),
+                IconButton(
+                  tooltip: '例外枠の決まり',
+                  icon: const Icon(Icons.info_outline_rounded, size: 20, color: GmColors.sub),
+                  onPressed: () => showDialog<void>(
+                    context: context,
+                    builder: (d) => AlertDialog(
+                      title: const Text('例外枠'),
+                      content: Text(
+                          '年俸の上限を超えていても、例外枠を使えば自由契約の選手を取れる。\n\n'
+                          '・中くらい: ${money(mleSalary)}まで(1年に1回)${car.mleUsed ? '…今年は使用済み' : ''}\n'
+                          '・課税者用: ${money(taxMleSalary)}まで(第1の壁 ${money(firstApron)} を超えるとき)\n'
+                          '・2年ごと: ${money(biennialSalary)}まで${car.biennialReady ? '' : '…去年使った'}\n\n'
+                          '第2の壁(${money(secondApron)})を超えると、どれも使えない。最低年俸(${money(minSalary)})の選手はいつでも取れる。',
+                          style: const TextStyle(height: 1.5)),
+                      actions: [TextButton(onPressed: () => Navigator.pop(d), child: const Text('閉じる'))],
+                    ),
+                  ),
+                ),
+              ]),
               const SizedBox(height: 4),
               Text('登録 ${car.me.roster.length - car.expiring.length}人 / $maxRoster人・2ウェイ ${car.me.twoWay.length}人 / $twoWayMax人', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
               if (car.phase == Phase.contracts) ...[
@@ -74,6 +128,41 @@ class MarketTab extends StatelessWidget {
           ),
         ],
         const SizedBox(height: 8),
+        // 絞り込みと並べ替え
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(children: [
+            for (final p in <Pos?>[null, ...Pos.values])
+              Padding(
+                padding: const EdgeInsets.only(right: 6),
+                child: ChoiceChip(
+                  visualDensity: VisualDensity.compact,
+                  label: Text(p == null ? '全員' : p.short, style: const TextStyle(fontSize: 12)),
+                  selected: _pos == p,
+                  onSelected: (_) => setState(() => _pos = p),
+                ),
+              ),
+            const SizedBox(width: 6),
+            FilterChip(
+              visualDensity: VisualDensity.compact,
+              label: const Text('いま取れる選手だけ', style: TextStyle(fontSize: 12)),
+              selected: _onlyAvailable,
+              onSelected: (v) => setState(() => _onlyAvailable = v),
+            ),
+            const SizedBox(width: 10),
+            for (final (s, label) in const [(_FaSort.ovr, '力の順'), (_FaSort.salary, '安い順'), (_FaSort.age, '若い順')])
+              Padding(
+                padding: const EdgeInsets.only(right: 6),
+                child: ChoiceChip(
+                  visualDensity: VisualDensity.compact,
+                  label: Text(label, style: const TextStyle(fontSize: 12)),
+                  selected: _sort == s,
+                  onSelected: (_) => setState(() => _sort = s),
+                ),
+              ),
+          ]),
+        ),
+        const SizedBox(height: 6),
         if (fa.isEmpty) const Text('いない', style: TextStyle(color: GmColors.sub)),
         for (final p in fa) ...[
           _row(context, car, p),
