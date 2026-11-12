@@ -572,6 +572,18 @@ const subRatings = <SubRating>[
   SubRating('跳躍', Attr.athletic, [0, 1, 1, 0, -1]),
   SubRating('力強さ', Attr.athletic, [-8, -5, 0, 5, 9]),
   SubRating('スタミナ', Attr.athletic, [2, 1, 0, -1, -2]),
+  // 2026-11-12: 35項目にそろえるための追加(見せる数字だけ。試合の強さは6つの能力から)
+  SubRating('キャッチ&シュート', Attr.outside, [2, 2, 1, -1, -4]),
+  SubRating('ドリブルからのシュート', Attr.outside, [3, 2, 0, -3, -6]),
+  SubRating('フィンガーロール', Attr.inside, [1, 1, 0, 0, -1]),
+  SubRating('ファウルのもらいやすさ', Attr.inside, [2, 2, 0, 1, 2]),
+  SubRating('ターンオーバーの少なさ', Attr.passing, [3, 2, 0, -2, -5]),
+  SubRating('セカンドチャンス', Attr.rebound, [-3, -1, 0, 2, 4]),
+  SubRating('ボックスアウト', Attr.rebound, [-5, -3, 0, 3, 6]),
+  SubRating('ポストでの守り', Attr.defense, [-9, -6, 0, 5, 9]),
+  SubRating('ピック&ロールの守り', Attr.defense, [0, 1, 1, 0, -1]),
+  SubRating('ヘルプの守り', Attr.defense, [-4, -2, 0, 3, 5]),
+  SubRating('ハッスル', Attr.athletic, [1, 1, 1, 1, 1]),
 ];
 
 /// 細かい能力の値(画面に見せる数字)。選手ごとに id から決まる揺らぎが付く。
