@@ -13,6 +13,8 @@ dependencies:
     sdk: flutter
   shared_preferences: ^2.5.5
   webview_flutter: ^4.13.0
+  google_mobile_ads: ^9.1.0
+  in_app_purchase: ^3.3.1
 
 dev_dependencies:
   flutter_test:

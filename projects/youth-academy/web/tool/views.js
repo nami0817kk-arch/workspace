@@ -27,6 +27,7 @@ const html = read('shell.html')
   .replace('/*__LINEAGE__*/', () => read('lineage.js'))
   .replace('/*__RIVALS__*/', () => read('rivals.js'))
   .replace('/*__STORY__*/', () => read('story.js'))
+  .replace('/*__SHOP__*/', () => read('shop.js'))
   .replace('/*__VIEWS3__*/', () => read('views3.js'))
   .replace('/*__IMGDATA__*/', () => read('imgdata.js'))
   .replace('/*__ART__*/', () => read('art.js'));
@@ -145,8 +146,11 @@ async function clearEvents() {
   ok(txt().includes('チームの重点'), '1枚の画面へ戻れる');
   // 選手
   rail('選手');
-  ok(txt().includes('面談') && txt().includes('特性') && txt().includes('性格'), '選手の詳細');
-  btn('面談').click();
+  ok(txt().includes('進路') && txt().includes('様子') && txt().includes('特性') && txt().includes('性格'), '選手の詳細（能力・様子・進路）');
+  btn('様子').click();
+  ok(txt().includes('調子') && txt().includes('コーチの一言'), '選手の様子');
+  btn('進路').click();
+  ok(txt().includes('本人の希望') && txt().includes('トップへの近さ'), '選手の進路（希望・トップへの近さ）');
   // 面談の一言と選択肢は選手の状態で変わる（talkSetup）ので、どれかが出ていれば押す
   (['褒める', '課題を伝える', '悩みを聞く', 'できていることを褒める', '背中を押す'].map((t) => btn(t)).find(Boolean) || btn('不安をゆっくり聞く') || btn('足りない点を伝える') || btn('期待していると伝える') || btn('焦らなくていいと聞く') || btn('さらに上を求める') || btn('気を引き締める') || btn('しっかり見ていると伝える') || btn('話を聞く')).click();
   ok(txt().includes('自信'), '面談の反応');
@@ -155,7 +159,9 @@ async function clearEvents() {
   btn('全員', d.querySelector('.fm-row')).click();
   btn('Bに回す') || btn('Aに上げる');
   rail('クラブ');
-  ok(txt().includes('信頼度') && txt().includes('今年の目標'), 'クラブの概要');
+  ok(txt().includes('予算と施設') && txt().includes('概要') && txt().includes('順位と日程'), 'クラブの8項目');
+  btn('概要').click();
+  ok(txt().includes('信頼度') && txt().includes('今年の目標') && !txt().includes('undefined'), 'クラブの概要（信頼度の名前が出る）');
   for (const k of ['予算と施設', 'スタッフ', 'スカウト', '順位と日程', '概要']) {
     btn(k).click();
     await sleep(10);
@@ -426,7 +432,7 @@ async function clearEvents() {
     }
     // フリー対戦（成績に残らない）
     rail('選手');
-    btn('操作と履歴').click();
+    btn('様子').click();
     ok(txt().includes('キャプテン') && txt().includes('ポジション'), '選手にキャプテンとポジション変更');
     btn('キャプテンにする').click();
     ok(A.w.captain != null, 'キャプテンを指名');

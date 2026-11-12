@@ -7,7 +7,7 @@
 
   // ---------- 信頼度 ----------
   YA.trustLevel = (w) => (w.club.trust >= 70 ? 'high' : w.club.trust >= 40 ? 'mid' : 'low');
-  YA.TRUST_NAME = { low: '低い', mid: '中くらい', high: '高い' };
+  YA.CLUB_TRUST_NAME = { low: '低い', mid: '中くらい', high: '高い' };
   YA.addTrust = function (w, d, why) {
     const c = w.club;
     const before = c.trust;

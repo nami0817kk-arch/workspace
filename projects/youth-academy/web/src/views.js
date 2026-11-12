@@ -360,7 +360,22 @@
       h('button', { class: 'btn sm', onclick: () => { const r = YA.setStar(w, sel, !sel.star); ui.starMsg = r.msg; YA.saveWorld(); rerender(); } }, sel.star ? '★ を外す' : `★ 注目の印（高${sel.grade} ${YA.starsIn(w, sel.grade).length}/${YA.STAR_MAX}）`), sel.star || sel.awake ? null : h('small', { class: 'sub', style: 'align-self:center' }, '覚醒するのは★の子だけ'),
       h('button', { class: 'btn sm', onclick: () => swapTeam(sel) }, sel.team === 'A' ? 'Bに回す' : 'Aに上げる')));
     // 面談
-    const talk = h('div', { style: 'margin-top:8px;border-top:1px dashed var(--line);padding-top:6px' }, h('div', { class: 'h' }, '面談（1人とは月1回まで）'));
+    // 進路（決定142）：希望・トップへの近さ・選んだ道、そのあとに面談
+    const talk = h('div', { style: 'margin-top:4px' });
+    {
+      const o = YA.ovr(sel);
+      const wish = o >= 12 ? 'プロを目指したい' : o >= 10.5 ? '大学でサッカーを続けたい' : 'サッカーは続けたいが、進路に迷っている';
+      const rk = YA.topRankFor ? YA.topRankFor(w, sel) : null;
+      const cut = YA.topCutLine ? YA.topCutLine(w) : 999;
+      const near = YA.rating(sel) >= cut ? 'トップの登録に入れる力があります' : `登録の目安まであと総合力${Math.max(1, Math.round(cut - YA.rating(sel)))}`;
+      const path = { abroad: '海外へ挑戦', pro: '他のプロへ', univ: '大学へ', corp: '社会人として続ける', quit: 'サッカーはやめる' }[sel._p2];
+      talk.append(h('div', { class: 'card', style: 'padding:6px 9px;margin:4px 0;background:#f5f8fd' },
+        h('div', { class: 'h' }, '進路'),
+        h('div', { class: 'note', style: 'color:var(--ink)' }, `本人の希望：${wish}`),
+        h('div', { class: 'note', style: 'color:var(--ink)' }, `トップへの近さ：${near}${rk ? `（同じポジションで${rk.n}番目くらい／${rk.of}人中）` : ''}`),
+        path ? h('div', { class: 'note', style: 'color:var(--ink)' }, `進路面談で選んだ道：${path}`) : null));
+    }
+    talk.append(h('div', { class: 'h', style: 'border-top:1px dashed var(--line);padding-top:6px' }, '面談（1人とは月1回まで）'));
     const res = h('div', { class: 'msglog' });
     const can = YA.canTalk(w, sel);
     // 会話の形（決定71）：相手の一言 → 言葉の違う選択肢3つ → 相手の返事と結果
@@ -369,13 +384,25 @@
     talk.append(h('div', { class: 'fm-row', style: 'margin-top:4px' }, su.opts.map((t) => h('button', { class: 'btn', disabled: !can, onclick: () => { const r = YA.talk(w, sel.id, t.k); res.replaceChildren(h('div', {}, r.ok ? `${sel.name.split(' ')[0]}は、${r.line}${r.small ? '（' + r.small + '）' : ''}${r.extra ? ' / ' + r.extra : ''}` : r.msg)); YA.saveWorld(); talkBtns(); } }, t.label))));
     talk.append(res);
     const talkBtns = () => { for (const b of talk.querySelectorAll('button')) b.disabled = true; };
+    // 様子（決定142）：調子・不満・性格・コーチの一言、チームでの役割とポジション、最近のこと
     const ops = h('div', {});
+    {
+      const g = (v, lo, hi) => (v >= hi ? '良い' : v <= lo ? '低い' : 'ふつう');
+      const unrest = sel.unrest > 3 ? '不満が溜まっている' : sel.unrest > 1.5 ? '少し気にしていることがある' : '不満はなさそう';
+      const pers = Object.values(sel.pers || {}).filter(Boolean).slice(0, 8);
+      const tip = sel.inj > 0 ? '怪我の回復が先です。無理に出さないで、完治を待ちましょう。' : sel.fat >= 70 ? '疲れが溜まっています。今週は休ませるか、軽めにしたほうがよさそうです。' : sel.unrest > 3 ? 'ひとこと声をかけてあげてください（進路タブの面談）。' : sel.conf < 35 ? '自信を失っています。出番か、励ましの言葉が効きそうです。' : sel.conf >= 70 ? '乗っています。この流れを切らさずに使いたい子です。' : '目立った心配はありません。';
+      ops.append(h('div', { class: 'card', style: 'padding:6px 9px;margin:4px 0;background:#f5f8fd' },
+        h('div', { class: 'h' }, '調子'),
+        h('div', { class: 'row', style: 'flex-wrap:wrap;gap:5px;margin:3px 0' }, h('span', { class: 'chip gray' }, `自信 ${Math.round(sel.conf)}（${g(sel.conf, 35, 70)}）`), h('span', { class: 'chip gray' }, `疲れ ${Math.round(sel.fat)}`), h('span', { class: 'chip gray' }, unrest), sel.inj > 0 ? h('span', { class: 'fit bad' }, `怪我 あと${sel.inj}週`) : null),
+        h('div', { class: 'row', style: 'flex-wrap:wrap;gap:4px;margin:3px 0' }, h('span', { class: 'sub' }, '性格：'), ...pers.map((t) => h('span', { class: 'chip gray' }, t))),
+        h('div', { class: 'note', style: 'color:var(--ink)' }, 'コーチの一言：' + tip)));
+    }
     ops.append(YA.playerExtras(w, sel));
     // 履歴
     if (sel.hist.length) ops.append(h('div', { class: 'h', style: 'margin-top:8px' }, '最近のこと'), h('div', { class: 'note', style: 'color:var(--ink)' }, sel.hist.slice(0, 6).map((x) => h('div', {}, `${x.y}年目 ${x.w}週：${x.t}`))));
     // 能力・面談・操作を切り替えて、スクロールせずに選手への操作へ届くようにする
     ui.pTab = ui.pTab || 'info';
-    const PT = [['info', '能力'], ['talk', '面談'], ['ops', '操作と履歴']];
+    const PT = [['info', '能力'], ['ops', '様子'], ['talk', '進路']];
     const tabsEl = h('div', { class: 'tabs' });
     const show = () => {
       tabsEl.replaceChildren(...PT.map(([k, n]) => h('button', { class: 'btn sm' + (ui.pTab === k ? ' on' : ''), onclick: () => { ui.pTab = k; show(); } }, n)));

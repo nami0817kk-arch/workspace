@@ -143,6 +143,8 @@
     app.autoStop = store.get('autoStop', true);
     app.slot = store.get('slot', 0);
     YA.sfx.on = store.get('sfx', true) !== false;
+    if (YA.bgm) YA.bgm.on = store.get('bgm', true) !== false;
+    if (YA.entSet) { YA.entSet(store.get('ent', null)); YA.shopStart(); }
     const sw = store.get(YA.slotKey(app.slot), null);
     // 保存がなければ「新しく始める」画面（指導者の作成）から
     app.w = sw && sw.v >= 3 && sw.players && sw.lineupA ? sw : null;
@@ -745,6 +747,8 @@
   function render() {
     const root = document.getElementById('app');
     root.classList.toggle('full', app.view === 'play');
+    if (YA.bgm) YA.bgm.setMode(app.view === 'play' ? 'match' : 'home');
+    if (YA.flushAd && app.view !== 'play') YA.flushAd();
     renderRail();
     const main = document.getElementById('main');
     // 同じ画面のまま作り直すとき（ボタンを押した直後など）は、スクロール位置を覚えておいて戻す
@@ -1167,7 +1171,7 @@
     loadCfg();
     // ボタンを押したときの小さな音
     YA.applyFontScale(store.get('fs', 1));
-    document.addEventListener('click', (e) => { if (e.target.closest && e.target.closest('button')) YA.sfx.play('tap'); });
+    document.addEventListener('click', (e) => { if (YA.bgm) YA.bgm.unlock(); if (e.target.closest && e.target.closest('button')) YA.sfx.play('tap'); });
     render();
   };
   YA._ui = { app, render, store, h, playerCard, persChips, abBar, surname, persText, newOurs, persistTeam };

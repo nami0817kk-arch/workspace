@@ -72,7 +72,7 @@
 
   // ---------- 殿堂の2段（決定133）----------
   // 条件に届いた瞬間に「殿堂候補」（銀）。引退のときに生涯の成績で正式に殿堂入り（金）
-  const hofScore = (a) => (a.nat || 0) * 2 + (a.titles || []).length * 2 + (a.awards || []).length + Math.floor((a.apps || 0) / 150) + (a.abroad ? 1 : 0);
+  const hofScore = YA.hofScore = (a) => (a.nat || 0) * 2 + (a.titles || []).length * 2 + (a.awards || []).length + Math.floor((a.apps || 0) / 150) + (a.abroad ? 1 : 0);
   YA.hofCondition = (a) => a.status === 'pro' && (a.nat > 0 || (a.abroad && a.ovr >= 14.5 && a.apps >= 80) || (a.club && /J1/.test(a.league || '') && a.apps >= 200) || (a.transfers >= 3 && a.ovr >= 14.4));
   YA.hofFull = (a) => hofScore(a) >= 4;
   const HOF_WORDS = ['あの頃から、ひたむきな子でした。', 'いちばん最初に練習に来て、最後まで残る子でした。', '背中を押しただけです。歩いたのは本人です。', '卒業の日の顔を、いまも覚えています。', 'ここから世界へ行ったのだと思うと、誇らしい。'];

@@ -13,6 +13,7 @@ require(path.join(__dirname, '../src/core.js'));
 require(path.join(__dirname, '../src/lineage.js'));
 require(path.join(__dirname, '../src/rivals.js'));
 require(path.join(__dirname, '../src/story.js'));
+require(path.join(__dirname, '../src/shop.js'));
 require(path.join(__dirname, '../src/imgdata.js'));
 require(path.join(__dirname, '../src/art.js'));
 const YA = globalThis.YA;
@@ -567,7 +568,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   const im = YA.importWorld(ex);
   ok(im.ok && im.world.year === wsim.year && Object.keys(im.world.players).length === Object.keys(wsim.players).length, '書き出して復元できる');
   ok(!YA.importWorld('これは違う').ok && !YA.importWorld('{"app":"x"}').ok && !YA.importWorld(ex.slice(0, 200)).ok, '壊れたデータは受け付けない');
-  ok(YA.slotKey(0) === 'world' && YA.slotKey(1) === 'world1' && YA.SLOT_COUNT === 2 && /年目/.test(YA.slotSummary(wsim)), 'セーブ枠の名前と要約');
+  ok(YA.slotKey(0) === 'world' && YA.slotKey(1) === 'world1' && YA.SLOT_COUNT === 1 && /年目/.test(YA.slotSummary(wsim)), 'セーブ枠の名前と要約');
   // 戦術の細かい設定：キッカーの指定・クロスの種類・浸透
   {
     const wtac = YA.newWorld(88);
@@ -1135,6 +1136,87 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   ok(wh.scoutScore && wh.scoutScore.hit + wh.scoutScore.over + wh.scoutScore.under >= 1, '当たり外れの集計が残る');
   ok((wh.inbox || []).some((n) => /見立ては総合力/.test(n.text)) || noted.every((p) => p.scoutNote.kind === 'hit' && !p.scoutNote.hunch), '見立てと違った子・見立てが付いた子は知らせが出る');
   ok(JSON.parse(JSON.stringify(wh)).scoutScore, '当たり外れの集計が保存される');
+}
+// 卒業生の便り（決定111）・卒業生が顔を出す（決定112）・クラブの印（決定146）
+{
+  const wv = YA.newWorld(41);
+  let gv = 0;
+  while (wv.year < 4 && gv++ < 300) YA.simulate(wv, { until: 'week', stopOnImportant: false });
+  ok(!!YA.KEY_DEF.alum, '鍵「憧れの卒業生と話す」がある');
+  ok(wv.letters && Object.keys(wv.letters).length >= 1 && Object.values(wv.letters).every((l) => l.length >= 1), '卒業生の便りが年ごとに貯まる');
+  ok((wv.inbox || []).some((n) => /卒業生の便りが\d+件/.test(n.text)), '便りが届いたと知らされる');
+  ok(wv.alumni.some((a) => a.visits >= 1), '卒業生がオフに顔を出す（2年目以降）');
+  ok(!!YA.visitor(wv), '顔を出す卒業生が選べる');
+  ok(JSON.parse(JSON.stringify(wv)).letters, '便りが保存される');
+  const mk = YA.clubMarks(wv);
+  ok(mk && typeof mk === 'object', 'クラブの印が出せる');
+  const ev = { id: 'visit', who: wv.alumni[0].name, week: 36, year: wv.year };
+  const v = YA.eventView(wv, ev);
+  ok(v && v.opts && v.opts.length === 3, '顔を出した場面の選択肢は3つ');
+  const st = Object.values(wv.players).find((p) => p.grade <= 2 && p.pos !== 'GK') || Object.values(wv.players)[0];
+  YA.setStar(wv, st, true);
+  const rr = YA.resolveEvent(wv, ev, 1);
+  ok(rr && rr.line, '★の子と話してもらえる');
+}
+// 3段目：課金・広告・セーブ枠・オリジナル選手（shop.js）
+{
+  YA.entSet(null);
+  ok(YA.SLOT_COUNT === 1, 'セーブ枠は最初1つ');
+  YA.entSet({ slots: 2, tickets: 2, noAds: true, eye: true });
+  ok(YA.SLOT_COUNT === 3 && YA.ent.tickets === 2, '買ったぶんだけセーブ枠がふえる');
+  YA.entSet({ slots: 99 });
+  ok(YA.SLOT_COUNT === 5, 'セーブ枠は最大5');
+  YA.entSet(null);
+  const ws = YA.newWorld(77);
+  ws.week = 3;
+  ok(!YA.interstitialDue(ws, 'month'), '最初の4週は全画面を出さない（1年目）');
+  ws.week = 20; ws.year = 2; ws.adMatches = 0;
+  const hits = [1, 2, 3, 4, 5, 6].map(() => YA.interstitialDue(ws, 'match'));
+  ok(hits.join() === 'false,false,true,false,false,true', '全画面は3試合に1回 ' + hits);
+  ok(YA.interstitialDue(ws, 'month'), '月の区切りに1回');
+  YA.entSet({ noAds: true });
+  ok(!YA.interstitialDue(ws, 'month') && !YA.interstitialDue(ws, 'match'), '広告を消すと全画面は出ない');
+  ok(YA.REWARDS.length >= 2 && YA.AD.rewardPerDay === 3, 'ご褒美の動画は1日3回');
+  const mem = {}; const st = { get: (k, d) => (mem[k] != null ? mem[k] : d), set: (k, v) => { mem[k] = v; } };
+  ok(YA.rewardLeft(st) === 3, '今日のご褒美は3回');
+  st.set('adday', { d: new Date().toISOString().slice(0, 10), n: 3 });
+  ok(YA.rewardLeft(st) === 0, '3回見たら今日はもう出ない');
+  // オリジナル選手
+  YA.entSet({ tickets: 1 });
+  const spec = { name: '架空 太郎', pos: 'ST', foot: 'L', stars: 5, face: null, pers: { 人との関わり: 'リーダー気質' } };
+  ok(YA.origValid(ws, spec) === null, 'オリジナル選手の入力が通る');
+  ok(YA.origValid(ws, Object.assign({}, spec, { name: '' })) !== null, '名前が空は通らない');
+  const r1 = YA.origCreate(ws, spec);
+  ok(r1.ok && ws.originals.length === 1, 'チケットで予定に入る');
+  ok(!YA.origCreate(ws, spec).ok, '同じ名前は迎えられない');
+  const ws2 = YA.newWorld(78);
+  ws2.originals = [Object.assign({}, spec, { stars: 5 })];
+  ws2.scouting = YA.newScouting();
+  const rng = YA.rngOf(5);
+  YA.intake(ws2, rng, new Set(Object.values(ws2.players).map((p) => p.name)));
+  const op = Object.values(ws2.players).find((p) => p.name === '架空 太郎');
+  ok(op && op.grade === 1 && op.main === 'ST' && op.foot === 'L' && op.pers['人との関わり'] === 'リーダー気質', 'オリジナル選手が新入生に入る');
+  ok(op && YA.potStars(op) === 5 && YA.ovr(op) < 12, '伸びしろは決めた通りで、入団時の能力は高1並み');
+  ok(op && !/内部昇格|undefined/.test(op.hist[0].t) , '履歴の文言');
+  ok(ws2.originals.length === 0, '迎えたら予定は空になる');
+  // 橋
+  let sent = null;
+  globalThis.YouthApp = { postMessage: (m) => { sent = JSON.parse(m); } };
+  ok(YA.native.has() && YA.buy('youth_keen_eye') && sent.cmd === 'buy' && sent.id === 'youth_keen_eye', '購入の依頼が Flutter へ出る');
+  globalThis.YAnative.onMsg(JSON.stringify({ ev: 'ent', v: { noAds: true, eye: true, slots: 1, tickets: 3 } }));
+  ok(YA.ent.noAds && YA.ent.eye && YA.SLOT_COUNT === 2 && YA.ent.tickets === 3, 'Flutter から届いた権利が反映される');
+  globalThis.YAnative.onMsg('これは壊れた通知');
+  delete globalThis.YouthApp;
+  YA.entSet(null);
+  // 見抜く目：候補を1回余計に見たことにする
+  const wc = YA.newWorld(79);
+  wc.scouting = wc.scouting || YA.newScouting();
+  const c0 = { id: 'c', p: Object.values(wc.players)[0], kind: 'scout', seen: 1, status: 'open' };
+  const base = YA.candView(wc, c0).ovr;
+  YA.entSet({ eye: true });
+  const keen = YA.candView(wc, c0).ovr;
+  ok(c0.seen === 1 && (keen[1] - keen[0]) < (base[1] - base[0]), '見抜く目で候補の幅が狭まる（見た回数は変わらない）');
+  YA.entSet(null);
 }
 console.log(fails ? '失敗 ' + fails : '育成の点検: すべて通過');
 process.exit(fails ? 1 : 0);

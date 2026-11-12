@@ -335,4 +335,91 @@
     return res;
   };
   YA.EXTRA_SIM_IMPORTANT = (YA.EXTRA_SIM_IMPORTANT || []).concat(['path']);
+
+  // ---------- 卒業生の便り（決定111）と、卒業生が今の子に関わる（決定112） ----------
+  // 卒業生の知らせ（「卒業生の○○が…」）を年ごとに貯めて、系譜タブの「便り」に1画面で見せる
+  const nt0 = YA.noteTier;
+  YA.noteTier = function (w, tier, text, pid) {
+    if (w && typeof text === 'string' && /^卒業生の/.test(text)) {
+      w.letters = w.letters || {};
+      const L = (w.letters[w.year] = w.letters[w.year] || []);
+      const t = text.replace(/^卒業生の/, '');
+      if (!L.includes(t)) L.push(t);
+    }
+    return nt0.apply(this, arguments);
+  };
+  const lt0 = YA.alumniTick;
+  YA.alumniTick = function (w) {
+    const r = lt0.apply(this, arguments);
+    const n = ((w.letters || {})[w.year] || []).length;
+    if (n > 0) nt0(w, 2, `今年の卒業生の便りが${n}件届いています（系譜 → 便り）`);
+    return r;
+  };
+  // 憧れの卒業生と話す：★の子の覚醒の鍵のひとつ（高1〜高2の子に。オフに卒業生が顔を出す）
+  YA.KEY_DEF.alum = { sys: '人', ok: (p) => p.grade <= 2, need: 1, vague: '憧れの先輩に会えば、何かが変わりそうだ', clear: () => 'オフに顔を出した卒業生と話す' };
+  YA.EVENTS.push({ id: 'visit', name: '卒業生が顔を出した', weight: 0, pick: () => null, text: () => '', opts: [] });
+  YA.EVENT_ABOUT.visit = '卒業した先輩が練習場に顔を出しました。★の子と話してもらうと、「憧れの卒業生と話す」の鍵や信頼が進みます。';
+  const STAT = { pro: 'プロ', univ: '大学', amateur: '社会人' };
+  YA.visitor = function (w) {
+    const list = (w.alumni || []).filter((a) => !a.retired || a.coached).filter((a) => a.age == null || a.age <= 34);
+    if (!list.length) return null;
+    const ranked = list.slice().sort((a, b) => (b.ovr || 0) - (a.ovr || 0)).slice(0, 6);
+    return ranked[YA.hash('visit' + w.year + w.seed) % ranked.length];
+  };
+  function visitPrep(w, e) {
+    const a = (w.alumni || []).find((x) => x.name === e.who);
+    const def = YA.EVENTS.find((x) => x.id === 'visit');
+    const star = Object.values(w.players).filter((p) => p.star && p.grade <= 2);
+    const said = (ww) => { if (a) a.visits = (a.visits || 0) + 1; };
+    def.name = '卒業生が顔を出した';
+    def.text = () => a ? `卒業生の${a.name}（${a.year}年卒・${a.club || STAT[a.status] || ''}）が、オフの練習場にふらりと顔を出した。「近くまで来たので」。後輩たちの視線が集まっている。` : '卒業生が練習場に顔を出した。';
+    const run = (label, line, fn) => ({ label, kind: null, run: (ww, p, r) => { said(ww); return { line, small: fn ? fn(ww) : '' }; } });
+    def.opts = [
+      run('練習に混ざってもらう', '久しぶりに本気のボール回しをして、グラウンドが沸いた。', (ww) => { const l = Object.values(ww.players).filter((p) => p.team === 'A'); for (const p of l) p.conf = clamp((p.conf || 0) + 3, 0, 100); return 'Aの自信 +3'; }),
+      run(star.length ? '★の子と、じっくり話してもらう' : '後輩たちに、プロの話をしてもらう', star.length ? '憧れの先輩の言葉を、後輩たちは真剣に聞いた。' : '質問が止まらず、予定の時間を超えた。', (ww) => {
+        if (!star.length) { for (const p of Object.values(ww.players)) p.conf = clamp((p.conf || 0) + 1, 0, 100); return '全員の自信 +1'; }
+        for (const p of star) { YA.keyProgress(ww, p, 'alum', 1); YA.addTr(ww, p, 1, '憧れの卒業生と話した'); YA.hintUp(ww, p, 0.5, '卒業生の話'); }
+        return `★の子${star.length}人の信頼 +1・鍵が進んだ`;
+      }),
+      run('お礼を言って、見送る', '「また来ます」と手を振って、帰っていった。'),
+    ];
+  }
+  const vv0 = YA.eventView;
+  YA.eventView = function (w, e) { if (e.id === 'visit') visitPrep(w, e); return vv0(w, e); };
+  const vr0 = YA.resolveEvent;
+  YA.resolveEvent = function (w, e, idx) { if (e.id === 'visit') visitPrep(w, e); return vr0(w, e, idx); };
+  const sw1 = YA.rivalWeek;
+  YA.rivalWeek = function (w) {
+    const r = sw1.apply(this, arguments);
+    const key = w.year * 100 + w.week;
+    if (w.week === 36 && w.visitKey !== key) {
+      w.visitKey = key;
+      const a = YA.visitor(w);
+      if (a) w.forced = (w.forced || []).concat([{ id: 'visit', who: a.name, pid: null, x: null, week: w.week, year: w.year }]);
+    }
+    return r;
+  };
+  YA.EXTRA_SIM_IMPORTANT = (YA.EXTRA_SIM_IMPORTANT || []).concat(['visit']);
+  // 気にすべき印（決定146）：項目の横に「!」を出す
+  YA.clubMarks = function (w) {
+    const m = {};
+    if (YA.trustLevel(w) === 'low') m.over = '信頼が低い';
+    if ((w.fund || 0) >= 600) m.money = '育成基金が使えます';
+    try { const wn = YA.scoutWindow(w); if (wn.int) m.int = '内部昇格の時期'; if (wn.sel) m.sel = 'セレクションの時期'; } catch (e) { /* 暦が無い古いデータ */ }
+    if (w.top && (w.topReq || []).some((q) => !q.done && q.y === w.year)) m.top = 'トップの注文が来ています';
+    return m;
+  };
+  // 便りの画面（系譜タブの小タブ）
+  YA.lineageExtraTabs = YA.lineageExtraTabs || [];
+  const U = () => YA._ui;
+  const hh = (...a) => U().h(...a);
+  function lettersTab(body, w) {
+    const ys = Object.keys(w.letters || {}).map(Number).sort((a, b) => b - a);
+    body.append(hh('div', { class: 'h' }, '卒業生の便り'), hh('div', { class: 'note' }, '卒業生の移籍・代表・タイトル・殿堂などの知らせを、年ごとにまとめます（卒業式のころに届きます）。'));
+    const list = hh('div', { class: 'scroll', style: 'flex:1;min-height:0;margin-top:4px' });
+    if (!ys.length) list.append(hh('div', { class: 'note' }, 'まだ便りはありません。最初の卒業生が出ると届きます。'));
+    for (const y of ys) list.append(hh('div', { class: 'card', style: 'padding:6px 9px;margin-bottom:4px' }, hh('b', {}, `${y}年目の便り`), ...w.letters[y].map((t) => hh('div', { class: 'note', style: 'color:var(--ink)' }, '・' + t))));
+    body.append(list);
+  }
+  YA.lineageExtraTabs.push(['letters', '便り', lettersTab]);
 })();
