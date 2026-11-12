@@ -1083,8 +1083,8 @@ void main() {
       expect(shown(92), greaterThanOrEqualTo(95));
     });
 
-    test('細かい能力は24項目で、6つの分類のどれにも2つ以上ある。ポジションの色が出る', () {
-      expect(subRatings, hasLength(24));
+    test('細かい能力は35項目で、6つの分類のどれにも2つ以上ある。ポジションの色が出る', () {
+      expect(subRatings, hasLength(35));
       for (final a in Attr.values) {
         expect(subRatings.where((s) => s.attr == a).length, greaterThanOrEqualTo(2), reason: a.label);
       }
