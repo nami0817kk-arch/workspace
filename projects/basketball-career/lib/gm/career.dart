@@ -2172,6 +2172,19 @@ class Career {
     return null;
   }
 
+  /// いま自由契約の選手に出せる年俸の上限と、その元(上限の空き・例外枠・最低年俸)。申し込み中の分は差し引く。
+  (int, String) get maxOfferNow {
+    if (phase == Phase.season) return (minSalary, 'シーズン中は最低年俸だけ');
+    final base = me.payroll + _bidTotal(mine);
+    final room = salaryCap - base;
+    var best = (minSalary, '最低年俸');
+    if (room > best.$1) best = (room, '上限の空き');
+    for (final (amt, label) in [(mleSalary, '中くらいの例外枠'), (taxMleSalary, '課税者の例外枠'), (biennialSalary, '2年ごとの例外枠')]) {
+      if (amt > best.$1 && exceptionFor(amt, base: base) != null) best = (amt, label);
+    }
+    return best;
+  }
+
   void _useException(CapException e) {
     if (e == CapException.biennial) {
       biennialYear = capYear;
