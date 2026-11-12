@@ -2996,6 +2996,36 @@ class Career {
         get: get, getPicks: getPicks, exclude: expiring, nowSeason: season, hardness: _hard(partner));
   }
 
+  /// 今の申し込みに、こちらから1つ(選手か指名権)足せば受けてもらえるもの。相手にとって値打ちの低いものから選ぶ。無ければ null。
+  TradeOffer? suggestAddition(TradeOffer o) {
+    if (!canTrade || judge(o).ok) return null;
+    final mode = teams[o.partner].mode;
+    final cands = <(double, TradeOffer)>[];
+    TradeOffer withGive(List<int> give, List<int> givePicks) => TradeOffer(
+          partner: o.partner,
+          give: give,
+          get: o.get,
+          givePicks: givePicks,
+          protections: o.protections,
+          getPicks: o.getPicks,
+          giveSwaps: o.giveSwaps,
+          getSwaps: o.getSwaps,
+        );
+    for (final p in me.roster) {
+      if (o.give.contains(p.id) || expiring.contains(p.id) || optionPending.contains(p.id)) continue;
+      cands.add((playerValue(p, mode), withGive([...o.give, p.id], o.givePicks)));
+    }
+    for (var i = 0; i < picks.length; i++) {
+      if (picks[i].owner != mine || o.givePicks.contains(i)) continue;
+      cands.add((pickValue(picks[i], mode, slotGuess(teams, picks[i].from), season), withGive(o.give, [...o.givePicks, i])));
+    }
+    cands.sort((a, b) => a.$1.compareTo(b.$1));
+    for (final (_, x) in cands) {
+      if (judge(x).ok) return x;
+    }
+    return null;
+  }
+
   /// 相手のチーム同士のトレード。優勝を狙うチームが、立て直し中・年俸を減らしたいチームのベテランを、若手や指名権で取る。
   /// どちらの見方でも損にならないときだけ成立する。
   void _aiTrades(int count) {
