@@ -46,9 +46,16 @@ class TeamBadge extends StatelessWidget {
   final int team;
   final double size;
 
-  /// チームのロゴ(team_logo.dart)。
+  /// チームのロゴ(画像生成で作った絵。assets/art/logos/)。絵が読めないときは、コードで描くロゴ(team_logo.dart)。
   @override
-  Widget build(BuildContext context) => TeamLogo(team: team, size: size);
+  Widget build(BuildContext context) => Image.asset(
+        'assets/art/logos/team_${team.toString().padLeft(2, '0')}.png',
+        width: size,
+        height: size,
+        fit: BoxFit.contain,
+        filterQuality: FilterQuality.medium,
+        errorBuilder: (_, __, ___) => TeamLogo(team: team, size: size),
+      );
 }
 
 /// 力の数字。
