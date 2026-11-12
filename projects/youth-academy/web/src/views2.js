@@ -54,7 +54,7 @@
         const lv = YA.trustLevel(w);
         bx.replaceChildren(
           h('div', { class: 'h', style: 'font-size:16px' }, `${w.year}年目の始まり：クラブの目標と、チームの約束事`),
-          h('div', { class: 'note' }, `${w.clubName}（${YA.TIER_NAME[c.tier]}・${YA.levelNames(w)[w.league.level - 1]}）。信頼度は${YA.TRUST_NAME[lv]}（${Math.round(c.trust)}）。目標を変えられる数：あと${c.goalChanges}つ`),
+          h('div', { class: 'note' }, `${w.clubName}（${YA.TIER_NAME[c.tier]}・${YA.levelNames(w)[w.league.level - 1]}）。信頼度は${YA.CLUB_TRUST_NAME[lv]}（${Math.round(c.trust)}）。目標を変えられる数：あと${c.goalChanges}つ`),
           ...c.goals.map((g, i) => h('div', { class: 'card', style: 'padding:4px 10px;display:flex;align-items:center;gap:6px' }, h('span', { class: 'chip trait' }, YA.GOAL_DEF[g.k].label), h('span', { class: 'grow', style: 'font-weight:700' }, YA.goalText(g)), h('button', { class: 'btn sm', disabled: c.goalChanges <= 0, onclick: () => { YA.changeGoal(w, i, -1); draw(); } }, '易しく'), h('button', { class: 'btn sm', disabled: c.goalChanges <= 0, onclick: () => { YA.changeGoal(w, i, 1); draw(); } }, '難しく'))),
           h('div', { class: 'note' }, '難しい目標を達成すると評価が上がります。信頼度が低いと、目標はそのまま受け入れるしかありません。'),
           h('div', { class: 'h', style: 'margin-top:4px' }, `チームの約束事（3つまで：${w.rules.length}）`),
@@ -84,14 +84,15 @@
   };
 
   // ---------- クラブ ----------
-  const SUBS = [['over', '概要'], ['top', 'トップ'], ['money', '予算と施設'], ['staff', 'スタッフ'], ['int', '内部昇格'], ['scout', 'スカウト'], ['sel', 'セレクション'], ['table', '順位と日程']];
+  const SUBS = [['money', '予算と施設'], ['over', '概要'], ['staff', 'スタッフ'], ['top', 'トップ'], ['int', '内部昇格'], ['scout', 'スカウト'], ['sel', 'セレクション'], ['table', '順位と日程']];
   function viewClub(main) {
     const w = W();
     const ui = U().app;
-    ui.ct = ui.ct || 'over';
-    const tabs = h('div', { class: 'tabs', style: 'flex:none' }, SUBS.map(([k, n]) => h('button', { class: 'btn' + (ui.ct === k ? ' on' : ''), onclick: () => { ui.ct = k; rerender(); } }, n)));
+    ui.ct = ui.ct || 'money';
+    const marks = YA.clubMarks(w);
+    const tabs = h('div', { class: 'tabs', style: 'flex:none' }, SUBS.map(([k, n]) => h('button', { class: 'btn' + (ui.ct === k ? ' on' : ''), title: marks[k] || '', onclick: () => { ui.ct = k; rerender(); } }, n, marks[k] ? h('b', { style: 'color:#d63a3a;margin-left:3px' }, '!') : null)));
     const body = h('div', { class: 'card pbody', style: 'flex:1;min-height:0' });
-    if (!SUBS.some((x) => x[0] === ui.ct)) ui.ct = 'over';
+    if (!SUBS.some((x) => x[0] === ui.ct)) ui.ct = 'money';
     ({ over: over, top: topView, money: money, staff: staff, int: (b, w2) => recruit(b, w2, 'int'), scout: (b, w2) => recruit(b, w2, 'scout'), sel: (b, w2) => recruit(b, w2, 'sel'), table: table })[ui.ct](body, w);
     main.append(h('div', { style: 'flex:1;min-height:0;display:flex;flex-direction:column;gap:6px' }, tabs, body));
   }
@@ -106,7 +107,7 @@
     const left = h('div', { style: 'flex:1;min-width:0' });
     left.append(
       card(h('div', { class: 'row' }, h('b', { class: 'grow' }, w.clubName), h('span', { class: 'chip gray' }, `${YA.TIER_NAME[c.tier]} / ${YA.levelNames(w)[w.league.level - 1]}`)),
-        h('div', { class: 'note', style: 'margin-top:5px' }, `クラブからの信頼度：${YA.TRUST_NAME[lv]}（${Math.round(c.trust)}）`), meter(c.trust, c.trust >= 70 ? '#1a9d57' : c.trust >= 40 ? '#1f6feb' : '#d63a3a'),
+        h('div', { class: 'note', style: 'margin-top:5px' }, `クラブからの信頼度：${YA.CLUB_TRUST_NAME[lv]}（${Math.round(c.trust)}）`), meter(c.trust, c.trust >= 70 ? '#1a9d57' : c.trust >= 40 ? '#1f6feb' : '#d63a3a'),
         h('div', { class: 'note', style: 'margin-top:5px' }, `クラブの評判：${Math.round(c.rep)}`), meter(c.rep, '#e6a800'),
         h('div', { class: 'note', style: 'margin-top:6px' }, `契約：あと${c.contract.left}年 ／ 指導者 ${YA.licenseOf(w)}（教える${w.coach.teach}・見る目${w.coach.eye}・話す${w.coach.talk}・戦術${w.coach.tactic}）`),
         h('div', { class: 'note' }, '信頼度が高いと、スタッフと予算の配分を自分で決められます。低いとクラブが決めます。'),

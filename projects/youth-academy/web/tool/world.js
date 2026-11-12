@@ -1136,5 +1136,26 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   ok((wh.inbox || []).some((n) => /見立ては総合力/.test(n.text)) || noted.every((p) => p.scoutNote.kind === 'hit' && !p.scoutNote.hunch), '見立てと違った子・見立てが付いた子は知らせが出る');
   ok(JSON.parse(JSON.stringify(wh)).scoutScore, '当たり外れの集計が保存される');
 }
+// 卒業生の便り（決定111）・卒業生が顔を出す（決定112）・クラブの印（決定146）
+{
+  const wv = YA.newWorld(41);
+  let gv = 0;
+  while (wv.year < 4 && gv++ < 300) YA.simulate(wv, { until: 'week', stopOnImportant: false });
+  ok(!!YA.KEY_DEF.alum, '鍵「憧れの卒業生と話す」がある');
+  ok(wv.letters && Object.keys(wv.letters).length >= 1 && Object.values(wv.letters).every((l) => l.length >= 1), '卒業生の便りが年ごとに貯まる');
+  ok((wv.inbox || []).some((n) => /卒業生の便りが\d+件/.test(n.text)), '便りが届いたと知らされる');
+  ok(wv.alumni.some((a) => a.visits >= 1), '卒業生がオフに顔を出す（2年目以降）');
+  ok(!!YA.visitor(wv), '顔を出す卒業生が選べる');
+  ok(JSON.parse(JSON.stringify(wv)).letters, '便りが保存される');
+  const mk = YA.clubMarks(wv);
+  ok(mk && typeof mk === 'object', 'クラブの印が出せる');
+  const ev = { id: 'visit', who: wv.alumni[0].name, week: 36, year: wv.year };
+  const v = YA.eventView(wv, ev);
+  ok(v && v.opts && v.opts.length === 3, '顔を出した場面の選択肢は3つ');
+  const st = Object.values(wv.players).find((p) => p.grade <= 2 && p.pos !== 'GK') || Object.values(wv.players)[0];
+  YA.setStar(wv, st, true);
+  const rr = YA.resolveEvent(wv, ev, 1);
+  ok(rr && rr.line, '★の子と話してもらえる');
+}
 console.log(fails ? '失敗 ' + fails : '育成の点検: すべて通過');
 process.exit(fails ? 1 : 0);
