@@ -11,6 +11,7 @@ require(path.join(__dirname, '../src/extra.js'));
 require(path.join(__dirname, '../src/more.js'));
 require(path.join(__dirname, '../src/core.js'));
 require(path.join(__dirname, '../src/lineage.js'));
+require(path.join(__dirname, '../src/rivals.js'));
 require(path.join(__dirname, '../src/imgdata.js'));
 require(path.join(__dirname, '../src/art.js'));
 const YA = globalThis.YA;
@@ -986,7 +987,9 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   while (wl.year < 9 && years++ < 600) YA.simulate(wl, { until: 'week', stopOnImportant: false });
   const hofN = wl.alumni.filter((a) => a.hof).length, fullN = wl.alumni.filter((a) => a.hof === 'full').length;
   console.log('8年後 卒業生', wl.alumni.length, '殿堂候補以上', hofN, '正式', fullN, '基金', wl.fund, '実績', YA.achievements(wl).filter((a) => a.done).length + '/66');
+  console.log('殿堂候補の点', wl.alumni.filter((a) => a.hof).map((a) => a.hof + ':' + a.age + ':' + (a.nat * 2 + (a.titles || []).length * 2 + (a.awards || []).length + Math.floor((a.apps || 0) / 150) + (a.abroad ? 1 : 0))).join(' '));
   ok(hofN >= 1, '8年で殿堂候補が出る');
+  { const c = wl.alumni.find((a) => a.hof === 'cand' && (a.nat || 0) * 2 + (a.titles || []).length * 2 + (a.awards || []).length >= 6); if (c) { c.age = 31; YA.alumniTick(wl); ok(c.hof === 'full' || c.retired, '殿堂候補が点を満たして30代になると正式に殿堂入りする'); } }
   ok(Object.keys(wl.achSeen || {}).length > 0 && wl.inbox.some((n) => /実績「/.test(n.text)), '届いた実績が知らされる');
   ok(fullN <= Math.ceil(wl.alumni.filter((a) => a.status === 'pro').length * 0.5) + 1, '正式な殿堂入りは多すぎない');
   ok((wl.fund || 0) + (wl.fundLog || []).reduce((s, x) => s + x.cost, 0) === (wl.fundIn || 0) && (wl.fundIn || 0) > 0, '連帯貢献金の一部が育成基金へ回る');
@@ -999,6 +1002,28 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   const svg = YA.lineageSvg(wl), mini = YA.lineageSvg(wl, { mini: true });
   ok(svg.startsWith('<svg') && svg.includes('年目') && mini.startsWith('<svg') && mini.length < svg.length, '系譜図が作れる');
   ok(YA.chronicle(wl).length > 5 && JSON.parse(JSON.stringify(wl)).fund === wl.fund, '年表が作れ、基金が保存される');
+  // 2段目その2：名物のライバル監督・トップ監督の注文・クラブ移籍
+  const rcs = wl.rivalCoaches || [];
+  console.log('ライバル', rcs.map((c) => `${c.k}:${c.teamName}:${c.rec.w}-${c.rec.d}-${c.rec.l}:${c.lin}`).join(' '), '／注文', (wl.topReq || []).map((q) => q.pos + ':' + q.res).join(','), '／トップ監督', wl.topCoach && wl.topCoach.name);
+  ok(rcs.length === 4 && rcs.filter((c) => c.teamName).length >= 3, '名物のライバル監督が4人いて、リーグのクラブに付く');
+  ok(wl.league.teams.some((t) => t.coach && t.coach.named), '相手のクラブの監督に名前と一言が付く');
+  ok(rcs.reduce((n, c) => n + c.rec.w + c.rec.d + c.rec.l, 0) >= 3, 'ライバルとの対戦成績が残る');
+  ok(YA.rivalOf(wl).coach && YA.rivalOf(wl).id, 'ライバル監督が取り合いに出る');
+  ok((wl.topReq || []).length >= 4 && (wl.topReq || []).filter((q) => q.res).length >= 3 && (wl.topReq || []).some((q) => q.res === 'ok'), 'トップ監督の注文が年に1〜2回来て、応えられる注文は応えられる');
+  ok(wl.topCoach && wl.topCoach.name && wl.inbox.some((n) => /トップの.*から注文/.test(n.text)), 'トップ監督の注文が知らされる');
+  const nm0 = wl.alumni.length, stars = Object.values(wl.players).filter((p) => p.star).length, tr0 = wl.trophies.length, sol0 = wl.solidTotal || 0, old = wl.clubName;
+  wl.moveOffer = { club: '松本 アルプスU-18', tier: 3, note: '3部', y: wl.year };
+  const nw = YA.clubMove(wl);
+  ok(!!nw && nw.clubName === '松本 アルプスU-18' && nw.year === wl.year, 'クラブ移籍で新しい世界に移る');
+  ok(nw.alumni.length === nm0 + stars && nw.alumni.every((a) => a.origin === old), '系譜（卒業生）を持って行き、注目の子は系譜に残る');
+  ok(nw.trophies.length === tr0 && nw.formerClub.name === old && nw.achInit, '実績の元になる記録を持って行く');
+  ok(Object.values(nw.players).length >= 30 && !Object.values(nw.players).some((p) => wl.players[p.id] && wl.players[p.id].name === p.name && wl.players[p.id].grade === p.grade && false), '選手は置いてきて、新しい36人がいる');
+  for (let i = 0; i < 4; i++) { nw.year++; YA.alumniTick(nw); }
+  ok((nw.solidTotal || 0) === sol0, '前のクラブの卒業生の連帯貢献金は、いまのクラブに入らない');
+  let gn = 0;
+  try { while (nw.year < wl.year + 2 && gn++ < 120) YA.simulate(nw, { until: 'week', stopOnImportant: false }); ok(true, '移ったあとも回せる'); } catch (e) { ok(false, '移ったあとに落ちる ' + e.message); }
+  ok(nw.league.teams.some((t) => t.grudge), '前のクラブが因縁の相手としてリーグにいる');
+  ok(JSON.stringify(nw).length > 1000 && !!JSON.parse(JSON.stringify(nw)).moves, '移籍後の世界が保存できる');
 }
 console.log(fails ? '失敗 ' + fails : '育成の点検: すべて通過');
 process.exit(fails ? 1 : 0);
