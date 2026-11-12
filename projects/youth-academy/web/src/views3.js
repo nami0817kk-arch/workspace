@@ -92,8 +92,10 @@
     body.append(h('div', { class: 'row', style: 'margin:6px 0' }, h('span', { class: 'grow' }, '最初の説明・コーチの一言'), h('button', { class: 'btn sm', onclick: () => { if (app.w) { app.w.coachSeen = {}; app.w.introSeen = false; YA.saveWorld(); rerender(); } } }, '読み返す')));
     body.append(h('div', { class: 'row', style: 'margin:6px 0' }, h('span', { class: 'grow' }, '試合の自動停止（前半終了・得点・失点・残り15分）'), h('button', { class: 'btn sm' + (app.autoStop ? ' on' : ''), onclick: () => { app.autoStop = !app.autoStop; store.set('autoStop', app.autoStop); rerender(); } }, app.autoStop ? 'ON' : 'OFF')));
     body.append(h('div', { class: 'row', style: 'margin:6px 0' }, h('span', { class: 'grow' }, '効果音'), h('button', { class: 'btn sm' + (YA.sfx.on ? ' on' : ''), onclick: () => { YA.sfx.on = !YA.sfx.on; store.set('sfx', YA.sfx.on); YA.sfx.play('tap'); rerender(); } }, YA.sfx.on ? 'ON' : 'OFF')));
+    body.append(h('div', { class: 'row', style: 'margin:6px 0' }, h('span', { class: 'grow' }, 'BGM（ホームと試合で曲が変わります）'), h('button', { class: 'btn sm' + (YA.bgm.on ? ' on' : ''), onclick: () => { YA.bgm.setOn(!YA.bgm.on); store.set('bgm', YA.bgm.on); rerender(); } }, YA.bgm.on ? 'ON' : 'OFF')));
     fontAndNotices(body);
     YA.nameBlock(body);
+    if (YA.shopBlock) YA.shopBlock(body);
     // セーブ枠
     body.append(h('div', { class: 'h', style: 'margin-top:10px' }, `セーブ枠（無料${YA.SLOT_COUNT}つ）`), h('div', { class: 'note' }, '1つの遊びに自動セーブが1つ。枠ごとに別のクラブで遊べます。'));
     for (let i = 0; i < YA.SLOT_COUNT; i++) {

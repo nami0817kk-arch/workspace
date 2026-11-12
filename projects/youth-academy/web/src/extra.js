@@ -319,6 +319,96 @@
   };
 })();
 
+// ---------- BGM（決定121）：音源ファイルを持たず、ブラウザで合成して鳴らす（素材の権利の心配がない）----------
+// ホーム＝ゆったりした分散和音、試合＝速い刻み。設定で効果音とは別に消せる。画面が隠れたら止める
+(function () {
+  'use strict';
+  const YA = (globalThis.YA = globalThis.YA || {});
+  const MIDI = (n) => 440 * Math.pow(2, (n - 69) / 12);
+  const THEMES = {
+    home: { bpm: 84, vol: 0.022, wave: 'sine', bass: 'triangle', chords: [[60, 64, 67, 72], [57, 60, 64, 69], [53, 57, 60, 65], [55, 59, 62, 67]], pat: [0, 1, 2, 3, 2, 1, 2, 1] },
+    match: { bpm: 126, vol: 0.02, wave: 'triangle', bass: 'square', chords: [[57, 60, 64, 69], [53, 57, 60, 65], [60, 64, 67, 72], [55, 59, 62, 67]], pat: [0, 2, 1, 3, 0, 2, 1, 3] },
+  };
+  YA.bgm = {
+    on: true,
+    mode: null,
+    ctx: null,
+    master: null,
+    timer: null,
+    step: 0,
+    next: 0,
+    theme: null,
+    setMode(m) {
+      if (m === this.mode) return;
+      this.mode = m;
+      this._sync();
+    },
+    setOn(v) {
+      this.on = !!v;
+      this._sync();
+    },
+    // 最初の操作のあとに鳴らせる（ブラウザの決まり）
+    unlock() {
+      try { if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume(); else if (!this.ctx) this._sync(); } catch (e) { /* 音が出せない環境 */ }
+    },
+    _stop() {
+      if (this.timer) { clearInterval(this.timer); this.timer = null; }
+      if (this.master && this.ctx) { try { this.master.gain.cancelScheduledValues(this.ctx.currentTime); this.master.gain.setTargetAtTime(0.0001, this.ctx.currentTime, 0.15); } catch (e) { /* 無視 */ } }
+      this.theme = null;
+    },
+    _sync() {
+      if (!this.on || !this.mode || !THEMES[this.mode]) return this._stop();
+      try {
+        const AC = globalThis.AudioContext || globalThis.webkitAudioContext;
+        if (!AC) return;
+        this.ctx = this.ctx || new AC();
+        if (!this.master) { this.master = this.ctx.createGain(); this.master.gain.value = 0.0001; this.master.connect(this.ctx.destination); }
+        const th = THEMES[this.mode];
+        if (this.theme === th && this.timer) return;
+        this.theme = th;
+        this.step = 0;
+        this.next = this.ctx.currentTime + 0.1;
+        this.master.gain.cancelScheduledValues(this.ctx.currentTime);
+        this.master.gain.setTargetAtTime(1, this.ctx.currentTime, 0.4);
+        if (!this.timer) this.timer = setInterval(() => this._tick(), 120);
+      } catch (e) { /* 無視 */ }
+    },
+    _note(f, t0, d, type, vol) {
+      const c = this.ctx;
+      const o = c.createOscillator();
+      const g = c.createGain();
+      o.type = type;
+      o.frequency.value = f;
+      g.gain.setValueAtTime(0.0001, t0);
+      g.gain.linearRampToValueAtTime(vol, t0 + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + d);
+      o.connect(g);
+      g.connect(this.master);
+      o.start(t0);
+      o.stop(t0 + d + 0.03);
+    },
+    _tick() {
+      const c = this.ctx;
+      const th = this.theme;
+      if (!c || !th || c.state !== 'running') return;
+      const dt = 60 / th.bpm / 2; // 8分音符
+      while (this.next < c.currentTime + 0.35) {
+        const bar = Math.floor(this.step / 8) % th.chords.length;
+        const i = this.step % 8;
+        const ch = th.chords[bar];
+        this._note(MIDI(ch[th.pat[i]] + 12), this.next, dt * 1.8, th.wave, th.vol);
+        if (i === 0) this._note(MIDI(ch[0] - 12), this.next, dt * 7, th.bass, th.vol * 1.3);
+        if (th === THEMES.match && i % 4 === 2) this._note(MIDI(ch[0] - 12), this.next, dt * 0.8, th.bass, th.vol * 0.9);
+        this.next += dt;
+        this.step++;
+      }
+    },
+  };
+  if (globalThis.document && document.addEventListener) {
+    document.addEventListener('visibilitychange', () => { if (document.hidden) YA.bgm._stop(); else YA.bgm._sync(); });
+  }
+})();
+
 // ---------- 追加の出来事：外国籍の適応・飛び級（U-15）----------
 (function () {
   'use strict';
