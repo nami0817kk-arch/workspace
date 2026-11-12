@@ -140,7 +140,7 @@
   今効くのは、自分のチームのけが(×0.7/1/1.3)・オーナーの信頼の減り方(×0.75/1/1.3)・トレードの通りやすさ(釣り合い ×0.92/1/1.1)。
   要求年俸・新人の見立ての幅・GM の格の点は、仕組みを作るときに足す。始めのリーグは難しさに依らず同じ。
 - iPad は `TabletScale`(`app.dart`)で、幅1000以上のとき、幅844の画面をそのまま拡大する(余白だらけにしない)。
-- 絵: タイトル・会場2枚(`scene_national`・`scene_final`)・選手(4つの姿勢×11色。チームの色は `TeamDef.color`)。
+- 絵: タイトル・会場2枚(`scene_national`=プレーオフ前・`scene_final`=優勝。2026-11-13 に日の丸入りの旧い絵を、旗も文字も無い紺と橙の会場に作り直した。Cloudflare FLUX)・選手(4つの姿勢×11色。チームの色は `TeamDef.color`)。
 - 掲載画像は `tool/screenshots/capture_test.dart`(iPhone 1206x2622・iPad 2064x2752、8枚)。**縦画面の作りのまま古い。横画面の掲載画像は最後の回(提出前)に作り直す。**
 - 横画面の点検用は `tool/screenshots/review_landscape_test.dart`(`DEVICE=ipad` で iPad)。`build/review_landscape/` に出る。画面を触ったら撮って目で見る。
 
