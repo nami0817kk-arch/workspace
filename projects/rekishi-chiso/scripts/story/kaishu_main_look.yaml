@@ -1,0 +1,232 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：勝海舟のその後（scripts/kaishu-story.yaml）。chiso/storymain.py が読む。
+# 11-11 作成（11/14 19:00 公開）。fukushima_main_look.yaml を写した。台本には手を入れない（承認のあと）。決まりは docs/story-main.md・スキル rekishi-story-screen。
+# 絵の方針：AI 絵（F01〜F19・FEND）は Gemini（Chrome、無料版）。指示の一覧は dev/output/rekishi-chiso/research/kaishu_ai_images.md。
+#   実在の写真（パブリックドメイン）は額（frame:）。勝の顔は実在の肖像に似せない想像図。
+script: scripts/kaishu-story.yaml
+out: kaishu_story_main
+art_dir: out/story/kaishu/main
+main_art_dir: out/story/kaishu/main
+ai_disclosure: この動画の情景・人物の画像の多くは、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面の右上に「AI生成画像」と出しています）。
+
+chapters:
+  0: {label: 序章 江戸を救った男の30年, now: 明治31年10月, dates: {7: 慶応4年, 9: 明治30年11月}}
+  1: {label: 第1章 静岡へ移した八万人, now: 慶応4年, dates: {17: 慶応4年6月, 20: 明治2年4月, 22: 明治元年10月}}
+  2: {label: 第2章 官職を辞め続けた勝, now: 明治2年7月, dates: {28: 明治2年11月, 29: 明治6年10月, 32: 明治7年8月, 33: 明治8年4月, 38: 明治8年8月}}
+  3: {label: 第3章 赤坂氷川の屋敷, now: 明治5年8月, dates: {49: 明治10年}}
+  4: {label: 第4章 月に200両足りない暮らし, now: 明治31年10月, dates: {59: 明治30年}}
+  5: {label: 第5章 『氷川清話』は勝の言葉そのままか, now: null, dates: {}}
+  6: {label: 第6章 福沢諭吉『痩我慢の説』, now: 明治20年5月, dates: {82: 明治24年11月, 83: 明治25年2月, 90: 明治34年1月}}
+  7: {label: 第7章 慶喜と30年, now: 明治25年2月, dates: {100: 明治30年11月, 101: 明治31年2月, 105: 明治31年3月2日, 119: 明治31年11月}}
+  8: {label: 第8章 1899年1月19日, now: 明治32年1月, dates: {130: 明治32年1月20日, 132: 明治32年1月25日}}
+  9: {label: 第9章 洗足池の墓と没後, now: 明治23年, dates: {138: 明治12年, 139: 大正2年, 140: 明治35年6月, 141: 明治38年}}
+  10: {label: まとめ 三十年突っ張って待った日, now: null, dates: {}}
+no_tag_from: 149
+
+references:
+  - 『海舟日記』『解難録』『海舟座談』『氷川清話』『徳川慶喜公伝』（国立国会図書館デジタルコレクション・青空文庫）
+  - 慶應義塾大学「福沢諭吉書簡集」解題／国立国会図書館・国立公文書館の解説／大田区立勝海舟記念館の解説
+  - 髙橋秀悦の論文（東北学院大学経済学論集）・飯田鼎の論文（1997）・松田和晃の論文（2013）／サライ.jp／Wikipedia
+credits:
+  paintings/yoshinobu_katsu_kaishu.jpg: 《勝海舟》（ウィキメディア・コモンズ、パブリックドメイン）
+  paintings/yoshinobu_portrait_late_13.jpg: 晩年の徳川慶喜（1913年以前の図版、ウィキメディア・コモンズ、パブリックドメイン）
+  paintings/yoshinobu_portrait_late_14.jpg: 晩年の徳川慶喜（1913年以前の図版、ウィキメディア・コモンズ、パブリックドメイン）
+
+ai:
+  F01: {scene: 江戸城の門を出る旗本の行列（遠景）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.35, 0.5, 0.45]}}
+  F02: {scene: 江戸湾の港で汽船に乗る旧幕臣（朝）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.35, 0.5, 0.45]}}
+  F03: {scene: 静岡の城下の簡素な長屋（夕方）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.35, 0.5, 0.45]}}
+  F04: {scene: 灯の下で日記を書く勝（斜め後ろ）, pan: zoom, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.35, 0.5, 0.45]}}
+  F05: {scene: 空の金蔵と金の塊ひとつ, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.35, 0.5, 0.45]}}
+  F06: {scene: 役所の広間・一人座る勝（後ろ姿）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.35, 0.5, 0.45]}}
+  F07: {scene: 行灯の下の帳簿とそろばん（手元）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.35, 0.5, 0.45]}}
+  F08: {scene: 赤坂氷川の屋敷・黒塀と石だたみ, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.35, 0.5, 0.45]}}
+  F09: {scene: 窓から海の見える質素な座敷（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.35, 0.5, 0.45]}}
+  F10: {scene: 夜の古道具屋の店先, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.35, 0.5, 0.45]}}
+  F11: {scene: 朝霧の茶畑を開墾する旧幕臣, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.35, 0.5, 0.45]}}
+  F12: {scene: 墨を磨って書を書く老人（斜め後ろ）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.35, 0.5, 0.45]}}
+  F13: {scene: 夜の縁側に座る勝（斜め後ろ・月）, pan: zoom, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.35, 0.5, 0.45]}}
+  F14: {scene: 池のほとりの五輪塔の墓（秋）, pan: v, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.35, 0.5, 0.45]}}
+  F15: {scene: 座敷で向き合う2人の老人, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.35, 0.5, 0.45]}}
+  F16: {scene: 皇居の石橋へ向かう黒い馬車（朝）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.35, 0.5, 0.45]}}
+  F17: {scene: 洗足池の夕暮れ, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.35, 0.5, 0.45]}}
+  F18: {scene: 机の上の書状と筆, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.35, 0.5, 0.45]}}
+  F19: {scene: 書物と新聞の山・印刷所の机, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.35, 0.5, 0.45]}}
+  FEND: {scene: 終了画面用。夕暮れの池（右半分を空ける）, lock: [1.0, 0.5, 0.5]}
+
+paint_fx: {}
+
+shots:
+  - 0 ai:F07 wide
+  - 1 ai:F02 wide
+  - 2 ai:F13 left
+  - 3 frame:paintings/yoshinobu_katsu_kaishu.jpg
+  - 4 ai:F07 left
+  - 5 ai:F13 wide
+  - 6 ai:F07 right
+  - 7 ai:F01 wide
+  - 8 ai:F05 wide
+  - 9 ai:F03 wide
+  - 10 ai:F08 wide
+  - 11 ai:F02 wide
+  - 12 ai:F03 wide
+  - 13 ai:F01 wide
+  - 14 ai:F06 wide
+  - 15 ai:F05 wide
+  - 16 ai:F07 wide
+  - 17 ai:F02 left
+  - 18 ai:F03 left
+  - 19 ai:F01 left
+  - 20 ai:F06 left
+  - 21 ai:F05 left
+  - 22 ai:F07 left
+  - 23 ai:F02 right
+  - 24 ai:F03 right
+  - 25 ai:F01 right
+  - 26 frame:paintings/yoshinobu_katsu_kaishu.jpg
+  - 27 ai:F06 right
+  - 28 ai:F04 wide
+  - 29 ai:F18 wide
+  - 30 ai:F12 wide
+  - 31 ai:F07 right
+  - 32 ai:F06 wide
+  - 33 ai:F04 left
+  - 34 ai:F18 left
+  - 35 ai:F12 left
+  - 36 ai:F07 wide
+  - 37 ai:F06 left
+  - 38 ai:F04 right
+  - 39 ai:F18 right
+  - 40 ai:F12 right
+  - 41 ai:F08 wide
+  - 42 ai:F09 wide
+  - 43 ai:F10 wide
+  - 44 ai:F12 face
+  - 45 ai:F13 wide
+  - 46 ai:F08 left
+  - 47 ai:F09 left
+  - 48 ai:F10 left
+  - 49 ai:F12 left
+  - 50 ai:F13 left
+  - 51 ai:F08 right
+  - 52 ai:F09 right
+  - 53 ai:F07 left
+  - 54 ai:F10 right
+  - 55 ai:F11 wide
+  - 56 ai:F09 wide
+  - 57 ai:F13 right
+  - 58 ai:F12 right
+  - 59 ai:F07 right
+  - 60 ai:F10 wide
+  - 61 ai:F11 left
+  - 62 ai:F09 left
+  - 63 ai:F13 face
+  - 64 ai:F12 wide
+  - 65 ai:F07 wide
+  - 66 ai:F19 wide
+  - 67 ai:F12 face
+  - 68 ai:F18 wide
+  - 69 ai:F04 face
+  - 70 ai:F19 left
+  - 71 ai:F12 right
+  - 72 ai:F18 left
+  - 73 ai:F04 left
+  - 74 ai:F19 right
+  - 75 ai:F12 wide
+  - 76 ai:F18 right
+  - 77 ai:F04 right
+  - 78 ai:F19 wide
+  - 79 ai:F12 left
+  - 80 ai:F18 wide
+  - 81 ai:F04 wide
+  - 82 ai:F12 face
+  - 83 ai:F19 left
+  - 84 ai:F13 left
+  - 85 ai:F18 left
+  - 86 ai:F04 face
+  - 87 ai:F12 wide
+  - 88 ai:F19 right
+  - 89 ai:F13 right
+  - 90 ai:F18 right
+  - 91 ai:F04 right
+  - 92 ai:F12 left
+  - 93 ai:F19 wide
+  - 94 ai:F15 wide
+  - 95 ai:F16 wide
+  - 96 ai:F13 wide
+  - 97 ai:F04 wide
+  - 98 ai:F08 wide
+  - 99 ai:F18 wide
+  - 100 frame:paintings/yoshinobu_portrait_late_14.jpg
+  - 101 ai:F09 right
+  - 102 ai:F15 left
+  - 103 ai:F16 left
+  - 104 ai:F13 face
+  - 105 frame:paintings/yoshinobu_portrait_late_13.jpg
+  - 106 ai:F04 left
+  - 107 ai:F08 left
+  - 108 ai:F18 left
+  - 109 ai:F09 wide
+  - 110 ai:F15 right
+  - 111 ai:F16 right
+  - 112 ai:F13 right
+  - 113 ai:F04 face
+  - 114 ai:F08 right
+  - 115 ai:F18 right
+  - 116 ai:F09 left
+  - 117 ai:F15 face
+  - 118 ai:F16 wide
+  - 119 ai:F13 wide
+  - 120 ai:F04 wide
+  - 121 ai:F08 wide
+  - 122 ai:F13 left
+  - 123 ai:F04 left
+  - 124 ai:F17 wide
+  - 125 ai:F15 left
+  - 126 ai:F14 wide
+  - 127 ai:F13 face
+  - 128 ai:F04 right
+  - 129 ai:F17 left
+  - 130 ai:F15 right
+  - 131 ai:F14 left
+  - 132 ai:F13 wide
+  - 133 ai:F04 face
+  - 134 ai:F17 right
+  - 135 ai:F14 right
+  - 136 ai:F17 wide
+  - 137 ai:F14 wide
+  - 138 ai:F12 right
+  - 139 ai:F14 left
+  - 140 ai:F17 left
+  - 141 ai:F14 right
+  - 142 ai:F12 face
+  - 143 ai:F14 wide
+  - 144 frame:paintings/yoshinobu_katsu_kaishu.jpg
+  - 145 ai:F04 left
+  - 146 ai:F08 left
+  - 147 ai:F16 left
+  - 148 ai:F17 right
+  - 149 ai:FEND wide
+  - 150 ai:FEND wide
+  - end ai:FEND wide
+
+focus: {}
+
+fx: {}
+
+parts:
+  - {type: versus3, from: 16, to: 16, items: [[勝の談話（後年）, 八万人], [解難録（1868年）, 3万3千4百余家], [閏4月の書（1868年）, 37〜38万人]], every: 1.8}
+  - {type: quote, from: 85, to: 85, label: 史料, text: 行蔵は我に存す、毀誉は他人の主張、我に与からず我に関せずと存候, source: 勝海舟の答書（1892年2月6日）}
+  - {type: quote, from: 102, to: 102, label: 史料, text: 此方で三十年突張ッて置たのだ、モウ又機を失ても宜しくない, source: 『海舟座談』（1898年）}
+  - {type: quote, from: 144, to: 144, label: 要点, text: 三十年突っ張って待った機は／慶喜が表に出る日だった, source: この動画のまとめ}
+
+figures: []
+
+stills:
+  - {line: 0, note: 冒頭（0秒）}
+  - {line: 4, note: 月の入用と月給}
+  - {line: 16, note: 八万人の食い違い}
+  - {line: 85, note: 行蔵は我に存す}
+  - {line: 102, note: 三十年突張ッて置た}
+  - {line: 105, note: 参内}
+  - {line: 144, note: 要点}
+  - {end: true, note: 終了画面の空き}

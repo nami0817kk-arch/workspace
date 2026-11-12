@@ -1,0 +1,164 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：クレオパトラの墓はどこにあるのか（scripts/cleopatra-story.yaml）。chiso/storymain.py が読む。
+# 11-11 作成（11/14 12:00 公開予定）。yamatai_main_look.yaml を写した。決まりは docs/story-main.md・スキル rekishi-story-screen。
+# 絵の方針：AI 絵（H01・C02〜C17）は 11-11 に Gemini（Chrome、無料版）で作った。クレオパトラの顔は特定の資料を写さない想像図。実在の古画は使わない。終了画面 YEND は yamatai の写し。
+script: scripts/cleopatra-story.yaml
+out: cleopatra_story_main
+art_dir: out/story/cleopatra/main
+main_art_dir: out/story/cleopatra/main
+ai_disclosure: この動画の情景・人物の画像は、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面の右上に「AI生成画像」と出しています）。
+chapters:
+  0:
+    label: 序章 完成しなかった墓
+    now: null
+    dates: {}
+  1:
+    label: 第1章 記録は、墓について何を書いたのか
+    now: 紀元前30年
+    dates: {}
+  2:
+    label: 第2章 採点の決まり
+    now: null
+    dates: {}
+  3:
+    label: 第3章 タポシリス・マグナ
+    now: 2005年
+    dates: {41: 2021年, 47: 2022年, 53: 2025年, 57: 2024年, 61: 2024年, 62: null, 65: null}
+  4:
+    label: 第4章 水の下の王宮区
+    now: null
+    dates: {78: 2011年, 82: null}
+  5:
+    label: 第5章 ソーマ
+    now: null
+    dates: {93: 2018年, 96: null, 98: null, 89: 2世紀末}
+  6:
+    label: 第6章 なぜ掘っても出ないのか
+    now: null
+    dates: {}
+  7:
+    label: 第7章 採点の結果
+    now: null
+    dates: {}
+  8:
+    label: まとめ クレオパトラの墓は、どこにあるのか
+    now: null
+    dates: {}
+no_tag_from: 121
+references: ['プルタルコス『英雄伝』アントニウス伝（Thayer 版 Loeb 英訳）　https://penelope.uchicago.edu/Thayer/E/Roman/Texts/Plutarch/Lives/Antony*.html', カッシウス・ディオ『ローマ史』第51巻・スエトニウス『ローマ皇帝伝』アウグストゥス（Thayer 版 Loeb 英訳）, ストラボン『地誌』第17巻・アンミアヌス・マルケリヌス『歴史』・オロシウス・フロールス・ホラティウス（Thayer 版・ラテン語原文）, エジプト観光・考古省の発表（タポシリス・マグナ 2021〜2025年）／ナショナル ジオグラフィック（2025年）／AFP（2009年）・AP（2010年）の報道, 欧州水中考古学研究所（IEASM）・Papakosta ほか アレクサンドリア王宮区の調査（学術論文）／Archaeology 誌・History.com の記事]
+ai:
+  C02:
+    scene: 古代アレクサンドリアの港の全景（灯台・宮殿群・帆船、夕日）
+    pan: h
+    crops: &id001
+      wide: [1.18, 0.5, 0.5]
+      left: [1.18, 0.4, 0.5]
+      right: [1.18, 0.6, 0.5]
+  C03:
+    scene: 海辺に建つ高い石の霊廟（円柱・高い窓・隣に小さな神殿）
+    pan: h
+    crops: *id001
+  C04:
+    scene: 霊廟の内部、2つの石棺と灯
+    pan: h
+    crops: *id001
+  C06:
+    scene: 灯のそばのパピルスの巻物と墨壺（字は読めない）
+    pan: h
+    crops: *id001
+  C07:
+    scene: ローマの将軍がガラスの棺の前に立つ神殿の内部
+    pan: h
+    crops: *id001
+  C08:
+    scene: タポシリス・マグナの神殿跡（海沿いの囲壁と門）
+    pan: h
+    crops: *id001
+  C09:
+    scene: 発掘隊が岩のトンネルを進む
+    pan: h
+    crops: *id001
+  C10:
+    scene: 海に沈んだ古代都市の遺跡（円柱・スフィンクス・ダイバー）
+    pan: h
+    crops: *id001
+  C11:
+    scene: 手のひらの青銅貨のアップ
+    pan: h
+    crops: *id001
+  C12:
+    scene: 砂漠の発掘現場の竪穴と石の墓室
+    pan: h
+    crops: *id001
+  C13:
+    scene: 古代アレクサンドリアに迫る津波
+    pan: h
+    crops: *id001
+  C14:
+    scene: 現代のアレクサンドリアの海沿いの都市（上空）
+    pan: h
+    crops: *id001
+  C15:
+    scene: 夕暮れ、霊廟の窓から綱で引き上げられる将軍と侍女
+    pan: h
+    crops: *id001
+  C16:
+    scene: 空の寝台とイチジクの籠
+    pan: h
+    crops: *id001
+  H01:
+    scene: クレオパトラの想像図（海を望む王宮のバルコニー、背後に港と灯台）
+    pan: h
+    crops: *id001
+  YEND:
+    scene: 夜明けの海（終了画面）
+    lock: [1.0, 0.5, 0.5]
+paint_fx: {}
+shots: ['0 ai:C03 wide', '1 ai:C04 wide', '2 ai:C07 wide', '3 ai:C06 wide', '4 ai:H01 wide', '5 ai:C12 wide', '6 ai:C02 wide', '7 ai:C03 left', '8 ai:C15 wide', '9 ai:C06 left', '10 ai:C04 left', '11 ai:C02 left', '12 ai:C06 right', '13 ai:C03 right', '14 ai:C02 right', '15 ai:C06 wide', '16 ai:C02 wide', '17 ai:C04 right', '18 ai:C06 left', '19 ai:C03 wide', '20 ai:C02 left', '21 ai:C16 wide', '22 ai:C02 right', '23 ai:C16 left', '24 ai:C04 wide', '25 ai:C07 left', '26 ai:C04 left', '27 ai:C06 right', '28 ai:C03 left', '29 ai:C02 wide', '30 ai:C06 wide', '31 ai:H01 left', '32 ai:C03 right', '33 ai:C02 left', '34 ai:C07 right', '35 ai:C06 left', '36 ai:H01 right', '37 ai:C08 wide', '38 ai:C12 left', '39 ai:C08 left', '40 ai:C10 wide', '41 ai:C11 wide', '42 ai:C10 left', '43 ai:C12 right', '44 ai:C10 right', '45 ai:C11 left', '46 ai:C12 wide', '47 ai:C09 wide', '48 ai:C08 right', '49 ai:C09 left', '50 ai:C12 left', '51 ai:C09 right', '52 ai:C10 wide', '53 ai:C08 wide', '54 ai:C10 left', '55
+    ai:C09 wide', '56 ai:C08 left', '57 ai:C10 right', '58 ai:C12 right', '59 ai:C10 wide', '60 ai:C08 right', '61 ai:C12 wide', '62 ai:C10 left', '63 ai:C08 wide', '64 ai:C12 left', '65 ai:C10 right', '66 ai:C02 right', '67 ai:C10 wide', '68 ai:C02 wide', '69 ai:C10 left', '70 ai:C02 left', '71 ai:C13 wide', '72 ai:C10 right', '73 ai:C02 right', '74 ai:C10 wide', '75 ai:C02 wide', '76 ai:C10 left', '77 ai:C02 left', '78 ai:C10 right', '79 ai:C02 right', '80 ai:C10 wide', '81 ai:C02 wide', '82 ai:C10 left', '83 ai:C02 left', '84 ai:C10 right', '85 ai:C04 right', '86 ai:C07 wide', '87 ai:C12 right', '88 ai:C07 left', '89 ai:C04 wide', '90 ai:C12 wide', '91 ai:C07 right', '92 ai:C04 left', '93 ai:C07 wide', '94 ai:C12 left', '95 ai:C04 right', '96 ai:C12 right', '97 ai:C04 wide', '98 ai:C12 wide', '99 ai:C14 wide', '100 ai:C12 left', '101 ai:C14 left', '102 ai:C08 left', '103 ai:C14 right', '104 ai:C08 right', '105 ai:C14 wide', '106 ai:C12 right', '107 ai:C08 wide', '108 ai:C14 left', '109
+    ai:C08 left', '110 ai:C07 left', '111 ai:H01 wide', '112 ai:C02 right', '113 ai:C03 wide', '114 ai:H01 left', '115 ai:C02 wide', '116 ai:C03 left', '117 ai:C11 right', '118 ai:C09 left', '119 ai:H01 right', '120 ai:C07 right', '121 ai:C02 left', '122 ai:YEND wide', 'end ai:YEND wide']
+focus: {}
+fx:
+  C04:
+    lamp:
+      region: [0.0, 0.2, 1.0, 0.9]
+  C06:
+    lamp:
+      region: [0.5, 0.2, 0.9, 0.7]
+  C16:
+    lamp:
+      region: [0.0, 0.3, 1.0, 0.9]
+  C09:
+    lamp:
+      region: [0.0, 0.3, 1.0, 0.9]
+  YEND:
+    water:
+      region: [0.0, 0.62, 1, 1.0]
+parts:
+- {type: quote, from: 18, to: 18, label: 史料, text: 二人が始めた霊廟を／完成させよ, source: スエトニウス『ローマ皇帝伝』アウグストゥス17（要旨）}
+- {type: quote, from: 26, to: 26, label: 史料, text: 私は王を見たかったのであって／死体ではない, source: スエトニウス『ローマ皇帝伝』アウグストゥス18（要旨）}
+- type: versus3
+  from: 21
+  to: 21
+  items:
+  - [プルタルコス, 3つの説]
+  - [ストラボン, 2つの説]
+  - [オロシウス, 左の腕に傷]
+  every: 1.8
+- type: versus3
+  from: 87
+  to: 87
+  items:
+  - [ストラボン, 王宮の中]
+  - [ゼノビオス, 町の真ん中]
+  every: 2.0
+figures: []
+stills:
+- {line: 0, note: 冒頭（0秒）}
+- {line: 3, note: 場所の一言}
+- {line: 4, note: 答えの席}
+- {line: 21, note: 死因の食い違い}
+- {line: 29, note: 3つの手がかり（表）}
+- {line: 34, note: 3つの候補の地図}
+- {line: 110, note: 結果（棒）}
+- {line: 121, note: 余韻}
+- {end: true, note: 終了画面の空き}
