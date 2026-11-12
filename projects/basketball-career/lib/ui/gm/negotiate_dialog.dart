@@ -92,8 +92,9 @@ class _NegotiateDialogState extends State<_NegotiateDialog> {
   @override
   Widget build(BuildContext context) {
     final car = widget.car, p = widget.p, ask = widget.ask;
-    final canHaggle = !(widget.extension ? car.extAsked : car.haggled).contains(p.id) && ask.salary > minSalary;
-    final chance = (car.discountChance(p, freeAgent: widget.freeAgent) * 100).round();
+    final rounds = car.haggleRounds(p.id);
+    final canHaggle = (widget.extension ? !car.extAsked.contains(p.id) : rounds < Career.maxHaggle) && ask.salary > minSalary;
+    final chance = ((car.discountChance(p, freeAgent: widget.freeAgent) - (widget.extension ? 0 : 0.1 * rounds)).clamp(0.05, 0.85) * 100).round();
     int at(double f) => (ask.salary * f).round().clamp(minSalary, maxSalary);
     return AlertDialog(
       title: Text(
@@ -143,7 +144,7 @@ class _NegotiateDialogState extends State<_NegotiateDialog> {
             _option(context, '求める額で', '${money(ask.salary)}・${widget.extension ? 'たいてい受ける' : '必ず受ける'}', 1.0),
             _option(context, '1割高く', '${money(at(1.1))}・気持ちが上がる', 1.1),
             if (canHaggle)
-              _option(context, '1割安く', '${money(at(0.9))}・受ける見込み$chance%', 0.9)
+              _option(context, '1割安く', '${money(at(0.9))}・受ける見込み$chance%${widget.extension ? '' : '(あと${Career.maxHaggle - rounds}回)'}', 0.9)
             else
               const Padding(
                 padding: EdgeInsets.only(top: 6),

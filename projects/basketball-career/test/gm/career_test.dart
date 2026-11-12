@@ -989,7 +989,12 @@ void main() {
       if (!ok) {
         expect(c.haggled, contains(b.id));
         expect(b.morale, lessThanOrEqualTo(before));
-        expect(c.offer(b.id, 1, 0.9), isFalse);
+        // 代理人との値切りは3回まで。3回断られたら、もう申し出られない
+        var guard = 0;
+        while (c.haggleRounds(b.id) < Career.maxHaggle && guard++ < 10) {
+          if (c.offer(b.id, 1, 0.9)) break;
+        }
+        if (c.haggleRounds(b.id) >= Career.maxHaggle) expect(c.offer(b.id, 1, 0.9), isFalse);
       }
     });
   });
