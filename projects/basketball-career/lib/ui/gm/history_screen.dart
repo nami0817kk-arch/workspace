@@ -76,6 +76,23 @@ class HistoryScreen extends StatelessWidget {
                       ]),
                     ),
                 ]),
+                const SectionTitle('カップ戦(41試合のあと、地区の上位4チームずつ)'),
+                _card([
+                  if (car.cupHistory.isEmpty) const Text('41試合を終えると行われる。優勝は賞金と人気。', style: TextStyle(color: GmColors.sub)),
+                  for (final r in car.cupHistory.reversed.take(8))
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 2),
+                      child: Row(children: [
+                        SizedBox(width: 56, child: Text('${r[0]}年目', style: const TextStyle(color: GmColors.sub, fontSize: 13))),
+                        TeamBadge(team: r[1], size: 18),
+                        const SizedBox(width: 6),
+                        Expanded(
+                          child: Text('${teamDefs[r[1]].short}(準優勝 ${teamDefs[r[2]].short})',
+                              style: TextStyle(fontSize: 13, color: r[1] == car.mine ? GmColors.ball : null)),
+                        ),
+                      ]),
+                    ),
+                ]),
                 const SectionTitle('記録帳'),
                 _card([
                   if (car.records.isEmpty) const Text('試合を重ねると出る。破ると知らせる。', style: TextStyle(color: GmColors.sub)),
