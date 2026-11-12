@@ -773,6 +773,14 @@ class ProgressTab extends StatelessWidget {
         Expanded(
           child: OutlinedButton(
             style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(36)),
+            onPressed: car.signAndTradeProblem(p) != null || c.busy ? null : () => c.signAndTrade(p.id),
+            child: const FittedBox(fit: BoxFit.scaleDown, child: Text('サイン＆トレード')),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: OutlinedButton(
+            style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(36)),
             onPressed: () => c.letGo(p.id),
             child: const Text('放す'),
           ),
