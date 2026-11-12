@@ -314,9 +314,13 @@ def draw_illust(img: Image.Image, sc: dict, u: float) -> None:
             d.text((W / 2, y + size * 0.95), sc["sub"], font=ov.font(52), fill=ov.WHITE, anchor="mm", stroke_width=6, stroke_fill=ov.NAVY)
 
 
-def _blur_back(img: Image.Image, mp, sc: dict, t: float) -> None:
+def _blur_back(img: Image.Image, mp, sc: dict, t: float, u: float | None = None) -> None:
     if mp is not None and sc.get("view"):
-        v = mp.view(*sc["view"])
+        vw = tuple(sc["view"])
+        if u is not None and sc.get("view_to"):          # 札の背景もゆっくり動かす(止まった画面にしない)
+            k = min(1.0, max(0.0, u))
+            vw = tuple(a + (b - a) * k for a, b in zip(vw, sc["view_to"]))
+        v = mp.view(*vw)
         b = Image.fromarray(mp.base_img(v, t))
         b = b.resize((W // 4, H // 4)).filter(ImageFilter.GaussianBlur(6)).resize((W, H), Image.BICUBIC)
         a = np.asarray(b).astype(np.float32) * 0.45 + np.array([8, 14, 30], np.float32) * 0.55
@@ -328,7 +332,7 @@ def _blur_back(img: Image.Image, mp, sc: dict, t: float) -> None:
 
 
 def draw_card(img: Image.Image, mp, sc: dict, t: float, u: float) -> None:
-    _blur_back(img, mp, sc, t)
+    _blur_back(img, mp, sc, t, u)
     d = ImageDraw.Draw(img)
     a = _ease(u * 5)
     big = sc["big"]
@@ -360,7 +364,7 @@ def draw_card(img: Image.Image, mp, sc: dict, t: float, u: float) -> None:
 
 def draw_cards(img: Image.Image, mp, sc: dict, t: float, u: float) -> None:
     """答えの並べ直し: 番号つきのカードを上から。items=[(題, 添え書き)]、n=いま何枚目まで、groups=[(最初, 最後, 括弧の字)]。"""
-    _blur_back(img, mp, sc, t)
+    _blur_back(img, mp, sc, t, u)
     items, n = sc["items"], sc.get("n", len(sc["items"]))
     land = W > H
     x0, x1 = (W * 0.18, W * 0.82) if land else (W * 0.07, W * 0.93)

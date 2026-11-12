@@ -284,7 +284,7 @@ def draw_bars(img, sc, t, u):
 
 
 def draw_cards(img, sc, t, u):
-    shots._blur_back(img, MAP, sc, t)
+    shots._blur_back(img, MAP, sc, t, u)
     items, n = sc["items"], sc.get("n", len(sc["items"]))
     x0, x1 = (W * 0.16, W * 0.84) if LAND else (W * 0.06, W * 0.94)
     top, gap = (H * 0.12, H * 0.136) if LAND else (H * 0.16, H * 0.125)
