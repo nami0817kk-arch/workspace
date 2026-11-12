@@ -1,0 +1,146 @@
+# 物語完結型ショート 勝海舟 s5（2026-11-12）。本編 scripts/kaishu-story.yaml（11/14 19:00 公開、https://youtu.be/KIXtgjggYl0）から。11/15 に予約。
+# 形式は inou_s1.yaml・saigo_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（dev/output/rekishi-chiso/research/勝海舟_facts_20261111.yaml）と本編の # fact: だけ。
+# 絵は本編の AI 絵（out/story/kaishu/main。勝は後ろ姿・斜め後ろ・手元）と実在の絵（パブリックドメイン）。新しい絵は作らない。
+# 切り口：小鹿の棺と慶喜の末子（本編第7・8章）。棺の横の言葉は居合わせた人の談（B20）。勝家は精が継いだ。
+# 計算：1888-08-23生→1899-01-20＝満10歳／2月8日→2月14日＝6日（本編と同じ）。
+# 理解テスト4問：①勝海舟と長男・小鹿 ②1892年2月8日に小鹿没。棺の横で、居合わせた人の話では勝家の奉還と慶喜の末子を望んだ ③慶喜は涙にむせび、2月14日に承諾。だが話は進まず海舟が亡くなった ④翌1899年1月20日に末の子・精が入り、勝家を継いだ。慶喜に嫌われたとの発言は本編
+# 本編の弱点：B20 の話者は勝本人ではなく棺の場にいた人物（「居合わせた人の話では」と言う）。小鹿の没日は Wikipedia（サライは1日ずれる）。精の家督の日付はWikipediaの誤記疑いがあり言わない。
+title: "勝海舟｜長男の棺の横で、海舟は慶喜に頼んだ"
+yt_title: "勝海舟は長男・小鹿の棺の横で「慶喜公の末子を貰いたい」と言った　話は進まず、海舟は亡くなった"
+description: |-
+  1892年2月8日、勝海舟の長男、小鹿が亡くなりました。『海舟座談』の附録は、居合わせた人の話として、海舟が棺の横で、勝家を徳川氏に奉還したい、そして慶喜公の末子を貰いたい、と言ったと記します。慶喜は涙にむせんだ、とも。
+  慶喜が承諾したのは2月14日で、小鹿の死の6日後です。しかし、世話をした人は、その後は一向に進まないまま海舟が亡くなった、と語っています。海舟の死の翌日、1899年1月20日に、慶喜の末の子、精が勝家に入りました（Wikipediaなどによる）。
+  座談の附録はNDLデジタルの全文（OCR）で確かめましたが、語り手は海舟本人ではなく、日付は確かめられていません。
+  海舟は、その慶喜に、嫌われていた、と自分で語っています。慶喜は何と言ったのか。本編は概要欄のリンクからどうぞ。
+  https://youtu.be/KIXtgjggYl0
+hashtags:
+- "#勝海舟"
+- "#徳川慶喜"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の風景・室内の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。"
+art_dir: out/story/kaishu
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: kaishu_story_s5
+header:
+  tag: "勝海舟と徳川慶喜"
+  title: "棺の横の、《頼み》"
+now:
+- {at: "1892年", text: "1892年2月　小鹿の死", point: 0}
+- {at: "1899年", text: "1899年1月　精が入る", point: 1}
+timeline:
+- {label: "1892"}
+- {label: "1899"}
+shots:
+  Katsu:
+    kind: "real"
+    image: "paintings/yoshinobu_katsu_kaishu.jpg"
+    focus: [0.5, 0.4]
+    move: "in"
+    credit: "《勝海舟》（ウィキメディア・コモンズ、パブリックドメイン）"
+    must: "勝海舟の肖像"
+  Room:
+    kind: "ai"
+    file: "kaishu/main/F15.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "座敷で向き合う2人の老人"
+  Night:
+    kind: "ai"
+    file: "kaishu/main/F13.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "夜の縁側に座る勝（斜め後ろ）"
+  Yo13:
+    kind: "real"
+    image: "paintings/yoshinobu_portrait_late_13.jpg"
+    focus: [0.5, 0.4]
+    move: "in"
+    credit: "晩年の徳川慶喜（1913年以前の図版、ウィキメディア・コモンズ、パブリックドメイン）"
+    must: "晩年の徳川慶喜の図版"
+  Letter:
+    kind: "ai"
+    file: "kaishu/main/F18.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "机の上の書状と筆"
+  Hikawa:
+    kind: "ai"
+    file: "kaishu/main/F08.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "赤坂氷川の屋敷の黒塀と石だたみ"
+  RoomR:
+    kind: "ai"
+    file: "kaishu/main/F08.jpg"
+    focus: [0.3, 0.5]
+    move: "right"
+    must: "赤坂氷川の屋敷の黒塀と石だたみ"
+  Desk:
+    kind: "ai"
+    file: "kaishu/main/F04.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "灯の下で日記を書く勝（斜め後ろ）"
+  NightL:
+    kind: "ai"
+    file: "kaishu/main/F13.jpg"
+    focus: [0.3, 0.5]
+    move: "right"
+    must: "夜の縁側に座る勝（斜め後ろ）"
+lines:
+  # fact: kaishu-C36
+- 語り: "1892年2月8日。勝海舟の長男、小鹿が亡くなった。"
+  shot: Katsu
+  tone: 重い
+  pause: 0.12
+  # fact: kaishu-B20
+- 語り: "居合わせた人の話では、海舟は、棺の横で、こう言った。"
+  shot: Room
+  tone: しみじみ
+  pause: 0.12
+  # fact: kaishu-B20
+- 語り: "自分の死んだあと、この家を、徳川氏に奉還したい。そして、慶喜公の末子を貰いたい、と。"
+  shot: Night
+  tone: 重い
+  pause: 0.12
+  # fact: kaishu-B20
+- 語り: "それを聞いた慶喜は、涙にむせんだ、と座談の附録は記す。"
+  shot: Yo13
+  tone: しみじみ
+  pause: 0.12
+  # fact: kaishu-C36
+- 語り: "慶喜が承諾したのは、2月14日。小鹿の死の、6日後だった。"
+  shot: Letter
+  tone: しみじみ
+  pause: 0.12
+  # fact: kaishu-B21
+- 語り: "ところが、その後は一向に進まないまま、海舟が亡くなった、と世話をした人は語る。"
+  shot: Hikawa
+  tone: 重い
+  pause: 0.12
+  # fact: kaishu-C37
+- 語り: "1899年1月20日、海舟の死の翌日。慶喜の末の子、精が、勝の家に入った。10歳だった。"
+  shot: RoomR
+  tone: 重い
+  pause: 0.12
+  # fact: kaishu-C37
+- 語り: "海舟は、はじめ、慶久を望んだ。しかし、慶喜は、嗣子だからと断り、末の男の子の精を出した。"
+  shot: Desk
+  tone: しみじみ
+  pause: 0.12
+  # fact: kaishu-B22
+- 語り: "海舟は、その慶喜に、嫌われていた、と自分で語る。慶喜は、何と言ったのか。"
+  shot: NightL
+  tone: 疑問
+  pause: 0.15
