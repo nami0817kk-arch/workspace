@@ -866,7 +866,7 @@ class Career {
   /// 今のシーズンの試合が始まっているか(シーズン中・プレーオフ前・シーズン終了)。
   bool get seasonStarted => phase == Phase.season || phase == Phase.playoffs || phase == Phase.seasonEnd;
 
-  bool get canTrade => phase == Phase.preseason || phase == Phase.contracts || (phase == Phase.season && block < tradeDeadlineBlock);
+  bool get canTrade => phase == Phase.preseason || phase == Phase.contracts || phase == Phase.draft || (phase == Phase.season && block < tradeDeadlineBlock);
 
   /// 自由契約の選手と契約できるか(シーズン中も最低年俸の選手なら取れる)。
   bool get canSign => phase == Phase.preseason || phase == Phase.contracts || phase == Phase.season;
