@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../gm/career.dart';
 import '../../gm/league.dart';
+import '../../gm/personality.dart';
 import '../../gm/player.dart';
 import 'box_score.dart';
 import 'common.dart';
@@ -66,6 +67,13 @@ class PlayerCardHeader extends StatelessWidget {
             }(), style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.white)),
           ]),
         ]),
+        const SizedBox(height: 8),
+        Text(
+          personalityKnown(p) ? '性格: ${personalityOf(p).line}' : '性格: まだ見えていない(同じチームに2年いると見えてくる)',
+          style: const TextStyle(fontSize: 12, color: Colors.white70),
+        ),
+        if (personalityKnown(p))
+          Text('${personalityOf(p).value.text}。${personalityOf(p).traits.map((t) => t.text).join('。')}。', style: const TextStyle(fontSize: 11, color: Colors.white60, height: 1.4)),
         if (badges.isNotEmpty) ...[
           const SizedBox(height: 10),
           Wrap(spacing: 6, runSpacing: 6, children: [
@@ -167,7 +175,8 @@ Future<void> showPlayerCard(BuildContext context, Career car, Player p, int team
             if (awardsSummary(car, p).isNotEmpty) _line('表彰', awardsSummary(car, p)),
             _line('年俸', '${money(p.salary)}(残り${p.years}年)'),
             _line('伸びしろ', p.grade == '-' ? 'なし' : p.grade),
-            if (p.injured > 0) _line('けが', 'あと${p.injured}試合'),
+            if (p.injured > 0) _line('けが', p.injuryText.isEmpty ? 'あと${p.injured}試合' : p.injuryText),
+            if (p.injCount >= 3) _line('けがの歴', '${p.injCount}回(繰り返している)'),
             RecentGames(car: car, p: p),
             if (p.career.isNotEmpty) CareerTable(p: p),
           ]),

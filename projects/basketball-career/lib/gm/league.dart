@@ -250,6 +250,12 @@ class Team {
   int get payroll => roster.fold(0, (s, p) => s + p.salary) + deadCap;
   int get capRoom => salaryCap - payroll;
 
+  /// 選手どうしの相性(0〜100、50がふつう)。自分のチームだけ動く。強さに最大 ±1.5。
+  int chem = 50;
+
+  /// 上がる方は最大 +0.2、下がる方は最大 -1.5(強いチームが強くなりすぎない。測ると +0.4 でも強いチームの優勝が増えすぎた)。
+  double get chemEffect => chem >= 50 ? ((chem - 50) / 50 * 0.2).clamp(0.0, 0.2) : ((chem - 50) / 50 * 1.5).clamp(-1.5, 0.0);
+
   /// チームの方針(軸ごとに 0・1・2。1 が「ふつう」)。自分のチームだけ変えられる。
   List<int> policy = defaultPolicy();
 
@@ -265,7 +271,7 @@ class Team {
   /// チームの強さ。力の高い順に9人を重み付きで平均し、ガードとビッグがいなければ下げる。
   /// 自分で順を決めたときは、その順で数える(力の低い選手を先発にすると弱くなる)。
   double get strength =>
-      (rotation.isEmpty && minutes.isEmpty ? teamStrength(healthy) : orderStrength(order.where((p) => p.injured == 0).toList())) + minutesEffect + coachBonus + policyEffect;
+      (rotation.isEmpty && minutes.isEmpty ? teamStrength(healthy) : orderStrength(order.where((p) => p.injured == 0).toList())) + minutesEffect + coachBonus + policyEffect + chemEffect;
 
   Map<String, dynamic> toJson() => {
         'i': index,
@@ -276,6 +282,7 @@ class Team {
         if (deadCap != 0) 'dc': deadCap,
         if (deadLater.isNotEmpty) 'dl': deadLater,
         if (policy.any((c) => c != 1)) 'po': policy,
+        if (chem != 50) 'ch': chem,
         if (rotation.isNotEmpty) 'ro': rotation,
         'sf': staff,
         if (twoWay.isNotEmpty) 'tw': [for (final p in twoWay) p.toJson()],
@@ -288,6 +295,7 @@ class Team {
   static Team fromJson(Map<String, dynamic> j) => _fromJson(j)
     ..streak = (j['sk'] as int?) ?? 0
     ..training = ((j['tr'] as int?) ?? 1).clamp(0, 2)
+    ..chem = ((j['ch'] as int?) ?? 50).clamp(0, 100)
     ..policy = [for (var i = 0; i < PolicyAxis.values.length; i++) i < ((j['po'] as List?)?.length ?? 0) ? ((j['po'] as List)[i] as int).clamp(0, 2) : 1]
     ..deadLater = [for (final x in (j['dl'] as List? ?? const [])) x as int]
     ..coaches = [for (final c in (j['co'] as List? ?? const [])) Coach.fromJson(Map<String, dynamic>.from(c as Map))]
@@ -585,6 +593,9 @@ const minutesByOrder = [34, 33, 32, 30, 28, 22, 18, 14, 10, 8, 6, 3, 2, 0, 0];
       final r = rng.nextInt(100);
       final games = r < 80 ? 1 + rng.nextInt(6) : r < 97 ? 8 + rng.nextInt(15) : 30 + rng.nextInt(30);
       p.injured = math.max(1, (games * speed).round());
+      // 部位は乱数を使わず、選手と回数から決める(リーグの続きを変えない)
+      p.injPart = (p.id * 7 + p.injCount * 13 + games) % injuryParts.length;
+      p.injCount++;
       injuries.add((t.index, p));
     }
   }

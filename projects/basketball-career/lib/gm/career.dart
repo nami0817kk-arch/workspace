@@ -5,6 +5,7 @@ import 'draft.dart';
 import 'inbox.dart';
 import 'league.dart';
 import 'names.dart';
+import 'personality.dart';
 import 'player.dart';
 import 'rating.dart';
 import 'rng.dart';
@@ -1050,6 +1051,7 @@ class Career {
     if (roundAt < blockStart(block + 1)) return;
     block++;
     _updateMorale();
+    _updateChem();
     _giveMonthly();
     if (block == tradeDeadlineBlock) _pickAllStars();
     if (block < blocksPerSeason) _mailAfterBlock();
@@ -1099,6 +1101,27 @@ class Career {
 
   /// 自分のチームの選手の気持ちを、区切りごとに動かす。
   /// 力の順位より出場の順が2つ以上下なら下がり、上なら上がる。チームの勝率でも動く。
+  /// 相性が決まる要素(先発から9人目まで)。続けて一緒にいる選手の割合・不満の人数・好調の人数・勝ち。
+  ({double continuity, int unhappy, int happy}) get chemFactors {
+    final top = me.order.take(9).toList();
+    if (top.isEmpty) return (continuity: 0.5, unhappy: 0, happy: 0);
+    return (
+      continuity: top.where((p) => p.tenure >= 1).length / top.length,
+      unhappy: top.where((p) => p.morale < 35).length,
+      happy: top.where((p) => p.morale >= 70).length,
+    );
+  }
+
+  /// 区切りごとに、相性を目標へ寄せる(新しい選手が多い・不満がある・負けが続くと下がる)。
+  void _updateChem() {
+    final f = chemFactors;
+    final top = me.order.take(9).toList();
+    final leaders = top.where((p) => hasTrait(p, Trait.leader)).length.clamp(0, 2);
+    final troublemakers = top.where((p) => hasTrait(p, Trait.troublemaker)).length;
+    final target = 50 + (f.continuity - 0.5) * 20 + (me.winPct - 0.5) * 16 + (f.happy - 4) * 1.5 - f.unhappy * 6 + leaders * 3 - troublemakers * 3;
+    me.chem = (me.chem + ((target - me.chem) * 0.4).round()).clamp(0, 100);
+  }
+
   void _updateMorale() {
     final order = me.order;
     final mins = me.playMinutes();
@@ -1119,6 +1142,8 @@ class Career {
       }
       if (pct >= 0.6) d += 3;
       if (pct < 0.4) d -= 3;
+      // 勝ちたい選手は、勝ち負けに敏感
+      if (personalityOf(p).value == Value.win) d += pct >= 0.55 ? 1 : pct < 0.4 ? -2 : 0;
       d += const [1, 0, -1][me.training.clamp(0, 2)];
       final before = p.morale;
       p.morale = (p.morale + d).clamp(0, 100);
@@ -1981,7 +2006,7 @@ class Career {
     if (team != mine && t.mode == TeamMode.contend) v += 8;
     final better = t.roster.where((x) => x.ovr > p.ovr && !(team == mine && expiring.contains(x.id))).length;
     v += better < 3 ? 18 : better < 5 ? 10 : better < 8 ? 0 : -12;
-    if (team == mine) v += (hype - 50) / 5;
+    if (team == mine) v += (hype - 50) / 5 + (me.chem - 50) / 10;
     return v.round().clamp(0, 100);
   }
 
@@ -2458,7 +2483,8 @@ class Career {
 
   /// 値切ったときに受けてくれる見込み(0〜1)。気持ちが高い・チームが強いほど受ける。
   double discountChance(Player p, {required bool freeAgent}) {
-    final base = freeAgent ? 0.35 + hype / 250 : 0.3 + p.morale / 200;
+    var base = freeAgent ? 0.35 + hype / 250 : 0.3 + p.morale / 200;
+    if (!freeAgent) base += personalityOf(p).value == Value.loyal ? 0.1 : personalityOf(p).value == Value.money ? -0.1 : 0;
     final win = history.isEmpty ? 0.0 : (history.last.wins / gamesPerSeason - 0.5) * 0.6;
     return (base + win).clamp(0.1, 0.85);
   }
