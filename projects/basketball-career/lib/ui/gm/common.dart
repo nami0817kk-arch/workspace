@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../gm/league.dart';
 import '../../gm/player.dart';
 import '../team_colors.dart';
+import 'player_face.dart';
 import 'style.dart';
 import 'team_logo.dart';
 
@@ -150,7 +151,7 @@ class PlayerRow extends StatelessWidget {
             border: Border.all(color: selected ? GmColors.ball : GmColors.line),
           ),
           child: Row(children: [
-            PlayerAvatar(team: team, size: 40),
+            PlayerFace(p: p, team: team, size: 40),
             const SizedBox(width: 8),
             Expanded(
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

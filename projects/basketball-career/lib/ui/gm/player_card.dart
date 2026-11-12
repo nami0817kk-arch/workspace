@@ -6,6 +6,7 @@ import '../../gm/personality.dart';
 import '../../gm/player.dart';
 import 'box_score.dart';
 import 'common.dart';
+import 'player_face.dart';
 import 'style.dart';
 
 /// バッジの段階の色(銅・銀・金・殿堂)。
@@ -34,7 +35,7 @@ class PlayerCardHeader extends StatelessWidget {
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          PlayerAvatar(team: team, size: 84, pose: p.pos.big ? 'dunk' : 'shoot'),
+          PlayerFace(p: p, team: team, size: 84),
           const SizedBox(width: 12),
           Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
