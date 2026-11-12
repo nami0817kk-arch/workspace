@@ -27,6 +27,13 @@ class _InboxScreenState extends State<InboxScreen> {
   GmController get c => widget.c;
 
   @override
+  void initState() {
+    super.initState();
+    // 前に見終えた知らせは、開いたときに片付ける(消すボタンは要らない)。返事待ちは残る
+    WidgetsBinding.instance.addPostFrameCallback((_) => c.clearReadMessages());
+  }
+
+  @override
   void dispose() {
     // 受信箱を閉じたら、返事が要らない知らせは読んだことにする(開くたびに未読の数が残らない)
     WidgetsBinding.instance.addPostFrameCallback((_) => c.readAllMessages());
@@ -42,14 +49,6 @@ class _InboxScreenState extends State<InboxScreen> {
           return Scaffold(
             appBar: AppBar(
               title: const Text('受信箱'),
-              actions: [
-                if (car.inbox.any((m) => m.read && !m.needsAnswer))
-                  TextButton.icon(
-                    onPressed: c.clearReadMessages,
-                    icon: const Icon(Icons.delete_sweep_rounded),
-                    label: const Text('読んだ知らせを消す'),
-                  ),
-              ],
             ),
             body: SafeArea(
               child: Center(
