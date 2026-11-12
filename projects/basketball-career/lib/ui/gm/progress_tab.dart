@@ -92,6 +92,7 @@ class ProgressTab extends StatelessWidget {
           const SizedBox(height: 8),
           Text(problem, style: const TextStyle(color: GmColors.bad, fontWeight: FontWeight.bold)),
         ],
+        _todo(_preseasonTodo(car, problem)),
         const SizedBox(height: 12),
         FilledButton.icon(
           onPressed: problem == null && !c.busy ? c.startSeason : null,
@@ -134,6 +135,67 @@ class ProgressTab extends StatelessWidget {
           const Text('今季の面談は済んだ。', style: TextStyle(color: GmColors.sub, fontSize: 12)),
       ]);
 
+  /// 「やること」の一行(金色の太字)。
+  Widget _todo(String t) => Padding(
+        padding: const EdgeInsets.only(top: 8),
+        child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          const Icon(Icons.lightbulb_rounded, size: 18, color: GmColors.gold),
+          const SizedBox(width: 6),
+          Expanded(child: Text(t, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: GmColors.gold, height: 1.4))),
+        ]),
+      );
+
+  /// シーズン前のやること。
+  String _preseasonTodo(Career car, String? problem) {
+    if (car.meetingOpen) return 'やること: まず下の「オーナー」で今季の予算を決める。';
+    if (car.me.roster.length < minRoster) return 'やること: 登録が$minRoster人に足りない。「補強」で選手を取る。';
+    if (car.me.roster.length > maxRoster) return 'やること: 登録が$maxRoster人を超えている。「チーム」で選手を放すか、トレードに出す。';
+    if (problem != null) return 'やること: $problem';
+    return 'やること: 準備ができていれば「開幕する」。補強やトレードをしてからでもよい。';
+  }
+
+  /// シーズン中のやること。
+  String _seasonTodo(Career car) {
+    if (car.incoming != null) return 'やること: トレードの申し込みが届いている。下で受けるか断る。';
+    if (car.inbox.any((m) => m.needsAnswer)) return 'やること: 受信箱に返事を待つ知らせがある。';
+    if (car.block < tradeDeadlineBlock && car.block == tradeDeadlineBlock - 1) {
+      return 'やること: 次の区切りでトレードの締め切り。補強するならいま。済んだら試合を進める。';
+    }
+    return 'やること: 「次の試合へ」で試合を進める。けが人や不調があれば「チーム」で先発を見直す。';
+  }
+
+  /// 直近10試合の○●と、この区切りの見どころ。
+  Widget _formCard(BuildContext context, Career car) {
+    final hl = car.highlightsOf(car.lastGames).take(4).toList();
+    final w = car.form.where((d) => d > 0).length;
+    return _card([
+      Row(children: [
+        Text('直近${car.form.length}試合 $w勝${car.form.length - w}敗', style: const TextStyle(fontWeight: FontWeight.bold)),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Wrap(spacing: 3, runSpacing: 3, children: [
+            for (final d in car.form)
+              Container(
+                width: 20,
+                height: 20,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(color: d > 0 ? GmColors.good : GmColors.bad, shape: BoxShape.circle),
+                child: Text(d > 0 ? '勝' : '負', style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.black)),
+              ),
+          ]),
+        ),
+      ]),
+      if (hl.isNotEmpty) ...[
+        const SizedBox(height: 8),
+        for (final h in hl)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 1),
+            child: Text('・$h', style: const TextStyle(fontSize: 13, height: 1.4)),
+          ),
+      ],
+    ]);
+  }
+
   Widget _kv(String k, String v, {Color? color}) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 2),
         child: Row(children: [
@@ -160,6 +222,7 @@ class ProgressTab extends StatelessWidget {
         _kv('成績', '${me.wins}勝${me.losses}敗($conf ${car.confRank}位)'),
         _kv('オーナーの目標', '${car.target}勝', color: me.wins + (gamesPerSeason - played) < car.target ? GmColors.bad : null),
         _kv('トレード', deadline ? 'あと${tradeDeadlineBlock - car.block}区切りで締め切り' : '締め切りを過ぎた', color: deadline ? null : GmColors.sub),
+        _todo(_seasonTodo(car)),
         const SizedBox(height: 12),
         Row(children: [
           Expanded(
@@ -200,6 +263,7 @@ class ProgressTab extends StatelessWidget {
           ),
         ]),
       ]),
+      if (car.form.isNotEmpty) _formCard(context, car),
       ..._offerCard(context, car),
       ..._inboxCard(context, car),
       ..._scheduleCard(car),
