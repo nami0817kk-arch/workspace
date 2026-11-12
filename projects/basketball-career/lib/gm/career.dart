@@ -8,6 +8,7 @@ import 'names.dart';
 import 'personality.dart';
 import 'player.dart';
 import 'rating.dart';
+import 'records.dart';
 import 'rng.dart';
 import 'trade.dart';
 
@@ -1037,6 +1038,7 @@ class Career {
     roundAt += n;
     _tickTenDay(n);
     lastGames = [...lastGames, ...games];
+    _checkGameRecords(games);
     final homeGames = games.where((g) => g.home == mine).length;
     _earn(Income.gate, homeGames * gatePerGame);
     _earn(Income.concession, homeGames * concessionPerGame);
@@ -1330,7 +1332,48 @@ class Career {
   /// 自分の地区での順位(1始まり)。
   int get confRank => standings(teams, east: me.east).indexWhere((t) => t.index == mine) + 1;
 
+  // ---------------------------------------------------------------- 記録帳
+
+  /// 記録帳(種類 → いちばんの記録)。自分のチームの試合とシーズンの成績から。破ると知らせる。
+  Map<String, RecordEntry> records = {};
+
+  void _setRecord(String key, double v, String name) {
+    final old = records[key];
+    if (old != null && v <= old.value) return;
+    records[key] = RecordEntry(v, name, season);
+    if (old != null) _log('記録更新: ${recordLabels[key]} ${recordText(key, v)}($name・前は${recordText(key, old.value)})');
+  }
+
+  /// 自分のチームの試合の、選手の数字から1試合の記録を見る。
+  void _checkGameRecords(List<GameResult> games) {
+    for (final g in games) {
+      for (final l in [...g.box, ...g.oppBox]) {
+        _setRecord('g_pts', l.pts.toDouble(), l.name);
+        _setRecord('g_reb', l.reb.toDouble(), l.name);
+        _setRecord('g_ast', l.ast.toDouble(), l.name);
+        _setRecord('g_stl', l.stl.toDouble(), l.name);
+        _setRecord('g_blk', l.blk.toDouble(), l.name);
+      }
+    }
+    if (me.streak > 0) _setRecord('s_streak', me.streak.toDouble(), me.def.short);
+  }
+
+  /// シーズンの終わりに、シーズンの記録を見る(40試合以上出た選手の平均)。
+  void _checkSeasonRecords() {
+    _setRecord('s_wins', me.wins.toDouble(), me.def.short);
+    for (final t in teams) {
+      for (final p in t.roster) {
+        final s = p.stats;
+        if (s.gp < 40) continue;
+        _setRecord('s_ppg', s.pts / s.gp, p.name);
+        _setRecord('s_rpg', s.reb / s.gp, p.name);
+        _setRecord('s_apg', s.ast / s.gp, p.name);
+      }
+    }
+  }
+
   void _closeSeason() {
+    _checkSeasonRecords();
     final res = myResult;
     lastTax = luxuryTaxTrust(me.payroll);
     // ぜいたく税は、超えた分の1.5倍を払う。プレーオフのホームの試合も入場収入になる
@@ -2672,6 +2715,7 @@ class Career {
         'exp': expiring,
         if (optionPending.isNotEmpty) 'opp': optionPending,
         'trust': trust,
+        if (records.isNotEmpty) 'rcd': {for (final e in records.entries) e.key: e.value.toJson()},
         if (ownerType != OwnerType.steady) 'ot': ownerType.index,
         if (budgetLevel != 2) 'bl': budgetLevel,
         if (meetingSeason != -1) 'ms': meetingSeason,
@@ -2751,6 +2795,7 @@ class Career {
       ..expiring = [for (final x in (j['exp'] as List? ?? const [])) x as int]
       ..optionPending = [for (final x in (j['opp'] as List? ?? const [])) x as int]
       ..trust = (j['trust'] as int?) ?? 50
+      ..records = {for (final e in ((j['rcd'] as Map?) ?? const {}).entries) e.key as String: RecordEntry.fromJson(e.value as List)}
       ..ownerType = OwnerType.values[((j['ot'] as int?) ?? OwnerType.steady.index).clamp(0, OwnerType.values.length - 1)]
       ..budgetLevel = ((j['bl'] as int?) ?? 2).clamp(0, 2)
       ..meetingSeason = (j['ms'] as int?) ?? -1

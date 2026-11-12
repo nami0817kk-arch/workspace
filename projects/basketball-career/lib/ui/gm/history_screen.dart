@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../gm/career.dart';
 import '../../gm/league.dart';
 import '../../gm/player.dart';
+import '../../gm/records.dart';
 import '../gm_controller.dart';
 import '../layout.dart';
 import 'common.dart';
@@ -74,6 +75,20 @@ class HistoryScreen extends StatelessWidget {
                         ),
                       ]),
                     ),
+                ]),
+                const SectionTitle('記録帳'),
+                _card([
+                  if (car.records.isEmpty) const Text('試合を重ねると出る。破ると知らせる。', style: TextStyle(color: GmColors.sub)),
+                  for (final e in recordLabels.entries)
+                    if (car.records[e.key] != null)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 2),
+                        child: Row(children: [
+                          Expanded(child: Text(e.value, style: const TextStyle(fontSize: 13))),
+                          Text('${recordText(e.key, car.records[e.key]!.value)}  ${car.records[e.key]!.name}(${car.records[e.key]!.season}年目)',
+                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                        ]),
+                      ),
                 ]),
                 const SectionTitle('通算成績の上位(現役)'),
                 _card([
