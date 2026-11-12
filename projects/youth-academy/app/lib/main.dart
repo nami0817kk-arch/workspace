@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
+// Flutter 3.50 で material.dart が非推奨になった（material_ui への移行は別件）。CI の analyze を止めないよう、この1行だけ許す
+// ignore: deprecated_member_use
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
