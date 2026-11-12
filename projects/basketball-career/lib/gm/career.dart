@@ -1066,6 +1066,12 @@ class Career {
 
   void setTraining(int level) => me.training = level.clamp(0, 2);
 
+  /// チームの方針の [axis] 番目の軸を [choice](0・1・2)にする。
+  void setPolicy(int axis, int choice) {
+    if (axis < 0 || axis >= me.policy.length || phase == Phase.over) return;
+    me.policy[axis] = choice.clamp(0, 2);
+  }
+
   void setFocus(int id, Attr? a) {
     final p = _mineById(id);
     if (p != null) p.focus = a;
