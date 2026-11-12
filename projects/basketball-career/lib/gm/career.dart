@@ -57,7 +57,8 @@ enum Income {
   concession('売店'),
   merch('グッズ'),
   sponsor('スポンサー'),
-  playoffs('プレーオフ');
+  playoffs('プレーオフ'),
+  cup('カップ戦');
 
   const Income(this.label);
   final String label;
@@ -515,6 +516,49 @@ class Career {
   List<int> allStarIds = [];
 
   /// オールスターを選ぶ(シーズンの半分、41試合のあと)。地区ごとに12人。
+  // ---------------------------------------------------------------- カップ戦
+
+  /// 歴代のカップ戦の結果(シーズン・優勝・準優勝のチーム)。
+  List<List<int>> cupHistory = [];
+
+  /// 今季のカップ戦の8チーム(41試合のあと、地区の上位4チームずつ)。
+  List<int> cupField = [];
+
+  /// 今季のカップ戦の経過(例: 準々決勝の勝ち上がり。チームの番号を勝者の順に)。
+  List<int> cupRounds = [];
+
+  /// 41試合のあと、地区の上位4チームずつ(8チーム)で1試合勝負のトーナメントを行う。82試合には数えない。
+  /// 勝敗は専用の乱数で決める(リーグの続きを変えない)。優勝は賞金と人気が入る。
+  void _runCup() {
+    final r = Rng(seed * 131 + season * 977 + 5);
+    final east = [for (final t in standings(teams, east: true).take(4)) t.index];
+    final west = [for (final t in standings(teams, east: false).take(4)) t.index];
+    cupField = [...east, ...west];
+    int play(int a, int b) => r.chance(winChance(teams[a].strength, teams[b].strength)) ? a : b;
+    final rounds = <int>[];
+    int bracket(List<int> g) {
+      final a = play(g[0], g[3]), b = play(g[1], g[2]);
+      rounds.addAll([a, b]);
+      final w = play(a, b);
+      rounds.add(w);
+      return w;
+    }
+
+    final e = bracket(east), w = bracket(west);
+    final champ = play(e, w);
+    final runnerUp = champ == e ? w : e;
+    rounds.add(champ);
+    cupRounds = rounds;
+    cupHistory.add([season, champ, runnerUp]);
+    if (cupField.contains(mine)) {
+      final prize = champ == mine ? capScaled(40) : runnerUp == mine ? capScaled(20) : capScaled(8);
+      _earn(Income.cup, prize);
+      hype = (hype + (champ == mine ? 4 : runnerUp == mine ? 2 : 1)).clamp(0, 100);
+    }
+    _log('カップ戦: ${teams[champ].def.short}が優勝(決勝の相手は${teams[runnerUp].def.short})${champ == mine ? '。賞金${money(capScaled(40))}' : ''}');
+    if (champ == mine) _mail(Sender.owner, 'カップ戦の優勝', 'カップ戦で優勝した。賞金と人気が入った。');
+  }
+
   void _pickAllStars() {
     allStarIds = [];
     final race = mvpRace(count: 300);
@@ -982,6 +1026,8 @@ class Career {
     final r = strengthRank(mine);
     target = (gamesPerSeason * (0.72 - r * 0.016)).round();
     revenue = 0;
+    cupField = [];
+    cupRounds = [];
     incomeBy = List.filled(Income.values.length, 0);
     costs = 0;
     final third = [GoalKind.playoffs, GoalKind.youth, GoalKind.noTax];
@@ -1056,7 +1102,10 @@ class Career {
     _updateMorale();
     _updateChem();
     _giveMonthly();
-    if (block == tradeDeadlineBlock) _pickAllStars();
+    if (block == tradeDeadlineBlock) {
+      _runCup();
+      _pickAllStars();
+    }
     if (block < blocksPerSeason) _mailAfterBlock();
     if (block <= tradeDeadlineBlock && rng.chance(0.5)) _aiTrades(1);
     if (block >= blocksPerSeason) {
@@ -2722,6 +2771,9 @@ class Career {
         'exp': expiring,
         if (optionPending.isNotEmpty) 'opp': optionPending,
         'trust': trust,
+        if (cupHistory.isNotEmpty) 'cup': cupHistory,
+        if (cupField.isNotEmpty) 'cf': cupField,
+        if (cupRounds.isNotEmpty) 'cr': cupRounds,
         if (records.isNotEmpty) 'rcd': {for (final e in records.entries) e.key: e.value.toJson()},
         if (ownerType != OwnerType.steady) 'ot': ownerType.index,
         if (budgetLevel != 2) 'bl': budgetLevel,
@@ -2802,6 +2854,9 @@ class Career {
       ..expiring = [for (final x in (j['exp'] as List? ?? const [])) x as int]
       ..optionPending = [for (final x in (j['opp'] as List? ?? const [])) x as int]
       ..trust = (j['trust'] as int?) ?? 50
+      ..cupHistory = [for (final x in (j['cup'] as List? ?? const [])) [for (final y in x as List) y as int]]
+      ..cupField = [for (final x in (j['cf'] as List? ?? const [])) x as int]
+      ..cupRounds = [for (final x in (j['cr'] as List? ?? const [])) x as int]
       ..records = {for (final e in ((j['rcd'] as Map?) ?? const {}).entries) e.key as String: RecordEntry.fromJson(e.value as List)}
       ..ownerType = OwnerType.values[((j['ot'] as int?) ?? OwnerType.steady.index).clamp(0, OwnerType.values.length - 1)]
       ..budgetLevel = ((j['bl'] as int?) ?? 2).clamp(0, 2)
