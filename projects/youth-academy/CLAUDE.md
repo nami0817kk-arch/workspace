@@ -2,7 +2,7 @@
 
 サッカーのユース育成ゲーム。日本のクラブユースの指導者になり、高1〜高3の約36人を育てて送り出す。
 構想・決定1〜80は記憶 `youth-academy-game`（C:\Users\なみ\.claude\projects\...\memory\）とまとめのページが正。
-**入っているのは、試合（ビルド1〜2）・育成（ビルド3）・クラブ運営まわり（ビルド4: リーグと大会・信頼度と予算とスタッフ・目標と評価・契約と解任・スカウトとセレクション・卒業生の追跡・キャプテン・ポジション変更・関係・代表とトップ・合宿・規律・分析と映像）**。広告と課金だけ未着手（ユーザー指示: 課金と広告以外は全部作る）。
+**入っているのは、試合（ビルド1〜2）・育成（ビルド3）・クラブ運営まわり（ビルド4: リーグと大会・信頼度と予算とスタッフ・目標と評価・契約と解任・スカウトとセレクション・卒業生の追跡・キャプテン・ポジション変更・関係・代表とトップ・合宿・規律・分析と映像）**。広告と課金は 2026-11-13 に3段目として入れた（`web/src/shop.js`・`app/lib/monetization/`）。
 
 ## 構成
 
@@ -18,7 +18,8 @@
 | `web/src/lineage.js` | **2段目その1**（決定133〜135・139・140・147）：「系譜」タブ（系譜図=横に伸びる木の SVG・卒業生名鑑・殿堂・実績・年表・育成基金。設定は左下の歯車→ `more`）、殿堂の2段（`a.hof` = cand 銀／full 金。条件で候補、引退で正式 `YA.hofCondition/hofFull`）、実績66個（22の物差し×銅銀金 `YA.achievements`・次の実績 `YA.nextAchievement`・届いたら知らせる `YA.achieveCheck`）、育成基金（`w.fund`。連帯貢献金は予算に入れずここへ。施設・海外遠征・スカウト増 `YA.fundUse`）、ホームの系譜の小窓。画面は読み込み時に `YA.views` へ足す |
 | `web/src/rivals.js` | **2段目その2**（決定25・30・117〜120・149）：名物のライバル監督4人（`YA.RIVAL_COACHES`・`YA.rivalSync`・対戦成績と系譜の大きさ。`YA.rivalOf` を置き換え）、トップ監督の注文と監督交代（`YA.topCoachOf/topRequest`）、クラブ移籍（`YA.moveOfferCheck/clubMove`。系譜・実績・評判だけ持って移り、★の子は卒業生の枠に残る。前のクラブの卒業生の連帯貢献金は入らない。因縁の一戦）。系譜タブに「ライバル／トップ／移籍」を足す（`YA.lineageExtraTabs`） |
 | `web/src/story.js` | **2段目その3**（決定136〜138）：口調10通り（`YA.TONES`・`YA.toneOf`＝性格から1つ決まる・`YA.say(w,p,場面)`＝場面×口調で3通り、直近は避ける）、進路面談（出来事 `path`：★の子でトップに上がらない子に、3年の秋=22週に面談。候補2〜3個で先頭がコーチのおすすめ `YA.pathCands`、選んだ道 `p._p2` が卒業の進路に反映。大学のおすすめに沿えば遅咲き `a.late`、社会人・やめるは卒業時に反映）、節目の場面4つ（出来事 `scene`：入学式=1週・夏合宿=26週・大会の決勝前=12/30週・卒業式=40週。どれも一言を添えるか見守るかで進める）、スカウトの見立て（決定117・148：見に行った子に「大化けの気配」「遅咲きかも」「完成形に近い」の一言 `YA.candHunch`。腕が良いほど付きやすく当たりやすい。外れもある。候補の幅の言葉 `YA.rangeWord`。入団時に見立ての幅と本当の数字を比べて当たり外れを知らせ、`p.scoutNote`・`w.scoutScore` に残す） |
-| `web/src/views3.js` | 新しく始める画面・おまかせ進行のカードと結果・設定（セーブ枠・書き出し・復元・効果音） |
+| `web/src/shop.js` | **3段目**（決定93・94・121・124・125・130・131）：権利 `YA.ent`（広告を消す・見抜く目・セーブ枠 `YA.SLOT_COUNT`=1+追加分・チケット。書き込むのは Flutter だけ）、商品5つ `YA.SHOP`、Flutter との橋（`YA.native.post` / `YAnative.onMsg`）、広告の出し方（全画面は3試合に1回と月の区切りに1回・最初の4週は無し・広告を消すと無し `YA.interstitialDue`、ご褒美の動画は1日3回 `YA.watchReward`）、見抜く目・動画で詳しく（候補を余計に見た扱い）、オリジナル選手（`YA.origCreate`→入団時に新入生へ `YA.intake` を包む。伸びしろ `YA.ORIG_POT`）、設定のショップ・ホームのご褒美の動画 |
+| `web/src/views3.js` | 新しく始める画面・おまかせ進行のカードと結果・設定（セーブ枠・書き出し・復元・効果音・BGM・ショップ） |
 | `web/src/views2.js` | クラブ・ほか・年度はじめ/契約/成長の画面・選手の追加操作・映像ミーティング |
 | `web/src/views.js` | 育成の画面（ホーム・練習・選手・クラブ・ほか）。左の縦タブから |
 | `web/src/engine.js` | **試合の中身**（位置と出来事）。見せ方に依存しない。`Match.step()` が tick / scene / stop / full を返す |
@@ -41,14 +42,15 @@
 - 試合は「見どころだけ動く」（決定79）。10〜15の場面だけ動かし、残りは実況1行。型は engine.js の `_through` など10種。
 - 特性や性格が場面に効いたら `scene.fx` に記録し、画面の札に出す（守る側は守備が成功したときだけ）。
 - 創作の物語を避ける決まり（no-creative-story-content）は動画の決まりで、ゲームの台詞・出来事には当てはめない（ユーザー指示）。
-- 広告・課金は試作に入れていない。入れるときは docs/app-pitfalls.md を先に読む。
+- 広告・課金（3段目）：Flutter 側は `app/lib/monetization/`（`bridge.dart`＝ページとの橋・`entitlements.dart`＝権利の保存・`purchase_service.dart`・`ad_service.dart`＝護送ボートから写した期限切れ対応）。docs/app-pitfalls.md の1〜3番に沿う（届いた購入は待ち手が居なくても受け取り、受け取りが済むまで完了通知を返さない／動画は見終えたら画面を離れても受け取る／広告は期限切れで読み直す）。商品ID: youth_remove_ads・youth_keen_eye・youth_save_slot・youth_ticket_1・youth_ticket_3（App Store Connect に同じIDで作る）。広告ユニットIDは既定がテスト用で、リリースの workflow が Secrets（YOUTH_ADMOB_APP_ID_IOS / _REWARDED_IOS / _INTERSTITIAL_IOS）から差し替える。
+- BGM（決定121）は音源を持たず合成（`YA.bgm`。ホームと試合で曲が変わる・設定で消せる）。iPhone だけ（決定122）、文字の大きさは小中大（決定123）。
 - 画面を直したら、ブラウザで絵にして目で確かめる（`node web/tool/build.js web/dist/index.html` → `python -m http.server` → 844×390）。
 - リリース: `youth-academy-ios-release.yml`（workflow_dispatch、`upload_to_testflight=true`）。Secret は `YOUTH_ACADEMY_IOS_PROVISIONING_PROFILE_BASE64` のみ新規。
   Bundle ID `com.namiki.youthacademy`、App Store Connect の Apple ID 6828073461。ビルド番号は `app/pubspec.yaml` の `+N`。
 
 ## まだ入っていないもの
 
-広告・課金、戦術理解の細かい見せ方（いまは「浸透」と選手の戦術理解の数だけ）、PKキッカーなどのさらに細かい設定、海外のクラブとの駆け引き。
+戦術理解の細かい見せ方（いまは「浸透」と選手の戦術理解の数だけ）、PKキッカーなどのさらに細かい設定、海外のクラブとの駆け引き。
 
 ## 遊びの流れの足場（テスト用の道具）
 
