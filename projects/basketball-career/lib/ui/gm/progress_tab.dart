@@ -187,6 +187,7 @@ class ProgressTab extends StatelessWidget {
       ..._offerCard(context, car),
       ..._inboxCard(context, car),
       ..._scheduleCard(car),
+      _pressCard(car),
       _goalsCard(car),
       ..._injuryCard(car),
       // 試合の結果を先に見せ、経営はそのあと
@@ -527,6 +528,16 @@ class ProgressTab extends StatelessWidget {
     );
     if (ok == true) c.endCareer();
   }
+
+  /// 見出しとファンの声。
+  Widget _pressCard(Career car) => _card([
+        _head('報道', icon: Icons.newspaper_rounded),
+        const SizedBox(height: 6),
+        if (car.headlines.isEmpty) const Text('区切りを終えると、見出しが出る。', style: TextStyle(color: GmColors.sub, fontSize: 12)),
+        for (final h in car.headlines.take(3)) Padding(padding: const EdgeInsets.symmetric(vertical: 2), child: Text('・$h', style: const TextStyle(fontSize: 13, height: 1.4))),
+        const SizedBox(height: 6),
+        Text('ファンの声: 「${car.fanVoice}」', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
+      ]);
 
   /// GM の格。このシーズンの点の内訳と、通算・次の段階。
   Widget _ratingCard(BuildContext context, Career car) {

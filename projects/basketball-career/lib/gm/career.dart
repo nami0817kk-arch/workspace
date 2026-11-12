@@ -480,6 +480,19 @@ class Career {
     m
       ..answer = choice
       ..read = true;
+    if (m.kind == MsgKind.press) {
+      // 強気は人気を呼ぶが、勝てていないと信頼を失う。慎重は信頼が少し上がる。はぐらかすと人気が少し下がる
+      switch (choice) {
+        case 0:
+          hype = (hype + 3).clamp(0, 100);
+          trust = (trust + (me.winPct >= 0.5 ? 1 : -2)).clamp(0, 100);
+        case 1:
+          trust = (trust + 1).clamp(0, 100);
+        default:
+          hype = (hype - 1).clamp(0, 100);
+      }
+      return;
+    }
     final p = m.player == null ? null : me.roster.where((x) => x.id == m.player).firstOrNull;
     if (p == null) return;
     switch (m.kind) {
@@ -496,6 +509,7 @@ class Career {
       case MsgKind.tradeRequest:
         p.morale = (p.morale + (choice == 0 ? 8 : -6)).clamp(0, 100);
       case MsgKind.info:
+      case MsgKind.press:
         break;
     }
   }
@@ -580,7 +594,58 @@ class Career {
   }
 
   /// 区切りのあとに届く知らせ(出番の不満・トレードの希望・MVP争い・オーナーの声)。
+  // ---------------------------------------------------------------- 報道
+
+  /// 自分のチームの見出し(新しいものが先頭。最大12)。
+  List<String> headlines = [];
+
+  /// 区切りのあとに、自分のチームの見出しを作る(乱数を使わない)。
+  void _makeHeadlines() {
+    final out = <String>[];
+    final st = standings(teams, east: me.east);
+    final rank = st.indexWhere((t) => t.index == mine) + 1;
+    if (me.streak >= 5) out.add('${me.def.short}が${me.streak}連勝、勢いが止まらない');
+    if (me.streak <= -4) out.add('${me.def.short}が${-me.streak}連敗、チームに重い空気');
+    if (rank == 1 && roundAt >= 20) out.add('${me.def.short}が${me.east ? '東' : '西'}地区の首位に立つ');
+    if (rank > playInSeeds && roundAt >= 40) out.add('${me.def.short}、プレーオフ圏外で苦しい戦い');
+    final star = me.roster.where((p) => p.injured > 0 && p.ovr >= 70).toList()..sort((a, b) => b.ovr.compareTo(a.ovr));
+    if (star.isNotEmpty) out.add('主力の${star.first.name}が${star.first.injuryText.isEmpty ? 'けが' : star.first.injuryText}');
+    if (hype >= 75) out.add('人気が沸騰、チケットは売り切れ続出');
+    if (hype <= 25) out.add('客席に空席目立つ、人気の低迷が続く');
+    final unhappy = me.roster.where((p) => p.morale < 25 && p.ovr >= 62).toList();
+    if (unhappy.isNotEmpty) out.add('${unhappy.first.name}に不満の声、移籍の観測も');
+    if (out.isEmpty) out.add('${me.def.short}は${me.wins}勝${me.losses}敗(地区$rank位)、静かな区切り');
+    headlines = [...out.map((h) => '$season年目・$roundAt試合: $h'), ...headlines].take(12).toList();
+  }
+
+  /// ファンの声(人気と勝率から、その場で決まる)。
+  String get fanVoice {
+    final pct = me.winPct;
+    final voices = hype >= 70 && pct >= 0.55
+        ? ['今年は本当にいける気がする!', '毎試合チケットを取るのが大変だよ', 'GMは神様か?']
+        : pct < 0.4
+            ? ['そろそろ立て直しを見せてほしい', 'いつまで待てばいいんだ…', 'GM、何か手を打ってくれ']
+            : hype <= 30
+                ? ['最近、試合を見に行かなくなった', 'もっとワクワクさせてほしい', '若手に期待してるよ']
+                : ['まあまあ楽しませてもらってる', '次の補強に期待', '勝ち越しならファンは満足'];
+    return voices[(seed + season * 7 + roundAt) % voices.length];
+  }
+
+  /// 区切りのあとの記者の質問(3区切りに1回ほど。乱数を使わない)。
+  void _pressQuestion() {
+    if ((seed + season * 3 + block) % 3 != 0) return;
+    final pct = me.winPct;
+    final q = pct >= 0.6
+        ? '好調が続いていますが、今季の目標は優勝ですか?'
+        : pct < 0.4
+            ? '苦しい戦いが続きます。立て直しの手はありますか?'
+            : 'ここまでのチームをどう評価しますか?';
+    _mail(Sender.press, '記者の質問', q, kind: MsgKind.press, choices: const ['強気に答える(「優勝を狙う」)', '慎重に答える(「一試合ずつ」)', 'はぐらかす']);
+  }
+
   void _mailAfterBlock() {
+    _makeHeadlines();
+    _pressQuestion();
     final race = mvpRace(count: 5);
     if (race.isNotEmpty) {
       _mail(Sender.league, 'MVP争い($roundAt試合のあと)',
@@ -2799,6 +2864,7 @@ class Career {
         'exp': expiring,
         if (optionPending.isNotEmpty) 'opp': optionPending,
         'trust': trust,
+        if (headlines.isNotEmpty) 'hl': headlines,
         if (skills.any((x) => x != 0)) 'skl': skills,
         if (cupHistory.isNotEmpty) 'cup': cupHistory,
         if (cupField.isNotEmpty) 'cf': cupField,
@@ -2883,6 +2949,7 @@ class Career {
       ..expiring = [for (final x in (j['exp'] as List? ?? const [])) x as int]
       ..optionPending = [for (final x in (j['opp'] as List? ?? const [])) x as int]
       ..trust = (j['trust'] as int?) ?? 50
+      ..headlines = [for (final x in (j['hl'] as List? ?? const [])) x as String]
       ..skills = [for (var i = 0; i < Skill.values.length; i++) i < ((j['skl'] as List?)?.length ?? 0) ? ((j['skl'] as List)[i] as int).clamp(0, skillMax) : 0]
       ..cupHistory = [for (final x in (j['cup'] as List? ?? const [])) [for (final y in x as List) y as int]]
       ..cupField = [for (final x in (j['cf'] as List? ?? const [])) x as int]
