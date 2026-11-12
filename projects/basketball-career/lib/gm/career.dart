@@ -796,6 +796,13 @@ class Career {
     return n;
   }
 
+  /// 永久欠番(背番号・引退した年・自分のチームでのシーズン数)。名前は [retiredNames] の同じ順。
+  List<List<int>> retiredNumbers = [];
+  List<String> retiredNames = [];
+
+  /// テスト用: 引退した選手の殿堂入りと永久欠番の判定をそのまま行う。
+  void toHallForTest(Player p, int team) => _toHall(p, team);
+
   /// 引退した選手が殿堂に入るか確かめる。
   void _toHall(Player p, int team) {
     if (hallScore(p) < hallThreshold) return;
@@ -813,6 +820,14 @@ class Career {
       if (p.allStars > 0) 'オールスター ${p.allStars}回',
     ].where((s) => s.isNotEmpty).join('・');
     hall.add(HallEntry(name: p.name, pos: p.pos, season: season, team: team, seasons: p.career.length, line: p.careerTotals.line, honors: honors));
+    // 自分のチームで4シーズン以上プレーした殿堂入りの選手は、背番号が永久欠番になる
+    final withMe = p.career.where((r) => r[1] == this.mine).length;
+    if (withMe >= 4) {
+      retiredNumbers.add([jerseyOf(p), season, withMe]);
+      retiredNames.add(p.name);
+      _log('永久欠番: ${p.name}の背番号${jerseyOf(p)}(自分のチームで$withMeシーズン)');
+      _mail(Sender.owner, '${p.name}の背番号を永久欠番に', '${p.name}は$withMeシーズン、チームでプレーした。背番号${jerseyOf(p)}を永久欠番にする。');
+    }
     _log('殿堂入り: ${p.name}($honors)');
     _mail(Sender.league, '${p.name}が殿堂入り', '${p.name}が引退し、殿堂に入った。通算 ${p.careerTotals.line}。$honors');
   }
@@ -2904,6 +2919,8 @@ class Career {
         'exp': expiring,
         if (optionPending.isNotEmpty) 'opp': optionPending,
         'trust': trust,
+        if (retiredNumbers.isNotEmpty) 'rnum': retiredNumbers,
+        if (retiredNames.isNotEmpty) 'rnam': retiredNames,
         if (h2h.isNotEmpty) 'h2h': {for (final e in h2h.entries) '${e.key}': e.value},
         if (headlines.isNotEmpty) 'hl': headlines,
         if (skills.any((x) => x != 0)) 'skl': skills,
@@ -2990,6 +3007,8 @@ class Career {
       ..expiring = [for (final x in (j['exp'] as List? ?? const [])) x as int]
       ..optionPending = [for (final x in (j['opp'] as List? ?? const [])) x as int]
       ..trust = (j['trust'] as int?) ?? 50
+      ..retiredNumbers = [for (final x in (j['rnum'] as List? ?? const [])) [for (final y in x as List) y as int]]
+      ..retiredNames = [for (final x in (j['rnam'] as List? ?? const [])) x as String]
       ..h2h = {for (final e in ((j['h2h'] as Map?) ?? const {}).entries) int.parse(e.key as String): [for (final x in e.value as List) x as int]}
       ..headlines = [for (final x in (j['hl'] as List? ?? const [])) x as String]
       ..skills = [for (var i = 0; i < Skill.values.length; i++) i < ((j['skl'] as List?)?.length ?? 0) ? ((j['skl'] as List)[i] as int).clamp(0, skillMax) : 0]

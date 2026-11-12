@@ -93,6 +93,18 @@ class HistoryScreen extends StatelessWidget {
                       ]),
                     ),
                 ]),
+                const SectionTitle('永久欠番'),
+                _card([
+                  if (car.retiredNumbers.isEmpty) const Text('自分のチームで4シーズン以上プレーした選手が殿堂に入ると、背番号が永久欠番になる。', style: TextStyle(color: GmColors.sub, fontSize: 12)),
+                  for (var i = 0; i < car.retiredNumbers.length && i < car.retiredNames.length; i++)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 2),
+                      child: Row(children: [
+                        SizedBox(width: 44, child: Text('#${car.retiredNumbers[i][0]}', style: const TextStyle(fontWeight: FontWeight.bold, color: GmColors.gold))),
+                        Expanded(child: Text('${car.retiredNames[i]}(${car.retiredNumbers[i][2]}シーズン・${car.retiredNumbers[i][1]}年目に引退)', style: const TextStyle(fontSize: 13))),
+                      ]),
+                    ),
+                ]),
                 const SectionTitle('宿敵'),
                 _card([
                   if (car.rival == null)

@@ -31,6 +31,9 @@ enum Attr {
   final String label;
 }
 
+/// 背番号(0〜99。選手の id から決まる)。
+int jerseyOf(Player p) => (p.id * 37 + 11) % 100;
+
 /// けがの部位。
 const injuryParts = ['足首', '膝', 'ふくらはぎ', '太もも', '腰', '肩', '手首', '指', '脳しんとう', '背中'];
 
