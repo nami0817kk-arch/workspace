@@ -83,8 +83,11 @@ class _FormationTab extends StatelessWidget {
       ..sort((a, b) => a.position.index.compareTo(b.position.index));
 
     final squadFull = team.startingXI.length == 11;
+    final screen = MediaQuery.sizeOf(context);
+    final wide = screen.width > screen.height;
 
-    return ListView(
+    return _PitchSplit(
+      wide: wide,
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
@@ -211,24 +214,9 @@ class _FormationTab extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 4),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.18),
-                  blurRadius: 8,
-                  offset: const Offset(0, 3),
-                ),
-              ],
-            ),
-            child: AspectRatio(
-              aspectRatio: 0.72,
-              child: _PitchView(team: team, formation: formation),
-            ),
-          ),
+        _PitchSlot(
+          horizontal: wide,
+          child: _PitchView(team: team, formation: formation, horizontal: wide),
         ),
         const SizedBox(height: 24),
         DragTarget<String>(
@@ -1125,7 +1113,14 @@ class _PitchView extends StatelessWidget {
   final Team team;
   final Formation formation;
 
-  const _PitchView({required this.team, required this.formation});
+  /// 横長のピッチにする。ゴールキーパーが左、攻撃が右になる。
+  final bool horizontal;
+
+  const _PitchView({
+    required this.team,
+    required this.formation,
+    this.horizontal = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -1140,13 +1135,18 @@ class _PitchView extends StatelessWidget {
           final w = constraints.maxWidth;
           final h = constraints.maxHeight;
           return CustomPaint(
-            painter: _PitchPainter(),
+            painter: _PitchPainter(horizontal: horizontal),
             child: Stack(
               children: [
                 for (int i = 0; i < slots.length; i++)
                   Positioned(
-                    left: (offsets[i].dx * w - 26).clamp(0, w - 52),
-                    top: (offsets[i].dy * h - 26).clamp(0, h - 52),
+                    // 横長は縦長の絵を反時計回りに90度回した位置にする
+                    // (縦の上=ゴールキーパーが左、縦の左が下になる)。
+                    left: ((horizontal ? offsets[i].dy : offsets[i].dx) * w - 26)
+                        .clamp(0, w - 52),
+                    top: ((horizontal ? 1 - offsets[i].dx : offsets[i].dy) * h -
+                            26)
+                        .clamp(0, h - 52),
                     child: _SlotChip(
                       team: team,
                       slotPosition: slots[i],
@@ -1342,8 +1342,25 @@ class _PitchView extends StatelessWidget {
 }
 
 class _PitchPainter extends CustomPainter {
+  /// 横長のピッチ(ゴールが左右)にするか。縦長の絵を反時計回りに90度回して描く。
+  final bool horizontal;
+
+  const _PitchPainter({this.horizontal = false});
+
   @override
   void paint(Canvas canvas, Size size) {
+    if (!horizontal) {
+      _paintPortrait(canvas, size);
+      return;
+    }
+    canvas.save();
+    canvas.translate(0, size.height);
+    canvas.rotate(-pi / 2);
+    _paintPortrait(canvas, Size(size.height, size.width));
+    canvas.restore();
+  }
+
+  void _paintPortrait(Canvas canvas, Size size) {
     PitchArt.paintTurf(canvas, size, horizontalStripes: true);
 
     final linePaint = Paint()
@@ -1426,7 +1443,8 @@ class _PitchPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant CustomPainter oldDelegate) =>
+      oldDelegate is! _PitchPainter || oldDelegate.horizontal != horizontal;
 }
 
 Color _dutyColor(PlayerDuty duty) => switch (duty) {
@@ -1676,6 +1694,66 @@ class _BenchTile extends StatelessWidget {
       ),
       childWhenDragging: Opacity(opacity: 0.3, child: card),
       child: card,
+    );
+  }
+}
+
+/// ピッチを影つきの枠に入れる。縦長は幅いっぱいで 0.72、横長は 1/0.72。
+/// [_PitchSplit] がこの部品の位置で子を左右に分ける。
+class _PitchSlot extends StatelessWidget {
+  final bool horizontal;
+  final Widget child;
+
+  const _PitchSlot({required this.horizontal, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    final framed = DecoratedBox(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.18),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: AspectRatio(aspectRatio: horizontal ? 1 / 0.72 : 0.72, child: child),
+    );
+    if (horizontal) return framed;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: framed,
+    );
+  }
+}
+
+/// 縦長では1本のリスト、横長では左に設定とベンチ・右にピッチ。
+/// 横画面は高さが 400 ほどしかなく、ピッチを設定の下に積むと一部しか見えない。
+class _PitchSplit extends StatelessWidget {
+  final bool wide;
+  final List<Widget> children;
+
+  const _PitchSplit({required this.wide, required this.children});
+
+  @override
+  Widget build(BuildContext context) {
+    final at = children.indexWhere((w) => w is _PitchSlot);
+    if (!wide || at < 0) return ListView(children: children);
+    final rest = [...children]..removeAt(at);
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(width: 340, child: ListView(children: rest)),
+        const VerticalDivider(width: 1),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Center(child: children[at]),
+          ),
+        ),
+      ],
     );
   }
 }
