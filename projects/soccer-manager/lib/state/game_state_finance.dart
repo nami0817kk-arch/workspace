@@ -196,6 +196,23 @@ extension GameStateFinance on GameState {
     return matchdayIncome + sponsorIncome + merchandiseIncome;
   }
 
+  /// 年の予算の配分(補強・育成・施設・営業・配当)。
+  BudgetPlan get budgetPlan => _save?.budgetPlan ?? BudgetPlan.balanced();
+
+  /// 年の予算の総額(万円)。今の週収入が1シーズン続いた場合の見込み。
+  int get annualBudgetPool => _save == null
+      ? 0
+      : BudgetEngine.annualPool(weeklyIncome: weeklyIncomeFor(_save!.userTeamId));
+
+  /// [category] の配分を [share]% にする。残りの配り先は比率に応じて
+  /// 分け直され、合計は100のまま。
+  Future<void> setBudgetShare(BudgetCategory category, int share) async {
+    if (_save == null) return;
+    _save!.budgetPlan = _save!.budgetPlan.withShare(category, share);
+    _notify();
+    await _persist();
+  }
+
   int get weeklyWageBill => _save == null
       ? 0
       : ContractEngine.weeklyWageBill(userTeam) +

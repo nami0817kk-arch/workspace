@@ -14,6 +14,7 @@ import '../state/game_state.dart';
 import '../widgets/busy_overlay.dart';
 import '../widgets/position_filter_bar.dart';
 import '../widgets/quick_access_drawer.dart';
+import '../widgets/two_pane.dart';
 import '../logic/reserve_match_engine.dart';
 import '../l10n/tr.dart';
 import '../theme/semantic_colors.dart';
@@ -165,7 +166,7 @@ class _TrainingScreenState extends State<TrainingScreen> {
       body: BusyOverlay(
         visible: _isRunningTraining,
         label: Tr.pick('トレーニングを実施しています…', 'Running the session…'),
-        child: _TwoPane(
+        child: TwoPane(
           wide: wide,
           children: [
             Builder(
@@ -400,7 +401,7 @@ class _TrainingScreenState extends State<TrainingScreen> {
                 ),
               ),
             ),
-            const _PaneBreak(),
+            const PaneBreak(),
             Text(Tr.pick('個別方針', 'Individual focus'),
                 style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 8),
@@ -1398,46 +1399,3 @@ class _PositionConvertPicker extends StatelessWidget {
   }
 }
 
-/// 縦長の画面では区切り線、横長の画面では左右の境目になる印。
-/// [_TwoPane] がこの位置で子を左右に分ける。
-class _PaneBreak extends StatelessWidget {
-  const _PaneBreak();
-
-  @override
-  Widget build(BuildContext context) => const Divider(height: 32);
-}
-
-/// 縦長では1本のリスト、横長では[_PaneBreak]で左右に分けた2本のリスト。
-/// 横画面は高さが 400 ほどしかなく、チーム全体の設定を選手の一覧の上に
-/// 積むと、一覧に届くまでに何画面も送ることになる。
-class _TwoPane extends StatelessWidget {
-  final bool wide;
-  final List<Widget> children;
-
-  const _TwoPane({required this.wide, required this.children});
-
-  @override
-  Widget build(BuildContext context) {
-    const padding = EdgeInsets.all(16);
-    final split = children.indexWhere((w) => w is _PaneBreak);
-    if (!wide || split < 0) {
-      return ListView(padding: padding, children: children);
-    }
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          flex: 5,
-          child: ListView(
-              padding: padding, children: children.sublist(0, split)),
-        ),
-        const VerticalDivider(width: 1),
-        Expanded(
-          flex: 6,
-          child: ListView(
-              padding: padding, children: children.sublist(split + 1)),
-        ),
-      ],
-    );
-  }
-}

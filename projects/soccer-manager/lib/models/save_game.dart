@@ -1,5 +1,6 @@
 import 'bank_loan.dart';
 import 'best_eleven.dart';
+import 'budget_plan.dart';
 import 'club_infrastructure.dart';
 import 'enum_json.dart';
 import 'continental_cup.dart';
@@ -82,6 +83,9 @@ class SaveGame {
   /// 終えると上がる。[confidence](成績・順位に由来するサポーター側の期待)
   /// と引っ張り合う、オーナー型の2つ目のメーター。
   int shareholderExpectation;
+
+  /// 年の予算の配分(補強・育成・施設・営業・配当の比率)。
+  BudgetPlan budgetPlan;
 
   /// 監督としての世間の評価（0-100）。信頼度と異なり解任されても引き継がれ、
   /// 他クラブからのオファーの受けやすさに影響する。
@@ -330,6 +334,7 @@ class SaveGame {
     this.boardTargetRank = 4,
     this.confidence = 60,
     this.shareholderExpectation = 60,
+    BudgetPlan? budgetPlan,
     this.managerReputation = 50,
     this.pendingJobOfferTeamId,
     List<Player>? youthProspects,
@@ -397,7 +402,8 @@ class SaveGame {
     this.weekProcessedSeason = 0,
     this.weekProcessedMatchday = 0,
     this.liveMatchProgress,
-  })  : unlockedAchievements = unlockedAchievements ?? {},
+  })  : budgetPlan = budgetPlan ?? BudgetPlan.balanced(),
+        unlockedAchievements = unlockedAchievements ?? {},
         seasonStartOverallByPlayerId = seasonStartOverallByPlayerId ?? {},
         newsLog = newsLog ?? [],
         trophyHistory = trophyHistory ?? [],
@@ -492,6 +498,7 @@ class SaveGame {
         'boardTargetRank': boardTargetRank,
         'confidence': confidence,
         'shareholderExpectation': shareholderExpectation,
+        'budgetPlan': budgetPlan.toJson(),
         'managerReputation': managerReputation,
         'pendingJobOfferTeamId': pendingJobOfferTeamId,
         'youthProspects': youthProspects.map((p) => p.toJson()).toList(),
@@ -580,6 +587,8 @@ class SaveGame {
         boardTargetRank: json['boardTargetRank'] as int? ?? 4,
         confidence: json['confidence'] as int? ?? 60,
         shareholderExpectation: json['shareholderExpectation'] as int? ?? 60,
+        budgetPlan:
+            BudgetPlan.fromJson(json['budgetPlan'] as Map<String, dynamic>?),
         managerReputation: json['managerReputation'] as int? ?? 50,
         pendingJobOfferTeamId: json['pendingJobOfferTeamId'] as String?,
         youthProspects: (json['youthProspects'] as List?)
