@@ -277,17 +277,27 @@ class _TradeTabState extends State<TradeTab> {
     ]);
   }
 
+  /// 先の年の指名権まで出すか(指名権は7年先まである。ふだんは近い4年だけ並べる)。
+  bool _farPicks = false;
+
   Widget _pickChips(Career car, int team, Set<int> chosen) {
-    final list = car.picksOf(team);
-    if (list.isEmpty) return const SizedBox.shrink();
+    final all = car.picksOf(team);
+    if (all.isEmpty) return const SizedBox.shrink();
+    final near = [for (final i in all) if (_farPicks || car.picks[i].season - car.season < 4 || chosen.contains(i)) i];
     return Padding(
       padding: const EdgeInsets.only(top: 2, bottom: 6),
-      child: Wrap(spacing: 6, runSpacing: 6, children: [
-        for (final i in list)
+      child: Wrap(spacing: 6, runSpacing: 6, crossAxisAlignment: WrapCrossAlignment.center, children: [
+        for (final i in near)
           FilterChip(
             label: Text('指名権 ${car.picks[i].label(car.teams, car.season)}', style: const TextStyle(fontSize: 12)),
             selected: chosen.contains(i),
             onSelected: (v) => setState(() => v ? chosen.add(i) : chosen.remove(i)),
+          ),
+        if (near.length < all.length || _farPicks)
+          TextButton(
+            style: TextButton.styleFrom(minimumSize: const Size(0, 32), visualDensity: VisualDensity.compact),
+            onPressed: () => setState(() => _farPicks = !_farPicks),
+            child: Text(_farPicks ? '先の年を閉じる' : '先の年の指名権(${all.length - near.length}本)', style: const TextStyle(fontSize: 12)),
           ),
       ]),
     );

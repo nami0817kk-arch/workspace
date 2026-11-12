@@ -1240,18 +1240,18 @@ void main() {
   });
 
   group('指名権(4年先まで・保護・くじの見込み)', () {
-    test('指名権は今年から3年先まで、1巡目と2巡目が30チーム分ある。ドラフトのあとも4年分そろう', () {
+    test('指名権は今年から6年先まで、1巡目と2巡目が30チーム分ある。ドラフトのあとも7年分そろう', () {
       final c = careerAt(19, 10);
-      expect(c.picks, hasLength(4 * 2 * 30));
-      expect(c.picks.map((p) => p.season).toSet(), {1, 2, 3, 4});
+      expect(c.picks, hasLength(7 * 2 * 30));
+      expect(c.picks.map((p) => p.season).toSet(), {1, 2, 3, 4, 5, 6, 7});
       _toPlayoffs(c).playPlayoffs();
       c.fired = false;
       c.toOffseason();
       while (c.phase == Phase.draft) {
         c.passPick();
       }
-      expect(c.picks.map((p) => p.season).toSet(), {2, 3, 4, 5});
-      expect(c.picks, hasLength(4 * 2 * 30));
+      expect(c.picks.map((p) => p.season).toSet(), {2, 3, 4, 5, 6, 7, 8});
+      expect(c.picks, hasLength(7 * 2 * 30));
     });
 
     test('先の年ほど、保護が付くほど、指名権の値打ちは下がる', () {
@@ -1306,13 +1306,13 @@ void main() {
       expect(odds[worst], odds.values.reduce((a, b) => a > b ? a : b));
     });
 
-    test('前の版の保存(指名権が2年分)を読んでも、4年分そろう', () {
+    test('前の版の保存(指名権が2年分)を読んでも、7年分そろう', () {
       final c = careerAt(19, 10);
       final j = jsonDecode(jsonEncode(c.toJson())) as Map<String, dynamic>;
       j['picks'] = [for (final p in j['picks'] as List) if ((p as Map)['s'] as int <= 2) p];
       final copy = Career.fromJson(j);
-      expect(copy.picks.map((p) => p.season).toSet(), {1, 2, 3, 4});
-      expect(copy.picks, hasLength(240));
+      expect(copy.picks.map((p) => p.season).toSet(), {1, 2, 3, 4, 5, 6, 7});
+      expect(copy.picks, hasLength(420));
     });
   });
 
