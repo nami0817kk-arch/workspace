@@ -26,6 +26,7 @@ const html = read('shell.html')
   .replace('/*__CORE__*/', () => read('core.js'))
   .replace('/*__LINEAGE__*/', () => read('lineage.js'))
   .replace('/*__RIVALS__*/', () => read('rivals.js'))
+  .replace('/*__STORY__*/', () => read('story.js'))
   .replace('/*__VIEWS3__*/', () => read('views3.js'))
   .replace('/*__IMGDATA__*/', () => read('imgdata.js'))
   .replace('/*__ART__*/', () => read('art.js'));
