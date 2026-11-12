@@ -74,7 +74,7 @@
   // 条件に届いた瞬間に「殿堂候補」（銀）。引退のときに生涯の成績で正式に殿堂入り（金）
   const hofScore = (a) => (a.nat || 0) * 2 + (a.titles || []).length * 2 + (a.awards || []).length + Math.floor((a.apps || 0) / 150) + (a.abroad ? 1 : 0);
   YA.hofCondition = (a) => a.status === 'pro' && (a.nat > 0 || (a.abroad && a.ovr >= 14.5 && a.apps >= 80) || (a.club && /J1/.test(a.league || '') && a.apps >= 200) || (a.transfers >= 3 && a.ovr >= 14.4));
-  YA.hofFull = (a) => hofScore(a) >= 6;
+  YA.hofFull = (a) => hofScore(a) >= 4;
   const HOF_WORDS = ['あの頃から、ひたむきな子でした。', 'いちばん最初に練習に来て、最後まで残る子でした。', '背中を押しただけです。歩いたのは本人です。', '卒業の日の顔を、いまも覚えています。', 'ここから世界へ行ったのだと思うと、誇らしい。'];
   YA.hofWord = (w, a) => HOF_WORDS[(a.name.length + a.year) % HOF_WORDS.length];
   const tickBase = YA.alumniTick;
@@ -87,7 +87,7 @@
         a.hofY = w.year;
         YA.noteTier(w, 2, `卒業生の${a.name}が殿堂候補になりました（${a.club}）`);
       }
-      if (a.retired && !was.has(a) && a.hof === 'cand' && YA.hofFull(a)) {
+      if (a.hof === 'cand' && ((a.retired && !was.has(a) && YA.hofFull(a)) || (!a.retired && a.age >= 31 && hofScore(a) >= 6))) {
         a.hof = 'full';
         a.hofY = w.year;
         YA.noteTier(w, 1, `卒業生の${a.name}が殿堂入りしました。「${YA.hofWord(w, a)}」`);
@@ -251,14 +251,16 @@
     const w = U().app.w;
     const ui = U().app;
     ui.lt = ui.lt || 'tree';
-    const TABS = [['tree', '系譜図'], ['alumni', '卒業生名鑑'], ['hall', '殿堂'], ['ach', '実績'], ['chron', '年表'], ['fund', '育成基金']];
-    const tabs = h('div', { class: 'tabs', style: 'width:520px' }, TABS.map(([k, n]) => h('button', { class: 'btn' + (ui.lt === k ? ' on' : ''), onclick: () => { ui.lt = k; rerender(); } }, n)));
+    const EXTRA = YA.lineageExtraTabs || [];
+    const TABS = [['tree', '系譜図'], ['alumni', '卒業生名鑑'], ['hall', '殿堂'], ['ach', '実績'], ['chron', '年表'], ['fund', '育成基金']].concat(EXTRA.map((x) => [x[0], x[1]]));
+    const tabs = h('div', { class: 'tabs', style: 'flex-wrap:wrap;gap:3px;max-width:100%' }, TABS.map(([k, n]) => h('button', { class: 'btn' + (ui.lt === k ? ' on' : ''), onclick: () => { ui.lt = k; rerender(); } }, n)));
     const body = h('div', { class: 'card pbody', style: 'flex:1;min-height:0;display:flex;flex-direction:column' });
     if (ui.lt === 'tree') treeTab(body, w);
     else if (ui.lt === 'hall') hallTab(body, w);
     else if (ui.lt === 'ach') achTab(body, w);
     else if (ui.lt === 'chron') chronTab(body, w);
     else if (ui.lt === 'fund') fundTab(body, w);
+    else if (EXTRA.some((x) => x[0] === ui.lt)) EXTRA.find((x) => x[0] === ui.lt)[2](body, w);
     else { ui.mt = 'alumni'; const inner = h('div', { style: 'flex:1;min-height:0;display:flex;flex-direction:column' }); YA.views.more(inner); const card = inner.querySelector('.card'); body.append(card || inner); if (inner.querySelector('.tabs')) inner.querySelector('.tabs').remove(); }
     main.append(h('div', { style: 'flex:1;min-height:0;display:flex;flex-direction:column;gap:6px' }, tabs, body));
   }
