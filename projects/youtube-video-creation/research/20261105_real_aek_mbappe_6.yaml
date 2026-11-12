@@ -1,0 +1,126 @@
+# 取材メモ（2026年11月5日）レアル、AEKアテネに3-2。90+2分のバルベルデ弾でCL4連勝。エンバペは公式戦6試合連続ゴール（ニュースのショート。見せ方 Y＝バルベルデの言葉から始める）
+# 取材: 2026-11-05。python requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。
+# 読んだ出典:
+#   ・ESPN の試合データ（site.api.espn.com .../uefa.champions/summary?event=401915383）: 12分 コイタ（AEK、アシスト ヨヴィッチ）／32分 ベリンガム（アシスト ククレジャ）／75分 ピリオス（AEK、アシスト コイタ）／78分 エンバペ（右足、至近距離、アシスト ダンフリース）／90+2分 バルベルデ（右足、エリア外から右上、アシスト ブラヒム・ディアス）。AEK 2-3 レアル。
+#   ・サッカーキング 2224751（試合レポート。全部読んだ）: 得点者と分は ESPN データと一致。「エンバペは公式戦6戦連発」「バルベルデの強烈なミドル」。次節は24日、レアルはホームでPSV。
+#   ・ESPN 記事 50322768（PA の試合レポート）／50382502（AP、モウリーニョの会見）: レアルは4試合4勝で、PSGと並んで勝ち点12の首位（AP）。バルベルデは「途中出場」。
+#   ・レアル・マドリード公式 realmadrid.com「Valverde: “We never stopped trying and came back again”」（クラブ公式。AI翻訳の注意書き付き）: バルベルデは67分にディオマンデと交代で入った。
+#       バルベルデ（公式の引用）: "The team never stops trying. After they scored their second goal, it seemed like it would be very difficult, but the team came back once again."
+#       "Sometimes I overthink it. As I always say, I thank my teammates, who give me the confidence to take the shot."
+#       → **確かめられた＝本人の言葉（確定）**。台本の言葉は英語を日本語にしたもので、語順はなぞらない。
+# **エンバペの6戦連発は、ESPN の試合データで自分で確かめた**（キーイベントの得点者）:
+#     10/14 ローマ戦（CL、3-4）25分 ／10/18 セビージャ戦（4-1）37分・63分 ／10/21 ライプツィヒ戦（CL、4-1）83分 ／10/25 バルサ戦（1-2）41分・87分 ／11/1 ラシン・サンタンデール戦（0-3）11分 ／11/4 AEK戦 78分。
+#     その前の10/10 ビジャレアル戦（1-0）は得点なし。レアルの試合表（ESPN team schedule）に抜けは無い。**6試合で8ゴール**（自分で数えた）。サッカーキングの「公式戦6戦連発」と一致。
+# 食い違い: ①バルベルデの得点を ESPN 記事は「stoppage time」、サッカーキングは「90＋2分」。ESPN データ 90'+2'で一致。②AEKのコイタの退場は試合終了後なので使わない。
+# 自分で数えたもの: AEK の勝ち越し 75分→同点 78分＝3分。勝ち越されてから決勝点（92分）まで17分。
+# 本人の言葉: あり（バルベルデ＝クラブ公式、英語を日本語にした）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+# 写真: レアル公式の記事の写真（クラブ撮影）から photopool で集める。
+# 前の本との重なり: 20261030_mbappe_100_real（レアル100点は116試合目）。→ 今回は「6試合連続」と「決勝点の言葉」。100点・116試合は繰り返さない。
+slot: match
+date: "2026年11月5日"
+format: news
+no_main: true
+people: [バルベルデ, エンバペ, レアル・マドリード, AEKアテネ, ベリンガム]
+
+short_style: Y
+short_hook_quote: チームは、決してあきらめません。
+short_question: エンバペの連続ゴールは、あと何試合続くと思いますか。
+short_photos:
+  - assets/images/20261105_real_aek_mbappe_6/01_v.jpg
+  - assets/images/20261105_real_aek_mbappe_6/04_v.jpg
+  - assets/images/20261105_real_aek_mbappe_6/03_v.jpg
+  - assets/images/20261105_real_aek_mbappe_6/05_v.jpg
+short_telops: []
+
+theme:
+  id: real_aek_mbappe_6
+  league: spain
+  league_name: チャンピオンズリーグ
+  prefix: ""
+  title: バルベルデ、90+2分の決勝弾。レアルのCL4連勝と、エンバペの6試合連続ゴール
+  hook: ""
+  question: レアルは2点目を取られてから、どうやってAEKアテネをひっくり返したのか
+  takeaway: AEKに勝ち越された75分から決勝点の92分まで、17分でひっくり返した。エンバペはこの6試合で8ゴール。レアルは勝ち点12で、PSGと並んで首位に立った
+
+thumbnail:
+  layout: face
+  line1: バルベルデ 決勝弾
+  line2: エンバペは6試合連発
+  tags: [レアル・マドリード, バルベルデ]
+  photo: assets/images/20261105_real_aek_mbappe_6/01_w.jpg
+  photos:
+    - assets/images/20261105_real_aek_mbappe_6/01_w.jpg
+    - assets/images/20261105_real_aek_mbappe_6/04_w.jpg
+  short_photo: assets/images/20261105_real_aek_mbappe_6/01_v.jpg
+
+answer: 75分に勝ち越されたが、78分にエンバペが同点、90+2分にバルベルデが決勝点。CL4連勝
+watch: 24日のPSV戦（ホーム）
+
+sections:
+  - id: what
+    main: true
+    heading: レアルは、AEKアテネをどうひっくり返したのか
+    tier: 確定
+    telop: バルベルデ、90+2分の決勝弾。レアルがCL4連勝
+    say:
+      - text: レアル・マドリードが、AEKアテネに3対2で逆転勝ちしました。
+      - text: 決めたのは90+2分。AEKアテネに勝ち越されてから、17分後です。
+        image: assets/images/20261105_real_aek_mbappe_6/01_w.jpg
+      - voice: フェデリコ・バルベルデ
+        text: チームは、決してあきらめません。
+        emph: true
+      - voice: フェデリコ・バルベルデ
+        text: 2点目を取られて、難しいと思いました。
+        cont: true
+      - voice: フェデリコ・バルベルデ
+        text: でもチームは、もう一度追いつきました。
+        cont: true
+      - text: 試合を振り返ります。12分にAEKが先制。32分にベリンガムが追いつきます。
+        image: assets/images/20261105_real_aek_mbappe_6/04_w.jpg
+      - text: 75分、AEKが再びリード。ところが、その3分後でした。
+        image: assets/images/20261105_real_aek_mbappe_6/03_w.jpg
+      - text: 78分、エンバペが折り返しを直接決めて、同点です。
+        image: assets/images/20261105_real_aek_mbappe_6/03_w.jpg
+      - text: そして90+2分。バルベルデがエリアの外から、右上へ決めました。
+        image: assets/images/20261105_real_aek_mbappe_6/02_w.jpg
+      - voice: フェデリコ・バルベルデ
+        text: 打つ自信をくれる仲間に、感謝しています。
+      - text: レアルはこれでCL4連勝。勝ち点12で、パリ・サンジェルマンと並んで首位です。
+        image: assets/images/20261105_real_aek_mbappe_6/04_w.jpg
+    official: true
+    sources:
+      - https://www.realmadrid.com/en-US/news/football/first-team/latest-news/valverde-we-never-stopped-trying-and-came-back-again-04-11-2026
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915383
+      - https://www.soccer-king.jp/news/world/cl/20261105/2224751.html
+      - https://www.espn.com/soccer/story/_/id/50382502/mourinho-bellingham-real-madrid-aek-athens-champions-league
+  - id: mbappe
+    heading: エンバペの連続ゴールは、いつから続いているのか
+    tier: 報道
+    telop: エンバペ、公式戦6試合連続ゴール
+    say:
+      - text: 78分の同点ゴールで、エンバペは公式戦6試合連続の得点です。
+        card: {type: table, title: エンバペの連続ゴール, columns: [試合, 得点], rows: [[ローマ戦, 1], [セビージャ戦, 2], [ライプツィヒ戦, 1], [バルサ戦, 2], [ラシン戦, 1], [AEK戦, 1]], highlight_row: 5}
+      - text: 10月14日のローマ戦から続く、連続ゴールです。
+        card: none
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915383
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/summary?event=401882819
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/summary?event=401882832
+      - https://www.soccer-king.jp/news/world/cl/20261105/2224751.html
+  - id: view
+    viewpoint: true
+    heading: エンバペの6試合8ゴールは、どれほどのペースか
+    tier: 背景
+    telop: エンバペは6試合で8ゴール。約1.3点
+    say:
+      - text: 見立てです。エンバペは6試合で8ゴール、1試合あたり約1.3点です。
+      - text: 同点のエンバペと、決勝点のバルベルデ。2人で、17分の逆転を作りました。
+        emph: true
+      - text: 次は24日、ホームでPSVアイントホーフェンを迎えます。
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915383
+      - https://www.soccer-king.jp/news/world/cl/20261105/2224751.html
+short_title: "バルベルデ、90+2分の決勝弾。レアルのCL4連勝と、エンバペの6試合連続ゴール"

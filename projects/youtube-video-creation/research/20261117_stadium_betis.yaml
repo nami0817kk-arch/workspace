@@ -1,0 +1,485 @@
+# スタジアム紹介シリーズ：ベティスの本拠地（エスタディオ・ベニート・ビジャマリン、11/17 予定）。雛形は 11/13 レアル・ソシエダの回。
+# 題材の選び方（2026-11-12）：指示書 20261115 の「ラ・リーガの続き」。11/15 の自分の1本目はセビージャ。ベティスを2本目に。ユニフォーム担当は 11/15 バレンシア・11/17 ソシエダ（research/20261115_picks.txt）。重ならない。ビジャレアルは残す。
+#   ベティスを選んだ理由：現役で話題の大きなクラブ／「6万席の本拠地を壊して3シーズン間借り」という強い一点／スペイン12対1マルタ・W杯1982などの歴史／今季の間借り先の入場3試合の数字で見立てが作れる。
+#   重なりの確認：scripts/*stadium_* にベティスは無し（posted.json・covered.yaml も grep 済み）。同じ11/17のスタジアムは自分の1本だけ。
+# 一次情報の突き合わせ：
+#   ESPN esp.1 teams/244 の2026-27日程。ラ・カルトゥーハでのホームで入場の記録あり3試合＝ソシエダ 59490（8/21）・オサスナ 65484（10/11）・バルセロナ 66924（10/17）。レアル・マドリード（9/4）・マラガ（10/31）は入場0＝記録なしで除外。平均 191898÷3＝63966。
+#   ★要確認：同じ ESPN は 9/17 のヘタフェ戦（入場57792）の会場を「Estadio Benito Villamarín」と表示。クラブ・es ウィキペディアは2025年8月からカルトゥーハ・メインスタンド解体済みなので、ESPN の会場表記の誤りと見て、この1試合は使わない。
+#   es・en ウィキペディア：開場1929-03-17（スペイン5-0ポルトガル）／1936-07-16 賃貸契約／1939-03-12 再開／収容60721（スペイン5位・アンダルシア2位）／12-1マルタ 1983-12-21（Euro1984へ）／1997 新しい器発表（6.5万席・最低4200万）／1998-09-12 前半開場・2000-01-01 前半完成／2016-17 ゴール裏南 約1500万・5000→14700／2023-08 新メインスタンド計画 デ・ラ・オス＋ゲンスラー・計画の席60379／2025-08 カルトゥーハへ・2025-09 解体・2026-04 アクシオナの掘削／目標 2028-05-02。
+#   金額：stadiumdb 2026-03（見積もり約1.6億・FCC 約2.7億・サクイル 約2.4億・アクシオナ・増額1億超を回避）。完成目標 2028年5月は El Gol Digital と es ウィキペディア、2027年秋は stadiumdb 2025-10。
+#   食い違い（台本には入れない）：クラブ取得年は es=1960・en=1961。完成後の席は 60379（es）と7万に増えると書く報道（未確認）。El Gol Digital は「約1.7億ユーロ（2.5億から約8000万削減）」、stadiumdb は「2.7億未満」。投票の得票数は es の数字が合わない（67.4%のみ）ので使わない。
+# 読みが割れる名前：ビジャマリン（ビジャマリーンとも）／ベニート（ベニトとも）／ラ・カルトゥーハ／アクシオナ／サクイル／ゲンスラー／デ・ラ・オス／イリャネス。
+date: 2026年11月12日
+slot: other_1
+format: news
+series: スタジアム紹介
+voice_min: 0
+people: []
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  id: stadium_betis
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: ベティス
+  title: ベティスのビジャマリン、6万席の本拠地を空けて、間借りで戦うのはなぜ？
+  question: 6万席の本拠地ビジャマリンを、なぜベティスは空けて、間借りで戦っているのか
+  lead: スペインが12対1で勝った器です。
+  hook: ''
+  opening_image: assets/images/20261117_stadium_betis/02_w.jpg
+  end_bg: assets/images/20261117_stadium_betis/06_w.jpg
+  takeaway: ビジャマリンは1929年に博覧会の競技場として開き、1998年と2016年に半分ずつ建て足して約6万721席になった。2025年にメインスタンドを解体して、ベティスはラ・カルトゥーハへ。完成の目標は2028年5月で、間借りは3シーズンの見込み。建て直したあとの席は計画で約6万379。ラ・カルトゥーハでの今季の入場3試合の平均は6万3966人で、新しい席の1.06倍にあたる
+  short_title: ビジャマリン、6万席を空けて間借りで戦う
+thumbnail:
+  layout: scene
+  bold: false
+  callouts:
+  - 完成目標は2028年5月
+  - 間借りの平均6万4000
+  photo: assets/images/20261117_stadium_betis/01_w.jpg
+  line1: ベティスのビジャマリン
+  line2: 6万席の本拠地を空けた
+  tags:
+  - ベティス
+  - ラ・リーガ
+  - スタジアム紹介
+sections:
+- id: data
+  main: true
+  heading: スペインが12対1で勝った器は、いまどうなっているのか
+  bg: assets/images/20261117_stadium_betis/02_w.jpg
+  card: &id001
+    type: table
+    title: ビジャマリンの基礎DATA
+    columns: &id002
+    - 項目
+    - 内容
+    rows: &id003
+    - - 持ち主
+      - ベティス
+    - - 開場
+      - 1929年3月17日
+    - - 収容
+      - 6万721人
+    - - 大きさ
+      - スペインで5番目
+    - - 名前
+      - 元会長の名前
+    - - いま
+      - 工事中。ラ・カルトゥーハで試合
+  narrator: 解説
+  tier: 報道
+  telop: 1929年に開場。収容は6万721席。いまは試合を開いていない
+  sources:
+  - https://es.wikipedia.org/wiki/Estadio_Benito_Villamar%C3%ADn
+  - https://en.wikipedia.org/wiki/Estadio_Benito_Villamar%C3%ADn
+  say:
+  - text: ベティスの本拠地、ビジャマリンの話です。
+    card: none
+    image: assets/images/20261117_stadium_betis/02_w.jpg
+    short_only: true
+  - text: 1983年12月21日。スペイン代表が、マルタに12対1で勝ちました。
+    card: none
+    image: assets/images/20261117_stadium_betis/02_w.jpg
+    emph: true
+  - text: その試合を開いたのが、この器です。
+    card: none
+    image: assets/images/20261117_stadium_betis/02_w.jpg
+  - text: 開場は、1929年3月17日。収容は、スペインで5番目の、6万721席です。
+    card: *id001
+    image: assets/images/20261117_stadium_betis/02_w.jpg
+  - text: その器は、いま、試合を開いていません。
+    card:
+      type: stats
+      title: ビジャマリンの数字
+      items:
+      - - '1929'
+        - 年
+        - 開場
+      - - '60721'
+        - 席
+        - いままでの収容
+      - - '3'
+        - シーズン
+        - 間借りの見込み
+      focus: 2
+    image: assets/images/20261117_stadium_betis/01_w.jpg
+    emph: true
+  - text: ベティスは、2025年8月から、同じ街の競技場、ラ・カルトゥーハを使っています。
+    card:
+      type: table
+      title: ビジャマリンの基礎DATA
+      columns: *id002
+      rows: *id003
+      highlight_row: 5
+    image: assets/images/20261117_stadium_betis/01_w.jpg
+- id: history
+  heading: ビジャマリンは、なぜ博覧会の競技場から、ベティスの器になったのか
+  bg: assets/images/20261117_stadium_betis/06_w.jpg
+  card:
+    type: timeline
+    title: ビジャマリンの歩み
+    rows: &id004
+    - - 1929年3月
+      - 博覧会の競技場として開場
+    - - 1936年7月
+      - ベティスが借り手になる
+    - - 1939年3月
+      - 戦争の傷みを直して再開
+    - - 1982年
+      - W杯の2試合を開く
+    - - 1998年
+      - 新しい器の工事が始まる
+    - - 2025年
+      - メインスタンドを解体
+    focus: 1929年3月
+    highlight_row: 0
+  narrator: 解説
+  tier: 背景
+  telop: 1929年の博覧会のために建ち、1936年にベティスが借り手になった
+  sources:
+  - https://es.wikipedia.org/wiki/Estadio_Benito_Villamar%C3%ADn
+  - https://en.wikipedia.org/wiki/Estadio_Benito_Villamar%C3%ADn
+  say:
+  - text: ビジャマリンは、1929年のイベロアメリカ博覧会に合わせて建てられた器です。
+    card:
+      type: timeline
+      title: ビジャマリンの歩み
+      rows: *id004
+      focus: 1929年3月
+      highlight_row: 0
+    image: assets/images/20261117_stadium_betis/06_w.jpg
+  - text: 設計は、アントニオ・イリャネス。博覧会の競技場として、生まれました。
+    card: none
+    image: assets/images/20261117_stadium_betis/06_w.jpg
+  - text: 構造を検討したのは、マヌエル・マリア・スミスです。
+    card: none
+    image: assets/images/20261117_stadium_betis/06_w.jpg
+  - text: 1913年に、ビルバオの旧サン・マメスを設計した人でもあります。
+    card: none
+    image: assets/images/20261117_stadium_betis/06_w.jpg
+  - text: 開場は1929年3月17日。スペインがポルトガルに、5対0で勝ちました。
+    card: none
+    image: assets/images/20261117_stadium_betis/06_w.jpg
+  - text: このときの収容は、1万8000人でした。
+    card: none
+    image: assets/images/20261117_stadium_betis/06_w.jpg
+  - text: ベティスが借り手になったのは、1936年7月16日。10年の賃貸契約でした。
+    card:
+      type: timeline
+      title: ビジャマリンの歩み
+      rows: *id004
+      focus: 1929年3月
+      highlight_row: 1
+    image: assets/images/20261117_stadium_betis/06_w.jpg
+  - text: 内戦では、軍が器を使い、ひどく傷みました。
+    card: none
+    image: assets/images/20261117_stadium_betis/06_w.jpg
+  - text: 直した器が再び開いたのは、1939年3月12日です。
+    card:
+      type: timeline
+      title: ビジャマリンの歩み
+      rows: *id004
+      focus: 1929年3月
+      highlight_row: 2
+    image: assets/images/20261117_stadium_betis/04_w.jpg
+  - text: のちに、会長ベニート・ビジャマリンの時代に、器はクラブの持ち物になります。
+    card: none
+    image: assets/images/20261117_stadium_betis/04_w.jpg
+  - text: 名前は、その会長のものです。
+    card: none
+    image: assets/images/20261117_stadium_betis/04_w.jpg
+    emph: true
+  - text: 1997年には、当時の会長の名前に変わりました。
+    card: none
+    image: assets/images/20261117_stadium_betis/04_w.jpg
+  - text: 2010年10月、ファンの投票で、ビジャマリンの名前へ戻っています。
+    card: none
+    image: assets/images/20261117_stadium_betis/04_w.jpg
+- id: halves
+  heading: 半分ずつ建て足した器は、なぜ残りの半分を壊したのか
+  bg: assets/images/20261117_stadium_betis/05_w.jpg
+  card:
+    type: table
+    title: 半分ずつの工事
+    columns: &id005
+    - 年
+    - 場所
+    - 中身
+    rows: &id006
+    - - 1998〜2000
+      - 北ゴール裏とフォンド
+      - 新しい器の前半
+    - - 2016〜17
+      - 南ゴール裏
+      - 約5000席から約1万4700席へ。約1500万ユーロ
+    - - 2025〜
+      - メインスタンド
+      - 3つの客席を解体して建て直す
+    highlight_row: 0
+  narrator: 解説
+  tier: 背景
+  telop: 1998年と2016年に作り足し、残ったメインスタンドを2025年に解体
+  sources:
+  - https://es.wikipedia.org/wiki/Estadio_Benito_Villamar%C3%ADn
+  - https://en.wikipedia.org/wiki/Estadio_Benito_Villamar%C3%ADn
+  say:
+  - text: 1997年10月、当時の会長が、新しい器を建てると発表しました。
+    card: none
+    image: assets/images/20261117_stadium_betis/05_w.jpg
+  - text: 計画は、6万5000席。費用は、最低でも4200万ユーロと見積もられました。
+    card: none
+    image: assets/images/20261117_stadium_betis/05_w.jpg
+  - text: 1998年9月12日のサラゴサ戦で、北ゴール裏とフォンドの低い段が開きます。
+    card:
+      type: table
+      title: 半分ずつの工事
+      columns: *id005
+      rows: *id006
+      highlight_row: 0
+    image: assets/images/20261117_stadium_betis/05_w.jpg
+  - text: 2000年1月1日に、その前半が完成しました。
+    card: none
+    image: assets/images/20261117_stadium_betis/05_w.jpg
+  - text: 残ったのは、メインスタンドと、屋根でした。
+    card: none
+    image: assets/images/20261117_stadium_betis/05_w.jpg
+    emph: true
+  - text: 2016年、南ゴール裏を壊して、建て直します。
+    card:
+      type: table
+      title: 半分ずつの工事
+      columns: *id005
+      rows: *id006
+      highlight_row: 1
+    image: assets/images/20261117_stadium_betis/05_w.jpg
+  - text: 席は約5000から、約1万4700へ。費用は、約1500万ユーロです。
+    card: none
+    image: assets/images/20261117_stadium_betis/05_w.jpg
+  - text: これで収容は、約6万。残りは、メインスタンドだけになりました。
+    card: none
+    image: assets/images/20261117_stadium_betis/05_w.jpg
+  - text: 2025年9月、そのメインスタンドの3つの客席と、階段の解体が始まりました。
+    card:
+      type: table
+      title: 半分ずつの工事
+      columns: *id005
+      rows: *id006
+      highlight_row: 2
+    image: assets/images/20261117_stadium_betis/01_w.jpg
+    emph: true
+  - text: 2025年10月撮影のビジャマリンは、メインスタンドのあった側が、空いています。
+    card: none
+    image: assets/images/20261117_stadium_betis/01_w.jpg
+- id: cost
+  heading: なぜ、金額が下がるまで、工事は動かなかったのか
+  bg: assets/images/20261117_stadium_betis/03_w.jpg
+  card:
+    type: table
+    title: ビジャマリンの工事の金額（報道）
+    columns: &id007
+    - 項目
+    - 金額
+    rows: &id008
+    - - 当初の見積もり
+      - 約1億6000万ユーロ
+    - - 建設会社（入札は1社）
+      - 約2億7000万ユーロ
+    - - サクイル（屋根なし）
+      - 約2億4000万ユーロ
+    - - 避けた増額
+      - 1億ユーロ以上
+    highlight_row: 0
+  narrator: 解説
+  tier: 報道
+  telop: 入札が見積もりを大きく上回り、設計をやり直した。完成目標は2028年5月
+  sources:
+  - https://stadiumdb.com/news/2026/03/spain_betis_cuts_stadium_costs_villamarin_to_be_built_for_under_270m
+  - https://stadiumdb.com/news/2025/10/spain_betis_invents_an_intermediate_phase_in_villamarin_reconstruction_to_avoid_delays
+  - https://www.elgoldigital.com/futbol/real-betis-balompie/villamarin-acciona-segunda-fase-obras-ahorro-millones/
+  - https://es.wikipedia.org/wiki/Estadio_Benito_Villamar%C3%ADn
+  say:
+  - text: 2023年8月、クラブは、新しいメインスタンドと屋根の計画を発表しました。
+    card: none
+    image: assets/images/20261117_stadium_betis/03_w.jpg
+  - text: 設計は、ラファエル・デ・ラ・オスと、ゲンスラーです。
+    card: none
+    image: assets/images/20261117_stadium_betis/03_w.jpg
+  - text: ところが、最初の入札で、金額が跳ね上がりました。
+    card:
+      type: table
+      title: ビジャマリンの工事の金額（報道）
+      columns: *id007
+      rows: *id008
+      highlight_row: 0
+    image: assets/images/20261117_stadium_betis/03_w.jpg
+    emph: true
+  - text: 当初の見積もりは、約1億6000万ユーロでした。
+    card:
+      type: table
+      title: ビジャマリンの工事の金額（報道）
+      columns: *id007
+      rows: *id008
+      highlight_row: 0
+    image: assets/images/20261117_stadium_betis/03_w.jpg
+  - text: 入札に応じたのは、建設会社の1社だけ。
+    card:
+      type: table
+      title: ビジャマリンの工事の金額（報道）
+      columns: *id007
+      rows: *id008
+      highlight_row: 1
+    image: assets/images/20261117_stadium_betis/03_w.jpg
+  - text: 約2億7000万ユーロの見積もりでした。
+    card:
+      type: table
+      title: ビジャマリンの工事の金額（報道）
+      columns: *id007
+      rows: *id008
+      highlight_row: 1
+    image: assets/images/20261117_stadium_betis/03_w.jpg
+  - text: サクイルは、屋根なしで約2億4000万ユーロでした。
+    card:
+      type: table
+      title: ビジャマリンの工事の金額（報道）
+      columns: *id007
+      rows: *id008
+      highlight_row: 2
+    image: assets/images/20261117_stadium_betis/03_w.jpg
+  - text: クラブは手続きを止めて、設計をやり直します。
+    card: none
+    image: assets/images/20261117_stadium_betis/04_w.jpg
+  - text: 二重の膜の屋根は、なくなりました。
+    card: none
+    image: assets/images/20261117_stadium_betis/04_w.jpg
+  - text: 組んだ相手は、アクシオナです。
+    card:
+      type: table
+      title: ビジャマリンの工事の金額（報道）
+      columns: *id007
+      rows: *id008
+      highlight_row: 3
+    image: assets/images/20261117_stadium_betis/04_w.jpg
+  - text: 部材を工場でつくる方法などで、増額を1億ユーロ以上避けた、と伝えられます。
+    card:
+      type: table
+      title: ビジャマリンの工事の金額（報道）
+      columns: *id007
+      rows: *id008
+      highlight_row: 3
+    image: assets/images/20261117_stadium_betis/04_w.jpg
+  - text: 2026年4月には、アクシオナが、掘削と土台の工事を始めました。
+    card: none
+    image: assets/images/20261117_stadium_betis/04_w.jpg
+  - text: 完成の目標は、2028年5月です。
+    card:
+      type: table
+      title: 間借りが終わる時期の見込み
+      columns: &id009
+      - 時点
+      - 見込み
+      rows: &id010
+      - - 2025年10月の報道
+        - 2027年秋に戻る
+      - - 2026年の報道
+        - 2028年5月に完成
+      - - 間借りの長さ
+        - 2027年秋なら2季、2028年5月なら3季
+      highlight_row: 1
+    image: assets/images/20261117_stadium_betis/04_w.jpg
+    emph: true
+  - text: 2025年10月には、2027年秋に戻ると伝えられていました。
+    card:
+      type: table
+      title: 間借りが終わる時期の見込み
+      columns: *id009
+      rows: *id010
+      highlight_row: 0
+    image: assets/images/20261117_stadium_betis/04_w.jpg
+  - text: 2027年秋なら間借りは2シーズン、2028年5月なら3シーズンです。
+    card:
+      type: table
+      title: 間借りが終わる時期の見込み
+      columns: *id009
+      rows: *id010
+      highlight_row: 2
+    image: assets/images/20261117_stadium_betis/04_w.jpg
+    emph: true
+- id: view
+  viewpoint: true
+  heading: 見立て・間借りの入りは、新しい席に収まるのか
+  bg: assets/images/20261117_stadium_betis/06_w.jpg
+  card: &id011
+    type: table
+    title: 今季のラ・カルトゥーハの入場（記録が残る3試合）
+    columns:
+    - 相手
+    - 入場
+    rows:
+    - - レアル・ソシエダ
+      - 5万9490人
+    - - オサスナ
+      - 6万5484人
+    - - バルセロナ
+      - 6万6924人
+    - - 平均
+      - 6万3966人
+    highlight_row: 3
+  narrator: 解説
+  tier: 報道
+  telop: 今季のラ・カルトゥーハの平均は6万3966人。建て直した席の1.06倍
+  sources:
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/teams/244/schedule?season=2026（2026-27 ラ・リーガ、ベティスのラ・カルトゥーハでのホームの入場）
+  - https://es.wikipedia.org/wiki/Estadio_Benito_Villamar%C3%ADn
+  say:
+  - text: では、新しい器の席に、いまの入りは収まるのか。数字は11月12日時点です。
+    card: none
+    image: assets/images/20261117_stadium_betis/02_w.jpg
+    emph: true
+  - text: 建て直したあとの席は、計画では6万379です。
+    card: none
+    image: assets/images/20261117_stadium_betis/02_w.jpg
+  - text: いまの6万721より、342席、少なくなります。
+    card: none
+    image: assets/images/20261117_stadium_betis/02_w.jpg
+  - text: ラ・カルトゥーハでの今季のホームで、入場が記録されたのは3試合です。
+    card: none
+    image: assets/images/20261117_stadium_betis/02_w.jpg
+  - text: ソシエダ戦が5万9490人、オサスナ戦が6万5484人。
+    card: *id011
+    image: assets/images/20261117_stadium_betis/02_w.jpg
+  - text: バルセロナ戦は、6万6924人です。
+    card: *id011
+    image: assets/images/20261117_stadium_betis/02_w.jpg
+  - text: 3試合の平均は、6万3966人です。
+    card: *id011
+    image: assets/images/20261117_stadium_betis/02_w.jpg
+    mark:
+      kind: circle
+      row: 3
+  - text: 建て直した6万379席を、平均で3587人、上回っています。
+    card:
+      type: calc
+      title: いまの入りは、建て直した席の何倍か（自分で割った）
+      terms:
+      - - 6万3966人
+        - 今季の平均の入場
+      - - 6万379席
+        - 建て直し後の席（計画）
+      - - 1.06倍
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+    image: assets/images/20261117_stadium_betis/02_w.jpg
+  - text: 最多は、バルセロナ戦の6万6924人。6545人が、席からあふれる数です。
+    card: none
+    image: assets/images/20261117_stadium_betis/02_w.jpg
+    emph: true
+  - text: 席の数は、ほとんど変わりません。
+    card: none
+    image: assets/images/20261117_stadium_betis/02_w.jpg
+  - text: いまの入りのままなら、新しい器は、約3600人あふれます。
+    card: none
+    image: assets/images/20261117_stadium_betis/02_w.jpg
+    emph: true

@@ -1,0 +1,368 @@
+# クラブの財政：ブライトン（11/6 金、シリーズ「クラブの財政」、key: finance_brighton、型は news）。
+#
+# 題材の選び方：デロイト Football Money League 2026（2024/25）の順で、財政の回をまだ出していないクラブから。
+#   1〜22位は既出または対象外（20位ウェストハムは今季2部、21位ガラタサライはトルコ）。27位ローマは 10/31、11/2 はアヤックス（30位の外）。
+#   未出の最上位は **23位ブライトン（2億3870万ユーロ）**。11/2 の担当は「Companies House の画像PDFで読めない」として外したが、
+#   クラブ公式サイトの記事（2026-01）から年次報告書の全文PDF（48頁、監査済み）に辿れた。PDF の文字は字の割り当てが壊れていて取れないので、頁を画像にして目で読んだ（下の数字はすべて画像で読んだ値）。
+#   外した候補：24位エヴァートン（11/2 の担当が「女子チームの売却益が損益の主役」で外した理由のまま）、25位クリスタル・パレス（今季18位。一次資料は未確認）。
+#
+# 重なりの確認（2026-11-04）：scripts/*finance_* にブライトンは無い。直近30日のブライトンの本は、10/14 スタジアム・10/23 ユニフォーム（別のシリーズ）、
+#   ニュースのショート（10/17 三笘の関心・冨安・10/19 鎌田・10/24 グロス・10/29 シティ戦）。財政の切り口は無い。picks（research/20261105_picks.txt）にもブライトンは無かった。
+# ★今季も1部：ESPN の 2026-27 Premier League 順位表（2026-11-04 取得）で3位・勝点19・9試合。
+# ★日本との接点：三笘薫が所属（英語版 Wikipedia「Kaoru Mitoma」の infobox：clubs2 = Brighton & Hove Albion、years2 = 2021–。前は川崎フロンターレ 2018–2021）。
+#   台本では「所属する」と「2021年に川崎フロンターレから」だけ。怪我・移籍のうわさは入れない。
+#
+# 軸は「**選手を売って稼いできたクラブが、過去2番目の8位の年に赤字になった。何が変わったのか**」。
+#   答え：選手の売り買いの損益が +6810万 → −2500万ポンド（償却が2倍あまり、売却益は約半分）。営業の損益の変化 1億2770万のうち約73%がここ。
+#   ★他の財政回と軸を重ねない：11/2 アヤックス＝本業は赤字・売却益で黒字（逆向き）、10/31 ローマ＝赤字を続ける・オーナーの貸付。
+#     今回は「売る利益が減り、買った分の償却が増えて赤字に転じた」。オーナーの貸付は見立ての1行に留める（ローマと重ならないように）。
+#   ★女子チームの話は入れない（年次報告に女子の順位・投資額が出てくるが、台本には書かない）。
+#   ★住宅・商業開発（New Monks Farm）の売上が収入に入っている。サッカーの収入として比べる所はそれを除いた数を使い、そう言う。
+#
+# **出どころ（読んだもの）**
+#   ○ クラブ公式記事「Club publish annual accounts for 2024/25 season」（2026-01）
+#       https://www.brightonandhovealbion.com/media-article/club-news-annual-accounts-published-2024-25-season-january-2026
+#       「an operating loss of £54.4m before interest and taxation up to 30 June 2025」「player trading results, which shifted from a profit of £68.1m to a loss of £25m」
+#       「an increase in amortisation of £39.8m as a result of a £210m investment in significant additions to the playing squad during 2024/25」
+#       「These accounts do not reflect major player sales last summer, including Joao Pedro, Simon Adingra, Julio Enciso and Pervis Estupinan.」
+#       Tony Bloom「we finished eighth, the second-highest league position in our history」「we dream of winning the first major trophy in our history」
+#   ○ 年次報告書 Brighton & Hove Albion Holdings Limited, Annual Report and Financial Statements for the Year Ended 30 June 2025（監査 BDO、2025-12-23 署名）
+#       https://images.ctfassets.net/rrpvignygaa1/5Pa3F0cMAACmehuKnGziTe/d174f9c54a90be016f74e5592369f93d/BHA_Holdings_25.pdf
+#       p.5 Business review（£000、2025／2024）：Turnover 242,672／260,849、Other operating income 5,060／3,760、Cost of sales (36,305)／(46,417)、
+#            Administrative and operational costs (41,076)／(38,147)、Depreciation (8,298)／(8,231)、Player trading (24,971)／68,140、Football costs (191,502)／(166,678)、
+#            Operating (loss)/profit (54,420)／73,276。「Turnover decrease: 0.1% (excluding £20.3m (2024 - £38.3m) of revenue from the New Monks Farm development project)」「Football costs increase: 14.9%」
+#            「finishing in 8th position (2024 - 11th position). The higher league finish and associated merit income compensated somewhat for the Club not competing in European Competition」
+#       p.6：Matchday 27.9 横ばい、Broadcasting 163.8→151.1（「due to the loss of income from the Europa League which offset increased Premier League income」）、Commercial 20.7→22.8、Other 48.4→40.9。
+#            「Player amortisation has increased to £82.0m compared to £39.4m」「New players were added to the squad at a discounted value of £210.5m (2024 - £122.4m)」
+#            「Profit on player disposals was £57.0m which compares with a profit on disposal of £110.3m」「impairment ... £Nil compared to £2.8m」
+#       p.20 損益計算書：Loss before taxation (55,805)／75,126、Tax 4,905／(14,888)、Loss after taxation (50,900)／60,238（2024 は修正後）
+#       p.33 注3 Turnover：Matchday 27,878／27,944、Broadcasting 151,090／163,808、Commercial 22,774／20,709、Other 40,930／48,388
+#       p.34 注7 人件費：Wages and salaries 144,454／128,836、社会保険 19,567／16,775、年金 531／611、合計 164,552／146,222
+#       p.45 注28 純負債：現金 40,933、オーナー（Director's loan）406,541、純負債 365,608（期首 126,061）
+#       p.46 注32「the group owed A G Bloom £406,541,000 (2024 - £299,672,000). £406,541,000 (2024 - £99,672,000) of this amount is interest free and repayable on demand.」
+#   ○ デロイト Football Money League 2026（2024/25）一次ページ（requests で本文、2026-11-04）：「23 Brighton & Hove Albion 238.7」（€m。デロイトは移籍・開発の売上を含めない数え方）
+#   ○ ESPN 順位表 API（2026-11-04）：3位 Brighton 19点 9試合
+#   ○ 英語版 Wikipedia「Kaoru Mitoma」（infobox）
+#   × 確かめられなかったもの：2025-26（2026年6月期）の決算（例年1〜2月に出るので、まだ無い）、2025年夏の4人の移籍金（台本に額を入れない）、
+#       放映権のうちヨーロッパリーグの分の額（年次報告は理由だけ書く）。どれも台本に入れない。
+#
+# 自分で計算した数（検算済み）
+#   収入の内訳 2025：27.878＋151.090＋22.774＋40.930＝242.672 ✓／2024：27.944＋163.808＋20.709＋48.388＝260.849 ✓
+#   開発を除く収入：242.672−20.3＝222.4／260.849−38.3＝222.5（発表「−0.1%」✓）
+#   放映権の割合：151.090÷222.372＝67.9%（開発を除く収入に対して）→約68%。全体に対しては62.3%
+#   放映権の減り：163.808−151.090＝12.718→約1270万
+#   人件費：146.222→164.552＝+18.330（+12.5%）。開発を除く収入に対する割合 164.552÷222.372＝74.0%／146.222÷222.549＝65.7%→約66%
+#   償却：39.374→81.976＝2.08倍→2倍あまり（減損を足すと 42.158→81.976＝+39.8 ✓ クラブの「+39.8」）
+#   売却益：110.299→57.005＝51.7%→約半分
+#   選手の売り買い：57.005−81.976＝−24.971 ✓／110.299−39.374−2.784＝68.141 ✓。振れ幅 68.140＋24.971＝93.111→約9310万
+#   営業の損益の振れ：73.276＋54.420＝127.696→約1億2770万。うち選手の売り買い 93.111÷127.696＝72.9%→約73%
+#   それ以外の振れ：127.696−93.111＝34.585→約3460万（収入 −18.177、その他営業収入 +1.300、売上原価 +10.112、管理費 −2.929、減価償却 −0.067、サッカーの費用 −24.824 の合計 −34.585 ✓）
+#   サッカーの費用：166.678→191.502＝+24.824（+14.9% ✓）
+#   オーナーからの借入：299.672→406.541＝+106.869→約1億690万増
+#   新加入の選手：210.5（前の年 122.4）→ 1.72倍
+#
+# 写真：assets/images/20261106_finance_brighton/（Commons、出典は credits.json）。01〜04 は本拠地アメックス・スタジアム（10/14 スタジアム回の取り込み分を再利用）、
+#   06 は三笘薫（2026-01-24 撮影、CC0。目で本人と確認：ブライトンの黄色のユニ、背番号22）。
+date: 2026年11月4日
+slot: other_1
+format: news
+series: クラブの財政
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- ブライトン
+- 三笘薫
+theme:
+  end_bg: assets/images/20261106_finance_brighton/02_w.jpg
+  id: finance_brighton
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: ブライトン
+  title: ブライトン、選手を売って稼ぐクラブが赤字に。何が変わったのか
+  question: ブライトンは2024-25のプレミアリーグで、クラブ史上2番目の8位。それなのに、営業の損益は前の年の7330万ポンドの黒字から、5440万ポンドの赤字に変わった。選手を売って稼いできたクラブで、何が変わったのか
+  lead: 史上2番目の8位。それでも、5440万ポンドの赤字。ブライトン。
+  opening_image: assets/images/20261106_finance_brighton/01_w.jpg
+  takeaway: ブライトンの2024-25の決算（クラブ公式の年次報告）は、営業の損益が5440万ポンドの赤字（前の年は7330万の黒字）。振れ幅約1億2770万のうち約73%は選手の売り買いで、+6810万から−2500万へ。買った選手の償却が3940万から8200万へ2倍あまりに増え、売った利益は1億1030万から5700万へ約半分に減った。収入は開発を除けば横ばい（約2億2240万）で、ヨーロッパリーグが無くなった分、放映権は約1270万減。人件費は開発を除く収入の約74%（前の年は約66%）。オーナーのブルーム氏からの借入は4億650万ポンドで、利息は無い。2025年夏の主力の売却はこの決算に入っていない
+  short_title: ブライトン、売って稼ぐクラブが赤字に
+thumbnail:
+  layout: number
+  crest_pos: right
+  photo: assets/images/20261106_finance_brighton/02_w.jpg
+  short_photo: assets/images/20261106_finance_brighton/06_v.jpg
+  number: 5440万ポンド赤字
+  line1: ブライトンの決算
+  line2: 8位の年になぜ赤字
+  callouts: [売り買い−2500万]
+  tags:
+  - ブライトン
+  - プレミアリーグ
+  - クラブの財政
+  - 三笘薫
+sections:
+- id: rev
+  heading: ブライトンの収入は、何でできているのか
+  tier: 報道
+  telop: 収入は2億4270万ポンド。いちばん大きいのは放映権の1億5110万
+  narrator: 解説
+  card: &rev_bars
+    type: bars
+    title: ブライトンの収入の内訳（2024-25、百万ポンド）
+    unit: 百万ポンド
+    items:
+    - {label: 放映権, value: 151.1, highlight: true}
+    - {label: その他（開発を含む）, value: 40.9}
+    - {label: 試合の日, value: 27.9}
+    - {label: スポンサーなど, value: 22.8}
+  say:
+  - text: この動画は、2026年11月4日時点で見られる、クラブの発表をもとにしています。
+    image: assets/images/20261106_finance_brighton/01_w.jpg
+    card: none
+  - text: イングランドのブライトン。日本代表の三笘薫が所属するクラブです。
+    image: assets/images/20261106_finance_brighton/06_w.jpg
+    card: none
+  - text: 三笘は2021年に、川崎フロンターレから加わりました。
+    card: none
+  - text: 今季は9試合を終えて、プレミアリーグの3位につけています。
+    image: assets/images/20261106_finance_brighton/02_w.jpg
+    card: none
+  - text: 決算は、7月から6月で区切ります。
+    card: none
+  - text: いちばん新しい決算は、2024年から25年のシーズンです。
+    card: none
+  - text: 収入は、2億4270万ポンド。
+    emph: true
+    card: *rev_bars
+  - text: いちばん大きいのは、テレビの放映権で、1億5110万ポンド。
+    card: *rev_bars
+  - text: 次が、その他。試合の日と、スポンサーなどが続きます。
+    card: *rev_bars
+  - text: ブライトンは、住宅と商業施設の開発も手がけています。
+    card: none
+  - text: その他の4090万には、その開発の売上が2030万入っています。
+    image: assets/images/20261106_finance_brighton/03_w.jpg
+    card: none
+  - text: 開発を除くと、収入は約2億2240万ポンドになります。
+    card: none
+  - text: 開発を除いた収入の、約68%が放映権。テレビのお金が、柱のクラブです。
+    card: none
+  sources:
+  - https://images.ctfassets.net/rrpvignygaa1/5Pa3F0cMAACmehuKnGziTe/d174f9c54a90be016f74e5592369f93d/BHA_Holdings_25.pdf
+  - https://www.brightonandhovealbion.com/media-article/club-news-annual-accounts-published-2024-25-season-january-2026
+  - https://en.wikipedia.org/wiki/Kaoru_Mitoma
+- id: europe
+  heading: 順位が上がったのに、放映権はなぜ減ったのか
+  tier: 報道
+  telop: 放映権は1億6380万から1億5110万ポンドへ。ヨーロッパリーグの分が無くなった
+  narrator: 解説
+  card: &rev_table
+    type: table
+    title: ブライトンの収入（百万ポンド）
+    columns: [項目, 2023-24, 2024-25]
+    rows:
+    - [放映権, '163.8', '151.1']
+    - [試合の日, '27.9', '27.9']
+    - [スポンサーなど, '20.7', '22.8']
+    - [開発を除く収入, '222.5', '222.4']
+    highlight_row: 0
+  say:
+  - text: 2024年から25年のブライトンは、プレミアリーグで8位。
+    image: assets/images/20261106_finance_brighton/04_w.jpg
+    card: none
+  - text: 会長のトニー・ブルームは、クラブ史上2番目に高い順位だと書いています。
+    card: none
+  - text: 前の年は11位。順位が上がれば、リーグから入るお金も増えます。
+    card: none
+  - text: それでも放映権は、前の年の1億6380万ポンドから、約1270万の減り。
+    emph: true
+    card: *rev_table
+  - text: 理由は、ヨーロッパリーグ。前の年に出ていた大会のお金が、この年は無くなりました。
+    card: *rev_table
+  - text: リーグの順位で増えた分を、それが打ち消した形です。
+    card: *rev_table
+  - text: 試合の日の収入は、前の年と同じ水準。
+    image: assets/images/20261106_finance_brighton/01_w.jpg
+    card: none
+  - text: スポンサーなどは、新しい提携とユニフォームの売れ行きで、約210万の増えです。
+    card:
+      <<: *rev_table
+      highlight_row: 2
+  - text: 開発を除く収入で比べると、前の年から0.1%の減り。ほぼ横ばいでした。
+    card:
+      <<: *rev_table
+      highlight_row: 3
+  sources:
+  - https://images.ctfassets.net/rrpvignygaa1/5Pa3F0cMAACmehuKnGziTe/d174f9c54a90be016f74e5592369f93d/BHA_Holdings_25.pdf
+- id: trade
+  main: true
+  heading: 選手の売り買いは、なぜマイナスになったのか
+  tier: 報道
+  telop: 選手の売り買いは、6810万の黒字から2500万ポンドの赤字へ
+  narrator: 解説
+  card: &trade_table
+    type: table
+    title: ブライトンの選手の売り買い（百万ポンド）
+    columns: [項目, 2023-24, 2024-25]
+    rows:
+    - [新しく加えた選手, '122.4', '210.5']
+    - [選手の契約の償却, '−39.4', '−82.0']
+    - [選手を売った利益, '+110.3', '+57.0']
+    - [売り買いの損益, '+68.1', '−25.0']
+    highlight_row: 0
+  say:
+  - text: 三笘のブライトンは、選手を売って稼いできたクラブです。
+    short_only: true
+    image: assets/images/20261106_finance_brighton/06_w.jpg
+    card: none
+  - text: 2024年から25年は、その売り買いが赤字になりました。
+    short_only: true
+    card: none
+  - text: この年、ブライトンが新しく加えた選手は、2億1050万ポンド分。
+    emph: true
+    image: assets/images/20261106_finance_brighton/02_w.jpg
+    card: *trade_table
+  - text: 前の年の、約1.7倍です。
+    card: *trade_table
+  - text: 買った選手の移籍金は、契約の年数に分けて、毎年の費用にします。これが償却です。
+    image: assets/images/20261106_finance_brighton/02_w.jpg
+    card: none
+  - text: 償却は、3940万から8200万ポンドへ。2倍あまりになりました。
+    emph: true
+    card:
+      <<: *trade_table
+      highlight_row: 1
+  - text: 一方で、選手を売った利益は、1億1030万から5700万ポンドへ。約半分です。
+    card:
+      <<: *trade_table
+      highlight_row: 2
+  - text: 差し引きの損益は、6810万の黒字から、2500万ポンドの赤字へ。
+    emph: true
+    card:
+      <<: *trade_table
+      highlight_row: 3
+  - text: 1年で、約9310万ポンド動いたことになります。
+    image: assets/images/20261106_finance_brighton/04_w.jpg
+    card: none
+  - text: 利息と税を引く前の、営業の損益で見てみます。
+    card: none
+  - text: 営業の損益は、7330万ポンドの黒字から、5440万ポンドの赤字に変わりました。
+    card: &swing_wf
+      type: waterfall
+      title: ブライトンの営業の損益は、どう動いたか（百万ポンド）
+      unit: 百万ポンド
+      start: [2023-24の営業の損益, 73.3]
+      steps:
+      - [選手の売り買い, -93.1]
+      - [収入・費用など, -34.6]
+      total: [2024-25の営業の損益, -54.4]
+  - text: 動いた約1億2770万のうち、約73%が選手の売り買いの分です。
+    card:
+      <<: *swing_wf
+      highlight: 選手の売り買い
+  - text: 税を引いた最終の損益は、5090万ポンドの赤字でした。
+    image: assets/images/20261106_finance_brighton/01_w.jpg
+    card: none
+  sources:
+  - https://images.ctfassets.net/rrpvignygaa1/5Pa3F0cMAACmehuKnGziTe/d174f9c54a90be016f74e5592369f93d/BHA_Holdings_25.pdf
+  - https://www.brightonandhovealbion.com/media-article/club-news-annual-accounts-published-2024-25-season-january-2026
+- id: cost
+  heading: 選手のほかに、費用は何が増えたのか
+  tier: 報道
+  telop: 人件費は1億6460万ポンド。開発を除く収入の約74%
+  narrator: 解説
+  card: &cost_table
+    type: table
+    title: ブライトンの費用（百万ポンド）
+    columns: [項目, 2023-24, 2024-25]
+    rows:
+    - [人件費, '146.2', '164.6']
+    - [チームを動かす費用, '166.7', '191.5']
+    - [人件費 ÷ 開発を除く収入, 約66%, 約74%]
+    highlight_row: 0
+  say:
+  - text: ブライトンで、もう1つ増えたのが給料。
+    image: assets/images/20261106_finance_brighton/03_w.jpg
+    card: none
+  - text: 人件費は、1億4620万から1億6460万ポンドへ。1830万の増えです。
+    emph: true
+    card: *cost_table
+  - text: 開発を除く収入に対しては、約66%から約74%へ。自分で割った数。
+    card:
+      <<: *cost_table
+      highlight_row: 2
+  - text: クラブの説明では、選手との契約と、8位に入ったことのボーナスが主な理由です。
+    card:
+      <<: *cost_table
+      highlight_row: 1
+  - text: 雇い主が払う社会保険の負担が、国の制度で上がったことも挙げています。
+    image: assets/images/20261106_finance_brighton/04_w.jpg
+    card: none
+  sources:
+  - https://images.ctfassets.net/rrpvignygaa1/5Pa3F0cMAACmehuKnGziTe/d174f9c54a90be016f74e5592369f93d/BHA_Holdings_25.pdf
+- id: view
+  viewpoint: true
+  heading: 見立て・ブライトンの赤字は、来年も続くのか
+  tier: 背景
+  telop: 売った利益で償却をまかなえたのは約7割。2025年夏の売却は、まだ入っていない
+  narrator: 解説
+  card: &view_table
+    type: table
+    title: 自分で割ってみた（ブライトンの決算）
+    columns: [比べ, 答え]
+    rows:
+    - [売った利益 ÷ 償却（2023-24）, 約2.8倍]
+    - [売った利益 ÷ 償却（2024-25）, 約7割]
+    - [オーナーからの借入 ÷ 開発を除く収入, 約1.8倍]
+    highlight_row: 0
+  say:
+  - text: ここからは見立てです。ブライトンの決算の数字を、自分で割ってみます。
+    image: assets/images/20261106_finance_brighton/02_w.jpg
+    card: none
+  - text: 売った利益で、買った選手の償却をどれだけまかなえたか。前の年は約2.8倍。
+    card: *view_table
+  - text: この年は、約7割にとどまりました。
+    emph: true
+    mark:
+      kind: circle
+      row: 1
+      col: 1
+    card:
+      <<: *view_table
+      highlight_row: 1
+  - text: 題への答えです。変わったのは、収入ではなく、選手の売り買いでした。
+    image: assets/images/20261106_finance_brighton/01_w.jpg
+    card: none
+  - text: たくさん買った年に、売る利益が小さかった。それが赤字の中身です。
+    emph: true
+    card: none
+  - text: 会長は、この決算には2025年夏の主な選手の売却が入っていない、と書いています。
+    card: &chair_doc
+      type: document
+      label: ブライトン 会長の声明（2024-25の年次報告、訳）
+      paragraphs:
+      - この決算には、2025年夏の主な選手の売却は反映されていない。
+      - ジョアン・ペドロ、シモン・アディングラ、フリオ・エンシソ、ペルビス・エストゥピニャンなどだ。
+      highlight: [反映されていない]
+  - text: ジョアン・ペドロや、エストゥピニャンなどの移籍です。
+    card: *chair_doc
+  - text: 赤字を支えているのは、会長でオーナーのブルーム氏です。
+    image: assets/images/20261106_finance_brighton/03_w.jpg
+    card: none
+  - text: クラブがブルーム氏から借りているお金は、4億650万ポンド。
+    card: none
+  - text: 1年で約1億690万増えました。利息はありません。
+    card: none
+  - text: 開発を除く収入の、約1.8倍にあたります。
+    card:
+      <<: *view_table
+      highlight_row: 2
+  - text: 会長は、クラブ史上初めての大きなタイトルを夢見ている、とも書いています。
+    image: assets/images/20261106_finance_brighton/06_w.jpg
+    card: none
+  - text: 今季は3位。その夏の売却が入る次の決算で、赤字はどこまで縮むのか。
+    emph: true
+    image: assets/images/20261106_finance_brighton/02_w.jpg
+    card: none
+  sources:
+  - https://images.ctfassets.net/rrpvignygaa1/5Pa3F0cMAACmehuKnGziTe/d174f9c54a90be016f74e5592369f93d/BHA_Holdings_25.pdf
+  - https://www.brightonandhovealbion.com/media-article/club-news-annual-accounts-published-2024-25-season-january-2026

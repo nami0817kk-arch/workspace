@@ -1,0 +1,690 @@
+# 北澤豪（元日本代表 MF）の紹介。シリーズ「レジェンドの紹介（日本）」2026-11-15。型は 11/13 の城彰二と同じ8節の変形（プレースタイルの節は「あの試合」の節の中で本人の言葉に置いた）。
+# **情報の時点は 2026-11-12。**年齢は出さない。いまの仕事は言わない（日本サッカー協会などの役職・解説・障がい者サッカー連盟は入れない）。
+# **FotMob・DataMB・FBref・Sofascore・Transfermarkt は不使用**。数字は日本語版 Wikipedia「北澤豪」の成績表・代表の年別表と出場表、英語版「1998 FIFA World Cup qualification (AFC)」、
+#   Yahoo!スポーツナビ（飯尾篤史、集中連載「ジョホールバルの真実」(4)「ドーハ組、北澤豪がもたらしたもの」）の1・2頁だけ。
+# **病気・私生活・法的な問題は入れない。**
+# **題材を選んだ理由**：引退した日本人で、ドーハ（1993）とジョホールバル（1997）の両方に立った大物。国内レジェンドの既出（中田・俊輔・内田・川口・小野・稲本・遠藤・大久保・岡崎・松井・阿部・宮本・憲剛・奥寺・中澤・槙野・高原・城）に無く、
+#   posted.json・covered.yaml・scripts/・picks のどこにも「北澤」は出ない。Commons に大きい写真が3枚ある（2010年・2018年・日本イタリアOB戦）。同じ日の別シリーズと人が重ならない。
+# **引退の確認**：日本語版の成績表が2002年で終わり、「2002年出場機会を減らして引退を決断」「2003年6月21日に引退試合」（日本語版）。現役ではない。
+# **ジョホールバルは城彰二（11/13）の回と同じ試合**。城の回は75分の同点ゴールの側、こちらは「先発し、延長前半0分に岡野と交代した側」。試合の表は出さず、岡田武史の電話からの1か月を主役にした。
+# **候補から外したもの**：柳沢敦・名波浩・楢崎正剛・中山雅史・小笠原満男・福西崇史（Commons に使える大きな写真が無い。11/9〜11/13 の担当と同じ結果）、本田圭佑・香川真司・長友佑都（現役）、前園真聖（写真は多いが大物度で北澤・福田に劣る）。
+# **数字の出どころ**
+# - 1968-08-10・東京都町田市生まれ。MF（日本語版）。クラブ：本田技研 1987-91 51試合14得点、読売／東京ヴェルディ 1991-2002 285試合43得点、合計 336試合57得点（日本語版の表の合計と一致。JSL1 71-16＋J1 265-41）。
+#   ※日本語版の本文は「Jリーグでは264試合41ゴール」「Aマッチ59試合」と書くが、成績表は J1 265試合・代表58試合3得点。**表の数字を採った**（本文との食い違いは報告に書く）。
+# - 年別（J）：1993 35-6、1994 40-9、1995 40-11、1996 28-4、1997 29-1、1998 34-5、1999 28-4、2000 4-0、2001 23-0、2002 4-1。1990-91 JSL1 22試合10得点（得点王）。
+# - 日本代表 58試合3得点（1991〜99年）。年別：1991 2-0、1992 11-1、1993 4-0、1994 7-1、1995 14-1、1996 5-0、1997 11-0、1998 3-0、1999 1-0。合計 58-3（足して一致）。
+#   1992・95・97年＝36試合（11＋14＋11）＝約62%（36÷58）。ほかの6年＝22試合・1得点（22÷6＝約3.7）。
+#   1992年アジアカップは5試合すべてに出場（日本語版の出場表の No.9〜13）。優勝は福田正博の項（日本語版・英語版）と英語版 Fukuda の Medal 欄で確認。
+#   1993年ドーハ：北朝鮮戦（10/21 3-0）・韓国戦（10/25 1-0）に出場、最終戦イラク戦（10/28 2-2）は出番なし（日本語版）。
+# - 1998年W杯：予選は戦い、本大会直前の合宿で三浦知良とともに外れた（日本語版）。選手を小さく見せる書き方は避け、事実だけ言う。
+# - 決勝ゴール（日本語版）：1993 Jリーグカップ決勝（清水）、1994 Jリーグチャンピオンシップ第1戦（広島）、1997-01-01 天皇杯決勝（広島）。Jリーグ初ゴール＝1993年第2節ジェフ戦。
+# - 引退：2002-07-27 清水戦が最後の得点。終盤に岡田武史（翌年マリノス監督就任が決定）からの移籍オファーを、ひざの不調で断り引退（日本語版）。引退試合 2003-06-21 国立競技場。
+# - ジョホールバル（英語版 1998 FIFA World Cup qualification (AFC)）：1997-11-16、イラン2-3日本（延長・ゴールデンゴール）、岡野雅行118分。北澤は先発し「延長前半0分に岡野と交代」（Yahoo 記事の交代記録）。
+# - 本人の言葉（Yahoo!スポーツナビ 2017-10-30、飯尾篤史。原文のまま）：①岡田武史からの電話（10月14日夜、8月以来の復帰要請）②静岡キャンプの雰囲気 ③トップ下・左サイドの役割。
+#   **WebFetch の抽出で取った文面。原記事の画面と一字ずつ突き合わせてはいない**（報告に書く）。「ヒデ」「モト」は台本の地の文で中田英寿・山口素弘と言ってから引いた。名波は記事の「（浩）」を名波浩に開いた。
+# **入れなかったもの**：キリンカップ1991の2得点（日本語版の本文と代表の年別表が食い違う）、ベストジーニスト賞、ウイイレの解説・テレビ・JFA 役職・障がい者サッカー連盟、フットサル代表、読売クラブ時代の人間関係の逸話（有料部分で確かめられない）、
+#   ドーハで出番がなかったときの本人の言葉（Sportiva 有料部分で取れなかった）、カズ・ラモスとの関係の評価。
+# **写真**：assets/images/20261115_kitazawa_tsuyoshi_legend/（Commons だけ）。01＝「Tsuyoshi Kitazawa on Feb 17, 2010.jpg」（Norio NAKAYAMA、CC BY-SA 2.0、2010-02-17、adidas のイベントでマイクを持つ姿）、
+#   02＝「Kitazawa Tsuyoshi from "Goal! Goal! Goal!…" at Opening Ceremony of the Tokyo International Film Festival 2018」（Dick Thomas Johnson、CC BY 2.0、2018-10-25、縦長）、
+#   03＝「Kazu Miura, Roberto Baggio and Tsuyoshi Kitazawa.jpg」の右の人（背番号8、赤いユニフォーム。2013年の日本・イタリアOB戦。CC BY 2.0）を切り出したもの。
+#   いずれも現役時代ではない（台本は現役の話の行にも使う）。紋章の差し込みは 日本。
+watch: 毎日、数字でサッカーを読み解きます
+title: 北澤豪は、どんな選手だった？ ドーハからジョホールバルまで
+format: news
+short_title: 北澤豪は、どんな選手だった？
+series: レジェンドの紹介
+topic: 北澤豪
+date: 2026年11月12日
+slot: other_1
+people:
+- 北澤豪
+theme:
+  id: legend_kitazawa_tsuyoshi
+  league: japan
+  league_name: 日本代表
+  kind: other
+  topic: 北澤豪
+  title: 北澤豪は、どんな選手だった？ ドーハからジョホールバルまで
+  question: ドーハとジョホールバルのどちらにも出た北澤豪は、1997年10月の電話のあと、ジョホールバルまでの1か月で何を求められたのか
+  takeaway: 北澤豪の日本代表58試合のうち36試合（約62%）は、1992年・1995年・1997年の3年に集まっている。1年あたり12試合で、ほかの6年は約3.7試合。1992年はアジアカップの優勝、1997年はワールドカップ初出場が決まった年だった
+  nameplate: 北澤豪｜元日本代表 MF
+  opening_image: assets/images/20261115_kitazawa_tsuyoshi_legend/01_w.jpg
+  end_bg: assets/images/20261115_kitazawa_tsuyoshi_legend/01_r.jpg
+  bgm: assets/audio/bgm_calm.wav
+  outro_title: 毎日、数字でサッカーを読み解きます
+thumbnail:
+  line1: 北澤豪、通算336試合57点
+  line2: ドーハとジョホールバルに出場
+  tags:
+  - 日本
+  photo: assets/images/20261115_kitazawa_tsuyoshi_legend/01_r.jpg
+  board: assets/images/20261115_kitazawa_tsuyoshi_legend/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261115_kitazawa_tsuyoshi_legend/01_v.jpg
+sections:
+- id: hook
+  heading: ドーハとジョホールバルのどちらにも立った選手は、誰だったのか
+  tier: 報道
+  telop: 1993年ドーハ、1997年ジョホールバル
+  card:
+    type: stats
+    title: 北澤豪 元日本代表MF
+    items: &id001
+    - - '58'
+      - 試合
+      - 日本代表の出場
+    - - '3'
+      - 得点
+      - 日本代表のゴール
+    - - '336'
+      - 試合
+      - クラブの通算（日本リーグとJリーグ）
+    focus: 0
+  say:
+  - text: 1993年のドーハ。1997年のジョホールバル。
+    image: assets/images/20261115_kitazawa_tsuyoshi_legend/03_w.jpg
+    card: none
+  - text: ワールドカップ予選の、2つの舞台にどちらも立ったミッドフィールダーがいます。
+    card: none
+  - text: ドーハでは、韓国戦に先発して勝ちました。
+    card: none
+  - text: ジョホールバルでは、イラン戦に先発して勝ちました。
+    card: none
+    emph: true
+  - text: その選手が、北澤豪です。
+    image: assets/backgrounds/cut_日本.png
+    card:
+      type: stats
+      title: 北澤豪 元日本代表MF
+      items: *id001
+      focus: 0
+    callword: 北澤豪
+  - text: 日本代表では58試合で3点。クラブの通算は、336試合で57点です。
+    image: assets/images/20261115_kitazawa_tsuyoshi_legend/01_r.jpg
+    card:
+      type: stats
+      title: 北澤豪 元日本代表MF
+      items: *id001
+      focus: 2
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/1998_FIFA_World_Cup_qualification_(AFC)
+  - https://en.wikipedia.org/wiki/Tsuyoshi_Kitazawa
+  - https://ja.wikipedia.org/wiki/%E5%8C%97%E6%BE%A4%E8%B1%AA
+- id: data
+  heading: 北澤豪は、どこでプレーし、どんな数字を残したのか
+  tier: 報道
+  telop: 北澤豪の基礎DATA
+  card:
+    type: table
+    title: 北澤豪
+    columns: &id002
+    - 項目
+    - 内容
+    rows: &id003
+    - - 生年月日
+      - 1968年8月10日・東京都生まれ
+    - - ポジション
+      - ミッドフィールダー
+    - - 所属したクラブ
+      - 本田技研 → 読売／ヴェルディ
+    - - 日本代表
+      - 58試合3得点（1991〜99年）
+    - - W杯
+      - 1994年・98年大会のアジア予選
+    - - 現役を退く
+      - 2002年シーズン限り
+    highlight_row: 0
+  say:
+  - text: 北澤豪は1968年8月10日、東京都町田市の生まれです。
+    card:
+      type: table
+      title: 北澤豪
+      columns: *id002
+      rows: *id003
+      highlight_row: 0
+  - text: ポジションはミッドフィールダー。
+    card:
+      type: table
+      title: 北澤豪
+      columns: *id002
+      rows: *id003
+      highlight_row: 1
+  - text: 本田技研のあと、読売クラブへ。のちのヴェルディです。
+    card:
+      type: table
+      title: 北澤豪
+      columns: *id002
+      rows: *id003
+      highlight_row: 2
+  - text: 日本代表には、1991年から1999年まで選ばれました。
+    image: assets/backgrounds/cut_日本.png
+    card:
+      type: table
+      title: 北澤豪
+      columns: *id002
+      rows: *id003
+      highlight_row: 3
+  - text: ワールドカップは、1994年大会と98年大会の、アジア予選を戦っています。
+    card:
+      type: table
+      title: 北澤豪
+      columns: *id002
+      rows: *id003
+      highlight_row: 4
+    image: assets/images/20261115_kitazawa_tsuyoshi_legend/01_r.jpg
+  quotes_from: []
+  sources:
+  - https://ja.wikipedia.org/wiki/%E5%8C%97%E6%BE%A4%E8%B1%AA
+  - https://en.wikipedia.org/wiki/Tsuyoshi_Kitazawa
+- id: road
+  heading: 本田技研から始まった北澤豪は、どうやってヴェルディの中心になったのか
+  tier: 報道
+  telop: 1987年、本田技研に入る
+  card:
+    type: timeline
+    title: 北澤豪の歩み
+    rows: &id004
+    - - 1987年
+      - 本田技研に入る
+    - - 1990-91年
+      - 日本リーグで10得点、得点王
+    - - 1991年
+      - 読売クラブへ。日本代表にも選ばれる
+    - - 1994年
+      - Jリーグのベストイレブンに入る
+    highlight_row: 0
+  say:
+  - text: 北澤豪の歩みは、1987年、本田技研のサッカー部から始まります。
+    card:
+      type: timeline
+      title: 北澤豪の歩み
+      rows: *id004
+      highlight_row: 0
+  - text: 当時の国内のトップリーグは、Jリーグの前身にあたる日本リーグでした。
+    card: none
+    image: assets/images/20261115_kitazawa_tsuyoshi_legend/03_w.jpg
+  - text: 1990年から91年のシーズン、日本リーグで10点を取り、
+    card:
+      type: timeline
+      title: 北澤豪の歩み
+      rows: *id004
+      highlight_row: 1
+    image: assets/images/20261115_kitazawa_tsuyoshi_legend/01_r.jpg
+  - text: 北澤豪は、得点王になります。
+    card:
+      type: timeline
+      title: 北澤豪の歩み
+      rows: *id004
+      highlight_row: 1
+    emph: true
+  - text: 1991年には読売クラブへ移り、日本代表にも選ばれました。
+    card:
+      type: timeline
+      title: 北澤豪の歩み
+      rows: *id004
+      highlight_row: 2
+  - text: 1993年、Jリーグの開幕です。
+    card: none
+    image: assets/images/20261115_kitazawa_tsuyoshi_legend/03_w.jpg
+  - text: 三浦知良、ラモス瑠偉、ビスマルクらと、ヴェルディ黄金時代を支えました。
+    card: none
+  - text: 1994年には、Jリーグのベストイレブンに入りました。
+    card:
+      type: timeline
+      title: 北澤豪の歩み
+      rows: *id004
+      highlight_row: 3
+    image: assets/images/20261115_kitazawa_tsuyoshi_legend/01_r.jpg
+  quotes_from: []
+  sources:
+  - https://ja.wikipedia.org/wiki/%E5%8C%97%E6%BE%A4%E8%B1%AA
+  - https://en.wikipedia.org/wiki/Tsuyoshi_Kitazawa
+- id: call
+  heading: 1997年10月14日の電話は、北澤豪をジョホールバルへどうつないだのか
+  tier: 報道
+  telop: 1997年10月14日、岡田武史からの電話
+  main: true
+  card:
+    type: timeline
+    title: 北澤豪の1997年10〜11月
+    rows: &id005
+    - - 10月14日
+      - 岡田武史から電話。代表への復帰を求められる
+    - - 11月16日
+      - ジョホールバルのイラン戦に先発
+    - - 延長前半0分
+      - 岡野雅行と交代
+    - - 118分
+      - 岡野がゴールデンゴール、日本3対2
+    highlight_row: 0
+  say:
+  - text: 1997年10月14日の夜、北澤豪の電話が鳴ります。
+    image: assets/images/20261115_kitazawa_tsuyoshi_legend/03_w.jpg
+    card: none
+    emph: true
+  - text: 岡田武史からの、代表に戻ってほしいという連絡でした。
+    card: none
+  - voice: 北澤豪
+    text: 岡田さんから連絡があって、
+    card: none
+  - voice: 北澤豪
+    text: 『今、見てのとおりの状況で、
+    card: none
+    cont: true
+  - voice: 北澤豪
+    text: おまえを必要としている。
+    card: none
+    cont: true
+  - voice: 北澤豪
+    text: ただ、この状況だから、おまえに意志がないと厳しい。
+    card: none
+    cont: true
+  - voice: 北澤豪
+    text: 自分で判断してくれ』と言われて、
+    card: none
+    cont: true
+  - voice: 北澤豪
+    text: 『もちろん、行きますよ』って答えたんだ
+    card: none
+    emph: true
+    cont: true
+  - text: 日本代表は、加茂監督を解任したばかり。後任を引き受けたのが、岡田武史でした。
+    card: none
+  - text: 北澤豪は、8月から代表を離れていました。
+    card: none
+  - text: 代表に戻った北澤豪は、静岡のキャンプで、チームの空気をこう感じました。
+    card: none
+  - voice: 北澤豪
+    text: 雰囲気が明らかに暗いし、会話もない。
+    card: none
+  - voice: 北澤豪
+    text: まずはこの雰囲気を壊さないとダメだなと思った。
+    card: none
+    cont: true
+  - text: 役割は、本人の言葉で、こう決まっていきます。
+    card: none
+  - voice: 北澤豪
+    text: 攻撃のときはダイヤモンドの中盤のトップ下に、
+    card: none
+  - voice: 北澤豪
+    text: 守備のときは左サイドに入ってくれと言われて、
+    card: none
+    cont: true
+  - voice: 北澤豪
+    text: 自分がトップ下をするなら、
+    card: none
+    cont: true
+  - voice: 北澤豪
+    text: そこにとどまっている理由はないなとか、
+    card: none
+    cont: true
+  - voice: 北澤豪
+    text: サイドの人数が足りなくなるなとか。
+    card: none
+    cont: true
+  - text: 本人の言うヒデは中田英寿、モトは山口素弘のことです。
+    card: none
+  - voice: 北澤豪
+    text: ヒデをどう生かすか、名波浩やモトにいかに前を向かせるか、
+    card: none
+  - voice: 北澤豪
+    text: 自分のタイプを考えれば、当然求められることだな、と
+    card: none
+    emph: true
+    cont: true
+  - text: 11月16日、マレーシアのジョホールバル。
+    image: assets/backgrounds/cut_日本.png
+    card:
+      type: timeline
+      title: 北澤豪の1997年10〜11月
+      rows: *id005
+      highlight_row: 1
+  - text: 日本の本大会行きが決まるかどうかの、イラン戦です。
+    card:
+      type: timeline
+      title: 北澤豪の1997年10〜11月
+      rows: *id005
+      highlight_row: 1
+    image: assets/images/20261115_kitazawa_tsuyoshi_legend/01_r.jpg
+  - text: 北澤豪は、この試合に先発で出ました。
+    image: assets/images/20261115_kitazawa_tsuyoshi_legend/03_w.jpg
+    card: none
+  - text: 同点のまま、延長へ。延長が始まるとすぐ、北澤豪は岡野雅行と交代します。
+    card:
+      type: timeline
+      title: 北澤豪の1997年10〜11月
+      rows: *id005
+      highlight_row: 2
+    image: assets/images/20261115_kitazawa_tsuyoshi_legend/01_r.jpg
+  - text: その岡野雅行が、118分にゴールデンゴールを決めます。
+    card:
+      type: timeline
+      title: 北澤豪の1997年10〜11月
+      rows: *id005
+      highlight_row: 3
+    emph: true
+  - text: 延長で先に決めたほうが勝ちになる、ゴールデンゴールです。
+    card:
+      type: timeline
+      title: 北澤豪の1997年10〜11月
+      rows: *id005
+      highlight_row: 3
+  - text: 日本は3対2で勝ち、本大会行きを決めました。
+    image: assets/backgrounds/cut_日本.png
+    card: none
+  quotes_from:
+  - https://sports.yahoo.co.jp/column/detail/201710260012-spnavi
+  sources:
+  - https://en.wikipedia.org/wiki/1998_FIFA_World_Cup_qualification_(AFC)
+  - https://sports.yahoo.co.jp/column/detail/201710260012-spnavi
+  - https://sports.yahoo.co.jp/column/detail/201710260012-spnavi?p=2
+- id: japan
+  heading: 北澤豪の代表58試合は、どんな舞台で積まれたのか
+  tier: 報道
+  telop: 日本代表58試合3得点
+  card:
+    type: timeline
+    title: 日本代表の北澤豪
+    rows: &id006
+    - - 1992年
+      - アジアカップ。5試合すべてに出て、日本は優勝
+    - - 1993年
+      - ドーハのW杯予選。北朝鮮戦と韓国戦に出場
+    - - 1995年
+      - 代表で14試合。いちばん多い年
+    - - 1997年
+      - W杯予選。11試合に出る
+    highlight_row: 0
+  say:
+  - text: 北澤豪の日本代表は、1991年から1999年までです。
+    image: assets/images/20261115_kitazawa_tsuyoshi_legend/01_r.jpg
+    card:
+      type: timeline
+      title: 日本代表の北澤豪
+      rows: *id006
+      highlight_row: 0
+  - text: 1992年のアジアカップは、日本の優勝。北澤豪は、5試合すべてに出ました。
+    card:
+      type: timeline
+      title: 日本代表の北澤豪
+      rows: *id006
+      highlight_row: 0
+    emph: true
+  - text: 1993年10月、ワールドカップ予選の舞台はカタールのドーハです。
+    image: assets/backgrounds/cut_日本.png
+    card:
+      type: timeline
+      title: 日本代表の北澤豪
+      rows: *id006
+      highlight_row: 1
+  - text: 北澤豪は、北朝鮮戦と韓国戦に出ました。
+    card:
+      type: timeline
+      title: 日本代表の北澤豪
+      rows: *id006
+      highlight_row: 1
+    image: assets/images/20261115_kitazawa_tsuyoshi_legend/01_r.jpg
+  - text: 最終戦のイラク戦では、出番がありませんでした。
+    card:
+      type: timeline
+      title: 日本代表の北澤豪
+      rows: *id006
+      highlight_row: 1
+  - text: そのイラク戦は2対2の引き分け。日本は、ワールドカップの初出場を逃します。
+    card: none
+    image: assets/images/20261115_kitazawa_tsuyoshi_legend/03_w.jpg
+  - text: ドーハの悲劇と呼ばれる試合です。
+    card: none
+  - text: 1995年は、北澤豪が代表でいちばん多く出た年です。
+    image: assets/images/20261115_kitazawa_tsuyoshi_legend/01_r.jpg
+    card:
+      type: timeline
+      title: 日本代表の北澤豪
+      rows: *id006
+      highlight_row: 2
+  - text: 1997年は、ジョホールバルへ向かう年でした。
+    card:
+      type: timeline
+      title: 日本代表の北澤豪
+      rows: *id006
+      highlight_row: 3
+  - text: 日本が本大会に初めて立ったのは、翌1998年のフランス大会。
+    image: assets/backgrounds/cut_日本.png
+    card: none
+  - text: 北澤豪は予選を戦い抜きました。
+    card: none
+    image: assets/images/20261115_kitazawa_tsuyoshi_legend/03_w.jpg
+  - text: ところが本大会の直前の合宿で、三浦知良とともに、メンバーから外れました。
+    card: none
+  quotes_from: []
+  sources:
+  - https://ja.wikipedia.org/wiki/%E5%8C%97%E6%BE%A4%E8%B1%AA
+  - https://en.wikipedia.org/wiki/Tsuyoshi_Kitazawa
+- id: final
+  heading: 北澤豪は、タイトルのかかった試合で、どんな点を決めていたのか
+  tier: 報道
+  telop: 優勝のかかった試合で、決勝ゴール
+  card:
+    type: table
+    title: 北澤豪の決勝ゴール
+    columns: &id007
+    - 時期
+    - 大会
+    - 相手
+    rows: &id008
+    - - 1993年
+      - Jリーグカップ決勝
+      - 清水エスパルス
+    - - 1994年
+      - Jリーグチャンピオンシップ第1戦
+      - サンフレッチェ広島
+    - - 1997年1月1日
+      - 天皇杯決勝
+      - サンフレッチェ広島
+    highlight_row: 0
+  say:
+  - text: ヴェルディでの北澤豪は、タイトルがかかる試合で、決勝ゴールを決めています。
+    image: assets/images/20261115_kitazawa_tsuyoshi_legend/01_r.jpg
+    card:
+      type: table
+      title: 北澤豪の決勝ゴール
+      columns: *id007
+      rows: *id008
+      highlight_row: 0
+  - text: 1993年は、Jリーグカップの決勝。清水エスパルスが相手です。
+    card:
+      type: table
+      title: 北澤豪の決勝ゴール
+      columns: *id007
+      rows: *id008
+      highlight_row: 0
+  - text: ここで決勝ゴールを決めて、優勝に貢献しました。
+    card:
+      type: table
+      title: 北澤豪の決勝ゴール
+      columns: *id007
+      rows: *id008
+      highlight_row: 0
+    emph: true
+  - text: 1994年は、Jリーグチャンピオンシップの第1戦。
+    card:
+      type: table
+      title: 北澤豪の決勝ゴール
+      columns: *id007
+      rows: *id008
+      highlight_row: 1
+  - text: サンフレッチェ広島から、決勝点を奪いました。
+    card:
+      type: table
+      title: 北澤豪の決勝ゴール
+      columns: *id007
+      rows: *id008
+      highlight_row: 1
+  - text: 1997年の元日、天皇杯の決勝も、相手は広島。決勝ゴールで優勝です。
+    card:
+      type: table
+      title: 北澤豪の決勝ゴール
+      columns: *id007
+      rows: *id008
+      highlight_row: 2
+  - text: Jリーグの1年目、第2節のジェフ戦では、Jリーグでの初ゴールも決めました。
+    card: none
+    image: assets/images/20261115_kitazawa_tsuyoshi_legend/03_w.jpg
+  quotes_from: []
+  sources:
+  - https://ja.wikipedia.org/wiki/%E5%8C%97%E6%BE%A4%E8%B1%AA
+- id: after
+  heading: ヴェルディの中心だった北澤豪は、どんな形で現役を終えたのか
+  tier: 報道
+  telop: 2002年、現役を退く
+  card:
+    type: table
+    title: 北澤豪のJリーグ
+    columns: &id009
+    - シーズン
+    - クラブ
+    - 試合
+    - 得点
+    rows: &id010
+    - - '1997'
+      - ヴェルディ
+      - '29'
+      - '1'
+    - - '1998'
+      - ヴェルディ
+      - '34'
+      - '5'
+    - - '1999'
+      - ヴェルディ
+      - '28'
+      - '4'
+    - - '2000'
+      - ヴェルディ
+      - '4'
+      - '0'
+    - - '2001'
+      - ヴェルディ
+      - '23'
+      - '0'
+    - - '2002'
+      - ヴェルディ
+      - '4'
+      - '1'
+    highlight_row: 0
+  say:
+  - text: 1997年から2002年のJリーグを、年ごとに見ます。
+    image: assets/images/20261115_kitazawa_tsuyoshi_legend/01_r.jpg
+    card:
+      type: table
+      title: 北澤豪のJリーグ
+      columns: *id009
+      rows: *id010
+      highlight_row: 0
+  - text: 1998年は34試合で5点。1999年は28試合で4点です。
+    card:
+      type: table
+      title: 北澤豪のJリーグ
+      columns: *id009
+      rows: *id010
+      highlight_row: 2
+  - text: 2000年から、出場機会が減っていきます。
+    card:
+      type: table
+      title: 北澤豪のJリーグ
+      columns: *id009
+      rows: *id010
+      highlight_row: 3
+  - text: 2002年、北澤豪は引退を決めます。
+    card:
+      type: table
+      title: 北澤豪のJリーグ
+      columns: *id009
+      rows: *id010
+      highlight_row: 5
+  - text: その終盤、岡田武史から、移籍のオファーが届きました。
+    image: assets/images/20261115_kitazawa_tsuyoshi_legend/03_w.jpg
+    card: none
+  - text: 岡田武史は、翌年に横浜F・マリノスの監督に就くことが決まっていました。
+    card: none
+  - text: ひざの調子が良くなく、断って、引退を決めたといいます。
+    card: none
+  - text: 7月27日の清水戦で、現役最後のゴール。
+    card: none
+  - text: 2003年6月21日、国立競技場で、引退試合が行われました。
+    card: none
+  quotes_from: []
+  sources:
+  - https://ja.wikipedia.org/wiki/%E5%8C%97%E6%BE%A4%E8%B1%AA
+- id: view
+  heading: 北澤豪の代表58試合は、どの年に集まっていたのか
+  tier: 背景
+  telop: 58試合のうち36試合が、3つの年
+  viewpoint: true
+  card:
+    type: table
+    title: 北澤豪の日本代表（年ごとの出場）
+    columns: &id011
+    - 年
+    - 試合
+    - 得点
+    rows: &id012
+    - - 1992年
+      - '11'
+      - '1'
+    - - 1995年
+      - '14'
+      - '1'
+    - - 1997年
+      - '11'
+      - '0'
+    - - ほかの6年（合計）
+      - '22'
+      - '1'
+    highlight_row: 0
+  say:
+  - text: 最後に、北澤豪の日本代表の出場を、年ごとに数えます。
+    card: none
+  - text: いちばん多いのは、1995年の14試合です。
+    image: assets/images/20261115_kitazawa_tsuyoshi_legend/01_r.jpg
+    card:
+      type: table
+      title: 北澤豪の日本代表（年ごとの出場）
+      columns: *id011
+      rows: *id012
+      highlight_row: 1
+  - text: 1992年と1997年が、どちらも11試合でした。
+    card:
+      type: table
+      title: 北澤豪の日本代表（年ごとの出場）
+      columns: *id011
+      rows: *id012
+      highlight_row: 1
+  - text: この3つの年だけで36試合。全体の約62%を占めます。
+    card:
+      type: table
+      title: 北澤豪の日本代表（年ごとの出場）
+      columns: *id011
+      rows: *id012
+      highlight_row: 2
+    emph: true
+    mark:
+      kind: circle
+      row: 2
+      col: 試合
+  - text: ほかの6つの年は、合わせて22試合。1年あたり、約3.7試合にとどまります。
+    card:
+      type: table
+      title: 北澤豪の日本代表（年ごとの出場）
+      columns: *id011
+      rows: *id012
+      highlight_row: 3
+  - text: 1992年はアジアカップの優勝、1997年はワールドカップ初出場が決まった年です。
+    card: none
+    image: assets/images/20261115_kitazawa_tsuyoshi_legend/03_w.jpg
+  - text: 日本の2つの節目に、北澤豪はピッチにいました。
+    card: none
+  quotes_from: []
+  sources:
+  - https://ja.wikipedia.org/wiki/%E5%8C%97%E6%BE%A4%E8%B1%AA
+  - https://en.wikipedia.org/wiki/1998_FIFA_World_Cup_qualification_(AFC)

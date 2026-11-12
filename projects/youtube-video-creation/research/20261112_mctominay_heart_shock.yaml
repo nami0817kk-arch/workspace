@@ -1,0 +1,141 @@
+# 取材メモ（2026年11月12日）マクトミネイ、W杯開幕戦の2日前に病院のベッドにいた（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-12。WebFetch（ESPN の記事）と site.api.espn.com で確かめた。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。
+# **病気の話なので煽らない。**「衝撃」「まさか」は書かない。日付・日数・本人の言葉だけで組む。
+# 出典で確かめたこと:
+#   ・ESPN（story 50444096, ESPN News Services, 2026-11-10 1:06PM ET）。**ESPN への requests は 202（空の本文）で本文を取れなかったので、WebFetch の抜き出し（2回）で読んだ**。
+#       本人の言葉（英語。WebFetch が返した原文）:
+#         "I had to go and get the shock on my heart two days before the Haiti game."
+#         "I was 100% [fit], but obviously when you're sat in a hospital bed two days before the first game of the World Cup … about to get put to sleep, it's not ideal, is it?"
+#         "It's nowhere near an excuse, but it's something that you have to look back on and say, 'Well, it's part of the process.'"
+#         "After the World Cup, it was probably the most disappointed I've ever been in my career."
+#       → 台本は、この英語を日本語にし、声に出して通る形に整えたもの。
+#       当時のスコットランド代表は、練習を休んだ理由を「胃の不調（stomach complaint）」と説明していた（ESPN の記述。WebFetch 経由）。
+#       9月には、マンチェスターで心臓のアブレーション（「軽度の良性の不整脈」に対する処置）を受けた（ESPN）。不整脈は6月上旬に米国入りしたあとに出始めた（ESPN）。
+#       → **6月の「ショート」と9月のアブレーションが同じ処置かは、記事に書いていない。台本では「電気ショック」「除細動」など処置名を付けず、本人の言葉「the shock on my heart（心臓へのショック）」のまま**。
+#       ※ ご指示にあった「電気ショック」という語は、ESPN の本人の言葉には出てこない（shock だけ）。
+#   ・ESPN の試合データ（site.api.espn.com fifa.world）:
+#       6/13（現地。キックオフ UTC 6/14 01:00）ハイチ 0-1 スコットランド（ジレット・スタジアム、マサチューセッツ州フォックスボロ。760418）。得点はマギン（28分）。マクトミネイは先発して交代なし（90分以上）。得点0。
+#       6/19 スコットランド 0-1 モロッコ（760445）。マクトミネイ先発、交代なし、得点0。
+#       6/24 スコットランド 0-3 ブラジル（760465）。マクトミネイ先発、交代なし、得点0。
+#       → 3試合とも先発（ESPN の記事の記述とも一致）。得点は0。
+#   ・ESPN uefa.nations scoreboard: 11/13 19:45Z（日本時間14日 4:45）スコットランド対北マケドニア（ハムデン・パーク、401861161）／11/16 19:45Z スイス対スコットランド（キュブンパーク、401861186）。
+#   ・ナポリの処置の日付（9/8 マンチェスターのスパイア病院）は 20261011_mctominay_return の取材メモ（クラブ発表）を参照。今回は日付を繰り返さない。
+# 食い違い: ①開幕戦の日付は ESPN の試合データで 6/13（現地）、記事は「Haiti game」としか言わない→台本は「開幕戦」と「6月13日」を試合データで言う。処置の日は記事に無い→「2日前」とだけ言う。②本人の言葉は日本語訳（私の訳）。原文の英語は WebFetch 経由で、ESPN 本文そのものは requests で取れていない。③「胃の不調」はESPN の記述のみ（代表の発表を一次で確認していない）→「と説明していた」と報道で言う。
+# 前の本との重なり: 20261011_mctominay_return（9/8 の処置から復帰まで。日付・61分・32日は今回使わない）。今回の初出は、6月の開幕戦2日前の本人の言葉。
+# 本人の言葉: あり（ESPN 記事の引用）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: overseas
+date: "2026年11月12日"
+format: news
+no_main: true
+people: [マクトミネイ, ナポリ, スコットランド代表]
+
+short_style: Y
+short_hook_quote: ハイチ戦の2日前に、心臓にショックを受ける羽目になった。
+short_photos:
+  - assets/images/20261112_mctominay_heart_shock/01_v.jpg
+  - assets/images/20261112_mctominay_heart_shock/02_v.jpg
+  - assets/images/20261112_mctominay_heart_shock/05_v.jpg
+  - assets/images/20261112_mctominay_heart_shock/01_v.jpg
+short_question: マクトミネイは、13日の北マケドニア戦で、どんなプレーを見せると思いますか。
+short_telops: []
+
+theme:
+  id: mctominay_heart_shock
+  league: italy
+  league_name: スコットランド代表
+  prefix: ""
+  title: マクトミネイ、W杯開幕戦の2日前に病院のベッドにいた 本人が語る
+  hook: ""
+  question: W杯の開幕戦の2日前、マクトミネイに何があったと本人は語ったのか
+  takeaway: マクトミネイは、W杯開幕戦の2日前に心臓へのショックを受けていた。それでも開幕から3試合すべてに先発し、スコットランドはグループステージで敗退した
+
+thumbnail:
+  layout: face
+  line1: マクトミネイ 開幕戦の2日前
+  line2: 病院のベッドにいた
+  tags: [マクトミネイ, スコットランド代表, ナポリ]
+  photo: assets/images/20261112_mctominay_heart_shock/01_w.jpg
+  short_photo: assets/images/20261112_mctominay_heart_shock/01_v.jpg
+
+answer: 開幕戦の2日前に心臓へのショックを受け、それでも先発した。言いわけにはならないと本人は語った
+watch: 13日（金）のスコットランド対北マケドニア（ハムデン・パーク）
+
+sections:
+  - id: what
+    main: true
+    heading: W杯の開幕戦の2日前に、マクトミネイは何を語ったのか
+    tier: 報道
+    telop: マクトミネイ「開幕戦の2日前、病院のベッドにいた」
+    say:
+      - text: ナポリのマクトミネイが、W杯の開幕戦の2日前のことを語りました。
+        short_only: true
+      - voice: マクトミネイ
+        text: ハイチ戦の2日前に、心臓にショックを受ける羽目になった。
+        emph: true
+        image: assets/images/20261112_mctominay_heart_shock/01_w.jpg
+      - voice: マクトミネイ
+        text: 開幕戦の2日前に、病院のベッドにいる。
+        cont: true
+      - voice: マクトミネイ
+        text: これから麻酔をかけられるなんて、理想的とは言えないよね。
+        cont: true
+        image: assets/images/20261112_mctominay_heart_shock/02_w.jpg
+      - text: 当時、スコットランド代表は、練習を休んだ理由を、胃の不調と説明していました。
+      - text: 開幕戦は6月13日のハイチ戦です。スコットランドは1対0で勝ち、マクトミネイは先発しました。
+        image: assets/images/20261112_mctominay_heart_shock/05_w.jpg
+      - voice: マクトミネイ
+        text: 言いわけには、まったくなりません。
+        image: assets/images/20261112_mctominay_heart_shock/01_w.jpg
+      - voice: マクトミネイ
+        text: 振り返って、これもプロセスの一部だったと言うしかない。
+        cont: true
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50444096/scott-mctominay-scotland-2026-world-cup-heart-shock
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/summary?event=760418
+      - https://sscnapoli.it/en/sscn-report-allenamento-7-ottobre
+      - https://sscnapoli.it/match-report-napoli-frosinone-3-0/
+      - https://sscnapoli.it/en/aggiornamento-medico-mctominay/
+      - https://football-italia.net/mctominay-makes-napoli-comeback-heart-surgery/
+      - https://www.thestar.com.my/sport/football/2026/10/08/soccer-mctominay-cleared-to-return-napoli-say
+  - id: game
+    heading: そのW杯で、スコットランドとマクトミネイは、どうなったのか
+    tier: 報道
+    telop: 3試合すべて先発。スコットランドはグループで敗退
+    say:
+      - text: 開幕戦のあと、スコットランドはモロッコに0対1、ブラジルに0対3で敗れました。
+        card: {type: table, title: スコットランドのW杯グループ, columns: [日付, 相手, 結果], rows: [[6月13日, ハイチ, 1-0], [6月19日, モロッコ, 0-1], [6月24日, ブラジル, 0-3]], highlight_row: 0}
+      - text: マクトミネイは、3試合すべてに先発しました。得点はありませんでした。
+        card: none
+        image: assets/images/20261112_mctominay_heart_shock/02_w.jpg
+      - voice: マクトミネイ
+        text: W杯のあと、キャリアでいちばん落ち込んだかもしれない。
+        emph: true
+      - text: 9月には、マンチェスターで、心臓の不整脈のアブレーションを受けています。
+        image: assets/images/20261112_mctominay_heart_shock/01_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50444096/scott-mctominay-scotland-2026-world-cup-heart-shock
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/summary?event=760445
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/summary?event=760465
+  - id: view
+    viewpoint: true
+    heading: マクトミネイは、このあと、どこでプレーするのか
+    tier: 背景
+    telop: 13日、スコットランド対北マケドニア
+    say:
+      - text: 見立てです。マクトミネイは今月、スコットランド代表に戻っています。
+        image: assets/images/20261112_mctominay_heart_shock/05_w.jpg
+        card: {type: table, title: スコットランド ネーションズリーグ, columns: [日付, 相手], rows: [[11月13日, 北マケドニア（ホーム）], [11月16日, スイス（アウェー）]], highlight_row: 0}
+      - text: 13日は、グラスゴーのハムデン・パークで、北マケドニアと戦います。
+        card: none
+      - text: 16日は、スイスに乗り込みます。
+      - text: 開幕戦の2日前に病院にいた選手が、いまは代表の試合に戻ってきました。
+        image: assets/images/20261112_mctominay_heart_shock/01_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50444096/scott-mctominay-scotland-2026-world-cup-heart-shock
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/scoreboard?dates=20261113
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/scoreboard?dates=20261116
+short_title: "マクトミネイ、W杯開幕戦の2日前に病院のベッドにいた 本人が語る"

@@ -1,0 +1,385 @@
+# 取材メモ（11/15 日、シリーズ「比べる」、key: compare_88755_27992）。ケヴィン・デ・ブライネ（ナポリ・35歳）×ルカ・モドリッチ（ミラン・41歳）。
+# **情報の時点は 2026-11-12**。FotMob・DataMB は使っていない。数字は Transfermarkt の API（2026-11-12 取得。控え: research/raw/20261115_debruyne_tm.json・20261115_modric_tm.json）。
+#   Transfermarkt 番号：デ・ブライネ 88755・モドリッチ 27992。player・market-value-history・performance-season（2019〜2026季）を2.5秒あけて取得。
+# **選んだ理由**：2025年夏に、同じく移籍金なしでセリエAへ移った35歳と41歳の中盤。昨季の出場時間は 1360分 と 2864分（2倍以上の差）、点に絡んだ数は 9 と 5。
+#   「どちらが時間を使い、どちらが速く絡んだか」で軸が立つ（自分で割る）。2人ともクラブの公式戦だけで数える（代表戦は混ぜない）。
+#   重なり：scripts/*compare*・posted.json・covered.yaml・picks を grep。この2人の組は初めて。デ・ブライネ・モドリッチとも比べるの回には未登場。
+#   同じ日（11/15）の picks には人名の重なり無し。11/17 の比べる（ロドリ×アンダーソン）とも人もクラブも重ならない。
+#   **外した候補**：サラー（TM の現所属がトラブゾンスポルでトップ7リーグ外）・ベリンガム×ライス（別の相手と比較済み）・ヤマル×ユルドゥズ（ヤマルが10/20・10/22 に登場済み）。
+#   日本との接点：無し（入れない）。
+# **2人とも今季も欧州7リーグの1部**：ナポリ（セリエA。TM の現所属 6195、2025-07-01〜）・ミラン（セリエA。TM の現所属 5、2025-07-14〜）。契約は2人とも 2027-06-30 まで。
+# **使った数**（TM の performance-season の、クラブのトップチームの公式戦だけ。代表戦は混ぜない。試合・出場時間・得点・アシスト）
+#   デ・ブライネ：23/24 シティ 26試合 1750分 6点18A／24/25 シティ 40試合 2391分 6点8A／25/26 ナポリ 21試合 1360分 5点4A（うちPK 3点）／26/27 ナポリ 15試合 983分 4点2A（11月12日時点）
+#   モドリッチ：23/24 レアル 46試合 2243分 2点8A／24/25 レアル 63試合 2985分 4点9A／25/26 ミラン 37試合 2864分 2点3A（PK 0点）／26/27 ミラン 13試合 802分 0点2A
+#   25/26 セリエAの先発：デ・ブライネ 13（18試合）・モドリッチ 32（34試合）。26/27 の先発（全大会）：デ・ブライネ 10・モドリッチ 8。
+#   計算：25/26 1つ絡むまで 1360÷9＝151.1／2864÷5＝572.8。PKを除く 1360÷6＝226.7／2864÷5＝572.8。26/27 1つ絡むまで 983÷6＝163.8／802÷2＝401。出場時間の比 2864÷1360＝2.1。
+# 市場価値（TM）：デ・ブライネ 2023-06 7000万€→2024-05 5000万→2024-12 3500万→2025-05 2000万→2025-12 1500万→2026-05 800万（最高 1億5000万€ は2019-12）／モドリッチ 2023-06 1000万→2024-06 600万→2024-12 500万→2025-06 400万→2025-12 400万→2026-05 350万（最高 5500万€ は2015-01）
+# 経歴（Wikipedia 英語版）：デ・ブライネ 2025年6月12日にナポリが発表、移籍金なし。2025年10月25日のインテル戦（3-1）でPKのあとにハムストリングを痛め、2026年3月6日のトリノ戦に交代で戻った。
+#   モドリッチ 2025年にミランへ移籍金なし。クロアチア代表は2026年W杯に出場。
+# 写真：d1〜d3 Commons（ベルギー代表 2026、Bryan Berlin、CC BY-SA 4.0）・m1〜m3 Commons（クロアチア代表 2026年7月2日、Bryan Berlin、CC BY-SA 4.0）。pair_a〜d は pairphoto。
+slot: other_1
+date: "2026年11月12日"
+format: news
+series: 比べる
+people:
+  - ケヴィン・デ・ブライネ
+  - ルカ・モドリッチ
+  - ナポリ
+  - ミラン
+
+theme:
+  end_bg: assets/images/20261115_compare_88755_27992/pair_c/01.jpg
+  id: compare_88755_27992
+  league: italy
+  kind: other
+  topic: デ・ブライネとモドリッチ
+  prefix: ""
+  title: デ・ブライネとモドリッチ、出場は1360分と2864分。絡む速さはどちらが上か
+  hook: ""
+  question: ナポリのデ・ブライネは35歳、ミランのモドリッチは41歳。同じ夏にセリエAへ来た2人は、出場時間と点に絡む速さで、どう違ったのか
+  takeaway: 昨季の出場はモドリッチが2864分、デ・ブライネが1360分。1つ絡むまでの時間は約573分と約151分で、PKを除いても約573分と約227分。モドリッチは長く、デ・ブライネは速く。今季も同じ向き
+  league_name: セリエA
+  opening_image: assets/images/20261115_compare_88755_27992/pair_d/01.jpg
+
+short_title: デ・ブライネとモドリッチ、出場は1360分と2864分
+
+thumbnail:
+  photo: assets/images/20261115_compare_88755_27992/pair_a/01.jpg
+  photos:
+    - assets/images/20261115_compare_88755_27992/d1/01_t.jpg
+    - assets/images/20261115_compare_88755_27992/m1/01_t.jpg
+  short_photo: assets/images/20261115_compare_88755_27992/pair_a/01_v.jpg
+  face_link: VS
+  line1: デ・ブライネとモドリッチ
+  line2: 41歳と35歳 出場は2倍違う
+  tags: [デ・ブライネ, モドリッチ, ナポリ, ミラン]
+
+answer: 出場時間はモドリッチが2倍以上。点に絡む速さはデ・ブライネが上で、1つ絡むまで約151分と約573分
+watch: 毎日、数字でサッカーを読み解きます
+
+sections:
+  - id: hook
+    heading: セリエA1季目に、2人はどれだけ出場したのか
+    tier: 報道
+    telop: クラブの公式戦
+    narrator: 解説
+    card: &hookcard
+      type: stats
+      title: 昨季の出場時間（クラブの公式戦）
+      items:
+        - ["2864", 分, モドリッチ]
+        - ["1360", 分, デ・ブライネ]
+        - ["9と5", 点に絡んだ数, デ・ブライネが9]
+      focus: 2
+    say:
+      - text: ナポリのミッドフィールダー、ケヴィン・デ・ブライネ。
+        image: assets/images/20261115_compare_88755_27992/d1/01_w.jpg
+        card: none
+      - text: そしてミランのミッドフィールダー、ルカ・モドリッチ。
+        image: assets/images/20261115_compare_88755_27992/m1/01_w.jpg
+        card: none
+      - text: 2人とも2025年の夏に、移籍金なしでセリエAへ来ました。
+        image: assets/images/20261115_compare_88755_27992/pair_d/01.jpg
+        card: none
+      - text: 数えるのは、昨季のクラブの公式戦です。
+        image: assets/images/20261115_compare_88755_27992/d1/01_r.jpg
+        card: {<<: *hookcard, focus: 0}
+      - text: 出場時間は、モドリッチが2864分。デ・ブライネは1360分でした。
+        image: assets/images/20261115_compare_88755_27992/m1/01_r.jpg
+        card: {<<: *hookcard, focus: 1}
+      - text: 出場は、2倍以上違います。
+        image: assets/images/20261115_compare_88755_27992/d1/01_r.jpg
+        card: {<<: *hookcard, focus: 2}
+      - text: 点に絡んだ数は、デ・ブライネが9、モドリッチが5。
+        emph: true
+        image: assets/images/20261115_compare_88755_27992/d1/01_r.jpg
+        card: {<<: *hookcard, focus: 2}
+      - text: 長く立った人と、速く絡んだ人。数字で順番に確かめます。
+        image: assets/images/20261115_compare_88755_27992/pair_c/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/kevin-de-bruyne/leistungsdaten/spieler/88755
+      - https://www.transfermarkt.com/luka-modric/leistungsdaten/spieler/27992
+
+  - id: data
+    heading: デ・ブライネとモドリッチは、どこから来た選手なのか
+    tier: 報道
+    telop: 35歳と41歳
+    narrator: 解説
+    card: &datacard
+      type: duel
+      left: {name: デ・ブライネ, club: ナポリ, photo: assets/images/20261115_compare_88755_27992/d1/01_sq.jpg, color: "#12a0d7"}
+      right: {name: モドリッチ, club: ミラン, photo: assets/images/20261115_compare_88755_27992/m1/01_sq.jpg, color: "#fb090b"}
+      rows:
+        - [年齢, 35歳, 41歳]
+        - [代表, ベルギー, クロアチア]
+        - [前のクラブ, マンチェスター・シティ, レアル・マドリード]
+        - [移った時期, 2025年7月, 2025年7月]
+        - [移籍金（報道）, なし, なし]
+        - [位置, 攻撃的MF, セントラルMF]
+        - [市場価値, 800万€, 350万€]
+      bars: false
+      note: 契約は2人とも2027年6月まで。市場価値は最新の値
+    say:
+      - text: デ・ブライネは35歳のベルギー代表。シティから、ナポリへ来ました。
+        image: assets/images/20261115_compare_88755_27992/d1/01_r.jpg
+        card: {<<: *datacard, highlight_row: 前のクラブ}
+      - text: モドリッチは41歳のクロアチア代表。レアル・マドリードから、ミランへ来ました。
+        image: assets/images/20261115_compare_88755_27992/m1/01_r.jpg
+        card: {<<: *datacard, highlight_row: 年齢}
+      - text: 2人とも契約満了での移籍。移籍金は、かかっていません。
+        emph: true
+        image: assets/images/20261115_compare_88755_27992/d1/01_r.jpg
+        card: {<<: *datacard, highlight_row: 移籍金（報道）}
+      - text: 契約は、2人とも2027年6月までです。
+        image: assets/images/20261115_compare_88755_27992/pair_b/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/kevin-de-bruyne/profil/spieler/88755
+      - https://www.transfermarkt.com/luka-modric/profil/spieler/27992
+      - https://en.wikipedia.org/wiki/Kevin_De_Bruyne
+      - https://en.wikipedia.org/wiki/Luka_Modri%C4%87
+
+  - id: seasons
+    heading: シティとレアルを出てから、出場はどう変わったのか
+    tier: 報道
+    telop: 季ごとの数（クラブの公式戦）
+    narrator: 解説
+    card: &seasoncard
+      type: table
+      title: 季ごとの数（クラブのトップチームの公式戦）
+      columns: [選手, 季, 試合, 出場時間, 得点, アシスト]
+      rows:
+        - [デ・ブライネ, 23/24, "26", 1750分, "6", "18"]
+        - [デ・ブライネ, 24/25, "40", 2391分, "6", "8"]
+        - [デ・ブライネ, 25/26, "21", 1360分, "5", "4"]
+        - [モドリッチ, 23/24, "46", 2243分, "2", "8"]
+        - [モドリッチ, 24/25, "63", 2985分, "4", "9"]
+        - [モドリッチ, 25/26, "37", 2864分, "2", "3"]
+      note: 23/24と24/25は、デ・ブライネがシティ、モドリッチがレアル。25/26がセリエA1季目
+    say:
+      - text: 季ごとに、試合数と出場時間を並べます。
+        image: assets/images/20261115_compare_88755_27992/d1/01_r.jpg
+        card: *seasoncard
+      - text: デ・ブライネの昨季は21試合、1360分。
+        image: assets/images/20261115_compare_88755_27992/d1/01_r.jpg
+        card: {<<: *seasoncard, highlight_row: 2}
+      - text: 2シーズン前の26試合より、少ない数です。
+        image: assets/images/20261115_compare_88755_27992/d1/01_r.jpg
+        card: {<<: *seasoncard, highlight_row: 2}
+      - text: 昨年10月25日のインテル戦のあと、太ももの裏を痛めました。
+        image: assets/images/20261115_compare_88755_27992/d2/01_w.jpg
+        card: none
+      - text: 戻ったのは、3月6日。長い離脱でした。
+        image: assets/images/20261115_compare_88755_27992/d2/01_w.jpg
+        card: none
+      - text: モドリッチは、昨季37試合で2864分。前の季の2985分と、ほぼ同じ時間です。
+        image: assets/images/20261115_compare_88755_27992/m1/01_r.jpg
+        card: {<<: *seasoncard, highlight_row: 5}
+      - text: それを、41歳が立ち続けました。
+        emph: true
+        image: assets/images/20261115_compare_88755_27992/m2/01_w.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/kevin-de-bruyne/leistungsdaten/spieler/88755
+      - https://www.transfermarkt.com/luka-modric/leistungsdaten/spieler/27992
+      - https://en.wikipedia.org/wiki/Kevin_De_Bruyne
+
+  - id: split
+    heading: 長く立ったのはどちらで、速く絡んだのはどちらなのか
+    tier: 報道
+    main: true
+    telop: 出場時間÷（得点＋アシスト）
+    narrator: 解説
+    card: &splitcard
+      type: duel
+      left: {name: デ・ブライネ, club: ナポリ, photo: assets/images/20261115_compare_88755_27992/d1/01_sq.jpg, color: "#12a0d7"}
+      right: {name: モドリッチ, club: ミラン, photo: assets/images/20261115_compare_88755_27992/m1/01_sq.jpg, color: "#fb090b"}
+      rows:
+        - [昨季の出場時間, 1360分, 2864分]
+        - [セリエAの先発, "13", "32"]
+        - [得点, "5", "2"]
+        - [アシスト, "4", "3"]
+        - [1つ絡むまで, 約151分, 約573分]
+        - [PKを除いて絡むまで, 約227分, 約573分]
+      bars: [昨季の出場時間, セリエAの先発, 得点, アシスト]
+      lower: [1つ絡むまで, PKを除いて絡むまで]
+      note: 昨季（25/26）、クラブの公式戦。かかった時間は出場時間÷（得点＋アシスト）で、自分で計算した値
+    say:
+      - text: 昨季のセリエA、デ・ブライネとモドリッチ。数字を並べます。
+        short_only: true
+        image: assets/images/20261115_compare_88755_27992/pair_a/01.jpg
+        card: none
+      - text: まず出場時間。デ・ブライネが1360分、モドリッチが2864分。
+        image: assets/images/20261115_compare_88755_27992/m1/01_r.jpg
+        card: {<<: *splitcard, highlight_row: 昨季の出場時間}
+      - text: モドリッチは、2倍以上の時間、出ています。
+        image: assets/images/20261115_compare_88755_27992/m1/01_r.jpg
+        card: {<<: *splitcard, highlight_row: 昨季の出場時間}
+      - text: セリエAの先発は、デ・ブライネが13試合、モドリッチが32試合です。
+        image: assets/images/20261115_compare_88755_27992/m3/01_w.jpg
+        card: {<<: *splitcard, highlight_row: セリエAの先発}
+      - text: 点に絡んだ数は、逆にデ・ブライネが9。得点が5、アシストが4。
+        image: assets/images/20261115_compare_88755_27992/d1/01_r.jpg
+        card: {<<: *splitcard, highlight_row: アシスト}
+      - text: モドリッチは5で、デ・ブライネより4つ少ない。得点は2、アシストは3。
+        image: assets/images/20261115_compare_88755_27992/m3/01_w.jpg
+        card: {<<: *splitcard, highlight_row: アシスト}
+      - text: 出場時間を、得点とアシストの合計で割ります。
+        image: assets/images/20261115_compare_88755_27992/d1/01_r.jpg
+        card: {<<: *splitcard, highlight_row: 1つ絡むまで}
+      - text: 1つ絡むまでにかかった時間は、デ・ブライネが約151分、モドリッチが約573分。
+        emph: true
+        image: assets/images/20261115_compare_88755_27992/d1/01_r.jpg
+        card: {<<: *splitcard, highlight_row: 1つ絡むまで}
+      - text: ただ、デ・ブライネの5点のうち、3点はPKでした。
+        image: assets/images/20261115_compare_88755_27992/d2/01_w.jpg
+        card: none
+      - text: PKを除いて数え直すと、デ・ブライネは6つ。かかった時間は約227分。
+        image: assets/images/20261115_compare_88755_27992/d1/01_r.jpg
+        card: {<<: *splitcard, highlight_row: PKを除いて絡むまで}
+      - text: それでも、モドリッチの約573分の、半分以下です。
+        image: assets/images/20261115_compare_88755_27992/pair_a/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/kevin-de-bruyne/leistungsdaten/spieler/88755
+      - https://www.transfermarkt.com/luka-modric/leistungsdaten/spieler/27992
+
+  - id: value
+    heading: 2人の市場価値は、この3年でどう動いたのか
+    tier: 報道
+    telop: 市場価値の歩み
+    narrator: 解説
+    card: &valuecard
+      type: line
+      title: 市場価値の歩み（百万ユーロ）
+      x: ["23年6月", "24年6月", "24年12月", "25年6月", "25年12月", "26年5月"]
+      series:
+        - [デ・ブライネ, [70, 50, 35, 20, 15, 8]]
+        - [モドリッチ, [10, 6, 5, 4, 4, 3.5]]
+      focus: デ・ブライネ
+      note: 各時点の直前に出た値
+    say:
+      - text: 市場価値の動きも見ます。
+        image: assets/images/20261115_compare_88755_27992/m3/01_w.jpg
+        card: *valuecard
+      - text: デ・ブライネは、2023年6月が7000万ユーロ。
+        image: assets/images/20261115_compare_88755_27992/d1/01_r.jpg
+        card: {<<: *valuecard, highlight: 23年6月}
+      - text: 最高は、2019年12月の1億5000万ユーロでした。
+        image: assets/images/20261115_compare_88755_27992/d1/01_w.jpg
+        card: none
+      - text: モドリッチは、2023年6月が1000万ユーロ。
+        image: assets/images/20261115_compare_88755_27992/m1/01_r.jpg
+        card: {<<: *valuecard, highlight: 23年6月}
+      - text: 最高は、2015年1月の5500万ユーロ。
+        image: assets/images/20261115_compare_88755_27992/m1/01_w.jpg
+        card: none
+      - text: いまは、デ・ブライネが800万ユーロ、モドリッチが350万ユーロ。
+        emph: true
+        image: assets/images/20261115_compare_88755_27992/d1/01_r.jpg
+        card: {<<: *valuecard, highlight: 26年5月}
+      - text: どちらも、この3年は下がるか、横ばいで来ました。
+        image: assets/images/20261115_compare_88755_27992/pair_b/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/kevin-de-bruyne/marktwertverlauf/spieler/88755
+      - https://www.transfermarkt.com/luka-modric/marktwertverlauf/spieler/27992
+
+  - id: now
+    heading: 今季のここまで、2人はどれだけ出て、どれだけ絡んでいるのか
+    tier: 報道
+    telop: 2026年から27年 11月12日時点
+    narrator: 解説
+    card: &nowcard
+      type: duel
+      left: {name: デ・ブライネ, club: ナポリ, photo: assets/images/20261115_compare_88755_27992/d1/01_sq.jpg, color: "#12a0d7"}
+      right: {name: モドリッチ, club: ミラン, photo: assets/images/20261115_compare_88755_27992/m1/01_sq.jpg, color: "#fb090b"}
+      rows:
+        - [試合, "15", "13"]
+        - [出場時間, 983分, 802分]
+        - [先発, "10", "8"]
+        - [得点, "4", "0"]
+        - [アシスト, "2", "2"]
+        - [1つ絡むまで, 約164分, 約401分]
+      bars: [試合, 出場時間, 先発, 得点, アシスト]
+      lower: [1つ絡むまで]
+      note: 今季のクラブの公式戦（11月12日時点）。モドリッチは900分に届いていない
+    say:
+      - text: 今季の数です。
+        image: assets/images/20261115_compare_88755_27992/pair_a/01.jpg
+        card: none
+      - text: デ・ブライネは15試合、983分。得点が4、アシストが2。
+        image: assets/images/20261115_compare_88755_27992/d1/01_r.jpg
+        card: {<<: *nowcard, highlight_row: 出場時間}
+      - text: モドリッチは13試合、802分。得点は0、アシストが2。
+        image: assets/images/20261115_compare_88755_27992/m1/01_r.jpg
+        card: {<<: *nowcard, highlight_row: アシスト}
+      - text: 先発は、デ・ブライネが10試合、モドリッチが8試合。
+        image: assets/images/20261115_compare_88755_27992/m3/01_w.jpg
+        card: {<<: *nowcard, highlight_row: 先発}
+      - text: 出場の差は、昨季より縮まりました。
+        image: assets/images/20261115_compare_88755_27992/m3/01_w.jpg
+        card: {<<: *nowcard, highlight_row: 先発}
+      - text: 1つ絡むまでは、デ・ブライネが約164分、モドリッチが約401分。
+        image: assets/images/20261115_compare_88755_27992/d1/01_r.jpg
+        card: {<<: *nowcard, highlight_row: 1つ絡むまで}
+      - text: 昨季と同じ向きです。
+        image: assets/images/20261115_compare_88755_27992/d1/01_r.jpg
+        card: {<<: *nowcard, highlight_row: 1つ絡むまで}
+      - text: モドリッチの802分は、900分に届いていません。いまの時点の数字として見ます。
+        image: assets/images/20261115_compare_88755_27992/pair_c/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/kevin-de-bruyne/leistungsdaten/spieler/88755
+      - https://www.transfermarkt.com/luka-modric/leistungsdaten/spieler/27992
+
+  - id: view
+    heading: 見立て・長く立つ人と、速く絡む人。差はどこに出たのか
+    tier: 背景
+    viewpoint: true
+    narrator: 解説
+    telop: 数字の違いが示すもの
+    card: &viewcard
+      type: duel
+      left: {name: デ・ブライネ, club: ナポリ, photo: assets/images/20261115_compare_88755_27992/d1/01_sq.jpg, color: "#12a0d7"}
+      right: {name: モドリッチ, club: ミラン, photo: assets/images/20261115_compare_88755_27992/m1/01_sq.jpg, color: "#fb090b"}
+      rows:
+        - [昨季の出場時間, 1360分, 2864分]
+        - [昨季の1つ絡むまで, 約151分, 約573分]
+        - [今季の1つ絡むまで, 約164分, 約401分]
+        - [今季の先発, "10", "8"]
+        - [市場価値, 800万€, 350万€]
+      lower: [昨季の1つ絡むまで, 今季の1つ絡むまで]
+      bars: false
+      note: クラブの公式戦。出場時間÷（得点＋アシスト）で、自分で計算した値
+    say:
+      - text: 見立てです。昨季は、モドリッチが長く、デ・ブライネが速く。
+        image: assets/images/20261115_compare_88755_27992/m1/01_r.jpg
+        card: {<<: *viewcard, highlight_row: 昨季の出場時間}
+      - text: 41歳が、2864分に立ち続けたこと。
+        mark: {kind: circle, row: 1}
+        image: assets/images/20261115_compare_88755_27992/d1/01_r.jpg
+        card: {<<: *viewcard, highlight_row: 昨季の1つ絡むまで}
+      - text: 35歳が、約151分に1つ絡んだこと。
+        image: assets/images/20261115_compare_88755_27992/d1/01_r.jpg
+        card: {<<: *viewcard, highlight_row: 昨季の1つ絡むまで}
+      - text: 今季も、同じ向きです。
+        image: assets/images/20261115_compare_88755_27992/d1/01_r.jpg
+        card: {<<: *viewcard, highlight_row: 今季の1つ絡むまで}
+      - text: デ・ブライネは約164分に1つ、モドリッチは約401分に1つ。
+        image: assets/images/20261115_compare_88755_27992/d1/01_r.jpg
+        card: {<<: *viewcard, highlight_row: 今季の1つ絡むまで}
+      - text: 差は、いまのところ昨季ほど開いていません。
+        emph: true
+        image: assets/images/20261115_compare_88755_27992/d1/01_r.jpg
+        card: {<<: *viewcard, highlight_row: 今季の先発}
+      - text: 次に数えるのは、季の終わりの出場時間。
+        image: assets/images/20261115_compare_88755_27992/pair_c/01.jpg
+        card: none
+      - text: ここまでの983分と802分が、どこまで伸びるか。
+        image: assets/images/20261115_compare_88755_27992/pair_c/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/kevin-de-bruyne/leistungsdaten/spieler/88755
+      - https://www.transfermarkt.com/luka-modric/leistungsdaten/spieler/27992

@@ -1,0 +1,141 @@
+# 取材メモ（2026年11月12日）デ・ラ・フエンテ監督、ヤマルの「特別待遇」報道を一蹴「いちばんこたえるのは嘘」（ニュースのショート。見せ方 Y＝監督の言葉から始める）
+# 取材: 2026-11-12。WebFetch と python requests（ブラウザUA）と site.api.espn.com で確かめた。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 出典で確かめたこと:
+#   ・ESPN（story 50455459, 2026-11-11 4:59PM ET。WebFetch で読んだ）: ヤマルは右膝の炎症でチェコ戦（木曜）を欠場。スペイン連盟は、バルセロナの試合のあとに違和感があったと発表。
+#       監督は回復は順調で金曜に合流する見込みと話した。「特別待遇」の報道に怒りを示した。
+#   ・Marca（futbol/seleccion/2026/11/11/fuente-lamine-tenia-liquido-rodilla-ver-enteran-quedado-claro.html, 2026-11-11 17:35Z。全文を requests で読んだ）。デ・ラ・フエンテの発言（プラハ、チェコ戦前日の会見。スペイン語）:
+#       「知らないまま語るのは、悲しいことで、残念です。だから私は説明に来ました。ラミンの膝には炎症があります。私たちの医療スタッフが診て、この遠征を避けるため、クラブで練習させるほうがいいと私が決めました。オヤルサバルも同じです」
+#       「昨日と今日、彼と話しました。回復は順調で、金曜にはチームに来られると考えています」
+#       「外からのメッセージは気になりません。私が説明しますから。人は現実と関係のない理屈を作ります。ラミンに特権はありません。ほかのどの選手でも、同じようにしたでしょう」
+#       「いちばんこたえるのは、嘘、慎重さのなさ、真実味のなさ、作り話です。だから、話すべき以上のことを話しました。それが、人々に現実を知ってもらう唯一の方法だからです。人をだまそうとする人、嘘をつく人には我慢できません」(Lo que más me duele es la mentira, la falta de rigor, la falta de veracidad y el invento. … No aguanto a la gente que trata de engañarte y mentir)
+#       → 台本は、このスペイン語を日本語にし、声に出して通る形に整えたもの（原文の語順はなぞらない）。ESPN の英訳「I can't stand people who try to deceive you and lie」と意味が一致。
+#   ・Marca/EFE（seleccion/2026/11/10/fuente-ve-apto-lamine-yamal-inglaterra-merecia-pena-asumir-riesgo.html, 2026-11-10。全文読んだ）: 膝の軽い痛み。「木曜に出られたが、リスクを冒す価値はなかった」。日曜のイングランド戦（メトロポリターノ）には出られる見込み。
+#   ・ESPN の試合データ（site.api.espn.com）:
+#       uefa.nations standings グループA3（2026-11-12 取得）: スペイン 4試合4勝 勝ち点12、イングランド 4試合3勝1敗 勝ち点9、クロアチア 勝ち点3、チェコ 0。
+#       日程 scoreboard: 11/12 19:45Z（日本時間13日 4:45）チェコ対スペイン（401861148、Generali Arena＝プラハ）／11/15 19:45Z スペイン対イングランド（England at Spain 401861178、メトロポリターノ）。
+#       esp.1 11/8 アトレティコ 1-2 バルセロナ（401882816）: ヤマルは先発してフル出場、66分のフェルミンの得点にアシスト。
+#   ・Marca（seleccion/2026/11/09 と 11/11 estalla-caso-lamine…）: RFEF の公式発表は「右膝の違和感（アトレティコ戦のあと）」。「試合を避けている（se borraba）」という情報が出て、監督が怒った。
+# 食い違い: ①膝の違和感の始まり: ESPN・RFEF発表（Marca 11/9・11/11）は「日曜のアトレティコ戦のあと」、Marca/EFE 11/10 の監督インタビューは「3日のCLアストン・ヴィラ戦から」→ 台本では始まりを言わない（「膝に炎症」だけ）。 ②言葉は日本語・スペイン語訳しか無い。 ③「特別待遇」の報道の出どころ（どの媒体か）は ESPN・Marca とも具体名を出していない → 台本は「そういう報道があった」と言い、媒体名は出さない。
+# 前の本との重なり: 20261106_rashford_yamal_ballon（ヤマルのバロンドール）・20261104_yamal_teen_cl_record・20261028_yamal_it_will_come。今回の初出は、膝の炎症での欠場と監督の「嘘」発言。ヤマルの怪我の内容は報道として扱い、診断を断定しない。
+# 本人の言葉: あり（デ・ラ・フエンテ監督。Marca が会見を引用）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: overseas
+date: "2026年11月12日"
+format: news
+no_main: true
+people: [ヤマル, デ・ラ・フエンテ監督, スペイン代表]
+
+short_style: Y
+short_hook_quote: ラミンに、特権はありません。
+short_photos:
+  - assets/images/20261112_yamal_delafuente_lying/07_v.jpg
+  - assets/images/20261112_yamal_delafuente_lying/05_v.jpg
+  - assets/images/20261112_yamal_delafuente_lying/03_v.jpg
+  - assets/images/20261112_yamal_delafuente_lying/06_v.jpg
+  - assets/images/20261112_yamal_delafuente_lying/04_v.jpg
+short_question: ヤマルは、15日のイングランド戦に間に合うと思いますか。
+short_telops: []
+
+theme:
+  id: yamal_delafuente_lying
+  league: spain
+  league_name: スペイン代表
+  prefix: ""
+  title: デ・ラ・フエンテ監督、ヤマルの「特別待遇」報道を一蹴「いちばんこたえるのは嘘」
+  hook: ""
+  question: ヤマルの欠場について、スペインのデ・ラ・フエンテ監督は何と語ったのか
+  takeaway: ヤマルは膝の炎症でチェコ戦を欠場。監督は「特権はない」と言い切り、金曜の合流と15日のイングランド戦を見ている
+
+thumbnail:
+  layout: face
+  line1: デ・ラ・フエンテ監督
+  line2: 「いちばんこたえるのは嘘」
+  tags: [ヤマル, デ・ラ・フエンテ, スペイン代表]
+  photo: assets/images/20261112_yamal_delafuente_lying/07_w.jpg
+  short_photo: assets/images/20261112_yamal_delafuente_lying/07_v.jpg
+
+answer: ヤマルは膝の炎症で欠場。特権はなく、どの選手でも同じ対応だったと監督は語った
+watch: 15日（日）のスペイン対イングランド（マドリード）
+
+sections:
+  - id: what
+    main: true
+    heading: ヤマルの「特別待遇」報道に、デ・ラ・フエンテ監督は何と答えたのか
+    tier: 報道
+    telop: デ・ラ・フエンテ監督「ラミンに特権はない」
+    say:
+      - text: ヤマルの欠場をめぐって、特別扱いや、試合を避けているという報道が出ました。
+        short_only: true
+      - text: スペインのデ・ラ・フエンテ監督は、こう答えました。
+        short_only: true
+      - voice: デ・ラ・フエンテ監督
+        text: ラミンに、特権はありません。
+        emph: true
+        image: assets/images/20261112_yamal_delafuente_lying/06_w.jpg
+      - voice: デ・ラ・フエンテ監督
+        text: ほかのどの選手でも、同じようにしました。
+        cont: true
+      - text: ヤマルは右膝の炎症で、チェコ戦を欠場します。
+        image: assets/images/20261112_yamal_delafuente_lying/05_w.jpg
+      - text: バルセロナに残って、クラブで練習を続けています。
+      - voice: デ・ラ・フエンテ監督
+        text: 私たちの医療スタッフが診ました。
+        image: assets/images/20261112_yamal_delafuente_lying/02_w.jpg
+      - voice: デ・ラ・フエンテ監督
+        text: この遠征を避けるのがいいと、私が決めました。
+        cont: true
+      - voice: デ・ラ・フエンテ監督
+        text: いちばんこたえるのは、嘘です。慎重さのなさと、作り話です。
+        emph: true
+      - voice: デ・ラ・フエンテ監督
+        text: 人をだまそうとする人、嘘をつく人には、我慢できません。
+        cont: true
+        image: assets/images/20261112_yamal_delafuente_lying/03_w.jpg
+    official: false
+    sources:
+      - https://www.marca.com/futbol/seleccion/2026/11/11/fuente-lamine-tenia-liquido-rodilla-ver-enteran-quedado-claro.html
+      - https://www.espn.com/soccer/story/_/id/50455459/spain-lamine-yamal-injury-luis-de-la-fuente-nations-league
+  - id: game
+    heading: ヤマルの回復は、どこまで進んでいるのか
+    tier: 報道
+    telop: 回復は順調。金曜に合流の見込み
+    say:
+      - text: 監督は、ヤマルとは昨日と今日、話したと言います。
+        image: assets/images/20261112_yamal_delafuente_lying/06_w.jpg
+      - voice: デ・ラ・フエンテ監督
+        text: 回復は順調です。金曜には、チームに来られると考えています。
+        image: assets/images/20261112_yamal_delafuente_lying/03_w.jpg
+      - text: 別の取材では、こうも話しています。
+      - voice: デ・ラ・フエンテ監督
+        text: 木曜に出ることも、できました。
+        image: assets/images/20261112_yamal_delafuente_lying/04_w.jpg
+      - voice: デ・ラ・フエンテ監督
+        text: でも、リスクを冒す価値はありませんでした。
+        cont: true
+    official: false
+    sources:
+      - https://www.marca.com/futbol/seleccion/2026/11/11/fuente-lamine-tenia-liquido-rodilla-ver-enteran-quedado-claro.html
+      - https://www.marca.com/futbol/seleccion/2026/11/10/fuente-ve-apto-lamine-yamal-inglaterra-merecia-pena-asumir-riesgo.html
+      - https://www.espn.com/soccer/story/_/id/50455459/spain-lamine-yamal-injury-luis-de-la-fuente-nations-league
+      - https://www.marca.com/futbol/seleccion/2026/11/11/estalla-caso-lamine-me-duele-mentira-falta-rigor-invento.html
+      - https://www.marca.com/futbol/seleccion/2026/11/09/lamine-molestias-rodilla-retrasa-incorporacion-seleccion.html
+  - id: view
+    viewpoint: true
+    heading: ヤマルは、15日のイングランド戦に戻れるのか
+    tier: 背景
+    telop: 15日（日）、スペイン対イングランド（マドリード）
+    say:
+      - text: 見立てです。ネーションズリーグの同じ組で、スペインは4戦4勝です。
+        image: assets/images/20261112_yamal_delafuente_lying/07_w.jpg
+        card: {type: table, title: ネーションズリーグ グループA3, columns: [順位, 国, 勝ち点], rows: [[1位, スペイン, 12], [2位, イングランド, 9], [3位, クロアチア, 3]], highlight_row: 0}
+      - text: 勝ち点12で首位。2位イングランドは9で、3差です。
+        card: none
+      - text: 15日は、その2チームが直接ぶつかります。
+      - text: ヤマルは、チェコ戦は欠場します。監督は、金曜の合流を見込んでいます。
+      - text: 日曜にマドリードで行われるイングランド戦に出られるかは、その回復しだいです。
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/v2/sports/soccer/uefa.nations/standings
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/scoreboard?dates=20261115
+      - https://www.marca.com/futbol/seleccion/2026/11/10/fuente-ve-apto-lamine-yamal-inglaterra-merecia-pena-asumir-riesgo.html
+short_title: "デ・ラ・フエンテ監督、ヤマルの「特別待遇」報道を一蹴「いちばんこたえるのは嘘」"

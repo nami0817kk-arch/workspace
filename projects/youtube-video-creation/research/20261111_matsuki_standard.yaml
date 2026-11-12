@@ -1,0 +1,130 @@
+# 取材メモ（2026年11月11日）松木玖生、前回の代表活動で「基準が二段階ぐらい上がった」。南米2連戦を前に語った（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-11。requests（ブラウザUA）で本文を全文読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。
+# 題材の元: サッカーキング 2026-11-10「「基準が二段階ぐらい上がった」前回の活動で成長実感の松木玖生、南米連戦へ「自分がどのようにできるのか」」（全文）
+#   https://www.soccer-king.jp/news/japan/national/20261110/2226401.html
+# 出典で確かめたこと:
+#   ・10日、日本代表が「MIZUHO BLUE CHALLENGE THE KALLANG FOOTBALL SERIES SINGAPORE」のブラジル戦へシンガポールで始動。練習後に松木がメディア対応（サッカーキング）。
+#   ・サッカーキング: 前回の活動で初めてA代表に招集され、デビュー戦のウルグアイ戦で先制点。
+#   ・松木の言葉（サッカーキング。記事は鉤括弧で引いている。台本は読点で行に分けた。字は変えていない）:
+#       「自分の基準が二段階ぐらい上がった」
+#       「サウサンプトンに戻っても、点を決めたとしても、まだまだだなと思いますし、そこの基準が上がってさらに自信もついた」
+#       「もっと結果のところと、攻撃で違いを見せるところはやっていかないといけない」
+#       「強豪相手と対決できるのも楽しみですし、そこで自分がどのようにできるのかも楽しみ」
+#         （最後の2つは地の文のあとの鉤括弧。記事は短いので、使える発言はこの4つだけ）
+#   ・ウルグアイ戦（ESPN fifa.friendly summary event=401905330、2026-09-24 10:05 UTC、宮城スタジアム）: 日本 3-1 ウルグアイ。11分 松木玖生（左足、エリアの外からゴール左下。中村敬斗のアシスト）／42分 マキシ・アラウホ（ウルグアイ）。松木は先発。
+#   ・サウサンプトンの試合（ESPN eng.2 teams/376/schedule と各試合の summary。松木の出場と得点を数えた）:
+#       9/24 以降のクラブの試合は7つ。10/11 ポーツマス（途中出場）、10/14 ノリッジ（先発・得点）、10/17 ボルトン（途中出場）、10/24 ウェストハム（先発・得点）、10/31 QPR（先発・得点）、11/3 ウェストブロム（先発・0得点。1-1）、11/7 プレストン（先発・0得点。0-1）。
+#       → 7試合で3得点。直近2試合は無得点。今季のリーグ戦は15試合4得点（9/12、10/14、10/24、10/31）。
+#       （この3得点は 20261104_matsuki_volley_saints／20261029_matsuki_chance の数字と重なる。今回は「代表デビューのあとの7試合」という数え方で使い、得点の中身は繰り返さない）
+#   ・日程: 11/14 ブラジル戦、11/17 パラグアイ戦（シンガポール。サッカーキング）。
+# 前の本との重なり: 20261104_matsuki_volley_saints（反転ボレー・今季4点目）／20261029_matsuki_chance／20261015_matsuki_southampton。
+#   → 今回の初出: 代表デビュー後の本人の言葉（基準が二段階ぐらい上がった）。ウルグアイ戦のゴールは経緯として1行だけ。
+# 【言わないこと】サウサンプトンの順位・チャンピオンシップの数字の細部／直近2試合の無得点の理由／ブラジル戦の起用の予想／堂安の「教わる」（過去回）。
+# 写真: 01＝サウサンプトン公式（加入発表。2024年の写真）、02＝サッカーキング 10日の記事の主写真（代表の練習。ビブス10番）、03＝サウサンプトン公式（試合の写真）、05＝サウサンプトン公式（代表の青のユニフォームの横顔。縦だけ・要確認の印は顔検出外れ）。
+#   04（ゲキサカの練習の集合写真）は誰か特定できないので外した。
+# 写真の加工: サッカーキングの主写真（02）は左上に「SOCCERKING」のロゴが入るので、横版（02_w）はロゴを外して切り直した（縦版は元からロゴの外）。
+# 本人の言葉: あり（松木玖生。サッカーキング）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月11日"
+format: news
+no_main: true
+people: [松木玖生, サウサンプトン, ウルグアイ代表, 日本代表]
+
+short_style: Y
+short_hook_quote: 自分の基準が二段階ぐらい上がった。
+short_photos:
+  - assets/images/20261111_matsuki_standard/02_v.jpg
+  - assets/images/20261111_matsuki_standard/03_v.jpg
+  - assets/images/20261111_matsuki_standard/01_v.jpg
+  - assets/images/20261111_matsuki_standard/05_v.jpg
+short_question: 松木玖生は、14日のブラジル戦でゴールを決めると思いますか。
+short_telops: []
+
+theme:
+  id: matsuki_standard
+  league: japan
+  league_name: 日本代表
+  prefix: ""
+  title: 松木玖生、南米2連戦へ。代表デビューのあと、何が変わったと語ったのか
+  hook: ""
+  question: 代表デビューのあと、松木玖生は何が変わったと語ったのか
+  takeaway: 松木はウルグアイ戦のデビューで先制点。そのあとクラブの7試合で3得点を決めたが、「まだまだだなと思う」と話した。直近2試合は無得点で、14日のブラジル戦が次の確かめになる
+
+thumbnail:
+  layout: face
+  line1: 松木玖生 代表デビュー後
+  line2: 基準が二段階上がった
+  tags: [松木玖生, 日本代表]
+  photo: assets/images/20261111_matsuki_standard/02_w.jpg
+  short_photo: assets/images/20261111_matsuki_standard/02_v.jpg
+
+answer: 点を決めても「まだまだ」と思えるほど、自分の基準が上がった。もっと結果を出し、攻撃で違いを見せたい
+watch: 14日のブラジル戦と17日のパラグアイ戦（シンガポール）
+
+sections:
+  - id: what
+    main: true
+    heading: 代表デビューのあと、松木玖生は何が変わったと語ったか
+    tier: 報道
+    telop: 松木玖生「自分の基準が二段階ぐらい上がった」
+    say:
+      - text: 松木玖生が、前回の日本代表の活動で感じたことを語りました。
+        image: assets/images/20261111_matsuki_standard/02_v.jpg
+      - voice: 松木玖生
+        text: 自分の基準が二段階ぐらい上がった。
+        emph: true
+      - text: 松木は前回の活動で、日本代表に初めて呼ばれました。
+      - text: デビュー戦のウルグアイ戦で、前半11分に先制点を決めています。
+      - voice: 松木玖生
+        text: サウサンプトンに戻っても、
+      - voice: 松木玖生
+        text: 点を決めたとしても、まだまだだなと思いますし、
+        cont: true
+      - voice: 松木玖生
+        text: そこの基準が上がってさらに自信もついた。
+        cont: true
+      - text: 戻ったクラブでも、松木はゴールを決めています。
+        image: assets/images/20261111_matsuki_standard/03_v.jpg
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20261110/2226401.html
+      - https://www.espn.com/soccer/match/_/gameId/401905330
+  - id: next
+    heading: ブラジルとパラグアイとの2連戦に、松木玖生が見ていること
+    tier: 報道
+    telop: 松木玖生「強豪相手と対決できるのも楽しみ」
+    say:
+      - text: 日本代表は14日にブラジル、17日にパラグアイと、シンガポールで戦います。
+        image: assets/images/20261111_matsuki_standard/02_v.jpg
+      - voice: 松木玖生
+        text: もっと結果のところと、
+      - voice: 松木玖生
+        text: 攻撃で違いを見せるところはやっていかないといけない。
+        cont: true
+      - voice: 松木玖生
+        text: 強豪相手と対決できるのも楽しみですし、
+        cont: true
+      - voice: 松木玖生
+        text: そこで自分がどのようにできるのかも楽しみ。
+        cont: true
+        emph: true
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20261110/2226401.html
+  - id: view
+    viewpoint: true
+    heading: 代表デビューのあと、松木玖生の得点は何試合で何点か
+    tier: 背景
+    telop: 代表デビュー後のクラブ7試合で3得点
+    say:
+      - text: 見立てです。ウルグアイ戦のデビューから、松木がクラブで出た試合は7つ。
+        card: {type: table, title: 松木玖生の得点, columns: [試合, 得点], rows: [[ウルグアイ戦（代表デビュー）, 1点], [サウサンプトンの7試合（10月11日〜11月7日）, 3点]], highlight_row: 1}
+      - text: そのうち3試合で、点を決めました。
+        card: none
+      - text: 直近のウェストブロム戦とプレストン戦は、無得点でした。
+      - text: 次の確かめは、14日のブラジル戦です。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401905330
+      - https://www.espn.com/soccer/team/schedule/_/id/376

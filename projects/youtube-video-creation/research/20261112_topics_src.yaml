@@ -1,0 +1,74 @@
+title: 11月12日のショート題材
+lead: 海外フィード（今朝の gather）と日本語3サイト（ゲキサカ・サッカーキング・フットボールチャンネル）から10件。ユーザー確認なしの自動運用のため、Claude が○を付けて選びました（日本人7・海外3）。
+note: 今日は木曜（12日）、日本時間の朝（9時台）に集めました。日本代表はシンガポールで合流済み（14日ブラジル戦、17日パラグアイ戦）。日本人の題は9〜17時、海外は18時以降に予約。外した題：マンUとポチェッティーノ（昨日 manutd_carrick_pochettino で扱済み）・マクトミネイの心臓・スビメンディ残留・パレスのフランク監督（次点）、女子W杯・MLS・Jリーグ・ユースは対象外。検索AI要約は使っていません。
+items:
+- num: 1
+  slot: 日本人（代表）
+  head: 久保建英、「W杯のリベンジ」を否定。相手は新生ブラジル「メンバーを見ても互角に戦えないといけない」
+  why: ゲキサカ（12日朝6:18）。久保本人の言葉あり。W杯で負けた相手との再戦（14日）。条件：日本代表・W杯に当たる・本人の言葉あり→Y。重なり：久保は10/06〜11/07に多数（別の出来事）。
+  src: ゲキサカ
+  url: https://web.gekisaka.jp/news/japan/detail/?463014-463014-fl
+  fmt: quote
+- num: 2
+  slot: 日本人（代表）
+  head: 町田浩樹、約1年5カ月ぶりの代表復帰。W杯ブラジル戦「自分がいれば…」歯がゆさを吐露
+  why: ゲキサカ・サッカーキング（11〜12日）。本人の言葉あり。11/05に復帰の題があるが今回は代表合流後の言葉。条件：日本代表・W杯・本人の言葉→Y。
+  src: ゲキサカ、サッカーキング
+  url: https://web.gekisaka.jp/news/japan/detail/?463010-463010-fl
+  fmt: quote
+- num: 3
+  slot: 日本人（代表）
+  head: 南野拓実、ケガから復帰して代表合流。「初招集された時の気持ちで」ギラギラの集大成
+  why: ゲキサカ（12日2:24）・サッカーキング（11日）。本人の言葉あり。条件：日本代表・大物・本人の言葉→Y。重なり：11/05・11/06に別の出来事。
+  src: ゲキサカ、サッカーキング
+  url: https://web.gekisaka.jp/news/japan/detail/?463009-463009-fl
+  fmt: quote
+- num: 4
+  slot: 日本人（代表）
+  head: 板倉滉に第1子誕生。「可愛くてしょうがない」父となって臨むブラジル戦
+  why: サッカーキング・ゲキサカ・フットボールチャンネル（11〜12日）。本人の言葉あり。条件：日本代表・本人の言葉→Y。家族の話題は誕生の事実と本人の言葉だけに絞る。
+  src: サッカーキング、ゲキサカ
+  url: https://www.soccer-king.jp/news/japan/national/20261111/2226706.html
+  fmt: quote
+- num: 5
+  slot: 日本人（代表）
+  head: 鈴木彩艶が西川周作の偉業を祝福「素晴らしいの一言。尊敬する選手」
+  why: サッカーキング（12日）。本人の言葉あり。条件：日本代表・大物（鈴木彩艶）・本人の言葉→Y。西川の偉業の中身は取材で確かめる。
+  src: サッカーキング
+  url: https://www.soccer-king.jp/news/japan/national/20261112/2226803.html
+  fmt: quote
+- num: 6
+  slot: 日本人（代表）
+  head: 22歳FW福田師王、高卒即欧州から3年半「キツいことだらけ」の下積みを経てA代表初招集
+  why: ゲキサカ（12日1:20）・サッカーキング（11日）。本人の言葉あり。条件：日本代表初招集・本人の言葉→Y。
+  src: ゲキサカ、サッカーキング
+  url: https://web.gekisaka.jp/news/japan/detail/?463007-463007-fl
+  fmt: quote
+- num: 7
+  slot: 日本人（代表）
+  head: ブラジル代表、日本戦はヴィニシウスやハフィーニャら主力が先発へ。ハフィーニャが主将の可能性
+  why: サッカーキング（11日）。W杯で日本が戦った相手の主力。条件：日本代表・W杯・記録。見せ方X。
+  src: サッカーキング
+  url: https://www.soccer-king.jp/news/japan/national/20261111/2226636.html
+  fmt: news
+- num: 8
+  slot: 海外
+  head: ムバッペ（太もも）、イタリア戦を欠場。ジダン「リスクは冒さない」
+  why: ESPN・キッカー・マルカ（12日）。条件：大物・本人（ジダン監督）の言葉。重なり：11/07 zidane_mbappe_france は別の出来事。
+  src: ESPN、キッカー
+  url: https://www.espn.com/soccer/story/_/id/50452835/kylian-mbappe-hamstring-miss-france-clash-italy
+  fmt: news
+- num: 9
+  slot: 海外
+  head: ケイン、バロンドール受賞。トゥヘル「バロンドールは良い手の中にある」
+  why: ESPN・キッカー（12日）。条件：大物・本人以外（トゥヘル監督）の言葉。受賞の前提は取材で確かめる（崩れたら次点のマクトミネイへ）。重なり：11/06 kane_bayern_2029 は契約で別の出来事。
+  src: ESPN、キッカー
+  url: https://www.kicker.de/tuchel-ueber-kane-ballon-d-or-ist-in-guten-haenden-1270798/video#omrss
+  fmt: news
+- num: 10
+  slot: 海外
+  head: スペインのデ・ラ・フエンテ監督、ヤマルの「特別待遇」報道を「嘘だ」と一蹴
+  why: ESPN（12日）。条件：大物（ヤマル）・監督の言葉。
+  src: ESPN
+  url: https://www.espn.com/soccer/story/_/id/50455459/spain-lamine-yamal-injury-luis-de-la-fuente-nations-league
+  fmt: quote

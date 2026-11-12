@@ -1,0 +1,138 @@
+# 取材メモ（2026年11月6日）アモリム監督、ELでフェレンツヴァーロシュに0-2の敗戦。「今夜は言い訳はない」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-06。python requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。
+# 出典で確かめたこと:
+#   ・ESPN 試合データ（uefa.europa summary event=401915534、2026-11-05 17:45Z キックオフ、サン・シーロ、観客49,372）:
+#       ACミラン 0-2 フェレンツヴァーロシュ。52分 レニー・ジョゼフ（右足、アシスト ザカリアセン）／66分 ジョゼフ（右足、アシスト ザカリアセン）。
+#       ミランはハーフタイムに3人交代（プリシッチ・ジーラ・モレイラ）。77分にフェレンツヴァーロシュの途中出場ユスフが一発退場。
+#       支配率 ミラン70.1%／29.9%。シュート 15本（枠内2本）／12本（枠内8本）。
+#   ・ESPN 順位表（uefa.europa standings、11/6 取得）: ミラン 4試合1勝3敗 勝ち点3 28位。フェレンツヴァーロシュ 4戦4勝 勝ち点12 3位。
+#   ・ESPN 2026-11-05 23:46Z（now.core.api.espn.com/v1/sports/news/50393432 で本文を読んだ）: 週末のダービーでインテルに勝った直後。先発を6人替えた。セリエAは10試合で1敗。ELは4試合で3敗。前半に控えGKトッリアーニのミスから先制された。
+#   ・Gazzetta dello Sport 2026-11-05（イタリア語の原文を読んだ）:
+#       "Se giochi con la maglia del Milan hai una responsabilità, non puoi andare in campo così."
+#       "Forse ho fatto qualcosa di sbagliato negli ultimi giorni. ... Stasera non abbiamo scuse."
+#       "Non siamo pronti mentalmente. Non c'entra nulla l'aspetto tecnico. Non c'entra il turnover."
+#       "Mi assumo la responsabilità in primis io, perché la squadra è una mia responsabilità"
+#       "certamente non mollerò in Europa League. Finché non sarà finita, lotteremo"
+#       → 台本の言葉は、この原文を私が日本語にしたもの。「O miglioriamo o finisce qui」（良くならなければここで終わり）は何が終わるのかが文から読めないので使わない。
+#   ・ELのリーグフェーズは36チームで8試合。1〜8位がベスト16、9〜24位がプレーオフ、25位以下は敗退（大会の決まり。背景）。
+# 自分で数えたもの: シュート15本で枠内2本、相手は12本で枠内8本。ELは4試合で勝ち点3、セリエAは10試合で1敗。24位までの線と、残り4試合。
+# 前の本との重なり: posted.json にアモリムのミランのショートは無い（2026-09 の本編で一度扱ったが、台本では過去回に触れない）。20261023_finance_acmilan は財政のシリーズで別の話。
+# 本人の言葉: あり（試合後の会見）。Y。
+# 反応: 0件（作らない）。
+slot: other_2
+date: "2026年11月6日"
+format: news
+no_main: true
+people: [ルベン・アモリム監督, ACミラン, フェレンツヴァーロシュ]
+
+short_style: Y
+short_hook_quote: 今夜は、言い訳はありません。
+short_photos:
+  - assets/images/20261106_amorim_milan_no_excuses/03_v.jpg
+  - assets/images/20261106_amorim_milan_no_excuses/01_v.jpg
+  - assets/images/20261106_amorim_milan_no_excuses/04_v.jpg
+short_question: アモリムのミランは、ヨーロッパリーグで24位以内に入れると思いますか。
+short_telops:
+  - {match: 言い訳, text: アモリム監督/「今夜は言い訳はない」}
+  - {match: 0対2, text: ミラン 0-2 フェレンツヴァーロシュ/ヨーロッパリーグ第4節}
+  - {match: 28位, text: ミランは4試合で勝ち点3/36チーム中28位}
+  - {match: 枠内2本, text: シュート15本で枠内2本/相手は12本で枠内8本}
+
+theme:
+  id: amorim_milan_no_excuses
+  league: italy
+  league_name: ヨーロッパリーグ
+  prefix: ""
+  title: アモリム監督「言い訳はない」。ミランがホームで0対2、自分にも向けた言葉
+  hook: ""
+  question: ホームで0対2と敗れたミランのアモリム監督は、チームと自分の何を問うたのか
+  takeaway: 支配率70%でシュート15本、それでも枠内は2本。相手は12本のうち8本を枠に飛ばした。ミランはELで4試合勝ち点3の28位、残り4試合で24位以内を目指す
+
+thumbnail:
+  layout: face
+  line1: アモリム監督 ミラン
+  line2: 「言い訳はない」
+  tags: [ルベン・アモリム監督, ACミラン]
+  photo: assets/images/20261106_amorim_milan_no_excuses/01_w.jpg
+  short_photo: assets/images/20261106_amorim_milan_no_excuses/03_v.jpg
+
+answer: 心の準備ができていなかったとチームを責め、責任はまず自分にあると認めた
+watch: ヨーロッパリーグの残り4試合
+
+sections:
+  - id: what
+    main: true
+    heading: ホームで0対2。アモリム監督が試合後に語ったこと
+    tier: 報道
+    telop: アモリム監督「今夜は言い訳はない」
+    say:
+      - text: ミランがヨーロッパリーグで0対2の敗戦。アモリム監督は、こう話しました。
+      - voice: ルベン・アモリム監督
+        text: ミランのユニフォームを着るなら、責任があります。
+      - voice: ルベン・アモリム監督
+        text: あんな姿で、ピッチに出てはいけない。
+        cont: true
+      - voice: ルベン・アモリム監督
+        text: この数日、私が何かを間違えたのかもしれません。
+      - voice: ルベン・アモリム監督
+        text: 今夜は、言い訳はありません。
+        emph: true
+      - text: 相手はハンガリーのフェレンツヴァーロシュ。本拠地サン・シーロでの敗戦です。
+        image: assets/images/20261106_amorim_milan_no_excuses/04_w.jpg
+      - text: 同じミラノのインテルとのダービーに勝って、5日後。先発は6人を入れ替えていました。
+      - voice: ルベン・アモリム監督
+        text: 心の準備が、できていなかった。
+        image: assets/images/20261106_amorim_milan_no_excuses/03_w.jpg
+      - voice: ルベン・アモリム監督
+        text: 技術の問題でも、選手の入れ替えの問題でもありません。
+        cont: true
+      - voice: ルベン・アモリム監督
+        text: 責任は、まず私にあります。チームは私の責任だからです。
+    official: false
+    sources:
+      - https://www.gazzetta.it/Calcio/Serie-A/Milan/05-11-2026/amorim-milan-ferencvaros-conferenza.shtml
+      - https://www.corrieredellosport.it/news/calcio/serie-a/milan/2026/11/05-152402097/amorim_duro_dopo_il_ko_col_ferencvaros_non_possiamo_giocare_cos_siamo_il_milan_abbiamo_una_responsabilit/
+      - https://www.espn.com/soccer/story/_/id/50393432/ruben-amorim-ac-milan-ferencvaros-uefa-europa-league
+  - id: game
+    heading: 0対2の試合で、何が起きていたか
+    tier: 報道
+    telop: 52分・66分 レニー・ジョゼフ
+    say:
+      - text: アモリム監督のミランが許した2点は、どちらも後半でした。
+        card: {type: table, title: ミラン 0-2 フェレンツヴァーロシュ, columns: [分, できごと], rows: [[52分, ジョゼフ 先制], [66分, ジョゼフ 2点目], [77分, ユスフ（相手）退場]], highlight_row: 0}
+        image: assets/images/20261106_amorim_milan_no_excuses/01_w.jpg
+      - text: 決めたのはどちらも、相手のレニー・ジョゼフです。
+        card: {type: table, title: ミラン 0-2 フェレンツヴァーロシュ, columns: [分, できごと], rows: [[52分, ジョゼフ 先制], [66分, ジョゼフ 2点目], [77分, ユスフ（相手）退場]], highlight_row: 1}
+      - text: 52分の1点目は、ミランのゴールキーパーのミスからでした。
+        card: {type: table, title: ミラン 0-2 フェレンツヴァーロシュ, columns: [分, できごと], rows: [[52分, ジョゼフ 先制], [66分, ジョゼフ 2点目], [77分, ユスフ（相手）退場]], highlight_row: 0}
+      - text: 77分に相手が1人退場しても、ミランは1点も返せませんでした。
+        card: {type: table, title: ミラン 0-2 フェレンツヴァーロシュ, columns: [分, できごと], rows: [[52分, ジョゼフ 先制], [66分, ジョゼフ 2点目], [77分, ユスフ（相手）退場]], highlight_row: 2}
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401915534
+      - https://www.espn.com/soccer/story/_/id/50393432/ruben-amorim-ac-milan-ferencvaros-uefa-europa-league
+  - id: view
+    viewpoint: true
+    heading: ボールを持ったミランと、枠を捉えた相手。数字は何を示したか
+    tier: 背景
+    telop: シュート15本で枠内2本。相手は12本で枠内8本
+    say:
+      - text: 見立てです。ボールを持っていたのは、ミランでした。支配率は70%。
+        card: {type: table, title: ミラン 0-2 フェレンツヴァーロシュ, columns: [項目, ミラン, フェレンツヴァーロシュ], rows: [[支配率, 70.1%, 29.9%], [シュート, 15本, 12本], [枠内, 2本, 8本]], highlight_row: 2}
+      - text: でも、枠に飛んだシュートは15本のうち2本。相手は12本のうち8本でした。
+        emph: true
+      - text: セリエAでは10試合で1敗。ヨーロッパリーグでは4試合で3敗です。
+        card: none
+        image: assets/images/20261106_amorim_milan_no_excuses/03_w.jpg
+      - text: 36チーム中、28位。24位までに入れば、次のプレーオフに進めます。
+      - text: 残りは4試合です。
+      - voice: ルベン・アモリム監督
+        text: ヨーロッパリーグは、絶対にあきらめません。
+      - voice: ルベン・アモリム監督
+        text: 終わるまで、戦います。
+        cont: true
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401915534
+      - https://site.api.espn.com/apis/v2/sports/soccer/uefa.europa/standings
+      - https://www.gazzetta.it/Calcio/Serie-A/Milan/05-11-2026/amorim-milan-ferencvaros-conferenza.shtml

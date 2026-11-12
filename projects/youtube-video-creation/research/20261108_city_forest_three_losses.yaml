@@ -1,0 +1,132 @@
+# 取材メモ（2026年11月8日）マンC、開幕7連勝のあと3連敗。フォレストのデラップが2発（ニュースのショート。見せ方 Y＝マレスカ監督の言葉から始める）
+# 取材: 2026-11-08。python requests（ブラウザUA）と WebFetch で本文を読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 読んだ出典:
+#   ・ESPN の試合データ（site.api.espn.com .../eng.1/summary?event=401878757）: 6分 ジェイール・クーニャ（フォレスト）／18分 リアム・デラップ（アシスト シュラーガー）／52分 ラヤン・シェルキ（シティ）／73分 デラップ（アシスト ギブス＝ホワイト）。フォレスト 3-1 シティ。
+#   ・マンチェスター・シティ公式 mancity.com 試合レポート「City fall to disappointing defeat at Forest」（クラブ公式）: 6分 グヴァルディオルが奪われ、クーニャが持ち込んで左下へ／18分 デラップの個人技／後半頭にグヴァルディオルとゲーイを下げてオライリーとヌネスを投入／52分 シェルキのハーフボレー／ハーランドの同点機は外れる／73分 デラップがカウンターから決める。
+#       マレスカ監督（クラブ公式の引用。英語）:
+#         "Let's be clear, in the first half we didn't match the intensity and lost two goals. And when we reacted, it was too late."
+#         "We won the first seven [Premier League games of the season], which had never happened. Now we lost three. It's football."
+#       → **確かめられた＝本人の言葉（確定。クラブ公式）。**台本は日本語にしたもの。後半の "which had never happened"（初めてのこと、の意）は、数字で確かめていないので台本に入れない（語を落として文を切るのではなく、文を分けて読む）。
+#   ・BBC Sport（Shamoon Hafez）「Maresca's dream start turns into nightmare」: 同じ会見の言葉。グヴァルディオルのボールロスでクーニャが先制。アーセナルは勝ち点6差。
+#   ・ESPN 記事 50412227（マレスカ会見。PA）: ゲーイとグヴァルディオルは前半で負傷により交代（「どちらも負傷で、本人が交代を求めた」）。マレスカ「ずっと心配はしている。勝つときも。バランスが要る」。
+#   ・フットボールチャンネル（2026-11-08 04:48）・サッカーキング（2225506）: 得点者と分は ESPN データと一致。
+# 自分で数えたもの（ESPN の team schedule・standings・各試合の summary）:
+#   ・シティのリーグ戦10試合: 8/23 ボーンマス 2-1、8/28 パレス 4-1、9/5 コヴェントリー 1-0、9/13 マンU 1-0、9/20 サンダーランド 5-3、10/11 リヴァプール 3-0、10/17 イプスウィッチ 3-2＝**開幕から7連勝**。
+#       そのあと 10/24 アストン・ヴィラ 1-2（アウェイ）、10/31 ブライトン 0-1（ホーム）、11/7 フォレスト 1-3（アウェイ）＝**3連敗**。**3連敗の3試合で取った点は2、取られた点は6**。勝ち点は7連勝のあとの21から増えていない（7勝0分3敗＝21）。
+#   ・順位（ESPN standings、11/7 の試合のあと）: 1位 アーセナル 10試合27点／2位 シティ 10試合21点。**差は6**（アーセナルは 11/7 にハルに 1-0）。
+#   ・フォレストはこれまでのホームのリーグ戦4試合（リーズ 0-1、トッテナム 0-0、コヴェントリー 0-1、アーセナル 0-1）で**0得点**。今回が今季ホーム初勝利（ESPN の試合表から数えた）。フォレストの前の勝利は 9/12 のヴィラ戦（2-1）なので、リーグ戦**6試合ぶり**の勝利（サッカーキングの「6戦ぶり」と一致）。勝ち点9で16位。
+#   ・デラップ（ESPN の各試合 summary）: 今季のリーグ戦は9試合に出場（開幕戦は不出場）。得点は 9/12 の1点（ヴィラ戦、46分）と今回の2点で**通算3点**。**この試合の2点は、それまでの8試合の1点の2倍**。
+# 食い違い: ①デラップの2点目の分は ESPN の試合データ・サッカーキング・フットボールチャンネル・BBC 系の記録で73分、ESPN の記事本文は「74th minute」。→ **73分**を使う（データと3社が一致）。②シェルキの得点は ESPN データ・クラブ公式とも「後半頭／52分」。ESPN 記事は分を書いていない。→ 52分。③ESPN 記事に「シティが3連敗は2年ぶり」とあるが、自分で数えられない（過去シーズンのデータを引いていない）ので使わない。④BBC は「2点目は ヌディアイェとアンダーソンの連係の乱れ」と書く（見立ての材料だが1社の評なので使わない）。
+# 本人の言葉: あり（マレスカ監督＝クラブ公式、英語を日本語にした）。Y。
+# 反応: 0件（X・Reddit はブラウザ無しでは読めない。Reddit は requests で 403、Bluesky の検索も 403。作らない。approve は --no-voices）。海外の反応（現地ファン）は混ぜられなかった。BBC Radio 5 の元フォレストの選手スティーヴ・ストーンの評（「両サイドバックが広がりすぎ」）はあるが、反応ではなく評論なので使わない。
+# 写真: mancity.com・BBC・ESPN の記事の主写真から photopool で3枚。01 マレスカ（BBC の主写真）、02 デラップ（ESPN の主写真。背番号19・フォレスト）、03 うつむくシティの選手（顔が見えない・縦のみ）。代理店の表記は alt に無かったが、画像の中の透かしは見つからなかった。
+# 前の本との重なり: 20261105_city_leipzig_haaland（CL ライプツィヒ戦のハーランド）。→ 今回はリーグ戦の3連敗とデラップ。ハーランド・CL の話は繰り返さない。
+slot: match
+date: "2026年11月8日"
+format: news
+no_main: true
+people: [マンチェスター・シティ, ノッティンガム・フォレスト, デラップ, マレスカ, クーニャ, シェルキ]
+
+short_style: Y
+short_hook_quote: 最初の7試合に勝ちました。
+short_question: マンチェスター・シティは、21日のフルハム戦で連敗を止められると思いますか。
+short_photos:
+  - assets/images/20261108_city_forest_three_losses/01_v.jpg
+  - assets/images/20261108_city_forest_three_losses/02_v.jpg
+  - assets/images/20261108_city_forest_three_losses/03_v.jpg
+  - assets/images/20261108_city_forest_three_losses/02_v.jpg
+short_telops: []
+
+theme:
+  id: city_forest_three_losses
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: マンC、開幕7連勝から一転して3連敗。デラップ2発の試合で起きたこと
+  hook: ""
+  question: 開幕7連勝のマンチェスター・シティは、なぜフォレストに2点を先に取られたのか
+  takeaway: シティは開幕7連勝のあと、リーグ戦3連敗で取った点は2、取られた点は6。勝ち点21のまま2位で、首位アーセナルとは6点差に広がった
+
+thumbnail:
+  layout: face
+  line1: マンC 開幕7連勝のあと
+  line2: 3連敗
+  tags: [マンチェスター・シティ, デラップ]
+  photo: assets/images/20261108_city_forest_three_losses/01_w.jpg
+  short_photo: assets/images/20261108_city_forest_three_losses/01_v.jpg
+
+answer: 6分と18分に先に2点を取られた。反応が遅すぎた、とマレスカ監督は話した。3連敗で勝ち点21のまま、首位とは6点差
+watch: 21日、ホームでのフルハム戦
+
+sections:
+  - id: what
+    main: true
+    heading: 開幕7連勝のシティは、フォレストになぜ負けたのか
+    tier: 確定
+    telop: マンC、フォレストに1-3。3連敗
+    say:
+      - text: マンチェスター・シティが、ノッティンガム・フォレストに1対3で負けました。
+      - text: 開幕から7連勝したあとの、リーグ戦3連敗です。首位アーセナルとは、勝ち点6差に広がりました。
+        image: assets/images/20261108_city_forest_three_losses/01_w.jpg
+      - voice: エンツォ・マレスカ
+        text: 最初の7試合に勝ちました。
+        emph: true
+      - voice: エンツォ・マレスカ
+        text: 今は3つ負けました。
+        cont: true
+      - voice: エンツォ・マレスカ
+        text: それがサッカーです。
+        cont: true
+      - text: 6分、グヴァルディオルがボールを奪われます。クーニャがそのまま持ち込んで、先制です。
+        card: {type: table, title: フォレスト 3-1 シティ 得点, columns: [分, 得点者, チーム], rows: [[6分, クーニャ, フォレスト], [18分, デラップ, フォレスト], [52分, シェルキ, シティ], [73分, デラップ, フォレスト]], highlight_row: 0}
+      - text: 18分には、デラップが個人技で2点目を決めました。
+        card: none
+        image: assets/images/20261108_city_forest_three_losses/02_w.jpg
+      - text: 後半の52分、シェルキが1点を返します。
+        image: assets/images/20261108_city_forest_three_losses/01_w.jpg
+      - text: でも73分、フォレストのカウンターから、デラップがこの日2点目を決めました。
+        image: assets/images/20261108_city_forest_three_losses/02_w.jpg
+      - text: デラップは、元シティの選手です。ここまでの8試合で、決めたのは1点でした。
+    official: true
+    sources:
+      - https://www.mancity.com/news/mens/nottingham-forest-manchester-city-match-report-premier-league-63929666
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/summary?event=401878757
+      - https://www.bbc.com/sport/football/articles/cm93z0l03n8vo
+  - id: why
+    heading: シティは、前半に何ができなかったのか
+    tier: 確定
+    telop: マレスカ監督「反応したときには、遅すぎた」
+    say:
+      - text: シティのマレスカ監督は、前半をこう振り返りました。
+      - voice: エンツォ・マレスカ
+        text: はっきり言うと、前半は相手の強度に並べませんでした。
+        image: assets/images/20261108_city_forest_three_losses/01_w.jpg
+      - voice: エンツォ・マレスカ
+        text: 2点を失って、反応したときには、もう遅かったんです。
+        cont: true
+      - text: 3連敗の相手と結果を並べます。
+        card: {type: table, title: シティのリーグ戦 3連敗, columns: [日付, 相手, スコア], rows: [[10月24日, アストン・ヴィラ, 1-2], [10月31日, ブライトン, 0-1], [11月7日, フォレスト, 1-3]], highlight_row: 2}
+      - text: 3試合で取った点は2、取られた点は6です。
+        card: none
+    official: true
+    sources:
+      - https://www.mancity.com/news/mens/nottingham-forest-manchester-city-match-report-premier-league-63929666
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/teams/382/schedule
+  - id: view
+    viewpoint: true
+    heading: シティの3連敗で、首位との差はどれだけ開いたのか
+    tier: 背景
+    telop: シティ勝ち点21。首位アーセナルと6点差
+    say:
+      - text: 見立てです。シティは10試合で7勝3敗、勝ち点21で2位です。
+        card: {type: table, title: プレミアリーグ 11月7日のあと, columns: [順位, クラブ, 試合, 勝ち点], rows: [[1位, アーセナル, 10, 27], [2位, マンチェスター・シティ, 10, 21]], highlight_row: 1}
+      - text: 首位アーセナルは勝ち点27。シティとの差は6です。
+        card: none
+        emph: true
+      - text: フォレストは、ホームのリーグ戦で4試合ノーゴールのあとの3点でした。
+      - text: シティの次の試合は、21日のフルハム戦。ホームです。
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/v2/sports/soccer/eng.1/standings
+      - https://www.mancity.com/news/mens/nottingham-forest-manchester-city-match-report-premier-league-63929666
+short_title: "マンC、開幕7連勝から一転して3連敗。デラップ2発の試合で起きたこと"

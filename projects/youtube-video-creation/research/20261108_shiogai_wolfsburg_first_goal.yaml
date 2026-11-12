@@ -1,0 +1,114 @@
+# 取材メモ（2026年11月8日）塩貝健人、リーグ戦10試合目で今季初ゴール（ニュースのショート。見せ方 X＝冒頭1秒に強い一言）
+# 取材: 2026-11-08。requests（ブラウザUA）と WebFetch で本文を読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: フットボールチャンネル 2026-11-08 06:39「ヴォルフスブルクFW塩貝健人が待望のリーグ戦今季初ゴール！…」（全文）。
+#   https://www.footballchannel.jp/2026/11/08/post1056288/
+# 出典で確かめたこと:
+#   ・ESPN（site.api.espn.com ger.2 event=401885064、11/7 19:30 UTC）: ヘルタ・ベルリン 2-1 ヴォルフスブルク。ヴォルフスブルクのクレイトン（Cleiton）が22分に退場、前半はヘルタが2点（43分・45+2分）で0-2。塩貝の得点は47分。
+#   ・ヴォルフスブルク公式の試合レポート（https://www.vfl-wolfsburg.de/newsdetails/news-detail/detail/news/aufholjagd-in-unterzahl-bleibt-unbelohnt 全文）:
+#       2部第11節、首位ヘルタのホーム。後半はマクシミリアン・アルノルトに代わって塩貝（46分に交代）。47分に塩貝が1-2に。63分に塩貝がシュートを外し、90+4分にペナルティエリアで倒れたがPKの笛なし。観衆70,928。
+#       次は代表ウィーク明けの11月21日（土）、ホームでホルシュタイン・キール（ESPN も同じ日程）。
+#   ・食い違い（得点時刻）: フットボールチャンネルは「46分」「途中出場からわずか1分」。ESPN とクラブ公式は「47分」（交代は46分）。→ 台本は分で言わず「後半の立ち上がり」。表にも分は出さない。
+#   ・食い違い（ヘルタの得点時刻）: クラブ公式は 44分・45+3分、ESPN は 43分・45+2分。→ 使わない（前半2失点とだけ）。
+#   ・フットボールチャンネルは第11節、前節までヴォルフスブルク5勝4分1敗の勝ち点19で4位・ヘルタ9勝1分と書く。ESPN の戦績（10試合分）と一致。→ 順位の話は題に答えないので入れない。
+# 自分で数えたもの（ESPN ger.2 各試合の summary、塩貝のロースター）:
+#   ・リーグ戦11試合のうち塩貝の出場は10試合（9/18 ダルムシュタット戦は出場なし）。先発2回（8/29 カールスルーエ戦・9/12 ザンクト・パウリ戦）、途中出場8回（ヘルタ戦を含む）。
+#   ・初ゴールまでの9試合（出場）のシュートは合計7本・得点0（試合ごとの最多は 8/29 カールスルーエ戦の3本）。ヘルタ戦はシュート3本・枠内1本・得点1。
+#   → 1試合3本は9試合の最多タイ。ただし先発でなく途中出場の試合で。
+#   ・フットボールチャンネルも「リーグ戦10試合目で初ゴール（出場9試合は無得点）」と一致。
+# 前の本との重なり: scripts/20261029_shiogai_goto_pokal（ポカールの2発）／20261105_shiogai_oiwa_two_category（森保監督の会見・選外）。
+#   → 今回の初出は「リーグ戦の初ゴールそのもの・シュートの数え直し」。ポカールの2点は言わない。選外は事実を1行だけ（4日の発表の28人に入っていない。事実は 11/5 のメモの出典と同じ）。
+# 本人の言葉: 無い（試合後の塩貝のコメントは、日本語記事・クラブ公式・ESPN のどこにも見つからなかった）。X。
+# 反応: 0件（作らない。approve は --no-voices）。
+# 写真: assets/images/20261108_shiogai_wolfsburg_first_goal/ 01=今回のヘルタ戦のシュート（クラブ公式ギャラリー）／02=同ゴール後の喜び（背番号7）／03=10/28 ポカール戦のシュート（10/29 の本の02を再掲）。
+#   元の画像は 1050x591 で、縦（ショート）は 3倍超に伸びる（小さい）。代理店の写真は無し。
+slot: japanese
+date: "2026年11月8日"
+format: news
+no_main: true
+people: [塩貝健人, ヴォルフスブルク, ヘルタ・ベルリン]
+
+short_style: X
+short_hook_word: 10試合目の初弾
+short_photos:
+  - assets/images/20261108_shiogai_wolfsburg_first_goal/01_v.jpg
+  - assets/images/20261108_shiogai_wolfsburg_first_goal/02_v.jpg
+  - assets/images/20261108_shiogai_wolfsburg_first_goal/03_v.jpg
+short_question: 塩貝健人は、21日のホルシュタイン・キール戦で先発すると思いますか。
+short_telops: []
+
+theme:
+  id: shiogai_wolfsburg_first_goal
+  league: germany
+  league_name: ドイツ2部
+  prefix: ""
+  title: 塩貝健人、首位ヘルタ戦の後半に起きたこと。リーグ戦で待ち続けた1本
+  hook: ""
+  question: 無得点だった塩貝健人は、首位ヘルタ戦で何を決めたのか
+  takeaway: 塩貝のシュートは、初ゴールまでの9試合で7本。ヘルタ戦はそれと並ぶ1試合最多の3本を、途中出場で打ち、1本が決まった
+
+thumbnail:
+  layout: face
+  line1: 塩貝健人 リーグ初ゴール
+  line2: 10試合目の一撃
+  tags: [塩貝健人, ヴォルフスブルク]
+  photo: assets/images/20261108_shiogai_wolfsburg_first_goal/01_w.jpg
+  short_photo: assets/images/20261108_shiogai_wolfsburg_first_goal/01_v.jpg
+
+answer: 後半の頭から出た塩貝が、立ち上がりにゴール左下へ。リーグ戦10試合目の初ゴールだが、チームは1対2で敗れた
+watch: 11月21日（土）、ホームでのホルシュタイン・キール戦
+
+sections:
+  - id: what
+    main: true
+    heading: 塩貝健人は、首位ヘルタ戦の後半に何を決めたのか
+    tier: 報道
+    telop: 塩貝健人 リーグ戦で今季初ゴール
+    say:
+      - text: ヴォルフスブルクの塩貝健人が、リーグ戦の10試合目で、待ちに待った今季初ゴール。
+      - text: ヴォルフスブルクは今季、ドイツ2部。相手は首位のヘルタ・ベルリンです。
+        image: assets/images/20261108_shiogai_wolfsburg_first_goal/03_w.jpg
+      - text: 出番はありながら、ここまでの9試合、ゴールがありませんでした。
+        image: assets/images/20261108_shiogai_wolfsburg_first_goal/03_w.jpg
+      - text: ヴォルフスブルクは前半に退場者を出し、2点を追って折り返しました。
+        card: {type: table, title: ヘルタ・ベルリン 対 ヴォルフスブルク, columns: [場面, ヘルタ, ヴォルフスブルク], rows: [[前半終了, 2, 0], [試合終了, 2, 1]], highlight_row: 0}
+      - text: 塩貝は、後半が始まるところから出場。
+        card: none
+        image: assets/images/20261108_shiogai_wolfsburg_first_goal/01_w.jpg
+      - text: 後半の立ち上がり、ゴール前の中央でボールを受けます。
+      - text: 振り向きざまの左足。ゴール左下に流し込みました。
+        emph: true
+        image: assets/images/20261108_shiogai_wolfsburg_first_goal/02_w.jpg
+      - text: 終盤には、ペナルティエリアの中で倒れました。PKの笛は鳴りませんでした。
+      - text: 1点差に迫りましたが、試合は1対2で敗れました。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/11/08/post1056288/
+      - https://www.vfl-wolfsburg.de/newsdetails/news-detail/detail/news/aufholjagd-in-unterzahl-bleibt-unbelohnt
+      - https://www.espn.com/soccer/match/_/gameId/401885064
+  - id: story
+    heading: 初ゴールまでの9試合で、塩貝は何本シュートを打っていたのか
+    tier: 報道
+    telop: 初ゴールまでの9試合、シュートは7本
+    say:
+      - text: 塩貝のリーグ戦の出場10回は、先発が2回。残りの8回は、途中出場です。
+        image: assets/images/20261108_shiogai_wolfsburg_first_goal/03_w.jpg
+      - text: 初ゴールまでの9試合で、打ったシュートは合わせて7本。
+        card: {type: table, title: 塩貝健人 リーグ戦のシュート, columns: [区間, 出場, シュート], rows: [[初ゴールまでの9試合, 9, 7], [ヘルタ戦, 1, 3]], highlight_row: 1}
+      - text: ヘルタ戦は、この1試合で3本でした。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401885064
+      - https://www.espn.com/soccer/team/schedule/_/id/138
+  - id: view
+    viewpoint: true
+    heading: ヘルタ戦の3本は、それまでの9試合と何が違うのか
+    tier: 背景
+    telop: 1試合3本は、9試合の最多と並ぶ
+    say:
+      - text: 見立てです。塩貝がヘルタ戦で打った3本は、初ゴールまでの9試合で最多だった、8月のカールスルーエ戦の3本と並びます。
+      - text: ただし、その試合は先発でした。今回は後半から出て、3本を打ちました。
+      - text: 次にピッチへ立つ可能性があるのは、11月21日。ホームで、ホルシュタイン・キールと戦います。
+    official: false
+    sources:
+      - https://www.vfl-wolfsburg.de/newsdetails/news-detail/detail/news/aufholjagd-in-unterzahl-bleibt-unbelohnt
+      - https://www.espn.com/soccer/match/_/gameId/401885064

@@ -1,0 +1,522 @@
+# ニコ・シュロッターベック（ドルトムント／ドイツ代表）の紹介。選手紹介の8節の型（2026-11-07 公開分、シリーズ「有名選手の紹介」。key: player_388198）。情報の時点は 2026-11-05（試合は 11/4 の CL ベティス戦まで）。
+# **FotMob は使わない。**数字は Transfermarkt API の試合記録（控え research/raw/20261107_schlotterbeck_tm.json）と、自分で数えた勝ち負け・失点。
+# **選んだ理由・重なり確認（2026-11-05）**：player_pool.py list を市場価値の上位から見て、紹介を出していない最上位が 24位のシュロッターベック
+#   （1〜23・25・27・29 は紹介済み。22 バリオスは 11/5）。scripts/・research/posted.json・covered.yaml を「シュロッターベック／Schlotterbeck／388198」で grep：
+#   紹介・比べるは0件（20260924_sancho のネットの声と 20261012_compare_dortmund_monaco の1行だけ）。ドルトムントのクラブ紹介は10月より前で、直近30日に無い。
+#   現役・今季もブンデスリーガ1部：TM の試合記録で 26/27 のブンデス6試合（9/12〜10/31）、英語版Wikipedia（club_update 2026-10-31）も current club = Borussia Dortmund・背番号4。
+#   外した候補：26 ヌメチャ（値が下）、28 マレン・30 カマラ・31 ヴシュコヴィッチ（値が下）。
+# **数字の軸**：トップチームと代表の通算（全公式戦。下部組織とフライブルクII＝4部は数えない）：フライブルク56試合4得点・ウニオン17試合2得点・ドルトムント170試合12得点・ドイツ代表30試合1得点 → 273試合19得点。
+#   英語版Wikipedia の通算表（10/31 まで：フライブルク56・4、ウニオン17・2、ドルトムント169・12、代表30・1）と一致。11/4 の CL ベティス戦（90分）を TM で足して170。
+#   市場価値（TM）：2018-08 7万5000ユーロ（18歳、フライブルクII）→ 2022-06 3300万 → 2025-12 5500万（最高・いま）。
+#   季ごと（クラブの全公式戦、TM）：21/22 フライブルク 38試合・3418分・4得点2アシスト／22/23 39・3035分・4・5／23/24 48・4078分・2・5／24/25 37・3274分・0・6／25/26 37・3290分・5・2／26/27 9・797分・1・0。
+#   今季の9試合（TM）：9/12 パーダーボルン3-0（77分）、9/19 シュトゥットガルト1-0、10/9 ブレーメン2-2（得点）、10/17 ウニオン0-0、10/20 サバフ2-1（CL）、10/24 フランクフルト1-0、10/27 ブレーメン3-2（ポカール）、10/31 バイエルン2-2、11/4 ベティス2-1（CL）。6勝3分、失点8、無失点4。全試合でキャプテンマーク（TM の isCaptain）。
+#   出なかった6試合（けがで欠場）：8/22 スーパーカップ バイエルン1-2、8/29 HSV2-0、9/1 HEBC 5-0（ポカール）、9/5 ホッフェンハイム3-2、9/8 ビジャレアル3-2（CL）、10/14 ボデ・グリムト0-1（CL）。4勝2敗、失点7、無失点2。
+#   ブンデスの順位：hessenschau（11/4 時点）で2位・8試合5勝3分0敗・18点（首位バイエルンと同じ勝ち点）。次は 11/7 15:30（ドイツ時間）ホームのエルフェルスベルク戦（9節）。
+# **日本との2試合**：2022-11-23 W杯（カタール）ドイツ1-2日本、先発90分。英語版Wikipedia「2022 FIFA World Cup Group E」に、浅野拓磨がシュロッターベックを振り切って決勝点とある。
+#   2023-09-09 親善試合（ヴォルフスブルク）ドイツ1-4日本、64分（TM）。この敗戦のあとフリック監督が解任（bundesliga.com 2026-04-10 の記事）。ナーゲルスマンの最初の6試合は招集外（TM の not in squad：2023-10-14〜2024-03-26）。
+# **一次情報・出典**：英語版Wikipedia（下部組織・デビュー・ウニオン・契約延長・W杯2026）、ドルトムント公式（2026-04-10 契約延長の発表と本人の言葉）、bundesliga.com（2026-04-10「Vom Leichtfuß zum Leader」）、hessenschau（順位と日程）。
+#   本人の言葉：ドルトムント公式の英語版の発表から訳した。
+# **入れなかったもの**：けがの部位・経過（欠場の事実だけ）、移籍の噂、2025年4月の「表に出るのを控える」発言（私生活に近い）、移籍金（報道の額だけで公式が無い）、エムレ・ジャンの主将の扱い（公式の発表を確かめられなかった）。
+# **写真**：Commons（Sandro Halank CC BY-SA 4.0 ×2、2026年W杯の観客席の写真 CC BY 4.0、2022年W杯の日本戦 CC BY 4.0）、ドルトムント公式の契約延長の写真2枚（Hendrik Deckers）。
+date: 2026年11月5日
+slot: other_1
+format: news
+series: 有名選手の紹介
+people:
+- ニコ・シュロッターベック
+theme:
+  id: player_388198
+  league: germany
+  league_name: ブンデスリーガ
+  kind: other
+  topic: ボルシア・ドルトムント
+  title: シュロッターベックってどんな選手？ 日本に2度敗れたDFは、なぜ柱になったのか
+  question: ニコ・シュロッターベックは、日本に敗れた2試合のあと、どうやってドルトムントの柱になったのか
+  takeaway: 通算273試合19得点。日本に敗れた2試合のあと、代表から外れた時期を経て、ドルトムントと2031年まで契約。今季は出た9試合で負けなし、1試合あたりの失点は出なかった試合より少ない
+  nameplate: ニコ・シュロッターベック｜ドルトムント DF／ドイツ代表
+  opening_image: assets/images/20261107_player_388198/b1/b.jpg
+  end_bg: assets/images/20261107_player_388198/c1/01_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+watch: 毎日、数字でサッカーを読み解きます
+short_title: ニコ・シュロッターベックってどんな選手？
+thumbnail:
+  line1: シュロッターベック、273戦
+  line2: W杯で日本と戦ったDF
+  tags:
+  - ドルトムント
+  photo: assets/images/20261107_player_388198/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261107_player_388198/b1/01_v.jpg
+sections:
+- id: hook
+  heading: 日本に2度敗れたドイツのDFは、いまどこにいるのか
+  tier: 報道
+  telop: 日本戦の2試合から、ドルトムントの柱へ
+  narrator: 解説
+  card: &hook_card
+    type: stats
+    title: ニコ・シュロッターベックの数字
+    items:
+    - - '2'
+      - 試合
+      - 日本に敗れた試合に出場
+    - - '9'
+      - 試合
+      - 今季出た試合（負けなし）
+    - - '2031'
+      - 年
+      - ドルトムントとの契約
+    focus: 0
+  say:
+  - text: 2022年のカタールW杯。日本がドイツに2対1で勝った、あの試合。
+    image: assets/images/20261107_player_388198/c1/01_w.jpg
+    card: none
+  - text: ドイツの最終ラインで90分戦ったのが、ニコ・シュロッターベックです。
+    image: assets/images/20261107_player_388198/c1/r.jpg
+    card:
+      <<: *hook_card
+      focus: 0
+  - text: 翌年の親善試合、日本が4対1で勝った夜も、ピッチにいました。
+    card:
+      <<: *hook_card
+      focus: 0
+  - text: いまはドルトムントでキャプテンマーク。今季出た9試合は、負けなしです。
+    card:
+      <<: *hook_card
+      focus: 1
+    emph: true
+  - text: 契約は2031年まで。クラブの守りの柱です。
+    image: assets/images/20261107_player_388198/b1/01_w.jpg
+    card: none
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/2022_FIFA_World_Cup_Group_E
+  - https://www.transfermarkt.com/nico-schlotterbeck/profil/spieler/388198
+- id: data
+  heading: シュロッターベックは、いまどこで、いくらと見られている選手か
+  tier: 報道
+  telop: ニコ・シュロッターベックの基礎DATA
+  narrator: 解説
+  card: &data_card
+    type: table
+    title: ニコ・シュロッターベック（ドルトムント）
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 所属
+      - ドルトムント（4番）
+    - - ポジション
+      - センターバック
+    - - 生年月日
+      - 1999年12月1日（26歳）
+    - - 出身
+      - ドイツ・ヴァイブリンゲン
+    - - 身長・利き足
+      - 191cm・左足
+    - - 代表
+      - ドイツ（30試合1得点）
+    - - 契約・市場価値
+      - 2031年まで・5500万ユーロ
+    source: Transfermarkt
+  say:
+  - text: シュロッターベックの持ち場は、守りの真ん中。センターバックです。
+    image: assets/images/20261107_player_388198/b2/01_w.jpg
+    card: none
+  - text: 生まれは1999年12月1日、南ドイツのヴァイブリンゲン。いま26歳です。
+    image: assets/images/20261107_player_388198/b2/b.jpg
+    card:
+      <<: *data_card
+      highlight_row: 2
+  - text: 身長は191センチ。センターバックには少ない、左利き。
+    card:
+      <<: *data_card
+      highlight_row: 4
+  - text: 市場価値は5500万ユーロ。これまででいちばん高い値です。
+    card:
+      <<: *data_card
+      highlight_row: 6
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/nico-schlotterbeck/profil/spieler/388198
+  - https://en.wikipedia.org/wiki/Nico_Schlotterbeck
+- id: japan
+  heading: シュロッターベックは、日本との2試合で何を経験したのか
+  tier: 報道
+  telop: 日本との2試合
+  narrator: 解説
+  card: &japan_card
+    type: table
+    title: シュロッターベック 日本との2試合
+    columns:
+    - 日付
+    - 試合
+    - 出場
+    rows:
+    - - 2022年11月23日
+      - W杯 ドイツ 1-2 日本
+      - 90分
+    - - 2023年9月9日
+      - 親善試合 ドイツ 1-4 日本
+      - 64分
+    source: Transfermarkt
+    highlight_row: 0
+  say:
+  - text: 日本とこの選手の縁は、2つの試合にあります。
+    image: assets/images/20261107_player_388198/c1/01_w.jpg
+    card: none
+  - text: 1つ目は2022年11月23日、カタールW杯の初戦。先発でした。
+    image: assets/images/20261107_player_388198/c1/r.jpg
+    card:
+      <<: *japan_card
+      highlight_row: 0
+  - text: 83分、浅野拓磨の決勝点。競り合っていたのが、この人でした。
+    card:
+      <<: *japan_card
+      highlight_row: 0
+    emph: true
+  - text: 2つ目は翌年9月、ドイツのヴォルフスブルクでの親善試合。日本が4対1で勝ちます。
+    card:
+      <<: *japan_card
+      highlight_row: 1
+  - text: この敗戦のあと、フリック監督は解任されました。
+    image: assets/images/20261107_player_388198/b2/01_w.jpg
+    card: none
+  - text: シュロッターベックも、次のナーゲルスマン監督の最初の6試合では、呼ばれていません。
+    card: none
+  - text: それでもドルトムントで出続けて、翌年のユーロ2024で、代表に戻りました。
+    image: assets/images/20261107_player_388198/c1/01_w.jpg
+    card: none
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/2022_FIFA_World_Cup_Group_E
+  - https://en.wikipedia.org/wiki/Germany_national_football_team_results_(2020%E2%80%93present)
+  - https://www.bundesliga.com/de/bundesliga/news/vom-leichtfus-zum-leader-schlotterbeck-karriere-36618
+  - https://www.transfermarkt.com/nico-schlotterbeck/leistungsdatendetails/spieler/388198
+- id: career
+  heading: 4つの下部組織を渡った少年は、どうやってドルトムントに来たのか
+  tier: 背景
+  telop: 4つの下部組織から、ドルトムントへ
+  narrator: 解説
+  card: &career_card
+    type: timeline
+    title: シュロッターベックの歩み
+    rows:
+    - - '2007'
+      - 地元シュトゥットガルトのクラブの下部組織へ
+    - - '2015'
+      - カールスルーエの下部組織へ
+    - - '2019'
+      - フライブルクでブンデスリーガのデビュー
+    - - '2021'
+      - U21欧州選手権で優勝
+    - - '2022'
+      - ドルトムントへ移籍
+    focus: '2007'
+  say:
+  - text: シュロッターベックは、兄のケヴェンと一緒に、町のクラブでサッカーを始めました。
+    image: assets/images/20261107_player_388198/b2/01_w.jpg
+    card: none
+  - text: 地元シュトゥットガルトのクラブ、アーレン、カールスルーエと、下部組織を渡ります。
+    image: assets/images/20261107_player_388198/b2/b.jpg
+    card:
+      <<: *career_card
+      focus: '2007'
+  - text: 2017年にフライブルクへ。翌年の夏、18歳の市場価値は7万5000ユーロ。
+    card:
+      <<: *career_card
+      focus: '2015'
+  - text: 2019年3月、ヘルタ戦の後半から出て、ブンデスリーガにデビュー。
+    card:
+      <<: *career_card
+      focus: '2019'
+  - text: 次の季はウニオン・ベルリンへ期限付きで移り、出場の時間を増やします。
+    image: assets/images/20261107_player_388198/c1/01_w.jpg
+    card: none
+  - text: 2021年の夏、21歳以下の欧州選手権で6試合に出て、優勝。
+    image: assets/images/20261107_player_388198/b2/b.jpg
+    card:
+      <<: *career_card
+      focus: '2021'
+  - text: そして2022年の夏、ドルトムントへ。市場価値は3300万ユーロ、440倍に。
+    card:
+      <<: *career_card
+      focus: '2022'
+    emph: true
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Nico_Schlotterbeck
+  - https://www.transfermarkt.com/nico-schlotterbeck/marktwertverlauf/spieler/388198
+- id: past
+  heading: シュロッターベックは、各季で何試合に出て、いくつ点に絡んだのか
+  tier: 報道
+  telop: フライブルクとドルトムントの6季
+  narrator: 解説
+  card: &past_card
+    type: table
+    title: シュロッターベック 各季の数字（全公式戦・クラブのみ）
+    columns:
+    - シーズン
+    - 試合
+    - 出場時間
+    - 得点
+    - アシスト
+    rows:
+    - - 21/22
+      - '38'
+      - 3418分
+      - '4'
+      - '2'
+    - - 22/23
+      - '39'
+      - 3035分
+      - '4'
+      - '5'
+    - - 23/24
+      - '48'
+      - 4078分
+      - '2'
+      - '5'
+    - - 24/25
+      - '37'
+      - 3274分
+      - '0'
+      - '6'
+    - - 25/26
+      - '37'
+      - 3290分
+      - '5'
+      - '2'
+    - - 26/27
+      - '9'
+      - 797分
+      - '1'
+      - '0'
+    source: Transfermarkt
+    highlight_row: 0
+  say:
+  - text: シュロッターベックの、フライブルクの最後の季からの数字です。
+    image: assets/images/20261107_player_388198/c1/r.jpg
+    card:
+      <<: *past_card
+      highlight_row: 0
+  - text: 出場が多かったのは2023年から24年。ほかの季より9試合以上多い、48試合です。
+    card:
+      <<: *past_card
+      highlight_row: 2
+    emph: true
+  - text: この季はチャンピオンズリーグの決勝まで勝ち進みます。
+    card:
+      <<: *past_card
+      highlight_row: 2
+  - text: ウェンブリーでのレアル・マドリード戦にも、90分出ました。
+    image: assets/images/20261107_player_388198/b2/01_w.jpg
+    card: none
+  - text: 2025年から26年は5得点。センターバックで、自分のいちばん多い数です。
+    image: assets/images/20261107_player_388198/c1/r.jpg
+    card:
+      <<: *past_card
+      highlight_row: 4
+  - text: ブンデスリーガの年間ベストイレブンには、これまで4回選ばれています。
+    image: assets/images/20261107_player_388198/b2/01_w.jpg
+    card: none
+  - text: 続いて通算です。ドルトムントでは170試合で12得点。
+    image: assets/images/20261107_player_388198/b1/b.jpg
+    card: &total_card
+      type: table
+      title: シュロッターベック 通算（トップチームと代表）
+      columns:
+      - 所属
+      - 試合
+      - 得点
+      rows:
+      - - フライブルク
+        - '56'
+        - '4'
+      - - ウニオン・ベルリン
+        - '17'
+        - '2'
+      - - ドルトムント
+        - '170'
+        - '12'
+      - - ドイツ代表
+        - '30'
+        - '1'
+      - - 合計
+        - '273'
+        - '19'
+      source: Transfermarkt
+      highlight_row: 2
+  - text: フライブルク、ウニオン、ドイツ代表を足すと、通算273試合で19得点になります。
+    card:
+      <<: *total_card
+      highlight_row: 4
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/nico-schlotterbeck/leistungsdatendetails/spieler/388198
+  - https://en.wikipedia.org/wiki/Nico_Schlotterbeck
+- id: season
+  heading: W杯の初ゴールのあと、今季のシュロッターベックは何を見せているのか
+  tier: 報道
+  main: true
+  telop: W杯と今季
+  narrator: 解説
+  card: &season_card
+    type: table
+    title: 今季のシュロッターベック（11月4日まで）
+    columns:
+    - 大会
+    - 内容
+    rows:
+    - - ブンデスリーガ
+      - 6試合・527分・1得点
+    - - DFBポカール
+      - 1試合・90分
+    - - チャンピオンズリーグ
+      - 2試合・180分
+    source: Transfermarkt
+    highlight_row: 0
+  say:
+  - text: ドルトムントの4番、シュロッターベック。W杯から今季までを見ます。
+    image: assets/images/20261107_player_388198/b1/01_w.jpg
+    card: none
+    short_only: true
+  - text: 2026年6月14日、W杯初戦のキュラソー戦。38分に頭で代表初ゴール。
+    image: assets/images/20261107_player_388198/b2/01_w.jpg
+    card: none
+    emph: true
+  - text: 7対1で勝ちましたが、次のコートジボワール戦でけが。自分の大会は、そこまででした。
+    image: assets/images/20261107_player_388198/w1/01_w.jpg
+    card: none
+  - text: クラブの今季も、はじめの6試合はけがで出ていません。
+    image: assets/images/20261107_player_388198/c1/r.jpg
+    card:
+      <<: *season_card
+      highlight_row: 0
+  - text: 戻ったのは9月12日。10月9日のブレーメン戦では、今季初ゴールです。
+    card:
+      <<: *season_card
+      highlight_row: 0
+  - text: 10月31日には、首位バイエルンとのアウェーで2対2の引き分け。
+    image: assets/images/20261107_player_388198/b2/b.jpg
+    card: none
+  - text: 11月4日のチャンピオンズリーグ、ベティス戦も90分。2対1で勝っています。
+    image: assets/images/20261107_player_388198/c1/r.jpg
+    card:
+      <<: *season_card
+      highlight_row: 2
+  - text: ドルトムントはブンデスリーガで8試合負けなしの2位。
+    image: assets/images/20261107_player_388198/b2/01_w.jpg
+    card: none
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/nico-schlotterbeck/leistungsdatendetails/spieler/388198
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_Group_E
+  - https://www.hessenschau.de/sport/ergebnisse-tabellen/fussball-1bl100~_matchday-9.html
+- id: words
+  heading: シュロッターベックは、2031年までの契約に何を語ったのか。本人の言葉
+  tier: 報道
+  telop: 本人の言葉
+  narrator: 解説
+  card: &words_card
+    type: document
+    label: 契約延長のときの言葉（訳、2026年4月）
+    paragraphs:
+    - 大事な決断なので、あえて時間をかけました。1週間や2週間で決められることではなかった。
+    - このクラブに何があるか、僕は分かっています。目標は、ドルトムントでタイトルを取ることです。
+    highlight:
+    - あえて時間をかけました
+    - タイトルを取る
+  say:
+  - text: 2026年4月、ドルトムントとの契約を2031年まで延ばしたときの言葉です。
+    image: assets/images/20261107_player_388198/b1/01_w.jpg
+    card: none
+  - voice: シュロッターベック
+    text: 大事な決断なので、あえて時間をかけました。
+    card: *words_card
+  - voice: シュロッターベック
+    text: 1週間や2週間で、決められることではなかった。
+    card: *words_card
+    cont: true
+    pause: 0.5
+  - voice: シュロッターベック
+    text: このクラブに何があるか、僕は分かっています。
+    card: *words_card
+  - voice: シュロッターベック
+    text: 目標は、ドルトムントでタイトルを取ることです。
+    card: *words_card
+    cont: true
+    pause: 0.5
+  - text: ドルトムントは、2023年に勝ち点で並びながら、得失点差で優勝を逃しています。
+    image: assets/images/20261107_player_388198/c1/01_w.jpg
+    card: none
+  quotes_from:
+  - ボルシア・ドルトムント公式 https://www.bvb.de/de/en/news/news-overview/news.html/2026/4/10/Borussia-Dortmund-extends-contract-with-Nico-Schlotterbeck.html
+  sources:
+  - https://www.bvb.de/de/en/news/news-overview/news.html/2026/4/10/Borussia-Dortmund-extends-contract-with-Nico-Schlotterbeck.html
+  - https://en.wikipedia.org/wiki/Nico_Schlotterbeck
+- id: view
+  heading: シュロッターベックがいる試合といない試合で、ドルトムントは何が違うのか
+  tier: 背景
+  viewpoint: true
+  narrator: 解説
+  telop: 出た9試合と、出なかった6試合
+  card: &view_card
+    type: table
+    title: ドルトムント 今季の全公式戦（11月4日まで）
+    columns:
+    - 項目
+    - 出た9試合
+    - 出なかった6試合
+    rows:
+    - - 勝ち・分け・負け
+      - 6勝3分0敗
+      - 4勝0分2敗
+    - - 失点
+      - '8'
+      - '7'
+    - - 1試合あたりの失点
+      - '0.89'
+      - '1.17'
+    - - 無失点の試合
+      - '4'
+      - '2'
+    source: Transfermarkt
+    highlight_row: 0
+  say:
+  - text: 締めくくりに、今季のドルトムントを2つに分けます。
+    image: assets/images/20261107_player_388198/c1/01_w.jpg
+    card: none
+  - text: シュロッターベックが出た試合と、出なかった試合です。
+    image: assets/images/20261107_player_388198/b1/b.jpg
+    card:
+      <<: *view_card
+      highlight_row: 0
+  - text: 出た9試合は、6勝3分けで負けなし。出なかった6試合では、2つ負けています。
+    card:
+      <<: *view_card
+      highlight_row: 0
+  - text: 1試合あたりの失点は、出た試合が0.89。出なかった試合は1.17です。
+    card:
+      <<: *view_card
+      highlight_row: 2
+    emph: true
+    mark:
+      kind: circle
+      row: 2
+  - text: 無失点の試合も、出た9試合のうち4つあります。
+    card:
+      <<: *view_card
+      highlight_row: 3
+  - text: ただ、出なかった6試合には、5部のクラブとのカップ戦も入っています。
+    image: assets/images/20261107_player_388198/b2/01_w.jpg
+    card: none
+  - text: 次は11月7日、ホームでのエルフェルスベルク戦。
+    image: assets/images/20261107_player_388198/c1/01_w.jpg
+    card: none
+  - text: 日本戦の悔しさを知るセンターバックが、この負けなしをどこまで伸ばすかに注目です。
+    card: none
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/nico-schlotterbeck/leistungsdatendetails/spieler/388198
+  - https://www.hessenschau.de/sport/ergebnisse-tabellen/fussball-1bl100~_matchday-9.html

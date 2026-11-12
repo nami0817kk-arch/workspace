@@ -1,0 +1,542 @@
+# ドニエル・マレン（ローマ／オランダ代表）の紹介。選手紹介の8節の型（2026-11-11 公開分、シリーズ「有名選手の紹介」。key: player_326029）。情報の時点は 2026-11-06（試合は 11/3 の CL マンチェスター・ユナイテッド戦まで）。
+# **FotMob は使わない。**数字は Transfermarkt API の試合記録（控え research/raw/20261111_malen_tm.json）と、自分で割った90分あたり。
+# **選んだ理由・重なり確認（2026-11-06）**：player_pool.py list で紹介を出していない上位は 26 ヌメチャ・28 マレン・30 カマラ・31 ヴシュコヴィッチ。
+#   ヴシュコヴィッチを 11/9 に、ヌメチャは 11/7 のシュロッターベックと同じドルトムントなので外し、マレンを 11/11 に。カマラ（5500万）は今季13試合2点で、マレン（13試合12点・W杯で日本と対戦）のほうが題が強い。
+#   scripts/・research/posted.json・covered.yaml を「マレン／Malen／326029」で grep：紹介は0件。比べるは 20261011_compare_malen_lautaro（10/11）の1本だけ＝11/11 の公開で31日あく。
+#   現役・今季もセリエA1部：TM の試合記録でセリエA9試合（8/24〜10/31）、英語版Wikipedia（club_update 2026-10-31）も current club = Roma・背番号14。ローマ公式に 10/13 の会見。
+# **数字の軸**：トップチームと代表の通算（全公式戦。ヨングPSV＝2部の22試合13得点は数えない）：PSV116試合55得点・ドルトムント132・39・アストン・ヴィラ46・10・ローマ33・27＋オランダ代表56・13 → 383試合144得点。
+#   英語版Wikipedia の通算表（10/31 まで：PSV 116・55、ドルトムント 132・39、ヴィラ 46・10、ローマ 33・27、代表 56・13）と TM の試合記録が一致。
+#   市場価値（TM）：2017-08 20万ユーロ（ヨングPSV）→ 2024-03 4000万（ドルトムント）→ 2025-12 2500万（ヴィラ）→ 2026-03 3500万 → 2026-05 4500万 → 2026-09 5500万（最高・いま）。
+#   季ごと（クラブの全公式戦、TM）：21/22 ドルトムント 38試合・2312分・9得点／22/23 35・2193・10／23/24 38・2378・15／24/25 ドルトムント21＋ヴィラ17＝38・1349・8／25/26 ヴィラ 29・1106・7／25/26 ローマ 20・1688・15／26/27 ローマ 13・889・12。
+#   今季（TM）：セリエA 9試合・575分・8得点（8/24 フィオレンティーナ4-0 で3点、8/31 レッチェ4-0 で2点、9/14 トリノ、10/27 カリアリ、10/31 ウディネーゼ）、CL 4試合・314分・4得点（10/14 レアル3-4 で2点、10/20 スロヴァン4-0、11/3 マンU2-3）。先発12／13。
+#   10/11 コモ戦（0-0）で退場（ローマ公式 10/13 の会見で本人が「赤い紙をもらうと…」と話している）、10/17 ジェノア戦は出場なし（TM は absent。理由は書かない）。CL は1勝1分2敗。
+#   90分あたりの得点（自分で割った）：ヴィラ 25/26 プレミア 4÷645×90＝0.56（先発5／21）、ローマ 25/26 セリエA 14÷1478×90＝0.85（先発18／18）、ローマ今季全公式戦 12÷889×90＝1.21。
+#   セリエAの順位：英語版Wikipedia「2026–27 Serie A」（11/2 まで）で3位・10試合7勝3分0敗・28得点10失点。
+# **日本との試合**：2026-06-14 W杯（アーリントン）オランダ2-2日本。英語版Wikipedia「2026 FIFA World Cup Group F」：マレンは先発のセンターフォワード、70分に交代。得点はファン・ダイク51分・中村敬斗57分・サマーヴィル64分・鎌田大地88分。オランダが1位、日本が2位で通過。この大会のマレンは3試合0得点（TM）。
+# **一次情報・出典**：ローマ公式（2026-10-13 レアル戦前日の会見）、英語版Wikipedia（下部組織・PSVの5点・ドルトムント・ローマ移籍・あだ名・祖母の話・代表デビュー）。
+#   本人の言葉：ローマ公式の英語版の会見から訳した。
+# **入れなかったもの**：移籍金（報道の額だけ）、身長（TM 178cm・Wikipedia 176cm で食い違う）、退場の場面の細部、家族の事情（両親の別れ）、2022年W杯の選外の話。
+# **写真**：ローマ公式（マンU戦のギャラリー3枚・ウディネーゼ戦1枚。どれも1275px で、ショートでは2.7倍に伸びるので本編の節だけに使う）、Commons（Sandro Halank CC BY-SA 4.0 ×2＝ドルトムント時代、Steffen Prößdorf CC BY-SA 4.0、u/reepers_hellcat CC BY 4.0＝2025年7月のヴィラ、Steindy CC BY 3.0＝U18のオランダ代表）。ショートに入る節（今季・言葉）はドルトムント・ヴィラ時代の写真（ローマ時代の大きい写真が無い）。
+date: 2026年11月6日
+slot: other_1
+format: news
+series: 有名選手の紹介
+people:
+- ドニエル・マレン
+theme:
+  id: player_326029
+  league: italy
+  league_name: セリエA
+  kind: other
+  topic: ローマ
+  title: マレンってどんな選手？ ローマで33試合27点、ヴィラと何が違ったのか
+  question: ドニエル・マレンは、アストン・ヴィラからローマに移って、なぜ点を取り続けているのか
+  takeaway: 通算383試合144得点。ヴィラのプレミアでは先発5／21で90分あたり0.56点、ローマのセリエAでは先発18／18で0.85点、今季は1.21点。出場の時間が増えた分だけ、点のペースも上がった
+  nameplate: ドニエル・マレン｜ローマ FW／オランダ代表
+  opening_image: assets/images/20261111_player_326029/v1/01_w.jpg
+  end_bg: assets/images/20261111_player_326029/r2/01_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+watch: 毎日、数字でサッカーを読み解きます
+short_title: ドニエル・マレンってどんな選手？
+thumbnail:
+  line1: マレン、383戦144点
+  line2: ローマで33試合27点
+  tags:
+  - ローマ
+  photo: assets/images/20261111_player_326029/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261111_player_326029/d1/01_v.jpg
+sections:
+- id: hook
+  heading: ヴィラから来たフォワードは、なぜローマで点を取り続けているのか
+  tier: 報道
+  telop: ローマで33試合27点
+  narrator: 解説
+  card: &hook_card
+    type: stats
+    title: ドニエル・マレンの数字
+    items:
+    - - '27'
+      - 点
+      - ローマに来てからの33試合
+    - - '12'
+      - 点
+      - 今季の13試合
+    - - '1.21'
+      - 点
+      - 今季の90分あたりの得点
+    focus: 0
+  say:
+  - text: 2026年1月、ドニエル・マレンは、アストン・ヴィラからローマへ移りました。
+    image: assets/images/20261111_player_326029/r4/01_w.jpg
+    card: none
+  - text: その季のヴィラでは、プレミアリーグで途中から出る試合が多くありました。
+    image: assets/images/20261111_player_326029/v1/01_w.jpg
+    card: none
+  - text: ところがローマに来てからは、27点。
+    image: assets/images/20261111_player_326029/r1/01_w.jpg
+    card:
+      <<: *hook_card
+      focus: 0
+    emph: true
+  - text: 今季も13試合で12点。チャンピオンズリーグでも4点を取っています。
+    card:
+      <<: *hook_card
+      focus: 1
+  - text: 何が、ここまで変わったのか。数字で追います。
+    image: assets/images/20261111_player_326029/r3/01_w.jpg
+    card: none
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/donyell-malen/leistungsdatendetails/spieler/326029
+  - https://en.wikipedia.org/wiki/Donyell_Malen
+- id: data
+  heading: マレンは、いまどこで、いくらと見られている選手か
+  tier: 報道
+  telop: ドニエル・マレンの基礎DATA
+  narrator: 解説
+  card: &data_card
+    type: table
+    title: ドニエル・マレン（ローマ）
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 所属
+      - ローマ（14番）
+    - - ポジション
+      - センターフォワード
+    - - 生年月日
+      - 1999年1月19日（27歳）
+    - - 出身
+      - オランダ・ヴィーリンゲン
+    - - 利き足
+      - 右足
+    - - 代表
+      - オランダ（56試合13得点）
+    - - 契約・市場価値
+      - 2030年まで・5500万ユーロ
+    source: Transfermarkt
+  say:
+  - text: マレンの持ち場は前線の真ん中。サイドもこなすフォワードです。
+    image: assets/images/20261111_player_326029/r3/01_w.jpg
+    card: none
+  - text: 1999年1月19日、オランダのヴィーリンゲン生まれ。いま27歳です。
+    image: assets/images/20261111_player_326029/r4/01_w.jpg
+    card:
+      <<: *data_card
+      highlight_row: 2
+  - text: オランダ代表では56試合で13点。
+    card:
+      <<: *data_card
+      highlight_row: 5
+  - text: 2019年のデビュー戦の相手はドイツ。そこで、いきなり点を取りました。
+    card:
+      <<: *data_card
+      highlight_row: 5
+  - text: 市場価値は5500万ユーロ。去年の12月の値は、2500万ユーロ。
+    image: assets/images/20261111_player_326029/r1/01_w.jpg
+    card:
+      <<: *data_card
+      highlight_row: 6
+    emph: true
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/donyell-malen/profil/spieler/326029
+  - https://www.transfermarkt.com/donyell-malen/marktwertverlauf/spieler/326029
+  - https://en.wikipedia.org/wiki/Donyell_Malen
+- id: japan
+  heading: マレンは、W杯の日本戦でどんな90分を過ごしたのか
+  tier: 報道
+  telop: W杯の日本戦
+  narrator: 解説
+  card: &japan_card
+    type: table
+    title: 2026年W杯 オランダ 2-2 日本（6月14日）
+    columns:
+    - 分
+    - 出来事
+    rows:
+    - - 51分
+      - オランダ先制（ファン・ダイク）
+    - - 57分
+      - 日本が同点（中村敬斗）
+    - - 64分
+      - オランダ勝ち越し（サマーヴィル）
+    - - 70分
+      - マレンが交代
+    - - 88分
+      - 日本が同点（鎌田大地）
+    source: Wikipedia
+    highlight_row: 0
+  say:
+  - text: 日本とマレンの縁は、2026年6月14日、W杯の初戦にあります。
+    image: assets/images/20261111_player_326029/r3/01_w.jpg
+    card: none
+  - text: アメリカのアーリントンで、オランダ対日本。マレンは先発で、前線の真ん中でした。
+    card: none
+  - text: 51分、オランダが先に点を取ります。
+    image: assets/images/20261111_player_326029/r4/01_w.jpg
+    card:
+      <<: *japan_card
+      highlight_row: 0
+  - text: 6分後、中村敬斗のゴールで同点に。
+    card:
+      <<: *japan_card
+      highlight_row: 1
+  - text: オランダがもう一度リードしたあと、マレンは70分にベンチへ下がりました。
+    card:
+      <<: *japan_card
+      highlight_row: 3
+  - text: その18分後、鎌田大地が決めて、2対2の引き分け。
+    card:
+      <<: *japan_card
+      highlight_row: 4
+    emph: true
+  - text: オランダは1位、日本は2位で、グループを抜けています。
+    image: assets/images/20261111_player_326029/r3/01_w.jpg
+    card: none
+  - text: この大会のマレンは3試合に出て、点は取れませんでした。
+    card: none
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_Group_F
+  - https://www.transfermarkt.com/donyell-malen/leistungsdatendetails/spieler/326029
+- id: career
+  heading: アヤックスとアーセナルで育った少年は、どこで点取り屋になったのか
+  tier: 背景
+  telop: アヤックス、アーセナル、PSV
+  narrator: 解説
+  card: &career_card
+    type: timeline
+    title: マレンの歩み
+    rows:
+    - - '2007'
+      - アヤックスの下部組織へ
+    - - '2015'
+      - アーセナルの下部組織へ
+    - - '2017'
+      - PSVへ。翌年にリーグ優勝
+    - - '2021'
+      - ドルトムントへ
+    - - '2025'
+      - アストン・ヴィラへ
+    - - '2026'
+      - ローマへ（5月に完全移籍）
+    focus: '2007'
+  say:
+  - text: マレンにボールの蹴り方を最初に教えたのは、おばあさんでした。3歳のときです。
+    image: assets/images/20261111_player_326029/y1/01_w.jpg
+    card: none
+  - text: 8歳で、アヤックスの下部組織へ。
+    card:
+      <<: *career_card
+      focus: '2007'
+  - text: 16歳でアーセナルへ移ります。憧れは、アンリとベルカンプでした。
+    card:
+      <<: *career_card
+      focus: '2015'
+  - text: 2017年の夏、オランダのピーエスブイへ。翌年デビューし、その季にリーグ優勝。
+    card:
+      <<: *career_card
+      focus: '2017'
+  - text: 2019年9月のフィテッセ戦では、1人で5点を取りました。
+    image: assets/images/20261111_player_326029/y1/01_w.jpg
+    card: none
+    emph: true
+  - text: 2021年には、ドイツのドルトムントへ。
+    image: assets/images/20261111_player_326029/d2/01_w.jpg
+    card:
+      <<: *career_card
+      focus: '2021'
+  - text: 2023年から24年は、ブンデスリーガでチームいちばんの13点。
+    image: assets/images/20261111_player_326029/d4/01_w.jpg
+    card:
+      <<: *career_card
+      focus: '2021'
+  - text: チャンピオンズリーグの決勝にも、途中から出ています。
+    image: assets/images/20261111_player_326029/d1/01_w.jpg
+    card: none
+  - text: 2025年1月にアストン・ヴィラへ。そして1年後、ローマへ期限付きで移りました。
+    image: assets/images/20261111_player_326029/v1/01_w.jpg
+    card:
+      <<: *career_card
+      focus: '2026'
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Donyell_Malen
+- id: past
+  heading: マレンは、ドルトムントからローマまで、各季に何点取ってきたのか
+  tier: 報道
+  telop: ドルトムントからローマまで
+  narrator: 解説
+  card: &past_card
+    type: table
+    title: マレン 各季の数字（全公式戦・クラブのみ）
+    columns:
+    - シーズン
+    - 所属
+    - 試合
+    - 出場時間
+    - 得点
+    rows:
+    - - 21/22
+      - ドルトムント
+      - '38'
+      - 2312分
+      - '9'
+    - - 22/23
+      - ドルトムント
+      - '35'
+      - 2193分
+      - '10'
+    - - 23/24
+      - ドルトムント
+      - '38'
+      - 2378分
+      - '15'
+    - - 24/25
+      - ドルトムント／ヴィラ
+      - '38'
+      - 1349分
+      - '8'
+    - - 25/26
+      - ヴィラ
+      - '29'
+      - 1106分
+      - '7'
+    - - 25/26
+      - ローマ
+      - '20'
+      - 1688分
+      - '15'
+    source: Transfermarkt
+    highlight_row: 0
+  say:
+  - text: マレンの、ドルトムントに移ってからの数字です。
+    image: assets/images/20261111_player_326029/d2/01_w.jpg
+    card:
+      <<: *past_card
+      highlight_row: 0
+  - text: ドルトムントでいちばん点を取ったのは、2023年から24年の15点。
+    card:
+      <<: *past_card
+      highlight_row: 2
+  - text: その季の前半、ヴィラでは29試合で1106分。1試合あたり40分ほどです。
+    card:
+      <<: *past_card
+      highlight_row: 4
+  - text: ローマに移った後半だけで、それより多い1688分に出て、15点。
+    card:
+      <<: *past_card
+      highlight_row: 5
+    emph: true
+  - text: 1月にローマのデビュー戦で点を取り、4月のピサ戦ではハットトリック。
+    image: assets/images/20261111_player_326029/r4/01_w.jpg
+    card: none
+  - text: その季のセリエAで、ハットトリックはこの1回だけでした。
+    card: none
+  - text: 続いて通算です。ピーエスブイで116試合55点、ドルトムントで132試合39点。
+    image: assets/images/20261111_player_326029/r2/01_w.jpg
+    card: &total_card
+      type: table
+      title: マレン 通算（トップチームと代表）
+      columns:
+      - 所属
+      - 試合
+      - 得点
+      rows:
+      - - PSV
+        - '116'
+        - '55'
+      - - ドルトムント
+        - '132'
+        - '39'
+      - - アストン・ヴィラ
+        - '46'
+        - '10'
+      - - ローマ
+        - '33'
+        - '27'
+      - - オランダ代表
+        - '56'
+        - '13'
+      - - 合計
+        - '383'
+        - '144'
+      source: Transfermarkt
+      highlight_row: 0
+  - text: ヴィラ、ローマ、オランダ代表を足すと、通算383試合で144点です。
+    card:
+      <<: *total_card
+      highlight_row: 5
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/donyell-malen/leistungsdatendetails/spieler/326029
+  - https://en.wikipedia.org/wiki/Donyell_Malen
+- id: season
+  heading: 13試合で12点。今季のマレンは、どこで点を取っているのか
+  tier: 報道
+  main: true
+  telop: 今季の13試合
+  narrator: 解説
+  card: &season_card
+    type: table
+    title: 今季のマレン（11月3日まで）
+    columns:
+    - 大会
+    - 内容
+    rows:
+    - - セリエA
+      - 9試合・575分・8得点
+    - - チャンピオンズリーグ
+      - 4試合・314分・4得点
+    source: Transfermarkt
+    highlight_row: 0
+  say:
+  - text: ローマの14番、ドニエル・マレン。今季の13試合を見ます。
+    image: assets/images/20261111_player_326029/d1/01_w.jpg
+    card: none
+    short_only: true
+  - text: 8月24日、セリエAの初戦、フィオレンティーナ戦でいきなり3点。
+    image: assets/images/20261111_player_326029/d1/01_w.jpg
+    card: none
+    emph: true
+  - text: 次のレッチェ戦でも2点。2試合で5点の出だしです。
+    image: assets/images/20261111_player_326029/v1/01_w.jpg
+    card:
+      <<: *season_card
+      highlight_row: 0
+  - text: 10月11日のコモ戦では、退場。次のリーグ戦には出られませんでした。
+    image: assets/images/20261111_player_326029/d1/01_w.jpg
+    card: none
+  - text: その3日後、チャンピオンズリーグのレアル・マドリード戦で2点。
+    image: assets/images/20261111_player_326029/d2/01_w.jpg
+    card:
+      <<: *season_card
+      highlight_row: 1
+  - text: 試合は3対4で敗れましたが、退場から3日での2点でした。
+    card:
+      <<: *season_card
+      highlight_row: 1
+  - text: 11月3日には、敵地のマンチェスター・ユナイテッド戦でもゴール。
+    image: assets/images/20261111_player_326029/d1/01_w.jpg
+    card: none
+  - text: ローマはセリエAで10試合負けなし。いまは3位です。
+    image: assets/images/20261111_player_326029/v1/01_w.jpg
+    card: none
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/donyell-malen/leistungsdatendetails/spieler/326029
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_Serie_A
+- id: words
+  heading: ローマで何が変わったのか。マレンが会見で一番に挙げたもの
+  tier: 報道
+  telop: 本人の言葉
+  narrator: 解説
+  card: &words_card
+    type: document
+    label: レアル・マドリード戦の前日の会見（訳、2026年10月13日）
+    paragraphs:
+    - まずは監督です。僕を信じて、たくさん試合に出してくれました。
+    - ここに来たとき、大きな目標の1つは、チャンピオンズリーグに戻ることでした。
+    highlight:
+    - 僕を信じて
+    - チャンピオンズリーグに戻る
+  say:
+  - text: ローマの何が特別か。10月の会見で聞かれて、マレンはこう答えています。
+    image: assets/images/20261111_player_326029/d2/01_w.jpg
+    card: none
+  - voice: マレン
+    text: まずは監督です。僕を信じて、たくさん試合に出してくれました。
+    card: *words_card
+  - voice: マレン
+    text: ここに来たとき、大きな目標の1つは、
+    card: *words_card
+    cont: true
+  - voice: マレン
+    text: チャンピオンズリーグに戻ることでした。
+    card: *words_card
+    cont: true
+    pause: 0.5
+  - text: ローマのファンがつけたあだ名は、ボビー・マレン。
+    image: assets/images/20261111_player_326029/v1/01_w.jpg
+    card: none
+  - text: 名字の響きが、ボブ・マーリーに似ているからです。
+    card: none
+  quotes_from:
+  - ASローマ公式 https://www.asroma.com/en/news/76060/malens-pre-real-press-conference
+  sources:
+  - https://www.asroma.com/en/news/76060/malens-pre-real-press-conference
+  - https://en.wikipedia.org/wiki/Donyell_Malen
+- id: view
+  heading: ヴィラとローマで、マレンの点のペースはどれだけ違うのか
+  tier: 背景
+  viewpoint: true
+  narrator: 解説
+  telop: ヴィラとローマを同じ物差しで
+  card: &view_card
+    type: table
+    title: マレンの出場と得点
+    columns:
+    - 項目
+    - ヴィラ（25/26 リーグ）
+    - ローマ（25/26 リーグ）
+    - ローマ（今季 全公式戦）
+    rows:
+    - - 先発
+      - 5／21試合
+      - 18／18試合
+      - 12／13試合
+    - - 出場時間
+      - 645分
+      - 1478分
+      - 889分
+    - - 得点
+      - '4'
+      - '14'
+      - '12'
+    - - 90分あたりの得点
+      - '0.56'
+      - '0.85'
+      - '1.21'
+    source: Transfermarkt
+    highlight_row: 0
+  say:
+  - text: 締めくくりに、ヴィラとローマのマレンを、同じ物差しで比べます。
+    image: assets/images/20261111_player_326029/r3/01_w.jpg
+    card: none
+  - text: ヴィラのプレミアリーグでは、21試合のうち、先発は5つでした。
+    image: assets/images/20261111_player_326029/v1/01_w.jpg
+    card:
+      <<: *view_card
+      highlight_row: 0
+  - text: ローマのセリエAでは、18試合すべてで先発しています。
+    image: assets/images/20261111_player_326029/r2/01_w.jpg
+    card:
+      <<: *view_card
+      highlight_row: 0
+  - text: 90分あたりの得点は、0.56から0.85へ。
+    card:
+      <<: *view_card
+      highlight_row: 3
+    mark:
+      kind: circle
+      row: 3
+  - text: 今季は1.21。90分に1点を超えるペースです。
+    card:
+      <<: *view_card
+      highlight_row: 3
+    emph: true
+  - text: 本人が会見でまず挙げたのも、監督がくれた出場の時間でした。
+    image: assets/images/20261111_player_326029/r1/01_w.jpg
+    card: none
+  - text: ただ、チャンピオンズリーグでは、4試合で1勝にとどまっています。
+    card: none
+  - text: このペースが、ヨーロッパでの勝ちにもつながるか。次の見どころです。
+    image: assets/images/20261111_player_326029/r4/01_w.jpg
+    card: none
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/donyell-malen/leistungsdatendetails/spieler/326029
+  - https://www.asroma.com/en/news/76060/malens-pre-real-press-conference

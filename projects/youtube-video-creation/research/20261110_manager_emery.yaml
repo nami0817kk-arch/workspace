@@ -1,0 +1,539 @@
+# 監督紹介：ウナイ・エメリ（11/10 火、シリーズ「監督紹介」、key: manager_emery、型は news）。9節の型（2026-10-20 決定）。見本は 20261108_manager_conte。
+# 順：フック→基礎DATA→日本との接点（久保建英・鈴木彩艶）→歩みと転機→戦術の色（実例の試合1つ）→数字で見る→本人の言葉→マル秘話→見立て。
+#
+# **題材の選び方（2026-11-06）**：既出13人（グアルディオラ・アンチェロッティ・モウリーニョ・クロップ・シメオネ・アルテタ・フリック・ベンゲル・ファーガソン・トゥヘル・ルイス・エンリケ・スロット・コンテ）以外の大物。
+#   ・シャビ・アロンソ（チェルシー監督。英語版 Wikipedia 冒頭で確認）は大物だが、10/23 のレバークーゼンのクラブ紹介で無敗優勝の話を出しており、10/24 にチェルシーのニュースのショート（退場ゼロ）もある。中身の柱が重なる。日本との接点も無い。外した。
+#   ・ジダンは 10/03 の「監督の経歴」と 10/18 のレジェンドで出ている（直近30日）。外した。
+#   ・ポチェッティーノ（アメリカ代表監督）・インザーギ（アル・ヒラル）・ナーゲルスマン（ドイツ代表を離れた「most recently」）は、今季の欧州7リーグの監督ではないか、立場が動いている。後ろに回した。
+#   ・エメリ：ヨーロッパリーグ5回優勝で歴代1位（英語版 Wikipedia 冒頭・ギネス世界記録の頁を出典に）。2026年5月にヴィラで5回目。日本との接点が2つ（ビジャレアルの久保建英、ヴィラの鈴木彩艶）。
+#   **重なりの確認（2026-11-06 に自分で）**：research/posted.json の build 名に emery は0件。research/covered.yaml は 09-19 のニュース（エメリがデ・ゼルビについて）だけ。
+#   scripts/ は 10/24 鈴木彩艶のヴィラ対シティのショート、11/04 鈴木彩艶のCLバルサ戦のショート（題に「エメリ監督」）に名前が出る。どちらもニュースのショートで、監督エメリを主役にした本は無い。
+#   ヴィラは 10/20 財政・10/24 ユニフォーム・10/11 スタジアムで出ているが、クラブの話で、監督の経歴は扱っていない。
+#   同じ 11/10 の他の担当（research/20261109_picks.txt）：レジェンド世界＝ブッフォン。重ならない。
+#
+# **いまの立場**：アストン・ヴィラ監督（2022年11月1日から）。
+#   ○ 英語版 Wikipedia「Unai Emery」（2026-11-06 版。Managerial statistics は「updated match played 3 November 2026」）：「is the manager of Premier League club Aston Villa」。
+#   ○ 英語版「2026–27 Aston Villa F.C. season」：infobox の manager、Overall record（u=3 November 2026）。プレミア 3勝3分3敗（10位）、CL リーグフェーズ 3勝1敗、UEFAスーパーカップ 1-2 で準優勝（8月12日、PSG）。
+#   契約は2029年まで（英語版：2024-05-27 に延長）。
+#
+# **通算（台本とサムネをそろえる）**＝英語版「Managerial record by team and tenure」（updated match played 3 November 2026）：
+#   ロルカ 70試合34勝／アルメリア 84試合39勝／バレンシア 220試合107勝58分55敗／スパルタク・モスクワ 26試合12勝／セビージャ 205試合106勝43分56敗／パリSG 114試合87勝15分12敗／アーセナル 78試合43勝16分19敗／ビジャレアル 129試合64勝35分30敗／アストン・ヴィラ 212試合116勝37分59敗。Total 1138試合608勝244分286敗。
+#   自分で足して一致（70+84+220+26+205+114+78+129+212＝1138、34+39+107+12+106+87+43+64+116＝608）。下部組織は無い（9チームともトップチーム）。
+#   勝率（自分で割った）：通算 53.4%、パリSG 76.3%、アーセナル 55.1%、ヴィラ 54.7%、セビージャ 51.7%、ビジャレアル 49.6%、バレンシア 48.6%。
+#   ※スパルタクとパリSGの行に「Failed verification」（就任日の出典の札）。数字は表のまま。確度は 報道。
+#
+# **ヨーロッパリーグの決勝（自分で数えた。英語版 Honours と本文）**：2014 セビージャ優勝（ベンフィカにPK）／2015 セビージャ優勝（ドニプロ）／2016 セビージャ優勝（リヴァプールに3-1、前半0-1）／2019 アーセナル準優勝（チェルシーに1-4）／2021 ビジャレアル優勝（マンU に1-1、PK 11-10）／2026 ヴィラ優勝（フライブルクに3-0）＝6回で5回優勝。
+#   CL は、2022年のビジャレアルの準決勝（ユヴェントス・バイエルンを破り、リヴァプールに敗退）がいちばん上。ほかはバレンシア16強、パリSG 16強2回、ヴィラ 2025年の準々決勝（PSG に合計4-5）。
+#   2026年の決勝（英語版「2026 UEFA Europa League final」）：5月20日、イスタンブール、ティーレマンス41分・ブエンディア45+3分・ロジャーズ58分で3-0。ヴィラは1982年のヨーロピアン・カップ以来のヨーロッパのタイトル（44年ぶり）、1996年のリーグ杯以来のタイトル。
+#
+# **基礎**：1971-11-03 スペイン・バスク地方ギプスコア県オンダリビア生まれ（2026-11-06 時点で55歳）。選手：左の中盤。レアル・ソシエダの下部組織、1部は5試合。主に2部で7季215試合9得点、32歳でロルカで引退。
+# **歩みの細部**（英語版本文）：
+#   2004-05 ロルカ（3部＝セグンダB）で、けがの間に会長から監督を頼まれ、その季にクラブ史上初の2部昇格。
+#   2006 アルメリア（2部）、2007 にクラブ初の1部昇格、2007-08 は8位。
+#   2008-12 バレンシア：6位→3位→3位→3位。
+#   2012 スパルタク・モスクワ（11月に解任）。台本では触れない。
+#   2013-01 セビージャ（途中就任）。2014・2015・2016 ヨーロッパリーグ3連覇。
+#   2016 パリSG：2017-18 に国内4冠（リーグ・アン、フランス杯、リーグ杯、スーパー杯）。
+#   2018 アーセナル：公式戦22試合負けなし、2019 EL 決勝でチェルシーに敗れ準優勝、2019-11 解任。台本では「アーセナルを経て」「アーセナルのあと」とだけ言う。
+#   2020-07 ビジャレアル：2021 EL 優勝（クラブ初の大きなタイトル＝スカイスポーツ 2026-01 の記事の地の文）、2022 CL 準決勝。
+#   2022-10 ヴィラ（11月1日から）：就任時16位、降格圏と勝ち点1差。2022-23 7位、2023-24 4位（CL 出場権）、2024-25 6位・CL 準々決勝、2025-26 4位・EL 優勝。2026-03-19 リール戦でヴィラ100勝目（クラブで3人目）。
+#   プレミアの月間最優秀監督：2023年4月・2023年12月・2025年12月の3回。
+#
+# **戦術の色**＝2023年12月6日 ヴィラ 1-0 マンチェスター・シティ（英語版「2023–24 Aston Villa F.C. season」の試合記録：ベイリー74分）。
+#   ガーディアンの試合記事（requests で本文を読んだ）：「Villa had 22 shots to City's two, seven of which were on target. Villa won the ball back 13 times in the opposition half, the most any team has done so in a league game against Guardiola's City.」
+#   シティは前の季（2022-23）に3冠。4日後（12月9日）にアーセナルに1-0（マギン7分）。英語版 Emery：この勝利でホームのリーグ戦15連勝、クラブの149年の歴史でいちばん長い。
+#   高い守りのライン（スカイスポーツ 2026-01-15、Adam Bate の取材記事）：「At Villa, that high line is fundamental. This season, as in the previous two, they have caught their opponents offside more than any other Premier League team. It requires meticulous planning because Villa control without the ball rather than press recklessly.」
+#
+# **日本との接点**：
+#   ○ 久保建英：英語版「Takefusa Kubo」：2020-08-10 にビジャレアルへ期限付き、2021-01-08 に打ち切ってヘタフェへ。ビジャレアルでは公式戦19試合1得点（リーグ13・国王杯1・EL5、得点はEL）。英語版「2020–21 Villarreal CF season」：10月22日 EL グループ初戦 シヴァスシュポル戦 5-3、久保13分に得点。その季のELはビジャレアルが優勝。生年月日 2001-06-04（25歳）。
+#   ○ 鈴木彩艶：英語版「Zion Suzuki」：2026-08-19 にヴィラへ。8月31日 アーセナル戦でデビュー、9月8日 クラブ・ブルッヘ戦（3-2 の勝ち）で日本人のGKとして初めてCLに出場。生年月日 2002-08-21（24歳）。
+#
+# **本人の言葉**：
+#   ①スカイスポーツ 2026-01-15（Adam Bate の取材記事。requests で本文を読んだ）：
+#     "I had a lot of key moments in my career but one of them was when I came back to Spain," / "I needed to perfect something in myself as a coach as well. I used the moment with Villarreal for myself to refresh a lot of things. I changed."
+#     "Football is changing and we must adapt quickly because it demands that you update every day,"
+#   ②スカイスポーツ 2026-05-20（EL 優勝の夜）："My dream when I started [at Villa] was to play in Europe and play for trophies - this is the first one." / "we're not going to stop."
+#
+# **マル秘話**（英語版本文と、スカイスポーツ 2026-01-15）：
+#   ・父と祖父はどちらもGK。父は2部のレアル・ウニオンなど、祖父はレアル・ウニオンで1部。2021年7月、一家がレアル・ウニオンを引き受け、弟イゴールが会長。エメリは2021年から大株主。
+#   ・アーセナルのあと、ヘタフェの試合を見に行って、高い守りのラインをもう一度強めた（ギジェム・バラゲの本「Rise of the Villans」にある、とスカイスポーツ）。最初の仕事のロルカでも取り組んでいた。
+#   ・2021年11月、ニューカッスルの誘いを断り「ビジャレアルに100%打ち込んでいる」。
+#
+# **入れなかったもの**：スパルタクの解任、アーセナルの解任の経緯（選手・監督を小さく見せる）、ロルカのけが（けがの話）、妻・息子（私生活）、マンUのうわさ（10/27 の記事）、ニューカッスルへの「明確な展望が無い」発言（相手を下げる言葉）、FotMob・女子・ニュースの反応。
+date: 2026年11月6日
+slot: other_1
+format: news
+series: 監督紹介
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- エメリ
+- 久保建英
+- 鈴木彩艶
+theme:
+  end_bg: assets/images/20261110_manager_emery/05_w.jpg
+  id: manager_emery
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: エメリ
+  title: エメリ、ヴィラ監督はどんな人？16位のチームをどうEL王者にしたのか
+  question: アストン・ヴィラ監督のウナイ・エメリは、どんな人なのか。降格を争っていたチームを、どうやってヨーロッパリーグの王者にしたのか
+  lead: アストン・ヴィラ監督、ウナイ・エメリ。
+  opening_image: assets/images/20261110_manager_emery_b/02_o.jpg
+  takeaway: セビージャで3回、ビジャレアルで1回、ヴィラで1回。ヨーロッパリーグの決勝は6回で5回優勝。通算1138試合608勝、勝率53.4%。チャンピオンズリーグは準決勝がいちばん上で、いまのヴィラがその先へ届くかを見ている
+  short_title: エメリ、ヨーロッパリーグ5回優勝の道のり
+  nameplate: ウナイ・エメリ｜アストン・ヴィラ監督
+thumbnail:
+  line1: エメリ、1138試合608勝
+  line2: ヨーロッパリーグ5回、史上最多
+  tags:
+  - アストン・ヴィラ
+  photo: assets/images/20261110_manager_emery_b/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261110_manager_emery/05_v.jpg
+sections:
+- id: hook
+  main: true
+  heading: ヨーロッパリーグで5回優勝。エメリとは、どんな監督なのか
+  tier: 報道
+  telop: ヨーロッパリーグを5回制した、ただ1人の監督
+  narrator: 解説
+  card: &hook_stats
+    type: stats
+    title: エメリが取ったヨーロッパリーグ
+    items:
+    - ['5', 回, 監督の中でいちばん多い優勝]
+    - ['3', クラブ, セビージャ・ビジャレアル・ヴィラ]
+    - ['44', 年, ヴィラの欧州のタイトルは44年ぶり]
+    focus: 0
+  say:
+  - text: ヨーロッパリーグで5回優勝。この大会を、いちばん多く制した監督です。
+    image: assets/images/20261110_manager_emery_b/02_w.jpg
+    emph: true
+    card: none
+  - text: それがエメリ。セビージャで3回、ビジャレアルで1回。
+    card:
+      <<: *hook_stats
+      focus: 0
+  - text: 5回目は2026年5月、アストン・ヴィラで手にしました。
+    card:
+      <<: *hook_stats
+      focus: 1
+  - text: ヴィラにとっては、44年ぶりのヨーロッパのタイトルでした。
+    image: assets/images/20261110_manager_emery/05_w.jpg
+    card:
+      <<: *hook_stats
+      focus: 2
+  sources:
+  - https://en.wikipedia.org/wiki/Unai_Emery
+  - https://www.guinnessworldrecords.com/world-records/457479-most-wins-of-the-uefa-cup-europa-league-by-a-manager
+  - https://en.wikipedia.org/wiki/2026_UEFA_Europa_League_final
+- id: data
+  heading: エメリは、いつ、どこで、どんな道を歩いた人か
+  tier: 報道
+  telop: ウナイ・エメリの基礎DATA
+  narrator: 解説
+  card: &data_table
+    type: table
+    title: ウナイ・エメリ（55歳）の基礎DATA
+    columns: [項目, 中身]
+    rows:
+    - [生年月日, 1971年11月3日（スペイン・バスク地方）]
+    - [選手のころ, 左の中盤。主に2部で7季]
+    - [監督, セビージャ、パリSG、アーセナル、ビジャレアルほか]
+    - [タイトル, ヨーロッパリーグ5回、フランスのリーグ1回]
+    - [いま, 2022年11月からアストン・ヴィラ監督]
+    highlight_row: 0
+  say:
+  - text: エメリは1971年11月3日、バスク地方のオンダリビアの生まれ。55歳です。
+    image: assets/images/20261110_manager_emery/05_w.jpg
+    card:
+      <<: *data_table
+      highlight_row: 0
+  - text: 現役のころは左の中盤。2部を中心に、7季プレーしました。
+    card:
+      <<: *data_table
+      highlight_row: 1
+  - text: 監督としては、バレンシア、セビージャ、パリ・サンジェルマン、
+    image: assets/images/20261110_manager_emery_b/02_w.jpg
+    card:
+      <<: *data_table
+      highlight_row: 2
+  - text: アーセナル、ビジャレアルを経て、2022年からアストン・ヴィラを率いています。
+    card:
+      <<: *data_table
+      highlight_row: 4
+  - text: ヴィラとの契約は、2029年まで結ばれています。
+    image: assets/images/20261110_manager_emery_b/02_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Unai_Emery
+  - https://es.wikipedia.org/wiki/Unai_Emery
+- id: japan
+  heading: 久保建英と鈴木彩艶。エメリと日本は、どこでつながるのか
+  tier: 報道
+  telop: ビジャレアルの久保建英、ヴィラの鈴木彩艶
+  narrator: 解説
+  card: &jp_table
+    type: table
+    title: エメリのチームでプレーした日本人
+    columns: [所属, 名前, 位置, 年齢]
+    rows:
+    - [ビジャレアル（2020年〜）, 久保建英, MF, '25']
+    - [アストン・ヴィラ（2026年〜）, 鈴木彩艶, GK, '24']
+    highlight_row: 0
+  say:
+  - text: 日本との縁は、2人の日本代表です。
+    image: assets/images/20261110_manager_emery/05_w.jpg
+    card:
+      <<: *jp_table
+      highlight_row: 0
+  - text: 2020年の夏、久保建英が期限付きでビジャレアルに加わりました。
+    card:
+      <<: *jp_table
+      highlight_row: 0
+  - text: 10月22日のヨーロッパリーグ、シヴァスシュポル戦では、13分にゴール。
+    card:
+      <<: *jp_table
+      highlight_row: 0
+  - text: 久保は翌年1月、ヘタフェへ移りました。
+    image: assets/images/20261110_manager_emery_b/02_w.jpg
+    card: none
+  - text: その季のヨーロッパリーグは、エメリのビジャレアルが制しています。
+    card: none
+  - text: 2026年8月には、鈴木彩艶がアストン・ヴィラに加わります。
+    image: assets/images/20261110_manager_emery/05_w.jpg
+    card:
+      <<: *jp_table
+      highlight_row: 1
+  - text: 9月8日、クラブ・ブルッヘとの試合で、
+    card:
+      <<: *jp_table
+      highlight_row: 1
+  - text: 日本人のゴールキーパーでは初めて、チャンピオンズリーグのピッチに立ちました。
+    emph: true
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Takefusa_Kubo
+  - https://en.wikipedia.org/wiki/2020%E2%80%9321_Villarreal_CF_season
+  - https://en.wikipedia.org/wiki/Zion_Suzuki
+- id: career
+  heading: 3部のロルカから、ヨーロッパの決勝へ。エメリは何を積み上げたのか
+  tier: 背景
+  telop: 歩みと転機。ロルカ、アルメリア、セビージャ、ビジャレアル、ヴィラ
+  narrator: 解説
+  card: &career_tl
+    type: timeline
+    title: エメリの歩み
+    rows:
+    - [2005年, ロルカを、クラブで初めて2部へ]
+    - [2007年, アルメリアを、クラブで初めて1部へ]
+    - [2014年, セビージャでヨーロッパリーグ優勝。3連覇へ]
+    - [2021年, ビジャレアルでヨーロッパリーグ優勝]
+    - [2026年, ヴィラでヨーロッパリーグ優勝]
+    focus: 0
+  say:
+  - text: エメリの監督の始まりは、現役の最後の季。3部のロルカで、監督を任されます。
+    image: assets/images/20261110_manager_emery_b/03_w.jpg
+    card: none
+  - text: その季のうちに、ロルカをクラブで初めて2部へ上げました。
+    card:
+      <<: *career_tl
+      focus: 0
+  - text: 2007年には、アルメリアもクラブで初めて1部へ。
+    card:
+      <<: *career_tl
+      focus: 1
+  - text: 2008年からのバレンシアでは、3季続けて3位に入ります。
+    card: none
+  - text: 2013年1月、シーズンの途中でセビージャの監督に。
+    image: assets/images/20261110_manager_emery_b/01_w.jpg
+    card:
+      <<: *career_tl
+      focus: 2
+  - text: 2014年から3年続けて、ヨーロッパリーグを制しました。
+    emph: true
+    callword: 3連覇
+    card: none
+  - text: パリ・サンジェルマンでは2季目に、フランスの国内の4つのタイトルを全部取ります。
+    card: none
+  - text: アーセナルを経て、2020年にビジャレアルへ。
+    image: assets/images/20261110_manager_emery_b/02_w.jpg
+    card:
+      <<: *career_tl
+      focus: 3
+  - text: 1季目にヨーロッパリーグを制し、クラブに初めての大きなタイトルをもたらしました。
+    card:
+      <<: *career_tl
+      focus: 3
+  - text: 2022年11月、2部に落ちる順位まで勝ち点1の、16位のアストン・ヴィラへ。
+    image: assets/images/20261110_manager_emery/05_w.jpg
+    card: none
+  - text: 2季目に4位に入り、チャンピオンズリーグの出場権を取ります。
+    card: none
+  - text: 2026年5月、ヨーロッパリーグの決勝でフライブルクに3対0。
+    card:
+      <<: *career_tl
+      focus: 4
+  - text: ヴィラに来て、3年半での優勝でした。
+    emph: true
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Unai_Emery
+  - https://en.wikipedia.org/wiki/2026_UEFA_Europa_League_final
+  - https://en.wikipedia.org/wiki/2023%E2%80%9324_Aston_Villa_F.C._season
+- id: style
+  heading: 3冠王者のシティに、シュートを2本しか許さなかった試合とは
+  tier: 報道
+  telop: 戦術の色。2023年12月、前から奪いにいったヴィラ
+  narrator: 解説
+  card: &style_doc
+    type: document
+    label: 2023年12月6日 アストン・ヴィラ対マンチェスター・シティ
+    paragraphs:
+    - シュートはヴィラ22本、シティ2本。
+    - 相手の陣地でボールを奪い返したのは13回。
+    - 74分、ベイリーのゴールで1対0。
+    - 4日後にはアーセナルにも1対0。
+    highlight:
+    - 22本
+    - 13回
+  say:
+  - text: 戦い方の色がよく出たのが、2023年12月6日のマンチェスター・シティ戦です。
+    image: assets/images/20261110_manager_emery/05_w.jpg
+    card: *style_doc
+  - text: 相手は、前の季に3冠を取ったチームでした。
+    card: *style_doc
+  - text: エメリのヴィラは前から奪いにいき、相手の陣地で13回、ボールを奪い返します。
+    card: *style_doc
+  - text: グアルディオラのシティを相手に、リーグ戦でいちばん多い回数でした。
+    card: none
+  - text: シュートは22本。シティには2本しか打たせていません。
+    image: assets/images/20261110_manager_emery_b/03_w.jpg
+    emph: true
+    callword: 22対2
+    card: none
+  - text: 74分、ベイリーのゴールで1対0の勝ちです。
+    card: none
+  - text: 4日後には、アーセナルにも1対0で勝ちます。
+    card: none
+  - text: ホームのリーグ戦は15連勝。クラブの記録になりました。
+    card: none
+  - text: もう1つの色が、守りの最後の列を前に押し上げる、高いライン。
+    image: assets/images/20261110_manager_emery_b/02_w.jpg
+    card: none
+  - text: 相手をオフサイドにした回数は、2026年1月の時点で、
+    card: none
+  - text: 3季続けてプレミアでいちばん多くなっています。
+    card: none
+  - text: やみくもに追いかけず、ボールを持たない時間もチームで相手を止めるやり方です。
+    card: none
+  sources:
+  - https://www.theguardian.com/football/2023/dec/06/aston-villa-manchester-city-premier-league-match-report
+  - https://en.wikipedia.org/wiki/2023%E2%80%9324_Aston_Villa_F.C._season
+  - https://en.wikipedia.org/wiki/Unai_Emery
+  - https://www.skysports.com/football/news/11096/13488340/unai-emery-exclusive-interview-aston-villa-manager-talks-evolving-and-updating-his-ideas-to-stay-ahead-of-the-rest
+- id: numbers
+  heading: 1138試合で608勝。数字で見ると、どこで強いのか
+  tier: 報道
+  telop: 通算608勝。勝率はパリSGの76.3%がいちばん上
+  narrator: 解説
+  card: &rate_bars
+    type: bars
+    title: エメリの勝率（チームごと、%）
+    unit: '%'
+    items:
+    - label: ビジャレアル
+      value: 49.6
+    - label: セビージャ
+      value: 51.7
+    - label: ヴィラ
+      value: 54.7
+    - label: アーセナル
+      value: 55.1
+    - label: パリSG
+      value: 76.3
+      highlight: true
+  say:
+  - text: ここからは、エメリの成績を数字で。
+    image: assets/images/20261110_manager_emery_b/01_w.jpg
+    card: &total_stats
+      type: stats
+      title: エメリの監督通算（2004年から）
+      items:
+      - ['1138', 試合, 9つのチーム]
+      - ['608', 勝, 引き分け244・負け286]
+      - ['53', '%', 勝率]
+      focus: 0
+  - text: 2004年からの通算は1138試合。勝ったのは608試合で、勝率53%です。
+    emph: true
+    card:
+      <<: *total_stats
+      focus: 1
+  - text: チームごとでいちばん高いのは、パリ・サンジェルマン。
+    image: assets/images/20261110_manager_emery_b/02_w.jpg
+    card: *rate_bars
+  - text: 114試合で87勝、76.3%です。
+    card: *rate_bars
+  - text: いまのヴィラでは、212試合で116勝を挙げています。
+    card: *rate_bars
+  - text: 2026年3月19日のリール戦で、ヴィラでの100勝目。
+    image: assets/images/20261110_manager_emery/05_w.jpg
+    card: none
+  - text: ヴィラの監督で100勝に届いたのは、3人目でした。
+    card: none
+  - text: プレミアの月間最優秀監督にも、3回選ばれています。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Unai_Emery
+- id: words
+  heading: アーセナルのあと、エメリは自分の何を変えたのか
+  tier: 報道
+  telop: エメリの言葉。2026年1月の取材で
+  narrator: 解説
+  card: &words_doc
+    type: document
+    label: エメリの言葉（訳）。2026年1月の取材で
+    paragraphs:
+    - 私の歩みには、大事な時がいくつもありました。そのひとつが、スペインに戻ったときです。
+    - 監督として、自分の中にも磨くべきところがありました。
+    - ビジャレアルでの時間を、多くのことを新しくするのに使いました。私は、変わったのです。
+    highlight:
+    - スペインに戻ったとき
+    - 変わったのです
+  say:
+  - text: 2026年1月の取材で、本人はこう振り返りました。
+    image: assets/images/20261110_manager_emery_b/02_w.jpg
+    card: *words_doc
+  - voice: エメリ
+    text: 私の歩みには、大事な時がいくつもありました。
+  - voice: エメリ
+    text: そのひとつが、スペインに戻ったときです。
+    cont: true
+  - voice: エメリ
+    text: 監督として、自分の中にも磨くべきところがありました。
+    cont: true
+  - voice: エメリ
+    text: ビジャレアルでの時間を、
+    cont: true
+    image: assets/images/20261110_manager_emery_b/03_w.jpg
+    card: none
+  - voice: エメリ
+    text: 多くのことを新しくするのに使いました。
+    cont: true
+  - voice: エメリ
+    text: 私は、変わったのです。
+    cont: true
+    pause: 0.5
+  - text: サッカーは変わり続けるので、毎日すべてを新しくしている、とも語っています。
+    image: assets/images/20261110_manager_emery_b/01_w.jpg
+    card: none
+  quotes_from:
+  - https://www.skysports.com/football/news/11096/13488340/unai-emery-exclusive-interview-aston-villa-manager-talks-evolving-and-updating-his-ideas-to-stay-ahead-of-the-rest
+  sources:
+  - https://www.skysports.com/football/news/11096/13488340/unai-emery-exclusive-interview-aston-villa-manager-talks-evolving-and-updating-his-ideas-to-stay-ahead-of-the-rest
+- id: secret
+  heading: 数字に出ない話。エメリの祖父と父は、何をしていたのか
+  tier: 背景
+  telop: 祖父も父も、レアル・ウニオンのゴールキーパー
+  narrator: 解説
+  card: &sec_table
+    type: table
+    title: 数字の外にある話
+    columns: [いつ, 何があったか]
+    rows:
+    - [祖父と父, レアル・ウニオンのゴールキーパー]
+    - [2021年7月, 一家でレアル・ウニオンを引き受ける]
+    - [アーセナルのあと, ヘタフェの試合を見に行く]
+    - [2021年11月, ニューカッスルの誘いを断る]
+    highlight_row: 0
+  say:
+  - text: ここからは、数字に出ない話です。
+    image: assets/images/20261110_manager_emery_b/01_w.jpg
+    card: none
+  - text: エメリの祖父と父は、どちらもゴールキーパー。
+    card:
+      <<: *sec_table
+      highlight_row: 0
+  - text: 地元バスクのクラブ、レアル・ウニオンでプレーしました。
+    card:
+      <<: *sec_table
+      highlight_row: 0
+  - text: 2021年7月には、エメリの一家がそのクラブを引き受け、弟が会長になっています。
+    card:
+      <<: *sec_table
+      highlight_row: 1
+  - text: アーセナルのあと、エメリはヘタフェの試合を見に行きました。
+    image: assets/images/20261110_manager_emery_b/03_w.jpg
+    card: none
+  - text: そこで、守りのラインを高くする考えを、もう一度強めたといいます。
+    card:
+      <<: *sec_table
+      highlight_row: 2
+  - text: 最初の仕事のロルカでも、取り組んでいたやり方でした。
+    card: none
+  - text: 2021年11月には、ニューカッスルからの誘いを断りました。
+    image: assets/images/20261110_manager_emery_b/02_w.jpg
+    card:
+      <<: *sec_table
+      highlight_row: 3
+  - text: ビジャレアルに100%打ち込んでいる、という理由でした。
+    card:
+      <<: *sec_table
+      highlight_row: 3
+  sources:
+  - https://en.wikipedia.org/wiki/Unai_Emery
+  - https://www.skysports.com/football/news/11096/13488340/unai-emery-exclusive-interview-aston-villa-manager-talks-evolving-and-updating-his-ideas-to-stay-ahead-of-the-rest
+- id: view
+  viewpoint: true
+  heading: 見立て・決勝で勝ち続けるエメリは、チャンピオンズリーグでも届くのか
+  tier: 背景
+  telop: ヨーロッパリーグの決勝は6回で5回優勝
+  narrator: 解説
+  card: &view_table
+    type: table
+    title: 自分で数えてみた（エメリのヨーロッパリーグの決勝）
+    columns: [年, チーム, 結果]
+    rows:
+    - ['2014', セビージャ, 優勝]
+    - ['2015', セビージャ, 優勝]
+    - ['2016', セビージャ, 優勝]
+    - ['2019', アーセナル, 準優勝]
+    - ['2021', ビジャレアル, 優勝]
+    - ['2026', アストン・ヴィラ, 優勝]
+    highlight_row: 0
+  say:
+  - text: 見立てです。エメリが率いたチームの、ヨーロッパリーグの決勝を並べました。
+    image: assets/images/20261110_manager_emery/05_w.jpg
+    card: *view_table
+  - text: 決勝に進んだのは6回。そのうち5回で優勝しています。
+    emph: true
+    mark: {kind: circle, row: 5, col: 2}
+    card:
+      <<: *view_table
+      highlight_row: 5
+  - text: 一方、チャンピオンズリーグでは、
+    card: none
+  - text: 準決勝まで進んだ2022年のビジャレアルが、いちばん上です。
+    card: none
+  - text: 前から奪う守りと高いライン、そして負けたあとに自分を変える準備。
+    image: assets/images/20261110_manager_emery_b/02_w.jpg
+    card: none
+  - text: 16位のチームを王者にしたのは、その積み重ねだと考えます。
+    card: none
+  - text: 優勝の夜も、ここで止まるつもりはない、と口にしていました。
+    card: none
+  - text: いまのヴィラは、チャンピオンズリーグで4試合3勝。
+    image: assets/images/20261110_manager_emery/05_w.jpg
+    card: none
+  - text: 前に出た2025年は、準々決勝まで進みました。
+    card: none
+  - text: ヨーロッパリーグで積んだ勝ち方を、いちばん上の大会でも出せるかに注目です。
+    card: none
+  quotes_from:
+  - https://www.skysports.com/football/news/13546446/unai-emery-wins-fifth-europa-league-its-time-to-recognise-aston-villa-manager-as-one-of-the-best-in-the-business
+  sources:
+  - https://en.wikipedia.org/wiki/Unai_Emery
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_Aston_Villa_F.C._season
+  - https://www.skysports.com/football/news/13546446/unai-emery-wins-fifth-europa-league-its-time-to-recognise-aston-villa-manager-as-one-of-the-best-in-the-business

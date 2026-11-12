@@ -1,0 +1,534 @@
+# ユニフォームとエンブレムの歴史 バルセロナ（11/5 作成、11/7 分）。ラ・リーガの1本目。雛形は 11/5 フラム回。
+# 題の問い：1899年の創設から107年、胸の真ん中に何も入れなかったバルセロナ。最初に入った名前は？（答え＝ユニセフ。しかもクラブがお金を出す側）
+# 選んだ理由：プレミアの20クラブは 11/5 のフラムで出し切った（指示書 20261107）。ラ・リーガの大きいクラブから。
+#   同じ日のスタジアム紹介はレアル・マドリード（research/20261107_picks.txt）→ 同じクラブを避けてバルセロナ。
+#   外した候補：レアル・マドリード（同じ日のスタジアムと重なる。直近30日にクラブ紹介・財政2本もある）。アトレティコ（11/1 にスタジアム、11/5 に選手紹介バリオス）。
+# 重なり確認（2026-11-05）：scripts/*kit_* にバルセロナ・ラ・リーガのクラブは無し。research/covered.yaml・posted.json にユニフォームのバルセロナは無し。
+#   近いもの：20261105_stadium_barcelona（2日前・スタジアム。収容・改装・入場の話）、20261018_finance_real_barca（財政の比べ）、20261003_finance_barcelona（33日前）。
+#   この回では、本拠地の名前・収容・改装・クラシコの入場（6万2055）は言わない。スポティファイは「胸」の話だけ。
+# 今季のリーグ：ウィキペディア en "2026–27 FC Barcelona season"（ラ・リーガ。Kits の節＝供給 ナイキ、胸 スポティファイ、袖 マイディア、背中 バルサ財団）。
+# 取材：requests と WebFetch・WebSearch だけ。ブラウザ操作・JS実行は使っていない。
+#   読んだ：クラブ公式「El escudo」（fcbarcelona.es/es/club/identidad/escudo）、クラブ公式「Sixteen previous FC Barcelona games in Japan」（2023-06-05）、
+#     クラブ公式 財団30周年の記事（ユニセフの合意 2006-09-07 国連本部・年150万ユーロの寄付・「初めての胸のスポンサー」）、
+#     クラブ公式 楽天の発表（2016-11-16、2017-18〜2020-21＋1年の選択権）・延長の発表（2020-11-06、2021-22 季まで）、
+#     クラブ公式 2026-27 のユニフォーム発表（2026-06-30）、クラブ公式 クラシコのシャツにタイラー・ザ・クリエイター（2026-10-15）、
+#     ウィキペディア en "FC Barcelona"（Kits and crest）、es "Historia del uniforme del Fútbol Club Barcelona"、ca "Equipació del Futbol Club Barcelona"・"Símbols del Futbol Club Barcelona"・"Escut del Futbol Club Barcelona"。
+# ---- 食い違い・断ったこと ----
+#   ・1910年の紋章の作者：クラブ公式の紋章の頁とカタルーニャ語版は「サンティアゴ・フェメニア」、英語版とクラブ公式のコママラの人物記事は「カルレス・コママラ」→ 台本では名前を言わず「会員から案を募った」とだけ言う。
+#   ・フランコ政権下で頭文字が C.F.B.・4本の線が2本：クラブ公式（年は書かない）。カタルーニャ語版は 1941〜1949。→ 台本は「1940年代」。
+#   ・1949年に4本に戻る（創立50年）・1974年の終わりに元の頭文字：クラブ公式。2002年の作り直し（クラレット・セラヒマ、点を消し、尖りを減らす）：クラブ公式。台本では名前は言わない。
+#   ・色の由来：決め手は無い（es・ca とも）。1924年11月29日の新聞（ラ・バングアルディア）に、創設の集まりにいたナルシス・マスフェレーが「バーゼルと同じ色」と書いた（es・ca が 2008年の同紙の記事を引く）。→「〜と書いています」と言う者を付ける。原文の新聞は読んでいない。
+#   ・最初の10年のシャツ（半分ずつ・袖は逆・パンツは白）、縦じまは 1909-10 季、パンツは 1913年ごろ黒→7年後に青：ca "Símbols"。es は「最初の10年は白、のち黒、1920年代から青」で大筋は一致。
+#   ・1990年の日本での2試合で胸に日本航空のロゴ（主催者の求め）：es・ca のウィキペディアだけ（出典は Sport 2019-07-20 の記事。読めなかった）。クラブ公式は「1990年に初めて日本へ、2試合、広島で1対1、東京で4対2」までで、ロゴは書いていない。
+#     →「とされています」と言う。親善試合なので、107年の「胸に何も無かった」の数え方は「公式の試合」と断らずに「例外が2試合だけ」と言う。
+#   ・クラブ公式の日本の記事は相手を「All Star J-League team」と書くが、Jリーグは1993年から → 台本は「日本の選抜チーム」。
+#   ・カタール財団の額（年3000万ユーロ）：es・ca のウィキペディア（2010-12-10 の発表）→「伝えられた額」と言う。
+#   ・楽天の額（年5500万ユーロ）は報道だけでクラブの頁に無いので言わない。スポティファイの額も言わない。
+#   ・スペインのクラブが胸の広告を始めたのは1981年：ウィキペディア en。
+# ---- 自分で数えた数 ----
+#   胸が空いていた：1899（創設）→2006（ユニセフ）＝107年。
+#   胸の名前（2006-07〜今季 2026-27 の21季）：ユニセフ 5季（2006-07〜2010-11）・カタール財団 2季（2011-12〜2012-13）・カタール航空 4季（2013-14〜2016-17）・楽天 5季（2017-18〜2021-22）・スポティファイ 5季（2022-23〜今季）＝5つで21季。21÷5＝4.2季。
+#   お金の向き：ユニセフ＝クラブが年150万ユーロを出す／カタール財団＝クラブが年3000万ユーロを受け取る（伝えられた額）。3000÷150＝20倍。
+#   紋章：1910年→2026年＝116年。
+#   クラシコの胸の歌手・音楽家：クラブ公式（2026-10-15）＝タイラー・ザ・クリエイターの前に8組（オリビア・ロドリゴ、エド・シーラン、トラヴィス・スコット、コールドプレイ、カロルG、ローリング・ストーンズ、ロザリア、ドレイク）→ 今季で9組目。es は 2022-23 からの各クラシコと書く。
+# ---- 日本との接点 ----
+#   ①1990年、初めての日本で2試合（クラブ公式）。胸に日本航空のロゴとされる（es・ca）。②2017-18〜2021-22 の5季、胸は日本の楽天（クラブ公式）。③2019年夏、日本で楽天カップ（チェルシーに1対2、ヴィッセル神戸に2対0。クラブ公式）。
+# 言わなかったもの：楽天・スポティファイ・ナイキの額／本拠地の名前と工事（2日前のスタジアム回）／紋章の作者の名前（食い違い）／2005-06 季のえんじのパンツ。
+# 写真：assets/images/20261107_kit_barcelona/（credits.json）。Commons（CC BY・CC BY-SA）。代理店・放送映像・エンブレム画像は使っていない。
+date: 2026年11月5日
+slot: other_5
+format: news
+series: ユニフォームとエンブレムの歴史
+voice_min: 0
+people:
+- バルセロナ
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  end_bg: assets/images/20261107_kit_barcelona/p_copa_w.jpg
+  id: kit_barcelona
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: バルセロナ
+  title: バルセロナの胸は107年、空いていた。最初に入った名前は？
+  question: バルセロナはなぜ107年も胸に何も入れず、最初に入れた名前は何で、青とえんじの紋章は何を守ってきたのか
+  opening_image: assets/images/20261107_kit_barcelona/p_rakuten_w.jpg
+  lead: 空いていた、胸。
+  hook: ''
+  takeaway: バルセロナの胸は1899年の創設から2006年まで107年、空いていた。最初に入ったのはユニセフで、クラブが年150万ユーロを出す側だった。そこから今季までの21季で、胸の名前は5つ、平均4.2季に1度替わった。2011年のカタール財団から、お金の向きは逆になり、伝えられた額は年3000万ユーロ、ユニセフに出した額の20倍。1910年の紋章の形は、116年続いている
+  hook_unused: ''
+thumbnail:
+  layout: classic
+  callouts:
+  - 最初の名前は？
+  - 日本の会社も胸に
+  photo: assets/images/20261107_kit_barcelona/p_copa_thumb_w.jpg
+  short_photo: assets/images/20261107_kit_barcelona/p_copa_v.jpg
+  line1: バルセロナの胸は
+  line2: 107年、空いていた
+  tags:
+  - バルセロナ
+  - ユニフォーム
+  - エンブレム
+  - ユニセフ
+  - 楽天
+  - ラ・リーガ
+x-cards:
+  chest: &chest
+    type: timeline
+    title: バルセロナの胸に入った名前
+    rows:
+    - - 1899年
+      - 創設。胸には何も無い
+    - - 1981年
+      - スペインのクラブが胸の広告を始める
+    - - 2006年
+      - 初めての名前、ユニセフ
+    - - 2011年
+      - お金を受け取る胸、カタール財団
+    - - 2017年
+      - 日本の楽天
+    - - 2022年
+      - スポティファイ
+    focus: 2006年
+    highlight_row: 0
+  unicef: &unicef
+    type: document
+    label: ユニセフとの合意（訳）
+    paragraphs:
+    - 2006年9月7日、ニューヨークの国連本部で、クラブと財団はユニセフと歴史的な合意を結んだ。バルサのシャツに、歴史上初めてスポンサーが入る。
+    - クラブは、ユニセフの名前を胸に付け、社会と人道の活動に、毎年150万ユーロを寄付する。
+    highlight:
+    - 歴史上初めて
+    - 毎年150万ユーロを寄付
+  japan: &japan
+    type: timeline
+    title: バルセロナと日本
+    rows:
+    - - 1990年
+      - 初めての日本。広島と東京で2試合
+    - - 2017年
+      - 胸に、日本の楽天
+    - - 2019年
+      - 日本で楽天カップ
+    - - 2022年
+      - 楽天の胸は5季で終わる
+    focus: 2017年
+    highlight_row: 0
+  colors: &colors
+    type: document
+    label: 1924年の新聞記事（創設の集まりの記録、訳）
+    paragraphs:
+    - 名前と色について長く話し合い、クラブの名はフットボール・クラブ・バルセロナ、色は青とえんじと決まった。
+    - 間違いでなければ、少し前までガンペルが所属していた、スイスのバーゼルと同じ色である。
+    highlight:
+    - 青とえんじ
+    - スイスのバーゼルと同じ色
+  crest: &crest
+    type: timeline
+    title: 胸の紋章の歩み
+    rows:
+    - - 1899年
+      - バルセロナ市の紋章
+    - - 1910年
+      - 会員から案を募り、自分たちの紋章
+    - - 1940年代
+      - 頭文字を変えられ、4本の線は2本に
+    - - 1949年
+      - 創立50年で、4本の線が戻る
+    - - 1974年
+      - 元の頭文字、FCBに戻る
+    - - 2002年
+      - 点を消し、形を整えた、いまの紋章
+    focus: 1910年
+    highlight_row: 0
+  stripes: &stripes
+    type: timeline
+    title: シャツとパンツの歩み
+    rows:
+    - - 1899年
+      - 青とえんじが半分ずつ。パンツは白
+    - - 1909年
+      - いまの縦じまに
+    - - 1913年ごろ
+      - パンツが黒に
+    - - 1920年ごろ
+      - パンツが青に
+    focus: 1909年
+    highlight_row: 0
+  artists: &artists
+    type: table
+    title: クラシコの胸に入った音楽家
+    columns:
+    - シーズン
+    - 名前
+    rows:
+    - - 2022年から23年
+      - ドレイク、ロザリア
+    - - 2023年から24年
+      - ローリング・ストーンズ、カロルG
+    - - 2024年から25年
+      - コールドプレイ、トラヴィス・スコット
+    - - 2025年から26年
+      - エド・シーラン、オリビア・ロドリゴ
+    - - 今季
+      - タイラー・ザ・クリエイター
+    highlight_row: 0
+  view: &view
+    type: table
+    title: バルセロナの胸を数える（自分で数えた）
+    columns:
+    - 何を
+    - 数
+    rows:
+    - - 胸が空いていた（1899年〜2006年）
+      - 107年
+    - - 胸の名前（2006年からの今季まで）
+      - 21季で5つ
+    - - 1つの名前が胸にいた長さ
+      - 平均4.2季
+    - - 1910年の紋章の形
+      - 116年
+    highlight_row: 0
+sections:
+- id: chest
+  main: true
+  heading: 107年空いていたバルセロナの胸に、最初に入った名前は何だったのか
+  bg: assets/images/20261107_kit_barcelona/p_copa_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 1899年から2006年まで、胸には何も無かった。最初の名前はユニセフ。クラブがお金を出す側だった
+  card: *chest
+  say:
+  - text: 今回はバルセロナ。青とえんじのシャツと、紋章と、胸に入った名前の話です。
+    image: assets/images/20261107_kit_barcelona/p_copa_w.jpg
+    card: none
+  - text: スペインのクラブが、シャツの胸に会社の名前を入れ始めたのは、1981年。
+    image: assets/images/20261107_kit_barcelona/p_copa_w.jpg
+    card:
+      <<: *chest
+      highlight_row: 1
+  - text: それでもバルセロナは、胸の真ん中を、空けたままにしました。
+    image: assets/images/20261107_kit_barcelona/p_copa_w.jpg
+    card: none
+    emph: true
+  - text: 1899年に生まれてから、2006年まで、107年です。
+    image: assets/images/20261107_kit_barcelona/p_copa_w.jpg
+    card:
+      <<: *chest
+      highlight_row: 0
+    callword: 107年、空白
+  - text: では、その空白を、最初に破ったのは、何だったのか。
+    image: assets/images/20261107_kit_barcelona/p_unicef_w.jpg
+    card: none
+  - text: 2006年9月、クラブは、ニューヨークの国連本部で、ひとつの合意を結びます。
+    image: assets/images/20261107_kit_barcelona/p_unicef_w.jpg
+    card: none
+  - text: 胸に入ったのは、ユニセフ。子どもを支える、国連の機関です。
+    image: assets/images/20261107_kit_barcelona/p_unicef_w.jpg
+    card:
+      <<: *chest
+      highlight_row: 2
+    emph: true
+  - text: ただ、ふつうの胸の広告とは、お金の向きが逆でした。
+    image: assets/images/20261107_kit_barcelona/p_unicef_w.jpg
+    card: none
+  - text: クラブが受け取るのではなく、毎年150万ユーロを、寄付する約束です。
+    image: assets/images/20261107_kit_barcelona/p_unicef_w.jpg
+    card: *unicef
+    emph: true
+  - text: 胸のユニセフは、2006年から、5シーズン続きました。
+    image: assets/images/20261107_kit_barcelona/p_unicef_w.jpg
+    card: none
+  - text: そして2011年。初めて、お金を受け取る胸の広告が入ります。
+    image: assets/images/20261107_kit_barcelona/p_statue_w.jpg
+    card: none
+  - text: カタール財団です。伝えられた額は、年間3000万ユーロでした。
+    image: assets/images/20261107_kit_barcelona/p_statue_w.jpg
+    card:
+      <<: *chest
+      highlight_row: 3
+  - text: ユニセフの名前は、胸から背中の番号の下へ移りました。
+    image: assets/images/20261107_kit_barcelona/p_back_w.jpg
+    card: none
+  - text: 2013年からは、同じカタールの、カタール航空が胸に入りました。
+    image: assets/images/20261107_kit_barcelona/p_statue_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/FC_Barcelona
+  - https://www.fcbarcelona.com/en/news/4060200/fc-barcelona-foundation-celebrates-30th-anniversary-with-new-website
+  - https://es.wikipedia.org/wiki/Historia_del_uniforme_del_F%C3%BAtbol_Club_Barcelona
+- id: japan
+  heading: バルセロナの胸に、日本の名前が入ったのはいつか
+  bg: assets/images/20261107_kit_barcelona/p_rakuten_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 1990年に初めての日本で2試合。2017年から5季、胸は日本の楽天
+  card: *japan
+  say:
+  - text: バルセロナの胸には、日本の名前も入っています。
+    image: assets/images/20261107_kit_barcelona/p_rakuten_w.jpg
+    card: none
+  - text: 2017年から、胸に入ったのは、日本の楽天でした。
+    image: assets/images/20261107_kit_barcelona/p_rakuten_w.jpg
+    card:
+      <<: *japan
+      highlight_row: 1
+    emph: true
+    callword: 胸に日本の楽天
+  - text: 4シーズンの契約に、1年の延長が付き、2022年まで胸にありました。
+    image: assets/images/20261107_kit_barcelona/p_rakuten_w.jpg
+    card:
+      <<: *japan
+      highlight_row: 3
+  - text: 2019年の夏には、日本で、楽天カップという親善試合も開かれました。
+    image: assets/images/20261107_kit_barcelona/p_rakuten_w.jpg
+    card:
+      <<: *japan
+      highlight_row: 2
+  - text: チェルシーに1対2で敗れ、ヴィッセル神戸を2対0で下しました。
+    image: assets/images/20261107_kit_barcelona/p_inter_w.jpg
+    card: none
+  - text: 日本との縁は、もっと古くからあります。
+    image: assets/images/20261107_kit_barcelona/p_inter_w.jpg
+    card: none
+  - text: 初めて日本に来たのは、1990年。日本の選抜チームと、2試合を戦いました。
+    image: assets/images/20261107_kit_barcelona/p_inter_w.jpg
+    card:
+      <<: *japan
+      highlight_row: 0
+  - text: 広島で1対1の引き分け、東京で4対2の勝ちです。
+    image: assets/images/20261107_kit_barcelona/p_inter_w.jpg
+    card: none
+  - text: この2試合だけは、主催者の求めで、胸に日本航空のロゴを付けたとされています。
+    image: assets/images/20261107_kit_barcelona/p_inter_w.jpg
+    card: none
+    emph: true
+  - text: 107年の空白の中の、たった2試合の例外です。
+    image: assets/images/20261107_kit_barcelona/p_inter_w.jpg
+    card: none
+  sources:
+  - https://www.fcbarcelona.com/en/news/814105/rakuten-sign-up-as-fc-barcelonas-new-main-global-partner
+  - https://www.fcbarcelona.com/en/news/1888727/fc-barcelona-and-rakuten-extend-partnership-for-the-202122-season-exercising-the-option-contained-in-the-original-agreement
+  - https://www.fcbarcelona.com/en/news/3317248/sixteen-previous-fc-barcelona-games-in-japan
+  - https://ca.wikipedia.org/wiki/Equipaci%C3%B3_del_Futbol_Club_Barcelona
+- id: colors
+  heading: 青とえんじの色は、どこから来たのか
+  bg: assets/images/20261107_kit_barcelona/p_unicef_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 色を決めたのは1899年11月29日の創設の集まり。バーゼルと同じ色とする記録がある
+  say:
+  - text: バルセロナの色は、青と、えんじ。
+    image: assets/images/20261107_kit_barcelona/p_unicef_w.jpg
+    card: none
+  - text: この色がどこから来たのか、決め手になる記録は、見つかっていません。
+    image: assets/images/20261107_kit_barcelona/p_unicef_w.jpg
+    card: none
+    emph: true
+  - text: 手がかりのひとつが、1924年の新聞記事です。
+    image: assets/images/20261107_kit_barcelona/p_unicef_w.jpg
+    card: none
+  - text: 1899年11月29日、クラブをつくる集まり。
+    image: assets/images/20261107_kit_barcelona/p_unicef_w.jpg
+    card: *colors
+  - text: その場に立ち会った人が、こう書いています。
+    image: assets/images/20261107_kit_barcelona/p_unicef_w.jpg
+    card: *colors
+  - text: 色は、創設者ガンペルが少し前までいた、スイスのバーゼルと同じだ、と。
+    image: assets/images/20261107_kit_barcelona/p_unicef_w.jpg
+    card: *colors
+    emph: true
+    callword: バーゼルと同じ色
+  - text: ほかにも、会計で使う赤と青の鉛筆から、という説もあります。
+    image: assets/images/20261107_kit_barcelona/p_copa_w.jpg
+    card: none
+  - text: ただ、どれも確かめられていません。
+    image: assets/images/20261107_kit_barcelona/p_copa_w.jpg
+    card: none
+  - text: 最初の10年、シャツは青とえんじが半分ずつ。袖は色が逆で、パンツは白でした。
+    image: assets/images/20261107_kit_barcelona/p_copa_w.jpg
+    card: *stripes
+  - text: いまの縦じまが入ったのは、1909年から10年のシーズンです。
+    image: assets/images/20261107_kit_barcelona/p_copa_w.jpg
+    card:
+      <<: *stripes
+      highlight_row: 1
+  - text: パンツは、黒を経て、1920年ごろに青へ。いまの形が、ここでそろいます。
+    image: assets/images/20261107_kit_barcelona/p_copa_w.jpg
+    card:
+      <<: *stripes
+      highlight_row: 3
+  sources:
+  - https://es.wikipedia.org/wiki/Historia_del_uniforme_del_F%C3%BAtbol_Club_Barcelona
+  - https://ca.wikipedia.org/wiki/S%C3%ADmbols_del_Futbol_Club_Barcelona
+- id: crest
+  heading: 胸の紋章は、なぜ形を変えられたのか
+  bg: assets/images/20261107_kit_barcelona/p_wembley_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 市の紋章から1910年の自分たちの紋章へ。1940年代に頭文字と線を変えられ、1949年と1974年に戻した
+  card: *crest
+  say:
+  - text: 胸の紋章にも、歩みがあります。
+    image: assets/images/20261107_kit_barcelona/p_wembley_w.jpg
+    card: none
+  - text: 生まれたころの胸にあったのは、バルセロナ市の紋章でした。
+    image: assets/images/20261107_kit_barcelona/p_wembley_w.jpg
+    card:
+      <<: *crest
+      highlight_row: 0
+  - text: 1910年、クラブは会員から案を募り、自分たちの紋章を決めます。
+    image: assets/images/20261107_kit_barcelona/p_wembley_w.jpg
+    card:
+      <<: *crest
+      highlight_row: 1
+    emph: true
+  - text: 左上に、カタルーニャの守り聖人、サン・ジョルディの赤い十字。
+    image: assets/images/20261107_kit_barcelona/p_wembley_w.jpg
+    card: none
+  - text: 右上に、カタルーニャの旗の、4本の赤い線。
+    image: assets/images/20261107_kit_barcelona/p_wembley_w.jpg
+    card: none
+  - text: 真ん中に、頭文字。下に、青とえんじと、ボールです。
+    image: assets/images/20261107_kit_barcelona/p_inter_w.jpg
+    card: none
+  - text: ところが1940年代、独裁者フランコの政権のもとで、紋章は変えられます。
+    image: assets/images/20261107_kit_barcelona/p_inter_w.jpg
+    card:
+      <<: *crest
+      highlight_row: 2
+    emph: true
+  - text: 頭文字はスペイン語の形に。4本の赤い線は、2本に減らされました。
+    image: assets/images/20261107_kit_barcelona/p_inter_w.jpg
+    card:
+      <<: *crest
+      highlight_row: 2
+    callword: 4本が2本に
+  - text: 4本の線が戻ったのは、1949年。クラブの創立50年の年です。
+    image: assets/images/20261107_kit_barcelona/p_inter_w.jpg
+    card: none
+  - text: 元の頭文字、エフ・シー・ビーに戻ったのは、1974年の終わりでした。
+    image: assets/images/20261107_kit_barcelona/p_copa_w.jpg
+    card:
+      <<: *crest
+      highlight_row: 4
+  - text: そして2002年。頭文字の間の点を消し、形を整えたのが、いまの紋章です。
+    image: assets/images/20261107_kit_barcelona/p_copa_w.jpg
+    card:
+      <<: *crest
+      highlight_row: 5
+  - text: 手が入ったのは、ほとんどが見た目だけ。1910年の形は、いまも変わっていません。
+    image: assets/images/20261107_kit_barcelona/p_copa_w.jpg
+    card: none
+  sources:
+  - https://www.fcbarcelona.es/es/club/identidad/escudo
+  - https://ca.wikipedia.org/wiki/Escut_del_Futbol_Club_Barcelona
+- id: now
+  heading: 今季の胸には、何が起きているのか
+  bg: assets/images/20261107_kit_barcelona/p_copa_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 2022年からスポティファイ。クラシコの胸には歌手や音楽家のロゴ。10月25日で9組目
+  say:
+  - text: 2022年からの胸は、音楽の配信の会社、スポティファイです。
+    image: assets/images/20261107_kit_barcelona/p_copa_w.jpg
+    card:
+      <<: *chest
+      highlight_row: 5
+  - text: この胸は、レアル・マドリードとのクラシコの日だけ、替わることがあります。
+    image: assets/images/20261107_kit_barcelona/p_copa_w.jpg
+    card: none
+    emph: true
+  - text: 入るのは、歌手や音楽家のロゴ。最初は、ドレイクとロザリアでした。
+    image: assets/images/20261107_kit_barcelona/p_copa_w.jpg
+    card: *artists
+  - text: 今季は、10月25日のクラシコでした。
+    image: assets/images/20261107_kit_barcelona/p_copa_w.jpg
+    card:
+      <<: *artists
+      highlight_row: 4
+  - text: 胸に入ったのは、アメリカのラッパー、タイラー・ザ・クリエイターのブランド。
+    image: assets/images/20261107_kit_barcelona/p_copa_w.jpg
+    card: none
+  - text: クラブによれば、これで9組目です。
+    image: assets/images/20261107_kit_barcelona/p_copa_w.jpg
+    card: none
+    emph: true
+  - text: シャツを作るのは、1998年からナイキです。
+    image: assets/images/20261107_kit_barcelona/p_inter_w.jpg
+    card: none
+  - text: 左の袖には、今季から、中国の家電の会社、ミデアの名前。
+    image: assets/images/20261107_kit_barcelona/p_inter_w.jpg
+    card: none
+  - text: 背中には、クラブの財団、バルサ財団の印も入りました。
+    image: assets/images/20261107_kit_barcelona/p_inter_w.jpg
+    card: none
+  sources:
+  - https://www.fcbarcelona.com/en/club/news/4592373/upcoming-clasico-jersey-to-feature-the-logo-of-tyler-the-creator
+  - https://www.fcbarcelona.com/en/club/news/4528818/fc-barcelona-presents-new-202627-kit-with-unique-show-at-the-macba-museum
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_FC_Barcelona_season
+- id: view
+  viewpoint: true
+  heading: 見立て・107年守った胸は、その後の21季で何回替わったのか
+  bg: assets/images/20261107_kit_barcelona/p_unicef_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 胸の空白は107年。2006年からの21季で胸の名前は5つ、平均4.2季。お金の向きは、出す150万から受け取る3000万へ、20倍
+  card: *view
+  say:
+  - text: バルセロナの胸を、数で並べます。
+    image: assets/images/20261107_kit_barcelona/p_unicef_w.jpg
+    card: none
+  - text: 胸が空いていたのは、1899年から2006年までの、107年。
+    image: assets/images/20261107_kit_barcelona/p_unicef_w.jpg
+    card:
+      <<: *view
+      highlight_row: 0
+  - text: そこから今季までの21シーズンで、胸の名前は5つです。
+    image: assets/images/20261107_kit_barcelona/p_unicef_w.jpg
+    card:
+      <<: *view
+      highlight_row: 1
+    mark:
+      kind: circle
+      row: 1
+  - text: ユニセフ、カタール財団、カタール航空、楽天、スポティファイ。
+    image: assets/images/20261107_kit_barcelona/p_statue_w.jpg
+    card: none
+  - text: 平均すると、4.2シーズンごとに1度、替わってきました。
+    image: assets/images/20261107_kit_barcelona/p_statue_w.jpg
+    card:
+      <<: *view
+      highlight_row: 2
+  - text: お金の向きも変わりました。
+    image: assets/images/20261107_kit_barcelona/p_statue_w.jpg
+    card: none
+  - text: 出す側から、受け取る側へ。受け取る額は、出していた額の20倍です。
+    image: assets/images/20261107_kit_barcelona/p_statue_w.jpg
+    card:
+      type: calc
+      title: 受け取る額と出した額（自分で割った）
+      terms:
+      - - 3000万
+        - カタール財団から
+      - - 150万
+        - ユニセフへ
+      - - 20倍
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+    emph: true
+  - text: 一方、1910年の紋章の形は、116年。
+    image: assets/images/20261107_kit_barcelona/p_copa_w.jpg
+    card:
+      <<: *view
+      highlight_row: 3
+  - text: 胸の名前は数年ごとに替わっても、紋章と色は、ほとんど変わらずに残ってきました。
+    image: assets/images/20261107_kit_barcelona/p_copa_w.jpg
+    card: none
+    emph: true
+  sources:
+  - https://en.wikipedia.org/wiki/FC_Barcelona
+  - https://www.fcbarcelona.es/es/club/identidad/escudo

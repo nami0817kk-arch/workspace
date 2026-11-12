@@ -1,0 +1,141 @@
+# 取材メモ（2026年11月4日）坂元達裕のプレミア初ゴール。試合後に本人が語ったこと（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-04。requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。
+# 題材の元: ゲキサカ 2026-11-01「坂元達裕がコベントリーの勝利導くプレミア初弾!!」（全文）。
+# 出典で確かめたこと:
+#   ・ESPN の試合データ（site.api.espn.com summary event=401879247、10/31 15:00 UTC キックオフ）:
+#       コベントリー 3-1 サンダーランド。17分 坂元（左足、エリアの外から、ゴール左下）／37分 アウォニイ／52分 ルドニ／67分 ル・フェーのPK。
+#       坂元は先発で交代なし（＝フル出場）。55分に警告。90+9分にアルデレーテ（サンダーランド）が2枚目で退場。
+#   ・ゲキサカ: プレミア初のフル出場で初ゴール、3試合連続の先発。前半17分、ファン・エバイクのクロスの跳ね返りを、左足ダイレクトでゴール左へ。
+#       （前半43分に髪を引っ張られた場面は今季の基準でカードなし → 題から離れるので使わない）
+#   ・Football ZONE 682016: 「プレミアリーグ5試合目で記念すべき一撃」。日本人では前田大然に次ぐ15人目のプレミア得点者。昨季チャンピオンシップ35試合7得点。
+#       サッカーキングの見出しも「15人目」（topics_src の要約。本文は読んでいない）。→ 15人目は報道として使う。
+#   ・CoventryLive 2026-11-02 11:00「Tatsuhiro Sakamoto opens up Premier League goal…」（試合後の本人の言葉。英語。全文を読んだ）:
+#       "I'm so happy to score my first goal in the Premier League and I just want to keep scoring."
+#       "I feel like I have got momentum to my game and I need more, so I need to focus on the next game."
+#       "I have ended up in this moment because this is the Premier League and I knew if I trained well and kept showing what I can do in training that I would get my chance, so I just waited for this moment. I'm just so happy."
+#       "Obviously the Premier League is the best league in the world and when I was a child I dreamt to play in it."
+#       "I always believe in myself and the team. … But I wanted to show what I can do for the team and, yeah, maybe I showed it."
+#       （地の文）監督の信頼に応えるためにゴールが必要だと感じていた、試合後に監督から祝福された、と認めた。次は金曜夜のエヴァートン戦（アウェー）。
+#       → 台本の言葉は、この英語を私が日本語にしたもの。訳の語順はなぞらず、日本語として通るように直した。「…」で切れた所は補っていない（使わない）。
+#   ・ESPN 順位表（eng.1 standings、11/4 取得）: コベントリー 9試合3勝6敗 勝ち点9 16位。17位マンU 勝ち点7、18位パレス 7、19位フォレスト 6、20位サンダーランド 5。
+#   ・CoventryLive（同じ記事の地の文）: 開幕5試合で出場は計31分（"played just 31 minutes of the first five games"）。
+#   ・ESPN scoreboard 2026-11-06: Coventry City at Everton（金曜）。
+#   ・theWORLD 512328: BBC の週間ベスト11（ディーニー選）の右SHに坂元 → 他人の評価なので今回は使わない（本人の言葉の回にする）。
+# 自分で数えたもの: 先発3試合の出場時間 トッテナム戦 78分 → フラム戦 86分（ESPN 401879255）→ サンダーランド戦 90分（フル）。先発のたびに長くなっている。
+#   順位 19位（8試合 勝ち点6、10/30 のメモの BBC 表）→ 16位（9試合 勝ち点9）。
+# 前の本との重なり: scripts/20261019_sakamoto_lampard_words（監督の言葉）／20261020_sakamoto_first_start（初先発）／20261030_sakamoto_pl_words（「まだ何も成し遂げていません」・出場4試合の表・下位の順位表）。
+#   → 今回の初出: 初ゴールそのもの・試合後の本人の言葉・フル出場・15人目。「まだ何も」の言葉と出場の内訳の表は繰り返さない。順位は「16位へ」と一言だけ。
+# 本人の言葉: あり（上の英語、CoventryLive）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月4日"
+format: news
+no_main: true
+people: [坂元達裕, コベントリー, サンダーランド, ランパード監督, エヴァートン]
+
+short_style: Y
+short_hook_quote: 練習で見せ続ければ、チャンスは来ると分かっていました。
+short_photos:
+  - assets/images/20261104_sakamoto_pl_first_goal/02_v.jpg
+  - assets/images/20261104_sakamoto_pl_first_goal/01_v.jpg
+short_question: 坂元達裕は、金曜のエヴァートン戦で2試合続けて点を取ると思いますか。
+short_telops: []
+
+theme:
+  id: sakamoto_pl_first_goal
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: 坂元達裕、プレミア初ゴール。30歳が試合後に明かした、待ち続けた理由
+  hook: ""
+  question: プレミアで初めて点を取った坂元達裕は、試合後に何を語ったのか
+  takeaway: 先発した3試合の出場時間は78分、86分、そして90分。坂元は先発のたびに長くピッチに立ち、3試合目でフル出場と初ゴールにたどり着いた。コベントリーは16位に上がった
+
+thumbnail:
+  layout: face
+  line1: 坂元達裕 プレミア初ゴール
+  line2: 30歳が待っていた瞬間
+  tags: [坂元達裕, コベントリー]
+  photo: assets/images/20261104_sakamoto_pl_first_goal/02_w.jpg
+  short_photo: assets/images/20261104_sakamoto_pl_first_goal/02_v.jpg
+
+answer: チャンスは来ると分かっていて、この瞬間を待っていた。夢のリーグで、点を取り続けたい
+watch: 金曜のエヴァートン戦（アウェー）
+
+sections:
+  - id: what
+    main: true
+    heading: プレミア初ゴールのあと、坂元達裕が語ったこと
+    tier: 報道
+    telop: 坂元達裕「チャンスは来ると分かっていました」
+    say:
+      - text: コベントリーの坂元達裕が、プレミア初ゴール。
+      - text: 3対1で勝った試合の後、30歳はこう話しました。
+      - voice: 坂元達裕
+        text: 練習で見せ続ければ、チャンスは来ると分かっていました。
+        emph: true
+      - voice: 坂元達裕
+        text: だから、この瞬間をただ待っていました。
+        cont: true
+      - voice: 坂元達裕
+        text: 本当にうれしいです。
+        cont: true
+      - text: 開幕からの5試合、坂元の出場は合わせて31分。待つ時間が続いていました。
+        image: assets/images/20261104_sakamoto_pl_first_goal/01_w.jpg
+      - text: そして直近の3試合は続けて先発。今回はプレミアで初めてのフル出場でした。
+      - text: ゴールは前半17分でした。
+      - text: クロスの跳ね返りを、ペナルティエリアの外から左足で直接決めました。
+      - text: 日本人では15人目の、プレミアでの得点者です。
+      - text: 子どもの頃の夢についても、坂元はこう語っています。
+        image: assets/images/20261104_sakamoto_pl_first_goal/02_w.jpg
+      - voice: 坂元達裕
+        text: プレミアは世界最高のリーグです。
+      - voice: 坂元達裕
+        text: 子どもの頃、ここでプレーすることを夢見ていました。
+        cont: true
+      - voice: 坂元達裕
+        text: チームのために、自分に何ができるかを見せたかった。
+      - voice: 坂元達裕
+        text: 少しは見せられたかもしれません。
+        cont: true
+    official: false
+    sources:
+      - https://www.coventrytelegraph.net/sport/football/football-news/tatsuhiro-sakamoto-opens-up-premier-34849253
+      - https://web.gekisaka.jp/news/world/detail/?462235-462235-fl
+      - https://www.football-zone.net/archives/682016
+      - https://www.espn.com/soccer/match/_/gameId/401879247
+  - id: game
+    heading: 坂元の先制点から、3対1の勝利と16位への浮上
+    tier: 報道
+    telop: コベントリー 3-1 サンダーランド。16位に浮上
+    say:
+      - text: この勝利で、コベントリーの勝ち点は9。順位は16位に上がりました。
+        card: {type: table, title: コベントリー 3-1 サンダーランド, columns: [分, 得点], rows: [[17分, 坂元達裕], [37分, アウォニイ], [52分, ルドニ], [67分, ル・フェー（PK）]], highlight_row: 0}
+      - voice: 坂元達裕
+        text: プレーに勢いが出てきたと感じています。
+        card: none
+      - voice: 坂元達裕
+        text: でも、もっと必要です。次の試合に集中します。
+        cont: true
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401879247
+      - https://site.api.espn.com/apis/v2/sports/soccer/eng.1/standings
+      - https://www.coventrytelegraph.net/sport/football/match-reports/coventry-city-v-sunderland-player-34844254
+  - id: view
+    viewpoint: true
+    heading: 先発3試合で、坂元のピッチに立つ時間はどう変わったか
+    tier: 背景
+    telop: 先発3試合の出場時間 78分→86分→90分
+    say:
+      - text: 見立てです。坂元が先発した3試合の出場時間は、78分、86分、そして90分。
+        card: {type: table, title: 坂元達裕 先発3試合の出場時間, columns: [相手, 出場], rows: [[トッテナム, 78分], [フラム, 86分], [サンダーランド, 90分]], highlight_row: 2}
+      - text: 先発のたびに、坂元がピッチに立つ時間は延びました。
+      - text: 3試合目で、フル出場と初ゴールが重なりました。
+        emph: true
+        card: none
+      - text: 次は金曜、アウェーのエヴァートン戦です。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401879247
+      - https://www.espn.com/soccer/match/_/gameId/401879255

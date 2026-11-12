@@ -1,0 +1,441 @@
+# イケル・カシージャス（元スペイン代表GK）の紹介。シリーズ「レジェンドの紹介（世界）」2026-10-31。型は 10/29 のトッティと同じ9節（フック→基礎DATA→日本との接点→歩み→持ち味→あの試合→引退のあと→知られざる話→見立て）。
+# **FotMob・DataMB・FBref・Sofascore・Transfermarkt は不使用**。数字は英語版 Wikipedia（Iker Casillas の成績表・本文・Honours・Records、2010 FIFA World Cup final、2002 Intercontinental Cup）と UEFA の決勝レポート（"Iniesta earns Spain World Cup crown"、2010-07-11）と OneFootball（2020-08-04「Iker Casillas announces retirement from professional football」）と、自分で足した・割った値だけ。
+# **引退後の私生活・法的な問題・病気は入れない**（2019年5月の心臓の件・離婚・家族・会長選の話は使わない。ポルトの章は優勝と記録だけ）。女子サッカーは入れない。
+#
+# **重なりの確認（10/31）**：scripts/・research/covered.yaml・research/posted.json を「カシージャス／Casillas」で grep。主役の回は無し（10/10 の代表最多出場の回にスペインの2位として名前が出るだけ）。レジェンド既出（ジダン・ロナウジーニョ・シャビ・イニエスタ・ベッカム・ロナウド・アンリ・イブラヒモビッチ・マルディーニ・カカ・ジェラード・ドログバ・ピルロ・トッティ）とも重ならない。
+# **引退の確認（一次情報に近いもの）**：OneFootball 2020-08-04 本文「Iker Casillas has officially confirmed his retirement from professional football ... The 39-year-old also won 167 caps for Spain」と本人のSNS投稿の引用（requests で本文取得）。Wikipedia「On 4 August 2020, Casillas officially announced his retirement」。→ **選手としては現役ではない（45歳）**。いまの立場：解説者（Wikipedia「currently works as a football commentator」）、2020-12 にレアル・マドリード財団のCEO補佐に就任（Wikipedia）。
+# **2010年W杯決勝の確認**：UEFA 決勝レポートの原文「Arjen Robben had squandered the best chance of normal time ... one on one with Iker Casillas」「could not bypass Casillas's outstretched right leg」「With extra time approaching, Casillas was once again quick to smother at the feet of Robben」「Heitinga dismissed ... seven minutes later Iniesta」。Wikipedia（決勝の記事）で 62分の1対1、前半終了間際のロッベンの近いほうのシュート、イニエスタの得点は延長の残り4分前＝116分。→ 山場にする（W杯優勝は決勝の記事で確認）。
+# **日本との接点**：2002年12月3日、トヨタカップ（インターコンチネンタルカップ）が横浜国際総合競技場で行われた最初の年。レアル・マドリード2対0オリンピア（ロナウド14分・グティ84分、観衆66,070）。カシージャスは背番号1で先発（Wikipedia の試合表）。21歳。
+# **数字の出どころと自分で足した値**
+# - 成績表（Wikipedia、公式戦）：レアル・マドリード 725試合（リーグ510・国内カップ40・欧州152・その他23、いずれも0得点）、ポルト 156試合、スペイン代表 167試合。クラブとスペイン代表の合計 1,048試合（自分で足した値。レアルの下部チームの試合は含まない）。
+# - 2010年W杯：7試合で2失点、決勝トーナメント4試合は全部無失点、無失点5試合は大会タイ記録、ゴールデングローブ（Wikipedia）。
+# - 2012年欧州選手権：6試合で1失点（イタリアとの初戦、ディ・ナターレ）、509分無失点は大会記録でゾフの494分を更新（Wikipedia）。509＝29分（初戦の失点の後）＋90＋90＋90＋120＋90（自分で足して合った）。
+# - 見立て（自分で割った値）：2010年 2÷7＝1試合0.29点。2012年 1÷6＝0.17点。2つ合わせて 3÷13＝0.23点。
+# - 最年少：1999-09 の18歳177日でCL出場（当時のGKの最年少）、2000-05 の19歳4日でCL決勝に出場して優勝（GKの最年少）。2002年決勝は先発セサルが終盤にけがをして途中から出場、2対1を守った。
+# - 2008年：キャプテンに。ユーロ準々決勝（6/22）イタリア戦のPK戦でディ・ナターレとデ・ロッシのPKを止めて4対2、決勝（6/29）ドイツに1対0、GKのキャプテンとして初めて欧州選手権の優勝杯を掲げる。
+# - 2014年：キャプテンとして5/24のCL決勝（リスボン、アトレティコに4対1）で3回目のCL優勝。2015-07-11 ポルトへ移籍（2年契約）。2018年にポルトでリーグ優勝。
+# - IFFHS 世界最優秀GK 2008〜2012の5年連続。UEFA年間ベストチームに2007〜2012の6年連続。
+# - 本人の言葉：W杯優勝の杯を掲げる前に頭に浮かんだ歴代キャプテン（Wikipedia が引く本人の談話）「From when I was small, I saw Matthäus lift it. I saw Dunga lift it, I saw Deschamps lift it, I saw Cafu lift it, Cannavaro... so to watch me lift it, I could watch it tomorrow, I could watch it within 10 years and it will always make me emotional because it's incomparable.」／引退の日の本人のSNS投稿（OneFootball が全文を引用）「Lo importante es el camino que recorres y la gente que te acompaña, no el destino al que te lleva ... ha sido el camino y el destino soñado」。
+# - 知られざる話：7〜8歳のとき、父のサッカーくじの投函を忘れた（父は15試合全部当てていて、約120万ユーロ＝推定）／1997-11-27（16歳）CLローゼンボリ戦で初めてトップチームに招集、ベンチのまま／2002年W杯は控え。先発のカニサレスが思いがけないけがで外れ、21歳で先発に。16強のアイルランド戦で規定時間にPKを1本、PK戦で2本止めて、PK戦3対2。あだ名「The Saint」の元。
+# **入れなかったもの**：2019年5月の心臓の件、ポルトのリハビリ期間、離婚・家族、会長選への意向、モウリーニョとの不和、2014年W杯の失点の批判、レアル退団の経緯の批判、チリ戦の失点。
+# **読みで怪しいもの**：カシージャス、ロッベン、ヘイティンハ、イニエスタ、デシャン、カンナバーロ、マテウス、ドゥンガ、ゾフ、ディ・ナターレ、デ・ロッシ、カニサレス、セサル、グティ、オリンピア、ヨハネスブルグ、モストレス、ゴールデングローブ、サン・イケル。「最年少」は「さいねんしょう」、「最多」は使わず言い換える。
+title: カシージャスは、どんな選手だった？ 守護神は、何を止め、何を掲げたのか
+format: news
+short_title: カシージャスは、どんな選手だった？
+series: レジェンドの紹介
+topic: イケル・カシージャス
+date: 2026年10月31日
+slot: other_1
+people: [イケル・カシージャス]
+watch: 毎日、数字でサッカーを読み解きます
+theme: {id: legend_casillas, league: spain, league_name: ラ・リーガ, kind: other, topic: イケル・カシージャス, title: カシージャスは、どんな選手だった？ 守護神は、何を止め、何を掲げたのか, question: 世界一のキャプテンになったゴールキーパーのカシージャスは、何を止めて何を残した選手で、いまは何をしているのか, takeaway: 優勝した2010年W杯と2012年欧州選手権の13試合で、失点は3。1試合あたり0.23点。サン・イケルと呼ばれた強さは、優勝した2つの大会に出ていた,
+  nameplate: イケル・カシージャス｜元スペイン代表 GK, opening_image: assets/images/20261031_casillas_legend/08_w.jpg, end_bg: assets/images/20261031_casillas_legend/02_w.jpg, bgm: assets/audio/bgm_calm.wav, outro_title: 毎日、数字でサッカーを読み解きます}
+thumbnail:
+  line1: カシージャス、1048試合
+  line2: W杯優勝の主将、守護神
+  tags: [レアル・マドリード]
+  photo: assets/images/20261031_casillas_legend/panel_08.jpg
+  photos: []
+  short_photo: assets/images/20261031_casillas_legend/08_v.jpg
+sections:
+- id: hook
+  heading: ゴールキーパーなのに、なぜ世界一のキャプテンになれたのか
+  tier: 報道
+  telop: レアルで725試合、代表で167試合
+  card: &hk
+    type: stats
+    title: カシージャス 元GK（45歳）
+    items:
+    - ['725', 試合, レアル・マドリード]
+    - ['167', 試合, スペイン代表]
+    - ['3', 回, CL優勝]
+    focus: 0
+  say:
+  - {text: 2010年のワールドカップ、優勝の瞬間。, card: none, image: assets/images/20261031_casillas_legend/08_w.jpg}
+  - {text: キャプテンマークを巻いていたのは、ゴールキーパーでした。, card: none}
+  - {text: トロフィーを掲げたのは、イケル・カシージャス。, card: none}
+  - {text: レアル・マドリードで、725試合。スペイン代表で、167試合。, card: none, image: assets/images/20261031_casillas_legend/07_w.jpg, emph: true}
+  - text: チャンピオンズリーグの優勝は3回。ヨーロッパ選手権も2回、制しました。
+    card: *hk
+    image: assets/images/20261031_casillas_legend/02_w.jpg
+    callword: 725試合
+  - {text: ついたあだ名は「サン・イケル」。聖なるイケル、という意味です。, card: none, image: assets/images/20261031_casillas_legend/05_w.jpg}
+  - {text: なぜ聖人と呼ばれたのか。その答えを、試合と数字から探します。, card: none, image: assets/images/20261031_casillas_legend/03_w.jpg}
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Iker_Casillas', 'https://onefootball.com/en/news/iker-casillas-announces-retirement-from-professional-football-30620784']
+- id: data
+  heading: カシージャスは、いつ、どこで生まれ、どんな選手か
+  tier: 報道
+  telop: カシージャスの基礎DATA
+  card: &dt
+    type: table
+    title: イケル・カシージャス
+    columns: [項目, 内容]
+    rows: &dtr
+    - [生年月日, 1981年5月20日・スペイン]
+    - [ポジション, ゴールキーパー]
+    - [クラブ, レアル・マドリード→ポルト]
+    - [代表, 167試合・W杯優勝]
+    - [引退, 2020年8月（39歳）]
+    source: Wikipedia
+    highlight_row: 0
+  say:
+  - text: カシージャスは、1981年5月20日、マドリード近郊のモストレスに生まれました。
+    card: *dt
+    image: assets/images/20261031_casillas_legend/02_w.jpg
+  - text: ポジションはゴールキーパー。身長が飛び抜けて高いわけではありません。
+    card:
+      type: table
+      title: イケル・カシージャス
+      columns: [項目, 内容]
+      rows: *dtr
+      source: Wikipedia
+      highlight_row: 1
+    image: assets/images/20261031_casillas_legend/07_w.jpg
+  - text: クラブは、レアル・マドリードで1999年から2015年。そのあと、ポルトへ。
+    card:
+      type: table
+      title: イケル・カシージャス
+      columns: [項目, 内容]
+      rows: *dtr
+      source: Wikipedia
+      highlight_row: 2
+    image: assets/images/20261031_casillas_legend/05_w.jpg
+  - text: 代表では、2010年にW杯、2008年と2012年に欧州選手権を制しました。
+    card:
+      type: table
+      title: イケル・カシージャス
+      columns: [項目, 内容]
+      rows: *dtr
+      source: Wikipedia
+      highlight_row: 3
+    image: assets/images/20261031_casillas_legend/03_w.jpg
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Iker_Casillas']
+- id: japan
+  heading: カシージャスと日本には、どんな縁があったのか
+  tier: 報道
+  telop: 横浜で先発した、21歳のカシージャス
+  say:
+  - {text: 日本との縁は、2002年12月3日。, card: none, image: assets/images/20261031_casillas_legend/07_w.jpg}
+  - {text: 場所は横浜。ヨーロッパ王者と南米王者が戦う、トヨタカップです。, card: none}
+  - {text: 相手は、パラグアイのオリンピア。, card: none, image: assets/images/20261031_casillas_legend/05_w.jpg}
+  - {text: レアル・マドリードは、ヨーロッパ王者として乗り込みました。, card: none}
+  - text: ゴールを守ったのは、背番号1の21歳、カシージャス。
+    card: &jp
+      type: timeline
+      title: 2002年12月3日 横浜 トヨタカップ
+      rows: &jpr
+      - [先発, 21歳のカシージャスがゴールに]
+      - [14分, ロナウドが先制]
+      - [84分, グティが追加点]
+      - [試合後, レアルが2対0で勝利]
+      focus: 0
+      highlight_row: 0
+    image: assets/images/20261031_casillas_legend/05_w.jpg
+    emph: true
+  - text: 14分にロナウド、84分にグティ。
+    card:
+      type: timeline
+      title: 2002年12月3日 横浜 トヨタカップ
+      rows: *jpr
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261031_casillas_legend/07_w.jpg
+  - {text: レアル・マドリードが2点を奪って、無失点で勝ちました。, card: none, image: assets/images/20261031_casillas_legend/07_w.jpg}
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/2002_Intercontinental_Cup', 'https://en.wikipedia.org/wiki/Iker_Casillas']
+- id: career
+  heading: 18歳で飛び出したカシージャスは、どう守護神になったのか
+  tier: 報道
+  telop: 18歳の初出場から、キャプテンへ
+  card: &cr
+    type: timeline
+    title: 歩んできた道
+    rows: &crr
+    - ['1999', 18歳でCL初出場]
+    - ['2000', 19歳でCL優勝]
+    - ['2008', 代表のキャプテンに]
+    - ['2010', W杯優勝]
+    - ['2015', ポルトへ]
+    focus: 0
+  say:
+  - text: 1999年9月、18歳でチャンピオンズリーグに初出場。
+    card: *cr
+    image: assets/images/20261031_casillas_legend/07_w.jpg
+  - {text: ゴールキーパーとして、当時の最年少記録でした。, card: none}
+  - text: 翌2000年5月、決勝のピッチへ。19歳と4日で、優勝を経験します。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *crr
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261031_casillas_legend/05_w.jpg
+    emph: true
+  - {text: 決勝に出て優勝した、ゴールキーパーの最年少記録です。, card: none}
+  - {text: 2002年の決勝。先発の選手が終盤にけがをして、カシージャスが途中から入ります。, card: none, image: assets/images/20261031_casillas_legend/07_w.jpg}
+  - {text: 何度も好セーブを見せて、2対1の勝利を守りました。, card: none}
+  - text: 2008年に、代表のキャプテンへ。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *crr
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261031_casillas_legend/01_w.jpg
+  - {text: ゴールキーパーのキャプテンとして初めて、欧州選手権の優勝杯を掲げます。, card: none}
+  - {text: 2014年にはキャプテンとして決勝へ。チャンピオンズリーグを、3度目の優勝。, card: none, image: assets/images/20261031_casillas_legend/05_w.jpg}
+  - text: 2015年7月、16年いたレアル・マドリードを離れて、ポルトへ。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *crr
+      focus: 4
+      highlight_row: 0
+    image: assets/images/20261031_casillas_legend/08_w.jpg
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Iker_Casillas']
+- id: style
+  heading: カシージャスは、何でシュートを止めたのか
+  tier: 報道
+  telop: 反射神経、1対1、そしてPK
+  card: &st
+    type: table
+    title: カシージャスの持ち味
+    columns: [項目, 中身]
+    rows: &str
+    - [武器1, ゴール前の反射神経と素早い動き]
+    - [武器2, 飛び出して止める1対1]
+    - [武器3, PKを止める力]
+    - [記録, 世界最優秀GK 5年連続]
+    source: Wikipedia
+    highlight_row: 0
+  say:
+  - text: カシージャスの武器、まずは反射神経。
+    card: *st
+    image: assets/images/20261031_casillas_legend/02_w.jpg
+  - text: 次に、1対1。ゴールから飛び出して、相手の足元のボールをさらう速さが持ち味です。
+    card:
+      type: table
+      title: カシージャスの持ち味
+      columns: [項目, 中身]
+      rows: *str
+      source: Wikipedia
+      highlight_row: 1
+    image: assets/images/20261031_casillas_legend/03_w.jpg
+    emph: true
+  - text: そして、PKを止める力。PK戦でも、何度もゴールを守りました。
+    card:
+      type: table
+      title: カシージャスの持ち味
+      columns: [項目, 中身]
+      rows: *str
+      source: Wikipedia
+      highlight_row: 2
+    image: assets/images/20261031_casillas_legend/07_w.jpg
+  - text: 世界最優秀ゴールキーパーに、2008年から5年連続で選ばれました。
+    card:
+      type: table
+      title: カシージャスの持ち味
+      columns: [項目, 中身]
+      rows: *str
+      source: Wikipedia
+      highlight_row: 3
+    image: assets/images/20261031_casillas_legend/05_w.jpg
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Iker_Casillas']
+- id: match
+  heading: 2010年のヨハネスブルグで、カシージャスは何を止めたのか
+  tier: 報道
+  main: true
+  telop: W杯決勝、ロッベンとの1対1
+  card: &mt
+    type: timeline
+    title: W杯決勝 スペイン対オランダ
+    rows: &mtr
+    - [62分, ロッベンと1対1。右足で止める]
+    - [90分, 0対0のまま延長へ]
+    - [116分, イニエスタが決めて1対0]
+    - [試合後, キャプテンが優勝杯を掲げる]
+    focus: 0
+    highlight_row: 0
+  say:
+  - {text: カシージャス。, short_only: true, card: none, image: assets/images/20261031_casillas_legend/02_w.jpg}
+  - {text: いちばん語られるのは、2010年のワールドカップ、決勝です。, short_only: true, card: none}
+  - {text: 2010年7月11日、南アフリカのヨハネスブルグ。決勝は、スペイン対オランダ。, card: none, image: assets/images/20261031_casillas_legend/08_w.jpg}
+  - {text: 前半の終わりにも、オランダのロッベンのシュートを止めています。, card: none, image: assets/images/20261031_casillas_legend/02_w.jpg}
+  - text: そして、後半62分。ロッベンが、ゴールキーパーと1対1になります。
+    card: *mt
+    image: assets/images/20261031_casillas_legend/08_w.jpg
+  - text: カシージャスは、伸ばした右足の先で、シュートを防ぎました。
+    card:
+      type: timeline
+      title: W杯決勝 スペイン対オランダ
+      rows: *mtr
+      focus: 0
+      highlight_row: 0
+    image: assets/images/20261031_casillas_legend/02_w.jpg
+    emph: true
+    callword: 右足の先
+  - {text: 延長が近づく場面でも、ロッベンの足元へ飛び込んで、ボールを止めます。, card: none, image: assets/images/20261031_casillas_legend/08_w.jpg}
+  - text: 0対0のまま延長へ。116分、イニエスタが決めて、スペインが1対0で勝ちました。
+    card:
+      type: timeline
+      title: W杯決勝 スペイン対オランダ
+      rows: *mtr
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261031_casillas_legend/02_w.jpg
+  - {text: スペインにとって、初めてのワールドカップ優勝でした。, card: none, image: assets/images/20261031_casillas_legend/08_w.jpg}
+  - {text: 決勝トーナメントの4試合は、すべて無失点。大会を通した失点は、2つだけです。, card: none, image: assets/images/20261031_casillas_legend/02_w.jpg}
+  - {text: 大会のいちばんのゴールキーパーに贈られる、ゴールデングローブも受けました。, card: none}
+  - {text: のちに、優勝杯を掲げる前の気持ちを、キャプテン自身が語っています。, card: none, image: assets/images/20261031_casillas_legend/08_w.jpg}
+  - {voice: カシージャス, text: 子どものころから、マテウスが掲げるのを見てきた。, card: none, pause: 0.2}
+  - {voice: カシージャス, text: ドゥンガも、デシャンも、カフーも、カンナバーロも。, card: none, cont: true, pause: 0.4}
+  - {voice: カシージャス, text: その杯を、自分が掲げる。, card: none, pause: 0.2}
+  - {voice: カシージャス, text: 明日見ても、10年後に見ても、胸がいっぱいになる。, card: none, cont: true, pause: 0.2}
+  - {voice: カシージャス, text: 比べられるものが、ないからだ。, card: none, cont: true, pause: 0.5}
+  quotes_from: ['https://en.wikipedia.org/wiki/Iker_Casillas']
+  sources: ['https://en.wikipedia.org/wiki/2010_FIFA_World_Cup_final', 'https://www.uefa.com/european-qualifiers/news/0253-0d7c93af1ed8-28be4efeaa14-1000--iniesta-earns-spain-world-cup-crown/', 'https://en.wikipedia.org/wiki/Iker_Casillas']
+- id: after
+  heading: 引退のあと、カシージャスは何をしてきたのか
+  tier: 報道
+  telop: 39歳の引退と、そのあと
+  card: &af
+    type: timeline
+    title: 引退のあと
+    rows: &afr
+    - [2020年8月, 39歳で引退を発表]
+    - [2020年12月, レアルの財団で補佐役に]
+    - [いま, 試合の解説者として活躍]
+    focus: 0
+    highlight_row: 0
+  say:
+  - text: 引退を発表したのは、2020年8月4日。39歳、22年の現役生活でした。
+    card: *af
+    image: assets/images/20261031_casillas_legend/08_w.jpg
+  - {text: その日、本人は自分のソーシャルメディアで、こう語りかけました。, card: none}
+  - {voice: カシージャス, text: 大切なのは、歩いてきた道と、ともに歩いてくれた人たち。, card: none, pause: 0.2}
+  - {voice: カシージャス, text: たどり着く先ではない。, card: none, cont: true, pause: 0.4}
+  - {voice: カシージャス, text: それは、夢見た道であり、夢見た行き先でした。, card: none, pause: 0.6}
+  - text: 2020年12月には、レアル・マドリード財団で、トップを支える補佐役に就きます。
+    card:
+      type: timeline
+      title: 引退のあと
+      rows: *afr
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261031_casillas_legend/05_w.jpg
+  - text: いまは、サッカーの解説者。スペインやメキシコの放送で、試合を伝えています。
+    card:
+      type: timeline
+      title: 引退のあと
+      rows: *afr
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261031_casillas_legend/02_w.jpg
+  quotes_from: ['https://onefootball.com/en/news/iker-casillas-announces-retirement-from-professional-football-30620784']
+  sources: ['https://en.wikipedia.org/wiki/Iker_Casillas', 'https://onefootball.com/en/news/iker-casillas-announces-retirement-from-professional-football-30620784']
+- id: secret
+  heading: カシージャスに、知られざる話はあるのか
+  tier: 報道
+  telop: ベンチの16歳と、聖人のあだ名
+  card: &sc
+    type: table
+    title: 知られざる、3つの話
+    columns: [いつ, 何があったか]
+    rows: &scr
+    - [7〜8歳ごろ, 父のくじの投函を忘れる]
+    - [16歳, 初めてトップの遠征に呼ばれる]
+    - [21歳, けがで空いた先発の座へ]
+    source: Wikipedia
+    highlight_row: 0
+  say:
+  - {text: カシージャスには、運命が動いた話が3つあります。, card: none, image: assets/images/20261031_casillas_legend/07_w.jpg}
+  - text: 1つ目。7、8歳のころ、父のサッカーくじの投函を、うっかり忘れました。
+    card: *sc
+    image: assets/images/20261031_casillas_legend/07_w.jpg
+  - {text: 父は、15試合の結果を全部当てていたといいます。, card: none}
+  - {text: 逃した賞金は、およそ120万ユーロと言われます。, card: none}
+  - text: 2つ目。1997年11月、16歳。
+    card:
+      type: table
+      title: 知られざる、3つの話
+      columns: [いつ, 何があったか]
+      rows: *scr
+      source: Wikipedia
+      highlight_row: 1
+    image: assets/images/20261031_casillas_legend/05_w.jpg
+    emph: true
+  - {text: チャンピオンズリーグの試合で、初めてトップチームに呼ばれます。, card: none}
+  - {text: 出番はなく、ベンチで試合を終えました。, card: none, image: assets/images/20261031_casillas_legend/05_w.jpg}
+  - text: 3つ目。2002年のW杯。カシージャスは、控えとして大会に入りました。
+    card:
+      type: table
+      title: 知られざる、3つの話
+      columns: [いつ, 何があったか]
+      rows: *scr
+      source: Wikipedia
+      highlight_row: 2
+    image: assets/images/20261031_casillas_legend/02_w.jpg
+  - {text: ところが、先発のゴールキーパー、カニサレスが、思いがけないけがで大会を去ります。, card: none}
+  - {text: 先発に座った21歳は、16強のアイルランド戦へ。, card: none, image: assets/images/20261031_casillas_legend/03_w.jpg}
+  - {text: 規定の時間にPKを1本、PK戦でも2本を止めて、勝ち上がります。, card: none}
+  - {text: ここから、聖人と呼ばれはじめました。, card: none}
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Iker_Casillas']
+- id: view
+  heading: サン・イケルの強さは、いつ、いちばん出ていたのか
+  tier: 背景
+  viewpoint: true
+  telop: 優勝した2大会の13試合で、失点は3
+  card: &vw
+    type: table
+    title: カシージャス 優勝した2大会の失点
+    columns: [大会, 試合, 失点, 1試合あたり]
+    rows: &vwr
+    - [2010年W杯, '7', '2', '0.29']
+    - [2012年欧州選手権, '6', '1', '0.17']
+    - [2大会の合計, '13', '3', '0.23']
+    source: Wikipedia
+    highlight_row: 0
+  say:
+  - text: 最後に、カシージャスが優勝した2つの大会を、失点で比べます。
+    card: *vw
+    image: assets/images/20261031_casillas_legend/03_w.jpg
+  - text: 2010年のW杯は、7試合で2失点。1試合の失点は、平均0.29です。
+    card:
+      type: table
+      title: カシージャス 優勝した2大会の失点
+      columns: [大会, 試合, 失点, 1試合あたり]
+      rows: *vwr
+      source: Wikipedia
+      highlight_row: 0
+    image: assets/images/20261031_casillas_legend/03_w.jpg
+  - text: 2012年の欧州選手権は、6試合で1失点。平均は0.17。
+    card:
+      type: table
+      title: カシージャス 優勝した2大会の失点
+      columns: [大会, 試合, 失点, 1試合あたり]
+      rows: *vwr
+      source: Wikipedia
+      highlight_row: 1
+    image: assets/images/20261031_casillas_legend/02_w.jpg
+  - text: 2つを合わせると、13試合で3失点。平均は0.23です。
+    card:
+      type: table
+      title: カシージャス 優勝した2大会の失点
+      columns: [大会, 試合, 失点, 1試合あたり]
+      rows: *vwr
+      source: Wikipedia
+      highlight_row: 2
+    image: assets/images/20261031_casillas_legend/05_w.jpg
+    emph: true
+    mark: {kind: circle, row: 2, col: 3}
+  - {text: 2012年の欧州選手権では、509分間、ゴールを割られませんでした。, card: none, image: assets/images/20261031_casillas_legend/07_w.jpg}
+  - {text: それまでの大会記録は、イタリアのゴールキーパー、ゾフの494分。, card: none}
+  - {text: それを、15分、上回りました。, card: none}
+  - {text: 優勝した大会ほど、ゴールを閉じていた。だから、サン・イケルと呼ばれたのです。, card: none, image: assets/images/20261031_casillas_legend/02_w.jpg}
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Iker_Casillas']
