@@ -49,69 +49,69 @@ class _DraftViewState extends State<DraftView> {
     return ListView(
       padding: const EdgeInsets.fromLTRB(14, 8, 14, 24),
       children: [
+        // 上の欄は小さく(候補の一覧を広く見せる)。知らせはたたんでおく
         Card(
           child: Padding(
-            padding: const EdgeInsets.all(14),
+            padding: const EdgeInsets.fromLTRB(12, 8, 8, 8),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Row(
-                  children: [
-                    const Icon(Icons.how_to_reg_rounded, color: GmColors.ball),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        pick == null ? 'ドラフト' : '${car.draftAt + 1}番目の指名(${pick.round}巡目)',
-                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
+                Row(children: [
+                  const Icon(Icons.how_to_reg_rounded, color: GmColors.ball, size: 20),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      pick == null ? 'ドラフト' : '${car.draftAt + 1}番目の指名(${pick.round}巡目)',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
-                  ],
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  myPicks.isEmpty ? 'このドラフトでは、もう指名権がない。' : 'こちらの指名: ${myPicks.map((k) => '$k番目').join('・')}。候補の力は幅でしか分からない。スカウトを送ると幅が狭まる。',
-                  style: const TextStyle(color: GmColors.sub, height: 1.5),
-                ),
-                if (car.news.isNotEmpty) ...[
-                  const SizedBox(height: 8),
-                  const Text('このオフの知らせ', style: TextStyle(fontWeight: FontWeight.bold)),
-                  for (final n in car.news) Text('・$n', style: const TextStyle(fontSize: 13, height: 1.5)),
-                ],
-                const SizedBox(height: 6),
+                  ),
+                  const Icon(Icons.travel_explore_rounded, size: 16, color: GmColors.sub),
+                  const SizedBox(width: 4),
+                  Text('スカウト 残り${car.scoutsLeft}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                  if (car.canAddScouts)
+                    TextButton.icon(
+                      onPressed: c.busy ? null : () => _moreScouts(context),
+                      icon: Icon(c.needsAd ? Icons.smart_display_rounded : Icons.add_rounded, size: 16),
+                      label: Text(c.needsAd ? '動画で+2' : '+2'),
+                    ),
+                ]),
                 Text(
                   myPicks.isEmpty
-                      ? 'やること: 何もない。他チームの指名が終わるまで進める。'
-                      : 'やること: 候補から欲しい選手を選び「指名」を押す(分からなければ、予想順位が高い選手でよい)。自分の番まで自動で進む。',
+                      ? 'やること: もう指名権がない。他チームの指名が終わるまで進める。'
+                      : 'やること: 欲しい選手の「指名」を押す(迷ったら予想順位が高い選手)。こちらの番: ${myPicks.map((k) => '$k番目').join('・')}',
                   style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: GmColors.gold, height: 1.4),
                 ),
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    const Icon(Icons.travel_explore_rounded, size: 18, color: GmColors.sub),
-                    const SizedBox(width: 6),
-                    Text('スカウト 残り${car.scoutsLeft}回', style: const TextStyle(fontWeight: FontWeight.bold)),
-                    const Spacer(),
-                    if (car.canAddScouts)
-                      TextButton.icon(
-                        onPressed: c.busy ? null : () => _moreScouts(context),
-                        icon: Icon(c.needsAd ? Icons.smart_display_rounded : Icons.add_rounded, size: 18),
-                        label: Text(c.needsAd ? '動画で+2回' : '+2回'),
-                      ),
-                  ],
+                Text(
+                  [
+                    if (before != null && before > 0) '次の指名までに$before人取られる',
+                    '契約中 ${car.signedCount}人(オフは$offseasonRoster人まで・開幕までに$maxRoster人)',
+                    '力は幅でしか見えず、スカウトで狭まる',
+                  ].join('・'),
+                  style: const TextStyle(fontSize: 11, color: GmColors.sub, height: 1.4),
                 ),
-                if (before != null && before > 0) ...[
-                  const SizedBox(height: 6),
-                  Text('次の指名まで、ほかのチームが$before人取る。予想$before位までの候補は、先に取られそう。', style: const TextStyle(fontSize: 12, color: GmColors.gold, height: 1.4)),
-                ],
-                const SizedBox(height: 6),
-                Text('契約中の選手 ${car.signedCount}人(オフは$offseasonRoster人まで。契約が切れる選手は数えない。開幕までに$maxRoster人にする)',
-                    style: const TextStyle(fontSize: 12, color: GmColors.sub)),
                 if (car.myTurn && car.draftProblem != null) ...[
-                  const SizedBox(height: 6),
-                  Text(car.draftProblem!, style: const TextStyle(color: GmColors.bad)),
-                  const SizedBox(height: 6),
-                  OutlinedButton(onPressed: c.passPick, child: const Text('この指名を見送る')),
+                  const SizedBox(height: 4),
+                  Row(children: [
+                    Expanded(child: Text(car.draftProblem!, style: const TextStyle(color: GmColors.bad, fontSize: 12))),
+                    OutlinedButton(onPressed: c.passPick, child: const Text('この指名を見送る')),
+                  ]),
                 ],
+                if (car.news.isNotEmpty)
+                  Theme(
+                    data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+                    child: ExpansionTile(
+                      dense: true,
+                      tilePadding: EdgeInsets.zero,
+                      visualDensity: VisualDensity.compact,
+                      title: Text('このオフの知らせ(${car.news.length})', style: const TextStyle(fontSize: 13)),
+                      children: [
+                        for (final n in car.news)
+                          Align(alignment: Alignment.centerLeft, child: Text('・$n', style: const TextStyle(fontSize: 13, height: 1.5))),
+                      ],
+                    ),
+                  ),
               ],
             ),
           ),
