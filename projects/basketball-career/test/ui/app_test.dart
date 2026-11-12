@@ -68,6 +68,12 @@ void main() {
     await tester.pumpAndSettle();
     await _closeDialogs(tester);
     expect(c.career!.block, 1);
+    // 進めたら報告が画面いっぱいに出て、閉じるまで戻らない
+    expect(find.text('1〜20試合目の結果'), findsOneWidget);
+    expect(find.textContaining('オーナーの目標'), findsWidgets);
+    await tester.tap(find.text('閉じる'));
+    await tester.pumpAndSettle();
+    expect(find.text('1〜20試合目の結果'), findsNothing);
     await tester.scrollUntilVisible(find.textContaining('この20試合'), 300, scrollable: _progress);
     expect(find.textContaining('この20試合'), findsOneWidget);
   });
@@ -156,6 +162,44 @@ void main() {
     }
     expect(car.phase, Phase.playoffs);
     expect(car.me.wins + car.me.losses, gamesPerSeason);
+  });
+
+  testWidgets('プレーオフは自分のシリーズを1試合ずつめくり、最後に結果を見てシーズンの終わりへ', (tester) async {
+    _size(tester, 667, 375);
+    final c = await _controller({'gmHowtoSeen': true});
+    c.newCareer(teamAtRank(0, 15), seed: 4);
+    c.startSeason();
+    final car = c.career!;
+    while (car.phase == Phase.season) {
+      car.declineIncoming();
+      car.playBlock();
+    }
+    await tester.pumpWidget(BasketballCareerApp(controller: c));
+    await tester.pumpAndSettle();
+    await _closeDialogs(tester);
+    final start = find.textContaining(RegExp('プレーオフを戦う|プレーオフの結果を見る'));
+    await tester.scrollUntilVisible(start, 300, scrollable: _progress);
+    await tester.tap(start);
+    await tester.pumpAndSettle();
+    await _closeDialogs(tester);
+    final mine = car.playoffs.where((s) => s.high == car.mine || s.low == car.mine).toList();
+    if (mine.isNotEmpty) {
+      expect(find.text('第1戦を見る'), findsOneWidget);
+      await tester.tap(find.text('第1戦を見る'));
+      await tester.pumpAndSettle();
+      expect(find.text('第1戦'), findsOneWidget);
+    }
+    var guard = 0;
+    while (find.textContaining('シーズンの終わりへ').evaluate().isEmpty && guard++ < 60) {
+      await tester.tap(find.byType(FilledButton).last);
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+    }
+    await tester.tap(find.textContaining('シーズンの終わりへ'));
+    await tester.pumpAndSettle();
+    await _closeDialogs(tester);
+    expect(car.phase, Phase.seasonEnd);
+    expect(find.text('オーナーの評価'), findsOneWidget);
   });
 
   for (final s in const [Size(667, 375), Size(932, 430), Size(1376, 1032)]) {

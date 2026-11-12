@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../gm/block_report.dart';
 import '../gm/career.dart';
 import '../gm/skills.dart';
 import '../sound/sound.dart';
@@ -151,31 +152,39 @@ class GmController extends ChangeNotifier {
   void startSeason() => _act((c) => c.startSeason());
 
   /// 次の区切り(20〜21試合)を進める。
-  Future<void> playBlock() async {
+  Future<BlockReport?> playBlock() async {
     final c = career;
-    if (c == null || c.phase != Phase.season || busy) return;
+    if (c == null || c.phase != Phase.season || busy) return null;
     if (c.roundAt == blockStart(c.block)) await _maybeInterstitial();
+    final snap = BlockSnapshot.of(c);
     c.playBlock();
     unawaited(Sfx.play(SoundEffect.buzzer));
     await money?.tournamentPlayed();
     _record(c);
     _changed();
+    return BlockReport.make(c, snap);
   }
 
   /// 1週間進める。全画面広告の番は、区切りの初めから進めるときだけ見る(週ごとに広告を出さない)。
   /// 試合をまとめて進める([toDeadline] ならトレードの締め切りまで、でなければレギュラーシーズンの終わりまで)。
   /// 全画面広告の番は最初に1回だけ見る。申し込みが届いたら、そこで止める(返事をしてもらうため)。
-  Future<void> simAhead({required bool toDeadline}) async {
+  Future<BlockReport?> simAhead({required bool toDeadline}) async {
     final c = career;
-    if (c == null || c.phase != Phase.season || busy) return;
+    if (c == null || c.phase != Phase.season || busy) return null;
     await _maybeInterstitial();
+    final snap = BlockSnapshot.of(c);
+    final games = <GameResult>[];
     while (c.phase == Phase.season && (!toDeadline || c.block < tradeDeadlineBlock)) {
+      final before = c.lastGames.length;
+      final fromStart = c.roundAt == blockStart(c.block);
       c.playBlock();
+      games.addAll(fromStart ? c.lastGames : c.lastGames.sublist(before));
       await money?.tournamentPlayed();
       if (c.incoming != null) break;
     }
     _record(c);
     _changed();
+    return BlockReport.make(c, snap, games);
   }
 
   void toggleTradeBlock(int id) => _act((c) => c.toggleTradeBlock(id));
@@ -191,13 +200,18 @@ class GmController extends ChangeNotifier {
     return ok;
   }
 
-  Future<void> playWeek() async {
+  /// 1週間進める。区切りの終わりに着いたときだけ報告を返す。
+  Future<BlockReport?> playWeek() async {
     final c = career;
-    if (c == null || c.phase != Phase.season || busy) return;
+    if (c == null || c.phase != Phase.season || busy) return null;
     if (c.roundAt == blockStart(c.block)) await _maybeInterstitial();
-    if (c.playWeek()) await money?.tournamentPlayed();
+    final snap = BlockSnapshot.of(c);
+    final ended = c.playWeek();
+    if (ended) await money?.tournamentPlayed();
     _record(c);
     _changed();
+    // 区切りの全部の試合でまとめる(週ごとの分ではなく)
+    return ended ? BlockReport.make(c, snap, c.lastGames) : null;
   }
 
   Future<void> playPlayoffs() async {
