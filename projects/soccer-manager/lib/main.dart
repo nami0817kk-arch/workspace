@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'l10n/app_localizations.dart';
 import 'l10n/tr.dart';
@@ -14,7 +15,24 @@ import 'screens/start_screen.dart';
 import 'widgets/save_error_notifier.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  _lockLandscapeOnPhones();
   runApp(const SoccerManagerApp());
+}
+
+/// 横画面を前提に作っているので、スマホでは横向きに固定する。
+/// iPad は全方向に対応する決まりなので(Apple の要件)、短辺が広い端末は
+/// 固定しない。そちらは [MainShell] が幅と高さの比でレイアウトを切り替える。
+void _lockLandscapeOnPhones() {
+  final views = WidgetsBinding.instance.platformDispatcher.views;
+  if (views.isEmpty) return;
+  final view = views.first;
+  final shortestSide = view.physicalSize.shortestSide / view.devicePixelRatio;
+  if (shortestSide >= 600) return;
+  SystemChrome.setPreferredOrientations(const [
+    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight,
+  ]);
 }
 
 /// クラブの重役室を思わせる、紺(ネイビー)と金(ゴールド)を基調にした配色。
