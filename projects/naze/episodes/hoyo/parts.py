@@ -146,18 +146,20 @@ P["ch4"] = dict(title="第4章 お金", cta=False, lines=[
     dict(id="d5", text="内訳を見ます。", section=True, scene=BARS([("海の下のトンネル", 9300, YEL), ("陸の道", 5900, SAND)], title="事業費（億円）", note="大分県（2026年3月）", fmt="{:,}", step=3)),
     dict(id="d6", text="海の下が9,300億円。陸の道が5,900億円です。"),
     dict(id="d7", text="海の下には、3種類のトンネルを掘ります。", scene=BARS([("車が通る本坑", 6200, YEL), ("調べる先進導坑", 1600, BLUE), ("工事の作業坑", 1500, GREY)], title="海の下のトンネル（億円）", note="大分県", fmt="{:,}", step=3)),
-    dict(id="d8", text="車が通る本坑が、6,200億円。"),
-    dict(id="d9", text="地質を調べながら進む先進導坑が、1,600億円。"),
-    dict(id="d10", text="工事のための作業坑が、1,500億円です。"),
+    dict(id="d8", text="車が通る本坑が、6,200億円。", scene=CARD("6,200億円", sub="車が通る本坑", note="大分県", step=3, count=False)),
+    dict(id="d9", text="地質を調べながら進む先進導坑が、1,600億円。", scene=SLICE(step=3, labels=S_LAB[:1] + [(0.5, -285, "先進導坑で岩を調べる", BLUE)] + S_LAB[2:])),
+    dict(id="d10", text="工事のための作業坑が、1,500億円です。", scene=CARD("1,500億円", sub="工事のための作業坑", note="大分県", step=3, count=False)),
     dict(id="d11", text="意外なのは、陸の道です。", section=True, scene=MAP(NEAR_S, step=3)),
     dict(id="d12", text="愛媛県側だけで4,900億円。大分県側の、約5倍です。", scene=BARS([("大分県側", 1000, BLUE), ("愛媛県側", 4900, YEL)], title="陸の道（億円）", note="大分県", fmt="{:,}", step=3)),
-    dict(id="d13", text="愛媛県側は、大洲・八幡浜自動車道の保内インターまで、道を新しく作る見積もりです。"),
-    dict(id="d14", text="しかも、通行料が入るのは、開通してからです。"),
+    dict(id="d13", text="愛媛県側は、大洲・八幡浜自動車道の保内インターまで、道を新しく作る見積もりです。", scene=MAP(WEST, LINE([MISAKI, MATSU], id="r_ehime"), PIN(MATSU, "松山", id="p_ma3"), step=3, view_to=(132.3, 33.55, 2.2, 0))),
+    dict(id="d14", text="しかも、通行料が入るのは、開通してからです。", scene=CARD("開通してから", sub="通行料が入るのは", note="大分県", step=3, count=False)),
     dict(id="d15", text="建設のお金を、どう集めるか。これが、いちばんの宿題です。", scene=MAP(STRAIT, step=3)),
 ])
 
 # ---- 第5章 調べ尽くされている ----------------------------------------------------------------------------
-CARDS_N = lambda n: dict(shot="cards", items=ANSWERS, n=n, view=STRAIT, step=4)  # noqa: E731
+_CV = [(STRAIT, (131.96, 33.30, 0.24, 20)), (NEAR_K, (131.92, 33.28, 0.07, 30)), (STRAIT_T, (131.96, 33.30, 0.20, 25)),
+       (NEAR_S, (132.00, 33.33, 0.07, 30)), (STRAIT, (131.96, 33.30, 0.34, 10))]
+CARDS_N = lambda n: dict(shot="cards", items=ANSWERS, n=n, view=_CV[n - 1][0], view_to=_CV[n - 1][1], step=4)  # noqa: E731
 P["ch5"] = dict(title="第5章 調べ尽くされている", cta=True, lines=[
     dict(id="e1", text="では、なぜ今も、できていないのか。", scene=MAP(STRAIT_T, step=4, tr="zoom")),
     dict(id="e2", text="作れるかどうかは、50年かけて、調べられてきました。", scene=CARD("約50年", sub="1974年から続く調べ", note="大分県", step=4, count=False)),

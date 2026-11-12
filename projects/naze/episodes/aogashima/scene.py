@@ -284,7 +284,7 @@ def draw_bars(img, sc, t, u):
 
 
 def draw_cards(img, sc, t, u):
-    shots._blur_back(img, MAP, sc, t)
+    shots._blur_back(img, MAP, sc, t, u)
     items, n = sc["items"], sc.get("n", len(sc["items"]))
     x0, x1 = (W * 0.16, W * 0.84) if LAND else (W * 0.06, W * 0.94)
     top, gap = (H * 0.12, H * 0.136) if LAND else (H * 0.16, H * 0.125)
@@ -299,6 +299,10 @@ def draw_cards(img, sc, t, u):
         d.text((x0 + 108, y + hh / 2 - 16), title, font=ov.font(46 if LAND else 38), fill=(255, 255, 255, int(255 * a)), anchor="lm")
         d.text((x0 + 108, y + hh / 2 + 28), sub, font=ov.font(30 if LAND else 28), fill=DIM + (int(255 * a),), anchor="lm")
         ov.BOXES.append(("label", (x0, y, x1, y + hh), title, 1.0))
+        if i == n - 1 and a >= 1.0:       # いちばん新しい札に、光の帯がゆっくり横切る(止まった画面にしない)
+            ph = (t * 0.45) % 1.0
+            bx = x0 + (x1 - x0 - 110) * ph
+            d.rounded_rectangle([bx, y + 6, bx + 110, y + hh - 6], 14, fill=(255, 255, 255, 60))
 
 
 # ---- 図の質を上げた版(2026-11-11「2Dの画像の質を上げたい」) ------------------------------------------------
