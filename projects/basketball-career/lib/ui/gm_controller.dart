@@ -176,6 +176,7 @@ class GmController extends ChangeNotifier {
   }
 
   void toggleTradeBlock(int id) => _act((c) => c.toggleTradeBlock(id));
+  void signAndTrade(int id) => _act((c) => c.signAndTrade(id));
 
   /// トレードブロックの申し込みを受ける。成立したら true。
   bool acceptBlockOffer(TradeOffer o) {

@@ -1377,6 +1377,26 @@ class Career {
     p.morale = (p.morale - 5).clamp(0, 100);
   }
 
+  /// サイン＆トレードができない理由(できるなら null)。契約が切れる自分の選手を、再契約したうえでトレードに出す。
+  String? signAndTradeProblem(Player p) {
+    if (phase != Phase.contracts) return 'オフの契約の画面だけ';
+    if (!expiring.contains(p.id)) return '契約が切れる選手だけ';
+    if (!canTrade) return '今はトレードできない';
+    return resignProblem(p);
+  }
+
+  /// サイン＆トレード: 求める条件(最長4年)で再契約して、そのままトレードブロックに載せる。
+  /// 載せたあと、トレードの画面で申し込みを集められる(再契約した選手を出す形なので、受けるチームの年俸の決まりも通る)。
+  bool signAndTrade(int id) {
+    final p = _mineById(id);
+    if (p == null || signAndTradeProblem(p) != null) return false;
+    final years = math.min(4, askOf(p, me).maxYears);
+    resign(id, years);
+    if (!tradeBlock.contains(id)) tradeBlock.add(id);
+    _log('サイン＆トレード: ${p.name}と再契約し、トレードブロックに載せた');
+    return true;
+  }
+
   /// トレードブロックの選手への、いま届く申し込み(チームごとに1つ。こちらに値打ちの高い順)。
   List<TradeOffer> blockOffers(int id) {
     if (!canTrade) return const [];
