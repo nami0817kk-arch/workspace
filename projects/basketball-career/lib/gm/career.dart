@@ -10,6 +10,7 @@ import 'personality.dart';
 import 'player.dart';
 import 'rating.dart';
 import 'records.dart';
+import 'skills.dart';
 import 'rng.dart';
 import 'trade.dart';
 
@@ -1170,7 +1171,7 @@ class Career {
     final top = me.order.take(9).toList();
     final leaders = top.where((p) => hasTrait(p, Trait.leader)).length.clamp(0, 2);
     final troublemakers = top.where((p) => hasTrait(p, Trait.troublemaker)).length;
-    final target = 50 + (f.continuity - 0.5) * 20 + (me.winPct - 0.5) * 16 + (f.happy - 4) * 1.5 - f.unhappy * 6 + leaders * 3 - troublemakers * 3;
+    final target = 50 + (f.continuity - 0.5) * 20 + (me.winPct - 0.5) * 16 + (f.happy - 4) * 1.5 - f.unhappy * 6 + leaders * 3 - troublemakers * 3 + (skillOf(Skill.charisma) >= 2 ? skillOf(Skill.charisma) * 2 : 0);
     me.chem = (me.chem + ((target - me.chem) * 0.4).round()).clamp(0, 100);
   }
 
@@ -1196,6 +1197,7 @@ class Career {
       if (pct < 0.4) d -= 3;
       // 勝ちたい選手は、勝ち負けに敏感
       if (personalityOf(p).value == Value.win) d += pct >= 0.55 ? 1 : pct < 0.4 ? -2 : 0;
+      if (skillOf(Skill.charisma) > 0) d += 1;
       d += const [1, 0, -1][me.training.clamp(0, 2)];
       final before = p.morale;
       p.morale = (p.morale + d).clamp(0, 100);
@@ -1505,6 +1507,30 @@ class Career {
 
   int get gmLevel => ratingLevelOf(gmPoints);
 
+  // ---------------------------------------------------------------- 技能
+
+  /// 技能の段階([Skill] の順に 0〜3)。
+  List<int> skills = List.filled(Skill.values.length, 0);
+
+  int skillOf(Skill s) => skills[s.index];
+
+  /// 使える技能の点(格が1つ上がるごとに1点)。
+  int get skillPoints => gmLevel - 1 - skills.fold(0, (a, b) => a + b);
+
+  String? skillProblem(Skill s) {
+    if (skillOf(s) >= skillMax) return 'もう最高の段階';
+    if (skillPoints <= 0) return '技能の点が無い(格が上がると1点)';
+    return null;
+  }
+
+  void learnSkill(Skill s) {
+    if (skillProblem(s) != null) return;
+    skills[s.index]++;
+  }
+
+  /// 代理人との値切りの最大の往復(交渉の技能で1回増える)。
+  int get haggleLimit => maxHaggle + (skillOf(Skill.negotiation) >= 3 ? 1 : 0);
+
   /// 直前のシーズンで格が上がったか(上がる前の段階。上がっていなければ null)。
   int? levelBefore;
 
@@ -1568,7 +1594,9 @@ class Career {
         // コーチの段階で若手の伸びが変わる(力が上がる年だけ)
         final coach = t.staffLevel(Staff.development);
         if (p.age <= 26 && d >= 0) {
-          final b = coach == 3 && rng.chance(0.55) ? 1 : coach == 1 && rng.chance(0.4) ? -1 : 0;
+          var b = coach == 3 && rng.chance(0.55) ? 1 : coach == 1 && rng.chance(0.4) ? -1 : 0;
+          // 育成の技能(自分のチームだけ。段階が0なら乱数を使わない)
+          if (t.index == mine && skillOf(Skill.development) > 0 && rng.chance(0.12 * skillOf(Skill.development))) b += 1;
           if (b != 0) {
             p.ovr = (p.ovr + b).clamp(35, 99);
             if (p.pot < p.ovr) p.pot = p.ovr;
@@ -1650,7 +1678,7 @@ class Career {
     board = [];
     draftAt = 0;
     draftLog = [];
-    scoutsLeft = 1 + me.staffLevel(Staff.scout);
+    scoutsLeft = 1 + me.staffLevel(Staff.scout) + skillOf(Skill.eye);
     scoutAdUsed = false;
     phase = Phase.draft;
     _advanceDraft();
@@ -2579,7 +2607,7 @@ class Career {
     var base = freeAgent ? 0.35 + hype / 250 : 0.3 + p.morale / 200;
     if (!freeAgent) base += personalityOf(p).value == Value.loyal ? 0.1 : personalityOf(p).value == Value.money ? -0.1 : 0;
     final win = history.isEmpty ? 0.0 : (history.last.wins / gamesPerSeason - 0.5) * 0.6;
-    return (base + win).clamp(0.1, 0.85);
+    return (base + win + 0.06 * skillOf(Skill.negotiation)).clamp(0.1, 0.85);
   }
 
   /// 交渉の結果。
@@ -2593,7 +2621,7 @@ class Career {
     if (p == null) return false;
     if (factor < 1) {
       final rounds = haggleRounds(id);
-      if (rounds >= maxHaggle) return false;
+      if (rounds >= haggleLimit) return false;
       // 断られるたびに、次は受けにくくなる(代理人は往復するほど硬くなる)
       if (!rng.chance((discountChance(p, freeAgent: !exp) - 0.1 * rounds).clamp(0.05, 0.85))) {
         haggled.add(id);
@@ -2678,7 +2706,7 @@ class Career {
   }
 
   /// 相手のチームのトレードの受けにくさ(難しさ × 相手の GM の型)。
-  double _hard(int partner) => difficulty.tradeHardness * gmOf(seed, partner).style.hardness;
+  double _hard(int partner) => difficulty.tradeHardness * gmOf(seed, partner).style.hardness * (1 - 0.03 * skillOf(Skill.network));
 
   /// チームの GM(名前と型)。
   GmPerson gmPerson(int team) => gmOf(seed, team);
@@ -2771,6 +2799,7 @@ class Career {
         'exp': expiring,
         if (optionPending.isNotEmpty) 'opp': optionPending,
         'trust': trust,
+        if (skills.any((x) => x != 0)) 'skl': skills,
         if (cupHistory.isNotEmpty) 'cup': cupHistory,
         if (cupField.isNotEmpty) 'cf': cupField,
         if (cupRounds.isNotEmpty) 'cr': cupRounds,
@@ -2854,6 +2883,7 @@ class Career {
       ..expiring = [for (final x in (j['exp'] as List? ?? const [])) x as int]
       ..optionPending = [for (final x in (j['opp'] as List? ?? const [])) x as int]
       ..trust = (j['trust'] as int?) ?? 50
+      ..skills = [for (var i = 0; i < Skill.values.length; i++) i < ((j['skl'] as List?)?.length ?? 0) ? ((j['skl'] as List)[i] as int).clamp(0, skillMax) : 0]
       ..cupHistory = [for (final x in (j['cup'] as List? ?? const [])) [for (final y in x as List) y as int]]
       ..cupField = [for (final x in (j['cf'] as List? ?? const [])) x as int]
       ..cupRounds = [for (final x in (j['cr'] as List? ?? const [])) x as int]

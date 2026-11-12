@@ -13,6 +13,7 @@ import 'common.dart';
 import 'inbox_screen.dart';
 import 'negotiate_dialog.dart';
 import 'player_card.dart';
+import 'skills_screen.dart';
 import 'style.dart';
 
 /// 進行のタブ。いまやること・試合の結果・届いた申し込み・オフの知らせ。
@@ -457,7 +458,7 @@ class ProgressTab extends StatelessWidget {
         const Divider(height: 18),
         _kv('信頼', '${car.trust}(${_signed(car.lastTrustDelta)})', color: car.trust >= 30 ? null : GmColors.bad),
       ]),
-      _ratingCard(car),
+      _ratingCard(context, car),
       if (car.awardsOf(car.season).isNotEmpty)
         _card([
           _head('表彰', icon: Icons.military_tech_rounded, color: GmColors.gold),
@@ -528,7 +529,7 @@ class ProgressTab extends StatelessWidget {
   }
 
   /// GM の格。このシーズンの点の内訳と、通算・次の段階。
-  Widget _ratingCard(Career car) {
+  Widget _ratingCard(BuildContext context, Career car) {
     final total = car.lastRating.fold(0, (n, x) => n + x.points);
     final next = nextRatingFloor(car.gmPoints);
     return _card([
@@ -553,6 +554,12 @@ class ProgressTab extends StatelessWidget {
       const Divider(height: 18),
       _kv('このシーズン', '+$total点'),
       _kv('通算', next == null ? '${car.gmPoints}点(最高の段階)' : '${car.gmPoints}点(次の段階まで ${next - car.gmPoints}点)'),
+      const SizedBox(height: 6),
+      OutlinedButton.icon(
+        onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => SkillsScreen(c: c))),
+        icon: const Icon(Icons.account_tree_rounded),
+        label: Text('GMの技能(使える点 ${car.skillPoints})'),
+      ),
     ]);
   }
 
