@@ -736,10 +736,10 @@
   }
 
   // ---------- 画面の枠（左の縦タブ） ----------
-  const TABS = [['home', 'ホーム', '⌂'], ['players', '選手', '☺'], ['train', '練習', '✎'], ['match', '試合', '⚽'], ['club', 'クラブ', '▦'], ['more', 'ほか', '⋯']];
+  const TABS = [['home', 'ホーム', '⌂'], ['players', '選手', '☺'], ['train', '練習', '✎'], ['match', '試合', '⚽'], ['club', 'クラブ', '▦'], ['lineage', '系譜', '❖']];
   function renderRail() {
     const rail = document.getElementById('rail');
-    rail.replaceChildren(h('div', { class: 'logo' }, 'ユースの', h('br'), '系譜'), ...TABS.map(([k, n, ic]) => h('button', { class: 'tab' + (app.tab === k ? ' on' : ''), onclick: () => { if (app.view === 'play') return; app.tab = k; render(); } }, h('i', {}, ic), n)));
+    rail.replaceChildren(h('div', { class: 'logo' }, 'ユースの', h('br'), '系譜'), ...TABS.map(([k, n, ic]) => h('button', { class: 'tab' + (app.tab === k ? ' on' : ''), onclick: () => { if (app.view === 'play') return; app.tab = k; render(); } }, h('i', {}, ic), n)), h('button', { class: 'tab' + (app.tab === 'more' ? ' on' : ''), style: 'margin-top:auto', onclick: () => { if (app.view === 'play') return; app.tab = 'more'; render(); } }, h('i', {}, '⚙'), '設定'));
   }
   let renderKey = '';
   function render() {

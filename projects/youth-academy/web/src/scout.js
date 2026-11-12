@@ -34,7 +34,7 @@
   YA.scoutActsLeft = function (w) {
     const a = w.scouting && w.scouting.acts;
     const used = a && a.m === YA.monthIdx(w.week) ? a.n : 0;
-    return Math.max(0, YA.SCOUT_PER_MONTH - used);
+    return Math.max(0, YA.SCOUT_PER_MONTH + (w.scoutPlus || 0) - used);
   };
   const useAct = function (w) {
     const S = w.scouting;
@@ -452,7 +452,7 @@
             a.club = jClub(w, r, a.league);
           }
           contrib += share;
-          YA.noteTier(w, 1, `卒業生の${a.name}が${a.club}（${a.league}）へ${abroad ? '海外移籍' : '移籍'}（移籍金およそ${fee}万円）。連帯貢献金 +${share}万円がクラブに入ります`);
+          YA.noteTier(w, 1, `卒業生の${a.name}が${a.club}（${a.league}）へ${abroad ? '海外移籍' : '移籍'}（移籍金およそ${fee}万円）。連帯貢献金 +${share}万円が育成基金に入ります`);
         }
         // U-21代表（決定16）：21歳以下で力のある卒業生。のちにフル代表の足がかり
         if (a.age <= 21 && a.ovr >= 13.4 && r() < 0.2) {

@@ -10,6 +10,7 @@ require(path.join(__dirname, '../src/scout.js'));
 require(path.join(__dirname, '../src/extra.js'));
 require(path.join(__dirname, '../src/more.js'));
 require(path.join(__dirname, '../src/core.js'));
+require(path.join(__dirname, '../src/lineage.js'));
 require(path.join(__dirname, '../src/imgdata.js'));
 require(path.join(__dirname, '../src/art.js'));
 const YA = globalThis.YA;
@@ -663,7 +664,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   {
     const wm = YA.newWorld(11);
     const ach = YA.achievements(wm);
-    ok(ach.length >= 9 && ach.every((x) => typeof x.done === 'boolean'), '実績の一覧が出る');
+    ok(ach.length === YA.ACH_COUNT && ach.length >= 60 && ach.every((x) => typeof x.done === 'boolean'), '実績の一覧が出る');
     ok(YA.noticeKind('Aが怪我（3週）') === '怪我' && YA.noticeKind('なにか') === 'そのほか', 'お知らせの種類を分ける');
     ok(YA.renamePlayer(wm, Object.keys(wm.players)[0], '').ok === false && YA.renamePlayer(wm, Object.keys(wm.players)[0], '新しい名前').ok, '名前を書き換えられる');
     const sm0 = YA.careerSummary(wm);
@@ -973,6 +974,31 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   ok(!!wm.scouting, '移ったあとも入団の情報がある');
   let gm = 0;
   try { while (wm.year === 1 && gm++ < 80) YA.simulate(wm, { until: 'week', stopOnImportant: false }); ok(wm.year === 2, '移ったあとも1年回せる'); } catch (e) { ok(false, '移ったあとに止まる: ' + e.message); }
+}
+// 2段目その1：実績66・殿堂の2段・育成基金・系譜図
+{
+  const wl = YA.newWorld(31);
+  const al0 = YA.achievements(wl);
+  ok(al0.length === 66 && new Set(al0.map((a) => a.k)).size === 66, '実績は66個で重ならない');
+  ok(YA.ACH_FIELDS.every((f) => al0.some((a) => a.field === f)) && ['銅', '銀', '金'].every((t) => al0.some((a) => a.tier === t)), '5分野・銅銀金がそろう');
+  ok(!!YA.nextAchievement(wl), '次に届きそうな実績が出る');
+  let years = 0;
+  while (wl.year < 9 && years++ < 600) YA.simulate(wl, { until: 'week', stopOnImportant: false });
+  const hofN = wl.alumni.filter((a) => a.hof).length, fullN = wl.alumni.filter((a) => a.hof === 'full').length;
+  console.log('8年後 卒業生', wl.alumni.length, '殿堂候補以上', hofN, '正式', fullN, '基金', wl.fund, '実績', YA.achievements(wl).filter((a) => a.done).length + '/66');
+  ok(hofN >= 1, '8年で殿堂候補が出る');
+  ok(Object.keys(wl.achSeen || {}).length > 0 && wl.inbox.some((n) => /実績「/.test(n.text)), '届いた実績が知らされる');
+  ok(fullN <= Math.ceil(wl.alumni.filter((a) => a.status === 'pro').length * 0.5) + 1, '正式な殿堂入りは多すぎない');
+  ok((wl.fund || 0) + (wl.fundLog || []).reduce((s, x) => s + x.cost, 0) === (wl.fundIn || 0) && (wl.fundIn || 0) > 0, '連帯貢献金の一部が育成基金へ回る');
+  ok(!wl.club.solidarityIn, '連帯貢献金は予算に入らない');
+  wl.fund = 300;
+  ok(!YA.fundUse(wl, 'facility').ok && wl.fund === 300, '基金が足りなければ使えない（赤字にならない）');
+  wl.fund = 1200;
+  const fp = wl.club.facPts;
+  ok(YA.fundUse(wl, 'facility').ok && wl.fund === 400 && wl.club.facPts === fp + 600, '基金で施設を建て増せる');
+  const svg = YA.lineageSvg(wl), mini = YA.lineageSvg(wl, { mini: true });
+  ok(svg.startsWith('<svg') && svg.includes('年目') && mini.startsWith('<svg') && mini.length < svg.length, '系譜図が作れる');
+  ok(YA.chronicle(wl).length > 5 && JSON.parse(JSON.stringify(wl)).fund === wl.fund, '年表が作れ、基金が保存される');
 }
 console.log(fails ? '失敗 ' + fails : '育成の点検: すべて通過');
 process.exit(fails ? 1 : 0);
