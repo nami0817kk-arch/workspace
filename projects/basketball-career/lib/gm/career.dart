@@ -60,6 +60,21 @@ enum Income {
   final String label;
 }
 
+/// オーナーの性格。続けて気に入られると、信頼に上乗せが付く(嫌われて減ることはない)。
+enum OwnerType {
+  winNow('勝利一筋', '勝つことだけを見る。優勝を争える年は信頼が大きく上がる。お金にはおおらか'),
+  steady('堅実', '収支とぜいたく税を見る。黒字で税を払わない年は信頼が上がる'),
+  youth('育成好き', '若手を育てるのを好む。毎年「25歳以下を先発に2人」を目標にし、果たすと信頼が大きく上がる'),
+  popular('人気重視', '人気の上がり下がりを見る。人気が上がった年は信頼が上がる');
+
+  const OwnerType(this.label, this.text);
+  final String label;
+  final String text;
+}
+
+/// 予算の段階(年俸の合計の目安)。低く約束して守るほど、オーナーに気に入られる。
+const budgetLabels = ['上限まで', 'ぜいたく税の手前まで', '第2の壁まで'];
+
 /// オーナーの目標の種類。
 enum GoalKind {
   wins('勝ち数'),
@@ -327,6 +342,7 @@ class Career {
     final rng = Rng(seed);
     final c = Career._(seed: seed, mine: team.clamp(0, teamDefs.length - 1), rng: rng, teams: [])..difficulty = difficulty;
     c._build();
+    c.ownerType = OwnerType.values[(seed * 7 + c.mine) % OwnerType.values.length];
     // はじめのコーチ陣はみな「良い」。ヘッドコーチは70ちょうど(強さを変えないので、どのチームを選んでも同じリーグ)
     c.me.coaches = [
       for (final x in c._makeCoaches(-1, start: true)) x.role == Staff.coach ? Coach(name: x.name, role: x.role, rating: 70) : x,
@@ -387,6 +403,35 @@ class Career {
 
   /// オーナーの信頼(0で解任)と、今シーズンの勝ち数の目標。
   int trust = 50;
+
+  /// オーナーの性格(始めるときに決まる)。
+  OwnerType ownerType = OwnerType.steady;
+
+  /// 面談で決めた予算の段階([budgetLabels] の番号)。0 は上限、1 はぜいたく税、2 は第2の壁(既定。どちらも縛らない)。
+  int budgetLevel = 2;
+
+  /// 最後に面談したシーズン。
+  int meetingSeason = -1;
+
+  /// 予算の年俸の合計の目安。
+  int get budgetCap => const [salaryCap, taxLine, secondApron][budgetLevel];
+
+  /// 今季の面談ができるか(シーズン前に1回)。
+  bool get meetingOpen => phase == Phase.preseason && meetingSeason != season;
+
+  /// オーナーと面談して予算を決める。
+  void ownerMeeting(int level) {
+    if (!meetingOpen) return;
+    budgetLevel = level.clamp(0, 2);
+    meetingSeason = season;
+    _mail(Sender.owner, '予算の面談', '今季の予算は「${budgetLabels[budgetLevel]}」で合意した。${budgetLevel == 2 ? '' : '守れば信頼が上がる。超える補強やトレードは、オーナーが許さない。'}');
+  }
+
+  /// 予算を超える補強・トレードを止める理由(止めないなら null)。年俸の合計が増えるときだけ。
+  String? budgetProblem(int after) {
+    if (budgetLevel >= 2 || after <= budgetCap || after <= me.payroll) return null;
+    return 'オーナーとの約束(${budgetLabels[budgetLevel]}=${money(budgetCap)})を超える';
+  }
   int target = 0;
 
   /// 解任を1度だけ取り消せる(動画)。
@@ -939,7 +984,7 @@ class Career {
     final third = [GoalKind.playoffs, GoalKind.youth, GoalKind.noTax];
     // 強いチームにはプレーオフ、立て直しには若手、上限を大きく超えたチームには税を
     final kind = r < 12 ? GoalKind.playoffs : r >= 22 ? GoalKind.youth : me.payroll > taxLine - capScaled(50) ? GoalKind.noTax : third[rng.nextInt(third.length)];
-    goals = [OwnerGoal(GoalKind.wins), OwnerGoal(GoalKind.profit), OwnerGoal(kind)];
+    goals = [OwnerGoal(GoalKind.wins), OwnerGoal(GoalKind.profit), OwnerGoal(ownerType == OwnerType.youth ? GoalKind.youth : kind)];
     allStarIds = [];
     extAsked = [];
     for (final p in me.roster.where((p) => p.years == 1 && p.ovr >= 70 && p.nextSalary == null)) {
@@ -1268,7 +1313,16 @@ class Career {
     final goalDelta = goals.where((g) => g.kind != GoalKind.wins).fold(0, (n, g) => n + (g.met! ? goalTrust : -goalTrust));
     // 人気: 勝率とプレーオフで動く
     hype = (hype + ((me.winPct - 0.5) * 40).round() + const [-4, 3, 6, 9, 12, 16][res]).clamp(0, 100);
-    final raw = ((me.wins - target) * 1.5).round() + resultTrust[res] - lastTax + goalDelta;
+    // オーナーの性格に合う年は、信頼に上乗せが付く(嫌われて減ることはない)
+    final liked = switch (ownerType) {
+      OwnerType.winNow => res >= 3 ? 5 : 0,
+      OwnerType.steady => profit >= 0 && lastTax == 0 ? 3 : 0,
+      OwnerType.youth => goals.any((g) => g.kind == GoalKind.youth && g.met == true) ? 5 : 0,
+      OwnerType.popular => me.winPct > 0.5 ? 3 : 0,
+    };
+    // 予算を守った年(上限か税の手前を約束していたとき)
+    final kept = budgetLevel < 2 && me.payroll <= budgetCap ? (budgetLevel == 0 ? 6 : 3) : 0;
+    final raw = ((me.wins - target) * 1.5).round() + resultTrust[res] - lastTax + goalDelta + liked + kept;
     // オーナーの厳しさ: 信頼が減るときだけ、難しさの倍率をかける
     final delta = raw < 0 ? (raw * difficulty.ownerStrict).round() : raw;
     trust = (trust + delta).clamp(0, 100);
@@ -1862,6 +1916,7 @@ class Career {
     if (sal > minSalary && me.payroll + sal > salaryCap && exceptionFor(sal) == null) {
       return '年俸の上限まで${money(math.max(0, me.capRoom))}しか空きがなく、使える例外枠も無い';
     }
+    if (sal > minSalary) return budgetProblem(me.payroll + sal);
     return null;
   }
 
@@ -1951,7 +2006,7 @@ class Career {
     if (salary > room && exceptionFor(salary, base: me.payroll + _bidTotal(mine, except: p.id)) == null) {
       return '年俸の上限まで${money(math.max(0, room))}しか空きがなく、使える例外枠も無い(申し込み中も数える)';
     }
-    return null;
+    return budgetProblem(me.payroll + _bidTotal(mine, except: p.id) + salary);
   }
 
   /// 大物に申し込む(前の申し込みは置きかえる)。[factor] は求める額に掛ける数。返事は日が進むと来る。
@@ -2312,6 +2367,10 @@ class Career {
   TradeVerdict judge(TradeOffer o) {
     if (!canTrade) return const TradeVerdict(false, '今はトレードできない(締め切りを過ぎた)', 0);
     if (o.give.any((id) => expiring.contains(id) || optionPending.contains(id))) return const TradeVerdict(false, '契約の話し合い中の選手は出せない', 0);
+    final gs = [for (final id in o.give) me.roster.where((p) => p.id == id).firstOrNull?.salary ?? 0].fold(0, (a, b) => a + b);
+    final ts = [for (final id in o.get) teams[o.partner].roster.where((p) => p.id == id).firstOrNull?.salary ?? 0].fold(0, (a, b) => a + b);
+    final bp = budgetProblem(me.payroll - gs + ts);
+    if (bp != null) return TradeVerdict(false, bp, 0);
     return judgeTrade(teams, picks, mine, o, season,
         rosterLimit: phase == Phase.season ? maxRoster : offseasonRoster, hardness: difficulty.tradeHardness);
   }
@@ -2581,6 +2640,9 @@ class Career {
         'exp': expiring,
         if (optionPending.isNotEmpty) 'opp': optionPending,
         'trust': trust,
+        if (ownerType != OwnerType.steady) 'ot': ownerType.index,
+        if (budgetLevel != 2) 'bl': budgetLevel,
+        if (meetingSeason != -1) 'ms': meetingSeason,
         'target': target,
         'ru': rescueUsed,
         'fired': fired,
@@ -2657,6 +2719,9 @@ class Career {
       ..expiring = [for (final x in (j['exp'] as List? ?? const [])) x as int]
       ..optionPending = [for (final x in (j['opp'] as List? ?? const [])) x as int]
       ..trust = (j['trust'] as int?) ?? 50
+      ..ownerType = OwnerType.values[((j['ot'] as int?) ?? OwnerType.steady.index).clamp(0, OwnerType.values.length - 1)]
+      ..budgetLevel = ((j['bl'] as int?) ?? 2).clamp(0, 2)
+      ..meetingSeason = (j['ms'] as int?) ?? -1
       ..target = (j['target'] as int?) ?? 0
       ..rescueUsed = (j['ru'] as bool?) ?? false
       ..fired = (j['fired'] as bool?) ?? false

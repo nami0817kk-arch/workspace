@@ -86,12 +86,36 @@ class ProgressTab extends StatelessWidget {
           OutlinedButton(onPressed: () => goTab(3), child: const Text('補強で選手を取る')),
         ],
       ]),
+      _ownerCard(car),
       ..._offerCard(context, car),
       _goalsCard(car),
       _moneyCard(car),
       _staffCard(context, car),
     ];
   }
+
+  /// オーナーの性格と、シーズン前の面談(予算を決める)。
+  Widget _ownerCard(Career car) => _card([
+        _head('オーナー(${car.ownerType.label})', icon: Icons.business_center_rounded),
+        const SizedBox(height: 6),
+        Text(car.ownerType.text, style: const TextStyle(color: GmColors.sub, fontSize: 12, height: 1.4)),
+        const SizedBox(height: 8),
+        _kv('今季の予算', '${budgetLabels[car.budgetLevel]}(${money(car.budgetCap)})'),
+        if (car.meetingOpen) ...[
+          const SizedBox(height: 6),
+          const Text('面談: 予算を決める。低く約束して守ると、シーズンの終わりに信頼が上がる(上限まで +6、ぜいたく税の手前まで +3)。約束を超える補強やトレードはできなくなる。',
+              style: TextStyle(color: GmColors.sub, fontSize: 12, height: 1.4)),
+          const SizedBox(height: 6),
+          Wrap(spacing: 8, runSpacing: 6, children: [
+            for (var i = 0; i < budgetLabels.length; i++)
+              OutlinedButton(
+                onPressed: c.busy ? null : () => c.ownerMeeting(i),
+                child: Text('${budgetLabels[i]}(${money(const [salaryCap, taxLine, secondApron][i])})', style: const TextStyle(fontSize: 12)),
+              ),
+          ]),
+        ] else
+          const Text('今季の面談は済んだ。', style: TextStyle(color: GmColors.sub, fontSize: 12)),
+      ]);
 
   Widget _kv(String k, String v, {Color? color}) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 2),
