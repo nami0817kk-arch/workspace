@@ -800,6 +800,13 @@ class Career {
   List<List<int>> retiredNumbers = [];
   List<String> retiredNames = [];
 
+  /// 今オフに引退した、力のある選手(名前・力)。コーチ候補に加わる(最大4人)。
+  List<List<Object>> retirees = [];
+
+  void _noteRetiree(Player p) {
+    if (p.ovr >= 62 && retirees.length < 4) retirees.add([p.name, p.ovr]);
+  }
+
   /// テスト用: 引退した選手の殿堂入りと永久欠番の判定をそのまま行う。
   void toHallForTest(Player p, int team) => _toHall(p, team);
 
@@ -1758,6 +1765,7 @@ class Career {
       for (final p in retired) {
         t.roster.remove(p);
         _toHall(p, t.index);
+        _noteRetiree(p);
         if (t.index == mine) news.add('${p.name}(${p.age}歳)が引退した');
         if (p.ovr >= 72 || t.index == mine) _log('引退: ${p.name}(${t.def.short}・${p.age}歳)');
       }
@@ -1767,7 +1775,10 @@ class Career {
     }
     freeAgents.removeWhere((p) {
       final gone = retires(p, rng);
-      if (gone) _toHall(p, p.career.isEmpty ? -1 : p.career.last[1]);
+      if (gone) {
+        _toHall(p, p.career.isEmpty ? -1 : p.career.last[1]);
+        _noteRetiree(p);
+      }
       return gone || p.ovr < 45;
     });
     // 2ウェイの選手も年を取る。契約が切れたら自由契約に出る(戻したければ自由契約から取り直す)
@@ -1949,6 +1960,12 @@ class Career {
     bids = {};
     faLog = [];
     coachPool = _makeCoaches(season, start: false);
+    // 引退した力のある選手が、コーチやスカウトの候補に加わる
+    for (final r in retirees) {
+      final role = Staff.values[(r[0] as String).length % Staff.values.length];
+      coachPool.add(Coach(name: '${r[0]}(元選手)', role: role, rating: ((r[1] as int) * 0.9).round().clamp(55, 92)));
+    }
+    retirees = [];
   }
 
   /// 選手が求める年俸。弱いチームには高く、強いチームには少し安く言う。
@@ -2919,6 +2936,7 @@ class Career {
         'exp': expiring,
         if (optionPending.isNotEmpty) 'opp': optionPending,
         'trust': trust,
+        if (retirees.isNotEmpty) 'rtr': retirees,
         if (retiredNumbers.isNotEmpty) 'rnum': retiredNumbers,
         if (retiredNames.isNotEmpty) 'rnam': retiredNames,
         if (h2h.isNotEmpty) 'h2h': {for (final e in h2h.entries) '${e.key}': e.value},
@@ -3007,6 +3025,7 @@ class Career {
       ..expiring = [for (final x in (j['exp'] as List? ?? const [])) x as int]
       ..optionPending = [for (final x in (j['opp'] as List? ?? const [])) x as int]
       ..trust = (j['trust'] as int?) ?? 50
+      ..retirees = [for (final x in (j['rtr'] as List? ?? const [])) [(x as List)[0] as String, x[1] as int]]
       ..retiredNumbers = [for (final x in (j['rnum'] as List? ?? const [])) [for (final y in x as List) y as int]]
       ..retiredNames = [for (final x in (j['rnam'] as List? ?? const [])) x as String]
       ..h2h = {for (final e in ((j['h2h'] as Map?) ?? const {}).entries) int.parse(e.key as String): [for (final x in e.value as List) x as int]}
