@@ -73,7 +73,7 @@ void main() {
       var dropped = 0, rose = 0;
       for (final seed in [2, 4, 6, 10, 12, 15]) {
         for (final rank in [2, 15, 28]) {
-          final base = _start(Difficulty.normal, seed: seed, rank: rank);
+          final base = _start(Difficulty.normal, seed: seed, rank: rank)..ownerType = OwnerType.winNow; // 上乗せが付きにくい性格(減る局面を確かめるため)
           base.startSeason();
           while (base.phase == Phase.season) {
             base.playBlock();
