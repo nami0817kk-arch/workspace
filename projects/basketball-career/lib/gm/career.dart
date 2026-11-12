@@ -531,6 +531,33 @@ class Career {
   List<int> allStarIds = [];
 
   /// オールスターを選ぶ(シーズンの半分、41試合のあと)。地区ごとに12人。
+  // ---------------------------------------------------------------- 締め切り日
+
+  /// 締め切り日のまとめ(朝・昼・夕・直前の4つに分けて、今季のトレードを時間順に見せる)。乱数は使わない。
+  void _deadlineDay() {
+    final prefix = '$season年目 トレード';
+    // ニュースは新しい順。今季のトレードを時間順(古い順)に並べる
+    final trades = [for (final l in log.reversed) if (l.startsWith(prefix)) l.substring('$season年目 '.length)];
+    const slots = ['朝', '昼', '夕', '直前'];
+    final buf = StringBuffer('トレードの締め切り日。動きを時間順に。\n');
+    for (var i = 0; i < slots.length; i++) {
+      final from = trades.length * i ~/ slots.length, to = trades.length * (i + 1) ~/ slots.length;
+      final part = trades.sublist(from, to);
+      buf.writeln('\n【${slots[i]}】${part.isEmpty ? '目立った動きはなかった' : ''}');
+      for (final t in part.take(3)) {
+        buf.writeln('・$t');
+      }
+      if (part.length > 3) buf.writeln('・ほか${part.length - 3}件');
+    }
+    _mail(Sender.league, '締め切り日のまとめ', buf.toString().trim());
+    _log('トレードの締め切りを迎えた(今季のトレード${trades.length}件)');
+  }
+
+  /// 締め切り前の最後の区切りの前に、知らせを出す。
+  void _deadlineWarning() {
+    _mail(Sender.league, 'トレードの締め切りが近い', 'このあとの区切りでトレードの締め切りを迎える。補強やトレードを動かすなら、いまのうち。');
+  }
+
   // ---------------------------------------------------------------- カップ戦
 
   /// 歴代のカップ戦の結果(シーズン・優勝・準優勝のチーム)。
@@ -1191,9 +1218,11 @@ class Career {
     _updateChem();
     _giveMonthly();
     if (block == tradeDeadlineBlock) {
+      _deadlineDay();
       _runCup();
       _pickAllStars();
     }
+    if (block == tradeDeadlineBlock - 1) _deadlineWarning();
     if (block < blocksPerSeason) _mailAfterBlock();
     if (block <= tradeDeadlineBlock && rng.chance(0.5)) _aiTrades(1);
     if (block >= blocksPerSeason) {
