@@ -103,6 +103,25 @@ void main() {
     final mid = careerAt(3, 12)..startSeason();
     mid.playBlock();
     await _shoot(t, '4_home_season', await _with(mid));
+    final rep = careerAt(3, 12)..startSeason();
+    await _shoot(t, '4b_block_report', await _with(rep), act: (t) async {
+      await _tap(t, '次の20試合へ');
+    });
+    final po = careerAt(4, 3)..startSeason();
+    while (po.phase == Phase.season) {
+      po.declineIncoming();
+      po.playBlock();
+    }
+    await _shoot(t, '4c_playoff_run', await _with(po), act: (t) async {
+      final b = find.textContaining(RegExp('プレーオフを戦う|プレーオフの結果を見る'));
+      await t.ensureVisible(b);
+      await t.pump(const Duration(milliseconds: 300));
+      await t.tap(b);
+      for (var i = 0; i < 4; i++) {
+        await t.pump(const Duration(milliseconds: 500));
+        if (i < 3 && find.byType(FilledButton).evaluate().isNotEmpty) await t.tap(find.byType(FilledButton).last);
+      }
+    });
     await _shoot(t, '5_team', await _with(mid), act: (t) => _tap(t, 'チーム', first: true));
     await _shoot(t, '6_trade', await _with(mid), act: (t) => _tap(t, 'トレード', first: true));
     await _shoot(t, '5b_policy', await _with(mid), act: (t) async {

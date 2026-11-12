@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../gm/block_report.dart';
 import '../../gm/career.dart';
 import '../../gm/league.dart';
 import '../../gm/player.dart';
@@ -7,6 +8,7 @@ import '../../gm/rating.dart';
 import '../../monetization/monetization.dart';
 import '../art/title_art.dart';
 import '../gm_controller.dart';
+import 'block_report_screen.dart';
 import 'box_score.dart';
 import 'coaches_screen.dart';
 import 'common.dart';
@@ -227,7 +229,7 @@ class ProgressTab extends StatelessWidget {
         Row(children: [
           Expanded(
             child: OutlinedButton(
-              onPressed: c.busy || next <= week ? null : c.playWeek,
+              onPressed: c.busy || next <= week ? null : () => _run(context, () => c.playWeek()),
               // 文字が折り返さないように、狭い画面では縮める
               child: FittedBox(fit: BoxFit.scaleDown, child: Text(week == Career.daysPerWeek ? '1週間' : '$week試合')),
             ),
@@ -236,7 +238,7 @@ class ProgressTab extends StatelessWidget {
           Expanded(
             flex: 2,
             child: FilledButton.icon(
-              onPressed: c.busy ? null : c.playBlock,
+              onPressed: c.busy ? null : () => _run(context, () => c.playBlock()),
               icon: const Icon(Icons.play_arrow_rounded),
               label: Text('次の$next試合へ'),
             ),
@@ -248,7 +250,7 @@ class ProgressTab extends StatelessWidget {
           if (deadline) ...[
             Expanded(
               child: TextButton.icon(
-                onPressed: c.busy ? null : () => c.simAhead(toDeadline: true),
+                onPressed: c.busy ? null : () => _run(context, () => c.simAhead(toDeadline: true)),
                 icon: const Icon(Icons.fast_forward_rounded, size: 18),
                 label: const Text('締め切りまで', style: TextStyle(fontSize: 13)),
               ),
@@ -256,7 +258,7 @@ class ProgressTab extends StatelessWidget {
           ],
           Expanded(
             child: TextButton.icon(
-              onPressed: c.busy ? null : () => c.simAhead(toDeadline: false),
+              onPressed: c.busy ? null : () => _run(context, () => c.simAhead(toDeadline: false)),
               icon: const Icon(Icons.skip_next_rounded, size: 18),
               label: const Text('シーズン終わりまで', maxLines: 1, style: TextStyle(fontSize: 13)),
             ),
@@ -500,12 +502,26 @@ class ProgressTab extends StatelessWidget {
           ),
         const SizedBox(height: 12),
         FilledButton.icon(
-          onPressed: c.busy ? null : c.playPlayoffs,
+          onPressed: c.busy ? null : () => _playoffs(context),
           icon: const Icon(Icons.emoji_events_rounded),
           label: Text(rank <= playInSeeds ? 'プレーオフを戦う' : 'プレーオフの結果を見る'),
         ),
       ]),
     ];
+  }
+
+  /// 試合を進め、終わったら報告を画面いっぱいに出す。
+  Future<void> _run(BuildContext context, Future<BlockReport?> Function() play) async {
+    final nav = Navigator.of(context);
+    await showBlockReport(nav, c, await play());
+  }
+
+  /// プレーオフを戦い、自分のシリーズを1試合ずつ見せる。
+  Future<void> _playoffs(BuildContext context) async {
+    final nav = Navigator.of(context);
+    await c.playPlayoffs();
+    if (c.career?.phase != Phase.seasonEnd) return;
+    await nav.push(MaterialPageRoute<void>(fullscreenDialog: true, builder: (_) => PlayoffRunScreen(c: c)));
   }
 
   // ------------------------------------------------------------ シーズン終了
