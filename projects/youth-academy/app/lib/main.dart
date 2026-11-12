@@ -9,6 +9,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import 'boot.dart';
+import 'monetization/ad_service.dart';
+import 'monetization/bridge.dart';
+import 'monetization/purchase_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -43,6 +46,7 @@ class MatchScreen extends StatefulWidget {
 
 class _MatchScreenState extends State<MatchScreen> {
   late final WebViewController _web;
+  late final MonetizationBridge _bridge;
   bool _loaded = false;
   static const _prefix = 'ya_';
 
@@ -53,7 +57,7 @@ class _MatchScreenState extends State<MatchScreen> {
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(const Color(0xFFEAF0F8))
       // ページからの保存の依頼：{"k": 名前, "v": JSON文字列}
-      ..addJavaScriptChannel('YouthApp', onMessageReceived: (m) => unawaited(_save(m.message)))
+      ..addJavaScriptChannel('YouthApp', onMessageReceived: (m) => unawaited(_onMessage(m.message)))
       ..setNavigationDelegate(
         NavigationDelegate(
           onPageFinished: (_) {
@@ -67,7 +71,24 @@ class _MatchScreenState extends State<MatchScreen> {
           },
         ),
       );
+    // 広告と課金（ページからの依頼は _onMessage で受ける）。権利を書き込むのはこの橋だけ
+    _bridge = MonetizationBridge(
+      prefs: widget.prefs,
+      ads: createAdService(),
+      purchases: createPurchaseService(),
+      send: (json) {
+        if (!mounted) return;
+        unawaited(_web.runJavaScript('window.YAnative && window.YAnative.onMsg(${jsonEncode(json)});'));
+      },
+    );
+    unawaited(_bridge.start());
     unawaited(_load());
+  }
+
+  // 広告・課金の依頼なら橋へ、そうでなければ保存の依頼
+  Future<void> _onMessage(String message) async {
+    if (await _bridge.handle(message)) return;
+    await _save(message);
   }
 
   Future<void> _save(String message) async {

@@ -16,13 +16,14 @@ void main() {
     expect('</script>'.allMatches(out).length, 1);
   });
 
-  test('Info.plist: 横向き固定・暗号化の質問に答え済み・AdMob を持ち込んでいない', () {
+  test('Info.plist: 横向き固定・暗号化の質問に答え済み・AdMob のアプリIDがある', () {
     final plist = File('ios/Runner/Info.plist').readAsStringSync();
     expect(plist, contains('UIInterfaceOrientationLandscapeLeft'));
     expect(plist, contains('UIInterfaceOrientationLandscapeRight'));
     expect(plist, isNot(contains('UIInterfaceOrientationPortrait')));
     expect(RegExp(r'<key>ITSAppUsesNonExemptEncryption</key>\s*<false/>').hasMatch(plist), isTrue);
-    expect(plist, isNot(contains('GADApplicationIdentifier')));
+    expect(plist, contains('GADApplicationIdentifier'));
+    expect(plist, contains('SKAdNetworkItems'));
   });
 
   test('Bundle ID が App Store Connect に作ったものと同じ', () {
