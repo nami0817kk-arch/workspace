@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../gm/career.dart';
+import '../gm/skills.dart';
 import '../gm/difficulty.dart';
 import '../gm/draft.dart';
 import '../gm/league.dart';
@@ -246,6 +247,7 @@ class GmController extends ChangeNotifier {
   void readMessage(int id) => _act((c) => c.readMessage(id));
   void answer(int id, int choice) => _act((c) => c.answer(id, choice));
   void setPrice(int level) => _act((c) => c.setPrice(level));
+  void learnSkill(Skill s) => _act((c) => c.learnSkill(s));
   void ownerMeeting(int level) => _act((c) => c.ownerMeeting(level));
   void setConcession(int level) => _act((c) => c.setConcession(level));
   void hireCoach(int poolIndex) => _act((c) => c.hireCoach(poolIndex));
