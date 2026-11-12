@@ -989,7 +989,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   ok(hofN >= 1, '8年で殿堂候補が出る');
   ok(Object.keys(wl.achSeen || {}).length > 0 && wl.inbox.some((n) => /実績「/.test(n.text)), '届いた実績が知らされる');
   ok(fullN <= Math.ceil(wl.alumni.filter((a) => a.status === 'pro').length * 0.5) + 1, '正式な殿堂入りは多すぎない');
-  ok((wl.fund || 0) + (wl.fundLog || []).reduce((s, x) => s + x.cost, 0) >= (wl.solidTotal || 0) - (wl.club.solidarity || 0) - 1, '連帯貢献金は育成基金へ回る');
+  ok((wl.fund || 0) + (wl.fundLog || []).reduce((s, x) => s + x.cost, 0) === (wl.fundIn || 0) && (wl.fundIn || 0) > 0, '連帯貢献金の一部が育成基金へ回る');
   ok(!wl.club.solidarityIn, '連帯貢献金は予算に入らない');
   wl.fund = 300;
   ok(!YA.fundUse(wl, 'facility').ok && wl.fund === 300, '基金が足りなければ使えない（赤字にならない）');

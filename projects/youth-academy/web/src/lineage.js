@@ -29,7 +29,7 @@
     ['wc', 2, 'W杯に出た卒業生が{n}人', [1, 5, 15], (w) => cnt(w.alumni, (a) => wcN(a) > 0)],
     ['hof', 2, '殿堂入りが{n}人', [1, 3, 8], (w) => cnt(w.alumni, (a) => a.hof === 'full')],
     ['years', 3, '{n}年指導する', [3, 10, 20], (w) => Math.max(0, w.year - 1)],
-    ['fund', 3, '育成基金に累計{n}万円', [1000, 4000, 15000], (w) => w.solidTotal || 0],
+    ['fund', 3, '育成基金に累計{n}万円', [500, 2000, 7500], (w) => w.fundIn || 0],
     ['fac', 3, '施設レベル{n}', [1, 3, 6], (w) => YA.facilityLevel(w)],
     ['clubs', 3, '{n}つのクラブを指導する', [2, 3, 5], (w) => ((w.club && w.club.careerClubs) || []).length + 1],
     ['long', 4, '10年以上プレーした卒業生が{n}人', [1, 3, 8], (w) => cnt(w.alumni, (a) => (a.seasons || []).length >= 10)],
@@ -125,10 +125,12 @@
   // 年度はじめ：前の年の連帯貢献金を育成基金へ（予算には入れない）
   const yearStartBase = YA.yearStart;
   YA.yearStart = function (w) {
-    const add = (w.club && w.club.solidarity) || 0;
-    if (w.club) w.club.solidarity = 0; // 予算には入れない
+    const got = (w.club && w.club.solidarity) || 0;
+    const add = Math.round(got * 0.5); // 決定：連帯貢献金の5割が基金、残りはクラブ本体へ（予算には入れない）
+    if (w.club) w.club.solidarity = 0;
     yearStartBase(w);
     w.fund = (w.fund || 0) + add;
+    w.fundIn = (w.fundIn || 0) + add;
     w.club.solidarityLast = add;
     w.scoutPlus = 0;
   };
@@ -242,7 +244,7 @@
     body.append(w.alumni.length ? svgBox(YA.lineageSvg(w), ui.lz, true) : h('div', { class: 'note', style: 'margin-top:6px' }, '最初の卒業式（1年目の終わり）のあとに、ここへ枝が伸びます。'));
   }
   function fundTab(body, w) {
-    body.append(h('div', { class: 'h' }, `育成基金 ${w.fund || 0}万円`), h('div', { class: 'note' }, '卒業生の大きな移籍で入る連帯貢献金が貯まります。クラブの予算とは別で、使い道は自分で決めます（赤字にはできません）。'));
+    body.append(h('div', { class: 'h' }, `育成基金 ${w.fund || 0}万円`), h('div', { class: 'note' }, '卒業生の大きな移籍で入る連帯貢献金の半分が貯まります。クラブの予算とは別で、使い道は自分で決めます（赤字にはできません）。'));
     for (const u of YA.FUND_USES) body.append(h('div', { class: 'pitem', style: 'cursor:default;gap:6px;margin-top:4px' }, h('div', { class: 'grow' }, h('b', {}, `${u.name}（${u.cost}万円）`), h('div', { class: 'note' }, u.note)), h('button', { class: 'btn sm', disabled: (w.fund || 0) < u.cost, onclick: () => { const r = YA.fundUse(w, u.k); YA.saveWorld(); rerender(); } }, '使う')));
   }
   function viewLineage(main) {
