@@ -1,4 +1,4 @@
-// 日程・リーグ（12チームの総当たり22試合）・夏と冬の大会・順位表・相手の分析・映像ミーティング。
+// 日程・リーグ（12チームの総当たり22試合）・夏と冬の大会・順位表・相手の分析。
 // 状態は w.league / w.cup / w.h2h に入れ、JSON でそのまま保存できる。
 (function () {
   'use strict';
@@ -54,7 +54,7 @@
   const STYLE_DESC = { power: '体が強く、前から奪いにくる', tech: 'つないで崩す技術派', defend: '堅守速攻。裏抜けに注意' };
 
   function levelBase(level) {
-    return [10.9, 9.8, 8.7][level - 1];
+    return [10.6, 9.8, 9.0][level - 1]; // 決定96：部の差を詰め、上下の部を行ったり来たりしにくくする
   }
   YA.LEVEL_NAMES = ['プレミアリーグ', 'プリンスリーグ', '県リーグ'];
   const PRINCE = ['東北', '関東', '東海', '関西', '中国', '九州'];
@@ -108,7 +108,7 @@
       used.add(name);
       const style = r.pick(['power', 'tech', 'defend']);
       const ck = r.pick(COACH_KIND);
-      out.push({ id: 'R' + region + '-' + out.length, name, kind, style, level, edge: Math.round((r() - 0.5) * 1.6 * 10) / 10, coach: { name: r.pick(COACH_SUR) + ' ' + r.pick(['監督', 'コーチ']), kind: ck[0], note: ck[1] } });
+      out.push({ id: 'R' + region + '-' + out.length, name, kind, style, level, edge: Math.round((r() - 0.5) * 2.2 * 10) / 10, coach: { name: r.pick(COACH_SUR) + ' ' + r.pick(['監督', 'コーチ']), kind: ck[0], note: ck[1] } });
     };
     // 全国（1部）：J1のユース11と、各地の強豪校
     const j1 = YA.PRO_CLUBS.filter((c) => c.tier === 1);
@@ -131,6 +131,8 @@
   // チームの短い名前（愛称）
   YA.shortName = (name) => String(name || '').replace(/U-18$/, '').split(' ').pop() || name;
 
+  // 相手の強さは部ごとの幅の中で、世代ごとに入れ替わる（決定105。年とともに強くなり続ける作りはやめた）
+  YA.genWave = (w, id) => (YA.rngOf((w.seed | 0) * 7 + YA.hash(String(id)) * 3 + w.year * 131)() - 0.5) * 1.1;
   YA.newLeague = function (w) {
     const r = YA.rngOf(w.seed * 91 + w.year * 313 + (w.level || 2) * 7);
     const level = w.leagueLevel || 2;
@@ -148,7 +150,7 @@
       const ck = [c.coach.kind, c.coach.note];
       teams.push({
         id: 't' + i, cid: c.id, name, short: name.length > 9 ? name.slice(0, 9) : name, kind, style,
-        lvl: Math.round((levelBase(level) + w.year * 0.36 + c.edge + (r() - 0.5) * 0.8 + (kind === 'club' ? 0.3 : 0)) * 10) / 10,
+        lvl: Math.round((levelBase(level) + c.edge + YA.genWave(w, c.id) + (r() - 0.5) * 0.4 + (kind === 'club' ? 0.3 : 0)) * 10) / 10,
         formation: r.pick(['4-4-2', '4-3-3', '5-3-2', '4-2-3-1']), tactic: { power: 'ハイプレス', tech: 'ポゼッション', defend: '堅守' }[style],
         color: r.pick(['#c0392b', '#2c3e50', '#7f8c8d', '#8e44ad', '#d35400', '#16a085']),
         coach: { name: c.coach.name, kind: ck[0], note: ck[1] },
@@ -186,7 +188,7 @@
       const style = r.pick(['power', 'tech', 'defend']);
       return { id: 'c' + i, name, short: name.length > 9 ? name.slice(0, 9) : name, style, lvl: Math.round((base + i * 0.55 + (r() - 0.5)) * 10) / 10, formation: r.pick(['4-4-2', '4-3-3', '5-3-2']), tactic: { power: 'ハイプレス', tech: 'ポゼッション', defend: '堅守' }[style], color: r.pick(['#c0392b', '#2c3e50', '#8e44ad', '#d35400']), coach: { name: r.pick(COACH_SUR) + ' 監督', kind: r.pick(COACH_KIND)[0], note: '' } };
     });
-    const base = levelBase(w.leagueLevel || 2) - 0.3 + w.year * 0.36;
+    const base = levelBase(w.leagueLevel || 2) - 0.3;
     w.cup = { summer: { alive: true, round: 0, opps: mk(3, base), result: null }, winter: { alive: true, round: 0, opps: mk(4, base - 0.2), result: null } };
   };
 
@@ -355,41 +357,4 @@
     return out;
   };
 
-  // ---------- 映像ミーティング（試合のあと。取り上げた場面で伸び方が変わる）----------
-  YA.videoOptions = function (w, m) {
-    const out = [];
-    for (const sc of m.scenes) {
-      const mine = sc.side === 'home';
-      const ids = [];
-      if (mine && sc.shooter && m.home.players[sc.shooter]) ids.push(sc.shooter);
-      for (const k of Object.keys(sc.actors || {})) if (mine && m.home.players[sc.actors[k]] && ids.indexOf(sc.actors[k]) < 0) ids.push(sc.actors[k]);
-      if (!mine) for (const d of sc.defs || []) if (m.home.players[d] && ids.indexOf(d) < 0) ids.push(d);
-      if (!ids.length) continue;
-      const good = mine ? sc.goal || sc.outcome === 'saved' : ['intercepted', 'cleared', 'stopped', 'dispossessed', 'escaped', 'offside', 'blocked'].indexOf(sc.outcome) >= 0;
-      const text = sc.beats[sc.beats.length - 1].text;
-      out.push({ id: sc.id, minute: sc.minute, text, good, pid: ids[0], name: sc.typeName });
-    }
-    return out.slice(0, 10);
-  };
-  YA.videoApply = function (w, picks) {
-    const msgs = [];
-    for (const v of picks) {
-      const p = w.players[v.pid];
-      if (!p) continue;
-      const ab = ['判断', '予測', 'ポジショニング', 'チームワーク'];
-      const amt = v.good ? 0.5 : 0.9;
-      for (const a of ab) p.prog[a] = (p.prog[a] || 0) + amt / 2;
-      if (v.good) {
-        p.conf = clamp(p.conf + 3, 0, 100);
-        msgs.push(`${p.num}番 ${p.name.split(' ')[0]}：いい場面を共有。自信 +3、戦術の理解が少し深まった`);
-      } else {
-        const sensitive = p.pers['気持ちの強さ'] === '繊細';
-        const fighter = p.pers['教えの受け止め方'] === '反骨心' || p.pers['気持ちの強さ'] === '負けず嫌い';
-        const d = fighter ? 2 : sensitive ? -6 : -2;
-        p.conf = clamp(p.conf + d, 0, 100);
-        msgs.push(`${p.num}番 ${p.name.split(' ')[0]}：失敗の場面を振り返った。` + (fighter ? '悔しさをバネにした（自信 +2）' : sensitive ? '強く落ち込んだ（自信 -6）' : '課題は見えた（自信 -2）') + '。戦術の理解は大きく深まった');
-      }
-    }
-    return msgs;
-  };
 })();

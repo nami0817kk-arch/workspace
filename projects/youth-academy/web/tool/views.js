@@ -23,6 +23,7 @@ const html = read('shell.html')
   .replace('/*__VIEWS2__*/', () => read('views2.js'))
   .replace('/*__EXTRA__*/', () => read('extra.js'))
   .replace('/*__MORE__*/', () => read('more.js'))
+  .replace('/*__CORE__*/', () => read('core.js'))
   .replace('/*__VIEWS3__*/', () => read('views3.js'))
   .replace('/*__IMGDATA__*/', () => read('imgdata.js'))
   .replace('/*__ART__*/', () => read('art.js'));
@@ -88,6 +89,15 @@ async function clearEvents() {
   btn('この指導者で始める').click();
   await sleep(50);
   ok(A.w && A.w.coachName === 'テスト監督' && A.w.club.tier === 2 && A.w.clubName.indexOf('千葉') >= 0 && A.w.coach.exp === 3, '選んだ内容で世界が始まる');
+  // 最初の説明（決定128）：数枚で、飛ばせる
+  ok(!!d.querySelector('.sheet.intro') && txt().includes('はじめに 1/') && !!btn('飛ばす'), '最初の説明が出る');
+  btn('次へ').click();
+  ok(txt().includes('★注目の子を選ぶ'), '説明を次へ進められる');
+  btn('飛ばす').click();
+  ok(!d.querySelector('.sheet.intro') && A.w.introSeen, '説明を飛ばせる');
+  ok(!!d.querySelector('.tut.coach') && /左が今週やること/.test(d.querySelector('.tut.coach').textContent), '初めての画面でコーチの一言');
+  btn('わかった').click();
+  ok(!d.querySelector('.tut.coach'), 'コーチの一言は二度目から出ない');
   // 年度はじめ：クラブの目標と約束事
   ok(txt().includes('クラブの目標') && txt().includes('この1年を始める') && txt().includes('易しく'), '年度はじめの目標の画面');
   btn('挨拶と片付けを徹底する').click();
@@ -104,13 +114,15 @@ async function clearEvents() {
   // ホーム
   ok(txt().includes('1年目') && txt().includes('4月第1週') && txt().includes('リーグ'), 'ホームに年と週');
   ok(!!btn('練習を確定して週を進める') && !!btn('練習を組む'), 'ホームの操作');
-  ok(!!d.querySelector('.tut') && /練習/.test(d.querySelector('.tut').textContent), '最初の1か月の案内が出る');
+  ok(!!d.querySelector('.tut:not(.coach)') && /練習/.test(d.querySelector('.tut:not(.coach)').textContent), '最初の1か月の案内が出る');
   ok(txt().includes('おまかせ進行') && !!btn('1年') && !!btn('次の試合まで'), 'おまかせ進行のボタン');
   ok(txt().includes('今週気にかけたい子') && txt().includes('お知らせ'), 'ホームの欄');
   // 練習
   rail('練習');
-  ok(['月', '火', '水', '木', '金'].every((x) => txt().includes(x)) && txt().includes('重点にする能力'), '練習の曜日と表');
-  btn('月').click?.();
+  // 練習は1枚（決定143）：7マス・チームの重点・疲れの高い子・見込みと「この週で行く」
+  ok(['月', '火', '水', '木', '金', '土', '日'].every((x) => txt().includes(x)) && txt().includes('チームの重点') && txt().includes('この週の見込み') && !!btn('この週で行く'), '練習の1枚');
+  btn('攻撃の形').click();
+  ok(A.w.plan.teamFocus === '攻撃の形', 'チームの重点を選べる');
   const dayBtns = [...d.querySelectorAll('#main button.card')];
   ok(dayBtns.length === 5, '曜日のカード');
   dayBtns[0].click();
@@ -118,12 +130,16 @@ async function clearEvents() {
   btn('フィジカル').click();
   ok(txt().includes('フィジカル'), 'メニューを替えられる');
   btn('おまかせ').click();
+  btn('選手ごとに細かく').click();
+  ok(txt().includes('重点にする能力'), '選手ごとの表');
   btn('疲れた子を休ます').click();
   // 重点・特性練習の選択
   const focusBtn = [...d.querySelectorAll('#main .pitem button')].find((b) => b.textContent.includes('未設定') || true);
   focusBtn.click();
   ok(txt().includes('重点（今の値）'), '重点の選択');
   btn('閉じる').click();
+  btn('← 1枚の画面へ').click();
+  ok(txt().includes('チームの重点'), '1枚の画面へ戻れる');
   // 選手
   rail('選手');
   ok(txt().includes('面談') && txt().includes('特性') && txt().includes('性格'), '選手の詳細');
@@ -373,7 +389,7 @@ async function clearEvents() {
     btn('設定').click();
     ok(txt().includes('名前の書き換え') && txt().includes('クラブ名') === false || txt().includes('名前の書き換え'), '設定に名前の書き換え');
     rail('練習');
-    ok(txt().includes('休み解除'), '練習に一括ボタン');
+    ok(txt().includes('先週と同じ') && txt().includes('おまかせ') && txt().includes('疲れの高い子'), '練習に一括ボタン');
     rail('ほか');
     btn('Bチーム').click();
     ok(txt().includes('Bチームの指揮') && txt().includes('起用方針'), 'Bチームの指揮の画面');

@@ -67,10 +67,29 @@
   }
 
   // ---------- 設定：自動停止・効果音・セーブ枠・書き出し・復元 ----------
+  // 最初の説明（決定128）。飛ばせる・設定から読み返せる
+  YA.showIntro = function () {
+    const app = U().app;
+    if (!app.w || document.querySelector('.sheet.intro')) return;
+    let i = 0;
+    const main = document.getElementById('main');
+    const sheet = h('div', { class: 'sheet intro', style: 'z-index:30' });
+    const done = () => { app.w.introSeen = true; YA.saveWorld(); sheet.remove(); };
+    const draw = () => {
+      const [t, b] = YA.INTRO[i];
+      sheet.replaceChildren(h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(520px,94%);padding:16px 18px;gap:10px' },
+        h('div', { class: 'sub' }, `はじめに ${i + 1}/${YA.INTRO.length}`), h('div', { class: 'h', style: 'font-size:18px' }, t), h('div', { style: 'font-size:13.5px;line-height:1.6' }, b),
+        h('div', { class: 'row', style: 'gap:6px' }, h('button', { class: 'btn', onclick: done }, '飛ばす'), h('span', { class: 'grow' }), i > 0 ? h('button', { class: 'btn', onclick: () => { i--; draw(); } }, '戻る') : null,
+          h('button', { class: 'btn pri', onclick: () => { if (i < YA.INTRO.length - 1) { i++; draw(); } else done(); } }, i < YA.INTRO.length - 1 ? '次へ' : 'はじめる'))));
+    };
+    draw();
+    main.append(sheet);
+  };
   YA.settingsBlock = function (body) {
     const app = U().app;
     const store = U().store;
     body.append(h('div', { class: 'h' }, '設定'));
+    body.append(h('div', { class: 'row', style: 'margin:6px 0' }, h('span', { class: 'grow' }, '最初の説明・コーチの一言'), h('button', { class: 'btn sm', onclick: () => { if (app.w) { app.w.coachSeen = {}; app.w.introSeen = false; YA.saveWorld(); rerender(); } } }, '読み返す')));
     body.append(h('div', { class: 'row', style: 'margin:6px 0' }, h('span', { class: 'grow' }, '試合の自動停止（前半終了・得点・失点・残り15分）'), h('button', { class: 'btn sm' + (app.autoStop ? ' on' : ''), onclick: () => { app.autoStop = !app.autoStop; store.set('autoStop', app.autoStop); rerender(); } }, app.autoStop ? 'ON' : 'OFF')));
     body.append(h('div', { class: 'row', style: 'margin:6px 0' }, h('span', { class: 'grow' }, '効果音'), h('button', { class: 'btn sm' + (YA.sfx.on ? ' on' : ''), onclick: () => { YA.sfx.on = !YA.sfx.on; store.set('sfx', YA.sfx.on); YA.sfx.play('tap'); rerender(); } }, YA.sfx.on ? 'ON' : 'OFF')));
     fontAndNotices(body);

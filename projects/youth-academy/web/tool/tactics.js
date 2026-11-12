@@ -9,6 +9,8 @@
 { let r = 12345; Math.random = () => ((r = (r * 1103515245 + 12345) % 2147483648) / 2147483648); }
 for (const f of ['data', 'engine', 'world', 'league', 'club', 'scout', 'extra', 'more', 'render']) require('../src/' + f + '.js');
 const YA = globalThis.YA;
+// 入学時の水準を下げた（決定100）ので、パスの上手い子・下手な子の両方の標本が要る点検では、半分の子のパスを下げて昔の広がりに戻す
+const lift = (w) => { Object.values(w.players).forEach((p, i) => { if (i % 2) p.ab['パス'] = Math.max(1, p.ab['パス'] - 3); else p.ab['パス'] = Math.min(20, p.ab['パス'] + 2); }); return w; };
 const cv = { getBoundingClientRect: () => ({ width: 844, height: 330 }), getContext: () => null, width: 0, height: 0 };
 let fails = 0;
 const ok = (c, msg) => { if (!c) { fails++; console.log('FAIL: ' + msg); } };
@@ -92,7 +94,7 @@ ok(hi.deep > lo.deep * 1.5, '押している側は相手陣の奥にいる時間
   const sp = {};
   const pass = { hi: [0, 0], lo: [0, 0] };
   for (const seed of [3, 8, 21, 34]) {
-    const w = YA.newWorld(seed);
+    const w = lift(YA.newWorld(seed));
     const home = YA.teamFromWorld(w, 'A');
     const away = YA.makeOpponent(YA.opponentOf(w), seed * 7);
     const m = new YA.Match({ seed, home, away, settings: { autoStop: false } });

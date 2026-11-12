@@ -27,7 +27,8 @@
   };
   YA.SCENE_NAMES = SCENE_NAMES;
 
-  const has = (p, t) => p.traits.indexOf(t) >= 0;
+  // 覚醒の特性（core.js の p.aw）は、元の特性と同じ働きをする
+  const has = (p, t) => p.traits.indexOf(t) >= 0 || !!(p.aw && p.aw.as && p.aw.as.indexOf(t) >= 0);
   const pers = (p, g, v) => p.pers[g] === v;
   const anyPers = (p, v) => Object.values(p.pers).indexOf(v) >= 0;
 
@@ -265,6 +266,11 @@
     }
     traitBonus(sc, p, trait, amount, text) {
       if (!has(p, trait)) return 0;
+      if (p.traits.indexOf(trait) < 0) {
+        // 覚醒の特性：札は覚醒の名前で出し、効きは少し強い
+        this._fx(sc, p, 'awake', p.aw.trait, text);
+        return amount * 1.4;
+      }
       this._fx(sc, p, 'trait', trait, text);
       return amount;
     }
