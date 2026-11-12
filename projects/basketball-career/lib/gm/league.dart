@@ -593,6 +593,9 @@ const minutesByOrder = [34, 33, 32, 30, 28, 22, 18, 14, 10, 8, 6, 3, 2, 0, 0];
       final r = rng.nextInt(100);
       final games = r < 80 ? 1 + rng.nextInt(6) : r < 97 ? 8 + rng.nextInt(15) : 30 + rng.nextInt(30);
       p.injured = math.max(1, (games * speed).round());
+      // 部位は乱数を使わず、選手と回数から決める(リーグの続きを変えない)
+      p.injPart = (p.id * 7 + p.injCount * 13 + games) % injuryParts.length;
+      p.injCount++;
       injuries.add((t.index, p));
     }
   }

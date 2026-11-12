@@ -158,7 +158,7 @@ class PlayerRow extends StatelessWidget {
                   Text(salaryText ?? '${money(p.salary)}・${p.years <= 0 ? '契約切れ' : '残り${p.years}年'}',
                       style: const TextStyle(fontSize: 12, color: GmColors.sub)),
                   if (grade != '-') Tag('伸びしろ$grade', color: grade == 'S' || grade == 'A' ? GmColors.gold : GmColors.sub),
-                  if (p.injured > 0) Tag('けが あと${p.injured}試合', color: GmColors.bad),
+                  if (p.injured > 0) Tag(p.injuryText.isEmpty ? 'けが あと${p.injured}試合' : 'けが ${p.injuryText}', color: GmColors.bad),
                 ]),
                 if (p.stats.gp > 0 || p.prev.gp > 0)
                   Padding(

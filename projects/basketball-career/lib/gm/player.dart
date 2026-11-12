@@ -31,6 +31,9 @@ enum Attr {
   final String label;
 }
 
+/// けがの部位。
+const injuryParts = ['足首', '膝', 'ふくらはぎ', '太もも', '腰', '肩', '手首', '指', '脳しんとう', '背中'];
+
 /// ポジションごとの能力のずれ(外・中・パス・リバウンド・守り・運動)。
 const _posProfile = <Pos, List<int>>{
   Pos.pg: [4, -3, 9, -9, 0, 3],
@@ -225,6 +228,8 @@ class Player {
     this.exp = 0,
     this.morale = 60,
     this.injured = 0,
+    this.injPart = -1,
+    this.injCount = 0,
     this.allStars = 0,
     this.nextSalary,
     this.optionYears = 0,
@@ -286,6 +291,18 @@ class Player {
 
   /// けがで休む残りの試合数(0なら出られる)。
   int injured;
+
+  /// 今のけがの部位([injuryParts] の番号。-1 は無し)。
+  int injPart;
+
+  /// これまでのけがの回数(繰り返すとけがしがちと言われる)。
+  int injCount;
+
+  /// 今のけがの重さ(軽い・中くらい・重い)。
+  String get injurySeverity => injured <= 3 ? '軽い' : injured <= 14 ? '中くらい' : '重い';
+
+  /// けがの説明(部位・重さ・残り)。けがをしていなければ空。
+  String get injuryText => injured <= 0 || injPart < 0 ? '' : '${injuryParts[injPart % injuryParts.length]}の$injurySeverityけが・あと$injured試合';
 
   /// オールスターに選ばれた回数。
   int allStars;
@@ -369,6 +386,8 @@ class Player {
         if (exp != 0) 'ex': exp,
         if (morale != 60) 'mo': morale,
         if (injured != 0) 'in': injured,
+        if (injPart != -1) 'ip': injPart,
+        if (injCount != 0) 'ic': injCount,
         if (allStars != 0) 'as': allStars,
         if (nextSalary != null) 'ns': nextSalary,
         if (optionYears != 0) 'op': optionYears,
@@ -397,6 +416,8 @@ class Player {
         exp: (j['ex'] as int?) ?? 0,
         morale: ((j['mo'] as int?) ?? 60).clamp(0, 100),
         injured: ((j['in'] as int?) ?? 0).clamp(0, 99),
+        injPart: ((j['ip'] as int?) ?? -1).clamp(-1, 99),
+        injCount: ((j['ic'] as int?) ?? 0).clamp(0, 99),
         allStars: (j['as'] as int?) ?? 0,
         nextSalary: j['ns'] as int?,
         optionYears: ((j['op'] as int?) ?? 0).clamp(0, 4),
