@@ -12,6 +12,7 @@ require(path.join(__dirname, '../src/more.js'));
 require(path.join(__dirname, '../src/core.js'));
 require(path.join(__dirname, '../src/lineage.js'));
 require(path.join(__dirname, '../src/rivals.js'));
+require(path.join(__dirname, '../src/story.js'));
 require(path.join(__dirname, '../src/imgdata.js'));
 require(path.join(__dirname, '../src/art.js'));
 const YA = globalThis.YA;
@@ -1024,6 +1025,80 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   try { while (nw.year < wl.year + 2 && gn++ < 120) YA.simulate(nw, { until: 'week', stopOnImportant: false }); ok(true, '移ったあとも回せる'); } catch (e) { ok(false, '移ったあとに落ちる ' + e.message); }
   ok(nw.league.teams.some((t) => t.grudge), '前のクラブが因縁の相手としてリーグにいる');
   ok(JSON.stringify(nw).length > 1000 && !!JSON.parse(JSON.stringify(nw)).moves, '移籍後の世界が保存できる');
+}
+
+// 2段目その3：進路面談・節目の場面・口調
+{
+  ok(YA.TONES.length >= 10, '口調が10通り以上ある');
+  const ws = YA.newWorld(77);
+  const toneSet = new Set(Object.values(ws.players).map((p) => YA.toneOf(p)));
+  ok(toneSet.size >= 6 && [...toneSet].every((t) => YA.TONES.indexOf(t) >= 0), '性格から口調が決まり、36人で6種類以上に散る ' + toneSet.size);
+  const p0 = Object.values(ws.players)[0];
+  ok(YA.toneOf(p0) === YA.toneOf(p0), '口調は決まっている');
+  const seen = [];
+  for (let i = 0; i < 3; i++) seen.push(YA.say(ws, p0, 'greet'));
+  ok(new Set(seen).size === 3, '台詞は直近に出したものを避ける');
+  for (const sc of Object.keys(YA.SAY)) ok(YA.TONES.every((t) => (YA.SAY[sc][t] || []).length >= 3), '台詞が口調ごとに3通り以上 ' + sc);
+  const w3 = YA.newWorld(41);
+  const kinds = new Set(), paths = [];
+  let gy = 0, startY = w3.year;
+  while (w3.year < startY + 3 && gy++ < 200) {
+    YA.autoPlan(w3);
+    if (w3.week === 26) w3.campChoice = 'domestic';
+    if (w3.scouting) YA.autoScout(w3);
+    YA.startWeek(w3);
+    for (const e of w3.events.slice()) {
+      if (e.pid && !w3.players[e.pid]) { w3.events.splice(w3.events.indexOf(e), 1); continue; }
+      if (e.id === 'scene') { kinds.add(e.sc); const v = YA.eventView(w3, e); ok(v && v.text.length > 20 && v.opts.length === 3, '節目の場面の表示 ' + e.sc); }
+      if (e.id === 'path') {
+        const v = YA.eventView(w3, e);
+        const p = w3.players[e.pid];
+        ok(p.star && v.opts.length >= 2 && v.opts.length <= 3 && /おすすめ/.test(v.opts[0]), '進路面談：★の子に候補2〜3個、先頭がおすすめ');
+        const idx = paths.length % v.opts.length;
+        const r = YA.resolveEvent(w3, e, idx);
+        ok(/「/.test(r.line) && !!p._p2, '進路面談：選んだ道が残り、口調の返事が出る');
+        paths.push(p._p2);
+      } else {
+        const v = YA.eventView(w3, e);
+        const r = YA.resolveEvent(w3, e, 0);
+        ok(r && typeof r.line === 'string', '出来事の結果 ' + e.id);
+      }
+    }
+    YA.afterEvents(w3);
+    const mt = YA.matchOf(w3);
+    if (mt) {
+      const home = YA.teamFromWorld(w3, 'A'), opp = YA.opponentOf(w3);
+      const away = YA.makeOpponent(opp, w3.seed + w3.week);
+      const m = new YA.Match({ seed: w3.seed + w3.week * 3 + w3.year, home, away, settings: { autoStop: false } });
+      let g = 0; while (!m.finished && g++ < 2000) m.step();
+      YA.applyMatch(w3, m, 'A', opp, true);
+    }
+    YA.endWeek(w3);
+    if (w3.pendingContract) YA.renewContract(w3);
+    // ★は毎年付ける（面談の対象）
+    if (w3.week === 3) YA.autoStars(w3);
+  }
+  console.log('節目の場面', [...kinds].join(','), '／面談の選択', paths.join(','), '／遅咲き', w3.alumni.filter((a) => a.late).length, '／path2', w3.alumni.filter((a) => a.path2).map((a) => a.path2 + ':' + a.status).join(','));
+  ok(kinds.has('enter') && kinds.has('grad') && kinds.has('camp'), '入学式・夏合宿・卒業式の場面が出る');
+  ok(paths.length >= 1, '進路面談が出る');
+  ok(w3.alumni.filter((a) => a.path2).every((a) => (a.path2 !== 'corp' && a.path2 !== 'quit') || a.status === 'amateur'), '社会人・やめる道は卒業の形に反映される');
+  // 大学のおすすめに沿えば遅咲きの印が付き、余分に伸びる
+  const wl2 = YA.newWorld(5);
+  const q = Object.values(wl2.players).filter((p) => p.grade === 3)[0];
+  q._p2 = 'univ'; q._push = 'univ'; q._pathRec = true;
+  const a = YA.alumniEntry(wl2, q, '大学へ');
+  ok(a.path2 === 'univ' && (a.status !== 'univ' || a.late === true), '大学を選んでおすすめと合えば遅咲きの印');
+  if (a.status === 'univ') {
+    wl2.alumni.push(a);
+    const o0 = a.ovr; YA.alumniTick(wl2);
+    ok(a.ovr >= o0 + 0.2, '遅咲きの子は余分に伸びる');
+  }
+  const wq = YA.newWorld(6);
+  const qq = Object.values(wq.players).filter((p) => p.grade === 3)[0];
+  qq._p2 = 'quit';
+  const aq = YA.alumniEntry(wq, qq, '大学へ');
+  ok(aq.status === 'amateur' && aq.retired === true && /やめて/.test(aq.note), 'サッカーをやめる道は引退の形で卒業する');
+  ok(JSON.stringify(w3).length > 1000 && JSON.parse(JSON.stringify(w3)).sayHist.length > 0, '台詞の履歴が保存される');
 }
 console.log(fails ? '失敗 ' + fails : '育成の点検: すべて通過');
 process.exit(fails ? 1 : 0);
