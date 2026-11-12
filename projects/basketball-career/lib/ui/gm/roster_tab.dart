@@ -16,10 +16,50 @@ import 'stats_screen.dart';
 import 'style.dart';
 import 'training_screen.dart';
 
+/// 選手の並べ方。
+enum RosterSort {
+  lineup('先発の順'),
+  ovr('力'),
+  salary('年俸'),
+  years('残り年数'),
+  morale('気持ち'),
+  age('年齢');
+
+  const RosterSort(this.label);
+  final String label;
+}
+
 /// チームのタブ。先発と控え、年俸。選手を押すと詳しく見て、放せる。
-class RosterTab extends StatelessWidget {
+class RosterTab extends StatefulWidget {
   const RosterTab({super.key, required this.c});
   final GmController c;
+
+  @override
+  State<RosterTab> createState() => _RosterTabState();
+}
+
+class _RosterTabState extends State<RosterTab> {
+  GmController get c => widget.c;
+  RosterSort _sort = RosterSort.lineup;
+
+  List<Player> _sorted(List<Player> list) {
+    final out = [...list];
+    switch (_sort) {
+      case RosterSort.lineup:
+        break;
+      case RosterSort.ovr:
+        out.sort((a, b) => b.ovr.compareTo(a.ovr));
+      case RosterSort.salary:
+        out.sort((a, b) => b.salary.compareTo(a.salary));
+      case RosterSort.years:
+        out.sort((a, b) => a.years.compareTo(b.years));
+      case RosterSort.morale:
+        out.sort((a, b) => a.morale.compareTo(b.morale));
+      case RosterSort.age:
+        out.sort((a, b) => a.age.compareTo(b.age));
+    }
+    return out;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,11 +117,34 @@ class RosterTab extends StatelessWidget {
             _tile(w, Icons.table_chart_rounded, 'チームの成績', 'シュート・スティールなど', () => go(StatsScreen(c: c))),
           ]);
         }),
-        const SectionTitle('先発'),
-        // PG・SG・SF・PF・C の順に。本来と違う位置で出る選手には、その位置を添える
-        for (final (slot, p) in bySlot(order.take(5).toList())) _row(context, car, p, slot: slot),
-        const SectionTitle('控え'),
-        for (final p in order.skip(5)) _row(context, car, p),
+        const SizedBox(height: 10),
+        // 並べ替え
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(children: [
+            const Text('並び: ', style: TextStyle(fontSize: 12, color: GmColors.sub)),
+            for (final s in RosterSort.values)
+              Padding(
+                padding: const EdgeInsets.only(right: 6),
+                child: ChoiceChip(
+                  visualDensity: VisualDensity.compact,
+                  label: Text(s.label, style: const TextStyle(fontSize: 12)),
+                  selected: _sort == s,
+                  onSelected: (_) => setState(() => _sort = s),
+                ),
+              ),
+          ]),
+        ),
+        if (_sort == RosterSort.lineup) ...[
+          const SectionTitle('先発'),
+          // PG・SG・SF・PF・C の順に。本来と違う位置で出る選手には、その位置を添える
+          for (final (slot, p) in bySlot(order.take(5).toList())) _row(context, car, p, slot: slot),
+          const SectionTitle('控え'),
+          for (final p in order.skip(5)) _row(context, car, p),
+        ] else ...[
+          SectionTitle('全員(${_sort.label}の順)'),
+          for (final p in _sorted(order)) _row(context, car, p),
+        ],
         SectionTitle('2ウェイ契約(${me.twoWay.length}/$twoWayMax人)'),
         Padding(
           padding: const EdgeInsets.only(bottom: 6),
@@ -174,14 +237,23 @@ class RosterTab extends StatelessWidget {
           team: car.mine,
           showDelta: true,
           showMorale: true,
-          extra: slot != null && slot != p.pos
-              ? Tag('${slot.short}で出る(本来は${p.pos.short})', color: GmColors.gold)
-              : car.draftedIds.contains(p.id)
-                  ? const Tag('生え抜き', color: GmColors.good)
-                  : null,
+          extra: _marks(car, p, slot),
           onTap: () => _detail(context, car, p),
         ),
       );
+
+  /// 選手の印(違う位置・不満・今季で契約切れ・トレードブロック・生え抜き)。何も無ければ null。
+  Widget? _marks(Career car, Player p, Pos? slot) {
+    final tags = <Widget>[
+      if (slot != null && slot != p.pos) Tag('${slot.short}で出る(本来は${p.pos.short})', color: GmColors.gold),
+      if (p.morale < 20) const Tag('不満', color: GmColors.bad) else if (p.morale < 45) const Tag('不満ぎみ', color: GmColors.gold),
+      if (p.years == 1 && car.phase != Phase.contracts) const Tag('今季で契約切れ', color: GmColors.gold),
+      if (car.tradeBlock.contains(p.id)) const Tag('ブロック', color: GmColors.ball),
+      if (car.draftedIds.contains(p.id)) const Tag('生え抜き', color: GmColors.good),
+    ];
+    if (tags.isEmpty) return null;
+    return Wrap(spacing: 5, runSpacing: 3, children: tags);
+  }
 
   Future<void> _detail(BuildContext context, Career car, Player p) => showGmSheet<void>(
         context,
