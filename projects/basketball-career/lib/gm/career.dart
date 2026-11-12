@@ -745,8 +745,8 @@ class Career {
         p.tenure = math.min(p.exp, 4);
       }
     }
-    // 指名権は今年から3年先まで(4回のドラフト)
-    for (final s in [season, season + 1, season + 2, season + 3]) {
+    // 指名権は今年から6年先まで(7回のドラフト)
+    for (final s in [for (var i = 0; i < pickYears; i++) season + i]) {
       for (final r in [1, 2]) {
         for (var t = 0; t < teams.length; t++) {
           picks.add(DraftPick(season: s, round: r, from: t, owner: t));
@@ -2419,9 +2419,9 @@ class Career {
     }
   }
 
-  /// [from] から4回分のドラフトの指名権がそろうように足す(前の保存で2年分しか無かったときも)。
+  /// [from] から7回分のドラフトの指名権がそろうように足す(前の保存で2年分しか無かったときも)。
   void _fillPicks(int from) {
-    for (var s = from; s < from + 4; s++) {
+    for (var s = from; s < from + pickYears; s++) {
       for (final r in [1, 2]) {
         for (var t = 0; t < teams.length; t++) {
           if (!picks.any((p) => p.season == s && p.round == r && p.from == t)) {
