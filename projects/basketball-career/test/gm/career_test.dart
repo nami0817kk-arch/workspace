@@ -277,7 +277,7 @@ void main() {
   group('表彰と歴史', () {
     late Career c;
     setUpAll(() {
-      c = careerAt(4, 15);
+      c = careerAt(6, 15);
       var guard = 0;
       while (c.phase != Phase.over && guard++ < 1500) {
         if (c.phase == Phase.seasonEnd) c.fired = false;
@@ -960,7 +960,7 @@ void main() {
       expect(c.scoutsLeft, 4);
     });
 
-    test('交渉: 求める額なら必ず契約、1割高いと気持ちが上がる、1割安くを断られると気持ちが下がって二度と値切れない', () {
+    test('交渉: 求める額なら必ず契約、1割高いと気持ちが上がる、1割安くを断られると気持ちが下がり、3回断られたらもう値切れない', () {
       final c = careerAt(7, 12);
       var guard = 0;
       while ((c.phase != Phase.contracts || c.expiring.length < 2) && guard++ < 300) {
@@ -989,7 +989,12 @@ void main() {
       if (!ok) {
         expect(c.haggled, contains(b.id));
         expect(b.morale, lessThanOrEqualTo(before));
-        expect(c.offer(b.id, 1, 0.9), isFalse);
+        // 代理人との値切りは3回まで。3回断られたら、もう申し出られない
+        var guard = 0;
+        while (c.haggleRounds(b.id) < Career.maxHaggle && guard++ < 10) {
+          if (c.offer(b.id, 1, 0.9)) break;
+        }
+        if (c.haggleRounds(b.id) >= Career.maxHaggle) expect(c.offer(b.id, 1, 0.9), isFalse);
       }
     });
   });
@@ -1235,18 +1240,18 @@ void main() {
   });
 
   group('指名権(4年先まで・保護・くじの見込み)', () {
-    test('指名権は今年から3年先まで、1巡目と2巡目が30チーム分ある。ドラフトのあとも4年分そろう', () {
+    test('指名権は今年から6年先まで、1巡目と2巡目が30チーム分ある。ドラフトのあとも7年分そろう', () {
       final c = careerAt(19, 10);
-      expect(c.picks, hasLength(4 * 2 * 30));
-      expect(c.picks.map((p) => p.season).toSet(), {1, 2, 3, 4});
+      expect(c.picks, hasLength(7 * 2 * 30));
+      expect(c.picks.map((p) => p.season).toSet(), {1, 2, 3, 4, 5, 6, 7});
       _toPlayoffs(c).playPlayoffs();
       c.fired = false;
       c.toOffseason();
       while (c.phase == Phase.draft) {
         c.passPick();
       }
-      expect(c.picks.map((p) => p.season).toSet(), {2, 3, 4, 5});
-      expect(c.picks, hasLength(4 * 2 * 30));
+      expect(c.picks.map((p) => p.season).toSet(), {2, 3, 4, 5, 6, 7, 8});
+      expect(c.picks, hasLength(7 * 2 * 30));
     });
 
     test('先の年ほど、保護が付くほど、指名権の値打ちは下がる', () {
@@ -1301,13 +1306,13 @@ void main() {
       expect(odds[worst], odds.values.reduce((a, b) => a > b ? a : b));
     });
 
-    test('前の版の保存(指名権が2年分)を読んでも、4年分そろう', () {
+    test('前の版の保存(指名権が2年分)を読んでも、7年分そろう', () {
       final c = careerAt(19, 10);
       final j = jsonDecode(jsonEncode(c.toJson())) as Map<String, dynamic>;
       j['picks'] = [for (final p in j['picks'] as List) if ((p as Map)['s'] as int <= 2) p];
       final copy = Career.fromJson(j);
-      expect(copy.picks.map((p) => p.season).toSet(), {1, 2, 3, 4});
-      expect(copy.picks, hasLength(240));
+      expect(copy.picks.map((p) => p.season).toSet(), {1, 2, 3, 4, 5, 6, 7});
+      expect(copy.picks, hasLength(420));
     });
   });
 

@@ -133,6 +133,29 @@ class TradeVerdict {
   final double ratio;
 }
 
+/// 指名権をそろえておく先の年数(今年から数えて7回のドラフト)。
+const pickYears = 7;
+
+/// 指名権の決まり(ステピエン・ルール): 自分の1巡目の指名権を、続く2年とも手放してはいけない。
+/// [away] は出す指名権、[gained] は受け取る指名権(どちらも [picks] の番号)。このトレードで新しく破るときだけ理由を返す。
+String? stepienProblem(List<Team> teams, List<DraftPick> picks, int team, Iterable<int> away, Iterable<int> gained) {
+  final awaySet = away.toSet(), gainedSet = gained.toSet();
+  final own = <int, int>{
+    for (var i = 0; i < picks.length; i++)
+      if (picks[i].from == team && picks[i].round == 1) picks[i].season: i,
+  };
+  bool held(int i) => (picks[i].owner == team && !awaySet.contains(i)) || gainedSet.contains(i);
+  for (final e in own.entries) {
+    final next = own[e.key + 1];
+    if (next == null) continue;
+    if (!awaySet.contains(e.value) && !awaySet.contains(next)) continue;
+    if (!held(e.value) && !held(next)) {
+      return '${teams[team].def.short}は、自分の1巡目の指名権を2年続けて手放せない(${e.key}年目と${e.key + 1}年目)';
+    }
+  }
+  return null;
+}
+
 /// 相手が受け入れるのに要る釣り合い。相手は少し得をしないと受けない。
 double requiredValue(double out) => out * 1.08 + 4;
 
@@ -173,6 +196,10 @@ TradeVerdict judgeTrade(List<Team> teams, List<DraftPick> picks, int mine, Trade
   if (mine1 != null) return TradeVerdict(false, mine1, 0);
   final theirs = salaryRuleProblem(them, gs, ts, maxSingleOut: maxOf(get));
   if (theirs != null) return TradeVerdict(false, theirs, 0);
+  final s1 = stepienProblem(teams, picks, mine, o.givePicks, o.getPicks);
+  if (s1 != null) return TradeVerdict(false, s1, 0);
+  final s2 = stepienProblem(teams, picks, o.partner, o.getPicks, o.givePicks);
+  if (s2 != null) return TradeVerdict(false, s2, 0);
   final mode = them.mode;
   var inV = give.fold(0.0, (s, p) => s + playerValue(p, mode));
   var outV = get.fold(0.0, (s, p) => s + playerValue(p, mode));

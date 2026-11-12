@@ -745,8 +745,8 @@ class Career {
         p.tenure = math.min(p.exp, 4);
       }
     }
-    // 指名権は今年から3年先まで(4回のドラフト)
-    for (final s in [season, season + 1, season + 2, season + 3]) {
+    // 指名権は今年から6年先まで(7回のドラフト)
+    for (final s in [for (var i = 0; i < pickYears; i++) season + i]) {
       for (final r in [1, 2]) {
         for (var t = 0; t < teams.length; t++) {
           picks.add(DraftPick(season: s, round: r, from: t, owner: t));
@@ -866,7 +866,7 @@ class Career {
   /// 今のシーズンの試合が始まっているか(シーズン中・プレーオフ前・シーズン終了)。
   bool get seasonStarted => phase == Phase.season || phase == Phase.playoffs || phase == Phase.seasonEnd;
 
-  bool get canTrade => phase == Phase.preseason || phase == Phase.contracts || (phase == Phase.season && block < tradeDeadlineBlock);
+  bool get canTrade => phase == Phase.preseason || phase == Phase.contracts || phase == Phase.draft || (phase == Phase.season && block < tradeDeadlineBlock);
 
   /// 自由契約の選手と契約できるか(シーズン中も最低年俸の選手なら取れる)。
   bool get canSign => phase == Phase.preseason || phase == Phase.contracts || phase == Phase.season;
@@ -2279,8 +2279,14 @@ class Career {
     return i >= 0 && i < minutesByOrder.length ? minutesByOrder[i] : 0;
   }
 
-  /// 値切りを一度断った選手(このオフのあいだ、もう値切れない)。
+  /// 値切りを断られた選手(断られるたびに1回足す。代理人との交渉は [maxHaggle] 回まで)。
   List<int> haggled = [];
+
+  /// 代理人との値切りの交渉の最大の往復。
+  static const maxHaggle = 3;
+
+  /// この選手の値切りを、いままでに断られた回数。
+  int haggleRounds(int id) => haggled.where((x) => x == id).length;
 
   /// 値切ったときに受けてくれる見込み(0〜1)。気持ちが高い・チームが強いほど受ける。
   double discountChance(Player p, {required bool freeAgent}) {
@@ -2293,16 +2299,18 @@ class Career {
   int _offerSalary(Player p, double factor) => (askOf(p, me).salary * factor).round().clamp(minSalary, maxSalaryFor(p.exp));
 
   /// 契約を申し出る。[factor] は求める額に掛ける数(0.9 で1割安く、1.1 で1割高く)。受けたら true。
-  /// 1割安くを断られると気持ちが10下がり、このオフはもう値切れない。1割高くは気持ちが10上がる。
+  /// 1割安くを断られると気持ちが4下がり、次は受けにくくなる(3回断られたら、このオフはもう値切れない)。1割高くは気持ちが10上がる。
   bool offer(int id, int years, double factor) {
     final exp = expiring.contains(id);
     final p = exp ? _mineById(id) : freeAgents.where((x) => x.id == id).firstOrNull;
     if (p == null) return false;
     if (factor < 1) {
-      if (haggled.contains(id)) return false;
-      if (!rng.chance(discountChance(p, freeAgent: !exp))) {
+      final rounds = haggleRounds(id);
+      if (rounds >= maxHaggle) return false;
+      // 断られるたびに、次は受けにくくなる(代理人は往復するほど硬くなる)
+      if (!rng.chance((discountChance(p, freeAgent: !exp) - 0.1 * rounds).clamp(0.05, 0.85))) {
         haggled.add(id);
-        p.morale = (p.morale - 10).clamp(0, 100);
+        p.morale = (p.morale - 4).clamp(0, 100);
         return false;
       }
     }
@@ -2419,9 +2427,9 @@ class Career {
     }
   }
 
-  /// [from] から4回分のドラフトの指名権がそろうように足す(前の保存で2年分しか無かったときも)。
+  /// [from] から7回分のドラフトの指名権がそろうように足す(前の保存で2年分しか無かったときも)。
   void _fillPicks(int from) {
-    for (var s = from; s < from + 4; s++) {
+    for (var s = from; s < from + pickYears; s++) {
       for (final r in [1, 2]) {
         for (var t = 0; t < teams.length; t++) {
           if (!picks.any((p) => p.season == s && p.round == r && p.from == t)) {
