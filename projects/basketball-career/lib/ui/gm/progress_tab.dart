@@ -561,6 +561,7 @@ class ProgressTab extends StatelessWidget {
         ],
       ]),
       if (car.growth.isNotEmpty) _growthCard(car),
+      if (car.sheetPlayer != null) _sheetCard(context, car),
       if (car.optionPending.isNotEmpty) ...[
         SectionTitle('チームの選択権(${car.optionPending.length}人)'),
         const Text('新人の契約の最後の年。使えば次の年も少し高い年俸で契約が続き、使わなければ契約が切れて、再契約か自由契約になる。',
@@ -587,6 +588,47 @@ class ProgressTab extends StatelessWidget {
         label: const Text('オフを終えて、シーズン前へ'),
       ),
     ];
+  }
+
+  /// ほかのチームから届いたオファーシート(同じ条件で残すか、見送るか)。
+  Widget _sheetCard(BuildContext context, Career car) {
+    final p = car.sheetPlayer!;
+    final s = car.sheet!;
+    final problem = car.matchProblem();
+    return Card(
+      color: GmColors.panelHi,
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+          const Text('オファーシートが届いた', style: TextStyle(fontWeight: FontWeight.bold, color: GmColors.gold)),
+          const SizedBox(height: 4),
+          Text('${car.teams[s[1]].name}が${p.name}に${s[3]}年 ${money(s[2])}を出した。同じ条件で残せば、上限を超えていても契約できる。見送ると、そのチームへ行く。答えないまま日が進むと、見送りになる。',
+              style: const TextStyle(fontSize: 12, color: GmColors.sub, height: 1.4)),
+          const SizedBox(height: 6),
+          PlayerRow(p: p, team: car.mine, onLongPress: () => showPlayerCard(context, car, p, car.mine)),
+          if (problem != null) Text(problem, style: const TextStyle(fontSize: 12, color: GmColors.bad)),
+          const SizedBox(height: 8),
+          Row(children: [
+            Expanded(
+              child: OutlinedButton(
+                style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(40)),
+                onPressed: c.busy ? null : c.declineSheet,
+                child: const Text('見送る'),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              flex: 2,
+              child: FilledButton(
+                style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(40)),
+                onPressed: problem != null || c.busy ? null : c.matchSheet,
+                child: Text('同じ条件で残す(${money(s[2])}・${s[3]}年)'),
+              ),
+            ),
+          ]),
+        ]),
+      ),
+    );
   }
 
   Widget _optionRow(BuildContext context, Career car, Player p) => Card(

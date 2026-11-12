@@ -218,6 +218,8 @@ class GmController extends ChangeNotifier {
   void toggleBoard(Prospect p) => _act((c) => c.toggleBoard(p));
   void resign(int id, int years) => _act((c) => c.resign(id, years));
   void letGo(int id) => _act((c) => c.letGo(id));
+  void matchSheet() => _act((c) => c.matchSheet());
+  void declineSheet() => _act((c) => c.declineSheet());
   void signFreeAgent(int id, int years) => _act((c) => c.signFreeAgent(id, years));
   void release(int id, {ReleaseMode mode = ReleaseMode.full}) => _act((c) => c.release(id, mode: mode));
   void signTwoWay(int id) => _act((c) => c.signTwoWay(id));
