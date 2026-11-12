@@ -151,6 +151,14 @@ class _TradeTabState extends State<TradeTab> {
           scrollDirection: Axis.horizontal,
           padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
           children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: ActionChip(
+                avatar: const Icon(Icons.person_search_rounded, size: 18, color: GmColors.ball),
+                label: const Text('選手から探す'),
+                onPressed: () => _findPlayer(context, car),
+              ),
+            ),
             for (var t = 0; t < teamDefs.length; t++)
               if (t != car.mine)
               Padding(
@@ -267,9 +275,12 @@ class _TradeTabState extends State<TradeTab> {
               Expanded(
                 child: OutlinedButton.icon(
                   style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(42)),
-                  onPressed: (_get.isEmpty && _getPicks.isEmpty) || !car.canTrade || c.busy ? null : () => _ask(context),
+                  onPressed: (_get.isEmpty && _getPicks.isEmpty) || !car.canTrade || c.busy ? null : () => _ask(context, verdict),
                   icon: const Icon(Icons.forum_rounded, size: 20),
-                  label: const Text('相手に聞く'),
+                  label: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(_give.isEmpty && _givePicks.isEmpty ? '相手に聞く' : '何を足せば受ける?'),
+                  ),
                 ),
               ),
               const SizedBox(width: 8),
@@ -329,11 +340,42 @@ class _TradeTabState extends State<TradeTab> {
     );
   }
 
+  /// リーグ全体の選手から探す。選ぶと、その選手のチームを相手にして、受け取る側に入れる。
+  Future<void> _findPlayer(BuildContext context, Career car) async {
+    final picked = await Navigator.of(context).push<(int, int)>(MaterialPageRoute(builder: (_) => _PlayerFinder(car: car)));
+    if (picked == null || !mounted) return;
+    setState(() {
+      _partner = picked.$1;
+      _get
+        ..clear()
+        ..add(picked.$2);
+      _getPicks.clear();
+      _getSwaps.clear();
+    });
+  }
+
   /// 受け取るものだけ選んだ状態で、相手が受けてくれる出し方を聞く。見つかったら、出すものの選択をそれに置き換える。
-  void _ask(BuildContext context) {
+  /// すでに出すものを選んでいて足りないときは、1つ足せば受けてもらえるものを探す。
+  void _ask(BuildContext context, TradeVerdict? verdict) {
     final car = widget.c.career!;
-    final o = car.askPartner(_partner, get: [..._get], getPicks: [..._getPicks]);
     final messenger = ScaffoldMessenger.of(context);
+    if ((_give.isNotEmpty || _givePicks.isNotEmpty) && verdict != null && !verdict.ok) {
+      final add = car.suggestAddition(_offer);
+      if (add != null) {
+        final newP = add.give.where((id) => !_give.contains(id)).toList();
+        final newK = add.givePicks.where((i) => !_givePicks.contains(i)).toList();
+        final what = newP.isNotEmpty
+            ? car.me.roster.firstWhere((p) => p.id == newP.first).name
+            : '${car.picks[newK.first].when(car.season)}の${car.picks[newK.first].round}巡目';
+        setState(() {
+          _give.addAll(newP);
+          _givePicks.addAll(newK);
+        });
+        messenger.showSnackBar(SnackBar(content: Text('${car.teams[_partner].def.short}の答え: 「$whatも付けてくれるなら受ける」(出す側に足した)')));
+        return;
+      }
+    }
+    final o = car.askPartner(_partner, get: [..._get], getPicks: [..._getPicks]);
     if (o == null) {
       messenger.showSnackBar(SnackBar(content: Text('${car.teams[_partner].def.short}は、この組み合わせではどう出されても受けない')));
       return;
@@ -395,5 +437,88 @@ class _Reaction extends StatelessWidget {
         ]),
       ),
     ]);
+  }
+}
+
+/// リーグ全体の選手を探す画面(ポジションと年齢で絞り、力の順に並べる)。選ぶと (チーム, 選手の id) を返す。
+class _PlayerFinder extends StatefulWidget {
+  const _PlayerFinder({required this.car});
+  final Career car;
+
+  @override
+  State<_PlayerFinder> createState() => _PlayerFinderState();
+}
+
+class _PlayerFinderState extends State<_PlayerFinder> {
+  Pos? _pos;
+  int _maxAge = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    final car = widget.car;
+    final all = <(int, Player)>[
+      for (var t = 0; t < car.teams.length; t++)
+        if (t != car.mine)
+          for (final p in car.teams[t].roster)
+            if ((_pos == null || p.pos == _pos) && (_maxAge == 0 || p.age <= _maxAge)) (t, p),
+    ]..sort((a, b) => b.$2.ovr.compareTo(a.$2.ovr));
+    final list = all.take(60).toList();
+    return Scaffold(
+      appBar: AppBar(title: const Text('選手から探す')),
+      body: SafeArea(
+        child: Column(children: [
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
+            child: Row(children: [
+              for (final p in <Pos?>[null, ...Pos.values])
+                Padding(
+                  padding: const EdgeInsets.only(right: 6),
+                  child: ChoiceChip(
+                    visualDensity: VisualDensity.compact,
+                    label: Text(p == null ? '全ポジション' : p.short),
+                    selected: _pos == p,
+                    onSelected: (_) => setState(() => _pos = p),
+                  ),
+                ),
+              const SizedBox(width: 10),
+              for (final a in const [0, 25, 29])
+                Padding(
+                  padding: const EdgeInsets.only(right: 6),
+                  child: ChoiceChip(
+                    visualDensity: VisualDensity.compact,
+                    label: Text(a == 0 ? '年齢は問わない' : '$a歳まで'),
+                    selected: _maxAge == a,
+                    onSelected: (_) => setState(() => _maxAge = a),
+                  ),
+                ),
+            ]),
+          ),
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(14, 4, 14, 16),
+              children: [
+                Text('力の高い順に${list.length}人。押すと、その選手を受け取る形でトレードの画面に戻る。', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
+                const SizedBox(height: 6),
+                for (final (t, p) in list)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 6),
+                    child: PlayerRow(
+                      p: p,
+                      team: t,
+                      extra: Row(children: [
+                        TeamBadge(team: t, size: 18),
+                        const SizedBox(width: 4),
+                        Text('${car.teams[t].def.short}(${car.teams[t].mode.label})', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
+                      ]),
+                      onTap: () => Navigator.pop(context, (t, p.id)),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ]),
+      ),
+    );
   }
 }
