@@ -663,13 +663,14 @@ extension GameStateMatch on GameState {
       _save!.consecutiveNegativeBudgetWeeks,
     );
     if (budgetConfidenceDelta != 0) {
-      _save!.confidence = (_save!.confidence + budgetConfidenceDelta).clamp(
-        0,
-        100,
+      // 資金のマイナスは、成績に由来する信頼度ではなく株主の期待を下げる。
+      _save!.shareholderExpectation = ShareholderEngine.applied(
+        _save!.shareholderExpectation,
+        budgetConfidenceDelta,
       );
       lastBudgetCrisisWarning = Tr.pick(
-          '資金マイナスが${_save!.consecutiveNegativeBudgetWeeks}週続いています。理事会の信頼度が低下しました。',
-          "You have been in the red for ${Tr.plural(_save!.consecutiveNegativeBudgetWeeks, 'week')}. The board's confidence has slipped.");
+          '資金マイナスが${_save!.consecutiveNegativeBudgetWeeks}週続いています。株主の期待が低下しました。',
+          "You have been in the red for ${Tr.plural(_save!.consecutiveNegativeBudgetWeeks, 'week')}. The shareholders' confidence has slipped.");
     }
 
     // 移籍市場は全員を作り直さず、数人だけ入れ替える(持続的な市場)。

@@ -78,6 +78,11 @@ class SaveGame {
   /// 監督への信頼度（0-100）。0になると解任される。
   int confidence;
 
+  /// 株主の期待(0-100)。資金のマイナスが続くと下がり、黒字でシーズンを
+  /// 終えると上がる。[confidence](成績・順位に由来するサポーター側の期待)
+  /// と引っ張り合う、オーナー型の2つ目のメーター。
+  int shareholderExpectation;
+
   /// 監督としての世間の評価（0-100）。信頼度と異なり解任されても引き継がれ、
   /// 他クラブからのオファーの受けやすさに影響する。
   int managerReputation;
@@ -324,6 +329,7 @@ class SaveGame {
     this.budget = 6000,
     this.boardTargetRank = 4,
     this.confidence = 60,
+    this.shareholderExpectation = 60,
     this.managerReputation = 50,
     this.pendingJobOfferTeamId,
     List<Player>? youthProspects,
@@ -485,6 +491,7 @@ class SaveGame {
         'budget': budget,
         'boardTargetRank': boardTargetRank,
         'confidence': confidence,
+        'shareholderExpectation': shareholderExpectation,
         'managerReputation': managerReputation,
         'pendingJobOfferTeamId': pendingJobOfferTeamId,
         'youthProspects': youthProspects.map((p) => p.toJson()).toList(),
@@ -572,6 +579,7 @@ class SaveGame {
         budget: json['budget'] as int? ?? 3000,
         boardTargetRank: json['boardTargetRank'] as int? ?? 4,
         confidence: json['confidence'] as int? ?? 60,
+        shareholderExpectation: json['shareholderExpectation'] as int? ?? 60,
         managerReputation: json['managerReputation'] as int? ?? 50,
         pendingJobOfferTeamId: json['pendingJobOfferTeamId'] as String?,
         youthProspects: (json['youthProspects'] as List?)

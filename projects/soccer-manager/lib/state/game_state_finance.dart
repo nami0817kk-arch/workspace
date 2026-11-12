@@ -99,6 +99,7 @@ extension GameStateFinance on GameState {
     _save!.userTeamId = newTeamId;
     _save!.pendingJobOfferTeamId = null;
     _save!.confidence = 60;
+    _save!.shareholderExpectation = 60;
     _save!.boardTargetRank = _difficultyAdjustedTarget(
       BoardEngine.estimateTargetRank(_save!.league, newTeamId),
     );
