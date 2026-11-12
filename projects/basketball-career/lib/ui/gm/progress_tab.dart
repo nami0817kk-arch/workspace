@@ -610,7 +610,7 @@ class ProgressTab extends StatelessWidget {
       _card([
         _head('オフ・契約'),
         const SizedBox(height: 6),
-        const Text('契約が切れた選手と、残すか放すかを話し合う。自分の選手との再契約は、年俸の上限を超えてもできる(ぜいたく税と信頼には響く)。',
+        const Text('来シーズンに向けて、選手の入れ替えをする時期。下の「やること」を上から順にこなして、最後に「オフを終えて、シーズン前へ」を押す。',
             style: TextStyle(color: GmColors.sub, height: 1.5)),
         if (car.news.isNotEmpty) ...[
           const SizedBox(height: 10),
@@ -618,6 +618,7 @@ class ProgressTab extends StatelessWidget {
           for (final n in car.news) Text('・$n', style: const TextStyle(fontSize: 13, height: 1.5)),
         ],
       ]),
+      _contractsGuide(car, exp.length),
       if (car.growth.isNotEmpty) _growthCard(car),
       if (car.sheetPlayer != null) _sheetCard(context, car),
       if (car.optionPending.isNotEmpty) ...[
@@ -646,6 +647,42 @@ class ProgressTab extends StatelessWidget {
         label: const Text('オフを終えて、シーズン前へ'),
       ),
     ];
+  }
+
+  /// オフの「やること」の一覧。済んだものにはチェックが付き、いま手を付けるものが太字で出る。
+  Widget _contractsGuide(Career car, int expiringCount) {
+    final steps = <(bool, String, String)>[
+      if (car.sheetPlayer != null) (false, 'オファーシートに答える', '下の「同じ条件で残す」か「見送る」を押す'),
+      if (car.optionPending.isNotEmpty)
+        (false, '新人の選択権を決める(${car.optionPending.length}人)', '「使う」なら契約が1年続く。「使わない」なら契約切れ'),
+      if (expiringCount > 0)
+        (false, '契約が切れた選手を決める($expiringCount人)', '残したい選手は「再契約」、いらない選手は「放す」。そのままだと出ていく')
+      else
+        (true, '契約が切れた選手は決め終わった', ''),
+      (false, 'お好みで: 自由契約の選手を取って補強する', '左のメニューの「補強」か、下の「自由契約の選手を見る」(しなくてもよい)'),
+      (false, '終わったら「オフを終えて、シーズン前へ」を押す', '一番下のボタン。次はトレードをして、開幕する'),
+    ];
+    final firstTodo = steps.indexWhere((s) => !s.$1);
+    return _card([
+      _head('オフの「やること」', icon: Icons.checklist_rounded, color: GmColors.gold),
+      const SizedBox(height: 8),
+      for (var i = 0; i < steps.length; i++)
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 3),
+          child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Icon(steps[i].$1 ? Icons.check_circle_rounded : Icons.radio_button_unchecked_rounded,
+                size: 20, color: steps[i].$1 ? GmColors.good : (i == firstTodo ? GmColors.ball : GmColors.sub)),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text('${i + 1}. ${steps[i].$2}',
+                    style: TextStyle(fontWeight: i == firstTodo ? FontWeight.bold : FontWeight.normal, fontSize: 14)),
+                if (steps[i].$3.isNotEmpty) Text(steps[i].$3, style: const TextStyle(fontSize: 12, color: GmColors.sub, height: 1.3)),
+              ]),
+            ),
+          ]),
+        ),
+    ], edge: GmColors.gold);
   }
 
   /// ほかのチームから届いたオファーシート(同じ条件で残すか、見送るか)。

@@ -77,6 +77,13 @@ class _DraftViewState extends State<DraftView> {
                   const Text('このオフの知らせ', style: TextStyle(fontWeight: FontWeight.bold)),
                   for (final n in car.news) Text('・$n', style: const TextStyle(fontSize: 13, height: 1.5)),
                 ],
+                const SizedBox(height: 6),
+                Text(
+                  myPicks.isEmpty
+                      ? 'やること: 何もない。他チームの指名が終わるまで進める。'
+                      : 'やること: 候補から欲しい選手を選び「指名」を押す(分からなければ、予想順位が高い選手でよい)。自分の番まで自動で進む。',
+                  style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: GmColors.gold, height: 1.4),
+                ),
                 const SizedBox(height: 10),
                 Row(
                   children: [
