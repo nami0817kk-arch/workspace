@@ -1,0 +1,139 @@
+# 物語完結型ショート 西郷隆盛 s4（2026-11-12）。本編 scripts/saigo-story.yaml（11/13 19:00 公開、https://youtu.be/19SEyS1d5CA）から。11/14 に予約。
+# 形式は gosekke_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（dev/output/rekishi-chiso/research/西郷隆盛_facts_20261111.yaml）と本編の # fact: だけ。
+# 絵は本編の AI 絵（out/story/saigo/main。人物は後ろ姿・遠景）と実在の錦絵（パブリックドメイン）。新しい絵は作らない。死・遺体の場面に人物の絵は当てない。
+# 本編の弱点（JACAR は翻刻のみで原画像未確認・二次引用あり）：言えること＝「読めた電報の翻刻に〜とある」、言えないこと＝洞窟を出た時刻・倒れた場所・最期の言葉の形・首を隠した者・切腹か介錯か。断定しない。
+# 切り口：首の行方（本編6章）。記録の言葉で淡々と・傷や遺体の描写は避ける。千田の履歴書は原文未見（孫引き）なので「と書く」。saigo-03, 17, 13, 14, 26。
+# 理解テスト4問：①西郷隆盛の首 ②1877年9月24日のうちに東伏見少将の電報が首のことを伝えた。のちの記録は埋めた場所が割れる ③第4旅団日記は折田庄輔の屋敷、千田登文の履歴書は門わきの小さな溝、折田庄助邸の前の溝とする記事、『西南記伝』は9説 ④首を埋めた人は分かっていない。切腹の話はいつ生まれたか（本編へ）
+title: "西郷隆盛｜首の行方は、記録で割れる"
+yt_title: "西郷隆盛の首はどこにあったのか　折田邸か、門わきの溝か　千田登文の履歴書と『西南記伝』の9説"
+description: |-
+  西郷隆盛の首の行方は、記録によって割れます。1877年9月24日のうちに打たれた東伏見少将の電報には、西郷を追った安村中尉が手負いとなり、首を取りかねたのは残念、とあります。
+  第4旅団の日記は、のち士族折田庄輔の屋敷で、首を得た、と書きます。金沢で見つかった千田登文の履歴書は、門わきの小さな溝に埋めてあるのを見つけた、と書き、2014年に大野敏明さんの本になりました。折田庄助邸の前の溝とする記事もあり、屋敷の主の名の字も割れています。日本語版ウィキペディアの注は、折田邸の門前説が最有力で、『西南記伝』は9説を挙げる、と書きます。
+  千田の履歴書は、事件から半世紀ほど後に書かれたもので、原文は確かめられていません。紹介された文章から読んでいます。首を埋めた人は、分かっていません。電報・日記は、アジア歴史資料センターの内容欄の翻刻を読んだもので、原画像までは確かめていません。翻刻には誤字や欠けがあります。
+  では、切腹の話は、いつ、生まれたのか。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#西郷隆盛"
+- "#西南戦争"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の風景・室内の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。"
+art_dir: out/story/saigo
+out: saigo_story_s4
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: "西郷隆盛の首と千田登文の履歴書"
+  title: "首の行方は、《記録で割れる》"
+now:
+- {at: "24日", text: "1877年9月24日", point: 0}
+- {at: "2014年", text: "2014年　本になる", point: 1}
+timeline:
+- {label: "1877"}
+- {label: "2014"}
+shots:
+  Gate:
+    kind: "ai"
+    file: "saigo/main/S13.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "苔むした石の溝と門"
+  Tel:
+    kind: "ai"
+    file: "saigo/main/S06.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "電信局の将校が電文を書く"
+  Gun:
+    kind: "ai"
+    file: "saigo/main/S07.jpg"
+    focus: [0.6, 0.5]
+    move: "right"
+    must: "夜明け前、大砲が火を噴く"
+  Road:
+    kind: "ai"
+    file: "saigo/main/S09.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    must: "岩崎谷の石垣の道と門"
+  Temple:
+    kind: "ai"
+    file: "saigo/main/S12.jpg"
+    focus: [0.5, 0.55]
+    move: "in"
+    must: "寺の境内、白布の台と将校"
+  Ditch:
+    kind: "ai"
+    file: "saigo/main/S13.jpg"
+    focus: [0.3, 0.7]
+    move: "left"
+    must: "苔むした石の溝と門"
+  Doc:
+    kind: "ai"
+    file: "saigo/main/S06.jpg"
+    focus: [0.65, 0.6]
+    move: "left"
+    must: "電信局の将校が電文を書く"
+  Fight:
+    kind: "real"
+    image: "paintings/saigo_nishiki_saigo_fighting.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    credit: "《西南戦争の錦絵》（中央に西郷隆盛と伝わる）19世紀（パブリックドメイン。ウィキメディア・コモンズ）"
+    must: "西南戦争の錦絵"
+  Dep:
+    kind: "real"
+    image: "paintings/saigo_nishiki_kagoshima_departure_yoshitoshi.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    credit: "月岡芳年《鹿児島暴徒出陣図》錦絵（三連の一部）1879年（パブリックドメイン。ウィキメディア・コモンズ）"
+    must: "鹿児島出陣の錦絵"
+lines:
+  # fact: saigo-14
+- 語り: "西郷隆盛の首は、どこにあったのか。記録で、答えが割れる。"
+  shot: Gate
+  tone: 強調
+  pause: 0.12
+  # fact: saigo-03
+- 語り: "24日のうちに、東伏見少将が打った電報。西郷を追った安村は手負いとなり、首を取りかねたのは、残念。"
+  shot: Tel
+  tone: 重い
+  pause: 0.12
+  # fact: saigo-17
+- 語り: "26日の答えでは、警部が駆けつけた時には、すでに首はなかった、とある。"
+  shot: Gun
+  tone: しみじみ
+  pause: 0.12
+  # fact: saigo-13
+- 語り: "第4旅団の日記は、のち士族折田庄輔の屋敷で、首を得た、と書く。"
+  shot: Road
+  tone: 重い
+  pause: 0.12
+  # fact: saigo-14
+- 語り: "金沢で見つかった、千田登文の履歴書は、門のわきの、小さな溝に埋めてあった、と書く。2014年に、本になった。"
+  shot: Ditch
+  tone: 重い
+  pause: 0.12
+  # fact: saigo-14
+- 語り: "溝は、折田庄助の屋敷の前、とする記事もある。日記は庄輔、解説は庄助。主の名の字さえ、割れている。"
+  shot: Doc
+  tone: しみじみ
+  pause: 0.12
+  # fact: saigo-26
+- 語り: "ウィキペディアの注は、折田邸の門前説が最有力で、『西南記伝』は、9つの説を挙げる、と書く。"
+  shot: Temple
+  tone: しみじみ
+  pause: 0.12
+  # fact: saigo-14
+- 語り: "首を埋めた人は、分かっていない。では、切腹の話は、いつ生まれたのか。"
+  shot: Fight
+  tone: 疑問
+  pause: 0.15
