@@ -93,6 +93,22 @@ class HistoryScreen extends StatelessWidget {
                       ]),
                     ),
                 ]),
+                const SectionTitle('宿敵'),
+                _card([
+                  if (car.rival == null)
+                    const Text('対戦を重ね、プレーオフで当たると決まる。', style: TextStyle(color: GmColors.sub))
+                  else
+                    Row(children: [
+                      TeamBadge(team: car.rival!, size: 28),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                          Text(car.teams[car.rival!].name, style: const TextStyle(fontWeight: FontWeight.bold)),
+                          Text(car.rivalLine(car.rival!), style: const TextStyle(fontSize: 12, color: GmColors.sub)),
+                        ]),
+                      ),
+                    ]),
+                ]),
                 const SectionTitle('記録帳'),
                 _card([
                   if (car.records.isEmpty) const Text('試合を重ねると出る。破ると知らせる。', style: TextStyle(color: GmColors.sub)),
