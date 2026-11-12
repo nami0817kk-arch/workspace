@@ -1100,5 +1100,41 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   ok(aq.status === 'amateur' && aq.retired === true && /やめて/.test(aq.note), 'サッカーをやめる道は引退の形で卒業する');
   ok(JSON.stringify(w3).length > 1000 && JSON.parse(JSON.stringify(w3)).sayHist.length > 0, '台詞の履歴が保存される');
 }
+
+// 2段目その3の続き：スカウトの見立て（決定117）と入団の当たり外れ（決定148）
+{
+  const wh = YA.newWorld(52);
+  let hunches = 0, seenCands = 0, trueN = 0, falseN = 0, g = 0, y0 = wh.year;
+  while (wh.year < y0 + 2 && g++ < 200) {
+    YA.autoPlan(wh);
+    if (wh.scouting) YA.autoScout(wh);
+    YA.startWeek(wh);
+    for (const e of wh.events.slice()) { if (e.pid && !wh.players[e.pid]) { wh.events.splice(wh.events.indexOf(e), 1); continue; } YA.eventView(wh, e); YA.resolveEvent(wh, e, 0); }
+    YA.afterEvents(wh);
+    const mt = YA.matchOf(wh);
+    if (mt) { const home = YA.teamFromWorld(wh, 'A'), opp = YA.opponentOf(wh); const away = YA.makeOpponent(opp, wh.seed + wh.week); const m = new YA.Match({ seed: wh.seed + wh.week * 3 + wh.year, home, away, settings: { autoStop: false } }); let k = 0; while (!m.finished && k++ < 2000) m.step(); YA.applyMatch(wh, m, 'A', opp, true); }
+    for (const c of (wh.scouting && wh.scouting.cands) || []) {
+      if (c.seen < 1) continue;
+      seenCands++;
+      const h1 = YA.candHunch(wh, c), h2 = YA.candHunch(wh, c);
+      ok(JSON.stringify(h1) === JSON.stringify(h2), '見立ては同じ子なら同じ');
+      if (h1) { hunches++; if (h1.true) trueN++; else falseN++; }
+      const v = YA.candView(wh, c);
+      ok(typeof v.rangeWord === 'string' && v.rangeWord.length > 0, '幅の言葉が付く');
+    }
+    YA.endWeek(wh);
+    if (wh.pendingContract) YA.renewContract(wh);
+  }
+  const noted = Object.values(wh.players).filter((p) => p.scoutNote);
+  console.log('見立て', hunches, '/', seenCands, '（当たり', trueN, '外れ', falseN, '）／当たり外れの記録', noted.length, JSON.stringify(wh.scoutScore));
+  ok(seenCands >= 5, '見に行った候補がいる');
+  ok(hunches >= 1 && hunches < seenCands * 0.4, '見立ての一言は付く子と付かない子がいる');
+  ok(trueN > falseN, '見立ては当たりのほうが多い（外れもある）');
+  ok(wh.scoutScore.over + wh.scoutScore.under >= 1, '当たりと外れが両方見える機会がある');
+  ok(noted.length >= 1 && noted.every((p) => ['hit', 'over', 'under'].indexOf(p.scoutNote.kind) >= 0), '入団した子に見立てと本当の数字の記録が残る');
+  ok(wh.scoutScore && wh.scoutScore.hit + wh.scoutScore.over + wh.scoutScore.under >= 1, '当たり外れの集計が残る');
+  ok((wh.inbox || []).some((n) => /見立ては総合力/.test(n.text)) || noted.every((p) => p.scoutNote.kind === 'hit' && !p.scoutNote.hunch), '見立てと違った子・見立てが付いた子は知らせが出る');
+  ok(JSON.parse(JSON.stringify(wh)).scoutScore, '当たり外れの集計が保存される');
+}
 console.log(fails ? '失敗 ' + fails : '育成の点検: すべて通過');
 process.exit(fails ? 1 : 0);

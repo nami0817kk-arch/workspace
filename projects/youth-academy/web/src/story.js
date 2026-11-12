@@ -261,5 +261,78 @@
     storyWeek(w);
     return r;
   };
+
+  // ---------- スカウトの見立て（決定117）と、入団で分かる当たり外れ（決定148） ----------
+  // 腕の良いスカウトほど「大化けの気配」「遅咲きかも」などの一言が付く。外れもある。見に行った子（seen≥1）だけに付く
+  const eyeOf = (w) => clamp((YA.staffAb(w, 'スカウト') + (w.coach ? w.coach.eye : 8)) / 2, 3, 18);
+  const HUNCH = {
+    big: '大化けの気配がある',
+    late: '遅咲きかもしれない',
+    ready: 'いまが完成形に近いかもしれない',
+  };
+  // 本当の姿（見えない）：伸びしろが大きく、いまが低ければ「遅咲き」、伸びしろが大きく力もあれば「大化け」、伸びしろが小さければ「完成形」
+  const trueKind = (p) => {
+    const st = YA.potStars(p), o = YA.ovr(p);
+    if (st >= 4 && o >= 8.5) return 'big';
+    if (st >= 4) return 'late';
+    if (st <= 2) return 'ready';
+    return null;
+  };
+  YA.candHunch = function (w, c) {
+    if (!c || c.seen < 1) return null;
+    const eye = eyeOf(w);
+    let hs = 0;
+    for (const ch of c.id + 'h') hs = (hs * 37 + ch.charCodeAt(0)) % 9973;
+    const r = (hs % 1000) / 1000;
+    const acc = clamp(0.55 + (eye - 8) * 0.05, 0.4, 0.92);
+    const tk = trueKind(c.p);
+    // 腕が良いほど、気配を感じ取る確率も上がる
+    const sense = clamp(0.1 + (eye - 8) * 0.04 + c.seen * 0.05, 0.06, 0.55);
+    if (tk && r < sense) {
+      if ((hs * 7 % 1000) / 1000 < acc) return { kind: tk, text: HUNCH[tk], true: true };
+      const other = ['big', 'late', 'ready'].filter((k) => k !== tk)[hs % 2];
+      return { kind: other, text: HUNCH[other], true: false };
+    }
+    // 何も感じない子にも、まれに外れの見立てが付く（腕が悪いほど）
+    if (!tk && r > 0.975 - (8 - eye) * 0.005) { const k = ['big', 'late'][hs % 2]; return { kind: k, text: HUNCH[k], true: false }; }
+    return null;
+  };
+  // 見える幅のめやす（画面に出す言葉）
+  YA.rangeWord = (c) => (c.seen >= 3 ? 'ほぼ確か' : c.seen === 2 ? 'だいたい分かる' : c.seen === 1 ? '幅がある' : 'ぼんやり');
+  const cv0 = YA.candView;
+  YA.candView = function (w, c) {
+    const v = cv0(w, c);
+    v.hunch = YA.candHunch(w, c);
+    v.rangeWord = YA.rangeWord(c);
+    return v;
+  };
+  // 入団した子について、見立てと本当の数字を比べて知らせる（当たり外れが見える）
+  const intake0 = YA.intake;
+  YA.intake = function (w) {
+    const S = w.scouting;
+    const pre = [];
+    if (S) for (const c of S.cands.filter((x) => x.status === 'signed').slice(0, 12)) {
+      const v = YA.candView(w, c);
+      pre.push({ p: c.p, lo: YA.rate(v.ovr[0]), hi: YA.rate(v.ovr[1]), stars: v.stars, hunch: v.hunch, seen: c.seen });
+    }
+    const res = intake0.apply(this, arguments);
+    let hit = 0, over = 0, under = 0;
+    for (const e of pre) {
+      const p = e.p;
+      const now = YA.rate(YA.ovr(p));
+      const st = YA.potStars(p);
+      const pos = e.hi > e.lo ? (now - e.lo) / (e.hi - e.lo) : 0.5; // 見立ての幅の中のどこか
+      const kind = pos > 0.66 ? 'over' : pos < 0.34 ? 'under' : 'hit';
+      p.scoutNote = { lo: e.lo, hi: e.hi, now, kind, hunch: e.hunch ? { text: e.hunch.text, true: e.hunch.true } : null };
+      if (kind === 'hit') hit++; else if (kind === 'over') over++; else under++;
+      if (kind !== 'hit' || e.hunch) {
+        const hn = e.hunch ? `「${e.hunch.text}」という見立ては${e.hunch.true ? '当たっていた' : '外れた'}（伸びしろ★${st}）。` : '';
+        YA.noteTier(w, kind === 'hit' ? 3 : 2, `入団した${p.name}：見立ては総合力${e.lo}〜${e.hi}、本当は${now}（${kind === 'over' ? '幅の上のほう＝当たり' : kind === 'under' ? '幅の下のほう＝外れ' : '見立てどおり'}）。${hn}`);
+      }
+    }
+    w.scoutScore = w.scoutScore || { hit: 0, over: 0, under: 0 };
+    w.scoutScore.hit += hit; w.scoutScore.over += over; w.scoutScore.under += under;
+    return res;
+  };
   YA.EXTRA_SIM_IMPORTANT = (YA.EXTRA_SIM_IMPORTANT || []).concat(['path']);
 })();
