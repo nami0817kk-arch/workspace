@@ -277,7 +277,7 @@ void main() {
   group('表彰と歴史', () {
     late Career c;
     setUpAll(() {
-      c = careerAt(4, 15);
+      c = careerAt(6, 15);
       var guard = 0;
       while (c.phase != Phase.over && guard++ < 1500) {
         if (c.phase == Phase.seasonEnd) c.fired = false;
