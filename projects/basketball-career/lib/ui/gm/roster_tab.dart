@@ -10,6 +10,7 @@ import 'common.dart';
 import 'minutes_screen.dart';
 import 'negotiate_dialog.dart';
 import 'player_card.dart';
+import 'policy_screen.dart';
 import 'rotation_screen.dart';
 import 'stats_screen.dart';
 import 'style.dart';
@@ -70,6 +71,8 @@ class RosterTab extends StatelessWidget {
                 () => go(CoachesScreen(c: c))),
             _tile(w, Icons.fitness_center_rounded, '練習', '強さ ${trainingLabels[me.training]}・重点 ${me.roster.where((p) => p.focus != null).length}人',
                 () => go(TrainingScreen(c: c))),
+            _tile(w, Icons.tune_rounded, 'チームの方針', me.policy.every((x) => x == 1) ? 'いまは全部ふつう' : '強さ ${me.policyEffect >= 0 ? '+' : ''}${me.policyEffect.toStringAsFixed(1)}',
+                () => go(PolicyScreen(c: c))),
             _tile(w, Icons.table_chart_rounded, 'チームの成績', 'シュート・スティールなど', () => go(StatsScreen(c: c))),
           ]);
         }),

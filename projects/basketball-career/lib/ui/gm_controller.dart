@@ -230,6 +230,7 @@ class GmController extends ChangeNotifier {
   void finishContracts() => _act((c) => c.finishContracts());
   void nextFaDay() => _act((c) => c.nextFaDay());
   void setTraining(int level) => _act((c) => c.setTraining(level));
+  void setPolicy(int axis, int choice) => _act((c) => c.setPolicy(axis, choice));
   void setFocus(int id, Attr? a) => _act((c) => c.setFocus(id, a));
   void withdrawBid(int id) => _act((c) => c.withdrawBid(id));
 

@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'player.dart';
+import 'policy.dart';
 import 'rng.dart';
 
 /// チームの決まり。都市は実在、愛称は架空(実在のプロのチームの愛称は使わない)。[color] は絵の色の名前。
@@ -249,12 +250,22 @@ class Team {
   int get payroll => roster.fold(0, (s, p) => s + p.salary) + deadCap;
   int get capRoom => salaryCap - payroll;
 
+  /// チームの方針(軸ごとに 0・1・2。1 が「ふつう」)。自分のチームだけ変えられる。
+  List<int> policy = defaultPolicy();
+
+  /// 方針が強さに足す値(全部「ふつう」なら0)。
+  double get policyEffect {
+    if (policy.every((c) => c == 1)) return 0;
+    final top = [...healthy]..sort((a, b) => b.ovr.compareTo(a.ovr));
+    return policyBonus(top, policy, coachOf(Staff.coach));
+  }
+
   double get winPct => wins + losses == 0 ? 0 : wins / (wins + losses);
 
   /// チームの強さ。力の高い順に9人を重み付きで平均し、ガードとビッグがいなければ下げる。
   /// 自分で順を決めたときは、その順で数える(力の低い選手を先発にすると弱くなる)。
   double get strength =>
-      (rotation.isEmpty && minutes.isEmpty ? teamStrength(healthy) : orderStrength(order.where((p) => p.injured == 0).toList())) + minutesEffect + coachBonus;
+      (rotation.isEmpty && minutes.isEmpty ? teamStrength(healthy) : orderStrength(order.where((p) => p.injured == 0).toList())) + minutesEffect + coachBonus + policyEffect;
 
   Map<String, dynamic> toJson() => {
         'i': index,
@@ -264,6 +275,7 @@ class Team {
         'm': mode.index,
         if (deadCap != 0) 'dc': deadCap,
         if (deadLater.isNotEmpty) 'dl': deadLater,
+        if (policy.any((c) => c != 1)) 'po': policy,
         if (rotation.isNotEmpty) 'ro': rotation,
         'sf': staff,
         if (twoWay.isNotEmpty) 'tw': [for (final p in twoWay) p.toJson()],
@@ -276,6 +288,7 @@ class Team {
   static Team fromJson(Map<String, dynamic> j) => _fromJson(j)
     ..streak = (j['sk'] as int?) ?? 0
     ..training = ((j['tr'] as int?) ?? 1).clamp(0, 2)
+    ..policy = [for (var i = 0; i < PolicyAxis.values.length; i++) i < ((j['po'] as List?)?.length ?? 0) ? ((j['po'] as List)[i] as int).clamp(0, 2) : 1]
     ..deadLater = [for (final x in (j['dl'] as List? ?? const [])) x as int]
     ..coaches = [for (final c in (j['co'] as List? ?? const [])) Coach.fromJson(Map<String, dynamic>.from(c as Map))]
     ..minutes = {
