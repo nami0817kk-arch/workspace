@@ -177,6 +177,7 @@ class _TradeTabState extends State<TradeTab> {
                     child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                       Text('${them.name}(${them.mode.label})', style: const TextStyle(fontWeight: FontWeight.bold)),
                       Text(them.mode.wants, style: const TextStyle(fontSize: 13, color: GmColors.gold)),
+                      Text('GM ${car.gmPerson(_partner).name}(${car.gmPerson(_partner).style.label}): ${car.gmPerson(_partner).style.text}', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
                       Text('年俸 ${money(them.payroll)}・${them.roster.length}人', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
                     ]),
                   ),
