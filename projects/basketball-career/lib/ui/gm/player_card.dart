@@ -40,7 +40,7 @@ class PlayerCardHeader extends StatelessWidget {
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(p.name, maxLines: 2, style: const TextStyle(fontSize: 19, fontWeight: FontWeight.bold, color: Colors.white)),
               const SizedBox(height: 2),
-              Text('${p.pos.short}・${p.age}歳・${p.exp == 0 ? '新人' : '${p.exp}年目'}', style: const TextStyle(color: Colors.white70)),
+              Text('#${jerseyOf(p)}・${p.pos.short}・${p.age}歳・${p.exp == 0 ? '新人' : '${p.exp}年目'}', style: const TextStyle(color: Colors.white70)),
               Text(() {
                 final (h, w, span) = physicalOf(p);
                 return '${h}cm・${w}kg・WS ${span}cm';
