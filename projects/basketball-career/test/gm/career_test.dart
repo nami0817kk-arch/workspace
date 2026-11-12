@@ -960,7 +960,7 @@ void main() {
       expect(c.scoutsLeft, 4);
     });
 
-    test('交渉: 求める額なら必ず契約、1割高いと気持ちが上がる、1割安くを断られると気持ちが下がって二度と値切れない', () {
+    test('交渉: 求める額なら必ず契約、1割高いと気持ちが上がる、1割安くを断られると気持ちが下がり、3回断られたらもう値切れない', () {
       final c = careerAt(7, 12);
       var guard = 0;
       while ((c.phase != Phase.contracts || c.expiring.length < 2) && guard++ < 300) {
