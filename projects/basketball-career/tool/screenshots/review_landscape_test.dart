@@ -105,6 +105,20 @@ void main() {
     await _shoot(t, '4_home_season', await _with(mid));
     await _shoot(t, '5_team', await _with(mid), act: (t) => _tap(t, 'チーム', first: true));
     await _shoot(t, '6_trade', await _with(mid), act: (t) => _tap(t, 'トレード', first: true));
+    await _shoot(t, '5b_policy', await _with(mid), act: (t) async {
+      await _tap(t, 'チーム', first: true);
+      await _tap(t, 'チームの方針');
+    });
+    await _shoot(t, '5c_team_tiles', await _with(mid), act: (t) async {
+      await _tap(t, 'チーム', first: true);
+      await t.drag(find.byType(Scrollable).last, const Offset(0, -120));
+      await t.pump(const Duration(milliseconds: 300));
+    });
+    await _shoot(t, '8b_history', await _with(mid), act: (t) async {
+      await _tap(t, 'リーグ', first: true);
+      await t.scrollUntilVisible(find.text('歴代の優勝・表彰・殿堂'), 300, scrollable: find.byType(Scrollable).last);
+      await _tap(t, '歴代の優勝・表彰・殿堂');
+    });
     await _shoot(t, '7_market', await _with(mid), act: (t) => _tap(t, '補強', first: true));
     await _shoot(t, '8_league', await _with(mid), act: (t) => _tap(t, 'リーグ', first: true));
     await _shoot(t, '9_inbox', await _with(mid), act: (t) => _tap(t, '受信箱', first: true));
@@ -126,6 +140,10 @@ void main() {
     await _shoot(t, '12_seasonend_top', await _with(end));
     await _shoot(t, '13_seasonend_rating', await _with(end),
         act: (t) => t.scrollUntilVisible(find.text('GMの格 Lv${end.gmLevel}(${ratingNameOf(end.gmLevel)})'), 200, scrollable: progress));
+    await _shoot(t, '13b_skills', await _with(end), act: (t) async {
+      await t.scrollUntilVisible(find.textContaining('GMの技能'), 200, scrollable: progress);
+      await _tap(t, 'GMの技能(使える点 ${end.skillPoints})');
+    });
     await _shoot(t, '14_seasonend_bottom', await _with(end),
         act: (t) => t.scrollUntilVisible(find.text('ここで任期を終える'), 300, scrollable: progress));
     // 契約の画面(1巡目の新人の選択権が保留になっている)
