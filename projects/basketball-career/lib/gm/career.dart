@@ -2400,18 +2400,19 @@ class Career {
   /// 放した選手の年俸の残り方。[now] は今季の合計に残る分、[later] は来季以降に残る分(先頭が来季)。
   ({int now, List<int> later}) releaseCost(Player p, ReleaseMode mode) {
     final r = math.max(1, p.years);
+    // 一部保証の契約は、2年目以降の年俸が保証の割合だけ残る
+    final gf = p.guarantee / 100;
     switch (mode) {
       case ReleaseMode.full:
-        return (now: p.salary, later: List.filled(r - 1, p.salary));
+        return (now: p.salary, later: List.filled(r - 1, (p.salary * gf).round()));
       case ReleaseMode.stretch:
         // 残りの年俸の全部を、残り年数の2倍＋1年に均して払う(今季の負担は軽く、長く残る)
         final n = 2 * r + 1;
-        final per = (p.salary * r / n).ceil();
+        final per = (p.salary * (1 + (r - 1) * gf) / n).ceil();
         return (now: per, later: List.filled(n - 1, per));
       case ReleaseMode.buyout:
         // 選手が残りの年俸の3割を諦める。払いは全額のときと同じ形で、3割少ない
-        final each = (p.salary * 0.7).round();
-        return (now: each, later: List.filled(r - 1, each));
+        return (now: (p.salary * 0.7).round(), later: List.filled(r - 1, (p.salary * 0.7 * gf).round()));
     }
   }
 
@@ -2750,9 +2751,17 @@ class Career {
   /// 交渉の結果。
   int _offerSalary(Player p, double factor) => (askOf(p, me).salary * factor).round().clamp(minSalary, maxSalaryFor(p.exp));
 
+  /// 次の契約を一部保証にするか(交渉の画面のスイッチ。申し出たら元に戻る)。
+  bool partialNext = false;
+
+  /// 一部保証にできるか(2年以上の契約で、29歳以上の選手)。
+  bool partialOk(Player p, int years) => years >= 2 && p.age >= 29;
+
   /// 契約を申し出る。[factor] は求める額に掛ける数(0.9 で1割安く、1.1 で1割高く)。受けたら true。
   /// 1割安くを断られると気持ちが4下がり、次は受けにくくなる(3回断られたら、このオフはもう値切れない)。1割高くは気持ちが10上がる。
   bool offer(int id, int years, double factor) {
+    final partial = partialNext;
+    partialNext = false;
     final exp = expiring.contains(id);
     final p = exp ? _mineById(id) : freeAgents.where((x) => x.id == id).firstOrNull;
     if (p == null) return false;
@@ -2766,7 +2775,9 @@ class Career {
         return false;
       }
     }
-    final salary = _offerSalary(p, factor);
+    // 一部保証は、選手の保証が減る分、年俸が8%高くなる
+    final isPartial = partial && partialOk(p, years);
+    final salary = isPartial ? (_offerSalary(p, factor) * 1.08).round().clamp(minSalary, maxSalaryFor(p.exp)) : _offerSalary(p, factor);
     if (exp) {
       if (resignProblem(p, salary: salary) != null || me.payroll - p.salary + salary > secondApron) return false;
       resign(id, years);
@@ -2775,6 +2786,7 @@ class Career {
       signFreeAgent(id, years, salary: salary);
     }
     p.salary = salary;
+    p.guarantee = isPartial ? 50 : 100;
     if (factor > 1) p.morale = (p.morale + 10).clamp(0, 100);
     return true;
   }

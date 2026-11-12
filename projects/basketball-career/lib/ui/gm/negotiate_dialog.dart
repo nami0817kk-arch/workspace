@@ -15,7 +15,10 @@ Future<void> negotiate(BuildContext context, GmController c, Player p, {required
     context: context,
     builder: (ctx) => _NegotiateDialog(car: car, p: p, ask: ask, freeAgent: freeAgent),
   );
-  if (picked == null) return;
+  if (picked == null) {
+    car.partialNext = false; // やめたら、一部保証のスイッチは持ち越さない
+    return;
+  }
   final (years, factor) = picked;
   final ok = c.offer(p.id, years, factor);
   messenger.showSnackBar(
@@ -87,6 +90,7 @@ class _NegotiateDialog extends StatefulWidget {
 }
 
 class _NegotiateDialogState extends State<_NegotiateDialog> {
+  bool _partial = false;
   late int _years = (widget.bid ? widget.car.myBid(widget.p.id)?.years : null) ?? widget.ask.maxYears.clamp(1, 3);
 
   @override
@@ -135,6 +139,18 @@ class _NegotiateDialogState extends State<_NegotiateDialog> {
               for (var y = 1; y <= ask.maxYears; y++) ChoiceChip(label: Text('$y年'), selected: _years == y, onSelected: (_) => setState(() => _years = y)),
             ],
           ),
+          if (!widget.bid && !widget.extension && car.partialOk(p, _years))
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              dense: true,
+              title: const Text('一部保証にする', style: TextStyle(fontSize: 13)),
+              subtitle: const Text('2年目以降の年俸は半分だけ保証(放しても半分しか残らない)。選手は年俸+8%を求める。', style: TextStyle(fontSize: 11, color: GmColors.sub)),
+              value: _partial,
+              onChanged: (v) => setState(() {
+                _partial = v;
+                widget.car.partialNext = v;
+              }),
+            ),
           const SizedBox(height: 12),
           if (widget.bid) ...[
             _option(context, '1割高く', '${money(at(1.1))}・選ばれやすい', 1.1),

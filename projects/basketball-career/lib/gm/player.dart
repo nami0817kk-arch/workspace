@@ -238,6 +238,7 @@ class Player {
     this.optionYears = 0,
     this.tenure = 0,
     this.tenDay = 0,
+    this.guarantee = 100,
     this.tenDayCount = 0,
     this.raise = 0,
     List<List<int>>? career,
@@ -323,6 +324,9 @@ class Player {
   /// 10日契約の残りの節の数(0は10日契約ではない)。
   int tenDay;
 
+  /// 契約の2年目以降の保証(%)。100は全額保証。50なら、放したときに2年目以降の年俸は半分だけ残る。
+  int guarantee;
+
   /// 今季に自分のチームと10日契約を結んだ回数(3回目は今季の契約にするしかない)。
   int tenDayCount;
 
@@ -396,6 +400,7 @@ class Player {
         if (optionYears != 0) 'op': optionYears,
         if (tenure != 0) 'tn': tenure,
         if (tenDay != 0) 'td': tenDay,
+        if (guarantee != 100) 'gr': guarantee,
         if (tenDayCount != 0) 'tc': tenDayCount,
         if (raise != 0) 'rz': raise,
         if (career.isNotEmpty) 'cr': career,
@@ -426,6 +431,7 @@ class Player {
         optionYears: ((j['op'] as int?) ?? 0).clamp(0, 4),
         tenure: ((j['tn'] as int?) ?? 0).clamp(0, 30),
         tenDay: ((j['td'] as int?) ?? 0).clamp(0, 20),
+        guarantee: ((j['gr'] as int?) ?? 100).clamp(0, 100),
         tenDayCount: ((j['tc'] as int?) ?? 0).clamp(0, 5),
         raise: ((j['rz'] as int?) ?? 0).clamp(0, 8),
         focus: j['fo'] is int && (j['fo'] as int) >= 0 && (j['fo'] as int) < Attr.values.length ? Attr.values[j['fo'] as int] : null,
