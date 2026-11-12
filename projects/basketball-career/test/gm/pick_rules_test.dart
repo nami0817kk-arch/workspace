@@ -1,5 +1,4 @@
 import 'package:basketball_career/gm/bot.dart';
-import 'package:basketball_career/gm/career.dart';
 import 'package:basketball_career/gm/trade.dart';
 import 'package:flutter_test/flutter_test.dart';
 
