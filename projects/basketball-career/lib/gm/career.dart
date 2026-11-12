@@ -1538,6 +1538,8 @@ class Career {
 
   void _startContracts() {
     haggled = [];
+    rfa = [];
+    sheet = null;
     capYear++;
     mleUsed = false;
     phase = Phase.contracts;
@@ -1703,10 +1705,52 @@ class Career {
     if (phase != Phase.contracts || p == null || !expiring.contains(id)) return;
     expiring.remove(id);
     me.roster.remove(p);
+    // 自分で指名した新人の契約が終わって手放すと、制限付きの自由契約になる(ほかのチームの条件に同じで残せる)
+    if (draftedIds.contains(id) && p.exp <= 5 && !rfa.contains(id)) rfa.add(id);
     p.salary = askOf(p, teams[(mine + 1) % teams.length]).salary;
     freeAgents
       ..add(p)
       ..sort((a, b) => b.ovr.compareTo(a.ovr));
+  }
+
+  // ---------------------------------------------------------------- 制限付き自由契約(オファーシート)
+
+  /// 制限付きの自由契約の自分の選手(このオフのあいだ、ほかのチームの申し込みに同じ条件で残せる)。
+  List<int> rfa = [];
+
+  /// ほかのチームから届いたオファーシート(選手の id・チーム・年俸・年数)。自分が答えるまで保留。
+  List<int>? sheet;
+
+  /// オファーシートの選手。
+  Player? get sheetPlayer => sheet == null ? null : freeAgents.where((p) => p.id == sheet![0]).firstOrNull;
+
+  /// 同じ条件で残せない理由(残せるなら null)。上限は超えてよいが、登録の人数は守る。
+  String? matchProblem() {
+    if (sheet == null || sheetPlayer == null) return 'オファーシートが無い';
+    if (me.roster.length - expiring.length >= offseasonRoster) return '登録がいっぱいで、残せない(先に空ける)';
+    return null;
+  }
+
+  /// オファーシートと同じ条件で残す。
+  bool matchSheet() {
+    final p = sheetPlayer;
+    if (p == null || matchProblem() != null) return false;
+    final s = sheet!;
+    sheet = null;
+    rfa.remove(p.id);
+    _signBid(p, FaBid(mine, s[2], s[3]));
+    p.morale = 70;
+    return true;
+  }
+
+  /// オファーシートを見送る(選手はそのチームに行く)。
+  void declineSheet() {
+    final p = sheetPlayer;
+    final s = sheet;
+    sheet = null;
+    if (p == null || s == null) return;
+    rfa.remove(p.id);
+    _signBid(p, FaBid(s[1], s[2], s[3]));
   }
 
   // ---------------------------------------------------------------- 10日契約
@@ -1875,6 +1919,7 @@ class Career {
   /// 自由契約を1日進める。ほかのチームが申し込み、大物の一部が行き先を決める。
   void nextFaDay() {
     if (phase != Phase.contracts || faDay >= faDays) return;
+    if (sheet != null) declineSheet(); // 答えないまま日が進めば、見送り
     _aiBids();
     final chance = faDecideChance[faDay.clamp(0, faDecideChance.length - 1)];
     for (final id in bids.keys.toList()) {
@@ -1898,6 +1943,11 @@ class Career {
       if (!rng.chance(chance)) continue;
       final best = list.reduce((a, b) => _bidScore(p, a) >= _bidScore(p, b) ? a : b);
       bids.remove(id);
+      if (best.team != mine && rfa.contains(p.id) && sheet == null) {
+        sheet = [p.id, best.team, best.salary, best.years];
+        _mail(Sender.agent, '${p.name}にオファーシート', '${teams[best.team].name}が${best.years}年 ${money(best.salary)}を出した。同じ条件で残すか、見送るか。答えないまま日が進むと、見送りになる。');
+        continue;
+      }
       _signBid(p, best);
       if (best.team != mine && list.any((b) => b.team == mine)) {
         _mail(Sender.agent, '${p.name}は${teams[best.team].def.short}を選んだ',
@@ -2121,6 +2171,7 @@ class Career {
     while (faDay < faDays) {
       nextFaDay();
     }
+    if (sheet != null) declineSheet();
     bids = {};
     _aiFreeAgency();
     for (final t in teams) {
@@ -2490,6 +2541,8 @@ class Career {
         'mid': _msgId,
         'asi': allStarIds,
         'hg': haggled,
+        if (rfa.isNotEmpty) 'rf': rfa,
+        if (sheet != null) 'sh': sheet,
         'hy': hype,
         'pl': priceLevel,
         'rv': revenue,
@@ -2562,6 +2615,8 @@ class Career {
       .._msgId = (j['mid'] as int?) ?? 1
       ..allStarIds = [for (final x in (j['asi'] as List? ?? const [])) x as int]
       ..haggled = [for (final x in (j['hg'] as List? ?? const [])) x as int]
+      ..rfa = [for (final x in (j['rf'] as List? ?? const [])) x as int]
+      ..sheet = j['sh'] is List ? [for (final x in j['sh'] as List) x as int] : null
       ..hype = ((j['hy'] as int?) ?? 50).clamp(0, 100)
       ..priceLevel = ((j['pl'] as int?) ?? 1).clamp(0, ticketPrices.length - 1)
       ..revenue = (j['rv'] as int?) ?? 0
