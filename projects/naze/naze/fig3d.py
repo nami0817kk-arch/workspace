@@ -32,12 +32,19 @@ BOX = [None]
 _DEM = {}
 
 
-def setup(bbox):
+PZ = [16]                                   # 空中写真の細かさ(z)。範囲が広いときは 14〜15 に下げる
+
+
+def setup(bbox, photo_z=16, dem=None):
+    """dem に Dem を渡すと、標高の取得の代わりにそれを使う(海の深さを足した標高など)。"""
     BOX[0] = tuple(bbox)
+    PZ[0] = photo_z
     _DEM.clear()
     _PH.clear()
     _SL.clear()
     _LS.clear()
+    if dem is not None:
+        _DEM["d"] = dem
 
 
 def _dem():
@@ -146,8 +153,8 @@ def _photo_at(lon, lat):
     """国土地理院の空中写真(z16)の色を、経度・緯度の配列で引く。"""
     bb = BOX[0]
     if "p" not in _PH:
-        ppd = 256 * 2 ** 16 / 360
-        _PH["p"] = (worldmap._gsi_grid(bb, 16, ppd, "photo").astype(np.float32), ppd)
+        ppd = 256 * 2 ** PZ[0] / 360
+        _PH["p"] = (worldmap._gsi_grid(bb, PZ[0], ppd, "photo").astype(np.float32), ppd)
     ph, ppd = _PH["p"]
     j = ((lon - bb[0]) * ppd).astype(np.float32)
     i = ((bb[3] - lat) * ppd).astype(np.float32)
