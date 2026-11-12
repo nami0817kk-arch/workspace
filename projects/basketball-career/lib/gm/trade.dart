@@ -85,6 +85,8 @@ class TradeOffer {
     this.givePicks = const [],
     this.getPicks = const [],
     this.protections = const {},
+    this.giveSwaps = const [],
+    this.getSwaps = const [],
   });
 
   /// 出す指名権に付ける保護(指名権の番号 → 上位いくつ)。成立すると指名権に付く。
@@ -100,7 +102,12 @@ class TradeOffer {
   final List<int> givePicks;
   final List<int> getPicks;
 
-  bool get isEmpty => give.isEmpty && get.isEmpty && givePicks.isEmpty && getPicks.isEmpty;
+  /// 入れ替え権(その年の1巡目): 受け取る側が、自分のその年の1巡目を、相手のその年の1巡目と(相手のほうが上位なら)入れ替えられる。
+  /// [giveSwaps] はこちらが相手に渡す年、[getSwaps] は相手からもらう年(シーズンの番号)。
+  final List<int> giveSwaps;
+  final List<int> getSwaps;
+
+  bool get isEmpty => give.isEmpty && get.isEmpty && givePicks.isEmpty && getPicks.isEmpty && giveSwaps.isEmpty && getSwaps.isEmpty;
 
   Map<String, dynamic> toJson() => {
         'p': partner,
@@ -108,6 +115,8 @@ class TradeOffer {
         't': get,
         'gp': givePicks,
         'tp': getPicks,
+        if (giveSwaps.isNotEmpty) 'gsw': giveSwaps,
+        if (getSwaps.isNotEmpty) 'tsw': getSwaps,
         if (protections.isNotEmpty) 'pt': {for (final e in protections.entries) '${e.key}': e.value},
       };
 
@@ -117,6 +126,8 @@ class TradeOffer {
         get: [for (final x in j['t'] as List) x as int],
         givePicks: [for (final x in j['gp'] as List) x as int],
         getPicks: [for (final x in j['tp'] as List) x as int],
+        giveSwaps: [for (final x in (j['gsw'] as List? ?? const [])) x as int],
+        getSwaps: [for (final x in (j['tsw'] as List? ?? const [])) x as int],
         protections: {for (final e in ((j['pt'] as Map?) ?? const {}).entries) int.parse(e.key as String): e.value as int},
       );
 }
@@ -182,7 +193,7 @@ TradeVerdict judgeTrade(List<Team> teams, List<DraftPick> picks, int mine, Trade
   final me = teams[mine], them = teams[o.partner];
   final give = [for (final id in o.give) me.roster.firstWhere((p) => p.id == id)];
   final get = [for (final id in o.get) them.roster.firstWhere((p) => p.id == id)];
-  if (o.isEmpty || (give.isEmpty && o.givePicks.isEmpty) || (get.isEmpty && o.getPicks.isEmpty)) {
+  if (o.isEmpty || (give.isEmpty && o.givePicks.isEmpty && o.giveSwaps.isEmpty) || (get.isEmpty && o.getPicks.isEmpty && o.getSwaps.isEmpty)) {
     return const TradeVerdict(false, '出すものと受け取るものを、どちらも選んでください', 0);
   }
   final myAfter = me.roster.length - give.length + get.length;
@@ -209,6 +220,14 @@ TradeVerdict judgeTrade(List<Team> teams, List<DraftPick> picks, int mine, Trade
   for (final i in o.getPicks) {
     outV += pickValue(picks[i], mode, slots?[picks[i].from] ?? slotGuess(teams, picks[i].from), nowSeason);
   }
+  // 入れ替え権の値打ち(近い年ほど高い)
+  double swapValue(int s) => const [6.0, 4.5, 3.0, 2.0][(s - nowSeason).clamp(0, 3)];
+  for (final s in o.giveSwaps) {
+    inV += swapValue(s);
+  }
+  for (final s in o.getSwaps) {
+    outV += swapValue(s);
+  }
   final need = requiredValue(outV) * hardness;
   final ratio = need <= 0 ? 2.0 : inV / need;
   if (ratio >= 1) return TradeVerdict(true, '', ratio);
@@ -216,10 +235,19 @@ TradeVerdict judgeTrade(List<Team> teams, List<DraftPick> picks, int mine, Trade
 }
 
 /// 申し込みを成立させる(選手と指名権を入れ替える)。
-void applyTrade(List<Team> teams, List<DraftPick> picks, int mine, TradeOffer o) {
+void applyTrade(List<Team> teams, List<DraftPick> picks, int mine, TradeOffer o, {List<List<int>>? swaps}) {
   final me = teams[mine], them = teams[o.partner];
   final give = [for (final id in o.give) me.roster.firstWhere((p) => p.id == id)];
   final get = [for (final id in o.get) them.roster.firstWhere((p) => p.id == id)];
+  // 入れ替え権: [その年, 権利を持つチーム(自分の1巡目を入れ替えられる), 入れ替えの相手のチーム]
+  if (swaps != null) {
+    for (final s in o.giveSwaps) {
+      swaps.add([s, o.partner, mine]);
+    }
+    for (final s in o.getSwaps) {
+      swaps.add([s, mine, o.partner]);
+    }
+  }
   for (final p in [...give, ...get]) {
     p.tenure = 0;
   }
