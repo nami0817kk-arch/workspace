@@ -43,6 +43,23 @@ const arenaSeats = 19000;
 /// 1シーズンの放映料など、勝ち負けによらない収入(10万ドル)。
 final baseIncome = capScaled(900);
 
+/// 売店の値段の段階(ドル)。
+const concessionPrices = [12, 18, 26];
+const concessionLabels = ['安い', 'ふつう', '高い'];
+
+/// 収入の種類。
+enum Income {
+  tv('放映料'),
+  gate('入場料'),
+  concession('売店'),
+  merch('グッズ'),
+  sponsor('スポンサー'),
+  playoffs('プレーオフ');
+
+  const Income(this.label);
+  final String label;
+}
+
 /// オーナーの目標の種類。
 enum GoalKind {
   wins('勝ち数'),
@@ -508,6 +525,30 @@ class Career {
   /// 入場料の段階([ticketPrices] の番号)。
   int priceLevel = 1;
 
+  /// 売店の値段の段階([concessionPrices] の番号)。
+  int concessionLevel = 1;
+
+  /// 自分のチームの市場の大きさ(スポンサーとグッズに掛かる)。
+  double get market => marketSizes[mine];
+
+  /// 今シーズンの収入の内訳([Income] の順)。合計は [revenue]。
+  List<int> incomeBy = List.filled(Income.values.length, 0);
+
+  void _earn(Income i, int v) {
+    incomeBy[i.index] += v;
+    revenue += v;
+  }
+
+  /// 勝ち負けによらない1シーズンの収入(放映料・スポンサー・グッズ)。人気と市場の大きさで変わる。
+  Map<Income, int> get baseIncomeParts => {
+        Income.tv: (baseIncome * 0.45).round(),
+        Income.sponsor: (baseIncome * 0.25 * market).round(),
+        Income.merch: (baseIncome * 0.20 * market * (0.6 + hype * 0.008)).round(),
+      };
+
+  /// 1試合のホームの売店の収入(10万ドル)。
+  int get concessionPerGame => (arenaSeats * attendance * concessionPrices[concessionLevel] * capScale / 100000).round();
+
   /// 今シーズンの収入と支出(10万ドル)。区切りごとに足していく。
   int revenue = 0;
   int costs = 0;
@@ -520,10 +561,15 @@ class Career {
   List<OwnerGoal> goals = [];
 
   /// 観客の入り(0.3〜1.0)。人気が高いほど、値段が安いほど入る。
-  double get attendance => (0.55 + hype * 0.0045 - (ticketPrices[priceLevel] - 100) * 0.003).clamp(0.3, 1.0);
+  double get attendance => (0.55 + hype * 0.0045 - (ticketPrices[priceLevel] - 100) * 0.003 - (concessionPrices[concessionLevel] - 18) * 0.002).clamp(0.3, 1.0);
 
   /// 1試合のホームの入場収入(10万ドル)。
   int get gatePerGame => (arenaSeats * attendance * ticketPrices[priceLevel] * capScale / 100000).round();
+
+  void setConcession(int level) {
+    if (phase == Phase.over) return;
+    concessionLevel = level.clamp(0, concessionPrices.length - 1);
+  }
 
   void setPrice(int level) {
     if (phase == Phase.over) return;
@@ -546,7 +592,8 @@ class Career {
     final left = gamesPerSeason - roundAt;
     final perGameCost = me.payroll / gamesPerSeason;
     final tax = me.payroll > taxLine ? ((me.payroll - taxLine) * 1.5).round() : 0;
-    final rest = (left / 2 * gatePerGame + baseIncome * left / gamesPerSeason - perGameCost * left).round();
+    final base = baseIncomeParts.values.fold(0, (a, b) => a + b);
+    final rest = (left / 2 * (gatePerGame + concessionPerGame) + base * left / gamesPerSeason - perGameCost * left).round();
     return profit + rest - tax;
   }
 
@@ -887,6 +934,7 @@ class Career {
     final r = strengthRank(mine);
     target = (gamesPerSeason * (0.72 - r * 0.016)).round();
     revenue = 0;
+    incomeBy = List.filled(Income.values.length, 0);
     costs = 0;
     final third = [GoalKind.playoffs, GoalKind.youth, GoalKind.noTax];
     // 強いチームにはプレーオフ、立て直しには若手、上限を大きく超えたチームには税を
@@ -944,7 +992,11 @@ class Career {
     _tickTenDay(n);
     lastGames = [...lastGames, ...games];
     final homeGames = games.where((g) => g.home == mine).length;
-    revenue += homeGames * gatePerGame + (baseIncome * games.length / gamesPerSeason).round();
+    _earn(Income.gate, homeGames * gatePerGame);
+    _earn(Income.concession, homeGames * concessionPerGame);
+    for (final e in baseIncomeParts.entries) {
+      _earn(e.key, (e.value * games.length / gamesPerSeason).round());
+    }
     costs += ((me.payroll + me.staffCost + me.twoWay.length * twoWaySalary) * games.length / gamesPerSeason).round();
     for (final (t, p) in injuries) {
       if (t == mine || p.ovr >= 76) _log('けが: ${p.name}(${teams[t].def.short})が${p.injured}試合欠場');
@@ -1208,7 +1260,7 @@ class Career {
     // ぜいたく税は、超えた分の1.5倍を払う。プレーオフのホームの試合も入場収入になる
     if (me.payroll > taxLine) costs += ((me.payroll - taxLine) * 1.5).round();
     final poHome = playoffs.where((s) => s.round >= 1 && (s.high == mine || s.low == mine)).fold(0, (n, s) => n + (s.games.where((g) => g.home == mine).length));
-    revenue += poHome * (gatePerGame * 1.5).round();
+    _earn(Income.playoffs, poHome * ((gatePerGame + concessionPerGame) * 1.5).round());
     lastProfit = profit;
     for (final g in goals) {
       g.met = goalOk(g);
@@ -2546,6 +2598,8 @@ class Career {
         'hy': hype,
         'pl': priceLevel,
         'rv': revenue,
+        'incb': incomeBy,
+        if (concessionLevel != 1) 'cl': concessionLevel,
         'cs': costs,
         'lp': lastProfit,
         'gl': [for (final g in goals) g.toJson()],
@@ -2620,6 +2674,8 @@ class Career {
       ..hype = ((j['hy'] as int?) ?? 50).clamp(0, 100)
       ..priceLevel = ((j['pl'] as int?) ?? 1).clamp(0, ticketPrices.length - 1)
       ..revenue = (j['rv'] as int?) ?? 0
+      ..incomeBy = [for (var i = 0; i < Income.values.length; i++) i < ((j['incb'] as List?)?.length ?? 0) ? (j['incb'] as List)[i] as int : 0]
+      ..concessionLevel = ((j['cl'] as int?) ?? 1).clamp(0, concessionPrices.length - 1)
       ..costs = (j['cs'] as int?) ?? 0
       ..lastProfit = (j['lp'] as int?) ?? 0
       ..goals = [for (final g in maps('gl')) OwnerGoal.fromJson(g)]
