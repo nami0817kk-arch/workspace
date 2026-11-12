@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
@@ -6,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../gm/career.dart';
 import '../gm/skills.dart';
+import '../sound/sound.dart';
 import '../gm/difficulty.dart';
 import '../gm/draft.dart';
 import '../gm/league.dart';
@@ -154,6 +156,7 @@ class GmController extends ChangeNotifier {
     if (c == null || c.phase != Phase.season || busy) return;
     if (c.roundAt == blockStart(c.block)) await _maybeInterstitial();
     c.playBlock();
+    unawaited(Sfx.play(SoundEffect.buzzer));
     await money?.tournamentPlayed();
     _record(c);
     _changed();
@@ -202,6 +205,7 @@ class GmController extends ChangeNotifier {
     if (c == null || c.phase != Phase.playoffs || busy) return;
     await _maybeInterstitial();
     c.playPlayoffs();
+    unawaited(Sfx.play(c.myResult >= 5 ? SoundEffect.fanfare : SoundEffect.buzzer));
     await money?.tournamentPlayed();
     pending.addAll(profile.recordSeason(c));
     _record(c);
@@ -214,15 +218,24 @@ class GmController extends ChangeNotifier {
 
   /// 任期を自分で終える(任期に上限は無い)。
   void endCareer() => _act((c) => c.endCareer());
-  void pickProspect(Prospect p) => _act((c) => c.pickProspect(p));
+  void pickProspect(Prospect p) {
+    _act((c) => c.pickProspect(p));
+    unawaited(Sfx.play(SoundEffect.tick));
+  }
   void passPick() => _act((c) => c.passPick());
   void scoutProspect(Prospect p) => _act((c) => c.scoutProspect(p));
   void toggleBoard(Prospect p) => _act((c) => c.toggleBoard(p));
-  void resign(int id, int years) => _act((c) => c.resign(id, years));
+  void resign(int id, int years) {
+    _act((c) => c.resign(id, years));
+    unawaited(Sfx.play(SoundEffect.chime));
+  }
   void letGo(int id) => _act((c) => c.letGo(id));
   void matchSheet() => _act((c) => c.matchSheet());
   void declineSheet() => _act((c) => c.declineSheet());
-  void signFreeAgent(int id, int years) => _act((c) => c.signFreeAgent(id, years));
+  void signFreeAgent(int id, int years) {
+    _act((c) => c.signFreeAgent(id, years));
+    unawaited(Sfx.play(SoundEffect.chime));
+  }
   void release(int id, {ReleaseMode mode = ReleaseMode.full}) => _act((c) => c.release(id, mode: mode));
   void signTwoWay(int id) => _act((c) => c.signTwoWay(id));
   void signTenDay(int id) => _act((c) => c.signTenDay(id));
@@ -285,6 +298,7 @@ class GmController extends ChangeNotifier {
     final c = career;
     if (c == null || busy) return false;
     final ok = c.propose(o);
+    if (ok) unawaited(Sfx.play(SoundEffect.chime));
     _record(c);
     _changed();
     return ok;

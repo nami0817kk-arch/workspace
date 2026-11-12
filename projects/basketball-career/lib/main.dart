@@ -8,6 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'monetization/ad_service.dart';
 import 'monetization/monetization.dart';
 import 'monetization/purchase_service.dart';
+import 'sound/audio_backend.dart';
+import 'sound/sound.dart';
 import 'ui/app.dart';
 import 'ui/gm_controller.dart';
 
@@ -21,6 +23,9 @@ Future<void> main() async {
         ['Noto Sans JP'], await rootBundle.loadString('assets/fonts/OFL-NotoSansJP.txt'));
   });
   final prefs = await SharedPreferences.getInstance();
+  // 効果音(設定で切れる。既定はオン)
+  Sfx.enabled = prefs.getBool('gmSound') ?? true;
+  Sfx.backend = AudioplayersBackend();
   final money = Monetization(prefs,
       ads: createAdService(), store: createPurchaseService());
   // 広告SDKの準備は待たずに画面を出す(読み込みは裏で続く)
