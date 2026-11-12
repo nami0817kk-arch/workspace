@@ -188,13 +188,27 @@ jobs:
       - name: Build IPA
         env:
           BUILD_NUMBER: ${{ github.event.inputs.build_number }}
+          ADMOB_APP_ID: ${{ secrets.YOUTH_ADMOB_APP_ID_IOS }}
+          ADMOB_REWARDED: ${{ secrets.YOUTH_ADMOB_REWARDED_IOS }}
+          ADMOB_INTERSTITIAL: ${{ secrets.YOUTH_ADMOB_INTERSTITIAL_IOS }}
         run: |
           set -euo pipefail
           EXTRA=""
+          # 広告：本物の ID が3つそろっていれば差し替える。無ければ Google のテスト用 ID のまま（TestFlight の試し用。ストアへは出さない）
+          if [ -n "$ADMOB_APP_ID" ] && [ -n "$ADMOB_REWARDED" ] && [ -n "$ADMOB_INTERSTITIAL" ]; then
+            echo "$ADMOB_APP_ID" | grep -Eq '^ca-app-pub-[0-9]{16}~[0-9]{10}$' || { echo "::error::YOUTH_ADMOB_APP_ID_IOS がアプリIDの形ではありません。"; exit 1; }
+            [ "$ADMOB_REWARDED" != "$ADMOB_INTERSTITIAL" ] || { echo "::error::動画と全画面に同じ広告ユニットIDが入っています。"; exit 1; }
+            plutil -replace GADApplicationIdentifier -string "$ADMOB_APP_ID" ios/Runner/Info.plist
+            [ "$(plutil -extract GADApplicationIdentifier raw -o - ios/Runner/Info.plist)" = "$ADMOB_APP_ID" ] || { echo "::error::Info.plist のアプリIDが Secret と一致しません。"; exit 1; }
+            EXTRA="$EXTRA --dart-define=ADMOB_REWARDED_IOS=$ADMOB_REWARDED --dart-define=ADMOB_INTERSTITIAL_IOS=$ADMOB_INTERSTITIAL"
+            echo "広告: 本物のIDで作ります"
+          else
+            echo "::warning::広告は Google のテスト用IDのままです（YOUTH_ADMOB_* の3つが未設定）。ストアへ出す前に設定してください。"
+          fi
           if [ -n "$BUILD_NUMBER" ]; then
             # 入力欄の値をそのままシェルに埋め込まない。数字だけ受け付ける
             [[ "$BUILD_NUMBER" =~ ^[0-9]+$ ]] || { echo "::error::ビルド番号は数字だけで入れてください。"; exit 1; }
-            EXTRA="--build-number=$BUILD_NUMBER"
+            EXTRA="$EXTRA --build-number=$BUILD_NUMBER"
           fi
           flutter build ipa --release \
             --export-options-plist=ios/ExportOptions.plist $EXTRA
