@@ -1,0 +1,140 @@
+# 物語完結型ショート クレオパトラ s1（2026-11-12）。本編 scripts/cleopatra-story.yaml（11/14 12:00 公開予定）から。11/15 に予約。
+# 形式は saigo_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（dev/output/rekishi-chiso/research/クレオパトラ_facts_20261111.yaml）と本編の # fact: だけ。
+# 絵は本編の AI 絵（out/story/cleopatra/main）の再利用だけ。新しい絵は作らない。死の場面に人物の絵は当てない。
+# 切り口：勝者が見なかった墓（本編序章。cleopatra-25, 92, 06, 59）。スエトニウスの引用は事実カードの quote（My wish was to see a king, not corpses.）。
+# 理解テスト4問：①クレオパトラ ②紀元前30年、エジプトを手に入れたオクタウィアヌスが大王の遺体は見て、プトレマイオス家の墓は見なかった ③「王を見たかったのであって、死体ではない」と答えた ④墓は2000年あまり見つかっていない（本編へ）
+
+title: "クレオパトラ｜勝者が見なかった墓"
+yt_title: "クレオパトラに勝った男は、大王の遺体は見て、王家の墓は見なかった　「私は王を見たかった」"
+description: |-
+  クレオパトラに勝ったローマのオクタウィアヌスは、紀元前30年、エジプトで、アレクサンドロス大王の遺体を石棺ごと祠から出させ、黄金の冠をのせ、花をまきました。ところが、プトレマイオス家の墓も見るかと聞かれると、スエトニウスによれば、こう答えました。「私は王を見たかったのであって、死体ではない」。
+  クレオパトラも、プトレマイオス家の女王です。アントニウスと同じ墓に葬られた、と記録は書きます。けれど、その墓が町のどこにあるのかは、はっきり書いていません。
+  死から2000年あまりたった今も、墓は見つかっていません。引用はスエトニウス『ローマ皇帝伝』の英訳（Thayer 版 Loeb）で読んだものです。
+  勝者が見なかった墓は、どこにあるのか。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#クレオパトラ"
+- "#古代エジプト"
+- "#世界史"
+ai_images: true
+ai_disclosure: "この動画の風景・室内・人物の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面に「AI生成画像」と出しています）。クレオパトラの姿も、特定の資料を写したものではありません。"
+art_dir: out/story/cleopatra
+out: cleopatra_story_s1
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: "クレオパトラの墓と勝者"
+  title: "勝者は、王家の墓を《見なかった》"
+now:
+- {at: "紀元前30年", text: "紀元前30年　アレクサンドリア", point: 0}
+timeline:
+- {label: "前30"}
+shots:
+  C07:
+    kind: "ai"
+    file: "cleopatra/main/C07.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "ローマの将軍がガラスの棺の前に立つ神殿"
+  C03:
+    kind: "ai"
+    file: "cleopatra/main/C03.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "海辺に建つ高い石の霊廟"
+  C07_right6:
+    kind: "ai"
+    file: "cleopatra/main/C07.jpg"
+    focus: [0.6, 0.5]
+    move: "right"
+    must: "ローマの将軍がガラスの棺の前に立つ神殿"
+  C07_left4:
+    kind: "ai"
+    file: "cleopatra/main/C07.jpg"
+    focus: [0.4, 0.5]
+    move: "left"
+    must: "ローマの将軍がガラスの棺の前に立つ神殿"
+  C04:
+    kind: "ai"
+    file: "cleopatra/main/C04.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "霊廟の内部、2つの石棺と灯"
+  C03_right6:
+    kind: "ai"
+    file: "cleopatra/main/C03.jpg"
+    focus: [0.6, 0.5]
+    move: "right"
+    must: "海辺に建つ高い石の霊廟"
+  C06:
+    kind: "ai"
+    file: "cleopatra/main/C06.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "灯のそばのパピルスの巻物と墨壺"
+  C02:
+    kind: "ai"
+    file: "cleopatra/main/C02.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "古代アレクサンドリアの港の全景"
+  H01:
+    kind: "ai"
+    file: "cleopatra/main/H01.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "クレオパトラの想像図"
+lines:
+  # fact: cleopatra-25
+- 語り: "クレオパトラに勝った男は、アレクサンドロス大王の遺体は見て、プトレマイオス家の墓は、見なかった。"
+  shot: C07
+  tone: 強調
+  pause: 0.12
+  # fact: cleopatra-92
+- 語り: "なぜ、見なかったのか。"
+  shot: C03
+  tone: 疑問
+  pause: 0.15
+  # fact: cleopatra-25
+- 語り: "紀元前30年、ローマのオクタウィアヌスは、エジプトを手に入れた。大王の石棺を、祠から出させる。"
+  shot: C07_right6
+  tone: しみじみ
+  pause: 0.12
+  # fact: cleopatra-25
+- 語り: "遺体を眺め、黄金の冠をのせ、花をまいた、とスエトニウスは書く。"
+  shot: C07_left4
+  tone: 重い
+  pause: 0.12
+  # fact: cleopatra-92
+- 語り: "プトレマイオス家の墓も見るか、と聞かれると、こう答えた。私は、王を見たかったのであって、死体ではない。"
+  shot: C04
+  tone: 重い
+  pause: 0.12
+  # fact: cleopatra-06
+- 語り: "クレオパトラも、その家の女王だ。アントニウスと同じ墓に葬られた、と記録は書く。"
+  shot: C03_right6
+  tone: しみじみ
+  pause: 0.12
+  # fact: cleopatra-04
+- 語り: "ところが、その墓が、町のどこにあるのかは、記録が、はっきり書いていない。"
+  shot: C06
+  tone: 重い
+  pause: 0.12
+  # fact: cleopatra-59
+- 語り: "死から2000年あまり。墓は、今も、見つかっていない。"
+  shot: C02
+  tone: 重い
+  pause: 0.12
+  # fact: cleopatra-92
+- 語り: "勝者が見なかった墓は、どこにあるのか。"
+  shot: H01
+  tone: 疑問
+  pause: 0.15

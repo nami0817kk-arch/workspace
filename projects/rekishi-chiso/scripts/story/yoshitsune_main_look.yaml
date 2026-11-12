@@ -1,0 +1,204 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：もしも義経が頼朝と戦わず平泉にとどまっていたら（scripts/yoshitsune-if-story.yaml）。chiso/storymain.py が読む。
+# 11-12 作成（11/15 12:00 公開）。genbaku_main_look.yaml を写した。台本には手を入れない（承認のあと）。
+# 絵の方針：AI 絵（Gemini）。T01・B01〜B05 はこの回のために作った。B06〜B19 は Gemini のタブが固まって作れなかったため、同じ鎌倉の頃の既存の AI 絵（yoritomo の Q01・Q03・Q05・Q07・Q09〜Q12・Q15、hojo-if の H06・H15・H19・H23・H24）を B 番号にコピーして使う（out/story/yoshitsune-if/main/）。B17（蓮）は桜の池の絵で代用（Gemini が戻ったら蓮の絵に差し替え）。
+#   実在の人物の顔は描かない（後ろ姿・遠景）。旗・家紋・字は入れない。妻子の最期・首・戦いの場面は描かない。
+script: scripts/yoshitsune-if-story.yaml
+out: yoshitsune_if_story_main
+art_dir: out/story/yoshitsune-if/ph
+main_art_dir: out/story/yoshitsune-if/main
+ai_disclosure: この動画の人物・情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+
+chapters:
+  0: {label: 序章 弓矢を袋にしまえ, now: 1189年6月8日, dates: {1: 1189年7月, 4: 1189年閏4月30日, 6: 1189年6月13日, 8: null}}
+  1: {label: 第1章 奥州の主、藤原秀衡, now: 1174年ごろ, dates: {11: 1180年10月21日, 13: 1181年8月, 20: 1186年4月, 22: null}}
+  2: {label: 第2章 分岐1 戦わずに平泉へ向かっていたら, now: 1184年8月6日, dates: {28: 1185年5月, 31: 1185年10月9日, 33: 1185年10月11日, 34: 1185年10月18日, 36: 1185年11月3日, 38: 1185年11月, 40: 1187年2月10日, 41: null}}
+  3: {label: 第3章 分岐2 秀衡が生きていたら, now: 1187年3月5日, dates: {49: 1187年10月29日, 53: 1188年2月, 56: null}}
+  4: {label: 第4章 衣川、閏4月30日, now: 1188年11月, dates: {66: 1189年閏4月30日, 70: 1189年5月29日, 71: 1185年11月, 72: 1189年6月, 74: 1189年6月7日, 75: null}}
+  5: {label: 第5章 分岐3 泰衡が義経を討たなかったら, now: null, dates: {81: 1189年6月30日, 83: 1189年7月16日, 90: 1189年8月26日, 92: 1189年9月3日, 93: null}}
+  6: {label: 第6章 その後 首桶の蓮, now: 1950年, dates: {106: 1689年}}
+  7: {label: まとめ もしも義経が平泉にとどまっていたら, now: null, dates: {}}
+
+references:
+  - "吾妻鏡（治承4年10月21日条・元暦元年〜文治5年の各条。1185〜89年の分は読み下し文で確認。黄瀬川の条は国史大系本の翻刻で確認）"
+  - "九条兼実『玉葉』（養和元年・文治元年〜文治5年の各条）"
+  - "中尊寺（公式ページ）・平泉町（世界遺産ページ・平泉関係年表）・文化庁 文化遺産オンライン・国土交通省観光庁 多言語解説文"
+  - "岩手県教育委員会 岩手県文化財調査報告書第157集 高館跡（2020）・島原弘征（平泉町教育委員会, 2022）・鎌田勉（岩手県立博物館だより No.118, 2008）・柳原敏昭（季刊大林 No.62, 2023）"
+  - "Schmid ほか The Oshu Fujiwara—An interdisciplinary study（PLOS ONE 16(10), 2021）・朝日新聞社編『中尊寺と藤原四代』（1950）"
+  - "高橋富雄・大石直正・入間田宣夫・安田元久（日本大百科全書・世界大百科事典の各項目）／藤沢市の資料（伝源義経首洗井戸）"
+no_tag_from: 114
+
+ai:
+  T01: {scene: 平泉の川沿いの丘に立つ若い武者の後ろ姿と、遠くに金色の堂の屋根（夜明け・サムネと同じ絵。顔は描かない）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B01: {scene: 京の院の御所の一室、簾の奥の灯と、控える公家の後ろ姿, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B02: {scene: 鎌倉の武家屋敷の広間、庭を向いて座る武将の後ろ姿（顔は描かない）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B03: {scene: 夏の奥州の街道を進む騎馬の列（遠景、戦いは描かない）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B04: {scene: 夕暮れの川沿いの木造の館（衣川の館の想像図、人は描かない）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B05: {scene: 板の間に置かれた黒漆の蓋付きの櫃と酒壺（中身は描かない）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B06: {scene: 相模の海辺、松と波の浜（腰越の想像図、人は小さな遠景）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B07: {scene: 12世紀の平泉の全景、川と寺の屋根と町並み（想像図）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B08: {scene: 山あいの寺の金色の堂（金色堂の想像図）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B09: {scene: 積み重なった素焼きの小皿（かわらけ）と発掘の土の面, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B10: {scene: 川を渡る荷を背負った馬の列と金の砂袋（平泉の交易の想像図）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B11: {scene: 嵐の海で傾く古い木造の船（人は描かない、大物浦の想像図）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B12: {scene: 吉野の山道を行く山伏姿の小さな一行（遠景・後ろ姿）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B13: {scene: 夜の京の屋敷の門と松明の明かり（戦いは描かない・遠景）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B14: {scene: 病の床のある館の一室、枕もとに集まる人々の後ろ姿, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B15: {scene: 丘の斜面に掘られた二重の堀と土塁（阿津賀志山の想像図、人は描かない）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B16: {scene: 夕暮れの高台から見る川と一面の夏草, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B17: {scene: 池に咲く蓮の花（淡い桃色）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B18: {scene: 灯のそばの机に広げた古い日記の巻物と筆（字は読めない）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B19: {scene: 夕暮れの誰もいない川辺と夏草（終了画面。右半分を空けた構図）, crops: {left: [1.12, 0.45, 0.5], wide: [1.12, 0.5, 0.5]}, lock: [1.0, 0.5, 0.5]}
+
+credits: {}
+
+shots:
+  - 0 ai:B01 wide
+  - 1 ai:B02 wide
+  - 2 ai:B16 wide
+  - 3 ai:T01 wide
+  - 4 ai:B04 wide
+  - 5 ai:B18 wide
+  - 6 ai:B05 wide
+  - 7 ai:B06 wide
+  - 8 ai:B07 left
+  - 9 ai:T01 right
+  - 10 ai:B07 wide
+  - 11 ai:B03 wide
+  - 12 ai:B02 right
+  - 13 ai:B07 right
+  - 14 ai:B18 left
+  - 15 ai:B10 wide
+  - 16 ai:B10 left
+  - 17 ai:B07 left
+  - 18 ai:B09 wide
+  - 19 ai:B09 right
+  - 20 ai:B10 right
+  - 21 ai:B07 wide
+  - 22 ai:B18 right
+  - 23 ai:B01 right
+  - 24 ai:B01 wide
+  - 25 ai:B02 wide
+  - 26 ai:B02 left
+  - 27 ai:B18 wide
+  - 28 ai:B06 left
+  - 29 ai:B06 right
+  - 30 ai:B06 wide
+  - 31 ai:B13 wide
+  - 32 ai:B13 left
+  - 33 ai:B01 left
+  - 34 ai:B01 right
+  - 35 ai:B01 wide
+  - 36 ai:B11 wide
+  - 37 ai:B11 left
+  - 38 ai:B02 right
+  - 39 ai:B18 left
+  - 40 ai:B12 left
+  - 41 ai:T01 left
+  - 42 ai:B13 wide
+  - 43 ai:B18 right
+  - 44 ai:B12 right
+  - 45 ai:B12 wide
+  - 46 ai:B14 wide
+  - 47 ai:B14 left
+  - 48 ai:B02 right
+  - 49 ai:B14 wide
+  - 50 ai:B18 wide
+  - 51 ai:B18 left
+  - 52 ai:B08 wide
+  - 53 ai:B02 wide
+  - 54 ai:B02 left
+  - 55 ai:B01 wide
+  - 56 ai:T01 right
+  - 57 ai:B07 wide
+  - 58 ai:B10 wide
+  - 59 ai:B08 left
+  - 60 ai:B07 left
+  - 61 ai:B07 right
+  - 62 ai:B07 wide
+  - 63 ai:B04 left
+  - 64 ai:B04 right
+  - 65 ai:B01 left
+  - 66 ai:B04 wide
+  - 67 ai:B04 right
+  - 68 ai:B04 left
+  - 69 ai:B15 left
+  - 70 ai:B18 wide
+  - 71 ai:B18 right
+  - 72 ai:B05 wide
+  - 73 ai:B05 left
+  - 74 ai:B03 wide
+  - 75 ai:B06 wide
+  - 76 ai:B03 right
+  - 77 ai:B15 wide
+  - 78 ai:T01 wide
+  - 79 ai:B16 wide
+  - 80 ai:B02 wide
+  - 81 ai:B02 left
+  - 82 ai:B02 right
+  - 83 ai:B03 wide
+  - 84 ai:B03 left
+  - 85 ai:B01 wide
+  - 86 ai:B01 right
+  - 87 ai:B01 wide
+  - 88 ai:B15 wide
+  - 89 ai:B15 right
+  - 90 ai:B18 wide
+  - 91 ai:B18 left
+  - 92 ai:B03 right
+  - 93 ai:B16 left
+  - 94 ai:B16 wide
+  - 95 ai:B01 right
+  - 96 ai:B01 wide
+  - 97 ai:B01 left
+  - 98 ai:B08 wide
+  - 99 ai:B17 wide
+  - 100 ai:B08 wide
+  - 101 ai:B05 right
+  - 102 ai:B08 left
+  - 103 ai:B17 left
+  - 104 ai:B17 wide
+  - 105 ai:B17 right
+  - 106 ai:B16 right
+  - 107 ai:B07 wide
+  - 108 ai:T01 wide
+  - 109 ai:T01 right
+  - 110 ai:B01 wide
+  - 111 ai:B07 right
+  - 112 ai:B03 wide
+  - 113 ai:B03 left
+  - 114 ai:B02 wide
+  - 115 ai:B17 wide
+  - 116 ai:B19 wide
+  - end ai:B19 wide
+
+figures: []
+
+focus: {}
+
+fx:
+  B19: {mist: {region: [0.0, 0.55, 1.0, 1.0]}}
+  B16: {mist: {region: [0.0, 0.6, 1.0, 1.0]}}
+
+paint_fx: {}
+
+parts:
+  - {type: quote, from: 0, to: 0, label: 史料, text: 国じゅうは静まるはずだ／今は弓矢を袋にしまいなさい, source: 後白河院の返事（吾妻鏡 1189年6月8日。今の言葉に）}
+  - {type: quote, from: 14, to: 14, label: 史料, text: 天下の恥／何事かこれに如かずや, source: 九条兼実『玉葉』（1181年8月15日。秀衡の陸奥守任官について）}
+  - {type: versus3, from: 36, to: 37, every: 4,
+     items: [[吾妻鏡, 11月6日に乗船], [玉葉, 5日の夜に乗船]]}
+  - {type: versus3, from: 50, to: 51, every: 5,
+     items: [[吾妻鏡, 義経を大将軍に], [玉葉（伝聞）, 3人一味で頼朝を襲う]]}
+  - {type: quote, from: 70, to: 70, label: 史料, text: 天下の悦び／何事かこれに如かず。頼朝卿の運, source: 九条兼実『玉葉』（1189年5月29日。今の言葉に）}
+  - {type: quote, from: 71, to: 71, label: 史料, text: 義経たちのふるまいは／まことに義士と言うべきか, source: 九条兼実『玉葉』（1185年11月3日。今の言葉に）}
+  - {type: quote, from: 82, to: 82, label: 史料, text: 軍中は将軍の令を聞く／天子の詔を聞かず, source: 大庭景能の答え（吾妻鏡 1189年6月30日。今の言葉に）}
+  - {type: quote, from: 90, to: 90, label: 史料, text: これは手柄ではないか／罪も無いのに、なぜ征伐されるのか, source: 泰衡の書状（吾妻鏡 1189年8月26日。今の言葉に）}
+
+stills:
+  - {line: 0, note: 冒頭（0秒）院の返事}
+  - {line: 14, note: 第1章 兼実の「天下の恥」}
+  - {line: 37, note: 第2章 大物浦の食い違い}
+  - {line: 40, note: 第2章 義経の足取りの地図}
+  - {line: 51, note: 第3章 遺言の食い違い}
+  - {line: 84, note: 第5章 兵の数}
+  - {line: 93, note: 第5章 研究者の見方の表}
+  - {end: true, note: 終了画面の空き}

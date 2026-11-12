@@ -1,0 +1,142 @@
+# 物語完結型ショート クレオパトラ s4（2026-11-12）。本編 scripts/cleopatra-story.yaml（11/14 12:00 公開予定）から。11/15 に予約。
+# 形式は saigo_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（dev/output/rekishi-chiso/research/クレオパトラ_facts_20261111.yaml）と本編の # fact: だけ。
+# 絵は本編の AI 絵（out/story/cleopatra/main）の再利用だけ。新しい絵は作らない。死の場面に人物の絵は当てない。
+# 切り口：タポシリス・マグナの1305mのトンネル（本編第3章。cleopatra-41, 37, 46, 47, 49, 59, 45）。計算：2005→2026＝21年／1305÷1036＝約1.26倍。
+# 理解テスト4問：①クレオパトラ（の墓探し）②2022年11月、アレクサンドリア西のタポシリス・マグナで長さ1305mのトンネルの発表 ③省はサモス島のトンネルに似ていると説明。用途も墓に通じるかも不明 ④2025年11月の報道でも墓室・碑文は出ていない（本編へ）
+
+title: "クレオパトラ｜1305mのトンネルに墓はあったか"
+yt_title: "クレオパトラの墓を探して、長さ1305mのトンネルが見つかった　けれど、墓は出ていない"
+description: |-
+  クレオパトラの墓を探して掘ると、長さ1305メートルのトンネルが出ました。場所は、アレクサンドリアの西、およそ50キロの、タポシリス・マグナ（意味は「オシリスの大きな墓」）。ドミニカ共和国の考古学者キャスリーン・マルティネスが、2005年の10月から掘っています。
+  2022年の11月、エジプトの考古最高評議会は、神殿の下に、岩を掘った長いトンネルを見つけた、と発表しました。高さは約2メートル、地下約13メートル。省は、ギリシャのサモス島の、長さ1036メートルのエウパリノスのトンネルに、設計がよく似ている、と説明しました。1305メートルは、その約1.26倍です。
+  ただし、このトンネルが何のために掘られたのか、墓に通じているのかは、2022年の報道は、どちらも分かっていない、と書いています。2025年11月の報道でも、墓の部屋も、クレオパトラの名の碑文も、見つかっていません。数字は報道・発表によって言い方が違います。
+  掘っても墓が出ないのは、なぜなのか。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#クレオパトラ"
+- "#古代エジプト"
+- "#世界史"
+ai_images: true
+ai_disclosure: "この動画の風景・室内・人物の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面に「AI生成画像」と出しています）。クレオパトラの姿も、特定の資料を写したものではありません。"
+art_dir: out/story/cleopatra
+out: cleopatra_story_s4
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: "クレオパトラの墓探しとトンネル"
+  title: "トンネルは出た。墓は《出ていない》"
+now:
+- {at: "2005年", text: "2005年　発掘の開始", point: 0}
+- {at: "2022年", text: "2022年11月　トンネルの発表", point: 1}
+timeline:
+- {label: "2005"}
+- {label: "2022"}
+shots:
+  C09:
+    kind: "ai"
+    file: "cleopatra/main/C09.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "発掘隊が岩のトンネルを進む"
+  C08:
+    kind: "ai"
+    file: "cleopatra/main/C08.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "タポシリス・マグナの神殿跡"
+  C12:
+    kind: "ai"
+    file: "cleopatra/main/C12.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "砂漠の発掘現場の竪穴"
+  C08_right6:
+    kind: "ai"
+    file: "cleopatra/main/C08.jpg"
+    focus: [0.6, 0.5]
+    move: "right"
+    must: "タポシリス・マグナの神殿跡"
+  C09_left4:
+    kind: "ai"
+    file: "cleopatra/main/C09.jpg"
+    focus: [0.4, 0.5]
+    move: "left"
+    must: "発掘隊が岩のトンネルを進む"
+  C09_right6:
+    kind: "ai"
+    file: "cleopatra/main/C09.jpg"
+    focus: [0.6, 0.5]
+    move: "right"
+    must: "発掘隊が岩のトンネルを進む"
+  C12_left3:
+    kind: "ai"
+    file: "cleopatra/main/C12.jpg"
+    focus: [0.35, 0.5]
+    move: "left"
+    must: "砂漠の発掘現場の竪穴"
+  C11:
+    kind: "ai"
+    file: "cleopatra/main/C11.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "手のひらの青銅貨"
+  C08_left3:
+    kind: "ai"
+    file: "cleopatra/main/C08.jpg"
+    focus: [0.35, 0.5]
+    move: "left"
+    must: "タポシリス・マグナの神殿跡"
+lines:
+  # fact: cleopatra-46
+- 語り: "クレオパトラの墓を探して、長さ1305メートルのトンネルが出た。けれど、墓は、出ていない。"
+  shot: C09
+  tone: 強調
+  pause: 0.12
+  # fact: cleopatra-41
+- 語り: "場所は、タポシリス・マグナ。アレクサンドリアの西、およそ50キロの、神殿の跡だ。"
+  shot: C08
+  tone: しみじみ
+  pause: 0.12
+  # fact: cleopatra-37
+- 語り: "掘るのは、考古学者のキャスリーン・マルティネス。2005年の10月に始めて、21年になる。"
+  shot: C12
+  tone: しみじみ
+  pause: 0.12
+  # fact: cleopatra-46
+- 語り: "2022年の11月、神殿の下で、岩を掘ったトンネルが見つかった、と発表された。"
+  shot: C08_right6
+  tone: 重い
+  pause: 0.12
+  # fact: cleopatra-46
+- 語り: "長さは、1305メートル。高さは、約2メートル。地下、約13メートルにある。"
+  shot: C09_left4
+  tone: 重い
+  pause: 0.12
+  # fact: cleopatra-47
+- 語り: "省は、ギリシャの島の、1036メートルのトンネルに、設計が似ている、と説明した。約1.26倍の長さだ。"
+  shot: C09_right6
+  tone: しみじみ
+  pause: 0.12
+  # fact: cleopatra-49
+- 語り: "ただし、何のためのトンネルか、墓に通じるのかは、どちらも分かっていない、と2022年の報道は書く。"
+  shot: C12_left3
+  tone: 重い
+  pause: 0.12
+  # fact: cleopatra-59
+- 語り: "2025年11月の報道でも、墓の部屋も、クレオパトラの名の碑文も、見つかっていない。"
+  shot: C11
+  tone: 重い
+  pause: 0.12
+  # fact: cleopatra-59
+- 語り: "掘っても、墓が出ないのは、なぜなのか。"
+  shot: C08_left3
+  tone: 疑問
+  pause: 0.15
