@@ -6,7 +6,8 @@ enum Sender {
   staff('スタッフ'),
 
   // 保存は番号なので、増やすときは後ろに足す
-  agent('代理人');
+  agent('代理人'),
+  press('記者');
 
   const Sender(this.label);
   final String label;
@@ -22,6 +23,9 @@ enum MsgKind {
 
   /// 選手がトレードを希望している。0: 相手を探すと約束する、1: 残ってもらう。
   tradeRequest,
+
+  /// 記者の質問。0: 強気に答える、1: 慎重に答える、2: はぐらかす。
+  press,
 }
 
 class Message {

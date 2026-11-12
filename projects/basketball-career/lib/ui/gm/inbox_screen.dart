@@ -11,6 +11,7 @@ IconData _senderIcon(Sender s) => switch (s) {
       Sender.agent => Icons.work_rounded,
       Sender.league => Icons.campaign_rounded,
       Sender.staff => Icons.groups_2_rounded,
+      Sender.press => Icons.mic_rounded,
     };
 
 /// 受信箱。返事が要る知らせは上に出し、選ぶと効き目がすぐ起きる。
