@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../app/links.dart';
 import '../monetization/monetization.dart';
+import '../sound/sound.dart';
 import 'howto_screen.dart';
 import '../monetization/purchase_service.dart';
 import 'layout.dart';
@@ -94,6 +97,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Card(
                     child: Column(
                       children: [
+                        SwitchListTile(
+                          secondary: const Icon(Icons.volume_up_rounded),
+                          title: const Text('効果音'),
+                          subtitle: const Text('区切りのブザー・契約やトレードの成立音など。'),
+                          value: Sfx.enabled,
+                          onChanged: (v) async {
+                            setState(() => Sfx.enabled = v);
+                            final prefs = await SharedPreferences.getInstance();
+                            await prefs.setBool('gmSound', v);
+                            if (v) await Sfx.play(SoundEffect.chime);
+                          },
+                        ),
                         if (m.adFree)
                           const ListTile(
                             leading: Icon(Icons.check_circle_rounded),
