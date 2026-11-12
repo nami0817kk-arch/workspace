@@ -24,6 +24,7 @@ const html = read('shell.html')
   .replace('/*__EXTRA__*/', () => read('extra.js'))
   .replace('/*__MORE__*/', () => read('more.js'))
   .replace('/*__CORE__*/', () => read('core.js'))
+  .replace('/*__LINEAGE__*/', () => read('lineage.js'))
   .replace('/*__VIEWS3__*/', () => read('views3.js'))
   .replace('/*__IMGDATA__*/', () => read('imgdata.js'))
   .replace('/*__ART__*/', () => read('art.js'));
@@ -161,10 +162,10 @@ async function clearEvents() {
     if (k === 'スカウト') ok(txt().includes('来年の高1') && txt().includes('スカウトに出る'), 'スカウトの画面');
     if (k === '順位と日程') ok(txt().includes('プレミアリーグ') || txt().includes('プリンスリーグ') || txt().includes('県リーグ'), '順位表');
   }
-  rail('ほか');
+  rail('設定');
   btn('記録').click();
   ok(txt().includes('主な記録') && txt().includes('リーグの履歴'), '記録の画面');
-  btn('設定').click();
+  btn('設定', d.getElementById('main')).click();
   btn('卒業生名鑑').click();
 
   // 選手のいない出来事（クラブの要望・スタッフの引き抜き）でも、画面が開いて選べる
@@ -350,8 +351,8 @@ async function clearEvents() {
     btn('閉じる', d.querySelector('.sheet')).click();
     ok(A.w.year >= 3, '1年おまかせで年度が進む ' + A.w.year);
     // 設定：セーブ枠・書き出し・復元・効果音
-    rail('ほか');
-    btn('設定').click();
+    rail('設定');
+    btn('設定', d.getElementById('main')).click();
     ok(txt().includes('セーブ枠') && txt().includes('効果音') && !!btn('書き出す') && !!btn('復元する'), '設定の画面');
     ok(txt().includes('点検用：新しい世界でシミュレーション') && !!btn('実行') && !!btn('10年'), '点検用シミュレーションの設定');
     const before = JSON.stringify(A.w.year) + A.w.clubName;
@@ -373,31 +374,47 @@ async function clearEvents() {
     btn('復元する', d.querySelector('.sheet')).click();
     await sleep(20);
     ok(!d.querySelector('.sheet') && A.w.players, '書き出したデータを復元できる');
-    rail('ほか');
+    rail('設定');
     btn('卒業生名鑑').click();
     ok(d.querySelectorAll('#main .pitem').length >= 12, '卒業生が名鑑に並ぶ');
     // 段2：設定の文字の大きさ・お知らせの重さ、実績、名前の書き換え
-    rail('ほか');
-    btn('設定').click();
+    rail('設定');
+    btn('設定', d.getElementById('main')).click();
     ok(txt().includes('文字の大きさ') && txt().includes('お知らせの重さ') && txt().includes('必ず止める'), '設定に文字の大きさとお知らせの重さ');
     btn('大', d.getElementById('main')).click();
     ok(d.getElementById('app').style.zoom !== '', '文字の大きさが変わる');
     btn('標準', d.getElementById('main')).click();
-    rail('ほか');
+    rail('設定');
     btn('実績と引退').click();
-    rail('ほか');
-    btn('設定').click();
+    rail('設定');
+    btn('設定', d.getElementById('main')).click();
     ok(txt().includes('名前の書き換え') && txt().includes('クラブ名') === false || txt().includes('名前の書き換え'), '設定に名前の書き換え');
     rail('練習');
     ok(txt().includes('先週と同じ') && txt().includes('おまかせ') && txt().includes('疲れの高い子'), '練習に一括ボタン');
-    rail('ほか');
+    rail('設定');
     btn('Bチーム').click();
     ok(txt().includes('Bチームの指揮') && txt().includes('起用方針'), 'Bチームの指揮の画面');
     btn('下級生を優先').click();
     ok(A.w.bCtl && A.w.bCtl.policy === 'young', 'Bの起用方針を選べる');
-    rail('ほか');
+    rail('設定');
     btn('実績と引退').click();
-    ok(txt().includes('実績') && txt().includes('引退する') && txt().includes('プレミアリーグで優勝'), '実績と引退の画面');
+    ok(txt().includes('実績') && txt().includes('引退する') && txt().includes('リーグ優勝を1回'), '実績と引退の画面');
+    // 2段目その1：系譜タブ（決定139）
+    {
+      rail('系譜');
+      ok(A.tab === 'lineage' && ['系譜図', '卒業生名鑑', '殿堂', '実績', '年表', '育成基金'].every((x) => txt().includes(x)), '系譜タブに6つの見出し');
+      ok(!!d.querySelector('.lin-svg svg') || txt().includes('最初の卒業式'), '系譜図か空の案内が出る');
+      for (const n of ['実績', '殿堂', '年表', '育成基金', '卒業生名鑑']) {
+        btn(n, d.querySelector('.tabs')).click();
+        ok(errors.length === 0, n + 'の画面で例外なし: ' + errors.slice(0, 2).join('|'));
+      }
+      btn('実績', d.querySelector('.tabs')).click();
+      ok(txt().includes('/66') && txt().includes('銅'), '実績は66個の銅銀金');
+      rail('ホーム');
+      ok(txt().includes('系譜') && txt().includes('次の実績'), 'ホームに系譜の小窓と次の実績');
+      rail('設定');
+      ok(txt().includes('設定') || txt().includes('実績と引退'), '歯車から設定へ');
+    }
     // フリー対戦（成績に残らない）
     rail('選手');
     btn('操作と履歴').click();
