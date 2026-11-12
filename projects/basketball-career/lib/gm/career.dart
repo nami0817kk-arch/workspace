@@ -1993,7 +1993,9 @@ class Career {
   bool release(int id, {ReleaseMode mode = ReleaseMode.full}) {
     final p = _mineById(id);
     if (p == null || releaseProblem(p, mode) != null) return false;
-    if (mode == ReleaseMode.full && rng.chance(waiverChance(p))) {
+    // 拾われるかは乱数の列を使わず、選手と年から決める(同じ局面なら同じ結果で、ほかの出来事の乱数をずらさない)
+    final waived = phase != Phase.contracts && ((p.id * 7919 + season * 104729) % 100) / 100 < waiverChance(p);
+    if (mode == ReleaseMode.full && waived) {
       final open = [for (final t in teams) if (t.index != mine && t.roster.length < maxRoster) t]..sort((a, b) => a.wins.compareTo(b.wins));
       if (open.isNotEmpty) {
         final t = open.first;
