@@ -25,7 +25,7 @@ class ProgressTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final car = c.career!;
-    return ListView(
+    final list = ListView(
       padding: const EdgeInsets.fromLTRB(14, 8, 14, 24),
       children: switch (car.phase) {
         Phase.preseason => _preseason(context, car),
@@ -37,6 +37,22 @@ class ProgressTab extends StatelessWidget {
         Phase.draft => const [],
       },
     );
+    if (car.phase != Phase.contracts) return list;
+    // オフの契約は長い一覧なので、「オフを終える」を下に固定して、いつでも押せるようにする
+    final left = car.expiring.length;
+    return Column(children: [
+      Expanded(child: list),
+      Container(
+        padding: const EdgeInsets.fromLTRB(14, 8, 14, 8),
+        decoration: const BoxDecoration(color: GmColors.panelHi, border: Border(top: BorderSide(color: GmColors.line))),
+        child: FilledButton.icon(
+          style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(44)),
+          onPressed: c.busy ? null : () => _finish(context, left),
+          icon: const Icon(Icons.arrow_forward_rounded),
+          label: const Text('オフを終えて、シーズン前へ'),
+        ),
+      ),
+    ]);
   }
 
   Widget _card(List<Widget> children, {Color? edge}) => Card(
@@ -640,12 +656,6 @@ class ProgressTab extends StatelessWidget {
       _staffCard(context, car),
       const SizedBox(height: 10),
       OutlinedButton.icon(onPressed: () => goTab(3), icon: const Icon(Icons.person_add_alt_1_rounded), label: const Text('自由契約の選手を見る')),
-      const SizedBox(height: 8),
-      FilledButton.icon(
-        onPressed: c.busy ? null : () => _finish(context, exp.length),
-        icon: const Icon(Icons.arrow_forward_rounded),
-        label: const Text('オフを終えて、シーズン前へ'),
-      ),
     ];
   }
 
@@ -660,7 +670,7 @@ class ProgressTab extends StatelessWidget {
       else
         (true, '契約が切れた選手は決め終わった', ''),
       (false, 'お好みで: 自由契約の選手を取って補強する', '左のメニューの「補強」か、下の「自由契約の選手を見る」(しなくてもよい)'),
-      (false, '終わったら「オフを終えて、シーズン前へ」を押す', '一番下のボタン。次はトレードをして、開幕する'),
+      (false, '終わったら「オフを終えて、シーズン前へ」を押す', '画面の下に固定してあるボタン。次はトレードをして、開幕する'),
     ];
     final firstTodo = steps.indexWhere((s) => !s.$1);
     return _card([
@@ -798,7 +808,7 @@ class ProgressTab extends StatelessWidget {
       showDelta: true,
       extra: Row(children: [
         Expanded(
-          child: FilledButton.tonal(
+          child: FilledButton(
             style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(36)),
             onPressed: problem != null
                 ? null

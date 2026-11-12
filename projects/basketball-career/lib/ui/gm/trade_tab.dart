@@ -62,11 +62,12 @@ class _TradeTabState extends State<TradeTab> {
             Icon(Icons.campaign_rounded, color: GmColors.ball, size: 20),
             SizedBox(width: 6),
             Text('トレードブロック', style: TextStyle(fontWeight: FontWeight.bold)),
+            SizedBox(width: 10),
+            Expanded(
+              child: Text('出してよい選手を、チームの画面で押して載せる', maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12, color: GmColors.sub)),
+            ),
           ]),
-          const SizedBox(height: 4),
-          if (onBlock.isEmpty)
-            const Text('出してもよい選手を、チームの画面で選手を押して載せる。載せた選手には申し込みが届きやすくなる。', style: TextStyle(fontSize: 12, color: GmColors.sub, height: 1.4))
-          else
+          if (onBlock.isNotEmpty)
             for (final p in onBlock)
               Row(children: [
                 Expanded(child: Text('${p.name}(OVR ${shown(p.ovr)})', maxLines: 1, overflow: TextOverflow.ellipsis)),
@@ -371,7 +372,7 @@ class _Reaction extends StatelessWidget {
   Widget build(BuildContext context) {
     final v = verdict;
     if (v == null) {
-      return const Text('受け取る選手と出す選手(指名権)を選ぶと、相手の反応が分かる。長押しで選手のカード。', style: TextStyle(fontSize: 13, color: GmColors.sub));
+      return const Text('欲しい選手と出す選手をタップ。相手の反応が出る', style: TextStyle(fontSize: 13, color: GmColors.sub));
     }
     final f = v.ratio.clamp(0.0, 1.0);
     final color = v.ok ? GmColors.good : f >= 0.8 ? GmColors.gold : GmColors.bad;

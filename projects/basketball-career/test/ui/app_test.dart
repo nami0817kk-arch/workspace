@@ -81,7 +81,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('トレード').first);
     await tester.pumpAndSettle();
-    expect(find.textContaining('相手の反応が分かる'), findsOneWidget);
+    expect(find.textContaining('相手の反応が出る'), findsOneWidget);
     // 相手のいちばん下の選手を、こちらのいちばんの選手で取りに行く(相手はきっと受ける)
     final them = car.teams[car.mine == 0 ? 1 : 0];
     final theirs = them.roster.reduce((a, b) => a.ovr <= b.ovr ? a : b);
