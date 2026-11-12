@@ -263,6 +263,11 @@ class GmController extends ChangeNotifier {
   }
 
   /// 契約を申し出る(交渉)。受けたら true。
+  void setPartial(bool v) {
+    final car = career;
+    if (car != null) car.partialNext = v;
+  }
+
   bool offer(int id, int years, double factor) {
     final c = career;
     if (c == null || busy) return false;
