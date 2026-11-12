@@ -253,7 +253,8 @@ class Team {
   /// 選手どうしの相性(0〜100、50がふつう)。自分のチームだけ動く。強さに最大 ±1.5。
   int chem = 50;
 
-  double get chemEffect => ((chem - 50) / 50 * 1.5).clamp(-1.5, 1.5);
+  /// 上がる方は最大 +1.0、下がる方は最大 -1.5(強いチームが強くなりすぎない)。
+  double get chemEffect => chem >= 50 ? ((chem - 50) / 50).clamp(0.0, 1.0) : ((chem - 50) / 50 * 1.5).clamp(-1.5, 0.0);
 
   /// チームの方針(軸ごとに 0・1・2。1 が「ふつう」)。自分のチームだけ変えられる。
   List<int> policy = defaultPolicy();

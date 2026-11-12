@@ -10,7 +10,7 @@ void main() {
     expect(c.me.chem, 50);
     expect(c.me.chemEffect, 0);
     c.me.chem = 100;
-    expect(c.me.chemEffect, 1.5);
+    expect(c.me.chemEffect, 1.0);
     c.me.chem = 0;
     expect(c.me.chemEffect, -1.5);
     c.me.chem = 70;

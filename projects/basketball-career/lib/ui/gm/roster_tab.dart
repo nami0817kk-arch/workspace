@@ -103,7 +103,7 @@ class RosterTab extends StatelessWidget {
       builder: (d) => AlertDialog(
         title: Text('チームの相性 ${car.me.chem}'),
         content: Text(
-            '選手どうしの相性。50がふつうで、強さに最大 ±1.5 が足される。区切りごとに目標へ寄っていく。\n\n'
+            '選手どうしの相性。50がふつうで、強さに最大 +1.0(下がる方は -1.5)が足される。区切りごとに目標へ寄っていく。\n\n'
             '・今のチームに1年以上いる主力 ${(f.continuity * 100).round()}%(新しい選手が多いと下がる)\n'
             '・気持ちが高い主力 ${f.happy}人(多いと上がる)\n'
             '・不満を持つ主力 ${f.unhappy}人(1人ごとに下がる)\n'
