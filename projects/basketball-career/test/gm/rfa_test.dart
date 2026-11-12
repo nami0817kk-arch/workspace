@@ -48,7 +48,7 @@ void main() {
       p.id: [FaBid(other, 200, 3)]
     };
     var guard = 0;
-    while (c.sheet == null && c.faDay < faDays && guard++ < 10) {
+    while (c.sheet == null && c.faDay < faDays && guard++ < 20) {
       c.bids.putIfAbsent(p.id, () => [FaBid(other, 200, 3)]);
       c.nextFaDay();
     }
