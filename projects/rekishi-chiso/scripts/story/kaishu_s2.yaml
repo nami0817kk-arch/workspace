@@ -1,0 +1,146 @@
+# 物語完結型ショート 勝海舟 s2（2026-11-12）。本編 scripts/kaishu-story.yaml（11/14 19:00 公開、https://youtu.be/KIXtgjggYl0）から。11/15 に予約。
+# 形式は inou_s1.yaml・saigo_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（dev/output/rekishi-chiso/research/勝海舟_facts_20261111.yaml）と本編の # fact: だけ。
+# 絵は本編の AI 絵（out/story/kaishu/main。勝は後ろ姿・斜め後ろ・手元）と実在の絵（パブリックドメイン）。新しい絵は作らない。
+# 切り口：福沢諭吉『痩我慢の説』と海舟の答書（本編第6章）。草稿の「2、3人の親友」と送付先、新聞掲載が海舟の死の712日後、海舟は載った形では読んでいない。
+# 計算：1899-01-19→1901-01-01＝712日／1901-01-01→福沢没 1901-02-03＝33日（本編と同じ。C07）。
+# 理解テスト4問：①福沢諭吉『痩我慢の説』と勝海舟 ②1892年2月6日の海舟の答書（行蔵は我に存す）と、福沢の「2、3人の親友のほか見せない」の追伸 ③写しは海舟・榎本のほか3人に送られ、新聞に渡った。掲載は1901年1月1日、海舟の死の712日後 ④海舟は載った形では読めず、福沢も33日後に亡くなった
+# 本編の弱点：「2、3人の親友」と「3人」を食い違いとは言わない（C03 は数が合わないとするが、受け取り手の数え方が不明）。事実だけ並べる。栗本経由の流出は慶應の解題（probably 1894）。
+title: "勝海舟｜福沢の批判を、海舟は新聞で読めなかった"
+yt_title: "勝海舟は福沢諭吉の『痩我慢の説』を新聞で読めなかった　掲載は海舟の死の712日後"
+description: |-
+  福沢諭吉が勝海舟を批判した『痩我慢の説』。海舟は1892年2月6日付の答書で、「行蔵は我に存す、毀誉は他人の主張」と返しました。
+  福沢は手紙の追伸に、草稿は2、3人の親友のほかには見せていない、と書きましたが、慶應義塾の解題によると、写しは海舟と榎本武揚のほか、木村芥舟・栗本鋤雲・徳川頼倫にも送られました。栗本を通じて『奥羽日日新聞』に渡り、1894年ごろ、名を伏せて載ったとされます（時期は不明）。
+  『時事新報』に初めて載ったのは1901年1月1日と3日。海舟の死（1899年1月19日）の712日後で、福沢は2月3日に亡くなりました。日付は慶應義塾の解題と飯田鼎の論文（1997年）で確かめています。
+  では、海舟が三十年、突っ張って待った相手は誰だったのか。本編は概要欄のリンクからどうぞ。
+  https://youtu.be/KIXtgjggYl0
+hashtags:
+- "#勝海舟"
+- "#福沢諭吉"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の風景・室内の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。"
+art_dir: out/story/kaishu
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: kaishu_story_s2
+header:
+  tag: "勝海舟と福沢諭吉"
+  title: "海舟は、批判を《読めなかった》"
+now:
+- {at: "1892年", text: "1892年2月　答書", point: 0}
+- {at: "1901年", text: "1901年1月　時事新報", point: 1}
+timeline:
+- {label: "1892"}
+- {label: "1901"}
+shots:
+  Katsu:
+    kind: "real"
+    image: "paintings/yoshinobu_katsu_kaishu.jpg"
+    focus: [0.5, 0.4]
+    move: "in"
+    credit: "《勝海舟》（ウィキメディア・コモンズ、パブリックドメイン）"
+    must: "勝海舟の肖像"
+  Letter:
+    kind: "ai"
+    file: "kaishu/main/F18.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "机の上の書状と筆"
+  Hand:
+    kind: "ai"
+    file: "kaishu/main/F12.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "墨で書を書く手元"
+  Night:
+    kind: "ai"
+    file: "kaishu/main/F13.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "夜の縁側に座る勝（斜め後ろ）"
+  LetterL:
+    kind: "ai"
+    file: "kaishu/main/F18.jpg"
+    focus: [0.4, 0.5]
+    move: "right"
+    must: "机の上の書状と筆"
+  Print:
+    kind: "ai"
+    file: "kaishu/main/F19.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "書物と新聞の山・印刷所の机"
+  PrintR:
+    kind: "ai"
+    file: "kaishu/main/F19.jpg"
+    focus: [0.65, 0.5]
+    move: "left"
+    must: "書物と新聞の山・印刷所の机"
+  Hikawa:
+    kind: "ai"
+    file: "kaishu/main/F08.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "赤坂氷川の屋敷の黒塀と石だたみ"
+  Yo13:
+    kind: "real"
+    image: "paintings/yoshinobu_portrait_late_13.jpg"
+    focus: [0.5, 0.4]
+    move: "in"
+    credit: "晩年の徳川慶喜（1913年以前の図版、ウィキメディア・コモンズ、パブリックドメイン）"
+    must: "晩年の徳川慶喜の図版"
+lines:
+  # fact: kaishu-C09
+- 語り: "福沢諭吉は、勝海舟を名指しで批判した。『痩我慢の説』。官爵を棄て、身を隠せ、と求めた。"
+  shot: Katsu
+  tone: 強調
+  pause: 0.12
+  # fact: kaishu-C01, kaishu-C02
+- 語り: "1892年2月6日。海舟の答書は、批判を、慙愧に堪えない、と受けとめて、こう結ぶ。"
+  shot: Letter
+  tone: しみじみ
+  pause: 0.12
+  # fact: kaishu-C02
+- 語り: "行蔵は我に存す、毀誉は他人の主張。出るも退くも、自分で決めた。ほめるもけなすも、他人のこと。"
+  shot: Hand
+  tone: 重い
+  pause: 0.12
+  # fact: kaishu-C03
+- 語り: "福沢は、追伸に書いた。草稿は、二人か三人の親友のほかには、誰にも見せていない、と。"
+  shot: Night
+  tone: しみじみ
+  pause: 0.12
+  # fact: kaishu-C03
+- 語り: "慶應義塾の解題では、写しは、海舟と榎本のほか、3人に送られていた。"
+  shot: LetterL
+  tone: 重い
+  pause: 0.12
+  # fact: kaishu-C04
+- 語り: "写しは、栗本鋤雲を通じて新聞に渡り、1894年ごろ、名を伏せて載った。"
+  shot: Print
+  tone: しみじみ
+  pause: 0.12
+  # fact: kaishu-C06, kaishu-C07
+- 語り: "『時事新報』に初めて載ったのは、1901年1月1日。海舟が亡くなって、712日後だ。"
+  shot: PrintR
+  tone: 重い
+  pause: 0.12
+  # fact: kaishu-C07
+- 語り: "海舟は、新聞に載った形では、読んでいない。福沢も、その33日後に亡くなった。"
+  shot: Hikawa
+  tone: 重い
+  pause: 0.12
+  # fact: kaishu-C35
+- 語り: "では、海舟が、三十年、突っ張って待った相手は、誰だったのか。"
+  shot: Yo13
+  tone: 疑問
+  pause: 0.15

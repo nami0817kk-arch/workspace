@@ -1,0 +1,143 @@
+# 物語完結型ショート 勝海舟 s4（2026-11-12）。本編 scripts/kaishu-story.yaml（11/14 19:00 公開、https://youtu.be/KIXtgjggYl0）から。11/15 に予約。
+# 形式は inou_s1.yaml・saigo_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（dev/output/rekishi-chiso/research/勝海舟_facts_20261111.yaml）と本編の # fact: だけ。
+# 絵は本編の AI 絵（out/story/kaishu/main。勝は後ろ姿・斜め後ろ・手元）と実在の絵（パブリックドメイン）。新しい絵は作らない。
+# 切り口：静岡へ移した「八万人」（本編第1章）。談話の八万人・解難録の3万3千4百余家・閏4月の37〜38万人。単位が違うので優劣はつけない。
+# 計算：数は引用のみ（計算なし）。
+# 理解テスト4問：①勝海舟の静岡移住の話 ②勝は旧旗本を静岡へ移したのは約八万人と語った。十日→二十日の猶予、汽船二艘 ③解難録では総員3万3千4百余家、閏4月の書では37〜38万人。単位が違うが数は大きく動く ④金庫は金の分銅一つ。その後に頼った先は本編（諸家の助成・約9万7千5百両）
+# 本編の弱点：八万人は談話（旗本移転後の始末）、3万3千4百余家は解難録、37〜38万人は閏4月13日の書。どれが正しいとは言わない。tease の答え（万石以上の諸家への助成）は本編第1章。
+title: "勝海舟｜静岡へ移したのは、本当に八万人か"
+yt_title: "勝海舟が静岡へ移した旧旗本は「八万人」と語ったが　海舟自身の記録では3万3千余家、37万人とも"
+description: |-
+  勝海舟は後年、旧旗本を静岡へ移したのは「凡そ八万人」で、政府の十日の注文に二十日の猶予を願い、汽船二艘で運んだと語っています。移して3日か4日で沢庵漬がなくなり、「おれも実に狼狽したよ」とも。
+  ところが、『解難録』には、新政府に命じられて調べた旗本・御家人の総員は3万3千4百余家とあり、1868年閏4月13日の田安殿への書には、子弟・使用人まで含めて飢える者は37万人か38万人を下らない、とあります。数えるものが違うため、同じ物差しでは比べられません。
+  談話は青空文庫・NDLデジタル（海舟全集）、解難録・日記も海舟全集の翻刻（OCR）で確かめました。
+  空の金庫を前に、海舟が頼った先はどこだったのか。本編は概要欄のリンクからどうぞ。
+  https://youtu.be/KIXtgjggYl0
+hashtags:
+- "#勝海舟"
+- "#旧幕臣"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の風景・室内の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。"
+art_dir: out/story/kaishu
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: kaishu_story_s4
+header:
+  tag: "勝海舟と静岡移住"
+  title: "静岡へ移した、《八万人》"
+now:
+- {at: "1868年", text: "1868年　江戸から静岡へ", point: 0}
+timeline:
+- {label: "1868"}
+shots:
+  Exodus:
+    kind: "ai"
+    file: "kaishu/main/F01.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "江戸城の門を出る旗本の行列（遠景）"
+  Port:
+    kind: "ai"
+    file: "kaishu/main/F02.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "江戸湾の港で汽船に乗る旧幕臣（朝）"
+  Shizu:
+    kind: "ai"
+    file: "kaishu/main/F03.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "静岡の城下の簡素な長屋（夕方）"
+  Ledger:
+    kind: "ai"
+    file: "kaishu/main/F07.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "行灯の下の帳簿とそろばん"
+  Beato:
+    kind: "real"
+    image: "paintings/yoshinobu_beato_yedo_palace_kitlv.jpg"
+    focus: [0.5, 0.85]
+    move: "in"
+    credit: "F.ベアト 江戸城のあたり（1860年代〜70年代初め、ウィキメディア・コモンズ、パブリックドメイン）"
+    must: "江戸城のあたりの古写真"
+  Hall:
+    kind: "ai"
+    file: "kaishu/main/F06.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "役所の広間・一人座る勝（後ろ姿）"
+  Chest:
+    kind: "ai"
+    file: "kaishu/main/F05.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "空の金蔵と金の塊ひとつ"
+  ShizuL:
+    kind: "ai"
+    file: "kaishu/main/F03.jpg"
+    focus: [0.3, 0.5]
+    move: "right"
+    must: "静岡の城下の簡素な長屋（夕方）"
+  PortR:
+    kind: "ai"
+    file: "kaishu/main/F02.jpg"
+    focus: [0.65, 0.5]
+    move: "left"
+    must: "江戸湾の港で汽船に乗る旧幕臣（朝）"
+lines:
+  # fact: kaishu-A01
+- 語り: "勝海舟は、旧旗本を静岡へ移したのは、およそ八万人だった、と語っている。"
+  shot: Exodus
+  tone: 強調
+  pause: 0.12
+  # fact: kaishu-A01
+- 語り: "政府は、十日で移せと言った。海舟は、二十日の猶予を願い、汽船二艘で運んだ。"
+  shot: Port
+  tone: しみじみ
+  pause: 0.12
+  # fact: kaishu-A02
+- 語り: "移して3日か4日で、沢庵漬がなくなった。4日か5日で、ちり紙もなくなり、おれも実に狼狽したよ、と語る。"
+  shot: Shizu
+  tone: しみじみ
+  pause: 0.12
+  # fact: kaishu-A01
+- 語り: "では、八万人は、本当なのか。"
+  shot: Ledger
+  tone: 疑問
+  pause: 0.15
+  # fact: kaishu-A04
+- 語り: "1868年、新政府に命じられて海舟が調べた旗本・御家人の総員は、3万3千4百余家。"
+  shot: Beato
+  tone: 重い
+  pause: 0.12
+  # fact: kaishu-A07
+- 語り: "同じ年の閏4月、田安殿への書には、子弟や使用人まで含めて、飢える者は、37万人か38万人を下らない、と書いた。"
+  shot: Hall
+  tone: 重い
+  pause: 0.12
+  # fact: kaishu-A07
+- 語り: "数えているものが違うので、同じ物差しでは比べられない。それでも、海舟自身の記録のなかで、数は大きく動く。"
+  shot: ShizuL
+  tone: しみじみ
+  pause: 0.12
+  # fact: kaishu-A13
+- 語り: "しかも、徳川家の金庫には、金の分銅が、一つあるだけだった、と海舟は書く。"
+  shot: Chest
+  tone: 重い
+  pause: 0.12
+  # fact: kaishu-A12
+- 語り: "その空の金庫を前に、海舟が頼った先は、どこだったのか。"
+  shot: PortR
+  tone: 疑問
+  pause: 0.15
