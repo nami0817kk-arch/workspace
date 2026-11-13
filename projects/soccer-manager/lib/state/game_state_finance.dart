@@ -126,6 +126,82 @@ extension GameStateFinance on GameState {
     return null;
   }
 
+  /// いま追っているオーナーの目標。決めていなければ null。
+  OwnerGoal? get ownerGoal => _save?.ownerGoal;
+
+  /// 選べる目標。すでに1部にいるなら「1部へ昇格」は出さない。
+  List<OwnerGoal> get selectableOwnerGoals => [
+        for (final g in OwnerGoal.values)
+          if (!(g == OwnerGoal.reachTopDivision && currentDivisionTier <= 1)) g,
+      ];
+
+  /// 達成した目標の記録(新しい順)。
+  List<String> get achievedGoals =>
+      (_save?.achievedGoals ?? const <String>[]).reversed.toList();
+
+  /// 目標を決める。いまのシーズンから期限を数える。
+  Future<void> setOwnerGoal(OwnerGoal goal) async {
+    final save = _save;
+    if (save == null || !selectableOwnerGoals.contains(goal)) return;
+    save.ownerGoal = goal;
+    save.ownerGoalStartSeason = save.league.season;
+    _notify();
+    await _persist();
+  }
+
+  /// 目標の期限までの残りシーズン数(今季を含む)。目標が無ければ 0。
+  int get ownerGoalSeasonsLeft {
+    final save = _save;
+    final goal = save?.ownerGoal;
+    if (save == null || goal == null) return 0;
+    return (save.ownerGoalStartSeason + goal.deadlineSeasons - save.league.season)
+        .clamp(0, goal.deadlineSeasons);
+  }
+
+  /// シーズン終了時に、目標の達成と期限切れを見る。達成は殿堂に残り、
+  /// 2つの期待を少し持ち上げる。期限切れは目標が消えるだけで、罰は無い。
+  void _evaluateOwnerGoal({required int season}) {
+    final save = _save;
+    final goal = save?.ownerGoal;
+    if (save == null || goal == null) return;
+    final recs =
+        save.seasonHistory.where((r) => r.season >= save.ownerGoalStartSeason);
+    final met = OwnerGoalRules.isMet(
+      goal,
+      wonTopLeague: recs.any((r) => r.wonLeague && r.divisionTier == 1),
+      promotedOrTop: recs.any(
+          (r) => r.divisionTier == 1 || (r.promoted && r.divisionTier == 2)),
+      wonCup: recs.any((r) => r.cupsWon.isNotEmpty),
+      budget: save.budget,
+    );
+    if (met) {
+      save.achievedGoals.add(Tr.pick(
+          '${save.clubName}: ${goal.label}(シーズン$season)',
+          '${save.clubName}: ${goal.label} (season $season)'));
+      save.ownerGoal = null;
+      save.confidence = (save.confidence + 10).clamp(0, 100);
+      save.shareholderExpectation = (save.shareholderExpectation + 10).clamp(0, 100);
+      _logNews(
+        Tr.pick('オーナーの目標「${goal.label}」を達成しました。殿堂に残ります。',
+            'Owner goal achieved: ${goal.label}. It joins your hall of fame.'),
+        context: Tr.pick('オーナー', 'Owner'),
+      );
+    } else if (OwnerGoalRules.isExpired(goal,
+        startSeason: save.ownerGoalStartSeason, season: season)) {
+      save.ownerGoal = null;
+      _logNews(
+        Tr.pick('オーナーの目標「${goal.label}」は期限までに果たせませんでした。新しい目標を決められます。',
+            'The owner goal "${goal.label}" was not reached in time. You can set a new one.'),
+        context: Tr.pick('オーナー', 'Owner'),
+      );
+    }
+  }
+
+  /// テスト用: シーズン終了時の目標の判定だけを走らせる。
+  @visibleForTesting
+  void debugEvaluateOwnerGoal({required int season}) =>
+      _evaluateOwnerGoal(season: season);
+
   /// サポーターか株主の期待が尽き、クラブを手放さなければならない状態か。
   bool get isSaleForced => saleReason != null;
 

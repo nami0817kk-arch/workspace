@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../data/quick_access_destinations.dart';
+import '../widgets/owner_goal_card.dart';
 import '../widgets/two_pane.dart';
 import '../logic/calendar_engine.dart';
 import '../logic/match_engine.dart' show HalfResult;
@@ -121,6 +122,8 @@ class HomeScreen extends StatelessWidget {
               // いま手を付けるべきこと。画面が30以上あり、どこから見れば
               // よいか分からない状態だった。出すのは常に1件だけ。
               const NextActionCard(),
+              // オーナーの目標。決めるまで選択肢を出し、決めたら残りを見せる。
+              const OwnerGoalCard(),
               // 終わったばかりのシーズンの振り返り。閉じるまで出る。
               const SeasonReviewCard(),
               // クラブの色で染めた見出しの帯。

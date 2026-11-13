@@ -1,6 +1,7 @@
 import 'bank_loan.dart';
 import 'best_eleven.dart';
 import 'budget_plan.dart';
+import 'owner_goal.dart';
 import 'owner_legacy.dart';
 import 'club_infrastructure.dart';
 import 'enum_json.dart';
@@ -87,6 +88,15 @@ class SaveGame {
 
   /// 手放した球団ごとの実績(殿堂)。売却後も消えない。
   List<OwnerLegacy> ownerLegacies;
+
+  /// いま追っているオーナーの目標。決めていなければ null。
+  OwnerGoal? ownerGoal;
+
+  /// 目標を選んだシーズン(期限の数え始め)。
+  int ownerGoalStartSeason;
+
+  /// 達成した目標の記録(殿堂)。売却後も消えない。
+  List<String> achievedGoals;
 
   /// 年の予算の配分(補強・育成・施設・営業・配当の比率)。
   BudgetPlan budgetPlan;
@@ -339,6 +349,9 @@ class SaveGame {
     this.confidence = 60,
     this.shareholderExpectation = 60,
     List<OwnerLegacy>? ownerLegacies,
+    this.ownerGoal,
+    this.ownerGoalStartSeason = 1,
+    List<String>? achievedGoals,
     BudgetPlan? budgetPlan,
     this.managerReputation = 50,
     this.pendingJobOfferTeamId,
@@ -414,6 +427,7 @@ class SaveGame {
         trophyHistory = trophyHistory ?? [],
         clubHistory = clubHistory ?? [],
         ownerLegacies = ownerLegacies ?? [],
+        achievedGoals = achievedGoals ?? [],
         freeAgents = freeAgents ?? [],
         retiredLegends = retiredLegends ?? [],
         seasonHistory = seasonHistory ?? [],
@@ -505,6 +519,9 @@ class SaveGame {
         'confidence': confidence,
         'shareholderExpectation': shareholderExpectation,
         'ownerLegacies': ownerLegacies.map((l) => l.toJson()).toList(),
+        'ownerGoal': ownerGoal?.name,
+        'ownerGoalStartSeason': ownerGoalStartSeason,
+        'achievedGoals': achievedGoals,
         'budgetPlan': budgetPlan.toJson(),
         'managerReputation': managerReputation,
         'pendingJobOfferTeamId': pendingJobOfferTeamId,
@@ -594,6 +611,14 @@ class SaveGame {
         boardTargetRank: json['boardTargetRank'] as int? ?? 4,
         confidence: json['confidence'] as int? ?? 60,
         shareholderExpectation: json['shareholderExpectation'] as int? ?? 60,
+        ownerGoal: OwnerGoal.values
+            .where((g) => g.name == json['ownerGoal'])
+            .firstOrNull,
+        ownerGoalStartSeason: json['ownerGoalStartSeason'] as int? ?? 1,
+        achievedGoals: (json['achievedGoals'] as List?)
+                ?.map((e) => e as String)
+                .toList() ??
+            [],
         ownerLegacies: (json['ownerLegacies'] as List?)
                 ?.map((e) => OwnerLegacy.fromJson(e as Map<String, dynamic>))
                 .toList() ??

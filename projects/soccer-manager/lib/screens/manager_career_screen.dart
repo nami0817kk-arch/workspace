@@ -198,6 +198,20 @@ class ManagerCareerScreen extends StatelessWidget {
                     title: Text(trophy),
                   ),
                 ),
+            if (save.achievedGoals.isNotEmpty) ...[
+              const SizedBox(height: 20),
+              Text(Tr.pick('達成したオーナーの目標', 'Owner goals achieved'),
+                  style: Theme.of(context).textTheme.titleMedium),
+              const SizedBox(height: 8),
+              for (final g in save.achievedGoals.reversed)
+                Card(
+                  margin: const EdgeInsets.only(bottom: 8),
+                  child: ListTile(
+                    leading: const Icon(Icons.flag, color: Colors.amber),
+                    title: Text(g),
+                  ),
+                ),
+            ],
             if (save.ownerLegacies.isNotEmpty) ...[
               const SizedBox(height: 20),
               Text(Tr.pick('オーナーの殿堂', 'Owner hall of fame'),
