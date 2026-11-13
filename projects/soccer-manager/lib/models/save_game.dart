@@ -1,6 +1,7 @@
 import 'bank_loan.dart';
 import 'best_eleven.dart';
 import 'budget_plan.dart';
+import 'owner_event.dart';
 import 'owner_goal.dart';
 import 'owner_legacy.dart';
 import 'club_infrastructure.dart';
@@ -91,6 +92,9 @@ class SaveGame {
 
   /// いま追っているオーナーの目標。決めていなければ null。
   OwnerGoal? ownerGoal;
+
+  /// 判断待ちの事件。無ければ null。
+  OwnerEventKind? pendingOwnerEvent;
 
   /// 勝負の試合を数えているシーズン。シーズンが変わると回数を戻す。
   int bigMatchSeason;
@@ -359,6 +363,7 @@ class SaveGame {
     this.shareholderExpectation = 60,
     List<OwnerLegacy>? ownerLegacies,
     this.ownerGoal,
+    this.pendingOwnerEvent,
     this.bigMatchSeason = 0,
     this.bigMatchesUsed = 0,
     this.bigMatchDeclaredMatchday = -1,
@@ -532,6 +537,7 @@ class SaveGame {
         'shareholderExpectation': shareholderExpectation,
         'ownerLegacies': ownerLegacies.map((l) => l.toJson()).toList(),
         'ownerGoal': ownerGoal?.name,
+        'pendingOwnerEvent': pendingOwnerEvent?.name,
         'bigMatchSeason': bigMatchSeason,
         'bigMatchesUsed': bigMatchesUsed,
         'bigMatchDeclaredMatchday': bigMatchDeclaredMatchday,
@@ -630,6 +636,9 @@ class SaveGame {
             .where((g) => g.name == json['ownerGoal'])
             .firstOrNull,
         ownerGoalStartSeason: json['ownerGoalStartSeason'] as int? ?? 1,
+        pendingOwnerEvent: OwnerEventKind.values
+            .where((k) => k.name == json['pendingOwnerEvent'])
+            .firstOrNull,
         bigMatchSeason: json['bigMatchSeason'] as int? ?? 0,
         bigMatchesUsed: json['bigMatchesUsed'] as int? ?? 0,
         bigMatchDeclaredMatchday: json['bigMatchDeclaredMatchday'] as int? ?? -1,

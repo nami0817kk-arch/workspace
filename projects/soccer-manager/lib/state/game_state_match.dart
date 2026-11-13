@@ -225,6 +225,8 @@ extension GameStateMatch on GameState {
 
     // 勝負の試合でなければ、先発と構えは監督が決める。
     _managerPreparesMatch(next);
+    // 節の区切りで、オーナーの判断を迫る事件が起きる。
+    _maybeRaiseOwnerEvent(next.matchday);
 
     // トレーニング自動化が有効な場合、この節の分をここで自動的に実施する。
     if (userTeam.autoTrainingEnabled) {

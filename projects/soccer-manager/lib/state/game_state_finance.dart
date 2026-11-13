@@ -273,6 +273,46 @@ extension GameStateFinance on GameState {
     }
   }
 
+  /// 判断待ちの事件。無ければ null。
+  OwnerEventKind? get pendingOwnerEvent => _save?.pendingOwnerEvent;
+
+  /// 事件が起きる節。1シーズンに3回(12節ごと、6・18・30節)。
+  static bool isOwnerEventMatchday(int matchday) =>
+      matchday > 0 && matchday % 12 == 6;
+
+  /// その節に事件が起きるなら、判断待ちに積む。すでに待っている事件があれば
+  /// 積まない(判断を溜めさせない)。
+  void _maybeRaiseOwnerEvent(int matchday) {
+    final save = _save;
+    if (save == null || save.pendingOwnerEvent != null) return;
+    if (!GameStateFinance.isOwnerEventMatchday(matchday)) return;
+    final kinds = OwnerEventKind.values;
+    save.pendingOwnerEvent =
+        kinds[Random(save.league.season * 1000 + matchday).nextInt(kinds.length)];
+  }
+
+  /// 事件に答える。選んだ答えの期待と資金の増減を反映する。
+  Future<bool> resolveOwnerEvent(int optionIndex) async {
+    final save = _save;
+    final kind = save?.pendingOwnerEvent;
+    if (save == null || kind == null) return false;
+    final options = kind.options;
+    if (optionIndex < 0 || optionIndex >= options.length) return false;
+    final o = options[optionIndex];
+    save.confidence = (save.confidence + o.supportersDelta).clamp(0, 100);
+    save.shareholderExpectation =
+        (save.shareholderExpectation + o.shareholdersDelta).clamp(0, 100);
+    save.budget += o.fundsDelta;
+    save.pendingOwnerEvent = null;
+    _notify();
+    await _persist();
+    return true;
+  }
+
+  /// テスト用: その節の事件の判定だけを走らせる。
+  @visibleForTesting
+  void debugRaiseOwnerEvent(int matchday) => _maybeRaiseOwnerEvent(matchday);
+
   /// テスト用: 監督のふだんの試合の準備だけを走らせる。
   @visibleForTesting
   void debugManagerPreparesMatch(Fixture next) => _managerPreparesMatch(next);
