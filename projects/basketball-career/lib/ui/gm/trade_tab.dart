@@ -8,6 +8,7 @@ import '../gm_controller.dart';
 import 'common.dart';
 import 'player_card.dart';
 import 'style.dart';
+import 'trade_show_screen.dart';
 
 /// トレードのタブ。相手を選び、出すものと受け取るものを選んで申し込む。相手の反応は申し込む前から見える。
 class TradeTab extends StatefulWidget {
@@ -115,8 +116,8 @@ class _TradeTabState extends State<TradeTab> {
                     TextButton(
                       onPressed: () {
                         Navigator.pop(ctx);
-                        final ok = widget.c.acceptBlockOffer(o);
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(ok ? 'トレードが成立した' : '成立しなかった(状況が変わった)')));
+                        final ok = tradeWithShow(context, widget.c, o, () => widget.c.acceptBlockOffer(o));
+                        if (!ok) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('成立しなかった(状況が変わった)')));
                       },
                       child: const Text('受ける'),
                     ),
@@ -392,15 +393,14 @@ class _TradeTabState extends State<TradeTab> {
   }
 
   void _propose(BuildContext context) {
-    final names = widget.c.career!.teams[_partner].name;
-    if (widget.c.propose(_offer)) {
+    final o = _offer;
+    if (tradeWithShow(context, widget.c, o, () => widget.c.propose(o))) {
       setState(() {
         _give.clear();
         _get.clear();
         _givePicks.clear();
         _getPicks.clear();
       });
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$namesとのトレードが成立した')));
     }
   }
 }

@@ -124,6 +124,30 @@ void main() {
     });
     await _shoot(t, '5_team', await _with(mid), act: (t) => _tap(t, 'チーム', first: true));
     await _shoot(t, '6_trade', await _with(mid), act: (t) => _tap(t, 'トレード', first: true));
+    // トレード成立の画面(届いた申し込みを受ける)
+    Career? offered;
+    for (final seed in [3, 7, 11, 19]) {
+      final x = careerAt(10, seed)..startSeason();
+      while (x.phase == Phase.season && (x.incoming == null || !x.canTrade)) {
+        x.playBlock();
+      }
+      if (x.incoming != null && x.judge(x.incoming!).ok) {
+        offered = x;
+        break;
+      }
+    }
+    if (offered != null) {
+      await _shoot(t, '6b_trade_done', await _with(offered), act: (t) async {
+        final b = find.widgetWithText(FilledButton, '受ける');
+        await t.scrollUntilVisible(b, 300, scrollable: find.descendant(of: find.byType(ProgressTab), matching: find.byType(Scrollable)).first);
+        await t.ensureVisible(b);
+        await t.pump(const Duration(milliseconds: 300));
+        await t.tap(b);
+        for (var i = 0; i < 6; i++) {
+          await t.pump(const Duration(milliseconds: 150));
+        }
+      });
+    }
     await _shoot(t, '5b_policy', await _with(mid), act: (t) async {
       await _tap(t, 'チーム', first: true);
       await _tap(t, 'チームの方針');

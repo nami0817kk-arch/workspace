@@ -41,6 +41,7 @@ class BlockReport {
     required this.newMail,
     required this.hasOffer,
     required this.deadlinePassed,
+    this.deadlineTrades = const [],
     required this.seasonOver,
     required this.games,
   });
@@ -77,6 +78,9 @@ class BlockReport {
 
   /// この間にトレードの締め切りを過ぎた。
   final bool deadlinePassed;
+
+  /// 締め切りを過ぎたとき: 今季のトレード(古い順。「トレード: 」は外してある)。
+  final List<String> deadlineTrades;
 
   /// レギュラーシーズンが終わった(次はプレーオフ)。
   final bool seasonOver;
@@ -116,6 +120,9 @@ class BlockReport {
       if (e.value.$2 >= (games.length / 2).ceil() && (star == null || avg > star.$2)) star = (e.key, avg, e.value.$2);
     }
     final played = me.wins + me.losses;
+    final deadlinePassed = s.block < tradeDeadlineBlock && c.block >= tradeDeadlineBlock;
+    final prefix = '${c.season}年目 トレード: ';
+    final deadlineTrades = deadlinePassed ? [for (final l in c.log.reversed) if (l.startsWith(prefix)) l.substring(prefix.length)] : const <String>[];
     final mail = [for (final m in c.inbox) if (m.id > s.maxMsg) m]..sort((a, b) => (b.needsAnswer ? 1 : 0) - (a.needsAnswer ? 1 : 0));
     return BlockReport(
       fromGame: c.roundAt - games.length + 1,
@@ -135,7 +142,8 @@ class BlockReport {
       leagueNews: leagueNews,
       newMail: mail,
       hasOffer: c.incoming != null,
-      deadlinePassed: s.block < tradeDeadlineBlock && c.block >= tradeDeadlineBlock,
+      deadlinePassed: deadlinePassed,
+      deadlineTrades: deadlineTrades,
       seasonOver: c.phase == Phase.playoffs,
       games: games,
     );
