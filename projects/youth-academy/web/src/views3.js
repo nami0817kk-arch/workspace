@@ -37,7 +37,16 @@
   };
 
   // ---------- おまかせ進行（1週・次の試合・1年）----------
+  // 開発用の道具（おまかせ進行・点検用シミュレーション）は、遊ぶ人には見せない。URL に ?dev を付けたときだけ出す
+  YA.devOn = () => {
+    try {
+      return globalThis.YA_DEV === true || /[?&]dev/.test(globalThis.location.search);
+    } catch (e) {
+      return false;
+    }
+  };
   YA.simCard = function () {
+    if (!YA.devOn()) return null;
     const app = U().app;
     const w = app.w;
     const stop = app.simStop !== false;
@@ -114,7 +123,7 @@
       h('button', { class: 'btn sm', onclick: exportBox }, '書き出す（コピーして保管）'),
       h('button', { class: 'btn sm', onclick: importBox }, '復元する（貼り付け）'),
       store.get(YA.slotKey(app.slot) + '_bak', null) ? h('button', { class: 'btn sm', onclick: () => confirmBox('年度はじめの控えに戻しますか（いまの進み具合は消えます）', () => { app.w = store.get(YA.slotKey(app.slot) + '_bak', null); YA.saveWorld(true); rerender(); }) }, '控え（年度はじめ）に戻す') : null));
-    testBlock(body);
+    if (YA.devOn()) testBlock(body);
     body.append(h('div', { class: 'h', style: 'margin-top:10px' }, 'この枠を最初からやり直す'), h('div', { class: 'note' }, '36人も成績も消えて、新しい指導者から始まります。'), h('button', { class: 'btn', style: 'margin-top:5px;color:#b02020', onclick: () => confirmBox('本当に最初からやり直しますか', () => { app.w = null; app.ng = null; store.set(YA.slotKey(app.slot), null); rerender(); }) }, '最初からやり直す'));
   };
   // ---------- 点検用：新しい世界でNか年シミュレーション（いまの遊びには影響しない）----------
