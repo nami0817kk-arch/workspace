@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:soccer_manager/logic/budget_engine.dart';
 import 'package:soccer_manager/models/budget_plan.dart';
+import 'package:soccer_manager/models/club_infrastructure.dart';
 import 'package:soccer_manager/models/save_game.dart';
 import 'package:soccer_manager/state/game_state.dart';
 
@@ -114,6 +115,67 @@ void main() {
           expect(sum, pool, reason: '総額$pool 施設$share%');
         }
       }
+    });
+  });
+
+  group('配分の効き', () {
+    test('初期の配分では、どの効きも1倍(既存のプレイの数字は動かない)', () {
+      final p = BudgetPlan.balanced();
+      expect(BudgetEngine.incomeMultiplier(p), 1.0);
+      expect(BudgetEngine.wageCapMultiplier(p), 1.0);
+      expect(BudgetEngine.facilityCostMultiplier(p), 1.0);
+      expect(BudgetEngine.dividendExpectationDelta(p), 0);
+    });
+
+    test('厚くすると効き、削ると弱まり、上下限で止まる', () {
+      final p = BudgetPlan.balanced();
+      expect(
+          BudgetEngine.incomeMultiplier(p.withShare(BudgetCategory.marketing, 40)),
+          greaterThan(1.0));
+      expect(
+          BudgetEngine.incomeMultiplier(p.withShare(BudgetCategory.marketing, 0)),
+          0.9);
+      expect(
+          BudgetEngine.incomeMultiplier(
+              p.withShare(BudgetCategory.marketing, 100)),
+          1.15);
+      expect(
+          BudgetEngine.wageCapMultiplier(p.withShare(BudgetCategory.signing, 80)),
+          1.2);
+      expect(
+          BudgetEngine.wageCapMultiplier(p.withShare(BudgetCategory.signing, 0)),
+          0.85);
+      expect(
+          BudgetEngine.facilityCostMultiplier(
+              p.withShare(BudgetCategory.facilities, 60)),
+          0.8);
+      expect(
+          BudgetEngine.facilityCostMultiplier(
+              p.withShare(BudgetCategory.facilities, 0)),
+          1.1);
+      expect(
+          BudgetEngine.dividendExpectationDelta(
+              p.withShare(BudgetCategory.dividend, 100)),
+          4);
+      expect(
+          BudgetEngine.dividendExpectationDelta(
+              p.withShare(BudgetCategory.dividend, 0)),
+          -4);
+    });
+
+    test('GameState: 営業を厚くすると週収入が増え、施設を厚くすると増築が安い', () async {
+      final gameState = GameState();
+      await gameState.startNewGame('テストFC');
+      final id = gameState.save!.userTeamId;
+      final income0 = gameState.weeklyIncomeFor(id);
+      final cost0 = gameState.facilityUpgradeCostFor(FacilityType.stadium);
+
+      await gameState.setBudgetShare(BudgetCategory.marketing, 50);
+      expect(gameState.weeklyIncomeFor(id), greaterThan(income0));
+
+      await gameState.setBudgetShare(BudgetCategory.facilities, 50);
+      expect(gameState.facilityUpgradeCostFor(FacilityType.stadium),
+          lessThan(cost0));
     });
   });
 
