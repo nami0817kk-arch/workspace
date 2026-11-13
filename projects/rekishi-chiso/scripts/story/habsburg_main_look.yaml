@@ -1,0 +1,438 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：ハプスブルク家の家系図（scripts/habsburg-kakeizu-story.yaml）。chiso/storymain.py が読む。
+# 11-13 作成（11/17 12:00 公開予定）。galileo_main_look.yaml を写した。決まりは docs/story-main.md・スキル rekishi-story-screen。
+# 絵の方針：AI 絵はすべて Gemini（Chrome、無料版）で新しく作る想像図。実在の人物の顔・肖像・紋章は使わない。使い回しなし（同じ絵の別の切り出しだけ）。
+script: scripts/habsburg-kakeizu-story.yaml
+out: habsburg_story_main
+art_dir: out/story/habsburg/main
+main_art_dir: out/story/habsburg/main
+ai_disclosure: この動画の風景・室内・人物の画像は、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面の右上に「AI生成画像」と出しています）。
+chapters:
+  0:
+    label: 序章 子のなかった王
+    now: null
+    dates: {}
+  1:
+    label: 第1章 「結婚せよ」は誰の言葉か
+    now: 1273年
+    dates:
+      9: 1282年
+      10: 1437年
+      11: null
+  2:
+    label: 第2章 18歳の花婿
+    now: 1477年
+    dates:
+      20: 1482年
+      22: 1488年
+      23: 1496年
+      25: 1500年
+      26: null
+  3:
+    label: 第3章 二重の婚約
+    now: 1515年7月
+    dates:
+      37: 1521年
+      38: null
+  4:
+    label: 第4章 王冠は、相続では来なかった
+    now: 1526年8月
+    dates:
+      43: 1526年
+      47: null
+  5:
+    label: 第5章 家を二つに分けた皇帝
+    now: 1556年
+    dates:
+      53: null
+  6:
+    label: 第6章 0.025から0.254へ
+    now: null
+    dates: {}
+  7:
+    label: 第7章 呪われた王
+    now: 1661年11月
+    dates:
+      68: null
+      73: 1691年
+      75: 1665年
+      76: 1679年
+      77: null
+      78: 1698年
+      79: 1698年9月
+      80: 1698年11月
+      81: 1699年6月
+      83: null
+  8:
+    label: 第8章 王国は、神だけが与える
+    now: 1698年
+    dates:
+      86: 1698年11月
+      87: 1699年
+      88: 1700年6月
+      89: 1700年9月
+      90: 1700年10月
+      92: 1700年11月
+      94: null
+  9:
+    label: 第9章 国事詔書から1919年へ
+    now: 1713年
+    dates:
+      98: 1740年
+      101: null
+      102: 1918年
+      103: 1919年
+      104: 1922年
+      105: null
+  10:
+    label: 第10章 今の当主
+    now: 2011年7月
+    dates:
+      108: 2011年7月16日
+      110: 2011年7月17日
+      111: 2007年1月
+      112: null
+  11:
+    label: まとめ 結婚で広げた家の、スペインの血筋は
+    now: null
+    dates: {}
+no_tag_from: 119
+references:
+- 近親婚と王家の断絶の研究 Alvarez, Ceballos & Quinteiro, PLOS ONE 4(4) e5174, 2009
+- ハプスブルクの顎の研究 Vilas ほか, Annals of Human Biology 46, 2019
+- ハプスブルク家の公式解説サイト habsburger.net（ルドルフ1世・AEIOU・ブルゴーニュとスペイン・国事詔書・マリア・テレジアの子・カール1世の最期）
+- Papp Júlia「1515年のウィーンのハプスブルク＝ヤギェウォ二重婚約の16〜19世紀の美術での表現」Történelmi Szemle 2024/1
+- Péterfi「Ferdinand I's claim to Hungary」Hungarian Historical Review 10(4), 2021
+- ラフエンテ『スペイン通史』第13章（1856）／カンガス・デ・ティネオの地方史の記事
+- 名言辞典 Chi l'ha detto?（no.1018）／オーストリア・フォーラム「Heiratspolitik der Habsburger」
+- ORF ウィーン「オットー・ハプスブルクの葬儀」2011
+- Wikipedia（Charles II of Spain・Philip V of Spain・Karl von Habsburg・Habsburg Law）
+ai:
+  H01:
+    scene: 1700年のマドリードの王宮の寝室。天蓋つきの大きなベッドに若い男が横たわり、枕元に黒い服の人々の影。窓から冷たい朝の光、蝋燭。人物は後ろ姿か影
+    pan: h
+    crops: &id001
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  H02:
+    scene: 古い羊皮紙に描かれた巨大な家系図。枝分かれした線と丸い名札の枠（文字は読めない模様だけ）。机の上、蝋燭と羽ペン
+    pan: h
+    crops: *id001
+  C01:
+    scene: 13世紀、アルプスの山の上に建つ石造りの小さな城、朝霧の谷
+    pan: h
+    crops: *id001
+  C02:
+    scene: 中世の平原で向かい合う二つの騎兵の軍勢（遠景）、土煙、旗は無地
+    pan: h
+    crops: *id001
+  C03:
+    scene: 古い羊皮紙の小さな手帳と羽ペン、蝋燭、古い印章（机の上のクローズアップ、文字は読めない）
+    pan: h
+    crops: *id001
+  C04:
+    scene: 15世紀ブルゴーニュの豪華な宮廷の広間。若い花婿と花嫁が向かい合って立つ後ろ姿、ステンドグラスの光
+    pan: h
+    crops: *id001
+  C06:
+    scene: 中世フランドルの運河の町、石の橋とレンガの塔、夕方の水面。岸辺に鞍の空いた馬が一頭だけ立っている
+    pan: h
+    crops: *id001
+  C07:
+    scene: 15世紀末の港、帆船の船団が出港する。岸で見送る人々の後ろ姿
+    pan: h
+    crops: *id001
+  C08:
+    scene: ゴシック様式の大聖堂の内部、高い柱とステンドグラス、祭壇の前に正装の人々が立つ後ろ姿
+    pan: h
+    crops: *id001
+  C09:
+    scene: 夕暮れの川辺の平原、戦いのあとの静けさ、倒れた無地の旗と霧、遠くに煙
+    pan: h
+    crops: *id001
+  C10:
+    scene: 貴族たちが半円の席に並び手を挙げて投票している後ろ姿（石の議場）
+    pan: h
+    crops: *id001
+  C11:
+    scene: 二つの玉座が並ぶ暗い広間、玉座は空、床に長く伸びる光
+    pan: h
+    crops: *id001
+  C12:
+    scene: 長い廊下の壁に並ぶ古い油彩の肖像画（顎の長い架空の人物たち、顔は小さくぼんやり）
+    pan: h
+    crops: *id001
+  C13:
+    scene: 17世紀スペイン宮廷、黒い服の婦人と、その手を握る幼い男の子の後ろ姿
+    pan: h
+    crops: *id001
+  C14:
+    scene: 石造りの修道院の廊下、蝋燭を持つ修道士たちの影、アーチ
+    pan: h
+    crops: *id001
+  C15:
+    scene: ヨーロッパの大きな地図が広がる机、赤い封蝋と羽ペン、数人の外交官の後ろ姿（17世紀末）
+    pan: h
+    crops: *id001
+  C16:
+    scene: 18世紀の宮廷の大広間、シャンデリア、着飾った人々（遠景）
+    pan: h
+    crops: *id001
+  C17:
+    scene: 1919年の霧の駅のホーム、トランクを持つ家族の後ろ姿、蒸気機関車
+    pan: h
+    crops: *id001
+  C18:
+    scene: 現代のウィーンの石畳の街路を行く、黒い馬が引く霊柩馬車の行列。見守る人々の後ろ姿
+    pan: h
+    crops: *id001
+  C19:
+    scene: 暗い石の地下納骨堂の重い扉、蝋燭の灯り
+    pan: h
+    crops: *id001
+  C20:
+    scene: 朝日の差し込む書斎、机の上に新しい家系図の巻物、窓の外はアルプスの山々
+    pan: h
+    crops: *id001
+  YEND:
+    scene: 夕暮れの山の上の古城のシルエット（終了画面、右半分は雲だけの余白）
+    lock:
+    - 1.0
+    - 0.5
+    - 0.5
+credits: {}
+paint_fx: {}
+shots:
+- 0 ai:H01 wide
+- 1 ai:H01 left
+- 2 ai:H02 right
+- 3 ai:C01 wide
+- 4 ai:H01 right
+- 5 ai:H02 left
+- 6 ai:C01 right
+- 7 ai:C03 wide
+- 8 ai:C02 wide
+- 9 ai:C01 right
+- 10 ai:C03 wide
+- 11 ai:C01 left
+- 12 ai:H02 wide
+- 13 ai:C03 right
+- 14 ai:H02 left
+- 15 ai:C03 wide
+- 16 ai:H02 right
+- 17 ai:C04 wide
+- 18 ai:C04 left
+- 19 ai:C04 right
+- 20 ai:C06 wide
+- 21 ai:C06 left
+- 22 ai:C06 right
+- 23 ai:C07 wide
+- 24 ai:H02 right
+- 25 ai:C07 right
+- 26 ai:H02 wide
+- 27 ai:C07 left
+- 28 ai:C08 wide
+- 29 ai:C08 wide
+- 30 ai:H02 left
+- 31 ai:C08 left
+- 32 ai:H02 right
+- 33 ai:C12 left
+- 34 ai:C08 wide
+- 35 ai:C08 left
+- 36 ai:C12 left
+- 37 ai:C04 left
+- 38 ai:C09 wide
+- 39 ai:C09 left
+- 40 ai:C09 right
+- 41 ai:C09 wide
+- 42 ai:C10 wide
+- 43 ai:C10 left
+- 44 ai:C10 right
+- 45 ai:H02 left
+- 46 ai:C09 left
+- 47 ai:C11 wide
+- 48 ai:C12 left
+- 49 ai:C11 right
+- 50 ai:C11 wide
+- 51 ai:C04 wide
+- 52 ai:C04 right
+- 53 ai:H02 wide
+- 54 ai:H02 right
+- 55 ai:C12 wide
+- 56 ai:H02 left
+- 57 ai:H02 right
+- 58 ai:C12 left
+- 59 ai:H02 wide
+- 60 ai:C12 right
+- 61 ai:C13 wide
+- 62 ai:C13 left
+- 63 ai:C12 wide
+- 64 ai:H02 left
+- 65 ai:C13 right
+- 66 ai:C13 wide
+- 67 ai:C13 left
+- 68 ai:H01 left
+- 69 ai:H01 right
+- 70 ai:C12 wide
+- 71 ai:C12 right
+- 72 ai:C15 left
+- 73 ai:C04 wide
+- 74 ai:C15 wide
+- 75 ai:C13 right
+- 76 ai:C16 left
+- 77 ai:C13 left
+- 78 ai:C14 left
+- 79 ai:C14 right
+- 80 ai:H01 wide
+- 81 ai:C14 left
+- 82 ai:C19 wide
+- 83 ai:H01 wide
+- 84 ai:C15 wide
+- 85 ai:C15 left
+- 86 ai:C13 left
+- 87 ai:C13 right
+- 88 ai:C15 left
+- 89 ai:H01 left
+- 90 ai:C15 right
+- 91 ai:H01 wide
+- 92 ai:H01 right
+- 93 ai:C11 wide
+- 94 ai:H01 right
+- 95 ai:C16 left
+- 96 ai:C16 right
+- 97 ai:C16 wide
+- 98 ai:C11 wide
+- 99 ai:C16 right
+- 100 ai:C16 wide
+- 101 ai:C15 left
+- 102 ai:C17 wide
+- 103 ai:C11 right
+- 104 ai:C17 right
+- 105 ai:C11 left
+- 106 ai:C20 wide
+- 107 ai:C18 wide
+- 108 ai:C18 left
+- 109 ai:C19 wide
+- 110 ai:C18 right
+- 111 ai:H02 wide
+- 112 ai:C20 right
+- 113 ai:C11 wide
+- 114 ai:C20 left
+- 115 ai:C20 right
+- 116 ai:H02 wide
+- 117 ai:C20 left
+- 118 ai:H02 right
+- 119 ai:C20 wide
+- 120 ai:H01 wide
+- end ai:YEND wide
+focus: {}
+fx:
+  H01:
+    lamp:
+      region:
+      - 0.0
+      - 0.2
+      - 1.0
+      - 0.9
+  C14:
+    lamp:
+      region:
+      - 0.0
+      - 0.3
+      - 1.0
+      - 0.9
+  C19:
+    lamp:
+      region:
+      - 0.0
+      - 0.3
+      - 1.0
+      - 0.9
+  C03:
+    lamp:
+      region:
+      - 0.0
+      - 0.2
+      - 1.0
+      - 0.9
+parts:
+- type: quote
+  from: 7
+  to: 7
+  label: 要点
+  text: 他の者は戦え／幸いなるオーストリアよ、結婚せよ
+  source: ハプスブルク家について語られる句（出どころは確かめられていません）
+- type: versus3
+  from: 14
+  to: 14
+  items:
+  - - 名言辞典
+    - コルヴィヌスは誤り
+  - - オーストリア・フォーラム
+    - 史料は17世紀
+  every: 2.0
+- type: versus3
+  from: 69
+  to: 69
+  items:
+  - - 論文
+    - 8歳まで歩けず
+  - - 英語版ウィキペディア
+    - 4歳まで補助なし
+  every: 2.0
+- type: quote
+  from: 82
+  to: 82
+  label: 史料
+  text: 多くの人が「呪われた」と言う／私も、そう思い始めている
+  source: 地方史の記事（要旨）
+- type: versus3
+  from: 104
+  to: 104
+  items:
+  - - ハプスブルガー・ネット
+    - 35歳
+  - - 生年月日から計算
+    - 34歳7か月
+  every: 2.0
+- type: quote
+  from: 109
+  to: 109
+  label: 史料
+  text: オットー・ハプスブルク／死すべき、罪深い人間
+  source: ORF ウィーン 2011年7月16日の葬儀（要旨）
+figures: []
+stills:
+- line: 0
+  note: 冒頭
+- line: 7
+  note: 句
+- line: 29
+  note: '1515'
+- line: 40
+  note: モハーチ
+- line: 57
+  note: 近親係数
+- line: 69
+  note: 4歳と8歳
+- line: 79
+  note: 悪魔祓い
+- line: 92
+  note: 没
+- line: 104
+  note: 34歳
+- line: 112
+  note: 当主
+- line: 119
+  note: 余韻
+- end: true
+  note: 終了画面
