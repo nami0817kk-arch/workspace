@@ -5,6 +5,7 @@ import '../../gm/player.dart';
 import '../gm_controller.dart';
 import 'common.dart';
 import 'negotiate_dialog.dart';
+import 'offseason_show_screen.dart';
 import 'style.dart';
 
 /// 自由契約の選手の並べ方。
@@ -105,7 +106,7 @@ class _MarketTabState extends State<MarketTab> {
                   ),
                   FilledButton.tonalIcon(
                     style: FilledButton.styleFrom(minimumSize: const Size(0, 40)),
-                    onPressed: car.faDay >= faDays || c.busy ? null : c.nextFaDay,
+                    onPressed: car.faDay >= faDays || c.busy ? null : () => nextFaDayWithReport(context, c),
                     icon: const Icon(Icons.wb_sunny_rounded, size: 18),
                     label: const Text('次の日へ'),
                   ),

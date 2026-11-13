@@ -224,6 +224,49 @@ void main() {
     expect(find.textContaining('ドラフトのまとめ'), findsNothing);
   });
 
+  testWidgets('自由契約: 日を進めるとその日の動きが出て、オフを終えるとまとめが出る(小さいスマホ)', (tester) async {
+    _size(tester, 667, 375);
+    final c = await _controller({'gmHowtoSeen': true});
+    c.newCareer(teamAtRank(6, 28), seed: 6);
+    final car = c.career!;
+    var guard = 0;
+    while (car.phase != Phase.contracts && guard++ < 600) {
+      if (car.phase == Phase.seasonEnd) car.fired = false;
+      botStep(car);
+    }
+    expect(car.phase, Phase.contracts);
+    await tester.pumpWidget(BasketballCareerApp(controller: c));
+    await tester.pumpAndSettle();
+    await _closeDialogs(tester);
+    final see = find.text('自由契約の選手を見る');
+    await tester.scrollUntilVisible(see, 300, scrollable: _progress);
+    await tester.tap(see);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('次の日へ'));
+    await tester.pumpAndSettle();
+    expect(find.text('自由契約 1日目の動き'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+    await tester.tap(find.text('続ける'));
+    await tester.pumpAndSettle();
+    expect(car.faDay, 1);
+    // 進み具合の画面に戻って、オフを終える
+    await tester.tap(find.text('ホーム'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('オフを終えて、シーズン前へ'));
+    await tester.pumpAndSettle();
+    if (find.text('終える').evaluate().isNotEmpty) {
+      await tester.tap(find.text('終える'));
+      await tester.pumpAndSettle();
+    }
+    expect(car.phase, Phase.preseason);
+    expect(find.textContaining('オフのまとめ'), findsOneWidget);
+    expect(find.textContaining('入った選手'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+    await tester.tap(find.text('シーズン前へ'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('オフのまとめ'), findsNothing);
+  });
+
   testWidgets('プレーオフは自分のシリーズを1試合ずつめくり、最後に結果を見てシーズンの終わりへ', (tester) async {
     _size(tester, 667, 375);
     final c = await _controller({'gmHowtoSeen': true});
