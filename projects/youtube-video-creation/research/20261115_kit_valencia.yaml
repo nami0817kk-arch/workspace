@@ -1,0 +1,522 @@
+# ユニフォームとエンブレムの歴史 バレンシア（11/12 作成、11/15 分）。ラ・リーガの5本目。雛形は 11/13 アスレティック回（20261113_kit_athletic.yaml）。
+# 題の問い：胸のコウモリに、バットマンの会社は何を問題にしたのか。答え＝2013年5月、新しいコウモリの絵が似すぎていると DCコミックスが異議。クラブは申請を取り下げ（英語版）。
+# 選んだ理由：指示書 20261109/20261112/20261115「ユニフォームはラ・リーガの続き」。済み：バルセロナ・レアル・アトレティコ・アスレティック。
+#   スタジアム担当（同じ11/15）と同じクラブにしない → research/20261115_picks.txt に先に1行書いた。バレンシアは 11/11 にスタジアム（メスタージャ）で出済み＝当日のスタジアム担当は選ばない。
+#   コウモリ＝バットマンの話は、題の主語になる強い一点。白黒の由来（創立の決まり）と、広告・メーカーの移り変わりを足して5節。
+# 重なり確認（2026-11-12）：scripts/*kit_* にバレンシアは無し。直近30日：20261111_stadium_valencia（4日前・スタジアム。本拠地の話だけ）／20261108_real_valencia_guler_mbappe・20261108_sato_valencia_out_of_squad（ニュース）。
+#   この回では、本拠地の名前・建物・観客席の話は言わない（4日前のスタジアム回）。写真も 20261111_stadium_valencia のものは使わない。
+# 今季のリーグ：ca "València Club de Futbol"（2026-2027 の登録選手の項あり）。ラ・リーガ。情報の時点は 2026年11月12日。
+# 取材：requests だけ（Wikipedia API）。ブラウザ操作・JS実行は使っていない。クラブ公式は読んでいない。
+#   読んだ：es "Valencia Club de Fútbol"（Fundación・Símbolos・Indumentaria・1985/86 の項）、es "Historia del uniforme del Valencia Club de Fútbol"（冒頭＝創立の決まりと前身の色。表は Patrocinio）、en "Valencia CF"（Kit の表・Crest）、ca "València Club de Futbol"（Uniforme・Escut）。
+# ---- 食い違い・断ったこと ----
+#   ・白黒の決まり：es 衣装史「1919年の創立から白と黒。創立の定款（estatuto fundacional）に書かれている。出どころは、同じバレンシアの名を持つ地元の混成チームで、白シャツに紺パンツ」。→ 台本はそのまま。黒を選んだ理由は資料に無いので言わない。
+#   ・原型：en「白シャツ、黒パンツ、黒ソックス。年月とともに白と黒を行き来」、es 本文「1994年に黒ソックスが戻り、1995年から原型（白シャツ・黒パンツ・黒ソックス）」。es の衣装史の図（Football kit）は1995年より前の白パンツの年を多く描くが、図の年は台本で使わない。
+#   ・コウモリの由来：en は「この地域に多いだけ」「1238年10月9日、ハイメ1世がバレンシアに入ろうとしたとき、旗の先にコウモリが止まり吉兆と受け取った」の2説。es は「1238年の征服で吉兆」「アラゴン王ペドロ4世が14世紀に使った兜飾りの竜の変形」。→ 3つとも「説」として並べ、どれとも言い切らない。
+#   ・バットマン：en「2013年5月、DCコミックスがバレンシアの新しいコウモリの絵が似すぎていると訴えたと報じられた。クラブは、改めたコウモリをカジュアル服用に使うつもりで欧州の商標の役所（OHIM）に申請した、と説明。申請は、DCコミックスの異議のあと取り下げ。裁判ではなく異議」「百周年のロゴの商標申請にも、DCコミックスが欧州の役所に苦情」。
+#     es は「DCコミックスは何度も訴訟を起こしたが、いまのところ実っていない」とも書く。→ 食い違いのうち、en の「異議・申請の取り下げ」を使い、「裁判ではなく異議」は「とされます」と言う。バットマンの誕生は es が「バレンシア創立の20年あと」と書くので1939年とした（年は本文に無く、DCの公式は読んでいない）。
+#   ・新ロゴ：es「2018年に、黒地にオレンジのコウモリ。百周年の2018-19季は、金と黒で CENTENARI と 1919-2019 の字入り」。
+#   ・胸の広告：es「1985-86季、資金が乏しく、胸に初めての広告として貯蓄銀行 Caja de Ahorros de Valencia の名を入れた。その季の4月12日、カンプ・ノウで0対3、1931年以来の2部降格」。
+#     es 衣装史の表は 1987〜1990 を Bancaja（貯蓄銀行の後身）としていて、年は1〜2年ずれる。→ 台本は es 本文の「1985-86季」と言い、表の年は使わない。
+#     フォード 1995–98、テラ・ミティカ（テーマパーク）1998–2000、トヨタ 2003–08、TM（不動産）2023–（en と es の表で一致）。2008以降のほかの広告主は言わない（賭け関係の会社を含むため）。
+#   ・シャツを作る会社：en と es の表で一致するのは 1990 プーマ、1993 ルアンビ、2000 ナイキ、2009 カッパ、2011 ジョマ、2014 アディダス、2019 プーマ。1990年より前（アディダス・レッシー・ラサン）は年が表で食い違うので使わない。
+# ---- 自分で数えた数 ----
+#   白と黒：1919→2026＝107年。コウモリの伝説：1238→2026＝788年。バットマン：1939−1919＝20年。
+#   メーカー：1990→2026＝36年で7期（プーマ・ルアンビ・ナイキ・カッパ・ジョマ・アディダス・プーマ）。36÷7＝5.14 → 約5.1年。107÷5.1＝20.98 → 約21倍。
+#   各期：プーマ 1990–93＝3年、ルアンビ 1993–2000＝7年、ナイキ 2000–09＝9年、カッパ 2009–11＝2年、ジョマ 2011–14＝3年、アディダス 2014–19＝5年、プーマ 2019–＝7年（今）。
+# ---- 日本との接点 ----
+#   見つけられなかった（読んだ資料に日本人選手・日本の会社との直接のつながりは、トヨタ（2003–08）の広告主以外に無い。トヨタは台本で広告主の1社として1行だけ）。
+# 言わなかったもの：本拠地の名前（4日前のスタジアム回）／賭け関係の広告主／経営の話（ピーター・リム）／DCコミックスの訴訟の結果の評価／黒を選んだ理由の推測。
+# 写真：assets/images/20261115_kit_valencia/（credits.json）。Commons（CC BY・CC BY-SA・Public domain）。代理店・放送映像・エンブレム画像は使っていない。人物は特定していない。
+date: 2026年11月12日
+slot: other_5
+format: news
+series: ユニフォームとエンブレムの歴史
+voice_min: 0
+people:
+- バレンシア
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  end_bg: assets/images/20261115_kit_valencia/p_fans_w.jpg
+  id: kit_valencia
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: バレンシア
+  title: バレンシアの胸のコウモリ、バットマンの会社は何を問題にした？
+  question: バレンシアの胸のコウモリは、どこから来たのか。バットマンの会社は、なぜ口を出したのか。白と黒は、いつ決まった色なのか
+  opening_image: assets/images/20261115_kit_valencia/p_old_w.jpg
+  lead: 白と黒は、創立の決まりから。
+  hook: ''
+  takeaway: バレンシアの白と黒は、1919年の創立の決まりから107年。胸のコウモリは、町の紋章の動物で、伝説は788年前にさかのぼる。守ってきたのは色と紋章で、シャツを作る会社は1990年から36年で7期、平均5年ほどで替わってきた
+  hook_unused: ''
+thumbnail:
+  layout: classic
+  callouts:
+  - 白黒は創立から
+  - コウモリの伝説
+  photo: assets/images/20261115_kit_valencia/p_fans2_t_w.jpg
+  short_photo: assets/images/20261115_kit_valencia/p_fans2_v.jpg
+  line1: バレンシアのコウモリ
+  line2: バットマンの会社が異議
+  tags:
+  - バレンシア
+  - ユニフォーム
+  - エンブレム
+  - 紋章
+  - ラ・リーガ
+x-cards:
+  colors: &colors
+    type: timeline
+    title: バレンシアのシャツの歩み
+    rows:
+    - - 前身
+      - 同じ名前の地元チーム。白シャツに紺パンツ
+    - - 1919年
+      - 創立。白と黒が、決まりになる
+    - - 1994年
+      - 黒いソックスが戻る
+    - - 1995年
+      - 白シャツ、黒パンツ、黒ソックスに
+    - - 今季
+      - 白と黒、107年
+    focus: 1919年
+    highlight_row: 0
+  parts: &parts
+    type: table
+    title: 紋章に入っているもの
+    columns:
+    - 形
+    - どこから来たか
+    rows:
+    - - コウモリ
+      - バレンシアの町の紋章
+    - - 黄5本、赤4本の縦線
+      - バレンシアの旗
+    - - 上の青い帯
+      - クラブの名前
+    - - 真ん中のボール
+      - サッカーのクラブ
+    highlight_row: 0
+  legend: &legend
+    type: timeline
+    title: コウモリの3つの由来
+    rows:
+    - - 1238年
+      - ハイメ1世の旗に、コウモリが止まった
+    - - 14世紀
+      - ペドロ4世の兜飾りの竜が、姿を変えた
+    - - もう一つ
+      - この辺りに、コウモリが多かった
+    focus: 1238年
+    highlight_row: 0
+  batman: &batman
+    type: timeline
+    title: コウモリとバットマン
+    rows:
+    - - 1919年
+      - バレンシア創立
+    - - 1939年
+      - バットマンが生まれる（創立の20年あと）
+    - - 2013年5月
+      - 新しい絵に、DCコミックスが異議
+    - - 2018年
+      - 黒地にオレンジのコウモリに
+    - - 2018〜19年
+      - 百周年は、金と黒の紋章
+    focus: 2013年5月
+    highlight_row: 0
+  chest: &chest
+    type: table
+    title: バレンシアの胸に入った広告
+    columns:
+    - いつから
+    - 胸
+    rows:
+    - - 1985年
+      - 地元の貯蓄銀行
+    - - 1995年
+      - フォード
+    - - 1998年
+      - テーマパーク
+    - - 2003年
+      - トヨタ
+    - - 2023年
+      - 不動産会社 TM
+    highlight_row: 0
+  maker: &maker
+    type: table
+    title: シャツを作る会社
+    columns:
+    - いつから
+    - 会社
+    - 年数
+    rows:
+    - - 1990年
+      - プーマ
+      - 3年
+    - - 1993年
+      - ルアンビ
+      - 7年
+    - - 2000年
+      - ナイキ
+      - 9年
+    - - 2009年
+      - カッパ
+      - 2年
+    - - 2011年
+      - ジョマ
+      - 3年
+    - - 2014年
+      - アディダス
+      - 5年
+    - - 2019年
+      - プーマ
+      - 今季で7年
+    highlight_row: 0
+  view: &view
+    type: table
+    title: バレンシアの白と黒、コウモリ、メーカー（自分で数えた）
+    columns:
+    - 何を
+    - 数
+    rows:
+    - - 白と黒（1919年〜）
+      - 107年
+    - - コウモリの伝説（1238年〜）
+      - 788年
+    - - メーカー（1990年〜）
+      - 36年で7期
+    - - メーカー1期の平均
+      - 約5.1年
+    highlight_row: 0
+sections:
+- id: colors
+  main: true
+  heading: バレンシアの白と黒は、いつ決まった色なのか
+  bg: assets/images/20261115_kit_valencia/p_fans_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 1919年の創立で白と黒が決まり。前身の地元チームは白シャツに紺パンツ。黒いソックスは1994年、黒いパンツは1995年に戻った
+  card: *colors
+  say:
+  - text: 今回はバレンシア。白と黒のシャツと、胸のコウモリの話です。
+    image: assets/images/20261115_kit_valencia/p_fans_w.jpg
+    card: none
+  - text: バレンシアの創立は、1919年3月18日です。
+    image: assets/images/20261115_kit_valencia/p_fans_w.jpg
+    card:
+      <<: *colors
+      highlight_row: 1
+  - text: 設立の文書が書かれたのは、その17日前。いまはない酒場、バル・トリノでした。
+    image: assets/images/20261115_kit_valencia/p_torino_w.jpg
+    card: none
+  - text: シャツの色は、創立の決まりに、白と黒と書かれていました。
+    image: assets/images/20261115_kit_valencia/p_fans_w.jpg
+    card: none
+    emph: true
+  - text: 色のもとになったのは、同じバレンシアの名前を持つ、地元の混成チームとされます。
+    image: assets/images/20261115_kit_valencia/p_fans_w.jpg
+    card:
+      <<: *colors
+      highlight_row: 0
+  - text: そのチームの装いは、白いシャツに、紺のパンツでした。
+    image: assets/images/20261115_kit_valencia/p_old_w.jpg
+    card: none
+  - text: クラブの元の姿は、白いシャツ、黒いパンツ、黒いソックスです。
+    image: assets/images/20261115_kit_valencia/p_old_w.jpg
+    card: none
+  - text: そのあと、パンツとソックスは、白と黒のあいだを行き来します。
+    image: assets/images/20261115_kit_valencia/p_old_w.jpg
+    card: none
+  - text: 1994年、黒いソックスが戻りました。
+    image: assets/images/20261115_kit_valencia/p_kit_w.jpg
+    card:
+      <<: *colors
+      highlight_row: 2
+  - text: 1995年からは、黒いパンツも加わり、元の姿に戻ります。
+    image: assets/images/20261115_kit_valencia/p_kit_w.jpg
+    card:
+      <<: *colors
+      highlight_row: 3
+    emph: true
+    callword: 元の姿に戻る
+  - text: 相手の本拠地で着る2つ目のシャツは、近年、オレンジの色合いです。
+    image: assets/images/20261115_kit_valencia/p_kit_w.jpg
+    card: none
+  - text: 3つ目のシャツには、紋章の黄色や赤、青の色が使われてきました。
+    image: assets/images/20261115_kit_valencia/p_kit_w.jpg
+    card: none
+  - text: 創立から、107年。白と黒は、クラブの色であり続けています。
+    image: assets/images/20261115_kit_valencia/p_fans_w.jpg
+    card:
+      <<: *colors
+      highlight_row: 4
+  sources:
+  - https://es.wikipedia.org/wiki/Historia_del_uniforme_del_Valencia_Club_de_F%C3%BAtbol
+  - https://en.wikipedia.org/wiki/Valencia_CF
+  - https://es.wikipedia.org/wiki/Valencia_Club_de_F%C3%BAtbol
+- id: crest
+  heading: 胸のコウモリは、なぜバレンシアの町の紋章から来たのか
+  bg: assets/images/20261115_kit_valencia/p_bat_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: コウモリは町の紋章の動物。由来は3説。1238年の旗、14世紀の兜飾りの竜、この辺りに多かったから。下半分はバレンシアの旗
+  card: *parts
+  say:
+  - text: 胸の紋章の上にいるのは、黒いコウモリです。
+    image: assets/images/20261115_kit_valencia/p_bat_w.jpg
+    card:
+      <<: *parts
+      highlight_row: 0
+  - text: バレンシア語で、ラット・ペナット。町の紋章にいる動物です。
+    image: assets/images/20261115_kit_valencia/p_bat_w.jpg
+    card: none
+  - text: 由来には、3つの説があります。
+    image: assets/images/20261115_kit_valencia/p_bat_w.jpg
+    card:
+      <<: *legend
+      highlight_row: 0
+  - text: 1つめは、1238年。アラゴンの王、ハイメ1世が、町を取り戻した年です。
+    image: assets/images/20261115_kit_valencia/p_bat_w.jpg
+    card:
+      <<: *legend
+      highlight_row: 0
+    emph: true
+  - text: 入城の日は、10月9日。王の旗の先に、コウモリが止まりました。
+    image: assets/images/20261115_kit_valencia/p_bat_w.jpg
+    card:
+      <<: *legend
+      highlight_row: 0
+  - text: 王は、それを吉兆と受け取った、とされます。
+    image: assets/images/20261115_kit_valencia/p_bat_w.jpg
+    card: none
+  - text: 2つめは、アラゴン王ペドロ4世の、兜の飾りの竜が、姿を変えた、という説。
+    image: assets/images/20261115_kit_valencia/p_fans2_w.jpg
+    card:
+      <<: *legend
+      highlight_row: 1
+  - text: 3つめは、この辺りに、コウモリが多かっただけ、というものです。
+    image: assets/images/20261115_kit_valencia/p_fans2_w.jpg
+    card:
+      <<: *legend
+      highlight_row: 2
+  - text: 盾の下半分は、バレンシアの旗。
+    image: assets/images/20261115_kit_valencia/p_fans2_w.jpg
+    card:
+      <<: *parts
+      highlight_row: 1
+  - text: 黄色が5本、赤が4本。合わせて縦に9本。
+    image: assets/images/20261115_kit_valencia/p_fans2_w.jpg
+    card: none
+    emph: true
+  - text: 上の青い帯には、クラブの名前。真ん中には、茶色のボールが入ります。
+    image: assets/images/20261115_kit_valencia/p_bat_w.jpg
+    card:
+      <<: *parts
+      highlight_row: 2
+  - text: 町の動物と、町の旗と、サッカーのボール。バレンシアの胸は、その3つでできています。
+    image: assets/images/20261115_kit_valencia/p_bat_w.jpg
+    card:
+      <<: *parts
+      highlight_row: 3
+  sources:
+  - https://en.wikipedia.org/wiki/Valencia_CF
+  - https://es.wikipedia.org/wiki/Valencia_Club_de_F%C3%BAtbol
+  - https://ca.wikipedia.org/wiki/Val%C3%A8ncia_Club_de_Futbol
+- id: batman
+  heading: バットマンの会社は、なぜコウモリに口を出したのか
+  bg: assets/images/20261115_kit_valencia/p_fans_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 2013年5月、DCコミックスが新しいコウモリの絵に異議。クラブは申請を取り下げた。バットマンは創立の20年あとの生まれ
+  card: *batman
+  say:
+  - text: 胸のコウモリは、ある会社の目にも留まりました。
+    image: assets/images/20261115_kit_valencia/p_fans_w.jpg
+    card: none
+  - text: アメリカの出版社、DCコミックスです。バットマンの会社です。
+    image: assets/images/20261115_kit_valencia/p_fans_w.jpg
+    card: none
+  - text: 2013年5月、バレンシアの新しいコウモリの絵が、話題になります。
+    image: assets/images/20261115_kit_valencia/p_fans_w.jpg
+    card:
+      <<: *batman
+      highlight_row: 2
+  - text: バットマンに、似すぎている。そう報じられました。
+    image: assets/images/20261115_kit_valencia/p_fans_w.jpg
+    card:
+      <<: *batman
+      highlight_row: 2
+    emph: true
+    callword: バットマンに似すぎ？
+  - text: クラブの説明は、こうです。コウモリの絵を少し改め、普段着に使うつもりでした。
+    image: assets/images/20261115_kit_valencia/p_kit_w.jpg
+    card: none
+  - text: 申請を出した先は、欧州の商標を扱う役所です。
+    image: assets/images/20261115_kit_valencia/p_kit_w.jpg
+    card: none
+  - text: そこへ、DCコミックスが異議を出しました。クラブは、申請を取り下げます。
+    image: assets/images/20261115_kit_valencia/p_kit_w.jpg
+    card: none
+  - text: 出されたのは、裁判ではなく、異議だった、とされます。
+    image: assets/images/20261115_kit_valencia/p_kit_w.jpg
+    card: none
+  - text: バットマンの登場は、1939年。バレンシアの創立より、20年あとのことです。
+    image: assets/images/20261115_kit_valencia/p_fans_w.jpg
+    card:
+      <<: *batman
+      highlight_row: 1
+    emph: true
+  - text: 2018年、クラブは、黒地にオレンジのコウモリの、新しいマークを発表します。
+    image: assets/images/20261115_kit_valencia/p_bat_w.jpg
+    card:
+      <<: *batman
+      highlight_row: 3
+  - text: 百周年の2018年から19年は、昔の紋章を、金と黒に替えて使いました。
+    image: assets/images/20261115_kit_valencia/p_bat_w.jpg
+    card:
+      <<: *batman
+      highlight_row: 4
+  - text: 上と下に、センテナリ、1919から2019の文字が入っています。
+    image: assets/images/20261115_kit_valencia/p_bat_w.jpg
+    card: none
+  - text: この百周年のマークにも、DCコミックスは、同じ役所へ苦情を出した、と伝えられます。
+    image: assets/images/20261115_kit_valencia/p_old_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Valencia_CF
+  - https://es.wikipedia.org/wiki/Valencia_Club_de_F%C3%BAtbol
+- id: chest
+  heading: 胸の広告と、シャツを作る会社は、どう移り変わったのか
+  bg: assets/images/20261115_kit_valencia/p_kit_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 胸の広告は1985年から。フォード、テーマパーク、トヨタと続き、2023年から不動産会社。作る会社は1990年から36年で7期
+  card: *chest
+  say:
+  - text: バレンシアの胸にも、広告が入ってきました。
+    image: assets/images/20261115_kit_valencia/p_kit_w.jpg
+    card: none
+  - text: 初めて入ったのは、1985年から86年の季です。地元の貯蓄銀行でした。
+    image: assets/images/20261115_kit_valencia/p_kit_w.jpg
+    card:
+      <<: *chest
+      highlight_row: 0
+    emph: true
+  - text: その季の終わり、クラブは、1931年以来の2部降格となります。
+    image: assets/images/20261115_kit_valencia/p_old_w.jpg
+    card: none
+  - text: 1995年からの3季は、フォード。
+    image: assets/images/20261115_kit_valencia/p_fans_w.jpg
+    card:
+      <<: *chest
+      highlight_row: 1
+  - text: 1998年からは、テーマパークのテラ・ミティカです。
+    image: assets/images/20261115_kit_valencia/p_fans_w.jpg
+    card:
+      <<: *chest
+      highlight_row: 2
+  - text: 2003年からの5季は、日本のトヨタでした。
+    image: assets/images/20261115_kit_valencia/p_fans_w.jpg
+    card:
+      <<: *chest
+      highlight_row: 3
+  - text: 2023年からは、不動産会社のTMです。
+    image: assets/images/20261115_kit_valencia/p_fans_w.jpg
+    card:
+      <<: *chest
+      highlight_row: 4
+  - text: シャツを作る会社は、さらに、目まぐるしく替わります。
+    image: assets/images/20261115_kit_valencia/p_kit_w.jpg
+    card:
+      <<: *maker
+      highlight_row: 0
+  - text: 1990年のプーマに始まり、1993年にルアンビ。
+    image: assets/images/20261115_kit_valencia/p_kit_w.jpg
+    card:
+      <<: *maker
+      highlight_row: 1
+  - text: 2000年からは、ナイキが9年。いちばん長い契約です。
+    image: assets/images/20261115_kit_valencia/p_kit_w.jpg
+    card:
+      <<: *maker
+      highlight_row: 2
+    emph: true
+  - text: 2009年にカッパ、2011年にジョマ、2014年にアディダス。
+    image: assets/images/20261115_kit_valencia/p_fans_w.jpg
+    card:
+      <<: *maker
+      highlight_row: 5
+  - text: 2019年に、プーマが戻ってきました。
+    image: assets/images/20261115_kit_valencia/p_fans_w.jpg
+    card:
+      <<: *maker
+      highlight_row: 6
+  - text: 1990年からの36年で、7期です。
+    image: assets/images/20261115_kit_valencia/p_fans_w.jpg
+    card: none
+  sources:
+  - https://es.wikipedia.org/wiki/Valencia_Club_de_F%C3%BAtbol
+  - https://es.wikipedia.org/wiki/Historia_del_uniforme_del_Valencia_Club_de_F%C3%BAtbol
+  - https://en.wikipedia.org/wiki/Valencia_CF
+- id: view
+  viewpoint: true
+  heading: 見立て・白と黒の107年、コウモリの788年、メーカーの平均5年
+  bg: assets/images/20261115_kit_valencia/p_fans_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 白と黒は107年、コウモリの伝説は788年。シャツを作る会社は36年で7期、平均約5年。白黒の長さは、1期の約21倍
+  card: *view
+  say:
+  - text: バレンシアの色と紋章と、シャツの会社を、年数で並べます。
+    image: assets/images/20261115_kit_valencia/p_fans_w.jpg
+    card: none
+  - text: 白と黒は、1919年の創立の決まりから、107年。
+    image: assets/images/20261115_kit_valencia/p_fans_w.jpg
+    card:
+      <<: *view
+      highlight_row: 0
+  - text: コウモリは、1238年の伝説まで数えれば、788年です。
+    image: assets/images/20261115_kit_valencia/p_bat_w.jpg
+    card:
+      <<: *view
+      highlight_row: 1
+  - text: メーカーは、1990年から36年で、7期。
+    image: assets/images/20261115_kit_valencia/p_bat_w.jpg
+    card:
+      <<: *view
+      highlight_row: 2
+  - text: 1期の長さは、平均して、約5年です。
+    image: assets/images/20261115_kit_valencia/p_bat_w.jpg
+    card:
+      <<: *view
+      highlight_row: 3
+    mark:
+      kind: circle
+      row: 3
+  - text: 白と黒の107年は、メーカー1期の、約21倍です。
+    image: assets/images/20261115_kit_valencia/p_kit_w.jpg
+    card:
+      type: calc
+      title: 白と黒の年月は、メーカー1期の何倍か（自分で割った）
+      terms:
+      - - 107年
+        - 白と黒
+      - - 5.1年
+        - メーカー1期
+      - - 約21倍
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+    emph: true
+  - text: 守ってきたのは、白と黒、そしてコウモリでした。
+    image: assets/images/20261115_kit_valencia/p_kit_w.jpg
+    card: none
+  - text: 替わり続けてきたのは、胸の広告と、メーカーでした。
+    image: assets/images/20261115_kit_valencia/p_kit_w.jpg
+    card: none
+    emph: true
+  sources:
+  - https://es.wikipedia.org/wiki/Historia_del_uniforme_del_Valencia_Club_de_F%C3%BAtbol
+  - https://en.wikipedia.org/wiki/Valencia_CF

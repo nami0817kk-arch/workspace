@@ -1,0 +1,484 @@
+format: news
+voice_min: 0
+slot: other_1
+date: 2026年11月11日
+people:
+- ウニオン・ベルリン
+- 遠藤渓太
+- 原口元気
+- ウルス・フィッシャー
+- マウロ・ルストリネッリ
+- カリム・ベニャミナ
+- トルステン・マトゥシュカ
+- マックス・クルーゼ
+short_title: ウニオン、ファンが建てた本拠地を今季で離れるわけ
+series: ブンデスリーガチーム紹介
+theme:
+  id: bd_unionberlin
+  league: germany
+  league_name: ブンデスリーガ
+  kind: other
+  topic: ウニオン・ベルリン
+  title: ウニオン・ベルリン、ファンが自分で建てた本拠地を、なぜ今季かぎりで離れるのか？
+  question: ファンが自分で建てた本拠地を、ウニオンはなぜ今季かぎりで離れるのか
+  hook: ''
+  lead: 東ベルリンの「鉄の人たち」、ウニオン。
+  opening_image: assets/stats/bd_unionberlin_data_t.png
+  takeaway: 11月11日時点で、リーグ戦9試合の勝ち点は1試合0.78で、昨シーズン34試合の1.15を下回る。失点は2.33で昨シーズンの1.71より多い。勝ち点7のうち6はホームの5試合で、アウェーは4試合で1。いまの形のアルテ・フェルステライで戦うのは今季が最後で、ここで勝ち点を積めるかが物差し
+thumbnail:
+  line1: ウニオン・ベルリン
+  line2: 本拠地で戦うのは今季が最後
+  crest_main:
+  - ウニオン・ベルリン
+  tags:
+  - ウニオン・ベルリン
+  - ウニオンベルリン
+  - ブンデスリーガ
+  - 原口元気
+  - 遠藤渓太
+  layout: classic
+  board: assets/stats/bd_unionberlin_data_t.png
+sections:
+- id: data
+  heading: いま見る理由と基礎DATA
+  main: true
+  tier: 背景
+  telop: ファン手づくりの本拠地は今季が最後。2023年にチャンピオンズリーグ初出場
+  narrator: キャスター
+  say:
+  - short_only: true
+    text: ウニオン・ベルリンは、東ベルリンで生まれたクラブです。
+  - text: 本拠地は、ファンが自分たちの手で建て直したスタジアムです。
+    image: assets/stats/bd_unionberlin_data_r1.png
+    no_telop: true
+  - text: その本拠地で戦うのは、今季が最後になります。
+    image: assets/stats/bd_unionberlin_data_r2.png
+    no_telop: true
+  - text: 2023年には、チャンピオンズリーグに初めて出ました。
+    image: assets/stats/bd_unionberlin_data_r3.png
+    no_telop: true
+  - image: assets/stats/bd_unionberlin_data0.png
+    text: 創立は**1966年**。前身は、1906年にできたクラブです。
+    no_telop: true
+  - image: assets/backgrounds/stadium_ウニオンベルリン.png
+    text: 本拠地のアルテ・フェルステライには、**2万2012人**が入ります。
+  - image: assets/stats/bd_unionberlin_cups.png
+    text: 東ドイツカップは、1968年に**1回**優勝しています。
+    no_telop: true
+  - image: assets/stats/bd_unionberlin_data6.png
+    text: ヨーロッパの舞台は、2023年のチャンピオンズリーグが初めてです。
+    no_telop: true
+  - image: assets/stats/bd_unionberlin_data8.png
+    text: 昨シーズンは**11位**。勝ち点39で、1部に残りました。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/1._FC_Union_Berlin
+  - https://en.wikipedia.org/wiki/2026–27_1._FC_Union_Berlin_season
+  - https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings
+  bg: assets/backgrounds/stadium_ウニオンベルリン_in.png
+  official: false
+- id: stadium
+  heading: ファンが自分で建てた本拠地を、ウニオンはなぜ今季かぎりで離れるのか
+  tier: 背景
+  telop: 2008年に改修を決め、ファン2000人超が14万時間働いた。今季が現スタジアム最後の季
+  narrator: 解説
+  main: true
+  say:
+  - text: 本拠地のアルテ・フェルステライは、1920年に開場した、古い競技場です。
+    image: assets/images/bd_unionberlin_builders/scene.jpg
+  - 2008年、クラブは建て直しを決めます。
+  - お金が足りず、工事にはファンが加わりました。
+  - text: 2000人以上のファンが、あわせて**14万時間**働きました。
+    card:
+      type: stats
+      title: 本拠地を建てたファン
+      items:
+      - - '2000'
+        - 人超
+        - 建設に加わったファン
+      - - 14万
+        - 時間
+        - あわせて働いた時間
+      - - 2万2012
+        - 人
+        - いまの収容人数
+      focus: 1
+  - 1日8時間なら、1人で約48年ぶんの仕事です。
+  - text: ベルリンで2番目に大きなスタジアム。座席は3617で、残りは立ち見席です。
+    card: none
+    image: assets/images/bd_unionberlin_gegen/scene.jpg
+  - 2017年、クラブは3万7000人への増築を発表します。
+  - ところが、駅や電車など交通の準備が追いつかず、計画は遅れました。
+  - 2025年11月、3万2500人へと見直します。
+  - text: 工事のため、今季がいまのスタジアムで戦う最後のシーズンです。
+    image: assets/backgrounds/stadium_ウニオンベルリン.png
+  - 次の1シーズンは、ベルリンのオリンピアシュタディオンで戦います。
+  - 2028年に、広くなったアルテ・フェルステライへ戻る予定です。
+  sources:
+  - https://en.wikipedia.org/wiki/1._FC_Union_Berlin
+  - https://en.wikipedia.org/wiki/Stadion_An_der_Alten_F%C3%B6rsterei
+  bg: assets/backgrounds/stadium_ウニオンベルリン_in.png
+  official: false
+- id: rise
+  heading: 3部リーグにいたウニオンは、どうやって欧州の舞台までたどり着いたのか
+  tier: 背景
+  telop: 2009年に3部で初代王者、2019年に初の1部。2023年にチャンピオンズリーグ初出場
+  narrator: 解説
+  say:
+  - text: 2009年、新しくできた3部リーグで、ウニオンは初代の王者になります。
+    image: assets/backgrounds/stadium_ウニオンベルリン_in.png
+    card:
+      type: table
+      title: ウニオンの歩み
+      columns:
+      - 年
+      - 出来事
+      rows:
+      - - 2009年
+        - 3部リーグの初代王者
+      - - 2019年
+        - 初めてのブンデスリーガ
+      - - 2021年
+        - 7位。ヨーロッパへ
+      - - 2022年
+        - 5位。ヨーロッパリーグへ
+      - - 2023年
+        - 4位。チャンピオンズリーグへ
+  - 翌2018年から2019年のシーズン、2部で入れ替え戦に勝ち、初めて1部へ。
+  - 相手はシュツットガルトでした。
+  - text: そこから、7位、5位、4位と順位を上げていきます。
+    card: none
+    image: assets/images/bd_unionberlin_gegen/scene.jpg
+  - 2023年5月、最終節でブレーメンに1対0で勝って、4位でチャンピオンズリーグへ。
+  - クラブ史上初めてのチャンピオンズリーグは、6試合で2引き分け。
+  - それでも最終節にフライブルクに2対1で勝って、降格を免れました。
+  sources:
+  - https://en.wikipedia.org/wiki/1._FC_Union_Berlin
+  bg: assets/backgrounds/stadium_ウニオンベルリン_in.png
+  official: false
+- id: japan
+  heading: 遠藤渓太と原口元気。ウニオンと日本は、どうつながってきたのか
+  tier: 背景
+  telop: 2020年に遠藤渓太、2021年に原口元気が加入。原口はリーグ戦41試合2得点
+  narrator: 解説
+  say:
+  - text: ウニオンには、遠藤渓太と原口元気という日本人が在籍しました。
+    image: assets/backgrounds/stadium_ウニオンベルリン_in.png
+    card:
+      type: table
+      title: ウニオンと日本
+      columns:
+      - 年
+      - 出来事
+      rows:
+      - - 2020年
+        - 遠藤渓太が加入
+      - - 2021年
+        - 原口元気が加入
+      - - 2023年
+        - 原口が退団
+  - 遠藤渓太は2020年、横浜F・マリノスから加わりました。
+  - 1年目は、リーグ戦**16試合1得点**。
+  - text: 原口元気は2021年から、2年間ウニオンでプレー。
+    card: none
+    image: assets/images/bd_unionberlin_pair_japan/01.jpg
+  - リーグ戦で**41試合2得点**。
+  - 在籍した2季は、5位と4位。順位が、そのままヨーロッパの舞台につながりました。
+  sources:
+  - https://en.wikipedia.org/wiki/Keita_End%C5%8D
+  - https://en.wikipedia.org/wiki/Genki_Haraguchi
+  bg: assets/backgrounds/stadium_ウニオンベルリン_in.png
+  official: false
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 愛称は「鉄の人たち」。クリスマスの合唱は89人から2万7500人へ
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 愛称
+      - アイゼルネン＝鉄の人たち
+    - - クリスマス
+      - 2003年89人→2013年2万7500人
+  say:
+  - text: 特徴の1つめは、愛称です。「アイゼルネン」は、ドイツ語で「鉄の人たち」。
+    image: assets/images/bd_unionberlin_gegen/scene.jpg
+  - 応援歌も、「アイゼルン・ウニオン」。鉄のウニオン、という意味です。
+  - 2つめは、クリスマスの歌。2003年に、89人のファンが集まって始まりました。
+  - 2013年には、**2万7500人**が集まりました。
+  - ろうそくを掲げて、クリスマスの歌と応援歌を歌います。
+  sources:
+  - https://en.wikipedia.org/wiki/1._FC_Union_Berlin
+  bg: assets/backgrounds/stadium_ウニオンベルリン_in.png
+  official: false
+- id: episode
+  heading: 2014年、ウニオンはなぜ、ピッチに800台を超えるソファーを並べたのか
+  tier: 背景
+  telop: 2014年のワールドカップ中、ファンがソファーを持ち込んで観戦。2015年にファン体験賞
+  narrator: 解説
+  card:
+    type: table
+    title: 2014年 ワールドカップのリビングルーム
+    columns: &id001
+    - ''
+    - ''
+    rows:
+    - - 2014年
+      - ピッチにソファー800台超
+  say:
+  - text: 2014年のワールドカップ。ウニオンは、ファンに呼びかけます。
+    image: assets/images/bd_unionberlin_xmas/scene.jpg
+  - 自分のソファーを、スタジアムに持ってきませんか。
+  - text: ピッチには、**800台**を超えるソファーが並びました。
+    card:
+      type: table
+      title: 2014年 ワールドカップのリビングルーム
+      columns: *id001
+      rows:
+      - - 2015年
+        - ファン体験賞を受賞
+  - この企画は、2015年にファン体験賞を受けました。
+  sources:
+  - https://en.wikipedia.org/wiki/1._FC_Union_Berlin
+  bg: assets/backgrounds/stadium_ウニオンベルリン_in.png
+  official: false
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - &id002
+      - ベニャミナ
+      - 2005-2011
+      - 87得点（通算）
+  say:
+  - text: ベニャミナは、東ドイツのドレスデン生まれのフォワード。
+    image: assets/photos/bd/unionberlin/unionberlin_legend_629695d4.jpg
+  - 2005年にウニオンへ加わりました。
+  - 在籍は2011年まで。リーグ戦**190試合62得点**。
+  - 通算では**213試合87得点**。いまも、クラブで最も多い得点です。
+  sources:
+  - https://en.wikipedia.org/wiki/Karim_Benyamina
+  - https://en.wikipedia.org/wiki/Torsten_Mattuschka
+  - https://en.wikipedia.org/wiki/Max_Kruse
+  bg: assets/backgrounds/stadium_ウニオンベルリン_in.png
+  official: false
+- id: legends2
+  heading: このクラブを語る3人（2人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id002
+    - &id003
+      - マトゥシュカ
+      - 2005-2014
+      - 246試合52得点
+  say:
+  - text: マトゥシュカは、2005年から2014年まで、9年間、ウニオンの中盤を支えた選手。
+    image: assets/photos/bd/unionberlin/unionberlin_legend_772d83dc.jpg
+  - リーグ戦**246試合52得点**。
+  - 2016年、ベニャミナと並んで引退の試合。
+  - 1万4000人を超えるファンが集まりました。
+  sources:
+  - https://en.wikipedia.org/wiki/Karim_Benyamina
+  - https://en.wikipedia.org/wiki/Torsten_Mattuschka
+  - https://en.wikipedia.org/wiki/Max_Kruse
+  bg: assets/backgrounds/stadium_ウニオンベルリン_in.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id002
+    - *id003
+    - - クルーゼ
+      - 2020-2022
+      - 38試合16得点
+  say:
+  - text: クルーゼは、2020年に加わった攻撃的な選手。
+    image: assets/photos/bd/unionberlin/unionberlin_legend_a4f5ce66.jpg
+  - リーグ戦**38試合16得点**。
+  - 2021年5月、ライプツィヒ戦の後半アディショナルタイムに決勝点。
+  - 2対1の勝利で、20年ぶりのヨーロッパが決まりました。
+  sources:
+  - https://en.wikipedia.org/wiki/Karim_Benyamina
+  - https://en.wikipedia.org/wiki/Torsten_Mattuschka
+  - https://en.wikipedia.org/wiki/Max_Kruse
+  bg: assets/backgrounds/stadium_ウニオンベルリン_in.png
+  official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はルストリネッリ。トゥーンでスイス優勝、2026年5月に就任
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - マウロ・ルストリネッリ
+    - - 就任
+      - 2026年5月
+    - - 前の仕事
+      - スイス・トゥーンの監督
+  say:
+  - text: ウニオンの今季の監督は、スイス人のマウロ・ルストリネッリ。**50歳**です。
+    image: assets/photos/bd/unionberlin/unionberlin_manager_02152569.jpg
+  - 選手としてはフォワード。スイス代表で12試合に出ました。
+  - 2006年のワールドカップのメンバーにも入りました。
+  - 監督としては、スイスのトゥーンを率いました。
+  - 2025年から2026年のシーズンに、スーパーリーグで優勝。
+  - 2026年5月に、ウニオンの監督になりました。
+  sources:
+  - https://en.wikipedia.org/wiki/1._FC_Union_Berlin
+  - https://en.wikipedia.org/wiki/Mauro_Lustrinelli
+  bg: assets/backgrounds/stadium_ウニオンベルリン_in.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は28人です。
+    image: assets/stats/bd_unionberlin_gk.png
+    no_telop: true
+  - image: assets/stats/bd_unionberlin_gk_f.png
+    text: ゴールキーパーは3人。
+    no_telop: true
+  - image: assets/stats/bd_unionberlin_df_f.png
+    text: ディフェンダーは9人。
+    no_telop: true
+  - image: assets/stats/bd_unionberlin_df_f.png
+    text: 主将を務めるのが**クリストファー・トリンメル**。
+    no_telop: true
+  - image: assets/stats/bd_unionberlin_df_f.png
+    text: リーグ戦で**350試合**に出ています。
+    no_telop: true
+  - image: assets/stats/bd_unionberlin_mf_f.png
+    text: ミッドフィールダーは10人。
+    no_telop: true
+  - image: assets/stats/bd_unionberlin_mf_f.png
+    text: アンドラーシュ・シェーファーはハンガリー代表で**49試合**。
+    no_telop: true
+  - image: assets/stats/bd_unionberlin_mf_f.png
+    text: ラニ・ケディラはリーグ戦で**157試合**。
+    no_telop: true
+  - image: assets/stats/bd_unionberlin_fw_f.png
+    text: フォワードは6人。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/1._FC_Union_Berlin
+  bg: assets/backgrounds/stadium_ウニオンベルリン_in.png
+  official: false
+- id: season
+  heading: 最後のシーズンを迎えるウニオンは、本拠地でどれだけ勝ち点を積めているのか
+  tier: 報道
+  telop: 11月11日時点で9試合1勝4分4敗。7得点21失点。16位
+  narrator: 解説
+  card:
+    type: table
+    title: ブンデスリーガの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - フランクフルト（ホーム）
+      - 3対3
+    - - 第2節
+      - レバークーゼン（アウェー）
+      - 0対4
+    - - 第3節
+      - シャルケ（ホーム）
+      - 1対3
+    - - 第4節
+      - バイエルン（アウェー）
+      - 0対7
+    - - 第5節
+      - エルフェルスベルク（ホーム）
+      - 1対0
+    - - 第6節
+      - ドルトムント（ホーム）
+      - 0対0
+    - - 第7節
+      - アウクスブルク（アウェー）
+      - 1対1
+    - - 第8節
+      - ケルン（ホーム）
+      - 1対1
+    - - 第9節
+      - フライブルク（アウェー）
+      - 0対2
+  say:
+  - text: ウニオンはブンデスリーガで9試合を終えて、**1勝4引き分け4敗**です。
+  - 順位は**16位**、勝ち点は**7**です。
+  - text: ホームの5試合は、1勝3分け1敗で勝ち点6。
+    card:
+      type: stats
+      title: 今季のリーグ戦（9試合）
+      items:
+      - - '6'
+        - ''
+        - ホームの勝ち点
+      - - '1'
+        - ''
+        - アウェーの勝ち点
+      - - '21'
+        - ''
+        - 失点
+      focus: 0
+  - text: 勝ち点7のうち、**6**はホームで取ったものです。
+    mark:
+      kind: circle
+      item: 0
+  - アウェーの4試合は、1分け3敗。得点は1、失点は14です。
+  - text: 鍵は、最後の本拠地での勝ち点。
+    card: none
+    image: assets/backgrounds/stadium_ウニオンベルリン_in.png
+  - 勝ち点を試合数で割ると**0.78**。昨シーズンの1.15を下回っています。
+  - 失点は1試合**2.33**で、昨シーズンの1.71より増えました。
+  - 得点は1試合0.78で、昨シーズンの1.29には届いていません。
+  - text: 11月21日には、ホームでライプツィヒと戦います。
+    image: assets/backgrounds/stadium_ウニオンベルリン.png
+  sources:
+  - https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_1._FC_Union_Berlin_season
+  bg: assets/backgrounds/stadium_ウニオンベルリン_in.png
+  official: false
+  viewpoint: true
+watch: 毎日、数字でサッカーを読み解きます

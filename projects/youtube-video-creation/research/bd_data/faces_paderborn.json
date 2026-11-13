@@ -1,0 +1,19 @@
+{
+ "paderborn": {
+  "ヒューネマイアー": {
+   "role": "legend",
+   "file": "assets/photos/bd/paderborn/paderborn_legend_c0e9c29b.jpg",
+   "page": "Uwe Hünemeier"
+  },
+  "ヴランチッチ": {
+   "role": "legend",
+   "file": "assets/photos/bd/paderborn/paderborn_legend_b6e1cd3a.jpg",
+   "page": "Mario Vrančić"
+  },
+  "バウムガルト": {
+   "role": "legend",
+   "file": "assets/photos/bd/paderborn/paderborn_legend_54b71a91.jpg",
+   "page": "Steffen Baumgart"
+  }
+ }
+}

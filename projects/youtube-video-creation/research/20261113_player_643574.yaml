@@ -1,0 +1,548 @@
+# 佐野海舟（マインツ／日本代表）の紹介。選手紹介の8節の型（2026-11-13 公開分、シリーズ「有名選手の紹介」。key: player_643574）。情報の時点は 2026-11-11（クラブの試合は 11/7 のマインツ対バイエルン戦まで）。
+# **FotMob は使わない。**数字は Transfermarkt API の試合記録（控え research/raw/20261113_sano_tm.json）、英語版・日本語版 Wikipedia（控え research/raw/20261113_sano_wiki_*.wikitext）、自分で数えたもの。
+# **選んだ理由・重なり確認（2026-11-11）**：player_pool.py list で紹介を出していない上位は 26 ヌメチャ・30 カマラ・32 佐野海舟・33 ファン・ヘッケ。11/14 に日本代表がブラジルと再戦する（11/4 の指示書・JFA 発表）ので、日本代表・W杯に絡む話（ヒットの条件）の佐野を推した。
+#   外した候補：ヌメチャ（11/7 のシュロッターベックと同じドルトムント。日本との縁が無い）／カマラ（今季13試合2点で題が弱い）。
+#   重なり：紹介は 0 件（scripts/ を「佐野海舟」で grep）。ただしニュースが 10/28（SDの話）・11/8（バイエルン戦）・11/11（ブラジル再戦の本人の言葉）と直近3本ある。
+#   → 11/11 のニュースが使った本人の言葉（「そのゴールで知ってくれるのは嬉しい」）・途中交代の数え方（10/28）は使わない。W杯のゴールは「どう奪ったか」（Number の7月のインタビュー）に絞る。
+# **現役・今季もブンデス1部**：TM の試合記録で 2026-11-07 のブンデスリーガ第9節（マインツ 1-2 バイエルン）まで先発90分。英語版 Wikipedia も current club = Mainz 05・背番号6。
+# **数字の軸**：通算（TM と英語版 Wikipedia の年別表。11/7 まで）：町田（2019〜22）119試合8点（英語版 Wikipedia の年別 0・1・6・1）／鹿島（2023〜24）58試合1点／マインツ（2024〜）TM で 36＋48＋11＝95試合2点／日本代表19試合1点（英語版 Wikipedia、10/5 まで。その後は未出場）→ 291試合12点。
+#   マインツの内訳（TM）：24/25 36試合0点、25/26 48試合2点（9/20 ブンデス、4/9 カンファレンスL）、26/27 11試合0点。英語版 Wikipedia（10/30 まで）は 36＋47＋10＝93。TM は予選2試合を数えるので差が出る。台本は TM の 95 を使い、「11月7日まで」と添える。
+#   市場価値（TM）：2019-06 2.5万ユーロ（町田）→ 2024-06 150万（鹿島）→ 2025-03 1700万 → 2025-06 2000万 → 2026-05 4000万 → 2026-07 5000万（最高）→ 2026-10 4000万（いま）。5000÷150＝33.3 で「およそ33倍」。
+# **ブンデス1年目（24/25）の数字**：ドイツ誌 kicker の集計を Goal.com 日本版（2025-05-26）が紹介：走行距離 394km（リーグトップ）・デュエル勝利 209回（最多）・インターセプト 65回（最多）・スプリント 764回（最多）・空中戦勝利 162回（3位）・最高時速 34.42km（3位）・イエロー 3枚。台本は媒体名を出さない。
+# **名前・幼少期**：ゲキサカ 2019-01-17（名は父が好きな勝海舟に由来、中学で回収に特化）／Number Web 2023-11-24（最初は「龍馬」の予定、祖父の言葉で勝海舟、下駄、父の理由、米子北の恩師の言葉）。
+# **マインツの獲得の経緯**：ハイデルSD（Bild 取材。theWORLD 2025-05-22 が伝えた）「ある代理人が別のフォワードを推してきていた。それで私は試合のビデオを見たのだが、その時すぐにカイシュウのことが気になった」。
+# **ブラジル戦（2026-06-29、ヒューストンの NRG スタジアム）**：ESPN の試合データ（11/11 取材の控え 20261111_sano_brazil_rematch.yaml に記録済み）で 29分 佐野（枠の外から右足、ゴール左下）／56分 カゼミーロ／90+5分 ブラジルの勝ち越し（英語版 Wikipedia の引用元の見出しでマルティネッリ）。ブラジル 2-1 日本。
+#   Number Web 2026-07-23（ミムラユウスケ。W杯直後の単独インタビュー）：ダニーロの横パスを読んでカット。当初は上田綺世へのパスを考えていたが、ブラジルのCB2人が上田の動きを警戒して寄せを緩めたのでシュートに変えた。本人の言葉は 2〜3ページ目から原文のまま。
+#   W杯の佐野（TM）：6/14 オランダ戦（2-2）90分先発、6/21 チュニジア戦（4-0）90分先発でアシスト1、6/25 は出場なし（ベンチ入り）、6/29 ブラジル戦 90分先発で1得点。
+# **入れなかったもの**：2024年夏から2025年春の代表の話（私生活・法的な問題は入れない決まり）、結婚、身長以外の私的な事情、10/28 の途中交代の話（直近のニュースと重なる）、「エンゴロ・カンテが理想」（出典の本文が読めなかった）、J2の「ボール奪取回数1位」（元のサイトを開けていない）。
+# **写真**：Gekisaka（©Koki NAGAHAMA/GEKISAKA、2560px、10日の代表練習）、サッカーキング（2000px、ロゴは横版で外した）、Football ZONE（マインツ。900〜1200px。写真代理店ではない）。**どれも 11/8・11/11 のニュースで使った写真の再利用**（Commons の Kaishu Sano の写真は 400px しか無く、取り直しの Commons は 429 で2分待っても返らなかった）。ショートは作らないので 900px の写真は本編の節だけに使う。
+date: 2026年11月11日
+slot: other_1
+format: news
+series: 有名選手の紹介
+people:
+- 佐野海舟
+theme:
+  id: player_643574
+  league: germany
+  league_name: ブンデスリーガ
+  kind: other
+  topic: マインツ
+  title: 佐野海舟ってどんな選手？ ブンデス1年目で4部門リーグ1位、奪い方の秘密とは
+  question: 佐野海舟は、なぜブンデスリーガで奪う数字がいちばん多く、W杯のブラジル戦でも奪ってゴールを決められたのか
+  takeaway: 市場価値は2024年6月の150万ユーロから2026年7月の5000万ユーロへ、およそ33倍。その間のマインツでの得点は95試合で2点で、値を押し上げたのは、リーグ最多の球際209回とインターセプト65回のような、奪う数字だった
+  nameplate: 佐野海舟｜マインツ MF／日本代表
+  opening_image: assets/images/20261113_player_643574/02_w.jpg
+  end_bg: assets/images/20261113_player_643574/08_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+watch: 毎日、数字でサッカーを読み解きます
+short_title: 佐野海舟ってどんな選手？
+thumbnail:
+  line1: 佐野海舟、通算291戦12点
+  line2: W杯でブラジルから先制弾
+  tags:
+  - マインツ
+  - 日本代表
+  photo: assets/images/20261113_player_643574/panel_01.jpg
+  photos: []
+sections:
+- id: hook
+  heading: ブンデス1年目でリーグ1位が4つ。佐野海舟は、どう奪う選手なのか
+  tier: 報道
+  telop: ブンデス1年目、リーグ1位が4つ
+  narrator: 解説
+  card: &hook_card
+    type: stats
+    title: 佐野海舟の数字
+    items:
+    - - '4'
+      - 部門
+      - ブンデス1年目でリーグ1位
+    - - '3'
+      - 枚
+      - その1年目のイエローカード
+    - - '29'
+      - 分
+      - W杯ブラジル戦の先制ゴール
+    focus: 0
+  say:
+  - text: ブンデスリーガの1年目、佐野海舟は、4つの部門でリーグ1位になりました。
+    image: assets/images/20261113_player_643574/02_w.jpg
+    card: none
+    emph: true
+  - text: ボールを奪う数字でも、走る数字でも、リーグの一番でした。
+    card:
+      <<: *hook_card
+      focus: 0
+  - text: しかも、警告を受けたのは、3回でした。
+    image: assets/images/20261113_player_643574/08_w.jpg
+    card:
+      <<: *hook_card
+      focus: 1
+  - text: そして2026年6月。W杯のブラジル戦で、奪ったボールから、先制ゴールを決めます。
+    card:
+      <<: *hook_card
+      focus: 2
+  - text: どんな奪い方なのか。数字と、本人の言葉で追います。
+    image: assets/images/20261113_player_643574/01_w.jpg
+    card: none
+  quotes_from: []
+  sources:
+  - https://www.goal.com/jp/ニュース/bundesliga-mainz-kaishu-sano-20250526/blte5ff824eb1e1e662
+  - https://number.bunshun.jp/articles/-/871268
+  - https://www.transfermarkt.com/kaishu-sano/profil/spieler/643574
+- id: data
+  heading: 佐野海舟は、いまどこで、いくらと見られている選手か
+  tier: 報道
+  telop: 佐野海舟の基礎DATA
+  narrator: 解説
+  card: &data_card
+    type: table
+    title: 佐野海舟（マインツ）
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 所属
+      - マインツ
+    - - ポジション
+      - 守備的ミッドフィールダー
+    - - 生年月日
+      - 2000年12月30日（25歳）
+    - - 出身
+      - 岡山県津山市
+    - - 身長
+      - 176cm
+    - - 契約・市場価値
+      - 2028年6月まで・4000万ユーロ
+    - - 日本代表
+      - 19試合1得点
+    source: Transfermarkt
+  say:
+  - text: 佐野海舟は、マインツの守備的ミッドフィールダーです。
+    image: assets/images/20261113_player_643574/02_w.jpg
+    card:
+      <<: *data_card
+      highlight_row: 0
+  - text: 2000年12月30日、岡山県津山市の生まれ。いま25歳です。
+    card:
+      <<: *data_card
+      highlight_row: 2
+  - text: 身長は176センチ。契約は、2028年の6月まで。
+    card:
+      <<: *data_card
+      highlight_row: 5
+  - text: 日本代表で決めた1点は、W杯のブラジル戦でした。
+    card:
+      <<: *data_card
+      highlight_row: 6
+  - text: 市場価値は、4000万ユーロ。今年の7月に付けた最高から、少し下がっています。
+    image: assets/images/20261113_player_643574/04_w.jpg
+    card:
+      <<: *data_card
+      highlight_row: 5
+    emph: true
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/kaishu-sano/profil/spieler/643574
+  - https://www.transfermarkt.com/kaishu-sano/marktwertverlauf/spieler/643574
+  - https://en.wikipedia.org/wiki/Kaishū_Sano
+- id: origin
+  heading: 「海舟」という名前と、下駄で走った少年時代には、どんな理由があったのか
+  tier: 背景
+  telop: 名前の由来と、下駄
+  narrator: 解説
+  say:
+  - text: 海舟という名前は、幕末の偉人、勝海舟から来ています。
+    image: assets/images/20261113_player_643574/08_w.jpg
+    card: none
+  - text: 父は最初、坂本龍馬にちなんで「龍馬」とつけるつもりでした。
+    card: none
+  - text: ところが祖父が、短命で終わった偉人より、長い人生を送ってほしいと言った。
+    image: assets/images/20261113_player_643574/02_w.jpg
+    card: none
+  - text: そこで、龍馬の師匠だった勝海舟の名前になったそうです。
+    card: none
+  - text: 津山市で生まれた佐野は、小さいころ、運動靴ではなく下駄で走り回っていました。
+    image: assets/images/20261113_player_643574/01_w.jpg
+    card: none
+    emph: true
+  - text: 父の考えで、足を正しくつく感覚を、体に覚えさせるためでした。
+    card: none
+  - text: 高校の恩師は、佐野の足の裏を初めて見て、その分厚さに驚いたといいます。
+    image: assets/images/20261113_player_643574/04_w.jpg
+    card: none
+  quotes_from: []
+  sources:
+  - https://number.bunshun.jp/articles/-/859681
+  - https://web.gekisaka.jp/news/jleague/detail/?264398-264398-fl
+- id: career
+  heading: 目立たなかった中学生は、どうやってマインツまで見つけられたのか
+  tier: 背景
+  telop: 町田、鹿島、マインツ
+  narrator: 解説
+  card: &career_card
+    type: timeline
+    title: 佐野海舟の歩み
+    rows:
+    - - '2007'
+      - 津山のFCヴィパルテでサッカーを始める
+    - - '2016'
+      - 米子北高校へ
+    - - '2019'
+      - FC町田ゼルビアへ
+    - - '2023'
+      - 鹿島アントラーズへ
+    - - '2024'
+      - マインツへ（7月）
+    focus: '2016'
+  say:
+  - text: 中学のころの佐野は、あまり目立つタイプではなかったと話しています。
+    image: assets/images/20261113_player_643574/01_w.jpg
+    card:
+      <<: *career_card
+      focus: '2007'
+  - text: そこでプレーを見直し、セカンドボールの回収と、インターセプトに絞りました。
+    card:
+      <<: *career_card
+      focus: '2007'
+  - text: 進んだのは山陰の名門、米子北高校。そこから二部のFC町田ゼルビアへ。
+    image: assets/images/20261113_player_643574/08_w.jpg
+    card:
+      <<: *career_card
+      focus: '2019'
+  - text: 2023年に鹿島アントラーズへ移り、J1で27試合に出ました。
+    card:
+      <<: *career_card
+      focus: '2023'
+  - text: そして2024年の7月、ドイツのマインツへ。4年契約でした。
+    image: assets/images/20261113_player_643574/02_w.jpg
+    card:
+      <<: *career_card
+      focus: '2024'
+    emph: true
+  - text: マインツが佐野を見つけたきっかけは、別の選手のビデオでした。
+    image: assets/images/20261113_player_643574/04_w.jpg
+    card: none
+  - text: マインツのスポーツディレクター、ハイデルは、こう振り返っています。
+    card: none
+  - text: 代理人が、別のフォワードを売り込んできた。
+    image: assets/images/20261113_player_643574/08_w.jpg
+    card: none
+  - text: ところが、その試合の映像を見ると、すぐに佐野のことが気になった。
+    card: none
+  - text: スカウトに分析させたら、全員が魅了されていた、と。
+    card: none
+  quotes_from: []
+  sources:
+  - https://web.gekisaka.jp/news/jleague/detail/?264398-264398-fl
+  - https://en.wikipedia.org/wiki/Kaishū_Sano
+  - https://www.theworldmagazine.jp/20250522/01world/germany/451791
+- id: style
+  heading: 佐野海舟の数字は、ブンデスリーガの中でどこが飛び抜けていたのか
+  tier: 報道
+  telop: ブンデス1年目の数字
+  narrator: 解説
+  card: &style_card1
+    type: table
+    title: 佐野海舟 ブンデス1年目の数字（1）
+    columns:
+    - 項目
+    - 数字
+    - リーグの中で
+    rows:
+    - - 走行距離
+      - 394km
+      - 1位
+    - - 球際に勝った回数
+      - 209回
+      - 1位
+    - - インターセプト
+      - 65回
+      - 1位
+    - - 全力で走った回数
+      - 764回
+      - 1位
+    source: kicker（Goal.com 日本版 2025-05-26）
+    highlight_row: 0
+  say:
+  - text: 佐野海舟の、2024年から25年のシーズン。ブンデスリーガ1年目の数字です。
+    image: assets/images/20261113_player_643574/01_w.jpg
+    card:
+      <<: *style_card1
+      highlight_row: 0
+  - text: 走った距離は、394キロ。リーグ1位です。
+    card:
+      <<: *style_card1
+      highlight_row: 0
+  - text: 球際に勝った回数は209回。インターセプトは65回。
+    image: assets/images/20261113_player_643574/02_w.jpg
+    card:
+      <<: *style_card1
+      highlight_row: 1
+  - text: どちらも、リーグでいちばん多い数字でした。
+    card:
+      <<: *style_card1
+      highlight_row: 2
+    emph: true
+  - text: 全力で走った回数も、764回で1位でした。
+    card:
+      <<: *style_card1
+      highlight_row: 3
+  - text: 空中戦に勝った回数は162回で3位。最高時速は34.42キロで、これも3位です。
+    image: assets/images/20261113_player_643574/08_w.jpg
+    card: &style_card2
+      type: table
+      title: 佐野海舟 ブンデス1年目の数字（2）
+      columns:
+      - 項目
+      - 数字
+      - リーグの中で
+      rows:
+      - - 空中戦に勝った回数
+        - 162回
+        - 3位
+      - - 最高時速
+        - 34.42km
+        - 3位
+      - - イエローカード
+        - 3枚
+        - ―
+      source: kicker（Goal.com 日本版 2025-05-26）
+      highlight_row: 0
+  - text: 奪って、走って、戦う。その数字が、ブンデス1年目の佐野でした。
+    card:
+      <<: *style_card2
+      highlight_row: 2
+  quotes_from: []
+  sources:
+  - https://www.goal.com/jp/ニュース/bundesliga-mainz-kaishu-sano-20250526/blte5ff824eb1e1e662
+- id: words
+  heading: 佐野海舟は、ボールを奪う前に、何を考えているのか
+  tier: 報道
+  telop: 本人の言葉
+  narrator: 解説
+  card: &words_card
+    type: document
+    label: W杯後のインタビュー（2026年7月）
+    paragraphs:
+    - 守備をしているときに『自分が攻撃のプレーヤーだったら、どういうプレーをしたらここにパスを出すか』と考えていくんです。
+    highlight:
+    - 自分が攻撃のプレーヤーだったら
+    - ここにパスを出すか
+  say:
+  - text: その奪い方を、本人は、W杯のあとのインタビューで説明しています。
+    image: assets/images/20261113_player_643574/04_w.jpg
+    card: none
+  - voice: 佐野海舟
+    text: 守備をしているときに『自分が攻撃のプレーヤーだったら、
+    card: *words_card
+  - voice: 佐野海舟
+    text: どういうプレーをしたら、
+    card: *words_card
+    cont: true
+  - voice: 佐野海舟
+    text: ここにパスを出すか』と考えていくんです。
+    card: *words_card
+    cont: true
+    pause: 0.5
+  - text: 相手の攻撃の選手の目線を持つこと。それが、ボールを奪う一番のポイントだと言います。
+    image: assets/images/20261113_player_643574/01_w.jpg
+    card: none
+  - text: 待ち構えて奪うのではなく、あそこにパスを出させる。それが、佐野の奪い方です。
+    card: none
+    emph: true
+  quotes_from:
+  - Number Web https://number.bunshun.jp/articles/-/871268
+  sources:
+  - https://number.bunshun.jp/articles/-/871268
+- id: japan
+  heading: 佐野海舟は、W杯のブラジル戦で、どうやってゴールまで運んだのか
+  tier: 報道
+  telop: W杯ブラジル戦の先制ゴール
+  narrator: 解説
+  card: &japan_card
+    type: table
+    title: 2026年W杯 ラウンド32 ブラジル 2-1 日本（6月29日）
+    columns:
+    - 分
+    - 出来事
+    rows:
+    - - 29分
+      - 佐野が先制（日本）
+    - - 56分
+      - カゼミーロが同点（ブラジル）
+    - - 90分＋5
+      - ブラジルが勝ち越し
+    source: ESPN
+    highlight_row: 0
+  say:
+  - text: W杯の佐野は、初戦のオランダ戦でフル出場。2戦目のチュニジア戦もフル出場でした。
+    image: assets/images/20261113_player_643574/02_w.jpg
+    card: none
+  - text: チュニジア戦では、上田綺世のゴールをアシストしています。
+    card: none
+  - text: 9月には、弟の佐野航大と、代表史上初の兄弟ボランチで先発しました。
+    image: assets/images/20261113_player_643574/07_w.jpg
+    card: none
+  - text: そして6月29日、ラウンド32のブラジル戦。前半の29分です。
+    image: assets/images/20261113_player_643574/01_w.jpg
+    card:
+      <<: *japan_card
+      highlight_row: 0
+  - text: ブラジルは、自陣でパスを回して、攻め筋を探っていました。
+    card: none
+  - text: 佐野は、センターサークルの近くで間合いを詰め、横パスを読んでカット。
+    image: assets/images/20261113_player_643574/02_w.jpg
+    card: none
+    emph: true
+  - text: そのままボールを運んで、ペナルティエリアの外から、右足でゴール左下へ。
+    card:
+      <<: *japan_card
+      highlight_row: 0
+  - text: 運んでいるあいだ、最初に考えていたのは、上田綺世へのパスでした。
+    image: assets/images/20261113_player_643574/01_w.jpg
+    card: none
+  - text: けれども、ブラジルのセンターバックが、上田の動きを警戒して、寄せるのをやめた。
+    card: none
+  - text: それで、シュートに変えたそうです。
+    card: none
+  - text: 日本は後半に2点を許し、ブラジルの2対1の勝ち。
+    image: assets/images/20261113_player_643574/08_w.jpg
+    card:
+      <<: *japan_card
+      highlight_row: 2
+  - text: A代表で、佐野の最初のゴールでした。
+    image: assets/images/20261113_player_643574/08_w.jpg
+    card:
+      <<: *japan_card
+      highlight_row: 2
+  quotes_from: []
+  sources:
+  - https://number.bunshun.jp/articles/-/871268
+  - https://en.wikipedia.org/wiki/Kaishū_Sano
+  - https://www.transfermarkt.com/kaishu-sano/leistungsdatendetails/spieler/643574
+- id: past
+  heading: 佐野海舟は、これまで何試合に出て、何点取ってきたのか
+  tier: 報道
+  telop: 通算291試合12点
+  narrator: 解説
+  card: &past_card
+    type: table
+    title: 佐野海舟 通算（11月7日まで）
+    columns:
+    - 所属
+    - 試合
+    - 得点
+    rows:
+    - - 町田（2019〜22）
+      - '119'
+      - '8'
+    - - 鹿島（2023〜24）
+      - '58'
+      - '1'
+    - - マインツ（2024〜）
+      - '95'
+      - '2'
+    - - 日本代表
+      - '19'
+      - '1'
+    - - 合計
+      - '291'
+      - '12'
+    source: Transfermarkt
+    highlight_row: 0
+  say:
+  - text: ここからは、佐野海舟の通算の数字です。
+    image: assets/images/20261113_player_643574/04_w.jpg
+    card:
+      <<: *past_card
+      highlight_row: 0
+  - text: 町田の4年間で、119試合8点。
+    card:
+      <<: *past_card
+      highlight_row: 0
+  - text: 鹿島では2シーズンで、58試合1点。
+    card:
+      <<: *past_card
+      highlight_row: 1
+  - text: マインツでは、2024年から今月7日までに、95試合2点。
+    card:
+      <<: *past_card
+      highlight_row: 2
+  - text: 日本代表は、19試合1点です。
+    card:
+      <<: *past_card
+      highlight_row: 3
+  - text: 合計は、291試合で12点。
+    card:
+      <<: *past_card
+      highlight_row: 4
+    emph: true
+  - text: ゴールが役目の中心ではない選手の、通算です。
+    image: assets/images/20261113_player_643574/08_w.jpg
+    card: none
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/kaishu-sano/leistungsdatendetails/spieler/643574
+  - https://en.wikipedia.org/wiki/Kaishū_Sano
+- id: view
+  heading: 点が2つの佐野海舟の市場価値は、なぜ2年で33倍になったのか
+  tier: 背景
+  viewpoint: true
+  narrator: 解説
+  telop: 市場価値と、奪う数字
+  card: &view_card
+    type: table
+    title: 佐野海舟の市場価値
+    columns:
+    - 項目
+    - 数字
+    rows:
+    - - 2024年6月（鹿島）
+      - 150万ユーロ
+    - - 2026年7月（マインツ）
+      - 5000万ユーロ
+    - - 上がった倍率
+      - およそ33倍
+    - - その間のマインツでの得点
+      - 95試合で2点
+    source: Transfermarkt
+    highlight_row: 0
+  say:
+  - text: 最後に、佐野海舟を、値段の面から見ます。
+    image: assets/images/20261113_player_643574/08_w.jpg
+    card: none
+  - text: 2024年6月、鹿島にいたころの市場価値は、150万ユーロでした。
+    card:
+      <<: *view_card
+      highlight_row: 0
+  - text: 2026年7月には、マインツで5000万ユーロ。およそ33倍です。
+    image: assets/images/20261113_player_643574/04_w.jpg
+    card:
+      <<: *view_card
+      highlight_row: 2
+    mark:
+      kind: circle
+      row: 2
+    emph: true
+  - text: その間のマインツでの得点は、先ほどの通算のとおり、2点です。
+    card:
+      <<: *view_card
+      highlight_row: 3
+  - text: ゴールで上がった値ではありません。奪う数字が、値を押し上げたと考えられます。
+    image: assets/images/20261113_player_643574/01_w.jpg
+    card: none
+  - text: 今年の10月には、そこから1000万ユーロ下がって、いまの値になっています。
+    card: none
+  - text: 次の見どころは、11月14日。シンガポールでの、ブラジルとの再戦です。
+    image: assets/images/20261113_player_643574/02_w.jpg
+    card: none
+  - text: W杯と同じ相手に、同じ奪い方が通じるか。
+    card: none
+  - text: マインツは22日に、アウクスブルクと戦います。
+    card: none
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/kaishu-sano/marktwertverlauf/spieler/643574
+  - https://www.goal.com/jp/ニュース/bundesliga-mainz-kaishu-sano-20250526/blte5ff824eb1e1e662

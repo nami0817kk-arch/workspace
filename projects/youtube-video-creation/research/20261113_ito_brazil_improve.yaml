@@ -1,0 +1,134 @@
+# 取材メモ（2026年11月13日）伊東純也、防戦一方だったW杯ブラジル戦からの改善を誓う「もっと主体的にアグレッシブに」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-13。requests（ブラウザUA）で本文を全文読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: サッカーキング 2026-11-12（By サッカーキング編集部）「伊東純也「積極的に自分たちからボールを奪いに行く」 防戦一方だったW杯ブラジル戦からの改善誓う「もっと主体的にアグレッシブに」」（全文） https://www.soccer-king.jp/news/japan/national/20261112/2227141.html
+# 写真の出どころ（本人の写真を探すため）:
+#   https://www.soccer-king.jp/news/japan/national/20261112/2227141.html
+#   https://www.soccer-king.jp/news/japan/national/20260918/2206292.html
+#   https://football-tribe.com/japan/2026/10/21/360584/
+#   https://web.gekisaka.jp/news/japan/detail/?462978-462978-fl
+#   https://web.gekisaka.jp/news/japan/detail/?463011-463011-fl
+#   https://web.gekisaka.jp/news/japan/detail/?463014-463014-fl
+#   https://web.gekisaka.jp/news/japan/detail/?463007-463007-fl
+#   https://www.soccer-king.jp/news/japan/national/20261110/2226285.html
+#   https://www.soccer-king.jp/news/japan/national/20261111/2226536.html
+#   https://www.soccer-king.jp/news/japan/national/20261111/2226735.html
+#   https://www.soccer-king.jp/news/japan/national/20261112/2226695.html
+# 出典で確かめたこと:
+#   ・12日、ブラジル戦に向け、シンガポールで練習（連日の非公開練習）。
+#   ・伊東の言葉（原文。サッカーキング。字は変えていない。台本は読点で行に分けた）:
+#       「もっと積極的に自分たちからボールを奪いに行ったりということはチャレンジする部分だと思いますし、もっと主体的に守備でもアグレッシブに行けるように。今、チームとしてミーティングで話しています」
+#       「出た時にできることをやるだけ。その時間が長くても短くても、結果を出せるように」
+#   ・地の文: 昨年10月のキリンチャレンジカップ（日本開催）は2点のリードを許しながら後半に3点で逆転勝ち。W杯の決勝トーナメント1回戦は、佐野海舟のゴールで先制したが、後半は防戦一方で2失点。第3次森保ジャパンは長谷部誠コーチが守備面を担当。9・10月の4連戦では伊東はジョーカー起用でアシストを重ねた（地の文）。
+#   ・ESPN（fifa.world summary event=760487, 2026-06-29）: ブラジル 2-1 日本。29分 佐野海舟で先制、56分 カゼミーロの同点、90分+5 マルティネッリの逆転。78分に伊東純也が町野修斗と交代。「後半は防戦一方」は記事の表現（試合データは得点の分だけ使う）。
+#   ・ESPN（fifa.friendly summary event=757632, 2025-10-14）: 日本 3-2 ブラジル（0-2から）。伊東は62分（中村敬斗）と71分（上田綺世）の2得点をアシスト。台本には使わない（今回の題＝守備の改善に答えない）。
+#   ・日程: 14日ブラジル戦、17日パラグアイ戦。
+# 食い違い: なし。
+# 前の本との重なり: 20261022_ito_junya_aoi_zion（伊東がW杯のMVPに挙げた名前）、20261112_brazil_starters_japan・20261112_kubo_brazil_no_revenge（ブラジル戦の別の話題）。W杯ブラジル戦の守備の改善という伊東の言葉は初出。
+# 【言わないこと】他の選手の同じ話（町田・久保・田中）／ブラジル戦の先発予想／10月のアシストの細部／長谷部コーチの戦術の中身（記事に細部が無い）。
+# 本人の言葉: あり（伊東純也。サッカーキング）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月13日"
+format: news
+no_main: true
+people: [伊東純也, 日本代表, ブラジル代表]
+
+short_style: Y
+short_hook_quote: もっと積極的に、自分たちからボールを奪いに行ったり
+short_photos:
+  - assets/images/20261113_ito_brazil_improve/03_v.jpg
+  - assets/images/20261113_ito_brazil_improve/12_v.jpg
+  - assets/images/20261113_ito_brazil_improve/12_v.jpg
+short_question: 伊東純也は、14日のブラジル戦に先発すると思いますか。
+short_telops: []
+
+theme:
+  id: ito_brazil_improve
+  league: japan
+  league_name: 日本代表
+  prefix: ""
+  title: 伊東純也、防戦一方だったW杯ブラジル戦から改善誓う「もっと主体的に」
+  hook: ""
+  question: W杯のブラジル戦で防戦一方になった日本代表は、何を変えようとしているのか。伊東純也は何と語ったか
+  takeaway: 伊東は「もっと主体的に、守備でもアグレッシブに行けるように」とチームで話していると明かし、出場時間が短くても結果を出すと誓った
+
+thumbnail:
+  layout: face
+  line1: 伊東純也 ブラジル戦へ
+  line2: もっと主体的に
+  tags: [伊東純也, ブラジル代表, 日本代表]
+  photo: assets/images/20261113_ito_brazil_improve/03_w.jpg
+  short_photo: assets/images/20261113_ito_brazil_improve/03_v.jpg
+
+answer: 守備でも自分たちからボールを奪いに行く。W杯で防戦一方になった反省を、ミーティングで話している
+watch: 14日のブラジル戦（シンガポール）
+
+sections:
+  - id: what
+    main: true
+    heading: 防戦一方だったW杯のブラジル戦から、伊東純也は何を変えるのか
+    tier: 報道
+    telop: 伊東純也「もっと主体的に守備でもアグレッシブに」
+    say:
+      - text: 日本代表の伊東純也が、W杯のブラジル戦の反省から、守備の改善について語りました。
+        image: assets/images/20261113_ito_brazil_improve/03_w.jpg
+      - voice: 伊東純也
+        text: もっと積極的に、自分たちからボールを奪いに行ったり、
+        image: assets/images/20261113_ito_brazil_improve/03_w.jpg
+      - voice: 伊東純也
+        text: ということは、チャレンジする部分だと思いますし、
+        cont: true
+        image: assets/images/20261113_ito_brazil_improve/03_w.jpg
+      - voice: 伊東純也
+        text: もっと主体的に、守備でもアグレッシブに行けるように。
+        cont: true
+        emph: true
+        image: assets/images/20261113_ito_brazil_improve/03_w.jpg
+      - voice: 伊東純也
+        text: 今、チームとして、ミーティングで話しています。
+        cont: true
+        image: assets/images/20261113_ito_brazil_improve/03_w.jpg
+      - text: W杯のブラジル戦で日本は、佐野海舟のゴールで先制しました。
+        image: assets/images/20261113_ito_brazil_improve/12_w.jpg
+      - text: ただ、後半は防戦一方になり、2点を失って逆転負けしました。
+        image: assets/images/20261113_ito_brazil_improve/03_w.jpg
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20261112/2227141.html
+      - https://www.espn.com/soccer/match/_/gameId/760487
+  - id: team
+    heading: 出場時間が短くても、伊東純也は何をするのか
+    tier: 報道
+    telop: 伊東純也「結果を出せるように」
+    say:
+      - text: 伊東は9月と10月の4連戦で、途中出場からアシストを重ねました。
+        image: assets/images/20261113_ito_brazil_improve/12_w.jpg
+      - text: ブラジル戦での役割についても、こう話しました。
+        image: assets/images/20261113_ito_brazil_improve/03_w.jpg
+      - voice: 伊東純也
+        text: 出た時にできることをやるだけ。
+        image: assets/images/20261113_ito_brazil_improve/12_w.jpg
+      - voice: 伊東純也
+        text: その時間が長くても短くても、結果を出せるように。
+        cont: true
+        emph: true
+        image: assets/images/20261113_ito_brazil_improve/12_w.jpg
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20261112/2227141.html
+  - id: view
+    viewpoint: true
+    heading: 「防戦一方」になった後半、スコアはどう動いたか
+    tier: 背景
+    telop: 日本は後半の2失点で、1-0から1-2に
+    say:
+      - text: 見立てです。伊東が話した「防戦一方」の後半は、2つの失点で、1対2の逆転負けになりました。
+        card: {type: table, title: W杯 ブラジル 2-1 日本の経過, columns: [分, 出来事], rows: [[29分, 佐野海舟が先制], [56分, カゼミーロが同点], [90+5分, マルティネッリが逆転]], highlight_row: 1}
+      - text: 日本は前半に1点を先行しましたが、後半の56分と95分に失点しました。
+        card: none
+      - text: 再戦は14日、シンガポールで。
+        image: assets/images/20261113_ito_brazil_improve/03_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/760487
+      - https://www.soccer-king.jp/news/japan/national/20261112/2227141.html

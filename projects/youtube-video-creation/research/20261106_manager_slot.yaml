@@ -1,0 +1,515 @@
+# 監督紹介：アルネ・スロット（11/6 金、シリーズ「監督紹介」、key: manager_slot、型は news）。9節の型（2026-10-20 決定）。見本は 20261102_manager_luisenrique・20261031_manager_tuchel。
+# 順：フック→基礎DATA→日本との接点（基礎DATAの次）→歩みと転機→戦術の色（実例の試合1つ）→数字で見る→本人の言葉→マル秘話→見立て。
+#
+# **題材の選び方（2026-11-04）**：既出11人（グアルディオラ・アンチェロッティ・モウリーニョ・クロップ・シメオネ・アルテタ・フリック・ベンゲル・ファーガソン・トゥヘル・ルイス・エンリケ）以外の大物。
+#   ・シャビ・アロンソ（いまはチェルシー監督＝英語版 Wikipedia の infobox で確認）は大物で時事にも合うが、同じ 11/6 の世界レジェンドがフェルナンド・トーレス（スペイン）で国が重なるので外した。covered.yaml にもアロンソのニュースが3件（10/24 退場ゼロほか）。
+#   ・コンテ（ナポリを離れて無所属＝英語版の本文「most recently … Napoli」）は日本との接点が薄い。エメリはスペインで国が重なる。ナーゲルスマンは 10/21 の代表ドイツ・10/31 トゥヘル・11/2 ホッフェンハイムに名前が出る。
+#   ・スロット：プレミアを就任1季目で優勝（オランダ人で初）＋日本人3人を指導（AZ 菅原由勢・フェイエノールト 上田綺世・リヴァプール 遠藤航）。ヒットの条件（日本代表の選手との縁）に当たる。
+#   **重なりの確認（2026-11-04 に自分で）**：research/posted.json に「スロット」0件、research/covered.yaml に0件。scripts は 2026-10-02 の rank_endo（遠藤のランキング。35日前）より後に「スロット」「Slot」は無い。
+#   同じ 11/6 の他の担当（research/20261105_picks.txt）：世界レジェンド＝フェルナンド・トーレス（スペイン）。人名・国（オランダ）は重ならない。トーレスもリヴァプールの元選手だが、決まりは人名と国。
+#
+# **いまの立場（一次情報で確かめた）**：無所属（前リヴァプール監督）。
+#   ○ リヴァプール公式 2026-05-30「Liverpool FC statement」（https://www.liverpoolfc.com/news/liverpool-fc-statement-13）：「Arne Slot is to depart his role as head coach with immediate effect」。2024-25 に20回目のリーグ優勝、LMA の年間最優秀監督、リーグカップ決勝、CL16強。2025-26 は CL の出場権と CL 準々決勝。
+#   ○ リヴァプール公式 2026-06-04 頃「Liverpool FC appoint Andoni Iraola as new head coach」＝後任はイラオラ。
+#   ○ 英語版 Wikipedia「Arne Slot」（最終更新 2026-10-24。本文「most recently the head coach of … Liverpool」）、オランダ語版（同じく 2026-05-30 に解任、その後のクラブ無し）。
+#     → **11月4日時点で次のクラブの発表は見つからない**（Wikipedia 2言語。クラブの公式発表を全部は当たれていない）。台本は「11月4日時点で、次のクラブは発表されていません」とだけ言う。
+#
+# **通算（台本とサムネをそろえる）**＝英語版 Wikipedia「Managerial record by team and tenure」（updated 30 May 2026）：
+#   カンブール 34試合21勝6分7敗（2016-10-15〜2017-06-30、シプケ・フルショフとの共同の暫定監督。2部）／AZ 58試合32勝16分10敗／フェイエノールト 150試合98勝29分23敗／リヴァプール 113試合66勝19分28敗。Career total 355試合217勝70分68敗。
+#   自分で足して一致（34+58+150+113＝355、21+32+98+66＝217）。勝率（自分で割った）：通算 61.1%、カンブール 61.8%、AZ 55.2%、フェイエノールト 65.3%、リヴァプール 58.4%。
+#   **リヴァプールは季ごとの表で突き合わせた**（英語版「2024–25 Liverpool F.C. season」「2025–26 …」の Overall record）：
+#     2024-25：プレミア 25勝9分4敗・FA杯 1勝1敗・リーグ杯 4勝2敗・CL 8勝2敗 → 56試合38勝9分9敗（67.9%）。プレミアの勝ち点 25×3+9＝84（自分で計算）。
+#     2025-26：プレミア 17勝9分12敗（5位）・FA杯 3勝1敗・リーグ杯 1勝1敗・コミュニティ・シールド 1分（PK負け）・CL 7勝5敗 → 57試合28勝10分19敗（49.1%）。勝ち点 17×3+9＝60。
+#     合計 113試合66勝19分28敗 ＝ 通算の表と一致。※オランダ語版は 18分29敗（コミュニティ・シールドのPK負けを負けに数えた差）。台本は英語版の数え方。
+#   ※AZ・フェイエノールト・カンブールの数字は英語版 Wikipedia だけ（出典 Soccerway に「Failed verification」の札）。オランダ語版の通算 355試合217勝 とは合う。概要欄の確度は 報道。
+#   タイトル（Honours・Manager）：フェイエノールト＝エールディビジ 2022-23・KNVBカップ 2023-24／リヴァプール＝プレミアリーグ 2024-25 → 3つ。個人＝リヌス・ミケルス賞 2回・LMA 年間最優秀監督 2024-25・プレミアの年間最優秀監督 2024-25。
+#
+# **基礎**：1978-09-17 オランダ・オーファーアイセル州ベルゲンタイム生まれ（48歳）。選手：MF（攻撃的MF）。FCズヴォレ（1995-2002）→NACブレダ（2002-07）→スパルタ・ロッテルダム（2007-10）→ズヴォレ（2009-13、最初は期限付き）。リーグ戦の通算 462試合100得点（infobox の total）。2013年に引退。
+#   監督：2013 ズヴォレの育成コーチ→カンブールのコーチ→2016-10-15 カンブールの共同の暫定監督→2017 AZ のコーチ→2019-07-01 AZ 監督（2020-12-05 解任、フェイエノールトとの合意が理由）→2021-07-01 フェイエノールト→2024-06-01 リヴァプール→2026-05-30 退任。
+#
+# **日本との接点（一次で確かめた範囲。サッカーの縁だけ）**：
+#   ・菅原由勢（2000-06-28生、右SB）：英語版「Yukinari Sugawara」＝2019-06-21 に名古屋から AZ へ期限付き。2019-07-25 ヘッケン戦でデビュー。2019-08-04 フォルトゥナ・シッタート戦で先発し84分に4-0の4点目。その季リーグ16試合2得点。AZ の監督はこの季（2019-20）からスロット（スロットの英語版の表 2019-07-01〜）。
+#   ・上田綺世（1998-08-28生、FW）：英語版「Ayase Ueda」＝2023-08-03 フェイエノールトと5年契約。1季目はリーグ26試合5得点（先発5）。2024-04-21 KNVBカップ決勝（NECに1-0）に途中出場して優勝。監督はスロット（〜2024-05-31）。
+#   ・遠藤航（1993-02-09生、守備的MF）：英語版「Wataru Endo」＝2024-25 プレミア20試合（季の表は 1+19＝先発1・途中19）、優勝。「香川真司・岡崎慎司・南野拓実に続く4人目の日本人のプレミア優勝」。
+#   ※年齢は 2026-11-04 時点で生年月日から計算（菅原26・上田28・遠藤33）。遠藤の代表引退・けがは入れない（病気・けがの話は入れない決まり）。
+#
+# **戦術の色**＝2024-09-01 プレミア第3節 マンチェスター・ユナイテッド 0-3 リヴァプール（オールド・トラッフォード）。得点：ディアス35分・42分、サラー56分（英語版 2024-25 季の Football box）。
+#   英語版「Ryan Gravenberch」：2024-25 の初めにスロットが、4-2-3-1 の中でより後ろの守備的な中盤へ移した。この 3-0 で「dominance」と評価。2025-04-27 トッテナム戦（5-1）でマック・アリスターの得点をアシスト。季の終わりにプレミアの最優秀若手選手。
+#   英語版スロット：2024-11-27 CL でレアル・マドリードに2-0、15年勝てなかった相手（前年の欧州王者）に勝った。
+#
+# **歩みの細部**：英語版スロット：カンブールで14位→3位（昇格プレーオフで MVV に敗れる）、KNVBカップでアヤックスを破りクラブ初の準決勝。AZ のリーグ戦1試合あたり勝ち点 2.11 はクラブの監督で最高。
+#   フェイエノールト：1季目 2022 カンファレンスリーグ決勝（ティラナ、ローマに0-1）。2023-05-14 ゴー・アヘッド・イーグルスに3-0でリーグ優勝（2017年以来＝6年ぶり、16回目）。2024-04-21 KNVBカップ優勝。
+#   リヴァプール：2025-04-27 トッテナムに5-1で優勝決定。リヴァプール公式「with four matches to spare」「first title victory with supporters present since 1990」「10th man to oversee championship glory for Liverpool」。英語版「the seventh manager in Premier League history to win a league title in their first season」「the first Dutch manager to win the Premier League」。
+#   リヴァプール公式：「a spell of 20 wins, three draws and no defeats in all competitions」（秋から年明け）。
+#
+# **本人の言葉**（リヴァプール公式。英語の原文を訳した）：
+#   ①2025年の優勝のあと（https://www.liverpoolfc.com/news/arne-slot-place-lfc-history-after-league-title-no20 に引用）："Everybody could see what it means for the fans to win it, and that is what makes it special and, in the end, for us as well." "Because you play football for yourself, for your family, but definitely also for the fans…"
+#   ②2026-06 の別れの手紙（https://www.liverpoolfc.com/news/arne-slot-writes-farewell-letter-liverpool-supporters 、元はリヴァプール・エコーに載ったと公式が書く）："That all of those emotions would culminate in a Premier League title after just 12 months was beyond special." "Liverpool's 20th league title belongs to all of us" "When I first stood beneath that sign in the Anfield tunnel, I knew what this club demanded. I leave knowing we never stopped striving for it."
+#
+# **マル秘話**（英語版スロットの本文）：チームメイトのエドウィン・デ・グラーフ「not so fast」、監督だったヤン・エフェルセ「パスと視野で選手としての力を出し切った」。チームメイトのブラム・ファン・ポーレン「現役の最後の数年、もうコーチのように振る舞っていた」。
+#   フェイエノールトのスタッフにロビン・ファン・ペルシー（フィールドコーチ）。2023年にトッテナムの監督の話が出たが残り、契約を延長。オランダ語版：2024-04-07 アヤックスに6-0、アヤックスのエールディビジ史上最大の負け。
+#
+# **入れなかったもの**：ディオゴ・ジョッタの事故と死去（亡くなった人の話）、優勝パレードの事故、家族・私生活、2季目の不振の理由の分析（確かめきれない）、解任の内幕の報道、AZ を離れた経緯の細部、移籍金・年俸、次の就任先のうわさ、ニュースの反応・女子・FotMob。
+date: 2026年11月6日
+slot: other_1
+format: news
+series: 監督紹介
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- スロット
+- 菅原由勢
+- 上田綺世
+- 遠藤航
+theme:
+  end_bg: assets/images/20261106_manager_slot/01_w.jpg
+  id: manager_slot
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: スロット
+  title: スロット、前リヴァプール監督はどんな人？1年目で優勝した戦い方はどこで育ったのか
+  question: 前リヴァプール監督のアルネ・スロットは、どんな人なのか。就任1年目でプレミアリーグを制した戦い方は、オランダのどこで育ったのか
+  lead: 前リヴァプール監督、アルネ・スロット。
+  opening_image: assets/images/20261106_manager_slot/02_w.jpg
+  takeaway: 通算355試合217勝、勝率61.1%。フェイエノールトの3季は65.3%、リヴァプールの1季目は67.9%と、新しいクラブで最初の季から形を作ってきた。2季目は49.1%で、勝ち点は84から60に。次の仕事で2季目をどう越えるかを見ている
+  short_title: スロット、1年目でプレミア優勝の道のり
+  nameplate: アルネ・スロット｜前リヴァプール監督
+thumbnail:
+  line1: スロット、355試合217勝
+  line2: 就任1年目でプレミア優勝
+  tags:
+  - リヴァプール
+  photo: assets/images/20261106_manager_slot/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261106_manager_slot/04_v.jpg
+sections:
+- id: hook
+  main: true
+  heading: 1年目でプレミア優勝。スロットとは、どんな監督なのか
+  tier: 報道
+  telop: 就任1年目でプレミアリーグ優勝。オランダ人の監督で初めて
+  narrator: 解説
+  card: &hook_stats
+    type: stats
+    title: スロットのリヴァプール1季目（2024年から25年）
+    items:
+    - ['1', 季目, 就任1季目でプレミア優勝]
+    - ['84', 点, その季の勝ち点]
+    - ['4', 試合, 残して優勝を決めた]
+    focus: 0
+  say:
+  - text: 就任1年目で、プレミアリーグを制した監督です。
+    image: assets/images/20261106_manager_slot/02_w.jpg
+    emph: true
+    card: none
+  - text: プレミアを制したオランダ人の監督は、スロットが最初です。
+    image: assets/images/20261106_manager_slot/01_w.jpg
+    card:
+      <<: *hook_stats
+      focus: 0
+  - text: その季の勝ち点は84。4試合を残して、優勝を決めています。
+    card:
+      <<: *hook_stats
+      focus: 1
+  - text: リヴァプールにとっては、20回目のリーグ優勝でした。
+    card:
+      <<: *hook_stats
+      focus: 2
+  - text: 率いたのは、アルネ・スロット。情報は11月4日時点のものです。
+    image: assets/images/20261106_manager_slot/02_w.jpg
+    card: none
+  sources:
+  - https://www.liverpoolfc.com/news/arne-slot-place-lfc-history-after-league-title-no20
+  - https://en.wikipedia.org/wiki/Arne_Slot
+  - https://en.wikipedia.org/wiki/2024%E2%80%9325_Liverpool_F.C._season
+- id: data
+  heading: スロットは、いつ、どこで、どんな道を歩いた人か
+  tier: 報道
+  telop: アルネ・スロットの基礎DATA
+  narrator: 解説
+  card: &data_table
+    type: table
+    title: アルネ・スロット（48歳）の基礎DATA
+    columns: [項目, 中身]
+    rows:
+    - [生年月日, 1978年9月17日（オランダ・ベルゲンタイム）]
+    - [選手のころ, MF。オランダでリーグ戦462試合100得点]
+    - [監督, AZ → フェイエノールト → リヴァプール]
+    - [タイトル, オランダのリーグとカップ、プレミアリーグ]
+    - [いま, 2026年5月にリヴァプールを退任]
+    highlight_row: 0
+  say:
+  - text: スロットは1978年9月17日、オランダ東部のベルゲンタイムの生まれ。48歳です。
+    image: assets/images/20261106_manager_slot/01_w.jpg
+    card:
+      <<: *data_table
+      highlight_row: 0
+  - text: 選手のころは中盤の選手。オランダのクラブで、リーグ戦462試合に出て100得点。
+    card:
+      <<: *data_table
+      highlight_row: 1
+  - text: 監督としては、AZ、フェイエノールト、リヴァプールを率いました。
+    card:
+      <<: *data_table
+      highlight_row: 2
+  - text: 取ったタイトルは、オランダのリーグとカップ、そしてプレミアリーグです。
+    image: assets/images/20261106_manager_slot/03_w.jpg
+    card:
+      <<: *data_table
+      highlight_row: 3
+  - text: 2026年5月30日、2季目を終えたところで、リヴァプールは退任を発表しました。
+    image: assets/images/20261106_manager_slot/03_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Arne_Slot
+  - https://www.liverpoolfc.com/news/liverpool-fc-statement-13
+- id: japan
+  heading: スロットの下で、どの日本人選手がプレーしたのか
+  tier: 報道
+  telop: 菅原由勢、上田綺世、遠藤航。3つのクラブで日本人を指導
+  narrator: 解説
+  card: &jp_table
+    type: table
+    title: スロットの下でプレーした日本人
+    columns: [所属, 名前, 位置, 年齢]
+    rows:
+    - [AZ（2019年〜）, 菅原由勢, DF, '26']
+    - [フェイエノールト（2023年〜）, 上田綺世, FW, '28']
+    - [リヴァプール（2024年〜）, 遠藤航, MF, '33']
+    highlight_row: 0
+  say:
+  - text: AZ、フェイエノールト、リヴァプール。
+    card: none
+  - text: スロットが率いたこの3クラブには、どこにも日本人選手がいました。
+    image: assets/images/20261106_manager_slot/01_w.jpg
+    card:
+      <<: *jp_table
+      highlight_row: 0
+  - text: 1人目は菅原由勢。2019年の夏、名古屋からAZに加わります。
+    card:
+      <<: *jp_table
+      highlight_row: 0
+  - text: この季から、AZの監督はスロットでした。
+    card:
+      <<: *jp_table
+      highlight_row: 0
+  - text: 8月4日のフォルトゥナ・シッタート戦で先発し、84分に4点目を決めています。
+    image: assets/images/20261106_manager_slot/03_w.jpg
+    card: none
+  - text: 2人目は上田綺世。2023年8月、フェイエノールトに加わりました。
+    image: assets/images/20261106_manager_slot/01_w.jpg
+    card:
+      <<: *jp_table
+      highlight_row: 1
+  - text: 上田の1季目は、リーグ戦26試合で5得点。
+    card:
+      <<: *jp_table
+      highlight_row: 1
+  - text: 2024年4月のカップ戦の決勝にも途中から出て、優勝を味わいました。
+    emph: true
+    card: none
+  - text: 3人目は遠藤航。スロットの1季目、プレミアで20試合に出て優勝。
+    image: assets/images/20261106_manager_slot/02_w.jpg
+    card:
+      <<: *jp_table
+      highlight_row: 2
+  - text: 香川真司、岡崎慎司、南野拓実に続いて、遠藤は4人目のプレミア優勝の日本人に。
+    emph: true
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Yukinari_Sugawara
+  - https://en.wikipedia.org/wiki/Ayase_Ueda
+  - https://en.wikipedia.org/wiki/Wataru_Endo
+- id: career
+  heading: 2部の共同監督から、プレミアの優勝監督へ。何があったのか
+  tier: 背景
+  telop: 歩みと転機。カンブール、AZ、フェイエノールト、そしてリヴァプール
+  narrator: 解説
+  card: &career_tl
+    type: timeline
+    title: スロットの歩み
+    rows:
+    - [2016年10月, 2部のカンブールで、2人で暫定監督に]
+    - [2019年7月, AZの監督に]
+    - [2021年7月, フェイエノールトの監督に]
+    - [2024年6月, クロップの後を継いでリヴァプールへ]
+    - [2026年5月, リヴァプールを退任]
+    focus: 0
+  say:
+  - text: スロットは2013年に引退すると、古巣のズヴォレで、育成年代のコーチから始めます。
+    image: assets/images/20261106_manager_slot/03_w.jpg
+    card: none
+  - text: 2016年10月、2部のカンブールで、もう1人のコーチと2人で暫定監督に。
+    card:
+      <<: *career_tl
+      focus: 0
+  - text: 14位のチームを3位まで上げ、カップ戦ではアヤックスを破って、クラブ初の準決勝へ。
+    card:
+      <<: *career_tl
+      focus: 0
+  - text: 2019年、AZの監督に。1試合あたりの勝ち点2.11は、AZの歴代最高です。
+    emph: true
+    card:
+      <<: *career_tl
+      focus: 1
+  - text: 2021年、フェイエノールトへ。1季目に、欧州の3番目の大会で決勝まで進みます。
+    card:
+      <<: *career_tl
+      focus: 2
+  - text: 決勝はローマに0対1。それでも2季目の2023年5月、6年ぶりのリーグ優勝。
+    image: assets/images/20261106_manager_slot/01_w.jpg
+    card: none
+  - text: 3季目には、カップ戦も制しました。
+    card: none
+  - text: 2024年6月、クロップの後を継いで、リヴァプールの監督に。
+    image: assets/images/20261106_manager_slot/02_w.jpg
+    card:
+      <<: *career_tl
+      focus: 3
+  - text: 2025年4月27日、トッテナムに5対1。ここで優勝が決まります。
+    emph: true
+    callword: 5対1
+    card: none
+  - text: リヴァプールが観客の前でリーグ優勝を祝うのは、1990年以来でした。
+    image: assets/images/20261106_manager_slot/04_w.jpg
+    card: none
+  - text: 2季目はプレミアで5位。2026年5月30日、クラブは退任を発表しました。
+    card:
+      <<: *career_tl
+      focus: 4
+  sources:
+  - https://en.wikipedia.org/wiki/Arne_Slot
+  - https://www.liverpoolfc.com/news/arne-slot-place-lfc-history-after-league-title-no20
+  - https://www.liverpoolfc.com/news/liverpool-fc-statement-13
+- id: style
+  heading: スロットのリヴァプールは、何を変えて勝ったのか
+  tier: 報道
+  telop: 戦術の色。2024年9月、オールド・トラッフォードでの3対0
+  narrator: 解説
+  card: &style_doc
+    type: document
+    label: 2024年9月1日 プレミアリーグ第3節（オールド・トラッフォード）
+    paragraphs:
+    - 形は4-2-3-1。
+    - グラフェンベルフを、中盤のより後ろへ。
+    - 35分と42分にディアス。56分にサラー。
+    - マンチェスター・ユナイテッドに3対0。
+    highlight:
+    - 中盤のより後ろ
+    - 3対0
+  say:
+  - text: 戦い方の色がよく出たのが、2024年9月1日のこの試合です。
+    image: assets/images/20261106_manager_slot/02_w.jpg
+    card: *style_doc
+  - text: 就任3試合目、オールド・トラッフォードでのマンチェスター・ユナイテッド戦。
+    card: *style_doc
+  - text: スロットの形は4-2-3-1。
+    card: *style_doc
+  - text: その中で、グラフェンベルフを、中盤のより後ろの守備的な位置に移します。
+    card: *style_doc
+  - text: この試合のグラフェンベルフは、中盤を支配したと評価されました。
+    image: assets/images/20261106_manager_slot/04_w.jpg
+    card: none
+  - text: 35分と42分にディアス、56分にサラー。3対0の勝ちです。
+    emph: true
+    callword: 3対0
+    card: none
+  - text: グラフェンベルフは、その季のプレミアの最優秀若手選手に選ばれます。
+    card: none
+  - text: 優勝を決めたトッテナム戦でも、マック・アリスターの得点をアシストしました。
+    image: assets/images/20261106_manager_slot/02_w.jpg
+    card: none
+  - text: 11月27日には、前の年の欧州王者、レアル・マドリードに2対0の勝ち。
+    card: none
+  - text: レアルには、それまで15年勝てていませんでした。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Ryan_Gravenberch
+  - https://en.wikipedia.org/wiki/2024%E2%80%9325_Liverpool_F.C._season
+  - https://en.wikipedia.org/wiki/Arne_Slot
+- id: numbers
+  heading: 通算355試合、勝率が高いのはどのクラブか
+  tier: 報道
+  telop: 通算217勝。勝率はフェイエノールト65.3%、リヴァプール58.4%
+  narrator: 解説
+  card: &rate_bars
+    type: bars
+    title: スロットの勝率（クラブごと、%）
+    unit: '%'
+    items:
+    - label: AZ
+      value: 55.2
+    - label: リヴァプール
+      value: 58.4
+    - label: カンブール
+      value: 61.8
+    - label: フェイエノールト
+      value: 65.3
+      highlight: true
+  say:
+  - text: スロットの成績を、数字で見ていきます。
+    image: assets/images/20261106_manager_slot/03_w.jpg
+    card: &total_stats
+      type: stats
+      title: スロットの監督通算（2016年から）
+      items:
+      - ['355', 試合, カンブールの共同監督を含む]
+      - ['217', 勝, 引き分け70・負け68]
+      - ['61.1', '%', 勝率]
+      focus: 1
+  - text: 監督としての通算は、355試合で217勝。勝率は61.1%です。
+    emph: true
+    card:
+      <<: *total_stats
+      focus: 1
+  - text: クラブごとに見ると、フェイエノールトは150試合で98勝。
+    image: assets/images/20261106_manager_slot/01_w.jpg
+    card: *rate_bars
+  - text: リヴァプールは113試合で66勝、58.4%でした。
+    card: *rate_bars
+  - text: 1季目の秋から年明けにかけては、20勝3分けで、負けなしの時期もあります。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Arne_Slot
+  - https://www.liverpoolfc.com/news/arne-slot-place-lfc-history-after-league-title-no20
+  - https://en.wikipedia.org/wiki/2025%E2%80%9326_Liverpool_F.C._season
+- id: words
+  heading: 本人は、20回目の優勝をどう語ったのか
+  tier: 報道
+  telop: スロットの言葉。優勝の日と、別れの手紙
+  narrator: 解説
+  card: &words_doc
+    type: document
+    label: スロットの言葉（訳）。2025年の優勝と、2026年6月の手紙
+    paragraphs:
+    - 優勝がファンにとって何を意味するか、誰もが見て分かった。だから特別なんです。
+    - わずか12か月でプレミアリーグの優勝にたどり着いたことは、特別という言葉では足りません。
+    - リヴァプールの20回目のリーグ優勝は、私たち全員のものです。
+    highlight:
+    - 誰もが見て分かった
+    - 私たち全員のもの
+  say:
+  - text: 本人の言葉です。まずは、2025年に優勝を決めたあと。
+    image: assets/images/20261106_manager_slot/04_w.jpg
+    card: *words_doc
+  - voice: スロット
+    text: 優勝がファンにとって何を意味するか、誰もが見て分かった。
+  - voice: スロット
+    text: だから特別なんです。そして最後には、私たちにとっても。
+    cont: true
+    pause: 0.5
+  - text: そして、退任のあと、ファンにあてた手紙で、こう書いています。
+    image: assets/images/20261106_manager_slot/04_w.jpg
+    card: *words_doc
+  - voice: スロット
+    text: わずか12か月でプレミアリーグの優勝にたどり着いたことは、
+  - voice: スロット
+    text: 特別という言葉では足りません。
+    cont: true
+  - voice: スロット
+    text: リヴァプールの20回目のリーグ優勝は、私たち全員のものです。
+    cont: true
+    pause: 0.5
+  quotes_from:
+  - https://www.liverpoolfc.com/news/arne-slot-place-lfc-history-after-league-title-no20
+  - https://www.liverpoolfc.com/news/arne-slot-writes-farewell-letter-liverpool-supporters
+  sources:
+  - https://www.liverpoolfc.com/news/arne-slot-place-lfc-history-after-league-title-no20
+  - https://www.liverpoolfc.com/news/arne-slot-writes-farewell-letter-liverpool-supporters
+- id: secret
+  heading: 数字の外にある話。足ではなく、パスで勝負した選手
+  tier: 背景
+  telop: 選手のころから、コーチのように振る舞っていた
+  narrator: 解説
+  card: &sec_table
+    type: table
+    title: 数字の外にある話
+    columns: [いつ, 何があったか]
+    rows:
+    - [選手のころ, 足の速さではなく、パスと視野で勝負]
+    - [現役の終わり, もうコーチのように振る舞っていた]
+    - [2021年, ファン・ペルシーをコーチに迎える]
+    - [2024年4月, アヤックスに6対0]
+    highlight_row: 0
+  say:
+  - text: ここから、スロットの数字の外の話。
+    image: assets/images/20261106_manager_slot/03_w.jpg
+    card: none
+  - text: 選手のころ、チームメイトからは、足は速くないと言われていました。
+    card:
+      <<: *sec_table
+      highlight_row: 0
+  - text: それでも当時の監督は、パスと視野で、持てる力を出し切った選手だと見ています。
+    card:
+      <<: *sec_table
+      highlight_row: 0
+  - text: 現役の最後の数年は、チームメイトいわく、もうコーチのように振る舞っていたそうです。
+    emph: true
+    card:
+      <<: *sec_table
+      highlight_row: 1
+  - text: フェイエノールトでは、ロビン・ファン・ペルシーをコーチに迎えました。
+    image: assets/images/20261106_manager_slot/01_w.jpg
+    card: none
+  - text: そして2024年4月7日、ライバルのアヤックスに6対0の勝ち。
+    card:
+      <<: *sec_table
+      highlight_row: 3
+  - text: アヤックスにとって、オランダのリーグで最も大きな負けでした。
+    card:
+      <<: *sec_table
+      highlight_row: 3
+  sources:
+  - https://en.wikipedia.org/wiki/Arne_Slot
+  - https://nl.wikipedia.org/wiki/Arne_Slot
+- id: view
+  viewpoint: true
+  heading: 見立て・1年目に強いスロットは、2年目をどう越えるのか
+  tier: 背景
+  telop: 勝率はフェイエノールト65.3%、リヴァプール1季目67.9%、2季目49.1%
+  narrator: 解説
+  card: &view_table
+    type: table
+    title: 自分で数えてみた（クラブと季ごとの勝率）
+    columns: [クラブ, 試合, 勝率]
+    rows:
+    - [AZ（1年半）, '58', 55.2%]
+    - [フェイエノールト（3季）, '150', 65.3%]
+    - [リヴァプール 1季目, '56', 67.9%]
+    - [リヴァプール 2季目, '57', 49.1%]
+    highlight_row: 1
+  say:
+  - text: 見立てです。スロットの勝率を、クラブと季ごとに数えて並べました。
+    image: assets/images/20261106_manager_slot/02_w.jpg
+    card: *view_table
+  - text: フェイエノールトの3季は、65.3%。
+    card:
+      <<: *view_table
+      highlight_row: 1
+  - text: リヴァプールの1季目は67.9%。フェイエノールトのころを上回ります。
+    emph: true
+    mark: {kind: circle, row: 2, col: 2}
+    card:
+      <<: *view_table
+      highlight_row: 2
+  - text: 2季目は49.1%。プレミアの勝ち点は、84から60に下がりました。
+    card:
+      <<: *view_table
+      highlight_row: 3
+  - text: AZではクラブ最高の勝ち点のペース、フェイエノールトでは1季目に欧州の決勝。
+    image: assets/images/20261106_manager_slot/01_w.jpg
+    card: none
+  - text: オランダで磨いた、最初の季から形を作る速さが、スロットの強みだと見ています。
+    card: none
+  - text: 2季目の下がり方は、理由を1つに絞れません。
+    card: none
+  - text: 11月4日時点で、次のクラブは発表されていません。
+    card: none
+  - text: 次の仕事で、2季目をどう越えるかに注目です。
+    image: assets/images/20261106_manager_slot/02_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Arne_Slot
+  - https://en.wikipedia.org/wiki/2024%E2%80%9325_Liverpool_F.C._season
+  - https://en.wikipedia.org/wiki/2025%E2%80%9326_Liverpool_F.C._season

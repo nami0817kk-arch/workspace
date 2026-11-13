@@ -1,0 +1,716 @@
+{
+ "club_title": "SV_Werder_Bremen",
+ "season_title": "2026–27_SV_Werder_Bremen_season",
+ "squad": [
+  {
+   "no": "1",
+   "pos": "GK",
+   "nat": "EST",
+   "name": "Karl Hein",
+   "page": "Karl Hein (footballer)",
+   "dob": "2002-04-13",
+   "captain": false,
+   "loan": false,
+   "team": "Estonia",
+   "caps": 49,
+   "club_caps": 10,
+   "club_goals": 0
+  },
+  {
+   "no": "2",
+   "pos": "DF",
+   "nat": "BEL",
+   "name": "Olivier Deman",
+   "page": "Olivier Deman",
+   "dob": "2000-04-06",
+   "captain": false,
+   "loan": false,
+   "team": "Belgium",
+   "caps": 3,
+   "club_caps": 61,
+   "club_goals": 3
+  },
+  {
+   "no": "3",
+   "pos": "DF",
+   "nat": "POL",
+   "name": "Oskar Wójcik",
+   "page": "Oskar Wójcik",
+   "dob": "2003-07-21",
+   "captain": false,
+   "loan": false,
+   "team": "Poland",
+   "caps": 1,
+   "club_caps": 3,
+   "club_goals": 0
+  },
+  {
+   "no": "4",
+   "pos": "DF",
+   "nat": "GER",
+   "name": "Niklas Stark",
+   "page": "Niklas Stark",
+   "dob": "1995-04-14",
+   "captain": false,
+   "loan": false,
+   "team": "Germany",
+   "caps": 2,
+   "club_caps": 85,
+   "club_goals": 2
+  },
+  {
+   "no": "5",
+   "pos": "DF",
+   "nat": "GER",
+   "name": "Amos Pieper",
+   "page": "Amos Pieper",
+   "dob": "1998-01-17",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 86,
+   "club_goals": 2
+  },
+  {
+   "no": "6",
+   "pos": "MF",
+   "nat": "DEN",
+   "name": "Jens Stage",
+   "page": "Jens Stage",
+   "dob": "1996-11-08",
+   "captain": false,
+   "loan": false,
+   "team": "Denmark",
+   "caps": 2,
+   "club_caps": 119,
+   "club_goals": 26
+  },
+  {
+   "no": "8",
+   "pos": "DF",
+   "nat": "GER",
+   "name": "Mitchell Weiser",
+   "page": "Mitchell Weiser",
+   "dob": "1994-04-21",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 121,
+   "club_goals": 12
+  },
+  {
+   "no": "9",
+   "pos": "FW",
+   "nat": "GER",
+   "name": "Keke Topp",
+   "page": "Keke Topp",
+   "dob": "2004-03-25",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 39,
+   "club_goals": 3
+  },
+  {
+   "no": "10",
+   "pos": "FW",
+   "nat": "GER",
+   "name": "Niclas Füllkrug",
+   "page": "Niclas Füllkrug",
+   "dob": "1993-02-09",
+   "captain": false,
+   "loan": true,
+   "team": "Germany",
+   "caps": 24,
+   "club_caps": 121,
+   "club_goals": 56
+  },
+  {
+   "no": "11",
+   "pos": "FW",
+   "nat": "GER",
+   "name": "Justin Njinmah",
+   "page": "Justin Njinmah",
+   "dob": "2000-11-15",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 84,
+   "club_goals": 14
+  },
+  {
+   "no": "13",
+   "pos": "DF",
+   "nat": "BRA",
+   "name": "Arthur",
+   "page": "Arthur (footballer, born 2003)",
+   "dob": "2003-03-17",
+   "captain": false,
+   "loan": true,
+   "team": "Brazil",
+   "caps": 1,
+   "club_caps": 7,
+   "club_goals": 0
+  },
+  {
+   "no": "14",
+   "pos": "MF",
+   "nat": "BEL",
+   "name": "Senne Lynen",
+   "page": "Senne Lynen",
+   "dob": "1999-02-19",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 97,
+   "club_goals": 0
+  },
+  {
+   "no": "15",
+   "pos": "MF",
+   "nat": "NED",
+   "name": "Ludovit Reis",
+   "page": "Ludovit Reis",
+   "dob": "2000-06-01",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 8,
+   "club_goals": 2
+  },
+  {
+   "no": "16",
+   "pos": "DF",
+   "nat": "SEN",
+   "name": "Moussa N'Diaye",
+   "page": "Moussa N'Diaye (footballer, born 2002)",
+   "dob": "2002-06-18",
+   "captain": false,
+   "loan": true,
+   "team": "",
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "17",
+   "pos": "FW",
+   "nat": "AUT",
+   "name": "Marco Grüll",
+   "page": "Marco Grüll",
+   "dob": "1998-07-06",
+   "captain": false,
+   "loan": false,
+   "team": "Austria",
+   "caps": 10,
+   "club_caps": 71,
+   "club_goals": 10
+  },
+  {
+   "no": "18",
+   "pos": "MF",
+   "nat": "TUR",
+   "name": "Eren Dinkçi",
+   "page": "Eren Dinkçi",
+   "dob": "2001-12-13",
+   "captain": false,
+   "loan": true,
+   "team": "",
+   "caps": null,
+   "club_caps": 53,
+   "club_goals": 3
+  },
+  {
+   "no": "19",
+   "pos": "FW",
+   "nat": "HAI",
+   "name": "Kenny Quetant",
+   "page": "Kenny Quetant",
+   "dob": "2006-07-17",
+   "captain": false,
+   "loan": false,
+   "team": "Haiti",
+   "caps": 3,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "20",
+   "pos": "MF",
+   "nat": "ESP",
+   "name": "Chuki",
+   "page": "Chuki (footballer)",
+   "dob": "2004-04-29",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 8,
+   "club_goals": 0
+  },
+  {
+   "no": "23",
+   "pos": "MF",
+   "nat": "POL",
+   "name": "Dariusz Stalmach",
+   "page": "Dariusz Stalmach",
+   "dob": "2005-12-08",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 6,
+   "club_goals": 1
+  },
+  {
+   "no": "25",
+   "pos": "GK",
+   "nat": "GER",
+   "name": "Markus Kolke",
+   "page": "Markus Kolke",
+   "dob": "1990-08-18",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "26",
+   "pos": "FW",
+   "nat": "SUI",
+   "name": "Cedric Itten",
+   "page": "Cedric Itten",
+   "dob": "1996-12-27",
+   "captain": false,
+   "loan": false,
+   "team": "Switzerland",
+   "caps": 19,
+   "club_caps": 5,
+   "club_goals": 0
+  },
+  {
+   "no": "27",
+   "pos": "DF",
+   "nat": "NGA",
+   "name": "Felix Agu",
+   "page": "Felix Agu",
+   "dob": "1999-09-27",
+   "captain": false,
+   "loan": false,
+   "team": "Nigeria",
+   "caps": 1,
+   "club_caps": 101,
+   "club_goals": 4
+  },
+  {
+   "no": "28",
+   "pos": "MF",
+   "nat": "FRA",
+   "name": "Skelly Alvero",
+   "page": "Skelly Alvero",
+   "dob": "2002-05-04",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 20,
+   "club_goals": 1
+  },
+  {
+   "no": "29",
+   "pos": "FW",
+   "nat": "GER",
+   "name": "Salim Musah",
+   "page": "Salim Musah",
+   "dob": "2006-02-23",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 11,
+   "club_goals": 1
+  },
+  {
+   "no": "30",
+   "pos": "GK",
+   "nat": "AUT",
+   "name": "Alexander Schlager",
+   "page": "Alexander Schlager",
+   "dob": "1996-02-01",
+   "captain": false,
+   "loan": false,
+   "team": "Austria",
+   "caps": 32,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "32",
+   "pos": "DF",
+   "nat": "AUT",
+   "name": "Marco Friedl",
+   "page": "Marco Friedl",
+   "dob": "1998-03-16",
+   "captain": true,
+   "loan": false,
+   "team": "Austria",
+   "caps": 13,
+   "club_caps": 221,
+   "club_goals": 7
+  },
+  {
+   "no": "33",
+   "pos": "DF",
+   "nat": "GER",
+   "name": "Mick Schmetgens",
+   "page": "Mick Schmetgens",
+   "dob": "2007-09-09",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 9,
+   "club_goals": 0
+  },
+  {
+   "no": "34",
+   "pos": "MF",
+   "nat": "TUR",
+   "name": "Darwin Soylu",
+   "page": "Darwin Soylu",
+   "dob": "",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "35",
+   "pos": "DF",
+   "nat": "GER",
+   "name": "Luca Höcker",
+   "page": "Luca Höcker",
+   "dob": "",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "36",
+   "pos": "DF",
+   "nat": "GER",
+   "name": "Mats Heitmann",
+   "page": "Mats Heitmann",
+   "dob": "",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "37",
+   "pos": "GK",
+   "nat": "BUL",
+   "name": "Stefan Smarkalev",
+   "page": "Stefan Smarkalev",
+   "dob": "2007-05-14",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "38",
+   "pos": "FW",
+   "nat": "GER",
+   "name": "Paul Erevbenagie",
+   "page": "Paul Erevbenagie",
+   "dob": "2007-08-19",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 4,
+   "club_goals": 0
+  },
+  {
+   "no": "44",
+   "pos": "MF",
+   "nat": "NED",
+   "name": "Youri Regeer",
+   "page": "Youri Regeer",
+   "dob": "2003-08-18",
+   "captain": false,
+   "loan": true,
+   "team": "",
+   "caps": null,
+   "club_caps": 7,
+   "club_goals": 0
+  }
+ ],
+ "results": [
+  [
+   "30 August 2026",
+   "1",
+   "Freiburg",
+   "4–1",
+   "Werder Bremen"
+  ],
+  [
+   "5 September 2026",
+   "2",
+   "Werder Bremen",
+   "3–1",
+   "RB Leipzig"
+  ],
+  [
+   "12 September 2026",
+   "3",
+   "1. FC Köln",
+   "1–1",
+   "Werder Bremen"
+  ],
+  [
+   "",
+   "4",
+   "Werder Bremen",
+   "3–2",
+   "Augsburg"
+  ],
+  [
+   "9 October 2026",
+   "5",
+   "Borussia Dortmund",
+   "2–2",
+   "Werder Bremen"
+  ],
+  [
+   "17 October 2026",
+   "6",
+   "Werder Bremen",
+   "2–2",
+   "Paderborn"
+  ],
+  [
+   "24 October 2026",
+   "7",
+   "Mainz 05",
+   "2–3",
+   "Werder Bremen"
+  ],
+  [
+   "31 October 2026",
+   "8",
+   "Werder Bremen",
+   "2–0",
+   "TSG Hoffenheim"
+  ],
+  [
+   "7 November 2026",
+   "9",
+   "Stuttgart",
+   "",
+   "Werder Bremen"
+  ],
+  [
+   "22 November 2026",
+   "10",
+   "Werder Bremen",
+   "",
+   "Hamburger SV"
+  ],
+  [
+   "27 November 2026",
+   "11",
+   "Werder Bremen",
+   "",
+   "Borussia Mönchengladbach"
+  ],
+  [
+   "5 December 2026",
+   "12",
+   "Eintracht Frankfurt",
+   "",
+   "Werder Bremen"
+  ],
+  [
+   "12 December 2026",
+   "13",
+   "Werder Bremen",
+   "",
+   "Bayer Leverkusen"
+  ],
+  [
+   "19 December 2026",
+   "14",
+   "Bayern Munich",
+   "",
+   "Werder Bremen"
+  ],
+  [
+   "9 January 2027",
+   "15",
+   "Werder Bremen",
+   "",
+   "Union Berlin"
+  ],
+  [
+   "12 January 2027",
+   "16",
+   "Schalke 04",
+   "",
+   "Werder Bremen"
+  ],
+  [
+   "16 January 2027",
+   "17",
+   "Werder Bremen",
+   "",
+   "Elversberg"
+  ],
+  [
+   "23 January 2027",
+   "18",
+   "Werder Bremen",
+   "",
+   "Freiburg"
+  ],
+  [
+   "30 January 2027",
+   "19",
+   "RB Leipzig",
+   "",
+   "Werder Bremen"
+  ],
+  [
+   "6 February 2027",
+   "20",
+   "Werder Bremen",
+   "",
+   "1. FC Köln"
+  ],
+  [
+   "11-13 February 2027",
+   "21",
+   "Augsburg",
+   "",
+   "Werder Bremen"
+  ],
+  [
+   "20 February 2027",
+   "22",
+   "Werder Bremen",
+   "",
+   "Borussia Dortmund"
+  ],
+  [
+   "27 February 2027",
+   "23",
+   "Paderborn",
+   "",
+   "Werder Bremen"
+  ],
+  [
+   "2 March 2027",
+   "24",
+   "Werder Bremen",
+   "",
+   "Mainz 05"
+  ],
+  [
+   "6 March 2027",
+   "25",
+   "TSG Hoffenheim",
+   "",
+   "Werder Bremen"
+  ],
+  [
+   "13 March 2027",
+   "26",
+   "Werder Bremen",
+   "",
+   "Stuttgart"
+  ],
+  [
+   "20 March 2027",
+   "27",
+   "Hamburger SV",
+   "",
+   "Werder Bremen"
+  ],
+  [
+   "3 April 2027",
+   "28",
+   "Borussia Mönchengladbach",
+   "",
+   "Werder Bremen"
+  ],
+  [
+   "10 April 2027",
+   "29",
+   "Werder Bremen",
+   "",
+   "Eintracht Frankfurt"
+  ],
+  [
+   "17 April 2027",
+   "30",
+   "Bayer Leverkusen",
+   "",
+   "Werder Bremen"
+  ],
+  [
+   "24 April 2027",
+   "31",
+   "Werder Bremen",
+   "",
+   "Bayern Munich"
+  ],
+  [
+   "8 May 2027",
+   "32",
+   "Union Berlin",
+   "",
+   "Werder Bremen"
+  ],
+  [
+   "14–16",
+   "33",
+   "Werder Bremen",
+   "",
+   "Schalke 04"
+  ],
+  [
+   "22 May 2027",
+   "34",
+   "Elversberg",
+   "",
+   "Werder Bremen"
+  ],
+  [
+   "",
+   "First Round",
+   "Lüneburger",
+   "0–3",
+   "Werder Bremen"
+  ],
+  [
+   "",
+   "Second Round",
+   "Borussia Dortmund",
+   "3–2",
+   "Werder Bremen"
+  ]
+ ]
+}

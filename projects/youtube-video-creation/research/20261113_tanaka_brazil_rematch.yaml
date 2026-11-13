@@ -1,0 +1,138 @@
+# 取材メモ（2026年11月13日）田中碧、涙のW杯ブラジル戦から因縁の再戦へ「個人的に何かというのはない」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-13。requests（ブラウザUA）で本文を全文読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: ゲキサカ 2026-11-13 01:23（取材・文 竹内達也）「「個人的に何かというのはない」涙のブラジル戦乗り越えた田中碧、因縁の再戦も「普段やっていることを」」（全文） https://web.gekisaka.jp/news/japan/detail/?463067-463067-fl
+# 写真の出どころ（本人の写真を探すため）:
+#   https://web.gekisaka.jp/news/japan/detail/?463067-463067-fl
+#   https://web.gekisaka.jp/news/japan/detail/?462496-462496-fl
+#   https://www.soccer-king.jp/news/japan/national/20261104/2224321.html
+#   https://web.gekisaka.jp/news/japan/detail/?462978-462978-fl
+#   https://web.gekisaka.jp/news/japan/detail/?463011-463011-fl
+#   https://web.gekisaka.jp/news/japan/detail/?463014-463014-fl
+#   https://web.gekisaka.jp/news/japan/detail/?463007-463007-fl
+#   https://www.soccer-king.jp/news/japan/national/20261110/2226285.html
+#   https://www.soccer-king.jp/news/japan/national/20261111/2226536.html
+#   https://www.soccer-king.jp/news/japan/national/20261111/2226735.html
+#   https://www.soccer-king.jp/news/japan/national/20261112/2226695.html
+# 出典で確かめたこと:
+#   ・12日の練習後に取材対応（シンガポール）。W杯ラウンド32から4か月半。14日にブラジルと再戦。
+#   ・地の文: 田中は今年夏のW杯ラウンド32ブラジル戦（1-2）後、自身のボールロストから試合終了間際に喫した失点を悔やみ、大粒の涙を流して帰路についた。「一人で責任を負うような類の失点ではなかった」（記者）。翌日の取材でも落胆は変わらず、「誰のせいでもなく自分の責任」と言い切り、失点シーンの映像は「もう見返さないと思います」と話していた（地の文の引用。台本は今回の言葉を使い、当時の言葉は使わない）。
+#   ・田中の言葉（原文。ゲキサカ。字は変えていない。括弧は記者の補足。台本は読点で行に分けた）:
+#       「ミスはミスでしてしまったことはしょうがないし、ただ個人的に何かというのはない」
+#       「あの試合であの瞬間に(ミスが)出てそうなっただけで、それを取り返すにはまた自分が日々努力していい選手になるしかないと思う」
+#       「見る機会は全然あるので見ました」（あの日の試合映像について）
+#       「すごく勝ちたいなと思うけど、別にこれに勝ったからと言ってW杯云々ではない」
+#       「本当に普段やっていることをやれればいいかなと思っている」
+#   ・ESPN（fifa.world summary event=760487, 2026-06-29 17:00Z）: ブラジル 2-1 日本。29分 佐野海舟で日本が先制、56分 カゼミーロで同点、90分+5 マルティネッリ（アシスト ブルーノ・ギマランイス）で逆転。田中碧は78分に鎌田大地に代わって途中出場。※ ESPN は「ボールロスト」の形までは書かない。失点の経緯はゲキサカの地の文（と、10/22 の台本が置いた同じ記述）に従い、台本ではゲキサカの記述として短く触れる。
+#   ・日程: 14日ブラジル戦（シンガポール）。
+# 食い違い: なし。「ラウンド32」は日本語記事の表記。ESPN では W杯の決勝トーナメント1回戦（6/29）。同じ試合。
+# 前の本との重なり: 20261107_tanaka_mitoma_words（三笘の話）、20261108_tanaka_leeds_first_win（リーズ初勝利）、20261022_ito_junya_aoi_zion（伊東が田中のW杯を語った話。ブラジル戦の失点にも触れている）。今回の初出: 再戦を前にした、あの失点への田中本人の今の言葉。伊東の評価・リーズの話は繰り返さない。
+# 【言わないこと】他の選手のブラジル戦の話／リーズの成績／4年後のW杯の戦い方の長い話／試合の予想。
+# 本人の言葉: あり（田中碧。ゲキサカ）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月13日"
+format: news
+no_main: true
+people: [田中碧, リーズ, ブラジル代表, 日本代表]
+
+short_style: Y
+short_hook_quote: ミスはミスで、してしまったことはしょうがないし、
+short_photos:
+  - assets/images/20261113_tanaka_brazil_rematch/04_v.jpg
+  - assets/images/20261113_tanaka_brazil_rematch/13_v.jpg
+  - assets/images/20261113_tanaka_brazil_rematch/13_v.jpg
+short_question: 田中碧は、14日のブラジル戦に出ると思いますか。
+short_telops: []
+
+theme:
+  id: tanaka_brazil_rematch
+  league: japan
+  league_name: 日本代表
+  prefix: ""
+  title: 田中碧、涙のW杯ブラジル戦から因縁の再戦へ「個人的に何かというのはない」
+  hook: ""
+  question: W杯のブラジル戦で涙を流した田中碧は、4か月半後の再戦を前に、あの失点をどう語ったのか
+  takeaway: 田中は「ミスはミスで、しょうがない」と話し、「個人的に何かというのはない」と言い切った。14日の再戦は「普段やっていることをやれれば」
+
+thumbnail:
+  layout: face
+  line1: 田中碧 因縁の再戦
+  line2: 個人的に何かはない
+  tags: [田中碧, ブラジル代表, 日本代表]
+  photo: assets/images/20261113_tanaka_brazil_rematch/04_w.jpg
+  short_photo: assets/images/20261113_tanaka_brazil_rematch/04_v.jpg
+
+answer: ミスはミスと受け止め、リベンジではなく、いまの力を示す気持ちで再戦に向かう
+watch: 14日のブラジル戦（シンガポール）
+
+sections:
+  - id: what
+    main: true
+    heading: W杯の失点を、田中碧は4か月半後にどう語ったか
+    tier: 報道
+    telop: 田中碧「個人的に何かというのはない」
+    say:
+      - text: 涙のW杯ブラジル戦から4か月半。日本代表の田中碧が、あの失点について語りました。
+        image: assets/images/20261113_tanaka_brazil_rematch/04_w.jpg
+      - voice: 田中碧
+        text: ミスはミスで、してしまったことはしょうがないし、
+        image: assets/images/20261113_tanaka_brazil_rematch/13_w.jpg
+      - voice: 田中碧
+        text: ただ個人的に何かというのはない。
+        cont: true
+        emph: true
+        image: assets/images/20261113_tanaka_brazil_rematch/04_w.jpg
+      - text: 田中はW杯のブラジル戦で、自分のボールロストから試合終了間際に失点しました。
+        image: assets/images/20261113_tanaka_brazil_rematch/04_w.jpg
+      - text: 大粒の涙を流して帰った田中は、あの日の映像を見たといいます。
+        image: assets/images/20261113_tanaka_brazil_rematch/04_w.jpg
+      - voice: 田中碧
+        text: 見る機会は全然あるので、見ました。
+        image: assets/images/20261113_tanaka_brazil_rematch/13_w.jpg
+      - voice: 田中碧
+        text: それを取り返すには、また自分が日々努力して、
+        image: assets/images/20261113_tanaka_brazil_rematch/04_w.jpg
+        cont: true
+      - voice: 田中碧
+        text: いい選手になるしかないと思う。
+        cont: true
+        image: assets/images/20261113_tanaka_brazil_rematch/13_w.jpg
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463067-463067-fl
+      - https://www.espn.com/soccer/match/_/gameId/760487
+  - id: team
+    heading: 再戦を前に、田中碧は何をやろうとしているのか
+    tier: 報道
+    telop: 田中碧「普段やっていることを」
+    say:
+      - text: 日本代表は14日、シンガポールでブラジルと再戦します。田中は、リベンジという気持ちではないと話しました。
+        image: assets/images/20261113_tanaka_brazil_rematch/04_w.jpg
+      - voice: 田中碧
+        text: 別にこれに勝ったからと言って、W杯云々ではない。
+        image: assets/images/20261113_tanaka_brazil_rematch/13_w.jpg
+      - voice: 田中碧
+        text: 本当に、普段やっていることをやれればいいかなと思っている。
+        image: assets/images/20261113_tanaka_brazil_rematch/13_w.jpg
+        cont: true
+        emph: true
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463067-463067-fl
+  - id: view
+    viewpoint: true
+    heading: 田中碧が悔やんだ失点は、試合のどの場面だったか
+    tier: 背景
+    telop: 78分に出場した田中碧。失点はその17分後
+    say:
+      - text: 見立てです。田中碧は78分に途中出場しました。
+        card: {type: table, title: W杯 ブラジル 2-1 日本の経過, columns: [分, 出来事], rows: [[29分, 佐野海舟が先制], [56分, カゼミーロが同点], [78分, 田中碧が途中出場], [90+5分, マルティネッリが逆転]], highlight_row: 3}
+      - text: 悔やんだ失点は、その17分後。90分を過ぎた、試合の最後の場面でした。
+        card: none
+        image: assets/images/20261113_tanaka_brazil_rematch/13_w.jpg
+      - text: 試合は1対2で、日本の逆転負けでした。
+        image: assets/images/20261113_tanaka_brazil_rematch/04_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/760487
+      - https://web.gekisaka.jp/news/japan/detail/?463067-463067-fl

@@ -1,0 +1,182 @@
+# 取材メモ（2026年11月13日）鎌田大地、アジア杯延期のあとも代表を続ける意向。「しっかり実力で選ばれるように」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-13。requests（ブラウザUA）で本文を全文読み、ESPN（site.api.espn.com）で試合を確かめた。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: ゲキサカ 2026-11-12 22:00（取材・文 竹内達也）「節目のアジア杯延期も鎌田大地、代表継続意向を明言「しっかり実力で選ばれるように」」（全文） https://web.gekisaka.jp/news/japan/detail/?463060-463060-fl
+# 写真の出どころ（本人の写真。ゲキサカの主写真と、パレス公式サイトの写真＝前の回の取り込み分を出どころごと引き継いだ）:
+#   https://web.gekisaka.jp/news/japan/detail/?463060-463060-fl
+#   https://www.cpfc.co.uk/news/club/the-numbers-kamadas-100-palace-appearances/
+#   https://www.cpfc.co.uk/news/match-reports/report-highlights-crystal-palace-hoffenheim-euro
+# 出典で確かめたこと:
+#   ・12日の練習後に報道陣の取材に応じた（ゲキサカ）。アジア杯は1年延期（ゲキサカ「アジア杯の1年延期」。記事冒頭は「北中米W杯後に『アジアカップまでは最低限やりたい』と意気込んでいた」）。
+#   ・鎌田の言葉（原文。ゲキサカ。括弧は記者の補足。字は変えていない。台本は読点で行に分けた）:
+#       「代表活動に関しては自分がしっかりしたレベルで、(所属クラブで)いるべき場所にいれば続けたいなと思っている」
+#       「自分が代表に入るべき場所にいて、出られるだけの実力があるなら来るべきところではあると思う。それ(選出)は僕が決めることではないけど、自分は自チームのパフォーマンスやレベルをすごく大事にしている。キャラ的にも裏で支えたりというより、しっかり実力で選ばれるようにやっていきたい」
+#       「ここ2年は個人成績が伸びない代わりにチームとしてすごく充実したシーズンを送れていて、数字に見えないところでたくさん仕事をしてきた自覚はあるけど、今年は逆に数字が伸びているけど、チームとしての調子が良くない。ただこういうタイミングはパレスでやっていれば常々あるし、そこにあまり焦りはない」
+#       （台本は「しっかりスタッツ的にも互角に…」を使わず、前半の「ボール保持も対等に」「前から守備に」までを引く。「スタッツ」は説明が要るため）
+#       「守ってワンチャンスで勝つのではなく、しっかりボール保持も対等にできたり、しっかり前から守備に行けるように。守ってセットプレーとかカウンターで一発勝つというよりも、しっかりスタッツ的にも互角にやり合えればいいなと思います」
+#       （台本では「所属クラブで」「選出」の補足は読み上げず、本人の言葉の流れだけを読む。記者の補足を本人の声にしない）
+#   ・地の文（ゲキサカ）: 今回は森保一監督のもとでの活動。終えたあとも代表活動を継続する意向を明言。今季は鎌田自身は安定。
+#   ・ESPN（fifa.world summary event=760487, 2026-06-29）: W杯のブラジル戦（ブラジル 2-1 日本）に鎌田は先発、78分に田中碧と交代。→ 台本は「先発して78分に交代」まで。
+#   ・日程: 11/14 ブラジル戦（シンガポール）。ゲキサカ記事に「14日に控えるブラジルとの再戦」。
+# 食い違い: ①記事は「1年延期」。堂安の回（20261111_doan_asiacup_words）の取材メモは本文の「中止」と見出しの「延期」の食い違いを記録済み。今回の記事は「延期」で一貫。
+#   ②「来年3月からの大岩剛監督体制」はゲキサカの記述だが、前の回の取材メモで「確定ではない」と整理済み → 台本に監督名・体制は出さない。
+#   ③記事内の成績（プレミア初ゴール・EL3試合2ゴール）、パレスの順位・サージュ監督解任（取材後に発表）は、この回の問いに要らないので台本に入れない（数字は使わない）。
+# 前の本との重なり: 20261111_doan_asiacup_words（延期への堂安の言葉）、20261106_kamada_palace_equalizer（同点弾）、20261107_kamada_tomiyasu_words（冨安）。今回の初出: 延期後の鎌田本人の「実力で選ばれたい」「代表は続けたい」。延期の発表そのもの・後任監督・同点弾は繰り返さない。
+# 【言わないこと】大岩監督／パレスの順位・監督解任／プレミアとELの得点数／次のクラブ戦（コベントリー・ハル）／ブラジル戦の勝敗予想。
+# 本人の言葉: あり（鎌田大地。ゲキサカ）。Y。日本人の題。9〜17時の枠に置く（18時以降に置かない）。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月13日"
+format: news
+no_main: true
+people: [鎌田大地, クリスタル・パレス, 日本代表, 森保一]
+
+short_style: Y
+short_hook_quote: キャラ的にも、裏で支えたりというより、
+short_photos:
+  - assets/images/20261113_kamada_asiacup_postponed/02_v.jpg
+  - assets/images/20261113_kamada_asiacup_postponed/03_v.jpg
+  - assets/images/20261113_kamada_asiacup_postponed/04_v.jpg
+  - assets/images/20261113_kamada_asiacup_postponed/05_v.jpg
+  - assets/images/20261113_kamada_asiacup_postponed/06_v.jpg
+short_question: 鎌田大地は、実力で代表に選ばれ続けると思いますか。
+short_telops: []
+
+theme:
+  id: kamada_asiacup_postponed
+  league: japan
+  league_name: 日本代表
+  prefix: ""
+  title: 鎌田大地、アジア杯延期でも代表を続ける意向。「しっかり実力で選ばれるように」
+  hook: ""
+  question: アジア杯が延期になったいま、鎌田大地は代表を続けるのか。本人は何と語ったのか
+  takeaway: 鎌田は、所属クラブでいるべき場所にいれば代表を続けたいと明言した。「キャラ的にも」裏で支えるのではなく、実力で選ばれたいと話し、14日のブラジル戦は、守ってワンチャンスで勝つのではなく、ボール保持も守備も対等に戦うと語った
+
+thumbnail:
+  layout: face
+  line1: 鎌田大地 代表継続
+  line2: 実力で選ばれる
+  tags: [鎌田大地, 日本代表, アジア杯]
+  photo: assets/images/20261113_kamada_asiacup_postponed/02_w.jpg
+  short_photo: assets/images/20261113_kamada_asiacup_postponed/02_v.jpg
+
+answer: 所属クラブでいるべき場所にいれば、代表は続けたい。裏で支えるより、実力で選ばれたい
+watch: 14日のブラジル戦（シンガポール）
+
+sections:
+  - id: what
+    main: true
+    heading: アジア杯が延期になったいま、鎌田大地は代表を続けるのか
+    tier: 報道
+    telop: 鎌田大地「しっかり実力で選ばれるように」
+    say:
+      - text: 12日、日本代表の鎌田大地が、アジア杯が1年延期になったあと、代表を続ける意向を語りました。
+        short_only: true
+        image: assets/images/20261113_kamada_asiacup_postponed/02_w.jpg
+      - voice: 鎌田大地
+        text: 代表活動に関しては、自分がしっかりしたレベルで、
+        image: assets/images/20261113_kamada_asiacup_postponed/02_w.jpg
+      - voice: 鎌田大地
+        text: いるべき場所にいれば、続けたいなと思っている。
+        cont: true
+        emph: true
+        image: assets/images/20261113_kamada_asiacup_postponed/05_w.jpg
+      - text: 代表に選ばれることについては、こう話しました。
+        image: assets/images/20261113_kamada_asiacup_postponed/03_w.jpg
+      - voice: 鎌田大地
+        text: 自分が代表に入るべき場所にいて、
+        image: assets/images/20261113_kamada_asiacup_postponed/06_w.jpg
+      - voice: 鎌田大地
+        text: 出られるだけの実力があるなら、
+        cont: true
+        image: assets/images/20261113_kamada_asiacup_postponed/02_w.jpg
+      - voice: 鎌田大地
+        text: 来るべきところではあると思う。
+        cont: true
+        image: assets/images/20261113_kamada_asiacup_postponed/04_w.jpg
+      - voice: 鎌田大地
+        text: 僕が決めることではないけど、
+        image: assets/images/20261113_kamada_asiacup_postponed/05_w.jpg
+      - voice: 鎌田大地
+        text: 自分は自チームのパフォーマンスやレベルを、
+        cont: true
+        image: assets/images/20261113_kamada_asiacup_postponed/06_w.jpg
+      - voice: 鎌田大地
+        text: すごく大事にしている。
+        cont: true
+        image: assets/images/20261113_kamada_asiacup_postponed/04_w.jpg
+      - text: 自分の立ち位置を、こう表現しました。
+        image: assets/images/20261113_kamada_asiacup_postponed/02_w.jpg
+      - voice: 鎌田大地
+        text: キャラ的にも、裏で支えたりというより、
+        image: assets/images/20261113_kamada_asiacup_postponed/02_w.jpg
+      - voice: 鎌田大地
+        text: しっかり実力で選ばれるようにやっていきたい。
+        cont: true
+        emph: true
+        image: assets/images/20261113_kamada_asiacup_postponed/05_w.jpg
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463060-463060-fl
+  - id: club
+    heading: 数字は伸びても、チームは苦しい。鎌田は焦っていない
+    tier: 報道
+    telop: 鎌田大地「今年は数字が伸びている」
+    say:
+      - text: 所属のクリスタル・パレスでの今季を、鎌田は昨季までと比べて振り返りました。
+        card: none
+      - text: 個人の数字は伸びている一方、チームの調子は良くないといいます。
+        image: assets/images/20261113_kamada_asiacup_postponed/06_w.jpg
+      - voice: 鎌田大地
+        text: ここ2年は、個人成績が伸びない代わりに、
+        image: assets/images/20261113_kamada_asiacup_postponed/05_w.jpg
+      - voice: 鎌田大地
+        text: チームとしてすごく充実したシーズンを送れていた。
+        cont: true
+        image: assets/images/20261113_kamada_asiacup_postponed/02_w.jpg
+      - voice: 鎌田大地
+        text: 今年は逆に、数字が伸びているけど、
+        image: assets/images/20261113_kamada_asiacup_postponed/04_w.jpg
+      - voice: 鎌田大地
+        text: チームとしての調子が良くない。
+        cont: true
+        image: assets/images/20261113_kamada_asiacup_postponed/05_w.jpg
+      - voice: 鎌田大地
+        text: こういうタイミングはパレスでやっていれば常々あるし、
+        image: assets/images/20261113_kamada_asiacup_postponed/06_w.jpg
+      - voice: 鎌田大地
+        text: そこにあまり焦りはない。
+        cont: true
+        emph: true
+        image: assets/images/20261113_kamada_asiacup_postponed/02_w.jpg
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463060-463060-fl
+  - id: view
+    viewpoint: true
+    heading: 14日のブラジル戦へ、鎌田が掲げたこと
+    tier: 背景
+    telop: ブラジル戦「ボール保持も対等に」
+    say:
+      - text: 見立てです。14日は、W杯で敗れたブラジルとの再戦です。
+        card: none
+        image: assets/images/20261113_kamada_asiacup_postponed/06_w.jpg
+      - text: 鎌田は、W杯のブラジル戦に先発して、78分に交代しています。
+        image: assets/images/20261113_kamada_asiacup_postponed/03_w.jpg
+      - voice: 鎌田大地
+        text: 守ってワンチャンスで勝つのではなく、
+        image: assets/images/20261113_kamada_asiacup_postponed/05_w.jpg
+      - voice: 鎌田大地
+        text: しっかりボール保持も対等にできたり、
+        cont: true
+        image: assets/images/20261113_kamada_asiacup_postponed/06_w.jpg
+      - voice: 鎌田大地
+        text: しっかり前から守備に行けるように。
+        cont: true
+        emph: true
+        image: assets/images/20261113_kamada_asiacup_postponed/02_w.jpg
+      - text: 再戦の舞台は、シンガポールです。
+        image: assets/images/20261113_kamada_asiacup_postponed/04_w.jpg
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463060-463060-fl
+      - https://www.espn.com/soccer/match/_/gameId/760487

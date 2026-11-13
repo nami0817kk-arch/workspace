@@ -1,0 +1,977 @@
+# 代表チーム紹介 オーストラリア代表（11/12 作成。見本は 11/14 の韓国代表）。7節：フック→基礎DATA→日本との関係→歴史と転機（年表）→看板選手（表）→いまのチーム→見立て。
+date: 2026年11月16日（情報は11月12日時点）
+slot: other_1
+format: news
+series: 代表チーム紹介
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+short_photos:
+- assets/images/20261116_team_australia/b02_v.jpg
+- assets/images/20261116_team_australia/b03_v.jpg
+people:
+- オーストラリア代表
+- ポポビッチ
+- 日本代表
+- ワールドカップ
+- アジアカップ
+theme:
+  id: team_australia
+  league: japan
+  league_name: オーストラリア代表
+  kind: preview
+  topic: オーストラリア代表
+  title: オーストラリア代表は、W杯は6大会すべてに出場。アジアに移って、何が変わったのか
+  question: オーストラリアは2006年にアジアへ移ったが、W杯の出場や勝ちの数字はそれ以前とどう違うのか
+  lead: 日本と戦い続けてきた、アジアの国。
+  hook: ''
+  opening_image: assets/stats/tb_australia_data_t.png
+  end_bg: assets/images/20261116_team_australia/b02_w.jpg
+  takeaway: オーストラリアは2006年にオセアニアからアジアへ移った。W杯の出場は、1974〜2002年の8大会で1回、2006〜2026年の6大会で6回。勝ちは0から5、ベスト16は0回から2回。日本とは2021年以降のW杯予選4試合で、日本の2勝1分け1敗。
+thumbnail:
+  board: assets/stats/tb_australia_data.png
+  short_photo: assets/images/20261116_team_australia/b03_v.jpg
+  line1: オーストラリア代表
+  line2: W杯は6大会連続で出場
+  crest_main:
+  - オーストラリア
+  tags:
+  - オーストラリア代表
+  - サッカルーズ
+  - 日本代表
+  - ワールドカップ
+  - アジアカップ
+  - 代表チーム紹介
+sections:
+- id: hook
+  heading: オーストラリアは、アジアに移って何が変わったのか
+  tier: 背景
+  telop: W杯は、アジアに移ってから6大会すべてに出場
+  narrator: 解説
+  main: true
+  say:
+  - text: オーストラリア代表。フィファランクは26位の国です。
+    image: assets/stats/tb_australia_data_t.png
+    short_only: true
+    no_telop: true
+  - text: 日本と、ワールドカップでもアジアカップでも戦ってきた国です。
+    image: assets/stats/tb_australia_data_t.png
+    no_telop: true
+  - text: オーストラリアは、2006年に、オセアニアからアジアへ移りました。
+    image: assets/stats/tb_australia_data_t.png
+    no_telop: true
+  - text: それまでの8大会、1974年から2002年で、W杯に出たのは1回だけ。
+    image: assets/stats/tb_australia_data_r1.png
+    no_telop: true
+  - text: 2006年からは、6大会で、毎回本大会に出ています。
+    image: assets/stats/tb_australia_data_r1.png
+    no_telop: true
+    emph: true
+  - text: 2015年には、アジアカップで優勝しました。
+    image: assets/images/20261116_team_australia/b01_w.jpg
+    no_telop: true
+  - text: アジアに移ったことで、この国の数字は、どう変わったのでしょうか。
+    image: assets/stats/tb_australia_data_t.png
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Australia_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/Australia_men's_national_soccer_team
+- id: data
+  heading: オーストラリア代表は、どんな数字を持つ国なのか
+  tier: 背景
+  telop: オーストラリア代表の基礎DATA
+  narrator: 解説
+  say:
+  - text: オーストラリアのフィファランクは、10月7日の発表で**26位**。日本は17位です。
+    image: assets/stats/tb_australia_data0.png
+    no_telop: true
+  - text: ワールドカップは7回出場。いちばん上はベスト16で、2006年と2022年です。
+    image: assets/stats/tb_australia_data1.png
+    no_telop: true
+  - text: 2026年は、決勝トーナメント1回戦でエジプトにPK戦で敗れました。
+    image: assets/stats/tb_australia_data2.png
+    no_telop: true
+  - text: アジアカップは、2015年に優勝。2011年は準優勝です。
+    image: assets/stats/tb_australia_data3.png
+    no_telop: true
+  - text: 連盟は、2006年からアジア。それまではオセアニアでした。
+    image: assets/stats/tb_australia_data4.png
+    no_telop: true
+  - text: 監督は、オーストラリア出身のトニー・ポポビッチ。2024年9月の就任です。
+    image: assets/stats/tb_australia_data5.png
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Module:SportsRankings/data/FIFA_World_Rankings
+  - https://en.wikipedia.org/wiki/Australia_men's_national_soccer_team
+- id: japan
+  heading: 日本は、オーストラリアとどう戦ってきたのか
+  tier: 背景
+  telop: 2021年以降の4試合は、日本の2勝1分け1敗
+  narrator: 解説
+  card:
+    type: table
+    title: 日本とオーストラリアの主な対戦
+    columns:
+    - 年
+    - 大会
+    - 日本の結果
+    rows:
+    - - 2006年
+      - W杯
+      - 1-3の負け
+    - - 2007年
+      - アジアカップ準々決勝
+      - 1-1。PK戦で勝ち
+    - - 2011年
+      - アジアカップ決勝
+      - 1-0の勝ち（延長）
+    - - 2021年以降
+      - W杯予選の4試合
+      - 2勝1分け1敗
+  say:
+  - text: オーストラリアと日本は、大きな大会で、何度も顔を合わせてきました。
+    image: assets/stats/tb_australia_data8.png
+    card:
+      type: table
+      title: 日本とオーストラリアの主な対戦
+      columns:
+      - 年
+      - 大会
+      - 日本の結果
+      rows:
+      - - 2006年
+        - W杯
+        - 1-3の負け
+      - - 2007年
+        - アジアカップ準々決勝
+        - 1-1。PK戦で勝ち
+      - - 2011年
+        - アジアカップ決勝
+        - 1-0の勝ち（延長）
+      - - 2021年以降
+        - W杯予選の4試合
+        - 2勝1分け1敗
+  - text: 最初の大舞台は、2006年のW杯。日本が先に点を取りました。
+    image: assets/images/20261116_team_australia/b02_w.jpg
+    card:
+      type: table
+      title: 日本とオーストラリアの主な対戦
+      columns:
+      - 年
+      - 大会
+      - 日本の結果
+      rows:
+      - - 2006年
+        - W杯
+        - 1-3の負け
+      - - 2007年
+        - アジアカップ準々決勝
+        - 1-1。PK戦で勝ち
+      - - 2011年
+        - アジアカップ決勝
+        - 1-0の勝ち（延長）
+      - - 2021年以降
+        - W杯予選の4試合
+        - 2勝1分け1敗
+      highlight_row: 0
+  - text: ところが、終盤の7分間に3点を取られ、1対3の逆転負けです。
+    card:
+      type: table
+      title: 日本とオーストラリアの主な対戦
+      columns:
+      - 年
+      - 大会
+      - 日本の結果
+      rows:
+      - - 2006年
+        - W杯
+        - 1-3の負け
+      - - 2007年
+        - アジアカップ準々決勝
+        - 1-1。PK戦で勝ち
+      - - 2011年
+        - アジアカップ決勝
+        - 1-0の勝ち（延長）
+      - - 2021年以降
+        - W杯予選の4試合
+        - 2勝1分け1敗
+      highlight_row: 0
+  - text: 2007年のアジアカップ準々決勝は、1対1のあと、PK戦で日本が勝ちました。
+    card:
+      type: table
+      title: 日本とオーストラリアの主な対戦
+      columns:
+      - 年
+      - 大会
+      - 日本の結果
+      rows:
+      - - 2006年
+        - W杯
+        - 1-3の負け
+      - - 2007年
+        - アジアカップ準々決勝
+        - 1-1。PK戦で勝ち
+      - - 2011年
+        - アジアカップ決勝
+        - 1-0の勝ち（延長）
+      - - 2021年以降
+        - W杯予選の4試合
+        - 2勝1分け1敗
+      highlight_row: 1
+  - text: 2011年のアジアカップ決勝は、延長で日本が1対0の勝ち。決めたのは李忠成です。
+    image: assets/images/20261116_team_australia/b03_w.jpg
+    card:
+      type: table
+      title: 日本とオーストラリアの主な対戦
+      columns:
+      - 年
+      - 大会
+      - 日本の結果
+      rows:
+      - - 2006年
+        - W杯
+        - 1-3の負け
+      - - 2007年
+        - アジアカップ準々決勝
+        - 1-1。PK戦で勝ち
+      - - 2011年
+        - アジアカップ決勝
+        - 1-0の勝ち（延長）
+      - - 2021年以降
+        - W杯予選の4試合
+        - 2勝1分け1敗
+      highlight_row: 2
+  - text: 2021年以降の4試合は、すべてW杯予選。日本の2勝1分け1敗です。
+    card:
+      type: table
+      title: 日本とオーストラリアの主な対戦
+      columns:
+      - 年
+      - 大会
+      - 日本の結果
+      rows:
+      - - 2006年
+        - W杯
+        - 1-3の負け
+      - - 2007年
+        - アジアカップ準々決勝
+        - 1-1。PK戦で勝ち
+      - - 2011年
+        - アジアカップ決勝
+        - 1-0の勝ち（延長）
+      - - 2021年以降
+        - W杯予選の4試合
+        - 2勝1分け1敗
+      highlight_row: 3
+  - text: 2022年3月は、シドニーで2対0の勝ち。三笘薫が89分と90分すぎに2得点。
+    image: assets/images/20261116_team_australia/b01_w.jpg
+    card:
+      type: table
+      title: 日本とオーストラリアの主な対戦
+      columns:
+      - 年
+      - 大会
+      - 日本の結果
+      rows:
+      - - 2006年
+        - W杯
+        - 1-3の負け
+      - - 2007年
+        - アジアカップ準々決勝
+        - 1-1。PK戦で勝ち
+      - - 2011年
+        - アジアカップ決勝
+        - 1-0の勝ち（延長）
+      - - 2021年以降
+        - W杯予選の4試合
+        - 2勝1分け1敗
+      highlight_row: 3
+  - text: 2025年6月は、パースで0対1の負け。決めたのは、ベヒッチです。
+    card:
+      type: table
+      title: 日本とオーストラリアの主な対戦
+      columns:
+      - 年
+      - 大会
+      - 日本の結果
+      rows:
+      - - 2006年
+        - W杯
+        - 1-3の負け
+      - - 2007年
+        - アジアカップ準々決勝
+        - 1-1。PK戦で勝ち
+      - - 2011年
+        - アジアカップ決勝
+        - 1-0の勝ち（延長）
+      - - 2021年以降
+        - W杯予選の4試合
+        - 2勝1分け1敗
+      highlight_row: 3
+  - text: 11月の招集メンバーには、日本のクラブの選手が5人います。
+    image: assets/images/20261116_team_australia/b02_w.jpg
+    card: none
+  - text: 広島、ガンバ大阪、町田、新潟、大宮の5クラブです。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_records_and_statistics
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(2020–present)
+- id: history
+  heading: オーストラリアは、どんな道でW杯の常連になったのか
+  tier: 背景
+  telop: W杯は7回。最高はベスト16
+  narrator: 解説
+  card:
+    type: timeline
+    title: オーストラリア代表の歩み
+    rows:
+    - - 1974年
+      - W杯に初出場。選手は全員アマチュア
+    - - 2005年
+      - アジアへの移籍をFIFAが承認
+    - - 2006年
+      - W杯でベスト16
+    - - 2011年
+      - アジアカップで準優勝
+    - - 2015年
+      - アジアカップで初優勝
+    - - 2026年
+      - W杯は32強で敗退
+    focus: 2006年
+  say:
+  - text: オーストラリアのW杯初出場は、1974年。選手は、全員がアマチュアでした。
+    image: assets/images/20261116_team_australia/b03_w.jpg
+    card:
+      type: timeline
+      title: オーストラリア代表の歩み
+      rows:
+      - - 1974年
+        - W杯に初出場。選手は全員アマチュア
+      - - 2005年
+        - アジアへの移籍をFIFAが承認
+      - - 2006年
+        - W杯でベスト16
+      - - 2011年
+        - アジアカップで準優勝
+      - - 2015年
+        - アジアカップで初優勝
+      - - 2026年
+        - W杯は32強で敗退
+      focus: 2006年
+  - text: そのあと、2002年まで、本大会には出られませんでした。
+    card:
+      type: timeline
+      title: オーストラリア代表の歩み
+      rows:
+      - - 1974年
+        - W杯に初出場。選手は全員アマチュア
+      - - 2005年
+        - アジアへの移籍をFIFAが承認
+      - - 2006年
+        - W杯でベスト16
+      - - 2011年
+        - アジアカップで準優勝
+      - - 2015年
+        - アジアカップで初優勝
+      - - 2026年
+        - W杯は32強で敗退
+      focus: 2006年
+      highlight_row: 0
+  - text: 2005年6月、フィファが、アジアへの移籍を認めました。
+    card:
+      type: timeline
+      title: オーストラリア代表の歩み
+      rows:
+      - - 1974年
+        - W杯に初出場。選手は全員アマチュア
+      - - 2005年
+        - アジアへの移籍をFIFAが承認
+      - - 2006年
+        - W杯でベスト16
+      - - 2011年
+        - アジアカップで準優勝
+      - - 2015年
+        - アジアカップで初優勝
+      - - 2026年
+        - W杯は32強で敗退
+      focus: 2006年
+      highlight_row: 1
+  - text: 11月、ウルグアイとのプレーオフを勝ち抜いて、2006年のW杯へ。
+    image: assets/images/20261116_team_australia/b01_w.jpg
+    card: none
+  - text: 2006年は、日本に勝って、W杯で初めての勝ち。
+    card:
+      type: timeline
+      title: オーストラリア代表の歩み
+      rows:
+      - - 1974年
+        - W杯に初出場。選手は全員アマチュア
+      - - 2005年
+        - アジアへの移籍をFIFAが承認
+      - - 2006年
+        - W杯でベスト16
+      - - 2011年
+        - アジアカップで準優勝
+      - - 2015年
+        - アジアカップで初優勝
+      - - 2026年
+        - W杯は32強で敗退
+      focus: 2006年
+      highlight_row: 2
+  - text: 16強に進み、イタリアに、0対1の負けでした。
+    card:
+      type: timeline
+      title: オーストラリア代表の歩み
+      rows:
+      - - 1974年
+        - W杯に初出場。選手は全員アマチュア
+      - - 2005年
+        - アジアへの移籍をFIFAが承認
+      - - 2006年
+        - W杯でベスト16
+      - - 2011年
+        - アジアカップで準優勝
+      - - 2015年
+        - アジアカップで初優勝
+      - - 2026年
+        - W杯は32強で敗退
+      focus: 2006年
+      highlight_row: 2
+  - text: 2011年のアジアカップは、決勝で日本に敗れて、準優勝。
+    image: assets/images/20261116_team_australia/b02_w.jpg
+    card:
+      type: timeline
+      title: オーストラリア代表の歩み
+      rows:
+      - - 1974年
+        - W杯に初出場。選手は全員アマチュア
+      - - 2005年
+        - アジアへの移籍をFIFAが承認
+      - - 2006年
+        - W杯でベスト16
+      - - 2011年
+        - アジアカップで準優勝
+      - - 2015年
+        - アジアカップで初優勝
+      - - 2026年
+        - W杯は32強で敗退
+      focus: 2006年
+      highlight_row: 3
+  - text: 2015年は、自国開催のアジアカップで優勝。決勝は、韓国に延長で2対1の勝ちです。
+    card:
+      type: timeline
+      title: オーストラリア代表の歩み
+      rows:
+      - - 1974年
+        - W杯に初出場。選手は全員アマチュア
+      - - 2005年
+        - アジアへの移籍をFIFAが承認
+      - - 2006年
+        - W杯でベスト16
+      - - 2011年
+        - アジアカップで準優勝
+      - - 2015年
+        - アジアカップで初優勝
+      - - 2026年
+        - W杯は32強で敗退
+      focus: 2006年
+      highlight_row: 4
+  - text: 2022年は、ベスト16。アルゼンチンに、1対2の負けでした。
+    image: assets/images/20261116_team_australia/b03_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Australia_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/Australia_men's_national_soccer_team
+- id: players
+  heading: いまの看板選手は、誰なのか
+  tier: 背景
+  telop: 看板選手を、所属・名前・位置・年齢で
+  narrator: 解説
+  card:
+    type: table
+    title: オーストラリア代表の看板選手
+    columns:
+    - 所属
+    - 名前
+    - 位置
+    - 年齢
+    rows:
+    - - レスター
+      - スーター
+      - DF
+      - '28'
+    - - スポルティング
+      - イランクンダ
+      - FW
+      - '20'
+    - - ザンクト・パウリ
+      - メトカーフ
+      - MF
+      - '27'
+    - - ミドルズブラ
+      - マクグリー
+      - MF
+      - '28'
+    - - メルボルン・シティ
+      - ベヒッチ
+      - DF
+      - '35'
+    - - トロワ
+      - ビーチ
+      - GK
+      - '23'
+  say:
+  - text: 11月に招集された、オーストラリアの主な選手です。
+    image: assets/images/20261116_team_australia/b01_w.jpg
+    card:
+      type: table
+      title: オーストラリア代表の看板選手
+      columns:
+      - 所属
+      - 名前
+      - 位置
+      - 年齢
+      rows:
+      - - レスター
+        - スーター
+        - DF
+        - '28'
+      - - スポルティング
+        - イランクンダ
+        - FW
+        - '20'
+      - - ザンクト・パウリ
+        - メトカーフ
+        - MF
+        - '27'
+      - - ミドルズブラ
+        - マクグリー
+        - MF
+        - '28'
+      - - メルボルン・シティ
+        - ベヒッチ
+        - DF
+        - '35'
+      - - トロワ
+        - ビーチ
+        - GK
+        - '23'
+  - text: ハリー・スーターは、レスターのディフェンダー。代表44試合で、11得点です。
+    image: assets/images/20261116_team_australia/b02_w.jpg
+    card:
+      type: table
+      title: オーストラリア代表の看板選手
+      columns:
+      - 所属
+      - 名前
+      - 位置
+      - 年齢
+      rows:
+      - - レスター
+        - スーター
+        - DF
+        - '28'
+      - - スポルティング
+        - イランクンダ
+        - FW
+        - '20'
+      - - ザンクト・パウリ
+        - メトカーフ
+        - MF
+        - '27'
+      - - ミドルズブラ
+        - マクグリー
+        - MF
+        - '28'
+      - - メルボルン・シティ
+        - ベヒッチ
+        - DF
+        - '35'
+      - - トロワ
+        - ビーチ
+        - GK
+        - '23'
+      highlight_row: 0
+  - text: ネストリー・イランクンダは、20歳のフォワード。
+    image: assets/images/20261116_team_australia/b04_w.jpg
+    card:
+      type: table
+      title: オーストラリア代表の看板選手
+      columns:
+      - 所属
+      - 名前
+      - 位置
+      - 年齢
+      rows:
+      - - レスター
+        - スーター
+        - DF
+        - '28'
+      - - スポルティング
+        - イランクンダ
+        - FW
+        - '20'
+      - - ザンクト・パウリ
+        - メトカーフ
+        - MF
+        - '27'
+      - - ミドルズブラ
+        - マクグリー
+        - MF
+        - '28'
+      - - メルボルン・シティ
+        - ベヒッチ
+        - DF
+        - '35'
+      - - トロワ
+        - ビーチ
+        - GK
+        - '23'
+      highlight_row: 1
+  - text: W杯初戦のトルコ戦で、ゴールを決めました。
+    card:
+      type: table
+      title: オーストラリア代表の看板選手
+      columns:
+      - 所属
+      - 名前
+      - 位置
+      - 年齢
+      rows:
+      - - レスター
+        - スーター
+        - DF
+        - '28'
+      - - スポルティング
+        - イランクンダ
+        - FW
+        - '20'
+      - - ザンクト・パウリ
+        - メトカーフ
+        - MF
+        - '27'
+      - - ミドルズブラ
+        - マクグリー
+        - MF
+        - '28'
+      - - メルボルン・シティ
+        - ベヒッチ
+        - DF
+        - '35'
+      - - トロワ
+        - ビーチ
+        - GK
+        - '23'
+      highlight_row: 1
+  - text: コナー・メトカーフも、同じ試合でゴール。ザンクト・パウリの所属です。
+    image: assets/images/20261116_team_australia/b03_w.jpg
+    card:
+      type: table
+      title: オーストラリア代表の看板選手
+      columns:
+      - 所属
+      - 名前
+      - 位置
+      - 年齢
+      rows:
+      - - レスター
+        - スーター
+        - DF
+        - '28'
+      - - スポルティング
+        - イランクンダ
+        - FW
+        - '20'
+      - - ザンクト・パウリ
+        - メトカーフ
+        - MF
+        - '27'
+      - - ミドルズブラ
+        - マクグリー
+        - MF
+        - '28'
+      - - メルボルン・シティ
+        - ベヒッチ
+        - DF
+        - '35'
+      - - トロワ
+        - ビーチ
+        - GK
+        - '23'
+      highlight_row: 2
+  - text: パトリック・ビーチは、W杯の全試合で、ゴールを守りました。
+    card:
+      type: table
+      title: オーストラリア代表の看板選手
+      columns:
+      - 所属
+      - 名前
+      - 位置
+      - 年齢
+      rows:
+      - - レスター
+        - スーター
+        - DF
+        - '28'
+      - - スポルティング
+        - イランクンダ
+        - FW
+        - '20'
+      - - ザンクト・パウリ
+        - メトカーフ
+        - MF
+        - '27'
+      - - ミドルズブラ
+        - マクグリー
+        - MF
+        - '28'
+      - - メルボルン・シティ
+        - ベヒッチ
+        - DF
+        - '35'
+      - - トロワ
+        - ビーチ
+        - GK
+        - '23'
+      highlight_row: 5
+  - text: アジズ・ベヒッチは、代表89試合。2025年6月に、日本を破るゴールを決めました。
+    image: assets/images/20261116_team_australia/b05_w.jpg
+    card:
+      type: table
+      title: オーストラリア代表の看板選手
+      columns:
+      - 所属
+      - 名前
+      - 位置
+      - 年齢
+      rows:
+      - - レスター
+        - スーター
+        - DF
+        - '28'
+      - - スポルティング
+        - イランクンダ
+        - FW
+        - '20'
+      - - ザンクト・パウリ
+        - メトカーフ
+        - MF
+        - '27'
+      - - ミドルズブラ
+        - マクグリー
+        - MF
+        - '28'
+      - - メルボルン・シティ
+        - ベヒッチ
+        - DF
+        - '35'
+      - - トロワ
+        - ビーチ
+        - GK
+        - '23'
+      highlight_row: 4
+  sources:
+  - https://en.wikipedia.org/wiki/Australia_men's_national_soccer_team
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_round_of_32
+- id: now
+  heading: W杯のあとのオーストラリアは、いまどうなっているのか
+  tier: 背景
+  telop: W杯のあと、ブラジルと2試合
+  narrator: 解説
+  card:
+    type: table
+    title: W杯のあと オーストラリアの2試合（親善試合）
+    columns:
+    - 日付
+    - 相手
+    - オーストラリアの結果
+    rows:
+    - - 9月25日
+      - ブラジル
+      - 1-1
+    - - 9月29日
+      - ブラジル
+      - 2-4
+  say:
+  - text: オーストラリアの2026年のW杯は、32強。グループは、1勝1分け1敗でした。
+    image: assets/images/20261116_team_australia/b01_w.jpg
+    card: none
+  - text: トルコに2対0の勝ち。アメリカに0対2の負け。パラグアイとは0対0の引き分けです。
+    card: none
+  - text: 決勝トーナメント1回戦は、エジプトと1対1。PK戦で、2対4の負けでした。
+    image: assets/images/20261116_team_australia/b02_w.jpg
+    card: none
+  - text: そのあと、オーストラリアは9月に、ブラジルと2試合。
+    card:
+      type: table
+      title: W杯のあと オーストラリアの2試合（親善試合）
+      columns:
+      - 日付
+      - 相手
+      - オーストラリアの結果
+      rows:
+      - - 9月25日
+        - ブラジル
+        - 1-1
+      - - 9月29日
+        - ブラジル
+        - 2-4
+  - text: 1戦目は1対1の引き分け。2戦目は、2対4の負けです。
+    card:
+      type: table
+      title: W杯のあと オーストラリアの2試合（親善試合）
+      columns:
+      - 日付
+      - 相手
+      - オーストラリアの結果
+      rows:
+      - - 9月25日
+        - ブラジル
+        - 1-1
+      - - 9月29日
+        - ブラジル
+        - 2-4
+      highlight_row: 1
+  - text: 11月は、カタールとヨルダンと、親善試合で戦います。
+    image: assets/images/20261116_team_australia/b03_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Australia_men's_national_soccer_team
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_round_of_32
+- id: viewpoint
+  heading: オーストラリアは、アジアに移って、W杯の数字がどう変わったのか
+  tier: 背景
+  telop: W杯の出場は、8大会で1回から、6大会で6回へ
+  narrator: 解説
+  card:
+    type: table
+    title: オーストラリアのW杯 数えた数字
+    columns:
+    - 項目
+    - 1974〜2002年
+    - 2006〜2026年
+    rows:
+    - - 大会数
+      - '8'
+      - '6'
+    - - 出場
+      - '1'
+      - '6'
+    - - 勝ち
+      - '0'
+      - '5'
+    - - ベスト16
+      - '0'
+      - '2'
+  viewpoint: true
+  say:
+  - text: 見立てです。W杯を、2002年までと、2006年からに分けて数えます。
+    image: assets/images/20261116_team_australia/b01_w.jpg
+    card: none
+  - text: 1974年から2002年は、8大会。出たのは、1回だけです。
+    card:
+      type: table
+      title: オーストラリアのW杯 数えた数字
+      columns:
+      - 項目
+      - 1974〜2002年
+      - 2006〜2026年
+      rows:
+      - - 大会数
+        - '8'
+        - '6'
+      - - 出場
+        - '1'
+        - '6'
+      - - 勝ち
+        - '0'
+        - '5'
+      - - ベスト16
+        - '0'
+        - '2'
+      highlight_row: 1
+  - text: 2006年から2026年の6大会は、出場が6回です。
+    card:
+      type: table
+      title: オーストラリアのW杯 数えた数字
+      columns:
+      - 項目
+      - 1974〜2002年
+      - 2006〜2026年
+      rows:
+      - - 大会数
+        - '8'
+        - '6'
+      - - 出場
+        - '1'
+        - '6'
+      - - 勝ち
+        - '0'
+        - '5'
+      - - ベスト16
+        - '0'
+        - '2'
+      highlight_row: 1
+    emph: true
+    mark:
+      kind: circle
+      row: 1
+      col: 2006〜2026年
+  - text: W杯の勝ちは、0から5へ。
+    image: assets/images/20261116_team_australia/b02_w.jpg
+    card:
+      type: table
+      title: オーストラリアのW杯 数えた数字
+      columns:
+      - 項目
+      - 1974〜2002年
+      - 2006〜2026年
+      rows:
+      - - 大会数
+        - '8'
+        - '6'
+      - - 出場
+        - '1'
+        - '6'
+      - - 勝ち
+        - '0'
+        - '5'
+      - - ベスト16
+        - '0'
+        - '2'
+      highlight_row: 2
+  - text: ベスト16は、0回から2回に増えました。
+    card:
+      type: table
+      title: オーストラリアのW杯 数えた数字
+      columns:
+      - 項目
+      - 1974〜2002年
+      - 2006〜2026年
+      rows:
+      - - 大会数
+        - '8'
+        - '6'
+      - - 出場
+        - '1'
+        - '6'
+      - - 勝ち
+        - '0'
+        - '5'
+      - - ベスト16
+        - '0'
+        - '2'
+      highlight_row: 3
+    mark:
+      kind: circle
+      row: 3
+      col: 2006〜2026年
+  - text: ただ、アジアに移ってからの6大会で、ベスト8に進んだことはありません。
+    card: none
+  - text: フィファランクは、日本が17位、オーストラリアは26位。
+    image: assets/images/20261116_team_australia/b03_w.jpg
+    card: none
+  - text: 次の日本との対戦で、日本の勝ち越しが続くのか。そこが注目点です。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Australia_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/Australia_men's_national_soccer_team

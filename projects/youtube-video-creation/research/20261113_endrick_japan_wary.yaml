@@ -1,0 +1,133 @@
+# 取材メモ（2026年11月13日）ブラジルFWエンドリッキ、日本戦を前に会見。「日本の実力はよく分かっている」（ニュースのショート。見せ方 Y＝本人の言葉から始める。日本戦の話なので日本人の題として扱う）
+# 取材: 2026-11-13。requests（ブラウザUA）と WebFetch で本文を全文読み、ESPN（site.api.espn.com）で試合を確かめた。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元（まとめブログ footballnet.2chblog.jp/archives/60135683.html は二次なので使わない。引用元として示されていた報道を直接当たった）:
+#   スポニチ Sponichi Annex 2026-11-11 05:25（共同通信）「ブラジルFWエンドリッキ　会見で日本警戒　「実力は分かっている」」（全文。短い記事） https://www.sponichi.co.jp/soccer/news/2026/11/11/articles/20261111s00002000040000c.html
+# 写真の出どころ（Commons の写真は本人と説明で確認。パルメイラス時代の2024年の写真）:
+#   https://www.sponichi.co.jp/soccer/news/2026/11/11/articles/20261111s00002000040000c.html
+#   https://commons.wikimedia.org/wiki/File:Endrick-Palmeiras-Liverpool-abr24-2.jpg
+#   https://commons.wikimedia.org/wiki/File:Endrick-Palmeiras-Liverpool-abr24-3.jpg
+#   https://commons.wikimedia.org/wiki/File:Endrick-Palmeiras-Liverpool-abr24.jpg
+# 出典で確かめたこと（スポニチ＝共同通信）:
+#   ・10日、シンガポールで、14日の日本戦へ向けて記者会見。写真は「記者会見するブラジル代表エンドリッキ＝10日、シンガポール（共同）」。
+#   ・本人の言葉（共同が日本語にしたもの。原文＝ポルトガル語は読めていない。字は記事のまま。括弧は記者の補足）:
+#       「日本の実力はよく分かっている。勝利を目指して全力を尽くす」
+#       W杯の日本戦は「本当に特別な試合だった」（地の文の中の引用）
+#       「2030年(の次回W杯)には最高のレベルに達してチームに貢献したい」
+#   ・地の文: W杯北中米3カ国大会の日本戦では後半から出場して逆転勝利に貢献、と共同は書く。若返りを図るブラジル代表の中核を担うと期待される20歳の新鋭。
+#       → 「貢献」の中身は記事に無い。ESPN で出場の事実だけ確かめ、「貢献」は台本に書かない。
+# ESPN の試合データ（fifa.world summary event=760487, 2026-06-29。ブラジル 2-1 日本）:
+#   ・エンドリッキは前半45分、負傷したルーカス・パケタと交代で途中出場（ESPN「Endrick replaces Lucas Paquetá because of an injury」）。→ 共同の「後半から出場」と一致（ハーフタイムの交代）。
+#   ・得点: 29分 佐野海舟（日本）／56分 カゼミーロ（ヘディング。アシストはガブリエウ・マガリャンイス）／90+5分 マルティネッリ（右足。アシストはブルーノ・ギマランイス）。エンドリッキは得点にもアシストにも入っていない。
+#   ・日程: 11/14 日本代表対ブラジル代表（シンガポール。日本時間19時15分は 20261111_endrick_january_words の取材メモから）。
+# 食い違い: 記事は共同の短信1本のみ。ほかのメディア（ブラジル側 CBF・Globo）の原文は当たっていない。まとめブログの反応欄（「ビビってる」「リップサービス」）は匿名掲示板の要約で、使わない。
+#   まとめ内に U-NEXT フットボールの投稿（エンドリッキ「全力で勝ちたい」「自分と家族にとって特別な瞬間だった」）の引用があったが、本物の投稿ページで確かめていない → 使わない。
+# 前の本との重なり: 20261111_endrick_january_words（1月の去就の言葉。重ねない）、20261030_brazil_japan_squad（招集）、20261112_brazil_starters_japan・20261112_kubo_brazil_no_revenge・20261112_machida_brazil_words（日本側の再戦の話）。
+#   今回の初出: エンドリッキ本人の「日本の実力はよく分かっている」と2030年への言葉、W杯での途中出場の事実。1月の去就・モウリーニョ・ミラン／ローマには触れない。
+# 【言わないこと】1月の去就・移籍の話／ブラジルの先発予想／「2軍」「リップサービス」などの匿名の見方／W杯の「戦犯」扱い（まとめの書き込み）。
+# 本人の言葉: あり（エンドリッキ。共同通信＝スポニチ）。Y。日本人の題として扱う（日本戦の話）。9〜17時の枠に置く。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月13日"
+format: news
+no_main: true
+people: [エンドリッキ, ブラジル代表, 日本代表, レアル・マドリード]
+
+short_style: Y
+short_hook_quote: 日本の実力は、よく分かっている。
+short_photos:
+  - assets/images/20261113_endrick_japan_wary/04_v.jpg
+  - assets/images/20261113_endrick_japan_wary/02_v.jpg
+  - assets/images/20261113_endrick_japan_wary/03_v.jpg
+  - assets/images/20261113_endrick_japan_wary/04_v.jpg
+short_question: ブラジルは、14日の再戦でも日本に勝つと思いますか。
+short_telops: []
+
+theme:
+  id: endrick_japan_wary
+  league: japan
+  league_name: 日本代表
+  prefix: ""
+  title: ブラジルのエンドリッキ、日本との再戦を前に会見。W杯の日本戦を振り返る
+  hook: ""
+  question: 日本との再戦を前に、ブラジルのエンドリッキは会見で何を語ったのか
+  takeaway: エンドリッキは「日本の実力はよく分かっている。勝利を目指して全力を尽くす」と話した。W杯の日本戦には後半から出場。14日の再戦を前に、2030年のW杯で最高のレベルに達したいと語った
+
+thumbnail:
+  layout: face
+  line1: エンドリッキ 日本戦へ
+  line2: 「実力は分かっている」
+  tags: [エンドリッキ, ブラジル代表, 日本代表]
+  photo: assets/images/20261113_endrick_japan_wary/04_w.jpg
+  short_photo: assets/images/20261113_endrick_japan_wary/04_v.jpg
+
+answer: 日本の実力はよく分かっていて、勝利を目指して全力を尽くす。W杯の日本戦は特別な試合だった
+watch: 14日の日本対ブラジル（シンガポール）
+
+sections:
+  - id: what
+    main: true
+    heading: 日本戦を前に、エンドリッキは会見で何と語ったのか
+    tier: 報道
+    telop: エンドリッキ「日本の実力はよく分かっている」
+    say:
+      - text: 14日の日本戦を前に、ブラジル代表のエンドリッキが、10日にシンガポールで会見を開きました。
+        short_only: true
+        image: assets/images/20261113_endrick_japan_wary/04_w.jpg
+      - voice: エンドリッキ
+        text: 日本の実力は、よく分かっている。
+        emph: true
+        image: assets/images/20261113_endrick_japan_wary/03_w.jpg
+      - voice: エンドリッキ
+        text: 勝利を目指して、全力を尽くす。
+        cont: true
+        image: assets/images/20261113_endrick_japan_wary/04_w.jpg
+      - text: 20歳のエンドリッキは、W杯の日本戦にも出ています。
+        image: assets/images/20261113_endrick_japan_wary/02_w.jpg
+      - text: ハーフタイムに、負傷したパケタと交代で入りました。試合は、ブラジルの逆転勝ちでした。
+        image: assets/images/20261113_endrick_japan_wary/04_w.jpg
+      - text: 本人は、あの試合をこう振り返りました。
+        image: assets/images/20261113_endrick_japan_wary/03_w.jpg
+      - voice: エンドリッキ
+        text: 本当に特別な試合だった。
+        emph: true
+        image: assets/images/20261113_endrick_japan_wary/03_w.jpg
+    official: false
+    sources:
+      - https://www.sponichi.co.jp/soccer/news/2026/11/11/articles/20261111s00002000040000c.html
+      - https://www.espn.com/soccer/match/_/gameId/760487
+  - id: future
+    heading: 若返るブラジルで、エンドリッキが見ている先
+    tier: 報道
+    telop: エンドリッキ「2030年には最高のレベルに」
+    say:
+      - text: ブラジル代表は、若返りを図っています。エンドリッキは、その中心を担うと期待されています。
+        card: none
+        image: assets/images/20261113_endrick_japan_wary/04_w.jpg
+      - text: 次のW杯について、こう話しました。
+        image: assets/images/20261113_endrick_japan_wary/03_w.jpg
+      - voice: エンドリッキ
+        text: 2030年には、最高のレベルに達して、
+        image: assets/images/20261113_endrick_japan_wary/04_w.jpg
+      - voice: エンドリッキ
+        text: チームに貢献したい。
+        cont: true
+        emph: true
+        image: assets/images/20261113_endrick_japan_wary/03_w.jpg
+    official: false
+    sources:
+      - https://www.sponichi.co.jp/soccer/news/2026/11/11/articles/20261111s00002000040000c.html
+  - id: view
+    viewpoint: true
+    heading: 14日の再戦は、W杯の続きになる
+    tier: 背景
+    telop: W杯は逆転でブラジルが勝ち
+    say:
+      - text: 見立てです。エンドリッキが途中出場したW杯の日本戦は、日本が先に点を取りました。
+        card: {type: table, title: W杯 ブラジル 2-1 日本, columns: [分, 出来事], rows: [[29分, 佐野海舟が先制], [45分, エンドリッキが途中出場], [56分, カゼミーロが同点], [90+5分, マルティネッリが逆転]], highlight_row: 1}
+        image: assets/images/20261113_endrick_japan_wary/02_w.jpg
+      - text: 後半に2点を取られて、逆転されました。再戦は、14日です。
+        card: none
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/760487
+      - https://www.sponichi.co.jp/soccer/news/2026/11/11/articles/20261111s00002000040000c.html

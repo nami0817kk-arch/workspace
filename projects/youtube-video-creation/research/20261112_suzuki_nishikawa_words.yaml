@@ -1,0 +1,127 @@
+# 取材メモ（2026年11月12日）鈴木彩艶、西川周作のJ1最多出場の新記録を祝福「もう素晴らしいの一言」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-12。requests（ブラウザUA）で本文を全文読み、site.api.espn.com で試合を確かめた。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。
+# 題材の元: サッカーキング 2026-11-12「鈴木彩艶が西川周作の偉業を祝福「素晴らしいの一言。尊敬する選手であり続ける」　移籍後も続く“師弟関係”「ゲームも見てくれているみたいです」」（全文）
+#   https://www.soccer-king.jp/news/japan/national/20261112/2226803.html
+# 出典で確かめたこと:
+#   ・サッカーキング: 浦和のGK西川周作が、明治安田J1第14節のヴィッセル神戸戦で、遠藤保仁氏が持っていたJ1最多出場記録（672試合）を抜き、J1通算673試合で歴代単独トップに立った。試合後の西川「これも応援してくれる方のおかげ。この試合数に満足することなく、1試合1試合の責任を持ってこれからも戦っていきたい」。
+#   ・ESPN（jpn.1 summary event=401877554）: 2026-11-08 05:00 UTC（日本時間 14:00）、ヴィッセル神戸 2-2 浦和レッズ。西川周作は先発（rosters の starter=True）。記事の「第14節・神戸戦」と一致。
+#   ・鈴木は浦和の公式SNSでも祝福していたが、改めて問われて答えた（サッカーキング。代表活動での取材）。鈴木の言葉（原文。字は変えていない。台本は読点で行に分けた）:
+#       「もう素晴らしいの一言ですね。彼のメンタリティ、マインドセットの素晴らしさは知っていますし、そういった影響もあって感情をコントロールしながら、メンタリティを保ちながらできていると思います。常に尊敬する選手であり続けるなと思います」
+#       「（鈴木の）ゲームも見てくれているみたいです。コミュニケーションは取っています」（括弧は記者の補足。台本は「ゲームも見てくれているみたいです」「コミュニケーションは取っています」に分けて引く）
+#   ・サッカーキングの地の文: 鈴木は2023年に浦和からシント・トロイデンへ移り、パルマ・カルチョ、アストン・ヴィラと着実にステップアップ。海外へ渡って約3年たっても、2人の師弟関係は続いている。浦和時代の先輩・後輩。
+#   ・サッカーキング 2225629（11/8）: 西川は40歳（今年6月）、大分の下部組織出身、2005年7月の横浜FM戦でJ1初出場、2010年広島、2014年から浦和。プロ22年目。会場は国立競技場（MUFGスタジアム）。
+#   ・ESPN 得点: 43分 武藤嘉紀（神戸）／69分 渡邊凌磨（浦和）／90+1分 金子拓郎（浦和）／90+4分 武藤嘉紀（神戸）→ 浦和が勝ち越した90+1分のあと、神戸が90+4分に同点。
+# 食い違い: なし（遠藤保仁の672試合・西川の673試合は記事のみ。J1全体の通算数は ESPN では確かめられないので、台本は記事の記述として扱い、「歴代単独トップ」の数字は出典どおり）。
+# 前の本との重なり: 鈴木彩艶の回（20261107_suzuki_best_save_nominee・20261108_suzuki_liverpool_candidate・20261111_suzuki_yui_freiburg など）はいずれも別の内容（ヴィラでの活躍・唯人の移籍）。西川の記録は scripts・covered.yaml に無い（grep 済み）。
+# 【言わないこと】西川の浦和でのタイトルや過去のゴール／ヴィラ戦の失点場面（11/9 の記事）／ブラジル戦の起用予想。
+# 写真: photopool で記事の主写真など。代理店（Getty 等）は使わない。
+# 本人の言葉: あり（鈴木彩艶。サッカーキング）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月12日"
+format: news
+no_main: true
+people: [鈴木彩艶, 西川周作, 浦和レッズ, アストン・ヴィラ, 日本代表]
+
+short_style: Y
+short_hook_quote: もう素晴らしいの一言ですね。
+short_photos:
+  - assets/images/20261112_suzuki_nishikawa_words/03_v.jpg
+  - assets/images/20261112_suzuki_nishikawa_words/01_v.jpg
+  - assets/images/20261112_suzuki_nishikawa_words/02_v.jpg
+  - assets/images/20261112_suzuki_nishikawa_words/03_v.jpg
+short_question: 鈴木彩艶は、14日のブラジル戦で先発すると思いますか。
+short_telops: []
+
+theme:
+  id: suzuki_nishikawa_words
+  league: japan
+  league_name: 日本代表
+  prefix: ""
+  title: 鈴木彩艶、西川周作のJ1最多出場の新記録を祝福。先輩への思いを語った
+  hook: ""
+  question: 鈴木彩艶は、浦和の先輩・西川周作の新記録を、どう語ったのか
+  takeaway: 西川はJ1通算673試合で、遠藤保仁氏の672試合を1つ上回った。鈴木は「常に尊敬する選手であり続ける」と語り、いまも連絡を取り合っている
+
+thumbnail:
+  layout: face
+  line1: 鈴木彩艶 西川周作の新記録
+  line2: 素晴らしいの一言
+  tags: [鈴木彩艶, 西川周作]
+  photo: assets/images/20261112_suzuki_nishikawa_words/03_w.jpg
+  short_photo: assets/images/20261112_suzuki_nishikawa_words/03_v.jpg
+
+answer: 「素晴らしいの一言」。西川のメンタリティに影響を受け、いまも連絡を取り合っている
+watch: 14日のブラジル戦（シンガポール）
+
+sections:
+  - id: what
+    main: true
+    heading: 西川周作の新記録を、鈴木彩艶はどう語ったか
+    tier: 報道
+    telop: 鈴木彩艶「もう素晴らしいの一言ですね」
+    say:
+      - text: 日本代表GKの鈴木彩艶が、浦和の先輩、西川周作の新記録を祝福しました。
+        image: assets/images/20261112_suzuki_nishikawa_words/03_w.jpg
+      - voice: 鈴木彩艶
+        text: もう素晴らしいの一言ですね。
+        emph: true
+      - text: 西川は8日の神戸戦に出場し、J1通算673試合で、歴代単独トップに立ちました。
+        image: assets/images/20261112_suzuki_nishikawa_words/01_w.jpg
+      - text: これまでの記録は、遠藤保仁さんの672試合でした。
+      - text: 西川は今年6月に40歳になりました。2005年7月に、J1で初めて出場しています。
+      - text: 鈴木は、浦和時代の後輩にあたります。
+      - voice: 鈴木彩艶
+        text: 彼のメンタリティ、
+        image: assets/images/20261112_suzuki_nishikawa_words/02_w.jpg
+      - voice: 鈴木彩艶
+        text: マインドセットの素晴らしさは知っていますし、
+        cont: true
+      - voice: 鈴木彩艶
+        text: そういった影響もあって、感情をコントロールしながら、
+        cont: true
+      - voice: 鈴木彩艶
+        text: メンタリティを保ちながらできていると思います。
+        cont: true
+      - voice: 鈴木彩艶
+        text: 常に尊敬する選手であり続けるなと思います。
+        cont: true
+        emph: true
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20261112/2226803.html
+      - https://www.espn.com/soccer/match/_/gameId/401877554
+  - id: bond
+    heading: 移籍のあとも続く2人の関係
+    tier: 報道
+    telop: 鈴木彩艶「ゲームも見てくれているみたいです」
+    say:
+      - text: 鈴木は2023年に浦和を離れ、シント・トロイデン、パルマ、アストン・ヴィラと歩んできました。
+        image: assets/images/20261112_suzuki_nishikawa_words/03_w.jpg
+      - text: 海外へ渡って、約3年。それでも2人は、いまも連絡を取り合っているそうです。
+      - voice: 鈴木彩艶
+        text: ゲームも見てくれているみたいです。
+      - voice: 鈴木彩艶
+        text: コミュニケーションは取っています。
+        cont: true
+        emph: true
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20261112/2226803.html
+  - id: view
+    viewpoint: true
+    heading: 西川周作の記録は、遠藤保仁さんを何試合上回ったか
+    tier: 背景
+    telop: 西川673試合、遠藤保仁672試合
+    say:
+      - text: 見立てです。J1の最多出場は、西川がわずか1試合差で、1位になりました。
+        image: assets/images/20261112_suzuki_nishikawa_words/02_w.jpg
+        card: {type: table, title: J1の最多出場, columns: [名前, 試合], rows: [[西川周作, 673試合], [遠藤保仁, 672試合]], highlight_row: 0}
+      - text: 鈴木はいま日本代表に合流していて、14日にシンガポールでブラジルと戦います。
+        card: none
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/japan/jl/20261108/2225629.html
+      - https://www.soccer-king.jp/news/japan/jl/20261108/2225673.html
+      - https://www.soccer-king.jp/news/japan/national/20261112/2226803.html
+      - https://www.espn.com/soccer/match/_/gameId/401877554

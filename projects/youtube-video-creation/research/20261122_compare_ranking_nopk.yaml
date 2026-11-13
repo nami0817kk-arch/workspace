@@ -1,0 +1,396 @@
+# 取材メモ（11/22 日、シリーズ「比べる」＝ランキング形式、key: compare_ranking_nopk）。
+# **臨時の入れ替え**：この日11:00枠のクラブ紹介（ブンデス）が尽きたため「比べる」に。A組の日なのでクラブ・選手の1対1ではなく、ランキングにした。
+# **情報の時点は 2026-11-12**（ESPN 取得 2026-11-12 夜、各リーグ9〜12試合）。FotMob・DataMB は使っていない。
+# 物差し：欧州5大リーグの今季リーグ戦、**得点からPKで決めた得点を引いた数**。出場時間の足切りは無し。
+# 数字：ESPN 公開API（各リーグの得点上位50を読み、得点5以上の45人について選手の今季成績で試合・分・得点・PK得点を取り直した。引き算は自分で）。
+#   道具：output/_tmp_compare2/top.py（結果は top.json・top_sorted.json）。
+#   **プレミアリーグは公式（FPL公式API bootstrap-static）と突き合わせた**：ハーランド9・アイザック7・ジャクソン6・バリー6の得点が一致。FPL にPKの内数の項目は無く、PKは ESPN のまま。
+#   **ほかの4リーグには公式の突き合わせ先が無い**（ESPN の集計のまま）。PK得点の取りこぼしがあれば順位が動きうる。
+# 順位（同点は同順位）：1位ラフィーニャ12／2位エムバペ10／3位（9）ヤマル・ザビリ・ハーランド／6位（8）マレン・シック・ライモンド／9位（7）ヴァレラ・クルスティッチ・アイザック・カメージョ・フェルミン・ロペス。
+#   PKを含む得点：ラフィーニャ15（PK3）・エムバペ13（PK3）・ヤマル10（PK1）・ザビリ9・ハーランド9・ヴァレラ9（PK2）・フュルクルク9（PK3）・シナヨコ9（PK3）・マレン8・シック8・ライモンド8・ブディミル8（PK4）・ルポール7（PK4）。
+#   試合・分：ラフィーニャ11・813／エムバペ12・1074／ヤマル12・995／ザビリ12・803／ハーランド10・890／マレン10・652／シック9・704／ライモンド10・761。
+# 自分で数えた値：上位8人の得点80のうちPK7（8.75%）。PKを除く得点が7以上の13人の得点117のうちPK9。13人のリーグ別：スペイン6・イタリア4・イングランド2・ドイツ1・フランス0（フランスの最多は6＝シナヨコ・グイリ・アーチャー）。
+#   90分あたり（PKを除く）：ラフィーニャ12×90÷813=1.33／マレン8×90÷652=1.10／シック8×90÷704=1.02／ザビリ9×90÷803=1.01／ライモンド8×90÷761=0.95／ハーランド9×90÷890=0.91／エムバペ10×90÷1074=0.84／ヤマル9×90÷995=0.81。
+#   PKを含めた順位→除いた順位：ザビリ4→3／ハーランド4→3／ヴァレラ4→9／フュルクルク4→14／シナヨコ4→14／マレン9→6／シック9→6／ライモンド9→6。ブディミル 8（PK4）→4、ルポール 7（PK4）→3。
+# **選んだ理由**：11/20 のローマ×ラツィオと軸（クラブ・順位）が違い、10/20 の「得点＋アシスト」ランキング（ラフィーニャ15・ヤマル14・エムバペ11）とも物差しが違う（PKを除く・アシストを数えない）。
+#   10/20 の数字（G+A）は使わない。10/20 から33日あいている。大物（ラフィーニャ・エムバペ・ヤマル・ハーランド）を軸に、PKを引くと順位が動く、という「伏せる軸」を置いた。
+#   重なり確認：scripts・posted.json・covered.yaml・picks を grep。「PKを除く得点」のランキングは初めて。同じ日（11/22）の他シリーズとは、人（スカローニ・シェフチェンコ・ヴィルツ）も重ならない。
+#   エムバペ（レアル・マドリード）と 11/20 のロベルト・カルロス（世界レジェンド）はクラブが重なるが、日が違う。ラツィオ・ローマは 11/20 の比べるで使う。マレンは 11/11 に選手紹介を出した。
+#   **11/22 の財政シリーズはラツィオ（20261122_finance_lazio）**。この回にラツィオの選手は1人も入れていない。
+# 写真：assets/images/20261122_compare_ranking_nopk/credits.json に出どころを控えた。ラフィーニャ・エムバペ・ヤマル・ハーランドは過去の回（10/18・10/23・11/4・11/5）の写真を再利用。
+# 反応・本人の言葉：入れていない（数字で比べる回）。日本との接点：無し。
+slot: other_1
+date: "2026年11月12日"
+format: news
+series: 比べる
+people:
+  - ラフィーニャ
+  - エムバペ
+  - ヤマル
+  - ハーランド
+
+theme:
+  end_bg: assets/images/20261122_compare_ranking_nopk/raph2_w.jpg
+  id: compare_ranking_nopk
+  league: spain
+  kind: other
+  topic: ラフィーニャ
+  prefix: ""
+  title: ラフィーニャ、エムバペ、ヤマル。PKを除くと得点ランキングはどう変わるか
+  hook: ""
+  question: 欧州5大リーグで、PKを除いた得点がいちばん多いのは誰なのか
+  takeaway: 11月12日時点、今季リーグ戦のPKを除く得点は、ラフィーニャ12・エムバペ10が1・2位で、9点で並ぶ3人（ヤマル・ザビリ・ハーランド）、8点で並ぶ3人（マレン・シック・ライモンド）が続く。上位8人の得点80のうちPKは7。9得点のフュルクルクとシナヨコはPKを除くと6、ブディミルは8から4、ルポールは7から3。PKを除く得点が7以上の13人のリーグ別はスペイン6・イタリア4・イングランド2・ドイツ1・フランス0。まだ9〜12試合の数字
+  league_name: 5大リーグ
+  opening_image: assets/images/20261122_compare_ranking_nopk/raph2_w.jpg
+
+short_title: ラフィーニャ、エムバペ、ヤマル。PKを除く得点が多いのは誰か
+
+thumbnail:
+  photo: assets/images/20261122_compare_ranking_nopk/collage8.jpg
+  line1: PKを除く得点、5大リーグ
+  line2: 首位はラフィーニャ12点
+
+answer: PKを除く得点の1位はラフィーニャの12、2位エムバペ10。9点で並ぶのはヤマル・ザビリ・ハーランド
+watch: リーグ再開後の試合で順番は動く
+
+sections:
+  - id: lead
+    heading: PKを除くと、得点がいちばん多いのは誰か
+    tier: 報道
+    telop: 今季リーグ戦の得点からPKを引く。欧州5大リーグ
+    narrator: 解説
+    card: &leadcard
+      type: stats
+      title: PKを除く得点（今季リーグ戦）
+      items:
+        - [12, 点, ラフィーニャ]
+        - [10, 点, エムバペ]
+        - [9, 点, ヤマル・ザビリ・ハーランド]
+      note: 11月12日時点・上位
+    say:
+      - text: 欧州5大リーグで、PKを除いた得点がいちばん多いのは誰か。
+        image: assets/images/20261122_compare_ranking_nopk/raph2_w.jpg
+        card: none
+      - text: 対象は、スペイン・イングランド・ドイツ・イタリア・フランスの1部です。
+        card: none
+        image: assets/images/20261122_compare_ranking_nopk/mbap3_w.jpg
+      - text: 数えるのは、今季のリーグ戦の得点から、PKで決めた得点を引いた数。
+        callword: PKを除く
+        card: none
+      - text: ここで言うPKは、ペナルティキックで決めた得点です。
+        card: none
+        image: assets/images/20261122_compare_ranking_nopk/yam_w.jpg
+      - text: 出場時間が短い選手も、数に入れます。
+        card: none
+        image: assets/images/20261122_compare_ranking_nopk/haa_w.jpg
+      - text: 得点の上位50人を読み、PKの数は選手ごとの成績で確かめました。
+        card: none
+      - text: 引き算は、自分でしました。
+        card: none
+      - text: ラフィーニャもエムバペも、この物差しで並べます。PKを除いて8点以上は、8人。
+        card: none
+    sources:
+      - https://site.web.api.espn.com/apis/site/v2/sports/soccer/esp.1/statistics
+      - https://site.web.api.espn.com/apis/site/v2/sports/soccer/eng.1/statistics
+      - https://site.web.api.espn.com/apis/site/v2/sports/soccer/ger.1/statistics
+
+  - id: top
+    main: true
+    heading: 1位と2位は、PKを引いても変わらないのか
+    tier: 報道
+    telop: ラフィーニャ12点・エムバペ10点。どちらもPKが3つ
+    narrator: 解説
+    card: &duelcard
+      type: duel
+      left: {name: ラフィーニャ, club: バルセロナ, photo: assets/images/20261122_compare_ranking_nopk/raph_sq.jpg, color: "#a50044"}
+      right: {name: エムバペ, club: レアル・マドリード, photo: assets/images/20261122_compare_ranking_nopk/mbap_sq.jpg, color: "#e8e8e8"}
+      rows:
+        - [得点, "15", "13"]
+        - [PK, "3", "3"]
+        - [PKを除く得点, "12", "10"]
+        - [試合, "11", "12"]
+        - [出場時間, 813分, 1074分]
+      bars: [得点, PKを除く得点]
+      note: 今季リーグ戦。11月12日時点
+    say:
+      - text: 1位は、バルセロナのラフィーニャ。PKを除いて12点。
+        image: assets/images/20261122_compare_ranking_nopk/raph2_w.jpg
+        card: none
+      - text: 得点は15。そのうち、PKが3つです。
+        card: {<<: *duelcard, highlight_row: PK}
+      - text: 11試合に出て、出場は813分。1試合あたり74分です。
+        card: {<<: *duelcard, highlight_row: 出場時間}
+      - text: 2位は、レアル・マドリードのエムバペ。PKを除いて10点。
+        image: assets/images/20261122_compare_ranking_nopk/mbap3_w.jpg
+        card: none
+      - text: 得点は13。PKは、ラフィーニャと同じ3つです。
+        card: none
+      - text: 12試合で、1074分。出場時間は、8人の中で最長です。
+        card: none
+      - text: 1位と2位の差は、PKがあっても、なくても2点。
+        emph: true
+        card: none
+      - text: 2人とも、得点の2割ほどがPKです。
+        image: assets/images/20261122_compare_ranking_nopk/raph2_w.jpg
+        card: {<<: *duelcard, highlight_row: PK}
+      - text: では、3位から順に、表で見ていきます。
+        card: none
+    sources:
+      - https://sports.core.api.espn.com/v2/sports/soccer/leagues/esp.1/seasons/2026/types/1/athletes/231050/statistics/0
+
+  - id: tie
+    heading: 9点で並ぶ3人と、8点で並ぶ3人は、何が違うのか
+    tier: 報道
+    telop: 3位はヤマル・ザビリ・ハーランド。6位はマレン・シック・ライモンド
+    narrator: 解説
+    card: &rankcard
+      type: table
+      title: 今季リーグ戦の得点（PKを除く上位8人）
+      columns: [順位, 選手, 試合, 出場, 得点, PK, 抜き]
+      rows:
+        - [1位, ラフィーニャ, "11", 813分, "15", "3", "12"]
+        - [2位, エムバペ, "12", 1074分, "13", "3", "10"]
+        - [3位, ヤマル, "12", 995分, "10", "1", "9"]
+        - [3位, ザビリ, "12", 803分, "9", "0", "9"]
+        - [3位, ハーランド, "10", 890分, "9", "0", "9"]
+        - [6位, マレン, "10", 652分, "8", "0", "8"]
+        - [6位, シック, "9", 704分, "8", "0", "8"]
+        - [6位, ライモンド, "10", 761分, "8", "0", "8"]
+      note: 抜き＝PKを除く得点。11月12日時点
+    say:
+      - text: ラフィーニャとエムバペに続く、3位は、9点で並ぶ3人です。
+        image: assets/images/20261122_compare_ranking_nopk/yam_w.jpg
+        card: {<<: *rankcard, highlight_row: [2, 3, 4]}
+      - text: バルセロナのヤマルは、10得点のうちPKが1つ。
+        card: {<<: *rankcard, highlight_row: 2}
+      - text: ラシン・サンタンデールのザビリは、9得点でPKは0。
+        card: {<<: *rankcard, highlight_row: 3}
+      - text: マンチェスター・シティのハーランドも、9得点でPKは0です。
+        image: assets/images/20261122_compare_ranking_nopk/haa_w.jpg
+        card: {<<: *rankcard, highlight_row: 4}
+      - text: 6位は、8点で並ぶ3人。
+        image: assets/images/20261122_compare_ranking_nopk/malen_w.jpg
+        card: {<<: *rankcard, highlight_row: [5, 6, 7]}
+      - text: ローマのマレン、レバークーゼンのシック、フロジノーネのライモンド。
+        card: {<<: *rankcard, highlight_row: [5, 6, 7]}
+      - text: 3人とも、8得点はすべて、PK以外。
+        emph: true
+        card: {<<: *rankcard, highlight_row: [5, 6, 7]}
+      - text: 8人の得点は、合わせて80。そのうちPKは7で、およそ9%です。
+        card: &pkcalc
+          type: calc
+          title: 上位8人の得点に占めるPKの割合
+          terms:
+            - ['7点', PK]
+            - ['80点', 8人の得点]
+            - ['9%', 割合]
+          ops: ['÷', ＝]
+    sources:
+      - https://site.web.api.espn.com/apis/site/v2/sports/soccer/ita.1/statistics
+      - https://fantasy.premierleague.com/api/bootstrap-static/
+
+  - id: pk
+    heading: PKを足すと、順位はどれだけ動くのか
+    tier: 報道
+    telop: PKを含めると4位の5人。除くと、フュルクルクとシナヨコは6点
+    narrator: 解説
+    card: &movecard
+      type: table
+      title: PKを含めた順位と、除いた順位
+      columns: [選手, 得点, PK, 抜き, 含む順位, 抜く順位]
+      rows:
+        - [ザビリ, "9", "0", "9", 4位, 3位]
+        - [ハーランド, "9", "0", "9", 4位, 3位]
+        - [ヴァレラ, "9", "2", "7", 4位, 9位]
+        - [フュルクルク, "9", "3", "6", 4位, 14位]
+        - [シナヨコ, "9", "3", "6", 4位, 14位]
+        - [マレン, "8", "0", "8", 9位, 6位]
+        - [シック, "8", "0", "8", 9位, 6位]
+        - [ライモンド, "8", "0", "8", 9位, 6位]
+      note: PKを含む順位は、得点の合計で付けた順位。11月12日時点
+    say:
+      - text: PKを含めた得点でも、順位を付けてみます。
+        card: {<<: *movecard}
+        image: assets/images/20261122_compare_ranking_nopk/mbap3_w.jpg
+      - text: 1位から3位は、ラフィーニャ、エムバペ、ヤマル。ここは変わりません。
+        card: none
+      - text: 4位は、9得点で並ぶ5人。
+        card: {<<: *movecard, highlight_row: [0, 1, 2, 3, 4]}
+      - text: ザビリ、ハーランド、ヴァレラ、フュルクルク、シナヨコ。
+        card: {<<: *movecard, highlight_row: [0, 1, 2, 3, 4]}
+      - text: ザビリとハーランドは、PKが0。除いても9点で、3位に上がります。
+        card: {<<: *movecard, highlight_row: [0, 1]}
+      - text: ヴァレラは、PKが2つ。除くと7点で、9位です。
+        card: {<<: *movecard, highlight_row: 2}
+      - text: ブレーメンのフュルクルクと、パリFCのシナヨコは、どちらもPKが3つ。
+        image: assets/images/20261122_compare_ranking_nopk/haa_w.jpg
+        card: {<<: *movecard, highlight_row: [3, 4]}
+      - text: 9得点が、PKを除くと6点。順位は、14位です。
+        emph: true
+        card: {<<: *movecard, highlight_row: [3, 4]}
+      - text: 逆に、PKを含めると9位のマレン、シック、ライモンドは、除くと6位に上がります。
+        card: {<<: *movecard, highlight_row: [5, 6, 7]}
+      - text: 動きがさらに大きいのは、オサスナのブディミル。
+        card: none
+        image: assets/images/20261122_compare_ranking_nopk/malen_w.jpg
+      - text: 8得点のうち4つがPKで、除くと4点です。
+        card: none
+        image: assets/images/20261122_compare_ranking_nopk/malen_w.jpg
+      - text: レンヌのルポールは、7得点のうち4つがPK。除くと3点です。
+        card: none
+    sources:
+      - https://site.web.api.espn.com/apis/site/v2/sports/soccer/ger.1/statistics
+      - https://site.web.api.espn.com/apis/site/v2/sports/soccer/fra.1/statistics
+
+  - id: rate
+    heading: 出た時間あたりで見ると、誰がいちばん速いのか
+    tier: 報道
+    telop: 90分あたりのPKを除く得点は、ラフィーニャ1.33・マレン1.10
+    narrator: 解説
+    card: &ratecard
+      type: bars
+      title: 90分あたりの、PKを除く得点（上位8人）
+      unit: 点
+      items:
+        - {label: ラフィーニャ, value: 1.33, highlight: true}
+        - {label: マレン, value: 1.10}
+        - {label: シック, value: 1.02}
+        - {label: ザビリ, value: 1.01}
+        - {label: ライモンド, value: 0.95}
+        - {label: ハーランド, value: 0.91}
+        - {label: エムバペ, value: 0.84}
+        - {label: ヤマル, value: 0.81}
+      note: 自分で割った値。11月12日時点
+    say:
+      - text: 8人の出場時間は、ばらばらです。90分あたりに直して並べます。
+        image: assets/images/20261122_compare_ranking_nopk/raph2_w.jpg
+        card: *ratecard
+      - text: いちばん多いのは、ラフィーニャ。90分あたり1.33点です。
+        card: {<<: *ratecard, highlight: ラフィーニャ}
+      - text: 計算は、PKを除く12点に90をかけて、出場時間で割ります。
+        card: &ratecalc
+          type: calc
+          title: ラフィーニャの90分あたり（PKを除く）
+          terms:
+            - ['12点', PKを除く得点]
+            - ['813分', 出場時間]
+            - ['1.33点', 90分あたり]
+          ops: ['÷', ＝]
+      - text: 2位は、ローマのマレン。652分で8点。1.10点です。
+        image: assets/images/20261122_compare_ranking_nopk/malen_w.jpg
+        card: {<<: *ratecard, highlight: マレン}
+      - text: 続くのは、シックの1.02、ザビリの1.01。
+        card: {<<: *ratecard, highlight: シック}
+      - text: 1点を超えるのは、この4人です。
+        emph: true
+        card: {<<: *ratecard, highlight: ザビリ}
+      - text: エムバペは0.84、ヤマルは0.81。
+        image: assets/images/20261122_compare_ranking_nopk/yam_w.jpg
+        card: {<<: *ratecard, highlight: ヤマル}
+      - text: 出場時間が長いエムバペとヤマルは、90分あたりに直すと、下に来ます。
+        card: *ratecard
+    sources:
+      - https://sports.core.api.espn.com/v2/sports/soccer/leagues/esp.1/seasons/2026/types/1/athletes/362150/statistics/0
+
+  - id: league
+    heading: リーグごとの首位は、誰で、何点なのか
+    tier: 報道
+    telop: スペイン12点・イングランド9点・イタリアとドイツ8点・フランス6点
+    narrator: 解説
+    card: &lgcard
+      type: table
+      title: リーグごとの首位（PKを除く得点）
+      columns: [リーグ, 首位, 点, 2位]
+      rows:
+        - [スペイン, ラフィーニャ, "12", エムバペ 10]
+        - [イングランド, ハーランド, "9", アイザック 7]
+        - [イタリア, マレン・ライモンド, "8", ヴァレラ・クルスティッチ 7]
+        - [ドイツ, シック, "8", 4人が6]
+        - [フランス, シナヨコ・グイリ・アーチャー, "6", ー]
+      note: 今季リーグ戦。11月12日時点
+    say:
+      - text: 次は、リーグごとの首位を見ます。PKを除く得点です。
+        image: assets/images/20261122_compare_ranking_nopk/mbap3_w.jpg
+        card: *lgcard
+      - text: スペインは、ラフィーニャの12点。2位は、エムバペの10点。
+        card: {<<: *lgcard, highlight_row: 0}
+      - text: イングランドは、ハーランドの9点。2位のアイザックとは、2点差。
+        image: assets/images/20261122_compare_ranking_nopk/haa_w.jpg
+        card: {<<: *lgcard, highlight_row: 1}
+      - text: イタリアは、ローマのマレンと、フロジノーネのライモンドが、同じ8点で並びます。
+        card: {<<: *lgcard, highlight_row: 2}
+      - text: ドイツは、レバークーゼンのシックが8点。2位は6点で、2点差。
+        card: {<<: *lgcard, highlight_row: 3}
+      - text: フランスは、首位が3人。どの選手も、6点です。
+        card: {<<: *lgcard, highlight_row: 4}
+      - text: 5つの首位を比べると、いちばん多いのはスペインの12。
+        emph: true
+        image: assets/images/20261122_compare_ranking_nopk/raph2_w.jpg
+        card: *lgcard
+      - text: フランスの6は、その半分です。
+        card: &halfcalc
+          type: calc
+          title: フランスの首位は、スペインの首位の
+          terms:
+            - ['6点', フランス]
+            - ['12点', スペイン]
+            - ['0.5倍', 比]
+          ops: ['÷', ＝]
+      - text: 首位に立つ顔ぶれは、全部で8人です。
+        card: none
+    sources:
+      - https://site.web.api.espn.com/apis/site/v2/sports/soccer/fra.1/statistics
+      - https://site.web.api.espn.com/apis/site/v2/sports/soccer/eng.1/statistics
+
+  - id: view
+    viewpoint: true
+    heading: 見立て・上位の顔ぶれを、リーグで数えると、どこが多いか
+    tier: 背景
+    telop: PKを除く得点が7以上の13人。スペイン6人・イタリア4人
+    narrator: 解説
+    card: &leaguecard
+      type: bars
+      title: PKを除く得点が7以上の選手の、リーグ別の人数
+      unit: 人
+      items:
+        - {label: スペイン, value: 6, highlight: true}
+        - {label: イタリア, value: 4}
+        - {label: イングランド, value: 2}
+        - {label: ドイツ, value: 1}
+        - {label: フランス, value: 0}
+      note: 今季リーグ戦。11月12日時点
+    say:
+      - text: 最後に、PKを除いて7点以上の選手を、リーグ別に数えます。全部で13人。
+        image: assets/images/20261122_compare_ranking_nopk/mbap3_w.jpg
+        card: *leaguecard
+      - text: スペインが6人。イタリアが4人です。
+        mark:
+          - {kind: circle, row: 0}
+        card: *leaguecard
+      - text: イングランドは2人、ドイツは1人。
+        card: *leaguecard
+      - text: フランスは、ゼロ。PKを除いて6点の選手が最多で、3人います。
+        image: assets/images/20261122_compare_ranking_nopk/haa_w.jpg
+        card: *leaguecard
+      - text: 13人の得点の合計は117。そのうち、PKで決めたのは9。
+        card: none
+      - text: 最後に、1位と3位の差も見ます。12点と9点で、差は3点。
+        card: &c1
+          type: calc
+          title: 1位と3位の差
+          terms:
+            - ['12', ラフィーニャ]
+            - ['9', 3位の3人]
+            - ['3', 差]
+          ops: ['－', '＝']
+      - text: PKを引いても、首位は変わらない。ただ、その下は、並びが入れ替わりました。
+        emph: true
+        image: assets/images/20261122_compare_ranking_nopk/yam_w.jpg
+        card: none
+      - text: まだ序盤。1試合で、順番は動きます。
+        card: none
+      - text: リーグが再開したあと、PKを除く得点でも、首位はラフィーニャのままなのか。
+        card: none
+    sources:
+      - https://site.web.api.espn.com/apis/site/v2/sports/soccer/esp.1/statistics
+      - https://site.web.api.espn.com/apis/site/v2/sports/soccer/ita.1/statistics

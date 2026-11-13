@@ -1,0 +1,869 @@
+# ロベルト・カルロス（元ブラジル代表DF、レアル・マドリード11シーズン）の紹介。シリーズ「レジェンドの紹介（世界）」2026-11-20 用。8節の変形（フック→基礎DATA→日本との接点→歩み→持ち味→あの試合→現役の終わり→マル秘話→見立て）。
+# **FotMob・DataMB・FBref・Sofascore・Transfermarkt 不使用**。数字は英語版 Wikipedia（Roberto Carlos 本文・Honours、1997 Tournoi de France、1998・2002 Intercontinental Cup、2002 FIFA World Cup final）と自分で足した値だけ。
+# **私生活・法的な問題・ドーピング疑惑・差別事件は入れない**。
+# **重なりの確認（2026-11-12）**：scripts/・research/covered.yaml・research/posted.json・research/2026111*_picks.txt を「ロベルト・カルロス／Roberto Carlos」で grep。主役の回は無し。同じ日（11/20）の別シリーズに同名なし（20261119_picks.txt）。
+# **引退の確認**：Wikipedia「announced his retirement from playing at the age of 39 in 2012 ... briefly came out of retirement in 2015 (Delhi Dynamos 選手兼監督)」。→ 現役ではない（53歳）。
+# **数字の出どころと自分で足した値**
+# - 通算（サムネの表）：レアル 584試合71点（本文）、ブラジル代表 125試合11点（本文）、合計 709試合82点（自分で足した値）。ほかのクラブは除く。
+# - 主要タイトル13個（Honours の Real Madrid）：La Liga 4（96-97・00-01・02-03・06-07）、スーペルコパ3（1997・2001・2003）、CL 3（97-98・99-00・01-02）、UEFAスーパー杯1（2002）、インターコンチネンタル2（1998・2002）＝13。暦年で割ると 1997〜2003＝12個、2004〜2006＝0個、2007＝1個（自分で数えた）。
+# - 日本：1998-12-01 国立競技場 レアル2-1ヴァスコ・ダ・ガマ（ラウール83分、先発）／2002-06-30 横浜 W杯決勝 ブラジル2-0ドイツ（ロナウド67・79分、左ウイングバック先発）／2002-12-03 横浜 レアル2-0オリンピア（ロナウド14分・グティ84分、先発）。いずれも Wikipedia の試合ページのラインナップ。
+# - 1997-06-03 リヨン、フランス1-1ブラジル。RC の FK は21分（試合ページ。距離は記事ごとに差があるので「30メートル以上」）、フランスの同点は55分（ケレール）。バルテズ・ボールボーイ・「史上最高のFK」・2010年の論文は本人記事の本文。
+# - 退団発表 2007-03-09、最終節マジョルカ3-1で優勝、最後のゴールはレクレアティボ戦の追加時間の決勝点（本文）。
+# - 2002-03 最終節ビルバオ戦（日付は本文に無いので書かない） FK（前半追加時間に2-1、試合は3-1）／1998-02 テネリフェ戦のボレー／2002年ナイキCM（ナカタ共演）：本文。
+# **本人の言葉**：取れていない。声の行は置かない。
+# **入れなかったもの**：私生活・家族・宗教・結婚、ドーピング疑惑、ロシアの差別事件、2006年W杯のアンリの失点、2007年のバイエルン戦の失点の細部（敗退の事実だけ）。
+# **読みで怪しいもの**：ロベルト・カルロス、ヴァスコ・ダ・ガマ、パルメイラス、オリンピア、グティ、バルテズ、レクレアティボ、トゥルノワ・ド・フランス、シバススポル、デリー・ダイナモス、フェネルバフチェ、アンジ、テネリフェ、コパ・デル・レイ、マジョルカ、ビルバオ。
+title: ロベルト・カルロスは、どんな選手だった？ 13個の優勝は、いつ集まったのか
+format: news
+short_title: ロベルト・カルロスは、どんな選手だった？
+series: レジェンドの紹介
+topic: ロベルト・カルロス
+date: 2026年11月12日
+slot: other_1
+people:
+- ロベルト・カルロス
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  id: legend_roberto_carlos
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: ロベルト・カルロス
+  title: ロベルト・カルロスは、どんな選手だった？ 13個の優勝は、いつ集まったのか
+  question: レアルで11年を過ごしたロベルト・カルロスは、いつ、いくつのタイトルを獲ったのか
+  takeaway: レアルでの主要タイトル13個のうち、12個は最初の7年（1997〜2003年）。次の3年はゼロ。最後の2007年に、去ると決めたシーズンのリーグ優勝を1つ
+  nameplate: ロベルト・カルロス｜元ブラジル代表 DF
+  opening_image: assets/images/20261120_roberto_carlos_legend/03_w.jpg
+  end_bg: assets/images/20261120_roberto_carlos_legend/03_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+  outro_title: 毎日、数字でサッカーを読み解きます
+thumbnail:
+  line1: ロベルト・カルロス、通算709試合
+  line2: レアルの11年で13冠
+  tags:
+  - レアル・マドリード
+  photo: assets/images/20261120_roberto_carlos_legend/panel_01.jpg
+  board: assets/images/20261120_roberto_carlos_legend/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261120_roberto_carlos_legend/02_v.jpg
+sections:
+- id: hook
+  heading: ロベルト・カルロスは、なぜ世界中から恐れられたのか
+  tier: 報道
+  telop: 左足の弾丸、レアルで13冠
+  say:
+  - text: 左サイドバックなのに、世界中のゴールキーパーが、その左足を恐れた選手がいます。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/02_w.jpg
+  - text: レアル・マドリードで過ごしたのは、11シーズン。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/03_w.jpg
+  - text: レアルとブラジル代表の公式戦は、合わせて709試合。
+    card:
+      type: stats
+      title: ロベルト・カルロス 元DF（53歳）
+      items:
+      - - '709'
+        - 試合
+        - レアルとブラジル代表の公式戦
+      - - '584'
+        - 試合
+        - レアル・マドリード
+      - - '13'
+        - 個
+        - レアルでの主要タイトル
+      focus: 0
+    image: assets/images/20261120_roberto_carlos_legend/02_w.jpg
+    emph: true
+    callword: 709試合
+  - text: ロベルト・カルロス。レアルでの主要タイトルは、13個です。
+    card:
+      type: stats
+      title: ロベルト・カルロス 元DF（53歳）
+      items:
+      - - '709'
+        - 試合
+        - レアルとブラジル代表の公式戦
+      - - '584'
+        - 試合
+        - レアル・マドリード
+      - - '13'
+        - 個
+        - レアルでの主要タイトル
+      focus: 2
+    image: assets/images/20261120_roberto_carlos_legend/03_w.jpg
+  - text: そして日本とも、深い縁があります。日本で、3度、頂点に立ちました。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/02_w.jpg
+  - text: ブラジルの弾丸と呼ばれた、左足の歩みをたどります。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/03_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Roberto_Carlos
+- id: data
+  heading: ロベルト・カルロスは、いつ、どこで生まれ、どんな選手か
+  tier: 報道
+  telop: ロベルト・カルロスの基礎DATA
+  say:
+  - text: ロベルト・カルロスは1973年4月10日、ブラジルに生まれました。
+    card:
+      type: table
+      title: ロベルト・カルロス
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 生年月日
+        - 1973年4月10日・ブラジル
+      - - ポジション
+        - 左サイドバック（左ウイングバックも）
+      - - クラブ
+        - レアル・マドリード（1996年から2007年）
+      - - 代表
+        - ブラジル代表 125試合
+      - - 現役を終えた
+        - 2012年に引退を表明
+      highlight_row: 0
+    image: assets/images/20261120_roberto_carlos_legend/02_w.jpg
+  - text: ポジションは、左サイドバック。左のウイングバックでも、プレーしました。
+    card:
+      type: table
+      title: ロベルト・カルロス
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 生年月日
+        - 1973年4月10日・ブラジル
+      - - ポジション
+        - 左サイドバック（左ウイングバックも）
+      - - クラブ
+        - レアル・マドリード（1996年から2007年）
+      - - 代表
+        - ブラジル代表 125試合
+      - - 現役を終えた
+        - 2012年に引退を表明
+      highlight_row: 1
+    image: assets/images/20261120_roberto_carlos_legend/03_w.jpg
+  - text: レアル・マドリードでは、1996年から2007年までプレー。
+    card:
+      type: table
+      title: ロベルト・カルロス
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 生年月日
+        - 1973年4月10日・ブラジル
+      - - ポジション
+        - 左サイドバック（左ウイングバックも）
+      - - クラブ
+        - レアル・マドリード（1996年から2007年）
+      - - 代表
+        - ブラジル代表 125試合
+      - - 現役を終えた
+        - 2012年に引退を表明
+      highlight_row: 2
+    image: assets/images/20261120_roberto_carlos_legend/02_w.jpg
+  - text: ブラジル代表では、125試合に出ています。
+    card:
+      type: table
+      title: ロベルト・カルロス
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 生年月日
+        - 1973年4月10日・ブラジル
+      - - ポジション
+        - 左サイドバック（左ウイングバックも）
+      - - クラブ
+        - レアル・マドリード（1996年から2007年）
+      - - 代表
+        - ブラジル代表 125試合
+      - - 現役を終えた
+        - 2012年に引退を表明
+      highlight_row: 3
+    image: assets/images/20261120_roberto_carlos_legend/03_w.jpg
+  - text: 2012年、39歳で、現役の引退を表明しました。
+    card:
+      type: table
+      title: ロベルト・カルロス
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 生年月日
+        - 1973年4月10日・ブラジル
+      - - ポジション
+        - 左サイドバック（左ウイングバックも）
+      - - クラブ
+        - レアル・マドリード（1996年から2007年）
+      - - 代表
+        - ブラジル代表 125試合
+      - - 現役を終えた
+        - 2012年に引退を表明
+      highlight_row: 4
+    image: assets/images/20261120_roberto_carlos_legend/02_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Roberto_Carlos
+- id: japan
+  heading: ロベルト・カルロスと日本には、どんな縁があったのか
+  tier: 報道
+  telop: 日本で獲った、3つのタイトル
+  say:
+  - text: 日本との接点は、3つの決勝です。3つとも、勝ちました。
+    card:
+      type: timeline
+      title: ロベルト・カルロスと日本
+      rows:
+      - - 1998年12月1日
+        - インターコンチネンタルカップ、東京でヴァスコ・ダ・ガマに勝つ
+      - - 2002年6月30日
+        - W杯決勝、横浜でドイツに勝つ
+      - - 2002年12月3日
+        - インターコンチネンタルカップ、横浜でオリンピアに勝つ
+      focus: 0
+      highlight_row: 0
+    image: assets/images/20261120_roberto_carlos_legend/03_w.jpg
+  - text: 1回目は1998年12月1日。東京の国立競技場での決勝です。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/02_w.jpg
+  - text: 相手は、ブラジルのヴァスコ・ダ・ガマ。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/03_w.jpg
+  - text: ロベルト・カルロスは、左サイドバックで先発しました。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/02_w.jpg
+  - text: ラウールが83分に決勝点。レアルは2対1で勝ちました。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/03_w.jpg
+  - text: 2回目は2002年6月30日、横浜。W杯決勝の舞台です。
+    card:
+      type: timeline
+      title: ロベルト・カルロスと日本
+      rows:
+      - - 1998年12月1日
+        - インターコンチネンタルカップ、東京でヴァスコ・ダ・ガマに勝つ
+      - - 2002年6月30日
+        - W杯決勝、横浜でドイツに勝つ
+      - - 2002年12月3日
+        - インターコンチネンタルカップ、横浜でオリンピアに勝つ
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261120_roberto_carlos_legend/02_w.jpg
+  - text: ブラジルの相手は、ドイツ。左ウイングバックで先発しました。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/03_w.jpg
+  - text: ロナウドが67分と79分に決めて、ブラジルが2対0で勝ちました。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/02_w.jpg
+  - text: 3回目は同じ年の12月3日、同じ横浜。クラブ世界一を決める、もう一度の決勝です。
+    card:
+      type: timeline
+      title: ロベルト・カルロスと日本
+      rows:
+      - - 1998年12月1日
+        - インターコンチネンタルカップ、東京でヴァスコ・ダ・ガマに勝つ
+      - - 2002年6月30日
+        - W杯決勝、横浜でドイツに勝つ
+      - - 2002年12月3日
+        - インターコンチネンタルカップ、横浜でオリンピアに勝つ
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261120_roberto_carlos_legend/03_w.jpg
+  - text: 相手は、パラグアイのオリンピア。ロナウドとグティのゴールで、2対0の勝ち。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/02_w.jpg
+  - text: 日本で、世界一のタイトルを3つ。日本は、特別な場所です。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/03_w.jpg
+    emph: true
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Roberto_Carlos
+  - https://en.wikipedia.org/wiki/1998_Intercontinental_Cup
+  - https://en.wikipedia.org/wiki/2002_FIFA_World_Cup_final
+  - https://en.wikipedia.org/wiki/2002_Intercontinental_Cup
+- id: career
+  heading: ロベルト・カルロスは、どこでプレーしてきたのか
+  tier: 報道
+  telop: ブラジルの小さなクラブから、レアルへ
+  say:
+  - text: 1992年、10代でブラジル代表に呼ばれます。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/02_w.jpg
+  - text: まだ、地方の小さなクラブにいたころです。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/03_w.jpg
+  - text: 1993年、パルメイラスへ。ブラジルのリーグを、2連覇します。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows:
+      - - '1993'
+        - パルメイラスでブラジル全国リーグ2連覇
+      - - '1996'
+        - レアル・マドリードへ
+      - - '2002'
+        - 日韓W杯でブラジルが優勝
+      - - '2007'
+        - トルコのフェネルバフチェへ
+      - - '2012'
+        - ロシアのアンジで引退を表明
+      focus: 0
+      highlight_row: 0
+    image: assets/images/20261120_roberto_carlos_legend/02_w.jpg
+  - text: 1995年にイタリアのインテルへ。でも、1シーズンで離れます。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/03_w.jpg
+  - text: 1996年、レアル・マドリードへ。以後、左サイドバックの一番手でした。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows:
+      - - '1993'
+        - パルメイラスでブラジル全国リーグ2連覇
+      - - '1996'
+        - レアル・マドリードへ
+      - - '2002'
+        - 日韓W杯でブラジルが優勝
+      - - '2007'
+        - トルコのフェネルバフチェへ
+      - - '2012'
+        - ロシアのアンジで引退を表明
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261120_roberto_carlos_legend/02_w.jpg
+  - text: 11シーズンで、584試合71ゴール。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/03_w.jpg
+  - text: ラ・リーガ優勝4回、チャンピオンズリーグ優勝3回です。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/02_w.jpg
+  - text: 2002年、日韓ワールドカップで、ブラジル代表として優勝。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows:
+      - - '1993'
+        - パルメイラスでブラジル全国リーグ2連覇
+      - - '1996'
+        - レアル・マドリードへ
+      - - '2002'
+        - 日韓W杯でブラジルが優勝
+      - - '2007'
+        - トルコのフェネルバフチェへ
+      - - '2012'
+        - ロシアのアンジで引退を表明
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261120_roberto_carlos_legend/03_w.jpg
+  - text: 2007年、トルコのフェネルバフチェへ。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows:
+      - - '1993'
+        - パルメイラスでブラジル全国リーグ2連覇
+      - - '1996'
+        - レアル・マドリードへ
+      - - '2002'
+        - 日韓W杯でブラジルが優勝
+      - - '2007'
+        - トルコのフェネルバフチェへ
+      - - '2012'
+        - ロシアのアンジで引退を表明
+      focus: 3
+      highlight_row: 0
+    image: assets/images/20261120_roberto_carlos_legend/02_w.jpg
+  - text: そのあと、ブラジルやロシアでもプレーします。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/03_w.jpg
+  - text: そして2012年、ロシアのアンジで、ピッチを去ると決めました。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows:
+      - - '1993'
+        - パルメイラスでブラジル全国リーグ2連覇
+      - - '1996'
+        - レアル・マドリードへ
+      - - '2002'
+        - 日韓W杯でブラジルが優勝
+      - - '2007'
+        - トルコのフェネルバフチェへ
+      - - '2012'
+        - ロシアのアンジで引退を表明
+      focus: 4
+      highlight_row: 0
+    image: assets/images/20261120_roberto_carlos_legend/02_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Roberto_Carlos
+- id: style
+  heading: ロベルト・カルロスは、何で相手を上回ったのか
+  tier: 報道
+  telop: 史上もっとも攻撃的な左サイドバック
+  say:
+  - text: ロベルト・カルロスは、史上もっとも攻撃的な左サイドバックと呼ばれました。
+    card:
+      type: table
+      title: ロベルト・カルロスの持ち味
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 位置
+        - 左サイドバック（左ウイングバックも）
+      - - 武器1
+        - 左足の強烈なシュート
+      - - 武器2
+        - 左サイドを駆け上がる走り
+      - - 武器3
+        - 61センチの太ももが生む加速
+      - - 記録
+        - ブラジル代表 125試合11点
+      highlight_row: 0
+    image: assets/images/20261120_roberto_carlos_legend/03_w.jpg
+  - text: 武器の1つ目は、左足のシュート。あだ名は、スペイン語で「弾丸の男」です。
+    card:
+      type: table
+      title: ロベルト・カルロスの持ち味
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 位置
+        - 左サイドバック（左ウイングバックも）
+      - - 武器1
+        - 左足の強烈なシュート
+      - - 武器2
+        - 左サイドを駆け上がる走り
+      - - 武器3
+        - 61センチの太ももが生む加速
+      - - 記録
+        - ブラジル代表 125試合11点
+      highlight_row: 1
+    image: assets/images/20261120_roberto_carlos_legend/02_w.jpg
+  - text: 強烈なフリーキックは、時速169キロと測られたことがあります。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/03_w.jpg
+  - text: 2つ目は、前へ攻め上がる走り。
+    card:
+      type: table
+      title: ロベルト・カルロスの持ち味
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 位置
+        - 左サイドバック（左ウイングバックも）
+      - - 武器1
+        - 左足の強烈なシュート
+      - - 武器2
+        - 左サイドを駆け上がる走り
+      - - 武器3
+        - 61センチの太ももが生む加速
+      - - 記録
+        - ブラジル代表 125試合11点
+      highlight_row: 2
+    image: assets/images/20261120_roberto_carlos_legend/02_w.jpg
+  - text: 左サイドを駆け上がり、攻めにも守りにも顔を出しました。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/03_w.jpg
+  - text: 3つ目は、太もも。
+    card:
+      type: table
+      title: ロベルト・カルロスの持ち味
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 位置
+        - 左サイドバック（左ウイングバックも）
+      - - 武器1
+        - 左足の強烈なシュート
+      - - 武器2
+        - 左サイドを駆け上がる走り
+      - - 武器3
+        - 61センチの太ももが生む加速
+      - - 記録
+        - ブラジル代表 125試合11点
+      highlight_row: 3
+    image: assets/images/20261120_roberto_carlos_legend/02_w.jpg
+  - text: 小柄ながら、61センチの太ももで、一気に加速しました。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/03_w.jpg
+  - text: ブラジル代表では、ゴールも11点。
+    card:
+      type: table
+      title: ロベルト・カルロスの持ち味
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 位置
+        - 左サイドバック（左ウイングバックも）
+      - - 武器1
+        - 左足の強烈なシュート
+      - - 武器2
+        - 左サイドを駆け上がる走り
+      - - 武器3
+        - 61センチの太ももが生む加速
+      - - 記録
+        - ブラジル代表 125試合11点
+      highlight_row: 4
+    image: assets/images/20261120_roberto_carlos_legend/02_w.jpg
+    emph: true
+  - text: ワールドカップは3大会に出場。1998年は準優勝、2002年は優勝です。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/03_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Roberto_Carlos
+- id: match
+  heading: 1997年のフランス戦で、ロベルト・カルロスは何を決めたのか
+  tier: 報道
+  telop: 前半21分、曲がって戻ったFK
+  main: true
+  say:
+  - text: ロベルト・カルロス。
+    card: none
+    short_only: true
+  - text: ボールボーイがよけた、あのフリーキックがあります。
+    card: none
+    short_only: true
+  - text: 1997年6月3日、フランスのリヨン。トゥルノワ・ド・フランスの、開幕戦です。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/02_w.jpg
+  - text: ブラジルの相手は、開催国のフランス。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/03_w.jpg
+  - text: 前半21分。ブラジルが、フリーキックを得ます。
+    card:
+      type: timeline
+      title: 1997年6月3日 トゥルノワ・ド・フランス フランス戦
+      rows:
+      - - 前半21分
+        - ロベルト・カルロスの左足のフリーキックが決まる
+      - - 55分
+        - フランスが同点に追いつく
+      - - 試合後
+        - 1対1の引き分け
+      focus: 0
+      highlight_row: 0
+    image: assets/images/20261120_roberto_carlos_legend/02_w.jpg
+  - text: ゴールから、30メートル以上離れた位置です。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/03_w.jpg
+  - text: 蹴るのは、ロベルト・カルロス。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/02_w.jpg
+  - text: 左足で蹴ったボールは、ゴールの右へ大きく逸れます。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/03_w.jpg
+  - text: ボールボーイが、思わずよけるほどでした。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/02_w.jpg
+  - text: ところが、ボールは曲がって戻り、ゴールの中へ。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/03_w.jpg
+    emph: true
+  - text: フランスのゴールキーパー、バルテズは、立ったまま動けませんでした。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/02_w.jpg
+  - text: のちに、史上最高のフリーキックと呼ばれるようになります。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/03_w.jpg
+  - text: 試合は、55分にフランスが追いついて、1対1の引き分けでした。
+    card:
+      type: timeline
+      title: 1997年6月3日 トゥルノワ・ド・フランス フランス戦
+      rows:
+      - - 前半21分
+        - ロベルト・カルロスの左足のフリーキックが決まる
+      - - 55分
+        - フランスが同点に追いつく
+      - - 試合後
+        - 1対1の引き分け
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261120_roberto_carlos_legend/02_w.jpg
+  - text: 2010年には、フランスの科学者が、この軌道を説明する論文を書いています。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/03_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Roberto_Carlos
+  - https://en.wikipedia.org/wiki/1997_Tournoi_de_France
+- id: after
+  heading: ロベルト・カルロスは、どんな形で現役を終えたのか
+  tier: 報道
+  telop: 最後のシーズンに、リーグ優勝
+  say:
+  - text: 2007年3月9日、シーズン限りでレアルを離れると発表。
+    card:
+      type: timeline
+      title: 現役の終わりと、その後
+      rows:
+      - - 2007年3月9日
+        - シーズン限りでの退団を発表
+      - - 2007年
+        - 最終節に優勝を決め、最後の試合に
+      - - 2012年
+        - 現役の引退を表明
+      - - 2013年
+        - トルコのシバススポルで監督に
+      focus: 0
+      highlight_row: 0
+    image: assets/images/20261120_roberto_carlos_legend/02_w.jpg
+  - text: チャンピオンズリーグでバイエルンに敗れた、直後でした。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/03_w.jpg
+  - text: 最後のゴールは、レクレアティボ戦の、終了間際の決勝点。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/02_w.jpg
+  - text: 最終節、マジョルカに3対1で勝って、レアルがリーグ優勝を決めます。
+    card:
+      type: timeline
+      title: 現役の終わりと、その後
+      rows:
+      - - 2007年3月9日
+        - シーズン限りでの退団を発表
+      - - 2007年
+        - 最終節に優勝を決め、最後の試合に
+      - - 2012年
+        - 現役の引退を表明
+      - - 2013年
+        - トルコのシバススポルで監督に
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261120_roberto_carlos_legend/03_w.jpg
+  - text: 11年のレアルでの日々は、優勝で幕を閉じました。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/02_w.jpg
+    emph: true
+  - text: 2012年、現役の引退を表明。
+    card:
+      type: timeline
+      title: 現役の終わりと、その後
+      rows:
+      - - 2007年3月9日
+        - シーズン限りでの退団を発表
+      - - 2007年
+        - 最終節に優勝を決め、最後の試合に
+      - - 2012年
+        - 現役の引退を表明
+      - - 2013年
+        - トルコのシバススポルで監督に
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261120_roberto_carlos_legend/03_w.jpg
+  - text: 2013年には、トルコのシバススポルの監督になります。
+    card:
+      type: timeline
+      title: 現役の終わりと、その後
+      rows:
+      - - 2007年3月9日
+        - シーズン限りでの退団を発表
+      - - 2007年
+        - 最終節に優勝を決め、最後の試合に
+      - - 2012年
+        - 現役の引退を表明
+      - - 2013年
+        - トルコのシバススポルで監督に
+      focus: 3
+      highlight_row: 0
+    image: assets/images/20261120_roberto_carlos_legend/02_w.jpg
+  - text: 2015年には、インドのデリー・ダイナモスへ。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/03_w.jpg
+  - text: 監督兼選手として、短く現役に戻りました。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/02_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Roberto_Carlos
+- id: secret
+  heading: ロベルト・カルロスには、どんな意外な話があるのか
+  tier: 報道
+  telop: ありえないゴール、CM、最終節のFK
+  say:
+  - text: ここで、ロベルト・カルロスの意外な一面を3つ。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/03_w.jpg
+  - text: 1つ目。1998年2月、コパ・デル・レイのテネリフェ戦。
+    card:
+      type: table
+      title: 知られざる、3つの話
+      columns:
+      - いつ
+      - 何があったか
+      rows:
+      - - 1998年2月
+        - コパ・デル・レイで「ありえないゴール」
+      - - 2002年
+        - W杯前のCMで、中田英寿らと共演
+      - - 2002-03
+        - 最終節のFKで、リーグ優勝を引き寄せる
+      highlight_row: 0
+    image: assets/images/20261120_roberto_carlos_legend/02_w.jpg
+  - text: サイドライン近くから、左足の外側で打った、曲がるボレー。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/03_w.jpg
+  - text: 「ありえないゴール」と呼ばれました。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/02_w.jpg
+  - text: 2つ目。2002年のワールドカップの前、ナイキのCM。
+    card:
+      type: table
+      title: 知られざる、3つの話
+      columns:
+      - いつ
+      - 何があったか
+      rows:
+      - - 1998年2月
+        - コパ・デル・レイで「ありえないゴール」
+      - - 2002年
+        - W杯前のCMで、中田英寿らと共演
+      - - 2002-03
+        - 最終節のFKで、リーグ優勝を引き寄せる
+      highlight_row: 1
+    image: assets/images/20261120_roberto_carlos_legend/03_w.jpg
+  - text: ロナウドやアンリ、トッティ、そして日本の中田英寿らと、共演しました。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/02_w.jpg
+  - text: 3つ目。2002-03シーズン、リーグ最終節のビルバオ戦。
+    card:
+      type: table
+      title: 知られざる、3つの話
+      columns:
+      - いつ
+      - 何があったか
+      rows:
+      - - 1998年2月
+        - コパ・デル・レイで「ありえないゴール」
+      - - 2002年
+        - W杯前のCMで、中田英寿らと共演
+      - - 2002-03
+        - 最終節のFKで、リーグ優勝を引き寄せる
+      highlight_row: 2
+    image: assets/images/20261120_roberto_carlos_legend/03_w.jpg
+  - text: 前半の追加時間に、フリーキックを決めて、2対1とリードします。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/02_w.jpg
+  - text: 試合は3対1。この勝利で、レアルはその年の王者になりました。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/03_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Roberto_Carlos
+- id: view
+  heading: 13個のタイトルは、いつ獲ったのか
+  tier: 背景
+  telop: 13個のうち、12個は最初の7年
+  viewpoint: true
+  say:
+  - text: 最後に、レアルの11年を、暦年で3つに分けて比べます。
+    card:
+      type: table
+      title: レアルでの主要タイトル（暦年ごと）
+      columns:
+      - 期間
+      - 年数
+      - 主要タイトル
+      rows:
+      - - 1997〜2003年
+        - '7'
+        - 12個
+      - - 2004〜2006年
+        - '3'
+        - 0個
+      - - 2007年
+        - '1'
+        - 1個
+      highlight_row: 0
+    image: assets/images/20261120_roberto_carlos_legend/02_w.jpg
+  - text: 1997年から2003年までの7年間で、主要タイトルは12個。
+    card:
+      type: table
+      title: レアルでの主要タイトル（暦年ごと）
+      columns:
+      - 期間
+      - 年数
+      - 主要タイトル
+      rows:
+      - - 1997〜2003年
+        - '7'
+        - 12個
+      - - 2004〜2006年
+        - '3'
+        - 0個
+      - - 2007年
+        - '1'
+        - 1個
+      highlight_row: 0
+    image: assets/images/20261120_roberto_carlos_legend/03_w.jpg
+  - text: リーグ優勝3回、チャンピオンズリーグ3回、スーパーカップなどです。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/02_w.jpg
+  - text: ところが、2004年から2006年の3年間は、ゼロでした。
+    card:
+      type: table
+      title: レアルでの主要タイトル（暦年ごと）
+      columns:
+      - 期間
+      - 年数
+      - 主要タイトル
+      rows:
+      - - 1997〜2003年
+        - '7'
+        - 12個
+      - - 2004〜2006年
+        - '3'
+        - 0個
+      - - 2007年
+        - '1'
+        - 1個
+      highlight_row: 1
+    image: assets/images/20261120_roberto_carlos_legend/03_w.jpg
+  - text: そして最後の2007年に、リーグ優勝を1つ。
+    card:
+      type: table
+      title: レアルでの主要タイトル（暦年ごと）
+      columns:
+      - 期間
+      - 年数
+      - 主要タイトル
+      rows:
+      - - 1997〜2003年
+        - '7'
+        - 12個
+      - - 2004〜2006年
+        - '3'
+        - 0個
+      - - 2007年
+        - '1'
+        - 1個
+      highlight_row: 2
+    image: assets/images/20261120_roberto_carlos_legend/02_w.jpg
+    emph: true
+    mark:
+      kind: circle
+      row: 2
+      col: 2
+  - text: 合わせて、13個です。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/03_w.jpg
+  - text: 13個のうち、最後の1個は、本人が去ると決めたシーズンに獲りました。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/02_w.jpg
+  - text: ブラジルの弾丸、ロベルト・カルロス。左足は、いまも語り継がれています。
+    card: none
+    image: assets/images/20261120_roberto_carlos_legend/03_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Roberto_Carlos

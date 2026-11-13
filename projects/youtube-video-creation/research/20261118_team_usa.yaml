@@ -1,0 +1,926 @@
+# 代表チーム紹介 アメリカ代表（11/12 作成。見本は 11/14 の韓国代表）。7節：フック→基礎DATA→日本との関係→歴史と転機（年表）→看板選手（表）→いまのチーム→見立て。
+date: 2026年11月18日（情報は11月12日時点）
+slot: other_1
+format: news
+series: 代表チーム紹介
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+short_photos:
+- assets/images/20261118_team_usa/b01_v.jpg
+- assets/images/20261118_team_usa/b03_v.jpg
+people:
+- アメリカ代表
+- ポチェッティーノ
+- プリシッチ
+- バログン
+- 日本代表
+- ワールドカップ
+theme:
+  id: team_usa
+  league: japan
+  league_name: アメリカ代表
+  kind: preview
+  topic: アメリカ代表
+  title: アメリカ代表は、自国W杯で過去最多の3勝。なぜベスト16止まりだったのか
+  question: アメリカは自国開催のW杯で過去最多の3勝を挙げたのに、なぜ到達点は1994年と同じベスト16だったのか
+  lead: 自国開催のW杯で、勝ち数は3倍に。
+  hook: ''
+  opening_image: assets/stats/tb_usa_data_t.png
+  end_bg: assets/images/20261118_team_usa/b02_w.jpg
+  takeaway: アメリカは自国開催の2026年W杯で3勝・11得点と過去最多を記録したが、結果は1994年と同じベスト16。勝った3試合は8得点1失点、負けた2試合は3得点7失点。W杯のあとの4試合は4勝で、ポチェッティーノ監督の契約は2030年まで。
+thumbnail:
+  board: assets/stats/tb_usa_data.png
+  short_photo: assets/images/20261118_team_usa/b03_v.jpg
+  line1: アメリカ代表
+  line2: 自国W杯で過去最多の3勝
+  crest_main:
+  - アメリカ
+  tags:
+  - アメリカ代表
+  - USMNT
+  - 日本代表
+  - プリシッチ
+  - ワールドカップ
+  - 代表チーム紹介
+sections:
+- id: hook
+  heading: アメリカは、自国のW杯で、何が変わったのか
+  tier: 背景
+  telop: 自国W杯で過去最多の3勝。結果はベスト16
+  narrator: 解説
+  main: true
+  say:
+  - text: アメリカ代表。フィファランクは16位の国です。
+    image: assets/stats/tb_usa_data_t.png
+    short_only: true
+    no_telop: true
+  - text: 2026年、自国で開かれたワールドカップで、アメリカは3勝を挙げました。
+    image: assets/stats/tb_usa_data_t.png
+    no_telop: true
+  - text: それまでの11大会は、あわせて9勝。1大会で、その3分の1に届きました。
+    image: assets/stats/tb_usa_data_r1.png
+    no_telop: true
+  - text: 11得点も、W杯の1大会では、アメリカで過去最多。
+    image: assets/stats/tb_usa_data_r1.png
+    no_telop: true
+    emph: true
+  - text: ところが結果は、ベスト16。1994年の自国開催と、同じところで終わりました。
+    image: assets/images/20261118_team_usa/b01_w.jpg
+    no_telop: true
+  - text: 勝ち数は増えたのに、なぜ到達点は変わらなかったのでしょうか。
+    image: assets/stats/tb_usa_data_t.png
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/United_States_men's_national_soccer_team
+  - https://en.wikipedia.org/wiki/United_States_at_the_FIFA_World_Cup
+- id: data
+  heading: アメリカ代表は、どんな数字を持つ国なのか
+  tier: 背景
+  telop: アメリカ代表の基礎DATA
+  narrator: 解説
+  say:
+  - text: アメリカのフィファランクは、10月7日の発表で**16位**。日本は17位です。
+    image: assets/stats/tb_usa_data0.png
+    no_telop: true
+  - text: ワールドカップは12回出場。いちばん上は、1930年の第1回大会の3位。
+    image: assets/stats/tb_usa_data1.png
+    no_telop: true
+  - text: 直近は2026年。自国開催で、決勝トーナメントの2回戦まで進みました。
+    image: assets/stats/tb_usa_data2.png
+    no_telop: true
+  - text: 北中米のゴールドカップは、7回の優勝。
+    image: assets/stats/tb_usa_data3.png
+    no_telop: true
+  - text: 監督は、アルゼンチン出身のポチェッティーノ。2024年9月に就任しました。
+    image: assets/stats/tb_usa_data5.png
+    no_telop: true
+  - text: 主将はタイラー・アダムス。代表62試合です。
+    image: assets/stats/tb_usa_data6.png
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Module:SportsRankings/data/FIFA_World_Rankings
+  - https://en.wikipedia.org/wiki/United_States_men's_national_soccer_team
+- id: japan
+  heading: 日本は、アメリカとどう戦ってきたのか
+  tier: 背景
+  telop: 日本とは4試合、日本から見て2勝0分け2敗
+  narrator: 解説
+  card:
+    type: table
+    title: 日本とアメリカの全4試合
+    columns:
+    - 年
+    - 場所
+    - 日本の結果
+    rows:
+    - - 1993年3月
+      - 東京
+      - 3-1の勝ち
+    - - 2006年2月
+      - サンフランシスコ
+      - 2-3の負け
+    - - 2022年9月
+      - デュッセルドルフ
+      - 2-0の勝ち
+    - - 2025年9月
+      - コロンバス
+      - 0-2の負け
+  say:
+  - text: 日本とアメリカの対戦は、4試合。日本から見て、2勝2敗です。
+    image: assets/stats/tb_usa_data8.png
+    card:
+      type: table
+      title: 日本とアメリカの全4試合
+      columns:
+      - 年
+      - 場所
+      - 日本の結果
+      rows:
+      - - 1993年3月
+        - 東京
+        - 3-1の勝ち
+      - - 2006年2月
+        - サンフランシスコ
+        - 2-3の負け
+      - - 2022年9月
+        - デュッセルドルフ
+        - 2-0の勝ち
+      - - 2025年9月
+        - コロンバス
+        - 0-2の負け
+  - text: 最初は1993年3月のキリンカップ。東京の国立競技場で、日本が3対1で勝ちました。
+    image: assets/images/20261118_team_usa/b02_w.jpg
+    card:
+      type: table
+      title: 日本とアメリカの全4試合
+      columns:
+      - 年
+      - 場所
+      - 日本の結果
+      rows:
+      - - 1993年3月
+        - 東京
+        - 3-1の勝ち
+      - - 2006年2月
+        - サンフランシスコ
+        - 2-3の負け
+      - - 2022年9月
+        - デュッセルドルフ
+        - 2-0の勝ち
+      - - 2025年9月
+        - コロンバス
+        - 0-2の負け
+      highlight_row: 0
+  - text: 2006年2月は、サンフランシスコ。日本は、2対3で敗れました。
+    card:
+      type: table
+      title: 日本とアメリカの全4試合
+      columns:
+      - 年
+      - 場所
+      - 日本の結果
+      rows:
+      - - 1993年3月
+        - 東京
+        - 3-1の勝ち
+      - - 2006年2月
+        - サンフランシスコ
+        - 2-3の負け
+      - - 2022年9月
+        - デュッセルドルフ
+        - 2-0の勝ち
+      - - 2025年9月
+        - コロンバス
+        - 0-2の負け
+      highlight_row: 1
+  - text: 2022年9月は、デュッセルドルフ。鎌田大地と三笘薫のゴールで、2対0の勝ち。
+    image: assets/images/20261118_team_usa/b03_w.jpg
+    card:
+      type: table
+      title: 日本とアメリカの全4試合
+      columns:
+      - 年
+      - 場所
+      - 日本の結果
+      rows:
+      - - 1993年3月
+        - 東京
+        - 3-1の勝ち
+      - - 2006年2月
+        - サンフランシスコ
+        - 2-3の負け
+      - - 2022年9月
+        - デュッセルドルフ
+        - 2-0の勝ち
+      - - 2025年9月
+        - コロンバス
+        - 0-2の負け
+      highlight_row: 2
+  - text: 2025年9月は、オハイオ州のコロンバス。アメリカが2対0で勝ちました。
+    card:
+      type: table
+      title: 日本とアメリカの全4試合
+      columns:
+      - 年
+      - 場所
+      - 日本の結果
+      rows:
+      - - 1993年3月
+        - 東京
+        - 3-1の勝ち
+      - - 2006年2月
+        - サンフランシスコ
+        - 2-3の負け
+      - - 2022年9月
+        - デュッセルドルフ
+        - 2-0の勝ち
+      - - 2025年9月
+        - コロンバス
+        - 0-2の負け
+      highlight_row: 3
+  - text: 4試合は、すべて親善試合です。ワールドカップでは、まだ戦っていません。
+    image: assets/images/20261118_team_usa/b01_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_records_and_statistics
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(2020–present)
+- id: history
+  heading: アメリカは、どんな道でW杯に戻ってきたのか
+  tier: 背景
+  telop: W杯は12回。最高は1930年の3位
+  narrator: 解説
+  card:
+    type: timeline
+    title: アメリカ代表の歩み
+    rows:
+    - - 1930年
+      - 第1回W杯で3位
+    - - 1991年
+      - ゴールドカップで初優勝
+    - - 1994年
+      - 自国開催のW杯でベスト16
+    - - 2002年
+      - W杯でベスト8
+    - - 2022年
+      - W杯でベスト16
+    - - 2026年
+      - 自国開催でベスト16。3勝は過去最多
+    focus: 2026年
+  say:
+  - text: アメリカがワールドカップに初めて出たのは、1930年の第1回大会。
+    image: assets/images/20261118_team_usa/b02_w.jpg
+    card:
+      type: timeline
+      title: アメリカ代表の歩み
+      rows:
+      - - 1930年
+        - 第1回W杯で3位
+      - - 1991年
+        - ゴールドカップで初優勝
+      - - 1994年
+        - 自国開催のW杯でベスト16
+      - - 2002年
+        - W杯でベスト8
+      - - 2022年
+        - W杯でベスト16
+      - - 2026年
+        - 自国開催でベスト16。3勝は過去最多
+      focus: 2026年
+  - text: 準決勝まで進んで、3位。いまも、W杯の最高成績です。
+    card:
+      type: timeline
+      title: アメリカ代表の歩み
+      rows:
+      - - 1930年
+        - 第1回W杯で3位
+      - - 1991年
+        - ゴールドカップで初優勝
+      - - 1994年
+        - 自国開催のW杯でベスト16
+      - - 2002年
+        - W杯でベスト8
+      - - 2022年
+        - W杯でベスト16
+      - - 2026年
+        - 自国開催でベスト16。3勝は過去最多
+      focus: 2026年
+      highlight_row: 0
+  - text: 1950年のあと、1990年まで、40年のあいだ本大会に出られませんでした。
+    card: none
+  - text: 1991年には、ゴールドカップで初優勝。
+    image: assets/images/20261118_team_usa/b03_w.jpg
+    card:
+      type: timeline
+      title: アメリカ代表の歩み
+      rows:
+      - - 1930年
+        - 第1回W杯で3位
+      - - 1991年
+        - ゴールドカップで初優勝
+      - - 1994年
+        - 自国開催のW杯でベスト16
+      - - 2002年
+        - W杯でベスト8
+      - - 2022年
+        - W杯でベスト16
+      - - 2026年
+        - 自国開催でベスト16。3勝は過去最多
+      focus: 2026年
+      highlight_row: 1
+  - text: 1994年は、自国開催のW杯。ベスト16でした。
+    card:
+      type: timeline
+      title: アメリカ代表の歩み
+      rows:
+      - - 1930年
+        - 第1回W杯で3位
+      - - 1991年
+        - ゴールドカップで初優勝
+      - - 1994年
+        - 自国開催のW杯でベスト16
+      - - 2002年
+        - W杯でベスト8
+      - - 2022年
+        - W杯でベスト16
+      - - 2026年
+        - 自国開催でベスト16。3勝は過去最多
+      focus: 2026年
+      highlight_row: 2
+  - text: 2002年は、ベスト8。1930年のあと、いちばんの成績です。
+    image: assets/images/20261118_team_usa/b01_w.jpg
+    card:
+      type: timeline
+      title: アメリカ代表の歩み
+      rows:
+      - - 1930年
+        - 第1回W杯で3位
+      - - 1991年
+        - ゴールドカップで初優勝
+      - - 1994年
+        - 自国開催のW杯でベスト16
+      - - 2002年
+        - W杯でベスト8
+      - - 2022年
+        - W杯でベスト16
+      - - 2026年
+        - 自国開催でベスト16。3勝は過去最多
+      focus: 2026年
+      highlight_row: 3
+  - text: 2022年は、ベスト16。オランダに、1対3の負けでした。
+    card:
+      type: timeline
+      title: アメリカ代表の歩み
+      rows:
+      - - 1930年
+        - 第1回W杯で3位
+      - - 1991年
+        - ゴールドカップで初優勝
+      - - 1994年
+        - 自国開催のW杯でベスト16
+      - - 2002年
+        - W杯でベスト8
+      - - 2022年
+        - W杯でベスト16
+      - - 2026年
+        - 自国開催でベスト16。3勝は過去最多
+      focus: 2026年
+      highlight_row: 4
+  - text: 2026年は、また自国開催。3勝を挙げて、ベスト16です。
+    image: assets/images/20261118_team_usa/b02_w.jpg
+    card:
+      type: timeline
+      title: アメリカ代表の歩み
+      rows:
+      - - 1930年
+        - 第1回W杯で3位
+      - - 1991年
+        - ゴールドカップで初優勝
+      - - 1994年
+        - 自国開催のW杯でベスト16
+      - - 2002年
+        - W杯でベスト8
+      - - 2022年
+        - W杯でベスト16
+      - - 2026年
+        - 自国開催でベスト16。3勝は過去最多
+      focus: 2026年
+      highlight_row: 5
+  sources:
+  - https://en.wikipedia.org/wiki/United_States_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/United_States_men's_national_soccer_team
+- id: players
+  heading: いまの看板選手は、誰なのか
+  tier: 背景
+  telop: 看板選手を、所属・名前・位置・年齢で
+  narrator: 解説
+  card:
+    type: table
+    title: アメリカ代表の看板選手
+    columns:
+    - 所属
+    - 名前
+    - 位置
+    - 年齢
+    rows:
+    - - ACミラン
+      - プリシッチ
+      - FW
+      - '28'
+    - - ユヴェントス
+      - マッケニー
+      - MF
+      - '28'
+    - - ボーンマス
+      - アダムス
+      - MF
+      - '27'
+    - - モナコ
+      - バログン
+      - FW
+      - '25'
+    - - レヴァークーゼン
+      - ティルマン
+      - MF
+      - '24'
+    - - フラム
+      - ロビンソン
+      - DF
+      - '29'
+  say:
+  - text: 11月に招集された、アメリカの看板選手です。
+    image: assets/images/20261118_team_usa/b02_w.jpg
+    card:
+      type: table
+      title: アメリカ代表の看板選手
+      columns:
+      - 所属
+      - 名前
+      - 位置
+      - 年齢
+      rows:
+      - - ACミラン
+        - プリシッチ
+        - FW
+        - '28'
+      - - ユヴェントス
+        - マッケニー
+        - MF
+        - '28'
+      - - ボーンマス
+        - アダムス
+        - MF
+        - '27'
+      - - モナコ
+        - バログン
+        - FW
+        - '25'
+      - - レヴァークーゼン
+        - ティルマン
+        - MF
+        - '24'
+      - - フラム
+        - ロビンソン
+        - DF
+        - '29'
+  - text: クリスチャン・プリシッチは、ACミランのフォワード。代表90試合で、33得点。
+    image: assets/images/20261118_team_usa/b01_w.jpg
+    card:
+      type: table
+      title: アメリカ代表の看板選手
+      columns:
+      - 所属
+      - 名前
+      - 位置
+      - 年齢
+      rows:
+      - - ACミラン
+        - プリシッチ
+        - FW
+        - '28'
+      - - ユヴェントス
+        - マッケニー
+        - MF
+        - '28'
+      - - ボーンマス
+        - アダムス
+        - MF
+        - '27'
+      - - モナコ
+        - バログン
+        - FW
+        - '25'
+      - - レヴァークーゼン
+        - ティルマン
+        - MF
+        - '24'
+      - - フラム
+        - ロビンソン
+        - DF
+        - '29'
+      highlight_row: 0
+  - text: W杯の初戦、パラグアイ戦で、W杯のアシスト数がアメリカ歴代最多の3になりました。
+    image: assets/images/20261118_team_usa/b05_w.jpg
+    card: none
+  - text: フォラリン・バログンは、その試合で2得点。
+    image: assets/images/20261118_team_usa/b03_w.jpg
+    card:
+      type: table
+      title: アメリカ代表の看板選手
+      columns:
+      - 所属
+      - 名前
+      - 位置
+      - 年齢
+      rows:
+      - - ACミラン
+        - プリシッチ
+        - FW
+        - '28'
+      - - ユヴェントス
+        - マッケニー
+        - MF
+        - '28'
+      - - ボーンマス
+        - アダムス
+        - MF
+        - '27'
+      - - モナコ
+        - バログン
+        - FW
+        - '25'
+      - - レヴァークーゼン
+        - ティルマン
+        - MF
+        - '24'
+      - - フラム
+        - ロビンソン
+        - DF
+        - '29'
+      highlight_row: 3
+  - text: アメリカの選手の1試合2得点は、W杯では、1930年以来です。
+    card:
+      type: table
+      title: アメリカ代表の看板選手
+      columns:
+      - 所属
+      - 名前
+      - 位置
+      - 年齢
+      rows:
+      - - ACミラン
+        - プリシッチ
+        - FW
+        - '28'
+      - - ユヴェントス
+        - マッケニー
+        - MF
+        - '28'
+      - - ボーンマス
+        - アダムス
+        - MF
+        - '27'
+      - - モナコ
+        - バログン
+        - FW
+        - '25'
+      - - レヴァークーゼン
+        - ティルマン
+        - MF
+        - '24'
+      - - フラム
+        - ロビンソン
+        - DF
+        - '29'
+      highlight_row: 3
+  - text: タイラー・アダムスは、主将。ボーンマスの所属です。
+    image: assets/images/20261118_team_usa/b02_w.jpg
+    card:
+      type: table
+      title: アメリカ代表の看板選手
+      columns:
+      - 所属
+      - 名前
+      - 位置
+      - 年齢
+      rows:
+      - - ACミラン
+        - プリシッチ
+        - FW
+        - '28'
+      - - ユヴェントス
+        - マッケニー
+        - MF
+        - '28'
+      - - ボーンマス
+        - アダムス
+        - MF
+        - '27'
+      - - モナコ
+        - バログン
+        - FW
+        - '25'
+      - - レヴァークーゼン
+        - ティルマン
+        - MF
+        - '24'
+      - - フラム
+        - ロビンソン
+        - DF
+        - '29'
+      highlight_row: 2
+  - text: マリク・ティルマンは、レヴァークーゼン。ボスニア戦とベルギー戦でゴール。
+    card:
+      type: table
+      title: アメリカ代表の看板選手
+      columns:
+      - 所属
+      - 名前
+      - 位置
+      - 年齢
+      rows:
+      - - ACミラン
+        - プリシッチ
+        - FW
+        - '28'
+      - - ユヴェントス
+        - マッケニー
+        - MF
+        - '28'
+      - - ボーンマス
+        - アダムス
+        - MF
+        - '27'
+      - - モナコ
+        - バログン
+        - FW
+        - '25'
+      - - レヴァークーゼン
+        - ティルマン
+        - MF
+        - '24'
+      - - フラム
+        - ロビンソン
+        - DF
+        - '29'
+      highlight_row: 4
+  - text: 招集メンバーの最年少は、2009年生まれの17歳。3人います。
+    image: assets/images/20261118_team_usa/b03_w.jpg
+    card: none
+  - text: 日本のクラブの選手は、いません。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/United_States_men's_national_soccer_team
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_Group_D
+- id: now
+  heading: W杯のあとのアメリカは、いまどうなっているのか
+  tier: 背景
+  telop: W杯のあとの4試合は、4連勝
+  narrator: 解説
+  card:
+    type: table
+    title: W杯のあと アメリカの4試合（親善試合）
+    columns:
+    - 日付
+    - 相手
+    - アメリカの結果
+    rows:
+    - - 9月26日
+      - ペルー
+      - 4-1
+    - - 9月29日
+      - チリ
+      - 4-2
+    - - 10月3日
+      - メキシコ
+      - 3-0
+    - - 10月6日
+      - カナダ
+      - 1-0
+  say:
+  - text: 2026年のW杯は、ベスト16。ベルギーに、1対4の負けでした。
+    image: assets/images/20261118_team_usa/b04_w.jpg
+    card: none
+  - text: グループ初戦は、パラグアイに4対1の勝ち。
+    card: none
+  - text: 2戦目も、オーストラリアに2対0の勝ち。首位で抜けました。
+    card: none
+  - text: 決勝トーナメント1回戦は、ボスニア・ヘルツェゴビナに2対0の勝ち。
+    image: assets/images/20261118_team_usa/b02_w.jpg
+    card: none
+  - text: そのあとのアメリカは、4試合で4連勝。
+    card:
+      type: table
+      title: W杯のあと アメリカの4試合（親善試合）
+      columns:
+      - 日付
+      - 相手
+      - アメリカの結果
+      rows:
+      - - 9月26日
+        - ペルー
+        - 4-1
+      - - 9月29日
+        - チリ
+        - 4-2
+      - - 10月3日
+        - メキシコ
+        - 3-0
+      - - 10月6日
+        - カナダ
+        - 1-0
+  - text: 9月はペルーに4対1の勝ち、チリに4対2の勝ち。
+    card:
+      type: table
+      title: W杯のあと アメリカの4試合（親善試合）
+      columns:
+      - 日付
+      - 相手
+      - アメリカの結果
+      rows:
+      - - 9月26日
+        - ペルー
+        - 4-1
+      - - 9月29日
+        - チリ
+        - 4-2
+      - - 10月3日
+        - メキシコ
+        - 3-0
+      - - 10月6日
+        - カナダ
+        - 1-0
+      highlight_row: 1
+  - text: 10月はメキシコに3対0の勝ち、カナダに1対0の勝ち。
+    image: assets/images/20261118_team_usa/b03_w.jpg
+    card:
+      type: table
+      title: W杯のあと アメリカの4試合（親善試合）
+      columns:
+      - 日付
+      - 相手
+      - アメリカの結果
+      rows:
+      - - 9月26日
+        - ペルー
+        - 4-1
+      - - 9月29日
+        - チリ
+        - 4-2
+      - - 10月3日
+        - メキシコ
+        - 3-0
+      - - 10月6日
+        - カナダ
+        - 1-0
+      highlight_row: 3
+  - text: チリ戦では、17歳のマティス・アルベルトが、代表の最年少得点の記録を作りました。
+    card: none
+  - text: そのあと、メキシコ戦で、17歳のカバン・サリバンが、記録を更新しています。
+    image: assets/images/20261118_team_usa/b01_w.jpg
+    card: none
+  - text: ポチェッティーノ監督は、8月に2030年まで契約を延ばしました。
+    card: none
+  - text: マンチェスター・ユナイテッドが交渉に入った、という話も出ています。
+    image: assets/images/20261118_team_usa/b02_w.jpg
+    card: none
+  - text: 本人の発表は、まだありません。
+    card: none
+  - text: 11月は、ネーションズリーグの準々決勝で、ハイチと2試合です。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/United_States_men's_national_soccer_team
+  - https://www.soccer-king.jp/news/world/world_other/20261112/2226819.html
+- id: viewpoint
+  heading: アメリカは、なぜ自国のW杯でも、ベスト16だったのか
+  tier: 背景
+  telop: 勝ちは1から3に。ベスト16は同じ
+  narrator: 解説
+  card:
+    type: table
+    title: アメリカの自国開催W杯 数えた数字
+    columns:
+    - 項目
+    - 1994年
+    - 2026年
+    rows:
+    - - 試合
+      - '4'
+      - '5'
+    - - 勝ち
+      - '1'
+      - '3'
+    - - 得点
+      - '3'
+      - '11'
+    - - 失点
+      - '4'
+      - '8'
+    - - 最終順位
+      - 14位
+      - 12位
+  viewpoint: true
+  say:
+  - text: 見立てです。自国開催のW杯を、1994年と2026年で並べて数えます。
+    image: assets/images/20261118_team_usa/b01_w.jpg
+    card: none
+  - text: アメリカの勝ちは、1から3。得点は3から11。数字は、はっきり増えました。
+    card:
+      type: table
+      title: アメリカの自国開催W杯 数えた数字
+      columns:
+      - 項目
+      - 1994年
+      - 2026年
+      rows:
+      - - 試合
+        - '4'
+        - '5'
+      - - 勝ち
+        - '1'
+        - '3'
+      - - 得点
+        - '3'
+        - '11'
+      - - 失点
+        - '4'
+        - '8'
+      - - 最終順位
+        - 14位
+        - 12位
+      highlight_row: 1
+    emph: true
+    mark:
+      kind: circle
+      row: 1
+      col: 2026年
+  - text: 最終順位は、14位から12位。結果は、どちらもベスト16です。
+    card:
+      type: table
+      title: アメリカの自国開催W杯 数えた数字
+      columns:
+      - 項目
+      - 1994年
+      - 2026年
+      rows:
+      - - 試合
+        - '4'
+        - '5'
+      - - 勝ち
+        - '1'
+        - '3'
+      - - 得点
+        - '3'
+        - '11'
+      - - 失点
+        - '4'
+        - '8'
+      - - 最終順位
+        - 14位
+        - 12位
+      highlight_row: 4
+  - text: 2026年の勝ち3試合は、8得点で1失点。
+    image: assets/images/20261118_team_usa/b02_w.jpg
+    card: none
+  - text: 負けた2試合は、3得点で7失点です。
+    card:
+      type: table
+      title: アメリカの自国開催W杯 数えた数字
+      columns:
+      - 項目
+      - 1994年
+      - 2026年
+      rows:
+      - - 試合
+        - '4'
+        - '5'
+      - - 勝ち
+        - '1'
+        - '3'
+      - - 得点
+        - '3'
+        - '11'
+      - - 失点
+        - '4'
+        - '8'
+      - - 最終順位
+        - 14位
+        - 12位
+      highlight_row: 3
+    mark:
+      kind: circle
+      row: 3
+      col: 2026年
+  - text: 負けた2試合は、トルコ戦が2対3の負け、ベルギー戦が1対4の負け。
+    card: none
+  - text: 勝った試合より、失点がかさみました。トルコ戦は、控え10人で臨んでいます。
+    card: none
+  - text: ただ、W杯のあとの4試合は4勝。12得点で3失点です。
+    image: assets/images/20261118_team_usa/b03_w.jpg
+    card: none
+  - text: ポチェッティーノ監督の契約は、2030年まで。
+    card: none
+  - text: 次のW杯で、アメリカが勝ち数を結果につなげられるか。そこが注目点です。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/United_States_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/United_States_men's_national_soccer_team

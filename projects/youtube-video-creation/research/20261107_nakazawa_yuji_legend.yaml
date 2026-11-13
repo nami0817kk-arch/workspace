@@ -1,0 +1,459 @@
+# 中澤佑二（元日本代表 DF）の紹介。シリーズ「レジェンドの紹介（日本）」2026-11-07。型は 11/5 の奥寺康彦・11/1 の中村憲剛と同じ8節の変形。
+# **情報の時点は 2026-11-05。**年齢は当時のものだけ（生年月日 1978-02-25 から計算）。いまの年齢・いまの仕事は言わない。
+# **FotMob・DataMB・FBref・Sofascore・Transfermarkt は不使用**。数字は J リーグ公式（2019-01-08 の引退の記事）・Goal.com 日本版のインタビュー（2017-07-14）・
+#   Number Web（2011-01-05、無料で読める前半だけ）・英語版/日本語版 Wikipedia の成績表と大会の記事だけ。
+# **私生活（家族・娘・ラクロスの指導）は入れない。女子のスポーツの話も入れない**。J リーグは経歴の事実だけにとどめ、サムネの主役にしない（主役は日本代表）。
+#
+# **題材を選んだ理由**：直近30日に未出の、日本代表の大物。110試合は日本代表で100試合を超えた数少ない1人（2010-02-14 に井原正巳・川口能活に続く3人目で100試合。英語版）。
+#   W杯2大会（2006・2010）、2010年は田中マルクス闘莉王とセンターバックを組んで4試合2失点。高校から無名→給料の出ない練習生→代表の主将、の物語がある。
+#   ヒットの条件（日本代表・W杯・本人の言葉）に当たる。
+#   候補から外したもの：高原直泰（11/6 のハンブルガーSV・10/24 のフランクフルトのクラブ紹介に名前と節が出ている。続けて出すと重なる）、
+#   中田浩二・柳沢敦・小笠原満男・楢崎正剛（使える現役時代の大きな写真が見つからない。Commons は別人の「Koji Nakata」か小さいものだけ）、
+#   本田圭佑・香川真司・長友佑都（現役）、釜本邦茂（2025年に死去。追悼の回になる）、田中マルクス闘莉王（写真が無い。本編の中で名前を出す）。
+# **重なりの確認（2026-11-05）**：scripts/・research/covered.yaml を「中澤」「Nakazawa」で grep → 0件。research/posted.json は build 名だけで人名は入っていない。
+#   research/20261107_picks.txt の他の担当（シュロッターベック・クヴァラツヘリアとドゥエ・ベルナベウ・バルセロナのユニフォーム）とも重ならない。
+#   同じ時期の日本人レジェンドでは、阿部勇樹（10/29）が2010年W杯の4試合、宮本恒靖（10/29）が2006年W杯、川口能活（10/22）が2004年アジアカップを扱っている。
+#   この回は「中澤の守り」と「2006年と2010年の失点の比べ」に絞り、同じ説明（アンカーの話・PK戦）はしない。
+# **引退の確認**：J リーグ公式 2019-01-08「横浜Ｆ・マリノスは8日、DF中澤 佑二が2018シーズン限りで現役を引退することを発表」。英語版・日本語版 Wikipedia も同じ。→ **現役ではない**。
+#
+# **数字の出どころ**
+# - 生年月日 1978-02-25・埼玉県吉川市（日本語版）。身長187cm（日本語版）。
+# - J1 通算 593試合36得点（J リーグ公式）。内訳：ヴェルディ 1999〜2001 = 28+29+26 = 83試合・1+4+0 = 5得点、横浜FM 2002〜2018 = 510試合31得点（日本語版の成績表。合計は自分で引いた）。
+# - J1 連続フル出場 178試合（2013-07-06〜2018-08-15）は「フィールドプレーヤーとしては歴代最長」（J リーグ公式）。
+# - 日本代表 110試合17得点（J リーグ公式「国際Aマッチ通算110試合・17得点」）。1999-09-08 イランとの親善試合でデビュー（英語版）。年ごとの数（英語版、RSSSF 典拠）：
+#   1999:1 2000:6 2001:2 2002:1 2003:4 2004:15 2005:12 2006:12 2007:13 2008:16 2009:14 2010:14 ＝110。2004〜2010 の7年で 96試合（自分で足した）。
+# - 100試合目：2010-02-14 東アジア選手権 韓国戦、国立。井原正巳・川口能活に続いて日本で3人目（英語版）。
+# - 1999 J リーグ新人王（英語版・日本語版）。2004 J リーグ最優秀選手（J リーグ公式）。2003・2004 J1 優勝（J リーグ公式）。
+# - プロ入り前：高校卒業後にブラジルのアメリカFCへ（日本語版・Goal.com 2017）。帰国後、ヴェルディの練習生（無給。日本語版・英語版「received no compensation」）。
+#   「片道2時間の距離を毎日自費で通って…シーズン終了後にプロ契約」（Goal.com 2017）。1999年3月13日 C大阪戦で J1 初出場（英語版・日本語版）。21歳（生年月日から）。
+# - 2002年W杯：本大会前最後のノルウェー戦（0対3）に出たが、メンバーから落ちた（日本語版「秋田豊のサプライズ選出に押し出され落選」、英語版「Yutaka Akita was preferred」）。24歳。
+# - 2004年アジアカップ：全試合に出て3得点（英語版）。タイ戦の2得点（57分・87分）、準決勝バーレーン戦の90分の同点ゴール。
+#   準決勝の流れ（英語版の試合記録）：バーレーン7分、中田浩二48分、玉田55分、バーレーン71分・85分（2対3）、中澤90分（3対3）、玉田93分（延長）→ 4対3。
+# - 2006年W杯：3試合すべてに出場（英語版の先発表）。結果はオーストラリアに1対3、クロアチアに0対0、ブラジルに1対4（英語版 2006 Group F）＝3試合で7失点（自分で足した）。
+#   ブラジル戦は主将（英語版の先発表の (c)、日本語版「宮本恒靖の代わりに主将」）。
+#   大会後に代表から退く考えを示し（英語版「announced his retirement from the international football at the age of 28」、日本語版）、2007年2月にオシム監督の合宿に呼ばれて戻る（日本語版）。
+# - 2010年W杯：4試合すべてに先発（英語版の先発表・日本語版）。結果はカメルーンに1対0、オランダに0対1、デンマークに3対1、パラグアイに0対0（PK3対5）（英語版）＝4試合で2失点（自分で足した）。
+#   Number Web 2011-01-05「4試合を2失点」「名コンビはカメルーンのエース、エトーをシュート1本に抑えた」。
+# - 引退：2019-01-08 発表、2018シーズン限り。40歳（J リーグ公式・生年月日から）。
+# - 1試合あたりの失点（自分で割った）：2006年 7÷3 ＝ 約2.3、2010年 2÷4 ＝ 0.5。
+# - 本人の言葉（原文のまま、短く切る）：
+#   ①Goal.com 2017-07-14「苦しかったですね、あの頃は。若かったし、一直線だったので。もう一回と言われたらできないですね。」
+#   ②Goal.com 2017-07-14「とにかく顔と名前を覚えてもらいたいという思いで、ああいう髪型にしていたんです。」
+#   ③Number Web 2011-01-05「闘莉王のほうが強いっすよ！」
+#   ④J リーグ公式 2019-01-08（クラブを通じたコメント）「最後は”中澤佑二”らしく、自分の決断を信じ、1ミリの後悔もなくピッチを去ろうと思います。」
+#
+# **入れなかったもの**：家族・娘・ラクロス、CM・テレビ、安室奈美恵の話、2010年5月のイングランド戦のオウンゴール、2004年アジアカップ準々決勝のPK（外した）、
+#   「DFで代表最多の17得点」（日本語版だけで裏が取れない）、「代表で警告5回・退場0回」（日本語版が Number を引くが本文を読めない）、「歴代4位の110試合」（日本語版の書きぶりが古く、いまの順位と合わない）、
+#   FIFA の技術報告の評価、エメルソンの言葉、いまの仕事。
+# **写真**：assets/images/20261107_nakazawa_yuji_legend/
+#   01 = Goal.com 日本版 2019-01 の引退の記事の主写真（（C）J.LEAGUE、1920x1080、2018年4月の横浜FM、腕章あり）。代理店ではない（J リーグの写真）。
+#   02 = Goal.com 日本版 2017-07-14 のインタビューの主写真（記者会見、1920x1280、撮影者の表記なし）。現役中（2017年）。
+#   03 = Commons「Nakazawa 20080622.jpg」（Neier、CC BY-SA 3.0、1289x1923、2008年6月22日の W杯予選バーレーン戦、日本代表の2番）。03_w は 1.49倍で本編に敷く。
+#   Commons の「Yuji Nakazawa and Hide Nakatoshi 20120122.jpg」は人が小さく、ほかの人も写るので使わない（20261107_nakazawa_yuji_cm2 に取り込んだまま）。
+#   ほかに当たったもの：フットボールチャンネル・SPREAD・サッカーキング（Getty）、Number（AFLO）、J リーグ公式（640px）、横浜FM 公式（660px）、Sportiva（600px）は使わない。
+watch: 毎日、数字でサッカーを読み解きます
+title: 中澤佑二は、どんな選手だった？ 給料ゼロの練習生が代表の柱になれたわけ
+format: news
+short_title: 中澤佑二は、どんな選手だった？
+series: レジェンドの紹介
+topic: 中澤佑二
+date: 2026年11月5日
+slot: other_1
+people:
+- 中澤佑二
+theme:
+  id: legend_nakazawa_yuji
+  league: japan
+  league_name: ワールドカップ
+  kind: other
+  topic: 中澤佑二
+  title: 中澤佑二は、どんな選手だった？ 給料ゼロの練習生が代表の柱になれたわけ
+  question: 高校からはどこにも誘われず、給料の出ない練習生から始めた中澤佑二は、どうやって日本代表で110試合に立ち、2度のワールドカップで何を残したのか
+  takeaway: 中澤佑二の日本代表110試合のうち、96試合は2004年から2010年の7年間。ワールドカップの失点は、2006年が3試合で7、2010年が4試合で2。1試合あたり約2.3から0.5へ。2002年に落ちた男が、8年後に日本の守りの真ん中に立っていた
+  nameplate: 中澤佑二｜元日本代表 DF
+  opening_image: assets/images/20261107_nakazawa_yuji_legend/01_w.jpg
+  end_bg: assets/images/20261107_nakazawa_yuji_legend/01_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+  outro_title: 毎日、数字でサッカーを読み解きます
+thumbnail:
+  line1: 中澤佑二、代表110戦17点
+  line2: 練習生から日本の主将へ
+  tags:
+  - 日本
+  photo: assets/images/20261107_nakazawa_yuji_legend/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261107_nakazawa_yuji_legend/03_v.jpg
+sections:
+- id: hook
+  heading: 給料の出ない練習生は、どこまで行ったのか
+  tier: 報道
+  telop: 1998年、ヴェルディ川崎の練習生
+  card: &hookcard
+    type: stats
+    title: 中澤佑二 元日本代表DF
+    items:
+    - - '0'
+      - 円
+      - 練習生のときの給料
+    - - '110'
+      - 試合
+      - 日本代表の出場
+    - - '2'
+      - 大会
+      - ワールドカップ（2006・2010年）
+    focus: 1
+  say:
+  - text: 1998年。ヴェルディ川崎の練習場に、毎日、片道2時間かけて通う若者がいました。
+    image: assets/images/20261107_nakazawa_yuji_legend/01_w.jpg
+    card: none
+  - text: 立場は練習生。給料は出ません。交通費も、自分で払っていました。
+    card: none
+  - text: 高校からは、どのクラブにも誘われなかった選手です。
+    card: none
+  - text: その若者は12年後、ワールドカップで日本の守りの真ん中に立っていました。
+    card: none
+    emph: true
+  - text: 中澤佑二。日本代表で110試合に出た、守りの柱です。
+    image: assets/images/20261107_nakazawa_yuji_legend/02_r.jpg
+    card: {<<: *hookcard, focus: 1}
+    callword: 中澤佑二
+  - text: ワールドカップには2度出て、主将として腕章を巻いた試合もありました。
+    card: {<<: *hookcard, focus: 2}
+  quotes_from: []
+  sources:
+  - https://www.goal.com/jp/%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9/%E9%99%90%E7%95%8C%E3%81%BE%E3%81%A7%E8%BF%BD%E3%81%84%E8%BE%BC%E3%82%93%E3%81%A0%E8%8B%A5%E3%81%8D%E6%97%A5%E3%81%AE%E8%A8%98%E6%86%B6%E4%B8%AD%E6%BE%A4%E4%BD%91%E4%BA%8C%E3%81%8C%E8%AA%9E%E3%82%8B%E3%83%9F%E3%82%B9%E3%82%BF%E3%83%BC%E3%82%B9%E3%83%88%E3%82%A4%E3%83%83%E3%82%AF%E3%81%AE%E5%8E%9F%E7%82%B9%E3%81%A8%E3%81%AF/1kk5yrq5owe991l1r883pfp6ia
+  - https://www.jleague.jp/news/article/13850/
+  - https://en.wikipedia.org/wiki/Yuji_Nakazawa
+- id: data
+  heading: 中澤佑二は、どこでプレーし、どんな数字を残したのか
+  tier: 報道
+  telop: 中澤佑二の基礎DATA
+  card: &datacard
+    type: table
+    title: 中澤佑二
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 生年月日
+      - 1978年2月25日・埼玉県生まれ
+    - - ポジション
+      - センターバック（187cm）
+    - - クラブ
+      - ヴェルディ → 横浜F・マリノス
+    - - 日本代表
+      - 110試合17得点（1999〜2010年）
+    - - W杯
+      - 2006年・2010年
+    - - 引退
+      - 2018年シーズン限り（40歳）
+    source: Jリーグ公式・Wikipedia
+    highlight_row: 0
+  say:
+  - text: 中澤佑二の生まれは、1978年2月25日。埼玉県の出身です。
+    image: assets/images/20261107_nakazawa_yuji_legend/02_r.jpg
+    card: {<<: *datacard, highlight_row: 0}
+  - text: 身長187センチ。空中戦に強いセンターバックでした。
+    card: {<<: *datacard, highlight_row: 1}
+  - text: 代表で決めたゴールは17。守備の選手ながら、セットプレーで点も取りました。
+    card: {<<: *datacard, highlight_row: 3}
+  - text: クラブでは、横浜F・マリノスで17シーズンを過ごしています。
+    image: assets/images/20261107_nakazawa_yuji_legend/01_w.jpg
+    card: none
+  quotes_from: []
+  sources:
+  - https://www.jleague.jp/news/article/13850/
+  - https://ja.wikipedia.org/wiki/%E4%B8%AD%E6%BE%A4%E4%BD%91%E4%BA%8C
+  - https://en.wikipedia.org/wiki/Yuji_Nakazawa
+- id: trainee
+  heading: どこにも誘われなかった高校生は、どうやってプロになったのか
+  tier: 報道
+  telop: ブラジルへ、そしてヴェルディの練習生へ
+  card: &traineecard
+    type: timeline
+    title: プロになるまで
+    rows:
+    - - 高校卒業後
+      - ブラジルのアメリカFCへ
+    - - 帰国後
+      - ヴェルディ川崎の練習生（給料なし）
+    - - 1999年3月
+      - プロ1年目、J1デビュー
+    - - 1999年末
+      - Jリーグの新人王
+    highlight_row: 0
+  say:
+  - text: 高校を出た中澤は、ひとりでブラジルへ渡ります。
+    image: assets/images/20261107_nakazawa_yuji_legend/02_r.jpg
+    card: {<<: *traineecard, highlight_row: 0}
+  - text: スパイクは盗まれ、練習でもパスが回ってこない。
+    card: none
+  - text: それでも半年ほどで、試合に出られるまでになりました。
+    card: none
+  - text: 日本に戻ると、ヴェルディ川崎の練習生に。
+    card: {<<: *traineecard, highlight_row: 1}
+  - text: 給料の出ない立場で、片道2時間の道のりを自分のお金で通い続けます。
+    card: none
+  - text: のちに本人は、この頃をこう振り返っています。
+    card: none
+  - voice: 中澤佑二
+    text: 苦しかったですね、あの頃は。若かったし、一直線だったので。
+    card: none
+  - voice: 中澤佑二
+    text: もう一回と言われたらできないですね。
+    card: none
+    cont: true
+    emph: true
+  - text: 1999年、21歳でプロ契約。開幕2戦目で先発に入り、そのまま定位置をつかみます。
+    card: {<<: *traineecard, highlight_row: 2}
+  - text: その年、Jリーグの新人王に選ばれました。
+    card: {<<: *traineecard, highlight_row: 3}
+  - text: トレードマークは、大きなアフロの髪。名前は「ボンバーヘッド」です。
+    image: assets/images/20261107_nakazawa_yuji_legend/01_w.jpg
+    card: none
+  - voice: 中澤佑二
+    text: とにかく顔と名前を覚えてもらいたいという思いで、
+    card: none
+  - voice: 中澤佑二
+    text: ああいう髪型にしていたんです。
+    card: none
+    cont: true
+  quotes_from:
+  - https://www.goal.com/jp/%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9/%E9%99%90%E7%95%8C%E3%81%BE%E3%81%A7%E8%BF%BD%E3%81%84%E8%BE%BC%E3%82%93%E3%81%A0%E8%8B%A5%E3%81%8D%E6%97%A5%E3%81%AE%E8%A8%98%E6%86%B6%E4%B8%AD%E6%BE%A4%E4%BD%91%E4%BA%8C%E3%81%8C%E8%AA%9E%E3%82%8B%E3%83%9F%E3%82%B9%E3%82%BF%E3%83%BC%E3%82%B9%E3%83%88%E3%82%A4%E3%83%83%E3%82%AF%E3%81%AE%E5%8E%9F%E7%82%B9%E3%81%A8%E3%81%AF/1kk5yrq5owe991l1r883pfp6ia
+  sources:
+  - https://www.goal.com/jp/%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9/%E9%99%90%E7%95%8C%E3%81%BE%E3%81%A7%E8%BF%BD%E3%81%84%E8%BE%BC%E3%82%93%E3%81%A0%E8%8B%A5%E3%81%8D%E6%97%A5%E3%81%AE%E8%A8%98%E6%86%B6%E4%B8%AD%E6%BE%A4%E4%BD%91%E4%BA%8C%E3%81%8C%E8%AA%9E%E3%82%8B%E3%83%9F%E3%82%B9%E3%82%BF%E3%83%BC%E3%82%B9%E3%83%88%E3%82%A4%E3%83%83%E3%82%AF%E3%81%AE%E5%8E%9F%E7%82%B9%E3%81%A8%E3%81%AF/1kk5yrq5owe991l1r883pfp6ia
+  - https://en.wikipedia.org/wiki/Yuji_Nakazawa
+  - https://ja.wikipedia.org/wiki/%E4%B8%AD%E6%BE%A4%E4%BD%91%E4%BA%8C
+- id: setback
+  heading: 2002年のワールドカップに落ちた中澤は、どう戻ってきたのか
+  tier: 報道
+  telop: 2002年、日韓大会のメンバーから外れる
+  card: &backcard
+    type: timeline
+    title: 落選から主力へ
+    rows:
+    - - 2002年の開幕
+      - 横浜F・マリノスへ移る
+    - - 2002年のW杯前
+      - W杯のメンバーから外れる
+    - - 2003〜04年
+      - J1で2年続けて優勝
+    - - 2004年
+      - JリーグのMVP、代表に定着
+    highlight_row: 0
+  say:
+  - text: 2000年、シドニー五輪では先発で戦い、日本代表にも呼ばれるようになります。
+    image: assets/images/20261107_nakazawa_yuji_legend/03_w.jpg
+    card: none
+  - text: ところが2002年。自国で開くワールドカップのメンバー発表です。
+    image: assets/images/20261107_nakazawa_yuji_legend/02_r.jpg
+    card: {<<: *backcard, highlight_row: 1}
+  - text: そこに、中澤の名前はありませんでした。
+    card: {<<: *backcard, highlight_row: 1}
+    emph: true
+  - text: 発表の前の最後の試合は、ノルウェー戦。フルで出て、0対3で負けていました。
+    card: {<<: *backcard, highlight_row: 1}
+  - text: この年から、中澤は横浜F・マリノスでプレーしていました。
+    card: {<<: *backcard, highlight_row: 0}
+  - text: 翌年からJ1を2年続けて制し、2004年にはJリーグの最優秀選手に選ばれました。
+    card: {<<: *backcard, highlight_row: 2}
+  - text: 代表にも戻り、ジーコ監督のもとで守りの軸になっていきます。
+    image: assets/images/20261107_nakazawa_yuji_legend/01_w.jpg
+    card: none
+  quotes_from: []
+  sources:
+  - https://ja.wikipedia.org/wiki/%E4%B8%AD%E6%BE%A4%E4%BD%91%E4%BA%8C
+  - https://en.wikipedia.org/wiki/Yuji_Nakazawa
+  - https://www.jleague.jp/news/article/13850/
+- id: asia
+  heading: 負けかけたアジアカップの準決勝で、中澤は何をしたのか
+  tier: 報道
+  telop: 2004年アジアカップ準決勝、バーレーン戦
+  card: &asiacard
+    type: table
+    title: 2004年8月 準決勝 日本対バーレーン
+    columns:
+    - 時間
+    - できごと
+    rows:
+    - - 85分
+      - バーレーンが勝ち越し、2対3
+    - - 90分
+      - 中澤のゴールで3対3
+    - - 延長93分
+      - 玉田圭司が決めて4対3
+    highlight_row: 0
+  say:
+  - text: 2004年の夏、中国で開かれたアジアカップ。準決勝の相手はバーレーンでした。
+    image: assets/backgrounds/cut_日本.png
+    card: none
+  - text: 85分、日本は2対3と勝ち越されます。残りは、ほんのわずか。
+    image: assets/images/20261107_nakazawa_yuji_legend/02_r.jpg
+    card: {<<: *asiacard, highlight_row: 0}
+  - text: 90分。同点のゴールを決めたのは、センターバックの中澤でした。
+    card: {<<: *asiacard, highlight_row: 1}
+    emph: true
+    callword: 90分の同点弾
+  - text: 延長に入ってすぐ、玉田圭司が決めて4対3。日本は決勝へ進み、大会を連覇します。
+    card: {<<: *asiacard, highlight_row: 2}
+  - text: この大会、中澤は3得点。玉田と並んで、チームでいちばん多い数でした。
+    image: assets/images/20261107_nakazawa_yuji_legend/03_w.jpg
+    card: none
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/2004_AFC_Asian_Cup
+  - https://en.wikipedia.org/wiki/Yuji_Nakazawa
+  - https://ja.wikipedia.org/wiki/%E4%B8%AD%E6%BE%A4%E4%BD%91%E4%BA%8C
+- id: worldcup
+  heading: 2006年と2010年、中澤の守る日本はどう変わったのか
+  tier: 報道
+  telop: ワールドカップ、ドイツ大会と南アフリカ大会
+  main: true
+  card: &wccard
+    type: table
+    title: 中澤佑二のワールドカップ
+    columns:
+    - 大会
+    - 結果
+    - 失点
+    rows:
+    - - 2006年 ドイツ
+      - 1次リーグで敗退
+      - 3試合で7
+    - - 2010年 南アフリカ
+      - ベスト16
+      - 4試合で2
+    highlight_row: 0
+  say:
+  - text: 2010年のW杯。中澤佑二と守りの真ん中を組んだのは、田中マルクス闘莉王。
+    image: assets/images/20261107_nakazawa_yuji_legend/03_w.jpg
+    card: none
+  - text: 空中戦はどちらが上か。中澤は即答です。
+    card: none
+  - voice: 中澤佑二
+    text: 闘莉王のほうが強いっすよ！
+    card: none
+  - text: ただ、その4年前のドイツ大会は、苦い大会でした。中澤は3試合すべてにフルで出ます。
+    card: none
+  - text: ブラジル戦は、中澤がキャプテンでした。
+    image: assets/images/20261107_nakazawa_yuji_legend/02_r.jpg
+    card: none
+  - text: それでも3試合で7失点。4年前のベスト16から、1次リーグ敗退に戻りました。
+    card: {<<: *wccard, highlight_row: 0}
+  - text: 大会のあと、中澤は代表から退く考えを口にします。28歳でした。
+    card: none
+  - text: 翌年、呼び戻したのはオシム監督。続く岡田監督のもとでは、主将も任されます。
+    card: none
+  - text: 2010年2月、日本で3人目となる代表100試合に届きました。
+    card: none
+  - text: そして迎えた南アフリカ大会。
+    image: assets/images/20261107_nakazawa_yuji_legend/03_w.jpg
+    card: none
+  - text: 初戦はカメルーンに1対0の勝ち。相手のエース、エトーを封じました。
+    card: none
+  - text: 4試合すべてに先発し、失点はわずか2。日本はベスト16まで進みました。
+    image: assets/images/20261107_nakazawa_yuji_legend/02_r.jpg
+    card: {<<: *wccard, highlight_row: 1}
+    emph: true
+  quotes_from:
+  - https://number.bunshun.jp/articles/-/74574
+  sources:
+  - https://en.wikipedia.org/wiki/2006_FIFA_World_Cup_Group_F
+  - https://en.wikipedia.org/wiki/2010_FIFA_World_Cup_Group_E
+  - https://en.wikipedia.org/wiki/2010_FIFA_World_Cup_knockout_stage
+  - https://en.wikipedia.org/wiki/Yuji_Nakazawa
+  - https://ja.wikipedia.org/wiki/%E4%B8%AD%E6%BE%A4%E4%BD%91%E4%BA%8C
+  - https://number.bunshun.jp/articles/-/74574
+- id: after
+  heading: 40歳まで続けた中澤は、どんな終わり方を選んだのか
+  tier: 報道
+  telop: 2019年1月、現役の引退を発表
+  card: &aftercard
+    type: timeline
+    title: 代表のあと
+    rows:
+    - - 2013〜18年
+      - J1で178試合続けてフル出場
+    - - 2018年
+      - 最後のシーズン
+    - - 2019年1月
+      - 現役の引退を発表（40歳）
+    highlight_row: 0
+  say:
+  - text: 南アフリカ大会のあとも、中澤は横浜F・マリノスで出続けます。
+    image: assets/images/20261107_nakazawa_yuji_legend/01_w.jpg
+    card: none
+  - text: 2013年から5年あまり、J1で178試合続けてフルに出ました。
+    image: assets/images/20261107_nakazawa_yuji_legend/02_r.jpg
+    card: {<<: *aftercard, highlight_row: 0}
+  - text: ゴールキーパーを除けば、J1でいちばん長い記録です。
+    card: {<<: *aftercard, highlight_row: 0}
+    emph: true
+  - text: 2019年1月、40歳で引退を発表。クラブを通じて、こう言葉を残しました。
+    card: {<<: *aftercard, highlight_row: 2}
+  - voice: 中澤佑二
+    text: 最後は中澤佑二らしく、自分の決断を信じ、
+    card: none
+  - voice: 中澤佑二
+    text: 1ミリの後悔もなくピッチを去ろうと思います。
+    card: none
+    cont: true
+  quotes_from:
+  - https://www.jleague.jp/news/article/13850/
+  sources:
+  - https://www.jleague.jp/news/article/13850/
+  - https://ja.wikipedia.org/wiki/%E4%B8%AD%E6%BE%A4%E4%BD%91%E4%BA%8C
+- id: view
+  heading: 中澤佑二の110試合は、どの7年に詰まっていたのか
+  tier: 背景
+  telop: 2002年に落ちた男が、8年後に守りの真ん中へ
+  viewpoint: true
+  card: &viewcard
+    type: table
+    title: ワールドカップの日本の失点
+    columns:
+    - 大会
+    - 試合
+    - 失点
+    - 1試合あたり
+    rows:
+    - - 2006年
+      - '3'
+      - '7'
+      - 約2.3
+    - - 2010年
+      - '4'
+      - '2'
+      - '0.5'
+    highlight_row: 0
+  say:
+  - text: 最後に、中澤佑二の数字を並べます。
+    image: assets/images/20261107_nakazawa_yuji_legend/03_w.jpg
+    card: none
+  - text: 2006年は3試合で7失点。1試合あたり、およそ2.3点を取られていました。
+    image: assets/images/20261107_nakazawa_yuji_legend/02_r.jpg
+    card: {<<: *viewcard, highlight_row: 0}
+  - text: 2010年は4試合で2失点。1試合あたり0.5点です。
+    card: {<<: *viewcard, highlight_row: 1}
+    mark:
+      kind: circle
+      row: 1
+      col: 1試合あたり
+  - text: 同じ中澤が真ん中にいて、取られる点は5分の1ほどに減りました。
+    card: {<<: *viewcard, highlight_row: 1}
+    emph: true
+  - text: 代表の110試合を年ごとに見ると、2002年はわずか1試合です。
+    image: assets/images/20261107_nakazawa_yuji_legend/01_w.jpg
+    card: none
+  - text: それが2004年から2010年の7年間で、96試合。毎年12試合以上に出ています。
+    card: none
+    emph: true
+  - text: ワールドカップに落ちた24歳が、32歳でベスト16の守りを支えました。
+    card: none
+  - text: 給料の出ない練習生から始まった道は、日本の守りの柱まで続いていました。
+    card: none
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Yuji_Nakazawa
+  - https://en.wikipedia.org/wiki/2006_FIFA_World_Cup_Group_F
+  - https://en.wikipedia.org/wiki/2010_FIFA_World_Cup_Group_E

@@ -1,0 +1,507 @@
+# ブンデスリーガ18クラブ紹介 ⑭1.FCケルン（2026-11-06 作成。情報は11月6日時点。見本は 11/8 のブレーメン）。tools/plbuild.py（CLUB_LEAGUE=bundesliga）で組み立て。
+# 材料は research/bd_data/koln*.json・koln_say.yaml・koln_research.md。（出力名・theme.id・date・question・takeaway・people・名選手の表題・今季の節（plbuild がケルンの試合を拾えなかったので手で組んだ）と viewpoint・watch は手で足した）
+format: news
+voice_min: 0
+slot: other_1
+date: 2026年11月6日
+people:
+- ケルン
+- 奥寺康彦
+- 大迫勇也
+- 長澤和輝
+- 槙野智章
+- ヘネス・ヴァイスヴァイラー
+- ヴォルフガング・オヴェラート
+- ピエール・リトバルスキー
+- ルーカス・ポドルスキ
+- ルネ・ヴァーグナー
+- マルヴィン・シュヴェーベ
+- サイード・エル・マラ
+- マレク・エル・マラ
+short_title: ケルン、初代王者が1部と2部を7往復したわけ
+series: ブンデスリーガチーム紹介
+theme:
+  id: bd_koln
+  league: germany
+  league_name: ブンデスリーガ
+  kind: other
+  topic: ケルン
+  title: ケルンはブンデスリーガ最初の王者。それでも1部と2部を7往復したのは、なぜ？
+  question: 初代王者のケルンは、なぜ1部と2部を7回も行き来したのか
+  hook: 会員はおよそ17万人。ドイツで6番目に大きなスポーツクラブです。
+  lead: 大聖堂の街ケルン。紋章は雄ヤギ。
+  opening_image: assets/stats/bd_koln_data_t.png
+  takeaway: 11月6日時点で、リーグ戦8試合の勝ち点は1試合1.13で、昨季34試合の0.94を上回る。失点は1.50で昨季の1.85より少なく、得点は1.13で昨季の1.44に届かない。勝ち点9のうち8はホームの4試合（2勝2分）で、アウェーは4試合で1。7回落ちて7回戻ったクラブが今季1部に残れるかは、アウェーで勝ち点を積めるかが物差し
+thumbnail:
+  line1: ケルン、初代ブンデス王者
+  line2: 7回落ちて、7回とも1部へ
+  crest_main:
+  - ケルン
+  tags:
+  - ケルン
+  - 1.FCケルン
+  - ブンデスリーガ
+  - 奥寺康彦
+  - 大迫勇也
+  - 長澤和輝
+  - 槙野智章
+  - ポドルスキ
+  - リトバルスキー
+  layout: classic
+  board: assets/stats/bd_koln_data_t.png
+sections:
+- id: data
+  heading: いま見る理由と基礎DATA
+  main: true
+  tier: 背景
+  telop: ブンデス最初の王者。降格7回、7回とも1部へ復帰。今季はホームで負けなし
+  narrator: キャスター
+  say:
+  - text: ケルンは、ブンデスリーガが始まった最初の季に優勝したクラブです。
+    image: assets/stats/bd_koln_data_r1.png
+    no_telop: true
+  - text: 1部から7回落ちて、7回とも1部に戻ってきました。
+    image: assets/stats/bd_koln_data_r2.png
+    no_telop: true
+  - text: 今季はホームで4試合、まだ負けていません。
+    image: assets/stats/bd_koln_data_r3.png
+    no_telop: true
+  - image: assets/stats/bd_koln_data0.png
+    text: 創立は**1948年**。街の2つのクラブが合併して生まれました。
+    no_telop: true
+  - image: assets/backgrounds/stadium_ケルン.png
+    text: 本拠地のラインエネルギー・シュタディオンには、5万人が入ります。
+  - image: assets/stats/bd_koln_cups.png
+    text: ドイツ王者は**3回**。ドイツカップは4回です。
+    no_telop: true
+  - image: assets/stats/bd_koln_data6.png
+    text: ヨーロッパでは1986年、ユーエファカップで準優勝しています。
+    no_telop: true
+  - image: assets/stats/bd_koln_data8.png
+    text: 昨シーズンは**14位**。2部から戻った1年目、勝ち点32で1部に残留。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/1._FC_Köln
+  - https://en.wikipedia.org/wiki/2026–27_1._FC_Köln_season
+  - https://en.wikipedia.org/wiki/1._FC_K%C3%B6ln
+  - https://de.wikipedia.org/wiki/1._FC_K%C3%B6ln
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/teams/122/schedule?season=2026
+  - https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings
+  bg: assets/backgrounds/stadium_ケルン_in.png
+  official: false
+- id: japan
+  heading: 奥寺康彦から大迫勇也まで。ケルンと日本は、どうつながってきたのか
+  tier: 背景
+  telop: 1977年に奥寺康彦が加入し、2冠を経験。2014年に大迫勇也と長澤和輝が加入
+  narrator: 解説
+  say:
+  - text: 最初の日本人は1977年。奥寺康彦がやって来ます。
+    image: assets/backgrounds/stadium_ケルン_in.png
+    card:
+      type: table
+      title: ケルンと日本
+      columns:
+      - 年
+      - 出来事
+      rows:
+      - - 1977年
+        - 奥寺康彦が加入
+      - - 1979年
+        - ヨーロッパの大会で、アジア人初ゴール
+      - - 2011年
+        - 槙野智章が加入
+      - - 2014年
+        - 大迫勇也・長澤和輝が加入
+  - 10月5日にデビュー。ヨーロッパの1部でプレーした、最初の日本人でした。
+  - その季、ケルンはリーグとドイツカップの2冠に輝きます。
+  - text: 1979年4月、いまのチャンピオンズリーグにあたる大会の準決勝。
+    card: none
+    image: assets/backgrounds/stadium_ケルン.png
+  - ノッティンガム・フォレスト戦で、ゴールを決めます。
+  - この大会で点を取った、最初のアジアの選手です。
+  - 3季で、リーグ戦**75試合15得点**。
+  - text: 2014年、今度は大迫勇也がケルンへ。
+    image: assets/images/bd_koln_pair_osako/01.jpg
+  - 4季で、リーグ戦**108試合15得点**。
+  sources:
+  - https://en.wikipedia.org/wiki/Yasuhiko_Okudera
+  - https://en.wikipedia.org/wiki/Yuya_Osako
+  - https://en.wikipedia.org/wiki/Kazuki_Nagasawa
+  - https://en.wikipedia.org/wiki/Tomoaki_Makino
+  bg: assets/backgrounds/stadium_ケルン_in.png
+  official: false
+- id: golden
+  heading: 初代王者のケルンは、なぜ1部と2部を7回も行き来したのか
+  tier: 背景
+  telop: 1998年に初めての降格。2024年までに降格7回、昇格7回。今季が1部54季目
+  narrator: 解説
+  main: true
+  say:
+  - text: 1963年に始まったブンデスリーガ。
+    image: assets/backgrounds/stadium_ケルン.png
+  - ケルンは最初の16クラブに入り、1年目の王者に。
+  - そこから**35年**、一度も2部に落ちていません。
+  - text: 流れが変わったのは1998年。初めての降格でした。
+    card:
+      type: table
+      title: 1部と2部の行き来
+      columns:
+      - 年
+      - 出来事
+      rows:
+      - - 1998年
+        - 初めての降格
+      - - 2002〜06年
+        - 降格と昇格を毎年のように
+      - - 2012年
+        - 降格。借金は3300万ユーロ
+      - - 2018年
+        - 18位で降格
+      - - 2024年
+        - 降格。翌年に2部で優勝
+  - 2001年から2002年のシーズンには、**1034分**、点が入りません。
+  - およそ11試合半ぶん。ブンデスリーガで最も長い記録です。
+  - text: 2012年に落ちたときは、借金が3300万ユーロにふくらんでいました。
+    card: none
+    image: assets/backgrounds/stadium_ケルン_in.png
+  - そこから立て直し、2017年には25年ぶりにヨーロッパの大会へ。
+  - ところが翌季は、最初の16試合で勝ち点3。18位で2部へ落ちます。
+  - text: 7回目の降格は2024年。それでも翌年、2部で優勝して1年で戻りました。
+    image: assets/backgrounds/stadium_ケルン.png
+  - 落ちたのは7回。そして7回とも、1部へ帰ってきています。
+  - お金が尽きた降格もあれば、勢いが止まった降格もありました。
+  - 今季は、1部で**54季目**です。
+  sources:
+  - https://en.wikipedia.org/wiki/1._FC_K%C3%B6ln
+  - https://de.wikipedia.org/wiki/1._FC_K%C3%B6ln
+  bg: assets/backgrounds/stadium_ケルン_in.png
+  official: false
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 愛称は「雄ヤギたち」。生きたヤギのヘネスはいま9代目。試合前は全員で歌う
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns: &id001
+    - ''
+    - ''
+    rows:
+    - &id002
+      - 愛称
+      - ガイスベッケ＝雄ヤギたち
+  say:
+  - text: まずは愛称。「ガイスベッケ」は、ドイツ語で雄ヤギたちのこと。
+    image: assets/images/bd_koln_hennes/scene.jpg
+  - 1950年2月13日、創立からちょうど2年の日。
+  - サーカスの団長が、子ヤギを贈りました。
+  - 名前は、選手兼監督だったヴァイスヴァイラーから取って「ヘネス」です。
+  - text: 次に、ケルンのヤギはいまもいます。エンブレムにも描かれ、9代目です。
+    card:
+      type: table
+      title: このクラブの特徴
+      columns: *id001
+      rows:
+      - *id002
+      - &id003
+        - マスコット
+        - 生きたヤギ、いまは9代目
+  - text: 最後は、試合前の歌。「メア・シュトン・ツォ・ディア」を、スタジアム中で歌います。
+    card:
+      type: table
+      title: このクラブの特徴
+      columns: *id001
+      rows:
+      - *id002
+      - *id003
+      - - 試合前
+        - スタジアム中で歌う
+  sources:
+  - https://en.wikipedia.org/wiki/1._FC_Köln
+  - https://de.wikipedia.org/wiki/1._FC_K%C3%B6ln
+  - https://de.wikipedia.org/wiki/Gei%C3%9Fbock_Hennes
+  bg: assets/backgrounds/stadium_ケルン_in.png
+  official: false
+- id: episode
+  heading: 1965年、ケルンはなぜコイン投げでヨーロッパの大会を去ったのか
+  tier: 背景
+  telop: 1965年の準々決勝、リヴァプールと3試合引き分け。勝ち上がりはコイン投げで決まった
+  narrator: 解説
+  card:
+    type: table
+    title: 1965年 リヴァプールとの準々決勝
+    columns: &id004
+    - ''
+    - ''
+    rows:
+    - - 2月10日
+      - 1戦目 0対0
+    - - 3月17日
+      - 2戦目 0対0
+  say:
+  - text: 1964年から65年のシーズン。ケルンは、各国の王者が集まる大会で準々決勝へ。
+    image: assets/images/bd_koln_rotterdam/scene.jpg
+  - 相手は、イングランドのリヴァプールです。
+  - ホームとアウェーの2試合は、どちらも0対0の引き分け。
+  - 3月24日、オランダのロッテルダムで再試合が開かれます。
+  - ケルンは0対2から追いつき、延長でも2対2の引き分け。
+  - 当時は、PK戦がありませんでした。
+  - text: 勝ち上がりは、コイン投げで決めることになります。
+    card:
+      type: table
+      title: 1965年 リヴァプールとの準々決勝
+      columns: *id004
+      rows:
+      - - 3月24日
+        - 再試合 2対2
+      - - 決め方
+        - コイン投げ
+    image: assets/images/bd_koln_coin2/scene.jpg
+  - 1回目は、投げたものが地面に縦に刺さって決まらず、投げ直し。
+  - 2回目でリヴァプールの側が出て、ケルンは大会を去りました。
+  sources:
+  - https://en.wikipedia.org/wiki/1964%E2%80%9365_European_Cup
+  - https://en.wikipedia.org/wiki/1._FC_K%C3%B6ln
+  - https://de.wikipedia.org/wiki/1._FC_K%C3%B6ln
+  bg: assets/backgrounds/stadium_ケルン_in.png
+  official: false
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: クラブの名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: クラブの名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - &id005
+      - オヴェラート
+      - 1962-1977
+      - 409試合83得点
+  say:
+  - text: オヴェラートは、1962年から77年までケルンひと筋の司令塔。
+    image: assets/photos/bd/koln/koln_legend_352cafa1.jpg
+  - 1974年には、西ドイツ代表でワールドカップを制しました。
+  - リーグ戦**409試合83得点**。公式戦549試合は、クラブの最多出場です。
+  sources:
+  - https://en.wikipedia.org/wiki/Wolfgang_Overath
+  - https://en.wikipedia.org/wiki/Pierre_Littbarski
+  - https://en.wikipedia.org/wiki/Lukas_Podolski
+  bg: assets/backgrounds/stadium_ケルン_in.png
+  official: false
+- id: legends2
+  heading: このクラブを語る3人（2人目）
+  tier: 背景
+  telop: クラブの名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: クラブの名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id005
+    - &id006
+      - リトバルスキー
+      - 1978-1993に2度
+      - 406試合116得点
+  say:
+  - text: リトバルスキーは、ドリブルが武器の西ドイツの名手。1978年にケルンでプロに。
+    image: assets/photos/bd/koln/koln_legend_f2d1c587.jpg
+  - 1990年にワールドカップ優勝。のちにジェフ市原でプレーし、横浜FCも率いました。
+  - ケルンには2度在籍して、リーグ戦**406試合116得点**。
+  sources:
+  - https://en.wikipedia.org/wiki/Wolfgang_Overath
+  - https://en.wikipedia.org/wiki/Pierre_Littbarski
+  - https://en.wikipedia.org/wiki/Lukas_Podolski
+  bg: assets/backgrounds/stadium_ケルン_in.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: クラブの名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: クラブの名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id005
+    - *id006
+    - - ポドルスキ
+      - 2003-2012に2度
+      - 169試合79得点
+  say:
+  - text: ポドルスキは、ケルンの下部組織育ち。2003年、18歳でトップチームへ。
+    image: assets/photos/bd/koln/koln_legend_412d537e.jpg
+  - ドイツ代表では130試合49得点。のちにヴィッセル神戸でもプレーします。
+  - ケルンでは2度、計6季。リーグ戦**169試合79得点**。
+  sources:
+  - https://en.wikipedia.org/wiki/Wolfgang_Overath
+  - https://en.wikipedia.org/wiki/Pierre_Littbarski
+  - https://en.wikipedia.org/wiki/Lukas_Podolski
+  bg: assets/backgrounds/stadium_ケルン_in.png
+  official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はヴァーグナー。2026年5月に正式に就任
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - ルネ・ヴァーグナー
+    - - 就任
+      - 2026年5月22日（正式）
+    - - 前の仕事
+      - ケルンのコーチ
+  say:
+  - ケルンの今季の監督は、ルネ・ヴァーグナー。**38歳**です。
+  - 2026年3月に暫定で指揮を執り、1部に残留。
+  - 5月に、正式な監督になりました。
+  sources:
+  - https://en.wikipedia.org/wiki/1._FC_Köln
+  - https://en.wikipedia.org/wiki/Ren%C3%A9_Wagner_(football_coach)
+  - https://de.wikipedia.org/wiki/1._FC_K%C3%B6ln
+  bg: assets/backgrounds/stadium_ケルン_in.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: ケルンの今季の登録選手は28人です。
+    image: assets/stats/bd_koln_gk.png
+    no_telop: true
+  - image: assets/stats/bd_koln_gk_f.png
+    text: ゴールキーパーは3人。
+    no_telop: true
+  - image: assets/stats/bd_koln_gk_f.png
+    text: 主将を務めるのが**マルヴィン・シュヴェーベ**。
+    no_telop: true
+  - image: assets/stats/bd_koln_df_f.png
+    text: ディフェンダーは8人。
+    no_telop: true
+  - image: assets/stats/bd_koln_df_f.png
+    text: ギデオン・メンサーはガーナ代表で**46試合**。
+    no_telop: true
+  - image: assets/stats/bd_koln_df_f.png
+    text: ティモ・ヒューバースはリーグ戦で**117試合**。
+    no_telop: true
+  - image: assets/stats/bd_koln_mf_f.png
+    text: ミッドフィールダーは9人。
+    no_telop: true
+  - image: assets/stats/bd_koln_mf_f.png
+    text: エリエス・スキリはチュニジア代表で**86試合**。
+    no_telop: true
+  - image: assets/stats/bd_koln_mf_f.png
+    text: イサク・ヨハネソンはアイスランド代表で**48試合**。
+    no_telop: true
+  - image: assets/stats/bd_koln_fw_f.png
+    text: フォワードは8人。
+    no_telop: true
+  - image: assets/stats/bd_koln_fw_f.png
+    text: ルカ・ヴァルトシュミットはリーグ戦で**58試合**。
+    no_telop: true
+  - image: assets/stats/bd_koln_fw_f.png
+    text: マリウス・ビュルターはリーグ戦で**39試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/1._FC_Köln
+  bg: assets/backgrounds/stadium_ケルン_in.png
+  official: false
+- id: season
+  heading: ホームで負けないケルンは、アウェーで勝ち点を積めるのか
+  tier: 報道
+  telop: 11月6日時点で8試合2勝3分3敗。9得点12失点。13位
+  narrator: 解説
+  card:
+    type: table
+    title: ブンデスリーガの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - ホッフェンハイム（ホーム）
+      - 3対2
+    - - 第2節
+      - シュツットガルト（アウェー）
+      - 1対4
+    - - 第3節
+      - ブレーメン（ホーム）
+      - 1対1
+    - - 第4節
+      - ハンブルガーSV（アウェー）
+      - 1対2
+    - - 第5節
+      - ボルシアMG（ホーム）
+      - 2対1
+    - - 第6節
+      - フランクフルト（アウェー）
+      - 0対1
+    - - 第7節
+      - シャルケ（ホーム）
+      - 0対0
+    - - 第8節
+      - ウニオン・ベルリン（アウェー）
+      - 1対1
+  say:
+  - ケルンはブンデスリーガで8試合を終えて、**2勝3引き分け3敗**です。
+  - 順位は**13位**、勝ち点は**9**です。
+  - text: ホームの4試合は2勝2分けで、負けがありません。
+    card:
+      type: stats
+      title: 今季のリーグ戦（8試合）
+      items:
+      - - '8'
+        - ''
+        - ホームの勝ち点
+      - - '1'
+        - ''
+        - アウェーの勝ち点
+      - - '0'
+        - ''
+        - ホームの負け
+      focus: 0
+  - text: 勝ち点9のうち、**8**はホームで取ったものです。
+    mark:
+      kind: circle
+      item: 0
+  - text: 兄弟で点を決めているのが、エル・マラ兄弟。
+    card: none
+    image: assets/backgrounds/stadium_ケルン_in.png
+  - 弟のサイードが2点、兄のマレクも1点。
+  - サイードは20歳。ポドルスキが最後に着けた背番号10を、受け継いでいます。
+  - 勝ち点を試合数で割ると**1.13**。昨シーズンの0.94を上回っています。
+  - 失点は1試合**1.50**で、昨シーズンの1.85より少なくなりました。
+  - 得点は1試合1.13で、昨シーズンの1.44には届いていません。
+  - text: 11月20日には、アウェーでバイエルンと戦います。
+    image: assets/backgrounds/stadium_ケルン.png
+  sources:
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/teams/122/schedule?season=2026
+  - https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings
+  - https://www.bundesliga.com/de/bundesliga/tabelle
+  - https://en.wikipedia.org/wiki/Said_El_Mala
+  - https://en.wikipedia.org/wiki/2025%E2%80%9326_Bundesliga
+  bg: assets/backgrounds/stadium_ケルン_in.png
+  official: false
+  viewpoint: true
+watch: 毎日、数字でサッカーを読み解きます

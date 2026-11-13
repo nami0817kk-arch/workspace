@@ -1,0 +1,662 @@
+# 福田正博（元日本代表 FW）の紹介。シリーズ「レジェンドの紹介（日本）」2026-11-17。型は 11/13 の城彰二と同じ8節の変形（「あの試合」の代わりに「あの1年」＝1995年を主役にした）。
+# **情報の時点は 2026-11-12。**年齢は出さない。いまの仕事は言わない（解説・浦和のコーチ・JFA アンバサダーは入れない）。
+# **FotMob・DataMB・FBref・Sofascore・Transfermarkt は不使用**。数字は日本語版 Wikipedia「福田正博」の成績表・代表の年別表と出場表、英語版「Masahiro Fukuda」、NUMBER（飯尾篤史、2023-04-24「福田正博が惚れた最高のパサーは…」#3）の1頁だけ。
+# **病気・私生活・法的な問題は入れない。**
+# **題材を選んだ理由**：引退した日本人の大物。「日本人初のJリーグ得点王」「ミスター・レッズ」「ブラジル戦の日本人初ゴール」と強い事実が3つあり、既出の国内レジェンドに無い（posted.json・covered.yaml・scripts/・picks のどれにも無い。
+#   scripts/20261109_makino_tomoaki_legend.md に「ブラジルから点を取った日本の選手」として名前が出るだけ）。11/15 の北澤豪（ドーハ・ジョホールバル）とは舞台が違う（Jリーグ1995年）。
+# **引退の確認**：日本語版・英語版とも「2002年シーズン限りで引退」「2003年に引退試合（5万人以上）」。現役ではない。
+# **候補から外したもの**：柳沢敦・名波浩・楢崎正剛・中山雅史・小笠原満男・福西崇史（Commons に使える大きな写真が無い）、前園真聖（写真は多いが大物度で劣る）、本田・香川・長友（現役）。
+# **数字の出どころ**
+# - 1966-12-27・神奈川県横浜市緑区生まれ。FW/MF（日本語版）。クラブ：三菱／浦和 1989-2002 287試合143得点（日本語版・英語版の infobox）。
+#   内訳（日本語版の表）：JSL2部 26-36、JSL1部 33-14、J1 216-91、J2 12-2。足すと 287-143（一致）。J1年別：1993 27-4、1994 25-6、1995 50-32、1996 4-3、1997 29-21、1998 17-7、1999 23-13、2001 14-2、2002 27-3（216-91 と一致）。J2 2000 12-2。
+# - 1995年：J1 50試合32得点、日本人選手初のJリーグ得点王、ベストイレブン（日本語版の本文）。英語版も「32 goals, top scorer, Best XI」。「日本人初」は日本語版が NUMBER を引いて言う。
+# - 日本代表 45試合9得点（1990〜95年）。年別：1990 5-0、1991 2-0、1992 8-3、1993 15-3、1994 0-0、1995 15-3（足して 45-9）。1990〜91年＝7試合0点（自分で束ねた）。
+#   1992年アジアカップ優勝（英語版 Medal 欄・日本語版）。1993年ドーハは4試合すべて（日本語版の出場表 No.27〜30）、イラク戦は途中出場（日本語版本文）、2-2。
+#   1995-08-09 国立、ブラジル戦 1-5（サン・スパークカップ。日本語版の出場表・英語版の試合一覧）。福田が得点（日本語版）。「日本人初のブラジル相手の得点」は日本語版の記述。
+#   日本の2025-10-14 のブラジル戦3-2は、11/9 の槙野の取材メモが引くサッカーキング 2025-10-14 の対戦一覧（日本が初めて勝った）。
+# - 1993年：Jリーグ開幕、サントリー・NICOS 両シリーズとも最下位（日本語版）。1994年：スポーツヘルニアで長期離脱（日本語版）。1995年：オジェック監督、ウーベ・バイン（1994年夏加入。NUMBER）。
+# - 1996年：開幕直前に負傷、8月に練習中に左足首を骨折、リーグ4試合（日本語版）。1997年：左足首のプレートの痛みの中で 29試合21得点（日本語版）。
+# - 1999-11-27 最終節広島戦：途中出場、延長のVゴール。延長に入る時点で浦和の残留の可能性は消えていた（日本語版。出典は FOOT×BRAIN と Sportiva）。2000年は J2。
+# - 引退：2002年シーズン限り。引退試合 2003-06-15、埼玉スタジアム2002、5万人以上（日本語版・英語版）。
+# - 本人の言葉（NUMBER 2023-04-24、飯尾篤史。原文のまま。**WebFetch の抽出で取った文面で、原記事と一字ずつ突き合わせてはいない**）：
+#   ①「93年、94年は自分がなんでもやろうとしていたんだな。『点を取ることだけに集中すべきだ』と指摘されて、落ち着きを取り戻したというか、自分の中で余裕が生まれた」（誰が指摘したかは文面で分からないので台本では言わない）
+#   ②「ウーベとは、最初はまったく合わなかったんだけど、彼の感覚に合わせられるようになると、面白いようにパスが出てきてね……」
+#   ③「『足もとで欲しいのか、スペースで欲しいのか』と聞かれて、『スペースで欲しい』と答えたら、『分かった』と。」「それからは裏にポンポン、ボールが出てきた。」（②と③は記事の中で近い位置だが、間の文は省いた。「バイン」の読みは辞書で確かめる）
+# **入れなかったもの**：PK得点の数（要出典）、「PK職人」、ゴールの8秒後に同点にされた逸話（浦和の低迷の象徴として紹介されるが、選手を小さく見せる）、1999年のVゴールのあとの表情の逸話、
+#   少年時代の野球・お汁粉、トーシンパートナーズのCM、解説・コーチ、AFC月間最優秀選手（Wikipedia の本文は「選出」のみ）、私生活。
+# **写真**：assets/images/20261117_fukuda_masahiro_legend/（Commons の1枚だけ。ほかに無い）。01＝「福田正博.jpg」（昼蔵医務、CC BY-SA 4.0、2016-11-19、イオンモール与野でのトークショー。現役時代ではない）。
+#   ピントが甘く手ぶれ気味。01_w（広め）と02_w（顔に寄せた切り出し）の2通りで使う。紋章の差し込みは 日本。
+watch: 毎日、数字でサッカーを読み解きます
+title: 福田正博は、どんな選手だった？ Jリーグ得点王の1995年まで
+format: news
+short_title: 福田正博は、どんな選手だった？
+series: レジェンドの紹介
+topic: 福田正博
+date: 2026年11月12日
+slot: other_1
+people:
+- 福田正博
+theme:
+  id: legend_fukuda_masahiro
+  league: japan
+  league_name: 日本代表
+  kind: other
+  topic: 福田正博
+  title: 福田正博は、どんな選手だった？ Jリーグ得点王の1995年まで
+  question: 日本人初のJリーグ得点王になった福田正博は、1995年になぜ32点を取れたのか
+  takeaway: 福田正博のJ1通算91点のうち32点（約35%）は、1995年の1年に集まっている。1試合あたりは1995年が0.64点、ほかの年は約0.36点。この年は日本人初のJリーグ得点王で、ブラジルからも点を取った。その30年後の2025年10月、日本は逆転で初めてブラジルに勝った
+  nameplate: 福田正博｜元日本代表 FW
+  opening_image: assets/images/20261117_fukuda_masahiro_legend/01_w.jpg
+  end_bg: assets/images/20261117_fukuda_masahiro_legend/01_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+  outro_title: 毎日、数字でサッカーを読み解きます
+thumbnail:
+  line1: 福田正博、通算143点
+  line2: 日本人初のJリーグ得点王
+  tags:
+  - 日本
+  photo: assets/images/20261117_fukuda_masahiro_legend/01_w.jpg
+  board: assets/images/20261117_fukuda_masahiro_legend/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261117_fukuda_masahiro_legend/01_v.jpg
+sections:
+- id: hook
+  heading: 1995年のJリーグで、得点ランキングの1位に立ったのは誰だったのか
+  tier: 報道
+  telop: 1995年、Jリーグ得点王
+  card:
+    type: stats
+    title: 福田正博 元日本代表FW
+    items: &id001
+    - - '32'
+      - 点
+      - 1995年のJリーグの得点
+    - - '91'
+      - 点
+      - Jリーグ1部の通算
+    - - '9'
+      - 得点
+      - 日本代表のゴール
+    focus: 0
+  say:
+  - text: 1995年のJリーグ。得点ランキングの1位に立ったのは、
+    image: assets/images/20261117_fukuda_masahiro_legend/01_w.jpg
+    card: none
+  - text: 浦和レッズのフォワードでした。
+    card: none
+  - text: その年のリーグ戦で、32点。
+    card: none
+    emph: true
+  - text: 日本人選手として初めての、Jリーグ得点王です。
+    card: none
+  - text: その選手が、福田正博です。
+    image: assets/backgrounds/cut_日本.png
+    card:
+      type: stats
+      title: 福田正博 元日本代表FW
+      items: *id001
+      focus: 0
+    callword: 福田正博
+  - text: 浦和のサポーターは、福田正博をミスター・レッズと呼びました。
+    image: assets/images/20261117_fukuda_masahiro_legend/01_w.jpg
+    card: none
+  - text: 日本代表では45試合で9点。ブラジル相手にも、ゴールを決めています。
+    card:
+      type: stats
+      title: 福田正博 元日本代表FW
+      items: *id001
+      focus: 2
+    image: assets/images/20261117_fukuda_masahiro_legend/01_r.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Masahiro_Fukuda
+  - https://ja.wikipedia.org/wiki/%E7%A6%8F%E7%94%B0%E6%AD%A3%E5%8D%9A
+  - https://www.soccer-king.jp/news/japan/national/fixed/2076259.html
+- id: data
+  heading: 福田正博は、どこでプレーし、どんな数字を残したのか
+  tier: 報道
+  telop: 福田正博の基礎DATA
+  card:
+    type: table
+    title: 福田正博
+    columns: &id002
+    - 項目
+    - 内容
+    rows: &id003
+    - - 生年月日
+      - 1966年12月27日・神奈川県生まれ
+    - - ポジション
+      - フォワード（ミッドフィールダーも）
+    - - 所属したクラブ
+      - 三菱 → 浦和レッズ
+    - - 日本代表
+      - 45試合9得点（1990〜95年）
+    - - タイトル
+      - Jリーグ得点王（1995年）
+    - - 現役を退く
+      - 2002年シーズン限り
+    highlight_row: 0
+  say:
+  - text: 福田正博は1966年12月27日、神奈川県横浜市の生まれです。
+    card:
+      type: table
+      title: 福田正博
+      columns: *id002
+      rows: *id003
+      highlight_row: 0
+  - text: ポジションはフォワード。ミッドフィールダーも務めました。
+    card:
+      type: table
+      title: 福田正博
+      columns: *id002
+      rows: *id003
+      highlight_row: 1
+  - text: 入ったのは、三菱のサッカー部。のちの浦和レッズです。
+    card:
+      type: table
+      title: 福田正博
+      columns: *id002
+      rows: *id003
+      highlight_row: 2
+  - text: クラブの通算は、日本リーグとJリーグで287試合143点です。
+    card:
+      type: table
+      title: 福田正博
+      columns: *id002
+      rows: *id003
+      highlight_row: 2
+  - text: 日本代表には1990年から選ばれ、1995年まで戦いました。
+    image: assets/backgrounds/cut_日本.png
+    card:
+      type: table
+      title: 福田正博
+      columns: *id002
+      rows: *id003
+      highlight_row: 3
+  quotes_from: []
+  sources:
+  - https://ja.wikipedia.org/wiki/%E7%A6%8F%E7%94%B0%E6%AD%A3%E5%8D%9A
+  - https://en.wikipedia.org/wiki/Masahiro_Fukuda
+- id: road
+  heading: 三菱で2部の得点王になった福田正博は、どうやって代表に近づいたのか
+  tier: 報道
+  telop: 1989年、三菱重工に入る
+  card:
+    type: timeline
+    title: 福田正博の歩み
+    rows: &id004
+    - - 1989年
+      - 三菱重工に入り、2部で36得点・得点王
+    - - 1990年
+      - 日本代表に初めて選ばれる
+    - - 1992年
+      - アジアカップ優勝。代表で3得点
+    - - 1993年
+      - Jリーグ開幕。浦和は前期・後期とも最下位
+    highlight_row: 0
+  say:
+  - text: 福田正博は中央大学を出て、1989年、三菱重工のサッカー部に入ります。
+    image: assets/images/20261117_fukuda_masahiro_legend/01_r.jpg
+    card:
+      type: timeline
+      title: 福田正博の歩み
+      rows: *id004
+      highlight_row: 0
+  - text: 当時の三菱は、日本リーグの2部でした。
+    card:
+      type: timeline
+      title: 福田正博の歩み
+      rows: *id004
+      highlight_row: 0
+  - text: 新人の福田正博は、26試合で36点を取って、2部の得点王。
+    card:
+      type: timeline
+      title: 福田正博の歩み
+      rows: *id004
+      highlight_row: 0
+    emph: true
+  - text: チームを、1年で1部へ戻しました。
+    card:
+      type: timeline
+      title: 福田正博の歩み
+      rows: *id004
+      highlight_row: 0
+  - text: 1990年、日本代表に初めて選ばれます。
+    card:
+      type: timeline
+      title: 福田正博の歩み
+      rows: *id004
+      highlight_row: 1
+  - text: 1992年は、アジアカップで日本が優勝。
+    card:
+      type: timeline
+      title: 福田正博の歩み
+      rows: *id004
+      highlight_row: 2
+  - text: 福田正博は、この年の代表で3点を取りました。
+    card:
+      type: timeline
+      title: 福田正博の歩み
+      rows: *id004
+      highlight_row: 2
+  - text: そして1993年、Jリーグが開幕します。
+    card:
+      type: timeline
+      title: 福田正博の歩み
+      rows: *id004
+      highlight_row: 3
+  quotes_from: []
+  sources:
+  - https://ja.wikipedia.org/wiki/%E7%A6%8F%E7%94%B0%E6%AD%A3%E5%8D%9A
+  - https://en.wikipedia.org/wiki/Masahiro_Fukuda
+- id: y1995
+  heading: 1995年、福田正博はなぜ32点を取れたのか
+  tier: 報道
+  telop: 1995年、リーグ戦50試合で32点
+  main: true
+  card:
+    type: table
+    title: 福田正博のJ1（浦和）
+    columns: &id005
+    - 年
+    - 試合
+    - 得点
+    rows: &id006
+    - - '1993'
+      - '27'
+      - '4'
+    - - '1994'
+      - '25'
+      - '6'
+    - - '1995'
+      - '50'
+      - '32'
+    - - '1996'
+      - '4'
+      - '3'
+    - - '1997'
+      - '29'
+      - '21'
+    highlight_row: 2
+  say:
+  - text: 1995年の得点王の前に、苦しい時期がありました。
+    card:
+      type: table
+      title: 福田正博のJ1（浦和）
+      columns: *id005
+      rows: *id006
+      highlight_row: 0
+  - text: 93年と94年を、本人はこう振り返ります。
+    card:
+      type: table
+      title: 福田正博のJ1（浦和）
+      columns: *id005
+      rows: *id006
+      highlight_row: 0
+  - voice: 福田正博
+    text: 93年、94年は自分がなんでもやろうとしていたんだな。
+    card: none
+    image: assets/images/20261117_fukuda_masahiro_legend/01_w.jpg
+  - voice: 福田正博
+    text: 「点を取ることだけに集中すべきだ」と指摘されて、
+    card: none
+    cont: true
+  - voice: 福田正博
+    text: 落ち着きを取り戻したというか、自分の中で余裕が生まれた
+    card: none
+    emph: true
+    cont: true
+  - text: 開幕年の1993年、浦和は10クラブのうち、前期も後期も10位でした。
+    image: assets/images/20261117_fukuda_masahiro_legend/01_r.jpg
+    card:
+      type: table
+      title: 福田正博のJ1（浦和）
+      columns: *id005
+      rows: *id006
+      highlight_row: 0
+  - text: 1994年も成績は上がらず、福田正博は痛みを抱えて、長く試合から離れます。
+    card:
+      type: table
+      title: 福田正博のJ1（浦和）
+      columns: *id005
+      rows: *id006
+      highlight_row: 1
+  - text: 1995年、ホルガー・オジェックが監督になります。
+    card: none
+    image: assets/images/20261117_fukuda_masahiro_legend/01_w.jpg
+  - text: 中盤には、ドイツ出身のウーベ・バインがいました。
+    card: none
+  - voice: 福田正博
+    text: ウーベとは、最初はまったく合わなかったんだけど、
+    card: none
+  - voice: 福田正博
+    text: 彼の感覚に合わせられるようになると、
+    card: none
+    cont: true
+  - voice: 福田正博
+    text: 面白いようにパスが出てきてね……
+    card: none
+    cont: true
+  - text: どこにパスがほしいのか。その答えを、本人はこう話しています。
+    card: none
+  - voice: 福田正博
+    text: 「足もとで欲しいのか、スペースで欲しいのか」と聞かれて、
+    card: none
+  - voice: 福田正博
+    text: 「スペースで欲しい」と答えたら、「分かった」と。
+    card: none
+    cont: true
+  - voice: 福田正博
+    text: それからは裏にポンポン、ボールが出てきた。
+    card: none
+    emph: true
+    cont: true
+  - text: 1995年のリーグ戦は、50試合で32点。得点王のタイトルを手にしました。
+    image: assets/images/20261117_fukuda_masahiro_legend/01_r.jpg
+    card:
+      type: table
+      title: 福田正博のJ1（浦和）
+      columns: *id005
+      rows: *id006
+      highlight_row: 2
+    emph: true
+  - text: 1993年の4点、1994年の6点から、一気に増えた年でした。
+    card:
+      type: table
+      title: 福田正博のJ1（浦和）
+      columns: *id005
+      rows: *id006
+      highlight_row: 2
+  - text: この年は、Jリーグのベストイレブンにも選ばれました。
+    card:
+      type: table
+      title: 福田正博のJ1（浦和）
+      columns: *id005
+      rows: *id006
+      highlight_row: 2
+  - text: 翌1996年は、左足首のケガで、1995年の50試合から4試合に減ります。
+    card:
+      type: table
+      title: 福田正博のJ1（浦和）
+      columns: *id005
+      rows: *id006
+      highlight_row: 4
+  quotes_from:
+  - https://number.bunshun.jp/articles/-/857200
+  sources:
+  - https://en.wikipedia.org/wiki/Masahiro_Fukuda
+  - https://ja.wikipedia.org/wiki/%E7%A6%8F%E7%94%B0%E6%AD%A3%E5%8D%9A
+  - https://number.bunshun.jp/articles/-/857200
+- id: japan
+  heading: 福田正博の代表の9点は、どんな舞台で生まれたのか
+  tier: 報道
+  telop: 日本代表45試合9得点
+  card:
+    type: table
+    title: 日本代表の福田正博
+    columns: &id007
+    - 年
+    - 試合
+    - 得点
+    rows: &id008
+    - - 1990〜91年
+      - '7'
+      - '0'
+    - - 1992年
+      - '8'
+      - '3'
+    - - 1993年
+      - '15'
+      - '3'
+    - - 1995年
+      - '15'
+      - '3'
+    highlight_row: 1
+  say:
+  - text: 福田正博の日本代表は、1990年から1995年までです。
+    card:
+      type: table
+      title: 日本代表の福田正博
+      columns: *id007
+      rows: *id008
+      highlight_row: 0
+  - text: 1993年は15試合で3点。ワールドカップ予選の年です。
+    card:
+      type: table
+      title: 日本代表の福田正博
+      columns: *id007
+      rows: *id008
+      highlight_row: 2
+  - text: 10月、舞台はカタールのドーハ。福田正博は、最終予選の4試合すべてに出ました。
+    image: assets/backgrounds/cut_日本.png
+    card:
+      type: table
+      title: 日本代表の福田正博
+      columns: *id007
+      rows: *id008
+      highlight_row: 2
+  - text: 最終戦のイラク戦は、途中から出ました。
+    card: none
+    image: assets/images/20261117_fukuda_masahiro_legend/01_w.jpg
+  - text: 2対2の引き分けで、日本は初めてのワールドカップを逃します。
+    card: none
+  - text: 1995年8月、東京の国立競技場で、日本はブラジルと戦います。
+    image: assets/images/20261117_fukuda_masahiro_legend/01_r.jpg
+    card:
+      type: table
+      title: 日本代表の福田正博
+      columns: *id007
+      rows: *id008
+      highlight_row: 3
+  - text: 前の年のワールドカップを制した、ブラジルです。結果は1対5。
+    card: none
+    image: assets/images/20261117_fukuda_masahiro_legend/01_w.jpg
+  - text: その1点が、福田正博のゴールでした。
+    card:
+      type: table
+      title: 日本代表の福田正博
+      columns: *id007
+      rows: *id008
+      highlight_row: 3
+    emph: true
+    image: assets/images/20261117_fukuda_masahiro_legend/01_r.jpg
+  - text: ブラジルから日本人が決めた、初めてのゴールとされています。
+    card:
+      type: table
+      title: 日本代表の福田正博
+      columns: *id007
+      rows: *id008
+      highlight_row: 3
+  quotes_from: []
+  sources:
+  - https://ja.wikipedia.org/wiki/%E7%A6%8F%E7%94%B0%E6%AD%A3%E5%8D%9A
+  - https://en.wikipedia.org/wiki/Masahiro_Fukuda
+- id: after
+  heading: 32点のあと、福田正博はどんな形で現役を終えたのか
+  tier: 報道
+  telop: 2002年、現役を退く
+  card:
+    type: table
+    title: 福田正博のリーグ戦（浦和）
+    columns: &id009
+    - シーズン
+    - リーグ
+    - 試合
+    - 得点
+    rows: &id010
+    - - '1997'
+      - J1
+      - '29'
+      - '21'
+    - - '1998'
+      - J1
+      - '17'
+      - '7'
+    - - '1999'
+      - J1
+      - '23'
+      - '13'
+    - - '2000'
+      - J2
+      - '12'
+      - '2'
+    - - '2001'
+      - J1
+      - '14'
+      - '2'
+    - - '2002'
+      - J1
+      - '27'
+      - '3'
+    highlight_row: 0
+  say:
+  - text: 1997年から2002年のリーグ戦を、年ごとに見ます。
+    card:
+      type: table
+      title: 福田正博のリーグ戦（浦和）
+      columns: *id009
+      rows: *id010
+      highlight_row: 0
+  - text: 1997年は、左足首の痛みと戦いながら、29試合で21点。
+    card:
+      type: table
+      title: 福田正博のリーグ戦（浦和）
+      columns: *id009
+      rows: *id010
+      highlight_row: 0
+    emph: true
+  - text: 1995年の32点に次ぐ、1部でいちばん多い年です。
+    card:
+      type: table
+      title: 福田正博のリーグ戦（浦和）
+      columns: *id009
+      rows: *id010
+      highlight_row: 0
+  - text: 1999年、浦和は1部に残れるかどうかの、瀬戸際にいました。
+    card:
+      type: table
+      title: 福田正博のリーグ戦（浦和）
+      columns: *id009
+      rows: *id010
+      highlight_row: 2
+  - text: 最終節の広島戦。福田正博は途中から出て、延長のVゴールを決めます。
+    card:
+      type: table
+      title: 福田正博のリーグ戦（浦和）
+      columns: *id009
+      rows: *id010
+      highlight_row: 2
+  - text: Vゴールは、延長で最初に決めたチームが勝つ決まりです。
+    card: none
+    image: assets/images/20261117_fukuda_masahiro_legend/01_w.jpg
+  - text: ただ、その延長に入る時点で、浦和の1部残留の可能性はなくなっていました。
+    card: none
+  - text: 浦和は2000年を、2部で戦います。
+    card:
+      type: table
+      title: 福田正博のリーグ戦（浦和）
+      columns: *id009
+      rows: *id010
+      highlight_row: 3
+    image: assets/images/20261117_fukuda_masahiro_legend/01_r.jpg
+  - text: 2002年限りで、福田正博は現役を退きます。
+    card:
+      type: table
+      title: 福田正博のリーグ戦（浦和）
+      columns: *id009
+      rows: *id010
+      highlight_row: 5
+  - text: 翌2003年6月15日、埼玉スタジアム2002で、引退試合が開かれました。
+    card: none
+    image: assets/images/20261117_fukuda_masahiro_legend/01_w.jpg
+  - text: 5万人以上が集まり、当時のJリーグ史上最多でした。
+    card: none
+  quotes_from: []
+  sources:
+  - https://ja.wikipedia.org/wiki/%E7%A6%8F%E7%94%B0%E6%AD%A3%E5%8D%9A
+  - https://en.wikipedia.org/wiki/Masahiro_Fukuda
+- id: view
+  heading: 福田正博の点は、どの年に集まっていたのか
+  tier: 背景
+  telop: J1の91点のうち、32点が1995年
+  viewpoint: true
+  card:
+    type: table
+    title: 福田正博のJ1の1試合あたりの得点
+    columns: &id011
+    - 区分
+    - 試合
+    - 得点
+    - 1試合あたり
+    rows: &id012
+    - - J1全体
+      - '216'
+      - '91'
+      - 約0.42
+    - - 1995年
+      - '50'
+      - '32'
+      - '0.64'
+    - - 1995年以外
+      - '166'
+      - '59'
+      - 約0.36
+    - - 日本代表
+      - '45'
+      - '9'
+      - '0.2'
+    highlight_row: 0
+  say:
+  - text: 最後に、福田正博のJ1の点を、1995年とそれ以外に分けます。
+    card: none
+  - text: J1は216試合で91点。1試合あたり、約0.42点です。
+    image: assets/images/20261117_fukuda_masahiro_legend/01_r.jpg
+    card:
+      type: table
+      title: 福田正博のJ1の1試合あたりの得点
+      columns: *id011
+      rows: *id012
+      highlight_row: 0
+  - text: そのうち32点が、1995年の1年に集まっています。91点の約35%です。
+    card:
+      type: table
+      title: 福田正博のJ1の1試合あたりの得点
+      columns: *id011
+      rows: *id012
+      highlight_row: 1
+    emph: true
+    mark:
+      kind: circle
+      row: 1
+      col: 得点
+  - text: 1試合あたりでは、1995年が0.64点。
+    card:
+      type: table
+      title: 福田正博のJ1の1試合あたりの得点
+      columns: *id011
+      rows: *id012
+      highlight_row: 1
+  - text: それ以外の年は、166試合で59点。約0.36点です。
+    card:
+      type: table
+      title: 福田正博のJ1の1試合あたりの得点
+      columns: *id011
+      rows: *id012
+      highlight_row: 2
+  - text: 代表のゴールは、1試合あたりに直すと0.2点です。
+    card:
+      type: table
+      title: 福田正博のJ1の1試合あたりの得点
+      columns: *id011
+      rows: *id012
+      highlight_row: 3
+  - text: 福田正博がブラジルから点を取ったのは、1995年8月。
+    image: assets/backgrounds/cut_日本.png
+    card: none
+  - text: その30年後の2025年10月14日、日本は逆転で、初めてブラジルに勝ちました。
+    card: none
+    image: assets/images/20261117_fukuda_masahiro_legend/01_w.jpg
+  quotes_from: []
+  sources:
+  - https://ja.wikipedia.org/wiki/%E7%A6%8F%E7%94%B0%E6%AD%A3%E5%8D%9A
+  - https://en.wikipedia.org/wiki/Masahiro_Fukuda

@@ -1,0 +1,132 @@
+# 取材メモ（2026年11月11日）アラン（マンC）、ブラジル代表初招集「すごく緊張している」。ハーランドから英語を勧められた話（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-11。requests（ブラウザUA）で本文を読み、site.api.espn.com で選手・試合を確かめた。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: サッカーキング 2226278（2026-11-10、取材・文＝三島大輔。『MIZUHO BLUE CHALLENGE THE KALLANG FOOTBALL SERIES SINGAPORE』日本代表戦に向けた会見。全文を requests で読んだ。WebFetch は要約のみ）。
+# 出典で確かめたこと:
+#   ・サッカーキング: ブラジル代表FWアランが日本戦に向けた会見に登壇。マンチェスター・シティ所属。今回が念願のブラジル代表初招集。22歳。パルメイラスの育成組織出身でトップチームに昇格。**今年8月末にシティへ移籍**。精度の高い左足のキックが武器で、右サイドのアタッカーやウイングバックとしてプレー。
+#       本人の言葉（日本語に訳されたもの。ポルトガル語の原文は読めていない）:
+#         「ここに来ることができてとても嬉しいですし、すごく緊張しています」
+#         シティでの日々は「本当に素晴らしいものです」
+#         「ヴィトール・レイス、マテウス・ヌネス、ルベン・ディアスはポルトガル語が話せるので、とても助けてくれます。ハーランドも時々話しかけてくれるのですが、僕があまり（言葉を）理解していないから『英語のレッスンを受けた方がいい』と言ってきます（笑）。できるだけ早く習得しようと努力しています」
+#       同じ日の会見でエンドリッキ（パルメイラス時代の同僚。年齢は2つ上だが代表歴では先輩）:「彼がブラジル代表で素晴らしい活躍をすることに期待していますし、一緒にプレーすることを楽しみにしています。僕にアシストしてくれることにも期待しているよ」。“パルメイラスホットライン”の開通に期待。
+#       → 台本は日本語訳を声に出して通る形に整えたもの。意味は変えていない。「（笑）」は使わない。
+#   ・ESPN（選手ID 382966「Allan Elias」、マンC・ブラジル・FW・22歳・生年月日 2004年4月19日・背番号37。マンC公式 mancity.com/players/allan の「Allan」背番号37 と一致）。
+#       ※ESPN の綴りは Allan。日本の報道は「アラン」→台本も「アラン」。**同名のパルメイラスの Allan（2025年の Commons 写真の人、別人・1997年生まれ）と混ぜない**（写真はマンC公式のみ使用）。
+#       ESPN gamelog＋各試合の summary rosters（自分で確かめた）: **今季のプレミアでの出場は途中出場の2試合**。10/11 マンC 3-0 リヴァプール（敵地）— 80分に交代出場（ハーランドと交代）／10/31 マンC 0-1 ブライトン（ホーム）— 79分に交代出場。ほかの試合（9/5 コヴェントリー・9/13 マンU・9/20 サンダーランド・10/17 イプスウィッチ・11/7 フォレスト）は出場なし（gamelog の一覧は6試合、うち交代出場は2試合のみ）。
+#       ESPN 順位表: マンC 10試合 7勝0分3敗 勝ち点21 3位。
+#   ・日程: ESPN scoreboard fifa.friendly 2026-11-14: Brazil at Japan、2026-11-14 10:15 UTC（日本時間 19:15）、Singapore National Stadium。サッカーキング（試合情報記事の見出し）も11/14・日本対ブラジル。11/17 日本対パラグアイ（サッカーキング）。
+# 食い違い: ①本人の言葉は日本語訳のみ。②ESPN の綴り Allan と日本の報道「アラン」（別人と混ぜないために上に書いた）。
+# 前の本との重なり: scripts にアランの回は無い（grep 済み）。11/8 の「パラグアイ・日本」は別題。エンドリッキの言葉は一覧の7番（別の下請けの担当）と同じ会見だが、ここで使うのは「アシストを期待」の一言だけ。
+# 日本との接点: 14日の日本対ブラジル（シンガポール）。
+# 本人の言葉: あり（サッカーキング経由）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: overseas
+date: "2026年11月11日"
+format: news
+no_main: true
+people: [アラン, マンチェスター・シティ, ブラジル代表, ハーランド, エンドリッキ]
+
+short_style: Y
+short_hook_quote: ここに来ることができてとても嬉しいですし、すごく緊張しています。
+short_photos:
+  - assets/images/20261111_alan_brazil_callup/01_v.jpg
+  - assets/images/20261111_alan_brazil_callup/02_v.jpg
+  - assets/images/20261111_alan_brazil_callup/03_v.jpg
+  - assets/images/20261111_alan_brazil_callup/01_v.jpg
+short_question: アランは、14日の日本代表戦で、ブラジル代表デビューを果たすと思いますか。
+short_telops: []
+
+theme:
+  id: alan_brazil_callup
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: アラン、ブラジル代表初招集「すごく緊張している」。ハーランドに勧められたこと
+  hook: ""
+  question: ブラジル代表に初めて選ばれたアランは、会見で何を語ったのか
+  takeaway: アランは22歳。8月末にマンCへ移り、プレミアでは途中出場の2試合。そのアランが、14日の日本戦でブラジル代表に初めて加わる
+
+thumbnail:
+  layout: face
+  line1: アラン ブラジル代表初招集
+  line2: ハーランドに言われたこと
+  tags: [アラン, マンチェスター・シティ]
+  photo: assets/images/20261111_alan_brazil_callup/01_w.jpg
+  short_photo: assets/images/20261111_alan_brazil_callup/01_v.jpg
+
+answer: 初招集に「すごく緊張している」。ハーランドからは英語のレッスンを勧められている
+watch: 14日の日本代表対ブラジル代表（シンガポール）
+
+sections:
+  - id: what
+    main: true
+    heading: ブラジル代表に初めて選ばれたアランは、会見で何を語ったのか
+    tier: 報道
+    telop: アラン「すごく緊張しています」
+    say:
+      - text: ブラジル代表に初めて選ばれたマンCのアランが、会見で心境を語りました。
+        short_only: true
+      - voice: アラン
+        text: ここに来ることができてとても嬉しいですし、すごく緊張しています。
+        emph: true
+        image: assets/images/20261111_alan_brazil_callup/01_v.jpg
+      - text: 22歳のアランは、パルメイラスの育成組織の出身です。
+        card: {type: table, title: アラン プロフィール, columns: [項目, 内容], rows: [[年齢, 22歳], [出身, パルメイラスの育成組織], [マンC加入, 今年8月末], [位置, 右サイドのアタッカー]], highlight_row: 2}
+      - text: 8月末にマンチェスター・シティへ移り、武器は精度の高い左足のキックです。
+        card: none
+      - text: そのシティでの日々を、アランはこう語りました。
+        image: assets/images/20261111_alan_brazil_callup/02_v.jpg
+      - voice: アラン
+        text: 本当に素晴らしいものです。
+      - text: 言葉の面では、ポルトガル語を話す選手たちが助けてくれるそうです。
+      - text: 名前を挙げたのは、ヴィトール・レイス、マテウス・ヌネス、ルベン・ディアスです。
+      - text: そして、エースのハーランドからも、声をかけられています。
+        image: assets/images/20261111_alan_brazil_callup/01_v.jpg
+      - voice: アラン
+        text: ハーランドも時々話しかけてくれるのですが、
+      - voice: アラン
+        text: 僕があまり理解していないから、
+        cont: true
+      - voice: アラン
+        text: 英語のレッスンを受けた方がいいと言ってきます。
+        cont: true
+      - voice: アラン
+        text: できるだけ早く習得しようと努力しています。
+        cont: true
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/southamerica/20261110/2226278.html
+      - https://www.mancity.com/players/allan
+  - id: game
+    heading: アランは、シティでこれまでどれだけ出場してきたのか
+    tier: 報道
+    telop: 今季のプレミアは途中出場の2試合
+    say:
+      - text: アランの今季のプレミアリーグは、途中出場の2試合です。
+        card: {type: table, title: アラン 今季のプレミアリーグ, columns: [日付, 相手, 出場], rows: [[10月11日, リヴァプール（敵地・3対0）, 80分から], [10月31日, ブライトン（ホーム・0対1）, 79分から]], highlight_row: 0}
+      - text: 10月11日のリヴァプール戦は、ハーランドと交代してピッチに立ちました。
+        card: none
+      - text: 同じ会見で、パルメイラス時代の同僚エンドリッキも、アランについて語りました。
+      - voice: エンドリッキ
+        text: 僕にアシストしてくれることにも期待しているよ。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/player/_/id/382966/allan-elias
+      - https://www.mancity.com/players/allan
+      - https://www.soccer-king.jp/news/world/southamerica/20261110/2226278.html
+  - id: view
+    viewpoint: true
+    heading: 14日の日本戦で、アランに出番は回ってくるのか
+    tier: 背景
+    telop: 14日、日本対ブラジル（シンガポール）
+    say:
+      - text: 見立てです。アランにとって、ブラジル代表としての最初の試合の候補は、14日の日本戦です。
+        image: assets/images/20261111_alan_brazil_callup/02_v.jpg
+        card: {type: table, title: アラン これから, columns: [日付, 試合], rows: [[11月14日, 日本代表 対 ブラジル代表（シンガポール）]], highlight_row: 0}
+      - text: 日本時間の夜7時15分に、キックオフです。
+        card: none
+      - text: 今季のシティでは途中出場の2試合。出番があるかどうかは、分かりません。
+      - text: ただ、ブラジル代表の初招集で、日本代表と戦う機会が来るかもしれません。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/scoreboard/_/league/fifa.friendly/date/20261114
+      - https://www.soccer-king.jp/news/world/southamerica/20261110/2226278.html

@@ -1,0 +1,142 @@
+# 取材メモ（2026年11月12日）南野拓実、ケガから復帰して代表合流。「初招集された時の気持ちで」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-12。requests（ブラウザUA）で本文を全文読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。
+# 題材の元: ゲキサカ 2026-11-11「「選手として」帰ってきた南野拓実、喜びと“ギラギラ”の代表合流「初招集された時の気持ちで」」（全文） https://web.gekisaka.jp/news/japan/detail/?463009-463009-fl
+#   サッカーキング 2026-11-11「ピッチで晴らす悔しさと森保監督への恩返し…南野拓実が誓う集大成の勝利「絶対に最後、いい形で感謝を」」（全文） https://www.soccer-king.jp/news/japan/national/20261111/2226694.html
+# 写真の出どころ（追加の記事。本人の写真を探すため）:
+#   https://www.soccer-king.jp/news/japan/national/20261104/2224347.html
+#   https://www.soccer-king.jp/news/japan/national/20261111/2226536.html
+#   https://web.gekisaka.jp/news/japan/detail/?462978-462978-fl
+# 写真の出どころ（追加の記事。本人の写真を探すため）:
+#   https://web.gekisaka.jp/news/world/detail/?462604-462604-fl
+#   https://web.gekisaka.jp/news/world/detail/?462607-462607-fl
+#   https://www.soccer-king.jp/news/world/fra/20261106/2225041.html
+# 出典で確かめたこと:
+#   ・11日、合流初日の練習後に取材対応（両記事）。ケガは昨年12月21日のフランス国内杯での左膝前十字靱帯断裂（ゲキサカ）→ W杯は選外で、メンターとして帯同。公式戦復帰は10月15日ECLのCSKAソフィア戦（先発）、11月5日ECLノアシェラン戦で初のフル出場・復帰後初アシスト（ゲキサカ。ESPN は 20261106_minamino_first_assist で確認済み）。
+#   ・自分で数えた日数（Python）: 昨年12月21日→11月11日（合流）= 325日。10月15日（復帰戦）→11月14日（ブラジル戦）= 30日。
+#   ・南野の言葉（原文。ゲキサカ。サッカーキングの言葉も同じ。字は変えていない。台本は読点で行に分けた）:
+#       「嬉しいですね。この場に帰って来られて嬉しいし、W杯ではピッチの外から見ている悔しさとか、みんなに頑張ってほしいとか、いろんな感情があったけど、選手としてピッチに立てる喜び、やってやるぞという気持ちを思う存分出していければ」
+#       「ピッチで結果を出さないとその気持ちを晴らしたことにならない。しっかりと結果を残して、もう一回このチームで自分ができることを示していきたい」
+#       「選手である以上、やっぱりギラギラしてスタメンを取りに行きたいし、結果を出したいし、そういう気持ちを前面に出してやっていったほうがいいかなと思う。今回はもう一回イチから、初招集された時の気持ちでプレーしたい」
+#       「整列してピッチに入る前は緊張していた。ケガの心配とか、自分がやるべきことをどうやってやるかとか。でもピッチに立って笛が鳴ったら、意外とこの雰囲気は自分、慣れてるなと。始まってみたら今まで長くやってきたことだし、何も怖いものはないなという感覚になれたのがすごく良かった」（復帰戦のCSKAソフィア戦を振り返って）
+#       「この1か月でフィジカル的にも感覚的にも良くなってきているかなと感じていて、試合時間を重ねるにつれて自信もついてきた」
+#       「森保ジャパンとしての事実上多分最後の試合になるかもしれないので、やっぱりこの二試合勝って森保さんへの感謝の気持ちを伝えたいと思います。…絶対に最後、いい形で森保さんへの感謝の気持ちを伝えたい」（サッカーキング。「…」は途中を省いた所）
+# 前の本との重なり: 20261105_minamino_machida_return（監督の言葉・298日）／20261106_minamino_first_assist（アシストの場面）。今回の初出: 本人の合流後の言葉。アシストの中身は繰り返さない。堂安の回（20261111_doan_asiacup_words）の延期の話は使わない。
+# 【言わないこと】298日の数字（5日の回）／アシストの場面の描写／ブラジル戦の起用予想／通算得点の数字（確かめていない）。
+# 本人の言葉: あり（南野拓実。ゲキサカ・サッカーキング）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月12日"
+format: news
+no_main: true
+people: [南野拓実, モナコ, 日本代表]
+
+short_style: Y
+short_hook_quote: 選手である以上、やっぱりギラギラして、
+short_photos:
+  - assets/images/20261112_minamino_return_words/01_v.jpg
+  - assets/images/20261112_minamino_return_words/05_v.jpg
+  - assets/images/20261112_minamino_return_words/06_v.jpg
+  - assets/images/20261112_minamino_return_words/07_v.jpg
+short_question: 南野拓実は、14日のブラジル戦でピッチに立つと思いますか。
+short_telops: []
+
+theme:
+  id: minamino_return_words
+  league: japan
+  league_name: 日本代表
+  prefix: ""
+  title: 南野拓実、ケガから復帰して代表合流。「初招集された時の気持ち」とは
+  hook: ""
+  question: ケガから戻った南野拓実は、代表合流で何と語ったのか
+  takeaway: 南野は昨年12月21日のケガから、代表合流の11日まで325日。公式戦復帰から30日後の14日に、ブラジルとの再戦を迎える
+
+thumbnail:
+  layout: face
+  line1: 南野拓実 代表合流
+  line2: 初招集の気持ちで
+  tags: [南野拓実, モナコ, 日本代表]
+  photo: assets/images/20261112_minamino_return_words/01_w.jpg
+  short_photo: assets/images/20261112_minamino_return_words/01_v.jpg
+
+answer: ピッチで結果を出して悔しさを晴らす。初招集の気持ちで、ギラギラとスタメンを取りに行く
+watch: 14日のブラジル戦（シンガポール）
+
+sections:
+  - id: what
+    main: true
+    heading: 代表に戻った南野拓実は、何と語ったか
+    tier: 報道
+    telop: 南野拓実「初招集された時の気持ちでプレーしたい」
+    say:
+      - text: 大ケガから戻った南野拓実が、日本代表に合流しました。11日の練習後、こう語りました。
+        image: assets/images/20261112_minamino_return_words/01_w.jpg
+      - voice: 南野拓実
+        text: 選手である以上、やっぱりギラギラして、
+      - voice: 南野拓実
+        text: スタメンを取りに行きたいし、結果を出したいし、
+        cont: true
+      - voice: 南野拓実
+        text: 今回はもう一回イチから、
+        cont: true
+      - voice: 南野拓実
+        text: 初招集された時の気持ちでプレーしたい。
+        cont: true
+        emph: true
+      - text: 南野は昨年12月、左ひざの前十字じん帯を断裂しました。W杯は選外で、メンターとして帯同しました。
+        image: assets/images/20261112_minamino_return_words/05_w.jpg
+      - voice: 南野拓実
+        text: W杯ではピッチの外から見ている悔しさとか、
+      - voice: 南野拓実
+        text: みんなに頑張ってほしいとか、いろんな感情があったけど、
+        cont: true
+      - voice: 南野拓実
+        text: 選手としてピッチに立てる喜び、
+        cont: true
+      - voice: 南野拓実
+        text: やってやるぞという気持ちを思う存分出していければ。
+        cont: true
+        emph: true
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463009-463009-fl
+      - https://www.soccer-king.jp/news/japan/national/20261111/2226694.html
+  - id: team
+    heading: 南野拓実が語った、復帰戦の緊張と、森保監督への思い
+    tier: 報道
+    telop: 南野拓実「絶対に最後、いい形で感謝を」
+    say:
+      - text: 10月15日の復帰戦、ピッチに入る前の気持ちを、南野はこう振り返りました。
+      - voice: 南野拓実
+        text: 整列してピッチに入る前は、緊張していた。
+        image: assets/images/20261112_minamino_return_words/06_w.jpg
+      - voice: 南野拓実
+        text: でもピッチに立って笛が鳴ったら、
+        cont: true
+      - voice: 南野拓実
+        text: 意外とこの雰囲気は、自分、慣れてるなと。
+        cont: true
+      - text: 森保一監督のもとでの試合は、今回が最後になるかもしれません。南野は、こう話しました。
+      - voice: 南野拓実
+        text: 絶対に最後、いい形で、
+      - voice: 南野拓実
+        text: 森保さんへの感謝の気持ちを伝えたい。
+        cont: true
+        emph: true
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463009-463009-fl
+      - https://www.soccer-king.jp/news/japan/national/20261111/2226694.html
+  - id: view
+    viewpoint: true
+    heading: ケガから代表合流まで、何日かかったのか
+    tier: 背景
+    telop: ケガから代表合流まで325日
+    say:
+      - text: 見立てです。南野は昨年12月21日にケガをして、代表に合流した11日までに325日かかりました。
+        card: {type: table, title: 南野拓実 ケガから代表まで, columns: [日付, できごと], rows: [[昨年12月21日, 左ひざの前十字じん帯を断裂], [10月15日, 公式戦に復帰], [11月5日, 復帰後初アシスト・初のフル出場], [11月11日, 代表に合流（ケガから325日）], [11月14日, ブラジル戦（復帰戦から30日後）]], highlight_row: 3}
+      - text: 南野の復帰戦から、ブラジルとの再戦までは30日。
+        card: none
+      - text: 再戦は14日、シンガポールです。
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463009-463009-fl

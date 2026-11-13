@@ -1,0 +1,120 @@
+# 取材メモ（2026年11月13日）アルダ・ギュレルの超FKもトルコは敗戦。ベルギーに逆転されグループ最下位が確定（ニュースのショート。見せ方 X＝冒頭1秒の強い一言。本人・監督の言葉は取れなかった）
+# 取材: 2026-11-13。WebFetch と python requests（ブラウザUA）と site.api.espn.com で確かめた。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 出典で確かめたこと:
+#   ・ESPN の試合データ（uefa.nations, event 401861145, 2026-11-12 17:00Z, Göztepe Gürsel Aksel Stadi＝イズミル）: トルコ 1-2 ベルギー。
+#       20分 ギュレル（直接FK・左足・左上隅）／27分 デ・ブライネ（アシスト ドク）／30分 デ・ケテラーレ（アシスト デ・カイペル）。
+#       ESPN の記述に「約30メートル」の距離は無い。距離は Foot Mercato と フットボールチャンネル（11/13）の2社が「約30メートル」と書いている → 台本は「約30メートル」と言う（ESPN では未確認）。
+#   ・Foot Mercato（a4033545…, 2026-11-12。全文を WebFetch で読んだ）: 20分ギュレルのFK（エリア外ほぼ中央から左足で曲げる）、27分デ・ブライネ、30分デ・ケテラーレ。本文に本人・監督の言葉は無い。
+#   ・フットボールチャンネル（post1057065, 2026-11-13。全文を WebFetch で読んだ）: 約30mのFKを左足で直接決め、壁の上を越えてゴール左上隅。トルコは今大会5戦全敗・勝ち点0でグループ4位が確定。
+#       前監督モンテッラの退任後、セルゲン・ヤルチン新監督の初陣。記事に発言は無い。
+#   ・Marca（cronica/2026/11/12/gueler-salva-turquia.html, 19:55 CET。requests で全文を読んだ。WebFetch は拒否される）: 1-2 で敗戦。ヤルチンの就任初戦。デ・ケテラーレにもう1点の好機があったがチャクルが好守。
+#       **降格の言い方が食い違う**: 冒頭は「descienden en la Nations League（降格）」、末尾は「トルコを降格を避けるためのプレーアウトに回す（manda oficialmente a Turquía al play-out por no descender a la Liga B）」。
+#       → 台本は「降格」とは言わず、確かな「勝ち点0で最下位が確定」だけを言う。依頼の題の「降格」は使わない。
+#   ・ESPN の順位（uefa.nations standings, 2026-11-13 取得）グループA1: イタリア 5試合 勝ち点10／フランス 5試合 10／ベルギー 5試合 9／トルコ 5試合 0。
+#   ・ESPN のトルコの日程と結果: 9/25 フランス 0-1、9/28 イタリア 1-4、10/2 ベルギー 0-3、10/5 イタリア 1-3、11/12 ベルギー 1-2。→ 5戦全敗、3得点・13失点（自分で足した）。
+#   ・ESPN の日程: 11/15 19:45Z（日本時間16日 4:45）トルコ at フランス（401861177）。
+# 食い違い: ①降格かプレーアウトか（上）。②ギュレルの「決定的な働き」の数字: Foot Mercato「直近6試合のレアルで7回」、Marca「10/14 のローマ戦の2アシスト以降、8得点に直接関与」→ 窓が違い、どちらも ESPN で突き合わせていないので台本には使わない。
+# 前の本との重なり: 20260912_guler（レアルとの契約）、20261108_real_valencia_guler_mbappe（バレンシア戦）。今回の初出は代表でのFK弾と、トルコの5戦全敗。
+# 本人の言葉: 無し（本人・ヤルチン監督の試合後コメントは取材した3社の本文に無かった）。X。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: overseas
+date: "2026年11月13日"
+format: news
+no_main: true
+people: [アルダ・ギュレル, トルコ代表, ベルギー代表]
+
+short_style: X
+short_hook_word: 超FKでも5連敗
+short_photos:
+  - assets/images/20261113_guler_freekick_turkey/02_v.jpg
+  - assets/images/20261113_guler_freekick_turkey/01_v.jpg
+  - assets/images/20261113_guler_freekick_turkey/03_v.jpg
+short_question: ギュレルは、15日のフランス戦で、トルコ代表に初勝利をもたらせると思いますか。
+short_telops: []
+
+theme:
+  id: guler_freekick_turkey
+  league: spain
+  league_name: トルコ代表
+  prefix: ""
+  title: アルダ・ギュレルの超FK弾。ベルギー戦、トルコの10分間に何があったのか
+  hook: ""
+  question: ギュレルのFKで先制したトルコは、どうベルギーに敗れたのか
+  takeaway: ギュレルの約30メートルのFKで先に点を取りながら、10分で逆転された。トルコは5試合で3得点・13失点、勝ち点0。次はフランス戦
+
+thumbnail:
+  layout: face
+  line1: ギュレル 約30mのFK
+  line2: それでも5敗
+  tags: [ギュレル, トルコ代表, ベルギー代表]
+  photo: assets/images/20261113_guler_freekick_turkey/02_w.jpg
+  short_photo: assets/images/20261113_guler_freekick_turkey/02_v.jpg
+
+answer: 先制のFKのあと、27分と30分に決められて1-2。トルコは勝ち点0のまま最下位が確定した
+watch: 15日（日）のフランス戦（日本時間16日4時45分）
+
+sections:
+  - id: what
+    main: true
+    heading: ギュレルのFKで先制したトルコは、どう逆転されたのか
+    tier: 報道
+    telop: ギュレルが約30メートルのFK弾。それでも1-2
+    say:
+      - text: ギュレルがベルギー戦で直接FKを決めましたが、トルコは敗れました。
+        short_only: true
+        image: assets/images/20261113_guler_freekick_turkey/02_w.jpg
+      - text: ネーションズリーグは、ヨーロッパの代表チームが戦う大会です。
+        image: assets/images/20261113_guler_freekick_turkey/01_w.jpg
+      - text: この試合は11月12日、トルコのイズミルで行われました。
+        image: assets/images/20261113_guler_freekick_turkey/02_w.jpg
+        card: {type: table, title: 得点の流れ（トルコ対ベルギー）, columns: [時間, 得点者, スコア], rows: [[20分, ギュレル（トルコ）, 1-0], [27分, デ・ブライネ（ベルギー）, 1-1], [30分, デ・ケテラーレ（ベルギー）, 1-2]], highlight_row: 0}
+      - text: 前半20分、ギュレルは約30メートルのフリーキックを、左足で直接決めました。
+        card: none
+        image: assets/images/20261113_guler_freekick_turkey/01_w.jpg
+      - text: ボールは壁の上を越えて、ゴールの左上の隅に入りました。トルコが先制です。
+        image: assets/images/20261113_guler_freekick_turkey/03_w.jpg
+      - text: ところが、27分にデ・ブライネ、30分にデ・ケテラーレに決められて、逆転されました。
+        image: assets/images/20261113_guler_freekick_turkey/01_w.jpg
+      - text: 試合は、トルコの1対2の負けです。後半に追いつけませんでした。
+        image: assets/images/20261113_guler_freekick_turkey/03_w.jpg
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/summary?event=401861145
+      - https://www.footmercato.net/a4033545223474328267-turquie-le-coup-franc-phenomenal-darda-guler-contre-la-belgique
+      - https://www.footballchannel.jp/2026/11/13/post1057065/
+      - https://www.marca.com/futbol/nations-league/cronica/2026/11/12/gueler-salva-turquia.html
+  - id: game
+    heading: トルコはここまで何敗しているのか
+    tier: 報道
+    telop: 5試合で3得点・13失点、勝ち点0
+    say:
+      - text: ギュレルがFKを決めた、この試合を含めて、トルコはこのグループで5試合を戦い、5敗です。
+        card: {type: table, title: トルコのネーションズリーグ グループA1, columns: [日付, 相手, 結果], rows: [[9月25日, フランス, 0-1], [9月28日, イタリア, 1-4], [10月2日, ベルギー, 0-3], [10月5日, イタリア, 1-3], [11月12日, ベルギー, 1-2]], highlight_row: 4}
+      - text: 勝ち点は0で、最下位が決まりました。
+        card: none
+        image: assets/images/20261113_guler_freekick_turkey/01_w.jpg
+      - text: 前の監督の退任後、ヤルチン新監督の初戦でもありました。
+        image: assets/images/20261113_guler_freekick_turkey/02_w.jpg
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/teams/465/schedule
+      - https://site.api.espn.com/apis/v2/sports/soccer/uefa.nations/standings
+      - https://www.footballchannel.jp/2026/11/13/post1057065/
+  - id: view
+    viewpoint: true
+    heading: 次のフランス戦で、トルコは初めて勝ち点を取れるのか
+    tier: 背景
+    telop: 次は15日（日）、フランス戦
+    say:
+      - text: 見立てです。トルコは5試合で3点しか取れず、13点を取られています。
+        image: assets/images/20261113_guler_freekick_turkey/03_w.jpg
+        card: {type: table, title: トルコの5試合の合計, columns: [項目, 数字], rows: [[得点, 3], [失点, 13], [勝ち点, 0]], highlight_row: 1}
+      - text: 先制のFKを決めたギュレルのいるトルコが、次に当たる相手です。
+        card: none
+      - text: 次は15日、フランスとの試合です。日本時間では、16日の4時45分から。
+        image: assets/images/20261113_guler_freekick_turkey/01_w.jpg
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/teams/465/schedule
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/scoreboard?dates=20261115
+short_title: "アルダ・ギュレルの超FK弾。ベルギー戦、トルコの10分間に何があったのか"

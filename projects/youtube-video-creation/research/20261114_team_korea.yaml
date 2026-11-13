@@ -1,0 +1,440 @@
+# 代表チーム紹介 韓国代表（11/11 作成。固定シリーズ9「代表チーム紹介」。見本は 11/12 のイタリア代表 scripts/20261112_team_italy.md と 11/10 のコロンビア代表）。7節：フック→基礎DATA（板）→日本との関係→歴史と転機（年表）→看板選手（表）→いまのチーム→見立て。
+# **選んだ理由**：日本との対戦が82試合と最も多く、日本から見て40回以上負けた相手。最初の50試合は7勝11分け32敗、あとの32試合は10勝12分け10敗の五分で、2021年以降は日本の3連勝（7得点0失点）という、数えて割ると軸になる数字がある。代表チーム紹介は未出（scripts/・research/posted.json・research/covered.yaml を grep。韓国代表が主役の本は無い。韓国の名前は日本人選手や他シリーズの台本に出るだけ）。
+# **外した候補**：イタリア（11/12 の別本として作る）、アメリカ・セネガル・モロッコ・スイス・デンマーク（日本との接点が韓国ほど強くない）、インドネシア・タイ（2027年アジアカップ組。大物ではない）。
+# **軸**：「日本は40回以上負けた相手と、なぜいまは五分なのか」。答えは見立ての節（自分で数えて割る）。
+# ---- 確かめたこと（2026-11-11。requests で Wikipedia の生の wikitext を読んだ。WebFetch の要約は使っていない）----
+#  ・FIFAランク：32位（Module:SportsRankings/data/FIFA World Rankings、updated 7 October 2026）。日本は17位。点数は書かない。
+#  ・日本との全対戦（Japan–South Korea football rivalry の Men's matches の表。updated 15 July 2025）：82試合。日本17勝・韓国42勝・23分け（アジアの大会・アジア大会などで日本協会が数えない3試合を含む。日本協会の数え方は Japan national football team records and statistics の表で79試合16勝23分け40敗）。→題・語りでは「40回以上」「82試合・17勝23分け42敗」と言い、どちらの数え方でも成り立つ形にした。
+#  ・→自分で数えた（82試合の表を1試合ずつ集計。/tmp 側のスクリプトで検算）：最初の50試合（1954〜1991）7勝11分け32敗＝記事の本文「South Korea overwhelmingly led the first 50 matches with 32 wins, 11 draws and 7 losses」と一致。あとの32試合（1992〜2025）10勝12分け10敗。2021・2022・2025の3試合は日本の3連勝、3-0・3-0・1-0で7得点0失点。
+#  ・最初の対戦：1954-03-07 W杯予選 日本1-5韓国（東京・明治神宮外苑競技場）。3-14 韓国2-2日本。1993-10-25 W杯予選 日本1-0韓国（ドーハ）、ただし最終戦のイラク戦が2-2で日本は敗退（「ドーハの悲劇」。本文）。1997-11-01 W杯予選 韓国0-2日本（ソウル、名波1分・ロペス37分）。2011-01-25 アジアカップ 2-2（PK 3-0で日本）。2011-08-10 札幌 3-0（香川2・本田）。2021-03-25 横浜 3-0。2022-07-27 東アジア選手権 3-0。2025-07-15 東アジア選手権 韓国0-1日本（ジャーメイン）。「Jリーグ設立後の1990年代初めからほとんど互角」（本文）。EAFF の大会は両国とも国内組が中心（本文）。
+#  ・韓国：W杯12回出場・1986〜2026の11大会連続はアジア最多、最高は2002年4位（Korea national football team の冒頭・South Korea at the FIFA World Cup）。アジアカップ優勝1956・1960、準優勝1972・1980・1988・2015（infobox・メダル欄）。2002は日韓共催：ポーランドに勝ってW杯初勝利、1次リーグ1位、16強イタリアに延長2-1、8強スペインにPK、準決勝ドイツに0-1、3位決定戦トルコに2-3。「Most Entertaining Team」賞を受けた。2015の決勝は延長でオーストラリアに1-2。応援団 Red Devils は1995年結成。愛称 Tigers of Asia。
+#  ・2026年W杯（A組。South Korea national football team の試合の枠・2026 FIFA World Cup Group A）：6/11 チェコ2-1（黄仁範67分・呉賢揆80分、グアダラハラ）／6/18 メキシコ0-1／6/24 南アフリカ0-1。A組3位、1勝0分2敗2得点3失点。1次リーグ敗退。
+#  ・監督：ロベルト・モレノ（スペイン出身、暫定。Korea national football team の coaching staff、updated 10 September 2026。KFA が暫定監督にモレノを選任した旨の出典）。前の監督（ホン・ミョンボ）が離れた理由は確かめていないので言わない。主将ソン・フンミン（infobox。151試合59得点＝歴代最多出場・最多得点、10月6日時点）。
+#  ・W杯のあと（試合の枠）：9/24 エクアドル3-0（呉賢揆54分・ソン58分・李東炯86分）／9/28 ウルグアイ1-4（ソン80分）／10/2 ベネズエラ0-0／10/6 ウズベキスタン2-0（ソン6分・呉世勲60分）。→2勝1分1敗6得点4失点、ソンは4試合のうち3試合で得点。11/13 サウジアラビア、11/17 カタール（親善試合、ドーハ）。アジアカップ2027 Group E：1/10 イエメン（ジッダ）、ベトナム、1/20 UAE。
+#  ・11月の招集メンバー（Current squad、caps・goals は2026-10-06時点）：キム・スンギュ（FC東京、GK、92試合）、オ・セフン（清水エスパルス、FW）など日本のクラブの選手が2人。看板選手（年齢は2026-11-11時点、生年月日から計算）：ソン・フンミン（ロサンゼルスFC、FW、1992-07-08）34・151試合59得点／キム・ミンジェ（バイエルン、DF、1996-11-15）29・85試合4得点／イ・ガンイン（アトレティコ・マドリード、MF、2001-02-19）25・53試合11得点／ファン・ヒチャン（シャルケ、MF、1996-01-26）30・85試合17得点／ファン・インボム（ポルト、MF、1996-09-20）30・78試合7得点／呉賢揆（ベシクタシュ、FW、2001-04-12）25・34試合8得点。
+# ---- 言わないもの ----
+#  ・ホン・ミョンボ前監督の退任の理由／歴史問題・政治の話／戦術の説明／怪我・私生活／審判への不満／2002年の判定をめぐる議論。
+# ---- 写真（assets/images/20261114_team_korea/、出典は credits.json）----
+#  ・2018年W杯 韓国対メキシコの2枚（soccer.ru のタグ。CC BY-SA 4.0 と記憶＝要確認）。2010年東アジア選手権 日本対韓国（yoppy、CC BY 2.0、遠景）。2026年6月24日 試合前の国旗（Balaenicactus、CC0）。ソン・フンミンの2枚（Ujishadow、CC BY-SA 4.0）。代理店・放送映像は使っていない。
+#  ・基礎DATAの板の中身は research/raw/20261114_team_korea_board.json（tools/clubdata.py で assets/stats/tb_korea_data*.png を描いた）。
+date: 2026年11月14日（情報は11月11日時点）
+slot: other_1
+format: news
+series: 代表チーム紹介
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+short_photos:
+- assets/images/20261114_team_korea/b01_son2018_v.jpg
+- assets/images/20261114_team_korea/b06_son2022_v.jpg
+people:
+- 韓国代表
+- ソン・フンミン
+- ロベルト・モレノ
+- キム・ミンジェ
+- イ・ガンイン
+- 日韓戦
+theme:
+  id: team_korea
+  league: japan
+  league_name: 韓国代表
+  kind: preview
+  topic: 韓国代表
+  title: 韓国代表は、日本が40回以上負けた相手。なぜいまは五分になったのか
+  question: 日本は韓国に40回以上負けてきたのに、なぜ1992年からの32試合は五分なのか
+  lead: 日本がいちばん多く負けている相手。
+  hook: ''
+  opening_image: assets/stats/tb_korea_data_t.png
+  end_bg: assets/images/20261114_team_korea/b04_flags2026_w.jpg
+  takeaway: 日本と韓国の82試合は、最初の50試合が日本の7勝32敗、あとの32試合が10勝10敗。2021年以降の3試合は日本が7得点0失点で3連勝。ただ2022年と2025年は国内組が中心の東アジア選手権だった。韓国はW杯に11大会続けて出ているが、2026年は1次リーグ敗退。暫定監督のもとで、ソン・フンミンが4試合で3得点を挙げている。
+thumbnail:
+  board: assets/stats/tb_korea_data.png
+  short_photo: assets/images/20261114_team_korea/b06_son2022_v.jpg
+  line1: 韓国代表
+  line2: 日本が最も負けた相手
+  crest_main:
+  - 韓国
+  tags:
+  - 韓国代表
+  - 日韓戦
+  - 日本代表
+  - ソン・フンミン
+  - ワールドカップ
+  - 代表チーム紹介
+sections:
+- id: hook
+  heading: 日本の勝ち負けは、なぜ半分ずつになったのか
+  main: true
+  tier: 背景
+  telop: 日本がいちばん負けた相手は、韓国
+  narrator: 解説
+  say:
+  - text: アジアの強豪、韓国代表。フィファランクは32位の国です。
+    short_only: true
+    image: assets/stats/tb_korea_data_t.png
+    no_telop: true
+  - text: 日本がいちばん多く負けている相手は、韓国です。
+    image: assets/stats/tb_korea_data_t.png
+    no_telop: true
+  - text: 戦ったのは82試合。日本から見て、17勝23分け42敗。
+    image: assets/stats/tb_korea_data_r1.png
+    no_telop: true
+  - text: ところが、最初の50試合は7勝32敗。あとの32試合は、**10勝12分け10敗**。
+    image: assets/stats/tb_korea_data_r1.png
+    no_telop: true
+    emph: true
+  - text: 2021年からの3試合は、日本の3連勝。
+    image: assets/images/20261114_team_korea/b03_japankorea2010_w.jpg
+    no_telop: true
+  - text: 日本は、ここまで負けを重ねた相手と、なぜ互角に戦えるようになったのでしょうか。
+    image: assets/stats/tb_korea_data_t.png
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Japan%E2%80%93South_Korea_football_rivalry
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_records_and_statistics
+- id: data
+  heading: 韓国代表は、どんな数字を持つ国なのか
+  tier: 背景
+  telop: 韓国代表の基礎DATA
+  narrator: 解説
+  say:
+  - text: 韓国のフィファランクは、10月7日の発表で**32位**。日本は17位です。
+    image: assets/stats/tb_korea_data0.png
+    no_telop: true
+  - text: ワールドカップは、12回出場。いちばん上は、日本と共催した2002年の4位。
+    image: assets/stats/tb_korea_data1.png
+    no_telop: true
+  - text: アジアカップは、1956年と1960年に優勝しています。
+    image: assets/stats/tb_korea_data2.png
+    no_telop: true
+  - text: 監督は、スペイン出身のロベルト・モレノ。暫定で指揮をとっています。
+    image: assets/stats/tb_korea_data4.png
+    no_telop: true
+  - text: 主将はソン・フンミン。代表151試合59得点は、どちらも歴代最多。
+    image: assets/stats/tb_korea_data5.png
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Module:SportsRankings/data/FIFA_World_Rankings
+  - https://en.wikipedia.org/wiki/South_Korea_national_football_team
+  - https://en.wikipedia.org/wiki/South_Korea_at_the_FIFA_World_Cup
+- id: japan
+  heading: 日本は、韓国とどう戦ってきたのか
+  tier: 背景
+  telop: 通算82試合、日本から見て17勝23分け42敗
+  narrator: 解説
+  card: &id_jp
+    type: table
+    title: 日本と韓国の全82試合
+    columns:
+    - 期間
+    - 試合
+    - 日本から見た結果
+    rows:
+    - - 1954〜1991年
+      - '50'
+      - 7勝11分け32敗
+    - - 1992〜2025年
+      - '32'
+      - 10勝12分け10敗
+    - - うち2021年以降
+      - '3'
+      - 3勝0分け0敗
+  say:
+  - text: 対戦を時期で3つに分けて見ていきます。
+    image: assets/stats/tb_korea_data8.png
+    card: *id_jp
+  - text: 最初の対戦は1954年、ワールドカップの予選。日本は東京で、1対5で負けました。
+    image: assets/images/20261114_team_korea/b04_flags2026_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 0
+  - text: この時期は、日本の勝ちが7つ。負けは32でした。
+    card:
+      <<: *id_jp
+      highlight_row: 0
+  - text: 1993年のドーハ。日本は韓国に1対0で勝ちました。
+    image: assets/images/20261114_team_korea/b03_japankorea2010_w.jpg
+    card: none
+  - text: それでも最終戦のイラク戦が、2対2の引き分け。ドーハの悲劇です。
+    card: none
+  - text: ワールドカップへ進んだのは、韓国でした。
+    card: none
+  - text: 1997年11月、ソウル。名波浩と呂比須ワグナーのゴールで、2対0の勝ち。
+    image: assets/images/20261114_team_korea/b04_flags2026_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 1
+  - text: 2011年のアジアカップは、2対2のあと、PK戦で3対0の勝ち。
+    card:
+      <<: *id_jp
+      highlight_row: 1
+  - text: 2021年3月の横浜は3対0の勝ち。2022年の東アジア選手権も3対0の勝ち。
+    image: assets/images/20261114_team_korea/b03_japankorea2010_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 2
+  - text: 2025年7月は、ジャーメイン良のゴールで1対0。3連勝です。
+    card:
+      <<: *id_jp
+      highlight_row: 2
+  sources:
+  - https://en.wikipedia.org/wiki/Japan%E2%80%93South_Korea_football_rivalry
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_records_and_statistics
+- id: history
+  heading: 韓国は、どうやってアジアの強豪になったのか
+  tier: 背景
+  telop: W杯に11大会続けて出場。2002年は4位
+  narrator: 解説
+  card: &id_hist
+    type: timeline
+    title: 韓国代表の歩み
+    rows:
+    - - 1954年
+      - W杯に初出場
+    - - 1956・60年
+      - アジアカップを連覇
+    - - 1986年
+      - W杯の連続出場が始まる
+    - - 2002年
+      - W杯で4位（日韓共催）
+    - - 2015年
+      - アジアカップで準優勝
+    - - 2026年
+      - W杯の1次リーグで敗退
+    focus: 2002年
+  say:
+  - text: 韓国のワールドカップ初出場は1954年。日本との予選を、勝ち上がった大会です。
+    image: assets/images/20261114_team_korea/b04_flags2026_w.jpg
+    card: *id_hist
+  - text: 1956年と1960年は、アジアカップで続けて優勝。
+    card:
+      <<: *id_hist
+      highlight_row: 1
+  - text: 1986年から2026年まで、ワールドカップに11大会続けて出場。アジア最多です。
+    card:
+      <<: *id_hist
+      highlight_row: 2
+  - text: 2002年は日本との共催。初戦はポーランドに勝ち、W杯初勝利。
+    image: assets/images/20261114_team_korea/b02_lineup2018_w.jpg
+    card: none
+  - text: 16強はイタリア、8強はスペインを破り、準決勝でドイツに0対1。
+    card:
+      <<: *id_hist
+      highlight_row: 3
+  - text: 3位決定戦はトルコに2対3の負けで、4位。
+    card:
+      <<: *id_hist
+      highlight_row: 3
+  - text: 最も観客を楽しませたチームにも選ばれました。
+    card: none
+  - text: アジアでベスト4に入ったのは、いまも韓国だけです。
+    card: none
+  - text: 2015年のアジアカップは決勝へ。延長でオーストラリアに1対2でした。
+    image: assets/images/20261114_team_korea/b01_son2018_w.jpg
+    card:
+      <<: *id_hist
+      highlight_row: 4
+  - text: 応援団の赤い悪魔は、1995年に生まれました。
+    image: assets/images/20261114_team_korea/b04_flags2026_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/South_Korea_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/South_Korea_national_football_team
+- id: players
+  heading: いまの看板選手は、誰なのか
+  tier: 背景
+  telop: 看板選手を、所属・名前・位置・年齢で
+  narrator: 解説
+  card: &id_pl
+    type: table
+    title: 韓国代表の看板選手
+    columns:
+    - 所属
+    - 名前
+    - 位置
+    - 年齢
+    rows:
+    - - ロサンゼルスFC
+      - ソン・フンミン
+      - FW
+      - '34'
+    - - バイエルン
+      - キム・ミンジェ
+      - DF
+      - '29'
+    - - アトレティコ
+      - イ・ガンイン
+      - MF
+      - '25'
+    - - シャルケ
+      - ファン・ヒチャン
+      - MF
+      - '30'
+    - - ポルト
+      - ファン・インボム
+      - MF
+      - '30'
+    - - ベシクタシュ
+      - オ・ヒョンギュ
+      - FW
+      - '25'
+  say:
+  - text: 11月に招集された、韓国の看板選手です。
+    image: assets/images/20261114_team_korea/b04_flags2026_w.jpg
+    card: *id_pl
+  - text: 主将のソン・フンミンは、ロサンゼルスFCの所属です。
+    card:
+      <<: *id_pl
+      highlight_row: 0
+  - text: ソンは、ワールドカップに4大会連続で出場。13試合で、3得点です。
+    image: assets/images/20261114_team_korea/b01_son2018_w.jpg
+    card: none
+  - text: バイエルンのキム・ミンジェは、代表85試合。守備の中心です。
+    image: assets/images/20261114_team_korea/b03_japankorea2010_w.jpg
+    card:
+      <<: *id_pl
+      highlight_row: 1
+  - text: アトレティコのイ・ガンインは25歳。代表53試合で、11得点。
+    card:
+      <<: *id_pl
+      highlight_row: 2
+  - text: 2026年のワールドカップ初戦、チェコ戦は、ファン・インボムの同点ゴールから逆転。
+    image: assets/images/20261114_team_korea/b04_flags2026_w.jpg
+    card:
+      <<: *id_pl
+      highlight_row: 4
+  - text: 決勝点を決めたのは、オ・ヒョンギュでした。
+    card:
+      <<: *id_pl
+      highlight_row: 5
+  - text: 招集メンバーには、日本のクラブの選手も2人います。
+    image: assets/images/20261114_team_korea/b02_lineup2018_w.jpg
+    card: none
+  - text: FC東京のキム・スンギュと、清水のオ・セフンです。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/South_Korea_national_football_team
+  - https://en.wikipedia.org/wiki/Son_Heung-min
+  - https://en.wikipedia.org/wiki/South_Korea_at_the_FIFA_World_Cup
+- id: now
+  heading: W杯のあとの韓国は、いまどうなっているのか
+  tier: 背景
+  telop: W杯のあとの4試合は、2勝1分1敗
+  narrator: 解説
+  card: &id_nw
+    type: table
+    title: W杯のあと 韓国の4試合（親善試合）
+    columns:
+    - 日付
+    - 相手
+    - 韓国の結果
+    rows:
+    - - 9月24日
+      - エクアドル
+      - 3-0
+    - - 9月28日
+      - ウルグアイ
+      - 1-4
+    - - 10月2日
+      - ベネズエラ
+      - 0-0
+    - - 10月6日
+      - ウズベキスタン
+      - 2-0
+  say:
+  - text: 2026年のワールドカップは、1次リーグで敗退しました。
+    image: assets/images/20261114_team_korea/b04_flags2026_w.jpg
+    card: none
+  - text: 初戦のチェコに2対1で勝ち、メキシコと南アフリカには、どちらも0対1。
+    card: none
+  - text: そのあとの韓国は、4試合で2勝1分け1敗。
+    image: assets/images/20261114_team_korea/b04_flags2026_w.jpg
+    card: *id_nw
+  - text: エクアドルに3対0で勝ち、ウルグアイには1対4で敗れました。
+    card:
+      <<: *id_nw
+      highlight_row: 1
+  - text: ベネズエラと0対0で引き分けたあと、10月6日はウズベキスタンに2対0。
+    card:
+      <<: *id_nw
+      highlight_row: 3
+  - text: ソン・フンミンは、この4試合のうち3試合でゴールを決めています。
+    image: assets/images/20261114_team_korea/b06_son2022_w.jpg
+    card: none
+  - text: 11月は、サウジアラビアとカタールと、親善試合で戦います。
+    image: assets/images/20261114_team_korea/b01_son2018_w.jpg
+    card: none
+  - text: 来年1月のアジアカップは、イエメン、ベトナム、アラブ首長国連邦と同じ組です。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/South_Korea_national_football_team
+  - https://en.wikipedia.org/wiki/2027_AFC_Asian_Cup
+- id: viewpoint
+  viewpoint: true
+  heading: 日本は、なぜ韓国と五分になったのか
+  tier: 背景
+  telop: 最初の50試合は7勝32敗。あとの32試合は10勝10敗
+  narrator: 解説
+  card: &id_vp
+    type: table
+    title: 日本と韓国 数えた数字
+    columns:
+    - 項目
+    - 日本
+    - 韓国
+    rows:
+    - - フィファランク（10月）
+      - 17位
+      - 32位
+    - - 最初の50試合の勝ち
+      - '7'
+      - '32'
+    - - あとの32試合の勝ち
+      - '10'
+      - '10'
+    - - 2021年以降の得点
+      - '7'
+      - '0'
+  say:
+  - text: 見立てです。日本と韓国の対戦を、前半と後半に分けて数えます。
+    image: assets/images/20261114_team_korea/b03_japankorea2010_w.jpg
+    card: none
+  - text: 最初の50試合の勝ちは、日本が7、韓国が32。
+    card:
+      <<: *id_vp
+      highlight_row: 1
+  - text: あとの32試合は、日本が10、韓国も10です。12試合は引き分けでした。
+    emph: true
+    mark:
+      kind: circle
+      row: 2
+      col: 日本
+    card:
+      <<: *id_vp
+      highlight_row: 2
+  - text: 差が縮まったのは、1993年にJリーグが始まった、あとの時期です。
+    card: none
+  - text: 2021年以降の3試合は、日本が7得点で、失点は0。
+    mark:
+      kind: circle
+      row: 3
+      col: 日本
+    card:
+      <<: *id_vp
+      highlight_row: 3
+  - text: ただ、2022年と2025年は、国内組が中心の東アジア選手権でした。
+    image: assets/images/20261114_team_korea/b02_lineup2018_w.jpg
+    card: none
+  - text: フィファランクは、日本が17位、韓国は32位。
+    card:
+      <<: *id_vp
+      highlight_row: 0
+  - text: 韓国には、歴代最多得点の主将、ソン・フンミンがいます。
+    image: assets/images/20261114_team_korea/b04_flags2026_w.jpg
+    card: none
+  - text: 次の日韓戦で、日本の連勝が3から伸びるのか。そこが注目点です。
+    image: assets/images/20261114_team_korea/b06_son2022_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Japan%E2%80%93South_Korea_football_rivalry
+  - https://en.wikipedia.org/wiki/South_Korea_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/South_Korea_national_football_team

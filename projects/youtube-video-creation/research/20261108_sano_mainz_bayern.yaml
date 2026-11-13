@@ -1,0 +1,118 @@
+# 取材メモ（2026年11月8日）佐野海舟、バイエルン戦もフル出場。マインツは終了間際に1点返すも3連敗（ニュースのショート。見せ方 X＝冒頭に強い一言）
+# 取材: 2026-11-08。requests（ブラウザUA）と site.api.espn.com で確かめた。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: サッカーキング 2225459（2026-11-07/08「バイエルン、キミッヒ＆カール弾でブンデス首位を死守！ 佐野海舟フル出場のマインツは一矢報いるも3連敗」。全文）。
+# 出典で確かめたこと:
+#   ・ESPN（site.api.espn.com ger.1 summary event=401884740、11/7 14:30 UTC）: マインツ 1-2 バイエルン。14分 キミッヒ（アシスト ケイン）／57分 レナート・カール（アシスト ケイン）／90+2分 ティーツ（ヘッド、アシスト ホラーバッハ）。
+#       佐野は先発で交代なし（フル出場）、シュート1本。川崎颯太はベンチで出場なし。伊藤洋輝（バイエルン）は86分から途中出場。
+#       ※ティーツの得点時刻は ESPN が90+2分、サッカーキング・Yahoo(DAZN News)が90+3分で**食い違う**。→ 台本では分を言わず「後半アディショナルタイム」。
+#   ・サッカーキング／Yahoo: 40分にマインツのイ・ジェソンがセットプレーから頭で合わせたがオフサイドで取り消し（2社一致）。後半、佐野が強烈なミドルシュート（サッカーキング）。
+#   ・バイエルンはリーグ戦無敗で首位（Yahoo・サッカーキング）。ESPN 順位表（11/8 取得）: バイエルン 9試合 勝ち点21 1位、マインツ 勝ち点10 11位。
+#   ・ESPN（ger.1 team 2950 の schedule）: マインツのリーグ戦 10/17 シャルケに1-0で勝ち → 10/24 ブレーメン 2-3 → 10/30 エルバースベルク 1-4（敵地） → 11/7 バイエルン 1-2。リーグ戦3連敗は ESPN の記録とサッカーキングの見出しで一致。
+#   ・ESPN（ger.dfb_pokal event 401917029）: 10/27 ドイツカップ2回戦 ボーフム 2-0 マインツ。佐野は先発で交代なし。theWORLD(11/5) も「ブレーメン戦(2-3)、10月27日のDFBポカール2回戦ボーフム戦(0-2)に続いてエルバースベルクに1-4、公式戦3連敗」と書く。
+#       → **公式戦で数えると、この試合が4連敗目**（自分で数えた。10/24・10/27・10/30・11/7）。見出しの「3連敗」はリーグ戦。台本は「リーグ戦3連敗」「ドイツカップを入れると4連敗」と分けて言う。
+#   ・佐野の出場（ESPN の各 summary で自分で数えた）: 10/24 ブレーメン戦は先発で90+1分に交代／10/27 ボーフム戦は先発・フル／10/30 エルバースベルク戦は先発で87分に交代／11/7 バイエルン戦は先発・フル。
+#       4試合とも先発で、いちばん短くて87分。リーグ戦9試合すべて先発（交代は9/6 88分・10/10 81分・10/24 90+1分・10/30 87分の4回、フル出場は5回）。
+#   ・次: Yahoo(DAZN News) 「次節、マインツは22日にアウェイでアウクスブルク」。ESPN scoreboard 2026-11-22: Mainz at FC Augsburg（14:30 UTC）で一致。
+#   ・日本代表: サッカーキング 2224321（11/4）の招集28人に佐野海舟が入っている。14日ブラジル戦・17日パラグアイ戦（シンガポール）。
+# 食い違い: ①ティーツの得点時刻（上、台本では分を言わない）。②「3連敗」はリーグ戦（見出し）と公式戦（theWORLD、10/30 時点）で数え方が違う → 台本で分ける。③Yahoo の本文は「公式戦ではなくリーグ戦3連敗」。
+# 前の本との重なり: scripts/20261028_sano_kaishu_bild（途中交代が今季3回・SDのハードル）／20261018_sano_kaishu_mainz（シャルケ戦）／20261028_bd_mainz。
+#   → 今回の初出は「バイエルン戦の中身」「公式戦4連敗の4試合で佐野が立った時間」。SD の「ハードル」の言葉・移籍話（パレス・6000万ユーロ）は言い直さない。途中交代の回数も「今季3回」とは言わない。
+# 本人の言葉: なし（試合後の佐野のコメントは、サッカーキング・Yahoo・DAZN News に無い。ほかを当たったが見つからず）。X。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月8日"
+format: news
+no_main: true
+people: [佐野海舟, マインツ, バイエルン, 伊藤洋輝]
+
+short_style: X
+short_hook_word: 公式戦4連敗
+short_photos:
+  - assets/images/20261108_sano_mainz_bayern/01_v.jpg
+  - assets/images/20261108_sano_mainz_bayern/02_v.jpg
+  - assets/images/20261108_sano_mainz_bayern/03_v.jpg
+  - assets/images/20261108_sano_mainz_bayern/04_v.jpg
+short_question: 佐野海舟は、14日の日本代表対ブラジル戦でも、90分ピッチに立つと思いますか。
+short_telops: []
+
+theme:
+  id: sano_mainz_bayern
+  league: germany
+  league_name: ブンデスリーガ
+  prefix: ""
+  title: 佐野海舟が90分戦ったバイエルン戦。マインツが終了間際に返した1点
+  hook: ""
+  question: 佐野海舟がフル出場したバイエルン戦で、マインツに何が起きたのか
+  takeaway: ドイツカップを入れると、マインツは公式戦4連敗。その4試合すべてに先発した佐野の出場は87分以上で、うち2試合がフル出場だった
+
+thumbnail:
+  layout: face
+  line1: 佐野海舟 バイエルン戦
+  line2: マインツ公式戦4連敗
+  tags: [佐野海舟, マインツ]
+  photo: assets/images/20261108_sano_mainz_bayern/01_w.jpg
+  short_photo: assets/images/20261108_sano_mainz_bayern/01_v.jpg
+
+answer: 佐野はフル出場したが、マインツは1対2で敗れ、リーグ戦3連敗（ドイツカップを入れると公式戦4連敗）
+watch: 14日の日本代表対ブラジル戦（シンガポール）
+
+sections:
+  - id: what
+    main: true
+    heading: 佐野海舟がフル出場したバイエルン戦で、マインツに何が起きたのか
+    tier: 報道
+    telop: マインツ 1-2 バイエルン。佐野海舟はフル出場
+    say:
+      - text: マインツの佐野海舟が、首位バイエルンとの試合にフル出場しました。
+      - text: 結果は、1対2の敗戦でした。
+        image: assets/images/20261108_sano_mainz_bayern/01_w.jpg
+      - text: 先に動いたのはバイエルンでした。14分、敵陣でボールを奪います。
+      - text: ケインのパスから、キミッヒがミドルシュート。1点目です。
+      - text: 40分には、マインツのイ・ジェソンが頭で合わせましたが、オフサイドで取り消しになりました。
+        image: assets/images/20261108_sano_mainz_bayern/02_w.jpg
+      - text: 57分には、ケインの折り返しから、カールがバイエルンの2点目。
+      - text: 佐野は後半、強烈なミドルシュートも放っています。
+        image: assets/images/20261108_sano_mainz_bayern/03_w.jpg
+      - text: マインツが1点を返したのは、後半アディショナルタイム。ティーツがヘディングで決めました。
+      - text: ただ、反撃はそこまででした。バイエルンは、リーグ戦無敗のまま首位です。
+      - text: マインツはこれで、リーグ戦3連敗。ドイツカップを入れると、公式戦4連敗です。
+        image: assets/images/20261108_sano_mainz_bayern/04_w.jpg
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/ger/20261108/2225459.html
+      - https://news.yahoo.co.jp/articles/b34ad4c813c8d424ce33cec4264f31ad2645f50f
+      - https://www.espn.com/soccer/match/_/gameId/401884740
+  - id: story
+    heading: 3連敗のマインツで、佐野海舟は何分プレーしたのか
+    tier: 報道
+    telop: マインツは公式戦4連敗。佐野は4試合とも先発
+    say:
+      - text: その公式戦4連敗の4試合を、佐野の出場時間で並べます。
+        image: assets/images/20261108_sano_mainz_bayern/02_w.jpg
+      - text: 4試合のうち1つは、ドイツカップです。
+        card: {type: table, title: マインツ 公式戦4連敗と佐野海舟, columns: [日付, 相手, スコア, 佐野], rows: [[10月24日, ブレーメン, 2-3, 先発・90分すぎに交代], [10月27日, ボーフム（ドイツカップ）, 0-2, 先発・フル出場], [10月30日, エルバースベルク, 1-4, 先発・87分で交代], [11月7日, バイエルン, 1-2, 先発・フル出場]], highlight_row: 3}
+      - text: 佐野は、その4試合すべてで先発しました。
+        card: none
+      - text: 出場時間は、いちばん短い試合でも87分です。
+      - text: マインツは勝ち点10の11位。リーグ戦9試合すべてで、佐野は先発しています。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/team/schedule/_/id/2950
+      - https://www.espn.com/soccer/match/_/gameId/401917029
+      - https://www.theworldmagazine.jp/20261105/01world/germany/512535
+  - id: view
+    viewpoint: true
+    heading: 4連敗のあと、佐野海舟に待っている試合は
+    tier: 背景
+    telop: 次は14日の日本代表、ブラジル戦
+    say:
+      - text: 見立てです。佐野海舟は、代表の2試合を挟んで、22日にマインツへ戻ります。
+        image: assets/images/20261108_sano_mainz_bayern/04_w.jpg
+      - text: 14日にはブラジル、17日にはパラグアイと、日本代表の2試合が控えています。
+        card: {type: table, title: 佐野海舟 これから, columns: [日付, 試合], rows: [[11月14日, 日本代表 ブラジル戦], [11月17日, 日本代表 パラグアイ戦], [11月22日, マインツ アウクスブルク戦（アウェー）]], highlight_row: 0}
+      - text: マインツでは、22日にアウェーでアウクスブルクと戦います。
+        card: none
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20261104/2224321.html
+      - https://www.espn.com/soccer/scoreboard/_/league/ger.1/date/20261122

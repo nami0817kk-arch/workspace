@@ -1,0 +1,1025 @@
+# 代表チーム紹介 スイス代表（11/12 作成。見本は 11/18 のアメリカ代表）。7節：フック→基礎DATA→日本との関係→歴史と転機（年表）→看板選手（表）→いまのチーム→見立て。
+date: 2026年11月22日（情報は11月12日時点）
+slot: other_1
+format: news
+series: 代表チーム紹介
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+short_photos:
+- assets/images/20261122_team_switzerland/b04_v.jpg
+- assets/images/20261122_team_switzerland/b01_v.jpg
+people:
+- スイス代表
+- ヤキン
+- シャカ
+- 日本代表
+- ワールドカップ
+theme:
+  id: team_switzerland
+  league: japan
+  league_name: スイス代表
+  kind: preview
+  topic: スイス代表
+  title: スイス代表は、ベスト16の壁を越えた。なぜ2026年は、ベスト8に進めたのか
+  question: スイスは1994年以降ベスト16で5回敗れてきたのに、なぜ2026年はベスト8に進めたのか
+  lead: ベスト16で5回負けた国が、72年ぶりのベスト8。
+  hook: ''
+  opening_image: assets/stats/tb_switzerland_data_t.png
+  end_bg: assets/images/20261122_team_switzerland/b02_w.jpg
+  takeaway: スイスは2026年のW杯でベスト8。1954年以来、72年ぶり。1994年以降ベスト16で5回敗れてきたが、今回はコロンビアにPK戦で勝って越えた。2022年は5得点9失点、2026年は10得点6失点で、得点は5人が分けた。11月はシャカが主将に戻る。
+thumbnail:
+  board: assets/stats/tb_switzerland_data.png
+  short_photo: assets/images/20261122_team_switzerland/b04_v.jpg
+  line1: スイス代表
+  line2: 72年ぶりのW杯ベスト8
+  crest_main:
+  - スイス
+  tags:
+  - スイス代表
+  - 日本代表
+  - ワールドカップ
+  - シャカ
+  - ヤキン
+  - 代表チーム紹介
+sections:
+- id: hook
+  heading: スイスは、72年ぶりのベスト8で、何が変わったのか
+  tier: 背景
+  telop: 1954年以来72年ぶり。W杯ベスト8
+  narrator: 解説
+  main: true
+  say:
+  - text: スイス代表。フィファランクは12位の国です。
+    image: assets/stats/tb_switzerland_data_t.png
+    short_only: true
+    no_telop: true
+  - text: 2026年のワールドカップで、スイスはベスト8に進みました。
+    image: assets/stats/tb_switzerland_data_t.png
+    no_telop: true
+  - text: 1954年以来、72年ぶりです。
+    image: assets/stats/tb_switzerland_data_r1.png
+    no_telop: true
+    emph: true
+  - text: 1994年のあと、スイスはベスト16で、5回負けてきました。
+    image: assets/stats/tb_switzerland_data_r1.png
+    no_telop: true
+  - text: それを2026年は、コロンビアとのPK戦に勝って、越えました。
+    image: assets/images/20261122_team_switzerland/b01_w.jpg
+    no_telop: true
+  - text: スイスは、なぜ今回、ベスト16を越えられたのでしょうか。
+    image: assets/stats/tb_switzerland_data_t.png
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Switzerland_national_football_team
+  - https://en.wikipedia.org/wiki/Switzerland_at_the_FIFA_World_Cup
+- id: data
+  heading: スイス代表は、どんな数字を持つ国なのか
+  tier: 背景
+  telop: スイス代表の基礎DATA
+  narrator: 解説
+  say:
+  - text: スイスのフィファランクは、10月7日の発表で**12位**。日本は17位です。
+    image: assets/stats/tb_switzerland_data0.png
+    no_telop: true
+  - text: ワールドカップは13回出場。最高は、ベスト8です。
+    image: assets/stats/tb_switzerland_data1.png
+    no_telop: true
+  - text: 直近は2026年。アルゼンチンに、延長で1対3の負けでした。
+    image: assets/stats/tb_switzerland_data2.png
+    no_telop: true
+  - text: ヨーロッパ選手権も、2020年と2024年が、ベスト8です。
+    image: assets/stats/tb_switzerland_data3.png
+    no_telop: true
+  - text: 監督は、ムラト・ヤキン。2021年8月から指揮しています。
+    image: assets/stats/tb_switzerland_data5.png
+    no_telop: true
+  - text: 主将はグラニト・シャカ。代表152試合は、歴代最多です。
+    image: assets/stats/tb_switzerland_data6.png
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Switzerland_national_football_team
+  - https://en.wikipedia.org/wiki/Switzerland_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/Module:SportsRankings/data/FIFA_World_Rankings
+- id: japan
+  heading: 日本は、スイスとどう戦ってきたのか
+  tier: 背景
+  telop: 日本とは3試合、日本から見て1勝1分け1敗
+  narrator: 解説
+  card:
+    type: table
+    title: 日本とスイスの全3試合
+    columns:
+    - 年
+    - 大会
+    - 日本の結果
+    rows:
+    - - 1993年1月
+      - 親善試合（香港）
+      - 1-1の引き分け
+    - - 2007年9月
+      - 親善試合
+      - 4-3の勝ち
+    - - 2018年6月
+      - 親善試合（ルガーノ）
+      - 0-2の負け
+  say:
+  - text: 日本とスイスの対戦は、3試合。日本から見て、1勝1分け1敗です。
+    image: assets/stats/tb_switzerland_data8.png
+    card:
+      type: table
+      title: 日本とスイスの全3試合
+      columns:
+      - 年
+      - 大会
+      - 日本の結果
+      rows:
+      - - 1993年1月
+        - 親善試合（香港）
+        - 1-1の引き分け
+      - - 2007年9月
+        - 親善試合
+        - 4-3の勝ち
+      - - 2018年6月
+        - 親善試合（ルガーノ）
+        - 0-2の負け
+  - text: 最初は1993年1月、香港で、1対1の引き分けでした。
+    image: assets/images/20261122_team_switzerland/b02_w.jpg
+    card:
+      type: table
+      title: 日本とスイスの全3試合
+      columns:
+      - 年
+      - 大会
+      - 日本の結果
+      rows:
+      - - 1993年1月
+        - 親善試合（香港）
+        - 1-1の引き分け
+      - - 2007年9月
+        - 親善試合
+        - 4-3の勝ち
+      - - 2018年6月
+        - 親善試合（ルガーノ）
+        - 0-2の負け
+      highlight_row: 0
+  - text: 2007年9月は、日本が4対3で勝ちました。
+    card:
+      type: table
+      title: 日本とスイスの全3試合
+      columns:
+      - 年
+      - 大会
+      - 日本の結果
+      rows:
+      - - 1993年1月
+        - 親善試合（香港）
+        - 1-1の引き分け
+      - - 2007年9月
+        - 親善試合
+        - 4-3の勝ち
+      - - 2018年6月
+        - 親善試合（ルガーノ）
+        - 0-2の負け
+      highlight_row: 1
+  - text: 2018年6月は、ルガーノで、日本は0対2で敗れました。
+    image: assets/images/20261122_team_switzerland/b03_w.jpg
+    card:
+      type: table
+      title: 日本とスイスの全3試合
+      columns:
+      - 年
+      - 大会
+      - 日本の結果
+      rows:
+      - - 1993年1月
+        - 親善試合（香港）
+        - 1-1の引き分け
+      - - 2007年9月
+        - 親善試合
+        - 4-3の勝ち
+      - - 2018年6月
+        - 親善試合（ルガーノ）
+        - 0-2の負け
+      highlight_row: 2
+  - text: 3試合とも、親善試合。W杯では、まだ顔を合わせていません。
+    image: assets/images/20261122_team_switzerland/b01_w.jpg
+    card: none
+  sources:
+  - https://www.national-football-teams.com/matches/report/20234/Switzerland_Japan.html
+  - https://www.jfa.jp/eng/news/00017735/
+- id: history
+  heading: スイスは、どんな道でベスト8に戻ってきたのか
+  tier: 背景
+  telop: ベスト8は、1934年・1938年・1954年・2026年
+  narrator: 解説
+  card:
+    type: timeline
+    title: スイス代表の歩み
+    rows:
+    - - 1934年
+      - W杯初出場でベスト8
+    - - 1954年
+      - 自国開催のW杯でベスト8
+    - - 1994年
+      - 28年ぶりのW杯。ベスト16
+    - - 2006年
+      - 無失点のままPK戦で敗退
+    - - 2018年
+      - スウェーデンに0-1。ベスト16
+    - - 2026年
+      - コロンビアにPK戦で勝つ。ベスト8
+    focus: 2026年
+  say:
+  - text: スイスが初めてW杯の舞台に立ったのは、1934年。
+    image: assets/images/20261122_team_switzerland/b02_w.jpg
+    card:
+      type: timeline
+      title: スイス代表の歩み
+      rows:
+      - - 1934年
+        - W杯初出場でベスト8
+      - - 1954年
+        - 自国開催のW杯でベスト8
+      - - 1994年
+        - 28年ぶりのW杯。ベスト16
+      - - 2006年
+        - 無失点のままPK戦で敗退
+      - - 2018年
+        - スウェーデンに0-1。ベスト16
+      - - 2026年
+        - コロンビアにPK戦で勝つ。ベスト8
+      focus: 2026年
+  - text: 初出場で、ベスト8でした。
+    card:
+      type: timeline
+      title: スイス代表の歩み
+      rows:
+      - - 1934年
+        - W杯初出場でベスト8
+      - - 1954年
+        - 自国開催のW杯でベスト8
+      - - 1994年
+        - 28年ぶりのW杯。ベスト16
+      - - 2006年
+        - 無失点のままPK戦で敗退
+      - - 2018年
+        - スウェーデンに0-1。ベスト16
+      - - 2026年
+        - コロンビアにPK戦で勝つ。ベスト8
+      focus: 2026年
+      highlight_row: 0
+  - text: 1954年は、自国開催。オーストリアに5対7で負けて、ベスト8です。
+    image: assets/images/20261122_team_switzerland/b03_w.jpg
+    card:
+      type: timeline
+      title: スイス代表の歩み
+      rows:
+      - - 1934年
+        - W杯初出場でベスト8
+      - - 1954年
+        - 自国開催のW杯でベスト8
+      - - 1994年
+        - 28年ぶりのW杯。ベスト16
+      - - 2006年
+        - 無失点のままPK戦で敗退
+      - - 2018年
+        - スウェーデンに0-1。ベスト16
+      - - 2026年
+        - コロンビアにPK戦で勝つ。ベスト8
+      focus: 2026年
+      highlight_row: 1
+  - text: そのあと本大会から離れ、1994年に、28年ぶりに出ました。
+    card:
+      type: timeline
+      title: スイス代表の歩み
+      rows:
+      - - 1934年
+        - W杯初出場でベスト8
+      - - 1954年
+        - 自国開催のW杯でベスト8
+      - - 1994年
+        - 28年ぶりのW杯。ベスト16
+      - - 2006年
+        - 無失点のままPK戦で敗退
+      - - 2018年
+        - スウェーデンに0-1。ベスト16
+      - - 2026年
+        - コロンビアにPK戦で勝つ。ベスト8
+      focus: 2026年
+      highlight_row: 2
+  - text: 結果は、ベスト16です。
+    card:
+      type: timeline
+      title: スイス代表の歩み
+      rows:
+      - - 1934年
+        - W杯初出場でベスト8
+      - - 1954年
+        - 自国開催のW杯でベスト8
+      - - 1994年
+        - 28年ぶりのW杯。ベスト16
+      - - 2006年
+        - 無失点のままPK戦で敗退
+      - - 2018年
+        - スウェーデンに0-1。ベスト16
+      - - 2026年
+        - コロンビアにPK戦で勝つ。ベスト8
+      focus: 2026年
+      highlight_row: 2
+  - text: 2006年は、1点も取られないまま、PK戦で敗退。
+    card:
+      type: timeline
+      title: スイス代表の歩み
+      rows:
+      - - 1934年
+        - W杯初出場でベスト8
+      - - 1954年
+        - 自国開催のW杯でベスト8
+      - - 1994年
+        - 28年ぶりのW杯。ベスト16
+      - - 2006年
+        - 無失点のままPK戦で敗退
+      - - 2018年
+        - スウェーデンに0-1。ベスト16
+      - - 2026年
+        - コロンビアにPK戦で勝つ。ベスト8
+      focus: 2026年
+      highlight_row: 3
+  - text: 2018年は、スウェーデンに0対1で負けて、ベスト16で敗退。
+    image: assets/images/20261122_team_switzerland/b04_w.jpg
+    card:
+      type: timeline
+      title: スイス代表の歩み
+      rows:
+      - - 1934年
+        - W杯初出場でベスト8
+      - - 1954年
+        - 自国開催のW杯でベスト8
+      - - 1994年
+        - 28年ぶりのW杯。ベスト16
+      - - 2006年
+        - 無失点のままPK戦で敗退
+      - - 2018年
+        - スウェーデンに0-1。ベスト16
+      - - 2026年
+        - コロンビアにPK戦で勝つ。ベスト8
+      focus: 2026年
+      highlight_row: 4
+  - text: 2026年は、そのベスト16で、コロンビアにPK戦で勝ちました。
+    image: assets/images/20261122_team_switzerland/b05_w.jpg
+    card:
+      type: timeline
+      title: スイス代表の歩み
+      rows:
+      - - 1934年
+        - W杯初出場でベスト8
+      - - 1954年
+        - 自国開催のW杯でベスト8
+      - - 1994年
+        - 28年ぶりのW杯。ベスト16
+      - - 2006年
+        - 無失点のままPK戦で敗退
+      - - 2018年
+        - スウェーデンに0-1。ベスト16
+      - - 2026年
+        - コロンビアにPK戦で勝つ。ベスト8
+      focus: 2026年
+      highlight_row: 5
+  sources:
+  - https://en.wikipedia.org/wiki/Switzerland_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/Switzerland_national_football_team
+- id: players
+  heading: いまの看板選手は、誰なのか
+  tier: 背景
+  telop: 看板選手を、所属・名前・位置・年齢で
+  narrator: 解説
+  card:
+    type: table
+    title: スイス代表の看板選手
+    columns:
+    - 所属
+    - 名前
+    - 位置
+    - 年齢
+    rows:
+    - - サンダーランド
+      - シャカ
+      - MF
+      - '34'
+    - - フライブルク
+      - マンザンビ
+      - MF
+      - '20'
+    - - レンヌ
+      - エンボロ
+      - FW
+      - '29'
+    - - ノッティンガム・F
+      - ンドイエ
+      - FW
+      - '26'
+    - - セビージャ
+      - バルガス
+      - MF
+      - '28'
+    - - インテル
+      - アカンジ
+      - DF
+      - '31'
+  say:
+  - text: 2026年のW杯でプレーした、スイスの看板選手です。
+    image: assets/images/20261122_team_switzerland/b04_w.jpg
+    card:
+      type: table
+      title: スイス代表の看板選手
+      columns:
+      - 所属
+      - 名前
+      - 位置
+      - 年齢
+      rows:
+      - - サンダーランド
+        - シャカ
+        - MF
+        - '34'
+      - - フライブルク
+        - マンザンビ
+        - MF
+        - '20'
+      - - レンヌ
+        - エンボロ
+        - FW
+        - '29'
+      - - ノッティンガム・F
+        - ンドイエ
+        - FW
+        - '26'
+      - - セビージャ
+        - バルガス
+        - MF
+        - '28'
+      - - インテル
+        - アカンジ
+        - DF
+        - '31'
+  - text: グラニト・シャカは、主将。サンダーランドのミッドフィールダーです。
+    card:
+      type: table
+      title: スイス代表の看板選手
+      columns:
+      - 所属
+      - 名前
+      - 位置
+      - 年齢
+      rows:
+      - - サンダーランド
+        - シャカ
+        - MF
+        - '34'
+      - - フライブルク
+        - マンザンビ
+        - MF
+        - '20'
+      - - レンヌ
+        - エンボロ
+        - FW
+        - '29'
+      - - ノッティンガム・F
+        - ンドイエ
+        - FW
+        - '26'
+      - - セビージャ
+        - バルガス
+        - MF
+        - '28'
+      - - インテル
+        - アカンジ
+        - DF
+        - '31'
+      highlight_row: 0
+  - text: W杯のボスニア戦では、ゴールを決めました。
+    card:
+      type: table
+      title: スイス代表の看板選手
+      columns:
+      - 所属
+      - 名前
+      - 位置
+      - 年齢
+      rows:
+      - - サンダーランド
+        - シャカ
+        - MF
+        - '34'
+      - - フライブルク
+        - マンザンビ
+        - MF
+        - '20'
+      - - レンヌ
+        - エンボロ
+        - FW
+        - '29'
+      - - ノッティンガム・F
+        - ンドイエ
+        - FW
+        - '26'
+      - - セビージャ
+        - バルガス
+        - MF
+        - '28'
+      - - インテル
+        - アカンジ
+        - DF
+        - '31'
+      highlight_row: 0
+  - text: ヨハン・マンザンビは、フライブルクの20歳。W杯で、3得点です。
+    image: assets/images/20261122_team_switzerland/b05_w.jpg
+    card:
+      type: table
+      title: スイス代表の看板選手
+      columns:
+      - 所属
+      - 名前
+      - 位置
+      - 年齢
+      rows:
+      - - サンダーランド
+        - シャカ
+        - MF
+        - '34'
+      - - フライブルク
+        - マンザンビ
+        - MF
+        - '20'
+      - - レンヌ
+        - エンボロ
+        - FW
+        - '29'
+      - - ノッティンガム・F
+        - ンドイエ
+        - FW
+        - '26'
+      - - セビージャ
+        - バルガス
+        - MF
+        - '28'
+      - - インテル
+        - アカンジ
+        - DF
+        - '31'
+      highlight_row: 1
+  - text: ブレール・エンボロは、レンヌのフォワード。
+    card:
+      type: table
+      title: スイス代表の看板選手
+      columns:
+      - 所属
+      - 名前
+      - 位置
+      - 年齢
+      rows:
+      - - サンダーランド
+        - シャカ
+        - MF
+        - '34'
+      - - フライブルク
+        - マンザンビ
+        - MF
+        - '20'
+      - - レンヌ
+        - エンボロ
+        - FW
+        - '29'
+      - - ノッティンガム・F
+        - ンドイエ
+        - FW
+        - '26'
+      - - セビージャ
+        - バルガス
+        - MF
+        - '28'
+      - - インテル
+        - アカンジ
+        - DF
+        - '31'
+      highlight_row: 2
+  - text: カタール戦とアルジェリア戦で、点を取りました。
+    card:
+      type: table
+      title: スイス代表の看板選手
+      columns:
+      - 所属
+      - 名前
+      - 位置
+      - 年齢
+      rows:
+      - - サンダーランド
+        - シャカ
+        - MF
+        - '34'
+      - - フライブルク
+        - マンザンビ
+        - MF
+        - '20'
+      - - レンヌ
+        - エンボロ
+        - FW
+        - '29'
+      - - ノッティンガム・F
+        - ンドイエ
+        - FW
+        - '26'
+      - - セビージャ
+        - バルガス
+        - MF
+        - '28'
+      - - インテル
+        - アカンジ
+        - DF
+        - '31'
+      highlight_row: 2
+  - text: ダン・ンドイエは、アルジェリア戦とアルゼンチン戦で、ゴール。
+    image: assets/images/20261122_team_switzerland/b03_w.jpg
+    card:
+      type: table
+      title: スイス代表の看板選手
+      columns:
+      - 所属
+      - 名前
+      - 位置
+      - 年齢
+      rows:
+      - - サンダーランド
+        - シャカ
+        - MF
+        - '34'
+      - - フライブルク
+        - マンザンビ
+        - MF
+        - '20'
+      - - レンヌ
+        - エンボロ
+        - FW
+        - '29'
+      - - ノッティンガム・F
+        - ンドイエ
+        - FW
+        - '26'
+      - - セビージャ
+        - バルガス
+        - MF
+        - '28'
+      - - インテル
+        - アカンジ
+        - DF
+        - '31'
+      highlight_row: 3
+  - text: ルベン・バルガスは、セビージャ所属。ボスニア戦とカナダ戦で、1点ずつです。
+    card:
+      type: table
+      title: スイス代表の看板選手
+      columns:
+      - 所属
+      - 名前
+      - 位置
+      - 年齢
+      rows:
+      - - サンダーランド
+        - シャカ
+        - MF
+        - '34'
+      - - フライブルク
+        - マンザンビ
+        - MF
+        - '20'
+      - - レンヌ
+        - エンボロ
+        - FW
+        - '29'
+      - - ノッティンガム・F
+        - ンドイエ
+        - FW
+        - '26'
+      - - セビージャ
+        - バルガス
+        - MF
+        - '28'
+      - - インテル
+        - アカンジ
+        - DF
+        - '31'
+      highlight_row: 4
+  - text: W杯のメンバーに、日本のクラブから来た選手はいません。
+    card: none
+  sources:
+  - https://www.beinsports.com/en-us/soccer/fifa-world-cup-2026/articles/murat-yakin-s-official-switzerland-squad-for-the-2026-fifa-world-cup-2026-05-20
+  - https://en.wikipedia.org/wiki/Switzerland_at_the_FIFA_World_Cup
+- id: now
+  heading: W杯のあとのスイスは、いまどうなっているのか
+  tier: 背景
+  telop: W杯は首位通過からベスト8まで
+  narrator: 解説
+  card:
+    type: table
+    title: 2026年W杯 スイスの6試合
+    columns:
+    - 段階
+    - 相手
+    - スイスの結果
+    rows:
+    - - グループ
+      - カタール
+      - 1-1
+    - - グループ
+      - ボスニア
+      - 4-1
+    - - グループ
+      - カナダ
+      - 2-1
+    - - 32強
+      - アルジェリア
+      - 2-0
+    - - 16強
+      - コロンビア
+      - 0-0（PK戦4-3）
+    - - 8強
+      - アルゼンチン
+      - 1-3（延長）
+  say:
+  - text: 2026年のW杯で、スイス代表は、グループBを首位で通過しました。
+    image: assets/images/20261122_team_switzerland/b01_w.jpg
+    card:
+      type: table
+      title: 2026年W杯 スイスの6試合
+      columns:
+      - 段階
+      - 相手
+      - スイスの結果
+      rows:
+      - - グループ
+        - カタール
+        - 1-1
+      - - グループ
+        - ボスニア
+        - 4-1
+      - - グループ
+        - カナダ
+        - 2-1
+      - - 32強
+        - アルジェリア
+        - 2-0
+      - - 16強
+        - コロンビア
+        - 0-0（PK戦4-3）
+      - - 8強
+        - アルゼンチン
+        - 1-3（延長）
+  - text: カタールと引き分け、ボスニアに4対1の勝ち、カナダに2対1の勝ち。
+    card:
+      type: table
+      title: 2026年W杯 スイスの6試合
+      columns:
+      - 段階
+      - 相手
+      - スイスの結果
+      rows:
+      - - グループ
+        - カタール
+        - 1-1
+      - - グループ
+        - ボスニア
+        - 4-1
+      - - グループ
+        - カナダ
+        - 2-1
+      - - 32強
+        - アルジェリア
+        - 2-0
+      - - 16強
+        - コロンビア
+        - 0-0（PK戦4-3）
+      - - 8強
+        - アルゼンチン
+        - 1-3（延長）
+      highlight_row: 2
+  - text: 32強は、アルジェリアに2対0の勝ち。
+    card:
+      type: table
+      title: 2026年W杯 スイスの6試合
+      columns:
+      - 段階
+      - 相手
+      - スイスの結果
+      rows:
+      - - グループ
+        - カタール
+        - 1-1
+      - - グループ
+        - ボスニア
+        - 4-1
+      - - グループ
+        - カナダ
+        - 2-1
+      - - 32強
+        - アルジェリア
+        - 2-0
+      - - 16強
+        - コロンビア
+        - 0-0（PK戦4-3）
+      - - 8強
+        - アルゼンチン
+        - 1-3（延長）
+      highlight_row: 3
+  - text: 16強はコロンビアと0対0。PK戦を制して、勝ち上がりました。
+    image: assets/images/20261122_team_switzerland/b02_w.jpg
+    card:
+      type: table
+      title: 2026年W杯 スイスの6試合
+      columns:
+      - 段階
+      - 相手
+      - スイスの結果
+      rows:
+      - - グループ
+        - カタール
+        - 1-1
+      - - グループ
+        - ボスニア
+        - 4-1
+      - - グループ
+        - カナダ
+        - 2-1
+      - - 32強
+        - アルジェリア
+        - 2-0
+      - - 16強
+        - コロンビア
+        - 0-0（PK戦4-3）
+      - - 8強
+        - アルゼンチン
+        - 1-3（延長）
+      highlight_row: 4
+  - text: 8強のアルゼンチン戦は、延長の末に敗れました。ンドイエが、1点を返しました。
+    card:
+      type: table
+      title: 2026年W杯 スイスの6試合
+      columns:
+      - 段階
+      - 相手
+      - スイスの結果
+      rows:
+      - - グループ
+        - カタール
+        - 1-1
+      - - グループ
+        - ボスニア
+        - 4-1
+      - - グループ
+        - カナダ
+        - 2-1
+      - - 32強
+        - アルジェリア
+        - 2-0
+      - - 16強
+        - コロンビア
+        - 0-0（PK戦4-3）
+      - - 8強
+        - アルゼンチン
+        - 1-3（延長）
+      highlight_row: 5
+  - text: 11月は、スロベニアとスコットランドと、2試合です。
+    image: assets/images/20261122_team_switzerland/b05_w.jpg
+    card: none
+  - text: 主将のシャカと、エンボロが、代表に戻ります。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Switzerland_at_the_FIFA_World_Cup
+  - https://www.plattformj.ch/artikel/248250/
+- id: viewpoint
+  heading: スイスは、なぜベスト16を越えられたのか
+  tier: 背景
+  telop: 2022年は9失点。2026年は10得点・6失点
+  narrator: 解説
+  card:
+    type: table
+    title: スイスのW杯 数えた数字
+    columns:
+    - 項目
+    - 2022年
+    - 2026年
+    rows:
+    - - 試合
+      - '4'
+      - '6'
+    - - 勝ち
+      - '2'
+      - '3'
+    - - 得点
+      - '5'
+      - '10'
+    - - 失点
+      - '9'
+      - '6'
+    - - 最終順位
+      - 12位
+      - 7位
+  viewpoint: true
+  say:
+  - text: 見立てです。ベスト16で終わった2022年と、ベスト8の今回を、数字で見比べます。
+    image: assets/images/20261122_team_switzerland/b03_w.jpg
+    card: none
+  - text: 勝ちは2から3、得点は5から10。数字は、増えました。
+    mark:
+      kind: circle
+      row: 2
+      col: 2026年
+    emph: true
+    card:
+      type: table
+      title: スイスのW杯 数えた数字
+      columns:
+      - 項目
+      - 2022年
+      - 2026年
+      rows:
+      - - 試合
+        - '4'
+        - '6'
+      - - 勝ち
+        - '2'
+        - '3'
+      - - 得点
+        - '5'
+        - '10'
+      - - 失点
+        - '9'
+        - '6'
+      - - 最終順位
+        - 12位
+        - 7位
+      highlight_row: 2
+  - text: 失点は9から6。2022年は、ポルトガル戦だけで6失点でした。
+    card:
+      type: table
+      title: スイスのW杯 数えた数字
+      columns:
+      - 項目
+      - 2022年
+      - 2026年
+      rows:
+      - - 試合
+        - '4'
+        - '6'
+      - - 勝ち
+        - '2'
+        - '3'
+      - - 得点
+        - '5'
+        - '10'
+      - - 失点
+        - '9'
+        - '6'
+      - - 最終順位
+        - 12位
+        - 7位
+      highlight_row: 3
+  - text: 最終順位は、12位から7位です。
+    image: assets/images/20261122_team_switzerland/b04_w.jpg
+    card:
+      type: table
+      title: スイスのW杯 数えた数字
+      columns:
+      - 項目
+      - 2022年
+      - 2026年
+      rows:
+      - - 試合
+        - '4'
+        - '6'
+      - - 勝ち
+        - '2'
+        - '3'
+      - - 得点
+        - '5'
+        - '10'
+      - - 失点
+        - '9'
+        - '6'
+      - - 最終順位
+        - 12位
+        - 7位
+      highlight_row: 4
+  - text: 10得点は、5人で分けました。2022年の5得点の、2倍。
+    card: none
+  - text: 最多はマンザンビの3。バルガス、エンボロ、ンドイエは2で、シャカは1です。
+    card: none
+  - text: コロンビア戦は、PK戦。2006年は、無失点のままPK戦で負けていました。
+    card: none
+  - text: 11月は、シャカが主将に戻ります。
+    card: none
+  - text: 次のW杯で、スイスがこの高さを保てるか。そこが注目点です。
+    image: assets/images/20261122_team_switzerland/b05_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Switzerland_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/2022_FIFA_World_Cup_Group_G

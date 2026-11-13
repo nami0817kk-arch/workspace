@@ -1,0 +1,112 @@
+# 取材メモ（2026年11月8日）堂安律が下がったあと、フランクフルトは10人でラストプレーに追いついた（ニュースのショート。見せ方 X＝冒頭1秒に強い一言）
+# 取材: 2026-11-08。requests（ブラウザUA）で本文と ESPN の試合データを読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: サッカーキング 2026-11-08「フランクフルトが“ラストプレー”で追いつき劇的ドロー…後半ATにブルカルトが技あり同点弾、堂安は63分までプレー」（全文）。
+#   https://www.soccer-king.jp/news/world/ger/20261108/2225461.html
+# 出典で確かめたこと:
+#   ・ESPN（site.api.espn.com ger.1 summary event=401884737、11/7 14:30 UTC）: パーダーボルン 2-2 フランクフルト。
+#       23分 ブルカルト（F、アシストはシャイビ）／45分 オーバーマイヤー（P）／73分 ピエリンガー（P、PK）／90+3分 ブルカルト（F、コーナーのあと至近距離から右足）。
+#       72分 ブラッシエがPKを与える。75分 エリアス・バウム（フランクフルト）が2枚目の警告で退場（10人）。
+#       90+3分に GKアトゥボル（フランクフルト）のシュートがブロックされ、そのあと同点。90+4分に後半終了＝同点弾の直後に試合終了。
+#       堂安は先発。64分にイリチェヴィッチと交代（ESPN）。前半のシュートは3本（4分・ブロック／5分・枠の外／27分・ブロック）で枠内0。ファウル2。
+#   ・サッカーキング本文: 堂安は右サイドのアタッカーで先発。ブルカルトの同点弾は「ヒールキック」、交代は「63分」、PKの獲得は「72分」。
+#   ・食い違い: ①交代は 63分（サッカーキング）対 64分（ESPN）→ 台本は分で言わず「後半の途中」。②同点弾は サッカーキング「ヒールキックで押し込む」、ESPN は「右足」とだけ→ 台本は蹴り方を言わない。
+#       ③前半の同点弾は サッカーキング 45+1分、ESPN 45分 → 「前半の終わり」。④PKの得点は サッカーキング本文 72分／得点者の欄 73分（記事内でも食い違う）、ESPN 73分 → 「後半」。
+#   ・ESPN 順位表（ger.1 standings、11/8 朝）: フランクフルト 9試合3勝3分3敗・勝ち点12・9位（試合前は8試合3勝2分3敗＝記事と一致）。
+#   ・日本代表: サッカーキング 2026-11-04（2224321）の招集28人に堂安律（フランクフルト）。14日のブラジル戦（シンガポール）。
+#   ・次のリーグ戦: 11月21日（土）ホームでホッフェンハイム（ESPN scoreboard。サッカーキングも「次節21日、町田浩樹所属のホッフェンハイム」）。
+# 自分で数えたもの: 引き分けで勝ち点1を加えて12（ESPN の順位表）。フランクフルトは後半の73分から10人になったのは75分（退場）から。同点弾までの時間は 90+3分。
+# 前の本との重なり: scripts/20261017_doan_kosugi_koeln_aori ほか堂安の過去の回。今回の初出は「ラストプレーの同点弾」と「堂安の前半のシュート3本・後半の交代」。
+# 本人の言葉: 無い（試合後の堂安のコメントは、サッカーキング・ゲキサカ・ESPN のどこにも11/8 朝の時点で見つからなかった）。X。
+# 反応: 0件（作らない。approve は --no-voices）。
+# 写真: assets/images/20261108_doan_frankfurt_last_play/ 01=Commons 2019 日本代表（El Loko Foto、CC BY）／02=Commons 2024 日本代表の練習（CC BY）／03=Commons 2019 フローニンゲン（CC BY-SA、縦のみ使う）。
+#   今季のフランクフルトの堂安の写真は取れなかった（サッカーキングの写真は Getty、クラブ公式のギャラリーは堂安を特定できず）。02 は 823x951 でショートは約2倍に伸びる。
+slot: japanese
+date: "2026年11月8日"
+format: news
+no_main: true
+people: [堂安律, フランクフルト, ブルカルト, パーダーボルン]
+
+short_style: X
+short_hook_word: ラストプレー
+short_photos:
+  - assets/images/20261108_doan_frankfurt_last_play/01_v.jpg
+  - assets/images/20261108_doan_frankfurt_last_play/02_v.jpg
+  - assets/images/20261108_doan_frankfurt_last_play/03_v.jpg
+short_question: 堂安律は、14日の日本代表のブラジル戦でどんな役割をすると思いますか。
+short_telops: []
+
+theme:
+  id: doan_frankfurt_last_play
+  league: germany
+  league_name: ブンデスリーガ
+  prefix: ""
+  title: 堂安律が下がったあと、フランクフルトは10人でラストプレーに追いついた
+  hook: ""
+  question: 堂安律が後半の途中で下がったあと、フランクフルトの試合はどう動いたのか
+  takeaway: フランクフルトは、堂安の交代後に逆転され、退場者も出した。それでも90分すぎのコーナーで追いつき、勝ち点1を拾って12。堂安は次に日本代表のブラジル戦へ向かう
+
+thumbnail:
+  layout: face
+  line1: 堂安律のフランクフルト
+  line2: ラストプレーで同点
+  tags: [堂安律, フランクフルト]
+  photo: assets/images/20261108_doan_frankfurt_last_play/01_w.jpg
+  short_photo: assets/images/20261108_doan_frankfurt_last_play/01_v.jpg
+
+answer: 堂安の交代後に逆転され、10人になったが、ブルカルトの90分すぎの同点弾で2対2。勝ち点1を拾った
+watch: 11月14日（土）、日本代表のブラジル戦（シンガポール）
+
+sections:
+  - id: what
+    main: true
+    heading: 堂安律が下がったあと、フランクフルトの試合に何が起きたのか
+    tier: 報道
+    telop: フランクフルト 2-2 パーダーボルン。ラストプレーで同点
+    say:
+      - text: フランクフルトが、アウェーのパーダーボルン戦で、ラストプレーで追いつきました。
+      - text: 堂安律は右サイドで先発し、後半の途中で交代。
+        image: assets/images/20261108_doan_frankfurt_last_play/01_w.jpg
+      - text: 前半、ブルカルトのゴールでフランクフルトが先制。前半の終わりに追いつかれます。
+      - text: 堂安が下がったあと、後半にパーダーボルンがPKで逆転。
+        card: {type: table, title: パーダーボルン 対 フランクフルト, columns: [場面, パーダーボルン, フランクフルト], rows: [[前半の先制, 0, 1], [後半のPK, 2, 1], [試合終了, 2, 2]], highlight_row: 2}
+      - text: そのあとフランクフルトは、退場者を出して10人になります。
+        image: assets/images/20261108_doan_frankfurt_last_play/02_w.jpg
+        card: none
+      - text: 試合終了の直前、コーナーキック。フランクフルトのGK、アトゥボルまで攻め上がります。
+        emph: true
+        image: assets/images/20261108_doan_frankfurt_last_play/01_w.jpg
+      - text: 最後は、ブルカルトが押し込んで同点。
+      - text: 同点のゴールの直後に、試合終了の笛が鳴りました。試合は2対2の引き分けです。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/ger/20261108/2225461.html
+      - https://www.espn.com/soccer/match/_/gameId/401884737
+  - id: story
+    heading: 堂安律は、先発した前半に何本シュートを打ったのか
+    tier: 報道
+    telop: 堂安律 前半のシュートは3本
+    say:
+      - text: 堂安は前半、右サイドから3本のシュートを打ちました。
+        image: assets/images/20261108_doan_frankfurt_last_play/02_w.jpg
+        card: {type: table, title: 堂安律 前半のシュート, columns: [時間帯, 結果], rows: [[前半4分, ブロック], [前半5分, 枠の外], [前半27分, ブロック]], highlight_row: 0}
+      - text: 前半4分のシュートは、先制点を決めるブルカルトのパスから生まれました。
+        card: none
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401884737
+  - id: view
+    viewpoint: true
+    heading: ラストプレーの同点弾のあと、堂安律とフランクフルトは次にどこへ向かうのか
+    tier: 背景
+    telop: 勝ち点1を拾って12。順位は9位
+    say:
+      - text: 見立てです。堂安が下がったあとも、フランクフルトは引き分けに持ち込み、勝ち点は12になりました。
+        image: assets/images/20261108_doan_frankfurt_last_play/01_w.jpg
+      - text: 9試合で、3勝3分け3敗です。順位は9位でした。
+      - text: 堂安は日本代表の一員として、次は14日のブラジル戦へ向かいます。
+        image: assets/images/20261108_doan_frankfurt_last_play/02_w.jpg
+      - text: フランクフルトに戻れば、21日のホームでのホッフェンハイム戦です。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401884737
+      - https://www.soccer-king.jp/news/japan/national/20261104/2224321.html

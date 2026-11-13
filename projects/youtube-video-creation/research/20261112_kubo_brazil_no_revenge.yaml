@@ -1,0 +1,154 @@
+# 取材メモ（2026年11月12日）久保建英、「W杯のリベンジ」を否定。相手は新生ブラジル（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-12。requests（ブラウザUA）で本文を全文読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。
+# 題材の元: ゲキサカ 2026-11-11（取材・文 竹内達也）「“W杯のリベンジ”を否定した久保建英、相手は新生ブラジル「メンバーを見ても互角に戦えないといけない」」（全文） https://web.gekisaka.jp/news/japan/detail/?463014-463014-fl
+# 写真の出どころ（追加の記事。本人の写真を探すため）:
+#   https://web.gekisaka.jp/news/japan/detail/?463011-463011-fl
+#   https://www.soccer-king.jp/news/japan/national/20261111/2226536.html
+#   https://www.soccer-king.jp/news/japan/national/20261110/2226285.html
+#   https://web.gekisaka.jp/news/japan/detail/?462978-462978-fl
+# 写真の出どころ（追加の記事。本人の写真を探すため）:
+#   https://www.soccer-king.jp/news/world/esp/20261102/2223746.html
+# 出典で確かめたこと:
+#   ・14日のシンガポール遠征初陣、ブラジル戦。W杯ラウンド32で敗れた相手との再戦（ゲキサカ）。久保（ソシエダ）はW杯のブラジル戦を負傷欠場していた（ゲキサカ。産経も「W杯では欠場」）。
+#   ・W杯の試合（ESPN fifa.world summary event=760487、2026-06-29）: ブラジル 2-1 日本。久保は登録メンバーに名前はあるが出場なし。ESPN は負傷の有無を示さない。
+#       → 台本は「出ていなかった」と言い、「負傷による欠場」はゲキサカの報道として言う。
+#   ・ブラジルの今回の遠征メンバー（ゲキサカ）: W杯メンバーはDFガブリエル・マガリャンイス（アーセナル）、DFウェズレイ（ローマ）、DFドグラス・サントス（ゼニト）、MFブルーノ・ギマランイス（アーセナル）、MFダニーロ（ボタフォゴ）、FWエンドリッキ（Rマドリー）、FWラヤン（ボーンマス）、FWビニシウス・ジュニオール（Rマドリー）の8人のみ。初招集5人、国内組6人。
+#   ・突き合わせ（ESPN のW杯ブラジル戦の登録）: 上の8人のうち、先発は6人（ガブリエル・マガリャンイス、ドグラス・サントス、ダニーロ、ブルーノ・ギマランイス、ビニシウス、ラヤン）、途中出場はエンドリッキ、ウェズレイは登録に名前が無い。
+#       → ブラジルのW杯の先発11人のうち、今回の遠征メンバーにいるのは6人（自分で数えた。ゲキサカのメンバー表のとおりなら）。
+#   ・久保の言葉（原文。ゲキサカ。字は変えていない。台本は句点・読点で行に分けた）:
+#       「この試合に勝ったところでW杯でのリベンジを果たせるわけじゃない」
+#       「いまのメンバーを見ても互角に戦えないといけないという話も選手の中では出ていますし、人数だけ見たら僕らのほうがヨーロッパでやっている選手が多かったりするので。個別に言ったらまだまだ世界で僕らの先を行っている選手はいますけど、それでもサッカーは11人でやるものなので、真っ向から勝負ができたらなと思います」
+#       「ここで僕がいいプレーをしてブラジルに勝って、じゃあ『あの時、久保がいたら』って言うのはそれは違う気がする」
+#       「ここから4年後のW杯で上に行こうと思ったら必ず避けて通れない相手だと思うので、そこに対して自分たちが対等以上に戦って。あとはW杯に向けてブラジルということもあるけど、FIFAランキングが上の相手なので、勝って少しでも自分たちのランキングを上げたいなという戦略的な思いもありますね」
+#       「もちろんそれはありますけど、今となっては証明しようがない問題なので、僕は前を向いています」（「俺がいたら」という心残りがあるかを問われて）
+#   ・日程: 11/14 ブラジル戦、11/17 パラグアイ戦（シンガポール）。
+# 前の本との重なり: 20261104_kubo_basque_derby・20261107_kubo_fctokyo_friends は別の話。久保のW杯ブラジル戦の欠場は covered.yaml・scripts に無い。佐野の回（20261111_sano_brazil_rematch）が試合の経緯を扱ったので、今回は経緯を1行にとどめる。
+# 【言わないこと】欠場の理由の詳細／ブラジル戦の起用の予想／FIFAランキングの数字（確かめていない）／結婚の話題。
+# 本人の言葉: あり（久保建英。ゲキサカ）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月12日"
+format: news
+no_main: true
+people: [久保建英, レアル・ソシエダ, ブラジル代表, 日本代表]
+
+short_style: Y
+short_hook_quote: この試合に勝ったところで、
+short_photos:
+  - assets/images/20261112_kubo_brazil_no_revenge/01_v.jpg
+  - assets/images/20261112_kubo_brazil_no_revenge/05_v.jpg
+  - assets/images/20261112_kubo_brazil_no_revenge/03_v.jpg
+  - assets/images/20261112_kubo_brazil_no_revenge/04_v.jpg
+short_question: 久保建英は、14日のブラジル戦で、ピッチに立つと思いますか。
+short_telops: []
+
+theme:
+  id: kubo_brazil_no_revenge
+  league: japan
+  league_name: 日本代表
+  prefix: ""
+  title: 久保建英、ブラジル戦を前に「W杯のリベンジ」を否定。何と言ったのか
+  hook: ""
+  question: 久保建英は、ブラジルとの再戦を前に、なぜ「リベンジ」を否定したのか
+  takeaway: 久保はW杯のブラジル戦に出ておらず、「勝ってもリベンジを果たせるわけじゃない」と話した。ブラジルは今回、W杯の先発11人のうち6人しか来ていない
+
+thumbnail:
+  layout: face
+  line1: 久保建英 ブラジル再戦
+  line2: リベンジではない
+  tags: [久保建英, ブラジル代表, 日本代表]
+  photo: assets/images/20261112_kubo_brazil_no_revenge/01_w.jpg
+  short_photo: assets/images/20261112_kubo_brazil_no_revenge/01_v.jpg
+
+answer: 勝ってもW杯のリベンジにはならない。互角に戦える今のメンバーで、真っ向勝負をしたい
+watch: 14日のブラジル戦（シンガポール）
+
+sections:
+  - id: what
+    main: true
+    heading: 久保建英は「W杯のリベンジ」をどう語ったか
+    tier: 報道
+    telop: 久保建英「リベンジを果たせるわけじゃない」
+    say:
+      - text: 日本代表の久保建英が、14日のブラジル戦を前に、「W杯のリベンジ」を否定しました。
+        image: assets/images/20261112_kubo_brazil_no_revenge/01_w.jpg
+      - voice: 久保建英
+        text: この試合に勝ったところで、
+      - voice: 久保建英
+        text: W杯でのリベンジを果たせるわけじゃない。
+        cont: true
+        emph: true
+      - text: 久保はW杯のブラジル戦に、出ていません。負傷による欠場と伝えられています。
+      - text: では、今回の試合をどう見ているのか。久保は、こう語りました。
+        image: assets/images/20261112_kubo_brazil_no_revenge/05_w.jpg
+      - voice: 久保建英
+        text: いまのメンバーを見ても互角に戦えないといけないという話も、
+      - voice: 久保建英
+        text: 選手の中では出ていますし、
+        cont: true
+      - voice: 久保建英
+        text: 人数だけ見たら僕らのほうが、
+        cont: true
+      - voice: 久保建英
+        text: ヨーロッパでやっている選手が多かったりするので。
+        cont: true
+        emph: true
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463014-463014-fl
+      - https://www.espn.com/soccer/match/_/gameId/760487
+  - id: team
+    heading: 「あの時、久保がいたら」を、久保本人はどう受け止めたか
+    tier: 報道
+    telop: 久保建英「僕は前を向いています」
+    say:
+      - voice: 久保建英
+        text: 個別に言ったら、
+      - voice: 久保建英
+        text: まだまだ世界で僕らの先を行っている選手はいますけど、
+        cont: true
+      - voice: 久保建英
+        text: それでもサッカーは11人でやるものなので、
+        cont: true
+      - voice: 久保建英
+        text: 真っ向から勝負ができたらなと思います。
+        cont: true
+        emph: true
+      - text: 久保は、この試合を4年後のW杯につながる一戦と位置づけています。
+      - text: 報道陣からは、W杯のブラジル戦で「俺がいたら」という心残りがあるか、という質問も出ました。
+        image: assets/images/20261112_kubo_brazil_no_revenge/03_w.jpg
+      - voice: 久保建英
+        text: もちろんそれはありますけど、
+      - voice: 久保建英
+        text: 今となっては証明しようがない問題なので、
+        cont: true
+      - voice: 久保建英
+        text: 僕は前を向いています。
+        cont: true
+        emph: true
+      - voice: 久保建英
+        text: ここで僕がいいプレーをしてブラジルに勝って、
+      - voice: 久保建英
+        text: じゃあ『あの時、久保がいたら』って言うのは、
+        cont: true
+      - voice: 久保建英
+        text: それは違う気がする。
+        cont: true
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463014-463014-fl
+  - id: view
+    viewpoint: true
+    heading: ブラジルは、W杯の先発11人のうち何人が来ているか
+    tier: 背景
+    telop: ブラジルのW杯の先発11人のうち、来ているのは6人
+    say:
+      - text: 見立てです。伝えられている今回のブラジル代表は、W杯のメンバーが8人だけです。
+        card: {type: table, title: 今回のブラジル代表 W杯メンバー8人のW杯ブラジル戦, columns: [選手, W杯 日本戦], rows: [[ガブリエル・マガリャンイス, 先発], [ドグラス・サントス, 先発], [ダニーロ, 先発], [ブルーノ・ギマランイス, 先発], [ビニシウス, 先発], [ラヤン, 先発], [エンドリッキ, 途中出場], [ウェズレイ, 出場なし]], highlight_row: 0}
+      - text: そのうち6人が、W杯の日本戦の先発でした。ブラジルの先発11人のうち、半分を少し超える人数です。
+        card: none
+      - text: 久保が話した「互角」を確かめるのは、14日、シンガポールの一戦。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/760487
+      - https://web.gekisaka.jp/news/japan/detail/?463014-463014-fl

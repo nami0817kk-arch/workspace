@@ -1,0 +1,152 @@
+# 取材メモ（2026年11月11日）マンU、キャリック監督の去就を水曜に協議へ。後任候補にポチェッティーノ氏（すべて報道。ニュースのショート。見せ方 Y＝キャリック監督本人の言葉から始める）
+# 取材: 2026-11-11。requests（ブラウザUA）で BBC Sport・Sky Sports・サッカーキングの本文を読み、site.api.espn.com で試合・順位を確かめた。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: 一覧の ESPN 50430907（Mark Ogden のコラム 11/9。WebFetch の要約は「キャリックは続投の見込み」「ラトクリフの人事を批判」。ポチェッティーノの名前は要約に無い。requests は 202 で空）。
+#   → 題材の中身（ポチェッティーノ・水曜の会合）は BBC と Sky で確かめた。ESPN のコラムは台本には使わない（11/9 時点の筆者の見方で、10日以降の報道と向きが違う＝下の食い違い）。
+# 読んだ出典:
+#   ・BBC Sport「Michael Carrick: Manchester United head coach's future to be discussed at Monaco meeting」（Dan Roan・Sami Mokbel・Simon Stone。11/9 公開・11/10 11:23 GMT 更新。全文を requests で読んだ）:
+#       カリックの去就は水曜（11/11）に、オーナーのラトクリフ卿・CEOのベラダ・フットボール・ディレクターのウィルコックスが**モナコ**で会う場で決まる（もともと予定されていた会合）。
+#       BBC は月曜に「ベラダとウィルコックスが、ラトクリフと多数派のグレイザー家にキャリックの解任を勧める見通しが強まっている」と報じた。グレイザー家にも意見を聞く。**決定の発表は木曜になる可能性**。
+#       ラトクリフはベラダ・ウィルコックスへの支持を保っている（BBC の理解）。解任なら本人に直接伝えたい（クラブ）。キャリックは「状況から話し合いは避けられない」と理解している（BBC）。
+#       ヴィラ戦（4-4）はキャリックの3試合目（ボーンマス戦 0-3 のあと、クラブは続投を選んだ。3試合は1勝1分1敗）。1986-87 シーズン以来最悪の出だし（10試合で1勝）。18位でパレスの1点上。失点19はパレス・イプスウィッチ以外より多い。
+#       **候補**: BBC は10月に「エディ・ハウとナーゲルスマンに打診した」と報道済み。コンテは意欲があると知られている。**ポチェッティーノについては「複数の情報筋が BBC に、オールド・トラッフォードへ移る話に前向き（open to）と話した」**。8月にアメリカ代表との契約を延長。契約には特定の大きな仕事へ移れる条項があると考えられる。アメリカは11/14と11/18にハイチと2試合。
+#   ・BBC チームページ（11/10 夜の時点）: 「Carrick remains Manchester United head coach and is due to take training on Tuesday, as it stands.」（朝7:15 に練習場へ。本人もコーチも解任は告げられていない）。
+#   ・Sky Sports 11/10 13:34「Michael Carrick future: Man Utd head coach position increasingly in doubt with Mauricio Pochettino open to talks」（全文を requests で読んだ）:
+#       「Sky Sports News が把握するところ、最終決定はまだ下されていない」。ポチェッティーノは、クラブから接触があれば話し合いに応じる（would be open to a discussion）。**アメリカ代表との契約の買い取りは約700万ポンドと考えられる**。契約は最近**2030年まで**延長（Sky）。過去に、ユナイテッドは少なくとも2回、ポチェッティーノとこの仕事について話している。
+#       クラブ幹部は国際試合期間でシーズンを見直す。解任の場合は暫定監督を置きたくない。**他の候補とはまだ本格的な話はしていない**。「リヴァプール戦（再来週の週末）までに監督が変わるのかという本当の疑いがある」。
+#   ・Sky Sports 11/9 08:14「Man Utd boss Michael Carrick 'expects' to stay on…」（全文を読んだ）: ヴィラ戦のあとの Sky の Patrick Davison のインタビュー。
+#       Davison:「次の数週間に何が起きると思いますか。辞めるのがいちばんだと思えば、辞めるでしょう」→ Carrick:「それは起きません」。「間違いなく話し合いはある」と問われて「そうですか？」。
+#       **Carrick（英語）: "We understand the situation; we haven't won enough games. But I expect to move forward and keep working on things we've been working on, showing a lot of the good in the game today, tighten up on a few mistakes and win football matches."**
+#       → 台本の本人の言葉は、この英語を私が日本語にしたもの。原文の語順をなぞらず、日本語として通るように直した。「We understand the situation」→「状況は分かっています」、「haven't won enough games」→「十分に勝ててはいません」。
+#   ・サッカーキング 2226204（11/10「降格圏転落のマンU、キャリック監督を解任か…後任候補にポチェッティーノ氏ら浮上」。全文を読んだ）: 『アスレティック』が9日、クラブが解任に踏み切る見通しで後任候補の選定を進めていると報じたとする。最終決定はまだ。**22日のリヴァプール戦前に体制変更が行われるとの見方が強い**。ロマーノも「2度の内部協議を経て立場が極めて危うい」と指摘。**後任候補ではポチェッティーノが有力、ハウとナーゲルスマンもクラブ内で評価が高い**。
+#   ・ESPN（site.api.espn.com eng.1 standings、11/11 取得・events 401879240）: マンU 10試合 1勝5分4敗 勝ち点8 **18位**（得失点差-5）。17位コヴェントリー 勝ち点9、19位サンダーランド 8、20位パレス 7。
+#       マンU 4-4 アストン・ヴィラ（11/8 16:30 UTC・オールド・トラッフォード）: ヴィラ 1分アリソン（アシスト マッギン）・4分ジャクソン → マンU 16分 ブルーノ・フェルナンデス（PK）・44分 ティーレマンス → ヴィラ 48分 マッギン（PK）・53分 ゴレツカ → マンU 90+2分 ジルクゼー・90+6分 ドルグ（ヘッド）。
+#       → 自分で数えた: 0-2 の2点差を 2-2 で追いつき、2-4 の2点差を 4-4 で追いついた（2点差から2度追いついた）。サッカーキングの見出し「2点差を2度追いつく」と一致。
+#       マンUの今後（ESPN schedule）: 11/22 16:30 UTC 敵地でリヴァプール、11/28 ブレントフォード（ホーム）、12/2 ニューカッスル（敵地）。
+# 食い違い: ①ESPN コラム（Ogden、11/9）は「続投の見込み」、BBC（11/10）は「水曜に去就を決める」。→ 台本は10日の BBC・Sky の「決まっていない」で止める。②サッカーキング（アスレティック経由）は「解任の見通し」、Sky は「最終決定はまだ」。→「決まっていない」を先に言う。③米国のハイチ戦: BBC「Nations League の play-off」、Sky「準々決勝」→ 台本は「ハイチとの2試合（14日と18日）」とだけ言う。
+# **公開時の注意**: 水曜（11/11）の会合の結果、または木曜の発表で、この台本は古くなる可能性がある。upload の直前に BBC/Sky を引き直すこと（決定が出ていたら作り直し）。
+# 前の本との重なり: scripts/20261108_man_united_relegation_zone（降格圏・1986年11月以来・キャリックの金曜の言葉）／20261107_carrick_ferguson_success。→ 今回の初出: ヴィラ戦4-4・試合後のキャリックの言葉・水曜の会合と報じられた経緯・ポチェッティーノの名前。「1986年」「降格圏に落ちた」の言い直しはしない。
+# 本人の言葉: あり（キャリック。ヴィラ戦のあと、Sky）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: match
+date: "2026年11月11日"
+format: news
+no_main: true
+people: [マンU, マンチェスター・ユナイテッド, キャリック, ポチェッティーノ, アストン・ヴィラ, リヴァプール]
+
+short_style: Y
+short_hook_quote: 状況は分かっています。十分に勝ててはいません。
+short_photos:
+  - assets/images/20261111_manutd_carrick_pochettino/02_v.jpg
+  - assets/images/20261111_manutd_carrick_pochettino/03_v.jpg
+  - assets/images/20261111_manutd_carrick_pochettino/05_v.jpg
+  - assets/images/20261111_manutd_carrick_pochettino/04_v.jpg
+short_question: マンチェスター・ユナイテッドは、22日のリヴァプール戦もキャリック監督で戦うと思いますか。
+short_telops: []
+
+theme:
+  id: manutd_carrick_pochettino
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: マンU、キャリック監督の去就を協議へ。報じられた後任候補とは
+  hook: ""
+  question: ヴィラ戦のあと、マンUのキャリック監督について何が報じられているのか
+  takeaway: マンUはプレミア10試合で1勝5分4敗の18位。キャリック監督の去就は水曜の会合で話し合われ、後任候補にはポチェッティーノ氏らの名前が挙がっている。最終決定はまだ下されていないと報じられている
+
+thumbnail:
+  layout: versus
+  photos:
+    - assets/images/20261111_manutd_carrick_pochettino/05_w.jpg
+    - assets/images/20261111_manutd_carrick_pochettino/03_w.jpg
+  names: [キャリック, ポチェッティーノ]
+  line1: マンU キャリック監督
+  line2: 去就は水曜に協議
+  tags: [マンチェスター・ユナイテッド, キャリック]
+  photo: assets/images/20261111_manutd_carrick_pochettino/05_w.jpg
+  short_photo: assets/images/20261111_manutd_carrick_pochettino/02_v.jpg
+
+answer: 去就は水曜の会合で話し合われる。ポチェッティーノ氏の名前が挙がるが、最終決定はまだ
+watch: 水曜の会合の結論と、22日のリヴァプール戦（アウェー）
+
+sections:
+  - id: what
+    main: true
+    heading: ヴィラ戦のあと、キャリック監督は去就についてどう答えたのか
+    tier: 報道
+    telop: キャリック監督「十分に勝ててはいません」
+    say:
+      - text: 4対4で引き分けたマンUのキャリック監督が、自分の去就を問われました。
+        short_only: true
+      - voice: キャリック監督
+        text: 状況は分かっています。十分に勝ててはいません。
+        emph: true
+        image: assets/images/20261111_manutd_carrick_pochettino/02_v.jpg
+      - voice: キャリック監督
+        text: でも、これまでの取り組みを続けて、前へ進めると思っています。
+        cont: true
+      - text: 試合は、マンUが2点差を2度追いつく展開でした。
+        image: assets/images/20261111_manutd_carrick_pochettino/05_v.jpg
+        card: {type: table, title: マンU 4-4 アストン・ヴィラ, columns: [分, 得点], rows: [[1分, ヴィラ（アリソン）], [4分, ヴィラ（ジャクソン）], [16分, マンU（Bフェルナンデス PK）], [44分, マンU（ティーレマンス）], [48分, ヴィラ（マッギン PK）], [53分, ヴィラ（ゴレツカ）], [90+2分, マンU（ジルクゼー）], [90+6分, マンU（ドルグ）]], highlight_row: 7}
+      - text: 後半アディショナルタイムの2点で、引き分けに持ち込みました。
+        card: none
+        image: assets/images/20261111_manutd_carrick_pochettino/02_v.jpg
+      - text: ただ、マンUはこれで、プレミアリーグの10試合で、1勝、5引き分け、4敗。
+      - text: 18位の降格圏で、2週間の代表戦の中断に入りました。
+        card: none
+        image: assets/images/20261111_manutd_carrick_pochettino/05_v.jpg
+    official: false
+    sources:
+      - https://www.skysports.com/football/news/13609927/michael-carrick-manchester-united-boss-expects-to-stay-on-despite-club-sitting-in-relegation-zone-after-aston-villa-draw
+      - https://www.espn.com/soccer/match/_/gameId/401879240
+      - https://site.api.espn.com/apis/v2/sports/soccer/eng.1/standings
+  - id: meeting
+    heading: キャリック監督の去就は、水曜のモナコの会合でどう話し合われるのか
+    tier: 報道
+    telop: 水曜、モナコで会合。最終決定はまだ
+    say:
+      - text: マンUのキャリック監督の去就は、水曜にモナコで話し合われます。
+        image: assets/images/20261111_manutd_carrick_pochettino/05_v.jpg
+      - text: 集まるのは、オーナーのラトクリフ氏と、クラブ幹部2人。
+      - text: 幹部2人が解任を勧める見通しが強まっている、とされています。
+      - text: ただ、最終的な決定は、まだ下りていないとのことです。
+      - text: 結論が発表されるのは、木曜になる可能性もあるということです。
+    official: false
+    sources:
+      - https://www.bbc.co.uk/sport/football/articles/cmy0r041ed0po
+      - https://www.skysports.com/football/news/13610412/michael-carrick-future-man-utd-head-coach-position-increasingly-in-doubt-with-mauricio-pochettino-open-to-talks
+      - https://www.soccer-king.jp/news/world/eng/20261110/2226204.html
+  - id: pochettino
+    heading: 後任の候補には、誰の名前が挙がっているのか
+    tier: 報道
+    telop: 候補はポチェッティーノ氏ら。すべて報道
+    say:
+      - text: 後任の候補として、複数の名前が挙がっています。
+        image: assets/images/20261111_manutd_carrick_pochettino/03_v.jpg
+        card: {type: table, title: 後任候補として報じられている名前, columns: [名前, 報じられていること], rows: [[ポチェッティーノ氏, 米国代表監督。話し合いに応じる姿勢と報道], [ハウ氏, 元ニューカッスル監督。10月に打診と報道], [ナーゲルスマン氏, 元ドイツ代表監督。10月に打診と報道], [コンテ氏, 元チェルシー監督。意欲があると報道]], highlight_row: 0}
+      - text: 中でも有力と見られているのが、アメリカ代表を率いるポチェッティーノ氏です。
+        card: none
+      - text: ポチェッティーノ氏は、マンUへ移る話に前向きだと伝えられています。
+      - text: アメリカ代表との契約は、8月に延長されたばかり。
+      - text: 契約を買い取る費用は、約700万ポンドと考えられています。
+    official: false
+    sources:
+      - https://www.bbc.co.uk/sport/football/articles/cmy0r041ed0po
+      - https://www.skysports.com/football/news/13610412/michael-carrick-future-man-utd-head-coach-position-increasingly-in-doubt-with-mauricio-pochettino-open-to-talks
+      - https://www.soccer-king.jp/news/world/eng/20261110/2226204.html
+  - id: view
+    viewpoint: true
+    heading: 22日のリヴァプール戦まで、マンUの監督問題はどう動くか
+    tier: 背景
+    telop: 次は22日、リヴァプール戦（アウェー）
+    say:
+      - text: 見立てです。キャリック監督の去就は、水曜の会合から木曜にかけて動く可能性があります。
+        image: assets/images/20261111_manutd_carrick_pochettino/02_v.jpg
+        card: {type: table, title: マンU これから, columns: [日付, できごと], rows: [[11月11日（水）, モナコで去就を話し合う（報道）], [11月14日・18日, ポチェッティーノ氏のアメリカ代表がハイチと2試合], [11月22日, リヴァプール戦（アウェー）]], highlight_row: 2}
+      - text: ポチェッティーノ氏のアメリカ代表は、14日と18日にハイチと2試合を戦います。
+        card: none
+      - text: マンUの失点は19。これより多いのは、パレスとイプスウィッチだけです。
+      - text: 次の試合は、22日のリヴァプール戦です。
+    official: false
+    sources:
+      - https://www.bbc.co.uk/sport/football/articles/cmy0r041ed0po
+      - https://www.espn.com/soccer/scoreboard/_/league/eng.1/date/20261122

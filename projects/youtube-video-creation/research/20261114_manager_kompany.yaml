@@ -1,0 +1,446 @@
+# 監督紹介：ヴァンサン・コンパニ（11/14 土、シリーズ「監督紹介」、key: manager_kompany、型は news）。9節の型。見本は 20261110_manager_emery、同日組の 20261112_manager_alonso。
+# 順：フック→基礎DATA→日本との接点（2018年W杯 ベルギー対日本）→歩みと転機→戦術の色（実例の試合1つ）→数字で見る→本人の言葉→マル秘話→見立て。
+#
+# **題材の選び方（2026-11-11）**：既出14人（…エメリ）と、同じ11/12 の分のアロンソ以外の大物。
+#   ・ジダン（10/03・10/18 と重なる）、森保一（10/06 に「監督の経歴」で本が出ている）は外した。
+#   ・コンパニ：バイエルン監督。英語版 Wikipedia の冒頭で確認（is the head coach of Bundesliga club Bayern Munich）。「降格したバーンリーの監督が、翌年にバイエルンで優勝」という問いが立つ。
+#   **重なりの確認（2026-11-11 に自分で）**：posted.json に kompany の本は無い。scripts/20261024_kompany_hospital.md はニュースのショート（練習中に倒れて病院へ）。
+#   バイエルンは 10/11 財政・10/21 クラブ紹介で出ているが、クラブの話で監督の経歴は扱っていない。同じ 11/14 の他の担当（research/20261112_picks.txt）：財政＝リーズ、代表＝韓国。重ならない。
+#   病気の話（10/24 のショート）は入れない。
+#
+# **いまの立場**：バイエルン・ミュンヘン監督（2024-05-29 から。2025-10-21 に契約を2029-06-30 まで延長）。
+#   ○ 英語版 Wikipedia「Vincent Kompany」（2026-11-11 に読む）：「is the head coach of Bundesliga club Bayern Munich」「signed a new contract extension that will keep him at the club until 30 June 2029」。
+#
+# **通算（台本とサムネをそろえる）**＝英語版「Managerial statistics」（As of match played 28 October 2026）：
+#   アンデルレヒト（2019年 選手兼任）4試合0勝2分2敗／アンデルレヒト（2020-08〜2022-06）92試合42勝32分18敗／バーンリー 96試合41勝24分31敗／バイエルン 124試合93勝19分12敗。
+#   Total 316試合176勝77分63敗。自分で足して一致（4+92+96+124＝316、0+42+41+93＝176、2+32+24+19＝77、2+18+31+12＝63）。下部組織は無い。
+#   アンデルレヒトは2つの就任期間を合算：96試合42勝（勝率 43.8%）。バーンリー 42.7%、バイエルン 75.0%、通算 55.7%（表の値と一致、自分で割って確認）。
+#   ※バイエルンの試合数は 10/28 時点。以降の試合は含まない。台本の数字は「10月28日までの通算」と扱う（サムネの表の見出しに日付）。
+#
+# **歩み**（英語版本文）：
+#   2019-05 マンチェスター・シティを離れ、古巣アンデルレヒトの選手兼監督に。2020-08-17 に引退して正式に監督（4季契約）。2021-22 はカップ決勝でヘントにPK負け、リーグ3位。
+#   2022-06-14 バーンリー（降格直後のチャンピオンシップ）。2022-23 は勝点101（46試合で負け3）、チャンピオンシップ優勝・昇格。
+#   2023-24 プレミアは19位、勝点24（クラブ最少）で降格。
+#   2024-05-29 バイエルン（3年契約）。バーンリーへの補償金は報道で約1,020万ポンド。
+#   2024-25 ブンデス優勝（5月4日決定。34試合で負け2）。2024-09 チャンピオンズリーグで ディナモ・ザグレブに9-2（CLの試合で8点を超えた初の監督）、3試合で20ゴール。
+#   2025-26 スーパー杯（シュツットガルト）→ブンデス連覇（リーグ最多の122得点。就任から2季連続優勝は、グアルディオラ、フリック、ハッペルに続く4人目）→CLは準決勝でPSGに敗退→DFB杯決勝でシュツットガルトに3-0（6年ぶり）。2026年のスーパー杯も優勝（Honours）。
+#
+# **戦術の色**＝2024年9月 バイエルン 9-2 ディナモ・ザグレブ（英語版本文）。パスをつなぐ、ボールを持つスタイル。グアルディオラのシティに近い、とされる（Managerial style）。直接的で体の強さを使うディーチェのバーンリーとは大きく違う、とも。
+#
+# **日本との接点**：2018年ロシアW杯 決勝トーナメント1回戦 ベルギー 3-2 日本（ロストフ）。コンパニは決勝トーナメントで全時間に出場（英語版 Kompany: playing every minute in the knockout phase）。スコア・得点者は「2018 FIFA World Cup knockout stage」で確認。
+#
+# **本人の言葉**：Sports Mole 2026-02-19（バイエルンの会員向けイベントでの発言。requests で本文を読んだ。英語に訳された記事）：
+#   "It's not exactly about tactics. It's about mentality, about always wanting to win everything, about treating every game as an important game..." / "The best manager I ever had was, without a doubt, Pep Guardiola. He expanded my understanding of football." / "You absorb something from each manager to write your own story."
+# **マル秘話**（英語版 Personal life）：2018年にマンチェスター・ビジネス・スクールで MBA。フランス語・オランダ語・ドイツ語・英語を話す（イタリア語・スペイン語は中級）。2013年、ブリュッセルの若者のためにベルギー3部のクラブ「ブレード」を買った。
+#
+# **入れなかったもの**：10/24 の病院の件（病気）、父の政治・家族・家庭（私生活）、レストランの失敗、バーンリーの「未熟」と評した記事（監督を小さく見せる）、退場処分の件、FotMob・女子・ニュースの反応。
+date: 2026年11月11日
+slot: other_1
+format: news
+series: 監督紹介
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- コンパニ
+theme:
+  end_bg: assets/images/20261114_manager_kompany/07_w.jpg
+  id: manager_kompany
+  league: germany
+  league_name: ブンデスリーガ
+  kind: other
+  topic: コンパニ
+  title: コンパニ、バイエルン監督はどんな人？降格の翌年に、なぜ王者を任されたのか
+  question: バイエルン監督のヴァンサン・コンパニは、どんな人なのか。プレミアリーグで降格した監督が、なぜ翌年にバイエルンで優勝できたのか
+  lead: バイエルン監督、ヴァンサン・コンパニ。
+  opening_image: assets/images/20261114_manager_kompany/04_o.jpg
+  takeaway: バーンリーの勝率42.7%に対して、バイエルンは75.0%。2シーズンとも優勝し、2025-26は122得点でリーグ記録。プレミアで降格した翌年に、同じパスをつなぐ形で勝ち切った。チャンピオンズリーグは2025-26に準決勝まで進み、その先に届くかを見ている
+  short_title: コンパニ、降格の翌年にバイエルンで優勝
+  nameplate: ヴァンサン・コンパニ｜バイエルン監督
+thumbnail:
+  line1: コンパニ、316試合176勝
+  line2: 降格の翌年、バイエルンで優勝
+  tags: []
+  photo: assets/images/20261114_manager_kompany_b/panel_01.jpg
+  board: assets/images/20261114_manager_kompany_b/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261114_manager_kompany/07_v.jpg
+sections:
+- id: hook
+  main: true
+  heading: プレミアで降格した翌年に、バイエルンで優勝。コンパニとは、どんな監督なのか
+  tier: 報道
+  telop: 降格から1年。バイエルンの優勝監督に
+  narrator: 解説
+  card: &hook_stats
+    type: stats
+    title: コンパニの2シーズン（バイエルン）
+    items:
+    - ['2', 回, ブンデスリーガは2季とも優勝]
+    - ['122', 点, 2025-26のリーグ得点。リーグ記録]
+    - ['24', 点, 前の年、バーンリーの勝ち点。降格]
+    focus: 0
+  say:
+  - text: プレミアリーグで降格した翌年に、バイエルンで優勝。それがコンパニです。
+    image: assets/images/20261114_manager_kompany/04_w.jpg
+    emph: true
+    card: none
+  - text: 2024年5月、バーンリーは勝ち点24で降格しました。クラブ最少の勝ち点でした。
+    card:
+      <<: *hook_stats
+      focus: 2
+  - text: その月に、バイエルンの監督に決まります。
+    card:
+      <<: *hook_stats
+      focus: 2
+  - text: ブンデスリーガは、1年目も2年目も優勝しました。
+    image: assets/images/20261114_manager_kompany/07_w.jpg
+    card:
+      <<: *hook_stats
+      focus: 0
+  - text: 2025-26は、ブンデスリーガの1シーズン最多、122ゴールを奪いました。
+    emph: true
+    card:
+      <<: *hook_stats
+      focus: 1
+  sources:
+  - https://en.wikipedia.org/wiki/Vincent_Kompany
+- id: data
+  heading: コンパニは、いつ、どこで、どんな道を歩いた人か
+  tier: 報道
+  telop: ヴァンサン・コンパニの基礎DATA
+  narrator: 解説
+  card: &data_table
+    type: table
+    title: ヴァンサン・コンパニ（40歳）の基礎DATA
+    columns: [項目, 中身]
+    rows:
+    - [生年月日, 1986年4月10日（ベルギー・ブリュッセル）]
+    - [選手のころ, センターバック。シティで11年、8年主将]
+    - [ベルギー代表, 89試合。W杯2回]
+    - [監督, アンデルレヒト、バーンリー]
+    - [いま, 2024年5月からバイエルン監督]
+    highlight_row: 0
+  say:
+  - text: コンパニは1986年4月10日、ブリュッセルの生まれ。40歳です。
+    image: assets/images/20261114_manager_kompany/05_w.jpg
+    card:
+      <<: *data_table
+      highlight_row: 0
+  - text: 現役のころはセンターバック。
+    card: none
+  - text: マンチェスター・シティで11年、うち8年は主将でした。
+    image: assets/images/20261114_manager_kompany/04_w.jpg
+    card: none
+  - text: ベルギー代表は89試合。2014年と2018年のワールドカップに出ました。
+    card: none
+  - text: 監督は、アンデルレヒト、バーンリーを経て、2024年からバイエルンです。
+    image: assets/images/20261114_manager_kompany/05_w.jpg
+    card:
+      <<: *data_table
+      highlight_row: 4
+  sources:
+  - https://en.wikipedia.org/wiki/Vincent_Kompany
+- id: japan
+  heading: 2018年のロストフ。コンパニと日本は、どこでつながるのか
+  tier: 報道
+  telop: 2018年ワールドカップ、ベルギー対日本
+  narrator: 解説
+  card: &jp_table
+    type: table
+    title: 2018年ワールドカップ 決勝トーナメント1回戦
+    columns: [項目, 中身]
+    rows:
+    - [試合, ベルギー対日本]
+    - [場所, ロシア・ロストフ]
+    - [結果, ベルギー 3-2 日本]
+    - [コンパニ, ベルギーの主力。決勝トーナメントは全時間に出場]
+    highlight_row: 0
+  say:
+  - text: 日本との縁は、2018年のワールドカップです。
+    image: assets/images/20261114_manager_kompany/05_w.jpg
+    card:
+      <<: *jp_table
+      highlight_row: 0
+  - text: 決勝トーナメント1回戦、ロストフでのベルギー対日本。
+    card:
+      <<: *jp_table
+      highlight_row: 1
+  - text: 日本が2対0とリードしましたが、ベルギーが3対2で逆転勝ちしました。
+    image: assets/images/20261114_manager_kompany/07_w.jpg
+    card: none
+  - text: コンパニは、この大会の決勝トーナメントに、全時間出場しています。
+    image: assets/images/20261114_manager_kompany/05_w.jpg
+    card:
+      <<: *jp_table
+      highlight_row: 3
+  - text: ベルギーはこの大会で準決勝まで進み、3位。国の最高の成績でした。
+    emph: true
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Vincent_Kompany
+  - https://en.wikipedia.org/wiki/2018_FIFA_World_Cup_knockout_stage
+  - https://inside.fifa.com/tournaments/mens/worldcup/2018russia/news/worldcupathome-belgium-japan-russia2018-3071468
+- id: career
+  heading: 選手兼監督から、降格、そしてバイエルンへ。コンパニは何を積み上げたのか
+  tier: 背景
+  telop: 歩みと転機。アンデルレヒト、バーンリー、バイエルン
+  narrator: 解説
+  card: &career_tl
+    type: timeline
+    title: コンパニの歩み
+    rows:
+    - [2019年, アンデルレヒトの選手兼監督に]
+    - [2023年, バーンリーをチャンピオンシップ優勝へ。勝ち点101]
+    - [2024年, バーンリーがプレミアで降格。バイエルンの監督に]
+    - [2025年, ブンデスリーガ優勝]
+    - [2026年, ブンデスリーガ連覇とDFB杯]
+    focus: 0
+  say:
+  - text: コンパニが監督になったのは、2019年。
+    image: assets/images/20261114_manager_kompany/05_w.jpg
+    card:
+      <<: *career_tl
+      focus: 0
+  - text: シティを離れ、古巣アンデルレヒトの選手兼監督になります。
+    card:
+      <<: *career_tl
+      focus: 0
+  - text: 翌年に現役を引退し、監督に専念しました。
+    card: none
+  - text: 2022年6月には、降格直後のバーンリーへ。
+    image: assets/images/20261114_manager_kompany/04_w.jpg
+    card: none
+  - text: 2022-23は勝ち点101で、2部を優勝。46試合で負けは3つでした。
+    emph: true
+    card:
+      <<: *career_tl
+      focus: 1
+  - text: ところが、プレミアリーグの1季目は19位。勝ち点24で、クラブ最少でした。
+    image: assets/images/20261114_manager_kompany/05_w.jpg
+    card:
+      <<: *career_tl
+      focus: 2
+  - text: その2024年5月、バイエルンが3年契約で迎えます。
+    card:
+      <<: *career_tl
+      focus: 2
+  - text: 1年目は34試合で負け2つ。5月に優勝を決めました。
+    image: assets/images/20261114_manager_kompany/05_w.jpg
+    card:
+      <<: *career_tl
+      focus: 3
+  - text: 2年目はリーグ連覇に、ドイツ杯。決勝はシュツットガルトに3対0でした。
+    emph: true
+    card:
+      <<: *career_tl
+      focus: 4
+  - text: 就任から2季続けてブンデスリーガを制した監督は、4人目です。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Vincent_Kompany
+- id: style
+  heading: 1試合で9点を奪った夜。コンパニのサッカーは、どんな形なのか
+  tier: 報道
+  telop: 戦術の色。ボールを持つ、パスをつなぐ形
+  narrator: 解説
+  card: &style_doc
+    type: document
+    label: 2024年9月 バイエルン対ディナモ・ザグレブ
+    paragraphs:
+    - 9対2。チャンピオンズリーグ。
+    - 1試合で8点を超えた、CL初の監督。
+    - 前後の3試合で、合わせて20ゴール。
+    - ボールを持ち、パスをつなぐ形。グアルディオラのシティに近い。
+    highlight:
+    - 9対2
+    - 20ゴール
+  say:
+  - text: 形がよく出たのが、2024年9月、チャンピオンズリーグのディナモ・ザグレブ戦です。
+    image: assets/images/20261114_manager_kompany/04_w.jpg
+    card: *style_doc
+  - text: 9対2の勝ちです。
+    emph: true
+    callword: 9対2
+    card: *style_doc
+  - text: 1試合で8点を超えたのは、このCLでは初めての監督でした。
+    card: *style_doc
+  - text: リーグ戦の2試合とあわせて、3試合で20ゴールです。
+    image: assets/images/20261114_manager_kompany/07_w.jpg
+    card: none
+  - text: コンパニのサッカーは、ボールを持ち、後ろからパスをつなぐ形。
+    card: none
+  - text: シティで教わったグアルディオラのやり方に近い、と言われます。
+    image: assets/images/20261114_manager_kompany/05_w.jpg
+    card: none
+  - text: バーンリーの前の監督が好んだ、長いボールと体の強さを使う形とは、大きく違います。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Vincent_Kompany
+- id: numbers
+  heading: 316試合で176勝。数字で見ると、どこで強いのか
+  tier: 報道
+  telop: 通算176勝。勝率はバイエルンの75.0%がいちばん上
+  narrator: 解説
+  card: &rate_bars
+    type: bars
+    title: コンパニの勝率（チームごと、%）
+    unit: '%'
+    items:
+    - label: バーンリー
+      value: 42.7
+    - label: アンデルレヒト
+      value: 43.8
+    - label: バイエルン
+      value: 75.0
+      highlight: true
+  say:
+  - text: ここからは、コンパニの成績を数字で。
+    image: assets/images/20261114_manager_kompany/04_w.jpg
+    card: &total_stats
+      type: stats
+      title: コンパニの監督通算（2019年から）
+      items:
+      - ['316', 試合, 3つのクラブ]
+      - ['176', 勝, 引き分け77・負け63]
+      - ['56', '%', 勝率]
+      focus: 0
+  - text: 2019年からの通算は316試合。勝ったのは176試合です。
+    emph: true
+    card:
+      <<: *total_stats
+      focus: 1
+  - text: クラブごとに割ると、いちばん高いのはバイエルンです。
+    image: assets/images/20261114_manager_kompany/05_w.jpg
+    card: *rate_bars
+  - text: 124試合で93勝。勝率は75.0%。
+    card: *rate_bars
+  - text: バーンリーは96試合で41勝。42.7%でした。
+    card: *rate_bars
+  - text: プレミアリーグで1年降格した直後に、勝率を30ポイント以上、上げたことになります。
+    image: assets/images/20261114_manager_kompany/05_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Vincent_Kompany
+- id: words
+  heading: グアルディオラから、コンパニは何を持ち帰ったのか
+  tier: 報道
+  telop: コンパニの言葉。2026年2月、バイエルンの会員向けイベントで
+  narrator: 解説
+  card: &words_doc
+    type: document
+    label: コンパニの言葉（訳）。2026年2月
+    paragraphs:
+    - 戦術の話ではありません。心構えの話です。
+    - どの試合も、大事な試合として扱う。
+    - 一人ひとりの監督から何かを吸収して、自分の物語を書く。
+    highlight:
+    - 心構え
+    - どの試合も、大事な試合
+  say:
+  - text: 2026年2月、バイエルンの会員向けイベントで、コンパニはこう話しました。
+    image: assets/images/20261114_manager_kompany/05_w.jpg
+    card: *words_doc
+  - voice: コンパニ
+    text: 戦術の話ではありません。心構えの話です。
+  - voice: コンパニ
+    text: どの試合も、大事な試合として扱う。
+    cont: true
+    image: assets/images/20261114_manager_kompany/04_w.jpg
+    card: none
+  - voice: コンパニ
+    text: 一人ひとりの監督から何かを吸収して、自分の物語を書くのです。
+    cont: true
+    pause: 0.5
+  - text: これまででいちばんの監督は、間違いなくグアルディオラだ、とも語っています。
+    image: assets/images/20261114_manager_kompany/07_w.jpg
+    card: none
+  quotes_from:
+  - https://www.sportsmole.co.uk/football/bayern-munich/news/its-not-exactly-about-tactics--kompany-reveals-biggest-lesson-from-guardiola_592258.html
+  sources:
+  - https://www.sportsmole.co.uk/football/bayern-munich/news/its-not-exactly-about-tactics--kompany-reveals-biggest-lesson-from-guardiola_592258.html
+- id: secret
+  heading: 数字に出ない話。コンパニが現役のころに学んでいたことは何か
+  tier: 背景
+  telop: 現役のころに MBA。4つの言葉を話す
+  narrator: 解説
+  card: &sec_table
+    type: table
+    title: 数字の外にある話
+    columns: [いつ, 何があったか]
+    rows:
+    - [2013年, ブリュッセルの若者のため、3部のクラブ「ブレード」を買う]
+    - [2018年, マンチェスター・ビジネス・スクールで MBA]
+    - [話す言葉, フランス語、オランダ語、ドイツ語、英語]
+    - [2024年, 'バーンリーに補償金。報道では約1000万ポンド']
+    highlight_row: 1
+  say:
+  - text: では、数字の外の話を。
+    image: assets/images/20261114_manager_kompany/07_w.jpg
+    card: none
+  - text: コンパニは2018年、現役のまま、経営学の修士号を取りました。
+    card:
+      <<: *sec_table
+      highlight_row: 1
+  - text: 話す言葉は、フランス語、オランダ語、ドイツ語、英語。
+    image: assets/images/20261114_manager_kompany/05_w.jpg
+    card:
+      <<: *sec_table
+      highlight_row: 2
+  - text: 2013年には、ベルギー3部のクラブ「ブレード」を買いました。
+    card:
+      <<: *sec_table
+      highlight_row: 0
+  - text: 地元の若者に、スポーツの場を作るためでした。
+    card:
+      <<: *sec_table
+      highlight_row: 0
+  - text: バーンリーへの補償金は、監督として歴代でも高い額のひとつと報じられました。
+    image: assets/images/20261114_manager_kompany/04_w.jpg
+    card:
+      <<: *sec_table
+      highlight_row: 3
+  sources:
+  - https://en.wikipedia.org/wiki/Vincent_Kompany
+- id: view
+  viewpoint: true
+  heading: 見立て・降格のあとに75%。チャンピオンズリーグでも勝ち切れるのか
+  tier: 背景
+  telop: 勝率はバーンリー42.7%、バイエルン75.0%
+  narrator: 解説
+  card: &view_table
+    type: table
+    title: 自分で割ってみた（コンパニのクラブごとの勝率）
+    columns: [クラブ, 試合, 勝率]
+    rows:
+    - [アンデルレヒト, '96', 43.8%]
+    - [バーンリー, '96', 42.7%]
+    - [バイエルン, '124', 75.0%]
+    highlight_row: 2
+  say:
+  - text: 見立てです。コンパニの勝率を、クラブごとに割りました。
+    image: assets/images/20261114_manager_kompany/05_w.jpg
+    card: *view_table
+  - text: アンデルレヒトとバーンリーは、どちらも40%台でした。
+    card:
+      <<: *view_table
+      highlight_row: 0
+  - text: バイエルンは、そこから32ポイント上です。
+    emph: true
+    mark: {kind: circle, row: 2, col: 2}
+    card:
+      <<: *view_table
+      highlight_row: 2
+  - text: やり方は、ボールを持つ形のまま。変わったのは、選手の層だと考えます。
+    image: assets/images/20261114_manager_kompany/05_w.jpg
+    card: none
+  - text: 一方、チャンピオンズリーグでは、2025-26に準決勝まで進みました。
+    card: none
+  - text: 2025-26は、パリ・サンジェルマンに敗れました。
+    card: none
+  - text: 国内で勝ちきった形が、ヨーロッパでも届くか。
+    image: assets/images/20261114_manager_kompany/04_w.jpg
+    card: none
+  - text: 次のチャンピオンズリーグに注目です。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Vincent_Kompany

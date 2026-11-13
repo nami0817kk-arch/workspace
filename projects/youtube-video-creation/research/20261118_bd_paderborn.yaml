@@ -1,0 +1,448 @@
+format: news
+voice_min: 0
+slot: other_1
+date: 2026年11月12日
+people:
+- パーダーボルン
+- シュテフェン・バウムガルト
+- ウーヴェ・ヒューネマイアー
+- マリオ・ヴランチッチ
+- ラルフ・ケッテマン
+short_title: パーダーボルン、3年連続の降格順位から1部へ
+series: ブンデスリーガチーム紹介
+theme:
+  id: bd_paderborn
+  league: germany
+  league_name: ブンデスリーガ
+  kind: other
+  topic: パーダーボルン
+  title: パーダーボルンは3年連続で降格の順位。なぜ1部に3度目の昇格ができたのか？
+  question: どんなクラブなのか
+  hook: ''
+  lead: ドイツ西部、ヴェストファーレンの町、パーダーボルン。
+  opening_image: assets/stats/bd_paderborn_data_t.png
+  takeaway: 11月12日時点で、勝ち点10は18クラブ中13位で、17位シャルケの6を4、16位ウニオン・ベルリンの7を3上回る。引き分けは4つで、ウニオンと並んで最多。アウェー4試合の勝ち点は3で、引き分けを勝ちに変えられるかが物差し
+thumbnail:
+  line1: パーダーボルン
+  line2: 3年連続の降格順位から1部へ
+  crest_main:
+  - パーダーボルン
+  tags:
+  - パーダーボルン
+  - SCパーダーボルン
+  - ブンデスリーガ
+  - 3度目の昇格
+  layout: classic
+  board: assets/stats/bd_paderborn_data_t.png
+sections:
+- id: data
+  heading: いま見る理由と基礎DATA
+  main: true
+  tier: 背景
+  telop: 2014年から3年連続で降格の順位。2026年に3度目の1部昇格。今季は9試合で3敗4分け
+  narrator: キャスター
+  say:
+  - text: 2014年から3年続けて、1部でも2部でも3部でも、降格する順位でした。
+    image: assets/stats/bd_paderborn_data_r1.png
+    no_telop: true
+  - text: それが2026年に、3度目の1部昇格を果たしました。
+    image: assets/stats/bd_paderborn_data_r2.png
+    no_telop: true
+  - text: 今季は9試合を終えて、負けは3つ。引き分けは4つです。
+    image: assets/stats/bd_paderborn_data_r3.png
+    no_telop: true
+  - image: assets/stats/bd_paderborn_data0.png
+    text: 合併したのは**1985年**。クラブ名の「07」は、前身の創立年、1907年に由来します。
+    no_telop: true
+  - image: assets/stats/bd_paderborn_data1.png
+    text: クラブの色は、青と黒。
+    no_telop: true
+  - image: assets/stats/bd_paderborn_data2.png
+    text: ホームタウンは、ノルトライン＝ヴェストファーレン州のパーダーボルンです。
+    no_telop: true
+  - image: assets/backgrounds/stadium_パーダーボルン.png
+    text: 本拠地はホーム・デラックス・アレーナ。収容は**1万5000人**です。
+  - image: assets/stats/bd_paderborn_data4.png
+    text: 会員は**1万1300人**います。
+    no_telop: true
+  - image: assets/stats/bd_paderborn_cups.png
+    text: タイトルは、地域のカップ優勝が**9回**。
+    no_telop: true
+  - image: assets/stats/bd_paderborn_data6.png
+    text: 1部には、2014年、2019年、2026年と、3回上がっています。
+    no_telop: true
+  - image: assets/stats/bd_paderborn_data7.png
+    text: 初めての1部で、第4節のあとには、首位に立ちました。
+    no_telop: true
+  - image: assets/stats/bd_paderborn_data8.png
+    text: 昨シーズンは、2部で**3位**。入れ替え戦に勝って、昇格を決めました。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/SC_Paderborn_07
+  - https://en.wikipedia.org/wiki/2026–27_SC_Paderborn_07_season
+  - https://de.wikipedia.org/wiki/SC_Paderborn_07
+  - https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings
+  bg: assets/backgrounds/stadium_パーダーボルン_in.png
+  official: false
+- id: rise
+  heading: 1部から3部まで落ちたパーダーボルンは、どうやって1部に戻ってきたのか
+  tier: 背景
+  telop: 2014年に初の1部。1部と2部で最下位、3部も18位。2017年から2年連続で昇格
+  narrator: 解説
+  main: true
+  say:
+  - text: 2014年。パーダーボルンは、初めての1部に上がります。
+    card:
+      type: table
+      title: パーダーボルンの歩み
+      columns:
+      - 年
+      - 出来事
+      rows:
+      - - 2014-15
+        - 1部で18位、降格
+      - - 2015-16
+        - 2部で最下位、降格
+      - - 2016-17
+        - 3部で18位
+      - - 2017-18
+        - 3部2位、2部へ
+      - - 2018-19
+        - 2部2位、1部へ
+  - ただ、1部は1年で終わります。最終順位は、18位でした。
+  - 翌2015年から16年は、2部でも18位。3部に落ちます。
+  - text: 2016年から17年は、3部でも18位。3年続けて、降格の順位でした。
+    card: none
+    image: assets/backgrounds/stadium_パーダーボルン.png
+  - ところが、ミュンヘン1860がライセンスを得られず、4部へ移ります。
+  - おかげでパーダーボルンは、3部に残ることができました。
+  - 立て直したのは、シュテフェン・バウムガルト。
+  - 監督になった4月から、5試合で勝ち点11を取ります。
+  - 翌季は2位で、2部へ。その次の年も2位で、1部へ戻りました。
+  - 2019年から20年の1部は、勝ち点20で18位。1年で、2部に戻ります。
+  sources:
+  - https://de.wikipedia.org/wiki/SC_Paderborn_07
+  - https://en.wikipedia.org/wiki/SC_Paderborn_07
+  bg: assets/backgrounds/stadium_パーダーボルン_in.png
+  official: false
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: クラブの色は青と黒。本拠地の名前は、これまでに4つ。ヨーロッパの試合では別の名前
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - クラブの色
+      - 青と黒
+    - - 本拠地の名前
+      - これまでに4つ
+    - - ヨーロッパでの名前
+      - SCパーダーボルン07アレーナ
+  say:
+  - text: クラブの色は、青と黒です。
+    image: assets/backgrounds/stadium_パーダーボルン_in.png
+  - パーダーボルンの本拠地の名前は、命名権でこれまでに4つあります。
+  - いまの名前は、ホーム・デラックス・アレーナです。
+  - ヨーロッパの試合では、「SCパーダーボルン07アレーナ」と呼ばれます。
+  sources:
+  - https://en.wikipedia.org/wiki/SC_Paderborn_07
+  - https://en.wikipedia.org/wiki/Home_Deluxe_Arena
+  - https://de.wikipedia.org/wiki/SC_Paderborn_07
+  bg: assets/backgrounds/stadium_パーダーボルン_in.png
+  official: false
+- id: episode
+  heading: パーダーボルンは2026年、なぜ3位から1部に上がれたのか
+  tier: 背景
+  telop: 2025年から26年の2部は3位。入れ替え戦でヴォルフスブルクに合計2対1
+  narrator: 解説
+  card:
+    type: table
+    title: 2025年から26年の2部
+    columns: &id001
+    - ''
+    - ''
+    rows:
+    - - 最終節の前
+      - 3チームが勝ち点59
+  say:
+  - text: 2025年から26年の2部。最終節を前に、3つのクラブが勝ち点59で並びました。
+    image: assets/backgrounds/stadium_パーダーボルン_in.png
+  - エルフェルスベルク、ハノーファー、そしてパーダーボルンです。
+  - 自動昇格は2枠。優勝のシャルケは、すでに決まっていました。
+  - text: 2位は、エルフェルスベルク。パーダーボルンは、3位になりました。
+    card:
+      type: table
+      title: 2025年から26年の2部
+      columns: *id001
+      rows:
+      - - 最終順位
+        - 3位（2位はエルフェルスベルク）
+  - 3位は、自動では上がれません。
+  - 入れ替え戦の相手は、1部のヴォルフスブルクでした。
+  - text: 1試合目は、アウェーで0対0の引き分け。
+    card:
+      type: table
+      title: 2025年から26年の2部
+      columns: *id001
+      rows:
+      - - 入れ替え戦
+        - ヴォルフスブルクに合計2対1
+  - 2試合目は、ホームです。延長にもつれ込み、2対1で勝ちました。
+  - 合計は2対1の勝ち。パーダーボルンは、3度目の1部を決めました。
+  sources:
+  - https://de.wikipedia.org/wiki/SC_Paderborn_07
+  - https://en.wikipedia.org/wiki/SC_Paderborn_07
+  bg: assets/backgrounds/stadium_パーダーボルン_in.png
+  official: false
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - &id002
+      - バウムガルト
+      - 2017-2021
+      - 3部から1部へ
+  say:
+  - text: バウムガルトは、パーダーボルンの監督を務めた人です。
+    image: assets/photos/bd/paderborn/paderborn_legend_54b71a91.jpg
+  - 2017年の4月から、2021年までです。
+  - 3部で18位だったチームを、2017年から18年に2位へ。
+  - 翌年は2部でも2位に入り、1部へ連れ戻しました。
+  sources:
+  - https://en.wikipedia.org/wiki/Steffen_Baumgart
+  - https://en.wikipedia.org/wiki/Uwe_H%C3%BCnemeier
+  - https://en.wikipedia.org/wiki/Mario_Vran%C4%8Di%C4%87
+  - https://de.wikipedia.org/wiki/SC_Paderborn_07
+  bg: assets/backgrounds/stadium_パーダーボルン_in.png
+  official: false
+- id: legends2
+  heading: このクラブを語る3人（2人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id002
+    - &id003
+      - ヒューネマイアー
+      - 2013-2023に2度
+      - 182試合8得点
+  say:
+  - text: ヒューネマイアーは、パーダーボルンで2度プレーしたディフェンダー。
+    image: assets/photos/bd/paderborn/paderborn_legend_c0e9c29b.jpg
+  - 2013年から15年と、2018年から23年で、リーグ戦**182試合8得点**。
+  - 2015年に降格したときは、主将でした。
+  - 間の3年は、イングランドのブライトンでプレーしています。
+  sources:
+  - https://en.wikipedia.org/wiki/Steffen_Baumgart
+  - https://en.wikipedia.org/wiki/Uwe_H%C3%BCnemeier
+  - https://en.wikipedia.org/wiki/Mario_Vran%C4%8Di%C4%87
+  - https://en.wikipedia.org/wiki/SC_Paderborn_07
+  bg: assets/backgrounds/stadium_パーダーボルン_in.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id002
+    - *id003
+    - - ヴランチッチ
+      - 2012-2015
+      - 93試合12得点
+  say:
+  - text: ヴランチッチは、パーダーボルンの中盤にいた選手です。
+    image: assets/photos/bd/paderborn/paderborn_legend_b6e1cd3a.jpg
+  - 2012年から15年に、リーグ戦**93試合12得点**。
+  - 初めて1部に上がる前後を、ピッチで支えた主力の1人でした。
+  - その後は、イングランドのノリッジで、リーグ戦**123試合**。
+  sources:
+  - https://en.wikipedia.org/wiki/Steffen_Baumgart
+  - https://en.wikipedia.org/wiki/Uwe_H%C3%BCnemeier
+  - https://en.wikipedia.org/wiki/Mario_Vran%C4%8Di%C4%87
+  - https://en.wikipedia.org/wiki/SC_Paderborn_07
+  bg: assets/backgrounds/stadium_パーダーボルン_in.png
+  official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はケッテマン。2025年に就任して、1年目で1部へ
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - ラルフ・ケッテマン
+    - - 就任
+      - 2025年
+    - - 前の仕事
+      - カールスルーエの下部組織の監督
+  say:
+  - パーダーボルンの今季の監督は、ドイツ人のラルフ・ケッテマン。**40歳**です。
+  - 2011年から2019年は、6部のイルスホーフェンで選手兼監督。
+  - 5部への昇格を決めています。
+  - そのあと、ホッフェンハイムのU23でコーチを務めます。
+  - 2021年からは、カールスルーエの下部組織を率いました。
+  - 2025年に、パーダーボルンの監督になりました。
+  - 2部から1部への昇格を、1年目で決めています。
+  sources:
+  - https://en.wikipedia.org/wiki/SC_Paderborn_07
+  - https://en.wikipedia.org/wiki/Ralf_Kettemann
+  bg: assets/backgrounds/stadium_パーダーボルン_in.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: パーダーボルンの今季の登録選手は27人です。
+    image: assets/stats/bd_paderborn_gk.png
+    no_telop: true
+  - image: assets/stats/bd_paderborn_gk.png
+    text: ゴールキーパーは2人。
+    no_telop: true
+  - image: assets/stats/bd_paderborn_df_f.png
+    text: ディフェンダーは9人。
+    no_telop: true
+  - image: assets/stats/bd_paderborn_df_f.png
+    text: 主将を務めるのが**フェリックス・ゲッツェ**。
+    no_telop: true
+  - image: assets/stats/bd_paderborn_df_f.png
+    text: リーグ戦で**65試合**に出ています。
+    no_telop: true
+  - image: assets/stats/bd_paderborn_df_f.png
+    text: マルセル・ホフマイアーはリーグ戦で**89試合**。
+    no_telop: true
+  - image: assets/stats/bd_paderborn_mf_f.png
+    text: ミッドフィールダーは8人。
+    no_telop: true
+  - image: assets/stats/bd_paderborn_mf_f.png
+    text: ラファエル・オーバーマイアーはリーグ戦で**131試合**。
+    no_telop: true
+  - image: assets/stats/bd_paderborn_mf_f.png
+    text: セバスティアン・クラースはリーグ戦で**82試合**。
+    no_telop: true
+  - image: assets/stats/bd_paderborn_fw_f.png
+    text: フォワードは8人。
+    no_telop: true
+  - image: assets/stats/bd_paderborn_fw_f.png
+    text: スヴェン・ミヒェルはリーグ戦で**215試合**。
+    no_telop: true
+  - image: assets/stats/bd_paderborn_fw_f.png
+    text: シュテフェン・ティゲスはリーグ戦で**39試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/SC_Paderborn_07
+  bg: assets/backgrounds/stadium_パーダーボルン_in.png
+  official: false
+- id: season
+  heading: 引き分けの多いパーダーボルンは、それを勝ちに変えられるのか
+  tier: 報道
+  telop: 11月12日時点で9試合2勝4分3敗。勝ち点10で13位。引き分けは18クラブで最多タイ
+  narrator: 解説
+  card:
+    type: table
+    title: ブンデスリーガの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - マインツ（アウェー）
+      - 0対0
+    - - 第2節
+      - フライブルク（ホーム）
+      - 0対1
+    - - 第3節
+      - ドルトムント（アウェー）
+      - 0対3
+    - - 第4節
+      - ホッフェンハイム（ホーム）
+      - 3対1
+    - - 第5節
+      - シュツットガルト（ホーム）
+      - 0対2
+    - - 第6節
+      - ブレーメン（アウェー）
+      - 2対2
+    - - 第7節
+      - ハンブルガーSV（ホーム）
+      - 1対0
+    - - 第8節
+      - ボルシアMG（アウェー）
+      - 0対0
+    - - 第9節
+      - フランクフルト（ホーム）
+      - 2対2
+  say:
+  - text: パーダーボルンは、ここまで9試合で**2勝4引き分け3敗**です。
+  - 順位は13位で、勝ち点は10。
+  - 勝ち点は、17位シャルケの6より4多い。
+  - 16位ウニオン・ベルリンの7と比べても、3多くなっています。
+  - text: 引き分けは**4**。ウニオン・ベルリンと並んで、18クラブで最多です。
+    card:
+      type: stats
+      title: 今季のリーグ戦（9試合）
+      items:
+      - - '2'
+        - ''
+        - 勝ち
+      - - '4'
+        - ''
+        - 引き分け
+      - - '3'
+        - ''
+        - 負け
+      focus: 1
+    mark:
+      kind: circle
+      item: 1
+  - text: 勝った2試合は、どちらもホームです。
+    card: none
+    image: assets/backgrounds/stadium_パーダーボルン_in.png
+  - 第4節はホッフェンハイムに3対1の勝ち。第7節はハンブルガーSVに1対0の勝ち。
+  - アウェー4試合は、0勝3引き分け1敗。勝ち点3は、ホームの7の半分に届きません。
+  - 引き分けを勝ちに変えられるかが、これからの見どころです。
+  - text: 11月21日には、アウェーでレバークーゼンと戦います。
+    image: assets/backgrounds/stadium_パーダーボルン.png
+  sources:
+  - https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_SC_Paderborn_07_season
+  bg: assets/backgrounds/stadium_パーダーボルン_in.png
+  official: false
+  viewpoint: true
+watch: 毎日、数字でサッカーを読み解きます

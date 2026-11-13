@@ -1,0 +1,703 @@
+# スタジアム紹介シリーズ：ナポリの本拠地（スタディオ・ディエゴ・アルマンド・マラドーナ、11/19 予定）。雛形は 11/17 ベティスの回。
+# 題材の選び方（2026-11-12）：指示書 20261119 の「大物のクラブの本拠地から」。プレミア20は全て済み、ラ・リーガの残りは中堅。セリエAの大物としてナポリ。
+#   選んだ理由：マラドーナの名／「1990年W杯準決勝（イタリア対アルゼンチン）をナポリの器が開いた」という強い一点／9万736人→5万4732席の縮み／2026年8月に出たばかりの建て直し計画で見立て（基準を満たす席）が作れる。
+#   重なりの確認：scripts/*stadium_*・posted.json・covered.yaml に無し（grep 済み）。同じ11/19のユニフォームはインテル、比べるはサリバ×クバルシ、選手紹介はロジャーズ。ナポリは重ならない。11/21 は別クラブ（マルセイユ）。picks は research/20261119_picks.txt。
+# 一次情報の突き合わせ：
+#   en・it ウィキペディア（開場1959-12-06 ナポリ2-1ユヴェントス／礎石1952-04-27／設計コッキア・コラディ／1963 サン・パオロ／2020-12-04 マラドーナ／最多 90736＝1974-12-15 ナポリ対ユヴェントス／1990後 72810席／3層目閉鎖後 60240／2019改修後 54726（en infobox）・54732（it 本文）／1968ユーロ準決勝 0-0 コイントス／1990W杯 5試合 6/13-7/3、準決勝 7/3 1-1 PK 3-4／1990改修 1320億リラ(it)）。
+#   建て直し：ナポリ市の公式発表（2026-08-04）＝現在54732席（うち欧州の基準を満たす3万4287）→63300席（同5万270）、3期、3層目の再建・新しい下層・屋根15m延長、車いす672・ボックス36×16席。費用は報道で約2億（市・州）〜2.5億（Il Mattino）。工事の時期は報道で割れる（2027年5月〜／7月）ので台本に入れない。
+#   ユーロ2032：en ウィキペディアで開催地候補に載る（54726席・to be renovated）。「UEFAが承認したのはトリノのみ」の記述があり確定ではないので「候補」と書いた。
+#   食い違い（台本には入れない）：1990後の席は en「約76000」・it「72810」（it を採用）。3層目の閉鎖は it「2005-06から」と別の報道「2004」で時期を台本に書いていない。ESPN の今季ホーム入場は0が多く使えなかったので入場の数字は使っていない。2025-07 に「新スタジアムを建てる」と述べたとの en の記述は 2026-08 の市の計画と食い違うので触れない。
+# 読みが割れる名前：スタディオ・デル・ソーレ／サン・パオロ／コッキア／コラディ／デ・マジストリス／デ・ラウレンティス／スキラッチ／カニーヒア（カニージャ）／ユニバーシアード。
+date: 2026年11月12日
+slot: other_1
+format: news
+series: スタジアム紹介
+voice_min: 0
+people: []
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  id: stadium_napoli
+  league: italy
+  league_name: セリエA
+  kind: other
+  topic: ナポリ
+  title: ナポリの本拠地、9万736人入った器は、なぜ5万4732席まで縮んだのか
+  question: 1974年に9万736人が入った器を、なぜナポリは5万4732席まで縮めたのか
+  lead: マラドーナがイタリアを破った夜の器です。
+  hook: ''
+  opening_image: assets/images/20261119_stadium_napoli/02_w.jpg
+  end_bg: assets/images/20261119_stadium_napoli/06_w.jpg
+  takeaway: ナポリの本拠地は1959年に開き、1974年に最多の9万736人が入った。1990年の座席化、3層目の閉鎖、2019年の改修で、いまは5万4732席。2026年8月に出た建て直しの計画では6万3300席になり、欧州の基準を満たす席は3万4287から5万270へ、1.47倍になる
+  short_title: 9万人の器は、なぜ5万席台に縮んだのか
+thumbnail:
+  layout: scene
+  bold: false
+  callouts:
+  - 最多は9万736人
+  - いまは5万4732席
+  photo: assets/images/20261119_stadium_napoli/01_w.jpg
+  line1: ナポリのマラドーナ競技場
+  line2: 9万人から5万4732席へ
+  tags:
+  - ナポリ
+  - セリエA
+  - スタジアム紹介
+sections:
+- id: data
+  main: true
+  heading: マラドーナがイタリアを破った器は、いま何席なのか
+  bg: assets/images/20261119_stadium_napoli/02_w.jpg
+  card: &id001
+    type: table
+    title: ナポリの本拠地の基礎DATA
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 持ち主
+      - ナポリ市
+    - - 開場
+      - 1959年12月6日
+    - - 収容
+      - 5万4732人
+    - - 名前
+      - 3つ目（マラドーナ）
+    - - 最多の入場
+      - 9万736人（1974年）
+    - - いま
+      - 3層目は閉鎖中
+  narrator: 解説
+  tier: 報道
+  telop: 1959年に開場。収容は5万4732席。1990年W杯の準決勝を開いた
+  sources: &id002
+  - https://en.wikipedia.org/wiki/Stadio_Diego_Armando_Maradona
+  - https://it.wikipedia.org/wiki/Stadio_San_Paolo
+  say:
+  - text: ナポリの本拠地、ディエゴ・アルマンド・マラドーナの話です。
+    card: none
+    image: assets/images/20261119_stadium_napoli/02_w.jpg
+    short_only: true
+  - text: 1990年7月3日。W杯の準決勝で、アルゼンチンが、PK戦でイタリアを破りました。
+    card: none
+    image: assets/images/20261119_stadium_napoli/02_w.jpg
+    emph: true
+  - text: その試合を開いたのが、ナポリのこの器です。
+    card: none
+    image: assets/images/20261119_stadium_napoli/02_w.jpg
+  - text: 開場は、1959年12月6日。収容は、5万4732席です。
+    card: *id001
+    image: assets/images/20261119_stadium_napoli/02_w.jpg
+  - text: 持ち主は、ナポリ市です。クラブは、借りて使っています。
+    card:
+      type: table
+      title: ナポリの本拠地の基礎DATA
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 持ち主
+        - ナポリ市
+      - - 開場
+        - 1959年12月6日
+      - - 収容
+        - 5万4732人
+      - - 名前
+        - 3つ目（マラドーナ）
+      - - 最多の入場
+        - 9万736人（1974年）
+      - - いま
+        - 3層目は閉鎖中
+      highlight_row: 0
+    image: assets/images/20261119_stadium_napoli/02_w.jpg
+  - text: この器には、かつて、9万人を超える人が入ったことがあります。
+    card:
+      type: stats
+      title: ナポリの本拠地の数字
+      items:
+      - - '1959'
+        - 年
+        - 開場
+      - - '54732'
+        - 席
+        - いまの収容
+      - - '90736'
+        - 人
+        - 最多の入場
+      focus: 2
+    image: assets/images/20261119_stadium_napoli/01_w.jpg
+    emph: true
+- id: history
+  heading: 太陽の競技場は、なぜ、聖パウロの名を経て、マラドーナの名になったのか
+  bg: assets/images/20261119_stadium_napoli/03_w.jpg
+  card:
+    type: timeline
+    title: マラドーナ競技場の歩み
+    rows:
+    - - 1959年12月
+      - スタディオ・デル・ソーレとして開場
+    - - 1963年
+      - サン・パオロの名へ
+    - - 1968年
+      - ユーロの準決勝を開く
+    - - 1990年
+      - W杯の5試合を開く
+    - - 2019年
+      - ユニバーシアードで改修
+    - - 2020年12月
+      - マラドーナの名へ
+    focus: 1959年12月
+    highlight_row: 0
+  narrator: 解説
+  tier: 背景
+  telop: 1959年にスタディオ・デル・ソーレとして開き、名前は3回目の変更でマラドーナへ
+  sources: *id002
+  say:
+  - text: 器の礎石が置かれたのは、1952年4月27日です。
+    card:
+      type: timeline
+      title: マラドーナ競技場の歩み
+      rows:
+      - - 1959年12月
+        - スタディオ・デル・ソーレとして開場
+      - - 1963年
+        - サン・パオロの名へ
+      - - 1968年
+        - ユーロの準決勝を開く
+      - - 1990年
+        - W杯の5試合を開く
+      - - 2019年
+        - ユニバーシアードで改修
+      - - 2020年12月
+        - マラドーナの名へ
+      focus: 1959年12月
+      highlight_row: 0
+    image: assets/images/20261119_stadium_napoli/03_w.jpg
+  - text: 建設には、7年。設計は、カルロ・コッキアと、ルイジ・コラディ。
+    card: none
+    image: assets/images/20261119_stadium_napoli/03_w.jpg
+  - text: 最初の名前は、スタディオ・デル・ソーレ。太陽の競技場、という意味。
+    card: none
+    image: assets/images/20261119_stadium_napoli/03_w.jpg
+  - text: 1959年12月6日、ナポリがユヴェントスに、2対1で勝ちました。
+    card: none
+    image: assets/images/20261119_stadium_napoli/03_w.jpg
+  - text: 1963年に、名前は、サン・パオロへ変わります。
+    card:
+      type: timeline
+      title: マラドーナ競技場の歩み
+      rows:
+      - - 1959年12月
+        - スタディオ・デル・ソーレとして開場
+      - - 1963年
+        - サン・パオロの名へ
+      - - 1968年
+        - ユーロの準決勝を開く
+      - - 1990年
+        - W杯の5試合を開く
+      - - 2019年
+        - ユニバーシアードで改修
+      - - 2020年12月
+        - マラドーナの名へ
+      focus: 1959年12月
+      highlight_row: 1
+    image: assets/images/20261119_stadium_napoli/03_w.jpg
+  - text: 使徒パウロにちなむ名前で、61年、続きました。
+    card: none
+    image: assets/images/20261119_stadium_napoli/03_w.jpg
+  - text: 1963年には、地中海競技大会の開会式を、この器が開いています。
+    card: none
+    image: assets/images/20261119_stadium_napoli/03_w.jpg
+  - text: 1968年のユーロでは、準決勝の、イタリア対ソ連です。
+    card:
+      type: timeline
+      title: マラドーナ競技場の歩み
+      rows:
+      - - 1959年12月
+        - スタディオ・デル・ソーレとして開場
+      - - 1963年
+        - サン・パオロの名へ
+      - - 1968年
+        - ユーロの準決勝を開く
+      - - 1990年
+        - W杯の5試合を開く
+      - - 2019年
+        - ユニバーシアードで改修
+      - - 2020年12月
+        - マラドーナの名へ
+      focus: 1959年12月
+      highlight_row: 2
+    image: assets/images/20261119_stadium_napoli/03_w.jpg
+  - text: 0対0のまま、コイントスで、イタリアが決勝へ進みました。
+    card: none
+    image: assets/images/20261119_stadium_napoli/03_w.jpg
+    emph: true
+  - text: 2020年12月4日、名前は、ディエゴ・アルマンド・マラドーナになります。
+    card:
+      type: timeline
+      title: マラドーナ競技場の歩み
+      rows:
+      - - 1959年12月
+        - スタディオ・デル・ソーレとして開場
+      - - 1963年
+        - サン・パオロの名へ
+      - - 1968年
+        - ユーロの準決勝を開く
+      - - 1990年
+        - W杯の5試合を開く
+      - - 2019年
+        - ユニバーシアードで改修
+      - - 2020年12月
+        - マラドーナの名へ
+      focus: 1959年12月
+      highlight_row: 5
+    image: assets/images/20261119_stadium_napoli/03_w.jpg
+  - text: 市長のデ・マジストリスと、ナポリ会長のデ・ラウレンティスが、提案しました。
+    card: none
+    image: assets/images/20261119_stadium_napoli/03_w.jpg
+  - text: 名前は、これで3つ目です。
+    card: none
+    image: assets/images/20261119_stadium_napoli/03_w.jpg
+    emph: true
+- id: wc
+  heading: 1990年、なぜ、マラドーナは、自分の器で、イタリアと戦ったのか
+  bg: assets/images/20261119_stadium_napoli/05_w.jpg
+  card:
+    type: table
+    title: 1990年W杯、ナポリの器の2試合
+    columns:
+    - 試合
+    - 結果
+    rows:
+    - - 準々決勝
+      - イングランド3−2カメルーン（延長）
+    - - 準決勝
+      - イタリア1−1アルゼンチン（PK3−4）
+    highlight_row: 1
+  narrator: 解説
+  tier: 背景
+  telop: 1990年7月3日、ナポリの器でイタリア対アルゼンチンの準決勝。PK戦でアルゼンチンが勝った
+  sources: *id002
+  say:
+  - text: 1990年のW杯で、この器は、5試合を開きました。
+    card: none
+    image: assets/images/20261119_stadium_napoli/05_w.jpg
+  - text: 6月13日から、7月3日までです。
+    card: none
+    image: assets/images/20261119_stadium_napoli/05_w.jpg
+  - text: 準々決勝は、イングランドが、カメルーンに3対2で勝った試合です。
+    card:
+      type: table
+      title: 1990年W杯、ナポリの器の2試合
+      columns:
+      - 試合
+      - 結果
+      rows:
+      - - 準々決勝
+        - イングランド3−2カメルーン（延長）
+      - - 準決勝
+        - イタリア1−1アルゼンチン（PK3−4）
+      highlight_row: 0
+    image: assets/images/20261119_stadium_napoli/05_w.jpg
+  - text: 準決勝は、地元のイタリアと、アルゼンチンでした。
+    card:
+      type: table
+      title: 1990年W杯、ナポリの器の2試合
+      columns:
+      - 試合
+      - 結果
+      rows:
+      - - 準々決勝
+        - イングランド3−2カメルーン（延長）
+      - - 準決勝
+        - イタリア1−1アルゼンチン（PK3−4）
+      highlight_row: 1
+    image: assets/images/20261119_stadium_napoli/05_w.jpg
+    emph: true
+  - text: 17分に、スキラッチが決めて、イタリアが先に点を取ります。
+    card: none
+    image: assets/images/20261119_stadium_napoli/05_w.jpg
+  - text: 67分に、カニーヒアが、同点にしました。
+    card: none
+    image: assets/images/20261119_stadium_napoli/05_w.jpg
+  - text: 1対1のまま、PK戦に入り、アルゼンチンが4対3で制します。
+    card: none
+    image: assets/images/20261119_stadium_napoli/05_w.jpg
+  - text: このときマラドーナは、ナポリの選手でした。
+    card: none
+    image: assets/images/20261119_stadium_napoli/05_w.jpg
+    emph: true
+  - text: ナポリの観客が、どちらを応援したのかは、いまも意見が割れています。
+    card: none
+    image: assets/images/20261119_stadium_napoli/05_w.jpg
+- id: shrink
+  heading: 9万736人が入った器は、なぜ、5万4732席まで縮んだのか
+  bg: assets/images/20261119_stadium_napoli/04_w.jpg
+  card:
+    type: table
+    title: 席の歩み
+    columns:
+    - 時期
+    - 数
+    rows:
+    - - 1974年12月（最多）
+      - 9万736人が入場
+    - - 1990年のあと
+      - 7万2810席
+    - - 3層目が使えなくなって
+      - 6万240席
+    - - 2019年のあと
+      - 5万4732席
+    highlight_row: 0
+  narrator: 解説
+  tier: 報道
+  telop: 1974年に9万736人。座席化と改修で、いまは5万4732席
+  sources: *id002
+  say:
+  - text: 開場のときは、立ち見が中心で、約9万人の設計でした。
+    card: none
+    image: assets/images/20261119_stadium_napoli/04_w.jpg
+  - text: 1974年12月15日。ナポリ対ユヴェントスで、最多の入場を記録します。
+    card:
+      type: table
+      title: 席の歩み
+      columns:
+      - 時期
+      - 数
+      rows:
+      - - 1974年12月（最多）
+        - 9万736人が入場
+      - - 1990年のあと
+        - 7万2810席
+      - - 3層目が使えなくなって
+        - 6万240席
+      - - 2019年のあと
+        - 5万4732席
+      highlight_row: 0
+    image: assets/images/20261119_stadium_napoli/04_w.jpg
+    emph: true
+  - text: 1990年のW杯のために、全席に、座席を付ける工事をします。
+    card: none
+    image: assets/images/20261119_stadium_napoli/04_w.jpg
+  - text: 費用は、1320億リラと伝えられます。
+    card: none
+    image: assets/images/20261119_stadium_napoli/04_w.jpg
+  - text: 席は、7万2810になりました。
+    card:
+      type: table
+      title: 席の歩み
+      columns:
+      - 時期
+      - 数
+      rows:
+      - - 1974年12月（最多）
+        - 9万736人が入場
+      - - 1990年のあと
+        - 7万2810席
+      - - 3層目が使えなくなって
+        - 6万240席
+      - - 2019年のあと
+        - 5万4732席
+      highlight_row: 1
+    image: assets/images/20261119_stadium_napoli/04_w.jpg
+  - text: その後、3層目が使えなくなり、席は、6万240へ減ります。
+    card:
+      type: table
+      title: 席の歩み
+      columns:
+      - 時期
+      - 数
+      rows:
+      - - 1974年12月（最多）
+        - 9万736人が入場
+      - - 1990年のあと
+        - 7万2810席
+      - - 3層目が使えなくなって
+        - 6万240席
+      - - 2019年のあと
+        - 5万4732席
+      highlight_row: 2
+    image: assets/images/20261119_stadium_napoli/04_w.jpg
+  - text: 2019年には、ユニバーシアードのために、改修しました。
+    card: none
+    image: assets/images/20261119_stadium_napoli/04_w.jpg
+  - text: 費用は、約2000万ユーロです。
+    card: none
+    image: assets/images/20261119_stadium_napoli/04_w.jpg
+  - text: 座席が大きくなり、大型の画面の置き場も要って、席は、5万4732になりました。
+    card:
+      type: table
+      title: 席の歩み
+      columns:
+      - 時期
+      - 数
+      rows:
+      - - 1974年12月（最多）
+        - 9万736人が入場
+      - - 1990年のあと
+        - 7万2810席
+      - - 3層目が使えなくなって
+        - 6万240席
+      - - 2019年のあと
+        - 5万4732席
+      highlight_row: 3
+    image: assets/images/20261119_stadium_napoli/04_w.jpg
+  - text: 最多の入場の、約6割です。
+    card: none
+    image: assets/images/20261119_stadium_napoli/04_w.jpg
+    emph: true
+- id: plan
+  heading: 縮んだ器は、2032年のユーロへ向けて、どう変わる計画なのか
+  bg: assets/images/20261119_stadium_napoli/06_w.jpg
+  card:
+    type: table
+    title: 建て直しの計画（2026年8月）
+    columns:
+    - 項目
+    - いま
+    - 建て直し後
+    rows:
+    - - 席
+      - 5万4732
+      - 6万3300
+    - - 欧州の基準を満たす席
+      - 3万4287
+      - 5万270
+    - - 車いすの席
+      - —
+      - '672'
+    - - ボックス席
+      - —
+      - 36室
+    highlight_row: 0
+  narrator: 解説
+  tier: 報道
+  telop: 2026年8月、ナポリ市が建て直しの計画を発表。席は6万3300へ
+  sources:
+  - https://www.comune.napoli.it/novita/stadio-diego-armando-maradona-presentato-il-progetto-di-riqualificazione-in-vista-di-uefa-euro-2032/
+  - https://en.wikipedia.org/wiki/UEFA_Euro_2032
+  say:
+  - text: ユーロ2032は、イタリアとトルコの共催です。
+    card: none
+    image: assets/images/20261119_stadium_napoli/06_w.jpg
+  - text: 時期は、2032年の6月から7月の見込みです。
+    card: none
+    image: assets/images/20261119_stadium_napoli/06_w.jpg
+  - text: イタリア側の会場の候補に、この器も入っています。
+    card: none
+    image: assets/images/20261119_stadium_napoli/06_w.jpg
+  - text: 2026年8月、ナポリ市が、建て直しの計画を発表しました。
+    card:
+      type: table
+      title: 建て直しの計画（2026年8月）
+      columns:
+      - 項目
+      - いま
+      - 建て直し後
+      rows:
+      - - 席
+        - 5万4732
+        - 6万3300
+      - - 欧州の基準を満たす席
+        - 3万4287
+        - 5万270
+      - - 車いすの席
+        - —
+        - '672'
+      - - ボックス席
+        - —
+        - 36室
+      highlight_row: 0
+    image: assets/images/20261119_stadium_napoli/06_w.jpg
+    emph: true
+  - text: 中身は、3層目の建て直しと、新しい下の層です。
+    card: none
+    image: assets/images/20261119_stadium_napoli/06_w.jpg
+  - text: 屋根は、15メートル、伸ばします。
+    card: none
+    image: assets/images/20261119_stadium_napoli/06_w.jpg
+  - text: 席は、5万4732から、6万3300へ。
+    card:
+      type: table
+      title: 建て直しの計画（2026年8月）
+      columns:
+      - 項目
+      - いま
+      - 建て直し後
+      rows:
+      - - 席
+        - 5万4732
+        - 6万3300
+      - - 欧州の基準を満たす席
+        - 3万4287
+        - 5万270
+      - - 車いすの席
+        - —
+        - '672'
+      - - ボックス席
+        - —
+        - 36室
+      highlight_row: 0
+    image: assets/images/20261119_stadium_napoli/06_w.jpg
+  - text: 車いすの席は、672。ボックス席は、36室です。
+    card:
+      type: table
+      title: 建て直しの計画（2026年8月）
+      columns:
+      - 項目
+      - いま
+      - 建て直し後
+      rows:
+      - - 席
+        - 5万4732
+        - 6万3300
+      - - 欧州の基準を満たす席
+        - 3万4287
+        - 5万270
+      - - 車いすの席
+        - —
+        - '672'
+      - - ボックス席
+        - —
+        - 36室
+      highlight_row: 3
+    image: assets/images/20261119_stadium_napoli/06_w.jpg
+  - text: 費用は、約2億ユーロから2億5000万ユーロと伝えられます。
+    card: none
+    image: assets/images/20261119_stadium_napoli/06_w.jpg
+- id: view
+  viewpoint: true
+  heading: 見立て・基準を満たす席は、建て直しで何倍になるのか
+  bg: assets/images/20261119_stadium_napoli/02_w.jpg
+  card:
+    type: table
+    title: 建て直しの計画（2026年8月）
+    columns:
+    - 項目
+    - いま
+    - 建て直し後
+    rows:
+    - - 席
+      - 5万4732
+      - 6万3300
+    - - 欧州の基準を満たす席
+      - 3万4287
+      - 5万270
+    - - 車いすの席
+      - —
+      - '672'
+    - - ボックス席
+      - —
+      - 36室
+    highlight_row: 1
+  narrator: 解説
+  tier: 報道
+  telop: 欧州の基準を満たす席は、3万4287から5万270へ。1.47倍
+  sources:
+  - https://www.comune.napoli.it/novita/stadio-diego-armando-maradona-presentato-il-progetto-di-riqualificazione-in-vista-di-uefa-euro-2032/
+  - https://en.wikipedia.org/wiki/UEFA_Euro_2032
+  - https://en.wikipedia.org/wiki/Stadio_Diego_Armando_Maradona
+  say:
+  - text: では、建て直しで、欧州の基準を満たす席は、どれだけ増えるのか。
+    card: none
+    image: assets/images/20261119_stadium_napoli/02_w.jpg
+    emph: true
+  - text: 数字は、11月12日時点です。
+    card: none
+    image: assets/images/20261119_stadium_napoli/02_w.jpg
+  - text: いまの席は、5万4732。そのうち、欧州の基準を満たすのは、3万4287です。
+    card:
+      type: table
+      title: 建て直しの計画（2026年8月）
+      columns:
+      - 項目
+      - いま
+      - 建て直し後
+      rows:
+      - - 席
+        - 5万4732
+        - 6万3300
+      - - 欧州の基準を満たす席
+        - 3万4287
+        - 5万270
+      - - 車いすの席
+        - —
+        - '672'
+      - - ボックス席
+        - —
+        - 36室
+      highlight_row: 1
+    image: assets/images/20261119_stadium_napoli/02_w.jpg
+  - text: 割ると、約63%。
+    card: none
+    image: assets/images/20261119_stadium_napoli/02_w.jpg
+  - text: 建て直したあとは、6万3300席のうち、5万270席が、基準を満たします。
+    card:
+      type: table
+      title: 建て直しの計画（2026年8月）
+      columns:
+      - 項目
+      - いま
+      - 建て直し後
+      rows:
+      - - 席
+        - 5万4732
+        - 6万3300
+      - - 欧州の基準を満たす席
+        - 3万4287
+        - 5万270
+      - - 車いすの席
+        - —
+        - '672'
+      - - ボックス席
+        - —
+        - 36室
+      highlight_row: 1
+    image: assets/images/20261119_stadium_napoli/02_w.jpg
+    mark:
+      kind: circle
+      row: 1
+  - text: 割ると、約79%。
+    card: none
+    image: assets/images/20261119_stadium_napoli/02_w.jpg
+  - text: 基準を満たす席は、3万4287から、5万270へ、1万5983増えます。
+    card:
+      type: calc
+      title: 基準を満たす席は、何倍になるか（自分で割った）
+      terms:
+      - - 5万270席
+        - 建て直し後の基準を満たす席
+      - - 3万4287席
+        - いまの基準を満たす席
+      - - 1.47倍
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+    image: assets/images/20261119_stadium_napoli/02_w.jpg
+  - text: 全体の席は、8568しか、増えません。
+    card: none
+    image: assets/images/20261119_stadium_napoli/02_w.jpg
+  - text: 増える数が、全体より大きいのは、いまの基準外の席が、直るからです。
+    card: none
+    image: assets/images/20261119_stadium_napoli/02_w.jpg
+    emph: true
+  - text: 基準を満たさない席は、2万445から、1万3030へ。7415席、減ります。
+    card:
+      type: table
+      title: 基準を満たさない席
+      columns:
+      - 時点
+      - 席
+      rows:
+      - - いま
+        - 2万445
+      - - 建て直し後
+        - 1万3030
+      - - 減る数
+        - '7415'
+      highlight_row: 2
+    image: assets/images/20261119_stadium_napoli/02_w.jpg
+  - text: 1990年から縮み続けた器が、増える計画に、変わります。
+    card: none
+    image: assets/images/20261119_stadium_napoli/02_w.jpg
+    emph: true

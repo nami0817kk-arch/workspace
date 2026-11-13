@@ -1,0 +1,555 @@
+# ユニフォームとエンブレムの歴史 アスレティック・ビルバオ（11/11 作成、11/13 分）。ラ・リーガの4本目。雛形は 11/11 アトレティコ回。
+# 題の問い：赤白のしまのシャツは、どこで買ったのか。答え＝1909年の冬、ロンドン帰りの学生が、港町サウサンプトンで地元クラブの赤白を50枚買った、という話。
+# 選んだ理由：指示書 20261109/20261112「ユニフォームはラ・リーガの続き」。済み：バルセロナ・レアル・アトレティコ。次の候補：ビルバオ・バレンシア・ビジャレアル・セビージャ・ベティス。
+#   スタジアム担当（同じ11/13）と同じクラブにしない → research/20261112_picks.txt に先に1行書いた（スタジアム担当は セビージャ・ベティス・ソシエダ・ビジャレアル から選ぶ想定）。
+#   外した候補：バレンシア（11/11 にスタジアムで出したばかり）、ビジャレアル（9/26 のクラブ紹介と近い）。
+# 重なり確認（2026-11-11）：scripts/*kit_* にビルバオは無し。直近30日：20261109_stadium_athletic（2日前・スタジアム。本拠地の話だけ）。20260926_ll03_athletic（46日前・クラブ紹介＝30日の外）。
+#   同じ赤白の由来の話は 11/11 のアトレティコ回が「分家」の側から言っている。この回は「本家」の側で、エロルドゥイの買い物・50枚を主にし、アトレティコの話は1行にとどめる。
+#   この回では、本拠地の名前・サン・マメスの話は言わない（2日前のスタジアム回）。
+# 今季のリーグ：en "2026–27 Athletic Bilbao season"（ラ・リーガ。「ラ・リーガ96季連続」）。
+# 取材：requests だけ（Wikipedia API）。ブラウザ操作・JS実行は使っていない。クラブ公式は読んでいない。
+#   読んだ：en "Athletic Bilbao"（Crest・Club colours）、es "Athletic Club"（Escudo・Indumentaria）、es "Historia del uniforme del Athletic Club"（Historia y evolución）、en "2026–27 Athletic Bilbao season"。
+# ---- 食い違い・断ったこと ----
+#   ・青白の最初のシャツ：en は 1902-03 季、es は 1903（コパ・デル・レイ初開催と同じ年）。→ 台本は「1903年ごろ」。寄付した人は es・en とも モーゼル（Juan Moser）。
+#   ・赤白の由来：es・en とも、1909年のクリスマスに、エロルドゥイが青白を探して買えず、サウサンプトンの港で赤白50枚を買った、とする。
+#     es は「最後の日まで買い物を残した」「ビルバオの港の旗と同じ色」と書く。en は「ビルバオ市の色と同じと気づいた」。→ どちらも「とされる」と言い、動機は es の2点だけ使う。
+#     en は 2023年の調べでサンダーランド説もあるとする。→ 台本で「もう一つの説」として1行。
+#   ・50枚の行方：es は「25枚はアスレティック、残りは祖父母の家に置き、1年後にマドリード支部へ」、en は「半分をアトレティコへ送った」。→ 「半分は、マドリードの分家へ」とだけ言う。
+#   ・初着用：es「1910年1月9日、親善試合でスポルティング・イルンに0対2」。正式採用「1910年11月13日」。→ そのまま。
+#   ・黒パンツ：es「1913年から黒を常用。サウサンプトンの黒パンツは1950年」。→ そのまま。
+#   ・紋章：es・en とも 初代はAとCの青い輪、1910 に赤白の旗、1913 にボールを巻く旗、1922 が今の形の最初（en は「記録の初出1922」）、1941 に今の形（名前「アトレティコ・ビルバオ」）、1972 に色と英語名が戻る、2008 に形を少し変えた。
+#     「アトレティコ・ビルバオ」の理由は en が「外国語の名前が禁じられた」と書く。→ 理由は言い切らず「禁じられたため、とされます」。
+#   ・広告：es「2008年のペトロノールが、創立から110年で初めての広告。それ以前は 2004-05 UEFA杯の「エウスカディ」（制度の広告）」。en「200万ユーロあまり」。2015-16 から クッチャバンクが胸（es）。
+#   ・シャツを作る会社：es「1980 アディダス（10年）、1990年代 カッパ（〜1998-99）、1999-2001 アディダス、2001 自前の100% Athletic（en は〜2009）、2009 アンブロ、2013-14〜 ナイキ、2017 ニューバランス、2023 キャストア」。
+#     表は 1980・1991・2001・2013・2017・2023 の6行だけ。1991 は「1990年代」のカッパ（en の表は 1991–1999）。2009 のアンブロは表に入れず、本文で言わない。
+#   ・ケチャップのシャツ：es「2004年、ダリオ・ウルサイ。8月5日、親善試合グローニンゲン戦（3対2で負け）。会長ラミクスが二度と使わないと決め、美術館 ARTIUM（ビトリア）の収蔵品、2009年に展示」。
+#     「史上もっとも醜い20枚に入った」は感想なので言わない。
+#   ・旗の色のシャツ：en「2011年、緑・白・赤。2012年ヨーロッパリーグ決勝（相手アトレティコ）で着た」。es は「緑の3枚目：2011-12 ほか」。→ 台本は en の言い方。決勝の結果は言わない。
+#   ・パッチ：es の「2023年5月23日にマップのパッチ」は年が合わない記述があるので使わない。襟の小さな旗は es「2015-16 から」→ 使う。
+# ---- 自分で数えた数 ----
+#   赤白のしま：1910→2026＝116年。広告なし：1898→2008＝110年（es の「110年」と一致）。広告あり：2008→2026＝18年。110÷18＝6.1 → 約6倍。
+#   黒パンツ：1913→2026＝113年。サウサンプトンの黒は1950年、ビルバオより37年あと。
+#   紋章の今の形（1941）→2026＝85年。
+# ---- 日本との接点 ----
+#   見つけられなかった（日本の会社・日本人選手とシャツ・紋章のつながりは、読んだ資料に無い）。無理に入れない。
+# 言わなかったもの：本拠地の名前（2日前のスタジアム回）／広告の金額以外の額／アトレティコの赤白の細かい話（2日前の回）／「史上もっとも醜い」の感想／フランコ政権への評価（名前を禁じられた事実だけ）。
+# 写真：assets/images/20261113_kit_athletic/（credits.json）。Commons（CC BY-SA・CC0・Public domain）。代理店・放送映像・エンブレム画像は使っていない。
+#   1923年の写真は撮影者不明のパブリックドメイン。バスの写真は Nationaal Archief（Anefo）の CC0（撮影年は未確認）。人物は特定していない。
+date: 2026年11月11日
+slot: other_5
+format: news
+series: ユニフォームとエンブレムの歴史
+voice_min: 0
+people:
+- アスレティック・ビルバオ
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  end_bg: assets/images/20261113_kit_athletic/p_tifo_w.jpg
+  id: kit_athletic
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: アスレティック・ビルバオ
+  title: アスレティック・ビルバオの赤白、そのシャツはどこで買った？
+  question: アスレティック・ビルバオの赤と白のシャツはどこから来たのか、紋章には何が入っているのか、胸の広告はなぜ110年なかったのか
+  opening_image: assets/images/20261113_kit_athletic/p_flag_w.jpg
+  lead: 赤白のシャツは、買い物の失敗から。
+  hook: ''
+  takeaway: アスレティック・ビルバオの赤と白は1910年から116年。もとは、青と白のシャツを買いに行った学生が、帰りの港で買えずに持ち帰った50枚だった。胸の広告は創立から110年なく、入ってから18年。変わったのは買ってきた色で、守ってきたのは広告のない胸と、1913年からの黒いパンツだ
+  hook_unused: ''
+thumbnail:
+  layout: classic
+  callouts:
+  - 胸は110年、空白
+  - ケチャップ事件
+  photo: assets/images/20261113_kit_athletic/p_flag_t_w.jpg
+  short_photo: assets/images/20261113_kit_athletic/p_flag_v.jpg
+  line1: アスレティックの赤白
+  line2: 英国の港町で買った
+  tags:
+  - アスレティック・ビルバオ
+  - ユニフォーム
+  - エンブレム
+  - 紋章
+  - ラ・リーガ
+x-cards:
+  stripes: &stripes
+    type: timeline
+    title: アスレティックのシャツの歩み
+    rows:
+    - - 1898年
+      - 創立。最初は白いシャツ
+    - - 1903年ごろ
+      - 青と白の半分ずつに
+    - - 1909年
+      - 青白のシャツを買いに、イングランドへ
+    - - 1910年
+      - 赤と白のしまに。黒いパンツは1913年
+    - - 今季
+      - 赤と白のしま、116年
+    focus: 1910年
+    highlight_row: 0
+  crest: &crest
+    type: timeline
+    title: 胸の紋章の歩み
+    rows:
+    - - 初め
+      - AとCを重ねた、青い輪
+    - - 1910年
+      - 赤白の旗の紋章に
+    - - 1913年
+      - ボールに旗を巻いた形
+    - - 1922年
+      - 今の形のはじまり
+    - - 1941年
+      - 名前が「アトレティコ・ビルバオ」に
+    - - 1972年
+      - 色が付き、英語の名前が戻る
+    focus: 1972年
+    highlight_row: 0
+  parts: &parts
+    type: table
+    title: 紋章に入っているもの
+    columns:
+    - 形
+    - どこから来たか
+    rows:
+    - - 橋と教会
+      - ビルバオの町の紋章
+    - - 狼
+      - ビルバオを築いた、領主のハロ家
+    - - 木
+      - ビスカヤ県の紋章（ゲルニカの木）
+    - - 斜めの十字
+      - ビスカヤ県の紋章（聖アンドレの十字）
+    highlight_row: 0
+  ketchup: &ketchup
+    type: timeline
+    title: 大胆なシャツ2枚
+    rows:
+    - - 2001年
+      - 自前のブランド、100% Athletic
+    - - 2004年8月
+      - 縦のしまを抽象的な形に替えた1枚
+    - - 同じ年
+      - 会長が、二度と使わないと決める
+    - - 2009年
+      - 美術館が収蔵した1枚として展示
+    - - 2011年
+      - バスクの旗の色、緑・白・赤
+    - - 2012年
+      - ヨーロッパリーグ決勝で着る
+    focus: 2004年8月
+    highlight_row: 0
+  chest: &chest
+    type: table
+    title: アスレティックの胸に入った広告
+    columns:
+    - いつから
+    - 胸
+    rows:
+    - - 創立〜2007年
+      - なし（110年）
+    - - 2008年
+      - 石油会社 ペトロノール
+    - - 2015年
+      - 銀行 クッチャバンク
+    highlight_row: 0
+  maker: &maker
+    type: timeline
+    title: シャツを作る会社
+    rows:
+    - - 1980年
+      - アディダス
+    - - 1991年
+      - カッパ
+    - - 2001年
+      - 自前のブランド
+    - - 2013年
+      - ナイキ
+    - - 2017年
+      - ニューバランス
+    - - 2023年
+      - キャストア
+    focus: 2001年
+    highlight_row: 0
+  view: &view
+    type: table
+    title: アスレティックの赤白と胸を数える（自分で数えた）
+    columns:
+    - 何を
+    - 数
+    rows:
+    - - 赤と白のしま（1910年〜）
+      - 116年
+    - - 黒いパンツ（1913年〜）
+      - 113年
+    - - 胸に広告なし（〜2007年）
+      - 110年
+    - - 胸に広告あり（2008年〜）
+      - 18年
+    highlight_row: 0
+sections:
+- id: stripes
+  main: true
+  heading: アスレティックの赤と白は、どこで買ってきたシャツなのか
+  bg: assets/images/20261113_kit_athletic/p_team1923_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 1898年の創立から赤白は12年あと。1909年の冬、青白のシャツを探した学生が、帰りの港で赤白50枚を買った
+  card: *stripes
+  say:
+  - text: 今回はアスレティック・ビルバオ。赤白のしまと、紋章と、シャツをめぐる事件の話です。
+    image: assets/images/20261113_kit_athletic/p_tifo_w.jpg
+    card: none
+  - text: クラブが生まれたのは、1898年。最初のシャツは、白一色でした。
+    image: assets/images/20261113_kit_athletic/p_tifo_w.jpg
+    card:
+      <<: *stripes
+      highlight_row: 0
+  - text: 1903年ごろ、青と白が半分ずつのシャツに替わります。
+    image: assets/images/20261113_kit_athletic/p_team1923_w.jpg
+    card: none
+  - text: イングランドのブラックバーンと同じ形です。
+    image: assets/images/20261113_kit_athletic/p_team1923_w.jpg
+    card: none
+  - text: 会員のモーゼルが、イギリスから持ち込んだものとされます。
+    image: assets/images/20261113_kit_athletic/p_team1923_w.jpg
+    card: none
+  - text: 事件は、1909年のクリスマスに起きます。
+    image: assets/images/20261113_kit_athletic/p_flag_w.jpg
+    card:
+      <<: *stripes
+      highlight_row: 2
+    emph: true
+    callword: 1909年の事件
+  - text: 青白のシャツが、汗と洗濯でくたびれていました。
+    image: assets/images/20261113_kit_athletic/p_flag_w.jpg
+    card: none
+  - text: クラブは、イングランドで新しいシャツを買ってくる人を探します。
+    image: assets/images/20261113_kit_athletic/p_flag_w.jpg
+    card: none
+  - text: 選ばれたのは、ビルバオ出身の学生、エロルドゥイでした。
+    image: assets/images/20261113_kit_athletic/p_flag_w.jpg
+    card: none
+  - text: マドリードで、鉱山の工学を学んでいました。
+    image: assets/images/20261113_kit_athletic/p_flag_w.jpg
+    card: none
+  - text: 頼まれたのは、青と白のシャツ50枚。マドリードの分家のぶんも含みます。
+    image: assets/images/20261113_kit_athletic/p_fan_w.jpg
+    card: none
+  - text: ところがエロルドゥイは、買い物を最後の日まで残してしまいます。
+    image: assets/images/20261113_kit_athletic/p_fan_w.jpg
+    card: none
+  - text: 青と白のシャツは、見つかりませんでした。
+    image: assets/images/20261113_kit_athletic/p_fan_w.jpg
+    card: none
+  - text: 帰る船を待っていたのは、港町のサウサンプトン。
+    image: assets/images/20261113_kit_athletic/p_fan_w.jpg
+    card: none
+  - text: そこで目にしたのが、地元クラブの、赤と白のしまのシャツでした。
+    image: assets/images/20261113_kit_athletic/p_fan_w.jpg
+    card: none
+    emph: true
+  - text: 赤と白は、ビルバオの港の旗と、同じ色です。
+    image: assets/images/20261113_kit_athletic/p_flag_w.jpg
+    card: none
+  - text: 手ぶらで帰るよりと、エロルドゥイは、50枚を買いました。
+    image: assets/images/20261113_kit_athletic/p_flag_w.jpg
+    card: none
+  - text: 届けられたシャツを、クラブは、ほとんどすぐに、新しい色に決めます。
+    image: assets/images/20261113_kit_athletic/p_flag_w.jpg
+    card: none
+  - text: 初めて着たのは、1910年1月9日の親善試合。0対2で負けています。
+    image: assets/images/20261113_kit_athletic/p_team1923_w.jpg
+    card:
+      <<: *stripes
+      highlight_row: 3
+  - text: 正式な色になったのは、同じ年の11月13日。
+    image: assets/images/20261113_kit_athletic/p_team1923_w.jpg
+    card: none
+  - text: 50枚の半分は、マドリードの分家へ渡りました。
+    image: assets/images/20261113_kit_athletic/p_flag_w.jpg
+    card: none
+  - text: スペインで、赤と白のクラブは、1905年からのスポルティング・ヒホンだけでした。
+    image: assets/images/20261113_kit_athletic/p_flag_w.jpg
+    card: none
+  - text: もう一つの説もあります。2023年の調べは、サンダーランドを挙げています。
+    image: assets/images/20261113_kit_athletic/p_fan_w.jpg
+    card: none
+  - text: 1913年からは、パンツが黒に決まりました。
+    image: assets/images/20261113_kit_athletic/p_fan_w.jpg
+    card: none
+  - text: 本家のサウサンプトンが黒にしたのは、1950年です。
+    image: assets/images/20261113_kit_athletic/p_fan_w.jpg
+    card: none
+    emph: true
+  sources:
+  - https://es.wikipedia.org/wiki/Historia_del_uniforme_del_Athletic_Club
+  - https://en.wikipedia.org/wiki/Athletic_Bilbao
+- id: crest
+  heading: 橋と狼と木は、なぜ紋章に入っているのか
+  bg: assets/images/20261113_kit_athletic/p_tifo_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 最初は青い輪にAとC。1922年に今の形のはじまり。1941年に名前が替わり、1972年に色と英語の名前が戻った
+  card: *crest
+  say:
+  - text: 胸の紋章も、最初はずいぶん簡単なものでした。
+    image: assets/images/20261113_kit_athletic/p_tifo_w.jpg
+    card:
+      <<: *crest
+      highlight_row: 0
+  - text: AとCの2文字を重ねた、青い輪です。
+    image: assets/images/20261113_kit_athletic/p_tifo_w.jpg
+    card: none
+  - text: 赤白のシャツに替えた1910年には、赤白の旗の形に。
+    image: assets/images/20261113_kit_athletic/p_tifo_w.jpg
+    card:
+      <<: *crest
+      highlight_row: 1
+  - text: 1913年には、ボールに旗を巻いた形になります。
+    image: assets/images/20261113_kit_athletic/p_tifo_w.jpg
+    card:
+      <<: *crest
+      highlight_row: 2
+  - text: いまの形の最初は、1922年です。
+    image: assets/images/20261113_kit_athletic/p_fan_w.jpg
+    card:
+      <<: *crest
+      highlight_row: 3
+    emph: true
+  - text: 中に入っているのは、町と県の、紋章でした。
+    image: assets/images/20261113_kit_athletic/p_fan_w.jpg
+    card: none
+  - text: 橋と教会は、ビルバオの町から。
+    image: assets/images/20261113_kit_athletic/p_fan_w.jpg
+    card:
+      <<: *parts
+      highlight_row: 0
+  - text: 狼は、1300年にビルバオを築いた、ハロ家のしるしです。
+    image: assets/images/20261113_kit_athletic/p_flag_w.jpg
+    card:
+      <<: *parts
+      highlight_row: 1
+  - text: 木と斜めの十字は、ビスカヤ県から。木は、ゲルニカの木と呼ばれます。
+    image: assets/images/20261113_kit_athletic/p_flag_w.jpg
+    card:
+      <<: *parts
+      highlight_row: 2
+  - text: 1941年に、今の形が決まります。
+    image: assets/images/20261113_kit_athletic/p_flag_w.jpg
+    card:
+      <<: *crest
+      highlight_row: 4
+  - text: ただ、そこに入った名前は、アトレティコ・ビルバオでした。
+    image: assets/images/20261113_kit_athletic/p_flag_w.jpg
+    card: none
+    emph: true
+  - text: 外国語のクラブ名が禁じられたため、とされます。
+    image: assets/images/20261113_kit_athletic/p_tifo_w.jpg
+    card: none
+  - text: 色が付き、アスレティック・クラブの名前が戻ったのは、1972年です。
+    image: assets/images/20261113_kit_athletic/p_tifo_w.jpg
+    card:
+      <<: *crest
+      highlight_row: 5
+  - text: 2008年には、形が少しだけ整えられました。いまの形は、85年続いています。
+    image: assets/images/20261113_kit_athletic/p_tifo_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Athletic_Bilbao
+  - https://es.wikipedia.org/wiki/Athletic_Club
+- id: ketchup
+  heading: 縦のしまを捨てた「ケチャップのシャツ」は、なぜ消えたのか
+  bg: assets/images/20261113_kit_athletic/p_fan_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 2004年、縦のしまを抽象的な形に替えた1枚。8月5日に初着用、会長は二度と使わないと決めた。2011年はバスクの旗の色
+  card: *ketchup
+  say:
+  - text: 赤白を守ってきたアスレティックにも、大きな冒険がありました。
+    image: assets/images/20261113_kit_athletic/p_fan_w.jpg
+    card: none
+  - text: 2001年、クラブは、シャツを作る自前のブランドを持ちました。
+    image: assets/images/20261113_kit_athletic/p_fan_w.jpg
+    card:
+      <<: *ketchup
+      highlight_row: 0
+  - text: 2004年、ヨーロッパの大会に戻るのに合わせて、特別なシャツを頼みます。
+    image: assets/images/20261113_kit_athletic/p_tifo_w.jpg
+    card: none
+  - text: 頼んだ相手は、バスクの芸術家、ダリオ・ウルサイです。
+    image: assets/images/20261113_kit_athletic/p_tifo_w.jpg
+    card: none
+  - text: 出来上がったのは、縦のしまを、抽象的な形に替えた1枚でした。
+    image: assets/images/20261113_kit_athletic/p_tifo_w.jpg
+    card:
+      <<: *ketchup
+      highlight_row: 1
+    emph: true
+    callword: 縦のしまが消えた
+  - text: 8月5日の親善試合で、初めて着ました。試合は2対3で負けています。
+    image: assets/images/20261113_kit_athletic/p_tifo_w.jpg
+    card: none
+  - text: ファンの反発は強く、会長は、二度と使わないと決めます。
+    image: assets/images/20261113_kit_athletic/p_flag_w.jpg
+    card:
+      <<: *ketchup
+      highlight_row: 2
+  - text: ついた愛称は、ケチャップのシャツ。
+    image: assets/images/20261113_kit_athletic/p_flag_w.jpg
+    card: none
+  - text: それでも、この1枚は、アルティウム美術館の収蔵品に入りました。
+    image: assets/images/20261113_kit_athletic/p_flag_w.jpg
+    card: none
+  - text: 場所はビトリア。展示されたのは、2009年です。
+    image: assets/images/20261113_kit_athletic/p_flag_w.jpg
+    card:
+      <<: *ketchup
+      highlight_row: 3
+  - text: もう一つの冒険は、2011年。バスクの旗にちなんだ、緑と白と赤のシャツです。
+    image: assets/images/20261113_kit_athletic/p_fan_w.jpg
+    card:
+      <<: *ketchup
+      highlight_row: 4
+  - text: このシャツを着たのが、2012年のヨーロッパリーグ決勝。
+    image: assets/images/20261113_kit_athletic/p_fan_w.jpg
+    card:
+      <<: *ketchup
+      highlight_row: 5
+    emph: true
+  - text: 相手は、同じ赤白をまとう、アトレティコ・マドリードでした。
+    image: assets/images/20261113_kit_athletic/p_fan_w.jpg
+    card: none
+  sources:
+  - https://es.wikipedia.org/wiki/Historia_del_uniforme_del_Athletic_Club
+  - https://en.wikipedia.org/wiki/Athletic_Bilbao
+- id: chest
+  heading: 胸の広告は、なぜ創立から110年なかったのか
+  bg: assets/images/20261113_kit_athletic/p_bus_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 胸は創立から110年、広告なし。2008年に石油会社が初めて。2015年から銀行。作る会社は2023年からキャストア
+  card: *chest
+  say:
+  - text: アスレティックの胸は、長いあいだ、まっさらでした。
+    image: assets/images/20261113_kit_athletic/p_bus_w.jpg
+    card:
+      <<: *chest
+      highlight_row: 0
+  - text: 広告を入れない、数少ない大きなクラブの一つだったのです。
+    image: assets/images/20261113_kit_athletic/p_bus_w.jpg
+    card: none
+  - text: 2004年から05年のヨーロッパの大会だけは、広告ではありません。
+    image: assets/images/20261113_kit_athletic/p_bus_w.jpg
+    card: none
+  - text: バスクの名前、エウスカディが、胸に入りました。
+    image: assets/images/20261113_kit_athletic/p_bus_w.jpg
+    card: none
+  - text: 初めての広告は、2008年。地元ビスカヤの石油会社、ペトロノールです。
+    image: assets/images/20261113_kit_athletic/p_tifo_w.jpg
+    card:
+      <<: *chest
+      highlight_row: 1
+    emph: true
+    callword: 110年で初の広告
+  - text: 創立から、110年がたっていました。
+    image: assets/images/20261113_kit_athletic/p_tifo_w.jpg
+    card: none
+  - text: 額は、200万ユーロあまりとされます。
+    image: assets/images/20261113_kit_athletic/p_tifo_w.jpg
+    card: none
+  - text: 2015年からは、銀行のクッチャバンクが、胸の専属になりました。
+    image: assets/images/20261113_kit_athletic/p_fan_w.jpg
+    card:
+      <<: *chest
+      highlight_row: 2
+  - text: 同じ年から、襟の内側に、バスクの旗の小さな印が付いています。
+    image: assets/images/20261113_kit_athletic/p_fan_w.jpg
+    card: none
+  - text: シャツを作る会社も、移り変わってきました。
+    image: assets/images/20261113_kit_athletic/p_fan_w.jpg
+    card:
+      <<: *maker
+      highlight_row: 0
+  - text: 1980年はアディダス。1990年代はカッパ。
+    image: assets/images/20261113_kit_athletic/p_bus_w.jpg
+    card:
+      <<: *maker
+      highlight_row: 1
+  - text: 2001年からは、クラブ自前のブランドで作りました。
+    image: assets/images/20261113_kit_athletic/p_bus_w.jpg
+    card:
+      <<: *maker
+      highlight_row: 2
+    emph: true
+  - text: そのあと、ナイキ、ニューバランスと続き、2023年からはイギリスのキャストアです。
+    image: assets/images/20261113_kit_athletic/p_bus_w.jpg
+    card:
+      <<: *maker
+      highlight_row: 4
+  sources:
+  - https://es.wikipedia.org/wiki/Historia_del_uniforme_del_Athletic_Club
+  - https://en.wikipedia.org/wiki/Athletic_Bilbao
+- id: view
+  viewpoint: true
+  heading: 見立て・赤白の116年と、広告の18年
+  bg: assets/images/20261113_kit_athletic/p_tifo_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 赤白は116年、黒いパンツは113年。胸の広告は110年なく、入ってから18年。長さは約6倍
+  card: *view
+  say:
+  - text: アスレティックの赤白と胸を、数で並べます。
+    image: assets/images/20261113_kit_athletic/p_tifo_w.jpg
+    card: none
+  - text: 赤と白のしまは、1910年から116年。
+    image: assets/images/20261113_kit_athletic/p_tifo_w.jpg
+    card:
+      <<: *view
+      highlight_row: 0
+  - text: 黒いパンツは、1913年から113年です。
+    image: assets/images/20261113_kit_athletic/p_tifo_w.jpg
+    card:
+      <<: *view
+      highlight_row: 1
+  - text: 胸に広告が無かったのは、110年。
+    image: assets/images/20261113_kit_athletic/p_flag_w.jpg
+    card:
+      <<: *view
+      highlight_row: 2
+  - text: 広告が入ってからは、18年です。
+    image: assets/images/20261113_kit_athletic/p_flag_w.jpg
+    card:
+      <<: *view
+      highlight_row: 3
+    mark:
+      kind: circle
+      row: 3
+  - text: 広告のない年月は、あった年月の、約6倍です。
+    image: assets/images/20261113_kit_athletic/p_flag_w.jpg
+    card:
+      type: calc
+      title: 胸に広告のなかった年月（自分で割った）
+      terms:
+      - - 110年
+        - 広告なし
+      - - 18年
+        - 広告あり
+      - - 約6倍
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+    emph: true
+  - text: 赤白は、買い物の失敗で手に入れた色でした。
+    image: assets/images/20261113_kit_athletic/p_fan_w.jpg
+    card: none
+  - text: それでも、色と黒いパンツは100年以上、まっさらな胸は110年、守ってきました。
+    image: assets/images/20261113_kit_athletic/p_fan_w.jpg
+    card: none
+    emph: true
+  sources:
+  - https://es.wikipedia.org/wiki/Historia_del_uniforme_del_Athletic_Club
+  - https://en.wikipedia.org/wiki/Athletic_Bilbao

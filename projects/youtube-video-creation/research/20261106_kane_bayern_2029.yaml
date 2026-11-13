@@ -1,0 +1,130 @@
+# 取材メモ（2026年11月6日）ケインがバイエルンと2029年までの新契約。トッテナムに残る「同じ条件を出せる権利」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-06。python requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。
+#   クラブ公式（fcbayern.com）は requests も WebFetch もタイムアウトで開けなかった。→ 契約は「報道」の札（複数の報道がクラブの発表として伝えている）。
+# 出典で確かめたこと:
+#   ・Sky Sports 2026-11-05 08:13（本文を全部読んだ）: バイエルンと新契約。2029年夏まで。33歳。2023年にトッテナムから加入し、バイエルンで161試合156点。
+#       2026年のバロンドールを受賞（イングランド人として25年ぶり）。本人の言葉はクラブ公式サイトへのもの:
+#       "I feel right at home at FC Bayern" "I love the club, the fans and the city of Munich. We have a fantastic team and, in Vincent Kompany, a fantastic manager. It makes me very proud to be part of this club."
+#       "My whole family is very happy here. I was keen to stay. I'm now looking forward to the future and I want to win many more titles with this great club."
+#       （年俸「少なくとも2500万ユーロ」は Sky ドイツの報道 → 見出しに無い数字で一次で確かめられないので使わない）
+#   ・Guardian 2026-11-05: 「the German club have announced」。161試合156点。スポーツディレクターのフロイントの言葉あり（今回は使わない）。
+#   ・Sky Sports Transfer Centre LIVE 2026-11-05 17:14「Spurs still have matching rights for Kane」:
+#       2023年の移籍のときに、バイエルンが将来ケインへの申し出を受け入れた場合、トッテナムがそれと同じ額を出せる権利（matching rights）を契約に入れた。
+#       クラブ間の移籍の取り決めなので、ケイン本人の新契約とは関係なく、残っている。
+#       【食い違い】依頼の手がかりにあった「買い戻しの条項」ではない。決まった額で買い戻せる条項ではなく、他クラブの申し出に「同じ条件で並べる」権利。
+#       （caughtoffside は「プレミアの他クラブからの申し出」と書くが、rumour 群なので使わない。Sky の「any bid」に合わせる）
+#   ・BBC 2026-11-05「What new Kane deal means for England and the Premier League record」: 新契約が切れるのは36歳の誕生日の少し前。
+#       プレミアの最多得点はシアラーの260点。ケインはトッテナムでリーグ320試合213点 → 47点足りない。トッテナムに戻る話は「ますます考えにくくなった」（論評）。
+# 自分で数えたもの: 156 ÷ 161 ＝ 0.97 → 1試合に約1点。ケインは1993年7月28日生まれ → 2029年夏の契約満了時は35歳（36歳の誕生日の直前）。シアラーまで 260 − 213 ＝ 47点。
+# 前の本との重なり: 20261016_kane_bayern_extension（「2029年まで基本合意。いつ正式に決まるのか」）／20261027_kane_ballon_dor／20261028_kane_bayern_return（トッテナムへの感謝）。
+#   → 今回の初出: 正式な署名・署名後の本人の言葉・トッテナムの権利。過去回には触れない。
+# 写真: 今日の記事の写真は Getty（BBC）・Reuters（Guardian）・dpa／IMAGO（tz.de・fcbinside）で、どれも代理店なので使わない。Commons の写真（10/23・10/28 にも使った）を使う。顔の大写しの1枚目はイングランド代表のもの（バイエルンの写真は顔が寄りすぎで切れる）。トッテナムの行はトッテナム時代の背中の写真。
+# 本人の言葉: あり（クラブ公式サイトへの言葉）。Y。
+# 反応: 0件（作らない）。
+slot: other_4
+date: "2026年11月6日"
+format: news
+no_main: true
+people: [ハリー・ケイン, バイエルン, トッテナム]
+
+short_style: Y
+short_hook_quote: バイエルンにいると、本当に家にいるように感じます。
+short_photos:
+  - assets/images/20261028_kane_bayern_return/06_v.jpg
+  - assets/images/20261023_kane_cl_10_straight/05_v.jpg
+  - assets/images/20261027_kane_ballon_dor/04_v.jpg
+short_question: ケインは、いつかトッテナムに戻ると思いますか。
+short_telops:
+  - {match: 家にいるように, text: ハリー・ケイン/新契約にサイン}
+  - {match: 2029年, text: バイエルンと新契約/2029年夏まで}
+  - {match: 同じ額, text: トッテナムの権利/同じ額を出せば優先される}
+  - {match: 47点, text: プレミア最多 シアラー260点/ケインは213点}
+
+theme:
+  id: kane_bayern_2029
+  league: germany
+  league_name: ブンデスリーガ
+  prefix: ""
+  title: ケイン、バイエルンと2029年まで新契約。それでもトッテナムに残った権利
+  hook: ""
+  question: 新契約にサインしたケインは何を語り、トッテナムには何が残ったのか
+  takeaway: バイエルンで161試合156点、1試合に約1点。契約が切れる2029年夏は35歳。プレミア最多のシアラーまでは47点で、トッテナムには同じ額を出せる権利が残る
+
+thumbnail:
+  layout: face
+  line1: ケイン 2029年まで
+  line2: トッテナムに残った権利
+  tags: [ハリー・ケイン, バイエルン]
+  photo: assets/images/20261028_kane_bayern_return/06_w.jpg
+  short_photo: assets/images/20261028_kane_bayern_return/06_v.jpg
+
+answer: 家族もミュンヘンで幸せで、残りたかったと語った。トッテナムには、他クラブの申し出と同じ額を出せる権利が残る
+watch: ケインの次の移籍の可能性
+
+sections:
+  - id: what
+    main: true
+    heading: 新契約にサインしたケインが語ったこと
+    tier: 報道
+    telop: ケイン「家にいるように感じる」
+    say:
+      - text: ハリー・ケインが、バイエルンと2029年夏までの新しい契約を結びました。
+      - voice: ハリー・ケイン
+        text: バイエルンにいると、本当に家にいるように感じます。
+        emph: true
+      - voice: ハリー・ケイン
+        text: クラブも、ファンも、ミュンヘンの街も大好きです。
+        cont: true
+      - text: 今年のバロンドールを取った33歳。2023年に、トッテナムから移ってきました。
+        image: assets/images/20261023_kane_cl_10_straight/05_w.jpg
+      - voice: ハリー・ケイン
+        text: 家族もみんな、ここでとても幸せです。
+      - voice: ハリー・ケイン
+        text: 残りたいと、思っていました。
+        cont: true
+      - voice: ハリー・ケイン
+        text: この偉大なクラブで、もっとたくさんのタイトルを取りたい。
+        cont: true
+      - text: ただ、古巣トッテナムとのつながりは、まだ残っています。
+        image: assets/images/20261028_kane_bayern_return/03_w.jpg
+      - text: 2023年の移籍のとき、両クラブは1つの権利を取り決めていました。
+      - text: バイエルンが、ケインへの他のクラブの申し出を受け入れたとき。
+      - text: トッテナムが同じ額を出せば、バイエルンはトッテナムに売らなければなりません。
+        emph: true
+      - text: 本人の新しい契約とは別の、クラブ同士の取り決めなので、今も残っています。
+    official: false
+    sources:
+      - https://www.skysports.com/football/news/12691/13608255/harry-kane-england-captain-signs-new-contract-at-bayern-munich-running-until-2029
+      - https://www.theguardian.com/football/2026/nov/05/ballon-dor-winner-harry-kane-signs-new-contract-with-bayern-munich-2029
+      - https://www.skysports.com/football/live-blog/11661/12476234/transfer-centre-live-football-transfer-news-updates-and-rumours
+  - id: record
+    heading: バイエルンでの3年あまり、ケインはどれだけ点を取ってきたか
+    tier: 報道
+    telop: バイエルンで161試合156点
+    say:
+      - text: 加入から161試合で156点。ケインは1試合に約1点のペースで決めてきました。
+        image: assets/images/20261023_kane_cl_10_straight/05_w.jpg
+        card: {type: calc, title: ケインのバイエルンでの得点, terms: [[156点, 得点], [161試合, 出場], [0.97点, 1試合あたり]], ops: [÷, ＝]}
+      - text: その間に、ブンデスリーガの優勝は2回。得点王は3季続けて取っています。
+        card: none
+    official: false
+    sources:
+      - https://www.skysports.com/football/news/12691/13608255/harry-kane-england-captain-signs-new-contract-at-bayern-munich-running-until-2029
+      - https://www.bbc.co.uk/sport/football/articles/cm93zvzzl33zo
+  - id: view
+    viewpoint: true
+    heading: 2029年までの契約で、プレミアの記録はどうなるか
+    tier: 背景
+    telop: プレミア最多 シアラー260点。ケインは213点
+    say:
+      - text: 見立てです。契約が切れる2029年夏、ケインは35歳になっています。
+        image: assets/images/20261028_kane_bayern_return/06_w.jpg
+        card: {type: table, title: プレミアリーグの得点, columns: [選手, 得点], rows: [[シアラー（最多）, 260点], [ケイン, 213点]], highlight_row: 1}
+      - text: プレミアの最多得点はシアラーの260点。ケインは213点で、47点足りません。
+        emph: true
+      - text: 35歳までドイツでプレーすれば、プレミアで記録に挑む時間は限られます。
+        card: none
+      - text: それでも、トッテナムが同じ額で並べる権利は、契約の外に残り続けます。
+    official: false
+    sources:
+      - https://www.bbc.co.uk/sport/football/articles/cm93zvzzl33zo

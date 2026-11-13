@@ -1,0 +1,116 @@
+# 取材メモ（2026年11月8日）田中碧が77分まで戦った日、リーズが6試合ぶりに勝った（ニュースのショート。見せ方 X＝冒頭に強い一言）
+# 取材: 2026-11-08。requests（ブラウザUA）と site.api.espn.com で確かめた。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: サッカーキング 2225446（2026-11-07「リーズが6試合ぶり白星！ 田中碧はチャンス生かせずもボール奪取で奮闘…スパーズの連勝は3でストップ」。全文）。
+# 出典で確かめたこと:
+#   ・ESPN（site.api.espn.com eng.1 summary event=401878758、11/7 12:30 UTC）: リーズ 1-0 トッテナム。79分 ノア・オカフォー。
+#       77分にリーズが2人交代（田中碧→ハリー・ウィルソン、ルーカス・ニュメチャ→オカフォー）。田中は先発で77分に交代、シュート2本（枠内0）。
+#       → 「田中が下がった2分後に決勝点」は ESPN の分だけで言える。サッカーキング・ゲキサカ（後半32分に交代。その2分後に先制）も一致。
+#       ウィルソンとオカフォーが途中出場でゴールに絡んだ（サッカーキング「途中出場の2人がゴールに絡む」。FOOTBALL ZONE「ウィルソンのアシストからオカフォー」）→ 報道。
+#   ・サッカーキング／ゲキサカ: 前半5分、田中がPA外から右足シュート（枠外）。後半8分（53分）、田中が中盤で奪い切ってカウンター → カルバート＝ルーウィンの折り返しをPA中央で右足、
+#       ゴール上に大きく外れた（ゲキサカ）。リーズは前節ボーンマス戦に敗れ、直近5試合白星なし（試合前）。
+#   ・FOOTBALL ZONE（Yahoo 経由）／GOAL（Yahoo 経由）: 地元紙ヨークシャー・イブニング・ポストの評。「積極的に何度もタックルで飛び込み、ピッチ中を縦横無尽に駆け回った。最も活気あふれるセンターミッドフィールダー」（FZ の訳）
+#       ※採点は FZ が「6」、GOAL が「7」と食い違う（同じ紙の採点）。**採点は使わない。**言葉の訳も媒体で違う（「活気あふれる」「躍動感あふれる」）ので、台本は FZ の訳だけを使い、混ぜない。
+#       ※元の英語の記事は読めていない → 引用は1社の訳（報道）どまり。
+#   ・ESPN（eng.1 team 357 の schedule＋各 summary）で自分で数えた:
+#       リーグ戦の最後の勝ちは 9/14 のニューカッスル戦（4-1）。その後 クリスタル・パレス0-0（9/20）・アーセナル1-2（10/10）・マンチェスターU 1-1（10/18）・サンダーランド0-0（10/25）・ボーンマス0-2（10/31）の5試合勝てず。11/7 がその次の試合＝6試合ぶり（見出しと一致）。
+#       田中はその5試合すべて先発。交代は 67分・71分・81分・89分・65分。11/7 は77分。9月5日から 先発が続いている（9/5〜11/7 の8試合連続先発（リーズの10試合のうち、8/22 ベンチ・8/30 途中出場のあと））。
+#       ESPN の順位表（11/8 取得）: リーズ 10試合 勝ち点14 8位。試合前の勝ち点11（サッカーキング）に3を足した値と一致。
+#   ・次: サッカーキング「次節は21日にアウェイでチェルシー戦」。ESPN scoreboard 2026-11-21: Leeds United at Chelsea（15:00 UTC）で一致。
+#   ・日本代表: サッカーキング 2224321（11/4）の招集28人に田中碧が入っている。14日ブラジル戦（シンガポール。scripts/20261107_tanaka_mitoma_words の取材メモと同じ）。
+# 食い違い: ①ヨークシャー・イブニング・ポストの採点が6と7（上）→使わない。②交代の時刻は ESPN 77分、ゲキサカ「後半32分」（77分）で一致。③「6試合ぶり」は見出しの言い方。直近5試合白星なし＋今回、で数えると一致する。
+# 前の本との重なり: scripts/20261107_tanaka_mitoma_words（三笘の現状）／20261026_tanaka_ao_sunderland（暴風の左足ミドル）／20261021_tanaka_gloves_falke。
+#   → 今回の初出は「6試合ぶりの白星の試合で、田中が77分まで何をしたか」。サンダーランド戦のミドルは言い直さない。
+# 本人の言葉: なし（試合後の田中本人のコメントは、ゲキサカ・サッカーキング・サッカーダイジェストの見出しにも本文にも無い。見つかったのは現地紙の評だけ）。X。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月8日"
+format: news
+no_main: true
+people: [田中碧, リーズ, トッテナム, オカフォー, ファルケ監督]
+
+short_style: X
+short_hook_word: 6試合ぶりの白星
+short_photos:
+  - assets/images/20261108_tanaka_leeds_first_win/03_v.jpg
+  - assets/images/20261108_tanaka_leeds_first_win/01_v.jpg
+  - assets/images/20261108_tanaka_leeds_first_win/02_v.jpg
+short_question: 田中碧は、14日の日本代表対ブラジル戦でも、中盤でボールを奪い切ると思いますか。
+short_telops: []
+
+theme:
+  id: tanaka_leeds_first_win
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: 田中碧が77分で交代したあと、リーズに起きたこと
+  hook: ""
+  question: リーズが6試合ぶりに勝った試合で、田中碧は何をしたのか
+  takeaway: 白星のなかった5試合も、田中は毎試合先発した。77分で交代した今回、リーズは2分後に決勝点を決めて勝ち点14の8位に上がった
+
+thumbnail:
+  layout: face
+  line1: 田中碧 77分まで
+  line2: リーズ6試合ぶりの白星
+  tags: [田中碧, リーズ]
+  photo: assets/images/20261108_tanaka_leeds_first_win/03_w.jpg
+  short_photo: assets/images/20261108_tanaka_leeds_first_win/03_v.jpg
+
+answer: 田中は先発して77分までプレー。奪い切る場面を作り、決勝点は交代の2分後だった
+watch: 14日の日本代表対ブラジル戦（シンガポール）
+
+sections:
+  - id: what
+    main: true
+    heading: リーズが6試合ぶりに勝った試合で、田中碧は何をしたのか
+    tier: 報道
+    telop: リーズ 1-0 トッテナム。田中碧は77分までプレー
+    say:
+      - text: リーズが、トッテナムに1対0で勝ちました。リーグ戦では6試合ぶりです。
+      - text: 勝ち点14の8位に上がりました。
+      - text: 田中碧は先発して、77分までプレーしました。
+        image: assets/images/20261108_tanaka_leeds_first_win/03_w.jpg
+      - text: 前半5分には、エリアの外から右足でシュート。ゴールの枠には飛びませんでした。
+      - text: 後半8分には、中盤でボールを奪い切って、カウンターの起点になります。
+        image: assets/images/20261108_tanaka_leeds_first_win/01_w.jpg
+      - text: 最後は、田中自身がエリアの中央でシュートを打ちましたが、ゴールの上へ外れました。
+      - text: 現地の地元紙は、田中を「ピッチ中を縦横無尽に駆け回った」と評価しました。
+      - text: 決勝点は79分。田中がベンチへ下がった2分後です。
+        image: assets/images/20261108_tanaka_leeds_first_win/02_w.jpg
+      - text: 点を決めたのは、同じ時間に交代で入ったオカフォーでした。
+      - text: 田中の代わりに入ったウィルソンも、ゴールに絡んでいます。
+        image: assets/images/20261108_tanaka_leeds_first_win/03_w.jpg
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/eng/20261107/2225446.html
+      - https://news.yahoo.co.jp/articles/c94f090c219d37af08a5ef8ac25e0fb8fac513d7
+      - https://news.yahoo.co.jp/articles/b86e0a64496549a2ba10fe5645fea34afe982e9d
+      - https://www.espn.com/soccer/match/_/gameId/401878758
+  - id: story
+    heading: 白星のなかった5試合で、田中碧はどこにいたのか
+    tier: 報道
+    telop: 勝てなかった5試合も、田中碧は全部先発
+    say:
+      - text: 9月14日の勝ちのあとの5試合は、引き分け3つと負け2つ。
+        image: assets/images/20261108_tanaka_leeds_first_win/02_w.jpg
+      - text: 田中碧は、その5試合すべてで先発しています。
+        card: {type: table, title: 田中碧 白星のなかった5試合, columns: [日付, 相手, 結果, 田中], rows: [[9月20日, パレス, 0-0, 67分で交代], [10月10日, アーセナル, 1-2, 71分で交代], [10月18日, マンU, 1-1, 81分で交代], [10月25日, サンダーランド, 0-0, 89分で交代], [10月31日, ボーンマス, 0-2, 65分で交代]], highlight_row: 1}
+    official: false
+    sources:
+      - https://www.espn.com/soccer/team/schedule/_/id/357
+      - https://www.espn.com/soccer/standings/_/league/eng.1
+  - id: view
+    viewpoint: true
+    heading: 6試合ぶりの白星のあと、田中碧に待っている試合は
+    tier: 背景
+    telop: 次は14日の日本代表、ブラジル戦
+    say:
+      - text: 見立てです。田中碧は、9月5日から8試合続けて先発しています。
+        image: assets/images/20261108_tanaka_leeds_first_win/01_w.jpg
+      - text: 次は、その田中碧が日本代表として臨む、14日のブラジル戦です。
+        card: {type: table, title: 田中碧 これから, columns: [日付, 試合], rows: [[11月14日, 日本代表 ブラジル戦], [11月21日, リーズ チェルシー戦（アウェー）]], highlight_row: 0}
+      - text: 田中碧がリーズに戻れば、21日にアウェーでチェルシーと対戦します。
+        card: none
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20261104/2224321.html
+      - https://www.espn.com/soccer/match/_/gameId/401879236

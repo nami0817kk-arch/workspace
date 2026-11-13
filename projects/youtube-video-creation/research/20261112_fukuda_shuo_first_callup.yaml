@@ -1,0 +1,164 @@
+# 取材メモ（2026年11月12日）福田師王、A代表初招集。高卒即欧州から3年半「キツいことだらけ」の下積みを語った（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-12。requests（ブラウザUA）で本文を全文読み、site.api.espn.com で今季のカールスルーエの試合を数えた。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。
+# 題材の元: ゲキサカ 2026-11-11「高卒即欧州から3年半…22歳FW福田師王「キツいことだらけ」の下積み経てA代表初招集「入ったからには結果を」」（全文）https://web.gekisaka.jp/news/japan/detail/?463007-463007-fl
+#   サッカーキング 2026-11-11「日本代表初招集で爪痕を残せるか…福田師王が決意を口に「入ったからには結果を残さないと」」（全文）https://www.soccer-king.jp/news/japan/national/20261111/2226735.html
+# 出典で確かめたこと:
+#   ・11日、シンガポール遠征の合流初日の練習後に福田（カールスルーエ）が取材に答えた。今回の活動で唯一の初招集（サッカーキング）。エースの上田綺世は負傷で不在（サッカーキング）。
+#   ・ゲキサカ: 2004年生まれの22歳。神村学園高を卒業と同時にドイツへ。インハイ・選手権通算13試合10ゴール。23年春にボルシアMGのセカンドチームでプロ生活を始め、24年1月にトップチームでブンデスリーガデビュー。昨季後半戦に2部カールスルーエへ期限付き移籍、今季から完全移籍。
+#     Jリーグ未経験での日本代表初選出は、2012年のFW宮市亮（当時ボルトン、現・横浜FM）以来14年ぶり（ゲキサカ）。
+#   ・福田の言葉（原文。字は変えていない。台本は読点・句点で行に分けた）:
+#       「キツいことしかなかった。ずっとキツいことだらけ。でもここ最近は結果が出始めているので、本当にしんどかったけど、いい(流れな)んじゃないかなと思います」（ゲキサカ。括弧は記者の補足。台本は「いい流れ」とせず、「いいんじゃないかなと思います」までで止める＝補足の括弧は読まない）
+#       「早く代表に入って、早く活躍したい思いがあったけど、1年前までは全然試合に絡めていなかったのでこうなるとは思っていなかった。でも自分に自信を持ってやり続ければ結果が出ると思って、それを続けていた」（ゲキサカ）
+#       「入ったからにはちゃんと結果を残さないといけないですし、追いついて追い越せるように人としてもプレーヤーとしても頑張っていけたらなと思います」（サッカーキング。ゲキサカも同旨）
+#       「まだまだ全然。もっと決めないといけないし、もっと成長しないといけない」（ゲキサカ）
+#       「もう結果。ゴールの部分ですね」（ゲキサカ。サッカーキングは「結果ですね。ゴールの部分だと思います」）
+#   ・ゲキサカ: 福田が前向きな変化を感じたのは「スタメンで出始めた半年前くらい」。
+# 食い違い（出典どうし）: ①成績の数え方。ゲキサカ「9試合3ゴール2アシスト」＝2部リーグ戦／サッカーキング「公式戦11試合3ゴール2アシスト」＝DFBポカールの2試合を含む。ESPN の試合データ（ger.2 と ger.dfb_pokal の各試合 summary の rosters）で自分で数えて、どちらも正しいと確かめた:
+#       リーグ戦9試合（8/29 ヴォルフスブルク、9/4 ハノーファー、9/13 コットブス、9/19 ニュルンベルク、10/11 ザンクト・パウリ、10/18 ダルムシュタット、10/24 マクデブルク、10/31 ハイデンハイム、11/8 ボーフム）にすべて先発、3得点（8/29・9/4・10/18）2アシスト（10/18・10/24）。ポカール2試合（8/21 ミュンスター 途中出場、10/27 ボルシアMG 先発）は無得点。合わせて11試合3得点2アシスト。
+#     ②サッカーキング本文の「キツいことしなかったです」は「キツいことしかなかった」の誤植と読め、ゲキサカの言葉を使う。③サッカーキングは「海外へ渡って約4年」、ゲキサカは「3年半」（見出し）。台本は「3年半」（2023年春〜）。
+# 前の本との重なり: 20260909_fukuda（独2部の連続記録）、11/4 の招集の会見（covered.yaml japan_squad_brazil_paraguay＝招集の理由）。今回の初出は本人の「キツいことだらけ」の言葉。招集の理由は繰り返さない。
+# 【言わないこと】招集の理由（森保監督の言葉）／カールスルーエの順位／ブラジル戦の起用予想／板倉との再共闘（別の記事）。
+# 写真: photopool（記事の主写真）。代理店の写真は使わない。
+# 本人の言葉: あり（福田師王。ゲキサカ・サッカーキング）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月12日"
+format: news
+no_main: true
+people: [福田師王, カールスルーエ, ボルシアMG, 日本代表]
+
+short_style: Y
+short_hook_quote: キツいことしかなかった。
+short_photos:
+  - assets/images/20261112_fukuda_shuo_first_callup/03_v.jpg
+  - assets/images/20261112_fukuda_shuo_first_callup/01_v.jpg
+  - assets/images/20261112_fukuda_shuo_first_callup/02_v.jpg
+  - assets/images/20261112_fukuda_shuo_first_callup/03_v.jpg
+short_question: 福田師王は、14日のブラジル戦でA代表デビューすると思いますか。
+short_telops: []
+
+theme:
+  id: fukuda_shuo_first_callup
+  league: japan
+  league_name: 日本代表
+  prefix: ""
+  title: 福田師王、A代表初招集。高卒で欧州へ渡った3年半を、本人はどう語ったのか
+  hook: ""
+  question: 高卒で欧州へ渡った福田師王は、初招集で3年半をどう語ったのか
+  takeaway: 福田はJリーグを経ずに初招集された選手として、2012年の宮市亮以来14年ぶり。今季のドイツ2部は9試合すべて先発で3得点2アシスト。本人は「まだまだ全然」と話した
+
+thumbnail:
+  layout: face
+  line1: 福田師王 A代表初招集
+  line2: ずっとキツいことだらけ
+  tags: [福田師王, 日本代表]
+  photo: assets/images/20261112_fukuda_shuo_first_callup/03_w.jpg
+  short_photo: assets/images/20261112_fukuda_shuo_first_callup/03_v.jpg
+
+answer: 「キツいことだらけ」だった3年半。結果が出始めて初招集。「まだまだ全然」と、ゴールを求める
+watch: 14日のブラジル戦と17日のパラグアイ戦（シンガポール）
+
+sections:
+  - id: what
+    main: true
+    heading: 高卒で欧州へ渡った3年半を、福田師王はどう語ったか
+    tier: 報道
+    telop: 福田師王「ずっとキツいことだらけ」
+    say:
+      - text: 日本代表に初めて選ばれた福田師王が、欧州での3年半を語りました。
+        image: assets/images/20261112_fukuda_shuo_first_callup/03_w.jpg
+      - voice: 福田師王
+        text: キツいことしかなかった。
+      - voice: 福田師王
+        text: ずっとキツいことだらけ。
+        cont: true
+        emph: true
+      - text: 福田は22歳で、前線の攻撃を担う選手です。神村学園高を卒業してすぐ、ドイツへ渡りました。
+      - text: Jリーグを経ずに日本代表へ選ばれるのは、2012年の宮市亮以来、14年ぶりです。
+      - text: 今季はドイツ2部で結果を出して、初めての招集をつかみました。
+      - voice: 福田師王
+        text: でもここ最近は結果が出始めているので、
+        image: assets/images/20261112_fukuda_shuo_first_callup/01_w.jpg
+      - voice: 福田師王
+        text: 本当にしんどかったけど、
+        cont: true
+      - voice: 福田師王
+        text: いいんじゃないかなと思います。
+        cont: true
+        emph: true
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463007-463007-fl
+      - https://www.soccer-king.jp/news/japan/national/20261111/2226735.html
+  - id: path
+    heading: 試合に出られなかった日々から、代表の初招集まで
+    tier: 報道
+    telop: 福田師王「1年前までは全然試合に絡めていなかった」
+    say:
+      - text: 2023年春にボルシアMGのセカンドチームで、プロ生活を始めました。
+        image: assets/images/20261112_fukuda_shuo_first_callup/02_w.jpg
+      - text: 翌年1月にドイツ1部のブンデスリーガでデビューしましたが、その後も出場機会は限られました。
+      - text: 昨シーズンの後半戦に、期限付きで2部のカールスルーエへ移りました。今季からは、正式にカールスルーエの選手です。
+      - voice: 福田師王
+        text: 1年前までは全然試合に絡めていなかったので、
+      - voice: 福田師王
+        text: こうなるとは思っていなかった。
+        cont: true
+      - voice: 福田師王
+        text: でも自分に自信を持ってやり続ければ結果が出ると思って、
+        cont: true
+      - voice: 福田師王
+        text: それを続けていた。
+        cont: true
+        emph: true
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463007-463007-fl
+  - id: next
+    heading: 初招集のあと、福田師王が求めること
+    tier: 報道
+    telop: 福田師王「もう結果。ゴールの部分ですね」
+    say:
+      - voice: 福田師王
+        text: 入ったからにはちゃんと結果を残さないといけないですし、
+        image: assets/images/20261112_fukuda_shuo_first_callup/03_w.jpg
+      - voice: 福田師王
+        text: 追いついて追い越せるように、
+        cont: true
+      - voice: 福田師王
+        text: 人としてもプレーヤーとしても頑張っていけたらなと思います。
+        cont: true
+      - voice: 福田師王
+        text: まだまだ全然。もっと決めないといけないし、
+        image: assets/images/20261112_fukuda_shuo_first_callup/02_w.jpg
+      - voice: 福田師王
+        text: もっと成長しないといけない。
+        cont: true
+      - voice: 福田師王
+        text: もう結果。ゴールの部分ですね。
+        emph: true
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463007-463007-fl
+      - https://www.soccer-king.jp/news/japan/national/20261111/2226735.html
+  - id: view
+    viewpoint: true
+    heading: 今季のドイツ2部で、福田師王は何試合で何点に関わったか
+    tier: 背景
+    telop: 今季のドイツ2部 9試合先発で3得点2アシスト
+    say:
+      - text: 見立てです。福田は今季のドイツ2部で、9試合にすべて先発しています。
+        card: {type: table, title: 福田師王 今季のドイツ2部, columns: [項目, 数], rows: [[先発, 9試合], [得点, 3点], [アシスト, 2つ]], highlight_row: 1}
+      - text: 合わせて、5つのゴールに関わっています。10月18日のダルムシュタット戦は、1得点1アシストで、4対0の勝利でした。
+        card: none
+      - text: 福田が加わった日本代表は、14日にシンガポールでブラジルと戦います。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/ger/20261019/2218080.html
+      - https://www.soccer-king.jp/news/world/ger/20261020/2219029.html
+      - https://www.soccer-king.jp/news/world/ger/20261028/2221997.html
+      - https://www.soccer-king.jp/news/japan/national/20261112/2226695.html
+      - https://web.gekisaka.jp/news/japan/detail/?462978-462978-fl
+      - https://www.soccer-king.jp/news/japan/national/20261110/2226285.html
+      - https://www.espn.com/soccer/team/schedule/_/id/4471
+      - https://www.espn.com/soccer/player/_/id/362673/shio-fukuda

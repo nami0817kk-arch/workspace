@@ -1,0 +1,135 @@
+# 取材メモ（2026年11月13日）前田大然、プレミア初ゴールを経て代表合流。昇格組で「チャンスの数は桁が違う」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-13。requests（ブラウザUA）で本文を全文読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: ゲキサカ 2026-11-13 03:09（取材・文 竹内達也）「プレミア初ゴール経て代表合流、昇格組で研ぎ澄ますFW前田大然「チャンスの数は桁が違う」」（全文） https://web.gekisaka.jp/news/japan/detail/?463069-463069-fl
+# 写真の出どころ（本人の写真を探すため）:
+#   https://web.gekisaka.jp/news/japan/detail/?463069-463069-fl
+#   https://web.gekisaka.jp/news/world/detail/?461665-461665-fl
+#   https://web.gekisaka.jp/news/world/detail/?461279-461279-fl
+#   https://web.gekisaka.jp/news/world/detail/?461252-461252-fl
+#   https://web.gekisaka.jp/news/world/detail/?461262-461262-fl
+#   https://www.soccer-king.jp/news/world/eng/20261018/2217944.html
+#   https://www.footballchannel.jp/2026/10/18/post1036401/
+# 出典で確かめたこと:
+#   ・12日の練習後に取材対応（シンガポール遠征中）。エースのFW上田綺世が不在で、ブラジル・パラグアイとの2連戦に向かう。1トップはブラジル戦で先発した上田が戦線離脱しており、代役起用が確実（地の文）。前田が「現時点で最も高い序列にあるとみられる」（地の文）。
+#   ・前田の言葉（原文。ゲキサカ。字は変えていない。台本は読点で行に分けた）:
+#       「FWが取ればチームが乗っていけると思うのでゴールを狙っていけたら」
+#       「地道にやっていれば絶対にチャンスがあると思っていて、ああいう注目される試合で決められて良かった」
+#       「セルティックでは何回チャンスがあっても一個を決めればというのがあったけど、プレミアではその一個のチャンスを決めないと。一個を決めるのが大事というのをプレミアでは感じている」（「前田によると」の言い換え形の地の文。台本には使わない）
+#       「チャンスの数はセルティックと比べれば桁が違うので。特にあの試合(マンチェスター・C戦)は一発しかなかったので、あれを決めるか決めないか。特に昇格組でそういうのを決めないといけないというのもあったので、一発で決められて良かった」（括弧は記者の補足）
+#   ・地の文: 前田は今季、セルティックからプレミアリーグ昇格組のイプスウィッチに加入。全試合出場を続けている。9・10月シリーズ後の第7節マンチェスター・C戦で初ゴール。「スルーパスを押し込んだ」ゴール。
+#   ・ESPN（eng.1 summary event=401879259, 2026-10-17 14:00Z）: マンチェスター・シティ 3-2 イプスウィッチ。前田は21分に得点（アシスト アブドゥル・ウアタラ）。ハーフタイム前の34分・69分にハーランドが得点、90分にフレミングがPKで1点返す。前田は71分に交代。イプスウィッチの第7節（ESPN の日程でリーグ戦7試合目）と一致。
+#   ・日程: 14日ブラジル戦（シンガポール）、17日パラグアイ戦（サッカーキングの関連記事）。
+# 食い違い: なし。「プレミア初ゴール」は、ゲキサカの地の文（初ゴール）と ESPN（21分に前田が得点）が合う。「スルーパス」の語は ESPN は assisted by のみで形までは書かない→台本は ESPN の分と得点者だけを使い、「スルーパス」はゲキサカの地の文として扱う（使わなくてよい）。
+# 前の本との重なり: 20261018_maeda_first_goal（初ゴールの本人のSNSの言葉・本人は何と書いたか）、20261019_maeda_local_praise（現地の評価）、20261021_maeda_oneill_shadow（監督の使い方）。今回の初出: 「チャンスの数が桁違い」というプレミアの感覚の言葉と、ブラジル戦でのゴールへの意気込み。初ゴールの経緯・SNSの言葉・監督の起用法は繰り返さない。
+# 【言わないこと】シティ戦の中身の細部（ハーランドの2点など）／ブラジル戦の起用予想の断定／戦術の話（引いて守らない云々は別記事の話）。
+# 本人の言葉: あり（前田大然。ゲキサカ）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月13日"
+format: news
+no_main: true
+people: [前田大然, イプスウィッチ, 日本代表, ブラジル代表]
+
+short_style: Y
+short_hook_quote: チャンスの数は、セルティックと比べれば桁が違うので。
+short_photos:
+  - assets/images/20261113_maeda_pl_goal_words/01_v.jpg
+  - assets/images/20261113_maeda_pl_goal_words/02_v.jpg
+  - assets/images/20261113_maeda_pl_goal_words/04_v.jpg
+short_question: 前田大然は、14日のブラジル戦でゴールを決めると思いますか。
+short_telops: []
+
+theme:
+  id: maeda_pl_goal_words
+  league: japan
+  league_name: 日本代表
+  prefix: ""
+  title: 前田大然、プレミア初ゴールを経て代表合流。昇格組で「チャンスの数は桁が違う」
+  hook: ""
+  question: プレミア初ゴールを決めた前田大然は、プレミアのチャンスをどう感じているのか
+  takeaway: 前田はセルティックと比べて「チャンスの数は桁が違う」と話し、一発で決められたことを喜んだ。ブラジル戦ではゴールを狙う
+
+thumbnail:
+  layout: face
+  line1: 前田大然 代表合流
+  line2: チャンスの数は桁が違う
+  tags: [前田大然, イプスウィッチ, 日本代表]
+  photo: assets/images/20261113_maeda_pl_goal_words/01_w.jpg
+  short_photo: assets/images/20261113_maeda_pl_goal_words/01_v.jpg
+
+answer: プレミアではチャンスの数が桁違いに少ない。だから一発で決めた初ゴールに意味があった。ブラジル戦もゴールを狙う
+watch: 14日のブラジル戦（シンガポール）
+
+sections:
+  - id: what
+    main: true
+    heading: プレミア初ゴールを、前田大然はどう振り返ったか
+    tier: 報道
+    telop: 前田大然「チャンスの数は桁が違う」
+    say:
+      - text: 代表に合流した前田大然が、プレミアリーグで決めた初ゴールと、そのチャンスの数について語りました。
+        image: assets/images/20261113_maeda_pl_goal_words/01_w.jpg
+      - voice: 前田大然
+        text: チャンスの数は、セルティックと比べれば桁が違うので。
+      - voice: 前田大然
+        text: 特にあの試合は一発しかなかったので、
+        cont: true
+      - voice: 前田大然
+        text: あれを決めるか決めないか。
+        cont: true
+      - voice: 前田大然
+        text: 特に昇格組で、そういうのを決めないといけないという、
+        cont: true
+        image: assets/images/20261113_maeda_pl_goal_words/02_w.jpg
+      - voice: 前田大然
+        text: そういうのもあったので、
+        cont: true
+      - voice: 前田大然
+        text: 一発で決められて良かった。
+        cont: true
+        emph: true
+      - text: 前田は今季、セルティックから昇格組のイプスウィッチに移り、リーグ戦の全試合に出ています。
+        image: assets/images/20261113_maeda_pl_goal_words/04_w.jpg
+      - text: 初ゴールは10月のマンチェスター・シティ戦、前半21分でした。
+      - voice: 前田大然
+        text: 地道にやっていれば、絶対にチャンスがあると思っていて、
+      - voice: 前田大然
+        text: ああいう注目される試合で決められて良かった。
+        cont: true
+        image: assets/images/20261113_maeda_pl_goal_words/01_w.jpg
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463069-463069-fl
+      - https://www.espn.com/soccer/match/_/gameId/401879259
+  - id: team
+    heading: 上田綺世が不在のブラジル戦、前田大然は何を狙うか
+    tier: 報道
+    telop: 前田大然「ゴールを狙っていけたら」
+    say:
+      - text: 日本代表は14日にブラジルと戦います。エースの上田綺世は不在です。
+        image: assets/images/20261113_maeda_pl_goal_words/02_w.jpg
+      - text: 前田は1トップの代役の一番手とみられていて、こう話しました。
+      - voice: 前田大然
+        text: FWが取ればチームが乗っていけると思うので、
+      - voice: 前田大然
+        text: ゴールを狙っていけたら。
+        cont: true
+        emph: true
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463069-463069-fl
+  - id: view
+    viewpoint: true
+    heading: 前田大然の初ゴールは、いつ決まったのか
+    tier: 背景
+    telop: 前半21分に同点。試合は2-3で敗戦
+    say:
+      - text: 見立てです。前田が話した「一発」は、10月17日のマンチェスター・シティ戦の前半21分でした。
+        card: {type: table, title: プレミア第7節 シティ 3-2 イプスウィッチ, columns: [分, 得点], rows: [[19分, フォデン（シティ）], [21分, 前田大然（イプスウィッチ）], [34分, ハーランド（シティ）], [69分, ハーランド（シティ）], [90分, フレミング（イプスウィッチ・PK）]], highlight_row: 1}
+      - text: 前田が決めて1対1に追いつきましたが、試合は2対3で敗れました。
+        card: none
+      - text: 14日のブラジル戦で、同じ一発が出るかどうかが焦点です。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401879259
+      - https://web.gekisaka.jp/news/japan/detail/?463069-463069-fl
