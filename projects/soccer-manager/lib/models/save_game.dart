@@ -1,6 +1,7 @@
 import 'bank_loan.dart';
 import 'best_eleven.dart';
 import 'budget_plan.dart';
+import 'owner_legacy.dart';
 import 'club_infrastructure.dart';
 import 'enum_json.dart';
 import 'continental_cup.dart';
@@ -83,6 +84,9 @@ class SaveGame {
   /// 終えると上がる。[confidence](成績・順位に由来するサポーター側の期待)
   /// と引っ張り合う、オーナー型の2つ目のメーター。
   int shareholderExpectation;
+
+  /// 手放した球団ごとの実績(殿堂)。売却後も消えない。
+  List<OwnerLegacy> ownerLegacies;
 
   /// 年の予算の配分(補強・育成・施設・営業・配当の比率)。
   BudgetPlan budgetPlan;
@@ -334,6 +338,7 @@ class SaveGame {
     this.boardTargetRank = 4,
     this.confidence = 60,
     this.shareholderExpectation = 60,
+    List<OwnerLegacy>? ownerLegacies,
     BudgetPlan? budgetPlan,
     this.managerReputation = 50,
     this.pendingJobOfferTeamId,
@@ -408,6 +413,7 @@ class SaveGame {
         newsLog = newsLog ?? [],
         trophyHistory = trophyHistory ?? [],
         clubHistory = clubHistory ?? [],
+        ownerLegacies = ownerLegacies ?? [],
         freeAgents = freeAgents ?? [],
         retiredLegends = retiredLegends ?? [],
         seasonHistory = seasonHistory ?? [],
@@ -498,6 +504,7 @@ class SaveGame {
         'boardTargetRank': boardTargetRank,
         'confidence': confidence,
         'shareholderExpectation': shareholderExpectation,
+        'ownerLegacies': ownerLegacies.map((l) => l.toJson()).toList(),
         'budgetPlan': budgetPlan.toJson(),
         'managerReputation': managerReputation,
         'pendingJobOfferTeamId': pendingJobOfferTeamId,
@@ -587,6 +594,10 @@ class SaveGame {
         boardTargetRank: json['boardTargetRank'] as int? ?? 4,
         confidence: json['confidence'] as int? ?? 60,
         shareholderExpectation: json['shareholderExpectation'] as int? ?? 60,
+        ownerLegacies: (json['ownerLegacies'] as List?)
+                ?.map((e) => OwnerLegacy.fromJson(e as Map<String, dynamic>))
+                .toList() ??
+            [],
         budgetPlan:
             BudgetPlan.fromJson(json['budgetPlan'] as Map<String, dynamic>?),
         managerReputation: json['managerReputation'] as int? ?? 50,

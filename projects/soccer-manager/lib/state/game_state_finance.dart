@@ -116,6 +116,84 @@ extension GameStateFinance on GameState {
     await _persist();
   }
 
+  /// クラブを手放すことになった理由。迫られていなければ null。
+  /// 両方が尽きたときはサポーターを先に見る(成績の責任が重い)。
+  SaleReason? get saleReason {
+    final save = _save;
+    if (save == null) return null;
+    if (save.confidence <= 0) return SaleReason.supporters;
+    if (save.shareholderExpectation <= 0) return SaleReason.shareholders;
+    return null;
+  }
+
+  /// サポーターか株主の期待が尽き、クラブを手放さなければならない状態か。
+  bool get isSaleForced => saleReason != null;
+
+  /// 手放したあとに買い直せるクラブの候補(最大3つ)。いまのリーグから、
+  /// 総合力の下位・中位・上位に1つずつ。強いほど資金の立て直しが楽だが、
+  /// 期待も重い。
+  List<Team> get buyoutCandidates {
+    final save = _save;
+    if (save == null) return const [];
+    final others = save.league.teams.where((t) => t.id != save.userTeamId).toList()
+      ..sort((a, b) => a.overallRating.compareTo(b.overallRating));
+    if (others.length <= 3) return others;
+    return [others.first, others[others.length ~/ 2], others.last];
+  }
+
+  /// 手放すクラブの実績(殿堂に残す1行)。
+  OwnerLegacy _legacyOfCurrentClub(SaleReason reason) {
+    final save = _save!;
+    final mine =
+        save.seasonHistory.where((r) => r.clubName == save.clubName).toList();
+    final ranks = mine.map((r) => r.finalRank).where((r) => r > 0);
+    return OwnerLegacy(
+      clubName: save.clubName,
+      seasons: mine.length,
+      leagueTitles: mine.where((r) => r.wonLeague).length,
+      cupTitles: mine.fold<int>(0, (t, r) => t + r.cupsWon.length),
+      bestRank: ranks.isEmpty ? 0 : ranks.reduce((a, b) => a < b ? a : b),
+      reason: reason,
+    );
+  }
+
+  /// 売却を迫られたクラブを手放し、[teamId] を買い直す。
+  ///
+  /// 実績は殿堂に残る。新しいクラブでは2つの期待が60に戻り、資金・施設・
+  /// スタッフ・融資・スポンサーは初期の状態から始める(予算の配り方は引き継ぐ)。
+  Future<bool> buyClub(String teamId) async {
+    final save = _save;
+    final reason = saleReason;
+    if (save == null || reason == null) return false;
+    final team = _findTeam(save.league.teams, teamId);
+    if (team == null || team.id == save.userTeamId) return false;
+
+    save.ownerLegacies.add(_legacyOfCurrentClub(reason));
+    save.userTeamId = team.id;
+    save.clubName = team.name;
+    save.pendingJobOfferTeamId = null;
+    save.confidence = 60;
+    save.shareholderExpectation = 60;
+    save.budget =
+        (6000 * save.difficulty.initialBudgetFactor).round();
+    save.infrastructure = ClubInfrastructure();
+    save.sponsorDeal = null;
+    save.bankLoans = [];
+    save.youthProspects = [];
+    save.boardTargetRank = _difficultyAdjustedTarget(
+      BoardEngine.estimateTargetRank(save.league, team.id),
+    );
+    save.wageBudget = BoardEngine.wageBudgetFor(
+      tier: save.currentDivisionTier,
+      currentWeeklyWageBill: weeklyWageBill,
+    );
+    save.clubHistory.add(team.name);
+    _refreshStaffCandidates();
+    _notify();
+    await _persist();
+    return true;
+  }
+
   /// ライバルクラブ(開幕時に決定、以後固定)。未設定の場合はnull。
   Team? get rivalTeam {
     final id = _save?.rivalTeamId;

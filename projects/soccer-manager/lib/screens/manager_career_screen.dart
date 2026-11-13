@@ -198,6 +198,26 @@ class ManagerCareerScreen extends StatelessWidget {
                     title: Text(trophy),
                   ),
                 ),
+            if (save.ownerLegacies.isNotEmpty) ...[
+              const SizedBox(height: 20),
+              Text(Tr.pick('オーナーの殿堂', 'Owner hall of fame'),
+                  style: Theme.of(context).textTheme.titleMedium),
+              const SizedBox(height: 8),
+              for (final l in save.ownerLegacies.reversed)
+                Card(
+                  margin: const EdgeInsets.only(bottom: 8),
+                  child: ListTile(
+                    leading:
+                        const Icon(Icons.workspace_premium, color: Colors.amber),
+                    title: Text(l.clubName),
+                    subtitle: Text(Tr.pick(
+                        '${l.seasons}シーズン・リーグ優勝${l.leagueTitles}回・カップ${l.cupTitles}回'
+                            '${l.bestRank > 0 ? '・最高${l.bestRank}位' : ''}',
+                        '${l.seasons} seasons, ${l.leagueTitles} league titles, ${l.cupTitles} cups'
+                            '${l.bestRank > 0 ? ', best ${l.bestRank}' : ''}')),
+                  ),
+                ),
+            ],
             const SizedBox(height: 20),
             Text(Tr.pick('指揮したクラブ', 'Clubs managed'),
                 style: Theme.of(context).textTheme.titleMedium),
