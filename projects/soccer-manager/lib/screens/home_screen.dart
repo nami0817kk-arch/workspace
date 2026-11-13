@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../data/quick_access_destinations.dart';
+import '../widgets/big_match_bar.dart';
 import '../widgets/owner_goal_card.dart';
 import '../widgets/two_pane.dart';
 import '../logic/calendar_engine.dart';
@@ -847,6 +848,7 @@ class HomeScreen extends StatelessWidget {
                         // いま何が結果に効いているか。戦術・習熟度・指示と
                         // 効く要素が増えたのに、それを見る場所が無かった。
                         const _MatchFactorsPanel(),
+                        const BigMatchBar(),
                         const SizedBox(height: 12),
                         FilledButton(
                           onPressed: () => _playMatch(context),
@@ -1007,7 +1009,10 @@ class HomeScreen extends StatelessWidget {
   Future<void> _playMatch(BuildContext context) async {
     FeedbackService.tap();
     final gameState = context.read<GameState>();
-    if (!await _confirmLineup(context, gameState)) return;
+    // 先発の穴は、勝負の試合でなければ監督が埋める。確かめるのは自分で決める試合だけ。
+    if (gameState.isNextMatchBig && !await _confirmLineup(context, gameState)) {
+      return;
+    }
     if (!context.mounted) return;
     final HalfResult? firstHalf;
     try {

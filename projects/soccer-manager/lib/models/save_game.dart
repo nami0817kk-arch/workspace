@@ -92,6 +92,15 @@ class SaveGame {
   /// いま追っているオーナーの目標。決めていなければ null。
   OwnerGoal? ownerGoal;
 
+  /// 勝負の試合を数えているシーズン。シーズンが変わると回数を戻す。
+  int bigMatchSeason;
+
+  /// そのシーズンに宣言した勝負の試合の数(取り消せば戻る)。
+  int bigMatchesUsed;
+
+  /// 勝負の試合と宣言した節。宣言が無ければ -1。
+  int bigMatchDeclaredMatchday;
+
   /// 目標を選んだシーズン(期限の数え始め)。
   int ownerGoalStartSeason;
 
@@ -350,6 +359,9 @@ class SaveGame {
     this.shareholderExpectation = 60,
     List<OwnerLegacy>? ownerLegacies,
     this.ownerGoal,
+    this.bigMatchSeason = 0,
+    this.bigMatchesUsed = 0,
+    this.bigMatchDeclaredMatchday = -1,
     this.ownerGoalStartSeason = 1,
     List<String>? achievedGoals,
     BudgetPlan? budgetPlan,
@@ -520,6 +532,9 @@ class SaveGame {
         'shareholderExpectation': shareholderExpectation,
         'ownerLegacies': ownerLegacies.map((l) => l.toJson()).toList(),
         'ownerGoal': ownerGoal?.name,
+        'bigMatchSeason': bigMatchSeason,
+        'bigMatchesUsed': bigMatchesUsed,
+        'bigMatchDeclaredMatchday': bigMatchDeclaredMatchday,
         'ownerGoalStartSeason': ownerGoalStartSeason,
         'achievedGoals': achievedGoals,
         'budgetPlan': budgetPlan.toJson(),
@@ -615,6 +630,9 @@ class SaveGame {
             .where((g) => g.name == json['ownerGoal'])
             .firstOrNull,
         ownerGoalStartSeason: json['ownerGoalStartSeason'] as int? ?? 1,
+        bigMatchSeason: json['bigMatchSeason'] as int? ?? 0,
+        bigMatchesUsed: json['bigMatchesUsed'] as int? ?? 0,
+        bigMatchDeclaredMatchday: json['bigMatchDeclaredMatchday'] as int? ?? -1,
         achievedGoals: (json['achievedGoals'] as List?)
                 ?.map((e) => e as String)
                 .toList() ??
