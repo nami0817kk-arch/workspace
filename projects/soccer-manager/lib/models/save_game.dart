@@ -93,6 +93,9 @@ class SaveGame {
   /// いま追っているオーナーの目標。決めていなければ null。
   OwnerGoal? ownerGoal;
 
+  /// 広告のご褒美で貯めた営業ブーストの残り(節数)。1節ごとに1減る。
+  int marketingBoostWeeks;
+
   /// 判断待ちの事件。無ければ null。
   OwnerEventKind? pendingOwnerEvent;
 
@@ -363,6 +366,7 @@ class SaveGame {
     this.shareholderExpectation = 60,
     List<OwnerLegacy>? ownerLegacies,
     this.ownerGoal,
+    this.marketingBoostWeeks = 0,
     this.pendingOwnerEvent,
     this.bigMatchSeason = 0,
     this.bigMatchesUsed = 0,
@@ -537,6 +541,7 @@ class SaveGame {
         'shareholderExpectation': shareholderExpectation,
         'ownerLegacies': ownerLegacies.map((l) => l.toJson()).toList(),
         'ownerGoal': ownerGoal?.name,
+        'marketingBoostWeeks': marketingBoostWeeks,
         'pendingOwnerEvent': pendingOwnerEvent?.name,
         'bigMatchSeason': bigMatchSeason,
         'bigMatchesUsed': bigMatchesUsed,
@@ -636,6 +641,7 @@ class SaveGame {
             .where((g) => g.name == json['ownerGoal'])
             .firstOrNull,
         ownerGoalStartSeason: json['ownerGoalStartSeason'] as int? ?? 1,
+        marketingBoostWeeks: json['marketingBoostWeeks'] as int? ?? 0,
         pendingOwnerEvent: OwnerEventKind.values
             .where((k) => k.name == json['pendingOwnerEvent'])
             .firstOrNull,

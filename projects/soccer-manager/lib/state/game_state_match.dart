@@ -647,6 +647,8 @@ extension GameStateMatch on GameState {
       );
     }
     _save!.budget += income;
+    // 営業ブーストは、収入が入った節で1つ使う。
+    if (_save!.marketingBoostWeeks > 0) _save!.marketingBoostWeeks -= 1;
     _save!.budget -= weeklyWageBill;
 
     // リーグ公式戦にスタメン出場した選手には出場手当を支払う(親善試合・カップ戦は対象外)。

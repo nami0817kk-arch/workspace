@@ -468,8 +468,12 @@ extension GameStateFinance on GameState {
     final merchandiseIncome =
         ((40 + managerReputation) * commercialMultiplier).round();
     // 営業の配分を厚くすると収入が増え、削ると減る(初期の配分で1倍)。
+    final boost = _save!.marketingBoostWeeks > 0
+        ? GameStateSquad.marketingBoostMultiplier
+        : 1.0;
     return ((matchdayIncome + sponsorIncome + merchandiseIncome) *
-            BudgetEngine.incomeMultiplier(_save!.budgetPlan))
+            BudgetEngine.incomeMultiplier(_save!.budgetPlan) *
+            boost)
         .round();
   }
 

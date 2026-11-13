@@ -10,7 +10,6 @@ import '../state/game_state.dart';
 import '../theme/semantic_colors.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/budget_plan_card.dart';
-import '../widgets/funds_pack_card.dart';
 import '../widgets/reward_funds_card.dart';
 import '../widgets/responsive_body.dart';
 import 'player_detail_screen.dart';
@@ -51,8 +50,6 @@ class FinanceScreen extends StatelessWidget {
           children: [
             // 特典資金。広告も課金も使えない環境では自分で消える。
             const RewardFundsCard(),
-            // 資金の購入。ストアに繋がらない環境では自分で消える。
-            const FundsPackCard(),
             const BudgetPlanCard(),
             Card(
               child: Padding(

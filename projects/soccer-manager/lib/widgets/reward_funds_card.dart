@@ -6,7 +6,9 @@ import '../services/feedback_service.dart';
 import '../state/game_state.dart';
 import '../l10n/tr.dart';
 
-/// 特典資金を受け取るカード。ファイナンス画面に置く。
+/// 営業ブーストを受け取るカード。ファイナンス画面に置く。
+///
+/// 資金を直接配らない。次の1節だけ収入が上がる(赤字を消すほどの力は持たせない)。
 ///
 /// 広告を出せない環境 (Web版・ストア未接続) では丸ごと消える。
 /// 押しても何も起きないボタンを残すより、無いほうがよい。
@@ -34,7 +36,7 @@ class _RewardFundsCardState extends State<RewardFundsCard> {
     }
 
     final scheme = Theme.of(context).colorScheme;
-    final amount = gameState.rewardFundsAmount;
+    final left = gameState.marketingBoostWeeks;
     final soldOut = money.remainingToday <= 0;
 
     return Card(
@@ -49,7 +51,7 @@ class _RewardFundsCardState extends State<RewardFundsCard> {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    Tr.pick('スポンサーの特別協賛金', 'Special sponsorship payment'),
+                    Tr.pick('営業を強化する', 'Push marketing'),
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ),
@@ -67,10 +69,10 @@ class _RewardFundsCardState extends State<RewardFundsCard> {
                       "You have taken today's allowance. It resets tomorrow.")
                   : money.requiresAd
                       ? Tr.pick(
-                          '短い動画広告を最後まで見ると$amount万円を受け取れます。見なくてもゲームは最後まで遊べます。',
-                          'Watch a short video to the end and receive $amount. You can finish the game without ever watching one.')
-                      : Tr.pick('サポーターとして、広告なしで$amount万円を受け取れます。',
-                          'As a supporter, you receive $amount with no ad.'),
+                          '短い動画広告を最後まで見ると、次の1節だけ収入が増えます(貯めた分: $left節)。見なくてもゲームは最後まで遊べます。',
+                          'Watch a short video to the end and income rises for the next matchday ($left banked). You can finish the game without ever watching one.')
+                      : Tr.pick('サポーターとして、広告なしで次の1節の収入を増やせます(貯めた分: $left節)。',
+                          'As a supporter, boost the next matchday\'s income with no ad ($left banked).'),
               style: TextStyle(color: scheme.onSurfaceVariant),
             ),
             const SizedBox(height: 12),
@@ -90,9 +92,8 @@ class _RewardFundsCardState extends State<RewardFundsCard> {
                   soldOut
                       ? Tr.pick('本日分は受け取り済み', 'Already taken today')
                       : money.requiresAd
-                          ? Tr.pick(
-                              '動画を見て$amount万円', 'Watch a video for $amount')
-                          : Tr.pick('$amount万円を受け取る', 'Receive $amount'),
+                          ? Tr.pick('動画を見て営業を強化', 'Watch a video to push marketing')
+                          : Tr.pick('営業を強化する', 'Push marketing'),
                 ),
                 onPressed: _busy || soldOut ? null : _claim,
               ),
@@ -118,14 +119,15 @@ class _RewardFundsCardState extends State<RewardFundsCard> {
     // Tr.pick は日本語と英語を「両方とも引数として」受け取るため、どちらの
     // 文字列も評価される。受け取り処理を文字列の中に書くと2回実行され、
     // 特典が二重に支払われる。必ず外で1回だけ呼ぶこと。
-    final granted =
-        result == ClaimResult.granted ? gameState.claimRewardFunds() : 0;
+    final banked =
+        result == ClaimResult.granted ? gameState.claimMarketingBoost() : 0;
 
     if (!mounted) return;
     setState(() => _busy = false);
     final message = switch (result) {
-      ClaimResult.granted => Tr.pick('特別協賛金$granted万円を受け取りました',
-          'You received $granted in sponsorship'),
+      ClaimResult.granted => Tr.pick(
+          '営業を強化しました。次の1節は収入が増えます(貯めた分: $banked節)',
+          'Marketing pushed. Income rises next matchday ($banked banked)'),
       ClaimResult.limitReached =>
         Tr.pick('本日分の受け取りは上限に達しています', "You have reached today's limit"),
       // 途中で閉じただけなので、責めるような文言にしない。

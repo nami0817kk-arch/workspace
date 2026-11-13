@@ -204,16 +204,30 @@ void main() {
       }
     });
 
-    test('特典を受け取ると資金が増え、理由がニュースに残る', () async {
+    test('特典を受け取ると営業ブーストが貯まり、理由がニュースに残る。資金は増えない', () async {
       final gameState = GameState();
       await gameState.startNewGame('テストFC');
       final before = gameState.save!.budget;
 
-      final amount = gameState.claimRewardFunds();
-      expect(amount, gameState.rewardFundsAmount);
-      expect(gameState.save!.budget, before + amount);
-      // 資金が増えた理由が追えないと、収支が読めなくなる。
-      expect(gameState.save!.newsLog.first.text, contains('特別協賛金'));
+      expect(gameState.claimMarketingBoost(), 1);
+      expect(gameState.marketingBoostWeeks, 1);
+      // 資金を直接配らない。赤字を消せる力は持たせない。
+      expect(gameState.save!.budget, before);
+      expect(gameState.save!.newsLog.first.text, contains('営業'));
+    });
+
+    test('営業ブーストは上限まで貯まり、次の節の収入だけ増える', () async {
+      final gameState = GameState();
+      await gameState.startNewGame('テストFC');
+      final id = gameState.save!.userTeamId;
+      final plain = gameState.weeklyIncomeFor(id);
+
+      for (var i = 0; i < GameStateSquad.marketingBoostCap + 2; i++) {
+        gameState.claimMarketingBoost();
+      }
+      expect(gameState.marketingBoostWeeks, GameStateSquad.marketingBoostCap);
+      expect(gameState.weeklyIncomeFor(id),
+          (plain * GameStateSquad.marketingBoostMultiplier).round());
     });
 
     test('シーズンの切り替わりでは全画面広告が出る', () async {

@@ -47,8 +47,8 @@ class _SupporterSectionState extends State<SupporterSection> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  Tr.pick('このアプリでお金が関わるのは次の3つだけです。',
-                      'Only three things in this app involve money.'),
+                  Tr.pick('このアプリでお金が関わるのは次の2つだけです。',
+                      'Only two things in this app involve money.'),
                   style: const TextStyle(fontSize: 13),
                 ),
                 const SizedBox(height: 8),
@@ -56,14 +56,14 @@ class _SupporterSectionState extends State<SupporterSection> {
                   icon: Icons.ondemand_video,
                   title: Tr.pick('広告', 'Ads'),
                   body: Tr.pick(
-                      '資金を受け取れる動画広告は、クラブ経営の画面で自分から選んだときだけ'
-                          '再生されます。1日${RewardOffer.dailyLimitFree}回まで、見ると特別協賛金を'
-                          '受け取れます。**一度も見なくても最後まで遊べます。**'
+                      '営業を強化できる動画広告は、クラブ経営の画面で自分から選んだときだけ'
+                          '再生されます。1日${RewardOffer.dailyLimitFree}回まで、見ると次の1節だけ'
+                          '収入が増えます。**一度も見なくても最後まで遊べます。**'
                           'このほか、シーズンの切り替わりで全画面広告が1回だけ出ます。'
                           '試合中やメニュー操作に割り込むことはなく、バナー広告もありません。',
-                      'The video ads that pay you play only when you choose to watch them, from the '
-                          'club finance screen. Up to ${RewardOffer.dailyLimitFree} a day, each one pays '
-                          'sponsorship money. **You can finish the game without ever watching one.** '
+                      'The video ads that boost your marketing play only when you choose to watch them, from the '
+                          'club finance screen. Up to ${RewardOffer.dailyLimitFree} a day, each one raises '
+                          'income for the next matchday. **You can finish the game without ever watching one.** '
                           'Separately, one full-screen ad appears when a season rolls over. '
                           'Nothing interrupts a match or a menu, and there are no banners.'),
                 ),
@@ -73,31 +73,17 @@ class _SupporterSectionState extends State<SupporterSection> {
                   title: Tr.pick('サポーター（買い切り）',
                       'Supporter (one-off purchase)'),
                   body: Tr.pick(
-                      '広告を見ずに同じ協賛金を受け取れるようになり、1日の回数が'
+                      '広告を見ずに同じ営業の強化ができるようになり、1日の回数が'
                           '${RewardOffer.dailyLimitFree}回から${RewardOffer.dailyLimitSupporter}回に増えます。'
                           'シーズンの切り替わりの全画面広告も出なくなります。'
                           '月額ではありません。**サポーター自体は、選手の成長や試合の勝率を'
                           '変えるものではありません。**',
-                      'You take the same money without ads, your daily limit rises from '
+                      'You get the same marketing boost without ads, your daily limit rises from '
                           '${RewardOffer.dailyLimitFree} to ${RewardOffer.dailyLimitSupporter}, and the '
                           'full-screen ad between seasons stops appearing. '
                           'It is not a subscription. '
                           '**The supporter purchase itself does not change player growth '
                           'or your chances in a match.**'),
-                ),
-                const SizedBox(height: 8),
-                _PointRow(
-                  icon: Icons.account_balance_wallet_outlined,
-                  title: Tr.pick('資金の購入（買い切り・任意）', 'Buying funds (optional)'),
-                  body: Tr.pick(
-                      'クラブ経営の画面で、クラブ資金をその場で増やせます。回数の制限は'
-                          'ありません。**これは買えばそのぶん有利になる商品です。**'
-                          '一度も買わずに最後まで遊べるように作っていますが、'
-                          '買った人が早く強いクラブを作れるのは事実です。',
-                      'From the club finances screen you can add money to the budget, '
-                          'as often as you like. **This one does give you an advantage.** '
-                          'The game is built to be finishable without ever buying any, '
-                          'but someone who buys will build a strong club sooner.'),
                 ),
               ],
             ),
@@ -116,8 +102,8 @@ class _SupporterSectionState extends State<SupporterSection> {
                   title: Text(Tr.pick('サポーターとしてご支援いただいています',
                       'Thank you for supporting the game')),
                   subtitle: Text(
-                    Tr.pick('広告を見なくても特別協賛金を受け取れます。ありがとうございます。',
-                        'You can take the sponsorship money without watching an ad. Thank you.'),
+                    Tr.pick('広告を見なくても営業を強化できます。ありがとうございます。',
+                        'You can push marketing without watching an ad. Thank you.'),
                   ),
                 )
               else
@@ -131,8 +117,8 @@ class _SupporterSectionState extends State<SupporterSection> {
                   ),
                   subtitle: Text(
                     Tr.pick(
-                        '買い切りです。広告を見なくても特別協賛金を受け取れるようになり、1日の回数が${RewardOffer.dailyLimitFree}回から${RewardOffer.dailyLimitSupporter}回に増えます。',
-                        'A one-off purchase. You get the sponsorship money without watching an ad, and your daily limit rises from ${RewardOffer.dailyLimitFree} to ${RewardOffer.dailyLimitSupporter}.'),
+                        '買い切りです。広告を見なくても営業を強化できるようになり、1日の回数が${RewardOffer.dailyLimitFree}回から${RewardOffer.dailyLimitSupporter}回に増えます。',
+                        'A one-off purchase. You can push marketing without watching an ad, and your daily limit rises from ${RewardOffer.dailyLimitFree} to ${RewardOffer.dailyLimitSupporter}.'),
                   ),
                   trailing: _busy
                       ? const SizedBox(
