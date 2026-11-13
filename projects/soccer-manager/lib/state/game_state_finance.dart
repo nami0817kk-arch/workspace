@@ -248,7 +248,7 @@ extension GameStateFinance on GameState {
   }
 
   /// 勝負の試合でない節は、監督が先発とメンタリティを決める。穴(負傷・出場停止)
-  /// を埋め、相手との力関係から構えを選ぶ。自分で決めた先発と戦術が効くのは、
+  /// を埋め、水準が高ければ相手との力関係から構えを、さらに高ければ最善の先発を選ぶ。自分で決めた先発と戦術が効くのは、
   /// 宣言した勝負の試合だけ。
   void _managerPreparesMatch(Fixture next) {
     final save = _save;
@@ -257,12 +257,25 @@ extension GameStateFinance on GameState {
     final oppId = next.homeTeamId == user.id ? next.awayTeamId : next.homeTeamId;
     final opp = _findTeam(save.league.teams, oppId);
     if (opp == null) return;
-    LineupUtils.fillVacancies(user);
-    user.mentality = CpuTacticsAI.mentalityFor(
-      ownRating: user.overallRating,
-      opponentRating: opp.overallRating,
-    );
+    final level = save.infrastructure.staffLevel(StaffRole.manager);
+    // 監督の水準が高いほど任せられる。低い監督は穴埋めまで、中くらいは
+    // 相手に合わせた構えまで、高い監督は最善の先発まで決める。
+    if (level >= 4) {
+      LineupUtils.autoFill(user);
+    } else {
+      LineupUtils.fillVacancies(user);
+    }
+    if (level >= 3) {
+      user.mentality = CpuTacticsAI.mentalityFor(
+        ownRating: user.overallRating,
+        opponentRating: opp.overallRating,
+      );
+    }
   }
+
+  /// テスト用: 監督のふだんの試合の準備だけを走らせる。
+  @visibleForTesting
+  void debugManagerPreparesMatch(Fixture next) => _managerPreparesMatch(next);
 
   /// テスト用: シーズン終了時の目標の判定だけを走らせる。
   @visibleForTesting
