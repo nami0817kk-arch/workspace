@@ -48,6 +48,7 @@ const dom = new JSDOM(html, {
     // canvas は描かない（描画の呼び出しが落ちないことだけ確かめる）
     const ctx = new Proxy(function () {}, { get: (t, k) => (k === 'measureText' ? () => ({ width: 10 }) : k === 'createLinearGradient' || k === 'createRadialGradient' ? () => ({ addColorStop() {} }) : () => {}), set: () => true });
     w.HTMLCanvasElement.prototype.getContext = () => ctx;
+    w.YA_DEV = true; // 開発用の道具（おまかせ進行・点検用）を出す
     w.addEventListener('error', (e) => errors.push(String(e.error || e.message)));
     const ce = w.console.error;
     w.console.error = (...a) => {
@@ -120,6 +121,13 @@ async function clearEvents() {
   ok(!!btn('練習を確定して週を進める') && !!btn('練習を組む'), 'ホームの操作');
   ok(!!d.querySelector('.tut:not(.coach)') && /練習/.test(d.querySelector('.tut:not(.coach)').textContent), '最初の1か月の案内が出る');
   ok(txt().includes('おまかせ進行') && !!btn('1年') && !!btn('次の試合まで'), 'おまかせ進行のボタン');
+  {
+    const Y = dom.window.YA;
+    dom.window.YA_DEV = false;
+    ok(Y.devOn() === false && Y.simCard() === null, '開発用の道具は ?dev が無いと出ない');
+    dom.window.YA_DEV = true;
+    ok(Y.devOn() === true, '開発用の道具は有効にすると出る');
+  }
   ok(txt().includes('今週気にかけたい子') && txt().includes('お知らせ'), 'ホームの欄');
   // 練習
   rail('練習');
