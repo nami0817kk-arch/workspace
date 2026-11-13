@@ -25,6 +25,10 @@ _engine_up = yomi.engine_up
 # --- 5. 見つけた誤読（台本, 文の一部, 置き換えたあとの文に入るもの, VOICEVOX のカナに入るもの）-----------------
 # カナが「／」で始まるものは、区切りの頭にその読みが来ること（「勝家」が「〜とか／ついえ」に切れないこと）
 MISREADS = [
+    # 11/17 ハプスブルク家の家系図（habsburg-kakeizu-story、11-13）。「〇〇家」はケ（エンジンはカ）
+    ("habsburg-kakeizu-story", "ハプスブルク家は、スペインで終わった", "ハプスブルクケ", "ハプスブルクケ"),
+    ("habsburg-kakeizu-story", "ハプスブルク家の公式解説サイト", "ハプスブルクケ", "ハプスブルクケ"),
+    ("habsburg-kakeizu-story", "ブルボン家へ", "ブルボンケ", "ブルボンケ"),
     # もしも原爆が間に合わなかったら（genbaku-if-story、11-07）
     ("genbaku-if-story", "宮崎県の都農と", "のつの", "ツノ"),
     ("genbaku-if-story", "参謀本部の種村佐孝の日誌", "たねむらさこう", "サコオ"),
@@ -614,11 +618,21 @@ MISREADS = [
     ("story/kaishu_s5", "勝の家に入った", "カツノイエニ", "カツノイエニ"),
     # 義経のショート5本（story/yoshitsune_s1〜s5、11-13）
     ("story/yoshitsune_s5", "言語の及ぶ所に非ず", "ゲンゴノオヨブトコロニアラズ", "ゲンゴノオヨブ"),
+    # 足利義満のショート5本（story/yoshimitsu_s1〜s5、11-13）
+    ("story/yoshimitsu_s5", "山科嗣教、16歳の元服", "やましなつぐのり", "ツグノリ"),
     # ガリレオ「それでも地球は動く」は本当に言ったのか（galileo-story、11-13）
     ("galileo-story", "聖務省の判決が", "セイムショウ", "セイムショオ"),
     ("galileo-story", "自分の手で署名しました", "せいぜつ", "セイゼツ"),
     ("galileo-story", "禁書目録を扱う聖省は", "せいしょう", "セイショオ"),
     ("galileo-story", "聖マッテオ修道院", "セイマッテオ", "セイマッテオ"),
+    # 11/17 もしも平清盛の福原遷都（kiyomori-fukuhara-if-story、11-13）。「都＋助詞」はミヤコ、「経が島」はキョウ
+    ("kiyomori-fukuhara-if-story", "経が島の工事", "きょうがしまの", "キョオガ"),
+    ("kiyomori-fukuhara-if-story", "大嘗会は", "だいじょうえは", "ダイジョ"),
+    ("kiyomori-fukuhara-if-story", "泰親が", "やすちかが", "ヤスチカ"),
+    ("kiyomori-fukuhara-if-story", "令旨が", "りょうじが", "リョオジガ"),
+    ("kiyomori-fukuhara-if-story", "謀叛は", "むほんは", "ムホン"),
+    ("kiyomori-fukuhara-if-story", "近江や東国", "おうみや東国", "オオミヤ"),
+    ("kiyomori-fukuhara-if-story", "、都を移そう", "みやこをうつそう", "ミヤコオ"),
 ]
 
 

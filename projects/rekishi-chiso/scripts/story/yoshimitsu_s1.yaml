@@ -1,0 +1,150 @@
+# 物語完結型ショート 足利義満 s1（2026-11-13）。本編 scripts/yoshimitsu-story.yaml（11/16 12:00 公開予定、https://youtu.be/6dJB0Rq7yeY）から。11/17 に予約。
+# 切り口：死の時刻が、日記によって午後3時から9時まで割れること（本編第4章。yoshimitsu-06, 09）。
+# 形式は louis14_s1.yaml・yoshitsune_s2.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（dev/output/rekishi-chiso/research/足利義満_facts_20261113_hand.yaml）と本編の # fact: だけ。
+# 絵は本編の AI 絵（out/story/yoshimitsu/main の S 番号）の切り出し・組み合わせの再利用だけ。新しい絵は作らない。
+# 計算：申3〜5時・酉5〜7時・戌7〜9時。最も早い申の刻の始め(15時)と最も遅い戌の刻の終わり(21時)で、刻の幅で数えて最大6時間（本編と同じ数え方）。
+title: "足利義満｜死の時刻が、記録で割れる"
+yt_title: "足利義満が亡くなった時刻　日記は午後3時から9時まで割れる　最大6時間のずれ"
+description: |-
+  1408年、応永15年5月6日。金閣を建てた足利義満は、北山第で亡くなりました。ところが、亡くなった時刻は、記録によって割れます。
+  教言卿記は申の斜め、続史愚抄は申の刻で、午後3時から5時ごろ。鹿苑院殿薨葬記と追善記は酉の刻で、午後5時から7時ごろ。飛鳥井雅縁は戌の時ばかり、午後7時から9時ごろ。いちばん早い記録と遅い記録で、刻の幅で数えて最大6時間、開きます。
+  教言卿記は、後鑑などの引用を通して読んだものです。その夜、遺体はどうなったのか。本編は次のリンクからどうぞ。
+  https://youtu.be/6dJB0Rq7yeY
+hashtags:
+- "#足利義満"
+- "#金閣"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の室内・風景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。"
+art_dir: out/story/yoshimitsu
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: yoshimitsu_story_s1
+header:
+  tag: "1408年5月6日の死"
+  title: "死の時刻が、記録で《6時間》割れる"
+now:
+- {at: "1408年", text: "1408年5月6日　北山第", point: 0}
+timeline:
+- {label: "1408"}
+shots:
+  S06_in5:
+    kind: "ai"
+    file: "yoshimitsu/main/S06.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "灯のそばで日記を書く後ろ姿"
+  SEND_in5:
+    kind: "ai"
+    file: "yoshimitsu/main/SEND.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "夕暮れの池のほとりの金閣"
+  S01_in5:
+    kind: "ai"
+    file: "yoshimitsu/main/S01.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "夕暮れの池に映る金閣（想像図）"
+  S12_left4:
+    kind: "ai"
+    file: "yoshimitsu/main/S12.jpg"
+    focus: [0.4, 0.5]
+    move: "left"
+    must: "灯のそばの机に広げた巻物と筆"
+  S06_left6:
+    kind: "ai"
+    file: "yoshimitsu/main/S06.jpg"
+    focus: [0.6, 0.5]
+    move: "left"
+    must: "灯のそばで日記を書く後ろ姿"
+  S12_right6:
+    kind: "ai"
+    file: "yoshimitsu/main/S12.jpg"
+    focus: [0.6, 0.5]
+    move: "right"
+    must: "灯のそばの机に広げた巻物と筆"
+  S02_in5:
+    kind: "ai"
+    file: "yoshimitsu/main/S02.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "灯のともる室内、向き合う二人（想像図）"
+  SEND_right3:
+    kind: "ai"
+    file: "yoshimitsu/main/SEND.jpg"
+    focus: [0.3, 0.5]
+    move: "right"
+    must: "夕暮れの池のほとりの金閣"
+  S12_right5:
+    kind: "ai"
+    file: "yoshimitsu/main/S12.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    must: "灯のそばの机に広げた巻物と筆"
+  S06_in4:
+    kind: "ai"
+    file: "yoshimitsu/main/S06.jpg"
+    focus: [0.4, 0.5]
+    move: "in"
+    must: "灯のそばで日記を書く後ろ姿"
+lines:
+  # fact: yoshimitsu-09
+- 語り: "死の時刻が、割れる。足利義満が亡くなった時刻を、記録は、午後3時から9時まで、バラバラに書く。"
+  shot: S06_in5
+  tone: 強調
+  pause: 0.12
+  # fact: yoshimitsu-06
+- 語り: "1408年5月6日。義満は、北山第で亡くなった。享年、数えで51。"
+  shot: SEND_in5
+  tone: 重い
+  pause: 0.12
+  # fact: yoshimitsu-06
+- 語り: "法名は、道義。号は、鹿苑院。西暦では、5月31日ごろだ。"
+  shot: S01_in5
+  tone: しみじみ
+  pause: 0.12
+  # fact: yoshimitsu-09
+- 語り: "当時は、一日を十二の刻に分けた。申の刻は午後3時から5時、酉の刻は5時から7時、戌の刻は7時から9時だ。"
+  shot: S12_left4
+  tone: しみじみ
+  pause: 0.12
+  # fact: yoshimitsu-09
+- 語り: "教言卿記は、申の斜め。続史愚抄は、申の刻。午後3時から5時ごろだ。"
+  shot: S06_left6
+  tone: しみじみ
+  pause: 0.12
+  # fact: yoshimitsu-09
+- 語り: "ところが、鹿苑院殿薨葬記と追善記は、酉の刻。午後5時から7時ごろだ。"
+  shot: S12_right6
+  tone: 重い
+  pause: 0.12
+  # fact: yoshimitsu-09
+- 語り: "飛鳥井雅縁は、戌の時ばかり、と書く。午後7時から9時ごろだ。"
+  shot: S02_in5
+  tone: 重い
+  pause: 0.12
+  # fact: yoshimitsu-09
+- 語り: "いちばん早い記録と、いちばん遅い記録では、刻の幅で数えて、最大で6時間、開く。"
+  shot: SEND_right3
+  tone: しみじみ
+  pause: 0.12
+  # fact: yoshimitsu-09
+- 語り: "同じ年の、同じ日の死なのに、書き手が違うと、時刻が違う。"
+  shot: S12_right5
+  tone: 重い
+  pause: 0.12
+  # fact: yoshimitsu-07
+- 語り: "では、その夜、義満の遺体は、どうなったのか。"
+  shot: S06_in4
+  tone: 疑問
+  pause: 0.15
