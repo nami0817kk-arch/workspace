@@ -12,6 +12,7 @@ import 'block_report_screen.dart';
 import 'box_score.dart';
 import 'coaches_screen.dart';
 import 'common.dart';
+import 'draft_show_screen.dart';
 import 'inbox_screen.dart';
 import 'negotiate_dialog.dart';
 import 'player_card.dart';
@@ -524,6 +525,18 @@ class ProgressTab extends StatelessWidget {
     await nav.push(MaterialPageRoute<void>(fullscreenDialog: true, builder: (_) => PlayoffRunScreen(c: c)));
   }
 
+  /// オフへ。指名権が無くドラフトがその場で終わったときも、くじとドラフトのまとめは見せる。
+  Future<void> _offseason(BuildContext context) async {
+    final nav = Navigator.of(context);
+    c.toOffseason();
+    final car = c.career;
+    if (car == null || car.phase != Phase.contracts || car.lotteryPre.isEmpty) return;
+    c.lotteryShownSeason = car.season;
+    await nav.push(MaterialPageRoute<void>(fullscreenDialog: true, builder: (_) => LotteryScreen(c: c)));
+    if (!nav.mounted) return;
+    await nav.push(MaterialPageRoute<void>(fullscreenDialog: true, builder: (_) => DraftSummaryScreen(c: c)));
+  }
+
   // ------------------------------------------------------------ シーズン終了
 
   List<Widget> _seasonEnd(BuildContext context, Career car) {
@@ -598,7 +611,7 @@ class ProgressTab extends StatelessWidget {
         ]),
       ] else
         FilledButton.icon(
-          onPressed: c.busy ? null : c.toOffseason,
+          onPressed: c.busy ? null : () => _offseason(context),
           icon: const Icon(Icons.arrow_forward_rounded),
           label: const Text('オフへ(ドラフト・契約)'),
         ),

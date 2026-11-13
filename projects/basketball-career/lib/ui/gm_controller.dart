@@ -43,6 +43,9 @@ class GmController extends ChangeNotifier {
   /// 広告を待っている間(ボタンを止める)。
   bool busy = false;
 
+  /// ドラフトくじの結果を見せたシーズン(画面を開き直したら、もう一度見せてよい)。
+  int lotteryShownSeason = -1;
+
   /// はじめの画面を出しているか(起動したときは、続きがあってもはじめの画面から)。
   bool atHome = true;
 

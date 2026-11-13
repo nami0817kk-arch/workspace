@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 
+import '../../gm/career.dart';
 import '../../gm/draft.dart';
+import '../../gm/draft_show.dart';
 import '../../gm/player.dart';
 import '../../monetization/monetization.dart';
 import '../gm_controller.dart';
 import 'common.dart';
+import 'draft_show_screen.dart';
 import 'style.dart';
 
 /// 候補の並べ方。
@@ -24,6 +27,41 @@ class _DraftViewState extends State<DraftView> {
   _Sort _sort = _Sort.mock;
 
   GmController get c => widget.c;
+
+  @override
+  void initState() {
+    super.initState();
+    // ドラフトが始まったら、まずくじの結果を見せる(シーズンごとに1度)
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final car = c.career;
+      if (!mounted || car == null || car.lotteryPre.isEmpty || c.lotteryShownSeason == car.season) return;
+      c.lotteryShownSeason = car.season;
+      Navigator.of(context).push(MaterialPageRoute<void>(fullscreenDialog: true, builder: (_) => LotteryScreen(c: c)));
+    });
+  }
+
+  /// 指名して、答え合わせと次の番までの指名を見せる。最後の指名ならドラフトのまとめへ。
+  Future<void> _pick(Prospect p) async {
+    final nav = Navigator.of(context);
+    final car = c.career!;
+    final before = car.draftLog.length;
+    c.pickProspect(p);
+    final since = picksSince(car, before);
+    if (since.isEmpty || since.first != p) return;
+    await showPickReveal(nav, c, p, since.skip(1).toList());
+    await _summaryIfOver(nav);
+  }
+
+  Future<void> _pass() async {
+    final nav = Navigator.of(context);
+    c.passPick();
+    await _summaryIfOver(nav);
+  }
+
+  Future<void> _summaryIfOver(NavigatorState nav) async {
+    if (c.career!.phase == Phase.draft || !nav.mounted) return;
+    await nav.push(MaterialPageRoute<void>(fullscreenDialog: true, builder: (_) => DraftSummaryScreen(c: c)));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,6 +108,11 @@ class _DraftViewState extends State<DraftView> {
                   const Icon(Icons.travel_explore_rounded, size: 16, color: GmColors.sub),
                   const SizedBox(width: 4),
                   Text('スカウト 残り${car.scoutsLeft}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                  if (car.lotteryPre.isNotEmpty)
+                    TextButton(
+                      onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(fullscreenDialog: true, builder: (_) => LotteryScreen(c: c))),
+                      child: const Text('くじ'),
+                    ),
                   if (car.canAddScouts)
                     TextButton.icon(
                       onPressed: c.busy ? null : () => _moreScouts(context),
@@ -95,7 +138,7 @@ class _DraftViewState extends State<DraftView> {
                   const SizedBox(height: 4),
                   Row(children: [
                     Expanded(child: Text(car.draftProblem!, style: const TextStyle(color: GmColors.bad, fontSize: 12))),
-                    OutlinedButton(onPressed: c.passPick, child: const Text('この指名を見送る')),
+                    OutlinedButton(onPressed: _pass, child: const Text('この指名を見送る')),
                   ]),
                 ],
                 if (car.news.isNotEmpty)
@@ -130,7 +173,7 @@ class _DraftViewState extends State<DraftView> {
             padding: EdgeInsets.symmetric(vertical: 8),
             child: Text('候補の☆を押すと、ここに並ぶ(押した順)。', style: TextStyle(color: GmColors.sub)),
           ),
-        for (final p in open) ...[_ProspectRow(c: c, p: p, rank: ranks[p]!, gone: before != null && ranks[p]! <= before), const SizedBox(height: 6)],
+        for (final p in open) ...[_ProspectRow(c: c, p: p, rank: ranks[p]!, gone: before != null && ranks[p]! <= before, onPick: _pick), const SizedBox(height: 6)],
         if (taken.isNotEmpty) ...[
           const SectionTitle('ここまでの指名'),
           for (final (k, p) in taken)
@@ -163,9 +206,10 @@ class _DraftViewState extends State<DraftView> {
 }
 
 class _ProspectRow extends StatelessWidget {
-  const _ProspectRow({required this.c, required this.p, required this.rank, required this.gone});
+  const _ProspectRow({required this.c, required this.p, required this.rank, required this.gone, required this.onPick});
   final GmController c;
   final Prospect p;
+  final void Function(Prospect) onPick;
 
   /// 模擬ドラフトの予想順位。
   final int rank;
@@ -181,7 +225,7 @@ class _ProspectRow extends StatelessWidget {
     final starred = car.board.contains(pl.id);
     return InkWell(
       borderRadius: BorderRadius.circular(12),
-      onTap: () => _showProspect(context, c, p, rank),
+      onTap: () => _showProspect(context, c, p, rank, onPick),
       child: Container(
         padding: const EdgeInsets.fromLTRB(10, 8, 8, 8),
         decoration: BoxDecoration(
@@ -264,7 +308,7 @@ class _ProspectRow extends StatelessWidget {
                     height: 34,
                     child: FilledButton(
                       style: FilledButton.styleFrom(minimumSize: const Size(72, 34), padding: const EdgeInsets.symmetric(horizontal: 8)),
-                      onPressed: canPick ? () => c.pickProspect(p) : null,
+                      onPressed: canPick ? () => onPick(p) : null,
                       child: const Text('指名', style: TextStyle(fontSize: 14)),
                     ),
                   ),
@@ -322,7 +366,7 @@ class _ProspectRow extends StatelessWidget {
 }
 
 /// 候補の詳しい情報(経歴・身体測定・去年の成績・見立て)。
-Future<void> _showProspect(BuildContext context, GmController c, Prospect p, int rank) => showGmSheet<void>(
+Future<void> _showProspect(BuildContext context, GmController c, Prospect p, int rank, void Function(Prospect) onPick) => showGmSheet<void>(
   context,
   builder: (ctx) => ListenableBuilder(
     listenable: c,
@@ -421,7 +465,7 @@ Future<void> _showProspect(BuildContext context, GmController c, Prospect p, int
                   onPressed: car.canDraftPick && !c.busy
                       ? () {
                           Navigator.of(ctx).pop();
-                          c.pickProspect(p);
+                          onPick(p);
                         }
                       : null,
                   child: const Text('この選手を指名する'),

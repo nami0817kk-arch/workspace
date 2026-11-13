@@ -439,6 +439,9 @@ class Career {
 
   /// 指名された順の候補(prospects の番号)。
   List<int> draftLog = [];
+
+  /// 今年のくじの前の並び(くじに入ったチーム、成績の悪い順)。くじの結果を見せるのに使う。
+  List<int> lotteryPre = [];
   int scoutsLeft = 0;
   bool scoutAdUsed = false;
 
@@ -1929,6 +1932,7 @@ class Career {
     // ドラフト
     // 1回戦に出たチーム(プレーインを勝ち抜いたチームを含む)は、くじに入らない
     final inPlayoffs = {for (final s in playoffs.where((s) => s.round == 1)) ...[s.high, s.low]}.toList();
+    lotteryPre = standings(teams).reversed.map((t) => t.index).where((i) => !inPlayoffs.contains(i)).toList();
     order = draftOrder(teams, picks, season, inPlayoffs, rng);
     _applySwaps();
     for (final i in conveyedBack) {
@@ -1983,6 +1987,7 @@ class Career {
 
   void _sign(Team t, Prospect p, int overall) {
     p.pickedBy = t.index;
+    p.pickNo = overall + 1;
     draftLog.add(prospects.indexOf(p));
     if (overall == 0) _log('ドラフト全体1位: ${p.player.name}(${t.def.short})');
     final (sal, yrs) = rookieContract(overall);
@@ -3116,6 +3121,7 @@ class Career {
         'order': order,
         'da': draftAt,
         'dl': draftLog,
+        if (lotteryPre.isNotEmpty) 'lpre': lotteryPre,
         'sl': scoutsLeft,
         'sau': scoutAdUsed,
         'exp': expiring,
@@ -3207,6 +3213,7 @@ class Career {
       ..order = [for (final x in (j['order'] as List? ?? const [])) x as int]
       ..draftAt = (j['da'] as int?) ?? 0
       ..draftLog = [for (final x in (j['dl'] as List? ?? const [])) x as int]
+      ..lotteryPre = [for (final x in (j['lpre'] as List? ?? const [])) x as int]
       ..scoutsLeft = (j['sl'] as int?) ?? 0
       ..scoutAdUsed = (j['sau'] as bool?) ?? false
       ..expiring = [for (final x in (j['exp'] as List? ?? const [])) x as int]
