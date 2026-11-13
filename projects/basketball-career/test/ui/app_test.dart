@@ -267,6 +267,40 @@ void main() {
     expect(find.textContaining('オフのまとめ'), findsNothing);
   });
 
+  testWidgets('トレード: 届いた申し込みを受けると、成立の画面が出る(小さいスマホ)', (tester) async {
+    _size(tester, 667, 375);
+    final c = await _controller({'gmHowtoSeen': true});
+    Career? car;
+    for (final seed in [3, 7, 11, 19]) {
+      c.newCareer(teamAtRank(10, 28), seed: seed);
+      c.startSeason();
+      final x = c.career!;
+      while (x.phase == Phase.season && (x.incoming == null || !x.canTrade)) {
+        x.playBlock();
+      }
+      if (x.incoming != null && x.judge(x.incoming!).ok) {
+        car = x;
+        break;
+      }
+    }
+    expect(car, isNotNull);
+    await tester.pumpWidget(BasketballCareerApp(controller: c));
+    await tester.pumpAndSettle();
+    await _closeDialogs(tester);
+    final accept = find.widgetWithText(FilledButton, '受ける');
+    await tester.scrollUntilVisible(accept, 300, scrollable: _progress);
+    await tester.ensureVisible(accept);
+    await tester.pumpAndSettle();
+    await tester.tap(accept);
+    await tester.pumpAndSettle();
+    expect(find.textContaining('トレード成立'), findsOneWidget);
+    expect(find.textContaining('評価: '), findsOneWidget);
+    expect(tester.takeException(), isNull);
+    await tester.tap(find.text('閉じる'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('トレード成立'), findsNothing);
+  });
+
   testWidgets('プレーオフは自分のシリーズを1試合ずつめくり、最後に結果を見てシーズンの終わりへ', (tester) async {
     _size(tester, 667, 375);
     final c = await _controller({'gmHowtoSeen': true});

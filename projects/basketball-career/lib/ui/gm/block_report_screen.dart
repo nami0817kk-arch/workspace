@@ -84,6 +84,13 @@ class BlockReportScreen extends StatelessWidget {
                 _line(Icons.star_rounded, GmColors.gold, 'この間のエース: ${r.star!.$1}(${r.star!.$3}試合で平均${r.star!.$2.toStringAsFixed(1)}点)'),
               if (r.deadlinePassed) _line(Icons.lock_clock_rounded, GmColors.bad, 'トレードの締め切りを過ぎた。今季はもうトレードできない'),
               if (r.seasonOver) _line(Icons.emoji_events_rounded, GmColors.gold, 'レギュラーシーズンが終わった。次はプレーオフ'),
+              if (r.deadlinePassed) ...[
+                SectionTitle('締め切りまでの今季のトレード(${r.deadlineTrades.length}件)'),
+                if (r.deadlineTrades.isEmpty) const Text('今季はトレードがなかった。', style: TextStyle(color: GmColors.sub)),
+                for (final t in r.deadlineTrades.reversed.take(8)) _bullet(t, bold: t.contains(c.career!.me.def.short)),
+                if (r.deadlineTrades.length > 8)
+                  Text('ほか${r.deadlineTrades.length - 8}件(受信箱の「締め切り日のまとめ」に時間順で)', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
+              ],
               if (r.highlights.isNotEmpty) ...[
                 const SectionTitle('見どころ'),
                 for (final h in r.highlights) _bullet(h),

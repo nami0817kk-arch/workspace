@@ -18,6 +18,7 @@ import 'negotiate_dialog.dart';
 import 'offseason_show_screen.dart';
 import 'player_card.dart';
 import 'skills_screen.dart';
+import 'trade_show_screen.dart';
 import 'style.dart';
 
 /// 進行のタブ。いまやること・試合の結果・届いた申し込み・オフの知らせ。
@@ -309,7 +310,16 @@ class ProgressTab extends StatelessWidget {
         Row(children: [
           Expanded(child: OutlinedButton(onPressed: c.declineIncoming, child: const Text('断る'))),
           const SizedBox(width: 10),
-          Expanded(child: FilledButton(onPressed: c.acceptIncoming, child: const Text('受ける'))),
+          Expanded(
+            child: FilledButton(
+              onPressed: () => tradeWithShow(context, c, o, () {
+                final before = car.tradesDone;
+                c.acceptIncoming();
+                return car.tradesDone > before;
+              }),
+              child: const Text('受ける'),
+            ),
+          ),
         ]),
       ]),
     ];
