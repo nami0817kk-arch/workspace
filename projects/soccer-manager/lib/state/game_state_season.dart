@@ -736,7 +736,8 @@ extension GameStateSeason on GameState {
     // 株主の期待: 黒字でシーズンを終えれば上がり、赤字なら下がる。
     _save!.shareholderExpectation = ShareholderEngine.applied(
       _save!.shareholderExpectation,
-      ShareholderEngine.deltaForSeasonEnd(budget: _save!.budget),
+      ShareholderEngine.deltaForSeasonEnd(budget: _save!.budget) +
+          BudgetEngine.dividendExpectationDelta(_save!.budgetPlan),
     );
 
     // 理事会の目標達成報奨金: シーズン目標順位を達成すると、リーグ賞金と

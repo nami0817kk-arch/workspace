@@ -421,7 +421,9 @@ extension GameStateSquad on GameState {
   int facilityUpgradeCostFor(FacilityType type) {
     if (_save == null) return 0;
     final lvl = _save!.infrastructure.facilityLevel(type);
-    return ClubInfrastructure.facilityUpgradeCost(lvl);
+    return (ClubInfrastructure.facilityUpgradeCost(lvl) *
+            BudgetEngine.facilityCostMultiplier(_save!.budgetPlan))
+        .round();
   }
 
   /// 候補[staffId]を雇う。既にその役職に人がいれば入れ替わる。
@@ -484,7 +486,7 @@ extension GameStateSquad on GameState {
     final infra = _save!.infrastructure;
     final lvl = infra.facilityLevel(type);
     if (lvl >= ClubInfrastructure.maxLevel) return false;
-    final cost = ClubInfrastructure.facilityUpgradeCost(lvl);
+    final cost = facilityUpgradeCostFor(type);
     if (_save!.budget < cost) return false;
     _save!.budget -= cost;
     infra.upgradeFacility(type);

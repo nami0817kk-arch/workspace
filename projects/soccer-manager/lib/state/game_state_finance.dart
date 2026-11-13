@@ -193,7 +193,10 @@ extension GameStateFinance on GameState {
     // チケット・スポンサーだけに依存しない収入源として資金繰りを下支えする。
     final merchandiseIncome =
         ((40 + managerReputation) * commercialMultiplier).round();
-    return matchdayIncome + sponsorIncome + merchandiseIncome;
+    // 営業の配分を厚くすると収入が増え、削ると減る(初期の配分で1倍)。
+    return ((matchdayIncome + sponsorIncome + merchandiseIncome) *
+            BudgetEngine.incomeMultiplier(_save!.budgetPlan))
+        .round();
   }
 
   /// 年の予算の配分(補強・育成・施設・営業・配当)。
@@ -223,12 +226,15 @@ extension GameStateFinance on GameState {
   /// 値になるため、既存プレイを突然ブロックしない)。
   int get wageBudgetCap {
     if (_save == null) return 0;
-    if (_save!.wageBudget > 0) return _save!.wageBudget;
-    return BoardEngine.wageBudgetFor(
-      tier: _save!.currentDivisionTier,
-      currentWeeklyWageBill: weeklyWageBill,
-      weeklyIncome: weeklyIncomeFor(_save!.userTeamId),
-    );
+    final base = _save!.wageBudget > 0
+        ? _save!.wageBudget
+        : BoardEngine.wageBudgetFor(
+            tier: _save!.currentDivisionTier,
+            currentWeeklyWageBill: weeklyWageBill,
+            weeklyIncome: weeklyIncomeFor(_save!.userTeamId),
+          );
+    // 補強の配分を厚くすると上限が広がり、削ると狭まる(初期の配分で1倍)。
+    return (base * BudgetEngine.wageCapMultiplier(_save!.budgetPlan)).round();
   }
 
   /// 週給[addedWeeklyWage]万円の選手を加えても週給予算に収まるか。
