@@ -148,7 +148,59 @@ void main() {
       if (draft.phase == Phase.seasonEnd) draft.fired = false;
       botStep(draft);
     }
-    await _shoot(t, '10_draft', await _with(draft));
+    Career toDraft() {
+      final d = careerAt(5, 28);
+      var g = 0;
+      while (d.phase != Phase.draft && g++ < 400) {
+        if (d.phase == Phase.seasonEnd) d.fired = false;
+        botStep(d);
+      }
+      return d;
+    }
+
+    Future<void> settle(WidgetTester t) async {
+      for (var i = 0; i < 6; i++) {
+        await t.pump(const Duration(milliseconds: 150));
+      }
+    }
+
+    await _shoot(t, '10a_lottery', await _with(toDraft()), act: settle);
+    await _shoot(t, '10b_lottery_open', await _with(toDraft()), act: (t) async {
+      await settle(t);
+      await _tap(t, '全部開ける');
+    });
+    Future<void> openDraft(WidgetTester t) async {
+      await settle(t);
+      await _tap(t, '全部開ける');
+      await _tap(t, 'ドラフトへ');
+      await settle(t);
+    }
+
+    await _shoot(t, '10_draft', await _with(draft), act: openDraft);
+    await _shoot(t, '10c_pick_reveal', await _with(toDraft()), act: (t) async {
+      await openDraft(t);
+      final b = find.widgetWithText(FilledButton, '指名').first;
+      await t.ensureVisible(b);
+      await t.pumpAndSettle();
+      await t.tap(b);
+      await t.pumpAndSettle();
+    });
+    await _shoot(t, '10d_draft_summary', await _with(toDraft()), act: (t) async {
+      await openDraft(t);
+      for (var i = 0; i < 8 && find.textContaining('ドラフトのまとめ').evaluate().isEmpty; i++) {
+        final pick = find.widgetWithText(FilledButton, '指名');
+        final pass = find.text('この指名を見送る');
+        final b = pass.evaluate().isNotEmpty ? pass : pick.first;
+        await t.ensureVisible(b);
+        await t.pumpAndSettle();
+        await t.tap(b);
+        await t.pumpAndSettle();
+        if (find.text('続ける').evaluate().isNotEmpty) {
+          await t.tap(find.text('続ける'));
+          await t.pumpAndSettle();
+        }
+      }
+    });
     // シーズンの終わり(GM の格の内訳と、任期を終えるボタンまで送って撮る)
     final end = careerAt(4, 3);
     guard = 0;

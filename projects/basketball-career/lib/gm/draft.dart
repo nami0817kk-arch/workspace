@@ -8,7 +8,7 @@ import 'trade.dart';
 
 /// ドラフトの候補。本当の力は指名するまで分からず、見えるのは幅([ovrLo]〜[ovrHi] など)だけ。
 class Prospect {
-  Prospect({required this.player, required this.ovrLo, required this.ovrHi, required this.potLo, required this.potHi, this.scouted = false, this.pickedBy});
+  Prospect({required this.player, required this.ovrLo, required this.ovrHi, required this.potLo, required this.potHi, this.scouted = false, this.pickedBy, this.pickNo});
 
   final Player player;
   int ovrLo, ovrHi, potLo, potHi;
@@ -18,6 +18,9 @@ class Prospect {
 
   /// 指名したチーム(まだなら null)。
   int? pickedBy;
+
+  /// 何番目の指名で取られたか(1始まり。まだなら null)。
+  int? pickNo;
 
   int get mid => ((ovrLo + ovrHi) / 2 * 0.45 + (potLo + potHi) / 2 * 0.55).round();
 
@@ -29,6 +32,7 @@ class Prospect {
         'ph': potHi,
         if (scouted) 's': true,
         if (pickedBy != null) 'by': pickedBy,
+        if (pickNo != null) 'no': pickNo,
       };
 
   static Prospect fromJson(Map<String, dynamic> j) => Prospect(
@@ -39,6 +43,7 @@ class Prospect {
         potHi: j['ph'] as int,
         scouted: (j['s'] as bool?) ?? false,
         pickedBy: j['by'] as int?,
+        pickNo: j['no'] as int?,
       );
 }
 

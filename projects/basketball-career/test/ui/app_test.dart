@@ -164,6 +164,66 @@ void main() {
     expect(car.me.wins + car.me.losses, gamesPerSeason);
   });
 
+  testWidgets('ドラフト: くじを開け、指名すると答え合わせ、終わるとまとめが出る(小さいスマホ)', (tester) async {
+    _size(tester, 667, 375);
+    final c = await _controller({'gmHowtoSeen': true});
+    c.newCareer(teamAtRank(6, 28), seed: 6);
+    c.startSeason();
+    final car = c.career!;
+    while (car.phase == Phase.season) {
+      car.declineIncoming();
+      car.playBlock();
+    }
+    car.playPlayoffs();
+    car.fired = false;
+    await tester.pumpWidget(BasketballCareerApp(controller: c));
+    await tester.pumpAndSettle();
+    await _closeDialogs(tester);
+    final off = find.text('オフへ(ドラフト・契約)');
+    await tester.scrollUntilVisible(off, 300, scrollable: _progress);
+    await tester.tap(off);
+    await tester.pumpAndSettle();
+    expect(car.phase, Phase.draft);
+    expect(find.textContaining('ドラフトくじ'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+    await tester.tap(find.text('4番目を開ける'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('全部開ける'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('ドラフトへ'));
+    await tester.pumpAndSettle();
+    var picked = 0;
+    var guard = 0;
+    while (car.phase == Phase.draft && guard++ < 10) {
+      if (car.canDraftPick) {
+        final b = find.widgetWithText(FilledButton, '指名').first;
+        await tester.ensureVisible(b);
+        await tester.pumpAndSettle();
+        await tester.tap(b);
+        await tester.pumpAndSettle();
+        expect(find.textContaining('を指名'), findsOneWidget);
+        expect(find.textContaining('本当の力'), findsOneWidget);
+        expect(tester.takeException(), isNull);
+        picked++;
+        await tester.tap(find.text('続ける'));
+        await tester.pumpAndSettle();
+      } else {
+        final b = find.text('この指名を見送る');
+        await tester.ensureVisible(b);
+        await tester.tap(b);
+        await tester.pumpAndSettle();
+      }
+    }
+    expect(picked, greaterThan(0));
+    expect(car.phase, Phase.contracts);
+    expect(find.textContaining('ドラフトのまとめ'), findsOneWidget);
+    expect(find.textContaining('自分の指名($picked人)'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+    await tester.tap(find.text('契約へ'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('ドラフトのまとめ'), findsNothing);
+  });
+
   testWidgets('プレーオフは自分のシリーズを1試合ずつめくり、最後に結果を見てシーズンの終わりへ', (tester) async {
     _size(tester, 667, 375);
     final c = await _controller({'gmHowtoSeen': true});
