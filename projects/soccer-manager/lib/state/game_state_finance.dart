@@ -116,6 +116,227 @@ extension GameStateFinance on GameState {
     await _persist();
   }
 
+  /// クラブを手放すことになった理由。迫られていなければ null。
+  /// 両方が尽きたときはサポーターを先に見る(成績の責任が重い)。
+  SaleReason? get saleReason {
+    final save = _save;
+    if (save == null) return null;
+    if (save.confidence <= 0) return SaleReason.supporters;
+    if (save.shareholderExpectation <= 0) return SaleReason.shareholders;
+    return null;
+  }
+
+  /// いま追っているオーナーの目標。決めていなければ null。
+  OwnerGoal? get ownerGoal => _save?.ownerGoal;
+
+  /// 選べる目標。すでに1部にいるなら「1部へ昇格」は出さない。
+  List<OwnerGoal> get selectableOwnerGoals => [
+        for (final g in OwnerGoal.values)
+          if (!(g == OwnerGoal.reachTopDivision && currentDivisionTier <= 1)) g,
+      ];
+
+  /// 達成した目標の記録(新しい順)。
+  List<String> get achievedGoals =>
+      (_save?.achievedGoals ?? const <String>[]).reversed.toList();
+
+  /// 目標を決める。いまのシーズンから期限を数える。
+  Future<void> setOwnerGoal(OwnerGoal goal) async {
+    final save = _save;
+    if (save == null || !selectableOwnerGoals.contains(goal)) return;
+    save.ownerGoal = goal;
+    save.ownerGoalStartSeason = save.league.season;
+    _notify();
+    await _persist();
+  }
+
+  /// 目標の期限までの残りシーズン数(今季を含む)。目標が無ければ 0。
+  int get ownerGoalSeasonsLeft {
+    final save = _save;
+    final goal = save?.ownerGoal;
+    if (save == null || goal == null) return 0;
+    return (save.ownerGoalStartSeason + goal.deadlineSeasons - save.league.season)
+        .clamp(0, goal.deadlineSeasons);
+  }
+
+  /// シーズン終了時に、目標の達成と期限切れを見る。達成は殿堂に残り、
+  /// 2つの期待を少し持ち上げる。期限切れは目標が消えるだけで、罰は無い。
+  void _evaluateOwnerGoal({required int season}) {
+    final save = _save;
+    final goal = save?.ownerGoal;
+    if (save == null || goal == null) return;
+    final recs =
+        save.seasonHistory.where((r) => r.season >= save.ownerGoalStartSeason);
+    final met = OwnerGoalRules.isMet(
+      goal,
+      wonTopLeague: recs.any((r) => r.wonLeague && r.divisionTier == 1),
+      promotedOrTop: recs.any(
+          (r) => r.divisionTier == 1 || (r.promoted && r.divisionTier == 2)),
+      wonCup: recs.any((r) => r.cupsWon.isNotEmpty),
+      budget: save.budget,
+    );
+    if (met) {
+      save.achievedGoals.add(Tr.pick(
+          '${save.clubName}: ${goal.label}(シーズン$season)',
+          '${save.clubName}: ${goal.label} (season $season)'));
+      save.ownerGoal = null;
+      save.confidence = (save.confidence + 10).clamp(0, 100);
+      save.shareholderExpectation = (save.shareholderExpectation + 10).clamp(0, 100);
+      _logNews(
+        Tr.pick('オーナーの目標「${goal.label}」を達成しました。殿堂に残ります。',
+            'Owner goal achieved: ${goal.label}. It joins your hall of fame.'),
+        context: Tr.pick('オーナー', 'Owner'),
+      );
+    } else if (OwnerGoalRules.isExpired(goal,
+        startSeason: save.ownerGoalStartSeason, season: season)) {
+      save.ownerGoal = null;
+      _logNews(
+        Tr.pick('オーナーの目標「${goal.label}」は期限までに果たせませんでした。新しい目標を決められます。',
+            'The owner goal "${goal.label}" was not reached in time. You can set a new one.'),
+        context: Tr.pick('オーナー', 'Owner'),
+      );
+    }
+  }
+
+  /// 1シーズンに宣言できる勝負の試合の数。
+  static const int bigMatchesPerSeason = 4;
+
+  /// 今シーズンに宣言できる勝負の試合の残り。シーズンが変わると満タンに戻る。
+  int get bigMatchesLeft {
+    final save = _save;
+    if (save == null) return 0;
+    final used = save.bigMatchSeason == save.league.season ? save.bigMatchesUsed : 0;
+    return (GameStateFinance.bigMatchesPerSeason - used)
+        .clamp(0, GameStateFinance.bigMatchesPerSeason);
+  }
+
+  /// 次の自クラブの試合が、宣言した勝負の試合か。
+  bool get isNextMatchBig {
+    final save = _save;
+    if (save == null) return false;
+    final next = save.league.nextUnplayedFixture;
+    return next != null &&
+        save.bigMatchSeason == save.league.season &&
+        save.bigMatchDeclaredMatchday == next.matchday;
+  }
+
+  /// 次の試合を勝負の試合と宣言する。回数が尽きている・試合が無い・
+  /// すでに宣言済みなら何もしない。宣言した試合だけ、戦術と先発を自分で決める。
+  Future<bool> declareBigMatch() async {
+    final save = _save;
+    if (save == null || isNextMatchBig || bigMatchesLeft <= 0) return false;
+    final next = save.league.nextUnplayedFixture;
+    if (next == null) return false;
+    if (save.bigMatchSeason != save.league.season) {
+      save.bigMatchSeason = save.league.season;
+      save.bigMatchesUsed = 0;
+    }
+    save.bigMatchesUsed += 1;
+    save.bigMatchDeclaredMatchday = next.matchday;
+    _notify();
+    await _persist();
+    return true;
+  }
+
+  /// 宣言を取り消す(回数は戻る)。
+  Future<void> cancelBigMatch() async {
+    final save = _save;
+    if (save == null || !isNextMatchBig) return;
+    save.bigMatchesUsed = (save.bigMatchesUsed - 1).clamp(0, 999);
+    save.bigMatchDeclaredMatchday = -1;
+    _notify();
+    await _persist();
+  }
+
+  /// 勝負の試合でない節は、監督が先発とメンタリティを決める。穴(負傷・出場停止)
+  /// を埋め、相手との力関係から構えを選ぶ。自分で決めた先発と戦術が効くのは、
+  /// 宣言した勝負の試合だけ。
+  void _managerPreparesMatch(Fixture next) {
+    final save = _save;
+    if (save == null || isNextMatchBig) return;
+    final user = userTeam;
+    final oppId = next.homeTeamId == user.id ? next.awayTeamId : next.homeTeamId;
+    final opp = _findTeam(save.league.teams, oppId);
+    if (opp == null) return;
+    LineupUtils.fillVacancies(user);
+    user.mentality = CpuTacticsAI.mentalityFor(
+      ownRating: user.overallRating,
+      opponentRating: opp.overallRating,
+    );
+  }
+
+  /// テスト用: シーズン終了時の目標の判定だけを走らせる。
+  @visibleForTesting
+  void debugEvaluateOwnerGoal({required int season}) =>
+      _evaluateOwnerGoal(season: season);
+
+  /// サポーターか株主の期待が尽き、クラブを手放さなければならない状態か。
+  bool get isSaleForced => saleReason != null;
+
+  /// 手放したあとに買い直せるクラブの候補(最大3つ)。いまのリーグから、
+  /// 総合力の下位・中位・上位に1つずつ。強いほど資金の立て直しが楽だが、
+  /// 期待も重い。
+  List<Team> get buyoutCandidates {
+    final save = _save;
+    if (save == null) return const [];
+    final others = save.league.teams.where((t) => t.id != save.userTeamId).toList()
+      ..sort((a, b) => a.overallRating.compareTo(b.overallRating));
+    if (others.length <= 3) return others;
+    return [others.first, others[others.length ~/ 2], others.last];
+  }
+
+  /// 手放すクラブの実績(殿堂に残す1行)。
+  OwnerLegacy _legacyOfCurrentClub(SaleReason reason) {
+    final save = _save!;
+    final mine =
+        save.seasonHistory.where((r) => r.clubName == save.clubName).toList();
+    final ranks = mine.map((r) => r.finalRank).where((r) => r > 0);
+    return OwnerLegacy(
+      clubName: save.clubName,
+      seasons: mine.length,
+      leagueTitles: mine.where((r) => r.wonLeague).length,
+      cupTitles: mine.fold<int>(0, (t, r) => t + r.cupsWon.length),
+      bestRank: ranks.isEmpty ? 0 : ranks.reduce((a, b) => a < b ? a : b),
+      reason: reason,
+    );
+  }
+
+  /// 売却を迫られたクラブを手放し、[teamId] を買い直す。
+  ///
+  /// 実績は殿堂に残る。新しいクラブでは2つの期待が60に戻り、資金・施設・
+  /// スタッフ・融資・スポンサーは初期の状態から始める(予算の配り方は引き継ぐ)。
+  Future<bool> buyClub(String teamId) async {
+    final save = _save;
+    final reason = saleReason;
+    if (save == null || reason == null) return false;
+    final team = _findTeam(save.league.teams, teamId);
+    if (team == null || team.id == save.userTeamId) return false;
+
+    save.ownerLegacies.add(_legacyOfCurrentClub(reason));
+    save.userTeamId = team.id;
+    save.clubName = team.name;
+    save.pendingJobOfferTeamId = null;
+    save.confidence = 60;
+    save.shareholderExpectation = 60;
+    save.budget =
+        (6000 * save.difficulty.initialBudgetFactor).round();
+    save.infrastructure = ClubInfrastructure();
+    save.sponsorDeal = null;
+    save.bankLoans = [];
+    save.youthProspects = [];
+    save.boardTargetRank = _difficultyAdjustedTarget(
+      BoardEngine.estimateTargetRank(save.league, team.id),
+    );
+    save.wageBudget = BoardEngine.wageBudgetFor(
+      tier: save.currentDivisionTier,
+      currentWeeklyWageBill: weeklyWageBill,
+    );
+    save.clubHistory.add(team.name);
+    _refreshStaffCandidates();
+    _notify();
+    await _persist();
+    return true;
+  }
+
   /// ライバルクラブ(開幕時に決定、以後固定)。未設定の場合はnull。
   Team? get rivalTeam {
     final id = _save?.rivalTeamId;

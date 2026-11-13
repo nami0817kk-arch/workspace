@@ -1119,6 +1119,7 @@ extension GameStateSeason on GameState {
       ),
     );
     _evaluateAchievements(season: league.season);
+    _evaluateOwnerGoal(season: league.season);
 
     // スーパーカップ: 前シーズンのリーグ王者と国内カップ王者(同一クラブが両方
     // 制した場合はカップ準優勝クラブ)が新シーズン開幕前に対戦する。カップが

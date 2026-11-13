@@ -1,6 +1,8 @@
 import 'bank_loan.dart';
 import 'best_eleven.dart';
 import 'budget_plan.dart';
+import 'owner_goal.dart';
+import 'owner_legacy.dart';
 import 'club_infrastructure.dart';
 import 'enum_json.dart';
 import 'continental_cup.dart';
@@ -83,6 +85,27 @@ class SaveGame {
   /// 終えると上がる。[confidence](成績・順位に由来するサポーター側の期待)
   /// と引っ張り合う、オーナー型の2つ目のメーター。
   int shareholderExpectation;
+
+  /// 手放した球団ごとの実績(殿堂)。売却後も消えない。
+  List<OwnerLegacy> ownerLegacies;
+
+  /// いま追っているオーナーの目標。決めていなければ null。
+  OwnerGoal? ownerGoal;
+
+  /// 勝負の試合を数えているシーズン。シーズンが変わると回数を戻す。
+  int bigMatchSeason;
+
+  /// そのシーズンに宣言した勝負の試合の数(取り消せば戻る)。
+  int bigMatchesUsed;
+
+  /// 勝負の試合と宣言した節。宣言が無ければ -1。
+  int bigMatchDeclaredMatchday;
+
+  /// 目標を選んだシーズン(期限の数え始め)。
+  int ownerGoalStartSeason;
+
+  /// 達成した目標の記録(殿堂)。売却後も消えない。
+  List<String> achievedGoals;
 
   /// 年の予算の配分(補強・育成・施設・営業・配当の比率)。
   BudgetPlan budgetPlan;
@@ -334,6 +357,13 @@ class SaveGame {
     this.boardTargetRank = 4,
     this.confidence = 60,
     this.shareholderExpectation = 60,
+    List<OwnerLegacy>? ownerLegacies,
+    this.ownerGoal,
+    this.bigMatchSeason = 0,
+    this.bigMatchesUsed = 0,
+    this.bigMatchDeclaredMatchday = -1,
+    this.ownerGoalStartSeason = 1,
+    List<String>? achievedGoals,
     BudgetPlan? budgetPlan,
     this.managerReputation = 50,
     this.pendingJobOfferTeamId,
@@ -408,6 +438,8 @@ class SaveGame {
         newsLog = newsLog ?? [],
         trophyHistory = trophyHistory ?? [],
         clubHistory = clubHistory ?? [],
+        ownerLegacies = ownerLegacies ?? [],
+        achievedGoals = achievedGoals ?? [],
         freeAgents = freeAgents ?? [],
         retiredLegends = retiredLegends ?? [],
         seasonHistory = seasonHistory ?? [],
@@ -498,6 +530,13 @@ class SaveGame {
         'boardTargetRank': boardTargetRank,
         'confidence': confidence,
         'shareholderExpectation': shareholderExpectation,
+        'ownerLegacies': ownerLegacies.map((l) => l.toJson()).toList(),
+        'ownerGoal': ownerGoal?.name,
+        'bigMatchSeason': bigMatchSeason,
+        'bigMatchesUsed': bigMatchesUsed,
+        'bigMatchDeclaredMatchday': bigMatchDeclaredMatchday,
+        'ownerGoalStartSeason': ownerGoalStartSeason,
+        'achievedGoals': achievedGoals,
         'budgetPlan': budgetPlan.toJson(),
         'managerReputation': managerReputation,
         'pendingJobOfferTeamId': pendingJobOfferTeamId,
@@ -587,6 +626,21 @@ class SaveGame {
         boardTargetRank: json['boardTargetRank'] as int? ?? 4,
         confidence: json['confidence'] as int? ?? 60,
         shareholderExpectation: json['shareholderExpectation'] as int? ?? 60,
+        ownerGoal: OwnerGoal.values
+            .where((g) => g.name == json['ownerGoal'])
+            .firstOrNull,
+        ownerGoalStartSeason: json['ownerGoalStartSeason'] as int? ?? 1,
+        bigMatchSeason: json['bigMatchSeason'] as int? ?? 0,
+        bigMatchesUsed: json['bigMatchesUsed'] as int? ?? 0,
+        bigMatchDeclaredMatchday: json['bigMatchDeclaredMatchday'] as int? ?? -1,
+        achievedGoals: (json['achievedGoals'] as List?)
+                ?.map((e) => e as String)
+                .toList() ??
+            [],
+        ownerLegacies: (json['ownerLegacies'] as List?)
+                ?.map((e) => OwnerLegacy.fromJson(e as Map<String, dynamic>))
+                .toList() ??
+            [],
         budgetPlan:
             BudgetPlan.fromJson(json['budgetPlan'] as Map<String, dynamic>?),
         managerReputation: json['managerReputation'] as int? ?? 50,

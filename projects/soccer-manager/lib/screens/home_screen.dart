@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../data/quick_access_destinations.dart';
+import '../widgets/big_match_bar.dart';
+import '../widgets/owner_goal_card.dart';
 import '../widgets/two_pane.dart';
 import '../logic/calendar_engine.dart';
 import '../logic/match_engine.dart' show HalfResult;
 import '../models/formation.dart';
 import '../models/incoming_offer.dart';
 import '../models/league.dart';
+import '../models/owner_legacy.dart';
 import '../models/match_result.dart';
 import '../models/player.dart';
 import '../models/team.dart';
@@ -68,8 +71,9 @@ class HomeScreen extends StatelessWidget {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    if (gameState.isDismissed) {
-      return _DismissalScreen(clubName: save.clubName);
+    final saleReason = gameState.saleReason;
+    if (saleReason != null) {
+      return _SaleScreen(clubName: save.clubName, reason: saleReason);
     }
 
     final scheme = Theme.of(context).colorScheme;
@@ -119,6 +123,8 @@ class HomeScreen extends StatelessWidget {
               // いま手を付けるべきこと。画面が30以上あり、どこから見れば
               // よいか分からない状態だった。出すのは常に1件だけ。
               const NextActionCard(),
+              // オーナーの目標。決めるまで選択肢を出し、決めたら残りを見せる。
+              const OwnerGoalCard(),
               // 終わったばかりのシーズンの振り返り。閉じるまで出る。
               const SeasonReviewCard(),
               // クラブの色で染めた見出しの帯。
@@ -842,6 +848,7 @@ class HomeScreen extends StatelessWidget {
                         // いま何が結果に効いているか。戦術・習熟度・指示と
                         // 効く要素が増えたのに、それを見る場所が無かった。
                         const _MatchFactorsPanel(),
+                        const BigMatchBar(),
                         const SizedBox(height: 12),
                         FilledButton(
                           onPressed: () => _playMatch(context),
@@ -1002,7 +1009,10 @@ class HomeScreen extends StatelessWidget {
   Future<void> _playMatch(BuildContext context) async {
     FeedbackService.tap();
     final gameState = context.read<GameState>();
-    if (!await _confirmLineup(context, gameState)) return;
+    // 先発の穴は、勝負の試合でなければ監督が埋める。確かめるのは自分で決める試合だけ。
+    if (gameState.isNextMatchBig && !await _confirmLineup(context, gameState)) {
+      return;
+    }
     if (!context.mounted) return;
     final HalfResult? firstHalf;
     try {
@@ -2233,36 +2243,69 @@ class _ActionTile extends StatelessWidget {
   }
 }
 
-class _DismissalScreen extends StatelessWidget {
+/// 期待が尽きてクラブを手放す画面。実績は殿堂に残り、別のクラブを買い直して
+/// 続きを遊ぶ。最初からやり直すこともできる。
+class _SaleScreen extends StatelessWidget {
   final String clubName;
+  final SaleReason reason;
 
-  const _DismissalScreen({required this.clubName});
+  const _SaleScreen({required this.clubName, required this.reason});
 
   @override
   Widget build(BuildContext context) {
+    final gameState = context.watch<GameState>();
+    final candidates = gameState.buyoutCandidates;
+    final supporters = reason == SaleReason.supporters;
     return Scaffold(
       body: SafeArea(
         child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 560),
+            child: ListView(
+              padding: const EdgeInsets.all(24),
+              shrinkWrap: true,
               children: [
-                const Icon(Icons.gavel, size: 64, color: Colors.redAccent),
-                const SizedBox(height: 16),
+                const Icon(Icons.gavel, size: 56, color: Colors.redAccent),
+                const SizedBox(height: 12),
                 Text(
-                  Tr.pick('$clubName の監督を解任されました',
-                      'You have been sacked by $clubName'),
+                  Tr.pick('$clubName を手放すことになりました',
+                      'You have to sell $clubName'),
                   style: Theme.of(context).textTheme.titleLarge,
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 8),
                 Text(
-                    Tr.pick(
-                        '理事会からの信頼を失いました。', "You lost the board's confidence."),
-                    textAlign: TextAlign.center),
-                const SizedBox(height: 24),
-                FilledButton(
+                  supporters
+                      ? Tr.pick('サポーターの期待が尽きました。成績不振で、オーナーの座に居られなくなりました。',
+                          'The supporters have lost faith after poor results.')
+                      : Tr.pick('株主の期待が尽きました。赤字が続き、株主に株を手放すよう迫られました。',
+                          'The shareholders have lost faith after repeated losses.'),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  Tr.pick('これまでの実績は殿堂に残ります。別のクラブを買い直して続けましょう。',
+                      'Your record stays in the hall of fame. Buy another club and carry on.'),
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                const SizedBox(height: 16),
+                for (final t in candidates)
+                  Card(
+                    child: ListTile(
+                      leading: ClubEmblem(teamId: t.id, teamName: t.name, size: 36),
+                      title: Text(t.name),
+                      subtitle: Text(Tr.pick('総合力 ${t.overallRating}',
+                          'Overall ${t.overallRating}')),
+                      trailing: FilledButton(
+                        onPressed: () =>
+                            context.read<GameState>().buyClub(t.id),
+                        child: Text(Tr.pick('買う', 'Buy')),
+                      ),
+                    ),
+                  ),
+                const SizedBox(height: 8),
+                TextButton(
                   onPressed: () async {
                     await context.read<GameState>().deleteSave();
                     if (context.mounted) {
@@ -2273,7 +2316,7 @@ class _DismissalScreen extends StatelessWidget {
                     }
                   },
                   child: Text(
-                      Tr.pick('新しいクラブで再出発する', 'Start again at a new club')),
+                      Tr.pick('最初からやり直す', 'Start over from scratch')),
                 ),
               ],
             ),
