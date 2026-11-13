@@ -1,0 +1,547 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：「それでも地球は動く」は、本当に言ったのか（scripts/galileo-story.yaml）。chiso/storymain.py が読む。
+# 11-13 作成（11/16 19:00 公開予定）。cleopatra_main_look.yaml を写した。決まりは docs/story-main.md・スキル rekishi-story-screen。
+# 絵の方針：AI 絵（H01・C02〜C19・YEND）は Gemini（Chrome、無料版）で新しく作る。ガリレオの顔は特定の資料を写さない想像図。実在の古画・肖像は使わない。使い回しなし。
+script: scripts/galileo-story.yaml
+out: galileo_story_main
+art_dir: out/story/galileo/main
+main_art_dir: out/story/galileo/main
+ai_disclosure: この動画の情景・人物の画像は、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面の右上に「AI生成画像」と出しています）。
+chapters:
+  0:
+    label: 序章 誓った日の記録
+    now: null
+    dates:
+      6: 1633年6月22日
+      12: null
+  1:
+    label: 第1章 記録は、6月22日をどう書いたのか
+    now: 1633年6月
+    dates: {}
+  2:
+    label: 第2章 採点の決まり
+    now: null
+    dates: {}
+  3:
+    label: 第3章 弟子の伝記と、アルチェトリの8年
+    now: 1654年
+    dates:
+      44: 1634年
+      45: 1635年
+      46: 1633年12月
+      48: 1634年4月
+      50: 1638年
+      52: 1642年
+      56: null
+      57: null
+  4:
+    label: 第4章 最初の活字
+    now: 1757年
+    dates:
+      63: 1761年
+      65: null
+  5:
+    label: 第5章 牢の壁の絵
+    now: 1911年
+    dates:
+      74: 1912年
+      77: 2020年
+      79: 2007年
+      80: 2020年
+      81: null
+  6:
+    label: 第6章 採点の結果
+    now: null
+    dates: {}
+  7:
+    label: 第7章 判決はどう扱われたのか
+    now: 1758年
+    dates:
+      91: 1835年
+      92: 1979年
+      93: 1981年
+      94: 1984年
+      95: 1992年
+      97: 1998年
+      98: null
+  8:
+    label: まとめ ガリレオは、言ったのか
+    now: null
+    dates: {}
+no_tag_from: 107
+references:
+- 聖務省の判決・誓絶文（ガリレオ全集 国定版 第19巻の転写・英訳 Internet Modern History Sourcebook）
+- ヴィヴィアーニ『ガリレオ伝』（1654年）
+- バレッティ『イタリアの文庫』（1757年）・イライユ『文芸論争』（1761年）
+- Kelly「Galileo's Non-Trial, Pre-Trial, and Trial」Church History 85(4), 2016／Mario Livio, Scientific American 2020
+- 教皇ヨハネ・パウロ2世 教皇庁科学アカデミーでの演説（1992年10月31日）
+ai:
+  H01:
+    scene: ミネルヴァ修道院の広間で、白髪の老人（ガリレオの想像図）が赤い法衣の枢機卿たちの前でひざまずき、文書を手にしている
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  C02:
+    scene: ローマの古い聖堂・修道院の外観（石造りの正面、夕暮れ、石畳）
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  C03:
+    scene: 羊皮紙の判決文書、羽ペン、蝋燭、赤い封蝋（文字は読めない）
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  C04:
+    scene: 長い机に赤い法衣の枢機卿たちが並んで座り署名している（3つの席は空）
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  C05:
+    scene: 薄暗い尋問室、石壁、机、書記官と蝋燭
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  C07:
+    scene: シエナの石畳の坂道と、石造りの大司教邸の門前に待つ馬車
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  C08:
+    scene: 牢の石壁に、老人が釘で太陽のまわりを回る円を描いている（文字なし）
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  C09:
+    scene: フィレンツェ近郊アルチェトリの丘、糸杉と石造りの家（夕景）
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  C10:
+    scene: 目の見えない老学者が窓辺に座り、若い弟子が机で書き取っている
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  C11:
+    scene: 18世紀ロンドンの書斎、羽ペンを持つ男、本の山、窓の霧
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  C12:
+    scene: 18世紀の印刷所、活字を組む職人と刷り上がった紙
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  C13:
+    scene: 夜明けの丘で、老人が空を見上げて足を踏み鳴らしている
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  C14:
+    scene: 19世紀ベルギーの美術商の部屋、壁に掛かる絵と紳士たち
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  C16:
+    scene: 積まれた古い本に鎖と封がされた書庫
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  C17:
+    scene: ルネサンス様式の館の広間に並ぶ現代の会議の席（人物は後ろ姿）
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  C18:
+    scene: 静かな夜空と古い天球儀・望遠鏡
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  C19:
+    scene: 聖堂の小部屋に置かれた簡素な石の棺
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  YEND:
+    scene: 夜明けの丘と空（終了画面、右半分に余白）
+    lock:
+    - 1.0
+    - 0.5
+    - 0.5
+paint_fx: {}
+shots:
+- 0 ai:H01 wide
+- 1 ai:C11 left
+- 2 ai:C05 right
+- 3 ai:C04 wide
+- 4 ai:C03 left
+- 5 ai:C13 right
+- 6 ai:C02 wide
+- 7 ai:H01 left
+- 8 ai:H01 wide
+- 9 ai:H01 right
+- 10 ai:C03 left
+- 11 ai:C13 right
+- 12 ai:C02 wide
+- 13 ai:C16 left
+- 14 ai:C03 right
+- 15 ai:C03 left
+- 16 ai:C16 left
+- 17 ai:C03 right
+- 18 ai:C04 wide
+- 19 ai:C04 right
+- 20 ai:C16 right
+- 21 ai:C05 wide
+- 22 ai:C03 left
+- 23 ai:C05 right
+- 24 ai:C05 left
+- 25 ai:C05 wide
+- 26 ai:H01 right
+- 27 ai:C03 wide
+- 28 ai:C07 left
+- 29 ai:C18 right
+- 30 ai:C18 left
+- 31 ai:C07 left
+- 32 ai:C08 right
+- 33 ai:C18 wide
+- 34 ai:C18 right
+- 35 ai:C18 left
+- 36 ai:C18 wide
+- 37 ai:C10 left
+- 38 ai:C10 wide
+- 39 ai:C09 wide
+- 40 ai:C10 left
+- 41 ai:C10 wide
+- 42 ai:C09 wide
+- 43 ai:C10 left
+- 44 ai:C16 right
+- 45 ai:C16 left
+- 46 ai:C07 left
+- 47 ai:C09 right
+- 48 ai:C09 left
+- 49 ai:C09 wide
+- 50 ai:C10 right
+- 51 ai:C12 wide
+- 52 ai:C10 left
+- 53 ai:C10 wide
+- 54 ai:C09 wide
+- 55 ai:C19 left
+- 56 ai:C09 right
+- 57 ai:C11 wide
+- 58 ai:C11 right
+- 59 ai:C12 right
+- 60 ai:C13 wide
+- 61 ai:C11 left
+- 62 ai:C05 right
+- 63 ai:C12 wide
+- 64 ai:C12 right
+- 65 ai:C11 right
+- 66 ai:C11 left
+- 67 ai:C07 left
+- 68 ai:C12 right
+- 69 ai:C18 wide
+- 70 ai:C08 left
+- 71 ai:C14 right
+- 72 ai:C08 wide
+- 73 ai:C08 right
+- 74 ai:C14 right
+- 75 ai:C14 left
+- 76 ai:C14 wide
+- 77 ai:C14 right
+- 78 ai:C14 left
+- 79 ai:C14 wide
+- 80 ai:C08 right
+- 81 ai:C18 wide
+- 82 ai:C18 right
+- 83 ai:C18 left
+- 84 ai:C18 wide
+- 85 ai:C18 right
+- 86 ai:C18 left
+- 87 ai:C18 wide
+- 88 ai:C18 right
+- 89 ai:C16 right
+- 90 ai:C16 left
+- 91 ai:C16 wide
+- 92 ai:C17 right
+- 93 ai:C17 left
+- 94 ai:C17 wide
+- 95 ai:C17 right
+- 96 ai:C17 left
+- 97 ai:C17 wide
+- 98 ai:C17 right
+- 99 ai:C18 wide
+- 100 ai:H01 left
+- 101 ai:C11 right
+- 102 ai:C04 wide
+- 103 ai:C14 left
+- 104 ai:H01 right
+- 105 ai:H01 left
+- 106 ai:C10 left
+- 107 ai:C13 right
+- 108 ai:YEND wide
+- end ai:YEND wide
+focus: {}
+fx:
+  C05:
+    lamp:
+      region:
+      - 0.0
+      - 0.2
+      - 1.0
+      - 0.9
+  C03:
+    lamp:
+      region:
+      - 0.0
+      - 0.2
+      - 1.0
+      - 0.9
+  C10:
+    lamp:
+      region:
+      - 0.0
+      - 0.3
+      - 0.6
+      - 0.9
+parts:
+- type: quote
+  from: 24
+  to: 24
+  label: 史料
+  text: 真実を言え／さもなくば、拷問に至る
+  source: 聖務省の6月21日の尋問記録（ラテン語・要旨）
+- type: quote
+  from: 40
+  to: 40
+  label: 史料
+  text: 真のカトリックとして、この意見を撤回した／罰として『天文対話』が禁じられた
+  source: ヴィヴィアーニ『ガリレオ伝』1654年（要旨）
+- type: versus3
+  from: 53
+  to: 53
+  items:
+  - - 弟子の伝記
+    - 77歳10か月20日
+  - - 生まれから計算
+    - 77歳10か月24日
+  every: 2.0
+- type: versus3
+  from: 62
+  to: 62
+  items:
+  - - バレッティ
+    - 6年・拷問
+  - - 記録
+    - 翌日に軟禁・拷問は脅しまで
+  every: 2.0
+- type: quote
+  from: 95
+  to: 95
+  label: 史料
+  text: 当時の神学者たちの誤りは、世界の構造の知識が／ある意味で聖書の字句で決まる、と考えたこと
+  source: 教皇ヨハネ・パウロ2世の演説 1992年10月31日（要旨）
+figures: []
+stills:
+- line: 0
+  note: 冒頭
+- line: 3
+  note: 署名7人
+- line: 24
+  note: 拷問の脅し
+- line: 34
+  note: 手がかり
+- line: 62
+  note: 食い違い
+- line: 85
+  note: 結果
+- line: 95
+  note: '1992'
+- line: 107
+  note: 余韻
+- end: true
+  note: 終了画面

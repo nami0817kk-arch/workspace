@@ -1,0 +1,109 @@
+# 物語完結型ショート ルイ14世 s4（2026-11-13）。本編 scripts/louis14-story.yaml（11/15 19:00 公開予定、https://youtu.be/FqHUnnLL6JM）から。11/16 に予約。
+# 形式は cleopatra_s2.yaml・kaishu_s3.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（dev/output/rekishi-chiso/research/ルイ14世_facts_20261112.yaml）と本編の # fact: だけ。
+# 絵：本編の AI 絵（V04・V05・V09・V16、サムネ thumb/lever.png）の再利用と、新しく作った shorts/N1〜N5（Gemini、人物は後ろ姿か手元）・実在の絵（リゴー・パテル）。本編で代用だった V01〜V03・V08・V13〜V15 は使わない。
+title: "ルイ14世｜就寝の燭台を持てるのは、ひとりだけ"
+yt_title: "ルイ14世の就寝の儀で、燭台を持てたのは、王に指名された1人だけ　晩年は大就寝をやめた"
+description: |-
+  サン=シモンによれば、ルイ14世の就寝の儀には、燭台を持つ栄誉がありました。祈りのあと、王が廷臣を声に出して指名し、指名された人は、手袋を外して燭台を受け取り、就寝が終わるまで持っていました。サン=シモンは最初、これを「ごく珍しい光栄」と書き、のちに自分も何度も受けています。
+  1702年、軍務を辞めて王の不興を買った直後にも、王は、不機嫌を気づかれまいとして、サン=シモンを指名した、と本人は書きます。王の気持ちは、サン=シモン本人の受け取り方です。燭台の決まり自体は1674年版の『国家年鑑』にも印刷されていますが、そこでは、部屋にいる最も位の高い貴人に持たせる、とあり、王が指名する、という書き方とは少し違います。
+  晩年の王は、宮廷全体が見る「大就寝」をやめていました。サン=シモンは死の10年から12年前から、と書き、編者ボワリルの注は1705年としています。見られない入口は、なかったのか。本編は概要欄のリンクからどうぞ。
+  https://youtu.be/FqHUnnLL6JM
+hashtags:
+- "#ルイ14世"
+- "#ヴェルサイユ宮殿"
+- "#世界史"
+ai_images: true
+ai_disclosure: "この動画の室内・宮殿の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。"
+art_dir: out/story/louis14
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: louis14_story_s4
+header:
+  tag: "夜の就寝の儀"
+  title: "燭台を持てるのは、《指名された1人》"
+now:
+- {at: "就寝", text: "夜　王の寝室", point: 0}
+timeline:
+- {label: "夜"}
+shots:
+  Hand:
+    kind: "ai"
+    file: "louis14/shorts/N3.jpg"
+    focus: [0.7, 0.5]
+    move: "in"
+    must: "燭台を持つ手"
+  HandL:
+    kind: "ai"
+    file: "louis14/shorts/N3.jpg"
+    focus: [0.4, 0.5]
+    move: "right"
+    must: "燭台を持つ手"
+  Halls:
+    kind: "ai"
+    file: "louis14/main/V04.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "ろうそくの広間"
+  Books:
+    kind: "ai"
+    file: "louis14/main/V16.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "年鑑（書物と灯）"
+  Bed:
+    kind: "ai"
+    file: "louis14/shorts/N4.jpg"
+    focus: [0.4, 0.5]
+    move: "right"
+    must: "寝台と去る人々"
+  BedR:
+    kind: "ai"
+    file: "louis14/shorts/N4.jpg"
+    focus: [0.7, 0.5]
+    move: "left"
+    must: "寝台と去る人々"
+lines:
+  # fact: l14-ss-15
+- 語り: "ルイ14世の就寝の儀で、燭台を持てるのは、王に指名された、ひとりだけだった。"
+  shot: Hand
+  tone: 強調
+  pause: 0.12
+  # fact: l14-ss-15
+- 語り: "サン=シモンによれば、祈りのあと、王は廷臣を、声に出して指名する。指名された人は、手袋を外して燭台を受け取り、就寝が終わるまで持っていた。"
+  shot: HandL
+  tone: 重い
+  pause: 0.12
+  # fact: l14-ss-16
+- 語り: "1702年、軍務を辞めて、王の不興を買った直後にも、王は、不機嫌を気づかれまいとして、サン=シモンを指名した、と本人は書く。"
+  shot: Hand
+  tone: 重い
+  pause: 0.12
+  # fact: l14-ss-16
+- 語り: "ただし、王の気持ちは、サン=シモン本人の受け取り方だ。"
+  shot: Halls
+  tone: しみじみ
+  pause: 0.12
+  # fact: l14-et-15
+- 語り: "燭台の決まりは、1674年版の『国家年鑑』にも、すでに印刷されている。ただし、そこでは、部屋で最も位の高い貴人に持たせる、とあり、王が指名する、という書き方とは、少し違う。"
+  shot: Books
+  tone: しみじみ
+  pause: 0.12
+  # fact: l14-et-08, l14-ss-14
+- 語り: "そして晩年の王は、宮廷じゅうが見る大就寝を、やめていた。サン=シモンは、死の10年から12年前から、と書く。編者ボワリルの注では、1705年。"
+  shot: Bed
+  tone: 重い
+  pause: 0.12
+  # fact: l14-et-19
+- 語り: "では、見られない入口は、なかったのか。"
+  shot: BedR
+  tone: 疑問
+  pause: 0.15
