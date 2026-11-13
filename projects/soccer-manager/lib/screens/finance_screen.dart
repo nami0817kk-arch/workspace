@@ -9,6 +9,7 @@ import '../services/feedback_service.dart';
 import '../state/game_state.dart';
 import '../theme/semantic_colors.dart';
 import '../widgets/quick_access_drawer.dart';
+import '../widgets/budget_plan_card.dart';
 import '../widgets/funds_pack_card.dart';
 import '../widgets/reward_funds_card.dart';
 import '../widgets/responsive_body.dart';
@@ -52,6 +53,7 @@ class FinanceScreen extends StatelessWidget {
             const RewardFundsCard(),
             // 資金の購入。ストアに繋がらない環境では自分で消える。
             const FundsPackCard(),
+            const BudgetPlanCard(),
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(16),
