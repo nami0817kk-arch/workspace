@@ -14,6 +14,7 @@ import '../state/game_state.dart';
 import '../widgets/busy_overlay.dart';
 import '../widgets/position_filter_bar.dart';
 import '../widgets/quick_access_drawer.dart';
+import '../widgets/two_pane.dart';
 import '../logic/reserve_match_engine.dart';
 import '../l10n/tr.dart';
 import '../theme/semantic_colors.dart';
@@ -148,6 +149,8 @@ class _TrainingScreenState extends State<TrainingScreen> {
   Widget build(BuildContext context) {
     final gameState = context.watch<GameState>();
     final team = gameState.userTeam;
+    final screen = MediaQuery.sizeOf(context);
+    final wide = screen.width > screen.height;
     final players = team.players
         .where((p) => _filter == null || p.position.group == _filter)
         .toList()
@@ -163,8 +166,8 @@ class _TrainingScreenState extends State<TrainingScreen> {
       body: BusyOverlay(
         visible: _isRunningTraining,
         label: Tr.pick('トレーニングを実施しています…', 'Running the session…'),
-        child: ListView(
-          padding: const EdgeInsets.all(16),
+        child: TwoPane(
+          wide: wide,
           children: [
             Builder(
               builder: (context) {
@@ -398,7 +401,7 @@ class _TrainingScreenState extends State<TrainingScreen> {
                 ),
               ),
             ),
-            const Divider(height: 32),
+            const PaneBreak(),
             Text(Tr.pick('個別方針', 'Individual focus'),
                 style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 8),
@@ -1395,3 +1398,4 @@ class _PositionConvertPicker extends StatelessWidget {
     );
   }
 }
+

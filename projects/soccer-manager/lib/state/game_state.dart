@@ -52,6 +52,9 @@ import '../logic/awards_engine.dart';
 import '../logic/background_match_engine.dart';
 import '../logic/best_eleven_engine.dart';
 import '../logic/board_engine.dart';
+import '../logic/budget_engine.dart';
+import '../models/budget_plan.dart';
+import '../logic/shareholder_engine.dart';
 import '../logic/contract_engine.dart';
 import '../logic/continental_cup_engine.dart';
 import '../logic/dynamics_engine.dart';
@@ -310,6 +313,11 @@ class GameState extends ChangeNotifier {
 
   /// 信頼度が0まで落ち、監督が解任された状態かどうか。
   bool get isDismissed => _save != null && _save!.confidence <= 0;
+
+  /// 株主の期待が0まで落ちた状態かどうか。売却を迫られる条件になる予定で、
+  /// いまは判定だけを置いてある(解任の扱いは変えていない)。
+  bool get isShareholderRevolt =>
+      _save != null && _save!.shareholderExpectation <= 0;
 
   /// 監督としての通算成績(勝敗数)。保存済みの過去シーズン分に加え、
   /// 進行中のシーズンの現在の順位表の成績もその場で合算して返す

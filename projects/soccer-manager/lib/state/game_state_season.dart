@@ -716,7 +716,13 @@ extension GameStateSeason on GameState {
       checkedMatchdays: _save!.visionCheckedMatchdays,
     );
     if (visionDelta != 0) {
-      _save!.confidence = (_save!.confidence + visionDelta).clamp(0, 100);
+      // 「堅実な経営」の路線は収支の評価なので株主の期待へ、それ以外は信頼度へ。
+      if (_save!.clubVision == ClubVision.financialProudence) {
+        _save!.shareholderExpectation = ShareholderEngine.applied(
+            _save!.shareholderExpectation, visionDelta);
+      } else {
+        _save!.confidence = (_save!.confidence + visionDelta).clamp(0, 100);
+      }
       _logNews(
         visionDelta > 0
             ? Tr.pick('理事会: 今季は「${_save!.clubVision.label}」の路線に沿っていたと評価されました。',
@@ -726,6 +732,12 @@ extension GameStateSeason on GameState {
         context: Tr.pick('理事会', 'Board'),
       );
     }
+
+    // 株主の期待: 黒字でシーズンを終えれば上がり、赤字なら下がる。
+    _save!.shareholderExpectation = ShareholderEngine.applied(
+      _save!.shareholderExpectation,
+      ShareholderEngine.deltaForSeasonEnd(budget: _save!.budget),
+    );
 
     // 理事会の目標達成報奨金: シーズン目標順位を達成すると、リーグ賞金と
     // 同じティア係数で減衰する報奨金が理事会から支給される。目標を大きく

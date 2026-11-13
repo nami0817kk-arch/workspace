@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../data/quick_access_destinations.dart';
+import '../widgets/two_pane.dart';
 import '../logic/calendar_engine.dart';
 import '../logic/match_engine.dart' show HalfResult;
 import '../models/formation.dart';
@@ -80,6 +81,9 @@ class HomeScreen extends StatelessWidget {
     final next = league.nextUnplayedFixture;
     final seasonComplete = league.isSeasonComplete;
     final net = _netWeekly(gameState);
+    // 横画面は高さが 400 ほどしかない。帯と数字のタイルを左右に分ける。
+    final screen = MediaQuery.sizeOf(context);
+    final wide = screen.width > screen.height;
 
     return BusyOverlay(
       visible: gameState.isBusy,
@@ -105,8 +109,9 @@ class HomeScreen extends StatelessWidget {
         ),
         drawer: const QuickAccessDrawer(),
         body: ResponsiveBody(
-          child: ListView(
-            padding: const EdgeInsets.all(16),
+          maxWidth: wide ? 1100 : 720,
+          child: TwoPane(
+            wide: wide,
             children: [
               // 初見の人を週次サイクルに一周させるガイド。
               // 4ステップ終えるか閉じられると自動的に消える。
@@ -287,6 +292,8 @@ class HomeScreen extends StatelessWidget {
                   );
                 },
               ),
+              // 横画面では、ここまでが左、これ以降が右。縦長では何も出ない。
+              const PaneBreak(divider: false),
               const SizedBox(height: 4),
               LayoutBuilder(
                 builder: (context, constraints) => GridView.count(
@@ -298,7 +305,7 @@ class HomeScreen extends StatelessWidget {
                   // 縦横比で高さを決めると、補足行やプログレスバーを持つ
                   // タイルだけ中身がはみ出す。必要な高さを直接指定し、
                   // 文字サイズ設定に合わせて伸ばす。
-                  mainAxisExtent: MediaQuery.textScalerOf(context).scale(104),
+                  mainAxisExtent: MediaQuery.textScalerOf(context).scale(108),
                   children: [
                     // 順位は帯へ移した。空いた枠には勝点を置く。
                     // 順位だけでは「あと何が要るのか」が分からない。
@@ -321,22 +328,35 @@ class HomeScreen extends StatelessWidget {
                           ? SemanticColors.positive(context)
                           : SemanticColors.negative(context),
                     ),
+                    // 2つの期待。成績・順位はサポーター、収支は株主が見ている。
+                    // 用語集の項目は「監督への信頼度」のまま引く。
+                    _StatTile(
+                      icon: Icons.shield,
+                      label: Tr.pick('サポーターの期待', 'Supporter expectation'),
+                      glossaryTerm: Tr.pick('監督への信頼度', 'Board confidence'),
+                      value: '${save.confidence}',
+                      sub: Tr.pick('成績・順位', 'Results'),
+                      progress: save.confidence / 100,
+                      color: save.confidence <= 25
+                          ? Colors.redAccent
+                          : Colors.teal.shade700,
+                    ),
+                    _StatTile(
+                      icon: Icons.account_balance,
+                      label: Tr.pick('株主の期待', 'Shareholder expectation'),
+                      value: '${save.shareholderExpectation}',
+                      sub: Tr.pick('収支', 'Finances'),
+                      progress: save.shareholderExpectation / 100,
+                      color: save.shareholderExpectation <= 25
+                          ? Colors.redAccent
+                          : Colors.amber.shade800,
+                    ),
                     _StatTile(
                       icon: Icons.bar_chart,
                       label: Tr.pick('平均総合力', 'Average overall'),
                       value: '${userTeam.overallRating}',
                       color: Colors.blue.shade700,
                       glossaryTerm: Tr.pick('総合力', 'Overall'),
-                    ),
-                    _StatTile(
-                      icon: Icons.shield,
-                      label: Tr.pick('監督への信頼度', 'Board confidence'),
-                      glossaryTerm: Tr.pick('監督への信頼度', 'Board confidence'),
-                      value: '${save.confidence}',
-                      progress: save.confidence / 100,
-                      color: save.confidence <= 25
-                          ? Colors.redAccent
-                          : Colors.teal.shade700,
                     ),
                     _StatTile(
                       icon: Icons.star,
@@ -1967,11 +1987,13 @@ class _ThisWeekCard extends StatelessWidget {
                       : Colors.orange,
                 ),
                 const SizedBox(width: 6),
-                Text(
-                  gameState.trainingDoneThisWeek
-                      ? Tr.pick('今週のトレーニングは実施済み', 'You have trained this week')
-                      : Tr.pick(
-                          '今週のトレーニングは未実施', 'You have not trained this week'),
+                Expanded(
+                  child: Text(
+                    gameState.trainingDoneThisWeek
+                        ? Tr.pick('今週のトレーニングは実施済み', 'You have trained this week')
+                        : Tr.pick('今週のトレーニングは未実施',
+                            'You have not trained this week'),
+                  ),
                 ),
               ],
             ),

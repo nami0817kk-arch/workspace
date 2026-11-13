@@ -363,6 +363,8 @@ class _SquadScreenState extends State<SquadScreen> {
   Widget build(BuildContext context) {
     final gameState = context.watch<GameState>();
     final team = gameState.userTeam;
+    final screen = MediaQuery.sizeOf(context);
+    final wide = screen.width > screen.height;
     final players = SquadScreen.filterAndSort(
       team.players,
       group: _filterGroup,
@@ -438,8 +440,10 @@ class _SquadScreenState extends State<SquadScreen> {
             )
           : null,
       body: ResponsiveBody(
-        child: Column(
-          children: [
+        maxWidth: wide ? 1100 : 720,
+        child: _SquadLayout(
+          wide: wide,
+          header: [
             if (!_compareMode) _SquadSummaryCard(team: team),
             Padding(
               padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
@@ -495,8 +499,8 @@ class _SquadScreenState extends State<SquadScreen> {
                 ),
               ),
             ),
-            Expanded(
-              child: players.isEmpty
+          ],
+          list: players.isEmpty
                   ? Center(
                       child: Text(Tr.pick('該当する選手がいません', 'No players match')))
                   : ListView.builder(
@@ -842,10 +846,38 @@ class _SquadScreenState extends State<SquadScreen> {
                         );
                       },
                     ),
-            ),
-          ],
         ),
       ),
+    );
+  }
+}
+
+/// 絞り込みと一覧の並べ方。縦長の画面では上下に積み、横長の画面では
+/// 左に絞り込み・右に一覧を置く。横画面は高さが 400 ほどしかなく、上に
+/// 絞り込みを積むと選手が1人しか見えなくなる。
+class _SquadLayout extends StatelessWidget {
+  final bool wide;
+  final List<Widget> header;
+  final Widget list;
+
+  const _SquadLayout({
+    required this.wide,
+    required this.header,
+    required this.list,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (!wide) {
+      return Column(children: [...header, Expanded(child: list)]);
+    }
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(width: 330, child: ListView(children: header)),
+        const VerticalDivider(width: 1),
+        Expanded(child: list),
+      ],
     );
   }
 }

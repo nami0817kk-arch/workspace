@@ -47,6 +47,37 @@ class _MainShellState extends State<MainShell> {
       return Badge(label: Text('$homeBadgeCount'), child: icon);
     }
 
+    final size = MediaQuery.sizeOf(context);
+    final wide = size.width > size.height;
+
+    void select(int i) {
+      FeedbackService.tap();
+      setState(() => _index = i);
+    }
+
+    final items = [
+      (
+        icon: homeIcon(false),
+        selectedIcon: homeIcon(true),
+        label: context.l10n.navHome,
+      ),
+      (
+        icon: const Icon(Icons.groups_outlined),
+        selectedIcon: const Icon(Icons.groups),
+        label: context.l10n.navSquad,
+      ),
+      (
+        icon: const Icon(Icons.checklist_outlined),
+        selectedIcon: const Icon(Icons.checklist),
+        label: context.l10n.navTactics,
+      ),
+      (
+        icon: const Icon(Icons.leaderboard_outlined),
+        selectedIcon: const Icon(Icons.leaderboard),
+        label: context.l10n.navStandings,
+      ),
+    ];
+
     return PopScope(
       // ボトムナビゲーションのタブ切り替えはルートを積まないため、ホーム以外の
       // タブを表示中に戻る操作をすると、そのままタイトル画面まで戻ってしまう。
@@ -58,36 +89,45 @@ class _MainShellState extends State<MainShell> {
         setState(() => _index = 0);
       },
       child: Scaffold(
-        body: IndexedStack(index: _index, children: _tabs),
-        bottomNavigationBar: NavigationBar(
-          selectedIndex: _index,
-          onDestinationSelected: (i) {
-            FeedbackService.tap();
-            setState(() => _index = i);
-          },
-          destinations: [
-            NavigationDestination(
-              icon: homeIcon(false),
-              selectedIcon: homeIcon(true),
-              label: context.l10n.navHome,
-            ),
-            NavigationDestination(
-              icon: const Icon(Icons.groups_outlined),
-              selectedIcon: const Icon(Icons.groups),
-              label: context.l10n.navSquad,
-            ),
-            NavigationDestination(
-              icon: const Icon(Icons.checklist_outlined),
-              selectedIcon: const Icon(Icons.checklist),
-              label: context.l10n.navTactics,
-            ),
-            NavigationDestination(
-              icon: const Icon(Icons.leaderboard_outlined),
-              selectedIcon: const Icon(Icons.leaderboard),
-              label: context.l10n.navStandings,
-            ),
-          ],
-        ),
+        // 横長の画面では縦の高さが貴重なので、ナビは下ではなく左に置く。
+        body: wide
+            ? Row(
+                children: [
+                  SafeArea(
+                    right: false,
+                    child: NavigationRail(
+                      selectedIndex: _index,
+                      onDestinationSelected: select,
+                      labelType: NavigationRailLabelType.all,
+                      destinations: [
+                        for (final d in items)
+                          NavigationRailDestination(
+                            icon: d.icon,
+                            selectedIcon: d.selectedIcon,
+                            label: Text(d.label),
+                          ),
+                      ],
+                    ),
+                  ),
+                  const VerticalDivider(width: 1),
+                  Expanded(child: IndexedStack(index: _index, children: _tabs)),
+                ],
+              )
+            : IndexedStack(index: _index, children: _tabs),
+        bottomNavigationBar: wide
+            ? null
+            : NavigationBar(
+                selectedIndex: _index,
+                onDestinationSelected: select,
+                destinations: [
+                  for (final d in items)
+                    NavigationDestination(
+                      icon: d.icon,
+                      selectedIcon: d.selectedIcon,
+                      label: d.label,
+                    ),
+                ],
+              ),
       ),
     );
   }
