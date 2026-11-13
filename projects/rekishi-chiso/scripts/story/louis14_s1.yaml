@@ -1,0 +1,108 @@
+# 物語完結型ショート ルイ14世 s1（2026-11-13）。本編 scripts/louis14-story.yaml（11/15 19:00 公開予定、https://youtu.be/FqHUnnLL6JM）から。11/16 に予約。
+# 形式は cleopatra_s2.yaml・kaishu_s3.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（dev/output/rekishi-chiso/research/ルイ14世_facts_20261112.yaml）と本編の # fact: だけ。
+# 絵：本編の AI 絵（V04・V05・V09・V16、サムネ thumb/lever.png）の再利用と、新しく作った shorts/N1〜N5（Gemini、人物は後ろ姿か手元）・実在の絵（リゴー・パテル）。本編で代用だった V01〜V03・V08・V13〜V15 は使わない。
+title: "ルイ14世｜朝8時、寝室に最初に入ったのは医者"
+yt_title: "ルイ14世の寝室に、朝8時、最初に入ったのは医者だった　部屋の人は100人を超える、と研究者は数える"
+description: |-
+  朝8時、ルイ14世の寝室に、いちばん先に入ってくるのは、家来でも妃でもなく、医者でした。サン=シモンの本によると、王を起こすのは寝室で寝ていた第一侍従で、同時に、医者の長の第一医師と、外科医の長が部屋に入ります。
+  そのあとに大入室が続きます。大侍従長、第一侍従貴族の4人、王の庶子など、ごく少数だけが、王がまだ寝台にいるうちに入れました。最後に大勢が入り、ヴェルサイユ城研究センターのダ・ヴィニャは、部屋に100人を超える、と書きますが、数え方の根拠は示されていません。研究者のガロは、1687年の名簿から、王が寝台にいる段階だけで40人を超える、と数えています。
+  宮廷全体では、1722年の最初の公式な調べで、王から宿を割り当てられうる人が約7,000人、うち約4,000人が城の敷地の中でした。この数が、本当にルイ14世のころの数なのか。本編は概要欄のリンクからどうぞ。
+  https://youtu.be/FqHUnnLL6JM
+hashtags:
+- "#ルイ14世"
+- "#ヴェルサイユ宮殿"
+- "#世界史"
+ai_images: true
+ai_disclosure: "この動画の室内・宮殿の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。"
+art_dir: out/story/louis14
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: louis14_story_s1
+header:
+  tag: "朝8時の起床の儀"
+  title: "朝の部屋は、《段階》で人が増えた"
+now:
+- {at: "朝8時", text: "朝8時　王の寝室", point: 0}
+timeline:
+- {label: "8時"}
+shots:
+  LeverC:
+    kind: "ai"
+    file: "louis14/thumb/lever.png"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "朝の寝室、寝台の王と取り巻く人々"
+  LeverL:
+    kind: "ai"
+    file: "louis14/thumb/lever.png"
+    focus: [0.3, 0.5]
+    move: "right"
+    must: "寝台のそばの人々"
+  LeverR:
+    kind: "ai"
+    file: "louis14/thumb/lever.png"
+    focus: [0.7, 0.5]
+    move: "left"
+    must: "寝台を囲む大勢"
+  Drug:
+    kind: "ai"
+    file: "louis14/main/V09.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "薬瓶の棚"
+  Roll:
+    kind: "ai"
+    file: "louis14/main/V05.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "封をした書状（名簿の代わり）"
+lines:
+  # fact: l14-ss-03
+- 語り: "朝8時。ルイ14世の寝室に、いちばん先に入ってくるのは、家来でも妃でもなく、医者だった、とサン=シモンは書く。"
+  shot: LeverC
+  tone: 強調
+  pause: 0.12
+  # fact: l14-ss-03
+- 語り: "王を起こすのは、寝室で寝ていた第一侍従。同時に、医者の長の第一医師と、外科医の長が、部屋に入る。"
+  shot: Drug
+  tone: 重い
+  pause: 0.12
+  # fact: l14-et-01, l14-et-02
+- 語り: "次が、大入室。大侍従長、第一侍従貴族の4人、王の庶子など、ごく少数だけだ。王は、まだ寝台にいる。"
+  shot: LeverL
+  tone: しみじみ
+  pause: 0.12
+  # fact: l14-et-02
+- 語り: "役職のない人が、これを持つのは、ごく稀で、大きな恩賞か寵愛のしるしだった、とサン=シモンは書く。"
+  shot: LeverC
+  tone: しみじみ
+  pause: 0.12
+  # fact: l14-et-04
+- 語り: "そのあと、秘書や読み役が続き、最後に、大勢が入る。"
+  shot: LeverR
+  tone: しみじみ
+  pause: 0.12
+  # fact: l14-et-05
+- 語り: "ヴェルサイユ城研究センターのダ・ヴィニャは、このとき部屋に、100人を超える、と書く。ただし、数え方の根拠は、示されていない。"
+  shot: LeverR
+  tone: 重い
+  pause: 0.12
+  # fact: l14-et-05
+- 語り: "研究者のガロは、1687年の名簿から、王がまだ寝台にいる段階だけで、40人を超える、と数えた。"
+  shot: Roll
+  tone: しみじみ
+  pause: 0.12
+  # fact: l14-et-17
+- 語り: "では、宮廷全体で、王のもとに宿を持てる人は、何人いたのか。"
+  shot: LeverC
+  tone: 疑問
+  pause: 0.15

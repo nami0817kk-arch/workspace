@@ -1,0 +1,116 @@
+# 物語完結型ショート ルイ14世 s5（2026-11-13）。本編 scripts/louis14-story.yaml（11/15 19:00 公開予定、https://youtu.be/FqHUnnLL6JM）から。11/16 に予約。
+# 形式は cleopatra_s2.yaml・kaishu_s3.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（dev/output/rekishi-chiso/research/ルイ14世_facts_20261112.yaml）と本編の # fact: だけ。
+# 絵：本編の AI 絵（V04・V05・V09・V16、サムネ thumb/lever.png）の再利用と、新しく作った shorts/N1〜N5（Gemini、人物は後ろ姿か手元）・実在の絵（リゴー・パテル）。本編で代用だった V01〜V03・V08・V13〜V15 は使わない。
+title: "ルイ14世｜暦と時計の一節は、回想録にない"
+yt_title: "暦と時計があれば、300里先でも王が何をしているか言い当てられる　その出どころは、回想録ではなかった"
+description: |-
+  「暦と時計があれば、300里先でも、王がいま何をしているか、言い当てられる」。ルイ14世の日課を語る有名な一節ですが、サン=シモンの『回想録』の日課の部分には、この言葉は出てきません。出どころは『三人の初代ブルボン王の比較』の87頁です。
+  サン=シモンが宮廷で過ごしたのは24年。この比較を書き始めたのは1740年で、王の死から25年ほどあとです。回想録の日課の部分を書いたのは1745年、王の死から30年後、70歳のときでした。同じ時期の文で、サン=シモンは王を「平均以下の知性」と書いています。
+  編者ボワリルは、時刻の規則正しさは誇張だ、動かなかったのは会議の時間だけだ、と注をつける一方、証人としての細かい正確さは争えない、とも評価しています。では、王の1日は、実際にはどこまで見られていたのか。本編は概要欄のリンクからどうぞ。
+  https://youtu.be/FqHUnnLL6JM
+hashtags:
+- "#ルイ14世"
+- "#サン=シモン"
+- "#世界史"
+ai_images: true
+ai_disclosure: "この動画の室内・宮殿の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。"
+art_dir: out/story/louis14
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: louis14_story_s5
+header:
+  tag: "「暦と時計」の一節"
+  title: "有名な一節の、《出どころ》"
+now:
+- {at: "1740年", text: "1740年　サン=シモン", point: 0}
+timeline:
+- {label: "1740"}
+shots:
+  Clock:
+    kind: "ai"
+    file: "louis14/shorts/N5.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "置き時計と暦"
+  ClockR:
+    kind: "ai"
+    file: "louis14/shorts/N5.jpg"
+    focus: [0.7, 0.5]
+    move: "left"
+    must: "置き時計と暦"
+  Books:
+    kind: "ai"
+    file: "louis14/main/V16.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "書物と灯"
+  King:
+    kind: "real"
+    image: "paintings/louis14_rigaud_1701.jpg"
+    focus: [0.5, 0.4]
+    move: "in"
+    credit: "ヤサント・リゴー《ルイ14世》（1701年、パブリックドメイン）"
+    must: "ルイ14世の肖像"
+  Roll:
+    kind: "ai"
+    file: "louis14/main/V05.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "封をした書状"
+  Palace:
+    kind: "real"
+    image: "paintings/louis14_versailles_patel_1668.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    credit: "ピエール・パテル《1668年のヴェルサイユ城》（パブリックドメイン）"
+    must: "ヴェルサイユ城の絵"
+lines:
+  # fact: l14-ss-01
+- 語り: "暦と時計があれば、300里先でも、王がいま何をしているか、言い当てられる。ルイ14世の日課を語る、有名な一節だ。"
+  shot: Clock
+  tone: 強調
+  pause: 0.12
+  # fact: l14-ss-01
+- 語り: "書いたのは、宮廷で24年を過ごした、サン=シモン。ただし、回想録の日課の部分に、この言葉は出てこない。『三人の初代ブルボン王の比較』の、87頁にある。"
+  shot: ClockR
+  tone: 重い
+  pause: 0.12
+  # fact: l14-ss-01, l14-ss-18
+- 語り: "書き始めたのは、1740年。王の死から、25年ほどあとだ。"
+  shot: Books
+  tone: しみじみ
+  pause: 0.12
+  # fact: l14-ss-18
+- 語り: "回想録の日課の部分を書いたのは、1745年。王の死から30年後、サン=シモンが70歳のときだ。"
+  shot: Books
+  tone: しみじみ
+  pause: 0.12
+  # fact: l14-ss-19
+- 語り: "同じ時期の文で、サン=シモンは、ルイ14世を、平均以下の知性、と書いた。"
+  shot: King
+  tone: 重い
+  pause: 0.12
+  # fact: l14-ss-17
+- 語り: "編者のボワリルは、時刻の規則正しさは誇張だ、と注をつけた。動かなかったのは、会議の時間だけだ、と。"
+  shot: Roll
+  tone: 重い
+  pause: 0.12
+  # fact: l14-ss-17
+- 語り: "ただし、証人としての細かい正確さは、争えない、とも評価している。"
+  shot: Roll
+  tone: しみじみ
+  pause: 0.12
+  # 問い（本編へ）
+- 語り: "では、王の1日は、実際には、どこまで、見られていたのか。"
+  shot: Palace
+  tone: 疑問
+  pause: 0.15
