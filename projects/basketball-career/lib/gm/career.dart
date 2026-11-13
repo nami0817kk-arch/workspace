@@ -322,6 +322,18 @@ enum CapException {
   final int maxYears;
 }
 
+/// オフの自由契約で決まった1件([day] は何日目か。[faDays] ならオフの終わりにまとめて決まった分)。
+class FaMove {
+  const FaMove(this.id, this.name, this.ovr, this.team, this.salary, this.years, this.day);
+  final int id;
+  final String name;
+  final int ovr, team, salary, years, day;
+
+  List<Object> toJson() => [id, name, ovr, team, salary, years, day];
+  static FaMove fromJson(List<dynamic> j) =>
+      FaMove(j[0] as int, j[1] as String, j[2] as int, j[3] as int, j[4] as int, j[5] as int, j[6] as int);
+}
+
 class FaBid {
   const FaBid(this.team, this.salary, this.years);
   final int team;
@@ -442,6 +454,10 @@ class Career {
 
   /// 今年のくじの前の並び(くじに入ったチーム、成績の悪い順)。くじの結果を見せるのに使う。
   List<int> lotteryPre = [];
+
+  /// オフに入ったときの自分の選手(id)と強さの順位(0が1位)。オフのまとめで、入った・出た選手と順位の変化を出す。
+  List<int> offStartIds = [];
+  int offStartRank = -1;
   int scoutsLeft = 0;
   bool scoutAdUsed = false;
 
@@ -1929,6 +1945,8 @@ class Career {
         news.add('${p.name}(2ウェイ)が大きく伸びた(OVR ${shown(p.ovr)})');
       }
     }
+    offStartIds = [for (final p in me.roster) p.id];
+    offStartRank = strengthRank(mine);
     // ドラフト
     // 1回戦に出たチーム(プレーインを勝ち抜いたチームを含む)は、くじに入らない
     final inPlayoffs = {for (final s in playoffs.where((s) => s.round == 1)) ...[s.high, s.low]}.toList();
@@ -2093,6 +2111,7 @@ class Career {
     faDay = 0;
     bids = {};
     faLog = [];
+    faMoves = [];
     coachPool = _makeCoaches(season, start: false);
     // 引退した力のある選手が、コーチやスカウトの候補に加わる
     for (final r in retirees) {
@@ -2372,6 +2391,7 @@ class Career {
     freeAgents.removeAt(i);
     p.morale = 65;
     me.roster.add(p);
+    if (phase == Phase.contracts) faMoves.add(FaMove(p.id, p.name, p.ovr, mine, p.salary, p.years, faDay));
     if (ex != null) _useException(ex);
   }
 
@@ -2385,6 +2405,9 @@ class Career {
 
   /// このオフの自由契約の動き(新しい順)。
   List<String> faLog = [];
+
+  /// このオフの自由契約の契約(日ごとの発表とオフのまとめ用)。
+  List<FaMove> faMoves = [];
 
   /// 大物として競り合いになる選手か(オフの契約のあいだ、最低年俸より高く求める選手)。
   bool isBigFa(Player p) => phase == Phase.contracts && freeAgents.contains(p) && askOf(p, me).salary > minSalary;
@@ -2512,6 +2535,7 @@ class Career {
       if (ex != null) _useException(ex);
     }
     t.roster.add(p);
+    faMoves.add(FaMove(p.id, p.name, p.ovr, b.team, b.salary, b.years, faDay));
     final text = '${p.name}(OVR${shown(p.ovr)})が${t.def.short}と${b.years}年 ${money(b.salary)}';
     faLog.insert(0, '${faDay + 1}日目 $text');
     if (b.team == mine) {
@@ -2751,6 +2775,7 @@ class Career {
           ..years = 1 + rng.nextInt(ask.maxYears);
         t.roster.add(p);
         freeAgents.remove(p);
+        if (p.ovr >= 60) faMoves.add(FaMove(p.id, p.name, p.ovr, t.index, p.salary, p.years, faDays));
         if (p.ovr >= 70) _log('移籍: ${p.name}(OVR${shown(p.ovr)})が${t.def.short}と${p.years}年契約');
         break;
       }
@@ -3122,6 +3147,9 @@ class Career {
         'da': draftAt,
         'dl': draftLog,
         if (lotteryPre.isNotEmpty) 'lpre': lotteryPre,
+        if (offStartIds.isNotEmpty) 'ofs': offStartIds,
+        if (offStartRank != -1) 'ofr': offStartRank,
+        if (faMoves.isNotEmpty) 'fm': [for (final m in faMoves) m.toJson()],
         'sl': scoutsLeft,
         'sau': scoutAdUsed,
         'exp': expiring,
@@ -3214,6 +3242,12 @@ class Career {
       ..draftAt = (j['da'] as int?) ?? 0
       ..draftLog = [for (final x in (j['dl'] as List? ?? const [])) x as int]
       ..lotteryPre = [for (final x in (j['lpre'] as List? ?? const [])) x as int]
+      ..offStartIds = [for (final x in (j['ofs'] as List? ?? const [])) x as int]
+      ..offStartRank = (j['ofr'] as int?) ?? -1
+      ..faMoves = [
+        for (final x in (j['fm'] as List? ?? const []))
+          if (x is List && x.length == 7) FaMove.fromJson(x),
+      ]
       ..scoutsLeft = (j['sl'] as int?) ?? 0
       ..scoutAdUsed = (j['sau'] as bool?) ?? false
       ..expiring = [for (final x in (j['exp'] as List? ?? const [])) x as int]

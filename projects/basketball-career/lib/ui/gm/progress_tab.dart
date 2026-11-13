@@ -15,6 +15,7 @@ import 'common.dart';
 import 'draft_show_screen.dart';
 import 'inbox_screen.dart';
 import 'negotiate_dialog.dart';
+import 'offseason_show_screen.dart';
 import 'player_card.dart';
 import 'skills_screen.dart';
 import 'style.dart';
@@ -944,7 +945,10 @@ class ProgressTab extends StatelessWidget {
       );
       if (ok != true) return;
     }
+    if (!context.mounted) return;
+    final nav = Navigator.of(context);
     c.finishContracts();
+    if (c.career?.phase == Phase.preseason) await nav.push(MaterialPageRoute<void>(builder: (_) => OffSummaryScreen(c: c)));
   }
 
   // ------------------------------------------------------------ 任期の終わり

@@ -233,6 +233,30 @@ void main() {
     }
     await _shoot(t, '15_contracts_option', await _with(opt),
         act: (t) => t.scrollUntilVisible(find.text('使う(年俸 ${money(opt.optionSalary(rookie))})'), 200, scrollable: progress));
+    // 自由契約の1日の発表(大物に申し込んでから日を進める)と、オフのまとめ
+    Career toContracts() {
+      final d = careerAt(6, 28);
+      var g = 0;
+      while (d.phase != Phase.contracts && g++ < 600) {
+        if (d.phase == Phase.seasonEnd) d.fired = false;
+        botStep(d);
+      }
+      final target = d.freeAgents.where((p) => d.isBigFa(p) && d.bidProblem(p) == null).firstOrNull;
+      if (target != null) d.bid(target.id, 2, 1.05);
+      return d;
+    }
+
+    await _shoot(t, '15b_fa_day', await _with(toContracts()), act: (t) async {
+      await _tap(t, '補強', first: true);
+      await _tap(t, '次の日へ');
+      await settle(t);
+    });
+    await _shoot(t, '15c_off_summary', await _with(toContracts()), act: (t) async {
+      await t.scrollUntilVisible(find.text('自由契約の選手を見る'), 300, scrollable: progress);
+      await _tap(t, 'オフを終えて、シーズン前へ');
+      if (find.text('終える').evaluate().isNotEmpty) await _tap(t, '終える');
+      await settle(t);
+    });
     final over = botPlayCareer(8, team: teamAtRank(8, 15));
     await _shoot(t, '11_over', await _with(over));
   });
