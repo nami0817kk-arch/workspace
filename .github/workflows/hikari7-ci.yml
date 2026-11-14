@@ -59,6 +59,8 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
+          # 新しい stable で material.dart が非推奨になり analyze が落ちた(2026-11-14)ため、basketball-ci と同じ版に固定する
+          flutter-version: 3.47.2
 
       - name: Install dependencies
         working-directory: projects/hikari7/app
@@ -88,6 +90,8 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
+          # 新しい stable で material.dart が非推奨になり analyze が落ちた(2026-11-14)ため、basketball-ci と同じ版に固定する
+          flutter-version: 3.47.2
       - working-directory: projects/hikari7/app
         run: flutter pub get
       - working-directory: projects/hikari7/app
