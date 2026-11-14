@@ -213,6 +213,34 @@ const START = `S=newGame('m','normal',null);var c=S.tr.slice();S.sel=c.slice(0,S
   ok(e.run("(function(){var D=S.tr.filter(function(t){return t.status==='debut';});for(var i=0;i<30;i++){if(endShape(S,{q:.3},{tier:3,D:D,coh:30,combos:[],L:null}).k!=='restart')return false;}return true;})()"), 'はじめてのシーズンの C は、解散ではなく休止からの再出発になる');
   e.run('S.first=0');
   ok(e.run("(function(){var D=S.tr.filter(function(t){return t.status==='debut';});for(var i=0;i<30;i++){if(endShape(S,{q:.3},{tier:3,D:D,coh:30,combos:[],L:null}).k!=='restart')return true;}return false;})()"), '2シーズン目からの C は、これまでどおり解散の筋もある');
+
+  // 心得の上の段（2026-11-15）：1段目を極めると開く。前の保存（上の段の印が無い）でも壊れず、取ったものは消えない
+  const pk = boot({ adFree: false, store: CAR({ seasons: 9, points: 70, spent: 58, perk: { bud: 3, watch: 2, seat: 2, trust: 2, coach: 1, bond: 1, ap: 1 }, achv: { perkAll: 1 } }), owned: {} });
+  ok(pk.run("perkPoints(loadCareer())") === 12 && /上の段/.test(pk.run('perkBox()')), '前の保存のまま開ける。上の段が出る');
+  ok(pk.run("buyPerk('bud2')") === false && pk.run("(loadCareer().perk.bud2||0)") === 0, 'ポイントが足りなければ上の段は買えない');
+  pk.run("var c=loadCareer();c.points=200;saveCareer(c);");
+  ok(pk.run("buyPerk('bud2')") === true && pk.run('loadCareer().perk.bud2') === 1 && pk.run('loadCareer().spent') === 74, '1段目を極めていれば、上の段を買える（使ったポイントに入る）');
+  ok(pk.run("buyPerk('rare')") === true, '1段目をすべて極めると「掘り出し上手」が開く');
+  ok(pk.run("loadCareer().perk.bud") === 3 && pk.run("!!loadCareer().achv.perkAll"), '上の段を買っても、1段目と実績「心得を極める」は消えない');
+  const pl = boot({ adFree: false, store: CAR({ seasons: 2, points: 40, spent: 4, perk: { bud: 2 } }), owned: {} });
+  ok(pl.run("buyPerk('bud2')") === false && /を極めると開く/.test(pl.run('perkBox()')), '1段目を極めていない心得の上の段は、買えず「極めると開く」と出る');
+  ok(pl.run("perkBase().length") === 7 && pl.run("ACHV.filter(function(a){return a.k==='perkAll';})[0].chk(null,null,{perk:{bud:3,watch:2,seat:2,trust:2,coach:1,bond:1,ap:1}})"), '実績「心得を極める」は1段目だけで数える（上の段で遠くならない）');
+  ok(pl.run("PERKS.filter(function(p){return p.req;}).every(function(p){return p.x;})"), '上の段の心得には、どれも代償が書いてある');
+  // 上の段の効き目と代償
+  const pe = boot({ adFree: false, store: CAR({ seasons: 9, points: 300, spent: 240, perk: { bud: 3, watch: 2, seat: 2, trust: 2, coach: 1, bond: 1, ap: 1, bud2: 2, watch2: 1, coach2: 1, trust2: 1, bond2: 1, ap2: 1, rare: 1 } }), owned: {} });
+  pe.run("S=newGame('m','normal',null);");
+  ok(pe.run("S.tr.filter(function(t){return t.rare;}).length") >= 1, '掘り出し上手：めずらしい応募者が必ず来る');
+  ok(pe.run("slotsOf(S)") === pe.run("SP_SLOTS+2"), '専属トレーナー：特訓できる人数がさらに+1');
+  const daily = boot({ adFree: false, store: CAR({ seasons: 9, perk: { rare: 1 } }), owned: {} });
+  ok(daily.run("(function(){var a=[];for(var i=0;i<3;i++){S=newGame('m','normal',null,'2026-11-15');a.push(S.tr.map(function(t){return t.rare||'';}).join(','));}return a[0]===a[1]&&a[1]===a[2];})()"), '今日のオーディションの応募者は、心得があっても同じ');
+  // 会議の最初の画面：前回のあらすじは1〜2行にたたみ、押すと全部（物語の文は消さない）
+  const pv = boot({ adFree: false, store: CAR({}), owned: {} });
+  pv.run(START + "S.story={r:1,lines:['一行目のあらすじ。','二行目のあらすじ。']};S.rnd=2;");
+  const vp = pv.run('vPlan()');
+  ok(/<details class="prevst pvf"/.test(vp) && /一行目のあらすじ/.test(vp) && /二行目のあらすじ/.test(vp) && /data-a="fold" data-v="story"/.test(vp), '前回のあらすじは畳んだ札で、文はすべて残っている');
+  // 本番の出来の文：型・担当ごとの束と、その子だけの行
+  ok(pv.run("(function(){var n=0;['v','d','r','e'].forEach(function(k){['g','o','b'].forEach(function(g){['solo','team','duo','live','final'].forEach(function(ty){n+=BEAT_TY[ty][k][g].length;});});});return n;})()") >= 150, '出来の文に、審査の型ごとの束がある');
+  ok(pv.run("(function(){S.rnd=2;S.critRes=[{id:S.tr[0].id,c:1,say:'x'}];var t=S.tr[0];t.traits=['clutch'];var a=beatPers(S,t,90),b=beatPers(S,t,60);return !!a&&b===null;})()"), 'その子だけの行は、出来がはっきりしたときだけ出る');
 }
 
 if (fails) { console.error(fails + '件 外れ'); process.exitCode = 1; } else console.log('すべて通った');
