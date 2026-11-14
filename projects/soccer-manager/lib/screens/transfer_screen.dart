@@ -26,7 +26,10 @@ extension on TransferSortOption {
 }
 
 class TransferScreen extends StatefulWidget {
-  const TransferScreen({super.key});
+  const TransferScreen({super.key, this.embedded = false});
+
+  /// 下タブの一員として表示するか。true なら戻るボタンを出さない。
+  final bool embedded;
 
   /// フィルタ・検索・並び替えを適用した移籍市場選手リストを返す。UIから切り離してテスト可能にしてある。
   static List<Player> filterAndSort(
@@ -107,7 +110,7 @@ class _TransferScreenState extends State<TransferScreen>
     return Scaffold(
       appBar: AppBar(
         title: Text(Tr.pick('移籍市場', 'Transfers')),
-        leading: const BackButton(),
+        leading: widget.embedded ? null : const BackButton(),
         actions: [
           PopupMenuButton<TransferSortOption>(
             icon: const Icon(Icons.sort),
