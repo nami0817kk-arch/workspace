@@ -286,7 +286,7 @@
       let pk = '';
       if (gf === ga) {
         const r = YA.rngOf(w.seed * 7 + w.week * 13 + w.year);
-        win = r() < 0.5 + (w.rep || 40) / 1000;
+        win = r() < 0.5 + (w.rep || 40) / 1000 + (YA.pkBonus ? YA.pkBonus(w) : 0);
         pk = win ? '（PK戦で勝利）' : '（PK戦で敗退）';
       }
       c.round = s.round;

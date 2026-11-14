@@ -61,7 +61,7 @@
     const list = [];
     for (let i = 0; i < 7; i++) list.push(genStaff(r, r.pick(YA.ROLES_STAFF), 6, 16));
     // 卒業生が引退して戻ってくる
-    for (const a of w.alumni) if (a.retired && !a.coached && a.ovr >= 11 && r.chance(0.5)) {
+    for (const a of w.alumni) if (a.retired && !a.coached && !a.mem && a.ovr >= 11 && r.chance(0.5)) {
       const s = genStaff(r, r.pick(YA.ROLES_STAFF), 9, 15, true);
       s.name = a.name;
       s.ob = true;

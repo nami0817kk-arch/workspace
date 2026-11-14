@@ -104,6 +104,7 @@
     S.cands.push(c);
     return c;
   }
+  YA._genCand = genCand;
   // スカウトに出る：行き先を選ぶと、数人の候補に出会える。月3回まで・4〜11月・経費がかかる
   YA.scoutOut = function (w, dest) {
     const S = w.scouting;

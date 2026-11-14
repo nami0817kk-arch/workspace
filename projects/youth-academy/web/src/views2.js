@@ -120,6 +120,9 @@
     const right = h('div', { style: 'flex:1;min-width:0' });
     right.append(card(title('評価の履歴'), ...(c.eval.length ? c.eval.slice().reverse().map((e) => h('div', { class: 'row', style: 'padding:3px 0' }, h('span', { class: 'chip ' + (e.letter <= 'A' ? 'trait' : 'gray'), style: 'font-size:13px;min-width:26px;justify-content:center' }, e.letter), h('span', { class: 'sub' }, `${e.year}年目`), h('span', { class: 'grow', style: 'font-size:11px' }, e.goals.map((g) => `${g.label}${g.ok ? '○' : g.score ? '△' : '×'}`).join(' ')), h('span', { class: 'sub' }, `${e.rank}位`))) : [h('div', { class: 'note' }, 'まだ評価はありません（年度末に出ます）')])),
       card(title('クラブの要望・約束'), h('div', { class: 'note' }, c.reqYoung > 0 ? `若手を使う約束があと${c.reqYoung}週ある` : '今は特にありません。要望は出来事として届きます。')));
+    if (YA.policyCard) right.append(YA.policyCard(w));
+    if (YA.plansCard) right.append(YA.plansCard(w));
+    if (YA.directorOf) right.append(card(title('強化部長'), h('div', { class: 'note', style: 'color:var(--ink)' }, `${YA.directorOf(w).name}（${YA.directorOf(w).pers}）／あなたとの関係：${YA.STAFF_REL_NAME ? YA.STAFF_REL_NAME[1 + Math.min(4, Math.floor(clamp(YA.directorOf(w).rel, 0, 100) / 20))] : ''}`)));
     body.append(h('div', { style: 'display:flex;gap:8px;align-items:flex-start' }, left, right));
   }
 
@@ -154,7 +157,7 @@
     left.append(title(`いまのスタッフ（給料の合計 ${c.staff.reduce((s, x) => s + x.salary, 0)}万円）`));
     for (const role of YA.ROLES_STAFF) {
       const s = c.staff.find((x) => x.role === role);
-      left.append(card(h('div', { class: 'row' }, h('span', { class: 'chip pers', style: 'min-width:78px;justify-content:center' }, role), s ? h('b', { class: 'grow' }, s.name + (s.ob ? '（OB）' : '')) : h('span', { class: 'grow sub' }, '不在'), s ? h('span', { class: 'chip trait' }, '能力 ' + s.ab) : null, s ? h('span', { class: 'sub' }, s.salary + '万') : null), h('div', { class: 'note' }, YA.STAFF_NOTE[role])));
+      left.append(card(h('div', { class: 'row' }, h('span', { class: 'chip pers', style: 'min-width:78px;justify-content:center' }, role), s ? h('b', { class: 'grow' }, s.name + (s.ob ? '（OB）' : '')) : h('span', { class: 'grow sub' }, '不在'), s ? h('span', { class: 'chip trait' }, '能力 ' + s.ab) : null, s ? h('span', { class: 'sub' }, s.salary + '万') : null), h('div', { class: 'note' }, YA.STAFF_NOTE[role]), s && YA.staffLine ? h('div', { class: 'note', style: 'color:var(--ink)' }, YA.staffLine(s)) : null));
     }
     const right = h('div', { style: 'flex:1;min-width:0' });
     const lv = YA.trustLevel(w);
@@ -381,19 +384,27 @@
     const w = W();
     const ui = U().app;
     ui.mt = ui.mt || 'alumni';
-    const tabs = h('div', { class: 'tabs', style: 'width:420px' }, [['alumni', '卒業生名鑑'], ['rec', '記録'], ['bteam', 'Bチーム'], ['ach', '実績と引退'], ['set', '設定']].map(([k, n]) => h('button', { class: 'btn' + (ui.mt === k ? ' on' : ''), onclick: () => { ui.mt = k; rerender(); } }, n)));
+    const tabs = h('div', { class: 'tabs', style: 'width:420px' }, [['alumni', '卒業生名鑑'], ['rec', '記録'], ['bteam', 'Bチーム'], ['ach', '実績と引退'], ['help', '用語集'], ['set', '設定']].map(([k, n]) => h('button', { class: 'btn' + (ui.mt === k ? ' on' : ''), onclick: () => { ui.mt = k; rerender(); } }, n)));
     const body = h('div', { class: 'card pbody', style: 'flex:1;min-height:0' });
     if (ui.mt === 'alumni') {
       // 絞り込み：全員・プロ・海外・代表・タイトル
       ui.af = ui.af || 'all';
-      const AF = [['all', '全員'], ['pro', 'プロ'], ['abroad', '海外'], ['nat', '代表'], ['title', 'タイトル・賞']];
-      const pass = (a) => ui.af === 'all' || (ui.af === 'pro' && a.status === 'pro') || (ui.af === 'abroad' && a.abroad) || (ui.af === 'nat' && a.nat > 0) || (ui.af === 'title' && ((a.titles || []).length || (a.awards || []).length));
-      const al = w.alumni.slice().reverse().filter(pass);
+      const AF = [['all', '全員'], ['fav', '追っている子'], ['pro', 'プロ'], ['abroad', '海外'], ['nat', '代表'], ['title', 'タイトル・賞'], ['retired', '引退']];
+      const pass = (a) => ui.af === 'all' || (ui.af === 'fav' && a.fav) || (ui.af === 'retired' && a.retired) || (ui.af === 'pro' && a.status === 'pro') || (ui.af === 'abroad' && a.abroad) || (ui.af === 'nat' && a.nat > 0) || (ui.af === 'title' && ((a.titles || []).length || (a.awards || []).length));
+      ui.aq = ui.aq || '';
+      const gens = [...new Set(w.alumni.map((a) => a.year))].sort((x, y) => y - x);
+      const al = w.alumni.slice().reverse().filter(pass).filter((a) => (!ui.ay || a.year === ui.ay) && (!ui.aq || a.name.indexOf(ui.aq) >= 0 || String(a.club || '').indexOf(ui.aq) >= 0));
       body.append(h('div', { class: 'row', style: 'gap:4px;flex-wrap:wrap' }, h('div', { class: 'h grow' }, `卒業生と退団者（${w.alumni.length}人）`), ...AF.map(([k, n]) => h('button', { class: 'btn sm' + (ui.af === k ? ' on' : ''), onclick: () => { ui.af = k; rerender(); } }, n))));
-      body.append(h('div', { class: 'note' }, 'タップすると、卒業してからの年ごとの経歴（クラブ・リーグ・出場・得点・タイトル・賞）が見られます。'));
+      const q = h('input', { type: 'text', value: ui.aq, placeholder: '名前・クラブで探す', style: 'flex:1;padding:5px 8px;border:1px solid #b9c7de;border-radius:8px;font:inherit' });
+      q.addEventListener('change', () => { ui.aq = q.value.trim(); rerender(); });
+      q.addEventListener('pointerdown', (e) => e.stopPropagation());
+      const gs = h('select', { style: 'padding:5px;border:1px solid #b9c7de;border-radius:8px;font:inherit' }, h('option', { value: '' }, 'すべての代'), ...gens.map((y) => h('option', { value: y, selected: ui.ay === y }, `${y}年目卒`)));
+      gs.addEventListener('change', () => { ui.ay = gs.value ? +gs.value : null; rerender(); });
+      body.append(h('div', { class: 'row', style: 'gap:5px;margin-top:4px' }, q, gs));
+      body.append(h('div', { class: 'note' }, 'タップすると、その後の年表が見られます。追う・連絡する・試合を観に行くもここから。'));
       body.append(h('div', { class: 'plist', style: 'margin-top:5px' }, al.map((a) => {
         const top = YA.alumniHighlight(a);
-        return h('button', { class: 'pitem', style: 'align-items:flex-start', onclick: () => alumniCareer(a) }, h('span', { class: 'pos ' + a.pos }, YA.POS_LABEL[a.main] || a.pos),
+        return h('button', { class: 'pitem', style: 'align-items:flex-start', onclick: () => (YA.alumniModal ? YA.alumniModal(w, a) : alumniCareer(a)) }, a.fav ? h('b', { style: 'color:#e6a800' }, '★') : null, h('span', { class: 'pos ' + a.pos }, YA.POS_LABEL[a.main] || a.pos),
           h('div', { class: 'grow', style: 'text-align:left;min-width:0' }, h('b', {}, a.name), h('div', { class: 'note' }, (a.status === 'left' ? '退団' : `${a.year}年卒・${a.age}歳`) + (a.club ? `・${a.club}` : '') + (a.league && a.status !== 'left' ? `（${a.league}）` : '') + (a.retired ? '・引退' : ''))),
           a.status === 'pro' || a.status === 'univ' ? h('span', { class: 'sub', style: 'font-size:10.5px;white-space:nowrap' }, `通算${a.apps}試合・${a.goals}得点`) : null,
           (a.titles || []).length ? h('span', { class: 'chip trait' }, `タイトル${a.titles.length}`) : null,
@@ -406,6 +417,9 @@
       body.append(title('獲得した大会'), ...(w.trophies && w.trophies.length ? w.trophies.map((t) => h('div', { class: 'pitem', style: 'cursor:default' }, h('span', { class: 'chip trait' }, t.rank), h('span', { class: 'nm grow' }, t.name), h('span', { class: 'sub' }, `${t.year}年目`))) : [h('div', { class: 'note' }, 'まだありません')]));
       body.append(title('リーグの履歴'), ...((w.leagueHist || []).slice().reverse().map((x) => h('div', { class: 'pitem', style: 'cursor:default' }, h('span', { class: 'sub', style: 'width:54px' }, `${x.year}年目`), h('span', { class: 'nm grow' }, YA.levelNames(w)[x.level - 1]), h('b', {}, `${x.rank}位（勝点${x.pts}）`)))));
       body.append(title('最近の試合'), ...w.results.slice(-10).reverse().map((r) => h('div', { class: 'pitem', style: 'cursor:default' }, h('span', { class: 'sub', style: 'width:68px' }, `${r.year}年目${r.week}週`), h('span', { class: 'nm grow' }, (r.kind ? r.kind + ' ' : '') + r.opp), h('b', { style: `color:${r.gf > r.ga ? '#1a9d57' : r.gf < r.ga ? '#d63a3a' : 'inherit'}` }, `${r.gf}-${r.ga}`))));
+      if (YA.recordBookEl) body.append(YA.recordBookEl(w));
+    } else if (ui.mt === 'help') {
+      if (YA.glossaryEl) body.append(YA.glossaryEl());
     } else if (ui.mt === 'bteam') {
       YA.bBlock(body);
     } else if (ui.mt === 'ach') {

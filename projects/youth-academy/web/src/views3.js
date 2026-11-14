@@ -12,7 +12,7 @@
   YA.views = YA.views || {};
   YA.views.newgame = function (main) {
     const app = U().app;
-    app.ng = app.ng || { name: '', career: 'grind', club: 2, points: { teach: 0, eye: 0, talk: 0, tactic: 0 }, noFire: false };
+    app.ng = app.ng || { name: '', career: 'grind', club: 2, points: { teach: 0, eye: 0, talk: 0, tactic: 0 }, noFire: false, legacy: null };
     const f = app.ng;
     const used = () => Object.values(f.points).reduce((a, b) => a + b, 0);
     const career = YA.CAREERS.find((c) => c.k === f.career);
@@ -30,8 +30,18 @@
     right.append(h('div', { class: 'h', style: 'font-size:15px' }, '最初のクラブを選ぶ'), h('div', { class: 'note', style: 'margin:3px 0 5px' }, '部が上のクラブほど予算が大きく、素質のある選手が集まりますが、評価の目も厳しくなります。'));
     YA.START_CLUBS.forEach((c, i) => right.append(h('button', { class: 'rolecard' + (f.club === i ? ' on' : ''), onclick: () => { f.club = i; rerender(); } }, h('div', { class: 'grow' }, h('b', {}, c.name), h('div', {}, h('span', { class: 'd' }, c.note))), h('span', { class: 'chip ' + (c.tier === 1 ? 'trait' : c.tier === 2 ? 'pers' : 'gray') }, YA.TIER_NAME[c.tier]))));
     right.append(h('div', { class: 'row', style: 'margin-top:8px' }, h('span', { class: 'grow' }, '解任'), h('button', { class: 'btn sm' + (f.noFire ? ' on' : ''), onclick: () => { f.noFire = !f.noFire; rerender(); } }, f.noFire ? '解任なし' : '解任あり')), h('div', { class: 'note' }, '「解任なし」でも、評価が悪いと予算と信頼度は下がります。'));
+    const ppl = YA.legacyPeople(U().store);
+    if (ppl.length) {
+      right.append(h('div', { class: 'h', style: 'margin-top:10px' }, '前の人生の教え子'), h('div', { class: 'note' }, '絆の深かった★の卒業生が、コーチとして付いてきてくれます。1人だけ連れていけます（同じ役のコーチと入れ替わり、毎月★の子に自分の経験を話します）。'));
+      for (const q of ppl) {
+        const on = f.legacy === q.name;
+        const m = YA.definingMem ? YA.definingMem(q) : null;
+        right.append(h('div', { class: 'pitem', style: 'cursor:default;gap:6px;margin-top:3px' }, h('div', { class: 'grow' }, h('b', {}, `${q.name}★（${q.from || ''} ${q.year}年目卒・${YA.obRoleOf(q)}）`), h('div', { class: 'note' }, m && YA.recallMem ? `「${YA.recallMem(q, m)}」` : `${q.club || ''}`)),
+          h('button', { class: 'btn sm' + (on ? ' on' : ''), onclick: () => { f.legacy = on ? null : q.name; rerender(); } }, on ? '連れていく' : '連れていかない')));
+      }
+    }
     main.append(h('div', { style: 'flex:1;min-height:0;display:flex;flex-direction:column;gap:6px' },
-      h('div', { class: 'row', style: 'gap:8px;padding:14px 12px;border-radius:12px;color:#fff;background:linear-gradient(90deg,rgba(8,16,36,.7),rgba(8,16,36,.15)),' + (YA.titleSrc() ? `url(${YA.titleSrc()}) center/cover` : '#223') }, h('div', { class: 'h grow', style: 'font-size:19px;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.6)' }, 'ユースの系譜　新しく始める'), h('button', { class: 'btn pri', style: 'min-width:150px;min-height:38px;font-size:14px', onclick: () => { const opts = YA.makeStart({ name: f.name, career: f.career, club: f.club, points: f.points, noFire: f.noFire });
+      h('div', { class: 'row', style: 'gap:8px;padding:14px 12px;border-radius:12px;color:#fff;background:linear-gradient(90deg,rgba(8,16,36,.7),rgba(8,16,36,.15)),' + (YA.titleSrc() ? `url(${YA.titleSrc()}) center/cover` : '#223') }, h('div', { class: 'h grow', style: 'font-size:19px;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.6)' }, 'ユースの系譜　新しく始める'), h('button', { class: 'btn pri', style: 'min-width:150px;min-height:38px;font-size:14px', onclick: () => { const opts = YA.makeStart({ name: f.name, career: f.career, club: f.club, points: f.points, noFire: f.noFire }); if (f.legacy) opts.legacy = YA.legacyTake(U().store, f.legacy);
  app.w =YA.newWorld((Date.now() % 90000) + 7, opts); app.ng = null; app.tab = 'home'; app.view = 'pre'; YA.saveWorld(true); YA.sfx.play('whistle'); rerender(); } }, 'この指導者で始める')),
       h('div', { style: 'flex:1;min-height:0;display:flex;gap:8px' }, left, right)));
   };
@@ -215,6 +225,8 @@
     const box = h('div', { class: 'card', style: 'margin:10px;padding:12px' });
     box.append(h('div', { class: 'h', style: 'font-size:16px' }, `指導者人生のまとめ（${s.years}年）`));
     box.append(h('div', { class: 'note' }, (app.w.coachName || '指導者') + 'さんの歩み'));
+    const lg = YA.legacyBank(U().store, app.w);
+    box.append(h('div', { class: 'insight' }, lg.length ? `次の人生に付いてきてくれる教え子：${lg.join('・')}（新しく始めるときに1人選べます）` : '次の人生に付いてきてくれる教え子は、いません（絆の深い★の卒業生が付いてきます）'));
     box.append(h('div', { class: 'insight' }, `プロ入りした卒業生 ${s.pros}人／代表経験者 ${s.nats}人／連帯貢献金 ${s.solid}万円`));
     if (s.best.length) box.append(h('div', { class: 'h', style: 'margin-top:4px' }, '育てた主な子'), ...s.best.map((a) => h('div', { class: 'note', style: 'color:var(--ink)' }, `・${a.name}（${a.pos}・能力${YA.rate(a.ovr)}・${a.club || ''}）`)));
     if (s.trophies.length) box.append(h('div', { class: 'h', style: 'margin-top:4px' }, '獲ったもの'), ...s.trophies.map((t) => h('div', { class: 'note', style: 'color:var(--ink)' }, `・${t.year || ''}年 ${t.name}`)));

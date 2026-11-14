@@ -349,8 +349,20 @@
     return nt0.apply(this, arguments);
   };
   const lt0 = YA.alumniTick;
+  // ★の子は、卒業してからも便りで追える（育てた子の「その後」を毎年見せる）
+  const aeStar0 = YA.alumniEntry;
+  YA.alumniEntry = function (w, p) {
+    const a = aeStar0.apply(this, arguments);
+    if (p.star) a.star = true;
+    return a;
+  };
   YA.alumniTick = function (w) {
     const r = lt0.apply(this, arguments);
+    for (const a of w.alumni || []) {
+      if (!a.star || a.year >= w.year || a.retired) continue;
+      const tail = a.status === 'pro' ? `${a.club}（${a.league}）で通算${a.apps || 0}試合${a.goals || 0}得点` : a.status === 'univ' ? `${a.club}で四年間のプレー中` : `${a.club}で続けている`;
+      YA.noteTier(w, 2, `卒業生の${a.name}★（${a.year}年目卒）：${tail}`);
+    }
     const n = ((w.letters || {})[w.year] || []).length;
     if (n > 0) nt0(w, 2, `今年の卒業生の便りが${n}件届いています（系譜 → 便り）`);
     return r;
