@@ -49,6 +49,10 @@ for (const m of src.matchAll(/font-size:\s*([\d.]+)px/g)) if (+m[1] < 12) tinyFs
 for (const m of src.matchAll(/font-size="([\d.]+)"/g)) if (+m[1] < 12) tinyFs.push(m[0]);
 for (const m of css.matchAll(/font-size:\s*(smaller|x-small|xx-small|small)/g)) tinyFs.push(m[0]);
 const smallRule = /(^|[}\s])small\{font-size:max\(12px,/m.test(css);
+// 押せる範囲を44ptまで広げる指定（2026-11-15：見た目はそのままで、発表の席の顔・合格発表の🔊・特性の札・狭い画面のレッスンの担当）
+const hitRules = { '発表の席の顔': /\.cshit\{[^}]*min-width:44px;min-height:44px/, '合格発表の台詞': /\.call \.who>\[data-a=say\]\{padding:12px 0;margin:-12px 0\}/,
+  '特性の札': /\.trt\[data-a\]::after\{[^}]*top:-12px;bottom:-12px/, '狭い画面のレッスンの担当': /body\.nar \.lpick\{flex-wrap:wrap\}/ };
+const hitMiss = Object.keys(hitRules).filter((k) => !hitRules[k].test(css));
 const setOk = run('ui.set.fs==="l"&&ui.set.bgm===0&&ui.set.voice===0&&ui.set.theme==="dark"');
 
 const errs = [], seen = {}, times = [];
@@ -88,7 +92,7 @@ function season(g, diff, chal) {
     applyFeature(S);toNight(S);if(S.phase==='night'){__shot();nightSkip(S);S.phase='judge';}
     var B=alive(S),res=S.stage.res,n=ROUNDS[r].fin?Math.min(6,S.caps.finMax,B.length):capOf(S);
     B.sort(function(a,b){return res[b.id].sc-res[a.id].sc;}).slice(0,n).forEach(function(t){S.pass[t.id]=true;});__shot();
-    decide(S);__shot();S.call.n=S.call.order.length;S.call.done=true;__shot();if(!ROUNDS[r].fin)nextRound(S);}
+    decide(S);__shot();S.call.n=S.call.order.length-1;ui.lastRoll={i:0};__shot();ui.lastRoll=null;S.call.n=S.call.order.length;__shot();S.call.done=true;__shot();if(!ROUNDS[r].fin)nextRound(S);}
   applyFarewell(S);startPrep(S);__shot();S.prep.color=2;S.prep.song=1;var D=S.tr.filter(function(t){return t.status==='debut';});S.prep.leader=D[0].id;
   startMonth(S);__shot();['tv','mv','rest','tv'].forEach(function(k){weekDo(S,k);});__shot();finishMonth(S);__shot();
   S.ending=false;__shot();ui.prof=D[0].id;__shot();ui.prof=null;S.bursts=[];__shot();`);
@@ -109,6 +113,8 @@ if (tinyFs.length) { console.error('12px 未満の字の指定: ' + [...new Set(
 if (!smallRule) { console.error('<small> を12px未満にしない指定（small{font-size:max(12px,…)}）が無い'); process.exitCode = 1; }
 else console.log('字の大きさの指定: 12px 未満 ' + tinyFs.length + '件');
 if (!critChk) { console.error('講評の画面の点検が1回も走っていない'); process.exitCode = 1; } else console.log('講評の画面の点検 ' + critChk + '回（1人1行・8択のシート）');
+if (hitMiss.length) { console.error('押せる範囲の指定が無い: ' + hitMiss.join('・')); process.exitCode = 1; }
+else console.log('押せる範囲の指定: ' + Object.keys(hitRules).length + '件あり');
 if (!setOk) { console.error('保存した設定が、開き直すと初期値に戻っている'); process.exitCode = 1; }
 if (miss.length) { console.error('描けていない画面:', miss.join(' ')); process.exitCode = 1; }
 if (errs.length) { console.error('エラー', errs.length + '件'); errs.slice(0, 10).forEach((e) => console.error('  ' + e)); process.exitCode = 1; }
