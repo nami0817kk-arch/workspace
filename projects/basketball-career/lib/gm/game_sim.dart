@@ -56,14 +56,14 @@ class SimTeam {
     wTov = [for (var i = 0; i < n; i++) (0.6 + sub(order[i], 'ボール運び') / 100 * (order[i].pos == Pos.pg ? 1.4 : 1.0)) * (1.5 - sSafe[i] / 100)];
     wStl = [for (var i = 0; i < n; i++) _pow(sStl[i] - 35, 1.3)];
     wBlk = [for (var i = 0; i < n; i++) _pow(sub(order[i], 'ブロック') - 35, 1.4) * _blkPos[order[i].pos]!];
-    wOreb = [for (var i = 0; i < n; i++) _pow(sub(order[i], '攻めのリバウンド') - 35, 1.3) * _rebPos[order[i].pos]! * (1 + 0.15 * (tier[i][Attr.rebound.index] + 1))];
+    wOreb = [for (var i = 0; i < n; i++) _pow(sub(order[i], '攻めのリバウンド') - 35, 1.3) * _rebPos[order[i].pos]! * (1 + 0.08 * (tier[i][Attr.rebound.index] + 1))];
     wReb = [
       for (var i = 0; i < n; i++)
-        _pow((sub(order[i], '守りのリバウンド') + sub(order[i], 'ボックスアウト')) / 2 - 35, 1.3) * _rebPos[order[i].pos]! * (1 + 0.15 * (tier[i][Attr.rebound.index] + 1)),
+        _pow((sub(order[i], '守りのリバウンド') + sub(order[i], 'ボックスアウト')) / 2 - 35, 1.3) * _rebPos[order[i].pos]! * (1 + 0.08 * (tier[i][Attr.rebound.index] + 1)),
     ];
     wAst = [
       for (var i = 0; i < n; i++)
-        _pow((sub(order[i], 'パスの正確さ') + sub(order[i], '視野')) / 2 - 35, 1.3) * _astPos[order[i].pos]! * (1 + 0.1 * (tier[i][Attr.passing.index] + 1)),
+        _pow((sub(order[i], 'パスの正確さ') + sub(order[i], '視野')) / 2 - 35, 1.3) * _astPos[order[i].pos]! * (1 + 0.06 * (tier[i][Attr.passing.index] + 1)),
     ];
   }
 
@@ -362,7 +362,7 @@ void _possession(SimTeam o, SimTeam d, Rng r, void Function(String)? play) {
   for (var tries = 0; tries < 4; tries++) {
     // ミス
     // ミスの見込み: 相手のスティールの力とこちらのミスの少なさ。司令塔のバッジがコートにいると減る
-    final toP = (0.125 - edge * 0.6 + (d.cStl - o.cSafe) / 900 + (press == 2 ? 0.015 : 0) - o.cGeneral * 0.002).clamp(0.06, 0.2);
+    final toP = (0.125 - edge * 0.6 + (d.cStl - o.cSafe) / 900 + (press == 2 ? 0.015 : 0) - o.cGeneral * 0.001).clamp(0.06, 0.2);
     if (r.nextInt(10000) < (toP * 10000).round()) {
       final who = _pick(r, oc, o.wTov);
       o.stat[who][_tov]++;
@@ -384,9 +384,9 @@ void _possession(SimTeam o, SimTeam d, Rng r, void Function(String)? play) {
     final skill = three ? out - o.c3 : ins - o.cRim;
     final paint = press == 0 ? (three ? 0.01 : -0.02) : 0.0;
     // 守る5人の得意(外の守りと中の守りのどちらが高いか)と、鉄壁のバッジ
-    final guard = (three ? d.cPerD - d.cDef : d.cIntD - d.cDef) / 400 + d.cWall * 0.003;
+    final guard = (three ? d.cPerD - d.cDef : d.cIntD - d.cDef) / 400 + d.cWall * 0.0015;
     // バッジ(シューターは3点、フィニッシャーは2点)
-    final badge = 0.008 * ((three ? tiers[Attr.outside.index] : tiers[Attr.inside.index]) + 1);
+    final badge = 0.004 * ((three ? tiers[Attr.outside.index] : tiers[Attr.inside.index]) + 1);
     // 疲れ: その試合で30分を超えて出ると、スタミナが低いほど入りにくい
     final played = o.secs[shooter] / 60 - 30;
     final tired = played <= 0 ? 0.0 : played * 0.002 * (1.6 - o.sStam[shooter] / 100);
@@ -394,7 +394,7 @@ void _possession(SimTeam o, SimTeam d, Rng r, void Function(String)? play) {
     make = make.clamp(three ? 0.18 : 0.3, three ? 0.52 : 0.72);
     // ファウルをもらう(中で多い。前から当たる守りは増える)
     // ファウルのもらいやすさと、身体能力のバッジ
-    final foulP = three ? 0.02 : (0.15 + (o.sFoul[shooter] - 70) / 500 + (press == 2 ? 0.02 : 0) + 0.008 * (tiers[Attr.athletic.index] + 1)).clamp(0.08, 0.26);
+    final foulP = three ? 0.02 : (0.15 + (o.sFoul[shooter] - 70) / 500 + (press == 2 ? 0.02 : 0) + 0.005 * (tiers[Attr.athletic.index] + 1)).clamp(0.08, 0.26);
     final fouled = r.nextInt(1000) < (foulP * 1000).round();
     final pft = (0.74 + (o.sFt[shooter] - 70) / 200).clamp(0.45, 0.93);
     final st = o.stat[shooter];
