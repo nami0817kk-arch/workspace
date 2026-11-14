@@ -23,6 +23,7 @@ import 'season_record.dart';
 import 'sponsor.dart';
 import 'club_vision.dart';
 import 'ledger.dart';
+import '../logic/economy_engine.dart';
 import '../logic/league_rules.dart';
 import '../logic/policy_engine.dart';
 import 'staff_member.dart';
@@ -107,6 +108,10 @@ class SaveGame {
 
   /// このクラブのいる国の財務規則。
   RuleSet ruleSet;
+
+  /// 今シーズンの景気と、来シーズンの景気(予報)。
+  EconomyPhase economyPhase;
+  EconomyPhase economyNext;
 
   /// オーナーが選んだクラブの方針。シーズンの開幕前にだけ変えられる。
   ClubPolicy clubPolicy;
@@ -410,6 +415,8 @@ class SaveGame {
     this.marketingBoostWeeks = 0,
     List<SeasonLedger>? ledgers,
     this.ruleSet = RuleSet.britain,
+    this.economyPhase = EconomyPhase.normal,
+    this.economyNext = EconomyPhase.normal,
     this.clubPolicy = ClubPolicy.balanced,
     Map<int, int>? clubValueHistory,
     this.ownerGoalStartValue = 0,
@@ -594,6 +601,8 @@ class SaveGame {
         'marketingBoostWeeks': marketingBoostWeeks,
         'ledgers': ledgers.map((l) => l.toJson()).toList(),
         'ruleSet': ruleSet.name,
+        'economyPhase': economyPhase.name,
+        'economyNext': economyNext.name,
         'clubPolicy': clubPolicy.name,
         'clubValueHistory': clubValueHistory.map((k, v) => MapEntry('$k', v)),
         'ownerGoalStartValue': ownerGoalStartValue,
@@ -708,6 +717,12 @@ class SaveGame {
         clubPolicy: ClubPolicy.values
             .where((p) => p.name == json['clubPolicy'])
             .firstOrNull ?? ClubPolicy.balanced,
+        economyPhase: EconomyPhase.values
+            .where((e) => e.name == json['economyPhase'])
+            .firstOrNull ?? EconomyPhase.normal,
+        economyNext: EconomyPhase.values
+            .where((e) => e.name == json['economyNext'])
+            .firstOrNull ?? EconomyPhase.normal,
         transferBanSeasons: json['transferBanSeasons'] as int? ?? 0,
         pendingPointsDeduction: json['pendingPointsDeduction'] as int? ?? 0,
         ledgers: (json['ledgers'] as List?)

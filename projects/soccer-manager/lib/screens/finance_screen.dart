@@ -11,6 +11,7 @@ import '../theme/semantic_colors.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/budget_plan_card.dart';
 import '../widgets/ledger_card.dart';
+import '../widgets/economy_card.dart';
 import '../widgets/club_policy_card.dart';
 import '../widgets/club_value_card.dart';
 import '../widgets/rules_card.dart';
@@ -132,6 +133,7 @@ class FinanceScreen extends StatelessWidget {
               ),
             ),
             const LedgerCard(),
+            const EconomyCard(),
             const ClubPolicyCard(),
             const ClubValueCard(),
             const RulesCard(),

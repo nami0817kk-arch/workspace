@@ -760,6 +760,7 @@ extension GameStateSeason on GameState {
     _enforceLeagueRules();
     _recordClubValue();
     _scoreClubPolicy(finalRank: finalRank);
+    _advanceEconomy();
 
     // 監督契約(任期)の更新。旧セーブ(0=未導入)はまず2年契約を結ぶ。
     lastManagerContractNote = null;

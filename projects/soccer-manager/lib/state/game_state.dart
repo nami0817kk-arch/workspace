@@ -21,6 +21,7 @@ import '../models/bank_loan.dart';
 import '../models/investment.dart';
 import '../models/ledger.dart';
 import '../logic/ledger_engine.dart';
+import '../logic/economy_engine.dart';
 import '../logic/league_rules.dart';
 import '../logic/policy_engine.dart';
 import '../logic/club_value_engine.dart';
@@ -956,6 +957,8 @@ class GameState extends ChangeNotifier {
       clubHistory: [clubName],
       difficulty: difficulty,
     );
+    // 最初のシーズンは平常。来季の予報だけ引いておく。
+    _save!.economyNext = EconomyEngine.next(EconomyPhase.normal, Random().nextDouble());
     // 難易度による初期条件の補正(資金と理事会目標の厳しさ)。
     _save!.budget = (_save!.budget * difficulty.initialBudgetFactor).round();
     _save!.boardTargetRank = _difficultyAdjustedTarget(_save!.boardTargetRank);
