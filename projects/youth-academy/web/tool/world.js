@@ -14,6 +14,7 @@ require(path.join(__dirname, '../src/lineage.js'));
 require(path.join(__dirname, '../src/rivals.js'));
 require(path.join(__dirname, '../src/story.js'));
 require(path.join(__dirname, '../src/memory.js'));
+require(path.join(__dirname, '../src/chains.js'));
 require(path.join(__dirname, '../src/shop.js'));
 require(path.join(__dirname, '../src/imgdata.js'));
 require(path.join(__dirname, '../src/art.js'));
@@ -763,6 +764,82 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
       const lw = YA.newWorld(14, Object.assign(YA.makeStart({ name: 'a', career: 'grind', club: 2, points: {} }), { legacy: person }));
       ok(lw.club.staff.some((x) => x.mentor && x.name === a.name) && lw.legacyUsed === a.name, '遺産：次の人生の最初からコーチにいる');
       JSON.parse(JSON.stringify(wm2));
+    }
+    {
+      // 中身の厚み 1段目：事情・続き物・前回を覚える・絆の差・便りの重なり・OBが早く戻る
+      const wc = YA.newWorld(31);
+      const all = Object.values(wc.players);
+      ok(all.every((x) => YA.BG_NAME[YA.bgOf(wc, x)]) && new Set(all.map((x) => x.bg)).size >= 15, '事情：全員に1つ、いろいろな事情がある');
+      const p = all.find((x) => x.grade === 1);
+      p.bg = 'poor'; p.bgKnow = 0;
+      ok(/まだ分からない/.test(YA.bgText(wc, p)), '事情：最初は分からない');
+      YA.bgReveal(wc, p);
+      ok(/うすうす/.test(YA.bgText(wc, p)), '事情：一段わかると「うすうす」');
+      // 続き物：家計（2話）
+      wc.chains = [];
+      const c = { id: 'chT', k: 'poor', pid: p.id, ep: 0, due: wc.year * 40 + wc.week, shown: 0, st: { sc: 0, picks: [] } };
+      wc.chains.push(c);
+      const e1 = { id: 'chain', cid: 'chT', pid: p.id, week: wc.week, year: wc.year };
+      const v1 = YA.eventView(wc, e1);
+      ok(v1 && /遠征費/.test(v1.text) && v1.opts.length === 3 && /1\/2/.test(v1.name), '続き物：1話目が出る');
+      const o1 = YA.resolveEvent(wc, e1, v1.opts.findIndex((x) => /クラブに相談/.test(x)));
+      ok(c.ep === 1 && c.st.club === 1 && !c.done && /続く/.test(o1.small || ''), '続き物：選ぶと次の話が数週あとに');
+      wc.week += 3;
+      wc.forced = [];
+      YA.chainWeek(wc);
+      const e2 = (wc.forced || []).find((x) => x.id === 'chain' && x.cid === 'chT');
+      ok(!!e2, '続き物：時期が来ると2話目が出る');
+      const v2 = YA.eventView(wc, e2);
+      ok(v2 && /制度/.test(v2.text), '続き物：2話目は1話目の選択を踏まえる');
+      YA.resolveEvent(wc, e2, v2.opts.findIndex((x) => /免除/.test(x)));
+      ok(c.done && c.end === 'good' && p.chainDone.poor === 'good' && p.bgKnow === 2, '続き物：向き合えば良い結末');
+      const cm = (p.mem || []).find((m) => m.k === 'chain');
+      ok(cm && cm.end === 'good' && /掛け合って/.test(cm.q), '続き物：結末が本人の言葉で記憶に残る');
+      // 悪い結末：辞める
+      const q = all.find((x) => x.id !== p.id && x.grade === 2);
+      q.bg = 'poor';
+      const c2 = { id: 'chU', k: 'poor', pid: q.id, ep: 1, due: 0, shown: 1, st: { sc: -1, picks: [2] } };
+      wc.chains.push(c2);
+      const eU = { id: 'chain', cid: 'chU', pid: q.id, week: wc.week, year: wc.year };
+      YA.resolveEvent(wc, eU, YA.eventView(wc, eU).opts.findIndex((x) => /任せる/.test(x)));
+      ok(!wc.players[q.id] && c2.end === 'bad', '続き物：放っておくと、辞めてしまうこともある');
+      // 15本すべて：1話目と2話目の文が出て、4つの結末がそろっている
+      let okAll = true;
+      for (const [k, d] of Object.entries(YA.CHAINS)) {
+        if (d.eps.length !== 2 || !['good', 'mid', 'bad', 'hidden'].every((x) => d.ends[x] && d.ends[x].m)) okAll = false;
+        for (const ep of d.eps) { try { if (!ep.t(p, wc, { sc: 0, picks: [] })) okAll = false; } catch (er) { okAll = false; } }
+      }
+      ok(okAll && Object.keys(YA.CHAINS).length === 15, '続き物：15本すべての文と4つの結末');
+      // 前回を覚える
+      const r = all.find((x) => x.id !== p.id && wc.players[x.id] && x.grade === 3);
+      r.tr = 70;
+      const ev = { id: 'lowconf', pid: r.id, week: wc.week, year: wc.year };
+      YA.eventView(wc, ev); YA.resolveEvent(wc, ev, 0);
+      const vv = YA.eventView(wc, ev);
+      ok(/にも同じことがあった/.test(vv.text), '前回を覚える：2回目は前回を踏まえた文');
+      const out2 = YA.resolveEvent(wc, ev, 0);
+      ok(/響きにくかった/.test(out2.small || ''), '前回を覚える：同じ言葉は2回目に響きにくい');
+      // 絆に差がつく
+      const g1 = { tr: 50, mem: [{ k: 'chain', end: 'good' }, { k: 'promise', c: 'kept' }] };
+      const g2 = { tr: 50, mem: [{ k: 'lowconf', bad: true }, { k: 'wall', bad: true }, { k: 'promise', c: 'broken' }] };
+      ok(YA.bondOf(g1) >= 3 && YA.bondOf(g2) <= 1, '絆：積み重ねで差がつく');
+      // 毎年の会話は記憶を押し流さない
+      const s = all.find((x) => wc.players[x.id] && x.id !== r.id);
+      s.star = true;
+      const n0 = (s.mem || []).length;
+      YA.resolveEvent(wc, { id: 'ms', pid: s.id, ms: 'term', week: 39, year: wc.year }, 0);
+      ok((s.mem || []).length === n0 && YA.leanOf(s).n >= 1, '年度末の会話は記憶に残さず、傾きにだけ数える');
+      // 便り：同じ年に同じ言葉を二度使わない
+      const mk = (nm) => ({ name: nm, year: wc.year - 1, club: 'X', status: 'pro', league: 'J1リーグ', bond: 5, mem: [{ k: 'wall', c: 'warm', q: '必ず越えられる' }], seasons: [{ y: wc.year, club: 'X', apps: 10, goals: 1, titles: [], awards: [] }] });
+      const ww = Object.assign({}, wc, { year: wc.year, _letUsed: null });
+      const la = YA.letterOf(ww, mk('甲 一')), lb = YA.letterOf(ww, mk('乙 二'));
+      ok(/越えられる/.test(la) && !/越えられる/.test(lb), '便り：同じ年に同じ言葉を二度使わない');
+      // OB：指導者志望の子は、引退を待たずに戻ってくる
+      wc.alumni.push({ name: '丙 三', year: wc.year - 2, status: 'univ', retired: false, coachPath: 2, bond: 3, mem: [{ k: 'chain', c: 'push', q: 'いつか戻ります', ch: 'coach', end: 'hidden' }], pos: 'MF', main: 'CM', ovr: 11 });
+      wc.week = 3; wc.memKey = null; wc.forced = [];
+      YA.rivalWeek(wc);
+      ok((wc.forced || []).some((x) => x.id === 'obret' && x.who === '丙 三'), 'OB：指導者志望の子は引退を待たずに戻ってくる');
+      JSON.parse(JSON.stringify(wc));
     }
     ok(YA.noticeKind('Aが怪我（3週）') === '怪我'&& YA.noticeKind('なにか') === 'そのほか', 'お知らせの種類を分ける');
     ok(YA.renamePlayer(wm, Object.keys(wm.players)[0], '').ok === false && YA.renamePlayer(wm, Object.keys(wm.players)[0], '新しい名前').ok, '名前を書き換えられる');

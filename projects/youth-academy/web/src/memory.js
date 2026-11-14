@@ -28,14 +28,17 @@
   const res0 = YA.resolveEvent;
   YA.resolveEvent = function (w, e, idx) {
     const p = e.pid ? w.players[e.pid] : null;
+    let rr = null;
+    try { const d0 = YA.EVENTS.find((x) => x.id === e.id); const o0 = d0 && d0.opts && d0.opts[idx]; if (p && o0 && o0.kind && !o0.run && YA.react) rr = YA.react(p, o0.kind).c < 0; } catch (er) { rr = null; }
     const out = res0.apply(this, arguments);
     if (!p || !(p.star || p.mem)) return out;
     const def = YA.EVENTS.find((x) => x.id === e.id);
     const o = def && def.opts && def.opts[idx];
     if (!o) return out;
-    if (e.id === 'ms') YA.memAdd(w, p, e.ms, o.kind, quoteOf(o.label));
+    if (e.id === 'ms' && (e.ms === 'term' || e.ms === 'hint')) { if (o.kind) { p.leanX = p.leanX || {}; p.leanX[o.kind] = (p.leanX[o.kind] || 0) + 1; } }
+    else if (e.id === 'ms') YA.memAdd(w, p, e.ms, o.kind, quoteOf(o.label), rr != null ? { bad: rr } : null);
     else if (e.id === 'path') YA.memAdd(w, p, 'path', o.k, quoteOf(o.label), { wish: p.wish || YA.wishOf(p) });
-    else if (MEM_EVENTS.has(e.id)) YA.memAdd(w, p, e.id, o.kind, quoteOf(o.label));
+    else if (MEM_EVENTS.has(e.id)) YA.memAdd(w, p, e.id, o.kind, quoteOf(o.label), rr != null ? { bad: rr } : null);
     return out;
   };
   const aw0 = YA.awaken;
@@ -55,6 +58,22 @@
     return r;
   };
 
+  // 約束（「Aで使う」）を守れたかを記憶に残す
+  const cp0 = YA.checkPromises;
+  if (cp0) YA.checkPromises = function (w) {
+    const before = (w.promises || []).slice();
+    const r = cp0.apply(this, arguments);
+    const after = new Set(w.promises || []);
+    for (const x of before) {
+      if (after.has(x)) continue;
+      const p = w.players[x.pid];
+      if (!p || x.year !== w.year) continue;
+      const played = p.lm && p.lm.y * 100 + p.lm.w > x.from && p.lm.mins > 0;
+      if (played || w.week > x.until) YA.memAdd(w, p, 'promise', played ? 'kept' : 'broken', x.why);
+    }
+    return r;
+  };
+
   // ---------- 育て方の傾き：接し方で、覚醒の形の出やすさが変わる ----------
   YA.FORM_LEAN = {
     firm: ['fighter', 'ice', 'leader', 'wall', 'hunter'],
@@ -66,6 +85,7 @@
     const cnt = { warm: 0, push: 0, firm: 0, wait: 0 };
     let n = 0;
     for (const m of p.mem || []) if (cnt[m.c] != null) { cnt[m.c]++; n++; }
+    for (const k of Object.keys(p.leanX || {})) if (cnt[k] != null) { cnt[k] += p.leanX[k]; n += p.leanX[k]; }
     return { cnt, n };
   };
   // 形の重みに掛ける倍率（1〜3倍）。記憶が無ければ1
@@ -148,10 +168,13 @@
     'debut:firm': () => [`初出場のあとに課題を言われたのが悔しくて、ずっとノートに書いていました。`, `初出場のあと課題言われて、悔しくてずっとメモってました。`],
     'unrest:warm': () => [`出番がなくて腐りかけたとき、約束してもらえたのがうれしかったです。`, `出番なくて腐ってたとき、約束してくれたっすよね。`],
     'hot:push': () => [`調子のいいときに、もっと上を求めてもらえたのが良かったです。`, `調子いいときに「もっと上」って言ってくれたの、良かったっす。`],
+    'chain': (x) => [x.m.q, x.m.q],
+    'promise:kept': () => [`「Aで使う」という約束を、ちゃんと守ってもらいました。`, `Aで使うって約束、守ってくれたっすよね。`],
+    'promise:broken': () => [`約束を守ってもらえなかったこと、正直、悔しかったです。`, `約束、守ってもらえなかったの、悔しかったっす。`],
     'scout': (x) => [`スカウトの人が「${x.m.q}」と言っていたって、あとで聞きました。`, `スカウトの人に「${x.m.q}」って言われてたらしいっすね。`],
     'ref': (x) => [`${x.m.q}さんの紹介でここに来て、本当によかったです。`, `${x.m.q}さんに紹介してもらって、マジでよかったっす。`],
   };
-  const PRI = ['star:push', 'wall', 'quit', 'awake', 'star', 'injury', 'lowconf', 'debut', 'unrest', 'hot', 'ref', 'scout'];
+  const PRI = ['star:push', 'chain', 'wall', 'quit', 'awake', 'star', 'injury', 'lowconf', 'debut', 'unrest', 'hot', 'ref', 'scout'];
   // その子を形づくった記憶を1つ（約束を最優先。次に壁・辞めかけ・覚醒…）
   YA.definingMem = function (p) {
     const mem = p.mem || [];
@@ -167,7 +190,7 @@
     if (!f) return null;
     const x = { awake: (p.awDone || 0) > 0, form: (p.aw && p.aw.form) || '', hi: YA.trustLv(p) >= 4, m };
     let s = f(x)[reg(p)];
-    if (YA.toneOf && YA.toneOf(p) === '無口') s = '……' + s;
+    if (m.k !== 'chain' && YA.toneOf && YA.toneOf(p) === '無口') s = '……' + s;
     return s;
   };
   YA.recallMem = sayMem;
@@ -201,13 +224,19 @@
   };
 
   // ---------- 卒業：記憶と絆を持って出ていく ----------
+  // 絆（0〜6）：信頼に、約束・進路・続き物の結末・反応の悪かった言葉の積み重ねを足し引きする。ならして3前後
   YA.bondOf = function (p) {
-    const promise = YA.memOf(p, 'star', 'push').length > 0;
+    const lv = YA.trustLv(p);
+    let b = 2 + (lv >= 4 ? 1 : 0) + (lv >= 5 ? 1 : 0) - (lv <= 2 ? 1 : 0);
+    if (YA.memOf(p, 'star', 'push').length) b += p.awDone > 0 ? 1 : -2;
     const pathM = YA.memOf(p, 'path')[0];
-    let b = YA.trustLv(p);
-    if (promise) b += p.awDone > 0 ? 1 : -2;
-    if (pathM && pathM.c === pathM.wish) b += 1;
-    return clamp(b, 0, 6);
+    if (pathM) b += pathM.c === pathM.wish ? 1 : -1;
+    for (const m of p.mem || []) {
+      if (m.k === 'chain') b += m.end === 'good' || m.end === 'hidden' ? 1 : m.end === 'bad' ? -1 : 0;
+      else if (m.k === 'promise') b += m.c === 'kept' ? 0.5 : -1;
+      else if (m.bad) b -= 0.5;
+    }
+    return clamp(Math.round(b), 0, 6);
   };
   const ae0 = YA.alumniEntry;
   YA.alumniEntry = function (w, p) {
@@ -218,6 +247,8 @@
       a.form = (p.aw && p.aw.form) || null;
       a.tone = YA.toneOf ? YA.toneOf(p) : null;
     }
+    if (p.coachPath) a.coachPath = p.coachPath;
+    if (p.bg) a.bg = p.bg;
     return a;
   };
 
@@ -244,14 +275,37 @@
     }
     const yrs = w.year - a.year;
     const b = a.bond == null ? 3 : a.bond;
-    if (b >= 4 && yrs % 3 === 1) {
-      const m = YA.definingMem(a);
-      if (m && m.q && m.k !== 'scout' && m.k !== 'ref' && m.k !== 'awake') parts.push(`監督に言われた「${m.q}」は、今も大事にしています。`);
+    const h = YA.hash(a.name + w.year);
+    // 近況のひとこと：出番・行き先・事情・年数から。種類を多くして、同じ年に重ねない
+    const BGNEAR = { poor: '初めての給料で、家に少しだけ返せました。', bropro: '兄と同じピッチに立つ日が、少しずつ近づいている気がします。', oldinj: '古傷とは、うまく付き合えています。', coach: '休みの日は、地元の子どもに教えています。', move: '家族とは離れて暮らしていますが、電話は毎週しています。', asthma: '薬は今も飲んでいますが、走れています。', weight: '寮の食事の量を、今も守っています。', dadpro: '父が、初めて試合を褒めてくれました。', localstar: '地元の新聞に、また小さく載りました。', abroad: '語学の勉強は、今も続けています。', small: '体の大きな相手にも、当たり負けしなくなりました。', shy: 'ロッカーで、少しずつ話せるようになりました。', hot: '審判とは、今は仲良くやっています。', job: '店の手伝いは、オフの日だけ続けています。' };
+    const NEAR = [
+      s && s.apps >= 25 ? '最近は、試合の前に眠れるようになりました。' : s && s.apps < 8 ? '出られない日は、ユースのころの居残り練習を思い出しています。' : '少しずつ、自分の役割が見えてきました。',
+      a.status === 'univ' ? '大学の寮の食事は、ユースの寮には勝てません。' : a.abroad ? 'こっちの冬は日が短くて、日本の夏が恋しいです。' : '移動のバスで、ユースの遠征を思い出すことがあります。',
+      BGNEAR[a.bg] || 'チームメイトにユースの話をすると、うらやましがられます。',
+      yrs >= 5 ? 'もう若手と呼ばれなくなりました。後輩の面倒を見る番です。' : '先輩たちのスピードに、やっと慣れてきました。',
+      s && s.goals >= 5 ? 'ゴールのあと、ユースの仲間から連絡が来るのがうれしいです。' : '守備の時間が長い試合も、粘れるようになりました。',
+      a.status === 'amateur' ? '仕事が終わってから練習する毎日ですが、楽しいです。' : 'オフの日は、ユースのころの試合映像を見返しています。',
+      '同期の連中とは、今もときどき集まっています。',
+      'ユースのグラウンドの横を通るたびに、少し寄りたくなります。',
+    ];
+    w._nearUsed = w._nearUsed && w._nearUsed.y === w.year ? w._nearUsed : { y: w.year, n: [] };
+    const nearPick = () => { for (let i = 0; i < NEAR.length; i++) { const t = NEAR[(h + i) % NEAR.length]; if (w._nearUsed.n.indexOf(t) < 0 || i === NEAR.length - 1) { w._nearUsed.n.push(t); return t; } } return NEAR[0]; };
+    const TAIL = b >= 4 ? ['後輩たちにも、よろしく伝えてください。', '監督も、体に気をつけてください。', '次のオフに、顔を出します。'] : b <= 2 ? [''] : ['また連絡します。', ''];
+    if (b >= 2) parts.push(BGNEAR[a.bg] && (h % 3 === 0) && w._nearUsed.n.indexOf(BGNEAR[a.bg]) < 0 ? (w._nearUsed.n.push(BGNEAR[a.bg]), BGNEAR[a.bg]) : nearPick());
+    if (b >= 3 && yrs % 2 === 1) {
+      // よくある記憶（初出場など）は避け、その子だけの記憶を。同じ年に同じ言葉を二度使わない
+      w._letUsed = w._letUsed && w._letUsed.y === w.year ? w._letUsed : { y: w.year, q: [] };
+      const COMMONK = new Set(['debut', 'term', 'hint', 'scout', 'ref', 'awake', 'grad', 'path', 'promise']);
+      const pool = (a.mem || []).filter((m) => m.q && !COMMONK.has(m.k) && w._letUsed.q.indexOf(m.q) < 0);
+      const m = pool.find((x) => x.k === 'chain') || pool[YA.hash(a.name + w.year) % (pool.length || 1)];
+      const ECHO = [(q) => `監督に言われた「${q}」は、今も大事にしています。`, (q) => `「${q}」――あの言葉を、試合の前に思い出します。`, (q) => `後輩に話すとき、つい「${q}」と言ってしまいます。`, (q) => `苦しいときは、「${q}」と言ってもらった日のことを思い出します。`];
+      if (m && m.k === 'chain') { parts.push(m.q); w._letUsed.q.push(m.q); }
+      else if (m && m.k !== 'promise') { parts.push(ECHO[YA.hash(a.name + yrs) % ECHO.length](m.q)); w._letUsed.q.push(m.q); }
       else if (a.form) parts.push(`あの日の覚醒（${a.form}）が、今も自分の土台です。`);
     }
     if (b <= 1) return parts.slice(0, 1).join('') + '（短い便りだった）';
     if (a.tone === '無口') return parts.slice(0, 2).join('');
-    return parts.join('');
+    return parts.join('') + TAIL[(h >> 3) % TAIL.length];
   };
   const nt0 = YA.noteTier;
   YA.noteTier = function (w, tier, text, pid) {
@@ -275,6 +329,7 @@
     'wall:firm': () => '壁の前で、あえて突き放しました。あの子は怒って、そして越えていった。',
     'quit:warm': () => '一度は辞めると言った子です。引き止めてよかった、と心から思います。',
     'quit:push': () => '辞めかけた子に、もう一度だけ機会を渡しました。それを掴んだのは本人です。',
+    'chain': (a, m) => `「${(YA.CHAIN_NAME || {})[m.ch] || 'あのころ'}」のことで悩んでいたあの子を、今もよく思い出します。`,
     'awake': (a) => `あの日、「${a.form || '覚醒'}」の瞬間を間近で見られたのは、指導者の幸運でした。`,
     'injury:warm': () => '怪我のとき、無理をさせなかった。それだけは正しかったと思います。',
     'lowconf:warm': () => '自信をなくして下を向いていた子が、こんなに大きくなりました。',
@@ -284,7 +339,7 @@
   YA.hofWord = function (w, a) {
     const m = a && a.mem ? YA.definingMem(a) : null;
     const f = m && (COACH_MEM[m.k + ':' + m.c] || COACH_MEM[m.k]);
-    return f ? f(a) : hw0.apply(this, arguments);
+    return f ? f(a, m) : hw0.apply(this, arguments);
   };
 
   // ---------- 人として返ってくる：OBコーチ・紹介 ----------
@@ -324,7 +379,7 @@
       const role = YA.obRoleOf(a);
       const cur = w.club.staff.find((x) => x.role === role);
       const m = YA.definingMem(a);
-      def.text = () => `${a.year}年目に送り出した${a.name}★が、現役を終えて訪ねてきた。「${m ? YA.recallMem(a, m) + '　' : ''}今度は、自分が教える側をやらせてもらえませんか」（${role}・腕前${YA.obAbOf(a)}／いまの${role}は${cur ? cur.name + '・腕前' + cur.ab : 'いない'}）`;
+      def.text = () => `${a.year}年目に送り出した${a.name}${a.star ? '★' : ''}が、${a.retired ? '現役を終えて' : a.coachPath ? '指導者の勉強を続けて' : '大学を出て'}訪ねてきた。「${m ? YA.recallMem(a, m) + '　' : ''}今度は、自分が教える側をやらせてもらえませんか」（${role}・腕前${YA.obAbOf(a)}／いまの${role}は${cur ? cur.name + '・腕前' + cur.ab : 'いない'}）`;
       def.opts = [
         run(`${role}として迎える`, (ww) => { YA.obJoin(ww, a); return { line: `${sur(a.name)}が、グラウンドに戻ってきた。`, small: `${role}が${a.name}に替わった。毎月、★の子に自分の経験を話す` }; }),
         run('今は枠がないと伝える', (ww) => { a.coached = true; a.bond = Math.max(0, (a.bond || 3) - 1); return { line: '「そうですよね。また顔を出します」と笑って帰っていった。', small: '' }; }),
@@ -385,7 +440,9 @@
       }
     }
     if (w.week === 3) {
-      const a = (w.alumni || []).find((x) => x.mem && x.star && x.retired && !x.coached && (x.bond == null ? 3 : x.bond) >= 3 && x.retY != null && w.year - x.retY <= 3 && x.status !== 'left' && x.path2 !== 'quit');
+      const bd = (x) => (x.bond == null ? 3 : x.bond);
+      const ready = (x) => (x.retired && x.retY != null && w.year - x.retY <= 3 && bd(x) >= 3) || (x.coachPath && w.year - x.year >= (x.coachPath >= 2 ? 2 : 4) && bd(x) >= 3) || ((x.status === 'univ' || x.status === 'amateur') && w.year - x.year >= 4 && bd(x) >= 5);
+      const a = (w.alumni || []).find((x) => x.mem && (x.star || x.coachPath) && !x.coached && x.status !== 'left' && x.path2 !== 'quit' && ready(x));
       if (a) fw(w, { id: 'obret', who: a.name, ay: a.year });
     }
     if (w.week === 10) {

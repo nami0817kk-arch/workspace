@@ -491,6 +491,7 @@
     const gift = YA.DEX_REWARD[c];
     if (gift) {
       w.fund = (w.fund || 0) + gift;
+      w.fundIn = (w.fundIn || 0) + gift;
       if (YA.noteTier) YA.noteTier(w, 1, `覚醒の図鑑が${c}種になりました。育成基金に${gift}万円が届きました`);
     } else if (YA.noteTier) YA.noteTier(w, 2, `覚醒の図鑑に「${f.name}」が載りました（${c}/${YA.AWAKE_FORMS.length}）`);
   };
