@@ -457,22 +457,38 @@ class _LoanSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        for (final loan in loans)
+        if (loans.isNotEmpty)
           Card(
-            margin: const EdgeInsets.only(bottom: 6),
-            child: ListTile(
-              leading: const Icon(Icons.account_balance),
-              title: Text(Tr.pick(
-                  '借入元本 ${loan.principal}万円', 'Principal ${loan.principal}')),
-              subtitle: Text(
-                Tr.pick(
-                    '残り${loan.weeksRemaining}週 / 返済総額残り${loan.totalRemaining}万円',
-                    '${Tr.plural(loan.weeksRemaining, 'week')} left / ${loan.totalRemaining} still to repay'),
-              ),
-              trailing: Text(
-                Tr.pick('-${loan.weeklyRepayment}万円/週',
-                    '-${loan.weeklyRepayment} per week'),
-                style: TextStyle(color: SemanticColors.negative(context)),
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                          child: Text(Tr.pick('借入元本', 'Principal'),
+                              style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold))),
+                      _LoanCell(Tr.pick('残り週', 'Weeks'), bold: true),
+                      _LoanCell(Tr.pick('返済残額', 'To repay'), bold: true),
+                      _LoanCell(Tr.pick('週返済', 'Weekly'), bold: true),
+                    ],
+                  ),
+                  for (final loan in loans)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 3),
+                      child: Row(
+                        children: [
+                          Expanded(
+                              child: Text(Tr.pick('${loan.principal}万円', '${loan.principal}'),
+                                  style: const TextStyle(fontSize: 13))),
+                          _LoanCell('${loan.weeksRemaining}'),
+                          _LoanCell('${loan.totalRemaining}'),
+                          _LoanCell('-${loan.weeklyRepayment}',
+                              color: SemanticColors.negative(context)),
+                        ],
+                      ),
+                    ),
+                ],
               ),
             ),
           ),
@@ -782,4 +798,30 @@ class _DepositRequestSheetState extends State<_DepositRequestSheet> {
               : Tr.pick('定期預金を組めませんでした', 'The deposit could not be opened'))),
     );
   }
+}
+
+/// 融資の表の1列(右寄せの数字)。
+class _LoanCell extends StatelessWidget {
+  const _LoanCell(this.text, {this.bold = false, this.color});
+
+  final String text;
+  final bool bold;
+  final Color? color;
+
+  @override
+  Widget build(BuildContext context) => SizedBox(
+        width: 68,
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.centerRight,
+          child: Text(
+            text,
+            style: TextStyle(
+              fontSize: bold ? 11 : 12,
+              fontWeight: bold ? FontWeight.bold : null,
+              color: color,
+            ),
+          ),
+        ),
+      );
 }
