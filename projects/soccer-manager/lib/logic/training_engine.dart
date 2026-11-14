@@ -52,6 +52,13 @@ class TrainingEngine {
       p.hadBreakthroughThisWeek = false;
       p.acquiredTraitThisWeek = null;
       final focus = _resolveFocus(p, team.defaultTrainingFocus);
+      // 個別方針・ローテーションを持たない選手は、チームの練習枠メニューに従う。
+      final ownFocus =
+          (p.focusRotation?.isNotEmpty ?? false) || p.individualFocus != null;
+      final menu = team.weeklyMenu;
+      final slots = (!ownFocus && menu != null && menu.isNotEmpty)
+          ? menu
+          : <TrainingFocus>[focus];
       // ローン放出中の選手は貸出先で練習しているため、自クラブの施設・
       // スタッフによる成長ボーナスは適用せず、貸出先の標準的な環境
       // ([loanHostGrowthMultiplier])で育つ。
@@ -70,7 +77,7 @@ class TrainingEngine {
 
       _applyToPlayer(
         p,
-        focus,
+        slots,
         effectiveGrowthMultiplier,
         effectiveFatigueRecoveryBonus,
         team.trainingIntensity,
@@ -105,7 +112,7 @@ class TrainingEngine {
 
   static void _applyToPlayer(
     Player p,
-    TrainingFocus focus,
+    List<TrainingFocus> slots,
     double growthMultiplier,
     int fatigueRecoveryBonus,
     TrainingIntensity intensity,
@@ -116,135 +123,163 @@ class TrainingEngine {
     final mentorBonus = hasMentor ? 1.2 : 1.0;
     final effectiveGrowth = growthMultiplier * intensityFactor * mentorBonus;
 
-    switch (focus) {
-      case TrainingFocus.balanced:
-        // ポジションに応じた「全体練習」。攻撃特化・守備特化のちょうど中間で、
-        // どのポジションの選手もそれぞれの主戦場の能力を伸ばせる。特化練習の
-        // 0.5に対して0.35なので、狙いを定めた方が伸びは速い。
-        if (p.position.group == PositionGroup.gk) {
-          for (final k in AttributeKeys.goalkeeping) {
-            _grow(p, k, 0.35 * effectiveGrowth);
+    // 1週を[slots]の枠数で等分する。枠が1つなら従来の「1週まるごと1方針」と
+    // 同じ計算になる(全枠が同じ方針でも合計は同じ)。
+    final share = 1 / slots.length;
+    final restShare =
+        slots.where((f) => f == TrainingFocus.rest).length / slots.length;
+    final workShare = 1 - restShare;
+    // 主方針: 休養以外で最も枠の多いもの(才能開花の判定に使う)。
+    final counts = <TrainingFocus, int>{};
+    for (final f in slots) {
+      if (f != TrainingFocus.rest) counts[f] = (counts[f] ?? 0) + 1;
+    }
+    var focus = TrainingFocus.rest;
+    var best = 0;
+    for (final f in slots) {
+      final c = counts[f] ?? 0;
+      if (c > best) {
+        best = c;
+        focus = f;
+      }
+    }
+    var fatigueDelta = 0.0;
+    var moraleDelta = 0.0;
+
+    for (final slotFocus in slots) {
+      final sliceGrowth = effectiveGrowth * share;
+      switch (slotFocus) {
+        case TrainingFocus.balanced:
+          // ポジションに応じた「全体練習」。攻撃特化・守備特化のちょうど中間で、
+          // どのポジションの選手もそれぞれの主戦場の能力を伸ばせる。特化練習の
+          // 0.5に対して0.35なので、狙いを定めた方が伸びは速い。
+          if (p.position.group == PositionGroup.gk) {
+            for (final k in AttributeKeys.goalkeeping) {
+              _grow(p, k, 0.35 * sliceGrowth);
+            }
+          } else if (p.position.group == PositionGroup.def) {
+            for (final k in [
+              AttributeKeys.tackling,
+              AttributeKeys.marking,
+              AttributeKeys.positioning,
+              AttributeKeys.anticipation,
+            ]) {
+              _grow(p, k, 0.35 * sliceGrowth);
+            }
+          } else {
+            for (final k in [
+              AttributeKeys.finishing,
+              AttributeKeys.longShots,
+              AttributeKeys.dribbling,
+              AttributeKeys.offTheBall,
+            ]) {
+              _grow(p, k, 0.35 * sliceGrowth);
+            }
           }
-        } else if (p.position.group == PositionGroup.def) {
+          // 技術系はポジションを問わず全員が取り組む。
           for (final k in [
-            AttributeKeys.tackling,
-            AttributeKeys.marking,
-            AttributeKeys.positioning,
-            AttributeKeys.anticipation,
+            AttributeKeys.passing,
+            AttributeKeys.firstTouch,
+            AttributeKeys.technique,
           ]) {
-            _grow(p, k, 0.35 * effectiveGrowth);
+            _grow(p, k, 0.25 * sliceGrowth);
           }
-        } else {
+          fatigueDelta += 10 * intensityFactor * share;
+          break;
+        case TrainingFocus.attack:
+          final primary = (p.position.group == PositionGroup.att ||
+                  p.position.group == PositionGroup.mid)
+              ? 0.5
+              : 0.15;
           for (final k in [
             AttributeKeys.finishing,
             AttributeKeys.longShots,
             AttributeKeys.dribbling,
             AttributeKeys.offTheBall,
           ]) {
-            _grow(p, k, 0.35 * effectiveGrowth);
-          }
-        }
-        // 技術系はポジションを問わず全員が取り組む。
-        for (final k in [
-          AttributeKeys.passing,
-          AttributeKeys.firstTouch,
-          AttributeKeys.technique,
-        ]) {
-          _grow(p, k, 0.25 * effectiveGrowth);
-        }
-        p.fatigue = (p.fatigue + (10 * intensityFactor).round()).clamp(0, 100);
-        break;
-      case TrainingFocus.attack:
-        final primary = (p.position.group == PositionGroup.att ||
-                p.position.group == PositionGroup.mid)
-            ? 0.5
-            : 0.15;
-        for (final k in [
-          AttributeKeys.finishing,
-          AttributeKeys.longShots,
-          AttributeKeys.dribbling,
-          AttributeKeys.offTheBall,
-        ]) {
-          _grow(p, k, primary * effectiveGrowth);
-        }
-        for (final k in [
-          AttributeKeys.passing,
-          AttributeKeys.firstTouch,
-          AttributeKeys.technique,
-        ]) {
-          _grow(p, k, 0.25 * effectiveGrowth);
-        }
-        p.fatigue = (p.fatigue + (12 * intensityFactor).round()).clamp(0, 100);
-        break;
-      case TrainingFocus.defense:
-        if (p.position.group == PositionGroup.gk) {
-          // GKはタックル/マーキングではなく、ゴールキーピング系の能力を伸ばす。
-          for (final k in AttributeKeys.goalkeeping) {
-            _grow(p, k, 0.5 * effectiveGrowth);
-          }
-        } else {
-          final primary = p.position.group == PositionGroup.def ? 0.5 : 0.15;
-          for (final k in [
-            AttributeKeys.tackling,
-            AttributeKeys.marking,
-            AttributeKeys.positioning,
-            AttributeKeys.anticipation,
-          ]) {
-            _grow(p, k, primary * effectiveGrowth);
+            _grow(p, k, primary * sliceGrowth);
           }
           for (final k in [
             AttributeKeys.passing,
             AttributeKeys.firstTouch,
             AttributeKeys.technique,
           ]) {
-            _grow(p, k, 0.2 * effectiveGrowth);
+            _grow(p, k, 0.25 * sliceGrowth);
           }
-        }
-        p.fatigue = (p.fatigue + (12 * intensityFactor).round()).clamp(0, 100);
-        break;
-      case TrainingFocus.fitness:
-        for (final k in [
-          AttributeKeys.stamina,
-          AttributeKeys.naturalFitness,
-          AttributeKeys.acceleration,
-          AttributeKeys.strength,
-        ]) {
-          _grow(p, k, 0.45 * effectiveGrowth);
-        }
-        p.fatigue = (p.fatigue + (6 * intensityFactor).round()).clamp(0, 100);
-        break;
-      case TrainingFocus.positionSwitch:
-        final targetName = p.trainingConvertTargetPosition;
-        if (targetName != null) {
-          // 明示的に指定した目標ポジションへ集中的にコンバートする。
-          // 慣れ度が上限に達したら正式に副ポジションへ加え、目標は解除する。
-          final target = Position.values.firstWhere(
-            (v) => v.name == targetName,
-            orElse: () => p.position,
-          );
-          if (target != p.position &&
-              _rng.nextDouble() < (0.6 * effectiveGrowth).clamp(0, 1)) {
-            p.growFamiliarity(target, amount: 3);
-          }
-          if (p.familiarityFor(target) >= 100 &&
-              !p.secondaryPositions.contains(target)) {
-            p.secondaryPositions = [...p.secondaryPositions, target];
-            p.trainingConvertTargetPosition = null;
-          }
-        } else {
-          for (final pos in p.secondaryPositions) {
-            if (_rng.nextDouble() < (0.5 * effectiveGrowth).clamp(0, 1)) {
-              p.growFamiliarity(pos, amount: 2);
+          fatigueDelta += 12 * intensityFactor * share;
+          break;
+        case TrainingFocus.defense:
+          if (p.position.group == PositionGroup.gk) {
+            // GKはタックル/マーキングではなく、ゴールキーピング系の能力を伸ばす。
+            for (final k in AttributeKeys.goalkeeping) {
+              _grow(p, k, 0.5 * sliceGrowth);
+            }
+          } else {
+            final primary = p.position.group == PositionGroup.def ? 0.5 : 0.15;
+            for (final k in [
+              AttributeKeys.tackling,
+              AttributeKeys.marking,
+              AttributeKeys.positioning,
+              AttributeKeys.anticipation,
+            ]) {
+              _grow(p, k, primary * sliceGrowth);
+            }
+            for (final k in [
+              AttributeKeys.passing,
+              AttributeKeys.firstTouch,
+              AttributeKeys.technique,
+            ]) {
+              _grow(p, k, 0.2 * sliceGrowth);
             }
           }
-        }
-        p.fatigue = (p.fatigue + (8 * intensityFactor).round()).clamp(0, 100);
-        break;
-      case TrainingFocus.rest:
-        p.fatigue = (p.fatigue - 30 - fatigueRecoveryBonus).clamp(0, 100);
-        p.morale = (p.morale + 8).clamp(0, 100);
-        break;
+          fatigueDelta += 12 * intensityFactor * share;
+          break;
+        case TrainingFocus.fitness:
+          for (final k in [
+            AttributeKeys.stamina,
+            AttributeKeys.naturalFitness,
+            AttributeKeys.acceleration,
+            AttributeKeys.strength,
+          ]) {
+            _grow(p, k, 0.45 * sliceGrowth);
+          }
+          fatigueDelta += 6 * intensityFactor * share;
+          break;
+        case TrainingFocus.positionSwitch:
+          final targetName = p.trainingConvertTargetPosition;
+          if (targetName != null) {
+            // 明示的に指定した目標ポジションへ集中的にコンバートする。
+            // 慣れ度が上限に達したら正式に副ポジションへ加え、目標は解除する。
+            final target = Position.values.firstWhere(
+              (v) => v.name == targetName,
+              orElse: () => p.position,
+            );
+            if (target != p.position &&
+                _rng.nextDouble() < (0.6 * sliceGrowth).clamp(0, 1)) {
+              p.growFamiliarity(target, amount: 3);
+            }
+            if (p.familiarityFor(target) >= 100 &&
+                !p.secondaryPositions.contains(target)) {
+              p.secondaryPositions = [...p.secondaryPositions, target];
+              p.trainingConvertTargetPosition = null;
+            }
+          } else {
+            for (final pos in p.secondaryPositions) {
+              if (_rng.nextDouble() < (0.5 * sliceGrowth).clamp(0, 1)) {
+                p.growFamiliarity(pos, amount: 2);
+              }
+            }
+          }
+          fatigueDelta += 8 * intensityFactor * share;
+          break;
+        case TrainingFocus.rest:
+          fatigueDelta -= (30 + fatigueRecoveryBonus) * share;
+          moraleDelta += 8 * share;
+          break;
+      }
     }
+    p.fatigue = (p.fatigue + fatigueDelta.round()).clamp(0, 100);
+    p.morale = (p.morale + moraleDelta.round()).clamp(0, 100);
 
     // 日々の全体練習による底上げ。重点練習で伸びるのは7項目前後だが、
     // 総合力([Player.overall])は28項目前後の加重平均なので、重点練習だけ
@@ -253,11 +288,11 @@ class TrainingEngine {
     // 重点項目より大幅に低い確率で、総合力に効く能力値全体をゆっくり
     // 底上げすることで、丁寧に育てた選手はキャリアをかけてポテンシャルへ
     // 近づける。休養週は練習しないので底上げも起きない。
-    if (focus != TrainingFocus.rest) {
+    if (workShare > 0) {
       final taper = _conditioningAgeTaper(p);
       if (taper > 0) {
         for (final k in _conditioningKeysFor(p)) {
-          _grow(p, k, _conditioningChance * effectiveGrowth * taper);
+          _grow(p, k, _conditioningChance * effectiveGrowth * taper * workShare);
         }
       }
     }
@@ -299,8 +334,8 @@ class TrainingEngine {
 
     p.fatigue = (p.fatigue - 5 - fatigueRecoveryBonus ~/ 2).clamp(0, 100);
 
-    if (focus != TrainingFocus.rest) {
-      _rollTrainingInjury(p, intensityFactor, injuryFactor);
+    if (workShare > 0) {
+      _rollTrainingInjury(p, intensityFactor * workShare, injuryFactor);
       _rollBreakthrough(p, focus, effectiveGrowth);
     }
 
