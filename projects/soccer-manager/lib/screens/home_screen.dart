@@ -27,6 +27,7 @@ import '../widgets/busy_overlay.dart';
 import '../widgets/club_emblem.dart';
 import '../widgets/match_widgets.dart';
 import '../widgets/first_run_guide_card.dart';
+import '../widgets/inbox_card.dart';
 import '../widgets/next_action_card.dart';
 import '../widgets/season_review_card.dart';
 import '../widgets/quick_access_drawer.dart';
@@ -128,6 +129,8 @@ class HomeScreen extends StatelessWidget {
               // いま手を付けるべきこと。画面が30以上あり、どこから見れば
               // よいか分からない状態だった。出すのは常に1件だけ。
               const NextActionCard(),
+              // 直近のお知らせ。FMの受信箱のように、状況を開いたらまず目に入る。
+              const InboxCard(),
               // オーナーの目標。決めるまで選択肢を出し、決めたら残りを見せる。
               const OwnerGoalCard(),
               // 終わったばかりのシーズンの振り返り。閉じるまで出る。
