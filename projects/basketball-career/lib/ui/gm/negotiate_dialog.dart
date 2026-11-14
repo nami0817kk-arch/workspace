@@ -121,6 +121,12 @@ class _NegotiateDialogState extends State<_NegotiateDialog> {
               padding: const EdgeInsets.only(top: 4),
               child: Text(
                 '関心 ${interestLabel(car.interest(p, car.mine))}・ほかの申し込み ${car.rivalBids(p.id)}チーム。'
+                '代理人の話では、いちばん重く見るのは「${car.faPriority(p)}」'
+                '(${switch (car.faPriority(p)) {
+                  '年俸の額' => '額を上げると大きく効く',
+                  '勝てるチーム' => '昨季の勝率が大きく効く',
+                  _ => '前のチームに残りたがる',
+                }})。'
                 '日が進むたびに、いちばん良い申し込みを選ぶことがある。',
                 style: const TextStyle(fontSize: 12, color: GmColors.sub, height: 1.4),
               ),

@@ -240,7 +240,7 @@ class _MarketTabState extends State<MarketTab> {
         ),
       ),
       extra: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text('関心 ${interestLabel(car.interest(p, car.mine))}・ほかの申し込み ${rivals == 0 ? 'なし' : '$rivalsチーム'}',
+        Text('関心 ${interestLabel(car.interest(p, car.mine))}・重く見る ${car.faPriority(p)}・ほかの申し込み ${rivals == 0 ? 'なし' : '$rivalsチーム'}',
             style: TextStyle(fontSize: 12, color: rivals > 0 ? GmColors.gold : GmColors.sub)),
         _twoWayButton(car, p),
         if (mine != null) ...[

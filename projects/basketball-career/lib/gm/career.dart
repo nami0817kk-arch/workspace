@@ -2448,13 +2448,37 @@ class Career {
     final better = t.roster.where((x) => x.ovr > p.ovr && !(team == mine && expiring.contains(x.id))).length;
     v += better < 3 ? 18 : better < 5 ? 10 : better < 8 ? 0 : -12;
     if (team == mine) v += (hype - 50) / 5 + (me.chem - 50) / 10;
+    // 価値観: 勝ちたい選手は勝率をさらに重く見る。忠誠と地元っ子は前のチームに残りたがる
+    final pers = personalityOf(p);
+    if (pers.value == Value.win) v += (t.winPct - 0.5) * 50;
+    if (lastTeamOf(p) == team) {
+      if (pers.value == Value.loyal) v += 10;
+      if (pers.traits.contains(Trait.hometown)) v += 12;
+    }
     return v.round().clamp(0, 100);
   }
+
+  /// 選手が最後にシーズンを終えたチーム(無ければ -1)。
+  int lastTeamOf(Player p) => p.career.isEmpty ? -1 : p.career.last[1];
+
+  /// 自由契約で選手が重く見ること(価値観から。代理人から聞ける)。
+  String faPriority(Player p) => switch (personalityOf(p).value) {
+        Value.win => '勝てるチーム',
+        Value.money => '年俸の額',
+        Value.loyal => '前のチーム',
+      };
+
+  /// 申し込みの額の重み(お金の選手は額を重く、忠誠の選手は軽く見る)。
+  double _moneyWeight(Player p) => switch (personalityOf(p).value) {
+        Value.money => 300.0,
+        Value.loyal => 170.0,
+        Value.win => 220.0,
+      };
 
   /// 申し込みの値打ち(選手の目から)。関心に、求める額との差を足す。
   double _bidScore(Player p, FaBid b) {
     final ask = askOf(p, teams[b.team]).salary;
-    return interest(p, b.team) + (b.salary / ask - 1) * 220 + math.min(b.years, askOf(p, me).maxYears) * 1.5;
+    return interest(p, b.team) + (b.salary / ask - 1) * _moneyWeight(p) + math.min(b.years, askOf(p, me).maxYears) * 1.5;
   }
 
   /// 今の申し込みで、自分のチームを選ぶ見込み(0〜1)。画面用の目安で、乱数は使わない。
