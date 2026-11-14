@@ -54,213 +54,271 @@ class FinanceScreen extends StatelessWidget {
       );
     final loanPlayers = team.players.where((p) => p.isLoan).toList();
 
-    return Scaffold(
+    return DefaultTabController(
+      length: 5,
+      child: Scaffold(
       appBar: AppBar(
         title: Text(Tr.pick('クラブ経営', 'Club finances')),
         leading: embedded ? null : const BackButton(),
         actions: const [QuickAccessMenuButton()],
+        bottom: TabBar(
+          isScrollable: true,
+          tabs: [
+            Tab(text: Tr.pick('概要', 'Overview')),
+            Tab(text: Tr.pick('収支・契約', 'Accounts')),
+            Tab(text: Tr.pick('資金・取引', 'Funding')),
+            Tab(text: Tr.pick('投資・規則', 'Projects')),
+            Tab(text: Tr.pick('記録', 'Records')),
+          ],
+        ),
       ),
       drawer: const QuickAccessDrawer(),
-      body: ResponsiveBody(
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            // 特典資金。広告も課金も使えない環境では自分で消える。
-            const ProposalCard(),
-            const RewardFundsCard(),
-            const BudgetPlanCard(),
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      Tr.pick('資金: ${save.budget}万円', 'Funds: ${save.budget}'),
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(Tr.pick('週間収入: +$income万円（観客動員・スポンサー・グッズ収入込み）',
-                        'Weekly income: +$income (gate receipts, sponsorship and merchandise)')),
-                    Text(Tr.pick('週間人件費: -$wageBill万円（スタッフ週俸込み）',
-                        'Weekly wages: -$wageBill (including staff)')),
-                    if (loanRepayment > 0)
-                      Text(Tr.pick('週間融資返済: -$loanRepayment万円',
-                          'Weekly loan repayment: -$loanRepayment')),
-                    const SizedBox(height: 8),
-                    _CashFlowBar(
-                      income: income,
-                      expenses: wageBill + loanRepayment,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      Tr.pick('週間収支: ${net >= 0 ? '+' : ''}$net万円',
-                          "Weekly balance: ${net >= 0 ? '+' : ''}$net"),
-                      style: TextStyle(
-                        color: net >= 0
-                            ? SemanticColors.positive(context)
-                            : SemanticColors.negative(context),
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    // 理事会が設定する週給予算。上限を超える新規獲得は
-                    // ブロックされるため、残り枠を常に確認できるようにする。
-                    Builder(builder: (context) {
-                      final cap = gameState.wageBudgetCap;
-                      final usage =
-                          cap > 0 ? (wageBill / cap).clamp(0.0, 1.0) : 0.0;
-                      final over = wageBill > cap;
-                      return Column(
+      body: TabBarView(
+        children: [
+          ResponsiveBody(
+            child: ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                  Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            Tr.pick(
-                                '週給予算(理事会設定): $wageBill / $cap万円${over ? '(超過中: 新規獲得は不可)' : ''}',
-                                "Wage budget set by the board: $wageBill / $cap${over ? ' (over budget: no new signings)' : ''}"),
+                            Tr.pick('資金: ${save.budget}万円', 'Funds: ${save.budget}'),
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
+                          const SizedBox(height: 8),
+                          Text(Tr.pick('週間収入: +$income万円（観客動員・スポンサー・グッズ収入込み）',
+                              'Weekly income: +$income (gate receipts, sponsorship and merchandise)')),
+                          Text(Tr.pick('週間人件費: -$wageBill万円（スタッフ週俸込み）',
+                              'Weekly wages: -$wageBill (including staff)')),
+                          if (loanRepayment > 0)
+                            Text(Tr.pick('週間融資返済: -$loanRepayment万円',
+                                'Weekly loan repayment: -$loanRepayment')),
+                          const SizedBox(height: 8),
+                          _CashFlowBar(
+                            income: income,
+                            expenses: wageBill + loanRepayment,
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            Tr.pick('週間収支: ${net >= 0 ? '+' : ''}$net万円',
+                                "Weekly balance: ${net >= 0 ? '+' : ''}$net"),
                             style: TextStyle(
-                              fontSize: 13,
+                              color: net >= 0
+                                  ? SemanticColors.positive(context)
+                                  : SemanticColors.negative(context),
                               fontWeight: FontWeight.bold,
-                              color: over
-                                  ? SemanticColors.negative(context)
-                                  : null,
                             ),
                           ),
-                          const SizedBox(height: 4),
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(3),
-                            child: LinearProgressIndicator(
-                              value: usage,
-                              minHeight: 6,
-                              color: over
-                                  ? SemanticColors.negative(context)
-                                  : null,
-                              backgroundColor: Colors.grey.shade300,
+                          const SizedBox(height: 12),
+                          // 理事会が設定する週給予算。上限を超える新規獲得は
+                          // ブロックされるため、残り枠を常に確認できるようにする。
+                          Builder(builder: (context) {
+                            final cap = gameState.wageBudgetCap;
+                            final usage =
+                                cap > 0 ? (wageBill / cap).clamp(0.0, 1.0) : 0.0;
+                            final over = wageBill > cap;
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  Tr.pick(
+                                      '週給予算(理事会設定): $wageBill / $cap万円${over ? '(超過中: 新規獲得は不可)' : ''}',
+                                      "Wage budget set by the board: $wageBill / $cap${over ? ' (over budget: no new signings)' : ''}"),
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold,
+                                    color: over
+                                        ? SemanticColors.negative(context)
+                                        : null,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(3),
+                                  child: LinearProgressIndicator(
+                                    value: usage,
+                                    minHeight: 6,
+                                    color: over
+                                        ? SemanticColors.negative(context)
+                                        : null,
+                                    backgroundColor: Colors.grey.shade300,
+                                  ),
+                                ),
+                              ],
+                            );
+                          }),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const ProposalCard(),
+                  const RewardFundsCard(),
+                  const BudgetPlanCard(),
+
+              ],
+            ),
+          ),
+          ResponsiveBody(
+            child: ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                  const LedgerCard(),
+                  if (save.pendingInstallments.isNotEmpty) ...[
+                    const SizedBox(height: 16),
+                    Text(Tr.pick('分割払い残金', 'Instalments outstanding'),
+                        style: Theme.of(context).textTheme.titleMedium),
+                    const SizedBox(height: 8),
+                    for (final inst in save.pendingInstallments)
+                      Card(
+                        margin: const EdgeInsets.only(bottom: 6),
+                        child: ListTile(
+                          onTap: inst.playerId == null
+                              ? null
+                              : () => _openPlayer(context, inst.playerId!),
+                          title: Text(inst.description),
+                          subtitle: Text(Tr.pick('残り${inst.weeksRemaining}週',
+                              '${Tr.plural(inst.weeksRemaining, 'week')} left')),
+                          trailing: Text(Tr.pick('-${inst.weeklyAmount}万円/週',
+                              '-${inst.weeklyAmount} per week')),
+                        ),
+                      ),
+                  ],
+                  if (loanPlayers.isNotEmpty) ...[
+                    const SizedBox(height: 16),
+                    Text(Tr.pick('ローン加入中の選手', 'Players on loan at your club'),
+                        style: Theme.of(context).textTheme.titleMedium),
+                    const SizedBox(height: 8),
+                    for (final p in loanPlayers)
+                      Card(
+                        margin: const EdgeInsets.only(bottom: 6),
+                        child: ListTile(
+                          onTap: () => _openPlayer(context, p.id),
+                          title: Text(p.name),
+                          subtitle: Text(Tr.pick(
+                              '${p.position.label} / 週俸 ${p.wage}万円',
+                              '${p.position.label} / wage ${p.wage}')),
+                          trailing: Text(Tr.pick('残り${p.loanWeeksRemaining}週',
+                              '${Tr.plural(p.loanWeeksRemaining, 'week')} left')),
+                        ),
+                      ),
+                  ],
+                  const SizedBox(height: 16),
+                  Text(
+                    Tr.pick('契約状況（残り年数が少ない順）', 'Contracts, shortest remaining first'),
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 8),
+                  for (final (i, p) in sortedByExpiry.indexed)
+                  InkWell(
+                    onTap: () => _openPlayer(context, p.id),
+                    child: Container(
+                      height: 40,
+                      color: i.isOdd
+                          ? Theme.of(context).colorScheme.surfaceContainerLow
+                          : null,
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(p.name,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                    fontSize: 13, fontWeight: FontWeight.w600)),
+                          ),
+                          SizedBox(
+                            width: 44,
+                            child: Text(p.position.label,
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(fontSize: 12)),
+                          ),
+                          SizedBox(
+                            width: 56,
+                            child: Text(
+                                Tr.pick('${p.wage}万円', '${p.wage}'),
+                                textAlign: TextAlign.right,
+                                style: const TextStyle(fontSize: 12)),
+                          ),
+                          SizedBox(
+                            width: 64,
+                            child: Text(
+                              ContractEngine.yearsShortLabel(
+                                  p.contractYearsRemaining),
+                              textAlign: TextAlign.right,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: p.contractYearsRemaining <= 1
+                                    ? SemanticColors.negative(context)
+                                    : null,
+                                fontWeight: p.contractYearsRemaining <= 1
+                                    ? FontWeight.bold
+                                    : null,
+                              ),
                             ),
                           ),
                         ],
-                      );
-                    }),
-                  ],
-                ),
-              ),
-            ),
-            const LedgerCard(),
-            _CardGroup(
-              title: Tr.pick('規則・方針・景気', 'Rules, policy and economy'),
-              children: const [
-                RulesCard(),
-                ClubPolicyCard(),
-                EconomyCard(),
-              ],
-            ),
-            _CardGroup(
-              title: Tr.pick('株主と契約', 'Shareholders and deals'),
-              children: const [
-                EquityCard(),
-                MediaDealsCard(),
-              ],
-            ),
-            _CardGroup(
-              title: Tr.pick('投資・人・備え', 'Projects, people and safeguards'),
-              children: const [
-                ProjectCard(),
-                AdvisorCard(),
-                RiskCard(),
-              ],
-            ),
-            _CardGroup(
-              title: Tr.pick('クラブの価値と記録', 'Value and records'),
-              children: const [
-                ClubValueCard(),
-                ClubRankingCard(),
-                RivalCard(),
-                ClubTimelineCard(),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Text(Tr.pick('資金調達（銀行融資）', 'Raise money (bank loan)'),
-                style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: 8),
-            _LoanSection(gameState: gameState),
-            const SizedBox(height: 16),
-            Text(Tr.pick('資金運用（定期預金）', 'Invest (fixed deposit)'),
-                style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: 8),
-            _InvestmentSection(gameState: gameState),
-            const SizedBox(height: 16),
-            Text(Tr.pick('スポンサー契約', 'Sponsorship'),
-                style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: 8),
-            _SponsorSection(gameState: gameState),
-            if (save.pendingInstallments.isNotEmpty) ...[
-              const SizedBox(height: 16),
-              Text(Tr.pick('分割払い残金', 'Instalments outstanding'),
-                  style: Theme.of(context).textTheme.titleMedium),
-              const SizedBox(height: 8),
-              for (final inst in save.pendingInstallments)
-                Card(
-                  margin: const EdgeInsets.only(bottom: 6),
-                  child: ListTile(
-                    onTap: inst.playerId == null
-                        ? null
-                        : () => _openPlayer(context, inst.playerId!),
-                    title: Text(inst.description),
-                    subtitle: Text(Tr.pick('残り${inst.weeksRemaining}週',
-                        '${Tr.plural(inst.weeksRemaining, 'week')} left')),
-                    trailing: Text(Tr.pick('-${inst.weeklyAmount}万円/週',
-                        '-${inst.weeklyAmount} per week')),
-                  ),
-                ),
-            ],
-            if (loanPlayers.isNotEmpty) ...[
-              const SizedBox(height: 16),
-              Text(Tr.pick('ローン加入中の選手', 'Players on loan at your club'),
-                  style: Theme.of(context).textTheme.titleMedium),
-              const SizedBox(height: 8),
-              for (final p in loanPlayers)
-                Card(
-                  margin: const EdgeInsets.only(bottom: 6),
-                  child: ListTile(
-                    onTap: () => _openPlayer(context, p.id),
-                    title: Text(p.name),
-                    subtitle: Text(Tr.pick(
-                        '${p.position.label} / 週俸 ${p.wage}万円',
-                        '${p.position.label} / wage ${p.wage}')),
-                    trailing: Text(Tr.pick('残り${p.loanWeeksRemaining}週',
-                        '${Tr.plural(p.loanWeeksRemaining, 'week')} left')),
-                  ),
-                ),
-            ],
-            const SizedBox(height: 16),
-            Text(
-              Tr.pick('契約状況（残り年数が少ない順）', 'Contracts, shortest remaining first'),
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 8),
-            for (final p in sortedByExpiry)
-              Card(
-                margin: const EdgeInsets.only(bottom: 6),
-                child: ListTile(
-                  onTap: () => _openPlayer(context, p.id),
-                  title: Text(p.name),
-                  subtitle: Text(Tr.pick('${p.position.label} / 週俸 ${p.wage}万円',
-                      '${p.position.label} / wage ${p.wage}')),
-                  trailing: Text(
-                    ContractEngine.yearsShortLabel(p.contractYearsRemaining),
-                    style: TextStyle(
-                      color: p.contractYearsRemaining <= 1
-                          ? SemanticColors.negative(context)
-                          : null,
-                      fontWeight: p.contractYearsRemaining <= 1
-                          ? FontWeight.bold
-                          : null,
+                      ),
                     ),
                   ),
-                ),
-              ),
-          ],
-        ),
+              ],
+            ),
+          ),
+          ResponsiveBody(
+            child: ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                  const SizedBox(height: 16),
+                  Text(Tr.pick('資金調達（銀行融資）', 'Raise money (bank loan)'),
+                      style: Theme.of(context).textTheme.titleMedium),
+                  const SizedBox(height: 8),
+                  _LoanSection(gameState: gameState),
+                  const SizedBox(height: 16),
+                  Text(Tr.pick('資金運用（定期預金）', 'Invest (fixed deposit)'),
+                      style: Theme.of(context).textTheme.titleMedium),
+                  const SizedBox(height: 8),
+                  _InvestmentSection(gameState: gameState),
+                  const SizedBox(height: 16),
+                  Text(Tr.pick('スポンサー契約', 'Sponsorship'),
+                      style: Theme.of(context).textTheme.titleMedium),
+                  const SizedBox(height: 8),
+                  _SponsorSection(gameState: gameState),
+                  const EquityCard(),
+                  const MediaDealsCard(),
+
+              ],
+            ),
+          ),
+          ResponsiveBody(
+            child: ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                  const RulesCard(),
+                  const ClubPolicyCard(),
+                  const EconomyCard(),
+                  const ProjectCard(),
+                  const AdvisorCard(),
+                  const RiskCard(),
+
+              ],
+            ),
+          ),
+          ResponsiveBody(
+            child: ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                  const ClubValueCard(),
+                  const ClubRankingCard(),
+                  const RivalCard(),
+                  const ClubTimelineCard(),
+
+              ],
+            ),
+          ),
+        ],
+      ),
       ),
     );
   }
@@ -722,28 +780,6 @@ class _DepositRequestSheetState extends State<_DepositRequestSheet> {
           content: Text(ok
               ? Tr.pick('$amount万円を預け入れました', 'You deposited $amount')
               : Tr.pick('定期預金を組めませんでした', 'The deposit could not be opened'))),
-    );
-  }
-}
-
-/// 経営画面のカードをまとめて畳む入れ物。普段は見出しだけで、開くと中身が出る。
-class _CardGroup extends StatelessWidget {
-  const _CardGroup({required this.title, required this.children});
-
-  final String title;
-  final List<Widget> children;
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Theme(
-        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-        child: ExpansionTile(
-          title: Text(title, style: Theme.of(context).textTheme.titleMedium),
-          childrenPadding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-          children: children,
-        ),
-      ),
     );
   }
 }
