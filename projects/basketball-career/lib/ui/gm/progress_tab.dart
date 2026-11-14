@@ -63,17 +63,17 @@ class ProgressTab extends StatelessWidget {
   Widget _card(List<Widget> children, {Color? edge}) => Card(
         shape: edge == null
             ? null
-            : RoundedRectangleBorder(borderRadius: BorderRadius.circular(16), side: BorderSide(color: edge, width: 1.5)),
+            : RoundedRectangleBorder(borderRadius: BorderRadius.circular(10), side: BorderSide(color: edge, width: 1.5)),
         child: Padding(
-          padding: const EdgeInsets.all(14),
+          padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
           child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: children),
         ),
       );
 
   Widget _head(String t, {IconData icon = Icons.flag_rounded, Color color = GmColors.ball}) => Row(children: [
-        Icon(icon, color: color),
-        const SizedBox(width: 8),
-        Expanded(child: Text(t, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
+        Icon(icon, color: color, size: 18),
+        const SizedBox(width: 6),
+        Expanded(child: Text(t, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold))),
       ]);
 
   // ------------------------------------------------------------ シーズン前
@@ -204,8 +204,8 @@ class ProgressTab extends StatelessWidget {
   Widget _kv(String k, String v, {Color? color}) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 2),
         child: Row(children: [
-          SizedBox(width: 110, child: Text(k, style: const TextStyle(color: GmColors.sub))),
-          Expanded(child: Text(v, style: TextStyle(fontWeight: FontWeight.bold, color: color))),
+          SizedBox(width: 100, child: Text(k, style: const TextStyle(fontSize: 12.5, color: GmColors.sub))),
+          Expanded(child: Text(v, style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.bold, color: color))),
         ]),
       );
 

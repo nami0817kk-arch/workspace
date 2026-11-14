@@ -97,7 +97,7 @@ class Tag extends StatelessWidget {
           borderRadius: BorderRadius.circular(6),
           border: Border.all(color: color.withValues(alpha: 0.5)),
         ),
-        child: Text(text, style: TextStyle(fontSize: 11, color: color, fontWeight: FontWeight.bold)),
+        child: Text(text, style: TextStyle(fontSize: 10, color: color, fontWeight: FontWeight.bold)),
       );
 }
 
@@ -139,32 +139,32 @@ class PlayerRow extends StatelessWidget {
     final grade = p.grade;
     return Material(
       color: selected ? GmColors.ball.withValues(alpha: 0.16) : GmColors.panel,
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(8),
       child: InkWell(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(8),
         onTap: onTap,
         onLongPress: onLongPress,
         child: Container(
-          padding: const EdgeInsets.fromLTRB(8, 7, 8, 7),
+          padding: const EdgeInsets.fromLTRB(6, 4, 6, 4),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(8),
             border: Border.all(color: selected ? GmColors.ball : GmColors.line),
           ),
           child: Row(children: [
-            PlayerFace(p: p, team: team, size: 40),
+            PlayerFace(p: p, team: team, size: 30),
             const SizedBox(width: 8),
             Expanded(
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Row(children: [
-                  Flexible(child: Text(p.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14.5))),
+                  Flexible(child: Text(p.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13))),
                   if (showMorale) ...[const SizedBox(width: 4), MoraleIcon(p: p)],
                 ]),
-                const SizedBox(height: 2),
+                const SizedBox(height: 1),
                 Wrap(spacing: 5, runSpacing: 2, crossAxisAlignment: WrapCrossAlignment.center, children: [
                   Tag(p.pos.short, color: p.pos.guard ? const Color(0xFF8FD3FF) : p.pos.big ? GmColors.good : GmColors.ball),
-                  Text('${p.age}歳・${archetypeOf(p)}', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
+                  Text('${p.age}歳・${archetypeOf(p)}', style: const TextStyle(fontSize: 11, color: GmColors.sub)),
                   Text(salaryText ?? '${money(p.salary)}・${p.years <= 0 ? '契約切れ' : '残り${p.years}年'}',
-                      style: const TextStyle(fontSize: 12, color: GmColors.sub)),
+                      style: const TextStyle(fontSize: 11, color: GmColors.sub)),
                   if (grade != '-') Tag('伸びしろ$grade', color: grade == 'S' || grade == 'A' ? GmColors.gold : GmColors.sub),
                   if (p.injured > 0) Tag(p.injuryText.isEmpty ? 'けが あと${p.injured}試合' : 'けが ${p.injuryText}', color: GmColors.bad),
                 ]),
@@ -172,12 +172,12 @@ class PlayerRow extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 2),
                     child: Text(p.stats.gp > 0 ? p.stats.line : '昨季 ${p.prev.line}',
-                        style: const TextStyle(fontSize: 12, color: GmColors.text, fontFeatures: [FontFeature.tabularFigures()])),
+                        style: const TextStyle(fontSize: 11, color: GmColors.text, fontFeatures: [FontFeature.tabularFigures()])),
                   ),
                 if (extra != null) ...[const SizedBox(height: 4), extra!],
               ]),
             ),
-            OvrBadge(p.ovr, delta: showDelta ? p.lastDelta : 0),
+            OvrBadge(p.ovr, size: 34, delta: showDelta ? p.lastDelta : 0),
             if (trailing != null) ...[const SizedBox(width: 4), trailing!],
           ]),
         ),
@@ -243,9 +243,9 @@ class SectionTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.fromLTRB(2, 14, 2, 6),
+        padding: const EdgeInsets.fromLTRB(2, 10, 2, 4),
         child: Row(children: [
-          Expanded(child: Text(text, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: GmColors.text))),
+          Expanded(child: Text(text, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13.5, color: GmColors.text))),
           if (trailing != null) trailing!,
         ]),
       );

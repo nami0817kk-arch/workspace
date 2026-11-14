@@ -36,6 +36,7 @@ ThemeData gmTheme() {
   return ThemeData(
     colorScheme: scheme,
     useMaterial3: true,
+    visualDensity: VisualDensity.compact,
     brightness: Brightness.dark,
     fontFamily: 'NotoSansJP',
     scaffoldBackgroundColor: GmColors.bg,
@@ -50,7 +51,7 @@ ThemeData gmTheme() {
       margin: EdgeInsets.zero,
       color: GmColors.panel,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(10),
         side: const BorderSide(color: GmColors.line),
       ),
     ),
@@ -58,19 +59,25 @@ ThemeData gmTheme() {
     bottomSheetTheme: const BottomSheetThemeData(backgroundColor: GmColors.panel),
     filledButtonTheme: FilledButtonThemeData(
       style: FilledButton.styleFrom(
-        minimumSize: const Size.fromHeight(50),
-        textStyle: const TextStyle(fontFamily: 'NotoSansJP', fontSize: 16, fontWeight: FontWeight.bold),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        minimumSize: const Size.fromHeight(42),
+        textStyle: const TextStyle(fontFamily: 'NotoSansJP', fontSize: 15, fontWeight: FontWeight.bold),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
-        minimumSize: const Size.fromHeight(46),
+        minimumSize: const Size.fromHeight(38),
         foregroundColor: GmColors.text,
         side: const BorderSide(color: GmColors.line),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
     ),
     snackBarTheme: const SnackBarThemeData(behavior: SnackBarBehavior.floating),
+    chipTheme: const ChipThemeData(
+      labelStyle: TextStyle(fontFamily: 'NotoSansJP', fontSize: 12),
+      padding: EdgeInsets.symmetric(horizontal: 2),
+      labelPadding: EdgeInsets.symmetric(horizontal: 4),
+      visualDensity: VisualDensity.compact,
+    ),
   );
 }

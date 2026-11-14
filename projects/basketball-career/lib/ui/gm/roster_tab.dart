@@ -7,6 +7,8 @@ import '../gm_controller.dart';
 import 'coaches_screen.dart';
 import 'box_score.dart';
 import 'common.dart';
+import 'gm_table.dart';
+import 'player_face.dart';
 import 'minutes_screen.dart';
 import 'negotiate_dialog.dart';
 import 'player_card.dart';
@@ -67,93 +69,152 @@ class _RosterTabState extends State<RosterTab> {
     final me = car.me;
     final order = me.order;
     final rank = car.strengthRank(car.mine) + 1;
-    return ListView(
-      padding: const EdgeInsets.fromLTRB(14, 8, 14, 24),
-      children: [
-        Card(
-          child: Padding(
-            padding: const EdgeInsets.all(14),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-              Row(children: [
-                PlayerAvatar(team: car.mine, size: 52, pose: 'dunk'),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    FittedBox(
-                      fit: BoxFit.scaleDown,
-                      alignment: Alignment.centerLeft,
-                      child: Text(me.name, maxLines: 1, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                    ),
-                    Text('戦力 ${me.strength.toStringAsFixed(1)}(30チーム中$rank位)・${me.roster.length}人',
-                        style: const TextStyle(color: GmColors.sub)),
-                  ]),
-                ),
+    void go(Widget screen) => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => screen));
+    // 左: チームの要点と設定。右: 選手の表(2026-11-14、詰めた表に)
+    final side = Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+      Container(
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(color: GmColors.panel, borderRadius: BorderRadius.circular(8), border: Border.all(color: GmColors.line)),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+          Row(children: [
+            TeamBadge(team: car.mine, size: 30),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(me.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                Text('戦力 ${me.strength.toStringAsFixed(1)}・$rank位・${me.roster.length}人', style: const TextStyle(fontSize: 11, color: GmColors.sub)),
               ]),
-              const SizedBox(height: 12),
-              PayrollBar(payroll: me.payroll),
-              const SizedBox(height: 6),
-              Text(
-                  '上限 ${money(salaryCap)}・ぜいたく税 ${money(taxLine)}から・第1の壁 ${money(firstApron)}・第2の壁 ${money(secondApron)}'
-                  '${me.deadCap > 0 ? '\n放した選手の年俸 ${money(me.deadCap)}が今季の合計に残っている' : ''}${me.deadLater.any((x) => x > 0) ? '(来季以降にも${me.deadLater.length}年分が残る)' : ''}',
-                  style: const TextStyle(fontSize: 12, color: GmColors.sub, height: 1.5)),
-            ]),
-          ),
-        ),
-        const SizedBox(height: 10),
-        // チームの設定は2列の小さな札にまとめる(先発が1画面目に見えるように)
-        LayoutBuilder(builder: (context, cons) {
-          final w = (cons.maxWidth - 8) / 2;
-          void go(Widget screen) => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => screen));
-          return Wrap(spacing: 8, runSpacing: 8, children: [
-            _tile(w, Icons.swap_vert_rounded, '先発と控えの順', me.rotation.isEmpty ? 'いまは自動' : '自分で決めた順', () => go(RotationScreen(c: c))),
-            _tile(w, Icons.timer_outlined, '出場時間', me.minutes.isEmpty ? 'いまは自動' : '自分で決めた時間', () => go(MinutesScreen(c: c))),
-            _tile(w, Icons.badge_rounded, 'コーチ陣', 'HC ${me.coachOf(Staff.coach)?.name ?? coachLevelLabels[me.staffLevel(Staff.coach) - 1]}',
-                () => go(CoachesScreen(c: c))),
-            _tile(w, Icons.fitness_center_rounded, '練習', '強さ ${trainingLabels[me.training]}・重点 ${me.roster.where((p) => p.focus != null).length}人',
-                () => go(TrainingScreen(c: c))),
-            _tile(w, Icons.groups_rounded, 'チームの相性', '${me.chem}(強さ ${me.chemEffect >= 0 ? '+' : ''}${me.chemEffect.toStringAsFixed(1)})', () => _chemSheet(context, car)),
-            _tile(w, Icons.tune_rounded, 'チームの方針', me.policy.every((x) => x == 1) ? 'いまは全部ふつう' : '強さ ${me.policyEffect >= 0 ? '+' : ''}${me.policyEffect.toStringAsFixed(1)}',
-                () => go(PolicyScreen(c: c))),
-            _tile(w, Icons.table_chart_rounded, 'チームの成績', 'シュート・スティールなど', () => go(StatsScreen(c: c))),
-          ]);
-        }),
-        const SizedBox(height: 10),
-        // 並べ替え
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(children: [
-            const Text('並び: ', style: TextStyle(fontSize: 12, color: GmColors.sub)),
-            for (final s in RosterSort.values)
-              Padding(
-                padding: const EdgeInsets.only(right: 6),
-                child: ChoiceChip(
-                  visualDensity: VisualDensity.compact,
-                  label: Text(s.label, style: const TextStyle(fontSize: 12)),
-                  selected: _sort == s,
-                  onSelected: (_) => setState(() => _sort = s),
-                ),
-              ),
+            ),
           ]),
-        ),
-        if (_sort == RosterSort.lineup) ...[
-          const SectionTitle('先発'),
-          // PG・SG・SF・PF・C の順に。本来と違う位置で出る選手には、その位置を添える
-          for (final (slot, p) in bySlot(order.take(5).toList())) _row(context, car, p, slot: slot),
-          const SectionTitle('控え'),
-          for (final p in order.skip(5)) _row(context, car, p),
-        ] else ...[
-          SectionTitle('全員(${_sort.label}の順)'),
-          for (final p in _sorted(order)) _row(context, car, p),
-        ],
+          const SizedBox(height: 8),
+          PayrollBar(payroll: me.payroll, compact: true),
+          const SizedBox(height: 4),
+          Text(
+              '上限 ${money(salaryCap)}・税 ${money(taxLine)}・第1の壁 ${money(firstApron)}・第2の壁 ${money(secondApron)}'
+              '${me.deadCap > 0 ? '\n放した選手の年俸 ${money(me.deadCap)}が今季に残る' : ''}${me.deadLater.any((x) => x > 0) ? '(来季以降も${me.deadLater.length}年分)' : ''}',
+              style: const TextStyle(fontSize: 10, color: GmColors.sub, height: 1.4)),
+        ]),
+      ),
+      const SizedBox(height: 6),
+      _tile(Icons.swap_vert_rounded, '先発と控えの順', me.rotation.isEmpty ? 'いまは自動' : '自分で決めた順', () => go(RotationScreen(c: c))),
+      _tile(Icons.timer_outlined, '出場時間', me.minutes.isEmpty ? 'いまは自動' : '自分で決めた時間', () => go(MinutesScreen(c: c))),
+      _tile(Icons.badge_rounded, 'コーチ陣', 'HC ${me.coachOf(Staff.coach)?.name ?? coachLevelLabels[me.staffLevel(Staff.coach) - 1]}', () => go(CoachesScreen(c: c))),
+      _tile(Icons.fitness_center_rounded, '練習', '強さ ${trainingLabels[me.training]}・重点 ${me.roster.where((p) => p.focus != null).length}人', () => go(TrainingScreen(c: c))),
+      _tile(Icons.groups_rounded, 'チームの相性', '${me.chem}(強さ ${me.chemEffect >= 0 ? '+' : ''}${me.chemEffect.toStringAsFixed(1)})', () => _chemSheet(context, car)),
+      _tile(Icons.tune_rounded, 'チームの方針', me.policy.every((x) => x == 1) ? 'いまは全部ふつう' : '強さ ${me.policyEffect >= 0 ? '+' : ''}${me.policyEffect.toStringAsFixed(1)}', () => go(PolicyScreen(c: c))),
+      _tile(Icons.table_chart_rounded, 'チームの成績', 'シュート・スティールなど', () => go(StatsScreen(c: c))),
+    ]);
+    final lineup = _sort == RosterSort.lineup;
+    final starters = lineup ? bySlot(order.take(5).toList()) : <(Pos, Player)>[];
+    final rows = <(Pos?, Player)>[
+      if (lineup) ...[for (final x in starters) (x.$1, x.$2), for (final p in order.skip(5)) (null, p)] else for (final p in _sorted(order)) (null, p),
+    ];
+    final table = _rosterTable(context, car, rows, lineup ? 5 : -1);
+    final twoWay = Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+      const SizedBox(height: 8),
+      if (me.twoWay.isEmpty)
+        Text('2ウェイ契約(0/$twoWayMax人): いない。若手(リーグ$twoWayMaxExp年目まで)を登録と年俸の合計に数えずに抱えられる(補強の画面で取れる)。',
+            style: const TextStyle(fontSize: 11, color: GmColors.sub))
+      else ...[
         SectionTitle('2ウェイ契約(${me.twoWay.length}/$twoWayMax人)'),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 6),
-          child: Text(
-              '若手(リーグ$twoWayMaxExp年目まで)を、登録の$maxRoster人と年俸の合計に数えずに抱える契約。試合には出ないが、育って、登録に空きがあれば上げられる。年俸は${money(twoWaySalary)}。',
-              style: const TextStyle(fontSize: 12, color: GmColors.sub, height: 1.5)),
-        ),
-        if (me.twoWay.isEmpty) const Text('いない(補強の画面で、自由契約の若手から取れる)', style: TextStyle(fontSize: 12, color: GmColors.sub)),
         for (final p in me.twoWay) _twoWayRow(context, car, p),
+      ],
+    ]);
+    return LayoutBuilder(builder: (context, cons) {
+      final wide = cons.maxWidth >= 720;
+      return ListView(
+        padding: const EdgeInsets.fromLTRB(10, 8, 10, 20),
+        children: [
+          if (wide)
+            Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              SizedBox(width: 216, child: side),
+              const SizedBox(width: 8),
+              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [table, twoWay])),
+            ])
+          else ...[
+            side,
+            const SizedBox(height: 8),
+            table,
+            twoWay,
+          ],
+        ],
+      );
+    });
+  }
+
+  /// 選手の表。[split] 行目の前に先発と控えの区切り(-1 なら区切らない)。見出しを押すと並べ替え。
+  Widget _rosterTable(BuildContext context, Career car, List<(Pos?, Player)> rows, int split) {
+    GmCol col(String label, RosterSort? sort, {double? width, int flex = 1, TextAlign align = TextAlign.center}) => GmCol(label,
+        width: width,
+        flex: flex,
+        align: align,
+        sorted: sort != null && _sort == sort,
+        onTap: sort == null ? null : () => setState(() => _sort = _sort == sort ? RosterSort.lineup : sort));
+    String one(double v) => v.toStringAsFixed(1);
+    return GmTable(
+      title: _sort == RosterSort.lineup ? '先発と控え' : '全員(${_sort.label}の順)',
+      trailing: const Text('見出しで並べ替え・選手を押すと詳しく', style: TextStyle(fontSize: 10, color: GmColors.sub)),
+      cols: [
+        col('位置', RosterSort.lineup, width: 34),
+        col('選手', null, flex: 6, align: TextAlign.left),
+        col('歳', RosterSort.age, width: 26),
+        col('OVR', RosterSort.ovr, width: 40),
+        col('伸', null, width: 22),
+        col('点', null, width: 36),
+        col('リ', null, width: 34),
+        col('ア', null, width: 32),
+        col('分', null, width: 30),
+        col('年俸', RosterSort.salary, width: 74, align: TextAlign.right),
+        col('残', RosterSort.years, width: 24),
+        col('気', RosterSort.morale, width: 24),
+      ],
+      rows: [
+        for (final (i, (slot, p)) in rows.indexed)
+          () {
+            final s = p.stats.gp > 0 ? p.stats : p.prev;
+            final last = p.stats.gp == 0 && p.prev.gp > 0;
+            final grade = p.grade;
+            final d = shownDelta(p.ovr, p.lastDelta);
+            final off = slot != null && slot != p.pos;
+            return GmRow(
+              [
+                numCell(slot == null ? (split >= 0 ? '控' : p.pos.short) : slot.short, bold: slot != null, color: off ? GmColors.gold : slot != null ? GmColors.text : GmColors.sub),
+                Row(children: [
+                  PlayerFace(p: p, team: car.mine, size: 20),
+                  const SizedBox(width: 5),
+                  Flexible(
+                    child: Text(p.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(fontWeight: FontWeight.bold, color: p.injured > 0 ? GmColors.bad : null)),
+                  ),
+                  const SizedBox(width: 4),
+                  Text(p.pos.short, style: const TextStyle(fontSize: 9.5, color: GmColors.sub)),
+                  for (final (txt, color) in _marks(car, p, slot))
+                    Padding(
+                      padding: const EdgeInsets.only(left: 3),
+                      child: Text(txt, style: TextStyle(fontSize: 9.5, fontWeight: FontWeight.bold, color: color)),
+                    ),
+                ]),
+                numCell('${p.age}'),
+                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  numCell('${shown(p.ovr)}', bold: true, color: GmColors.ovr(p.ovr)),
+                  if (d != 0) Text(d > 0 ? '+$d' : '$d', style: TextStyle(fontSize: 9, color: d > 0 ? GmColors.good : GmColors.bad)),
+                ]),
+                numCell(grade == '-' ? '' : grade, color: grade == 'S' || grade == 'A' ? GmColors.gold : GmColors.sub),
+                numCell(s.gp == 0 ? '-' : one(s.ppg), color: last ? GmColors.sub : null),
+                numCell(s.gp == 0 ? '-' : one(s.rpg), color: last ? GmColors.sub : null),
+                numCell(s.gp == 0 ? '-' : one(s.apg), color: last ? GmColors.sub : null),
+                numCell(s.gp == 0 ? '-' : s.mpg.round().toString(), color: last ? GmColors.sub : null),
+                numCell(money(p.salary)),
+                numCell(p.years <= 0 ? '切' : '${p.years}', color: p.years == 1 ? GmColors.gold : null),
+                MoraleIcon(p: p, size: 14),
+              ],
+              divider: i == split,
+              dim: p.injured > 0,
+              onTap: () => _detail(context, car, p),
+            );
+          }(),
       ],
     );
   }
@@ -204,56 +265,38 @@ class _RosterTabState extends State<RosterTab> {
     );
   }
 
-  Widget _tile(double w, IconData icon, String title, String sub, VoidCallback onTap) => SizedBox(
-        width: w,
+  Widget _tile(IconData icon, String title, String sub, VoidCallback onTap) => Padding(
+        padding: const EdgeInsets.only(bottom: 4),
         child: Material(
           color: GmColors.panel,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(8),
           child: InkWell(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(8),
             onTap: onTap,
             child: Container(
-              padding: const EdgeInsets.fromLTRB(10, 8, 8, 8),
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), border: Border.all(color: GmColors.line)),
+              padding: const EdgeInsets.fromLTRB(8, 5, 4, 5),
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), border: Border.all(color: GmColors.line)),
               child: Row(children: [
-                Icon(icon, size: 20, color: GmColors.ball),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text(title, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-                    Text(sub, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 11, color: GmColors.sub)),
-                  ]),
-                ),
+                Icon(icon, size: 16, color: GmColors.ball),
+                const SizedBox(width: 6),
+                Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                const SizedBox(width: 6),
+                Expanded(child: Text(sub, maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.right, style: const TextStyle(fontSize: 10.5, color: GmColors.sub))),
+                const Icon(Icons.chevron_right_rounded, size: 16, color: GmColors.sub),
               ]),
             ),
           ),
         ),
       );
 
-  Widget _row(BuildContext context, Career car, Player p, {Pos? slot}) => Padding(
-        padding: const EdgeInsets.only(bottom: 6),
-        child: PlayerRow(
-          p: p,
-          team: car.mine,
-          showDelta: true,
-          showMorale: true,
-          extra: _marks(car, p, slot),
-          onTap: () => _detail(context, car, p),
-        ),
-      );
-
-  /// 選手の印(違う位置・不満・今季で契約切れ・トレードブロック・生え抜き)。何も無ければ null。
-  Widget? _marks(Career car, Player p, Pos? slot) {
-    final tags = <Widget>[
-      if (slot != null && slot != p.pos) Tag('${slot.short}で出る(本来は${p.pos.short})', color: GmColors.gold),
-      if (p.morale < 20) const Tag('不満', color: GmColors.bad) else if (p.morale < 45) const Tag('不満ぎみ', color: GmColors.gold),
-      if (p.years == 1 && car.phase != Phase.contracts) const Tag('今季で契約切れ', color: GmColors.gold),
-      if (car.tradeBlock.contains(p.id)) const Tag('ブロック', color: GmColors.ball),
-      if (car.draftedIds.contains(p.id)) const Tag('生え抜き', color: GmColors.good),
-    ];
-    if (tags.isEmpty) return null;
-    return Wrap(spacing: 5, runSpacing: 3, children: tags);
-  }
+  /// 選手の印(けが・不満・今季で契約切れ・トレードブロック・生え抜き)を短い字で。
+  List<(String, Color)> _marks(Career car, Player p, Pos? slot) => [
+        if (p.injured > 0) ('負傷${p.injured}', GmColors.bad),
+        if (p.morale < 20) ('不満', GmColors.bad) else if (p.morale < 45) ('不満ぎみ', GmColors.gold),
+        if (p.years == 1 && car.phase != Phase.contracts) ('今季まで', GmColors.gold),
+        if (car.tradeBlock.contains(p.id)) ('ブロック', GmColors.ball),
+        if (car.draftedIds.contains(p.id)) ('生え抜き', GmColors.good),
+      ];
 
   Future<void> _detail(BuildContext context, Career car, Player p) => showGmSheet<void>(
         context,
