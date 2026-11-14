@@ -684,6 +684,19 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
       ok(YA.dexCount(wd) === YA.AWAKE_FORMS.length && wd.fund === fund0 + 300 + 600 + 1000, '図鑑：20種で合計1900万円');
       JSON.parse(JSON.stringify(wd));
     }
+    {
+      // 遺産：引退で1回だけ貯まる・使うと減る・次の世界の最初に効く
+      const mem = {};
+      const st = { get: (k, d) => (mem[k] != null ? mem[k] : d), set: (k, v) => { mem[k] = v; } };
+      const wl2 = YA.newWorld(13);
+      const g1 = YA.legacyBank(st, wl2), g2 = YA.legacyBank(st, wl2);
+      ok(g1 === g2 && YA.legacyPts(st) === g1 && mem.legacy.runs === 1, '遺産：引退の1回だけ貯まる');
+      mem.legacy = { pts: 20, runs: 1 };
+      ok(YA.legacySpend(st, ['fund', 'trust']) && YA.legacyPts(st) === 6 && !YA.legacySpend(st, ['rep']), '遺産：使うと減り、足りなければ使えない');
+      const base = YA.newWorld(14, YA.makeStart({ name: 'a', career: 'grind', club: 2, points: {} }));
+      const lw = YA.newWorld(14, Object.assign(YA.makeStart({ name: 'a', career: 'grind', club: 2, points: {} }), { legacy: ['fund', 'trust'] }));
+      ok(lw.fund === (base.fund || 0) + 500 && lw.club.trust === base.club.trust + 8, '遺産：基金と信頼度が最初から上乗せ');
+    }
     ok(YA.noticeKind('Aが怪我（3週）') === '怪我'&& YA.noticeKind('なにか') === 'そのほか', 'お知らせの種類を分ける');
     ok(YA.renamePlayer(wm, Object.keys(wm.players)[0], '').ok === false && YA.renamePlayer(wm, Object.keys(wm.players)[0], '新しい名前').ok, '名前を書き換えられる');
     const sm0 = YA.careerSummary(wm);

@@ -97,10 +97,43 @@
     YA.achieveCheck(w);
     return contrib;
   };
+  // ---------- 遺産（周回のやり込み）：引退で遺産ポイントが貯まり、次の人生の最初に使える ----------
+  YA.LEGACY = [
+    { k: 'fund', name: '育成基金の元手', cost: 6, note: '最初から育成基金が500万円ある' },
+    { k: 'trust', name: '恩師の口ききで信頼度+8', cost: 8, note: 'クラブの信頼度が最初から8高い' },
+    { k: 'rep', name: '評判の下駄', cost: 8, note: '評判が最初から6高い（良い子が集まりやすい）' },
+  ];
+  YA.legacyGain = (w) => YA.achievements(w).filter((x) => x.done).length + cnt(w.alumni, (a) => a.hof === 'full') * 3 + cnt(w.alumni, (a) => a.hof === 'cand');
+  // 引退したとき1回だけ貯める。貯めた分は w.legacyGain に残る
+  YA.legacyBank = function (store, w) {
+    if (w.legacyGain != null) return w.legacyGain;
+    const g = YA.legacyGain(w);
+    const st = store.get('legacy', null) || { pts: 0, runs: 0 };
+    store.set('legacy', { pts: (st.pts || 0) + g, runs: (st.runs || 0) + 1 });
+    w.legacyGain = g;
+    return g;
+  };
+  YA.legacyPts = (store) => ((store.get('legacy', null) || {}).pts || 0);
+  YA.legacySpend = function (store, keys) {
+    const cost = keys.reduce((s, k) => s + ((YA.LEGACY.find((x) => x.k === k) || {}).cost || 0), 0);
+    const st = store.get('legacy', null) || { pts: 0, runs: 0 };
+    if (cost > st.pts) return false;
+    store.set('legacy', Object.assign({}, st, { pts: st.pts - cost }));
+    return true;
+  };
+  YA.legacyApply = function (w, keys) {
+    for (const k of keys || []) {
+      if (k === 'fund') w.fund = (w.fund || 0) + 500;
+      else if (k === 'trust') w.club.trust = clamp((w.club.trust || 50) + 8, 0, 100);
+      else if (k === 'rep') YA.addRep(w, 6);
+    }
+    w.legacyUsed = (keys || []).slice();
+  };
   const newWorldBase = YA.newWorld;
   YA.newWorld = function (...a) {
     const w = newWorldBase.apply(this, a);
     w.achInit = true; // 新しい世界は最初から知らせる。古いセーブは最初の1回だけ黙って記録する
+    if (a[1] && a[1].legacy && a[1].legacy.length) YA.legacyApply(w, a[1].legacy);
     return w;
   };
 

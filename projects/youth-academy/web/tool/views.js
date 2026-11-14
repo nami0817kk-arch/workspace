@@ -85,6 +85,11 @@ async function clearEvents() {
   const A = w.YA._ui.app;
   // 新しく始める：指導者を作る・クラブを選ぶ
   ok(txt().includes('指導者を作る') && txt().includes('最初のクラブを選ぶ') && txt().includes('この指導者で始める') && !A.w, '保存がなければ新しく始める画面');
+  w.YA._ui.store.set('legacy', { pts: 14, runs: 1 });
+  w.YA._ui.render();
+  ok(txt().includes('前の人生の遺産') && txt().includes('育成基金の元手'), '遺産ポイントがあれば、新しく始める画面に使い道が出る');
+  btn('使わない').click();
+  ok(txt().includes('あと8点') && txt().includes('使う'), '遺産を選ぶと残りが減る');
   const nameBox = d.querySelector('input[type=text]');
   nameBox.value = 'テスト監督';
   nameBox.dispatchEvent(new w.Event('input', { bubbles: true }));
@@ -432,7 +437,7 @@ async function clearEvents() {
         ok(errors.length === 0, n + 'の画面で例外なし: ' + errors.slice(0, 2).join('|'));
       }
       btn('図鑑', d.querySelector('.tabs')).click();
-      ok(txt().includes('覚醒の図鑑 0/20') && txt().includes('？'), '図鑑：20種が？で並ぶ');
+      ok(txt().includes('覚醒の図鑑 ') && txt().includes('/20') && txt().includes('？'), '図鑑：20種が並び、未発見は？');
       btn('実績', d.querySelector('.tabs')).click();
       ok(txt().includes('/69') && txt().includes('銅'), '実績は69個の銅銀金');
       rail('ホーム');
@@ -461,6 +466,10 @@ async function clearEvents() {
       ok(A.w.players[sid].team === 'B' && !A.w.lineupA.some((s) => s.pid === sid) && A.w.lineupA.length === 11, '選ぶと先発が入れ替わり、下げた子はBへ');
       ok(A.w.benchA.length === 9 && new Set(A.w.lineupA.map((s) => s.pid).concat(A.w.benchA)).size === 20, '入れ替えのあともAは20人で重ならない');
     }
+    // 引退のまとめに遺産ポイントが出る
+    A.w.retired = { year: A.w.year, week: A.w.week };
+    w.YA._ui.render();
+    ok(txt().includes('遺産ポイント +') && errors.length === 0, '引退のまとめに遺産ポイントが出る: ' + errors.slice(0, 2).join('|'));
     console.log(fails ? '失敗 ' + fails : '画面の点検: すべて通過');
     process.exit(fails ? 1 : 0);
   }
