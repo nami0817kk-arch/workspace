@@ -91,7 +91,7 @@ void main() {
   });
 
   group('広告の特典', () {
-    testWidgets('見終えた後に画面を離れても、資金は入る', (tester) async {
+    testWidgets('見終えた後に画面を離れても、営業ブーストは入る', (tester) async {
       // 広告は最後まで見ているので、こちらには収入が立つ。受け取りを
       // mounted の後ろに置いていた頃は、回数だけ消費して資金が入らなかった。
       SharedPreferences.setMockInitialValues({});
@@ -108,7 +108,7 @@ void main() {
       Tr.language = AppLanguage.japanese;
       addTearDown(() => Tr.language = AppLanguage.system);
 
-      final before = game.save!.budget;
+      final before = game.marketingBoostWeeks;
       await tester.pumpWidget(MultiProvider(
         providers: [
           ChangeNotifierProvider<GameState>.value(value: game),
@@ -135,8 +135,8 @@ void main() {
       await tester.pump();
       await tester.pump();
 
-      expect(game.save!.budget, greaterThan(before),
-          reason: '広告を見たのに資金が入っていない');
+      expect(game.marketingBoostWeeks, greaterThan(before),
+          reason: '広告を見たのに営業ブーストが入っていない');
       expect(money.claimedToday, 1);
 
       // 受け取りが保存を予約する。残したままテストを終えると、未処理の
