@@ -53,15 +53,19 @@ void main() {
       c.nextFaDay();
     }
     expect(c.sheet, isNotNull, reason: "決める日までにオファーシートが届く");
-    expect(c.sheet, [p.id, other, 200, 3]);
+    // 届くのは、いちばん良い申し込み(置いたものか、ほかのチームがもっと良い条件で出したもの)
+    final sh = [...c.sheet!];
+    expect(sh[0], p.id);
+    expect(sh[1], isNot(c.mine));
+    expect(sh[2], greaterThanOrEqualTo(200));
     expect(c.sheetPlayer, p);
     final back = Career.fromJson(jsonDecode(jsonEncode(c.toJson())) as Map<String, dynamic>);
-    expect(back.sheet, [p.id, other, 200, 3]);
+    expect(back.sheet, sh);
     c.me.roster.removeWhere((x) => c.me.roster.length > 10 && !c.expiring.contains(x.id));
     expect(c.matchSheet(), isTrue);
     expect(c.me.roster, contains(p));
-    expect(p.salary, 200);
-    expect(p.years, 3);
+    expect(p.salary, sh[2]);
+    expect(p.years, sh[3]);
     expect(c.sheet, isNull);
   });
 
