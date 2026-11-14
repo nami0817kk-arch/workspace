@@ -342,16 +342,16 @@ def draw_plumb(img, sc, t, u):
     d = ImageDraw.Draw(img, "RGBA")
     mode = sc.get("mode", "mountain")
     lab = {"plain": "重りは真下を指し、水面はそれに直角", "mountain": "山のそばでは、重りが山へ引かれる", "heavy": "下が重い → 水が寄って盛り上がる", "light": "下が軽い → 水が離れてへこむ"}[mode]
-    text(d, (W / 2, 160 if LAND else 330), sc.get("title", lab), 56 if LAND else 46, WHITE)
+    text(d, (W / 2, 132 if LAND else 330), sc.get("title", lab), 56 if LAND else 46, WHITE)
     c = W * 0.5
     if mode == "heavy":
-        text(d, (c, H - 150 if LAND else H * 0.42 + 425), "重い岩", 48, WHITE)
+        text(d, (c, H - 300 if LAND else H * 0.42 + 425), "重い岩", 48, WHITE)
     elif mode == "light":
-        text(d, (c, H - 150 if LAND else H * 0.42 + 425), "熱くて軽い岩", 48, WHITE)
+        text(d, (c, H - 300 if LAND else H * 0.42 + 425), "熱くて軽い岩", 48, WHITE)
     elif mode == "mountain":
         text(d, (W * 0.78, H * (0.52 if LAND else 0.42) - 260), "山", 52, WHITE)
     if sc.get("note"):
-        text(d, (W / 2, H * 0.52 - 420 if LAND else 420), sc["note"], 44, YEL)
+        text(d, (W / 2, 186 if LAND else 405), sc["note"], 36 if LAND else 40, YEL)
 
 
 # ---- まん丸と、つぶれたみかん ---------------------------------------------------------------------------------
@@ -387,10 +387,11 @@ def draw_ellip(img, sc, t, u):
     f = 0.16 * a
     text(d, (cx + R * (1 + f * 0.4) * 0.5, cy + 44), "赤道 6,378km", 44, WHITE)
     text(d, (cx + 26, cy - R * (1 - f) * 0.5), "北極 6,357km", 44, WHITE, "lm")
-    text(d, (W / 2, 150 if LAND else 330), sc.get("title", "地球は、つぶれたみかんの形"), 56 if LAND else 46, WHITE)
-    text(d, (W / 2, H - (70 if LAND else 360)), "つぶれ方は大きくして描いています", 34, DIM)
+    # 下は字幕の場所なので、注は題のすぐ下に置く(2026-11-14 qc の重なり)
+    text(d, (W / 2, 132 if LAND else 330), sc.get("title", "地球は、つぶれたみかんの形"), 56 if LAND else 46, WHITE)
+    text(d, (W / 2, 184 if LAND else 392), "つぶれ方は大きくして描いています", 34, DIM)
     if sc.get("geo"):
-        text(d, (W / 2, H - (130 if LAND else 430)), "青い線：本当の海面（でこぼこを大きくして描いています）", 40, BLUE)
+        text(d, (W / 2, 222 if LAND else 446), "青い線：本当の海面（でこぼこも大きくして描いています）", 36 if LAND else 32, BLUE)
 
 
 # ---- 地球の断面(マントル) -------------------------------------------------------------------------------------
@@ -456,7 +457,7 @@ def draw_mantle(img, sc, t, u):
 # ---- 富士山の下の 3 つの面 ------------------------------------------------------------------------------------
 def _draw_levels(d, sc, t, u):
     S = SS
-    yE = H * 0.80                                          # 物差しの地球
+    yE = H * (0.74 if LAND else 0.80)                      # 物差しの地球(横は字幕の上に収める)
     yG = yE - 120                                          # 見えない海面(43m を大きくして描く)
     a = ease(u * 2)
     xs = np.linspace(0, W, 120)
@@ -479,7 +480,7 @@ def draw_levels(img, sc, t, u):
     base.back(img)
     _supersample(_draw_levels, img, sc, t, u)
     d = ImageDraw.Draw(img, "RGBA")
-    yE = H * 0.80
+    yE = H * (0.74 if LAND else 0.80)
     yG = yE - 120
     cx = W * 0.5
     top = H * 0.24
@@ -492,7 +493,7 @@ def draw_levels(img, sc, t, u):
     if ease(u * 2 - 0.8) > 0.6:
         text(d, (cx - 350, (top + yE) / 2), "3,818m", 54, (255, 190, 80), "rm")
     text(d, (W / 2, 160 if LAND else 330), sc.get("title", "富士山の山頂を、2つの0mから測る"), 52 if LAND else 44, WHITE)
-    text(d, (W / 2, H - 40), "43mの差は大きくして描いています", 32, DIM, "md")
+    text(d, (W / 2, 218 if LAND else H - 40), "43mの差は大きくして描いています", 32, DIM, "mm" if LAND else "md")
 
 
 # ---- 氷と海面 -------------------------------------------------------------------------------------------------
