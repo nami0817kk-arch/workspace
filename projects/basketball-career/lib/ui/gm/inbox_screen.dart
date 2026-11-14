@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../gm/inbox.dart';
 import '../gm_controller.dart';
-import '../layout.dart';
 import 'style.dart';
 
 IconData _senderIcon(Sender s) => switch (s) {
@@ -60,6 +59,9 @@ class _InboxScreenState extends State<InboxScreen> {
     super.dispose();
   }
 
+  /// 右に開いている知らせ。
+  int? _sel;
+
   @override
   Widget build(BuildContext context) => ListenableBuilder(
     listenable: c,
@@ -75,54 +77,150 @@ class _InboxScreenState extends State<InboxScreen> {
             return r != 0 ? r : order[a.id]!.compareTo(order[b.id]!);
           });
       final senders = {for (final m in car.inbox) m.from}.toList()..sort((a, b) => a.index.compareTo(b.index));
+      final sel = list.where((m) => m.id == _sel).firstOrNull ?? list.firstOrNull;
       return Scaffold(
-        appBar: AppBar(title: const Text('受信箱')),
+        appBar: AppBar(title: const Text('受信箱'), toolbarHeight: 40),
         body: SafeArea(
-          child: Center(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: contentMaxWidth(context, phone: 620)),
-              child: car.inbox.isEmpty
-                  ? const Center(
-                      child: Text('知らせはまだない', style: TextStyle(color: GmColors.sub)),
-                    )
-                  : ListView(
-                      padding: const EdgeInsets.fromLTRB(14, 8, 14, 24),
-                      children: [
-                        // 送り手で絞る
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: [
-                              for (final s in <Sender?>[null, ...senders])
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 6, bottom: 8),
-                                  child: ChoiceChip(
-                                    visualDensity: VisualDensity.compact,
-                                    avatar: s == null ? null : Icon(_senderIcon(s), size: 16, color: senderColor(s)),
-                                    label: Text(
-                                      s == null ? 'すべて(${car.inbox.length})' : '${s.label}(${car.inbox.where((m) => m.from == s).length})',
-                                      style: const TextStyle(fontSize: 12),
-                                    ),
+          child: car.inbox.isEmpty
+              ? const Center(
+                  child: Text('知らせはまだない', style: TextStyle(color: GmColors.sub)),
+                )
+              : Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // 左: 送り手で絞る＋知らせの一覧(1行ずつ)
+                      SizedBox(
+                        width: 340,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Wrap(
+                              spacing: 4,
+                              runSpacing: 4,
+                              children: [
+                                for (final s in <Sender?>[null, ...senders])
+                                  ChoiceChip(
+                                    visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                    showCheckmark: false,
+                                    avatar: s == null ? null : Icon(_senderIcon(s), size: 13, color: senderColor(s)),
+                                    label: Text(s == null ? 'すべて(${car.inbox.length})' : '${s.label}(${car.inbox.where((m) => m.from == s).length})', style: const TextStyle(fontSize: 11)),
                                     selected: _only == s,
                                     onSelected: (_) => setState(() => _only = s),
                                   ),
+                              ],
+                            ),
+                            const SizedBox(height: 6),
+                            Expanded(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: GmColors.panel,
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(color: GmColors.line),
                                 ),
-                            ],
-                          ),
+                                clipBehavior: Clip.antiAlias,
+                                child: ListView(
+                                  children: [
+                                    for (final (i, m) in list.indexed)
+                                      _MessageRow(
+                                        m: m,
+                                        selected: m == sel,
+                                        odd: i.isOdd,
+                                        onTap: () {
+                                          setState(() => _sel = m.id);
+                                          if (!m.read) c.readMessage(m.id);
+                                        },
+                                      ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                        for (final m in list)
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 8),
-                            child: _MessageCard(c: c, m: m),
-                          ),
-                      ],
-                    ),
-            ),
-          ),
+                      ),
+                      const SizedBox(width: 10),
+                      // 右: 開いている知らせの本文と返事
+                      Expanded(
+                        child: sel == null
+                            ? const Center(
+                                child: Text('この送り手の知らせは無い', style: TextStyle(color: GmColors.sub)),
+                              )
+                            : SingleChildScrollView(
+                                child: _MessageCard(c: c, m: sel),
+                              ),
+                      ),
+                    ],
+                  ),
+                ),
         ),
       );
     },
   );
+}
+
+/// 一覧の1行(送り手の印・題・返事待ち・未読の点)。
+class _MessageRow extends StatelessWidget {
+  const _MessageRow({required this.m, required this.selected, required this.odd, required this.onTap});
+  final Message m;
+  final bool selected, odd;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final unread = !m.read || m.needsAnswer;
+    final color = senderColor(m.from);
+    return Material(
+      color: selected
+          ? GmColors.ball.withValues(alpha: 0.16)
+          : odd
+          ? GmColors.panelHi.withValues(alpha: 0.45)
+          : Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        child: Container(
+          height: 40,
+          padding: const EdgeInsets.fromLTRB(0, 3, 8, 3),
+          decoration: BoxDecoration(
+            border: Border(left: BorderSide(color: color, width: 3)),
+          ),
+          child: Row(
+            children: [
+              const SizedBox(width: 8),
+              Icon(_senderIcon(m.from), size: 15, color: color),
+              const SizedBox(width: 6),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      m.title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(fontSize: 12, fontWeight: unread ? FontWeight.bold : FontWeight.normal),
+                    ),
+                    Text(
+                      m.needsAnswer ? '${m.from.label}・返事を待っている' : '${m.from.label}・${m.season}年目',
+                      maxLines: 1,
+                      style: TextStyle(fontSize: 10, color: m.needsAnswer ? GmColors.gold : GmColors.sub),
+                    ),
+                  ],
+                ),
+              ),
+              if (unread)
+                Container(
+                  width: 7,
+                  height: 7,
+                  decoration: const BoxDecoration(color: GmColors.ball, shape: BoxShape.circle),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class _MessageCard extends StatelessWidget {
@@ -155,7 +253,7 @@ class _MessageCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           onTap: m.read ? null : () => c.readMessage(m.id),
           child: Padding(
-            padding: const EdgeInsets.all(14),
+            padding: const EdgeInsets.all(12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -185,9 +283,9 @@ class _MessageCard extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 6),
-                Text(m.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                Text(m.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
                 const SizedBox(height: 4),
-                Text(m.body, style: const TextStyle(height: 1.5)),
+                Text(m.body, style: const TextStyle(fontSize: 13, height: 1.5)),
                 if (m.choices.isNotEmpty) ...[
                   const SizedBox(height: 10),
                   if (m.answer != null)

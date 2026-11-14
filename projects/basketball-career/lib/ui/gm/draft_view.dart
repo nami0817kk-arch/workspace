@@ -10,6 +10,7 @@ import '../../monetization/monetization.dart';
 import '../gm_controller.dart';
 import 'common.dart';
 import 'draft_show_screen.dart';
+import 'gm_table.dart';
 import 'style.dart';
 
 /// 候補の並べ方。
@@ -17,6 +18,7 @@ enum _Sort { mock, mid, board }
 
 /// ドラフト。候補の力は幅でしか見えない。スカウトを送ると幅が狭まる。
 /// 模擬ドラフトの予想順位・経歴・身体測定を見て、自分のボード(注目の印)を作る。
+/// 左に候補の表、右に選んだ候補の詳しい情報とここまでの指名(2026-11-15、表の形に組み直した)。
 class DraftView extends StatefulWidget {
   const DraftView({super.key, required this.c});
   final GmController c;
@@ -27,6 +29,9 @@ class DraftView extends StatefulWidget {
 
 class _DraftViewState extends State<DraftView> {
   _Sort _sort = _Sort.mock;
+
+  /// 右の欄に出す候補(選手の id)。
+  int? _sel;
 
   GmController get c => widget.c;
 
@@ -68,7 +73,6 @@ class _DraftViewState extends State<DraftView> {
   @override
   Widget build(BuildContext context) {
     final car = c.career!;
-    final pick = car.currentPick;
     final ranks = mockRanks(car.prospects);
     final before = car.picksBeforeMine();
     final all = car.prospects.where((p) => p.pickedBy == null).toList();
@@ -81,119 +85,244 @@ class _DraftViewState extends State<DraftView> {
             if (p.player.id == id) p,
       ],
     };
+    // 選んでいた候補が取られたら、表の先頭へ
+    final sel = all.where((p) => p.player.id == _sel).firstOrNull ?? (open.isNotEmpty ? open.first : (all.isNotEmpty ? all.first : null));
+    final taken = [for (var k = car.draftLog.length - 1; k >= 0; k--) (k + 1, car.prospects[car.draftLog[k]])];
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _header(car),
+          const SizedBox(height: 6),
+          Expanded(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(child: _table(car, open, all.length, ranks, before, sel)),
+                const SizedBox(width: 8),
+                SizedBox(
+                  width: 270,
+                  child: ListView(
+                    children: [
+                      if (sel != null) _ProspectPanel(c: c, p: sel, rank: ranks[sel]!, onPick: _pick),
+                      if (taken.isNotEmpty) ...[
+                        const SizedBox(height: 8),
+                        GmTable(
+                          title: 'ここまでの指名(${taken.length})',
+                          rowHeight: 24,
+                          cols: const [
+                            GmCol('順', width: 26),
+                            GmCol('', width: 24),
+                            GmCol('選手', flex: 1, align: TextAlign.left),
+                            GmCol('位', width: 30),
+                          ],
+                          rows: [
+                            for (final (k, p) in taken)
+                              GmRow([
+                                numCell('$k', color: GmColors.sub),
+                                TeamBadge(team: p.pickedBy!, size: 16),
+                                Text(p.player.name, maxLines: 1, overflow: TextOverflow.ellipsis),
+                                Text(p.player.pos.short, style: const TextStyle(fontSize: 10, color: GmColors.sub)),
+                              ], highlight: p.pickedBy == car.mine),
+                          ],
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 上の欄(指名の番・スカウトの残り・やること)。候補の表を広く見せるため細くする。知らせはたたんでおく。
+  Widget _header(Career car) {
+    final pick = car.currentPick;
+    final before = car.picksBeforeMine();
     final myPicks = [
       for (var k = car.draftAt; k < car.order.length; k++)
         if (car.picks[car.order[k]].owner == car.mine) k + 1,
     ];
-    final taken = [for (var k = car.draftLog.length - 1; k >= 0; k--) (k + 1, car.prospects[car.draftLog[k]])];
-    return ListView(
-      padding: const EdgeInsets.fromLTRB(14, 8, 14, 24),
-      children: [
-        // 上の欄は小さく(候補の一覧を広く見せる)。知らせはたたんでおく
-        Card(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(12, 8, 8, 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(10, 4, 6, 4),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
               children: [
-                Row(children: [
-                  const Icon(Icons.how_to_reg_rounded, color: GmColors.ball, size: 20),
-                  const SizedBox(width: 6),
-                  Expanded(
-                    child: Text(
-                      pick == null ? 'ドラフト' : '${car.draftAt + 1}番目の指名(${pick.round}巡目)',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
+                const Icon(Icons.how_to_reg_rounded, color: GmColors.ball, size: 18),
+                const SizedBox(width: 6),
+                Text(pick == null ? 'ドラフト' : '${car.draftAt + 1}番目の指名(${pick.round}巡目)', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    myPicks.isEmpty ? 'もう指名権がない。他チームの指名が終わるまで進める' : 'こちらの番: ${myPicks.map((k) => '$k番目').join('・')}',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: GmColors.gold),
                   ),
-                  const Icon(Icons.travel_explore_rounded, size: 16, color: GmColors.sub),
-                  const SizedBox(width: 4),
-                  Text('スカウト 残り${car.scoutsLeft}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-                  if (car.lotteryPre.isNotEmpty)
-                    TextButton(
-                      onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(fullscreenDialog: true, builder: (_) => LotteryScreen(c: c))),
-                      child: const Text('くじ'),
-                    ),
-                  if (car.canAddScouts)
-                    TextButton.icon(
-                      onPressed: c.busy ? null : () => _moreScouts(context),
-                      icon: Icon(c.needsAd ? Icons.smart_display_rounded : Icons.add_rounded, size: 16),
-                      label: Text(c.needsAd ? '動画で+2' : '+2'),
-                    ),
-                ]),
-                Text(
-                  myPicks.isEmpty
-                      ? 'やること: もう指名権がない。他チームの指名が終わるまで進める。'
-                      : 'やること: 欲しい選手の「指名」を押す(迷ったら予想順位が高い選手)。こちらの番: ${myPicks.map((k) => '$k番目').join('・')}',
-                  style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: GmColors.gold, height: 1.4),
                 ),
-                Text(
-                  [
-                    if (before != null && before > 0) '次の指名までに$before人取られる',
-                    '契約中 ${car.signedCount}人(オフは$offseasonRoster人まで・開幕までに$maxRoster人)',
-                    '力は幅でしか見えず、スカウトで狭まる',
-                  ].join('・'),
-                  style: const TextStyle(fontSize: 11, color: GmColors.sub, height: 1.4),
-                ),
-                if (car.myTurn && car.draftProblem != null) ...[
-                  const SizedBox(height: 4),
-                  Row(children: [
-                    Expanded(child: Text(car.draftProblem!, style: const TextStyle(color: GmColors.bad, fontSize: 12))),
-                    OutlinedButton(onPressed: _pass, child: const Text('この指名を見送る')),
-                  ]),
-                ],
-                if (car.news.isNotEmpty)
-                  Theme(
-                    data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-                    child: ExpansionTile(
-                      dense: true,
-                      tilePadding: EdgeInsets.zero,
-                      visualDensity: VisualDensity.compact,
-                      title: Text('このオフの知らせ(${car.news.length})', style: const TextStyle(fontSize: 13)),
-                      children: [
-                        for (final n in car.news)
-                          Align(alignment: Alignment.centerLeft, child: Text('・$n', style: const TextStyle(fontSize: 13, height: 1.5))),
-                      ],
-                    ),
+                const Icon(Icons.travel_explore_rounded, size: 15, color: GmColors.sub),
+                const SizedBox(width: 4),
+                Text('スカウト 残り${car.scoutsLeft}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                if (car.lotteryPre.isNotEmpty)
+                  TextButton(
+                    onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(fullscreenDialog: true, builder: (_) => LotteryScreen(c: c))),
+                    child: const Text('くじ', style: TextStyle(fontSize: 12)),
+                  ),
+                if (car.canAddScouts)
+                  TextButton.icon(
+                    onPressed: c.busy ? null : () => _moreScouts(context),
+                    icon: Icon(c.needsAd ? Icons.smart_display_rounded : Icons.add_rounded, size: 15),
+                    label: Text(c.needsAd ? '動画で+2' : '+2', style: const TextStyle(fontSize: 12)),
                   ),
               ],
             ),
-          ),
-        ),
-        SectionTitle(_sort == _Sort.board ? '自分のボード(${open.length}人)' : '候補(${all.length}人)'),
-        Wrap(
-          spacing: 6,
-          children: [
-            for (final (s, label) in [(_Sort.mock, '予想順'), (_Sort.mid, '見込み順'), (_Sort.board, '注目だけ(${car.board.length})')])
-              ChoiceChip(label: Text(label), selected: _sort == s, onSelected: (_) => setState(() => _sort = s)),
+            Text(
+              [
+                if (myPicks.isNotEmpty) '欲しい選手の「指名」を押す(迷ったら予想順位が高い選手)',
+                if (before != null && before > 0) '次の指名までに$before人取られる(予想順位が赤い選手)',
+                '契約中 ${car.signedCount}人(オフは$offseasonRoster人まで・開幕までに$maxRoster人)',
+              ].join('・'),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontSize: 11, color: GmColors.sub, height: 1.4),
+            ),
+            if (car.myTurn && car.draftProblem != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 2),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(car.draftProblem!, style: const TextStyle(color: GmColors.bad, fontSize: 12)),
+                    ),
+                    OutlinedButton(onPressed: _pass, child: const Text('この指名を見送る')),
+                  ],
+                ),
+              ),
+            if (car.news.isNotEmpty)
+              Theme(
+                data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+                child: ExpansionTile(
+                  dense: true,
+                  tilePadding: EdgeInsets.zero,
+                  visualDensity: const VisualDensity(vertical: -4),
+                  minTileHeight: 26,
+                  title: Text('このオフの知らせ(${car.news.length})', style: const TextStyle(fontSize: 12)),
+                  children: [
+                    for (final n in car.news)
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text('・$n', style: const TextStyle(fontSize: 12, height: 1.5)),
+                      ),
+                  ],
+                ),
+              ),
           ],
         ),
-        const SizedBox(height: 8),
+      ),
+    );
+  }
+
+  /// 候補の表。行を押すと右の欄に詳しく出る。☆は自分のボード。
+  Widget _table(Career car, List<Prospect> open, int total, Map<Prospect, int> ranks, int? before, Prospect? sel) {
+    final canPick = car.canDraftPick && !c.busy;
+    GmCol sortCol(String label, _Sort s, {double? width, int flex = 1, TextAlign align = TextAlign.center}) =>
+        GmCol(label, width: width, flex: flex, align: align, sorted: _sort == s, onTap: () => setState(() => _sort = s));
+    return ListView(
+      children: [
+        GmTable(
+          title: _sort == _Sort.board ? '自分のボード(${open.length}人)' : '候補($total人)',
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              for (final (s, label) in [(_Sort.mock, '予想順'), (_Sort.mid, '見込み順'), (_Sort.board, '注目だけ(${car.board.length})')])
+                Padding(
+                  padding: const EdgeInsets.only(left: 4),
+                  child: ChoiceChip(
+                    visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    showCheckmark: false,
+                    label: Text(label, style: const TextStyle(fontSize: 11)),
+                    selected: _sort == s,
+                    onSelected: (_) => setState(() => _sort = s),
+                  ),
+                ),
+            ],
+          ),
+          rowHeight: 30,
+          cols: [
+            sortCol('予想', _Sort.mock, width: 30),
+            sortCol('☆', _Sort.board, width: 24),
+            const GmCol('選手', flex: 3, align: TextAlign.left),
+            const GmCol('位', width: 28),
+            const GmCol('歳', width: 24),
+            const GmCol('去年 点-リ-ア', width: 86),
+            sortCol('OVR', _Sort.mid, width: 82),
+            const GmCol('POT', width: 82),
+            GmCol('', width: car.myTurn ? 100 : 62),
+          ],
+          rows: [
+            for (final p in open)
+              () {
+                final pl = p.player;
+                final rank = ranks[p]!;
+                final gone = before != null && rank <= before;
+                final starred = car.board.contains(pl.id);
+                final st = amateurStatsOf(p);
+                return GmRow(
+                  [
+                    numCell('$rank', color: gone ? GmColors.bad : null, bold: true),
+                    InkWell(
+                      onTap: c.busy ? null : () => c.toggleBoard(p),
+                      child: Icon(starred ? Icons.star_rounded : Icons.star_border_rounded, size: 18, color: starred ? GmColors.gold : GmColors.sub),
+                    ),
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            pl.name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        if (p.scouted) ...[const SizedBox(width: 4), const Tag('調査済', color: GmColors.gold)],
+                      ],
+                    ),
+                    Text(pl.pos.short, style: const TextStyle(fontSize: 11, color: GmColors.sub)),
+                    numCell('${pl.age}'),
+                    Text('${st.ppg}-${st.rpg}-${st.apg}', maxLines: 1, style: const TextStyle(fontSize: 11, color: GmColors.sub)),
+                    _RangeCell(lo: p.ovrLo, hi: p.ovrHi),
+                    _RangeCell(lo: p.potLo, hi: p.potHi),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (!p.scouted) miniButton('スカウト', car.scoutsLeft > 0 && !c.busy ? () => c.scoutProspect(p) : null),
+                        if (car.myTurn) ...[const SizedBox(width: 4), miniButton('指名', canPick ? () => _pick(p) : null, filled: true)],
+                      ],
+                    ),
+                  ],
+                  highlight: p == sel,
+                  onTap: () => setState(() => _sel = pl.id),
+                );
+              }(),
+          ],
+        ),
         if (_sort == _Sort.board && open.isEmpty)
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 8),
-            child: Text('候補の☆を押すと、ここに並ぶ(押した順)。', style: TextStyle(color: GmColors.sub)),
+            child: Text('候補の☆を押すと、ここに並ぶ(押した順)。', style: TextStyle(color: GmColors.sub, fontSize: 12)),
           ),
-        for (final p in open) ...[_ProspectRow(c: c, p: p, rank: ranks[p]!, gone: before != null && ranks[p]! <= before, onPick: _pick), const SizedBox(height: 6)],
-        if (taken.isNotEmpty) ...[
-          const SectionTitle('ここまでの指名'),
-          for (final (k, p) in taken)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 2),
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: 34,
-                    child: Text('$k', style: const TextStyle(color: GmColors.sub)),
-                  ),
-                  TeamBadge(team: p.pickedBy!, size: 20),
-                  const SizedBox(width: 6),
-                  Expanded(child: Text('${p.player.name}(${p.player.pos.short})', maxLines: 1, overflow: TextOverflow.ellipsis)),
-                ],
-              ),
-            ),
-        ],
+        const Padding(
+          padding: EdgeInsets.only(top: 4),
+          child: Text('OVR・POT は見えている幅(スカウトで狭まる)。行を押すと右に経歴・身体測定・見立て。', style: TextStyle(fontSize: 10, color: GmColors.sub)),
+        ),
       ],
     );
   }
@@ -207,289 +336,173 @@ class _DraftViewState extends State<DraftView> {
   }
 }
 
-class _ProspectRow extends StatelessWidget {
-  const _ProspectRow({required this.c, required this.p, required this.rank, required this.gone, required this.onPick});
-  final GmController c;
-  final Prospect p;
-  final void Function(Prospect) onPick;
-
-  /// 模擬ドラフトの予想順位。
-  final int rank;
-
-  /// 自分の次の指名までに取られそうか。
-  final bool gone;
+/// 見えている幅(数字と細い帯)。
+class _RangeCell extends StatelessWidget {
+  const _RangeCell({required this.lo, required this.hi});
+  final int lo, hi;
 
   @override
-  Widget build(BuildContext context) {
-    final car = c.career!;
-    final pl = p.player;
-    final canPick = car.canDraftPick && !c.busy;
-    final starred = car.board.contains(pl.id);
-    return InkWell(
-      borderRadius: BorderRadius.circular(12),
-      onTap: () => _showProspect(context, c, p, rank, onPick),
-      child: Container(
-        padding: const EdgeInsets.fromLTRB(10, 8, 8, 8),
-        decoration: BoxDecoration(
-          color: GmColors.panel,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: p.scouted ? GmColors.gold.withValues(alpha: 0.6) : GmColors.line),
-        ),
-        child: Row(
-          children: [
-            SizedBox(
-              width: 34,
-              child: Column(
-                children: [
-                  Text('予想', style: TextStyle(fontSize: 9, color: gone ? GmColors.bad : GmColors.sub)),
-                  Text(
-                    '$rank',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: gone ? GmColors.bad : null),
-                  ),
-                  InkWell(
-                    onTap: c.busy ? null : () => c.toggleBoard(p),
-                    child: Icon(starred ? Icons.star_rounded : Icons.star_border_rounded, size: 22, color: starred ? GmColors.gold : GmColors.sub),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 4),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Flexible(
-                        child: Text(
-                          pl.name,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      const SizedBox(width: 6),
-                      Tag(pl.pos.short),
-                      const SizedBox(width: 6),
-                      Text('${pl.age}歳', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
-                      if (p.scouted) ...[const SizedBox(width: 6), const Tag('調査済み', color: GmColors.gold)],
-                    ],
-                  ),
-                  Text(
-                    '${backgroundOf(p)}・${() {
-                      final s = amateurStatsOf(p);
-                      return '${s.ppg}点 ${s.rpg}リ ${s.apg}ア';
-                    }()}',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontSize: 11, color: GmColors.sub),
-                  ),
-                  const SizedBox(height: 4),
-                  _range('OVR', p.ovrLo, p.ovrHi),
-                  const SizedBox(height: 2),
-                  _range('POT', p.potLo, p.potHi),
-                ],
-              ),
-            ),
-            const SizedBox(width: 6),
-            Column(
-              mainAxisSize: MainAxisSize.min,
+  Widget build(BuildContext context) => Column(
+    mainAxisSize: MainAxisSize.min,
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+      Text(
+        '${shown(lo)}〜${shown(hi)}',
+        textAlign: TextAlign.center,
+        style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: GmColors.ovr(hi)),
+      ),
+      LayoutBuilder(
+        builder: (context, cons) {
+          final w = cons.maxWidth;
+          double x(int v) => w * ((v - 35) / 65).clamp(0.0, 1.0);
+          return SizedBox(
+            height: 4,
+            child: Stack(
               children: [
-                if (!p.scouted)
-                  SizedBox(
-                    height: 34,
-                    child: OutlinedButton(
-                      style: OutlinedButton.styleFrom(minimumSize: const Size(72, 34), padding: const EdgeInsets.symmetric(horizontal: 8)),
-                      onPressed: car.scoutsLeft > 0 && !c.busy ? () => c.scoutProspect(p) : null,
-                      child: const Text('スカウト', style: TextStyle(fontSize: 13)),
-                    ),
-                  ),
-                if (car.myTurn) ...[
-                  const SizedBox(height: 6),
-                  SizedBox(
-                    height: 34,
-                    child: FilledButton(
-                      style: FilledButton.styleFrom(minimumSize: const Size(72, 34), padding: const EdgeInsets.symmetric(horizontal: 8)),
-                      onPressed: canPick ? () => onPick(p) : null,
-                      child: const Text('指名', style: TextStyle(fontSize: 14)),
-                    ),
-                  ),
-                ],
+                Positioned.fill(child: Container(color: GmColors.line)),
+                Positioned(
+                  top: 0,
+                  bottom: 0,
+                  left: x(lo),
+                  width: (x(hi) - x(lo)).clamp(3.0, w),
+                  child: Container(color: GmColors.ovr(hi)),
+                ),
               ],
             ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _range(String label, int lo, int hi) => Row(
-    children: [
-      SizedBox(
-        width: 56,
-        child: Text(label, style: const TextStyle(fontSize: 12, color: GmColors.sub)),
-      ),
-      Expanded(
-        child: LayoutBuilder(
-          builder: (context, cons) {
-            final w = cons.maxWidth;
-            double x(int v) => w * ((v - 35) / 65).clamp(0.0, 1.0);
-            return SizedBox(
-              height: 14,
-              child: Stack(
-                children: [
-                  Positioned(top: 5, left: 0, right: 0, child: Container(height: 4, color: GmColors.line)),
-                  Positioned(
-                    top: 3,
-                    left: x(lo),
-                    width: (x(hi) - x(lo)).clamp(4.0, w),
-                    child: Container(
-                      height: 8,
-                      decoration: BoxDecoration(color: GmColors.ovr(hi), borderRadius: BorderRadius.circular(4)),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
-      ),
-      const SizedBox(width: 6),
-      SizedBox(
-        width: 52,
-        child: Text(
-          '${shown(lo)}〜${shown(hi)}',
-          textAlign: TextAlign.right,
-          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-        ),
+          );
+        },
       ),
     ],
   );
 }
 
-/// 候補の詳しい情報(経歴・身体測定・去年の成績・見立て)。
-Future<void> _showProspect(BuildContext context, GmController c, Prospect p, int rank, void Function(Prospect) onPick) => showGmSheet<void>(
-  context,
-  builder: (ctx) => ListenableBuilder(
-    listenable: c,
-    builder: (ctx, _) {
-      final car = c.career!;
-      final pl = p.player;
-      final (h, w, span) = physicalOf(pl);
-      final cb = combineOf(p);
-      final st = amateurStatsOf(p);
-      final (good, bad) = strengthsOf(pl);
-      final starred = car.board.contains(pl.id);
-      Widget line(String k, String v, {Color? color}) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 3),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: 128,
-              child: Text(k, style: const TextStyle(color: GmColors.sub)),
+/// 選んだ候補の詳しい情報(経歴・身体測定・去年の成績・見立て)と、注目・スカウト・指名。
+class _ProspectPanel extends StatelessWidget {
+  const _ProspectPanel({required this.c, required this.p, required this.rank, required this.onPick});
+  final GmController c;
+  final Prospect p;
+  final int rank;
+  final void Function(Prospect) onPick;
+
+  @override
+  Widget build(BuildContext context) {
+    final car = c.career!;
+    final pl = p.player;
+    final (h, w, span) = physicalOf(pl);
+    final cb = combineOf(p);
+    final st = amateurStatsOf(p);
+    final (good, bad) = strengthsOf(pl);
+    final starred = car.board.contains(pl.id);
+    Widget head(String s) => Padding(
+      padding: const EdgeInsets.only(top: 6, bottom: 1),
+      child: Text(
+        s,
+        style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: GmColors.ball),
+      ),
+    );
+    Widget line(String k, String v, {Color? color}) => Padding(
+      padding: const EdgeInsets.symmetric(vertical: 1),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 92,
+            child: Text(k, style: const TextStyle(fontSize: 11, color: GmColors.sub)),
+          ),
+          Expanded(
+            child: Text(
+              v,
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: color),
             ),
-            Expanded(
-              child: Text(
-                v,
-                style: TextStyle(fontWeight: FontWeight.bold, color: color),
+          ),
+        ],
+      ),
+    );
+    return Container(
+      padding: const EdgeInsets.fromLTRB(10, 8, 10, 10),
+      decoration: BoxDecoration(
+        color: GmColors.panel,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: p.scouted ? GmColors.gold.withValues(alpha: 0.6) : GmColors.line),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  pl.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                ),
               ),
+              Tag(pl.pos.short),
+            ],
+          ),
+          Text('${pl.age}歳・${backgroundOf(p)}・予想$rank位', maxLines: 2, style: const TextStyle(fontSize: 11, color: GmColors.sub)),
+          head('見立て'),
+          line('OVR', '${shown(p.ovrLo)}〜${shown(p.ovrHi)}', color: GmColors.ovr(p.ovrHi)),
+          line('POT', '${shown(p.potLo)}〜${shown(p.potHi)}', color: GmColors.ovr(p.potHi)),
+          if (p.scouted) ...[
+            line('得意', good.map((a) => a.label).join('・'), color: GmColors.good),
+            line('苦手', bad.label, color: GmColors.bad),
+            line('性格', personalityOf(pl).line, color: GmColors.gold),
+            Text('${personalityOf(pl).value.text}。${personalityOf(pl).traits.map((t) => t.text).join('。')}。', style: const TextStyle(fontSize: 10, color: GmColors.sub, height: 1.4)),
+          ] else ...[
+            line('得意・苦手・性格', 'スカウトで分かる'),
+            Builder(
+              builder: (_) {
+                final k = (car.me.staffLevel(Staff.scout) - 1).clamp(0, 2);
+                final om = (p.ovrLo + p.ovrHi) ~/ 2, pm = (p.potLo + p.potHi) ~/ 2;
+                return Text(
+                  'いまのスカウト(段階${k + 1})なら OVR ±${shown(om + scoutOvrHalf[k]) - shown(om)}・POT ±${shown(pm + scoutPotHalf[k]) - shown(pm)} ほどまで狭まる',
+                  style: const TextStyle(fontSize: 10, color: GmColors.sub, height: 1.4),
+                );
+              },
             ),
           ],
-        ),
-      );
-      return SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 18),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+          head('コンバイン(身体測定)'),
+          line('身長・体重', '${h}cm・${w}kg'),
+          line('ウイングスパン', '${span}cm'),
+          line('垂直跳び', '${cb.vertical}cm'),
+          line('4分の3コート', '${cb.sprint}秒'),
+          head('去年の成績(1試合あたり)'),
+          line('得点・リバ・アシ', '${st.ppg}点 ${st.rpg}リ ${st.apg}ア'),
+          const SizedBox(height: 8),
+          Row(
             children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(pl.name, style: const TextStyle(fontSize: 19, fontWeight: FontWeight.bold)),
-                  ),
-                  Tag(pl.pos.short),
-                ],
-              ),
-              Text('${pl.age}歳・${backgroundOf(p)}・模擬ドラフト 予想$rank位', style: const TextStyle(color: GmColors.sub)),
-              const SizedBox(height: 10),
-              const Text(
-                'コンバイン(身体測定)',
-                style: TextStyle(fontWeight: FontWeight.bold, color: GmColors.ball),
-              ),
-              line('身長・体重', '${h}cm・${w}kg'),
-              line('ウイングスパン', '${span}cm'),
-              line('垂直跳び', '${cb.vertical}cm'),
-              line('4分の3コート', '${cb.sprint}秒'),
-              const SizedBox(height: 8),
-              const Text(
-                '去年の成績(1試合あたり)',
-                style: TextStyle(fontWeight: FontWeight.bold, color: GmColors.ball),
-              ),
-              line('得点・リバ・アシ', '${st.ppg}点 ${st.rpg}リ ${st.apg}ア'),
-              const SizedBox(height: 8),
-              const Text(
-                '見立て',
-                style: TextStyle(fontWeight: FontWeight.bold, color: GmColors.ball),
-              ),
-              line('OVR', '${shown(p.ovrLo)}〜${shown(p.ovrHi)}'),
-              line('POT', '${shown(p.potLo)}〜${shown(p.potHi)}'),
-              if (p.scouted) ...[
-                line('得意', good.map((a) => a.label).join('・'), color: GmColors.good),
-                line('苦手', bad.label, color: GmColors.bad),
-                line('性格', personalityOf(pl).line, color: GmColors.gold),
-                Text(
-                  '${personalityOf(pl).value.text}。${personalityOf(pl).traits.map((t) => t.text).join('。')}。',
-                  style: const TextStyle(fontSize: 11, color: GmColors.sub, height: 1.4),
+              Expanded(
+                child: OutlinedButton.icon(
+                  style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(30), padding: EdgeInsets.zero),
+                  onPressed: c.busy ? null : () => c.toggleBoard(p),
+                  icon: Icon(starred ? Icons.star_rounded : Icons.star_border_rounded, size: 16, color: starred ? GmColors.gold : null),
+                  label: Text(starred ? '注目を外す' : '注目する', style: const TextStyle(fontSize: 12)),
                 ),
-              ] else ...[
-                line('得意・苦手・性格', 'スカウトを送ると分かる'),
-                Builder(builder: (_) {
-                  final k = (car.me.staffLevel(Staff.scout) - 1).clamp(0, 2);
-                  return Text(
-                    'いまのスカウト(段階${k + 1})なら、OVR は±${shown((p.ovrLo + p.ovrHi) ~/ 2 + scoutOvrHalf[k]) - shown((p.ovrLo + p.ovrHi) ~/ 2)}、POT は±${shown((p.potLo + p.potHi) ~/ 2 + scoutPotHalf[k]) - shown((p.potLo + p.potHi) ~/ 2)}ほどまで狭まる',
-                    style: const TextStyle(fontSize: 11, color: GmColors.sub),
-                  );
-                }),
-              ],
-              const SizedBox(height: 12),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: c.busy ? null : () => c.toggleBoard(p),
-                      icon: Icon(starred ? Icons.star_rounded : Icons.star_border_rounded, color: starred ? GmColors.gold : null),
-                      label: Text(starred ? '注目を外す' : '注目する'),
-                    ),
-                  ),
-                  if (!p.scouted) ...[
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: car.scoutsLeft > 0 && !c.busy ? () => c.scoutProspect(p) : null,
-                        child: Text('スカウト(残り${car.scoutsLeft})'),
-                      ),
-                    ),
-                  ],
-                ],
               ),
-              if (car.myTurn && p.pickedBy == null) ...[
-                const SizedBox(height: 8),
-                FilledButton(
-                  onPressed: car.canDraftPick && !c.busy
-                      ? () {
-                          Navigator.of(ctx).pop();
-                          onPick(p);
-                        }
-                      : null,
-                  child: const Text('この選手を指名する'),
+              if (!p.scouted) ...[
+                const SizedBox(width: 6),
+                Expanded(
+                  child: OutlinedButton(
+                    style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(30), padding: EdgeInsets.zero),
+                    onPressed: car.scoutsLeft > 0 && !c.busy ? () => c.scoutProspect(p) : null,
+                    child: Text('スカウト(残り${car.scoutsLeft})', style: const TextStyle(fontSize: 12)),
+                  ),
                 ),
               ],
             ],
           ),
-        ),
-      );
-    },
-  ),
-);
+          if (car.myTurn && p.pickedBy == null) ...[
+            const SizedBox(height: 6),
+            FilledButton(
+              style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(34)),
+              onPressed: car.canDraftPick && !c.busy ? () => onPick(p) : null,
+              child: const Text('指名する', style: TextStyle(fontSize: 14)),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}

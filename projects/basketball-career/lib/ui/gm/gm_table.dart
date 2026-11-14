@@ -65,64 +65,99 @@ class GmTable extends StatelessWidget {
         border: Border.all(color: GmColors.line),
       ),
       clipBehavior: Clip.antiAlias,
-      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        if (title != null)
-          Container(
-            padding: const EdgeInsets.fromLTRB(10, 6, 8, 6),
-            color: GmColors.panelHi,
-            child: Row(children: [
-              Expanded(child: Text(title!, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold))),
-              if (trailing != null) trailing!,
-            ]),
-          ),
-        Container(
-          height: 22,
-          color: GmColors.bg.withValues(alpha: 0.6),
-          padding: const EdgeInsets.symmetric(horizontal: 4),
-          child: Row(children: [
-            for (final c in cols)
-              _cell(
-                c,
-                InkWell(
-                  onTap: c.onTap,
-                  child: Text(
-                    c.sorted ? '${c.label}▼' : c.label,
-                    maxLines: 1,
-                    overflow: TextOverflow.clip,
-                    style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: c.sorted ? GmColors.ball : GmColors.sub, letterSpacing: 0.2),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (title != null)
+            Container(
+              padding: const EdgeInsets.fromLTRB(10, 6, 8, 6),
+              color: GmColors.panelHi,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(title!, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
                   ),
-                ),
+                  if (trailing != null) trailing!,
+                ],
               ),
-          ]),
-        ),
-        for (final (i, r) in rows.indexed)
-          Material(
-            color: r.highlight
-                ? GmColors.ball.withValues(alpha: 0.16)
-                : i.isOdd
-                    ? GmColors.panelHi.withValues(alpha: 0.45)
-                    : Colors.transparent,
-            child: InkWell(
-              onTap: r.onTap,
-              child: Container(
-                height: rowHeight,
-                padding: const EdgeInsets.symmetric(horizontal: 4),
-                decoration: r.divider ? const BoxDecoration(border: Border(top: BorderSide(color: GmColors.line, width: 1.5))) : null,
-                child: Opacity(
-                  opacity: r.dim ? 0.5 : 1,
-                  child: DefaultTextStyle.merge(
-                    style: const TextStyle(fontSize: 12, fontFeatures: [FontFeature.tabularFigures()]),
-                    child: Row(children: [for (var k = 0; k < cols.length; k++) _cell(cols[k], r.cells[k])]),
+            ),
+          Container(
+            height: 22,
+            color: GmColors.bg.withValues(alpha: 0.6),
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: Row(
+              children: [
+                for (final c in cols)
+                  _cell(
+                    c,
+                    InkWell(
+                      onTap: c.onTap,
+                      child: Text(
+                        c.sorted ? '${c.label}▼' : c.label,
+                        maxLines: 1,
+                        overflow: TextOverflow.clip,
+                        style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: c.sorted ? GmColors.ball : GmColors.sub, letterSpacing: 0.2),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          for (final (i, r) in rows.indexed)
+            Material(
+              color: r.highlight
+                  ? GmColors.ball.withValues(alpha: 0.16)
+                  : i.isOdd
+                  ? GmColors.panelHi.withValues(alpha: 0.45)
+                  : Colors.transparent,
+              child: InkWell(
+                onTap: r.onTap,
+                child: Container(
+                  height: rowHeight,
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  decoration: r.divider
+                      ? const BoxDecoration(
+                          border: Border(top: BorderSide(color: GmColors.line, width: 1.5)),
+                        )
+                      : null,
+                  child: Opacity(
+                    opacity: r.dim ? 0.5 : 1,
+                    child: DefaultTextStyle.merge(
+                      style: const TextStyle(fontSize: 12, fontFeatures: [FontFeature.tabularFigures()]),
+                      child: Row(children: [for (var k = 0; k < cols.length; k++) _cell(cols[k], r.cells[k])]),
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-      ]),
+        ],
+      ),
     );
   }
 }
 
+/// 表の行に収まる小さなボタン(高さ22)。[filled] で橙の塗り。
+Widget miniButton(String label, VoidCallback? onPressed, {bool filled = false}) {
+  const pad = EdgeInsets.symmetric(horizontal: 8);
+  const size = Size(0, 22);
+  const text = TextStyle(fontFamily: 'NotoSansJP', fontSize: 11, fontWeight: FontWeight.bold);
+  final shape = RoundedRectangleBorder(borderRadius: BorderRadius.circular(6));
+  return filled
+      ? FilledButton(
+          style: FilledButton.styleFrom(minimumSize: size, padding: pad, textStyle: text, shape: shape, tapTargetSize: MaterialTapTargetSize.shrinkWrap),
+          onPressed: onPressed,
+          child: Text(label),
+        )
+      : OutlinedButton(
+          style: OutlinedButton.styleFrom(minimumSize: size, padding: pad, textStyle: text, shape: shape, tapTargetSize: MaterialTapTargetSize.shrinkWrap),
+          onPressed: onPressed,
+          child: Text(label),
+        );
+}
+
 /// 表の中の数字(色つき)。
-Widget numCell(String s, {Color? color, bool bold = false}) =>
-    Text(s, maxLines: 1, style: TextStyle(color: color, fontWeight: bold ? FontWeight.bold : null));
+Widget numCell(String s, {Color? color, bool bold = false}) => Text(
+  s,
+  maxLines: 1,
+  style: TextStyle(color: color, fontWeight: bold ? FontWeight.bold : null),
+);
