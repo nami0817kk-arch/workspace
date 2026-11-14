@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'league.dart';
+import 'personality.dart';
 import 'player.dart';
 import 'policy.dart';
 import 'rng.dart';
@@ -50,6 +51,8 @@ class SimTeam {
     tier = [
       for (final p in order) [for (final a in Attr.values) badgeTierOf(p, a)],
     ];
+    clutch = [for (final p in order) hasTrait(p, Trait.clutch)];
+    form = List.filled(n, 0.0);
     final usageExp = const [2.1, 1.7, 1.35][share];
     wUse = [for (var i = 0; i < n; i++) _pow((out[i] + ins[i]) / 2 - 40, usageExp)];
     // ボールを持つ人ほどミスに関わり、ミスの少なさが高いほど減る
@@ -73,6 +76,20 @@ class SimTeam {
   /// バッジの段階([Attr] の順。-1 は無し、0 銅〜3 殿堂)。
   late final List<List<int>> tier;
   late final List<double> wOreb;
+
+  /// 大舞台に強い選手か。
+  late final List<bool> clutch;
+
+  /// その試合の調子(シュートの入る見込みの±。性格で幅が変わる)。
+  late List<double> form;
+
+  /// いまが接戦の終盤か(4Q残り5分・8点差以内、と延長)。
+  bool crunch = false;
+
+  /// 試合ごとの調子を決める(試合の乱数で)。
+  void rollForm(Rng r) {
+    form = [for (final p in order) (r.nextInt(2001) - 1000) / 1000 * formRange(p)];
+  }
 
   final Team team;
   final double str;
@@ -212,6 +229,8 @@ String _clock(int period, int left) {
 /// [home] と [away] の1試合を進める。チームの勝敗・個人成績・けがはここでは触らない(呼ぶ側で行う)。
 SimResult simulateGame(Team home, Team away, Rng r, {required double homeStr, required double awayStr, bool record = false}) {
   final h = SimTeam(home, homeStr + 1.0), a = SimTeam(away, awayStr);
+  h.rollForm(r);
+  a.rollForm(r);
   final res = SimResult(h, a);
   // 1分ごとのコートの5人を、残りの出場時間の割合が大きい順に決める(先発が始めに出て、控えと入れ替わり、最後は残りの多い人)
   List<List<int>> plan(SimTeam t) {
@@ -291,6 +310,7 @@ SimResult simulateGame(Team home, Team away, Rng r, {required double homeStr, re
         }
       }
       final before = o.pts;
+      o.crunch = period >= 4 || (period == 3 && clock <= 300 && (hScore - aScore).abs() <= 8);
       _possession(o, d, r, record ? (text) => addPlay(period, clock, text) : null);
       final got = o.pts - before;
       if (got > 0) {
@@ -390,7 +410,9 @@ void _possession(SimTeam o, SimTeam d, Rng r, void Function(String)? play) {
     // 疲れ: その試合で30分を超えて出ると、スタミナが低いほど入りにくい
     final played = o.secs[shooter] / 60 - 30;
     final tired = played <= 0 ? 0.0 : played * 0.002 * (1.6 - o.sStam[shooter] / 100);
-    var make = (three ? 0.35 + skill / 300 + edge * 0.85 + paint : 0.52 + skill / 300 + edge + paint) + badge - guard - tired;
+    // その日の調子と、大舞台に強い選手の接戦の終盤
+    final mood = o.form[shooter] + (o.crunch && o.clutch[shooter] ? clutchBonus : 0);
+    var make = (three ? 0.35 + skill / 300 + edge * 0.85 + paint : 0.52 + skill / 300 + edge + paint) + badge - guard - tired + mood;
     make = make.clamp(three ? 0.18 : 0.3, three ? 0.52 : 0.72);
     // ファウルをもらう(中で多い。前から当たる守りは増える)
     // ファウルのもらいやすさと、身体能力のバッジ

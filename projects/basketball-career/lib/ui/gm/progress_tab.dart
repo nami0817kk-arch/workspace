@@ -874,13 +874,30 @@ class ProgressTab extends StatelessWidget {
     return _card([
       _head('オフの成長', icon: Icons.trending_up_rounded),
       const SizedBox(height: 6),
+      const Text('伸びは年齢で大きく決まり、育成コーチ・練習・出場時間・性格で上下します', style: TextStyle(fontSize: 11, color: GmColors.sub)),
+      const SizedBox(height: 4),
       for (final g in list)
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 2),
           child: Row(children: [
             Expanded(
-              child: Text('${g.name}(${g.age}歳)${g.focus == null ? '' : '・重点 ${g.focus!.label}'}',
-                  maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 13)),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text('${g.name}(${g.age}歳)${g.focus == null ? '' : '・重点 ${g.focus!.label}'}',
+                    maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 13)),
+                if (g.parts.isNotEmpty)
+                  Text.rich(
+                    TextSpan(children: [
+                      for (final (i, (l, v)) in g.parts.indexed)
+                        TextSpan(
+                          text: '${i == 0 ? '' : '・'}$l${v > 0 ? '+' : ''}$v',
+                          style: TextStyle(color: i == 0 ? GmColors.sub : v > 0 ? GmColors.good : GmColors.bad),
+                        ),
+                    ]),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontSize: 11),
+                  ),
+              ]),
             ),
             Text('${shown(g.before)} → ${shown(g.after)}', style: const TextStyle(fontSize: 13, color: GmColors.sub)),
             SizedBox(

@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'game_sim.dart';
+import 'personality.dart';
 import 'player.dart';
 import 'policy.dart';
 import 'rng.dart';
@@ -642,7 +643,7 @@ const minutesByOrder = [34, 33, 32, 30, 28, 22, 18, 14, 10, 8, 6, 3, 2, 0, 0];
     final p = order[i];
     if (p.injured > 0) {
       p.injured--;
-    } else if (count && mins[i] > 0 && rng.nextInt(100000) < (chance * mins[i] / 30 * (1 + math.max(0, mins[i] - fatigueLine) * 0.1) * 100000).round()) {
+    } else if (count && mins[i] > 0 && rng.nextInt(100000) < (chance * injuryProne(p) * mins[i] / 30 * (1 + math.max(0, mins[i] - fatigueLine) * 0.1) * 100000).round()) {
       final r = rng.nextInt(100);
       final games = r < 80 ? 1 + rng.nextInt(6) : r < 97 ? 8 + rng.nextInt(15) : 30 + rng.nextInt(30);
       p.injured = math.max(1, (games * speed).round());
