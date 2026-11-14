@@ -779,7 +779,8 @@ void main() {
       final low = c.winChanceOf(p);
       c.bid(p.id, 2, 1.1);
       final high = c.winChanceOf(p);
-      expect(high, greaterThan(low));
+      // 見込みは95%で頭打ち(お金を重く見る選手は、少し上げるだけで届く)
+      expect(high, low >= 0.95 ? 0.95 : greaterThan(low));
       expect(c.rivalBids(p.id), 1);
       // 申し込みを重ねていくと、上限の空きが無くなる
       var n = 0;
