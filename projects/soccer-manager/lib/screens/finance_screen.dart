@@ -13,6 +13,7 @@ import '../widgets/budget_plan_card.dart';
 import '../widgets/ledger_card.dart';
 import '../widgets/economy_card.dart';
 import '../widgets/club_policy_card.dart';
+import '../widgets/club_ranking_card.dart';
 import '../widgets/club_value_card.dart';
 import '../widgets/equity_card.dart';
 import '../widgets/media_deals_card.dart';
@@ -142,6 +143,7 @@ class FinanceScreen extends StatelessWidget {
             const EconomyCard(),
             const ClubPolicyCard(),
             const ClubValueCard(),
+            const ClubRankingCard(),
             const EquityCard(),
             const MediaDealsCard(),
             const RiskCard(),

@@ -736,6 +736,41 @@ extension GameStateFinance on GameState {
     }
   }
 
+  /// 世界クラブ価値番付。自クラブは実際の価値、他クラブは見積もり。
+  List<RankedClub> get worldClubRanking {
+    final save = _save;
+    if (save == null) return const [];
+    final clubs = <RankedClub>[
+      RankedClub(
+        name: save.clubName,
+        value: clubValue.total,
+        tier: save.currentDivisionTier,
+        isUser: true,
+      ),
+    ];
+    void addLeague(League league, int tier) {
+      for (final t in league.teams) {
+        if (t.id == save.userTeamId) continue;
+        clubs.add(RankedClub(
+          name: t.name,
+          value: ClubRankingEngine.estimate(
+            playersValue: t.players.fold<int>(0, (s, p) => s + p.marketValue),
+            tier: tier,
+          ),
+          tier: tier,
+          isUser: false,
+        ));
+      }
+    }
+
+    addLeague(save.league, save.currentDivisionTier);
+    for (var tier = 1; tier <= save.otherDivisionLeagues.length; tier++) {
+      final l = save.otherDivisionLeagues[tier - 1];
+      if (l != null) addLeague(l, tier);
+    }
+    return ClubRankingEngine.rank(clubs);
+  }
+
   /// オーナーの持分(%)。
   int get ownerShare => _save?.ownerShare ?? 100;
 
