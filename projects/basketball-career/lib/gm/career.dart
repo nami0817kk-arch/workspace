@@ -2847,7 +2847,42 @@ class Career {
     final bp = budgetProblem(me.payroll - gs + ts);
     if (bp != null) return TradeVerdict(false, bp, 0);
     return judgeTrade(teams, picks, mine, o, season,
-        rosterLimit: phase == Phase.season ? maxRoster : offseasonRoster, hardness: _hard(o.partner));
+        rosterLimit: phase == Phase.season ? maxRoster : offseasonRoster, hardness: _hard(o.partner), needs: true);
+  }
+
+  /// トレードで両チームの強さと、82試合での勝ち数の見込みがどう変わるか
+  /// ((自分の前, 自分の後, 相手の前, 相手の後)の強さと、(自分の前, 後)の勝ち数)。選手を入れ替えて数え、元に戻す。
+  ({double myBefore, double myAfter, double theirBefore, double theirAfter, double winsBefore, double winsAfter}) tradeImpact(TradeOffer o) {
+    final them = teams[o.partner];
+    final give = [for (final id in o.give) ...me.roster.where((p) => p.id == id)];
+    final get = [for (final id in o.get) ...them.roster.where((p) => p.id == id)];
+    double wins(Team t, double str) {
+      var w = 0.0;
+      for (final x in teams) {
+        if (x == t) continue;
+        final xs = x.strength;
+        w += (winChance(str, xs) + 1 - winChance(xs, str)) / 2;
+      }
+      return w / (teams.length - 1) * gamesPerSeason;
+    }
+
+    final myBefore = me.strength, theirBefore = them.strength;
+    final winsBefore = wins(me, myBefore);
+    me.roster
+      ..removeWhere(give.contains)
+      ..addAll(get);
+    them.roster
+      ..removeWhere(get.contains)
+      ..addAll(give);
+    final myAfter = me.strength, theirAfter = them.strength;
+    final winsAfter = wins(me, myAfter);
+    me.roster
+      ..removeWhere(get.contains)
+      ..addAll(give);
+    them.roster
+      ..removeWhere(give.contains)
+      ..addAll(get);
+    return (myBefore: myBefore, myAfter: myAfter, theirBefore: theirBefore, theirAfter: theirAfter, winsBefore: winsBefore, winsAfter: winsAfter);
   }
 
   bool propose(TradeOffer o) {
