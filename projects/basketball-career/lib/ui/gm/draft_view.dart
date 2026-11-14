@@ -88,6 +88,7 @@ class _DraftViewState extends State<DraftView> {
     // 選んでいた候補が取られたら、表の先頭へ
     final sel = all.where((p) => p.player.id == _sel).firstOrNull ?? (open.isNotEmpty ? open.first : (all.isNotEmpty ? all.first : null));
     final taken = [for (var k = car.draftLog.length - 1; k >= 0; k--) (k + 1, car.prospects[car.draftLog[k]])];
+    final wide = MediaQuery.sizeOf(context).width >= 940;
     return Padding(
       padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
       child: Column(
@@ -99,10 +100,10 @@ class _DraftViewState extends State<DraftView> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(child: _table(car, open, all.length, ranks, before, sel)),
+                Expanded(child: _table(car, open, all.length, ranks, before, sel, wide)),
                 const SizedBox(width: 8),
                 SizedBox(
-                  width: 270,
+                  width: wide ? 270 : 220,
                   child: ListView(
                     children: [
                       if (sel != null) _ProspectPanel(c: c, p: sel, rank: ranks[sel]!, onPick: _pick),
@@ -230,7 +231,7 @@ class _DraftViewState extends State<DraftView> {
   }
 
   /// 候補の表。行を押すと右の欄に詳しく出る。☆は自分のボード。
-  Widget _table(Career car, List<Prospect> open, int total, Map<Prospect, int> ranks, int? before, Prospect? sel) {
+  Widget _table(Career car, List<Prospect> open, int total, Map<Prospect, int> ranks, int? before, Prospect? sel, bool wide) {
     final canPick = car.canDraftPick && !c.busy;
     GmCol sortCol(String label, _Sort s, {double? width, int flex = 1, TextAlign align = TextAlign.center}) =>
         GmCol(label, width: width, flex: flex, align: align, sorted: _sort == s, onTap: () => setState(() => _sort = s));
@@ -262,10 +263,10 @@ class _DraftViewState extends State<DraftView> {
             const GmCol('選手', flex: 3, align: TextAlign.left),
             const GmCol('位', width: 28),
             const GmCol('歳', width: 24),
-            const GmCol('去年 点-リ-ア', width: 86),
-            sortCol('OVR', _Sort.mid, width: 82),
-            const GmCol('POT', width: 82),
-            GmCol('', width: car.myTurn ? 100 : 62),
+            if (wide) const GmCol('去年 点-リ-ア', width: 86),
+            sortCol('OVR', _Sort.mid, width: wide ? 82 : 66),
+            GmCol('POT', width: wide ? 82 : 66),
+            GmCol('', width: car.myTurn ? 124 : 70, align: TextAlign.right),
           ],
           rows: [
             for (final p in open)
@@ -297,15 +298,18 @@ class _DraftViewState extends State<DraftView> {
                     ),
                     Text(pl.pos.short, style: const TextStyle(fontSize: 11, color: GmColors.sub)),
                     numCell('${pl.age}'),
-                    Text('${st.ppg}-${st.rpg}-${st.apg}', maxLines: 1, style: const TextStyle(fontSize: 11, color: GmColors.sub)),
+                    if (wide) Text('${st.ppg}-${st.rpg}-${st.apg}', maxLines: 1, style: const TextStyle(fontSize: 11, color: GmColors.sub)),
                     _RangeCell(lo: p.ovrLo, hi: p.ovrHi),
                     _RangeCell(lo: p.potLo, hi: p.potHi),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (!p.scouted) miniButton('スカウト', car.scoutsLeft > 0 && !c.busy ? () => c.scoutProspect(p) : null),
-                        if (car.myTurn) ...[const SizedBox(width: 4), miniButton('指名', canPick ? () => _pick(p) : null, filled: true)],
-                      ],
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (!p.scouted) miniButton('スカウト', car.scoutsLeft > 0 && !c.busy ? () => c.scoutProspect(p) : null),
+                          if (car.myTurn) ...[const SizedBox(width: 4), miniButton('指名', canPick ? () => _pick(p) : null, filled: true)],
+                        ],
+                      ),
                     ),
                   ],
                   highlight: p == sel,
