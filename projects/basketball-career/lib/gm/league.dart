@@ -704,12 +704,12 @@ const minutesByOrder = [34, 33, 32, 30, 28, 22, 18, 14, 10, 8, 6, 3, 2, 0, 0];
 }
 
 /// 試合のあとの、けがの残りとけがの抽選(トレーナーが良いほど少なく、治りも早い)。[mins] は実際に出た分。
-void injuriesAfterGame(Team t, List<int> mins, Rng rng, {bool count = true, double injuryScale = 1.0}) {
+void injuriesAfterGame(Team t, List<int> mins, Rng rng, {bool count = true, double injuryScale = 1.0, double healScale = 1.0}) {
   final order = t.order;
   final trainer = t.staffLevel(Staff.trainer);
   // 練習がきついほど、けがが増える
   final chance = const [0.0075, 0.005, 0.003][trainer - 1] * const [0.8, 1.0, 1.35][t.training.clamp(0, 2)] * injuryScale;
-  final speed = const [1.25, 1.0, 0.75][trainer - 1];
+  final speed = const [1.25, 1.0, 0.75][trainer - 1] * healScale;
   for (var i = 0; i < order.length; i++) {
     final p = order[i];
     if (p.injured > 0) {
@@ -728,8 +728,8 @@ void injuriesAfterGame(Team t, List<int> mins, Rng rng, {bool count = true, doub
 
 /// 1試合を進める(`game_sim.dart` で1回の攻めずつ)。どちらのチームにも個人の数字を付ける([count] ならシーズンの成績に足す)。
 /// [mine] のチームの試合なら、ボックススコア・クォーター・点差の流れ・見せ場を結果に残す。
-/// [injuryScale] は、[mine] のチームのけがの起きやすさの倍率(難しさ)。
-GameResult playGame(Team home, Team away, Rng rng, {int? mine, bool count = true, double injuryScale = 1.0}) {
+/// [injuryScale] は、[mine] のチームのけがの起きやすさの倍率(難しさと医療の施設)。[healScale] は治るまでの試合の倍率(医療の施設)。
+GameResult playGame(Team home, Team away, Rng rng, {int? mine, bool count = true, double injuryScale = 1.0, double healScale = 1.0}) {
   final hStr = home.strength, aStr = away.strength;
   final p = winChance(hStr, aStr);
   final isMine = mine == home.index || mine == away.index;
@@ -742,8 +742,8 @@ GameResult playGame(Team home, Team away, Rng rng, {int? mine, bool count = true
     addSeasonStats(h);
     addSeasonStats(a);
   }
-  injuriesAfterGame(home, [for (var i = 0; i < h.order.length; i++) minutesOf(h, i)], rng, count: count, injuryScale: mine == home.index ? injuryScale : 1.0);
-  injuriesAfterGame(away, [for (var i = 0; i < a.order.length; i++) minutesOf(a, i)], rng, count: count, injuryScale: mine == away.index ? injuryScale : 1.0);
+  injuriesAfterGame(home, [for (var i = 0; i < h.order.length; i++) minutesOf(h, i)], rng, count: count, injuryScale: mine == home.index ? injuryScale : 1.0, healScale: mine == home.index ? healScale : 1.0);
+  injuriesAfterGame(away, [for (var i = 0; i < a.order.length; i++) minutesOf(a, i)], rng, count: count, injuryScale: mine == away.index ? injuryScale : 1.0, healScale: mine == away.index ? healScale : 1.0);
   String? topName;
   var topPts = 0;
   if (isMine) {

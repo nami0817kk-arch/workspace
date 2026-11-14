@@ -266,6 +266,10 @@ void main() {
     });
     await _shoot(t, '14_seasonend_bottom', await _with(end),
         act: (t) => t.scrollUntilVisible(find.text('ここで任期を終える'), 300, scrollable: progress));
+    // 経営の札の施設(シーズン前、アリーナを1段上げたところ)
+    final fac = careerAt(5, 10)..upgradeFacility(Facility.arena);
+    await _shoot(t, '14b_facilities', await _with(fac),
+        act: (t) => t.scrollUntilVisible(find.text('施設'), 300, scrollable: find.descendant(of: find.byType(ProgressTab), matching: find.byType(Scrollable)).first));
     // 契約の画面(1巡目の新人の選択権が保留になっている)
     final opt = careerAt(6, 8);
     final rookie = opt.me.roster.reduce((a, b) => a.ovr >= b.ovr ? a : b)
