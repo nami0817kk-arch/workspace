@@ -1956,7 +1956,20 @@ class Career {
     for (final i in conveyedBack) {
       _log('保護: ${teams[picks[i].from].def.short}の1巡目は上位${picks[i].protect}位に入ったので、${teams[picks[i].from].def.short}に戻った');
     }
-    prospects = makeProspects(rng, nextId, order.length + 8, name: _uniqueName);
+    final main = makeProspects(rng, nextId, order.length + 8, name: _uniqueName);
+    // 層を厚くする(2巡目の後半にも選ぶ余地を残す)。リーグの続きをずらさないよう、別の乱数で作る
+    final deepRng = Rng(seed * 104723 + season * 613 + 29);
+    final used = {..._usedNames, for (final p in main) p.player.name};
+    String deepName() {
+      var n = randomName(deepRng);
+      for (var i = 0; i < 200 && used.contains(n); i++) {
+        n = randomName(deepRng);
+      }
+      used.add(n);
+      return n;
+    }
+
+    prospects = [...main, ...makeProspects(deepRng, nextId, deepProspects, name: deepName, deep: true)];
     board = [];
     draftAt = 0;
     draftLog = [];

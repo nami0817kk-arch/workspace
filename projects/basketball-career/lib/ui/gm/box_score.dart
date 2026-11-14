@@ -39,6 +39,10 @@ class _BoxScoreState extends State<_BoxScore> {
             style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: g.winner == mine ? GmColors.good : GmColors.bad)),
         const SizedBox(height: 6),
         _QuarterTable(g: g),
+        if (g.hasChance) ...[
+          const SizedBox(height: 12),
+          _ChanceCard(g: g, mine: mine),
+        ],
         if (best != null && detail) ...[
           const SizedBox(height: 12),
           _bestCard(best.$1, best.$2),
@@ -94,6 +98,66 @@ class _BoxScoreState extends State<_BoxScore> {
           ),
         ]),
       );
+}
+
+/// 試合前の見立て(両チームの強さと勝つ見込み)と、結果がそれどおりだったか。
+class _ChanceCard extends StatelessWidget {
+  const _ChanceCard({required this.g, required this.mine});
+  final GameResult g;
+  final int mine;
+
+  @override
+  Widget build(BuildContext context) {
+    final opp = g.opponentOf(mine);
+    final p = g.chanceOf(mine);
+    final won = g.winner == mine;
+    final (verdict, color) = switch ((won, p)) {
+      (true, < 0.4) => ('番狂わせの勝ち', GmColors.gold),
+      (false, > 0.6) => ('取りこぼし', GmColors.bad),
+      (true, _) => ('見込みどおりの勝ち', GmColors.good),
+      _ => ('見込みどおりの負け', GmColors.sub),
+    };
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(color: GmColors.panelHi, borderRadius: BorderRadius.circular(12)),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        Row(children: [
+          const Text('試合前の見立て', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: GmColors.sub)),
+          const Spacer(),
+          Text(verdict, style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: color)),
+        ]),
+        const SizedBox(height: 6),
+        Row(children: [
+          Expanded(
+            child: Text('強さ ${g.strOf(mine).toStringAsFixed(1)}${g.home == mine ? '(ホーム)' : ''}',
+                maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.bold, color: GmColors.ball)),
+          ),
+          Text('勝つ見込み ${(p * 100).round()}%', style: const TextStyle(fontWeight: FontWeight.bold)),
+          Expanded(
+            child: Text('${g.home == opp ? '(ホーム)' : ''}強さ ${g.strOf(opp).toStringAsFixed(1)}',
+                textAlign: TextAlign.right, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.bold)),
+          ),
+        ]),
+        const SizedBox(height: 6),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(4),
+          child: SizedBox(
+            height: 8,
+            child: Row(children: [
+              Expanded(flex: (p * 1000).round().clamp(1, 999), child: Container(color: GmColors.ball)),
+              Expanded(flex: 1000 - (p * 1000).round().clamp(1, 999), child: Container(color: GmColors.line)),
+            ]),
+          ),
+        ),
+        const SizedBox(height: 6),
+        const Text(
+          '強さは、けが人を除いた先発と控えの力・ポジション・出場時間・方針・相性・ヘッドコーチから毎試合数える。'
+          'その差(ホームは+1)で勝つ見込みが決まり、勝敗・点・選手ごとの数字はそこから計算している。',
+          style: TextStyle(fontSize: 11, color: GmColors.sub, height: 1.4),
+        ),
+      ]),
+    );
+  }
 }
 
 String _pct(int m, int a) => a == 0 ? '-' : '${(m * 100 / a).toStringAsFixed(1)}%';

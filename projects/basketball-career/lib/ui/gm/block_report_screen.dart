@@ -80,6 +80,14 @@ class BlockReportScreen extends StatelessWidget {
                 r.pace >= r.target ? GmColors.good : GmColors.bad,
                 'オーナーの目標 ${r.target}勝 → いまの勢いだと ${r.pace}勝${r.pace >= r.target ? '(届きそう)' : '(このままだと届かない)'}',
               ),
+              if (r.hasChances)
+                _line(
+                  Icons.calculate_rounded,
+                  GmColors.sub,
+                  '試合前の見込みどおりなら ${r.expectedWinsOf(car.mine).toStringAsFixed(1)}勝 → 実際は ${r.wins}勝'
+                  '${r.upsetWinsOf(car.mine) > 0 ? '・番狂わせの勝ち${r.upsetWinsOf(car.mine)}' : ''}'
+                  '${r.letdownsOf(car.mine) > 0 ? '・取りこぼし${r.letdownsOf(car.mine)}' : ''}',
+                ),
               if (r.star != null)
                 _line(Icons.star_rounded, GmColors.gold, 'この間のエース: ${r.star!.$1}(${r.star!.$3}試合で平均${r.star!.$2.toStringAsFixed(1)}点)'),
               if (r.deadlinePassed) _line(Icons.lock_clock_rounded, GmColors.bad, 'トレードの締め切りを過ぎた。今季はもうトレードできない'),

@@ -489,7 +489,27 @@ class GameResult {
     this.quarters = const [],
     this.box = const [],
     this.oppBox = const [],
+    this.chance = -1,
+    this.homeStr = 0,
+    this.awayStr = 0,
   });
+
+  /// 試合前の、ホームが勝つ見込み(0〜1)。自分のチームの試合だけ。前の版の保存は -1。
+  final double chance;
+
+  /// 試合前の両チームの強さ(けが人を除いた先発と控え・出場時間・方針・相性・コーチから)。自分のチームの試合だけ。
+  final double homeStr;
+  final double awayStr;
+
+  bool get hasChance => chance >= 0;
+
+  /// [t] のチームが勝つ見込み(試合前)。
+  double chanceOf(int t) => t == home ? chance : 1 - chance;
+
+  double strOf(int t) => t == home ? homeStr : awayStr;
+
+  /// 番狂わせ(勝つ見込みが4割未満のほうが勝った)。
+  bool get upset => hasChance && chanceOf(winner) < 0.4;
 
   /// 相手のチームのボックススコア(自分のチームの試合だけ)。
   final List<BoxLine> oppBox;
@@ -525,6 +545,9 @@ class GameResult {
         if (quarters.isNotEmpty) 'q': quarters,
         if (box.isNotEmpty) 'bx': [for (final b in box) b.toJson()],
         if (oppBox.isNotEmpty) 'ob': [for (final b in oppBox) b.toJson()],
+        if (hasChance) 'wc': (chance * 1000).round(),
+        if (hasChance) 'hs': (homeStr * 10).round(),
+        if (hasChance) 'as': (awayStr * 10).round(),
       };
 
   static GameResult fromJson(Map<String, dynamic> j) => GameResult(
@@ -537,6 +560,9 @@ class GameResult {
         quarters: [for (final x in (j['q'] as List? ?? const [])) x as int],
         box: [for (final x in (j['bx'] as List? ?? const [])) BoxLine.fromJson(x as List)],
         oppBox: [for (final x in (j['ob'] as List? ?? const [])) BoxLine.fromJson(x as List)],
+        chance: j['wc'] is int ? (j['wc'] as int) / 1000 : -1,
+        homeStr: ((j['hs'] as int?) ?? 0) / 10,
+        awayStr: ((j['as'] as int?) ?? 0) / 10,
       );
 }
 
@@ -653,7 +679,8 @@ const minutesByOrder = [34, 33, 32, 30, 28, 22, 18, 14, 10, 8, 6, 3, 2, 0, 0];
 /// [mine] のチームの試合なら、いちばん点を取った選手を結果に残す。
 /// [injuryScale] は、[mine] のチームのけがの起きやすさの倍率(難しさ)。
 GameResult playGame(Team home, Team away, Rng rng, {int? mine, bool count = true, double injuryScale = 1.0}) {
-  final p = winChance(home.strength, away.strength);
+  final hStr = home.strength, aStr = away.strength;
+  final p = winChance(hStr, aStr);
   final homeWins = rng.nextInt(10000) < (p * 10000).round();
   final base = 92 + rng.nextInt(28);
   final margin = 1 + rng.nextInt(rng.chance(0.3) ? 24 : 12);
@@ -684,6 +711,9 @@ GameResult playGame(Team home, Team away, Rng rng, {int? mine, bool count = true
     quarters: isMine ? [...splitQuarters(hp, rng), ...splitQuarters(ap, rng)] : const [],
     box: myBox,
     oppBox: oppBox,
+    chance: isMine ? p : -1,
+    homeStr: isMine ? hStr : 0,
+    awayStr: isMine ? aStr : 0,
   );
   if (homeWins) {
     home.wins++;
