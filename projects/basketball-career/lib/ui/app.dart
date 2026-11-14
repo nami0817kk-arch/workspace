@@ -5,7 +5,6 @@ import 'gm/home_screen.dart';
 import 'gm/hub_screen.dart';
 import 'gm/style.dart';
 import 'gm_controller.dart';
-import 'layout.dart';
 import 'remove_ads_offer.dart';
 
 class BasketballCareerApp extends StatefulWidget {
@@ -121,19 +120,24 @@ class AchievementDialog extends StatelessWidget {
       );
 }
 
-/// 幅の広い端末(iPad)では、[designWidth] の幅で作った画面を、拡大して全面に出す。押す位置も一緒に変わる。
-/// 作る基準は横向きのスマホ(844x390)。
+/// 画面全体を、[designWidth] / [uiScale] の幅で作って縮めて(iPad では拡大して)出す。押す位置も一緒に変わる。
+/// 作る基準は横向きのスマホ(844x390)。2026-11-14 ユーザー「もう少し文字小さくても良いので、質を上げる」で、
+/// 全体を 0.85 倍で描くようにした(844幅のスマホでは、約990幅の画面として組む。字も余白も一度に小さくなる)。
 class TabletScale extends StatelessWidget {
   const TabletScale({super.key, required this.child});
   final Widget child;
 
   static const designWidth = 844.0;
 
+  /// スマホ(844幅)での描く倍率。
+  static const uiScale = 0.85;
+
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context);
-    if (mq.size.width < tabletWidth) return child;
-    final scale = (mq.size.width / designWidth).clamp(1.0, 1.8);
+    // 小さいスマホ(667幅)でも 0.8 倍より小さくはしない(字が読めなくなる)
+    final scale = (mq.size.width / (designWidth / uiScale)).clamp(0.8, 1.8);
+    if ((scale - 1).abs() < 0.001) return child;
     final size = mq.size / scale;
     return FittedBox(
       fit: BoxFit.fill,

@@ -6,6 +6,7 @@ import '../../gm/league.dart';
 import '../../gm/player.dart';
 import '../gm_controller.dart';
 import 'common.dart';
+import 'gm_table.dart';
 import 'history_screen.dart';
 import 'player_card.dart';
 import 'style.dart';
@@ -24,24 +25,21 @@ class LeagueTab extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.fromLTRB(14, 8, 14, 24),
       children: [
-        for (final east in confs) ...[
-          SectionTitle('${east ? '東' : '西'}地区 ${started ? '順位' : '戦力の順(シーズン前)'}'),
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-              child: Builder(
-                builder: (context) {
-                  final list = started
-                      ? standings(car.teams, east: east)
-                      : ([...car.teams.where((t) => t.east == east)]..sort((a, b) => b.strength.compareTo(a.strength)));
-                  return Column(
-                    children: [for (var i = 0; i < list.length; i++) _teamRow(context, car, list[i], i + 1, started, leader: started ? list.first : null)],
-                  );
-                },
-              ),
-            ),
-          ),
-        ],
+        // 東西の順位を横に並べた表(2026-11-14、詰めた表に)
+        LayoutBuilder(builder: (context, cons) {
+          final tables = [for (final east in confs) _standingsTable(context, car, east, started)];
+          if (cons.maxWidth < 640) return Column(children: [for (final t in tables) Padding(padding: const EdgeInsets.only(bottom: 8), child: t)]);
+          return Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Expanded(child: tables[0]),
+            const SizedBox(width: 8),
+            Expanded(child: tables[1]),
+          ]);
+        }),
+        const SizedBox(height: 4),
+        Text(
+          started ? '1〜6位はプレーオフ(金)、7〜10位はプレーイン(橙)。チームを押すと選手が見られる。' : 'シーズン前は戦力の順。チームを押すと選手が見られる。',
+          style: const TextStyle(fontSize: 11, color: GmColors.sub),
+        ),
         if (car.phase == Phase.season && car.mvpRace().isNotEmpty) ...[
           const SectionTitle('MVP争い'),
           Card(
@@ -403,68 +401,70 @@ class LeagueTab extends StatelessWidget {
     );
   }
 
-  Widget _teamRow(BuildContext context, Career car, Team t, int n, bool started, {Team? leader}) {
-    final mine = t.index == car.mine;
-    final gb = leader == null ? 0.0 : gamesBehind(leader, t);
-    return InkWell(
-      onTap: () => _showTeam(context, car, t),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 5),
-        child: Row(
-          children: [
-            SizedBox(
-              width: 24,
-              child: Text(
-                '$n',
-                style: TextStyle(
-                  color: n <= directSeeds
-                      ? GmColors.gold
-                      : n <= playInSeeds
-                      ? GmColors.ball
-                      : GmColors.sub,
-                  fontWeight: FontWeight.bold,
+  /// 地区の順位の表。
+  Widget _standingsTable(BuildContext context, Career car, bool east, bool started) {
+    final list = started ? standings(car.teams, east: east) : ([...car.teams.where((t) => t.east == east)]..sort((a, b) => b.strength.compareTo(a.strength)));
+    final leader = list.first;
+    final byStr = [...car.teams]..sort((a, b) => b.strength.compareTo(a.strength));
+    return GmTable(
+      title: '${east ? '東' : '西'}地区 ${started ? '順位' : '戦力の順(シーズン前)'}',
+      cols: const [
+        GmCol('#', width: 28),
+        GmCol('チーム', flex: 5, align: TextAlign.left),
+        GmCol('勝', width: 28),
+        GmCol('敗', width: 28),
+        GmCol('勝率', width: 40),
+        GmCol('差', width: 32),
+        GmCol('連', width: 34),
+        GmCol('戦力', width: 34),
+      ],
+      rows: [
+        for (final (i, t) in list.indexed)
+          GmRow(
+            [
+              numCell('${i + 1}',
+                  bold: true,
+                  color: !started
+                      ? GmColors.sub
+                      : i < directSeeds
+                          ? GmColors.gold
+                          : i < playInSeeds
+                              ? GmColors.ball
+                              : GmColors.sub),
+              Row(children: [
+                TeamBadge(team: t.index, size: 18),
+                const SizedBox(width: 5),
+                Flexible(
+                  child: Text(t.def.short,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(fontWeight: FontWeight.bold, color: t.index == car.mine ? GmColors.ball : null)),
                 ),
-              ),
-            ),
-            TeamBadge(team: t.index, size: 24),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    t.name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontWeight: FontWeight.bold, color: mine ? GmColors.ball : null),
-                  ),
-                  if (!mine) Text(t.mode.label, style: const TextStyle(fontSize: 11, color: GmColors.sub)),
+                if (t.index != car.mine) ...[
+                  const SizedBox(width: 4),
+                  Flexible(child: Text(t.mode.label, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 9.5, color: GmColors.sub))),
                 ],
-              ),
-            ),
-            if (started)
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(record(t), style: const TextStyle(fontWeight: FontWeight.bold)),
-                  Text(
-                    '${gb == 0 ? '-' : '${gb.toStringAsFixed(gb == gb.roundToDouble() ? 0 : 1)}差'}・${streakLabel(t.streak)}',
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: t.streak >= 3
-                          ? GmColors.good
-                          : t.streak <= -3
+              ]),
+              numCell('${t.wins}'),
+              numCell('${t.losses}'),
+              numCell(t.wins + t.losses == 0 ? '-' : t.winPct.toStringAsFixed(3).replaceFirst('0.', '.')),
+              numCell(() {
+                final gb = gamesBehind(leader, t);
+                return !started || gb == 0 ? '-' : gb.toStringAsFixed(gb == gb.roundToDouble() ? 0 : 1);
+              }()),
+              numCell(t.streak == 0 ? '-' : t.streak > 0 ? '${t.streak}勝' : '${-t.streak}敗',
+                  color: t.streak >= 3
+                      ? GmColors.good
+                      : t.streak <= -3
                           ? GmColors.bad
-                          : GmColors.sub,
-                    ),
-                  ),
-                ],
-              )
-            else
-              Text('戦力 ${t.strength.toStringAsFixed(1)}', style: const TextStyle(fontWeight: FontWeight.bold)),
-          ],
-        ),
-      ),
+                          : GmColors.sub),
+              numCell('${byStr.indexOf(t) + 1}', color: GmColors.sub),
+            ],
+            highlight: t.index == car.mine,
+            divider: started && (i == directSeeds || i == playInSeeds),
+            onTap: () => _showTeam(context, car, t),
+          ),
+      ],
     );
   }
 

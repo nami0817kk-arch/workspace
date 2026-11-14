@@ -56,23 +56,23 @@ class _MarketTabState extends State<MarketTab> {
       _ => '今は契約できない(シーズン前・シーズン中・オフの契約で取れる)。',
     };
     return ListView(
-      padding: const EdgeInsets.fromLTRB(14, 8, 14, 24),
+      padding: const EdgeInsets.fromLTRB(10, 8, 10, 20),
       children: [
         Card(
           child: Padding(
-            padding: const EdgeInsets.all(14),
+            padding: const EdgeInsets.fromLTRB(12, 10, 12, 8),
             child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-              const Text('自由契約の選手', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const Text('自由契約の選手', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 2),
+              Text(note, style: const TextStyle(fontSize: 11.5, color: GmColors.sub, height: 1.4)),
               const SizedBox(height: 6),
-              Text(note, style: const TextStyle(color: GmColors.sub, height: 1.5)),
-              const SizedBox(height: 10),
-              PayrollBar(payroll: car.me.payroll),
+              PayrollBar(payroll: car.me.payroll, compact: true),
               const SizedBox(height: 4),
               Row(children: [
                 Expanded(
                   child: Text.rich(TextSpan(children: [
-                    const TextSpan(text: 'いま出せる年俸: ', style: TextStyle(color: GmColors.sub)),
-                    TextSpan(text: '最大 ${money(maxOffer)}', style: const TextStyle(fontWeight: FontWeight.bold, color: GmColors.gold, fontSize: 15)),
+                    const TextSpan(text: 'いま出せる年俸: ', style: TextStyle(fontSize: 12, color: GmColors.sub)),
+                    TextSpan(text: '最大 ${money(maxOffer)}', style: const TextStyle(fontWeight: FontWeight.bold, color: GmColors.gold, fontSize: 13)),
                     TextSpan(text: '($maxFrom)', style: const TextStyle(color: GmColors.sub, fontSize: 12)),
                   ])),
                 ),
@@ -165,10 +165,12 @@ class _MarketTabState extends State<MarketTab> {
         ),
         const SizedBox(height: 6),
         if (fa.isEmpty) const Text('いない', style: TextStyle(color: GmColors.sub)),
-        for (final p in fa) ...[
-          _row(context, car, p),
-          const SizedBox(height: 6),
-        ],
+        // 広い画面では2列に並べる(2026-11-14、詰めた画面に)
+        LayoutBuilder(builder: (context, cons) {
+          final cols = cons.maxWidth >= 700 ? 2 : 1;
+          final w = (cons.maxWidth - 6 * (cols - 1)) / cols;
+          return Wrap(spacing: 6, runSpacing: 6, children: [for (final p in fa) SizedBox(width: w, child: _row(context, car, p))]);
+        }),
       ],
     );
   }
@@ -182,9 +184,9 @@ class _MarketTabState extends State<MarketTab> {
       team: car.mine,
       salaryText: '求める年俸 ${money(ask.salary)}',
       trailing: SizedBox(
-        height: 36,
+        height: 32,
         child: FilledButton(
-          style: FilledButton.styleFrom(minimumSize: const Size(64, 36), padding: const EdgeInsets.symmetric(horizontal: 10)),
+          style: FilledButton.styleFrom(minimumSize: const Size(56, 32), padding: const EdgeInsets.symmetric(horizontal: 8)),
           onPressed: problem != null || c.busy
               ? null
               : () => negotiate(context, c, p, freeAgent: true),
@@ -205,9 +207,9 @@ class _MarketTabState extends State<MarketTab> {
     final problem = car.tenDayProblem(p);
     if (problem != null && !problem.contains('2回まで')) return const SizedBox.shrink();
     return TextButton(
-      style: TextButton.styleFrom(minimumSize: const Size(0, 32), padding: EdgeInsets.zero, visualDensity: VisualDensity.compact),
+      style: TextButton.styleFrom(minimumSize: const Size(0, 26), padding: EdgeInsets.zero, visualDensity: VisualDensity.compact),
       onPressed: problem != null || c.busy ? null : () => c.signTenDay(p.id),
-      child: Text(problem ?? '10日契約で取る($tenDayRounds試合・${money(tenDaySalary)})', style: const TextStyle(fontSize: 12)),
+      child: Text(problem ?? '10日契約で取る($tenDayRounds試合・${money(tenDaySalary)})', style: const TextStyle(fontSize: 11)),
     );
   }
 
@@ -216,7 +218,7 @@ class _MarketTabState extends State<MarketTab> {
     if (p.exp > twoWayMaxExp || !car.canSign) return const SizedBox.shrink();
     final problem = car.twoWayProblem(p);
     return TextButton(
-      style: TextButton.styleFrom(minimumSize: const Size(0, 32), padding: EdgeInsets.zero, visualDensity: VisualDensity.compact),
+      style: TextButton.styleFrom(minimumSize: const Size(0, 26), padding: EdgeInsets.zero, visualDensity: VisualDensity.compact),
       onPressed: problem != null || c.busy ? null : () => c.signTwoWay(p.id),
       child: Text(problem ?? '2ウェイで取る(${money(twoWaySalary)}・登録に数えない)', style: const TextStyle(fontSize: 12)),
     );
@@ -232,9 +234,9 @@ class _MarketTabState extends State<MarketTab> {
       team: car.mine,
       salaryText: '求める年俸 ${money(ask.salary)}(最長${ask.maxYears}年)',
       trailing: SizedBox(
-        height: 36,
+        height: 32,
         child: FilledButton(
-          style: FilledButton.styleFrom(minimumSize: const Size(64, 36), padding: const EdgeInsets.symmetric(horizontal: 10)),
+          style: FilledButton.styleFrom(minimumSize: const Size(56, 32), padding: const EdgeInsets.symmetric(horizontal: 8)),
           onPressed: (problem != null && mine == null) || c.busy ? null : () => negotiateBid(context, c, p),
           child: Text(mine == null ? '申し込む' : '変える'),
         ),
@@ -247,7 +249,7 @@ class _MarketTabState extends State<MarketTab> {
           Text('申し込み中 ${mine.years}年 ${money(mine.salary)}・選ばれる見込み ${(car.winChanceOf(p) * 100).round()}%',
               style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: GmColors.good)),
           TextButton(
-            style: TextButton.styleFrom(minimumSize: const Size(0, 32), padding: EdgeInsets.zero, visualDensity: VisualDensity.compact),
+            style: TextButton.styleFrom(minimumSize: const Size(0, 26), padding: EdgeInsets.zero, visualDensity: VisualDensity.compact),
             onPressed: c.busy ? null : () => c.withdrawBid(p.id),
             child: const Text('申し込みを取り下げる', style: TextStyle(fontSize: 12)),
           ),
