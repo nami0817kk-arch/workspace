@@ -67,8 +67,9 @@
     half = Math.max(4, Math.round(half));
     // 見え方は真ん中から少しずれる（見る目が低いほど）
     const off = Math.round((YA.rngOf((w ? w.seed | 0 : 0) + YA.hash(p.id) * 5)() - 0.5) * half * (1.1 - eye * 0.04));
-    const lo = Math.max(YA.rating(p), mid - half + off);
-    const hi = Math.max(lo + 2, mid + half + off);
+    // 総合力は200が上限（200＝歴史上No.1）。見立ての幅を足しても200を超えて見せない
+    const hi = Math.min(200, Math.max(YA.rating(p) + 2, mid + half + off));
+    const lo = Math.min(hi - 2, Math.max(YA.rating(p), mid - half + off));
     const nm = (v) => YA.levelOf(v).replace(/（.*）/, '');
     return { lo, hi, text: `将来 ${lo}〜${hi}（${nm(lo) === nm(hi) ? nm(lo) : nm(lo) + '〜' + nm(hi)}）` };
   };
