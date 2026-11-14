@@ -259,6 +259,7 @@ class _FmTopBar extends StatelessWidget {
             FilledButton.icon(
               style: FilledButton.styleFrom(
                 minimumSize: const Size(0, 32),
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 padding: const EdgeInsets.symmetric(horizontal: 12),
               ),
               onPressed: gameState.isBusy

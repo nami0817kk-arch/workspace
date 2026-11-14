@@ -169,12 +169,61 @@ class _TransferScreenState extends State<TransferScreen>
     List<Player> players,
   ) {
     final windowOpen = gameState.isTransferWindowOpen;
+    final screen = MediaQuery.sizeOf(context);
+    final wide = screen.width > screen.height;
     return Column(
       children: [
         _TransferWindowBanner(
           open: windowOpen,
           label: gameState.transferWindowStatusLabel,
         ),
+        if (wide) ...[
+          // 横画面は高さが足りない。資金・枠・検索を1行にまとめ、表を広く見せる。
+          Padding(
+            padding: const EdgeInsets.fromLTRB(12, 6, 12, 0),
+            child: Row(
+              children: [
+                Text(Tr.pick('資金 ${save.budget}万円', 'Funds ${save.budget}'),
+                    style: Theme.of(context).textTheme.titleSmall),
+                const SizedBox(width: 12),
+                Text(
+                  Tr.pick(
+                      'スカッド ${gameState.userTeam.players.length}/$maxSquadSize',
+                      'Squad ${gameState.userTeam.players.length}/$maxSquadSize'),
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                if (squadFull) ...[
+                  const SizedBox(width: 8),
+                  Text(
+                    Tr.pick('枠が上限です', 'Squad full'),
+                    style: const TextStyle(color: Colors.orange, fontSize: 12),
+                  ),
+                ],
+                const SizedBox(width: 12),
+                Flexible(
+                  flex: 3,
+                  child: PositionFilterBar(
+                    value: _filter,
+                    onChanged: (v) => setState(() => _filter = v),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Flexible(
+                  flex: 2,
+                  child: TextField(
+                    controller: _searchController,
+                    onChanged: (v) => setState(() => _query = v),
+                    decoration: InputDecoration(
+                      hintText: Tr.pick('選手名で検索', 'Search by name'),
+                      prefixIcon: const Icon(Icons.search, size: 18),
+                      isDense: true,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ] else ...[
         Padding(
           padding: const EdgeInsets.all(16),
           child: Row(
@@ -237,6 +286,7 @@ class _TransferScreenState extends State<TransferScreen>
             ),
           ),
         ),
+        ],
         Expanded(
           child: players.isEmpty
               ? Center(child: Text(Tr.pick('該当する選手はいません', 'No players match')))
