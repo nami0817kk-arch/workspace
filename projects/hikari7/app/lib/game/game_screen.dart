@@ -106,7 +106,11 @@ class _GameScreenState extends State<GameScreen> {
 
   Future<void> _load() async {
     final html = await rootBundle.loadString('assets/web/index.html');
+    if (!mounted) return;
+    // 端末の文字の大きさ（iOS の「さらに大きな文字」）。ゲームの文字の大きさをまだ自分で選んでいない人の初期値になる
+    final textScale = MediaQuery.textScalerOf(context).scale(16) / 16;
     final boot = <String, Object?>{
+      'textScale': textScale,
       'store': widget.store.snapshot(),
       'adFree': widget.money.adFree,
       // 追加パックは起動の時点で入れる（ストアの返事を待つ間に始めた遊びで、買ったパックが抜けないように）
