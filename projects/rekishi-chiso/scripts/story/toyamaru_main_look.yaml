@@ -1,0 +1,164 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：洞爺丸の最期（scripts/toyamaru-story.yaml）。chiso/storymain.py が読む。
+# 11-14 作成（11/18 19:00 公開予定）。yoshimitsu_main_look.yaml を写した。台本には手を入れない（承認のあと）。決まりは docs/story-main.md・スキル rekishi-story-screen。
+# 絵の方針：AI 絵（S01〜S14・SEND）は Gemini（Chrome、無料版）で新しく作る。人物は後ろ姿・遠景（顔は出さない）。遺体や惨状は描かない。船は白い上部＋黒い船体下部の連絡船、遠景か後ろから。
+script: scripts/toyamaru-story.yaml
+out: toyamaru_story_main
+art_dir: out/story/toyamaru/main
+main_art_dir: out/story/toyamaru/main
+ai_disclosure: この動画の情景・人物の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の人物の姿ではありません（画面の右上に「AI生成画像」と出しています）。
+
+chapters:
+  0: {label: 序章 出航できなかった船, now: 1954年9月26日, dates: {}}
+  1: {label: 第1章 停電と暴風雨警報, now: 1954年9月26日, dates: {9: 1954年9月26日11時, 11: 1954年9月26日15時, 15: 1954年9月26日16時}}
+  2: {label: 第2章 風が弱まった17時, now: 1954年9月26日17時, dates: {20: 1954年9月26日17時40分, 29: 1954年9月26日18時39分}}
+  3: {label: 第3章 出港から22分で錨を入れた, now: 1954年9月26日18時39分, dates: {32: 1954年9月26日18時55分, 34: 1954年9月26日19時1分, 35: 1954年9月26日19時30分, 36: 1954年9月26日20時40分, 38: 1954年9月26日21時}}
+  4: {label: 第4章 21時25分、無線が伝えたこと, now: 1954年9月26日21時25分, dates: {43: 1954年9月26日21時50分, 44: 1954年9月26日22時26分, 45: 1954年9月26日22時39分, 46: 1954年9月26日22時45分, 47: 1954年9月27日0時30分}}
+  5: {label: 第5章 風はなぜ弱まったのか, now: null, dates: {}}
+  6: {label: 第6章 誰の判断だったのか, now: null, dates: {}}
+  7: {label: 第7章 洞爺丸のあと, now: null, dates: {}}
+  8: {label: まとめ 洞爺丸の最期、記録から言えること, now: null, dates: {}}
+no_tag_from: 91
+
+references:
+  - 高等海難審判庁の裁決（日本財団図書館の英訳 Judgements of Four Major Marine Accidents と、海難審判所「日本の重大海難 洞爺丸遭難事件」の裁決の要旨）
+  - 国会会議録（衆議院・参議院の運輸委員会ほか、昭和29年9月〜11月。国会会議録検索システム）
+  - 運輸安全委員会 海難分析集No.6「台風と海難」／海難審判所ニュースレターNo.18
+  - 気象庁「洞爺丸台風」の災害事例・事後の観測表と位置の記録／村松照男（1983年）・佐々木（1954年）の論文（二次の紹介を通して）
+  - JR北海道の青函トンネル年表／北海道新聞・函館新聞の慰霊の記事
+
+credits: {}
+
+ai:
+  S01: {scene: 荒れ模様の函館港に停泊する白い連絡船（夕方の曇天）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S02: {scene: 停電で暗い桟橋の可動橋の前で待つ作業員と列車, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S03: {scene: 気象台の観測室、気圧計と記録紙（後ろ姿の観測員）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S04: {scene: 雲の切れ間に青空がのぞく港の桟橋, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S05: {scene: 船橋の舵輪と時計、後ろ姿の船長（顔は見せない）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S06: {scene: 桟橋に並ぶ乗客の後ろ姿、傘と荷物, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S07: {scene: 夕暮れの港を離れる白い連絡船の遠景, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S08: {scene: 荒波の沖で錨を入れて停まる連絡船（夕闇）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S09: {scene: 裁決の審判廷、木の机と書類（後ろ姿）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S10: {scene: 無線室で受信機に向かう通信士の後ろ姿, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S11: {scene: 夜の荒海に灯りが揺れる船の遠景, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S12: {scene: 夜の海を現場へ向かう巡視船, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S13: {scene: 七重浜の朝の静かな海岸（遠くに小さな慰霊の碑、文字なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S14: {scene: 天気図・気圧計・書類と議事録の積まれた机（記録）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  SEND: {scene: 終了画面用。夕暮れの津軽海峡の水平線（右半分を空ける）, lock: [1.0, 0.5, 0.5]}
+
+shots:
+  - 0 ai:S01 wide
+  - 1 ai:S01 left
+  - 2 ai:S02 wide
+  - 3 ai:S04 wide
+  - 4 ai:S04 right
+  - 5 ai:S01 right
+  - 6 ai:S14 wide
+  - 7 ai:S02 left
+  - 8 ai:S01 left
+  - 9 ai:S03 wide
+  - 10 ai:S14 wide
+  - 11 ai:S02 right
+  - 12 ai:S05 wide
+  - 13 ai:S14 left
+  - 14 ai:S03 left
+  - 15 ai:S03 right
+  - 16 ai:S04 left
+  - 17 ai:S04 wide
+  - 18 ai:S03 wide
+  - 19 ai:S14 right
+  - 20 ai:S05 left
+  - 21 ai:S06 wide
+  - 22 ai:S06 left
+  - 23 ai:S05 right
+  - 24 ai:S06 right
+  - 25 ai:S05 wide
+  - 26 ai:S14 left
+  - 27 ai:S14 right
+  - 28 ai:S05 left
+  - 29 ai:S07 wide
+  - 30 ai:S07 left
+  - 31 ai:S07 right
+  - 32 ai:S08 wide
+  - 33 ai:S08 left
+  - 34 ai:S08 right
+  - 35 ai:S01 wide
+  - 36 ai:S11 wide
+  - 37 ai:S14 wide
+  - 38 ai:S11 left
+  - 39 ai:S03 wide
+  - 40 ai:S10 wide
+  - 41 ai:S10 left
+  - 42 ai:S10 right
+  - 43 ai:S11 right
+  - 44 ai:S11 wide
+  - 45 ai:S10 left
+  - 46 ai:S11 left
+  - 47 ai:S12 wide
+  - 48 ai:S10 wide
+  - 49 ai:S14 left
+  - 50 ai:S04 wide
+  - 51 ai:S09 wide
+  - 52 ai:S14 right
+  - 53 ai:S14 left
+  - 54 ai:S03 wide
+  - 55 ai:S14 wide
+  - 56 ai:S11 right
+  - 57 ai:S03 left
+  - 58 ai:S14 left
+  - 59 ai:S14 right
+  - 60 ai:S03 right
+  - 61 ai:S03 left
+  - 62 ai:S14 right
+  - 63 ai:S14 wide
+  - 64 ai:S05 wide
+  - 65 ai:S09 left
+  - 66 ai:S09 right
+  - 67 ai:S09 left
+  - 68 ai:S09 wide
+  - 69 ai:S08 wide
+  - 70 ai:S09 left
+  - 71 ai:S09 right
+  - 72 ai:S07 wide
+  - 73 ai:S13 wide
+  - 74 ai:S13 left
+  - 75 ai:S14 wide
+  - 76 ai:S14 left
+  - 77 ai:S07 left
+  - 78 ai:S09 left
+  - 79 ai:S13 right
+  - 80 ai:S14 right
+  - 81 ai:S13 wide
+  - 82 ai:S13 left
+  - 83 ai:S01 wide
+  - 84 ai:S01 left
+  - 85 ai:S02 wide
+  - 86 ai:S04 wide
+  - 87 ai:S06 wide
+  - 88 ai:S05 wide
+  - 89 ai:S03 wide
+  - 90 ai:S01 left
+  - 91 ai:S13 wide
+  - 92 ai:SEND wide
+  - end ai:SEND wide
+
+focus: {}
+
+fx:
+  S02: {lamp: {region: [0.3, 0.4, 0.8, 0.85]}}
+  S10: {lamp: {region: [0.3, 0.4, 0.8, 0.85]}}
+
+parts:
+  - {type: quote, from: 40, to: 40, label: 史料, text: "エンジン、ダイナモとまりつつあり／突風55メートル", source: "国鉄の無線の記録（衆議院運輸委員会 1954年10月19日の報告）"}
+  - {type: quote, from: 51, to: 51, label: 史料, text: "台風が通過し去ったとは／認められない荒天下に", source: "高等海難審判庁 裁決（1959年）"}
+  - {type: quote, from: 67, to: 67, label: 史料, text: "安全運航はすべて／船長に委ぬれば足りる", source: "高等海難審判庁 裁決（運航管理の認定）"}
+  - {type: quote, from: 87, to: 87, label: 要点, text: "言える＝待つ船のなか洞爺丸は出た／言える＝止める指揮は無かった／言えない＝船長の根拠", source: "この動画のまとめ"}
+
+figures: []
+
+stills:
+  - {line: 0, note: 冒頭（0秒）}
+  - {line: 30, note: 出港}
+  - {line: 48, note: 最後の時刻の表}
+  - {line: 51, note: 裁決の言葉}
+  - {line: 87, note: 要点}
+  - {end: true, note: 終了画面の空き}
