@@ -1,6 +1,7 @@
 // 文章の点検：ブラウザなしで何シーズンも遊ばせ、画面に出た文を集めて、
 //   ・差し込みの漏れ（{A}・undefined・NaN など）
 //   ・同じ文が何度も出ていないか（1シーズンに3回以上出る文）
+//   ・合格のひと言・世間の声が、1シーズンの中で重なっていないか（重なれば失敗）
 // を数える。  node tool/texts.js [シーズン数=12] [--dump 出力先]
 // 文の中身は確かめない（それは人が読む）。漏れがあれば失敗で終わる。
 const fs = require('fs'), vm = require('vm'), path = require('path');
@@ -45,6 +46,18 @@ const NARR = ['event', 'talk', 'show', 'night', 'interview', 'month', 'result'];
 const LEAK = /\{[A-Z]\}|undefined|NaN|\bnull\b|\[object|function ?\(|「「|」」|。。|、、/;
 const strip = (h) => h.replace(/<(script|style)[\s\S]*?<\/\1>/g, '').replace(/<[^>]+>/g, '\n').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"');
 let season = 0;
+// 合格のひと言（デビュー発表も）と世間の声は、1シーズンに同じ文を出さない（2026-11-14）。名前を伏せて比べる
+const dupSeen = new Set(), dups = [];
+let dupN = 0;
+ctx.__chk = () => {
+  const names = run('S.tr.map(function(t){return [t.name,t.giv];})').flat().filter(Boolean).sort((a, b) => b.length - a.length);
+  const mask = (x) => { let k = String(x); names.forEach((n) => { k = k.split(n).join('〇'); }); return k; };
+  const lines = run('Object.keys(S.call.lines).map(function(k){return S.call.lines[k];})'), cmts = run('S.comments.map(function(x){return x.t;})');
+  [['合格のひと言', lines], ['世間の声', cmts]].forEach(([kind, arr]) => arr.forEach((x) => {
+    const key = season + '\t' + kind + '\t' + mask(x); dupN++;
+    if (dupSeen.has(key)) dups.push(`シーズン${season} ${kind}: ${x}`); else dupSeen.add(key);
+  }));
+};
 const per = new Map(), leaks = [], all = [];
 ctx.__shot = () => {
   try { run('render()'); } catch (e) { return; }
@@ -78,7 +91,7 @@ function play(g, diff) {
     applyFeature(S);toNight(S);if(S.phase==='night'){__shot();nightSkip(S);S.phase='judge';}
     var B=alive(S),res=S.stage.res,n=ROUNDS[r].fin?Math.min(6,S.caps.finMax,B.length):capOf(S);
     B.sort(function(a,b){return res[b.id].sc-res[a.id].sc;}).slice(0,n).forEach(function(t){S.pass[t.id]=true;});
-    decide(S);S.call.n=S.call.order.length;S.call.done=true;if(!ROUNDS[r].fin)nextRound(S);}
+    decide(S);__chk();S.call.n=S.call.order.length;S.call.done=true;if(!ROUNDS[r].fin)nextRound(S);}
   applyFarewell(S);startPrep(S);S.prep.color=ri(0,5);S.prep.song=0;var D=S.tr.filter(function(t){return t.status==='debut';});S.prep.leader=D[0].id;
   startMonth(S);__shot();['tv','mv','rest','tv'].forEach(function(k){weekDo(S,k);__shot();});finishMonth(S);__shot();`);
 }
@@ -92,5 +105,7 @@ console.log(`${N}シーズン・文 ${all.length}件・違う文 ${rows.length}�
 console.log('1シーズンに3回以上出る文（名前は〇）:');
 heavy.slice(0, 40).forEach((r) => console.log(`  ${(r.n / N).toFixed(1)}回  [${r.ph}] ${r.k.slice(0, 70)}`));
 if (dumpTo) fs.writeFileSync(dumpTo, all.join('\n'));
+console.log(`シーズン内の重なり（合格のひと言・世間の声 ${dupN}件を確かめた）: ${dups.length}件`);
+if (dups.length) { [...new Set(dups)].slice(0, 15).forEach((x) => console.error('  ' + x)); process.exitCode = 1; }
 if (leaks.length) { console.error('差し込みの漏れ', leaks.length + '件'); [...new Set(leaks)].slice(0, 15).forEach((x) => console.error('  ' + x)); process.exitCode = 1; }
 else console.log('差し込みの漏れ 0件');
