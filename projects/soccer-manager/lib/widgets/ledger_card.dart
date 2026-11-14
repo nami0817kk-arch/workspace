@@ -12,7 +12,8 @@ import '../theme/semantic_colors.dart';
 class LedgerCard extends StatelessWidget {
   const LedgerCard({super.key});
 
-  static String _money(int v) => '${v >= 0 ? '+' : ''}$v万円';
+  static String _money(int v) =>
+      Tr.pick('${v >= 0 ? '+' : ''}$v万円', '${v >= 0 ? '+' : ''}$v');
 
   @override
   Widget build(BuildContext context) {
