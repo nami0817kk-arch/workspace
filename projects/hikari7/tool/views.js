@@ -43,6 +43,12 @@ const run = (js) => vm.runInContext(js, ctx);
 const css = src.slice(src.indexOf('<style'), src.indexOf('</style>'));
 const tagMods = [...new Set([...src.matchAll(/class=\\?"tag ([a-z][\w-]*)/g)].map((m) => m[1]))];
 const clash = tagMods.filter((k) => new RegExp('(^|[}\\s,])\\.' + k + '(?=[\\s{>:])').test(css));
+// 12px 未満の字の指定が無いか（2026-11-14：<small> の既定の縮みで 10px 台が出ていた。計算後の大きさは見られないので、指定の値で見る）
+const tinyFs = [];
+for (const m of src.matchAll(/font-size:\s*([\d.]+)px/g)) if (+m[1] < 12) tinyFs.push(m[0]);
+for (const m of src.matchAll(/font-size="([\d.]+)"/g)) if (+m[1] < 12) tinyFs.push(m[0]);
+for (const m of css.matchAll(/font-size:\s*(smaller|x-small|xx-small|small)/g)) tinyFs.push(m[0]);
+const smallRule = /(^|[}\s])small\{font-size:max\(12px,/m.test(css);
 const setOk = run('ui.set.fs==="l"&&ui.set.bgm===0&&ui.set.voice===0&&ui.set.theme==="dark"');
 
 const errs = [], seen = {}, times = [];
@@ -59,7 +65,7 @@ function season(g, diff, chal) {
   run(`S=newGame('${g}','${diff}',${chal ? `'${chal}'` : 'null'});__shot();
   var c=S.tr.slice();watchVideo(S,c[0].id);S.sel=c.slice(0,S.caps.sel).map(function(t){return t.id;});confirmSelect(S);__shot();startSeason(S);
   alive(S).forEach(function(t,i){if(i%2)t.temperRev=true;});
-  for(var r=1;r<=NROUND;r++){__shot();S.plan.acts.stage=S.budget>=60;applyPlan(S);__shot();applyLesson(S);S.phase='lres';__shot();S.phase='talk';__shot();
+  for(var r=1;r<=NROUND;r++){__shot();ui.planTab={r:S.rnd,v:'use'};__shot();ui.planTab=null;ui.tipOpen=S.phase;__shot();ui.tipOpen=null;S.plan.acts.stage=S.budget>=60;applyPlan(S);__shot();applyLesson(S);S.phase='lres';__shot();S.phase='talk';__shot();
     ui.tfilter='story';__shot();ui.tsort='pop';__shot();ui.tfilter='all';ui.tsort='story';
     S.reqs.forEach(function(q,qi){answerReq(S,qi,qi%2);});__shot();
     var t=alive(S)[0];doTalk(S,t.id);__shot();if(S.talk){if(S.talk.kind==='arc')talkChoose(S,0);else if(S.talk.kind==='honne')honneChoose(S,0);else if(S.talk.kind==='free')freeChoose(S,1);__shot();S.talk=null;}
@@ -88,6 +94,9 @@ const miss = need.filter((p) => !seen[p]);
 const avg = times.reduce((a, b) => a + b, 0) / times.length, max = Math.max(...times);
 console.log('描いた回数', times.length, '・平均', avg.toFixed(1) + 'ms', '・最大', max + 'ms', '・描いた画面', Object.keys(seen).length + '種');
 if (clash.length) { console.error('札の名前が、ほかの部品の見た目にも使われている: ' + clash.join(' ')); process.exitCode = 1; }
+if (tinyFs.length) { console.error('12px 未満の字の指定: ' + [...new Set(tinyFs)].join(' ')); process.exitCode = 1; }
+if (!smallRule) { console.error('<small> を12px未満にしない指定（small{font-size:max(12px,…)}）が無い'); process.exitCode = 1; }
+else console.log('字の大きさの指定: 12px 未満 ' + tinyFs.length + '件');
 if (!setOk) { console.error('保存した設定が、開き直すと初期値に戻っている'); process.exitCode = 1; }
 if (miss.length) { console.error('描けていない画面:', miss.join(' ')); process.exitCode = 1; }
 if (errs.length) { console.error('エラー', errs.length + '件'); errs.slice(0, 10).forEach((e) => console.error('  ' + e)); process.exitCode = 1; }

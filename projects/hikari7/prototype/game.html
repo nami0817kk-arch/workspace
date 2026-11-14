@@ -998,6 +998,108 @@ body.stg .telop{filter:brightness(1.12)}
 /* 人気の順位の札 */
 .smini .pchip{display:inline-flex;align-items:baseline;padding:0 6px;border-radius:6px;font-size:12px;font-weight:800;border:1px solid var(--accent);color:var(--accent)}
 .smini .pchip.top{border-color:var(--gold);color:var(--gold)}
+
+/* ===== 2026-11-14 画面・操作の点検の直し（合否・コツ・帯・会議のタブ・結果・本番の下の帯・狭い画面・押せる大きさ・字の大きさ・広告の行） ===== */
+/* 字の大きさ：<small> はブラウザの既定で親の0.83倍になり、12.5px の中で 10.4px になっていた */
+small{font-size:max(12px,.85em)}
+/* 合否：押す前は「合格にする」、押した後は「✓ 合格」。再審査は名前の下の小さな線のボタン */
+.ptog{min-width:92px;min-height:44px;color:var(--fg);border-color:var(--accent)}
+.ptog:not(.on){background:transparent}
+.rtry{display:inline-flex;align-items:center;min-height:44px;margin:0 0 -8px;padding:0;border:none;background:none;color:var(--muted)}
+.rtry span{border:1px solid var(--line);border-radius:999px;padding:2px 10px;font-size:12px;line-height:1.5}
+.rtry.arm span{border-color:var(--gold);color:var(--gold);font-weight:800}
+/* コツ：1行にたたんだ札。押すと全文 */
+.tipc{display:flex;align-items:center;gap:8px;width:100%;min-height:44px;margin:6px 0;padding:4px 10px;border:1px solid rgba(164,124,242,.6);border-radius:12px;background:var(--card);text-align:left;font-size:13px}
+.tipc .tq,.tip .tq{flex:none;border-radius:999px;padding:1px 10px;background:linear-gradient(135deg,#a47cf2,#7445d6);color:#fff;font-weight:800;font-size:12px}
+.tipc .tt1{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--muted)}
+.tip{align-items:center}
+/* 審査名の1行の帯（レッスンなど） */
+.rband{margin:8px 0 4px;padding:8px 12px;border-radius:12px;background:linear-gradient(120deg,rgba(42,27,82,.88),rgba(18,12,38,.9));color:#f4effd;border:1px solid rgba(255,255,255,.08)}
+.rband .rb1{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;line-height:1.35}
+.rband .rb1 b{color:#e9ba4b;font-size:15px}
+.rband .rbn{font-weight:800;font-size:14px}
+.rband .rbs{margin-left:auto;font-size:12px;color:#cfc3ee}
+.rband .rb2{font-size:12.5px;color:#ddd3f5;margin-top:2px;line-height:1.5}
+.telop .tcap{font-size:13px;color:#f4effd;margin-top:4px}
+/* 会議のタブ */
+.ptabs{display:flex;gap:0;margin:12px 0 6px;border-bottom:2px solid var(--line)}
+.ptabs button{flex:1;min-height:44px;border:none;background:none;font-weight:800;font-size:14px;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-2px}
+.ptabs button.on{color:var(--fg);border-bottom-color:var(--accent)}
+.ptabs small{font-weight:700;color:var(--gold)}
+.ptnext{margin-top:12px}
+/* 畳んだ見出し（押すと開く） */
+details.fold{padding:0 14px}
+details.fold>summary{display:flex;align-items:center;flex-wrap:wrap;gap:4px 10px;min-height:48px;cursor:pointer;list-style:none}
+details.fold>summary::-webkit-details-marker{display:none}
+details.fold>summary::before{content:'▸';color:var(--accent);font-weight:800}
+details.fold[open]>summary::before{content:'▾'}
+details.fold>summary>b{font-size:15px}
+details.fold[open]{padding-bottom:12px}
+details.fold .rendh{margin-left:0}
+details.status>summary,details.pairbox>summary,details.help>summary{min-height:44px;display:flex;align-items:center}
+/* 結果：評価の札をポスターの中に */
+.poster .pgrade{position:relative;z-index:2;display:flex;justify-content:center;align-items:center;gap:10px;margin:8px 0 2px}
+.poster .pgrade .gr{width:auto;height:auto;min-width:68px;line-height:1.25;font-size:40px;padding:2px 16px;border-radius:14px;box-shadow:0 6px 18px rgba(0,0,0,.35);animation:stampIn .7s cubic-bezier(.2,1.5,.35,1) .3s both}
+.poster .pgrade span{font-size:24px;font-weight:900;color:#fff}
+body.reduce .poster .pgrade .gr{animation:none}
+@media (prefers-reduced-motion:reduce){.poster .pgrade .gr{animation:none}}
+/* 本番：下の帯を2段に（操作の列に「大きく映す」） */
+.foot .in.showin{flex-wrap:wrap}
+.foot .in.showin .cnt.showctl{flex:1 1 100%;max-width:none;display:flex;gap:6px}
+.foot .in.showin .cnt.showctl .btn-s{flex:1 1 auto;min-height:44px;min-width:44px;padding:0 6px}
+.foot .in.showin .featb{flex:1.6 1 auto;border-color:var(--gold);color:var(--gold);font-weight:800}
+.foot .in.showin .featb.on{background:var(--gold);color:var(--gold-fg);border-color:var(--gold)}
+.foot .in.showin>.btn{flex:1 1 100%}
+/* 押せる所は44pt以上（講評の画面は別の担当が直しているので触らない） */
+.btn-s,.chip,.tcon .chip,.cbtn,.feat,.mv,.tacts button,.lpick button,.lsel .spb,.acts button,.cand .cfoot .watch,.hdr .btn-s{min-height:44px}
+.seg:not(.crg) button{min-height:44px;min-width:44px}
+.fslot .seg button,.fslot.in .seg button{min-width:44px}.chip{min-width:44px}
+.hdr .btn-s.gear{min-width:44px}
+.face.sm[data-a]:not(.cseat .face){width:44px;height:44px;border-radius:11px}
+.sayb{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;margin:-12px -6px -12px -4px}
+.trt[data-a]{position:relative}
+.trt[data-a]::after{content:'';position:absolute;left:-2px;right:-2px;top:-12px;bottom:-12px}
+/* 面談の3択（効き目と代償の札つき） */
+.acts.ivacts button.ivb{white-space:normal;height:auto;padding:6px 4px;line-height:1.3;display:flex;flex-direction:column;align-items:center;gap:4px;overflow:visible}
+.acts.ivacts .hint{display:flex;flex-wrap:wrap;justify-content:center;gap:3px}
+.acts.ivacts button.ivb.on .hp{background:rgba(0,0,0,.25);color:#fff;border-color:rgba(255,255,255,.5)}
+/* 広告の特典は小さな行（本題の下） */
+.btn.ad.adrow{min-height:44px;padding:8px 12px;margin:10px 0;font-size:13px;font-weight:700;background:transparent;border:1px solid var(--gold);border-radius:12px;gap:10px;color:var(--fg)}
+.btn.ad.adrow svg{width:22px;height:22px;color:var(--gold)}
+.btn.ad.adrow>span{display:flex;flex-direction:column;line-height:1.4}
+.btn.ad.adrow .small{font-weight:400}
+/* 押せない段階のタブはボタンの形をやめ、進み具合の線に */
+.steps span{background:none!important;box-shadow:none!important;border-radius:0;border-bottom:3px solid var(--line);padding:2px 0 3px}
+.steps span.done{border-bottom-color:var(--accent);color:var(--accent)}
+.steps span.now{border-bottom-color:var(--gold);color:var(--gold)}
+/* タイトルの肩書き・シーズンの数は、押せる丸い枠をやめて文字だけ */
+.trank span{background:none;border:none;padding:0;text-shadow:0 1px 3px rgba(0,0,0,.7)}
+.trank span+span::before{content:'・';margin-right:8px}
+/* 狭い画面（幅÷文字の倍率が360未満）。.nar は narCheck が付ける */
+body.nar .hdr .logo span{display:none}
+body.nar .hdr{gap:4px}
+body.nar .hudc{padding:2px 6px 2px 4px}
+body.nar .hudc.tv svg{display:none}
+body.nar2 .hdr .logo{display:none}
+body.nar .steps .stw{font-size:12px}
+body.nar .steps span:not(.now){flex:0 0 12px;max-width:12px;height:12px;padding:0;border:none;border-radius:50%;background:var(--line)!important;color:transparent;overflow:hidden;align-self:center}
+body.nar .steps span.done{background:var(--accent)!important}
+body.nar .steps span.now{flex:1}
+body.nar .jrow{flex-wrap:wrap}
+body.nar .jrow .seg{flex:1 1 100%;margin-left:52px}
+body.nar .jrow .seg .ptog{flex:1}
+body.nar .cand .cfoot{flex-wrap:wrap}
+body.nar .tseats{gap:3px}
+body.nar .tseat .face{width:28px;height:28px;border-radius:8px}
+body.nar .tseat i{width:22px}
+body.nar .tseat.mid .face{width:42px;height:42px}
+body.nar .tseat.mid i{width:32px}
+body.nar .logo7.tbig{font-size:52px}
+body.nar .foot .in.showin .cnt.showctl{flex-wrap:nowrap;gap:4px}body.nar .foot .in.showin .cnt.showctl .btn-s{padding:0 4px}body.nar .featb .lng{display:none}body.nar2 .foot .in.showin .cnt.showctl{flex-wrap:wrap}
+body.nar .tipc{font-size:12.5px}
+.lrow>.lt{grid-template-columns:44px 1fr auto!important}.trow2{grid-template-columns:44px 1fr!important}
+body.nar .tkick{letter-spacing:.12em}
+body.nar .foot .in{flex-wrap:wrap;row-gap:6px}body.nar .foot .cnt{flex:1 1 100%;max-width:none}body.nar .foot .cnt br{display:none}body.nar .foot .in>.btn{flex:1 1 auto;white-space:nowrap;padding:10px 12px}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -4498,7 +4600,7 @@ function vTitleNew(){
 
   if(loadCareer().seasons===0)h+='<div class="card firstflow"><div class="mh">はじめての方へ：1シーズンの流れ</div><ol class="tight"><li><b>書類・動画審査</b>　40人から最大24人を選ぶ</li><li><b>構成会議</b>　4つの審査の順番を決める</li><li><b>審査ごとに</b>　制作会議 → レッスン → 関わる時間 → 出来事 → ステージ → 講評 → <b>合否はあなたが決める</b></li><li><b>最終審査</b>　デビューメンバーを5〜8人選ぶ</li><li><b>デビュー後1か月</b>　活動を選び、評価とグループのその後を見る</li></ol><p class="small muted">1シーズンは30〜40分。迷ったら「おまかせ」や、画面の上に出るコツを見てください。</p></div>';
 
-  h+='<div class="card small"><b>遊び方</b><ul class="tight"><li>応募者40人から最大24人を書類・動画審査で選ぶ（能力は一部しか見えない）</li><li>構成会議で、'+fmtKeys().length+'種類の審査から4つを選んで順番を決める（最後は最終審査）</li><li>毎シーズン、スポンサーから3つの依頼が来る（まだ見ていない結末があれば、その手がかりの依頼が1つ増える）。局は審査ごとに目標の視聴率を示し、届かないと制作費が減る</li><li>シーズンを終えるたびにポイントがたまり、肩書きが上がる。番組での経験（覚醒・コンビ・視聴率）で使える審査が増え、10・20シーズン目を終えるとごほうびがある</li><li>審査ごとに、制作会議 → レッスン → 関わる時間（話す・出かける・ふたりと話す、と相談）→ 出来事 → <b>ステージ本番</b> → 講評 → <b>合否はあなたが決める</b></li><li>顔を押すと、その子の個人ページ（来た理由・目標・好み・物語・関係・思い出）が開く</li><li>世間の人気は決定には使わないが、人気の子を落とすと荒れる</li><li>練習生には特性がある。ふたりごとの相性と絆が深まると「ふたりの物語」が進み、息が合えばコンビになる。ひとりの物語を正しく支えきると覚醒する</li><li>最終審査でデビューメンバーを5〜8人選び、グループ名・リーダー・曲の方向を決めて、デビュー後1か月の反響で評価される。最後にグループのその後がエンドロールで流れる</li></ul><p class="muted">試作 v18。1シーズン約30〜40分。練習生は毎回ちがう顔ぶれです。</p></div>';
+  h+='<div class="card small"><b>遊び方</b><ul class="tight"><li>応募者40人から最大24人を書類・動画審査で選ぶ（能力は一部しか見えない）</li><li>構成会議で、'+fmtKeys().length+'種類の審査から4つを選んで順番を決める（最後は最終審査）</li><li>毎シーズン、スポンサーから3つの依頼が来る（まだ見ていない結末があれば、その手がかりの依頼が1つ増える）。局は審査ごとに目標の視聴率を示し、届かないと制作費が減る</li><li>シーズンを終えるたびにポイントがたまり、肩書きが上がる。番組での経験（覚醒・コンビ・視聴率）で使える審査が増え、10・20シーズン目を終えるとごほうびがある</li><li>審査ごとに、制作会議 → レッスン → 関わる時間（話す・出かける・ふたりと話す、と相談）→ 出来事 → <b>ステージ本番</b> → 講評 → <b>合否はあなたが決める</b></li><li>顔を押すと、その子の個人ページ（来た理由・目標・好み・物語・関係・思い出）が開く</li><li>世間の人気は決定には使わないが、人気の子を落とすと荒れる</li><li>練習生には特性がある。ふたりごとの相性と絆が深まると「ふたりの物語」が進み、息が合えばコンビになる。ひとりの物語を正しく支えきると覚醒する</li><li>最終審査でデビューメンバーを5〜8人選び、グループ名・リーダー・曲の方向を決めて、デビュー後1か月の反響で評価される。最後にグループのその後がエンドロールで流れる</li></ul><p class="muted">1シーズン約30〜40分。練習生は毎回ちがう顔ぶれです。</p></div>';
   return h;
 }
 function vSelect(){
@@ -4507,7 +4609,7 @@ function vSelect(){
   S.tr.filter(function(t){return ui.filter==='all'||(ui.filter==='sel'?S.sel.indexOf(t.id)>=0:t.spec===ui.filter);}).forEach(function(t){var on=S.sel.indexOf(t.id)>=0;
     h+='<div class="card cand '+(on?'on':'')+'" data-a="pick" data-id="'+t.id+'">'+face(t,'')+'<div class="body"><div class="eno">'+eno(t)+'</div><div class="nm">'+esc(t.name)+(t.rare?' <span class="trt tgold" style="font-size:12px">注目</span>':'')+'</div><div class="small muted">'+t.age+'歳・'+t.home+'出身 '+tag(t.spec)+'</div><div class="line">「'+esc(t.line)+'」'+(sayIcon('「'+t.line+'」')?'<button class="sayb" data-a="say" data-id="'+t.id+'" data-t="「'+esc(t.line)+'」" aria-label="声を聞く">'+ICO.voice+'</button>':'')+'</div>'+statMini(t)+((S.watched||[]).indexOf(t.id)>=0?'<div class="small"><span class="tag good">動画を見た</span> 伸びしろ <b>'+(t.pot>=1.3?'大':t.pot>=0.95?'中':'小')+'</b>・'+esc(t.watchNote)+'</div>':'')+'<div class="cfoot"><span class="small">話題 <span style="color:var(--gold)">'+stars(t.popStar)+'</span></span>'+((S.watched||[]).indexOf(t.id)>=0?'':'<button class="btn-s watch" data-a="watch" data-id="'+t.id+'" '+((S.watched||[]).length>=watchMax(S)?'disabled':'')+' aria-label="応募動画をじっくり見る（あと'+(watchMax(S)-(S.watched||[]).length)+'人）">▶ 動画を見る <small>あと'+(watchMax(S)-(S.watched||[]).length)+'人</small></button>')+'</div></div><div class="chk">'+(on?'✓':'')+'</div></div>';});
   var n=S.sel.length,cv={v:0,d:0,r:0,t:0};S.sel.forEach(function(id){cv[S.tr[id].spec]++;});
-  h+='<div class="foot"><div class="in"><div class="cnt"><b>'+n+'</b> / '+S.caps.sel+'人<span class="muted">（'+S.caps.selMin+'人以上）</span><br><span class="muted">歌'+cv.v+' ダ'+cv.d+' ラ'+cv.r+' ビ'+cv.t+'</span></div>'+
+  h+='<div class="foot"><div class="in"><div class="cnt"><b>'+n+'</b> / '+S.caps.sel+'人<span class="muted">（'+S.caps.selMin+'人以上）</span><br><span class="muted">歌'+cv.v+' ダ'+cv.d+' ラ'+cv.r+' 表'+cv.t+'</span></div>'+
     (n<S.caps.sel?'<button class="btn sub" data-a="autofill" style="font-size:14px" aria-label="能力の高い順に残りを埋める">おまかせ</button>':'')+
     '<button class="btn" data-a="selok" '+(n>=S.caps.selMin&&n<=S.caps.sel?'':'disabled')+'>'+(n<S.caps.selMin?'あと'+(S.caps.selMin-n)+'人選ぶ':'この'+n+'人で構成会議へ')+'</button></div></div>';
   return h;
@@ -4531,9 +4633,9 @@ function vLres(){var L=(S.lres||[]).slice().map(function(x){var y={};for(var k i
   return h;}
 function vLesson(){
   var f=ROUNDS[S.rnd],A=alive(S).sort(function(a,b){return b.lastP-a.lastP||a.id-b.id;}),used=usedSlots(S),sl=slotsOf(S);
-  var h=telop('レッスン')+'<div class="card fmt"><p class="small muted" style="margin:0">見られる力：'+wText(roundFmt(S))+(roundFmt(S).concept?'（'+roundFmt(S).concept+'）':'')+(f.kind==='team'?'（'+f.size+'人組）':'')+(S.plan&&S.plan.center!=null?'・センター '+esc(S.tr[S.plan.center].giv):'')+'</p><p class="small muted">'+(f.fin?'この審査でデビューメンバーを <b>5〜'+S.caps.finMax+'人</b> 選ぶ':'合格にできるのは <b>'+capOf(S)+'人まで</b>（いま'+A.length+'人）')+'</p></div>';
+  /* 2026-11-14：審査名の大きな札は会議の最初だけ。ここは1行の帯にして、本題（割り振り）を最初の画面に入れる */
+  var h=roundBand('レッスン','見られる力：'+wText(roundFmt(S))+(roundFmt(S).concept?'（'+roundFmt(S).concept+'）':'')+(f.kind==='team'?'（'+f.size+'人組）':'')+(S.plan&&S.plan.center!=null?'・センター '+esc(S.tr[S.plan.center].giv):'')+'　'+(f.fin?'デビューは <b>5〜'+S.caps.finMax+'人</b>':'合格は <b>'+capOf(S)+'人まで</b>（いま'+A.length+'人）'));
   h+='<h3>レッスンの割り振り <button class="btn-s" data-a="autolesson">おまかせ</button></h3><details class="help"><summary>説明</summary><p class="small muted">全員が1つずつレッスンを受けます（最初はおすすめが入っています）。さらに <b>'+sl+'人まで</b>「特訓」を付けられます。特訓は同じレッスンをもう1回。よく伸びるぶん、疲れます。「休養」で疲れが抜けます。講評で課題を伝えた子は、その弱点がよく伸びます。</p></details>';
-  if(!S.adUsed&&S.chal!=='noad')h+='<button class="btn ad" data-a="adslot">'+adIcon()+'<span>特訓の枠を1人ぶん増やす<br><span class="small muted">'+adNote()+'。1審査に1回（再審査と共通）</span></span></button>';
   h+='<div class="card lcard">';
   A.forEach(function(t){
     var k=(S.lesson.train[t.id]||[])[0],sp=!!(S.lesson.sp&&S.lesson.sp[t.id]),fc=t.fat>=80?'var(--bad)':t.fat>=60?'var(--gold)':'var(--muted)';
@@ -4544,6 +4646,8 @@ function vLesson(){
     h+='</div>';
   });
   h+='</div>';
+  /* 広告の特典は本題の下に小さく（会議の「制作費を足す」とそろえる） */
+  if(!S.adUsed&&S.chal!=='noad')h+=adRow('adslot','特訓の枠を1人ぶん増やす',adNote()+'。1審査に1回（再審査と共通）');
   if(f.kind==='pos'){var c={v:0,d:0,r:0};A.forEach(function(t){c[S.lesson.pos[t.id]]++;});h+='<p class="note">担当の人数：歌'+c.v+'・ダンス'+c.d+'・ラップ'+c.r+'（'+Math.round(A.length/3)+'人より多い担当は評価が下がり、少ない担当は上がる）</p>';}
   h+='<div class="foot"><div class="in"><div class="cnt">特訓 <b>'+used+'</b>/'+sl+'人</div><button class="btn" data-a="lessonok">レッスンを終える</button></div></div>';
   return h;
@@ -4560,14 +4664,20 @@ function vEvent(){
 }
 function vInterview(){
   var A=alive(S);
-  var h='<h2>個別面談</h2><p class="small muted">ひとりずつ本音を聞いて、言葉を返します。面談で気質（素直・負けず嫌い・繊細）がはっきりします。</p>';
+  var h='<h2>個別面談</h2><p class="small muted">ひとりずつ本音を聞いて、言葉を返します。面談で気質（素直・負けず嫌い・繊細・マイペース・お調子者）がはっきりします。</p>';
   A.forEach(function(t){var c=S.interview[t.id]==null?0:S.interview[t.id];
     h+='<div class="card pl ivc"><div class="top">'+face(t,'sm')+'<div class="who"><div class="nm">'+esc(t.name)+' '+tag(t.spec)+' <span class="tag lt">'+(t.temperRev?TEMPER[t.temper]:'気質 ？')+'</span></div><div class="smini"><span>人気'+Math.round(t.pop)+'</span><span>自信'+Math.round(t.conf)+'</span><span class="'+(t.fat>=80?'fbad':t.fat>=60?'fwarn':'')+'">疲れ'+Math.round(t.fat)+'</span></div><div class="react" data-a="say" data-id="'+t.id+'">「'+esc(interviewLine(t))+'」'+sayIcon('「'+interviewLine(t)+'」')+'</div></div></div>'+
-      '<div class="acts c3">'+INTV_OPTS.map(function(o,i){return '<button class="'+(c===i?'on':'')+'" data-a="iv" data-id="'+t.id+'" data-v="'+i+'">'+o[0]+'</button>';}).join('')+'</div></div>';});
+      '<div class="acts c3 ivacts">'+INTV_OPTS.map(function(o,i){return '<button class="ivb'+(c===i?' on':'')+'" data-a="iv" data-id="'+t.id+'" data-v="'+i+'"><b>'+o[0]+'</b><span class="hint">'+partsHtml(ivParts(t,i))+'</span></button>';}).join('')+'</div></div>';});
   h+='<p class="note">期待している＝自信が上がる／課題を正直に伝える＝伸びるが繊細な子は落ち込む／無理しなくていい＝疲れが抜ける（負けず嫌いな子は物足りない）</p>';
   h+='<div class="foot"><div class="in"><div class="cnt">面談 <b>'+A.length+'</b>人</div><button class="btn" data-a="ivok">面談を終えてステージへ</button></div></div>';
   return h;
 }
+/* 面談の3択の効き目と代償（2026-11-14：交流・夜の相談と同じ札の形に）。数は applyInterview と同じ。気質が分かるまでは向き不向きだけ */
+function ivParts(t,i){var k=t.temperRev?t.temper:null,P=[];
+  if(i===0){P.push(['自信'+(k?'+'+(k==='sensai'?16:k==='makezu'?6:10):'↑'),1],['信頼+6',1]);if(!k||k==='makezu')P.push([k?'効きが薄い':'負けず嫌いには薄い',0]);}
+  else if(i===1){P.push(['苦手が伸びる',1]);if(k){var dc=k==='makezu'?6:k==='sensai'?-8:0;if(dc)P.push(['自信'+(dc>0?'+'+dc:'−'+(-dc)),dc>0?1:0]);if(k!=='sensai')P.push(['信頼+5',1]);}else P.push(['繊細な子は自信↓',0]);}
+  else{P.push(['疲れ−30',1]);if(k)P.push(['自信'+(k==='makezu'?'−4':'+6'),k==='makezu'?0:1]);else P.push(['負けず嫌いは自信↓',0]);P.push(['信頼+4',1]);}
+  return P;}
 function resRow(id,rk){var t=S.tr[id],r=S.stage.res[id],br=r.br.map(function(b){return STATN[b[0]]+Math.round(b[1]);}).join('・');
   var dp=r.dPop>0.5?'<span style="color:var(--ok)">人気▲</span>':r.dPop<0?'<span style="color:var(--bad)">人気▼</span>':'';
   return '<div class="res-row'+(rk===1?' top1':'')+'">'+(rk?'<span class="rkb'+(rk<=3?' rk'+rk:'')+'">'+rk+'</span>':'')+face(t,'sm')+'<div class="mid"><div class="nm">'+esc(t.name)+(r.rest?' <span class="small muted">欠場</span>':'')+'</div><div class="small muted">'+(br||'前回の出来から')+' '+dp+'</div><div class="bar"><i class="grow" style="width:'+r.sc+'%;background:var(--c-'+t.spec+')"></i></div></div><div class="sc">'+r.sc+'</div></div>';}
@@ -4631,9 +4741,11 @@ function vJudge(){
   h+='<div class="card">';
   A.forEach(function(t){var r=S.stage.res[t.id],on=S.pass[t.id],p=pr[t.id];
     var warn=!on&&p<=3?' <span class="tag warn">荒れそう</span>':'';
-    h+='<div class="jrow'+(on?' jon':'')+'">'+face(t,'sm')+'<div class="mid"><div class="nm">'+esc(t.name)+' '+tag(t.spec)+'</div><div class="small muted">出来 <b>'+r.sc+'</b>'+(r.retry!=null?'（再'+r.retry+'）':'')+(t.hist.length>1?'・前回 '+t.hist[t.hist.length-2].sc:'')+warn+'</div>'+statMini(t)+'</div><div class="seg">'+
-      (!S.adUsed&&!f.fin&&!t.retried&&S.chal!=='noad'?'<button data-a="retry" data-id="'+t.id+'" class="'+(ui.retryArm===t.id?'warnb':'')+'" title="もう一度見る（動画）">'+(ui.retryArm===t.id?'▶ 見る':'再審査')+'</button>':'')+
-      '<button class="ptog'+(on?' on':'')+'" data-a="pass" data-id="'+t.id+'" data-v="'+(on?'0':'1')+'" aria-pressed="'+(on?'true':'false')+'">'+(on?(f.fin?'選んだ ✓':'合格 ✓'):(f.fin?'選ぶ':'不合格'))+'</button></div></div>';});
+    h+='<div class="jrow'+(on?' jon':'')+'">'+face(t,'sm')+'<div class="mid"><div class="nm">'+esc(t.name)+' '+tag(t.spec)+'</div><div class="small muted">出来 <b>'+r.sc+'</b>'+(r.retry!=null?'（再'+r.retry+'）':'')+(t.hist.length>1?'・前回 '+t.hist[t.hist.length-2].sc:'')+warn+'</div>'+statMini(t)+
+      /* 2026-11-14：広告の再審査は名前の下の小さな線のボタンに（合否のボタンと並べて押し違えないように） */
+      (!S.adUsed&&!f.fin&&!t.retried&&S.chal!=='noad'?'<button data-a="retry" data-id="'+t.id+'" class="rtry'+(ui.retryArm===t.id?' arm':'')+'" aria-label="もう一度見る（動画）"><span>'+(ui.retryArm===t.id?'▶ もう一度押すと動画':'▶ 再審査（動画）')+'</span></button>':'')+'</div><div class="seg">'+
+      /* 選ぶ前に「不合格」と書くと、押すと落ちるように読めた（2026-11-14 点検）。押す前は行き先、押した後は状態 */
+      '<button class="ptog'+(on?' on':'')+'" data-a="pass" data-id="'+t.id+'" data-v="'+(on?'0':'1')+'" aria-pressed="'+(on?'true':'false')+'">'+(on?(f.fin?'✓ 選んだ':'✓ 合格'):(f.fin?'選ぶ':'合格にする'))+'</button></div></div>';});
   h+='</div>'+hx;
   if(S.retryRes&&S.tr[S.retryRes.id]){var rr=S.retryRes,rt=S.tr[rr.id],up=rr.sc>rr.sc0;
     h='<div class="card rtres">'+face(rt,'md')+'<div><div class="mh">再審査の結果</div><b>'+esc(rt.giv)+'</b>：出来 '+rr.sc0+' → <b class="'+(up?'up':'')+'">'+rr.sc+'</b>'+(up?'（上がった）':rr.sc===rr.sc0?'（同じ）':'（前の出来のまま）')+
@@ -4675,15 +4787,15 @@ function vCall(){
   h+=(S.lastTgt?'<div class="tgt '+(S.lastTgt.hit?'hit':'miss')+'"><span>局の目標 '+S.lastTgt.tg.toFixed(1)+'%</span><b>'+(S.lastTgt.hit?'達成':'届かず')+'</b><small>'+(S.lastTgt.hit?'局の評価が上がり、制作費が上乗せされた':(S.warns>=2?'2回続けて届かず、局から厳しく言われた。制作費を大きく減らされた':'局から「数字が厳しい」と言われた'))+'</small></div>':'')+(!f.fin?'<p class="note">次の審査の制作費として <b>'+S.income+'万</b> 入りました（残り '+S.budget+'万）。</p>':'')+'<button class="btn" data-a="'+(f.fin?'toprep':'nextround')+'">'+(f.fin?'デビューの準備へ':'次の審査へ')+'</button>';
   return h;
 }
-function resultCard(E,P){var col=P.color!=null?GCOLORS[P.color][1]:'#e9ba4b',d=new Date(),dt=d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate();
+function resultCard(E,P,noGrade){var col=P.color!=null?GCOLORS[P.color][1]:'#e9ba4b',d=new Date(),dt=d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate();
   var EK=S.future&&S.future.end?endOf(S.future.end):null;
-  return '<div class="rcard" style="border-color:'+col+'"><div class="rg"><b class="gr g-'+E.grade+'">'+E.grade+'</b><span>'+E.total.toFixed(1)+'点</span></div>'+(EK?'<div class="rend">結末「'+esc(EK.n)+'」'+(S.endNew?'<span class="rnew">はじめて</span>':'')+'</div>':'')+'<div class="rn" style="color:'+col+'">'+esc(gName(P))+'</div>'+
+  return '<div class="rcard" style="border-color:'+col+'">'+(noGrade?'':'<div class="rg"><b class="gr g-'+E.grade+'">'+E.grade+'</b><span>'+E.total.toFixed(1)+'点</span></div>')+(EK?'<div class="rend">結末「'+esc(EK.n)+'」'+(S.endNew?'<span class="rnew">はじめて</span>':'')+'</div>':'')+'<div class="rn" style="color:'+col+'">'+esc(gName(P))+'</div>'+
     (P.songs?'<div class="small">デビュー曲「'+esc(P.songs[P.song||0])+'」・'+manStr(E.streams)+'回</div>':'')+
     '<div class="rf">'+E.D.map(function(t){return faceImg(t,'sm');}).join('')+'</div><div class="small muted">'+(S.daily?'今日のオーディション（'+esc(S.daily)+'）・':'')+DIFF[S.diff||'normal'].n+(S.chal&&chalOf(S.chal)?'・チャレンジ「'+esc(chalOf(S.chal).n)+'」':'')+'・'+dt+'・ひかりの指名</div></div>';}
 function vResult(){
   if(!S.future){S.future=makeFuture(S,finalEval(S));if(S.recorded)noteEnding(S);}
   if(S.ending)return vEnding();
-  var E=finalEval(S),P=S.prep||{names:['（名前なし）'],name:0},h='<h2>デビューから1か月</h2>'+poster(E,P)+resultCard(E,P);
+  var E=finalEval(S),P=S.prep||{names:['（名前なし）'],name:0},h='<h2>デビューから1か月</h2>'+poster(E,P,true)+resultCard(E,P,true);
   var cn=S.careerNews;
   if(cn)h+='<div class="card career"><div class="mh">プロデューサー歴</div><div>このシーズンで <b>＋'+cn.got+'ポイント</b>（合計 '+cn.points+'）・'+esc(rankOf(cn.points,loadCareer())[1])+'</div>'+cn.news.map(function(x){return '<div class="newu">'+esc(x)+'</div>';}).join('')+'</div>';
 
@@ -4695,7 +4807,7 @@ function vResult(){
   /* 評価の内訳（2026-10-04 指摘への対応「なぜこの評価かが分からない」）：合計がどう組み上がったかを数字で */
   var mok=(E.missions||[]).filter(function(m){return m.ok;}).length,cb=(E.combos||[]).length,mo=E.mo||{fan:0,song:0,coh:0};
   var row=function(a,b,c){return '<div class="brow'+(c?' '+c:'')+'"><span>'+a+'</span><b>'+b+'</b></div>';},sg=function(x){x=Math.round(x*10)/10;return (x>=0?'+':'')+x;};
-  h+='<div class="card bdown"><div class="mh">評価の内訳</div>'+
+  h+='<details class="fold card bdown"'+(ui.fold&&ui.fold.bd?' open':'')+'><summary data-a="fold" data-v="bd"><b>評価の内訳</b><span class="small muted">合計 '+E.total.toFixed(1)+'点の組み立て</span></summary>'+
     row('曲の反響 '+Math.round(E.song)+' × 0.35',(E.song*.35).toFixed(1))+row('まとまり '+Math.round(E.coh)+' × 0.25',(E.coh*.25).toFixed(1))+
     row('ファン '+Math.round(E.fanScore)+' × 0.2',(E.fanScore*.2).toFixed(1))+row('視聴率 '+Math.round(E.show)+' × 0.2',(E.show*.2).toFixed(1))+
     row('依頼 '+mok+'/'+(E.missions||[]).length+'つ達成',sg(mok*MISSION_PT))+(E.dtot?row('難しさ「'+esc(DIFF[S.diff||'normal'].n)+'」',sg(E.dtot)):'')+
@@ -4707,7 +4819,7 @@ function vResult(){
     row('デビュー組の自信（平均'+Math.round(E.confAvg)+'）','まとまり'+sg((E.confAvg-50)*.12))+
     row(E.L?'リーダー（'+esc(E.L.giv)+'）':S.prep&&S.prep.leader===-1?'リーダーを置かない':'リーダー','まとまり'+sg(E.leadB))+
     (E.promo>=.1?row('宣伝費（残った制作費）','ファン'+sg(E.promo)):'')+
-    ((mo.fan||mo.song||mo.coh)?row('デビュー後1か月の活動','曲'+sg(mo.song)+'・ファン'+sg(mo.fan)+'・まとまり'+sg(mo.coh)):'')+'</div>';
+    ((mo.fan||mo.song||mo.coh)?row('デビュー後1か月の活動','曲'+sg(mo.song)+'・ファン'+sg(mo.fan)+'・まとまり'+sg(mo.coh)):'')+'</details>';
   var W=300,H=90,mx=Math.max.apply(null,S.ratings)+1,mn=Math.max(0,Math.min.apply(null,S.ratings)-1),k=S.ratings.length,pts=S.ratings.map(function(r,i){return (14+i*(W-28)/Math.max(1,k-1)).toFixed(1)+','+(H-10-(r-mn)/(mx-mn)*(H-26)).toFixed(1);});
   h+='<div class="card"><div class="small muted">審査ごとの視聴率</div><svg viewBox="0 0 '+W+' '+H+'" width="100%" style="max-width:420px;display:block"><polyline points="'+pts.join(' ')+'" fill="none" stroke="var(--accent)" stroke-width="2.5"/>'+
     S.ratings.map(function(r,i){var p=pts[i].split(',');return '<circle cx="'+p[0]+'" cy="'+p[1]+'" r="3.5" fill="var(--accent)"/><text x="'+p[0]+'" y="'+(p[1]-7)+'" font-size="12" text-anchor="middle" fill="currentColor" opacity=".75">'+r.toFixed(1)+'</text>';}).join('')+'</svg></div>';
@@ -4721,7 +4833,7 @@ function vResult(){
   if(others.length){h+='<h3>番組を去った子のその後</h3><div class="card">';others.forEach(function(t){h+='<div class="epi">'+face(t,'sm dim')+'<div><b>'+esc(t.giv)+'</b> '+esc(arcEnd(S,t))+'</div></div>';});h+='</div>';}
   h+=missionBox(E);
   var al=S.album.filter(function(x){return S.tr[x.id].status==='debut';});
-  if(al.length){h+='<h3>思い出アルバム <span class="small muted">'+S.album.length+'枚</span></h3><div class="card">';al.slice(-10).forEach(function(x){var t=S.tr[x.id];h+='<div class="epi">'+face(t,'sm')+'<div><b>'+esc(x.title)+'</b> <span class="muted small">'+esc(t.giv)+(x.r?'・第'+x.r+'審査':'')+'</span><br>'+esc(x.t)+'</div></div>';});h+='</div>';}
+  if(al.length){h+='<details class="fold card"'+(ui.fold&&ui.fold.al?' open':'')+'><summary data-a="fold" data-v="al"><b>思い出アルバム</b><span class="small muted">'+S.album.length+'枚</span></summary><div>';al.slice(-10).forEach(function(x){var t=S.tr[x.id];h+='<div class="epi">'+face(t,'sm')+'<div><b>'+esc(x.title)+'</b> <span class="muted small">'+esc(t.giv)+(x.r?'・第'+x.r+'審査':'')+'</span><br>'+esc(x.t)+'</div></div>';});h+='</div></details>';}
   var hints=[];
   if(E.q<.45)hints.push('実力が足りず、曲の出来が話題に負けた');
   if(E.fanScore<45)hints.push('知られていないメンバーが多く、ファンが広がりきらなかった');
@@ -4741,8 +4853,11 @@ function yen(n){return '<b>'+n+'</b><span class="small muted">万</span>';}
 function vPlan(){
   var f=roundFmt(S),P=S.plan,A=alive(S).sort(function(a,b){return b.lastP-a.lastP||a.id-b.id;}),cost=actCost(S);
   var fcE=forecast(S);
-  var h=telop('制作会議')+(S.story&&S.story.r===S.rnd-1&&S.story.lines.length?'<div class="prevst"><div class="mh">前回のあらすじ</div>'+S.story.lines.map(function(x){return '<p>'+esc(x)+'</p>';}).join('')+'<p class="nx">そして、第'+S.rnd+'審査'+esc(qName(ROUNDS[S.rnd].name))+'が始まる。</p></div>':'')+'<details class="status card"'+(ui.statusOpen?' open':'')+'><summary data-a="statusopen"><b>番組の状況</b><span>目標 視聴率'+roundTarget(S.rnd,S).toFixed(1)+'%'+(fcE?' ・いまデビューしたら <b class="gr g-'+fcE.grade+'">'+fcE.grade+'</b>':'')+' ・依頼'+(S.missions||[]).length+'</span></summary>'+'<div class="tgt"><span>局の目標</span><b>視聴率 '+roundTarget(S.rnd,S).toFixed(1)+'%</b><small>届けば次の制作費＋15万、届かなければ−10万。2回続けて届かないとさらに−20万</small></div>'+missionBox()+forecastBox()+'</details>'+'<div class="card fmt"><p class="small muted" style="margin:0">'+(ROUNDS[S.rnd].fin?'この審査でデビューメンバーを <b>5〜'+S.caps.finMax+'人</b> 選ぶ':'合格にできるのは <b>'+capOf(S)+'人まで</b>（いま'+A.length+'人）')+'</p></div>';
-  h+='<div class="budget"><span>制作費</span><span>'+yen(S.budget)+(cost?' <span class="muted">→ 使うと残り '+(S.budget-cost)+'万</span>':'')+'</span></div>';
+  var h=telop('制作会議',ROUNDS[S.rnd].fin?'この審査でデビューメンバーを <b>5〜'+S.caps.finMax+'人</b> 選ぶ':'合格にできるのは <b>'+capOf(S)+'人まで</b>（いま'+A.length+'人）')+(S.story&&S.story.r===S.rnd-1&&S.story.lines.length?'<div class="prevst"><div class="mh">前回のあらすじ</div>'+S.story.lines.map(function(x){return '<p>'+esc(x)+'</p>';}).join('')+'<p class="nx">そして、第'+S.rnd+'審査'+esc(qName(ROUNDS[S.rnd].name))+'が始まる。</p></div>':'')+'<details class="status card"'+(ui.statusOpen?' open':'')+'><summary data-a="statusopen"><b>番組の状況</b><span>目標 視聴率'+roundTarget(S.rnd,S).toFixed(1)+'%'+(fcE?' ・いまデビューしたら <b class="gr g-'+fcE.grade+'">'+fcE.grade+'</b>':'')+' ・依頼'+(S.missions||[]).length+'</span></summary>'+'<div class="tgt"><span>局の目標</span><b>視聴率 '+roundTarget(S.rnd,S).toFixed(1)+'%</b><small>届けば次の制作費＋15万、届かなければ−10万。2回続けて届かないとさらに−20万</small></div>'+missionBox()+forecastBox()+'</details>';
+  /* 2026-11-14：会議は「チーム（曲・センター）」と「使い道」のタブに分ける（1枚に並べると最初の画面が説明と広告で埋まっていた） */
+  var tab=ui.planTab&&ui.planTab.r===S.rnd?ui.planTab.v:'team';
+  h+='<div class="ptabs" role="tablist"><button role="tab" class="'+(tab==='team'?'on':'')+'" data-a="ptab" data-v="team" aria-selected="'+(tab==='team')+'">'+(P.teams?'チーム':'曲・センター')+'</button><button role="tab" class="'+(tab==='use'?'on':'')+'" data-a="ptab" data-v="use" aria-selected="'+(tab==='use')+'">制作費の使い道 <small>'+(S.budget-cost)+'万</small></button></div>';
+  if(tab==='team'){
   var C=P.teams?null:ROUNDS[S.rnd].concepts;
   if(C){h+='<h3>曲とコンセプト</h3><div class="filters">'+C.map(function(c,i){return '<button class="chip '+(P.concept===i?'on':'')+'" data-a="concept" data-v="'+i+'">'+c.n+'</button>';}).join('')+'</div><p class="small muted">見られる力：'+wText(f)+'</p>';}
   if(S.rnd>=2&&!P.teams&&roundFmt(S).g!=='solo'){h+='<h3>センター</h3><p class="small muted">センターはステージが少し映える。中位より上の出来なら人気と自信が上がり、下回ると自信を失う。</p><div class="pickrow">';
@@ -4760,17 +4875,21 @@ function vPlan(){
         h+='<div class="tmem'+(sel===id?' sel':'')+'"><button class="tm" data-a="tsel" data-id="'+id+'">'+faceImg(t,'sm')+'<span class="nm2">'+esc(t.name)+' '+tag(t.spec)+'<small>曲との相性 '+Math.round(fitOf(t,c.w))+'</small>'+statMini(t)+'</span></button><button class="cbtn'+(isC?' on':'')+'" data-a="tcen" data-id="'+ti+'" data-v="'+id+'">'+(isC?'センター ★':'センターに')+'</button></div>';});
       if(sel!=null&&selTi!==ti&&al.length<5&&P.teams[selTi].length>3)h+='<button class="btn-s tmove" data-a="tmove" data-id="'+ti+'">'+esc(S.tr[sel].giv)+' をここへ移す</button>';
       h+='</div>';});}
+  if(S.rnd>=2&&S.rnd<=4&&S.revived==null){var L=reviveList(S);if(L.length){h+='<h3>復活枠 <span class="small muted">1シーズンに1回</span></h3><p class="small muted">不合格にした子を1人だけ戻せます。人気のある子なら喜ばれ、そうでなければ「基準が分からない」と言われます。</p><div class="pickrow">';
+    L.forEach(function(t){h+='<button class="pk" data-a="revive" data-id="'+t.id+'">'+faceImg(t,'sm dim')+'<span>'+esc(t.giv)+'</span>'+pkStat(t)+'</button>';});h+='</div>';}}
   h+=planFmtBox();
-  h+='<h3>制作費の使い道</h3><div class="actgrid">';
+  h+='<p class="small muted ptnext">制作費の使い道は、上の「制作費の使い道」で選べます。</p>';
+  }else{
+  h+='<div class="budget"><span>制作費</span><span>'+yen(S.budget)+(cost?' <span class="muted">→ 使うと残り '+(S.budget-cost)+'万</span>':'')+'</span></div>';
+  h+='<div class="actgrid">';
   ACTS.forEach(function(a){if(a.from&&(S.rnd<a.from||S.rnd>a.to))return;var on=!!P.acts[a.k],can=on||S.budget-cost>=a.cost;
     h+='<div class="act '+(on?'on':'')+'"><button class="actb" data-a="act" data-v="'+a.k+'" '+(can?'':'disabled')+'><span class="aico">'+(ACT_ICO[a.k]||ACT_ICO.def)+'</span>'+(on?'<span class="aon">✓</span>':'')+'<b>'+a.n+'</b><span class="cost">'+(a.cost?a.cost+'万':'0')+'</span><span class="small muted">'+a.d+'</span>'+(a.x?'<span class="small muted ax"><b>代償</b> '+a.x+'</span>':'')+'</button>';
     if(a.k==='coach'&&on)h+='<div class="acts">'+['v','d','r','e'].map(function(k){return '<button class="'+(P.coachK===k?'on':'')+'" data-a="coachk" data-v="'+k+'">'+STATN[k]+'</button>';}).join('')+'</div>';
     if(a.k==='vlog'&&on){h+='<div class="pickrow sm">';A.forEach(function(t){h+='<button class="pk '+(P.vlogId===t.id?'on':'')+'" data-a="vlogid" data-id="'+t.id+'">'+faceImg(t,'sm')+'<span>'+esc(t.giv)+'</span></button>';});h+='</div>';}
     h+='</div>';});
   h+='</div>';
-  var bLeft=budgetAdLeft();if(!ROUNDS[S.rnd].fin&&S.chal!=='noad'&&bLeft>0)h+='<button class="btn ad" data-a="adbudget">'+adIcon()+'<span>制作費を15万足す<br><span class="small muted">'+adNote()+'。この審査ではあと'+bLeft+'回</span></span></button>';
-  if(S.rnd>=2&&S.rnd<=4&&S.revived==null){var L=reviveList(S);if(L.length){h+='<h3>復活枠 <span class="small muted">1シーズンに1回</span></h3><p class="small muted">不合格にした子を1人だけ戻せます。人気のある子なら喜ばれ、そうでなければ「基準が分からない」と言われます。</p><div class="pickrow">';
-    L.forEach(function(t){h+='<button class="pk" data-a="revive" data-id="'+t.id+'">'+faceImg(t,'sm dim')+'<span>'+esc(t.giv)+'</span>'+pkStat(t)+'</button>';});h+='</div>';}}
+  var bLeft=budgetAdLeft();if(!ROUNDS[S.rnd].fin&&S.chal!=='noad'&&bLeft>0)h+=adRow('adbudget','制作費を15万足す',adNote()+'。この審査ではあと'+bLeft+'回');
+  }
   var ok=!(P.acts.vlog&&P.vlogId==null);
   h+='<div class="foot"><div class="in"><div class="cnt">制作費 '+yen(S.budget-cost)+'</div><button class="btn" data-a="planok" '+(ok?'':'disabled')+'>'+(ok?'レッスンへ':'企画動画の主役を選ぶ')+'</button></div></div>';
   return h;
@@ -4812,9 +4931,13 @@ function radar(t){var K=['v','d','r','e','s'],N=['歌','ダンス','ラップ','
   K.forEach(function(k,i){var r=t.rev[k]===2?t.st[k]:t.rev[k]===1?GV[t.fz[k]]:20,q=pt(i,R*r/100);
     g+='<circle cx="'+q[0]+'" cy="'+q[1]+'" r="3.5" fill="'+(t.rev[k]===2?'var(--c-'+t.spec+')':'var(--card)')+'" stroke="var(--c-'+t.spec+')" stroke-width="1.5"/>';
     var lp=pt(i,R+22),v=t.rev[k]===2?Math.round(t.st[k]):t.rev[k]===1?t.fz[k]+'前後':'？';
-    g+='<text x="'+lp[0]+'" y="'+lp[1]+'" text-anchor="middle" font-size="11.5" fill="var(--muted)">'+N[i]+'</text><text x="'+lp[0]+'" y="'+(+lp[1]+14)+'" text-anchor="middle" font-size="13" font-weight="800" fill="var(--fg)">'+v+'</text>';});
+    g+='<text x="'+lp[0]+'" y="'+lp[1]+'" text-anchor="middle" font-size="12" fill="var(--muted)">'+N[i]+'</text><text x="'+lp[0]+'" y="'+(+lp[1]+14)+'" text-anchor="middle" font-size="13" font-weight="800" fill="var(--fg)">'+v+'</text>';});
   return '<svg class="radar" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="能力のレーダー">'+g+'</svg><div class="small muted" style="text-align:center">塗りつぶしの点は確かな値、白い点は見立て（ずれていることがある）</div>';}
-function telop(sub){var f=ROUNDS[S.rnd];return '<div class="telop"><div class="ep">第'+S.rnd+'審査<span>／全'+NROUND+'回</span></div><div class="tt">'+esc(f.name)+'</div><div class="ds">'+esc(f.desc)+'</div><div class="meta">'+esc(VENUE[S.rnd])+(sub?'　'+sub:'')+'</div></div>';}
+function telop(sub,extra){var f=ROUNDS[S.rnd];return '<div class="telop"><div class="ep">第'+S.rnd+'審査<span>／全'+NROUND+'回</span></div><div class="tt">'+esc(f.name)+'</div><div class="ds">'+esc(f.desc)+'</div><div class="meta">'+esc(VENUE[S.rnd])+(sub?'　'+sub:'')+'</div>'+(extra?'<div class="tcap">'+extra+'</div>':'')+'</div>';}
+/* 審査名の1行の帯（会議のあとの場面）。第何審査・どの段階かは上の段階のタブに出ているので、ここは審査名と条件だけ。info は HTML（呼ぶ側で esc 済み） */
+function roundBand(sub,info){var f=ROUNDS[S.rnd];return '<div class="rband" aria-label="'+esc('第'+S.rnd+'審査 '+sub)+'"><div class="rb1"><b>'+esc(f.name)+'</b></div>'+(info?'<div class="rb2">'+info+'</div>':'')+'</div>';}
+/* 動画広告の特典の小さな行（2026-11-14：本題より上の金の点線の大きな箱をやめた）。data-a は今までと同じ */
+function adRow(a,label,note){return '<button class="btn ad adrow" data-a="'+a+'">'+adIcon()+'<span><b>'+esc(label)+'</b><span class="small muted">'+esc(note)+'</span></span></button>';}
 function stageHero(){var ch='';for(var i=0;i<7;i++){var x=110+i*30,gold=i===3;
     ch+='<g transform="translate('+x+',124) scale(.85)"><rect x="-11" y="-24" width="22" height="20" rx="4" fill="'+(gold?'#e9ba4b':'#4d3c80')+'"/><rect x="-13" y="-6" width="26" height="6" rx="2" fill="'+(gold?'#f6d77e':'#5e4d93')+'"/><rect x="-11" y="0" width="3" height="12" fill="#2c2150"/><rect x="8" y="0" width="3" height="12" fill="#2c2150"/></g>';}
   return '<svg class="hsvg" viewBox="0 0 400 150" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="spg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3c8" stop-opacity=".7"/><stop offset="1" stop-color="#fff3c8" stop-opacity="0"/></linearGradient><linearGradient id="flg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b1d52"/><stop offset="1" stop-color="#110b22"/></linearGradient></defs>'+
@@ -4822,9 +4945,9 @@ function stageHero(){var ch='';for(var i=0;i<7;i++){var x=110+i*30,gold=i===3;
     '<ellipse cx="200" cy="138" rx="150" ry="9" fill="#e9ba4b" opacity=".2"/>'+ch+'</svg>';}
 function confetti(){var c=['#f0709c','#6c9cf0','#f0a14a','#45c592','#e9ba4b','#a47cf2'],h='<div class="confetti" aria-hidden="true">';
   for(var i=0;i<36;i++)h+='<i style="left:'+(i*2.8%100).toFixed(1)+'%;background:'+c[i%c.length]+';animation-delay:'+((i*37%100)/60).toFixed(2)+'s;animation-duration:'+(2.4+(i*13%10)/10).toFixed(1)+'s"></i>';return h+'</div>';}
-function poster(E,P){var L=E.L,D=E.D.filter(function(t){return !L||t.id!==L.id;});
+function poster(E,P,grade){var L=E.L,D=E.D.filter(function(t){return !L||t.id!==L.id;});
   function mem(t,lead){return '<div class="mem'+(lead?' lead':'')+'">'+face(t,lead?'lg':'md')+'<b>'+esc(t.giv)+'</b><small>'+(lead?'リーダー':SPEC[t.spec])+'</small></div>';}
-  return '<div class="poster">'+confetti()+'<div class="pk2">デビュー決定</div><div class="gname"'+(P.color!=null?' style="color:'+GCOLORS[P.color][1]+';text-shadow:0 0 22px '+GCOLORS[P.color][1]+'88"':'')+'>'+esc(gName(P))+'</div>'+(P.songs?'<div class="small" style="opacity:.85">デビュー曲「'+esc(P.songs[P.song||0])+'」</div>':'')+''+(L?'<div class="lineup">'+mem(L,1)+'</div>':'')+'<div class="lineup">'+D.map(function(t){return mem(t,0);}).join('')+'</div><div class="pmeta">'+esc(SONGDIR[P.dir].n)+'</div></div>';}
+  return '<div class="poster">'+confetti()+'<div class="pk2">デビュー決定</div>'+(grade?'<div class="pgrade"><b class="gr g-'+E.grade+'">'+E.grade+'</b><span>'+E.total.toFixed(1)+'<small>点</small></span></div>':'')+'<div class="gname"'+(P.color!=null?' style="color:'+GCOLORS[P.color][1]+';text-shadow:0 0 22px '+GCOLORS[P.color][1]+'88"':'')+'>'+esc(gName(P))+'</div>'+(P.songs?'<div class="small" style="opacity:.85">デビュー曲「'+esc(P.songs[P.song||0])+'」</div>':'')+''+(L?'<div class="lineup">'+mem(L,1)+'</div>':'')+'<div class="lineup">'+D.map(function(t){return mem(t,0);}).join('')+'</div><div class="pmeta">'+esc(SONGDIR[P.dir].n)+'</div></div>';}
 
 
 function hypeStars(h){return '<span class="hype">'+'★★★'.slice(0,h)+'<i>'+'★★★'.slice(h)+'</i></span>';}
@@ -4851,12 +4974,14 @@ function vFormat(){
   return h;
 }
 function planFmtBox(){
-  var F=S.fmt,h='<h3>この先の審査 <span class="small muted">今回とこの先を入れ替えられる</span></h3><div class="card">';
+  /* 2026-11-14：ふだんは見出しだけ（押すと開く）。差し替えを選んでいる間は開いたまま */
+  var op=(ui.fold&&ui.fold.pfmt)||ui.fswap!=null;
+  var F=S.fmt,h='<details class="fold card"'+(op?' open':'')+'><summary data-a="fold" data-v="pfmt"><b>この先の審査</b><span class="small muted">今回とこの先を入れ替えられる</span></summary><div>';
   for(var i=S.rnd-1;i<4;i++){var f=FORMATS[F[i]],w=fmtWarn(S,F[i],i+1);
     h+='<div class="fslot in"><div class="fno">第'+(i+1)+'審査'+(i===S.rnd-1?'<small>今回</small>':'')+'</div><div class="fbody"><b>'+esc(f.t)+'</b> '+hypeStars(f.hype)+(w?'<div class="small" style="color:var(--bad)">'+esc(w)+'</div>':'')+'</div><div class="seg">'+
       '<button data-a="pfup" data-v="'+i+'" '+(i<=S.rnd-1?'disabled':'')+' aria-label="上へ">↑</button><button data-a="pfdn" data-v="'+i+'" '+(i>=3?'disabled':'')+' aria-label="下へ">↓</button><button data-a="pfswap" data-v="'+i+'">差し替え</button></div></div>';
     if(ui.fswap===i){var used={};F.forEach(function(k){used[k]=1;});h+='<div class="fpick">'+fmtKeys().filter(function(k){return !used[k]&&!(S.locked&&S.locked[k]);}).map(function(k){var g=FORMATS[k];return '<button class="choice" data-a="pfput" data-v="'+k+'"><b>'+esc(g.t)+' '+hypeStars(g.hype)+'</b><span class="hint"><span class="hp up">'+esc(g.good)+'</span><span class="hp dn">'+esc(g.bad)+'</span></span></button>';}).join('')+'</div>';}}
-  h+='<div class="fslot in fin"><div class="fno">第5審査</div><div class="fbody"><b>最終審査</b></div></div></div>';
+  h+='<div class="fslot in fin"><div class="fno">第5審査</div><div class="fbody"><b>最終審査</b></div></div></div></details>';
   return h;
 }
 
@@ -4958,10 +5083,12 @@ function vShow(){
   h2+='<div class="scorepop" data-n="'+it.sc+'" style="animation-delay:'+sD.toFixed(2)+'s"><span class="num">'+(ui.endStatic?it.sc:0)+'</span><small>点</small>'+(it.sc>=90?' <span class="hl">見せ場</span>':'')+'</div>';
   h2+='<p class="judge" style="animation-delay:'+(sD+.4).toFixed(2)+'s">'+esc(it.duo?'先生「'+S.tr[st.res[it.ids[0]].duoWin?it.ids[0]:it.ids[1]].giv+'の勝ち。'+(Math.abs(st.res[it.ids[0]].sc-st.res[it.ids[1]].sc)<=6?'紙一重だった」':'はっきり差が出た」'):it.team!=null?(it.team===st.win?'先生「今日いちばんのチーム。全員の顔が見えた」':(it.jl||judgeLine(it.sc))):(st.order[0]===it.ids[0]?'先生「今日いちばんの出来。言うことはない」':(it.jl||judgeLine(it.sc))))+'</p>';
   if(it.team!=null||it.duo)h2+='<div class="chips" style="animation-delay:'+(sD+.4).toFixed(2)+'s">'+it.ids.map(function(id){return '<span>'+esc(S.tr[id].giv)+' '+st.res[id].sc+'</span>';}).join('')+'</div>';
-  h2+='<div class="featrow">'+it.ids.map(function(id){var on=!!S.feat[id];return '<button class="btn-s '+(on?'on':'')+'" data-a="showfeat" data-id="'+id+'" '+(!on&&nf>=3?'disabled':'')+'>'+(it.ids.length>1?esc(S.tr[id].giv)+'を':'')+(on?'大きく映す ✓':'大きく映す')+'</button>';}).join('')+'<span class="small" style="opacity:.7">'+nf+'/3</span></div>';
+  if(it.ids.length>1)h2+='<div class="featrow">'+it.ids.map(function(id){var on=!!S.feat[id];return '<button class="btn-s '+(on?'on':'')+'" data-a="showfeat" data-id="'+id+'" '+(!on&&nf>=3?'disabled':'')+'>'+(it.ids.length>1?esc(S.tr[id].giv)+'を':'')+(on?'大きく映す ✓':'大きく映す')+'</button>';}).join('')+'<span class="small" style="opacity:.7">'+nf+'/3</span></div>';
   h2+='<div class="crowd"></div><div class="pen">'+penl(it.ids.map(function(id){return S.tr[id];}))+'</div></div>';
   var last=sh.pos>=sh.seq.length-1;
-  h2+='<div class="foot"><div class="in"><div class="cnt showctl"><button class="btn-s '+(ui.showAuto?'on':'')+'" data-a="showauto">オート'+(ui.showAuto?' ✓':'')+'</button><button class="btn-s '+(ui.showFast?'on':'')+'" data-a="showfast">速く'+(ui.showFast?' ✓':'')+'</button><button class="btn-s" data-a="showend">'+(ui.skipArm?'もう一度で結果へ':'結果へ')+'</button></div><button class="btn" data-a="'+(last?'showend':'shownext')+'">'+(last?'結果発表へ':'次の出番へ')+'</button></div></div>';
+  /* 2026-11-14：「大きく映す」が折り目の下にあった。下の帯の操作の列に入れる（ひとりの出番はその子を、組の出番は舞台の中の選ぶ所へ） */
+  var fon=it.ids.length===1&&!!S.feat[it.ids[0]],fb=it.ids.length===1?'<button class="btn-s featb'+(fon?' on':'')+'" data-a="showfeat" data-id="'+it.ids[0]+'" '+(!fon&&nf>=3?'disabled':'')+'><span class="lng">大きく</span>映す'+(fon?' ✓':'')+' <small>'+nf+'/3</small></button>':'<button class="btn-s featb" data-a="featjump"><span class="lng">大きく</span>映す <small>'+nf+'/3</small></button>';
+  h2+='<div class="foot"><div class="in showin"><div class="cnt showctl">'+fb+'<button class="btn-s '+(ui.showAuto?'on':'')+'" data-a="showauto">オート'+(ui.showAuto?' ✓':'')+'</button><button class="btn-s '+(ui.showFast?'on':'')+'" data-a="showfast">速く'+(ui.showFast?' ✓':'')+'</button><button class="btn-s" data-a="showend">'+(ui.skipArm?'もう一度で結果へ':'結果へ')+'</button></div><button class="btn" data-a="'+(last?'showend':'shownext')+'">'+(last?'結果発表へ':'次の出番へ')+'</button></div></div>';
   return h2;
 }
 function penl(T){var cols=T.map(function(t){return 'var(--c-'+t.spec+')';});var h='';for(var i=0;i<14;i++)h+='<i style="background:'+cols[i%cols.length]+';animation-delay:'+(i*.08).toFixed(2)+'s"></i>';return h;}
@@ -4999,16 +5126,16 @@ function vMonth(){var M=S.month,P=S.prep,D=S.tr.filter(function(t){return t.stat
   if(M.w>=4)return '<h2>デビューから1か月</h2><p class="small muted">4週間の活動が終わりました。</p><div class="card">'+M.log.map(function(l){return '<div class="fy" style="display:grid;grid-template-columns:4em 1fr;gap:8px;padding:6px 0;border-bottom:1px dashed var(--line);font-size:13.5px;line-height:1.7"><b>第'+l.w+'週</b><span><b>'+esc(l.n)+'</b><br>'+esc(l.t)+'</span></div>';}).join('')+'</div><div class="foot"><div class="in"><button class="btn" data-a="monthdone" style="flex:1">結果を見る</button></div></div>';
   var h='<div class="telop"><div class="ep">デビューから1か月</div><div class="tt">'+esc(gName(P))+'</div><div class="ds">毎週1つ、グループの活動を選びます。忙しい週が3回続くと、体調を崩すメンバーが出ることがあります。</div><div class="meta">第'+Math.min(4,M.w+1)+'週 ／ 全4週　制作費 '+S.budget+'万</div><div class="mfaces">'+D.map(function(t){return faceImg(t,'sm');}).join('')+'</div></div>';
   h+='<div class="weeks">';for(var i=0;i<4;i++){var l=M.log[i];h+='<div class="wkc'+(i===M.w?' now':'')+'"><small>第'+(i+1)+'週</small><b>'+(l?esc(l.n.replace(/（.*）/,'')):i===M.w?'いま':'')+'</b></div>';}h+='</div>';
-  if(!M.boostUsed&&M.w<4&&S.chal!=='noad')h+='<button class="btn ad" data-a="adboost">'+adIcon()+'<span>次の週の宣伝を倍にする<br><span class="small muted">'+adNote()+'。ファンが広がる活動に効く。1か月に1回</span></span></button>';
   if(M.log.length){var l=M.log[M.log.length-1];h+='<div class="toast"><b>第'+l.w+'週</b> '+esc(l.t)+'</div>';}
   if(M.busy>=2)h+='<p class="note" style="color:var(--bad)">忙しい週が'+M.busy+'回続いている。そろそろ休ませないと危ない。</p>';
   WEEK_ACTS.forEach(function(a){var dis=a.cost&&S.budget<a.cost;var parts=[];for(var k in a.fx)parts.push([{fan:'ファン',song:'曲の評価',coh:'まとまり'}[k]+'↑',1]);if(a.busy>0)parts.push(['忙しい',0]);if(a.cost)parts.push(['制作費−'+a.cost+'万',0]);
     h+='<button class="choice" data-a="week" data-v="'+a.k+'" '+(dis?'disabled':'')+'><b>'+esc(a.n)+'</b><span class="hint">'+partsHtml(parts)+'<span class="small muted">'+esc(a.d)+'</span></span></button>';});
+  if(!M.boostUsed&&M.w<4&&S.chal!=='noad')h+=adRow('adboost','次の週の宣伝を倍にする',adNote()+'。ファンが広がる活動に効く。1か月に1回');
   return h;}
 
 
 var TIPS={
-  select:function(){return 'まずは'+S.caps.sel+'人まで選びます。「▶ 動画をじっくり見る」は'+watchMax(S)+'人まで（制作費は要りません）。ひと言に「始めてまだ1年」のような手がかりがある子は、伸びしろが大きいかもしれません。';},
+  select:function(){return 'まずは'+S.caps.sel+'人まで選びます。「▶ 動画を見る」は'+watchMax(S)+'人まで（制作費は要りません）。ひと言に「始めてまだ1年」のような手がかりがある子は、伸びしろが大きいかもしれません。';},
   format:'審査の順番で番組の流れが決まります。盛り上がり（★）が上がっていく並びほど視聴率が伸びます。迷ったら「おすすめに戻す」。',
   plan:'制作会議では、制作費の使い道とセンターを決めます。局の目標視聴率に届かないと次の制作費が減ります。',
   lesson:'全員が1つずつレッスンを受け、2つめの「特訓」は人数を絞って選びます。迷ったら見出しの横の「おまかせ」。疲れが80を超えた子は、本番でけがをすることがあります。',
@@ -5022,7 +5149,13 @@ var TIPS={
 };
 function tipSeen(){try{return JSON.parse(HStore.get('hikari7_tips')||'{}');}catch(e){return {};}}
 function tipBox(){if(!S||ui.tipsOff)return '';var p=S.phase,t=TIPS[p];if(typeof t==='function')t=t();if(!t)return '';if(tipSeen()[p])return '';
-  return '<div class="tip"><span class="tq">コツ</span><span>'+esc(t)+'</span><button class="btn-s" data-a="tipok" data-v="'+p+'">わかった</button></div>';}
+  /* 2026-11-14：全文の箱が場面の上に居座り、幅320・文字とても大きいで画面の半分近くを取っていた。
+     ふだんは1行にたたみ（押すと開く）、その場面で1つ操作したら既読にする（tipTouch） */
+  if(ui.tipOpen!==p)return '<button class="tipc" data-a="tipopen" data-v="'+p+'" aria-expanded="false"><span class="tq">💡 コツ</span><span class="tt1">'+esc(t)+'</span></button>';
+  return '<div class="tip"><span class="tq">💡 コツ</span><span>'+esc(t)+'</span><button class="btn-s" data-a="tipok" data-v="'+p+'">わかった</button></div>';}
+/* その場面の操作を1つしたら、コツは既読（コツ・設定・顔を開くなど、場面の外の操作では数えない） */
+var TIP_FREE={tipopen:1,tipok:1,settings:1,setclose:1,bgmtoggle:1,prof:1,profclose:1,noop:1,say:1,gloss:1,glclose:1,tinfo:1,fav:1,statusopen:1,fold:1,ptab:1,pfopen:1,adcancel:1};
+function tipTouch(a){try{if(!S||TIP_FREE[a])return;var p=S.phase;if(!TIPS[p])return;var ts=tipSeen();if(ts[p])return;ts[p]=1;HStore.set('hikari7_tips',JSON.stringify(ts));if(ui.tipOpen===p)ui.tipOpen=null;}catch(e){}}
 
 
 function vNight(){var q=S.reqs[0],t=S.tr[q.id],N=S.night;
@@ -5102,8 +5235,8 @@ function vEnding(){var F=S.future,E=finalEval(S),others=S.tr.filter(function(t){
   return h;}
 function futureBox(){var F=S.future;if(!F)return '';
   var EK=F.end?endOf(F.end):null;
-  return '<h3>グループのその後'+(EK?'<span class="rendh">結末「'+esc(EK.n)+'」</span>':'')+'</h3><div class="card fut">'+F.years.map(function(y){return '<div class="fy"><b>'+esc(y.y)+'</b><span>'+esc(y.t)+'</span></div>';}).join('')+
-    '<button class="btn sub" data-a="endagain">エンドロールをもう一度見る</button></div>';}
+  return '<details class="fold card fut"'+(ui.fold&&ui.fold.fu?' open':'')+'><summary data-a="fold" data-v="fu"><b>グループのその後</b>'+(EK?'<span class="rendh">結末「'+esc(EK.n)+'」</span>':'')+'</summary><div>'+F.years.map(function(y){return '<div class="fy"><b>'+esc(y.y)+'</b><span>'+esc(y.t)+'</span></div>';}).join('')+
+    '</div></details><button class="btn sub" data-a="endagain">エンドロールをもう一度見る</button>';}
 var endRaf=null,endLast=0;
 function endTick(ts){endRaf=null;var el=document.querySelector('.ending .roll');if(!el||el.classList.contains('static'))return;
   var dt=endLast?Math.min(.1,(ts-endLast)/1000):0;endLast=ts;var vh=window.innerHeight;
@@ -5149,16 +5282,22 @@ function highlightBox(){var H=seasonHighlights(S);if(!H.length)return '';
 
 /* ---------- フェーズ18〜27：並べ替え・設定・効果音・振動・明暗・動きを減らす ---------- */
 var SETKEY='hikari7_set';
-function loadSet(){var d={fs:'n',sfx:1,hap:1,theme:'stage',reduce:0,bgm:60,voice:1};try{var o=JSON.parse(HStore.get(SETKEY)||'{}');for(var k in o)d[k]=o[k];}catch(e){}if(!d.thv){if(d.theme==='auto')d.theme='stage';d.thv=2;}return d;}
-function saveSet(){try{HStore.set(SETKEY,JSON.stringify(ui.set));}catch(e){}applySet();}
-var FS={n:['標準',1],l:['大きい',1.1],xl:['とても大きい',1.2]};
+function loadSet(){var d={fs:'n',sfx:1,hap:1,theme:'stage',reduce:0,bgm:60,voice:1};try{var o=JSON.parse(HStore.get(SETKEY)||'{}');for(var k in o)d[k]=o[k];}catch(e){}
+  try{var ts=APP&&+APP.textScale;if(ts&&!d.fsUser&&d.fs==='n'){d.fs=ts>=1.3?'xxl':ts>=1.15?'xl':ts>=1.05?'l':'n';if(d.fs!=='n')d.fsAuto=1;}}catch(e){}
+  if(!d.thv){if(d.theme==='auto')d.theme='stage';d.thv=2;}return d;}
+function saveSet(){try{var o={};for(var k in ui.set)o[k]=ui.set[k];if(o.fsAuto&&!o.fsUser)o.fs='n';delete o.fsAuto;HStore.set(SETKEY,JSON.stringify(o));}catch(e){}applySet();}
+var FS={n:['標準',1],l:['大きい',1.1],xl:['とても大きい',1.2],xxl:['最大',1.35]};
 function applySet(){var st=ui.set,de=document.documentElement;
   if(st.theme==='auto')de.removeAttribute('data-theme');else de.setAttribute('data-theme',st.theme==='stage'?'dark':st.theme);
   try{document.body.classList.toggle('stg',st.theme==='stage');}catch(e){}
   document.body.style.zoom=(FS[st.fs]||FS.n)[1]===1?'':String((FS[st.fs]||FS.n)[1]);
   document.body.classList.toggle('reduce',!!st.reduce);
+  narCheck();
   pushTheme();
   var pr=false;try{pr=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){}ui.endStatic=pr||!!st.reduce;}
+/* 2026-11-14：幅320や文字「とても大きい」で崩れていた。文字の倍率で割った幅が360未満なら .nar、260未満なら .nar2 */
+function narCheck(){try{var z=(FS[ui.set.fs]||FS.n)[1],w=(window.innerWidth||375)/z;document.body.classList.toggle('nar',w<360);document.body.classList.toggle('nar2',w<260);}catch(e){}}
+try{window.addEventListener('resize',narCheck);}catch(e){}
 var actx=null;
 function sfx(k){if(!ui.set||!ui.set.sfx)return;try{if(!actx){var C=window.AudioContext||window.webkitAudioContext;if(!C)return;actx=new C();}if(actx.state==='suspended')actx.resume();
   var N={tap:[[700,.035]],ok:[[660,.07],[880,.11]],ng:[[392,.09],[294,.13]],fan:[[523,.08],[659,.08],[784,.08],[1047,.24]],call:[[784,.06],[1175,.14]]}[k];if(!N)return;var t=actx.currentTime+.01;
@@ -5167,7 +5306,7 @@ function haptic(k){if(!ui.set||!ui.set.hap)return;if(APP){appPost({type:'haptic'
 function seg2(a,cur,opts){return '<div class="seg sset'+(opts.length===2?' c2':opts.length===4?' c4':'')+'">'+opts.map(function(o){return '<button class="'+(cur===o[0]?'on':'')+'" data-a="'+a+'" data-v="'+o[0]+'">'+o[1]+'</button>';}).join('')+'</div>';}
 function vSettings(){var st=ui.set;
   var h='<div class="ov" data-a="setclose"><div class="sheet setsheet" data-a="noop"><button class="btn-s close" data-a="setclose">閉じる</button><h2 style="margin-top:0">設定</h2>';
-  h+='<h3>文字の大きさ</h3>'+seg2('setfs',st.fs,[['n','標準'],['l','大きい'],['xl','とても大きい']]);
+  h+='<h3>文字の大きさ</h3>'+seg2('setfs',st.fs,[['n','標準'],['l','大きい'],['xl','とても大きい'],['xxl','最大']]).replace('sset c4','sset c2')+(st.fsAuto&&!st.fsUser&&st.fs!=='n'?'<p class="small muted">端末の文字の大きさに合わせています</p>':'');
   h+='<h3>進み方</h3>'+seg2('setquick',ui.quick?'1':'0',[['0','じっくり'],['1','さくさく']])+'<p class="small muted">さくさくは、ステージの演出・一人ずつの発表・エンドロールを飛ばします。</p>';
   h+='<h3>ステージの見方</h3>'+seg2('setauto',ui.showAuto?'1':'0',[['0','自分で送る'],['1','自動で送る']])+seg2('setfast',ui.showFast?'1':'0',[['0','ふつうの速さ'],['1','速い']]);
   h+='<h3>BGM</h3>'+seg2('setbgm',String(st.bgm),[['0','切る'],['30','小'],['60','中'],['100','大']])+'<h3>台詞の声</h3>'+seg2('setvoice',st.voice?'1':'0',[['1','声あり'],['0','声なし']])+'<p class="small muted">名前が入らない台詞だけ声が付きます。🔊 の付いた台詞は押すと聞けます。</p>';
@@ -5304,8 +5443,14 @@ document.addEventListener('click',function(ev){
   if(a!=='wipe')ui.wipeArm=false;if(a!=='new'&&a!=='daily')ui.newArm=null;if(a!=='quit')ui.quitArm=false;if(a!=='talkok')ui.talkArm=false;if(a!=='retry')ui.retryArm=null;if(a!=='revive')ui.reviveArm=null;if(a!=='seat')ui.seatArm=false;if(a!=='showend')ui.skipArm=false;if(a!=='undo')ui.undoArm=false;
   if(el.classList.contains('btn')||el.classList.contains('choice'))sfx('tap');
   if(!AUD.unlocked&&!APP){AUD.unlocked=true;AUD.cur=undefined;}
+  tipTouch(a);
   switch(a){
     case 'g':ui.g=v;render();break;
+    case 'tipopen':ui.tipOpen=v;render();break;
+    /* 畳んだ見出し（結果の内訳・年表・アルバム、会議のこの先の審査）。開け閉めは details に任せ、描き直しで戻らないよう覚えておく */
+    case 'fold':if(!ui.fold)ui.fold={};var fd=el.closest&&el.closest('details');ui.fold[v]=fd?!fd.open:!ui.fold[v];if(v==='pfmt'&&!ui.fold[v])ui.fswap=null;break;
+    case 'ptab':ui.planTab={r:S?S.rnd:0,v:v};render();break;
+    case 'featjump':try{var fr=document.querySelector('#app .featrow');if(fr)fr.scrollIntoView({behavior:'smooth',block:'center'});}catch(e){}break;
     case 'adboost':if(!S.month||S.month.boostUsed)break;withAd(function(){go(function(){S.month.boost=true;S.month.boostUsed=true;});});break;
     case 'buypack':if(APP&&PACKS[v])appPost({type:'buy',id:PACKS[v].id});break;
     case 'tsub':if(v==='shop'&&APP)appPost({type:'refresh'});ui.tsub=v||null;ui.newArm=null;render();window.scrollTo(0,0);break;
@@ -5340,7 +5485,7 @@ document.addEventListener('click',function(ev){
     case 'tinfo':if(TRAITS[v])toast(TRAITS[v].n+'：'+TRAITS[v].d);break;
     case 'settings':ui.settings=true;render();break;
     case 'setclose':ui.settings=false;render();break;
-    case 'setfs':ui.set.fs=v;saveSet();render();break;
+    case 'setfs':ui.set.fs=v;ui.set.fsUser=1;saveSet();render();break;
     case 'bgmtoggle':if(ui.set.bgm>0){ui.set.bgmPrev=ui.set.bgm;ui.set.bgm=0;}else ui.set.bgm=ui.set.bgmPrev||60;saveSet();render();syncBgm(true);toast(ui.set.bgm>0?'BGM を流します':'BGM を止めました');break;
     case 'setbgm':ui.set.bgm=+v;saveSet();render();syncBgm(true);break;
     case 'setvoice':ui.set.voice=v==='1'?1:0;saveSet();render();break;
