@@ -1415,7 +1415,7 @@ var EV={
 /* 2026-11-14：後で回収される出来事。仲間割れを放っておくと次の審査で再燃し、仲直りしないまま
    ふたりともデビューさせるとまとまりが下がる（FEUD_COH）。分かれ道（cross）は第2・第4審査に1回ずつ。
    いまデビューしたらいちばん足りない項目を選ぶと大きく効く（CROSS_BIG）、ほかは小さい */
-var ARC_GOOD=3,ARC_BAD=4,ARC_HIT=0,ARC_MISSP=6,CRIT_MATCH=3,FEUD_COH=6,CROSS_BIG=4,CROSS_SMALL=-1,FW_POP=35;
+var ARC_GOOD=4,ARC_BAD=4,ARC_HIT=0,ARC_MISSP=6,CRIT_MATCH=4,CRIT_MISS=3,FEUD_COH=6,CROSS_BIG=5,CROSS_SMALL=-1,FW_POP=35;
 var CROSS_K=['song','fan','coh'],CROSS_N={song:'曲の評価',fan:'ファン',coh:'まとまり'};
 function crossWeak(S){var E=typeof forecast==='function'?forecast(S):null;if(!E)return null;var v={song:E.song,fan:E.fanScore,coh:E.coh};return CROSS_K.slice().sort(function(a,b){return v[a]-v[b];})[0];}
 EV.feud={title:'仲間割れ、ふたたび',text:function(S,e,A,B){return '前の審査でぶつかった'+A.name+'と'+B.name+'が、また同じことで言い合いになった。今度はほかの子も手が止まっている。';},
@@ -1633,7 +1633,7 @@ function critMates(S,t){var st=S.stage,r=st.res[t.id];
   var ord=st.order.filter(function(id){return S.tr[id].status==='alive';}),i=ord.indexOf(t.id);return [ord[i-1],ord[i+1]].filter(function(id){return id!=null;});}
 function critPick(S,arr){var u=S.critSeen||(S.critSeen={}),c=arr.filter(function(x){return !u[x];});if(!c.length){arr.forEach(function(x){delete u[x];});c=arr;}var x=pick(c);u[x]=1;return x;}
 function applyCritique(S){
-  var out=[];
+  var out=[],cset=critSet(S);
   alive(S).forEach(function(t){var b0={trust:t.trust,conf:t.conf,fat:t.fat,sk:t.st.v+t.st.d+t.st.r+t.st.e},best0=critBest(t);var c=S.crit[t.id]==null?critDefault(t,S):S.crit[t.id],tp=t.temper,pot=t.pot,r=S.stage.res[t.id],sc=r?r.sc:60,hi=sc>=70,tag=hi?'hi':'lo',sk=t.spec==='t'?'e':t.spec,wk=weakest(t),oth=null,sayK=hi?'hi':'lo';
     if(c===0){ if(tp==='makezu'){t.conf+=6;t.trust+=hi?2:-2;t.complacent=true;} else if(tp==='ochoshi'){t.conf+=12;t.trust+=4;if(R()<.5)t.complacent=true;} else if(tp==='sensai'){t.conf+=15;t.trust+=6;} else {t.conf+=10;t.trust+=3;} }
     else if(c===1){ t.focus=wk;t.st[wk]=Math.min(99,t.st[wk]+2*pot);t.conf+=tp==='makezu'?3:tp==='sensai'?-5:-1;t.trust+=tp==='sensai'?2:5; }
@@ -1662,7 +1662,9 @@ function applyCritique(S){
       else if(tp==='sunao'){t.conf-=3;t.trust-=1;tag='ng';}
       else if(tp==='sensai'){t.conf-=10;t.trust-=4;tag='ng';}
       else {if(R()<.6){t.complacent=true;tag='ng';}else t.conf+=2;} }
-    if(c===critFit(t,S)&&tag!=='ng'){t.conf+=CRIT_MATCH;t.trust+=CRIT_MATCH;t.st[sk]=Math.min(99,t.st[sk]+CRIT_MATCH*.75*pot);}
+    /* 気質に合った講評は響く。自分で選んだ子（上位・下位・物語の続き）ほど大きく、おまかせの子は小さく */
+    if(c===critFit(t,S)&&tag!=='ng'){var mb=cset[t.id]?CRIT_MATCH:1;t.conf+=mb;t.trust+=mb;t.st[sk]=Math.min(99,t.st[sk]+mb*.75*pot);}
+    else if(best0>=0&&cset[t.id]&&S.crit[t.id]!=null&&c!==best0){t.conf-=CRIT_MISS;t.trust-=CRIT_MISS;}
     normT(t);
     var on=oth?oth.o.giv:'',fill=function(s){return s.replace(/\{D\}/g,pick(CRIT_SPD[t.spec])).replace(/\{W\}/g,pick(CRIT_WKD[wk])).replace(/\{O\}/g,on);};
     var sy=CRIT_SAY[c],say=fill(critPick(S,sy[sayK]||sy.all||sy.hi));
@@ -4787,7 +4789,7 @@ function vCritique(){
   h+='<div class="crbar"><button class="btn-s" data-a="critstar" '+(nStar?'':'disabled')+'>★ おすすめにする（'+nOn+' / '+nStar+'人）</button><button class="btn-s" data-a="critall" data-v="7">「見守る」に戻す</button>'+
     '<span class="small muted">'+(nStar?'気質の分からない子は、そのままです':'まだ気質の分かっている子がいません。講評のあとで全員分かります')+'</span></div><div class="card">';
   A.forEach(function(t){var ri=A0.indexOf(t),c=S.crit[t.id]==null?critDefault(t,S):S.crit[t.id],bst=critBest(t),sc=S.stage.res[t.id].sc;
-    var eff='<div class="crfx"><b>'+CRIT[c][0]+'</b>：'+CRIT[c][1]+'<span class="crc">代償：'+CRIT[c][2]+'</span>'+(bst>=0&&bst!==c?'<span class="crhint">★は「'+CRIT[bst][0]+'」</span>':bst===c?'<span class="crhint ok">★ この子に合う</span>':'')+'</div>';
+    var eff='<div class="crfx"><b>'+CRIT[c][0]+'</b>：'+CRIT[c][1]+'<span class="crc">代償：'+CRIT[c][2]+'</span>'+(bst>=0&&bst!==c?'<span class="crhint">★は「'+CRIT[bst][0]+'」（合わないと自信・信頼↓）</span>':bst===c?'<span class="crhint ok">★ この子に合う</span>':'')+'</div>';
     h+='<div class="jrow crow">'+face(t,'sm')+'<div class="mid"><div class="nm"><span class="crk">'+(ri+1)+'位</span>'+esc(t.name)+' '+tag(t.spec)+'</div><div class="small muted">出来 <b class="crsc '+(sc>=85?'hi':sc<60?'lo':'')+'">'+sc+'</b>・気質 '+(t.temperRev?TEMPER[t.temper]:'?')+'</div><div class="seg crg">'+CRIT.map(function(o,i){return '<button class="cr'+i+(c===i?' on':'')+(critBest(t)===i?' best':'')+'" data-a="crit" data-id="'+t.id+'" data-v="'+i+'" aria-label="'+o[0]+'">'+(critBest(t)===i?'★':'')+o[3]+'</button>';}).join('')+'</div>'+eff+'</div></div>';});
   h+='</div>';
   if(nAuto)h+='<p class="small muted">ほかの'+nAuto+'人はおまかせ（気質が分かっている子は ★、分からない子は「見守る」）。</p>';
