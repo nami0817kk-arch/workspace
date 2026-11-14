@@ -146,18 +146,38 @@ class FinanceScreen extends StatelessWidget {
               ),
             ),
             const LedgerCard(),
-            const EconomyCard(),
-            const ClubPolicyCard(),
-            const ClubValueCard(),
-            const ClubRankingCard(),
-            const EquityCard(),
-            const MediaDealsCard(),
-            const ProjectCard(),
-            const AdvisorCard(),
-            const RiskCard(),
-            const RivalCard(),
-            const ClubTimelineCard(),
-            const RulesCard(),
+            _CardGroup(
+              title: Tr.pick('規則・方針・景気', 'Rules, policy and economy'),
+              children: const [
+                RulesCard(),
+                ClubPolicyCard(),
+                EconomyCard(),
+              ],
+            ),
+            _CardGroup(
+              title: Tr.pick('株主と契約', 'Shareholders and deals'),
+              children: const [
+                EquityCard(),
+                MediaDealsCard(),
+              ],
+            ),
+            _CardGroup(
+              title: Tr.pick('投資・人・備え', 'Projects, people and safeguards'),
+              children: const [
+                ProjectCard(),
+                AdvisorCard(),
+                RiskCard(),
+              ],
+            ),
+            _CardGroup(
+              title: Tr.pick('クラブの価値と記録', 'Value and records'),
+              children: const [
+                ClubValueCard(),
+                ClubRankingCard(),
+                RivalCard(),
+                ClubTimelineCard(),
+              ],
+            ),
             const SizedBox(height: 16),
             Text(Tr.pick('資金調達（銀行融資）', 'Raise money (bank loan)'),
                 style: Theme.of(context).textTheme.titleMedium),
@@ -702,6 +722,28 @@ class _DepositRequestSheetState extends State<_DepositRequestSheet> {
           content: Text(ok
               ? Tr.pick('$amount万円を預け入れました', 'You deposited $amount')
               : Tr.pick('定期預金を組めませんでした', 'The deposit could not be opened'))),
+    );
+  }
+}
+
+/// 経営画面のカードをまとめて畳む入れ物。普段は見出しだけで、開くと中身が出る。
+class _CardGroup extends StatelessWidget {
+  const _CardGroup({required this.title, required this.children});
+
+  final String title;
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Theme(
+        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+        child: ExpansionTile(
+          title: Text(title, style: Theme.of(context).textTheme.titleMedium),
+          childrenPadding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+          children: children,
+        ),
+      ),
     );
   }
 }
