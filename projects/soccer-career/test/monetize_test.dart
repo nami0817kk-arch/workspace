@@ -110,6 +110,30 @@ Future<Monetization> started({
 }
 
 void main() {
+  // **なぜ「星を頼む季は広告を譲る」が要るのか。**
+  //
+  // 広告も星の依頼も、置き場は季の切れ目しかない。以前は
+  // 「広告が出た回は星を見送る」だけにしていたが、広告は**毎季出る**ので
+  // 星の依頼がほぼ永久に順番待ちになっていた（累計1,000DL超で星8件）。
+  // ここが落ちたら、広告が疎になったということなので、
+  // `hub_screen` で譲っている形を見直してよい。
+  test('広告は季末のたびに出る——だから「出た回は見送る」では星を頼めない', () {
+    final money = Monetization(ads: NoAdService(), purchases: NoPurchaseService());
+    var now = DateTime(2026);
+    var shown = 0;
+    const seasons = 19;
+    for (var season = 1; season <= seasons; season++) {
+      // 1シーズンを手で進めれば数十分かかるので、連発の線には当たらない。
+      now = now.add(const Duration(minutes: 30));
+      if (money.shouldShowSeasonAd(seasonsPlayed: season, now: now)) shown++;
+    }
+    expect(
+      shown,
+      seasons,
+      reason: '季末のたびに広告が出る。星の依頼に空く回は無い',
+    );
+  });
+
   /// **利用者に配る文面も、実装と突き合わせる。**
   ///
   /// サポートページに「始めてから数シーズンのあいだは広告を出さない」と
