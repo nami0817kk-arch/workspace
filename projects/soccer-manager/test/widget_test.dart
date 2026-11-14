@@ -60,7 +60,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('テストFC'), findsWidgets);
-    expect(find.text('スカッド'), findsOneWidget);
+    expect(find.text('チーム'), findsOneWidget);
   });
 
   testWidgets(
@@ -79,7 +79,7 @@ void main() {
     await tester.pumpAndSettle();
 
     // ホームタブから「スカッド」タブへ切り替える(ルートは積まれない)。
-    await tester.tap(find.text('スカッド'));
+    await tester.tap(find.text('チーム'));
     await tester.pumpAndSettle();
     expect(find.text('テストFC'), findsNothing);
 

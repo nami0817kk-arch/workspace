@@ -5,6 +5,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:soccer_manager/l10n/app_localizations.dart';
 import 'package:soccer_manager/l10n/tr.dart';
+import 'package:soccer_manager/monetization/ad_service.dart';
+import 'package:soccer_manager/monetization/monetization_controller.dart';
+import 'support/stub_purchase_service.dart';
 import 'package:soccer_manager/screens/lineup_screen.dart';
 import 'package:soccer_manager/screens/main_shell.dart';
 import 'package:soccer_manager/screens/squad_screen.dart';
@@ -32,6 +35,10 @@ void main() {
       providers: [
         ChangeNotifierProvider<GameState>.value(value: game),
         ChangeNotifierProvider<SettingsController>.value(value: settings),
+        // 下タブの「経営」が、ご褒美のカードで読む。
+        ChangeNotifierProvider<MonetizationController>(
+            create: (_) => MonetizationController(
+                adService: NoOpAdService(), purchases: StubPurchaseService())),
       ],
       child: MaterialApp(
         locale: const Locale('ja'),

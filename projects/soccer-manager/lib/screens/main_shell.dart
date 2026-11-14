@@ -3,13 +3,17 @@ import 'package:provider/provider.dart';
 
 import '../services/feedback_service.dart';
 import '../state/game_state.dart';
+import 'finance_screen.dart';
 import 'fixtures_screen.dart';
 import 'home_screen.dart';
-import 'lineup_screen.dart';
-import 'squad_screen.dart';
-import '../l10n/l10n_ext.dart';
+import 'team_tabs.dart';
+import 'transfer_screen.dart';
+import '../l10n/tr.dart';
 
-/// ホーム/スカッド/戦術/順位表をボトムナビゲーションのタブとして保持するシェル。
+/// 状況/経営/補強/チーム/リーグを下(横向きなら左)のナビゲーションのタブとして保持するシェル。
+///
+/// オーナーが毎回触るのは状況・経営・補強。選手と先発は「チーム」に、順位と日程は
+/// 「リーグ」にまとめてある。
 class MainShell extends StatefulWidget {
   const MainShell({super.key});
 
@@ -22,8 +26,9 @@ class _MainShellState extends State<MainShell> {
 
   static const _tabs = [
     HomeScreen(),
-    SquadScreen(),
-    LineupScreen(),
+    FinanceScreen(embedded: true),
+    TransferScreen(embedded: true),
+    TeamTabs(),
     FixturesScreen(),
   ];
 
@@ -59,22 +64,27 @@ class _MainShellState extends State<MainShell> {
       (
         icon: homeIcon(false),
         selectedIcon: homeIcon(true),
-        label: context.l10n.navHome,
+        label: Tr.pick('状況', 'Status'),
+      ),
+      (
+        icon: const Icon(Icons.account_balance_outlined),
+        selectedIcon: const Icon(Icons.account_balance),
+        label: Tr.pick('経営', 'Finance'),
+      ),
+      (
+        icon: const Icon(Icons.swap_horiz_outlined),
+        selectedIcon: const Icon(Icons.swap_horiz),
+        label: Tr.pick('補強', 'Signings'),
       ),
       (
         icon: const Icon(Icons.groups_outlined),
         selectedIcon: const Icon(Icons.groups),
-        label: context.l10n.navSquad,
-      ),
-      (
-        icon: const Icon(Icons.checklist_outlined),
-        selectedIcon: const Icon(Icons.checklist),
-        label: context.l10n.navTactics,
+        label: Tr.pick('チーム', 'Team'),
       ),
       (
         icon: const Icon(Icons.leaderboard_outlined),
         selectedIcon: const Icon(Icons.leaderboard),
-        label: context.l10n.navStandings,
+        label: Tr.pick('リーグ', 'League'),
       ),
     ];
 

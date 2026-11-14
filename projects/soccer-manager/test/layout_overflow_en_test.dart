@@ -88,7 +88,7 @@ void main() {
 
     // ボトムナビの各タブを開く。オーバーフローがあればpumpの時点で
     // 例外になり、このテストが落ちる。
-    for (final tab in const ['Squad', 'Tactics', 'Table', 'Home']) {
+    for (final tab in const ['Team', 'Signings', 'Finance', 'League', 'Status']) {
       await tester.tap(find.text(tab));
       await tester.pumpAndSettle();
     }

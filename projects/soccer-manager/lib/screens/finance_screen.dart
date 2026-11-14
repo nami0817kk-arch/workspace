@@ -21,7 +21,10 @@ import 'player_detail_screen.dart';
 import '../l10n/tr.dart';
 
 class FinanceScreen extends StatelessWidget {
-  const FinanceScreen({super.key});
+  const FinanceScreen({super.key, this.embedded = false});
+
+  /// 下タブの一員として表示するか。true なら戻るボタンを出さない。
+  final bool embedded;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +48,7 @@ class FinanceScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(Tr.pick('クラブ経営', 'Club finances')),
-        leading: const BackButton(),
+        leading: embedded ? null : const BackButton(),
         actions: const [QuickAccessMenuButton()],
       ),
       drawer: const QuickAccessDrawer(),
