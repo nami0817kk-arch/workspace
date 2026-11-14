@@ -283,6 +283,8 @@ class GmController extends ChangeNotifier {
   void learnSkill(Skill s) => _act((c) => c.learnSkill(s));
   void ownerMeeting(int level) => _act((c) => c.ownerMeeting(level));
   void setConcession(int level) => _act((c) => c.setConcession(level));
+
+  void upgradeFacility(Facility f) => _act((c) => c.upgradeFacility(f));
   void hireCoach(int poolIndex) => _act((c) => c.hireCoach(poolIndex));
   void setMinutes(Map<int, int> m) => _act((c) => c.setMinutes(m));
 

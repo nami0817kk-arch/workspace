@@ -65,6 +65,24 @@ enum Income {
   final String label;
 }
 
+/// 自分のチームの施設(2026-11-14、ユーザー「経営に手をつけて」)。段階1〜3。はじめは1で、お金を払って上げる(下げられない)。
+/// 稼いだお金の使い道で、試合と育成に効く。ほかのチームは段階1のまま(自動で遊ぶGMも上げない=釣り合いは変わらない)。
+enum Facility {
+  training('練習施設', '若手が毎オフ伸びやすい(段階2: 22歳まで+1、段階3: 24歳まで+1。伸びしろの範囲で)'),
+  medical('医療', 'けがが起きにくく、早く治る(段階2: ×0.85、段階3: ×0.7)'),
+  arena('アリーナ', '客が入りやすく、人気が上がる(段階ごとに入り+4%、シーズンの終わりの人気+2)');
+
+  const Facility(this.label, this.text);
+  final String label;
+  final String text;
+}
+
+/// 施設を、その段階へ上げる費用(10万ドル。番号が段階)。上げた分はその(次の)シーズンの支出に入る。
+const facilityUpgradeCost = [0, 0, 300, 600];
+
+/// 施設の段階ごとの、1シーズンの維持費(10万ドル)。
+const facilityUpkeep = [0, 0, 20, 50];
+
 /// オーナーの性格。続けて気に入られると、信頼に上乗せが付く(嫌われて減ることはない)。
 enum OwnerType {
   winNow('勝利一筋', '勝つことだけを見る。優勝を争える年は信頼が大きく上がる。お金にはおおらか'),
@@ -823,6 +841,38 @@ class Career {
   /// 入場料の段階([ticketPrices] の番号)。
   int priceLevel = 1;
 
+  /// 施設の段階([Facility] の順、1〜3)。
+  List<int> facilities = [1, 1, 1];
+
+  /// 施設を上げた費用のうち、まだ支出に入れていない分(シーズン前・オフに上げると、次の開幕で入る)。
+  int facilityDebt = 0;
+
+  int facilityLevel(Facility f) => f.index < facilities.length ? facilities[f.index].clamp(1, 3) : 1;
+
+  /// 施設の維持費の合計(1シーズン)。
+  int get facilityUpkeepTotal => [for (final f in Facility.values) facilityUpkeep[facilityLevel(f)]].fold(0, (a, b) => a + b);
+
+  /// 施設を上げられない理由(上げられるなら null)。
+  String? facilityProblem(Facility f) {
+    if (phase != Phase.preseason && phase != Phase.contracts) return 'シーズン前とオフの契約のときに上げられる';
+    if (facilityLevel(f) >= 3) return 'これ以上は上げられない';
+    return null;
+  }
+
+  /// 施設を1段上げる。費用は次の開幕(シーズン前ならこの開幕)の支出に入る。
+  bool upgradeFacility(Facility f) {
+    if (facilityProblem(f) != null) return false;
+    while (facilities.length < Facility.values.length) {
+      facilities.add(1);
+    }
+    facilities[f.index] = facilityLevel(f) + 1;
+    facilityDebt += facilityUpgradeCost[facilities[f.index]];
+    return true;
+  }
+
+  /// 医療の施設による、けがの起きやすさと治るまでの倍率。
+  double get medicalScale => const [1.0, 1.0, 0.85, 0.7][facilityLevel(Facility.medical)];
+
   /// 売店の値段の段階([concessionPrices] の番号)。
   int concessionLevel = 1;
 
@@ -859,7 +909,7 @@ class Career {
   List<OwnerGoal> goals = [];
 
   /// 観客の入り(0.3〜1.0)。人気が高いほど、値段が安いほど入る。
-  double get attendance => (0.55 + hype * 0.0045 - (ticketPrices[priceLevel] - 100) * 0.003 - (concessionPrices[concessionLevel] - 18) * 0.002).clamp(0.3, 1.0);
+  double get attendance => (0.55 + (facilityLevel(Facility.arena) - 1) * 0.04 + hype * 0.0045 - (ticketPrices[priceLevel] - 100) * 0.003 - (concessionPrices[concessionLevel] - 18) * 0.002).clamp(0.3, 1.0);
 
   /// 1試合のホームの入場収入(10万ドル)。
   int get gatePerGame => (arenaSeats * attendance * ticketPrices[priceLevel] * capScale / 100000).round();
@@ -1257,7 +1307,9 @@ class Career {
     cupField = [];
     cupRounds = [];
     incomeBy = List.filled(Income.values.length, 0);
-    costs = 0;
+    // 施設を上げた費用と維持費は、開幕で支出に入れる
+    costs = facilityDebt + facilityUpkeepTotal;
+    facilityDebt = 0;
     final third = [GoalKind.playoffs, GoalKind.youth, GoalKind.noTax];
     // 強いチームにはプレーオフ、立て直しには若手、上限を大きく超えたチームには税を
     final kind = r < 12 ? GoalKind.playoffs : r >= 22 ? GoalKind.youth : me.payroll > taxLine - capScaled(50) ? GoalKind.noTax : third[rng.nextInt(third.length)];
@@ -1307,7 +1359,7 @@ class Career {
     final games = <GameResult>[];
     for (final round in seasonSchedule(teams.length).sublist(roundAt, roundAt + n)) {
       for (final (h, a) in round) {
-        final g = playGame(teams[h], teams[a], rng, mine: mine, injuryScale: difficulty.injury);
+        final g = playGame(teams[h], teams[a], rng, mine: mine, injuryScale: difficulty.injury * medicalScale, healScale: medicalScale);
         if (g.involves(mine)) games.add(g);
       }
     }
@@ -1730,7 +1782,7 @@ class Career {
     }
     final goalDelta = goals.where((g) => g.kind != GoalKind.wins).fold(0, (n, g) => n + (g.met! ? goalTrust : -goalTrust));
     // 人気: 勝率とプレーオフで動く
-    hype = (hype + ((me.winPct - 0.5) * 40).round() + const [-4, 3, 6, 9, 12, 16][res] + mediaHype).clamp(0, 100);
+    hype = (hype + ((me.winPct - 0.5) * 40).round() + const [-4, 3, 6, 9, 12, 16][res] + mediaHype + (facilityLevel(Facility.arena) - 1) * 2).clamp(0, 100);
     // オーナーの性格に合う年は、信頼に上乗せが付く(嫌われて減ることはない)
     final liked = switch (ownerType) {
       OwnerType.winNow => res >= 3 ? 5 : 0,
@@ -1903,8 +1955,11 @@ class Career {
           byTraining = _train(p, d);
           d += byTraining;
         }
-        // 出場時間と性格(どのチームも。乱数は使わない)
-        final extra = extraGrowth(p, d);
+        // 出場時間と性格(どのチームも。乱数は使わない)。自分のチームは練習施設も
+        final extra = [
+          ...extraGrowth(p, d),
+          if (t.index == mine && d >= 0 && p.ovr < p.pot && p.age <= const [0, 0, 22, 24][facilityLevel(Facility.training)]) (Facility.training.label, 1),
+        ];
         for (final (label, v) in extra) {
           p.ovr = (p.ovr + v).clamp(35, 99);
           if (label == Trait.lateBloomer.label && v > 0 && p.pot < p.ovr + 1) p.pot = math.min(99, p.ovr + 1);
@@ -3299,6 +3354,8 @@ class Career {
         'rv': revenue,
         'incb': incomeBy,
         if (concessionLevel != 1) 'cl': concessionLevel,
+        if (facilities.any((x) => x != 1)) 'fcl': facilities,
+        if (facilityDebt != 0) 'fcd': facilityDebt,
         'cs': costs,
         'lp': lastProfit,
         'gl': [for (final g in goals) g.toJson()],
@@ -3397,6 +3454,11 @@ class Career {
       ..revenue = (j['rv'] as int?) ?? 0
       ..incomeBy = [for (var i = 0; i < Income.values.length; i++) i < ((j['incb'] as List?)?.length ?? 0) ? (j['incb'] as List)[i] as int : 0]
       ..concessionLevel = ((j['cl'] as int?) ?? 1).clamp(0, concessionPrices.length - 1)
+      ..facilities = [
+        for (var i = 0; i < Facility.values.length; i++)
+          (j['fcl'] is List && (j['fcl'] as List).length > i && (j['fcl'] as List)[i] is int) ? ((j['fcl'] as List)[i] as int).clamp(1, 3) : 1,
+      ]
+      ..facilityDebt = ((j['fcd'] as int?) ?? 0).clamp(0, 100000)
       ..costs = (j['cs'] as int?) ?? 0
       ..lastProfit = (j['lp'] as int?) ?? 0
       ..goals = [for (final g in maps('gl')) OwnerGoal.fromJson(g)]

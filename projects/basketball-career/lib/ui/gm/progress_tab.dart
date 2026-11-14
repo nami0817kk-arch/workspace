@@ -472,6 +472,33 @@ class ProgressTab extends StatelessWidget {
             color: car.projectedProfit >= 0 ? GmColors.good : GmColors.bad),
         const Text('人気が高いほど、入場料が安いほど客が入る。人気は勝ちとプレーオフで上がる。ぜいたく税は超えた分の1.5倍を払う。',
             style: TextStyle(fontSize: 12, color: GmColors.sub, height: 1.4)),
+        const SizedBox(height: 10),
+        const Text('施設', style: TextStyle(color: GmColors.sub, fontSize: 13)),
+        for (final f in Facility.values)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 3),
+            child: Row(children: [
+              Expanded(
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text('${f.label}  ${'★' * car.facilityLevel(f)}${'☆' * (3 - car.facilityLevel(f))}',
+                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                  Text(f.text, style: const TextStyle(fontSize: 11, color: GmColors.sub, height: 1.3)),
+                ]),
+              ),
+              const SizedBox(width: 8),
+              if (car.facilityLevel(f) < 3)
+                OutlinedButton(
+                  style: OutlinedButton.styleFrom(minimumSize: const Size(0, 34), padding: const EdgeInsets.symmetric(horizontal: 8)),
+                  onPressed: car.facilityProblem(f) != null || c.busy ? null : () => c.upgradeFacility(f),
+                  child: Text('上げる ${money(facilityUpgradeCost[car.facilityLevel(f) + 1])}', style: const TextStyle(fontSize: 12)),
+                ),
+            ]),
+          ),
+        Text(
+          '上げた費用は次の開幕の支出に入る(この先の分 ${money(car.facilityDebt)})。維持費 1シーズン ${money(car.facilityUpkeepTotal)}。'
+          '${car.phase == Phase.preseason || car.phase == Phase.contracts ? '' : '上げられるのはシーズン前とオフの契約のとき。'}',
+          style: const TextStyle(fontSize: 12, color: GmColors.sub, height: 1.4),
+        ),
       ]);
 
   // ------------------------------------------------------------ プレーオフ
