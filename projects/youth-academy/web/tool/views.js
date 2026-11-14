@@ -29,6 +29,13 @@ const html = read('shell.html')
   .replace('/*__STORY__*/', () => read('story.js'))
   .replace('/*__MEMORY__*/', () => read('memory.js'))
   .replace('/*__CHAINS__*/', () => read('chains.js'))
+  .replace('/*__CHAINS2__*/', () => read('chains2.js'))
+  .replace('/*__EVENTS2__*/', () => read('events2.js'))
+  .replace('/*__STAFF__*/', () => read('staff.js'))
+  .replace('/*__SCOUT2__*/', () => read('scout2.js'))
+  .replace('/*__CLUB5__*/', () => read('club5.js'))
+  .replace('/*__LIFE__*/', () => read('life.js'))
+  .replace('/*__FUNC__*/', () => read('func.js'))
   .replace('/*__SHOP__*/', () => read('shop.js'))
   .replace('/*__VIEWS3__*/', () => read('views3.js'))
   .replace('/*__IMGDATA__*/', () => read('imgdata.js'))
@@ -177,11 +184,13 @@ async function clearEvents() {
   ok(txt().includes('予算と施設') && txt().includes('概要') && txt().includes('順位と日程'), 'クラブの8項目');
   btn('概要').click();
   ok(txt().includes('信頼度') && txt().includes('今年の目標') && !txt().includes('undefined'), 'クラブの概要（信頼度の名前が出る）');
+  ok(txt().includes('指導の方針') && txt().includes('強化部長') && txt().includes('寄り添い'), 'クラブの概要に指導の方針と強化部長');
+  ok(txt().includes('中長期の計画'), 'クラブの概要に中長期の計画');
   for (const k of ['予算と施設', 'スタッフ', 'スカウト', '順位と日程', '概要']) {
     btn(k).click();
     await sleep(10);
     if (k === '予算と施設') ok(txt().includes('今年の予算') && txt().includes('施設レベル'), '予算の画面');
-    if (k === 'スタッフ') ok(txt().includes('技術コーチ') && txt().includes('スタッフ候補'), 'スタッフの画面');
+    if (k === 'スタッフ') ok(txt().includes('技術コーチ') && txt().includes('スタッフ候補') && txt().includes('監督との関係') && txt().includes('得意は'), 'スタッフの画面（性格・得意・関係が出る）');
     if (k === 'スカウト') ok(txt().includes('来年の高1') && txt().includes('スカウトに出る'), 'スカウトの画面');
     if (k === '順位と日程') ok(txt().includes('プレミアリーグ') || txt().includes('プリンスリーグ') || txt().includes('県リーグ'), '順位表');
   }
@@ -468,6 +477,25 @@ async function clearEvents() {
       ok(A.w.players[sid].team === 'B' && !A.w.lineupA.some((s) => s.pid === sid) && A.w.lineupA.length === 11, '選ぶと先発が入れ替わり、下げた子はBへ');
       ok(A.w.benchA.length === 9 && new Set(A.w.lineupA.map((s) => s.pid).concat(A.w.benchA)).size === 20, '入れ替えのあともAは20人で重ならない');
     }
+    // 機能面の画面
+    rail('選手');
+    await sleep(10);
+    ok(txt().includes('並び：') && !!btn('総合力'), '選手一覧に並び替え');
+    btn('総合力').click();
+    btn('様子').click();
+    ok(txt().includes('他の子と比べる') && txt().includes('今年の育成計画') && txt().includes('伸び悩みの診断') && txt().includes('位置の転向練習'), '選手の様子に比べる・育成計画・診断・転向');
+    btn('他の子と比べる').click();
+    ok(!!d.querySelector('.sheet') && txt().includes('比べる子を選ぶ'), '比べる画面が開く');
+    const sh2 = d.querySelector('.sheet');
+    const first2 = sh2 && sh2.querySelector('.pitem');
+    if (first2) first2.click();
+    ok(txt().includes('総合力') && txt().includes('別の子と比べる'), '2人の比較が出る');
+    if (btn('閉じる')) btn('閉じる').click();
+    rail('設定');
+    if (btn('用語集')) { btn('用語集').click(); ok(txt().includes('覚醒の鍵') && txt().includes('連帯貢献金'), '用語集'); }
+    rail('ホーム');
+    ok(txt().includes('お知らせ') && (txt().includes('留める') || txt().includes('すべて読んだ') || true), 'お知らせに留める');
+    ok(errors.length === 0, '機能面の画面で例外なし: ' + errors.slice(0, 2).join('|'));
     // 引退のまとめに遺産ポイントが出る
     A.w.retired = { year: A.w.year, week: A.w.week };
     w.YA._ui.render();

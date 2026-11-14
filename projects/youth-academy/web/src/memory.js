@@ -36,9 +36,9 @@
     const o = def && def.opts && def.opts[idx];
     if (!o) return out;
     if (e.id === 'ms' && (e.ms === 'term' || e.ms === 'hint')) { if (o.kind) { p.leanX = p.leanX || {}; p.leanX[o.kind] = (p.leanX[o.kind] || 0) + 1; } }
-    else if (e.id === 'ms') YA.memAdd(w, p, e.ms, o.kind, quoteOf(o.label), rr != null ? { bad: rr } : null);
+    else if (e.id === 'ms') YA.memAdd(w, p, e.ms, o.kind, quoteOf(o.label), Object.assign(rr != null ? { bad: rr } : {}, /「/.test(o.label) ? { sp: true } : {}));
     else if (e.id === 'path') YA.memAdd(w, p, 'path', o.k, quoteOf(o.label), { wish: p.wish || YA.wishOf(p) });
-    else if (MEM_EVENTS.has(e.id)) YA.memAdd(w, p, e.id, o.kind, quoteOf(o.label), rr != null ? { bad: rr } : null);
+    else if (MEM_EVENTS.has(e.id)) YA.memAdd(w, p, e.id, o.kind, quoteOf(o.label), Object.assign(rr != null ? { bad: rr } : {}, /「/.test(o.label) ? { sp: true } : {}));
     return out;
   };
   const aw0 = YA.awaken;
@@ -169,12 +169,13 @@
     'unrest:warm': () => [`出番がなくて腐りかけたとき、約束してもらえたのがうれしかったです。`, `出番なくて腐ってたとき、約束してくれたっすよね。`],
     'hot:push': () => [`調子のいいときに、もっと上を求めてもらえたのが良かったです。`, `調子いいときに「もっと上」って言ってくれたの、良かったっす。`],
     'chain': (x) => [x.m.q, x.m.q],
+    'pitch': (x) => (x.m.kept === false ? [`入るときに「${x.m.q}」と言われたのに、と思ったこともありました。`, `入るとき「${x.m.q}」って言われたのに、って思ったこともあったっす。`] : [`「${x.m.q}」――あの日そう言ってもらって、ここに決めました。`, `「${x.m.q}」って言われて、ここに決めたんすよ。`]),
     'promise:kept': () => [`「Aで使う」という約束を、ちゃんと守ってもらいました。`, `Aで使うって約束、守ってくれたっすよね。`],
     'promise:broken': () => [`約束を守ってもらえなかったこと、正直、悔しかったです。`, `約束、守ってもらえなかったの、悔しかったっす。`],
     'scout': (x) => [`スカウトの人が「${x.m.q}」と言っていたって、あとで聞きました。`, `スカウトの人に「${x.m.q}」って言われてたらしいっすね。`],
     'ref': (x) => [`${x.m.q}さんの紹介でここに来て、本当によかったです。`, `${x.m.q}さんに紹介してもらって、マジでよかったっす。`],
   };
-  const PRI = ['star:push', 'chain', 'wall', 'quit', 'awake', 'star', 'injury', 'lowconf', 'debut', 'unrest', 'hot', 'ref', 'scout'];
+  const PRI = ['star:push', 'chain', 'wall', 'pitch', 'quit', 'awake', 'star', 'injury', 'lowconf', 'debut', 'unrest', 'hot', 'ref', 'scout'];
   // その子を形づくった記憶を1つ（約束を最優先。次に壁・辞めかけ・覚醒…）
   YA.definingMem = function (p) {
     const mem = p.mem || [];
@@ -296,7 +297,7 @@
       // よくある記憶（初出場など）は避け、その子だけの記憶を。同じ年に同じ言葉を二度使わない
       w._letUsed = w._letUsed && w._letUsed.y === w.year ? w._letUsed : { y: w.year, q: [] };
       const COMMONK = new Set(['debut', 'term', 'hint', 'scout', 'ref', 'awake', 'grad', 'path', 'promise']);
-      const pool = (a.mem || []).filter((m) => m.q && !COMMONK.has(m.k) && w._letUsed.q.indexOf(m.q) < 0);
+      const pool = (a.mem || []).filter((m) => m.q && !COMMONK.has(m.k) && (m.sp || m.k === 'chain') && w._letUsed.q.indexOf(m.q) < 0);
       const m = pool.find((x) => x.k === 'chain') || pool[YA.hash(a.name + w.year) % (pool.length || 1)];
       const ECHO = [(q) => `監督に言われた「${q}」は、今も大事にしています。`, (q) => `「${q}」――あの言葉を、試合の前に思い出します。`, (q) => `後輩に話すとき、つい「${q}」と言ってしまいます。`, (q) => `苦しいときは、「${q}」と言ってもらった日のことを思い出します。`];
       if (m && m.k === 'chain') { parts.push(m.q); w._letUsed.q.push(m.q); }

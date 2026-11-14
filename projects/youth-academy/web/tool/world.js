@@ -15,6 +15,13 @@ require(path.join(__dirname, '../src/rivals.js'));
 require(path.join(__dirname, '../src/story.js'));
 require(path.join(__dirname, '../src/memory.js'));
 require(path.join(__dirname, '../src/chains.js'));
+require(path.join(__dirname, '../src/chains2.js'));
+require(path.join(__dirname, '../src/events2.js'));
+require(path.join(__dirname, '../src/staff.js'));
+require(path.join(__dirname, '../src/scout2.js'));
+require(path.join(__dirname, '../src/club5.js'));
+require(path.join(__dirname, '../src/life.js'));
+require(path.join(__dirname, '../src/func.js'));
 require(path.join(__dirname, '../src/shop.js'));
 require(path.join(__dirname, '../src/imgdata.js'));
 require(path.join(__dirname, '../src/art.js'));
@@ -44,6 +51,8 @@ function playYear(w, opts) {
       // 同じ週の別の出来事で抜けた子（プロ契約など）宛ては、画面と同じく飛ばす
       if (e.pid && !w.players[e.pid]) { w.events.splice(w.events.indexOf(e), 1); continue; }
       const v = YA.eventView(w, e);
+      // 出す直前に状況が変わった出来事（クラブ・スタッフ・暮らし・声かけ）は、画面と同じく飛ばす
+      if (!v && ['clubev', 'staffev', 'lifeev', 'meet', 'obret', 'ref'].indexOf(e.id) >= 0) { w.events.splice(w.events.indexOf(e), 1); continue; }
       ok(v && v.text && v.opts.length >= 2, '出来事の表示 ' + e.id);
       const r = YA.resolveEvent(w, e, ((e.pid ? e.pid.length : 3) + w.week) % v.opts.length);
       ok(r && typeof r.line === 'string', '出来事の結果 ' + e.id);
@@ -809,7 +818,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
         if (d.eps.length !== 2 || !['good', 'mid', 'bad', 'hidden'].every((x) => d.ends[x] && d.ends[x].m)) okAll = false;
         for (const ep of d.eps) { try { if (!ep.t(p, wc, { sc: 0, picks: [] })) okAll = false; } catch (er) { okAll = false; } }
       }
-      ok(okAll && Object.keys(YA.CHAINS).length === 15, '続き物：15本すべての文と4つの結末');
+      ok(okAll && Object.keys(YA.CHAINS).length === 43, '続き物：43本すべての文と4つの結末 ' + Object.keys(YA.CHAINS).length);
       // 前回を覚える
       const r = all.find((x) => x.id !== p.id && wc.players[x.id] && x.grade === 3);
       r.tr = 70;
@@ -830,7 +839,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
       YA.resolveEvent(wc, { id: 'ms', pid: s.id, ms: 'term', week: 39, year: wc.year }, 0);
       ok((s.mem || []).length === n0 && YA.leanOf(s).n >= 1, '年度末の会話は記憶に残さず、傾きにだけ数える');
       // 便り：同じ年に同じ言葉を二度使わない
-      const mk = (nm) => ({ name: nm, year: wc.year - 1, club: 'X', status: 'pro', league: 'J1リーグ', bond: 5, mem: [{ k: 'wall', c: 'warm', q: '必ず越えられる' }], seasons: [{ y: wc.year, club: 'X', apps: 10, goals: 1, titles: [], awards: [] }] });
+      const mk = (nm) => ({ name: nm, year: wc.year - 1, club: 'X', status: 'pro', league: 'J1リーグ', bond: 5, mem: [{ k: 'wall', c: 'warm', q: '必ず越えられる', sp: true }], seasons: [{ y: wc.year, club: 'X', apps: 10, goals: 1, titles: [], awards: [] }] });
       const ww = Object.assign({}, wc, { year: wc.year, _letUsed: null });
       const la = YA.letterOf(ww, mk('甲 一')), lb = YA.letterOf(ww, mk('乙 二'));
       ok(/越えられる/.test(la) && !/越えられる/.test(lb), '便り：同じ年に同じ言葉を二度使わない');
@@ -839,6 +848,165 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
       wc.week = 3; wc.memKey = null; wc.forced = [];
       YA.rivalWeek(wc);
       ok((wc.forced || []).some((x) => x.id === 'obret' && x.who === '丙 三'), 'OB：指導者志望の子は引退を待たずに戻ってくる');
+      // 2段目：関係と一話の出来事
+      const wr = YA.newWorld(41);
+      YA.relSync(wr);
+      const kinds = new Set((wr.rel || []).map((x) => x.k));
+      ok(kinds.has('room') && (kinds.has('mentor') || kinds.has('gk')), '関係：寮の同室と師弟が結ばれる ' + [...kinds].join(','));
+      let okEv = true, nEv = 0;
+      const rr = YA.rngOf(5);
+      for (const id of YA.EVENTS2) {
+        const d = YA.EVENTS.find((x) => x.id === id);
+        for (let wk = 1; wk <= 40; wk += 3) {
+          wr.week = wk;
+          const pp = d.pick(wr, rr);
+          if (!pp) continue;
+          const e = { id, pid: pp.id, week: wk, year: wr.year };
+          const v = YA.eventView(wr, e);
+          if (!v || !v.text || v.opts.length < 2) { okEv = false; break; }
+          YA.resolveEvent(wr, e, 0);
+          nEv++;
+          break;
+        }
+      }
+      ok(okEv && nEv >= 12, '一話の出来事：出せるものは文と選択肢が出て、選べる ' + nEv + '/' + YA.EVENTS2.length);
+      ok(Object.values(wr.players).some((x) => (x.mem || []).some((m) => YA.EVENTS2.indexOf(m.k) >= 0)), '一話の出来事も記憶に残る');
+      JSON.parse(JSON.stringify(wr));
+      // 3段目：スタッフ
+      const ws = YA.newWorld(43);
+      const st = ws.club.staff.map(YA.staffInfo);
+      ok(st.every((x) => YA.STAFF_PERS[x.pers] && x.origin && x.spec && x.rel >= 0) && /関係/.test(YA.staffLine(st[0])), 'スタッフ：性格・出身・得意・関係を持つ');
+      const sp = Object.values(ws.players)[0];
+      const evi = { id: 'injury', pid: sp.id, week: ws.week, year: ws.year };
+      sp.inj = 3;
+      const vi = YA.eventView(ws, evi);
+      ok(vi && /私なら/.test(vi.text) && vi.staffRec != null, 'スタッフ：担当のコーチが意見を言う');
+      const tr = ws.club.staff.find((x) => x.role === 'トレーナー');
+      const rel0 = tr.rel;
+      YA.resolveEvent(ws, evi, vi.staffRec);
+      ok(tr.rel > rel0, 'スタッフ：意見を聞くと関係が深まる');
+      let nSE = 0, okSE = true;
+      for (const id of YA.STAFF_EVENTS) {
+        const s0 = ws.club.staff[0];
+        const e = { id: 'staffev', sk: id, sid: s0.id, pid: null, week: ws.week, year: ws.year };
+        const v = YA.eventView(ws, e);
+        if (!v) continue;
+        if (!v.text || v.opts.length < 2) { okSE = false; continue; }
+        if (!ws.club.staff.find((x) => x.id === s0.id)) continue;
+        YA.resolveEvent(ws, e, 1);
+        nSE++;
+      }
+      ok(okSE && YA.STAFF_EVENTS.length === 30 && nSE >= 20, 'スタッフの出来事30種：文と選択肢が出て、選べる ' + nSE);
+      const low = ws.club.staff[1];
+      low.rel = 5; low.pers = '厳格';
+      const name0 = low.name;
+      YA.yearStart(ws);
+      ok(!ws.club.staff.some((x) => x.name === name0) && (ws.exStaff || []).some((x) => x.name === name0), 'スタッフ：関係が冷えきると辞める');
+      JSON.parse(JSON.stringify(ws));
+      // 4段目：スカウト
+      const wk = YA.newWorld(47);
+      wk.week = 8;
+      const r8 = YA.rngOf(9);
+      const cd = YA._genCand(wk, r8, 'scout', 'strong');
+      cd.next = false; cd.status = 'open';
+      const sg = YA.signCand(wk, cd.id);
+      const me = (wk.forced || []).find((x) => x.id === 'meet' && x.cid === cd.id);
+      ok(sg.ok && !!me && Object.keys(YA.HOME).length === 11 && !YA.HOME.edu, '声をかけると、本人と家族に会う場面になる（家の型11・勉強の型はない）');
+      const mv = YA.eventView(wk, me);
+      ok(mv && /家は「/.test(mv.text) && mv.opts.length === 3, '会う場面：家の型と口説き方3つが出る');
+      const fitIdx = YA.pitchOptions(wk, cd).findIndex((k) => YA.HOME[cd.home].fit.indexOf(k) >= 0);
+      YA.resolveEvent(wk, me, fitIdx);
+      ok(cd.pitch && cd.pitchFit === 1, '家に合う口説き方を選ぶと手応えがある');
+      cd.amb = 0; wk.club.rep = 90;
+      YA.resolveOffers(wk);
+      ok(cd.status === 'signed' && cd.p.mem && cd.p.mem[0].k === 'pitch', '入団したら、口説いたときの約束が記憶の最初に残る');
+      const cv = YA.candView(wk, cd);
+      ok(cv.region && cv.home, '候補の画面に地域と家の型が出る');
+      JSON.parse(JSON.stringify(wk));
+      // 5段目：ライバル監督・強化部長・練習
+      const w5 = YA.newWorld(53);
+      ok(YA.directorOf(w5).name && YA.directorOf(w5).pers, '強化部長が一人の人物として決まる');
+      let n5 = 0, ok5 = true;
+      for (const id of YA.CLUB_EVENTS) {
+        const e = { id: 'clubev', ck: id, pid: null, week: w5.week, year: w5.year };
+        const v = YA.eventView(w5, e);
+        if (!v) continue;
+        if (!v.text || v.opts.length < 2) { ok5 = false; continue; }
+        YA.resolveEvent(w5, e, 0);
+        n5++;
+      }
+      ok(ok5 && YA.CLUB_EVENTS.length >= 15 && n5 >= 10, 'クラブ・ライバルの出来事：文と選択肢が出て、選べる ' + n5 + '/' + YA.CLUB_EVENTS.length);
+      w5.week = 10;
+      const dy = YA.diaryOf(w5);
+      ok(Array.isArray(dy) && dy.length >= 1 && dy.length <= 3, '練習日誌が毎週2〜3行できる ' + dy.join('／'));
+      let np = 0;
+      const rp = YA.rngOf(3);
+      for (const id of YA.PRACTICE_EVENTS) {
+        const d = YA.EVENTS.find((x) => x.id === id);
+        const pp = d.pick(w5, rp);
+        if (!pp) continue;
+        const e = { id, pid: pp.id, week: w5.week, year: w5.year };
+        const v = YA.eventView(w5, e);
+        if (v && v.text && v.opts.length === 3) { YA.resolveEvent(w5, e, 0); np++; }
+      }
+      ok(YA.PRACTICE_EVENTS.length === 20 && np >= 12, '練習中の出来事20種：出せるものは文と選択肢が出て、選べる ' + np);
+      ok(YA.rivalRelName(-50) === '宿敵' && YA.rivalRelName(50) === '認め合う', 'ライバル監督との関係の名前');
+      JSON.parse(JSON.stringify(w5));
+      // 6段目：方針と流儀・暮らしの出来事
+      const w6 = YA.newWorld(59);
+      w6.week = 2;
+      ok(YA.setCoachPolicy(w6, 'tone', 1).ok && YA.policyOf(w6).tone === 1, '方針：年度はじめに変えられる');
+      w6.week = 10;
+      ok(!YA.setCoachPolicy(w6, 'tone', 0).ok, '方針：年度の途中では変えられない');
+      w6.styleLog = [{ aim: 1, play: 0, ctrl: 1, tone: 1, use: 0, grow: 0 }, { aim: 1, play: 0, ctrl: 1, tone: 1, use: 0, grow: 0 }, { aim: 1, play: 1, ctrl: 1, tone: 1, use: 0, grow: 1 }];
+      ok(/育てる/.test(YA.styleOf(w6) || '') && /寄り添い/.test(YA.styleOf(w6) || ''), '流儀：長く貫いた方針が流儀になる ' + YA.styleOf(w6));
+      let n6 = 0, ok6 = true;
+      for (const id of YA.LIFE_EVENTS) {
+        const e = { id: 'lifeev', lk: id, pid: null, week: w6.week, year: w6.year };
+        const v = YA.eventView(w6, e);
+        if (!v) continue;
+        if (!v.text || v.opts.length < 2) { ok6 = false; continue; }
+        YA.resolveEvent(w6, e, 0);
+        n6++;
+      }
+      ok(ok6 && YA.LIFE_EVENTS.length >= 35 && n6 >= 25, '暮らしの出来事：文と選択肢が出て、選べる ' + n6 + '/' + YA.LIFE_EVENTS.length);
+      JSON.parse(JSON.stringify(w6));
+      // 機能面
+      const wf = YA.newWorld(61);
+      const pa = Object.values(wf.players)[0], pb = Object.values(wf.players)[1];
+      ok(YA.compareRows(wf, pa, pb).length >= 8, '比べる：2人の数字が並ぶ');
+      for (const q of Object.values(wf.players).slice(0, 6)) YA.pkToggle(wf, q);
+      ok(wf.pkOrder.length === 5 && typeof YA.pkBonus(wf) === 'number', 'PK戦のキッカーは5人まで');
+      wf.week = 2;
+      ok(YA.setYPlan(wf, pa, '技術').ok && pa.yplan.k === '技術', '育成計画を立てられる');
+      pa.ab[YA.AB_TECH[0]] = Math.min(20, pa.ab[YA.AB_TECH[0]] + 4); pa.ab[YA.AB_TECH[1]] = Math.min(20, pa.ab[YA.AB_TECH[1]] + 4);
+      YA.planCheck(wf, pa);
+      ok(pa.yplan.done && typeof pa.yplan.ok === 'boolean', '育成計画の答え合わせ');
+      ok(YA.diagnose(wf, pa).length >= 1, '伸び悩みの診断が出る');
+      const fg1 = Object.values(wf.players).find((x) => x.grade === 1), fg3 = Object.values(wf.players).find((x) => x.grade === 3 && x.pos === fg1.pos) || Object.values(wf.players).find((x) => x.grade === 3);
+      YA.setMentor(wf, fg1, fg3);
+      ok((wf.rel || []).some((x) => (x.k === 'mentor' || x.k === 'gk') && x.a === fg3.id && x.b === fg1.id), '師匠を付けられる');
+      const pos = Object.entries(fg1.apt).filter(([k, v]) => k !== fg1.main && v >= 8 && v < 16)[0];
+      if (pos) { YA.startConvert(wf, fg1, pos[0]); const a0 = fg1.apt[pos[0]]; wf.funcKey = null; YA.rivalWeek(wf); ok(fg1.apt[pos[0]] > a0, '転向練習で適性が少しずつ上がる'); }
+      wf.alumni.push({ name: '丁 四', main: fg1.main, pos: fg1.pos, year: 1, club: 'X', rHist: [{ g: fg1.grade, r: 50, y: 1 }] });
+      ok(/先輩/.test(YA.seniorCompare(wf, fg1) || ''), '先輩との比較が出る');
+      ok(YA.addPlan(wf, 'pro10').ok && YA.addPlan(wf, 'cup').ok && YA.addPlan(wf, 'hof').ok && !YA.addPlan(wf, 'nat').ok, '中長期の計画は3つまで');
+      const rb = YA.recordBook(wf);
+      ok(rb && Array.isArray(rb.goals) && rb.unbeaten >= 0, '記録帳が作れる');
+      const al = { name: '戊 五', year: 1, club: 'Y', league: 'J2リーグ', status: 'pro', seasons: [{ y: 2, club: 'Y', apps: 20, goals: 3, titles: [], awards: [] }], rHist: [{ g: 1, r: 70, y: 0 }], mem: [{ k: 'wall', y: 0, q: 'x' }], bond: 3 };
+      wf.alumni.push(al);
+      ok(YA.alumniTimeline(wf, al).length >= 3, '卒業生の年表');
+      ok(YA.alumniContact(wf, al).ok && !YA.alumniContact(wf, al).ok, '連絡は年1回');
+      ok(YA.alumniWatch(wf, al).ok && !YA.alumniWatch(wf, al).ok, '試合を観に行くのは年1回');
+      ok(YA.GLOSSARY.length >= 15, '用語集');
+      // 展開ごとの指示：試合の中で切り替わる
+      const types = Object.keys(YA.TACTICS || {});
+      if (types.length >= 2) {
+        wf.cond = { lose: types[1], win: types[0] };
+        const tA = YA.teamFromWorld(wf, 'A');
+        ok(tA._cond && tA._cond.lose === types[1], '展開ごとの指示が試合のチームに渡る');
+      }
+      JSON.parse(JSON.stringify(wf));
       JSON.parse(JSON.stringify(wc));
     }
     ok(YA.noticeKind('Aが怪我（3週）') === '怪我'&& YA.noticeKind('なにか') === 'そのほか', 'お知らせの種類を分ける');

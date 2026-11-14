@@ -219,7 +219,7 @@
   const chainOf = (w, e) => (w.chains || []).find((c) => c.id === e.cid);
   function endOf(w, p, c) {
     const d = CH[c.k];
-    if (d.ends.hidden && d.ends.hidden.if(w, p, c.st) && YA.hash(c.id + 'hid') % 2 === 0) return 'hidden';
+    if (d.ends.hidden && d.ends.hidden.if(w, p, c.st) && YA.hash(c.id + 'hid') % 3 === 0) return 'hidden';
     return c.st.sc >= 2 ? 'good' : c.st.sc >= 0 ? 'mid' : 'bad';
   }
   const txt = (f, w, p, st) => (typeof f === 'function' ? f(w, p, st) : f);
@@ -281,13 +281,27 @@
     if (!r.chance(0.16)) return;
     const busy = new Set(w.chains.map((c) => c.pid));
     const recent = w.chainRecent || [];
-    const all = Object.values(w.players).filter((p) => !busy.has(p.id) && CH[YA.bgOf(w, p)] && !(p.chainDone || {})[p.bg] && !(p.inj > 0) && (p.bg !== 'idol' || proAlum(w)));
-    const fresh = all.filter((p) => recent.indexOf(p.bg) < 0);
+    // 事情から始まるもの（事情と同じ名前の続き物）と、条件から始まるもの（pick を持つ続き物）
+    const all = [];
+    for (const p of Object.values(w.players)) {
+      const k = YA.bgOf(w, p);
+      if (!busy.has(p.id) && CH[k] && !CH[k].pick && !(p.chainDone || {})[k] && !(p.inj > 0) && (k !== 'idol' || proAlum(w))) all.push({ k, p });
+    }
+    w.chainYr = w.chainYr || {};
+    for (const [k, d] of Object.entries(CH)) {
+      if (!d.pick || (d.once && w.chainYr[k] === w.year)) continue;
+      let p = null;
+      try { p = d.pick(w); } catch (er) { p = null; }
+      if (p && w.players[p.id] && !busy.has(p.id) && !(p.chainDone || {})[k]) all.push({ k, p });
+    }
+    const fresh = all.filter((x) => recent.indexOf(x.k) < 0);
     const cands = fresh.length ? fresh : all;
     if (!cands.length) return;
-    const p = cands[r.int(0, cands.length - 1)];
-    w.chainRecent = recent.concat([p.bg]).slice(-6);
-    const c = { id: 'ch' + now + '_' + p.id, k: p.bg, pid: p.id, ep: 0, due: now, shown: 0, st: { sc: 0, picks: [] } };
+    const pick = cands[r.int(0, cands.length - 1)];
+    const p = pick.p;
+    w.chainRecent = recent.concat([pick.k]).slice(-6);
+    if (CH[pick.k].once) w.chainYr[pick.k] = w.year;
+    const c = { id: 'ch' + now + '_' + p.id, k: pick.k, pid: p.id, ep: 0, due: now, shown: 0, st: { sc: 0, picks: [] } };
     w.chains.push(c);
     YA.bgReveal(w, p, 2);
     w.forced = (w.forced || []).concat([{ id: 'chain', cid: c.id, pid: p.id, week: w.week, year: w.year }]);
@@ -349,7 +363,7 @@
         if (out) out.small = (out.small ? out.small + '・' : '') + '前と同じ言葉は、響きにくかった（自信 −3）';
       }
       // ★でない子も、よくある出来事は記憶に残す（★の子は memory.js が残す）
-      if (!p.star && YA.memAdd) YA.memAdd(w, p, e.id, o.kind, quoteOf(o.label));
+      if (!p.star && YA.memAdd) YA.memAdd(w, p, e.id, o.kind, quoteOf(o.label), /「/.test(o.label) ? { sp: true } : null);
       if (YA.trustLv(p) >= 3 && YA.hash(p.id + w.week) % 3 === 0) YA.bgReveal(w, p);
     }
     return out;
