@@ -121,6 +121,11 @@ class RuleReport {
 class RulesEngine {
   const RulesEngine._();
 
+  /// 新しいオーナーに猶予を与えるシーズン数。最初のシーズンは、引き継いだ
+  /// 人件費や借金のせいで、何をしても違反になりやすい(測定で、何も操作
+  /// しない1年目に英国式の上限を超えた)。この間は警告だけで罰は科さない。
+  static const int graceSeasons = 1;
+
   /// 累積赤字を数える季数。
   static const int lossWindowSeasons = 3;
 

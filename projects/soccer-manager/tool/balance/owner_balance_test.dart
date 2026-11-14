@@ -52,12 +52,13 @@ void main() {
         final standings = gs.save!.league.sortedStandings;
         final rank =
             standings.indexWhere((r) => r.teamId == gs.save!.userTeamId) + 1;
-        final newsBefore = gs.save!.newsLog.length;
         final income = ledger.operatingIncome;
         final ratio = (ledger.wageRatio * 100).round();
         final profit = ledger.profit;
         await gs.startNextSeason();
-        final added = gs.save!.newsLog.skip(newsBefore).toList();
+        // newsLog は新しい順で、シーズン末の出来事はそのシーズンの番号で残る。
+        final added =
+            gs.save!.newsLog.where((n) => n.season == s).toList();
         final p = added.where((n) => n.context.contains('規則')).length;
         final i = added.where((n) => n.context.contains('突発')).length;
         penalties += p;

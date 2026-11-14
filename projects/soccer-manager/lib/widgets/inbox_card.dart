@@ -17,7 +17,8 @@ class InboxCard extends StatelessWidget {
     final gs = context.watch<GameState>();
     final all = gs.save?.newsLog ?? const [];
     if (all.isEmpty) return const SizedBox.shrink();
-    final recent = all.reversed.take(_shown).toList();
+    // newsLog は新しい順に積まれている。先頭から読む。
+    final recent = all.take(_shown).toList();
     final scheme = Theme.of(context).colorScheme;
     return Card(
       child: Padding(

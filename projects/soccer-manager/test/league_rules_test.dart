@@ -198,6 +198,7 @@ void main() {
       final gs = GameState();
       await gs.startNewGame('テストFC');
       final save = gs.save!;
+      save.league.season = 2; // 最初のシーズンは猶予
       save.ruleSet = RuleSet.japan;
       save.budget = -100; // 債務超過
       save.confidence = 50;
@@ -206,6 +207,21 @@ void main() {
       expect(save.transferBanSeasons, 1);
       expect(save.confidence, 40);
       expect(save.newsLog.length, newsBefore + 1);
+    });
+
+    test('最初のシーズンは猶予され、罰は科されず、警告のニュースだけ残る', () async {
+      final gs = GameState();
+      await gs.startNewGame('テストFC');
+      final save = gs.save!;
+      expect(save.league.season, 1);
+      save.ruleSet = RuleSet.japan;
+      save.budget = -100; // 債務超過なら本来は罰
+      save.confidence = 50;
+      final news = save.newsLog.length;
+      gs.debugEnforceLeagueRules();
+      expect(save.transferBanSeasons, 0);
+      expect(save.confidence, 50);
+      expect(save.newsLog.length, news + 1);
     });
 
     test('罰の補強禁止は、季が進むと解ける', () async {
