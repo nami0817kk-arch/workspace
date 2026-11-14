@@ -4493,9 +4493,9 @@ function vLres(){var L=(S.lres||[]).slice().map(function(x){var y={};for(var k i
   return h;}
 function vLesson(){
   var f=ROUNDS[S.rnd],A=alive(S).sort(function(a,b){return b.lastP-a.lastP||a.id-b.id;}),used=usedSlots(S),sl=slotsOf(S);
-  var h=telop('レッスン')+'<div class="card fmt"><p class="small muted" style="margin:0">見られる力：'+wText(roundFmt(S))+(roundFmt(S).concept?'（'+roundFmt(S).concept+'）':'')+(f.kind==='team'?'（'+f.size+'人組）':'')+(S.plan&&S.plan.center!=null?'・センター '+esc(S.tr[S.plan.center].giv):'')+'</p><p class="small muted">'+(f.fin?'この審査でデビューメンバーを <b>5〜'+S.caps.finMax+'人</b> 選ぶ':'合格にできるのは <b>'+capOf(S)+'人まで</b>（いま'+A.length+'人）')+'</p></div>';
+  /* 2026-11-14：審査名の大きな札は会議の最初だけ。ここは1行の帯にして、本題（割り振り）を最初の画面に入れる */
+  var h=roundBand('レッスン','見られる力：'+wText(roundFmt(S))+(roundFmt(S).concept?'（'+roundFmt(S).concept+'）':'')+(f.kind==='team'?'（'+f.size+'人組）':'')+(S.plan&&S.plan.center!=null?'・センター '+esc(S.tr[S.plan.center].giv):'')+'　'+(f.fin?'デビューは <b>5〜'+S.caps.finMax+'人</b>':'合格は <b>'+capOf(S)+'人まで</b>（いま'+A.length+'人）'));
   h+='<h3>レッスンの割り振り <button class="btn-s" data-a="autolesson">おまかせ</button></h3><details class="help"><summary>説明</summary><p class="small muted">全員が1つずつレッスンを受けます（最初はおすすめが入っています）。さらに <b>'+sl+'人まで</b>「特訓」を付けられます。特訓は同じレッスンをもう1回。よく伸びるぶん、疲れます。「休養」で疲れが抜けます。講評で課題を伝えた子は、その弱点がよく伸びます。</p></details>';
-  if(!S.adUsed&&S.chal!=='noad')h+='<button class="btn ad" data-a="adslot">'+adIcon()+'<span>特訓の枠を1人ぶん増やす<br><span class="small muted">'+adNote()+'。1審査に1回（再審査と共通）</span></span></button>';
   h+='<div class="card lcard">';
   A.forEach(function(t){
     var k=(S.lesson.train[t.id]||[])[0],sp=!!(S.lesson.sp&&S.lesson.sp[t.id]),fc=t.fat>=80?'var(--bad)':t.fat>=60?'var(--gold)':'var(--muted)';
@@ -4506,6 +4506,8 @@ function vLesson(){
     h+='</div>';
   });
   h+='</div>';
+  /* 広告の特典は本題の下に小さく（会議の「制作費を足す」とそろえる） */
+  if(!S.adUsed&&S.chal!=='noad')h+=adRow('adslot','特訓の枠を1人ぶん増やす',adNote()+'。1審査に1回（再審査と共通）');
   if(f.kind==='pos'){var c={v:0,d:0,r:0};A.forEach(function(t){c[S.lesson.pos[t.id]]++;});h+='<p class="note">担当の人数：歌'+c.v+'・ダンス'+c.d+'・ラップ'+c.r+'（'+Math.round(A.length/3)+'人より多い担当は評価が下がり、少ない担当は上がる）</p>';}
   h+='<div class="foot"><div class="in"><div class="cnt">特訓 <b>'+used+'</b>/'+sl+'人</div><button class="btn" data-a="lessonok">レッスンを終える</button></div></div>';
   return h;
@@ -4593,9 +4595,11 @@ function vJudge(){
   h+='<div class="card">';
   A.forEach(function(t){var r=S.stage.res[t.id],on=S.pass[t.id],p=pr[t.id];
     var warn=!on&&p<=3?' <span class="tag warn">荒れそう</span>':'';
-    h+='<div class="jrow'+(on?' jon':'')+'">'+face(t,'sm')+'<div class="mid"><div class="nm">'+esc(t.name)+' '+tag(t.spec)+'</div><div class="small muted">出来 <b>'+r.sc+'</b>'+(r.retry!=null?'（再'+r.retry+'）':'')+(t.hist.length>1?'・前回 '+t.hist[t.hist.length-2].sc:'')+warn+'</div>'+statMini(t)+'</div><div class="seg">'+
-      (!S.adUsed&&!f.fin&&!t.retried&&S.chal!=='noad'?'<button data-a="retry" data-id="'+t.id+'" class="'+(ui.retryArm===t.id?'warnb':'')+'" title="もう一度見る（動画）">'+(ui.retryArm===t.id?'▶ 見る':'再審査')+'</button>':'')+
-      '<button class="ptog'+(on?' on':'')+'" data-a="pass" data-id="'+t.id+'" data-v="'+(on?'0':'1')+'" aria-pressed="'+(on?'true':'false')+'">'+(on?(f.fin?'選んだ ✓':'合格 ✓'):(f.fin?'選ぶ':'不合格'))+'</button></div></div>';});
+    h+='<div class="jrow'+(on?' jon':'')+'">'+face(t,'sm')+'<div class="mid"><div class="nm">'+esc(t.name)+' '+tag(t.spec)+'</div><div class="small muted">出来 <b>'+r.sc+'</b>'+(r.retry!=null?'（再'+r.retry+'）':'')+(t.hist.length>1?'・前回 '+t.hist[t.hist.length-2].sc:'')+warn+'</div>'+statMini(t)+
+      /* 2026-11-14：広告の再審査は名前の下の小さな線のボタンに（合否のボタンと並べて押し違えないように） */
+      (!S.adUsed&&!f.fin&&!t.retried&&S.chal!=='noad'?'<button data-a="retry" data-id="'+t.id+'" class="rtry'+(ui.retryArm===t.id?' arm':'')+'" aria-label="もう一度見る（動画）"><span>'+(ui.retryArm===t.id?'▶ もう一度押すと動画':'▶ 再審査（動画）')+'</span></button>':'')+'</div><div class="seg">'+
+      /* 選ぶ前に「不合格」と書くと、押すと落ちるように読めた（2026-11-14 点検）。押す前は行き先、押した後は状態 */
+      '<button class="ptog'+(on?' on':'')+'" data-a="pass" data-id="'+t.id+'" data-v="'+(on?'0':'1')+'" aria-pressed="'+(on?'true':'false')+'">'+(on?(f.fin?'✓ 選んだ':'✓ 合格'):(f.fin?'選ぶ':'合格にする'))+'</button></div></div>';});
   h+='</div>'+hx;
   if(S.retryRes&&S.tr[S.retryRes.id]){var rr=S.retryRes,rt=S.tr[rr.id],up=rr.sc>rr.sc0;
     h='<div class="card rtres">'+face(rt,'md')+'<div><div class="mh">再審査の結果</div><b>'+esc(rt.giv)+'</b>：出来 '+rr.sc0+' → <b class="'+(up?'up':'')+'">'+rr.sc+'</b>'+(up?'（上がった）':rr.sc===rr.sc0?'（同じ）':'（前の出来のまま）')+
@@ -4983,7 +4987,13 @@ var TIPS={
 };
 function tipSeen(){try{return JSON.parse(HStore.get('hikari7_tips')||'{}');}catch(e){return {};}}
 function tipBox(){if(!S||ui.tipsOff)return '';var p=S.phase,t=TIPS[p];if(typeof t==='function')t=t();if(!t)return '';if(tipSeen()[p])return '';
-  return '<div class="tip"><span class="tq">コツ</span><span>'+esc(t)+'</span><button class="btn-s" data-a="tipok" data-v="'+p+'">わかった</button></div>';}
+  /* 2026-11-14：全文の箱が場面の上に居座り、幅320・文字とても大きいで画面の半分近くを取っていた。
+     ふだんは1行にたたみ（押すと開く）、その場面で1つ操作したら既読にする（tipTouch） */
+  if(ui.tipOpen!==p)return '<button class="tipc" data-a="tipopen" data-v="'+p+'" aria-expanded="false"><span class="tq">💡 コツ</span><span class="tt1">'+esc(t)+'</span></button>';
+  return '<div class="tip"><span class="tq">💡 コツ</span><span>'+esc(t)+'</span><button class="btn-s" data-a="tipok" data-v="'+p+'">わかった</button></div>';}
+/* その場面の操作を1つしたら、コツは既読（コツ・設定・顔を開くなど、場面の外の操作では数えない） */
+var TIP_FREE={tipopen:1,tipok:1,settings:1,setclose:1,bgmtoggle:1,prof:1,profclose:1,noop:1,say:1,gloss:1,glclose:1,tinfo:1,fav:1,statusopen:1,fold:1,ptab:1,pfopen:1,adcancel:1};
+function tipTouch(a){try{if(!S||TIP_FREE[a])return;var p=S.phase;if(!TIPS[p])return;var ts=tipSeen();if(ts[p])return;ts[p]=1;HStore.set('hikari7_tips',JSON.stringify(ts));if(ui.tipOpen===p)ui.tipOpen=null;}catch(e){}}
 
 
 function vNight(){var q=S.reqs[0],t=S.tr[q.id],N=S.night;
@@ -5265,8 +5275,14 @@ document.addEventListener('click',function(ev){
   if(a!=='wipe')ui.wipeArm=false;if(a!=='new'&&a!=='daily')ui.newArm=null;if(a!=='quit')ui.quitArm=false;if(a!=='talkok')ui.talkArm=false;if(a!=='retry')ui.retryArm=null;if(a!=='revive')ui.reviveArm=null;if(a!=='seat')ui.seatArm=false;if(a!=='showend')ui.skipArm=false;if(a!=='undo')ui.undoArm=false;
   if(el.classList.contains('btn')||el.classList.contains('choice'))sfx('tap');
   if(!AUD.unlocked&&!APP){AUD.unlocked=true;AUD.cur=undefined;}
+  tipTouch(a);
   switch(a){
     case 'g':ui.g=v;render();break;
+    case 'tipopen':ui.tipOpen=v;render();break;
+    /* 畳んだ見出し（結果の内訳・年表・アルバム、会議のこの先の審査）。開け閉めは details に任せ、描き直しで戻らないよう覚えておく */
+    case 'fold':if(!ui.fold)ui.fold={};ui.fold[v]=!ui.fold[v];break;
+    case 'ptab':ui.planTab={r:S?S.rnd:0,v:v};render();break;
+    case 'featjump':try{var fr=document.querySelector('#app .featrow');if(fr)fr.scrollIntoView({behavior:'smooth',block:'center'});}catch(e){}break;
     case 'adboost':if(!S.month||S.month.boostUsed)break;withAd(function(){go(function(){S.month.boost=true;S.month.boostUsed=true;});});break;
     case 'buypack':if(APP&&PACKS[v])appPost({type:'buy',id:PACKS[v].id});break;
     case 'tsub':if(v==='shop'&&APP)appPost({type:'refresh'});ui.tsub=v||null;ui.newArm=null;render();window.scrollTo(0,0);break;
@@ -5426,5 +5442,4 @@ document.addEventListener('click',function(ev){
 (function(){try{ui.set=loadSet();applySet();}catch(e){}try{applyPacks();}catch(e){}var sv=load();if(sv){ui.g=sv.g||'m';if(sv.fmt)buildRounds(sv);}
   /* アプリが裏で閉じられたあとの起動なら、タイトルを飛ばして続きから（印は1回で消す。次に裏へ回るとまた付く） */
   try{if(APP&&sv&&HStore.get('hikari7_resume')==='1'){S=sv;HStore.del('hikari7_resume');}}catch(e){}
-  render();})();
-</script>
+  
