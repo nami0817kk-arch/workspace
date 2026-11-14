@@ -1094,11 +1094,11 @@ body.nar .tseat i{width:22px}
 body.nar .tseat.mid .face{width:42px;height:42px}
 body.nar .tseat.mid i{width:32px}
 body.nar .logo7.tbig{font-size:52px}
-body.nar .foot .in.showin .cnt.showctl{flex-wrap:wrap}
+body.nar .foot .in.showin .cnt.showctl{flex-wrap:nowrap;gap:4px}body.nar .foot .in.showin .cnt.showctl .btn-s{padding:0 4px}body.nar .featb .lng{display:none}body.nar2 .foot .in.showin .cnt.showctl{flex-wrap:wrap}
 body.nar .tipc{font-size:12.5px}
 .lrow>.lt{grid-template-columns:44px 1fr auto!important}.trow2{grid-template-columns:44px 1fr!important}
 body.nar .tkick{letter-spacing:.12em}
-body.nar .foot .in{flex-wrap:wrap;row-gap:6px}body.nar .foot .cnt{flex:1 1 100%}body.nar .foot .cnt br{display:none}body.nar .foot .in>.btn{flex:1 1 auto;white-space:nowrap;padding:10px 12px}
+body.nar .foot .in{flex-wrap:wrap;row-gap:6px}body.nar .foot .cnt{flex:1 1 100%;max-width:none}body.nar .foot .cnt br{display:none}body.nar .foot .in>.btn{flex:1 1 auto;white-space:nowrap;padding:10px 12px}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -4933,8 +4933,8 @@ function radar(t){var K=['v','d','r','e','s'],N=['歌','ダンス','ラップ','
     g+='<text x="'+lp[0]+'" y="'+lp[1]+'" text-anchor="middle" font-size="12" fill="var(--muted)">'+N[i]+'</text><text x="'+lp[0]+'" y="'+(+lp[1]+14)+'" text-anchor="middle" font-size="13" font-weight="800" fill="var(--fg)">'+v+'</text>';});
   return '<svg class="radar" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="能力のレーダー">'+g+'</svg><div class="small muted" style="text-align:center">塗りつぶしの点は確かな値、白い点は見立て（ずれていることがある）</div>';}
 function telop(sub,extra){var f=ROUNDS[S.rnd];return '<div class="telop"><div class="ep">第'+S.rnd+'審査<span>／全'+NROUND+'回</span></div><div class="tt">'+esc(f.name)+'</div><div class="ds">'+esc(f.desc)+'</div><div class="meta">'+esc(VENUE[S.rnd])+(sub?'　'+sub:'')+'</div>'+(extra?'<div class="tcap">'+extra+'</div>':'')+'</div>';}
-/* 審査名の1行の帯（会議のあとの場面）。info は HTML（呼ぶ側で esc 済み） */
-function roundBand(sub,info){var f=ROUNDS[S.rnd];return '<div class="rband"><div class="rb1"><b>第'+S.rnd+'審査</b><span class="rbn">'+esc(f.name)+'</span><span class="rbs">'+esc(sub)+'</span></div>'+(info?'<div class="rb2">'+info+'</div>':'')+'</div>';}
+/* 審査名の1行の帯（会議のあとの場面）。第何審査・どの段階かは上の段階のタブに出ているので、ここは審査名と条件だけ。info は HTML（呼ぶ側で esc 済み） */
+function roundBand(sub,info){var f=ROUNDS[S.rnd];return '<div class="rband" aria-label="'+esc('第'+S.rnd+'審査 '+sub)+'"><div class="rb1"><b>'+esc(f.name)+'</b></div>'+(info?'<div class="rb2">'+info+'</div>':'')+'</div>';}
 /* 動画広告の特典の小さな行（2026-11-14：本題より上の金の点線の大きな箱をやめた）。data-a は今までと同じ */
 function adRow(a,label,note){return '<button class="btn ad adrow" data-a="'+a+'">'+adIcon()+'<span><b>'+esc(label)+'</b><span class="small muted">'+esc(note)+'</span></span></button>';}
 function stageHero(){var ch='';for(var i=0;i<7;i++){var x=110+i*30,gold=i===3;
@@ -5086,7 +5086,7 @@ function vShow(){
   h2+='<div class="crowd"></div><div class="pen">'+penl(it.ids.map(function(id){return S.tr[id];}))+'</div></div>';
   var last=sh.pos>=sh.seq.length-1;
   /* 2026-11-14：「大きく映す」が折り目の下にあった。下の帯の操作の列に入れる（ひとりの出番はその子を、組の出番は舞台の中の選ぶ所へ） */
-  var fon=it.ids.length===1&&!!S.feat[it.ids[0]],fb=it.ids.length===1?'<button class="btn-s featb'+(fon?' on':'')+'" data-a="showfeat" data-id="'+it.ids[0]+'" '+(!fon&&nf>=3?'disabled':'')+'>大きく映す'+(fon?' ✓':'')+' <small>'+nf+'/3</small></button>':'<button class="btn-s featb" data-a="featjump">大きく映す <small>'+nf+'/3</small></button>';
+  var fon=it.ids.length===1&&!!S.feat[it.ids[0]],fb=it.ids.length===1?'<button class="btn-s featb'+(fon?' on':'')+'" data-a="showfeat" data-id="'+it.ids[0]+'" '+(!fon&&nf>=3?'disabled':'')+'><span class="lng">大きく</span>映す'+(fon?' ✓':'')+' <small>'+nf+'/3</small></button>':'<button class="btn-s featb" data-a="featjump"><span class="lng">大きく</span>映す <small>'+nf+'/3</small></button>';
   h2+='<div class="foot"><div class="in showin"><div class="cnt showctl">'+fb+'<button class="btn-s '+(ui.showAuto?'on':'')+'" data-a="showauto">オート'+(ui.showAuto?' ✓':'')+'</button><button class="btn-s '+(ui.showFast?'on':'')+'" data-a="showfast">速く'+(ui.showFast?' ✓':'')+'</button><button class="btn-s" data-a="showend">'+(ui.skipArm?'もう一度で結果へ':'結果へ')+'</button></div><button class="btn" data-a="'+(last?'showend':'shownext')+'">'+(last?'結果発表へ':'次の出番へ')+'</button></div></div>';
   return h2;
 }
