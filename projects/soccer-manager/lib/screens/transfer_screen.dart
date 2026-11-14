@@ -13,6 +13,7 @@ import '../widgets/responsive_body.dart';
 import 'player_compare_screen.dart';
 import '../l10n/tr.dart';
 import '../theme/semantic_colors.dart';
+import '../widgets/transfer_table.dart';
 
 enum TransferSortOption { overall, potential, marketValue, age }
 
@@ -239,7 +240,15 @@ class _TransferScreenState extends State<TransferScreen>
         Expanded(
           child: players.isEmpty
               ? Center(child: Text(Tr.pick('該当する選手はいません', 'No players match')))
-              : ListView.builder(
+              : (!_compareMode)
+                  ? TransferTable(
+                      players: players,
+                      market: true,
+                      budget: save.budget,
+                      canSign: !squadFull && windowOpen,
+                      onSign: (p) => _showAcquireSheet(context, p),
+                    )
+                  : ListView.builder(
                   padding: const EdgeInsets.all(16),
                   itemCount: players.length,
                   itemBuilder: (context, i) {
@@ -422,33 +431,12 @@ class _TransferScreenState extends State<TransferScreen>
               ? Center(
                   child: Text(Tr.pick('現在フリーエージェントはいません',
                       'There are no free agents right now')))
-              : ListView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: freeAgents.length,
-                  itemBuilder: (context, i) {
-                    final p = freeAgents[i];
-                    return Card(
-                      margin: const EdgeInsets.only(bottom: 8),
-                      child: ListTile(
-                        leading: PlayerFaceAvatar(
-                          playerId: p.id,
-                          position: p.position,
-                        ),
-                        title: Text(p.name, overflow: TextOverflow.ellipsis),
-                        subtitle: Text(
-                          Tr.pick(
-                              '${p.age}歳 / ${p.position.label} / 総合 ${p.overall} / 週俸 ${p.wage}万円',
-                              'Age ${p.age} / ${p.position.label} / overall ${p.overall} / wage ${p.wage}'),
-                        ),
-                        trailing: FilledButton(
-                          onPressed: (squadFull || !windowOpen)
-                              ? null
-                              : () => _signFreeAgent(context, p),
-                          child: Text(Tr.pick('獲得する', 'Sign him')),
-                        ),
-                      ),
-                    );
-                  },
+              : TransferTable(
+                  players: freeAgents,
+                  market: false,
+                  budget: 0,
+                  canSign: !squadFull && windowOpen,
+                  onSign: (p) => _signFreeAgent(context, p),
                 ),
         ),
       ],
