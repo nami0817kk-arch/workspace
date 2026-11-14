@@ -267,7 +267,7 @@
     const t = YA.tacticReport(w);
     const c = YA.condOf(w);
     const types = Object.keys(YA.TACTICS || {});
-    const sel = (k, label) => { const s = h('select', { style: 'flex:1;padding:4px;border:1px solid #b9c7de;border-radius:8px;font:inherit' }, h('option', { value: '' }, 'そのまま'), ...types.map((x) => h('option', { value: x, selected: c[k] === x }, (YA.TACTICS[x] && YA.TACTICS[x].name) || x))); s.addEventListener('change', () => { c[k] = s.value; save(); }); return h('div', { class: 'row', style: 'gap:6px;margin-top:3px' }, h('span', { class: 'note', style: 'width:150px' }, label), s); };
+    const sel = (k, label) => { const s = h('select', { style: 'flex:1;padding:4px;min-height:34px;border:1px solid #b9c7de;border-radius:8px;font:inherit' }, h('option', { value: '' }, 'そのまま'), ...types.map((x) => h('option', { value: x, selected: c[k] === x }, (YA.TACTICS[x] && YA.TACTICS[x].name) || x))); s.addEventListener('change', () => { c[k] = s.value; save(); }); return h('div', { class: 'row', style: 'gap:6px;margin-top:3px' }, h('span', { class: 'note', style: 'width:150px' }, label), s); };
     const card = h('div', { class: 'card', style: 'padding:7px 10px;margin-top:6px' },
       h('div', { class: 'h' }, '戦術理解の内訳'),
       h('div', { class: 'note', style: 'color:var(--ink)' }, `戦い方の浸透 ${Math.round(t.rep * 100)}%（同じ戦い方を${t.weeks}週続けている。12週で最大）`),
