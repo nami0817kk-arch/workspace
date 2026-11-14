@@ -12,7 +12,7 @@ extension GameStateTransfer on GameState {
     if (_save!.budget < player.marketValue) return false;
     if (userTeam.players.length >= maxSquadSize) return false;
     if (!_wageBudgetAllowsSigning(player.wage)) return false;
-    _save!.budget -= player.marketValue;
+    _book(LedgerCategory.transfers, -(player.marketValue));
     ContractEngine.applyTransferContract(player);
     userTeam.players.add(player);
     transferMarket.removeWhere((p) => p.id == playerId);
@@ -63,7 +63,7 @@ extension GameStateTransfer on GameState {
       _notify();
       return (attempted: true, accepted: false);
     }
-    _save!.budget -= offer;
+    _book(LedgerCategory.transfers, -(offer));
     ContractEngine.applyTransferContract(player);
     userTeam.players.add(player);
     transferMarket.removeWhere((p) => p.id == playerId);
@@ -110,7 +110,7 @@ extension GameStateTransfer on GameState {
         0, (sum, i) => sum + i.weeklyAmount * i.weeksRemaining);
     _save!.pendingInstallments.removeWhere((i) => i.playerId == playerId);
     if (outstanding <= 0) return;
-    _save!.budget -= outstanding;
+    _book(LedgerCategory.transfers, -(outstanding));
     _logNews(Tr.pick('移籍に伴い、分割払いの残金$outstanding万円を一括で精算した。',
         'The remaining $outstanding of the instalment plan was settled in full on his departure.'));
   }
@@ -155,7 +155,7 @@ extension GameStateTransfer on GameState {
     team.players.removeWhere((p) => p.id == playerId);
     team.startingXI.remove(playerId);
     _clearPlayerRoleReferences(team, playerId);
-    _save!.budget += net;
+    _book(LedgerCategory.playerSales, net);
     _placeSoldPlayerAtCpuClub(player);
     // ダイナミクス: チームリーダーの放出はロッカールーム全体を動揺させる。
     if (wasTeamLeader) {
@@ -260,7 +260,7 @@ extension GameStateTransfer on GameState {
     final cost = ContractEngine.renewalCost(player) +
         ContractEngine.signingBonusFor(player);
     if (_save!.budget < cost) return false;
-    _save!.budget -= cost;
+    _book(LedgerCategory.transfers, -(cost));
     ContractEngine.renewContract(player);
     _notify();
     await _persist();
@@ -314,7 +314,7 @@ extension GameStateTransfer on GameState {
       final cost = ContractEngine.renewalCost(player) +
           ContractEngine.signingBonusFor(player);
       if (_save!.budget < cost) return ContractOfferResult.insufficientFunds;
-      _save!.budget -= cost;
+      _book(LedgerCategory.transfers, -(cost));
       player.wage = wage;
       ContractEngine.renewContract(player);
       _save!.pendingContractNegotiation = null;
@@ -399,7 +399,7 @@ extension GameStateTransfer on GameState {
     lastSigningBlockReason = null;
     if (!_wageBudgetAllowsSigning(player.wage)) return false;
 
-    _save!.budget -= downPayment;
+    _book(LedgerCategory.transfers, -(downPayment));
     const weeks = 4;
     final remaining = total - downPayment;
     _save!.pendingInstallments.add(
@@ -434,7 +434,7 @@ extension GameStateTransfer on GameState {
     lastSigningBlockReason = null;
     if (!_wageBudgetAllowsSigning((player.wage * 0.6).round())) return false;
 
-    _save!.budget -= fee;
+    _book(LedgerCategory.transfers, -(fee));
     player.isLoan = true;
     player.loanWeeksRemaining = GameState.loanDurationWeeks;
     player.wage = (player.wage * 0.6).round().clamp(1, 999);
@@ -460,7 +460,7 @@ extension GameStateTransfer on GameState {
     final fee = player.loanBuyOptionFee!;
     if (_save!.budget < fee) return false;
 
-    _save!.budget -= fee;
+    _book(LedgerCategory.transfers, -(fee));
     player.isLoan = false;
     player.loanWeeksRemaining = 0;
     player.loanBuyOptionFee = null;
@@ -565,7 +565,7 @@ extension GameStateTransfer on GameState {
     if (_save == null) return false;
     final cost = scoutRefreshCost;
     if (_save!.budget < cost) return false;
-    _save!.budget -= cost;
+    _book(LedgerCategory.facilities, -(cost));
     _refreshScoutCandidates();
     _notify();
     await _persist();
@@ -584,7 +584,7 @@ extension GameStateTransfer on GameState {
     );
     if (_save!.budget < cost) return false;
     if (_save!.youthProspects.length >= maxP) return false;
-    _save!.budget -= cost;
+    _book(LedgerCategory.facilities, -(cost));
     final signed = scoutCandidates.removeAt(idx);
     _save!.youthProspects.add(signed);
     final scoutLevel = infra.staffLevel(StaffRole.scout);
@@ -639,7 +639,7 @@ extension GameStateTransfer on GameState {
 
     _save!.youthProspects.removeAt(idx);
     YouthPromotionEngine.applyPromotion(player, terms);
-    _save!.budget -= terms.signingBonus;
+    _book(LedgerCategory.transfers, -(terms.signingBonus));
     userTeam.players.add(player);
     _logNews(
       Tr.pick(
@@ -880,7 +880,7 @@ extension GameStateTransfer on GameState {
       LineupUtils.autoFill(team);
     }
     _movePlayerToBuyer(player, offer.buyerClubName);
-    _save!.budget += offer.amount;
+    _book(LedgerCategory.playerSales, offer.amount);
     _notify();
     await _persist();
     return true;
@@ -1081,7 +1081,7 @@ extension GameStateTransfer on GameState {
           }
           _clearPlayerRoleReferences(team, chosen.id);
           _movePlayerToBuyer(chosen, buyer.name);
-          _save!.budget += amount;
+          _book(LedgerCategory.playerSales, amount);
           autoSold.add(chosen.name);
         } else {
           final amount =

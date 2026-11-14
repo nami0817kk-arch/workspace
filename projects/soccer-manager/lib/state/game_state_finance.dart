@@ -302,7 +302,7 @@ extension GameStateFinance on GameState {
     save.confidence = (save.confidence + o.supportersDelta).clamp(0, 100);
     save.shareholderExpectation =
         (save.shareholderExpectation + o.shareholdersDelta).clamp(0, 100);
-    save.budget += o.fundsDelta;
+    _book(LedgerCategory.other, o.fundsDelta);
     save.pendingOwnerEvent = null;
     _notify();
     await _persist();
@@ -438,14 +438,32 @@ extension GameStateFinance on GameState {
       (stadiumCapacity * userAttendanceFactor).round();
 
   int weeklyIncomeFor(String teamId) {
-    if (_save == null) return 0;
+    final p = weeklyIncomeParts(teamId);
+    return p.gate + p.sponsor + p.merchandise;
+  }
+
+  /// 資金が動く唯一の入口。資金を増減させ、同じ額をそのシーズンの収支の
+  /// 記録に残す。ここを通さずに資金だけ動かすと、損益計算書の合計が実際の
+  /// 資金とずれる。収入は正、支出は負で渡す。
+  void _book(LedgerCategory category, int delta) {
+    final save = _save!;
+    save.budget += delta;
+    save.ledgerFor(save.league.season).add(category, delta);
+  }
+
+  /// 週の収入の内訳(観客・スポンサー・グッズ)。合計は [weeklyIncomeFor] と
+  /// 必ず一致する(端数はグッズに寄せる)。他クラブは観客収入だけを持つ。
+  ({int gate, int sponsor, int merchandise}) weeklyIncomeParts(String teamId) {
+    if (_save == null) return (gate: 0, sponsor: 0, merchandise: 0);
     final league = _save!.league;
     final standings = league.sortedStandings;
     final rank = standings.indexWhere((r) => r.teamId == teamId) + 1;
     final teamCount = league.teams.length;
     final rankBonus = ((teamCount - rank) * 20).clamp(0, 999);
     final base = 150 + rankBonus;
-    if (teamId != _save!.userTeamId) return base;
+    if (teamId != _save!.userTeamId) {
+      return (gate: base, sponsor: 0, merchandise: 0);
+    }
 
     final stadiumLevel = _save!.infrastructure.facilityLevel(
       FacilityType.stadium,
@@ -471,10 +489,12 @@ extension GameStateFinance on GameState {
     final boost = _save!.marketingBoostWeeks > 0
         ? GameStateSquad.marketingBoostMultiplier
         : 1.0;
-    return ((matchdayIncome + sponsorIncome + merchandiseIncome) *
-            BudgetEngine.incomeMultiplier(_save!.budgetPlan) *
-            boost)
-        .round();
+    final factor = BudgetEngine.incomeMultiplier(_save!.budgetPlan) * boost;
+    final total =
+        ((matchdayIncome + sponsorIncome + merchandiseIncome) * factor).round();
+    final gate = (matchdayIncome * factor).round();
+    final sponsor = (sponsorIncome * factor).round();
+    return (gate: gate, sponsor: sponsor, merchandise: total - gate - sponsor);
   }
 
   /// 年の予算の配分(補強・育成・施設・営業・配当)。
@@ -493,6 +513,32 @@ extension GameStateFinance on GameState {
     _notify();
     await _persist();
   }
+
+  /// 今シーズンの収支の記録。
+  SeasonLedger get currentLedger =>
+      _save == null ? SeasonLedger(1) : _save!.ledgerFor(_save!.league.season);
+
+  /// 過去シーズンの収支の記録(シーズン順。今季は含めない)。
+  List<SeasonLedger> get pastLedgers => _save == null
+      ? const []
+      : _save!.ledgers.where((l) => l.season < _save!.league.season).toList();
+
+  /// 1節あたりの収支(収入 − 人件費 − 分割払い − 融資返済)。
+  int get weeklyNet {
+    if (_save == null) return 0;
+    return LedgerEngine.weeklyNet(
+      income: weeklyIncomeFor(_save!.userTeamId),
+      wageBill: weeklyWageBill,
+      installments:
+          _save!.pendingInstallments.fold<int>(0, (s, i) => s + i.weeklyAmount),
+      loanRepayment: bankLoans.fold<int>(0, (s, l) => s + l.weeklyRepayment),
+    );
+  }
+
+  /// 今の収支のまま続けたとき、資金が尽きるまでの節数。尽きなければ null。
+  int? get runwayWeeks => _save == null
+      ? null
+      : LedgerEngine.runwayWeeks(budget: _save!.budget, weeklyNet: weeklyNet);
 
   int get weeklyWageBill => _save == null
       ? 0
@@ -559,7 +605,7 @@ extension GameStateFinance on GameState {
         weeksRemaining: term.weeks,
       ),
     );
-    _save!.budget += amount;
+    _book(LedgerCategory.financing, amount);
     _notify();
     await _persist();
     return true;
@@ -577,7 +623,7 @@ extension GameStateFinance on GameState {
   Future<bool> openFixedDeposit(int amount, DepositTerm term) async {
     if (_save == null || amount <= 0) return false;
     if (amount > _save!.budget) return false;
-    _save!.budget -= amount;
+    _book(LedgerCategory.financing, -(amount));
     _save!.fixedDeposits.add(
       FixedDeposit(
         id: 'deposit${_depositSeq++}',
