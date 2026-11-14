@@ -129,7 +129,7 @@ function play(g, pol, seed) {
 function bestArc(S, t) { // 場面を読んで選ぶ。気質が分かっていれば、気質に合う語りかけを選ぶ（返すのは画面の並びの番号）
   const tones = ARC_TONE[t.arc.k][t.arc.step], sc = ARCS[t.arc.k].sc[t.arc.step], perm = arcPerm(t);
   let best = 0, bv = -1e9;
-  perm.forEach((oi, i) => { const c = sc.ch[oi], tone = tones.charAt(oi); const v = t.temperRev ? arcFit(t, c, tone) * 3 + c[3] : c[3] * 3;
+  perm.forEach((oi, i) => { const c = sc.ch[oi], tone = tones.charAt(oi); const v = t.temperRev ? arcFit(t, c, tone) * 3 + c[3] : c[3] * 3 - ((t.ngT || '').indexOf(tone) >= 0 ? 3 : 0); // 半分分かった気質（合わない語りかけ）も避ける
     if (v > bv) { bv = v; best = i; } });
   return best;
 }

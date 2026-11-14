@@ -290,4 +290,50 @@ const START = `S=newGame('m','normal',null);var c=S.tr.slice();S.sel=c.slice(0,S
   ok(e.run("S.phase==='select'&&S.g==='f'&&S.diff==='hard'&&S.chal==='poor'&&!S.recorded"), '「同じ設定で次のシーズン」で、同じ性別・難しさ・チャレンジの新しいシーズンが始まる');
 }
 
+// ===== 約束の子の再挑戦（2026-11-15）：前は名前がぶつかると何もせず、出る率が2%だった =====
+{
+  const b = boot({ adFree: false, store: { hikari7_career: JSON.stringify({ seasons: 0, points: 0, hall: [] }) }, owned: {} });
+  const r = JSON.parse(b.run(`(function(){var o={n:0,ap:0,bad:[],keep:0,dly:0,face:0},N=300;
+    function grp(g,i){return (typeof FACE_GRP!=='undefined'&&FACE_GRP[g])?FACE_GRP[g][i]:i;}
+    for(var i=0;i<N;i++){var g=i%2?'f':'m';saveCareer({seasons:0,points:0,hall:[]});var P=newGame(g,'normal',null),t=P.tr[i%P.tr.length];
+      var rec={g:g,img:t.img,fam:t.fam,giv:t.giv,spec:t.spec,temper:t.temper,pot:t.pot,age:t.age,home:t.home,st:t.st,
+        bg:{start:'き',past:'が',family:'テストの家族',skill:'と',habit:'「テストの口癖」'},dream:'テストの夢',like:'テストの好物',arc:'lyric',vo:g+'3'};
+      saveCareer({seasons:3,points:10,hall:[],back:[rec]});var S=newGame(g,'normal',null),B=S.tr.filter(function(x){return x.back;});o.n++;
+      if(B.length){o.ap++;var x=B[0],F={},G={},I={};S.tr.forEach(function(y){F[y.fam]=(F[y.fam]||0)+1;G[y.giv]=(G[y.giv]||0)+1;I[grp(g,y.img)]=(I[grp(g,y.img)]||0)+1;});
+        if(x.fam!==rec.fam||x.giv!==rec.giv||F[x.fam]>1||G[x.giv]>1||S.tr.some(function(y){return y.name!==y.fam+' '+y.giv;}))o.bad.push('名前 '+x.name);
+        if(x.img!==rec.img||Object.keys(I).some(function(k){return I[k]>1;}))o.bad.push('顔 '+x.img);
+        if(B.length!==1||x.rare)o.bad.push('札');
+        if(S.rels.some(function(r){return (r.a===x.id||r.b===x.id)&&r.k!=='town';})||S.tr.some(function(y){return y.arc&&y.arc.p===x.id;}))o.bad.push('つながり');
+        if(x.bg.family==='テストの家族'&&x.bg.habit==='「テストの口癖」'&&x.dream==='テストの夢'&&x.like==='テストの好物'&&x.arc.k==='lyric'&&x.arc.step===0&&x.vo===g+'3'&&x.temperRev&&!x.backKeep)o.keep++;
+        if(loadCareer().back.length)o.bad.push('記録が残った');}
+      saveCareer({seasons:3,points:10,hall:[],back:[rec]});var D=newGame(g,'normal',null,'2026-11-15');if(D.tr.some(function(y){return y.back;})||!loadCareer().back.length)o.dly++;}
+    return JSON.stringify(o);})()`));
+  console.log('  再挑戦の子が出た率', (r.ap / r.n * 100).toFixed(1) + '%（' + r.ap + '/' + r.n + '）');
+  ok(r.ap / r.n >= 0.1, '前のシーズンに「また会おう」と送り出した子が、1割以上のシーズンで戻ってくる');
+  ok(!r.bad.length, '戻ってきた子と名前・顔がぶつかる子がいない／注目の札・前の枠のつながりを引き継がない' + (r.bad.length ? '（' + r.bad.slice(0, 3).join('・') + '）' : ''));
+  ok(r.keep === r.ap, '戻ってきた子の物語・家族・口癖・夢・声は前のシーズンの記録のまま');
+  ok(r.dly === 0, '今日のオーディションでは戻ってこない（乱数をずらさない・記録も消さない）');
+  // 書類審査の一番上の札
+  b.run(`saveCareer({seasons:3,points:10,hall:[],back:[]});S=newGame('f','normal',null);var bt=S.tr[7];bt.back=1;S.phase='select';`);
+  ok(/約束の子が戻ってきた<\/b>（No\.08 /.test(b.run('vSelect()')) && /data-a="backjump" data-id="7"/.test(b.run('vSelect()')), '書類審査の一番上に「約束の子が戻ってきた（No.n 名前）」の札が出て、押すとその子へ飛ぶ');
+  b.run('S.tr[7].back=0');
+  ok(!/約束の子が戻ってきた/.test(b.run('vSelect()')), '戻ってきた子がいなければ札は出ない');
+}
+
+// ===== 物語の3択の外れ（2026-11-15） =====
+{
+  const a = boot({ adFree: false, store: {}, owned: {} });
+  const r = JSON.parse(a.run(`(function(){S=newGame('f','normal',null);var o={miss:0,ok:0,bad:[],half:0,lab:0};
+    for(var i=0;i<S.tr.length*3;i++){var t=S.tr[i%S.tr.length];if(!t.arc||t.arc.step>=3)continue;var sc=arcScene(S,t),ch=arcChoices(S,t);
+      if(ch.some(function(c){return !c.hint.parts.some(function(p){return /信頼・自信−|気質に合わない/.test(p[0]);});}))o.lab++;
+      var j=i%3,oi=arcPerm(t)[j],c4=arcText(S,t,sc.ch[oi][4]),rev=t.temperRev,res=arcChoose(S,t,j),hit=t.arc.hits[t.arc.hits.length-1];
+      if(hit){o.ok++;if(res.indexOf(c4)!==0)o.bad.push('当たりなのに返事が違う');}
+      else{o.miss++;if(res.indexOf(c4)>=0)o.bad.push('外れなのに成功の返事: '+res);if(!rev&&t.ngT)o.half++;}}
+    return JSON.stringify(o);})()`));
+  ok(r.miss > 0 && r.ok > 0 && !r.bad.length, '物語の3択：外れたら成功前提の返事を出さず、外れ用の返事にする' + (r.bad.length ? '（' + r.bad[0] + '）' : ''));
+  ok(r.lab === 0, '物語の3択の札に「気質しだいで 信頼・自信−」（気質が分かれば「外すと…」か「気質に合わない」）が付く');
+  ok(a.run(`(function(){var t={temper:'sensai',temperRev:false};temperHalf(t,'h');var x=temperTxt(t);temperHalf(t,'a');return x+'|'+temperTxt(t)+'|'+t.temperRev;})()`) === '繊細かマイペースかお調子者？|繊細かマイペース？|false'
+    && a.run(`(function(){var t={temper:'makezu',temperRev:false};temperHalf(t,'s');return t.temperRev;})()`) === true, '気質に合わない語りかけで外れると、気質の候補が絞られる（1つになれば明かす）');
+}
+
 if (fails) { console.error(fails + '件 外れ'); process.exitCode = 1; } else console.log('すべて通った');
