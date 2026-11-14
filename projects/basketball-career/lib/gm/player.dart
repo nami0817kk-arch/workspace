@@ -514,20 +514,35 @@ const badgeNames = {
 
 const badgeTiers = ['銅', '銀', '金', '殿堂'];
 
+/// バッジの試合での効き(段階ごとに強くなる)。
+const badgeEffects = {
+  Attr.outside: '3ポイントが入りやすい(段階ごとに+0.4%)',
+  Attr.inside: 'ゴール下のシュートが入りやすい(段階ごとに+0.4%)',
+  Attr.passing: 'コートにいるとチームのミスが減り、アシストを集める',
+  Attr.rebound: 'リバウンドを取りやすい(段階ごとに+8%)',
+  Attr.defense: 'コートにいると相手のシュートが入りにくい',
+  Attr.athletic: 'ゴール下でファウルをもらいやすい',
+};
+
+/// 能力 [a] のバッジの段階(-1 は無し、0 銅・1 銀・2 金・3 殿堂)。
+int badgeTierOf(Player p, Attr a) {
+  final v = p.attr(a);
+  return v >= 96
+      ? 3
+      : v >= 90
+          ? 2
+          : v >= 84
+              ? 1
+              : v >= 78
+                  ? 0
+                  : -1;
+}
+
 /// 選手の持つバッジ(名前と段階0〜3)。段階の高い順。
 List<(String, int)> badgesOf(Player p) {
   final out = <(String, int)>[];
   for (final a in Attr.values) {
-    final v = p.attr(a);
-    final tier = v >= 96
-        ? 3
-        : v >= 90
-            ? 2
-            : v >= 84
-                ? 1
-                : v >= 78
-                    ? 0
-                    : -1;
+    final tier = badgeTierOf(p, a);
     if (tier >= 0) out.add((badgeNames[a]!, tier));
   }
   out.sort((x, y) => y.$2.compareTo(x.$2));
@@ -538,7 +553,9 @@ List<(String, int)> badgesOf(Player p) {
 /// 試合や年俸の計算は、もとの数字([Player.ovr] など)で行う。
 int shown(int v) => (39 + v * 0.62).round().clamp(40, 99);
 
-/// 細かい能力(画面に見せるだけ。試合の計算は大きな分類 [Attr] で行う)。
+/// 細かい能力(2026-11-14 から試合でも使う: 3ポイント・レイアップ/ゴール下/ダンク・フリースロー・ファウルのもらいやすさ・
+/// ボール運び・ターンオーバーの少なさ・パスの正確さ/視野・攻め/守りのリバウンド・ボックスアウト・スティール・ブロック・外/中の守り・スタミナ。
+/// ほかの項目は画面に見せるだけ)。
 /// [tweak] はポジションごとのずれ(PG・SG・SF・PF・C の順)。
 class SubRating {
   const SubRating(this.label, this.attr, this.tweak);
@@ -587,12 +604,24 @@ const subRatings = <SubRating>[
 ];
 
 /// 細かい能力の値(画面に見せる数字)。選手ごとに id から決まる揺らぎが付く。
-int subRating(Player p, SubRating s) {
+int subRating(Player p, SubRating s) => shown(subRatingRaw(p, s));
+
+/// 細かい能力のもとの数字(25〜99。試合の計算に使う)。
+int subRatingRaw(Player p, SubRating s) {
   final i = subRatings.indexOf(s);
   final x = ((p.id * 2654435761 + i * 40503) & 0xFFFFFFFF) >> 13;
   final noise = x % 11 - 5;
-  return shown((p.attr(s.attr) + s.tweak[p.pos.index] + noise).clamp(25, 99));
+  return (p.attr(s.attr) + s.tweak[p.pos.index] + noise).clamp(25, 99);
 }
+
+/// 試合の計算に使う細かい能力(`game_sim.dart`)。
+const simSubRatings = {
+  '3ポイント', 'フリースロー', 'レイアップ', 'ゴール下', 'ダンク', 'ファウルのもらいやすさ', 'ボール運び', 'ターンオーバーの少なさ', 'パスの正確さ', '視野',
+  '攻めのリバウンド', '守りのリバウンド', 'ボックスアウト', 'スティール', 'ブロック', '外の守り', '中の守り', 'スタミナ',
+};
+
+/// 名前から細かい能力を引く。
+final subRatingByLabel = {for (final s in subRatings) s.label: s};
 
 /// 身長(cm)・体重(kg)・ウイングスパン(cm)。ポジションと id から決まる。
 (int, int, int) physicalOf(Player p) {

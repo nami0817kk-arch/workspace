@@ -93,6 +93,34 @@ class RatingsPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        if (badgesOf(p).isNotEmpty)
+          Container(
+            margin: const EdgeInsets.only(top: 8),
+            padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+            decoration: BoxDecoration(color: GmColors.panelHi, borderRadius: BorderRadius.circular(12)),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+              const Text('バッジの試合での効き', style: TextStyle(fontWeight: FontWeight.bold)),
+              const SizedBox(height: 4),
+              for (final a in Attr.values)
+                if (badgeTierOf(p, a) >= 0)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 1.5),
+                    child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      SizedBox(
+                        width: 110,
+                        child: Text('${badgeNames[a]}(${badgeTiers[badgeTierOf(p, a)]})',
+                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: badgeColors[badgeTierOf(p, a)])),
+                      ),
+                      Expanded(child: Text(badgeEffects[a]!, style: const TextStyle(fontSize: 12, color: GmColors.sub))),
+                    ]),
+                  ),
+            ]),
+          ),
+        const Padding(
+          padding: EdgeInsets.only(top: 8),
+          child: Text('● の付いた項目は、試合の1回ずつの攻めの計算に使っている(ほかは見せるだけ)',
+              style: TextStyle(fontSize: 11, color: GmColors.sub)),
+        ),
         for (final a in Attr.values) ...[
           Container(
             margin: const EdgeInsets.only(top: 8),
@@ -111,7 +139,12 @@ class RatingsPanel extends StatelessWidget {
                     SizedBox(
                       width: w,
                       child: Row(children: [
-                        Expanded(child: Text(s.label, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 12, color: GmColors.sub))),
+                        Expanded(
+                          child: Text('${simSubRatings.contains(s.label) ? '● ' : ''}${s.label}',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(fontSize: 12, color: simSubRatings.contains(s.label) ? Colors.white70 : GmColors.sub)),
+                        ),
                         Text('${subRating(p, s)}',
                             style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: _subColor(subRating(p, s)), fontFeatures: const [FontFeature.tabularFigures()])),
                       ]),
