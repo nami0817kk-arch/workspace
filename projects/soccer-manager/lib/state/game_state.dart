@@ -27,6 +27,7 @@ import '../logic/club_ranking_engine.dart';
 import '../logic/equity_engine.dart';
 import '../logic/media_deals_engine.dart';
 import '../logic/project_engine.dart';
+import '../logic/proposal_engine.dart';
 import '../logic/risk_engine.dart';
 import '../logic/league_rules.dart';
 import '../logic/policy_engine.dart';

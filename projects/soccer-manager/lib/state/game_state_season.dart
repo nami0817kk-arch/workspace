@@ -763,6 +763,7 @@ extension GameStateSeason on GameState {
     _resolveSeasonRisks();
     _tickProjects();
     _settleAdvisors();
+    _save!.declinedProposalIds.clear();
     _recordClubValue();
     _scoreClubPolicy(finalRank: finalRank);
     _advanceEconomy();

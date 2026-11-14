@@ -587,6 +587,56 @@ extension GameStateFinance on GameState {
     );
   }
 
+  /// 監督の提案を足す(上限まで)。節の進行ごとに呼ぶ。
+  void _refreshProposals() {
+    final save = _save;
+    if (save == null) return;
+    // 実際には存在しなくなった選手の提案は消す。
+    save.proposals.removeWhere((p) => p.kind == ProposalKind.renew
+        ? !userTeam.players.any((x) => x.id == p.playerId)
+        : !save.youthProspects.any((x) => x.id == p.playerId));
+    final fresh = ProposalEngine.generate(
+      squad: userTeam.players,
+      prospects: save.youthProspects,
+      existing: save.proposals,
+      declined: save.declinedProposalIds.toSet(),
+      squadFull: userTeam.players.length >= maxSquadSize,
+    );
+    save.proposals.addAll(fresh);
+  }
+
+  /// テスト用: 提案の生成だけを走らせる。
+  @visibleForTesting
+  void debugRefreshProposals() => _refreshProposals();
+
+  /// 提案を承認して実行する。実行できなかった(資金・枠が足りない)ときは
+  /// 提案を取り下げ、false。
+  Future<bool> approveProposal(String id) async {
+    final save = _save;
+    if (save == null) return false;
+    final p = save.proposals.where((x) => x.id == id).firstOrNull;
+    if (p == null) return false;
+    final ok = switch (p.kind) {
+      ProposalKind.renew => await renewContract(p.playerId),
+      ProposalKind.promote => await promoteYouthProspect(p.playerId),
+    };
+    save.proposals.removeWhere((x) => x.id == id);
+    if (!ok) save.declinedProposalIds.add(id);
+    _notify();
+    await _persist();
+    return ok;
+  }
+
+  /// 提案を却下する。今シーズンは同じ提案が出ない。
+  Future<void> declineProposal(String id) async {
+    final save = _save;
+    if (save == null) return;
+    save.proposals.removeWhere((x) => x.id == id);
+    save.declinedProposalIds.add(id);
+    _notify();
+    await _persist();
+  }
+
   /// アドバイザーのレベルを変える(0〜3)。
   Future<bool> setAdvisorLevel(Advisor a, int level) async {
     final save = _save;

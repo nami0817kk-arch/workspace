@@ -19,6 +19,7 @@ import '../widgets/club_value_card.dart';
 import '../widgets/equity_card.dart';
 import '../widgets/media_deals_card.dart';
 import '../widgets/project_card.dart';
+import '../widgets/proposal_card.dart';
 import '../widgets/risk_card.dart';
 import '../widgets/rules_card.dart';
 import '../widgets/reward_funds_card.dart';
@@ -63,6 +64,7 @@ class FinanceScreen extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           children: [
             // 特典資金。広告も課金も使えない環境では自分で消える。
+            const ProposalCard(),
             const RewardFundsCard(),
             const BudgetPlanCard(),
             Card(

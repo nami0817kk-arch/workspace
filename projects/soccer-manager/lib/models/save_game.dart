@@ -26,6 +26,7 @@ import 'ledger.dart';
 import '../logic/economy_engine.dart';
 import '../logic/league_rules.dart';
 import '../logic/media_deals_engine.dart';
+import '../logic/proposal_engine.dart';
 import '../logic/policy_engine.dart';
 import 'staff_member.dart';
 import 'team.dart';
@@ -125,6 +126,10 @@ class SaveGame {
 
   /// オーナーの持分(%)。外部の株主へ売ると減る。51〜100。
   int ownerShare;
+
+  /// 監督からの提案(承認待ち)と、却下して今季は出さない提案の id。
+  List<ManagerProposal> proposals;
+  List<String> declinedProposalIds;
 
   /// 経営アドバイザー。名前→レベル(0〜3)。
   Map<String, int> advisors;
@@ -450,6 +455,8 @@ class SaveGame {
     List<String>? retiredNumberIds,
     Map<String, int>? projects,
     Map<String, int>? advisors,
+    List<ManagerProposal>? proposals,
+    List<String>? declinedProposalIds,
     this.insured = false,
     this.reserveFund = 0,
     this.communityLevel = 0,
@@ -560,6 +567,8 @@ class SaveGame {
         retiredNumberIds = retiredNumberIds ?? [],
         projects = projects ?? {},
         advisors = advisors ?? {},
+        proposals = proposals ?? [],
+        declinedProposalIds = declinedProposalIds ?? [],
         pendingInstallments = pendingInstallments ?? [],
         friendlies = friendlies ?? [],
         incomingOffers = incomingOffers ?? [],
@@ -651,6 +660,8 @@ class SaveGame {
         'retiredNumberIds': retiredNumberIds,
         'projects': projects,
         'advisors': advisors,
+        'proposals': proposals.map((p) => p.toJson()).toList(),
+        'declinedProposalIds': declinedProposalIds,
         'insured': insured,
         'reserveFund': reserveFund,
         'communityLevel': communityLevel,
@@ -767,6 +778,15 @@ class SaveGame {
             ?.map((k, v) => MapEntry(int.parse('$k'), v as int)),
         ownerGoalStartValue: json['ownerGoalStartValue'] as int? ?? 0,
         ownerShare: json['ownerShare'] as int? ?? 100,
+        proposals: (json['proposals'] as List?)
+                ?.map((e) => ManagerProposal.fromJson(e as Map<String, dynamic>))
+                .whereType<ManagerProposal>()
+                .toList() ??
+            [],
+        declinedProposalIds: (json['declinedProposalIds'] as List?)
+                ?.map((e) => e as String)
+                .toList() ??
+            [],
         advisors: (json['advisors'] as Map?)
                 ?.map((k, v) => MapEntry('$k', v as int)) ??
             {},
