@@ -412,7 +412,7 @@
       const q = h('input', { type: 'text', value: ui.aq, placeholder: '名前・クラブで探す', style: 'flex:1;padding:5px 8px;border:1px solid #b9c7de;border-radius:8px;font:inherit' });
       q.addEventListener('change', () => { ui.aq = q.value.trim(); rerender(); });
       q.addEventListener('pointerdown', (e) => e.stopPropagation());
-      const gs = h('select', { style: 'padding:5px;border:1px solid #b9c7de;border-radius:8px;font:inherit' }, h('option', { value: '' }, 'すべての代'), ...gens.map((y) => h('option', { value: y, selected: ui.ay === y }, `${y}年目卒`)));
+      const gs = h('select', { style: 'padding:5px;min-height:34px;border:1px solid #b9c7de;border-radius:8px;font:inherit' }, h('option', { value: '' }, 'すべての代'), ...gens.map((y) => h('option', { value: y, selected: ui.ay === y }, `${y}年目卒`)));
       gs.addEventListener('change', () => { ui.ay = gs.value ? +gs.value : null; rerender(); });
       body.append(h('div', { class: 'row', style: 'gap:5px;margin-top:4px' }, q, gs));
       body.append(h('div', { class: 'note' }, 'タップすると、その後の年表が見られます。追う・連絡する・試合を観に行くもここから。'));

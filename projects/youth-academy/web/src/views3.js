@@ -200,7 +200,7 @@
     for (const k of kinds) {
       const t = w.noticeTier[k] || 2;
       grid.append(h('div', { class: 'row', style: 'gap:3px' }, h('span', { class: 'grow', style: 'font-size:11.5px' }, k),
-        ...[1, 2, 3].map((n) => h('button', { class: 'btn sm' + (t === n ? ' on' : ''), style: 'padding:3px 6px;min-height:28px;font-size:10.5px', onclick: () => { w.noticeTier[k] = n; YA.saveWorld(true); rerender(); } }, YA.NOTICE_TIER_NAME[n]))));
+        ...[1, 2, 3].map((n) => h('button', { class: 'btn sm' + (t === n ? ' on' : ''), style: 'padding:3px 8px;min-height:34px;font-size:10.5px', onclick: () => { w.noticeTier[k] = n; YA.saveWorld(true); rerender(); } }, YA.NOTICE_TIER_NAME[n]))));
     }
   }
 

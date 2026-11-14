@@ -880,7 +880,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
       const evi = { id: 'injury', pid: sp.id, week: ws.week, year: ws.year };
       sp.inj = 3;
       const vi = YA.eventView(ws, evi);
-      ok(vi && /私なら/.test(vi.text) && vi.staffRec != null, 'スタッフ：担当のコーチが意見を言う');
+      ok(vi && /私なら/.test(vi.staffNote || '') && !/私なら/.test(vi.text) && vi.staffRec != null && vi.info[vi.staffRec].rec, 'スタッフ：担当のコーチが意見を言う（台詞とは別の行・おすすめの札）');
       const tr = ws.club.staff.find((x) => x.role === 'トレーナー');
       const rel0 = tr.rel;
       YA.resolveEvent(ws, evi, vi.staffRec);

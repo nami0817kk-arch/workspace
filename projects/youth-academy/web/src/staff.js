@@ -70,7 +70,8 @@
     const v = v0.apply(this, arguments);
     if (!v) return v;
     const op = YA.staffOpinion(w, e);
-    if (op && v.opts[op.idx]) { v.text += ` ${op.s.role}の${sur(op.s.name)}：「${YA.STAFF_PERS[op.s.pers].say}。私なら『${v.opts[op.idx]}』です」`; v.staffRec = op.idx; }
+    // 選手の台詞と混ざらないよう、コーチの意見は別の行（staffNote）に。おすすめの選択肢には札（info[i].rec）
+    if (op && v.opts[op.idx]) { v.staffNote = `${op.s.role}の${sur(op.s.name)}：「${YA.STAFF_PERS[op.s.pers].say}。私なら『${v.opts[op.idx]}』です」`; v.staffRec = op.idx; if (v.info && v.info[op.idx]) v.info[op.idx].rec = `${sur(op.s.name)}のおすすめ`; }
     return v;
   };
   const r0 = YA.resolveEvent;
