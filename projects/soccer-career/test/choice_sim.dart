@@ -14,6 +14,7 @@
 library;
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:soccer_career/game/match_engine.dart';
 import 'package:soccer_career/models/agent.dart';
 import 'package:soccer_career/models/attributes.dart';
 import 'package:soccer_career/models/season.dart';
@@ -28,6 +29,13 @@ final _builds = <String, List<Detail>>{
   '守備': [Detail.tackling, Detail.marking, Detail.interceptions],
 };
 
+const _stakesName = {
+  MatchStakes.none: 'ふだん',
+  MatchStakes.chasing: '追う',
+  MatchStakes.leveling: '同点の終盤',
+  MatchStakes.protecting: '守り切る',
+};
+
 void main() {
   test('最善手が入れ替わるか', () async {
     const seeds = 8;
@@ -35,6 +43,8 @@ void main() {
     for (final position in [Position.st, Position.cm, Position.cb]) {
       // 育て方 -> 局面 -> 最善だった手 -> 回数
       final byBuild = <String, Map<String, Map<String, int>>>{};
+      // 状況 -> [出会った回数, 状況が無かったときと最善手が違った回数]
+      final byStakes = <MatchStakes, List<int>>{};
 
       for (final build in _builds.entries) {
         final byScenario = <String, Map<String, int>>{};
@@ -56,6 +66,21 @@ void main() {
                 (a, b) =>
                     match.expectedDelta(b) > match.expectedDelta(a) ? b : a,
               );
+              // **同じ局面を「状況が何も変えていなかったら」で比べる。**
+              // 局面ごとに数えると、序盤に出た回と終盤に出た回が混ざって
+              // 状況の効きが薄まって見える。1回ずつ、その場で比べる。
+              if (build.key == '平均') {
+                final plain = options.reduce(
+                  (a, b) =>
+                      match.expectedDelta(b, asIf: MatchStakes.none) >
+                          match.expectedDelta(a, asIf: MatchStakes.none)
+                      ? b
+                      : a,
+                );
+                final row = byStakes.putIfAbsent(match.stakes, () => [0, 0]);
+                row[0]++;
+                if (!identical(plain, best)) row[1]++;
+              }
               final counts = byScenario.putIfAbsent(match.current.id, () => {});
               counts[best.label] = (counts[best.label] ?? 0) + 1;
             },
@@ -101,6 +126,16 @@ void main() {
         '／ どう育てても同じ ${fixed - revived}'
         '${dead.isEmpty ? '' : '  例: ${dead.join(' ')}'}',
       );
+      final total = byStakes.values.fold(0, (a, r) => a + r[0]);
+      final parts = [
+        for (final s in MatchStakes.values)
+          if (byStakes[s] != null)
+            '${_stakesName[s]} ${byStakes[s]![0]}回'
+                '（${(byStakes[s]![0] * 100 / total).toStringAsFixed(1)}%）'
+                '・答えが変わる '
+                '${(byStakes[s]![1] * 100 / byStakes[s]![0]).toStringAsFixed(0)}%',
+      ];
+      print('    状況ごと（平均の育て方）: ${parts.join(' ／ ')}');
     }
   }, timeout: const Timeout(Duration(minutes: 90)));
 }

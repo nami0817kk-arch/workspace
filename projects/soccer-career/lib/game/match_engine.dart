@@ -110,6 +110,25 @@ class ChanceFactor {
 }
 
 /// 試合1つぶんの進行状態。UI はこれを介して局面を1つずつ進める。
+/// **試合の状況で、手の値打ちが変わる**（2026-11-15）。
+///
+/// 同じ局面でも、負けている終盤と勝っている終盤では選ぶべき手が違う。
+/// 以前は評価点の物差しが状況を見ておらず、実測（`test/choice_sim.dart`）で
+/// 中盤の選手は出会う局面の半分で答えが9割以上同じだった。
+enum MatchStakes {
+  /// 状況は手の値打ちを変えない（序盤・中盤、点差がついていない時間）。
+  none,
+
+  /// 追う展開。決めにいく手が重く、つなぐだけの手は軽い。
+  chasing,
+
+  /// 同点の終盤。決めにいく手が重い。
+  leveling,
+
+  /// 守り切る展開。外したときの減点が重く、つなぐ手が重い。
+  protecting,
+}
+
 class MatchInProgress {
   MatchInProgress({
     required this.matchday,
@@ -486,6 +505,74 @@ class MatchInProgress {
 
   /// 終盤か。ここでの1点は重い。
   bool get lateGame => !isFinished && currentMinute >= Formulas.lateGameMinute;
+
+  /// 今の局面で、状況が手の値打ちをどう変えているか。
+  ///
+  /// 区切りは局面の差し替え（[tempoNow]）と同じ線を使う。
+  /// 別の線を引くと、「1点ビハインド・残り30分」と出ているのに
+  /// 値打ちは変わっていない、という食い違いが起きる。
+  MatchStakes get stakes {
+    if (isFinished) return MatchStakes.none;
+    switch (tempoNow) {
+      case ScenarioTempo.chase:
+        return MatchStakes.chasing;
+      case ScenarioTempo.hold:
+        return MatchStakes.protecting;
+      case ScenarioTempo.any:
+        return lateGame && margin == 0
+            ? MatchStakes.leveling
+            : MatchStakes.none;
+    }
+  }
+
+  /// その手が通ったときの見返りに、状況が掛ける倍率。
+  ///
+  /// 決めにいく手（ゴール・アシスト）は、決定機・得点・アシスト・仕留めの
+  /// 上乗せに掛かる。つなぐ手（play）は、通ったときの基本の評価に掛かる。
+  /// **判定（[choose]）と物差し（[expectedDelta]）と画面が同じものを読む。**
+  static double stakesSuccessFactor(MatchStakes stakes, ScenarioOption option) {
+    final attack = option.outcome != Outcome.play;
+    switch (stakes) {
+      case MatchStakes.none:
+        return 1.0;
+      case MatchStakes.chasing:
+        return attack ? Formulas.decisiveGoalFactor : Formulas.stakesChasePlay;
+      case MatchStakes.leveling:
+        return attack ? Formulas.decisiveGoalFactor : Formulas.stakesLevelPlay;
+      case MatchStakes.protecting:
+        return attack ? 1.0 : Formulas.stakesHoldPlay;
+    }
+  }
+
+  /// 外したときの減点に、状況が掛ける倍率。
+  static double stakesFailureFactor(MatchStakes stakes) =>
+      stakes == MatchStakes.protecting ? Formulas.stakesHoldFailure : 1.0;
+
+  /// 状況がその手の値打ちを変えているなら、手の側に出すひと言。
+  ///
+  /// **見えない計算で答えが変わるだけだと、迷いではなく当てずっぽうになる。**
+  String? stakesNoteFor(ScenarioOption option) {
+    final s = stakes;
+    final up = stakesSuccessFactor(s, option);
+    if (up > 1) return '今は重い';
+    if (up < 1) return '今は軽い';
+    if (s == MatchStakes.protecting) return '外すと痛い';
+    return null;
+  }
+
+  /// 状況が何を変えているかを一言で。局面の札（[situationLabel]）に添える。
+  String? get stakesLabel {
+    switch (stakes) {
+      case MatchStakes.none:
+        return null;
+      case MatchStakes.chasing:
+        return '攻める手が重い';
+      case MatchStakes.leveling:
+        return '決める手が重い';
+      case MatchStakes.protecting:
+        return '外すと痛い';
+    }
+  }
 
   /// 今の状況を一言で。画面に出す。
   ///
@@ -904,6 +991,10 @@ class MatchInProgress {
     final role = current.roleOf(option);
     final combo = comboLands(option);
     if (role == ComboRole.finish) setupReady = false;
+    // 状況は手を選んだ時点のもの。得点が入ってから読むと、
+    // 追いついた1本が「同点」の重さで数えられてしまう。
+    final stakesNow = stakes;
+    final up = stakesSuccessFactor(stakesNow, option);
 
     final chance = chanceFor(option);
     final success = _random.nextDouble() < chance;
@@ -927,16 +1018,20 @@ class MatchInProgress {
     }
 
     var delta = success
-        ? Formulas.ratingPerSuccess * Formulas.ratingSuccessWeight(chance)
-        : Formulas.ratingPerFailure * Formulas.ratingFailureWeight(chance);
+        ? Formulas.ratingPerSuccess *
+              Formulas.ratingSuccessWeight(chance) *
+              (option.outcome == Outcome.play ? up : 1.0)
+        : Formulas.ratingPerFailure *
+              Formulas.ratingFailureWeight(chance) *
+              stakesFailureFactor(stakesNow);
     var outcome = option.outcome;
     var text = success ? option.successText : option.failureText;
 
     if (success && outcome != Outcome.play) {
       // 決定機を作った。決まらなくても、無難な手とは違う。
-      delta += Formulas.ratingPerChance;
+      delta += Formulas.ratingPerChance * up;
       // 布石から繋がったぶんは、ここでまとめて返す。
-      if (combo) delta += Formulas.ratingPerCombo;
+      if (combo) delta += Formulas.ratingPerCombo * up;
       final rolled =
           _random.nextDouble() <
           (outcome == Outcome.goal
@@ -957,15 +1052,11 @@ class MatchInProgress {
           _claimTeammateGoal(currentMinute);
         }
         if (outcome == Outcome.goal) {
-          // 追いついた・突き放した1点は重く見る。
-          final before = margin;
+          // 追う展開・同点の終盤の1点は重く見る（[stakes]）。
           ownGoalMinutes.add(currentMinute);
-          final decisive = lateGame && before <= 0;
-          delta +=
-              Formulas.ratingPerGoal *
-              (decisive ? Formulas.decisiveGoalFactor : 1.0);
+          delta += Formulas.ratingPerGoal * up;
         } else {
-          delta += Formulas.ratingPerAssist;
+          delta += Formulas.ratingPerAssist * up;
         }
       } else {
         text = outcome == Outcome.goal ? missedGoal : missedAssist;
@@ -1067,11 +1158,21 @@ class MatchInProgress {
   ///
   /// 決まる確率まで含めて見る。含めないと、自動進行が得点の手を
   /// 実際の価値より高く買ってしまう。
-  double expectedDelta(ScenarioOption option) {
+  ///
+  /// [asIf] は測る道具（`test/choice_sim.dart`）のためのもの。同じ局面を
+  /// 「状況が何も変えていなかったら」で比べるときに渡す。
+  double expectedDelta(ScenarioOption option, {MatchStakes? asIf}) {
     final p = chanceFor(option);
-    var gain = Formulas.ratingPerSuccess * Formulas.ratingSuccessWeight(p);
-    if (option.outcome != Outcome.play) gain += Formulas.ratingPerChance;
-    if (comboLands(option)) gain += Formulas.ratingPerCombo;
+    // 状況の重みは判定（[choose]）と同じものを読む。
+    final s = asIf ?? stakes;
+    final up = stakesSuccessFactor(s, option);
+    final attack = option.outcome != Outcome.play;
+    var gain =
+        Formulas.ratingPerSuccess *
+        Formulas.ratingSuccessWeight(p) *
+        (attack ? 1.0 : up);
+    if (attack) gain += Formulas.ratingPerChance * up;
+    if (comboLands(option)) gain += Formulas.ratingPerCombo * up;
     // 自動進行にもノリを見せる。見ないと、自動で進めるだけでは
     // 「刻んでから決めにいく」が一度も起きない（切り札と同じ理屈）。
     // **布石の「先の価値」は見せない。** 今この手で得られるものだけを数える。
@@ -1081,11 +1182,12 @@ class MatchInProgress {
     // 隠すと自動進行がただ弱くなるだけになる。
     final combo = comboLands(option);
     if (option.outcome == Outcome.goal) {
-      gain += Formulas.ratingPerGoal * goalConversionNow(combo: combo);
+      gain += Formulas.ratingPerGoal * up * goalConversionNow(combo: combo);
     }
     if (option.outcome == Outcome.assist) {
       gain +=
           Formulas.ratingPerAssist *
+          up *
           assistConversionNow(currentMinute, combo: combo);
     }
     // カードのぶんを引く。ここを入れないと、自動進行が「止めるための反則」を
@@ -1098,7 +1200,10 @@ class MatchInProgress {
         ? p * Formulas.ratingPerGoalPrevented
         : 0.0;
     return p * gain +
-        (1 - p) * Formulas.ratingPerFailure * Formulas.ratingFailureWeight(p) +
+        (1 - p) *
+            Formulas.ratingPerFailure *
+            Formulas.ratingFailureWeight(p) *
+            stakesFailureFactor(s) +
         card +
         prevented;
   }
@@ -1855,6 +1960,7 @@ class MatchEngine {
     int fatigue = 0,
     void Function(Detail detail)? aimed,
     void Function(AttributeKey key, int step)? toPoints,
+
     /// 復帰直後の再発しやすさ（`RehabPlan.relapseFactor`）。
     ///
     /// **練習中の負傷はここを読んでいなかった。** 試合まわりの判定

@@ -40,6 +40,7 @@ void main() {
       '出場給',
       '2つ以上で達成',
       '出た試合',
+      '手の値打ちが変わる',
     ]) {
       expect(text, contains(name), reason: name);
     }
