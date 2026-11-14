@@ -313,6 +313,14 @@ extension GameStateFinance on GameState {
   @visibleForTesting
   void debugRaiseOwnerEvent(int matchday) => _maybeRaiseOwnerEvent(matchday);
 
+  /// テスト用: シーズン終了時の規則の判定だけを走らせる。
+  @visibleForTesting
+  void debugEnforceLeagueRules() => _enforceLeagueRules();
+
+  /// テスト用: 週給の予算と補強禁止を見る判定だけを走らせる。
+  @visibleForTesting
+  bool debugAllowsSigning(int wage) => _wageBudgetAllowsSigning(wage);
+
   /// テスト用: 監督のふだんの試合の準備だけを走らせる。
   @visibleForTesting
   void debugManagerPreparesMatch(Fixture next) => _managerPreparesMatch(next);
@@ -514,6 +522,51 @@ extension GameStateFinance on GameState {
     await _persist();
   }
 
+  /// このクラブのいる国の財務規則。
+  RuleSet get ruleSet => _save?.ruleSet ?? RuleSet.britain;
+
+  /// 規則の今の状況。今シーズンを終えたらどの罰を受けるかも含む。
+  RuleReport get ruleReport => _save == null
+      ? const RuleReport(statuses: [])
+      : RulesEngine.evaluate(
+          ruleSet: _save!.ruleSet,
+          ledgers: [
+            for (final l in _save!.ledgers)
+              if (l.season <= _save!.league.season) l,
+          ],
+          budget: _save!.budget,
+        );
+
+  /// 規則違反の罰で補強が禁止されているか。
+  bool get isTransferBanned => (_save?.transferBanSeasons ?? 0) > 0;
+
+  /// シーズン終了時に規則を当て、違反なら罰を科す。
+  void _enforceLeagueRules() {
+    final save = _save!;
+    // 前の罰の期間を1季進める。
+    if (save.transferBanSeasons > 0) save.transferBanSeasons -= 1;
+    final penalty = ruleReport.penalty;
+    if (penalty == null) return;
+    if (penalty.fine > 0) _book(LedgerCategory.other, -penalty.fine);
+    save.confidence = (save.confidence - penalty.trustLoss).clamp(0, 100);
+    save.transferBanSeasons = max(save.transferBanSeasons, penalty.banSeasons);
+    save.pendingPointsDeduction += penalty.pointsDeduction;
+    final parts = <String>[
+      if (penalty.fine > 0)
+        Tr.pick('罰金${penalty.fine}万円', 'fine of ${penalty.fine}'),
+      if (penalty.pointsDeduction > 0)
+        Tr.pick('来季の勝ち点${penalty.pointsDeduction}剥奪',
+            '${penalty.pointsDeduction} points docked next season'),
+      if (penalty.banSeasons > 0)
+        Tr.pick('補強禁止${penalty.banSeasons}季', 'signing ban'),
+    ];
+    _logNews(
+      Tr.pick('${save.ruleSet.label}の規則違反: ${penalty.reason}。${parts.join('、')}。',
+          '${save.ruleSet.label} breach: ${penalty.reason}. ${parts.join(', ')}.'),
+      context: Tr.pick('リーグの規則', 'League rules'),
+    );
+  }
+
   /// 今シーズンの収支の記録。
   SeasonLedger get currentLedger =>
       _save == null ? SeasonLedger(1) : _save!.ledgerFor(_save!.league.season);
@@ -564,6 +617,12 @@ extension GameStateFinance on GameState {
   /// 週給[addedWeeklyWage]万円の選手を加えても週給予算に収まるか。
   /// 収まらない場合は[lastSigningBlockReason]に理由をセットしてfalseを返す。
   bool _wageBudgetAllowsSigning(int addedWeeklyWage) {
+    if (isTransferBanned) {
+      lastSigningBlockReason = Tr.pick(
+          'リーグの規則違反で、今は補強が禁止されています(あと${_save!.transferBanSeasons}季)。',
+          'Signings are banned for a rule breach (${_save!.transferBanSeasons} more seasons).');
+      return false;
+    }
     final cap = wageBudgetCap;
     if (weeklyWageBill + addedWeeklyWage <= cap) return true;
     lastSigningBlockReason = Tr.pick(

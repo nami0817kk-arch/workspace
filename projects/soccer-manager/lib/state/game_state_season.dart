@@ -756,6 +756,9 @@ extension GameStateSeason on GameState {
               "You met the board's target, and they have paid you a $bonus bonus!");
     }
 
+    // 国の財務規則(収支規則・ライセンス)の判定。違反なら罰を科す。
+    _enforceLeagueRules();
+
     // 監督契約(任期)の更新。旧セーブ(0=未導入)はまず2年契約を結ぶ。
     lastManagerContractNote = null;
     if (_save!.managerContractYears <= 0) {
@@ -986,6 +989,12 @@ extension GameStateSeason on GameState {
       fixtures: newFixtures,
       season: league.season + 1,
     );
+    // 規則違反の勝ち点剥奪は、来季の順位表に反映する。
+    if (_save!.pendingPointsDeduction > 0) {
+      _save!.league.pointsAdjustments[_save!.userTeamId] =
+          -_save!.pendingPointsDeduction;
+      _save!.pendingPointsDeduction = 0;
+    }
     _save!.boardTargetRank = _difficultyAdjustedTarget(
       BoardEngine.estimateTargetRank(_save!.league, _save!.userTeamId),
     );
