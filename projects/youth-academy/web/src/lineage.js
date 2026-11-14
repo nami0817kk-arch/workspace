@@ -17,6 +17,7 @@
     ['r125', 0, 'J1級（総合力125）に届いた卒業生が{n}人', [1, 5, 15], (w) => cnt(w.alumni, (a) => YA.rate(a.ovr) >= 125)],
     ['r155', 0, '日本代表級（総合力155）に届いた卒業生が{n}人', [1, 3, 8], (w) => cnt(w.alumni, (a) => YA.rate(a.ovr) >= 155)],
     ['grads', 0, '送り出した卒業生が{n}人', [36, 108, 360], (w) => w.alumni.length],
+    ['dex', 0, '覚醒の図鑑を{n}種そろえる', [5, 10, 20], (w) => YA.dexCount(w)],
     ['trophy', 1, '大会で優勝を{n}回', [1, 5, 15], (w) => (w.trophies || []).length],
     ['lwin', 1, 'リーグ優勝を{n}回', [1, 3, 8], (w) => (w.leagueHist || []).filter((x) => x.rank === 1).length],
     ['wins', 1, 'Aチームで通算{n}勝', [20, 100, 300], (w) => (w.rec && w.rec.w) || 0],
@@ -96,10 +97,38 @@
     YA.achieveCheck(w);
     return contrib;
   };
+  // ---------- 遺産（決定152を作り直し）：絆の深い★の卒業生が、次の人生にコーチとして付いてくる ----------
+  // 端末の store 'legacy' = { runs, people: [{ name, pos, main, ovr, bond, form, mem, year, club, from }] }
+  YA.legacyCands = (w) => (w.alumni || []).filter((a) => a.mem && a.star && (a.bond == null ? 3 : a.bond) >= 3).sort((a, b) => (b.bond || 0) - (a.bond || 0) || b.ovr - a.ovr).slice(0, 3);
+  // 引退したとき1回だけ。付いてきてくれる教え子（最大3人）を残す
+  YA.legacyBank = function (store, w) {
+    if (w.legacyBanked) return w.legacyBanked;
+    const st = store.get('legacy', null) || { runs: 0, people: [] };
+    const add = YA.legacyCands(w).map((a) => ({ name: a.name, pos: a.pos, main: a.main, ovr: a.ovr, bond: a.bond, form: a.form || null, mem: (a.mem || []).slice(-6), year: a.year, club: a.club, from: w.clubName }));
+    store.set('legacy', { runs: (st.runs || 0) + 1, people: (st.people || []).concat(add).slice(-6) });
+    w.legacyBanked = add.map((x) => x.name);
+    return w.legacyBanked;
+  };
+  YA.legacyPeople = (store) => ((store.get('legacy', null) || {}).people || []);
+  // 新しい人生に連れていく（store から外す）
+  YA.legacyTake = function (store, name) {
+    const st = store.get('legacy', null) || { runs: 0, people: [] };
+    const p = (st.people || []).find((x) => x.name === name);
+    if (!p) return null;
+    store.set('legacy', Object.assign({}, st, { people: st.people.filter((x) => x !== p) }));
+    return p;
+  };
+  YA.legacyApply = function (w, person) {
+    if (!person || !YA.obJoin) return;
+    const s = YA.obJoin(w, Object.assign({}, person), `前の人生の教え子。${person.from || '前のクラブ'}から付いてきてくれた`);
+    w.legacyUsed = person.name;
+    return s;
+  };
   const newWorldBase = YA.newWorld;
   YA.newWorld = function (...a) {
     const w = newWorldBase.apply(this, a);
     w.achInit = true; // 新しい世界は最初から知らせる。古いセーブは最初の1回だけ黙って記録する
+    if (a[1] && a[1].legacy) YA.legacyApply(w, a[1].legacy);
     return w;
   };
 
@@ -243,6 +272,19 @@
       h('div', { class: 'note' }, '青い枝はプロ入り。金の丸は代表経験、金の縁は殿堂入り、銀の縁は殿堂候補。'));
     body.append(w.alumni.length ? svgBox(YA.lineageSvg(w), ui.lz, true) : h('div', { class: 'note', style: 'margin-top:6px' }, '最初の卒業式（1年目の終わり）のあとに、ここへ枝が伸びます。'));
   }
+  const leanHint = (f) => { const ks = Object.keys(YA.FORM_LEAN || {}).filter((k) => YA.FORM_LEAN[k].includes(f.k)); return ks.length ? ks.map((k) => YA.KIND_LABEL[k]).join('か') + '接し方で育てた子に出やすい' : ''; };
+  function dexTab(body, w) {
+    const n = YA.dexCount(w), all = YA.AWAKE_FORMS;
+    body.append(h('div', { class: 'h' }, `覚醒の図鑑 ${n}/${all.length}`), h('div', { class: 'note' }, '★の子が覚醒すると、その形が載ります。形は位置と能力に加えて、節目や出来事でどう接してきたか（寄り添う・厳しく・背中を押す・任せる）で出やすさが変わります。5種・10種・20種で育成基金のごほうび（300・600・1000万円）。'));
+    const next = [5, 10, 20].find((x) => x > n);
+    if (next) body.append(h('div', { class: 'note', style: 'margin-top:3px' }, `次のごほうびまで あと${next - n}種（${YA.DEX_REWARD[next]}万円）`));
+    body.append(h('div', { class: 'plist scroll', style: 'margin-top:5px;flex:1;min-height:0' }, all.map((f) => {
+      const d = (w.dex || {})[f.k];
+      return h('div', { class: 'pitem', style: 'cursor:default;gap:6px;' + (d ? '' : 'opacity:.6') },
+        h('span', { class: 'chip ' + (d ? 'trait' : 'gray') }, d ? '載った' : '？'),
+        h('div', { class: 'grow' }, h('b', {}, d ? f.name : '？？？？'), h('div', { class: 'note' }, d ? `特性「${f.trait}」・最初の子 ${d.name}（${d.y}年目）・${d.n}回` : `向く位置：${f.pos.slice(0, 4).map((x) => YA.posJa ? YA.posJa(x) : x).join('・')}／${leanHint(f)}`)));
+    })));
+  }
   function fundTab(body, w) {
     body.append(h('div', { class: 'h' }, `育成基金 ${w.fund || 0}万円`), h('div', { class: 'note' }, '卒業生の大きな移籍で入る連帯貢献金の半分が貯まります。クラブの予算とは別で、使い道は自分で決めます（赤字にはできません）。'));
     for (const u of YA.FUND_USES) body.append(h('div', { class: 'pitem', style: 'cursor:default;gap:6px;margin-top:4px' }, h('div', { class: 'grow' }, h('b', {}, `${u.name}（${u.cost}万円）`), h('div', { class: 'note' }, u.note)), h('button', { class: 'btn sm', disabled: (w.fund || 0) < u.cost, onclick: () => { const r = YA.fundUse(w, u.k); YA.saveWorld(); rerender(); } }, '使う')));
@@ -252,12 +294,13 @@
     const ui = U().app;
     ui.lt = ui.lt || 'tree';
     const EXTRA = YA.lineageExtraTabs || [];
-    const TABS = [['tree', '系譜図'], ['alumni', '卒業生名鑑'], ['hall', '殿堂'], ['ach', '実績'], ['chron', '年表'], ['fund', '育成基金']].concat(EXTRA.map((x) => [x[0], x[1]]));
+    const TABS = [['tree', '系譜図'], ['alumni', '卒業生名鑑'], ['hall', '殿堂'], ['ach', '実績'], ['dex', '図鑑'], ['chron', '年表'], ['fund', '育成基金']].concat(EXTRA.map((x) => [x[0], x[1]]));
     const tabs = h('div', { class: 'tabs', style: 'flex-wrap:wrap;gap:3px;max-width:100%' }, TABS.map(([k, n]) => h('button', { class: 'btn' + (ui.lt === k ? ' on' : ''), onclick: () => { ui.lt = k; rerender(); } }, n)));
     const body = h('div', { class: 'card pbody', style: 'flex:1;min-height:0;display:flex;flex-direction:column' });
     if (ui.lt === 'tree') treeTab(body, w);
     else if (ui.lt === 'hall') hallTab(body, w);
     else if (ui.lt === 'ach') achTab(body, w);
+    else if (ui.lt === 'dex') dexTab(body, w);
     else if (ui.lt === 'chron') chronTab(body, w);
     else if (ui.lt === 'fund') fundTab(body, w);
     else if (EXTRA.some((x) => x[0] === ui.lt)) EXTRA.find((x) => x[0] === ui.lt)[2](body, w);

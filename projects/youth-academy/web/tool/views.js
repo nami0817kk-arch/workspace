@@ -27,6 +27,8 @@ const html = read('shell.html')
   .replace('/*__LINEAGE__*/', () => read('lineage.js'))
   .replace('/*__RIVALS__*/', () => read('rivals.js'))
   .replace('/*__STORY__*/', () => read('story.js'))
+  .replace('/*__MEMORY__*/', () => read('memory.js'))
+  .replace('/*__CHAINS__*/', () => read('chains.js'))
   .replace('/*__SHOP__*/', () => read('shop.js'))
   .replace('/*__VIEWS3__*/', () => read('views3.js'))
   .replace('/*__IMGDATA__*/', () => read('imgdata.js'))
@@ -85,6 +87,11 @@ async function clearEvents() {
   const A = w.YA._ui.app;
   // 新しく始める：指導者を作る・クラブを選ぶ
   ok(txt().includes('指導者を作る') && txt().includes('最初のクラブを選ぶ') && txt().includes('この指導者で始める') && !A.w, '保存がなければ新しく始める画面');
+  w.YA._ui.store.set('legacy', { runs: 1, people: [{ name: '遠藤 光', pos: 'MF', main: 'CM', ovr: 13, bond: 5, form: null, mem: [{ y: 1, w: 3, g: 1, k: 'wall', c: 'warm', q: '必ず越えられる' }], year: 2, club: 'X', from: '前のクラブ' }] });
+  w.YA._ui.render();
+  ok(txt().includes('前の人生の教え子') && txt().includes('遠藤 光') && txt().includes('待って'), '前の人生の教え子が、新しく始める画面に出る（記憶の言葉つき）');
+  btn('連れていかない').click();
+  ok(txt().includes('連れていく'), '教え子を選べる');
   const nameBox = d.querySelector('input[type=text]');
   nameBox.value = 'テスト監督';
   nameBox.dispatchEvent(new w.Event('input', { bubbles: true }));
@@ -427,12 +434,14 @@ async function clearEvents() {
         if (n === 'トップ') ok(txt().includes('トップ監督の注文'), 'トップ監督の注文の画面');
         if (n === '移籍') ok(txt().includes('クラブ移籍'), 'クラブ移籍の画面');
       }
-      for (const n of ['実績', '殿堂', '年表', '育成基金', '卒業生名鑑']) {
+      for (const n of ['実績', '図鑑', '殿堂', '年表', '育成基金', '卒業生名鑑']) {
         btn(n, d.querySelector('.tabs')).click();
         ok(errors.length === 0, n + 'の画面で例外なし: ' + errors.slice(0, 2).join('|'));
       }
+      btn('図鑑', d.querySelector('.tabs')).click();
+      ok(txt().includes('覚醒の図鑑 ') && txt().includes('/20') && txt().includes('？'), '図鑑：20種が並び、未発見は？');
       btn('実績', d.querySelector('.tabs')).click();
-      ok(txt().includes('/66') && txt().includes('銅'), '実績は66個の銅銀金');
+      ok(txt().includes('/69') && txt().includes('銅'), '実績は69個の銅銀金');
       rail('ホーム');
       ok(txt().includes('系譜') && txt().includes('次の実績'), 'ホームに系譜の小窓と次の実績');
       rail('設定');
@@ -459,6 +468,10 @@ async function clearEvents() {
       ok(A.w.players[sid].team === 'B' && !A.w.lineupA.some((s) => s.pid === sid) && A.w.lineupA.length === 11, '選ぶと先発が入れ替わり、下げた子はBへ');
       ok(A.w.benchA.length === 9 && new Set(A.w.lineupA.map((s) => s.pid).concat(A.w.benchA)).size === 20, '入れ替えのあともAは20人で重ならない');
     }
+    // 引退のまとめに遺産ポイントが出る
+    A.w.retired = { year: A.w.year, week: A.w.week };
+    w.YA._ui.render();
+    ok(txt().includes('付いてきてくれる教え子') && errors.length === 0, '引退のまとめに、次の人生に付いてくる教え子が出る: ' + errors.slice(0, 2).join('|'));
     console.log(fails ? '失敗 ' + fails : '画面の点検: すべて通過');
     process.exit(fails ? 1 : 0);
   }
