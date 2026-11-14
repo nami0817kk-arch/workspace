@@ -64,25 +64,31 @@ extension GameStateSquad on GameState {
     _persist();
   }
 
-  /// 現在のディビジョンに応じた特典資金の額(万円)。
-  /// ボタンに「いくら貰えるか」を出すため、受け取り前に参照できるようにする。
-  int get rewardFundsAmount =>
-      RewardOffer.fundsFor(_save?.currentDivisionTier ?? 5);
+  /// 営業ブーストの倍率。ブーストが残っている節の週収入にかかる。
+  /// 資金を直接配らないので、赤字を消すほどの力は持たない。
+  static const double marketingBoostMultiplier = 1.5;
 
-  /// リワード広告の視聴、またはサポーター購入による特典資金を受け取る。
+  /// 貯めておける営業ブーストの上限(節数)。
+  static const int marketingBoostCap = 3;
+
+  /// 営業ブーストの残り(節数)。
+  int get marketingBoostWeeks => _save?.marketingBoostWeeks ?? 0;
+
+  /// リワード広告の視聴、またはサポーター購入による特典を受け取る。
+  /// 次の1節だけ、チケット・スポンサー・グッズの収入が上がる。
   ///
   /// 広告を見せたか・購入済みかの判定は MonetizationController の責務で、
-  /// ここはゲームの状態を触るだけ。受け取った事実はクラブニュースに残す
-  /// (資金が増えた理由が後から分からないと、収支を追えなくなるため)。
-  int claimRewardFunds() {
+  /// ここはゲームの状態を触るだけ。受け取った事実はクラブニュースに残す。
+  /// 戻り値は受け取り後の残り節数。
+  int claimMarketingBoost() {
     if (_save == null) return 0;
-    final amount = rewardFundsAmount;
-    _save!.budget += amount;
-    _logNews(Tr.pick('スポンサーの特別協賛金として$amount万円を受け取った。',
-        'You received $amount in special sponsorship.'));
+    _save!.marketingBoostWeeks =
+        (_save!.marketingBoostWeeks + 1).clamp(0, marketingBoostCap);
+    _logNews(Tr.pick('営業を強化した。次の1節は収入が増える。',
+        'Marketing pushed: income is up for the next matchday.'));
     _notify();
     _persist();
-    return amount;
+    return _save!.marketingBoostWeeks;
   }
 
   /// 資金パックの購入で受け取る額(万円)。所属ディビジョンに比例する。

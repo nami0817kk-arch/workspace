@@ -248,7 +248,7 @@ extension GameStateFinance on GameState {
   }
 
   /// 勝負の試合でない節は、監督が先発とメンタリティを決める。穴(負傷・出場停止)
-  /// を埋め、相手との力関係から構えを選ぶ。自分で決めた先発と戦術が効くのは、
+  /// を埋め、水準が高ければ相手との力関係から構えを、さらに高ければ最善の先発を選ぶ。自分で決めた先発と戦術が効くのは、
   /// 宣言した勝負の試合だけ。
   void _managerPreparesMatch(Fixture next) {
     final save = _save;
@@ -257,12 +257,65 @@ extension GameStateFinance on GameState {
     final oppId = next.homeTeamId == user.id ? next.awayTeamId : next.homeTeamId;
     final opp = _findTeam(save.league.teams, oppId);
     if (opp == null) return;
-    LineupUtils.fillVacancies(user);
-    user.mentality = CpuTacticsAI.mentalityFor(
-      ownRating: user.overallRating,
-      opponentRating: opp.overallRating,
-    );
+    final level = save.infrastructure.staffLevel(StaffRole.manager);
+    // 監督の水準が高いほど任せられる。低い監督は穴埋めまで、中くらいは
+    // 相手に合わせた構えまで、高い監督は最善の先発まで決める。
+    if (level >= 4) {
+      LineupUtils.autoFill(user);
+    } else {
+      LineupUtils.fillVacancies(user);
+    }
+    if (level >= 3) {
+      user.mentality = CpuTacticsAI.mentalityFor(
+        ownRating: user.overallRating,
+        opponentRating: opp.overallRating,
+      );
+    }
   }
+
+  /// 判断待ちの事件。無ければ null。
+  OwnerEventKind? get pendingOwnerEvent => _save?.pendingOwnerEvent;
+
+  /// 事件が起きる節。1シーズンに3回(12節ごと、6・18・30節)。
+  static bool isOwnerEventMatchday(int matchday) =>
+      matchday > 0 && matchday % 12 == 6;
+
+  /// その節に事件が起きるなら、判断待ちに積む。すでに待っている事件があれば
+  /// 積まない(判断を溜めさせない)。
+  void _maybeRaiseOwnerEvent(int matchday) {
+    final save = _save;
+    if (save == null || save.pendingOwnerEvent != null) return;
+    if (!GameStateFinance.isOwnerEventMatchday(matchday)) return;
+    final kinds = OwnerEventKind.values;
+    save.pendingOwnerEvent =
+        kinds[Random(save.league.season * 1000 + matchday).nextInt(kinds.length)];
+  }
+
+  /// 事件に答える。選んだ答えの期待と資金の増減を反映する。
+  Future<bool> resolveOwnerEvent(int optionIndex) async {
+    final save = _save;
+    final kind = save?.pendingOwnerEvent;
+    if (save == null || kind == null) return false;
+    final options = kind.options;
+    if (optionIndex < 0 || optionIndex >= options.length) return false;
+    final o = options[optionIndex];
+    save.confidence = (save.confidence + o.supportersDelta).clamp(0, 100);
+    save.shareholderExpectation =
+        (save.shareholderExpectation + o.shareholdersDelta).clamp(0, 100);
+    save.budget += o.fundsDelta;
+    save.pendingOwnerEvent = null;
+    _notify();
+    await _persist();
+    return true;
+  }
+
+  /// テスト用: その節の事件の判定だけを走らせる。
+  @visibleForTesting
+  void debugRaiseOwnerEvent(int matchday) => _maybeRaiseOwnerEvent(matchday);
+
+  /// テスト用: 監督のふだんの試合の準備だけを走らせる。
+  @visibleForTesting
+  void debugManagerPreparesMatch(Fixture next) => _managerPreparesMatch(next);
 
   /// テスト用: シーズン終了時の目標の判定だけを走らせる。
   @visibleForTesting
@@ -415,8 +468,12 @@ extension GameStateFinance on GameState {
     final merchandiseIncome =
         ((40 + managerReputation) * commercialMultiplier).round();
     // 営業の配分を厚くすると収入が増え、削ると減る(初期の配分で1倍)。
+    final boost = _save!.marketingBoostWeeks > 0
+        ? GameStateSquad.marketingBoostMultiplier
+        : 1.0;
     return ((matchdayIncome + sponsorIncome + merchandiseIncome) *
-            BudgetEngine.incomeMultiplier(_save!.budgetPlan))
+            BudgetEngine.incomeMultiplier(_save!.budgetPlan) *
+            boost)
         .round();
   }
 

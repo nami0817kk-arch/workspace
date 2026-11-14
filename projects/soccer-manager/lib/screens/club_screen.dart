@@ -58,6 +58,18 @@ String _staffEffectLabel(StaffRole role, int level, {StaffMember? member}) {
               '指導: 練習で手の回る項目+$extraKeys',
           'Judging: intake quality +$quality, potential read within ±$spread / '
               'Coaching: +$extraKeys extra attributes worked on');
+    case StaffRole.manager:
+      return Tr.pick(
+          level >= 4
+              ? 'ふだんの試合は最善の先発で臨み、相手に合わせて構えを選ぶ'
+              : level >= 3
+                  ? 'ふだんの試合は相手に合わせて構えを選ぶ(先発は負傷の穴埋めまで)'
+                  : 'ふだんの試合は負傷の穴を埋めるだけ(構えは変えない)',
+          level >= 4
+              ? 'Ordinary matches: best XI, approach set by the opponent'
+              : level >= 3
+                  ? 'Ordinary matches: approach set by the opponent (XI only patched for injuries)'
+                  : 'Ordinary matches: only patches injury gaps (approach unchanged)');
     case StaffRole.fitnessCoach:
       final cur = ClubInfrastructure.fitnessCoachRecoveryBonus(level);
       final next = level < maxLevel
