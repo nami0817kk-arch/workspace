@@ -24,17 +24,31 @@
   function box(inner) {
     return h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(700px,97%);max-height:96%;padding:12px;gap:7px;overflow:auto' }, ...inner);
   }
+  // 契約満了（3年ごと）：何が起きているか・選べる道・それぞれで何が変わるかを、1画面で分かるように
   function contractModal() {
     const w = W();
     const last = w.club.eval[w.club.eval.length - 1];
-    const refuse = w.club.trust < 30 || (last && last.letter === 'D');
+    const lowTrust = w.club.trust < 30, badEval = !!(last && last.letter === 'D');
+    const refuse = lowTrust || badEval;
+    const why = [badEval ? '直近の評価がD' : '', lowTrust ? `信頼度が${Math.round(w.club.trust)}（30未満）` : ''].filter(Boolean).join('・');
+    const rec = refuse ? 1 : 0; // おすすめ：更新できるなら更新
     V().modal(() => box([
-      h('div', { class: 'h', style: 'font-size:16px' }, '契約満了：これからのこと'),
-      h('div', { class: 'note' }, `直近の評価は ${last ? last.letter : '-'}、信頼度は ${Math.round(w.club.trust)}。` + (refuse ? 'クラブは更新に消極的です。' : 'クラブは更新を前向きに考えています。')),
-      h('div', { class: 'note' }, `いまのクラブ：${YA.TIER_NAME[w.club.tier]}・今年の予算 ${w.club.total}万円・36人をよく知っている`),
-      h('button', { class: 'btn pri', style: 'padding:9px', disabled: refuse, onclick: () => { YA.renewContract(w); save(); rerender(); } }, `${w.clubName}と契約を更新する（3年）`),
-      h('div', { class: 'h', style: 'margin-top:4px' }, '他のクラブからの誘い（移ると、36人を一から知ることになります）'),
-      ...w.pendingContract.offers.map((o) => h('button', { class: 'btn', style: 'justify-content:space-between;padding:9px', onclick: () => { YA.moveTo(w, o, '契約満了で移りました。'); save(); rerender(); } }, h('span', { style: 'text-align:left' }, h('b', {}, o.name), o.note ? h('div', { class: 'sub', style: 'font-weight:600' }, o.note) : null), h('span', {}, `${YA.TIER_NAME[o.tier]}・予算およそ${o.budget}万円`))),
+      h('div', { class: 'h', style: 'font-size:17px' }, '3年の契約が終わりました'),
+      h('div', { class: 'note', style: 'color:var(--ink)' }, `${w.clubName}との契約が満了しました。直近の評価 ${last ? last.letter : '-'}・クラブからの信頼度 ${Math.round(w.club.trust)}。下のどれか1つを選ぶと、次の年度が始まります。`),
+      // 1. 更新
+      h('div', { class: 'card', style: 'padding:8px 10px;border:2px solid ' + (refuse ? '#d0d6e2' : '#1f6feb') },
+        h('div', { class: 'row' }, h('b', { class: 'grow', style: 'font-size:14px' }, `① ${w.clubName}で続ける（3年）`), !refuse ? h('span', { class: 'chip trait' }, 'おすすめ') : null),
+        h('div', { class: 'note' }, 'いまの36人・スタッフ・施設・予算をそのまま引き継ぎます。'),
+        refuse
+          ? h('div', { class: 'note', style: 'color:#c0392b;font-weight:700;margin-top:4px' }, `クラブが更新を断っています（${why}）。②の誘いから選んでください。`)
+          : h('button', { class: 'btn pri', style: 'width:100%;padding:10px;margin-top:5px;font-size:14px', onclick: () => { YA.renewContract(w); save(); rerender(); } }, `${w.clubName}と更新する`)),
+      // 2. 移る
+      h('div', { class: 'h', style: 'margin-top:4px' }, `② ほかのクラブへ移る${refuse ? '（いずれかを選んでください）' : ''}`),
+      h('div', { class: 'note' }, '移ると、選手36人・スタッフ・施設は新しいクラブのものになります。指導者の評判・卒業生の名鑑・実績は持っていけます。'),
+      ...w.pendingContract.offers.map((o, i) => h('div', { class: 'card', style: 'padding:7px 10px;display:flex;align-items:center;gap:8px;' + (refuse && i === rec ? 'border:2px solid #1f6feb' : '') },
+        h('div', { class: 'grow', style: 'min-width:0' }, h('b', {}, o.name), h('div', { class: 'note' }, `${YA.TIER_NAME[o.tier]}・予算およそ${o.budget}万円${o.note ? '・' + o.note : ''}`)),
+        refuse && i === rec ? h('span', { class: 'chip trait' }, 'おすすめ') : null,
+        h('button', { class: 'btn', style: 'flex:none;padding:9px 14px', onclick: () => { YA.moveTo(w, o, '契約満了で移りました。'); save(); rerender(); } }, 'ここへ移る'))),
     ]));
   }
   function coachModal() {
@@ -56,7 +70,7 @@
           h('div', { class: 'h', style: 'font-size:16px' }, `${w.year}年目の始まり：クラブの目標と、チームの約束事`),
           h('div', { class: 'note' }, `${w.clubName}（${YA.TIER_NAME[c.tier]}・${YA.levelNames(w)[w.league.level - 1]}）。信頼度は${YA.CLUB_TRUST_NAME[lv]}（${Math.round(c.trust)}）。目標を変えられる数：あと${c.goalChanges}つ`),
           ...c.goals.map((g, i) => h('div', { class: 'card', style: 'padding:4px 10px;display:flex;align-items:center;gap:6px' }, h('span', { class: 'chip trait' }, YA.GOAL_DEF[g.k].label), h('span', { class: 'grow', style: 'font-weight:700' }, YA.goalText(g)), h('button', { class: 'btn sm', disabled: c.goalChanges <= 0, onclick: () => { YA.changeGoal(w, i, -1); draw(); } }, '易しく'), h('button', { class: 'btn sm', disabled: c.goalChanges <= 0, onclick: () => { YA.changeGoal(w, i, 1); draw(); } }, '難しく'))),
-          h('div', { class: 'note' }, '難しい目標を達成すると評価が上がります。信頼度が低いと、目標はそのまま受け入れるしかありません。'),
+          h('div', { class: 'note', style: c.goalChanges <= 0 ? 'color:#c0392b;font-weight:700' : '' }, c.goalChanges <= 0 ? `いまは目標を変えられません（変えられる数が0。信頼度が「${YA.CLUB_TRUST_NAME[lv]}」のため）。このまま「この1年を始める」を押してください。` : '難しい目標を達成すると評価が上がります。信頼度が低いと、目標はそのまま受け入れるしかありません。'),
           h('div', { class: 'h', style: 'margin-top:4px' }, `チームの約束事（3つまで：${w.rules.length}）`),
           h('div', { class: 'fm-row' }, YA.RULES.map((r) => h('button', { class: 'btn sm' + (w.rules.indexOf(r) >= 0 ? ' on' : ''), onclick: () => { const i = w.rules.indexOf(r); if (i >= 0) w.rules.splice(i, 1); else if (w.rules.length < 3) w.rules.push(r); draw(); } }, r))),
           h('div', { class: 'note' }, '約束を守ると規律が上がります。違反した子を「約束どおり」に処分すると、規律がより上がります。'),
