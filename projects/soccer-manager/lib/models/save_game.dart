@@ -126,6 +126,9 @@ class SaveGame {
   /// オーナーの持分(%)。外部の株主へ売ると減る。51〜100。
   int ownerShare;
 
+  /// 永久欠番にした殿堂の選手の id。
+  List<String> retiredNumberIds;
+
   /// 保険に入っているか、災害基金の残高(万円)、地域貢献のレベル(0〜5)。
   bool insured;
   int reserveFund;
@@ -438,6 +441,7 @@ class SaveGame {
     Map<int, int>? clubValueHistory,
     this.ownerGoalStartValue = 0,
     this.ownerShare = 100,
+    List<String>? retiredNumberIds,
     this.insured = false,
     this.reserveFund = 0,
     this.communityLevel = 0,
@@ -545,6 +549,7 @@ class SaveGame {
         continentalTeams = continentalTeams ?? [],
         pendingSponsorOffers = pendingSponsorOffers ?? [],
         pendingNamingOffers = pendingNamingOffers ?? [],
+        retiredNumberIds = retiredNumberIds ?? [],
         pendingInstallments = pendingInstallments ?? [],
         friendlies = friendlies ?? [],
         incomingOffers = incomingOffers ?? [],
@@ -633,6 +638,7 @@ class SaveGame {
         'clubValueHistory': clubValueHistory.map((k, v) => MapEntry('$k', v)),
         'ownerGoalStartValue': ownerGoalStartValue,
         'ownerShare': ownerShare,
+        'retiredNumberIds': retiredNumberIds,
         'insured': insured,
         'reserveFund': reserveFund,
         'communityLevel': communityLevel,
@@ -749,6 +755,10 @@ class SaveGame {
             ?.map((k, v) => MapEntry(int.parse('$k'), v as int)),
         ownerGoalStartValue: json['ownerGoalStartValue'] as int? ?? 0,
         ownerShare: json['ownerShare'] as int? ?? 100,
+        retiredNumberIds: (json['retiredNumberIds'] as List?)
+                ?.map((e) => e as String)
+                .toList() ??
+            [],
         insured: json['insured'] as bool? ?? false,
         reserveFund: json['reserveFund'] as int? ?? 0,
         communityLevel: json['communityLevel'] as int? ?? 0,

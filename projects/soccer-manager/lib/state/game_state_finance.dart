@@ -582,6 +582,28 @@ extension GameStateFinance on GameState {
     );
   }
 
+  /// 永久欠番にした選手か。
+  bool isNumberRetired(String playerId) =>
+      _save?.retiredNumberIds.contains(playerId) ?? false;
+
+  /// 殿堂の選手を永久欠番にする。サポーターの期待が上がる。同じ選手は一度だけ。
+  Future<bool> retireNumber(String playerId) async {
+    final save = _save;
+    if (save == null || save.retiredNumberIds.contains(playerId)) return false;
+    final p = save.retiredLegends.where((l) => l.id == playerId).firstOrNull;
+    if (p == null) return false;
+    save.retiredNumberIds.add(playerId);
+    save.confidence = (save.confidence + 3).clamp(0, 100);
+    _logNews(
+      Tr.pick('${p.name}の背番号を永久欠番にしました。サポーターが沸いています',
+          '${p.name}\'s number is retired for good. Supporters are thrilled'),
+      context: Tr.pick('殿堂', 'Hall of fame'),
+    );
+    _notify();
+    await _persist();
+    return true;
+  }
+
   /// 保険に入る/やめる。
   Future<void> setInsured(bool value) async {
     if (_save == null) return;

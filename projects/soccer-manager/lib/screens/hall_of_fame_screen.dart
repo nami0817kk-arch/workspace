@@ -46,7 +46,11 @@ class HallOfFameScreen extends StatelessWidget {
             : ListView.builder(
                 padding: const EdgeInsets.all(16),
                 itemCount: legends.length,
-                itemBuilder: (context, i) => _LegendCard(player: legends[i]),
+                itemBuilder: (context, i) => _LegendCard(
+                  player: legends[i],
+                  retired: gameState.isNumberRetired(legends[i].id),
+                  onRetireNumber: () => gameState.retireNumber(legends[i].id),
+                ),
               ),
       ),
     );
@@ -55,7 +59,13 @@ class HallOfFameScreen extends StatelessWidget {
 
 class _LegendCard extends StatelessWidget {
   final Player player;
-  const _LegendCard({required this.player});
+  final bool retired;
+  final VoidCallback onRetireNumber;
+  const _LegendCard({
+    required this.player,
+    required this.retired,
+    required this.onRetireNumber,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -67,10 +77,23 @@ class _LegendCard extends StatelessWidget {
           position: player.position,
         ),
         title: Text(player.name),
-        subtitle: Text(
-          Tr.pick(
-              '${player.position.fullLabel} ・ 引退時${player.age}歳 ・ 総合${player.overall}',
-              '${player.position.fullLabel} • retired at ${player.age} • overall ${player.overall}'),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              Tr.pick(
+                  '${player.position.fullLabel} ・ 引退時${player.age}歳 ・ 総合${player.overall}',
+                  '${player.position.fullLabel} • retired at ${player.age} • overall ${player.overall}'),
+            ),
+            if (retired)
+              Text(Tr.pick('永久欠番', 'Number retired'),
+                  style: const TextStyle(fontWeight: FontWeight.bold))
+            else
+              TextButton(
+                onPressed: onRetireNumber,
+                child: Text(Tr.pick('永久欠番にする', 'Retire his number')),
+              ),
+          ],
         ),
         trailing: Column(
           mainAxisAlignment: MainAxisAlignment.center,
