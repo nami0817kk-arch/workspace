@@ -535,13 +535,16 @@ extension GameStateFinance on GameState {
   }
 
   /// このクラブのいる国の財務規則。
-  RuleSet get ruleSet => _save?.ruleSet ?? RuleSet.britain;
+  RuleSet get ruleSet => _save == null
+      ? RuleSet.britain
+      : RuleSet.forTheme(currentLeagueTheme);
 
   /// 規則の今の状況。今シーズンを終えたらどの罰を受けるかも含む。
   RuleReport get ruleReport => _save == null
       ? const RuleReport(statuses: [])
       : RulesEngine.evaluate(
-          ruleSet: _save!.ruleSet,
+          ruleSet: ruleSet,
+          tier: _save!.currentDivisionTier,
           ledgers: [
             for (final l in _save!.ledgers)
               if (l.season <= _save!.league.season) l,
@@ -573,8 +576,8 @@ extension GameStateFinance on GameState {
         Tr.pick('補強禁止${penalty.banSeasons}季', 'signing ban'),
     ];
     _logNews(
-      Tr.pick('${save.ruleSet.label}の規則違反: ${penalty.reason}。${parts.join('、')}。',
-          '${save.ruleSet.label} breach: ${penalty.reason}. ${parts.join(', ')}.'),
+      Tr.pick('${ruleSet.label}の規則違反: ${penalty.reason}。${parts.join('、')}。',
+          '${ruleSet.label} breach: ${penalty.reason}. ${parts.join(', ')}.'),
       context: Tr.pick('リーグの規則', 'League rules'),
     );
   }

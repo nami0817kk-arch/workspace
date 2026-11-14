@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:soccer_manager/l10n/tr.dart';
 import 'package:soccer_manager/logic/league_rules.dart';
+import 'package:soccer_manager/models/league_theme.dart';
 import 'package:soccer_manager/models/ledger.dart';
 import 'package:soccer_manager/models/save_game.dart';
 import 'package:soccer_manager/state/game_state.dart';
@@ -216,6 +217,60 @@ void main() {
       save.transferBanSeasons = 1;
       gs.debugEnforceLeagueRules();
       expect(save.transferBanSeasons, 0);
+    });
+  });
+
+  group('国ごとの規則と部のゆるさ', () {
+    test('国風のテーマから規則の式が決まる', () {
+      expect(RuleSet.forTheme(LeagueTheme.england), RuleSet.britain);
+      expect(RuleSet.forTheme(LeagueTheme.germany), RuleSet.germany);
+      expect(RuleSet.forTheme(LeagueTheme.spain), RuleSet.spain);
+      expect(RuleSet.forTheme(LeagueTheme.italy), RuleSet.japan);
+      expect(RuleSet.forTheme(LeagueTheme.france), RuleSet.usa);
+    });
+
+    test('ドイツ式は、人件費が重く赤字のときだけ補強禁止', () {
+      RuleReport r({required int extra}) => RulesEngine.evaluate(
+            ruleSet: RuleSet.germany,
+            ledgers: [
+              _season(1, income: 1000, cost: 800)
+                ..add(LedgerCategory.transfers, -extra),
+            ],
+            budget: 5000,
+          );
+      expect(r(extra: 300).penalty?.banSeasons, 1); // 人件費80%超・赤字
+      expect(r(extra: 0).penalty, isNull); // 重いが黒字
+    });
+
+    test('スペイン式は上限超過で罰金と勝ち点の剥奪', () {
+      final r = RulesEngine.evaluate(
+        ruleSet: RuleSet.spain,
+        ledgers: [_season(1, income: 1000, cost: 900)],
+        budget: 5000,
+      );
+      expect(r.penalty!.fine, 60); // 上限700、超過200の3割
+      expect(r.penalty!.pointsDeduction, greaterThan(0));
+    });
+
+    test('米国式は贅沢税だけで、勝ち点は引かれない', () {
+      final r = RulesEngine.evaluate(
+        ruleSet: RuleSet.usa,
+        ledgers: [_season(1, income: 1000, cost: 1000)],
+        budget: 5000,
+      );
+      expect(r.penalty!.fine, 50); // 天井900、超過100の半分
+      expect(r.penalty!.pointsDeduction, 0);
+    });
+
+    test('下の部ほど同じ人件費でも罰を受けにくい', () {
+      RuleReport at(int tier) => RulesEngine.evaluate(
+            ruleSet: RuleSet.spain,
+            ledgers: [_season(1, income: 1000, cost: 800)],
+            budget: 5000,
+            tier: tier,
+          );
+      expect(at(1).penalty, isNotNull);
+      expect(at(5).penalty, isNull); // 上限 700×1.5=1050
     });
   });
 }
