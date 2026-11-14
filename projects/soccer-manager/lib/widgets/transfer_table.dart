@@ -28,18 +28,37 @@ class TransferTable extends StatelessWidget {
   final bool canSign;
   final void Function(Player) onSign;
 
-  static const double _rowHeight = 38;
+  // 行はタップの的でもある。移籍の判断なので、押し間違えない高さにする。
+  static const double _rowHeight = 48;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => LayoutBuilder(
+        builder: (context, c) => _table(
+          context,
+          // 狭い画面では所属・潜在を省く。名前と値段が読めることを優先する。
+          showClub: market && c.maxWidth >= 520,
+          showPot: market && c.maxWidth >= 400,
+        ),
+      );
+
+  Widget _table(BuildContext context,
+      {required bool showClub, required bool showPot}) {
     final scheme = Theme.of(context).colorScheme;
     final head = TextStyle(
       fontSize: 11,
       fontWeight: FontWeight.bold,
       color: scheme.onSurfaceVariant,
     );
-    Widget h(String s, double w, [TextAlign a = TextAlign.center]) =>
-        SizedBox(width: w, child: Text(s, style: head, textAlign: a));
+    Widget h(String s, double w, [TextAlign a = TextAlign.center]) => SizedBox(
+          width: w,
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: a == TextAlign.left
+                ? Alignment.centerLeft
+                : Alignment.center,
+            child: Text(s, style: head, textAlign: a),
+          ),
+        );
     return Column(
       children: [
         Container(
@@ -48,11 +67,11 @@ class TransferTable extends StatelessWidget {
           child: Row(
             children: [
               Expanded(child: h(Tr.pick('名前', 'Name'), double.infinity, TextAlign.left)),
-              if (market) h(Tr.pick('所属', 'Club'), 84),
+              if (showClub) h(Tr.pick('所属', 'Club'), 84),
               h(Tr.pick('年', 'Age'), 26),
               h(Tr.pick('位置', 'Pos'), 40),
               h(Tr.pick('総合', 'OVR'), 34),
-              if (market) h(Tr.pick('潜在', 'POT'), 30),
+              if (showPot) h(Tr.pick('潜在', 'POT'), 30),
               h(market ? Tr.pick('移籍金', 'Fee') : Tr.pick('週俸', 'Wage'), 46),
               const SizedBox(width: 56),
             ],
@@ -62,23 +81,25 @@ class TransferTable extends StatelessWidget {
           child: ListView.builder(
             itemCount: players.length,
             itemExtent: _rowHeight,
-            itemBuilder: (context, i) => _row(context, players[i], i),
+            itemBuilder: (context, i) => _row(context, players[i], i,
+                showClub: showClub, showPot: showPot),
           ),
         ),
       ],
     );
   }
 
-  Widget _row(BuildContext context, Player p, int index) {
+  Widget _row(BuildContext context, Player p, int index,
+      {required bool showClub, required bool showPot}) {
     final scheme = Theme.of(context).colorScheme;
     const small = TextStyle(fontSize: 12);
     final affordable = !market || budget >= p.marketValue;
     Widget cell(String s, double w, {TextStyle? style}) => SizedBox(
           width: w,
-          child: Text(s,
-              textAlign: TextAlign.center,
-              overflow: TextOverflow.ellipsis,
-              style: style ?? small),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(s, textAlign: TextAlign.center, style: style ?? small),
+          ),
         );
     return Container(
       color: index.isOdd ? scheme.surfaceContainerLow : null,
@@ -92,11 +113,11 @@ class TransferTable extends StatelessWidget {
               style: small.copyWith(fontWeight: FontWeight.w700),
             ),
           ),
-          if (market) cell(p.originClubName ?? '-', 84),
+          if (showClub) cell(p.originClubName ?? '-', 84),
           cell('${p.age}', 26),
           cell(p.position.label, 40),
           SizedBox(width: 34, child: Center(child: OverallBadge(overall: p.overall))),
-          if (market) cell('${p.potential}', 30),
+          if (showPot) cell('${p.potential}', 30),
           cell(
             market ? '${p.marketValue}' : '${p.wage}',
             46,
@@ -110,12 +131,14 @@ class TransferTable extends StatelessWidget {
             child: TextButton(
               style: TextButton.styleFrom(
                 padding: EdgeInsets.zero,
-                minimumSize: const Size(52, 36),
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                minimumSize: const Size(52, 48),
               ),
               onPressed: canSign ? () => onSign(p) : null,
-              child: Text(Tr.pick('獲得', 'Sign'),
-                  style: const TextStyle(fontSize: 12)),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(Tr.pick('獲得', 'Sign'),
+                    style: const TextStyle(fontSize: 12)),
+              ),
             ),
           ),
         ],
