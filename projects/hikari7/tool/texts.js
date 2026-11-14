@@ -1,7 +1,7 @@
 // 文章の点検：ブラウザなしで何シーズンも遊ばせ、画面に出た文を集めて、
 //   ・差し込みの漏れ（{A}・undefined・NaN など）
 //   ・同じ文が何度も出ていないか（1シーズンに3回以上出る文）
-//   ・合格のひと言・世間の声が、1シーズンの中で重なっていないか（重なれば失敗）
+//   ・合格のひと言・世間の声・不合格の子の最後のひと言が、1シーズンの中で重なっていないか（重なれば失敗）
 // を数える。  node tool/texts.js [シーズン数=12] [--dump 出力先]
 // 文の中身は確かめない（それは人が読む）。漏れがあれば失敗で終わる。
 const fs = require('fs'), vm = require('vm'), path = require('path');
@@ -47,13 +47,16 @@ const LEAK = /\{[A-Z]\}|undefined|NaN|\bnull\b|\[object|function ?\(|「「|」�
 const strip = (h) => h.replace(/<(script|style)[\s\S]*?<\/\1>/g, '').replace(/<[^>]+>/g, '\n').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"');
 let season = 0;
 // 合格のひと言（デビュー発表も）と世間の声は、1シーズンに同じ文を出さない（2026-11-14）。名前を伏せて比べる
+// 不合格の子の最後のひと言も（2026-11-15）。描き直しても同じ文のままかも見る
 const dupSeen = new Set(), dups = [];
-let dupN = 0;
+let dupN = 0, lwN = 0;
 ctx.__chk = () => {
   const names = run('S.tr.map(function(t){return [t.name,t.giv];})').flat().filter(Boolean).sort((a, b) => b.length - a.length);
   const mask = (x) => { let k = String(x); names.forEach((n) => { k = k.split(n).join('〇'); }); return k; };
   const lines = run('Object.keys(S.call.lines).map(function(k){return S.call.lines[k];})'), cmts = run('S.comments.map(function(x){return x.t;})');
-  [['合格のひと言', lines], ['世間の声', cmts]].forEach(([kind, arr]) => arr.forEach((x) => {
+  const lw = run('S.call.failed.map(function(id){return lastWords(S,S.tr[id]);})');
+  if (run('S.call.failed.some(function(id){return lastWords(S,S.tr[id])!==S.tr[id].lw.s;})')) dups.push('不合格のひと言が描き直しで変わった'); lwN += lw.length;
+  [['合格のひと言', lines], ['世間の声', cmts], ['不合格のひと言', lw]].forEach(([kind, arr]) => arr.forEach((x) => {
     const key = season + '\t' + kind + '\t' + mask(x); dupN++;
     if (dupSeen.has(key)) dups.push(`シーズン${season} ${kind}: ${x}`); else dupSeen.add(key);
   }));
@@ -105,7 +108,8 @@ console.log(`${N}シーズン・文 ${all.length}件・違う文 ${rows.length}�
 console.log('1シーズンに3回以上出る文（名前は〇）:');
 heavy.slice(0, 40).forEach((r) => console.log(`  ${(r.n / N).toFixed(1)}回  [${r.ph}] ${r.k.slice(0, 70)}`));
 if (dumpTo) fs.writeFileSync(dumpTo, all.join('\n'));
-console.log(`シーズン内の重なり（合格のひと言・世間の声 ${dupN}件を確かめた）: ${dups.length}件`);
+console.log(`シーズン内の重なり（合格のひと言・世間の声・不合格のひと言 ${dupN}件を確かめた。うち不合格のひと言 ${lwN}件）: ${dups.length}件`);
+if (!lwN) { console.error('不合格のひと言を1件も確かめていない'); process.exitCode = 1; }
 if (dups.length) { [...new Set(dups)].slice(0, 15).forEach((x) => console.error('  ' + x)); process.exitCode = 1; }
 if (leaks.length) { console.error('差し込みの漏れ', leaks.length + '件'); [...new Set(leaks)].slice(0, 15).forEach((x) => console.error('  ' + x)); process.exitCode = 1; }
 else console.log('差し込みの漏れ 0件');
