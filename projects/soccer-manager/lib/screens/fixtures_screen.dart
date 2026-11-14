@@ -351,10 +351,6 @@ class _StandingsTab extends StatelessWidget {
     final showContinental = divisionTier == 1;
     final showPromotion = divisionTier > 1;
     final showRelegation = divisionTier < totalDivisionTiers;
-    final maxOverall = league.teams.fold<int>(
-      1,
-      (m, t) => t.overallRating > m ? t.overallRating : m,
-    );
     final relegationStart = rows.length - PromotionEngine.swapCount;
     const autoPromotionEnd = PromotionEngine.automaticPromotionCount;
     const playoffEnd = autoPromotionEnd + PromotionEngine.playoffPoolSize;
@@ -388,9 +384,47 @@ class _StandingsTab extends StatelessWidget {
             ],
           ),
         ),
+        Container(
+          color: Theme.of(context).colorScheme.surfaceContainerHighest,
+          padding: const EdgeInsets.only(left: 4, right: 8, top: 4, bottom: 4),
+          child: Row(
+            children: [
+              for (final (label, w) in [
+                ('#', 26.0),
+              ])
+                SizedBox(
+                    width: w,
+                    child: Text(label,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                            fontSize: 11, fontWeight: FontWeight.bold))),
+              const SizedBox(width: 26),
+              Expanded(
+                  child: Text(Tr.pick('クラブ', 'Club'),
+                      style: const TextStyle(
+                          fontSize: 11, fontWeight: FontWeight.bold))),
+              for (final (label, w) in [
+                (Tr.pick('試', 'P'), 26.0),
+                (Tr.pick('勝', 'W'), 24.0),
+                (Tr.pick('分', 'D'), 24.0),
+                (Tr.pick('敗', 'L'), 24.0),
+                (Tr.pick('差', 'GD'), 34.0),
+                (Tr.pick('戦力', 'OVR'), 30.0),
+                (Tr.pick('点', 'Pts'), 34.0),
+              ])
+                SizedBox(
+                    width: w,
+                    child: Text(label,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                            fontSize: 11, fontWeight: FontWeight.bold))),
+            ],
+          ),
+        ),
         Expanded(
           child: ListView.builder(
             itemCount: rows.length,
+            itemExtent: 34,
             itemBuilder: (context, i) {
               final r = rows[i];
               final team = league.teams.firstWhere((t) => t.id == r.teamId);
@@ -405,136 +439,69 @@ class _StandingsTab extends StatelessWidget {
               } else if (showRelegation && i >= relegationStart) {
                 zoneColor = SemanticColors.negative(context);
               }
+              final scheme = Theme.of(context).colorScheme;
+              const num = TextStyle(
+                fontSize: 12,
+                fontFeatures: [FontFeature.tabularFigures()],
+              );
+              Widget cell(String s, double w, {TextStyle? style}) => SizedBox(
+                    width: w,
+                    child: Text(s,
+                        textAlign: TextAlign.center,
+                        style: style ?? num),
+                  );
               final row = Container(
+                height: 34,
+                padding: const EdgeInsets.only(right: 8),
                 decoration: BoxDecoration(
                   // 自分の行は、20行の中から一目で見つかる必要がある。
-                  // 薄い色だけだと、昇格圏の帯に紛れて見失っていた。
                   color: isUser
-                      ? Theme.of(context)
-                          .colorScheme
-                          .primaryContainer
-                          .withValues(alpha: 0.72)
-                      : null,
+                      ? scheme.primaryContainer.withValues(alpha: 0.72)
+                      : (i.isOdd ? scheme.surfaceContainerLow : null),
                   border: Border(
                     left: BorderSide(
                       color: zoneColor ??
-                          (isUser
-                              ? Theme.of(context).colorScheme.primary
-                              : Colors.transparent),
+                          (isUser ? scheme.primary : Colors.transparent),
                       width: 4,
                     ),
                   ),
                 ),
-                child: ListTile(
-                  leading: SizedBox(
-                    // 順位20 + 間隔6 + エンブレム24 = 50。ここを48にすると
-                    // 常に2pxはみ出す。
-                    width: 50,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SizedBox(
-                          width: 20,
-                          // 順位は縦に並べて読む数字。等幅にしないと
-                          // 1桁と2桁で頭の位置がずれる。
-                          child: Text(
-                            '${i + 1}',
-                            textAlign: TextAlign.right,
-                            style: TextStyle(
-                              fontFamily: 'NotoSansJP',
-                              fontWeight:
-                                  isUser ? FontWeight.w800 : FontWeight.w600,
-                              fontFeatures: const [
-                                FontFeature.tabularFigures()
-                              ],
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 6),
-                        ClubEmblem(
-                          teamId: team.id,
-                          teamName: team.name,
-                          size: 24,
-                        ),
-                      ],
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 26,
+                      child: Text(
+                        '${i + 1}',
+                        textAlign: TextAlign.center,
+                        style: num.copyWith(
+                            fontWeight:
+                                isUser ? FontWeight.w800 : FontWeight.w600),
+                      ),
                     ),
-                  ),
-                  title: Text(
-                    team.name,
-                    style: TextStyle(
-                      fontWeight: isUser ? FontWeight.w800 : FontWeight.w600,
+                    ClubEmblem(teamId: team.id, teamName: team.name, size: 20),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: Text(
+                        team.name,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight:
+                              isUser ? FontWeight.w800 : FontWeight.w600,
+                        ),
+                      ),
                     ),
-                  ),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        Tr.pick(
-                            '${r.played}試合 勝${r.won} 分${r.draw} 敗${r.lost} 得失点差${r.goalDiff}',
-                            'P${r.played} W${r.won} D${r.draw} L${r.lost} GD${r.goalDiff}'),
-                      ),
-                      const SizedBox(height: 4),
-                      _FormGuide(results: league.recentFormFor(r.teamId)),
-                      const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: 80,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(3),
-                              child: LinearProgressIndicator(
-                                value: team.overallRating / maxOverall,
-                                minHeight: 5,
-                                backgroundColor: Theme.of(context)
-                                    .colorScheme
-                                    .surfaceContainerHighest,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 6),
-                          // 末尾の勝点表示が伸びるとこの行に回る幅が減る。
-                          // ゲージは固定幅なので、ラベル側を縮ませる。
-                          Flexible(
-                            child: Text(
-                              Tr.pick('戦力${team.overallRating}',
-                                  'Squad ${team.overallRating}'),
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 11,
-                                color: SemanticColors.subtleText(context),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  // 勝点は一覧でいちばん見る数字。明朝の titleMedium だと
-                  // 添え物に見えていた。太いゴシックの等幅にする。
-                  trailing: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        '${r.points}',
-                        style: TextStyle(
-                          fontFamily: 'NotoSansJP',
-                          fontSize: 20,
-                          fontWeight: FontWeight.w800,
-                          height: 1.0,
-                          color: Theme.of(context).colorScheme.onSurface,
-                          fontFeatures: const [FontFeature.tabularFigures()],
-                        ),
-                      ),
-                      Text(
-                        Tr.pick('pt', 'pts'),
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: SemanticColors.subtleText(context),
-                        ),
-                      ),
-                    ],
-                  ),
+                    cell('${r.played}', 26),
+                    cell('${r.won}', 24),
+                    cell('${r.draw}', 24),
+                    cell('${r.lost}', 24),
+                    cell('${r.goalDiff >= 0 ? '+' : ''}${r.goalDiff}', 34),
+                    cell('${team.overallRating}', 30,
+                        style: num.copyWith(color: scheme.onSurfaceVariant)),
+                    cell('${r.points}', 34,
+                        style: num.copyWith(
+                            fontSize: 14, fontWeight: FontWeight.w800)),
+                  ],
                 ),
               );
               if (!isUser) return row;
@@ -548,54 +515,6 @@ class _StandingsTab extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-/// 直近5試合の勝敗(W/D/L)を古い順→新しい順の丸アイコンで示すフォームガイド。
-class _FormGuide extends StatelessWidget {
-  final List<String> results;
-
-  const _FormGuide({required this.results});
-
-  @override
-  Widget build(BuildContext context) {
-    if (results.isEmpty) return const SizedBox.shrink();
-    Color colorFor(String r) => switch (r) {
-          'W' => SemanticColors.positive(context),
-          'L' => SemanticColors.negative(context),
-          _ => SemanticColors.neutral(context),
-        };
-    return Semantics(
-      label: Tr.pick('直近${results.length}試合のフォーム: ${results.join('、')}',
-          "Form over the last ${results.length}: ${results.join(', ')}"),
-      child: ExcludeSemantics(
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            for (final r in results)
-              Container(
-                margin: const EdgeInsets.only(right: 3),
-                width: 16,
-                height: 16,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: colorFor(r),
-                  shape: BoxShape.circle,
-                ),
-                child: Text(
-                  r,
-                  style: const TextStyle(
-                    fontSize: 9,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    height: 1,
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
     );
   }
 }

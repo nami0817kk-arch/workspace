@@ -60,7 +60,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('テストFC'), findsWidgets);
-    expect(find.text('チーム'), findsOneWidget);
+    expect(find.text('チーム'), findsOneWidget); // 左メニューの見出し
   });
 
   testWidgets(
@@ -78,16 +78,18 @@ void main() {
     await tester.tap(find.text('創設する'));
     await tester.pumpAndSettle();
 
-    // ホームタブから「スカッド」タブへ切り替える(ルートは積まれない)。
-    await tester.tap(find.text('チーム'));
+    // ホームから「選手」へ切り替える(ルートは積まれない)。横画面の左メニュー。
+    // 上のバーには常にクラブ名があるので、画面の見出しで切り替わりを確かめる。
+    expect(find.text('選手'), findsOneWidget);
+    await tester.tap(find.text('選手'));
     await tester.pumpAndSettle();
-    expect(find.text('テストFC'), findsNothing);
+    expect(find.text('試合を行う'), findsOneWidget); // 上バーの進めるボタンは残る
 
     // ブラウザ/端末の戻る操作を発火する。
     await tester.binding.handlePopRoute();
     await tester.pumpAndSettle();
 
-    // タイトル画面まで戻るのではなく、ホームタブに戻るだけであるべき。
+    // タイトル画面まで戻るのではなく、ホームに戻るだけであるべき。
     expect(find.text('新規クラブ作成'), findsNothing);
     expect(find.text('テストFC'), findsWidgets);
 

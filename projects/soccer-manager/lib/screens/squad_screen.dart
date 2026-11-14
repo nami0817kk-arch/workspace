@@ -16,6 +16,7 @@ import 'glossary_screen.dart';
 import 'player_compare_screen.dart';
 import '../logic/match_engine.dart';
 import '../models/player_instruction.dart';
+import '../widgets/squad_table.dart';
 import 'player_detail_screen.dart';
 import '../l10n/tr.dart';
 import '../theme/semantic_colors.dart';
@@ -158,6 +159,9 @@ class SquadScreen extends StatefulWidget {
 
 class _SquadScreenState extends State<SquadScreen> {
   bool _compareMode = false;
+
+  /// 表(FM風の密な一覧)で見せるか。横画面の既定は表、押すとカードに切り替わる。
+  bool _table = true;
   final List<String> _selected = [];
   PositionGroup? _filterGroup;
   SquadSortOption _sort = SquadSortOption.position;
@@ -445,6 +449,27 @@ class _SquadScreenState extends State<SquadScreen> {
           wide: wide,
           header: [
             if (!_compareMode) _SquadSummaryCard(team: team),
+            if (!_compareMode)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(12, 4, 12, 0),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: SegmentedButton<bool>(
+                    showSelectedIcon: false,
+                    style: const ButtonStyle(
+                        visualDensity: VisualDensity.compact),
+                    segments: [
+                      ButtonSegment(
+                          value: true, label: Text(Tr.pick('表', 'Table'))),
+                      ButtonSegment(
+                          value: false, label: Text(Tr.pick('カード', 'Cards'))),
+                    ],
+                    selected: {_table},
+                    onSelectionChanged: (s) =>
+                        setState(() => _table = s.first),
+                  ),
+                ),
+              ),
             Padding(
               padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
               child: PositionFilterBar(
@@ -503,7 +528,18 @@ class _SquadScreenState extends State<SquadScreen> {
           list: players.isEmpty
                   ? Center(
                       child: Text(Tr.pick('該当する選手がいません', 'No players match')))
-                  : ListView.builder(
+                  : (_table && !_compareMode)
+                      ? SquadTable(
+                          players: players,
+                          startingIds: team.startingXI.toSet(),
+                          onTap: (p) => Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) =>
+                                  PlayerDetailScreen(playerId: p.id),
+                            ),
+                          ),
+                        )
+                      : ListView.builder(
                       padding: const EdgeInsets.symmetric(vertical: 4),
                       itemCount: players.length,
                       itemBuilder: (context, i) {

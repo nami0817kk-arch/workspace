@@ -65,6 +65,9 @@ List<List<IncomingOffer>> _groupOffersByPlayer(GameState gameState) {
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
+  /// 上のバーの「試合を行う」から、次の試合を始める。
+  Future<void> playMatch(BuildContext context) => _playMatch(context);
+
   @override
   Widget build(BuildContext context) {
     final gameState = context.watch<GameState>();
