@@ -243,4 +243,51 @@ const START = `S=newGame('m','normal',null);var c=S.tr.slice();S.sel=c.slice(0,S
   ok(pv.run("(function(){S.rnd=2;S.critRes=[{id:S.tr[0].id,c:1,say:'x'}];var t=S.tr[0];t.traits=['clutch'];var a=beatPers(S,t,90),b=beatPers(S,t,60);return !!a&&b===null;})()"), 'その子だけの行は、出来がはっきりしたときだけ出る');
 }
 
+// ===== 画面の弱い所（2026-11-15）：最後の合格者の間・別れの言葉の決め手・次のシーズンの引き・「新」の札 =====
+{
+  const e = boot({ adFree: false, store: {}, owned: {} });
+  const fire = () => { for (let i = e.timers.length - 1; i >= 0; i--) if (e.timers[i]) { const f = e.timers[i]; e.timers[i] = null; f(); return true; } return false; };
+  const html = () => e.run("document.querySelector('#app').innerHTML");
+  e.run(START + PLAY_ROUND);
+  e.run('S.call.n=S.call.order.length-1;S.call.done=false;');
+  e.press('calllast');
+  ok(e.run('!!ui.lastRoll&&!S.call.done&&S.call.n===S.call.order.length-1') && /lastseat rolling/.test(html()), '最後の合格者：「名前を呼ぶ」ですぐ一覧に戻らず、候補の顔の点滅が始まる');
+  e.run('ROLL_MS=0'); fire();
+  ok(e.run('!ui.lastRoll&&!S.call.done&&S.call.n===S.call.order.length') && /crev last/.test(html()) && /crok/.test(html()), '点滅のあと、選ばれた子を大きく照らして合格のひと言を出す（まだ一覧へは行かない）');
+  fire();
+  ok(e.run('S.call.done'), '少し置くと一覧へ進む');
+  e.run('S.call.n=S.call.order.length-1;S.call.done=false;ROLL_MS=1500;'); e.press('calllast'); e.press('lastskip');
+  ok(e.run('!ui.lastRoll&&!S.call.done&&S.call.n===S.call.order.length'), '点滅中に押すと、すぐ発表に飛ぶ');
+  e.press('lastskip');
+  ok(e.run('S.call.done'), '発表中に押すと、すぐ一覧へ');
+  e.run('S.call.n=S.call.order.length-1;S.call.done=false;ui.endStatic=true;'); e.press('calllast');
+  ok(e.run('!ui.lastRoll&&S.call.n===S.call.order.length'), '動きを減らす設定なら点滅を飛ばす');
+  e.run('ui.endStatic=false;'); fire();
+  // 別れの言葉：決め手と効き目、下の帯
+  e.run('S.farewell={};render();');
+  const nf = e.run('S.call.failed.length');
+  ok(nf > 0 && html().includes('data-a="fwjump"') && html().includes('残り' + nf + '人') && html().includes('このまま進む'), '選んでいない子がいる間は、下の帯が「ひと言を選ぶ（残りn人）」になり、進む道も残る');
+  ok(/人気 ★\d+/.test(html()) && /番組で[＋−]\d+伸びた/.test(html()) && e.run('FW_SHORT.every(function(x){return document.querySelector("#app").innerHTML.indexOf(x)>=0;})'), '行に人気と伸びの札、3つの言葉の効き目が出る');
+  ok(e.run("(function(){var t=S.tr[S.call.failed[0]],p=t.pop,sh=t.sh;t.pop=50;var a=fwBest(t);t.pop=10;t.sh=[[1,0,0,0,0]];var b=fwBest(t);t.sh=[[1,t.st.v,t.st.d,t.st.r,t.st.e]];var c=fwBest(t);t.pop=p;t.sh=sh;return a===2&&b===0&&c===-1;})()"), '合う言葉：人気35以上は「また必ず会おう」、大きく伸びた子は「誇って」');
+  e.press('fwall', 1);
+  ok(!html().includes('data-a="fwjump"'), '全員に選ぶと、下の帯は「次の審査へ」に戻る');
+}
+{
+  const CAR = (o) => ({ hikari7_career: JSON.stringify(Object.assign({ seasons: 0, points: 0, hall: [] }, o)) });
+  const e = boot({ adFree: false, store: CAR({ seasons: 10, points: 12 }), owned: {} });
+  const html = () => e.run("document.querySelector('#app').innerHTML");
+  const pk = e.run('Object.keys(PACK_AUDITION)[0]');
+  e.run("S=newGame('f','hard','poor');var c=S.tr.slice();S.sel=c.slice(0,S.caps.sel).map(function(t){return t.id;});confirmSelect(S);S.fmt=[null,null,null,null];render();");
+  ok(e.run('S.phase') === 'format' && e.run(`fmtKeys().indexOf(${JSON.stringify(pk)})>=0`) && html().includes('class="ftag"'), 'ごほうびで入った審査の型に「新」の札が付く');
+  e.press('fadd', pk);
+  ok(!e.run(`fmtNew(${JSON.stringify(pk)})`) && e.run(`Object.keys(PACK_AUDITION).slice(1).every(fmtNew)`), '一度選んだ型だけ「新」が消える');
+  e.run("S.fmt=DEFAULT_FMT.slice();startSeason(S);S.tr.slice(0,6).forEach(function(t){t.status='debut';});S.tr[7].fwd='again';S.tr[7].status='out';startPrep(S);S.prep.leader=S.tr[0].id;S.phase='month';S.month={w:4,busy:0,fan:0,song:0,coh:0,log:[]};");
+  e.press('monthdone'); e.run('hikariBetweenDone()');
+  ok(e.run('S.phase') === 'result' && e.posts.filter((p) => p.type === 'between').length === 1, '全画面広告はエンドロールの前に1回のまま');
+  e.run('S.ending=false;render();');
+  ok(html().includes('次のシーズンでできること') && /次の肩書き/.test(html()) && /ごほうびの「物語パック」まで あと<b>\d+<\/b>シーズン/.test(html()) && /約束した子 <b>\d+人<\/b>/.test(html()) && html().includes('data-a="again"'), '結果の一番下に「次のシーズンでできること」と「同じ設定で次のシーズン」');
+  e.press('again');
+  ok(e.run("S.phase==='select'&&S.g==='f'&&S.diff==='hard'&&S.chal==='poor'&&!S.recorded"), '「同じ設定で次のシーズン」で、同じ性別・難しさ・チャレンジの新しいシーズンが始まる');
+}
+
 if (fails) { console.error(fails + '件 外れ'); process.exitCode = 1; } else console.log('すべて通った');
