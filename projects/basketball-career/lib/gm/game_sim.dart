@@ -419,8 +419,39 @@ BoxLine boxLineAt(SimTeam t, int i) {
   );
 }
 
-/// 出場時間(分、四捨五入。出ていれば1分以上)。
-int minutesOf(SimTeam t, int i) => t.secs[i] <= 0 ? 0 : math.max(1, (t.secs[i] / 60).round());
+/// 出場時間(分)。合計がちょうど 240分(延長は+25分ずつ)になるよう、端数の大きい順に1分ずつ配る。出ていれば1分以上。
+int minutesOf(SimTeam t, int i) => _minutes(t)[i];
+
+final _minCache = Expando<List<int>>();
+
+List<int> _minutes(SimTeam t) {
+  final cached = _minCache[t];
+  if (cached != null) return cached;
+  final n = t.secs.length;
+  final total = t.secs.fold(0, (a, b) => a + b) ~/ 60;
+  final out = [for (final s in t.secs) s ~/ 60];
+  for (var i = 0; i < n; i++) {
+    if (t.secs[i] > 0 && out[i] == 0) out[i] = 1;
+  }
+  var left = total - out.fold(0, (a, b) => a + b);
+  final byRem = [for (var i = 0; i < n; i++) i]..sort((a, b) => (t.secs[b] % 60).compareTo(t.secs[a] % 60));
+  for (var k = 0; left > 0 && k < n * 2; k++) {
+    final i = byRem[k % n];
+    if (t.secs[i] <= 0) continue;
+    out[i]++;
+    left--;
+  }
+  // 1分に繰り上げた人の分が多すぎたら、いちばん長く出た人から引く
+  while (left < 0) {
+    var top = 0;
+    for (var i = 1; i < n; i++) {
+      if (out[i] > out[top]) top = i;
+    }
+    out[top]--;
+    left++;
+  }
+  return _minCache[t] = out;
+}
 
 /// 個人成績に足す。
 void addSeasonStats(SimTeam t) {

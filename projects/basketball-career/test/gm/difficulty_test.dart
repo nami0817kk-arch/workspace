@@ -71,7 +71,7 @@ void main() {
     test('オーナーの信頼は、減るときだけ難しさの倍率がかかる(増えるときは同じ)', () {
       // 同じシーズンをプレーオフの直前まで進め、そこで3つに複製して難しさだけ替える(続きは同じ乱数)
       var dropped = 0, rose = 0;
-      for (final seed in [2, 4, 6, 10, 12, 15]) {
+      for (final seed in [1, 2, 4, 5, 6, 10]) {
         for (final rank in [2, 15, 28]) {
           final base = _start(Difficulty.normal, seed: seed, rank: rank)..ownerType = OwnerType.winNow; // 上乗せが付きにくい性格(減る局面を確かめるため)
           base.startSeason();

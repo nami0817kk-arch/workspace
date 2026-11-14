@@ -542,7 +542,7 @@ void main() {
         expect(g.oppBox, isNotEmpty);
         for (final (box, pts) in [(g.box, g.ptsOf(c.mine)), (g.oppBox, g.ptsAgainst(c.mine))]) {
           expect(box.fold<int>(0, (n, b) => n + b.pts), pts);
-          expect(box.fold<int>(0, (n, b) => n + b.min), totalMinutes);
+          expect(box.fold<int>(0, (n, b) => n + b.min), totalMinutes + 25 * g.overtimes);
           for (final b in box) {
             expect(2 * (b.fgm - b.tpm) + 3 * b.tpm + b.ftm, b.pts, reason: b.name);
             expect(b.fgm, lessThanOrEqualTo(b.fga));
@@ -614,21 +614,28 @@ void main() {
     });
 
     test('期待より大きく少ない出場時間だと気持ちが下がる', () {
-      final c = careerAt(5, 12)..startSeason();
-      final o = c.me.order;
-      final star = o.first;
-      final m = {for (var i = 0; i < o.length; i++) o[i].id: i == 0 ? 4 : 0};
-      var left = totalMinutes - 4;
-      for (final p in o.skip(1)) {
-        final add = left.clamp(0, 40);
-        m[p.id] = add;
-        left -= add;
+      // 区切りの途中でけが人が出ると、足りない時間は上から足される(エースに戻る)。そうならなかった局面で確かめる
+      var checked = 0;
+      for (final seed in [5, 6, 7, 8, 9, 10]) {
+        final c = careerAt(seed, 12)..startSeason();
+        final o = c.me.order;
+        final star = o.first;
+        final m = {for (var i = 0; i < o.length; i++) o[i].id: i == 0 ? 4 : 0};
+        var left = totalMinutes - 4;
+        for (final p in o.skip(1)) {
+          final add = left.clamp(0, 40);
+          m[p.id] = add;
+          left -= add;
+        }
+        c.setMinutes(m);
+        expect(c.me.minutes, isNotEmpty);
+        star.morale = 60;
+        c.playBlock();
+        if (c.me.playMinutes()[c.me.order.indexOf(star)] > 10) continue;
+        checked++;
+        expect(star.morale, lessThan(60), reason: 'seed $seed');
       }
-      c.setMinutes(m);
-      expect(c.me.minutes, isNotEmpty);
-      star.morale = 60;
-      c.playBlock();
-      expect(star.morale, lessThan(60));
+      expect(checked, greaterThan(0));
     });
 
     test('ヘッドコーチの力で戦力が変わり、保存しても残る。はじめのコーチは強さを変えない', () {
@@ -1147,8 +1154,9 @@ void main() {
       c.playBlock();
       for (final g in c.lastGames) {
         expect(g.quarters, hasLength(8));
-        expect(g.quarters.take(4).fold(0, (a, b) => a + b), g.homePts);
-        expect(g.quarters.skip(4).fold(0, (a, b) => a + b), g.awayPts);
+        // 延長があれば、その点も足す
+        expect(g.quarters.take(4).fold(0, (a, b) => a + b) + [for (var k = 0; k < g.overtimes; k++) g.overtime[k * 2]].fold(0, (a, b) => a + b), g.homePts);
+        expect(g.quarters.skip(4).fold(0, (a, b) => a + b) + [for (var k = 0; k < g.overtimes; k++) g.overtime[k * 2 + 1]].fold(0, (a, b) => a + b), g.awayPts);
         expect(g.box.fold(0, (a, b) => a + b.pts), g.ptsOf(c.mine));
         expect(g.box.every((b) => b.min > 0), isTrue);
       }
