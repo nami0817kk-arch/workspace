@@ -10,12 +10,12 @@
   const abs = (w) => w.year * 100 + w.week;
 
   // ---------- ★注目（決定85。決定150で「入団時に決める」へ）：各学年4人まで ----------
-  // ★は新入生の入団から4週のうちに決める（そのあとは付け替えられない）。初年度だけは最初の36人もいつでも付け外しできる
+  // ★は新入生の入団から4週のうちに決める（そのあとは付け替えられない）。初年度も同じで、高1だけ（決定：上級生には付けない）
   YA.STAR_MAX = 4;
   YA.STAR_WEEKS = 4;
-  YA.starGrades = (w) => (w.year <= 1 ? [1, 2, 3] : w.week <= YA.STAR_WEEKS ? [1] : []);
+  YA.starGrades = (w) => (w.week <= YA.STAR_WEEKS ? [1] : []);
   YA.starOpen = (w, p) => YA.starGrades(w).includes(p.grade);
-  YA.STAR_CLOSED = '★は入団から4週のうちに決めます（初年度だけは自由に付け外しできます）。今年の新入生は、次の入団のときにまた選べます';
+  YA.STAR_CLOSED = '★は高1にだけ、入団から4週のうちに付けます。高2・高3には付けられません。次の新入生が入ったら、また選べます';
   YA.starsIn = (w, grade) => Object.values(w.players).filter((p) => p.star && p.grade === grade);
   YA.setStar = function (w, p, on) {
     if (!YA.starOpen(w, p)) return { ok: false, msg: YA.STAR_CLOSED };
@@ -176,7 +176,7 @@
   // ---------- 教え方（決定128）----------
   YA.INTRO = [
     ['ユースの指導者になった', '高1〜高3の36人を預かり、3年かけて育てて送り出します。勝つことと、育てること。その両方を任されています。'],
-    ['★注目の子を選ぶ', '★は各学年4人まで。★の子だけが「覚醒の鍵」を持っています。面談や試合で鍵のヒントを見つけ、満たすと覚醒します。'],
+    ['★注目の子を選ぶ', '★は高1に4人まで、入団から4週のうちに付けます。★の子だけが「覚醒の鍵」を持っています。3年かけて鍵のヒントを見つけ、満たすと覚醒します。'],
     ['毎週やること', '練習の画面を確かめて「この週で行く」。試合の週は布陣と戦い方を決めてキックオフ。出来事が起きたら、言葉をかけて選びます。'],
     ['系譜を伸ばす', '卒業した子がプロや代表で活躍すると、あなたの系譜が伸びます。大きな移籍では連帯貢献金も入ります。'],
   ];
@@ -200,14 +200,9 @@
   // 最初の4週：鍵の短い子（見た目では分からない）に★を勧める
   YA.starRecommend = function (w) {
     if (!w || w.week > YA.STAR_WEEKS) return null;
-    if (w.year > 1) {
-      if (YA.starsIn(w, 1).length >= YA.STAR_MAX) return null;
-      const n = YA.starPick(w, 1)[0];
-      return n ? `今年の新入生は、入団から${YA.STAR_WEEKS}週のうちに★を決めます。${n.name}は伸びしろが大きそうです（${YA.starsIn(w, 1).length}/${YA.STAR_MAX}）。` : null;
-    }
-    const p = Object.values(w.players).find((q) => q.fast && !q.star);
-    if (!p) return null;
-    return `高${p.grade}の${p.name}は、何かきっかけがあれば早く化けそうです。★を付けてみては。`;
+    if (YA.starsIn(w, 1).length >= YA.STAR_MAX) return null;
+    const n = YA.starPick(w, 1)[0];
+    return n ? `高1には、入団から${YA.STAR_WEEKS}週のうちに★を決めます。${n.name}は伸びしろが大きそうです（${YA.starsIn(w, 1).length}/${YA.STAR_MAX}）。` : null;
   };
 
   // ---------- 信頼（決定110）：★の子ごとに5段階 ----------

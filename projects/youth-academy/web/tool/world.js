@@ -1278,12 +1278,14 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   for (let i = 0; i < YA.STAR_MAX; i++) ok(YA.setStar(w0, g1[i], true).ok, '★を付けられる ' + i);
   ok(!YA.setStar(w0, g1[YA.STAR_MAX], true).ok && !g1[YA.STAR_MAX].star, '★は各学年4人まで');
   ok(YA.setStar(w0, g1[0], false).ok && YA.setStar(w0, g1[YA.STAR_MAX], true).ok, '外せば別の子に付け替えられる');
-  // ★は入団から4週のうちに決める（決定150）。初年度だけは最初の36人もいつでも付け外しできる
+  // ★は入団から4週のうちに決める（決定150）。初年度も高1だけ
   {
     const g2 = Object.values(w0.players).filter((p) => p.grade === 2);
-    ok(g2.length > 0 && YA.starOpen(w0, g2[0]) && YA.starOpen(w0, g1[0]), '初年度は全学年で★を決められる');
+    ok(g2.length > 0 && !YA.starOpen(w0, g2[0]) && YA.starOpen(w0, g1[0]), '初年度も★は高1だけ');
+    const g3 = Object.values(w0.players).filter((p) => p.grade === 3);
+    ok(!YA.setStar(w0, g3[0], true).ok && !g3[0].star, '初年度も高3には★を付けられない');
     w0.week = 30;
-    ok(YA.starOpen(w0, g2[0]), '初年度は何週目でも決められる');
+    ok(!YA.starOpen(w0, g1[1]), '初年度も入団から4週をすぎると決められない');
     const wn = YA.newWorld(9);
     wn.year = 2;
     wn.week = 3;
@@ -1337,10 +1339,12 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   let star = 0, other = 0, yrs = 0;
   for (const seed of [8, 21]) {
     const wa = YA.newWorld(seed);
-    for (let y = 0; y < 3; y++) {
-      const yy = wa.year; let g = 0; yrs++;
+    // ★は高1だけなので、初年度は覚醒がほぼ起きない。2年目からの3年でならす
+    for (let y = 0; y < 4; y++) {
+      const yy = wa.year; let g = 0;
+      if (y === 0) ok(Object.values(wa.players).every((p) => !p.star || p.grade === 1), '初年度の★は高1だけ（おまかせ）');
       while (wa.year === yy && g++ < 60) YA.simulate(wa, { until: 'week', stopOnImportant: false });
-      star += wa.awakeN && wa.awakeN.y === yy ? wa.awakeN.n : 0;
+      if (y > 0) { yrs++; star += wa.awakeN && wa.awakeN.y === yy ? wa.awakeN.n : 0; }
       ok(Object.values(wa.players).every((p) => !p.star || YA.starsIn(wa, p.grade).length <= YA.STAR_MAX), '★は各学年4人まで（おまかせ）');
     }
     other += Object.values(wa.players).filter((p) => p.awake && !p.awake.form).length;
