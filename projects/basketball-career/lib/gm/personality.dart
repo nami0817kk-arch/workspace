@@ -53,7 +53,7 @@ Personality personalityOf(Player p) {
 bool _conflict(Trait a, Trait b) =>
     {a, b}.containsAll([Trait.steady, Trait.streaky]) || {a, b}.containsAll([Trait.leader, Trait.troublemaker]);
 
-/// 性格が見えているか。同じチームに2年以上いると見えてくる(新しい選手は面接・スカウトまで見えない)。
-bool personalityKnown(Player p) => p.tenure >= 2;
+/// 性格が見えているか。同じチームに2年以上いると見えてくる。ドラフトの前にスカウトした選手は、はじめから見える。
+bool personalityKnown(Player p) => p.tenure >= 2 || p.traitsKnown;
 
 bool hasTrait(Player p, Trait t) => personalityOf(p).traits.contains(t);

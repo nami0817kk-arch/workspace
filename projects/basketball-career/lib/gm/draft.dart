@@ -137,12 +137,18 @@ List<Prospect> makeProspects(Rng rng, int Function() nextId, int count, {String 
   return list;
 }
 
-/// スカウトを送る。幅が狭まる。
-void scout(Prospect p, Rng rng) {
+/// スカウトの段階(1〜3)ごとの、調べたあとの見立ての幅(OVR と POT の片側)。
+const scoutOvrHalf = [4, 2, 1];
+const scoutPotHalf = [7, 4, 2];
+
+/// スカウトを送る。幅が狭まり(スカウトの段階 [level] が高いほど狭い)、性格も分かる。
+void scout(Prospect p, Rng rng, {int level = 2}) {
   if (p.scouted) return;
   p.scouted = true;
-  final (ol, oh) = _range(rng, p.player.ovr, 2);
-  final (pl, ph) = _range(rng, p.player.pot, 4);
+  p.player.traitsKnown = true;
+  final k = (level - 1).clamp(0, 2);
+  final (ol, oh) = _range(rng, p.player.ovr, scoutOvrHalf[k]);
+  final (pl, ph) = _range(rng, p.player.pot, scoutPotHalf[k]);
   p
     ..ovrLo = ol
     ..ovrHi = oh
