@@ -428,7 +428,8 @@ extension GameStateSquad on GameState {
     if (_save == null) return 0;
     final lvl = _save!.infrastructure.facilityLevel(type);
     return (ClubInfrastructure.facilityUpgradeCost(lvl) *
-            BudgetEngine.facilityCostMultiplier(_save!.budgetPlan))
+            BudgetEngine.facilityCostMultiplier(_save!.budgetPlan) *
+            PolicyEngine.facilityCostMultiplier(_save!.clubPolicy))
         .round();
   }
 

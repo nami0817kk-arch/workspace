@@ -759,6 +759,7 @@ extension GameStateSeason on GameState {
     // 国の財務規則(収支規則・ライセンス)の判定。違反なら罰を科す。
     _enforceLeagueRules();
     _recordClubValue();
+    _scoreClubPolicy(finalRank: finalRank);
 
     // 監督契約(任期)の更新。旧セーブ(0=未導入)はまず2年契約を結ぶ。
     lastManagerContractNote = null;
