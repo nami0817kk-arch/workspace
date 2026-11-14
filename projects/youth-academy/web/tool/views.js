@@ -477,6 +477,34 @@ async function clearEvents() {
       ok(A.w.players[sid].team === 'B' && !A.w.lineupA.some((s) => s.pid === sid) && A.w.lineupA.length === 11, '選ぶと先発が入れ替わり、下げた子はBへ');
       ok(A.w.benchA.length === 9 && new Set(A.w.lineupA.map((s) => s.pid).concat(A.w.benchA)).size === 20, '入れ替えのあともAは20人で重ならない');
     }
+    // 契約満了の画面：分かりやすく、押せる。更新を断られたときは理由が出る
+    {
+      d.querySelectorAll('.sheet').forEach((s) => s.remove());
+      A.w.pendingContract = { offers: w.YA.moveOffers(A.w) };
+      A.tab = 'home';
+      w.YA._ui.render();
+      await sleep(20);
+      ok(txt().includes('3年の契約が終わりました') && txt().includes('で続ける') && txt().includes('ここへ移る') && txt().includes('持っていけます'), '契約満了の画面に、選べる道と何が変わるかが出る');
+      const t0 = A.w.club.trust; A.w.club.trust = 10;
+      d.querySelectorAll('.sheet').forEach((s) => s.remove());
+      w.YA._ui.render();
+      await sleep(20);
+      ok(txt().includes('クラブが更新を断っています') && txt().includes('30未満'), '更新できないときは理由が出る');
+      const mv = btn('ここへ移る');
+      if (mv) mv.click();
+      await sleep(20);
+      ok(!A.w.pendingContract && !txt().includes('3年の契約が終わりました'), '「ここへ移る」を押すと先へ進める');
+      A.w.club.trust = Math.max(t0, 50);
+    }
+    // 押せないボタンには、触れたときに出す理由（data-why）がある
+    {
+      const noWhy = () => [...d.querySelectorAll('#app button[disabled]')].filter((b) => !b.dataset.why).map((b) => b.textContent.trim().slice(0, 16));
+      const bad = [];
+      for (const k of ['ホーム', '選手', 'クラブ']) { rail(k); await sleep(10); bad.push(...noWhy()); }
+      for (const k of ['予算と施設', 'スタッフ', 'スカウト', 'セレクション', '内部昇格', '概要']) { const bb = btn(k); if (bb) { bb.click(); await sleep(10); bad.push(...noWhy()); } }
+      ok(bad.length === 0, '押せないボタンには理由がある: ' + bad.slice(0, 5).join('|'));
+      ok(typeof w.YA.toast === 'function', '押せないボタンに触れたら理由を出す仕組みがある');
+    }
     // 機能面の画面
     rail('選手');
     await sleep(10);

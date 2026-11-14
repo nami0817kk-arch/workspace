@@ -58,11 +58,37 @@
       else if (k === 'style') e.style.cssText = v;
       else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
       else if (k === 'html') e.innerHTML = v;
+      else if (k === 'why') e.dataset.why = v;
       else e.setAttribute(k, v === true ? '' : v);
     }
     for (const c of kids.flat()) if (c != null && c !== false) e.append(c.nodeType ? c : document.createTextNode(String(c)));
     return e;
   }
+  // 短い知らせ（画面の下に2.5秒）
+  YA.toast = function (msg) {
+    try {
+      let t = document.getElementById('ya-toast');
+      if (!t) { t = document.createElement('div'); t.id = 'ya-toast'; t.style.cssText = 'position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);max-width:86%;background:rgba(20,32,58,.94);color:#fff;padding:9px 14px;border-radius:10px;font-size:13px;font-weight:700;z-index:99;box-shadow:0 4px 14px rgba(0,0,0,.35);transition:opacity .25s;pointer-events:none;text-align:center;line-height:1.45'; document.body.append(t); }
+      t.textContent = msg;
+      t.style.opacity = '1';
+      clearTimeout(YA._toastT);
+      YA._toastT = setTimeout(() => { t.style.opacity = '0'; }, 3500);
+    } catch (e) { /* 画面が無い */ }
+  };
+  // 押せないボタン（pointer-events:none で指が通り抜ける）に触れたら、理由を出す
+  try {
+    document.addEventListener('click', (ev) => {
+      if (ev.target && ev.target.closest && ev.target.closest('button:not([disabled])')) return;
+      const x = ev.clientX, y = ev.clientY;
+      for (const b of document.querySelectorAll('button[disabled]')) {
+        const r = b.getBoundingClientRect();
+        if (r.width && x >= r.left && x <= r.right && y >= r.top && y <= r.bottom) {
+          YA.toast(b.dataset.why || 'いまは押せません');
+          return;
+        }
+      }
+    }, true);
+  } catch (e) { /* node での点検 */ }
   const svgNS = 'http://www.w3.org/2000/svg';
   function s(tag, attrs, ...kids) {
     const e = document.createElementNS(svgNS, tag);
@@ -491,7 +517,7 @@
         const dutyBox = h('div', { class: 'card', style: 'padding:6px 8px;margin:4px 0 6px;background:#f5f8fd' });
         dutyBox.append(h('div', { class: 'row', style: 'gap:5px;flex-wrap:wrap' }, h('b', {}, '任務'), ['def', 'sup', 'att', 'stop', 'cover'].filter((k) => curRd.duties.indexOf(k) >= 0 || (k !== 'stop' && k !== 'cover')).map((k) => {
           const allowed = curRd.duties.indexOf(k) >= 0;
-          return h('button', { class: 'btn sm' + (sl.duty === k ? ' on' : ''), disabled: !allowed, onclick: () => { sl.duty = k; board.redraw(); onChange(); } }, YA.DUTY[k].label);
+          return h('button', { class: 'btn sm' + (sl.duty === k ? ' on' : ''), disabled: !allowed, why: 'この役割では選べない任務です', onclick: () => { sl.duty = k; board.redraw(); onChange(); } }, YA.DUTY[k].label);
         }), h('span', { class: 'grow' })), h('div', { class: 'note', style: 'margin-top:3px' }, (YA.DUTY[sl.duty] || YA.DUTY.sup).note + '。（深さ・戻り・場面の出やすさが変わります）'));
         body.append(dutyBox);
         body.append(h('div', { class: 'h' }, '役割'));
@@ -517,7 +543,7 @@
         const m = o.match;
         const left = 5 - t.subsUsed;
         const win = 3 - t.windowsUsed + (t._winOpen ? 1 : 0);
-        body.append(h('div', { class: 'row' }, h('div', { class: 'h grow' }, `交代  あと${left}人 / 機会あと${m && m.isHalf() ? '（ハーフタイムは数えない）' : win + '回'}`), h('button', { class: 'btn pri sm', disabled: !(st.subOut && st.subIn), onclick: () => { const r = m.substitute(t, st.subOut, st.subIn); if (!r.ok) st.msgs = [r.msg]; else { st.msgs = ['交代しました']; st.subOut = st.subIn = null; board.redraw(); o.onChange && o.onChange(); } renderTabs(); renderBody(); } }, '交代する')));
+        body.append(h('div', { class: 'row' }, h('div', { class: 'h grow' }, `交代  あと${left}人 / 機会あと${m && m.isHalf() ? '（ハーフタイムは数えない）' : win + '回'}`), h('button', { class: 'btn pri sm', disabled: !(st.subOut && st.subIn), why: '下げる子と入れる子を、両方選んでください', onclick: () => { const r = m.substitute(t, st.subOut, st.subIn); if (!r.ok) st.msgs = [r.msg]; else { st.msgs = ['交代しました']; st.subOut = st.subIn = null; board.redraw(); o.onChange && o.onChange(); } renderTabs(); renderBody(); } }, '交代する')));
         const cols = h('div', { class: 'row', style: 'align-items:flex-start;gap:8px;margin-top:6px' });
         const lo = h('div', { class: 'grow plist' }, h('div', { class: 'note' }, '下げる選手（ピッチ）'));
         t.lineup.forEach((x, i) => {

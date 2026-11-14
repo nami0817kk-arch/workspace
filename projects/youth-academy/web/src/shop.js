@@ -204,7 +204,7 @@
       const done = it.once && st === '購入済み';
       body.append(h('div', { class: 'card', style: 'padding:6px 9px;margin:4px 0;display:flex;align-items:center;gap:6px' },
         h('div', { class: 'grow' }, h('b', {}, it.name), h('div', { class: 'note' }, it.note), st ? h('div', { class: 'note', style: 'color:var(--ink)' }, st) : null),
-        done || (it.key === 'slot' && YA.ent.slots >= YA.SLOT_MAX - 1) ? null : h('button', { class: 'btn sm pri', disabled: !YA.native.has(), onclick: () => { YA.shopMsg = ''; YA.buy(it.id); } }, priceOf(it))));
+        done || (it.key === 'slot' && YA.ent.slots >= YA.SLOT_MAX - 1) ? null : h('button', { class: 'btn sm pri', disabled: !YA.native.has(), why: '買い物はアプリでだけできます', onclick: () => { YA.shopMsg = ''; YA.buy(it.id); } }, priceOf(it))));
     }
     body.append(h('div', { class: 'row', style: 'gap:6px;margin-top:4px' }, h('button', { class: 'btn sm', disabled: !YA.native.has(), onclick: () => { YA.shopMsg = ''; YA.restorePurchases(); } }, '購入を復元'), h('span', { class: 'note' }, YA.shopMsg || '')));
     YA.origButton(body);
@@ -213,7 +213,7 @@
     const w = U().app.w;
     if (!w) return;
     const n = (w.originals || []).length;
-    body.append(h('div', { class: 'row', style: 'gap:6px;margin-top:6px' }, h('button', { class: 'btn sm', disabled: YA.ent.tickets < 1, onclick: () => origModal() }, 'オリジナル選手を作る'), h('span', { class: 'note' }, `チケット${YA.ent.tickets}枚／来年度に迎える予定 ${n}人`)));
+    body.append(h('div', { class: 'row', style: 'gap:6px;margin-top:6px' }, h('button', { class: 'btn sm', disabled: YA.ent.tickets < 1, why: 'オリジナル選手のチケットがありません', onclick: () => origModal() }, 'オリジナル選手を作る'), h('span', { class: 'note' }, `チケット${YA.ent.tickets}枚／来年度に迎える予定 ${n}人`)));
     if (n) body.append(h('div', { class: 'note' }, (w.originals || []).map((o) => `${o.name}（${YA.POS_LABEL ? YA.POS_LABEL[o.pos] || o.pos : o.pos}・伸びしろ${'★'.repeat(o.stars)}）`).join('、')));
   };
   function origModal() {
@@ -256,7 +256,7 @@
     const left = YA.rewardLeft(st);
     const card = h('div', { class: 'card', style: 'padding:6px 9px;margin-top:6px' }, h('div', { class: 'h' }, 'ご褒美の動画'));
     const msg = h('div', { class: 'note' }, YA.native.has() ? `今日あと${left}回。見終えると、全員の疲れが少し抜けます。` : 'アプリ版（iPhone）で使えます。');
-    card.append(msg, h('button', { class: 'btn sm', disabled: !YA.native.has() || left <= 0, style: 'margin-top:3px', onclick: () => {
+    card.append(msg, h('button', { class: 'btn sm', disabled: !YA.native.has() || left <= 0, why: !YA.native.has() ? '動画はアプリでだけ見られます' : '今日はもう見られません（1日の回数を使い切りました）', style: 'margin-top:3px', onclick: () => {
       YA.watchReward(st, (res) => {
         let t = YA.rewardMsg(res);
         if (res === 'earned') { t += '：' + YA.REWARDS[0].run(w); YA.saveWorld(); }
@@ -281,7 +281,7 @@
   YA.boostButton = function (w, c, rerenderFn) {
     if (c.boost || c.status !== 'open' || c.seen < 1) return null;
     const st = U().store;
-    return h('button', { class: 'btn sm', disabled: !YA.native.has() || YA.rewardLeft(st) <= 0, style: 'margin-top:3px', onclick: () => {
+    return h('button', { class: 'btn sm', disabled: !YA.native.has() || YA.rewardLeft(st) <= 0, why: !YA.native.has() ? '動画はアプリでだけ見られます' : '今日はもう見られません（1日3回まで）', style: 'margin-top:3px', onclick: () => {
       YA.watchReward(st, (res) => { if (res === 'earned') { c.boost = true; YA.saveWorld(); } (rerenderFn || rerender)(); });
     } }, '動画で詳しく見る');
   };
