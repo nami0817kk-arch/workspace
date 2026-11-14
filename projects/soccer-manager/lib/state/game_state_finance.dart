@@ -508,6 +508,7 @@ extension GameStateFinance on GameState {
         : 1.0;
     final factor = BudgetEngine.incomeMultiplier(_save!.budgetPlan) *
         PolicyEngine.incomeMultiplier(_save!.clubPolicy) *
+        _save!.economyPhase.incomeMultiplier *
         boost;
     final total =
         ((matchdayIncome + sponsorIncome + merchandiseIncome) * factor).round();
@@ -577,6 +578,30 @@ extension GameStateFinance on GameState {
       context: Tr.pick('リーグの規則', 'League rules'),
     );
   }
+
+  /// 今シーズンの景気。
+  EconomyPhase get economyPhase => _save?.economyPhase ?? EconomyPhase.normal;
+
+  /// 来シーズンの景気(予報)。
+  EconomyPhase get economyNext => _save?.economyNext ?? EconomyPhase.normal;
+
+  /// シーズン末に景気を1つ進める。来季の予報が今季になり、次の予報を引く。
+  void _advanceEconomy({double? roll}) {
+    final save = _save!;
+    save.economyPhase = save.economyNext;
+    save.economyNext =
+        EconomyEngine.next(save.economyPhase, roll ?? Random().nextDouble());
+    _logNews(
+      Tr.pick(
+          '景気: 来季は「${save.economyPhase.label}」です。${save.economyPhase.summary}(再来季の予報: ${save.economyNext.label})',
+          'Economy: next season is "${save.economyPhase.label}". ${save.economyPhase.summary} (Forecast after that: ${save.economyNext.label})'),
+      context: Tr.pick('景気', 'Economy'),
+    );
+  }
+
+  /// テスト用: 景気を1つ進める。
+  @visibleForTesting
+  void debugAdvanceEconomy(double roll) => _advanceEconomy(roll: roll);
 
   /// オーナーが選んだクラブの方針。
   ClubPolicy get clubPolicy => _save?.clubPolicy ?? ClubPolicy.balanced;
