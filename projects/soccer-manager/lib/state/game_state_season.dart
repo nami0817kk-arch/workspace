@@ -760,6 +760,7 @@ extension GameStateSeason on GameState {
     // 国の財務規則(収支規則・ライセンス)の判定。違反なら罰を科す。
     _enforceLeagueRules();
     _holdShareholdersMeeting();
+    _resolveSeasonRisks();
     _recordClubValue();
     _scoreClubPolicy(finalRank: finalRank);
     _advanceEconomy();

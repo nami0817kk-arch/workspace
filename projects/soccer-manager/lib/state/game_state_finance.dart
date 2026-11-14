@@ -582,6 +582,79 @@ extension GameStateFinance on GameState {
     );
   }
 
+  /// 保険に入る/やめる。
+  Future<void> setInsured(bool value) async {
+    if (_save == null) return;
+    _save!.insured = value;
+    _notify();
+    await _persist();
+  }
+
+  /// 災害基金へ積む(正)/引き出す(負)。資金が足りない・基金が足りないときは false。
+  Future<bool> depositReserveFund(int amount) async {
+    final save = _save;
+    if (save == null || amount == 0) return false;
+    if (amount > 0 && amount > save.budget) return false;
+    if (amount < 0 && -amount > save.reserveFund) return false;
+    save.reserveFund += amount;
+    _book(LedgerCategory.financing, -amount);
+    _notify();
+    await _persist();
+    return true;
+  }
+
+  /// 地域貢献を1段上げる。
+  Future<bool> upgradeCommunity() async {
+    final save = _save;
+    if (save == null || save.communityLevel >= RiskEngine.maxCommunityLevel) {
+      return false;
+    }
+    final cost = RiskEngine.communityCost(save.communityLevel + 1);
+    if (cost > save.budget) return false;
+    _book(LedgerCategory.other, -cost);
+    save.communityLevel += 1;
+    _notify();
+    await _persist();
+    return true;
+  }
+
+  /// シーズン末: 保険料、地域貢献の効果、突発の出来事。
+  void _resolveSeasonRisks({double? chanceRoll, double? kindRoll, double? sizeRoll}) {
+    final save = _save!;
+    final tier = save.currentDivisionTier;
+    if (save.insured) _book(LedgerCategory.other, -RiskEngine.premium(tier));
+    if (save.communityLevel > 0) {
+      save.confidence =
+          (save.confidence + RiskEngine.communityTrustGain(save.communityLevel))
+              .clamp(0, 100);
+    }
+    final rng = Random();
+    final incident = RiskEngine.roll(
+      chanceRoll: chanceRoll ?? rng.nextDouble(),
+      kindRoll: kindRoll ?? rng.nextDouble(),
+      sizeRoll: sizeRoll ?? rng.nextDouble(),
+      tier: tier,
+      communityLevel: save.communityLevel,
+    );
+    if (incident == null) return;
+    final cover = RiskEngine.cover(
+        loss: incident.loss, insured: save.insured, fund: save.reserveFund);
+    save.reserveFund = cover.fundAfter;
+    if (cover.byClub > 0) _book(LedgerCategory.other, -cover.byClub);
+    save.confidence = (save.confidence - incident.trustLoss).clamp(0, 100);
+    _logNews(
+      Tr.pick(
+          '${incident.kind.label}が起きました。損失${incident.loss}万円(保険${cover.byInsurance}・基金${cover.byFund}・クラブ負担${cover.byClub})',
+          '${incident.kind.label}. Loss ${incident.loss} (insurance ${cover.byInsurance}, fund ${cover.byFund}, club ${cover.byClub})'),
+      context: Tr.pick('突発の出来事', 'Incident'),
+    );
+  }
+
+  /// テスト用: 突発の出来事の判定を、指定の乱数で進める。
+  @visibleForTesting
+  void debugResolveSeasonRisks(double chance, double kind, double size) =>
+      _resolveSeasonRisks(chanceRoll: chance, kindRoll: kind, sizeRoll: size);
+
   /// 命名権の候補から1つ結ぶ。
   Future<bool> chooseNamingRights(int index) async {
     final save = _save;

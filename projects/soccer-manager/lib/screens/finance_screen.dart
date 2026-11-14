@@ -16,6 +16,7 @@ import '../widgets/club_policy_card.dart';
 import '../widgets/club_value_card.dart';
 import '../widgets/equity_card.dart';
 import '../widgets/media_deals_card.dart';
+import '../widgets/risk_card.dart';
 import '../widgets/rules_card.dart';
 import '../widgets/reward_funds_card.dart';
 import '../widgets/responsive_body.dart';
@@ -143,6 +144,7 @@ class FinanceScreen extends StatelessWidget {
             const ClubValueCard(),
             const EquityCard(),
             const MediaDealsCard(),
+            const RiskCard(),
             const RulesCard(),
             const SizedBox(height: 16),
             Text(Tr.pick('資金調達（銀行融資）', 'Raise money (bank loan)'),
