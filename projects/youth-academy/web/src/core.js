@@ -477,7 +477,7 @@
     const done = (p.awHist || []).map((x) => x.k);
     let c = YA.AWAKE_FORMS.filter((f) => (f.pos.includes(pos) || f.pos.includes(p.main)) && !done.includes(f.k));
     if (!c.length) c = YA.AWAKE_FORMS.filter((f) => f.pos.includes(p.main) || f.pos.includes(pos));
-    return r.weighted(c, (f) => Math.pow(f.abs.reduce((s, a) => s + (p.ab[a] || 6), 0) / f.abs.length, 2));
+    return r.weighted(c, (f) => Math.pow(f.abs.reduce((s, a) => s + (p.ab[a] || 6), 0) / f.abs.length, 2) * (YA.formLean ? YA.formLean(p, f) : 1));
   }
   // ---------- 覚醒の図鑑：形20種のうち、あなたの子が目覚めた形（やり込み）----------
   // w.dex[形のk] = { y:年目, name:最初の子, n:回数 }。5・10・20種で育成基金のごほうび

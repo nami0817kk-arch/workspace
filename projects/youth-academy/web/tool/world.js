@@ -13,6 +13,7 @@ require(path.join(__dirname, '../src/core.js'));
 require(path.join(__dirname, '../src/lineage.js'));
 require(path.join(__dirname, '../src/rivals.js'));
 require(path.join(__dirname, '../src/story.js'));
+require(path.join(__dirname, '../src/memory.js'));
 require(path.join(__dirname, '../src/shop.js'));
 require(path.join(__dirname, '../src/imgdata.js'));
 require(path.join(__dirname, '../src/art.js'));
@@ -685,17 +686,83 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
       JSON.parse(JSON.stringify(wd));
     }
     {
-      // 遺産：引退で1回だけ貯まる・使うと減る・次の世界の最初に効く
+      // 記憶（決定153〜155）：残す・傾き・引用・便り・殿堂・戻ってくる・紹介・次の人生
+      const wm2 = YA.newWorld(21);
+      const p = Object.values(wm2.players).find((x) => x.grade === 1);
+      p.star = true;
+      const ms = (k, idx) => YA.resolveEvent(wm2, { id: 'ms', pid: p.id, ms: k, week: wm2.week, year: wm2.year }, idx);
+      ms('star', 0);
+      ms('wall', 2);
+      ok(p.mem.length === 2 && p.mem[0].k === 'star' && p.mem[0].c === 'push' && p.mem[0].q.includes('必ず化けさせる') && p.mem[1].c === 'firm', '記憶：節目の会話で何を選んだかが残る');
+      ok(YA.memLines(p)[0].includes('壁') && YA.memLines(p)[0].includes('厳しく'), '記憶：選手画面の一覧の文');
+      const fighter = YA.AWAKE_FORMS.find((f) => f.k === 'fighter'), magic = YA.AWAKE_FORMS.find((f) => f.k === 'magic');
+      ok(YA.formLean(p, fighter) > 1.9 && YA.formLean(p, magic) === 1 && YA.formLean({}, magic) === 1, '育て方の傾き：厳しく接した子は闘将が出やすい');
+      // 約束を守れなかった卒業式
+      const g0 = YA.recall(wm2, p, 'grad');
+      ok(/届/.test(g0) && g0.includes('化け'), '卒業式：守れなかった約束を引用する ' + g0);
+      p.awDone = 1; p.aw = { form: '闘将になる' };
+      const g1 = YA.recall(wm2, p, 'grad');
+      ok(/守|マジ/.test(g1) && !/届かな/.test(g1), '卒業式：守った約束を引用する ' + g1);
+      const v = YA.eventView(wm2, { id: 'ms', pid: p.id, ms: 'grad', week: 39, year: wm2.year });
+      ok(v && v.text.includes('化け') && v.text.includes('信頼'), '卒業式の会話の文が記憶から作られる');
+      ok(YA.say(wm2, p, 'thanks').includes('化け'), '卒業式の場面の挨拶も記憶から');
+      // 進路：本人の希望
+      p.grade = 3;
+      const pv = YA.eventView(wm2, { id: 'path', pid: p.id, week: 22, year: wm2.year });
+      ok(pv && pv.text.includes('本人の希望'), '進路面談に本人の希望が出る');
+      const opts = YA.pathOptions(p).map((o) => o.k);
+      const wi = opts.indexOf(YA.wishOf(p));
+      const why = [];
+      const addTr0 = YA.addTr;
+      YA.addTr = function (ww, q, d, wy) { if (q === p && /進路：/.test(wy || '')) why.push([d, wy]); return addTr0.apply(this, arguments); };
+      YA.resolveEvent(wm2, { id: 'path', pid: p.id, week: 22, year: wm2.year }, wi >= 0 ? wi : 0);
+      YA.addTr = addTr0;
+      ok(YA.memOf(p, 'path').length === 1 && why.some((x) => (wi >= 0 ? x[0] > 0 && /希望を聞いて/.test(x[1]) : x[0] < 0 && /行きたかった/.test(x[1]))), '進路：希望に沿えば信頼が上がり、沿わなければ下がる ' + JSON.stringify(why));
+      // 卒業：記憶と絆を持って出る
+      const a = YA.alumniEntry(wm2, p, '卒業');
+      ok(a.mem && a.mem.length >= 3 && a.bond >= 0 && a.star && a.form === '闘将になる', '卒業生が記憶と絆を持つ');
+      a.seasons = [{ y: wm2.year + 1, club: a.club, league: a.league, apps: 12, goals: 3, titles: [], awards: [] }];
+      a.bond = 5;
+      const L = YA.letterOf(Object.assign({}, wm2, { year: wm2.year + 1 }), a);
+      ok(L.includes('12試合') && L.length > 20, '便り：その年のことを書く ' + L);
+      ok(!/通算/.test(L), '便り：数字だけの一行ではない');
+      ok(YA.hofWord(wm2, a).includes('化け'), '殿堂の言葉が記憶から');
+      // 戻ってくる
+      wm2.alumni.push(a);
+      a.retired = true; a.retY = wm2.year; a.bond = 4;
+      wm2.week = 3; wm2.memKey = null; wm2.forced = [];
+      YA.rivalWeek(wm2);
+      const ob = (wm2.forced || []).find((e) => e.id === 'obret');
+      ok(!!ob, '絆の深い★の卒業生が、引退後に戻りたいと言ってくる');
+      if (ob) {
+        const ov = YA.eventView(wm2, ob);
+        ok(ov && ov.text.includes('教える側'), '戻ってくる場面の文');
+        YA.resolveEvent(wm2, ob, 0);
+        const s = wm2.club.staff.find((x) => x.mentor && x.name === a.name);
+        ok(!!s && s.role === YA.obRoleOf(a) && a.coached, '迎えると、その役のコーチと入れ替わる');
+        const q = Object.values(wm2.players).find((x) => x.id !== p.id);
+        q.star = true;
+        const h0 = q.hist.length;
+        wm2.week = 6; wm2.memKey = null;
+        YA.rivalWeek(wm2);
+        ok(Object.values(wm2.players).some((x) => x.star && x.hist.some((hh) => /卒業生）が、自分の経験/.test(hh.t))), 'OBコーチが毎月★の子に経験を話す');
+      }
+      // 紹介
+      const c = YA.refCand(wm2, a);
+      ok(c && c.seen >= 2 && c.ref === a.name && wm2.scouting.cands.includes(c) && c.p.mem[0].k === 'ref', '紹介：スカウトの候補に、よく見えた状態で入る');
+      // 次の人生
       const mem = {};
-      const st = { get: (k, d) => (mem[k] != null ? mem[k] : d), set: (k, v) => { mem[k] = v; } };
+      const st = { get: (k, d) => (mem[k] != null ? mem[k] : d), set: (k, vv) => { mem[k] = vv; } };
       const wl2 = YA.newWorld(13);
-      const g1 = YA.legacyBank(st, wl2), g2 = YA.legacyBank(st, wl2);
-      ok(g1 === g2 && YA.legacyPts(st) === g1 && mem.legacy.runs === 1, '遺産：引退の1回だけ貯まる');
-      mem.legacy = { pts: 20, runs: 1 };
-      ok(YA.legacySpend(st, ['fund', 'trust']) && YA.legacyPts(st) === 6 && !YA.legacySpend(st, ['rep']), '遺産：使うと減り、足りなければ使えない');
-      const base = YA.newWorld(14, YA.makeStart({ name: 'a', career: 'grind', club: 2, points: {} }));
-      const lw = YA.newWorld(14, Object.assign(YA.makeStart({ name: 'a', career: 'grind', club: 2, points: {} }), { legacy: ['fund', 'trust'] }));
-      ok(lw.fund === (base.fund || 0) + 500 && lw.club.trust === base.club.trust + 8, '遺産：基金と信頼度が最初から上乗せ');
+      wl2.alumni.push(Object.assign({}, a, { bond: 5 }));
+      const got = YA.legacyBank(st, wl2);
+      YA.legacyBank(st, wl2);
+      ok(got.length === 1 && YA.legacyPeople(st).length === 1 && mem.legacy.runs === 1, '遺産：絆の深い教え子が、引退の1回だけ残る');
+      const person = YA.legacyTake(st, a.name);
+      ok(person && YA.legacyPeople(st).length === 0, '遺産：連れていくと一覧から外れる');
+      const lw = YA.newWorld(14, Object.assign(YA.makeStart({ name: 'a', career: 'grind', club: 2, points: {} }), { legacy: person }));
+      ok(lw.club.staff.some((x) => x.mentor && x.name === a.name) && lw.legacyUsed === a.name, '遺産：次の人生の最初からコーチにいる');
+      JSON.parse(JSON.stringify(wm2));
     }
     ok(YA.noticeKind('Aが怪我（3週）') === '怪我'&& YA.noticeKind('なにか') === 'そのほか', 'お知らせの種類を分ける');
     ok(YA.renamePlayer(wm, Object.keys(wm.players)[0], '').ok === false && YA.renamePlayer(wm, Object.keys(wm.players)[0], '新しい名前').ok, '名前を書き換えられる');

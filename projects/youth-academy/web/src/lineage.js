@@ -97,43 +97,38 @@
     YA.achieveCheck(w);
     return contrib;
   };
-  // ---------- 遺産（周回のやり込み）：引退で遺産ポイントが貯まり、次の人生の最初に使える ----------
-  YA.LEGACY = [
-    { k: 'fund', name: '育成基金の元手', cost: 6, note: '最初から育成基金が500万円ある' },
-    { k: 'trust', name: '恩師の口ききで信頼度+8', cost: 8, note: 'クラブの信頼度が最初から8高い' },
-    { k: 'rep', name: '評判の下駄', cost: 8, note: '評判が最初から6高い（良い子が集まりやすい）' },
-  ];
-  YA.legacyGain = (w) => YA.achievements(w).filter((x) => x.done).length + cnt(w.alumni, (a) => a.hof === 'full') * 3 + cnt(w.alumni, (a) => a.hof === 'cand');
-  // 引退したとき1回だけ貯める。貯めた分は w.legacyGain に残る
+  // ---------- 遺産（決定152を作り直し）：絆の深い★の卒業生が、次の人生にコーチとして付いてくる ----------
+  // 端末の store 'legacy' = { runs, people: [{ name, pos, main, ovr, bond, form, mem, year, club, from }] }
+  YA.legacyCands = (w) => (w.alumni || []).filter((a) => a.mem && a.star && (a.bond == null ? 3 : a.bond) >= 3).sort((a, b) => (b.bond || 0) - (a.bond || 0) || b.ovr - a.ovr).slice(0, 3);
+  // 引退したとき1回だけ。付いてきてくれる教え子（最大3人）を残す
   YA.legacyBank = function (store, w) {
-    if (w.legacyGain != null) return w.legacyGain;
-    const g = YA.legacyGain(w);
-    const st = store.get('legacy', null) || { pts: 0, runs: 0 };
-    store.set('legacy', { pts: (st.pts || 0) + g, runs: (st.runs || 0) + 1 });
-    w.legacyGain = g;
-    return g;
+    if (w.legacyBanked) return w.legacyBanked;
+    const st = store.get('legacy', null) || { runs: 0, people: [] };
+    const add = YA.legacyCands(w).map((a) => ({ name: a.name, pos: a.pos, main: a.main, ovr: a.ovr, bond: a.bond, form: a.form || null, mem: (a.mem || []).slice(-6), year: a.year, club: a.club, from: w.clubName }));
+    store.set('legacy', { runs: (st.runs || 0) + 1, people: (st.people || []).concat(add).slice(-6) });
+    w.legacyBanked = add.map((x) => x.name);
+    return w.legacyBanked;
   };
-  YA.legacyPts = (store) => ((store.get('legacy', null) || {}).pts || 0);
-  YA.legacySpend = function (store, keys) {
-    const cost = keys.reduce((s, k) => s + ((YA.LEGACY.find((x) => x.k === k) || {}).cost || 0), 0);
-    const st = store.get('legacy', null) || { pts: 0, runs: 0 };
-    if (cost > st.pts) return false;
-    store.set('legacy', Object.assign({}, st, { pts: st.pts - cost }));
-    return true;
+  YA.legacyPeople = (store) => ((store.get('legacy', null) || {}).people || []);
+  // 新しい人生に連れていく（store から外す）
+  YA.legacyTake = function (store, name) {
+    const st = store.get('legacy', null) || { runs: 0, people: [] };
+    const p = (st.people || []).find((x) => x.name === name);
+    if (!p) return null;
+    store.set('legacy', Object.assign({}, st, { people: st.people.filter((x) => x !== p) }));
+    return p;
   };
-  YA.legacyApply = function (w, keys) {
-    for (const k of keys || []) {
-      if (k === 'fund') w.fund = (w.fund || 0) + 500;
-      else if (k === 'trust') w.club.trust = clamp((w.club.trust || 50) + 8, 0, 100);
-      else if (k === 'rep') YA.addRep(w, 6);
-    }
-    w.legacyUsed = (keys || []).slice();
+  YA.legacyApply = function (w, person) {
+    if (!person || !YA.obJoin) return;
+    const s = YA.obJoin(w, Object.assign({}, person), `前の人生の教え子。${person.from || '前のクラブ'}から付いてきてくれた`);
+    w.legacyUsed = person.name;
+    return s;
   };
   const newWorldBase = YA.newWorld;
   YA.newWorld = function (...a) {
     const w = newWorldBase.apply(this, a);
     w.achInit = true; // 新しい世界は最初から知らせる。古いセーブは最初の1回だけ黙って記録する
-    if (a[1] && a[1].legacy && a[1].legacy.length) YA.legacyApply(w, a[1].legacy);
+    if (a[1] && a[1].legacy) YA.legacyApply(w, a[1].legacy);
     return w;
   };
 
@@ -277,16 +272,17 @@
       h('div', { class: 'note' }, '青い枝はプロ入り。金の丸は代表経験、金の縁は殿堂入り、銀の縁は殿堂候補。'));
     body.append(w.alumni.length ? svgBox(YA.lineageSvg(w), ui.lz, true) : h('div', { class: 'note', style: 'margin-top:6px' }, '最初の卒業式（1年目の終わり）のあとに、ここへ枝が伸びます。'));
   }
+  const leanHint = (f) => { const ks = Object.keys(YA.FORM_LEAN || {}).filter((k) => YA.FORM_LEAN[k].includes(f.k)); return ks.length ? ks.map((k) => YA.KIND_LABEL[k]).join('か') + '接し方で育てた子に出やすい' : ''; };
   function dexTab(body, w) {
     const n = YA.dexCount(w), all = YA.AWAKE_FORMS;
-    body.append(h('div', { class: 'h' }, `覚醒の図鑑 ${n}/${all.length}`), h('div', { class: 'note' }, '★の子が覚醒すると、その形が載ります。5種・10種・20種で育成基金のごほうび（300・600・1000万円）。まだの形は「？」で、合う位置だけ手がかりに出ます。'));
+    body.append(h('div', { class: 'h' }, `覚醒の図鑑 ${n}/${all.length}`), h('div', { class: 'note' }, '★の子が覚醒すると、その形が載ります。形は位置と能力に加えて、節目や出来事でどう接してきたか（寄り添う・厳しく・背中を押す・任せる）で出やすさが変わります。5種・10種・20種で育成基金のごほうび（300・600・1000万円）。'));
     const next = [5, 10, 20].find((x) => x > n);
     if (next) body.append(h('div', { class: 'note', style: 'margin-top:3px' }, `次のごほうびまで あと${next - n}種（${YA.DEX_REWARD[next]}万円）`));
     body.append(h('div', { class: 'plist scroll', style: 'margin-top:5px;flex:1;min-height:0' }, all.map((f) => {
       const d = (w.dex || {})[f.k];
       return h('div', { class: 'pitem', style: 'cursor:default;gap:6px;' + (d ? '' : 'opacity:.6') },
         h('span', { class: 'chip ' + (d ? 'trait' : 'gray') }, d ? '載った' : '？'),
-        h('div', { class: 'grow' }, h('b', {}, d ? f.name : '？？？？'), h('div', { class: 'note' }, d ? `特性「${f.trait}」・最初の子 ${d.name}（${d.y}年目）・${d.n}回` : `向く位置：${f.pos.slice(0, 4).map((x) => YA.posJa ? YA.posJa(x) : x).join('・')}`)));
+        h('div', { class: 'grow' }, h('b', {}, d ? f.name : '？？？？'), h('div', { class: 'note' }, d ? `特性「${f.trait}」・最初の子 ${d.name}（${d.y}年目）・${d.n}回` : `向く位置：${f.pos.slice(0, 4).map((x) => YA.posJa ? YA.posJa(x) : x).join('・')}／${leanHint(f)}`)));
     })));
   }
   function fundTab(body, w) {
