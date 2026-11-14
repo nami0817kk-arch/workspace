@@ -1,0 +1,143 @@
+# 物語完結型ショート ハプスブルク s5（2026-11-14）。本編 scripts/habsburg-kakeizu-story.yaml（11/17 12:00 公開、https://youtu.be/RnyhC0Qyirs）から。11/18 に予約。
+# 形式は galileo_s1〜s5.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（dev/output/rekishi-chiso/research/ハプスブルク家_facts_20261113_hand.yaml）と本編の # fact: だけ。
+# 絵：本編の AI 絵（out/story/habsburg/main/ の H01・H02・C01〜C20）の切り出し・組み合わせだけ。新しい絵は作らない。切り口：呪われた王と1698年の悪魔祓い
+# 計算（自分で数え直した）：1700−1661＝38歳（誕生日の5日前に没）／1698→1700＝2年／1698年9月の悪魔祓い→11月に取り消し
+title: "ハプスブルク｜「私も、そう思い始めている」"
+yt_title: "「多くの人が、私は呪われていると言う。私も、そう思い始めている」　1698年の悪魔祓いと、呪われた王カルロス2世"
+description: |-
+  1698年9月、北スペインの修道院で、修道女に取りついた悪魔が祓われました。悪魔は、王が14歳のとき飲み物で呪われた、と答えたと伝わります。王とは、スペインのカルロス2世。宮廷では「呪われた王」と噂されていました。
+  けれど、11月、その答えは取り消され、19世紀の歴史家ラフエンテは、王には何もなく先の話はうそだった、と書いています。1699年6月には、王本人に会って悪魔祓いをした修道士もいました。地方史の記事は、王が新しい宗教裁判所の長官に「多くの人が、私は呪われていると言う。私も、そう思い始めている」と語った、と伝えます（出どころは1つです）。
+  1700年11月1日、王は38歳で亡くなります。王の死を待っていたヨーロッパは、王国をどうしようとしていたのか。本編は概要欄のリンクからどうぞ。
+  https://youtu.be/RnyhC0Qyirs
+hashtags:
+- "#ハプスブルク家"
+- "#カルロス2世"
+- "#呪われた王"
+- "#世界史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。人物の姿も、特定の資料を写したものではありません。"
+art_dir: out/story/habsburg
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: habsburg_story_s5
+header:
+  tag: "呪われた王"
+  title: "「私も、そう思い始めている」"
+now:
+- {at: "1698年9月", text: "1698年9月　悪魔祓い", point: 0}
+- {at: "1699年6月", text: "1699年6月　王本人へ", point: 1}
+- {at: "1700年", text: "1700年11月1日　没", point: 2}
+timeline:
+- {label: "1698"}
+- {label: "1699"}
+- {label: "1700"}
+shots:
+  C14_1:
+    kind: "ai"
+    file: "habsburg/main/C14.jpg"
+    focus: [0.25, 0.5]
+    move: "right"
+    must: "蝋燭の修道院の廊下"
+  C14_2:
+    kind: "ai"
+    file: "habsburg/main/C14.jpg"
+    focus: [0.45, 0.5]
+    move: "in"
+    must: "蝋燭の修道院の廊下"
+  H01_3:
+    kind: "ai"
+    file: "habsburg/main/H01.jpg"
+    focus: [0.8, 0.5]
+    move: "left"
+    must: "1700年のマドリードの王宮の寝室"
+  C03_4:
+    kind: "ai"
+    file: "habsburg/main/C03.jpg"
+    focus: [0.2, 0.5]
+    move: "right"
+    must: "羊皮紙と羽ペンの机"
+  C11_5:
+    kind: "ai"
+    file: "habsburg/main/C11.jpg"
+    focus: [0.3, 0.5]
+    move: "in"
+    must: "二つの空の玉座"
+  C14_6:
+    kind: "ai"
+    file: "habsburg/main/C14.jpg"
+    focus: [0.8, 0.5]
+    move: "left"
+    must: "蝋燭の修道院の廊下"
+  C13_7:
+    kind: "ai"
+    file: "habsburg/main/C13.jpg"
+    focus: [0.2, 0.5]
+    move: "right"
+    must: "黒い服の婦人と幼い男の子"
+  H01_8:
+    kind: "ai"
+    file: "habsburg/main/H01.jpg"
+    focus: [0.55, 0.5]
+    move: "in"
+    must: "1700年のマドリードの王宮の寝室"
+  C15_9:
+    kind: "ai"
+    file: "habsburg/main/C15.jpg"
+    focus: [0.75, 0.5]
+    move: "left"
+    must: "地図の机と外交官"
+lines:
+  # fact: habs-27
+- 語り: "1698年9月、北スペインの修道院で、修道女に取りついた悪魔が、祓われた。"
+  shot: C14_1
+  tone: 強調
+  pause: 0.12
+  # fact: habs-27
+- 語り: "悪魔は、スペイン王は、14歳のとき、飲み物で、呪われた、と答えたと、伝わる。"
+  shot: C14_2
+  tone: 重い
+  pause: 0.12
+  # fact: habs-27
+- 語り: "王とは、カルロス2世。宮廷では、呪われた王、と噂されていた。"
+  shot: H01_3
+  tone: しみじみ
+  pause: 0.12
+  # fact: habs-27
+- 語り: "王は、この年の初め、宗教裁判所の長官ロカベルティに、秘密で、相談していた。"
+  shot: C03_4
+  tone: しみじみ
+  pause: 0.12
+  # fact: habs-27
+- 語り: "ところが、11月、悪魔の答えは、取り消された。歴史家ラフエンテは、王には何もなく、先の話は、うそだった、と書く。"
+  shot: C11_5
+  tone: しみじみ
+  pause: 0.12
+  # fact: habs-27
+- 語り: "1699年6月には、王本人に会って、カプチン会の修道士が、悪魔祓いをした。"
+  shot: C14_6
+  tone: しみじみ
+  pause: 0.12
+  # fact: habs-28
+- 語り: "地方史の記事は、王が、新しい長官に、こう語ったと伝える。「多くの人が、私は呪われていると言う。私も、そう思い始めている」。"
+  shot: C13_7
+  tone: 重い
+  pause: 0.12
+  # fact: habs-01
+- 語り: "1700年11月1日、王は、38歳で亡くなった。子は、一人もいなかった。"
+  shot: H01_8
+  tone: 重い
+  pause: 0.12
+  # fact: habs-29
+- 語り: "では、王の死を待っていたヨーロッパは、王国を、どうしようとしていたのか。"
+  shot: C15_9
+  tone: 疑問
+  pause: 0.15

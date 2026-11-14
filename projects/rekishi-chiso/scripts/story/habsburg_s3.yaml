@@ -1,0 +1,140 @@
+# 物語完結型ショート ハプスブルク s3（2026-11-14）。本編 scripts/habsburg-kakeizu-story.yaml（11/17 12:00 公開、https://youtu.be/RnyhC0Qyirs）から。11/18 に予約。
+# 形式は galileo_s1〜s5.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（dev/output/rekishi-chiso/research/ハプスブルク家_facts_20261113_hand.yaml）と本編の # fact: だけ。
+# 絵：本編の AI 絵（out/story/habsburg/main/ の H01・H02・C01〜C20）の切り出し・組み合わせだけ。新しい絵は作らない。切り口：1526年モハーチ。婚約から11年、王冠は相続でなく選挙と戦争で
+# 計算（自分で数え直した）：1526−1515＝11年／ルートヴィヒ2世は20歳／1527年戴冠
+title: "ハプスブルク｜王冠は、相続では来なかった"
+yt_title: "1526年、20歳の王が戦場で亡くなった　婚約の約束は効いたが、王冠は自動では渡らなかった　選挙と、手に入った北西の一部"
+description: |-
+  1526年8月29日、モハーチの戦いで、ハンガリーとボヘミアの王ルートヴィヒ2世が20歳で亡くなりました。11年前のウィーンの婚約が、ここで効き始めます。
+  けれど、王冠は自動では渡りませんでした。ボヘミアでは、その年のうちに貴族の議会がフェルディナントを選び、ハンガリーでは、ライバルのザポリヤも同じ1526年に王に選ばれ、戴冠します。手に入ったのは、ハンガリーの北西の一部だけでした。
+  広い領地を一人で抱えた皇帝は、ある決断をします。本編は概要欄のリンクからどうぞ。
+  https://youtu.be/RnyhC0Qyirs
+hashtags:
+- "#ハプスブルク家"
+- "#モハーチの戦い"
+- "#世界史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。人物の姿も、特定の資料を写したものではありません。"
+art_dir: out/story/habsburg
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: habsburg_story_s3
+header:
+  tag: "1526年　モハーチ"
+  title: "王冠は、《相続では来なかった》"
+now:
+- {at: "1526年", text: "1526年8月29日　モハーチ", point: 0}
+- {at: "1527年", text: "1527年　戴冠", point: 1}
+timeline:
+- {label: "1526"}
+- {label: "1527"}
+shots:
+  C09_1:
+    kind: "ai"
+    file: "habsburg/main/C09.jpg"
+    focus: [0.55, 0.5]
+    move: "in"
+    must: "戦いのあとの平原"
+  C08_2:
+    kind: "ai"
+    file: "habsburg/main/C08.jpg"
+    focus: [0.75, 0.5]
+    move: "left"
+    must: "大聖堂の内部と正装の人々"
+  C11_3:
+    kind: "ai"
+    file: "habsburg/main/C11.jpg"
+    focus: [0.25, 0.5]
+    move: "right"
+    must: "二つの空の玉座"
+  C10_4:
+    kind: "ai"
+    file: "habsburg/main/C10.jpg"
+    focus: [0.45, 0.5]
+    move: "in"
+    must: "半円の議場で投票する貴族"
+  C10_5:
+    kind: "ai"
+    file: "habsburg/main/C10.jpg"
+    focus: [0.8, 0.5]
+    move: "left"
+    must: "半円の議場で投票する貴族"
+  C11_6:
+    kind: "ai"
+    file: "habsburg/main/C11.jpg"
+    focus: [0.2, 0.5]
+    move: "right"
+    must: "二つの空の玉座"
+  C03_7:
+    kind: "ai"
+    file: "habsburg/main/C03.jpg"
+    focus: [0.3, 0.5]
+    move: "in"
+    must: "羊皮紙と羽ペンの机"
+  C09_8:
+    kind: "ai"
+    file: "habsburg/main/C09.jpg"
+    focus: [0.8, 0.5]
+    move: "left"
+    must: "戦いのあとの平原"
+  C16_9:
+    kind: "ai"
+    file: "habsburg/main/C16.jpg"
+    focus: [0.2, 0.5]
+    move: "right"
+    must: "18世紀の宮廷の広間"
+lines:
+  # fact: habs-18
+- 語り: "1526年、モハーチの戦い。8月29日、ハンガリーとボヘミアの王、ルートヴィヒ2世が、20歳で、命を落とした。"
+  shot: C09_1
+  tone: 重い
+  pause: 0.12
+  # fact: habs-19
+- 語り: "11年前、ウィーンの大聖堂で交わされた婚約が、ここで、動き出す。"
+  shot: C08_2
+  tone: 強調
+  pause: 0.12
+  # fact: habs-19
+- 語り: "ハプスブルガー・ネットは、取り決めは、思ったより早く効き始めた、と書く。"
+  shot: C11_3
+  tone: しみじみ
+  pause: 0.12
+  # fact: habs-19
+- 語り: "けれど、王冠が、自動で渡ったわけではない。どちらの国でも、選挙が、必要だった。"
+  shot: C10_4
+  tone: 重い
+  pause: 0.12
+  # fact: habs-19
+- 語り: "ボヘミアでは、その年のうちに、貴族たちの議会が、フェルディナントを、王に選んだ。"
+  shot: C10_5
+  tone: しみじみ
+  pause: 0.12
+  # fact: habs-19
+- 語り: "ハンガリーでは、ライバルの貴族、ザポリヤも、同じ1526年に、王に選ばれ、戴冠した。"
+  shot: C11_6
+  tone: しみじみ
+  pause: 0.12
+  # fact: habs-19
+- 語り: "2021年の論文は、フェルディナントの根拠は、条約ではなく、選出と、翌1527年の戴冠だった、と指摘する。"
+  shot: C03_7
+  tone: しみじみ
+  pause: 0.12
+  # fact: habs-19
+- 語り: "手に入ったのは、ハンガリーの、北西の一部だけ。結婚は、扉を開けただけだった。"
+  shot: C09_8
+  tone: 重い
+  pause: 0.12
+  # fact: habs-21
+- 語り: "では、その広い領地を、一人で抱えた皇帝は、どんな決断をしたのか。"
+  shot: C16_9
+  tone: 疑問
+  pause: 0.15
