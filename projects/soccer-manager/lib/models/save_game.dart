@@ -23,6 +23,7 @@ import 'season_record.dart';
 import 'sponsor.dart';
 import 'club_vision.dart';
 import 'ledger.dart';
+import '../logic/league_rules.dart';
 import 'staff_member.dart';
 import 'team.dart';
 import '../l10n/tr.dart';
@@ -102,6 +103,15 @@ class SaveGame {
   List<SeasonLedger> ledgers;
 
   static const int maxLedgerSeasons = 10;
+
+  /// このクラブのいる国の財務規則。
+  RuleSet ruleSet;
+
+  /// 補強が禁止されている残りのシーズン数(規則違反の罰)。
+  int transferBanSeasons;
+
+  /// 来季の開幕時に引かれる勝ち点(規則違反の罰)。
+  int pendingPointsDeduction;
 
   /// そのシーズンの収支の記録。無ければ作る。古いものは捨てる。
   SeasonLedger ledgerFor(int season) {
@@ -389,6 +399,9 @@ class SaveGame {
     this.ownerGoal,
     this.marketingBoostWeeks = 0,
     List<SeasonLedger>? ledgers,
+    this.ruleSet = RuleSet.britain,
+    this.transferBanSeasons = 0,
+    this.pendingPointsDeduction = 0,
     this.pendingOwnerEvent,
     this.bigMatchSeason = 0,
     this.bigMatchesUsed = 0,
@@ -566,6 +579,9 @@ class SaveGame {
         'ownerGoal': ownerGoal?.name,
         'marketingBoostWeeks': marketingBoostWeeks,
         'ledgers': ledgers.map((l) => l.toJson()).toList(),
+        'ruleSet': ruleSet.name,
+        'transferBanSeasons': transferBanSeasons,
+        'pendingPointsDeduction': pendingPointsDeduction,
         'pendingOwnerEvent': pendingOwnerEvent?.name,
         'bigMatchSeason': bigMatchSeason,
         'bigMatchesUsed': bigMatchesUsed,
@@ -666,6 +682,11 @@ class SaveGame {
             .firstOrNull,
         ownerGoalStartSeason: json['ownerGoalStartSeason'] as int? ?? 1,
         marketingBoostWeeks: json['marketingBoostWeeks'] as int? ?? 0,
+        ruleSet: RuleSet.values
+            .where((r) => r.name == json['ruleSet'])
+            .firstOrNull ?? RuleSet.britain,
+        transferBanSeasons: json['transferBanSeasons'] as int? ?? 0,
+        pendingPointsDeduction: json['pendingPointsDeduction'] as int? ?? 0,
         ledgers: (json['ledgers'] as List?)
                 ?.map((e) => SeasonLedger.fromJson(e as Map<String, dynamic>))
                 .toList() ??
