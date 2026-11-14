@@ -22,6 +22,7 @@ import '../models/investment.dart';
 import '../models/ledger.dart';
 import '../logic/ledger_engine.dart';
 import '../logic/economy_engine.dart';
+import '../logic/equity_engine.dart';
 import '../logic/league_rules.dart';
 import '../logic/policy_engine.dart';
 import '../logic/club_value_engine.dart';
@@ -940,6 +941,7 @@ class GameState extends ChangeNotifier {
       userTeamId: 'user',
       league: league,
       leagueName: theme.label,
+      ruleSet: RuleSet.forTheme(theme),
       boardTargetRank: BoardEngine.estimateTargetRank(league, 'user'),
       cups: [
         CupEngine.createKnockout(

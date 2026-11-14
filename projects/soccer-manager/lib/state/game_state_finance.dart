@@ -382,6 +382,7 @@ extension GameStateFinance on GameState {
     save.pendingJobOfferTeamId = null;
     save.confidence = 60;
     save.shareholderExpectation = 60;
+    save.ownerShare = 100;
     save.budget =
         (6000 * save.difficulty.initialBudgetFactor).round();
     save.infrastructure = ClubInfrastructure();
@@ -535,9 +536,7 @@ extension GameStateFinance on GameState {
   }
 
   /// このクラブのいる国の財務規則。
-  RuleSet get ruleSet => _save == null
-      ? RuleSet.britain
-      : RuleSet.forTheme(currentLeagueTheme);
+  RuleSet get ruleSet => _save?.ruleSet ?? RuleSet.britain;
 
   /// 規則の今の状況。今シーズンを終えたらどの罰を受けるかも含む。
   RuleReport get ruleReport => _save == null
@@ -579,6 +578,63 @@ extension GameStateFinance on GameState {
       Tr.pick('${ruleSet.label}の規則違反: ${penalty.reason}。${parts.join('、')}。',
           '${ruleSet.label} breach: ${penalty.reason}. ${parts.join(', ')}.'),
       context: Tr.pick('リーグの規則', 'League rules'),
+    );
+  }
+
+  /// オーナーの持分(%)。
+  int get ownerShare => _save?.ownerShare ?? 100;
+
+  /// 持分の10%を外部の株主へ売る(増資)。売れないときは false。
+  Future<bool> sellStake() async {
+    final save = _save;
+    if (save == null) return false;
+    final pct = EquityEngine.sellable(save.ownerShare);
+    if (pct == 0) return false;
+    final price = EquityEngine.salePrice(clubValue.total, pct);
+    save.ownerShare -= pct;
+    _book(LedgerCategory.financing, price);
+    _logNews(
+      Tr.pick('持分$pct%を外部の株主に売り、$price万円を調達しました(持分${save.ownerShare}%)',
+          'Sold a $pct% stake for $price (you now hold ${save.ownerShare}%)'),
+      context: Tr.pick('株主', 'Shareholders'),
+    );
+    _notify();
+    await _persist();
+    return true;
+  }
+
+  /// 持分の10%を買い戻す。資金が足りないときは false。
+  Future<bool> buyBackStake() async {
+    final save = _save;
+    if (save == null || save.ownerShare >= 100) return false;
+    const pct = EquityEngine.step;
+    final take = pct > 100 - save.ownerShare ? 100 - save.ownerShare : pct;
+    final cost = EquityEngine.buybackCost(clubValue.total, take);
+    if (cost > save.budget) return false;
+    save.ownerShare += take;
+    _book(LedgerCategory.financing, -cost);
+    _logNews(
+      Tr.pick('持分$take%を$cost万円で買い戻しました(持分${save.ownerShare}%)',
+          'Bought back $take% for $cost (you now hold ${save.ownerShare}%)'),
+      context: Tr.pick('株主', 'Shareholders'),
+    );
+    _notify();
+    await _persist();
+    return true;
+  }
+
+  /// シーズン末の株主総会。外部の株主へ配当を払い、総会の様子をニュースに残す。
+  void _holdShareholdersMeeting() {
+    final save = _save!;
+    final dividend = EquityEngine.dividend(
+        ownerShare: save.ownerShare, seasonProfit: currentLedger.profit);
+    if (dividend > 0) _book(LedgerCategory.financing, -dividend);
+    final outside = 100 - save.ownerShare;
+    _logNews(
+      Tr.pick(
+          '株主総会: ${EquityEngine.mood(save.shareholderExpectation)}。${outside > 0 ? '外部の株主(持分$outside%)へ配当$dividend万円を払いました。' : '外部の株主はいません。'}',
+          'Shareholders\' meeting: ${EquityEngine.mood(save.shareholderExpectation)}. ${outside > 0 ? 'Paid outside holders ($outside%) a dividend of $dividend.' : 'There are no outside shareholders.'}'),
+      context: Tr.pick('株主総会', 'Shareholders\' meeting'),
     );
   }
 

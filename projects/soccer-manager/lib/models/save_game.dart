@@ -122,6 +122,9 @@ class SaveGame {
   /// 目標「クラブ価値を2倍に」を選んだときのクラブ価値。選ぶまでは 0。
   int ownerGoalStartValue;
 
+  /// オーナーの持分(%)。外部の株主へ売ると減る。51〜100。
+  int ownerShare;
+
   /// 補強が禁止されている残りのシーズン数(規則違反の罰)。
   int transferBanSeasons;
 
@@ -420,6 +423,7 @@ class SaveGame {
     this.clubPolicy = ClubPolicy.balanced,
     Map<int, int>? clubValueHistory,
     this.ownerGoalStartValue = 0,
+    this.ownerShare = 100,
     this.transferBanSeasons = 0,
     this.pendingPointsDeduction = 0,
     this.pendingOwnerEvent,
@@ -606,6 +610,7 @@ class SaveGame {
         'clubPolicy': clubPolicy.name,
         'clubValueHistory': clubValueHistory.map((k, v) => MapEntry('$k', v)),
         'ownerGoalStartValue': ownerGoalStartValue,
+        'ownerShare': ownerShare,
         'transferBanSeasons': transferBanSeasons,
         'pendingPointsDeduction': pendingPointsDeduction,
         'pendingOwnerEvent': pendingOwnerEvent?.name,
@@ -714,6 +719,7 @@ class SaveGame {
         clubValueHistory: (json['clubValueHistory'] as Map?)
             ?.map((k, v) => MapEntry(int.parse('$k'), v as int)),
         ownerGoalStartValue: json['ownerGoalStartValue'] as int? ?? 0,
+        ownerShare: json['ownerShare'] as int? ?? 100,
         clubPolicy: ClubPolicy.values
             .where((p) => p.name == json['clubPolicy'])
             .firstOrNull ?? ClubPolicy.balanced,
