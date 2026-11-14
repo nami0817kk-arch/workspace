@@ -136,7 +136,10 @@ const firstApron = 2090;
 const secondApron = 2217;
 
 /// ぜいたく税で下がる信頼。
-int luxuryTaxTrust(int payroll) => payroll <= taxLine ? 0 : ((payroll - taxLine) / 10).ceil();
+/// ぜいたく税の線を超えたときに、1シーズンで減る信頼の上限(2026-11-14。上限が無いと、年俸が膨らんだ優勝チームが税だけで解任されていた)。
+const maxTaxTrust = 25;
+
+int luxuryTaxTrust(int payroll) => payroll <= taxLine ? 0 : math.min(maxTaxTrust, ((payroll - taxLine) / 10).ceil());
 
 /// 最低年俸。上限を超えていても、最低年俸の契約はいつでも結べる。
 const minSalary = 14;

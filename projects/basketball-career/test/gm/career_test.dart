@@ -1510,6 +1510,7 @@ void main() {
     test('ぜいたく税の線を超えると、超えた分だけ信頼が下がる', () {
       expect(luxuryTaxTrust(taxLine), 0);
       expect(luxuryTaxTrust(taxLine + 120), 12);
+      expect(luxuryTaxTrust(taxLine + 900), maxTaxTrust, reason: '税だけで解任されないよう、1シーズンの減りには上限がある');
     });
   });
 

@@ -59,13 +59,11 @@ bool personalityKnown(Player p) => p.tenure >= 2;
 bool hasTrait(Player p, Trait t) => personalityOf(p).traits.contains(t);
 
 /// 試合ごとの調子の幅(シュートが入る見込みの±)。ムラっ気は大きく、安定感は小さい。
-var tuneForm = true;
-var tuneMinutes = true;
-double formRange(Player p) => !tuneForm ? 0 : hasTrait(p, Trait.streaky)
-    ? 0.045
+double formRange(Player p) => hasTrait(p, Trait.streaky)
+    ? 0.025
     : hasTrait(p, Trait.steady)
-        ? 0.008
-        : 0.02;
+        ? 0.004
+        : 0.01;
 
 /// けがの起きやすさの倍率。
 double injuryProne(Player p) => hasTrait(p, Trait.fragile) ? 1.6 : 1.0;
@@ -75,7 +73,7 @@ const clutchBonus = 0.03;
 
 /// オフに年齢の伸び・衰え(と育成コーチ・練習)のあとで足す、理由のある伸び。乱数を使わない(リーグの続きを変えない)。
 /// [p] は年を取ったあと(年齢と年数は+1済み)、[d] はここまでの伸び。[p.stats] は終わったシーズンの成績。
-/// - 出場時間: 25歳までで、20試合以上・平均28分以上出た選手は+1。2年目以上で、シーズンの出場が300分未満なら-1(試合に出ないと伸びない)
+/// - 出場時間: 23歳までで、20試合以上・平均30分以上出た選手は+1。2年目以上で、シーズンの出場が300分未満なら-1(試合に出ないと伸びない)
 /// - 練習の虫: 27歳までは伸びた年に+1、30歳からは落ちた年に+1(落ち幅が小さい)
 /// - 遅咲き: 22歳までは伸びた年に-1、24〜28歳は+1(伸びしろも1上がる)
 List<(String, int)> extraGrowth(Player p, int d) {
@@ -83,17 +81,14 @@ List<(String, int)> extraGrowth(Player p, int d) {
   var ovr = p.ovr;
   bool room() => ovr < p.pot;
   final s = p.stats;
-  if (tuneMinutes && p.age <= 25 && d >= 0) {
-    if (s.gp >= 20 && s.mpg >= 28 && room()) {
-      parts.add(('出場時間', 1));
-      ovr++;
-    } else if (p.exp >= 2 && s.min < 300) {
+  if (p.age <= 23 && d >= 0) {
+    if (p.exp >= 2 && s.min < 300) {
       parts.add(('出場時間', -1));
       ovr--;
     }
   }
   if (hasTrait(p, Trait.grinder)) {
-    if (p.age <= 27 && d >= 0 && room()) {
+    if (p.age <= 27 && d >= 0 && d <= 1 && room()) {
       parts.add((Trait.grinder.label, 1));
       ovr++;
     } else if (p.age >= 30 && d < 0) {
