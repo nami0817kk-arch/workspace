@@ -480,8 +480,10 @@ async function clearEvents() {
     // 機能面の画面
     rail('選手');
     await sleep(10);
-    ok(txt().includes('並び：') && !!btn('総合力'), '選手一覧に並び替え');
-    btn('総合力').click();
+    const sortSel = d.querySelector('select[title="並び替え"]');
+    ok(!!sortSel && sortSel.options.length === 7, '選手一覧に並び替え');
+    if (sortSel) { sortSel.value = 'ovr'; sortSel.dispatchEvent(new w.Event('change')); }
+    await sleep(10);
     btn('様子').click();
     ok(txt().includes('他の子と比べる') && txt().includes('今年の育成計画') && txt().includes('伸び悩みの診断') && txt().includes('位置の転向練習'), '選手の様子に比べる・育成計画・診断・転向');
     btn('他の子と比べる').click();

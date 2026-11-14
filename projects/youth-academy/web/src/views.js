@@ -355,8 +355,12 @@
     const left = h('div', { class: 'card', style: 'width:262px;flex:none;display:flex;flex-direction:column;min-height:0;padding:5px' });
     const chips = h('div', { class: 'fm-row', style: 'margin-bottom:4px' }, [['all', '全員'], ['A', 'A'], ['B', 'B'], ['1', '高1'], ['2', '高2'], ['3', '高3'], ['GK', 'GK'], ['DF', 'DF'], ['MF', 'MF'], ['FW', 'FW'], ['star', '★'], ['inj', '怪我']].map(([k, n]) => h('button', { class: 'btn sm' + (f === k ? ' on' : ''), style: 'padding:4px 8px;min-height:32px;font-size:11.5px', onclick: () => { ui.pf = k; rerender(); } }, n)));
     const list = h('div', { class: 'plist scroll', style: 'flex:1;min-height:0' }, filtered.map((p) => h('button', { class: 'pitem' + (p.id === sel.id ? ' on' : ''), onclick: () => { const changed = ui.pSel !== p.id; ui.pSel = p.id; const st = list.scrollTop; rerender(); const l2 = document.querySelector('.plist.scroll'); if (l2) l2.scrollTop = st; const d2 = document.querySelector('#main .pdetail'); if (changed && d2) d2.scrollTop = 0; } }, posc(p), YA.faceEl(W(), p, 24), h('span', { class: 'num' }, p.num), h('span', { class: 'nm grow', style: 'overflow:hidden;text-overflow:ellipsis' }, p.name), h('span', { class: 'sub', style: 'font-size:10px' }, gradeName(p.grade) + p.team), h('b', { style: 'width:26px;text-align:right' }, YA.rating(p)), h('span', { style: 'font-size:9px;color:#b08a00;width:28px;letter-spacing:-1px' }, '★'.repeat(YA.coachStars(w, p))), p.inj > 0 ? h('span', { class: 'fit bad' }, '怪') : null, p.star ? h('span', { class: 'chip trait', style: 'padding:0 4px;font-size:10px' }, '注目') : null)));
-    const sorts = h('div', { class: 'fm-row', style: 'margin-bottom:4px' }, h('span', { class: 'sub', style: 'font-size:10.5px;align-self:center' }, '並び：'), ...[['pos', '位置'], ['ovr', '総合力'], ['grow', '伸び'], ['trust', '信頼'], ['conf', '自信'], ['fat', '疲れ'], ['mins', '出場']].map(([k, n]) => h('button', { class: 'btn sm' + (ui.psort === k ? ' on' : ''), style: 'padding:3px 7px;min-height:28px;font-size:11px', onclick: () => { ui.psort = k; rerender(); } }, n)));
-    left.append(chips, sorts, list);
+    // 並び替え（1つの選択欄にして、一覧の高さを削らない）
+    const sorts = h('select', { title: '並び替え', style: 'padding:3px 4px;min-height:32px;border:1px solid #b9c7de;border-radius:8px;font:inherit;font-size:11px' }, ...[['pos', '並び：位置'], ['ovr', '並び：総合力'], ['grow', '並び：伸び'], ['trust', '並び：信頼'], ['conf', '並び：自信'], ['fat', '並び：疲れ'], ['mins', '並び：出場']].map(([k, n]) => h('option', { value: k, selected: ui.psort === k }, n)));
+    sorts.addEventListener('change', () => { ui.psort = sorts.value; rerender(); });
+    sorts.addEventListener('pointerdown', (e) => e.stopPropagation());
+    chips.append(sorts);
+    left.append(chips, list);
     const right = h('div', { class: 'card pbody pdetail', style: 'flex:1;min-width:0' });
     const info = h('div', {});
     if (ui.starMsg) { info.append(h('div', { class: 'note', style: 'color:var(--ink)' }, ui.starMsg)); ui.starMsg = null; }

@@ -71,7 +71,8 @@
         const rows = YA.compareRows(w, a, b);
         box.append(h('div', { class: 'plist' }, rows.map(([k, x, y]) => {
           const nx = +x, ny = +y;
-          const bx = !isNaN(nx) && !isNaN(ny) && nx > ny, by = !isNaN(nx) && !isNaN(ny) && ny > nx;
+          const low = k === '疲れ'; // 疲れは少ないほうが良い
+          const bx = !isNaN(nx) && !isNaN(ny) && (low ? nx < ny : nx > ny), by = !isNaN(nx) && !isNaN(ny) && (low ? ny < nx : ny > nx);
           return h('div', { class: 'pitem', style: 'cursor:default;gap:6px' }, h('b', { style: `width:80px;text-align:right;${bx ? 'color:#1a9d57' : ''}` }, String(x)), h('span', { class: 'grow', style: 'text-align:center;font-size:11.5px' }, k), h('b', { style: `width:80px;${by ? 'color:#1a9d57' : ''}` }, String(y)));
         })), h('button', { class: 'btn sm', onclick: () => draw(null) }, '別の子と比べる'));
       };
