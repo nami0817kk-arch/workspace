@@ -11,6 +11,7 @@ import '../logic/match_engine.dart' show HalfResult;
 import '../models/formation.dart';
 import '../models/incoming_offer.dart';
 import '../models/league.dart';
+import '../models/league_theme.dart';
 import '../models/owner_legacy.dart';
 import '../models/match_result.dart';
 import '../models/player.dart';
@@ -2306,6 +2307,27 @@ class _SaleScreen extends StatelessWidget {
                       ),
                     ),
                   ),
+                const SizedBox(height: 8),
+                Text(
+                  Tr.pick('別の国で新しいクラブを立ち上げる(4部から。その国の規則に従います)',
+                      'Or found a new club in another country (starts in tier 4, under that country\'s rules)'),
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: 8,
+                  children: [
+                    for (final theme in LeagueTheme.values)
+                      if (theme != gameState.currentLeagueTheme)
+                        OutlinedButton(
+                          onPressed: () => context
+                              .read<GameState>()
+                              .buyClubInCountry(theme),
+                          child: Text(theme.flavorLabel),
+                        ),
+                  ],
+                ),
                 const SizedBox(height: 8),
                 TextButton(
                   onPressed: () async {

@@ -22,6 +22,14 @@ import '../models/investment.dart';
 import '../models/ledger.dart';
 import '../logic/ledger_engine.dart';
 import '../logic/economy_engine.dart';
+import '../logic/advisor_engine.dart';
+import '../logic/club_ranking_engine.dart';
+import '../logic/equity_engine.dart';
+import '../logic/media_deals_engine.dart';
+import '../logic/project_engine.dart';
+import '../models/start_scenario.dart';
+import '../logic/proposal_engine.dart';
+import '../logic/risk_engine.dart';
 import '../logic/league_rules.dart';
 import '../logic/policy_engine.dart';
 import '../logic/club_value_engine.dart';
@@ -865,6 +873,7 @@ class GameState extends ChangeNotifier {
     String clubName, {
     LeagueTheme theme = LeagueTheme.england,
     GameDifficulty difficulty = GameDifficulty.normal,
+    StartScenario scenario = StartScenario.standard,
   }) async {
     // ここから先はこのセーブが正。古い予約は無効になる。
     _saveGeneration++;
@@ -940,6 +949,7 @@ class GameState extends ChangeNotifier {
       userTeamId: 'user',
       league: league,
       leagueName: theme.label,
+      ruleSet: RuleSet.forTheme(theme),
       boardTargetRank: BoardEngine.estimateTargetRank(league, 'user'),
       cups: [
         CupEngine.createKnockout(
@@ -956,6 +966,7 @@ class GameState extends ChangeNotifier {
       currentDivisionTier: userStartTier,
       clubHistory: [clubName],
       difficulty: difficulty,
+      scenario: scenario,
     );
     // 最初のシーズンは平常。来季の予報だけ引いておく。
     _save!.economyNext = EconomyEngine.next(EconomyPhase.normal, Random().nextDouble());
@@ -968,6 +979,7 @@ class GameState extends ChangeNotifier {
     );
     _save!.boardCupTargetRound = _estimateDomesticCupTarget();
     _save!.managerContractYears = 3;
+    _applyScenario(scenario);
     final rival = cpuTeams[rng.nextInt(cpuTeams.length)];
     _save!.rivalTeamId = rival.id;
     _save!.rivalTeamName = rival.name;

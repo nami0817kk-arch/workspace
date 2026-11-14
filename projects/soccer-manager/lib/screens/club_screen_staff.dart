@@ -41,7 +41,10 @@ class _StaffCard extends StatelessWidget {
                 staff: current,
                 trailing: TextButton(
                   onPressed: () => gameState.dismissStaff(role),
-                  child: Text(Tr.pick('解任', 'Dismiss')),
+                  child: Text(current.severance > 0
+                      ? Tr.pick('解任(違約金${current.severance}万円)',
+                          'Dismiss (severance ${current.severance})')
+                      : Tr.pick('解任', 'Dismiss')),
                 ),
               ),
               Text(

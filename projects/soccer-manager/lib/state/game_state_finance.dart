@@ -382,6 +382,7 @@ extension GameStateFinance on GameState {
     save.pendingJobOfferTeamId = null;
     save.confidence = 60;
     save.shareholderExpectation = 60;
+    save.ownerShare = 100;
     save.budget =
         (6000 * save.difficulty.initialBudgetFactor).round();
     save.infrastructure = ClubInfrastructure();
@@ -407,6 +408,129 @@ extension GameStateFinance on GameState {
     return true;
   }
 
+  /// 別の国のクラブを新しく立ち上げて、続きを遊ぶ。その国の規則に従い、
+  /// 新しい国のピラミッド(5部制)の4部から始まる。実績は殿堂に残る。
+  Future<bool> buyClubInCountry(LeagueTheme theme) async {
+    final save = _save;
+    final reason = saleReason;
+    if (save == null || reason == null) return false;
+    if (theme == currentLeagueTheme) return false;
+    const startTier = 4;
+    final rng = Random();
+    final names =
+        NamePool.themedClubNames(theme, teamsPerLeague * totalDivisionTiers);
+    var ni = 0;
+    String nextName() => names[ni++];
+    int strengthForTier(int tier) =>
+        (40 + (totalDivisionTiers - tier) * 10 + rng.nextInt(35)).clamp(20, 99);
+
+    save.ownerLegacies.add(_legacyOfCurrentClub(reason));
+
+    final userTeam = PlayerGenerator.generateSquad(
+        id: 'user', name: nextName(), strengthTier: 60);
+    final others = List<League?>.filled(totalDivisionTiers, null);
+    League? mine;
+    final cpuInMine = <Team>[];
+    for (var tier = 1; tier <= totalDivisionTiers; tier++) {
+      final teams = <Team>[
+        if (tier == startTier) userTeam,
+        for (var i = 0;
+            i < (tier == startTier ? teamsPerLeague - 1 : teamsPerLeague);
+            i++)
+          PlayerGenerator.generateSquad(
+            id: tier == startTier ? 'cpu$i' : 'div${tier}_$i',
+            name: nextName(),
+            strengthTier: strengthForTier(tier),
+          ),
+      ];
+      for (final t in teams) {
+        LineupUtils.autoFill(t);
+      }
+      final league = League(
+        teams: teams,
+        fixtures: FixtureGenerator.generateDoubleRoundRobin(teams),
+        season: save.league.season,
+      );
+      if (tier == startTier) {
+        mine = league;
+        cpuInMine.addAll(teams.where((t) => t.id != 'user'));
+      } else {
+        others[tier - 1] = league;
+      }
+    }
+
+    save.userTeamId = 'user';
+    save.clubName = userTeam.name;
+    save.leagueName = theme.label;
+    save.ruleSet = RuleSet.forTheme(theme);
+    save.league = mine!;
+    save.otherDivisionLeagues = others;
+    save.currentDivisionTier = startTier;
+    save.cups = [
+      CupEngine.createKnockout(
+        type: CupType.domestic,
+        name: theme.domesticCupName,
+        teamIds: mine.teams.map((t) => t.id).toList(),
+      ),
+    ];
+    save.continentalCup = null;
+    save.continentalTeams = [];
+    save.friendlies = _generateFriendlies(mine.teams, 'user');
+    final rival = cpuInMine[rng.nextInt(cpuInMine.length)];
+    save.rivalTeamId = rival.id;
+    save.rivalTeamName = rival.name;
+    save.rivalPast = [0, 0, 0];
+    save.pendingJobOfferTeamId = null;
+    save.pendingOwnerEvent = null;
+    save.pendingPressConference = null;
+    save.pendingContractNegotiation = null;
+    save.incomingOffers = [];
+    save.proposals = [];
+    save.declinedProposalIds = [];
+    save.confidence = 60;
+    save.shareholderExpectation = 60;
+    save.ownerShare = 100;
+    save.budget = (6000 * save.difficulty.initialBudgetFactor).round();
+    save.infrastructure = ClubInfrastructure();
+    save.sponsorDeal = null;
+    save.namingDeal = null;
+    save.pendingNamingOffers = [];
+    save.pendingSponsorOffers = SponsorEngine.generateOffers(
+        userTeam.overallRating,
+        tier: startTier);
+    save.tvHolidaySeasons = 0;
+    save.bankLoans = [];
+    save.youthProspects = [];
+    save.projects = {};
+    save.advisors = {};
+    save.communityLevel = 0;
+    save.reserveFund = 0;
+    save.insured = false;
+    save.retiredLegends.clear();
+    save.retiredNumberIds.clear();
+    save.boardTargetRank = _difficultyAdjustedTarget(
+      BoardEngine.estimateTargetRank(save.league, 'user'),
+    );
+    save.boardCupTargetRound = _estimateDomesticCupTarget();
+    save.wageBudget = BoardEngine.wageBudgetFor(
+      tier: startTier,
+      currentWeeklyWageBill: weeklyWageBill,
+    );
+    save.clubHistory.add(userTeam.name);
+    save.clubValueHistory.clear();
+    if (save.ownerGoal == OwnerGoal.clubValue) {
+      save.ownerGoalStartValue = clubValue.total;
+    }
+    transferMarket = TransferMarket.generate();
+    _refreshScoutCandidates();
+    _refreshStaffCandidates();
+    _addTimeline(Tr.pick('${theme.label}(${theme.flavorLabel})で新しいクラブ${userTeam.name}を立ち上げた',
+        'Founded ${userTeam.name} in the ${theme.label}'));
+    _notify();
+    await _persist();
+    return true;
+  }
+
   /// ライバルクラブ(開幕時に決定、以後固定)。未設定の場合はnull。
   Team? get rivalTeam {
     final id = _save?.rivalTeamId;
@@ -415,6 +539,54 @@ extension GameStateFinance on GameState {
       return _save!.league.teams.firstWhere((t) => t.id == id);
     } catch (_) {
       return null;
+    }
+  }
+
+  /// 今シーズンの宿敵との戦績(終わった試合だけ)。
+  ({int won, int draw, int lost}) get rivalRecordThisSeason {
+    final save = _save;
+    if (save == null) return (won: 0, draw: 0, lost: 0);
+    var w = 0, d = 0, l = 0;
+    for (final f in save.league.fixtures) {
+      final r = f.result;
+      if (r == null || !isRivalFixture(f)) continue;
+      final mine = f.homeTeamId == save.userTeamId ? r.homeGoals : r.awayGoals;
+      final theirs = f.homeTeamId == save.userTeamId ? r.awayGoals : r.homeGoals;
+      if (mine > theirs) {
+        w++;
+      } else if (mine == theirs) {
+        d++;
+      } else {
+        l++;
+      }
+    }
+    return (won: w, draw: d, lost: l);
+  }
+
+  /// 宿敵との通算の戦績(過去のシーズン+今季)。
+  ({int won, int draw, int lost}) get rivalRecord {
+    final save = _save;
+    if (save == null) return (won: 0, draw: 0, lost: 0);
+    final now = rivalRecordThisSeason;
+    final past = save.rivalPast;
+    return (
+      won: past[0] + now.won,
+      draw: past[1] + now.draw,
+      lost: past[2] + now.lost,
+    );
+  }
+
+  /// シーズン末に、今季の宿敵との戦績を通算へ足す。
+  void _closeRivalSeason() {
+    final save = _save!;
+    final now = rivalRecordThisSeason;
+    if (now.won + now.draw + now.lost == 0) return;
+    save.rivalPast[0] += now.won;
+    save.rivalPast[1] += now.draw;
+    save.rivalPast[2] += now.lost;
+    if (now.won >= 2 && now.lost == 0) {
+      _addTimeline(Tr.pick('宿敵に今季は負けなし(${now.won}勝${now.draw}分)',
+          'Unbeaten against the rivals this season (${now.won}W ${now.draw}D)'));
     }
   }
 
@@ -494,20 +666,26 @@ extension GameStateFinance on GameState {
             commercialMultiplier)
         .round();
     // 2部リーグは1部より観客動員が少ない(userAttendanceFactorに反映済み)。
-    final sponsorIncome =
-        ((_save!.sponsorDeal?.weeklyIncome ?? 0) * commercialMultiplier)
-            .round();
+    final sponsorIncome = (((_save!.sponsorDeal?.weeklyIncome ?? 0) +
+                (_save!.namingDeal?.weeklyIncome ?? 0)) *
+            commercialMultiplier)
+        .round();
     // グッズ収入(マーチャンダイジング)。試合の有無に関わらず、監督の評価
     // (=クラブの知名度)が高いほど、商業施設が充実しているほど増える。
     // チケット・スポンサーだけに依存しない収入源として資金繰りを下支えする。
-    final merchandiseIncome =
-        ((40 + managerReputation) * commercialMultiplier).round();
+    final merchandiseIncome = ((40 +
+                managerReputation +
+                ProjectEngine.weeklyMerchandiseBonus(
+                    _save!.projects, managerReputation)) *
+            commercialMultiplier)
+        .round();
     // 営業の配分を厚くすると収入が増え、削ると減る(初期の配分で1倍)。
     final boost = _save!.marketingBoostWeeks > 0
         ? GameStateSquad.marketingBoostMultiplier
         : 1.0;
     final factor = BudgetEngine.incomeMultiplier(_save!.budgetPlan) *
         PolicyEngine.incomeMultiplier(_save!.clubPolicy) *
+        AdvisorEngine.incomeMultiplier(_save!.advisors[Advisor.finance.name] ?? 0) *
         _save!.economyPhase.incomeMultiplier *
         boost;
     final total =
@@ -541,7 +719,8 @@ extension GameStateFinance on GameState {
   RuleReport get ruleReport => _save == null
       ? const RuleReport(statuses: [])
       : RulesEngine.evaluate(
-          ruleSet: _save!.ruleSet,
+          ruleSet: ruleSet,
+          tier: _save!.currentDivisionTier,
           ledgers: [
             for (final l in _save!.ledgers)
               if (l.season <= _save!.league.season) l,
@@ -573,9 +752,426 @@ extension GameStateFinance on GameState {
         Tr.pick('補強禁止${penalty.banSeasons}季', 'signing ban'),
     ];
     _logNews(
-      Tr.pick('${save.ruleSet.label}の規則違反: ${penalty.reason}。${parts.join('、')}。',
-          '${save.ruleSet.label} breach: ${penalty.reason}. ${parts.join(', ')}.'),
+      Tr.pick('${ruleSet.label}の規則違反: ${penalty.reason}。${parts.join('、')}。',
+          '${ruleSet.label} breach: ${penalty.reason}. ${parts.join(', ')}.'),
       context: Tr.pick('リーグの規則', 'League rules'),
+    );
+  }
+
+  /// 年表に1行足す。直近200行だけ残す。
+  void _addTimeline(String text) {
+    final save = _save!;
+    save.timeline.add(TimelineEntry(season: save.league.season, text: text));
+    while (save.timeline.length > 200) {
+      save.timeline.removeAt(0);
+    }
+  }
+
+  /// 新規開始のシナリオを、初期の資金・期待・施設に反映する。
+  void _applyScenario(StartScenario scenario) {
+    final save = _save!;
+    switch (scenario) {
+      case StartScenario.standard:
+        break;
+      case StartScenario.debt:
+        save.budget = -1500;
+        save.shareholderExpectation = 45;
+      case StartScenario.patron:
+        save.budget = save.budget * 3;
+        save.shareholderExpectation = 70;
+        save.boardTargetRank = (save.boardTargetRank - 2).clamp(1, 99);
+      case StartScenario.academy:
+        save.budget = (save.budget * 0.7).round();
+        save.infrastructure.facilityLevels[FacilityType.youthFacility] = 3;
+        save.infrastructure.facilityLevels[FacilityType.trainingGround] = 2;
+    }
+    _addTimeline(Tr.pick('「${scenario.label}」でクラブの経営が始まった',
+        'Began running the club: ${scenario.label}'));
+  }
+
+  /// 監督の提案を足す(上限まで)。節の進行ごとに呼ぶ。
+  void _refreshProposals() {
+    final save = _save;
+    if (save == null) return;
+    // 実際には存在しなくなった選手の提案は消す。
+    save.proposals.removeWhere((p) => p.kind == ProposalKind.renew
+        ? !userTeam.players.any((x) => x.id == p.playerId)
+        : !save.youthProspects.any((x) => x.id == p.playerId));
+    final fresh = ProposalEngine.generate(
+      squad: userTeam.players,
+      prospects: save.youthProspects,
+      existing: save.proposals,
+      declined: save.declinedProposalIds.toSet(),
+      squadFull: userTeam.players.length >= maxSquadSize,
+    );
+    save.proposals.addAll(fresh);
+  }
+
+  /// テスト用: 提案の生成だけを走らせる。
+  @visibleForTesting
+  void debugRefreshProposals() => _refreshProposals();
+
+  /// 提案を承認して実行する。実行できなかった(資金・枠が足りない)ときは
+  /// 提案を取り下げ、false。
+  Future<bool> approveProposal(String id) async {
+    final save = _save;
+    if (save == null) return false;
+    final p = save.proposals.where((x) => x.id == id).firstOrNull;
+    if (p == null) return false;
+    final ok = switch (p.kind) {
+      ProposalKind.renew => await renewContract(p.playerId),
+      ProposalKind.promote => await promoteYouthProspect(p.playerId),
+    };
+    save.proposals.removeWhere((x) => x.id == id);
+    if (!ok) save.declinedProposalIds.add(id);
+    _notify();
+    await _persist();
+    return ok;
+  }
+
+  /// 提案を却下する。今シーズンは同じ提案が出ない。
+  Future<void> declineProposal(String id) async {
+    final save = _save;
+    if (save == null) return;
+    save.proposals.removeWhere((x) => x.id == id);
+    save.declinedProposalIds.add(id);
+    _notify();
+    await _persist();
+  }
+
+  /// アドバイザーのレベルを変える(0〜3)。
+  Future<bool> setAdvisorLevel(Advisor a, int level) async {
+    final save = _save;
+    if (save == null || level < 0 || level > AdvisorEngine.maxLevel) {
+      return false;
+    }
+    if (level == 0) {
+      save.advisors.remove(a.name);
+    } else {
+      save.advisors[a.name] = level;
+    }
+    _notify();
+    await _persist();
+    return true;
+  }
+
+  /// シーズン末にアドバイザーへ報酬を払い、広報顧問の効果を与える。
+  void _settleAdvisors() {
+    final save = _save!;
+    final fee = AdvisorEngine.totalSalary(save.advisors);
+    if (fee > 0) _book(LedgerCategory.staffWages, -fee);
+    final pr = save.advisors[Advisor.pr.name] ?? 0;
+    if (pr > 0) save.confidence = (save.confidence + pr).clamp(0, 100);
+  }
+
+  /// 投資案件に着手する。費用は着手時に払う。
+  Future<bool> startProject(ClubProject p) async {
+    final save = _save;
+    if (save == null || ProjectEngine.started(save.projects, p)) return false;
+    if (p.cost > save.budget) return false;
+    _book(LedgerCategory.facilities, -p.cost);
+    save.projects[p.name] = p.buildSeasons;
+    _logNews(
+      Tr.pick('${p.label}に着手しました(${p.cost}万円・完成まで${p.buildSeasons}季)',
+          'Started ${p.label} (${p.cost}, ${p.buildSeasons} season(s) to build)'),
+      context: Tr.pick('投資案件', 'Projects'),
+    );
+    _notify();
+    await _persist();
+    return true;
+  }
+
+  /// シーズン末に建設を進め、稼働中の提携クラブの効果を与える。
+  void _tickProjects() {
+    final save = _save!;
+    final wasPartnerActive =
+        ProjectEngine.isActive(save.projects, ClubProject.partnerClub);
+    final done = ProjectEngine.tick(save.projects);
+    for (final p in done) {
+      _addTimeline(Tr.pick('${p.label}が完成', '${p.label} completed'));
+      _logNews(
+        Tr.pick('${p.label}が完成しました', '${p.label} is complete'),
+        context: Tr.pick('投資案件', 'Projects'),
+      );
+    }
+    // 完成した季からではなく、稼働している季の末から効く。
+    if (wasPartnerActive) {
+      save.managerReputation = (save.managerReputation + 2).clamp(0, 100);
+      save.confidence = (save.confidence + 1).clamp(0, 100);
+    }
+  }
+
+  /// 永久欠番にした選手か。
+  bool isNumberRetired(String playerId) =>
+      _save?.retiredNumberIds.contains(playerId) ?? false;
+
+  /// 殿堂の選手を永久欠番にする。サポーターの期待が上がる。同じ選手は一度だけ。
+  Future<bool> retireNumber(String playerId) async {
+    final save = _save;
+    if (save == null || save.retiredNumberIds.contains(playerId)) return false;
+    final p = save.retiredLegends.where((l) => l.id == playerId).firstOrNull;
+    if (p == null) return false;
+    save.retiredNumberIds.add(playerId);
+    _addTimeline(Tr.pick('${p.name}の背番号を永久欠番に', '${p.name}\'s number retired'));
+    save.confidence = (save.confidence + 3).clamp(0, 100);
+    _logNews(
+      Tr.pick('${p.name}の背番号を永久欠番にしました。サポーターが沸いています',
+          '${p.name}\'s number is retired for good. Supporters are thrilled'),
+      context: Tr.pick('殿堂', 'Hall of fame'),
+    );
+    _notify();
+    await _persist();
+    return true;
+  }
+
+  /// 保険に入る/やめる。
+  Future<void> setInsured(bool value) async {
+    if (_save == null) return;
+    _save!.insured = value;
+    _notify();
+    await _persist();
+  }
+
+  /// 災害基金へ積む(正)/引き出す(負)。資金が足りない・基金が足りないときは false。
+  Future<bool> depositReserveFund(int amount) async {
+    final save = _save;
+    if (save == null || amount == 0) return false;
+    if (amount > 0 && amount > save.budget) return false;
+    if (amount < 0 && -amount > save.reserveFund) return false;
+    save.reserveFund += amount;
+    _book(LedgerCategory.financing, -amount);
+    _notify();
+    await _persist();
+    return true;
+  }
+
+  /// 地域貢献を1段上げる。
+  Future<bool> upgradeCommunity() async {
+    final save = _save;
+    if (save == null || save.communityLevel >= RiskEngine.maxCommunityLevel) {
+      return false;
+    }
+    final cost = RiskEngine.communityCost(save.communityLevel + 1);
+    if (cost > save.budget) return false;
+    _book(LedgerCategory.other, -cost);
+    save.communityLevel += 1;
+    _notify();
+    await _persist();
+    return true;
+  }
+
+  /// シーズン末: 保険料、地域貢献の効果、突発の出来事。
+  void _resolveSeasonRisks({double? chanceRoll, double? kindRoll, double? sizeRoll}) {
+    final save = _save!;
+    final tier = save.currentDivisionTier;
+    if (save.insured) _book(LedgerCategory.other, -RiskEngine.premium(tier));
+    if (save.communityLevel > 0) {
+      save.confidence =
+          (save.confidence + RiskEngine.communityTrustGain(save.communityLevel))
+              .clamp(0, 100);
+    }
+    final rng = Random();
+    final incident = RiskEngine.roll(
+      chanceRoll: chanceRoll ?? rng.nextDouble(),
+      kindRoll: kindRoll ?? rng.nextDouble(),
+      sizeRoll: sizeRoll ?? rng.nextDouble(),
+      tier: tier,
+      communityLevel:
+          save.communityLevel + (save.advisors[Advisor.pr.name] ?? 0),
+    );
+    if (incident == null) return;
+    final cover = RiskEngine.cover(
+        loss: incident.loss, insured: save.insured, fund: save.reserveFund);
+    save.reserveFund = cover.fundAfter;
+    if (cover.byClub > 0) _book(LedgerCategory.other, -cover.byClub);
+    save.confidence = (save.confidence - incident.trustLoss).clamp(0, 100);
+    _logNews(
+      Tr.pick(
+          '${incident.kind.label}が起きました。損失${incident.loss}万円(保険${cover.byInsurance}・基金${cover.byFund}・クラブ負担${cover.byClub})',
+          '${incident.kind.label}. Loss ${incident.loss} (insurance ${cover.byInsurance}, fund ${cover.byFund}, club ${cover.byClub})'),
+      context: Tr.pick('突発の出来事', 'Incident'),
+    );
+  }
+
+  /// テスト用: 突発の出来事の判定を、指定の乱数で進める。
+  @visibleForTesting
+  void debugResolveSeasonRisks(double chance, double kind, double size) =>
+      _resolveSeasonRisks(chanceRoll: chance, kindRoll: kind, sizeRoll: size);
+
+  /// 命名権の候補から1つ結ぶ。
+  Future<bool> chooseNamingRights(int index) async {
+    final save = _save;
+    if (save == null || index < 0 || index >= save.pendingNamingOffers.length) {
+      return false;
+    }
+    save.namingDeal = save.pendingNamingOffers[index];
+    _addTimeline(Tr.pick('スタジアムの命名権を${save.namingDeal!.name}と契約',
+        'Signed naming rights with ${save.namingDeal!.name}'));
+    save.pendingNamingOffers = [];
+    _logNews(
+      Tr.pick('スタジアムの命名権を結びました: ${save.namingDeal!.name}(週${save.namingDeal!.weeklyIncome}万円・${save.namingDeal!.yearsRemaining}年)',
+          'Naming rights signed: ${save.namingDeal!.name} (${save.namingDeal!.weeklyIncome}/week, ${save.namingDeal!.yearsRemaining} yr)'),
+      context: Tr.pick('命名権', 'Naming rights'),
+    );
+    _notify();
+    await _persist();
+    return true;
+  }
+
+  /// 放映権の受け取り方を変える。開幕前だけ。
+  Future<bool> setTvDeal(TvDeal deal) async {
+    if (_save == null || !canChangeClubPolicy) return false;
+    _save!.tvDeal = deal;
+    _notify();
+    await _persist();
+    return true;
+  }
+
+  /// 放映権の前払いを受ける。以後の数季は分配金が出ない。
+  Future<bool> takeTvAdvance() async {
+    final save = _save;
+    if (save == null || save.tvHolidaySeasons > 0) return false;
+    final amount = MediaDealsEngine.advanceAmount(save.currentDivisionTier);
+    _book(LedgerCategory.prize, amount);
+    save.tvHolidaySeasons = MediaDealsEngine.advanceHolidaySeasons;
+    _logNews(
+      Tr.pick('放映権の前払い$amount万円を受け取りました。あと${save.tvHolidaySeasons}季は分配金が出ません',
+          'Took a TV advance of $amount. No TV money for ${save.tvHolidaySeasons} seasons'),
+      context: Tr.pick('放映権', 'TV rights'),
+    );
+    _notify();
+    await _persist();
+    return true;
+  }
+
+  /// シーズン末に放映権の分配金を受け取る(前払いの精算中は無い)。
+  void _bookTvRights({required int finalRank, required int teamCount}) {
+    final save = _save!;
+    if (save.tvHolidaySeasons > 0) {
+      save.tvHolidaySeasons -= 1;
+      return;
+    }
+    final pay = MediaDealsEngine.tvPayout(
+      deal: save.tvDeal,
+      tier: save.currentDivisionTier,
+      rank: finalRank,
+      teamCount: teamCount,
+    );
+    _book(LedgerCategory.prize, pay);
+    _logNews(
+      Tr.pick('放映権の分配金$pay万円(${save.tvDeal.label})が入りました',
+          'TV money of $pay (${save.tvDeal.label}) arrived'),
+      context: Tr.pick('放映権', 'TV rights'),
+    );
+  }
+
+  /// シーズン境界で命名権を1年消化し、無ければ候補を出す。
+  void _rollNamingRights() {
+    final save = _save!;
+    if (save.namingDeal != null) {
+      save.namingDeal!.yearsRemaining -= 1;
+      if (save.namingDeal!.yearsRemaining <= 0) save.namingDeal = null;
+    }
+    if (save.namingDeal == null && save.pendingNamingOffers.isEmpty) {
+      save.pendingNamingOffers = MediaDealsEngine.namingOffers(
+        stadiumLevel: save.infrastructure.facilityLevel(FacilityType.stadium),
+        tier: save.currentDivisionTier,
+        managerReputation: save.managerReputation,
+      );
+    }
+  }
+
+  /// 世界クラブ価値番付。自クラブは実際の価値、他クラブは見積もり。
+  List<RankedClub> get worldClubRanking {
+    final save = _save;
+    if (save == null) return const [];
+    final clubs = <RankedClub>[
+      RankedClub(
+        name: save.clubName,
+        value: clubValue.total,
+        tier: save.currentDivisionTier,
+        isUser: true,
+      ),
+    ];
+    void addLeague(League league, int tier) {
+      for (final t in league.teams) {
+        if (t.id == save.userTeamId) continue;
+        clubs.add(RankedClub(
+          name: t.name,
+          value: ClubRankingEngine.estimate(
+            playersValue: t.players.fold<int>(0, (s, p) => s + p.marketValue),
+            tier: tier,
+          ),
+          tier: tier,
+          isUser: false,
+        ));
+      }
+    }
+
+    addLeague(save.league, save.currentDivisionTier);
+    for (var tier = 1; tier <= save.otherDivisionLeagues.length; tier++) {
+      final l = save.otherDivisionLeagues[tier - 1];
+      if (l != null) addLeague(l, tier);
+    }
+    return ClubRankingEngine.rank(clubs);
+  }
+
+  /// オーナーの持分(%)。
+  int get ownerShare => _save?.ownerShare ?? 100;
+
+  /// 持分の10%を外部の株主へ売る(増資)。売れないときは false。
+  Future<bool> sellStake() async {
+    final save = _save;
+    if (save == null) return false;
+    final pct = EquityEngine.sellable(save.ownerShare);
+    if (pct == 0) return false;
+    final price = EquityEngine.salePrice(clubValue.total, pct);
+    save.ownerShare -= pct;
+    _book(LedgerCategory.financing, price);
+    _addTimeline(Tr.pick('持分$pct%を外部の株主に売却(残り${save.ownerShare}%)',
+        'Sold a $pct% stake (${save.ownerShare}% left)'));
+    _logNews(
+      Tr.pick('持分$pct%を外部の株主に売り、$price万円を調達しました(持分${save.ownerShare}%)',
+          'Sold a $pct% stake for $price (you now hold ${save.ownerShare}%)'),
+      context: Tr.pick('株主', 'Shareholders'),
+    );
+    _notify();
+    await _persist();
+    return true;
+  }
+
+  /// 持分の10%を買い戻す。資金が足りないときは false。
+  Future<bool> buyBackStake() async {
+    final save = _save;
+    if (save == null || save.ownerShare >= 100) return false;
+    const pct = EquityEngine.step;
+    final take = pct > 100 - save.ownerShare ? 100 - save.ownerShare : pct;
+    final cost = EquityEngine.buybackCost(clubValue.total, take);
+    if (cost > save.budget) return false;
+    save.ownerShare += take;
+    _book(LedgerCategory.financing, -cost);
+    _logNews(
+      Tr.pick('持分$take%を$cost万円で買い戻しました(持分${save.ownerShare}%)',
+          'Bought back $take% for $cost (you now hold ${save.ownerShare}%)'),
+      context: Tr.pick('株主', 'Shareholders'),
+    );
+    _notify();
+    await _persist();
+    return true;
+  }
+
+  /// シーズン末の株主総会。外部の株主へ配当を払い、総会の様子をニュースに残す。
+  void _holdShareholdersMeeting() {
+    final save = _save!;
+    final dividend = EquityEngine.dividend(
+        ownerShare: save.ownerShare, seasonProfit: currentLedger.profit);
+    if (dividend > 0) _book(LedgerCategory.financing, -dividend);
+    final outside = 100 - save.ownerShare;
+    _logNews(
+      Tr.pick(
+          '株主総会: ${EquityEngine.mood(save.shareholderExpectation)}。${outside > 0 ? '外部の株主(持分$outside%)へ配当$dividend万円を払いました。' : '外部の株主はいません。'}',
+          'Shareholders\' meeting: ${EquityEngine.mood(save.shareholderExpectation)}. ${outside > 0 ? 'Paid outside holders ($outside%) a dividend of $dividend.' : 'There are no outside shareholders.'}'),
+      context: Tr.pick('株主総会', 'Shareholders\' meeting'),
     );
   }
 

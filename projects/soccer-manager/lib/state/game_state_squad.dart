@@ -429,7 +429,9 @@ extension GameStateSquad on GameState {
     final lvl = _save!.infrastructure.facilityLevel(type);
     return (ClubInfrastructure.facilityUpgradeCost(lvl) *
             BudgetEngine.facilityCostMultiplier(_save!.budgetPlan) *
-            PolicyEngine.facilityCostMultiplier(_save!.clubPolicy))
+            PolicyEngine.facilityCostMultiplier(_save!.clubPolicy) *
+            AdvisorEngine.facilityCostMultiplier(
+                _save!.advisors[Advisor.scouting.name] ?? 0))
         .round();
   }
 
@@ -443,6 +445,7 @@ extension GameStateSquad on GameState {
     if (idx < 0) return false;
     final hired = _save!.staffCandidates[idx];
     final previous = _save!.infrastructure.staffFor(hired.role);
+    final severance = previous?.severance ?? 0;
 
     // 週俸の総額が給与予算を食い潰さないよう、選手と同じ枠で見る。
     // 入れ替えなら前任者の週俸は出ていかなくなるので、差額で見る。
@@ -452,6 +455,7 @@ extension GameStateSquad on GameState {
 
     _save!.infrastructure.staff[hired.role] = hired;
     _save!.staffCandidates.removeAt(idx);
+    if (severance > 0) _book(LedgerCategory.staffWages, -severance);
     // 入れ替えで空いた人は候補に戻さない。断った相手が翌週も同じ条件で
     // 待っているのは不自然なため。
     if (previous != null) {
@@ -478,6 +482,8 @@ extension GameStateSquad on GameState {
     final current = _save!.infrastructure.staffFor(role);
     if (current == null) return false;
     _save!.infrastructure.staff[role] = null;
+    final severance = current.severance;
+    if (severance > 0) _book(LedgerCategory.staffWages, -severance);
     _logNews(
       Tr.pick('${current.name}が${role.label}を退任しました。',
           '${current.name} leaves his post as ${role.label}.'),

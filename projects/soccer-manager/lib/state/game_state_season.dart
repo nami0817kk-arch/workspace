@@ -703,6 +703,7 @@ extension GameStateSeason on GameState {
     );
     prizeMoney = (prizeMoney * pow(0.6, playedTier - 1)).round();
     _book(LedgerCategory.prize, prizeMoney);
+    _bookTvRights(finalRank: finalRank, teamCount: league.teams.length);
     final confidenceDelta = BoardEngine.confidenceDeltaForSeasonEnd(
       finalRank: finalRank,
       targetRank: _save!.boardTargetRank,
@@ -758,6 +759,11 @@ extension GameStateSeason on GameState {
 
     // 国の財務規則(収支規則・ライセンス)の判定。違反なら罰を科す。
     _enforceLeagueRules();
+    _holdShareholdersMeeting();
+    _resolveSeasonRisks();
+    _tickProjects();
+    _settleAdvisors();
+    _save!.declinedProposalIds.clear();
     _recordClubValue();
     _scoreClubPolicy(finalRank: finalRank);
     _advanceEconomy();
@@ -1016,6 +1022,7 @@ extension GameStateSeason on GameState {
     _refreshScoutCandidates();
     FreeAgentEngine.topUp(_save!.freeAgents);
 
+    _rollNamingRights();
     // スポンサー契約(年単位)はシーズン境界で1年分消化する。
     if (_save!.sponsorDeal != null) {
       _save!.sponsorDeal!.yearsRemaining -= 1;
@@ -1130,6 +1137,19 @@ extension GameStateSeason on GameState {
         cupsWon: cupsWonThisSeason,
       ),
     );
+    _closeRivalSeason();
+    if (finalRank == 1) {
+      _addTimeline(Tr.pick('$playedTier部リーグで優勝', 'Won the tier $playedTier league'));
+    }
+    if (newTier < playedTier) {
+      _addTimeline(Tr.pick('$newTier部へ昇格', 'Promoted to tier $newTier'));
+    }
+    if (newTier > playedTier) {
+      _addTimeline(Tr.pick('$newTier部へ降格', 'Relegated to tier $newTier'));
+    }
+    for (final cup in cupsWonThisSeason) {
+      _addTimeline(Tr.pick('$cupで優勝', 'Won $cup'));
+    }
     _evaluateAchievements(season: league.season);
     _evaluateOwnerGoal(season: league.season);
 

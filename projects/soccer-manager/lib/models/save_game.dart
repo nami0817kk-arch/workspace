@@ -21,10 +21,13 @@ import 'press_question.dart';
 import 'season_award.dart';
 import 'season_record.dart';
 import 'sponsor.dart';
+import 'start_scenario.dart';
 import 'club_vision.dart';
 import 'ledger.dart';
 import '../logic/economy_engine.dart';
 import '../logic/league_rules.dart';
+import '../logic/media_deals_engine.dart';
+import '../logic/proposal_engine.dart';
 import '../logic/policy_engine.dart';
 import 'staff_member.dart';
 import 'team.dart';
@@ -121,6 +124,34 @@ class SaveGame {
 
   /// 目標「クラブ価値を2倍に」を選んだときのクラブ価値。選ぶまでは 0。
   int ownerGoalStartValue;
+
+  /// オーナーの持分(%)。外部の株主へ売ると減る。51〜100。
+  int ownerShare;
+
+  /// 宿敵との過去のシーズンの通算戦績(勝・分・敗)。
+  List<int> rivalPast;
+
+  /// 新規開始で選んだシナリオと、クラブの年表。
+  StartScenario scenario;
+  List<TimelineEntry> timeline;
+
+  /// 監督からの提案(承認待ち)と、却下して今季は出さない提案の id。
+  List<ManagerProposal> proposals;
+  List<String> declinedProposalIds;
+
+  /// 経営アドバイザー。名前→レベル(0〜3)。
+  Map<String, int> advisors;
+
+  /// 投資案件。名前→完成までの残り季数(0は稼働中)。
+  Map<String, int> projects;
+
+  /// 永久欠番にした殿堂の選手の id。
+  List<String> retiredNumberIds;
+
+  /// 保険に入っているか、災害基金の残高(万円)、地域貢献のレベル(0〜5)。
+  bool insured;
+  int reserveFund;
+  int communityLevel;
 
   /// 補強が禁止されている残りのシーズン数(規則違反の罰)。
   int transferBanSeasons;
@@ -220,6 +251,14 @@ class SaveGame {
 
   /// 契約更新・新規契約のために提示されている候補(未選択の間はスポンサー収入が発生しない)。
   List<SponsorDeal> pendingSponsorOffers;
+
+  /// スタジアムの命名権(契約中)と、提示されている候補。
+  SponsorDeal? namingDeal;
+  List<SponsorDeal> pendingNamingOffers;
+
+  /// 放映権の分配金の受け取り方と、前払いの精算で分配金が出ない残りの季数。
+  TvDeal tvDeal;
+  int tvHolidaySeasons;
 
   /// 分割払いで獲得した選手の残金支払い予定。
   List<Installment> pendingInstallments;
@@ -420,6 +459,18 @@ class SaveGame {
     this.clubPolicy = ClubPolicy.balanced,
     Map<int, int>? clubValueHistory,
     this.ownerGoalStartValue = 0,
+    this.ownerShare = 100,
+    List<String>? retiredNumberIds,
+    Map<String, int>? projects,
+    Map<String, int>? advisors,
+    List<ManagerProposal>? proposals,
+    this.scenario = StartScenario.standard,
+    List<int>? rivalPast,
+    List<TimelineEntry>? timeline,
+    List<String>? declinedProposalIds,
+    this.insured = false,
+    this.reserveFund = 0,
+    this.communityLevel = 0,
     this.transferBanSeasons = 0,
     this.pendingPointsDeduction = 0,
     this.pendingOwnerEvent,
@@ -445,6 +496,10 @@ class SaveGame {
     this.lastSeasonRank,
     List<Team>? continentalTeams,
     this.sponsorDeal,
+    this.namingDeal,
+    List<SponsorDeal>? pendingNamingOffers,
+    this.tvDeal = TvDeal.fixed,
+    this.tvHolidaySeasons = 0,
     List<SponsorDeal>? pendingSponsorOffers,
     List<Installment>? pendingInstallments,
     List<Fixture>? friendlies,
@@ -519,6 +574,14 @@ class SaveGame {
         cups = cups ?? [],
         continentalTeams = continentalTeams ?? [],
         pendingSponsorOffers = pendingSponsorOffers ?? [],
+        pendingNamingOffers = pendingNamingOffers ?? [],
+        retiredNumberIds = retiredNumberIds ?? [],
+        projects = projects ?? {},
+        advisors = advisors ?? {},
+        proposals = proposals ?? [],
+        timeline = timeline ?? [],
+        rivalPast = rivalPast ?? [0, 0, 0],
+        declinedProposalIds = declinedProposalIds ?? [],
         pendingInstallments = pendingInstallments ?? [],
         friendlies = friendlies ?? [],
         incomingOffers = incomingOffers ?? [],
@@ -606,6 +669,18 @@ class SaveGame {
         'clubPolicy': clubPolicy.name,
         'clubValueHistory': clubValueHistory.map((k, v) => MapEntry('$k', v)),
         'ownerGoalStartValue': ownerGoalStartValue,
+        'ownerShare': ownerShare,
+        'retiredNumberIds': retiredNumberIds,
+        'projects': projects,
+        'advisors': advisors,
+        'proposals': proposals.map((p) => p.toJson()).toList(),
+        'scenario': scenario.name,
+        'rivalPast': rivalPast,
+        'timeline': timeline.map((e) => e.toJson()).toList(),
+        'declinedProposalIds': declinedProposalIds,
+        'insured': insured,
+        'reserveFund': reserveFund,
+        'communityLevel': communityLevel,
         'transferBanSeasons': transferBanSeasons,
         'pendingPointsDeduction': pendingPointsDeduction,
         'pendingOwnerEvent': pendingOwnerEvent?.name,
@@ -633,6 +708,10 @@ class SaveGame {
         'lastSeasonRank': lastSeasonRank,
         'continentalTeams': continentalTeams.map((t) => t.toJson()).toList(),
         'sponsorDeal': sponsorDeal?.toJson(),
+        'namingDeal': namingDeal?.toJson(),
+        'pendingNamingOffers': pendingNamingOffers.map((s) => s.toJson()).toList(),
+        'tvDeal': tvDeal.name,
+        'tvHolidaySeasons': tvHolidaySeasons,
         'pendingSponsorOffers':
             pendingSponsorOffers.map((s) => s.toJson()).toList(),
         'pendingInstallments':
@@ -714,6 +793,39 @@ class SaveGame {
         clubValueHistory: (json['clubValueHistory'] as Map?)
             ?.map((k, v) => MapEntry(int.parse('$k'), v as int)),
         ownerGoalStartValue: json['ownerGoalStartValue'] as int? ?? 0,
+        ownerShare: json['ownerShare'] as int? ?? 100,
+        rivalPast: (json['rivalPast'] as List?)?.map((e) => e as int).toList() ??
+            [0, 0, 0],
+        scenario: StartScenario.values
+                .where((s) => s.name == json['scenario'])
+                .firstOrNull ??
+            StartScenario.standard,
+        timeline: (json['timeline'] as List?)
+                ?.map((e) => TimelineEntry.fromJson(e as Map<String, dynamic>))
+                .toList() ??
+            [],
+        proposals: (json['proposals'] as List?)
+                ?.map((e) => ManagerProposal.fromJson(e as Map<String, dynamic>))
+                .whereType<ManagerProposal>()
+                .toList() ??
+            [],
+        declinedProposalIds: (json['declinedProposalIds'] as List?)
+                ?.map((e) => e as String)
+                .toList() ??
+            [],
+        advisors: (json['advisors'] as Map?)
+                ?.map((k, v) => MapEntry('$k', v as int)) ??
+            {},
+        projects: (json['projects'] as Map?)
+                ?.map((k, v) => MapEntry('$k', v as int)) ??
+            {},
+        retiredNumberIds: (json['retiredNumberIds'] as List?)
+                ?.map((e) => e as String)
+                .toList() ??
+            [],
+        insured: json['insured'] as bool? ?? false,
+        reserveFund: json['reserveFund'] as int? ?? 0,
+        communityLevel: json['communityLevel'] as int? ?? 0,
         clubPolicy: ClubPolicy.values
             .where((p) => p.name == json['clubPolicy'])
             .firstOrNull ?? ClubPolicy.balanced,
@@ -797,6 +909,18 @@ class SaveGame {
                 ?.map((e) => Team.fromJson(e as Map<String, dynamic>))
                 .toList() ??
             [],
+        namingDeal: json['namingDeal'] == null
+            ? null
+            : SponsorDeal.fromJson(json['namingDeal'] as Map<String, dynamic>),
+        pendingNamingOffers: (json['pendingNamingOffers'] as List?)
+                ?.map((e) => SponsorDeal.fromJson(e as Map<String, dynamic>))
+                .toList() ??
+            [],
+        tvDeal: TvDeal.values
+                .where((d) => d.name == json['tvDeal'])
+                .firstOrNull ??
+            TvDeal.fixed,
+        tvHolidaySeasons: json['tvHolidaySeasons'] as int? ?? 0,
         sponsorDeal: json['sponsorDeal'] == null
             ? null
             : SponsorDeal.fromJson(json['sponsorDeal'] as Map<String, dynamic>),
