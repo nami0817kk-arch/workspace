@@ -1137,6 +1137,18 @@ extension GameStateSeason on GameState {
         cupsWon: cupsWonThisSeason,
       ),
     );
+    if (finalRank == 1) {
+      _addTimeline(Tr.pick('$playedTier部リーグで優勝', 'Won the tier $playedTier league'));
+    }
+    if (newTier < playedTier) {
+      _addTimeline(Tr.pick('$newTier部へ昇格', 'Promoted to tier $newTier'));
+    }
+    if (newTier > playedTier) {
+      _addTimeline(Tr.pick('$newTier部へ降格', 'Relegated to tier $newTier'));
+    }
+    for (final cup in cupsWonThisSeason) {
+      _addTimeline(Tr.pick('$cupで優勝', 'Won $cup'));
+    }
     _evaluateAchievements(season: league.season);
     _evaluateOwnerGoal(season: league.season);
 

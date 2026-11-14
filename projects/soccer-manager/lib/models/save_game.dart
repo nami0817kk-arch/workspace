@@ -21,6 +21,7 @@ import 'press_question.dart';
 import 'season_award.dart';
 import 'season_record.dart';
 import 'sponsor.dart';
+import 'start_scenario.dart';
 import 'club_vision.dart';
 import 'ledger.dart';
 import '../logic/economy_engine.dart';
@@ -126,6 +127,10 @@ class SaveGame {
 
   /// オーナーの持分(%)。外部の株主へ売ると減る。51〜100。
   int ownerShare;
+
+  /// 新規開始で選んだシナリオと、クラブの年表。
+  StartScenario scenario;
+  List<TimelineEntry> timeline;
 
   /// 監督からの提案(承認待ち)と、却下して今季は出さない提案の id。
   List<ManagerProposal> proposals;
@@ -456,6 +461,8 @@ class SaveGame {
     Map<String, int>? projects,
     Map<String, int>? advisors,
     List<ManagerProposal>? proposals,
+    this.scenario = StartScenario.standard,
+    List<TimelineEntry>? timeline,
     List<String>? declinedProposalIds,
     this.insured = false,
     this.reserveFund = 0,
@@ -568,6 +575,7 @@ class SaveGame {
         projects = projects ?? {},
         advisors = advisors ?? {},
         proposals = proposals ?? [],
+        timeline = timeline ?? [],
         declinedProposalIds = declinedProposalIds ?? [],
         pendingInstallments = pendingInstallments ?? [],
         friendlies = friendlies ?? [],
@@ -661,6 +669,8 @@ class SaveGame {
         'projects': projects,
         'advisors': advisors,
         'proposals': proposals.map((p) => p.toJson()).toList(),
+        'scenario': scenario.name,
+        'timeline': timeline.map((e) => e.toJson()).toList(),
         'declinedProposalIds': declinedProposalIds,
         'insured': insured,
         'reserveFund': reserveFund,
@@ -778,6 +788,14 @@ class SaveGame {
             ?.map((k, v) => MapEntry(int.parse('$k'), v as int)),
         ownerGoalStartValue: json['ownerGoalStartValue'] as int? ?? 0,
         ownerShare: json['ownerShare'] as int? ?? 100,
+        scenario: StartScenario.values
+                .where((s) => s.name == json['scenario'])
+                .firstOrNull ??
+            StartScenario.standard,
+        timeline: (json['timeline'] as List?)
+                ?.map((e) => TimelineEntry.fromJson(e as Map<String, dynamic>))
+                .toList() ??
+            [],
         proposals: (json['proposals'] as List?)
                 ?.map((e) => ManagerProposal.fromJson(e as Map<String, dynamic>))
                 .whereType<ManagerProposal>()

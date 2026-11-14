@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../models/league_theme.dart';
 import '../models/save_game.dart';
+import '../models/start_scenario.dart';
 import '../state/game_state.dart';
 import '../widgets/busy_overlay.dart';
 import 'main_shell.dart';
@@ -197,6 +198,7 @@ class _StartScreenState extends State<StartScreen> {
         result.clubName,
         theme: result.theme,
         difficulty: result.difficulty,
+        scenario: result.scenario,
       );
     } catch (_) {
       if (context.mounted) {
@@ -340,7 +342,8 @@ class _NewClubInput {
   final String clubName;
   final LeagueTheme theme;
   final GameDifficulty difficulty;
-  _NewClubInput(this.clubName, this.theme, this.difficulty);
+  final StartScenario scenario;
+  _NewClubInput(this.clubName, this.theme, this.difficulty, this.scenario);
 }
 
 class _NewClubDialog extends StatefulWidget {
@@ -355,6 +358,7 @@ class _NewClubDialogState extends State<_NewClubDialog> {
   final _controller = TextEditingController();
   LeagueTheme _theme = LeagueTheme.england;
   GameDifficulty _difficulty = GameDifficulty.normal;
+  StartScenario _scenario = StartScenario.standard;
 
   @override
   void dispose() {
@@ -421,6 +425,29 @@ class _NewClubDialogState extends State<_NewClubDialog> {
               style: TextStyle(
                   fontSize: 12, color: SemanticColors.subtleText(context)),
             ),
+            const SizedBox(height: 16),
+            Text(Tr.pick('シナリオ', 'Scenario'),
+                style: Theme.of(context).textTheme.titleSmall),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: StartScenario.values
+                  .map(
+                    (s) => ChoiceChip(
+                      label: Text(s.label),
+                      selected: _scenario == s,
+                      onSelected: (_) => setState(() => _scenario = s),
+                    ),
+                  )
+                  .toList(),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              _scenario.description,
+              style: TextStyle(
+                  fontSize: 12, color: SemanticColors.subtleText(context)),
+            ),
           ],
         ),
       ),
@@ -433,7 +460,8 @@ class _NewClubDialogState extends State<_NewClubDialog> {
           onPressed: () {
             final name = _controller.text.trim();
             if (name.isEmpty) return;
-            Navigator.pop(context, _NewClubInput(name, _theme, _difficulty));
+            Navigator.pop(
+                context, _NewClubInput(name, _theme, _difficulty, _scenario));
           },
           child: Text(context.l10n.startCreate),
         ),

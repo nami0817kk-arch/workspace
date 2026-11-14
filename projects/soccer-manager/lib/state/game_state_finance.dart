@@ -587,6 +587,37 @@ extension GameStateFinance on GameState {
     );
   }
 
+  /// 年表に1行足す。直近200行だけ残す。
+  void _addTimeline(String text) {
+    final save = _save!;
+    save.timeline.add(TimelineEntry(season: save.league.season, text: text));
+    while (save.timeline.length > 200) {
+      save.timeline.removeAt(0);
+    }
+  }
+
+  /// 新規開始のシナリオを、初期の資金・期待・施設に反映する。
+  void _applyScenario(StartScenario scenario) {
+    final save = _save!;
+    switch (scenario) {
+      case StartScenario.standard:
+        break;
+      case StartScenario.debt:
+        save.budget = -1500;
+        save.shareholderExpectation = 45;
+      case StartScenario.patron:
+        save.budget = save.budget * 3;
+        save.shareholderExpectation = 70;
+        save.boardTargetRank = (save.boardTargetRank - 2).clamp(1, 99);
+      case StartScenario.academy:
+        save.budget = (save.budget * 0.7).round();
+        save.infrastructure.facilityLevels[FacilityType.youthFacility] = 3;
+        save.infrastructure.facilityLevels[FacilityType.trainingGround] = 2;
+    }
+    _addTimeline(Tr.pick('「${scenario.label}」でクラブの経営が始まった',
+        'Began running the club: ${scenario.label}'));
+  }
+
   /// 監督の提案を足す(上限まで)。節の進行ごとに呼ぶ。
   void _refreshProposals() {
     final save = _save;
@@ -686,6 +717,7 @@ extension GameStateFinance on GameState {
         ProjectEngine.isActive(save.projects, ClubProject.partnerClub);
     final done = ProjectEngine.tick(save.projects);
     for (final p in done) {
+      _addTimeline(Tr.pick('${p.label}が完成', '${p.label} completed'));
       _logNews(
         Tr.pick('${p.label}が完成しました', '${p.label} is complete'),
         context: Tr.pick('投資案件', 'Projects'),
@@ -709,6 +741,7 @@ extension GameStateFinance on GameState {
     final p = save.retiredLegends.where((l) => l.id == playerId).firstOrNull;
     if (p == null) return false;
     save.retiredNumberIds.add(playerId);
+    _addTimeline(Tr.pick('${p.name}の背番号を永久欠番に', '${p.name}\'s number retired'));
     save.confidence = (save.confidence + 3).clamp(0, 100);
     _logNews(
       Tr.pick('${p.name}の背番号を永久欠番にしました。サポーターが沸いています',
@@ -801,6 +834,8 @@ extension GameStateFinance on GameState {
       return false;
     }
     save.namingDeal = save.pendingNamingOffers[index];
+    _addTimeline(Tr.pick('スタジアムの命名権を${save.namingDeal!.name}と契約',
+        'Signed naming rights with ${save.namingDeal!.name}'));
     save.pendingNamingOffers = [];
     _logNews(
       Tr.pick('スタジアムの命名権を結びました: ${save.namingDeal!.name}(週${save.namingDeal!.weeklyIncome}万円・${save.namingDeal!.yearsRemaining}年)',
@@ -922,6 +957,8 @@ extension GameStateFinance on GameState {
     final price = EquityEngine.salePrice(clubValue.total, pct);
     save.ownerShare -= pct;
     _book(LedgerCategory.financing, price);
+    _addTimeline(Tr.pick('持分$pct%を外部の株主に売却(残り${save.ownerShare}%)',
+        'Sold a $pct% stake (${save.ownerShare}% left)'));
     _logNews(
       Tr.pick('持分$pct%を外部の株主に売り、$price万円を調達しました(持分${save.ownerShare}%)',
           'Sold a $pct% stake for $price (you now hold ${save.ownerShare}%)'),
