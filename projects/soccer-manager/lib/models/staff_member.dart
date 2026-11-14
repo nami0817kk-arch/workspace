@@ -127,6 +127,12 @@ class StaffMember {
 
   int attribute(StaffAttribute a) => attributes[a] ?? 1;
 
+  /// 契約の途中で解任するときの違約金(万円)。残りの契約の週俸の一部。
+  /// 監督は他の役職より重い。契約が切れていれば掛からない。
+  int get severance =>
+      (wage * 52 * contractYears * (role == StaffRole.manager ? 0.4 : 0.2))
+          .round();
+
   /// この役職での仕事の質(1-20)。役職に関係ある能力だけの加重平均。
   ///
   /// スカウトに指導20の人を置いても、見極めが低ければ質は上がらない。

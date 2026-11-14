@@ -514,6 +514,7 @@ extension GameStateFinance on GameState {
         : 1.0;
     final factor = BudgetEngine.incomeMultiplier(_save!.budgetPlan) *
         PolicyEngine.incomeMultiplier(_save!.clubPolicy) *
+        AdvisorEngine.incomeMultiplier(_save!.advisors[Advisor.finance.name] ?? 0) *
         _save!.economyPhase.incomeMultiplier *
         boost;
     final total =
@@ -584,6 +585,31 @@ extension GameStateFinance on GameState {
           '${ruleSet.label} breach: ${penalty.reason}. ${parts.join(', ')}.'),
       context: Tr.pick('リーグの規則', 'League rules'),
     );
+  }
+
+  /// アドバイザーのレベルを変える(0〜3)。
+  Future<bool> setAdvisorLevel(Advisor a, int level) async {
+    final save = _save;
+    if (save == null || level < 0 || level > AdvisorEngine.maxLevel) {
+      return false;
+    }
+    if (level == 0) {
+      save.advisors.remove(a.name);
+    } else {
+      save.advisors[a.name] = level;
+    }
+    _notify();
+    await _persist();
+    return true;
+  }
+
+  /// シーズン末にアドバイザーへ報酬を払い、広報顧問の効果を与える。
+  void _settleAdvisors() {
+    final save = _save!;
+    final fee = AdvisorEngine.totalSalary(save.advisors);
+    if (fee > 0) _book(LedgerCategory.staffWages, -fee);
+    final pr = save.advisors[Advisor.pr.name] ?? 0;
+    if (pr > 0) save.confidence = (save.confidence + pr).clamp(0, 100);
   }
 
   /// 投資案件に着手する。費用は着手時に払う。
@@ -696,7 +722,8 @@ extension GameStateFinance on GameState {
       kindRoll: kindRoll ?? rng.nextDouble(),
       sizeRoll: sizeRoll ?? rng.nextDouble(),
       tier: tier,
-      communityLevel: save.communityLevel,
+      communityLevel:
+          save.communityLevel + (save.advisors[Advisor.pr.name] ?? 0),
     );
     if (incident == null) return;
     final cover = RiskEngine.cover(
