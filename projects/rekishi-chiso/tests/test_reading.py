@@ -633,6 +633,9 @@ MISREADS = [
     ("kiyomori-fukuhara-if-story", "謀叛は", "むほんは", "ムホン"),
     ("kiyomori-fukuhara-if-story", "近江や東国", "おうみや東国", "オオミヤ"),
     ("kiyomori-fukuhara-if-story", "、都を移そう", "みやこをうつそう", "ミヤコオ"),
+    # 洞爺丸（toyamaru-story、11-14）
+    ("toyamaru-story", "羊蹄丸が", "ようてい丸", "ヨオテイマル"),
+    ("toyamaru-story", "左舷の主機が", "しゅき", "シュキ"),
 ]
 
 
