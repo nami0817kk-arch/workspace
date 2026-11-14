@@ -506,7 +506,9 @@ extension GameStateFinance on GameState {
     final boost = _save!.marketingBoostWeeks > 0
         ? GameStateSquad.marketingBoostMultiplier
         : 1.0;
-    final factor = BudgetEngine.incomeMultiplier(_save!.budgetPlan) * boost;
+    final factor = BudgetEngine.incomeMultiplier(_save!.budgetPlan) *
+        PolicyEngine.incomeMultiplier(_save!.clubPolicy) *
+        boost;
     final total =
         ((matchdayIncome + sponsorIncome + merchandiseIncome) * factor).round();
     final gate = (matchdayIncome * factor).round();
@@ -575,6 +577,47 @@ extension GameStateFinance on GameState {
       context: Tr.pick('リーグの規則', 'League rules'),
     );
   }
+
+  /// オーナーが選んだクラブの方針。
+  ClubPolicy get clubPolicy => _save?.clubPolicy ?? ClubPolicy.balanced;
+
+  /// 方針を変えられるか。今シーズンの試合が1つも行われていない間だけ。
+  /// 途中で変えられると、シーズン末の採点に合わせて直前に選べてしまう。
+  bool get canChangeClubPolicy =>
+      _save != null && _save!.league.fixtures.every((f) => f.result == null);
+
+  /// 方針を選ぶ。変えられないときは何もせず false。
+  Future<bool> setClubPolicy(ClubPolicy policy) async {
+    if (_save == null || !canChangeClubPolicy) return false;
+    _save!.clubPolicy = policy;
+    _notify();
+    await _persist();
+    return true;
+  }
+
+  /// シーズン末に方針を採点し、2つの期待を動かす。
+  void _scoreClubPolicy({required int finalRank}) {
+    final save = _save!;
+    final result = PolicyEngine.score(
+      policy: save.clubPolicy,
+      finalRank: finalRank,
+      targetRank: save.boardTargetRank,
+      youngCount: userTeam.players
+          .where((p) => p.age <= PolicyEngine.youngAge)
+          .length,
+      seasonProfit: currentLedger.profit,
+    );
+    if (result == null) return;
+    save.confidence = (save.confidence + result.supporters).clamp(0, 100);
+    save.shareholderExpectation =
+        (save.shareholderExpectation + result.shareholders).clamp(0, 100);
+    _logNews(result.reason, context: Tr.pick('クラブの方針', 'Club policy'));
+  }
+
+  /// テスト用: 方針の採点だけを走らせる。
+  @visibleForTesting
+  void debugScoreClubPolicy({required int finalRank}) =>
+      _scoreClubPolicy(finalRank: finalRank);
 
   /// いまのクラブ価値と内訳。
   ClubValue get clubValue {
@@ -686,7 +729,10 @@ extension GameStateFinance on GameState {
             weeklyIncome: weeklyIncomeFor(_save!.userTeamId),
           );
     // 補強の配分を厚くすると上限が広がり、削ると狭まる(初期の配分で1倍)。
-    return (base * BudgetEngine.wageCapMultiplier(_save!.budgetPlan)).round();
+    return (base *
+            BudgetEngine.wageCapMultiplier(_save!.budgetPlan) *
+            PolicyEngine.wageCapMultiplier(_save!.clubPolicy))
+        .round();
   }
 
   /// 週給[addedWeeklyWage]万円の選手を加えても週給予算に収まるか。

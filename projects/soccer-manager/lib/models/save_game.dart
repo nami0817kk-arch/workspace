@@ -24,6 +24,7 @@ import 'sponsor.dart';
 import 'club_vision.dart';
 import 'ledger.dart';
 import '../logic/league_rules.dart';
+import '../logic/policy_engine.dart';
 import 'staff_member.dart';
 import 'team.dart';
 import '../l10n/tr.dart';
@@ -106,6 +107,9 @@ class SaveGame {
 
   /// このクラブのいる国の財務規則。
   RuleSet ruleSet;
+
+  /// オーナーが選んだクラブの方針。シーズンの開幕前にだけ変えられる。
+  ClubPolicy clubPolicy;
 
   /// シーズンごとのクラブ価値(万円)。シーズン終了時に記録する。
   Map<int, int> clubValueHistory;
@@ -406,6 +410,7 @@ class SaveGame {
     this.marketingBoostWeeks = 0,
     List<SeasonLedger>? ledgers,
     this.ruleSet = RuleSet.britain,
+    this.clubPolicy = ClubPolicy.balanced,
     Map<int, int>? clubValueHistory,
     this.ownerGoalStartValue = 0,
     this.transferBanSeasons = 0,
@@ -589,6 +594,7 @@ class SaveGame {
         'marketingBoostWeeks': marketingBoostWeeks,
         'ledgers': ledgers.map((l) => l.toJson()).toList(),
         'ruleSet': ruleSet.name,
+        'clubPolicy': clubPolicy.name,
         'clubValueHistory': clubValueHistory.map((k, v) => MapEntry('$k', v)),
         'ownerGoalStartValue': ownerGoalStartValue,
         'transferBanSeasons': transferBanSeasons,
@@ -699,6 +705,9 @@ class SaveGame {
         clubValueHistory: (json['clubValueHistory'] as Map?)
             ?.map((k, v) => MapEntry(int.parse('$k'), v as int)),
         ownerGoalStartValue: json['ownerGoalStartValue'] as int? ?? 0,
+        clubPolicy: ClubPolicy.values
+            .where((p) => p.name == json['clubPolicy'])
+            .firstOrNull ?? ClubPolicy.balanced,
         transferBanSeasons: json['transferBanSeasons'] as int? ?? 0,
         pendingPointsDeduction: json['pendingPointsDeduction'] as int? ?? 0,
         ledgers: (json['ledgers'] as List?)
