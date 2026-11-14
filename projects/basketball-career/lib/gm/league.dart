@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'game_sim.dart';
 import 'player.dart';
 import 'policy.dart';
 import 'rng.dart';
@@ -492,7 +493,25 @@ class GameResult {
     this.chance = -1,
     this.homeStr = 0,
     this.awayStr = 0,
+    this.overtime = const [],
+    this.flow = const [],
+    this.plays = const [],
+    this.leadChanges = 0,
   });
+
+  /// 延長の点(1回目のホーム、アウェー、2回目の…)。自分のチームの試合だけ。
+  final List<int> overtime;
+
+  /// 1分ごとの点差(ホーム − アウェー)。自分のチームの試合だけ。前の版の保存は空。
+  final List<int> flow;
+
+  /// 見せ場(終盤の得点と逆転)。自分のチームの試合だけ。
+  final List<String> plays;
+
+  /// リードが入れ替わった回数。
+  final int leadChanges;
+
+  int get overtimes => overtime.length ~/ 2;
 
   /// 試合前の、ホームが勝つ見込み(0〜1)。自分のチームの試合だけ。前の版の保存は -1。
   final double chance;
@@ -548,6 +567,10 @@ class GameResult {
         if (hasChance) 'wc': (chance * 1000).round(),
         if (hasChance) 'hs': (homeStr * 10).round(),
         if (hasChance) 'as': (awayStr * 10).round(),
+        if (overtime.isNotEmpty) 'ot': overtime,
+        if (flow.isNotEmpty) 'fl': flow,
+        if (plays.isNotEmpty) 'pl': plays,
+        if (leadChanges != 0) 'lc': leadChanges,
       };
 
   static GameResult fromJson(Map<String, dynamic> j) => GameResult(
@@ -563,6 +586,10 @@ class GameResult {
         chance: j['wc'] is int ? (j['wc'] as int) / 1000 : -1,
         homeStr: ((j['hs'] as int?) ?? 0) / 10,
         awayStr: ((j['as'] as int?) ?? 0) / 10,
+        overtime: [for (final x in (j['ot'] as List? ?? const [])) x as int],
+        flow: [for (final x in (j['fl'] as List? ?? const [])) x as int],
+        plays: [for (final x in (j['pl'] as List? ?? const [])) x as String],
+        leadChanges: (j['lc'] as int?) ?? 0,
       );
 }
 
@@ -675,31 +702,56 @@ const minutesByOrder = [34, 33, 32, 30, 28, 22, 18, 14, 10, 8, 6, 3, 2, 0, 0];
   return (order[top], pts[top]);
 }
 
-/// 1試合を進める。どちらのチームにも個人の数字を配る([count] ならシーズンの成績に足す)。
-/// [mine] のチームの試合なら、いちばん点を取った選手を結果に残す。
+/// 試合のあとの、けがの残りとけがの抽選(トレーナーが良いほど少なく、治りも早い)。[mins] は実際に出た分。
+void injuriesAfterGame(Team t, List<int> mins, Rng rng, {bool count = true, double injuryScale = 1.0}) {
+  final order = t.order;
+  final trainer = t.staffLevel(Staff.trainer);
+  // 練習がきついほど、けがが増える
+  final chance = const [0.0075, 0.005, 0.003][trainer - 1] * const [0.8, 1.0, 1.35][t.training.clamp(0, 2)] * injuryScale;
+  final speed = const [1.25, 1.0, 0.75][trainer - 1];
+  for (var i = 0; i < order.length; i++) {
+    final p = order[i];
+    if (p.injured > 0) {
+      p.injured--;
+    } else if (count && mins[i] > 0 && rng.nextInt(100000) < (chance * mins[i] / 30 * (1 + math.max(0, mins[i] - fatigueLine) * 0.1) * 100000).round()) {
+      final r = rng.nextInt(100);
+      final games = r < 80 ? 1 + rng.nextInt(6) : r < 97 ? 8 + rng.nextInt(15) : 30 + rng.nextInt(30);
+      p.injured = math.max(1, (games * speed).round());
+      // 部位は乱数を使わず、選手と回数から決める(リーグの続きを変えない)
+      p.injPart = (p.id * 7 + p.injCount * 13 + games) % injuryParts.length;
+      p.injCount++;
+      injuries.add((t.index, p));
+    }
+  }
+}
+
+/// 1試合を進める(`game_sim.dart` で1回の攻めずつ)。どちらのチームにも個人の数字を付ける([count] ならシーズンの成績に足す)。
+/// [mine] のチームの試合なら、ボックススコア・クォーター・点差の流れ・見せ場を結果に残す。
 /// [injuryScale] は、[mine] のチームのけがの起きやすさの倍率(難しさ)。
 GameResult playGame(Team home, Team away, Rng rng, {int? mine, bool count = true, double injuryScale = 1.0}) {
   final hStr = home.strength, aStr = away.strength;
   final p = winChance(hStr, aStr);
-  final homeWins = rng.nextInt(10000) < (p * 10000).round();
-  final base = 92 + rng.nextInt(28);
-  final margin = 1 + rng.nextInt(rng.chance(0.3) ? 24 : 12);
-  final w = base + margin, l = base;
-  final hp = homeWins ? w : l, ap = homeWins ? l : w;
-  final myBox = <BoxLine>[], oppBox = <BoxLine>[];
   final isMine = mine == home.index || mine == away.index;
-  final (hTop, hTopPts) = boxScore(home, hp, rng,
-      count: count, oppPts: ap, lines: !isMine ? null : mine == home.index ? myBox : oppBox, injuryScale: mine == home.index ? injuryScale : 1.0);
-  final (aTop, aTopPts) = boxScore(away, ap, rng,
-      count: count, oppPts: hp, lines: !isMine ? null : mine == away.index ? myBox : oppBox, injuryScale: mine == away.index ? injuryScale : 1.0);
+  // 試合の中は、この試合だけの乱数で進める(リーグの乱数は1つだけ使う)
+  final sim = simulateGame(home, away, Rng(rng.next() ^ 0x5bd1e995), homeStr: hStr, awayStr: aStr, record: isMine);
+  final h = sim.home, a = sim.away;
+  final hp = h.pts, ap = a.pts;
+  final homeWins = hp > ap;
+  if (count) {
+    addSeasonStats(h);
+    addSeasonStats(a);
+  }
+  injuriesAfterGame(home, [for (var i = 0; i < h.order.length; i++) minutesOf(h, i)], rng, count: count, injuryScale: mine == home.index ? injuryScale : 1.0);
+  injuriesAfterGame(away, [for (var i = 0; i < a.order.length; i++) minutesOf(a, i)], rng, count: count, injuryScale: mine == away.index ? injuryScale : 1.0);
   String? topName;
   var topPts = 0;
-  if (mine == home.index) {
-    topName = hTop?.name;
-    topPts = hTopPts;
-  } else if (mine == away.index) {
-    topName = aTop?.name;
-    topPts = aTopPts;
+  if (isMine) {
+    final t = mine == home.index ? h : a;
+    if (t.order.isNotEmpty) {
+      final i = topScorerOf(t);
+      topName = t.order[i].name;
+      topPts = ptsAt(t, i);
+    }
   }
   final r = GameResult(
     home: home.index,
@@ -708,12 +760,16 @@ GameResult playGame(Team home, Team away, Rng rng, {int? mine, bool count = true
     awayPts: ap,
     topName: topName,
     topPts: topPts,
-    quarters: isMine ? [...splitQuarters(hp, rng), ...splitQuarters(ap, rng)] : const [],
-    box: myBox,
-    oppBox: oppBox,
+    quarters: isMine ? [...h.periods.take(4), ...a.periods.take(4)] : const [],
+    overtime: isMine ? [for (var k = 4; k < h.periods.length; k++) ...[h.periods[k], a.periods[k]]] : const [],
+    box: isMine ? boxLinesOf(mine == home.index ? h : a) : const [],
+    oppBox: isMine ? boxLinesOf(mine == home.index ? a : h) : const [],
     chance: isMine ? p : -1,
     homeStr: isMine ? hStr : 0,
     awayStr: isMine ? aStr : 0,
+    flow: isMine ? sim.flow : const [],
+    plays: isMine ? sim.plays : const [],
+    leadChanges: isMine ? sim.leadChanges : 0,
   );
   if (homeWins) {
     home.wins++;
