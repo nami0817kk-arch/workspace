@@ -25,6 +25,7 @@ import 'club_vision.dart';
 import 'ledger.dart';
 import '../logic/economy_engine.dart';
 import '../logic/league_rules.dart';
+import '../logic/media_deals_engine.dart';
 import '../logic/policy_engine.dart';
 import 'staff_member.dart';
 import 'team.dart';
@@ -223,6 +224,14 @@ class SaveGame {
 
   /// 契約更新・新規契約のために提示されている候補(未選択の間はスポンサー収入が発生しない)。
   List<SponsorDeal> pendingSponsorOffers;
+
+  /// スタジアムの命名権(契約中)と、提示されている候補。
+  SponsorDeal? namingDeal;
+  List<SponsorDeal> pendingNamingOffers;
+
+  /// 放映権の分配金の受け取り方と、前払いの精算で分配金が出ない残りの季数。
+  TvDeal tvDeal;
+  int tvHolidaySeasons;
 
   /// 分割払いで獲得した選手の残金支払い予定。
   List<Installment> pendingInstallments;
@@ -449,6 +458,10 @@ class SaveGame {
     this.lastSeasonRank,
     List<Team>? continentalTeams,
     this.sponsorDeal,
+    this.namingDeal,
+    List<SponsorDeal>? pendingNamingOffers,
+    this.tvDeal = TvDeal.fixed,
+    this.tvHolidaySeasons = 0,
     List<SponsorDeal>? pendingSponsorOffers,
     List<Installment>? pendingInstallments,
     List<Fixture>? friendlies,
@@ -523,6 +536,7 @@ class SaveGame {
         cups = cups ?? [],
         continentalTeams = continentalTeams ?? [],
         pendingSponsorOffers = pendingSponsorOffers ?? [],
+        pendingNamingOffers = pendingNamingOffers ?? [],
         pendingInstallments = pendingInstallments ?? [],
         friendlies = friendlies ?? [],
         incomingOffers = incomingOffers ?? [],
@@ -638,6 +652,10 @@ class SaveGame {
         'lastSeasonRank': lastSeasonRank,
         'continentalTeams': continentalTeams.map((t) => t.toJson()).toList(),
         'sponsorDeal': sponsorDeal?.toJson(),
+        'namingDeal': namingDeal?.toJson(),
+        'pendingNamingOffers': pendingNamingOffers.map((s) => s.toJson()).toList(),
+        'tvDeal': tvDeal.name,
+        'tvHolidaySeasons': tvHolidaySeasons,
         'pendingSponsorOffers':
             pendingSponsorOffers.map((s) => s.toJson()).toList(),
         'pendingInstallments':
@@ -803,6 +821,18 @@ class SaveGame {
                 ?.map((e) => Team.fromJson(e as Map<String, dynamic>))
                 .toList() ??
             [],
+        namingDeal: json['namingDeal'] == null
+            ? null
+            : SponsorDeal.fromJson(json['namingDeal'] as Map<String, dynamic>),
+        pendingNamingOffers: (json['pendingNamingOffers'] as List?)
+                ?.map((e) => SponsorDeal.fromJson(e as Map<String, dynamic>))
+                .toList() ??
+            [],
+        tvDeal: TvDeal.values
+                .where((d) => d.name == json['tvDeal'])
+                .firstOrNull ??
+            TvDeal.fixed,
+        tvHolidaySeasons: json['tvHolidaySeasons'] as int? ?? 0,
         sponsorDeal: json['sponsorDeal'] == null
             ? null
             : SponsorDeal.fromJson(json['sponsorDeal'] as Map<String, dynamic>),

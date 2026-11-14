@@ -703,6 +703,7 @@ extension GameStateSeason on GameState {
     );
     prizeMoney = (prizeMoney * pow(0.6, playedTier - 1)).round();
     _book(LedgerCategory.prize, prizeMoney);
+    _bookTvRights(finalRank: finalRank, teamCount: league.teams.length);
     final confidenceDelta = BoardEngine.confidenceDeltaForSeasonEnd(
       finalRank: finalRank,
       targetRank: _save!.boardTargetRank,
@@ -1017,6 +1018,7 @@ extension GameStateSeason on GameState {
     _refreshScoutCandidates();
     FreeAgentEngine.topUp(_save!.freeAgents);
 
+    _rollNamingRights();
     // スポンサー契約(年単位)はシーズン境界で1年分消化する。
     if (_save!.sponsorDeal != null) {
       _save!.sponsorDeal!.yearsRemaining -= 1;

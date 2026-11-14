@@ -495,9 +495,10 @@ extension GameStateFinance on GameState {
             commercialMultiplier)
         .round();
     // 2部リーグは1部より観客動員が少ない(userAttendanceFactorに反映済み)。
-    final sponsorIncome =
-        ((_save!.sponsorDeal?.weeklyIncome ?? 0) * commercialMultiplier)
-            .round();
+    final sponsorIncome = (((_save!.sponsorDeal?.weeklyIncome ?? 0) +
+                (_save!.namingDeal?.weeklyIncome ?? 0)) *
+            commercialMultiplier)
+        .round();
     // グッズ収入(マーチャンダイジング)。試合の有無に関わらず、監督の評価
     // (=クラブの知名度)が高いほど、商業施設が充実しているほど増える。
     // チケット・スポンサーだけに依存しない収入源として資金繰りを下支えする。
@@ -579,6 +580,87 @@ extension GameStateFinance on GameState {
           '${ruleSet.label} breach: ${penalty.reason}. ${parts.join(', ')}.'),
       context: Tr.pick('リーグの規則', 'League rules'),
     );
+  }
+
+  /// 命名権の候補から1つ結ぶ。
+  Future<bool> chooseNamingRights(int index) async {
+    final save = _save;
+    if (save == null || index < 0 || index >= save.pendingNamingOffers.length) {
+      return false;
+    }
+    save.namingDeal = save.pendingNamingOffers[index];
+    save.pendingNamingOffers = [];
+    _logNews(
+      Tr.pick('スタジアムの命名権を結びました: ${save.namingDeal!.name}(週${save.namingDeal!.weeklyIncome}万円・${save.namingDeal!.yearsRemaining}年)',
+          'Naming rights signed: ${save.namingDeal!.name} (${save.namingDeal!.weeklyIncome}/week, ${save.namingDeal!.yearsRemaining} yr)'),
+      context: Tr.pick('命名権', 'Naming rights'),
+    );
+    _notify();
+    await _persist();
+    return true;
+  }
+
+  /// 放映権の受け取り方を変える。開幕前だけ。
+  Future<bool> setTvDeal(TvDeal deal) async {
+    if (_save == null || !canChangeClubPolicy) return false;
+    _save!.tvDeal = deal;
+    _notify();
+    await _persist();
+    return true;
+  }
+
+  /// 放映権の前払いを受ける。以後の数季は分配金が出ない。
+  Future<bool> takeTvAdvance() async {
+    final save = _save;
+    if (save == null || save.tvHolidaySeasons > 0) return false;
+    final amount = MediaDealsEngine.advanceAmount(save.currentDivisionTier);
+    _book(LedgerCategory.prize, amount);
+    save.tvHolidaySeasons = MediaDealsEngine.advanceHolidaySeasons;
+    _logNews(
+      Tr.pick('放映権の前払い$amount万円を受け取りました。あと${save.tvHolidaySeasons}季は分配金が出ません',
+          'Took a TV advance of $amount. No TV money for ${save.tvHolidaySeasons} seasons'),
+      context: Tr.pick('放映権', 'TV rights'),
+    );
+    _notify();
+    await _persist();
+    return true;
+  }
+
+  /// シーズン末に放映権の分配金を受け取る(前払いの精算中は無い)。
+  void _bookTvRights({required int finalRank, required int teamCount}) {
+    final save = _save!;
+    if (save.tvHolidaySeasons > 0) {
+      save.tvHolidaySeasons -= 1;
+      return;
+    }
+    final pay = MediaDealsEngine.tvPayout(
+      deal: save.tvDeal,
+      tier: save.currentDivisionTier,
+      rank: finalRank,
+      teamCount: teamCount,
+    );
+    _book(LedgerCategory.prize, pay);
+    _logNews(
+      Tr.pick('放映権の分配金$pay万円(${save.tvDeal.label})が入りました',
+          'TV money of $pay (${save.tvDeal.label}) arrived'),
+      context: Tr.pick('放映権', 'TV rights'),
+    );
+  }
+
+  /// シーズン境界で命名権を1年消化し、無ければ候補を出す。
+  void _rollNamingRights() {
+    final save = _save!;
+    if (save.namingDeal != null) {
+      save.namingDeal!.yearsRemaining -= 1;
+      if (save.namingDeal!.yearsRemaining <= 0) save.namingDeal = null;
+    }
+    if (save.namingDeal == null && save.pendingNamingOffers.isEmpty) {
+      save.pendingNamingOffers = MediaDealsEngine.namingOffers(
+        stadiumLevel: save.infrastructure.facilityLevel(FacilityType.stadium),
+        tier: save.currentDivisionTier,
+        managerReputation: save.managerReputation,
+      );
+    }
   }
 
   /// オーナーの持分(%)。
