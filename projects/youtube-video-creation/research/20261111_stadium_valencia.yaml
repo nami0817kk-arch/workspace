@@ -1,0 +1,414 @@
+# スタジアム紹介シリーズ：バレンシアの本拠地（メスタージャ、11/11 予定）。雛形は 11/7 ベルナベウの回。
+# 題材の選び方（2026-11-06）：指示書 20261109 の「ラ・リーガの続き・大きいクラブから」。11/9 のサン・マメスの次に大きいクラブ（セビージャより先に、今季が最後のシーズンという時期の強さでバレンシア）。
+#   重なりの確認：scripts/*stadium_* にメスタージャ・バレンシアは無し。covered.yaml・posted.json にも stadium_valencia は無い。
+#   直近30日（10/12〜11/11）のバレンシアの本：無し（佐藤龍之介のニュース 20261007_sato_valencia は 10/7 で30日の外。クラブ紹介 ll19 は 9/26）。
+#   ll19（9/26）は「1923年から続いて今季で終わる」「新しい器の工事が16年止まった」を1節で触れている。この回は器そのもの（名前・歩み・新旧の違い・席の数）を掘る。言い回しは ll19 と変えた。
+#   picks（research/20261109_picks.txt）：同じ 11/11 のユニフォームはアトレティコ。重ならない。
+# 今季のラ・リーガ所属（一次情報）：ESPN の esp.1 2026-27 の日程（teams/94/schedule?season=2026）にホーム6試合、会場は Mestalla Stadium。
+# メスタージャ（ウィキペディア es・en）：1923-05-20 開場、レバンテとの親善試合1対0、収容1万7000。名前は用水路（acequia de Mestalla）から。1927年に初めて芝、約2万5000に。
+#   内戦（1936〜39）でメインスタンドの骨組みしか残らず（es）。1950年代の大改修で4万5500（es。en は6万と書くので数字は言わず「大改修」まで…台本では es の 4万5500 を使わず「大きく広げた」）。
+#   資金集めはレアル・マドリードの会長サンティアゴ・ベルナベウの助けで（es「conseguido gracias a la ayuda de Santiago Bernabéu」）。
+#   1957-10-14 トゥリア川の大洪水で浸水（es・en）。1959年に照明。1969-08-23〜1994-11-06 は「ルイス・カサノバ」の名（本人の手紙で元の名に）。
+#   1982年W杯：スペインの1次リーグ3試合（es）。1992年五輪：スペインの準決勝までの試合（en・es）。スペインは金メダル。
+#   収容4万9430（es・en）。ラ・リーガでいちばん古い本拠地（en「Since January 2020」）。
+#   客席の傾き：「急なところで45度、新しい器は約36度」（Levante-EMV 2026-10-01、クラブの説明会）。ウィキペディアは「34〜35度」で割れるので、台本は Levante の数字を「報道」で。
+# 新しい器（ウィキペディア es・en、Las Provincias 2026-07-18、Levante-EMV 2026-10-01・11-06）：
+#   2007-08-01 着工／2009年2月 お金が足りず中断（古い器の土地を売って建てる計画が不動産の値下がりで崩れた。es）／2011年12月 銀行と合意→2012年9月 崩れる（es）。
+#   2014年 ピーター・リムのメリトンが株を買い、創立100年（2019）までの完成を約束→できず（es）。
+#   2025-01-10 再開（es・en）。止まっていたのは2009年2月〜2025年1月＝15年11か月（自分で数えた）。
+#   収容7万44、全部の席に屋根（es）。屋根を支える骨組み4800トン、張り出し70メートル、いちばん上の輪3万1000人＝1部の10のスタジアムより多い、芝は道路から9.2メートル下（Levante 10-01）。
+#   期限 2027-07-11（市から与えられた30か月。Las Provincias 07-18）。開く試合は8月の親善大会トロフェオ・ナランハの案（同、報道）。
+# 見立て：
+#   今季の年間席の持ち主（abonados）4万76人、新しい器で約5万人が目標、席選びの組に入ったのは11月6日までに4万9232人・1万3684組（Levante-EMV 2026-11-06、クラブの数字）。
+#   7万44−5万＝2万44（自分で計算。残りは来賓・企業の席と、入場券に回す＝Levante）。
+#   今季メスタージャの入場（ESPN の試合記録。記録が0の2試合＝9/6 バルセロナ・10/24 ビジャレアルは使わない）：8/22 セルタ4万3684・8/25 ベティス4万5472・9/20 レアル・ソシエダ4万5122・10/17 アスレティック4万3223。合計17万7501・平均4万4375。
+#   4万4375 ÷ 4万9430 ＝ 89.8％。7万44 ÷ 4万4375 ＝ 1.58倍（自分で計算）。
+# 日本との接点（サッカーの縁）：8/22 セルタ戦で佐藤龍之介が先発（ESPN の先発表 event=401882907）。8/25 ベティス戦も先発。
+# 言わなかったもの：2008年の工事の事故／内戦中の使われ方（収容所）の詳しい中身／1998〜2001年の増築の裁判／2030年W杯の会場の話（割れている）／費用の総額（出どころで割れる）。
+# 写真：assets/images/20261111_stadium_valencia/（credits.json）。Commons（CC0・CC BY・CC BY-SA・PD）。
+date: 2026年11月6日
+slot: other_1
+format: news
+series: スタジアム紹介
+voice_min: 0
+people: []
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  id: stadium_valencia
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: バレンシア
+  title: バレンシアのメスタージャ、103年使った本拠地が今季で最後になるのはなぜ？
+  question: 1923年から使ってきたメスタージャは、なぜ今季で最後になり、次の器は何が違うのか
+  lead: 103年使った本拠地と、今季でお別れ。
+  hook: ''
+  opening_image: assets/images/20261111_stadium_valencia/01_w.jpg
+  end_bg: assets/images/20261111_stadium_valencia/03_w.jpg
+  takeaway: メスタージャは1923年から使ってきたラ・リーガでいちばん古い本拠地で、今季が最後。2007年に始めた新しい器の工事は2009年2月に止まり、再開は2025年1月で、15年11か月止まっていた。新しい器は7万44席で今より2万614席多いが、年間席は約5万が目標で、今季の入場の平均（記録が残る4試合）は4万4375人。7万席を埋めるには、今の1.58倍が要る
+  short_title: メスタージャ、103年使った器の最後の季節
+thumbnail:
+  layout: scene
+  bold: false
+  callouts:
+  - 新しい器は7万44席
+  - 工事は15年11か月停止
+  photo: assets/images/20261111_stadium_valencia/01_w.jpg
+  line1: バレンシアのメスタージャ
+  line2: 103年使って今季で最後
+  tags:
+  - バレンシア
+  - ラ・リーガ
+  - スタジアム紹介
+sections:
+- id: data
+  main: true
+  heading: メスタージャは、なぜ今季で最後のシーズンなのか
+  bg: assets/images/20261111_stadium_valencia/01_w.jpg
+  tier: 報道
+  telop: 1923年から使ってきた器は今季で最後。2027年の夏に、7万44席の新しい器へ
+  narrator: 解説
+  card:
+    type: table
+    title: メスタージャの基礎DATA
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 持ち主
+      - バレンシア
+    - - 開場
+      - 1923年5月
+    - - 収容
+      - 4万9430人
+    - - 名前
+      - そばの用水路から
+    - - 古さ
+      - ラ・リーガでいちばん古い本拠地
+    - - 次の本拠地
+      - 2027年夏の予定、7万44席
+  say:
+  - text: バレンシアの本拠地、メスタージャの話です。
+    short_only: true
+    image: assets/images/20261111_stadium_valencia/01_w.jpg
+    card: none
+  - text: 1923年から使ってきたこの器は、今季が最後のシーズンです。
+    emph: true
+    image: assets/images/20261111_stadium_valencia/01_w.jpg
+    card: none
+  - text: 来季からは、街の北西に建つ新しいスタジアムへ移ります。
+    image: assets/images/20261111_stadium_valencia/07_w.jpg
+    card: none
+  - text: 新しい器は、7万44席。いまの4万9430席より、2万席あまり多くなります。
+    image: assets/images/20261111_stadium_valencia/07_w.jpg
+    card:
+      type: stats
+      title: 古い器と新しい器
+      items:
+      - - '49430'
+        - 席
+        - メスタージャ
+      - - '70044'
+        - 席
+        - 新しい器
+      - - '20614'
+        - 席
+        - 増える席
+      focus: 1
+  - text: いまのメスタージャは、ラ・リーガでいちばん古い本拠地です。
+    image: assets/images/20261111_stadium_valencia/03_w.jpg
+    card:
+      type: table
+      title: メスタージャの基礎DATA
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 持ち主
+        - バレンシア
+      - - 開場
+        - 1923年5月
+      - - 収容
+        - 4万9430人
+      - - 名前
+        - そばの用水路から
+      - - 古さ
+        - ラ・リーガでいちばん古い本拠地
+      - - 次の本拠地
+        - 2027年夏の予定、7万44席
+      highlight_row: 4
+  - text: 今季の開幕戦、8月22日のセルタ戦では、佐藤龍之介がこのピッチで先発しました。
+    image: assets/images/20261111_stadium_valencia/03_w.jpg
+    card: none
+  sources:
+  - https://es.wikipedia.org/wiki/Estadio_de_Mestalla
+  - https://es.wikipedia.org/wiki/Nuevo_Mestalla
+  - https://www.levante-emv.com/deportes/2026/11/06/nou-mestalla-albergara-53-418-136159733.html
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/summary?event=401882907
+- id: history
+  heading: メスタージャは、103年のあいだに何をくぐり抜けてきたのか
+  bg: assets/images/20261111_stadium_valencia/05_w.jpg
+  tier: 背景
+  telop: 1923年に1万7000人で開場。内戦・大洪水・名前の変更を経て、いまの器に
+  narrator: 解説
+  card: &id_hist
+    type: timeline
+    title: メスタージャの歩み
+    rows:
+    - - 1923年5月
+      - 開場、1万7000人
+    - - 1927年
+      - 初めて芝を植える
+    - - 1957年10月
+      - 川の大洪水で水につかる
+    - - 1969年
+      - 会長の名前に変わる
+    - - 1994年
+      - メスタージャの名に戻る
+    focus: 1923年5月
+    highlight_row: 0
+  say:
+  - text: 開いたのは1923年5月。入れるのは1万7000人でした。
+    image: assets/images/20261111_stadium_valencia/05_w.jpg
+    card:
+      <<: *id_hist
+      highlight_row: 0
+  - text: 名前は、すぐそばを流れていた用水路、メスタージャ用水から付きました。
+    emph: true
+    image: assets/images/20261111_stadium_valencia/05_w.jpg
+    card: none
+  - text: 最初は土のグラウンド。芝を植えたのは、4年後の1927年です。
+    image: assets/images/20261111_stadium_valencia/05_w.jpg
+    card:
+      <<: *id_hist
+      highlight_row: 1
+  - text: 1936年からの内戦で傷み、残ったのはメインスタンドの骨組みだけでした。
+    image: assets/images/20261111_stadium_valencia/05_w.jpg
+    card: none
+  - text: 1950年代には、スタンドを足して、器を大きく広げます。
+    image: assets/images/20261111_stadium_valencia/03_w.jpg
+    card: none
+  - text: お金を集めるのに、レアル・マドリードの会長ベルナベウも力を貸しました。
+    image: assets/images/20261111_stadium_valencia/03_w.jpg
+    card: none
+  - text: 1957年10月には、街を流れるトゥリア川があふれ、器ごと水につかります。
+    image: assets/images/20261111_stadium_valencia/03_w.jpg
+    card:
+      <<: *id_hist
+      highlight_row: 2
+  - text: 1969年からは、長く会長を務めたルイス・カサノバの名前で呼ばれました。
+    image: assets/images/20261111_stadium_valencia/04_w.jpg
+    card:
+      <<: *id_hist
+      highlight_row: 3
+  - text: 1994年、そのカサノバ本人が手紙で頼み、元のメスタージャに戻ります。
+    image: assets/images/20261111_stadium_valencia/04_w.jpg
+    card:
+      <<: *id_hist
+      highlight_row: 4
+  - text: 1982年のワールドカップでは、スペイン代表の1次リーグ3試合の舞台に。
+    image: assets/images/20261111_stadium_valencia/01_w.jpg
+    card: none
+  - text: 1992年のバルセロナ五輪でも、スペインは準決勝までここで戦い、金メダルへ。
+    image: assets/images/20261111_stadium_valencia/01_w.jpg
+    card: none
+  sources:
+  - https://es.wikipedia.org/wiki/Estadio_de_Mestalla
+  - https://en.wikipedia.org/wiki/Mestalla_Stadium
+- id: rebuild
+  heading: 新しい器の工事は、なぜ15年以上も止まったのか
+  bg: assets/images/20261111_stadium_valencia/04_w.jpg
+  tier: 背景
+  telop: 2007年に着工、2009年2月に中断。再開は2025年1月。止まっていたのは15年11か月
+  narrator: 解説
+  card: &id_reb
+    type: timeline
+    title: 新しい器の歩み
+    rows:
+    - - 2007年8月
+      - 工事が始まる
+    - - 2009年2月
+      - お金が足りず止まる
+    - - 2014年
+      - 新しいオーナーが完成を約束
+    - - 2025年1月
+      - 工事を再開
+    - - 2027年7月
+      - 完成の期限
+    focus: 2009年2月
+    highlight_row: 0
+  say:
+  - text: 新しい器の工事が始まったのは、2007年の8月でした。
+    image: assets/images/20261111_stadium_valencia/04_w.jpg
+    card:
+      <<: *id_reb
+      highlight_row: 0
+  - text: お金の当ては、古い器の土地を売ることでした。
+    image: assets/images/20261111_stadium_valencia/04_w.jpg
+    card: none
+  - text: ところが、スペインの土地の値段が大きく下がり、思った値で売れなくなります。
+    image: assets/images/20261111_stadium_valencia/04_w.jpg
+    card: none
+  - text: 2009年2月、工事は止まりました。
+    emph: true
+    image: assets/images/20261111_stadium_valencia/04_w.jpg
+    card:
+      <<: *id_reb
+      highlight_row: 1
+  - text: 2011年には銀行と手を結びますが、翌年に話は崩れます。
+    image: assets/images/20261111_stadium_valencia/07_w.jpg
+    card: none
+  - text: 2014年、シンガポールの実業家ピーター・リムが、クラブの株を買います。
+    image: assets/images/20261111_stadium_valencia/07_w.jpg
+    card:
+      <<: *id_reb
+      highlight_row: 2
+  - text: 創立100年の2019年までに、新しい器を仕上げると約束しました。
+    image: assets/images/20261111_stadium_valencia/07_w.jpg
+    card: none
+  - text: その約束も果たせず、重機が戻ったのは2025年1月10日。
+    image: assets/images/20261111_stadium_valencia/07_w.jpg
+    card:
+      <<: *id_reb
+      highlight_row: 3
+  - text: 止まっていたのは、15年と11か月です。
+    emph: true
+    image: assets/images/20261111_stadium_valencia/07_w.jpg
+    card: none
+  - text: 市から与えられた期限は、2027年7月11日です。
+    image: assets/images/20261111_stadium_valencia/04_w.jpg
+    card:
+      <<: *id_reb
+      highlight_row: 4
+  sources:
+  - https://es.wikipedia.org/wiki/Nuevo_Mestalla
+  - https://en.wikipedia.org/wiki/Nou_Mestalla
+  - https://www.lasprovincias.es/valenciacf/valencia-preve-inaugurar-nou-mestalla-trofeo-taronja-20260717012016-nt.html
+- id: events
+  heading: 新しい器は、メスタージャと何が違うのか
+  bg: assets/images/20261111_stadium_valencia/01_w.jpg
+  tier: 報道
+  telop: 客席の傾きは45度から約36度へ。7万44席すべてに屋根
+  narrator: 解説
+  card: &id_ev
+    type: table
+    title: 古い器と新しい器
+    columns:
+    - 項目
+    - メスタージャ
+    - 新しい器
+    rows:
+    - - 席
+      - 4万9430
+      - 7万44
+    - - 客席の傾き
+      - 急なところで45度
+      - 約36度
+    - - 開場
+      - 1923年
+      - 2027年の予定
+    highlight_row: 1
+  say:
+  - text: メスタージャの名物は、客席の急な傾きです。
+    image: assets/images/20261111_stadium_valencia/01_w.jpg
+    card: none
+  - text: 急なところで、45度。客席が、ピッチのすぐそばまで迫ります。
+    emph: true
+    image: assets/images/20261111_stadium_valencia/06_w.jpg
+    card:
+      <<: *id_ev
+      highlight_row: 1
+  - text: 新しい器の傾きは、約36度。10度近くゆるやかになります。
+    image: assets/images/20261111_stadium_valencia/03_w.jpg
+    card:
+      <<: *id_ev
+      highlight_row: 1
+  - text: しかも、すべての席に屋根がかかります。
+    image: assets/images/20261111_stadium_valencia/08_w.jpg
+    card:
+      <<: *id_ev
+      highlight_row: 0
+  - text: 屋根を支える骨組みは4800トン。70メートル、客席の上へ張り出します。
+    image: assets/images/20261111_stadium_valencia/08_w.jpg
+    card: none
+  - text: いちばん上の輪だけで、3万1000人。ラ・リーガの10のスタジアムより多い数です。
+    image: assets/images/20261111_stadium_valencia/08_w.jpg
+    card: none
+  - text: クラブは、8月の親善大会、トロフェオ・ナランハで新しい器を開く案を持っています。
+    image: assets/images/20261111_stadium_valencia/04_w.jpg
+    card: none
+  sources:
+  - https://www.levante-emv.com/deportes/2026/10/01/sera-nou-mestalla-diez-grados-134855650.html
+  - https://www.lasprovincias.es/valenciacf/valencia-preve-inaugurar-nou-mestalla-trofeo-taronja-20260717012016-nt.html
+  - https://es.wikipedia.org/wiki/Nuevo_Mestalla
+- id: view
+  viewpoint: true
+  heading: 見立て・新しい器の7万席は、埋まるのか
+  bg: assets/images/20261111_stadium_valencia/03_w.jpg
+  tier: 報道
+  telop: 今季の入場の平均は4万4375人。7万44席を埋めるには1.58倍が要る。年間席の目標は約5万
+  narrator: 解説
+  card: &id_view
+    type: table
+    title: 今季のメスタージャの入場（記録が残る4試合）
+    columns:
+    - 相手
+    - 入場
+    rows:
+    - - セルタ
+      - 4万3684人
+    - - ベティス
+      - 4万5472人
+    - - レアル・ソシエダ
+      - 4万5122人
+    - - アスレティック・ビルバオ
+      - 4万3223人
+    - - 平均
+      - 4万4375人
+    highlight_row: 4
+  say:
+  - text: では、7万席の器は埋まるのか。11月6日までの数字で確かめます。
+    emph: true
+    image: assets/images/20261111_stadium_valencia/03_w.jpg
+    card: none
+  - text: 今季のメスタージャの入場は、記録が残る4試合の平均で、4万4375人。
+    mark: {"kind": "circle", "row": 4}
+    image: assets/images/20261111_stadium_valencia/03_w.jpg
+    card:
+      <<: *id_view
+      highlight_row: 4
+  - text: 4万9430席の、89.8％が埋まっています。
+    image: assets/images/20261111_stadium_valencia/03_w.jpg
+    card: none
+  - text: 同じ人数のままだと、新しい器の7万44席を埋めるには、1.58倍の人が要ります。
+    image: assets/images/20261111_stadium_valencia/03_w.jpg
+    card:
+      type: calc
+      title: 新しい器を埋めるには、いまの何倍か（自分で割った）
+      terms:
+      - - 7万44席
+        - 新しい器
+      - - 4万4375人
+        - 今季の平均の入場
+      - - 1.58倍
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: 今季の年間席の持ち主は、4万76人。クラブは新しい器で、約5万人を目指しています。
+    image: assets/images/20261111_stadium_valencia/02_w.jpg
+    card: none
+  - text: 11月6日までに、新しい席を選ぶ組に入ったのは、4万9232人です。
+    emph: true
+    image: assets/images/20261111_stadium_valencia/02_w.jpg
+    card: none
+  - text: 年間席を5万としても、残りは2万あまり。来賓の席や入場券で埋める分です。
+    image: assets/images/20261111_stadium_valencia/02_w.jpg
+    card: none
+  - text: 急な客席で知られた103年の器から、7万席の器へ。毎試合、何人が集まるのか。
+    emph: true
+    image: assets/images/20261111_stadium_valencia/01_w.jpg
+    card: none
+  sources:
+  - https://www.levante-emv.com/deportes/2026/11/06/nou-mestalla-albergara-53-418-136159733.html
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/teams/94/schedule?season=2026（2026-27 ラ・リーガ、バレンシアのホーム）

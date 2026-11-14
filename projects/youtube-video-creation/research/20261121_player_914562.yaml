@@ -1,0 +1,1156 @@
+# デジレ・ドゥエ（パリ・サンジェルマン／フランス代表）の紹介。選手紹介の型（2026-11-21 公開分、シリーズ「有名選手の紹介」。key: player_914562）。情報の時点は 2026-11-12（クラブの試合は 11/7 のリーグ・アン第10節まで）。
+# **FotMob は使わない。**数字は Transfermarkt API の試合記録（控え research/raw/20261112_doue_*.json）、英語版 Wikipedia、CL決勝の報道（channelstv・parisfans・UEFA）。
+# **選んだ理由（2026-11-12）**：player_pool.py list の上位は10月に紹介済み（scripts/*_intro.md）で、pool の外で市場価値の上位（TM 1億2000万）・21歳のドゥエを選んだ。ほかの候補は、デンベレ（10/26 から負傷で欠場中）、パーマー（11/19 に使う）、サリバ（11/19 の比べるで使う）、エンソ・フェルナンデス・フェルミン。
+#   重なり：scripts/ を「ドゥエ」で grep → 10/15 のCLの回などに名前が出るだけで紹介は0件。research/2026111*_picks.txt にも無い。同じ日（11/21）の別シリーズでは使わない。
+# **現役・今季もリーグ・アン**：TM の試合記録で 2026-11-07（トロワ戦 1-0）まで90分出場。
+# **数字の軸**：TM の試合記録。クラブ通算：レンヌ 76試合8点7アシスト、PSG 116試合34点31アシスト（Wikipedia の 116/34 と一致）＝192試合42点。シーズン別（PSG・全公式戦）：24/25 61/16/16、25/26 41/13/11、26/27 14/5/4。今季の大会別：リーグ・アン 9/1/1（526分）、CL 3/3/2、そのほか（スーパーカップ・トロフェ・デ・シャンピオン）2/1/1。代表 19試合4点（TM と Wikipedia が一致）。W杯2026 は TM で8試合1点2アシスト。市場価値（TM）：2022-03 40万→2024-06 3000万→2025-06 9000万→2025-12 9000万→2026-06 1億2000万（÷40万＝300）。
+# **入れなかったもの**：信仰の発言（CL優勝後の本人の言葉）、本人の言葉の引用（一次の原文は確かめられず）、バイエルンの誘いの詳細。
+# **確かめられなかった**：移籍金5000万ユーロ（ボーナス別）は Wikipedia の記述。PK戦で決めた順番は報道で食い違う（「決めた」ことは複数の記事で一致）。2026年の優勝までの試合の細部は台本に出さない。25/26 秋のけがの中身は確かめられていない（台本は「けがで欠場」だけ）。W杯のフランスの4位は Wikipedia の記述。
+# **写真**：press 写真（parisfans のCL決勝の記事写真ほか。Getty 系の可能性があるので、透かしがないか目で見ること）。
+date: 2026年11月12日
+slot: other_1
+format: news
+series: 有名選手の紹介
+people:
+- デジレ・ドゥエ
+theme:
+  id: player_914562
+  league: france
+  league_name: リーグ・アン
+  kind: other
+  topic: パリ・サンジェルマン
+  title: ドゥエってどんな選手？ CL決勝で2点の19歳が、2度目の優勝をつかむまで
+  question: デジレ・ドゥエは、どんなウイングで、なぜ4年あまりで市場価値が300倍になったのか
+  takeaway: 市場価値は2022年3月の40万ユーロから2026年6月の1億2000万ユーロへ、およそ300倍。直近の半年で9000万から3000万上がった間にあったのは、CLの2連覇とW杯。今季のリーグ・アンは9試合で1点だが、CLは3試合で3点で、値段を支えているのは大きな試合での強さと見られる
+  nameplate: デジレ・ドゥエ｜パリ・サンジェルマン FW／フランス代表
+  opening_image: assets/images/20261121_player_914562/02_w.jpg
+  end_bg: assets/images/20261121_player_914562/02_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+watch: 毎日、数字でサッカーを読み解きます
+short_title: ドゥエってどんな選手？
+thumbnail:
+  line1: ドゥエ、通算192戦42点
+  line2: 市場価値は4年で300倍
+  tags:
+  - パリ・サンジェルマン
+  - フランス代表
+  photo: assets/images/20261121_player_914562/panel_01.jpg
+  photos: []
+sections:
+- id: hook
+  heading: CL決勝で2点の19歳は、どんなウイングなのか
+  tier: 報道
+  telop: 決勝で2点、値段は300倍
+  narrator: 解説
+  card:
+    type: stats
+    title: ドゥエの数字
+    items:
+    - - '300'
+      - 倍
+      - 市場価値。4年あまりで
+    - - '2'
+      - 点
+      - 2025年のCL決勝。10代で初めて
+    - - '2'
+      - 連覇
+      - CLの優勝。2025年と2026年
+    focus: 0
+  say:
+  - text: ドゥエは、パリ・サンジェルマンのウイング。フランス代表の、21歳です。
+    image: assets/images/20261121_player_914562/02_w.jpg
+    card:
+      type: stats
+      title: ドゥエの数字
+      items:
+      - - '300'
+        - 倍
+        - 市場価値。4年あまりで
+      - - '2'
+        - 点
+        - 2025年のCL決勝。10代で初めて
+      - - '2'
+        - 連覇
+        - CLの優勝。2025年と2026年
+      focus: 0
+  - text: 2025年5月、CL決勝。19歳で、2点を決めました。
+    card:
+      type: stats
+      title: ドゥエの数字
+      items:
+      - - '300'
+        - 倍
+        - 市場価値。4年あまりで
+      - - '2'
+        - 点
+        - 2025年のCL決勝。10代で初めて
+      - - '2'
+        - 連覇
+        - CLの優勝。2025年と2026年
+      focus: 1
+  - text: 決勝で2点を取った10代は、初めてでした。
+    card:
+      type: stats
+      title: ドゥエの数字
+      items:
+      - - '300'
+        - 倍
+        - 市場価値。4年あまりで
+      - - '2'
+        - 点
+        - 2025年のCL決勝。10代で初めて
+      - - '2'
+        - 連覇
+        - CLの優勝。2025年と2026年
+      focus: 1
+  - text: そして2026年も、CLの優勝。PK戦でも、決めています。
+    image: assets/images/20261121_player_914562/01_w.jpg
+    card:
+      type: stats
+      title: ドゥエの数字
+      items:
+      - - '300'
+        - 倍
+        - 市場価値。4年あまりで
+      - - '2'
+        - 点
+        - 2025年のCL決勝。10代で初めて
+      - - '2'
+        - 連覇
+        - CLの優勝。2025年と2026年
+      focus: 2
+  - text: 市場価値は、2022年3月、40万ユーロ。
+    card:
+      type: stats
+      title: ドゥエの数字
+      items:
+      - - '300'
+        - 倍
+        - 市場価値。4年あまりで
+      - - '2'
+        - 点
+        - 2025年のCL決勝。10代で初めて
+      - - '2'
+        - 連覇
+        - CLの優勝。2025年と2026年
+      focus: 0
+  - text: いまは1億2000万ユーロ。300倍にあたります。
+    card:
+      type: stats
+      title: ドゥエの数字
+      items:
+      - - '300'
+        - 倍
+        - 市場価値。4年あまりで
+      - - '2'
+        - 点
+        - 2025年のCL決勝。10代で初めて
+      - - '2'
+        - 連覇
+        - CLの優勝。2025年と2026年
+      focus: 0
+    emph: true
+  - text: どんな選手なのか。数字から追います。
+    card: none
+  sources:
+  - https://www.transfermarkt.com/desire-doue/profil/spieler/914562
+  - https://en.wikipedia.org/wiki/D%C3%A9sir%C3%A9_Dou%C3%A9
+  quotes_from: []
+- id: data
+  heading: ドゥエは、いまどこで、いくらと見られている選手か
+  tier: 報道
+  telop: ドゥエの基礎DATA
+  narrator: 解説
+  card:
+    type: table
+    title: デジレ・ドゥエ（パリ・サンジェルマン）
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 所属
+      - パリ・サンジェルマン
+    - - ポジション
+      - 右ウイング
+    - - 生年月日
+      - 2005年6月3日（21歳）
+    - - 出身
+      - フランス（アンジェ）
+    - - 身長・利き足
+      - 181cm・右利き
+    - - 契約・市場価値
+      - 2029年6月まで・1億2000万ユーロ
+    highlight_row: 0
+  say:
+  - text: デジレ・ドゥエは、パリ・サンジェルマンのウイング。主に、右サイドを任されます。
+    image: assets/images/20261121_player_914562/01_w.jpg
+    card:
+      type: table
+      title: デジレ・ドゥエ（パリ・サンジェルマン）
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 所属
+        - パリ・サンジェルマン
+      - - ポジション
+        - 右ウイング
+      - - 生年月日
+        - 2005年6月3日（21歳）
+      - - 出身
+        - フランス（アンジェ）
+      - - 身長・利き足
+        - 181cm・右利き
+      - - 契約・市場価値
+        - 2029年6月まで・1億2000万ユーロ
+      highlight_row: 0
+  - text: 2005年6月生まれの、21歳。出身は、フランスのアンジェ。
+    card:
+      type: table
+      title: デジレ・ドゥエ（パリ・サンジェルマン）
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 所属
+        - パリ・サンジェルマン
+      - - ポジション
+        - 右ウイング
+      - - 生年月日
+        - 2005年6月3日（21歳）
+      - - 出身
+        - フランス（アンジェ）
+      - - 身長・利き足
+        - 181cm・右利き
+      - - 契約・市場価値
+        - 2029年6月まで・1億2000万ユーロ
+      highlight_row: 2
+  - text: 身長は181センチ、右利きです。
+    card:
+      type: table
+      title: デジレ・ドゥエ（パリ・サンジェルマン）
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 所属
+        - パリ・サンジェルマン
+      - - ポジション
+        - 右ウイング
+      - - 生年月日
+        - 2005年6月3日（21歳）
+      - - 出身
+        - フランス（アンジェ）
+      - - 身長・利き足
+        - 181cm・右利き
+      - - 契約・市場価値
+        - 2029年6月まで・1億2000万ユーロ
+      highlight_row: 4
+  - text: 契約は、2029年6月まで。
+    card:
+      type: table
+      title: デジレ・ドゥエ（パリ・サンジェルマン）
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 所属
+        - パリ・サンジェルマン
+      - - ポジション
+        - 右ウイング
+      - - 生年月日
+        - 2005年6月3日（21歳）
+      - - 出身
+        - フランス（アンジェ）
+      - - 身長・利き足
+        - 181cm・右利き
+      - - 契約・市場価値
+        - 2029年6月まで・1億2000万ユーロ
+      highlight_row: 5
+  - text: 市場価値は、いま1億2000万ユーロ。半年前は、9000万ユーロ。
+    card:
+      type: table
+      title: デジレ・ドゥエ（パリ・サンジェルマン）
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 所属
+        - パリ・サンジェルマン
+      - - ポジション
+        - 右ウイング
+      - - 生年月日
+        - 2005年6月3日（21歳）
+      - - 出身
+        - フランス（アンジェ）
+      - - 身長・利き足
+        - 181cm・右利き
+      - - 契約・市場価値
+        - 2029年6月まで・1億2000万ユーロ
+      highlight_row: 5
+    emph: true
+  sources:
+  - https://www.transfermarkt.com/desire-doue/profil/spieler/914562
+  - https://en.wikipedia.org/wiki/D%C3%A9sir%C3%A9_Dou%C3%A9
+  quotes_from: []
+- id: origin
+  heading: ドゥエは、アンジェの少年から、どうやって世界に見つかったのか
+  tier: 背景
+  telop: アンジェの少年時代
+  narrator: 解説
+  card:
+    type: table
+    title: ドゥエ 若いころの歩み
+    columns:
+    - 年
+    - 出来事
+    rows:
+    - - '2011'
+      - レンヌの下部組織へ（5歳）
+    - - 2022年8月
+      - トップチームでデビュー（17歳）
+    - - 2022年10月
+      - ヨーロッパリーグで初ゴール
+    - - '2022'
+      - 17歳以下の欧州選手権で優勝
+    highlight_row: 1
+  say:
+  - text: ドゥエは、2005年、フランス西部のアンジェで生まれました。
+    image: assets/images/20261121_player_914562/01_w.jpg
+    card: none
+  - text: 父はコートジボワール、母はフランスの出身です。
+    card: none
+  - text: 2011年、5歳で、レンヌの下部組織に入ります。
+    card: none
+  - text: 弟のゲラ・ドゥエも、プロのサッカー選手です。
+    card: none
+  - text: いとこにも、プロ選手が何人もいる、サッカー一家です。
+    card: none
+  - text: 憧れは、ネイマールと、メッシ。
+    card: none
+  - text: 2022年8月、17歳で、リーグ・アンにデビュー。
+    image: assets/images/20261121_player_914562/01_w.jpg
+    card:
+      type: table
+      title: ドゥエ 若いころの歩み
+      columns:
+      - 年
+      - 出来事
+      rows:
+      - - '2011'
+        - レンヌの下部組織へ（5歳）
+      - - 2022年8月
+        - トップチームでデビュー（17歳）
+      - - 2022年10月
+        - ヨーロッパリーグで初ゴール
+      - - '2022'
+        - 17歳以下の欧州選手権で優勝
+      highlight_row: 1
+  - text: 8月31日には、初ゴール。
+    card: none
+  - text: 2005年生まれで、5大リーグで点を取ったのは、彼が初めてでした。
+    card: none
+    emph: true
+  - text: 10月6日、ヨーロッパリーグで、決勝点。
+    card:
+      type: table
+      title: ドゥエ 若いころの歩み
+      columns:
+      - 年
+      - 出来事
+      rows:
+      - - '2011'
+        - レンヌの下部組織へ（5歳）
+      - - 2022年8月
+        - トップチームでデビュー（17歳）
+      - - 2022年10月
+        - ヨーロッパリーグで初ゴール
+      - - '2022'
+        - 17歳以下の欧州選手権で優勝
+      highlight_row: 2
+  - text: 17歳4か月。ヨーロッパのクラブ大会で、フランス人最年少の得点でした。
+    card: none
+  - text: 同じ2022年、17歳以下の欧州選手権でも、優勝しています。
+    card:
+      type: table
+      title: ドゥエ 若いころの歩み
+      columns:
+      - 年
+      - 出来事
+      rows:
+      - - '2011'
+        - レンヌの下部組織へ（5歳）
+      - - 2022年8月
+        - トップチームでデビュー（17歳）
+      - - 2022年10月
+        - ヨーロッパリーグで初ゴール
+      - - '2022'
+        - 17歳以下の欧州選手権で優勝
+      highlight_row: 3
+  sources:
+  - https://en.wikipedia.org/wiki/D%C3%A9sir%C3%A9_Dou%C3%A9
+  quotes_from: []
+- id: career
+  heading: ドゥエの値段は、パリ・サンジェルマンに移って、どこで跳ねたのか
+  tier: 報道
+  telop: 移籍で跳ねた値段
+  narrator: 解説
+  card:
+    type: table
+    title: ドゥエの市場価値
+    columns:
+    - 時期
+    - 市場価値
+    rows:
+    - - 2022年3月（レンヌ）
+      - 40万ユーロ
+    - - 2024年6月（レンヌ）
+      - 3000万ユーロ
+    - - 2025年6月（パリ・サンジェルマン）
+      - 9000万ユーロ
+    - - 2026年6月（パリ・サンジェルマン）
+      - 1億2000万ユーロ
+    highlight_row: 0
+  say:
+  - text: 2024年8月17日、ドゥエは、パリ・サンジェルマンへ。
+    image: assets/images/20261121_player_914562/01_w.jpg
+    card: none
+  - text: 移籍金は5000万ユーロ。契約は、2029年6月まで。
+    card: none
+  - text: 市場価値3000万ユーロの、1.6倍を超える額です。
+    card: none
+  - text: バイエルンからも、誘いがありましたが、断りました。
+    card: none
+  - text: 市場価値は、2022年3月、16歳のとき、40万ユーロでした。
+    card:
+      type: table
+      title: ドゥエの市場価値
+      columns:
+      - 時期
+      - 市場価値
+      rows:
+      - - 2022年3月（レンヌ）
+        - 40万ユーロ
+      - - 2024年6月（レンヌ）
+        - 3000万ユーロ
+      - - 2025年6月（パリ・サンジェルマン）
+        - 9000万ユーロ
+      - - 2026年6月（パリ・サンジェルマン）
+        - 1億2000万ユーロ
+      highlight_row: 0
+  - text: 2024年6月、レンヌ最後の時点で、3000万ユーロ。
+    card:
+      type: table
+      title: ドゥエの市場価値
+      columns:
+      - 時期
+      - 市場価値
+      rows:
+      - - 2022年3月（レンヌ）
+        - 40万ユーロ
+      - - 2024年6月（レンヌ）
+        - 3000万ユーロ
+      - - 2025年6月（パリ・サンジェルマン）
+        - 9000万ユーロ
+      - - 2026年6月（パリ・サンジェルマン）
+        - 1億2000万ユーロ
+      highlight_row: 1
+  - text: 移籍の翌年、2025年6月には、9000万ユーロ。
+    card:
+      type: table
+      title: ドゥエの市場価値
+      columns:
+      - 時期
+      - 市場価値
+      rows:
+      - - 2022年3月（レンヌ）
+        - 40万ユーロ
+      - - 2024年6月（レンヌ）
+        - 3000万ユーロ
+      - - 2025年6月（パリ・サンジェルマン）
+        - 9000万ユーロ
+      - - 2026年6月（パリ・サンジェルマン）
+        - 1億2000万ユーロ
+      highlight_row: 2
+  - text: 2026年6月に、いまの値段に届きました。
+    card:
+      type: table
+      title: ドゥエの市場価値
+      columns:
+      - 時期
+      - 市場価値
+      rows:
+      - - 2022年3月（レンヌ）
+        - 40万ユーロ
+      - - 2024年6月（レンヌ）
+        - 3000万ユーロ
+      - - 2025年6月（パリ・サンジェルマン）
+        - 9000万ユーロ
+      - - 2026年6月（パリ・サンジェルマン）
+        - 1億2000万ユーロ
+      highlight_row: 3
+    emph: true
+  sources:
+  - https://www.transfermarkt.com/desire-doue/profil/spieler/914562
+  - https://en.wikipedia.org/wiki/D%C3%A9sir%C3%A9_Dou%C3%A9
+  quotes_from: []
+- id: style
+  heading: ドゥエは、パリ・サンジェルマンで、どんな試合を決めてきたのか
+  tier: 報道
+  telop: パリ・サンジェルマンでの数字
+  narrator: 解説
+  card:
+    type: table
+    title: ドゥエ パリ・サンジェルマンでの全公式戦
+    columns:
+    - シーズン
+    - 試合
+    - 得点
+    - アシスト
+    rows:
+    - - 24/25
+      - '61'
+      - '16'
+      - '16'
+    - - 25/26
+      - '41'
+      - '13'
+      - '11'
+    - - 26/27（11月7日まで）
+      - '14'
+      - '5'
+      - '4'
+    highlight_row: 0
+  say:
+  - text: パリ・サンジェルマンでの、ドゥエの数字です。
+    image: assets/images/20261121_player_914562/02_w.jpg
+    card:
+      type: table
+      title: ドゥエ パリ・サンジェルマンでの全公式戦
+      columns:
+      - シーズン
+      - 試合
+      - 得点
+      - アシスト
+      rows:
+      - - 24/25
+        - '61'
+        - '16'
+        - '16'
+      - - 25/26
+        - '41'
+        - '13'
+        - '11'
+      - - 26/27（11月7日まで）
+        - '14'
+        - '5'
+        - '4'
+      highlight_row: 0
+  - text: 移籍1年目、24/25は、61試合で16点、16アシスト。
+    card:
+      type: table
+      title: ドゥエ パリ・サンジェルマンでの全公式戦
+      columns:
+      - シーズン
+      - 試合
+      - 得点
+      - アシスト
+      rows:
+      - - 24/25
+        - '61'
+        - '16'
+        - '16'
+      - - 25/26
+        - '41'
+        - '13'
+        - '11'
+      - - 26/27（11月7日まで）
+        - '14'
+        - '5'
+        - '4'
+      highlight_row: 0
+  - text: レンヌ最後の年の、4倍にあたる点の数です。
+    card:
+      type: table
+      title: ドゥエ パリ・サンジェルマンでの全公式戦
+      columns:
+      - シーズン
+      - 試合
+      - 得点
+      - アシスト
+      rows:
+      - - 24/25
+        - '61'
+        - '16'
+        - '16'
+      - - 25/26
+        - '41'
+        - '13'
+        - '11'
+      - - 26/27（11月7日まで）
+        - '14'
+        - '5'
+        - '4'
+      highlight_row: 0
+  - text: 2025年5月31日、CL決勝。相手は、インテル。
+    image: assets/images/20261121_player_914562/01_w.jpg
+    card: none
+  - text: ドゥエは、66分のプレーで、2得点1アシスト。5対0の大勝でした。
+    card: none
+    emph: true
+    callword: 決勝2点
+  - text: 19歳と362日での、2得点でした。
+    card: none
+  - text: このシーズン、パリは、リーグ、国内カップ、CLの3つを取りました。
+    card: none
+  - text: 2025年のゴールデンボーイにも、選ばれています。
+    card: none
+  - text: 21歳以下で、ヨーロッパ最高の選手に贈られる賞です。
+    card: none
+  - text: 25/26は、41試合で13点、11アシスト。
+    card:
+      type: table
+      title: ドゥエ パリ・サンジェルマンでの全公式戦
+      columns:
+      - シーズン
+      - 試合
+      - 得点
+      - アシスト
+      rows:
+      - - 24/25
+        - '61'
+        - '16'
+        - '16'
+      - - 25/26
+        - '41'
+        - '13'
+        - '11'
+      - - 26/27（11月7日まで）
+        - '14'
+        - '5'
+        - '4'
+      highlight_row: 1
+  - text: 試合は20本少ないのに、点は3つ違いです。
+    card:
+      type: table
+      title: ドゥエ パリ・サンジェルマンでの全公式戦
+      columns:
+      - シーズン
+      - 試合
+      - 得点
+      - アシスト
+      rows:
+      - - 24/25
+        - '61'
+        - '16'
+        - '16'
+      - - 25/26
+        - '41'
+        - '13'
+        - '11'
+      - - 26/27（11月7日まで）
+        - '14'
+        - '5'
+        - '4'
+      highlight_row: 1
+  - text: 秋には、けがで、CLの4試合を欠場しました。
+    card: none
+  - text: 2026年5月30日、CL決勝。アーセナル相手に、120分間、出続けました。
+    image: assets/images/20261121_player_914562/02_w.jpg
+    card: none
+  - text: 1対1のまま、PK戦へ。ドゥエも決めて、2年連続の優勝です。
+    card: none
+    emph: true
+  - text: 2026年8月には、ヨーロッパのスーパーカップで、決勝ゴール。
+    card: none
+  sources:
+  - https://www.transfermarkt.com/desire-doue/profil/spieler/914562
+  - https://en.wikipedia.org/wiki/D%C3%A9sir%C3%A9_Dou%C3%A9
+  - https://www.channelstv.com/2026/05/30/psg-beat-arsenal-on-penalties-to-win-champions-league-title/
+  - https://en.parisfans.fr/psg-vs-arsenal-doue-full-of-emotion-and-ambition.html
+  quotes_from: []
+- id: national
+  heading: ドゥエは、フランス代表で、何をしてきたのか
+  tier: 報道
+  telop: フランス代表のドゥエ
+  narrator: 解説
+  card:
+    type: table
+    title: ドゥエとフランス代表
+    columns:
+    - 時期
+    - 出来事
+    rows:
+    - - 2022年
+      - 17歳以下の欧州選手権で優勝
+    - - 2024年
+      - パリ五輪で銀メダル
+    - - 2025年3月
+      - A代表デビュー
+    - - 2026年6月
+      - W杯で4位
+    highlight_row: 1
+  say:
+  - text: 代表の話です。ドゥエは、フランス代表。
+    image: assets/images/20261121_player_914562/01_w.jpg
+    card: none
+  - text: 2024年3月、五輪代表のデビュー戦で、2得点。
+    card: none
+  - text: その夏の、パリ五輪では、銀メダルでした。
+    card:
+      type: table
+      title: ドゥエとフランス代表
+      columns:
+      - 時期
+      - 出来事
+      rows:
+      - - 2022年
+        - 17歳以下の欧州選手権で優勝
+      - - 2024年
+        - パリ五輪で銀メダル
+      - - 2025年3月
+        - A代表デビュー
+      - - 2026年6月
+        - W杯で4位
+      highlight_row: 1
+  - text: 2025年3月、A代表に初招集。
+    card: none
+  - text: ネーションズリーグ準々決勝の、クロアチア戦で、デビューしました。
+    card:
+      type: table
+      title: ドゥエとフランス代表
+      columns:
+      - 時期
+      - 出来事
+      rows:
+      - - 2022年
+        - 17歳以下の欧州選手権で優勝
+      - - 2024年
+        - パリ五輪で銀メダル
+      - - 2025年3月
+        - A代表デビュー
+      - - 2026年6月
+        - W杯で4位
+      highlight_row: 2
+  - text: 2026年3月のコロンビア戦では、1試合で2得点。
+    card: none
+  - text: 2026年のW杯は、8試合に出て、1点、2アシスト。
+    card:
+      type: table
+      title: ドゥエとフランス代表
+      columns:
+      - 時期
+      - 出来事
+      rows:
+      - - 2022年
+        - 17歳以下の欧州選手権で優勝
+      - - 2024年
+        - パリ五輪で銀メダル
+      - - 2025年3月
+        - A代表デビュー
+      - - 2026年6月
+        - W杯で4位
+      highlight_row: 3
+    emph: true
+  - text: フランスは、4位でした。
+    card:
+      type: table
+      title: ドゥエとフランス代表
+      columns:
+      - 時期
+      - 出来事
+      rows:
+      - - 2022年
+        - 17歳以下の欧州選手権で優勝
+      - - 2024年
+        - パリ五輪で銀メダル
+      - - 2025年3月
+        - A代表デビュー
+      - - 2026年6月
+        - W杯で4位
+      highlight_row: 3
+  - text: 代表通算は、19試合で4点です。
+    card: none
+  sources:
+  - https://www.transfermarkt.com/desire-doue/profil/spieler/914562
+  - https://en.wikipedia.org/wiki/D%C3%A9sir%C3%A9_Dou%C3%A9
+  quotes_from: []
+- id: season
+  heading: ドゥエの今季は、ここまでどう進んでいるのか
+  tier: 報道
+  telop: 今季ここまで
+  narrator: 解説
+  card:
+    type: table
+    title: ドゥエ 今季の数字（11月7日まで）
+    columns:
+    - 大会
+    - 試合
+    - 得点
+    - アシスト
+    rows:
+    - - リーグ・アン
+      - '9'
+      - '1'
+      - '1'
+    - - CL
+      - '3'
+      - '3'
+      - '2'
+    - - そのほか
+      - '2'
+      - '1'
+      - '1'
+    - - 合計
+      - '14'
+      - '5'
+      - '4'
+    highlight_row: 3
+  say:
+  - text: 11月12日の時点での、ドゥエの今季です。
+    image: assets/images/20261121_player_914562/02_w.jpg
+    card: none
+  - text: ここまで、14試合で5点、4アシスト。
+    card:
+      type: table
+      title: ドゥエ 今季の数字（11月7日まで）
+      columns:
+      - 大会
+      - 試合
+      - 得点
+      - アシスト
+      rows:
+      - - リーグ・アン
+        - '9'
+        - '1'
+        - '1'
+      - - CL
+        - '3'
+        - '3'
+        - '2'
+      - - そのほか
+        - '2'
+        - '1'
+        - '1'
+      - - 合計
+        - '14'
+        - '5'
+        - '4'
+      highlight_row: 3
+  - text: リーグ・アンは、9試合で1点、1アシスト。
+    card:
+      type: table
+      title: ドゥエ 今季の数字（11月7日まで）
+      columns:
+      - 大会
+      - 試合
+      - 得点
+      - アシスト
+      rows:
+      - - リーグ・アン
+        - '9'
+        - '1'
+        - '1'
+      - - CL
+        - '3'
+        - '3'
+        - '2'
+      - - そのほか
+        - '2'
+        - '1'
+        - '1'
+      - - 合計
+        - '14'
+        - '5'
+        - '4'
+      highlight_row: 0
+  - text: 出場時間は526分。1試合あたり、およそ58分です。
+    card:
+      type: table
+      title: ドゥエ 今季の数字（11月7日まで）
+      columns:
+      - 大会
+      - 試合
+      - 得点
+      - アシスト
+      rows:
+      - - リーグ・アン
+        - '9'
+        - '1'
+        - '1'
+      - - CL
+        - '3'
+        - '3'
+        - '2'
+      - - そのほか
+        - '2'
+        - '1'
+        - '1'
+      - - 合計
+        - '14'
+        - '5'
+        - '4'
+      highlight_row: 0
+  - text: 一方、CLは、3試合で3点、2アシスト。
+    card:
+      type: table
+      title: ドゥエ 今季の数字（11月7日まで）
+      columns:
+      - 大会
+      - 試合
+      - 得点
+      - アシスト
+      rows:
+      - - リーグ・アン
+        - '9'
+        - '1'
+        - '1'
+      - - CL
+        - '3'
+        - '3'
+        - '2'
+      - - そのほか
+        - '2'
+        - '1'
+        - '1'
+      - - 合計
+        - '14'
+        - '5'
+        - '4'
+      highlight_row: 1
+    emph: true
+  - text: 10月14日、マンチェスター・シティ戦。1点1アシスト。
+    card: none
+  - text: 10月20日、バルセロナ戦も、1点1アシスト。
+    card: none
+  - text: 11月3日、ビジャレアル戦でも、1点。
+    card: none
+  - text: 11月7日のリーグ・アンは、90分フル出場。1対0の勝ちでした。
+    card: none
+  sources:
+  - https://www.transfermarkt.com/desire-doue/profil/spieler/914562
+  - https://en.wikipedia.org/wiki/D%C3%A9sir%C3%A9_Dou%C3%A9
+  quotes_from: []
+- id: past
+  heading: ドゥエは、クラブで、これまで何試合に出て、何点取ってきたのか
+  tier: 報道
+  telop: クラブ通算192試合42点
+  narrator: 解説
+  card:
+    type: table
+    title: ドゥエ クラブでの通算（11月7日まで）
+    columns:
+    - 所属
+    - 試合
+    - 得点
+    rows:
+    - - レンヌ
+      - '76'
+      - '8'
+    - - パリ・サンジェルマン
+      - '116'
+      - '34'
+    - - 合計
+      - '192'
+      - '42'
+    highlight_row: 0
+  say:
+  - text: ここからは、ドゥエの、クラブでの通算です。
+    image: assets/images/20261121_player_914562/01_w.jpg
+    card:
+      type: table
+      title: ドゥエ クラブでの通算（11月7日まで）
+      columns:
+      - 所属
+      - 試合
+      - 得点
+      rows:
+      - - レンヌ
+        - '76'
+        - '8'
+      - - パリ・サンジェルマン
+        - '116'
+        - '34'
+      - - 合計
+        - '192'
+        - '42'
+      highlight_row: 0
+  - text: レンヌでは、76試合で8点。
+    card:
+      type: table
+      title: ドゥエ クラブでの通算（11月7日まで）
+      columns:
+      - 所属
+      - 試合
+      - 得点
+      rows:
+      - - レンヌ
+        - '76'
+        - '8'
+      - - パリ・サンジェルマン
+        - '116'
+        - '34'
+      - - 合計
+        - '192'
+        - '42'
+      highlight_row: 0
+  - text: パリ・サンジェルマンでは、116試合で34点。
+    card:
+      type: table
+      title: ドゥエ クラブでの通算（11月7日まで）
+      columns:
+      - 所属
+      - 試合
+      - 得点
+      rows:
+      - - レンヌ
+        - '76'
+        - '8'
+      - - パリ・サンジェルマン
+        - '116'
+        - '34'
+      - - 合計
+        - '192'
+        - '42'
+      highlight_row: 1
+  - text: 合計は、192試合で42点です。
+    card:
+      type: table
+      title: ドゥエ クラブでの通算（11月7日まで）
+      columns:
+      - 所属
+      - 試合
+      - 得点
+      rows:
+      - - レンヌ
+        - '76'
+        - '8'
+      - - パリ・サンジェルマン
+        - '116'
+        - '34'
+      - - 合計
+        - '192'
+        - '42'
+      highlight_row: 2
+    emph: true
+  - text: クラブでのアシストの合計は、38です。
+    card: none
+  sources:
+  - https://www.transfermarkt.com/desire-doue/profil/spieler/914562
+  quotes_from: []
+- id: view
+  heading: 半年で3000万ユーロ上がった値段は、ドゥエの何を映しているのか
+  tier: 背景
+  viewpoint: true
+  telop: 値段と大舞台
+  narrator: 解説
+  card:
+    type: table
+    title: ドゥエの値段と得点
+    columns:
+    - 項目
+    - 数字
+    rows:
+    - - 2025年12月の市場価値
+      - 9000万ユーロ
+    - - 2026年6月の市場価値
+      - 1億2000万ユーロ
+    - - 上がった額
+      - 3000万ユーロ
+    - - 26/27 リーグ・アン
+      - 9試合で1点
+    - - 26/27 CL
+      - 3試合で3点
+    highlight_row: 0
+  say:
+  - text: 最後に、ドゥエの値段を見ます。
+    image: assets/images/20261121_player_914562/02_w.jpg
+    card: none
+  - text: 2025年12月の値段は、9000万ユーロ。
+    card:
+      type: table
+      title: ドゥエの値段と得点
+      columns:
+      - 項目
+      - 数字
+      rows:
+      - - 2025年12月の市場価値
+        - 9000万ユーロ
+      - - 2026年6月の市場価値
+        - 1億2000万ユーロ
+      - - 上がった額
+        - 3000万ユーロ
+      - - 26/27 リーグ・アン
+        - 9試合で1点
+      - - 26/27 CL
+        - 3試合で3点
+      highlight_row: 0
+  - text: 2026年6月は、1億2000万ユーロ。半年で、3000万ユーロ、上がっています。
+    card:
+      type: table
+      title: ドゥエの値段と得点
+      columns:
+      - 項目
+      - 数字
+      rows:
+      - - 2025年12月の市場価値
+        - 9000万ユーロ
+      - - 2026年6月の市場価値
+        - 1億2000万ユーロ
+      - - 上がった額
+        - 3000万ユーロ
+      - - 26/27 リーグ・アン
+        - 9試合で1点
+      - - 26/27 CL
+        - 3試合で3点
+      highlight_row: 2
+    emph: true
+    mark:
+      kind: circle
+      row: 2
+  - text: その半年に、あったのは、CLの優勝と、W杯です。
+    card: none
+  - text: 今季のリーグ・アンは、9試合で1点。点の数で、上がったわけではありません。
+    card:
+      type: table
+      title: ドゥエの値段と得点
+      columns:
+      - 項目
+      - 数字
+      rows:
+      - - 2025年12月の市場価値
+        - 9000万ユーロ
+      - - 2026年6月の市場価値
+        - 1億2000万ユーロ
+      - - 上がった額
+        - 3000万ユーロ
+      - - 26/27 リーグ・アン
+        - 9試合で1点
+      - - 26/27 CL
+        - 3試合で3点
+      highlight_row: 3
+  - text: 評価されているのは、決勝のような、大きな試合での強さと見られます。
+    card:
+      type: table
+      title: ドゥエの値段と得点
+      columns:
+      - 項目
+      - 数字
+      rows:
+      - - 2025年12月の市場価値
+        - 9000万ユーロ
+      - - 2026年6月の市場価値
+        - 1億2000万ユーロ
+      - - 上がった額
+        - 3000万ユーロ
+      - - 26/27 リーグ・アン
+        - 9試合で1点
+      - - 26/27 CL
+        - 3試合で3点
+      highlight_row: 4
+  - text: 次に見たいのは、リーグ・アンの、今季2点目。
+    card: none
+  sources:
+  - https://www.transfermarkt.com/desire-doue/profil/spieler/914562
+  - https://en.wikipedia.org/wiki/D%C3%A9sir%C3%A9_Dou%C3%A9
+  quotes_from: []

@@ -1,0 +1,137 @@
+# 取材メモ（2026年11月7日）田中碧が明かした三笘薫の今。「順調に回復」「近いうちに再びプレーできる」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-07。requests（ブラウザUA）で本文を全文読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。
+# 題材の元: フットボール・トライブ日本語版 2026-11-06 9:45「三笘薫の現状は？川崎時代の同僚・田中碧が明かす！「悩んでいる」「日本代表について…」」（全文）。
+#   https://football-tribe.com/japan/2026/11/06/361058/
+# 元の媒体を辿った:
+#   ・U-NEXT フットボール（YouTube）が 11/5 に公開した田中碧のインタビュー動画。YouTube の検索で見つけた:
+#     「【三笘薫とは「今も毎週話します」🤝｜#田中碧 プレミアでの日々を英語で語る】プレミアリーグ 2026/27」（id 5zdOhx51Nos、約8分20秒）。
+#     題名どおり、田中は英語で答えている。字幕は自動生成の英語しか取れず本文は取れなかった（動画の音声は聞いていない）。
+#   → 台本の言葉は、フットボール・トライブの日本語（英語の発言を訳したもの）を、私が読み上げ用に整えたもの。原文の英語は確かめられていない。確度は報道（動画は実在し、題名が内容と合う）。
+#   ・同じ日に別の動画「【最高峰の舞台で躍動】田中碧（リーズ）｜独占インタビュー」（id ScKG9J0mMAA）も出ている。こちらは見ていない。台本には使わない。
+# 出典で確かめたこと:
+#   ・トライブの記事（田中の発言。日本語訳）:
+#     「毎週メッセージや電話で連絡を取り合っていますし、今でもそうですね」
+#     「彼とはサッカーのことや日常生活のこと、そして日本代表について話しています。今は負傷していて悩んでいますけど、順調に回復しているみたいですし、近いうちに再びプレーできる状態になると思います」
+#     「日本サッカーは以前と比べて格段に良くなっていますし、さらに成長しています」
+#     「ただ、他の国々も成長しています。だからこそ、私たちは他国以上に成長しなければなりません。ワールドカップで優勝するためには、これは非常に重要なことです」
+#     （プレミアの日本人が少ないという話の続き（「例えば、プレミアリーグを見てください…」）は長いので台本には入れない。）
+#   ・トライブの地の文: 三笘は今もコンディション不良に悩まされている／11月の国際Aマッチ（ブラジル戦・パラグアイ戦）に招集されなかった。川崎フロンターレ時代のチームメイト。
+#   ・ゲキサカ 462496（2026-11-04 14:00、JFA 発表）: 11月のシンガポール遠征の日本代表28人。三笘薫は入っていない。田中碧（リーズ）・久保建英・鈴木彩艶らは入っている。
+#     試合は 14日ブラジル戦、17日パラグアイ戦（シンガポールのナショナルスタジアム）。→ 「三笘は28人に入っていない」「田中は入っている」は確定。
+#   ・ESPN（site.api.espn.com eng.1 teams/331/schedule と、各試合の summary の rosters。ベンチ入りの控えも含む20人×2）:
+#     ブライトンの今季プレミア 9試合（8/23 ヴィラ戦〜10/31 マンC戦）のどの出場選手リストにも Kaoru Mitoma の名前は無い。
+#     （ESPN の選手一覧には Active と出ているが、ケガの欄は空。ケガの中身は ESPN では分からない。台本は負傷の中身に触れない。）
+#   ・同じ数え方でリーズの田中碧: 今季9試合すべてで出場選手リスト（控え含む）に名前がある（先発7・途中出場1・控えで出番なし1。ESPN teams/357/schedule と各 summary）。三笘は0/9。
+# 前の本との重なり: 20261017_mitoma_interest（移籍の噂・年俸）／20261003_mitoma_free（来夏フリーの可能性）／20261106_finance_brighton（クラブの財政）。田中碧の過去回（10/26 サンダーランド戦ほか）は試合の話。
+#   → 今回の初出: 田中碧が語った三笘の今（毎週連絡・順調に回復・近いうちに復帰）。移籍・契約・年俸の話には触れない。
+# 本人の言葉: あり（田中碧。英語の発言の日本語訳）。Y。三笘本人の言葉は無い。
+# 【言わないこと】「悩んでいる」の中身の推測（トライブの題の括弧。田中の発言は「負傷していて悩んでいますけど」）、復帰の時期、代表落選の理由。
+# 写真: assets/images/20261107_tanaka_mitoma_words/（credits.json）。01・02＝リーズ公式サイトの田中碧の顔のアップ。04＝Wikimedia Commons の田中碧（移動中）。
+#   03・05・06＝Wikimedia Commons の三笘（03 は黄のユニフォーム、05・06 は青白）。05・06 は 10/17 の本の写真の再掲。
+#   トライブの写真は AFLO なので使わない。photopool が拾えたのは 4枚（三笘の公式ページからは取れず）。三笘の写真は古い（2022年と2026年1月）。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月7日"
+format: news
+no_main: true
+people: [田中碧, 三笘薫, リーズ, ブライトン, 川崎フロンターレ]
+
+short_style: Y
+short_hook_quote: 順調に回復しているみたいですし、近いうちに再びプレーできる状態になると思います。
+short_photos:
+  - assets/images/20261107_tanaka_mitoma_words/03_v.jpg
+  - assets/images/20261107_tanaka_mitoma_words/01_v.jpg
+  - assets/images/20261107_tanaka_mitoma_words/04_v.jpg
+  - assets/images/20261107_tanaka_mitoma_words/02_v.jpg
+short_question: 三笘薫のプレーする姿を、また見られるのはいつだと思いますか。
+short_telops: []
+
+theme:
+  id: tanaka_mitoma_words
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: 三笘薫の今を、田中碧が明かした。「順調に回復しているみたい」
+  hook: ""
+  question: 川崎時代の仲間・田中碧は、三笘薫の今をどう語ったのか
+  takeaway: 田中碧は三笘と今も毎週連絡を取り合い、「順調に回復している」「近いうちに再びプレーできる」と語った。一方、ブライトンの今季プレミア9試合に三笘の名前は無く、日本代表の11月の28人にも入っていない
+
+thumbnail:
+  layout: face
+  line1: 三笘薫の現状
+  line2: 田中碧「順調に回復」
+  tags: [三笘薫, 田中碧]
+  photo: assets/images/20261107_tanaka_mitoma_words/01_w.jpg
+  short_photo: assets/images/20261107_tanaka_mitoma_words/01_v.jpg
+
+answer: 田中碧は「順調に回復しているみたいで、近いうちに再びプレーできる状態になると思う」と話した
+watch: 14日の日本代表対ブラジル代表（シンガポール）
+
+sections:
+  - id: what
+    main: true
+    heading: 田中碧が語った、三笘薫の今
+    tier: 報道
+    telop: 田中碧「三笘とは今も毎週話します」
+    say:
+      - text: プレミアリーグのリーズの田中碧が、今季まだプレミアに出ていない三笘薫の負傷を語りました。
+        image: assets/images/20261107_tanaka_mitoma_words/01_w.jpg
+      - voice: 田中碧
+        text: 今は負傷していて悩んでいますけど、
+        image: assets/images/20261107_tanaka_mitoma_words/03_w.jpg
+      - voice: 田中碧
+        text: 順調に回復しているみたいですし、近いうちに再びプレーできる状態になると思います。
+        emph: true
+      - voice: 田中碧
+        text: 毎週メッセージや電話で連絡を取り合っています。今でもそうですね。
+      - voice: 田中碧
+        text: サッカーのことや日常生活のこと、そして日本代表について話しています。
+        cont: true
+      - text: 日本代表は今月、シンガポールでブラジル、パラグアイと戦います。三笘は、その28人には入っていません。
+        image: assets/images/20261107_tanaka_mitoma_words/03_w.jpg
+      - text: 田中碧は、その28人に選ばれています。
+        image: assets/images/20261107_tanaka_mitoma_words/02_w.jpg
+    official: false
+    sources:
+      - https://football-tribe.com/japan/2026/11/06/361058/
+      - https://www.youtube.com/watch?v=5zdOhx51Nos
+      - https://web.gekisaka.jp/news/japan/detail/?462496-462496-fl
+  - id: japan
+    heading: 田中碧が語った、日本代表がワールドカップで勝つために
+    tier: 報道
+    telop: 田中碧「他国以上に成長しなければ」
+    say:
+      - text: 同じインタビューで、田中は日本代表の成長についても語っています。
+        card: none
+      - voice: 田中碧
+        text: 日本サッカーは以前と比べて、格段に良くなっています。さらに成長しています。
+      - voice: 田中碧
+        text: ただ、他の国々も成長しています。
+        cont: true
+      - voice: 田中碧
+        text: だからこそ、私たちは他国以上に成長しなければなりません。
+        cont: true
+      - voice: 田中碧
+        text: ワールドカップで優勝するためには、これは非常に重要なことです。
+        cont: true
+        emph: true
+    official: false
+    sources:
+      - https://football-tribe.com/japan/2026/11/06/361058/
+      - https://www.youtube.com/watch?v=5zdOhx51Nos
+  - id: view
+    viewpoint: true
+    heading: 田中碧と三笘薫、今季の試合に名前があった数
+    tier: 背景
+    telop: 今季のプレミア9試合 田中碧9試合、三笘薫0試合
+    say:
+      - text: 見立てです。今季のプレミア9試合で、試合の選手リストに名前がある試合を数えました。
+        card: {type: table, title: 試合の選手リストに名前がある試合（今季プレミア9試合）, columns: [選手, 試合数], rows: [[田中碧（リーズ）, 9試合], [三笘薫（ブライトン）, 0試合]], highlight_row: 1}
+      - text: 控えに入った試合も数えています。田中碧は9試合すべて、三笘は0試合でした。
+        card: none
+      - text: 田中が入っている日本代表は、14日にシンガポールでブラジル代表と対戦します。
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/teams/331/schedule
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/teams/357/schedule
+      - https://web.gekisaka.jp/news/japan/detail/?462496-462496-fl

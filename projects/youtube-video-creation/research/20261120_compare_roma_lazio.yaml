@@ -1,0 +1,542 @@
+# 取材メモ（11/20 金、シリーズ「比べる」＝クラブ、key: compare_roma_lazio）。ローマ×ラツィオ（セリエA、同じローマ市・同じ本拠地）。
+# **臨時の入れ替え**：この日11:00枠のクラブ紹介（ブンデス）が尽きたため「比べる」に。A組の日なので選手の比べは避け、クラブの比べにした。
+# **情報の時点は 2026-11-12**（ESPN 取得 2026-11-12 夜。各クラブ11試合を終えた時点）。FotMob・DataMB は使っていない。
+# 材料：ESPN 公開API（順位表 apis/v2/.../ita.1/standings・各クラブの日程 teams/104,112/schedule・試合ごとの summary の keyEvents と boxscore）。
+#   控え：output/_tmp_compare2/（standings.json・sched.json・summ.json）。タイトルと創設・収容人数は Wikipedia 英語版（SS Lazio・AS Roma・Stadio Olimpico の Honours・Infobox。2026-11-12 取得）。
+# **選んだ理由**：セリエAで「負けなし」の2クラブが同じ街にいる。ラツィオ1位（勝ち点29）・ローマ3位（27）。5大リーグの負けなしは4クラブだけ（バイエルン・ドルトムント・ラツィオ・ローマ）。
+#   2クラブとも CL 常連ではないが、ローマ・ダービーは世界でも知名度が高い大物。最初のダービーは現地12月13日（ESPN 日程。ラツィオが主催）、2回目は4月18日（ローマが主催）。
+#   **外した候補**：レアル・マドリード×アトレティコ（同じ日11/20のレジェンド＝ロベルト・カルロスとクラブが重なる）／リバプール×チェルシー（直近30日に比べるでは未登場だが、11/19 の選手紹介（ロジャーズ=チェルシー）と重なる）
+#   ／マンチェスター・ユナイテッド×トッテナム（18位と11位で「近い順位」にならない）。ミランは 11/22 のレジェンド（シェフチェンコ）、ユベントスは 11/20 の監督紹介（デシャン）と重ねないよう避けた。
+#   重なり確認：scripts・posted.json・covered.yaml・picks を grep。ローマとラツィオの2クラブ比較は初めて。ローマは 10/28 菅原（カリアリ戦）・10/31 財政・11/11 選手紹介（マレン）、
+#   ラツィオは 10/20 ガットゥーゾ（ラツィオの試合後）が個別に出ているが、2クラブを並べる回は無い。**マレンは 11/11 に選手紹介を出した**ので、台本では1か所（得点者の節）だけ名前を出す。
+# **自分で数えた値**（ESPN の試合記録から）：
+#   得点・失点・勝分け：ローマ 31-10（8勝3分0敗・27点）／ラツィオ 25-9（9勝2分0敗・29点）。1試合あたり 31÷11=2.82／25÷11=2.27、失点 10÷11=0.91／9÷11=0.82。
+#   シュート（boxscore の totalShots 合計）：ローマ 213本（枠内72）・受けた 129（枠内47）／ラツィオ 153本（枠内52）・受けた 131（枠内47）。1試合 19.4／13.9、枠内 6.5／4.7。平均ボール支配率 57.1%／53.7%。
+#   勝ち方：1点差の勝ち ローマ1（アタランタ2-1）／ラツィオ5（1-0×2・2-1×3）。3点差以上の勝ち ローマ4（4-0×2・5-2・3-0）／ラツィオ2（3-0・6-2）。無失点 ローマ6／ラツィオ4。引き分け ローマ3（2-2・0-0・3-3）／ラツィオ2（2-2・1-1）。
+#   得点者（オウンゴールを除く）：ローマ12人（マレン8・モーラ4・ピサッリ3・ソウレ3・2点が4人・1点が4人）＋オウンゴール1／ラツィオ12人（4点が3人＝フラッテージ・イサクセン・ノスリン、2点が3人、1点が6人）＋オウンゴール1。
+#     最多の割合 8÷31=26%／4÷25=16%。
+#   80分以降の得点：ローマ8（うち90分以降3）／ラツィオ4（90分以降0）。80分以降の失点：ローマ2／ラツィオ1。
+#   ホーム／アウェー：ローマ ホーム6試合 17-5 勝ち点16（2.67）・アウェー5試合 14-5 勝ち点11（2.20）／ラツィオ ホーム5試合 10-5 勝ち点13（2.60）・アウェー6試合 15-4 勝ち点16（2.67）。
+#     勝ち点の差2＝（アウェーでラツィオが5多い）－（ホームでローマが3多い）。
+#   得点÷失点：31÷10=3.10／25÷9=2.78。
+# タイトル（Wikipedia 英語版 Honours）：セリエA ローマ3（1942・83・2001）／ラツィオ2（1974・2000）、コッパ・イタリア 9／7、スーペルコッパ 2／5、欧州：ローマ=フェアーズ・カップ1961＋カンファレンスリーグ2022、ラツィオ=カップウィナーズ杯1999＋欧州スーパーカップ1999。
+#   合計（セリエA・コッパ・スーペルコッパ・欧州）：3+9+2+2=16／2+7+5+2=16。**セリエB・アングロ・イタリアン杯は数えない**。創設 ラツィオ1900年1月9日／ローマ1927年。
+# 本拠地：スタディオ・オリンピコ（同じ競技場を2クラブで使う）。収容人数 70,634（Wikipedia が引く内務省資料）、開場 1953年5月17日。
+# 監督：ローマ=ガスペリーニ、ラツィオ=ガットゥーゾ（Wikipedia 英語版の現在の監督）。
+# **次の物差し**：ダービー現地12/13（ラツィオ主催）。その前に 11/21 ラツィオ対レッチェ（ホーム）・パルマ対ローマ（アウェー）。
+# 反応・本人の言葉：入れていない（数字で比べる回）。日本との接点：無し（入れない）。
+# 写真：assets/images/20261120_compare_roma_lazio/credits.json に出どころを控えた（ガスペリーニ＝Quirinale 2024 を 11/15 の取材から再利用）。
+slot: other_1
+date: "2026年11月12日"
+format: news
+series: 比べる
+people:
+  - ローマ
+  - ラツィオ
+  - ガスペリーニ
+  - ガットゥーゾ
+
+theme:
+  end_bg: assets/images/20261120_compare_roma_lazio/olimp1_w.jpg
+  id: compare_roma_lazio
+  league: italy
+  kind: other
+  topic: ローマとラツィオ
+  prefix: ""
+  title: ローマとラツィオ、同じ街でまだ負けていない2クラブ。得点と勝ち方はどう違うのか
+  hook: ""
+  question: セリエAで負けなしのローマとラツィオは、得点と勝ち方で、どう違うのか
+  takeaway: 11月12日時点、ラツィオ（1位・勝ち点29）とローマ（3位・27）は、11試合を終えてどちらも負けなし。得点はローマ31・ラツィオ25、失点は10と9で、得失点差はローマ＋21・ラツィオ＋16。1点差の勝ちはラツィオ5・ローマ1、3点差以上の勝ちはローマ4・ラツィオ2、80分以降の得点はローマ8・ラツィオ4。同じスタディオ・オリンピコを使い、セリエA・コッパ・スーペルコッパ・欧州のタイトル合計は16と16。最初のダービーは現地12月13日
+  league_name: セリエA
+  opening_image: assets/images/20261120_compare_roma_lazio/pair_a/01.jpg
+
+short_title: ローマとラツィオ、同じ街でまだ負けていない2クラブ
+
+thumbnail:
+  photo: assets/images/20261120_compare_roma_lazio/pair_a/01.jpg
+  photos:
+    - assets/images/20261120_compare_roma_lazio/g1/01_t.jpg
+    - assets/images/20261120_compare_roma_lazio/t1/01_t.jpg
+  short_photo: assets/images/20261120_compare_roma_lazio/pair_a/01_v.jpg
+  face_link: VS
+  line1: ローマとラツィオ
+  line2: 同じ街で11試合負けなし
+  tags: [ローマ, ラツィオ, セリエA, ガスペリーニ, ガットゥーゾ, スタディオ・オリンピコ]
+
+answer: 得点はローマ31、勝ち点はラツィオ29。1点差の勝ちはラツィオが5つ。タイトルは16と16
+watch: 次の物差しは、現地12月13日の最初のダービー
+
+sections:
+  - id: lead
+    heading: 同じ街の2クラブは、11試合を終えて何が同じなのか
+    tier: 報道
+    telop: セリエAの1位ラツィオと3位ローマ。どちらも負けなし
+    narrator: 解説
+    card: &leadcard
+      type: duel
+      left: {name: ローマ, club: 3位, photo: assets/images/20261120_compare_roma_lazio/roma_sq.jpg, color: "#8e1f2f"}
+      right: {name: ラツィオ, club: 1位, photo: assets/images/20261120_compare_roma_lazio/lazio_sq.jpg, color: "#87d8f7"}
+      rows:
+        - [試合, "11", "11"]
+        - [勝・分・敗, 8・3・0, 9・2・0]
+        - [勝ち点, "27", "29"]
+        - [得点, "31", "25"]
+        - [失点, "10", "9"]
+        - [得失点差, "+21", "+16"]
+      note: セリエA。11月12日時点。順位は、ラツィオ1位・インテル2位・ローマ3位
+    say:
+      - text: ローマの街にある、2つのクラブ。ローマとラツィオです。
+        image: assets/images/20261120_compare_roma_lazio/olimp1_w.jpg
+        card: *leadcard
+      - text: セリエAの順位は、ラツィオが1位。ローマは3位です。
+        card: {<<: *leadcard, highlight_row: 勝ち点}
+      - text: 間に入るのは、インテル。
+        image: assets/images/20261120_compare_roma_lazio/olimp2_w.jpg
+        card: none
+      - text: 11試合を終えて、ラツィオは勝ち点29。ローマは27です。
+        card: {<<: *leadcard, highlight_row: 勝ち点}
+      - text: どちらも、まだ1つも負けていません。
+        emph: true
+        card: {<<: *leadcard, highlight_row: 勝・分・敗}
+      - text: ラツィオが9勝2分け。ローマは、8勝3分けです。
+        card: {<<: *leadcard, highlight_row: 勝・分・敗}
+      - text: 欧州5大リーグで、負けなしのクラブは4つだけ。
+        callword: 負けなし
+        image: assets/images/20261120_compare_roma_lazio/olimp3_w.jpg
+        card: none
+      - text: バイエルンとドルトムント。そして、この2クラブです。
+        card: none
+      - text: 同じ街で、どちらも負けていない。まず、点の取り方から見ていきます。
+        card: none
+    sources:
+      - https://site.api.espn.com/apis/v2/sports/soccer/ita.1/standings
+      - https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings
+
+  - id: goals
+    main: true
+    heading: 得点は、ローマのほうが何点多いのか
+    tier: 報道
+    telop: 得点はローマ31・ラツィオ25。失点は10と9
+    narrator: 解説
+    card: &goalcard
+      type: duel
+      left: {name: ローマ, club: 11試合, photo: assets/images/20261120_compare_roma_lazio/roma_sq.jpg, color: "#8e1f2f"}
+      right: {name: ラツィオ, club: 11試合, photo: assets/images/20261120_compare_roma_lazio/lazio_sq.jpg, color: "#87d8f7"}
+      rows:
+        - [得点, "31", "25"]
+        - [得点（1試合）, "2.82", "2.27"]
+        - [失点, "10", "9"]
+        - [失点（1試合）, "0.91", "0.82"]
+        - [得失点差, "+21", "+16"]
+      bars: [得点, 失点]
+      lower: [失点]
+      note: セリエA11試合。1試合あたりは自分で割った値
+    say:
+      - text: まず、得点。ローマが31点、ラツィオが25点。
+        image: assets/images/20261120_compare_roma_lazio/olimp1_w.jpg
+        card: {<<: *goalcard, highlight_row: 得点}
+      - text: ローマのほうが、6点多い。
+        emph: true
+        card: {<<: *goalcard, highlight_row: 得点}
+      - text: 1試合あたりでは、2.82点と2.27点。
+        card: {<<: *goalcard, highlight_row: 得点（1試合）}
+      - text: ローマは、1試合に3点近く取っている計算です。
+        card: {<<: *goalcard, highlight_row: 得点（1試合）}
+      - text: 次は失点。ローマが10点、ラツィオが9点です。
+        image: assets/images/20261120_compare_roma_lazio/olimp2_w.jpg
+        card: {<<: *goalcard, highlight_row: 失点}
+      - text: 差は、1点だけ。
+        card: {<<: *goalcard, highlight_row: 失点}
+      - text: 取った点から、取られた点を引くと、ローマがプラス21。ラツィオは、プラス16です。
+        card: {<<: *goalcard, highlight_row: 得失点差}
+      - text: 得失点差の差は5点。得点の差6点から、失点の差1点を引いた数です。
+        card: &gdcalc
+          type: calc
+          title: 得失点差の差
+          terms:
+            - ['6点', 得点の差]
+            - ['1点', 失点の差]
+            - ['5点', 得失点差の差]
+          ops: ['－', '＝']
+      - text: 得失点差はローマが上。勝ち点は、ラツィオが上。
+        emph: true
+        card: {<<: *leadcard, highlight_row: [勝ち点, 得失点差]}
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/teams/104/schedule
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/teams/112/schedule
+
+  - id: shots
+    heading: シュートの数は、ローマがどれだけ多いのか
+    tier: 報道
+    telop: シュートはローマ213本・ラツィオ153本。受けたシュートは129本と131本
+    narrator: 解説
+    card: &shotcard
+      type: duel
+      left: {name: ローマ, club: 11試合, photo: assets/images/20261120_compare_roma_lazio/roma_sq.jpg, color: "#8e1f2f"}
+      right: {name: ラツィオ, club: 11試合, photo: assets/images/20261120_compare_roma_lazio/lazio_sq.jpg, color: "#87d8f7"}
+      rows:
+        - [シュート, "213", "153"]
+        - [シュート（1試合）, "19.4", "13.9"]
+        - [枠内, "72", "52"]
+        - [枠内（1試合）, "6.5", "4.7"]
+        - [受けたシュート, "129", "131"]
+        - [支配率の平均, 57.1%, 53.7%]
+      bars: [シュート, 枠内]
+      note: 11試合の試合記録の合計。1試合あたりは自分で割った値
+    say:
+      - text: 試合の記録から、シュートも数えました。ローマが213本、ラツィオが153本。
+        image: assets/images/20261120_compare_roma_lazio/olimp3_w.jpg
+        card: {<<: *shotcard, highlight_row: シュート}
+      - text: ローマが、60本多い。
+        card: {<<: *shotcard, highlight_row: シュート}
+      - text: 1試合あたりでは、19.4本と13.9本。
+        card: {<<: *shotcard, highlight_row: シュート（1試合）}
+      - text: 枠内に飛んだシュートは、72本と52本。
+        card: {<<: *shotcard, highlight_row: 枠内}
+      - text: 1試合あたり、6.5本と4.7本です。
+        card: {<<: *shotcard, highlight_row: 枠内（1試合）}
+      - text: ボールを持つ時間の平均は、57.1%と53.7%。どちらも、半分を超えています。
+        card: {<<: *shotcard, highlight_row: 支配率の平均}
+      - text: 逆に、相手に打たれたシュートは、ローマが129本。ラツィオが131本。
+        image: assets/images/20261120_compare_roma_lazio/olimp1_w.jpg
+        card: {<<: *shotcard, highlight_row: 受けたシュート}
+      - text: ほとんど同じです。
+        card: {<<: *shotcard, highlight_row: 受けたシュート}
+      - text: ローマは、打つ数が多く、打たれる数は同じ。
+        emph: true
+        card: none
+      - text: ラツィオは、153本で25点。ローマは、213本で31点です。
+        card: none
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874803
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874810
+
+  - id: wins
+    heading: 勝ち方は、どちらが大きく、どちらが小さいのか
+    tier: 報道
+    telop: 1点差の勝ちはラツィオ5つ・ローマ1つ。3点差以上はローマ4つ
+    narrator: 解説
+    card: &rescard
+      type: table
+      title: 11試合の結果（セリエA、自分たちの得点が先）
+      columns: [試合順, ローマ, ラツィオ]
+      rows:
+        - [1, 4対0 勝, 1対0 勝]
+        - [2, 4対0 勝, 1対0 勝]
+        - [3, 2対1 勝, 2対1 勝]
+        - [4, 2対0 勝, 2対2 分]
+        - [5, 2対2 分, 2対0 勝]
+        - [6, 0対0 分, 3対1 勝]
+        - [7, 2対0 勝, 3対0 勝]
+        - [8, 3対3 分, 2対1 勝]
+        - [9, 4対2 勝, 6対2 勝]
+        - [10, 5対2 勝, 2対1 勝]
+        - [11, 3対0 勝, 1対1 分]
+      note: 試合順は、日付の順
+    say:
+      - text: 勝ち方を比べます。まず、ここまでの結果です。
+        image: assets/images/20261120_compare_roma_lazio/olimp2_w.jpg
+        card: *rescard
+      - text: ローマは、4対0の勝ち、4対0の勝ち、2対1の勝ちと始まりました。
+        card: {<<: *rescard, highlight_row: [0, 1, 2]}
+      - text: ラツィオは、1対0の勝ち、1対0の勝ち、2対1の勝ち。
+        card: {<<: *rescard, highlight_row: [0, 1, 2]}
+      - text: 1点差の勝ちを数えると、ラツィオが5つ。ローマは1つです。
+        emph: true
+        card: &wincard
+          type: duel
+          left: {name: ローマ, club: 11試合, photo: assets/images/20261120_compare_roma_lazio/roma_sq.jpg, color: "#8e1f2f"}
+          right: {name: ラツィオ, club: 11試合, photo: assets/images/20261120_compare_roma_lazio/lazio_sq.jpg, color: "#87d8f7"}
+          rows:
+            - [1点差の勝ち, "1", "5"]
+            - [3点差以上の勝ち, "4", "2"]
+            - [無失点の試合, "6", "4"]
+            - [引き分け, "3", "2"]
+          bars: [1点差の勝ち, 3点差以上の勝ち, 無失点の試合]
+          note: セリエA11試合。自分で数えた値
+      - text: ラツィオの5つは、1対0の勝ちが2つと、2対1の勝ちが3つ。
+        card: {<<: *rescard, highlight_row: [0, 1, 2, 7, 9]}
+      - text: 3点差以上の勝ちは、ローマが4つ。
+        image: assets/images/20261120_compare_roma_lazio/olimp3_w.jpg
+        card: {<<: *wincard, highlight_row: 3点差以上の勝ち}
+      - text: 4対0の勝ちが2つと、5対2の勝ち、3対0の勝ち。
+        card: {<<: *wincard, highlight_row: 3点差以上の勝ち}
+      - text: ラツィオは2つ。3対0の勝ちと、6対2の勝ち。
+        card: {<<: *wincard, highlight_row: 3点差以上の勝ち}
+      - text: 無失点の試合は、ローマが6つ。ラツィオの4つより、2つ多い。
+        card: {<<: *wincard, highlight_row: 無失点の試合}
+      - text: 引き分けは、ローマが3つ。2対2と、0対0と、3対3の引き分け。
+        card: {<<: *wincard, highlight_row: 引き分け}
+      - text: ラツィオは2つ。2対2の引き分けと、1対1の引き分け。
+        card: {<<: *wincard, highlight_row: 引き分け}
+      - text: ローマは大きく勝つ。ラツィオは、1点差を拾って勝つ形です。
+        emph: true
+        card: none
+        image: assets/images/20261120_compare_roma_lazio/olimp1_w.jpg
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/teams/104/schedule
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/teams/112/schedule
+
+  - id: scorers
+    heading: 点を取っているのは、1人なのか、みんななのか
+    tier: 報道
+    telop: ローマの最多はマレンの8点。ラツィオの最多は4点で3人
+    narrator: 解説
+    card: &scorecard
+      type: duel
+      left: {name: ローマ, club: セリエA, photo: assets/images/20261120_compare_roma_lazio/roma_sq.jpg, color: "#8e1f2f"}
+      right: {name: ラツィオ, club: セリエA, photo: assets/images/20261120_compare_roma_lazio/lazio_sq.jpg, color: "#87d8f7"}
+      rows:
+        - [チーム最多の得点, "8", "4"]
+        - [最多が占める割合, 26%, 16%]
+        - [点を取った選手, 12人, 12人]
+        - [2点以上の選手, 8人, 6人]
+        - [オウンゴール, "1", "1"]
+      bars: [チーム最多の得点]
+      note: セリエA11試合。選手の数はオウンゴールを除く。割合は自分で割った値
+    say:
+      - text: 次は、点を取った選手です。ローマの最多は、マレンの8点。
+        image: assets/images/20261120_compare_roma_lazio/olimp2_w.jpg
+        card: {<<: *scorecard, highlight_row: チーム最多の得点}
+      - text: ローマの31点の、およそ4分の1です。
+        card: &sharecalc
+          type: calc
+          title: マレンの得点が、ローマの得点に占める割合
+          terms:
+            - ['8点', マレン]
+            - ['31点', ローマの得点]
+            - ['26%', 割合]
+          ops: ['÷', ＝]
+      - text: ラツィオの最多は、4点。フラッテージ、イサクセン、ノスリンの3人が並びます。
+        card: {<<: *scorecard, highlight_row: チーム最多の得点}
+      - text: 4割る25で、16%。
+        card: &sharecalc2
+          type: calc
+          title: 最多の選手が、ラツィオの得点に占める割合
+          terms:
+            - ['4点', 最多の選手]
+            - ['25点', ラツィオの得点]
+            - ['16%', 割合]
+          ops: ['÷', ＝]
+      - text: 点を取った選手の数は、どちらも12人。
+        emph: true
+        image: assets/images/20261120_compare_roma_lazio/olimp3_w.jpg
+        card: {<<: *scorecard, highlight_row: 点を取った選手}
+      - text: 2点以上取った選手は、ローマが8人、ラツィオが6人です。
+        card: {<<: *scorecard, highlight_row: 2点以上の選手}
+      - text: オウンゴールで入った点は、どちらも1点ずつ。
+        card: {<<: *scorecard, highlight_row: オウンゴール}
+      - text: ローマは、取る人が1人抜けている。ラツィオは、広く分け合っています。
+        card: none
+        image: assets/images/20261120_compare_roma_lazio/olimp1_w.jpg
+    sources:
+      - https://site.web.api.espn.com/apis/site/v2/sports/soccer/ita.1/statistics
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874780
+
+  - id: late
+    heading: 試合の終わり際は、どちらが点を取っているのか
+    tier: 報道
+    telop: 80分以降の得点は、ローマ8点・ラツィオ4点
+    narrator: 解説
+    card: &latecard
+      type: duel
+      left: {name: ローマ, club: 80分以降, photo: assets/images/20261120_compare_roma_lazio/roma_sq.jpg, color: "#8e1f2f"}
+      right: {name: ラツィオ, club: 80分以降, photo: assets/images/20261120_compare_roma_lazio/lazio_sq.jpg, color: "#87d8f7"}
+      rows:
+        - [80分以降の得点, "8", "4"]
+        - [90分を過ぎた得点, "3", "0"]
+        - [80分以降の失点, "2", "1"]
+      bars: [80分以降の得点, 80分以降の失点]
+      lower: [80分以降の失点]
+      note: セリエA11試合。80分以降は、試合記録の時間が80分以降のもの
+    say:
+      - text: 試合の終わり際も、数えました。80分以降に入った得点です。
+        image: assets/images/20261120_compare_roma_lazio/olimp2_w.jpg
+        card: {<<: *latecard, highlight_row: 80分以降の得点}
+      - text: ローマが8点。ラツィオが4点。
+        emph: true
+        card: {<<: *latecard, highlight_row: 80分以降の得点}
+      - text: ローマの31点のうち、4分の1が、80分以降です。
+        card: {<<: *latecard, highlight_row: 80分以降の得点}
+      - text: 90分を過ぎてから入った点は、ローマが3つ。ラツィオは、ありません。
+        card: {<<: *latecard, highlight_row: 90分を過ぎた得点}
+      - text: 80分以降に取られた点は、ローマが2つ。ラツィオが1つです。
+        image: assets/images/20261120_compare_roma_lazio/olimp3_w.jpg
+        card: {<<: *latecard, highlight_row: 80分以降の失点}
+      - text: 終わり際は、ローマが取り、ほとんど取られていません。
+        card: none
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874781
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874983
+
+  - id: home
+    heading: 同じ本拠地を使うのに、ホームの成績は同じなのか
+    tier: 報道
+    telop: どちらもスタディオ・オリンピコ。ホームとアウェーの勝ち点
+    narrator: 解説
+    card: &homecard
+      type: duel
+      left: {name: ローマ, club: 勝ち点, photo: assets/images/20261120_compare_roma_lazio/roma_sq.jpg, color: "#8e1f2f"}
+      right: {name: ラツィオ, club: 勝ち点, photo: assets/images/20261120_compare_roma_lazio/lazio_sq.jpg, color: "#87d8f7"}
+      rows:
+        - [ホームの試合, "6", "5"]
+        - [ホームの勝ち点, "16", "13"]
+        - [ホーム（1試合）, "2.67", "2.60"]
+        - [アウェーの試合, "5", "6"]
+        - [アウェーの勝ち点, "11", "16"]
+        - [アウェー（1試合）, "2.20", "2.67"]
+      note: セリエA11試合。1試合あたりは自分で割った値
+    say:
+      - text: 本拠地は、どちらもスタディオ・オリンピコ。同じ競技場を、2クラブで使っています。
+        image: assets/images/20261120_compare_roma_lazio/olimp1_w.jpg
+        card: none
+      - text: この競技場の収容人数は、7万634人。1953年に開場しました。
+        image: assets/images/20261120_compare_roma_lazio/olimp3_w.jpg
+        card: none
+      - text: 同じ競技場でも、成績は同じなのか。まず、ホームの試合です。
+        card: {<<: *homecard, highlight_row: ホームの試合}
+      - text: ローマが6試合で勝ち点16。ラツィオは、5試合で13。
+        card: {<<: *homecard, highlight_row: ホームの勝ち点}
+      - text: 1試合に直すと、2.67と2.60。ほぼ同じです。
+        card: {<<: *homecard, highlight_row: ホーム（1試合）}
+      - text: アウェーは、ローマが5試合で勝ち点11。ラツィオは、6試合で16。
+        card: {<<: *homecard, highlight_row: アウェーの勝ち点}
+      - text: 1試合あたりは、2.20と2.67。
+        card: {<<: *homecard, highlight_row: アウェー（1試合）}
+      - text: 勝ち点の差は2。
+        card: {<<: *homecard, highlight_row: [ホームの勝ち点, アウェーの勝ち点]}
+      - text: アウェーでラツィオが5多く、ホームでローマが3多い。その差し引きです。
+        emph: true
+        image: assets/images/20261120_compare_roma_lazio/olimp2_w.jpg
+        card: &homecalc
+          type: calc
+          title: ラツィオが上回った勝ち点
+          terms:
+            - ['5点', アウェーの差]
+            - ['3点', ホームの差]
+            - ['2点', 全体の差]
+          ops: ['－', '＝']
+    sources:
+      - https://en.wikipedia.org/wiki/Stadio_Olimpico
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/standings
+
+  - id: titles
+    heading: タイトルの数は、どちらが多いのか
+    tier: 報道
+    telop: セリエA・コッパ・スーペルコッパ・欧州の合計は、どちらも16
+    narrator: 解説
+    card: &shelfcard
+      type: shelf
+      left: {name: ローマ, club: 個数, photo: assets/images/20261120_compare_roma_lazio/roma_sq.jpg, color: "#8e1f2f"}
+      right: {name: ラツィオ, club: 個数, photo: assets/images/20261120_compare_roma_lazio/lazio_sq.jpg, color: "#87d8f7"}
+      rows:
+        - [セリエA, "3", "2"]
+        - [コッパ・イタリア, "9", "7"]
+        - [スーペルコッパ, "2", "5"]
+        - [欧州の大会, "2", "2"]
+        - [合計, "16", "16"]
+      note: 合計は自分で足した値。欧州の大会は、ローマがフェアーズ・カップとカンファレンスリーグ、ラツィオがカップウィナーズ杯と欧州スーパーカップ
+    say:
+      - text: 最後に、タイトルの数です。まず、セリエAの優勝。
+        image: assets/images/20261120_compare_roma_lazio/olimp3_w.jpg
+        card: {<<: *shelfcard, highlight_row: セリエA}
+      - text: ローマが3回。ラツィオが2回です。
+        card: {<<: *shelfcard, highlight_row: セリエA}
+      - text: 優勝は、ローマが1942年、1983年、2001年。
+        card: {<<: *shelfcard, highlight_row: セリエA}
+      - text: ラツィオは、1974年と2000年です。
+        card: {<<: *shelfcard, highlight_row: セリエA}
+      - text: コッパ・イタリアは、9回と7回。
+        card: {<<: *shelfcard, highlight_row: コッパ・イタリア}
+      - text: スーペルコッパは、リーグ王者とカップ王者が、シーズンの初めに戦う大会。
+        card: {<<: *shelfcard, highlight_row: スーペルコッパ}
+      - text: ローマが2回、ラツィオが5回。ここだけ、ラツィオが上です。
+        card: {<<: *shelfcard, highlight_row: スーペルコッパ}
+      - text: 欧州の大会は、どちらも2つ。
+        image: assets/images/20261120_compare_roma_lazio/olimp1_w.jpg
+        card: {<<: *shelfcard, highlight_row: 欧州の大会}
+      - text: ローマは、1961年のフェアーズ・カップと、2022年のカンファレンスリーグ。
+        card: {<<: *shelfcard, highlight_row: 欧州の大会}
+      - text: フェアーズ・カップは、ヨーロッパリーグの前身にあたる大会です。
+        card: {<<: *shelfcard, highlight_row: 欧州の大会}
+      - text: ラツィオは、1999年のカップウィナーズ杯と、同じ年の欧州スーパーカップ。
+        card: {<<: *shelfcard, highlight_row: 欧州の大会}
+      - text: カップウィナーズ杯は、かつてあった欧州の大会です。
+        card: {<<: *shelfcard, highlight_row: 欧州の大会}
+      - text: 4つを足すと、ローマが3＋9＋2＋2で16。ラツィオが、2＋7＋5＋2で16。
+        emph: true
+        card: {<<: *shelfcard, highlight_row: 合計}
+      - text: ちょうど、同じ数です。
+        card: {<<: *shelfcard, highlight_row: 合計}
+    sources:
+      - https://en.wikipedia.org/wiki/SS_Lazio
+      - https://en.wikipedia.org/wiki/AS_Roma
+
+  - id: view
+    viewpoint: true
+    heading: 見立て・同じ負けなしでも、勝ち方は逆の形をしている
+    tier: 背景
+    telop: ローマは点で上回り、ラツィオは勝ち点で上回る。次は12月13日のダービー
+    narrator: 解説
+    card: &viewcard
+      type: duel
+      left: {name: ローマ, club: 11試合, photo: assets/images/20261120_compare_roma_lazio/roma_sq.jpg, color: "#8e1f2f"}
+      right: {name: ラツィオ, club: 11試合, photo: assets/images/20261120_compare_roma_lazio/lazio_sq.jpg, color: "#87d8f7"}
+      rows:
+        - [勝ち点, "27", "29"]
+        - [得失点差, "+21", "+16"]
+        - [得点÷失点, "3.10", "2.78"]
+        - [1点差の勝ち, "1", "5"]
+        - [80分以降の得点, "8", "4"]
+      bars: [得失点差, 得点÷失点, 1点差の勝ち, 80分以降の得点]
+      note: セリエA11試合。得点÷失点は自分で割った値
+    say:
+      - text: ここまでの数字を、並べます。
+        image: assets/images/20261120_compare_roma_lazio/olimp2_w.jpg
+        card: *viewcard
+      - text: 勝ち点は、ラツィオが2点上。
+        card: {<<: *viewcard, highlight_row: 勝ち点}
+      - text: 得失点差は、ローマが5点上です。
+        card: {<<: *viewcard, highlight_row: 得失点差}
+      - text: 取った点が、取られた点の何倍か。ローマは31割る10で、3.10。
+        card: &ratio_r
+          type: calc
+          title: 得点÷失点（ローマ）
+          terms:
+            - ['31点', 得点]
+            - ['10点', 失点]
+            - ['3.10', 倍]
+          ops: ['÷', ＝]
+      - text: ラツィオは25割る9で、2.78。
+        card: &ratio_l
+          type: calc
+          title: 得点÷失点（ラツィオ）
+          terms:
+            - ['25点', 得点]
+            - ['9点', 失点]
+            - ['2.78', 倍]
+          ops: ['÷', ＝]
+      - text: 点で上回るのは、ローマ。勝ち点で上回るのは、ラツィオです。
+        emph: true
+        image: assets/images/20261120_compare_roma_lazio/olimp3_w.jpg
+        card: {<<: *viewcard, highlight_row: 得点÷失点}
+        mark:
+          - {kind: circle, row: 2, col: 左の値}
+      - text: 差を作ったのは、1点差の勝ち。ラツィオは5つ、ローマは1つ。
+        card: {<<: *viewcard, highlight_row: 1点差の勝ち}
+      - text: 終わり際の得点は、ローマが倍。ここは、ローマが上です。
+        card: {<<: *viewcard, highlight_row: 80分以降の得点}
+      - text: ただし、これからの試合で、数字は動きます。
+        card: *viewcard
+      - text: 再開は、現地11月21日。
+        image: assets/images/20261120_compare_roma_lazio/olimp1_w.jpg
+        card: none
+      - text: ラツィオはホームでレッチェ、ローマはアウェーでパルマ。
+        card: none
+      - text: 次の物差しは、現地12月13日。同じ街どうしの対戦、ダービーです。今季の1回目。
+        card: none
+      - text: 2クラブの負けなしは、ダービーの前に、どちらかが止まるのか。
+        card: none
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/teams/104/schedule?fixture=true
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/teams/112/schedule?fixture=true

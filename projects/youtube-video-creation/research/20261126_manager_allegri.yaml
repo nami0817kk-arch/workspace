@@ -1,0 +1,421 @@
+# 監督紹介：マッシミリアーノ・アッレグリ（11/26 木、シリーズ「監督紹介」、key: manager_allegri、型は news）。8節（日本との接点は無し）。見本は 20261122_manager_scaloni。
+# 順：フック→基礎DATA→歩みと転機→戦術の色（実例の試合1つ）→数字で見る→本人の言葉→マル秘話→見立て。
+#
+# **題材の選び方（2026-11-13）**：既出20人以外の大物から。ユベントスでリーグ5連覇・コッパ・イタリア5回（史上初）、現職はナポリ監督（2026-07-03 就任）。
+#   いま見る理由＝ナポリでの苦戦（リーグ11試合で勝ち点15・10位、11/8 時点）。**11/26 公開までに状況が動く**ので、台本の「いま」は日付つきの事実だけにし、評価の言葉は書かない。
+#   **重なりの確認（2026-11-13 に自分で）**：scripts/・posted.json・covered.yaml に、アッレグリを主題にした本は無い（covered.yaml 116 行のアモリム/ミランは別人・別件）。
+#   同じ日（11/26）の他担当の picks は未記入。同じ担当の 11/24 はインザーギ（同じ日ではない）。次点（外した）：ガスペリーニ・アモリム（今季の状況を確かめきれず）。
+#
+# **いまの立場**：ナポリ監督。2026-07-03 に3年契約で就任（クラブ声明「2029年6月30日まで」、WebSearch：beIN Sports・ESPN ほか。2026-11-13 に確認）。コンテの後任。
+#   ○ 英語版 Wikipedia「Massimiliano Allegri」（2026-11-13 に action=raw で読んだ）：「SSC Napoli head coach」、成績表は 2026-11-08 まで更新。
+#   ○ ナポリの足元：リーグ11試合で勝ち点15、10位（Tuttomercatoweb 2026-11-08）。同じ勝ち点15は 2007-08 以来という記事。
+#
+# **通算（台本とサムネをそろえる）**＝英語版「Managerial statistics」（2026-11-08 時点、全大会）。クラブ別の行の合計と通算の行は一致（879試合469勝203分207敗、得点1383失点832）。
+#   アリャネーゼ・SPAL・グロッセート・サッスオーロ・カリアリ時代を含む。勝率 469÷879＝53.4%。
+#   ミラン1期 178試合91勝（51.1%）／ユベントス1期 271試合191勝（70.5%、クラブ史上最高）／ユベントス2期 149試合80勝（53.7%）／ミラン2期 42試合22勝10分10敗（52.4%）／ナポリ 15試合5勝3分7敗（33.3%）。
+#   ユベントス1期の負け37試合。割合はすべて自分で割った。
+#   タイトル14個＝リーグ6（ミラン2010-11・ユベントス2014-15〜2018-19）＋コッパ・イタリア5（2014-15〜2017-18・2023-24）＋スーペルコッパ3（ミラン2011・ユベントス2015・2018）。ほかにサッスオーロの C1 優勝（2007-08）。
+#
+# **歩み**（英語版）：2010 ミラン。2011-05-07 セリエA優勝決定（ローマ戦の引き分け）。2014-01 ミラン解任。2014-07 ユベントス（コンテの辞任の翌日）。2015-06-06 CL決勝 1-3 バルセロナ。
+#   2017-06-03 CL決勝 1-4 レアル・マドリード。2019 退任。2021 ユベントスに復帰。2024-05-15 コッパ決勝 1-0 アタランタ（5回目＝監督として史上初）、2024-05-17 解任。
+#   2025-05-30 ミラン。2026-05-25 解任（CL出場権を逃した）。2026-07-03 ナポリ。
+# **戦術の色**＝2024 コッパ・イタリア決勝（英語版）：1-0 アタランタ、ユベントス5回目のコッパ。形の話：コンテの 3-5-2 を土台に、CLでは4バックも使い、競った終盤に3-5-2へ切り替える（英語版）。
+#   守りの3人「BBC」（バルザーリ・ボヌッチ・キエッリーニ）。
+# **日本との接点**：無し（入れない）。
+#
+# **本人の言葉**：2026年10月中旬、ヴェネツィア戦を前に（SoccerNews・Stats Perform、2026-10-17。英語で配信された訳）：
+#   “I'm not concerned; we need to find solutions to the problems.” ／ “We just need to work, get all the players back and available, and manage playing every three days.” ／ “We need everyone.”
+#   ※原語はイタリア語の会見で、英語訳からの重訳。
+# **マル秘話**（英語版）：1967-08-11 リボルノ生まれ。選手のころはMFで、ナポリでも1997-98年にプレー（374試合56得点）。愛称「アッチュジーナ（小さなカタクチイワシ）」。2018年、イタリアサッカー殿堂入り。
+#   2024年のコッパ決勝後の言動を理由にユベントスが解任（英語版）。
+#
+# **入れなかったもの**：私生活（結婚・家族・交際）、2000年の出場停止とその後の無罪（法的な話）、「コルト・ムーゾ」（英語版に出典が無かった）、ナポリ内部の対立・会長の最後通告の報道（確かめられない）、
+#   CLリーグフェーズの順位（動く数字）、ファンの解任要求、FotMob、女子、他の監督との優劣。
+date: 2026年11月13日
+slot: other_1
+format: news
+series: 監督紹介
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- アッレグリ
+theme:
+  end_bg: assets/images/20261126_manager_allegri/02_w.jpg
+  id: manager_allegri
+  league: italy
+  league_name: ナポリ
+  kind: other
+  topic: アッレグリ
+  title: アッレグリ、ナポリ監督はどんな人？5連覇した人が、なぜいま苦しんでいるのか
+  question: ナポリのマッシミリアーノ・アッレグリ監督は、どんな人なのか。ユベントスでリーグ5連覇を成し遂げた人の勝率は、なぜいま3割台まで下がっているのか
+  lead: ナポリ監督、マッシミリアーノ・アッレグリ。
+  opening_image: assets/images/20261126_manager_allegri/02_w.jpg
+  takeaway: 通算879試合で469勝。ユベントスの1期目は勝率70.5%でクラブ史上最高。リーグ5連覇、コッパ・イタリア5回は監督として史上初。ところが勝率はユベントス2期目53.7%、ミラン2期目52.4%、ナポリ33.3%と下がっている。ナポリは11月8日時点でリーグ11試合・勝ち点15の10位。契約は2029年6月まで
+  short_title: アッレグリ、5連覇の監督のいま
+  nameplate: マッシミリアーノ・アッレグリ｜ナポリ監督
+thumbnail:
+  line1: アッレグリ、通算469勝
+  line2: リーグ6回優勝。ナポリでは苦戦
+  tags: []
+  photo: assets/images/20261126_manager_allegri_b/panel_01.jpg
+  board: assets/images/20261126_manager_allegri_b/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261126_manager_allegri/01_v.jpg
+sections:
+- id: hook
+  main: true
+  heading: 5連覇、コッパ5回。史上初の記録を持つ監督は、なぜいま苦しんでいるのか
+  tier: 報道
+  telop: ユベントスでリーグ5連覇。いまはナポリの監督
+  narrator: 解説
+  card: &hook_stats
+    type: stats
+    title: アッレグリの歩み
+    items:
+    - ['5', 連覇, ユベントスでリーグ優勝]
+    - ['5', 回, コッパ・イタリア優勝。監督で史上初]
+    - ['2', 度, CL決勝へ。どちらも敗戦]
+    focus: 0
+  say:
+  - text: ユベントスで、リーグ5連覇。史上初の記録も持つ監督。それがアッレグリです。
+    image: assets/images/20261126_manager_allegri/02_w.jpg
+    emph: true
+    card: none
+  - text: ユベントスでリーグ優勝を、5年続けました。
+    card:
+      <<: *hook_stats
+      focus: 0
+  - text: コッパ・イタリアの優勝は、5回。監督としては、史上初です。
+    image: assets/images/20261126_manager_allegri/01_w.jpg
+    emph: true
+    card:
+      <<: *hook_stats
+      focus: 1
+  - text: チャンピオンズリーグの決勝にも、2度進みました。
+    card:
+      <<: *hook_stats
+      focus: 2
+  - text: 2026年7月から、ナポリを率いています。
+    card: none
+  - text: ところが、いまのナポリは、苦しい戦いが続いています。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Massimiliano_Allegri
+- id: data
+  heading: アッレグリは、いつ、どこで、どんな道を歩いた人か
+  tier: 報道
+  telop: マッシミリアーノ・アッレグリの基礎DATA
+  narrator: 解説
+  card: &data_table
+    type: table
+    title: マッシミリアーノ・アッレグリ（59歳）の基礎DATA
+    columns: [項目, 中身]
+    rows:
+    - [生年月日, 1967年8月11日（イタリア・リボルノ）]
+    - [選手のころ, MF。ナポリでもプレー]
+    - [監督, ナポリ（2026年7月から）]
+    - [タイトル, リーグ6、コッパ5、スーペルコッパ3]
+    - [いま, 契約は2029年6月まで]
+    highlight_row: 0
+  say:
+  - text: アッレグリは、1967年8月11日の生まれ。59歳です。
+    image: assets/images/20261126_manager_allegri/01_w.jpg
+    card:
+      <<: *data_table
+      highlight_row: 0
+  - text: 生まれは、リボルノ。選手のころはMFで、ナポリでも1年プレーしました。
+    card:
+      <<: *data_table
+      highlight_row: 1
+  - text: 監督は、2026年7月から、ナポリです。
+    card:
+      <<: *data_table
+      highlight_row: 2
+  - text: タイトルは、リーグ6回、コッパ5回、スーパーカップ3回です。
+    card:
+      <<: *data_table
+      highlight_row: 3
+  - text: 契約は3年。2029年6月までになっています。
+    card:
+      <<: *data_table
+      highlight_row: 4
+  sources:
+  - https://en.wikipedia.org/wiki/Massimiliano_Allegri
+  - https://www.beinsports.com/en-au/football/serie-a/articles/napoli-confirm-allegri-appointment-on-three-year-contract-2026-07-03
+- id: career
+  heading: ミランからユベントス、そしてナポリへ。アッレグリは何を積み上げたのか
+  tier: 背景
+  telop: 歩みと転機。ミランの優勝から、ナポリの監督まで
+  narrator: 解説
+  card: &career_tl
+    type: timeline
+    title: アッレグリの歩み
+    rows:
+    - [2010年, ミランの監督に。翌年にセリエA優勝]
+    - [2014年, ユベントスの監督に。リーグ5連覇へ]
+    - [2015年, CL決勝でバルセロナに1対3]
+    - [2021年, ユベントスに復帰]
+    - [2024年, コッパ優勝の2日後に、解任]
+    - [2026年7月, ミランを解任され、ナポリの監督に]
+    focus: 0
+  say:
+  - text: アッレグリは、2010年に、ミランの監督になりました。
+    image: assets/images/20261126_manager_allegri/02_w.jpg
+    card: none
+  - text: 2011年5月、ローマ戦の引き分けで、リーグ優勝が決まりました。
+    emph: true
+    image: assets/images/20261126_manager_allegri/02_w.jpg
+    card:
+      <<: *career_tl
+      focus: 0
+  - text: 2014年7月、コンテの辞任の翌日に、ユベントスの監督になりました。
+    image: assets/images/20261126_manager_allegri/02_w.jpg
+    card:
+      <<: *career_tl
+      focus: 1
+  - text: 就任した年から、リーグ優勝が、5年続きます。
+    emph: true
+    card: none
+  - text: 同じ時期のコッパ・イタリアも、2015年から4年続けて優勝です。
+    card: none
+  - text: 2015年6月、チャンピオンズリーグ決勝は、バルセロナに1対3。
+    image: assets/images/20261126_manager_allegri/02_w.jpg
+    card:
+      <<: *career_tl
+      focus: 2
+  - text: 2017年6月の決勝も、レアル・マドリードに1対4でした。
+    card: none
+  - text: 2021年、ユベントスに復帰。
+    card:
+      <<: *career_tl
+      focus: 3
+  - text: 2024年5月、コッパ・イタリアに勝った2日後に、クラブは解任を決めました。
+    emph: true
+    card:
+      <<: *career_tl
+      focus: 4
+  - text: 2025年5月に、ミランの監督へ。1年後の2026年5月に、解任されました。
+    image: assets/images/20261126_manager_allegri/02_w.jpg
+    card: none
+  - text: 2026年7月、ナポリの監督になりました。
+    card:
+      <<: *career_tl
+      focus: 5
+  sources:
+  - https://en.wikipedia.org/wiki/Massimiliano_Allegri
+- id: style
+  heading: 5回目のコッパ。アッレグリのチームは、どんな形なのか
+  tier: 報道
+  telop: 戦術の色。2024年コッパ・イタリア決勝、アタランタに1対0
+  narrator: 解説
+  card: &style_doc
+    type: document
+    label: 2024 コッパ・イタリア 決勝 対アタランタ
+    paragraphs:
+    - 2024年5月15日、ローマ。
+    - ユベントスが、アタランタに1対0。
+    - ユベントスにとって、5回目のコッパ・イタリア。
+    - アッレグリは、監督として史上初の、5回目の優勝。
+    highlight:
+    - 1対0
+    - 史上初
+  say:
+  - text: 形がよく見えるのは、2024年のコッパ・イタリア決勝です。
+    image: assets/images/20261126_manager_allegri/01_w.jpg
+    card: *style_doc
+  - text: 相手はアタランタ。ユベントスが、1対0の勝ちで締めました。
+    card: *style_doc
+  - text: 取られないこと。競った試合を、最少の点差で締めること。
+    emph: true
+    callword: 1対0
+    card: *style_doc
+  - text: アッレグリの土台は、コンテが作った3-5-2です。
+    image: assets/images/20261126_manager_allegri/02_w.jpg
+    card: none
+  - text: チャンピオンズリーグでは、3人ではなく、4人で守る形も使いました。
+    card: none
+  - text: 競った終盤には、3-5-2に切り替えます。
+    card: none
+  - text: ユベントスの守りの3人は、「ビービーシー」と呼ばれました。
+    image: assets/images/20261126_manager_allegri/02_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Massimiliano_Allegri
+- id: numbers
+  heading: 879試合で469勝。数字で見ると、どの時期がいちばん強かったのか
+  tier: 報道
+  telop: 通算879試合469勝。ユベントス1期目は勝率70.5%
+  narrator: 解説
+  card: &rate_table
+    type: table
+    title: アッレグリの成績（11月8日まで）
+    columns: [時期, 試合, 勝率]
+    rows:
+    - [通算, '879', 53.4%]
+    - [ミラン1期目, '178', 51.1%]
+    - [ユベントス1期目, '271', 70.5%]
+    highlight_row: 0
+  say:
+  - text: ここからは、アッレグリの成績を数字で。
+    image: assets/images/20261126_manager_allegri/01_w.jpg
+    card:
+      <<: *rate_table
+      highlight_row: 0
+  - text: 通算は879試合。勝ったのは469試合で、勝率は53.4%です。
+    emph: true
+    card:
+      <<: *rate_table
+      highlight_row: 0
+  - text: ミランの1期目は、178試合で、51.1%。
+    card:
+      <<: *rate_table
+      highlight_row: 1
+  - text: いちばん高いのが、ユベントスの1期目。271試合で、191勝です。
+    image: assets/images/20261126_manager_allegri/01_w.jpg
+    emph: true
+    card:
+      <<: *rate_table
+      highlight_row: 2
+  - text: 勝率70.5%は、ユベントスの歴史でも最高です。
+    emph: true
+    card:
+      <<: *rate_table
+      highlight_row: 2
+  sources:
+  - https://en.wikipedia.org/wiki/Massimiliano_Allegri
+- id: words
+  heading: 苦しい序盤のなか、アッレグリは何を語ったのか
+  tier: 報道
+  telop: アッレグリの言葉。2026年10月、ヴェネツィア戦を前に
+  narrator: 解説
+  card: &words_doc
+    type: document
+    label: アッレグリの言葉（訳）。2026年10月中旬
+    paragraphs:
+    - 心配はしていません。問題への答えを、見つけなければいけない。
+    - ただ、働くこと。選手を戻し、3日おきの試合を乗り切ること。
+    - 全員が必要です。
+    highlight:
+    - 心配はしていません
+    - 全員が必要です
+  say:
+  - text: 2026年10月中旬、ヴェネツィア戦を前に、アッレグリはこう話しました。
+    image: assets/images/20261126_manager_allegri/01_w.jpg
+    card: *words_doc
+  - voice: アッレグリ
+    text: 心配はしていません。問題への答えを、見つけなければいけない。
+  - voice: アッレグリ
+    text: ただ、働くこと。選手を戻し、3日おきの試合を乗り切ること。
+    cont: true
+    image: assets/images/20261126_manager_allegri/04_w.jpg
+    card: none
+  - voice: アッレグリ
+    text: 全員が必要です。
+    pause: 0.5
+  - text: ナポリは、その時点で、リーグ6試合を終えたところでした。
+    image: assets/images/20261126_manager_allegri/04_w.jpg
+    card: none
+  quotes_from:
+  - https://www.soccernews.com/napoli-need-to-find-solutions-to-the-problems-says-allegri/406503/
+  sources:
+  - https://www.soccernews.com/napoli-need-to-find-solutions-to-the-problems-says-allegri/406503/
+- id: secret
+  heading: 数字に出ない話。アッレグリの原点は、どこにあるのか
+  tier: 背景
+  telop: 愛称は小さなカタクチイワシ。コンテの後任として、ナポリへ
+  narrator: 解説
+  card: &sec_table
+    type: table
+    title: 数字の外にある話
+    columns: [いつ, 何があったか]
+    rows:
+    - [ルーツ, リボルノ生まれ。選手として374試合56得点]
+    - [愛称, 「アッチュジーナ」。小さなカタクチイワシ]
+    - [1997年, 選手としてナポリへ]
+    - [2014年, コンテの辞任の翌日に、ユベントスへ]
+    - [2018年, イタリアサッカー殿堂入り]
+    highlight_row: 0
+  say:
+  - text: では、アッレグリの、数字の外の話を。
+    image: assets/images/20261126_manager_allegri/04_w.jpg
+    card: none
+  - text: 選手としては、374試合に出て、56得点です。
+    card:
+      <<: *sec_table
+      highlight_row: 0
+  - text: 愛称は、「アッチュジーナ」。小さなカタクチイワシという意味です。
+    image: assets/images/20261126_manager_allegri/01_w.jpg
+    card:
+      <<: *sec_table
+      highlight_row: 1
+  - text: 細い体つきと、素早さから付いたと言われています。
+    card: none
+  - text: 1997年には、選手としてナポリへ。いまの職場でもあります。
+    card:
+      <<: *sec_table
+      highlight_row: 2
+  - text: 2014年、前任のコンテが辞めた翌日に、ユベントスを引き継ぎました。
+    emph: true
+    card:
+      <<: *sec_table
+      highlight_row: 3
+  - text: 12年後の2026年7月、そのコンテの後任として、ナポリへ来ました。
+    image: assets/images/20261126_manager_allegri/04_w.jpg
+    emph: true
+    card: none
+  - text: 2018年には、イタリアサッカーの殿堂に入っています。
+    card:
+      <<: *sec_table
+      highlight_row: 4
+  sources:
+  - https://en.wikipedia.org/wiki/Massimiliano_Allegri
+- id: view
+  viewpoint: true
+  heading: 見立て・勝率が下がり続けている。数字で見る、いまのナポリとは
+  tier: 背景
+  telop: 勝率70.5%から33.3%へ。時期ごとに並べる
+  narrator: 解説
+  card: &view_table
+    type: table
+    title: 自分で割ってみた（アッレグリの勝率）
+    columns: [時期, 試合, 勝率]
+    rows:
+    - [ユベントス1期目, '271', 70.5%]
+    - [ユベントス2期目, '149', 53.7%]
+    - [ミラン2期目, '42', 52.4%]
+    - [ナポリ（11月8日まで）, '15', 33.3%]
+    highlight_row: 0
+  say:
+  - text: 見立てです。アッレグリの勝率を、時期ごとに並べます。
+    image: assets/images/20261126_manager_allegri/01_w.jpg
+    card: *view_table
+  - text: ユベントスの2期目は、149試合で80勝。53.7%です。
+    card:
+      <<: *view_table
+      highlight_row: 1
+  - text: ミランの2期目は、42試合で22勝。52.4%です。
+    card:
+      <<: *view_table
+      highlight_row: 2
+  - text: ナポリでは、15試合で5勝。33.3%まで下がっています。
+    emph: true
+    mark: {"kind": "circle", "row": 3, "col": 2}
+    image: assets/images/20261126_manager_allegri/01_w.jpg
+    card:
+      <<: *view_table
+      highlight_row: 3
+  - text: 負けは、そのうちの7試合です。
+    card:
+      <<: *view_table
+      highlight_row: 3
+  - text: リーグ戦は、11月8日時点で、11試合を終えて勝ち点15。10位です。
+    card: none
+  - text: 最も高かった1期目から、時期を追うごとに、数字は下がっています。
+    emph: true
+    card: none
+  - text: 契約は、2029年6月まで。次の数字を決めるのは、年末までの試合です。
+    image: assets/images/20261126_manager_allegri/02_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Massimiliano_Allegri
+  - https://www.tuttomercatoweb.com/serie-a/napoli-de-laurentiis-pochi-punti-serie-a-neopromossa-2292053

@@ -1,0 +1,136 @@
+# 取材メモ（2026年11月4日）PSG、ビジャレアルに6-0。開始17分で4点、CLで4点に届いた最速の記録（ニュースのショート。見せ方 Y＝ルイス・エンリケ監督の言葉から始める）
+# 取材: 2026-11-04。WebFetch は使わず、python requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約は使っていない（記事を探すのに Google ニュースの RSS の見出し一覧だけ使った）。
+# 読んだ出典:
+#   ・ESPN 記事 50371706「PSG send UCL records tumbling with 6-goal thrashing of Villarreal」（content.core.api.espn.com 経由で本文を全部読んだ）
+#       - 4点目（ファビアン・ルイス）で「CLの試合で4点に届いた最速」。それまではレアル・マドリーが2011年にディナモ・ザグレブ相手に20分で4点。
+#       - 4点目で「CLの1シーズンの4試合目までの最多得点」18点にも並んだ（スロヴァン・ブラチスラヴァに6点、マンC・バルサに4点ずつ）。
+#         「CL史上はじめて、4試合続けて4点以上を取ったチーム」。
+#       - 78分のダビド・ボリー（17歳のDF）は、その4分前に途中出場したCLデビュー戦。
+#       - ルイス・エンリケ監督（英語の訳は AP/ESPN）: "What stands out to me is the way we started of the match. After a quick 0-4 down, no team can recover from that. It's hard for an opponent to wake up and make a comeback."
+#         "I don't particularly like these blowout scores because we always respect our opponent ..." / "the real competition starts in February or March" → 使うのは最初の3文だけ。
+#       - 最初の3点はビジャレアルが後ろからつなぐ所・自陣で奪われたミスから。デンベレ・マルキーニョス・ヌーノ・メンデス（腿）とクヴァラ（前十字）が欠場。公式戦10連勝。
+#   ・PSG 公式「Luis Enrique: “A sensational match”」（psg.fr、PSG TV の試合後の談話。監督・ファビアン・ルイス・ボリー・リュカの順）
+#       監督: "It was a sensational match. ... But we started the game brilliantly. We pressed very well, won the ball back and scored three goals. I’m very pleased with the match I saw."
+#       ボリー: "I got the ball from João Neves, moved in front of goal, took a shot and saw it go in. It was incredible!"
+#   ・ESPN の試合データ（site.api.espn.com .../uefa.champions/summary?event=401915309）: ビジャレアル 0-6 PSG（エスタディオ・デ・ラ・セラミカ、20,036人）。
+#       9分 ジョアン・ネヴェス（CKの流れ）、12分 ドゥエ（アシスト アクリウシェ）、13分 マユル、17分 ファビアン・ルイス（アシスト アクリウシェ）、50分 ファビアン・ルイス（アシスト ヴィティーニャ）、78分 ボリー（アシスト ジョアン・ネヴェス）。
+#       74分 ボリーがハキミと交代で入った。ボール保持 PSG 70.6%、シュート PSG 22本（枠内12）・ビジャレアル 14本（枠内2）。
+#   ・サッカーキング 2026-11-04（2224214）: 得点者と分は ESPN と一致。名前の表記（ジョアン・ネヴェス／デジレ・ドゥエ／セニー・マユル／ファビアン・ルイス／ダビド・ボリー）はここに合わせた。次節は25日、PSGはホームでローマ。
+#   ・マルカの「子どものサッカーか」（交代の制限への不満）は本文を読めていない＆記録と別の話なので使わない。
+# 食い違い: 得点の分・得点者は ESPN データとサッカーキングで一致。ESPN 記事は「最初の3点はビジャレアルのミスから」と書くが、ESPN データとサッカーキングでは1点目はCKの流れ。→ 台本は「2点目と3点目は相手陣地で奪ってから」とだけ言う（サッカーキング：12分はビルドアップに制限をかけてミスを誘発、13分はハキミの敵陣インターセプト）。監督の「3点」は監督の言葉のまま。
+# 自分で数えたもの: 1点目（9分）から4点目（17分）までは8分。記録は20分→17分で3分短い。CL4試合の得点 6+4+4+4=18。枠内シュート 12本 対 2本。
+# 本人の言葉: ルイス・エンリケ監督（PSG 公式の談話＝確定、ESPN の訳＝報道）。
+# 写真: PSG 公式の試合のスライドショー（diaporama、クラブのカメラマン）から5枚。01 ファビアン・ルイス（POTM の盾）、02 ファビアン・ルイス（背番号8）、03 ファビアン・ルイスを囲む選手（背中の名前で確認）、04 ネヴェス（87）ともう1人（縦切りはもう1人の方なので使わない）、05 ドゥエ（14）。代理店ではない。ESPN の主写真は誰か特定できず外した。
+# 反応: 0件（X は道具の決まりで当たれず、Reddit は requests で 403。作らない。approve は --no-voices）。
+# 前の本との重なり: 20261021_psg_barca_42（バルサ戦4-2・「3試合で14点」）／20261026_luis_enrique_kvara／20261102_manager_luisenrique（監督紹介のシリーズ）。
+#   → 今回の初出は「17分で4点の最速記録」「4試合で18点」「17歳ボリーのデビュー弾」。バルサ戦の得点の中身・クヴァラの話は繰り返さない。「3試合で14点」は言わない。
+slot: match
+date: "2026年11月4日"
+format: news
+no_main: true
+people: [パリ・サンジェルマン, ルイス・エンリケ, ファビアン・ルイス, ダビド・ボリー, ビジャレアル]
+
+short_style: Y
+short_hook_quote: 試合の入り方が素晴らしかった。
+short_question: パリ・サンジェルマンの4試合18点、このまま止まらないと思いますか。
+short_photos:
+  - assets/images/20261104_psg_17min_4goals/02_v.jpg
+  - assets/images/20261104_psg_17min_4goals/01_v.jpg
+  - assets/images/20261104_psg_17min_4goals/03_v.jpg
+  - assets/images/20261104_psg_17min_4goals/05_v.jpg
+short_telops: []
+
+theme:
+  id: psg_17min_4goals
+  league: france
+  league_name: チャンピオンズリーグ
+  prefix: ""
+  title: PSG、開始17分で4点。2011年のレアルを抜いたCL最速の4点目は誰が
+  hook: ""
+  question: パリ・サンジェルマンは、ビジャレアル相手にどうやって17分で4点を取ったのか
+  takeaway: 1点目の9分から4点目の17分までは8分。CLは4試合で18点、1試合あたり4.5点。4試合続けて4点以上はCL史上はじめて
+
+thumbnail:
+  layout: face
+  line1: パリ・サンジェルマン、17分で4点
+  line2: CL最速、レアルの20分を更新
+  tags: [PSG, ビジャレアル]
+  photo: assets/images/20261104_psg_17min_4goals/02_w.jpg
+  photos:
+    - assets/images/20261104_psg_17min_4goals/02_w.jpg
+    - assets/images/20261104_psg_17min_4goals/01_w.jpg
+  short_photo: assets/images/20261104_psg_17min_4goals/02_v.jpg
+
+answer: 9分ネヴェス、12分ドゥエ、13分マユル、17分ファビアン・ルイス。最後は17歳ボリーのデビュー弾で6対0
+watch: CLの次節は25日、パリ・サンジェルマンはホームでローマ戦
+
+sections:
+  - id: what
+    main: true
+    heading: パリ・サンジェルマンは、17分で何をしたのか
+    tier: 報道
+    telop: PSG、開始17分で4点。CLで4点に届いた最速の記録
+    say:
+      - text: パリ・サンジェルマンが、ビジャレアル戦の開始17分で4点を奪いました。
+      - voice: ルイス・エンリケ
+        text: 試合の入り方が素晴らしかった。
+        emph: true
+      - voice: ルイス・エンリケ
+        text: うまくプレスをかけて、ボールを奪い返し、3点を取った。
+        image: assets/images/20261104_psg_17min_4goals/03_w.jpg
+        cont: true
+      - voice: ルイス・エンリケ
+        text: あっという間に0対4になったら、どのチームも立て直せない。
+        cont: true
+      - text: ルイス・エンリケ監督の言葉です。現地3日の試合は、6対0の勝ちでした。
+        card: {type: table, title: CLの試合で4点に届いた速さ, columns: [チーム, 相手, 4点目], rows: [[パリ・サンジェルマン（2026年）, ビジャレアル, 17分], [レアル・マドリー（2011年）, ディナモ・ザグレブ, 20分]], highlight_row: 0}
+      - text: チャンピオンズリーグで4点に届いた最速。それまではレアル・マドリーの20分。
+        card: {type: table, title: CLの試合で4点に届いた速さ, columns: [チーム, 相手, 4点目], rows: [[パリ・サンジェルマン（2026年）, ビジャレアル, 17分], [レアル・マドリー（2011年）, ディナモ・ザグレブ, 20分]], highlight_row: 1}
+      - text: 最速の4点目を決めたのは、ファビアン・ルイスでした。
+        card: none
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50371706/psg-villarreal-champions-league-record-goals
+      - https://www.psg.fr/en/content/luis-enrique-ca-a-ete-un-match-sensationnel-villarreal-cf-reactions-paris-saint-germain-uefa-champions-league-2026-2027
+  - id: goals
+    heading: 17分までの4点は、どう決まったのか
+    tier: 報道
+    telop: 9分・12分・13分・17分。4点目までは8分
+    say:
+      - text: パリ・サンジェルマンの1点目は9分、ジョアン・ネヴェス。
+        image: assets/images/20261104_psg_17min_4goals/04_w.jpg
+        card: {type: table, title: パリ・サンジェルマンの6得点, columns: [分, 決めた選手], rows: [[9分, ジョアン・ネヴェス], [12分, デジレ・ドゥエ], [13分, セニー・マユル], [17分, ファビアン・ルイス], [50分, ファビアン・ルイス], [78分, ダビド・ボリー]], highlight_row: 0}
+      - text: 2点目と3点目は、ビジャレアルの陣地でボールを奪ってからの得点でした。
+      - text: 12分はデジレ・ドゥエ、13分はセニー・マユルが決めました。
+        image: assets/images/20261104_psg_17min_4goals/05_w.jpg
+        card: {type: table, title: パリ・サンジェルマンの6得点, columns: [分, 決めた選手], rows: [[9分, ジョアン・ネヴェス], [12分, デジレ・ドゥエ], [13分, セニー・マユル], [17分, ファビアン・ルイス], [50分, ファビアン・ルイス], [78分, ダビド・ボリー]], highlight_row: 2}
+      - text: そして17分、ファビアン・ルイスが左足で4点目。
+        image: assets/images/20261104_psg_17min_4goals/01_w.jpg
+        card: {type: table, title: パリ・サンジェルマンの6得点, columns: [分, 決めた選手], rows: [[9分, ジョアン・ネヴェス], [12分, デジレ・ドゥエ], [13分, セニー・マユル], [17分, ファビアン・ルイス], [50分, ファビアン・ルイス], [78分, ダビド・ボリー]], highlight_row: 3}
+      - text: ファビアン・ルイスは、50分にも決めました。この日2点目です。
+        card: none
+      - text: 78分には、17歳のダビド・ボリーが決めました。
+        card: {type: table, title: パリ・サンジェルマンの6得点, columns: [分, 決めた選手], rows: [[9分, ジョアン・ネヴェス], [12分, デジレ・ドゥエ], [13分, セニー・マユル], [17分, ファビアン・ルイス], [50分, ファビアン・ルイス], [78分, ダビド・ボリー]], highlight_row: 5}
+      - text: 途中出場から4分で決めた、チャンピオンズリーグのデビュー戦でした。
+        card: none
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915309
+      - https://www.soccer-king.jp/news/world/cl/20261104/2224214.html
+  - id: view
+    viewpoint: true
+    heading: パリ・サンジェルマンの4試合18点は、どれだけ異例か
+    tier: 背景
+    telop: CL4試合で18点。4試合続けて4点以上は史上はじめて
+    say:
+      - text: 見立てです。パリ・サンジェルマンは4試合で18点、1試合あたり4.5点。
+        emph: true
+      - text: シーズン4試合目までの得点では、大会の最多記録です。
+      - text: 4試合続けて4点以上を取ったチームは、チャンピオンズリーグで初めてです。
+      - text: この勢いのまま、次は25日、ホームでローマと戦います。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50371706/psg-villarreal-champions-league-record-goals
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915309
+      - https://www.psg.fr/en/content/diaporama-paris-survole-villarreal-saison-2026-2027
+short_title: "PSG、開始17分で4点。2011年のレアルを抜いたCL最速の4点目は誰が"

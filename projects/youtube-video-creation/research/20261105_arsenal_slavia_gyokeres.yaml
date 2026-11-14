@@ -1,0 +1,121 @@
+# 取材メモ（2026年11月5日）スラヴィア・プラハ1-2アーセナル。ギェケレシュが1ゴール1アシスト、CL3勝目で無敗継続。アルテタ監督とギェケレシュ本人の言葉（ニュースのショート。見せ方 Y＝アルテタの言葉から始める）
+# 取材: 2026-11-05。python requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。
+# 読んだ出典:
+#   ・ESPN の試合データ（site.api.espn.com .../uefa.champions/summary?event=401915381、11/4 20:00 UTC）: 9分 マドゥエケ（アシスト ギェケレシュ）／38分 ギェケレシュ（右足、左のエリア内から右上、アシスト メリーノ）／90分 ノヴァク（スラヴィア、アシスト ユラーセク）。スラヴィア 1-2 アーセナル。
+#   ・サッカーキング 2224762（試合レポート。全部読んだ）: 得点と分は ESPN データと一致。アーセナルは開幕2連勝、前節バイエルンと引き分け、今節で3勝目。プレミアでも4連勝で首位。次節は24日、ホームでドルトムント。
+#   ・ESPN 記事 50322780（PA の試合レポート。全部読んだ）: ギェケレシュは今季6度目の先発（珍しい先発）。**今季のここまでの得点はリーグカップのフリートウッド戦の1点だけ**。CLのオープンプレーでの得点は1月（カイラト・アルマトイ戦）以来。アーセナルは3位に上がった。
+#   ・アーセナル公式 arsenal.com「Every word from Arteta's post-Slavia Prague presser」（クラブ公式の書き起こし）:
+#       アルテタ: "I thought he was really good. It was a game we believed would be really good for him, for the demands the opponent puts in and the spaces he could use. He's done it really well, not just for the assist and the goal, but he was really connected to the team. It's really great news for him, because he really needed that performance."
+#       "The players need to impact the game like he has done today when they get the opportunity, to show the level they can produce. It's really positive for the team."
+#   ・アーセナル公式「Goalscorer Gyokeres feeling good after Slavia win」: ギェケレシュ: "It's my job as a striker and of course I want to contribute every game when I'm on the pitch and want to be involved as much as I can in attacks."
+#       アーセナルは4試合で勝ち点10、リーグフェーズ3位（公式）。**公式は「直近5試合で5つのゴール関与」と書くが、ESPN の「今季の得点は1点だけ」と合わせると数え方を確かめられない → 使わない**。
+#   ・アーセナル公式「Arteta reflects on two very different halves in Prague」: アウェーのCL無敗は10試合で、クラブ史上初。→ 題の範囲外なので使わない（後半の内容もギェケレシュの話ではないので使わない）。
+#   → **確かめられた＝本人の言葉（クラブ公式の書き起こし＝確定）**。台本は英語を日本語にした（語順はなぞらない）。
+# 食い違い: ①スコアの書き方。ESPN は「アーセナル 2-1」、サッカーキングは「1－2」。同じ試合で、ホーム側を先に書くかの違い。台本は「アーセナルが2対1」。②サッカーキングは「75分のCKでガブリエウが弾き出した」、ESPN は「スラヴィアの失点は90分」。失点は90分で一致。
+# 自分で数えたもの: 4試合で勝ち点10＝3勝1分け（開幕2連勝、バイエルン戦はドロー、今節勝ち）。
+# 本人の言葉: あり（アルテタ監督・ギェケレシュ＝アーセナル公式）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+# 写真: アーセナル公式の記事・フォトギャラリーから photopool で集める。
+# 前の本との重なり: ギェケレシュ・アーセナルの直近の本は posted.json に無し（人名・クラブ名で引いた）。日本の接点は無し。
+slot: match
+date: "2026年11月5日"
+format: news
+no_main: true
+people: [ギェケレシュ, アーセナル, アルテタ監督, マドゥエケ, スラヴィア・プラハ]
+
+short_style: Y
+short_hook_quote: 彼には、あのパフォーマンスが必要でした。
+short_question: ギェケレシュは、次のドルトムント戦でも先発に戻ってくると思いますか。
+short_photos:
+  - assets/images/20261105_arsenal_slavia_gyokeres/03_v.jpg
+  - assets/images/20261105_arsenal_slavia_gyokeres/02_v.jpg
+  - assets/images/20261105_arsenal_slavia_gyokeres/01_v.jpg
+  - assets/images/20261105_arsenal_slavia_gyokeres/04_v.jpg
+short_telops: []
+
+theme:
+  id: arsenal_slavia_gyokeres
+  league: england
+  league_name: チャンピオンズリーグ
+  prefix: ""
+  title: ギェケレシュ、1ゴール1アシスト。アルテタが言った「彼に必要だった試合」とは
+  hook: ""
+  question: アルテタ監督は、ギェケレシュの1ゴール1アシストをどう語ったのか
+  takeaway: ギェケレシュは今季6度目の先発。出番が来たとき、ゴールとアシストの両方で応えた。アーセナルは4試合で勝ち点10、3位に立った
+
+thumbnail:
+  layout: face
+  line1: ギェケレシュ 1G1A
+  line2: アルテタ「彼に必要な試合だった」
+  tags: [ギェケレシュ, アーセナル]
+  photo: assets/images/20261105_arsenal_slavia_gyokeres/04_w.jpg
+  photos:
+    - assets/images/20261105_arsenal_slavia_gyokeres/04_w.jpg
+    - assets/images/20261105_arsenal_slavia_gyokeres/02_w.jpg
+  short_photo: assets/images/20261105_arsenal_slavia_gyokeres/03_v.jpg
+
+answer: 相手の出方がギェケレシュに合うと見て起用。ゴールとアシストで応え、アルテタは「必要なパフォーマンスだった」
+watch: 24日のドルトムント戦（ホーム）
+
+sections:
+  - id: what
+    main: true
+    heading: ギェケレシュの1ゴール1アシストを、アルテタはどう語ったのか
+    tier: 確定
+    telop: アルテタ「彼に必要なパフォーマンスだった」
+    say:
+      - text: アーセナルが、スラヴィア・プラハに2対1で勝ちました。
+      - text: 今季6度目の先発のギェケレシュが、1ゴール1アシスト。監督のアルテタは、こう話しました。
+        image: assets/images/20261105_arsenal_slavia_gyokeres/03_w.jpg
+      - voice: ミケル・アルテタ
+        text: 彼には、あのパフォーマンスが必要でした。
+        emph: true
+      - voice: ミケル・アルテタ
+        text: 相手の出方からして、この試合は彼に合うと思っていました。
+        cont: true
+      - text: 9分、ギェケレシュが相手を背負ったまま、スルーパスを出します。
+      - text: 走り込んだマドゥエケが、1対1を決めて先制しました。
+      - text: 38分、ギェケレシュはメリーノとのパス交換から、右上へ決めて追加点です。
+        image: assets/images/20261105_arsenal_slavia_gyokeres/02_w.jpg
+      - voice: ヴィクトル・ギェケレシュ
+        text: ストライカーの仕事ですから。出る試合は、毎回貢献したいです。
+        image: assets/images/20261105_arsenal_slavia_gyokeres/01_w.jpg
+      - text: チャンピオンズリーグで、流れの中からの得点は1月以来です。
+    official: true
+    sources:
+      - https://www.arsenal.com/news/every-word-from-artetas-post-slavia-prague-presser-a0pkU6Q1QGpa
+      - https://www.arsenal.com/news/goalscorer-gyokeres-feeling-good-after-slavia-win-aq4jd9e9KN2A
+      - https://www.espn.com/soccer/report/_/gameId/401915381
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915381
+      - https://www.soccer-king.jp/news/world/cl/20261105/2224762.html
+  - id: game
+    heading: ギェケレシュの活躍で、アーセナルは何位に立ったのか
+    tier: 報道
+    telop: アーセナル、4試合で勝ち点10。CL3位に
+    say:
+      - text: 後半の90分に1点を返されましたが、アーセナルは逃げ切りました。
+        image: assets/images/20261105_arsenal_slavia_gyokeres/04_w.jpg
+      - text: ギェケレシュの2点への関与で、アーセナルは4試合で勝ち点10。3位です。
+    official: false
+    sources:
+      - https://www.arsenal.com/news/goalscorer-gyokeres-feeling-good-after-slavia-win-aq4jd9e9KN2A
+      - https://www.espn.com/soccer/report/_/gameId/401915381
+  - id: view
+    viewpoint: true
+    heading: アルテタは、出番が来た選手に何を求めたのか
+    tier: 報道
+    telop: 先発の機会が少ない選手に、アルテタが求めたこと
+    say:
+      - text: 見立てです。ギェケレシュは、出番が多くない中での先発でした。
+      - voice: ミケル・アルテタ
+        text: 出番が来たら、こんなふうに試合に影響を与えてほしい。
+        emph: true
+      - voice: ミケル・アルテタ
+        text: 持っている力を見せてほしいのです。
+        cont: true
+      - text: 次は24日、ホームでドルトムントを迎えます。
+    official: true
+    sources:
+      - https://www.arsenal.com/news/every-word-from-artetas-post-slavia-prague-presser-a0pkU6Q1QGpa
+      - https://www.espn.com/soccer/report/_/gameId/401915381
+short_title: "ギェケレシュ、1ゴール1アシスト。アルテタが言った「彼に必要だった試合」とは"

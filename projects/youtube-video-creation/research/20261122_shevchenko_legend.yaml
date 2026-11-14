@@ -1,0 +1,831 @@
+# アンドリー・シェフチェンコ（元ウクライナ代表FW、ミラン7シーズン・2004年バロンドール）の紹介。シリーズ「レジェンドの紹介（世界）」2026-11-22 用。8節（フック→基礎DATA→歩み→持ち味→あの試合→現役のあと→マル秘話→見立て）。日本との接点は一次情報で確かめられなかったので節を置かない。
+# **FotMob・DataMB・FBref・Sofascore・Transfermarkt 不使用**。数字は英語版 Wikipedia（Andriy Shevchenko、2003 UEFA Champions League final）・イタリア語版（リーグの内訳）と自分で足した値だけ。
+# **私生活・法的な問題は入れない**。政治の話も入れない。
+# **重なりの確認（2026-11-12）**：scripts/・covered.yaml・posted.json・research/2026111*_picks.txt を「シェフチェンコ／Shevchenko」で grep。主役の回は無し。同じ日の別シリーズに同名なし。
+# **引退の確認**：Wikipedia「2012年に代表（ユーロ2012後）と現役を終えた」。現役ではない（50歳）。2024-01-25 ウクライナサッカー協会会長に選出（本文）。
+# **数字の出どころと自分で足した値**
+# - **ミランのゴール数は資料が割れる**（英語版：成績表173・本文175／all competitions）。台本・サムネは割れない**セリエAだけ**を使う：ミラン 208試合127点（1999-2006、英語版・イタリア語版が一致）。2008-09 のレンタル（18試合0点）は除く。ウクライナ代表 111試合48点（本文）。合計 319試合175点（自分で足した値：208+111、127+48）。サムネの表は「ミラン（セリエA）」「ウクライナ代表」「合計」。
+# - ミランの主要タイトル5個（Honours）：CL 2002-03、コッパ・イタリア 2002-03、UEFAスーパー杯 2003、セリエA 2003-04、スーペルコッパ 2004。暦年で 2003＝3、2004＝2。1999〜2002＝0、2005〜2006＝0（自分で数えた。2005年CL決勝はリヴァプールに敗れた準優勝）。セリエA得点王 1999-2000・2003-04（各24点）。
+# - 2003-05-28 CL決勝（オールド・トラッフォード、62,315人）ミラン0-0ユベントス（延長）、PK戦3-2。ディダが3本止める。シェフチェンコが最後のキック。9分のインザーギのゴールはオフサイド。シェフチェンコは先発してフル出場（試合ページのラインナップ）。**PKの順番は資料の表記が割れるので、「2対2で迎えた5人目」だけ書く（ミラン3本成功・ユベントス2本成功の合計から）。**
+# - 2006年チェルシー移籍金 £30.8m（イングランドのクラブとして記録・本文）。ユーロ2012 スウェーデン戦2ゴール（ヘディング・本文）。1997-98 バルセロナ戦ハットトリック（4-0・本文）。2006年W杯は主将、準々決勝でイタリアに0-3（本文）。
+# **本人の言葉**：取れていない。声の行は置かない。
+# **入れなかったもの**：私生活・家族・政治（2012年の選挙）・2005年イスタンブール決勝のPK失敗（敗戦の事実のみ見立てで触れず）・ミランのゴール数の通算（資料が割れる）。
+# **読みで怪しいもの**：アンドリー・シェフチェンコ（アンドリー／アンドリイ）、ディナモ・キーウ、ユベントス、インザーギ、ディダ、ジェノア、オールド・トラッフォード、カンプ・ノウ、スーペルコッパ、コッパ・イタリア。
+title: シェフチェンコは、どんな選手だった？ ミラン7年のタイトルは、いつ集まったのか
+format: news
+short_title: シェフチェンコは、どんな選手だった？
+series: レジェンドの紹介
+topic: アンドリー・シェフチェンコ
+date: 2026年11月12日
+slot: other_1
+people:
+- アンドリー・シェフチェンコ
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  id: legend_shevchenko
+  league: italy
+  league_name: セリエA
+  kind: other
+  topic: アンドリー・シェフチェンコ
+  title: シェフチェンコは、どんな選手だった？ ミラン7年のタイトルは、いつ集まったのか
+  question: ミランの7年で、シェフチェンコのタイトルはいつ集まったのか
+  takeaway: ミランでの主要タイトル5個は、すべて2003年と2004年の2年間に集中。その前の4年と後の2年はゼロ。その中心にいたのが、2003年のCL決勝で優勝を決めたシェフチェンコ
+  nameplate: アンドリー・シェフチェンコ｜元ウクライナ代表 FW
+  opening_image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  end_bg: assets/images/20261122_shevchenko_legend/05_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+  outro_title: 毎日、数字でサッカーを読み解きます
+thumbnail:
+  line1: シェフチェンコ、セリエA127点
+  line2: 2004年、バロンドール
+  tags:
+  - ミラン
+  photo: assets/images/20261122_shevchenko_legend/panel_01.jpg
+  board: assets/images/20261122_shevchenko_legend/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261122_shevchenko_legend/05_v.jpg
+sections:
+- id: hook
+  heading: シェフチェンコは、ミランで何を決めたのか
+  tier: 報道
+  telop: 2004年、バロンドール
+  say:
+  - text: 2004年、バロンドールを手にした、ウクライナの選手がいます。
+    card: none
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: ヨーロッパの年間最優秀選手に贈られる賞です。
+    card: none
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: アンドリー・シェフチェンコ。ミランの7シーズンで、セリエAの127ゴール。
+    card:
+      type: stats
+      title: アンドリー・シェフチェンコ 元FW（50歳）
+      items:
+      - - '319'
+        - 試合
+        - セリエAとウクライナ代表の試合
+      - - '127'
+        - ゴール
+        - ミランのセリエA（7シーズン）
+      - - '5'
+        - 個
+        - ミランでの主要タイトル
+      focus: 1
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: セリエAとウクライナ代表の試合は、合わせて319試合です。
+    card:
+      type: stats
+      title: アンドリー・シェフチェンコ 元FW（50歳）
+      items:
+      - - '319'
+        - 試合
+        - セリエAとウクライナ代表の試合
+      - - '127'
+        - ゴール
+        - ミランのセリエA（7シーズン）
+      - - '5'
+        - 個
+        - ミランでの主要タイトル
+      focus: 0
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+    emph: true
+    callword: 319試合
+  - text: ミランでの主要タイトルは5個。すべて、2003年と2004年に集まりました。
+    card:
+      type: stats
+      title: アンドリー・シェフチェンコ 元FW（50歳）
+      items:
+      - - '319'
+        - 試合
+        - セリエAとウクライナ代表の試合
+      - - '127'
+        - ゴール
+        - ミランのセリエA（7シーズン）
+      - - '5'
+        - 個
+        - ミランでの主要タイトル
+      focus: 2
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: 2003年のチャンピオンズリーグ決勝では、優勝を決めるPKを蹴りました。
+    card: none
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: 7年間の歩みを、たどります。
+    card: none
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Andriy_Shevchenko
+- id: data
+  heading: シェフチェンコは、いつ、どこで生まれ、どんな選手か
+  tier: 報道
+  telop: シェフチェンコの基礎DATA
+  say:
+  - text: シェフチェンコは1976年9月29日、ウクライナに生まれました。
+    card:
+      type: table
+      title: アンドリー・シェフチェンコ
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 生年月日
+        - 1976年9月29日・ウクライナ
+      - - ポジション
+        - ストライカー
+      - - クラブ
+        - ディナモ・キーウ、ミラン、チェルシー
+      - - 代表
+        - ウクライナ代表 111試合
+      - - 現役を終えた
+        - 2012年・ディナモ・キーウ
+      highlight_row: 0
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: ポジションは、ストライカーです。
+    card:
+      type: table
+      title: アンドリー・シェフチェンコ
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 生年月日
+        - 1976年9月29日・ウクライナ
+      - - ポジション
+        - ストライカー
+      - - クラブ
+        - ディナモ・キーウ、ミラン、チェルシー
+      - - 代表
+        - ウクライナ代表 111試合
+      - - 現役を終えた
+        - 2012年・ディナモ・キーウ
+      highlight_row: 1
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: 所属は、ディナモ・キーウ、ミラン、チェルシー。
+    card:
+      type: table
+      title: アンドリー・シェフチェンコ
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 生年月日
+        - 1976年9月29日・ウクライナ
+      - - ポジション
+        - ストライカー
+      - - クラブ
+        - ディナモ・キーウ、ミラン、チェルシー
+      - - 代表
+        - ウクライナ代表 111試合
+      - - 現役を終えた
+        - 2012年・ディナモ・キーウ
+      highlight_row: 2
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: ウクライナ代表では、111試合に出ています。
+    card:
+      type: table
+      title: アンドリー・シェフチェンコ
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 生年月日
+        - 1976年9月29日・ウクライナ
+      - - ポジション
+        - ストライカー
+      - - クラブ
+        - ディナモ・キーウ、ミラン、チェルシー
+      - - 代表
+        - ウクライナ代表 111試合
+      - - 現役を終えた
+        - 2012年・ディナモ・キーウ
+      highlight_row: 3
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: 引退は2012年、35歳のときです。
+    card:
+      type: table
+      title: アンドリー・シェフチェンコ
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 生年月日
+        - 1976年9月29日・ウクライナ
+      - - ポジション
+        - ストライカー
+      - - クラブ
+        - ディナモ・キーウ、ミラン、チェルシー
+      - - 代表
+        - ウクライナ代表 111試合
+      - - 現役を終えた
+        - 2012年・ディナモ・キーウ
+      highlight_row: 4
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Andriy_Shevchenko
+- id: career
+  heading: シェフチェンコは、どこでプレーしてきたのか
+  tier: 報道
+  telop: キーウからミラン、そしてロンドンへ
+  say:
+  - text: シェフチェンコは、ディナモ・キーウの下部組織で育ちます。
+    card: none
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: トップチームに上がると、在籍中にウクライナのリーグを5連覇します。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows:
+      - - 1995〜99
+        - ディナモ・キーウで、在籍中にリーグ5連覇
+      - - '1999'
+        - ミランへ移籍
+      - - '2000'
+        - セリエAの得点王（1999-2000）
+      - - '2004'
+        - バロンドール
+      - - '2006'
+        - イングランドのチェルシーへ
+      - - '2012'
+        - ディナモ・キーウで現役を終える
+      focus: 0
+      highlight_row: 0
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: 1999年、ミランへ。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows:
+      - - 1995〜99
+        - ディナモ・キーウで、在籍中にリーグ5連覇
+      - - '1999'
+        - ミランへ移籍
+      - - '2000'
+        - セリエAの得点王（1999-2000）
+      - - '2004'
+        - バロンドール
+      - - '2006'
+        - イングランドのチェルシーへ
+      - - '2012'
+        - ディナモ・キーウで現役を終える
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: 初めてのシーズンで、セリエAの得点王になります。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows:
+      - - 1995〜99
+        - ディナモ・キーウで、在籍中にリーグ5連覇
+      - - '1999'
+        - ミランへ移籍
+      - - '2000'
+        - セリエAの得点王（1999-2000）
+      - - '2004'
+        - バロンドール
+      - - '2006'
+        - イングランドのチェルシーへ
+      - - '2012'
+        - ディナモ・キーウで現役を終える
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: 2003年にチャンピオンズリーグを制し、2004年にバロンドール。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows:
+      - - 1995〜99
+        - ディナモ・キーウで、在籍中にリーグ5連覇
+      - - '1999'
+        - ミランへ移籍
+      - - '2000'
+        - セリエAの得点王（1999-2000）
+      - - '2004'
+        - バロンドール
+      - - '2006'
+        - イングランドのチェルシーへ
+      - - '2012'
+        - ディナモ・キーウで現役を終える
+      focus: 3
+      highlight_row: 0
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: 2006年、7年いたミランを離れ、イングランドのチェルシーへ。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows:
+      - - 1995〜99
+        - ディナモ・キーウで、在籍中にリーグ5連覇
+      - - '1999'
+        - ミランへ移籍
+      - - '2000'
+        - セリエAの得点王（1999-2000）
+      - - '2004'
+        - バロンドール
+      - - '2006'
+        - イングランドのチェルシーへ
+      - - '2012'
+        - ディナモ・キーウで現役を終える
+      focus: 4
+      highlight_row: 0
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: 2008年からは、1年間だけミランに戻ります。
+    card: none
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: そして2012年、ディナモ・キーウで、現役を終えました。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows:
+      - - 1995〜99
+        - ディナモ・キーウで、在籍中にリーグ5連覇
+      - - '1999'
+        - ミランへ移籍
+      - - '2000'
+        - セリエAの得点王（1999-2000）
+      - - '2004'
+        - バロンドール
+      - - '2006'
+        - イングランドのチェルシーへ
+      - - '2012'
+        - ディナモ・キーウで現役を終える
+      focus: 5
+      highlight_row: 0
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Andriy_Shevchenko
+- id: style
+  heading: シェフチェンコは、何で相手を上回ったのか
+  tier: 報道
+  telop: 速くて、何でもできるストライカー
+  say:
+  - text: シェフチェンコは、速くて、何でもできるストライカーでした。
+    card:
+      type: table
+      title: シェフチェンコの持ち味
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 位置
+        - ストライカー
+      - - 武器1
+        - どちらの足でも打てる、強く正確なシュート
+      - - 武器2
+        - 動き出しと、ゴール前の位置取り
+      - - 武器3
+        - ヘディング
+      - - 記録
+        - ウクライナ代表 歴代最多の48ゴール
+      highlight_row: 0
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: 武器の1つ目は、どちらの足でも打てる、強く正確なシュート。
+    card:
+      type: table
+      title: シェフチェンコの持ち味
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 位置
+        - ストライカー
+      - - 武器1
+        - どちらの足でも打てる、強く正確なシュート
+      - - 武器2
+        - 動き出しと、ゴール前の位置取り
+      - - 武器3
+        - ヘディング
+      - - 記録
+        - ウクライナ代表 歴代最多の48ゴール
+      highlight_row: 1
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: 2つ目は、動き出しと、ゴール前での位置取り。ゴールになる場所に、先にいました。
+    card:
+      type: table
+      title: シェフチェンコの持ち味
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 位置
+        - ストライカー
+      - - 武器1
+        - どちらの足でも打てる、強く正確なシュート
+      - - 武器2
+        - 動き出しと、ゴール前の位置取り
+      - - 武器3
+        - ヘディング
+      - - 記録
+        - ウクライナ代表 歴代最多の48ゴール
+      highlight_row: 2
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: 3つ目は、ヘディング。空中戦にも強い選手でした。
+    card:
+      type: table
+      title: シェフチェンコの持ち味
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 位置
+        - ストライカー
+      - - 武器1
+        - どちらの足でも打てる、強く正確なシュート
+      - - 武器2
+        - 動き出しと、ゴール前の位置取り
+      - - 武器3
+        - ヘディング
+      - - 記録
+        - ウクライナ代表 歴代最多の48ゴール
+      highlight_row: 3
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: ウクライナ代表では、48ゴール。歴代最多です。
+    card:
+      type: table
+      title: シェフチェンコの持ち味
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 位置
+        - ストライカー
+      - - 武器1
+        - どちらの足でも打てる、強く正確なシュート
+      - - 武器2
+        - 動き出しと、ゴール前の位置取り
+      - - 武器3
+        - ヘディング
+      - - 記録
+        - ウクライナ代表 歴代最多の48ゴール
+      highlight_row: 4
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+    emph: true
+  - text: 2006年のワールドカップには、主将として出場。
+    card: none
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: ウクライナの初めての本大会は、準々決勝まで勝ち上がりました。
+    card: none
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Andriy_Shevchenko
+- id: match
+  heading: 2003年のチャンピオンズリーグ決勝で、シェフチェンコは何を決めたのか
+  tier: 報道
+  telop: PK戦、最後の1本
+  main: true
+  say:
+  - text: アンドリー・シェフチェンコ。
+    card: none
+    short_only: true
+  - text: 優勝を決めるPKを、蹴った夜があります。
+    card: none
+    short_only: true
+  - text: 2003年5月28日、イングランドのオールド・トラッフォード。
+    card: none
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: チャンピオンズリーグの決勝です。
+    card: none
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: ミランの相手は、同じイタリアのユベントス。観客は6万2,315人です。
+    card: none
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: シェフチェンコは、センターフォワードで先発しました。
+    card: none
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: 9分、シェフチェンコがつないだボールから、インザーギが決めます。
+    card:
+      type: timeline
+      title: 2003年5月28日 CL決勝 ユベントス戦
+      rows:
+      - - 9分
+        - インザーギが決めるが、オフサイドの判定
+      - - 120分
+        - 延長まで戦って、0対0
+      - - PK戦
+        - 3対2でミランの優勝。最後はシェフチェンコ
+      focus: 0
+      highlight_row: 0
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: でも、オフサイドの判定でした。
+    card: none
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: 0対0のまま、延長戦の120分が終わります。
+    card:
+      type: timeline
+      title: 2003年5月28日 CL決勝 ユベントス戦
+      rows:
+      - - 9分
+        - インザーギが決めるが、オフサイドの判定
+      - - 120分
+        - 延長まで戦って、0対0
+      - - PK戦
+        - 3対2でミランの優勝。最後はシェフチェンコ
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: 勝負は、PK戦に。
+    card: none
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: ミランのゴールキーパー、ディダが、ユベントスの5人のうち3人を止めます。
+    card: none
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: ミランも2人が外して、2対2で迎えた、5人目。
+    card:
+      type: timeline
+      title: 2003年5月28日 CL決勝 ユベントス戦
+      rows:
+      - - 9分
+        - インザーギが決めるが、オフサイドの判定
+      - - 120分
+        - 延長まで戦って、0対0
+      - - PK戦
+        - 3対2でミランの優勝。最後はシェフチェンコ
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: 蹴るのは、シェフチェンコ。
+    card: none
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: ボールは、ゴールに入ります。3対2、ミランの優勝です。
+    card: none
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+    emph: true
+  - text: シェフチェンコは、120分とPK戦、最後の1本まで、ピッチに立ち続けました。
+    card: none
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Andriy_Shevchenko
+  - https://en.wikipedia.org/wiki/2003_UEFA_Champions_League_final
+- id: after
+  heading: シェフチェンコは、現役のあと何をしているのか
+  tier: 報道
+  telop: 代表監督から、協会の会長へ
+  say:
+  - text: ユーロ2012では、スウェーデン戦でヘディングを2発。
+    card: none
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: シェフチェンコの2ゴールで、2対1の勝ちでした。
+    card: none
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: 大会のあと、ウクライナ代表からの引退を発表します。
+    card:
+      type: timeline
+      title: 現役のあとの歩み
+      rows:
+      - - 2012年
+        - ユーロ2012のあと代表を退き、現役も終える
+      - - 2016年7月
+        - ウクライナ代表の監督に（〜2021年）
+      - - 2021年11月
+        - イタリアのジェノアの監督に（〜2022年1月）
+      - - 2024年1月
+        - ウクライナサッカー協会の会長に
+      focus: 0
+      highlight_row: 0
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: 同じ2012年、現役生活にも区切りをつけます。
+    card: none
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: 2016年7月、今度はウクライナ代表の監督に。
+    card:
+      type: timeline
+      title: 現役のあとの歩み
+      rows:
+      - - 2012年
+        - ユーロ2012のあと代表を退き、現役も終える
+      - - 2016年7月
+        - ウクライナ代表の監督に（〜2021年）
+      - - 2021年11月
+        - イタリアのジェノアの監督に（〜2022年1月）
+      - - 2024年1月
+        - ウクライナサッカー協会の会長に
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: 2021年8月まで、5年間率います。
+    card: none
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: 2021年11月には、イタリアのジェノアの監督に。
+    card:
+      type: timeline
+      title: 現役のあとの歩み
+      rows:
+      - - 2012年
+        - ユーロ2012のあと代表を退き、現役も終える
+      - - 2016年7月
+        - ウクライナ代表の監督に（〜2021年）
+      - - 2021年11月
+        - イタリアのジェノアの監督に（〜2022年1月）
+      - - 2024年1月
+        - ウクライナサッカー協会の会長に
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: 2022年1月までの、短い期間でした。
+    card: none
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: そして2024年1月、ウクライナサッカー協会の会長に選ばれます。
+    card:
+      type: timeline
+      title: 現役のあとの歩み
+      rows:
+      - - 2012年
+        - ユーロ2012のあと代表を退き、現役も終える
+      - - 2016年7月
+        - ウクライナ代表の監督に（〜2021年）
+      - - 2021年11月
+        - イタリアのジェノアの監督に（〜2022年1月）
+      - - 2024年1月
+        - ウクライナサッカー協会の会長に
+      focus: 3
+      highlight_row: 0
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+    emph: true
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Andriy_Shevchenko
+- id: secret
+  heading: シェフチェンコには、どんな意外な話があるのか
+  tier: 報道
+  telop: 本拠地での3発、記録の移籍金
+  say:
+  - text: ここで、シェフチェンコの意外な一面を3つ。
+    card: none
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: 1つ目。1997-98シーズン、チャンピオンズリーグのバルセロナ戦。
+    card:
+      type: table
+      title: 知られざる、3つの話
+      columns:
+      - いつ
+      - 何があったか
+      rows:
+      - - 1997-98
+        - バルセロナの本拠地で、前半にハットトリック
+      - - 2006年
+        - チェルシーへ。イングランドのクラブとして記録の移籍金
+      - - 2012年
+        - ユーロ2012のスウェーデン戦で、ヘディング2発
+      highlight_row: 0
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: ディナモ・キーウの一員として、敵地のカンプ・ノウで、前半にハットトリック。
+    card: none
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: チームは4対0で勝ちました。
+    card: none
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: 2つ目。2006年、チェルシーへの移籍。
+    card:
+      type: table
+      title: 知られざる、3つの話
+      columns:
+      - いつ
+      - 何があったか
+      rows:
+      - - 1997-98
+        - バルセロナの本拠地で、前半にハットトリック
+      - - 2006年
+        - チェルシーへ。イングランドのクラブとして記録の移籍金
+      - - 2012年
+        - ユーロ2012のスウェーデン戦で、ヘディング2発
+      highlight_row: 1
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: 移籍金は3,080万ポンド。
+    card: none
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: イングランドのクラブが獲得した選手として、記録でした。
+    card: none
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: 3つ目。2012年、ユーロ2012のスウェーデン戦。
+    card:
+      type: table
+      title: 知られざる、3つの話
+      columns:
+      - いつ
+      - 何があったか
+      rows:
+      - - 1997-98
+        - バルセロナの本拠地で、前半にハットトリック
+      - - 2006年
+        - チェルシーへ。イングランドのクラブとして記録の移籍金
+      - - 2012年
+        - ユーロ2012のスウェーデン戦で、ヘディング2発
+      highlight_row: 2
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: 35歳で迎えた大会で、決めた2ゴールでした。
+    card: none
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Andriy_Shevchenko
+- id: view
+  heading: 5個のタイトルは、いつ獲ったのか
+  tier: 背景
+  telop: 5個のタイトルは、2年に集中
+  viewpoint: true
+  say:
+  - text: 最後に、ミランの7年を、年ごとに並べて比べます。
+    card:
+      type: table
+      title: ミランでの主要タイトル（暦年ごと）
+      columns:
+      - 期間
+      - 年数
+      - 主要タイトル
+      rows:
+      - - 1999〜2002年
+        - '4'
+        - 0個
+      - - 2003〜2004年
+        - '2'
+        - 5個
+      - - 2005〜2006年
+        - '2'
+        - 0個
+      highlight_row: 0
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: 1999年から2002年の4年間は、主要タイトルがありませんでした。
+    card:
+      type: table
+      title: ミランでの主要タイトル（暦年ごと）
+      columns:
+      - 期間
+      - 年数
+      - 主要タイトル
+      rows:
+      - - 1999〜2002年
+        - '4'
+        - 0個
+      - - 2003〜2004年
+        - '2'
+        - 5個
+      - - 2005〜2006年
+        - '2'
+        - 0個
+      highlight_row: 0
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: ところが、2003年と2004年の2年間で、5個。
+    card:
+      type: table
+      title: ミランでの主要タイトル（暦年ごと）
+      columns:
+      - 期間
+      - 年数
+      - 主要タイトル
+      rows:
+      - - 1999〜2002年
+        - '4'
+        - 0個
+      - - 2003〜2004年
+        - '2'
+        - 5個
+      - - 2005〜2006年
+        - '2'
+        - 0個
+      highlight_row: 1
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+    emph: true
+    mark:
+      kind: circle
+      row: 1
+      col: 2
+  - text: チャンピオンズリーグ、リーグ優勝、国内カップ、そして2つのスーパーカップ。
+    card: none
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: 1年あたりにならすと、2003〜2004年は2.5個。ほかの6年は、0個です。
+    card: none
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: 2005年と2006年は、また0個でした。
+    card:
+      type: table
+      title: ミランでの主要タイトル（暦年ごと）
+      columns:
+      - 期間
+      - 年数
+      - 主要タイトル
+      rows:
+      - - 1999〜2002年
+        - '4'
+        - 0個
+      - - 2003〜2004年
+        - '2'
+        - 5個
+      - - 2005〜2006年
+        - '2'
+        - 0個
+      highlight_row: 2
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: そのあいだ、セリエAの得点王は2度。1999-2000と、2003-04です。
+    card: none
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  - text: 7年のうち、タイトルが集まったのは2年。その中心にいたのが、シェフチェンコです。
+    card: none
+    image: assets/images/20261122_shevchenko_legend/05_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Andriy_Shevchenko

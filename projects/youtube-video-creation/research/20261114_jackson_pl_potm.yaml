@@ -1,0 +1,125 @@
+# 取材メモ（2026年11月14日）ニコラス・ジャクソン、プレミアリーグ10月の月間MVPを初受賞（ニュースのショート。見せ方 X＝冒頭1秒の強い一言。本人の言葉は取れなかった）
+# 取材: 2026-11-14。WebFetch と python requests（ブラウザUA）と site.api.espn.com で確かめた。検索エンジンのAI要約は使っていない（URL探しに検索を1回使っただけ）。ブラウザの道具・FotMob は使っていない。
+# 出典で確かめたこと:
+#   ・プレミアリーグ公式（premierleague.com/en/news/4763463, 2026-11-13。WebFetch で読んだ）: EA SPORTS 10月の月間MVPをジャクソン（25歳）が初受賞。ブレントフォード戦（2-2）で同点弾、ニューカッスル戦（1-0）は得点の記述なし、
+#       マンC戦（2-1）で2得点、フルアム戦（1-1）で先制点。4試合4ゴール。ヴィラはシティの今季初めて勝ち点を奪ったチーム。候補8人（エヴァニウソン・コンサ・ライス・ルドニ・ファン・ヘッケ・フェルブルッヘン・ヴシュコヴィッチ）。
+#       ファン投票（EA SPORTS サイト）と専門家の投票を合算。ヴィラの選手では2015年4月のベンテケ以来。セネガル人では4人目で、2019年11月のマネ以来。今季の受賞：8月ジョアン・ペドロ、9月グロス。本人の言葉は無い。
+#   ・BBC（Yahoo Sports 転載 articles/jackson-wins-award-goal-topping-135806604.html, 2026-11-13。WebFetch で読んだ）: 10月は誰よりも多い4ゴール。夏にチェルシーから最大6,500万ポンドで加入。リーグ戦9試合で6ゴール1アシスト。本人・エメリの言葉は無い。
+#   ・サッカーキング（world/eng/20261113/2227397.html。WebFetch で読んだ。依頼元）: 対象は第6〜9節の4試合4ゴール。公式戦14試合9ゴール1アシスト（リーグ戦以外を含む）。本人コメント無し。
+#   ・ESPN の試合データ（eng.1 summary）: 10/10 ヴィラ2-2ブレントフォード＝ジャクソン前半12分（先発）／10/17 ニューカッスル0-1ヴィラ＝得点マンザンビ、ジャクソンは先発で無得点（枠内1）／
+#       10/24 ヴィラ2-1マンC＝ジャクソン前半6分（アシスト マッギン）・後半15分（60分。アシスト ムバイェ）、ハーランド52分／10/31 ヴィラ1-1フルアム＝ジャクソン前半39分（アシスト マンザンビ）。
+#       4試合とも先発。ジャクソンの10月の枠内シュートは合計7本で4ゴール。ESPN の4試合の日付は現地時間。
+#   ・ESPN のジャクソンのリーグ戦合計（試合ごとに集計。自分で足した）: 9試合出場6ゴール。10月の4点＋9/19 トッテナム戦＋11/8 ユナイテッド戦（4分。4-4）。→ BBC の「9試合6ゴール」と一致。
+#   ・ESPN の日程: 11/21 15:00Z（日本時間22日0時）ヴィラ対サンダーランド（401878756、ヴィラ・パーク）。
+# 食い違い: ①ジャクソンの今季の数字：サッカーキング「公式戦14試合9ゴール1アシスト」とBBC「リーグ戦9試合6ゴール1アシスト」は範囲が違う（全大会かリーグ戦のみか）。ESPN のリーグ戦集計は6ゴールで BBC と一致。台本はリーグ戦の数字だけ使う。
+#   ②BBC（Yahoo転載）は4試合のうち3試合しか名前を挙げない（ニューカッスル戦が抜ける）。公式と ESPN で補った。
+#   ③移籍金：BBC「最大6,500万ポンド」。他社に別の額があるが、台本では使わない。
+#   ④サッカーキング「4戦4発」ではなく、ニューカッスル戦は無得点（4試合で4ゴール）。台本は「4試合で4ゴール」と言い、「毎試合」とは言わない。
+# 前の本との重なり: 20261025_jackson_villa_city（マンC戦の2発・210分に1点）。今回の初出は月間MVP受賞、4ゴールの4試合の中身、ヴィラ11年ぶり、リーグ戦6点のうち4点が10月。
+# 本人の言葉: 無し（公式・BBC・サッカーキングの本文に無い）。X。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: overseas
+date: "2026年11月14日"
+format: news
+no_main: true
+people: [ニコラス・ジャクソン]
+
+short_style: X
+short_hook_word: 4試合で4ゴール
+short_photos:
+  - assets/images/20261114_jackson_pl_potm/03_v.jpg
+  - assets/images/20261114_jackson_pl_potm/01_v.jpg
+  - assets/images/20261114_jackson_pl_potm/04_v.jpg
+short_question: ジャクソンは、11月以降も、ヴィラの得点源であり続けると思いますか。
+short_telops: []
+
+theme:
+  id: jackson_pl_potm
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: ジャクソン、10月の月間MVP。受賞を決めた4試合には、何があったのか
+  hook: ""
+  question: ジャクソンの10月の4ゴールは、どの試合で生まれたのか
+  takeaway: 10月の4試合で4ゴール。リーグ戦の今季6点のうち4点がこの月に集まり、ヴィラの選手の受賞は2015年4月のベンテケ以来
+
+thumbnail:
+  layout: face
+  line1: ジャクソン 月間MVP
+  line2: 10月は4試合4ゴール
+  tags: [ジャクソン, アストン・ヴィラ, プレミアリーグ]
+  photo: assets/images/20261114_jackson_pl_potm/03_w.jpg
+  short_photo: assets/images/20261114_jackson_pl_potm/03_v.jpg
+
+answer: ブレントフォード戦で1点、マンC戦で2点、フルアム戦で1点。ニューカッスル戦だけ得点が無かった
+watch: 21日（土）のサンダーランド戦（日本時間22日0時）
+
+sections:
+  - id: what
+    main: true
+    heading: ジャクソンの10月の4ゴールは、どの試合で生まれたのか
+    tier: 報道
+    telop: 10月の月間MVPは、4試合で4ゴール
+    say:
+      - text: ヴィラのジャクソンが、プレミアリーグの10月の月間最優秀選手に選ばれました。
+        image: assets/images/20261114_jackson_pl_potm/03_w.jpg
+        short_only: true
+      - text: 発表は11月13日です。リーグ戦でこの月に出た4試合で、4ゴールを決めました。
+        image: assets/images/20261114_jackson_pl_potm/01_w.jpg
+      - text: 内訳です。ブレントフォード戦で1点、マンチェスター・シティ戦で2点、フルアム戦で1点。
+        card: {type: table, title: ジャクソンの10月のリーグ戦, columns: [相手, 結果, ジャクソン], rows: [[ブレントフォード, 2-2, 1ゴール（前半12分）], [ニューカッスル, 1-0で勝ち, 無し], [マンチェスター・シティ, 2-1で勝ち, 2ゴール（前半6分・後半15分）], [フルアム, 1-1, 1ゴール（前半39分）]], highlight_row: 2}
+      - text: ニューカッスル戦だけは、得点がありませんでした。
+        card: none
+      - text: マンチェスター・シティ戦は、前半6分と後半15分の2点で、2対1の勝ちです。
+        image: assets/images/20261114_jackson_pl_potm/04_w.jpg
+        card: none
+      - text: シティが今季、勝ち点を落とした初めての相手が、ヴィラでした。
+        card: none
+      - text: 候補は8人でした。ファン投票と専門家の投票を合わせて、ジャクソンが選ばれました。
+        card: none
+    official: false
+    sources:
+      - https://www.premierleague.com/en/news/4763463/jackson-wins-his-first-ea-sports-player-of-the-month-award
+      - https://sports.yahoo.com/articles/jackson-wins-award-goal-topping-135806604.html
+      - https://www.soccer-king.jp/news/world/eng/20261113/2227397.html
+      - https://africasoccer.com/nicolas-jackson-wins-premier-league-player-of-the-month-award-after-aston-villa-revival/
+      - https://readastonvilla.com/2026/11/13/nicolas-jackson-player-of-the-month-aston-villa/
+      - https://notjustok.com/sports/nicolas-jackson-premier-league-best-player-for-october-2026/
+      - https://www.ysscores.com/en/news/14094675/jackson-wins-player-of-the-month-award-in-premier-league-after-shining-with-aston-villa
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/summary?event=401879256
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/summary?event=401878776
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/summary?event=401879250
+  - id: game
+    heading: この受賞は、ヴィラにとってどれくらい久しぶりなのか
+    tier: 報道
+    telop: ヴィラの選手では2015年4月のベンテケ以来
+    say:
+      - text: ジャクソンの受賞は、ヴィラの選手では2015年4月のベンテケ以来です。
+        image: assets/images/20261114_jackson_pl_potm/01_w.jpg
+        card: {type: table, title: 今季のプレミア月間MVP, columns: [月, 選手], rows: [[8月, ジョアン・ペドロ（チェルシー）], [9月, グロス（ブライトン）], [10月, ジャクソン（ヴィラ）]], highlight_row: 2}
+      - text: ジャクソンはセネガルの選手では4人目で、2019年11月のマネ以来です。
+        card: none
+    official: false
+    sources:
+      - https://www.premierleague.com/en/news/4763463/jackson-wins-his-first-ea-sports-player-of-the-month-award
+      - https://sports.yahoo.com/articles/jackson-wins-award-goal-topping-135806604.html
+  - id: view
+    viewpoint: true
+    heading: 10月の勢いは、11月も続いているのか
+    tier: 背景
+    telop: リーグ戦の今季6点のうち、4点が10月
+    say:
+      - text: 見立てです。ジャクソンのリーグ戦は9試合で6ゴール。そのうち4点が、10月に集まっています。
+        image: assets/images/20261114_jackson_pl_potm/04_w.jpg
+        card: {type: table, title: ジャクソンの今季のリーグ戦, columns: [項目, 数字], rows: [[出場, 9試合], [ゴール, 6], [うち10月, 4]], highlight_row: 2}
+      - text: 11月8日のマンチェスター・ユナイテッド戦でも、開始4分に決めました。試合は4対4の引き分けです。
+        card: none
+      - text: 次は21日、ホームのサンダーランド戦です。日本時間では、22日の0時から。
+        image: assets/images/20261114_jackson_pl_potm/03_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/summary?event=401879240
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/teams/362/schedule
+      - https://sports.yahoo.com/articles/jackson-wins-award-goal-topping-135806604.html
+short_title: "ジャクソン、10月の月間MVP。受賞を決めた4試合には、何があったのか"

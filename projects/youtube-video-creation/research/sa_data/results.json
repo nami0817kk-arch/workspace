@@ -1,0 +1,776 @@
+{
+ "source": "ESPN scoreboard (ita.1)",
+ "fetched": "2026-11-13",
+ "results": [
+  [
+   "22 August 2026",
+   "1",
+   "Inter Milan",
+   "4–1",
+   "AC Monza"
+  ],
+  [
+   "22 August 2026",
+   "1",
+   "Udinese Calcio",
+   "1–1",
+   "Como 1907"
+  ],
+  [
+   "22 August 2026",
+   "1",
+   "Genoa CFC",
+   "0–2",
+   "SSC Napoli"
+  ],
+  [
+   "22 August 2026",
+   "1",
+   "Parma Calcio 1913",
+   "0–1",
+   "Cagliari Calcio"
+  ],
+  [
+   "23 August 2026",
+   "1",
+   "Frosinone Calcio",
+   "0–1",
+   "Juventus FC"
+  ],
+  [
+   "23 August 2026",
+   "1",
+   "Venezia FC",
+   "0–2",
+   "US Lecce"
+  ],
+  [
+   "23 August 2026",
+   "1",
+   "Atalanta BC",
+   "2–1",
+   "US Sassuolo Calcio"
+  ],
+  [
+   "23 August 2026",
+   "1",
+   "Torino FC",
+   "1–2",
+   "AC Milan"
+  ],
+  [
+   "24 August 2026",
+   "1",
+   "Bologna FC 1909",
+   "0–1",
+   "SS Lazio"
+  ],
+  [
+   "24 August 2026",
+   "1",
+   "AS Roma",
+   "4–0",
+   "ACF Fiorentina"
+  ],
+  [
+   "28 August 2026",
+   "2",
+   "AC Milan",
+   "2–0",
+   "Venezia FC"
+  ],
+  [
+   "29 August 2026",
+   "2",
+   "ACF Fiorentina",
+   "0–3",
+   "Frosinone Calcio"
+  ],
+  [
+   "29 August 2026",
+   "2",
+   "AC Monza",
+   "2–3",
+   "Udinese Calcio"
+  ],
+  [
+   "29 August 2026",
+   "2",
+   "US Sassuolo Calcio",
+   "2–1",
+   "Torino FC"
+  ],
+  [
+   "29 August 2026",
+   "2",
+   "Juventus FC",
+   "2–0",
+   "Parma Calcio 1913"
+  ],
+  [
+   "30 August 2026",
+   "2",
+   "SSC Napoli",
+   "1–2",
+   "Como 1907"
+  ],
+  [
+   "30 August 2026",
+   "2",
+   "Cagliari Calcio",
+   "0–1",
+   "Inter Milan"
+  ],
+  [
+   "30 August 2026",
+   "2",
+   "SS Lazio",
+   "1–0",
+   "Genoa CFC"
+  ],
+  [
+   "31 August 2026",
+   "2",
+   "US Lecce",
+   "0–4",
+   "AS Roma"
+  ],
+  [
+   "31 August 2026",
+   "2",
+   "Atalanta BC",
+   "1–0",
+   "Bologna FC 1909"
+  ],
+  [
+   "4 September 2026",
+   "3",
+   "Genoa CFC",
+   "1–4",
+   "Como 1907"
+  ],
+  [
+   "5 September 2026",
+   "3",
+   "ACF Fiorentina",
+   "1–2",
+   "Torino FC"
+  ],
+  [
+   "5 September 2026",
+   "3",
+   "Inter Milan",
+   "3–2",
+   "SSC Napoli"
+  ],
+  [
+   "5 September 2026",
+   "3",
+   "AS Roma",
+   "2–1",
+   "Atalanta BC"
+  ],
+  [
+   "6 September 2026",
+   "3",
+   "Frosinone Calcio",
+   "3–2",
+   "Venezia FC"
+  ],
+  [
+   "6 September 2026",
+   "3",
+   "Parma Calcio 1913",
+   "1–1",
+   "AC Monza"
+  ],
+  [
+   "6 September 2026",
+   "3",
+   "Bologna FC 1909",
+   "2–2",
+   "US Sassuolo Calcio"
+  ],
+  [
+   "6 September 2026",
+   "3",
+   "Juventus FC",
+   "1–1",
+   "AC Milan"
+  ],
+  [
+   "7 September 2026",
+   "3",
+   "Cagliari Calcio",
+   "1–0",
+   "US Lecce"
+  ],
+  [
+   "7 September 2026",
+   "3",
+   "Udinese Calcio",
+   "1–2",
+   "SS Lazio"
+  ],
+  [
+   "11 September 2026",
+   "4",
+   "Venezia FC",
+   "2–4",
+   "ACF Fiorentina"
+  ],
+  [
+   "12 September 2026",
+   "4",
+   "Genoa CFC",
+   "1–1",
+   "Frosinone Calcio"
+  ],
+  [
+   "12 September 2026",
+   "4",
+   "SS Lazio",
+   "2–2",
+   "AC Milan"
+  ],
+  [
+   "12 September 2026",
+   "4",
+   "Atalanta BC",
+   "1–2",
+   "Cagliari Calcio"
+  ],
+  [
+   "13 September 2026",
+   "4",
+   "US Lecce",
+   "3–2",
+   "AC Monza"
+  ],
+  [
+   "13 September 2026",
+   "4",
+   "SSC Napoli",
+   "1–0",
+   "Bologna FC 1909"
+  ],
+  [
+   "13 September 2026",
+   "4",
+   "US Sassuolo Calcio",
+   "3–2",
+   "Juventus FC"
+  ],
+  [
+   "14 September 2026",
+   "4",
+   "Como 1907",
+   "2–1",
+   "Parma Calcio 1913"
+  ],
+  [
+   "14 September 2026",
+   "4",
+   "Torino FC",
+   "0–2",
+   "AS Roma"
+  ],
+  [
+   "14 September 2026",
+   "4",
+   "Inter Milan",
+   "5–3",
+   "Udinese Calcio"
+  ],
+  [
+   "18 September 2026",
+   "5",
+   "AC Monza",
+   "2–1",
+   "US Sassuolo Calcio"
+  ],
+  [
+   "19 September 2026",
+   "5",
+   "Bologna FC 1909",
+   "1–1",
+   "Torino FC"
+  ],
+  [
+   "19 September 2026",
+   "5",
+   "Udinese Calcio",
+   "0–1",
+   "Cagliari Calcio"
+  ],
+  [
+   "19 September 2026",
+   "5",
+   "AS Roma",
+   "2–2",
+   "Inter Milan"
+  ],
+  [
+   "19 September 2026",
+   "5",
+   "Venezia FC",
+   "0–2",
+   "SS Lazio"
+  ],
+  [
+   "20 September 2026",
+   "5",
+   "ACF Fiorentina",
+   "1–1",
+   "SSC Napoli"
+  ],
+  [
+   "20 September 2026",
+   "5",
+   "Frosinone Calcio",
+   "2–0",
+   "Como 1907"
+  ],
+  [
+   "20 September 2026",
+   "5",
+   "Parma Calcio 1913",
+   "2–1",
+   "Genoa CFC"
+  ],
+  [
+   "20 September 2026",
+   "5",
+   "Juventus FC",
+   "2–0",
+   "Atalanta BC"
+  ],
+  [
+   "20 September 2026",
+   "5",
+   "AC Milan",
+   "3–0",
+   "US Lecce"
+  ],
+  [
+   "10 October 2026",
+   "6",
+   "Genoa CFC",
+   "2–1",
+   "ACF Fiorentina"
+  ],
+  [
+   "10 October 2026",
+   "6",
+   "Inter Milan",
+   "3–0",
+   "Parma Calcio 1913"
+  ],
+  [
+   "10 October 2026",
+   "6",
+   "SSC Napoli",
+   "3–0",
+   "Frosinone Calcio"
+  ],
+  [
+   "11 October 2026",
+   "6",
+   "Como 1907",
+   "0–0",
+   "AS Roma"
+  ],
+  [
+   "11 October 2026",
+   "6",
+   "SS Lazio",
+   "3–1",
+   "AC Monza"
+  ],
+  [
+   "11 October 2026",
+   "6",
+   "US Lecce",
+   "1–2",
+   "Bologna FC 1909"
+  ],
+  [
+   "11 October 2026",
+   "6",
+   "US Sassuolo Calcio",
+   "1–1",
+   "AC Milan"
+  ],
+  [
+   "11 October 2026",
+   "6",
+   "Cagliari Calcio",
+   "1–1",
+   "Juventus FC"
+  ],
+  [
+   "12 October 2026",
+   "6",
+   "Atalanta BC",
+   "3–1",
+   "Venezia FC"
+  ],
+  [
+   "12 October 2026",
+   "6",
+   "Torino FC",
+   "2–1",
+   "Udinese Calcio"
+  ],
+  [
+   "16 October 2026",
+   "7",
+   "Frosinone Calcio",
+   "4–2",
+   "US Sassuolo Calcio"
+  ],
+  [
+   "17 October 2026",
+   "7",
+   "Venezia FC",
+   "1–0",
+   "SSC Napoli"
+  ],
+  [
+   "17 October 2026",
+   "7",
+   "Bologna FC 1909",
+   "1–3",
+   "Inter Milan"
+  ],
+  [
+   "17 October 2026",
+   "7",
+   "AS Roma",
+   "2–0",
+   "Genoa CFC"
+  ],
+  [
+   "18 October 2026",
+   "7",
+   "Udinese Calcio",
+   "0–3",
+   "US Lecce"
+  ],
+  [
+   "18 October 2026",
+   "7",
+   "ACF Fiorentina",
+   "1–3",
+   "Como 1907"
+  ],
+  [
+   "18 October 2026",
+   "7",
+   "AC Milan",
+   "3–2",
+   "Atalanta BC"
+  ],
+  [
+   "18 October 2026",
+   "7",
+   "Juventus FC",
+   "0–3",
+   "SS Lazio"
+  ],
+  [
+   "19 October 2026",
+   "7",
+   "AC Monza",
+   "4–0",
+   "Cagliari Calcio"
+  ],
+  [
+   "19 October 2026",
+   "7",
+   "Parma Calcio 1913",
+   "0–3",
+   "Torino FC"
+  ],
+  [
+   "23 October 2026",
+   "8",
+   "Torino FC",
+   "3–2",
+   "AC Monza"
+  ],
+  [
+   "24 October 2026",
+   "8",
+   "Cagliari Calcio",
+   "0–2",
+   "Bologna FC 1909"
+  ],
+  [
+   "24 October 2026",
+   "8",
+   "Como 1907",
+   "2–0",
+   "US Sassuolo Calcio"
+  ],
+  [
+   "24 October 2026",
+   "8",
+   "SSC Napoli",
+   "3–3",
+   "AS Roma"
+  ],
+  [
+   "24 October 2026",
+   "8",
+   "SS Lazio",
+   "2–1",
+   "Parma Calcio 1913"
+  ],
+  [
+   "25 October 2026",
+   "8",
+   "Inter Milan",
+   "2–1",
+   "ACF Fiorentina"
+  ],
+  [
+   "25 October 2026",
+   "8",
+   "Atalanta BC",
+   "4–4",
+   "Frosinone Calcio"
+  ],
+  [
+   "25 October 2026",
+   "8",
+   "Genoa CFC",
+   "1–0",
+   "Venezia FC"
+  ],
+  [
+   "25 October 2026",
+   "8",
+   "US Lecce",
+   "0–2",
+   "Juventus FC"
+  ],
+  [
+   "25 October 2026",
+   "8",
+   "Udinese Calcio",
+   "0–2",
+   "AC Milan"
+  ],
+  [
+   "27 October 2026",
+   "9",
+   "US Sassuolo Calcio",
+   "2–6",
+   "SS Lazio"
+  ],
+  [
+   "27 October 2026",
+   "9",
+   "AS Roma",
+   "4–2",
+   "Cagliari Calcio"
+  ],
+  [
+   "27 October 2026",
+   "9",
+   "Torino FC",
+   "1–3",
+   "Como 1907"
+  ],
+  [
+   "28 October 2026",
+   "9",
+   "AC Milan",
+   "2–4",
+   "Bologna FC 1909"
+  ],
+  [
+   "28 October 2026",
+   "9",
+   "Parma Calcio 1913",
+   "0–0",
+   "Udinese Calcio"
+  ],
+  [
+   "28 October 2026",
+   "9",
+   "Venezia FC",
+   "0–2",
+   "Inter Milan"
+  ],
+  [
+   "28 October 2026",
+   "9",
+   "Genoa CFC",
+   "2–0",
+   "Juventus FC"
+  ],
+  [
+   "28 October 2026",
+   "9",
+   "AC Monza",
+   "1–4",
+   "SSC Napoli"
+  ],
+  [
+   "29 October 2026",
+   "9",
+   "Frosinone Calcio",
+   "5–1",
+   "US Lecce"
+  ],
+  [
+   "29 October 2026",
+   "9",
+   "ACF Fiorentina",
+   "2–2",
+   "Atalanta BC"
+  ],
+  [
+   "31 October 2026",
+   "10",
+   "Bologna FC 1909",
+   "2–1",
+   "AC Monza"
+  ],
+  [
+   "31 October 2026",
+   "10",
+   "Udinese Calcio",
+   "2–5",
+   "AS Roma"
+  ],
+  [
+   "31 October 2026",
+   "10",
+   "AC Milan",
+   "3–1",
+   "Inter Milan"
+  ],
+  [
+   "1 November 2026",
+   "10",
+   "Como 1907",
+   "1–0",
+   "Venezia FC"
+  ],
+  [
+   "1 November 2026",
+   "10",
+   "Frosinone Calcio",
+   "2–0",
+   "Torino FC"
+  ],
+  [
+   "1 November 2026",
+   "10",
+   "SS Lazio",
+   "2–1",
+   "Cagliari Calcio"
+  ],
+  [
+   "1 November 2026",
+   "10",
+   "US Lecce",
+   "1–2",
+   "Genoa CFC"
+  ],
+  [
+   "1 November 2026",
+   "10",
+   "Juventus FC",
+   "2–0",
+   "SSC Napoli"
+  ],
+  [
+   "2 November 2026",
+   "10",
+   "US Sassuolo Calcio",
+   "2–4",
+   "ACF Fiorentina"
+  ],
+  [
+   "2 November 2026",
+   "10",
+   "Atalanta BC",
+   "0–3",
+   "Parma Calcio 1913"
+  ],
+  [
+   "6 November 2026",
+   "11",
+   "Venezia FC",
+   "2–1",
+   "Udinese Calcio"
+  ],
+  [
+   "7 November 2026",
+   "11",
+   "Cagliari Calcio",
+   "1–0",
+   "Frosinone Calcio"
+  ],
+  [
+   "7 November 2026",
+   "11",
+   "Torino FC",
+   "1–1",
+   "US Lecce"
+  ],
+  [
+   "7 November 2026",
+   "11",
+   "Parma Calcio 1913",
+   "1–2",
+   "Bologna FC 1909"
+  ],
+  [
+   "7 November 2026",
+   "11",
+   "AS Roma",
+   "3–0",
+   "US Sassuolo Calcio"
+  ],
+  [
+   "8 November 2026",
+   "11",
+   "SSC Napoli",
+   "1–1",
+   "SS Lazio"
+  ],
+  [
+   "8 November 2026",
+   "11",
+   "Genoa CFC",
+   "1–2",
+   "AC Milan"
+  ],
+  [
+   "8 November 2026",
+   "11",
+   "AC Monza",
+   "0–1",
+   "Atalanta BC"
+  ],
+  [
+   "8 November 2026",
+   "11",
+   "Inter Milan",
+   "2–0",
+   "Como 1907"
+  ],
+  [
+   "8 November 2026",
+   "11",
+   "ACF Fiorentina",
+   "2–2",
+   "Juventus FC"
+  ]
+ ]
+}

@@ -1,0 +1,417 @@
+# スタジアム紹介シリーズ：アスレティック・ビルバオの本拠地（サン・マメス、11/9 予定）。雛形は 11/7 ベルナベウの回。
+# 題材の選び方（2026-11-06）：指示書 20261109 の「ラ・リーガの続き・大きいクラブから」の先頭（ビルバオのサン・マメス）。
+#   重なりの確認：scripts/*stadium_* にサン・マメス・アスレティックは無し。covered.yaml・posted.json にも stadium_athletic は無い。
+#   直近30日のアスレティックの本は無い（クラブ紹介 ll03 は 9/26 で30日の外。軸は「世界王者を3人」でスタジアムではない）。
+#   picks（research/20261109_picks.txt）：同じ 11/9 のユニフォームはレアル・マドリード。重ならない。
+# 今季のラ・リーガ所属（一次情報）：ESPN の esp.1 2026-27 の日程（teams/93/schedule?season=2026）にホーム6試合、会場は San Mamés。
+#   今季は欧州の大会に出ていない（Cadena SER 2026-09-28：会計の説明で「欧州の大会が無い」）。
+# 胸像と花の習わし：
+#   ピチチ（Rafael Moreno Aranzadi、1892-05-23〜1922-03-01）。アスレティックで89試合83点（ウィキペディア en・AS 2022-03-02）。国王杯優勝4度（1914・15・16・21、AS）。
+#   旧スタジアムの最初のゴール（1913年8月、ウィキペディア en）。1926年に胸像（ABC 2013-09-17・ウィキペディア en）。
+#   初めて来たチームの主将が花を置く。始まりは1927年1月1日、ハンガリーのMTKが即興で（AS 2022-03-02）。
+#   得点王の賞の名前（マルカが1953年に始めた。ウィキペディア en・ABC）。台本は「得点王に贈られる賞の名前」まで。
+#   新しい器では選手の通路の入口（ABC 2013-09-17・AS 2022）。
+#   2025-09-16 CL アーセナル戦、主将ガブリエウ・マガリャンイスが花を置いた。アーセナルは初めてサン・マメスへ（Deia 2025-09-16）。
+#   亡くなった理由（病気）は言わない。「29歳で亡くなった」まで。
+# 新しい器（ウィキペディア en・es）：2006年3月承認／2010年5月26日 最初の石／4分の3を建てて移り、旧スタジアムを壊して最後の1辺を跡地に。
+#   旧スタジアムの最後の試合（2013-06-05）から102日で、2013-09-16 開場（セルタ戦3対2、3万3000人、仮の収容3万5686）。
+#   全部の席がそろった最初の試合は2014-08-27 CL予選 ナポリ戦3対1、4万9017人。収容5万3331。
+#   総工費2億1100万ユーロ、52.6％は公の機関（en）。旧スタジアムは1913年から、スペインで最も古いスタジアムで「大聖堂」と呼ばれた（en 旧スタジアムの項）。
+#   旧スタジアムの屋根のアーチは練習場レサマへ（en）。
+# 屋根と大舞台（ウィキペディア en・es）：屋根を延ばす工事 1260万ユーロ（クラブだけで負担）、2016-11-20 ビジャレアル戦で完成。2015-11-05 世界建築フェスティバルの最優秀スポーツ建築。
+#   Euro2020 の会場→感染症の流行で外れ、UEFA は代わりに 2025年のEL決勝などを割り当てた（en・es）。2025-05-21 EL決勝 トッテナム1対0マンチェスター・ユナイテッド、4万9224人（ウィキペディア en の決勝の項）。
+#   ラグビーの欧州の決勝 2018年 5万2282人、2026年 5万2327人が最多（en）。
+# 見立て（Mundo Deportivo 2026-09-30・Cadena SER 2026-09-28）：
+#   平均の入場：2014-15 3万8727／2017-18 3万6898（新しい器で最少）／2022-23 4万3703／2024-25 4万8459（最多）／2025-26 4万8394／今季最初の4試合 4万8095（MD）。
+#   2025-26 ÷ 5万3331 ＝ 90.7％。2017-18 → 2025-26 で 1万1496人増、約31％増（自分で計算）。
+#   会員になるのを待つ人：「1万1000人あまり」（SER）「約1万1000人」（MD）。
+#   計画：最大2440席を足し、約5万6000席に（SER。MD の 5万6008 は 5万3331＋2440 と合わないので言わない）。工事は今季が終わってから。2440 ÷ 1万1000 ＝ 22％（自分で計算）。
+# 日本との接点（サッカーの縁）：2026-11-01 アスレティック2対1レアル・ソシエダ（サン・マメス）、久保建英が75分から出場（ESPN の試合記録 event=401882826）。
+# 言わなかったもの：ピチチの死因／EUの調査の話／2035年ラグビーW杯の招致／招待席の取りやめ（1019席）。
+# 写真：assets/images/20261109_stadium_athletic/（credits.json）。Commons（CC0・CC BY・CC BY-SA）。
+date: 2026年11月6日
+slot: other_1
+format: news
+series: スタジアム紹介
+voice_min: 0
+people: []
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  id: stadium_athletic
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: アスレティック・ビルバオ
+  title: アスレティック・ビルバオのサン・マメス、相手の主将が花を置くのはなぜ？
+  question: サン・マメスでは、なぜ初めて来た相手の主将が花を置き、いまの器はどんな器なのか
+  lead: 初めて来たチームの主将は、花束を持ってピッチへ出る。
+  hook: ''
+  opening_image: assets/images/20261109_stadium_athletic/01_w.jpg
+  end_bg: assets/images/20261109_stadium_athletic/02_w.jpg
+  takeaway: サン・マメスでは、初めて来たチームの主将が、選手の通路の入口にあるピチチの胸像に花を置く。旧スタジアムで最初のゴールを決め、89試合83点を挙げた選手で、得点王の賞の名前にもなった。習わしは1927年に始まり、2013年の新しい器にも移った。いまの収容は5万3331人で、昨季の平均の入場は4万8394人（90.7％）。会員を待つ人は約1万1000人いて、クラブは最大2440席を足す計画
+  short_title: サン・マメス、主将が花を置く器
+thumbnail:
+  layout: scene
+  bold: false
+  callouts:
+  - 初めての相手は花を置く
+  - 会員待ちは1万1000人
+  photo: assets/images/20261109_stadium_athletic/01_w.jpg
+  line1: ビルバオの本拠地サン・マメス
+  line2: 相手の主将が花を置く
+  tags:
+  - アスレティック・ビルバオ
+  - ラ・リーガ
+  - スタジアム紹介
+sections:
+- id: data
+  main: true
+  heading: サン・マメスで、相手の主将は誰に花を置くのか
+  bg: assets/images/20261109_stadium_athletic/01_w.jpg
+  tier: 報道
+  telop: 初めて来たチームの主将は、選手の通路の入口にある胸像に花を置く
+  narrator: 解説
+  card:
+    type: table
+    title: サン・マメスの基礎DATA
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 持ち主
+      - アスレティック・ビルバオなど
+    - - 開場
+      - 2013年9月
+    - - 収容
+      - 5万3331人
+    - - 前の本拠地
+      - 1913年から、すぐ隣に
+    - - 呼び名
+      - 大聖堂
+    - - 胸像
+      - 選手の通路の入口
+  say:
+  - text: アスレティック・ビルバオの本拠地、サン・マメスの話です。
+    short_only: true
+    image: assets/images/20261109_stadium_athletic/01_w.jpg
+    card: none
+  - text: ここで初めて戦うチームの主将は、試合の前に、花束を置いていきます。
+    emph: true
+    image: assets/images/20261109_stadium_athletic/01_w.jpg
+    card: none
+  - text: 置く先は、通路の入口の胸像。スペインの得点王の賞に名を残す、ピチチです。
+    image: assets/images/20261109_stadium_athletic/07_w.jpg
+    card: none
+  - text: 2025年9月には、初めてここへ来たアーセナルの主将ガブリエウが、花を置きました。
+    image: assets/images/20261109_stadium_athletic/04_w.jpg
+    card: none
+  - text: いまの器が開いたのは、2013年9月。5万3331人が入ります。
+    image: assets/images/20261109_stadium_athletic/04_w.jpg
+    card:
+      type: table
+      title: サン・マメスの基礎DATA
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 持ち主
+        - アスレティック・ビルバオなど
+      - - 開場
+        - 2013年9月
+      - - 収容
+        - 5万3331人
+      - - 前の本拠地
+        - 1913年から、すぐ隣に
+      - - 呼び名
+        - 大聖堂
+      - - 胸像
+        - 選手の通路の入口
+      highlight_row: 2
+  - text: 11月1日のレアル・ソシエダ戦では、久保建英が75分から途中出場しました。
+    image: assets/images/20261109_stadium_athletic/05_w.jpg
+    card: none
+  sources:
+  - https://www.deia.eus/athletic/2025/09/16/arsenal-cumple-tradicion-pichichi-10092573.html
+  - https://www.abc.es/deportes/futbol/20130917/abci-pichichi-tiene-sitio-nuevo-201309171334.html
+  - https://en.wikipedia.org/wiki/San_Mam%C3%A9s_Stadium_(2013)
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/summary?event=401882826
+- id: history
+  heading: ピチチは、なぜ花を手向けられる人になったのか
+  bg: assets/images/20261109_stadium_athletic/08_w.jpg
+  tier: 背景
+  telop: 旧スタジアムで最初のゴールを決めた点取り屋。89試合83点。胸像は1926年から
+  narrator: 解説
+  card: &id_hist
+    type: timeline
+    title: ピチチと胸像の歩み
+    rows:
+    - - 1913年8月
+      - 旧スタジアムの最初のゴール
+    - - 1922年3月
+      - 29歳で亡くなる
+    - - 1926年
+      - 旧スタジアムに胸像
+    - - 1927年1月
+      - 花を置く習わしが始まる
+    - - 2013年9月
+      - 新しい器の通路の入口へ
+    focus: 1927年1月
+    highlight_row: 0
+  say:
+  - text: ピチチは、ビルバオ生まれの点取り屋です。
+    image: assets/images/20261109_stadium_athletic/08_w.jpg
+    card: none
+  - text: 1913年8月、旧スタジアムの初戦で、最初のゴールを決めたのがピチチでした。
+    emph: true
+    image: assets/images/20261109_stadium_athletic/08_w.jpg
+    card:
+      <<: *id_hist
+      highlight_row: 0
+  - text: アスレティックひと筋で、89試合83点。国王杯を4度、勝ち取りました。
+    image: assets/images/20261109_stadium_athletic/08_w.jpg
+    card: none
+  - text: 1922年、29歳の若さで亡くなります。
+    image: assets/images/20261109_stadium_athletic/08_w.jpg
+    card:
+      <<: *id_hist
+      highlight_row: 1
+  - text: 1926年、旧スタジアムに、ピチチの胸像が置かれました。
+    image: assets/images/20261109_stadium_athletic/07_w.jpg
+    card:
+      <<: *id_hist
+      highlight_row: 2
+  - text: 花を置く習わしを始めたのは、ハンガリーのクラブ、エムティーケーでした。
+    image: assets/images/20261109_stadium_athletic/07_w.jpg
+    card: none
+  - text: 1927年の元日、その場の思いつきで、胸像に花を手向けたのが最初です。
+    emph: true
+    image: assets/images/20261109_stadium_athletic/07_w.jpg
+    card:
+      <<: *id_hist
+      highlight_row: 3
+  - text: 得点王の賞にピチチの名が付いたのは、1953年。スペインのスポーツ紙が始めました。
+    image: assets/images/20261109_stadium_athletic/08_w.jpg
+    card: none
+  - text: 2013年、新しい器に移るときも、胸像は一緒に運ばれました。
+    image: assets/images/20261109_stadium_athletic/05_w.jpg
+    card:
+      <<: *id_hist
+      highlight_row: 4
+  sources:
+  - https://as.com/futbol/2022/03/02/reportajes/1646204428_118930.html
+  - https://en.wikipedia.org/wiki/Pichichi_(footballer)
+  - https://www.abc.es/deportes/futbol/20130917/abci-pichichi-tiene-sitio-nuevo-201309171334.html
+- id: rebuild
+  heading: 新しいサン・マメスは、なぜ古い器のすぐ隣に建ったのか
+  bg: assets/images/20261109_stadium_athletic/02_w.jpg
+  tier: 背景
+  telop: 4分の3を建てて引っ越し、古い器を壊して最後の1辺を跡地に建てた
+  narrator: 解説
+  card: &id_reb
+    type: timeline
+    title: 新しいサン・マメスの歩み
+    rows:
+    - - 2010年5月
+      - 最初の石
+    - - 2013年6月
+      - 旧スタジアムの最後の試合
+    - - 2013年9月
+      - 4分の3で開場
+    - - 2014年8月
+      - 全部の席がそろう
+    - - 2016年11月
+      - 延ばした屋根が完成
+    focus: 2013年9月
+    highlight_row: 0
+  say:
+  - text: 旧スタジアムは、1913年から100年。スペインでいちばん古いスタジアムでした。
+    image: assets/images/20261109_stadium_athletic/08_w.jpg
+    card: none
+  - text: 古さと熱い声援から、付いた呼び名は「大聖堂」です。
+    image: assets/images/20261109_stadium_athletic/08_w.jpg
+    card: none
+  - text: 新しい器は、そのすぐ隣、見本市の跡地に建てられます。最初の石は2010年5月。
+    image: assets/images/20261109_stadium_athletic/02_w.jpg
+    card:
+      <<: *id_reb
+      highlight_row: 0
+  - text: 建て方は、変わっていました。まず、4分の3だけを建てて、そこへ引っ越します。
+    emph: true
+    image: assets/images/20261109_stadium_athletic/06_w.jpg
+    card: none
+  - text: 古い器を壊し、その跡地に、最後の1辺のスタンドを建てました。
+    image: assets/images/20261109_stadium_athletic/06_w.jpg
+    card: none
+  - text: 旧スタジアムの最後の試合から102日。2013年9月16日に、新しい器が開きます。
+    image: assets/images/20261109_stadium_athletic/03_w.jpg
+    card:
+      <<: *id_reb
+      highlight_row: 2
+  - text: 最初の試合はセルタ戦、3対2の勝ちでした。
+    image: assets/images/20261109_stadium_athletic/03_w.jpg
+    card: none
+  - text: 全部の席がそろったのは、2014年8月のナポリ戦。4万9017人が入りました。
+    image: assets/images/20261109_stadium_athletic/05_w.jpg
+    card:
+      <<: *id_reb
+      highlight_row: 3
+  - text: 総工費は、2億1100万ユーロ。半分あまりを、国や県、市などが出しています。
+    image: assets/images/20261109_stadium_athletic/02_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/San_Mam%C3%A9s_Stadium_(2013)
+  - https://es.wikipedia.org/wiki/Estadio_de_San_Mam%C3%A9s_(2013)
+  - https://en.wikipedia.org/wiki/San_Mam%C3%A9s_Stadium_(1913)
+- id: events
+  heading: 雨の多い街で、屋根と大きな舞台は何を変えたのか
+  bg: assets/images/20261109_stadium_athletic/03_w.jpg
+  tier: 背景
+  telop: 屋根を延ばす工事は1260万ユーロ。2025年にはヨーロッパリーグの決勝
+  narrator: 解説
+  card: &id_ev
+    type: timeline
+    title: サン・マメスの大きな舞台
+    rows:
+    - - 2015年11月
+      - 世界の建築の賞
+    - - 2016年11月
+      - 延ばした屋根が完成
+    - - 2018年5月
+      - ラグビーの欧州の決勝
+    - - 2025年5月
+      - ヨーロッパリーグの決勝
+    - - 2026年5月
+      - ラグビーの決勝で最多の入場
+    focus: 2025年5月
+    highlight_row: 0
+  say:
+  - text: 開いたあと、ファンから出た不満は、屋根でした。
+    image: assets/images/20261109_stadium_athletic/03_w.jpg
+    card: none
+  - text: 雨の多いビルバオで、屋根がすべての席を覆っていなかったのです。
+    image: assets/images/20261109_stadium_athletic/03_w.jpg
+    card: none
+  - text: 2016年、クラブは1260万ユーロを自分で出して、屋根を延ばします。
+    emph: true
+    image: assets/images/20261109_stadium_athletic/04_w.jpg
+    card:
+      <<: *id_ev
+      highlight_row: 1
+  - text: その前の年には、世界の建築の祭典で、最も優れたスポーツの建物に選ばれていました。
+    image: assets/images/20261109_stadium_athletic/02_w.jpg
+    card:
+      <<: *id_ev
+      highlight_row: 0
+  - text: 2020年のヨーロッパ選手権でも、試合の会場に選ばれていました。
+    image: assets/images/20261109_stadium_athletic/02_w.jpg
+    card: none
+  - text: ところが、感染症の流行で外れ、代わりにヨーロッパリーグの決勝が回ってきます。
+    image: assets/images/20261109_stadium_athletic/05_w.jpg
+    card: none
+  - text: 2025年5月、トッテナムがマンチェスター・ユナイテッドを1対0で破りました。
+    image: assets/images/20261109_stadium_athletic/05_w.jpg
+    card:
+      <<: *id_ev
+      highlight_row: 3
+  - text: いちばん多く入ったのは、ラグビーでした。
+    image: assets/images/20261109_stadium_athletic/01_w.jpg
+    card: none
+  - text: 2026年5月、ヨーロッパのクラブの決勝に、5万2327人が集まりました。
+    image: assets/images/20261109_stadium_athletic/01_w.jpg
+    card:
+      <<: *id_ev
+      highlight_row: 4
+  sources:
+  - https://en.wikipedia.org/wiki/San_Mam%C3%A9s_Stadium_(2013)
+  - https://es.wikipedia.org/wiki/Estadio_de_San_Mam%C3%A9s_(2013)
+  - https://en.wikipedia.org/wiki/2025_UEFA_Europa_League_final
+- id: view
+  viewpoint: true
+  heading: 見立て・サン・マメスの席は、あと何席あれば足りるのか
+  bg: assets/images/20261109_stadium_athletic/04_w.jpg
+  tier: 報道
+  telop: 昨季の平均は4万8394人で、席の90.7％。会員を待つ人は約1万1000人、足す席は最大2440
+  narrator: 解説
+  card: &id_view
+    type: table
+    title: サン・マメスの平均の入場
+    columns:
+    - シーズン
+    - 平均の入場
+    rows:
+    - - 2014年から15年
+      - 3万8727人
+    - - 2017年から18年
+      - 3万6898人
+    - - 2022年から23年
+      - 4万3703人
+    - - 2024年から25年
+      - 4万8459人
+    - - 2025年から26年
+      - 4万8394人
+    highlight_row: 1
+  say:
+  - text: では、この器は、どれだけ埋まっているのか。数字は、11月6日の時点です。
+    emph: true
+    image: assets/images/20261109_stadium_athletic/04_w.jpg
+    card: none
+  - text: 平均の入場の底は、2017年から18年。3万6898人です。
+    image: assets/images/20261109_stadium_athletic/04_w.jpg
+    card:
+      <<: *id_view
+      highlight_row: 1
+  - text: それが昨季は、4万8394人。1万1496人、およそ3割増えています。
+    mark: {"kind": "circle", "row": 4}
+    image: assets/images/20261109_stadium_athletic/04_w.jpg
+    card:
+      <<: *id_view
+      highlight_row: 4
+  - text: 5万3331席のうち、埋まったのは90.7％です。
+    image: assets/images/20261109_stadium_athletic/04_w.jpg
+    card:
+      type: calc
+      title: 昨季、席の何割が埋まったか（自分で割った）
+      terms:
+      - - 4万8394人
+        - 昨季の平均の入場
+      - - 5万3331席
+        - いまの収容
+      - - 90.7％
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: 今季も、最初の4試合の平均は4万8095人。同じ高さのままです。
+    image: assets/images/20261109_stadium_athletic/05_w.jpg
+    card: none
+  - text: 一方で、クラブの会員になるのを待っている人が、およそ1万1000人います。
+    emph: true
+    image: assets/images/20261109_stadium_athletic/02_w.jpg
+    card: none
+  - text: クラブは今季のあと、最大2440席を足して、およそ5万6000席にする計画です。
+    image: assets/images/20261109_stadium_athletic/02_w.jpg
+    card:
+      type: stats
+      title: 足りない席と、足す席
+      items:
+      - - '11000'
+        - 人
+        - 会員を待つ人（およそ）
+      - - '2440'
+        - 席
+        - 足す席（最大）
+      - - '22'
+        - ％
+        - 待つ人に対する割合
+      focus: 1
+  - text: 足す席は、待っている人の22％ぶん。5人に1人あまりにしか届きません。
+    image: assets/images/20261109_stadium_athletic/02_w.jpg
+    card: none
+  - text: 花を置く習わしが100年続く大聖堂は、席の足りなさを、どこまで埋められるのか。
+    emph: true
+    image: assets/images/20261109_stadium_athletic/01_w.jpg
+    card: none
+  sources:
+  - https://www.mundodeportivo.com/futbol/athletic-bilbao/20260930/1004232688/nueva-realidad-san-mames.html
+  - https://cadenaser.com/euskadi/2026/09/28/el-athletic-invertira-9-millones-para-ampliar-la-capacidad-de-san-mames-radio-bilbao/
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/teams/93/schedule?season=2026（2026-27 ラ・リーガ、アスレティックのホーム）

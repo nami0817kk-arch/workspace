@@ -1,0 +1,378 @@
+# クラブの財政：アヤックス（11/2 月、シリーズ「クラブの財政」、key: finance_ajax、型は news）。
+#
+# 題材の選び方：デロイト Football Money League 2026（2024/25）の順で、財政の回をまだ出していないクラブから。
+#   1〜22位は既出（22位フランクフルト 10/29、27位ローマ 10/31）。20位ウェストハムは今季2部、21位ガラタサライ・28位フェネルバフチェはトルコ（欧州7リーグの外）、29位ウルヴスは今季2部。
+#   残り：23位ブライトン・24位エヴァートン・25位クリスタルパレス・26位ボーンマス・30位ブレントフォード。
+#   どれも決算の一次資料（Companies House の画像PDF、またはクラブ公式の全文）を、この担当の手元（WebFetch と requests だけ）で読めなかった／読めても要約止まり。
+#     エヴァートンは公式の決算ページに当たれず、二次情報（theesk 等）しか無い上に、女子チームの売却益（4920万ポンド）が損益の主役で、女子サッカーは扱わない決まりに触れる。→ 題材を替えた。
+#   → 「一次資料が取れる」を優先して、デロイトの上位30に入らないが、決算の全文（監査済みの年次報告書128頁）をクラブ公式サイトで読めるアヤックス（エールディヴィジ）にした。
+#     ★「収益の大きいクラブから」からは外れる（アヤックスは2025/26の収入1億8830万ユーロで、デロイトの30位ブレントフォード 2億600万ユーロより下）。報告に書く。
+#
+# 重なりの確認（10/31）：scripts/*finance_* に ajax は無い。research/posted.json・covered.yaml の ajax は covered の「ジンチェンコがアヤックスを去る」（ニュース）だけ。
+#   アヤックスの名前の入る本（直近30日）：無し（grep scripts/ で *ajax* 0件）。
+# ★今季も1部：英語版 Wikipedia「2026–27 AFC Ajax season」の infobox「league = Eredivisie」「stadium = Johan Cruyff Arena」、2026-08 の試合（Heerenveen 戦 8/16、PSV 戦 9/5）が載っている。
+#   エールディヴィジは欧州7リーグの1つ（ポルトガルのベンフィカを 10/28 に扱った前例と同じ「5大リーグの外」）。
+# ★日本との接点：2025/26 の決算に日本人選手の話は無い（板倉滉は2023年にボルシアMGへ。いまのアヤックスの日本人は確認できず）。無理に入れない（10/6 の決定）。
+#
+# 軸は「**チャンピオンズリーグで32位、決勝トーナメントに進めなかった年に、なぜ最終の損益が黒字だったのか**」。
+#   答え：本業（営業の損益）は2年続けてマイナスで、黒字は選手を売った利益（6550万ユーロ）から。ハト・ブロビー・テイラーの移籍。
+#   ★他の財政回と軸を重ねない：10/29 フランクフルト＝出場を決めた年のお金の入る年のずれ、10/28 ベンフィカ＝本業の黒字、10/27 シュツットガルト＝伸び率と放映権。
+#     今回は「本業は赤字のまま、売却益で黒字」。
+#   ★アルファベット（AG・UEFA・CL・NV）は読み上げに出さない。「クラブの運営会社」と言う。
+#   ★選手の名前は移籍の3人（クラブの発表に載っている）だけ。監督の話は「解任の費用」の1行だけ（名前は出さない）。女子の話・中止になった試合の経緯（騒ぎ）は入れない（「観客への補償」の費用の1行だけ）。
+#
+# **決算期**：AFC Ajax NV（上場しているクラブの運営会社）は7月〜6月。2025/26 は 2025-07-01〜2026-06-30。発表は 2026-09-25。監査済み（PwC の適正意見、2026-09-25）。
+#
+# **出どころ（読んだもの。2026-10-31 に requests で PDF を取って pypdf で全文を読んだ）**
+#   ○ クラブ公式のプレスリリース「Jaarcijfers AFC Ajax NV」（2026-09-25、4頁）
+#       https://www.ajax.nl/media/0k4ljz0e/persbericht-jaarcijfers-afc-ajax-nv-per-30-juni-2026-def.pdf
+#       「Ajax heeft het boekjaar 2025/2026 afgesloten met een nettowinst van € 2,0 miljoen ten opzichte van een verlies van € 37,3 miljoen in het vorige boekjaar.」
+#       「In de League Phase van de UEFA Champions League eindigde Ajax als 32e, waardoor kwalificatie voor de knock-outfase uitbleef. In de Eredivisie eindigde Ajax op de vijfde plaats. Via de play-offs plaatste Ajax zich voor de tweede kwalificatieronde van de UEFA Conference League.」
+#       「De netto-omzet steeg met € 10,2 miljoen (+6%) naar € 188,3 miljoen, hoofdzakelijk door hogere Europese premies」
+#       「De kosten stegen met € 9,0 miljoen naar € 206,5 miljoen (+5%). ... hogere salariskosten in het betaald voetbal vanwege deelname aan de UEFA Champions League en door diverse eenmalige financiële tegenvallers, waaronder de compensatie voor toeschouwers voor de gestaakte wedstrijd ... en het ontslag van de hoofdtrainer gedurende het seizoen.」
+#       「Het operationeel resultaat kwam uit op € 18,2 miljoen negatief, tegenover ... € 19,4 miljoen negatief in 2024/2025.」
+#       「Het resultaat uit transfers van spelers bedroeg € 65,5 miljoen. ... Jorrel Hato naar Chelsea, Brian Brobbey naar Sunderland en Kenneth Taylor naar Lazio Roma ... Na afschrijvingen op vergoedingssommen bedroeg het transferresultaat € 26,7 miljoen positief (2024/2025: € 31,0 miljoen negatief).」
+#       「eigen vermogen € 191,0 miljoen」
+#       「Voor het boekjaar 2026/2027 zal de deelname aan de UEFA Conference League, ten opzichte van deelname aan de UEFA Champions League in 2025/2026, druk zetten op de omzet. Ajax blijft daarom sturen op kostenbeheersing en financiële discipline. De vanaf 1 juli 2026 gerealiseerde transferresultaten, waaronder de transfers van Sean Steur naar Newcastle United FC en Mika Godts naar Paris Saint-Germain, zullen naar verwachting positief bijdragen aan het resultaat over 2026/2027.」
+#       表（x €1 miljoen）：Netto-omzet 188,3／178,1、Bedrijfslasten 206,5／197,5、Bedrijfsresultaat vóór afschrijving en resultaat vergoedingssommen −18,2／−19,4、Afschrijving vergoedingssommen −38,8／−41,3、Resultaat vergoedingssommen 65,5／10,3、Saldo 26,7／−31,0、Financieel resultaat en waardeveranderingen −5,3／−1,1、Belastingen en aandeel derden −1,2／+14,2、Resultaat na belastingen 2,0／−37,3
+#   ○ クラブ公式の年次報告書「Jaarverslag 2025/2026」（128頁、監査済み）https://www.ajax.nl/media/45peoljn/ajax-jaarverslag-2025_2026-def.pdf
+#       セグメント表「Netto-omzet (24)」（千ユーロ、2025/26／2024/25）：Recettes competitie... 9.473／9.455、Recettes Europese competities 9.567／12.533、Premies Europese competities 43.521／20.752、Seizoenkaarten 14.553／14.799、Business-seats en skybox-plaatsen 23.968／23.038、Indirecte wedstrijdbaten 3.461／4.440、Partnerships 42.541／42.460、Televisie 11.367／11.724、Merchandising 26.085／33.408、Overige baten 3.743／5.520、Totaal 188.279／178.129
+#       損益計算書：Lonen, salarissen en sociale lasten −120.597／−109.110、Afschrijvingen vergoedingssommen −38.840／−41.344、Resultaat vergoedingssommen 65.526／10.333、Financiële baten 3.099／8.719、Financiële lasten −8.429／−10.723、Resultaat vóór belastingen 3.138／−51.504、Belastingen −1.163／+14.165、Resultaat na belastingen 1.975／−37.339
+#       本文「De totale kaartverkoop daalde echter met € 2,3 miljoen naar € 57,6 miljoen」「De Europese premies stegen met € 22,7 miljoen naar € 43,5 miljoen」「De omzet van merchandise daalde met € 7,3 miljoen naar € 26,1 miljoen」「Lonen... toegenomen met € 11,5 miljoen naar € 120,6 miljoen (+11%) ... als gevolg van het spelen in de UEFA Champions League, hogere kosten afkoopsommen en hogere vergoedingen tekengeld」
+#       人件費の内訳（注26）：選手 76,2／67,3、技術・医療スタッフ 18,4／16,9（百万ユーロ）
+#   ○ 前の年のプレスリリース（2025-09-29）https://www.ajax.nl/media/0qtdntsf/persbericht-jaarcijfers-afc-ajax-nv-per-30-juni-2025.pdf（2024/25：収入178,1・営業−19,4・売却益10,3・最終−37,3・純資産189,1、ヨーロッパリーグ16強・エールディヴィジ2位）
+#   ○ 英語版 Wikipedia「2026–27 AFC Ajax season」（上の「今季も1部」）
+#   ○ デロイト Football Money League 2026（2024/25）一次ページ：1〜30位にアヤックスは無い（30位ブレントフォード 206.0）。2026-10-31 に requests で確認。
+#   × 確かめられなかったもの：ハト・ブロビー・テイラーの移籍金（クラブは「売却益の合計 6550万」だけ書く。台本に個別の額を入れない）、
+#       デロイトの2025/26 の順位（2026年版は2024/25 まで）、今季の収入の見込み、オーナーなどの話（入れない）。
+#
+# 自分で計算した数（検算済み）
+#   内訳（2025/26）：欧州大会の賞金 43.521／スポンサー 42.541／試合の日（国内recettes 9.473＋欧州recettes 9.567＋シーズンチケット 14.553＋ビジネスシート 23.968＝57.561）／グッズ 26.085／テレビ 11.367／その他（間接の試合収入 3.461＋その他 3.743＝7.204）。合計 188.279 ✓
+#   内訳（2024/25）：賞金 20.752／スポンサー 42.460／試合の日（9.455＋12.533＋14.799＋23.038＝59.825）／グッズ 33.408／テレビ 11.724／その他（4.440＋5.520＝9.960）。合計 178.129 ✓
+#   収入の増え：188.279−178.129＝10.150（発表は +10.2 ✓）
+#   賞金の増え：43.521−20.752＝22.769（発表は +22.7／約2300万 ✓）、倍率 43.521÷20.752＝2.097→2倍あまり
+#   賞金が収入に占める割合：43.521÷188.279＝23.1%／20.752÷178.129＝11.65%→約12%
+#   賞金を除く収入：188.279−43.521＝144.758／178.129−20.752＝157.377。差 −12.619（−8.0%）→約1260万・約8%の減り
+#   グッズの減り：33.408−26.085＝7.323（−21.9%）／試合の日の減り：59.825−57.561＝2.264
+#   費用：197.5→206.5（+9.0, +4.6%＝発表「+5%」✓）
+#   人件費：109.110→120.597＝+11.487（+10.5%＝発表「+11%」）。収入に対する割合 120.597÷188.279＝64.05%→64.1%／109.110÷178.129＝61.25%→61.3%
+#   選手の人件費：67.3→76.2＝+8.9
+#   人件費の増え÷賞金の増え：11.487÷22.769＝50.5%→約半分
+#   本業の損益：188.279−206.5（概数）＝−18.2 ✓（損益計算書の −18.218）。2年連続のマイナス（−19.405、−18.218）
+#   売却益 65.526÷収入 188.279＝34.8%→約35%。前の年の売却益 10.333 → 65.526＝6.34倍→6倍あまり
+#   本業 −18.218＋償却 −38.840＝−57.058→約マイナス5710万。＋売却益 65.526＝＋8.468（損益計算書の8.468 ✓）
+#   売却益を除く項目の合計：−18.218−38.840−5.330（金融 3.099−8.429）−1.163＝−63.551→約マイナス6350万。最終 1.975−65.526＝−63.551 ✓
+#   最終の損益：8.468−5.330−1.163＝1.975 ✓（発表 2,0）
+#   前の年：−19.405−41.344＋10.333−1.088＋14.165＝−37.339 ✓
+#
+# 写真：assets/images/20261102_finance_ajax/（Commons、出典は credits.json）。01 内部（ピッチ、ヨハン・クライフ・アレナ）、02 空撮、03 外観、04 スタンド（2012年のNAC戦）。
+#   4枚。スタジアムの写真だけで、人物は特定していない。ほかに候補だった「機内から見た翼つき」「発煙筒のスタンド」は使わない（翼・発煙筒）。
+date: 2026年11月2日
+slot: other_1
+format: news
+series: クラブの財政
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- アヤックス
+theme:
+  end_bg: assets/images/20261102_finance_ajax/02_w.jpg
+  id: finance_ajax
+  league: netherlands
+  league_name: エールディヴィジ
+  kind: other
+  topic: アヤックス
+  title: アヤックス、チャンピオンズリーグ32位の年に黒字。なぜ？
+  question: アヤックスは、2025-26のチャンピオンズリーグで32位に終わり、決勝トーナメントに進めなかった。それなのに、最終の損益は200万ユーロの黒字（前の年は3730万ユーロの赤字）。なぜ黒字になったのか
+  lead: チャンピオンズリーグで32位。それでも、決算は黒字。アヤックス。
+  opening_image: assets/images/20261102_finance_ajax/01_w.jpg
+  takeaway: アヤックスの運営会社の2025-26の決算は、収入1億8830万ユーロ（前の年より1020万増）で、最終の損益は200万ユーロの黒字（前の年は3730万の赤字）。ただし本業の損益は1820万ユーロのマイナスで、2年続けて赤字。黒字にしたのは選手を売った利益6550万ユーロ（ハト・ブロビー・テイラー）で、これは収入の約35%にあたり、これを除く項目を足すと約6350万ユーロのマイナス（自分で足した数）。収入の増え約1000万は欧州大会の賞金の増え（2080万→4350万）によるもので、賞金を除く収入は約8%減った。クラブは来季、カンファレンスリーグへの出場で収入に重しがかかると書いている
+  short_title: アヤックス、32位の年に黒字
+thumbnail:
+  layout: number
+  crest_pos: right
+  photo: assets/images/20261102_finance_ajax/01_w.jpg
+  number: 200万ユーロ黒字
+  line1: アヤックスの決算
+  line2: 32位の年になぜ黒字
+  callouts: [売却益6550万]
+  tags:
+  - アヤックス
+  - エールディヴィジ
+  - クラブの財政
+  - チャンピオンズリーグ
+sections:
+- id: rev
+  heading: アヤックスの収入は、何でできているのか
+  tier: 報道
+  telop: 収入は1億8830万ユーロ。いちばん大きいのは試合の日の5760万
+  narrator: 解説
+  card: &rev_bars
+    type: bars
+    title: アヤックスの収入の内訳（2025-26、百万ユーロ）
+    unit: 百万ユーロ
+    items:
+    - {label: 試合の日, value: 57.6, highlight: true}
+    - {label: 欧州大会の賞金, value: 43.5}
+    - {label: スポンサー, value: 42.5}
+    - {label: グッズ, value: 26.1}
+    - {label: テレビ（国内）, value: 11.4}
+    - {label: その他, value: 7.2}
+  say:
+  - text: この動画は、2026年10月30日時点で見られる、クラブの発表をもとにしています。
+    image: assets/images/20261102_finance_ajax/01_w.jpg
+    card: none
+  - text: オランダのクラブ、アヤックス。決算は、7月から6月で区切ります。
+    card: none
+  - text: 2025年から26年のシーズンの数字は、9月25日に出ました。
+    card: none
+  - text: 収入は、1億8830万ユーロ。1年で、1020万ユーロの増えです。
+    emph: true
+    card: *rev_bars
+  - text: いちばん大きいのは、試合の日の収入で、5760万ユーロ。
+    card: *rev_bars
+  - text: 入場券と、年間シートと、ビジネス席の合計です。
+    card: *rev_bars
+  - text: 次が、欧州大会の賞金。そのあとに、スポンサーの4250万ユーロが続きます。
+    card: *rev_bars
+  - text: グッズは2610万ユーロ。国内リーグのテレビは、1140万ユーロ。
+    image: assets/images/20261102_finance_ajax/03_w.jpg
+    card: none
+  sources:
+  - https://www.ajax.nl/media/45peoljn/ajax-jaarverslag-2025_2026-def.pdf
+  - https://www.ajax.nl/media/0k4ljz0e/persbericht-jaarcijfers-afc-ajax-nv-per-30-juni-2026-def.pdf
+- id: uefa
+  heading: チャンピオンズリーグに出て、収入はどれだけ増えたのか
+  tier: 報道
+  telop: 欧州大会の賞金は2080万から4350万ユーロへ。ほかの収入は1260万減
+  narrator: 解説
+  card: &rev_table
+    type: table
+    title: アヤックスの収入（百万ユーロ）
+    columns: [項目, 2024-25, 2025-26]
+    rows:
+    - [欧州大会の賞金, '20.8', '43.5']
+    - [試合の日, '59.8', '57.6']
+    - [スポンサー, '42.5', '42.5']
+    - [グッズ, '33.4', '26.1']
+    - [賞金を除く収入, '157.4', '144.8']
+    highlight_row: 0
+  say:
+  - text: 前の年のアヤックスは、ヨーロッパリーグ。この年は、チャンピオンズリーグに出ました。
+    image: assets/images/20261102_finance_ajax/02_w.jpg
+    card: none
+  - text: ただ、結果は32位。決勝トーナメントには、進めませんでした。
+    image: assets/images/20261102_finance_ajax/04_w.jpg
+    card: none
+  - text: 国内のリーグは、5位でした。
+    card: none
+  - text: 欧州大会の賞金は、2080万ユーロから、4350万ユーロへ。2倍あまりです。
+    emph: true
+    card: *rev_table
+  - text: 収入に占める割合は、約12%から、約23%へ。
+    card: *rev_table
+  - text: ところが、ほかの収入は、増えませんでした。
+    image: assets/images/20261102_finance_ajax/02_w.jpg
+    card: none
+  - text: グッズは、730万ユーロの減り。
+    card:
+      <<: *rev_table
+      highlight_row: 3
+  - text: 試合の日の収入も、230万ユーロのマイナス。
+    card:
+      <<: *rev_table
+      highlight_row: 1
+  - text: 欧州の本拠地での試合が少なかったことと、観客への補償のためです。
+    image: assets/images/20261102_finance_ajax/03_w.jpg
+    card: none
+  - text: スポンサーの収入は、ほぼ横ばい。
+    card:
+      <<: *rev_table
+      highlight_row: 2
+  - text: 賞金を除いた収入は、1億5740万から1億4480万ユーロへ。
+    emph: true
+    card:
+      <<: *rev_table
+      highlight_row: 4
+  - text: 約8%の減り。自分で引いた数です。
+    card:
+      <<: *rev_table
+      highlight_row: 4
+  sources:
+  - https://www.ajax.nl/media/45peoljn/ajax-jaarverslag-2025_2026-def.pdf
+  - https://www.ajax.nl/media/0k4ljz0e/persbericht-jaarcijfers-afc-ajax-nv-per-30-juni-2026-def.pdf
+- id: cost
+  heading: 本業は、黒字だったのか
+  tier: 報道
+  telop: 本業の損益は1820万ユーロのマイナス。人件費は1150万ユーロ増
+  narrator: 解説
+  card: &cost_table
+    type: table
+    title: アヤックスの本業の損益（百万ユーロ）
+    columns: [項目, 2024-25, 2025-26]
+    rows:
+    - [収入, '178.1', '188.3']
+    - [費用, '197.5', '206.5']
+    - [人件費, '109.1', '120.6']
+    - [本業の損益, '−19.4', '−18.2']
+    highlight_row: 1
+  say:
+  - text: アヤックスの本業の損益とは、収入から、選手の売り買いを除いた費用を引いた数字です。
+    image: assets/images/20261102_finance_ajax/03_w.jpg
+    card: none
+  - text: 費用は、2億650万ユーロ。900万ユーロ増えました。
+    card: *cost_table
+  - text: 中でも人件費は、1億2060万ユーロ。1150万ユーロ増えています。
+    card:
+      <<: *cost_table
+      highlight_row: 2
+  - text: 収入に対する人件費の割合は、61.3%から64.1%へ。
+    card:
+      <<: *cost_table
+      highlight_row: 2
+  - text: クラブの説明では、主な理由は、チャンピオンズリーグに出た分の給料です。
+    card: &cost_doc
+      type: document
+      label: アヤックスの運営会社 決算の発表（2026年9月、訳）
+      paragraphs:
+      - 費用が増えた理由は、チャンピオンズリーグに出たことによる、プロの選手の給料の増えと、一度きりの出費だ。
+      - 一度きりの出費には、打ち切りになった試合の観客への補償と、シーズン中の監督の解任がある。
+      highlight: [チャンピオンズリーグ, 一度きりの出費]
+  - text: 一度きりの出費として、観客への補償と、監督の解任の費用も挙げています。
+    card: *cost_doc
+  - text: その結果、本業の損益は、1820万ユーロのマイナス。
+    emph: true
+    image: assets/images/20261102_finance_ajax/01_w.jpg
+    card: none
+  - text: 前の年も、1940万ユーロのマイナスでした。本業は、2年続けて赤字です。
+    card:
+      <<: *cost_table
+      highlight_row: 3
+  sources:
+  - https://www.ajax.nl/media/0k4ljz0e/persbericht-jaarcijfers-afc-ajax-nv-per-30-juni-2026-def.pdf
+  - https://www.ajax.nl/media/45peoljn/ajax-jaarverslag-2025_2026-def.pdf
+- id: profit
+  main: true
+  heading: 本業が赤字なのに、なぜ黒字になったのか
+  tier: 報道
+  telop: 選手を売った利益は6550万ユーロ。最終の損益は200万ユーロの黒字
+  narrator: 解説
+  card: &pl_table
+    type: table
+    title: アヤックスの決算（百万ユーロ）
+    columns: [項目, 2024-25, 2025-26]
+    rows:
+    - [本業の損益, '−19.4', '−18.2']
+    - [選手の契約の償却, '−41.3', '−38.8']
+    - [選手を売った利益, '+10.3', '+65.5']
+    - [利息・税など, '+13.1', '−6.5']
+    - [最終の損益, '−37.3', '+2.0']
+    highlight_row: 0
+  say:
+  - text: チャンピオンズリーグで32位のアヤックス。それでも、決算は黒字でした。
+    short_only: true
+    image: assets/images/20261102_finance_ajax/01_w.jpg
+    card: none
+  - text: まず、本業の損益。ここは、マイナスのままです。
+    card: *pl_table
+  - text: ここに、選手の契約の償却が加わります。
+    card:
+      <<: *pl_table
+      highlight_row: 1
+  - text: 買った選手の移籍金を、契約の期間に分けて、費用にしたものです。
+    card:
+      <<: *pl_table
+      highlight_row: 1
+  - text: 3880万ユーロ。前の年の4130万より、少なめです。
+    card:
+      <<: *pl_table
+      highlight_row: 1
+  - text: 償却を引くと、約5710万ユーロのマイナス。
+    emph: true
+    image: assets/images/20261102_finance_ajax/02_w.jpg
+    card: none
+  - text: そこに、選手を売った利益、売却益が、6550万ユーロ入りました。
+    emph: true
+    card:
+      <<: *pl_table
+      highlight_row: 2
+  - text: クラブが挙げるのは、ヨレル・ハトのチェルシーへの移籍。
+    image: assets/images/20261102_finance_ajax/04_w.jpg
+    card: none
+  - text: ブロビーのサンダーランドへの移籍。ケネス・テイラーのラツィオへの移籍です。
+    card: none
+  - text: 利息や税などを引いて、最後に残ったのは、200万ユーロの黒字です。
+    emph: true
+    card:
+      <<: *pl_table
+      highlight_row: 4
+  - text: 前の年は、売却益が1030万ユーロ。最終は、3730万ユーロの赤字。
+    card:
+      <<: *pl_table
+      highlight_row: 2
+  - text: 売却益は、6倍あまりに増えたことになります。
+    card: none
+    image: assets/images/20261102_finance_ajax/03_w.jpg
+  sources:
+  - https://www.ajax.nl/media/0k4ljz0e/persbericht-jaarcijfers-afc-ajax-nv-per-30-juni-2026-def.pdf
+  - https://www.ajax.nl/media/45peoljn/ajax-jaarverslag-2025_2026-def.pdf
+- id: view
+  viewpoint: true
+  heading: 見立て・アヤックスの黒字は、来年も続くのか
+  tier: 背景
+  telop: 売った利益は収入の約35%。これを除くと約6350万ユーロのマイナス
+  narrator: 解説
+  card: &view_table
+    type: table
+    title: 自分で割ってみた（アヤックスの決算）
+    columns: [比べ, 答え]
+    rows:
+    - [売却益 ÷ 収入（前の年は約6%）, 約35%]
+    - [売却益を除いた項目の合計, −63.5百万]
+    - [人件費の増え ÷ 賞金の増え, 約半分]
+    highlight_row: 0
+  say:
+  - text: ここからは見立てです。アヤックスの決算の数字を、自分で割ってみます。
+    image: assets/images/20261102_finance_ajax/02_w.jpg
+    card: none
+  - text: 売却益は、収入の約35%。前の年の約6%より、大きく増えました。
+    emph: true
+    mark:
+      kind: circle
+      row: 0
+      col: 1
+    card: *view_table
+  - text: 売却益を除いて、ほかの項目を足すと、およそ6350万ユーロのマイナス。
+    card:
+      <<: *view_table
+      highlight_row: 1
+  - text: 人件費の増えは、賞金の増えの、約半分にあたります。
+    card:
+      <<: *view_table
+      highlight_row: 2
+  - text: 題への答えです。
+    image: assets/images/20261102_finance_ajax/01_w.jpg
+    card: none
+  - text: 黒字にしたのは、本業ではなく、選手の売却でした。
+    emph: true
+    card: none
+  - text: 今季のアヤックスは、チャンピオンズリーグではなく、カンファレンスリーグ。
+    image: assets/images/20261102_finance_ajax/04_w.jpg
+    card: none
+  - text: 賞金の少ない大会です。
+    card: none
+  - text: クラブは、このことが収入に重しになると書いています。
+    card: none
+  - text: そのうえで、費用を抑える方針です。
+    card: none
+  - text: 7月以降には、ニューカッスルとパリ・サンジェルマンへの移籍もありました。
+    card: none
+  - text: 今季の決算にプラスに働く見込み、とクラブは書いています。
+    card: none
+  - text: 賞金が減るなかで、本業の赤字を、次も売却益で埋められるのか。ここが見どころ。
+    emph: true
+    image: assets/images/20261102_finance_ajax/03_w.jpg
+    card: none
+  sources:
+  - https://www.ajax.nl/media/0k4ljz0e/persbericht-jaarcijfers-afc-ajax-nv-per-30-juni-2026-def.pdf
+  - https://www.ajax.nl/media/45peoljn/ajax-jaarverslag-2025_2026-def.pdf

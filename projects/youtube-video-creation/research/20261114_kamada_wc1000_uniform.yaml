@@ -1,0 +1,117 @@
+# 取材メモ（2026年11月14日）鎌田大地のユニフォームがFIFAミュージアムに収蔵。W杯通算1000試合目の先制点（ニュースのショート。見せ方 X＝冒頭に強い一言）
+# 取材: 2026-11-14。requests（ブラウザUA）でゲキサカ・サッカーキングの本文を全文読み、ESPN（site.api.espn.com）で試合を確かめた。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元:
+#   ゲキサカ 2026-11-13 20:59（ゲキサカ編集部）「W杯通算1000試合目でメモリアル弾!「原因不明の白いシミ」付き鎌田大地の着用ユニがFIFAミュージアムに収蔵」 https://web.gekisaka.jp/news/japan/detail/?463118-463118-fl
+#   サッカーキング 2026-11-13（サッカーキング編集部）「W杯通算1000試合目の歴史的一着！ 鎌田大地がチュニジア戦で着用したユニフォームがFIFAミュージアムに収蔵」 https://www.soccer-king.jp/news/japan/national/20261113/2227426.html
+# 写真の出どころ（本人の写真を探すため。ユニフォームの写真はFIFAミュージアム提供なので使わない）:
+#   https://web.gekisaka.jp/news/japan/detail/?463118-463118-fl
+#   https://www.soccer-king.jp/news/japan/national/20261113/2227426.html
+#   https://web.gekisaka.jp/news/japan/detail/?463060-463060-fl
+#   https://web.gekisaka.jp/news/japan/detail/?462978-462978-fl
+#   https://www.cpfc.co.uk/news/club/the-numbers-kamadas-100-palace-appearances/
+#   https://www.cpfc.co.uk/news/match-reports/report-highlights-crystal-palace-hoffenheim-euro
+#   https://www.soccer-king.jp/news/japan/national/20261111/2226536.html
+#   https://web.gekisaka.jp/news/japan/detail/?463113-463113-fl
+#   https://web.gekisaka.jp/news/japan/detail/?463112-463112-fl
+# 出典で確かめたこと（2社の記事が合う）:
+#   ・FIFAミュージアム（スイス・チューリヒ。2016年開館。サッカーキングは2016年2月）は13日、鎌田が2026年W杯北中米大会で着たユニフォームをコレクションに加えたと発表した。
+#   ・収蔵されたのは6月20日のグループリーグ（グループF）第2戦、チュニジア戦で着たユニフォーム。この試合が1930年に始まったW杯の通算1000試合目にあたる（2社とも）。日本は鎌田の開始4分の先制点などで4-0（ゲキサカ：上田綺世の2得点、伊東純也のゴール）。
+#   ・ユニフォームには記念の特別ステッカーが貼られ、背面には「原因不明の白いシミ」（ゲキサカ）／「白い染み」（サッカーキング）が残る。FIFAミュージアムはステッカーも、試合中に付いたとみられるシミも取り除かず、当時の状態のまま保存している（ゲキサカ）。サッカーキングは「サッカーの歴史を本来の姿のまま後世へ残す博物館の姿勢」と書く。
+#   ・「原因不明」はゲキサカの語。シミが何かは、記事のどこにも書かれていない→台本は記事の範囲だけ（原因の推測は書かない）。
+# ESPN（fifa.world, event=760449）で確かめたこと: Tunisia 0-4 Japan、キックオフ 2026-06-21T04:00Z＝現地6月20日夜（会場 Estadio BBVA）。得点: 4分 鎌田（アシスト 中村敬斗）、31分 上田（アシスト 板倉滉）、69分 伊東（アシスト 上田）、83分 上田（ヘディング。アシスト 佐野海舟）。上田2得点は記事と合う。
+# 1000試合目の確認: 記事は2社とも「通算1000試合目」。ESPN の日程を6/11の開幕から日付順に数えると、この試合は2026年大会の36試合目。2022年大会までの通算964試合（一般に知られる数）に36を足すと1000で、記事と合う。台本には「2026年大会の36試合目」（ESPNの日程）までを書き、964は書かない。
+# 食い違い: なし。ゲキサカの見出しの「メモリアル弾」は鎌田の4分の先制点のこと。ESPN で4分が試合の最初の得点だが、記事の語ではないので台本は「先制点」で通す。サッカーキング見出しの「歴史的一着」は、1着のユニフォームの意味。
+# 前の本との重なり: 20261113_kamada_asiacup_postponed（アジア杯延期後の鎌田の代表継続の言葉）。今回の初出: W杯通算1000試合目の試合のユニフォームの収蔵（別の話）。鎌田の言葉・アジア杯の話は繰り返さない。
+# 【言わないこと】14日ブラジル戦の結果・予想／シミの原因の推測／ユニフォームの価値の金額。
+# 本人の言葉: なし（鎌田のコメントは記事に無い）。X。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月14日"
+format: news
+no_main: true
+people: [鎌田大地, 日本代表, FIFAミュージアム]
+
+short_style: X
+short_hook_word: W杯1000試合目
+short_photos:
+  - assets/images/20261114_kamada_wc1000_uniform/01_v.jpg
+  - assets/images/20261114_kamada_wc1000_uniform/02_v.jpg
+  - assets/images/20261114_kamada_wc1000_uniform/05_v.jpg
+short_question: 鎌田大地のユニフォームが残された試合の中で、一番の見どころはどの場面だと思いますか。
+short_telops: []
+
+theme:
+  id: kamada_wc1000_uniform
+  league: japan
+  league_name: 日本代表
+  prefix: ""
+  title: 鎌田大地、W杯1000試合目のユニフォームがフィファミュージアムに収蔵
+  hook: ""
+  question: 鎌田大地のユニフォームは、なぜFIFAミュージアムに収蔵されたのか
+  takeaway: 6月のチュニジア戦はW杯の通算1000試合目で、鎌田は開始4分に先制点を決めた。そのユニフォームには記念ステッカーと原因不明の白いシミが残り、取り除かずに保存される
+
+thumbnail:
+  layout: face
+  line1: W杯1000試合目の一着
+  line2: 鎌田大地のユニ 収蔵
+  tags: [鎌田大地, 日本代表, FIFAミュージアム]
+  photo: assets/images/20261114_kamada_wc1000_uniform/01_w.jpg
+  short_photo: assets/images/20261114_kamada_wc1000_uniform/01_v.jpg
+
+answer: 6月20日のチュニジア戦はW杯の通算1000試合目。鎌田が開始4分に先制点を決めたその日のユニフォームを、FIFAミュージアムが記念ステッカーやシミもそのままに保存する
+watch: 14日のブラジル戦（シンガポール）
+
+sections:
+  - id: what
+    main: true
+    heading: 鎌田大地のユニフォームは、なぜFIFAミュージアムに収蔵されたのか
+    tier: 報道
+    telop: 鎌田大地のユニフォーム、FIFAミュージアムへ
+    say:
+      - text: W杯の節目の試合で、鎌田大地が着たユニフォームが収蔵されました。
+        image: assets/images/20261114_kamada_wc1000_uniform/01_w.jpg
+      - text: スイスのチューリヒにあるフィファミュージアムが、13日に発表しました。
+      - text: 収蔵されたのは、今年6月20日、北中米W杯のグループリーグ第2戦、
+      - text: チュニジア戦で鎌田が着たユニフォームです。
+        image: assets/images/20261114_kamada_wc1000_uniform/02_w.jpg
+      - text: この試合が、1930年に始まったW杯の、通算1000試合目にあたります。
+      - text: 日本は鎌田の開始4分の先制点から、4対0で勝ちました。
+        image: assets/images/20261114_kamada_wc1000_uniform/01_w.jpg
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463118-463118-fl
+      - https://www.soccer-king.jp/news/japan/national/20261113/2227426.html
+      - https://www.espn.com/soccer/match/_/gameId/760449
+  - id: team
+    heading: ユニフォームには、何が残されているのか
+    tier: 報道
+    telop: 記念ステッカーと、原因不明の白いシミ
+    say:
+      - text: 鎌田のユニフォームには、1000試合目を記念する特別なステッカーが貼られています。
+        image: assets/images/20261114_kamada_wc1000_uniform/02_w.jpg
+      - text: 背中には、原因不明の白いシミも残っています。
+      - text: フィファミュージアムは、ステッカーだけでなく、
+      - text: 試合中に付いたとみられるシミも、取り除かず保存するということです。
+        image: assets/images/20261114_kamada_wc1000_uniform/01_w.jpg
+      - text: サッカーの歴史を、本来の姿のまま後世に残すという、博物館の姿勢です。
+        image: assets/images/20261114_kamada_wc1000_uniform/02_w.jpg
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463118-463118-fl
+      - https://www.soccer-king.jp/news/japan/national/20261113/2227426.html
+  - id: view
+    viewpoint: true
+    heading: 1000試合目の日本は、どう勝ったのか
+    tier: 背景
+    telop: 4-0。鎌田の先制点から4得点
+    say:
+      - text: 見立てです。試合日程で数えると、この試合は2026年大会の36試合目。
+        card: {type: table, title: W杯グループF チュニジア 0-4 日本, columns: [分, 得点], rows: [[4分, 鎌田大地], [31分, 上田綺世], [69分, 伊東純也], [83分, 上田綺世]], highlight_row: 0}
+      - text: この36試合目で、W杯の通算が1000試合に届いたことになります。
+      - text: 鎌田の先制点のあと、上田綺世が2点、伊東純也が1点を加えました。
+        card: none
+      - text: 日本代表は14日、ブラジルと戦います。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/760449
+      - https://web.gekisaka.jp/news/japan/detail/?463118-463118-fl

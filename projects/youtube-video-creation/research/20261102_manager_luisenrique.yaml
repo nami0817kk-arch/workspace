@@ -1,0 +1,521 @@
+# 監督紹介：ルイス・エンリケ（11/2 月、シリーズ「監督紹介」、key: manager_luisenrique、型は news）。9節の型（2026-10-20 決定）。見本は 20261029_manager_ferguson。
+# 順：フック→基礎DATA→日本との接点（基礎DATAの次）→歩みと転機→戦術の色（実例の試合1つ）→数字で見る→本人の言葉→マル秘話→見立て。
+#
+# **題材の選び方（2026-10-31）**：大物の監督で、まだ出していない人。出し済み＝グアルディオラ・アンチェロッティ・モウリーニョ・クロップ・シメオネ・アルテタ・フリック・ヴェンゲル・ファーガソン・トゥヘル。
+#   ・ジダンは scripts に 20261003_coach_zidane・20261018_zidane_legend・20261024_team_france があり、直近30日に重なるので外した。
+#   ・ポチェッティーノは 20260911_poch（30日より前だが近い）、コンテは日本との接点が薄い、シャビ・アロンソ（brief の候補10）は日本との接点が薄いと brief にある。
+#   ・ルイス・エンリケ：欧州の大会で現役最多級の実績（CL3回）＋日本との接点が2つ（2015年クラブW杯＝横浜の決勝、2022年W杯＝日本に1対2）。
+#   **重なりの確認（2026-10-31 に自分で）**：research/posted.json に「エンリケ」0件、research/covered.yaml は 2件のみ（10/15 PSG対シティ後の一言・10/26 クヴァラのショート。どちらもニュースの短い題材で「監督紹介」ではない）。
+#   scripts は 20261026_luis_enrique_kvara・20261027_spain_three_awards・20261022_team_spain に名前が出るだけ（監督紹介としての本は無い）。同日10/31 の本は トゥヘル。
+#
+# **いまの立場（一次情報で確かめた）**：現役。パリ・サンジェルマンの監督（2023-07-05〜）。
+#   ○ PSG公式（https://www.psg.fr/en/content/a-new-record-for-luis-enrique-havre-ac-paris-saint-germain-ligue-1-2026-2027 、控え research/raw/20261102_psg_a-new-record-for-lui.txt、2026-10-31 取得）：
+#     「Paris Saint-Germain recorded a 5-1 win over Le Havre AC in Matchday 9 of Ligue 1 on Friday 30 October 2026 … the 127th victory in all competitions for coach Luis Enrique … a new record in club history.」
+#     「127 wins and just 27 losses (a 67.6% win rate …) in 188 matches as head coach.」→ 引き分けは 188-127-27＝34。「he recently extended his contract … through to 2030」。
+#     「The first coach to win the UEFA Champions League with Paris (2025, 2026) … French champion (2024, 2025, 2026), Coupe de France (2024, 2025), Trophée des Champions (2024, 2025, 2026), UEFA Super Cup (2025, 2026), FIFA Intercontinental Cup (2025)」→ 3+2+3+2+1+2＝13 個（自分で足した）。
+#     「leads Mikel Arteta (121), Pep Guardiola (116), Diego Simeone (110), Unai Emery and Xabi Alonso (101)」「188 matches … ahead of Arteta (187), Simeone (186), Emery (183), Guardiola (180)」（欧州5大リーグの全大会の勝ち数・試合数。2023年夏から）。
+#   ○ PSG公式の試合後コメント（…luis-enrique-be-as-competitive-as-possible-reactions-le-havre…、控え 20261102_psg_luis-enrique-be-as-c.txt）：英語の訳が公式サイトに載っている。台本は日本語に訳した（訳の訳であることは台本で断らず、取材メモに残す）。
+#   ○ PSG公式トップページ：次の試合は 11月3日（火）ビジャレアル対パリ（大会名は未確認なので台本では「ビジャレアル戦」とだけ言う）。
+#   ○ 英語版 Wikipedia「Luis Enrique」（控え research/raw/20261102_luisenrique_wiki.txt・_plain.txt、2026-10-31 取得。Managerial statistics は「match played 30 October 2026」まで更新）。
+#
+# **通算（台本とサムネをそろえる。トップチームのみ＝バルセロナBは除く）**＝英語版 Wikipedia「Managerial record by team and tenure」（UEFA の表が出典）：
+#   バルセロナB 124試合59勝40分25敗（**除く**）／ローマ 42試合17勝9分16敗／セルタ 40試合15勝7分18敗／バルセロナ 181試合138勝22分21敗／
+#   スペイン代表 8試合6勝0分2敗（2018-07〜2019-03）＋39試合20勝14分5敗（2019-11〜2022-12）＝47試合26勝14分7敗／パリ 188試合127勝34分27敗。
+#   合計（表の Total 622試合382勝126分114敗）−バルセロナB（124・59・40・25）＝ 498試合323勝86分89敗。自分で足して一致（42+40+181+47+188＝498、17+15+138+26+127＝323、9+7+22+14+34＝86、16+18+21+7+27＝89）。
+#   勝率（自分で割った）：通算 323/498＝64.9%、ローマ 17/42＝40.5%、セルタ 15/40＝37.5%、バルセロナ 138/181＝76.2%、スペイン代表 26/47＝55.3%、パリ 127/188＝67.6%（PSG公式の 67.6% と一致）。
+#   ※パリ分は PSG公式で一致を確認。ほかのクラブ分は英語版 Wikipedia だけ（独立した出典では未確認）→ 台本は「通算」の数字を言うが、概要欄の確度は 報道。
+#   タイトル（Honours・Manager）：バルセロナ＝リーグ2・国王杯3・スーパーカップ（スペイン）1・CL1・UEFAスーパーカップ1・クラブW杯1＝9（自分で数えた）。パリ＝13（上の PSG公式から）。合わせて22。
+#
+# **基礎**：1970-05-08 スペイン・ヒホン生まれ（56歳）。選手：MF／FW。レアル・マドリード（1991-96、5季）→バルセロナ（1996-2004、8季、のち主将）。スペイン代表62試合12得点、1992年バルセロナ五輪で金メダル。2004-08-10 に34歳で引退。
+#   監督：2008-05-26 バルセロナB（グアルディオラの後任）→2011-06 ローマ→2013-06 セルタ→2014-05-19 バルセロナ→2017-03-01 契約満了での退任を発表（6/30）→2018-07-09 スペイン代表（2019-03 辞任、2019-11 復帰、2022-12-08 退任）→2023-07-05 パリ。
+#
+# **日本との接点（一次で確かめた範囲。サッカーの縁だけ）**：
+#   ・2015 FIFA Club World Cup（日本開催、12/10〜20）：バルセロナ（監督ルイス・エンリケ）は準決勝で広州恒大に3-0、決勝は 2015-12-20 横浜の国際総合競技場でリーベル・プレートに3-0（英語版 Wikipedia「2015 FIFA Club World Cup」「…final」）。
+#     「a record third Club World Cup title」。サンフレッチェ広島が3位（Wikipedia）。最優秀選手・得点王はスアレス（5点）。
+#   ・2022 W杯 E組 最終戦 2022-12-01：日本2-1スペイン（英語版 Wikipedia「2022 FIFA World Cup Group E」）。前半モラタで1-0、後半の立ち上がりに堂安律、続けて田中碧。日本が首位、スペインは2位。
+#     スペインは16強でモロッコにPK0-3で敗退、ルイス・エンリケはその大会のあと退任（stats の To＝2022-12-08）。
+#   ※日本人選手との縁（指導した・対戦した個人）は確かめられていないので、台本に入れない。
+#
+# **戦術の色**（英語版 Wikipedia「FC Barcelona 6–1 Paris Saint-Germain FC」・Luis Enrique の Tactics）：2017-03-08 カンプ・ノウ、CL16強第2戦。第1戦（2017-02-14 パリ）は 0-4。
+#   先発（Wikipedia の Details）：ブラボでなく ter Stegen、CB 3人＝マスチェラーノ・ピケ・ウンティティ、DM ブスケツ、RM ラキティッチ、LM イニエスタ、AM メッシ、前線＝ラフィーニャ・スアレス・ネイマール。
+#   得点：スアレス3'、クルザワのオウンゴール40'、メッシ（PK）50'、カバーニ（PSG）62'、ネイマール88'（FK）・90+1'（PK）、セルジ・ロベルト90+5'。76分にラフィーニャ→セルジ・ロベルト。合計6-5。大会史上最大の逆転（Wikipedia）。
+#   Wikipedia のプロフィール節「その季の3バックの形が、この逆転に効いた（instrumental）」。
+#   ※その後：2023-24 準々決勝でパリ（監督ルイス・エンリケ）がバルセロナに合計6-4（1戦目 パリ 2-3 バルセロナ、2戦目 バルセロナ 1-4 パリ）。Wikipedia の match 記事。
+#
+# **本人の言葉**：2026-10-30 ル・アーヴル戦後の PSG公式コメント（上）。
+#   ①「…that's what we're aiming for: to be as competitive as possible in every match, whoever the opponent.」
+#   ②「The win record? I'm lucky enough to manage a club of this level and to have incredible players. I'm very happy and I hope to continue making history in Paris.」
+#
+# **マル秘話**：Wikipedia「Club career」「Personal life」：1995年1月にレアルの選手としてバルセロナに5-0で勝った試合で得点／1996年に契約満了で移籍金なしでバルセロナへ／最初はファンがためらったが主将に／
+#   引退後はオーストラリアでサーフィン、2005 NYマラソン・2006 アムステルダム・2007 フィレンツェ・2007 フランクフルトのアイアンマン・2008 マラソン・デ・サーブルを完走。
+#
+# **入れなかったもの**：家族・娘の死去・病気、メッシ・トッティとのもめごと、ロベルト・モレノとの件（私生活ではないが審判の揉めごとと同じ扱いで外した）、レアル・マドリード選手を外した2020年の代表メンバー選び、
+#   スペイン代表を2019年に離れた事情、PSGでのキックオフの戦術の細部（確かめきれない）、ニュースの反応・女子・お金・FotMob のパーセンタイル。
+date: 2026年11月2日
+slot: other_1
+format: news
+series: 監督紹介
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- ルイス・エンリケ
+theme:
+  end_bg: assets/images/20261102_manager_luisenrique/01_w.jpg
+  id: manager_luisenrique
+  league: france
+  league_name: リーグ・アン
+  kind: other
+  topic: ルイス・エンリケ
+  title: ルイス・エンリケ監督ってどんな人？CL優勝3回、勝ち方は何が変わったのか
+  question: パリ・サンジェルマンのルイス・エンリケ監督は、どんな人なのか。ローマとセルタでは勝率4割前後だった監督が、チャンピオンズリーグを3回制するまでに、何が変わったのか
+  lead: パリ・サンジェルマン監督、ルイス・エンリケ。
+  opening_image: assets/images/20261102_manager_luisenrique/01_w.jpg
+  takeaway: トップチームの通算は498試合323勝、勝率64.9%。ローマとセルタの1年ずつは4割前後、バルセロナは76.2%、パリは67.6%。勝てる監督への転機は、バルセロナ1年目の途中で先発を固めた決断だと見ている
+  short_title: ルイス・エンリケ、CL優勝3回の道のり
+  nameplate: ルイス・エンリケ｜パリ・サンジェルマン監督
+thumbnail:
+  line1: ルイス・エンリケ、323勝
+  line2: パリでCL連覇、バルサで3冠
+  tags:
+  - パリ・サンジェルマン
+  photo: assets/images/20261102_manager_luisenrique/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261102_manager_luisenrique/03_v.jpg
+sections:
+- id: hook
+  main: true
+  heading: CL優勝3回。ルイス・エンリケとは、どんな監督なのか
+  tier: 報道
+  telop: チャンピオンズリーグ優勝3回。パリでの勝ち数はクラブ最多
+  narrator: 解説
+  card: &hook_stats
+    type: stats
+    title: ルイス・エンリケの監督歴（10月30日時点）
+    items:
+    - ['3', 回, チャンピオンズリーグ優勝]
+    - ['127', 勝, パリでの勝ち数。クラブ最多]
+    - ['13', 個, パリで取ったタイトル]
+    focus: 0
+  say:
+  - text: 監督として、チャンピオンズリーグを3回制しています。
+    image: assets/images/20261102_manager_luisenrique/01_w.jpg
+    emph: true
+    card: none
+  - text: バルセロナで1回、パリ・サンジェルマンで2回です。
+    image: assets/images/20261102_manager_luisenrique/03_w.jpg
+    card:
+      <<: *hook_stats
+      focus: 0
+  - text: パリでは、188試合で127勝。クラブの歴史で、いちばん多い勝ち数です。
+    card:
+      <<: *hook_stats
+      focus: 1
+  - text: パリで取ったタイトルは、全部で13個になります。
+    card:
+      <<: *hook_stats
+      focus: 2
+  - text: 率いているのは、ルイス・エンリケ。10月30日までの試合で数えています。
+    image: assets/images/20261102_manager_luisenrique/02_w.jpg
+    card: none
+  sources:
+  - https://www.psg.fr/en/content/a-new-record-for-luis-enrique-havre-ac-paris-saint-germain-ligue-1-2026-2027
+  - https://en.wikipedia.org/wiki/Luis_Enrique
+- id: data
+  heading: ルイス・エンリケは、いつ、どこで、どんな道を歩いた人か
+  tier: 報道
+  telop: ルイス・エンリケの基礎DATA
+  narrator: 解説
+  card: &data_table
+    type: table
+    title: ルイス・エンリケ（56歳）の基礎DATA
+    columns: [項目, 中身]
+    rows:
+    - [生年月日, 1970年5月8日（スペイン・ヒホン）]
+    - [選手のころ, MF・FW。レアル・マドリード → バルセロナ]
+    - [スペイン代表, 62試合12得点。1992年の五輪で金メダル]
+    - [監督, ローマ → セルタ → バルセロナ → 代表 → パリ]
+    - [いま, パリ・サンジェルマン監督（契約は2030年まで）]
+    highlight_row: 0
+    source: PSG公式、英語版Wikipedia
+  say:
+  - text: ルイス・エンリケは1970年5月8日、スペイン北部のヒホンの生まれ。
+    image: assets/images/20261102_manager_luisenrique/01_w.jpg
+    card:
+      <<: *data_table
+      highlight_row: 0
+  - text: 選手のころは、中盤もフォワードもこなす万能型でした。
+    card:
+      <<: *data_table
+      highlight_row: 1
+  - text: レアル・マドリードで5季、バルセロナで8季。ライバルの両方でプレーしました。
+    card:
+      <<: *data_table
+      highlight_row: 1
+  - text: スペイン代表は62試合で12得点。1992年のバルセロナ五輪では金メダルです。
+    image: assets/images/20261102_manager_luisenrique/02_w.jpg
+    card:
+      <<: *data_table
+      highlight_row: 2
+  - text: 監督はローマ、セルタ、バルセロナ、代表を経て、いまはパリ。契約は2030年まで。
+    image: assets/images/20261102_manager_luisenrique/02_w.jpg
+    emph: true
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Luis_Enrique
+  - https://www.psg.fr/en/content/a-new-record-for-luis-enrique-havre-ac-paris-saint-germain-ligue-1-2026-2027
+- id: japan
+  heading: ルイス・エンリケのチームは、日本でどんな試合をしたのか
+  tier: 報道
+  telop: 横浜で世界一。そして、W杯で日本に敗れた
+  narrator: 解説
+  card: &jp_table
+    type: timeline
+    title: ルイス・エンリケと日本
+    rows:
+    - [2015年12月, 横浜でリーベル・プレートに3対0。クラブ世界一]
+    - [2022年12月1日, W杯でスペインを率い、日本に1対2]
+    - [2022年12月8日, 16強でモロッコにPK戦で敗れ、代表を退く]
+    focus: 0
+  say:
+  - text: ルイス・エンリケと日本の縁は、2つの大会にあります。
+    image: assets/images/20261102_manager_luisenrique/01_w.jpg
+    card: none
+  - text: 1つめは2015年12月、日本で開かれたクラブワールドカップ。
+    card:
+      <<: *jp_table
+      focus: 0
+  - text: バルセロナの監督として、準決勝で広州恒大に3対0。
+    image: assets/images/20261102_manager_luisenrique/01_w.jpg
+    card:
+      <<: *jp_table
+      focus: 0
+  - text: 決勝は横浜で、アルゼンチンのリーベル・プレートにも3対0でした。
+    emph: true
+    card: none
+  - text: クラブワールドカップの3度目の優勝は、史上最多です。
+    image: assets/images/20261102_manager_luisenrique/01_w.jpg
+    card: none
+  - text: 2つめは2022年12月、カタールのワールドカップです。
+    image: assets/images/20261102_manager_luisenrique/04_w.jpg
+    card:
+      <<: *jp_table
+      focus: 1
+  - text: スペイン代表を率いて、グループの最後の相手が日本でした。
+    card:
+      <<: *jp_table
+      focus: 1
+  - text: 前半はスペインが1点をリード。
+    card: none
+  - text: 後半の立ち上がり、堂安律と田中碧が続けて決めて、日本が2対1で勝ちます。
+    emph: true
+    card: none
+  - text: 日本が首位、スペインは2位でグループを抜けました。
+    image: assets/images/20261102_manager_luisenrique/04_w.jpg
+    card: none
+  - text: 16強の相手はモロッコ。PK戦で敗れ、この大会を最後に代表の監督を退きます。
+    card:
+      <<: *jp_table
+      focus: 2
+  sources:
+  - https://en.wikipedia.org/wiki/2015_FIFA_Club_World_Cup
+  - https://en.wikipedia.org/wiki/2015_FIFA_Club_World_Cup_final
+  - https://en.wikipedia.org/wiki/2022_FIFA_World_Cup_Group_E
+- id: career
+  heading: 1年で去った2クラブから、バルセロナの3冠へ。何があったのか
+  tier: 背景
+  telop: 歩みと転機。ローマ、セルタ、そしてバルセロナ
+  narrator: 解説
+  card: &career_tl
+    type: timeline
+    title: ルイス・エンリケの歩み
+    rows:
+    - [2008年5月, バルセロナBの監督に]
+    - [2011年6月, ローマ。2013年6月、セルタ。どちらも1季]
+    - [2014年5月, バルセロナの監督に。1年目に3冠]
+    - [2017年3月, 契約満了での退任を発表]
+    - [2023年7月, パリ・サンジェルマンの監督に]
+    focus: 0
+  say:
+  - text: ルイス・エンリケの最初の仕事は、2008年のバルセロナB。
+    image: assets/images/20261102_manager_luisenrique/03_w.jpg
+    card:
+      <<: *career_tl
+      focus: 0
+  - text: グアルディオラの後任でした。
+    card:
+      <<: *career_tl
+      focus: 0
+  - text: 2011年にローマ、2013年にセルタ。どちらも1シーズンで去ります。
+    card:
+      <<: *career_tl
+      focus: 1
+  - text: セルタは9位。それでも、レアル・マドリードに2対0で勝ち、優勝を阻みました。
+    image: assets/images/20261102_manager_luisenrique/01_w.jpg
+    card: none
+  - text: 2014年5月、バルセロナの監督に戻ります。
+    card:
+      <<: *career_tl
+      focus: 2
+  - text: 1年目の途中、先発を固めて、メッシとネイマールを内側で使う形にします。
+    image: assets/images/20261102_manager_luisenrique/01_w.jpg
+    emph: true
+    card: none
+  - text: 2015年4月、パリ・サンジェルマンに2対0で勝って、50試合で42勝。
+    image: assets/images/20261102_manager_luisenrique/03_w.jpg
+    card: none
+  - text: 当時、どの監督よりも高い勝率でした。
+    card: none
+  - text: 2015年6月、ユヴェントスに3対1で勝って、リーグ、カップ戦、CLの3冠。
+    emph: true
+    callword: 3冠
+    image: assets/images/20261102_manager_luisenrique/01_w.jpg
+    card: none
+  - text: 2017年3月、契約満了での退任を発表します。
+    card:
+      <<: *career_tl
+      focus: 3
+  - text: 代表を経て、2023年7月、パリ・サンジェルマンの監督に。
+    image: assets/images/20261102_manager_luisenrique/03_w.jpg
+    card:
+      <<: *career_tl
+      focus: 4
+  sources:
+  - https://en.wikipedia.org/wiki/Luis_Enrique
+- id: style
+  heading: ルイス・エンリケのチームは、0対4をどうひっくり返したのか
+  tier: 報道
+  telop: 戦術の色。2017年3月、カンプ・ノウでのパリ戦
+  narrator: 解説
+  card: &style_doc
+    type: document
+    label: 2017年3月8日 チャンピオンズリーグ16強 第2戦（カンプ・ノウ）
+    paragraphs:
+    - 第1戦はパリで0対4。
+    - センターバック3人で先発。前に3人。
+    - 62分にパリが1点。あと3点が必要に。
+    - 88分から追加タイム5分までに、3点。6対1。
+    highlight:
+    - センターバック3人
+    - あと3点
+  say:
+  - text: 戦い方の色がよく出たのが、2017年3月8日、カンプ・ノウでの試合です。
+    image: assets/images/20261102_manager_luisenrique/03_w.jpg
+    card: *style_doc
+  - text: 決勝トーナメント1回戦の2試合目。相手はパリ・サンジェルマンでした。
+    card: *style_doc
+  - text: 第1戦はパリで0対4の負け。大会の歴史で、最大の逆転への挑戦です。
+    card: *style_doc
+  - text: ルイス・エンリケは、センターバックを3人並べて先発させます。
+    image: assets/images/20261102_manager_luisenrique/01_w.jpg
+    card: *style_doc
+  - text: 前には、ラフィーニャ、スアレス、ネイマールの3人です。
+    card: none
+  - text: 3点をリードして迎えた62分、カバーニに決められ、あと3点が必要に。
+    image: assets/images/20261102_manager_luisenrique/01_w.jpg
+    card: *style_doc
+  - text: 76分、ルイス・エンリケはセルジ・ロベルトを入れます。
+    card: none
+  - text: 88分にネイマールのフリーキック。追加タイムに入って、ネイマールのPK。
+    image: assets/images/20261102_manager_luisenrique/01_w.jpg
+    card: none
+  - text: そして追加タイム5分、セルジ・ロベルトが押し込んで、6対1の勝ちです。
+    emph: true
+    callword: 6対1
+    card: none
+  - text: 最後の7分間で3点。合計6対5で勝ち上がりました。
+    image: assets/images/20261102_manager_luisenrique/03_w.jpg
+    card: none
+  - text: その後、今度はパリの監督として、同じバルセロナと準々決勝で当たります。
+    image: assets/images/20261102_manager_luisenrique/02_w.jpg
+    card: none
+  - text: 2023年から24年のシーズンです。合計6対4で、パリが勝ち上がりました。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/FC_Barcelona_6%E2%80%931_Paris_Saint-Germain_FC
+  - https://en.wikipedia.org/wiki/Luis_Enrique
+- id: numbers
+  heading: 通算498試合、勝率が高いのはどのクラブか
+  tier: 報道
+  telop: トップチームの通算323勝。勝率はバルセロナ76.2%、パリ67.6%
+  narrator: 解説
+  card: &rate_bars
+    type: bars
+    title: ルイス・エンリケの勝率（チームごと、%）
+    unit: '%'
+    items:
+    - label: セルタ
+      value: 37.5
+    - label: ローマ
+      value: 40.5
+    - label: スペイン代表
+      value: 55.3
+    - label: パリ
+      value: 67.6
+    - label: バルセロナ
+      value: 76.2
+      highlight: true
+  say:
+  - text: ルイス・エンリケの成績を、数字で見ていきます。
+    image: assets/images/20261102_manager_luisenrique/03_w.jpg
+    card: &total_stats
+      type: stats
+      title: ルイス・エンリケの監督通算（2011年から。トップチーム）
+      items:
+      - ['498', 試合, バルセロナBは除く]
+      - ['323', 勝, 引き分け86・負け89]
+      - ['64.9', '%', 勝率]
+      focus: 1
+  - text: トップチームの監督として、498試合で323勝。勝率は64.9%です。
+    emph: true
+    card:
+      <<: *total_stats
+      focus: 1
+  - text: チームごとに見ると、バルセロナは181試合で138勝、76.2%。
+    image: assets/images/20261102_manager_luisenrique/03_w.jpg
+    card: *rate_bars
+  - text: パリは勝率67.6%です。
+    card: *rate_bars
+  - text: スペイン代表は47試合で26勝、55.3%でした。
+    card: *rate_bars
+  - text: 取ったタイトルは、バルセロナで9個、パリで13個。合わせて22個です。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Luis_Enrique
+  - https://www.psg.fr/en/content/a-new-record-for-luis-enrique-havre-ac-paris-saint-germain-ligue-1-2026-2027
+- id: words
+  heading: 本人は、クラブ最多の127勝の夜に何を話したのか
+  tier: 報道
+  telop: ルイス・エンリケの言葉。10月30日、ル・アーヴル戦のあと
+  narrator: 解説
+  card: &words_doc
+    type: document
+    label: ルイス・エンリケの言葉（訳）。2026年10月30日 試合後
+    paragraphs:
+    - 私たちが目指すのは、相手が誰でも、毎試合、できるかぎり強く戦うこと。
+    - これほどのレベルのクラブを率いて、すばらしい選手たちに恵まれて、私は幸運です。
+    - とても幸せです。これからも、パリで歴史をつくり続けたい。
+    highlight:
+    - 毎試合
+    - 歴史をつくり続けたい
+  say:
+  - text: 本人の言葉です。10月30日、ル・アーヴルに5対1で勝った直後。
+    image: assets/images/20261102_manager_luisenrique/02_w.jpg
+    card: *words_doc
+  - voice: ルイス・エンリケ
+    text: 私たちが目指すのは、相手が誰でも、
+  - voice: ルイス・エンリケ
+    text: 毎試合、できるかぎり強く戦うことです。
+    cont: true
+    pause: 0.5
+  - text: そして、クラブ最多の勝ち数について聞かれると、こう答えました。
+    image: assets/images/20261102_manager_luisenrique/02_w.jpg
+    card: *words_doc
+  - voice: ルイス・エンリケ
+    text: これほどのレベルのクラブを率いて、
+  - voice: ルイス・エンリケ
+    text: すばらしい選手たちに恵まれて、私は幸運です。
+    cont: true
+  - voice: ルイス・エンリケ
+    text: とても幸せです。これからも、パリで歴史をつくり続けたい。
+    cont: true
+    cont: true
+    pause: 0.5
+  quotes_from:
+  - https://www.psg.fr/en/content/luis-enrique-be-as-competitive-as-possible-reactions-le-havre-ac-paris-saint-germain-ligue-1-2026-2027
+  sources:
+  - https://www.psg.fr/en/content/luis-enrique-be-as-competitive-as-possible-reactions-le-havre-ac-paris-saint-germain-ligue-1-2026-2027
+- id: secret
+  heading: 数字の外にある話。ライバル2クラブでプレーした選手
+  tier: 背景
+  telop: レアルの選手として、バルセロナ戦で得点。その翌年、バルセロナへ
+  narrator: 解説
+  card: &sec_table
+    type: table
+    title: 数字の外にある話
+    columns: [いつ, 何があったか]
+    rows:
+    - [1995年1月, レアルの選手としてバルセロナ戦（5対0）で得点]
+    - [1996年, 契約が切れて、移籍金なしでバルセロナへ]
+    - [2004年8月, 34歳で現役を引退]
+    - [2008年, 砂漠を走るマラソン・デ・サーブルに出場]
+    highlight_row: 0
+    source: 英語版Wikipedia
+  say:
+  - text: ここから、ルイス・エンリケの数字の外の話。
+    image: assets/images/20261102_manager_luisenrique/03_w.jpg
+    card: none
+  - text: 1995年1月、レアル・マドリードの選手として、バルセロナ戦で得点。
+    card:
+      <<: *sec_table
+      highlight_row: 0
+  - text: 5対0の勝ちでした。
+    card:
+      <<: *sec_table
+      highlight_row: 0
+  - text: その翌年、契約が切れると、移籍金なしでそのバルセロナへ移ります。
+    emph: true
+    card:
+      <<: *sec_table
+      highlight_row: 1
+  - text: 最初はファンもためらいましたが、やがて主将になりました。
+    image: assets/images/20261102_manager_luisenrique/01_w.jpg
+    card: none
+  - text: 2004年8月、34歳で現役を引退します。
+    card:
+      <<: *sec_table
+      highlight_row: 2
+  - text: 引退後は、オーストラリアでサーフィン。マラソンにも出ています。
+    image: assets/images/20261102_manager_luisenrique/02_w.jpg
+    card: none
+  - text: 2008年には、砂漠を走るマラソン・デ・サーブルにも出ています。
+    card:
+      <<: *sec_table
+      highlight_row: 3
+  sources:
+  - https://en.wikipedia.org/wiki/Luis_Enrique
+- id: view
+  viewpoint: true
+  heading: 見立て・1年で去った2クラブと、勝ち続ける2クラブの差は何か
+  tier: 背景
+  telop: 勝率はローマとセルタで4割前後、バルセロナで76.2%、パリで67.6%
+  narrator: 解説
+  card: &view_table
+    type: table
+    title: 自分で数えてみた（クラブごとの勝率）
+    columns: [クラブ, 試合, 勝率]
+    rows:
+    - [ローマ（1季）, '42', 40.5%]
+    - [セルタ（1季）, '40', 37.5%]
+    - [バルセロナ（3季）, '181', 76.2%]
+    - [パリ（3年あまり）, '188', 67.6%]
+    highlight_row: 0
+  say:
+  - text: 見立てです。ルイス・エンリケの4つのクラブでの勝率を、並べました。
+    image: assets/images/20261102_manager_luisenrique/03_w.jpg
+    card: *view_table
+  - text: ローマとセルタでは、勝率は4割前後でした。
+    card:
+      <<: *view_table
+      highlight_row: 0
+  - text: バルセロナとパリでは、勝率が7割前後に上がります。
+    emph: true
+    mark: {kind: circle, row: 2, col: 2}
+    card:
+      <<: *view_table
+      highlight_row: 2
+  - text: バルセロナの1年目、先発を固めた時期から、白星が続くようになります。
+    image: assets/images/20261102_manager_luisenrique/03_w.jpg
+    card: none
+  - text: パリでの勝ち数127は、欧州5大リーグの監督で最も多い数字です。
+    image: assets/images/20261102_manager_luisenrique/02_w.jpg
+    card: none
+  - text: 2位のアルテタは121勝。パリの次の試合は、11月3日のビジャレアル戦です。
+    card: none
+  - text: クラブの大きさも違うので、理由は1つに絞れません。
+    card: none
+  - text: それでも、先発を固める決断が、勝てる監督への転機だったと見ています。
+    image: assets/images/20261102_manager_luisenrique/02_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Luis_Enrique
+  - https://www.psg.fr/en/content/a-new-record-for-luis-enrique-havre-ac-paris-saint-germain-ligue-1-2026-2027

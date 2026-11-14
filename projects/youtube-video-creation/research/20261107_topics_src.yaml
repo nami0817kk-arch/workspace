@@ -1,0 +1,74 @@
+title: 11月7日のショート題材
+lead: 海外フィードと日本語サイトから10件（日本人6件・海外4件）。Claude が選びました（11/4 以降は確認なしで進める指示のため、○を付けて作業を進めます）。
+note: 日本時間の朝に集めました。11/6 までに扱った題材（ロナウドの代表引退、ケイン、鎌田の同点弾 ほか）は外しています。女子・Jリーグ・MLS・育成年代・人の死の題は出していません。
+items:
+- num: 1
+  slot: 日本人（海外）
+  head: ボルシアMG板倉滉、5試合ぶり先発復帰も約3年半ぶりの退場。ハンブルガーSVに1-3。ブレッシン監督「馬鹿げている」
+  why: フットボールチャンネル・ドイツ紙。11/6 のブンデス。負傷明けの復帰戦で退場。監督の言葉あり。
+  src: ''
+  url: https://www.footballchannel.jp/2026/11/07/post1056156/
+  fmt: news
+- num: 2
+  slot: 日本人（プレミア）
+  head: 坂元達裕、エヴァートン戦（金曜）。コヴェントリー1-3で敗れた試合で坂元は何をしたか
+  why: 'ESPN: Everton 3-1 Coventry。前回（11/4）の初ゴールの続報。取材で出場時間・本人の言葉を確かめる。'
+  src: ''
+  url: https://www.espn.com/soccer/scoreboard/_/league/eng.1
+  fmt: news
+- num: 3
+  slot: 日本人（プレミア）
+  head: 鎌田大地が語る冨安健洋の素顔。「僕と全然違う」パレス加入の裏側も
+  why: フットボール・トライブ（11/6）。鎌田本人の言葉 → Y。
+  src: ''
+  url: https://football-tribe.com/japan/2026/11/06/361060/
+  fmt: quote
+- num: 4
+  slot: 日本人（代表）
+  head: 三笘薫の現状を、川崎時代の同僚・田中碧が明かす「悩んでいる」
+  why: フットボール・トライブ（11/6）。田中碧の言葉 → Y。W杯に絡む。
+  src: ''
+  url: https://football-tribe.com/japan/2026/11/06/361058/
+  fmt: quote
+- num: 5
+  slot: 日本人（プレミア）
+  head: 鈴木彩艶、日本人初のプレミア月間ベストセーブにノミネート。フルハム戦の大ピンチ
+  why: ゲキサカ。日本人初の記録。
+  src: ''
+  url: https://web.gekisaka.jp/news/world/detail/?462610-462610-fl
+  fmt: news
+- num: 6
+  slot: 日本人（リーガ）
+  head: 久保建英の異端児ぶり。FC東京時代の同僚が明かす「いきなり踊り出す」「最初から大物」
+  why: フットボール・トライブ（11/6）。大物の名前。
+  src: ''
+  url: https://football-tribe.com/japan/2026/11/06/361062/
+  fmt: quote
+- num: 7
+  slot: 海外（代表）
+  head: ジョーブ・ベリンガム、イングランド代表に初招集。パーマーは外れる。トゥヘル監督の言葉
+  why: ESPN（11/6）。W杯前の最後の期間。
+  src: ''
+  url: https://www.espn.com/soccer/story/_/id/50397863/jobe-bellingham-england-squad-cole-palmer-thomas-tuchel
+  fmt: news
+- num: 8
+  slot: 海外（代表）
+  head: ジダン監督、フランス代表で「エムバペを好きな位置に置くかも」。メンバー発表
+  why: マルカ（11/6）。監督の言葉 → Y。
+  src: ''
+  url: https://www.marca.com/futbol/nations-league/2026/11/06/zidane-mbappe-le-ponga-posicion-favorita.html
+  fmt: quote
+- num: 9
+  slot: 海外（プレミア）
+  head: キャリック監督「ファーガソンの成功をまた手にするのは、不可能ではない」
+  why: スカイ（11/6）。監督の言葉 → Y。
+  src: ''
+  url: https://www.skysports.com/football/news/11661/13608887/michael-carrick-manchester-united-boss-says-its-possible-the-club-can-emulate-sir-alex-fergusons-success-at-old-trafford
+  fmt: quote
+- num: 10
+  slot: 海外（記録）
+  head: PSG、ギネス世界記録を12個まとめて認定
+  why: Le Parisien系（11/7）。記録。
+  src: ''
+  url: https://www.footmercato.net/a907049223776871945-le-psg-etablit-12-records-dans-le-guiness-book
+  fmt: news

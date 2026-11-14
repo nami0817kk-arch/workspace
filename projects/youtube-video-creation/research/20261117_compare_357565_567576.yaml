@@ -1,0 +1,410 @@
+# 取材メモ（11/17 火、シリーズ「比べる」、key: compare_357565_567576）。ロドリ（バルセロナ・30歳）×エリオット・アンダーソン（マンチェスター・シティ・23歳）。
+# **情報の時点は 2026-11-12**。FotMob・DataMB は使っていない。数字は Transfermarkt の API（2026-11-12 取得。控え: research/raw/20261115_rodri_tm.json・20261115_anderson_tm.json）。
+#   Transfermarkt 番号：ロドリ 357565・アンダーソン 567576。player・market-value-history・performance-season（2019〜2026季）を2.5秒あけて取得。
+# **選んだ理由**：同じ2026年の夏に、守備的MFのロドリがシティからバルセロナへ（8月18日）、アンダーソンがフォレストからシティへ（7月23日）動いた。
+#   守備的MFは得点・アシストで比べにくいので、TM の「出ている間のチームの得点・失点」（teamGoalsOnThePitchSum・opponentGoalsOnThePitch）を90分あたりに自分で割って軸にする。
+#   昨季の出場時間 2185分 と 4168分、今季 945分 と 1139分（どちらも900分超）。クラブの公式戦だけで数える（代表戦は混ぜない）。
+#   重なり：scripts/*compare*・posted.json・covered.yaml・picks を grep。この2人の組は初めて。ロドリは9月に個別の本（バレンシアへの謝罪・マンCの違反認定）、アンダーソンは10/14 に選手紹介（20261014_anderson）があるが、比べる回には未登場。
+#   同じ日（11/17）の picks の人名・クラブ（ベティス・レアル・ソシエダ・ほか）とは重ならない。11/15 の比べる（デ・ブライネ×モドリッチ）とも人もクラブも重ならない。
+#   **外した候補**：ヤマル×ユルドゥズ（ヤマルが10/20・10/22 に登場済み）・ライス×カイセド（ライスが10/21 に登場済み）・ヴィティーニャ系（10/17 に登場済み）。
+#   日本との接点：無し（入れない）。
+# **2人とも今季も欧州7リーグの1部**：バルセロナ（ラ・リーガ。TM の現所属 131、2026-08-18〜）・マンチェスター・シティ（プレミア。TM の現所属 281、2026-07-23〜）。
+# **使った数**（TM の performance-season の、クラブのトップチームの公式戦だけ。代表戦は混ぜない。試合・出場時間・得点・アシスト）
+#   ロドリ：23/24 シティ 50試合 4327分 9点15A／24/25 シティ 8試合 336分 0点1A／25/26 シティ 33試合 2185分 2点0A／26/27 バルセロナ 14試合 945分 1点1A（11月12日時点。先発 リーグ8＋CL3＝11）
+#   アンダーソン：23/24 ニューカッスル 26試合 1100分 0点2A／24/25 フォレスト 42試合 3123分 2点6A／25/26 フォレスト 50試合 4168分 4点5A／26/27 シティ 15試合 1139分 1点2A（先発 リーグ9＋CL3＋コミュニティ・シールド1＝13）
+#   出ている間のチームの得点・失点（TM。クラブの公式戦、90分あたりに自分で割った値）：
+#     ロドリ 25/26 得点45・失点23／2185分 → 1.85・0.95・差+0.91。26/27 得点41・失点14／945分 → 3.90・1.33・差+2.57
+#     アンダーソン 25/26 得点59・失点63／4168分 → 1.27・1.36・差-0.09。26/27 得点26・失点22／1139分 → 2.05・1.74・差+0.32
+#   増えた失点の幅：ロドリ 1.33-0.95＝0.38／アンダーソン 1.74-1.36＝0.38。**チームの数字で、本人だけの数字ではない**（台本でも言う）。
+# 市場価値（TM）：ロドリ 2023-06 9000万€→2024-05 1億2000万→2024-07 1億3000万（最高）→2025-05 1億1000万→2025-12 7500万→2026-10 6000万／アンダーソン 2023-06 800万→2024-05 1500万→2024-12 2400万→2025-05 3200万→2025-12 6000万→2026-10 1億2000万（最高）
+# 経歴（Wikipedia 英語版）：ロドリ 2026年8月18日にバルセロナと4年契約、報道の移籍金は基本6000万€＋追加1650万€（計7650万€）。2024年のバロンドールを受賞。2024年9月22日のアーセナル戦で前十字靭帯と半月板を痛めた。
+#   アンダーソン 2026年7月2日にシティとフォレストが合意を発表、7月23日に正式契約。報道の移籍金は1億1600万ポンド。
+# 写真：r1〜r3 Commons（スペイン代表 2026年7月、Bryan Berlin、CC BY-SA 4.0）・a1〜a3 Commons（イングランド代表 2026年6月、Bryan Berlin、CC BY-SA 4.0）。pair_a〜d は pairphoto。
+slot: other_1
+date: "2026年11月12日"
+format: news
+series: 比べる
+people:
+  - ロドリ
+  - エリオット・アンダーソン
+  - バルセロナ
+  - マンチェスター・シティ
+
+theme:
+  end_bg: assets/images/20261117_compare_357565_567576/pair_c/01.jpg
+  id: compare_357565_567576
+  league: spain
+  kind: other
+  topic: ロドリとアンダーソン
+  prefix: ""
+  title: ロドリとアンダーソン、同じ夏に動いた守備的MF。得失点差はどれだけ違うのか
+  hook: ""
+  question: ロドリはシティからバルセロナへ、アンダーソンはフォレストからシティへ。同じ夏に動いた守備的ミッドフィールダー2人は、出ている間のチームの数字で、どう違うのか
+  takeaway: 出ている間の失点は、新しいクラブで2人とも90分あたり約0.4増えた（ロドリ 0.95→1.33、アンダーソン 1.36→1.74）。得失点差は今季ロドリ＋2.57、アンダーソン＋0.32。チームの数字なので本人だけの力ではない
+  league_name: ラ・リーガ・プレミアリーグ
+  opening_image: assets/images/20261117_compare_357565_567576/pair_a/01.jpg
+
+short_title: ロドリとアンダーソン、同じ夏に動いた守備的MF
+
+thumbnail:
+  photo: assets/images/20261117_compare_357565_567576/pair_a/01.jpg
+  photos:
+    - assets/images/20261117_compare_357565_567576/r1/01_t.jpg
+    - assets/images/20261117_compare_357565_567576/a1/01_t.jpg
+  short_photo: assets/images/20261117_compare_357565_567576/pair_a/01_v.jpg
+  face_link: VS
+  line1: ロドリとアンダーソン
+  line2: シティを出た人と入った人
+  tags: [ロドリ, アンダーソン, バルセロナ, マンチェスター・シティ]
+
+answer: 出ている間の得失点差は、今季ロドリが＋2.57、アンダーソンが＋0.32。2人とも失点は約0.4増えた
+watch: 毎日、数字でサッカーを読み解きます
+
+sections:
+  - id: hook
+    heading: 同じ夏に動いた2人は、いまどれだけ出ているのか
+    tier: 報道
+    telop: 今季、クラブの公式戦
+    narrator: 解説
+    card: &hookcard
+      type: stats
+      title: 今季の出場時間（クラブの公式戦）
+      items:
+        - ["945", 分, ロドリ]
+        - ["1139", 分, アンダーソン]
+        - ["2.57と0.32", 得失点差（90分）, 出ている間のチーム]
+      focus: 2
+    say:
+      - text: バルセロナの守備的ミッドフィールダー、ロドリ。
+        image: assets/images/20261117_compare_357565_567576/r1/01_w.jpg
+        card: none
+      - text: そしてシティの守備的ミッドフィールダー、エリオット・アンダーソン。
+        image: assets/images/20261117_compare_357565_567576/a1/01_w.jpg
+        card: none
+      - text: ロドリはシティからバルセロナへ。
+        image: assets/images/20261117_compare_357565_567576/pair_d/01.jpg
+        card: none
+      - text: アンダーソンはフォレストからシティへ。
+        image: assets/images/20261117_compare_357565_567576/pair_d/01.jpg
+        card: none
+      - text: 2人とも、この夏に動きました。
+        image: assets/images/20261117_compare_357565_567576/pair_d/01.jpg
+        card: none
+      - text: 数えるのは、11月12日までのクラブの公式戦です。
+        image: assets/images/20261117_compare_357565_567576/r1/01_r.jpg
+        card: {<<: *hookcard, focus: 0}
+      - text: 今季の出場は、ロドリが945分、アンダーソンが1139分です。
+        image: assets/images/20261117_compare_357565_567576/a2/01_w.jpg
+        card: {<<: *hookcard, focus: 1}
+      - text: 守備的ミッドフィールダーは、点を取る役ではありません。
+        image: assets/images/20261117_compare_357565_567576/r1/01_r.jpg
+        card: {<<: *hookcard, focus: 2}
+      - text: そこで、出ている間のチームの得失点差を、90分あたりで見ます。
+        image: assets/images/20261117_compare_357565_567576/r1/01_r.jpg
+        card: {<<: *hookcard, focus: 2}
+      - text: ロドリが2.57、アンダーソンが0.32。差は大きく開いています。
+        emph: true
+        image: assets/images/20261117_compare_357565_567576/r1/01_r.jpg
+        card: {<<: *hookcard, focus: 2}
+      - text: この差が何を意味するのか、順番に確かめます。
+        image: assets/images/20261117_compare_357565_567576/pair_c/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/rodri/leistungsdaten/spieler/357565
+      - https://www.transfermarkt.com/elliot-anderson/leistungsdaten/spieler/567576
+
+  - id: data
+    heading: ロドリとアンダーソンは、どこから、いくらで動いた選手なのか
+    tier: 報道
+    telop: 30歳と23歳
+    narrator: 解説
+    card: &datacard
+      type: duel
+      left: {name: ロドリ, club: バルセロナ, photo: assets/images/20261117_compare_357565_567576/r1/01_sq.jpg, color: "#a50044"}
+      right: {name: アンダーソン, club: マンチェスター・シティ, photo: assets/images/20261117_compare_357565_567576/a1/01_sq.jpg, color: "#6cabdd"}
+      rows:
+        - [年齢, 30歳, 23歳]
+        - [代表, スペイン, イングランド]
+        - [前のクラブ, マンチェスター・シティ, ノッティンガム・フォレスト]
+        - [移った時期, 2026年8月, 2026年7月]
+        - [移籍金（報道）, 6000万€＋追加, 1億1600万£]
+        - [市場価値, 6000万€, 1億2000万€]
+      bars: false
+      note: ロドリの追加は最大1650万€。市場価値は最新の値
+    say:
+      - text: ロドリは30歳のスペイン代表。2026年8月にバルセロナへ。
+        image: assets/images/20261117_compare_357565_567576/r1/01_r.jpg
+        card: {<<: *datacard, highlight_row: 前のクラブ}
+      - text: 移籍金は、基本6000万ユーロ。追加は最大1650万ユーロ。
+        image: assets/images/20261117_compare_357565_567576/r1/01_r.jpg
+        card: {<<: *datacard, highlight_row: 移籍金（報道）}
+      - text: アンダーソンは23歳のイングランド代表。2026年7月に、シティへ来ました。
+        image: assets/images/20261117_compare_357565_567576/a2/01_w.jpg
+        card: {<<: *datacard, highlight_row: 前のクラブ}
+      - text: アンダーソンの移籍金は、1億1600万ポンド。
+        emph: true
+        image: assets/images/20261117_compare_357565_567576/a2/01_w.jpg
+        card: {<<: *datacard, highlight_row: 移籍金（報道）}
+      - text: 市場価値は、ロドリが6000万ユーロ。アンダーソンは、その2倍です。
+        image: assets/images/20261117_compare_357565_567576/r1/01_r.jpg
+        card: {<<: *datacard, highlight_row: 市場価値}
+    sources:
+      - https://www.transfermarkt.com/rodri/profil/spieler/357565
+      - https://www.transfermarkt.com/elliot-anderson/profil/spieler/567576
+      - https://en.wikipedia.org/wiki/Rodri_(footballer,_born_1996)
+      - https://en.wikipedia.org/wiki/Elliot_Anderson_(footballer)
+
+  - id: seasons
+    heading: 去る前の季と、移る前の季で、出場はどう違ったのか
+    tier: 報道
+    telop: 季ごとの数（クラブの公式戦）
+    narrator: 解説
+    card: &seasoncard
+      type: table
+      title: 季ごとの数（クラブのトップチームの公式戦）
+      columns: [選手, 季, 試合, 出場時間, 得点, アシスト]
+      rows:
+        - [ロドリ, 23/24, "50", 4327分, "9", "15"]
+        - [ロドリ, 24/25, "8", 336分, "0", "1"]
+        - [ロドリ, 25/26, "33", 2185分, "2", "0"]
+        - [アンダーソン, 23/24, "26", 1100分, "0", "2"]
+        - [アンダーソン, 24/25, "42", 3123分, "2", "6"]
+        - [アンダーソン, 25/26, "50", 4168分, "4", "5"]
+      note: ロドリは3季ともシティ。アンダーソンは23/24がニューカッスル、24/25と25/26がフォレスト
+    say:
+      - text: シーズンごとの出場を、表で確かめます。
+        image: assets/images/20261117_compare_357565_567576/r1/01_r.jpg
+        card: *seasoncard
+      - text: ロドリは、2023/24にシティで50試合、4327分。
+        image: assets/images/20261117_compare_357565_567576/r1/01_r.jpg
+        card: {<<: *seasoncard, highlight_row: 0}
+      - text: 2024年のバロンドールを受けた選手です。
+        image: assets/images/20261117_compare_357565_567576/r1/01_w.jpg
+        card: none
+      - text: 次の季は、2024年9月に膝の前十字靭帯を痛めて、8試合、336分。
+        image: assets/images/20261117_compare_357565_567576/r1/01_r.jpg
+        card: {<<: *seasoncard, highlight_row: 1}
+      - text: 昨季は33試合、2185分まで戻りました。
+        image: assets/images/20261117_compare_357565_567576/r1/01_r.jpg
+        card: {<<: *seasoncard, highlight_row: 2}
+      - text: アンダーソンは、フォレストで昨季50試合、4168分。
+        image: assets/images/20261117_compare_357565_567576/a2/01_w.jpg
+        card: {<<: *seasoncard, highlight_row: 5}
+      - text: ロドリの昨季の、ほぼ2倍の時間です。
+        emph: true
+        image: assets/images/20261117_compare_357565_567576/a2/01_w.jpg
+        card: {<<: *seasoncard, highlight_row: 5}
+    sources:
+      - https://www.transfermarkt.com/rodri/leistungsdaten/spieler/357565
+      - https://www.transfermarkt.com/elliot-anderson/leistungsdaten/spieler/567576
+      - https://en.wikipedia.org/wiki/Rodri_(footballer,_born_1996)
+
+  - id: split
+    heading: 昨季、出ている間にチームはどれだけ点を取り、失ったのか
+    tier: 報道
+    main: true
+    telop: 出ている間のチームの得点・失点（90分あたり）
+    narrator: 解説
+    card: &splitcard
+      type: duel
+      left: {name: ロドリ, club: マンチェスター・シティ, photo: assets/images/20261117_compare_357565_567576/r1/01_sq.jpg, color: "#6cabdd"}
+      right: {name: アンダーソン, club: ノッティンガム・フォレスト, photo: assets/images/20261117_compare_357565_567576/a1/01_sq.jpg, color: "#dd0000"}
+      rows:
+        - [昨季の出場時間, 2185分, 4168分]
+        - [出ている間の得点, "1.85", "1.27"]
+        - [出ている間の失点, "0.95", "1.36"]
+        - [得失点差, ＋0.91, －0.09]
+      bars: [昨季の出場時間]
+      lower: [出ている間の失点]
+      note: 昨季（25/26）、クラブの公式戦。チーム全体の得点・失点を、本人の出場時間で割った90分あたりの値。自分で計算した値
+    say:
+      - text: 昨季の、ロドリとアンダーソン。守備的ミッドフィールダーの数字を並べます。
+        short_only: true
+        image: assets/images/20261117_compare_357565_567576/pair_a/01.jpg
+        card: none
+      - text: 見るのは、本人がピッチにいた間の、チームの得点と失点。
+        image: assets/images/20261117_compare_357565_567576/r1/01_r.jpg
+        card: {<<: *splitcard, highlight_row: 昨季の出場時間}
+      - text: 出場時間で割って、90分あたりにします。
+        image: assets/images/20261117_compare_357565_567576/r1/01_r.jpg
+        card: {<<: *splitcard, highlight_row: 昨季の出場時間}
+      - text: 昨季、ロドリが出ていた間のシティは、90分あたり1.85点を取りました。
+        image: assets/images/20261117_compare_357565_567576/r1/01_r.jpg
+        card: {<<: *splitcard, highlight_row: 出ている間の失点}
+      - text: 失った点は、0.95点です。
+        image: assets/images/20261117_compare_357565_567576/r1/01_r.jpg
+        card: {<<: *splitcard, highlight_row: 出ている間の失点}
+      - text: アンダーソンが出ていた間のフォレストは、1.27点を取りました。
+        image: assets/images/20261117_compare_357565_567576/a2/01_w.jpg
+        card: {<<: *splitcard, highlight_row: 出ている間の得点}
+      - text: 失った点は、1.36点です。
+        image: assets/images/20261117_compare_357565_567576/a2/01_w.jpg
+        card: {<<: *splitcard, highlight_row: 出ている間の得点}
+      - text: 得点から失点を引くと、ロドリがプラス0.91、アンダーソンがマイナス0.09。
+        image: assets/images/20261117_compare_357565_567576/r1/01_r.jpg
+        card: {<<: *splitcard, highlight_row: 得失点差}
+      - text: 差は、ロドリのほうが1.00大きい数字です。
+        emph: true
+        image: assets/images/20261117_compare_357565_567576/r1/01_r.jpg
+        card: {<<: *splitcard, highlight_row: 得失点差}
+      - text: ただ、ロドリはシティ、アンダーソンはフォレスト。
+        image: assets/images/20261117_compare_357565_567576/a3/01_w.jpg
+        card: none
+      - text: チームの強さが違う数字です。本人だけの力ではありません。
+        image: assets/images/20261117_compare_357565_567576/a3/01_w.jpg
+        card: none
+      - text: 同じクラブで比べられるのは、今季のいま。次で見ます。
+        image: assets/images/20261117_compare_357565_567576/pair_a/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/rodri/leistungsdaten/spieler/357565
+      - https://www.transfermarkt.com/elliot-anderson/leistungsdaten/spieler/567576
+
+  - id: value
+    heading: 2人の市場価値は、いつ入れ替わったのか
+    tier: 報道
+    telop: 市場価値の歩み
+    narrator: 解説
+    card: &valuecard
+      type: line
+      title: 市場価値の歩み（百万ユーロ）
+      x: ["23年6月", "24年6月", "24年12月", "25年6月", "25年12月", "26年10月"]
+      series:
+        - [ロドリ, [90, 120, 130, 110, 75, 60]]
+        - [アンダーソン, [8, 15, 24, 32, 60, 120]]
+      focus: アンダーソン
+      note: 各時点の直前に出た値
+    say:
+      - text: 市場価値の動きも見ます。
+        image: assets/images/20261117_compare_357565_567576/r1/01_r.jpg
+        card: *valuecard
+      - text: ロドリは、2024年に最高の1億3000万ユーロ。
+        image: assets/images/20261117_compare_357565_567576/r1/01_r.jpg
+        card: {<<: *valuecard, highlight: 24年12月}
+      - text: 2025年12月は、7500万ユーロでした。
+        image: assets/images/20261117_compare_357565_567576/r1/01_r.jpg
+        card: {<<: *valuecard, highlight: 25年12月}
+      - text: アンダーソンは、2023年6月が800万ユーロ。
+        image: assets/images/20261117_compare_357565_567576/a2/01_w.jpg
+        card: {<<: *valuecard, highlight: 23年6月}
+      - text: そこから上がり続けて、いまは最高の1億2000万ユーロ。
+        image: assets/images/20261117_compare_357565_567576/a2/01_w.jpg
+        card: {<<: *valuecard, highlight: 26年10月}
+      - text: 2025年12月は、ロドリが上でした。
+        image: assets/images/20261117_compare_357565_567576/r1/01_r.jpg
+        card: {<<: *valuecard, highlight: 25年12月}
+      - text: いまは逆です。この1年弱で、入れ替わりました。
+        emph: true
+        image: assets/images/20261117_compare_357565_567576/r1/01_r.jpg
+        card: {<<: *valuecard, highlight: 25年12月}
+    sources:
+      - https://www.transfermarkt.com/rodri/marktwertverlauf/spieler/357565
+      - https://www.transfermarkt.com/elliot-anderson/marktwertverlauf/spieler/567576
+
+  - id: now
+    heading: 今季のここまで、2人が出ている間のチームはどうなのか
+    tier: 報道
+    telop: 2026年から27年 11月12日時点
+    narrator: 解説
+    card: &nowcard
+      type: duel
+      left: {name: ロドリ, club: バルセロナ, photo: assets/images/20261117_compare_357565_567576/r1/01_sq.jpg, color: "#a50044"}
+      right: {name: アンダーソン, club: マンチェスター・シティ, photo: assets/images/20261117_compare_357565_567576/a1/01_sq.jpg, color: "#6cabdd"}
+      rows:
+        - [試合, "14", "15"]
+        - [出場時間, 945分, 1139分]
+        - [先発, "11", "13"]
+        - [出ている間の得点, "3.90", "2.05"]
+        - [出ている間の失点, "1.33", "1.74"]
+        - [得失点差, ＋2.57, ＋0.32]
+      bars: [試合, 出場時間, 先発]
+      lower: [出ている間の失点]
+      note: 今季のクラブの公式戦（11月12日時点）。チーム全体の数を90分あたりに割った値。どちらも900分を超えている
+    say:
+      - text: 今季の数です。
+        image: assets/images/20261117_compare_357565_567576/pair_a/01.jpg
+        card: none
+      - text: ロドリは14試合、945分。アンダーソンより194分短い出場です。
+        image: assets/images/20261117_compare_357565_567576/r1/01_r.jpg
+        card: {<<: *nowcard, highlight_row: 出ている間の得点}
+      - text: 出ている間、バルセロナは90分あたり3.90点。
+        image: assets/images/20261117_compare_357565_567576/r1/01_r.jpg
+        card: {<<: *nowcard, highlight_row: 出ている間の得点}
+      - text: 失点は1.33点。
+        image: assets/images/20261117_compare_357565_567576/r1/01_r.jpg
+        card: {<<: *nowcard, highlight_row: 出ている間の失点}
+      - text: アンダーソンは15試合、1139分。ロドリより1試合多い数字です。
+        image: assets/images/20261117_compare_357565_567576/a2/01_w.jpg
+        card: {<<: *nowcard, highlight_row: 出ている間の失点}
+      - text: 出ている間は、2.05点を取っています。
+        image: assets/images/20261117_compare_357565_567576/a2/01_w.jpg
+        card: {<<: *nowcard, highlight_row: 出ている間の失点}
+      - text: 失点は1.74点です。
+        image: assets/images/20261117_compare_357565_567576/a2/01_w.jpg
+        card: {<<: *nowcard, highlight_row: 出ている間の失点}
+      - text: 得失点差は、ロドリがプラス2.57、アンダーソンがプラス0.32。
+        image: assets/images/20261117_compare_357565_567576/r1/01_r.jpg
+        card: {<<: *nowcard, highlight_row: 得失点差}
+      - text: 2人とも、プラスです。
+        emph: true
+        image: assets/images/20261117_compare_357565_567576/r1/01_r.jpg
+        card: {<<: *nowcard, highlight_row: 得失点差}
+      - text: 2人とも900分を超えました。いまの時点の数字として並べます。
+        image: assets/images/20261117_compare_357565_567576/pair_c/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/rodri/leistungsdaten/spieler/357565
+      - https://www.transfermarkt.com/elliot-anderson/leistungsdaten/spieler/567576
+
+  - id: view
+    heading: 見立て・移った先で、失点はどう動いたのか
+    tier: 背景
+    viewpoint: true
+    narrator: 解説
+    telop: 数字の違いが示すもの
+    card: &viewcard
+      type: duel
+      left: {name: ロドリ, club: バルセロナ, photo: assets/images/20261117_compare_357565_567576/r1/01_sq.jpg, color: "#a50044"}
+      right: {name: アンダーソン, club: マンチェスター・シティ, photo: assets/images/20261117_compare_357565_567576/a1/01_sq.jpg, color: "#6cabdd"}
+      rows:
+        - [昨季の失点（90分）, "0.95", "1.36"]
+        - [今季の失点（90分）, "1.33", "1.74"]
+        - [今季の得失点差（90分）, ＋2.57, ＋0.32]
+        - [今季の出場時間, 945分, 1139分]
+        - [市場価値, 6000万€, 1億2000万€]
+      lower: [昨季の失点（90分）, 今季の失点（90分）]
+      bars: false
+      note: クラブの公式戦。チーム全体の数を、本人の出場時間で割った90分あたりの値
+    say:
+      - text: 見立てです。2人とも、新しいクラブに移って、出ている間の失点が増えました。
+        image: assets/images/20261117_compare_357565_567576/r1/01_r.jpg
+        card: {<<: *viewcard, highlight_row: 昨季の失点（90分）}
+      - text: ロドリは0.95から1.33へ。アンダーソンは1.36から1.74へ。
+        mark: {kind: circle, row: 1}
+        image: assets/images/20261117_compare_357565_567576/a2/01_w.jpg
+        card: {<<: *viewcard, highlight_row: 今季の失点（90分）}
+      - text: 増えた幅は、どちらも約0.4です。
+        image: assets/images/20261117_compare_357565_567576/a2/01_w.jpg
+        card: {<<: *viewcard, highlight_row: 今季の失点（90分）}
+      - text: 得失点差は、ロドリがプラス2.57、アンダーソンがプラス0.32。
+        image: assets/images/20261117_compare_357565_567576/r1/01_r.jpg
+        card: {<<: *viewcard, highlight_row: 今季の得失点差（90分）}
+      - text: チームの攻めの多さにも、左右される数字。本人だけの力とは言えません。
+        image: assets/images/20261117_compare_357565_567576/r2/01_w.jpg
+        card: none
+      - text: 市場価値は逆に、アンダーソンが上。ロドリの2倍の、1億2000万ユーロ。
+        emph: true
+        image: assets/images/20261117_compare_357565_567576/r1/01_r.jpg
+        card: {<<: *viewcard, highlight_row: 市場価値}
+      - text: 最後に見るのは、季の終わりの失点です。
+        image: assets/images/20261117_compare_357565_567576/pair_c/01.jpg
+        card: none
+      - text: 昨季は2185分と4168分。
+        image: assets/images/20261117_compare_357565_567576/pair_c/01.jpg
+        card: none
+      - text: いまの945分と1139分から、どこまで伸びるか。
+        image: assets/images/20261117_compare_357565_567576/pair_c/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/rodri/leistungsdaten/spieler/357565
+      - https://www.transfermarkt.com/elliot-anderson/leistungsdaten/spieler/567576

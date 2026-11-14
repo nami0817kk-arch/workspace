@@ -1,0 +1,439 @@
+# 監督紹介：シモーネ・インザーギ（11/24 火、シリーズ「監督紹介」、key: manager_inzaghi、型は news）。8節（日本との接点は無し）。見本は 20261122_manager_scaloni。
+# 順：フック→基礎DATA→歩みと転機→戦術の色（実例の試合1つ）→数字で見る→本人の言葉→マル秘話→見立て。
+#
+# **題材の選び方（2026-11-13）**：既出20人（グアルディオラ〜スカローニ）以外の大物から。インテルでCL決勝2回・リーグ優勝1回、いまはサウジのアル・ヒラル監督。
+#   「無敗なのに優勝を逃した」（2025-26）と「インテルでも2024-25 は1点差の2位」が、いま見る理由。
+#   **重なりの確認（2026-11-13 に自分で）**：scripts/・posted.json・covered.yaml・20261123_picks.txt に、インザーギを主題にした本は無い（grep済み）。
+#   次点（外した）：アッレグリ（11/26 に使う）、ガスペリーニ・アモリム（今季の状況を確かめきれず）。
+#
+# **いまの立場**：アル・ヒラル（サウジ）監督、2025年6月4〜5日就任、2年契約・2027年まで（アル・ヒラル公式発表。2026-11-13 に WebSearch で確認）。
+#   ○ 英語版 Wikipedia「Simone Inzaghi」（2026-11-13 に action=raw で読んだ）：「currently the head coach of Saudi Pro League club Al-Hilal」、成績表は 2026-11-03 まで更新。
+#
+# **通算（台本とサムネをそろえる）**＝英語版「Managerial statistics」（2026-11-03 時点）。クラブ別の行：
+#   ラツィオ 251試合134勝45分72敗／インテル 217試合141勝41分35敗／アル・ヒラル 69試合52勝14分3敗。
+#   **Wikipedia の「通算」の行は 533試合324勝…と出ていて、クラブ別の行の足し算（537試合327勝100分110敗）と合わない**。
+#   台本・サムネは**クラブ別の行を自分で足した値**（537試合・327勝・110敗、勝率 327÷537＝60.9%）を使う。
+#   勝率：ラツィオ 53.4%・インテル 65.0%・アル・ヒラル 75.4%（各行の勝÷試合。表の勝率と一致）。
+#   タイトル10個＝ラツィオ3（コッパ2018-19・スーペルコッパ2017・2019）＋インテル6（セリエA 2023-24・コッパ2021-22・2022-23・スーペルコッパ2021・2022・2023）＋アル・ヒラル1（国王杯2025-26）。
+#
+# **歩み**（英語版）：2016-04-03 ラツィオ暫定、7月に正式。2017-08-13 スーペルコッパ（ユーヴェに3-2）。2019-05-15 コッパ決勝アタランタに2-0。2019-12-22 スーペルコッパ（ユーヴェに3-1）。
+#   2021-06-03 インテル。2022-01-12 スーペルコッパ（ユーヴェに2-1延長）、2022-05-11 コッパ決勝（ユーヴェに4-2延長）。2023-06-10 CL決勝 0-1 マンC。
+#   2024-04-22 ミラノ・ダービー 2-1 でセリエA優勝決定。2025-05-06 CL準決勝 バルセロナに合計7-6。2025-05-31 CL決勝 0-5 PSG。2024-25 のセリエAはナポリに1点差の2位（英語版）。2025-06-03 インテル退団（合意）。
+# **戦術の色**＝2025 クラブW杯 ラウンド16（2025-07-01、FIFA の試合記録に基づく英語版）：アル・ヒラル 4-3 マンチェスター・シティ（延長）。準々決勝はフルミネンセに1-2。
+#   基本は 3-5-2＋ウイングバック（英語版）。
+# **日本との接点**：無し（入れない）。
+#
+# **2025-26 サウジ**：最終節 2026-05-21、アル・ヒラルはファイハに1-0。アル・ナスルがダマクに4-1で優勝。勝ち点 アル・ナスル86／アル・ヒラル84／アル・アハリ81（Sky TG24・英語版の順位表）。
+#   **アル・ヒラルは34試合25勝9分0敗（84＝25×3＋9 と合う）、アル・ナスルは28勝2分4敗（86 と合う）。** 勝敗数は英語版「2025–26 Saudi Pro League」の対戦表から計算された値（WebFetch の要約）。
+#   「9つの引き分けのうち2つが勝ちなら 84＋2×2＝88 で86を上回る」は自分で計算。
+#   国王杯2025-26：決勝 2-1 アル・ホルード（2026-05-08〜09、アル・ヒラルでの最初のタイトル）。
+#
+# **本人の言葉**：2026-05-21 の最終節のあと（Tuttomercatoweb 2026-05-21、イタリア語の発言。こちらで訳した）：
+#   "Per noi c'e delusione perche volevamo vincere il campionato" ／ "Solitamente con 84 punti l'avremmo potuto vincere" ／
+#   "Per me sono stati straordinari, tra mille difficolta, infortuni, cambi nella rosa" ／ "Siamo l'unica squadra imbattuta al mondo e portiamo a casa solo un titolo, la King Cup"。
+# **マル秘話**（英語版）：1976-04-05 ピアチェンツァ生まれ。兄フィリッポ（元FW）。1999-2000 CL でマルセイユ戦に4得点。2000-05-14 ラツィオが優勝を決めた日（レッジーナに3-0）、兄のユーヴェはペルージャに0-1で敗れた。
+#   2010年 34歳で引退、ラツィオのユースの指導者に。イタリア代表3試合。
+#
+# **入れなかったもの**：私生活（結婚・家族）、年俸・「世界最高額の監督」（CBS の見出し。一次で確かめず、埋め草にもなる）、ニックネーム、FotMob、女子、ニュースの反応、他の監督との優劣、ファンの解任要求。
+date: 2026年11月13日
+slot: other_1
+format: news
+series: 監督紹介
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- インザーギ
+theme:
+  end_bg: assets/images/20261124_manager_inzaghi/02_w.jpg
+  id: manager_inzaghi
+  league: italy
+  league_name: アル・ヒラル
+  kind: other
+  topic: インザーギ
+  title: インザーギ、アル・ヒラル監督はどんな人？無敗でも、なぜ優勝できなかったのか
+  question: アル・ヒラルのシモーネ・インザーギ監督は、どんな人なのか。2025-26年のサウジで1試合も負けなかったのに、なぜリーグ優勝を逃したのか
+  lead: アル・ヒラル監督、シモーネ・インザーギ。
+  opening_image: assets/images/20261124_manager_inzaghi/03_w.jpg
+  takeaway: 監督通算537試合で327勝。インテルでリーグ優勝1回・欧州の決勝2回。サウジの2025-26年は25勝9分け0敗でも、アル・ナスルに勝ち点2届かず2位。9つの引き分けのうち2つが勝ちなら優勝だった。インテルの2024-25年も、ナポリに1点差の2位。契約は2027年まで
+  short_title: インザーギ、無敗でも優勝できなかった監督
+  nameplate: シモーネ・インザーギ｜アル・ヒラル監督
+thumbnail:
+  line1: インザーギ、通算327勝
+  line2: リーグ無敗で、優勝まで2点差
+  tags: []
+  photo: assets/images/20261124_manager_inzaghi_b/panel_01.jpg
+  board: assets/images/20261124_manager_inzaghi_b/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261124_manager_inzaghi/03_v.jpg
+sections:
+- id: hook
+  main: true
+  heading: 無敗なのに、優勝を逃した監督。インザーギとは、どんな監督なのか
+  tier: 報道
+  telop: 監督として327勝。いまはサウジ、アル・ヒラルの監督
+  narrator: 解説
+  card: &hook_stats
+    type: stats
+    title: インザーギの歩み
+    items:
+    - ['537', 試合, 監督として指揮]
+    - ['327', 勝, 勝率は6割超え]
+    - ['10', タイトル, 3つのクラブで]
+    focus: 0
+  say:
+  - text: リーグ戦で、1試合も負けなかった。それでも優勝を逃した監督。それがインザーギです。
+    image: assets/images/20261124_manager_inzaghi/02_w.jpg
+    emph: true
+    card: none
+  - text: 監督として指揮した試合は、通算537試合。
+    card:
+      <<: *hook_stats
+      focus: 0
+  - text: 勝ったのは327試合。勝率は、6割を超えます。
+    image: assets/images/20261124_manager_inzaghi/02_w.jpg
+    emph: true
+    card:
+      <<: *hook_stats
+      focus: 1
+  - text: ラツィオ、インテル、アル・ヒラルの3つのクラブで、
+    card: none
+  - text: 獲ったタイトルは、10個です。
+    card:
+      <<: *hook_stats
+      focus: 2
+  - text: そのうち6個は、インテルの4年間で獲りました。
+    emph: true
+    card: none
+  - text: インテルでは、ヨーロッパの決勝に、2度進みました。
+    card: none
+  - text: いまは、サウジアラビアのアル・ヒラルを率いています。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Simone_Inzaghi
+- id: data
+  heading: インザーギは、いつ、どこで、どんな道を歩いた人か
+  tier: 報道
+  telop: シモーネ・インザーギの基礎DATA
+  narrator: 解説
+  card: &data_table
+    type: table
+    title: シモーネ・インザーギ（50歳）の基礎DATA
+    columns: [項目, 中身]
+    rows:
+    - [生年月日, 1976年4月5日（イタリア・ピアチェンツァ）]
+    - [選手のころ, FW。ラツィオで1999-2000年に二冠]
+    - [監督, アル・ヒラル（2025年6月から）]
+    - [タイトル, リーグ1、カップ3、スーペルコッパ5、国王杯1]
+    - [いま, 契約は2年。2027年まで]
+    highlight_row: 0
+  say:
+  - text: インザーギは、1976年4月5日の生まれ。50歳です。
+    image: assets/images/20261124_manager_inzaghi/02_w.jpg
+    card:
+      <<: *data_table
+      highlight_row: 0
+  - text: 選手のころはFW。ラツィオで、リーグとカップの二冠を経験しました。
+    card:
+      <<: *data_table
+      highlight_row: 1
+  - text: 監督は、2025年6月から、サウジのアル・ヒラルです。
+    image: assets/images/20261124_manager_inzaghi/02_w.jpg
+    card:
+      <<: *data_table
+      highlight_row: 2
+  - text: タイトルは、リーグ1回、カップ3回、スーパーカップ5回、国王杯1回。
+    card:
+      <<: *data_table
+      highlight_row: 3
+  - text: 契約は2年で、2027年までです。
+    card:
+      <<: *data_table
+      highlight_row: 4
+  sources:
+  - https://en.wikipedia.org/wiki/Simone_Inzaghi
+  - https://www.spl.com.sa/en/news/751415/al-hilal-confirm-simone-inzaghi-as-manager
+- id: career
+  heading: ラツィオからインテル、サウジへ。インザーギは何を積み上げたのか
+  tier: 背景
+  telop: 歩みと転機。ラツィオの暫定監督からアル・ヒラルまで
+  narrator: 解説
+  card: &career_tl
+    type: timeline
+    title: インザーギの歩み
+    rows:
+    - [2016年, ラツィオの暫定監督に。7月に正式な監督へ]
+    - [2019年, コッパ・イタリア優勝。決勝でアタランタに2対0]
+    - [2021年, インテルの監督に]
+    - [2024年, セリエA優勝。ミラノ・ダービーで決める]
+    - [2025年, CL決勝でPSGに0対5]
+    - [2025年6月, インテルを離れ、アル・ヒラルの監督に]
+    focus: 0
+  say:
+  - text: インザーギは、2016年4月、ラツィオの暫定監督になりました。
+    image: assets/images/20261124_manager_inzaghi/04_w.jpg
+    card: none
+  - text: 7月には、正式な監督として契約しました。
+    image: assets/images/20261124_manager_inzaghi/02_w.jpg
+    card:
+      <<: *career_tl
+      focus: 0
+  - text: 2019年5月、コッパ・イタリアの決勝でアタランタに2対0。
+    emph: true
+    card:
+      <<: *career_tl
+      focus: 1
+  - text: 同じ年の12月には、ユベントスに3対1の勝ちで、スーパーカップも取りました。
+    image: assets/images/20261124_manager_inzaghi/04_w.jpg
+    card: none
+  - text: 2021年6月、インテルの監督に。
+    card:
+      <<: *career_tl
+      focus: 2
+  - text: 最初のシーズンは、ユベントスとの2つの決勝に、どちらも延長で勝ちました。
+    card: none
+  - text: 2023年6月、チャンピオンズリーグの決勝は、マンチェスター・シティに0対1。
+    image: assets/images/20261124_manager_inzaghi/04_w.jpg
+    card: none
+  - text: 2024年4月22日、ミラノ・ダービーに2対1で勝ち、セリエAを制しました。
+    emph: true
+    card:
+      <<: *career_tl
+      focus: 3
+  - text: 2025年5月、準決勝でバルセロナに、2試合合計7対6。再び決勝へ。
+    card: none
+  - text: 決勝は、パリ・サンジェルマンに0対5でした。
+    emph: true
+    card:
+      <<: *career_tl
+      focus: 4
+  - text: 2025年6月、インテルを離れ、アル・ヒラルの監督になりました。
+    image: assets/images/20261124_manager_inzaghi/02_w.jpg
+    card:
+      <<: *career_tl
+      focus: 5
+  sources:
+  - https://en.wikipedia.org/wiki/Simone_Inzaghi
+- id: style
+  heading: 前回王者に4対3。インザーギのチームは、どんな形なのか
+  tier: 報道
+  telop: 戦術の色。2025年クラブW杯、マンチェスター・シティに延長で勝利
+  narrator: 解説
+  card: &style_doc
+    type: document
+    label: 2025 クラブワールドカップ ラウンド16
+    paragraphs:
+    - 2025年7月1日、アル・ヒラル対マンチェスター・シティ。
+    - 相手は、前回の優勝チーム。
+    - 延長の末に、4対3。
+    - 準々決勝は、フルミネンセに1対2。
+    highlight:
+    - 延長の末に、4対3
+  say:
+  - text: 戦い方の色が出たのは、2025年7月のクラブワールドカップです。
+    image: assets/images/20261124_manager_inzaghi/02_w.jpg
+    card: *style_doc
+  - text: ラウンド16の相手は、前回の優勝チーム、マンチェスター・シティ。
+    card: *style_doc
+  - text: 延長までもつれて、4対3で、アル・ヒラルが勝ちました。
+    emph: true
+    callword: 4対3
+    card: *style_doc
+  - text: 次の準々決勝は、フルミネンセに1対2。そこで大会を終えました。
+    image: assets/images/20261124_manager_inzaghi/04_w.jpg
+    card: none
+  - text: インザーギの基本は、3-5-2です。
+    card: none
+  - text: 両サイドに、上下に走るウイングバックを置く形です。
+    card: none
+  - text: インテルでも、この形で戦っていました。
+    image: assets/images/20261124_manager_inzaghi/04_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Simone_Inzaghi
+- id: numbers
+  heading: 3つのクラブの勝率は。数字で見ると、どこがいちばん強いのか
+  tier: 報道
+  telop: ラツィオ53.4%・インテル65.0%・アル・ヒラル75.4%
+  narrator: 解説
+  card: &rate_table
+    type: table
+    title: インザーギの成績（クラブ別、11月3日まで）
+    columns: [クラブ, 試合, 勝率]
+    rows:
+    - [ラツィオ, '251', 53.4%]
+    - [インテル, '217', 65.0%]
+    - [アル・ヒラル, '69', 75.4%]
+    highlight_row: 0
+  say:
+  - text: ここからは、3つのクラブでの成績を、勝率で見ます。
+    image: assets/images/20261124_manager_inzaghi/02_w.jpg
+    card:
+      <<: *rate_table
+      highlight_row: 0
+  - text: ラツィオは、251試合で、勝率53.4%。
+    card:
+      <<: *rate_table
+      highlight_row: 0
+  - text: インテルは、217試合で、65.0%です。
+    emph: true
+    card:
+      <<: *rate_table
+      highlight_row: 1
+  - text: アル・ヒラルは、69試合で、75.4%。
+    emph: true
+    image: assets/images/20261124_manager_inzaghi/02_w.jpg
+    card:
+      <<: *rate_table
+      highlight_row: 2
+  - text: 負けは、その69試合のうち、3試合だけです。
+    emph: true
+    card:
+      <<: *rate_table
+      highlight_row: 2
+  sources:
+  - https://en.wikipedia.org/wiki/Simone_Inzaghi
+- id: words
+  heading: 優勝を逃した最終節のあと、インザーギは何を語ったのか
+  tier: 報道
+  telop: インザーギの言葉。2026年5月、最終節のあとで
+  narrator: 解説
+  card: &words_doc
+    type: document
+    label: インザーギの言葉（訳）。2026年5月21日
+    paragraphs:
+    - リーグを勝ちたかったので、失望があります。
+    - ふつうなら、勝ち点84で優勝できたはずです。
+    - 選手たちは、たくさんの困難の中でも、素晴らしかった。
+    - 世界で唯一、負けなしのチームなのに、持ち帰るのは国王杯だけです。
+    highlight:
+    - 失望があります
+    - 負けなしのチーム
+  say:
+  - text: 2026年5月21日、最終節に勝ったあと、インザーギはこう話しました。
+    image: assets/images/20261124_manager_inzaghi/02_w.jpg
+    card: *words_doc
+  - voice: インザーギ
+    text: リーグを勝ちたかったので、失望があります。
+  - voice: インザーギ
+    text: ふつうなら、勝ち点84で優勝できたはずです。
+    cont: true
+    image: assets/images/20261124_manager_inzaghi/04_w.jpg
+    card: none
+  - voice: インザーギ
+    text: 選手たちは、たくさんの困難の中でも、素晴らしかった。
+  - voice: インザーギ
+    text: 世界で唯一、負けなしのチームなのに、
+  - voice: インザーギ
+    text: 持ち帰るのは、国王杯だけです。
+    cont: true
+    pause: 0.5
+  - text: 国王杯は、その年の5月に勝った、サウジのカップ戦です。
+    image: assets/images/20261124_manager_inzaghi/04_w.jpg
+    card: none
+  quotes_from:
+  - https://www.tuttomercatoweb.com/serie-a/al-hilal-addio-titolo-inzaghi-unici-imbattuti-al-mondo-tra-difficolta-infortuni-e-poco-tempo-2236755
+  sources:
+  - https://www.tuttomercatoweb.com/serie-a/al-hilal-addio-titolo-inzaghi-unici-imbattuti-al-mondo-tra-difficolta-infortuni-e-poco-tempo-2236755
+- id: secret
+  heading: 数字に出ない話。インザーギの原点は、どこにあるのか
+  tier: 背景
+  telop: 兄はフィリッポ。優勝を決めた日の、2人の明暗
+  narrator: 解説
+  card: &sec_table
+    type: table
+    title: 数字の外にある話
+    columns: [いつ, 何があったか]
+    rows:
+    - [ルーツ, ピアチェンツァ生まれ。兄は元FWのフィリッポ]
+    - [1999-2000年, CLのマルセイユ戦で、1試合4得点]
+    - [2000年5月, ラツィオが優勝を決めた日]
+    - [同じ日, 兄のユベントスはペルージャに0対1]
+    - [2010年, 34歳で引退。ラツィオのユースの指導者に]
+    highlight_row: 0
+  say:
+  - text: では、インザーギの、数字の外の話を。
+    image: assets/images/20261124_manager_inzaghi/04_w.jpg
+    card: none
+  - text: 生まれは、イタリア北部のピアチェンツァ。兄は、元FWのフィリッポです。
+    card:
+      <<: *sec_table
+      highlight_row: 0
+  - text: 選手のころ、チャンピオンズリーグのマルセイユ戦で、1試合4得点。
+    image: assets/images/20261124_manager_inzaghi/02_w.jpg
+    card:
+      <<: *sec_table
+      highlight_row: 1
+  - text: 2000年5月、ラツィオは、レッジーナに3対0で勝って、優勝を決めました。
+    card:
+      <<: *sec_table
+      highlight_row: 2
+  - text: 同じ日、兄のいるユベントスは、ペルージャに0対1で負けています。
+    emph: true
+    card:
+      <<: *sec_table
+      highlight_row: 3
+  - text: 2010年、34歳で引退して、ラツィオのユースの指導者になりました。
+    image: assets/images/20261124_manager_inzaghi/02_w.jpg
+    card:
+      <<: *sec_table
+      highlight_row: 4
+  sources:
+  - https://en.wikipedia.org/wiki/Simone_Inzaghi
+- id: view
+  viewpoint: true
+  heading: 見立て・無敗でも2位。優勝との差は、どこにあったのか
+  tier: 背景
+  telop: 25勝9分け0敗で2位。差は引き分け9つの中に
+  narrator: 解説
+  card: &view_table
+    type: table
+    title: 自分で並べてみた（リーグ戦の優勝との差）
+    columns: [季, クラブ, 結果]
+    rows:
+    - [2025-26, アル・ヒラル, 25勝9分け0敗。2点差の2位]
+    - [2025-26, アル・ナスル, 28勝2分け4敗。優勝]
+    - [引き分け, 9試合, 2つが勝ちなら88点]
+    - [2024-25, インテル, ナポリと1点差の2位]
+    highlight_row: 0
+  say:
+  - text: 見立てです。アル・ヒラルの、2025-26年のリーグ戦を数えます。
+    image: assets/images/20261124_manager_inzaghi/02_w.jpg
+    card: *view_table
+  - text: 34試合で、25勝9分け。負けは、ゼロです。
+    emph: true
+    card:
+      <<: *view_table
+      highlight_row: 0
+  - text: 優勝したアル・ナスルは、28勝2分け、そして4敗。勝ち点は86でした。
+    card:
+      <<: *view_table
+      highlight_row: 1
+  - text: 差は、勝ち点2です。
+    emph: true
+    card:
+      <<: *view_table
+      highlight_row: 1
+  - text: 9つあった引き分けのうち、2つが勝ちなら、勝ち点は88。
+    emph: true
+    mark: {"kind": "circle", "row": 2, "col": 2}
+    image: assets/images/20261124_manager_inzaghi/02_w.jpg
+    card:
+      <<: *view_table
+      highlight_row: 2
+  - text: それなら優勝は、アル・ヒラルでした。
+    card:
+      <<: *view_table
+      highlight_row: 2
+  - text: インテルの2024-25年も、ナポリに1点届かない、2位でした。
+    card:
+      <<: *view_table
+      highlight_row: 3
+  - text: 負けなかったことと、勝ち切ることは、別の物差しです。
+    card: none
+  - text: 契約は2027年まで。次のリーグ戦で、その差を埋められるのか、注目です。
+    image: assets/images/20261124_manager_inzaghi/04_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Simone_Inzaghi
+  - https://en.wikipedia.org/wiki/2025%E2%80%9326_Saudi_Pro_League
+  - https://sport.sky.it/calcio/simone-inzaghi-cristiano-ronaldo-arabia-saudita-classifica-news

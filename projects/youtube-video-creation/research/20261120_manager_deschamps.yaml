@@ -1,0 +1,437 @@
+# 監督紹介：ディディエ・デシャン（11/20 金、シリーズ「監督紹介」、key: manager_deschamps、型は news）。8節（日本との接点は無し）。見本は 20261118_manager_nagelsmann。
+# 順：フック→基礎DATA→歩みと転機→戦術の色（実例の試合1つ）→数字で見る→本人の言葉→マル秘話→見立て。
+#
+# **題材の選び方（2026-11-12）**：既出18人（グアルディオラ…ポチェッティーノ・ナーゲルスマン）以外の大物から。ジダンは 10/03・10/18 と重なるので外し、その前任のデシャンを選んだ。
+#   ・退任した監督も扱ってよい（2026-10-20 ユーザー）。題・語りは「前フランス代表監督」。
+#   **重なりの確認（2026-11-12 に自分で）**：posted.json・covered.yaml・scripts/・2026111*_picks.txt にデシャンを主題にした本は無い（ジダンの回に名前が出る程度）。
+#     同じ 11/20 の他担当（20261119_picks.txt）：レジェンド（世界）＝ロベルト・カルロス、代表＝チュニジア。同じ人・国は無し。
+#     ※フランス代表の回が将来出るときは、この回と重ねないこと。
+#
+# **いまの立場**：2026-07-18 の3位決定戦（フランス 4-6 イングランド）が最後の試合。FFF は 2026-07-28 にジダンの就任を発表（4年契約、2030年W杯まで）。
+#   ○ 英語版 Wikipedia「Didier Deschamps」（2026-11-12 に API で本文を読んだ）：「Deschamps' final game as France head coach ended in a 6–4 defeat to England」「fourth place at the 2026 FIFA World Cup」。2025-01 に「2026年W杯のあとは延長しない」と発表。
+#   ○ ESPN・Yahoo Sports・beIN など複数（WebSearch の結果、2026-11-12）：ジダンが 2026-07-28 に就任。
+#
+# **通算（台本とサムネをそろえる）**＝英語版「Managerial statistics」（As of 18 July 2026）。トップチームのみ。
+#   モナコ 220試合110勝59分51敗／ユヴェントス 43試合30勝11分2敗／マルセイユ 163試合82勝40分41敗／フランス代表 185試合120勝35分30敗。
+#   Career total 611試合342勝145分124敗。**自分で足して一致**（220+43+163+185＝611、110+30+82+120＝342、59+11+40+35＝145、51+2+41+30＝124）。勝率 342÷611＝56.0%。
+#   勝率（自分で割って確認）：モナコ 50.0%、ユヴェントス 69.8%、マルセイユ 50.3%、フランス代表 64.9%。クラブ3つ合計 426試合222勝＝52.1%。フランスとの差 12.8 ポイント。
+#   ※ユヴェントスはセリエB（2006-07）。
+#
+# **歩み**（英語版本文）：2001 引退（32歳）。モナコ監督 2001-05（2003 リーグカップ、2004 CL 決勝＝0-3 ポルト。35歳でCL決勝に進んだ最年少の監督）。2006-07 ユヴェントス（セリエB優勝・昇格）。2009-12 マルセイユ（2009-10 リーグ・アン優勝、リーグカップ3連覇）。
+#   2012-07-08 フランス代表（ブランの後任）。2014 W杯 準々決勝（ドイツに0-1）／EURO2016 決勝（ポルトガルに延長0-1）／2018 W杯 優勝／EURO2020 ラウンド16（スイスにPK負け）／2022 W杯 決勝（アルゼンチンにPK負け）／EURO2024 準決勝／2026 W杯 4位。ネーションズリーグ 2020-21 優勝・2024-25 3位。
+#   7大会のうち準決勝以上は5大会（自分で数えた：2016・2018・2022・2024・2026）。決勝3回、優勝1回。
+#   2026 W杯：準々決勝モロッコに2-0（W杯20勝目、監督として初の20勝）、準決勝スペインに0-2、3位決定戦イングランドに4-6。
+#
+# **戦術の色**＝2018 W杯（英語版 Style of management・France 節）。4-2-3-1、マテュイディを左に開かせ、ジルーを偽9番に。グループは僅差（豪1-0・ペルー1-0・デンマーク0-0）、決勝トーナメントはアルゼンチン4-3・ウルグアイ2-0・ベルギー1-0・クロアチア4-2。
+#   実例＝準決勝ベルギー戦（1-0）。ベルギーの選手から実利的・守備的という批判が出た（英語版）。
+#
+# **日本との接点**：無し（入れない）。
+#
+# **本人の言葉**：2026-07-17 の前日会見（Al Jazeera 2026-07-18 記事が引用、2026-11-12 に WebFetch で読んだ）。原文：“I had the privilege of experiencing moments that were magical, and others that were difficult… But life goes on. I'm a positive person, and I know things will be good, too.”
+#   ※原語はフランス語の会見で、英語訳からの重訳。台本の訳は英文に沿う。
+# **マル秘話**（英語版）：選手時代の呼び名「水を運ぶ人」（カントナが皮肉で付けた呼び名。本人の持ち味＝奪って味方につなぐ）。1993年、マルセイユでCLを掲げた最年少の主将。ラグビーのビアリッツのクラブにもいた。2018年、W杯を選手（1998）と監督で制した3人目（ザガロ、ベッケンバウアーに続く）。
+#
+# **入れなかったもの**：家族・私生活（母の死去・兄の事故）、フランス代表の内部不和の噂、ジダン就任への批評、FotMob・女子・ニュースの反応。
+date: 2026年11月12日
+slot: other_1
+format: news
+series: 監督紹介
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- デシャン
+theme:
+  end_bg: assets/images/20261120_manager_deschamps/03_w.jpg
+  id: manager_deschamps
+  league: france
+  league_name: フランス代表
+  kind: other
+  topic: デシャン
+  title: デシャン、前フランス代表監督はどんな人？14年間で、何を勝ち取り何を逃したのか
+  question: フランス代表の前監督ディディエ・デシャンは、どんな人なのか。選手でも監督でもワールドカップを制した人が、14年間で何を勝ち取り、何を逃したのか
+  lead: 前フランス代表監督、ディディエ・デシャン。
+  opening_image: assets/images/20261120_manager_deschamps/03_w.jpg
+  takeaway: 勝率はモナコ50.0%、ユヴェントス69.8%、マルセイユ50.3%、フランス代表64.9%。代表の勝率は、クラブ3つの合計52.1%より12.8ポイント高い。7つの大会のうち5つで準決勝以上、決勝は3回で優勝は1回。2026年7月に代表を離れ、後任はジダンに決まった
+  short_title: デシャン、選手でも監督でもW杯優勝
+  nameplate: ディディエ・デシャン｜前フランス代表監督
+thumbnail:
+  line1: デシャン、通算342勝
+  line2: 選手でも監督でもW杯制覇
+  tags: []
+  photo: assets/images/20261120_manager_deschamps_b/panel_01.jpg
+  board: assets/images/20261120_manager_deschamps_b/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261120_manager_deschamps/01_v.jpg
+sections:
+- id: hook
+  main: true
+  heading: 選手でも監督でもW杯優勝。デシャンとは、どんな監督なのか
+  tier: 報道
+  telop: 選手でも監督でも、ワールドカップを制した人
+  narrator: 解説
+  card: &hook_stats
+    type: stats
+    title: デシャンの歩み
+    items:
+    - ['14', 年, フランス代表を率いた]
+    - ['342', 勝, 4つのチーム・通算611試合]
+    - ['3', 人目, 選手と監督の両方でW杯を制した]
+    focus: 0
+  say:
+  - text: 選手でも、監督でも、ワールドカップで優勝した人。それがデシャンです。
+    image: assets/images/20261120_manager_deschamps/03_w.jpg
+    emph: true
+    card: none
+  - text: フランス代表を率いたのは、2012年から14年間。
+    card:
+      <<: *hook_stats
+      focus: 0
+  - text: 通算では、342勝を挙げています。
+    image: assets/images/20261120_manager_deschamps/01_w.jpg
+    card:
+      <<: *hook_stats
+      focus: 1
+  - text: 選手と監督の両方でW杯を制したのは、史上3人目。
+    emph: true
+    card:
+      <<: *hook_stats
+      focus: 2
+  - text: 2026年7月18日、そのフランス代表の監督を終えました。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Didier_Deschamps
+- id: data
+  heading: デシャンは、いつ、どこで、どんな道を歩いた人か
+  tier: 報道
+  telop: ディディエ・デシャンの基礎DATA
+  narrator: 解説
+  card: &data_table
+    type: table
+    title: ディディエ・デシャン（58歳）の基礎DATA
+    columns: [項目, 中身]
+    rows:
+    - [生年月日, 1968年10月15日（フランス・バイヨンヌ）]
+    - [選手のころ, 守備的MF。フランス代表103試合]
+    - [監督, モナコ、ユヴェントス、マルセイユ、フランス代表]
+    - [タイトル, W杯1回、ネーションズリーグ1回、リーグ・アン1回]
+    - [いま, 2026年7月にフランス代表を退任]
+    highlight_row: 0
+  say:
+  - text: デシャンは、1968年10月15日の生まれ。58歳です。
+    image: assets/images/20261120_manager_deschamps/03_w.jpg
+    card:
+      <<: *data_table
+      highlight_row: 0
+  - text: 選手のころは守備的MF。代表では103試合、主将も務めました。
+    card:
+      <<: *data_table
+      highlight_row: 1
+    image: assets/images/20261120_manager_deschamps/01_w.jpg
+    card: none
+  - text: 監督は、モナコ、ユヴェントス、マルセイユ、フランス代表。
+    card:
+      <<: *data_table
+      highlight_row: 2
+  - text: タイトルは、W杯が1回、フランスのリーグ・アンが1回。
+    card:
+      <<: *data_table
+      highlight_row: 3
+  - text: 国どうしのリーグ戦、ネーションズリーグも、1回制しています。
+    card:
+      <<: *data_table
+      highlight_row: 3
+  sources:
+  - https://en.wikipedia.org/wiki/Didier_Deschamps
+- id: career
+  heading: モナコのCL決勝から、W杯優勝へ。デシャンは何を積み上げたのか
+  tier: 背景
+  telop: 歩みと転機。モナコ、マルセイユ、フランス代表
+  narrator: 解説
+  card: &career_tl
+    type: timeline
+    title: デシャンの歩み
+    rows:
+    - [2004年, モナコでCL決勝へ。35歳で最年少]
+    - [2007年, ユヴェントスをセリエBから昇格させる]
+    - [2010年, マルセイユでリーグ優勝]
+    - [2012年, フランス代表の監督に]
+    - [2018年, ワールドカップで優勝]
+    - [2026年, W杯は4位。7月に退任]
+    focus: 0
+  say:
+  - text: デシャンの監督としての出発は、モナコです。
+    image: assets/images/20261120_manager_deschamps/03_w.jpg
+    card:
+      <<: *career_tl
+      focus: 0
+  - text: 2004年、チャンピオンズリーグの決勝へ。
+  - text: 35歳は、決勝に進んだ監督として最年少でした。
+    card:
+      <<: *career_tl
+      focus: 0
+  - text: 決勝はポルトに0対3で敗れました。
+    card: none
+  - text: 2006年、ユヴェントスの監督に。イタリア2部のセリエBで優勝します。
+  - text: 1年で、1部へ戻しました。
+    image: assets/images/20261120_manager_deschamps/01_w.jpg
+    card:
+      <<: *career_tl
+      focus: 1
+  - text: 2009年からはマルセイユ。1年目に、18年ぶりのリーグ優勝です。
+    emph: true
+    card:
+      <<: *career_tl
+      focus: 2
+  - text: リーグカップは、3年続けて取りました。
+    card: none
+  - text: 2012年7月、フランス代表の監督に決まります。
+    image: assets/images/20261120_manager_deschamps/03_w.jpg
+    card:
+      <<: *career_tl
+      focus: 3
+  - text: 2016年のユーロは決勝。自国開催でポルトガルに、延長で0対1でした。
+    card: none
+  - text: 2018年のW杯で、優勝しました。決勝はクロアチアに4対2です。
+    emph: true
+    card:
+      <<: *career_tl
+      focus: 4
+  - text: 2022年のW杯は、決勝でアルゼンチンにPK戦で敗れました。
+    image: assets/images/20261120_manager_deschamps/01_w.jpg
+    card: none
+  - text: 2026年のW杯は、準決勝でスペインに0対2。
+    card:
+      <<: *career_tl
+      focus: 5
+  - text: 3位決定戦は、イングランドに4対6で敗れました。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Didier_Deschamps
+- id: style
+  heading: 優勝を引き寄せた2018年。デシャンのサッカーは、どんな形なのか
+  tier: 報道
+  telop: 戦術の色。2018年W杯、4-2-3-1と左に開くマテュイディ
+  narrator: 解説
+  card: &style_doc
+    type: document
+    label: 2018 ワールドカップ フランス
+    paragraphs:
+    - 陣形は4-2-3-1。マテュイディを、中央ではなく左に開かせる。
+    - ジルーは、前線で体を張る偽9番。
+    - グループは、オーストラリア、ペルーに僅差の勝ち。
+    - 決勝トーナメントは、アルゼンチン、ウルグアイ、ベルギー、クロアチアに勝つ。
+    highlight:
+    - 左に開かせる
+    - 偽9番
+  say:
+  - text: デシャンのサッカーの形がよく出たのが、2018年のワールドカップです。
+    image: assets/images/20261120_manager_deschamps/03_w.jpg
+    card: *style_doc
+  - text: 陣形は4-2-3-1。マテュイディを、中央ではなく、左に開かせました。
+    card: *style_doc
+  - text: 前線のジルーは、体を張って味方の空きを作る、偽9番という役目。
+  - text: エムバペとグリーズマンが、その空きを突きます。
+    emph: true
+    callword: 偽9番
+    card: *style_doc
+  - text: グループは僅差の勝ちが続き、守りが堅すぎるという批判もありました。
+    image: assets/images/20261120_manager_deschamps/01_w.jpg
+    card: none
+  - text: それでも決勝トーナメントは、アルゼンチンに4対3、ウルグアイに2対0。
+    card: none
+  - text: 準決勝のベルギーには1対0、決勝のクロアチアには4対2でした。
+    card: none
+  - text: 準決勝のあとは、ベルギーの選手から、実利的な戦い方だという声も出ました。
+    image: assets/images/20261120_manager_deschamps/03_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Didier_Deschamps
+- id: numbers
+  heading: 611試合で342勝。数字で見ると、どこで強いのか
+  tier: 報道
+  telop: 通算342勝。勝率はユヴェントス69.8%、フランス64.9%
+  narrator: 解説
+  card: &rate_bars
+    type: bars
+    title: デシャンの勝率（チームごと、%）
+    unit: '%'
+    items:
+    - label: モナコ
+      value: 50.0
+    - label: ユヴェントス
+      value: 69.8
+    - label: マルセイユ
+      value: 50.3
+    - label: フランス代表
+      value: 64.9
+      highlight: true
+  say:
+  - text: ここからは、デシャンの成績を数字で。
+    image: assets/images/20261120_manager_deschamps/01_w.jpg
+    card: &total_stats
+      type: stats
+      title: デシャンの監督通算（7月18日まで）
+      items:
+      - ['611', 試合, 4つのチーム]
+      - ['342', 勝, 引き分け145・負け124]
+      - ['56.0', '%', 勝率]
+      focus: 0
+  - text: 通算は611試合。勝ったのは342試合です。
+    emph: true
+    card:
+      <<: *total_stats
+      focus: 1
+  - text: 率をチームごとに見ると、いちばん高いのはユヴェントス。
+    image: assets/images/20261120_manager_deschamps/03_w.jpg
+    card: *rate_bars
+  - text: ただし、これはイタリア2部での43試合、30勝の数字。
+    card: *rate_bars
+  - text: 最も長く率いたフランス代表は、185試合で120勝。64.9%でした。
+    emph: true
+    card: *rate_bars
+  - text: モナコは220試合で110勝、50.0%。
+  - text: マルセイユは163試合で82勝、50.3%です。
+    card: none
+  - text: クラブでは5割のチームを、代表では6割5分まで引き上げた形。
+    image: assets/images/20261120_manager_deschamps/01_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Didier_Deschamps
+- id: words
+  heading: 最後の大会の前日、デシャンは何を語ったのか
+  tier: 報道
+  telop: デシャンの言葉。2026年7月17日、3位決定戦の前日
+  narrator: 解説
+  card: &words_doc
+    type: document
+    label: デシャンの言葉（訳）。2026年7月17日
+    paragraphs:
+    - 魔法のような瞬間も、つらい瞬間も、経験できる幸運に恵まれました。
+    - でも、人生は続きます。
+    - 私は前向きな人間です。これからも、いいことがあると思っています。
+    highlight:
+    - 魔法のような瞬間
+    - 人生は続きます
+  say:
+  - text: 2026年7月17日、最後の試合の前日に、デシャンはこう話しました。
+    image: assets/images/20261120_manager_deschamps/03_w.jpg
+    card: *words_doc
+  - voice: デシャン
+    text: 魔法のような瞬間も、
+  - voice: デシャン
+    text: つらい瞬間も、経験できる幸運に恵まれました。
+    cont: true
+  - voice: デシャン
+    text: でも、人生は続きます。
+    cont: true
+    image: assets/images/20261120_manager_deschamps/01_w.jpg
+    card: none
+  - voice: デシャン
+    text: 私は前向きな人間です。
+    cont: true
+  - voice: デシャン
+    text: これからも、いいことがあると思っています。
+    cont: true
+    pause: 0.5
+  - text: 翌日の3位決定戦が、14年間で最後の試合になりました。
+    image: assets/images/20261120_manager_deschamps/03_w.jpg
+    card: none
+  quotes_from:
+  - https://www.aljazeera.com/sports/2026/7/18/world-cup-france-england-third-place-playoff-deschamps-zidane-coach
+  sources:
+  - https://www.aljazeera.com/sports/2026/7/18/world-cup-france-england-third-place-playoff-deschamps-zidane-coach
+- id: secret
+  heading: 数字に出ない話。「水を運ぶ人」と呼ばれた原点は、どこにあるのか
+  tier: 背景
+  telop: 「水を運ぶ人」。呼び名の意味
+  narrator: 解説
+  card: &sec_table
+    type: table
+    title: 数字の外にある話
+    columns: [いつ, 何があったか]
+    rows:
+    - [子ども, ラグビーのクラブにも所属]
+    - [選手時代, 「水を運ぶ人」と呼ばれた]
+    - [1993年, マルセイユの主将としてCLを掲げる]
+    - [2004年, 35歳でCL決勝に進んだ最年少の監督]
+    - [2018年, 選手と監督でW杯を制した3人目]
+    highlight_row: 0
+  say:
+  - text: では、デシャンの、数字の外の話を。
+    image: assets/images/20261120_manager_deschamps/01_w.jpg
+    card: none
+  - text: 子どものころは、ラグビーのクラブにも入っていました。
+    card:
+      <<: *sec_table
+      highlight_row: 0
+  - text: 選手のころの呼び名は、「水を運ぶ人」。
+    image: assets/images/20261120_manager_deschamps/03_w.jpg
+    card:
+      <<: *sec_table
+      highlight_row: 1
+  - text: 元チームメートのカントナが、皮肉を込めて付けた名前です。
+    card: none
+  - text: 奪ったボールを、才能のある味方へ渡す。その役目を指した言葉でした。
+    card:
+      <<: *sec_table
+      highlight_row: 1
+  - text: 1993年には、マルセイユの主将として、欧州の頂点に立っています。
+    image: assets/images/20261120_manager_deschamps/01_w.jpg
+    card:
+      <<: *sec_table
+      highlight_row: 2
+  - text: 当時、最年少の主将でした。
+    card: none
+  - text: 水を運ぶと言われた人が、2018年には、監督として優勝杯を掲げました。
+    card:
+      <<: *sec_table
+      highlight_row: 4
+  sources:
+  - https://en.wikipedia.org/wiki/Didier_Deschamps
+- id: view
+  viewpoint: true
+  heading: 見立て・代表の勝率は64.9%。クラブとのこの差は、何を表すのか
+  tier: 背景
+  telop: 勝率はクラブ3つ合計52.1%、フランス代表64.9%
+  narrator: 解説
+  card: &view_table
+    type: table
+    title: 自分で割ってみた（デシャンのチームごとの勝率）
+    columns: [チーム, 試合, 勝率]
+    rows:
+    - [モナコ, '220', 50.0%]
+    - [ユヴェントス, '43', 69.8%]
+    - [マルセイユ, '163', 50.3%]
+    - [フランス代表, '185', 64.9%]
+    - [クラブ3つの合計, '426', 52.1%]
+    highlight_row: 3
+  say:
+  - text: 見立てです。デシャンの勝率を、チームごとに並べてみます。
+    image: assets/images/20261120_manager_deschamps/03_w.jpg
+    card: *view_table
+  - text: モナコとマルセイユは、どちらも5割前後です。
+    card:
+      <<: *view_table
+      highlight_row: 0
+  - text: ところが、フランス代表では、勝率がぐんと上がります。
+    emph: true
+    mark: {kind: circle, row: 3, col: 2}
+    card:
+      <<: *view_table
+      highlight_row: 3
+  - text: クラブ3つを合わせた52.1%より、12.8ポイント高い数字です。
+    image: assets/images/20261120_manager_deschamps/01_w.jpg
+    emph: true
+    card:
+      <<: *view_table
+      highlight_row: 4
+  - text: 7つの大会のうち、準決勝以上は5つ。決勝は3回で、優勝は1回でした。
+    card: none
+  - text: 負けにくい形を作って、大会の終盤まで残る。そこが、14年間の強さでした。
+    card: none
+  - text: 2026年7月に離れた代表は、ジダンが引き継ぎます。
+  - text: デシャンが次にどこで指揮を執るのかは、決まっていません。
+    image: assets/images/20261120_manager_deschamps/03_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Didier_Deschamps

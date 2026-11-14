@@ -1,0 +1,492 @@
+# 監督紹介：ユリアン・ナーゲルスマン（11/18 水、シリーズ「監督紹介」、key: manager_nagelsmann、型は news）。9節の型。見本は 20261114_manager_kompany。
+# 順：フック→基礎DATA→日本との接点（2023年9月 ドイツ1-4日本とフリック解任）→歩みと転機→戦術の色（実例の試合1つ）→数字で見る→本人の言葉→マル秘話→見立て。
+#
+# **題材の選び方（2026-11-12）**：既出16人（…アロンソ・コンパニ）以外の大物から。ポチェッティーノ（11/16）と別の人。
+#   ・ジダン・森保一・アッレグリ・インザーギ・マレスカは 11/16 の指示の選び方のとおり外した。
+#   ・ナーゲルスマン：ブンデス最年少の監督→バイエルン→ドイツ代表。2026年7月に代表を辞任した人物で、「退任した監督も扱ってよい」（2026-10-20 ユーザー）。
+#   **重なりの確認（2026-11-12 に自分で）**：scripts/ に「監督紹介」の本は無い（名前が出るのはクラブ紹介 hoffenheim・leipzig、トゥヘルの回、選手紹介のみ）。
+#     同じ 11/18 の他の担当（research/20261115_picks.txt）：財政＝セルティック。ホッフェンハイム・ライプツィヒ・バイエルンの同日のクラブ紹介が出ていないかは、仕上げ時にもう一度見る。
+#
+# **いまの立場**：2026-07-03 にドイツ代表の監督を辞任（DFB が発表）。そのあとの就任先は、2026-11-12 時点で確かめられていない。
+#   ○ DW「The downfall: Julian Nagelsmann out as Germany coach」（2026-07-03、2026-11-12 に requests で本文を読んだ）：「DFBとナーゲルスマンが袂を分かった」「3年足らずで、契約（2028年のEUROまで）の途中で辞めた」。
+#   ○ 英語版 Wikipedia「Julian Nagelsmann」冒頭（2026-11-12）：「most recently the manager of the Germany national team」「He stepped down in July 2026」。
+#
+# **通算（台本とサムネをそろえる）**＝英語版「Managerial statistics」（As of match played 29 June 2026）。
+#   ホッフェンハイム 136試合55勝43分38敗／ライプツィヒ 95試合54勝22分19敗／バイエルン 84試合60勝14分10敗／ドイツ代表 37試合23勝7分7敗。
+#   Total 352試合192勝86分74敗。**自分で足して一致**（136+95+84+37＝352、55+54+60+23＝192、43+22+14+7＝86、38+19+10+7＝74）。勝率 192÷352＝54.5%。下部組織の試合は含まない。
+#   勝率（自分で割って確認）：ホッフェンハイム 40.4%、ライプツィヒ 56.8%、バイエルン 71.4%、ドイツ代表 62.2%（表の値と一致）。バイエルンとドイツ代表の差 9.2 ポイント。
+#   ※DW は「37試合で23勝、負けは8」と書く（Wikipedia は負け7。PK 負けの数え方の差と見られる）。台本は「23勝」だけ使い、負けの数は言わない。
+#
+# **歩み**（英語版本文・DW）：2015-10-27 ホッフェンハイムの次期監督に決まり、2016-02 に前任の辞任で早めに就任（28歳、ブンデス最年少）。17位のチームが残留（入れ替え戦圏の1つ上）。2016-17 は4位、2017-18 は3位。
+#   2019 ライプツィヒ（2019-20 は3位・CL準決勝＝ラウンド16でトッテナム、準々決勝でアトレティコ、準決勝でPSGに0-3。DW「CL準決勝に進んだ最年少の監督」）。2020-21 は2位、ドイツ杯決勝でドルトムントに1-4。
+#   2021-07 バイエルン（2021 スーパー杯、2021-22 ブンデス優勝＝残り3試合で決定、2022 スーパー杯）。2023-03-24 に解任（首位ドルトムントと勝ち点1差）。在任20か月。
+#   2023-09-22 ドイツ代表監督（フリックの後任）。EURO2024 は準々決勝でスペインに1-2（延長）。2025 ネーションズリーグ4強。2026 W杯はグループ首位通過→ラウンド32でパラグアイに 1-1（PK 3-4）。
+#
+# **戦術の色**＝2019-20 ライプツィヒのCL（英語版本文）。tactically flexible・frequent changes of formation・possession-oriented・aggressive pressing after turnovers (gegenpressing)。
+#
+# **日本との接点**：2023-09-09 親善試合 ドイツ 1-4 日本（ヴォルフスブルク）。ドイツ：サネ19分／日本：伊東純也11分・上田綺世22分・浅野拓磨90分・田中碧90+2分。
+#   英語版「Germany national football team results (2020–present)」で確認。翌 2023-09-10 にフリックが解任（代表監督として史上初の解任。英語版「Hansi Flick」）、2023-09-22 にナーゲルスマンが就任。
+#   ※この試合の監督はフリック。ナーゲルスマンは試合に関わっていない。台本は「就任の直前」「後任」と書く。
+#
+# **本人の言葉**：2026-07-03 辞任の声明（DW が引用）。原文：“This decision was anything but easy for me… After such a bitter disappointment, the team deserves the chance for a fresh start without any baggage… A special thank you also goes to the fans. You carried us, you trusted us, and you gave us energy, even during difficult times. I am truly sorry and deeply saddened that we let you down and were unable to give you more nights of football excitement at this World Cup. You deserved so much more!”
+#   別：Süddeutsche Zeitung での発言（DW が引用）：“30% of coaching is tactics, 70% social competence.”
+# **マル秘話**（英語版 Early life・Personal life）：膝と半月板の大けがが2度重なり、20歳で現役を終えた（プロの試合は無し）。2008年前半、アウクスブルクのセカンドチームの監督だったトゥヘルの補佐（スカウト）。経営学を4学期学んでスポーツ科学へ。
+#   子どものころはアイスホッケーも。2017年、Common Goal に給料の1%を寄付すると約束。バイエルンは移籍補償金として約2500万ユーロを払ったと報じられた。
+#
+# **入れなかったもの**：結婚・別れ・交際（私生活）、バイエルンの選手との不和・ノイアーの件の詳細（監督を小さく見せる）、ベンチの振る舞いの批判、FotMob・女子・ニュースの反応。
+date: 2026年11月12日
+slot: other_1
+format: news
+series: 監督紹介
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- ナーゲルスマン
+theme:
+  end_bg: assets/images/20261118_manager_nagelsmann/03_w.jpg
+  id: manager_nagelsmann
+  league: germany
+  league_name: ブンデスリーガ
+  kind: other
+  topic: ナーゲルスマン
+  title: ナーゲルスマン、前ドイツ代表監督はどんな人？なぜ、代表を去ることになったのか
+  question: ドイツ代表の前監督ユリアン・ナーゲルスマンは、どんな人なのか。28歳でブンデスリーガの最年少の監督になり、バイエルンとドイツ代表まで率いた人が、なぜ2026年7月に代表を去ることになったのか
+  lead: 前ドイツ代表監督、ユリアン・ナーゲルスマン。
+  opening_image: assets/images/20261118_manager_nagelsmann/03_w.jpg
+  takeaway: 勝率はホッフェンハイム40.4%、ライプツィヒ56.8%、バイエルン71.4%、ドイツ代表62.2%。代表の勝率は、クラブ3つの合計53.7%より高い。それでも大きな大会は、1点差とPK戦で止まった。2026年7月に代表を離れ、次にどこで指揮を執るのかを見ている
+  short_title: ナーゲルスマン、28歳の最年少監督の道
+  nameplate: ユリアン・ナーゲルスマン｜前ドイツ代表監督
+thumbnail:
+  line1: ナーゲルスマン、通算192勝
+  line2: 28歳でブンデス最年少の監督
+  tags: []
+  photo: assets/images/20261118_manager_nagelsmann_b/panel_01.jpg
+  board: assets/images/20261118_manager_nagelsmann_b/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261118_manager_nagelsmann/03_v.jpg
+sections:
+- id: hook
+  main: true
+  heading: 28歳でブンデスリーガの最年少監督に。ナーゲルスマンとは、どんな監督なのか
+  tier: 報道
+  telop: 28歳で、ブンデスリーガの最年少監督
+  narrator: 解説
+  card: &hook_stats
+    type: stats
+    title: ナーゲルスマンの歩み
+    items:
+    - ['28', 歳, ブンデスリーガの最年少の監督に]
+    - ['352', 試合, 4つのチームで指揮]
+    - ['23', 勝, ドイツ代表の37試合で]
+    focus: 0
+  say:
+  - text: 28歳で、ブンデスリーガのいちばん若い監督になった人。それがナーゲルスマンです。
+    image: assets/images/20261118_manager_nagelsmann/03_w.jpg
+    emph: true
+    card: none
+  - text: 2016年2月、ホッフェンハイムを率いたとき、28歳。
+  - text: ブンデスリーガの監督として、史上いちばん若い年齢でした。
+    card:
+      <<: *hook_stats
+      focus: 0
+  - text: そのあと、ライプツィヒ、バイエルンを経て、ドイツ代表まで率いました。
+    image: assets/images/20261118_manager_nagelsmann/01_w.jpg
+    card:
+      <<: *hook_stats
+      focus: 1
+  - text: ドイツ代表でも、37試合で23勝。6割を超える勝率です。
+    emph: true
+    card:
+      <<: *hook_stats
+      focus: 2
+  - text: 2026年7月3日、そのドイツ代表の監督を辞めました。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Julian_Nagelsmann
+  - https://www.dw.com/en/the-downfall-julian-nagelsmann-out-as-germany-coach/a-77797146
+- id: data
+  heading: ナーゲルスマンは、いつ、どこで、どんな道を歩いた人か
+  tier: 報道
+  telop: ユリアン・ナーゲルスマンの基礎DATA
+  narrator: 解説
+  card: &data_table
+    type: table
+    title: ユリアン・ナーゲルスマン（39歳）の基礎DATA
+    columns: [項目, 中身]
+    rows:
+    - [生年月日, 1987年7月23日（ドイツ・ランツベルク）]
+    - [選手のころ, 20歳でけがのため引退。プロの試合は無し]
+    - [監督, ホッフェンハイム、ライプツィヒ、バイエルン、ドイツ代表]
+    - [タイトル, ブンデスリーガ1回、スーパーカップ2回]
+    - [いま, 2026年7月にドイツ代表を辞任]
+    highlight_row: 0
+  say:
+  - text: ナーゲルスマンは、1987年7月23日の生まれ。39歳です。
+    image: assets/images/20261118_manager_nagelsmann/03_w.jpg
+    card:
+      <<: *data_table
+      highlight_row: 0
+  - text: 現役は、ひざのけがで、20歳で終えました。プロの試合は無し。
+    card:
+      <<: *data_table
+      highlight_row: 1
+  - text: 2008年には、アウクスブルクのセカンドチームで、トゥヘルの補佐をしました。
+    image: assets/images/20261118_manager_nagelsmann/01_w.jpg
+    card: none
+  - text: 監督は、ホッフェンハイム、ライプツィヒ、バイエルン、ドイツ代表。
+    card:
+      <<: *data_table
+      highlight_row: 2
+  - text: タイトルは、ブンデスリーガが1回、スーパーカップが2回です。
+    card:
+      <<: *data_table
+      highlight_row: 3
+  sources:
+  - https://en.wikipedia.org/wiki/Julian_Nagelsmann
+- id: japan
+  heading: 2023年のヴォルフスブルク。ナーゲルスマンと日本は、どこでつながるのか
+  tier: 報道
+  telop: 2023年9月、ドイツ対日本。ナーゲルスマンが就任する直前
+  narrator: 解説
+  card: &jp_table
+    type: table
+    title: 2023年9月 ドイツ対日本
+    columns: [項目, 中身]
+    rows:
+    - [試合, ドイツ対日本（親善試合）]
+    - [日付と場所, 2023年9月9日、ヴォルフスブルク]
+    - [結果, ドイツ 1-4 日本]
+    - [翌日, フリック監督が解任]
+    - [後任, 9月22日にナーゲルスマン]
+    highlight_row: 0
+  say:
+  - text: 日本との縁は、ナーゲルスマンが代表監督になる、直前の試合です。
+    image: assets/images/20261118_manager_nagelsmann/03_w.jpg
+    card:
+      <<: *jp_table
+      highlight_row: 0
+  - text: 2023年9月9日、ヴォルフスブルクでのドイツ対日本。
+    card:
+      <<: *jp_table
+      highlight_row: 1
+  - text: 日本が、4対1で勝ちました。
+  - text: 伊東純也、上田綺世、浅野拓磨、田中碧が、ゴールを決めています。
+    image: assets/images/20261118_manager_nagelsmann/01_w.jpg
+    emph: true
+    card:
+      <<: *jp_table
+      highlight_row: 2
+  - text: 翌日、ドイツサッカー連盟は、フリック監督を解任しました。
+    card:
+      <<: *jp_table
+      highlight_row: 3
+  - text: 代表監督として、史上初の解任でした。
+    card:
+      <<: *jp_table
+      highlight_row: 3
+  - text: その後任として、9月22日に決まったのが、ナーゲルスマンです。
+    card:
+      <<: *jp_table
+      highlight_row: 4
+  sources:
+  - https://en.wikipedia.org/wiki/Hansi_Flick
+  - https://en.wikipedia.org/wiki/Germany_national_football_team_results_(2020%E2%80%93present)
+  - https://en.wikipedia.org/wiki/Julian_Nagelsmann
+- id: career
+  heading: 降格の危機のチームから、バイエルン、ドイツ代表へ。ナーゲルスマンは何を積み上げたのか
+  tier: 背景
+  telop: 歩みと転機。ホッフェンハイム、ライプツィヒ、バイエルン、代表
+  narrator: 解説
+  card: &career_tl
+    type: timeline
+    title: ナーゲルスマンの歩み
+    rows:
+    - [2016年, ホッフェンハイムの監督に。28歳で最年少]
+    - [2019年, ライプツィヒへ。CL準決勝まで進む]
+    - [2021年, バイエルンへ。1年目にリーグ優勝]
+    - [2023年, バイエルンを解任。9月にドイツ代表へ]
+    - [2024年, 自国開催のEUROで準々決勝]
+    - [2026年, W杯は1回戦で敗退。7月に辞任]
+    focus: 0
+  say:
+  - text: ナーゲルスマンは2016年2月、ホッフェンハイムへ。
+    image: assets/images/20261118_manager_nagelsmann/03_w.jpg
+    card:
+      <<: *career_tl
+      focus: 0
+  - text: 当時は、17位のチームでした。
+    image: assets/images/20261118_manager_nagelsmann/03_w.jpg
+    card:
+      <<: *career_tl
+      focus: 0
+  - text: 最後の14試合で7勝。降格の入れ替え戦の順位から、勝ち点1差で逃れました。
+    card: none
+  - text: 次の2016-17は4位、2017-18は3位でした。
+    emph: true
+    card: none
+  - text: 2019年にライプツィヒ。1年目は3位でした。
+  - text: チャンピオンズリーグは、準決勝まで進みました。
+    image: assets/images/20261118_manager_nagelsmann/01_w.jpg
+    card:
+      <<: *career_tl
+      focus: 1
+  - text: 2021年にバイエルンへ。1年目は、リーグ優勝。
+  - text: スーパーカップも取りました。
+    emph: true
+    card:
+      <<: *career_tl
+      focus: 2
+  - text: 2023年3月24日、優勝を争うなかで、解任されました。在任は20か月でした。
+    card:
+      <<: *career_tl
+      focus: 3
+  - text: それから半年後の9月、ドイツ代表の監督に決まります。
+    image: assets/images/20261118_manager_nagelsmann/03_w.jpg
+    card:
+      <<: *career_tl
+      focus: 3
+  - text: 2024年の、自国開催のユーロは、準々決勝でスペインに1対2。延長での敗戦でした。
+    card:
+      <<: *career_tl
+      focus: 4
+  - text: 2026年のワールドカップは、グループを首位で抜けました。
+    card:
+      <<: *career_tl
+      focus: 5
+  - text: 決勝トーナメント1回戦のパラグアイ戦は、1対1からPK戦で敗れました。
+    emph: true
+    card: none
+  - text: ドイツ代表が、ワールドカップのPK戦で負けたのは、これが初めてです。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Julian_Nagelsmann
+  - https://www.dw.com/en/the-downfall-julian-nagelsmann-out-as-germany-coach/a-77797146
+- id: style
+  heading: 準決勝まで進んだ最年少。ナーゲルスマンのサッカーは、どんな形なのか
+  tier: 報道
+  telop: 戦術の色。陣形を変え、奪われたらすぐ取り返す
+  narrator: 解説
+  card: &style_doc
+    type: document
+    label: 2019-20 チャンピオンズリーグ ライプツィヒ
+    paragraphs:
+    - ラウンド16でトッテナム、準々決勝でアトレティコ・マドリードに勝つ。
+    - 準決勝は、パリ・サンジェルマンに0対3。
+    - 当時のCLで、準決勝まで進んだ最年少の監督。
+    - 試合ごとに陣形を変え、奪われたらすぐ取り返しに行く。
+    highlight:
+    - 準決勝
+    - 最年少
+  say:
+  - text: 形がよく出たのが、2019-20のチャンピオンズリーグ、ライプツィヒです。
+    image: assets/images/20261118_manager_nagelsmann/03_w.jpg
+    card: *style_doc
+  - text: ラウンド16でトッテナム、準々決勝でアトレティコ・マドリードを倒しました。
+    card: *style_doc
+  - text: 準決勝は、パリ・サンジェルマンに0対3で敗れました。
+    emph: true
+    callword: 準決勝
+    card: *style_doc
+  - text: それでも、準決勝まで進んだ監督としては、いちばん若い人でした。
+    image: assets/images/20261118_manager_nagelsmann/01_w.jpg
+    card: none
+  - text: ナーゲルスマンのサッカーは、試合ごとに、陣形を変えます。
+    card: none
+  - text: ボールを持つ形を土台に、奪われたら、すぐに取り返しに行く。
+  - text: ゲーゲンプレッシングと呼ばれる守りです。
+    image: assets/images/20261118_manager_nagelsmann/03_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Julian_Nagelsmann
+  - https://www.dw.com/en/the-downfall-julian-nagelsmann-out-as-germany-coach/a-77797146
+- id: numbers
+  heading: 352試合で192勝。数字で見ると、どこで強いのか
+  tier: 報道
+  telop: 通算192勝。勝率はバイエルンの71.4%がいちばん上
+  narrator: 解説
+  card: &rate_bars
+    type: bars
+    title: ナーゲルスマンの勝率（チームごと、%）
+    unit: '%'
+    items:
+    - label: ホッフェンハイム
+      value: 40.4
+    - label: ライプツィヒ
+      value: 56.8
+    - label: バイエルン
+      value: 71.4
+      highlight: true
+    - label: ドイツ代表
+      value: 62.2
+  say:
+  - text: ここからは、ナーゲルスマンの成績を数字で。
+    image: assets/images/20261118_manager_nagelsmann/01_w.jpg
+    card: &total_stats
+      type: stats
+      title: ナーゲルスマンの監督通算（6月29日まで）
+      items:
+      - ['352', 試合, 4つのチーム]
+      - ['192', 勝, 引き分け86・負け74]
+      - ['54.5', '%', 勝率]
+      focus: 0
+  - text: 通算は352試合。勝ったのは192試合です。
+    emph: true
+    card:
+      <<: *total_stats
+      focus: 1
+  - text: 率をチームごとに見ると、最も高いのはバイエルンです。
+    image: assets/images/20261118_manager_nagelsmann/03_w.jpg
+    card: *rate_bars
+  - text: 84試合で60勝。勝率は71.4%。
+    card: *rate_bars
+  - text: ドイツ代表は、23勝。62.2%でした。
+    card: *rate_bars
+  - text: ホッフェンハイムは、136試合で55勝。40.4%です。
+  - text: 降格の危機のチームから始めた数字でもあります。
+    image: assets/images/20261118_manager_nagelsmann/01_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Julian_Nagelsmann
+- id: words
+  heading: 辞任の声明で、ナーゲルスマンは何を語ったのか
+  tier: 報道
+  telop: ナーゲルスマンの言葉。2026年7月、辞任の声明で
+  narrator: 解説
+  card: &words_doc
+    type: document
+    label: ナーゲルスマンの言葉（訳）。2026年7月3日
+    paragraphs:
+    - この決断は、決して簡単ではありませんでした。
+    - 苦い失望のあとだからこそ、チームは、重荷のない新しい出発に値します。
+    - ファンの皆さんは、もっと多くに値しました。
+    highlight:
+    - 決して簡単ではありませんでした
+    - もっと多くに値しました
+  say:
+  - text: 2026年7月3日、辞任の声明で、ナーゲルスマンはこう話しました。
+    image: assets/images/20261118_manager_nagelsmann/03_w.jpg
+    card: *words_doc
+  - voice: ナーゲルスマン
+    text: この決断は、私にとって、決して簡単ではありませんでした。
+  - voice: ナーゲルスマン
+    text: あれほど苦い失望のあとだからこそ、
+    cont: true
+  - voice: ナーゲルスマン
+    text: チームは、重荷のない新しい出発に値します。
+    cont: true
+    image: assets/images/20261118_manager_nagelsmann/01_w.jpg
+    card: none
+  - voice: ナーゲルスマン
+    text: もっと多くの、興奮の夜を届けられませんでした。
+  - voice: ナーゲルスマン
+    text: 本当に申し訳なく、深く悲しんでいます。
+    cont: true
+  - voice: ナーゲルスマン
+    text: 皆さんは、もっと多くに値しました。
+    cont: true
+    pause: 0.5
+  - text: かつては、「戦術は3割。残りの7割は、人づきあいの力だ」と語っています。
+    image: assets/images/20261118_manager_nagelsmann/03_w.jpg
+    card: none
+  quotes_from:
+  - https://www.dw.com/en/the-downfall-julian-nagelsmann-out-as-germany-coach/a-77797146
+  sources:
+  - https://www.dw.com/en/the-downfall-julian-nagelsmann-out-as-germany-coach/a-77797146
+- id: secret
+  heading: 数字に出ない話。ナーゲルスマンの原点は、どこにあるのか
+  tier: 背景
+  telop: U19のキャプテン。給料の1%を寄付
+  narrator: 解説
+  card: &sec_table
+    type: table
+    title: 数字の外にある話
+    columns: [いつ, 何があったか]
+    rows:
+    - [10代, 1860ミュンヘンのU19でキャプテン]
+    - [2008年, トゥヘルの補佐として、対戦相手を調べる]
+    - [学業, 経営学を4学期学び、スポーツ科学へ]
+    - [2017年, 給料の1%を、サッカーの慈善活動へ]
+    - [2021年, バイエルンは約2500万ユーロの補償金と報道]
+    highlight_row: 0
+  say:
+  - text: では、ナーゲルスマンの、数字の外の話を。
+    image: assets/images/20261118_manager_nagelsmann/01_w.jpg
+    card: none
+  - text: 10代のころは、1860ミュンヘンのU19で、キャプテンを務めました。
+    card:
+      <<: *sec_table
+      highlight_row: 0
+  - text: そのあと、経営学を4学期学んでから、スポーツ科学に移っています。
+    image: assets/images/20261118_manager_nagelsmann/03_w.jpg
+    card:
+      <<: *sec_table
+      highlight_row: 2
+  - text: 子どものころは、アイスホッケーにも打ち込みました。
+    card: none
+  - text: 2017年には、「コモン・ゴール」に、給料の1%を寄付すると約束しました。
+    card:
+      <<: *sec_table
+      highlight_row: 3
+  - text: サッカーを通した、慈善活動を支えるものです。
+    image: assets/images/20261118_manager_nagelsmann/01_w.jpg
+    card:
+      <<: *sec_table
+      highlight_row: 3
+  - text: 2021年、バイエルンは、約2500万ユーロの補償金を払ったと報じられました。
+    card:
+      <<: *sec_table
+      highlight_row: 4
+  sources:
+  - https://en.wikipedia.org/wiki/Julian_Nagelsmann
+- id: view
+  viewpoint: true
+  heading: 見立て・リーグの勝率は71.4%。一発勝負の大会で、何が違ったのか
+  tier: 背景
+  telop: 勝率はバイエルン71.4%、ドイツ代表62.2%
+  narrator: 解説
+  card: &view_table
+    type: table
+    title: 自分で割ってみた（ナーゲルスマンのチームごとの勝率）
+    columns: [チーム, 試合, 勝率]
+    rows:
+    - [ホッフェンハイム, '136', 40.4%]
+    - [ライプツィヒ, '95', 56.8%]
+    - [バイエルン, '84', 71.4%]
+    - [ドイツ代表, '37', 62.2%]
+    - [クラブ3つの合計, '315', 53.7%]
+    highlight_row: 2
+  say:
+  - text: 見立てです。ナーゲルスマンのチームごとの勝率を、並べます。
+    image: assets/images/20261118_manager_nagelsmann/03_w.jpg
+    card: *view_table
+  - text: ホッフェンハイム、ライプツィヒと、チームを移るたびに、勝率は上がりました。
+    card:
+      <<: *view_table
+      highlight_row: 0
+  - text: バイエルンで、いちばん高くなります。
+    emph: true
+    mark: {kind: circle, row: 2, col: 2}
+    card:
+      <<: *view_table
+      highlight_row: 2
+  - text: ドイツ代表は、そこから9ポイント下がっています。
+    image: assets/images/20261118_manager_nagelsmann/01_w.jpg
+    card:
+      <<: *view_table
+      highlight_row: 3
+  - text: ただ、クラブ3つを合わせた53.7%より、代表は8ポイント以上高い。
+    emph: true
+    card:
+      <<: *view_table
+      highlight_row: 4
+  - text: ただ、毎週戦うリーグと、一発勝負の大会は、別のものです。
+    card: none
+  - text: 2024年のユーロは、延長で1点差。
+    card: none
+  - text: 2026年のワールドカップは、PK戦でした。どちらも、決着は紙一重でした。
+    image: assets/images/20261118_manager_nagelsmann/03_w.jpg
+    card: none
+  - text: 勝つ形を持つ監督が、次にどこで指揮を執るのか。注目です。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Julian_Nagelsmann

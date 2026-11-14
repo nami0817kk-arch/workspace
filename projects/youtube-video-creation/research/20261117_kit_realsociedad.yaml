@@ -1,0 +1,456 @@
+# ユニフォームとエンブレムの歴史 レアル・ソシエダ（11/12 作成、11/17 分）。ラ・リーガの6本目。雛形は 11/13 アスレティック回（20261113_kit_athletic.yaml）。
+# 題の問い：紋章から王冠が一度消えたのは、いつ、なぜか。答え＝1931年4月の共和制で王を思わせるものが禁じられ、王冠が外れ、名前も「レアル」を外して「ドノスティアFC」に。紋章の文字も SS から DFC に。1939-40季に戻る。
+# 選んだ理由：指示書「ユニフォームはラ・リーガの続き」。済み：バルセロナ・レアル・アトレティコ・アスレティック、同じ日のバレンシア（11/15）。
+#   スタジアム担当と同じクラブにしない → research/20261115_picks.txt に1行（11/15 バレンシア・11/17 レアル・ソシエダ）。ソシエダは 11/13 にスタジアム（アノエタ）で出済み＝スタジアム担当は選ばない。
+#   アスレティック（11/13）の「赤白の買い物」と同じバスクでも、こちらは「王冠が消えた」＝別の問い。名前と王様と共和制の話で、前回と重ならない。
+# 重なり確認（2026-11-12）：scripts/*kit_* にレアル・ソシエダは無し。直近30日：20261113_stadium_realsociedad（4日前・スタジアム。アノエタの話だけ）／20261106_nakamura_lyon_sociedad（ニュース）。
+#   この回では、本拠地の名前・建物・陸上トラックの話は言わない（4日前のスタジアム回）。写真も 20261113_stadium_realsociedad のものは使わない。
+#   1982年前後の連覇は1行（「2連覇した」）だけ。久保建英の話は、このシリーズには入れない（日本との接点は無理に入れない）。
+# 今季のリーグ：es "Real Sociedad de Fútbol"（2026-27 の登録選手の項あり）。ラ・リーガ。情報の時点は 2026年11月12日。
+# 取材：requests だけ（Wikipedia API）。ブラウザ操作・JS実行は使っていない。クラブ公式は読んでいない。
+#   読んだ：es "Real Sociedad de Fútbol"（Historia・Indumentaria・Denominaciones・Proveedores y patrocinadores）、en "Real Sociedad"（Early history・Name and colours）、ca "Reial Societat de Futbol"（Els colors・L'escut・Proveïdors i patrocinadors）。
+# ---- 食い違い・断ったこと ----
+#   ・青白の由来：en「色は、サン・セバスティアンの旗（白地に青い四角）から」、ca「サン・セバスティアン・レクリエーション・クラブの色は緑と黄。1908年に今の色に替えた」、es「創立からずっと同じ青と白のしま。パンツ・ソックスは年で替わる。1967年に白パンツと青白しまソックスに」。
+#     → 台本は en の旗の由来、ca の「緑と黄から1908年に青白へ」、es の「創立から同じしま」をそのまま言う。「1908年に青白に替えたのは、新しいクラブを作った選手たち」は ca の「1908年」と en の「1908年に新クラブ」から。
+#   ・クラブの始まり：en「1904年にレクリエーション・クラブ。1907年の対立で選手が抜け、1908年に新クラブ。1909年のコパは自転車クラブの名前で出て優勝。そのあと、同じ選手たちが 1909年9月7日にソシエダを作った」。es も一致（9月7日、自転車クラブ）。
+#   ・レアルの称号：es「1910年2月11日、アルフォンソ13世が与えた」、en「1910年に国王が後援」。→ 台本は es の日付。国王が夏の都をサン・セバスティアンに置いた、は en。
+#   ・共和制と名前：es「1931年4月、共和制になり、王を思わせるものが法律で禁止。王冠を外し、『レアル』も外す。6月30日の総会でドノスティアFC（バスク語の街の名）に。1939-40季の途中に、元の名前に戻す」。en は「1931年に Donostia Club de Futbol、1939年に Real Sociedad」と書く（1939 と 1939-40 で年が少しずれる）。→ 台本は es に合わせて「1939-40年のシーズン」と言う。
+#   ・紋章：ca「古い革のボールを、旗で巻いた形。旗は白と紺（ギプスコア県の色と重なる）。旗の中の丸い盾に SS の文字。共和制のあいだは、王冠が外れ、街の紋章を置き、SS が DFC に。旗・色・ボールは変わらなかった。2017年に青の色味を、初期と1980年代の青に戻すと発表」。es の図説「1909-10 の最初の紋章は、旗がボールを抱く形」。
+#     ca の「王冠を街の紋章に替えた」の細部は資料1つなので言わない。「SS から DFC に」は ca のみ（es の文字の話は無い）。→ ca の記述として台本に入れる。
+#   ・広告・メーカー：es・ca の表は両方「1981〜87は広告なし」。1987年以降の最初の広告主名は es と ca で食い違う（es：ニーセン1987-88、バンコア1990-94／ca：バンコア1987-94）。
+#     Commons の写真の説明（Kutxa Fototeka）は「1987年9月1日、オイアルツンのニーセン社がレアル・ソシエダとスポンサー契約に署名」「ニーセンが支援した2季」と書く＝es の表に合う。→ 台本は「1987年9月、ニーセン、2季」。以降の広告主の名前は言わない。
+#     メーカー：アディダス 1981–87、ラサン 1987–94、アストーレ 1994–2011、ナイキ 2011–14、アディダス 2014–18、マクロン 2018–（ca の表。es の表はメーカー欄が空）。アストーレは es・ca とも 2011 まで。
+#   ・2017年の青：ca が DiarioVasco（2017-10-06）を引く。→ 台本は「発表した」まで。
+#   ・es 本文に「2026年のコパ・デル・レイをアトレティコにPK戦で勝って獲った」とあるが、一次情報を確かめていないので使わない。
+# ---- 自分で数えた数 ----
+#   青と白：1909→2026＝117年（クラブの創立から）。名前：es の表の7つの名前（1909 Sociedad de Foot-ball → 1910 Real Sociedad → 1931 Sociedad（数か月）→ 1931 Donostia → 1940 Real Sociedad de Foot-ball → 1941 Real Sociedad de Fútbol → 1992 S.A.D. を足す）＝6回の変更。117÷6＝19.5 → 約20年に1度。
+#   王冠のない期間：1931年4月→1939-40季の途中＝約9年（es「ほぼ10年」）。胸の広告なし：1981→1987＝6年。
+#   メーカー：1981→2026＝45年で6期（アディダス・ラサン・アストーレ・ナイキ・アディダス・マクロン）。45÷6＝7.5年。アストーレ 1994→2011＝17年。
+# ---- 日本との接点 ----
+#   見つけられなかった（このシリーズでは久保建英の在籍は触れない。シャツ・紋章と日本のつながりは、読んだ資料に無い）。無理に入れない。
+# 言わなかったもの：本拠地の話（4日前のスタジアム回）／1987年以降の広告主の名前／2026年のコパの結果／ニュースの話（久保建英）／ギプスコア県の紋章の細部。
+# 写真：assets/images/20261117_kit_realsociedad/（credits.json）。Commons（CC BY・CC BY-SA・Public domain）。代理店・放送映像・エンブレム画像は使っていない。人物は特定していない。
+date: 2026年11月12日
+slot: other_5
+format: news
+series: ユニフォームとエンブレムの歴史
+voice_min: 0
+people:
+- レアル・ソシエダ
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  end_bg: assets/images/20261117_kit_realsociedad/p_fans_w.jpg
+  id: kit_realsociedad
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: レアル・ソシエダ
+  title: レアル・ソシエダの紋章から、王冠が一度消えた。いつ、なぜ？
+  question: レアル・ソシエダの紋章から、王冠が消えたのはいつか。青と白のしまは、どこから来たのか。胸の広告は、いつから入ったのか
+  opening_image: assets/images/20261117_kit_realsociedad/p_flag_w.jpg
+  lead: 王冠は、一度外れた。
+  hook: ''
+  takeaway: レアル・ソシエダの青と白は、1909年の創立から117年。名前は細かな替わりまで数えて6回、王冠は約9年なかった。それでも、旗でボールを巻いた紋章と青白のしまは残った。替わったのは名前で、守ったのは色と紋章だ
+  hook_unused: ''
+thumbnail:
+  layout: classic
+  callouts:
+  - 名前は6回替わる
+  - 胸は6年、空白
+  photo: assets/images/20261117_kit_realsociedad/p_flag_t_w.jpg
+  short_photo: assets/images/20261117_kit_realsociedad/p_flag_v.jpg
+  line1: ソシエダの紋章から
+  line2: 王冠が消えた年
+  tags:
+  - レアル・ソシエダ
+  - ユニフォーム
+  - エンブレム
+  - 紋章
+  - ラ・リーガ
+x-cards:
+  stripes: &stripes
+    type: timeline
+    title: 青と白のしまの歩み
+    rows:
+    - - 1904年
+      - 街で最初のクラブ。色は緑と黄
+    - - 1908年
+      - 新しいクラブが、青と白を選ぶ
+    - - 1909年
+      - 9月7日に創立。コパは別の名前で優勝
+    - - 1967年
+      - 白パンツ、青白しまのソックスに
+    - - 今季
+      - 青と白のしま、創立から117年
+    focus: 1908年
+    highlight_row: 0
+  crest: &crest
+    type: table
+    title: 紋章に入っているもの
+    columns:
+    - 形
+    - 意味
+    rows:
+    - - 革のボール
+      - サッカーのクラブ
+    - - ボールを巻く旗
+      - 白と紺。ギプスコア県の色
+    - - 旗の中の丸い盾
+      - 街の頭文字「SS」
+    - - 青の色味
+      - 2017年に、初期と1980年代の青へ
+    highlight_row: 0
+  crown: &crown
+    type: timeline
+    title: 王冠と名前の歩み
+    rows:
+    - - 1910年2月
+      - 国王が「レアル」の称号を与える
+    - - 1931年4月
+      - 共和制。王を思わせるものを禁止
+    - - 1931年
+      - 王冠が外れ、名前はドノスティアFCに
+    - - 1939-40年
+      - 元の名前と紋章に戻る
+    focus: 1931年4月
+    highlight_row: 0
+  chest: &chest
+    type: table
+    title: レアル・ソシエダのシャツを作る会社
+    columns:
+    - いつから
+    - 会社
+    - 年数
+    rows:
+    - - 1981年
+      - アディダス
+      - 6年
+    - - 1987年
+      - ラサン
+      - 7年
+    - - 1994年
+      - アストーレ
+      - 17年
+    - - 2011年
+      - ナイキ
+      - 3年
+    - - 2014年
+      - アディダス
+      - 4年
+    - - 2018年
+      - マクロン
+      - 今季で8年
+    highlight_row: 0
+  view: &view
+    type: table
+    title: レアル・ソシエダの青白と名前（自分で数えた）
+    columns:
+    - 何を
+    - 数
+    rows:
+    - - 青と白のしま（1909年〜）
+      - 117年
+    - - 名前が替わった（細かな替わりも）
+      - 6回
+    - - 王冠がなかった（1931年〜）
+      - 約9年
+    - - 胸の広告なし（1981〜87年）
+      - 6年
+    highlight_row: 0
+sections:
+- id: stripes
+  main: true
+  heading: レアル・ソシエダの青と白のしまは、どこから来たのか
+  bg: assets/images/20261117_kit_realsociedad/p_fans_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 1904年の最初のクラブの色は緑と黄。1908年に新しいクラブが青と白を選ぶ。もとは、サン・セバスティアンの旗の色
+  card: *stripes
+  say:
+  - text: 今回はレアル・ソシエダ。青と白のしまと、紋章から消えた王冠の話です。
+    image: assets/images/20261117_kit_realsociedad/p_flag_w.jpg
+    card: none
+  - text: 街は、スペイン北部、バスク地方の、サン・セバスティアン。ギプスコア県の中心です。
+    image: assets/images/20261117_kit_realsociedad/p_flag_w.jpg
+    card: none
+  - text: サッカーを持ち込んだのは、イギリスから戻った、学生や労働者でした。
+    image: assets/images/20261117_kit_realsociedad/p_flag_w.jpg
+    card: none
+  - text: 1904年、街で最初のクラブができます。
+    image: assets/images/20261117_kit_realsociedad/p_old_w.jpg
+    card:
+      <<: *stripes
+      highlight_row: 0
+  - text: サン・セバスティアン・レクリエーション・クラブです。
+    image: assets/images/20261117_kit_realsociedad/p_flag_w.jpg
+    card: none
+  - text: このクラブの色は、緑と黄色でした。
+    image: assets/images/20261117_kit_realsociedad/p_old_w.jpg
+    card: none
+  - text: 1907年、クラブで対立が起き、選手が抜けます。翌年、新しいクラブをつくります。
+    image: assets/images/20261117_kit_realsociedad/p_old_w.jpg
+    card:
+      <<: *stripes
+      highlight_row: 1
+  - text: その新しいクラブが選んだ色が、青と白です。
+    image: assets/images/20261117_kit_realsociedad/p_old_w.jpg
+    card: none
+    emph: true
+  - text: 青と白は、サン・セバスティアンの旗の色です。白地に、青い四角。
+    image: assets/images/20261117_kit_realsociedad/p_flag_w.jpg
+    card: none
+  - text: 1909年、新しいクラブは、スペインのカップ戦、コパ・デル・レイに出ます。
+    image: assets/images/20261117_kit_realsociedad/p_fans2_w.jpg
+    card:
+      <<: *stripes
+      highlight_row: 2
+  - text: ただ、登録が間に合いません。
+    image: assets/images/20261117_kit_realsociedad/p_fans2_w.jpg
+    card: none
+  - text: 自転車クラブの名前を借りて出場し、優勝します。
+    image: assets/images/20261117_kit_realsociedad/p_fans2_w.jpg
+    card: none
+    emph: true
+    callword: 別の名前で優勝
+  - text: 数か月後の9月7日、同じ選手たちが、ソシエダとして正式に認められます。
+    image: assets/images/20261117_kit_realsociedad/p_fans2_w.jpg
+    card: none
+  - text: シャツのしまは、創立からずっと同じ、とされます。
+    image: assets/images/20261117_kit_realsociedad/p_kit_w.jpg
+    card: none
+  - text: パンツは白、ソックスは青と白のしま。今の組み合わせは、1967年からです。
+    image: assets/images/20261117_kit_realsociedad/p_old_w.jpg
+    card:
+      <<: *stripes
+      highlight_row: 3
+  - text: 2つ目のシャツには、緑と黄色が使われたことがあります。最初のクラブへの敬意です。
+    image: assets/images/20261117_kit_realsociedad/p_kit_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Real_Sociedad
+  - https://es.wikipedia.org/wiki/Real_Sociedad_de_F%C3%BAtbol
+  - https://ca.wikipedia.org/wiki/Reial_Societat_de_Futbol
+- id: crest
+  heading: 紋章の中には、何が入っているのか
+  bg: assets/images/20261117_kit_realsociedad/p_flag_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 古い革のボールを、白と紺の旗で巻いた形。旗の中の丸い盾に「SS」。最初の紋章は1909〜10年。2017年に青の色味を昔に戻した
+  card: *crest
+  say:
+  - text: レアル・ソシエダの胸の紋章は、古い革のボールを、旗で巻いた形です。
+    image: assets/images/20261117_kit_realsociedad/p_fans2_w.jpg
+    card:
+      <<: *crest
+      highlight_row: 0
+  - text: 旗の色は、白と紺。ギプスコア県の色と重なります。
+    image: assets/images/20261117_kit_realsociedad/p_old_w.jpg
+    card:
+      <<: *crest
+      highlight_row: 1
+  - text: 旗の中の丸い盾には、「エスエス」の2文字。サン・セバスティアンの頭文字です。
+    image: assets/images/20261117_kit_realsociedad/p_fans2_w.jpg
+    card:
+      <<: *crest
+      highlight_row: 2
+    emph: true
+  - text: 最初の紋章は、1909年から10年。旗が、ボールを抱く形でした。
+    image: assets/images/20261117_kit_realsociedad/p_flag_w.jpg
+    card: none
+  - text: 2017年、クラブは、青の色味を昔に戻すと発表します。
+    image: assets/images/20261117_kit_realsociedad/p_old_w.jpg
+    card:
+      <<: *crest
+      highlight_row: 3
+    emph: true
+  - text: 初期の青と、1980年代の黄金期の青、とされます。
+    image: assets/images/20261117_kit_realsociedad/p_old_w.jpg
+    card: none
+  sources:
+  - https://ca.wikipedia.org/wiki/Reial_Societat_de_Futbol
+  - https://es.wikipedia.org/wiki/Real_Sociedad_de_F%C3%BAtbol
+- id: crown
+  heading: 紋章の王冠は、いつ、なぜ消えたのか
+  bg: assets/images/20261117_kit_realsociedad/p_fans_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 1910年2月11日に国王が「レアル」の称号。1931年4月の共和制で王冠が外れ、名前はドノスティアFC、文字はDFC。1939-40年に戻る
+  card: *crown
+  say:
+  - text: 名前の「レアル」は、王様から贈られた称号です。
+    image: assets/images/20261117_kit_realsociedad/p_old_w.jpg
+    card:
+      <<: *crown
+      highlight_row: 0
+  - text: 1910年2月11日。スペイン国王、アルフォンソ13世が与えました。
+    image: assets/images/20261117_kit_realsociedad/p_flag_w.jpg
+    card: none
+  - text: 国王は、夏の都を、サン・セバスティアンに置いていました。
+    image: assets/images/20261117_kit_realsociedad/p_flag_w.jpg
+    card: none
+  - text: 意味は、王立のフットボール協会。紋章の上には、王冠が載っていました。
+    image: assets/images/20261117_kit_realsociedad/p_flag_w.jpg
+    card: none
+  - text: 1931年4月、スペインは共和制になります。
+    image: assets/images/20261117_kit_realsociedad/p_fans2_w.jpg
+    card:
+      <<: *crown
+      highlight_row: 1
+    emph: true
+    callword: 王冠が外れる
+  - text: 王を思わせるものは、法律で、禁じられました。
+    image: assets/images/20261117_kit_realsociedad/p_old_w.jpg
+    card: none
+  - text: クラブは、紋章から王冠を外し、名前からも「レアル」を外します。
+    image: assets/images/20261117_kit_realsociedad/p_old_w.jpg
+    card:
+      <<: *crown
+      highlight_row: 2
+  - text: 新しい名前は、ドノスティア・フットボール・クラブ。
+    image: assets/images/20261117_kit_realsociedad/p_old_w.jpg
+    card: none
+  - text: ドノスティアは、サン・セバスティアンの、バスク語の名前です。
+    image: assets/images/20261117_kit_realsociedad/p_old_w.jpg
+    card: none
+  - text: 紋章の文字も、「エスエス」から「ディーエフシー」に替わります。
+    image: assets/images/20261117_kit_realsociedad/p_flag_w.jpg
+    card: none
+    emph: true
+  - text: ただ、旗も、色も、ボールも、そのままでした。
+    image: assets/images/20261117_kit_realsociedad/p_flag_w.jpg
+    card: none
+  - text: 街の人は、ずっと「ラ・レアル」と呼んでいて、新しい名前は根づきませんでした。
+    image: assets/images/20261117_kit_realsociedad/p_flag_w.jpg
+    card: none
+  - text: 1939年から40年のシーズンに、元の名前と紋章が戻ります。
+    image: assets/images/20261117_kit_realsociedad/p_old_w.jpg
+    card:
+      <<: *crown
+      highlight_row: 3
+  - text: 王冠のなかった年月は、約9年です。
+    image: assets/images/20261117_kit_realsociedad/p_flag_w.jpg
+    card: none
+    emph: true
+  sources:
+  - https://es.wikipedia.org/wiki/Real_Sociedad_de_F%C3%BAtbol
+  - https://ca.wikipedia.org/wiki/Reial_Societat_de_Futbol
+  - https://en.wikipedia.org/wiki/Real_Sociedad
+- id: chest
+  heading: 胸の広告は、いつ入ったのか
+  bg: assets/images/20261117_kit_realsociedad/p_fans_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 2連覇のころの1981年から87年は胸に広告なし。1987年の地元企業から。作る会社は45年で6期。アストーレが17年でいちばん長い
+  card: *chest
+  say:
+  - text: レアル・ソシエダは、1980年代の初めに、2連覇を果たしました。
+    image: assets/images/20261117_kit_realsociedad/p_flag_w.jpg
+    card: none
+  - text: 1981年から1987年の6季、胸は、まっさらでした。
+    image: assets/images/20261117_kit_realsociedad/p_fans2_w.jpg
+    card:
+      <<: *chest
+      highlight_row: 0
+    emph: true
+    callword: 胸は6年、空白
+  - text: そのあいだにシャツを作っていたのは、アディダスです。
+    image: assets/images/20261117_kit_realsociedad/p_flag_w.jpg
+    card: none
+  - text: 初めて広告が入ったのは、1987年9月の契約です。
+    image: assets/images/20261117_kit_realsociedad/p_old_w.jpg
+    card:
+      <<: *chest
+      highlight_row: 1
+    emph: true
+  - text: 相手は、ギプスコア県の会社、ニーセン。契約は、2季続きました。
+    image: assets/images/20261117_kit_realsociedad/p_kit_w.jpg
+    card: none
+  - text: メーカーも、1987年からは、ラサンです。
+    image: assets/images/20261117_kit_realsociedad/p_arc_w.jpg
+    card: none
+  - text: 1994年からは、スペインのブランド、アストーレが作ります。
+    image: assets/images/20261117_kit_realsociedad/p_fans2_w.jpg
+    card:
+      <<: *chest
+      highlight_row: 2
+  - text: アストーレは、2011年まで17年。この45年で、最長の付き合いです。
+    image: assets/images/20261117_kit_realsociedad/p_fans2_w.jpg
+    card: none
+    emph: true
+  - text: 2011年はナイキ。2014年からはアディダス。
+    image: assets/images/20261117_kit_realsociedad/p_fans2_w.jpg
+    card:
+      <<: *chest
+      highlight_row: 4
+  - text: 2018年からは、イタリアのマクロンです。
+    image: assets/images/20261117_kit_realsociedad/p_fans2_w.jpg
+    card:
+      <<: *chest
+      highlight_row: 5
+  - text: 1981年からの45年で、6期。平均は、7年半です。
+    image: assets/images/20261117_kit_realsociedad/p_fans2_w.jpg
+    card: none
+  sources:
+  - https://ca.wikipedia.org/wiki/Reial_Societat_de_Futbol
+  - https://es.wikipedia.org/wiki/Real_Sociedad_de_F%C3%BAtbol
+- id: view
+  viewpoint: true
+  heading: 見立て・青白の117年と、名前の6回
+  bg: assets/images/20261117_kit_realsociedad/p_fans_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 青と白のしまは117年。名前は6回、王冠は約9年なかった。胸の空白は6年。名前は約20年に1度替わった計算
+  card: *view
+  say:
+  - text: レアル・ソシエダの青と白、名前と王冠を、数で並べます。
+    image: assets/images/20261117_kit_realsociedad/p_flag_w.jpg
+    card: none
+  - text: 青と白のしまは、創立から、117年。
+    image: assets/images/20261117_kit_realsociedad/p_old_w.jpg
+    card:
+      <<: *view
+      highlight_row: 0
+  - text: 名前は、117年のあいだに、細かな替わりまで数えて、6回。
+    image: assets/images/20261117_kit_realsociedad/p_fans2_w.jpg
+    card:
+      <<: *view
+      highlight_row: 1
+  - text: 王冠が紋章になかったのは、約9年。117年の、約8%です。
+    image: assets/images/20261117_kit_realsociedad/p_old_w.jpg
+    card:
+      <<: *view
+      highlight_row: 2
+    mark:
+      kind: circle
+      row: 2
+  - text: 胸の空白は、1981年から87年の6年。
+    image: assets/images/20261117_kit_realsociedad/p_fans2_w.jpg
+    card:
+      <<: *view
+      highlight_row: 3
+  - text: 117年を6回で割ると、約20年に1度、名前が替わった計算です。
+    image: assets/images/20261117_kit_realsociedad/p_old_w.jpg
+    card:
+      type: calc
+      title: 名前が替わる間隔（自分で割った）
+      terms:
+      - - 117年
+        - 創立から
+      - - 6回
+        - 名前の替わり
+      - - 約20年
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+    emph: true
+  - text: それでも、旗でボールを巻いた紋章と、青と白は、残りました。
+    image: assets/images/20261117_kit_realsociedad/p_old_w.jpg
+    card: none
+  - text: 替わったのは名前で、守ってきたのは、色と紋章でした。
+    image: assets/images/20261117_kit_realsociedad/p_old_w.jpg
+    card: none
+    emph: true
+  sources:
+  - https://es.wikipedia.org/wiki/Real_Sociedad_de_F%C3%BAtbol
+  - https://ca.wikipedia.org/wiki/Reial_Societat_de_Futbol

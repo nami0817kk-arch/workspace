@@ -1,0 +1,213 @@
+# ブンデスリーガ チーム紹介 ⑪ホッフェンハイム（見本は 10/29 のボルシアMG）。2026-10-31 作成。情報は10月30日時点。
+# 事実は research/bd_data/hoffenheim_research.md（出典付き）から。アルファベットは読み上げに残さない。
+# 今季の出場と得点は ESPN の試合データで数えた。町田浩樹の私生活の話は入れない。順位の言い方で選手・クラブを小さく見せない。
+title: ホッフェンハイムは5部から8年で1部へ。小さな町のクラブは、なぜ駆け上がれたのか
+short_title: ホッフェンハイム、5部から8年で1部へ
+opening: "2000年に5部。2008年に1部。いま最終ラインには町田浩樹がいます。"
+hook: 始まりは、故郷のクラブに力を貸した、ソフトウェア会社の創業者でした。
+thumbnail:
+  line1: 町田浩樹のホッフェンハイム
+  line2: 5部から8年で1部へ
+  crest_main: [ホッフェンハイム]
+  tags: [ホッフェンハイム, TSGホッフェンハイム, ブンデスリーガ, 町田浩樹, クラマリッチ, ナーゲルスマン]
+  layout: classic
+
+reasons:
+- "町田浩樹がホッフェンハイムに在籍。今季はリーグ戦**5試合**に出場。"
+- "町田浩樹は、ヨーロッパリーグでゴールを記録しています。"
+- "10月30日の時点で、リーグ戦は7試合を終えて**10位**です。"
+reasons_focus: [1, 2, 3]
+reasons_telop: 町田浩樹が在籍。ヨーロッパリーグでゴール。10月30日時点で10位
+reasons_rows:
+- ["理由1", "町田浩樹が在籍"]
+- ["理由2", "ヨーロッパリーグでゴール"]
+- ["理由3", "7試合を終えて10位"]
+reasons_sources:
+- https://en.wikipedia.org/wiki/K%C5%8Dki_Machida
+- https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.europa/summary?event=401915563
+- https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/teams/7911/schedule?season=2026
+- https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings
+
+data:
+- 創立は**1899年**。体操クラブとして生まれました。
+- 愛称は「クライヒガウアー」。ドイツ語で「クライヒガウの人たち」です。
+- 1部、ドイツカップ、ヨーロッパの大会で、優勝はまだありません。
+- 1部の最高順位は、**3位**です。
+- 昨季のリーグ戦は**5位**。勝ち点は61でした。
+data_focus: [0, 1, 5, 6, 8]
+
+story_sections:
+  - id: japan
+    heading: 町田浩樹は、ホッフェンハイムで何を取り戻したのか
+    tier: 背景
+    telop: 町田浩樹は2025年に加入。今季はリーグ戦5試合、ヨーロッパリーグで1得点
+    narrator: 解説
+    say:
+      - text: 町田浩樹は、身長**190センチ**のセンターバックです。
+        card:
+          type: table
+          title: 町田浩樹の歩み
+          columns: ["年", "出来事"]
+          rows:
+            - ["2022-2025", "ベルギーのユニオンSG"]
+            - ["2024", "カップ決勝で決勝点"]
+            - ["2025年6月", "ホッフェンハイムへ"]
+            - ["今季", "リーグ5試合、EL1得点"]
+      - 2022年から、ベルギーのユニオンSGでプレーしました。
+      - 2024年のベルギーカップ決勝では、唯一の得点を決めます。
+      - クラブにとって、110年ぶりのカップ優勝でした。
+      - text: 2025年6月25日、ホッフェンハイムへ。
+        card: none
+        image: assets/images/bd_hoffenheim_pair_machida/01.jpg
+      - 8月23日の開幕戦でデビューしますが、前半のうちにケガで交代。
+      - text: 復帰は2026年9月12日。シュツットガルト戦に、交代で入りました。
+        image: assets/images/bd_hoffenheim_arena/scene.jpg
+      - 10月15日、ヨーロッパリーグのベシクタシュ戦。
+      - 87分、コーナーキックからのヘディングで、ホッフェンハイムでの初ゴール。
+      - 25日のレバークーゼン戦は、先発でフル出場。チームは3対0の勝ちでした。
+    sources:
+      - https://en.wikipedia.org/wiki/K%C5%8Dki_Machida
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.europa/summary?event=401915563
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/summary?event=401884760
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/summary?event=401884797
+  - id: golden
+    heading: 人口3445人の地区のクラブは、なぜ5部から8年で1部へ上がれたのか
+    tier: 背景
+    telop: 2000年に5部で優勝。2008年に1部。昇格は4回
+    narrator: 解説
+    main: true
+    say:
+      - text: ホッフェンハイムは、町シンスハイムの一地区。町の人口は、およそ**3万7000人**。
+        image: assets/images/bd_hoffenheim_oldground/scene.jpg
+      - そのうち、ホッフェンハイムの地区の人口は**3445人**です。
+      - 1990年代のはじめは、1部から数えて8番目のリーグの、地域クラブでした。
+      - text: 転機は2000年ごろ。ディートマー・ホップが、育ったクラブを支え始めます。
+        image: assets/images/bd_hoffenheim_pair_hopp/01.jpg
+      - ホップは、エスエーピーという会社の共同創業者です。
+      - text: 2000年、5部で優勝して、4部へ。
+        card:
+          type: table
+          title: ホッフェンハイムの昇格
+          columns: ["年", "結果"]
+          rows:
+            - ["2000", "5部で優勝、4部へ"]
+            - ["2001", "4部で優勝、3部へ"]
+            - ["2007", "3部で2位、2部へ"]
+            - ["2008", "2部で2位、1部へ"]
+      - 2001年も、4部で優勝。3部へ上がりました。
+      - text: 2006年には、ラルフ・ラングニックを監督に迎え、選手も補強します。
+        card: none
+        image: assets/images/bd_hoffenheim_oldground/scene.jpg
+      - 2007年、3部で2位。2部へ上がりました。
+      - text: 2008年、2部でも2位に入り、1部へ。2部で過ごしたのは、1年間です。
+        card: none
+        image: assets/images/bd_hoffenheim_2008/scene.jpg
+      - 2000年の5部から、8年で1部。昇格は4回でした。
+      - 初めてのブンデスリーガ、2008年から09年のシーズンは7位でした。
+    sources:
+      - https://en.wikipedia.org/wiki/TSG_1899_Hoffenheim
+      - https://de.wikipedia.org/wiki/Hoffenheim
+
+features:
+- "ホッフェンハイムの特徴の1つめは、本拠地の大きさの変化です。"
+- "かつての本拠地は、ディートマー・ホップ・シュタディオン。"
+- "1999年に完成し、収容は**5000人**でした。"
+- "1部の最初のシーズンは、マンハイムのスタジアムで開幕します。収容は**2万6022人**。"
+- "もう1つの特徴は、海外のクラブとの提携です。"
+- "2020年に、アメリカのFCシンシナティと提携。"
+- "ガーナのハーツ・オブ・オークとも、手を組みました。"
+- "2025年3月には、インドのラージャスターン・ユナイテッドとも提携しました。"
+features_marks: [3, 4]
+features_telop: 本拠地は5000人から3万150人へ。3か国のクラブと提携
+features_rows:
+- ["本拠地の変化", "5000人から3万150人へ"]
+- ["1部の最初の年", "マンハイムで開幕"]
+- ["クラブの広がり", "3か国のクラブと提携"]
+features_sources:
+- https://en.wikipedia.org/wiki/TSG_1899_Hoffenheim
+
+episode:
+  id: episode
+  heading: 2016年、17位のチームに28歳の監督。なぜ残留し、翌年は4位になれたのか
+  tier: 背景
+  telop: 2016年2月、17位のチームを28歳のナーゲルスマンが引き継ぐ
+  narrator: 解説
+  card:
+    type: table
+    title: ナーゲルスマンのホッフェンハイム
+    columns: ["", ""]
+    rows:
+      - ["2016年2月", "リーグ17位で就任"]
+      - ["2015年から16年", "勝ち点1差で残留"]
+      - ["2016年から17年", "4位"]
+      - ["2017年から18年", "3位"]
+  say:
+    - text: 2016年2月。ホッフェンハイムは、ブンデスリーガの17位でした。
+      image: assets/images/bd_hoffenheim_pair_nagelsmann/01.jpg
+    - 監督に就いたのは、ユリアン・ナーゲルスマン。**28歳**です。
+    - ブンデスリーガの歴史で、いちばん若い監督でした。
+    - text: 残りの14試合のうち、**7試合**に勝ちます。
+    - 降格プレーオフ圏の、勝ち点1差上で残留しました。
+    - text: 翌2016年から17年のシーズンは、**4位**。
+      card: none
+      image: assets/images/bd_hoffenheim_fans/scene.jpg
+    - 2017年から18年のシーズンは**3位**。いまもクラブの最高順位です。
+  sources:
+    - https://en.wikipedia.org/wiki/Julian_Nagelsmann
+    - https://en.wikipedia.org/wiki/TSG_1899_Hoffenheim
+
+legends:
+- - イビシェヴィッチは、ホッフェンハイムのフォワード。2007年に加入。
+  - "2012年まで、リーグ戦**123試合48得点**。"
+  - 1部に上がった最初のシーズンには、**18得点**を挙げました。
+- - フィルミーノはブラジルの攻撃の選手。2011年から、ホッフェンハイムで4年半。
+  - "2015年まで、リーグ戦**140試合38得点**。"
+  - 2013年から14年には、リーグが選ぶ「飛躍した選手」に。
+  - 2015年に、リヴァプールへ。
+  - 2018年から19年には、チャンピオンズリーグで優勝しました。
+- - クラマリッチはクロアチアのフォワード。2016年から、ホッフェンハイムの一員です。
+  - "リーグ戦は**311試合136得点**。"
+  - 2019年3月29日に、クラブの通算最多得点になりました。
+legend_rows:
+- ["イビシェヴィッチ", "2007-2012", "リーグ123試合48得点"]
+- ["フィルミーノ", "2011-2015", "リーグ140試合38得点"]
+- ["クラマリッチ", "2016-", "リーグ311試合136得点"]
+legend_sources:
+- - https://en.wikipedia.org/wiki/Vedad_Ibi%C5%A1evi%C4%87
+  - https://en.wikipedia.org/wiki/TSG_1899_Hoffenheim
+- - https://en.wikipedia.org/wiki/Roberto_Firmino
+- - https://en.wikipedia.org/wiki/Andrej_Kramari%C4%87
+
+manager:
+- 今季の監督は、クリスティアン・イルツァー。
+- "**49歳**のオーストリア人です。"
+- 前の仕事は、オーストリアのシュトゥルム・グラーツの監督。
+- 2023年から24年のシーズンには、リーグ優勝を果たしています。
+- 2024年11月15日から、ホッフェンハイムを率いています。
+manager_telop: 監督はイルツァー。2024年11月に就任
+manager_rows:
+- ["監督", "クリスティアン・イルツァー"]
+- ["就任", "2024年11月15日"]
+- ["前の仕事", "シュトゥルム・グラーツの監督"]
+manager_sources:
+- https://en.wikipedia.org/wiki/Christian_Ilzer
+
+season:
+- text: ホッフェンハイムは、ここまでの7試合で3勝4敗。勝ち点は9。
+  card:
+    type: stats
+    title: 今季のリーグ戦（7試合）
+    items:
+    - ["14", "", "得点"]
+    - ["3", "", "1点差の負け"]
+    - ["9", "", "勝ち点"]
+    focus: 1
+- text: 4つの負けのうち**3つ**は、1点差でした。
+  mark: {kind: circle, item: 1}
+- 得点は1試合あたり**2.0**。昨季の1.91を上回っています。
+- 失点は**2.0**。昨季の1.53より、増えています。
+- text: ヨーロッパリーグでは、10月22日にリヨンに3対0の勝ち。
+  card: none
+  image: assets/images/bd_hoffenheim_arena/scene.jpg
+- クラマリッチが先制点と、2つのアシストでした。
+- 次のヨーロッパリーグは、11月5日。クリスタル・パレスとの対戦。

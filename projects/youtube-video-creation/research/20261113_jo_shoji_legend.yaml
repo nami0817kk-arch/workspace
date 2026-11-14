@@ -1,0 +1,492 @@
+# 城彰二（元日本代表 FW）の紹介。シリーズ「レジェンドの紹介（日本）」2026-11-13。型は 11/11 の高原直泰・11/9 の槙野智章と同じ8節の変形。
+# **情報の時点は 2026-11-11。**年齢は出さない。いまの仕事は言わない。
+# **FotMob・DataMB・FBref・Sofascore・Transfermarkt は不使用**。数字は日本語版 Wikipedia「城彰二」の成績表・英語版 Wikipedia「Shoji Jo」・
+#   英語版「1998 FIFA World Cup qualification (AFC)」（ジョホールバルの得点者と分）・Sportiva 2017-11-18 の本人インタビュー（全5頁のうち1・2頁）だけ。
+# **病気・私生活・法的な問題は入れない。**1998年W杯の成績（3戦全敗）は、選手を小さく見せる書き方になるので数えない（3試合に出たことだけ言う）。
+#
+# **題材を選んだ理由**：引退した日本人FWで、**使える大きい写真が3枚そろう**数少ない人（前回 11/11 の高原は写真が足りず差し替えた）。
+#   Commons に 3840x2560 の CC BY-SA 2.0 が3枚（2010年 norio nakayama、2017年 セルバンテス文化センター東京 2枚）。ほかの候補は写真が無い（下）。
+#   日本代表・W杯に絡む話（1997年ジョホールバル、1998年W杯）＝ヒットの条件に当たる。本人の言葉（Sportiva 2017）も取れた。
+#   スペイン1部（レアル・バリャドリード）でプレーした経歴で、ラ・リーガ関連の題材が続く時期にも合う。
+# **重なりの確認（2026-11-11）**：scripts/ を「城彰二」「城」で grep → 本人の題・サムネの本は無い。research/posted.json・covered.yaml にも無い。
+#   research/20261112_picks.txt は未作成（先に書いた担当なし）。11/9〜11/11 の国内レジェンド（槙野・高原）と重ならない。
+# **引退の確認**：英語版 Wikipedia「Shoji Jo」に「2006シーズン後に引退、最後のクラブは横浜FC（2003〜2006）」。日本語版の成績表も 2006 年の横浜FCで終わる。
+#   日本語版に引退の発表日は無い（確かめられなかった）。→ 台本は「2006年のシーズンを最後に」とだけ言う。現役ではない。
+# **候補から外したもの**：田中マルクス闘莉王（2019-12-01 引退で一次情報は確認できたが、Commons の大きい写真が無い。1200x800 が1枚・657x643 が1枚・ほかは小さい）、
+#   柳沢敦・名波浩・楢崎正剛（Commons に写真が無い）、小笠原満男（152x297 が1枚）、中山雅史（146x195）、福西崇史・佐藤寿人・牧（小さい）、本田圭佑・香川真司・長友・川島（現役）。
+#
+# **数字の出どころ**
+# - 生年月日 1975-06-17・北海道室蘭市生まれ、鹿児島県で育つ（日本語版）。FW。
+# - クラブ別リーグ戦（日本語版の表）：ジェフ市原 1994-96 99試合35得点、横浜マリノス／横浜F・マリノス 1997-2001 106試合59得点、
+#   レアル・バリャドリード 1999-00 15試合2得点（スペイン1部、期限付き）、ヴィッセル神戸 2002 25試合1得点（期限付き）、横浜FC 2003-06（J2）151試合44得点。
+#   合計 396試合141得点（自分で足した。99+106+15+25+151=396、35+59+2+1+44=141。J1 230試合95得点・J2 151試合44得点・スペイン15試合2得点とも一致）。
+#   年別：1994 33-12、1997 21-12、1998 31-25、1999 25-18、2003 33-12、2004 35-8、2005 40-12、2006 43-12。
+# - 日本代表 35試合7得点（1995〜2001年、日本語版）。年別：1995 1-0、1996 3-0、1997 13-4、1998 10-1、1999 5-0、2000 2-2、2001 1-0。
+#   1995〜96年 4試合0点／1997年 13試合4点／1998年 10試合1点／1999〜2001年 8試合2点（自分で束ねた。合計 35試合7点）。1997年の4点は7点の約57%（4÷7）。
+# - 1998年W杯：3試合に出場（日本語版・英語版）。
+# - ジョホールバル（英語版 1998 FIFA World Cup qualification (AFC)）：1997-11-16、イラン2-3日本（延長・ゴールデンゴール）。
+#   得点：中山雅史39分、アジジ46分（イラン）、ダエイ58分（イラン）、城彰二75分、岡野雅行118分。
+# - 交代：後半18分に呂比須ワグナーと一緒に入った（Sportiva 2017-11-18 の記事の導入文）。**75分の同点ゴール（2対2）**。
+# - 1試合あたり（自分で割った）：J1 95÷230＝約0.41、日本代表 7÷35＝0.20、スペイン1部 2÷15＝約0.13、1998年 25÷31＝約0.81。
+# - 本人の言葉（Sportiva 2017-11-18、佐藤俊、「ジョホールバルの歓喜」から20年・城彰二編。原文のまま。[ ]は記事の補足）：
+#   ①「ロペ［呂比須］が［交代の］ファーストチョイスなのはいつもどおり。ただ、彼が呼ばれたときにベンチがざわついた。」（続く「『城も一緒だ』っていきなり言われて……。」は VOICEVOX が「城」を「シロ」と読むので台本に入れず、地の文「同じ交代で、城彰二にも声がかかりました」にした）
+#   ②「［イランには］ダエイとアジジという強力なFWがいましたからね。」
+#   ③「最初、［日本がボールを奪ったとき］前にスペースが空いていると思って、そこを突こうと思ったんだけど、［そのスペースは］オフサイドだった。」「それで、一度戻って、スピードダウンして止まった。」
+#      「そのとき、ボールを持っていたヒデ［中田英寿］がちょうど顔を上げたので、『あっ［クロスが］来るな』と思って動き直したんですけど」
+#   （記事の見出し「あのイラン戦、同点弾の城彰二は『脳震とう』で中盤をウロウロしていた」は本文が有料で、本人の発言を確かめられなかったので使わない。）
+# - 次の日本代表の試合：11月14日ブラジル戦・11月17日パラグアイ戦（11/4 の指示書。JFA 公式の発表）。W杯初出場は1998年＝28年前。
+#
+# **入れなかったもの**：アトランタ五輪、1994年の新人記録（Wikipedia が「記録」と言い切っていない）、前歯の話（要出典）、解説・テレビ・Jリーグ百年構想の仕事、
+#   十勝スカイアース、私生活・CM、1998年W杯の戦績、ジョホールバルのゴールの形（クロスか・ヘッドか＝確かめられなかった）、「日本人初」系（日本語版に記述が無い）。
+# **写真**：assets/images/20261113_jo_shoji_legend/（Commons だけ。3840x2560、**現役時代のものではなく引退後のスーツ姿**。台本では現役の話の行にも使うので、概要欄の撮影者表示のほかは触れない）
+#   01 = 「Shoji Jo Visa ゴォーーール・デイ.jpg」（norio nakayama、CC BY-SA 2.0、2010-06-01）。01_w=16:9、01_v=縦。panel_01 = 01_w に通算の表を描いたサムネ専用（.thumbonly）
+#   02 = 「Shoji Jo in Institute Cervantes Tokyo.jpg」（Instituto Cervantes de Tokio、CC BY-SA 2.0、2017-11-09）。02_w・02_v は手で位置を決めて切った（顔の自動検出が外れた）
+#   03 = 「Shoji Jo in Institute Cervantes Tokyo 2.jpg」（同上）。03_w・03_v も同じ
+#   ほかに当たったもの：「Shoji Jo 2006.jpg」（Ryosuke Yagi、CC BY 2.0、1024x768）は 429 で取れず、取れても本編2.4倍になるので使わない。紋章の差し込みは 日本・スペイン。
+watch: 毎日、数字でサッカーを読み解きます
+title: 城彰二は、どんな選手だった？ ジョホールバルの同点ゴールまで
+format: news
+short_title: 城彰二は、どんな選手だった？
+series: レジェンドの紹介
+topic: 城彰二
+date: 2026年11月11日
+slot: other_1
+people:
+- 城彰二
+theme:
+  id: legend_jo_shoji
+  league: japan
+  league_name: 日本代表
+  kind: other
+  topic: 城彰二
+  title: 城彰二は、どんな選手だった？ ジョホールバルの同点ゴールまで
+  question: 日本代表で7点しか取っていない城彰二の、ジョホールバルの75分の同点ゴールは、どんな1年の中から生まれたのか
+  takeaway: 城彰二の日本代表の7点のうち4点（約57%）は、W杯初出場を決めた1997年に集中している。13試合で4点、1試合あたり約0.31。ほかの年は22試合で3点（約0.14）。日本代表は11月14日にブラジル、17日にパラグアイと戦う。日本が初めてW杯に立った1998年から28年がたった
+  nameplate: 城彰二｜元日本代表 FW
+  opening_image: assets/images/20261113_jo_shoji_legend/02_w.jpg
+  end_bg: assets/images/20261113_jo_shoji_legend/01_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+  outro_title: 毎日、数字でサッカーを読み解きます
+thumbnail:
+  line1: 城彰二、代表35戦7点
+  line2: ジョホールバルで同点ゴール
+  tags:
+  - 日本
+  photo: assets/images/20261113_jo_shoji_legend/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261113_jo_shoji_legend/01_v.jpg
+sections:
+- id: hook
+  heading: ジョホールバルで同点ゴールを決めたのは、誰だったのか
+  tier: 報道
+  telop: 1997年11月16日、ジョホールバル
+  card: &hookcard
+    type: stats
+    title: 城彰二 元日本代表FW
+    items:
+    - - '75'
+      - 分
+      - ジョホールバルの同点ゴール
+    - - '35'
+      - 試合
+      - 日本代表の出場
+    - - '7'
+      - 得点
+      - 日本代表のゴール
+    focus: 0
+  say:
+  - text: 1997年11月16日、マレーシアのジョホールバル。
+    image: assets/images/20261113_jo_shoji_legend/02_w.jpg
+    card: none
+  - text: ワールドカップ初出場がかかった、イランとのプレーオフです。
+    card: none
+  - text: 日本が1点を追う展開の、後半18分。1人のフォワードがピッチに入ります。
+    card: none
+  - text: 75分、そのフォワードが同点ゴールを決めます。
+    card: none
+    emph: true
+  - text: 延長の末に3対2で勝った日本は、初めてのワールドカップへ進みました。
+    card: none
+  - text: そのフォワードが、城彰二です。
+    image: assets/backgrounds/cut_日本.png
+    card: {<<: *hookcard, focus: 0}
+    callword: 城彰二
+  - text: 日本代表では35試合で7点。そのうちの4点は、この1997年に取りました。
+    image: assets/images/20261113_jo_shoji_legend/01_w.jpg
+    card: {<<: *hookcard, focus: 2}
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/1998_FIFA_World_Cup_qualification_(AFC)
+  - https://en.wikipedia.org/wiki/Shoji_Jo
+  - https://ja.wikipedia.org/wiki/%E5%9F%8E%E5%BD%B0%E4%BA%8C
+- id: data
+  heading: 城彰二は、どこでプレーし、どんな数字を残したのか
+  tier: 報道
+  telop: 城彰二の基礎DATA
+  card: &datacard
+    type: table
+    title: 城彰二
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 生年月日
+      - 1975年6月17日・北海道生まれ
+    - - ポジション
+      - フォワード
+    - - 所属したクラブ
+      - 市原 → 横浜 → バリャドリード → 神戸 → 横浜FC
+    - - 日本代表
+      - 35試合7得点（1995〜2001年）
+    - - W杯
+      - 1998年
+    - - 現役を退く
+      - 2006年シーズン限り
+    highlight_row: 0
+  say:
+  - text: 城彰二は1975年6月17日、北海道室蘭市の生まれ。育ったのは鹿児島です。
+    image: assets/images/20261113_jo_shoji_legend/01_w.jpg
+    card: {<<: *datacard, highlight_row: 0}
+  - text: ポジションはフォワード。
+    card: {<<: *datacard, highlight_row: 1}
+  - text: ジェフ市原、横浜マリノス、スペインのバリャドリード、神戸、横浜FC。
+    card: {<<: *datacard, highlight_row: 2}
+  - text: クラブの通算は、リーグ戦396試合で141点です。
+    card: {<<: *datacard, highlight_row: 2}
+  - text: 日本代表には1995年から選ばれ、フランス大会の本大会にも立っています。
+    image: assets/backgrounds/cut_日本.png
+    card: {<<: *datacard, highlight_row: 3}
+  quotes_from: []
+  sources:
+  - https://ja.wikipedia.org/wiki/%E5%9F%8E%E5%BD%B0%E4%BA%8C
+  - https://en.wikipedia.org/wiki/Shoji_Jo
+- id: road
+  heading: 市原でプロになった城彰二は、どうやって代表のエースに近づいたのか
+  tier: 報道
+  telop: 1994年、ジェフ市原でプロに
+  card: &roadcard
+    type: timeline
+    title: 城彰二の歩み
+    rows:
+    - - 1994年
+      - ジェフ市原でプロに、12得点
+    - - 1995年
+      - 日本代表に初めて出場
+    - - 1997年
+      - 横浜マリノスへ。代表で4得点
+    - - 1998年
+      - 横浜F・マリノスでリーグ25得点
+    highlight_row: 0
+  say:
+  - text: 城彰二のプロ生活は、1994年のジェフ市原から始まります。
+    image: assets/images/20261113_jo_shoji_legend/03_w.jpg
+    card: {<<: *roadcard, highlight_row: 0}
+  - text: 1年目からリーグ戦33試合に出て、12点です。
+    card: {<<: *roadcard, highlight_row: 0}
+  - text: 日本代表に初めて出たのは、翌1995年。
+    card: {<<: *roadcard, highlight_row: 1}
+  - text: ただ、1995年と96年の2年間は4試合で、代表のゴールはまだありません。
+    card: none
+  - text: 1997年、横浜マリノスへ。リーグ戦は21試合で12点。
+    image: assets/images/20261113_jo_shoji_legend/01_w.jpg
+    card: {<<: *roadcard, highlight_row: 2}
+  - text: 代表でも、この年に4点を取ります。
+    card: {<<: *roadcard, highlight_row: 2}
+  - text: その締めくくりが、ジョホールバルでした。
+    card: none
+  quotes_from: []
+  sources:
+  - https://ja.wikipedia.org/wiki/%E5%9F%8E%E5%BD%B0%E4%BA%8C
+  - https://en.wikipedia.org/wiki/Shoji_Jo
+- id: johor
+  heading: ジョホールバルの75分は、どんな場面から生まれたのか
+  tier: 報道
+  telop: 1997年11月16日、イラン2対3日本
+  main: true
+  card: &johorcard
+    type: table
+    title: 1997年11月16日 イラン対日本
+    columns:
+    - 時間
+    - できごと
+    rows:
+    - - 39分
+      - 中山が先制、日本1対0
+    - - 46分
+      - アジジが同点、1対1
+    - - 58分
+      - ダエイが勝ち越し、イラン2対1
+    - - 75分
+      - 城が同点、2対2
+    - - 118分
+      - 岡野がゴールデンゴール、日本3対2
+    highlight_row: 0
+  say:
+  - text: 日本は先に決めたのに、後半の立ち上がりに2点を取られ、逆転されていました。
+    image: assets/images/20261113_jo_shoji_legend/03_w.jpg
+    card: none
+  - text: 城彰二は、イランのフォワードをこう振り返ります。
+    card: none
+  - voice: 城彰二
+    text: イランには、ダエイとアジジという、
+    card: none
+  - voice: 城彰二
+    text: 強力なフォワードがいましたからね。
+    card: none
+    cont: true
+  - text: 後半18分、城彰二は呂比須ワグナーと一緒に、ピッチへ入ります。
+    image: assets/images/20261113_jo_shoji_legend/02_w.jpg
+    card: none
+  - voice: 城彰二
+    text: ロペが交代のファーストチョイスなのは、いつもどおり。
+    card: none
+  - voice: 城彰二
+    text: ただ、彼が呼ばれたときに、ベンチがざわついた。
+    card: none
+    cont: true
+  - text: 同じ交代で、城彰二にも声がかかりました。
+    card: none
+  - text: 逆転されてから17分後の75分、城彰二が追いつきます。
+    image: assets/images/20261113_jo_shoji_legend/01_w.jpg
+    card: {<<: *johorcard, highlight_row: 3}
+    emph: true
+  - text: ゴールの前の動きを、本人はこう話しています。
+    card: none
+  - voice: 城彰二
+    text: 最初、前にスペースが空いていると思って、
+    card: none
+  - voice: 城彰二
+    text: そこを突こうと思ったんだけど、オフサイドだった。
+    card: none
+  - voice: 城彰二
+    text: それで、一度戻って、スピードダウンして止まった。
+    card: none
+    cont: true
+  - voice: 城彰二
+    text: そのとき、ボールを持っていたヒデが、
+    card: none
+    cont: true
+  - voice: 城彰二
+    text: ちょうど顔を上げたので、
+    card: none
+    cont: true
+  - voice: 城彰二
+    text: あっ、クロスが来るなと思って、動き直したんですけど。
+    card: none
+    cont: true
+    emph: true
+  - text: 43分後の118分、岡野雅行のゴールデンゴールで、日本が3対2の勝ち。
+    card: {<<: *johorcard, highlight_row: 4}
+  - text: これで日本は、本大会への切符を手にしました。
+    image: assets/backgrounds/cut_日本.png
+    card: none
+  quotes_from:
+  - https://sportiva.shueisha.co.jp/clm/football/jfootball/2017/11/18/___split_53/
+  sources:
+  - https://en.wikipedia.org/wiki/1998_FIFA_World_Cup_qualification_(AFC)
+  - https://sportiva.shueisha.co.jp/clm/football/jfootball/2017/11/18/___split_53/
+  - https://sportiva.shueisha.co.jp/clm/football/jfootball/2017/11/18/___split_53/?page=2
+- id: japan
+  heading: 城彰二の代表の7点は、どの年に集まっていたのか
+  tier: 報道
+  telop: 日本代表35試合7得点
+  card: &jpcard
+    type: table
+    title: 日本代表の城彰二
+    columns:
+    - 年
+    - 試合
+    - 得点
+    rows:
+    - - 1995〜96年
+      - '4'
+      - '0'
+    - - 1997年
+      - '13'
+      - '4'
+    - - 1998年
+      - '10'
+      - '1'
+    - - 1999〜2001年
+      - '8'
+      - '2'
+    highlight_row: 1
+  say:
+  - text: 城彰二の日本代表は、1995年から2001年までのあいだです。
+    image: assets/images/20261113_jo_shoji_legend/02_w.jpg
+    card: {<<: *jpcard, highlight_row: 1}
+  - text: 1997年は13試合で4点。7点のうち、半分を超える4点が、この年のものです。
+    card: {<<: *jpcard, highlight_row: 1}
+    emph: true
+  - text: 翌1998年は、日本が初めて出たワールドカップの年。
+    image: assets/backgrounds/cut_日本.png
+    card: {<<: *jpcard, highlight_row: 2}
+  - text: 城彰二は、その3試合すべてに出ました。
+    card: {<<: *jpcard, highlight_row: 2}
+  - text: 2000年には、2試合で2点を取っています。
+    image: assets/images/20261113_jo_shoji_legend/03_w.jpg
+    card: {<<: *jpcard, highlight_row: 3}
+  quotes_from: []
+  sources:
+  - https://ja.wikipedia.org/wiki/%E5%9F%8E%E5%BD%B0%E4%BA%8C
+  - https://en.wikipedia.org/wiki/Shoji_Jo
+- id: spain
+  heading: リーグ25点の翌年、城彰二はスペイン1部で何を残したのか
+  tier: 報道
+  telop: レアル・バリャドリード、15試合2得点
+  card: &spaincard
+    type: table
+    title: 城彰二のリーグ戦
+    columns:
+    - シーズン
+    - クラブ
+    - 試合
+    - 得点
+    rows:
+    - - '1997'
+      - 横浜マリノス
+      - '21'
+      - '12'
+    - - '1998'
+      - 横浜F・マリノス
+      - '31'
+      - '25'
+    - - '1999'
+      - 横浜F・マリノス
+      - '25'
+      - '18'
+    - - 1999-00
+      - バリャドリード
+      - '15'
+      - '2'
+    highlight_row: 1
+  say:
+  - text: 1998年、城彰二は横浜F・マリノスで、リーグ戦31試合に出て25点を取ります。
+    image: assets/images/20261113_jo_shoji_legend/01_w.jpg
+    card: {<<: *spaincard, highlight_row: 1}
+    emph: true
+  - text: 翌1999年も、25試合で18点です。
+    card: {<<: *spaincard, highlight_row: 2}
+  - text: そして1999年から2000年のシーズン、
+    image: assets/backgrounds/cut_スペイン.png
+    card: none
+  - text: スペイン1部のレアル・バリャドリードへ、期限付きで渡ります。
+    card: none
+  - text: 初めての海外のクラブで、リーグ戦15試合に出て、2点を取りました。
+    image: assets/images/20261113_jo_shoji_legend/02_w.jpg
+    card: {<<: *spaincard, highlight_row: 3}
+  quotes_from: []
+  sources:
+  - https://ja.wikipedia.org/wiki/%E5%9F%8E%E5%BD%B0%E4%BA%8C
+  - https://en.wikipedia.org/wiki/Shoji_Jo
+- id: after
+  heading: スペインから戻った城彰二は、どんな形で現役を終えたのか
+  tier: 報道
+  telop: 城彰二、横浜FCで4シーズン
+  card: &aftercard
+    type: table
+    title: 城彰二のリーグ戦
+    columns:
+    - シーズン
+    - クラブ
+    - 試合
+    - 得点
+    rows:
+    - - '2002'
+      - 神戸
+      - '25'
+      - '1'
+    - - '2003'
+      - 横浜FC
+      - '33'
+      - '12'
+    - - '2004'
+      - 横浜FC
+      - '35'
+      - '8'
+    - - '2005'
+      - 横浜FC
+      - '40'
+      - '12'
+    - - '2006'
+      - 横浜FC
+      - '43'
+      - '12'
+    highlight_row: 0
+  say:
+  - text: 日本に戻った城彰二は、2002年、神戸でプレーします。
+    image: assets/images/20261113_jo_shoji_legend/03_w.jpg
+    card: {<<: *aftercard, highlight_row: 0}
+  - text: 2003年からは、J2の横浜FC。
+    card: {<<: *aftercard, highlight_row: 1}
+  - text: 4シーズンで、リーグ戦151試合に出て44点です。
+    card: {<<: *aftercard, highlight_row: 4}
+  - text: 2003年、2005年、2006年は、どの年も12点でした。
+    card: {<<: *aftercard, highlight_row: 3}
+  - text: 城彰二は2006年のシーズンを最後に、現役を退きました。
+    image: assets/images/20261113_jo_shoji_legend/01_w.jpg
+    card: none
+  quotes_from: []
+  sources:
+  - https://ja.wikipedia.org/wiki/%E5%9F%8E%E5%BD%B0%E4%BA%8C
+  - https://en.wikipedia.org/wiki/Shoji_Jo
+- id: view
+  heading: 城彰二の点は、どの舞台でどれだけ生まれたのか
+  tier: 背景
+  telop: 日本代表の7点のうち、4点が1997年
+  viewpoint: true
+  card: &viewcard
+    type: table
+    title: 城彰二の1試合あたりの得点
+    columns:
+    - 舞台
+    - 試合
+    - 得点
+    - 1試合あたり
+    rows:
+    - - J1
+      - '230'
+      - '95'
+      - 約0.41
+    - - 日本代表
+      - '35'
+      - '7'
+      - 0.2
+    - - 日本代表（1997年）
+      - '13'
+      - '4'
+      - 約0.31
+    - - スペイン1部
+      - '15'
+      - '2'
+      - 約0.13
+    highlight_row: 0
+  say:
+  - text: 最後に、城彰二の点を舞台ごとに並べます。
+    image: assets/images/20261113_jo_shoji_legend/02_w.jpg
+    card: none
+  - text: J1は230試合で95点。1試合あたり、約0.41点です。
+    image: assets/images/20261113_jo_shoji_legend/01_w.jpg
+    card: {<<: *viewcard, highlight_row: 0}
+  - text: 日本代表では、1試合あたり0.2点。
+    card: {<<: *viewcard, highlight_row: 1}
+  - text: ところが1997年だけなら、約0.31点まで上がります。
+    card: {<<: *viewcard, highlight_row: 2}
+    mark:
+      kind: circle
+      row: 2
+      col: 1試合あたり
+    emph: true
+  - text: ほかの年は22試合で3点、約0.14点です。
+    card: none
+  - text: 城彰二の代表のゴールは、本大会の切符がかかった年に集中していました。
+    image: assets/images/20261113_jo_shoji_legend/03_w.jpg
+    card: none
+  - text: 日本代表は、11月14日にブラジル、17日にパラグアイと戦います。
+    card: none
+  - text: 日本が初めてワールドカップに立った1998年から、28年がたちました。
+    card: none
+  quotes_from: []
+  sources:
+  - https://ja.wikipedia.org/wiki/%E5%9F%8E%E5%BD%B0%E4%BA%8C
+  - https://en.wikipedia.org/wiki/1998_FIFA_World_Cup_qualification_(AFC)

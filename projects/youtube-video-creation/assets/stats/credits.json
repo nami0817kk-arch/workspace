@@ -308,5 +308,35 @@
   "author": "NordNordWest",
   "license": "CC BY-SA 3.0 de",
   "note": "ドイツの白地図に18クラブの紋章を置いたもの"
+ },
+ {
+  "file": "sa_map_base.png",
+  "source": "wikimedia",
+  "title": "File:Italy provincial location map 2016.svg",
+  "page_url": "https://commons.wikimedia.org/wiki/File:Italy_provincial_location_map_2016.svg",
+  "image_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/16/Italy_provincial_location_map_2016.svg/1920px-Italy_provincial_location_map_2016.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+  "author": "TUBS",
+  "license": "CC BY-SA 3.0 de",
+  "note": "ホームタウンの地図の白地図。上はクラブの紋章"
+ },
+ {
+  "file": "sa_inter_map.png",
+  "source": "wikimedia",
+  "title": "File:Italy provincial location map 2016.svg",
+  "page_url": "https://commons.wikimedia.org/wiki/File:Italy_provincial_location_map_2016.svg",
+  "image_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/16/Italy_provincial_location_map_2016.svg/1920px-Italy_provincial_location_map_2016.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+  "author": "TUBS",
+  "license": "CC BY-SA 3.0 de",
+  "note": "イタリアの白地図に20クラブの紋章を置いたもの"
+ },
+ {
+  "file": "sa_milan_map.png",
+  "source": "wikimedia",
+  "title": "File:Italy provincial location map 2016.svg",
+  "page_url": "https://commons.wikimedia.org/wiki/File:Italy_provincial_location_map_2016.svg",
+  "image_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/16/Italy_provincial_location_map_2016.svg/1920px-Italy_provincial_location_map_2016.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+  "author": "TUBS",
+  "license": "CC BY-SA 3.0 de",
+  "note": "イタリアの白地図に20クラブの紋章を置いたもの"
  }
 ]

@@ -1,0 +1,142 @@
+# 取材メモ（2026年11月7日）マンU、キャリック監督「ファーガソンの成功を再現するのは不可能ではない」（ニュースのショート。見せ方 Y＝キャリック監督の言葉から始める）
+# 取材: 2026-11-07。WebFetch と python requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。
+# 出典（Sky Sports 2026-11-06「Michael Carrick: Manchester United boss says it is possible club can emulate Sir Alex Ferguson's success at Old Trafford」。requests で本文を全部読んだ）:
+#   ・金曜（11月6日）はファーガソンが1986年11月6日にユナイテッドの監督に就いて40年。就任時のクラブは1967年からリーグ優勝が無く、最初の優勝まで「ほぼ7年」かかった。その後プレミア13回・CL 2回（記事の数え方）。
+#   ・キャリックの発言（会見。英語。全文を読んだ。日本語にしたのは私）:
+#       "It's difficult to bring success. It was difficult then, and it's difficult now."
+#       Asked whether it was realistic for United to be judged against Ferguson's standards: "It's not impossible. Anything's possible. You've got to build. You've got to be realistic, and you've got to put things into perspective as well."
+#       "It's not going to happen in a blink of an eye. It's not going to happen overnight." / "Success does take time, and we don't like having to spend time, but it does take a period of time to build."
+#       "But sustaining it is the key. Consistency is the key. There's no other way of doing it, and there are no shortcuts."
+#       "I'm probably closer to him now and speak to him more than I did when I was playing. I think relationships change over time, and that's only natural."
+#       "Time and patience, but we're all desperate to win football matches and win them as quickly as we possibly can."
+#     記事の地の文: キャリックの立場には厳しい目が向いている／水曜のローマ戦の3-2の逆転勝ちで一息ついた／日曜のアストン・ヴィラ戦（Sky で生中継）が次の試験。
+#   ・マンU公式（manutd.com）「Carrick: Consistency is key」は JS のページで本文が取れなかった（写真だけ使った）。
+# ESPN のデータ（site.api.espn.com）:
+#   ・順位表 eng.1（season=2026、11/7 取得）: マンU 17位 9試合 1勝4分4敗 勝ち点7。アストン・ヴィラ 10位 9試合 3勝3分3敗 勝ち点12。首位アーセナル 24点。
+#   ・順位表（season=2025）: マンU 3位 38試合 20勝11分7敗 勝ち点71（首位アーセナル85）。
+#   ・scoreboard 2026-11-08: Aston Villa at Manchester United 16:30Z（401879240）。
+# 自分で数えたもの: ファーガソンの就任（1986-11-06）から今日まで40年。昨季の勝ち点71 対 今季9試合で7。
+# 食い違い: Sky の見出しは「可能だと語る」だが、発言は「不可能ではない。何でも起こり得る」で、続けて「近道は無い・時間がかかる」と言っている。台本は発言の全体を言い、「再現できると言い切った」とは言わない。
+# 前の本との重なり: scripts/20261104_bruno_roma_comeback（ローマ戦の逆転・ブルーノの言葉）／20261022_bruno_carrick_como／covered.yaml のキャリック（出だし5試合・シティの判定・4日で2試合）／ファーガソンのシリーズ回。
+#   → 今回の初出: ファーガソン就任40年の日の発言・「不可能ではない」・ファーガソンとの関係。ローマ戦の中身・ブルーノは繰り返さない（ローマ戦は言わない）。
+# 本人の言葉: あり（Sky が会見を伝えた。会見の英語は全文）。Y。
+# 反応: 0件（作らない）。
+# 写真: assets/images/20261107_carrick_ferguson_success/（credits.json）。ファーガソン＋キャリックの2枚並べ=assets/images/20261107_pair_ferguson_carrick/（サムネと2節目）。03=ファーガソン（Wikimedia Commons CC BY 2.0、2013年）。01=マンU公式の会見の写真（manutd.com）、02=キャリック（Wikimedia Commons CC0、2025年、ミドルズブラ時代の私的な1枚で頭がきわどい）。
+#   マンUの写真は取れたものが少なく、ブルーノの写真（11/4 の本で使用済み）は使っていない。
+slot: other_3
+date: "2026年11月7日"
+format: news
+no_main: true
+people: [キャリック監督, ファーガソン, マンチェスター・ユナイテッド, アストン・ヴィラ]
+
+short_style: Y
+short_hook_quote: 不可能ではありません。何だって起こり得ます。
+short_photos:
+  - assets/images/20261107_carrick_ferguson_success/01_v.jpg
+  - assets/images/20261107_pair_ferguson_carrick/01_v.jpg
+short_question: キャリック監督は、ファーガソンのような成功を再現できると思いますか。
+short_telops: []
+
+theme:
+  id: carrick_ferguson_success
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: キャリック監督、ファーガソンの成功は再現できるか。就任40年の日に語ったこと
+  hook: ""
+  question: ファーガソン就任から40年の日、キャリック監督は成功の再現について何と語ったのか
+  takeaway: ファーガソンは最初の優勝まで7年近くかかった。マンUは昨季3位の勝ち点71から、今季は9試合で勝ち点7の17位。キャリック監督は「不可能ではない。ただ近道は無い」と語った
+
+thumbnail:
+  layout: scene
+  line1: キャリック監督
+  line2: ファーガソン超えは不可能じゃない
+  tags: [キャリック, ファーガソン, マンU]
+  photo: assets/images/20261107_carrick_ferguson_success/01_w.jpg
+  short_photo: assets/images/20261107_carrick_ferguson_success/01_v.jpg
+
+answer: 不可能ではない。ただ成功には時間がかかり、近道は無い
+watch: 日曜のアストン・ヴィラ戦（ホーム）
+
+sections:
+  - id: what
+    main: true
+    heading: ファーガソンの成功を再現できるのか。キャリック監督は何と答えたのか
+    tier: 報道
+    telop: キャリック監督「不可能ではありません」
+    say:
+      - text: マンUのキャリック監督が、ファーガソンの成功を再現できるのかと聞かれました。
+      - voice: キャリック監督
+        text: 不可能ではありません。何だって起こり得ます。
+        emph: true
+      - voice: キャリック監督
+        text: ただ、築いていくしかありません。
+        cont: true
+      - voice: キャリック監督
+        text: 現実を見て、大きな視点で考えないといけません。
+        cont: true
+      - text: 金曜は、ファーガソンがマンUの監督になってから、ちょうど40年の日でした。
+        image: assets/images/20261107_carrick_ferguson_success/01_w.jpg
+        card: {type: table, title: ファーガソンのマンU監督就任, columns: [日付, できごと], rows: [[1986年11月6日, 就任], [2026年11月6日, 就任から40年]], highlight_row: 1}
+      - voice: キャリック監督
+        text: 一瞬では起こりません。一晩でも起こりません。
+        card: none
+      - voice: キャリック監督
+        text: 成功には時間がかかります。
+        cont: true
+      - voice: キャリック監督
+        text: 大事なのは安定です。近道はありません。
+        cont: true
+    official: false
+    sources:
+      - https://www.skysports.com/football/news/11661/13608887/michael-carrick-manchester-united-boss-says-its-possible-the-club-can-emulate-sir-alex-fergusons-success-at-old-trafford
+  - id: ferguson
+    heading: ファーガソンは、最初の優勝までどれくらいかかったのか
+    tier: 報道
+    telop: ファーガソン 1986年11月6日に就任。最初の優勝まで7年近く
+    say:
+      - text: ファーガソンが就いたとき、ユナイテッドは1967年からリーグ優勝がありませんでした。
+        image: assets/images/20261107_pair_ferguson_carrick/01.jpg
+      - text: 最初の優勝までは、7年近くかかっています。
+        card: {type: table, title: ファーガソンのマンU, columns: [項目, 数字], rows: [[最初の優勝まで, 7年近く], [プレミア優勝, 13回], [CL優勝, 2回]], highlight_row: 0}
+        emph: true
+      - text: そのあとプレミアで13回、チャンピオンズリーグで2回、優勝しました。
+        card: {type: table, title: ファーガソンのマンU, columns: [項目, 数字], rows: [[最初の優勝まで, 7年近く], [プレミア優勝, 13回], [CL優勝, 2回]], highlight_row: 1}
+      - voice: キャリック監督
+        text: 成功を手にするのは難しい。
+        card: none
+      - voice: キャリック監督
+        text: あのときも難しかったし、いまも難しい。
+        cont: true
+      - voice: キャリック監督
+        text: 現役のときより、いまのほうが、
+      - voice: キャリック監督
+        text: 彼と親しくて、話す回数も多いと思います。
+        cont: true
+    official: false
+    sources:
+      - https://www.skysports.com/football/news/11661/13608887/michael-carrick-manchester-united-boss-says-its-possible-the-club-can-emulate-sir-alex-fergusons-success-at-old-trafford
+  - id: view
+    viewpoint: true
+    heading: マンUは、キャリック監督のもとでどこにいるのか
+    tier: 背景
+    telop: 昨季3位・勝ち点71。今季9試合で17位・勝ち点7
+    say:
+      - text: 見立てです。マンUは昨季、3位で勝ち点71でした。
+        card: {type: table, title: マンUのプレミアリーグ, columns: [シーズン, 順位, 勝ち点], rows: [[昨季 38試合, 3位, 71], [今季 9試合, 17位, 7]], highlight_row: 0}
+      - text: 今季は9試合を終えて、17位で勝ち点7です。
+        card: {type: table, title: マンUのプレミアリーグ, columns: [シーズン, 順位, 勝ち点], rows: [[昨季 38試合, 3位, 71], [今季 9試合, 17位, 7]], highlight_row: 1}
+      - text: 次は日曜、ホームで10位のアストン・ヴィラです。
+        card: none
+      - voice: キャリック監督
+        text: 時間と忍耐が必要です。
+      - voice: キャリック監督
+        text: でも、みんな勝ちたくてたまらない。できるだけ早く勝ちたい。
+        cont: true
+        emph: true
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/v2/sports/soccer/eng.1/standings?season=2026
+      - https://site.api.espn.com/apis/v2/sports/soccer/eng.1/standings?season=2025
+      - https://www.skysports.com/football/news/11661/13608887/michael-carrick-manchester-united-boss-says-its-possible-the-club-can-emulate-sir-alex-fergusons-success-at-old-trafford
+short_title: "キャリック監督、ファーガソンの成功は再現できるか。就任40年の日に語ったこと"

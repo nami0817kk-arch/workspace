@@ -1,0 +1,647 @@
+# ハビエル・ザネッティ（元アルゼンチン代表DF、インテル一筋）の紹介。シリーズ「レジェンドの紹介（世界）」2026-11-14。型は 11/12 ラウールと同じ9節（フック→基礎DATA→日本との接点→歩み→持ち味→あの試合→記録と現役の終わり→マル秘話→見立て）。
+# **FotMob・DataMB・FBref・Sofascore・Transfermarkt は不使用**。数字は英語版 Wikipedia（Javier Zanetti の成績表・本文・Honours・International goals、2010 UEFA Champions League final）、RSSSF「Kirin Cup 2003」、日本語版Wikipedia「キリンカップサッカー2003」（JFA の試合レポートを出典に持つ）と、自分で足した・割った値だけ。
+# **私生活・法的な問題は入れない**。引退後の役職（副会長など）は台本で言わない。
+# **重なりの確認（2026-11-11）**：scripts/・research/covered.yaml・research/posted.json を「ザネッティ／Zanetti」で grep。主役の回は無し。レジェンド既出（ジダン・ロナウジーニョ・シャビ・イニエスタ・ベッカム・ロナウド・アンリ・イブラヒモビッチ・マルディーニ・カカ・ジェラード・ドログバ・ピルロ・トッティ・カシージャス・デル・ピエロ・トーレス・ルーニー・ブッフォン・ラウール）と重ならない。11/14 のクラブ紹介・代表・監督・財政の担当とも題材は別（research/20261112_picks.txt）。
+# **引退の確認**：Wikipedia「On 29 April 2014, Inter chairman Erick Thohir announced that Zanetti would retire at the end of the 2013–14 season」「He retired after the last game of the season ... 18 May」。→ 選手としては現役ではない（53歳）。
+# **日本との接点**：①1998年W杯の初戦、アルゼンチン 1-0 日本（Wikipedia「making his competitive debut in team's opening group match against Japan which finished in a 1–0 victory」。日付・会場は言わない）。②2003-06-08 キリンカップ、長居スタジアム（大阪）、日本1-4アルゼンチン。前半0-2。得点：サビオラ30分・ザネッティ45分・ロメオ78分・マキシ・ロドリゲス82分、日本は秋田55分（RSSSF と日本語版Wikipedia が一致。ザネッティは背番号8・キャプテンで先発（RSSSF の先発表）。**英語版Wikipedia の国際得点表は「70分・2-1」と書いていて食い違う**ので、RSSSF・JFA 由来の45分を使う）。観客42,508人。③2010-10 埼玉での日本戦に招集されたが直前のけがで辞退（Wikipedia）。日本が1-0で勝った試合だが結果は言わない（確かめていない）。
+# **数字の出どころと自分で足した値**
+# - 成績表（Wikipedia、公式戦）：タジェレス 33試合1点、バンフィエルド 66試合4点、インテル 858試合21点（リーグ615・国内カップ71・欧州159・その他13）。Career total 957試合26点（33+66+858＝957、1+4+21＝26）。アルゼンチン代表 145試合5点。クラブと代表の合計 1102試合31点（自分で足した値：957+145、26+5。Wikipedia 冒頭の「1,115 official games」は五輪代表13試合を含む数字なので使わない）。サムネの表：インテル 858/21、ほかのクラブ 99/5（33+66、1+4）、アルゼンチン代表 145/5、合計 1102/31。
+# - インテルのクラブ記録858試合、タイトル16個（うちキャプテンとして15）、2001年から主将、19シーズンの在籍、19人の監督（Wikipedia）。UEFAカップ1998が最初のタイトル。
+# - 2010-05-22 CL決勝（マドリード、バイエルン戦 2-0、ミリート35分・70分）。ザネッティは主将で先発。インテルの欧州王者は1965年以来45年ぶり。先発にイタリア人は1人もいない。ザネッティのインテルでの700試合目。イタリアのクラブとして初の三冠、その主将（Wikipedia）。
+# - 2011-05-11 コッパ・イタリア準決勝2試合目（ローマ戦）でプロ1000試合目。2014-04-21 パルマ戦で公式戦1100試合目、歴代4位（当時）。2014-05-10 サン・シーロ最後の試合（ラツィオ戦 4-1）、後半から出場、全員の名前の腕章。2014-05-18 最後の試合（キエーヴォ戦 1-2）に先発（Wikipedia）。
+# - 退場はインテルで2回：1999-02-17 コッパ・イタリア（パルマ戦）、2011-12-03 セリエA（ウディネーゼ戦）（Wikipedia）。あだ名 El Tractor＝体力と上下の動き。
+# - 2010-10-20 トッテナム戦（4-3）の開始1分にゴール、37歳71日。CLの2点目のゴール、1点目は1998年12月（シュトルム・グラーツ戦 2-0）（Wikipedia）。
+# **山場**：2010年CL決勝。ザネッティ本人のゴール・発言は無いので、キャプテンとして先発した三冠の試合を、結果と記録で語る。
+# **本人の言葉**：取れていない（公式の引退声明の全文は未確認）。声の行は置かない。
+# **見立て（自分で足した・割った値）**：インテルの季ごと（公式戦）95-96 39、96-97 50、97-98 41、98-99 50、99-00 43、00-01 34、01-02 44、02-03 53、03-04 51、04-05 49、05-06 39、06-07 50、07-08 51、08-09 51、09-10 55、10-11 52、11-12 45、12-13 48、13-14 13（合計858と一致）。デビューからの11季（95-96〜05-06）：493試合、1季44.8、50試合以上は4季（96-97・98-99・02-03・03-04）。2006-07〜2010-11の5季（33歳〜37歳）：50+51+51+55+52＝259試合、1季51.8、50試合以上は5季。差 51.8-44.8＝7.0。残りの3季（11-12〜13-14）は45+48+13＝106（493+259+106＝858）。
+# **入れなかったもの**：私生活・家族・慈善活動、引退後の副会長、背番号4の永久欠番、2006年W杯に呼ばれなかった経緯、ほかの選手との比較、「最多」「最年少」、日本戦の結果（2010年）。
+# **読みで怪しいもの**：ハビエル・ザネッティ、ブエノスアイレス、バンフィエルド、ミリート、バイエルン、サン・シーロ、エル・トラクトル、長居、キリンカップ、サビオラ、トッテナム、コッパ・イタリア。「2006-07」のような書き方はしない。
+title: ザネッティは、どんな選手だった？ 858試合は、いつ積み上がったのか
+format: news
+short_title: ザネッティは、どんな選手だった？
+series: レジェンドの紹介
+topic: ハビエル・ザネッティ
+date: 2026年11月11日
+slot: other_1
+people: [ハビエル・ザネッティ]
+watch: 毎日、数字でサッカーを読み解きます
+theme: {id: legend_zanetti, league: italy, league_name: セリエA, kind: other, topic: ハビエル・ザネッティ, title: ザネッティは、どんな選手だった？ 858試合は、いつ積み上がったのか, question: インテルで858試合に出たザネッティは、その試合をいつ積み上げたのか, takeaway: 33歳から37歳の5シーズンは、すべて50試合以上。1シーズン51.8試合は、デビューからの11シーズン（44.8試合）より多い。年を重ねるほど、出場は増えていた,
+  nameplate: ハビエル・ザネッティ｜元アルゼンチン代表 DF, opening_image: assets/images/20261114_zanetti_legend/03_w.jpg, end_bg: assets/images/20261114_zanetti_legend/09_w.jpg, bgm: assets/audio/bgm_calm.wav, outro_title: 毎日、数字でサッカーを読み解きます}
+thumbnail:
+  line1: ザネッティ、通算1102試合
+  line2: インテル858試合、三冠の主将
+  tags: [インテル]
+  photo: assets/images/20261114_zanetti_legend/panel_02.jpg
+  photos: []
+  short_photo: assets/images/20261114_zanetti_legend/03_v.jpg
+sections:
+- id: hook
+  heading: ザネッティは、何試合に出たのか
+  tier: 報道
+  telop: インテル一筋、19年の記録
+  say:
+  - text: インテルで、858試合に出た選手がいます。
+    card: none
+    image: assets/images/20261114_zanetti_legend/02_w.jpg
+  - text: インテルのクラブ記録として、いまも残る数字です。
+    card: none
+    image: assets/images/20261114_zanetti_legend/03_w.jpg
+  - text: クラブと代表の公式戦は、合わせて1102試合。
+    card:
+      type: stats
+      title: ハビエル・ザネッティ 元DF（53歳）
+      items:
+      - - '1102'
+        - 試合
+        - クラブと代表の公式戦
+      - - '858'
+        - 試合
+        - インテル
+      - - '16'
+        - 個
+        - インテルでのタイトル
+      focus: 0
+    image: assets/images/20261114_zanetti_legend/09_w.jpg
+    emph: true
+    callword: 1102試合
+  - text: ハビエル・ザネッティ。タイトルは、インテルだけで16個です。
+    card:
+      type: stats
+      title: ハビエル・ザネッティ 元DF（53歳）
+      items:
+      - - '1102'
+        - 試合
+        - クラブと代表の公式戦
+      - - '858'
+        - 試合
+        - インテル
+      - - '16'
+        - 個
+        - インテルでのタイトル
+      focus: 2
+    image: assets/images/20261114_zanetti_legend/02_w.jpg
+  - text: そして日本とも、1998年と2003年に縁があります。
+    card: none
+    image: assets/images/20261114_zanetti_legend/02_w.jpg
+  - text: 21歳でインテルに来て、40歳で去るまで。19年の歩みをたどります。
+    card: none
+    image: assets/images/20261114_zanetti_legend/03_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Javier_Zanetti
+- id: data
+  heading: ザネッティは、いつ、どこで生まれ、どんな選手か
+  tier: 報道
+  telop: ザネッティの基礎DATA
+  say:
+  - text: ザネッティは1973年8月10日、アルゼンチンのブエノスアイレスに生まれました。
+    card:
+      type: table
+      title: ハビエル・ザネッティ
+      columns:
+      - 項目
+      - 内容
+      rows: &id001
+      - - 生年月日
+        - 1973年8月10日・アルゼンチン
+      - - ポジション
+        - ディフェンダー、中盤もこなす
+      - - クラブ
+        - インテル（1995年から2014年）
+      - - 代表
+        - アルゼンチン代表 145試合
+      - - 現役を終えた
+        - 2014年・インテル
+      highlight_row: 0
+    image: assets/images/20261114_zanetti_legend/09_w.jpg
+  - text: 身長は178センチ。ポジションは、ディフェンダーです。
+    card:
+      type: table
+      title: ハビエル・ザネッティ
+      columns:
+      - 項目
+      - 内容
+      rows: *id001
+      highlight_row: 1
+    image: assets/images/20261114_zanetti_legend/02_w.jpg
+  - text: 主なクラブは、インテル。1995年から2014年まで、プレーしました。
+    card:
+      type: table
+      title: ハビエル・ザネッティ
+      columns:
+      - 項目
+      - 内容
+      rows: *id001
+      highlight_row: 2
+    image: assets/images/20261114_zanetti_legend/02_w.jpg
+  - text: アルゼンチン代表では、145試合に出ています。
+    card:
+      type: table
+      title: ハビエル・ザネッティ
+      columns:
+      - 項目
+      - 内容
+      rows: *id001
+      highlight_row: 3
+    image: assets/images/20261114_zanetti_legend/03_w.jpg
+  - text: 引退は2014年、40歳のときです。
+    card:
+      type: table
+      title: ハビエル・ザネッティ
+      columns:
+      - 項目
+      - 内容
+      rows: *id001
+      highlight_row: 4
+    image: assets/images/20261114_zanetti_legend/09_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Javier_Zanetti
+- id: japan
+  heading: ザネッティと日本には、どんな縁があったのか
+  tier: 報道
+  telop: W杯の初戦と、大阪のキリンカップ
+  say:
+  - text: 日本との接点は、2つの試合にあります。
+    card:
+      type: timeline
+      title: ザネッティと日本
+      rows: &id002
+      - - 1998年6月
+        - W杯の初戦で、日本と対戦
+      - - 2003年6月
+        - 大阪で、主将として日本と対戦
+      focus: 0
+      highlight_row: 0
+    image: assets/images/20261114_zanetti_legend/08_w.jpg
+  - text: 1回目は1998年、フランスのワールドカップ。アルゼンチンの初戦が、日本戦でした。
+    card: none
+    image: assets/images/20261114_zanetti_legend/08_w.jpg
+  - text: ザネッティにとって、これがワールドカップの初めての試合でした。
+    card: none
+    image: assets/images/20261114_zanetti_legend/03_w.jpg
+  - text: 試合は、アルゼンチンの1対0の勝ちでした。
+    card: none
+    image: assets/images/20261114_zanetti_legend/08_w.jpg
+  - text: 2回目は2003年6月8日、大阪の長居スタジアム。キリンカップです。
+    card:
+      type: timeline
+      title: ザネッティと日本
+      rows: *id002
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261114_zanetti_legend/08_w.jpg
+  - text: ザネッティは、腕章を巻いて先発しました。
+    card: none
+    image: assets/images/20261114_zanetti_legend/03_w.jpg
+  - text: 前半45分、ザネッティのゴール。2点をリードして、折り返します。
+    card: none
+    image: assets/images/20261114_zanetti_legend/08_w.jpg
+    emph: true
+  - text: 日本は後半に1点を返しましたが、結果は4対1。アルゼンチンの勝ちでした。
+    card: none
+    image: assets/images/20261114_zanetti_legend/08_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Javier_Zanetti
+  - https://www.rsssf.org/tablesk/kirin03.html
+  - https://ja.wikipedia.org/wiki/キリンカップサッカー2003
+- id: career
+  heading: ザネッティは、どこでプレーしてきたのか
+  tier: 報道
+  telop: アルゼンチンからインテルへ、19シーズン
+  say:
+  - text: ザネッティは1992年、アルゼンチンのクラブで、プロ選手になりました。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: &id003
+      - - '1992'
+        - アルゼンチンでプロに
+      - - '1995'
+        - 21歳でインテルへ
+      - - '1998'
+        - UEFAカップ優勝
+      - - '2001'
+        - キャプテンに
+      - - '2010'
+        - 三冠を達成
+      - - '2014'
+        - 40歳で現役を終える
+      focus: 0
+      highlight_row: 0
+    image: assets/images/20261114_zanetti_legend/02_w.jpg
+  - text: 1993年からは、バンフィエルドでプレーします。
+    card: none
+    image: assets/images/20261114_zanetti_legend/02_w.jpg
+  - text: 1995年、21歳でイタリアのインテルへ。ここから19年が始まります。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *id003
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261114_zanetti_legend/03_w.jpg
+  - text: 1998年には、ユーエファカップで優勝。インテルでの初めてのタイトルです。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *id003
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261114_zanetti_legend/09_w.jpg
+  - text: ザネッティは2001年から、キャプテンになります。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *id003
+      focus: 3
+      highlight_row: 0
+    image: assets/images/20261114_zanetti_legend/02_w.jpg
+  - text: 2014年まで、13年間、チームを率いました。
+    card: none
+    image: assets/images/20261114_zanetti_legend/02_w.jpg
+  - text: 2010年には、チームは三冠を達成します。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *id003
+      focus: 4
+      highlight_row: 0
+    image: assets/images/20261114_zanetti_legend/03_w.jpg
+  - text: そして2014年、40歳。インテルでの19シーズンに、幕を下ろしました。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *id003
+      focus: 5
+      highlight_row: 0
+    image: assets/images/20261114_zanetti_legend/09_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Javier_Zanetti
+- id: style
+  heading: ザネッティは、何で相手を上回ったのか
+  tier: 報道
+  telop: あだ名は、トラクター
+  say:
+  - text: ザネッティは、ディフェンダーとして知られますが、中盤もこなしました。
+    card:
+      type: table
+      title: ザネッティの持ち味
+      columns:
+      - 項目
+      - 中身
+      rows: &id004
+      - - 位置
+        - ディフェンダー、中盤もこなす
+      - - 武器1
+        - 走り続ける体力
+      - - 武器2
+        - 攻めも守りもこなす動き
+      - - 武器3
+        - 日ごろの体の管理
+      - - 記録
+        - インテルでの退場は2回
+      highlight_row: 0
+    image: assets/images/20261114_zanetti_legend/02_w.jpg
+  - text: 武器の1つ目は、走り続ける体力。あだ名は、エル・トラクトル。トラクターです。
+    card:
+      type: table
+      title: ザネッティの持ち味
+      columns:
+      - 項目
+      - 中身
+      rows: *id004
+      highlight_row: 1
+    image: assets/images/20261114_zanetti_legend/02_w.jpg
+  - text: 2つ目は、サイドを上下する動き。攻めも守りも、支えました。
+    card:
+      type: table
+      title: ザネッティの持ち味
+      columns:
+      - 項目
+      - 中身
+      rows: *id004
+      highlight_row: 2
+    image: assets/images/20261114_zanetti_legend/03_w.jpg
+  - text: 3つ目は、日ごろの体の管理。それが、長い現役を支えました。
+    card:
+      type: table
+      title: ザネッティの持ち味
+      columns:
+      - 項目
+      - 中身
+      rows: *id004
+      highlight_row: 3
+    image: assets/images/20261114_zanetti_legend/09_w.jpg
+  - text: 19シーズンで、インテルでの退場は2回。1回目は1999年でした。
+    card:
+      type: table
+      title: ザネッティの持ち味
+      columns:
+      - 項目
+      - 中身
+      rows: *id004
+      highlight_row: 4
+    image: assets/images/20261114_zanetti_legend/02_w.jpg
+    emph: true
+  - text: 2回目は、12年後の2011年12月です。
+    card: none
+    image: assets/images/20261114_zanetti_legend/02_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Javier_Zanetti
+- id: match
+  heading: 2010年のチャンピオンズリーグ決勝で、ザネッティは何を成し遂げたのか
+  tier: 報道
+  main: true
+  telop: マドリードの決勝、三冠のキャプテン
+  say:
+  - text: ハビエル・ザネッティ。
+    card: none
+    image: assets/images/20261114_zanetti_legend/03_w.jpg
+    short_only: true
+  - text: 主将として、ヨーロッパの頂点に立った試合があります。
+    card: none
+    image: assets/images/20261114_zanetti_legend/09_w.jpg
+    short_only: true
+  - text: 2010年5月22日、スペインのマドリード。チャンピオンズリーグの決勝です。
+    card: none
+    image: assets/images/20261114_zanetti_legend/02_w.jpg
+  - text: インテルの相手は、ドイツのバイエルン。
+    card: none
+    image: assets/images/20261114_zanetti_legend/02_w.jpg
+  - text: 先発には、主将ザネッティの名前もありました。
+    card: none
+    image: assets/images/20261114_zanetti_legend/03_w.jpg
+  - text: 35分、ミリートのゴールで、インテルが先制します。
+    card:
+      type: timeline
+      title: 2010年5月22日 CL決勝 バイエルン戦
+      rows: &id005
+      - - 35分
+        - ミリートが先制
+      - - 70分
+        - ミリートが2点目
+      - - 試合後
+        - 45年ぶりのヨーロッパ王者に
+      focus: 0
+      highlight_row: 0
+    image: assets/images/20261114_zanetti_legend/09_w.jpg
+  - text: 70分、またミリート。2対0で、インテルの勝ちです。
+    card:
+      type: timeline
+      title: 2010年5月22日 CL決勝 バイエルン戦
+      rows: *id005
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261114_zanetti_legend/02_w.jpg
+  - text: カウンターで守り切った、インテルの勝利でした。
+    card: none
+    image: assets/images/20261114_zanetti_legend/02_w.jpg
+  - text: インテルのヨーロッパ王者は、1965年以来、45年ぶり。
+    card:
+      type: timeline
+      title: 2010年5月22日 CL決勝 バイエルン戦
+      rows: *id005
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261114_zanetti_legend/03_w.jpg
+    emph: true
+    callword: 45年ぶり
+  - text: この日の先発に、イタリア人選手は1人もいませんでした。
+    card: none
+    image: assets/images/20261114_zanetti_legend/09_w.jpg
+  - text: これが、ザネッティのインテルでの、700試合目でした。
+    card: none
+    image: assets/images/20261114_zanetti_legend/02_w.jpg
+  - text: リーグ、国内カップ、CLの三冠は、イタリアのクラブで初めて。
+    card: none
+    image: assets/images/20261114_zanetti_legend/02_w.jpg
+  - text: ザネッティは、その三冠を率いた主将でした。
+    card: none
+    image: assets/images/20261114_zanetti_legend/03_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/2010_UEFA_Champions_League_final
+  - https://en.wikipedia.org/wiki/Javier_Zanetti
+- id: after
+  heading: ザネッティは、どんな記録を残して現役を終えたのか
+  tier: 報道
+  telop: 1000試合、1100試合、そして40歳の引退
+  say:
+  - text: 2011年5月、コッパ・イタリアのローマ戦。プロとして、1000試合目です。
+    card:
+      type: timeline
+      title: 記録と、現役の終わり
+      rows: &id006
+      - - 2011年5月
+        - プロで1000試合目
+      - - 2014年4月
+        - 公式戦1100試合目
+      - - 2014年5月
+        - 40歳で現役を終える
+      focus: 0
+      highlight_row: 0
+    image: assets/images/20261114_zanetti_legend/02_w.jpg
+  - text: 2014年4月には、公式戦1100試合目に出ました。
+    card:
+      type: timeline
+      title: 記録と、現役の終わり
+      rows: *id006
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261114_zanetti_legend/03_w.jpg
+  - text: 当時、歴代4位の出場数でした。
+    card: none
+    image: assets/images/20261114_zanetti_legend/08_w.jpg
+  - text: 2014年4月29日、シーズン限りでの引退が、発表されます。
+    card: none
+    image: assets/images/20261114_zanetti_legend/01_w.jpg
+  - text: 5月10日、本拠地サン・シーロでの最後の試合。ザネッティは後半から出ます。
+    card:
+      type: timeline
+      title: 記録と、現役の終わり
+      rows: *id006
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261114_zanetti_legend/09_w.jpg
+  - text: 腕には、一緒にプレーした全員の名前を記した、キャプテンマーク。
+    card: none
+    image: assets/images/20261114_zanetti_legend/02_w.jpg
+    emph: true
+  - text: 5月18日、最後の試合に先発。これが、現役最後の90分でした。
+    card: none
+    image: assets/images/20261114_zanetti_legend/03_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Javier_Zanetti
+- id: secret
+  heading: ザネッティには、どんな意外な話があるのか
+  tier: 報道
+  telop: 19人の監督、開始1分のゴール、日本戦
+  say:
+  - text: ここで、ザネッティの意外な一面を3つ。
+    card: none
+    image: assets/images/20261114_zanetti_legend/08_w.jpg
+  - text: 1つ目。インテルで、19人の監督のもとでプレーしました。
+    card:
+      type: table
+      title: 知られざる、3つの話
+      columns:
+      - いつ
+      - 何があったか
+      rows: &id007
+      - - 在籍中
+        - 19人の監督のもとでプレー
+      - - 2010年10月
+        - 37歳でチャンピオンズリーグのゴール
+      - - 2010年10月
+        - 日本戦に招集されたが辞退
+      highlight_row: 0
+    image: assets/images/20261114_zanetti_legend/01_w.jpg
+  - text: これほど多くの監督に仕えた選手は、ほかにいません。
+    card: none
+    image: assets/images/20261114_zanetti_legend/09_w.jpg
+  - text: 2つ目。2010年10月、37歳のザネッティが、トッテナム戦の開始1分にゴール。
+    card:
+      type: table
+      title: 知られざる、3つの話
+      columns:
+      - いつ
+      - 何があったか
+      rows: *id007
+      highlight_row: 1
+    image: assets/images/20261114_zanetti_legend/02_w.jpg
+  - text: CLでの2点目のゴールでした。1点目は、12年前の1998年12月です。
+    card: none
+    image: assets/images/20261114_zanetti_legend/03_w.jpg
+    emph: true
+  - text: 3つ目。同じ10月、日本との試合に、アルゼンチン代表として招集されます。
+    card:
+      type: table
+      title: 知られざる、3つの話
+      columns:
+      - いつ
+      - 何があったか
+      rows: *id007
+      highlight_row: 2
+    image: assets/images/20261114_zanetti_legend/08_w.jpg
+  - text: 場所は埼玉。けれど直前のけがで、出場を辞退しました。
+    card: none
+    image: assets/images/20261114_zanetti_legend/01_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Javier_Zanetti
+- id: view
+  heading: 858試合は、どの時期に積み上がったのか
+  tier: 背景
+  viewpoint: true
+  telop: 33歳から37歳の5シーズンは、すべて50試合以上
+  say:
+  - text: 最後に、858試合を、時期で分けて比べます。
+    card:
+      type: table
+      title: インテルの出場試合（公式戦）
+      columns:
+      - 期間
+      - シーズン
+      - 試合
+      - 1季あたり
+      - 50試合以上
+      rows: &id008
+      - - デビューからの11シーズン
+        - '11'
+        - '493'
+        - '44.8'
+        - 4回
+      - - 2006年から2011年の5シーズン
+        - '5'
+        - '259'
+        - '51.8'
+        - 5回
+      highlight_row: 0
+    image: assets/images/20261114_zanetti_legend/09_w.jpg
+  - text: デビューからの11シーズンは、493試合。1シーズン44.8試合です。
+    card:
+      type: table
+      title: インテルの出場試合（公式戦）
+      columns:
+      - 期間
+      - シーズン
+      - 試合
+      - 1季あたり
+      - 50試合以上
+      rows: *id008
+      highlight_row: 0
+    image: assets/images/20261114_zanetti_legend/02_w.jpg
+  - text: 50試合以上に出たのは、11シーズンのうち、4回でした。
+    card:
+      type: table
+      title: インテルの出場試合（公式戦）
+      columns:
+      - 期間
+      - シーズン
+      - 試合
+      - 1季あたり
+      - 50試合以上
+      rows: *id008
+      highlight_row: 0
+    image: assets/images/20261114_zanetti_legend/03_w.jpg
+  - text: 一方、2006年から2011年の5シーズン。ザネッティは、33歳から37歳です。
+    card:
+      type: table
+      title: インテルの出場試合（公式戦）
+      columns:
+      - 期間
+      - シーズン
+      - 試合
+      - 1季あたり
+      - 50試合以上
+      rows: *id008
+      highlight_row: 1
+    image: assets/images/20261114_zanetti_legend/08_w.jpg
+  - text: 5シーズンの合計は、259試合。1シーズン51.8試合です。
+    card:
+      type: table
+      title: インテルの出場試合（公式戦）
+      columns:
+      - 期間
+      - シーズン
+      - 試合
+      - 1季あたり
+      - 50試合以上
+      rows: *id008
+      highlight_row: 1
+    image: assets/images/20261114_zanetti_legend/01_w.jpg
+    mark:
+      kind: circle
+      row: 1
+      col: 3
+    emph: true
+  - text: 5シーズンのすべてで、50試合以上に出ました。
+    card:
+      type: table
+      title: インテルの出場試合（公式戦）
+      columns:
+      - 期間
+      - シーズン
+      - 試合
+      - 1季あたり
+      - 50試合以上
+      rows: *id008
+      highlight_row: 1
+    image: assets/images/20261114_zanetti_legend/09_w.jpg
+  - text: デビューからの44.8試合より、およそ7試合多いペースです。
+    card: none
+    image: assets/images/20261114_zanetti_legend/02_w.jpg
+  - text: 年を重ねるほど、ピッチに立つ回数は増えました。
+    card: none
+    image: assets/images/20261114_zanetti_legend/03_w.jpg
+  - text: 21歳でインテルへ。40歳で去るまで。それが、ハビエル・ザネッティです。
+    card: none
+    image: assets/images/20261114_zanetti_legend/08_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Javier_Zanetti

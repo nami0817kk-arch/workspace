@@ -1,0 +1,1333 @@
+# ラミン・カマラ（モナコ／セネガル代表）の紹介。選手紹介の型（2026-11-17 公開分、シリーズ「有名選手の紹介」。key: player_918969）。情報の時点は 2026-11-12（クラブの試合は 11/8 のリーグ・アン第10節まで）。
+# **FotMob は使わない。**数字は Transfermarkt API の試合記録（控え research/raw/20261115_camara_*.json）、英語版 Wikipedia、AS モナコ公式（2024-07-31）、AfricaSoccer の記者会見記事（2025-12-12・2026-02-28）。
+# **選んだ理由（2026-11-12）**：player_pool.py list で紹介済みを除いた市場価値の上位は 26 ヌメチャ（11/15 に使う）・30 カマラ・33 ファン・ヘッケ・34 G.ラモス。TM の市場価値の推移（20万→5500万、およそ275倍）が題の引きになる。11/13 の担当は「今季13試合2点で題が弱い」と外したが、得点でなく値段と出場時間の話にした。
+#   重なり：scripts/ を「カマラ」で grep → ニュース・10/14 の比べる（バレバ×カマラ）に名前が出るだけで紹介は0件。同じ日（11/17）の別シリーズでは使わない。
+# **現役・今季もリーグ・アン**：TM の試合記録で 2026-11-08（ル・マン戦 1-1）まで90分出場。
+# **数字の軸**：TM の試合記録。クラブ通算は メス37/2（Bチーム1試合除く）、モナコ85/7＝122試合9点、アシストはメス6＋モナコ12＝18。リーグ・アンは 23/24 31/1/4、24/25 29/2/7、25/26 24/3/4、26/27 10/0/1（900分＝全試合フル出場）。市場価値（TM）：2023-06 20万（メスB）→2024-06 1000万→2026-09 5500万（÷20万＝275）。
+#   **代表の通算は台本に出さない**：TM は39試合5得点、英語版 Wikipedia は50試合7得点（2026-09-29 時点）で食い違うため。
+# **本人の言葉**：AfricaSoccer（2025-12-12 の記者会見、2026-02-28 の取材）の英訳からの日本語訳。ほかの一次の原文（フランス語）は確かめられなかった。
+# **入れなかったもの**：チェルシー移籍の破談報道（Wikipedia が未確認と明記）、2025年アフリカ選手権の結果（Wikipedia は準優勝、別の記事は優勝で食い違う）、W杯2・3戦目の相手名。
+# **確かめられなかった**：モンペリエ戦の「2006年以降いちばん遅いゴール」は検索結果の要約（beIN SPORTS の見出し）から。58メートル弾の「歴代4番目」は AS モナコ公式の記述。
+# **写真**：Commons の「Lamine Camara France v Senegal 16 June 2026」（CC BY-SA 4.0、Bryan Berlin）と、AfricaSoccer の記事写真2枚（モナコ時代。代理店のURLではない）。3枚だけなので、行ごとに入れ替える。
+date: 2026年11月12日
+slot: other_1
+format: news
+series: 有名選手の紹介
+people:
+- ラミン・カマラ
+theme:
+  id: player_918969
+  league: france
+  league_name: リーグ・アン
+  kind: other
+  topic: モナコ
+  title: カマラってどんな選手？ 58メートル弾の19歳が、W杯のピッチに立つまで
+  question: ラミン・カマラは、どんな中盤の選手で、なぜ3年あまりで市場価値が275倍になったのか
+  takeaway: 市場価値は2023年6月の20万ユーロから2026年9月の5500万ユーロへ、およそ275倍。その間のクラブでの得点は9点、アシストは18で、値段を押し上げたのは点ではなく、リーグ戦でフル出場を重ねる出場時間の長さだった
+  nameplate: ラミン・カマラ｜モナコ MF／セネガル代表
+  opening_image: assets/images/20261117_player_918969/02_w.jpg
+  end_bg: assets/images/20261117_player_918969/04_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+watch: 毎日、数字でサッカーを読み解きます
+short_title: カマラってどんな選手？
+thumbnail:
+  line1: カマラ、クラブで122戦9点
+  line2: 市場価値は3年で275倍
+  tags:
+  - モナコ
+  - セネガル代表
+  photo: assets/images/20261117_player_918969/panel_01.jpg
+  photos: []
+sections:
+- id: hook
+  heading: 3年3か月で、市場価値が275倍。カマラは、どんな中盤なのか
+  tier: 報道
+  telop: 3年3か月で275倍
+  narrator: 解説
+  card:
+    type: stats
+    title: カマラの数字
+    items:
+    - - '275'
+      - 倍
+      - 市場価値。3年3か月で
+    - - '58'
+      - メートル
+      - 2023年10月のゴールの距離
+    - - '4'
+      - 試合
+      - 2026年W杯での出場
+    focus: 0
+  say:
+  - text: カマラは、モナコのミッドフィールダー。セネガル代表の、22歳です。
+    image: assets/images/20261117_player_918969/02_w.jpg
+    card:
+      type: stats
+      title: カマラの数字
+      items:
+      - - '275'
+        - 倍
+        - 市場価値。3年3か月で
+      - - '58'
+        - メートル
+        - 2023年10月のゴールの距離
+      - - '4'
+        - 試合
+        - 2026年W杯での出場
+      focus: 0
+  - text: 市場価値は、2023年6月の20万ユーロから、今年の9月の値段へ。
+    card:
+      type: stats
+      title: カマラの数字
+      items:
+      - - '275'
+        - 倍
+        - 市場価値。3年3か月で
+      - - '58'
+        - メートル
+        - 2023年10月のゴールの距離
+      - - '4'
+        - 試合
+        - 2026年W杯での出場
+      focus: 0
+  - text: 3年3か月で、200倍を超える伸びです。
+    card:
+      type: stats
+      title: カマラの数字
+      items:
+      - - '275'
+        - 倍
+        - 市場価値。3年3か月で
+      - - '58'
+        - メートル
+        - 2023年10月のゴールの距離
+      - - '4'
+        - 試合
+        - 2026年W杯での出場
+      focus: 0
+    emph: true
+  - text: その間に、58メートルのロングシュートがあり、W杯がありました。
+    image: assets/images/20261117_player_918969/02_w.jpg
+    card:
+      type: stats
+      title: カマラの数字
+      items:
+      - - '275'
+        - 倍
+        - 市場価値。3年3か月で
+      - - '58'
+        - メートル
+        - 2023年10月のゴールの距離
+      - - '4'
+        - 試合
+        - 2026年W杯での出場
+      focus: 1
+  - text: 数字と、本人の言葉から、この選手を追います。
+    card: none
+  sources:
+  - https://www.transfermarkt.com/lamine-camara/profil/spieler/918969
+  - https://www.asmonaco.com/en/news/9-things-lamine-camara
+  quotes_from: []
+- id: data
+  heading: カマラは、いまどこで、いくらと見られている選手か
+  tier: 報道
+  telop: カマラの基礎DATA
+  narrator: 解説
+  card:
+    type: table
+    title: ラミン・カマラ（モナコ）
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 所属
+      - モナコ
+    - - ポジション
+      - セントラルMF
+    - - 生年月日
+      - 2004年1月1日（22歳）
+    - - 出身
+      - セネガル
+    - - 身長・利き足
+      - 174cm・右利き
+    - - 契約・市場価値
+      - 2029年6月まで・5500万ユーロ
+    - - W杯2026
+      - セネガル代表として4試合出場
+    highlight_row: 0
+  say:
+  - text: ラミン・カマラは、モナコのセントラルミッドフィールダーです。
+    image: assets/images/20261117_player_918969/02_w.jpg
+    card:
+      type: table
+      title: ラミン・カマラ（モナコ）
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 所属
+        - モナコ
+      - - ポジション
+        - セントラルMF
+      - - 生年月日
+        - 2004年1月1日（22歳）
+      - - 出身
+        - セネガル
+      - - 身長・利き足
+        - 174cm・右利き
+      - - 契約・市場価値
+        - 2029年6月まで・5500万ユーロ
+      - - W杯2026
+        - セネガル代表として4試合出場
+      highlight_row: 0
+  - text: 2004年生まれ。セネガルの出身で、いま22歳。
+    card:
+      type: table
+      title: ラミン・カマラ（モナコ）
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 所属
+        - モナコ
+      - - ポジション
+        - セントラルMF
+      - - 生年月日
+        - 2004年1月1日（22歳）
+      - - 出身
+        - セネガル
+      - - 身長・利き足
+        - 174cm・右利き
+      - - 契約・市場価値
+        - 2029年6月まで・5500万ユーロ
+      - - W杯2026
+        - セネガル代表として4試合出場
+      highlight_row: 2
+  - text: 右利きで、身長は174センチ。2029年6月まで契約があります。
+    card:
+      type: table
+      title: ラミン・カマラ（モナコ）
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 所属
+        - モナコ
+      - - ポジション
+        - セントラルMF
+      - - 生年月日
+        - 2004年1月1日（22歳）
+      - - 出身
+        - セネガル
+      - - 身長・利き足
+        - 174cm・右利き
+      - - 契約・市場価値
+        - 2029年6月まで・5500万ユーロ
+      - - W杯2026
+        - セネガル代表として4試合出場
+      highlight_row: 4
+  - text: 今年の6月には、セネガル代表として、W杯に出場しました。
+    image: assets/images/20261117_player_918969/01_w.jpg
+    card:
+      type: table
+      title: ラミン・カマラ（モナコ）
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 所属
+        - モナコ
+      - - ポジション
+        - セントラルMF
+      - - 生年月日
+        - 2004年1月1日（22歳）
+      - - 出身
+        - セネガル
+      - - 身長・利き足
+        - 174cm・右利き
+      - - 契約・市場価値
+        - 2029年6月まで・5500万ユーロ
+      - - W杯2026
+        - セネガル代表として4試合出場
+      highlight_row: 6
+  - text: 市場価値は、今年の9月に、4000万ユーロから上がりました。
+    image: assets/images/20261117_player_918969/04_w.jpg
+    card:
+      type: table
+      title: ラミン・カマラ（モナコ）
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 所属
+        - モナコ
+      - - ポジション
+        - セントラルMF
+      - - 生年月日
+        - 2004年1月1日（22歳）
+      - - 出身
+        - セネガル
+      - - 身長・利き足
+        - 174cm・右利き
+      - - 契約・市場価値
+        - 2029年6月まで・5500万ユーロ
+      - - W杯2026
+        - セネガル代表として4試合出場
+      highlight_row: 5
+    emph: true
+  sources:
+  - https://www.transfermarkt.com/lamine-camara/profil/spieler/918969
+  - https://en.wikipedia.org/wiki/Lamine_Camara
+  quotes_from: []
+- id: origin
+  heading: セネガル南西部の少年は、どうやって、世界に見つかったのか
+  tier: 背景
+  telop: セネガルの少年時代
+  narrator: 解説
+  card:
+    type: table
+    title: カマラ 年代別の主な実績
+    columns:
+    - 年
+    - 大会
+    - 結果
+    rows:
+    - - '2022'
+      - アフリカ選手権CHAN
+      - セネガルの初優勝
+    - - '2023'
+      - U-20アフリカ選手権
+      - 大会最優秀選手
+    - - 2023・2024
+      - アフリカの年間最優秀若手
+      - 2年連続で選出
+    highlight_row: 0
+  say:
+  - text: カマラは、セネガルの南西部の生まれです。
+    image: assets/images/20261117_player_918969/01_w.jpg
+    card: none
+  - text: 小さいころから、足元にボールを置いて歩く子どもだったと、伝えられています。
+    card: none
+  - text: 父を説得して、サッカーの道へ。
+    card: none
+  - text: 首都ダカールのギャラクシーFAや、故郷に近いカサ・スポールで、プレーしました。
+    card: none
+  - text: 憧れの選手は、デ・ブルイネ、クロース、そして、同じセネガルのイドリサ・ゲイェ。
+    card: none
+  - text: 2019年11月、ジェネラシオン・フットへ。
+    image: assets/images/20261117_player_918969/02_w.jpg
+    card: none
+    emph: true
+  - text: サディオ・マネを送り出した、育成校です。
+    card: none
+  - text: 2022年、国内リーグの選手が出る、アフリカ選手権。
+    image: assets/images/20261117_player_918969/01_w.jpg
+    card:
+      type: table
+      title: カマラ 年代別の主な実績
+      columns:
+      - 年
+      - 大会
+      - 結果
+      rows:
+      - - '2022'
+        - アフリカ選手権CHAN
+        - セネガルの初優勝
+      - - '2023'
+        - U-20アフリカ選手権
+        - 大会最優秀選手
+      - - 2023・2024
+        - アフリカの年間最優秀若手
+        - 2年連続で選出
+      highlight_row: 0
+  - text: 決勝では120分間プレーして、PK戦でも決め、セネガルの初優勝に貢献しました。
+    card:
+      type: table
+      title: カマラ 年代別の主な実績
+      columns:
+      - 年
+      - 大会
+      - 結果
+      rows:
+      - - '2022'
+        - アフリカ選手権CHAN
+        - セネガルの初優勝
+      - - '2023'
+        - U-20アフリカ選手権
+        - 大会最優秀選手
+      - - 2023・2024
+        - アフリカの年間最優秀若手
+        - 2年連続で選出
+      highlight_row: 0
+  - text: 2023年のU-20アフリカ選手権では、大会最優秀選手。
+    card:
+      type: table
+      title: カマラ 年代別の主な実績
+      columns:
+      - 年
+      - 大会
+      - 結果
+      rows:
+      - - '2022'
+        - アフリカ選手権CHAN
+        - セネガルの初優勝
+      - - '2023'
+        - U-20アフリカ選手権
+        - 大会最優秀選手
+      - - 2023・2024
+        - アフリカの年間最優秀若手
+        - 2年連続で選出
+      highlight_row: 1
+  - text: 6戦全勝で、無失点の優勝でした。
+    card:
+      type: table
+      title: カマラ 年代別の主な実績
+      columns:
+      - 年
+      - 大会
+      - 結果
+      rows:
+      - - '2022'
+        - アフリカ選手権CHAN
+        - セネガルの初優勝
+      - - '2023'
+        - U-20アフリカ選手権
+        - 大会最優秀選手
+      - - 2023・2024
+        - アフリカの年間最優秀若手
+        - 2年連続で選出
+      highlight_row: 1
+  - text: アフリカの年間最優秀若手選手にも、2年連続で選ばれています。
+    card:
+      type: table
+      title: カマラ 年代別の主な実績
+      columns:
+      - 年
+      - 大会
+      - 結果
+      rows:
+      - - '2022'
+        - アフリカ選手権CHAN
+        - セネガルの初優勝
+      - - '2023'
+        - U-20アフリカ選手権
+        - 大会最優秀選手
+      - - 2023・2024
+        - アフリカの年間最優秀若手
+        - 2年連続で選出
+      highlight_row: 2
+  sources:
+  - https://www.asmonaco.com/en/news/9-things-lamine-camara
+  - https://en.wikipedia.org/wiki/Lamine_Camara
+  quotes_from: []
+- id: career
+  heading: メスの19歳は、どうやって、モナコまで引き上げられたのか
+  tier: 報道
+  telop: メスからモナコへ
+  narrator: 解説
+  card:
+    type: timeline
+    title: カマラの歩み
+    rows:
+    - - '2019'
+      - ジェネラシオン・フットへ
+    - - 2023年2月
+      - フランスのメスへ
+    - - 2023年10月
+      - 58メートルのゴール
+    - - '2024'
+      - モナコへ（7月）
+    - - '2026'
+      - W杯に出場
+    focus: '2019'
+  say:
+  - text: カマラは、2023年2月に、フランスのメスへ移ります。
+    image: assets/images/20261117_player_918969/02_w.jpg
+    card:
+      type: timeline
+      title: カマラの歩み
+      rows:
+      - - '2019'
+        - ジェネラシオン・フットへ
+      - - 2023年2月
+        - フランスのメスへ
+      - - 2023年10月
+        - 58メートルのゴール
+      - - '2024'
+        - モナコへ（7月）
+      - - '2026'
+        - W杯に出場
+      focus: 2023年2月
+  - text: 4月15日、2部のボルドー戦で、89分から出場して、デビューしました。
+    card:
+      type: timeline
+      title: カマラの歩み
+      rows:
+      - - '2019'
+        - ジェネラシオン・フットへ
+      - - 2023年2月
+        - フランスのメスへ
+      - - 2023年10月
+        - 58メートルのゴール
+      - - '2024'
+        - モナコへ（7月）
+      - - '2026'
+        - W杯に出場
+      focus: 2023年2月
+  - text: そして10月22日。モナコ戦で、58メートルのロングシュートを決めます。
+    image: assets/images/20261117_player_918969/02_w.jpg
+    card:
+      type: timeline
+      title: カマラの歩み
+      rows:
+      - - '2019'
+        - ジェネラシオン・フットへ
+      - - 2023年2月
+        - フランスのメスへ
+      - - 2023年10月
+        - 58メートルのゴール
+      - - '2024'
+        - モナコへ（7月）
+      - - '2026'
+        - W杯に出場
+      focus: 2023年10月
+    emph: true
+  - text: メスは、2対1で負けた試合でした。
+    card:
+      type: timeline
+      title: カマラの歩み
+      rows:
+      - - '2019'
+        - ジェネラシオン・フットへ
+      - - 2023年2月
+        - フランスのメスへ
+      - - 2023年10月
+        - 58メートルのゴール
+      - - '2024'
+        - モナコへ（7月）
+      - - '2026'
+        - W杯に出場
+      focus: 2023年10月
+  - text: リーグ・アンで、2006年以降の記録では、4番目に長いゴールです。
+    card:
+      type: timeline
+      title: カマラの歩み
+      rows:
+      - - '2019'
+        - ジェネラシオン・フットへ
+      - - 2023年2月
+        - フランスのメスへ
+      - - 2023年10月
+        - 58メートルのゴール
+      - - '2024'
+        - モナコへ（7月）
+      - - '2026'
+        - W杯に出場
+      focus: 2023年10月
+  - text: 10月の、月間ベストゴールにも選ばれました。
+    card:
+      type: timeline
+      title: カマラの歩み
+      rows:
+      - - '2019'
+        - ジェネラシオン・フットへ
+      - - 2023年2月
+        - フランスのメスへ
+      - - 2023年10月
+        - 58メートルのゴール
+      - - '2024'
+        - モナコへ（7月）
+      - - '2026'
+        - W杯に出場
+      focus: 2023年10月
+  - text: 2024年7月30日、モナコへ。
+    image: assets/images/20261117_player_918969/02_w.jpg
+    card:
+      type: timeline
+      title: カマラの歩み
+      rows:
+      - - '2019'
+        - ジェネラシオン・フットへ
+      - - 2023年2月
+        - フランスのメスへ
+      - - 2023年10月
+        - 58メートルのゴール
+      - - '2024'
+        - モナコへ（7月）
+      - - '2026'
+        - W杯に出場
+      focus: '2024'
+  - text: 移籍金は、約1500万ユーロとの報道があります。
+    card:
+      type: timeline
+      title: カマラの歩み
+      rows:
+      - - '2019'
+        - ジェネラシオン・フットへ
+      - - 2023年2月
+        - フランスのメスへ
+      - - 2023年10月
+        - 58メートルのゴール
+      - - '2024'
+        - モナコへ（7月）
+      - - '2026'
+        - W杯に出場
+      focus: '2024'
+  - text: 9月19日、チャンピオンズリーグのバルセロナ戦。
+    card:
+      type: timeline
+      title: カマラの歩み
+      rows:
+      - - '2019'
+        - ジェネラシオン・フットへ
+      - - 2023年2月
+        - フランスのメスへ
+      - - 2023年10月
+        - 58メートルのゴール
+      - - '2024'
+        - モナコへ（7月）
+      - - '2026'
+        - W杯に出場
+      focus: '2024'
+  - text: 2対1の勝利で、CLデビューです。
+    card:
+      type: timeline
+      title: カマラの歩み
+      rows:
+      - - '2019'
+        - ジェネラシオン・フットへ
+      - - 2023年2月
+        - フランスのメスへ
+      - - 2023年10月
+        - 58メートルのゴール
+      - - '2024'
+        - モナコへ（7月）
+      - - '2026'
+        - W杯に出場
+      focus: '2024'
+  - text: 9月28日、モンペリエ戦では、97分45秒に決勝ゴール。
+    image: assets/images/20261117_player_918969/02_w.jpg
+    card:
+      type: timeline
+      title: カマラの歩み
+      rows:
+      - - '2019'
+        - ジェネラシオン・フットへ
+      - - 2023年2月
+        - フランスのメスへ
+      - - 2023年10月
+        - 58メートルのゴール
+      - - '2024'
+        - モナコへ（7月）
+      - - '2026'
+        - W杯に出場
+      focus: '2024'
+    emph: true
+  - text: モナコのリーグ・アンのゴールとして、2006年以降で、いちばん遅い時間でした。
+    card:
+      type: timeline
+      title: カマラの歩み
+      rows:
+      - - '2019'
+        - ジェネラシオン・フットへ
+      - - 2023年2月
+        - フランスのメスへ
+      - - 2023年10月
+        - 58メートルのゴール
+      - - '2024'
+        - モナコへ（7月）
+      - - '2026'
+        - W杯に出場
+      focus: '2024'
+  sources:
+  - https://www.asmonaco.com/en/news/9-things-lamine-camara
+  - https://en.wikipedia.org/wiki/Lamine_Camara
+  - https://www.beinsports.com/en-mena/football/ligue-1/articles-video/camara-snatches-late-win-as-monaco-move-level-with-psg-2024-09-28
+  quotes_from: []
+- id: style
+  heading: カマラは、リーグ・アンで、どれだけ出続けてきたのか
+  tier: 報道
+  telop: リーグ・アンの数字
+  narrator: 解説
+  card:
+    type: table
+    title: カマラ リーグ・アンの数字
+    columns:
+    - シーズン
+    - 試合
+    - 得点
+    - アシスト
+    rows:
+    - - 23/24（メス）
+      - '31'
+      - '1'
+      - '4'
+    - - 24/25（モナコ）
+      - '29'
+      - '2'
+      - '7'
+    - - 25/26（モナコ）
+      - '24'
+      - '3'
+      - '4'
+    - - 26/27（モナコ）
+      - '10'
+      - '0'
+      - '1'
+    highlight_row: 0
+  say:
+  - text: カマラの、リーグ・アンの数字です。
+    image: assets/images/20261117_player_918969/01_w.jpg
+    card:
+      type: table
+      title: カマラ リーグ・アンの数字
+      columns:
+      - シーズン
+      - 試合
+      - 得点
+      - アシスト
+      rows:
+      - - 23/24（メス）
+        - '31'
+        - '1'
+        - '4'
+      - - 24/25（モナコ）
+        - '29'
+        - '2'
+        - '7'
+      - - 25/26（モナコ）
+        - '24'
+        - '3'
+        - '4'
+      - - 26/27（モナコ）
+        - '10'
+        - '0'
+        - '1'
+      highlight_row: 0
+  - text: メスの1年目、2023年から24年は、31試合1点4アシスト。
+    card:
+      type: table
+      title: カマラ リーグ・アンの数字
+      columns:
+      - シーズン
+      - 試合
+      - 得点
+      - アシスト
+      rows:
+      - - 23/24（メス）
+        - '31'
+        - '1'
+        - '4'
+      - - 24/25（モナコ）
+        - '29'
+        - '2'
+        - '7'
+      - - 25/26（モナコ）
+        - '24'
+        - '3'
+        - '4'
+      - - 26/27（モナコ）
+        - '10'
+        - '0'
+        - '1'
+      highlight_row: 0
+  - text: モナコの1年目は、29試合で2点、7アシスト。
+    card:
+      type: table
+      title: カマラ リーグ・アンの数字
+      columns:
+      - シーズン
+      - 試合
+      - 得点
+      - アシスト
+      rows:
+      - - 23/24（メス）
+        - '31'
+        - '1'
+        - '4'
+      - - 24/25（モナコ）
+        - '29'
+        - '2'
+        - '7'
+      - - 25/26（モナコ）
+        - '24'
+        - '3'
+        - '4'
+      - - 26/27（モナコ）
+        - '10'
+        - '0'
+        - '1'
+      highlight_row: 1
+  - text: 2年目は、24試合で3点、4アシスト。
+    image: assets/images/20261117_player_918969/02_w.jpg
+    card:
+      type: table
+      title: カマラ リーグ・アンの数字
+      columns:
+      - シーズン
+      - 試合
+      - 得点
+      - アシスト
+      rows:
+      - - 23/24（メス）
+        - '31'
+        - '1'
+        - '4'
+      - - 24/25（モナコ）
+        - '29'
+        - '2'
+        - '7'
+      - - 25/26（モナコ）
+        - '24'
+        - '3'
+        - '4'
+      - - 26/27（モナコ）
+        - '10'
+        - '0'
+        - '1'
+      highlight_row: 2
+  - text: そして今季は、ここまでの10試合すべてに、90分間フル出場。
+    card:
+      type: table
+      title: カマラ リーグ・アンの数字
+      columns:
+      - シーズン
+      - 試合
+      - 得点
+      - アシスト
+      rows:
+      - - 23/24（メス）
+        - '31'
+        - '1'
+        - '4'
+      - - 24/25（モナコ）
+        - '29'
+        - '2'
+        - '7'
+      - - 25/26（モナコ）
+        - '24'
+        - '3'
+        - '4'
+      - - 26/27（モナコ）
+        - '10'
+        - '0'
+        - '1'
+      highlight_row: 3
+    emph: true
+  - text: 出場時間は900分です。ただし、リーグ戦では、まだ無得点で、1アシストです。
+    card:
+      type: table
+      title: カマラ リーグ・アンの数字
+      columns:
+      - シーズン
+      - 試合
+      - 得点
+      - アシスト
+      rows:
+      - - 23/24（メス）
+        - '31'
+        - '1'
+        - '4'
+      - - 24/25（モナコ）
+        - '29'
+        - '2'
+        - '7'
+      - - 25/26（モナコ）
+        - '24'
+        - '3'
+        - '4'
+      - - 26/27（モナコ）
+        - '10'
+        - '0'
+        - '1'
+      highlight_row: 3
+  - text: 2025年の秋には、足首のけがで、およそ2か月、離れました。
+    card: none
+  - text: これまでで、いちばん長い離脱でした。
+    card: none
+  sources:
+  - https://www.transfermarkt.com/lamine-camara/leistungsdatendetails/spieler/918969
+  - https://africasoccer.com/senegal-midfielder-lamine-camara-ready-to-play-in-any-role-to-help-as-monaco/
+  quotes_from: []
+- id: words
+  heading: カマラは、自分の課題を、どう話しているのか
+  tier: 背景
+  telop: 本人の言葉
+  narrator: 解説
+  card:
+    type: document
+    label: 記者会見（2025年12月）
+    paragraphs:
+    - おっしゃるとおり、ボールはたくさん奪っています。でも、あとは、それを生かして、アシストを出したい。あるいは、攻めを自分で仕上げることも。
+    - 遠くから打って点を取るのが好きです。監督は、その自由をくれます。
+    highlight:
+    - アシストを出したい
+    - 遠くから打って
+  say:
+  - text: 2025年12月、カマラは、記者会見で、自分の課題を話しました。
+    image: assets/images/20261117_player_918969/01_w.jpg
+    card: none
+  - voice: カマラ
+    text: おっしゃるとおり、ボールはたくさん奪っています。
+    card:
+      type: document
+      label: 記者会見（2025年12月）
+      paragraphs:
+      - おっしゃるとおり、ボールはたくさん奪っています。でも、あとは、それを生かして、アシストを出したい。あるいは、攻めを自分で仕上げることも。
+      - 遠くから打って点を取るのが好きです。監督は、その自由をくれます。
+      highlight:
+      - アシストを出したい
+      - 遠くから打って
+  - voice: カマラ
+    text: でも、あとは、それを生かして、アシストを出したい。
+    card:
+      type: document
+      label: 記者会見（2025年12月）
+      paragraphs:
+      - おっしゃるとおり、ボールはたくさん奪っています。でも、あとは、それを生かして、アシストを出したい。あるいは、攻めを自分で仕上げることも。
+      - 遠くから打って点を取るのが好きです。監督は、その自由をくれます。
+      highlight:
+      - アシストを出したい
+      - 遠くから打って
+    cont: true
+  - voice: カマラ
+    text: あるいは、攻めを自分で仕上げることも。
+    card:
+      type: document
+      label: 記者会見（2025年12月）
+      paragraphs:
+      - おっしゃるとおり、ボールはたくさん奪っています。でも、あとは、それを生かして、アシストを出したい。あるいは、攻めを自分で仕上げることも。
+      - 遠くから打って点を取るのが好きです。監督は、その自由をくれます。
+      highlight:
+      - アシストを出したい
+      - 遠くから打って
+    cont: true
+    pause: 0.5
+  - text: 奪う数字は、すでに知られています。足りないのは、最後の一歩だと、本人は見ています。
+    image: assets/images/20261117_player_918969/02_w.jpg
+    card: none
+    emph: true
+  - text: 遠くから打って点を取るのも、好きだと言います。
+    card: none
+  - voice: カマラ
+    text: 遠くから打って点を取るのが好きです。
+    card:
+      type: document
+      label: 記者会見（2025年12月）
+      paragraphs:
+      - おっしゃるとおり、ボールはたくさん奪っています。でも、あとは、それを生かして、アシストを出したい。あるいは、攻めを自分で仕上げることも。
+      - 遠くから打って点を取るのが好きです。監督は、その自由をくれます。
+      highlight:
+      - アシストを出したい
+      - 遠くから打って
+  - voice: カマラ
+    text: 監督は、その自由をくれます。
+    card:
+      type: document
+      label: 記者会見（2025年12月）
+      paragraphs:
+      - おっしゃるとおり、ボールはたくさん奪っています。でも、あとは、それを生かして、アシストを出したい。あるいは、攻めを自分で仕上げることも。
+      - 遠くから打って点を取るのが好きです。監督は、その自由をくれます。
+      highlight:
+      - アシストを出したい
+      - 遠くから打って
+    cont: true
+    pause: 0.5
+  - text: 2026年2月には、監督に見えていた課題を、自分から口にしています。
+    card:
+      type: document
+      label: 取材（2026年2月）
+      paragraphs:
+      - 監督は、僕が細かいところで苦しんでいるのを見ていました。特に、不必要なボールロストと、悪いパスです。
+      highlight:
+      - ボールロスト
+      - 悪いパス
+  - voice: カマラ
+    text: 監督は、僕が細かいところで苦しんでいるのを見ていました。
+    card:
+      type: document
+      label: 取材（2026年2月）
+      paragraphs:
+      - 監督は、僕が細かいところで苦しんでいるのを見ていました。特に、不必要なボールロストと、悪いパスです。
+      highlight:
+      - ボールロスト
+      - 悪いパス
+  - voice: カマラ
+    text: 特に、不必要なボールロストと、悪いパスです。
+    card:
+      type: document
+      label: 取材（2026年2月）
+      paragraphs:
+      - 監督は、僕が細かいところで苦しんでいるのを見ていました。特に、不必要なボールロストと、悪いパスです。
+      highlight:
+      - ボールロスト
+      - 悪いパス
+    cont: true
+    pause: 0.5
+  quotes_from:
+  - AfricaSoccer https://africasoccer.com/senegal-midfielder-lamine-camara-ready-to-play-in-any-role-to-help-as-monaco/
+  - AfricaSoccer https://africasoccer.com/lamine-camara-injury-psg-monaco-ligue1-push/
+  sources:
+  - https://africasoccer.com/senegal-midfielder-lamine-camara-ready-to-play-in-any-role-to-help-as-monaco/
+  - https://africasoccer.com/lamine-camara-injury-psg-monaco-ligue1-push/
+- id: worldcup
+  heading: カマラは、W杯のセネガル代表で、何をしたのか
+  tier: 報道
+  telop: W杯のセネガル代表
+  narrator: 解説
+  card:
+    type: table
+    title: 2026年W杯 セネガル代表のカマラ
+    columns:
+    - 試合
+    - 結果
+    - 出場
+    rows:
+    - - 6/16 初戦 フランス
+      - 1-3
+      - 76分
+    - - 6/23 第2戦
+      - 2-3
+      - 63分
+    - - 6/26 第3戦
+      - 5-0
+      - 57分 1アシスト
+    - - 7/1 ラウンド32
+      - 2-3
+      - 54分
+    highlight_row: 0
+  say:
+  - text: 2026年6月、W杯。セネガルは、フランスとノルウェーと、同じグループでした。
+    image: assets/images/20261117_player_918969/01_w.jpg
+    card: none
+  - text: 6月16日の初戦は、フランス戦。カマラは先発して、76分間プレーしました。
+    card:
+      type: table
+      title: 2026年W杯 セネガル代表のカマラ
+      columns:
+      - 試合
+      - 結果
+      - 出場
+      rows:
+      - - 6/16 初戦 フランス
+        - 1-3
+        - 76分
+      - - 6/23 第2戦
+        - 2-3
+        - 63分
+      - - 6/26 第3戦
+        - 5-0
+        - 57分 1アシスト
+      - - 7/1 ラウンド32
+        - 2-3
+        - 54分
+      highlight_row: 0
+  - text: 結果は、1対3の負けでした。
+    card:
+      type: table
+      title: 2026年W杯 セネガル代表のカマラ
+      columns:
+      - 試合
+      - 結果
+      - 出場
+      rows:
+      - - 6/16 初戦 フランス
+        - 1-3
+        - 76分
+      - - 6/23 第2戦
+        - 2-3
+        - 63分
+      - - 6/26 第3戦
+        - 5-0
+        - 57分 1アシスト
+      - - 7/1 ラウンド32
+        - 2-3
+        - 54分
+      highlight_row: 0
+  - text: 6月26日、グループ最終戦は、5対0の大勝。
+    image: assets/images/20261117_player_918969/02_w.jpg
+    card:
+      type: table
+      title: 2026年W杯 セネガル代表のカマラ
+      columns:
+      - 試合
+      - 結果
+      - 出場
+      rows:
+      - - 6/16 初戦 フランス
+        - 1-3
+        - 76分
+      - - 6/23 第2戦
+        - 2-3
+        - 63分
+      - - 6/26 第3戦
+        - 5-0
+        - 57分 1アシスト
+      - - 7/1 ラウンド32
+        - 2-3
+        - 54分
+      highlight_row: 2
+  - text: カマラは57分間の出場で、1アシストです。
+    card:
+      type: table
+      title: 2026年W杯 セネガル代表のカマラ
+      columns:
+      - 試合
+      - 結果
+      - 出場
+      rows:
+      - - 6/16 初戦 フランス
+        - 1-3
+        - 76分
+      - - 6/23 第2戦
+        - 2-3
+        - 63分
+      - - 6/26 第3戦
+        - 5-0
+        - 57分 1アシスト
+      - - 7/1 ラウンド32
+        - 2-3
+        - 54分
+      highlight_row: 2
+    emph: true
+  - text: 7月1日のラウンド32では、2対3で敗れて、大会を去りました。
+    card:
+      type: table
+      title: 2026年W杯 セネガル代表のカマラ
+      columns:
+      - 試合
+      - 結果
+      - 出場
+      rows:
+      - - 6/16 初戦 フランス
+        - 1-3
+        - 76分
+      - - 6/23 第2戦
+        - 2-3
+        - 63分
+      - - 6/26 第3戦
+        - 5-0
+        - 57分 1アシスト
+      - - 7/1 ラウンド32
+        - 2-3
+        - 54分
+      highlight_row: 3
+  - text: 出場は4試合。合計で、250分間でした。
+    image: assets/images/20261117_player_918969/01_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Lamine_Camara
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_knockout_stage
+  - https://www.transfermarkt.com/lamine-camara/leistungsdatendetails/spieler/918969
+  quotes_from: []
+- id: past
+  heading: カマラは、クラブで、これまで何試合に出て、何点取ってきたのか
+  tier: 報道
+  telop: クラブ通算122試合9点
+  narrator: 解説
+  card:
+    type: table
+    title: カマラ クラブでの通算（11月8日まで）
+    columns:
+    - 所属
+    - 試合
+    - 得点
+    rows:
+    - - メス（2023〜24）
+      - '37'
+      - '2'
+    - - モナコ（2024〜）
+      - '85'
+      - '7'
+    - - 合計
+      - '122'
+      - '9'
+    highlight_row: 0
+  say:
+  - text: ここからは、カマラの、クラブでの通算です。
+    image: assets/images/20261117_player_918969/02_w.jpg
+    card:
+      type: table
+      title: カマラ クラブでの通算（11月8日まで）
+      columns:
+      - 所属
+      - 試合
+      - 得点
+      rows:
+      - - メス（2023〜24）
+        - '37'
+        - '2'
+      - - モナコ（2024〜）
+        - '85'
+        - '7'
+      - - 合計
+        - '122'
+        - '9'
+      highlight_row: 0
+  - text: メスでは、1年半で、37試合2点。
+    card:
+      type: table
+      title: カマラ クラブでの通算（11月8日まで）
+      columns:
+      - 所属
+      - 試合
+      - 得点
+      rows:
+      - - メス（2023〜24）
+        - '37'
+        - '2'
+      - - モナコ（2024〜）
+        - '85'
+        - '7'
+      - - 合計
+        - '122'
+        - '9'
+      highlight_row: 0
+  - text: モナコでは、2年3か月で、85試合7点。
+    card:
+      type: table
+      title: カマラ クラブでの通算（11月8日まで）
+      columns:
+      - 所属
+      - 試合
+      - 得点
+      rows:
+      - - メス（2023〜24）
+        - '37'
+        - '2'
+      - - モナコ（2024〜）
+        - '85'
+        - '7'
+      - - 合計
+        - '122'
+        - '9'
+      highlight_row: 1
+  - text: 合計は、122試合で9点です。
+    card:
+      type: table
+      title: カマラ クラブでの通算（11月8日まで）
+      columns:
+      - 所属
+      - 試合
+      - 得点
+      rows:
+      - - メス（2023〜24）
+        - '37'
+        - '2'
+      - - モナコ（2024〜）
+        - '85'
+        - '7'
+      - - 合計
+        - '122'
+        - '9'
+      highlight_row: 2
+    emph: true
+  - text: 今季の2点は、どちらも、ヨーロッパのカップ戦のものです。
+    image: assets/images/20261117_player_918969/02_w.jpg
+    card: none
+  - text: リーグ・アンでは、まだ、点が出ていません。
+    card: none
+  sources:
+  - https://www.transfermarkt.com/lamine-camara/leistungsdatendetails/spieler/918969
+  quotes_from: []
+- id: view
+  heading: 20万ユーロだった19歳の値段は、なぜ、275倍になったのか
+  tier: 背景
+  viewpoint: true
+  telop: 市場価値と、出続ける力
+  narrator: 解説
+  card:
+    type: table
+    title: カマラの市場価値
+    columns:
+    - 項目
+    - 数字
+    rows:
+    - - 2023年6月（メスのBチーム）
+      - 20万ユーロ
+    - - 2024年6月（メス）
+      - 1000万ユーロ
+    - - 2026年9月（モナコ）
+      - 5500万ユーロ
+    - - 上がった倍率
+      - およそ275倍
+    highlight_row: 0
+  say:
+  - text: 最後に、カマラを、値段の面から見ます。
+    image: assets/images/20261117_player_918969/02_w.jpg
+    card: none
+  - text: 2023年6月、メスのBチームにいたころは、20万ユーロでした。
+    card:
+      type: table
+      title: カマラの市場価値
+      columns:
+      - 項目
+      - 数字
+      rows:
+      - - 2023年6月（メスのBチーム）
+        - 20万ユーロ
+      - - 2024年6月（メス）
+        - 1000万ユーロ
+      - - 2026年9月（モナコ）
+        - 5500万ユーロ
+      - - 上がった倍率
+        - およそ275倍
+      highlight_row: 0
+  - text: 2024年6月、メスのトップチームで、1000万ユーロ。
+    image: assets/images/20261117_player_918969/02_w.jpg
+    card:
+      type: table
+      title: カマラの市場価値
+      columns:
+      - 項目
+      - 数字
+      rows:
+      - - 2023年6月（メスのBチーム）
+        - 20万ユーロ
+      - - 2024年6月（メス）
+        - 1000万ユーロ
+      - - 2026年9月（モナコ）
+        - 5500万ユーロ
+      - - 上がった倍率
+        - およそ275倍
+      highlight_row: 1
+  - text: 2026年9月には、モナコで、5500万ユーロ。倍率にして、約275倍です。
+    card:
+      type: table
+      title: カマラの市場価値
+      columns:
+      - 項目
+      - 数字
+      rows:
+      - - 2023年6月（メスのBチーム）
+        - 20万ユーロ
+      - - 2024年6月（メス）
+        - 1000万ユーロ
+      - - 2026年9月（モナコ）
+        - 5500万ユーロ
+      - - 上がった倍率
+        - およそ275倍
+      highlight_row: 3
+    emph: true
+    mark:
+      kind: circle
+      row: 3
+  - text: その間の、クラブでの得点は9点。アシストは、18です。
+    card: none
+  - text: 点の数が、値段を押し上げたわけではありません。
+    image: assets/images/20261117_player_918969/01_w.jpg
+    card: none
+  - text: 今季のリーグ戦で、全試合にフル出場してきた、
+    card: none
+  - text: その出場時間の長さが、評価につながっていると見られます。
+    card: none
+  - text: 本人が挙げた課題は、アシストです。
+    card: none
+  - text: 次の見どころは、リーグ・アンでの、今季最初のゴールです。
+    image: assets/images/20261117_player_918969/02_w.jpg
+    card: none
+  sources:
+  - https://www.transfermarkt.com/lamine-camara/marktwertverlauf/spieler/918969
+  - https://www.transfermarkt.com/lamine-camara/leistungsdatendetails/spieler/918969
+  - https://africasoccer.com/senegal-midfielder-lamine-camara-ready-to-play-in-any-role-to-help-as-monaco/
+  quotes_from: []

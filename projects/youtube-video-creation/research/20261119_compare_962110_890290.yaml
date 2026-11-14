@@ -1,0 +1,1882 @@
+# 取材メモ（11/19 木、シリーズ「比べる」、key: compare_962110_890290）。パウ・クバルシ（バルセロナ・19歳）×ディーン・ハイセン（レアル・マドリード・21歳）。
+# **情報の時点は 2026-11-12**。FotMob・DataMB は使っていない。数字は Transfermarkt の API（2026-11-12 取得。控え: research/raw/20261119_cubarsi_tm.json・20261119_huijsen_tm.json）。
+#   Transfermarkt 番号：クバルシ 962110・ハイセン 890290。player・market-value-history・performance-season（2023〜2026季）を2.5秒あけて取得。
+# **選んだ理由**：クラシコの両クラブの若いセンターバック（19歳と21歳、同じスペイン代表）。今季の出場時間は 1142分 と 1042分（どちらも1000分超、足切り450分を超える）。
+#   守備の選手は得点・アシストで比べにくいので、TM の「出ている間のチームの得点・失点」（teamGoalsOnThePitchSum・opponentGoalsOnThePitch）を90分あたりに自分で割って軸にする。クラブの公式戦だけで数える（代表戦は混ぜない）。
+#   重なり：scripts/*compare*・posted.json・covered.yaml・picks を grep。この2人の組は初めて。クバルシは 10/07 に若手の本・9/08 にバルサの本、ハイセンは単独の回が無い。比べるの回には両者とも未登場。
+#   同じ日（11/19）の picks（選手紹介 ムシアラ・インテルのユニフォーム・ビジャレアルのスタジアム・中山雅史）とは人もクラブも重ならない。11/21 の比べる（クヴァラツヘリア×ドク）とも重ならない。
+#   **外した候補**：サリバ×クバルシ（サリバは 26/27 のアーセナルで出場0分、足切りを満たさない）・ヤマル×ユルドゥズ（ヤマルが10/20・10/22 に登場済み／ユルドゥズは 26/27 の出場69分）。
+#   日本との接点：無し（入れない）。
+# **2人とも今季も欧州7リーグの1部**：バルセロナ（ラ・リーガ。TM の現所属 131）・レアル・マドリード（ラ・リーガ。TM の現所属 418、2025-06-01〜）。
+# **使った数**（TM の performance-season の、クラブのトップチームの公式戦だけ。代表戦は混ぜない。試合・出場時間・得点・アシスト）
+#   クバルシ：23/24 バルセロナ 24試合 1927分 0点1A／24/25 バルセロナ 56試合 4214分 1点4A／25/26 バルセロナ 48試合 3978分 1点0A／26/27 バルセロナ 13試合 1142分 0点2A（11月12日時点。先発 13）
+#   ハイセン：24/25 ボーンマス 36試合 2812分 3点2A（クラブW杯のレアルでの5試合450分は除く）／25/26 レアル・マドリード 40試合 3038分 2点2A（先発36）／26/27 レアル・マドリード 12試合 1042分 0点0A（先発12）
+#   出ている間のチームの得点・失点（TM。クラブの公式戦、90分あたりに自分で割った値）：
+#     クバルシ 25/26 得点115・失点47／3978分 → 2.60・1.06・差+1.54。26/27 得点45・失点17／1142分 → 3.55・1.34・差+2.21
+#     ハイセン 25/26 得点76・失点33／3038分 → 2.25・0.98・差+1.27。26/27 得点31・失点9／1042分 → 2.68・0.78・差+1.90
+#   差：今季 得点 3.55-2.68＝0.87／失点 1.34-0.78＝0.56／出場時間 1142-1042＝100／昨季 3978-3038＝940。**チームの数字で、本人だけの数字ではない**（台本でも言う）。
+# 市場価値（TM）：クバルシ 2024-06 3000万€→2024-12 7000万→2025-06 8000万→2025-12 8000万→2026-06 8000万→2026-07 1億（最高）／ハイセン 2024-06 1000万€→2024-12 1800万→2025-05 6000万→2025-12 7000万（最高）→2026-06 6000万
+# 経歴（Wikipedia 英語版）：クバルシ 2024年1月18日にトップチームで初出場、W杯2026（スペイン優勝）に全試合フル出場し最優秀若手選手。ハイセン 2025年5月17日にレアルが獲得を発表、移籍金5000万£（5950万€）、W杯2026のスペイン代表メンバーから外れた。
+# 写真：下記の出典（Commons）。pair_a〜d は pairphoto。
+slot: other_1
+date: 2026年11月12日
+format: news
+series: 比べる
+people:
+- パウ・クバルシ
+- ディーン・ハイセン
+- バルセロナ
+- レアル・マドリード
+theme:
+  end_bg: assets/images/20261119_compare_962110_890290/pair_c/01.jpg
+  id: compare_962110_890290
+  league: spain
+  kind: other
+  topic: クバルシとハイセン
+  prefix: ''
+  title: クバルシとハイセン、バルサとレアルの若いセンターバック。失点が少ないのはどちらか
+  hook: ''
+  question: クバルシは19歳でバルセロナ、ハイセンは21歳でレアル・マドリード。クラシコの両クラブの若いセンターバック2人は、出ている間のチームの失点で、どう違うのか
+  takeaway: 出ている間の失点は、今季ハイセンが0.78、クバルシが1.34でハイセンが少ない。ただ得失点差はクバルシが＋2.21、ハイセンが＋1.90。バルセロナは点も多く取るため。チームの数字なので1人だけの力ではない
+  league_name: ラ・リーガ
+  opening_image: assets/images/20261119_compare_962110_890290/pair_a/01.jpg
+short_title: クバルシとハイセン、バルサとレアルの若いセンターバック
+thumbnail:
+  photo: assets/images/20261119_compare_962110_890290/pair_a/01.jpg
+  photos:
+  - assets/images/20261119_compare_962110_890290/c1/01_t.jpg
+  - assets/images/20261119_compare_962110_890290/h1/01_t.jpg
+  short_photo: assets/images/20261119_compare_962110_890290/pair_a/01_v.jpg
+  face_link: VS
+  line1: クバルシとハイセン
+  line2: 今季の失点 1.34と0.78
+  tags:
+  - クバルシ
+  - ハイセン
+  - バルセロナ
+  - レアル・マドリード
+answer: 今季の失点はハイセンが少なく、得失点差はクバルシが上。失点は1.34と0.78
+watch: 毎日、数字でサッカーを読み解きます
+sections:
+- id: hook
+  heading: バルサとレアルの若いセンターバックは、いまどれだけ出ているのか
+  tier: 報道
+  telop: 今季、クラブの公式戦
+  narrator: 解説
+  card:
+    type: stats
+    title: 今季の出場時間（クラブの公式戦）
+    items:
+    - - '1142'
+      - 分
+      - クバルシ
+    - - '1042'
+      - 分
+      - ハイセン
+    - - 1.34と0.78
+      - 失点（90分）
+      - 出ている間のチーム
+    focus: 2
+  say:
+  - text: バルセロナのセンターバック、パウ・クバルシ。
+    image: assets/images/20261119_compare_962110_890290/c1/01_w.jpg
+    card: none
+  - text: レアル・マドリードのセンターバック、ディーン・ハイセン。
+    image: assets/images/20261119_compare_962110_890290/h1/01_w.jpg
+    card: none
+  - text: クバルシは19歳。ハイセンは21歳です。
+    image: assets/images/20261119_compare_962110_890290/pair_d/01.jpg
+    card: none
+  - text: 2人とも、スペイン代表です。
+    image: assets/images/20261119_compare_962110_890290/pair_d/01.jpg
+    card: none
+  - text: 対象は、11月12日までのクラブの試合だけ。
+    image: assets/images/20261119_compare_962110_890290/c1/01_r.jpg
+    card:
+      type: stats
+      title: 今季の出場時間（クラブの公式戦）
+      items:
+      - - '1142'
+        - 分
+        - クバルシ
+      - - '1042'
+        - 分
+        - ハイセン
+      - - 1.34と0.78
+        - 失点（90分）
+        - 出ている間のチーム
+      focus: 0
+  - text: 今季の出場時間は、どちらも1000分を超えました。
+    image: assets/images/20261119_compare_962110_890290/h1/01_w.jpg
+    card:
+      type: stats
+      title: 今季の出場時間（クラブの公式戦）
+      items:
+      - - '1142'
+        - 分
+        - クバルシ
+      - - '1042'
+        - 分
+        - ハイセン
+      - - 1.34と0.78
+        - 失点（90分）
+        - 出ている間のチーム
+      focus: 1
+  - text: センターバックの仕事は、点を取ることより、失点を防ぐこと。
+    image: assets/images/20261119_compare_962110_890290/c1/01_r.jpg
+    card:
+      type: stats
+      title: 今季の出場時間（クラブの公式戦）
+      items:
+      - - '1142'
+        - 分
+        - クバルシ
+      - - '1042'
+        - 分
+        - ハイセン
+      - - 1.34と0.78
+        - 失点（90分）
+        - 出ている間のチーム
+      focus: 2
+  - text: 本人がいた間にチームが失った点を、90分あたりで比べます。
+    image: assets/images/20261119_compare_962110_890290/c1/01_r.jpg
+    card:
+      type: stats
+      title: 今季の出場時間（クラブの公式戦）
+      items:
+      - - '1142'
+        - 分
+        - クバルシ
+      - - '1042'
+        - 分
+        - ハイセン
+      - - 1.34と0.78
+        - 失点（90分）
+        - 出ている間のチーム
+      focus: 2
+  - text: クバルシが1.34点、ハイセンが0.78点。
+    image: assets/images/20261119_compare_962110_890290/c1/01_r.jpg
+    card:
+      type: stats
+      title: 今季の出場時間（クラブの公式戦）
+      items:
+      - - '1142'
+        - 分
+        - クバルシ
+      - - '1042'
+        - 分
+        - ハイセン
+      - - 1.34と0.78
+        - 失点（90分）
+        - 出ている間のチーム
+      focus: 2
+    emph: true
+  - text: クバルシのほうが、約7割多い。この差が何を示すのか、ひとつずつ見ていきます。
+    image: assets/images/20261119_compare_962110_890290/pair_c/01.jpg
+    card: none
+  sources:
+  - https://www.transfermarkt.com/pau-cubarsi/leistungsdaten/spieler/962110
+  - https://www.transfermarkt.com/dean-huijsen/leistungsdaten/spieler/890290
+- id: data
+  heading: クバルシとハイセンは、どこから、いくらで来た選手なのか
+  tier: 報道
+  telop: 19歳と21歳
+  narrator: 解説
+  card:
+    type: duel
+    left:
+      name: クバルシ
+      club: バルセロナ
+      photo: assets/images/20261119_compare_962110_890290/c1/01_sq.jpg
+      color: '#a50044'
+    right:
+      name: ハイセン
+      club: レアル・マドリード
+      photo: assets/images/20261119_compare_962110_890290/h1/01_sq.jpg
+      color: '#d4af37'
+    rows:
+    - - 年齢
+      - 19歳
+      - 21歳
+    - - 代表
+      - スペイン
+      - スペイン
+    - - 身長
+      - 1.84m
+      - 1.95m
+    - - 前のクラブ
+      - ユース育ち
+      - ボーンマス
+    - - 移った時期
+      - 2024年1月
+      - 2025年夏
+    - - 移籍金（報道）
+      - なし
+      - 約5950万€
+    - - 市場価値
+      - 1億€
+      - 6000万€
+    bars: false
+    note: クバルシの「移った時期」は、トップチームで初めて出た月。市場価値は最新の値
+  say:
+  - text: クバルシは19歳。バルセロナのユース育ちです。
+    image: assets/images/20261119_compare_962110_890290/c1/01_r.jpg
+    card:
+      type: duel
+      left:
+        name: クバルシ
+        club: バルセロナ
+        photo: assets/images/20261119_compare_962110_890290/c1/01_sq.jpg
+        color: '#a50044'
+      right:
+        name: ハイセン
+        club: レアル・マドリード
+        photo: assets/images/20261119_compare_962110_890290/h1/01_sq.jpg
+        color: '#d4af37'
+      rows:
+      - - 年齢
+        - 19歳
+        - 21歳
+      - - 代表
+        - スペイン
+        - スペイン
+      - - 身長
+        - 1.84m
+        - 1.95m
+      - - 前のクラブ
+        - ユース育ち
+        - ボーンマス
+      - - 移った時期
+        - 2024年1月
+        - 2025年夏
+      - - 移籍金（報道）
+        - なし
+        - 約5950万€
+      - - 市場価値
+        - 1億€
+        - 6000万€
+      bars: false
+      note: クバルシの「移った時期」は、トップチームで初めて出た月。市場価値は最新の値
+      highlight_row: 前のクラブ
+  - text: トップチームで初めて出たのは、2024年1月。
+    image: assets/images/20261119_compare_962110_890290/c1/01_r.jpg
+    card:
+      type: duel
+      left:
+        name: クバルシ
+        club: バルセロナ
+        photo: assets/images/20261119_compare_962110_890290/c1/01_sq.jpg
+        color: '#a50044'
+      right:
+        name: ハイセン
+        club: レアル・マドリード
+        photo: assets/images/20261119_compare_962110_890290/h1/01_sq.jpg
+        color: '#d4af37'
+      rows:
+      - - 年齢
+        - 19歳
+        - 21歳
+      - - 代表
+        - スペイン
+        - スペイン
+      - - 身長
+        - 1.84m
+        - 1.95m
+      - - 前のクラブ
+        - ユース育ち
+        - ボーンマス
+      - - 移った時期
+        - 2024年1月
+        - 2025年夏
+      - - 移籍金（報道）
+        - なし
+        - 約5950万€
+      - - 市場価値
+        - 1億€
+        - 6000万€
+      bars: false
+      note: クバルシの「移った時期」は、トップチームで初めて出た月。市場価値は最新の値
+      highlight_row: 移った時期
+  - text: ハイセンは21歳。2025年の夏に、ボーンマスからレアルへ。
+    image: assets/images/20261119_compare_962110_890290/h1/01_w.jpg
+    card:
+      type: duel
+      left:
+        name: クバルシ
+        club: バルセロナ
+        photo: assets/images/20261119_compare_962110_890290/c1/01_sq.jpg
+        color: '#a50044'
+      right:
+        name: ハイセン
+        club: レアル・マドリード
+        photo: assets/images/20261119_compare_962110_890290/h1/01_sq.jpg
+        color: '#d4af37'
+      rows:
+      - - 年齢
+        - 19歳
+        - 21歳
+      - - 代表
+        - スペイン
+        - スペイン
+      - - 身長
+        - 1.84m
+        - 1.95m
+      - - 前のクラブ
+        - ユース育ち
+        - ボーンマス
+      - - 移った時期
+        - 2024年1月
+        - 2025年夏
+      - - 移籍金（報道）
+        - なし
+        - 約5950万€
+      - - 市場価値
+        - 1億€
+        - 6000万€
+      bars: false
+      note: クバルシの「移った時期」は、トップチームで初めて出た月。市場価値は最新の値
+      highlight_row: 前のクラブ
+  - text: 移籍金は、報道で約5950万ユーロ。
+    image: assets/images/20261119_compare_962110_890290/h1/01_w.jpg
+    card:
+      type: duel
+      left:
+        name: クバルシ
+        club: バルセロナ
+        photo: assets/images/20261119_compare_962110_890290/c1/01_sq.jpg
+        color: '#a50044'
+      right:
+        name: ハイセン
+        club: レアル・マドリード
+        photo: assets/images/20261119_compare_962110_890290/h1/01_sq.jpg
+        color: '#d4af37'
+      rows:
+      - - 年齢
+        - 19歳
+        - 21歳
+      - - 代表
+        - スペイン
+        - スペイン
+      - - 身長
+        - 1.84m
+        - 1.95m
+      - - 前のクラブ
+        - ユース育ち
+        - ボーンマス
+      - - 移った時期
+        - 2024年1月
+        - 2025年夏
+      - - 移籍金（報道）
+        - なし
+        - 約5950万€
+      - - 市場価値
+        - 1億€
+        - 6000万€
+      bars: false
+      note: クバルシの「移った時期」は、トップチームで初めて出た月。市場価値は最新の値
+      highlight_row: 移籍金（報道）
+    emph: true
+  - text: 身長は、ハイセンのほうが11センチ高い。1.95メートルです。
+    image: assets/images/20261119_compare_962110_890290/h1/01_w.jpg
+    card:
+      type: duel
+      left:
+        name: クバルシ
+        club: バルセロナ
+        photo: assets/images/20261119_compare_962110_890290/c1/01_sq.jpg
+        color: '#a50044'
+      right:
+        name: ハイセン
+        club: レアル・マドリード
+        photo: assets/images/20261119_compare_962110_890290/h1/01_sq.jpg
+        color: '#d4af37'
+      rows:
+      - - 年齢
+        - 19歳
+        - 21歳
+      - - 代表
+        - スペイン
+        - スペイン
+      - - 身長
+        - 1.84m
+        - 1.95m
+      - - 前のクラブ
+        - ユース育ち
+        - ボーンマス
+      - - 移った時期
+        - 2024年1月
+        - 2025年夏
+      - - 移籍金（報道）
+        - なし
+        - 約5950万€
+      - - 市場価値
+        - 1億€
+        - 6000万€
+      bars: false
+      note: クバルシの「移った時期」は、トップチームで初めて出た月。市場価値は最新の値
+      highlight_row: 身長
+  sources:
+  - https://www.transfermarkt.com/pau-cubarsi/profil/spieler/962110
+  - https://www.transfermarkt.com/dean-huijsen/profil/spieler/890290
+  - https://en.wikipedia.org/wiki/Pau_Cubars%C3%AD
+  - https://en.wikipedia.org/wiki/Dean_Huijsen
+- id: seasons
+  heading: 昨季までの2季で、出場はどれだけ違ったのか
+  tier: 報道
+  telop: 季ごとの数（クラブの公式戦）
+  narrator: 解説
+  card:
+    type: table
+    title: 季ごとの数（クラブのトップチームの公式戦）
+    columns:
+    - 選手
+    - 季
+    - 試合
+    - 出場時間
+    - 得点
+    - アシスト
+    rows:
+    - - クバルシ
+      - 24/25
+      - '56'
+      - 4214分
+      - '1'
+      - '4'
+    - - クバルシ
+      - 25/26
+      - '48'
+      - 3978分
+      - '1'
+      - '0'
+    - - ハイセン
+      - 24/25
+      - '36'
+      - 2812分
+      - '3'
+      - '2'
+    - - ハイセン
+      - 25/26
+      - '40'
+      - 3038分
+      - '2'
+      - '2'
+    note: クバルシは2季ともバルセロナ。ハイセンの24/25はボーンマス、25/26はレアル・マドリード
+  say:
+  - text: 季ごとの出場を、表で見ます。
+    image: assets/images/20261119_compare_962110_890290/c1/01_r.jpg
+    card:
+      type: table
+      title: 季ごとの数（クラブのトップチームの公式戦）
+      columns:
+      - 選手
+      - 季
+      - 試合
+      - 出場時間
+      - 得点
+      - アシスト
+      rows:
+      - - クバルシ
+        - 24/25
+        - '56'
+        - 4214分
+        - '1'
+        - '4'
+      - - クバルシ
+        - 25/26
+        - '48'
+        - 3978分
+        - '1'
+        - '0'
+      - - ハイセン
+        - 24/25
+        - '36'
+        - 2812分
+        - '3'
+        - '2'
+      - - ハイセン
+        - 25/26
+        - '40'
+        - 3038分
+        - '2'
+        - '2'
+      note: クバルシは2季ともバルセロナ。ハイセンの24/25はボーンマス、25/26はレアル・マドリード
+  - text: クバルシは、2024/25に56試合、4214分。17歳から18歳の1季です。
+    image: assets/images/20261119_compare_962110_890290/c1/01_r.jpg
+    card:
+      type: table
+      title: 季ごとの数（クラブのトップチームの公式戦）
+      columns:
+      - 選手
+      - 季
+      - 試合
+      - 出場時間
+      - 得点
+      - アシスト
+      rows:
+      - - クバルシ
+        - 24/25
+        - '56'
+        - 4214分
+        - '1'
+        - '4'
+      - - クバルシ
+        - 25/26
+        - '48'
+        - 3978分
+        - '1'
+        - '0'
+      - - ハイセン
+        - 24/25
+        - '36'
+        - 2812分
+        - '3'
+        - '2'
+      - - ハイセン
+        - 25/26
+        - '40'
+        - 3038分
+        - '2'
+        - '2'
+      note: クバルシは2季ともバルセロナ。ハイセンの24/25はボーンマス、25/26はレアル・マドリード
+      highlight_row: 0
+  - text: 昨季は48試合、3978分。2季続けて、4000分前後です。
+    image: assets/images/20261119_compare_962110_890290/c1/01_r.jpg
+    card:
+      type: table
+      title: 季ごとの数（クラブのトップチームの公式戦）
+      columns:
+      - 選手
+      - 季
+      - 試合
+      - 出場時間
+      - 得点
+      - アシスト
+      rows:
+      - - クバルシ
+        - 24/25
+        - '56'
+        - 4214分
+        - '1'
+        - '4'
+      - - クバルシ
+        - 25/26
+        - '48'
+        - 3978分
+        - '1'
+        - '0'
+      - - ハイセン
+        - 24/25
+        - '36'
+        - 2812分
+        - '3'
+        - '2'
+      - - ハイセン
+        - 25/26
+        - '40'
+        - 3038分
+        - '2'
+        - '2'
+      note: クバルシは2季ともバルセロナ。ハイセンの24/25はボーンマス、25/26はレアル・マドリード
+      highlight_row: 1
+  - text: ハイセンは、2024/25にボーンマスで36試合、2812分。
+    image: assets/images/20261119_compare_962110_890290/h1/01_w.jpg
+    card:
+      type: table
+      title: 季ごとの数（クラブのトップチームの公式戦）
+      columns:
+      - 選手
+      - 季
+      - 試合
+      - 出場時間
+      - 得点
+      - アシスト
+      rows:
+      - - クバルシ
+        - 24/25
+        - '56'
+        - 4214分
+        - '1'
+        - '4'
+      - - クバルシ
+        - 25/26
+        - '48'
+        - 3978分
+        - '1'
+        - '0'
+      - - ハイセン
+        - 24/25
+        - '36'
+        - 2812分
+        - '3'
+        - '2'
+      - - ハイセン
+        - 25/26
+        - '40'
+        - 3038分
+        - '2'
+        - '2'
+      note: クバルシは2季ともバルセロナ。ハイセンの24/25はボーンマス、25/26はレアル・マドリード
+      highlight_row: 2
+  - text: 昨季はレアルで40試合、3038分です。
+    image: assets/images/20261119_compare_962110_890290/h1/01_w.jpg
+    card:
+      type: table
+      title: 季ごとの数（クラブのトップチームの公式戦）
+      columns:
+      - 選手
+      - 季
+      - 試合
+      - 出場時間
+      - 得点
+      - アシスト
+      rows:
+      - - クバルシ
+        - 24/25
+        - '56'
+        - 4214分
+        - '1'
+        - '4'
+      - - クバルシ
+        - 25/26
+        - '48'
+        - 3978分
+        - '1'
+        - '0'
+      - - ハイセン
+        - 24/25
+        - '36'
+        - 2812分
+        - '3'
+        - '2'
+      - - ハイセン
+        - 25/26
+        - '40'
+        - 3038分
+        - '2'
+        - '2'
+      note: クバルシは2季ともバルセロナ。ハイセンの24/25はボーンマス、25/26はレアル・マドリード
+      highlight_row: 3
+  - text: 昨季の出場は、クバルシのほうが940分長い。
+    image: assets/images/20261119_compare_962110_890290/c1/01_r.jpg
+    card:
+      type: table
+      title: 季ごとの数（クラブのトップチームの公式戦）
+      columns:
+      - 選手
+      - 季
+      - 試合
+      - 出場時間
+      - 得点
+      - アシスト
+      rows:
+      - - クバルシ
+        - 24/25
+        - '56'
+        - 4214分
+        - '1'
+        - '4'
+      - - クバルシ
+        - 25/26
+        - '48'
+        - 3978分
+        - '1'
+        - '0'
+      - - ハイセン
+        - 24/25
+        - '36'
+        - 2812分
+        - '3'
+        - '2'
+      - - ハイセン
+        - 25/26
+        - '40'
+        - 3038分
+        - '2'
+        - '2'
+      note: クバルシは2季ともバルセロナ。ハイセンの24/25はボーンマス、25/26はレアル・マドリード
+      highlight_row: 1
+    emph: true
+  - text: 今年のW杯は、スペインが優勝しました。
+    image: assets/images/20261119_compare_962110_890290/pair_d/01.jpg
+    card: none
+  - text: クバルシは全試合にフルで出て、大会の最優秀若手賞を手にしました。
+    image: assets/images/20261119_compare_962110_890290/c2/01_w.jpg
+    card: none
+  - text: ハイセンは、優勝した代表のメンバーには入っていません。
+    image: assets/images/20261119_compare_962110_890290/h1/01_w.jpg
+    card: none
+  sources:
+  - https://www.transfermarkt.com/pau-cubarsi/leistungsdaten/spieler/962110
+  - https://www.transfermarkt.com/dean-huijsen/leistungsdaten/spieler/890290
+  - https://en.wikipedia.org/wiki/Pau_Cubars%C3%AD
+  - https://en.wikipedia.org/wiki/Dean_Huijsen
+- id: split
+  heading: 昨季、出ている間にチームはどれだけ点を取り、失ったのか
+  tier: 報道
+  main: true
+  telop: 出ている間のチームの得点・失点（90分あたり）
+  narrator: 解説
+  card:
+    type: duel
+    left:
+      name: クバルシ
+      club: バルセロナ
+      photo: assets/images/20261119_compare_962110_890290/c1/01_sq.jpg
+      color: '#a50044'
+    right:
+      name: ハイセン
+      club: レアル・マドリード
+      photo: assets/images/20261119_compare_962110_890290/h1/01_sq.jpg
+      color: '#d4af37'
+    rows:
+    - - 昨季の出場時間
+      - 3978分
+      - 3038分
+    - - 出ている間の得点
+      - '2.60'
+      - '2.25'
+    - - 出ている間の失点
+      - '1.06'
+      - '0.98'
+    - - 得失点差
+      - ＋1.54
+      - ＋1.27
+    bars:
+    - 昨季の出場時間
+    lower:
+    - 出ている間の失点
+    note: 昨季（25/26）、クラブの公式戦。チーム全体の得点・失点を、本人の出場時間で割った90分あたりの値。自分で計算した値
+  say:
+  - text: 昨季の、クバルシとハイセン。センターバックの数字を並べます。
+    image: assets/images/20261119_compare_962110_890290/pair_a/01.jpg
+    card: none
+    short_only: true
+  - text: 集計するのは、本人が出場していた時間のチームの得点と失点。
+    image: assets/images/20261119_compare_962110_890290/c1/01_r.jpg
+    card:
+      type: duel
+      left:
+        name: クバルシ
+        club: バルセロナ
+        photo: assets/images/20261119_compare_962110_890290/c1/01_sq.jpg
+        color: '#a50044'
+      right:
+        name: ハイセン
+        club: レアル・マドリード
+        photo: assets/images/20261119_compare_962110_890290/h1/01_sq.jpg
+        color: '#d4af37'
+      rows:
+      - - 昨季の出場時間
+        - 3978分
+        - 3038分
+      - - 出ている間の得点
+        - '2.60'
+        - '2.25'
+      - - 出ている間の失点
+        - '1.06'
+        - '0.98'
+      - - 得失点差
+        - ＋1.54
+        - ＋1.27
+      bars:
+      - 昨季の出場時間
+      lower:
+      - 出ている間の失点
+      note: 昨季（25/26）、クラブの公式戦。チーム全体の得点・失点を、本人の出場時間で割った90分あたりの値。自分で計算した値
+      highlight_row: 昨季の出場時間
+  - text: それを出場時間で割り、90分あたりに直します。
+    image: assets/images/20261119_compare_962110_890290/c1/01_r.jpg
+    card:
+      type: duel
+      left:
+        name: クバルシ
+        club: バルセロナ
+        photo: assets/images/20261119_compare_962110_890290/c1/01_sq.jpg
+        color: '#a50044'
+      right:
+        name: ハイセン
+        club: レアル・マドリード
+        photo: assets/images/20261119_compare_962110_890290/h1/01_sq.jpg
+        color: '#d4af37'
+      rows:
+      - - 昨季の出場時間
+        - 3978分
+        - 3038分
+      - - 出ている間の得点
+        - '2.60'
+        - '2.25'
+      - - 出ている間の失点
+        - '1.06'
+        - '0.98'
+      - - 得失点差
+        - ＋1.54
+        - ＋1.27
+      bars:
+      - 昨季の出場時間
+      lower:
+      - 出ている間の失点
+      note: 昨季（25/26）、クラブの公式戦。チーム全体の得点・失点を、本人の出場時間で割った90分あたりの値。自分で計算した値
+      highlight_row: 昨季の出場時間
+  - text: 昨季、クバルシが出ていた間のバルセロナは、90分あたり2.60点を取りました。
+    image: assets/images/20261119_compare_962110_890290/c1/01_r.jpg
+    card:
+      type: duel
+      left:
+        name: クバルシ
+        club: バルセロナ
+        photo: assets/images/20261119_compare_962110_890290/c1/01_sq.jpg
+        color: '#a50044'
+      right:
+        name: ハイセン
+        club: レアル・マドリード
+        photo: assets/images/20261119_compare_962110_890290/h1/01_sq.jpg
+        color: '#d4af37'
+      rows:
+      - - 昨季の出場時間
+        - 3978分
+        - 3038分
+      - - 出ている間の得点
+        - '2.60'
+        - '2.25'
+      - - 出ている間の失点
+        - '1.06'
+        - '0.98'
+      - - 得失点差
+        - ＋1.54
+        - ＋1.27
+      bars:
+      - 昨季の出場時間
+      lower:
+      - 出ている間の失点
+      note: 昨季（25/26）、クラブの公式戦。チーム全体の得点・失点を、本人の出場時間で割った90分あたりの値。自分で計算した値
+      highlight_row: 出ている間の得点
+  - text: 失った点は、1.06点です。
+    image: assets/images/20261119_compare_962110_890290/c1/01_r.jpg
+    card:
+      type: duel
+      left:
+        name: クバルシ
+        club: バルセロナ
+        photo: assets/images/20261119_compare_962110_890290/c1/01_sq.jpg
+        color: '#a50044'
+      right:
+        name: ハイセン
+        club: レアル・マドリード
+        photo: assets/images/20261119_compare_962110_890290/h1/01_sq.jpg
+        color: '#d4af37'
+      rows:
+      - - 昨季の出場時間
+        - 3978分
+        - 3038分
+      - - 出ている間の得点
+        - '2.60'
+        - '2.25'
+      - - 出ている間の失点
+        - '1.06'
+        - '0.98'
+      - - 得失点差
+        - ＋1.54
+        - ＋1.27
+      bars:
+      - 昨季の出場時間
+      lower:
+      - 出ている間の失点
+      note: 昨季（25/26）、クラブの公式戦。チーム全体の得点・失点を、本人の出場時間で割った90分あたりの値。自分で計算した値
+      highlight_row: 出ている間の失点
+  - text: ハイセンが出ていた間のレアル・マドリードは、2.25点を取りました。
+    image: assets/images/20261119_compare_962110_890290/h1/01_w.jpg
+    card:
+      type: duel
+      left:
+        name: クバルシ
+        club: バルセロナ
+        photo: assets/images/20261119_compare_962110_890290/c1/01_sq.jpg
+        color: '#a50044'
+      right:
+        name: ハイセン
+        club: レアル・マドリード
+        photo: assets/images/20261119_compare_962110_890290/h1/01_sq.jpg
+        color: '#d4af37'
+      rows:
+      - - 昨季の出場時間
+        - 3978分
+        - 3038分
+      - - 出ている間の得点
+        - '2.60'
+        - '2.25'
+      - - 出ている間の失点
+        - '1.06'
+        - '0.98'
+      - - 得失点差
+        - ＋1.54
+        - ＋1.27
+      bars:
+      - 昨季の出場時間
+      lower:
+      - 出ている間の失点
+      note: 昨季（25/26）、クラブの公式戦。チーム全体の得点・失点を、本人の出場時間で割った90分あたりの値。自分で計算した値
+      highlight_row: 出ている間の得点
+  - text: 失った点は、0.98点です。
+    image: assets/images/20261119_compare_962110_890290/h1/01_w.jpg
+    card:
+      type: duel
+      left:
+        name: クバルシ
+        club: バルセロナ
+        photo: assets/images/20261119_compare_962110_890290/c1/01_sq.jpg
+        color: '#a50044'
+      right:
+        name: ハイセン
+        club: レアル・マドリード
+        photo: assets/images/20261119_compare_962110_890290/h1/01_sq.jpg
+        color: '#d4af37'
+      rows:
+      - - 昨季の出場時間
+        - 3978分
+        - 3038分
+      - - 出ている間の得点
+        - '2.60'
+        - '2.25'
+      - - 出ている間の失点
+        - '1.06'
+        - '0.98'
+      - - 得失点差
+        - ＋1.54
+        - ＋1.27
+      bars:
+      - 昨季の出場時間
+      lower:
+      - 出ている間の失点
+      note: 昨季（25/26）、クラブの公式戦。チーム全体の得点・失点を、本人の出場時間で割った90分あたりの値。自分で計算した値
+      highlight_row: 出ている間の失点
+  - text: 得点から失点を引くと、クバルシがプラス1.54、ハイセンがプラス1.27。
+    image: assets/images/20261119_compare_962110_890290/c1/01_r.jpg
+    card:
+      type: duel
+      left:
+        name: クバルシ
+        club: バルセロナ
+        photo: assets/images/20261119_compare_962110_890290/c1/01_sq.jpg
+        color: '#a50044'
+      right:
+        name: ハイセン
+        club: レアル・マドリード
+        photo: assets/images/20261119_compare_962110_890290/h1/01_sq.jpg
+        color: '#d4af37'
+      rows:
+      - - 昨季の出場時間
+        - 3978分
+        - 3038分
+      - - 出ている間の得点
+        - '2.60'
+        - '2.25'
+      - - 出ている間の失点
+        - '1.06'
+        - '0.98'
+      - - 得失点差
+        - ＋1.54
+        - ＋1.27
+      bars:
+      - 昨季の出場時間
+      lower:
+      - 出ている間の失点
+      note: 昨季（25/26）、クラブの公式戦。チーム全体の得点・失点を、本人の出場時間で割った90分あたりの値。自分で計算した値
+      highlight_row: 得失点差
+  - text: 失点は、ほぼ同じ水準でした。
+    image: assets/images/20261119_compare_962110_890290/c1/01_r.jpg
+    card:
+      type: duel
+      left:
+        name: クバルシ
+        club: バルセロナ
+        photo: assets/images/20261119_compare_962110_890290/c1/01_sq.jpg
+        color: '#a50044'
+      right:
+        name: ハイセン
+        club: レアル・マドリード
+        photo: assets/images/20261119_compare_962110_890290/h1/01_sq.jpg
+        color: '#d4af37'
+      rows:
+      - - 昨季の出場時間
+        - 3978分
+        - 3038分
+      - - 出ている間の得点
+        - '2.60'
+        - '2.25'
+      - - 出ている間の失点
+        - '1.06'
+        - '0.98'
+      - - 得失点差
+        - ＋1.54
+        - ＋1.27
+      bars:
+      - 昨季の出場時間
+      lower:
+      - 出ている間の失点
+      note: 昨季（25/26）、クラブの公式戦。チーム全体の得点・失点を、本人の出場時間で割った90分あたりの値。自分で計算した値
+      highlight_row: 出ている間の失点
+    emph: true
+  - text: ただ、チーム全体の数字です。センターバック1人だけの力ではありません。
+    image: assets/images/20261119_compare_962110_890290/h1/01_w.jpg
+    card: none
+  - text: 今季の数字は、次の節です。
+    image: assets/images/20261119_compare_962110_890290/pair_a/01.jpg
+    card: none
+  sources:
+  - https://www.transfermarkt.com/pau-cubarsi/leistungsdaten/spieler/962110
+  - https://www.transfermarkt.com/dean-huijsen/leistungsdaten/spieler/890290
+- id: value
+  heading: 2人の市場価値は、いつ開いたのか
+  tier: 報道
+  telop: 市場価値の歩み
+  narrator: 解説
+  card:
+    type: line
+    title: 市場価値の歩み（百万ユーロ）
+    x:
+    - 24年6月
+    - 24年12月
+    - 25年6月
+    - 25年12月
+    - 26年6月
+    - 26年7月
+    series:
+    - - クバルシ
+      - - 30
+        - 70
+        - 80
+        - 80
+        - 80
+        - 100
+    - - ハイセン
+      - - 10
+        - 18
+        - 60
+        - 70
+        - 60
+        - 60
+    focus: クバルシ
+    note: 各時点の直前に出た値
+  say:
+  - text: 市場価値の動きも見ます。
+    image: assets/images/20261119_compare_962110_890290/c1/01_r.jpg
+    card:
+      type: line
+      title: 市場価値の歩み（百万ユーロ）
+      x:
+      - 24年6月
+      - 24年12月
+      - 25年6月
+      - 25年12月
+      - 26年6月
+      - 26年7月
+      series:
+      - - クバルシ
+        - - 30
+          - 70
+          - 80
+          - 80
+          - 80
+          - 100
+      - - ハイセン
+        - - 10
+          - 18
+          - 60
+          - 70
+          - 60
+          - 60
+      focus: クバルシ
+      note: 各時点の直前に出た値
+  - text: クバルシは、2024年6月に3000万ユーロ。
+    image: assets/images/20261119_compare_962110_890290/c1/01_r.jpg
+    card:
+      type: line
+      title: 市場価値の歩み（百万ユーロ）
+      x:
+      - 24年6月
+      - 24年12月
+      - 25年6月
+      - 25年12月
+      - 26年6月
+      - 26年7月
+      series:
+      - - クバルシ
+        - - 30
+          - 70
+          - 80
+          - 80
+          - 80
+          - 100
+      - - ハイセン
+        - - 10
+          - 18
+          - 60
+          - 70
+          - 60
+          - 60
+      focus: クバルシ
+      note: 各時点の直前に出た値
+      highlight: 24年6月
+  - text: 2026年7月に、1億ユーロに届き、最高額です。
+    image: assets/images/20261119_compare_962110_890290/c1/01_r.jpg
+    card:
+      type: line
+      title: 市場価値の歩み（百万ユーロ）
+      x:
+      - 24年6月
+      - 24年12月
+      - 25年6月
+      - 25年12月
+      - 26年6月
+      - 26年7月
+      series:
+      - - クバルシ
+        - - 30
+          - 70
+          - 80
+          - 80
+          - 80
+          - 100
+      - - ハイセン
+        - - 10
+          - 18
+          - 60
+          - 70
+          - 60
+          - 60
+      focus: クバルシ
+      note: 各時点の直前に出た値
+      highlight: 26年7月
+  - text: ハイセンは、2024年6月に1000万ユーロ。
+    image: assets/images/20261119_compare_962110_890290/h1/01_w.jpg
+    card:
+      type: line
+      title: 市場価値の歩み（百万ユーロ）
+      x:
+      - 24年6月
+      - 24年12月
+      - 25年6月
+      - 25年12月
+      - 26年6月
+      - 26年7月
+      series:
+      - - クバルシ
+        - - 30
+          - 70
+          - 80
+          - 80
+          - 80
+          - 100
+      - - ハイセン
+        - - 10
+          - 18
+          - 60
+          - 70
+          - 60
+          - 60
+      focus: クバルシ
+      note: 各時点の直前に出た値
+      highlight: 24年6月
+  - text: 最高は、2025年12月の7000万ユーロ。
+    image: assets/images/20261119_compare_962110_890290/h1/01_w.jpg
+    card:
+      type: line
+      title: 市場価値の歩み（百万ユーロ）
+      x:
+      - 24年6月
+      - 24年12月
+      - 25年6月
+      - 25年12月
+      - 26年6月
+      - 26年7月
+      series:
+      - - クバルシ
+        - - 30
+          - 70
+          - 80
+          - 80
+          - 80
+          - 100
+      - - ハイセン
+        - - 10
+          - 18
+          - 60
+          - 70
+          - 60
+          - 60
+      focus: クバルシ
+      note: 各時点の直前に出た値
+      highlight: 25年12月
+  - text: いまの値は6000万ユーロ。
+    image: assets/images/20261119_compare_962110_890290/h1/01_w.jpg
+    card:
+      type: line
+      title: 市場価値の歩み（百万ユーロ）
+      x:
+      - 24年6月
+      - 24年12月
+      - 25年6月
+      - 25年12月
+      - 26年6月
+      - 26年7月
+      series:
+      - - クバルシ
+        - - 30
+          - 70
+          - 80
+          - 80
+          - 80
+          - 100
+      - - ハイセン
+        - - 10
+          - 18
+          - 60
+          - 70
+          - 60
+          - 60
+      focus: クバルシ
+      note: 各時点の直前に出た値
+      highlight: 26年7月
+  - text: クバルシのほうが、4000万ユーロ高い。
+    image: assets/images/20261119_compare_962110_890290/c1/01_r.jpg
+    card:
+      type: line
+      title: 市場価値の歩み（百万ユーロ）
+      x:
+      - 24年6月
+      - 24年12月
+      - 25年6月
+      - 25年12月
+      - 26年6月
+      - 26年7月
+      series:
+      - - クバルシ
+        - - 30
+          - 70
+          - 80
+          - 80
+          - 80
+          - 100
+      - - ハイセン
+        - - 10
+          - 18
+          - 60
+          - 70
+          - 60
+          - 60
+      focus: クバルシ
+      note: 各時点の直前に出た値
+      highlight: 26年7月
+    emph: true
+  sources:
+  - https://www.transfermarkt.com/pau-cubarsi/marktwertverlauf/spieler/962110
+  - https://www.transfermarkt.com/dean-huijsen/marktwertverlauf/spieler/890290
+- id: now
+  heading: 今季のここまで、2人が出ている間のチームはどうなのか
+  tier: 報道
+  telop: 2026年から27年 11月12日時点
+  narrator: 解説
+  card:
+    type: duel
+    left:
+      name: クバルシ
+      club: バルセロナ
+      photo: assets/images/20261119_compare_962110_890290/c1/01_sq.jpg
+      color: '#a50044'
+    right:
+      name: ハイセン
+      club: レアル・マドリード
+      photo: assets/images/20261119_compare_962110_890290/h1/01_sq.jpg
+      color: '#d4af37'
+    rows:
+    - - 試合
+      - '13'
+      - '12'
+    - - 出場時間
+      - 1142分
+      - 1042分
+    - - 先発
+      - '13'
+      - '12'
+    - - 出ている間の得点
+      - '3.55'
+      - '2.68'
+    - - 出ている間の失点
+      - '1.34'
+      - '0.78'
+    - - 得失点差
+      - ＋2.21
+      - ＋1.90
+    bars:
+    - 試合
+    - 出場時間
+    - 先発
+    lower:
+    - 出ている間の失点
+    note: 今季のクラブの公式戦（11月12日時点）。チーム全体の数を90分あたりに割った値。2人とも標本は十分
+  say:
+  - text: 今季の数です。
+    image: assets/images/20261119_compare_962110_890290/pair_a/01.jpg
+    card: none
+  - text: クバルシは13試合、1142分。ハイセンより100分長く出ています。
+    image: assets/images/20261119_compare_962110_890290/c1/01_r.jpg
+    card:
+      type: duel
+      left:
+        name: クバルシ
+        club: バルセロナ
+        photo: assets/images/20261119_compare_962110_890290/c1/01_sq.jpg
+        color: '#a50044'
+      right:
+        name: ハイセン
+        club: レアル・マドリード
+        photo: assets/images/20261119_compare_962110_890290/h1/01_sq.jpg
+        color: '#d4af37'
+      rows:
+      - - 試合
+        - '13'
+        - '12'
+      - - 出場時間
+        - 1142分
+        - 1042分
+      - - 先発
+        - '13'
+        - '12'
+      - - 出ている間の得点
+        - '3.55'
+        - '2.68'
+      - - 出ている間の失点
+        - '1.34'
+        - '0.78'
+      - - 得失点差
+        - ＋2.21
+        - ＋1.90
+      bars:
+      - 試合
+      - 出場時間
+      - 先発
+      lower:
+      - 出ている間の失点
+      note: 今季のクラブの公式戦（11月12日時点）。チーム全体の数を90分あたりに割った値。2人とも標本は十分
+      highlight_row: 出場時間
+  - text: バルセロナの得点は、出ている間で90分あたり3.55点。
+    image: assets/images/20261119_compare_962110_890290/c1/01_r.jpg
+    card:
+      type: duel
+      left:
+        name: クバルシ
+        club: バルセロナ
+        photo: assets/images/20261119_compare_962110_890290/c1/01_sq.jpg
+        color: '#a50044'
+      right:
+        name: ハイセン
+        club: レアル・マドリード
+        photo: assets/images/20261119_compare_962110_890290/h1/01_sq.jpg
+        color: '#d4af37'
+      rows:
+      - - 試合
+        - '13'
+        - '12'
+      - - 出場時間
+        - 1142分
+        - 1042分
+      - - 先発
+        - '13'
+        - '12'
+      - - 出ている間の得点
+        - '3.55'
+        - '2.68'
+      - - 出ている間の失点
+        - '1.34'
+        - '0.78'
+      - - 得失点差
+        - ＋2.21
+        - ＋1.90
+      bars:
+      - 試合
+      - 出場時間
+      - 先発
+      lower:
+      - 出ている間の失点
+      note: 今季のクラブの公式戦（11月12日時点）。チーム全体の数を90分あたりに割った値。2人とも標本は十分
+      highlight_row: 出ている間の得点
+  - text: 失点は1.34点。
+    image: assets/images/20261119_compare_962110_890290/c1/01_r.jpg
+    card:
+      type: duel
+      left:
+        name: クバルシ
+        club: バルセロナ
+        photo: assets/images/20261119_compare_962110_890290/c1/01_sq.jpg
+        color: '#a50044'
+      right:
+        name: ハイセン
+        club: レアル・マドリード
+        photo: assets/images/20261119_compare_962110_890290/h1/01_sq.jpg
+        color: '#d4af37'
+      rows:
+      - - 試合
+        - '13'
+        - '12'
+      - - 出場時間
+        - 1142分
+        - 1042分
+      - - 先発
+        - '13'
+        - '12'
+      - - 出ている間の得点
+        - '3.55'
+        - '2.68'
+      - - 出ている間の失点
+        - '1.34'
+        - '0.78'
+      - - 得失点差
+        - ＋2.21
+        - ＋1.90
+      bars:
+      - 試合
+      - 出場時間
+      - 先発
+      lower:
+      - 出ている間の失点
+      note: 今季のクラブの公式戦（11月12日時点）。チーム全体の数を90分あたりに割った値。2人とも標本は十分
+      highlight_row: 出ている間の失点
+  - text: ハイセンは12試合、1042分。クバルシより1試合少ない数字です。
+    image: assets/images/20261119_compare_962110_890290/h1/01_w.jpg
+    card:
+      type: duel
+      left:
+        name: クバルシ
+        club: バルセロナ
+        photo: assets/images/20261119_compare_962110_890290/c1/01_sq.jpg
+        color: '#a50044'
+      right:
+        name: ハイセン
+        club: レアル・マドリード
+        photo: assets/images/20261119_compare_962110_890290/h1/01_sq.jpg
+        color: '#d4af37'
+      rows:
+      - - 試合
+        - '13'
+        - '12'
+      - - 出場時間
+        - 1142分
+        - 1042分
+      - - 先発
+        - '13'
+        - '12'
+      - - 出ている間の得点
+        - '3.55'
+        - '2.68'
+      - - 出ている間の失点
+        - '1.34'
+        - '0.78'
+      - - 得失点差
+        - ＋2.21
+        - ＋1.90
+      bars:
+      - 試合
+      - 出場時間
+      - 先発
+      lower:
+      - 出ている間の失点
+      note: 今季のクラブの公式戦（11月12日時点）。チーム全体の数を90分あたりに割った値。2人とも標本は十分
+      highlight_row: 試合
+  - text: 出ている間、レアル・マドリードは2.68点を取っています。
+    image: assets/images/20261119_compare_962110_890290/h1/01_w.jpg
+    card:
+      type: duel
+      left:
+        name: クバルシ
+        club: バルセロナ
+        photo: assets/images/20261119_compare_962110_890290/c1/01_sq.jpg
+        color: '#a50044'
+      right:
+        name: ハイセン
+        club: レアル・マドリード
+        photo: assets/images/20261119_compare_962110_890290/h1/01_sq.jpg
+        color: '#d4af37'
+      rows:
+      - - 試合
+        - '13'
+        - '12'
+      - - 出場時間
+        - 1142分
+        - 1042分
+      - - 先発
+        - '13'
+        - '12'
+      - - 出ている間の得点
+        - '3.55'
+        - '2.68'
+      - - 出ている間の失点
+        - '1.34'
+        - '0.78'
+      - - 得失点差
+        - ＋2.21
+        - ＋1.90
+      bars:
+      - 試合
+      - 出場時間
+      - 先発
+      lower:
+      - 出ている間の失点
+      note: 今季のクラブの公式戦（11月12日時点）。チーム全体の数を90分あたりに割った値。2人とも標本は十分
+      highlight_row: 出ている間の得点
+  - text: 失点は0.78点です。
+    image: assets/images/20261119_compare_962110_890290/h1/01_w.jpg
+    card:
+      type: duel
+      left:
+        name: クバルシ
+        club: バルセロナ
+        photo: assets/images/20261119_compare_962110_890290/c1/01_sq.jpg
+        color: '#a50044'
+      right:
+        name: ハイセン
+        club: レアル・マドリード
+        photo: assets/images/20261119_compare_962110_890290/h1/01_sq.jpg
+        color: '#d4af37'
+      rows:
+      - - 試合
+        - '13'
+        - '12'
+      - - 出場時間
+        - 1142分
+        - 1042分
+      - - 先発
+        - '13'
+        - '12'
+      - - 出ている間の得点
+        - '3.55'
+        - '2.68'
+      - - 出ている間の失点
+        - '1.34'
+        - '0.78'
+      - - 得失点差
+        - ＋2.21
+        - ＋1.90
+      bars:
+      - 試合
+      - 出場時間
+      - 先発
+      lower:
+      - 出ている間の失点
+      note: 今季のクラブの公式戦（11月12日時点）。チーム全体の数を90分あたりに割った値。2人とも標本は十分
+      highlight_row: 出ている間の失点
+  - text: 得失点差は、クバルシがプラス2.21、ハイセンがプラス1.90。
+    image: assets/images/20261119_compare_962110_890290/c1/01_r.jpg
+    card:
+      type: duel
+      left:
+        name: クバルシ
+        club: バルセロナ
+        photo: assets/images/20261119_compare_962110_890290/c1/01_sq.jpg
+        color: '#a50044'
+      right:
+        name: ハイセン
+        club: レアル・マドリード
+        photo: assets/images/20261119_compare_962110_890290/h1/01_sq.jpg
+        color: '#d4af37'
+      rows:
+      - - 試合
+        - '13'
+        - '12'
+      - - 出場時間
+        - 1142分
+        - 1042分
+      - - 先発
+        - '13'
+        - '12'
+      - - 出ている間の得点
+        - '3.55'
+        - '2.68'
+      - - 出ている間の失点
+        - '1.34'
+        - '0.78'
+      - - 得失点差
+        - ＋2.21
+        - ＋1.90
+      bars:
+      - 試合
+      - 出場時間
+      - 先発
+      lower:
+      - 出ている間の失点
+      note: 今季のクラブの公式戦（11月12日時点）。チーム全体の数を90分あたりに割った値。2人とも標本は十分
+      highlight_row: 得失点差
+  - text: 失点はハイセンが少なく、得失点差はクバルシが上です。
+    image: assets/images/20261119_compare_962110_890290/c1/01_r.jpg
+    card:
+      type: duel
+      left:
+        name: クバルシ
+        club: バルセロナ
+        photo: assets/images/20261119_compare_962110_890290/c1/01_sq.jpg
+        color: '#a50044'
+      right:
+        name: ハイセン
+        club: レアル・マドリード
+        photo: assets/images/20261119_compare_962110_890290/h1/01_sq.jpg
+        color: '#d4af37'
+      rows:
+      - - 試合
+        - '13'
+        - '12'
+      - - 出場時間
+        - 1142分
+        - 1042分
+      - - 先発
+        - '13'
+        - '12'
+      - - 出ている間の得点
+        - '3.55'
+        - '2.68'
+      - - 出ている間の失点
+        - '1.34'
+        - '0.78'
+      - - 得失点差
+        - ＋2.21
+        - ＋1.90
+      bars:
+      - 試合
+      - 出場時間
+      - 先発
+      lower:
+      - 出ている間の失点
+      note: 今季のクラブの公式戦（11月12日時点）。チーム全体の数を90分あたりに割った値。2人とも標本は十分
+      highlight_row: 得失点差
+    emph: true
+  - text: あくまで現時点の数字を並べます。
+    image: assets/images/20261119_compare_962110_890290/pair_c/01.jpg
+    card: none
+  sources:
+  - https://www.transfermarkt.com/pau-cubarsi/leistungsdaten/spieler/962110
+  - https://www.transfermarkt.com/dean-huijsen/leistungsdaten/spieler/890290
+- id: view
+  heading: 見立て・失点が少ないのは、誰の力なのか
+  tier: 背景
+  viewpoint: true
+  telop: 数字の違いが示すもの
+  narrator: 解説
+  card:
+    type: duel
+    left:
+      name: クバルシ
+      club: バルセロナ
+      photo: assets/images/20261119_compare_962110_890290/c1/01_sq.jpg
+      color: '#a50044'
+    right:
+      name: ハイセン
+      club: レアル・マドリード
+      photo: assets/images/20261119_compare_962110_890290/h1/01_sq.jpg
+      color: '#d4af37'
+    rows:
+    - - 今季の得点（90分）
+      - '3.55'
+      - '2.68'
+    - - 今季の失点（90分）
+      - '1.34'
+      - '0.78'
+    - - 今季の得失点差（90分）
+      - ＋2.21
+      - ＋1.90
+    - - 昨季の出場時間
+      - 3978分
+      - 3038分
+    - - 市場価値
+      - 1億€
+      - 6000万€
+    lower:
+    - 今季の失点（90分）
+    bars: false
+    note: クラブの公式戦。チーム全体の数を、本人の出場時間で割った90分あたりの値
+  say:
+  - text: 見立てです。バルセロナは点が多く、レアル・マドリードは点が少ない。
+    image: assets/images/20261119_compare_962110_890290/c1/01_r.jpg
+    card:
+      type: duel
+      left:
+        name: クバルシ
+        club: バルセロナ
+        photo: assets/images/20261119_compare_962110_890290/c1/01_sq.jpg
+        color: '#a50044'
+      right:
+        name: ハイセン
+        club: レアル・マドリード
+        photo: assets/images/20261119_compare_962110_890290/h1/01_sq.jpg
+        color: '#d4af37'
+      rows:
+      - - 今季の得点（90分）
+        - '3.55'
+        - '2.68'
+      - - 今季の失点（90分）
+        - '1.34'
+        - '0.78'
+      - - 今季の得失点差（90分）
+        - ＋2.21
+        - ＋1.90
+      - - 昨季の出場時間
+        - 3978分
+        - 3038分
+      - - 市場価値
+        - 1億€
+        - 6000万€
+      lower:
+      - 今季の失点（90分）
+      bars: false
+      note: クラブの公式戦。チーム全体の数を、本人の出場時間で割った90分あたりの値
+      highlight_row: 今季の得点（90分）
+  - text: 出ている間の得点は、3.55と2.68。差は0.87です。
+    image: assets/images/20261119_compare_962110_890290/h1/01_w.jpg
+    card:
+      type: duel
+      left:
+        name: クバルシ
+        club: バルセロナ
+        photo: assets/images/20261119_compare_962110_890290/c1/01_sq.jpg
+        color: '#a50044'
+      right:
+        name: ハイセン
+        club: レアル・マドリード
+        photo: assets/images/20261119_compare_962110_890290/h1/01_sq.jpg
+        color: '#d4af37'
+      rows:
+      - - 今季の得点（90分）
+        - '3.55'
+        - '2.68'
+      - - 今季の失点（90分）
+        - '1.34'
+        - '0.78'
+      - - 今季の得失点差（90分）
+        - ＋2.21
+        - ＋1.90
+      - - 昨季の出場時間
+        - 3978分
+        - 3038分
+      - - 市場価値
+        - 1億€
+        - 6000万€
+      lower:
+      - 今季の失点（90分）
+      bars: false
+      note: クラブの公式戦。チーム全体の数を、本人の出場時間で割った90分あたりの値
+      highlight_row: 今季の得点（90分）
+    mark:
+      kind: circle
+      row: 0
+  - text: 失点は、1.34と0.78。差は0.56です。
+    image: assets/images/20261119_compare_962110_890290/h1/01_w.jpg
+    card:
+      type: duel
+      left:
+        name: クバルシ
+        club: バルセロナ
+        photo: assets/images/20261119_compare_962110_890290/c1/01_sq.jpg
+        color: '#a50044'
+      right:
+        name: ハイセン
+        club: レアル・マドリード
+        photo: assets/images/20261119_compare_962110_890290/h1/01_sq.jpg
+        color: '#d4af37'
+      rows:
+      - - 今季の得点（90分）
+        - '3.55'
+        - '2.68'
+      - - 今季の失点（90分）
+        - '1.34'
+        - '0.78'
+      - - 今季の得失点差（90分）
+        - ＋2.21
+        - ＋1.90
+      - - 昨季の出場時間
+        - 3978分
+        - 3038分
+      - - 市場価値
+        - 1億€
+        - 6000万€
+      lower:
+      - 今季の失点（90分）
+      bars: false
+      note: クラブの公式戦。チーム全体の数を、本人の出場時間で割った90分あたりの値
+      highlight_row: 今季の失点（90分）
+  - text: 点の差のほうが大きいので、得失点差はクバルシが上になります。
+    image: assets/images/20261119_compare_962110_890290/c1/01_r.jpg
+    card:
+      type: duel
+      left:
+        name: クバルシ
+        club: バルセロナ
+        photo: assets/images/20261119_compare_962110_890290/c1/01_sq.jpg
+        color: '#a50044'
+      right:
+        name: ハイセン
+        club: レアル・マドリード
+        photo: assets/images/20261119_compare_962110_890290/h1/01_sq.jpg
+        color: '#d4af37'
+      rows:
+      - - 今季の得点（90分）
+        - '3.55'
+        - '2.68'
+      - - 今季の失点（90分）
+        - '1.34'
+        - '0.78'
+      - - 今季の得失点差（90分）
+        - ＋2.21
+        - ＋1.90
+      - - 昨季の出場時間
+        - 3978分
+        - 3038分
+      - - 市場価値
+        - 1億€
+        - 6000万€
+      lower:
+      - 今季の失点（90分）
+      bars: false
+      note: クラブの公式戦。チーム全体の数を、本人の出場時間で割った90分あたりの値
+      highlight_row: 今季の得失点差（90分）
+  - text: 失点の少なさは、チーム全体の数字。センターバック1人の力とは言えません。
+    image: assets/images/20261119_compare_962110_890290/h1/01_w.jpg
+    card: none
+  - text: 昨季の出場時間は、19歳のクバルシのほうが長い。
+    image: assets/images/20261119_compare_962110_890290/c1/01_r.jpg
+    card:
+      type: duel
+      left:
+        name: クバルシ
+        club: バルセロナ
+        photo: assets/images/20261119_compare_962110_890290/c1/01_sq.jpg
+        color: '#a50044'
+      right:
+        name: ハイセン
+        club: レアル・マドリード
+        photo: assets/images/20261119_compare_962110_890290/h1/01_sq.jpg
+        color: '#d4af37'
+      rows:
+      - - 今季の得点（90分）
+        - '3.55'
+        - '2.68'
+      - - 今季の失点（90分）
+        - '1.34'
+        - '0.78'
+      - - 今季の得失点差（90分）
+        - ＋2.21
+        - ＋1.90
+      - - 昨季の出場時間
+        - 3978分
+        - 3038分
+      - - 市場価値
+        - 1億€
+        - 6000万€
+      lower:
+      - 今季の失点（90分）
+      bars: false
+      note: クラブの公式戦。チーム全体の数を、本人の出場時間で割った90分あたりの値
+      highlight_row: 昨季の出場時間
+    emph: true
+  - text: 2人の出場が増えたとき、失点はどう動くか。
+    image: assets/images/20261119_compare_962110_890290/pair_c/01.jpg
+    card: none
+  sources:
+  - https://www.transfermarkt.com/pau-cubarsi/leistungsdaten/spieler/962110
+  - https://www.transfermarkt.com/dean-huijsen/leistungsdaten/spieler/890290

@@ -1,0 +1,79 @@
+{
+ "title": "ホッフェンハイム 基礎DATA",
+ "colors": [
+  "#1C63B7",
+  "#FFFFFF"
+ ],
+ "crest": "assets/crests/ホッフェンハイム.png",
+ "tiles": [
+  [
+   "クラブ創立",
+   "1899年",
+   "7月1日。体操クラブから"
+  ],
+  [
+   "愛称",
+   "クライヒガウアー",
+   "ドイツ語で「クライヒガウの人たち」"
+  ],
+  [
+   "ホームタウン",
+   "シンスハイム",
+   "ドイツ南西部の町の一地区"
+  ],
+  [
+   "本拠地",
+   "プレゼロ・アレーナ",
+   "収容 30,150人。2009年から"
+  ],
+  [
+   "オーナー",
+   "ディートマー・ホップ",
+   "SAPの共同創業者。持ち株96%"
+  ],
+  [
+   "タイトル歴",
+   "1部・カップ・欧州は無し",
+   "4部と5部では優勝"
+  ],
+  [
+   "1部の最高順位",
+   "3位",
+   "2017年から18年のシーズン"
+  ],
+  [
+   "欧州の舞台",
+   "CL本戦に初出場",
+   "2018年から19年のシーズン"
+  ],
+  [
+   "昨季の順位",
+   "5位",
+   "勝ち点61"
+  ]
+ ],
+ "trophies": [
+  [
+   "ブンデスリーガ",
+   0
+  ],
+  [
+   "DFBポカール",
+   0
+  ],
+  [
+   "UEFAカップ/EL",
+   0
+  ],
+  [
+   "チャンピオンズカップ",
+   0
+  ]
+ ],
+ "sources": [
+  "https://en.wikipedia.org/wiki/TSG_1899_Hoffenheim",
+  "https://de.wikipedia.org/wiki/Hoffenheim",
+  "https://en.wikipedia.org/wiki/2025%E2%80%9326_Bundesliga"
+ ],
+ "notes": "取材の控えは research/bd_data/hoffenheim_research.md。創立 1899-07-01（体操クラブ TV Hoffenheim）・愛称 Die Kraichgauer・収容30,150・持ち株96%（Hopp）は英語版 infobox。ホームタウン Sinsheim・2009年から Rhein-Neckar-Arena（PreZero Arena）は英語版 History・Stadium。タイトルは英語版 Honours（1部・DFBポカール・欧州の優勝なし。Oberliga Baden-Württemberg 2000-01 と Verbandsliga Nordbaden 1999-2000 で優勝）。1部の最高3位・CL本戦初出場は英語版 History（2017-18に3位、2018-19にCLグループステージ）。昨季5位・勝点61は last_season.json（18勝7分9敗）。"
+}

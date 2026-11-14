@@ -1,0 +1,132 @@
+# 取材メモ（2026年11月6日）中村敬斗、フォンセカ監督が去ったあとのリヨンでも先発。EL ソシエダ戦 1-1（ニュースのショート。見せ方 X＝強い一言を冒頭に）
+# 取材: 2026-11-06。requests（ブラウザUA）で本文を全文読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。
+# 題材の元: サッカーキング 2026-11-06「中村敬斗先発のリヨン、後半の主将トリッソ弾でレアル・ソシエダとドロー 久保建英に出番は訪れず」（全文）／marca の速報（directo）。
+# 出典で確かめたこと:
+#   ・ESPN（uefa.europa summary event=401915537、11/5 20:00 UTC）: レアル・ソシエダ 1-1 リヨン。28分 オスカルソン（頭、アシスト バレネチェア）／54分 トリソ。
+#       中村敬斗 先発（LF＝左のFW）→ 67分 デュランヴィルと交代。シュート2（枠内0）。久保建英 ベンチ入り・出場なし（appearances 0）。
+#   ・レアル・ソシエダ公式（empate-y-a-seguir）: リヨンの並び「Nakamura (Duranville, min.67)」。28分ごろオスカルソンの頭、後半10分前にトリソの同点。
+#   ・ゲキサカ 462603（全文）: 中村は4-3-3の左ウイングで先発。前半はアランブルのマークで自由に受けられない時間が続いた。37分 左CK。40分過ぎにファウルを誘い、ドリブルから味方のシュートを立て続けにお膳立て。
+#       後半14分 激しいプレスでボールを奪い、カットインして右足でシュート（ジョン・マルティンがブロック）。久保は公式戦3試合続けてベンチスタートで、出番なし。
+#       リヨンは今大会2勝1分1敗、ソシエダは1勝2分1敗。
+#   ・Olympique & Lyonnais 2026-11-05「Maciel après Real Sociedad - OL (1-1)」: ホルヘ・マシエル暫定監督の試合後の言葉（フランス語。全文を読んだ。台本の訳は私が日本語にしたもの）:
+#       « La façon dont on est rentrés en deuxième mi-temps, c'est très très très très positif, très structuré. »
+#       « Aujourd'hui, on a pris un point, on aurait voulu en prendre trois, mais c'était un match risqué et on aurait pu le perdre. »
+#       « le point pris ce (jeudi) soir est un point de satisfaction. »  中村についての言葉は無い。
+#   ・lyonfoot 14696: フォンセカ監督が去ったあとの最初の試合。マシエルは代表ウィークまでの暫定。次は日曜、アウェーのブレスト戦（リーグ・アン）。
+#   ・中村の前の試合（11/4 の 20261104_nakamura_lyon_fonseca の取材メモ、ESPN 401876418）: 11/1 アンジェ戦 先発・交代なし（90分）。フォンセカ監督の最後の試合。
+# 記事どうしの食い違い:
+#   ・同点の場面: ESPN・サッカーキング「テスマンのパスから、トリソの左足」／ゲキサカ「アブネル・ビニシウスのクロスを、トリソが右足ボレー」→ 台本はパスの出し手も足も言わない。
+#   ・サッカーキングの得点経過の表は「14分 オスカルソン」だが、本文・ESPN・ゲキサカは28分 → 28分。
+#   ・交代の分: サッカーキング「67分までプレー」／ゲキサカ「後半22分」／ESPN・ソシエダ公式 67分 → 67分。
+# 本人の言葉: 無し（中村・久保とも。Olympique & Lyonnais・lyonfoot・ソシエダ公式・ゲキサカ・サッカーキング・marca を当たった）。→ X。
+# 【言わないこと】Olympique & Lyonnais のコメント欄の評価（読者の書き込みで、記事ではない）。J3 での初対戦（2018年）の話は久保が主役になるので入れない。久保は「ベンチ入り、出番なし」の事実だけ。
+# 写真: assets/images/20261106_nakamura_lyon_sociedad/（credits.json）。01＝Lyon Foot 11/4 の記事の主写真（日の丸を背にした中村。文字・透かし無し）／02＝Lyon Foot 10月の記事（シュルツと笑顔、10/23 の本の03と同じ写真）／03＝Lyon Foot 11/2 の記事（背番号11の中村が喜ぶ、11/4 の本の01と同じ写真）。
+#   この試合の中村の写真で Getty 以外のものは見つからなかった（サッカーキング・ゲキサカ・Olympique & Lyonnais は Getty/AFP、ソシエダ公式に中村の写真なし、Lyon Foot の試合記事の写真は別の選手）。02・03 は前に使った写真の使い回し。
+# 反応: 0件（作らない。approve は --no-voices）。
+# 前の本との重なり: 20261104_nakamura_lyon_fonseca（フォンセカ監督の退任と後任の報道）／16628「リーグ初先発で90分」。→ 今回の初出は、退任後の最初の試合で先発したこと・この試合の中身・暫定監督の言葉。
+slot: japanese
+date: "2026年11月6日"
+format: news
+no_main: true
+people: [中村敬斗, リヨン, レアル・ソシエダ, 久保建英, マシエル暫定監督, トリソ]
+
+short_style: X
+short_hook_word: 2試合続けて先発
+short_photos:
+  - assets/images/20261106_nakamura_lyon_sociedad/01_v.jpg
+  - assets/images/20261106_nakamura_lyon_sociedad/02_v.jpg
+  - assets/images/20261106_nakamura_lyon_sociedad/03_v.jpg
+short_question: 中村敬斗は、日曜のブレスト戦でも先発すると思いますか。
+short_telops: []
+
+theme:
+  id: nakamura_kubo_lyon_sociedad
+  league: france
+  league_name: ヨーロッパリーグ
+  prefix: ""
+  title: 中村敬斗、監督が去ったリヨンでも先発。暫定監督の初陣で見せたもの
+  hook: ""
+  question: 監督が代わった最初の試合で、中村敬斗はどんな役目を担ったのか
+  takeaway: フォンセカ監督の最後の試合で90分、暫定監督の最初の試合でも先発して67分。監督が代わっても、中村は2試合続けて先発した
+
+thumbnail:
+  layout: face
+  line1: 中村敬斗 2試合続けて先発
+  line2: 監督が代わっても
+  tags: [中村敬斗, リヨン]
+  photo: assets/images/20261106_nakamura_lyon_sociedad/02_w.jpg
+  short_photo: assets/images/20261106_nakamura_lyon_sociedad/01_v.jpg
+
+answer: 左ウイングで先発し、ドリブルとプレスで攻撃に絡んで67分までプレーした
+watch: 日曜のブレスト戦（アウェー）
+
+sections:
+  - id: what
+    main: true
+    heading: 監督が代わった最初の試合で、中村敬斗は何をしたか
+    tier: 報道
+    telop: 中村敬斗 左ウイングで先発、67分まで
+    say:
+      - text: リヨンの中村敬斗が、ヨーロッパリーグで先発。
+      - text: 監督が去って最初の試合。暫定監督はこう話しました。
+      - voice: マシエル暫定監督
+        text: 後半の入り方は、とても、とても前向きでした。
+      - voice: マシエル暫定監督
+        text: よく整理されていました。
+        cont: true
+      - voice: マシエル暫定監督
+        text: 勝ち点3が欲しかった。でも、負けてもおかしくない試合でした。
+        cont: true
+      - voice: マシエル暫定監督
+        text: 今夜の勝ち点1には、満足しています。
+        cont: true
+        emph: true
+      - text: 相手はレアル・ソシエダ。フォンセカ監督が去り、マシエル暫定監督が指揮を執りました。
+      - text: 中村は4-3-3の左ウイング。前半は相手のマークに遭い、自由にボールを受けられない時間が続きました。
+        image: assets/images/20261106_nakamura_lyon_sociedad/01_w.jpg
+      - text: それでも前半の終わりには、ドリブルから味方のシュートを続けてお膳立て。
+      - text: 前半28分に先制されましたが、後半にトリソが決めて1対1に追いつきます。
+        card: {type: table, title: レアル・ソシエダ 1-1 リヨン, columns: [分, 得点], rows: [[28分, オスカルソン（ソシエダ）], [54分, トリソ（リヨン）]], highlight_row: 1}
+        image: assets/images/20261106_nakamura_lyon_sociedad/03_w.jpg
+      - text: その5分後、中村は激しいプレスでボールを奪いました。
+        card: none
+      - text: そのまま切れ込んで右足でシュート。これは相手に防がれました。
+        image: assets/images/20261106_nakamura_lyon_sociedad/02_w.jpg
+      - text: 中村は67分に交代。試合は1対1の引き分けでした。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/el/20261106/2225023.html
+      - https://web.gekisaka.jp/news/uel/detail/?462603-462603-fl
+      - https://www.olympique-et-lyonnais.com/maciel-apres-real-sociedad-ol-1-1-ce-point-pris-est-une-satisfaction,412245.html
+      - https://www.espn.com/soccer/match/_/gameId/401915537
+      - https://www.lyonfoot.com/article/14696/real-sociedad-ol-lyon-cale-encore-en-ligue-europa-1-1
+  - id: kubo
+    heading: 久保建英は、ベンチから最後まで
+    tier: 報道
+    telop: 久保建英はベンチ入り、出場なし
+    say:
+      - text: ソシエダの久保建英はベンチに入りましたが、出番はありませんでした。
+      - text: 中村と久保が、同じピッチに立つことはありませんでした。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401915537
+      - https://web.gekisaka.jp/news/uel/detail/?462603-462603-fl
+  - id: view
+    viewpoint: true
+    heading: 監督が代わる前と後で、中村敬斗の立ち位置は変わったか
+    tier: 背景
+    telop: フォンセカ監督の最後の試合も、暫定監督の最初の試合も先発
+    say:
+      - text: 見立てです。中村敬斗は、フォンセカ監督の最後の試合で先発して90分。
+        card: {type: table, title: 中村敬斗 監督が代わる前と後, columns: [試合, 監督, 出場], rows: [[アンジェ戦（11月1日）, フォンセカ, 先発 90分], [ソシエダ戦（11月5日）, マシエル暫定, 先発 67分]], highlight_row: 0}
+      - text: 暫定監督の最初の試合でも、先発で67分までプレーしました。
+        card: {type: table, title: 中村敬斗 監督が代わる前と後, columns: [試合, 監督, 出場], rows: [[アンジェ戦（11月1日）, フォンセカ, 先発 90分], [ソシエダ戦（11月5日）, マシエル暫定, 先発 67分]], highlight_row: 1}
+      - text: 監督が代わっても、先発の席は2試合続けて中村のものでした。
+        emph: true
+        card: none
+      - text: 次は日曜、アウェーのブレスト戦です。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401915537
+      - https://www.espn.com/soccer/match/_/gameId/401876418
+      - https://www.lyonfoot.com/article/14696/real-sociedad-ol-lyon-cale-encore-en-ligue-europa-1-1

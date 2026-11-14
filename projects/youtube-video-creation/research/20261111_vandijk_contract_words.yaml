@@ -1,0 +1,129 @@
+# 取材メモ（2026年11月11日）ファン・ダイク、契約最終年の去就に言及「続くなら良いこと」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-11。requests（ブラウザUA）と site.api.espn.com で確かめた。WebFetch はサッカーキングで全文の転載を断られたので requests で本文を読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: サッカーキング 2226425（2026-11-10「ファン・ダイク、自身の去就に言及『続くなら良いこと』」。全文を requests で読んだ）。
+# 出典で確かめたこと:
+#   ・サッカーキング: 10日、イギリスメディア『スカイスポーツ』が伝えた本人のコメント。35歳、2018年1月にサウサンプトンから完全移籍、公式戦389試合36ゴール16アシスト（報道の数字・台本では使わない）。
+#       2025年4月にクラブと2年間の契約延長に合意、現行契約は2027年6月30日まで（＝契約最終年）。来夏に36歳。
+#       本人の言葉（日本語に訳されたもの。原文の英語は読めていない）:
+#         「今後、どうなるか見守っていこう。全く焦っていない。今のプレーを続けていきたい。今シーズンがどうなるか見てみよう。これまでのところ、素晴らしい時間を過ごしている。もし、それが続くなら良いことだ」
+#         「そうでなければ、別の場所へ行くと思う。今のところ報告するべきことは何もないが、だからといってストレスがあるわけではない」（契約延長交渉について）
+#       → 台本は、この日本語を声に出して通る形に整えたもの。意味が二通りに取れる「そうでなければ、別の場所へ行くと思う」は使わない（原文の英語が読めず、「延長しなければ」なのか別の意味なのか確かめられない）。
+#       サッカーキング: 今季のファン・ダイクは公式戦15試合に出場、プレミアは全試合でスタメンフル出場。オランダ代表のメンバーに選ばれていたが、コンディション不良で11月の代表活動は不参加（報道）。
+#   ・Sky Sports のライブブログ（liverpool-transfer-news…/13025501）はトップの見出し「Van Dijk 'not panicking' about new deal」までは確認できたが、本文は「利用できません」で読めなかった。契約の年・日付の一次情報（クラブ発表）は確認できていない → 台本は「2027年6月までと報じられています」と報道で言う。
+#   ・ESPN（site.api.espn.com eng.1 teams/364/schedule＋各試合の summary rosters）: ファン・ダイク（選手ID 157892、35歳）は今季のプレミア10試合すべてで先発し、途中交代なし（＝10試合フル出場。自分で数えた）。
+#       8/23 ニューカッスル 2-2、8/29 フォレスト 2-2、9/4 イプスウィッチ 2-0、9/12 フルハム 0-0、9/20 ボーンマス 1-0、10/11 マンC 0-3、10/17 ブレントフォード 2-1、10/25 ブライトン 2-0、11/1 アーセナル 0-1、11/8 クリスタル・パレス 3-1（アウェー）。
+#   ・ESPN 順位表（eng.1 standings、11/11 取得）: リヴァプール 10試合 5勝3分2敗 勝ち点18 4位。
+#   ・ESPN schedule: 11/22 16:30 UTC マンチェスター・ユナイテッド at リヴァプール（アンフィールド）。サッカーキング（キャリックの記事）も「22日のリヴァプール戦」。
+# 食い違い: ①本人の言葉は日本語訳しか無い。②契約の年は報道のみ（クラブ発表を確認できず）。
+# 前の本との重なり: scripts に ファン・ダイク の回は無い（grep 済み）。11/10 サッカーキングの別記事（アリソンの契約「今季限り」）は扱わない。11/6 の「CLで3戦連続3失点…このままでは持続不可能」は別の話なので使わない。
+# 本人の言葉: あり（上。サッカーキング経由、スカイスポーツの伝え）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: overseas
+date: "2026年11月11日"
+format: news
+no_main: true
+people: [ファン・ダイク, リヴァプール, オランダ代表]
+
+short_style: Y
+short_hook_quote: 今後、どうなるか見守っていこう。全く焦っていない。
+short_photos:
+  - assets/images/20261111_vandijk_contract_words/01_v.jpg
+  - assets/images/20261111_vandijk_contract_words/03_v.jpg
+  - assets/images/20261111_vandijk_contract_words/02_v.jpg
+  - assets/images/20261111_vandijk_contract_words/03_v.jpg
+short_question: ファン・ダイクは、リヴァプールと契約を延長すると思いますか。
+short_telops: []
+
+theme:
+  id: vandijk_contract_words
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: リヴァプールのファン・ダイク、契約最終年の去就に言及「続くなら良いこと」
+  hook: ""
+  question: 契約最終年に入ったファン・ダイクは、自分の去就について何を語ったのか
+  takeaway: ファン・ダイクは今季のプレミア10試合すべてに先発してフル出場。35歳で契約最終年に入っても、リヴァプールの守備の中心に立ち続けている
+
+thumbnail:
+  layout: face
+  line1: ファン・ダイク 契約最終年
+  line2: 本人が語った去就
+  tags: [ファン・ダイク, リヴァプール]
+  photo: assets/images/20261111_vandijk_contract_words/02_w.jpg
+  short_photo: assets/images/20261111_vandijk_contract_words/01_v.jpg
+
+answer: 全く焦っていない。今のプレーを続けて、今季がどうなるか見てみたい
+watch: 22日のマンチェスター・ユナイテッド戦（アンフィールド）
+
+sections:
+  - id: what
+    main: true
+    heading: 契約最終年のファン・ダイクが、去就について語ったこと
+    tier: 報道
+    telop: ファン・ダイク「全く焦っていない」
+    say:
+      - text: 契約が来年6月に切れるリヴァプールのファン・ダイクが、去就についてこう話しました。
+        short_only: true
+      - voice: ファン・ダイク
+        text: 今後、どうなるか見守っていこう。全く焦っていない。
+        emph: true
+        image: assets/images/20261111_vandijk_contract_words/01_v.jpg
+      - voice: ファン・ダイク
+        text: 今のプレーを続けていきたい。
+        cont: true
+      - text: 35歳のオランダ代表DFは、2025年4月に、2年間の契約延長に合意しました。
+        image: assets/images/20261111_vandijk_contract_words/01_v.jpg
+        card: {type: table, title: ファン・ダイクの契約（報道）, columns: [項目, 内容], rows: [[延長に合意, 2025年4月（2年）], [現行契約の期限, 2027年6月30日], [来夏の年齢, 36歳]], highlight_row: 1}
+      - text: 契約が切れるのは、2027年6月と報じられています。
+        card: none
+      - text: 今シーズンの手応えについても、こう語っています。
+      - voice: ファン・ダイク
+        text: 今シーズンがどうなるか、見てみよう。
+        image: assets/images/20261111_vandijk_contract_words/03_v.jpg
+      - voice: ファン・ダイク
+        text: これまでのところ、素晴らしい時間を過ごしている。
+        cont: true
+      - voice: ファン・ダイク
+        text: もし、それが続くなら良いことだ。
+        cont: true
+      - text: 契約の延長交渉については、こう話しました。
+      - voice: ファン・ダイク
+        text: 今のところ、報告することは何もない。
+        image: assets/images/20261111_vandijk_contract_words/01_v.jpg
+      - voice: ファン・ダイク
+        text: でも、だからといってストレスがあるわけではない。
+        cont: true
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/eng/20261110/2226425.html
+      - https://www.skysports.com/football/live-blog/13025501/liverpool-transfer-news-rumours-and-gossip-live-updates-and-latest-on-deals-signings-loans-and-contracts
+  - id: game
+    heading: 契約最終年の今季、ファン・ダイクはピッチにどれだけ立っているか
+    tier: 報道
+    telop: 今季のプレミア10試合、すべて先発・フル出場
+    say:
+      - text: イングランドのプレミアリーグで、ファン・ダイクは今季10試合すべてに先発し、一度も交代していません。
+        card: {type: table, title: ファン・ダイク 今季のプレミアリーグ, columns: [項目, 今季], rows: [[先発, 10試合], [フル出場, 10試合], [リヴァプールの順位, 4位（勝ち点18）]], highlight_row: 1}
+      - text: ただ、オランダ代表の11月の活動は、コンディション不良で不参加と伝えられています。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/team/schedule/_/id/364
+      - https://site.api.espn.com/apis/v2/sports/soccer/eng.1/standings
+      - https://www.soccer-king.jp/news/world/eng/20261110/2226425.html
+  - id: view
+    viewpoint: true
+    heading: 契約が切れる来夏まで、ファン・ダイクの去就で何が分かっているか
+    tier: 背景
+    telop: 次は22日、マンチェスター・ユナイテッド戦
+    say:
+      - text: 見立てです。契約の期限までに残るのは、今季の1シーズンです。
+        image: assets/images/20261111_vandijk_contract_words/02_v.jpg
+        card: {type: table, title: ファン・ダイク これから, columns: [日付, できごと], rows: [[11月22日, マンチェスター・ユナイテッド戦（ホーム）], [2027年6月30日, 現行契約の期限（報道）]], highlight_row: 1}
+      - text: 延長するのかどうかは、まだ分かりません。
+        card: none
+      - text: ただ、全試合でフル出場を続けるファン・ダイクは、35歳でも守備の中心にいます。
+      - text: リヴァプールの次の試合は、11月22日のマンチェスター・ユナイテッド戦です。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/scoreboard/_/league/eng.1/date/20261122
+      - https://www.soccer-king.jp/news/world/eng/20261110/2226425.html

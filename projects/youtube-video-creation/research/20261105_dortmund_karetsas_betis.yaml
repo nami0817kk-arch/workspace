@@ -1,0 +1,135 @@
+# 取材メモ（2026年11月5日）ドルトムント2-1ベティス。18歳カレツァスが72分の決勝ゴール。コヴァチ監督と本人の言葉（ニュースのショート。見せ方 Y＝コヴァチの言葉から始める）
+# 取材: 2026-11-05。python requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約は使っていない（WebSearch は記事のURLを探すためだけに使い、要約は事実に使っていない）。ブラウザの道具は使っていない。
+# 読んだ出典:
+#   ・ESPN の試合データ（site.api.espn.com .../uefa.champions/summary?event=401915304、11/4 20:00 UTC）: 34分 ギラシ負傷→カレツァス投入／49分 ファビオ・シルヴァ／67分 ルイバル（ベティス、アシスト アブデ）／72分 カレツァス（左足、ボックス中央から右下、アシスト ファビオ・シルヴァ）。ドルトムント 2-1 ベティス。
+#   ・サッカーキング 2224764（試合レポート。全部読んだ）: 得点者と分は ESPN と一致。ベティスは開幕3連勝で21年ぶりの本大会参戦。ドルトムントは2勝1敗から。次節は24日、アウェーでアーセナル。
+#   ・sport1.de「Karetsas-Premierentor erlöst den BVB」（全部読んだ。DAZN の試合後インタビューの引用）:
+#       カレツァス: „Um ehrlich zu sein: Als ich eingewechselt wurde, kam ich gerade von der Toilette. … Deswegen kam es keine Instruktionen. Einfach nur nach vorne gehen und intensiv spielen. Und das war mein Spiel“
+#       コヴァチ: „Ich hab ihn gesucht. Ich hatte überlegt: Komm, jetzt gehst du rein, aber dann war er nicht da. Auf die Geschichte habe ich dann Carney (Chukwuemeka) gerufen – und schwupp, kam er um die Ecke. …“
+#       「ドルトムントでの公式戦初ゴール」「12位、勝ち点で並ぶのはベティスほか7チーム、4位まで（コモ）」。
+#   ・sportschau.de（ARD）: カレツァス（DAZN）„Ich habe ehrlich gesagt kaum Anweisungen bekommen, weil ich da gerade von der Toilette kam“ ← sport1 と言い回しは少し違うが、内容（トイレから戻ったところ・指示はほとんど無し）は一致。台本は共通の内容だけを使う。
+#   ・t-online.de（DAZN の取材）: コヴァチ „Ich habe ihn gesucht“／“Plötzlich war er nicht da …“／“ganz gute Haken geschlagen wie so ein Hase“／“Es ist schwierig, ihn zu verteidigen“。ギラシが長引けばカレツァスの先発を増やす見込みをコヴァチが示した（t-online の言い換え。直接の引用ではない）。
+#   → 確かめられた＝本人（コヴァチ監督・カレツァス）の言葉。DAZN の試合後の取材を複数の独立した報道が同じ内容で引いている。台本は独語を日本語にした（語順はなぞらない）。
+# 食い違い: ①依頼文の「Ich wollte ihn einwechseln und er war nicht da」は、読んだ記事のどこにも逐語では無かった。実際の引用は「Ich hab ihn gesucht. Ich hatte überlegt: Komm, jetzt gehst du rein, aber dann war er nicht da.」。台本は後者を使う。
+#         ②sport1 は交代を「後半の中ごろ」と書くが、ESPN と t-online は34分（前半）。台本は34分（ESPN）。
+#         ③スコアの書き方（サッカーキング「2－1」、ESPN は「ドルトムント2 ベティス1」）は一致。
+# 自分で数えたもの: ドルトムントは2勝1敗から勝って3勝1敗、勝ち点9（ベティスは開幕3連勝＝勝ち点9のまま）。
+# 本人の言葉: あり（コヴァチ監督・カレツァス＝DAZN の取材を sport1・sportschau・t-online が引用）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+# 写真: 出典の記事から photopool で集めた5枚（t-online×3＝IMAGO クレジット、sport1＝IMAGO、zdfheute）。sportschau の1枚は『AFP』クレジットなので外した。sport1 のもう1枚は人物を確かめられず外した。目で見て本人（背番号付きのユニフォームでひざまずく選手、サポ記事のキャプションと一致）・透かし無しを確認。
+# 前の本との重なり: カレツァス・ドルトムントの直近の本は posted.json に無し（人名・クラブ名で引いた）。日本の接点は無し。18歳だがトップチームのCLの試合。
+slot: match
+date: "2026年11月5日"
+format: news
+no_main: true
+people: [カレツァス, ドルトムント, ベティス, コヴァチ監督, ファビオ・シルヴァ]
+
+short_style: Y
+short_hook_quote: 彼を探したんです。
+short_question: カレツァスは、ギラシが戻るまで先発に入ると思いますか。
+short_photos:
+  - assets/images/20261105_dortmund_karetsas_betis/01_v.jpg
+  - assets/images/20261105_dortmund_karetsas_betis/07_v.jpg
+  - assets/images/20261105_dortmund_karetsas_betis/05_v.jpg
+short_telops: []
+
+theme:
+  id: dortmund_karetsas_betis
+  league: germany
+  league_name: チャンピオンズリーグ
+  prefix: ""
+  title: カレツァス、18歳の決勝弾。コヴァチ監督が探していたもの
+  hook: ""
+  question: コヴァチ監督は、カレツァスの投入をどう語ったのか
+  takeaway: 負傷者が出て、予定外の交代で入った18歳が決勝ゴール。ドルトムントは4試合で3勝1敗、勝ち点9で12位。4位から12位まで9チームが並ぶ混戦にいる
+
+thumbnail:
+  layout: face
+  line1: カレツァス 18歳の決勝弾
+  line2: コヴァチ「彼を探した」
+  tags: [カレツァス, ドルトムント]
+  photo: assets/images/20261105_dortmund_karetsas_betis/01_w.jpg
+  photos:
+    - assets/images/20261105_dortmund_karetsas_betis/01_w.jpg
+    - assets/images/20261105_dortmund_karetsas_betis/05_w.jpg
+  short_photo: assets/images/20261105_dortmund_karetsas_betis/01_v.jpg
+
+answer: 負傷者が出て予定外の交代。トイレから戻ったカレツァスが入り、72分に決勝ゴール
+watch: 24日のアーセナル戦（アウェー）
+
+sections:
+  - id: what
+    main: true
+    heading: コヴァチ監督は、カレツァスの交代をどう語ったのか
+    tier: 報道
+    telop: コヴァチ「彼を探した。でも、いなかった」
+    say:
+      - text: 開幕3連勝だったベティスに、ドルトムントが2対1で競り勝ちました。
+      - text: 72分の決勝ゴールは、18歳のカレツァス。ドルトムントでの公式戦初ゴールです。
+      - text: 34分、ストライカーのギラシが負傷。監督は、交代の相手をこう話しました。
+        image: assets/images/20261105_dortmund_karetsas_betis/05_w.jpg
+      - voice: ニコ・コヴァチ
+        text: 彼を探したんです。
+        emph: true
+      - voice: ニコ・コヴァチ
+        text: 「よし、お前が入れ」と思ったら、いなかった。
+        cont: true
+      - voice: ニコ・コヴァチ
+        text: そこでチュクウェメカを呼んだら、角から出てきました。
+        cont: true
+        cont: true
+      - text: カレツァス本人も、試合後の取材でこう明かしました。
+      - voice: コンスタンティノス・カレツァス
+        text: ちょうどトイレから戻ったところでした。
+        image: assets/images/20261105_dortmund_karetsas_betis/01_w.jpg
+      - voice: コンスタンティノス・カレツァス
+        text: 指示は、ほとんどありませんでした。
+        cont: true
+      - voice: コンスタンティノス・カレツァス
+        text: とにかく前へ出て、激しくやる。それが僕の試合でした。
+        cont: true
+      - text: 49分にファビオ・シルヴァが先制。67分にベティスが追いつきます。
+      - text: 72分、ファビオ・シルヴァが前へ展開します。
+      - text: 受けたカレツァスが、ボックス手前から左足でゴール右下へ。
+        image: assets/images/20261105_dortmund_karetsas_betis/07_w.jpg
+    official: false
+    sources:
+      - https://www.sport1.de/news/fussball/champions-league/2026/11/karetsas-premierentor-erloest-den-bvb
+      - https://www.t-online.de/sport/fussball/champions-league/id_101513494/bvb-star-karetsas-haette-wegen-wc-besuch-fast-einwechslung-verpasst.html
+      - https://www.sportschau.de/fussball/championsleague/diesmal-karetsas-bvb-jubelt-auch-gegen-betis-dank-seiner-joker,spielbericht-bvb-betis-100.html
+      - https://www.espn.com/soccer/report/_/gameId/401915304
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915304
+      - https://www.soccer-king.jp/news/world/cl/20261105/2224764.html
+  - id: game
+    heading: この勝利で、ドルトムントは何位に立ったのか
+    tier: 報道
+    telop: ドルトムント、4試合で3勝1敗。勝ち点9で12位
+    say:
+      - text: ベティスは、21年ぶりの本大会で最高のスタートを切っていました。
+      - text: その連勝を、カレツァスのゴールが止めました。
+      - text: ドルトムントは4試合で3勝1敗、勝ち点9で12位です。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/cl/20261105/2224764.html
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915304
+  - id: view
+    viewpoint: true
+    heading: カレツァスは、ギラシが戻るまで先発に入るのか
+    tier: 報道
+    telop: ギラシの負傷が長引けば、先発の機会が増える
+    say:
+      - text: 見立てです。カレツァスのゴールで、ドルトムントは勝ち点9になりました。
+      - text: 4位から12位まで、勝ち点9のチームが9つ並ぶ混戦です。
+      - voice: ニコ・コヴァチ
+        text: ゴールだけでなく、ウサギのようないい切り返しも見せました。
+        emph: true
+      - voice: ニコ・コヴァチ
+        text: 彼を守るのは難しいんです。
+        cont: true
+      - text: ギラシの負傷が長引けば、先発の機会を増やす考えも、コヴァチ監督は示しています。
+      - text: 次は24日、アウェーでアーセナルと戦います。
+    official: false
+    sources:
+      - https://www.t-online.de/sport/fussball/champions-league/id_101513494/bvb-star-karetsas-haette-wegen-wc-besuch-fast-einwechslung-verpasst.html
+      - https://www.sport1.de/news/fussball/champions-league/2026/11/karetsas-premierentor-erloest-den-bvb
+short_title: "カレツァス、18歳の決勝弾。コヴァチ監督が探していたもの"

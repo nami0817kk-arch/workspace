@@ -532,5 +532,65 @@
     "file": "オランダ.png",
     "source": "https://commons.wikimedia.org/wiki/File:Flag_of_the_Netherlands.svg",
     "note": "国旗（Commons: Public domain）。赤・白・青の3色を手元で描いた"
+  },
+  {
+    "club": "アヤックス",
+    "file": "アヤックス.png",
+    "source": "https://thumb.wikimedia.org/wikipedia/en/thumb/7/79/Ajax_Amsterdam.svg/330px-Ajax_Amsterdam.svg.png?utm_source=en.wikipedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "note": "権利は晴れていない。小さく添えるだけ"
+  },
+  {
+    "club": "メキシコ",
+    "file": "メキシコ.png",
+    "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Mexico.svg?width=960",
+    "note": "国旗（Flag of Mexico、パブリックドメイン）。小さく添えるだけ"
+  },
+  {
+    "club": "パラグアイ",
+    "file": "パラグアイ.png",
+    "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Paraguay.svg?width=960",
+    "note": "国旗（Flag of Paraguay、パブリックドメイン）。小さく添えるだけ"
+  },
+  {
+    "club": "コロンビア",
+    "file": "コロンビア.png",
+    "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Colombia.svg?width=960",
+    "note": "国旗（Flag of Colombia、パブリックドメイン）。小さく添えるだけ"
+  },
+  {
+    "club": "イタリア",
+    "file": "イタリア.png",
+    "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Italy.svg?width=960",
+    "note": "国旗（Flag of Italy、パブリックドメイン）。小さく添えるだけ"
+  },
+  {
+    "club": "韓国",
+    "file": "韓国.png",
+    "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_South_Korea.svg?width=960",
+    "note": "国旗（Flag of South Korea、パブリックドメイン）。小さく添えるだけ"
+  },
+  {
+    "club": "チュニジア",
+    "file": "チュニジア.png",
+    "source": "自作（国旗の幾何図形を PIL で描画）",
+    "note": "国旗。権利上の問題は軽い（単純な図形）"
+  },
+  {
+    "club": "スイス",
+    "file": "スイス.png",
+    "source": "自作（国旗の幾何図形を PIL で描画）",
+    "note": "国旗。権利上の問題は軽い（単純な図形）"
+  },
+  {
+    "club": "ノルウェー",
+    "file": "ノルウェー.png",
+    "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Norway.svg?width=960",
+    "note": "国旗（Flag_of_Norway、パブリックドメイン）。権利を主張するだけ"
+  },
+  {
+    "club": "モロッコ",
+    "file": "モロッコ.png",
+    "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Morocco.svg?width=960",
+    "note": "国旗（Flag_of_Morocco、パブリックドメイン）。権利を主張するだけ"
   }
 ]

@@ -1,0 +1,475 @@
+# ユニフォームとエンブレムの歴史 レアル・マドリード（11/6 作成、11/9 分）。ラ・リーガの2本目。雛形は 11/7 バルセロナ回。
+# 題の問い：1902年から白のレアル・マドリードが、1シーズンだけパンツと靴下を黒にした。なぜ1年でやめたのか（答え＝コパでバルセロナに1対5・0対2で敗れ、会長が「縁起が悪い」と白に戻した）
+# 選んだ理由：指示書 20261109「ユニフォームはラ・リーガの続き（バルセロナは済み）。次はレアル・マドリード → アトレティコ」。
+#   同じ日（11/9）のスタジアム紹介はラ・リーガの続き（ビルバオ・セビージャ・バレンシアなど）で、レアルのベルナベウは 11/7 に済み → 同じ日に同じクラブにならない（research/20261109_picks.txt に先に書いた）。
+# 重なり確認（2026-11-06）：scripts/*kit_* にレアル・マドリードは無し。直近30日の近いもの：20261107_stadium_realmadrid（2日前・スタジアム）、20261009_finance_realmadrid（28日前・財政）、20261018_finance_real_barca。
+#   この回では、本拠地の名前・収容・改装・お金（エミレーツ・アディダスの額）は言わない。
+# 今季のリーグ：ウィキペディア en "2026–27 Real Madrid CF season"（ラ・リーガ96季連続の1部。監督モウリーニョ）。
+# 取材：requests と WebFetch・WebSearch だけ。ブラウザ操作・JS実行は使っていない。
+#   読んだ：クラブ公式 歴史の頁（realmadrid.com/static/sobre-el-real-madrid/historia/futbol/1902-1910・1911-1920・1931-1940・1941-1950）
+#     ＝1902年3月6日に会として成立／1920年 王室の称号「レアル」／1931年4月 共和国で王冠が消え、斜めの紫の帯が現れる／1941年 いまの名前、王冠が戻る。
+#   クラブの発表（2026-06-09、puromarketing が全文を転載）＝エミレーツと2031年まで延長。2011年から協賛、2013年から胸。「ラ・リーガの歴史でいちばん長いシャツの協賛」。
+#   ウィキペディア es "Historia del uniforme del Real Madrid Club de Fútbol"、en "Real Madrid CF"（Crests and colours・Kit suppliers and shirt sponsors）、es "Real Madrid Club de Fútbol"（Símbolos）。
+#   今季のシャツ：SuperSport（アディダスの発表、2026-06-04）＝白、深い緑の襟と袖口、肩の3本線は桃色、模様は王冠のダイヤと真珠から。
+# ---- 食い違い・断ったこと ----
+#   ・黒いパンツの年：es は 1925-1926（表）・「1925年」、en は「1926年の1シーズン」→ 台本は「1925年から26年のシーズン」（どちらにも当たる言い方）。
+#   ・コパの敗戦：en ＝1926年のコパでバルセロナにホーム1対5・アウェー0対2、会長パラヘスが「縁起が悪い」と白に戻した。es は「いくつかのつまずきのあと、縁起が悪いとされた」で相手は書かない → 台本は en の数字。会長の名前は言わない。
+#   ・お手本のコリンチャンス：en・es とも「初めの白の手本」「創設のころの手本」→「とされる」。
+#   ・紫の帯の出どころ：クラブ公式は 1931年に「現れる」。es は 1902年の新聞（ヘラルド・デ・マドリード）に「紫の帯」の記述があり、1920年代の資料にも紫があったとする → 台本は公式どおり「1931年に紋章に入った」とだけ言い、それ以前の話はしない。
+#     色の意味（カスティーリャ）：es は「いちばん広く知られた説」で、クラブの公式文書には無いとする →「説が、よく知られています」。
+#   ・帯が青に近くなった年：en は 2001、es は 1998（いまの版は 2003）→ 年は言わない。
+#   ・レニー・ピコ：en の表は 1989-1991、es の本文は 1989-90 の1季だけ → 年数は言わない（表は「1989年から　レニー・ピコ、オタイサ」とまとめる）。
+#   ・パルマラットを欧州の試合で付けられなかった：es（UEFA の決まりで季の途中に替えられず、3試合のあと 1986-01-08 に許可）。
+#   ・アディダスの3本線が初めて入ったのは 1981-05-27 の欧州カップ決勝（パリ、対リヴァプール）：es。
+#   ・リーズ・ユナイテッドが1960年代に白へ替えた・1947-11-23 に背番号（スペインで初）：en。
+#   ・HP が袖に入ったのは 2024-02-03（初めての袖の協賛）：es。
+# ---- 自分で数えた数 ----
+#   白いシャツ：1902→2026＝124年。白一色（靴下まで）：1955→2026＝71年。白一色まで：1902→1955＝53年。王冠が消えていた：1931→1941＝10年。
+#   胸の名前（en の表、1982-83〜今季 2026-27 の45季）：ザヌッシ3・パルマラット4・レニー・ピコ2・オタイサ1・テカ9・Realmadrid.com 1・シーメンス・モバイル3・シーメンス1・ベンキュー・シーメンス1・ビーウィン6・エミレーツ14＝11の表記で45季（足して45を確かめた）。
+#   エミレーツ 14÷45＝31.1%（およそ3割）。2031年まで＝2030-31 季までで18季。
+# ---- 日本との接点 ----
+#   ユニフォームとエンブレムの話で日本との縁は見つからなかった（胸に日本の会社は入っていない）。2016年の横浜のクラブW杯決勝（鹿島）は胸・紋章の話ではないので入れない（10/6 の決まり：無理に押し込まない）。
+# 言わなかったもの：エミレーツ・アディダス・HP の額／本拠地の名前と工事（2日前のスタジアム回）／1985年のバルセロナ五輪の印／会長の名前。
+# 写真：assets/images/20261109_kit_realmadrid/（credits.json）。Commons（CC BY-SA・PD）。代理店・放送映像・エンブレム画像は使っていない。
+date: 2026年11月6日
+slot: other_5
+format: news
+series: ユニフォームとエンブレムの歴史
+voice_min: 0
+people:
+- レアル・マドリード
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  end_bg: assets/images/20261109_kit_realmadrid/p_lineup_w.jpg
+  id: kit_realmadrid
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: レアル・マドリード
+  title: レアル・マドリードの白、1年だけパンツが黒に。なぜ戻した？
+  question: 1902年から白のレアル・マドリードは、なぜ1年だけ黒を着てやめ、胸の紋章の王冠はなぜ一度消え、白い胸にはどんな名前が入ってきたのか
+  opening_image: assets/images/20261109_kit_realmadrid/p_bwin_w.jpg
+  lead: 白は、一度だけ崩れた。
+  hook: ''
+  takeaway: レアル・マドリードの白いシャツは1902年から124年。白一色が崩れたのは、1925年から26年の黒いパンツの1シーズンだけで、コパでバルセロナに敗れて白に戻した。靴下まで白になってから71年。紋章の王冠は共和国の10年だけ消えた。胸の名前は1982年からの45季で11、そのうちエミレーツが14季、およそ3割を占める
+  hook_unused: ''
+thumbnail:
+  layout: classic
+  callouts:
+  - なぜ1年でやめた？
+  - 王冠が消えた10年
+  photo: assets/images/20261109_kit_realmadrid/p_bwin_w.jpg
+  short_photo: assets/images/20261109_kit_realmadrid/p_ronaldo_v.jpg
+  line1: レアル・マドリードの白
+  line2: パンツが1年だけ黒に
+  tags:
+  - レアル・マドリード
+  - ユニフォーム
+  - エンブレム
+  - エミレーツ
+  - ラ・リーガ
+  - サッカー
+x-cards:
+  white: &white
+    type: timeline
+    title: レアル・マドリードの白の歩み
+    rows:
+    - - 1902年
+      - シャツもパンツも白。靴下は黒
+    - - 1911年
+      - 靴下が紺に
+    - - 1925年
+      - パンツと靴下が黒に。1シーズンだけ
+    - - 1926年
+      - 白いパンツに戻る
+    - - 1955年
+      - 靴下も白に。白一色がそろう
+    focus: 1925年
+    highlight_row: 0
+  cup: &cup
+    type: stats
+    title: 1926年のコパ、バルセロナとの2試合
+    items:
+    - - '1対5'
+      - ''
+      - ホームで
+    - - '0対2'
+      - ''
+      - アウェーで
+    - - '1'
+      - シーズン
+      - 黒いパンツの長さ
+    focus: 2
+  crest: &crest
+    type: timeline
+    title: 胸の紋章の歩み
+    rows:
+    - - 1902年
+      - 頭文字MCFの組み文字
+    - - 1908年
+      - 頭文字を丸の中に
+    - - 1920年
+      - 称号「レアル」。王冠が乗る
+    - - 1931年
+      - 共和国に。王冠が消え、紫の帯
+    - - 1941年
+      - 王冠が戻る。紫の帯は残る
+    focus: 1931年
+    highlight_row: 0
+  chest: &chest
+    type: table
+    title: レアル・マドリードの胸に入った名前
+    columns:
+    - いつから
+    - 名前
+    rows:
+    - - 1982年から
+      - ザヌッシ
+    - - 1985年から
+      - パルマラット
+    - - 1989年から
+      - レニー・ピコ、オタイサ
+    - - 1992年から
+      - テカ
+    - - 2001年から
+      - クラブの公式サイト
+    - - 2002年から
+      - シーメンス、ベンキュー・シーメンス
+    - - 2007年から
+      - ビーウィン
+    - - 2013年から
+      - エミレーツ
+    highlight_row: 0
+  emirates: &emirates
+    type: document
+    label: エミレーツとの延長の発表（2026年6月、訳）
+    paragraphs:
+    - エミレーツは2011年からレアル・マドリードを支え、2013年からは主たるスポンサーを務めている。
+    - 今回の延長で、ラ・リーガの歴史でいちばん長いシャツのスポンサーとなる。契約は2031年まで。
+    highlight:
+    - いちばん長いシャツのスポンサー
+    - 2031年まで
+  view: &view
+    type: table
+    title: レアル・マドリードの白を数える（自分で数えた）
+    columns:
+    - 何を
+    - 数
+    rows:
+    - - 白いシャツ（1902年から）
+      - 124年
+    - - 靴下まで白（1955年から）
+      - 71年
+    - - 胸の名前（1982年から45季）
+      - 11
+    - - 王冠が消えていた
+      - 10年
+    highlight_row: 0
+sections:
+- id: white
+  main: true
+  heading: レアル・マドリードの白は、なぜ1年だけ黒になったのか
+  bg: assets/images/20261109_kit_realmadrid/p_bwin_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 1902年から白。1925年から26年のシーズンだけ、パンツと靴下が黒。コパでバルセロナに敗れ、白に戻した
+  card: *white
+  say:
+  - text: 今回はレアル・マドリード。白いシャツ、王冠の紋章、胸のスポンサーをたどります。
+    image: assets/images/20261109_kit_realmadrid/p_bwin_w.jpg
+    card: none
+  - text: クラブが会としてまとまったのは、1902年3月。
+    image: assets/images/20261109_kit_realmadrid/p_bwin_w.jpg
+    card:
+      <<: *white
+      highlight_row: 0
+  - text: 決めた色は、シャツもパンツも白でした。
+    image: assets/images/20261109_kit_realmadrid/p_bwin_w.jpg
+    card: none
+  - text: お手本にしたとされるのが、イングランドのコリンチャンス。
+    image: assets/images/20261109_kit_realmadrid/p_bwin_w.jpg
+    card: none
+  - text: 上品な試合ぶりで知られた、アマチュアの名門です。
+    image: assets/images/20261109_kit_realmadrid/p_benq_w.jpg
+    card: none
+  - text: その白が、一度だけ崩れます。
+    image: assets/images/20261109_kit_realmadrid/p_benq_w.jpg
+    card: none
+    emph: true
+  - text: 1925年から26年のシーズン。パンツと靴下が、黒になりました。
+    image: assets/images/20261109_kit_realmadrid/p_benq_w.jpg
+    card:
+      <<: *white
+      highlight_row: 2
+    callword: パンツが黒に
+  - text: コリンチャンスの姿に、もっと近づけようという試みでした。
+    image: assets/images/20261109_kit_realmadrid/p_bwin13_w.jpg
+    card: none
+  - text: ところが、その年のスペインのカップ戦、コパ・デル・レイで、バルセロナに敗れます。
+    image: assets/images/20261109_kit_realmadrid/p_bwin13_w.jpg
+    card: none
+  - text: ホームで1対5の負け、アウェーでも0対2の負けでした。
+    image: assets/images/20261109_kit_realmadrid/p_bwin13_w.jpg
+    card: *cup
+  - text: 会長は、黒は縁起が悪いと言って、白に戻しました。
+    image: assets/images/20261109_kit_realmadrid/p_bwin13_w.jpg
+    card:
+      <<: *cup
+      focus: 2
+    emph: true
+  - text: 黒いパンツは、1シーズンで消えたことになります。
+    image: assets/images/20261109_kit_realmadrid/p_lineup_w.jpg
+    card: none
+  - text: それでも、頭から足の先まで白になるのは、まだ先です。
+    image: assets/images/20261109_kit_realmadrid/p_lineup_w.jpg
+    card: none
+  - text: 靴下は、黒と紺を行ったり来たりして、白になったのは1955年でした。
+    image: assets/images/20261109_kit_realmadrid/p_lineup_w.jpg
+    card:
+      <<: *white
+      highlight_row: 4
+  - text: クラブができてから53年。ようやく、白一色がそろいました。
+    image: assets/images/20261109_kit_realmadrid/p_lineup_w.jpg
+    card: none
+    emph: true
+  sources:
+  - https://es.wikipedia.org/wiki/Historia_del_uniforme_del_Real_Madrid_Club_de_F%C3%BAtbol
+  - https://en.wikipedia.org/wiki/Real_Madrid_CF
+  - https://www.realmadrid.com/static/sobre-el-real-madrid/historia/futbol/1902-1910
+- id: crest
+  heading: 胸の紋章の王冠は、なぜ一度消えたのか
+  bg: assets/images/20261109_kit_realmadrid/p_ronaldo_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 1920年に称号「レアル」と王冠。1931年に共和国となり王冠が消え、紫の帯。1941年に王冠が戻る
+  card: *crest
+  say:
+  - text: 胸の紋章にも、白と同じくらい長い歩みがあります。
+    image: assets/images/20261109_kit_realmadrid/p_ronaldo_w.jpg
+    card: none
+  - text: 最初の印は、1902年。クラブの頭文字を、組み合わせたものでした。
+    image: assets/images/20261109_kit_realmadrid/p_ronaldo_w.jpg
+    card:
+      <<: *crest
+      highlight_row: 0
+  - text: 1908年に、その頭文字が丸の中に入ります。
+    image: assets/images/20261109_kit_realmadrid/p_ronaldo_w.jpg
+    card:
+      <<: *crest
+      highlight_row: 1
+  - text: 1920年、国王アルフォンソ13世から、称号を授かります。
+    image: assets/images/20261109_kit_realmadrid/p_ronaldo_w.jpg
+    card:
+      <<: *crest
+      highlight_row: 2
+  - text: 「王の」という意味の、レアルです。
+    image: assets/images/20261109_kit_realmadrid/p_ronaldo_w.jpg
+    card: none
+  - text: 紋章の上に、王冠が乗ったのは、このときです。
+    image: assets/images/20261109_kit_realmadrid/p_ronaldo_w.jpg
+    card: none
+  - text: ところが1931年4月、スペインは国王のいない共和国になります。
+    image: assets/images/20261109_kit_realmadrid/p_cup18_w.jpg
+    card: none
+  - text: 王冠は、紋章から消えました。代わりに入ったのが、斜めの紫の帯です。
+    image: assets/images/20261109_kit_realmadrid/p_cup18_w.jpg
+    card:
+      <<: *crest
+      highlight_row: 3
+    emph: true
+    callword: 王冠が消えた
+  - text: 紫は、マドリードを含むカスティーリャ地方の色だ、という説がよく知られています。
+    image: assets/images/20261109_kit_realmadrid/p_cup18_w.jpg
+    card: none
+  - text: 王冠が戻ったのは、内戦のあとの1941年。いまの名前になったのも、この年です。
+    image: assets/images/20261109_kit_realmadrid/p_cup18_w.jpg
+    card:
+      <<: *crest
+      highlight_row: 4
+  - text: 王冠が紋章から消えていたのは、10年でした。
+    image: assets/images/20261109_kit_realmadrid/p_cup18_w.jpg
+    card: none
+    emph: true
+  - text: 紫の帯は、王冠が戻ったあとも残り、いまは青に近い色になっています。
+    image: assets/images/20261109_kit_realmadrid/p_ronaldo_w.jpg
+    card: none
+  sources:
+  - https://www.realmadrid.com/static/sobre-el-real-madrid/historia/futbol/1911-1920
+  - https://www.realmadrid.com/static/sobre-el-real-madrid/historia/futbol/1931-1940
+  - https://www.realmadrid.com/static/sobre-el-real-madrid/historia/futbol/1941-1950
+  - https://en.wikipedia.org/wiki/Real_Madrid_CF
+  - https://es.wikipedia.org/wiki/Real_Madrid_Club_de_F%C3%BAtbol
+- id: chest
+  heading: 白い胸に、最初に入った名前は何だったのか
+  bg: assets/images/20261109_kit_realmadrid/p_benq_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 1982年に初めての胸の名前、ザヌッシ。テカが9季、2001年からはクラブの公式サイトの名前も
+  card: *chest
+  say:
+  - text: レアル・マドリードの白いシャツに、初めて会社の印が入ったのは1981年5月。
+    image: assets/images/20261109_kit_realmadrid/p_benq_w.jpg
+    card: none
+  - text: パリでのヨーロッパの決勝で、用具の会社、アディダスの3本線が、紫で入りました。
+    image: assets/images/20261109_kit_realmadrid/p_benq_w.jpg
+    card: none
+  - text: 胸に名前が入ったのは、翌年の1982年。イタリアの家電の会社、ザヌッシでした。
+    image: assets/images/20261109_kit_realmadrid/p_benq_w.jpg
+    card:
+      <<: *chest
+      highlight_row: 0
+    emph: true
+    callword: 最初の胸はザヌッシ
+  - text: 1985年からは、イタリアの乳製品の会社、パルマラット。
+    image: assets/images/20261109_kit_realmadrid/p_benq_w.jpg
+    card:
+      <<: *chest
+      highlight_row: 1
+  - text: ただ、当時のヨーロッパの大会では、シーズン途中に胸の広告を替えられません。
+    image: assets/images/20261109_kit_realmadrid/p_bwin_w.jpg
+    card: none
+  - text: そのため、ヨーロッパの3試合では、パルマラットを付けられませんでした。
+    image: assets/images/20261109_kit_realmadrid/p_bwin_w.jpg
+    card: none
+  - text: 1992年からは、スペインの台所の設備の会社、テカが9シーズン。
+    image: assets/images/20261109_kit_realmadrid/p_bwin_w.jpg
+    card:
+      <<: *chest
+      highlight_row: 3
+  - text: 変わっているのは、2001年からの1シーズンです。
+    image: assets/images/20261109_kit_realmadrid/p_bwin_w.jpg
+    card: none
+  - text: 胸に入れたのは、クラブ自身の、公式サイトの名前でした。
+    image: assets/images/20261109_kit_realmadrid/p_bwin_w.jpg
+    card:
+      <<: *chest
+      highlight_row: 4
+    emph: true
+  - text: そのあとは、電機のシーメンス、ネットの会社のビーウィンと続きます。
+    image: assets/images/20261109_kit_realmadrid/p_bwin13_w.jpg
+    card:
+      <<: *chest
+      highlight_row: 6
+  - text: そして2013年。胸に入ったのが、ドバイの航空会社、エミレーツです。
+    image: assets/images/20261109_kit_realmadrid/p_ronaldo_w.jpg
+    card:
+      <<: *chest
+      highlight_row: 7
+  sources:
+  - https://es.wikipedia.org/wiki/Historia_del_uniforme_del_Real_Madrid_Club_de_F%C3%BAtbol
+  - https://en.wikipedia.org/wiki/Real_Madrid_CF
+- id: now
+  heading: 今季の白いシャツには、何が起きているのか
+  bg: assets/images/20261109_kit_realmadrid/p_ronaldo_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: エミレーツは今季で14季目。2031年までの延長で、ラ・リーガでいちばん長いシャツのスポンサーに
+  say:
+  - text: エミレーツの胸は、今季で14シーズン目。テカの9シーズンを超えました。
+    image: assets/images/20261109_kit_realmadrid/p_ronaldo_w.jpg
+    card: none
+  - text: 2026年6月、クラブは、この契約を2031年まで延ばすと発表します。
+    image: assets/images/20261109_kit_realmadrid/p_ronaldo_w.jpg
+    card: *emirates
+  - text: クラブによれば、ラ・リーガの歴史で、いちばん長いシャツのスポンサーになります。
+    image: assets/images/20261109_kit_realmadrid/p_ronaldo_w.jpg
+    card: *emirates
+    emph: true
+    callword: ラ・リーガで最長
+  - text: 2024年2月には、初めて袖にも名前が入りました。
+    image: assets/images/20261109_kit_realmadrid/p_lineup_w.jpg
+    card: none
+  - text: アメリカのパソコンの会社、エイチピーです。
+    image: assets/images/20261109_kit_realmadrid/p_lineup_w.jpg
+    card: none
+  - text: 今季のシャツは、白に、深い緑の縁取りと、桃色の3本線。
+    image: assets/images/20261109_kit_realmadrid/p_lineup_w.jpg
+    card: none
+  - text: 生地の模様は、紋章の王冠にある、ダイヤと真珠の形からとったとされています。
+    image: assets/images/20261109_kit_realmadrid/p_lineup_w.jpg
+    card: none
+  - text: この白は、ほかのクラブのシャツまで動かしました。
+    image: assets/images/20261109_kit_realmadrid/p_cup18_w.jpg
+    card: none
+  - text: 1960年代、イングランドのリーズ・ユナイテッドは、青いシャツを白に替えます。
+    image: assets/images/20261109_kit_realmadrid/p_cup18_w.jpg
+    card: none
+    emph: true
+  - text: 当時、ヨーロッパで勝ち続けていた、レアル・マドリードにならったものでした。
+    image: assets/images/20261109_kit_realmadrid/p_cup18_w.jpg
+    card: none
+  - text: スペインで初めて、背番号を付けて試合をしたのも、レアル・マドリードです。
+    image: assets/images/20261109_kit_realmadrid/p_bwin13_w.jpg
+    card: none
+  - text: 1947年11月、アトレティコとの試合でした。
+    image: assets/images/20261109_kit_realmadrid/p_bwin13_w.jpg
+    card: none
+  sources:
+  - https://www.puromarketing.com/39/217202/real-madrid-emirates-amplian-historica-alianza-patrocinio-hasta-2031
+  - https://supersport.com/football/news/c0ffa682-d23e-43eb-88e2-fb025f14e12f/adidas-and-real-madrid-unveil-2026-27-home-jersey
+  - https://es.wikipedia.org/wiki/Historia_del_uniforme_del_Real_Madrid_Club_de_F%C3%BAtbol
+  - https://en.wikipedia.org/wiki/Real_Madrid_CF
+- id: view
+  viewpoint: true
+  heading: 見立て・白は124年、胸の名前は45季でいくつ替わったのか
+  bg: assets/images/20261109_kit_realmadrid/p_lineup_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 白いシャツは124年。白一色が崩れたのは1シーズンだけ。胸の名前は45季で11、エミレーツが14季でおよそ3割
+  card: *view
+  say:
+  - text: レアル・マドリードの白を、数で並べます。
+    image: assets/images/20261109_kit_realmadrid/p_lineup_w.jpg
+    card: none
+  - text: 白いシャツは、1902年から、124年。
+    image: assets/images/20261109_kit_realmadrid/p_lineup_w.jpg
+    card:
+      <<: *view
+      highlight_row: 0
+  - text: 124年のうち、白一色が崩れたのは、黒いパンツの1シーズンだけです。
+    image: assets/images/20261109_kit_realmadrid/p_lineup_w.jpg
+    card: none
+  - text: 靴下まで白になってからは、71年がたちました。
+    image: assets/images/20261109_kit_realmadrid/p_lineup_w.jpg
+    card:
+      <<: *view
+      highlight_row: 1
+  - text: 胸の名前は、1982年からの45シーズンで、表記で数えて11です。
+    image: assets/images/20261109_kit_realmadrid/p_ronaldo_w.jpg
+    card:
+      <<: *view
+      highlight_row: 2
+    mark:
+      kind: circle
+      row: 2
+  - text: そのうちエミレーツが、14シーズン。
+    image: assets/images/20261109_kit_realmadrid/p_ronaldo_w.jpg
+    card: none
+  - text: 45シーズンのおよそ3割を、1つの名前が占めています。
+    image: assets/images/20261109_kit_realmadrid/p_ronaldo_w.jpg
+    card:
+      type: calc
+      title: エミレーツの長さ（自分で割った）
+      terms:
+      - - 14季
+        - エミレーツ
+      - - 45季
+        - 1982年から今季まで
+      - - 31%
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+    emph: true
+  - text: 紋章も、王冠の無い時代は、10年で終わりました。
+    image: assets/images/20261109_kit_realmadrid/p_cup18_w.jpg
+    card:
+      <<: *view
+      highlight_row: 3
+  - text: 胸の名前は替わっても、シャツの白が揺れたのは、124年でたった1度です。
+    image: assets/images/20261109_kit_realmadrid/p_cup18_w.jpg
+    card: none
+    emph: true
+  sources:
+  - https://en.wikipedia.org/wiki/Real_Madrid_CF
+  - https://www.realmadrid.com/static/sobre-el-real-madrid/historia/futbol/1931-1940

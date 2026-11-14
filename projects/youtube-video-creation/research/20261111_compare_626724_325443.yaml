@@ -1,0 +1,367 @@
+# 取材メモ（11/11 水、シリーズ「比べる」、key: compare_626724_325443）。ジョアン・ペドロ（チェルシー・25歳）×ヴィクトル・ギェケレシュ（アーセナル・28歳）。
+# **情報の時点は 2026-11-06**。**FotMob・DataMB は使っていない**。数字は Transfermarkt（2026-11-06 取得。控え: research/raw/20261111_joaopedro_tm.json・20261111_gyokeres_tm.json）。
+#   Transfermarkt 番号：ジョアン・ペドロ 626724・ギェケレシュ 325443。API（tmapi-alpha）の player・market-value-history・performance-season（2019〜2026季）・performance-game（2023〜2026季）を2.5秒あけて取得。
+# **選んだ理由**：2025年7月、同じ夏にロンドンのビッグクラブへ来たCF2人。基本の移籍金はどちらも5500万ポンド（報道）。1季目（25/26）の得点は 20 と 21 でほぼ同じ、
+#   ところがアシストは 9 と 3。1点取るまでの時間はギェケレシュ（約166分）、1つ絡むまではジョアン・ペドロ（約127分）が速い。市場価値は 2026年3月までに入れ替わった。比べる軸が立つ。
+#   日本との接点：ジョアン・ペドロはブライトンで三笘薫のチームメート（TM：三笘 504849 の 23/24・24/25 はブライトン 1237、ジョアン・ペドロも同じ2季ブライトン 1237）。
+#   重なり：scripts/*compare*・posted.json・covered.yaml・直近30日の scripts を grep。ジョアン・ペドロは 10/20 のランキング・11/6 のブライトンの財政に名前だけ。
+#   ギェケレシュは 11/5 のニュース（アーセナルのスラヴィア戦「1ゴール1アシスト」）がある。**比べる・選手紹介で2人は出していない**。重なりの度合いは報告に書く。
+#   picks（research/20261109_picks.txt）：11/11 の選手紹介はマレン、スタジアムはメスタージャ、ユニフォームはアトレティコ。人名は重ならない。
+#   **最初に選んだルイス・ディアス×ガクポは替えた**：11/10 の代表チーム紹介がコロンビア（ディアスが看板選手になる）で、前日と人が重なるため。
+#   **外した候補**：デ・ブライネ×モドリッチ（モドリッチは 11/8 のクロアチア代表の主役級）・エンソ×マック・アリスター（10/23 のアルゼンチン代表）・ガクポ×ニコ・ウィリアムズ（ニコは今季530分で強い軸が立たない）・
+#   セシュコ（今季206分）・エキティケ（今季0分）・サラー／レオン（トルコ）。
+# **2人とも今季も扱うリーグの1部**：チェルシー・アーセナル（プレミア）。TM の現所属（チェルシー 631 は 2025-07-02〜、アーセナル 11 は 2025-07-26〜）。
+#   **注意**：11/7〜11/8 の週末にプレミアの試合がある（公開の11/11時点では1試合ぶん古い）。台本は「11月6日までの数字」と言い、次の試合の日程は言わない。
+# **使った数**（TM の performance-season。クラブのトップチームの公式戦。**代表戦は混ぜない**）
+#   ジョアン・ペドロ：23/24 ブライトン 40試合 2747分 20点3A（GB1 31/2047/9/3・EL 6/437/6/0・FAC 2/173/5/0・CGB 1/90）
+#                    24/25 ブライトン 30試合 2136分 10点7A（GB1 27/1953/10/6・FAC 3/183/0/1）。2025年夏のクラブW杯（チェルシー 3/163/3/0）は TM では 24/25
+#                    25/26 チェルシー 50試合 3694分 20点9A＝29（GB1 35/2674/15/8・CL 8/532/3/0・FAC 4/272/2/0・CGB 3/216/0/1）
+#                    26/27 7試合 539分 5点3A＝8（GB1 6/522/5/3・CGB 1/17）
+#   ギェケレシュ：23/24 スポルティング 50試合 4169分 43点15A（PO1 33/2915/29/9・EL 9/622/5/2・POPO 6/477/6/4・POCP 2/155/3/0）
+#                24/25 スポルティング 52試合 4248分 54点13A（PO1 33/2804/39/8・CL 8/606/6/0・POPO 7/493/5/3・POCP 3/225/4/0・POSU 1/120/0/2）
+#                25/26 アーセナル 55試合 3481分 21点3A＝24（GB1 36/2231/14/1・CL 13/915/5/1・CGB 4/260/1/1・FAC 2/75/1/0）。Wikipedia「early May 2026 … 20th goal of the season」と矛盾しない
+#                26/27 13試合 587分 2点3A＝5（GB1 6/154/0/1・CL 4/238/1/2・CGB 2/180/1/0・GBCS 1/15）
+#   計算：25/26 1点取るまで ジョアン・ペドロ 3694÷20＝184.7／ギェケレシュ 3481÷21＝165.8。1つ絡むまで 3694÷29＝127.4／3481÷24＝145.0
+#         26/27 1つ絡むまで 539÷8＝67.4／587÷5＝117.4（どちらも 450分超・900分未満）
+# 市場価値（TM の推移）：ジョアン・ペドロ 2024-12 5000万€→2025-05 5000万→2025-10 6500万→2025-12 6500万→2026-03 7500万→2026-06 8000万→2026-10-07 1億（最高）
+#   ギェケレシュ 2024-12 7500万€（最高）→2025-05 7500万→2025-12 7000万→2026-03 6500万→2026-06 6500万→2026-10-07 5500万。2025-12 はギェケレシュが上、2026-03 で入れ替わり
+# 経歴（Wikipedia・TM）：ジョアン・ペドロ 2001-09-26 ブラジル・リベイランプレト生、フルミネンセの下部組織→ワトフォード（2020）→ブライトン（2023、報道 3000万ポンド）→チェルシー 2025-07-02（報道 5500万ポンド＋追加500万）。
+#   2025年のクラブW杯の決勝（3-0 PSG）で3点目。2025-26 チェルシーの年間最優秀選手。2026年8月のプレミア月間最優秀選手。2026-08-24 フラム戦で開始31秒の得点（開幕節の最速）。
+#   ギェケレシュ 1998-06-04 ストックホルム生、ブロンマポイカルナ→ブライトン（2018-01 加入、貸し出しを経て 2021-07 にコヴェントリーへ完全移籍）→スポルティング（2023、2000万€）→アーセナル 2025-07-26（報道 5500万ポンド、最大6350万ポンド）。
+#   アーセナルは 2025-26 にプレミア優勝、ギェケレシュはクラブの得点王（Wikipedia の冒頭）。
+# 写真：j1〜j4 チェルシー公式（選手ページ・ニュースの写真。名前が GettyImages の写真は使っていない）・g1 アーセナル公式（選手ページ。透過の切り抜きを暗い地に合成）・
+#   g3/g4 Commons（2026 W杯 スウェーデン代表、CC BY-SA 4.0 Bryan Berlin）・g5 Commons（2026-06-04 スウェーデン代表、CC BY-SA 4.0 Mikael Hervestad）。pair_a/b/c は pairphoto。
+slot: other_1
+date: "2026年11月6日"
+format: news
+series: 比べる
+people:
+  - ジョアン・ペドロ
+  - ヴィクトル・ギェケレシュ
+  - チェルシー
+  - アーセナル
+
+theme:
+  end_bg: assets/images/20261111_compare_626724_325443/pair_c/01.jpg
+  id: compare_626724_325443
+  league: england
+  kind: other
+  topic: ジョアン・ペドロとギェケレシュ
+  prefix: ""
+  title: ジョアン・ペドロとギェケレシュ、1季目の得点は20と21。差がついたのはどこか
+  hook: ""
+  question: 2025年の同じ夏に、ロンドンのビッグクラブへ来た2人のストライカー。1季目の得点はほぼ同じなのに、数字のどこで差がついたのか
+  takeaway: 1季目の得点は20と21でほぼ同じ。1点取るまではギェケレシュ（約166分）が速く、アシストを足した1つ絡むまではジョアン・ペドロ（約127分）が速い。差はアシストの9と3にあった
+  league_name: プレミアリーグ
+  opening_image: assets/images/20261111_compare_626724_325443/pair_b/01.jpg
+
+short_title: ジョアン・ペドロとギェケレシュ、1季目の得点は20と21
+
+thumbnail:
+  photo: assets/images/20261111_compare_626724_325443/pair_b/01.jpg
+  photos:
+    - assets/images/20261111_compare_626724_325443/j2/01_t.jpg
+    - assets/images/20261111_compare_626724_325443/g1/01_t.jpg
+  short_photo: assets/images/20261111_compare_626724_325443/pair_b/01_v.jpg
+  face_link: VS
+  line1: J・ペドロとギェケレシュ
+  line2: 1季目の得点 20と21
+  tags: [ジョアン・ペドロ, ギェケレシュ, チェルシー, アーセナル]
+
+answer: 得点はほぼ同じ。差がついたのはアシストで、9と3
+watch: 毎日、数字でサッカーを読み解きます
+
+sections:
+  - id: hook
+    heading: 同じ夏に来た2人は、1季目にいくつ点を取ったのか
+    tier: 報道
+    telop: 2025年から26年 クラブの公式戦
+    narrator: 解説
+    card: &hookcard
+      type: stats
+      title: 1季目の得点（クラブの公式戦）
+      items:
+        - ["20", 点, ジョアン・ペドロ]
+        - ["21", 点, ギェケレシュ]
+        - ["9と3", アシスト, 差がついたところ]
+      focus: 2
+    say:
+      - text: チェルシーのストライカー、ジョアン・ペドロ。
+        image: assets/images/20261111_compare_626724_325443/j2/01_w.jpg
+        card: none
+      - text: そしてアーセナルのストライカー、ヴィクトル・ギェケレシュ。
+        image: assets/images/20261111_compare_626724_325443/g1/01_w.jpg
+        card: none
+      - text: 2人とも、2025年の夏に、ロンドンのビッグクラブへ来ました。
+        image: assets/images/20261111_compare_626724_325443/pair_b/01.jpg
+        card: none
+      - text: 数字は、11月6日までのクラブの公式戦で数えます。
+        image: assets/images/20261111_compare_626724_325443/j1/01_b.jpg
+        card: {<<: *hookcard, focus: 0}
+      - text: 1季目の得点は、ジョアン・ペドロが20、ギェケレシュが21。
+        image: assets/images/20261111_compare_626724_325443/g3/01_b.jpg
+        card: {<<: *hookcard, focus: 1}
+      - text: ほとんど同じ数なのに、アシストは9と3。ここで大きく分かれています。
+        emph: true
+        image: assets/images/20261111_compare_626724_325443/g3/01_b.jpg
+        card: {<<: *hookcard, focus: 2}
+      - text: その差が、2季目のいまにどうつながっているのか。順に見ていきます。
+        image: assets/images/20261111_compare_626724_325443/pair_c/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/joao-pedro/leistungsdaten/spieler/626724
+      - https://www.transfermarkt.com/viktor-gyokeres/leistungsdaten/spieler/325443
+
+  - id: data
+    heading: ジョアン・ペドロとギェケレシュは、どこから来た選手なのか
+    tier: 報道
+    telop: 25歳と28歳
+    narrator: 解説
+    card: &datacard
+      type: duel
+      left: {name: ジョアン・ペドロ, club: チェルシー, photo: assets/images/20261111_compare_626724_325443/j1/01_sq.jpg, color: "#3d7fe0"}
+      right: {name: ギェケレシュ, club: アーセナル, photo: assets/images/20261111_compare_626724_325443/g1/01_sq.jpg, color: "#ef0107"}
+      rows:
+        - [生まれた日, 2001年9月26日, 1998年6月4日]
+        - [代表, ブラジル, スウェーデン]
+        - [前のクラブ, ブライトン, スポルティング]
+        - [加入, 2025年7月2日, 2025年7月26日]
+        - [移籍金（報道）, 5500万ポンド, 5500万ポンド]
+        - [市場価値, 1億€, 5500万€]
+      bars: false
+      note: 移籍金は報道の基本額。ジョアン・ペドロは別に最大500万、ギェケレシュは最大850万ポンドの追加。市場価値は最新の値
+    say:
+      - text: ジョアン・ペドロは25歳のブラジル代表。ブライトンからチェルシーへ来ました。
+        image: assets/images/20261111_compare_626724_325443/j2/01_b.jpg
+        card: {<<: *datacard, highlight_row: 前のクラブ}
+      - text: ブライトンでは2季のあいだ、三笘薫のチームメートでした。
+        image: assets/images/20261111_compare_626724_325443/j4/01_w.jpg
+        card: none
+      - text: ギェケレシュは28歳のスウェーデン代表。ポルトガルのスポルティングから移りました。
+        image: assets/images/20261111_compare_626724_325443/g4/01_b.jpg
+        card: {<<: *datacard, highlight_row: 代表}
+      - text: 実はギェケレシュも、2018年からブライトンに所属していた選手です。
+        image: assets/images/20261111_compare_626724_325443/g5/01_w.jpg
+        card: none
+      - text: 報じられた基本の移籍金は、どちらも5500万ポンドで同じでした。
+        emph: true
+        image: assets/images/20261111_compare_626724_325443/g1/01_b.jpg
+        card: {<<: *datacard, highlight_row: 移籍金（報道）}
+    sources:
+      - https://www.transfermarkt.com/joao-pedro/profil/spieler/626724
+      - https://www.transfermarkt.com/viktor-gyokeres/profil/spieler/325443
+      - https://en.wikipedia.org/wiki/Jo%C3%A3o_Pedro_(footballer,_born_2001)
+      - https://en.wikipedia.org/wiki/Viktor_Gy%C3%B6keres
+
+  - id: seasons
+    heading: ロンドンに来る前の2季、2人はいくつ点を取っていたのか
+    tier: 報道
+    telop: 季ごとの数（クラブの公式戦）
+    narrator: 解説
+    card: &seasoncard
+      type: table
+      title: 季ごとの数（クラブのトップチームの公式戦）
+      columns: [選手, 季, 試合, 得点, アシスト]
+      rows:
+        - [ギェケレシュ, 23/24, "50", "43", "15"]
+        - [J・ペドロ, 23/24, "40", "20", "3"]
+        - [ギェケレシュ, 24/25, "52", "54", "13"]
+        - [J・ペドロ, 24/25, "30", "10", "7"]
+        - [J・ペドロ, 25/26, "50", "20", "9"]
+        - [ギェケレシュ, 25/26, "55", "21", "3"]
+      note: 24/25まではギェケレシュがスポルティング、ジョアン・ペドロがブライトン
+    say:
+      - text: まずは、季ごとの数を並べます。
+        image: assets/images/20261111_compare_626724_325443/g4/01_b.jpg
+        card: *seasoncard
+      - text: ギェケレシュは、スポルティングでの2季目に54点。
+        image: assets/images/20261111_compare_626724_325443/g4/01_b.jpg
+        card: {<<: *seasoncard, highlight_row: 2}
+      - text: ポルトガルのリーグで、2年続けて得点王になっています。
+        image: assets/images/20261111_compare_626724_325443/g3/01_w.jpg
+        card: none
+      - text: ジョアン・ペドロは、ブライトンでの2季で20点と10点。
+        image: assets/images/20261111_compare_626724_325443/j1/01_b.jpg
+        card: {<<: *seasoncard, highlight_row: 3}
+      - text: ところがロンドンでの1季目は、20点と21点でほぼ並びました。
+        emph: true
+        image: assets/images/20261111_compare_626724_325443/g1/01_b.jpg
+        card: {<<: *seasoncard, highlight_row: 5}
+      - text: ギェケレシュは、アーセナルのプレミア優勝の年に、チームの得点王でした。
+        image: assets/images/20261111_compare_626724_325443/g5/01_w.jpg
+        card: none
+      - text: チェルシーの年間最優秀選手は、ジョアン・ペドロでした。
+        image: assets/images/20261111_compare_626724_325443/j2/01_w.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/joao-pedro/leistungsdaten/spieler/626724
+      - https://www.transfermarkt.com/viktor-gyokeres/leistungsdaten/spieler/325443
+      - https://en.wikipedia.org/wiki/Viktor_Gy%C3%B6keres
+      - https://en.wikipedia.org/wiki/Jo%C3%A3o_Pedro_(footballer,_born_2001)
+
+  - id: split
+    heading: 1点取るまでと、1つ絡むまで。速いのはどちらなのか
+    tier: 報道
+    main: true
+    telop: 出場時間÷得点、出場時間÷得点＋アシスト
+    narrator: 解説
+    card: &splitcard
+      type: duel
+      left: {name: ジョアン・ペドロ, club: チェルシー, photo: assets/images/20261111_compare_626724_325443/j1/01_sq.jpg, color: "#3d7fe0"}
+      right: {name: ギェケレシュ, club: アーセナル, photo: assets/images/20261111_compare_626724_325443/g1/01_sq.jpg, color: "#ef0107"}
+      rows:
+        - [1季目の出場時間, 3694分, 3481分]
+        - [得点, "20", "21"]
+        - [アシスト, "9", "3"]
+        - [1点取るまで, 約185分, 約166分]
+        - [1つ絡むまで, 約127分, 約145分]
+      bars: [1季目の出場時間, 得点, アシスト]
+      lower: [1点取るまで, 1つ絡むまで]
+      note: 2025年から26年の季、クラブの公式戦。かかった時間は自分で計算した値
+    say:
+      - text: 2025年夏にロンドンへ来た、ジョアン・ペドロとギェケレシュ。1季目の数字です。
+        short_only: true
+        image: assets/images/20261111_compare_626724_325443/pair_b/01.jpg
+        card: none
+      - text: 出場時間を、得点の数で割って比べます。
+        image: assets/images/20261111_compare_626724_325443/j1/01_b.jpg
+        card: {<<: *splitcard, highlight_row: 1季目の出場時間}
+      - text: 1点取るまでは、ジョアン・ペドロが約185分、ギェケレシュが約166分。
+        image: assets/images/20261111_compare_626724_325443/g3/01_b.jpg
+        card: {<<: *splitcard, highlight_row: 1点取るまで}
+      - text: 点を取る速さは、ギェケレシュが約19分速かった。
+        image: assets/images/20261111_compare_626724_325443/g4/01_w.jpg
+        card: none
+      - text: ところが、アシストを足して割ると、並びが逆になります。
+        image: assets/images/20261111_compare_626724_325443/j2/01_b.jpg
+        card: {<<: *splitcard, highlight_row: アシスト}
+      - text: 1つ絡むまでは、ジョアン・ペドロが約127分、ギェケレシュが約145分。
+        image: assets/images/20261111_compare_626724_325443/j2/01_b.jpg
+        card: {<<: *splitcard, highlight_row: 1つ絡むまで}
+      - text: 差を生んだのは、9と3のアシストです。
+        emph: true
+        image: assets/images/20261111_compare_626724_325443/pair_a/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/joao-pedro/leistungsdaten/spieler/626724
+      - https://www.transfermarkt.com/viktor-gyokeres/leistungsdaten/spieler/325443
+
+  - id: value
+    heading: 2人の市場価値は、いつ入れ替わったのか
+    tier: 報道
+    telop: 市場価値の歩み
+    narrator: 解説
+    card: &valuecard
+      type: line
+      title: 市場価値の歩み（百万ユーロ）
+      x: ["24年12月", "25年5月", "25年12月", "26年3月", "26年6月", "26年10月"]
+      series:
+        - [ジョアン・ペドロ, [50, 50, 65, 75, 80, 100]]
+        - [ギェケレシュ, [75, 75, 70, 65, 65, 55]]
+      focus: ジョアン・ペドロ
+      note: 各時点の直前に出た値
+    say:
+      - text: 値段のほうも見ておきます。
+        image: assets/images/20261111_compare_626724_325443/j1/01_b.jpg
+        card: *valuecard
+      - text: 移る前の2025年5月は、ギェケレシュが7500万ユーロ。
+        image: assets/images/20261111_compare_626724_325443/g5/01_b.jpg
+        card: {<<: *valuecard, highlight: 25年5月}
+      - text: ジョアン・ペドロは、5000万ユーロ。
+        image: assets/images/20261111_compare_626724_325443/j1/01_b.jpg
+        card: {<<: *valuecard, highlight: 25年5月}
+      - text: 2026年3月の時点で、上下が逆になっています。
+        image: assets/images/20261111_compare_626724_325443/j2/01_b.jpg
+        card: {<<: *valuecard, highlight: 26年3月}
+      - text: いま、ジョアン・ペドロは初めて1億ユーロに届いています。
+        emph: true
+        image: assets/images/20261111_compare_626724_325443/j2/01_w.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/joao-pedro/marktwertverlauf/spieler/626724
+      - https://www.transfermarkt.com/viktor-gyokeres/marktwertverlauf/spieler/325443
+
+  - id: now
+    heading: 2季目の今季、2人はどれだけ点に絡んでいるのか
+    tier: 報道
+    telop: 2026年から27年 11月6日時点
+    narrator: 解説
+    card: &nowcard
+      type: duel
+      left: {name: ジョアン・ペドロ, club: チェルシー, photo: assets/images/20261111_compare_626724_325443/j1/01_sq.jpg, color: "#3d7fe0"}
+      right: {name: ギェケレシュ, club: アーセナル, photo: assets/images/20261111_compare_626724_325443/g1/01_sq.jpg, color: "#ef0107"}
+      rows:
+        - [試合, "7", "13"]
+        - [出場時間, 539分, 587分]
+        - [得点, "5", "2"]
+        - [アシスト, "3", "3"]
+        - [1つ絡むまで, 約67分, 約117分]
+      bars: [試合, 出場時間, 得点, アシスト]
+      lower: [1つ絡むまで]
+      note: 今季のクラブの公式戦（11月6日時点）。どちらも900分に届かない小さな数
+    say:
+      - text: 今季の数です。
+        image: assets/images/20261111_compare_626724_325443/pair_a/01.jpg
+        card: {<<: *nowcard, highlight_row: 試合}
+      - text: ジョアン・ペドロは5点3アシスト。点を取るペースは、1季目より速い。
+        image: assets/images/20261111_compare_626724_325443/j4/01_w.jpg
+        card: {<<: *nowcard, highlight_row: 得点}
+      - text: 8月24日のフラム戦では、開始31秒で決めています。
+        image: assets/images/20261111_compare_626724_325443/j4/01_w.jpg
+        card: none
+      - text: プレミアの開幕節では、史上いちばん早いゴールでした。
+        image: assets/images/20261111_compare_626724_325443/j3/01_w.jpg
+        card: none
+      - text: ギェケレシュは587分で2点3アシスト。アシストは早くも、1季目と同じ3つです。
+        image: assets/images/20261111_compare_626724_325443/g4/01_b.jpg
+        card: {<<: *nowcard, highlight_row: アシスト}
+      - text: プレミアの出場は154分で、多くはチャンピオンズリーグとリーグカップで出ています。
+        image: assets/images/20261111_compare_626724_325443/g3/01_w.jpg
+        card: none
+      - text: 2人ともまだ出場900分未満で、季の途中の小さな数です。
+        image: assets/images/20261111_compare_626724_325443/pair_c/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/joao-pedro/leistungsdaten/spieler/626724
+      - https://www.transfermarkt.com/viktor-gyokeres/leistungsdaten/spieler/325443
+      - https://en.wikipedia.org/wiki/Jo%C3%A3o_Pedro_(footballer,_born_2001)
+
+  - id: view
+    heading: 見立て・同じ額で来た2人の差は、どこで開いたのか
+    tier: 背景
+    viewpoint: true
+    narrator: 解説
+    telop: 数字の違いが示すもの
+    card: &viewcard
+      type: duel
+      left: {name: ジョアン・ペドロ, club: チェルシー, photo: assets/images/20261111_compare_626724_325443/j1/01_sq.jpg, color: "#3d7fe0"}
+      right: {name: ギェケレシュ, club: アーセナル, photo: assets/images/20261111_compare_626724_325443/g1/01_sq.jpg, color: "#ef0107"}
+      rows:
+        - [1季目の1点取るまで, 約185分, 約166分]
+        - [1季目の1つ絡むまで, 約127分, 約145分]
+        - [今季の1つ絡むまで, 約67分, 約117分]
+        - [市場価値, 1億€, 5500万€]
+      lower: [1季目の1点取るまで, 1季目の1つ絡むまで, 今季の1つ絡むまで]
+      bars: false
+      note: クラブの公式戦。出場時間÷得点、出場時間÷得点＋アシストで、自分で計算した値。今季は900分未満
+    say:
+      - text: 見立てです。点を取る速さだけなら、1季目はギェケレシュが上でした。
+        image: assets/images/20261111_compare_626724_325443/g3/01_b.jpg
+        card: {<<: *viewcard, highlight_row: 1季目の1点取るまで}
+      - text: 差がついたのは、味方の点のお膳立て。ジョアン・ペドロのアシストです。
+        mark: {kind: circle, row: 1}
+        image: assets/images/20261111_compare_626724_325443/j1/01_b.jpg
+        card: {<<: *viewcard, highlight_row: 1季目の1つ絡むまで}
+      - text: 今季は1つ絡むまでの時間が、約67分と約117分。差は50分に開いています。
+        image: assets/images/20261111_compare_626724_325443/j2/01_b.jpg
+        card: {<<: *viewcard, highlight_row: 今季の1つ絡むまで}
+      - text: 同じ額で来た2人の市場価値は、いま4500万ユーロ離れました。
+        emph: true
+        image: assets/images/20261111_compare_626724_325443/pair_b/01.jpg
+        card: none
+      - text: プレミア優勝を知るギェケレシュが、2季目にどんな数字を残すのか。注目です。
+        image: assets/images/20261111_compare_626724_325443/pair_c/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/joao-pedro/leistungsdaten/spieler/626724
+      - https://www.transfermarkt.com/viktor-gyokeres/leistungsdaten/spieler/325443

@@ -1,0 +1,460 @@
+# スタジアム紹介シリーズ：レアル・ソシエダの本拠地（アノエタ、11/13 予定）。雛形は 11/11 バレンシアの回。
+# 題材の選び方（2026-11-11）：指示書 20261112 の「ラ・リーガの続き」。済み＝アトレティコ・バルサ・レアル・ビルバオ・バレンシア。次の候補はセビージャ・ベティス・ソシエダ・ビジャレアル。
+#   ソシエダを選んだ理由：久保建英の所属クラブ（日本との縁）／「陸上競技場から変わった器」という強い一点／今季の夏に増設工事をした直後で数字が新しい。外した候補＝セビージャ（サンチェス・ピスフアン。次の回に回せる）。
+#   重なりの確認：scripts/*stadium_* にアノエタ・ソシエダは無し。ll01_realsociedad（9/26）は「本拠地はアノエタ、4万人」の1行だけ触れる。直近30日の本はニュース（11/6 中村敬斗のリヨン対ソシエダの EL 戦など）のみ。
+#   picks（research/20261112_picks.txt）：同じ 11/13 のユニフォームはアスレティック・ビルバオ。重ならない。
+# 今季のラ・リーガ所属（一次情報）：ESPN esp.1 の teams 一覧に Real Sociedad（id 89）、2026-27 の日程にホーム6試合（会場 Reale Arena＝ESPN の表記）。
+# アノエタ（ウィキペディア en・es）：
+#   1991 着工／1993-07-29 開場（欧州ジュニア陸上選手権。es）／1993-08-13 初のサッカー＝ソシエダ対レアル・マドリード 2対2、最初のゴールはロレン（en・es）。持ち主は市（en・es）。
+#   最初の建設費 30億ペセタ（約2100万ユーロ。en）。開場時の収容3万2000（en）。開場の日にアトーチャの芝の一片をピッチの真ん中に置いた（es）。
+#   前の本拠地：オンダレータ 1909〜13、アトーチャ 1913〜93（en）。アトーチャ 1913-10-04 開場 3対3 アスレティック、最後のリーグ戦 1993-06-13 テネリフェに3対1（es）。1981・82 のリーグ優勝はアトーチャの時代（es の概要欄）。
+#   トラック：陸上のトラックがあって客席とピッチの間が遠く、ファンに不評（en）。2004 トラックを外して4万2000席にする案（アスティアサラン）を市が却下（en）。
+#   2017-05 工事開始（en）。設計 イサスクン・ラルサバル（en）。費用 4700万ユーロ＝クラブ3300万・バスク自治州政府1000万・ギプスコア県400万（en）。
+#   2018-09-15 第4節バルセロナ戦で第1期の区画が完成（en）。2019-09-14 アトレティコ戦 2対0、入場3万3374（en）。5か月後のアスレティックとのダービー 2対1、3万6730＝記録（en。注の題は3万6370で一致しないので、台本は3万6730）。
+#   名前：2019〜2025 は保険会社の名前（LaLiga 公式の記事・es の概要欄）。2025年7月にアノエタへ戻る（LaLiga の記事）。
+#   2013-14、改築中のサン・マメスの代わりにアスレティックが開幕のホーム戦をここで（en）。入場の最多はラグビー、2023-06-10 のトップ14準決勝ボルドー・ベグル対ラ・ロシェルで 3万9314（en）。
+#   女子の欧州CL決勝（2020）も en・es に載るが、決まりで扱わない。コンサートの名前の列挙も言わない。
+# 拡張工事（El Gol Digital 2026-05-09、Onda Vasca 2024-12-30、StadiumDB 2026-07-16）：
+#   約2000席増（上の段。四隅 約1000・メインスタンド上 580・東スタンド上 430）。費用 約1000万ユーロ（Onda Vasca 1060万、StadiumDB 約1000万）。2026-05 着工、夏に完成の予定（StadiumDB「8月末〜9月初め」）。席の総数は 4万2247（El Gol Digital・Onda Vasca）と 4万2427（StadiumDB）で割れる→台本は 4万2247 を使い「約」を付ける。完成したかは確かめられなかったので、台本は「足す」と書き、完成とは言わない。
+#   今季の最初の2節はアウェー（クラブが LaLiga に要請。重機と芝の張り替え。El Gol Digital）。ESPN の日程でも 8/21 ベティス・8/26 レアル・マドリードが遠征、8/29 が最初のホーム。
+#   FIFAの条件は4万席以上（StadiumDB）。2030年W杯の開催は未定（同）。
+# 見立て：
+#   2025-26 のアノエタの占有率 78.1%（収容 3万9313 に対して）、ラ・リーガ15番目。サン・マメス 89.4%（3位）。El Gol Digital 2026-05-28。コパ・デル・レイ 2026-04-18、ラ・カルトゥハでアトレティコに 2対2→PK 4対3（複数の報道が一致）。
+#   今季アノエタの入場（ESPN の試合記録。11/8 ラージョ戦は記録0なので使わない）：8/29 エスパニョール3万1884・9/3 セルタ3万364・9/13 アトレティコ3万1834・10/11 デポルティーボ3万3644・10/25 レバンテ3万35。合計15万7761・平均3万1552。
+#   3万1552 ÷ 3万9313 ＝ 80.3％。4万2247 ÷ 3万1552 ＝ 1.34倍（自分で計算）。最多 3万6730 との差は 4万2247−3万6730＝5517。4700÷2100＝2.2倍（自分で計算）。
+# 日本との接点（サッカーの縁）：久保建英はソシエダの選手（ESPN の名簿に在籍）。11/8 ラージョ戦（1対0で勝ち）に先発（ESPN の先発表 event=401882810）。
+# 言わなかったもの：女子の決勝・コンサート／4万席に届かなかった理由の推測／ピッチの縦横（en 105x68、es 105x70 で割れる）／2030年W杯でスポンサー名が変わる話。
+# 写真：assets/images/20261113_stadium_realsociedad/（credits.json）。Commons（すべて CC BY-SA 4.0）。01〜02 夜の内観、03 2018年5月の内観（トラックが見える）、04〜08 外観。
+date: 2026年11月11日
+slot: other_1
+format: news
+series: スタジアム紹介
+voice_min: 0
+people: []
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  id: stadium_realsociedad
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: レアル・ソシエダ
+  title: レアル・ソシエダのアノエタ、陸上トラックをなくした器を、また広げるのはなぜ？
+  question: 陸上競技場として生まれたアノエタは、なぜトラックをなくし、いままた席を足しているのか
+  lead: 陸上競技場から変わった本拠地です。
+  hook: ''
+  opening_image: assets/images/20261113_stadium_realsociedad/01_w.jpg
+  end_bg: assets/images/20261113_stadium_realsociedad/04_w.jpg
+  takeaway: アノエタは1993年に陸上競技場として開き、2017年からの4700万ユーロの工事でトラックをなくして今の形になった。今夏はまた約2000席を足す工事で、足すと約4万2200席。ただ昨季の入場は収容の78.1％で15番目、今季のホーム5試合の平均3万1552人は3万9313席の80.3％。足したあとの席を埋めるには、今季の平均の1.34倍が要る
+  short_title: アノエタ、陸上トラックをなくした器をまた広げる
+thumbnail:
+  layout: scene
+  bold: false
+  callouts:
+  - 約2000席を増設
+  - 昨季の入場は78.1％
+  photo: assets/images/20261113_stadium_realsociedad/01_w.jpg
+  line1: ソシエダのアノエタ
+  line2: 陸上トラックをなくした器
+  tags:
+  - レアル・ソシエダ
+  - ラ・リーガ
+  - スタジアム紹介
+sections:
+- id: data
+  main: true
+  heading: アノエタは、なぜ「陸上競技場」から生まれたのか
+  bg: assets/images/20261113_stadium_realsociedad/01_w.jpg
+  tier: 報道
+  telop: 1993年に陸上競技場として開場。いまはトラックの無い、サッカーのための器
+  narrator: 解説
+  card:
+    type: table
+    title: アノエタの基礎DATA
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 持ち主
+      - サンセバスチャン市
+    - - 開場
+      - 1993年7月
+    - - 収容
+      - 約3万9000人
+    - - 前の本拠地
+      - アトーチャ（1913〜93年）
+    - - 名前
+      - 2019〜25年は保険会社の名前
+    - - 今夏の工事
+      - 約2000席を足す
+  say:
+  - text: レアル・ソシエダの本拠地、アノエタの話です。
+    short_only: true
+    image: assets/images/20261113_stadium_realsociedad/01_w.jpg
+    card: none
+  - text: この器は、サッカーのために建てられたのではありませんでした。
+    emph: true
+    image: assets/images/20261113_stadium_realsociedad/01_w.jpg
+    card: none
+  - text: 開いたのは1993年7月。最初の舞台は、ヨーロッパジュニアの陸上選手権です。
+    image: assets/images/20261113_stadium_realsociedad/03_w.jpg
+    card: none
+  - text: いまは、ピッチのまわりのトラックが無い、サッカーのための器です。
+    image: assets/images/20261113_stadium_realsociedad/03_w.jpg
+    card:
+      type: stats
+      title: アノエタの数字
+      items:
+      - - '1993'
+        - 年
+        - 開場
+      - - '39313'
+        - 席
+        - 拡張の前
+      - - '2000'
+        - 席
+        - 今夏に足す
+      focus: 1
+  - text: 持ち主は、クラブではなく市です。ソシエダは、ここを借りて戦っています。
+    image: assets/images/20261113_stadium_realsociedad/05_w.jpg
+    card:
+      type: table
+      title: アノエタの基礎DATA
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 持ち主
+        - サンセバスチャン市
+      - - 開場
+        - 1993年7月
+      - - 収容
+        - 約3万9000人
+      - - 前の本拠地
+        - アトーチャ（1913〜93年）
+      - - 名前
+        - 2019〜25年は保険会社の名前
+      - - 今夏の工事
+        - 約2000席を足す
+      highlight_row: 0
+  - text: 11月8日のラージョ戦では、久保建英がこのピッチに先発しました。
+    image: assets/images/20261113_stadium_realsociedad/05_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Reale_Arena
+  - https://es.wikipedia.org/wiki/Reale_Arena
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/summary?event=401882810
+- id: history
+  heading: ソシエダは、なぜアトーチャを離れ、陸上競技場へ移ったのか
+  bg: assets/images/20261113_stadium_realsociedad/07_w.jpg
+  tier: 背景
+  telop: 1913年から使ったアトーチャを離れ、1993年に市が建てたアノエタへ
+  narrator: 解説
+  card: &id_hist
+    type: timeline
+    title: ソシエダの本拠地の歩み
+    rows:
+    - - 1913年10月
+      - アトーチャが開場
+    - - 1993年6月
+      - アトーチャで最後のリーグ戦
+    - - 1993年7月
+      - アノエタが開場（陸上の大会）
+    - - 1993年8月
+      - アノエタで最初のサッカー
+    - - 2017年5月
+      - トラックを外す工事が始まる
+    - - 2019年9月
+      - 工事後の最初の試合
+    focus: 1993年7月
+    highlight_row: 0
+  say:
+  - text: アノエタの前の本拠地は、アトーチャ。開いたのは1913年10月です。
+    image: assets/images/20261113_stadium_realsociedad/07_w.jpg
+    card:
+      <<: *id_hist
+      highlight_row: 0
+  - text: 最初の試合は、アスレティック・ビルバオと3対3の引き分けでした。
+    image: assets/images/20261113_stadium_realsociedad/07_w.jpg
+    card: none
+  - text: リーグ優勝を2回、1981年と82年に果たしたのも、アトーチャの時代です。
+    emph: true
+    image: assets/images/20261113_stadium_realsociedad/07_w.jpg
+    card: none
+  - text: 最後のリーグ戦は、1993年6月13日。テネリフェに3対1で勝ちました。
+    image: assets/images/20261113_stadium_realsociedad/08_w.jpg
+    card:
+      <<: *id_hist
+      highlight_row: 1
+  - text: 次に移ったのが、市が建てたアノエタです。
+    image: assets/images/20261113_stadium_realsociedad/08_w.jpg
+    card: none
+  - text: 開場は1993年7月29日。最初は陸上の大会でした。
+    image: assets/images/20261113_stadium_realsociedad/08_w.jpg
+    card:
+      <<: *id_hist
+      highlight_row: 2
+  - text: 開場の日、アトーチャの芝の一片が、ピッチの真ん中に置かれました。
+    image: assets/images/20261113_stadium_realsociedad/08_w.jpg
+    card: none
+  - text: サッカーの最初の試合は、8月13日。レアル・マドリードとの親善試合です。
+    image: assets/images/20261113_stadium_realsociedad/03_w.jpg
+    card:
+      <<: *id_hist
+      highlight_row: 3
+  - text: 結果は、2対2の引き分けでした。
+    image: assets/images/20261113_stadium_realsociedad/03_w.jpg
+    card: none
+  - text: 最初のゴールを決めたのは、ロレンです。
+    image: assets/images/20261113_stadium_realsociedad/03_w.jpg
+    card: none
+  - text: 陸上競技場なので、ピッチのまわりはトラックが囲んでいました。
+    emph: true
+    image: assets/images/20261113_stadium_realsociedad/03_w.jpg
+    card: none
+  - text: そのぶん客席がピッチから遠く、ファンには不評でした。
+    image: assets/images/20261113_stadium_realsociedad/03_w.jpg
+    card: none
+  - text: 2004年には、トラックを外して4万2000席にする案が出ました。
+    image: assets/images/20261113_stadium_realsociedad/02_w.jpg
+    card: none
+  - text: でも、市が受け入れませんでした。
+    image: assets/images/20261113_stadium_realsociedad/02_w.jpg
+    card: none
+  sources:
+  - https://es.wikipedia.org/wiki/Estadio_de_Atocha
+  - https://en.wikipedia.org/wiki/Reale_Arena
+  - https://es.wikipedia.org/wiki/Reale_Arena
+- id: rebuild
+  heading: トラックをなくす工事は、アノエタの何を変えたのか
+  bg: assets/images/20261113_stadium_realsociedad/02_w.jpg
+  tier: 背景
+  telop: 2017年5月に着工。費用は4700万ユーロで、開場のときの建設費の2倍あまり
+  narrator: 解説
+  card: &id_reb
+    type: table
+    title: 工事の前と後
+    columns:
+    - 項目
+    - 工事の前
+    - 工事の後
+    rows:
+    - - 陸上トラック
+      - あり
+      - なし
+    - - 席
+      - 開場時 3万2000
+      - 約3万9000
+    - - 費用
+      - 開場時 約2100万ユーロ
+      - 工事 4700万ユーロ
+    highlight_row: 0
+  say:
+  - text: 工事が始まったのは、2017年5月。陸上のトラックをなくす工事です。
+    image: assets/images/20261113_stadium_realsociedad/02_w.jpg
+    card:
+      <<: *id_reb
+      highlight_row: 0
+  - text: 費用は4700万ユーロ。大半の3300万を、クラブが出しました。
+    image: assets/images/20261113_stadium_realsociedad/02_w.jpg
+    card:
+      <<: *id_reb
+      highlight_row: 2
+  - text: 開場のときの建設費、約2100万ユーロの、2倍あまりです。
+    emph: true
+    image: assets/images/20261113_stadium_realsociedad/02_w.jpg
+    card: none
+  - text: 工事の途中から、器は使われました。
+    image: assets/images/20261113_stadium_realsociedad/04_w.jpg
+    card: none
+  - text: 2018年9月15日のバルセロナ戦で、最初の区画が間に合います。
+    image: assets/images/20261113_stadium_realsociedad/04_w.jpg
+    card: none
+  - text: 全部の席がそろったのは、2019年9月14日。
+    image: assets/images/20261113_stadium_realsociedad/04_w.jpg
+    card: none
+  - text: アトレティコに2対0で勝ち、入場は3万3374人でした。
+    image: assets/images/20261113_stadium_realsociedad/04_w.jpg
+    card:
+      <<: *id_hist
+      highlight_row: 5
+  - text: 5か月後には、アスレティックとのバスク・ダービー。結果は2対1の勝ちです。
+    image: assets/images/20261113_stadium_realsociedad/04_w.jpg
+    card: none
+  - text: 入場は3万6730人。この器のサッカーの入場記録になりました。
+    emph: true
+    image: assets/images/20261113_stadium_realsociedad/04_w.jpg
+    card: none
+  - text: 2019年から2025年までは、スポンサーの保険会社の名前で呼ばれました。
+    image: assets/images/20261113_stadium_realsociedad/08_w.jpg
+    card: none
+  - text: 2025年7月に、アノエタの名前へ戻っています。
+    image: assets/images/20261113_stadium_realsociedad/08_w.jpg
+    card: none
+  - text: ソシエダだけの器でもありません。
+    image: assets/images/20261113_stadium_realsociedad/08_w.jpg
+    card: none
+  - text: 2013年には、サン・マメスが改築中でした。
+    image: assets/images/20261113_stadium_realsociedad/08_w.jpg
+    card: none
+  - text: 代わりにアスレティックが、開幕のホーム戦をここで戦いました。
+    image: assets/images/20261113_stadium_realsociedad/08_w.jpg
+    card: none
+  - text: 入場の最多は、サッカーではなくラグビーです。
+    image: assets/images/20261113_stadium_realsociedad/07_w.jpg
+    card: none
+  - text: 2023年6月10日の準決勝で、3万9314人でした。
+    image: assets/images/20261113_stadium_realsociedad/07_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Reale_Arena
+  - https://es.wikipedia.org/wiki/Reale_Arena
+  - https://www.laliga.com/noticias/historia-reale-arena-estadio-real-sociedad
+- id: expand
+  heading: 広げたばかりの器を、なぜまた広げるのか
+  bg: assets/images/20261113_stadium_realsociedad/05_w.jpg
+  tier: 報道
+  telop: 今夏は上の段に約2000席。条件は、W杯の会場に求められる4万席
+  narrator: 解説
+  card: &id_ex
+    type: table
+    title: 今夏に足す席（上の段）
+    columns:
+    - 場所
+    - 席
+    rows:
+    - - 四隅
+      - 約1000
+    - - メインスタンドの上
+      - 580
+    - - 東のスタンドの上
+      - 430
+    - - 合計
+      - 約2000
+    highlight_row: 3
+  say:
+  - text: 2026年5月から、新しい工事が始まっています。足すのは、約2000席です。
+    emph: true
+    image: assets/images/20261113_stadium_realsociedad/05_w.jpg
+    card:
+      <<: *id_ex
+      highlight_row: 3
+  - text: 場所は、上の段。四隅に約1000席。
+    image: assets/images/20261113_stadium_realsociedad/05_w.jpg
+    card:
+      <<: *id_ex
+      highlight_row: 0
+  - text: メインスタンドの上に580席、東のスタンドの上に430席です。
+    image: assets/images/20261113_stadium_realsociedad/05_w.jpg
+    card:
+      <<: *id_ex
+      highlight_row: 0
+  - text: 費用は、約1000万ユーロ。
+    image: assets/images/20261113_stadium_realsociedad/05_w.jpg
+    card: none
+  - text: 重機を入れ、芝も全部張り替えます。
+    image: assets/images/20261113_stadium_realsociedad/06_w.jpg
+    card: none
+  - text: そこでクラブは、今季の最初の2試合を遠征にしてほしいと、リーグに頼みました。
+    image: assets/images/20261113_stadium_realsociedad/06_w.jpg
+    card: none
+  - text: 実際に、8月21日はベティス、26日はレアル・マドリードが相手。
+    image: assets/images/20261113_stadium_realsociedad/06_w.jpg
+    card: none
+  - text: 最初のホーム戦は、8月29日でした。
+    image: assets/images/20261113_stadium_realsociedad/06_w.jpg
+    card: none
+  - text: 狙いは、4万席の壁です。
+    image: assets/images/20261113_stadium_realsociedad/04_w.jpg
+    card: none
+  - text: 2030年のワールドカップの会場には、4万席以上が求められます。
+    emph: true
+    image: assets/images/20261113_stadium_realsociedad/04_w.jpg
+    card: none
+  - text: ただ、サンセバスチャンが会場に入るかは、まだ決まっていません。
+    image: assets/images/20261113_stadium_realsociedad/04_w.jpg
+    card: none
+  sources:
+  - https://www.elgoldigital.com/futbol/real-sociedad/real-sociedad-dos-jornadas-visitante-obras-anoeta/
+  - https://stadiumdb.com/news/2026/07/spain_anoeta_expansion_accelerates_despite_doubts_over_2030_world_cup
+  - https://www.ondavasca.com/anoeta-sigue-creciendo-ya-prepara-la-ampliacion/
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/teams/89/schedule?season=2026（2026-27 ラ・リーガ、ソシエダの日程）
+- id: view
+  viewpoint: true
+  heading: 見立て・足した席は、埋まるのか
+  bg: assets/images/20261113_stadium_realsociedad/01_w.jpg
+  tier: 報道
+  telop: 今季の平均は3万1552人。足したあとの席を埋めるには1.34倍が要る
+  narrator: 解説
+  card: &id_view
+    type: table
+    title: 今季のアノエタの入場（記録が残る5試合）
+    columns:
+    - 相手
+    - 入場
+    rows:
+    - - エスパニョール
+      - 3万1884人
+    - - セルタ
+      - 3万364人
+    - - アトレティコ
+      - 3万1834人
+    - - デポルティーボ
+      - 3万3644人
+    - - レバンテ
+      - 3万35人
+    - - 平均
+      - 3万1552人
+    highlight_row: 5
+  say:
+  - text: では、足した席は埋まるのか。11月11日までの数字で確かめます。
+    emph: true
+    image: assets/images/20261113_stadium_realsociedad/01_w.jpg
+    card: none
+  - text: 去年は、ソシエダが2026年のコパ・デル・レイを制したシーズンでした。
+    image: assets/images/20261113_stadium_realsociedad/01_w.jpg
+    card: none
+  - text: それでもアノエタの入場は、収容の78.1％。ラ・リーガで15番目です。
+    image: assets/images/20261113_stadium_realsociedad/01_w.jpg
+    card: none
+  - text: 同じバスクのサン・マメスは89.4％で、3番目でした。
+    image: assets/images/20261113_stadium_realsociedad/02_w.jpg
+    card: none
+  - text: 今季は、記録が残るホームの5試合の平均が、3万1552人。
+    mark: {"kind": "circle", "row": 5}
+    image: assets/images/20261113_stadium_realsociedad/02_w.jpg
+    card:
+      <<: *id_view
+      highlight_row: 5
+  - text: 拡張の前の席、3万9313を基準にすると、80.3％です。
+    image: assets/images/20261113_stadium_realsociedad/02_w.jpg
+    card: none
+  - text: 足したあとの4万2247席を埋めるには、今季の平均の1.34倍が要ります。
+    image: assets/images/20261113_stadium_realsociedad/02_w.jpg
+    card:
+      type: calc
+      title: 足した席を埋めるには、いまの何倍か（自分で割った）
+      terms:
+      - - 4万2247席
+        - 足したあとの席
+      - - 3万1552人
+        - 今季の平均の入場
+      - - 1.34倍
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: いちばん入ったのは、2020年のダービー。それでも、あと5517人足りません。
+    emph: true
+    image: assets/images/20261113_stadium_realsociedad/01_w.jpg
+    card: none
+  - text: 4万席の壁は、席を足せば越えます。
+    image: assets/images/20261113_stadium_realsociedad/01_w.jpg
+    card: none
+  - text: 残る問いは、平均より1万人あまり多い席を、毎試合どう埋めるのか。
+    emph: true
+    image: assets/images/20261113_stadium_realsociedad/01_w.jpg
+    card: none
+  sources:
+  - https://www.elgoldigital.com/futbol/real-sociedad/anoeta-ranking-aficiones-laliga-78-porciento-copa-rey/
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/teams/89/schedule?season=2026（2026-27 ラ・リーガ、ソシエダのホームの入場）
+  - https://en.wikipedia.org/wiki/Reale_Arena

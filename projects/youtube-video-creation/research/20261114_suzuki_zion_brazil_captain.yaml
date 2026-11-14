@@ -1,0 +1,152 @@
+# 取材メモ（2026年11月14日）鈴木彩艶、ブラジル主将ラフィーニャを警戒。西川周作の記録に「追い越せるように」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-14。requests（ブラウザUA）で本文を全文読み、site.api.espn.com で確かめた。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: ゲキサカ 2026-11-13 23:23（取材・文 矢内由美子）「ブラジル主将FWを警戒するGK鈴木彩艶、浦和GK西川のJ1新記録にも刺激「彼を追い越せるように頑張りたい」」（全文） https://web.gekisaka.jp/news/japan/detail/?463122-463122-fl
+#   サッカーキング 2026-11-13「GK鈴木彩艶、ブラジル代表の10番ハフィーニャを警戒「非常に強烈な選手」…王国撃破へ完封誓う」（全文） https://www.soccer-king.jp/news/japan/national/20261113/2227402.html
+# 写真の出どころ（本人の写真を探すため）:
+#   https://web.gekisaka.jp/news/japan/detail/?463122-463122-fl
+#   https://www.soccer-king.jp/news/japan/national/20261113/2227402.html
+#   https://www.soccer-king.jp/news/japan/national/20261113/2227341.html
+#   https://www.soccer-king.jp/news/japan/national/20261112/2226803.html
+#   https://www.soccer-king.jp/news/japan/jl/20261108/2225629.html
+# 出典で確かめたこと:
+#   ・13日（ブラジル戦の前日）の取材対応。ブラジル代表のキャプテンはバルセロナのFWラフィーニャ（ゲキサカ。サッカーキングは「10番」）。
+#   ・ESPN（uefa.champions summary event=401915387, 2026-11-03 20:00Z）: バルセロナ 3-0 アストン・ヴィラ。7分 ヤマル、52分 ラフィーニャ（アシスト フェルミン・ロペス）、64分 ラフィーニャ（アシスト カンセロ）。鈴木彩艶はアストン・ヴィラの先発GK（rosters starter=True）。ゲキサカ「ラフィーニャに2ゴールを許し、0-3で敗れた」と一致。
+#   ・ESPN（fifa.world summary event=760487, 2026-06-29 17:00Z）: ブラジル 2-1 日本。29分 佐野海舟で日本が先制、56分 カゼミーロで同点、90分+5 マルティネッリで逆転（アシスト ブルーノ・ギマランイス）。鈴木彩艶は先発。ゲキサカ「試合終了間際に失点を許し、1-2で逆転負け」と一致。ラフィーニャはこの試合の登録メンバーに無い（ESPN の rosters）ので、「W杯でも戦った相手」とは書かない。
+#   ・鈴木の言葉（原文。ゲキサカ。字は変えていない。台本は読点で行に分けた）:
+#       「悔しさはもちろん覚えていますし、最後のシーンだけでなく1失点目も含めて、細かい部分でこうできたというのがあった」
+#       「自分がボールを持っている時のプレススピードや彼のプレースタイルは記憶に新しい。そういったところは警戒しながらプレーしたい」
+#       「自分がどこまで飛び出せるのか、クロスに対しての準備も意識したい」（W杯のブラジル戦で守備ラインが低くなったことを課題に挙げた、のあとの言葉）
+#       「僕も違った形で彼を追い越せるように頑張りたい」（西川周作について）
+#   ・サッカーキングの言葉（鈴木）: 「非常に強烈な選手だったんですけど…」（台本には使わない。ゲキサカの表記に統一）。
+#   ・地の文: 鈴木は今夏アストン・ヴィラへ完全移籍。新天地でも正守護神（サッカーキング）。西川周作（浦和）がJ1通算最多出場記録を更新。記録達成後に鈴木は自らメッセージを送った（ゲキサカ）。西川の記録は 20261112_suzuki_nishikawa_words で ESPN（jpn.1 event=401877554、11/8 神戸 2-2 浦和、西川先発）と確認済み。
+# 食い違い: 鈴木の言葉の書き起こしが2社で少し違う（ゲキサカ「プレースタイルは記憶に新しい。そういったところは警戒しながら」、サッカーキング「点を決められてしまい彼のプレースタイルは記憶に新しいので、警戒しながら」）。ゲキサカの表記に統一。ゲキサカは「再戦」と書くが、W杯のブラジル戦にラフィーニャは登録外（ESPN）。「再戦」は11月3日のCLの対戦の意味（サッカーキング「約1週間半ぶりに同選手との再戦」）なので、台本は「CLで2点を許した相手」と書く。ラフィーニャが「ブラジルの主将」という点はゲキサカ・サッカーキングの両方が言っている（報道）。
+# 前の本との重なり: 20261112_suzuki_nishikawa_words（西川のJ1最多出場記録を祝福・「素晴らしいの一言」・師弟関係）。今回の初出: ラフィーニャへの警戒、W杯の課題、西川への「追い越せるように」の言葉。記録の祝福・連絡を取り合う話は繰り返さない（記録は1行だけ）。
+# 【言わないこと】ブラジル戦の結果・失点の予想／ラフィーニャの評価（鈴木の言葉の範囲だけ）／アンチェロッティ監督の話。
+# 本人の言葉: あり（鈴木彩艶。ゲキサカ）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月14日"
+format: news
+no_main: true
+people: [鈴木彩艶, ラフィーニャ, 西川周作, アストン・ヴィラ, 日本代表, ブラジル代表]
+
+short_style: Y
+short_hook_quote: 自分がボールを持っている時のプレススピードや、
+short_photos:
+  - assets/images/20261114_suzuki_zion_brazil_captain/01_v.jpg
+  - assets/images/20261114_suzuki_zion_brazil_captain/02_v.jpg
+  - assets/images/20261114_suzuki_zion_brazil_captain/05_v.jpg
+short_question: 鈴木彩艶は、14日のブラジル戦でラフィーニャを止められると思いますか。
+short_telops: []
+
+theme:
+  id: suzuki_zion_brazil_captain
+  league: japan
+  league_name: 日本代表
+  prefix: ""
+  title: 鈴木彩艶、ブラジル主将ラフィーニャを警戒。西川周作には「追い越せるように」
+  hook: ""
+  question: ブラジル戦を前に、鈴木彩艶はラフィーニャをどう警戒しているのか
+  takeaway: 鈴木は11月3日のCLでラフィーニャに2点を許した。その記憶が新しいうちに、今度はブラジルのキャプテンとして迎える
+
+thumbnail:
+  layout: face
+  line1: 鈴木彩艶 ブラジル主将を警戒
+  line2: プレススピードを警戒
+  tags: [鈴木彩艶, ラフィーニャ, 日本代表]
+  photo: assets/images/20261114_suzuki_zion_brazil_captain/02_w.jpg
+  short_photo: assets/images/20261114_suzuki_zion_brazil_captain/01_v.jpg
+
+answer: 鈴木はラフィーニャのプレスの速さと決定力を警戒し、W杯の課題だった飛び出しとクロス対応を意識する
+watch: 14日のブラジル戦（シンガポール）
+
+sections:
+  - id: what
+    main: true
+    heading: 鈴木彩艶は、ブラジルの主将ラフィーニャをどう警戒するのか
+    tier: 報道
+    telop: 鈴木彩艶「警戒しながらプレーしたい」
+    say:
+      - text: 14日にブラジルと戦う日本代表のGK鈴木彩艶が、ブラジルの主将ラフィーニャへの警戒を口にしました。
+        image: assets/images/20261114_suzuki_zion_brazil_captain/01_w.jpg
+      - voice: 鈴木彩艶
+        text: 自分がボールを持っている時のプレススピードや、
+      - voice: 鈴木彩艶
+        text: 彼のプレースタイルは記憶に新しい。
+        cont: true
+        image: assets/images/20261114_suzuki_zion_brazil_captain/02_w.jpg
+      - voice: 鈴木彩艶
+        text: そういったところは警戒しながらプレーしたい。
+        cont: true
+        emph: true
+      - text: 記憶に新しいのは、11月3日の欧州チャンピオンズリーグです。
+      - text: 鈴木のアストン・ヴィラは、ラフィーニャのバルセロナに0対3で敗れました。
+        image: assets/images/20261114_suzuki_zion_brazil_captain/05_w.jpg
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463122-463122-fl
+      - https://www.soccer-king.jp/news/japan/national/20261113/2227402.html
+      - https://www.espn.com/soccer/match/_/gameId/401915387
+  - id: team
+    heading: W杯のブラジル戦で、鈴木彩艶が課題に挙げたことは何か
+    tier: 報道
+    telop: 鈴木彩艶「クロスに対しての準備も意識したい」
+    say:
+      - text: 鈴木は今夏のW杯でもブラジルと戦い、1対2で逆転負けしました。
+        image: assets/images/20261114_suzuki_zion_brazil_captain/01_w.jpg
+      - text: 日本が先に点を取りましたが、終了間際に決勝点を許しています。
+        image: assets/images/20261114_suzuki_zion_brazil_captain/05_w.jpg
+      - voice: 鈴木彩艶
+        text: 悔しさはもちろん覚えていますし、
+      - voice: 鈴木彩艶
+        text: 最後のシーンだけでなく1失点目も含めて、
+        cont: true
+      - voice: 鈴木彩艶
+        text: 細かい部分でこうできたというのがあった。
+        cont: true
+        image: assets/images/20261114_suzuki_zion_brazil_captain/02_w.jpg
+      - text: あの試合は守備ラインが低くなったことを課題に挙げ、今回は飛び出しを意識するといいます。
+      - voice: 鈴木彩艶
+        text: 自分がどこまで飛び出せるのか、
+      - voice: 鈴木彩艶
+        text: クロスに対しての準備も意識したい。
+        cont: true
+        emph: true
+        image: assets/images/20261114_suzuki_zion_brazil_captain/05_w.jpg
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463122-463122-fl
+      - https://www.espn.com/soccer/match/_/gameId/760487
+  - id: nishikawa
+    heading: 鈴木彩艶は、浦和の先輩・西川周作の新記録をどう受け止めたか
+    tier: 報道
+    telop: 鈴木彩艶「違った形で彼を追い越せるように」
+    say:
+      - text: 浦和の先輩GK、西川周作は、J1の通算最多出場記録を更新しました。
+        image: assets/images/20261114_suzuki_zion_brazil_captain/01_w.jpg
+      - text: 鈴木は記録のあと、自分からメッセージを送ったそうです。
+      - voice: 鈴木彩艶
+        text: 僕も違った形で、
+      - voice: 鈴木彩艶
+        text: 彼を追い越せるように頑張りたい。
+        cont: true
+        emph: true
+        image: assets/images/20261114_suzuki_zion_brazil_captain/02_w.jpg
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463122-463122-fl
+  - id: view
+    viewpoint: true
+    heading: 鈴木彩艶が許した3点のうち、ラフィーニャは何点か
+    tier: 背景
+    telop: 3失点のうち2点がラフィーニャ
+    say:
+      - text: 見立てです。警戒の原点は、11月3日のCLの3失点です。そのうち2点が、ラフィーニャでした。
+        card: {type: table, title: CL バルセロナ 3-0 アストン・ヴィラ（11月3日）, columns: [分, 得点], rows: [[7分, ヤマル（バルセロナ）], [52分, ラフィーニャ（バルセロナ）], [64分, ラフィーニャ（バルセロナ）]], highlight_row: 1}
+        image: assets/images/20261114_suzuki_zion_brazil_captain/05_w.jpg
+      - text: ヤマルの1点を除けば、残りは全部ラフィーニャ。11日後のブラジル戦は、その警戒を試す場になります。
+        card: none
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401915387
+      - https://web.gekisaka.jp/news/japan/detail/?463122-463122-fl

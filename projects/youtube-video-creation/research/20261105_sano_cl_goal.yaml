@@ -1,0 +1,135 @@
+# 取材メモ（2026年11月5日）佐野航大のCL初ゴール。日本人で2番目に若い（ニュースのショート。見せ方 X＝冒頭1秒に強い一言）
+# 取材: 2026-11-05。requests（ブラウザUA）で本文を全文読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。
+# 題材の元:
+#   ・ゲキサカ 2026-11-05 06:18「佐野航大が日本人年少2位となる欧州CL初ゴール!! 混戦から巧みな技術で公式戦2戦連発」 https://web.gekisaka.jp/news/ucl/detail/?462539-462539-fl （全文）
+#   ・ゲキサカ 2026-11-05 06:54（試合のまとめ。得点者・先発・Opta） https://web.gekisaka.jp/news/ucl/detail/?462540-462540-fl （全文）
+#   ・サッカーキング 2026-11-05 https://www.soccer-king.jp/news/world/cl/20261105/2224772.html （全文）
+# 出典で確かめたこと:
+#   ・ESPN の試合データ（site.api.espn.com summary event=401915303、11/4 20:00 UTC）:
+#       PSV 1-2 クラブ・ブルッヘ。25分 トレソルディ（ブルッヘ、ヘディング）／54分 佐野（PSV、右足）／65分 フォルブス（ブルッヘ）。佐野は先発・交代なし（フル出場）。
+#       ゲキサカ（後半9分＝54分・後半20分＝65分）・サッカーキング（54分・65分）の分も一致。
+#   ・ゴールの中身（ゲキサカ・サッカーキング一致）: 後半9分、右からのクロスにティルが合わせたシュートが相手DFにブロックされ、こぼれ球に佐野が反応。
+#       ゲキサカ「右足足裏で前に押し出し、右足を振った。相手DFと左ポストに当たりながらゴールに吸い込まれた」。
+#   ・記録: 23歳1か月での欧州CL初ゴールは、香川真司の22歳8か月6日に次ぐ日本人2番目の若さ（ゲキサカ）。日本人通算16人目のCLゴール（ゲキサカ。サッカーキングは書いていない→報道として使う）。
+#   ・公式戦14試合目の出場で3点目、直近のリーグ戦（エールディヴィジ第11節ヴィレムII戦）に続く公式戦2試合連続ゴール（ゲキサカ・サッカーキング）。
+#   ・次の試合: 24日にアウェーでレアル・マドリード（サッカーキング）。PSVは今大会2敗目、クラブ・ブルッヘは3連勝（サッカーキング・ゲキサカ）。
+# 記事どうしの食い違い:
+#   ・年少記録の日数: 462539 は「23歳1か月10日」、462540 は「23歳1か月11日」→ 台本は「23歳1か月」だけにする。香川の22歳8か月6日は両記事一致。
+#   ・クラブ・ブルッヘの得点者の表記: ゲキサカ「フォーブス」・サッカーキング「フォルブス」→ ゲキサカの表記に合わせる。
+#   ・ゴール後の流れ: サッカーキング「右足を強襲」、ゲキサカ「右足を振った」→ 台本は「振り抜く」。
+# 自分で数えたもの: 公式戦14試合で3点のうち、直近2試合が2点（記事の「2試合連続」と「3点目」から引き算）。
+# 【言わないこと】テネリフェの訃報（記事の関連記事欄にあるが題と無関係）／トレソルディの14得点などブルッヘ側の数字／佐野本人の言葉（見つからなかった。作らない）／
+#   10/21 ポルト戦（20261021_sano_psv_porto）の役割の話。
+# 本人の言葉: 無い（X）。反応: 0件（作らない。approve は --no-voices）。
+# 前の本との重なり: scripts/20261014〜1028 の佐野の本（CL初白星・マインツ戦の佐野海舟ほか）に CL 初ゴールは無い。20261104_yamal_teen_cl_record は別の話。
+# 写真: assets/images/20261105_sano_cl_goal/（credits.json）
+#   ゲキサカ・サッカーキングの写真は全部「©Getty Images」の焼き込みがあるので使わない。football-zone は別人（佐野海舟）・小さい写真だった。
+#   使えたのは Wikimedia Commons の File:Kodai Sano.JPG（CC BY-SA 4.0、Hans Reefman、2026-09-20）1枚だけ。02 はその上半身の切り出し。**写真は実質1枚**（人物の別カットは見つからなかった）。
+slot: japanese
+date: "2026年11月5日"
+format: news
+no_main: true
+people: [佐野航大, PSV, クラブ・ブルッヘ, フース・ティル, 香川真司]
+
+short_style: X
+short_hook_word: CL初ゴール
+short_question: 佐野航大は、24日のレアル・マドリード戦でも点を取ると思いますか。
+short_photos:
+  - assets/images/20261105_sano_cl_goal/01_v.jpg
+  - assets/images/20261105_sano_cl_goal/02_v.jpg
+short_telops: []
+
+theme:
+  id: sano_cl_goal
+  league: netherlands
+  league_name: チャンピオンズリーグ
+  prefix: ""
+  title: 佐野航大、CL初ゴール。日本人で2番目に若い23歳が決めた同点弾
+  hook: ""
+  question: 佐野航大のCL初ゴールは、どんな場面で生まれたのか
+  takeaway: 公式戦14試合で3点のうち、2点が直近の2試合。23歳1か月でのCL初ゴールは、香川真司の22歳8か月に次ぐ日本人2番目の若さ
+
+thumbnail:
+  layout: face
+  line1: 佐野航大 CL初ゴール
+  line2: 日本人年少2位の同点弾
+  tags: [佐野航大, PSV]
+  photo: assets/images/20261105_sano_cl_goal/01_w.jpg
+  short_photo: assets/images/20261105_sano_cl_goal/01_v.jpg
+
+answer: 0対1の後半9分、こぼれ球に反応して右足で決めた同点弾。23歳1か月は日本人で2番目の若さ
+watch: 24日のレアル・マドリード戦（敵地）
+
+sections:
+  - id: what
+    main: true
+    heading: CL初ゴールは、どんな場面だったのか
+    tier: 報道
+    telop: 後半9分、こぼれ球に反応した同点弾
+    say:
+      - text: 4日のチャンピオンズリーグ、ピーエスブイ対クラブ・ブルッヘ。
+        image: assets/images/20261105_sano_cl_goal/01_w.jpg
+      - text: 佐野航大は、4試合続けての先発でした。
+      - text: ピーエスブイが1点を追う後半9分、ティルのシュートが相手に当たります。
+        image: assets/images/20261105_sano_cl_goal/02_w.jpg
+      - text: こぼれたボールに、佐野が素早く反応しました。
+      - text: 右足の足裏で前へ押し出し、右足を振り抜きます。
+        image: assets/images/20261105_sano_cl_goal/01_w.jpg
+      - text: 相手とポストに当たりながら、ゴールへ吸い込まれました。
+        emph: true
+      - text: 同点。佐野のチャンピオンズリーグ初ゴールです。
+        image: assets/images/20261105_sano_cl_goal/02_w.jpg
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/ucl/detail/?462539-462539-fl
+      - https://web.gekisaka.jp/news/ucl/detail/?462540-462540-fl
+      - https://www.soccer-king.jp/news/world/cl/20261105/2224772.html
+      - https://www.espn.com/soccer/match/_/gameId/401915303
+  - id: record
+    heading: 日本人で何番目に若いCL初ゴールか
+    tier: 報道
+    telop: 23歳1か月、日本人で2番目の若さ
+    say:
+      - text: 佐野航大の23歳1か月での初ゴールは、日本人で2番目の若さです。
+        card: {type: table, title: 日本人のCL初ゴール 若い順, columns: [順位, 名前, 年齢], rows: [[1位, 香川真司, 22歳8か月], [2位, 佐野航大, 23歳1か月]], highlight_row: 1}
+      - text: いちばん若いのは、香川真司の22歳8か月でした。
+        card: none
+      - text: 日本人では、通算16人目のCLゴールになりました。
+        image: assets/images/20261105_sano_cl_goal/02_w.jpg
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/ucl/detail/?462539-462539-fl
+      - https://web.gekisaka.jp/news/ucl/detail/?462540-462540-fl
+  - id: game
+    heading: 試合は1対2。同点のあと、何が起きたのか
+    tier: 報道
+    telop: PSV 1-2 クラブ・ブルッヘ
+    say:
+      - text: 試合は、ピーエスブイの1対2の敗戦でした。
+        card: {type: table, title: PSV 1-2 クラブ・ブルッヘ, columns: [分, 得点], rows: [[25分, トレソルディ（ブルッヘ）], [54分, 佐野航大（PSV）], [65分, フォーブス（ブルッヘ）]], highlight_row: 1}
+      - text: 佐野航大の同点の11分後、後半20分に、フォーブスに勝ち越されました。
+        card: none
+      - text: ピーエスブイは今大会2敗目。クラブ・ブルッヘは3連勝です。
+        image: assets/images/20261105_sano_cl_goal/01_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401915303
+      - https://web.gekisaka.jp/news/ucl/detail/?462540-462540-fl
+      - https://www.soccer-king.jp/news/world/cl/20261105/2224772.html
+  - id: view
+    viewpoint: true
+    heading: 佐野の得点は、ここ2試合に集まっている
+    tier: 背景
+    telop: 公式戦14試合で3点。うち2点は直近2試合
+    say:
+      - text: 見立てです。佐野は公式戦14試合目で、これが3点目。
+        card: none
+      - text: そのうち2点が、直近の2試合です。
+        emph: true
+      - text: リーグ戦のヴィレム・ツー戦に続く、2試合連続ゴールでした。
+        image: assets/images/20261105_sano_cl_goal/02_w.jpg
+      - text: 次のチャンピオンズリーグは、24日。敵地でレアル・マドリードと戦います。
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/ucl/detail/?462539-462539-fl
+      - https://www.soccer-king.jp/news/world/cl/20261105/2224772.html

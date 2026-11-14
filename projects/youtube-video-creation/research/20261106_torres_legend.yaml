@@ -1,0 +1,471 @@
+# フェルナンド・トーレス（元スペイン代表FW）の紹介。シリーズ「レジェンドの紹介（世界）」2026-11-06。型は 11/2 デル・ピエロと同じ9節（フック→基礎DATA→日本との接点→歩み→持ち味→あの試合→現役を終えたあと→マル秘話→見立て）。
+# **FotMob・DataMB・FBref・Sofascore・Transfermarkt は不使用**。数字は英語版 Wikipedia（Fernando Torres の成績表・本文、UEFA Euro 2008 final、2012 FIFA Club World Cup）と、自分で足した・割った値だけ。
+# **私生活・法的な問題は入れない**（結婚・家族・入れ墨・自伝は使わない）。女子サッカー・Jリーグの記録をサムネの主役にしない（鳥栖は「現役の最後のクラブ」として扱う）。
+#
+# **重なりの確認（2026-11-04）**：scripts/・research/covered.yaml・research/posted.json を「フェルナンド・トーレス／Fernando Torres」で grep。主役の回は無し（9/26 ラ・リーガ④アトレティコのクラブ紹介に「11歳からこのクラブで育ったFW」として1行。直近30日ではない）。covered.yaml の「トーレス」はフェラン・トーレス（別人）。レジェンド既出（ジダン・ロナウジーニョ・シャビ・イニエスタ・ベッカム・ロナウド・アンリ・イブラヒモビッチ・マルディーニ・カカ・ジェラード・ドログバ・ピルロ・トッティ・カシージャス・デル・ピエロ）と重ならない。research/20261105_picks.txt（ユニフォーム＝フラム、スタジアム＝バルセロナ）とも重ならない。
+# **引退の確認（一次情報）**：サガン鳥栖公式「フェルナンド・トーレス選手 現役引退のお知らせ」（2019-06-21、https://www.sagan-tosu.net/news/p/3967/ を requests で取得）に「2019年8月23日(金)開催の【明治安田生命Ｊ１リーグ第24節】サガン鳥栖vsヴィッセル神戸…をもちまして現役を引退」。→ **選手としては現役ではない（42歳）**。いまの立場：アトレティコ・マドリードB（アトレティコ・マドリレーニョ）の監督（英語版 Wikipedia の本人の記事と Atlético Madrileño の記事。2021-07 にU19、2024-06-11 にB）。**クラブ公式（atleticodemadrid.com）は 403 で読めず、確度は報道止まり**。台本は「11月4日時点」と断る。
+# **日本との接点**：①7歳でFWを始めたとき『キャプテン翼』の登場人物を手本にした（英語版 Wikipedia 本文）。②2012-12-13 横浜国際総合競技場、クラブW杯準決勝 モンテレイ1-3チェルシー、46分に得点（2012 FIFA Club World Cup の試合表）。決勝は 12-16 同競技場でコリンチャンスに0-1。③2018-07-10 サガン鳥栖に加入（鳥栖公式）。2018-08-22 天皇杯4回戦 神戸戦で来日初得点、08-26 J1 G大阪戦 3-0 で1点2アシスト（英語版 Wikipedia）。2018年は公式戦19試合4点、J1第33節 横浜FM戦 2-1 で決勝点（ゲキサカ 2019-06-23）。④引退会見 2019-06-23（都内）。最後の試合は 2019-08-23 J1第24節 神戸戦、イニエスタ・ビジャと対戦、1-6（英語版 Wikipedia、鳥栖公式）。
+# **数字の出どころと自分で足した値**
+# - 成績表（英語版 Wikipedia、公式戦）：アトレティコ 1期目 244試合91点＋2期目（ローン含む）160試合38点＝404試合129点（自分で足した値）、リヴァプール 142試合81点、チェルシー 172試合45点、ミラン 10試合1点、鳥栖 40試合7点（ミラン＋鳥栖＝50試合8点）。Career total 768試合263点（合計と一致）。
+# - スペイン代表 110試合38点（Wikipedia）。クラブと代表の合計 878試合301点（自分で足した値：768+110、263+38）。**年代別代表は含めない**と台本で断る。
+# - 見立て（自分で割った値）：リヴァプール 81÷142＝0.570→0.57、クラブ通算 263÷768＝0.342→0.34、チェルシー 45÷172＝0.262→0.26。0.57÷0.34＝1.68→約1.7倍。リヴァプール1年目 2007-08 公式戦46試合33点、リーグ33試合24点（イングランド1年目の外国人で歴代いちばん多い。ファン・ニステルローイの23点を上回る）。
+# - 1部の初めの2季：2002-03 リーグ29試合13点、2003-04 35試合19点（得点ランキング3位タイ）、19歳で主将（Wikipedia）。デビュー 2001-05-27 レガネス戦（2部）。
+# - 移籍：2007 リヴァプールへ、クラブ史上最高額の移籍金（金額は報道で割れるので言わない）。2011-01-31 チェルシーへ、報道で5000万ポンド＝当時のイギリスの最高額（Wikipedia）。
+# - タイトル：EURO2008・2010W杯・EURO2012。EURO2008・2012 とも決勝で得点。EURO2012 得点王（3点1アシスト）。チェルシーで CL（2012）・EL（2013、決勝で先制点）・FAカップ（2012）、アトレティコで EL（2018）。2012-13 は7つの大会で得点した初の選手（Wikipedia）。
+# - 2010-04-18 膝の手術（Wikipedia）。「後年はけがで速さを失った」（Wikipedia の Style of play）は**言い方に気をつけて**「けがと向き合いながら」とだけ言う。
+# **山場**：EURO2008決勝（2008-06-29 ウィーン、エルンスト・ハッペル、観客51,428人、ドイツ0-1スペイン、21分にヘディングがポスト、33分にシャビのスルーパスからラームを振り切りレーマンの上を越して左隅へ。最優秀選手。スペインは1964年以来44年ぶりの欧州王者。英語版 "UEFA Euro 2008 final"）。本人の言葉は同記事の引用（英語）を訳した。
+# **本人の言葉**：①EURO2008決勝後「It's just a dream come true. This is my first title and I hope it's the first of many.」（英語版 Wikipedia。原文のスペイン語は未確認）。②引退会見「古くからの友人であるイニエスタ選手との直接対決を日本でできること」（ゲキサカ 2019-06-23、鳥栖が神戸戦を最後の試合にした理由）。
+# **入れなかったもの**：結婚・家族・入れ墨・自伝・歌のビデオ、2008年ユーロでの監督との握手の件、退場、移籍金の金額（リヴァプール分）、「スペイン代表歴代3位の得点」（いまの順位を確かめていない）、若林くんの話（出典の supportista 2009 が読めない）。
+# **読みで怪しいもの**：トーレス、フエンラブラダ、アトレティコ、リヴァプール、レガネス、シャビ、ラーム、レーマン、ウィーン、エル・ニーニョ、イニエスタ、ビジャ、モンテレイ、コリンチャンス、鳥栖（とす）、駅前不動産スタジアム、天皇杯。「最多」は使わず「いちばん多い」。「2007-08」は書かない。
+title: フェルナンド・トーレスは、どんな選手だった？ 点の山はどこにあったのか
+format: news
+short_title: フェルナンド・トーレスは、どんな選手だった？
+series: レジェンドの紹介
+topic: フェルナンド・トーレス
+date: 2026年11月4日
+slot: other_1
+people: [フェルナンド・トーレス]
+watch: 毎日、数字でサッカーを読み解きます
+theme: {id: legend_torres, league: spain, league_name: ラ・リーガ, kind: other, topic: フェルナンド・トーレス, title: フェルナンド・トーレスは、どんな選手だった？ 点の山はどこにあったのか, question: 鳥栖で現役を終えたトーレスの18年で、点がいちばん集まったのはどこだったのか, takeaway: クラブ通算は1試合0.34点。リヴァプールの3年半は0.57点で、通算の約1.7倍。点の山はリヴァプール、優勝の山はそのあとのチェルシーと代表にあった,
+  nameplate: フェルナンド・トーレス｜元スペイン代表 FW, opening_image: assets/images/20261106_torres_legend/16_w.jpg, end_bg: assets/images/20261106_torres_legend/15_w.jpg, bgm: assets/audio/bgm_calm.wav, outro_title: 毎日、数字でサッカーを読み解きます}
+thumbnail:
+  line1: トーレス、878試合301点
+  line2: 現役の最後は、サガン鳥栖
+  tags: [リヴァプール]
+  photo: assets/images/20261106_torres_legend/panel_10.jpg
+  photos: []
+  short_photo: assets/images/20261106_torres_legend/20_v.jpg
+sections:
+- id: hook
+  heading: フェルナンド・トーレスは、何点を取ったのか
+  tier: 報道
+  telop: クラブと代表、18年の記録
+  card: &hk
+    type: stats
+    title: トーレス 元FW（42歳）
+    items:
+    - ['878', 試合, クラブと代表の公式戦]
+    - ['301', 点, クラブと代表の公式戦]
+    - ['3', 度, 世界一とヨーロッパ一]
+    focus: 1
+  say:
+  - {text: スペイン代表で、世界一とヨーロッパ一を、合わせて3度。, card: none, image: assets/images/20261106_torres_legend/15_w.jpg}
+  - {text: そのうち2度の決勝で、点を決めたフォワードがいます。, card: none}
+  - text: クラブと代表を合わせて、878試合で301点。
+    card: *hk
+    image: assets/images/20261106_torres_legend/10_w.jpg
+    emph: true
+    callword: 301点
+  - text: フェルナンド・トーレス。愛称は、少年を意味するエル・ニーニョです。
+    card:
+      type: stats
+      title: トーレス 元FW（42歳）
+      items:
+      - ['878', 試合, クラブと代表の公式戦]
+      - ['301', 点, クラブと代表の公式戦]
+      - ['3', 度, 世界一とヨーロッパ一]
+      focus: 2
+    image: assets/images/20261106_torres_legend/05_w.jpg
+  - {text: そして、現役の最後を過ごしたのは、日本のサガン鳥栖でした。, card: none, image: assets/images/20261106_torres_legend/08_w.jpg}
+  - {text: 2001年からの18年、点が集まった時期はいつか。数字でたどります。, card: none}
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Fernando_Torres', 'https://www.sagan-tosu.net/news/p/3967/']
+- id: data
+  heading: トーレスは、いつ、どこで生まれ、どんな選手か
+  tier: 報道
+  telop: トーレスの基礎DATA
+  card: &dt
+    type: table
+    title: フェルナンド・トーレス
+    columns: [項目, 内容]
+    rows: &dtr
+    - [生年月日, 1984年3月20日・スペイン]
+    - [ポジション, フォワード]
+    - [クラブ, アトレティコ・リヴァプール・チェルシーほか]
+    - [代表, 110試合38得点・W杯とEUROで優勝]
+    - [現役を終えた, 2019年・サガン鳥栖]
+    source: Wikipedia
+    highlight_row: 0
+  say:
+  - text: トーレスは、1984年3月20日、マドリード近郊のフエンラブラダに生まれました。
+    card: *dt
+    image: assets/images/20261106_torres_legend/16_w.jpg
+  - text: ポジションはフォワード。頭でも、両足でも決められるストライカーでした。
+    card:
+      type: table
+      title: フェルナンド・トーレス
+      columns: [項目, 内容]
+      rows: *dtr
+      source: Wikipedia
+      highlight_row: 1
+    image: assets/images/20261106_torres_legend/10_w.jpg
+  - text: 主なクラブは、アトレティコ・マドリード、リヴァプール、チェルシーの3つ。
+    card:
+      type: table
+      title: フェルナンド・トーレス
+      columns: [項目, 内容]
+      rows: *dtr
+      source: Wikipedia
+      highlight_row: 2
+    image: assets/images/20261106_torres_legend/05_w.jpg
+  - text: スペイン代表の成績は、110試合で38得点です。
+    card:
+      type: table
+      title: フェルナンド・トーレス
+      columns: [項目, 内容]
+      rows: *dtr
+      source: Wikipedia
+      highlight_row: 3
+    image: assets/images/20261106_torres_legend/15_w.jpg
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Fernando_Torres', 'https://www.sagan-tosu.net/news/p/3167/']
+- id: japan
+  heading: トーレスと日本には、どんな縁があったのか
+  tier: 報道
+  telop: キャプテン翼、横浜、そして鳥栖
+  card: &jp
+    type: timeline
+    title: トーレスと日本
+    rows: &jpr
+    - [7歳, 『キャプテン翼』を手本にFWへ]
+    - [2012年12月, 横浜のクラブW杯で得点]
+    - [2018年7月, サガン鳥栖に加入]
+    - [2019年8月, 鳥栖で現役を終える]
+    focus: 0
+    highlight_row: 0
+  say:
+  - text: トーレスと日本の縁は、子どものころから。
+    card: *jp
+    image: assets/images/20261106_torres_legend/23_w.jpg
+  - {text: 7歳でフォワードを始めたとき、手本は『キャプテン翼』でした。, card: none}
+  - text: 2012年12月には、チェルシーの一員として、横浜のクラブワールドカップへ。
+    card:
+      type: timeline
+      title: トーレスと日本
+      rows: *jpr
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261106_torres_legend/01_w.jpg
+  - {text: 準決勝のモンテレイ戦で、後半開始すぐの46分にゴールを決めています。, card: none, image: assets/images/20261106_torres_legend/08_w.jpg}
+  - text: そして2018年7月、34歳のトーレスは、サガン鳥栖に加入します。
+    card:
+      type: timeline
+      title: トーレスと日本
+      rows: *jpr
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261106_torres_legend/16_w.jpg
+  - {text: 日本での初ゴールは、天皇杯のヴィッセル神戸戦。, card: none, image: assets/images/20261106_torres_legend/16_w.jpg}
+  - {text: 1年目の終盤には、残留を争う横浜F・マリノス戦で、決勝ゴールを決めました。, card: none, image: assets/images/20261106_torres_legend/10_w.jpg, emph: true}
+  - text: 鳥栖での公式戦は、40試合で7点。現役の最後の2年を、日本で過ごしました。
+    card:
+      type: timeline
+      title: トーレスと日本
+      rows: *jpr
+      focus: 3
+      highlight_row: 0
+    image: assets/images/20261106_torres_legend/16_w.jpg
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Fernando_Torres', 'https://en.wikipedia.org/wiki/2012_FIFA_Club_World_Cup', 'https://www.sagan-tosu.net/news/p/3167/', 'https://web.gekisaka.jp/news/jleague/detail/?277733-277733-fl']
+- id: career
+  heading: 17歳でデビューしたトーレスは、どこで点を取ってきたのか
+  tier: 報道
+  telop: 17歳のデビューから、4つのクラブへ
+  card: &cr
+    type: timeline
+    title: 歩んできた道
+    rows: &crr
+    - ['2001', 17歳でデビュー（2部）]
+    - ['2003', 19歳で主将に]
+    - ['2007', リヴァプールへ]
+    - ['2011', チェルシーへ]
+    - ['2015', アトレティコへ戻る]
+    - ['2018', 鳥栖へ]
+    focus: 0
+  say:
+  - text: トーレスのデビューは、2001年5月27日。
+    card: *cr
+    image: assets/images/20261106_torres_legend/16_w.jpg
+  - {text: 17歳で、当時2部にいたアトレティコの試合でした。, card: none}
+  - {text: 1部に上がった2年目には、35試合で19点。リーグ3位タイの得点でした。, card: none, image: assets/images/20261106_torres_legend/16_w.jpg}
+  - text: 同じシーズン、19歳でアトレティコの主将に選ばれています。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *crr
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261106_torres_legend/16_w.jpg
+  - text: 2007年、リヴァプールへ。移籍金は、クラブの歴史でいちばん高い額でした。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *crr
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261106_torres_legend/10_w.jpg
+  - {text: 1年目は、リーグで24点。, card: none, image: assets/images/20261106_torres_legend/10_w.jpg, emph: true}
+  - {text: イングランド1年目の外国人選手として、歴代でいちばん多い点でした。, card: none}
+  - text: 2011年1月、チェルシーへ。報じられた移籍金は、当時のイギリスの最高額です。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *crr
+      focus: 3
+      highlight_row: 0
+    image: assets/images/20261106_torres_legend/05_w.jpg
+  - text: ミランを経て、2015年に、11歳から育ったアトレティコへ戻りました。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *crr
+      focus: 4
+      highlight_row: 0
+    image: assets/images/20261106_torres_legend/16_w.jpg
+  - text: 2018年にヨーロッパリーグで優勝し、その夏に日本へ渡ります。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *crr
+      focus: 5
+      highlight_row: 0
+    image: assets/images/20261106_torres_legend/16_w.jpg
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Fernando_Torres']
+- id: style
+  heading: トーレスは、何で相手を上回ったのか
+  tier: 報道
+  telop: 裏へ抜ける速さと、決める力
+  card: &st
+    type: table
+    title: トーレスの持ち味
+    columns: [項目, 中身]
+    rows: &str
+    - [武器1, 速さで、守備の裏へ抜ける]
+    - [武器2, 頭と両足で決める]
+    - [武器3, 前から追いかける守備]
+    - [記録, リヴァプールでリーグ50点がクラブ史上最速]
+    source: Wikipedia
+    highlight_row: 0
+  say:
+  - text: トーレスの武器、まずは速さ。守る側のわずかな隙間へ、走り込みました。
+    card: *st
+    image: assets/images/20261106_torres_legend/10_w.jpg
+  - text: 次に、決める力。頭でも、右足でも、左足でも、点を取れました。
+    card:
+      type: table
+      title: トーレスの持ち味
+      columns: [項目, 中身]
+      rows: *str
+      source: Wikipedia
+      highlight_row: 1
+    image: assets/images/20261106_torres_legend/01_w.jpg
+  - text: そして、前から追いかける守備。相手の守備陣に、休む時間を与えません。
+    card:
+      type: table
+      title: トーレスの持ち味
+      columns: [項目, 中身]
+      rows: *str
+      source: Wikipedia
+      highlight_row: 2
+    image: assets/images/20261106_torres_legend/16_w.jpg
+  - {text: リヴァプールでは、リーグ50点に届くまでの速さが、クラブ史上いちばんでした。, card: none, image: assets/images/20261106_torres_legend/10_w.jpg, emph: true}
+  - {text: 当時の監督、ベニテスの言葉です。, card: none}
+  - {voice: ベニテス監督, text: 最後のパスを待っていた。, card: none, pause: 0.6}
+  - {voice: ベニテス監督, text: それが来れば、彼が決めると分かっていた。, card: none, cont: true}
+  quotes_from: ['https://en.wikipedia.org/wiki/Fernando_Torres']
+  sources: ['https://en.wikipedia.org/wiki/Fernando_Torres']
+- id: match
+  heading: 2008年のヨーロッパ選手権決勝で、トーレスは何をしたのか
+  tier: 報道
+  main: true
+  telop: ウィーンの33分
+  card: &mt
+    type: timeline
+    title: 2008年6月29日 ヨーロッパ選手権 決勝
+    rows: &mtr
+    - [21分, ヘディングがポストに当たる]
+    - [33分, シャビのパスから先制]
+    - [試合後, 1対0。最優秀選手に選ばれる]
+    focus: 0
+    highlight_row: 0
+  say:
+  - {text: フェルナンド・トーレス。, short_only: true, card: none, image: assets/images/20261106_torres_legend/10_w.jpg}
+  - {text: スペインを、44年ぶりのヨーロッパ王者へ導いた1点があります。, short_only: true, card: none, image: assets/images/20261106_torres_legend/10_w.jpg}
+  - {text: 2008年6月29日、オーストリアのウィーン。, card: none, image: assets/images/20261106_torres_legend/23_w.jpg}
+  - {text: ヨーロッパ選手権の決勝で、スペインはドイツと戦います。観客は5万1428人。, card: none}
+  - text: 21分、トーレスのヘディングは、ポストに当たりました。
+    card: *mt
+    image: assets/images/20261106_torres_legend/23_w.jpg
+  - text: 33分、シャビのスルーパスに走り込み、ドイツのラームを振り切ります。
+    card:
+      type: timeline
+      title: 2008年6月29日 ヨーロッパ選手権 決勝
+      rows: *mtr
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261106_torres_legend/10_w.jpg
+    emph: true
+    callword: 33分
+  - {text: 飛び出したキーパーのレーマンの上を、ふわりと越して、左の隅へ。, card: none, image: assets/images/20261106_torres_legend/23_w.jpg}
+  - text: この試合ただ1つのゴールで、スペインの1対0の勝ち。トーレスは最優秀選手です。
+    card:
+      type: timeline
+      title: 2008年6月29日 ヨーロッパ選手権 決勝
+      rows: *mtr
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261106_torres_legend/10_w.jpg
+  - {text: スペインのヨーロッパ王者は、1964年以来のことでした。, card: none, image: assets/images/20261106_torres_legend/10_w.jpg}
+  - {text: 試合のあと、トーレスが残した言葉です。, card: none}
+  - {voice: トーレス, text: まさに夢がかなった。これが僕の初めてのタイトルです。, card: none, pause: 0.6, image: assets/images/20261106_torres_legend/10_w.jpg}
+  - {voice: トーレス, text: たくさんのタイトルの、最初の1つになってほしい。, card: none, cont: true}
+  - {text: その言葉どおり、スペインは2010年に世界一、2012年にもヨーロッパ一。, card: none, image: assets/images/20261106_torres_legend/10_w.jpg}
+  - {text: トーレスは、どちらの優勝メンバーにも入っていました。, card: none}
+  quotes_from: ['https://en.wikipedia.org/wiki/UEFA_Euro_2008_final', 'https://en.wikipedia.org/wiki/Fernando_Torres']
+  sources: ['https://en.wikipedia.org/wiki/UEFA_Euro_2008_final', 'https://en.wikipedia.org/wiki/Fernando_Torres']
+- id: after
+  heading: 現役を終えたあと、トーレスは何をしてきたのか
+  tier: 報道
+  telop: 神戸戦の引退と、指導者への道
+  card: &af
+    type: timeline
+    title: 現役の終わりと、そのあと
+    rows: &afr
+    - [2019年6月, 引退を発表]
+    - [2019年8月, 神戸戦が最後の試合]
+    - [2021年, アトレティコのU19監督]
+    - [2024年, アトレティコBの監督]
+    focus: 0
+    highlight_row: 0
+  say:
+  - text: 2019年6月、トーレスは鳥栖で現役を終えると発表します。35歳でした。
+    card: *af
+    image: assets/images/20261106_torres_legend/16_w.jpg
+  - {text: 最後に選んだのは、8月23日のヴィッセル神戸戦。会見で挙げた理由です。, card: none, image: assets/images/20261106_torres_legend/08_w.jpg}
+  - {voice: トーレス, text: 古くからの友人であるイニエスタ選手との直接対決を、, card: none, pause: 0.6}
+  - {voice: トーレス, text: 日本でできること。, card: none, cont: true}
+  - text: 神戸にはイニエスタとビジャ。スペインの元仲間2人と戦い、鳥栖の1対6の負けでした。
+    card:
+      type: timeline
+      title: 現役の終わりと、そのあと
+      rows: *afr
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261106_torres_legend/16_w.jpg
+  - text: 引退のあと、2021年に指導者の道へ。アトレティコの19歳以下のチームの監督です。
+    card:
+      type: timeline
+      title: 現役の終わりと、そのあと
+      rows: *afr
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261106_torres_legend/16_w.jpg
+  - text: 2024年からは、アトレティコのセカンドチームを率いています。
+    card:
+      type: timeline
+      title: 現役の終わりと、そのあと
+      rows: *afr
+      focus: 3
+      highlight_row: 0
+    image: assets/images/20261106_torres_legend/16_w.jpg
+  quotes_from: ['https://web.gekisaka.jp/news/jleague/detail/?277733-277733-fl']
+  sources: ['https://www.sagan-tosu.net/news/p/3967/', 'https://web.gekisaka.jp/news/jleague/detail/?277733-277733-fl', 'https://en.wikipedia.org/wiki/Fernando_Torres', 'https://en.wikipedia.org/wiki/Atl%C3%A9tico_Madrile%C3%B1o']
+- id: secret
+  heading: トーレスには、どんな意外な話があるのか
+  tier: 報道
+  telop: キーパー、7つの大会、そして名前のスタジアム
+  card: &sc
+    type: table
+    title: 知られざる、3つの話
+    columns: [いつ, 何があったか]
+    rows: &scr
+    - [子どものころ, 最初はゴールキーパー]
+    - [2012〜13年, 7つの大会で得点]
+    - [2011年, 故郷に名前のスタジアム]
+    source: Wikipedia
+    highlight_row: 0
+  say:
+  - {text: トーレスには、意外な話が3つあります。, card: none, image: assets/images/20261106_torres_legend/05_w.jpg}
+  - text: 1つ目。サッカーを始めたころは、ゴールキーパーでした。
+    card: *sc
+    image: assets/images/20261106_torres_legend/15_w.jpg
+  - {text: フォワードに替わったのは、7歳のころでした。, card: none}
+  - text: 2つ目。チェルシーで、1つのシーズンに7つの大会で点を取りました。
+    card:
+      type: table
+      title: 知られざる、3つの話
+      columns: [いつ, 何があったか]
+      rows: *scr
+      source: Wikipedia
+      highlight_row: 1
+    image: assets/images/20261106_torres_legend/01_w.jpg
+    emph: true
+  - {text: 2012年から13年のシーズン。7つの大会で決めたのは、トーレスが初めてでした。, card: none, image: assets/images/20261106_torres_legend/08_w.jpg}
+  - text: 3つ目。2011年、故郷のフエンラブラダに、トーレスの名のスタジアムができました。
+    card:
+      type: table
+      title: 知られざる、3つの話
+      columns: [いつ, 何があったか]
+      rows: *scr
+      source: Wikipedia
+      highlight_row: 2
+    image: assets/images/20261106_torres_legend/15_w.jpg
+  - {text: まだ27歳、現役のまっただ中のことでした。, card: none, image: assets/images/20261106_torres_legend/10_w.jpg}
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Fernando_Torres']
+- id: view
+  heading: 鳥栖で終えた18年、トーレスの点の山はどこにあったのか
+  tier: 背景
+  viewpoint: true
+  telop: 点の山はリヴァプール、優勝の山はそのあと
+  card: &vw
+    type: table
+    title: トーレス クラブでの得点ペース（公式戦）
+    columns: [期間, 試合, 得点, 1試合あたり]
+    rows: &vwr
+    - [クラブ通算, '768', '263', '0.34']
+    - [リヴァプール, '142', '81', '0.57']
+    - [チェルシー, '172', '45', '0.26']
+    source: Wikipedia
+    highlight_row: 0
+  say:
+  - text: 最後に、トーレスのクラブでの得点ペースを、3つの数字で比べます。
+    card: *vw
+    image: assets/images/20261106_torres_legend/16_w.jpg
+  - text: クラブの公式戦の通算は、768試合で263点。1試合0.34点です。
+    card:
+      type: table
+      title: トーレス クラブでの得点ペース（公式戦）
+      columns: [期間, 試合, 得点, 1試合あたり]
+      rows: *vwr
+      source: Wikipedia
+      highlight_row: 0
+    image: assets/images/20261106_torres_legend/16_w.jpg
+  - text: リヴァプールの3年半は142試合で81点。1試合0.57点、通算の約1.7倍。
+    card:
+      type: table
+      title: トーレス クラブでの得点ペース（公式戦）
+      columns: [期間, 試合, 得点, 1試合あたり]
+      rows: *vwr
+      source: Wikipedia
+      highlight_row: 1
+    image: assets/images/20261106_torres_legend/10_w.jpg
+    emph: true
+    mark: {kind: circle, row: 1, col: 3}
+  - text: チェルシーでは、172試合で45点。1試合0.26点でした。
+    card:
+      type: table
+      title: トーレス クラブでの得点ペース（公式戦）
+      columns: [期間, 試合, 得点, 1試合あたり]
+      rows: *vwr
+      source: Wikipedia
+      highlight_row: 2
+    image: assets/images/20261106_torres_legend/05_w.jpg
+  - {text: 2010年4月には膝の手術。そこからは、けがと向き合いながらのプレーが続きました。, card: none, image: assets/images/20261106_torres_legend/01_w.jpg}
+  - {text: それでもチェルシーで、チャンピオンズリーグとヨーロッパリーグを制します。, card: none, image: assets/images/20261106_torres_legend/05_w.jpg}
+  - {text: 2012年のヨーロッパ選手権では、決勝でも決めて、大会の得点王になりました。, card: none, image: assets/images/20261106_torres_legend/15_w.jpg}
+  - {text: 点の山はリヴァプール。優勝の山は、そのあとにありました。, card: none, image: assets/images/20261106_torres_legend/08_w.jpg}
+  - {text: 2つの頂点を持つフォワード。それが、フェルナンド・トーレスです。, card: none}
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Fernando_Torres']

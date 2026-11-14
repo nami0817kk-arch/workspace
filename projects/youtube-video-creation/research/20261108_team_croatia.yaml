@@ -1,0 +1,458 @@
+# 代表チーム紹介 クロアチア代表（11/5 作成。固定シリーズ9「代表チーム紹介」。見本は 11/6 のパラグアイ代表 scripts/20261106_team_paraguay.md）。7節：フック→基礎DATA（板）→日本との関係（早い節へ）→歴史と転機（年表）→看板選手（表）→いまのチーム→見立て。
+# **選んだ理由**：日本がW杯で3度戦った、ただ1つの国（1998・2006・2022。Japan at the FIFA World Cup の試合表で、ほかの国は2度まで＝ベルギー・コロンビア・ブラジル・オランダ・チュニジア）。2018年準優勝・2022年3位のW杯の強豪。代表チーム紹介は未出（scripts/・research/posted.json・research/covered.yaml を grep。既出はエクアドル・ニュージーランド・ブラジル・ドイツ・スペイン・アルゼンチン・フランス・イングランド・ポルトガル・オランダ・ウルグアイ・ベルギー・スウェーデン・メキシコ・パラグアイ）。クロアチアが主役の本は 10/4 のニュース（イングランドに0対7、20261004_england_croatia）で、11/8 から35日前＝直近30日の外。軸も違う（あちらは0対7の1試合、こちらは日本とのW杯3試合と延長の強さ）。
+# **外した候補**：コロンビア（W杯で日本と2度。強豪の格でクロアチアが上）、イタリア・韓国・オーストラリア（日本とW杯での対戦が無いか少ない）。
+# **軸（2026-11-05）**：「日本がW杯で3度戦って0勝2分1敗、300分で1点。クロアチアはW杯で延長に入った5試合をすべて勝ち上がった」。答えは見立ての節（自分で数えて割る）。
+# ---- 確かめたこと（2026-11-05。requests で Wikipedia の生の wikitext を読んだ。WebFetch の要約は使っていない）----
+#  ・FIFAランク：14位（Module:SportsRankings/data/FIFA World Rankings、updated 7 October 2026、Croatia 14・前回比-1）。日本は17位。点数は書かない。
+#  ・W杯：Croatia at the FIFA World Cup の Overall record。出場7大会（1998・2002・2006・2014・2018・2022・2026、2010は予選敗退）。1998年3位・2018年準優勝・2022年3位。2026年は32強（20位）。通算34試合15勝8分11敗49得点40失点。
+#  ・延長の試合（同じ記事の試合表）：2018年16強 デンマーク1-1（延長、PK3-2）／8強 ロシア2-2（延長、PK4-3）／準決勝 イングランド2-1（延長）／2022年16強 日本1-1（延長、PK3-1）／8強 ブラジル1-1（延長、PK4-2）。→ 自分で数えた：延長に入った5試合はすべて勝ち上がり、負けは0。PK戦は4戦4勝（Croatia national football team の本文「most penalty shoot-out played (4) and won (4)」）。ほかの大会（1998・2002・2006・2014・2026）に延長の試合は無い。
+#  ・日本の延長の試合（Japan at the FIFA World Cup）：2010年16強 パラグアイ0-0（PK3-5）、2022年16強 クロアチア1-1（PK1-3）の2試合、どちらも敗退。2026年32強ブラジル1-2は90分（2026 FIFA World Cup round of 32、マルティネッリ90+5分）。
+#  ・日本のW杯通算（Japan at the FIFA World Cup の Total）：8大会29試合 8勝8分13敗 33得点38失点。33÷29＝1.14。クロアチア戦は3試合1得点＝0.33（約3分の1）。クロアチアの通算は49÷34＝1.44。
+#  ・日本とクロアチアの全対戦（Japan national football team records and statistics「CRO 1997 2022 4 1 2 1 5 5」）：1997-06-08 キリンカップ 4-3（東京・国立。Japan national football team results (1990–1999)）／1998-06-20 W杯1次リーグ 0-1（ナント。シュケル77分。1998 FIFA World Cup Group H）／2006-06-18 W杯1次リーグ 0-0（ニュルンベルク。前半の半ば、スルナのPKを川口能活が止めた。2006 FIFA World Cup Group F の本文）／2022-12-05 W杯16強 1-1（延長、PK1-3。アル・ワクラ。前田大然43分、ペリシッチ55分（ロヴレンのクロスに頭）。日本は南野・三笘・吉田がリヴァコヴィッチに止められ、浅野だけ決めた。クロアチアはリヴァヤがポストに当て、最後はパシャリッチ。2022 FIFA World Cup knockout stage）。W杯3試合の合計時間は 90＋90＋120＝300分。
+#  ・1998年の日本戦のクロアチアの先発に CB 6番 スラヴェン・ビリッチ（1998 FIFA World Cup Group H のメンバー表）＝いまの監督。
+#  ・監督：スラヴェン・ビリッチ（Slaven Bilić の記事）。2006年W杯のあと〜2012年に1度目、2026年7月13日に2度目の就任（ダリッチの退任のあと）。ダリッチは9年率いて、W杯のあと契約満了で退任（Zlatko Dalić の記事）。
+#  ・2026年W杯（Croatia at the FIFA World Cup の試合表）：L組 イングランド2-4（アーリントン）、パナマ1-0（トロント）、ガーナ2-1（フィラデルフィア）、32強 ポルトガル1-2（トロント、7月2日。ペリシッチ53分、ロナウド68分PK、ゴンサロ・ラモス90+4分。2026 FIFA World Cup round of 32 の本文「the first time since 2014 they failed to progress to the round of 16」）。
+#  ・主将：ルカ・モドリッチ（ACミラン、MF、1985-09-09）。代表206試合30得点（Luka Modrić の記事、national_team_update 6 October 2026）。代表の歴代最多出場（infobox Most caps）。2026年6月27日のガーナ戦で、W杯でアシストした最年長（40歳291日。Luka Modrić の本文）。
+#  ・看板選手（Croatia national football team の Current squad＝2026年11月の招集。所属は各選手の記事の current_club でも確かめた）。2026-11-05 時点の年齢（生年月日から計算）：モドリッチ41、グヴァルディオル（マンチェスター・シティ、DF、2002-01-23）24・56試合、コヴァチッチ（マンチェスター・シティ、MF、1994-05-06）32・121試合、ペリシッチ（PSV、FW、1989-02-02）37・162試合40得点、クラマリッチ（ホッフェンハイム、FW、1991-06-19）35・119試合36得点、リヴァコヴィッチ（バルセロナ、GK、1995-01-09）31・83試合。ペリシッチのW杯通算7得点は国の最多（Croatia at the FIFA World Cup の Goalscorers）。
+#  ・シュケルは1998年に6得点で得点王（Croatia national football team の本文「Golden Shoe」、Goalscorers の表で1998年6）。
+#  ・人口：3,871,833人（2021年の国勢調査。Croatia の infobox）。
+#  ・W杯のあと（Croatia national football team results (2020–present)）：ネーションズリーグ 9/26 チェコ2-1（プラハ）、9/29 スペイン1-4（セビリア）、10/3 イングランド0-7（リエカ。infobox の Largest loss）、10/6 スペイン1-2（スプリト）。→ 1勝3敗、4得点14失点。次は 11/12 イングランド（ウェンブリー）、11/15 チェコ（オシエク）。
+#  ・愛称：Vatreni（infobox「Vatreni (Blazers)」）。
+# ---- 言わないもの ----
+#  ・怪我／私生活／背番号／戦術の説明／監督の契約／0対7の試合の細部（10/4 のニュースで扱った）／2026年の判定の細部（グヴァルディオルの取り消された得点）。
+# ---- 写真（assets/images/20261108_team_croatia/、出典は credits.json）----
+#  ・Commons の 2026年7月2日 ポルトガル対クロアチア（Bryan Berlin、CC BY-SA 4.0）から、喜ぶ選手・先発11人・ペリシッチ・モドリッチ・グヴァルディオル。2022年の日本戦を見て喜ぶクロアチアのファン（Silverije、CC BY-SA 4.0）。ビリッチは2015年のウェストハム監督時代（joshjdss、CC BY 2.0）。代理店・放送映像は使っていない。
+#  ・基礎DATAの板の中身は research/raw/20261108_team_croatia_board.json（tools/clubdata.py で assets/stats/tb_croatia_data*.png を描いた）。
+date: 2026年11月8日（情報は11月5日時点）
+slot: other_1
+format: news
+series: 代表チーム紹介
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+short_photos:
+- assets/images/20261108_team_croatia/b01_celebration_v.jpg
+- assets/images/20261108_team_croatia/b04_modric_v.jpg
+people:
+- クロアチア代表
+- スラヴェン・ビリッチ
+- ルカ・モドリッチ
+- イヴァン・ペリシッチ
+- ヨシュコ・グヴァルディオル
+- ドミニク・リヴァコヴィッチ
+theme:
+  id: team_croatia
+  league: japan
+  league_name: クロアチア代表
+  kind: preview
+  topic: クロアチア代表
+  title: クロアチア代表は、日本がW杯で3度戦った唯一の国。なぜ一度も勝てないのか
+  question: 日本はW杯でクロアチアと3度戦って0勝2分1敗、300分で1点しか取れていない。なぜクロアチアに勝てないのか
+  lead: 日本がワールドカップで、3度戦った国。
+  hook: ''
+  opening_image: assets/stats/tb_croatia_data_t.png
+  end_bg: assets/images/20261108_team_croatia/b01_celebration_w.jpg
+  takeaway: 日本はW杯で29試合33得点（1試合1.14）なのに、クロアチア戦の3試合・300分では1点（0.33）しか取れていない。クロアチアはW杯で延長に入った5試合をすべて勝ち上がり（PK戦4戦4勝）、日本は延長の2試合とも敗退。点の取り合いにさせず、120分の先で勝つ形に日本は3度とも持ち込まれた。ただW杯のあとのクロアチアは4試合で1勝3敗・14失点で、11月12日のイングランド戦が守りを立て直せるかの1試合目になる。
+thumbnail:
+  board: assets/stats/tb_croatia_data.png
+  short_photo: assets/images/20261108_team_croatia/b04_modric_v.jpg
+  line1: クロアチア代表
+  line2: 日本がW杯で3度勝てない国
+  crest_main:
+  - クロアチア
+  tags:
+  - クロアチア代表
+  - ワールドカップ
+  - 日本代表
+  - 日本対クロアチア
+  - モドリッチ
+  - 代表チーム紹介
+sections:
+- id: hook
+  heading: 日本がW杯で3度戦った国。なぜ一度も勝てないのか
+  main: true
+  tier: 背景
+  telop: 日本がW杯で3度戦った国は、クロアチアだけ
+  narrator: 解説
+  say:
+  - text: ヨーロッパのクロアチア代表。フィファランクは14位の国です。
+    short_only: true
+    image: assets/stats/tb_croatia_data_t.png
+    no_telop: true
+  - text: 日本がワールドカップで3度戦った国は、クロアチアだけです。
+    image: assets/stats/tb_croatia_data_t.png
+    no_telop: true
+  - text: 日本がほかの国と当たったのは、多くても2度です。
+    image: assets/stats/tb_croatia_data_t.png
+    no_telop: true
+  - text: 1998年のフランス大会は、0対1の負け。
+    image: assets/stats/tb_croatia_data_r1.png
+    no_telop: true
+  - text: 2006年のドイツ大会は、0対0の引き分け。
+    image: assets/stats/tb_croatia_data_r1.png
+    no_telop: true
+  - text: 2022年のカタール大会は16強。1対1から、PK戦で敗れました。
+    image: assets/images/20261108_team_croatia/b05_fans2022_w.jpg
+    no_telop: true
+  - text: 3試合で合わせて**300分**。日本が取った点は、前田大然の1点です。
+    image: assets/stats/tb_croatia_data_r2.png
+    no_telop: true
+    emph: true
+  - text: 人口およそ387万人の国に、日本はなぜ勝てないのでしょうか。
+    image: assets/stats/tb_croatia_data_t.png
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Japan_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/Croatia
+- id: data
+  heading: クロアチア代表は、どんな数字を持つ国なのか
+  tier: 背景
+  telop: クロアチア代表の基礎DATA
+  narrator: 解説
+  say:
+  - text: クロアチアのフィファランクは、10月7日の発表で**14位**。日本は17位です。
+    image: assets/stats/tb_croatia_data0.png
+    no_telop: true
+  - text: ワールドカップでは2018年に準優勝。メダルは3つあります。
+    image: assets/stats/tb_croatia_data2.png
+    no_telop: true
+  - text: 監督は、スラヴェン・ビリッチ。2026年7月に、2度目の就任をしました。
+    image: assets/stats/tb_croatia_data4.png
+    no_telop: true
+  - text: 主将は、中盤のルカ・モドリッチです。
+    image: assets/stats/tb_croatia_data5.png
+    no_telop: true
+  - text: 愛称のヴァトレニは、炎の者たちを表す言葉です。
+    image: assets/stats/tb_croatia_data6.png
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Module:SportsRankings/data/FIFA_World_Rankings
+  - https://en.wikipedia.org/wiki/Croatia_national_football_team
+  - https://en.wikipedia.org/wiki/Slaven_Bili%C4%87
+- id: japan
+  heading: 日本は、クロアチアとどう戦ってきたのか
+  tier: 背景
+  telop: 通算4試合、日本から見て1勝2分1敗
+  narrator: 解説
+  card: &id_jp
+    type: table
+    title: 日本とクロアチアの国際Aマッチ（全4試合）
+    columns:
+    - 年月
+    - 大会
+    - 日本から見た結果
+    rows:
+    - - 1997年6月
+      - キリンカップ
+      - 4-3
+    - - 1998年6月
+      - W杯 1次リーグ
+      - 0-1
+    - - 2006年6月
+      - W杯 1次リーグ
+      - 0-0
+    - - 2022年12月
+      - W杯 16強
+      - 1-1（PK1-3）
+  say:
+  - text: 日本とクロアチアは、これまで4度、国際Aマッチで戦いました。
+    image: assets/stats/tb_croatia_data8.png
+    no_telop: true
+  - text: 日本から見て、1勝2引き分け1敗。勝ったのは1997年、東京での4対3です。
+    image: assets/images/20261108_team_croatia/b02_xi_w.jpg
+    card: *id_jp
+  - text: 1998年のワールドカップは、ダヴォール・シュケルの1点に敗れました。
+    card:
+      <<: *id_jp
+      highlight_row: 1
+  - text: この試合に守備で出ていたのが、いまの監督、ビリッチです。
+    emph: true
+    image: assets/images/20261108_team_croatia/b06_bilic_w.jpg
+    card: none
+  - text: 2006年は、川口能活がダリヨ・スルナのPKを止め、点を与えませんでした。
+    image: assets/images/20261108_team_croatia/b02_xi_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 2
+  - text: 2022年の16強は、前田大然が先に決めました。
+    card:
+      <<: *id_jp
+      highlight_row: 3
+  - text: 後半、イヴァン・ペリシッチの頭で追いつかれ、延長でも決まりません。
+    image: assets/images/20261108_team_croatia/b05_fans2022_w.jpg
+    card: none
+  - text: PK戦では、ゴールキーパーのリヴァコヴィッチが3本を止めました。
+    image: assets/images/20261108_team_croatia/b02_xi_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 3
+  - text: 南野拓実、三笘薫、吉田麻也。決めたのは、浅野拓磨の1本でした。
+    card:
+      <<: *id_jp
+      highlight_row: 3
+  sources:
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_records_and_statistics
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(1990%E2%80%931999)
+  - https://en.wikipedia.org/wiki/1998_FIFA_World_Cup_Group_H
+  - https://en.wikipedia.org/wiki/2006_FIFA_World_Cup_Group_F
+  - https://en.wikipedia.org/wiki/2022_FIFA_World_Cup_knockout_stage
+- id: history
+  heading: クロアチアは、どうやってメダルを3つ取ったのか
+  tier: 背景
+  telop: 初出場で3位、2018年は準優勝、2022年も3位
+  narrator: 解説
+  card: &id_hist
+    type: timeline
+    title: クロアチア代表の歩み
+    rows:
+    - - 1991年
+      - クロアチアが独立
+    - - 1998年
+      - 初めてのW杯で3位
+    - - 2018年
+      - W杯で準優勝
+    - - 2022年
+      - W杯で3位。2大会続けてメダル
+    - - 2026年
+      - 32強で敗退
+    focus: 2018年
+  say:
+  - text: クロアチアは、1991年に独立した国です。
+    image: assets/images/20261108_team_croatia/b01_celebration_w.jpg
+    card: *id_hist
+  - text: ワールドカップに初めて出たのは1998年。いきなり3位でした。
+    card:
+      <<: *id_hist
+      highlight_row: 1
+  - text: この大会で6点を取ったシュケルが、得点王です。
+    card:
+      <<: *id_hist
+      highlight_row: 1
+  - text: 2018年は決勝まで進み、フランスに2対4で敗れて準優勝。
+    image: assets/images/20261108_team_croatia/b02_xi_w.jpg
+    card: none
+  - text: 2022年もまた3位。2大会続けて、メダルを持ち帰りました。
+    card:
+      <<: *id_hist
+      highlight_row: 3
+  - text: ところが2026年は、決勝トーナメント1回戦でポルトガルに1対2。
+    image: assets/images/20261108_team_croatia/b03_perisic_w.jpg
+    card:
+      <<: *id_hist
+      highlight_row: 4
+  - text: 後半のアディショナルタイムに勝ち越されました。
+    card: none
+  - text: 16強に届かなかったのは、2014年の大会以来です。
+    card: none
+  - text: 大会のあと、9年率いたダリッチ監督が退き、ビリッチが戻りました。
+    image: assets/images/20261108_team_croatia/b06_bilic_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Croatia_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/Croatia_national_football_team
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_round_of_32
+  - https://en.wikipedia.org/wiki/Zlatko_Dali%C4%87
+- id: players
+  heading: いまの看板選手は、誰なのか
+  tier: 背景
+  telop: 看板選手を、所属・名前・位置・年齢で
+  narrator: 解説
+  card: &id_pl
+    type: table
+    title: クロアチア代表の看板選手
+    columns:
+    - 所属
+    - 名前
+    - 位置
+    - 年齢
+    rows:
+    - - ACミラン
+      - ルカ・モドリッチ
+      - MF
+      - '41'
+    - - マンチェスター・シティ
+      - ヨシュコ・グヴァルディオル
+      - DF
+      - '24'
+    - - マンチェスター・シティ
+      - マテオ・コヴァチッチ
+      - MF
+      - '32'
+    - - PSV
+      - イヴァン・ペリシッチ
+      - FW
+      - '37'
+    - - ホッフェンハイム
+      - アンドレイ・クラマリッチ
+      - FW
+      - '35'
+    - - バルセロナ
+      - ドミニク・リヴァコヴィッチ
+      - GK
+      - '31'
+  say:
+  - text: いまのクロアチアを支える6人です。
+    image: assets/images/20261108_team_croatia/b02_xi_w.jpg
+    card: *id_pl
+  - text: 主将のモドリッチは41歳。代表206試合は、国の歴代最多です。
+    card:
+      <<: *id_pl
+      highlight_row: 0
+  - text: 2026年のワールドカップでは、40歳でアシストを決めました。
+    image: assets/images/20261108_team_croatia/b04_modric_w.jpg
+    card: none
+  - text: ワールドカップでアシストをした、歴代最年長の選手です。
+    card: none
+  - text: 37歳のペリシッチは、代表40得点。ワールドカップの7点は国の最多です。
+    image: assets/images/20261108_team_croatia/b03_perisic_w.jpg
+    card:
+      <<: *id_pl
+      highlight_row: 3
+  - text: 2022年の日本戦で同点にしたのも、この人でした。
+    card:
+      <<: *id_pl
+      highlight_row: 3
+  - text: 守備の柱は、マンチェスター・シティの24歳、グヴァルディオル。
+    image: assets/images/20261108_team_croatia/b07_gvardiol_w.jpg
+    card: none
+  - text: ゴールキーパーのリヴァコヴィッチは、いまバルセロナにいます。
+    image: assets/images/20261108_team_croatia/b02_xi_w.jpg
+    card:
+      <<: *id_pl
+      highlight_row: 5
+  sources:
+  - https://en.wikipedia.org/wiki/Croatia_national_football_team
+  - https://en.wikipedia.org/wiki/Luka_Modri%C4%87
+  - https://en.wikipedia.org/wiki/Ivan_Peri%C5%A1i%C4%87
+  - https://en.wikipedia.org/wiki/Jo%C5%A1ko_Gvardiol
+  - https://en.wikipedia.org/wiki/Mateo_Kova%C4%8Di%C4%87
+  - https://en.wikipedia.org/wiki/Andrej_Kramari%C4%87
+  - https://en.wikipedia.org/wiki/Dominik_Livakovi%C4%87
+  - https://en.wikipedia.org/wiki/Croatia_at_the_FIFA_World_Cup
+- id: now
+  heading: ビリッチ監督のクロアチアは、W杯のあとをどう戦っているのか
+  tier: 背景
+  telop: W杯のあとの4試合は、1勝3敗・4得点14失点
+  narrator: 解説
+  card: &id_nw
+    type: table
+    title: W杯のあと クロアチアの4試合（ネーションズリーグ）
+    columns:
+    - 日付
+    - 相手
+    - クロアチアの結果
+    rows:
+    - - 9月26日
+      - チェコ
+      - 2-1
+    - - 9月29日
+      - スペイン
+      - 1-4
+    - - 10月3日
+      - イングランド
+      - 0-7
+    - - 10月6日
+      - スペイン
+      - 1-2
+  say:
+  - text: ビリッチ監督は、2006年から2012年にもクロアチアを率いた人です。
+    image: assets/images/20261108_team_croatia/b06_bilic_w.jpg
+    card: none
+  - text: 2度目の就任は、2026年7月13日でした。
+    card: none
+  - text: ヨーロッパの国どうしで戦うネーションズリーグは、4試合で1勝3敗。
+    image: assets/images/20261108_team_croatia/b01_celebration_w.jpg
+    card: *id_nw
+  - text: 9月26日、初戦のチェコには2対1で勝ちました。
+    card:
+      <<: *id_nw
+      highlight_row: 0
+  - text: 10月3日のイングランド戦は0対7。国の歴史で、いちばん大きな負けです。
+    card:
+      <<: *id_nw
+      highlight_row: 2
+  - text: 10月6日のスペイン戦も1対2の負け。4試合で4得点、14失点です。
+    card:
+      <<: *id_nw
+      highlight_row: 3
+  - text: 次は11月12日にロンドンでイングランド、15日にオシエクでチェコと戦います。
+    image: assets/images/20261108_team_croatia/b03_perisic_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Slaven_Bili%C4%87
+  - https://en.wikipedia.org/wiki/Croatia_national_football_team_results_(2020%E2%80%93present)
+- id: viewpoint
+  viewpoint: true
+  heading: 日本は、なぜクロアチアに勝てないのか
+  tier: 背景
+  telop: 日本はクロアチア戦の300分で1点。延長に入った試合はクロアチア5勝ち上がり、日本0
+  narrator: 解説
+  card: &id_vp
+    type: table
+    title: W杯の数字 日本とクロアチア（2026年まで）
+    columns:
+    - 項目
+    - 日本
+    - クロアチア
+    rows:
+    - - W杯の1試合あたりの得点
+      - '1.14'
+      - '1.44'
+    - - 日本対クロアチアの得点（3試合）
+      - '1'
+      - '2'
+    - - 延長に入った試合
+      - '2'
+      - '5'
+    - - 延長に入って勝ち上がり
+      - '0'
+      - '5'
+  say:
+  - text: 見立てです。日本とクロアチア、ワールドカップでの数字を比べます。
+    image: assets/images/20261108_team_croatia/b01_celebration_w.jpg
+    card: none
+  - text: 日本はワールドカップ29試合で33得点。1試合に1点は取っています。
+    card:
+      <<: *id_vp
+      highlight_row: 0
+  - text: ところがクロアチア戦の3試合では、1点。いつもの3分の1にも届きません。
+    emph: true
+    mark:
+      kind: circle
+      row: 1
+      col: 日本
+    card:
+      <<: *id_vp
+      highlight_row: 1
+  - text: もう1つの差は、長い試合です。
+    card:
+      <<: *id_vp
+      highlight_row: 2
+  - text: クロアチアは延長に入った5試合を、すべて勝ち上がりました。
+    mark:
+      kind: circle
+      row: 3
+      col: クロアチア
+    card:
+      <<: *id_vp
+      highlight_row: 3
+  - text: 日本は延長の2試合とも、PK戦で敗れています。
+    image: assets/images/20261108_team_croatia/b02_xi_w.jpg
+    card: none
+  - text: 2018年は3試合続けて延長を戦い、決勝までたどり着きました。
+    card: none
+  - text: 点の取り合いにせず、少ない点で試合を締める。
+    image: assets/images/20261108_team_croatia/b04_modric_w.jpg
+    card: none
+  - text: 日本との3試合も、両チーム合わせて3点しか入っていません。
+    card: none
+  - text: ただ、ビリッチ監督になってからは、守りが崩れています。
+    image: assets/images/20261108_team_croatia/b03_perisic_w.jpg
+    card: none
+  - text: 11月12日、イングランドとの再戦で守りを立て直せるか。
+    card: none
+  - text: そこが、次の見どころです。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Japan_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/Croatia_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/Croatia_national_football_team_results_(2020%E2%80%93present)

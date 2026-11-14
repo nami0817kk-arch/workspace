@@ -7,6 +7,7 @@
 
     CLUB_LEAGUE=laliga python tools/plsquad.py realsociedad Real_Sociedad "2026–27_Real_Sociedad_season"
     CLUB_LEAGUE=bundesliga python tools/plmap.py            # ブンデスリーガ版（2026-09-28、research/bd_data）
+    CLUB_LEAGUE=serie_a python tools/plmap.py               # セリエA版（2026-11-13、research/sa_data）
 """
 from __future__ import annotations
 
@@ -73,6 +74,24 @@ LEAGUES = {
         "note_prefix": "20260928_bd",
         "legends": "bd_legends.json",
     },
+    # セリエA版（2026-11-13）。20クラブ。地図は Module:Location map/data/Italy の四隅
+    "serie_a": {
+        "data": "sa_data",
+        "prefix": "sa_",
+        "series": "セリエAチーム紹介",
+        "league": "italy",
+        "league_name": "セリエA",
+        "league_short": "セリエA",
+        "best_label": "昨季の順位",
+        "slot": "other_1",
+        "page_title": "セリエA20クラブの台本",
+        "map_module": "Italy",
+        "map_file": "Italy provincial location map 2016.svg",
+        "map_png": "italy.png",
+        "map_note": "イタリアの白地図に20クラブの紋章を置いたもの",
+        "note_prefix": "20261113_sa",
+        "legends": "sa_legends.json",
+    },
 }
 
 
@@ -84,6 +103,8 @@ def name() -> str:
         got = "laliga"
     if got in ("bd", "bl", "bundes", "germany"):
         got = "bundesliga"
+    if got in ("sa", "seriea", "serie-a", "italy", "ita"):
+        got = "serie_a"
     if got not in LEAGUES:
         raise SystemExit(f"■ CLUB_LEAGUE={got} は知らないリーグです（{', '.join(LEAGUES)}）")
     return got

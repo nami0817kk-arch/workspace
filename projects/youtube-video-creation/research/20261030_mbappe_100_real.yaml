@@ -1,0 +1,168 @@
+# 取材メモ（2026年10月30日）ムバッペのレアル100点は116試合目。C・ロナウドは105〜106試合（ショートだけ・見せ方 Y＝試合後の本人の言葉から始める）
+# 取材: 2026-10-30 朝。本文は読んだ（検索の要約は使っていない）。
+#   ・ESPN 記事API 50311567（2026-10-29 10:36Z）「Mbappé's 100 Real Madrid goals: Quicker than Ronaldo to hit century」控え research/raw/20261030_mbappe100_espn.json
+#       本文: 116試合で100点、クラブ歴代23位の得点者（百点に届いたのは24人目・届いた速さは5番目）。
+#       ウーゴ・サンチェスは142試合、（ブラジルの）ロナウドは163試合。「Only four ... fewer games」＝プスカシュ100・C・ロナウド106・パヒーニョ111・ディ・ステファノ114。
+#       試合後の本人の言葉（Real Madrid TV）: "I'm very happy. Everyone knows I like to score goals and help the team that way, but I think today that's just a minor detail,
+#       because the most important thing is the team's victory and our success as a group."（訳は自前。文を区切っただけ）
+#       今季は13試合14点。
+#   ・Marca（2026-10-29 06:02 CET、データ分析欄）「Radiografía de los 100 goles de Mbappé」本文を requests で全部読んだ。控え research/raw/20261030_mbappe100_marca.txt
+#       116試合。少ない試合数で届いたのは4人: プスカシュ101・C・ロナウド105・パヒーニョ114・ディ・ステファノ114。1試合あたり0.86はその中で4番目
+#       （C・ロナウド1.03〔438試合〕、プスカシュ0.92、パヒーニョ0.87）。内訳のPKは21点（26本から）、エリア外17点、ヘディング2点。今季は14点13試合。
+#   ・レアル公式サイト（2026-10-25）https://www.realmadrid.com/es-ES/noticias/futbol/primer-equipo/actualidad/mbappe-alcanza-los-100-goles-con-el-real-madrid-25-10-2026
+#       requests で読んだ: 「partido 116」で100点。内訳 リーグ67・CL25・コパ4・クラブW杯2・欧州スーパーカップ1・スペインスーパーカップ1。今季14点。
+# 資料のずれ（台本では断る・言い切らない）:
+#   ・C・ロナウドの試合数は ESPN 106／Marca 105（ほかにも 90min が105）→「105試合か106試合。数え方で1試合ずれる」と言う。
+#   ・パヒーニョは ESPN 111／Marca 114、プスカシュは 100／101 → 台本では試合数を言わない。「116試合より少ない試合数で届いた4人」とだけ言う。
+#   ・ムバッペの116試合はレアル公式が確定。
+#   ・ESPN の見出し「Quicker than Ronaldo」は、本文ではブラジルのロナウド（163試合）との比べ。クリスティアーノ・ロナウドとは、ムバッペのほうが約10試合遅い。
+#       → 題を「ロナウドより早く」にしない（依頼文の「ロナウドより早く」は、クリスティアーノについては事実と逆）。
+#   ・【親への注意】10/26 の本（mbappe_100_clasico）は「届いた速さはクラブで4番目」と言っていた。ESPN 本文・Marca とも、ムバッペ自身が5番目
+#       （より少ない試合で届いた人が4人）。「4番目」は、1試合あたりの点（Marca の0.86が4番目）と取り違えやすい。10/26 の言い方が誤りの恐れ。公開済みは触らない。
+# 言わないこと: バロンドール（10/27 の本と重なる）、中国の件（10/28）、PKを「だけ」で小さく見せる言い方、ロナウドの最多点数（ESPN 451／ほか450で割れる）、次の試合の結果の予想。
+# 前の本との重なり: 10/26 mbappe_100_clasico は試合の流れ（41分・87分）・24人目・383点。今回は「何試合で届いたか」と本人の言葉だけ。24人目・383点・試合の流れは言い直さない。
+#   本人の言葉（試合後の「小さなこと」）は10/26〜28 の台本に無いことを grep で確認。
+# 確度: 116試合・内訳はレアル公式（確定）。ほかの試合数・順位は報道（ESPN・Marca）。見立ては背景。
+# 反応: 作らない（0件）。approve は --no-voices。
+slot: world_3
+date: "2026年10月30日"
+format: news
+no_main: true
+people: [ムバッペ, レアル・マドリード, クリスティアーノ・ロナウド]
+
+short_style: Y
+short_hook_quote: いちばん大切なのは、チームの勝利と、みんなの成功です。
+short_photos:
+  - assets/images/20261030_mbappe_100_real/02_v.jpg
+  - assets/images/20261030_mbappe_100_real/03_v.jpg
+  - assets/images/20261030_mbappe_100_real/01_v.jpg
+
+short_question: ムバッペの100点、116試合という数字をどう見ますか。
+short_hook: ムバッペのレアル100点は、116試合目でした。
+short_telops:
+  - {match: 116試合目, text: レアルで100点/116試合目}
+  - {match: 105試合, text: C・ロナウドは/105試合か106試合}
+  - {match: 142試合, text: ウーゴ・サンチェス142試合/ブラジルのロナウド163試合}
+  - {match: 5番目, text: レアル歴代/5番目に早い100点}
+  - {match: 0.86, text: 1試合あたり0.86点/4番目}
+
+theme:
+  id: mbappe_100_real
+  league: spain
+  league_name: ラ・リーガ
+  prefix: ""
+  title: ムバッペ、レアル100点は116試合目。ロナウドは何試合だったか
+  hook: ""
+  question: ムバッペの100点は、クリスティアーノ・ロナウドと比べて早いのか
+  takeaway: 116試合は歴代5番目の速さ。クリスティアーノ・ロナウドの105〜106試合には届かなかった
+
+thumbnail:
+  line1: ムバッペ、レアル100点
+  line2: 116試合、ロナウドは？
+  tags: [レアル・マドリード]
+  layout: face
+  photo: assets/images/20261030_mbappe_100_real/02_w.jpg
+  short_photo: assets/images/20261030_mbappe_100_real/02_v.jpg
+
+answer: ムバッペは116試合目。クリスティアーノ・ロナウドの105試合か106試合より約10試合遅く、歴代5番目の速さ
+watch: 1試合あたりの点を、いまの0.86のまま保てるか
+
+sections:
+  - id: words
+    heading: 試合後、本人は何と言ったのか
+    tier: 報道
+    telop: 試合後、ムバッペ本人の言葉
+    say:
+      - text: 試合後、ムバッペはクラブのテレビに、こう話しています。
+        image: assets/images/20261030_mbappe_100_real/01_w.jpg
+        card: none
+      - voice: ムバッペ
+        text: とても嬉しいです。
+        image: assets/images/20261030_mbappe_100_real/02_w.jpg
+      - voice: ムバッペ
+        text: ゴールを決めて、チームを助けるのが、
+        cont: true
+        image: assets/images/20261030_mbappe_100_real/02_w.jpg
+      - voice: ムバッペ
+        text: 好きなのは、みんな知っています。
+        cont: true
+        image: assets/images/20261030_mbappe_100_real/02_w.jpg
+      - voice: ムバッペ
+        text: でも今日は、それは小さなことだと思います。
+        cont: true
+        image: assets/images/20261030_mbappe_100_real/03_w.jpg
+      - voice: ムバッペ
+        text: いちばん大切なのは、チームの勝利と、みんなの成功です。
+        emph: true
+        image: assets/images/20261030_mbappe_100_real/01_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50311567/mbappes-100-real-madrid-goals-quicker-ronaldo-hit-century
+
+  - id: how_many
+    main: true
+    heading: 100点に、何試合で届いたのか
+    tier: 確定
+    telop: 100点は、レアルでの116試合目
+    say:
+      - text: レアル・マドリードのムバッペが、レアルで通算100点に届きました。
+        short_only: true
+        image: assets/images/20261030_mbappe_100_real/01_w.jpg
+        card: none
+      - text: 25日のクラシコで2点を決めて、節目に届きました。
+        image: assets/images/20261030_mbappe_100_real/02_w.jpg
+        card: none
+      - text: レアルの公式サイトによると、116試合目での到達でした。
+        emph: true
+        image: assets/images/20261030_mbappe_100_real/03_w.jpg
+        card: none
+      - text: クリスティアーノ・ロナウドは、105試合か106試合。数え方で1試合ずれます。
+        image: assets/images/20261030_mbappe_100_real/01_w.jpg
+        card: &games {type: table, title: レアルで100点に届いた試合数, columns: [選手, 試合], rows: [[ムバッペ, "116"], [C・ロナウド, 105〜106], [ウーゴ・サンチェス, "142"], [ブラジルのロナウド, "163"]], highlight_row: 1}
+      - text: ロナウドのほうが、約10試合早く届いていました。
+        image: assets/images/20261030_mbappe_100_real/02_w.jpg
+        card: *games
+      - text: ウーゴ・サンチェスは142試合、ブラジルのロナウドは163試合。
+        image: assets/images/20261030_mbappe_100_real/02_w.jpg
+        card: none
+      - text: この2人より、ムバッペは早く届きました。
+        image: assets/images/20261030_mbappe_100_real/03_w.jpg
+        card: none
+      - text: 116試合より少ない試合で届いたのは、4人です。
+        image: assets/images/20261030_mbappe_100_real/01_w.jpg
+        card: none
+      - text: クリスティアーノ・ロナウド、プスカシュ、パヒーニョ、ディ・ステファノ。
+        image: assets/images/20261030_mbappe_100_real/02_w.jpg
+        card: none
+      - text: ムバッペは、クラブの歴史で5番目に早い100点でした。
+        emph: true
+        image: assets/images/20261030_mbappe_100_real/02_w.jpg
+        card: none
+    official: true
+    sources:
+      - https://www.realmadrid.com/es-ES/noticias/futbol/primer-equipo/actualidad/mbappe-alcanza-los-100-goles-con-el-real-madrid-25-10-2026
+      - https://www.espn.com/soccer/story/_/id/50311567/mbappes-100-real-madrid-goals-quicker-ronaldo-hit-century
+      - https://www.marca.com/futbol/real-madrid/2026/10/29/radiografia-100-goles-mbappe-real-madrid-ariete-fabrica-propios-goles.html
+
+  - id: view
+    viewpoint: true
+    heading: 1試合あたり0.86点は、どこまで保てるか
+    tier: 背景
+    telop: 1試合あたり0.86点、100点に届いた中で4番目
+    say:
+      - text: 見立てです。100点を116試合で割ると、1試合あたり0.86点。
+        image: assets/images/20261030_mbappe_100_real/02_w.jpg
+        card: none
+      - text: 100点に届いた選手の中で、4番目に高い数字です。
+        image: assets/images/20261030_mbappe_100_real/01_w.jpg
+        card: none
+      - text: クリスティアーノ・ロナウドは、438試合で1.03点でした。
+        image: assets/images/20261030_mbappe_100_real/02_w.jpg
+        card: none
+      - text: ムバッペは今季、13試合で14点。この数字を、これからも保てるかが見どころです。
+        image: assets/images/20261030_mbappe_100_real/03_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.marca.com/futbol/real-madrid/2026/10/29/radiografia-100-goles-mbappe-real-madrid-ariete-fabrica-propios-goles.html
+short_title: "ムバッペ、レアル100点は116試合目。ロナウドは何試合だったか"

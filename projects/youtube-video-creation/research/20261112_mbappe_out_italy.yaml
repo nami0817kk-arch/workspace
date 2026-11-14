@@ -1,0 +1,135 @@
+# 取材メモ（2026年11月12日）ムバッペ、イタリア戦を欠場。ジダン監督「リスクは冒さない」（ニュースのショート。見せ方 Y＝監督の言葉から始める）
+# 取材: 2026-11-12。WebFetch と python requests（ブラウザUA）と site.api.espn.com で確かめた。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 出典で確かめたこと:
+#   ・ESPN（story 50452835, 2026-11-11, ESPN News Services。WebFetch で読んだ）: ムバッペはハムストリングの問題で水曜の練習を休み、木曜のネーションズリーグ・イタリア戦（ミラノ）を欠場。
+#       ジダン監督は会見で、レアルのストライカーに「リスク」は冒さないと言った。日曜のトルコ戦（ボルドー）には「大したことではなく、日曜は大丈夫なはず」。
+#       ※ ESPN は全文の引用が短い。言葉の本文は Marca（下）で取った。
+#   ・Marca（nations-league/2026/11/11/zidane-confirma-ausencia-mbappe-italia.html, 2026-11-11 19:23Z。全文を requests で読んだ）。ジダンの発言（フランス語→スペイン語）:
+#       「キリアンは明日は出られない。軽い違和感を覚えた」(Kylian no estará disponible mañana. Sintió una leve molestia)
+#       「日曜に彼を使えることを願っている」
+#       「彼は大丈夫だと思う。その証拠に、私たちと一緒に残る。うれしくはないだろう。明日は出たかったはずだ」
+#       「リスクを冒してはいけない。シーズンは長いのだから」(No debemos correr riesgos porque la temporada es larga)
+#       地の文: 大腿二頭筋（bíceps femoral＝ハムストリング）の違和感。カルル・チュアメニ・マルクス・テュラムと違い、ムバッペはマドリードに戻らず代表に残る。日曜のトルコ戦に出られるかを見る。
+#       → 台本は、この日本語を声に出して通る形に整えたもの（元はフランス語。フランス語の原文は読めていない）。Marca の「como siempre, no hay ningún riesgo」は意味が二通りに取れるので使わない。
+#   ・ゲキサカ（?463001-463001-fl）: 仏『レキップ』による。ムバッペは11日午前の全体練習に参加せず、ハムストリングに違和感。深刻ではないとみられる。ジダン監督と医療スタッフは無理をさせるリスクを冒すつもりはない。
+#       「前回の代表戦で膝を負傷し、途中離脱」。今後は個別トレーニングで、15日のトルコ戦（ボルドー）での復帰を目指す。
+#   ・ESPN の順位（uefa.nations standings, 2026-11-12 取得）グループA1: フランス 4試合 3勝1分 勝ち点10、イタリア 4試合 2勝1分1敗 勝ち点7、ベルギー 4試合 勝ち点6、トルコ 勝ち点0。
+#       ESPN story: フランスはイタリアに勝てば3月の準々決勝に進む。
+#   ・ESPN の日程（uefa.nations scoreboard）: 11/12 19:45Z（日本時間13日 4:45）イタリア対フランス（401861151、サン・シーロ）／11/15 19:45Z トルコ at フランス（401861177、Stade Atlantique＝ボルドー）。
+#   ・ムバッペのここまで: 研究メモ research/20261107_zidane_mbappe_france.yaml（ESPN 各試合の出場者名簿）。9/25 トルコ戦（1-0）で54分に得点・59分に交代、その後の9/28・10/02・10/05 の3試合は名簿に名前が無い。
+# 食い違い: ①トルコ戦の開催地は Marca が「リヨン」、ESPN（Stade Atlantique）とゲキサカは「ボルドー」→ ESPN に合わせて「ボルドー」。 ②負傷の部位の言い方: ESPN・ゲキサカ「ハムストリング」、Marca「大腿二頭筋」（同じ場所）。 ③言葉は日本語・スペイン語訳しか無い。
+# 前の本との重なり: 20261107_zidane_mbappe_france（起用位置の発言・メンバー発表）、20261105_real_aek_mbappe_6（レアルの得点）。今回の初出: 太ももの違和感での欠場と、ジダン監督の「リスクは冒さない」。起用位置と初戦の中身は繰り返さない。
+# 本人の言葉: あり（ジダン監督。Marca が会見を引用）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: overseas
+date: "2026年11月12日"
+format: news
+no_main: true
+people: [ムバッペ, ジダン監督, フランス代表]
+
+short_style: Y
+short_hook_quote: キリアンは、明日は出られません。軽い違和感がありました。
+short_photos:
+  - assets/images/20261112_mbappe_out_italy/03_v.jpg
+  - assets/images/20261112_mbappe_out_italy/07_v.jpg
+  - assets/images/20261112_mbappe_out_italy/01_v.jpg
+  - assets/images/20261112_mbappe_out_italy/08_v.jpg
+  - assets/images/20261112_mbappe_out_italy/02_v.jpg
+short_question: ムバッペは、15日のトルコ戦に間に合うと思いますか。
+short_telops: []
+
+theme:
+  id: mbappe_out_italy
+  league: france
+  league_name: フランス代表
+  prefix: ""
+  title: ムバッペ、イタリア戦を欠場。ジダン監督「リスクは冒さない」
+  hook: ""
+  question: ムバッペのイタリア戦欠場について、ジダン監督は何と語ったのか
+  takeaway: ムバッペはイタリア戦を欠場するが、代表には残る。ジダン監督は「日曜に使えることを願っている」と言い、次は15日のトルコ戦
+
+thumbnail:
+  layout: face
+  line1: ムバッペ 欠場
+  line2: 「リスクは冒さない」
+  tags: [ムバッペ, ジダン, フランス代表]
+  photo: assets/images/20261112_mbappe_out_italy/03_w.jpg
+  short_photo: assets/images/20261112_mbappe_out_italy/03_v.jpg
+
+answer: 軽い違和感で、イタリア戦は欠場。リスクは冒さず、日曜のトルコ戦での復帰を見る
+watch: 15日（日）のトルコ戦（ボルドー）
+
+sections:
+  - id: what
+    main: true
+    heading: ムバッペのイタリア戦の欠場について、ジダン監督が語ったこと
+    tier: 報道
+    telop: ジダン監督「キリアンは明日は出られない」
+    say:
+      - text: フランス代表のジダン監督が、イタリア戦の前日の会見で、ムバッペについて語りました。
+        short_only: true
+      - voice: ジダン監督
+        text: キリアンは、明日は出られません。軽い違和感がありました。
+        emph: true
+        image: assets/images/20261112_mbappe_out_italy/03_w.jpg
+      - text: ムバッペは、太ももの裏のハムストリングに違和感があると伝えられています。
+        image: assets/images/20261112_mbappe_out_italy/01_w.jpg
+      - text: 11日の練習は休みました。
+      - text: ジダン監督は、無理はさせない考えです。
+      - voice: ジダン監督
+        text: リスクを冒してはいけません。シーズンは長いのですから。
+        image: assets/images/20261112_mbappe_out_italy/07_w.jpg
+      - voice: ジダン監督
+        text: 日曜に、彼を使えることを願っています。
+        cont: true
+      - text: ムバッペはマドリードには戻らず、代表に残ります。
+        image: assets/images/20261112_mbappe_out_italy/05_w.jpg
+      - voice: ジダン監督
+        text: 彼は大丈夫だと思います。その証拠に、私たちと一緒に残ります。
+      - voice: ジダン監督
+        text: うれしくはないでしょう。明日は出たかったはずです。
+        cont: true
+        image: assets/images/20261112_mbappe_out_italy/08_w.jpg
+    official: false
+    sources:
+      - https://www.marca.com/futbol/nations-league/2026/11/11/zidane-confirma-ausencia-mbappe-italia.html
+      - https://www.espn.com/soccer/story/_/id/50452835/kylian-mbappe-hamstring-miss-france-clash-italy
+      - https://web.gekisaka.jp/news/world/detail/?463001-463001-fl
+      - https://web.gekisaka.jp/news/world/detail/?460055-460055-fl
+      - https://www.marca.com/futbol/nations-league/2026/11/11/zidane-llama-mayulu-titi-favorito-luis-enrique-me-dijo-siguiera-trabajando-sombra.html
+      - https://www.marca.com/futbol/nations-league/2026/11/10/zidane-convoca-eli-junior-kroupi-bournemouth.html
+  - id: game
+    heading: ムバッペ抜きで迎える、フランスのイタリア戦
+    tier: 報道
+    telop: フランスはグループ首位。勝てば準々決勝へ
+    say:
+      - text: イタリア戦は、日本時間13日の午前4時45分から、ミラノのサン・シーロです。
+        card: {type: table, title: ネーションズリーグ グループA1, columns: [順位, 国, 勝ち点], rows: [[1位, フランス, 10], [2位, イタリア, 7], [3位, ベルギー, 6]], highlight_row: 0}
+      - text: フランスは4試合で3勝1分けの首位です。勝てば、3月の準々決勝に進みます。
+        card: none
+        image: assets/images/20261112_mbappe_out_italy/02_w.jpg
+      - text: ムバッペがここまでに出たのは、9月25日の初戦のトルコ戦です。
+        image: assets/images/20261112_mbappe_out_italy/04_w.jpg
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/v2/sports/soccer/uefa.nations/standings
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/scoreboard?dates=20261112
+      - https://www.espn.com/soccer/story/_/id/50452835/kylian-mbappe-hamstring-miss-france-clash-italy
+  - id: view
+    viewpoint: true
+    heading: ムバッペは、15日のトルコ戦に戻れるのか
+    tier: 背景
+    telop: 次は15日（日）、トルコ戦（ボルドー）
+    say:
+      - text: 見立てです。6試合あるグループ戦で、ムバッペが出たのは初戦の1試合。
+        image: assets/images/20261112_mbappe_out_italy/05_w.jpg
+        card: {type: table, title: ムバッペの今回のグループ戦, columns: [試合, ムバッペ], rows: [[9月25日 トルコ戦, 先発して得点], [9月28日・10月2日・10月5日, 出場なし], [11月12日 イタリア戦, 欠場（ハムストリング）]], highlight_row: 2}
+      - text: 15日のトルコ戦が、2試合目の出場になるかどうかです。
+        card: none
+      - text: 次の試合は、15日のトルコ戦。会場はボルドーです。
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/summary?event=401861053
+      - https://www.marca.com/futbol/nations-league/2026/11/11/zidane-confirma-ausencia-mbappe-italia.html
+      - https://web.gekisaka.jp/news/world/detail/?463001-463001-fl
+short_title: "ムバッペ、イタリア戦を欠場。ジダン監督「リスクは冒さない」"

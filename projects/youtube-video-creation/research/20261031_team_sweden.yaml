@@ -1,0 +1,471 @@
+# 代表チーム紹介 スウェーデン代表（10/31 作成。固定シリーズ9「代表チーム紹介」。見本は 10/29 のベルギー代表 scripts/20261029_team_belgium.md）。7節：フック→基礎DATA（板）→日本との関係（早い節へ）→歴史と転機（年表）→看板選手（表）→いまのチーム→見立て。
+# **軸（2026-10-31）**：「W杯予選でグループ最下位だった国は、ポッター監督のもとで何が変わったのか」。答えは見立ての節（予選の最初の4試合〔トマソン監督〕と、ポッター監督の14試合を、1試合あたりの勝点・得点・失点で自分で割って比べる）。
+# **日本との接点**：2026年W杯F組の最終戦（6/25、アーリントン）で1対1（前田大然56分／エランガ62分）。日本は2位、スウェーデンは3位で32強。基礎DATAの次の節に置いた。2002年5月の国立競技場の1対1、1936年ベルリン五輪の日本の3対2の勝ちも添える。
+# **重なりの確認（2026-10-31）**：scripts/・research/covered.yaml・research/posted.json を grep。スウェーデン代表の「紹介」回（team_sweden）は無い。代表チーム紹介の既出はエクアドル・ニュージーランド・ブラジル・ドイツ・スペイン・アルゼンチン・フランス・イングランド・ポルトガル・オランダ・ウルグアイ・ベルギー。scripts/20260926_sweden.md はルーマニア戦（9/25）のギョケレスの言葉のショートで、紹介ではない。
+# ---- 確かめたこと（2026-10-31。WebFetch の要約は使わず、requests で Wikipedia の生の wikitext と、スウェーデン協会・FIFA の公式ページを読んだ）----
+#  ・FIFAランク：34位（前回比＋3）。Module:SportsRankings/data/FIFA World Rankings（updated 7 October 2026）で Sweden 34・変化 3。日本17位・ベルギー8位（同じ表）。FIFA 公式 inside.fifa.com/fifa-world-ranking/SWE の国別ページは「37th」（Last official update: 20 July 2026 の表示。ランキング一覧の側は 07 October 2026 更新）。つまり7月37位→10月34位と読めるが、FIFA 公式で34位の表示そのものは取れていない（JS の表）。**台本には「34位」と「7月の37位から」を書く。公開前に FIFA で34位を目で確かめたい。**点数は書かない。
+#  ・W杯：出場13回（初出場は1934年。1930年は不参加）。最高は1958年の準優勝（自国開催。決勝でブラジルに2-5）。3位が1950年と1994年、4位が1938年（Sweden men's national football team の本文・infobox「World cup best = Runners-up (1958)」）。2018年は8強。2022年は予選プレーオフでポーランドに0-2で敗れ不出場（2022-03-29）。
+#  ・2026年W杯（Sweden at the FIFA World Cup の表：4試合 1勝1分2敗 7得点10失点、32強）：6/14 グループF初戦 チュニジア5-1（アヤリ7分・90+6分、イサク30分、ギョケレス59分、スバンベリ84分／レキク43分）、6/20 オランダ1-5（エランガ59分／ブロッビー5・17分、ヤクポ47・54分、サマービル89分）、6/25 日本1-1（エランガ62分／前田56分）、6/30 32強 フランス0-3（MetLife、ムバッペ2点・バルコラ1点）。5-1は W杯1試合での得点の歴代2位（最多は1938年キューバ戦の8-0）。F組は1位オランダ・2位日本・3位スウェーデン。スウェーデンは「成績上位8つの3位」で32強へ（2026 FIFA World Cup Group F）。
+#  ・自分で割った（検算した）：W杯4試合 7÷4=1.75・10÷4=2.50。
+#  ・W杯予選（Group B。UEFA）：6試合 0勝2分4敗・4得点12失点・勝点2でグループ最下位（2025-09-05 スロベニア2-2、09-08 コソボ0-2、10-10 スイス0-2、10-13 コソボ0-1、11-15 スイス1-4、11-18 スロベニア1-1。Wikipedia の Group B の試合表を1試合ずつ集計）。うち最初の4試合（10/13まで）はトマソン監督：1分3敗で勝点1・2得点7失点（本文「after taking only 1 point in four matches」とも一致）。トマソン監督は2025-10-14 に協会が解任（最初の解任）。ポッターは2025-10-20 就任（スウェーデンサッカー協会の発表 svenskfotboll.se 2025/10/graham-potter-ny-forbundskapten で日付確認）。
+#  ・ネーションズリーグ（Nations League B 2026-27 のスウェーデンの試合表）：9/25 ルーマニア2-1（ホーム・ソルナ。イサク20分、ギョケレス43分／マン29分）、9/28 ポーランド3-1（ホーム。ニーグレン8分、アヤリ64分、ギョケレス72分／シマンスキ43分）、10/2 ボスニア・ヘルツェゴビナ1-1（敵地ゼニツァ。ギョケレス61分／アライベゴビッチ80分）、10/5 ルーマニア1-0（敵地ブカレスト。ギョケレス13分）＝3勝1分け・7得点3失点。ギョケレスは4試合すべてで得点。次は 11/14 ボスニア（ホーム）、11/17 ポーランド（敵地ヴロツワフ）。
+#  ・ポッター監督の記録：Graham Potter の Managerial statistics（match played 5 October 2026 まで）で Sweden 14試合 6勝4分4敗。試合表で自分でも集計：W 6（ウクライナ3-1・ポーランド3-2・チュニジア5-1・ルーマニア2-1・ポーランド3-1・ルーマニア1-0）／D 4（スロベニア1-1・ギリシャ2-2・日本1-1・ボスニア1-1）／L 4（スイス1-4・ノルウェー1-3・オランダ1-5・フランス0-3）。得点25・失点26（勝点22）。自分で割った：勝点 22÷14=1.57、得点 25÷14=1.79（1.7857）、失点 26÷14=1.86（1.857）。トマソン監督の予選4試合：勝点 1÷4=0.25、得点 2÷4=0.50、失点 7÷4=1.75。**3倍以上** は 1.79÷0.50=3.6倍。
+#  ・ポッター：初勝利は2026-03-26 のW杯プレーオフ準決勝（ウクライナ3-1、ギョケレスのハットトリック：6・51・73分PK）。3-31 のプレーオフ決勝でポーランドに3-2（エランガ20分・ラーゲルビェルケ44分・ギョケレス88分）。契約は2026-03-12 に2030年まで延長（Graham Potter 本文）。スウェーデンのエステルスンドを 2011-01-24〜2018-06-11 に率いた（同記事の Managerial record の表）。
+#  ・ユーロ：最高は1992年の4強（自国開催。infobox「Regional cup best = Semi-finals (1992)」）。2024年は予選で敗退（Janne Andersson の退任）。五輪：1948年ロンドンで金メダル（infobox）。
+#  ・愛称：Blågult（The Blue and Yellow）＝青と黄色（infobox）。
+#  ・主将：ヴィクトル・リンデロフ（名簿の印 captain）。1994-07-17=32歳、アストン・ヴィラ、DF、代表84試合3得点。副主将はイサク・ヒエン（アタランタ）。名簿の数字は「Caps and goals are correct as of 5 October 2026」。
+#  ・名簿・年齢（2026-10-31 時点を生年月日から計算）：リンデロフ 1994-07-17=32（アストン・ヴィラ、DF）／ギョケレス 1998-06-04=28（アーセナル、FW、41試合25得点）／イサク 1999-09-21=27（リヴァプール、FW、63試合19得点。10/5 の名簿には「WD」の印があり、記事では怪我に触れない）／エランガ 2002-04-27=24（ニューカッスル、FW、34試合8得点。W杯で2点）／アヤリ 2003-10-06=23（ブライトン、MF、27試合6得点。W杯チュニジア戦で2点）／ベルグヴァル 2006-02-02=20（トッテナム、MF、18試合0得点）。
+#  ・日本との対戦：2026-06-25（F組最終戦・AT&Tスタジアム、アーリントン、観衆70,137）1-1、前田大然56分／エランガ62分（Japan national football team results (2020–present)、Sweden men's national football team の試合表、スウェーデン協会 svenskfotboll.se/…/herr-vm-jpn-swe）。2002-05-25 国立競技場（キリンチャレンジカップ）1-1（Japan national football team results (2000–2009)）。1936年ベルリン五輪1回戦 日本3-2スウェーデン（Japan national football team records and statistics の五輪の表）。1995-06-10 ノッティンガム（アンブロカップ）2-2、1996-02-22 香港（旧正月カップ）1-1・PK4-5、1997-02-13 バンコク（キングスカップ）0-1（results 1990–1999）。**通算の勝敗は台本に書かない**：Japan national football team records and statistics の対戦表は「7試合 1勝4分2敗 9得点13失点」だが、results の各ページで確認できたのは6試合（8得点8失点）で、1試合が突き合わない（1950〜1980年代のページが取得できなかった）。
+# ---- 言わないもの ----
+#  ・怪我／出場停止（名簿の WD の印）／私生活／背番号／戦術の説明／監督の契約の金額／トマソン前監督の解任の事情（解任の事実だけ）／イブラヒモビッチの引退後の話。
+# ---- 写真（assets/images/20261031_team_sweden/、出典は credits.json）----
+date: 2026年10月31日
+slot: other_1
+format: news
+series: 代表チーム紹介
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+short_photos:
+- assets/images/20261031_team_sweden/potter/01.jpg
+- assets/images/20261031_team_sweden/lindelof/01.jpg
+- assets/images/20261031_team_sweden/elanga/01.jpg
+people:
+- スウェーデン代表
+- グレアム・ポッター
+- ヴィクトル・リンデロフ
+- ヴィクトル・ギョケレス
+- アレクサンデル・イサク
+theme:
+  id: team_sweden
+  league: japan
+  league_name: スウェーデン代表
+  kind: preview
+  topic: スウェーデン代表
+  title: スウェーデン代表は、予選グループ4位からW杯へ。ポッター監督で、何が変わったのか
+  question: W杯予選でグループ4位だったスウェーデンは、ポッター監督のもとで何が変わったのか
+  lead: W杯で5対1と1対5を6日のうちに経験した国。
+  hook: ''
+  opening_image: assets/stats/tb_sweden_data_t.png
+  end_bg: assets/images/20261031_team_sweden/pair_coach/01.jpg
+  takeaway: スウェーデンは、W杯予選の最初の4試合（トマソン監督）で1試合あたり0.50得点・1.75失点・勝点0.25。ポッター監督の14試合は1.79得点・1.86失点・勝点1.57。点を取る力は3倍以上になり、失点は変わらない。W杯では4試合で7得点10失点。11月のボスニア戦・ポーランド戦が、守りを確かめる試合になる。
+thumbnail:
+  board: assets/stats/tb_sweden_data.png
+  short_photo: assets/images/20261031_team_sweden/gyokeres/01.jpg
+  line1: スウェーデン代表
+  line2: 予選4位からW杯へ
+  crest_main:
+  - スウェーデン
+  tags:
+  - スウェーデン代表
+  - ワールドカップ
+  - 日本代表
+  - ポッター
+  - ギョケレス
+  - 代表チーム紹介
+sections:
+- id: hook
+  heading: 5対1で勝って、6日後に1対5。それでも、決勝トーナメントに進めたのはなぜか
+  main: true
+  tier: 背景
+  telop: W杯で5対1と1対5。日本とは1対1
+  narrator: 解説
+  say:
+  - text: スウェーデン代表は、2026年のワールドカップの初戦で、チュニジアに**5対1**で勝ちました。
+    image: assets/stats/tb_sweden_data2.png
+    no_telop: true
+    emph: true
+  - text: ところが6日後、オランダには1対5で負けています。
+    image: assets/stats/tb_sweden_data2.png
+    no_telop: true
+  - text: 日本とは、同じ組で引き分けています。
+    image: assets/stats/tb_sweden_data_r2.png
+    no_telop: true
+  - text: 4試合を終えて、1勝1引き分け2敗。それでもグループ3位で、決勝トーナメントに進んでいます。
+    image: assets/stats/tb_sweden_data2.png
+    no_telop: true
+  - text: スウェーデン代表は、その前のワールドカップ予選で、グループ4位でした。
+    image: assets/stats/tb_sweden_data_r1.png
+    no_telop: true
+  - text: ポッター監督が来て、何が変わったのでしょうか。
+    image: assets/stats/tb_sweden_data_t.png
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Sweden_men's_national_football_team
+  - https://en.wikipedia.org/wiki/Sweden_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_Group_F
+- id: data
+  heading: スウェーデン代表は、どんな数字を持つ国なのか
+  tier: 背景
+  telop: スウェーデン代表の基礎DATA
+  narrator: 解説
+  say:
+  - text: フィファの10月7日発表のランクで、スウェーデンは**34位**。
+    image: assets/stats/tb_sweden_data0.png
+    no_telop: true
+  - text: 7月の37位から、3つ上がっています。
+    image: assets/stats/tb_sweden_data0.png
+    no_telop: true
+  - text: ワールドカップの最高成績は、1958年の準優勝。自分の国で開いた大会でした。
+    image: assets/stats/tb_sweden_data1.png
+    no_telop: true
+  - text: ヨーロッパ選手権の最高も、自国開催の1992年。4強です。
+    image: assets/stats/tb_sweden_data3.png
+    no_telop: true
+  - text: 監督は、イングランド出身のグレアム・ポッター。
+    image: assets/stats/tb_sweden_data4.png
+    no_telop: true
+  - text: 主将は、守備のヴィクトル・リンデロフです。
+    image: assets/stats/tb_sweden_data5.png
+    no_telop: true
+  - text: 愛称は、ブロゴルト。スウェーデン語で、青と黄色という意味です。
+    image: assets/stats/tb_sweden_data6.png
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Module:SportsRankings/data/FIFA_World_Rankings
+  - https://en.wikipedia.org/wiki/Sweden_men's_national_football_team
+  - https://en.wikipedia.org/wiki/Graham_Potter
+- id: japan
+  heading: 日本は、スウェーデンとどう戦ってきたのか
+  tier: 背景
+  telop: W杯F組の最終戦で1対1。日本が2位、スウェーデンが3位
+  narrator: 解説
+  card: &id_jp
+    type: table
+    title: 日本とスウェーデンの対戦（主なもの）
+    columns:
+    - 年月
+    - 大会
+    - 日本から見た結果
+    rows:
+    - - 1936年
+      - ベルリン五輪
+      - 3-2
+    - - 2002年5月
+      - キリンカップ
+      - 1-1
+    - - 2026年6月
+      - W杯
+      - 1-1
+  say:
+  - text: 日本とスウェーデンは、2026年のワールドカップで、同じF組に入りました。
+    image: assets/stats/tb_sweden_data7.png
+    no_telop: true
+  - text: 6月25日の最終戦。アメリカのアーリントンで戦いました。
+    image: assets/images/20261031_team_sweden/pair_young/01.jpg
+    card: *id_jp
+  - text: 後半、56分に前田大然が先制。
+    card:
+      <<: *id_jp
+      highlight_row: 2
+  - text: 62分に、エランガがすぐに同点。結果は、1対1の引き分けでした。
+    card:
+      <<: *id_jp
+      highlight_row: 2
+  - text: 日本はグループ2位、スウェーデンは3位。
+    card: none
+    image: assets/images/20261031_team_sweden/pair_young/01.jpg
+  - text: スウェーデンは、成績のいい3位の8チームに入り、決勝トーナメントに進みました。
+    card: none
+  - text: 2002年のワールドカップの直前にも、国立競技場で対戦しています。
+    card:
+      <<: *id_jp
+      highlight_row: 1
+  - text: こちらも、引き分けでした。
+    card:
+      <<: *id_jp
+      highlight_row: 1
+  - text: さかのぼって1936年のベルリン五輪では、1回戦で日本が3対2の勝ちでした。
+    emph: true
+    card:
+      <<: *id_jp
+      highlight_row: 0
+  sources:
+  - https://en.wikipedia.org/wiki/Sweden_men's_national_football_team
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_Group_F
+  - https://www.svenskfotboll.se/nyheter/landslag/2026/06/herr-vm-jpn-swe/
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(2000%E2%80%932009)
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_records_and_statistics
+- id: history
+  heading: スウェーデンは、いつ頂点に近づいたのか
+  tier: 背景
+  telop: 1958年に準優勝、1994年に3位。2022年は予選で敗退
+  narrator: 解説
+  card: &id_hist
+    type: timeline
+    title: スウェーデン代表の歩み
+    rows:
+    - - 1934年
+      - W杯に初出場
+    - - 1948年
+      - ロンドン五輪で金メダル
+    - - 1950年
+      - W杯で3位
+    - - 1958年
+      - 自国開催のW杯で準優勝
+    - - 1994年
+      - W杯で3位
+    - - 2018年
+      - W杯で8強
+    focus: 1958年
+  say:
+  - text: スウェーデンは、第2回の1934年から、ワールドカップに出ています。
+    image: assets/images/20261031_team_sweden/pair_cap/01.jpg
+    card: *id_hist
+  - text: 1948年のロンドン五輪では、金メダルを取りました。
+    card:
+      <<: *id_hist
+      highlight_row: 1
+  - text: 1950年のワールドカップは3位。
+    card:
+      <<: *id_hist
+      highlight_row: 2
+  - text: いちばん近づいたのが、1958年。自国開催の大会で、決勝まで進みました。
+    card: none
+    image: assets/images/20261031_team_sweden/pair_cap/01.jpg
+  - text: 決勝はブラジルに2対5。準優勝が、いまも最高の成績です。
+    emph: true
+    card:
+      <<: *id_hist
+      highlight_row: 3
+  - text: 1994年のアメリカ大会は、2度目の3位。
+    card:
+      <<: *id_hist
+      highlight_row: 4
+  - text: 2018年のロシア大会は、8強でした。
+    card:
+      <<: *id_hist
+      highlight_row: 5
+  - text: ところが2022年は、最後の出場枠を争う試合で、ポーランドに0対2の負け。
+    card: none
+    image: assets/images/20261031_team_sweden/pair_cap/01.jpg
+  - text: 本大会には、出られませんでした。
+    card: none
+  - text: ヨーロッパ選手権も、2024年は予選で敗退しています。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Sweden_men's_national_football_team
+  - https://en.wikipedia.org/wiki/Sweden_at_the_FIFA_World_Cup
+- id: players
+  heading: いまのスウェーデンを引っ張るのは、誰なのか
+  tier: 背景
+  telop: 看板選手を、所属・名前・位置・年齢で
+  narrator: 解説
+  card: &id_pl
+    type: table
+    title: スウェーデン代表の看板選手
+    columns:
+    - 所属
+    - 名前
+    - 位置
+    - 年齢
+    rows:
+    - - アストン・ビラ
+      - ヴィクトル・リンデロフ
+      - DF
+      - '32'
+    - - アーセナル
+      - ヴィクトル・ギョケレス
+      - FW
+      - '28'
+    - - リヴァプール
+      - アレクサンデル・イサク
+      - FW
+      - '27'
+    - - ニューカッスル
+      - アンソニー・エランガ
+      - FW
+      - '24'
+    - - ブライトン
+      - ヤシン・アヤリ
+      - MF
+      - '23'
+    - - トッテナム
+      - ルーカス・ベルグヴァル
+      - MF
+      - '20'
+  say:
+  - text: いまのスウェーデンを引っ張る顔ぶれです。
+    image: assets/images/20261031_team_sweden/pair_cap/01.jpg
+    card: *id_pl
+  - text: 年齢は、10月31日の時点のものです。
+    card: *id_pl
+  - text: 主将は、アストン・ビラのリンデロフ。32歳で、代表84試合。
+    card:
+      <<: *id_pl
+      highlight_row: 0
+  - text: 前線の中心は、アーセナルのギョケレス。代表41試合で25得点です。
+    image: assets/images/20261031_team_sweden/pair_fw/01.jpg
+    card:
+      <<: *id_pl
+      highlight_row: 1
+  - text: リヴァプールのイサクは、代表63試合で19得点。
+    emph: true
+    card:
+      <<: *id_pl
+      highlight_row: 2
+  - text: W杯のチュニジア戦では、イサクもギョケレスも、1点ずつ決めています。
+    card: none
+  - text: ニューカッスルのエランガは、W杯で2点。日本戦の同点ゴールもその1つです。
+    image: assets/images/20261031_team_sweden/pair_young/01.jpg
+    card:
+      <<: *id_pl
+      highlight_row: 3
+  - text: ブライトンの23歳、アヤリは、チュニジア戦で2点を決めました。
+    card:
+      <<: *id_pl
+      highlight_row: 4
+  - text: トッテナムのベルグヴァルは、20歳で代表18試合です。
+    card:
+      <<: *id_pl
+      highlight_row: 5
+  sources:
+  - https://en.wikipedia.org/wiki/Sweden_men's_national_football_team
+  - https://en.wikipedia.org/wiki/Victor_Lindel%C3%B6f
+  - https://en.wikipedia.org/wiki/Viktor_Gy%C3%B6keres
+  - https://en.wikipedia.org/wiki/Alexander_Isak
+  - https://en.wikipedia.org/wiki/Anthony_Elanga
+  - https://en.wikipedia.org/wiki/Yasin_Ayari
+  - https://en.wikipedia.org/wiki/Lucas_Bergvall
+- id: now
+  heading: ポッター監督は、スウェーデンをどうW杯へ導き、いまをどう戦うのか
+  tier: 背景
+  telop: ポッター監督のW杯後の4試合は、3勝1分け
+  narrator: 解説
+  card: &id_nw
+    type: table
+    title: W杯のあと スウェーデンの4試合（ネーションズリーグ）
+    columns:
+    - 日付
+    - 相手
+    - スウェーデンの結果
+    rows:
+    - - 9月25日
+      - ルーマニア（ホーム）
+      - 2-1
+    - - 9月28日
+      - ポーランド（ホーム）
+      - 3-1
+    - - 10月2日
+      - ボスニア（敵地）
+      - 1-1
+    - - 10月5日
+      - ルーマニア（敵地）
+      - 1-0
+  say:
+  - text: 予選のスウェーデンは、最初の4試合が1分け3敗でした。
+    image: assets/images/20261031_team_sweden/pair_coach/01.jpg
+    card: none
+  - text: 2025年10月、トマソン監督が解任されます。
+    card: none
+  - text: 後任に就いたのが、グレアム・ポッター。10月20日のことです。
+    card: none
+  - text: ポッターは、スウェーデンのクラブ、エステルスンドの元監督です。
+    card: none
+  - text: 2011年から2018年まで、率いていました。
+    card: none
+  - text: 就任後の最初の2試合は、スイスに1対4の負けと、スロベニアと1対1。
+    card: none
+  - text: 初勝利は2026年3月、出場を争うプレーオフでした。
+    card: none
+    image: assets/images/20261031_team_sweden/pair_fw/01.jpg
+  - text: ウクライナに3対1の勝ち。ギョケレスが、3点を取りました。
+    emph: true
+    card: none
+  - text: 続くポーランド戦も3対2で勝ち、本大会の出場を決めました。
+    card: none
+  - text: ネーションズリーグは、ヨーロッパの代表が競うリーグ戦。W杯のあとは3勝1分け。
+    card: *id_nw
+  - text: ルーマニアとポーランドに、ホームで勝ち。
+    card:
+      <<: *id_nw
+      highlight_row: 1
+  - text: ボスニアとは敵地で、1点ずつ取り合う引き分け。
+    image: assets/images/20261031_team_sweden/pair_coach/01.jpg
+    card:
+      <<: *id_nw
+      highlight_row: 2
+  - text: 敵地のルーマニアには、1対0の勝利でした。
+    card:
+      <<: *id_nw
+      highlight_row: 3
+  - text: 4試合すべてで、ギョケレスがゴールを決めています。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Sweden_men's_national_football_team
+  - https://en.wikipedia.org/wiki/Graham_Potter
+  - https://www.svenskfotboll.se/nyheter/landslag/2025/10/graham-potter-ny-forbundskapten/
+- id: viewpoint
+  viewpoint: true
+  heading: スウェーデン代表の数字は、ポッター監督の14試合でどこが変わったのか
+  tier: 背景
+  telop: 1試合の得点は0.50から1.79へ。失点は1.75と1.86
+  narrator: 解説
+  card: &id_vp
+    type: table
+    title: スウェーデン 1試合あたりの勝点と得点・失点
+    columns: &id_vpc
+    - 期間
+    - 試合
+    - 勝点
+    - 得点
+    - 失点
+    rows: &id_vpr
+    - - 予選の最初の4試合
+      - '4'
+      - '0.25'
+      - '0.50'
+      - '1.75'
+    - - ポッター監督
+      - '14'
+      - '1.57'
+      - '1.79'
+      - '1.86'
+  say:
+  - text: 見立てに入ります。スウェーデン代表の数字を、二人の監督で並べます。
+    image: assets/images/20261031_team_sweden/pair_coach/01.jpg
+    card: none
+  - text: トマソン監督のW杯予選4試合と、ポッター監督の14試合です。
+    card: none
+  - text: 予選の4試合は勝点1。取った点は2、失った点は7でした。
+    card:
+      <<: *id_vp
+      highlight_row: 0
+  - text: ポッター監督の14試合は、6勝4分け4敗。勝点は22。
+    card:
+      <<: *id_vp
+      highlight_row: 1
+  - text: 取った点は25、失った点は26です。
+    card:
+      <<: *id_vp
+      highlight_row: 1
+  - text: 1試合に直すと、得点は0.5点から1.79点へ。3倍以上に増えました。
+    emph: true
+    mark:
+      kind: circle
+      row: 1
+      col: 3
+    card:
+      <<: *id_vp
+      highlight_row: 1
+  - text: 一方で失点は、1.75点から1.86点。ほとんど変わっていません。
+    mark:
+      kind: circle
+      row: 1
+      col: 4
+    card:
+      <<: *id_vp
+      highlight_row: 1
+  - text: 点を取る力は上がったが、守りはそのまま。数字は、そう語っています。
+    card: none
+  - text: ワールドカップの4試合でも、7得点10失点。1試合で2.5点を失っています。
+    card: none
+    image: assets/images/20261031_team_sweden/pair_fw/01.jpg
+  - text: 次は11月14日にホームでボスニア、17日に敵地でポーランドと戦います。
+    card: none
+  - text: 失点を減らせるのか。そこが、勝ち上がる国になれるかの分かれ目です。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Graham_Potter
+  - https://en.wikipedia.org/wiki/Sweden_men's_national_football_team
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_qualification_%E2%80%93_UEFA_Group_B
+  - https://en.wikipedia.org/wiki/Sweden_at_the_FIFA_World_Cup

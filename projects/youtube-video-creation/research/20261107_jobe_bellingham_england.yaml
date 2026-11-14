@@ -1,0 +1,140 @@
+# 取材メモ（2026年11月7日）ジョーブ・ベリンガム、イングランド代表に初招集。トゥヘル監督が語った理由（ニュースのショート。見せ方 Y＝トゥヘル監督の言葉から始める）
+# 取材: 2026-11-07。WebFetch と python requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。
+# 一次情報（FA＝イングランドサッカー協会の公式 englandfootball.com、2026-11-06。本文を全部読んだ）:
+#   ・「England men's squad named for Croatia and Spain」: トゥヘル監督が 25人を発表。初招集の2人は ジョーブ・ベリンガム（ドルトムント）とジョシュ・キング（フルアム）。
+#       どちらも男子U-21から昇格。クロアチア戦はウェンブリーで木曜12日19:45（記事の本文は「12 October」と誤記。同じ記事の試合ページの URL は thursday-12-november-2026）、スペイン戦はマドリードで15日（日曜）19:45。
+#       イングランドはグループCの2位。クロアチア戦を負けなければ準々決勝（来年3月）に進める。首位になるには2連勝＋得失点差でスペインを上回る必要。
+#       名簿（中盤）: アンダーソン（マンC）・ジョーブ・ベリンガム（ドルトムント）・ジュード・ベリンガム（レアル・マドリード）・ガーナー（エヴァートン）・キング（フルアム）・ルイス＝スケリー（アーセナル）・ライス（アーセナル）＝7人。
+#   ・「Tuchel: 'The door should always be open for the pathway'」（記者会見の発言。全文を読んだ）:
+#       "I think the door should always be open for the pathway and for those that have delivered special performances over a long period of time - that's what Jobe has done."
+#       "He's found his rhythm with Dortmund, has had an excellent start to the season and is a regular starter now. We have Myles (Lewis-Skelly) suspended for the match against Croatia, so there's an opportunity for him and he comes in on his own merit."
+#       "We're glad to have him in the camp and to see what he can do for us. In general, it's an incredible achievement for his and Jude's family for both the brothers to be selected for the national team."
+#       → 台本の言葉は、この英語を私が日本語にしたもの。語順はなぞらず、声に出して通る形に直した。（FA 公式＝確定）
+# 報道（ESPN 記事 50397863、content.core.api.espn.com 経由で全文を読んだ。2026-11-06 11:28Z）:
+#       ジョーブ 21歳、昨夏サンダーランドからドルトムントへ。U-21代表で12試合、シニアは初めて。
+#       トゥヘル: "We have a slight issue in central midfield as Alex Scott is not ready, Myles [Lewis-Skelly] who played in all four matches picked up a yellow card and is suspended for the Croatia match, so that leaves us short."
+#       パーマー（チェルシー）は外れた。代表14試合・今季5得点。直近で出たのは3月の日本戦（ホームで敗戦）。記事は「欠席が多い履歴が響いたようだ」と書く（記事の見立て。使わない）。
+# 食い違い: FA 記事の「12 October」は誤記（URL と ESPN の日程は11月）。台本は「12日」とだけ言う。
+# 自分で数えたもの: 中盤7人のうち初招集は2人（ジョーブ・キング）。25人のうち初招集は2人。
+# 前の本との重なり: scripts/20261025_team_england（代表チーム紹介）・scripts/20261105_real_aek_mbappe_6（ジュードの得点）。ジョーブの招集は初出。ジュードのレアルでの話は繰り返さない。
+#   research/covered.yaml・scripts 20261101〜1106 にジョーブの回は無い。
+# 本人の言葉: ジョーブ本人の言葉は取っていない（招集直後の本人コメントは FA の記事に無い）。話者はトゥヘル監督（招集を決めた人）。Y。
+# 反応: 0件（作らない）。
+# 写真: assets/images/20261107_jobe_bellingham_england/（credits.json）。01=パーマー（ESPN、日本戦のユニフォーム）、02=トゥヘル監督（ESPN の主写真系）、05=ジュード・ベリンガム（FA 記事）、06=ジョーブ（Wikimedia Commons CC0、2024年の私的な1枚・719x1123）。サムネの顔は小さく引き伸ばせないのでトゥヘル監督（02）。ジョーブの公式写真は見つけられなかった。
+slot: other_1
+date: "2026年11月7日"
+format: news
+no_main: true
+people: [ジョーブ・ベリンガム, ジュード・ベリンガム, トゥヘル監督, パーマー, イングランド代表]
+
+short_style: Y
+short_hook_quote: 道は、いつでも開いているべきだと思います。
+short_photos:
+  - assets/images/20261107_jobe_bellingham_england/02_v.jpg
+  - assets/images/20261107_jobe_bellingham_england/06_v.jpg
+  - assets/images/20261107_jobe_bellingham_england/05_v.jpg
+short_question: ジョーブ・ベリンガムは、クロアチア戦で代表デビューすると思いますか。
+short_telops: []
+
+theme:
+  id: jobe_bellingham_england
+  league: england
+  league_name: イングランド代表
+  prefix: ""
+  title: ジョーブ・ベリンガム、イングランド代表に初招集。トゥヘル監督が語った理由
+  hook: ""
+  question: ジョーブ・ベリンガムを初めて呼んだトゥヘル監督は、何と語ったのか
+  takeaway: 代表の中盤7人のうち初招集は2人。クロアチア戦はルイス＝スケリーが出場停止で、負けなければ準々決勝に進める。ジョーブの出番は、まずその12日になるかもしれない
+
+thumbnail:
+  layout: face
+  line1: ジョーブ・ベリンガム
+  line2: 代表に初招集
+  tags: [ジョーブ・ベリンガム, イングランド代表]
+  photo: assets/images/20261107_jobe_bellingham_england/02_w.jpg
+  short_photo: assets/images/20261107_jobe_bellingham_england/02_v.jpg
+
+answer: 長く特別な活躍をした選手に、道は開いているべきだ。兄ジュードと並んで25人に入った
+watch: 12日（木）ウェンブリーのクロアチア戦、15日のスペイン戦
+
+sections:
+  - id: what
+    main: true
+    heading: ジョーブ・ベリンガムを呼んだ理由を、トゥヘル監督はどう語ったか
+    tier: 報道
+    telop: トゥヘル監督「道は、いつでも開いているべきだと思います」
+    say:
+      - text: イングランド代表のトゥヘル監督が、ジョーブ・ベリンガムを初めて呼びました。
+      - voice: トゥヘル監督
+        text: 道は、いつでも開いているべきだと思います。
+        emph: true
+      - voice: トゥヘル監督
+        text: 長いあいだ、特別な活躍を見せてきた選手には。
+        cont: true
+      - voice: トゥヘル監督
+        text: ジョーブは、それをやってきました。
+        cont: true
+      - text: 兄のジュードと並んで、代表に入りました。
+        image: assets/images/20261107_jobe_bellingham_england/05_w.jpg
+      - voice: トゥヘル監督
+        text: ドルトムントでリズムをつかみ、
+      - voice: トゥヘル監督
+        text: 素晴らしい出だしで、いまは先発の常連です。
+        cont: true
+      - voice: トゥヘル監督
+        text: 兄弟そろって代表に選ばれたのは、
+        cont: true
+      - voice: トゥヘル監督
+        text: ご家族にとって、驚くべき成果です。
+        cont: true
+      - text: 21歳のジョーブは昨夏、サンダーランドからドルトムントへ。
+        image: assets/images/20261107_jobe_bellingham_england/06_w.jpg
+      - text: U-21代表では12試合に出ていて、シニアは初めてです。
+    official: false
+    sources:
+      - https://www.englandfootball.com/articles/2026/Nov/06/thomas-tuchel-interview-november-squad-announcement-20260611
+      - https://www.englandfootball.com/articles/2026/Nov/06/england-senior-mens-squad-announcement-for-croatia-spain-games-20261106
+      - https://www.espn.com/soccer/story/_/id/50397863/jobe-bellingham-england-squad-cole-palmer-thomas-tuchel
+  - id: why
+    heading: なぜ今、中盤の選手が呼ばれたのか
+    tier: 報道
+    telop: 中盤が足りない。パーマーは外れた
+    say:
+      - text: ジョーブが呼ばれた背景には、中盤の人数があります。アーセナルのルイス＝スケリーが、クロアチア戦に出られないのです。
+        image: assets/images/20261107_jobe_bellingham_england/02_w.jpg
+      - voice: トゥヘル監督
+        text: 中盤に、少し問題があります。
+      - voice: トゥヘル監督
+        text: アレックス・スコットはまだ万全ではなく、
+        cont: true
+      - voice: トゥヘル監督
+        text: 4試合すべてに出たマイルズは、
+        cont: true
+      - voice: トゥヘル監督
+        text: 警告を受けて、クロアチア戦に出られません。
+        cont: true
+      - text: 一方で、チェルシーのパーマーは外れました。
+        image: assets/images/20261107_jobe_bellingham_england/01_w.jpg
+      - text: 代表で最後に出たのは、3月の日本戦です。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50397863/jobe-bellingham-england-squad-cole-palmer-thomas-tuchel
+  - id: view
+    viewpoint: true
+    heading: ジョーブの代表デビューは、どの試合になりそうか
+    tier: 背景
+    telop: 中盤7人のうち、初招集は2人
+    say:
+      - text: 見立てです。代表の中盤は7人。そのうち2人が、今回が初招集です。
+        card: {type: table, title: 代表の中盤 7人, columns: [選手, 所属], rows: [[ジョーブ・ベリンガム, ドルトムント（初招集）], [ジョシュ・キング, フルアム（初招集）], [ジュード・ベリンガム, レアル・マドリード], [エリオット・アンダーソン, マンチェスター・シティ], [ジェームズ・ガーナー, エヴァートン], [ルイス＝スケリー, アーセナル], [デクラン・ライス, アーセナル]], highlight_row: 0}
+      - text: 12日のクロアチア戦は、ルイス＝スケリーが出場停止です。
+        card: {type: table, title: 代表の中盤 7人, columns: [選手, 所属], rows: [[ジョーブ・ベリンガム, ドルトムント（初招集）], [ジョシュ・キング, フルアム（初招集）], [ジュード・ベリンガム, レアル・マドリード], [エリオット・アンダーソン, マンチェスター・シティ], [ジェームズ・ガーナー, エヴァートン], [ルイス＝スケリー, アーセナル], [デクラン・ライス, アーセナル]], highlight_row: 5}
+      - text: この試合を負けなければ、イングランドはネーションズリーグの準々決勝に進めます。
+        card: none
+      - text: ジョーブの代表デビューは、その大一番になるかもしれません。
+        emph: true
+    official: false
+    sources:
+      - https://www.englandfootball.com/articles/2026/Nov/06/england-senior-mens-squad-announcement-for-croatia-spain-games-20261106
+      - https://www.espn.com/soccer/story/_/id/50397863/jobe-bellingham-england-squad-cole-palmer-thomas-tuchel
+short_title: "ジョーブ・ベリンガム、イングランド代表に初招集。トゥヘル監督が語った理由"

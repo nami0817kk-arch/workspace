@@ -1,0 +1,638 @@
+{
+ "club_title": "FC_Schalke_04",
+ "season_title": "2026–27_FC_Schalke_04_season",
+ "squad": [
+  {
+   "no": "1",
+   "pos": "GK",
+   "nat": "GER",
+   "name": "Loris Karius",
+   "page": "Loris Karius",
+   "dob": "1993-06-22",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 35,
+   "club_goals": 0
+  },
+  {
+   "no": "4",
+   "pos": "DF",
+   "nat": "TUR",
+   "name": "Hasan Kuruçay",
+   "page": "Hasan Kuruçay",
+   "dob": "1997-08-31",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 31,
+   "club_goals": 4
+  },
+  {
+   "no": "5",
+   "pos": "DF",
+   "nat": "GER",
+   "name": "Timo Becker",
+   "page": "Timo Becker",
+   "dob": "1997-03-25",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 62,
+   "club_goals": 0
+  },
+  {
+   "no": "6",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Ron Schallenberg",
+   "page": "Ron Schallenberg",
+   "dob": "1998-10-06",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 91,
+   "club_goals": 3
+  },
+  {
+   "no": "7",
+   "pos": "FW",
+   "nat": "KOR",
+   "name": "Hwang Hee-chan",
+   "page": "Hwang Hee-chan",
+   "dob": "1996-01-26",
+   "captain": false,
+   "loan": true,
+   "team": "South Korea",
+   "caps": 85,
+   "club_caps": 5,
+   "club_goals": 0
+  },
+  {
+   "no": "8",
+   "pos": "DF",
+   "nat": "GER",
+   "name": "Robin Gosens",
+   "page": "Robin Gosens",
+   "dob": "1994-07-05",
+   "captain": false,
+   "loan": true,
+   "team": "Germany",
+   "caps": 24,
+   "club_caps": 1,
+   "club_goals": 0
+  },
+  {
+   "no": "9",
+   "pos": "FW",
+   "nat": "MLI",
+   "name": "Moussa Sylla",
+   "page": "Moussa Sylla (footballer, born 1999)",
+   "dob": "1999-11-25",
+   "captain": false,
+   "loan": false,
+   "team": "Mali",
+   "caps": 6,
+   "club_caps": 58,
+   "club_goals": 23
+  },
+  {
+   "no": "10",
+   "pos": "FW",
+   "nat": "BIH",
+   "name": "Edin Džeko",
+   "page": "Edin Džeko",
+   "dob": "1986-03-17",
+   "captain": false,
+   "loan": false,
+   "team": "Bosnia and Herzegovina",
+   "caps": 152,
+   "club_caps": 16,
+   "club_goals": 6
+  },
+  {
+   "no": "11",
+   "pos": "FW",
+   "nat": "FRA",
+   "name": "Bryan Lasme",
+   "page": "Bryan Lasme",
+   "dob": "1998-11-14",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 45,
+   "club_goals": 6
+  },
+  {
+   "no": "13",
+   "pos": "MF",
+   "nat": "JPN",
+   "name": "Satoshi Tanaka",
+   "page": "Satoshi Tanaka",
+   "dob": "2002-08-13",
+   "captain": false,
+   "loan": false,
+   "team": "Japan",
+   "caps": 3,
+   "club_caps": 3,
+   "club_goals": 0
+  },
+  {
+   "no": "14",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Janik Bachmann",
+   "page": "Janik Bachmann",
+   "dob": "1996-05-06",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 49,
+   "club_goals": 3
+  },
+  {
+   "no": "15",
+   "pos": "FW",
+   "nat": "DEN",
+   "name": "Emil Højlund",
+   "page": "Emil Højlund",
+   "dob": "2005-01-04",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 14,
+   "club_goals": 0
+  },
+  {
+   "no": "17",
+   "pos": "DF",
+   "nat": "SUI",
+   "name": "Adrian Gantenbein",
+   "page": "Adrian Gantenbein",
+   "dob": "2001-04-18",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 40,
+   "club_goals": 2
+  },
+  {
+   "no": "19",
+   "pos": "FW",
+   "nat": "TUR",
+   "name": "Kenan Karaman",
+   "page": "Kenan Karaman",
+   "dob": "1994-03-05",
+   "captain": true,
+   "loan": false,
+   "team": "Turkey",
+   "caps": 31,
+   "club_caps": 112,
+   "club_goals": 41
+  },
+  {
+   "no": "20",
+   "pos": "FW",
+   "nat": "AUT",
+   "name": "Junior Adamu",
+   "page": "Junior Adamu",
+   "dob": "2001-06-06",
+   "captain": false,
+   "loan": false,
+   "team": "Austria",
+   "caps": 10,
+   "club_caps": 2,
+   "club_goals": 0
+  },
+  {
+   "no": "21",
+   "pos": "MF",
+   "nat": "AUT",
+   "name": "Dejan Ljubičić",
+   "page": "Dejan Ljubičić",
+   "dob": "1997-10-08",
+   "captain": false,
+   "loan": false,
+   "team": "Austria",
+   "caps": 9,
+   "club_caps": 16,
+   "club_goals": 4
+  },
+  {
+   "no": "22",
+   "pos": "GK",
+   "nat": "GER",
+   "name": "Kevin Müller",
+   "page": "Kevin Müller (footballer)",
+   "dob": "1991-03-15",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 4,
+   "club_goals": 0
+  },
+  {
+   "no": "23",
+   "pos": "MF",
+   "nat": "MAR",
+   "name": "Soufiane El-Faouzi",
+   "page": "Soufiane El-Faouzi",
+   "dob": "2002-07-13",
+   "captain": false,
+   "loan": false,
+   "team": "Morocco",
+   "caps": 2,
+   "club_caps": 38,
+   "club_goals": 2
+  },
+  {
+   "no": "24",
+   "pos": "MF",
+   "nat": "ALG",
+   "name": "Adil Aouchiche",
+   "page": "Adil Aouchiche",
+   "dob": "2002-07-15",
+   "captain": false,
+   "loan": false,
+   "team": "Algeria",
+   "caps": 3,
+   "club_caps": 18,
+   "club_goals": 4
+  },
+  {
+   "no": "25",
+   "pos": "DF",
+   "nat": "BIH",
+   "name": "Nikola Katić",
+   "page": "Nikola Katić",
+   "dob": "1996-10-10",
+   "captain": false,
+   "loan": false,
+   "team": "Bosnia and Herzegovina",
+   "caps": 25,
+   "club_caps": 32,
+   "club_goals": 1
+  },
+  {
+   "no": "27",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Finn Porath",
+   "page": "Finn Porath",
+   "dob": "1997-02-23",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 18,
+   "club_goals": 1
+  },
+  {
+   "no": "29",
+   "pos": "MF",
+   "nat": "CMR",
+   "name": "Junior Dina Ebimbe",
+   "page": "Junior Dina Ebimbe",
+   "dob": "2000-11-21",
+   "captain": false,
+   "loan": false,
+   "team": "Cameroon",
+   "caps": 3,
+   "club_caps": 4,
+   "club_goals": 0
+  },
+  {
+   "no": "33",
+   "pos": "DF",
+   "nat": "GER",
+   "name": "Vitalie Becker",
+   "page": "Vitalie Becker",
+   "dob": "2005-03-03",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 22,
+   "club_goals": 2
+  },
+  {
+   "no": "36",
+   "pos": "GK",
+   "nat": "GER",
+   "name": "Johannes Siebeking",
+   "page": "Johannes Siebeking",
+   "dob": "2006-03-02",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": null,
+   "club_goals": null
+  },
+  {
+   "no": "38",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Luca Vozar",
+   "page": "Luca Vozar",
+   "dob": "2007-05-06",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": null,
+   "club_goals": null
+  },
+  {
+   "no": "39",
+   "pos": "DF",
+   "nat": "AUT",
+   "name": "Maximilian Wöber",
+   "page": "Maximilian Wöber",
+   "dob": "1998-02-04",
+   "captain": false,
+   "loan": false,
+   "team": "Austria",
+   "caps": 34,
+   "club_caps": 6,
+   "club_goals": 1
+  },
+  {
+   "no": "43",
+   "pos": "DF",
+   "nat": "TUR",
+   "name": "Mertcan Ayhan",
+   "page": "Mertcan Ayhan",
+   "dob": "2006-09-08",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 29,
+   "club_goals": 0
+  }
+ ],
+ "results": [
+  [
+   "",
+   "1",
+   "FC Augsburg",
+   "3–0",
+   "Schalke 04"
+  ],
+  [
+   "",
+   "2",
+   "Schalke 04",
+   "0–0",
+   "Bayern Munich"
+  ],
+  [
+   "",
+   "3",
+   "Union Berlin",
+   "1–3",
+   "Schalke 04"
+  ],
+  [
+   "",
+   "4",
+   "Schalke 04",
+   "0–0",
+   "SV Elversberg"
+  ],
+  [
+   "",
+   "5",
+   "SC Freiburg",
+   "2–1",
+   "Schalke 04"
+  ],
+  [
+   "",
+   "6",
+   "Schalke 04",
+   "0–1",
+   "Mainz 05"
+  ],
+  [
+   "",
+   "7",
+   "1. FC Köln",
+   "0–0",
+   "Schalke 04"
+  ],
+  [
+   "",
+   "8",
+   "Schalke 04",
+   "",
+   "RB Leipzig"
+  ],
+  [
+   "",
+   "9",
+   "TSG Hoffenheim",
+   "",
+   "Schalke 04"
+  ],
+  [
+   "",
+   "10",
+   "Schalke 04",
+   "",
+   "VfB Stuttgart"
+  ],
+  [
+   "",
+   "11",
+   "SC Paderborn",
+   "",
+   "Schalke 04"
+  ],
+  [
+   "4–6",
+   "12",
+   "Schalke 04",
+   "",
+   "Borussia Dortmund"
+  ],
+  [
+   "11–13",
+   "13",
+   "Hamburger SV",
+   "",
+   "Schalke 04"
+  ],
+  [
+   "18–20",
+   "14",
+   "Schalke 04",
+   "",
+   "Borussia Mönchengladbach"
+  ],
+  [
+   "8–10",
+   "15",
+   "Eintracht Frankfurt",
+   "",
+   "Schalke 04"
+  ],
+  [
+   "12–14",
+   "16",
+   "Schalke 04",
+   "",
+   "Werder Bremen"
+  ],
+  [
+   "15–17",
+   "17",
+   "Bayer Leverkusen",
+   "",
+   "Schalke 04"
+  ],
+  [
+   "22–24",
+   "18",
+   "Schalke 04",
+   "",
+   "FC Augsburg"
+  ],
+  [
+   "29–31",
+   "19",
+   "Bayern Munich",
+   "",
+   "Schalke 04"
+  ],
+  [
+   "5–7",
+   "20",
+   "Schalke 04",
+   "",
+   "Union Berlin"
+  ],
+  [
+   "12–14",
+   "21",
+   "SV Elversberg",
+   "",
+   "Schalke 04"
+  ],
+  [
+   "19–21",
+   "22",
+   "Schalke 04",
+   "",
+   "SC Freiburg"
+  ],
+  [
+   "26–28",
+   "23",
+   "Mainz 05",
+   "",
+   "Schalke 04"
+  ],
+  [
+   "2–4",
+   "24",
+   "Schalke 04",
+   "",
+   "1. FC Köln"
+  ],
+  [
+   "5–7",
+   "25",
+   "RB Leipzig",
+   "",
+   "Schalke 04"
+  ],
+  [
+   "12–14",
+   "26",
+   "Schalke 04",
+   "",
+   "TSG Hoffenheim"
+  ],
+  [
+   "19–21",
+   "27",
+   "VfB Stuttgart",
+   "",
+   "Schalke 04"
+  ],
+  [
+   "2–4",
+   "28",
+   "Schalke 04",
+   "",
+   "SC Paderborn"
+  ],
+  [
+   "9–11",
+   "29",
+   "Borussia Dortmund",
+   "",
+   "Schalke 04"
+  ],
+  [
+   "16–18",
+   "30",
+   "Schalke 04",
+   "",
+   "Hamburger SV"
+  ],
+  [
+   "23–25",
+   "31",
+   "Borussia Mönchengladbach",
+   "",
+   "Schalke 04"
+  ],
+  [
+   "7–9",
+   "32",
+   "Schalke 04",
+   "",
+   "Eintracht Frankfurt"
+  ],
+  [
+   "14–16",
+   "33",
+   "Werder Bremen",
+   "",
+   "Schalke 04"
+  ],
+  [
+   "",
+   "34",
+   "Schalke 04",
+   "",
+   "Bayer Leverkusen"
+  ],
+  [
+   "",
+   "1R",
+   "Hallescher FC",
+   "2–5",
+   "Schalke 04"
+  ],
+  [
+   "",
+   "2R",
+   "Dynamo Dresden",
+   "2–0",
+   "Schalke 04"
+  ]
+ ]
+}

@@ -1,0 +1,14 @@
+title: 11月6日のショート題材
+lead: 自動運転の日。Claudeが10件を選んで作ります（日本人6・海外4）。
+note: 11/6 朝にゲキサカ・サッカーキング・ESPN・Marca の見出しから選びました。条件：代表・W杯、本人の言葉、大物の名前を優先。
+items:
+- {num: 1, slot: 日本人（EL）, head: 鎌田大地が劇的同点弾。10人のパレスを救う, why: 本人の言葉と現地紙の称賛, src: サッカーキング, url: 'https://www.soccer-king.jp/news/world/el/20261106/2225056.html', fmt: news}
+- {num: 2, slot: 日本人（協会）, head: 田嶋幸三氏がFIFA会長選に出馬表明, why: 本人の言葉あり。日本人初, src: ゲキサカ, url: 'https://web.gekisaka.jp/news/japan/detail/?462574-462574-fl', fmt: quote}
+- {num: 3, slot: 日本人（ECL）, head: 石渡ネルソンが欧州カップ戦初ゴール, why: 代表に近い若手の初得点, src: ゲキサカ, url: 'https://web.gekisaka.jp/news/world/detail/?462606-462606-fl', fmt: news}
+- {num: 4, slot: 日本人（ECL）, head: 南野拓実が復帰後初アシスト、モナコ3連勝, why: 昨日の復帰招集の続報, src: サッカーキング, url: 'https://www.soccer-king.jp/news/world/fra/20261106/2225041.html', fmt: news}
+- {num: 5, slot: 日本人（代表）, head: 塩貝健人が代表選外。森保監督「大岩監督に聞いて」, why: 森保監督の言葉。重なりは取材で確認, src: 2ch系の見出し→一次で確認, url: 'https://footballnet.2chblog.jp/archives/60129428.html', fmt: quote}
+- {num: 6, slot: 日本人（国内組）, head: 谷口彰悟が批判の的に。去就と本人の言葉, why: 本人の言葉あり。取材で前提が崩れたら次点へ, src: football-tribe, url: 'https://football-tribe.com/japan/2026/11/05/361042/', fmt: quote}
+- {num: 7, slot: 海外（代表）, head: C・ロナウドがポルトガル代表引退。声明, why: 大物・本人の言葉, src: ESPN, url: 'https://www.espn.com/soccer/story/_/id/49266866/cristiano-ronaldo-portugal-jorge-jesus-retires-international', fmt: quote}
+- {num: 8, slot: 海外, head: アモリム「言い訳はない」ミラン惨敗後, why: 監督本人の言葉, src: ESPN, url: 'https://www.espn.com/soccer/story/_/id/50393432/ruben-amorim-ac-milan-ferencvaros-uefa-europa-league', fmt: quote}
+- {num: 9, slot: 海外, head: ラッシュフォード「ヤマルが7回バロンドールでも驚かない」, why: 大物ヤマル・本人の言葉, src: Marca, url: 'https://www.marca.com/futbol/barcelona/2026/11/05/rashford-lamine-gana-siete-balones-oro-me-sorprendera.html', fmt: quote}
+- {num: 10, slot: 海外, head: ケインがバイエルンと2029年まで新契約, why: 大物・本人の言葉, src: Sky Sports, url: 'https://www.skysports.com/football/news/12691/13608255/harry-kane-england-captain-signs-new-contract-at-bayern-munich-running-until-2029', fmt: news}

@@ -1,0 +1,140 @@
+# 取材メモ（2026年11月12日）町田浩樹、約1年5カ月ぶりの代表復帰。W杯ブラジル戦「自分がいれば」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-12。requests（ブラウザUA）で本文を全文読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。
+# 題材の元: ゲキサカ 2026-11-11（取材・文 竹内達也）「W杯ブラジル戦「自分がいれば…」歯がゆさ吐露した町田浩樹、完全復活の使命「同数で守り切れるCBが必要」」（全文） https://web.gekisaka.jp/news/japan/detail/?463010-463010-fl
+#   サッカーキング 2026-11-11「長期離脱を経て約1年5カ月ぶり復帰の町田浩樹、W杯を逃した悔しさを胸に「率先して引っ張っていきたい」」（全文） https://www.soccer-king.jp/news/japan/national/20261111/2226750.html
+# 写真の出どころ（追加の記事。本人の写真を探すため）:
+#   https://www.soccer-king.jp/news/japan/national/20261104/2224347.html
+#   https://www.soccer-king.jp/news/japan/national/20261111/2226536.html
+#   https://web.gekisaka.jp/news/japan/detail/?462978-462978-fl
+#   https://www.soccer-king.jp/news/world/world_other/20261016/2217283.html
+# 写真の出どころ（追加の記事。本人の写真を探すため）:
+#   https://web.gekisaka.jp/news/japan/detail/?462511-462511-fl
+#   https://web.gekisaka.jp/news/japan/detail/?462496-462496-fl
+# 出典で確かめたこと:
+#   ・11日、合流初日の練習後に取材対応（両記事）。2025年6月以来の代表（サッカーキング）。左膝前十字靭帯断裂は昨年8月23日のブンデスリーガ開幕節（ゲキサカ）。復帰までの日数（385日）は 20261105_minamino_machida_return と重なるので繰り返さない。
+#   ・W杯の試合（ESPN fifa.world summary event=760487）: ブラジル 2-1 日本。前半は日本1-0。後半56分 カゼミーロ（ヘディング）で同点、90+5分 マルティネッリ（右足）で逆転。町田は不在。
+#   ・町田の言葉（原文。ゲキサカ。サッカーキングも同じ中身。字は変えていない。台本は読点で行に分けた）:
+#       「やれることはやっていたと思うし、でも相手のレベルのほうが上だった。後半は厳しそうだなというのはテレビを見ながら思っていたし、終盤はロングボールも入ってきて跳ね返し切れないところもあったので、歯がゆさというか『自分がいれば何かできたかな』というのを感じていました」
+#       「攻守において違いを作らないといけない。…今回は(谷口)彰悟さんが抜けてディフェンスラインのリーダー的な選手がいなくなったので、自分も29歳なので率先して引っ張っていきたい」（括弧は記者の補足。「…」は途中を省いた所）
+#       「同数で守れるようにならないと恐らくベスト16以上には行けない。W杯で上を目指すためには同数で、広いスペースも守り切れるCBが必要かなと思う」
+#       「後ろが同数でも前を出してあげる、プレッシングをさせてあげるというのを自分が出ればやっていきたい」
+#       「W杯まではW杯に選ばれるためにリハビリしていたし、外れてからはチームでまず試合に出ることと、しっかりそこで結果を出してここに戻ってくることだけを考えてやっていた」
+#   ・ゲキサカの地の文: 町田はチーム最長身の190cm。
+#   ・日程: 11/14 ブラジル戦、11/17 パラグアイ戦。
+# 前の本との重なり: 20261105_minamino_machida_return（森保監督の「呼んだ理由」・復帰までの日数）。今回の初出: 町田本人のW杯ブラジル戦の言葉と「同数で守る」。
+# 【言わないこと】復帰までの385日・298日の数字（5日の回）／ホッフェンハイムの成績／ブラジル戦の起用予想／相手FW名の細部。
+# 本人の言葉: あり（町田浩樹。ゲキサカ・サッカーキング）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月12日"
+format: news
+no_main: true
+people: [町田浩樹, ホッフェンハイム, ブラジル代表, 日本代表]
+
+short_style: Y
+short_hook_quote: 終盤はロングボールも入ってきて、
+short_photos:
+  - assets/images/20261112_machida_brazil_words/01_v.jpg
+  - assets/images/20261112_machida_brazil_words/02_v.jpg
+  - assets/images/20261112_machida_brazil_words/03_v.jpg
+short_question: 町田浩樹は、14日のブラジル戦でピッチに立つと思いますか。
+short_telops: []
+
+theme:
+  id: machida_brazil_words
+  league: japan
+  league_name: 日本代表
+  prefix: ""
+  title: 町田浩樹、約1年5カ月ぶりの代表復帰。W杯のブラジル戦を見て、何を思ったのか
+  hook: ""
+  question: 約1年5カ月ぶりに代表へ戻った町田浩樹は、W杯のブラジル戦を見て何を思ったのか
+  takeaway: 町田が悔しさを語った後半、日本は56分と95分の2失点で逆転された。町田は「同数で守り切れるCBが必要」と話し、14日の再戦に向かう
+
+thumbnail:
+  layout: face
+  line1: 町田浩樹 代表復帰
+  line2: 自分がいれば
+  tags: [町田浩樹, ブラジル代表, 日本代表]
+  photo: assets/images/20261112_machida_brazil_words/01_w.jpg
+  short_photo: assets/images/20261112_machida_brazil_words/01_v.jpg
+
+answer: 自分がいればと悔やみつつ、同数でも守り切れるCBとして、再戦に向かう
+watch: 14日のブラジル戦（シンガポール）
+
+sections:
+  - id: what
+    main: true
+    heading: W杯のブラジル戦を、町田浩樹はどう見ていたか
+    tier: 報道
+    telop: 町田浩樹「自分がいれば何かできたかな」
+    say:
+      - text: 日本代表に約1年5か月ぶりに戻った町田浩樹が、W杯のブラジル戦をテレビで見て感じたことを語りました。
+        image: assets/images/20261112_machida_brazil_words/01_w.jpg
+      - voice: 町田浩樹
+        text: 終盤はロングボールも入ってきて、
+      - voice: 町田浩樹
+        text: 跳ね返し切れないところもあったので、
+        cont: true
+      - voice: 町田浩樹
+        text: 歯がゆさというか、
+        cont: true
+      - voice: 町田浩樹
+        text: 『自分がいれば何かできたかな』というのを感じていました。
+        cont: true
+        emph: true
+      - text: 町田は昨年8月、ブンデスリーガの開幕節で、左ひざの前十字じん帯を断裂しました。W杯の出場は、逃しました。
+        image: assets/images/20261112_machida_brazil_words/02_w.jpg
+      - voice: 町田浩樹
+        text: やれることはやっていたと思うし、
+      - voice: 町田浩樹
+        text: でも相手のレベルのほうが上だった。
+        cont: true
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463010-463010-fl
+      - https://www.soccer-king.jp/news/japan/national/20261111/2226750.html
+      - https://www.espn.com/soccer/match/_/gameId/760487
+  - id: team
+    heading: 再戦へ、町田浩樹が掲げた「同数で守り切る」
+    tier: 報道
+    telop: 町田浩樹「同数で守り切れるCBが必要」
+    say:
+      - voice: 町田浩樹
+        text: 同数で守れるようにならないと、
+        image: assets/images/20261112_machida_brazil_words/03_w.jpg
+      - voice: 町田浩樹
+        text: 恐らくベスト16以上には行けない。
+        cont: true
+      - voice: 町田浩樹
+        text: W杯で上を目指すためには、
+        cont: true
+      - voice: 町田浩樹
+        text: 同数で、広いスペースも守り切れるCBが必要かなと思う。
+        cont: true
+        emph: true
+      - text: 谷口彰悟が今回の代表にいないため、守備のリーダーが不在になっています。町田は、こう話しました。
+      - voice: 町田浩樹
+        text: 自分も29歳なので、
+      - voice: 町田浩樹
+        text: 率先して引っ張っていきたい。
+        cont: true
+        emph: true
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463010-463010-fl
+      - https://www.soccer-king.jp/news/japan/national/20261111/2226750.html
+  - id: view
+    viewpoint: true
+    heading: 町田が「自分がいれば」と語った後半、何が起きたか
+    tier: 背景
+    telop: 日本は後半の2失点で、1-0から1-2に
+    say:
+      - text: 見立てです。町田がテレビで見たW杯のブラジル戦は、日本の1対2の敗戦でした。
+        card: {type: table, title: W杯 ブラジル 2-1 日本の失点, columns: [分, 得点], rows: [[56分, カゼミーロ（ヘディング）], [90+5分, マルティネッリ（右足）]], highlight_row: 0}
+      - text: 日本は前半を1対0で折り返し、後半の56分と95分に失点して、1対2で敗れました。
+        card: none
+      - text: 再戦は14日、シンガポールで。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/760487
+      - https://web.gekisaka.jp/news/japan/detail/?463010-463010-fl

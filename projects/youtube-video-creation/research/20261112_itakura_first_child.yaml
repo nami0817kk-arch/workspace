@@ -1,0 +1,140 @@
+# 取材メモ（2026年11月12日）板倉滉、第1子誕生。代表に合流して語った言葉（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-12。requests（ブラウザUA）で本文を全文読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。
+# 題材の元: サッカーキング 2026-11-11「「可愛くてしょうがない」第一子誕生の板倉滉、父となり代表戦へ決意新た「子どもが大きくなるまでプロで頑張る」」（全文） https://www.soccer-king.jp/news/japan/national/20261111/2226706.html
+#   サッカーキング 2026-11-11「日本代表DF板倉滉に第一子誕生！　妻・川口春奈さんが出産を報告「たくさんの方に支えていただきました」」（全文） https://www.soccer-king.jp/news/japan/national/20261111/2226613.html
+#   ゲキサカ 2026-11-11「第1子誕生に幸せいっぱいの板倉滉「可愛くてしょうがない」初招集の“弟分”にも太鼓判」（全文） https://web.gekisaka.jp/news/japan/detail/?462997-462997-fl
+# 写真の出どころ（追加の記事。本人の写真を探すため）:
+#   https://www.soccer-king.jp/news/japan/national/20261111/2226731.html
+#   https://www.soccer-king.jp/news/japan/national/20261110/2226285.html
+#   https://www.soccer-king.jp/news/japan/national/20261112/2226695.html
+#   https://www.soccer-king.jp/news/japan/national/20261111/2226536.html
+# 出典で確かめたこと:
+#   ・11日、妻で俳優の川口春奈さんが自身のインスタグラムのストーリーズで第一子の出産を報告（サッカーキング）。8月に入籍を発表し、妊娠も公表していた。板倉はシンガポールの練習後に取材対応。性別・出産の時期は明かしていない（サッカーキング・ゲキサカ）。
+#   ・父として初の代表活動（サッカーキング）。
+#   ・板倉の言葉（原文。サッカーキング。ゲキサカも同じ中身。字は変えていない。台本は読点で行に分けた）:
+#       「より一層、責任もありますし。子どもが大きくなるまでプロでできるように頑張りたいなと思います」
+#       「もうすでにパワーをもらっていますし、可愛くてしょうがない。さっきも言ったように、自分がプロでやっているというのを分かってもらえるぐらいまでは頑張らないとな、という気持ちはあります」
+#       「もう可愛すぎますね、やばいです」
+#       「いい意味でサッカーの方は色々難しいこともあるし、難しいシチュエーションではありますけど、やっぱりひとつ自分にパワーをくれる要素ではあるので、引き続き頑張りたいなと思います」
+#       「まずは母子ともに健康で生まれてくるということが自分の中でも大事だったので、今本当に健康でいられているということに、まずは感謝したいなと思います」
+#   ・日程: 11/14 ブラジル戦、11/17 パラグアイ戦（シンガポール）。
+#   ・家族の話題は「誕生の事実と本人の言葉」だけ。妻の経歴・交際の経緯・子どもの情報の推測は書かない。
+# 前の本との重なり: 20261107_itakura_red_hamburg（退場）。ほかに板倉の家族の回は無い。
+# 【言わないこと】妻の経歴・出産の時期や性別の推測／ボルシアMGの最下位などクラブの苦境の細部／福田師王の話／森保監督の話（堂安の回と重なる）。
+# 本人の言葉: あり（板倉滉。サッカーキング・ゲキサカ）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月12日"
+format: news
+no_main: true
+people: [板倉滉, ボルシアMG, 日本代表]
+
+short_style: Y
+short_hook_quote: もうすでにパワーをもらっていますし、
+short_photos:
+  - assets/images/20261112_itakura_first_child/01_v.jpg
+  - assets/images/20261112_itakura_first_child/02_v.jpg
+  - assets/images/20261112_itakura_first_child/04_v.jpg
+short_question: 板倉滉は、14日のブラジル戦でピッチに立つと思いますか。
+short_telops: []
+
+theme:
+  id: itakura_first_child
+  league: japan
+  league_name: 日本代表
+  prefix: ""
+  title: 板倉滉、第1子誕生。シンガポールの代表合流で、何と語ったのか
+  hook: ""
+  question: 第1子が生まれた板倉滉は、父として初めての代表活動で何と語ったのか
+  takeaway: 板倉は第1子の誕生に「可愛くてしょうがない」と話し、「子どもが大きくなるまでプロでできるように頑張りたい」と誓った。父として初の代表は、14日と17日の2試合
+
+thumbnail:
+  layout: face
+  line1: 板倉滉 第1子誕生
+  line2: 可愛くてしょうがない
+  tags: [板倉滉, 日本代表]
+  photo: assets/images/20261112_itakura_first_child/01_w.jpg
+  short_photo: assets/images/20261112_itakura_first_child/01_v.jpg
+
+answer: 力をもらっている。子どもが大きくなるまで、プロで頑張りたい
+watch: 14日のブラジル戦（シンガポール）
+
+sections:
+  - id: what
+    main: true
+    heading: 第1子が生まれた板倉滉は、何と語ったか
+    tier: 報道
+    telop: 板倉滉「可愛くてしょうがない」
+    say:
+      - text: 日本代表の板倉滉に、第1子が誕生しました。
+        image: assets/images/20261112_itakura_first_child/01_w.jpg
+      - voice: 板倉滉
+        text: もうすでにパワーをもらっていますし、
+      - voice: 板倉滉
+        text: 可愛くてしょうがない。
+        cont: true
+        emph: true
+      - voice: 板倉滉
+        text: もう可愛すぎますね、やばいです。
+      - text: 11日、妻で俳優の川口春奈さんがインスタグラムで報告。性別や出産の時期は、明かしていません。
+        image: assets/images/20261112_itakura_first_child/02_w.jpg
+      - voice: 板倉滉
+        text: まずは母子ともに健康で生まれてくるということが、
+      - voice: 板倉滉
+        text: 自分の中でも大事だったので、
+        cont: true
+      - voice: 板倉滉
+        text: 今本当に健康でいられているということに、
+        cont: true
+      - voice: 板倉滉
+        text: まずは感謝したいなと思います。
+        cont: true
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20261111/2226706.html
+      - https://www.soccer-king.jp/news/japan/national/20261111/2226613.html
+      - https://web.gekisaka.jp/news/japan/detail/?462997-462997-fl
+  - id: team
+    heading: 父になった板倉滉の決意
+    tier: 報道
+    telop: 板倉滉「子どもが大きくなるまでプロで」
+    say:
+      - text: 父として初めての代表活動です。板倉は、決意をこう話しました。
+      - voice: 板倉滉
+        text: より一層、責任もありますし。
+        image: assets/images/20261112_itakura_first_child/04_w.jpg
+      - voice: 板倉滉
+        text: 子どもが大きくなるまで、
+        cont: true
+      - voice: 板倉滉
+        text: プロでできるように頑張りたいなと思います。
+        cont: true
+        emph: true
+      - voice: 板倉滉
+        text: 自分がプロでやっているというのを、
+      - voice: 板倉滉
+        text: 分かってもらえるぐらいまでは、
+        cont: true
+      - voice: 板倉滉
+        text: 頑張らないとな、という気持ちはあります。
+        cont: true
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20261111/2226706.html
+      - https://web.gekisaka.jp/news/japan/detail/?462997-462997-fl
+  - id: view
+    viewpoint: true
+    heading: 板倉滉は、W杯のブラジル戦でどこにいたか
+    tier: 背景
+    telop: 板倉滉はW杯のブラジル戦、出場なし
+    say:
+      - text: 見立てです。板倉滉はW杯のブラジル戦で、登録メンバーに入りましたが、出場はありませんでした。
+        card: {type: table, title: 板倉滉とブラジル戦, columns: [試合, 板倉滉], rows: [[W杯 ブラジル戦, 出場なし], [11月14日 ブラジル戦, 再戦], [11月17日 パラグアイ戦, 2試合目]], highlight_row: 0}
+      - text: 日本は1対2で敗れ、板倉の出番は、ありませんでした。
+      - text: 最初の試合が、そのブラジルとの再戦です。
+        card: none
+      - text: 舞台は、シンガポール。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/760487
+      - https://www.soccer-king.jp/news/japan/national/20261111/2226706.html

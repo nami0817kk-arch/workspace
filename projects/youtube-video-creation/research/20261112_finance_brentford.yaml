@@ -1,0 +1,353 @@
+# クラブの財政：ブレントフォード（11/12 木、シリーズ「クラブの財政」、key: finance_brentford、型は news）。
+#
+# 題材の選び方：デロイト Football Money League 2026（2024/25）の順で、財政の回をまだ出していないクラブから。
+#   25位ボーンマス（11/10）・23位ブライトン・24位エヴァートン（女子チーム絡みで外す）・26位ローマは既出・27位ウルヴスは今季2部。
+#   → 未出の最上位は **28位ブレントフォード（2億600万ユーロ。money.it・Lance の転載で確認）**。29位フラメンゴはブラジル。
+#   11/14 の担当（リーズ）とクラブが別。11/10 のボーンマスと軸が重ならないようにした（下）。
+#
+# 重なりの確認（2026-11-11）：scripts/*finance_* にブレントフォードは無い。直近30日のブレントフォードの本は 10/29 ユニフォーム（別のシリーズ）。
+#   research/20261112_picks.txt に同日のクラブは無い。
+# ★今季も1部：ESPN の 2026-27 English Premier League 順位表 API（2026-11-11 取得）で 8位・勝点14・10試合。台本では順位を言わない（小さく見せない）。
+# ★日本との接点：決算・今季の所属に日本人選手は確かめられない。無理に入れない（10/6 の決定）。
+#
+# 軸は「**10位の年に赤字2053万ポンド。収入の76%を給料に使い、その決算の年が終わった夏に主力4人を売った。売ると何が変わるのか**」。
+#   ★他の財政回と軸を重ねない：11/10 ボーンマス＝入場料3.7%・売却益が黒字に変えた、11/8 パレス＝勝つと費用が増える、11/6 ブライトン＝売る利益が減る。
+#     今回は「給料の重さ（収入の76%）」と「売却が決算の年のあとに来る時間差」を主役にする。ボーンマスと同じく「リーグの分配が約81%」だが、そこは1行だけ。
+#   ★選手の移籍金の額は言わない（決算に4人ぶんの額は無い）。誰がどこへ・いつ、だけ言う（決算の注24）。
+#   ★決算のあとの2025-26 の数字は出ていない。台本は決算の1年（2024-25）と、決算書に書かれた決算のあとの出来事だけ。
+#
+# **出どころ（読んだもの）**
+#   ○ Brentford FC Ltd（会社番号 03642327）Consolidated Financial Statements for the year ended 30 June 2025（Companies House、2026-03-16 提出、56頁、監査 BDO、画像PDF。頁を画像にして目で読んだ）
+#       https://find-and-update.company-information.service.gov.uk/company/03642327/filing-history/MzUxMDQ1NjE3MmFkaXF6a2N4/document?format=pdf&download=0
+#       Group Strategic Report（p.8〜）KPI（2024/25／2023/24）：Turnover 173.1／166.5、Player Trading 27.2／25.2、Loss before tax (20.5)／(7.9)、Wages:Turnover 76%／69%、Season tickets 11,205／11,393、League position 10th／16th
+#            「finished in 10th position in the Premier League with one of the lowest wage costs in the division, ensuring a fifth consecutive season of Premier League football」
+#            「summer 2025 saw us sell four significant first team players in Mark Flekken, Bryan Mbeumo, Christian Norgaard and Yoane Wissa」
+#            「Central income increased £12.0m to £139.5m」「Other Turnover decreased £9.9m primarily because the prior year included the loan fee and wage recovery of David Raya on loan to Arsenal for the 23/24 season」
+#            「Profit on player trading shows an increase of £2.0m ... primarily due to the sale of Ivan Toney in August 24. Mbeumo, Wissa and Norgaard were all sold after the year-end and therefore the profit impact of these sales will be shown in next year's financial statements.」
+#            「increase in salary costs of £16.4m and an increase in player amortisation of £12.0m」（本文は12.0。注5の数字から計算すると12.2。台本は注5の数字を使う）
+#            「The profit on sale of fixed assets of £8.8m is derived from a settlement agreement with a third party in respect of mutual property interests.」
+#            「Central Income ... £139.5m (2024: £127.5m) ... representing 81% of the club's turnover」
+#       p.21 損益計算書（£000、2025／2024）：Turnover 173,076／166,536、Administrative expenses (232,060)／(201,155)、Other operating income 10,191／5,400、Profit on sale of tangible fixed assets 8,796／–、
+#            Operating loss before player trading (39,997)／(29,219)、Gain on disposal of players' registrations 27,236／25,198、Operating loss (12,761)／(4,021)、
+#            Interest receivable 2,680／1,168、Interest payable (10,446)／(5,020)、Loss before taxation (20,527)／(7,873)、Tax credit 2,858／356、Loss for the year (17,669)／(7,517)
+#       p.37 注2 Turnover：Central distributions 139,547／127,500、Commercial 19,357／16,029、Matchday 12,376／11,341、Other 1,796／11,666。注3 Other operating income：Settlement agreements 6,716（key staff の退団に伴う補償金）／–、Other income 2,638／5,166
+#       p.38 注4：Wages and salaries 113,000／99,265、Social security 16,415／14,069、Pension 1,363／1,037、計 130,778／114,371。注5：Intangible assets amortisation 47,872／35,631、Depreciation 11,390／8,694
+#       p.39 注8：Unwinding of discount on player creditors 5,974／3,593（分割払いの移籍金の利息）
+#       p.53 注24 Post balance sheet events：Player trading（決算のあとの1年）獲得 Antoni Milambo 2025-07-01・Jordan Henderson（free agent）2025-07-11・Dango Ouattara 2025-08-16・Reiss Nelson（Arsenal からレンタル）2025-09-01、
+#            退団 Christian Norgaard（Arsenal）2025-07-08・Bryan Mbeumo（Manchester United）2025-07-21・Yoane Wissa（Newcastle United）2025-09-01 ほか。
+#            Funding：「In July 2025, the Club entered into a new £100m interest-bearing facility with Macquarie Bank, comprising a £75m Term Loan and £25m Revolving Credit facility. The Barclays overdraft facility was repaid」
+#   ○ ESPN 順位表 API（2026-11-11）：8位 Brentford 14点 10試合（台本には入れない）
+#   × 確かめられなかったもの：4人の移籍金の額（決算に無い。報道の数字は使わない）、フレッケンの移籍先（注24の退団一覧に無い）、2025-26 の決算（まだ出ていない）、デロイトの順位の一次（Deloitte のPDFは読めず二次の転載）。どれも台本に入れない。
+#
+# 自分で計算した数（検算済み）
+#   損益の底：−39.997＋27.236＝−12.761 ✓／−12.761＋2.680−10.446＝−20.527 ✓。前の年：−29.219＋25.198＝−4.021／＋1.168−5.020＝−7.873 ✓
+#   赤字の広がり：20.527÷7.873＝2.607→約2.6倍
+#   人件費：130.778÷173.076＝75.6%→約76%／114.371÷166.536＝68.7%→約69%。増え 130.778−114.371＝16.407→約1640万
+#   収入の増え：173.076−166.536＝6.540→約650万。人件費の増え÷収入の増え＝16.407÷6.540＝2.51→約2.5倍
+#   リーグの分配：139.547÷173.076＝80.6%→約81%。増え 139.547−127.500＝12.047→約1200万
+#   その他の収入の減り：11.666−1.796＝9.870→約990万。広告など商業の増え：19.357−16.029＝3.328→約330万。試合の日の増え 12.376−11.341＝1.035→約100万
+#   選手の償却：47.872−35.631＝12.241→約1220万
+#   運営の費用（管理費）の増え：232.060−201.155＝30.905→約3090万
+#   売却の前の営業損益の広がり：39.997−29.219＝10.778→約1080万。うち 収入＋6.540・その他の収入＋4.791・土地などの売却益＋8.796・費用−30.905 → 合計 −10.778 ✓
+#   waterfall（税引き前の損益の動き）：−7.873＋6.540−30.905＋13.587（その他の収入の増え4.791＋売却益8.796）＋2.038（選手を売った利益 27.236−25.198）−3.914（利息の差 −7.766−(−3.852)）＝−20.527 ✓
+#   分割払い移籍金の利息：5.974−3.593＝2.381→約240万
+#   人件費÷試合の日の収入＝130.778÷12.376＝10.57→約10.6倍／リーグの分配÷試合の日の収入＝139.547÷12.376＝11.28→約11.3倍
+#
+# 写真：assets/images/20261112_finance_brentford/（出典は credits.json）。01 試合前の整列（Commons、Jim Linwood、CC BY 2.0）、02 スタジアムの外観（AndyScott、CC BY-SA 4.0）、
+#   03・04 旧本拠地グリフィン・パーク（Steve Daniels CC BY-SA 2.0／Gareth Williams CC BY 2.0）、10/29 ユニフォーム回の再利用（同じシリーズではない）。
+date: 2026年11月11日
+slot: other_1
+format: news
+series: クラブの財政
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- ブレントフォード
+theme:
+  end_bg: assets/images/20261112_finance_brentford/01_w.jpg
+  id: finance_brentford
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: ブレントフォード
+  title: ブレントフォード、10位で赤字2053万ポンド。主力を売ると何が変わるのか
+  question: ブレントフォードは2024-25に10位で、収入の76%を人件費に使い、2053万ポンドの赤字を出した。その決算の1年が終わった夏に、主力4人を売った。売ると何が変わり、何が変わらないのか
+  lead: 10位の年に、赤字2053万ポンド。ブレントフォード。
+  opening_image: assets/images/20261112_finance_brentford/01_w.jpg
+  takeaway: ブレントフォードの2024-25の決算（クラブの運営会社の年次報告、監査済み）は、収入が1億7310万ポンド、約650万の増え。うちリーグからの分配が約81%。人件費は約1640万増えて収入の約76%（前の年は約69%）、税引き前は2053万ポンドの赤字（前の年は787万の赤字）。選手を売った利益は2724万ポンドで、前の年とほぼ同じ。ムベウモ・ウィサ・ノアゴーらを売ったのは決算の年のあとの夏で、その利益は次の決算に入る。収入の形（リーグの分配が約81%、試合の日の収入は約7%）は変わらないので、次の決算で見るのは人件費の割合と、売って入る利益の大きさ
+  short_title: ブレントフォード、人件費は収入の76%
+thumbnail:
+  layout: number
+  crest_pos: right
+  photo: assets/images/20261112_finance_brentford/01_w.jpg
+  short_photo: assets/images/20261112_finance_brentford/04_w_v.jpg
+  number: 76%
+  line1: ブレントフォード 人件費
+  line2: 10位でも赤字2053万ポンド
+  callouts: [主力4人を売った夏]
+  tags:
+  - ブレントフォード
+  - プレミアリーグ
+  - クラブの財政
+  - ムベウモ
+  - ウィサ
+sections:
+- id: rev
+  heading: ブレントフォードの収入は、何でできているのか
+  tier: 報道
+  telop: 収入は1億7310万ポンド。リーグからの分配が約81%
+  narrator: 解説
+  card: &rev_bars
+    type: bars
+    title: ブレントフォードの収入の内訳（2024-25、百万ポンド）
+    unit: 百万ポンド
+    items:
+    - {label: リーグからの分配, value: 139.5, highlight: true}
+    - {label: スポンサーなど商業, value: 19.4}
+    - {label: 試合の日, value: 12.4}
+    - {label: その他, value: 1.8}
+  say:
+  - text: ブレントフォードの最新の決算は、2026年3月に公表されています。
+    image: assets/images/20261112_finance_brentford/01_w.jpg
+    card: none
+  - text: ロンドン西部の町、ブレントフォード。この年で、プレミアは5季連続です。
+    image: assets/images/20261112_finance_brentford/02_w.jpg
+    card: none
+  - text: 2024年から25年のシーズンは10位。前の年は、16位でした。
+    image: assets/images/20261112_finance_brentford/03_w.jpg
+    card: none
+  - text: 決算は、7月から翌年6月の1年で区切ります。収入は、1億7310万ポンド。
+    emph: true
+    card: *rev_bars
+  - text: 最大の柱は、プレミアリーグからの分配金。1億3950万ポンド。
+    card: *rev_bars
+  - text: 収入の約81%を、リーグが払っています。
+    image: assets/images/20261112_finance_brentford/01_w.jpg
+    card: none
+  - text: 試合の日の収入は1240万ポンド。スポンサーなど商業の収入は、1940万ポンド。
+    card:
+      <<: *rev_bars
+      items:
+      - {label: リーグからの分配, value: 139.5}
+      - {label: スポンサーなど商業, value: 19.4, highlight: true}
+      - {label: 試合の日, value: 12.4, highlight: true}
+      - {label: その他, value: 1.8}
+  - text: 収入は前の年より増えました。増えた分の大半は、リーグの分配金。
+    image: assets/images/20261112_finance_brentford/04_w.jpg
+    card: none
+  - text: 10位に上がって、リーグの分配金が増えました。
+    card: none
+  - text: いっぽう、その他の収入は約990万ポンド減りました。
+    card: none
+  - text: 前の年は、ゴールキーパーのラヤをアーセナルへ貸した料金などが入っていました。
+    image: assets/images/20261112_finance_brentford/03_w.jpg
+    card: none
+  sources:
+  - https://find-and-update.company-information.service.gov.uk/company/03642327/filing-history/MzUxMDQ1NjE3MmFkaXF6a2N4/document?format=pdf&download=0
+- id: cost
+  heading: 収入が増えた年に、給料はどこまで増えたのか
+  tier: 報道
+  telop: 収入は約650万の増え。人件費は約1640万の増え
+  narrator: 解説
+  card: &cost_table
+    type: table
+    title: ブレントフォードの収入と費用（百万ポンド）
+    columns: &ct_cols [項目, 2023-24, 2024-25]
+    rows: &ct_rows
+    - [収入の合計, '166.5', '173.1']
+    - [人件費, '114.4', '130.8']
+    - [選手の償却, '35.6', '47.9']
+    - [収入に占める人件費, 69%, 76%]
+    highlight_row: 0
+  say:
+  - text: ブレントフォードの出ていくお金を見ます。収入は約650万ポンドの増え。
+    card: *cost_table
+  - text: ところが、人件費は1億1437万から1億3078万ポンドへ。
+    emph: true
+    card:
+      <<: *cost_table
+      highlight_row: 1
+  - text: 約1640万の増え。収入の増えの2倍半です。
+    card:
+      <<: *cost_table
+      highlight_row: 1
+  - text: 収入に占める人件費は、約69%から約76%になりました。
+    image: assets/images/20261112_finance_brentford/04_w.jpg
+    card: none
+  - text: クラブは、給料の総額はリーグでも低い部類だと述べています。
+    card: none
+  - text: 働く人も増えました。平均の従業員は、327人から379人へ。
+    image: assets/images/20261112_finance_brentford/02_w.jpg
+    card: none
+  - text: 管理や商業のスタッフは、142人から189人です。
+    card: none
+  - text: 低いと言っても、収入が小さいので、割合は上がります。
+    image: assets/images/20261112_finance_brentford/04_w.jpg
+    card: none
+  - text: 償却とは、移籍金を契約の年数で割って、毎年の費用にする会計です。
+    card: none
+    image: assets/images/20261112_finance_brentford/02_w.jpg
+  - text: その償却が、3563万から4787万ポンドへ。約1220万の増えです。
+    emph: true
+    card:
+      <<: *cost_table
+      highlight_row: 2
+  - text: 運営の費用の全体は、約3090万ポンドの増えでした。
+    card: none
+    image: assets/images/20261112_finance_brentford/01_w.jpg
+  sources:
+  - https://find-and-update.company-information.service.gov.uk/company/03642327/filing-history/MzUxMDQ1NjE3MmFkaXF6a2N4/document?format=pdf&download=0
+- id: sale
+  main: true
+  heading: 主力4人を売ったのは、決算の年のあとだった
+  tier: 報道
+  telop: 売った夏の利益は、この決算には入っていない
+  narrator: 解説
+  card: &sale_table
+    type: table
+    title: ブレントフォードの損益（百万ポンド）
+    columns: &st_cols [項目, 2023-24, 2024-25]
+    rows: &st_rows
+    - [選手を売る前の営業損益, −29.2, −40.0]
+    - [選手を売った利益, '+25.2', '+27.2']
+    - [利息など, −3.9, −7.8]
+    - [税引き前の損益, −7.9, −20.5]
+    highlight_row: 3
+  say:
+  - text: ブレントフォードは、10位の年に赤字でした。前の年も、赤字でした。
+    short_only: true
+    image: assets/images/20261112_finance_brentford/01_w.jpg
+    card: none
+  - text: 選手を売った利益は、2724万ポンド。前の年とほぼ同じです。
+    card: *sale_table
+    emph: true
+  - text: 主な理由は、2024年8月のイヴァン・トニーの売却。
+    image: assets/images/20261112_finance_brentford/02_w.jpg
+    card: none
+  - text: それでも、売る前の営業損益は、2922万から3999万ポンドの赤字になりました。
+    card:
+      <<: *sale_table
+      highlight_row: 0
+  - text: 利息なども増えています。分割で払う移籍金の利息が、359万から597万ポンドに。
+    image: assets/images/20261112_finance_brentford/04_w.jpg
+    card: none
+  - text: 差し引きで、赤字は787万から2053万ポンドへ。約2.6倍です。
+    emph: true
+    card:
+      <<: *sale_table
+      highlight_row: 3
+  - text: 税の戻りを入れた最終の赤字は、1767万ポンド。
+    card: none
+    image: assets/images/20261112_finance_brentford/04_w.jpg
+  - text: クラブの純資産は、7770万から6000万ポンドに。
+    card: none
+  - text: 減った分は、この年の赤字です。
+    card: none
+  - text: そして、この決算の1年が終わった、2025年の夏です。
+    image: assets/images/20261112_finance_brentford/03_w.jpg
+    card: none
+  - text: 決算には、この夏に主力を売ったとあります。
+    emph: true
+    image: assets/images/20261112_finance_brentford/03_w.jpg
+    card: none
+  - text: 夏に売った主力は、ムベウモ、ウィサ、ノアゴー、フレッケン。
+    card: none
+  - text: ノアゴーは、7月8日にアーセナルへ。
+    image: assets/images/20261112_finance_brentford/04_w.jpg
+    card: none
+  - text: ブライアン・ムベウモは、7月21日にマンチェスター・ユナイテッドへ。
+    card: none
+  - text: ヨアネ・ウィサは、9月1日にニューカッスルへ移りました。
+    card: none
+  - text: この3人を売った利益は、この決算に入っていません。次の年の決算に入ります。
+    emph: true
+    image: assets/images/20261112_finance_brentford/02_w.jpg
+    card: none
+  - text: 同じ夏に、ミランボ、ヘンダーソン、ウアタラなどを加えました。
+    card: none
+  - text: 7月には、新しく1億ポンドの借り入れの枠を結び、銀行の当座貸越を返しています。
+    image: assets/images/20261112_finance_brentford/01_w.jpg
+    card: none
+  sources:
+  - https://find-and-update.company-information.service.gov.uk/company/03642327/filing-history/MzUxMDQ1NjE3MmFkaXF6a2N4/document?format=pdf&download=0
+- id: view
+  viewpoint: true
+  heading: 見立て・ブレントフォードの収入は、売っても変わらないのか
+  tier: 背景
+  telop: 人件費は試合の日の収入の約10.6倍。リーグの分配は約11.3倍
+  narrator: 解説
+  card: &view_wf
+    type: waterfall
+    title: 税引き前の損益の動き（百万ポンド）
+    unit: 百万ポンド
+    start: &vw_start [2023-24の損益, -7.9]
+    steps: &vw_steps
+    - [収入, 6.5]
+    - [運営の費用, -30.9]
+    - [売却益などその他, 13.6]
+    - [選手を売った利益, 2.0]
+    - [利息, -3.9]
+    total: &vw_total [2024-25の損益, -20.5]
+  say:
+  - text: 見立てに入ります。ブレントフォードの赤字が広がった理由を、1つずつ並べます。
+    image: assets/images/20261112_finance_brentford/02_w.jpg
+    card: none
+  - text: 損益の動きを、1段ずつ見ます。
+    emph: true
+    card: *view_wf
+  - text: 収入が増えても、運営の費用の増えのほうが、はるかに大きい。
+    card: *view_wf
+  - text: 費用の増えを抑えたのは、土地などの売却益と、スタッフの退団に伴う補償金です。
+    card:
+      type: waterfall
+      title: 税引き前の損益の動き（百万ポンド）
+      unit: 百万ポンド
+      start: *vw_start
+      steps: *vw_steps
+      total: *vw_total
+      highlight: 売却益などその他
+  - text: 合わせて約1360万ポンド。売却の利益の増えは、約200万でした。
+    image: assets/images/20261112_finance_brentford/04_w.jpg
+    card: none
+  - text: 収入の形は、変わりません。自分で割ってみます。
+    emph: true
+    image: assets/images/20261112_finance_brentford/01_w.jpg
+    card: &view_table
+      type: table
+      title: 自分で割ってみた（ブレントフォードの決算）
+      columns: [比べ, 答え]
+      rows:
+      - [人件費 ÷ 試合の日の収入, 約10.6倍]
+      - [リーグの分配 ÷ 試合の日の収入, 約11.3倍]
+      - [人件費 ÷ 収入, 約76%]
+      highlight_row: 0
+    mark:
+      kind: circle
+      row: 0
+      col: 1
+  - text: リーグの分配は、試合の日の収入の約11.3倍。
+    card:
+      <<: *view_table
+      highlight_row: 1
+  - text: 試合の日のお金だけでは、人件費に届きません。
+    card:
+      <<: *view_table
+      highlight_row: 0
+  - text: 題への答えです。変わるのは、売った利益が次の決算に入ること。
+    image: assets/images/20261112_finance_brentford/03_w.jpg
+    card: none
+  - text: 変わらないのは、リーグ頼みの収入の形です。
+    image: assets/images/20261112_finance_brentford/03_w.jpg
+    card: none
+  - text: 次の決算で見るのは、2つです。
+    emph: true
+    image: assets/images/20261112_finance_brentford/02_w.jpg
+    card: none
+  - text: 人件費の割合が下がるか。売って入る利益が、どれだけ大きいか。
+    card: none
+  - text: 売る強みと、給料の重さ。次の決算で、人件費の割合は下がるのか。
+    emph: true
+    image: assets/images/20261112_finance_brentford/04_w.jpg
+    card: none
+  sources:
+  - https://find-and-update.company-information.service.gov.uk/company/03642327/filing-history/MzUxMDQ1NjE3MmFkaXF6a2N4/document?format=pdf&download=0

@@ -1,0 +1,899 @@
+# 代表チーム紹介 ノルウェー代表（11/13 作成。見本は 11/22 のスイス代表）。7節：フック→基礎DATA→日本との関係（あるとき）→歴史と転機（年表）→看板選手（表）→いまのチーム→見立て。
+date: 2026年11月24日（情報は11月13日時点）
+slot: other_1
+format: news
+series: 代表チーム紹介
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+short_photos:
+- assets/images/20261124_team_norway/b01_v.jpg
+- assets/images/20261124_team_norway/b04_v.jpg
+people:
+- ノルウェー代表
+- ハーランド
+- ウーデゴール
+- 日本代表
+- ワールドカップ
+theme:
+  id: team_norway
+  league: japan
+  league_name: ノルウェー代表
+  kind: preview
+  topic: ノルウェー代表
+  title: ノルウェー代表は、28年ぶりのW杯で初のベスト8。なぜ、そこまで勝ち上がれたのか
+  question: ノルウェーは1998年を最後にW杯から遠ざかっていたのに、なぜ2026年は初のベスト8に進めたのか
+  lead: 28年ぶりのW杯で、ブラジルを破って初のベスト8。
+  hook: ''
+  opening_image: assets/stats/tb_norway_data_t.png
+  end_bg: assets/images/20261124_team_norway/b02_w.jpg
+  takeaway: ノルウェーは2026年のW杯でベスト8。1998年以来28年ぶりの出場で、初めて。13得点のうち7点がハーランドで、ブラジルには1998年に続いて2対1で勝った。1998年と比べて、勝ちは1から4、得点は5から13に増えた。11月はウェールズとデンマークと対戦する。
+thumbnail:
+  board: assets/stats/tb_norway_data.png
+  short_photo: assets/images/20261124_team_norway/b01_v.jpg
+  line1: ノルウェー代表
+  line2: 28年ぶりのW杯で初のベスト8
+  crest_main:
+  - ノルウェー
+  tags:
+  - ノルウェー代表
+  - ハーランド
+  - ウーデゴール
+  - 日本代表
+  - ワールドカップ
+  - 代表チーム紹介
+sections:
+- id: hook
+  heading: ノルウェーは、28年ぶりのW杯で、何が起きたのか
+  tier: 背景
+  telop: 28年ぶりのW杯で、初のベスト8
+  narrator: 解説
+  main: true
+  say:
+  - text: ノルウェー代表。フィファランクは19位の国です。
+    image: assets/stats/tb_norway_data_t.png
+    short_only: true
+    no_telop: true
+  - text: 2026年のワールドカップで、ノルウェーは、初めてのベスト8に進みました。
+    image: assets/stats/tb_norway_data_t.png
+    no_telop: true
+  - text: 出場は1998年以来、28年ぶりでした。
+    image: assets/stats/tb_norway_data_r1.png
+    no_telop: true
+    emph: true
+  - text: 6試合で13得点。そのうち7点を決めたのが、ハーランドです。
+    image: assets/images/20261124_team_norway/b01_w.jpg
+    no_telop: true
+  - text: ベスト16の相手は、ブラジル。ハーランドが2点を決めて、2対1の勝ちでした。
+    image: assets/images/20261124_team_norway/b04_w.jpg
+    no_telop: true
+  - text: 今回のノルウェーは、これまでと何が違ったのでしょうか。
+    image: assets/stats/tb_norway_data_t.png
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Norway_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/Norway_national_football_team
+- id: data
+  heading: ノルウェー代表は、どんな数字を持つ国なのか
+  tier: 背景
+  telop: ノルウェー代表の基礎DATA
+  narrator: 解説
+  say:
+  - text: ノルウェーのフィファランクは、10月7日の発表で**19位**。日本は17位です。
+    image: assets/stats/tb_norway_data0.png
+    no_telop: true
+  - text: ワールドカップの本大会は、これで4回目。最高成績は、ベスト8です。
+    image: assets/stats/tb_norway_data1.png
+    no_telop: true
+  - text: 直近は2026年。イングランドに、延長で1対2の負けでした。
+    image: assets/stats/tb_norway_data2.png
+    no_telop: true
+  - text: ヨーロッパ選手権は、2000年に1回だけ出場。1次リーグで敗退です。
+    image: assets/stats/tb_norway_data3.png
+    no_telop: true
+  - text: 監督は、ストーレ・ソルバッケン。就任は、2020年12月です。
+    image: assets/stats/tb_norway_data5.png
+    no_telop: true
+  - text: 主将はマルティン・ウーデゴール。ハーランドの65得点は、代表の歴代最多です。
+    image: assets/stats/tb_norway_data6.png
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Norway_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/Norway_national_football_team
+  - https://en.wikipedia.org/wiki/Module:SportsRankings/data/FIFA_World_Rankings
+- id: japan
+  heading: 日本は、ノルウェーとどう戦ってきたのか
+  tier: 背景
+  telop: 日本とは1試合、日本から見て0勝0分け1敗
+  narrator: 解説
+  card:
+    type: table
+    title: 日本とノルウェーの全1試合
+    columns:
+    - 年
+    - 大会
+    - 日本の結果
+    rows:
+    - - 2002年5月
+      - 親善試合（オスロ）
+      - 0-3の負け
+  say:
+  - text: 日本とノルウェーの対戦は、1試合だけ。日本から見て、0勝0分け1敗です。
+    image: assets/stats/tb_norway_data8.png
+    card:
+      type: table
+      title: 日本とノルウェーの全1試合
+      columns:
+      - 年
+      - 大会
+      - 日本の結果
+      rows:
+      - - 2002年5月
+        - 親善試合（オスロ）
+        - 0-3の負け
+  - text: 2002年5月14日、オスロでの親善試合で、日本は0対3で負けました。
+    image: assets/images/20261124_team_norway/b02_w.jpg
+    card:
+      type: table
+      title: 日本とノルウェーの全1試合
+      columns:
+      - 年
+      - 大会
+      - 日本の結果
+      rows:
+      - - 2002年5月
+        - 親善試合（オスロ）
+        - 0-3の負け
+      highlight_row: 0
+  - text: 日韓ワールドカップの開幕を、2週間後に控えた試合でした。
+    image: assets/images/20261124_team_norway/b03_w.jpg
+    card: none
+  - text: W杯の舞台では、まだ当たっていません。
+    image: assets/images/20261124_team_norway/b02_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(2000–2009)
+  - https://www.national-football-teams.com/matches/report/19778/Norway_Japan.html
+- id: history
+  heading: ノルウェーは、どんな道でベスト8に届いたのか
+  tier: 背景
+  telop: 28年ぶりの本大会で、初のベスト8
+  narrator: 解説
+  card:
+    type: timeline
+    title: ノルウェー代表の歩み
+    rows:
+    - - 1938年
+      - W杯初出場。ベスト16
+    - - 1993年
+      - FIFAランクが歴代最高の2位
+    - - 1994年
+      - W杯。1次リーグで敗退
+    - - 1998年
+      - ブラジルに2-1。ベスト16
+    - - 2025年
+      - 予選でイタリアに4-1。28年ぶりの本大会へ
+    - - 2026年
+      - ブラジルに2-1。初のベスト8
+    focus: 2026年
+  say:
+  - text: ノルウェーが初めてW杯に出たのは、1938年。
+    image: assets/images/20261124_team_norway/b02_w.jpg
+    card:
+      type: timeline
+      title: ノルウェー代表の歩み
+      rows:
+      - - 1938年
+        - W杯初出場。ベスト16
+      - - 1993年
+        - FIFAランクが歴代最高の2位
+      - - 1994年
+        - W杯。1次リーグで敗退
+      - - 1998年
+        - ブラジルに2-1。ベスト16
+      - - 2025年
+        - 予選でイタリアに4-1。28年ぶりの本大会へ
+      - - 2026年
+        - ブラジルに2-1。初のベスト8
+      focus: 2026年
+  - text: イタリアに延長で1対2。ベスト16で、敗退しました。
+    card:
+      type: timeline
+      title: ノルウェー代表の歩み
+      rows:
+      - - 1938年
+        - W杯初出場。ベスト16
+      - - 1993年
+        - FIFAランクが歴代最高の2位
+      - - 1994年
+        - W杯。1次リーグで敗退
+      - - 1998年
+        - ブラジルに2-1。ベスト16
+      - - 2025年
+        - 予選でイタリアに4-1。28年ぶりの本大会へ
+      - - 2026年
+        - ブラジルに2-1。初のベスト8
+      focus: 2026年
+      highlight_row: 0
+  - text: 1993年には、フィファランクで歴代最高の2位になりました。
+    image: assets/images/20261124_team_norway/b03_w.jpg
+    card:
+      type: timeline
+      title: ノルウェー代表の歩み
+      rows:
+      - - 1938年
+        - W杯初出場。ベスト16
+      - - 1993年
+        - FIFAランクが歴代最高の2位
+      - - 1994年
+        - W杯。1次リーグで敗退
+      - - 1998年
+        - ブラジルに2-1。ベスト16
+      - - 2025年
+        - 予選でイタリアに4-1。28年ぶりの本大会へ
+      - - 2026年
+        - ブラジルに2-1。初のベスト8
+      focus: 2026年
+      highlight_row: 1
+  - text: その翌年、1994年のアメリカ大会は、1勝1分け1敗。グループ止まりでした。
+    card:
+      type: timeline
+      title: ノルウェー代表の歩み
+      rows:
+      - - 1938年
+        - W杯初出場。ベスト16
+      - - 1993年
+        - FIFAランクが歴代最高の2位
+      - - 1994年
+        - W杯。1次リーグで敗退
+      - - 1998年
+        - ブラジルに2-1。ベスト16
+      - - 2025年
+        - 予選でイタリアに4-1。28年ぶりの本大会へ
+      - - 2026年
+        - ブラジルに2-1。初のベスト8
+      focus: 2026年
+      highlight_row: 2
+  - text: 1998年は、グループで、ブラジルを破りました。
+    image: assets/images/20261124_team_norway/b04_w.jpg
+    card:
+      type: timeline
+      title: ノルウェー代表の歩み
+      rows:
+      - - 1938年
+        - W杯初出場。ベスト16
+      - - 1993年
+        - FIFAランクが歴代最高の2位
+      - - 1994年
+        - W杯。1次リーグで敗退
+      - - 1998年
+        - ブラジルに2-1。ベスト16
+      - - 2025年
+        - 予選でイタリアに4-1。28年ぶりの本大会へ
+      - - 2026年
+        - ブラジルに2-1。初のベスト8
+      focus: 2026年
+      highlight_row: 3
+  - text: ベスト16では、イタリアに0対1で敗退。
+    card:
+      type: timeline
+      title: ノルウェー代表の歩み
+      rows:
+      - - 1938年
+        - W杯初出場。ベスト16
+      - - 1993年
+        - FIFAランクが歴代最高の2位
+      - - 1994年
+        - W杯。1次リーグで敗退
+      - - 1998年
+        - ブラジルに2-1。ベスト16
+      - - 2025年
+        - 予選でイタリアに4-1。28年ぶりの本大会へ
+      - - 2026年
+        - ブラジルに2-1。初のベスト8
+      focus: 2026年
+      highlight_row: 3
+  - text: そのあと、28年間、W杯に出られませんでした。
+    card:
+      type: timeline
+      title: ノルウェー代表の歩み
+      rows:
+      - - 1938年
+        - W杯初出場。ベスト16
+      - - 1993年
+        - FIFAランクが歴代最高の2位
+      - - 1994年
+        - W杯。1次リーグで敗退
+      - - 1998年
+        - ブラジルに2-1。ベスト16
+      - - 2025年
+        - 予選でイタリアに4-1。28年ぶりの本大会へ
+      - - 2026年
+        - ブラジルに2-1。初のベスト8
+      focus: 2026年
+      highlight_row: 3
+  - text: 2025年11月、予選でイタリアに4対1の勝ち。28年ぶりの本大会を決めました。
+    image: assets/images/20261124_team_norway/b05_w.jpg
+    card:
+      type: timeline
+      title: ノルウェー代表の歩み
+      rows:
+      - - 1938年
+        - W杯初出場。ベスト16
+      - - 1993年
+        - FIFAランクが歴代最高の2位
+      - - 1994年
+        - W杯。1次リーグで敗退
+      - - 1998年
+        - ブラジルに2-1。ベスト16
+      - - 2025年
+        - 予選でイタリアに4-1。28年ぶりの本大会へ
+      - - 2026年
+        - ブラジルに2-1。初のベスト8
+      focus: 2026年
+      highlight_row: 4
+  - text: 2026年は、16強を突破して、準々決勝へ進みました。
+    card:
+      type: timeline
+      title: ノルウェー代表の歩み
+      rows:
+      - - 1938年
+        - W杯初出場。ベスト16
+      - - 1993年
+        - FIFAランクが歴代最高の2位
+      - - 1994年
+        - W杯。1次リーグで敗退
+      - - 1998年
+        - ブラジルに2-1。ベスト16
+      - - 2025年
+        - 予選でイタリアに4-1。28年ぶりの本大会へ
+      - - 2026年
+        - ブラジルに2-1。初のベスト8
+      focus: 2026年
+      highlight_row: 5
+  sources:
+  - https://en.wikipedia.org/wiki/Norway_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/Norway_national_football_team
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_qualification_(UEFA)
+- id: players
+  heading: いまの看板選手は、誰なのか
+  tier: 背景
+  telop: 看板選手を、所属・名前・位置・年齢で
+  narrator: 解説
+  card:
+    type: table
+    title: ノルウェー代表の看板選手
+    columns:
+    - 所属
+    - 名前
+    - 位置
+    - 年齢
+    rows:
+    - - マンチェスター・C
+      - ハーランド
+      - FW
+      - '26'
+    - - アーセナル
+      - ウーデゴール
+      - MF
+      - '27'
+    - - ライプツィヒ
+      - ヌサ
+      - FW
+      - '21'
+    - - ベンフィカ
+      - シェルデルップ
+      - FW
+      - '22'
+    - - オリンピアコス
+      - ペデルセン
+      - DF
+      - '26'
+  say:
+  - text: 2026年大会で戦った、ノルウェーの主力です。
+    image: assets/images/20261124_team_norway/b05_w.jpg
+    card:
+      type: table
+      title: ノルウェー代表の看板選手
+      columns:
+      - 所属
+      - 名前
+      - 位置
+      - 年齢
+      rows:
+      - - マンチェスター・C
+        - ハーランド
+        - FW
+        - '26'
+      - - アーセナル
+        - ウーデゴール
+        - MF
+        - '27'
+      - - ライプツィヒ
+        - ヌサ
+        - FW
+        - '21'
+      - - ベンフィカ
+        - シェルデルップ
+        - FW
+        - '22'
+      - - オリンピアコス
+        - ペデルセン
+        - DF
+        - '26'
+  - text: ハーランドは、マンチェスター・シティのフォワード。W杯で、7得点でした。
+    card:
+      type: table
+      title: ノルウェー代表の看板選手
+      columns:
+      - 所属
+      - 名前
+      - 位置
+      - 年齢
+      rows:
+      - - マンチェスター・C
+        - ハーランド
+        - FW
+        - '26'
+      - - アーセナル
+        - ウーデゴール
+        - MF
+        - '27'
+      - - ライプツィヒ
+        - ヌサ
+        - FW
+        - '21'
+      - - ベンフィカ
+        - シェルデルップ
+        - FW
+        - '22'
+      - - オリンピアコス
+        - ペデルセン
+        - DF
+        - '26'
+      highlight_row: 0
+  - text: 代表では、59試合に出場しています。
+    image: assets/images/20261124_team_norway/b01_w.jpg
+    card: none
+  - text: ウーデゴールは、主将。アーセナルのミッドフィールダーです。
+    card:
+      type: table
+      title: ノルウェー代表の看板選手
+      columns:
+      - 所属
+      - 名前
+      - 位置
+      - 年齢
+      rows:
+      - - マンチェスター・C
+        - ハーランド
+        - FW
+        - '26'
+      - - アーセナル
+        - ウーデゴール
+        - MF
+        - '27'
+      - - ライプツィヒ
+        - ヌサ
+        - FW
+        - '21'
+      - - ベンフィカ
+        - シェルデルップ
+        - FW
+        - '22'
+      - - オリンピアコス
+        - ペデルセン
+        - DF
+        - '26'
+      highlight_row: 1
+  - text: ヌサは、ライプツィヒの21歳。コートジボワール戦で、1点を取りました。
+    image: assets/images/20261124_team_norway/b03_w.jpg
+    card:
+      type: table
+      title: ノルウェー代表の看板選手
+      columns:
+      - 所属
+      - 名前
+      - 位置
+      - 年齢
+      rows:
+      - - マンチェスター・C
+        - ハーランド
+        - FW
+        - '26'
+      - - アーセナル
+        - ウーデゴール
+        - MF
+        - '27'
+      - - ライプツィヒ
+        - ヌサ
+        - FW
+        - '21'
+      - - ベンフィカ
+        - シェルデルップ
+        - FW
+        - '22'
+      - - オリンピアコス
+        - ペデルセン
+        - DF
+        - '26'
+      highlight_row: 2
+  - text: シェルデルップは、ベンフィカの22歳。準々決勝で、1点を決めました。
+    card:
+      type: table
+      title: ノルウェー代表の看板選手
+      columns:
+      - 所属
+      - 名前
+      - 位置
+      - 年齢
+      rows:
+      - - マンチェスター・C
+        - ハーランド
+        - FW
+        - '26'
+      - - アーセナル
+        - ウーデゴール
+        - MF
+        - '27'
+      - - ライプツィヒ
+        - ヌサ
+        - FW
+        - '21'
+      - - ベンフィカ
+        - シェルデルップ
+        - FW
+        - '22'
+      - - オリンピアコス
+        - ペデルセン
+        - DF
+        - '26'
+      highlight_row: 3
+  - text: ペデルセンは、オリンピアコスのディフェンダー。セネガル戦で、ゴールです。
+    card:
+      type: table
+      title: ノルウェー代表の看板選手
+      columns:
+      - 所属
+      - 名前
+      - 位置
+      - 年齢
+      rows:
+      - - マンチェスター・C
+        - ハーランド
+        - FW
+        - '26'
+      - - アーセナル
+        - ウーデゴール
+        - MF
+        - '27'
+      - - ライプツィヒ
+        - ヌサ
+        - FW
+        - '21'
+      - - ベンフィカ
+        - シェルデルップ
+        - FW
+        - '22'
+      - - オリンピアコス
+        - ペデルセン
+        - DF
+        - '26'
+      highlight_row: 4
+  - text: 日本のクラブに所属する選手は、メンバーにいません。
+    image: assets/images/20261124_team_norway/b03_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Norway_national_football_team
+  - https://en.wikipedia.org/wiki/Norway_at_the_FIFA_World_Cup
+- id: now
+  heading: W杯のあとのノルウェーは、いまどうなっているのか
+  tier: 背景
+  telop: W杯はグループ2位からベスト8まで
+  narrator: 解説
+  card:
+    type: table
+    title: 2026年W杯 ノルウェーの6試合
+    columns:
+    - 段階
+    - 相手
+    - ノルウェーの結果
+    rows:
+    - - グループ
+      - イラク
+      - 4-1
+    - - グループ
+      - セネガル
+      - 3-2
+    - - グループ
+      - フランス
+      - 1-4
+    - - 32強
+      - コートジボワール
+      - 2-1
+    - - 16強
+      - ブラジル
+      - 2-1
+    - - 8強
+      - イングランド
+      - 1-2（延長）
+  say:
+  - text: 2026年のW杯で、ノルウェー代表は、グループIを2位で通過しました。
+    image: assets/images/20261124_team_norway/b04_w.jpg
+    card:
+      type: table
+      title: 2026年W杯 ノルウェーの6試合
+      columns:
+      - 段階
+      - 相手
+      - ノルウェーの結果
+      rows:
+      - - グループ
+        - イラク
+        - 4-1
+      - - グループ
+        - セネガル
+        - 3-2
+      - - グループ
+        - フランス
+        - 1-4
+      - - 32強
+        - コートジボワール
+        - 2-1
+      - - 16強
+        - ブラジル
+        - 2-1
+      - - 8強
+        - イングランド
+        - 1-2（延長）
+  - text: イラクに4対1、セネガルに3対2。フランスには、1対4で負けました。
+    card:
+      type: table
+      title: 2026年W杯 ノルウェーの6試合
+      columns:
+      - 段階
+      - 相手
+      - ノルウェーの結果
+      rows:
+      - - グループ
+        - イラク
+        - 4-1
+      - - グループ
+        - セネガル
+        - 3-2
+      - - グループ
+        - フランス
+        - 1-4
+      - - 32強
+        - コートジボワール
+        - 2-1
+      - - 16強
+        - ブラジル
+        - 2-1
+      - - 8強
+        - イングランド
+        - 1-2（延長）
+      highlight_row: 2
+  - text: 32強は、コートジボワールに2対1の勝ち。
+    card:
+      type: table
+      title: 2026年W杯 ノルウェーの6試合
+      columns:
+      - 段階
+      - 相手
+      - ノルウェーの結果
+      rows:
+      - - グループ
+        - イラク
+        - 4-1
+      - - グループ
+        - セネガル
+        - 3-2
+      - - グループ
+        - フランス
+        - 1-4
+      - - 32強
+        - コートジボワール
+        - 2-1
+      - - 16強
+        - ブラジル
+        - 2-1
+      - - 8強
+        - イングランド
+        - 1-2（延長）
+      highlight_row: 3
+  - text: 16強の相手は、ブラジル。2対1の勝ちで、8強へ進みました。
+    image: assets/images/20261124_team_norway/b01_w.jpg
+    card:
+      type: table
+      title: 2026年W杯 ノルウェーの6試合
+      columns:
+      - 段階
+      - 相手
+      - ノルウェーの結果
+      rows:
+      - - グループ
+        - イラク
+        - 4-1
+      - - グループ
+        - セネガル
+        - 3-2
+      - - グループ
+        - フランス
+        - 1-4
+      - - 32強
+        - コートジボワール
+        - 2-1
+      - - 16強
+        - ブラジル
+        - 2-1
+      - - 8強
+        - イングランド
+        - 1-2（延長）
+      highlight_row: 4
+  - text: 8強のイングランド戦は、延長の末、1対2の負け。1点は、シェルデルップです。
+    card:
+      type: table
+      title: 2026年W杯 ノルウェーの6試合
+      columns:
+      - 段階
+      - 相手
+      - ノルウェーの結果
+      rows:
+      - - グループ
+        - イラク
+        - 4-1
+      - - グループ
+        - セネガル
+        - 3-2
+      - - グループ
+        - フランス
+        - 1-4
+      - - 32強
+        - コートジボワール
+        - 2-1
+      - - 16強
+        - ブラジル
+        - 2-1
+      - - 8強
+        - イングランド
+        - 1-2（延長）
+      highlight_row: 5
+  - text: 11月は、ウェールズとデンマークと、2試合です。
+    image: assets/images/20261124_team_norway/b02_w.jpg
+    card: none
+  - text: ハーランドとウーデゴールも、代表に招集されています。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Norway_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/Norway_national_football_team
+- id: viewpoint
+  heading: ノルウェーは、なぜ初のベスト8に届いたのか
+  tier: 背景
+  telop: 1998年は5得点。2026年は13得点
+  narrator: 解説
+  card:
+    type: table
+    title: ノルウェーのW杯 数えた数字
+    columns:
+    - 項目
+    - 1998年
+    - 2026年
+    rows:
+    - - 試合
+      - '4'
+      - '6'
+    - - 勝ち
+      - '1'
+      - '4'
+    - - 得点
+      - '5'
+      - '13'
+    - - 失点
+      - '5'
+      - '11'
+    - - 最終順位
+      - 15位
+      - 5位
+  viewpoint: true
+  say:
+  - text: 見立てです。ノルウェーの1998年と2026年のW杯を、数字で見比べます。
+    image: assets/images/20261124_team_norway/b03_w.jpg
+    card: none
+  - text: 勝ちは1から4、得点は5から13。数字は、大きく増えました。
+    emph: true
+    mark:
+      kind: circle
+      row: 2
+      col: 2026年
+    card:
+      type: table
+      title: ノルウェーのW杯 数えた数字
+      columns:
+      - 項目
+      - 1998年
+      - 2026年
+      rows:
+      - - 試合
+        - '4'
+        - '6'
+      - - 勝ち
+        - '1'
+        - '4'
+      - - 得点
+        - '5'
+        - '13'
+      - - 失点
+        - '5'
+        - '11'
+      - - 最終順位
+        - 15位
+        - 5位
+      highlight_row: 2
+  - text: 失点も、5から11。6試合のうち、無失点の試合は、1つもありません。
+    card:
+      type: table
+      title: ノルウェーのW杯 数えた数字
+      columns:
+      - 項目
+      - 1998年
+      - 2026年
+      rows:
+      - - 試合
+        - '4'
+        - '6'
+      - - 勝ち
+        - '1'
+        - '4'
+      - - 得点
+        - '5'
+        - '13'
+      - - 失点
+        - '5'
+        - '11'
+      - - 最終順位
+        - 15位
+        - 5位
+      highlight_row: 3
+  - text: 最終順位は、15位から5位です。
+    image: assets/images/20261124_team_norway/b04_w.jpg
+    card:
+      type: table
+      title: ノルウェーのW杯 数えた数字
+      columns:
+      - 項目
+      - 1998年
+      - 2026年
+      rows:
+      - - 試合
+        - '4'
+        - '6'
+      - - 勝ち
+        - '1'
+        - '4'
+      - - 得点
+        - '5'
+        - '13'
+      - - 失点
+        - '5'
+        - '11'
+      - - 最終順位
+        - 15位
+        - 5位
+      highlight_row: 4
+  - text: 得点の中身です。7点が、ハーランドです。
+    card: none
+  - text: 32強とブラジル戦の決勝点は、どちらもハーランド。86分と、90分でした。
+    image: assets/images/20261124_team_norway/b01_w.jpg
+    card: none
+  - text: 残りの6点は、5人が1点ずつと、相手のオウンゴール1点です。
+    card: none
+  - text: ブラジルとは、W杯で2回当たって、2回とも2対1の勝ちです。
+    image: assets/images/20261124_team_norway/b05_w.jpg
+    card: none
+  - text: ハーランド以外の5人も、点を取りました。1998年の得点者は、4人でした。
+    card: none
+  - text: この形を、次のW杯まで保てるか。そこが次の焦点です。
+    image: assets/images/20261124_team_norway/b05_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Norway_at_the_FIFA_World_Cup

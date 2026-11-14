@@ -1,0 +1,136 @@
+# 取材メモ（2026年11月13日）ジョーブ・ベリンガム、兄ジュードと同じ代表へ。本人が語った「家族みんなにとって素晴らしい気持ち」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-13。WebFetch と python requests（ブラウザUA）と site.api.espn.com で確かめた。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 出典で確かめたこと:
+#   ・Foot Mercato（a6012012…, 2026-11-12 15:57。requests で全文を読んだ。控え research/raw/20261113_bell_fm.txt）: ジョーブが「イングランドサッカー協会のために（pour la Fédération anglaise）」語った言葉。
+#       **フランス語に訳された形でしか読めていない。FA の英語の原文（englandfootball.com）は見つけられなかった**（トップのニュース一覧は WebFetch で本文が取れなかった）。台本は、このフランス語からの自訳。
+#       ・"Avec Jude qui est également présent, c'est un sentiment extraordinaire pour toute la famille. C'est vraiment spécial. Être appelé en équipe d'Angleterre est déjà un rêve en soi, mais avoir la possibilité de représenter son pays avec son frère, c'est très difficile à décrire avec des mots"
+#       ・"Je n'ai pas les mots. Je pense que seules les émotions pourraient décrire ce moment. Et j'espère que, si cela arrive, vous verrez beaucoup d'émotion, notamment dans ma famille"
+#       ・"Jeudi dernier, je rentrais de l'entraînement en voiture quand j'ai vu apparaître un message : « Salut Jobe, c'est Thomas Tuchel. » J'étais tellement heureux et excité ! Quand nous avons parlé un peu plus tard, c'était assez irréel"
+#       ・"Je ne savais pas vraiment comment réagir, mais je n'arrivais pas à m'arrêter de sourire. Je suis très fier"（最初はU-21代表に呼ばれると思っていた、は記事の地の文）
+#       「先週木曜」は、インタビューの日が分からず相対表現なので台本では日を言わない。「22組目の兄弟」の数字も記事のみ（確認できず）なので使わない。
+#   ・ESPN（story 50457211, 2026-11-12。WebFetch で読んだ。requests は空の本文）: ジョーブ・ベリンガム（21歳、ドルトムント）は代表に初招集。兄ジュードも代表メンバー。「ロッカールームをジュードと共有する」。
+#       ※ Foot Mercato は一度「ボルシアMG所属」と書くが、ESPN と本文の経歴（2025年夏にドルトムント）に合わせて「ドルトムント」。
+#   ・ESPN の試合データ（uefa.nations, event 401861150, 2026-11-12 19:45Z, ウェンブリー）: イングランド 2-1 クロアチア（24分 ロジャース〔アシスト ジュード〕／59分 スチッチ／64分 ケインPK）。
+#       名簿: ジュード・ベリンガム 先発。ジョーブは名簿にあるが先発でも途中出場でもない（**出番なし**。交代の記録は77分のヌゴモハ・ガーナー・ホワイトの3人のみ）。
+#   ・ESPN の日程と順位: 11/15 19:45Z（日本時間16日 4:45）イングランド at スペイン（401861175, リヤド・エア・メトロポリターノ）。グループA3（11/13 取得）: スペイン 5試合 勝ち点15／イングランド 5試合 12／クロアチア 3／チェコ 0。
+#   ・前回の取材メモ（20261107_jobe_bellingham_england）: FA 公式で初招集（11/6）。トゥヘル監督の言葉。今回は繰り返さない。
+# 食い違い: ①所属（ボルシアMG→ドルトムント、上）。②本人の言葉は FA の英語原文でなく、フランス語訳。③「先週木曜」の日付は特定できない。
+# 前の本との重なり: 20261107_jobe_bellingham_england（初招集の事実・トゥヘル監督の言葉）。今回の初出: 本人自身の言葉（兄と同じ代表の気持ち・招集の連絡）と、クロアチア戦で兄が先発・ジョーブは出番なしだった事実。招集の事実は一言にとどめる。
+# 本人の言葉: あり（FA 向けの発言のフランス語訳）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: overseas
+date: "2026年11月13日"
+format: news
+no_main: true
+people: [ジョーブ・ベリンガム, ジュード・ベリンガム, イングランド代表]
+
+short_style: Y
+short_hook_quote: ジュードも代表にいるので、家族みんなにとって、すばらしい気持ちです。
+short_photos:
+  - assets/images/20261113_jobe_bellingham_england/02_v.jpg
+  - assets/images/20261113_jobe_bellingham_england/01_v.jpg
+  - assets/images/20261113_jobe_bellingham_england/04_v.jpg
+  - assets/images/20261113_jobe_bellingham_england/03_v.jpg
+short_question: ジョーブは、15日のスペイン戦で、兄のジュードと一緒にピッチに立てると思いますか。
+short_telops: []
+
+theme:
+  id: jobe_bellingham_england
+  league: germany
+  league_name: イングランド代表
+  prefix: ""
+  title: ジョーブ・ベリンガム、兄と同じ代表で語った気持ち。「家族みんなにとって」
+  hook: ""
+  question: 兄のジュードと同じ代表に呼ばれて、ジョーブ・ベリンガム本人は何と語ったのか
+  takeaway: ジョーブは、兄と同じ代表にいることを「家族みんなにとって素晴らしい」と語った。クロアチア戦は兄が先発しジョーブは出番なし。次はスペイン戦
+
+thumbnail:
+  layout: face
+  line1: ジョーブ・ベリンガム
+  line2: 兄と同じ代表で語った
+  tags: [ジョーブ・ベリンガム, ジュード・ベリンガム, イングランド代表]
+  photo: assets/images/20261113_jobe_bellingham_england/02_w.jpg
+  short_photo: assets/images/20261113_jobe_bellingham_england/02_v.jpg
+
+answer: 兄と同じ代表にいる気持ちを「家族みんなにとって素晴らしい」と語った。まだ共演はできていない
+watch: 15日（日）のスペイン戦（日本時間16日4時45分）
+
+sections:
+  - id: what
+    main: true
+    heading: 兄のジュードと同じ代表で、ジョーブ・ベリンガムが語ったこと
+    tier: 報道
+    telop: ジョーブ「家族みんなにとって、すばらしい気持ち」
+    say:
+      - text: ジョーブ・ベリンガムが、兄のジュードと同じイングランド代表に初めて呼ばれて、気持ちを語りました。
+        short_only: true
+      - voice: ジョーブ・ベリンガム
+        text: ジュードも代表にいるので、家族みんなにとって、すばらしい気持ちです。
+        emph: true
+        image: assets/images/20261113_jobe_bellingham_england/02_w.jpg
+      - voice: ジョーブ・ベリンガム
+        text: 本当に特別です。
+        cont: true
+      - voice: ジョーブ・ベリンガム
+        text: 代表に呼ばれるだけで夢なのに、兄と一緒に国を背負えるかもしれない。
+        cont: true
+      - voice: ジョーブ・ベリンガム
+        text: 言葉で表すのは、とても難しいです。
+        cont: true
+      - text: ジョーブは21歳。ドルトムントのミッドフィールダーで、トゥヘル監督が代表に初めて招集しました。
+      - voice: ジョーブ・ベリンガム
+        text: 練習から車で帰る途中に、メッセージが届きました。「やあ、ジョーブ。トーマス・トゥヘルだ」と。
+        image: assets/images/20261113_jobe_bellingham_england/03_w.jpg
+      - voice: ジョーブ・ベリンガム
+        text: とても嬉しくて、興奮しました。
+        cont: true
+      - text: 最初は、U-21代表への招集だと思っていたといいます。
+      - voice: ジョーブ・ベリンガム
+        text: 笑いが止まりませんでした。とても誇らしいです。
+        cont: true
+      - voice: ジョーブ・ベリンガム
+        text: 言葉が出ません。この瞬間を表せるのは、感情だけだと思います。
+      - voice: ジョーブ・ベリンガム
+        text: もし実現したら、僕の家族を中心に、たくさんの感動を見ることになるはずです。
+        cont: true
+        image: assets/images/20261113_jobe_bellingham_england/04_w.jpg
+    official: false
+    quotes_from: イングランドサッカー協会
+    sources:
+      - https://www.footmercato.net/a6012012078776100106-angleterre-jobe-bellingham-emu-a-lidee-de-jouer-avec-son-grand-frere
+      - https://www.espn.com/soccer/story/_/id/50457211/england-france-bellingham-nations-league-squads
+  - id: game
+    heading: クロアチア戦で、兄弟はピッチに立てたのか
+    tier: 報道
+    telop: ジュードは先発してアシスト。ジョーブは出番なし
+    say:
+      - text: 11月12日、ウェンブリーでのクロアチア戦に、兄のジュードは先発しました。
+        image: assets/images/20261113_jobe_bellingham_england/01_w.jpg
+        card: {type: table, title: イングランド対クロアチア（11月12日）, columns: [時間, 得点者, スコア], rows: [[24分, ロジャース（イングランド）, 1-0], [59分, スチッチ（クロアチア）, 1-1], [64分, ケイン（PK・イングランド）, 2-1]], highlight_row: 0}
+      - text: 24分の先制点は、ジュードのアシストです。試合は、イングランドの2対1の勝ちでした。
+        card: none
+        image: assets/images/20261113_jobe_bellingham_england/04_w.jpg
+      - text: 一方、ジョーブに出番はありませんでした。兄弟の共演は、まだ実現していません。
+        image: assets/images/20261113_jobe_bellingham_england/02_w.jpg
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/summary?event=401861150
+  - id: view
+    viewpoint: true
+    heading: 兄弟の共演は、15日のスペイン戦で実現するのか
+    tier: 背景
+    telop: 次は15日（日）、スペイン戦
+    say:
+      - text: 見立てです。舞台のネーションズリーグは、ヨーロッパの国どうしが、総当たりで戦うグループ戦です。
+      - text: イングランドは、グループの5試合で勝ち点12。首位のスペインとは3点差です。
+        image: assets/images/20261113_jobe_bellingham_england/03_w.jpg
+        card: {type: table, title: ネーションズリーグ グループA3（5試合後）, columns: [順位, 国, 勝ち点], rows: [[1位, スペイン, 15], [2位, イングランド, 12], [3位, クロアチア, 3]], highlight_row: 1}
+      - text: 15日は、マドリードでスペインとの直接対決です。キックオフは、日本時間の16日、午前4時45分です。
+        card: none
+        image: assets/images/20261113_jobe_bellingham_england/01_w.jpg
+      - text: ジョーブが兄と同じ試合に出られるかどうかは、トゥヘル監督の選択しだいです。
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/v2/sports/soccer/uefa.nations/standings
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/scoreboard?dates=20261115
+short_title: "ジョーブ・ベリンガム、兄と同じ代表で語った気持ち。「家族みんなにとって」"

@@ -1,0 +1,649 @@
+# スタジアム紹介シリーズ：バイエルンの本拠地（アリアンツ・アリーナ、11/25 予定）。雛形は 11/21 マルセイユの回。
+# 題材の選び方（2026-11-13）：ブンデスの大物としてバイエルンの器。同日 11/25 の他シリーズ（ユニフォーム＝PSG）と重ならない。11/21 のユニフォーム（バイエルン）とは別の日。外した候補：ドルトムント（席・金額の数字が en・de で割れ、買い戻しの一次情報が取れなかった）、PSG（同日ユニフォーム）、ユヴェントス（11/23 のユニフォーム）、ローマ（11/23 のスタジアムで使用）。
+# 選んだ理由：「半分ずつ持った器を、半分1100万ユーロで買い取った」という強い一点／2025-26 の入場（平均約7万5000・17試合が満員）で見立てを作れる。
+# 重なりの確認：scripts/*stadium_*・posted.json・covered.yaml・research/*picks.txt に無し（grep 済み）。
+# 一次情報の突き合わせ：en・de ウィキペディア（Allianz Arena）、fcbayern.com の10年の年表（2006-04-27）、diefalsche9.de の2025/26 観客表（バイエルン平均75,000・ドルトムント81,365）、kicker 系の要約（17試合中17試合が満員）、en の2025-26 Bayern season（平均75,000）。
+#   起工2002-10-21／開場2005-05-30（1860 3-2 ニュルンベルク・親善）・05-31 バイエルン対ドイツ代表／工事費2億8600万・金利などを含め3億4000万（en・de 一致）／周辺整備は市と州で約2億1000万（en）／国内7万5024席（立見1万3342）・国際は約7万（de 6万9344・枠7万で割れる→台本に入れない）／外壁は赤（バイエルン）・青（1860）・白（代表）／2006-04-27 バイエルンが1860の半分を1100万ユーロ（en・de。business-punk は1130万＋買戻しオプション130万の記述で割れるので「と伝えられます」）／2017-07 バイエルンが1860の賃貸を終了（en）／2014 アリアンツ社へ株8.33%を売った金で器の借金を返すと発表（de。当初の返済計画は2028年）／命名権は2041年まで（de）／WC2006 6試合（開幕 ドイツ4-2コスタリカ 06-09、準決勝 ポルトガル0-1フランス 07-05）／CL決勝2012（チェルシーがPK4-3）・2025（PSG5-0インテル）／ユーロ2024 準決勝 スペイン2-1フランス。
+#   食い違い（台本には入れない）：国際の席（7万か6万9344か）、外壁の膜の数（en 2760・de 2784）、1860の売却の理由（「破産を避けた」は en にある1860側の説明のみで、一次未確認）、2006-07〜の席の推移（66,000→69,901→…）、1860の賃貸の終了年（en 2017、fcbayern の年表は別の書き方）。
+#   確かめられなかった：1860の2005/06の平均入場（de の67,588・41,932 は裏が取れず台本に入れない）。DFB の試合ページが404。
+#   写真：Commons。外壁（赤）は CC BY 2.0、そのほか CC BY-SA。前景に観客が写る06は中央で切った。
+# 読みが割れる名前：アリアンツ／ヘルツォーク・ド・ムーロン／ニュルンベルク／1860（ミュンヘン）／ドルトムント。
+date: 2026年11月13日
+slot: other_1
+format: news
+series: スタジアム紹介
+voice_min: 0
+people: []
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  id: stadium_bayern
+  league: germany
+  league_name: ブンデスリーガ
+  kind: other
+  topic: バイエルン
+  title: アリアンツ・アリーナ、半分ずつ持った器を、なぜバイエルンが買い取ったのか
+  question: バイエルンと1860が半分ずつ持った器を、なぜバイエルンが、1100万ユーロで買い取れたのか
+  lead: W杯の開幕戦を開いた器です。
+  hook: ''
+  opening_image: assets/images/20261125_stadium_bayern/02_w.jpg
+  end_bg: assets/images/20261125_stadium_bayern/05_w.jpg
+  takeaway: アリアンツ・アリーナは2005年に、バイエルンと1860が半分ずつ持って開いた。2006年4月、バイエルンが1860の半分を1100万ユーロと伝えられる値段で買い取った。いまの席は7万5024で、2025-26の平均の入りは約7万5000。
+  short_title: アリアンツ・アリーナ、半分の売値は1100万ユーロ
+thumbnail:
+  layout: scene
+  bold: false
+  callouts:
+  - W杯の開幕戦を開催
+  - 半分は1100万ユーロ
+  photo: assets/images/20261125_stadium_bayern/02_w.jpg
+  line1: バイエルンのアリアンツ
+  line2: 半分ずつの器を、一つに
+  tags:
+  - バイエルン
+  - ブンデスリーガ
+  - スタジアム紹介
+sections:
+- id: data
+  main: true
+  heading: W杯の開幕戦を開いた器は、いまどんな姿なのか
+  bg: assets/images/20261125_stadium_bayern/02_w.jpg
+  card:
+    type: table
+    title: アリアンツ・アリーナの基礎DATA
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 持ち主
+      - バイエルン（2006年から）
+    - - 開場
+      - 2005年5月30日
+    - - 収容
+      - 7万5024人
+    - - 外壁
+      - バイエルンの試合は赤
+    - - 名前
+      - アリアンツ社（2041年まで）
+  narrator: 解説
+  tier: 背景
+  telop: 2005年に開場。収容は7万5024席。2006年のW杯の開幕戦を開いた
+  sources:
+  - https://en.wikipedia.org/wiki/Allianz_Arena
+  - https://de.wikipedia.org/wiki/Allianz_Arena
+  - https://fcbayern.com/en/news/2015/05/allianz-arena-ten-year-timeline-300515
+  - https://www.diefalsche9.de/zuschauertabelle-2025-26/
+  - https://en.wikipedia.org/wiki/2025%E2%80%9326_FC_Bayern_Munich_season
+  say:
+  - text: バイエルンの本拠地、アリアンツ・アリーナの話です。
+    card: none
+    image: assets/images/20261125_stadium_bayern/02_w.jpg
+    short_only: true
+  - text: 2006年のW杯の開幕戦を、この器が開きました。
+    card: none
+    image: assets/images/20261125_stadium_bayern/02_w.jpg
+    emph: true
+  - text: 開場は、2005年5月30日。収容は、7万5024席です。
+    card:
+      type: table
+      title: アリアンツ・アリーナの基礎DATA
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 持ち主
+        - バイエルン（2006年から）
+      - - 開場
+        - 2005年5月30日
+      - - 収容
+        - 7万5024人
+      - - 外壁
+        - バイエルンの試合は赤
+      - - 名前
+        - アリアンツ社（2041年まで）
+    image: assets/images/20261125_stadium_bayern/02_w.jpg
+  - text: 外壁は光る膜で、バイエルンの試合は、赤に光ります。
+    card:
+      type: table
+      title: アリアンツ・アリーナの基礎DATA
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 持ち主
+        - バイエルン（2006年から）
+      - - 開場
+        - 2005年5月30日
+      - - 収容
+        - 7万5024人
+      - - 外壁
+        - バイエルンの試合は赤
+      - - 名前
+        - アリアンツ社（2041年まで）
+      highlight_row: 3
+    image: assets/images/20261125_stadium_bayern/02_w.jpg
+  - text: 開いたとき、持ち主は、バイエルンと、もう1つのクラブでした。
+    card:
+      type: table
+      title: アリアンツ・アリーナの基礎DATA
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 持ち主
+        - バイエルン（2006年から）
+      - - 開場
+        - 2005年5月30日
+      - - 収容
+        - 7万5024人
+      - - 外壁
+        - バイエルンの試合は赤
+      - - 名前
+        - アリアンツ社（2041年まで）
+      highlight_row: 0
+    image: assets/images/20261125_stadium_bayern/02_w.jpg
+    emph: true
+  - text: その半分は、のちに、手放されます。
+    card:
+      type: stats
+      title: アリアンツ・アリーナの数字
+      items:
+      - - '2005'
+        - 年
+        - 開場
+      - - '75024'
+        - 席
+        - いまの収容
+      - - '1100'
+        - 万ユーロ
+        - 1860の持ち分の売値（報道）
+      focus: 2
+    image: assets/images/20261125_stadium_bayern/02_w.jpg
+    emph: true
+- id: history
+  heading: なぜ、器は、2つのクラブの持ち物になったのか
+  bg: assets/images/20261125_stadium_bayern/03_w.jpg
+  card:
+    type: timeline
+    title: アリアンツ・アリーナの歩み
+    rows:
+    - - 1972年
+      - 五輪の競技場へ
+    - - 2002年10月
+      - 起工
+    - - 2005年5月
+      - 開場
+    - - 2006年4月
+      - バイエルンが全株
+    - - 2006年6月
+      - W杯6試合
+    - - 2012年5月
+      - 欧州決勝
+    focus: 1972年
+    highlight_row: 0
+  narrator: 解説
+  tier: 背景
+  telop: 2002年に起工、2005年に開場。バイエルンと1860が半分ずつ持った
+  sources:
+  - https://en.wikipedia.org/wiki/Allianz_Arena
+  - https://de.wikipedia.org/wiki/Allianz_Arena
+  - https://fcbayern.com/en/news/2015/05/allianz-arena-ten-year-timeline-300515
+  - https://www.diefalsche9.de/zuschauertabelle-2025-26/
+  - https://en.wikipedia.org/wiki/2025%E2%80%9326_FC_Bayern_Munich_season
+  say:
+  - text: バイエルンは、1972年から2005年まで、ミュンヘンの五輪の競技場を使いました。
+    card:
+      type: timeline
+      title: アリアンツ・アリーナの歩み
+      rows:
+      - - 1972年
+        - 五輪の競技場へ
+      - - 2002年10月
+        - 起工
+      - - 2005年5月
+        - 開場
+      - - 2006年4月
+        - バイエルンが全株
+      - - 2006年6月
+        - W杯6試合
+      - - 2012年5月
+        - 欧州決勝
+      focus: 1972年
+      highlight_row: 0
+    image: assets/images/20261125_stadium_bayern/04_w.jpg
+  - text: 新しい器の起工は、2002年10月21日。
+    card:
+      type: timeline
+      title: アリアンツ・アリーナの歩み
+      rows:
+      - - 1972年
+        - 五輪の競技場へ
+      - - 2002年10月
+        - 起工
+      - - 2005年5月
+        - 開場
+      - - 2006年4月
+        - バイエルンが全株
+      - - 2006年6月
+        - W杯6試合
+      - - 2012年5月
+        - 欧州決勝
+      focus: 1972年
+      highlight_row: 1
+    image: assets/images/20261125_stadium_bayern/03_w.jpg
+  - text: 設計は、ヘルツォーク・ド・ムーロン。
+    card: none
+    image: assets/images/20261125_stadium_bayern/03_w.jpg
+  - text: 半分ずつを持ったのは、バイエルンと1860です。
+    card: none
+    image: assets/images/20261125_stadium_bayern/03_w.jpg
+    emph: true
+  - text: 2005年5月30日に開場。最初は、1860対ニュルンベルクの親善試合。
+    card:
+      type: timeline
+      title: アリアンツ・アリーナの歩み
+      rows:
+      - - 1972年
+        - 五輪の競技場へ
+      - - 2002年10月
+        - 起工
+      - - 2005年5月
+        - 開場
+      - - 2006年4月
+        - バイエルンが全株
+      - - 2006年6月
+        - W杯6試合
+      - - 2012年5月
+        - 欧州決勝
+      focus: 1972年
+      highlight_row: 2
+    image: assets/images/20261125_stadium_bayern/03_w.jpg
+  - text: 1860が、3対2で、ニュルンベルクを破りました。
+    card: none
+    image: assets/images/20261125_stadium_bayern/03_w.jpg
+  - text: 次の日の5月31日が、バイエルン対ドイツ代表の親善試合です。
+    card: none
+    image: assets/images/20261125_stadium_bayern/03_w.jpg
+  - text: 外壁は、バイエルンの試合は赤、1860は青、代表の試合は白に光ります。
+    card: none
+    image: assets/images/20261125_stadium_bayern/02_w.jpg
+  - text: 2006年のW杯は、この器で6試合。
+    card:
+      type: timeline
+      title: アリアンツ・アリーナの歩み
+      rows:
+      - - 1972年
+        - 五輪の競技場へ
+      - - 2002年10月
+        - 起工
+      - - 2005年5月
+        - 開場
+      - - 2006年4月
+        - バイエルンが全株
+      - - 2006年6月
+        - W杯6試合
+      - - 2012年5月
+        - 欧州決勝
+      focus: 1972年
+      highlight_row: 4
+    image: assets/images/20261125_stadium_bayern/05_w.jpg
+  - text: 開幕戦は、ドイツがコスタリカに、4対2で勝ちました。
+    card: none
+    image: assets/images/20261125_stadium_bayern/05_w.jpg
+  - text: 準決勝は、ポルトガル対フランス。フランスが、1対0です。
+    card: none
+    image: assets/images/20261125_stadium_bayern/05_w.jpg
+  - text: 欧州の決勝は、2012年と2025年に開きました。
+    card:
+      type: timeline
+      title: アリアンツ・アリーナの歩み
+      rows:
+      - - 1972年
+        - 五輪の競技場へ
+      - - 2002年10月
+        - 起工
+      - - 2005年5月
+        - 開場
+      - - 2006年4月
+        - バイエルンが全株
+      - - 2006年6月
+        - W杯6試合
+      - - 2012年5月
+        - 欧州決勝
+      focus: 1972年
+      highlight_row: 5
+    image: assets/images/20261125_stadium_bayern/06_w.jpg
+- id: cost
+  heading: なぜ、3億4000万ユーロは、工事費の1.19倍と言われるのか
+  bg: assets/images/20261125_stadium_bayern/03_w.jpg
+  card:
+    type: table
+    title: 器の金額（報道）
+    columns:
+    - 項目
+    - 中身
+    rows:
+    - - 工事だけ
+      - 2億8600万ユーロ
+    - - 金利などを含む
+      - 3億4000万ユーロ
+    - - 周辺の整備（市と州）
+      - 約2億1000万ユーロ
+    - - 借金の返し方
+      - 2014年に発表
+    highlight_row: 1
+  narrator: 解説
+  tier: 報道
+  telop: 工事費は2億8600万ユーロ。金利などを含めて3億4000万ユーロと伝えられる
+  sources:
+  - https://en.wikipedia.org/wiki/Allianz_Arena
+  - https://de.wikipedia.org/wiki/Allianz_Arena
+  - https://fcbayern.com/en/news/2015/05/allianz-arena-ten-year-timeline-300515
+  - https://www.diefalsche9.de/zuschauertabelle-2025-26/
+  - https://en.wikipedia.org/wiki/2025%E2%80%9326_FC_Bayern_Munich_season
+  say:
+  - text: 工事費は、2億8600万ユーロです。
+    card:
+      type: table
+      title: 器の金額（報道）
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 工事だけ
+        - 2億8600万ユーロ
+      - - 金利などを含む
+        - 3億4000万ユーロ
+      - - 周辺の整備（市と州）
+        - 約2億1000万ユーロ
+      - - 借金の返し方
+        - 2014年に発表
+      highlight_row: 0
+    image: assets/images/20261125_stadium_bayern/03_w.jpg
+  - text: 金利などを含めると、3億4000万ユーロ。
+    card:
+      type: table
+      title: 器の金額（報道）
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 工事だけ
+        - 2億8600万ユーロ
+      - - 金利などを含む
+        - 3億4000万ユーロ
+      - - 周辺の整備（市と州）
+        - 約2億1000万ユーロ
+      - - 借金の返し方
+        - 2014年に発表
+      highlight_row: 1
+    image: assets/images/20261125_stadium_bayern/03_w.jpg
+    emph: true
+  - text: 割ると、工事費の1.19倍。
+    card:
+      type: calc
+      title: 工事費の何倍か（自分で割った）
+      terms:
+      - - 3億4000万ユーロ
+        - 金利などを含む
+      - - 2億8600万ユーロ
+        - 工事だけ
+      - - 1.19倍
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+    image: assets/images/20261125_stadium_bayern/03_w.jpg
+  - text: 差は、5400万ユーロ。金利などの分です。
+    card: none
+    image: assets/images/20261125_stadium_bayern/03_w.jpg
+  - text: 市と州は、周辺の整備に、約2億1000万ユーロを出しました。
+    card:
+      type: table
+      title: 器の金額（報道）
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 工事だけ
+        - 2億8600万ユーロ
+      - - 金利などを含む
+        - 3億4000万ユーロ
+      - - 周辺の整備（市と州）
+        - 約2億1000万ユーロ
+      - - 借金の返し方
+        - 2014年に発表
+      highlight_row: 2
+    image: assets/images/20261125_stadium_bayern/03_w.jpg
+  - text: 器の借金は、当初の計画で、2028年まで返す予定でした。
+    card: none
+    image: assets/images/20261125_stadium_bayern/03_w.jpg
+  - text: 2014年、アリアンツ社への株の売却で、返すと発表します。
+    card:
+      type: table
+      title: 器の金額（報道）
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 工事だけ
+        - 2億8600万ユーロ
+      - - 金利などを含む
+        - 3億4000万ユーロ
+      - - 周辺の整備（市と州）
+        - 約2億1000万ユーロ
+      - - 借金の返し方
+        - 2014年に発表
+      highlight_row: 3
+    image: assets/images/20261125_stadium_bayern/03_w.jpg
+    emph: true
+  - text: 株は、バイエルンの8.33%です。
+    card: none
+    image: assets/images/20261125_stadium_bayern/03_w.jpg
+  - text: アリアンツの名前は、2041年まで。
+    card: none
+    image: assets/images/20261125_stadium_bayern/03_w.jpg
+- id: buy
+  heading: なぜ、半分を持つ1860は、1100万ユーロで手放したのか
+  bg: assets/images/20261125_stadium_bayern/01_w.jpg
+  card:
+    type: table
+    title: 1860の持ち分（報道）
+    columns:
+    - 項目
+    - 中身
+    rows:
+    - - 日付
+      - 2006年4月27日
+    - - 買った人
+      - バイエルン
+    - - 売値
+      - 1100万ユーロ
+    - - その後
+      - 2017年に賃貸が終わる
+    highlight_row: 2
+  narrator: 解説
+  tier: 報道
+  telop: 2006年4月27日、バイエルンが1860の半分を買った。値段は1100万ユーロと伝えられる
+  sources:
+  - https://en.wikipedia.org/wiki/Allianz_Arena
+  - https://de.wikipedia.org/wiki/Allianz_Arena
+  - https://fcbayern.com/en/news/2015/05/allianz-arena-ten-year-timeline-300515
+  - https://www.diefalsche9.de/zuschauertabelle-2025-26/
+  - https://en.wikipedia.org/wiki/2025%E2%80%9326_FC_Bayern_Munich_season
+  say:
+  - text: 2006年4月27日、バイエルンが、1860の持ち分を買い取りました。
+    card:
+      type: table
+      title: 1860の持ち分（報道）
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 日付
+        - 2006年4月27日
+      - - 買った人
+        - バイエルン
+      - - 売値
+        - 1100万ユーロ
+      - - その後
+        - 2017年に賃貸が終わる
+      highlight_row: 0
+    image: assets/images/20261125_stadium_bayern/01_w.jpg
+  - text: 値段は、1100万ユーロだったとされます。
+    card:
+      type: table
+      title: 1860の持ち分（報道）
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 日付
+        - 2006年4月27日
+      - - 買った人
+        - バイエルン
+      - - 売値
+        - 1100万ユーロ
+      - - その後
+        - 2017年に賃貸が終わる
+      highlight_row: 2
+    image: assets/images/20261125_stadium_bayern/01_w.jpg
+    emph: true
+  - text: 1860は、これで、破産を避けられた、と説明したと伝えられます。
+    card: none
+    image: assets/images/20261125_stadium_bayern/01_w.jpg
+  - text: バイエルンは、この日から、単独の持ち主。
+    card:
+      type: table
+      title: 1860の持ち分（報道）
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 日付
+        - 2006年4月27日
+      - - 買った人
+        - バイエルン
+      - - 売値
+        - 1100万ユーロ
+      - - その後
+        - 2017年に賃貸が終わる
+      highlight_row: 1
+    image: assets/images/20261125_stadium_bayern/01_w.jpg
+  - text: 1860は、借り手として、使い続けました。
+    card: none
+    image: assets/images/20261125_stadium_bayern/01_w.jpg
+  - text: 2017年7月、バイエルンが、その賃貸の契約を終わらせました。
+    card:
+      type: table
+      title: 1860の持ち分（報道）
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 日付
+        - 2006年4月27日
+      - - 買った人
+        - バイエルン
+      - - 売値
+        - 1100万ユーロ
+      - - その後
+        - 2017年に賃貸が終わる
+      highlight_row: 3
+    image: assets/images/20261125_stadium_bayern/01_w.jpg
+    emph: true
+- id: view
+  viewpoint: true
+  heading: 見立て・1860が出ていった器は、バイエルンだけで埋まっているのか
+  bg: assets/images/20261125_stadium_bayern/06_w.jpg
+  card:
+    type: table
+    title: 入場と席（2025-26）
+    columns:
+    - 項目
+    - 人数
+    rows:
+    - - バイエルンの席
+      - 7万5024
+    - - バイエルンの平均
+      - 約7万5000
+    - - 1位ドルトムントの平均
+      - 8万1365
+    highlight_row: 1
+  narrator: 解説
+  tier: 報道
+  telop: 2025-26の平均の入りは約7万5000。席7万5024のほぼ100%。17試合が満員
+  sources:
+  - https://en.wikipedia.org/wiki/Allianz_Arena
+  - https://de.wikipedia.org/wiki/Allianz_Arena
+  - https://fcbayern.com/en/news/2015/05/allianz-arena-ten-year-timeline-300515
+  - https://www.diefalsche9.de/zuschauertabelle-2025-26/
+  - https://en.wikipedia.org/wiki/2025%E2%80%9326_FC_Bayern_Munich_season
+  say:
+  - text: では、バイエルンだけになった器に、人は入っているのか。数字は11月13日時点です。
+    card: none
+    image: assets/images/20261125_stadium_bayern/06_w.jpg
+    emph: true
+  - text: 2025年から26年の、ブンデスのホームの平均は、約7万5000人。
+    card:
+      type: table
+      title: 入場と席（2025-26）
+      columns:
+      - 項目
+      - 人数
+      rows:
+      - - バイエルンの席
+        - 7万5024
+      - - バイエルンの平均
+        - 約7万5000
+      - - 1位ドルトムントの平均
+        - 8万1365
+      highlight_row: 1
+    image: assets/images/20261125_stadium_bayern/06_w.jpg
+  - text: 席は、7万5024。割ると、ほぼ100%。
+    card:
+      type: calc
+      title: 平均の入りは、席の何%か（自分で割った）
+      terms:
+      - - 約7万5000人
+        - 平均の入り
+      - - 7万5024席
+        - いまの席
+      - - 約100%
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+    image: assets/images/20261125_stadium_bayern/06_w.jpg
+  - text: ホームの17試合の全部が、満員と伝えられます。
+    card: none
+    image: assets/images/20261125_stadium_bayern/06_w.jpg
+    emph: true
+  - text: 平均の入りは、ブンデスで2位です。
+    card: none
+    image: assets/images/20261125_stadium_bayern/06_w.jpg
+  - text: 1位は、ドルトムントの8万1365人。
+    card:
+      type: table
+      title: 入場と席（2025-26）
+      columns:
+      - 項目
+      - 人数
+      rows:
+      - - バイエルンの席
+        - 7万5024
+      - - バイエルンの平均
+        - 約7万5000
+      - - 1位ドルトムントの平均
+        - 8万1365
+      highlight_row: 2
+    image: assets/images/20261125_stadium_bayern/06_w.jpg
+    mark:
+      kind: circle
+      row: 2
+  - text: 差は、6365人。席の数が違うだけで、どちらも、ほぼ満員です。
+    card: none
+    image: assets/images/20261125_stadium_bayern/06_w.jpg
+  - text: 半分ずつ建てた器は、いま、バイエルンの満員で、埋まっています。
+    card: none
+    image: assets/images/20261125_stadium_bayern/06_w.jpg
+    emph: true

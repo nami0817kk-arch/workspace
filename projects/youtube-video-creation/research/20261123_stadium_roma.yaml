@@ -1,0 +1,886 @@
+# スタジアム紹介シリーズ：ローマの本拠地（スタディオ・オリンピコ、11/23 予定）。雛形は 11/21 マルセイユの回。
+# 題材の選び方（2026-11-13）：ラ・リーガ・プレミア20・ナポリ・サン・シーロ・マルセイユは済み。セリエAの大物でサン・シーロ以外の器としてローマ。同日 11/23 の他シリーズ（ユニフォーム＝ユヴェントス）と重ならない。外した候補：ドルトムント（Wikipedia の席・金額の数字が en・de で割れ、買い戻しの一次情報が取れなかった）、ユヴェントス（同日のユニフォームと重なる）、PSG（11/25 のユニフォームと重なる）。
+# 選んだ理由：「持ち主でない器を1953年から使い続け、いま新しい器を建てる」という強い一点／新しい器の席（6万605）が去年の平均入場（6万1796）より少ないという、自分で引いた見立て。
+# 重なりの確認：scripts/*stadium_*・posted.json・covered.yaml・research/*picks.txt に無し（grep 済み）。
+# 一次情報の突き合わせ：en・it ウィキペディア（Stadio Olimpico）、en ウィキペディア（Stadio della Roma・2025-26 AS Roma season）、quotidiano.net 2007-05-10（工事計画の原文）、calcioefinanza 2026-09-29（許可の会議）、calcioefinanza（2025-26 の入場：ローマ平均は6万2000近く）。
+#   開場1953-05-17 イタリア0-3ハンガリー（it）／1932 開場・1937 モレッティが広げて6万人（it）／1960 五輪開会式 8/25／1968 ユーロ決勝 1-1 → 再試合2-0／1987 世界陸上 ルイス9秒93／1990 工事 設計ヴィトッツィ・クレリチ・約8万5000席・屋根はテフロンの膜・88本のケーブル・屋根1600億リラ・全体2330億リラ（en 枠）・のちの分析で約4500億リラ（en 本文）／1990 W杯6試合・決勝 西ドイツ1-0アルゼンチン（ブレーメPK）／2007-08 工事：1672万ユーロ（税抜）・目的は2009欧州決勝の「5つ星エリート」・安全の工事385万6463ユーロは コーニ・ローマ・ラツィオで等分（quotidiano）／2009-05-27 決勝 バルセロナ2-0マンチェスター・U 6万2467人／所有 2004-02-03 に Coni Servizi へ、2019 に Sport e Salute に改称（en）／2025-26 ローマのホーム平均6万1796・最多6万7785（2025-12-29 ジェノア戦）・席7万634（en 2025-26 AS Roma season）。
+#   ピエトララータ：2026-03 市議会が公共の利益を確認（44票中39票賛成、calcioefinanza ほか）、2026-09-28 許可の会議が賛成で終了、着工は2027年春予定、収容6万605席、開場は2030年予定（en 枠）、土地の使用権90年を申請。
+#   食い違い（台本には入れない）：en は「1955年にオリンピコ」、枠は「1953-60 チェントミラ（10万人の競技場）」。1990年の費用は枠が2330億・本文が約4500億で「と伝えられます」にした。2008年改修前の席は quotidiano が80,120・en が約75,000。入場の最多記録は en が78,886（1974-05-12 ラツィオ対フォッジャ）。ピエトララータの費用は en の10.47億ユーロと報道の13億ユーロで割れるので台本に入れない。市議会の日付は en が2月・報道が3月。平均入場は en 6万1796、calcioefinanza は「6万2000近く」で矛盾しない。2008年の安全工事の等分は全体費用ではなく安全の工事分だけ。
+#   写真：Commons。1959の絵はがき・屋根の骨組みは Public domain。
+# 読みが割れる名前：オリンピコ／ピエトララータ／スポーツ・エ・サルーテ／モレッティ／ヴィトッツィ／クレリチ／ブレーメ／デル・デッビオ／ルドルフ／CONI。
+date: 2026年11月13日
+slot: other_1
+format: news
+series: スタジアム紹介
+voice_min: 0
+people: []
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  id: stadium_roma
+  league: italy
+  league_name: セリエA
+  kind: other
+  topic: ローマ
+  title: ローマのオリンピコ、持ち主でない器を、なぜ70年以上使い続けるのか
+  question: 持ち主でない器を、ローマはなぜ1953年から使い続け、いま新しい器を建てようとするのか
+  lead: W杯の決勝を開いた器です。
+  hook: ''
+  opening_image: assets/images/20261123_stadium_roma/01_w.jpg
+  end_bg: assets/images/20261123_stadium_roma/05_w.jpg
+  takeaway: オリンピコは1953年に今の形で開き、1990年に屋根がかかって、いまは7万634席。持ち主は国の機関で、ローマもラツィオも借りて使う。ローマは6万605席の新しい器を計画していて、去年の平均入場6万1796人より1191人、少ない。
+  short_title: オリンピコ、持ち主でない器を70年以上
+thumbnail:
+  layout: scene
+  bold: false
+  callouts:
+  - W杯の決勝を開いた器
+  - 新しい器は6万605席
+  photo: assets/images/20261123_stadium_roma/01_w.jpg
+  line1: ローマのオリンピコ
+  line2: 持ち主でない器を70年以上
+  tags:
+  - ローマ
+  - セリエA
+  - スタジアム紹介
+sections:
+- id: data
+  main: true
+  heading: W杯の決勝を開いた器は、いまどんな姿なのか
+  bg: assets/images/20261123_stadium_roma/01_w.jpg
+  card:
+    type: table
+    title: オリンピコの基礎DATA
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 持ち主
+      - スポーツ・エ・サルーテ（国の機関）
+    - - 開場
+      - 1953年5月17日
+    - - 収容
+      - 7万634人
+    - - 屋根
+      - あり（1990年から）
+    - - 使う人
+      - ローマ・ラツィオ・代表
+  narrator: 解説
+  tier: 背景
+  telop: 1953年に今の形で開場。収容は7万634席。持ち主は国の機関
+  sources:
+  - https://en.wikipedia.org/wiki/Stadio_Olimpico
+  - https://it.wikipedia.org/wiki/Stadio_Olimpico_(Roma)
+  - https://en.wikipedia.org/wiki/Stadio_della_Roma
+  - https://en.wikipedia.org/wiki/2025%E2%80%9326_AS_Roma_season
+  - https://www.quotidiano.net/sport/2007/05/10/10538-presentato_piano_ristrutturazione.shtml
+  - https://www.calcioefinanza.it/2026/09/29/prossime-tappe-nuovo-stadio-roma/
+  say:
+  - text: ローマの本拠地、スタディオ・オリンピコの話です。
+    card: none
+    image: assets/images/20261123_stadium_roma/01_w.jpg
+    short_only: true
+  - text: 1990年のW杯の決勝を、この器が開きました。
+    card: none
+    image: assets/images/20261123_stadium_roma/01_w.jpg
+    emph: true
+  - text: 開場は、1953年5月17日。収容は、7万634席です。
+    card:
+      type: table
+      title: オリンピコの基礎DATA
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 持ち主
+        - スポーツ・エ・サルーテ（国の機関）
+      - - 開場
+        - 1953年5月17日
+      - - 収容
+        - 7万634人
+      - - 屋根
+        - あり（1990年から）
+      - - 使う人
+        - ローマ・ラツィオ・代表
+    image: assets/images/20261123_stadium_roma/01_w.jpg
+  - text: 持ち主は、国の機関のスポーツ・エ・サルーテです。
+    card:
+      type: table
+      title: オリンピコの基礎DATA
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 持ち主
+        - スポーツ・エ・サルーテ（国の機関）
+      - - 開場
+        - 1953年5月17日
+      - - 収容
+        - 7万634人
+      - - 屋根
+        - あり（1990年から）
+      - - 使う人
+        - ローマ・ラツィオ・代表
+      highlight_row: 0
+    image: assets/images/20261123_stadium_roma/01_w.jpg
+  - text: ローマも、ラツィオも、1953年から。持ち主でない器を、70年以上、使っています。
+    card:
+      type: table
+      title: オリンピコの基礎DATA
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 持ち主
+        - スポーツ・エ・サルーテ（国の機関）
+      - - 開場
+        - 1953年5月17日
+      - - 収容
+        - 7万634人
+      - - 屋根
+        - あり（1990年から）
+      - - 使う人
+        - ローマ・ラツィオ・代表
+      highlight_row: 4
+    image: assets/images/20261123_stadium_roma/01_w.jpg
+    emph: true
+  - text: そのローマが、いま、新しい器を建てようとしています。
+    card:
+      type: stats
+      title: オリンピコの数字
+      items:
+      - - '1953'
+        - 年
+        - 開場
+      - - '70634'
+        - 席
+        - いまの収容
+      - - '60605'
+        - 席
+        - 新しい器の計画
+      focus: 2
+    image: assets/images/20261123_stadium_roma/01_w.jpg
+    emph: true
+- id: history
+  heading: なぜ、この器は、オリンピコと呼ばれるのか
+  bg: assets/images/20261123_stadium_roma/03_w.jpg
+  card:
+    type: timeline
+    title: オリンピコの歩み
+    rows:
+    - - 1932年
+      - 開場（糸杉の競技場）
+    - - 1937年
+      - 広げて、6万人
+    - - 1953年5月
+      - 今の形で開く
+    - - 1960年
+      - ローマ五輪
+    - - 1968年
+      - ユーロ決勝
+    - - 1987年
+      - 世界陸上
+    focus: 1932年
+    highlight_row: 0
+  narrator: 解説
+  tier: 背景
+  telop: 1932年に開き、1953年に今の形に。1960年のローマ五輪で今の名前に
+  sources:
+  - https://en.wikipedia.org/wiki/Stadio_Olimpico
+  - https://it.wikipedia.org/wiki/Stadio_Olimpico_(Roma)
+  - https://en.wikipedia.org/wiki/Stadio_della_Roma
+  - https://en.wikipedia.org/wiki/2025%E2%80%9326_AS_Roma_season
+  - https://www.quotidiano.net/sport/2007/05/10/10538-presentato_piano_ristrutturazione.shtml
+  - https://www.calcioefinanza.it/2026/09/29/prossime-tappe-nuovo-stadio-roma/
+  say:
+  - text: 設計は、エンリコ・デル・デッビオ。1928年に始まりました。
+    card: none
+    image: assets/images/20261123_stadium_roma/03_w.jpg
+  - text: 1932年に開き、当時の名前は、糸杉の競技場でした。
+    card:
+      type: timeline
+      title: オリンピコの歩み
+      rows:
+      - - 1932年
+        - 開場（糸杉の競技場）
+      - - 1937年
+        - 広げて、6万人
+      - - 1953年5月
+        - 今の形で開く
+      - - 1960年
+        - ローマ五輪
+      - - 1968年
+        - ユーロ決勝
+      - - 1987年
+        - 世界陸上
+      focus: 1932年
+      highlight_row: 0
+    image: assets/images/20261123_stadium_roma/03_w.jpg
+  - text: 1937年には、モレッティが広げて、6万人。いまより、1万634席、少ない数です。
+    card:
+      type: timeline
+      title: オリンピコの歩み
+      rows:
+      - - 1932年
+        - 開場（糸杉の競技場）
+      - - 1937年
+        - 広げて、6万人
+      - - 1953年5月
+        - 今の形で開く
+      - - 1960年
+        - ローマ五輪
+      - - 1968年
+        - ユーロ決勝
+      - - 1987年
+        - 世界陸上
+      focus: 1932年
+      highlight_row: 1
+    image: assets/images/20261123_stadium_roma/03_w.jpg
+  - text: 1953年5月17日、今の形で開きます。
+    card:
+      type: timeline
+      title: オリンピコの歩み
+      rows:
+      - - 1932年
+        - 開場（糸杉の競技場）
+      - - 1937年
+        - 広げて、6万人
+      - - 1953年5月
+        - 今の形で開く
+      - - 1960年
+        - ローマ五輪
+      - - 1968年
+        - ユーロ決勝
+      - - 1987年
+        - 世界陸上
+      focus: 1932年
+      highlight_row: 2
+    image: assets/images/20261123_stadium_roma/03_w.jpg
+  - text: 最初のサッカーは、イタリア対ハンガリー。
+    card: none
+    image: assets/images/20261123_stadium_roma/03_w.jpg
+  - text: ハンガリーが、3対0で、イタリアを破りました。
+    card: none
+    image: assets/images/20261123_stadium_roma/03_w.jpg
+    emph: true
+  - text: ラツィオの最初の試合は、次の日曜で、ユヴェントスに0対1で、負けました。
+    card: none
+    image: assets/images/20261123_stadium_roma/03_w.jpg
+  - text: 1960年の五輪の開催が決まり、今の名前になりました。
+    card:
+      type: timeline
+      title: オリンピコの歩み
+      rows:
+      - - 1932年
+        - 開場（糸杉の競技場）
+      - - 1937年
+        - 広げて、6万人
+      - - 1953年5月
+        - 今の形で開く
+      - - 1960年
+        - ローマ五輪
+      - - 1968年
+        - ユーロ決勝
+      - - 1987年
+        - 世界陸上
+      focus: 1932年
+      highlight_row: 3
+    image: assets/images/20261123_stadium_roma/04_w.jpg
+  - text: 8月25日の開会式。陸上では、ウィルマ・ルドルフが金メダル3つです。
+    card: none
+    image: assets/images/20261123_stadium_roma/04_w.jpg
+  - text: 1968年のユーロ決勝は、1対1のあと、再試合で、イタリアが2対0。
+    card:
+      type: timeline
+      title: オリンピコの歩み
+      rows:
+      - - 1932年
+        - 開場（糸杉の競技場）
+      - - 1937年
+        - 広げて、6万人
+      - - 1953年5月
+        - 今の形で開く
+      - - 1960年
+        - ローマ五輪
+      - - 1968年
+        - ユーロ決勝
+      - - 1987年
+        - 世界陸上
+      focus: 1932年
+      highlight_row: 4
+    image: assets/images/20261123_stadium_roma/04_w.jpg
+  - text: 1987年の世界陸上では、カール・ルイスが、100メートルで9秒93です。
+    card:
+      type: timeline
+      title: オリンピコの歩み
+      rows:
+      - - 1932年
+        - 開場（糸杉の競技場）
+      - - 1937年
+        - 広げて、6万人
+      - - 1953年5月
+        - 今の形で開く
+      - - 1960年
+        - ローマ五輪
+      - - 1968年
+        - ユーロ決勝
+      - - 1987年
+        - 世界陸上
+      focus: 1932年
+      highlight_row: 5
+    image: assets/images/20261123_stadium_roma/04_w.jpg
+- id: w90
+  heading: なぜ、1990年のW杯に向けて、屋根をかけて建て直したのか
+  bg: assets/images/20261123_stadium_roma/06_w.jpg
+  card:
+    type: table
+    title: 1990年の工事の金額（報道）
+    columns:
+    - 項目
+    - 中身
+    rows:
+    - - 当初
+      - 2330億リラ
+    - - のちの分析（報道）
+      - 約4500億リラ
+    - - 屋根だけ
+      - 約1600億リラ
+    - - 屋根のつり方
+      - 88本のケーブル
+    highlight_row: 1
+  narrator: 解説
+  tier: 報道
+  telop: 1988年から90年に建て直し。約8万5000席、テフロンの屋根。費用は2倍近いと伝えられる
+  sources:
+  - https://en.wikipedia.org/wiki/Stadio_Olimpico
+  - https://it.wikipedia.org/wiki/Stadio_Olimpico_(Roma)
+  - https://en.wikipedia.org/wiki/Stadio_della_Roma
+  - https://en.wikipedia.org/wiki/2025%E2%80%9326_AS_Roma_season
+  - https://www.quotidiano.net/sport/2007/05/10/10538-presentato_piano_ristrutturazione.shtml
+  - https://www.calcioefinanza.it/2026/09/29/prossime-tappe-nuovo-stadio-roma/
+  say:
+  - text: 1990年の大会に向けて、器は造り替えられることになります。
+    card: none
+    image: assets/images/20261123_stadium_roma/06_w.jpg
+  - text: 設計は、アンニバーレ・ヴィトッツィと、マウリツィオ・クレリチ。
+    card: none
+    image: assets/images/20261123_stadium_roma/06_w.jpg
+  - text: 工事は、1988年から1990年です。
+    card: none
+    image: assets/images/20261123_stadium_roma/06_w.jpg
+  - text: 席は、約8万5000。いまの7万634より、約1万4000、多い数です。
+    card: none
+    image: assets/images/20261123_stadium_roma/06_w.jpg
+  - text: 屋根は、テフロンの膜で、88本の鋼のケーブルでつります。
+    card:
+      type: table
+      title: 1990年の工事の金額（報道）
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 当初
+        - 2330億リラ
+      - - のちの分析（報道）
+        - 約4500億リラ
+      - - 屋根だけ
+        - 約1600億リラ
+      - - 屋根のつり方
+        - 88本のケーブル
+      highlight_row: 3
+    image: assets/images/20261123_stadium_roma/06_w.jpg
+    emph: true
+  - text: 屋根だけで、約1600億リラかかったとされます。
+    card:
+      type: table
+      title: 1990年の工事の金額（報道）
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 当初
+        - 2330億リラ
+      - - のちの分析（報道）
+        - 約4500億リラ
+      - - 屋根だけ
+        - 約1600億リラ
+      - - 屋根のつり方
+        - 88本のケーブル
+      highlight_row: 2
+    image: assets/images/20261123_stadium_roma/06_w.jpg
+  - text: 全体の費用は、当初、2330億リラでした。
+    card:
+      type: table
+      title: 1990年の工事の金額（報道）
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 当初
+        - 2330億リラ
+      - - のちの分析（報道）
+        - 約4500億リラ
+      - - 屋根だけ
+        - 約1600億リラ
+      - - 屋根のつり方
+        - 88本のケーブル
+      highlight_row: 0
+    image: assets/images/20261123_stadium_roma/06_w.jpg
+  - text: のちの分析では、約4500億リラと伝えられます。
+    card:
+      type: table
+      title: 1990年の工事の金額（報道）
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 当初
+        - 2330億リラ
+      - - のちの分析（報道）
+        - 約4500億リラ
+      - - 屋根だけ
+        - 約1600億リラ
+      - - 屋根のつり方
+        - 88本のケーブル
+      highlight_row: 1
+    image: assets/images/20261123_stadium_roma/06_w.jpg
+  - text: 割ると、当初の1.93倍です。
+    card:
+      type: calc
+      title: 何倍になったか（自分で割った）
+      terms:
+      - - 約4500億リラ
+        - のちの分析
+      - - 2330億リラ
+        - 当初
+      - - 1.93倍
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+    image: assets/images/20261123_stadium_roma/06_w.jpg
+    emph: true
+  - text: この器で、W杯は6試合ありました。
+    card: none
+    image: assets/images/20261123_stadium_roma/06_w.jpg
+  - text: 7月8日の決勝は、西ドイツ対アルゼンチンです。
+    card: none
+    image: assets/images/20261123_stadium_roma/06_w.jpg
+  - text: ブレーメのPKで、西ドイツが1対0で勝ちました。
+    card: none
+    image: assets/images/20261123_stadium_roma/06_w.jpg
+    emph: true
+- id: w08
+  heading: なぜ、2008年に、器をまた直したのか
+  bg: assets/images/20261123_stadium_roma/01_w.jpg
+  card:
+    type: table
+    title: 2007〜08年の工事（報道）
+    columns:
+    - 項目
+    - 中身
+    rows:
+    - - 目的
+      - 2009年の欧州決勝
+    - - 全体の費用
+      - 1672万ユーロ（税抜）
+    - - 安全の工事
+      - 385万ユーロ余り
+    - - 安全の負担
+      - コーニ・ローマ・ラツィオで等分
+    highlight_row: 3
+  narrator: 解説
+  tier: 報道
+  telop: 2009年の欧州決勝のため、2007〜08年に工事。安全の工事は3者で等分と伝えられる
+  sources:
+  - https://en.wikipedia.org/wiki/Stadio_Olimpico
+  - https://it.wikipedia.org/wiki/Stadio_Olimpico_(Roma)
+  - https://en.wikipedia.org/wiki/Stadio_della_Roma
+  - https://en.wikipedia.org/wiki/2025%E2%80%9326_AS_Roma_season
+  - https://www.quotidiano.net/sport/2007/05/10/10538-presentato_piano_ristrutturazione.shtml
+  - https://www.calcioefinanza.it/2026/09/29/prossime-tappe-nuovo-stadio-roma/
+  say:
+  - text: 2007年から08年に、器はまた直されました。
+    card: none
+    image: assets/images/20261123_stadium_roma/01_w.jpg
+  - text: 目的は、2009年のチャンピオンズリーグの決勝。
+    card:
+      type: table
+      title: 2007〜08年の工事（報道）
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 目的
+        - 2009年の欧州決勝
+      - - 全体の費用
+        - 1672万ユーロ（税抜）
+      - - 安全の工事
+        - 385万ユーロ余り
+      - - 安全の負担
+        - コーニ・ローマ・ラツィオで等分
+      highlight_row: 0
+    image: assets/images/20261123_stadium_roma/01_w.jpg
+    emph: true
+  - text: 欧州サッカー連盟の、最上位の基準に、合わせる工事です。
+    card: none
+    image: assets/images/20261123_stadium_roma/01_w.jpg
+  - text: 費用は、全体で1672万ユーロ、税抜きと伝えられます。
+    card:
+      type: table
+      title: 2007〜08年の工事（報道）
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 目的
+        - 2009年の欧州決勝
+      - - 全体の費用
+        - 1672万ユーロ（税抜）
+      - - 安全の工事
+        - 385万ユーロ余り
+      - - 安全の負担
+        - コーニ・ローマ・ラツィオで等分
+      highlight_row: 1
+    image: assets/images/20261123_stadium_roma/01_w.jpg
+  - text: このうち、安全の工事は、385万ユーロあまり。
+    card:
+      type: table
+      title: 2007〜08年の工事（報道）
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 目的
+        - 2009年の欧州決勝
+      - - 全体の費用
+        - 1672万ユーロ（税抜）
+      - - 安全の工事
+        - 385万ユーロ余り
+      - - 安全の負担
+        - コーニ・ローマ・ラツィオで等分
+      highlight_row: 2
+    image: assets/images/20261123_stadium_roma/01_w.jpg
+  - text: この分は、コーニ、ローマ、ラツィオの3者で、等分です。
+    card:
+      type: table
+      title: 2007〜08年の工事（報道）
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 目的
+        - 2009年の欧州決勝
+      - - 全体の費用
+        - 1672万ユーロ（税抜）
+      - - 安全の工事
+        - 385万ユーロ余り
+      - - 安全の負担
+        - コーニ・ローマ・ラツィオで等分
+      highlight_row: 3
+    image: assets/images/20261123_stadium_roma/01_w.jpg
+    emph: true
+  - text: 割ると、1者、約128万ユーロ。
+    card:
+      type: calc
+      title: 1者の負担（自分で割った）
+      terms:
+      - - 385万6463ユーロ
+        - 安全の工事
+      - - 3者
+        - コーニ・ローマ・ラツィオ
+      - - 約128万ユーロ
+        - 1者の分
+      ops:
+      - ÷
+      - ＝
+    image: assets/images/20261123_stadium_roma/01_w.jpg
+  - text: 席は、約5000、減らす計画でした。
+    card: none
+    image: assets/images/20261123_stadium_roma/01_w.jpg
+  - text: 2009年5月27日、決勝は、バルセロナがマンチェスター・ユナイテッドに、2対0。
+    card: none
+    image: assets/images/20261123_stadium_roma/01_w.jpg
+  - text: 入場は、6万2467人でした。
+    card: none
+    image: assets/images/20261123_stadium_roma/01_w.jpg
+- id: newst
+  heading: なぜ、ローマは、持ち主でない器を出て、新しい器を建てようとするのか
+  bg: assets/images/20261123_stadium_roma/05_w.jpg
+  card:
+    type: table
+    title: ローマの新しい器（計画）
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 場所
+      - ピエトララータ
+    - - 収容
+      - 6万605席
+    - - 着工
+      - 2027年春の予定
+    - - 開場
+      - 2030年の予定
+    - - 土地の使用権
+      - 90年を申請
+    highlight_row: 1
+  narrator: 解説
+  tier: 報道
+  telop: 新しい器はピエトララータに6万605席。2026年9月28日、許可の会議が賛成で終わった
+  sources:
+  - https://en.wikipedia.org/wiki/Stadio_Olimpico
+  - https://it.wikipedia.org/wiki/Stadio_Olimpico_(Roma)
+  - https://en.wikipedia.org/wiki/Stadio_della_Roma
+  - https://en.wikipedia.org/wiki/2025%E2%80%9326_AS_Roma_season
+  - https://www.quotidiano.net/sport/2007/05/10/10538-presentato_piano_ristrutturazione.shtml
+  - https://www.calcioefinanza.it/2026/09/29/prossime-tappe-nuovo-stadio-roma/
+  say:
+  - text: この器の持ち主は、2004年に、国の側の会社へ移りました。
+    card: none
+    image: assets/images/20261123_stadium_roma/05_w.jpg
+  - text: 2019年に、その会社の名前は、スポーツ・エ・サルーテに替わっています。
+    card: none
+    image: assets/images/20261123_stadium_roma/05_w.jpg
+  - text: ローマの新しい器は、ピエトララータに建つ計画です。
+    card:
+      type: table
+      title: ローマの新しい器（計画）
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 場所
+        - ピエトララータ
+      - - 収容
+        - 6万605席
+      - - 着工
+        - 2027年春の予定
+      - - 開場
+        - 2030年の予定
+      - - 土地の使用権
+        - 90年を申請
+      highlight_row: 1
+    image: assets/images/20261123_stadium_roma/05_w.jpg
+  - text: 収容は、6万605席の計画です。
+    card:
+      type: table
+      title: ローマの新しい器（計画）
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 場所
+        - ピエトララータ
+      - - 収容
+        - 6万605席
+      - - 着工
+        - 2027年春の予定
+      - - 開場
+        - 2030年の予定
+      - - 土地の使用権
+        - 90年を申請
+      highlight_row: 1
+    image: assets/images/20261123_stadium_roma/05_w.jpg
+    emph: true
+  - text: 2026年3月、ローマ市議会が、公共の利益を認めました。
+    card: none
+    image: assets/images/20261123_stadium_roma/05_w.jpg
+  - text: 2026年9月28日には、許可を決める会議が、賛成で終わりました。
+    card: none
+    image: assets/images/20261123_stadium_roma/05_w.jpg
+  - text: 着工は、2027年の春の予定です。
+    card:
+      type: table
+      title: ローマの新しい器（計画）
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 場所
+        - ピエトララータ
+      - - 収容
+        - 6万605席
+      - - 着工
+        - 2027年春の予定
+      - - 開場
+        - 2030年の予定
+      - - 土地の使用権
+        - 90年を申請
+      highlight_row: 2
+    image: assets/images/20261123_stadium_roma/05_w.jpg
+  - text: 開場は、2030年の予定と伝えられます。
+    card:
+      type: table
+      title: ローマの新しい器（計画）
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 場所
+        - ピエトララータ
+      - - 収容
+        - 6万605席
+      - - 着工
+        - 2027年春の予定
+      - - 開場
+        - 2030年の予定
+      - - 土地の使用権
+        - 90年を申請
+      highlight_row: 3
+    image: assets/images/20261123_stadium_roma/05_w.jpg
+  - text: 土地は、90年の使用権を求めています。
+    card:
+      type: table
+      title: ローマの新しい器（計画）
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 場所
+        - ピエトララータ
+      - - 収容
+        - 6万605席
+      - - 着工
+        - 2027年春の予定
+      - - 開場
+        - 2030年の予定
+      - - 土地の使用権
+        - 90年を申請
+      highlight_row: 4
+    image: assets/images/20261123_stadium_roma/05_w.jpg
+  - text: 2032年のユーロの会場にも、間に合わせる計画です。
+    card: none
+    image: assets/images/20261123_stadium_roma/05_w.jpg
+- id: view
+  viewpoint: true
+  heading: 見立て・新しい器の席は、去年の平均の入場より、少なくてよいのか
+  bg: assets/images/20261123_stadium_roma/01_w.jpg
+  card:
+    type: table
+    title: 入場と席（2025-26）
+    columns:
+    - 項目
+    - 人数
+    rows:
+    - - いまの席
+      - 7万634
+    - - 去年の最多入場
+      - 6万7785
+    - - 去年の平均入場
+      - 6万1796
+    - - 新しい器の席
+      - 6万605
+    highlight_row: 3
+  narrator: 解説
+  tier: 報道
+  telop: 新しい席6万605は、去年の平均入場6万1796より1191少ない
+  sources:
+  - https://en.wikipedia.org/wiki/Stadio_Olimpico
+  - https://it.wikipedia.org/wiki/Stadio_Olimpico_(Roma)
+  - https://en.wikipedia.org/wiki/Stadio_della_Roma
+  - https://en.wikipedia.org/wiki/2025%E2%80%9326_AS_Roma_season
+  - https://www.quotidiano.net/sport/2007/05/10/10538-presentato_piano_ristrutturazione.shtml
+  - https://www.calcioefinanza.it/2026/09/29/prossime-tappe-nuovo-stadio-roma/
+  say:
+  - text: では、新しい器の6万605席は、足りるのか。数字は11月13日時点です。
+    card: none
+    image: assets/images/20261123_stadium_roma/01_w.jpg
+    emph: true
+  - text: 2025年から26年の、セリエAのホームの平均は、6万1796人です。
+    card:
+      type: table
+      title: 入場と席（2025-26）
+      columns:
+      - 項目
+      - 人数
+      rows:
+      - - いまの席
+        - 7万634
+      - - 去年の最多入場
+        - 6万7785
+      - - 去年の平均入場
+        - 6万1796
+      - - 新しい器の席
+        - 6万605
+      highlight_row: 2
+    image: assets/images/20261123_stadium_roma/01_w.jpg
+  - text: 最多は、2025年12月29日、ジェノア戦の6万7785人。
+    card:
+      type: table
+      title: 入場と席（2025-26）
+      columns:
+      - 項目
+      - 人数
+      rows:
+      - - いまの席
+        - 7万634
+      - - 去年の最多入場
+        - 6万7785
+      - - 去年の平均入場
+        - 6万1796
+      - - 新しい器の席
+        - 6万605
+      highlight_row: 1
+    image: assets/images/20261123_stadium_roma/01_w.jpg
+    mark:
+      kind: circle
+      row: 1
+  - text: いまの席は、7万634。平均は、席の87.5%です。
+    card:
+      type: calc
+      title: 平均の入りは、いまの席の何%か（自分で割った）
+      terms:
+      - - 6万1796人
+        - 去年の平均
+      - - 7万634席
+        - いまの席
+      - - 87.5%
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+    image: assets/images/20261123_stadium_roma/01_w.jpg
+  - text: 最多の日は、席の96.0%。
+    card: none
+    image: assets/images/20261123_stadium_roma/01_w.jpg
+  - text: 新しい席は、6万605。
+    card:
+      type: table
+      title: 入場と席（2025-26）
+      columns:
+      - 項目
+      - 人数
+      rows:
+      - - いまの席
+        - 7万634
+      - - 去年の最多入場
+        - 6万7785
+      - - 去年の平均入場
+        - 6万1796
+      - - 新しい器の席
+        - 6万605
+      highlight_row: 3
+    image: assets/images/20261123_stadium_roma/01_w.jpg
+  - text: 平均の入場より、1191人、少ない数です。
+    card:
+      type: calc
+      title: 平均の入場は、新しい席より何人多いか
+      terms:
+      - - 6万1796人
+        - 去年の平均
+      - - 6万605席
+        - 新しい器の席
+      - - 1191人
+        - 引いた答え
+      ops:
+      - −
+      - ＝
+    image: assets/images/20261123_stadium_roma/01_w.jpg
+    emph: true
+  - text: 最多の6万7785人には、7180人、足りません。
+    card: none
+    image: assets/images/20261123_stadium_roma/01_w.jpg
+  - text: 去年の平均の入りが、新しい器の席より、多いことになります。
+    card: none
+    image: assets/images/20261123_stadium_roma/01_w.jpg
+    emph: true

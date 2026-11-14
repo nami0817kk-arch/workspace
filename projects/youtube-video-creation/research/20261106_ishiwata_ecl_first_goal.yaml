@@ -1,0 +1,124 @@
+# 取材メモ（2026年11月6日）石渡ネルソン、欧州カップ戦で初ゴール。終盤に追いつかれECL開幕3連勝ならず（ニュースのショート。見せ方 X＝冒頭1秒に強い一言）
+# 取材: 2026-11-06。requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約は使っていない（検索は記事のURLを探すためだけ）。ブラウザの道具は使っていない。
+# 題材の元: ゲキサカ 462606「石渡ネルソンが欧州カップ戦初ゴール! シントトロイデンはブランに追いつかれてドロー」（全文）。
+# 出典で確かめたこと:
+#   ・ESPN の試合データ（site.api.espn.com summary event=401915820、11/5 20:00 UTC）:
+#       シント＝トロイデン 1-1 ブラン。48分 石渡（右足）／78分 マティセン（ブラン、コーナーキックの流れからヘディング）。
+#       石渡・谷口・小久保は先発で交代なし、新川は先発して59分に交代（メルラン）。
+#   ・クラブ公式（stvv.jp/news/game/20261106_1、全文）: 得点 石渡（48分）、マティセン（79分）。新川（59分 メルラン）。
+#       「走り込んだネルソン選手が放ったシュートは一度GKに防がれるも、こぼれ球を自ら押し込んで」。
+#       ECL は開幕2連勝のあと2勝1分で無敗。リーグ戦の5連敗を受けてデ・メイヤー監督との契約を解除し、暫定の体制で臨んだ試合。
+#   ・ゲキサカ 462606: 後半3分、ムブクのパスから石渡が右足でシュート→ブロック→こぼれ球を右足で。今季C大阪から完全移籍、加入後2得点目。
+#       次節は26日、敵地でハイデュク・スプリト（クロアチア）。U-21日本代表。
+#   ・ゲキサカ 461116（10/15）: ECL 第1節イベリア戦の前半4分、石渡の左足ボレーがVARでオフサイド → 欧州大会初ゴールは「幻」に。
+#       8月の EL 予選プレーオフ2試合では得点なし。
+# 記事どうしの食い違い:
+#   ・同点の分: ESPN 78分、クラブ公式・ゲキサカ 79分（後半34分）→ 台本は分を言わず「終盤」とする。
+#   ・最初のシュートを止めたもの: クラブ公式「GK」、ゲキサカ「ブロック」→ 台本は「一度は防がれ」とだけ言う。
+#   ・新川: サッカーキングのまとめは「フル出場」、ESPN・クラブ公式は59分に交代 → 新川には触れない。
+#   ・クラブ公式の見出しは「第2節」、本文は「第3節」→ ゲキサカ・ESPN と合う「第3節」。
+# 自分で数えたもの: 幻のゴール（10/15）から、認められた初ゴール（11/5）まで21日。ECL 3試合で 2勝1分＝勝ち点7。
+# 前の本との重なり: 石渡ネルソンの本は無い（scripts を検索）。
+# 【言わないこと】監督の解任の中身（題から離れる。背景として1行だけ）／U-21代表・A代表の話（題の出来事より前の発言）。
+# 写真: すべてゲキサカの写真（©Koki NAGAHAMA/GEKISAKA、U-21代表の練習）。クラブの写真は使っていない。
+#   02 ゲキサカ 462606 の主写真／03・04 ゲキサカ photonews 459930（9/29 堺市での練習、photo_no=3・4、説明に「MF 石渡ネルソン」）／05 ゲキサカ 459432 の主写真（9/22 合流の日の練習）。
+#   外したもの: ゲキサカ 461116（©Getty Images）、stvv.jp の Belgaimage 4枚（Belga は通信社なので代理店と同じ扱い、親の判断 11/6）。
+#   この試合の本人の写真は、代理店の表記の無いものが見つからなかった（STVV の公式 X・Instagram はブラウザの道具を使わないと読めないので当たれていない）。
+# 本人の言葉: 見つからなかった（クラブ公式・ゲキサカ・サッカーキングに無い）。作らない。X。
+# 反応: 0件（nofootynolife はまとめなので使わない。作らない）。
+slot: japanese
+date: "2026年11月6日"
+format: news
+no_main: true
+people: [石渡ネルソン, シント＝トロイデン, ブラン, 小久保玲央ブライアン, 谷口彰悟, セレッソ大阪]
+
+short_style: X
+short_hook_word: 幻から21日
+short_photos:
+  - assets/images/20261106_ishiwata_ecl_first_goal/03_v.jpg
+  - assets/images/20261106_ishiwata_ecl_first_goal/02_v.jpg
+  - assets/images/20261106_ishiwata_ecl_first_goal/04_v.jpg
+  - assets/images/20261106_ishiwata_ecl_first_goal/05_v.jpg
+short_question: 石渡ネルソンは、26日のハイデュク・スプリト戦でも点を取ると思いますか。
+short_telops: []
+
+theme:
+  id: ishiwata_ecl_first_goal
+  league: netherlands
+  league_name: カンファレンスリーグ
+  prefix: ""
+  title: 石渡ネルソン、3週間前はVARで消えた欧州初ゴール。ブラン戦で起きたこと
+  hook: ""
+  question: 石渡ネルソンの欧州カップ戦初ゴールは、どんな形で生まれたのか
+  takeaway: 10月15日にVARで消えた欧州初ゴールから21日。今度は認められた。ただチームは終盤に追いつかれ、カンファレンスリーグは2勝1分で勝ち点7
+
+thumbnail:
+  layout: face
+  line1: 石渡ネルソン 欧州初ゴール
+  line2: 3週間前は「幻」だった
+  tags: [石渡ネルソン, シント＝トロイデン]
+  photo: assets/images/20261106_ishiwata_ecl_first_goal/03_w.jpg
+  short_photo: assets/images/20261106_ishiwata_ecl_first_goal/03_v.jpg
+
+answer: 一度は防がれたシュートのこぼれ球を、自分で押し込んだ。3週間前のオフサイドの幻のあとの、本当の初ゴール
+watch: 26日のハイデュク・スプリト戦（敵地）
+
+sections:
+  - id: what
+    main: true
+    heading: 3週間前に消えた欧州初ゴールを、石渡ネルソンはどう取り返したか
+    tier: 報道
+    telop: 石渡ネルソン、欧州カップ戦で初ゴール
+    say:
+      - text: シント＝トロイデンの石渡ネルソンが、ヨーロッパの大会で初ゴールを決めました。
+      - text: 実は3週間前の10月15日、ヨーロッパの大会、カンファレンスリーグでも、石渡はネットを揺らしています。
+        image: assets/images/20261106_ishiwata_ecl_first_goal/02_w.jpg
+      - text: 左足のボレーでしたが、ビデオ判定でオフサイド。欧州での初ゴールは、幻に終わりました。
+        emph: true
+      - text: そして5日、ホームのブラン戦。スコアが動かないまま迎えた、後半3分でした。
+        image: assets/images/20261106_ishiwata_ecl_first_goal/04_w.jpg
+      - text: 石渡のシュートは、一度は防がれます。
+      - text: それでも、こぼれてきたボールを、自分で右足で押し込みました。
+        emph: true
+      - text: ただ、チームは終盤に追いつかれ、勝ち点3を逃しました。
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/world/detail/?462606-462606-fl
+      - https://web.gekisaka.jp/news/world/detail/?461116-461116-fl
+      - https://stvv.jp/news/game/20261106_1/
+      - https://www.espn.com/soccer/match/_/gameId/401915820
+  - id: game
+    heading: 1点を守り切れず、開幕3連勝を逃したシント＝トロイデン
+    tier: 報道
+    telop: シント＝トロイデン 1-1 ブラン
+    say:
+      - text: 先制点を守り切れなかったのは、終盤の場面でした。
+        card: {type: table, title: シント＝トロイデン 1-1 ブラン, columns: [分, できごと], rows: [[48分, 石渡の先制点], [終盤, コーナーキックの流れから、頭で同点]], highlight_row: 0}
+      - text: ブランに、コーナーキックの流れから頭で決められました。
+      - text: カンファレンスリーグ開幕からの連勝は、2で止まりました。
+      - text: ゴールキーパーの小久保玲央ブライアンと、谷口彰悟もフル出場。小久保は何度も好セーブを見せていました。
+        card: none
+        image: assets/images/20261106_ishiwata_ecl_first_goal/05_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401915820
+      - https://stvv.jp/news/game/20261106_1/
+      - https://web.gekisaka.jp/news/world/detail/?462606-462606-fl
+  - id: view
+    viewpoint: true
+    heading: 引き分けでも、シント＝トロイデンの欧州での位置はどうか
+    tier: 背景
+    telop: カンファレンスリーグは3試合で2勝1引き分け、勝ち点7
+    say:
+      - text: 見立てです。実はこの試合、チームは監督が代わった直後でした。
+        card: {type: table, title: シント＝トロイデン いまの成績, columns: [大会, 成績], rows: [[カンファレンスリーグ, 3試合 2勝1引き分け（勝ち点7）], [ベルギーリーグ, 直近5連敗]], highlight_row: 0}
+      - text: リーグ戦の5連敗で、監督との契約を解いたばかりです。
+      - text: それでもカンファレンスリーグでは、3試合で2勝1引き分け、勝ち点7。まだ負けていません。
+      - text: 幻のゴールから21日。石渡は、本当の初ゴールをその無敗の中で手にしました。
+        card: none
+        image: assets/images/20261106_ishiwata_ecl_first_goal/03_w.jpg
+      - text: 次は26日、敵地でクロアチアのハイデュク・スプリトと戦います。
+    official: false
+    sources:
+      - https://stvv.jp/news/game/20261106_1/
+      - https://web.gekisaka.jp/news/world/detail/?462606-462606-fl

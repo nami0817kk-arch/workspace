@@ -1,0 +1,353 @@
+# 取材メモ（11/13 金、シリーズ「比べる」、key: compare_342229_132098）。ハリー・ケイン（バイエルン・33歳）×キリアン・エムバペ（レアル・マドリード・27歳）。
+# **情報の時点は 2026-11-11**。FotMob・DataMB は使っていない。数字は Transfermarkt（2026-11-11 取得。控え: research/raw/20261113_kane_tm.json・20261113_mbappe_tm.json）。
+#   Transfermarkt 番号：ケイン 132098・エムバペ 342229。API の player・market-value-history・performance-season（2019〜2026季）・performance-game を2.5秒あけて取得。
+# **選んだ理由**：2人とも移籍の1季目に44点（ケイン 23/24 バイエルン、エムバペ 24/25 レアル）。クラブの公式戦の合計。アシストは 12 と 5、出場時間は 3934分 と 4744分。
+#   2人を比べる軸が立つ：1点取るまで・1つ絡むまでの時間（自分で割る）、PKを除く得点（36 と 37）、2季目の入れ替わり、市場価値（6000万 と 2億）。
+#   重なり：scripts/*compare*・posted.json・covered.yaml を grep。ケインは 10/25 にレヴァンドフスキとの比較、エムバペは 10/2 ハーランド・10/16 ヴィニシウスとの比較。**この2人の組は初めて**。
+#   同じ日の picks には人名の重なり無し（11/13 の選手紹介・スタジアム・ユニフォーム・国内レジェンドとは別）。
+#   **外した候補**：ベリンガム×ライス（ともに10/21前後に別の相手と比較済み）・ラウタロ×アルバレス（10/11・10/12・10/22 に個別の本あり）・ヴィルツ×ソボスライ（10/23・11/1 に別の相手と比較済み）・ヤマル×オリーセ（10/22・10/24 に別の相手と比較済み）。
+#   日本との接点：無し（入れない）。
+# **2人とも今季も欧州7リーグの1部**：バイエルン（ブンデス）・レアル・マドリード（ラ・リーガ）。TM の現所属（バイエルン 27 は 2023-08-12〜、レアル 418 は 2024-07-01〜）。
+#   **注意**：11/7〜11/9 の週末の試合までを数えている。台本は「11月11日までの数字」と言い、次の試合の日程は言わない。
+# **使った数**（TM の performance-season。クラブのトップチームの公式戦。**代表戦は混ぜない**。試合・出場時間・得点・アシスト）
+#   ケイン：22/23 トッテナム 49試合 4302分 32点6A／23/24 バイエルン 45試合 3934分 44点12A／24/25 51試合 3958分 41点14A／25/26 51試合 4050分 61点7A／26/27 15試合 1252分 10点10A
+#   エムバペ：22/23 PSG 43試合 3564分 41点10A／23/24 PSG 48試合 3869分 44点10A／24/25 レアル 59試合 4744分 44点5A／25/26 44試合 3621分 42点7A／26/27 16試合 1433分 17点3A
+#   PKで決めた点（TM の penaltyShooterGoalsScored の合計）：ケイン 23/24 8（PKを除く 36）・エムバペ 24/25 7（PKを除く 37）
+#   計算：1季目 1点取るまで ケイン 3934÷44＝89.4／エムバペ 4744÷44＝107.8。1つ絡むまで 3934÷56＝70.3／4744÷49＝96.8
+#         2季目（ケイン 24/25・エムバペ 25/26）1点取るまで 3958÷41＝96.5／3621÷42＝86.2。1つ絡むまで 3958÷55＝72.0／3621÷49＝73.9
+#         今季 1点取るまで 1252÷10＝125.2／1433÷17＝84.3。1つ絡むまで 1252÷20＝62.6／1433÷20＝71.7（どちらも900分超）
+# 市場価値（TM）：ケイン 2023-06 9000万€→2024-05 1億€→2024-12 9000万→2025-06 7500万→2025-12 6500万→2026-05 6000万（最高 1億5000万€ は2017〜2019年）／エムバペ 2023-06 1億8000万→2024-06 1億8000万→2024-12 1億6000万→2025-06 1億8000万→2025-12 2億→2026-07 2億（最高）
+# 経歴（Wikipedia）：ケイン 1993-07-28 ロンドン生、トッテナム→バイエルン 2023-08-12（基本 1億€＋追加 1000万€、ブンデス歴代でもっとも高い移籍）。2023-24 に欧州得点王の賞（ブンデス 36点）。
+#   エムバペ 1998-12-20 パリ生、PSG→レアル（2024年6月3日に発表、契約満了の移籍で移籍金なし）。2024-25 に欧州得点王の賞。2025-26 はラ・リーガ 25点で得点王。2026-10-25 バルセロナ戦の2点でレアル通算100点。
+# 写真：k1 バイエルン関連の記事の主写真・k2〜k6 既存の控え（ケイン：Commons 2026 W杯 イングランド代表 CC BY-SA ほか）・m1/m3/m5 レアル公式・m2 記事の主写真・m4 Commons（2026 フランス代表 CC BY-SA 4.0 Bryan Berlin）。pair_a/b/c は pairphoto。
+slot: other_1
+date: "2026年11月11日"
+format: news
+series: 比べる
+people:
+  - ハリー・ケイン
+  - キリアン・エムバペ
+  - バイエルン
+  - レアル・マドリード
+
+theme:
+  end_bg: assets/images/20261113_compare_342229_132098/pair_c/01.jpg
+  id: compare_342229_132098
+  league: germany
+  kind: other
+  topic: ケインとエムバペ
+  prefix: ""
+  title: ケインとエムバペ、移籍1季目の得点はどちらも44。違いはどこにあるのか
+  hook: ""
+  question: ケインはバイエルン、エムバペはレアル・マドリード。移籍1季目の得点がどちらも44だった2人は、数字のどこで差がついたのか
+  takeaway: 移籍1季目の得点は44と44。ケインは短い時間と12のアシストで絡み、2季目からは1点取るまでの時間でエムバペが上回っている。差はアシストと時間の使い方にあった
+  league_name: ブンデスリーガ・ラ・リーガ
+  opening_image: assets/images/20261113_compare_342229_132098/pair_d/01.jpg
+
+short_title: ケインとエムバペ、移籍1季目の得点はどちらも44
+
+thumbnail:
+  photo: assets/images/20261113_compare_342229_132098/pair_a/01.jpg
+  photos:
+    - assets/images/20261113_compare_342229_132098/k1/01_t.jpg
+    - assets/images/20261113_compare_342229_132098/m1/01_t.jpg
+  short_photo: assets/images/20261113_compare_342229_132098/pair_a/01_v.jpg
+  face_link: VS
+  line1: ケインとエムバペ
+  line2: 移籍1季目の得点 44と44
+  tags: [ケイン, エムバペ, バイエルン, レアル・マドリード]
+
+answer: 得点は44で同じ。差がついたのはアシストで、12と5
+watch: 毎日、数字でサッカーを読み解きます
+
+sections:
+  - id: hook
+    heading: 移籍1季目に、2人はいくつ点を取ったのか
+    tier: 報道
+    telop: クラブの公式戦
+    narrator: 解説
+    card: &hookcard
+      type: stats
+      title: 移籍1季目の得点（クラブの公式戦）
+      items:
+        - ["44", 点, ケイン]
+        - ["44", 点, エムバペ]
+        - ["12と5", アシスト, 差がついたところ]
+      focus: 2
+    say:
+      - text: バイエルンのストライカー、ハリー・ケイン。
+        image: assets/images/20261113_compare_342229_132098/k5/01.jpg
+        card: none
+      - text: そしてレアル・マドリードのストライカー、キリアン・エムバペ。
+        image: assets/images/20261113_compare_342229_132098/m1/01_w.jpg
+        card: none
+      - text: 2人とも、新しいクラブでの1季目に、同じ数の点を取りました。
+        image: assets/images/20261113_compare_342229_132098/pair_d/01.jpg
+        card: none
+      - text: 数えるのは、11月11日までのクラブの公式戦です。
+        image: assets/images/20261113_compare_342229_132098/k3/01_w.jpg
+        card: {<<: *hookcard, focus: 0}
+      - text: 移籍1季目の得点は、ケインが44、エムバペも44。
+        image: assets/images/20261113_compare_342229_132098/m1/01_w.jpg
+        card: {<<: *hookcard, focus: 1}
+      - text: まったく同じ数なのに、アシストは12と5。ここに大きな差があります。
+        emph: true
+        image: assets/images/20261113_compare_342229_132098/m4/01_w.jpg
+        card: {<<: *hookcard, focus: 2}
+      - text: この差が2季目と今季にどう響いたのか、順番に確かめます。
+        image: assets/images/20261113_compare_342229_132098/pair_c/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/harry-kane/leistungsdaten/spieler/132098
+      - https://www.transfermarkt.com/kylian-mbappe/leistungsdaten/spieler/342229
+
+  - id: data
+    heading: ケインとエムバペは、どこから、いくらで移った選手なのか
+    tier: 報道
+    telop: 33歳と27歳
+    narrator: 解説
+    card: &datacard
+      type: duel
+      left: {name: ケイン, club: バイエルン, photo: assets/images/20261113_compare_342229_132098/k1/01_sq.jpg, color: "#dc052d"}
+      right: {name: エムバペ, club: レアル・マドリード, photo: assets/images/20261113_compare_342229_132098/m1/01_sq.jpg, color: "#d4af37"}
+      rows:
+        - [生まれた日, 1993年7月28日, 1998年12月20日]
+        - [代表, イングランド, フランス]
+        - [前のクラブ, トッテナム, パリ・サンジェルマン]
+        - [移った時期, 2023年8月, 2024年7月]
+        - [移った年齢, 30歳, 25歳]
+        - [移籍金（報道）, 1億€＋追加, なし]
+        - [市場価値, 6000万€, 2億€]
+      bars: false
+      note: ケインの追加は最大1000万€。エムバペは契約満了での移籍。市場価値は最新の値
+    say:
+      - text: ケインは33歳のイングランド代表。2023年8月、トッテナムから移りました。
+        image: assets/images/20261113_compare_342229_132098/k3/01_w.jpg
+        card: {<<: *datacard, highlight_row: 前のクラブ}
+      - text: 基本の移籍金は1億ユーロ。ブンデスリーガの歴代でも、いちばん高い移籍でした。
+        image: assets/images/20261113_compare_342229_132098/k3/01_w.jpg
+        card: {<<: *datacard, highlight_row: 移籍金（報道）}
+      - text: エムバペは27歳のフランス代表。パリ・サンジェルマンから来ました。
+        image: assets/images/20261113_compare_342229_132098/m4/01_w.jpg
+        card: {<<: *datacard, highlight_row: 前のクラブ}
+      - text: 契約が終わってからの移籍で、移籍金はありません。
+        emph: true
+        image: assets/images/20261113_compare_342229_132098/m4/01_w.jpg
+        card: none
+      - text: 移った年齢は、ケインが30歳、エムバペが25歳でした。
+        image: assets/images/20261113_compare_342229_132098/pair_b/01.jpg
+        card: {<<: *datacard, highlight_row: 移った年齢}
+    sources:
+      - https://www.transfermarkt.com/harry-kane/profil/spieler/132098
+      - https://www.transfermarkt.com/kylian-mbappe/profil/spieler/342229
+      - https://en.wikipedia.org/wiki/Harry_Kane
+      - https://en.wikipedia.org/wiki/Kylian_Mbapp%C3%A9
+
+  - id: seasons
+    heading: 移る前の季と、移ってからの季で、点はどう変わったのか
+    tier: 報道
+    telop: 季ごとの数（クラブの公式戦）
+    narrator: 解説
+    card: &seasoncard
+      type: table
+      title: 季ごとの数（クラブのトップチームの公式戦）
+      columns: [選手, 季, 試合, 得点, アシスト]
+      rows:
+        - [ケイン, 22/23, "49", "32", "6"]
+        - [ケイン, 23/24, "45", "44", "12"]
+        - [ケイン, 24/25, "51", "41", "14"]
+        - [ケイン, 25/26, "51", "61", "7"]
+        - [エムバペ, 22/23, "43", "41", "10"]
+        - [エムバペ, 23/24, "48", "44", "10"]
+        - [エムバペ, 24/25, "59", "44", "5"]
+        - [エムバペ, 25/26, "44", "42", "7"]
+      note: 移る前はケインがトッテナム、エムバペがパリ・サンジェルマン。移った季は23/24のケイン、24/25のエムバペ
+    say:
+      - text: 季ごとに、試合と点の数を見ていきます。
+        image: assets/images/20261113_compare_342229_132098/k4/01_w.jpg
+        card: *seasoncard
+      - text: ケインは、トッテナム最後の季が32点。バイエルンでの1季目に44点まで伸びました。
+        image: assets/images/20261113_compare_342229_132098/k5/01.jpg
+        card: {<<: *seasoncard, highlight_row: 1}
+      - text: そのあとも41点、61点。移ってからの季は、いちばん少なくても41点です。
+        image: assets/images/20261113_compare_342229_132098/k4/01_w.jpg
+        card: none
+      - text: エムバペは、パリ最後の季が44点。レアルの1季目も、同じ44点でした。
+        image: assets/images/20261113_compare_342229_132098/m1/01_w.jpg
+        card: {<<: *seasoncard, highlight_row: 6}
+      - text: 2季目は42点。移っても、点を取る数は大きく変わっていません。
+        emph: true
+        image: assets/images/20261113_compare_342229_132098/m1/01_w.jpg
+        card: {<<: *seasoncard, highlight_row: 7}
+    sources:
+      - https://www.transfermarkt.com/harry-kane/leistungsdaten/spieler/132098
+      - https://www.transfermarkt.com/kylian-mbappe/leistungsdaten/spieler/342229
+
+  - id: split
+    heading: 1点取るまでと、1つ絡むまで。速いのはどちらなのか
+    tier: 報道
+    main: true
+    telop: 出場時間÷得点、出場時間÷得点＋アシスト
+    narrator: 解説
+    card: &splitcard
+      type: duel
+      left: {name: ケイン, club: バイエルン, photo: assets/images/20261113_compare_342229_132098/k1/01_sq.jpg, color: "#dc052d"}
+      right: {name: エムバペ, club: レアル・マドリード, photo: assets/images/20261113_compare_342229_132098/m1/01_sq.jpg, color: "#d4af37"}
+      rows:
+        - [1季目の出場時間, 3934分, 4744分]
+        - [得点, "44", "44"]
+        - [アシスト, "12", "5"]
+        - [1点取るまで, 約89分, 約108分]
+        - [1つ絡むまで, 約70分, 約97分]
+        - [PKを除く得点, "36", "37"]
+      bars: [1季目の出場時間, 得点, アシスト]
+      lower: [1点取るまで, 1つ絡むまで]
+      note: 移籍1季目、クラブの公式戦。かかった時間は自分で計算した値
+    say:
+      - text: 移籍1季目の、ケインとエムバペ。数字を並べます。
+        short_only: true
+        image: assets/images/20261113_compare_342229_132098/pair_a/01.jpg
+        card: none
+      - text: かかった時間を比べるため、出場時間を得点で割ります。
+        image: assets/images/20261113_compare_342229_132098/k5/01.jpg
+        card: {<<: *splitcard, highlight_row: 1季目の出場時間}
+      - text: 1点取るまでは、ケインが約89分、エムバペが約108分。
+        image: assets/images/20261113_compare_342229_132098/m4/01_w.jpg
+        card: {<<: *splitcard, highlight_row: 1点取るまで}
+      - text: ケインのほうが、2割近く短い時間でした。
+        image: assets/images/20261113_compare_342229_132098/k3/01_w.jpg
+        card: none
+      - text: 割る数にアシストも加えると、差はさらに開きます。
+        image: assets/images/20261113_compare_342229_132098/m4/01_w.jpg
+        card: {<<: *splitcard, highlight_row: アシスト}
+      - text: 1つ絡むまでは、ケインが約70分、エムバペが約97分。
+        image: assets/images/20261113_compare_342229_132098/k4/01_w.jpg
+        card: {<<: *splitcard, highlight_row: 1つ絡むまで}
+      - text: 差を生んだのは、12と5のアシストです。
+        emph: true
+        image: assets/images/20261113_compare_342229_132098/pair_a/01.jpg
+        card: none
+      - text: ただ、PKを除くと、ケインが36、エムバペが37。エムバペが1つ上です。
+        image: assets/images/20261113_compare_342229_132098/pair_a/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/harry-kane/leistungsdaten/spieler/132098
+      - https://www.transfermarkt.com/kylian-mbappe/leistungsdaten/spieler/342229
+
+  - id: value
+    heading: 2人の市場価値は、いまどれだけ離れているのか
+    tier: 報道
+    telop: 市場価値の歩み
+    narrator: 解説
+    card: &valuecard
+      type: line
+      title: 市場価値の歩み（百万ユーロ）
+      x: ["23年6月", "24年6月", "24年12月", "25年6月", "25年12月", "26年7月"]
+      series:
+        - [エムバペ, [180, 180, 160, 180, 200, 200]]
+        - [ケイン, [90, 100, 90, 75, 65, 60]]
+      focus: エムバペ
+      note: 各時点の直前に出た値
+    say:
+      - text: 市場価値の動きも見ます。
+        image: assets/images/20261113_compare_342229_132098/k6/01_w.jpg
+        card: *valuecard
+      - text: ケインが移る直前の2023年6月は、9000万ユーロ。
+        image: assets/images/20261113_compare_342229_132098/k3/01_w.jpg
+        card: {<<: *valuecard, highlight: 23年6月}
+      - text: エムバペがレアルへ移る直前の2024年6月は、1億8000万ユーロでした。
+        image: assets/images/20261113_compare_342229_132098/m1/01_w.jpg
+        card: {<<: *valuecard, highlight: 24年6月}
+      - text: いま、エムバペは2億ユーロ。ケインは33歳で、6000万ユーロです。
+        emph: true
+        image: assets/images/20261113_compare_342229_132098/k6/01_w.jpg
+        card: {<<: *valuecard, highlight: 26年7月}
+      - text: ケインが最高の1億5000万ユーロに届いたのは、2018年のことです。
+        image: assets/images/20261113_compare_342229_132098/k5/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/harry-kane/marktwertverlauf/spieler/132098
+      - https://www.transfermarkt.com/kylian-mbappe/marktwertverlauf/spieler/342229
+
+  - id: now
+    heading: 今季のここまで、2人はどれだけ点に絡んでいるのか
+    tier: 報道
+    telop: 2026年から27年 11月11日時点
+    narrator: 解説
+    card: &nowcard
+      type: duel
+      left: {name: ケイン, club: バイエルン, photo: assets/images/20261113_compare_342229_132098/k1/01_sq.jpg, color: "#dc052d"}
+      right: {name: エムバペ, club: レアル・マドリード, photo: assets/images/20261113_compare_342229_132098/m1/01_sq.jpg, color: "#d4af37"}
+      rows:
+        - [試合, "15", "16"]
+        - [出場時間, 1252分, 1433分]
+        - [得点, "10", "17"]
+        - [アシスト, "10", "3"]
+        - [1つ絡むまで, 約63分, 約72分]
+      bars: [試合, 出場時間, 得点, アシスト]
+      lower: [1つ絡むまで]
+      note: 今季のクラブの公式戦（11月11日時点）。どちらも900分を超えている
+    say:
+      - text: 今季の数です。
+        image: assets/images/20261113_compare_342229_132098/pair_a/01.jpg
+        card: none
+      - text: ケインは10点10アシスト。アシストは、1季目の12に迫っています。
+        image: assets/images/20261113_compare_342229_132098/k6/01_w.jpg
+        card: {<<: *nowcard, highlight_row: アシスト}
+      - text: エムバペは16試合で17点3アシスト。得点では、いまのところ7点上です。
+        image: assets/images/20261113_compare_342229_132098/m1/01_w.jpg
+        card: {<<: *nowcard, highlight_row: 得点}
+      - text: 10月25日のバルセロナ戦では2点を決めて、レアル通算100点に届きました。
+        image: assets/images/20261113_compare_342229_132098/m4/01_w.jpg
+        card: none
+      - text: 点に絡むペースは、ケインが約63分に1つ、エムバペが約72分に1つです。
+        image: assets/images/20261113_compare_342229_132098/k4/01_w.jpg
+        card: {<<: *nowcard, highlight_row: 1つ絡むまで}
+      - text: 出場は2人とも900分を超えています。季の途中ですが、並べるには十分な数です。
+        image: assets/images/20261113_compare_342229_132098/pair_c/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/harry-kane/leistungsdaten/spieler/132098
+      - https://www.transfermarkt.com/kylian-mbappe/leistungsdaten/spieler/342229
+      - https://en.wikipedia.org/wiki/Kylian_Mbapp%C3%A9
+
+  - id: view
+    heading: 見立て・同じ44点から、差はどこへ動いたのか
+    tier: 背景
+    viewpoint: true
+    narrator: 解説
+    telop: 数字の違いが示すもの
+    card: &viewcard
+      type: duel
+      left: {name: ケイン, club: バイエルン, photo: assets/images/20261113_compare_342229_132098/k1/01_sq.jpg, color: "#dc052d"}
+      right: {name: エムバペ, club: レアル・マドリード, photo: assets/images/20261113_compare_342229_132098/m1/01_sq.jpg, color: "#d4af37"}
+      rows:
+        - [1季目の1点取るまで, 約89分, 約108分]
+        - [1季目の1つ絡むまで, 約70分, 約97分]
+        - [2季目の1点取るまで, 約97分, 約86分]
+        - [今季の1つ絡むまで, 約63分, 約72分]
+        - [市場価値, 6000万€, 2億€]
+      lower: [1季目の1点取るまで, 1季目の1つ絡むまで, 2季目の1点取るまで, 今季の1つ絡むまで]
+      bars: false
+      note: クラブの公式戦。出場時間÷得点、出場時間÷得点＋アシストで、自分で計算した値
+    say:
+      - text: 見立てです。1季目は、ケインが短い時間で点に絡んでいました。
+        image: assets/images/20261113_compare_342229_132098/k5/01.jpg
+        card: {<<: *viewcard, highlight_row: 1季目の1点取るまで}
+      - text: 差がついたのは、12と5のアシスト。味方の点へのお膳立てです。
+        mark: {kind: circle, row: 1}
+        image: assets/images/20261113_compare_342229_132098/k3/01_w.jpg
+        card: {<<: *viewcard, highlight_row: 1季目の1つ絡むまで}
+      - text: ところが2季目は、1点までの時間が逆転。ケインが約97分、エムバペが約86分。
+        image: assets/images/20261113_compare_342229_132098/m1/01_w.jpg
+        card: {<<: *viewcard, highlight_row: 2季目の1点取るまで}
+      - text: 今季は、1つ絡むまでの差が約9分まで縮んでいます。
+        emph: true
+        image: assets/images/20261113_compare_342229_132098/pair_b/01.jpg
+        card: {<<: *viewcard, highlight_row: 今季の1つ絡むまで}
+      - text: ケインは3季目に61点。エムバペの3季目は、いま17点。注目です。
+        image: assets/images/20261113_compare_342229_132098/pair_c/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/harry-kane/leistungsdaten/spieler/132098
+      - https://www.transfermarkt.com/kylian-mbappe/leistungsdaten/spieler/342229

@@ -1,0 +1,141 @@
+# 取材メモ（2026年11月13日）クルゼフスキ、526日の離脱を振り返る。「人にがっかりした。でも、すべてを許さなければ」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# ケガの話なので、敬意を持った言い方にする。病名・期間は出典に書いてある範囲だけ。選手を小さく見せない。**依頼の題の「トッテナムに言及」は言い過ぎ**（下の食い違い）。
+# 取材: 2026-11-13。WebFetch と python requests（ブラウザUA）と site.api.espn.com で確かめた。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 出典で確かめたこと:
+#   ・ミラー（mirror.co.uk, フェリックス・キース記者, 2026-11-11 12:19。requests で全文を読んだ。控え research/raw/20261113_kulu_mirror.txt）「Dejan Kulusevski aims pointed criticism at Tottenham over 526-day injury lay-off」。
+#       本人の言葉（スウェーデン代表に約2年ぶりに戻り、スウェーデンの記者に語った。**ミラーが載せた英語訳。スウェーデン語の原文は読めていない**）:
+#         "I have been disappointed in people during this period but at the same time I have to forgive everything."
+#         "It is also written in the Bible. That is how I have moved on. It is difficult for all people. Unfortunately, we look after our own interests first, often. It has been a tough period because sometimes you wish you had received more help and such."
+#         "But at the same time I understand that we are all part of a business. I have moved on and I love being at the club. I received a very good welcome when I came back."
+#         "We did what we thought was best and it didn't work. After that we had to try another operation."
+#         "I had to sit all summer and talk to other doctors about having another operation. It would be a knee transplant. That I had replaced my knee with someone else's." / "Then I said no: ... if I have pain when I play, I have to play with pain. I trained and tried to live like a normal person. I trusted that it would work out. So far I've been right."
+#       ミラーの地の文: 「トッテナムの扱いについて謎めいた批判（cryptic criticism）」。**本人は誰のことかを言っていない。トッテナムはコメントを控えた（declined to comment）。**
+#       今季クラブでは途中出場だけ。スウェーデン代表のグレアム・ポッター監督: 「トッテナムと連絡を取っている…大事なのは、彼がここにいること」（"the most important thing for us is that he is here"）。
+#   ・Foot Mercato（a7179870…, 2026-11-12 17:42。requests で全文を読んだ）: 見出しは「クルセフスキがトッテナムを批判」だが、本文は「何人かにがっかりした」とミラー経由で伝えるだけ。
+#       2025年5月11日のクリスタル・パレス戦で膝を負傷→復帰まで526日。コヴェントリー戦（3-1）の「le 19 octobre dernier」で復帰（年は書かれない）。**見出しが本人の言葉より強い。**
+#   ・ESPN（試合 401879257, 10/19）: トッテナム 3-1 コヴェントリー。終盤（87分）にクドゥスと交代で出場。前の取材メモ 20261020_kulusevski_return で確認済み。5/11 + 526日 = 10/19（自分で数えた。合う）。
+#   ・ESPN uefa.nations: スウェーデンの次は 11/14 19:45Z（日本時間15日 4:45）対ボスニア・ヘルツェゴビナ、フレンズ・アリーナ（401861166）。グループB4の順位（11/13 取得）: スウェーデン 4試合 勝ち点10で首位。
+#       **クルゼフスキがこの代表ウィークの試合に出たかは未確認（14日の試合はまだ）。台本は「呼ばれている」までしか言わない。**
+# 食い違い: ①題の「トッテナムに言及」→ ミラーも Foot Mercato も本人はクラブ名を出していない。ミラーの解釈（批判）と本人の言葉（「人」への失望＋許す＋クラブが大好き）は温度が違う → 台本は本人の言葉を並べ、「誰のことかは語っていない」「クラブはコメントを控えた」と言う。批判とは言わない。
+#   ②「526日ぶりの復帰」は10/19の試合（コヴェントリー戦）で、今回の話の場面ではない。今回は代表に戻った場面。③Foot Mercato は復帰を「ce 19 octobre dernier」とだけ書く（年なし）→ ESPN の試合データの年を使う。
+# 前の本との重なり: 20261020_kulusevski_return（526日・妻の手紙・コヴェントリー戦の復帰）。今回の初出: 代表に約2年ぶりに戻った場での本人の言葉（人への失望と許し、膝の移植の話）とポッター監督の言葉。妻の手紙・復帰戦の中身は繰り返さない。
+# 本人の言葉: あり（ミラー経由の英訳）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: overseas
+date: "2026年11月13日"
+format: news
+no_main: true
+people: [クルゼフスキ, トッテナム, スウェーデン代表]
+
+short_style: Y
+short_hook_quote: この期間、人にがっかりしたこともありました。でも同時に、すべてを許さなければなりません。
+short_photos:
+  - assets/images/20261113_kulusevski_return_words/02_v.jpg
+  - assets/images/20261113_kulusevski_return_words/04_v.jpg
+  - assets/images/20261113_kulusevski_return_words/01_v.jpg
+  - assets/images/20261113_kulusevski_return_words/05_v.jpg
+  - assets/images/20261113_kulusevski_return_words/03_v.jpg
+short_question: クルゼフスキは、スウェーデン代表の試合で、どんなプレーを見せると思いますか。
+short_telops: []
+
+theme:
+  id: kulusevski_return_words
+  league: england
+  league_name: スウェーデン代表
+  prefix: ""
+  title: クルゼフスキ、代表復帰で語った離脱の日々。「すべてを許さなければ」
+  hook: ""
+  question: 526日の離脱を、クルゼフスキ本人はどう振り返ったのか
+  takeaway: クルゼフスキは、人にがっかりしたことを認めながら「すべてを許さなければ」と語り、クラブにいることが大好きだと話した。誰のことかは語っていない。次はスウェーデン代表のボスニア戦
+
+thumbnail:
+  layout: face
+  line1: クルゼフスキ 離脱の日々
+  line2: 「すべてを許す」
+  tags: [クルゼフスキ, トッテナム, スウェーデン代表]
+  photo: assets/images/20261113_kulusevski_return_words/02_w.jpg
+  short_photo: assets/images/20261113_kulusevski_return_words/02_v.jpg
+
+answer: 人にがっかりした日々もあった。でも許して前に進み、クラブにいることが大好きだと語った
+watch: 14日（土）のスウェーデン対ボスニア・ヘルツェゴビナ（日本時間15日4時45分）
+
+sections:
+  - id: what
+    main: true
+    heading: 526日の離脱を、クルゼフスキ本人はどう振り返ったのか
+    tier: 報道
+    telop: クルゼフスキ「人にがっかりした。でも、すべてを許さなければ」
+    say:
+      - text: トッテナムのクルゼフスキが、代表に約2年ぶりに戻り、526日のケガの日々を語りました。
+        short_only: true
+      - voice: クルゼフスキ
+        text: この期間、人にがっかりしたこともありました。でも同時に、すべてを許さなければなりません。
+        emph: true
+        image: assets/images/20261113_kulusevski_return_words/02_w.jpg
+      - voice: クルゼフスキ
+        text: 聖書にも書いてあります。私は、そうやって前に進んできました。
+        cont: true
+      - voice: クルゼフスキ
+        text: もっと助けてほしかったと、思う時期もありました。
+        image: assets/images/20261113_kulusevski_return_words/04_w.jpg
+      - text: 本人は、具体的に誰のことかは語っていません。トッテナムは、この件についてコメントを控えています。
+      - voice: クルゼフスキ
+        text: でも、私たちはみんな、ビジネスの一部だと分かっています。
+        image: assets/images/20261113_kulusevski_return_words/01_w.jpg
+      - voice: クルゼフスキ
+        text: 私は前を向きましたし、このクラブにいることが大好きです。
+        cont: true
+    official: false
+    quotes_from: ミラー
+    sources:
+      - https://www.mirror.co.uk/sport/football/news/dejan-kulusevski-tottenham-injury-criticism-37866007
+      - https://www.footmercato.net/a7179870526308036135-dejan-kulusevski-tacle-tottenham-apres-ses-526-jours-dabsence
+  - id: knee
+    heading: 長引いた離脱の裏にあった、決断とは
+    tier: 報道
+    telop: 夏のあいだ、別の手術を考えていた
+    say:
+      - text: 離脱は、去年5月11日のクリスタル・パレス戦で負った、膝のケガから始まりました。
+        image: assets/images/20261113_kulusevski_return_words/03_w.jpg
+      - text: 復帰は、10月19日のコヴェントリー戦。526日ぶりでした。
+      - text: トッテナムは今夏、医療部門を作り直しました。
+      - text: クルゼフスキ、マディソン、オドベール、シモンズの膝の大ケガが続いたためです。
+      - voice: クルゼフスキ
+        text: 夏のあいだずっと、ほかの医師と、もう1度手術をする話をしていました。
+        image: assets/images/20261113_kulusevski_return_words/05_w.jpg
+      - voice: クルゼフスキ
+        text: 膝の移植です。他の人の膝に、入れ替えるということです。
+        cont: true
+      - voice: クルゼフスキ
+        text: そこで私は、断りました。プレーして痛みがあるなら、痛みを抱えてプレーする、と。
+        cont: true
+      - text: 本人は、練習を重ねて、うまくいくと信じたと語っています。
+    official: false
+    quotes_from: ミラー
+    sources:
+      - https://www.mirror.co.uk/sport/football/news/dejan-kulusevski-tottenham-injury-criticism-37866007
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/summary?event=401879257
+  - id: view
+    viewpoint: true
+    heading: クルゼフスキは、代表でどう使われるのか
+    tier: 背景
+    telop: 次は14日（土）、ボスニア戦
+    say:
+      - text: 見立てです。クルゼフスキは今季、クラブでは途中出場だけで、代表に呼ばれたのは約2年ぶりです。
+        image: assets/images/20261113_kulusevski_return_words/02_w.jpg
+        card: {type: table, title: クルゼフスキの今, columns: [項目, 中身], rows: [[離脱, 526日], [今季のクラブ, 途中出場のみ], [代表, 約2年ぶりに招集]], highlight_row: 2}
+      - text: ポッター監督は、トッテナムと連絡を取りながら、慎重に起用する考えです。
+      - voice: ポッター
+        text: 大事なのは、彼がここにいることです。
+        card: none
+        image: assets/images/20261113_kulusevski_return_words/04_w.jpg
+      - text: ネーションズリーグは、4か国ずつのグループで争う、ヨーロッパの国際大会です。
+      - text: スウェーデンはグループB4で、4試合を戦って勝ち点10。首位です。
+      - text: 次は14日、ボスニア・ヘルツェゴビナ戦。日本時間では、15日の4時45分からです。
+        image: assets/images/20261113_kulusevski_return_words/01_w.jpg
+    official: false
+    sources:
+      - https://www.mirror.co.uk/sport/football/news/dejan-kulusevski-tottenham-injury-criticism-37866007
+      - https://site.api.espn.com/apis/v2/sports/soccer/uefa.nations/standings
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/scoreboard?dates=20261114
+short_title: "クルゼフスキ、代表復帰で語った離脱の日々。「すべてを許さなければ」"

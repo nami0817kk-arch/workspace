@@ -1,0 +1,24 @@
+{
+ "bremen": {
+  "ピサロ": {
+   "role": "legend",
+   "file": "assets/photos/bd/bremen/bremen_legend_3e96df53.jpg",
+   "page": "Claudio Pizarro"
+  },
+  "クローゼ": {
+   "role": "legend",
+   "file": "assets/photos/bd/bremen/bremen_legend_2786e33b.jpg",
+   "page": "Miroslav Klose"
+  },
+  "ディエゴ": {
+   "role": "legend",
+   "file": "assets/photos/bd/bremen/bremen_legend_00401ff0.jpg",
+   "page": "Diego (footballer, born 1985)"
+  },
+  "ダニエル・ティウネ": {
+   "role": "manager",
+   "file": "assets/photos/bd/bremen/bremen_manager_18b2724f.jpg",
+   "page": "Daniel Thioune"
+  }
+ }
+}

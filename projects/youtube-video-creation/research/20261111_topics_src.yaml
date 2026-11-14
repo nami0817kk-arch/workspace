@@ -1,0 +1,87 @@
+title: 11月11日のショート題材（Claude選）
+items:
+- num: 1
+  slot: 日本人（代表）
+  head: 堂安律、アジア杯延期に「最後に監督と一緒にタイトルを取りたい思いだった」。森保監督へ本人の言葉
+  why: ゲキサカ・サッカーキング（10日夜〜11日朝）。堂安が代表のシンガポール合宿で、延期になったアジア杯と森保監督への思いを語った。<b>条件：日本代表×本人の言葉×大物</b>。見せ方：Y。重なり：11/4
+    のアジア杯延期の題とは別（堂安本人の言葉が新しい）、11/8 の堂安は所属先の話。
+  src: 上のURL
+  url: https://web.gekisaka.jp/news/japan/detail/?462936-462936-fl
+  fmt: news
+- num: 2
+  slot: 日本人（代表）
+  head: 佐野海舟、W杯ブラジル戦の鮮烈ゴールは「過去のこと」。再戦へ本人の言葉
+  why: サッカーキング・ゲキサカ。日本×ブラジルの再戦を前にした佐野本人の言葉。<b>条件：日本代表×本人の言葉×ブラジル再戦</b>。見せ方：Y。重なり：11/8
+    の佐野はマインツ戦で別の話。
+  src: 上のURL
+  url: https://www.soccer-king.jp/news/japan/national/20261110/2226424.html
+  fmt: news
+- num: 3
+  slot: 日本人（代表）
+  head: 坂元達裕、約5年半ぶりの日本代表復帰。「誰にも負けない自信がある」
+  why: サッカーキング。プレミア仕込みのドリブルで勝負すると本人が語る。<b>条件：日本代表×本人の言葉</b>。見せ方：Y。
+  src: 上のURL
+  url: https://www.soccer-king.jp/news/japan/national/20261110/2226413.html
+  fmt: news
+- num: 4
+  slot: 日本人（代表）
+  head: 松木玖生「基準が二段階ぐらい上がった」。南米連戦へ本人の言葉
+  why: サッカーキング。前回の代表活動で成長を実感、南米2連戦へ。<b>条件：日本代表×本人の言葉</b>。重なり：松木は10/15・10/29 に出しているが、今回は代表での本人の言葉で別の話。見せ方：Y。
+  src: 上のURL
+  url: https://www.soccer-king.jp/news/japan/national/20261110/2226401.html
+  fmt: news
+- num: 5
+  slot: 日本人
+  head: 久保建英、久々の先発「代表戦は楽しみ」。途中交代後の本人の言葉
+  why: フットボールネット（動画記事）。ソシエダ×リヨンの試合後の本人の言葉。<b>条件：本人の言葉×大物×代表への言及</b>。重なり：久保は多数出ているが、この発言は新しい。見せ方：Y。
+  src: 上のURL
+  url: https://footballnet.2chblog.jp/archives/60133841.html
+  fmt: news
+- num: 6
+  slot: 日本人（代表）
+  head: 三笘薫の負傷状況が更新。「復帰すると断言することはできません」
+  why: フットボールトライブ。ブライトンの三笘の状況。<b>条件：日本人の大物。語っているのは監督かもしれず、取材で確認</b>。確度：クラブ側の発言。見せ方：X。
+  src: 上のURL
+  url: https://football-tribe.com/japan/2026/11/10/361173/
+  fmt: news
+- num: 7
+  slot: 海外
+  head: エンドリッキ「1月に何が起こるかは分からない」。ミラン・ローマの噂に本人が語る
+  why: football-italia ほか3媒体。レアルの若手の去就。<b>条件：本人の言葉×大物（ブラジル代表）</b>。確度：本人の発言、移籍は報道。見せ方：Y。
+  src: 上のURL
+  url: https://football-italia.net/real-madrid-star-endrick-opens-up-milan-roma/
+  fmt: news
+- num: 8
+  slot: 海外
+  head: ファン・ダイク、契約最終年の去就に言及。「続くなら良いこと」
+  why: サッカーキング。リバプールとの契約最終年。<b>条件：本人の言葉×大物</b>。見せ方：Y。
+  src: 上のURL
+  url: https://www.soccer-king.jp/news/world/eng/20261110/2226425.html
+  fmt: news
+- num: 9
+  slot: 海外
+  head: マンU、カリック監督の去就が焦点に。ポチェッティーノ招へいの動きと、水曜のクラブ首脳の会合
+  why: ESPN・マルカ・スカイほか9媒体。<b>条件：大物クラブ（直近の降格圏）</b>。確度：報道。11/8 の「降格圏」の話の続報。見せ方：X。
+  src: 上のURL
+  url: https://www.espn.com/soccer/story/_/id/50430907/manchester-united-transfers-carrick-premier-league-ratcliffe
+  fmt: news
+- num: 10
+  slot: 海外
+  head: ブラジル代表初招集のアラン（マンC）「すごく緊張している」。ハーランドから英語を勧められた話
+  why: サッカーキング。日本のブラジル戦に絡む。<b>条件：本人の言葉×ブラジル代表</b>。見せ方：Y。
+  src: 上のURL
+  url: https://www.soccer-king.jp/news/world/southamerica/20261110/2226278.html
+  fmt: news
+drops:
+- head: 鈴木彩艶（クーニャ批判・トッテナム獲得画策）
+  why: 11/8 に鈴木の移籍の題があり重なる。本人の言葉が無い
+- head: ジェフ・Jリーグ・高校サッカー
+  why: 扱わない範囲
+- head: ヤマルの代表復帰（デ・ラ・フエンテ）
+  why: 他人の言葉のみ。次点
+- head: ゲンクの監督解任（伊東ら日本人3人）
+  why: 本人の言葉が無く出来事が小さい。次点
+- head: 上田綺世のランニング再開
+  why: 出来事が小さい
+lead: 日本人6件・海外4件、計10件をClaudeが選びました（11/4 以降はユーザーに聞かずに進める決まり）。
+note: 日本代表はシンガポールで合宿中（ブラジル戦前）。本人の言葉が取れる題を優先しました。

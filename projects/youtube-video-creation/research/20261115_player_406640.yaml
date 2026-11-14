@@ -1,0 +1,1426 @@
+# フェリックス・ヌメチャ（ドルトムント／ドイツ代表）の紹介。選手紹介の型（2026-11-15 公開分、シリーズ「有名選手の紹介」。key: player_406640）。情報の時点は 2026-11-12（クラブの試合は 11/7 のブンデス第9節まで）。
+# **FotMob は使わない。**数字は Transfermarkt API の試合記録（控え research/raw/20261115_nmecha_*.json）、英語版 Wikipedia、BVB・各社の記事、自分で割った90分あたり。
+# **選んだ理由（2026-11-12）**：player_pool.py list で紹介済みを除いた市場価値の上位は 26 ヌメチャ（6500万）・30 カマラ・33 ファン・ヘッケ・34 G.ラモス。11/13 の佐野（マインツ）と違うクラブで、今季ブンデス9試合4点・9月の月間ベストゴール・W杯のクラサオ戦の先制点と、題の材料が最も強い。
+#   重なり：scripts/ を「ヌメチャ」で grep → ニュース・比べる・クラブ紹介に名前が出るだけで紹介は0件。同じ日（11/15）の別シリーズでは使わない。
+# **現役・今季もブンデス1部**：TM の試合記録で 2026-11-07 のブンデス第9節（ドルトムント 2-1 エルバースベルク、2得点）まで出場。
+# **数字の軸**：TM の試合記録。ブンデス 25/26 は29試合2点2190分、26/27 は9試合4点659分（0.08→0.55 は 点÷分×90 を自分で計算）。通算（トップチームのみ）：シティ3/0、ヴォルフスブルク50/3、ドルトムント128/17、ドイツ代表14/3＝195試合23点。市場価値（TM）：2021-12 70万→2023-06 1500万→2026-10 6500万（÷70万＝92.9 で「およそ93倍」）。
+# **本人の言葉**：9/12 の DAZN 取材の英訳（bulinews）からの日本語訳。コバチ監督の言葉は getfootballnewsgermany（2026-11-07）の英訳から（2025年3月の発言と11/7 の試合後の発言）。
+# **入れなかったもの**：過去のSNS投稿をめぐる議論（私生活・法的な問題は入れない決まり。Wikipedia が書いている）、信仰の発言。
+# **確かめられなかった**：ヴォルフスブルク移籍が「兄の5日後」の一次情報、移籍金3000万は報道、BVB 公式インタビュー全文、W杯2・3戦目の相手名。
+# **写真**：Commons の Felix Nmecha 2021（CC BY-SA 4.0）は粗いので使わない。BVB・beIN SPORTS・getfootballnewsgermany の記事写真（代理店のURLではない）。
+date: 2026年11月12日
+slot: other_1
+format: news
+series: 有名選手の紹介
+people:
+- フェリックス・ヌメチャ
+theme:
+  id: player_406640
+  league: germany
+  league_name: ブンデスリーガ
+  kind: other
+  topic: ドルトムント
+  title: ヌメチャってどんな選手？ 昨シーズン2点が、今季は9試合4点の理由とは
+  question: フェリックス・ヌメチャは、どんな役目の選手で、なぜ今季のブンデスリーガで点が増えたのか
+  takeaway: 市場価値は2021年12月の70万ユーロから2026年10月の6500万ユーロへ、およそ93倍。ブンデスリーガの90分あたりの得点は、昨シーズンの0.08から今季は0.55へ上がったが、通算はドルトムントの128試合で17点。値段を支えてきたのは、点だけでなく、コバチ監督の言う6番や8番としての働きだった
+  nameplate: フェリックス・ヌメチャ｜ドルトムント MF／ドイツ代表
+  opening_image: assets/images/20261115_player_406640/10_w.jpg
+  end_bg: assets/images/20261115_player_406640/11_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+watch: 毎日、数字でサッカーを読み解きます
+short_title: ヌメチャってどんな選手？
+thumbnail:
+  line1: ヌメチャ、通算195戦23点
+  line2: 今季は9試合で4点
+  tags:
+  - ドルトムント
+  - ドイツ代表
+  photo: assets/images/20261115_player_406640/panel_01.jpg
+  photos: []
+sections:
+- id: hook
+  heading: 昨シーズン2点が、今季は9試合で4点。ヌメチャに、何が起きているのか
+  tier: 報道
+  telop: 今季は9試合で4点
+  narrator: 解説
+  card:
+    type: stats
+    title: ヌメチャの数字
+    items:
+    - - '4'
+      - 点
+      - 今季のブンデスリーガ。9試合で
+    - - '2'
+      - 点
+      - 昨季は29試合で
+    - - '25'
+      - 分
+      - 9月12日、交代出場で2得点
+    focus: 0
+  say:
+  - text: ドルトムントのフェリックス・ヌメチャは、今季のブンデスリーガで、9試合4得点です。
+    image: assets/images/20261115_player_406640/10_w.jpg
+    card: none
+    emph: true
+  - text: 昨シーズンは2点。その倍の点数です。
+    card:
+      type: stats
+      title: ヌメチャの数字
+      items:
+      - - '4'
+        - 点
+        - 今季のブンデスリーガ。9試合で
+      - - '2'
+        - 点
+        - 昨季は29試合で
+      - - '25'
+        - 分
+        - 9月12日、交代出場で2得点
+      focus: 1
+  - text: 9月12日のパーダーボルン戦では、途中出場から、2点を決めています。
+    card:
+      type: stats
+      title: ヌメチャの数字
+      items:
+      - - '4'
+        - 点
+        - 今季のブンデスリーガ。9試合で
+      - - '2'
+        - 点
+        - 昨季は29試合で
+      - - '25'
+        - 分
+        - 9月12日、交代出場で2得点
+      focus: 2
+  - text: その2点目は、背中を向けたままのオーバーヘッド。
+    image: assets/images/20261115_player_406640/12_w.jpg
+    card: none
+  - text: ファン投票で、9月の1位になったゴールです。
+    card: none
+  - text: 数字と、監督の言葉から、ヌメチャという選手を追います。
+    image: assets/images/20261115_player_406640/11_w.jpg
+    card: none
+  sources:
+  - https://www.transfermarkt.com/felix-nmecha/profil/spieler/406640
+  - https://www.getfootballnewsgermany.com/2026/felix-nmecha-bvb-lukas-feature/
+  quotes_from: []
+- id: data
+  heading: ヌメチャは、いまどこで、いくらと見られている選手か
+  tier: 報道
+  telop: ヌメチャの基礎DATA
+  narrator: 解説
+  card:
+    type: table
+    title: フェリックス・ヌメチャ（ドルトムント）
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 所属
+      - ドルトムント（背番号8）
+    - - ポジション
+      - セントラルMF
+    - - 生年月日
+      - 2000年10月10日（26歳）
+    - - 出身
+      - ドイツ・ハンブルク
+    - - 身長・利き足
+      - 190cm・右利き
+    - - 契約・市場価値
+      - 2030年6月まで・6500万ユーロ
+    - - ドイツ代表
+      - 14試合3得点
+    highlight_row: 0
+  say:
+  - text: ヌメチャは、ドルトムントのミッドフィールダーです。
+    image: assets/images/20261115_player_406640/10_w.jpg
+    card:
+      type: table
+      title: フェリックス・ヌメチャ（ドルトムント）
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 所属
+        - ドルトムント（背番号8）
+      - - ポジション
+        - セントラルMF
+      - - 生年月日
+        - 2000年10月10日（26歳）
+      - - 出身
+        - ドイツ・ハンブルク
+      - - 身長・利き足
+        - 190cm・右利き
+      - - 契約・市場価値
+        - 2030年6月まで・6500万ユーロ
+      - - ドイツ代表
+        - 14試合3得点
+      highlight_row: 0
+  - text: 2000年10月10日、ドイツのハンブルク生まれ。いま26歳。
+    card:
+      type: table
+      title: フェリックス・ヌメチャ（ドルトムント）
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 所属
+        - ドルトムント（背番号8）
+      - - ポジション
+        - セントラルMF
+      - - 生年月日
+        - 2000年10月10日（26歳）
+      - - 出身
+        - ドイツ・ハンブルク
+      - - 身長・利き足
+        - 190cm・右利き
+      - - 契約・市場価値
+        - 2030年6月まで・6500万ユーロ
+      - - ドイツ代表
+        - 14試合3得点
+      highlight_row: 2
+  - text: 右利きで、身長は190センチ。2030年6月まで契約があります。
+    card:
+      type: table
+      title: フェリックス・ヌメチャ（ドルトムント）
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 所属
+        - ドルトムント（背番号8）
+      - - ポジション
+        - セントラルMF
+      - - 生年月日
+        - 2000年10月10日（26歳）
+      - - 出身
+        - ドイツ・ハンブルク
+      - - 身長・利き足
+        - 190cm・右利き
+      - - 契約・市場価値
+        - 2030年6月まで・6500万ユーロ
+      - - ドイツ代表
+        - 14試合3得点
+      highlight_row: 4
+  - text: ドイツ代表の一員でもあります。
+    card:
+      type: table
+      title: フェリックス・ヌメチャ（ドルトムント）
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 所属
+        - ドルトムント（背番号8）
+      - - ポジション
+        - セントラルMF
+      - - 生年月日
+        - 2000年10月10日（26歳）
+      - - 出身
+        - ドイツ・ハンブルク
+      - - 身長・利き足
+        - 190cm・右利き
+      - - 契約・市場価値
+        - 2030年6月まで・6500万ユーロ
+      - - ドイツ代表
+        - 14試合3得点
+      highlight_row: 6
+  - text: 市場価値は、今年の10月の更新で、5500万ユーロから一段上がりました。
+    image: assets/images/20261115_player_406640/11_w.jpg
+    card:
+      type: table
+      title: フェリックス・ヌメチャ（ドルトムント）
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 所属
+        - ドルトムント（背番号8）
+      - - ポジション
+        - セントラルMF
+      - - 生年月日
+        - 2000年10月10日（26歳）
+      - - 出身
+        - ドイツ・ハンブルク
+      - - 身長・利き足
+        - 190cm・右利き
+      - - 契約・市場価値
+        - 2030年6月まで・6500万ユーロ
+      - - ドイツ代表
+        - 14試合3得点
+      highlight_row: 5
+    emph: true
+  sources:
+  - https://www.transfermarkt.com/felix-nmecha/profil/spieler/406640
+  - https://en.wikipedia.org/wiki/Felix_Nmecha
+  quotes_from: []
+- id: origin
+  heading: ハンブルク生まれの少年は、なぜ、イングランドで育ったのか
+  tier: 背景
+  telop: ハンブルクからマンチェスターへ
+  narrator: 解説
+  say:
+  - text: ヌメチャの父はナイジェリア出身、母はドイツの人です。
+    image: assets/images/20261115_player_406640/11_w.jpg
+    card: none
+  - text: ハンブルクで生まれて、幼いころ、家族でイングランドへ渡ります。
+    card:
+      type: table
+      title: ヌメチャ マンチェスター・シティ時代
+      columns:
+      - 時期
+      - 出来事
+      rows:
+      - - 2007年
+        - 家族でイングランドへ
+      - - 下部組織
+        - 18歳以下のカップ決勝で決勝ゴール
+      - - 2020年11月
+        - CLでカンセロのゴールをアシスト
+      highlight_row: 0
+  - text: 兄のルーカスと一緒に、マンチェスター・シティの目にとまりました。
+    image: assets/images/20261115_player_406640/10_w.jpg
+    card:
+      type: table
+      title: ヌメチャ マンチェスター・シティ時代
+      columns:
+      - 時期
+      - 出来事
+      rows:
+      - - 2007年
+        - 家族でイングランドへ
+      - - 下部組織
+        - 18歳以下のカップ決勝で決勝ゴール
+      - - 2020年11月
+        - CLでカンセロのゴールをアシスト
+      highlight_row: 0
+  - text: その兄は、いま、リーズのフォワードです。
+    card:
+      type: table
+      title: ヌメチャ マンチェスター・シティ時代
+      columns:
+      - 時期
+      - 出来事
+      rows:
+      - - 2007年
+        - 家族でイングランドへ
+      - - 下部組織
+        - 18歳以下のカップ決勝で決勝ゴール
+      - - 2020年11月
+        - CLでカンセロのゴールをアシスト
+      highlight_row: 0
+  - text: シティの下部組織では、カップ戦の決勝で、決勝ゴールを決めています。
+    image: assets/images/20261115_player_406640/13_w.jpg
+    card:
+      type: table
+      title: ヌメチャ マンチェスター・シティ時代
+      columns:
+      - 時期
+      - 出来事
+      rows:
+      - - 2007年
+        - 家族でイングランドへ
+      - - 下部組織
+        - 18歳以下のカップ決勝で決勝ゴール
+      - - 2020年11月
+        - CLでカンセロのゴールをアシスト
+      highlight_row: 1
+  - text: トップチームでは、リーグカップで、ジンチェンコと交代してデビュー。
+    card:
+      type: table
+      title: ヌメチャ マンチェスター・シティ時代
+      columns:
+      - 時期
+      - 出来事
+      rows:
+      - - 2007年
+        - 家族でイングランドへ
+      - - 下部組織
+        - 18歳以下のカップ決勝で決勝ゴール
+      - - 2020年11月
+        - CLでカンセロのゴールをアシスト
+      highlight_row: 1
+  - text: チャンピオンズリーグのオリンピアコス戦では、カンセロのゴールをアシストしました。
+    image: assets/images/20261115_player_406640/11_w.jpg
+    card:
+      type: table
+      title: ヌメチャ マンチェスター・シティ時代
+      columns:
+      - 時期
+      - 出来事
+      rows:
+      - - 2007年
+        - 家族でイングランドへ
+      - - 下部組織
+        - 18歳以下のカップ決勝で決勝ゴール
+      - - 2020年11月
+        - CLでカンセロのゴールをアシスト
+      highlight_row: 2
+    emph: true
+  - text: けれども、プレミアリーグでの出場は、ありませんでした。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Felix_Nmecha
+  quotes_from: []
+- id: career
+  heading: シティを出た19歳は、どうやって、ドルトムントまでたどり着いたのか
+  tier: 報道
+  telop: ヴォルフスブルクからドルトムントへ
+  narrator: 解説
+  card:
+    type: timeline
+    title: ヌメチャの歩み
+    rows:
+    - - '2007'
+      - 家族でイングランドへ
+    - - '2021'
+      - シティを退団、ヴォルフスブルクへ
+    - - '2023'
+      - ドルトムントへ（7月）
+    - - '2024'
+      - CL準優勝
+    - - '2026'
+      - W杯で先制ゴール
+    focus: '2007'
+  say:
+  - text: 2021年6月30日、ヌメチャは、シティとの契約が切れて、退団します。
+    image: assets/images/20261115_player_406640/11_w.jpg
+    card:
+      type: timeline
+      title: ヌメチャの歩み
+      rows:
+      - - '2007'
+        - 家族でイングランドへ
+      - - '2021'
+        - シティを退団、ヴォルフスブルクへ
+      - - '2023'
+        - ドルトムントへ（7月）
+      - - '2024'
+        - CL準優勝
+      - - '2026'
+        - W杯で先制ゴール
+      focus: '2007'
+  - text: 移籍先は、ヴォルフスブルク。兄のルーカスが入団した5日後でした。
+    image: assets/images/20261115_player_406640/10_w.jpg
+    card:
+      type: timeline
+      title: ヌメチャの歩み
+      rows:
+      - - '2007'
+        - 家族でイングランドへ
+      - - '2021'
+        - シティを退団、ヴォルフスブルクへ
+      - - '2023'
+        - ドルトムントへ（7月）
+      - - '2024'
+        - CL準優勝
+      - - '2026'
+        - W杯で先制ゴール
+      focus: '2021'
+  - text: ヴォルフスブルクでは、2シーズンプレー。ブンデスリーガでは、3点でした。
+    card:
+      type: timeline
+      title: ヌメチャの歩み
+      rows:
+      - - '2007'
+        - 家族でイングランドへ
+      - - '2021'
+        - シティを退団、ヴォルフスブルクへ
+      - - '2023'
+        - ドルトムントへ（7月）
+      - - '2024'
+        - CL準優勝
+      - - '2026'
+        - W杯で先制ゴール
+      focus: '2021'
+  - text: 初めての2点は、2022年10月。ボーフム戦の4対0の勝利でした。
+    card:
+      type: timeline
+      title: ヌメチャの歩み
+      rows:
+      - - '2007'
+        - 家族でイングランドへ
+      - - '2021'
+        - シティを退団、ヴォルフスブルクへ
+      - - '2023'
+        - ドルトムントへ（7月）
+      - - '2024'
+        - CL準優勝
+      - - '2026'
+        - W杯で先制ゴール
+      focus: '2021'
+  - text: 2023年3月、ドイツ代表に、初めて呼ばれます。
+    image: assets/images/20261115_player_406640/13_w.jpg
+    card: none
+  - text: それまでは、イングランドのユース代表でもプレーしていました。
+    card: none
+  - text: そして2023年7月3日、ドルトムントへ。
+    image: assets/images/20261115_player_406640/11_w.jpg
+    card:
+      type: timeline
+      title: ヌメチャの歩み
+      rows:
+      - - '2007'
+        - 家族でイングランドへ
+      - - '2021'
+        - シティを退団、ヴォルフスブルクへ
+      - - '2023'
+        - ドルトムントへ（7月）
+      - - '2024'
+        - CL準優勝
+      - - '2026'
+        - W杯で先制ゴール
+      focus: '2023'
+    emph: true
+  - text: 約3000万ユーロの移籍金だった、との報道があります。
+    card:
+      type: timeline
+      title: ヌメチャの歩み
+      rows:
+      - - '2007'
+        - 家族でイングランドへ
+      - - '2021'
+        - シティを退団、ヴォルフスブルクへ
+      - - '2023'
+        - ドルトムントへ（7月）
+      - - '2024'
+        - CL準優勝
+      - - '2026'
+        - W杯で先制ゴール
+      focus: '2023'
+  - text: 最初のゴールは、2023年10月25日のニューカッスル戦。
+    card:
+      type: timeline
+      title: ヌメチャの歩み
+      rows:
+      - - '2007'
+        - 家族でイングランドへ
+      - - '2021'
+        - シティを退団、ヴォルフスブルクへ
+      - - '2023'
+        - ドルトムントへ（7月）
+      - - '2024'
+        - CL準優勝
+      - - '2026'
+        - W杯で先制ゴール
+      focus: '2023'
+  - text: チャンピオンズリーグの、初ゴールでもありました。
+    card:
+      type: timeline
+      title: ヌメチャの歩み
+      rows:
+      - - '2007'
+        - 家族でイングランドへ
+      - - '2021'
+        - シティを退団、ヴォルフスブルクへ
+      - - '2023'
+        - ドルトムントへ（7月）
+      - - '2024'
+        - CL準優勝
+      - - '2026'
+        - W杯で先制ゴール
+      focus: '2023'
+  - text: その年、ドルトムントは決勝へ進み、準優勝でした。
+    card:
+      type: timeline
+      title: ヌメチャの歩み
+      rows:
+      - - '2007'
+        - 家族でイングランドへ
+      - - '2021'
+        - シティを退団、ヴォルフスブルクへ
+      - - '2023'
+        - ドルトムントへ（7月）
+      - - '2024'
+        - CL準優勝
+      - - '2026'
+        - W杯で先制ゴール
+      focus: '2024'
+  sources:
+  - https://en.wikipedia.org/wiki/Felix_Nmecha
+  - https://www.getfootballnewsgermany.com/2026/felix-nmecha-bvb-lukas-feature/
+  quotes_from: []
+- id: style
+  heading: ヌメチャの点は、昨シーズンと今季で、どれだけ違うのか
+  tier: 報道
+  telop: 昨季と今季の数字
+  narrator: 解説
+  card:
+    type: table
+    title: ヌメチャのブンデスリーガ（11月7日まで）
+    columns:
+    - 項目
+    - 昨季（25/26）
+    - 今季（26/27）
+    rows:
+    - - 試合
+      - '29'
+      - '9'
+    - - 得点
+      - '2'
+      - '4'
+    - - 出場時間
+      - 2190分
+      - 659分
+    - - 90分あたりの得点
+      - '0.08'
+      - '0.55'
+    highlight_row: 0
+  say:
+  - text: ヌメチャのブンデスリーガだけを、昨シーズンと今季で並べます。
+    image: assets/images/20261115_player_406640/10_w.jpg
+    card:
+      type: table
+      title: ヌメチャのブンデスリーガ（11月7日まで）
+      columns:
+      - 項目
+      - 昨季（25/26）
+      - 今季（26/27）
+      rows:
+      - - 試合
+        - '29'
+        - '9'
+      - - 得点
+        - '2'
+        - '4'
+      - - 出場時間
+        - 2190分
+        - 659分
+      - - 90分あたりの得点
+        - '0.08'
+        - '0.55'
+      highlight_row: 0
+  - text: 昨シーズンの2点が、今季は、9試合で4点です。
+    card:
+      type: table
+      title: ヌメチャのブンデスリーガ（11月7日まで）
+      columns:
+      - 項目
+      - 昨季（25/26）
+      - 今季（26/27）
+      rows:
+      - - 試合
+        - '29'
+        - '9'
+      - - 得点
+        - '2'
+        - '4'
+      - - 出場時間
+        - 2190分
+        - 659分
+      - - 90分あたりの得点
+        - '0.08'
+        - '0.55'
+      highlight_row: 1
+  - text: 出場時間は、2190分から659分。短い時間で、点が増えています。
+    image: assets/images/20261115_player_406640/11_w.jpg
+    card:
+      type: table
+      title: ヌメチャのブンデスリーガ（11月7日まで）
+      columns:
+      - 項目
+      - 昨季（25/26）
+      - 今季（26/27）
+      rows:
+      - - 試合
+        - '29'
+        - '9'
+      - - 得点
+        - '2'
+        - '4'
+      - - 出場時間
+        - 2190分
+        - 659分
+      - - 90分あたりの得点
+        - '0.08'
+        - '0.55'
+      highlight_row: 2
+  - text: 90分あたりの得点で割ると、0.08から0.55。6倍以上です。
+    card:
+      type: table
+      title: ヌメチャのブンデスリーガ（11月7日まで）
+      columns:
+      - 項目
+      - 昨季（25/26）
+      - 今季（26/27）
+      rows:
+      - - 試合
+        - '29'
+        - '9'
+      - - 得点
+        - '2'
+        - '4'
+      - - 出場時間
+        - 2190分
+        - 659分
+      - - 90分あたりの得点
+        - '0.08'
+        - '0.55'
+      highlight_row: 3
+    emph: true
+  - text: 得点が増えた今季も、役目は、ゴール前だけではありません。
+    image: assets/images/20261115_player_406640/12_w.jpg
+    card: none
+  - text: では、なぜ点が増えたのか。次の節で、監督の言葉から探ります。
+    card: none
+  sources:
+  - https://www.transfermarkt.com/felix-nmecha/profil/spieler/406640
+  - https://www.transfermarkt.com/felix-nmecha/leistungsdatendetails/spieler/406640
+  quotes_from: []
+- id: words
+  heading: コバチ監督は、ヌメチャを、どんな選手だと見ているのか
+  tier: 報道
+  telop: 監督の言葉
+  narrator: 解説
+  card:
+    type: document
+    label: コバチ監督の言葉（2025年3月）
+    paragraphs:
+    - もちろん10番の役もできる。ただ、体の強さ、存在感、技術、視野、そしてポジションの解釈を考えれば、6番か8番の選手だ。彼はこのクラブの未来だ。
+    highlight:
+    - 6番か8番
+    - クラブの未来
+  say:
+  - text: ドルトムントの監督は、ニコ・コバチ。
+    image: assets/images/20261115_player_406640/11_w.jpg
+    card: none
+  - text: ヴォルフスブルク時代にも、ヌメチャを指導した人です。
+    card: none
+  - text: 2025年3月、コバチ監督は、ヌメチャをこう評価しています。
+    card: none
+  - voice: コバチ
+    text: もちろん10番の役もできる。
+    card:
+      type: document
+      label: コバチ監督の言葉（2025年3月）
+      paragraphs:
+      - もちろん10番の役もできる。ただ、体の強さ、存在感、技術、視野、そしてポジションの解釈を考えれば、6番か8番の選手だ。彼はこのクラブの未来だ。
+      highlight:
+      - 6番か8番
+      - クラブの未来
+  - voice: コバチ
+    text: ただ、体の強さ、存在感、技術、視野、
+    card:
+      type: document
+      label: コバチ監督の言葉（2025年3月）
+      paragraphs:
+      - もちろん10番の役もできる。ただ、体の強さ、存在感、技術、視野、そしてポジションの解釈を考えれば、6番か8番の選手だ。彼はこのクラブの未来だ。
+      highlight:
+      - 6番か8番
+      - クラブの未来
+    cont: true
+  - voice: コバチ
+    text: そしてポジションの解釈を考えれば、6番か8番の選手だ。
+    card:
+      type: document
+      label: コバチ監督の言葉（2025年3月）
+      paragraphs:
+      - もちろん10番の役もできる。ただ、体の強さ、存在感、技術、視野、そしてポジションの解釈を考えれば、6番か8番の選手だ。彼はこのクラブの未来だ。
+      highlight:
+      - 6番か8番
+      - クラブの未来
+    cont: true
+  - voice: コバチ
+    text: 彼はこのクラブの未来だ。
+    card:
+      type: document
+      label: コバチ監督の言葉（2025年3月）
+      paragraphs:
+      - もちろん10番の役もできる。ただ、体の強さ、存在感、技術、視野、そしてポジションの解釈を考えれば、6番か8番の選手だ。彼はこのクラブの未来だ。
+      highlight:
+      - 6番か8番
+      - クラブの未来
+    cont: true
+    pause: 0.5
+  - text: 点を取る役ではなく、6番か8番として、試合を動かす選手だ、という見方です。
+    image: assets/images/20261115_player_406640/10_w.jpg
+    card: none
+    emph: true
+  - text: そして今季の11月7日。2得点で勝った試合のあと、コバチ監督は、こう話しました。
+    card:
+      type: document
+      label: コバチ監督の言葉（11月7日の試合後）
+      paragraphs:
+      - ヌメチャは26歳になったばかりで、これから全盛期に入る。
+      - 彼がいるとチームのプレーに、まったく新しい次元が加わる。
+      highlight:
+      - 全盛期
+      - 新しい次元
+  - voice: コバチ
+    text: ヌメチャは26歳になったばかりで、これから全盛期に入る。
+    card:
+      type: document
+      label: コバチ監督の言葉（11月7日の試合後）
+      paragraphs:
+      - ヌメチャは26歳になったばかりで、これから全盛期に入る。
+      - 彼がいるとチームのプレーに、まったく新しい次元が加わる。
+      highlight:
+      - 全盛期
+      - 新しい次元
+  - voice: コバチ
+    text: 彼がいるとチームのプレーに、まったく新しい次元が加わる。
+    card:
+      type: document
+      label: コバチ監督の言葉（11月7日の試合後）
+      paragraphs:
+      - ヌメチャは26歳になったばかりで、これから全盛期に入る。
+      - 彼がいるとチームのプレーに、まったく新しい次元が加わる。
+      highlight:
+      - 全盛期
+      - 新しい次元
+    cont: true
+    pause: 0.5
+  quotes_from:
+  - getfootballnewsgermany https://www.getfootballnewsgermany.com/2026/felix-nmecha-bvb-lukas-feature/
+  sources:
+  - https://www.getfootballnewsgermany.com/2026/felix-nmecha-bvb-lukas-feature/
+- id: goal
+  heading: 9月12日のオーバーヘッドは、どんなゴールだったのか
+  tier: 報道
+  telop: パーダーボルン戦のオーバーヘッド
+  narrator: 解説
+  card:
+    type: table
+    title: 9月12日 ドルトムント 3-0 パーダーボルン
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - ヌメチャの出場
+      - 交代で25分
+    - - 得点
+      - '2'
+    - - 2点目
+      - 89分 オーバーヘッド
+    - - ファン投票
+      - 9月の月間ベストゴール
+    highlight_row: 0
+  say:
+  - text: 9月12日、ホームのパーダーボルン戦。ドルトムントは、3対0で勝ちました。
+    image: assets/images/20261115_player_406640/12_w.jpg
+    card:
+      type: table
+      title: 9月12日 ドルトムント 3-0 パーダーボルン
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - ヌメチャの出場
+        - 交代で25分
+      - - 得点
+        - '2'
+      - - 2点目
+        - 89分 オーバーヘッド
+      - - ファン投票
+        - 9月の月間ベストゴール
+      highlight_row: 0
+  - text: 途中出場だったヌメチャは、出場25分間で、2得点です。
+    card:
+      type: table
+      title: 9月12日 ドルトムント 3-0 パーダーボルン
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - ヌメチャの出場
+        - 交代で25分
+      - - 得点
+        - '2'
+      - - 2点目
+        - 89分 オーバーヘッド
+      - - ファン投票
+        - 9月の月間ベストゴール
+      highlight_row: 1
+  - text: 2点目は、89分。ザビッツァーのクロスです。
+    card:
+      type: table
+      title: 9月12日 ドルトムント 3-0 パーダーボルン
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - ヌメチャの出場
+        - 交代で25分
+      - - 得点
+        - '2'
+      - - 2点目
+        - 89分 オーバーヘッド
+      - - ファン投票
+        - 9月の月間ベストゴール
+      highlight_row: 2
+  - text: ゴールに背を向けたまま、オーバーヘッドで合わせました。
+    card:
+      type: table
+      title: 9月12日 ドルトムント 3-0 パーダーボルン
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - ヌメチャの出場
+        - 交代で25分
+      - - 得点
+        - '2'
+      - - 2点目
+        - 89分 オーバーヘッド
+      - - ファン投票
+        - 9月の月間ベストゴール
+      highlight_row: 2
+    emph: true
+  - text: ファン投票では、10人の候補から、約3割の票を集めました。
+    image: assets/images/20261115_player_406640/10_w.jpg
+    card:
+      type: table
+      title: 9月12日 ドルトムント 3-0 パーダーボルン
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - ヌメチャの出場
+        - 交代で25分
+      - - 得点
+        - '2'
+      - - 2点目
+        - 89分 オーバーヘッド
+      - - ファン投票
+        - 9月の月間ベストゴール
+      highlight_row: 3
+  - text: 9月の月間ベストゴールに、選ばれています。
+    card:
+      type: table
+      title: 9月12日 ドルトムント 3-0 パーダーボルン
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - ヌメチャの出場
+        - 交代で25分
+      - - 得点
+        - '2'
+      - - 2点目
+        - 89分 オーバーヘッド
+      - - ファン投票
+        - 9月の月間ベストゴール
+      highlight_row: 3
+  - text: 試合のあと、本人は、こう話しています。
+    image: assets/images/20261115_player_406640/11_w.jpg
+    card:
+      type: document
+      label: 試合後の取材（9月12日）
+      paragraphs:
+      - 選ばれるかどうかは、皆さんが決めること。でも、ちょっと子どものころの気分でした。あれは、子どものころ、いつも試したプレーです。決まれば、うれしいですよね。
+      highlight:
+      - 子どものころの気分
+      - 決まれば、うれしい
+  - voice: ヌメチャ
+    text: 選ばれるかどうかは、皆さんが決めること。
+    card:
+      type: document
+      label: 試合後の取材（9月12日）
+      paragraphs:
+      - 選ばれるかどうかは、皆さんが決めること。でも、ちょっと子どものころの気分でした。あれは、子どものころ、いつも試したプレーです。決まれば、うれしいですよね。
+      highlight:
+      - 子どものころの気分
+      - 決まれば、うれしい
+  - voice: ヌメチャ
+    text: でも、ちょっと子どものころの気分でした。
+    card:
+      type: document
+      label: 試合後の取材（9月12日）
+      paragraphs:
+      - 選ばれるかどうかは、皆さんが決めること。でも、ちょっと子どものころの気分でした。あれは、子どものころ、いつも試したプレーです。決まれば、うれしいですよね。
+      highlight:
+      - 子どものころの気分
+      - 決まれば、うれしい
+    cont: true
+  - voice: ヌメチャ
+    text: あれは、子どものころ、いつも試したプレーです。
+    card:
+      type: document
+      label: 試合後の取材（9月12日）
+      paragraphs:
+      - 選ばれるかどうかは、皆さんが決めること。でも、ちょっと子どものころの気分でした。あれは、子どものころ、いつも試したプレーです。決まれば、うれしいですよね。
+      highlight:
+      - 子どものころの気分
+      - 決まれば、うれしい
+    cont: true
+  - voice: ヌメチャ
+    text: 決まれば、うれしいですよね。
+    card:
+      type: document
+      label: 試合後の取材（9月12日）
+      paragraphs:
+      - 選ばれるかどうかは、皆さんが決めること。でも、ちょっと子どものころの気分でした。あれは、子どものころ、いつも試したプレーです。決まれば、うれしいですよね。
+      highlight:
+      - 子どものころの気分
+      - 決まれば、うれしい
+    cont: true
+    pause: 0.5
+  - text: 11月7日のエルバースベルク戦でも、2点。今季2回目の、1試合2得点でした。
+    image: assets/images/20261115_player_406640/10_w.jpg
+    card: none
+  quotes_from:
+  - bulinews https://bulinews.com/felix-nmecha-reacts-dortmund-bicycle-kick-bit-childhood
+  sources:
+  - https://bulinews.com/felix-nmecha-reacts-dortmund-bicycle-kick-bit-childhood
+  - https://www.beinsports.com/en-au/football/bundesliga/articles-video/nmecha-revels-in-overhead-kick-goal-2026-09-13?sL=53
+  - https://www.bvb.de/de/en/news/news-overview/news.html/2026/10/6/Felix-Nmecha-Scores-the-Top-Goal-of-the-Month-for-September-with-a-Bicycle-Kick.html
+- id: germany
+  heading: ヌメチャは、W杯のドイツ代表で、何をしたのか
+  tier: 報道
+  telop: W杯のドイツ代表
+  narrator: 解説
+  card:
+    type: table
+    title: 2026年W杯 ドイツ代表のヌメチャ
+    columns:
+    - 試合
+    - 結果
+    - 出場
+    rows:
+    - - 6/14 初戦 クラサオ
+      - 7-1
+      - 73分 1得点1アシスト
+    - - 6/20 第2戦
+      - 2-1
+      - 90分 1アシスト
+    - - 6/25 第3戦
+      - 1-2
+      - 64分
+    - - 6/29 ラウンド32 パラグアイ
+      - 1-1（PK3-4）
+      - 46分
+    highlight_row: 0
+  say:
+  - text: ドイツ代表での最初の得点は、2024年11月19日。
+    image: assets/images/20261115_player_406640/11_w.jpg
+    card: none
+  - text: ハンガリー戦で、1対1の引き分けでした。
+    card: none
+  - text: そして2026年6月14日、W杯の初戦、クラサオ戦。
+    image: assets/images/20261115_player_406640/10_w.jpg
+    card:
+      type: table
+      title: 2026年W杯 ドイツ代表のヌメチャ
+      columns:
+      - 試合
+      - 結果
+      - 出場
+      rows:
+      - - 6/14 初戦 クラサオ
+        - 7-1
+        - 73分 1得点1アシスト
+      - - 6/20 第2戦
+        - 2-1
+        - 90分 1アシスト
+      - - 6/25 第3戦
+        - 1-2
+        - 64分
+      - - 6/29 ラウンド32 パラグアイ
+        - 1-1（PK3-4）
+        - 46分
+      highlight_row: 0
+  - text: ドイツの先制点を決めて、チームは、7対1で勝ちました。
+    card:
+      type: table
+      title: 2026年W杯 ドイツ代表のヌメチャ
+      columns:
+      - 試合
+      - 結果
+      - 出場
+      rows:
+      - - 6/14 初戦 クラサオ
+        - 7-1
+        - 73分 1得点1アシスト
+      - - 6/20 第2戦
+        - 2-1
+        - 90分 1アシスト
+      - - 6/25 第3戦
+        - 1-2
+        - 64分
+      - - 6/29 ラウンド32 パラグアイ
+        - 1-1（PK3-4）
+        - 46分
+      highlight_row: 0
+    emph: true
+  - text: この試合は、73分間の出場で、1得点1アシスト。
+    card:
+      type: table
+      title: 2026年W杯 ドイツ代表のヌメチャ
+      columns:
+      - 試合
+      - 結果
+      - 出場
+      rows:
+      - - 6/14 初戦 クラサオ
+        - 7-1
+        - 73分 1得点1アシスト
+      - - 6/20 第2戦
+        - 2-1
+        - 90分 1アシスト
+      - - 6/25 第3戦
+        - 1-2
+        - 64分
+      - - 6/29 ラウンド32 パラグアイ
+        - 1-1（PK3-4）
+        - 46分
+      highlight_row: 0
+  - text: グループは1位で通過。2戦目も、90分間出て、1アシストです。
+    image: assets/images/20261115_player_406640/12_w.jpg
+    card:
+      type: table
+      title: 2026年W杯 ドイツ代表のヌメチャ
+      columns:
+      - 試合
+      - 結果
+      - 出場
+      rows:
+      - - 6/14 初戦 クラサオ
+        - 7-1
+        - 73分 1得点1アシスト
+      - - 6/20 第2戦
+        - 2-1
+        - 90分 1アシスト
+      - - 6/25 第3戦
+        - 1-2
+        - 64分
+      - - 6/29 ラウンド32 パラグアイ
+        - 1-1（PK3-4）
+        - 46分
+      highlight_row: 1
+  - text: ラウンド32のパラグアイ戦は、1対1からのPK戦で敗れました。
+    card:
+      type: table
+      title: 2026年W杯 ドイツ代表のヌメチャ
+      columns:
+      - 試合
+      - 結果
+      - 出場
+      rows:
+      - - 6/14 初戦 クラサオ
+        - 7-1
+        - 73分 1得点1アシスト
+      - - 6/20 第2戦
+        - 2-1
+        - 90分 1アシスト
+      - - 6/25 第3戦
+        - 1-2
+        - 64分
+      - - 6/29 ラウンド32 パラグアイ
+        - 1-1（PK3-4）
+        - 46分
+      highlight_row: 3
+  - text: この試合のヌメチャは、46分間の出場でした。
+    card:
+      type: table
+      title: 2026年W杯 ドイツ代表のヌメチャ
+      columns:
+      - 試合
+      - 結果
+      - 出場
+      rows:
+      - - 6/14 初戦 クラサオ
+        - 7-1
+        - 73分 1得点1アシスト
+      - - 6/20 第2戦
+        - 2-1
+        - 90分 1アシスト
+      - - 6/25 第3戦
+        - 1-2
+        - 64分
+      - - 6/29 ラウンド32 パラグアイ
+        - 1-1（PK3-4）
+        - 46分
+      highlight_row: 3
+  - text: 9月のネーションズリーグ、オランダ戦でも1点。代表での3点目です。
+    image: assets/images/20261115_player_406640/11_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Felix_Nmecha
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_knockout_stage
+  - https://www.transfermarkt.com/felix-nmecha/leistungsdatendetails/spieler/406640
+  quotes_from: []
+- id: past
+  heading: ヌメチャは、これまで何試合に出て、何点取ってきたのか
+  tier: 報道
+  telop: 通算195試合23点
+  narrator: 解説
+  card:
+    type: table
+    title: ヌメチャ 通算（11月7日まで）
+    columns:
+    - 所属
+    - 試合
+    - 得点
+    rows:
+    - - マンチェスター・シティ
+      - '3'
+      - '0'
+    - - ヴォルフスブルク
+      - '50'
+      - '3'
+    - - ドルトムント
+      - '128'
+      - '17'
+    - - ドイツ代表
+      - '14'
+      - '3'
+    - - 合計
+      - '195'
+      - '23'
+    highlight_row: 0
+  say:
+  - text: ここからは、ヌメチャの通算の数字です。ユース年代は入れていません。
+    image: assets/images/20261115_player_406640/10_w.jpg
+    card:
+      type: table
+      title: ヌメチャ 通算（11月7日まで）
+      columns:
+      - 所属
+      - 試合
+      - 得点
+      rows:
+      - - マンチェスター・シティ
+        - '3'
+        - '0'
+      - - ヴォルフスブルク
+        - '50'
+        - '3'
+      - - ドルトムント
+        - '128'
+        - '17'
+      - - ドイツ代表
+        - '14'
+        - '3'
+      - - 合計
+        - '195'
+        - '23'
+      highlight_row: 0
+  - text: シティのトップチームでは、3試合。
+    card:
+      type: table
+      title: ヌメチャ 通算（11月7日まで）
+      columns:
+      - 所属
+      - 試合
+      - 得点
+      rows:
+      - - マンチェスター・シティ
+        - '3'
+        - '0'
+      - - ヴォルフスブルク
+        - '50'
+        - '3'
+      - - ドルトムント
+        - '128'
+        - '17'
+      - - ドイツ代表
+        - '14'
+        - '3'
+      - - 合計
+        - '195'
+        - '23'
+      highlight_row: 0
+  - text: ヴォルフスブルクは、2シーズンで50試合3点。
+    card:
+      type: table
+      title: ヌメチャ 通算（11月7日まで）
+      columns:
+      - 所属
+      - 試合
+      - 得点
+      rows:
+      - - マンチェスター・シティ
+        - '3'
+        - '0'
+      - - ヴォルフスブルク
+        - '50'
+        - '3'
+      - - ドルトムント
+        - '128'
+        - '17'
+      - - ドイツ代表
+        - '14'
+        - '3'
+      - - 合計
+        - '195'
+        - '23'
+      highlight_row: 1
+  - text: ドルトムントは、3年半で、128試合17点。
+    card:
+      type: table
+      title: ヌメチャ 通算（11月7日まで）
+      columns:
+      - 所属
+      - 試合
+      - 得点
+      rows:
+      - - マンチェスター・シティ
+        - '3'
+        - '0'
+      - - ヴォルフスブルク
+        - '50'
+        - '3'
+      - - ドルトムント
+        - '128'
+        - '17'
+      - - ドイツ代表
+        - '14'
+        - '3'
+      - - 合計
+        - '195'
+        - '23'
+      highlight_row: 2
+  - text: ドイツ代表は、14試合3点です。
+    card:
+      type: table
+      title: ヌメチャ 通算（11月7日まで）
+      columns:
+      - 所属
+      - 試合
+      - 得点
+      rows:
+      - - マンチェスター・シティ
+        - '3'
+        - '0'
+      - - ヴォルフスブルク
+        - '50'
+        - '3'
+      - - ドルトムント
+        - '128'
+        - '17'
+      - - ドイツ代表
+        - '14'
+        - '3'
+      - - 合計
+        - '195'
+        - '23'
+      highlight_row: 3
+  - text: 合計は、195試合で23点。
+    card:
+      type: table
+      title: ヌメチャ 通算（11月7日まで）
+      columns:
+      - 所属
+      - 試合
+      - 得点
+      rows:
+      - - マンチェスター・シティ
+        - '3'
+        - '0'
+      - - ヴォルフスブルク
+        - '50'
+        - '3'
+      - - ドルトムント
+        - '128'
+        - '17'
+      - - ドイツ代表
+        - '14'
+        - '3'
+      - - 合計
+        - '195'
+        - '23'
+      highlight_row: 4
+    emph: true
+  - text: ドルトムントの17点のうち、4点は、今季のブンデスリーガの9試合で決めたものです。
+    image: assets/images/20261115_player_406640/11_w.jpg
+    card: none
+  sources:
+  - https://www.transfermarkt.com/felix-nmecha/leistungsdatendetails/spieler/406640
+  - https://en.wikipedia.org/wiki/Felix_Nmecha
+  quotes_from: []
+- id: view
+  heading: 70万ユーロだった選手の値段は、なぜ、93倍になったのか
+  tier: 背景
+  viewpoint: true
+  telop: 市場価値と、点の数
+  narrator: 解説
+  card:
+    type: table
+    title: ヌメチャの市場価値
+    columns:
+    - 項目
+    - 数字
+    rows:
+    - - 2021年12月（ヴォルフスブルク）
+      - 70万ユーロ
+    - - 2023年6月（移籍の直前）
+      - 1500万ユーロ
+    - - 2026年10月（ドルトムント）
+      - 6500万ユーロ
+    - - 上がった倍率
+      - およそ93倍
+    highlight_row: 0
+  say:
+  - text: 最後に、ヌメチャを、値段の面から見ます。
+    image: assets/images/20261115_player_406640/12_w.jpg
+    card: none
+  - text: 2021年12月、ヴォルフスブルクにいたころは、70万ユーロでした。
+    card:
+      type: table
+      title: ヌメチャの市場価値
+      columns:
+      - 項目
+      - 数字
+      rows:
+      - - 2021年12月（ヴォルフスブルク）
+        - 70万ユーロ
+      - - 2023年6月（移籍の直前）
+        - 1500万ユーロ
+      - - 2026年10月（ドルトムント）
+        - 6500万ユーロ
+      - - 上がった倍率
+        - およそ93倍
+      highlight_row: 0
+  - text: 2023年6月、移籍の直前は、1500万ユーロ。
+    image: assets/images/20261115_player_406640/10_w.jpg
+    card:
+      type: table
+      title: ヌメチャの市場価値
+      columns:
+      - 項目
+      - 数字
+      rows:
+      - - 2021年12月（ヴォルフスブルク）
+        - 70万ユーロ
+      - - 2023年6月（移籍の直前）
+        - 1500万ユーロ
+      - - 2026年10月（ドルトムント）
+        - 6500万ユーロ
+      - - 上がった倍率
+        - およそ93倍
+      highlight_row: 1
+  - text: 今年の10月には、6500万ユーロ。2021年12月から、およそ93倍です。
+    card:
+      type: table
+      title: ヌメチャの市場価値
+      columns:
+      - 項目
+      - 数字
+      rows:
+      - - 2021年12月（ヴォルフスブルク）
+        - 70万ユーロ
+      - - 2023年6月（移籍の直前）
+        - 1500万ユーロ
+      - - 2026年10月（ドルトムント）
+        - 6500万ユーロ
+      - - 上がった倍率
+        - およそ93倍
+      highlight_row: 3
+    emph: true
+    mark:
+      kind: circle
+      row: 3
+  - text: 通算の点の数だけでは、この値段は説明できません。
+    image: assets/images/20261115_player_406640/11_w.jpg
+    card: none
+  - text: コバチ監督が評価した、中盤の働きが、値段を後押ししたと見られます。
+    card: none
+  - text: その働きに、今季は、90分あたり0.55点という、点の数字が加わりました。
+    card: none
+  - text: 次の見どころは、この点のペースが、続くかどうかです。
+    image: assets/images/20261115_player_406640/10_w.jpg
+    card: none
+  sources:
+  - https://www.transfermarkt.com/felix-nmecha/marktwertverlauf/spieler/406640
+  - https://www.getfootballnewsgermany.com/2026/felix-nmecha-bvb-lukas-feature/
+  quotes_from: []

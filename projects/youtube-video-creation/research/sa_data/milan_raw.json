@@ -1,0 +1,661 @@
+{
+ "club_title": "AC_Milan",
+ "season_title": "2026–27_AC_Milan_season",
+ "squad": [
+  {
+   "no": "1",
+   "pos": "GK",
+   "nat": "ITA",
+   "name": "Pietro Terracciano",
+   "page": "Pietro Terracciano",
+   "dob": "1990-03-08",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "2",
+   "pos": "DF",
+   "nat": "ECU",
+   "name": "Pervis Estupiñán",
+   "page": "Pervis Estupiñán",
+   "dob": "1998-01-21",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "5",
+   "pos": "DF",
+   "nat": "BEL",
+   "name": "Koni De Winter",
+   "page": "Koni De Winter",
+   "dob": "2002-06-12",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "8",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Ruben Loftus-Cheek",
+   "page": "Ruben Loftus-Cheek",
+   "dob": "1996-01-23",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "9",
+   "pos": "FW",
+   "nat": "POR",
+   "name": "Gonçalo Ramos",
+   "page": "Gonçalo Ramos",
+   "dob": "2001-06-20",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "11",
+   "pos": "MF",
+   "nat": "USA",
+   "name": "Christian Pulisic",
+   "page": "Christian Pulisic",
+   "dob": "1998-09-18",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "12",
+   "pos": "MF",
+   "nat": "FRA",
+   "name": "Adrien Rabiot",
+   "page": "Adrien Rabiot",
+   "dob": "1995-04-03",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "13",
+   "pos": "DF",
+   "nat": "FRA",
+   "name": "Sankhoun Diawara",
+   "page": "Sankhoun Diawara",
+   "dob": "2006-01-13",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "14",
+   "pos": "MF",
+   "nat": "CRO",
+   "name": "Luka Modrić",
+   "page": "Luka Modrić",
+   "dob": "1985-09-09",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "16",
+   "pos": "GK",
+   "nat": "FRA",
+   "name": "Mike Maignan",
+   "page": "Mike Maignan",
+   "dob": "1995-07-03",
+   "captain": true,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "20",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Omari Hutchinson",
+   "page": "Omari Hutchinson",
+   "dob": "2003-10-30",
+   "captain": false,
+   "loan": true,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "21",
+   "pos": "MF",
+   "nat": "NGA",
+   "name": "Samuel Chukwueze",
+   "page": "Samuel Chukwueze",
+   "dob": "1999-05-22",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "22",
+   "pos": "FW",
+   "nat": "BEL",
+   "name": "Diego Moreira",
+   "page": "Diego Moreira",
+   "dob": "2004-08-06",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "23",
+   "pos": "DF",
+   "nat": "ENG",
+   "name": "Fikayo Tomori",
+   "page": "Fikayo Tomori",
+   "dob": "1997-12-19",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "28",
+   "pos": "MF",
+   "nat": "ITA",
+   "name": "Christian Comotto",
+   "page": "Christian Comotto",
+   "dob": "2008-04-25",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "30",
+   "pos": "MF",
+   "nat": "SUI",
+   "name": "Ardon Jashari",
+   "page": "Ardon Jashari",
+   "dob": "2002-07-30",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "31",
+   "pos": "DF",
+   "nat": "SRB",
+   "name": "Strahinja Pavlović",
+   "page": "Strahinja Pavlović",
+   "dob": "2001-05-24",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "33",
+   "pos": "DF",
+   "nat": "ITA",
+   "name": "Davide Bartesaghi",
+   "page": "Davide Bartesaghi",
+   "dob": "2005-12-29",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "34",
+   "pos": "DF",
+   "nat": "ESP",
+   "name": "Mario Gila",
+   "page": "Mario Gila",
+   "dob": "2000-08-29",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "35",
+   "pos": "DF",
+   "nat": "BUL",
+   "name": "Valeri Vladimirov",
+   "page": "Valeri Vladimirov",
+   "dob": "2008-06-04",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "42",
+   "pos": "DF",
+   "nat": "ITA",
+   "name": "Filippo Terracciano",
+   "page": "Filippo Terracciano",
+   "dob": "2003-02-08",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "46",
+   "pos": "DF",
+   "nat": "ITA",
+   "name": "Matteo Gabbia",
+   "page": "Matteo Gabbia",
+   "dob": "1999-10-21",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "56",
+   "pos": "MF",
+   "nat": "BEL",
+   "name": "Alexis Saelemaekers",
+   "page": "Alexis Saelemaekers",
+   "dob": "1999-06-27",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "70",
+   "pos": "MF",
+   "nat": "ITA",
+   "name": "Alphadjo Cisse",
+   "page": "Alphadjo Cisse",
+   "dob": "2006-10-22",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "73",
+   "pos": "FW",
+   "nat": "ITA",
+   "name": "Francesco Camarda",
+   "page": "Francesco Camarda",
+   "dob": "2008-03-10",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "80",
+   "pos": "MF",
+   "nat": "USA",
+   "name": "Yunus Musah",
+   "page": "Yunus Musah",
+   "dob": "2002-11-29",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "96",
+   "pos": "GK",
+   "nat": "ITA",
+   "name": "Lorenzo Torriani",
+   "page": "Lorenzo Torriani",
+   "dob": "2005-01-31",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  }
+ ],
+ "results": [
+  [
+   "23 August 2026",
+   "1",
+   "Torino",
+   "1–2",
+   "Milan"
+  ],
+  [
+   "28 August 2026",
+   "2",
+   "Milan",
+   "2–0",
+   "Venezia"
+  ],
+  [
+   "6 September 2026",
+   "3",
+   "Juventus",
+   "1–1",
+   "Milan"
+  ],
+  [
+   "12 September 2026",
+   "4",
+   "Lazio",
+   "2–2",
+   "Milan"
+  ],
+  [
+   "20 September 2026",
+   "5",
+   "Milan",
+   "3–0",
+   "Lecce"
+  ],
+  [
+   "11 October 2026",
+   "6",
+   "Sassuolo",
+   "1–1",
+   "Milan"
+  ],
+  [
+   "18 October 2026",
+   "7",
+   "Milan",
+   "3–2",
+   "Atalanta"
+  ],
+  [
+   "25 October 2026",
+   "8",
+   "Udinese",
+   "0–2",
+   "Milan"
+  ],
+  [
+   "28 October 2026",
+   "9",
+   "Milan",
+   "2–4",
+   "Bologna"
+  ],
+  [
+   "31 October 2026",
+   "10",
+   "Milan",
+   "3–1",
+   "Internazionale"
+  ],
+  [
+   "8 November 2026",
+   "11",
+   "Genoa",
+   "1–2",
+   "Milan"
+  ],
+  [
+   "22 November 2026",
+   "12",
+   "Milan",
+   "",
+   "Frosinone"
+  ],
+  [
+   "30 November 2026",
+   "13",
+   "Cagliari",
+   "",
+   "Milan"
+  ],
+  [
+   "6 December 2026",
+   "14",
+   "Milan",
+   "",
+   "Parma"
+  ],
+  [
+   "13 December 2026",
+   "15",
+   "Napoli",
+   "",
+   "Milan"
+  ],
+  [
+   "19 December 2026",
+   "16",
+   "Milan",
+   "",
+   "Como"
+  ],
+  [
+   "2 January 2027",
+   "17",
+   "Monza",
+   "",
+   "Milan"
+  ],
+  [
+   "5 January 2027",
+   "18",
+   "Milan",
+   "",
+   "Fiorentina"
+  ],
+  [
+   "9 January 2027",
+   "19",
+   "Roma",
+   "",
+   "Milan"
+  ],
+  [
+   "17 January 2027",
+   "20",
+   "Milan",
+   "",
+   "Torino"
+  ],
+  [
+   "24 January 2027",
+   "21",
+   "Frosinone",
+   "",
+   "Milan"
+  ],
+  [
+   "31 January 2027",
+   "22",
+   "Milan",
+   "",
+   "Juventus"
+  ],
+  [
+   "7 February 2027",
+   "23",
+   "Bologna",
+   "",
+   "Milan"
+  ],
+  [
+   "14 February 2027",
+   "24",
+   "Internazionale",
+   "",
+   "Milan"
+  ],
+  [
+   "21 February 2027",
+   "25",
+   "Milan",
+   "",
+   "Genoa"
+  ],
+  [
+   "28 February 2027",
+   "26",
+   "Como",
+   "",
+   "Milan"
+  ],
+  [
+   "7 March 2027",
+   "27",
+   "Milan",
+   "",
+   "Cagliari"
+  ],
+  [
+   "14 March 2027",
+   "28",
+   "Milan",
+   "",
+   "Sassuolo"
+  ],
+  [
+   "21 March 2027",
+   "29",
+   "Atalanta",
+   "",
+   "Milan"
+  ],
+  [
+   "4 April 2027",
+   "30",
+   "Milan",
+   "",
+   "Monza"
+  ],
+  [
+   "11 April 2027",
+   "31",
+   "Fiorentina",
+   "",
+   "Milan"
+  ],
+  [
+   "18 April 2027",
+   "32",
+   "Milan",
+   "",
+   "Napoli"
+  ],
+  [
+   "25 April 2027",
+   "33",
+   "Lecce",
+   "",
+   "Milan"
+  ],
+  [
+   "2 May 2027",
+   "34",
+   "Milan",
+   "",
+   "Lazio"
+  ],
+  [
+   "9 May 2027",
+   "35",
+   "Parma",
+   "",
+   "Milan"
+  ],
+  [
+   "16 May 2027",
+   "36",
+   "Milan",
+   "",
+   "Roma"
+  ],
+  [
+   "23 May 2027",
+   "37",
+   "Venezia",
+   "",
+   "Milan"
+  ],
+  [
+   "30 May 2027",
+   "38",
+   "Milan",
+   "",
+   "Udinese"
+  ],
+  [
+   "13 January 2027",
+   "Round of 16",
+   "Milan",
+   "",
+   "Monza"
+  ],
+  [
+   "16 September 2026",
+   "1",
+   "Milan",
+   "0–2",
+   "Benfica"
+  ],
+  [
+   "15 October 2026",
+   "2",
+   "Red Bull Salzburg",
+   "0–4",
+   "Milan"
+  ],
+  [
+   "22 October 2026",
+   "3",
+   "Bournemouth",
+   "3–0",
+   "Milan"
+  ],
+  [
+   "5 November 2026",
+   "4",
+   "Milan",
+   "0–2",
+   "Ferencváros"
+  ],
+  [
+   "26 November 2026",
+   "5",
+   "Olympiacos",
+   "",
+   "Milan"
+  ],
+  [
+   "10 December 2026",
+   "6",
+   "Milan",
+   "",
+   "Sunderland"
+  ],
+  [
+   "21 January 2027",
+   "7",
+   "Levski Sofia",
+   "",
+   "Milan"
+  ],
+  [
+   "28 January 2027",
+   "8",
+   "Milan",
+   "",
+   "Ararat-Armenia"
+  ]
+ ]
+}

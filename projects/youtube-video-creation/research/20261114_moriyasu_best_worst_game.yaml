@@ -1,0 +1,159 @@
+# 取材メモ（2026年11月14日）森保監督、海外記者に「8年間で一番良かった試合」を問われ困惑。悪かった試合は即答（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-14。requests（ブラウザUA）で本文を全文読み、ESPN（site.api.espn.com）で試合を確かめた。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: ゲキサカ 2026-11-13（取材・文 竹内達也）「森保監督、海外記者に“8年間のベストゲーム”問われ困惑…ワーストゲームは即答「忘れられない」」（全文） https://web.gekisaka.jp/news/japan/detail/?463110-463110-fl
+# 写真の出どころ（本人の写真を探すため）:
+#   https://web.gekisaka.jp/news/japan/detail/?463110-463110-fl
+#   https://www.soccer-king.jp/news/japan/national/20261113/2227426.html
+#   https://web.gekisaka.jp/news/japan/detail/?462511-462511-fl
+#   https://web.gekisaka.jp/news/japan/detail/?462978-462978-fl
+#   https://web.gekisaka.jp/news/japan/detail/?462496-462496-fl
+#   https://www.soccer-king.jp/news/japan/national/20261104/2224347.html
+#   https://www.soccer-king.jp/news/japan/national/20261111/2226536.html
+#   https://web.gekisaka.jp/news/japan/detail/?463113-463113-fl
+#   https://web.gekisaka.jp/news/japan/detail/?463112-463112-fl
+#   https://web.gekisaka.jp/news/japan/detail/?463121-463121-fl
+#   https://web.gekisaka.jp/news/japan/detail/?463120-463120-fl
+# 出典で確かめたこと:
+#   ・13日、シンガポールで行われるブラジル戦（MIZUHO BLUE CHALLENGE THE KALLANG FOOTBALL SERIES SINGAPORE）に向けた前日練習後の取材。海外メディアが、今回の2連戦で退任する森保監督に「8年間で一番良かった試合、一番悪かった試合はどれか」と質問した（ゲキサカ）。
+#   ・森保監督の言葉（原文。ゲキサカ。字は変えていない。台本は読点で行に分けた。原文の「ですか?」の?は台本では全角）:
+#       「一番良かった試合ですか?どうですかね……」（地の文が「頭を悩ませつつ」）
+#       「逆は覚えています」（先にワーストゲームを回答。地の文）
+#       「なぜなら、準備の段階から、選手が思い切って、自信を持って戦える役割・戦術を監督としてうまく落とし込めず、選手たちが持っている力を発揮できずにホームで敗戦したことを覚えている」
+#       「忘れることはできない」（地の文が「声を落とした」）
+#       「いい試合は思い出さないことにしたい」（ベストゲームについては「なかなか言葉が出て来ず、最後に」）
+#   ・同じ記者から「8年間でどういったレガシーを残せたか」と聞かれ、森保監督は選手層の広がりに意義を見出した（地の文）。原文:
+#       「…一部の選手だけを指してベストオブベストではなく、選手層を広く日本代表として捉えていただけるようになったことだと思う。私自身、日本にはたくさんのいい選手がいると言い続け、選手層を厚くしながらより高い頂点を目指してチームづくりをすることをさせてもらえた。そこは自分がやるというより、そういう環境を許していただけた協会の方々がいるからだと思っている」
+#   ・「ワーストゲーム」の試合: ゲキサカの地の文は「2021年9月にパナソニックスタジアム吹田で行われたカタールW杯アジア最終予選初戦のオマーン戦(●0-1)」。森保監督本人が「ワースト」という語を使ったのではなく、質問（一番悪かった試合）に答えて挙げた試合を、記事が“ワーストゲーム”と呼んでいる→台本は「一番悪かった試合を挙げました」と書き、断定しすぎない。
+#   ・ESPN（fifa.worldq.afc, event=611303）: 2021-09-02 日本 0-1 オマーン、パナソニックスタジアム吹田。得点は88分にアル・サブヒ（オマーン）の1点のみ。記事の「2021年9月」「ホーム」「0-1」と合う。
+#   ・退任: 記事は「この活動限りで退任」。日程は14日ブラジル戦、17日パラグアイ戦（シンガポール。取材メモ 20261113_maeda_pl_goal_words と同じ出どころ）。
+# 食い違い: なし。記事の見出しは「忘れられない」だが、森保監督の原文の言葉は「忘れることはできない」→台本は原文のほうを使う。
+# 前の本との重なり: 20261111_doan_asiacup_words（堂安が語った、森保監督との8年3か月・契約・最後の活動）。今回の初出: 森保監督本人が海外記者の質問に答えた言葉（悪かった試合＝オマーン戦の理由、ベストゲームは出てこなかったこと、残したもの）。堂安の言葉・8年3か月・契約更新の話は繰り返さない。
+# 【言わないこと】14日ブラジル戦の結果・予想／後任の話／森保監督の戦績の評価。
+# 本人の言葉: あり（森保一。ゲキサカ）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月14日"
+format: news
+no_main: true
+people: [森保一]
+
+short_style: Y
+short_hook_quote: いい試合は、思い出さないことにしたい。
+short_photos:
+  - assets/images/20261114_moriyasu_best_worst_game/01_v.jpg
+  - assets/images/20261114_moriyasu_best_worst_game/02_v.jpg
+  - assets/images/20261114_moriyasu_best_worst_game/03_v.jpg
+short_question: 森保監督の8年間で、あなたが選ぶ一番良かった試合はどれですか。
+short_telops: []
+
+theme:
+  id: moriyasu_best_worst_game
+  league: japan
+  league_name: 日本代表
+  prefix: ""
+  title: 森保監督、海外記者に「8年間のベストゲーム」を問われ困惑。悪かった試合は即答
+  hook: ""
+  question: 退任を控えた森保監督は、8年間で一番良かった試合と一番悪かった試合を何と答えたのか
+  takeaway: 一番悪かった試合として挙げたのは、2021年9月のオマーン戦。理由を挙げて「忘れることはできない」と話した。一番良かった試合には言葉が出ず、「いい試合は思い出さないことにしたい」と答えた
+
+thumbnail:
+  layout: face
+  line1: 森保監督 8年間のベスト
+  line2: 悪かった試合は即答
+  tags: [森保一, 日本代表, オマーン戦]
+  photo: assets/images/20261114_moriyasu_best_worst_game/01_w.jpg
+  short_photo: assets/images/20261114_moriyasu_best_worst_game/01_v.jpg
+
+answer: 一番悪かった試合は2021年9月のオマーン戦と即答し、理由も語った。一番良かった試合は選べず、「いい試合は思い出さないことにしたい」と答えた
+watch: 14日のブラジル戦（シンガポール）
+
+sections:
+  - id: what
+    main: true
+    heading: 8年間のベストゲームを問われた森保監督は、何と答えたか
+    tier: 報道
+    telop: 森保監督「いい試合は思い出さないことにしたい」
+    say:
+      - text: 今回の2連戦で退任する森保監督に、海外記者が8年間のベストゲームを尋ねました。
+        image: assets/images/20261114_moriyasu_best_worst_game/01_w.jpg
+      - voice: 森保一
+        text: 一番良かった試合ですか？どうですかね……
+      - voice: 森保一
+        text: 逆は覚えています。
+        cont: true
+        image: assets/images/20261114_moriyasu_best_worst_game/02_w.jpg
+      - text: 森保監督は先に、一番悪かった試合を挙げました。
+      - text: 2021年9月、ホームで0対1で敗れた、W杯アジア最終予選の初戦、オマーン戦です。
+      - voice: 森保一
+        text: 準備の段階から、選手が思い切って、
+      - voice: 森保一
+        text: 自信を持って戦える役割・戦術を、
+        cont: true
+        image: assets/images/20261114_moriyasu_best_worst_game/03_w.jpg
+      - voice: 森保一
+        text: 監督としてうまく落とし込めず、
+        cont: true
+      - voice: 森保一
+        text: 選手たちが持っている力を発揮できずに、
+        cont: true
+        image: assets/images/20261114_moriyasu_best_worst_game/02_w.jpg
+      - voice: 森保一
+        text: ホームで敗戦したことを覚えている。
+        cont: true
+        image: assets/images/20261114_moriyasu_best_worst_game/01_w.jpg
+      - voice: 森保一
+        text: 忘れることはできない。
+        emph: true
+      - text: 一方、一番良かった試合には、言葉が出てきませんでした。
+      - text: 最後に、こう答えました。
+        image: assets/images/20261114_moriyasu_best_worst_game/01_w.jpg
+      - voice: 森保一
+        text: いい試合は、思い出さないことにしたい。
+        emph: true
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463110-463110-fl
+      - https://www.espn.com/soccer/match/_/gameId/611303
+  - id: view
+    viewpoint: true
+    heading: 森保監督が一番悪かった試合に挙げたオマーン戦は、どんな試合だったか
+    tier: 背景
+    telop: 2021年9月2日、ホームで0-1の敗戦
+    say:
+      - text: 見立てです。森保一監督が挙げたのは、吹田で行われた一戦でした。
+        card: {type: table, title: W杯アジア最終予選 初戦 日本 0-1 オマーン, columns: [分, 得点], rows: [[88分, アル・サブヒ（オマーン）]], highlight_row: 0}
+      - text: 決勝点は後半88分。日本は無得点のまま、敗れた試合です。
+        card: none
+      - text: 8年間を締めくくる2連戦の1試合目、ブラジル戦は14日に行われます。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/611303
+      - https://web.gekisaka.jp/news/japan/detail/?463110-463110-fl
+  - id: team
+    heading: 8年間で残したものを、森保監督はどう語ったか
+    tier: 報道
+    telop: 森保監督「選手層を広く日本代表として」
+    say:
+      - text: 同じ記者からは、8年間で何を残せたか、とも聞かれました。
+        image: assets/images/20261114_moriyasu_best_worst_game/03_w.jpg
+      - voice: 森保一
+        text: 一部の選手だけを指して、ベストオブベストではなく、
+      - voice: 森保一
+        text: 選手層を広く日本代表として、
+        cont: true
+      - voice: 森保一
+        text: 捉えていただけるようになったことだと思う。
+        cont: true
+      - voice: 森保一
+        text: 私自身、日本にはたくさんのいい選手がいると言い続け、
+      - voice: 森保一
+        text: 選手層を厚くしながら、より高い頂点を目指して、
+        cont: true
+      - voice: 森保一
+        text: チームづくりをすることをさせてもらえた。
+        cont: true
+        emph: true
+        image: assets/images/20261114_moriyasu_best_worst_game/03_w.jpg
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463110-463110-fl

@@ -1,0 +1,143 @@
+# 取材メモ（2026年11月14日）堂安律、森保J最後のキャプテン。「名前負けしない自分たちの土俵がある」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-14。requests（ブラウザUA）で本文を全文読み、site.api.espn.com で確かめた。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: ゲキサカ 2026-11-13 23:13（取材・文 矢内由美子）「森保J“最後のキャプテン”に任命されたMF堂安律「(ブラジルに)勝つんじゃないかと思っている人も前より増えたと思う」」（全文） https://web.gekisaka.jp/news/japan/detail/?463120-463120-fl
+#   サッカーキング 2026-11-13「森保一監督の年内退任が正式決定…南米強豪2連戦で勝利誓った主将・堂安律「壁を乗り越えて終わるのが森保ジャパンらしい」」（全文） https://www.soccer-king.jp/news/japan/national/20261113/2227399.html
+# 写真の出どころ（本人の写真を探すため）:
+#   https://web.gekisaka.jp/news/japan/detail/?463120-463120-fl
+#   https://web.gekisaka.jp/news/japan/detail/?462936-462936-fl
+#   https://web.gekisaka.jp/news/japan/detail/?460364-460364-fl
+#   https://www.soccer-king.jp/news/japan/national/20261113/2227399.html
+#   https://www.soccer-king.jp/news/japan/national/20261113/2227361.html
+#   https://www.soccer-king.jp/news/japan/national/20261112/2227030.html
+# 出典で確かめたこと:
+#   ・13日（ブラジル戦の前日）の取材対応。この日、12月30日に予定されていた親善試合の中止が発表され、シンガポールの2試合（14日ブラジル戦・17日パラグアイ戦）が森保監督の最後の指揮になった（ゲキサカ・サッカーキングが一致）。キャプテンは9月・10月に続いて堂安（ゲキサカ）。森保監督の言葉（サッカーキング）「キャプテンは継続して律にやってもらうということで、選手たちには伝えました」。ゲキサカの地の文: 北中米W杯でチームキャプテンを務めたのはDF板倉滉。
+#   ・堂安の言葉（原文。ゲキサカ。字は変えていない。括弧は記者の補足。台本は読点で行に分けた）:
+#       「(キャプテンが板倉)滉くんと言われていたところで僕も感情は変わらない。僕は誰よりもリスペクトしているし、誰よりも滉くんのチームへの思いが分かっている。例えば(昨年10月にキャプテンを務めた南野)拓実くんであっても、森保さんのために日本サッカーのためにという思いを持った選手が増えているので」
+#       「森保監督になってから、日本代表が勝つことが当たり前になった。明日(のブラジル戦に)勝つんじゃないかと思っている人も、前より増えたと思う。そういう感覚にできたことが日本サッカーの発展だと思う」
+#       「名前負けしない自分たちの土俵があるので、勝てる自信は大いにあります」
+#       「(集大成が)もうちょい楽な試合やったらとか思う人もおそらく多いでしょうけど、僕たちをやる気にさせるミッションが来たなと思います。ゆるっと終わるのではなく、タフな2試合を乗り切って壁を乗り越えて終わる」
+#   ・サッカーキングの地の文: 森保監督は2018年から日本代表を率い、通算111試合で76勝17分け18敗。来年3月からは大岩剛監督の就任が決定。76+17+18=111（合う）。勝った割合は 76÷111＝約68%（自分で割った）。
+#   ・ESPN の確認: 今回の台本の事実はすべて記事の言葉と記録の数字で、ESPN で確かめる試合は無い（通算の111試合は ESPN では数えていない＝サッカーキングの数字。報道の札）。
+# 食い違い: 堂安の言葉の書き起こしが2社で少し違う。ゲキサカ「日本代表が勝つことが当たり前になった」「僕たちをやる気にさせるミッションが来た」、サッカーキング「日本代表は勝つことが当たり前になった」「やる気にさせてくれるミッションが来た」。台本は主な出典のゲキサカの表記に統一した。サッカーキングの「ブラジル代表、パラグアイ代表と…決勝トーナメントに進出した」は、日本が両国と戦ったという意味ではないので台本に使わない。
+# 前の本との重なり: 20261111_doan_asiacup_words（アジア杯延期・8年3か月・「最後じゃない気もする」・森保監督への感謝）。今回の初出: キャプテンを託されたこと、「勝つのが当たり前になった」「勝てる自信」「ミッション」の言葉、通算成績の数字。アジア杯・8年3か月・感謝の話は繰り返さない。
+# 【言わないこと】ブラジル戦の結果・起用の予想／アジア杯の話／板倉・南野の評価（堂安の言葉の範囲だけ）。
+# 本人の言葉: あり（堂安律。ゲキサカ）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月14日"
+format: news
+no_main: true
+people: [堂安律, 森保一, 板倉滉, 日本代表, ブラジル代表]
+
+short_style: Y
+short_hook_quote: 名前負けしない自分たちの土俵があるので
+short_photos:
+  - assets/images/20261114_doan_last_captain/01_v.jpg
+  - assets/images/20261114_doan_last_captain/04_v.jpg
+  - assets/images/20261114_doan_last_captain/05_v.jpg
+short_question: 森保監督の最後の2試合、堂安律のキャプテンシーに何を期待しますか。
+short_telops: []
+
+theme:
+  id: doan_last_captain
+  league: japan
+  league_name: 日本代表
+  prefix: ""
+  title: 堂安律、森保J最後のキャプテンが語った「勝つことが当たり前になった」
+  hook: ""
+  question: 森保監督の最後の2試合を前に、キャプテン堂安律は何を語ったのか
+  takeaway: 堂安は「勝つのが当たり前になった」と森保体制を振り返り、「勝てる自信は大いにある」と話した。通算111試合で76勝という数字が、その言葉と重なる
+
+thumbnail:
+  layout: face
+  line1: 堂安律 最後のキャプテン
+  line2: 勝てる自信は大いにある
+  tags: [堂安律, 日本代表, 森保J]
+  photo: assets/images/20261114_doan_last_captain/05_w.jpg
+  short_photo: assets/images/20261114_doan_last_captain/05_v.jpg
+
+answer: 堂安は「勝つことが当たり前になった」と語り、勝てる自信を口にした。ゆるっと終わらず、タフな2試合を乗り越えるつもりだ
+watch: 14日のブラジル戦（シンガポール）
+
+sections:
+  - id: what
+    main: true
+    heading: 堂安律は、森保監督のもとで何が変わったと語ったか
+    tier: 報道
+    telop: 堂安律「勝つことが当たり前になった」
+    say:
+      - text: 森保一監督の最後の2試合を前に、日本代表のキャプテン堂安律が、ブラジル戦の前日にこう語りました。
+        image: assets/images/20261114_doan_last_captain/05_w.jpg
+      - voice: 堂安律
+        text: 森保監督になってから、日本代表が勝つことが当たり前になった。
+      - voice: 堂安律
+        text: 明日、勝つんじゃないかと思っている人も、
+        cont: true
+        image: assets/images/20261114_doan_last_captain/04_w.jpg
+      - voice: 堂安律
+        text: 前より増えたと思う。
+        cont: true
+        emph: true
+      - voice: 堂安律
+        text: そういう感覚にできたことが、日本サッカーの発展だと思う。
+        cont: true
+      - text: 相手はW杯で戦った強豪、ブラジルです。それでも堂安は、こう言い切りました。
+      - voice: 堂安律
+        text: 名前負けしない自分たちの土俵があるので、
+        image: assets/images/20261114_doan_last_captain/05_w.jpg
+      - voice: 堂安律
+        text: 勝てる自信は大いにあります。
+        cont: true
+        emph: true
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463120-463120-fl
+      - https://www.soccer-king.jp/news/japan/national/20261113/2227399.html
+  - id: team
+    heading: 森保監督の最後の2試合を、堂安律はどう受け止めたか
+    tier: 報道
+    telop: 堂安律「ゆるっと終わるのではなく」
+    say:
+      - text: 森保監督の年内の退任が正式に決まり、12月30日に予定されていた親善試合も中止になりました。
+        image: assets/images/20261114_doan_last_captain/05_w.jpg
+      - text: 森保監督が指揮をとるのは、14日のブラジル戦と17日のパラグアイ戦の2試合になりました。
+      - text: 堂安は、9月・10月に続いてキャプテンを任されました。
+        image: assets/images/20261114_doan_last_captain/04_w.jpg
+      - text: 北中米W杯のキャプテンだった板倉滉ではなく、堂安です。
+      - text: 板倉への思いを、堂安はこう話しました。
+      - voice: 堂安律
+        text: 僕は誰よりもリスペクトしているし、
+      - voice: 堂安律
+        text: 誰よりも滉くんのチームへの思いが分かっている。
+        cont: true
+        image: assets/images/20261114_doan_last_captain/04_w.jpg
+      - text: 集大成の相手がブラジルとパラグアイになったことについて、堂安はこう話しました。
+      - voice: 堂安律
+        text: 僕たちをやる気にさせるミッションが来たなと思います。
+      - voice: 堂安律
+        text: ゆるっと終わるのではなく、
+        cont: true
+      - voice: 堂安律
+        text: タフな2試合を乗り切って、壁を乗り越えて終わる。
+        cont: true
+        emph: true
+        image: assets/images/20261114_doan_last_captain/05_w.jpg
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463120-463120-fl
+      - https://www.soccer-king.jp/news/japan/national/20261113/2227399.html
+  - id: view
+    viewpoint: true
+    heading: 堂安律の言う「当たり前」は、森保監督の成績と合っているか
+    tier: 報道
+    telop: 森保監督は通算111試合で76勝17分け18敗
+    say:
+      - text: 見立てです。森保監督は2018年から日本代表を率い、通算で111試合、76勝17分け18敗です。
+        card: {type: table, title: 森保監督の通算成績（2018年〜）, columns: [成績, 試合数], rows: [[試合, 111], [勝ち, 76], [引き分け, 17], [負け, 18]], highlight_row: 1}
+        image: assets/images/20261114_doan_last_captain/05_w.jpg
+      - text: 勝った試合は全体の約68%。堂安律の言葉は、この勝率と重なります。
+        card: none
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20261113/2227399.html
+      - https://web.gekisaka.jp/news/japan/detail/?463120-463120-fl

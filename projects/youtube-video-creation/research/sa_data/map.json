@@ -1,0 +1,111 @@
+{
+ "bounds": {
+  "top": 47.4,
+  "bottom": 35.3,
+  "left": 6.2,
+  "right": 19.0,
+  "image": "Italy provincial location map 2016.svg"
+ },
+ "clubs": {
+  "atalanta": {
+   "ground": "Stadio di Bergamo",
+   "lat": 45.70888889,
+   "lon": 9.68083333
+  },
+  "bologna": {
+   "ground": "Stadio Renato Dall'Ara",
+   "lat": 44.49222222,
+   "lon": 11.30972222
+  },
+  "cagliari": {
+   "ground": "Unipol Domus",
+   "lat": 39.2,
+   "lon": 9.1375
+  },
+  "como": {
+   "ground": "Stadio Giuseppe Sinigaglia",
+   "lat": 45.81388889,
+   "lon": 9.07222222
+  },
+  "fiorentina": {
+   "ground": "Stadio Artemio Franchi",
+   "lat": 43.78083333,
+   "lon": 11.28222222
+  },
+  "frosinone": {
+   "ground": "Stadio Benito Stirpe",
+   "lat": 41.63416667,
+   "lon": 13.32194444
+  },
+  "genoa": {
+   "ground": "Stadio Luigi Ferraris",
+   "lat": 44.41638889,
+   "lon": 8.9525
+  },
+  "inter": {
+   "ground": "San Siro",
+   "lat": 45.47805556,
+   "lon": 9.12388889
+  },
+  "juventus": {
+   "ground": "Juventus Stadium",
+   "lat": 45.10944444,
+   "lon": 7.64111111
+  },
+  "lazio": {
+   "ground": "Stadio Olimpico",
+   "lat": 41.93388889,
+   "lon": 12.45472222
+  },
+  "lecce": {
+   "ground": "Stadio Via del mare",
+   "lat": 40.36527778,
+   "lon": 18.20888889
+  },
+  "milan": {
+   "ground": "San Siro",
+   "lat": 45.47805556,
+   "lon": 9.12388889
+  },
+  "monza": {
+   "ground": "Stadio Brianteo",
+   "lat": 45.58277778,
+   "lon": 9.30805556
+  },
+  "napoli": {
+   "ground": "Stadio Diego Armando Maradona",
+   "lat": 40.828,
+   "lon": 14.193
+  },
+  "parma": {
+   "ground": "Stadio Ennio Tardini",
+   "lat": 44.795,
+   "lon": 10.33833333
+  },
+  "roma": {
+   "ground": "Stadio Olimpico",
+   "lat": 41.93388889,
+   "lon": 12.45472222
+  },
+  "sassuolo": {
+   "ground": "Mapei Stadium – Città del Tricolore",
+   "lat": 44.71472222,
+   "lon": 10.64972222
+  },
+  "torino": {
+   "ground": "Stadio Olimpico Grande Torino",
+   "lat": 45.04166667,
+   "lon": 7.65
+  },
+  "udinese": {
+   "ground": "Stadio Friuli",
+   "lat": 46.0816,
+   "lon": 13.2001
+  },
+  "venezia": {
+   "ground": "Stadio Pier Luigi Penzo",
+   "lat": 45.42777778,
+   "lon": 12.36361111
+  }
+ }
+}

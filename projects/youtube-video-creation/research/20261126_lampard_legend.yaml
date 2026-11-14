@@ -1,0 +1,913 @@
+# フランク・ランパード（元イングランド代表MF、チェルシー13シーズン。現コヴェントリー・シティ監督）の紹介。シリーズ「レジェンドの紹介（世界）」2026-11-26 用。9節（フック→基礎DATA→日本との接点→歩み→持ち味→あの試合→現役のあと→マル秘話→見立て）。
+# **FotMob・DataMB・FBref・Sofascore・Transfermarkt 不使用**。数字は英語版 Wikipedia（Frank Lampard の成績表・本文・Honours、2012 UEFA Champions League final、2012 FIFA Club World Cup）と自分で足した・割った値だけ。
+# **私生活・法的な問題・論争は入れない**（結婚・家族・母の死・Ayia Napa の件・NYCFC の契約騒動・運転中の携帯の件は台本に出さない）。
+# **重なりの確認（2026-11-13）**：scripts/・covered.yaml・posted.json・research/2026111*_picks.txt を「ランパード／Lampard」で grep。主役の回は無し（坂元達裕の回に「ランパード監督」が出るだけ。ロナウジーニョ・カシージャスの回に名前が出るだけ）。同じ日（11/26）の別シリーズに同名なし。
+# **引退の確認**：Wikipedia「Lampard announced his retirement on 2 February 2017」→ 現役ではない（48歳）。いまは Coventry City のヘッドコーチ（2025-26 Championship 優勝・2026-11-06 時点の戦績の記載あり）。
+# **数字の出どころと自分で足した値**
+# - 成績表（Wikipedia、公式戦）：ウェストハム 187試合39ゴール、チェルシー 648試合211ゴール（Total 行）、マンチェスター・シティ 38試合8ゴール、ニューヨーク・シティ 31試合15ゴール。イングランド代表 106試合29ゴール。サムネの表：チェルシー648/211＋イングランド代表106/29＝754試合240点（自分で足した値。ほかのクラブは除く）。
+# - チェルシーのシーズン別ゴール（全大会）：01-02 7、02-03 8、03-04 15、04-05 19、05-06 20、06-07 21、07-08 20、08-09 20、09-10 27、10-11 13、11-12 16、12-13 17、13-14 8（合計211と一致）。期間ごと：01-02〜04-05＝49（÷4＝12.3）、05-06〜09-10＝108（÷5＝21.6）、10-11〜13-14＝54（÷4＝13.5）。108÷211＝51%。ほかの8年＝49＋54＝103（÷8＝12.9）、21.6÷12.9＝1.68。本文「fourth consecutive season he scored 20 or more goals」（08-09）・「fifth-consecutive season」（09-10）と一致。
+# - プレミア通算177ゴール（中盤で歴代最多、本文）。最初の100ゴールのうち18点がPK（本文、2008-11-02の100点目の段）。プレミア10ゴール以上を9シーズン連続は2012-02-25時点で唯一（本文）。2005年のバロンドール・FIFA年間最優秀選手はともに2位（ロナウジーニョ）。2013-05-11 アストン・ヴィラ戦の2ゴールでタンブリングの記録を超えクラブ歴代最多に（本文）。移籍金1,100万ポンド（本文）。タイトル：プレミア2004-05・2005-06・2009-10、CL 2011-12、EL 2012-13。
+# - 日本：2012 FIFA Club World Cup（日本開催）。2012-12-13 準決勝 横浜（日産スタジアム）モンテレイ1-3チェルシー、2012-12-16 決勝 横浜国際総合競技場 コリンチャンス1-0チェルシー（ゲレロ69分、観客68,275）。ランパードは「After six weeks out injured, on 16 December Lampard appeared in the final」（本文）。**準決勝に出たかは確かめていないので台本に書かない。**
+# - 2012-05-19 CL決勝（アリアンツ・アレーナ）：ミュラー83分、ドログバ88分（コーナーからのヘディング）、延長でロッベンのPKをチェフが止める、PK戦 4-3。チェルシーのPKはマタ（止められる）→ダビド・ルイス→ランパード（ゴール中央・高め）→コール→ドログバ。テリーは準決勝の退場で出場停止、ランパードが主将（本文）。ロンドンのクラブ初のCL優勝。
+# - 監督歴：ダービー 2018-05-31（昇格プレーオフ決勝でヴィラに敗れる）、チェルシー 2019-07-04〜2021-01-25（1年目リーグ4位・FAカップ決勝）、エバートン 2022-01-31〜2023-01-23、コヴェントリー 2024〜（2025-26 Championship 優勝）。
+# **本人の言葉**：取れていない。声の行は置かない。
+# **入れなかったもの**：私生活・家族・母の死、論争（ホテルの件・NYCFC の件・運転中の携帯）、2006年W杯のPK失敗、ゴールラインの誤審（2010年W杯のドイツ戦）、サウスゲートの比較評価、監督解任の経緯（移籍方針の対立）、エバートンの降格争いの詳細。
+# **読みで怪しいもの**：フランク・ランパード、ウェストハム、モンテレイ、コリンチャンス、ゲレロ、ミュラー、ドログバ、チェフ、ダビド・ルイス、テリー、タンブリング、アストン・ヴィラ、コヴェントリー、ダービー・カウンティ、エバートン、ロナウジーニョ、ヨーロッパリーグ。
+title: ランパードは、どんな選手だった？ 中盤の211点は、いつ積み上がったのか
+format: news
+short_title: ランパードは、どんな選手だった？
+series: レジェンドの紹介
+topic: フランク・ランパード
+date: 2026年11月13日
+slot: other_1
+people:
+- フランク・ランパード
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  id: legend_lampard
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: フランク・ランパード
+  title: ランパードは、どんな選手だった？ 中盤の211点は、いつ積み上がったのか
+  question: チェルシーで211ゴールを決めたランパードは、そのゴールをいつ積み上げたのか
+  takeaway: チェルシーの211ゴールのうち108点、51%は、2005-06から2009-10の5シーズンに集中。5年とも20ゴール超えで、1年21.6点は、ほかの8年（12.9点）の約1.7倍
+  nameplate: フランク・ランパード｜元イングランド代表 MF
+  opening_image: assets/images/20261126_lampard_legend/04_w.jpg
+  end_bg: assets/images/20261126_lampard_legend/04_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+  outro_title: 毎日、数字でサッカーを読み解きます
+thumbnail:
+  line1: ランパード、211ゴール
+  line2: 中盤で、5年連続20点以上
+  tags:
+  - チェルシー
+  photo: assets/images/20261126_lampard_legend/panel_01.jpg
+  board: assets/images/20261126_lampard_legend/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261126_lampard_legend/04_v.jpg
+sections:
+- id: hook
+  heading: ランパードは、中盤から何点を決めたのか
+  tier: 報道
+  telop: 中盤で211点、5年連続の20ゴール
+  say:
+  - text: 中盤の選手なのに、5年続けて、20ゴール以上を決めた選手がいます。
+    card: none
+    image: assets/images/20261126_lampard_legend/01_w.jpg
+  - text: フランク・ランパード。チェルシーの13シーズンで、648試合に出ました。
+    card:
+      type: stats
+      title: フランク・ランパード 元MF（48歳）
+      items:
+      - - '648'
+        - 試合
+        - チェルシーの公式戦
+      - - '211'
+        - ゴール
+        - チェルシーの歴代最多
+      - - '5'
+        - 年連続
+        - 20ゴール以上（2005-06〜2009-10）
+      focus: 0
+    image: assets/images/20261126_lampard_legend/02_w.jpg
+  - text: ゴールは、211点。クラブの歴代最多です。
+    card:
+      type: stats
+      title: フランク・ランパード 元MF（48歳）
+      items:
+      - - '648'
+        - 試合
+        - チェルシーの公式戦
+      - - '211'
+        - ゴール
+        - チェルシーの歴代最多
+      - - '5'
+        - 年連続
+        - 20ゴール以上（2005-06〜2009-10）
+      focus: 1
+    image: assets/images/20261126_lampard_legend/03_w.jpg
+    emph: true
+    callword: 211点
+  - text: 2005-06から2009-10まで、5シーズン連続で、20ゴール以上。
+    card:
+      type: stats
+      title: フランク・ランパード 元MF（48歳）
+      items:
+      - - '648'
+        - 試合
+        - チェルシーの公式戦
+      - - '211'
+        - ゴール
+        - チェルシーの歴代最多
+      - - '5'
+        - 年連続
+        - 20ゴール以上（2005-06〜2009-10）
+      focus: 2
+    image: assets/images/20261126_lampard_legend/04_w.jpg
+  - text: 2012年には、主将として、ヨーロッパの頂点に立ちました。
+    card: none
+    image: assets/images/20261126_lampard_legend/01_w.jpg
+  - text: そして日本とも、縁があります。2012年12月、横浜の決勝に立ちました。
+    card: none
+    image: assets/images/20261126_lampard_legend/02_w.jpg
+  - text: ランパードの歩みを、たどります。
+    card: none
+    image: assets/images/20261126_lampard_legend/03_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Frank_Lampard
+- id: data
+  heading: ランパードは、いつ、どこで生まれ、どんな選手か
+  tier: 報道
+  telop: ランパードの基礎DATA
+  say:
+  - text: ランパードは1978年6月20日、イングランドに生まれました。
+    card:
+      type: table
+      title: フランク・ランパード
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 生年月日
+        - 1978年6月20日・イングランド
+      - - ポジション
+        - 中盤（中央）
+      - - クラブ
+        - ウェストハム、チェルシー、マンチェスター・シティ、ニューヨーク・シティ
+      - - 代表
+        - イングランド代表 106試合
+      - - 現役を終えた
+        - 2017年・38歳
+      highlight_row: 0
+    image: assets/images/20261126_lampard_legend/04_w.jpg
+  - text: ポジションは、中盤の中央。攻めも守りもできる、MFです。
+    card:
+      type: table
+      title: フランク・ランパード
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 生年月日
+        - 1978年6月20日・イングランド
+      - - ポジション
+        - 中盤（中央）
+      - - クラブ
+        - ウェストハム、チェルシー、マンチェスター・シティ、ニューヨーク・シティ
+      - - 代表
+        - イングランド代表 106試合
+      - - 現役を終えた
+        - 2017年・38歳
+      highlight_row: 1
+    image: assets/images/20261126_lampard_legend/01_w.jpg
+  - text: 所属は、ウェストハム、チェルシー、マンチェスター・シティ、ニューヨーク・シティ。
+    card:
+      type: table
+      title: フランク・ランパード
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 生年月日
+        - 1978年6月20日・イングランド
+      - - ポジション
+        - 中盤（中央）
+      - - クラブ
+        - ウェストハム、チェルシー、マンチェスター・シティ、ニューヨーク・シティ
+      - - 代表
+        - イングランド代表 106試合
+      - - 現役を終えた
+        - 2017年・38歳
+      highlight_row: 2
+    image: assets/images/20261126_lampard_legend/02_w.jpg
+  - text: イングランド代表では、106試合に出ています。
+    card:
+      type: table
+      title: フランク・ランパード
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 生年月日
+        - 1978年6月20日・イングランド
+      - - ポジション
+        - 中盤（中央）
+      - - クラブ
+        - ウェストハム、チェルシー、マンチェスター・シティ、ニューヨーク・シティ
+      - - 代表
+        - イングランド代表 106試合
+      - - 現役を終えた
+        - 2017年・38歳
+      highlight_row: 3
+    image: assets/images/20261126_lampard_legend/03_w.jpg
+  - text: 2017年2月、38歳で、現役を退くと発表しました。
+    card:
+      type: table
+      title: フランク・ランパード
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 生年月日
+        - 1978年6月20日・イングランド
+      - - ポジション
+        - 中盤（中央）
+      - - クラブ
+        - ウェストハム、チェルシー、マンチェスター・シティ、ニューヨーク・シティ
+      - - 代表
+        - イングランド代表 106試合
+      - - 現役を終えた
+        - 2017年・38歳
+      highlight_row: 4
+    image: assets/images/20261126_lampard_legend/04_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Frank_Lampard
+- id: japan
+  heading: ランパードと日本には、どんな縁があったのか
+  tier: 報道
+  telop: 横浜で迎えた、世界一決定戦の決勝
+  say:
+  - text: 日本との縁は、2012年12月。日本で開かれた、クラブ世界一を決める大会です。
+    card:
+      type: timeline
+      title: ランパードと日本
+      rows:
+      - - 12月13日
+        - 準決勝 横浜 モンテレイに3対1
+      - - 12月16日
+        - 決勝 横浜 コリンチャンスに0対1
+      - - ランパード
+        - 6週間のけがから戻り、決勝に出場
+      focus: 0
+      highlight_row: 0
+    image: assets/images/20261126_lampard_legend/01_w.jpg
+  - text: チェルシーは、前のシーズンのチャンピオンズリーグ王者として、出場しました。
+    card: none
+    image: assets/images/20261126_lampard_legend/03_w.jpg
+  - text: 12月13日、横浜での準決勝は、メキシコのモンテレイに3対1で勝ちます。
+    card: none
+    image: assets/images/20261126_lampard_legend/01_w.jpg
+  - text: 12月16日、決勝。会場は、横浜国際総合競技場です。
+    card:
+      type: timeline
+      title: ランパードと日本
+      rows:
+      - - 12月13日
+        - 準決勝 横浜 モンテレイに3対1
+      - - 12月16日
+        - 決勝 横浜 コリンチャンスに0対1
+      - - ランパード
+        - 6週間のけがから戻り、決勝に出場
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261126_lampard_legend/03_w.jpg
+  - text: 相手は、ブラジルのコリンチャンス。観客は、6万8,275人。
+    card: none
+    image: assets/images/20261126_lampard_legend/01_w.jpg
+  - text: ランパードは、6週間のけがから戻って、この決勝に出ました。
+    card:
+      type: timeline
+      title: ランパードと日本
+      rows:
+      - - 12月13日
+        - 準決勝 横浜 モンテレイに3対1
+      - - 12月16日
+        - 決勝 横浜 コリンチャンスに0対1
+      - - ランパード
+        - 6週間のけがから戻り、決勝に出場
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261126_lampard_legend/03_w.jpg
+  - text: 試合は、69分にゲレロに決められて、0対1の負け。
+    card: none
+    image: assets/images/20261126_lampard_legend/01_w.jpg
+  - text: 日本で世界一になることは、できませんでした。
+    card: none
+    image: assets/images/20261126_lampard_legend/03_w.jpg
+    emph: true
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Frank_Lampard
+  - https://en.wikipedia.org/wiki/2012_FIFA_Club_World_Cup
+- id: career
+  heading: ランパードは、どこでプレーしてきたのか
+  tier: 報道
+  telop: ウェストハムからチェルシーへ、そしてアメリカへ
+  say:
+  - text: ランパードは、ロンドンのウェストハムの、下部組織で育ちます。
+    card: none
+    image: assets/images/20261126_lampard_legend/01_w.jpg
+  - text: 1995年にプロ契約。6シーズンで、187試合に出ました。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows:
+      - - 1995〜2001
+        - ウェストハムでプロに。187試合39ゴール
+      - - '2001'
+        - 同じロンドンのチェルシーへ
+      - - 2004〜06
+        - プレミアリーグを2連覇
+      - - 2012〜13
+        - チャンピオンズリーグ、ヨーロッパリーグを制す
+      - - '2014'
+        - マンチェスター・シティへ
+      - - 2015〜17
+        - ニューヨーク・シティで、現役を終える
+      focus: 0
+      highlight_row: 0
+    image: assets/images/20261126_lampard_legend/02_w.jpg
+  - text: 2001年、同じロンドンのチェルシーへ。移籍金は、1,100万ポンドです。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows:
+      - - 1995〜2001
+        - ウェストハムでプロに。187試合39ゴール
+      - - '2001'
+        - 同じロンドンのチェルシーへ
+      - - 2004〜06
+        - プレミアリーグを2連覇
+      - - 2012〜13
+        - チャンピオンズリーグ、ヨーロッパリーグを制す
+      - - '2014'
+        - マンチェスター・シティへ
+      - - 2015〜17
+        - ニューヨーク・シティで、現役を終える
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261126_lampard_legend/03_w.jpg
+  - text: チェルシーでは、13シーズンを過ごしました。
+    card: none
+    image: assets/images/20261126_lampard_legend/04_w.jpg
+  - text: 2004-05と2005-06で、プレミアを連覇。3回目は2009-10。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows:
+      - - 1995〜2001
+        - ウェストハムでプロに。187試合39ゴール
+      - - '2001'
+        - 同じロンドンのチェルシーへ
+      - - 2004〜06
+        - プレミアリーグを2連覇
+      - - 2012〜13
+        - チャンピオンズリーグ、ヨーロッパリーグを制す
+      - - '2014'
+        - マンチェスター・シティへ
+      - - 2015〜17
+        - ニューヨーク・シティで、現役を終える
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261126_lampard_legend/01_w.jpg
+  - text: 2012年にチャンピオンズリーグ、2013年にヨーロッパリーグを制します。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows:
+      - - 1995〜2001
+        - ウェストハムでプロに。187試合39ゴール
+      - - '2001'
+        - 同じロンドンのチェルシーへ
+      - - 2004〜06
+        - プレミアリーグを2連覇
+      - - 2012〜13
+        - チャンピオンズリーグ、ヨーロッパリーグを制す
+      - - '2014'
+        - マンチェスター・シティへ
+      - - 2015〜17
+        - ニューヨーク・シティで、現役を終える
+      focus: 3
+      highlight_row: 0
+    image: assets/images/20261126_lampard_legend/02_w.jpg
+  - text: 2014年、チェルシーを離れ、マンチェスター・シティへ。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows:
+      - - 1995〜2001
+        - ウェストハムでプロに。187試合39ゴール
+      - - '2001'
+        - 同じロンドンのチェルシーへ
+      - - 2004〜06
+        - プレミアリーグを2連覇
+      - - 2012〜13
+        - チャンピオンズリーグ、ヨーロッパリーグを制す
+      - - '2014'
+        - マンチェスター・シティへ
+      - - 2015〜17
+        - ニューヨーク・シティで、現役を終える
+      focus: 4
+      highlight_row: 0
+    image: assets/images/20261126_lampard_legend/03_w.jpg
+  - text: 2015年には、アメリカのニューヨーク・シティへ。
+    card: none
+    image: assets/images/20261126_lampard_legend/04_w.jpg
+  - text: そして2017年2月、現役を終えます。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows:
+      - - 1995〜2001
+        - ウェストハムでプロに。187試合39ゴール
+      - - '2001'
+        - 同じロンドンのチェルシーへ
+      - - 2004〜06
+        - プレミアリーグを2連覇
+      - - 2012〜13
+        - チャンピオンズリーグ、ヨーロッパリーグを制す
+      - - '2014'
+        - マンチェスター・シティへ
+      - - 2015〜17
+        - ニューヨーク・シティで、現役を終える
+      focus: 5
+      highlight_row: 0
+    image: assets/images/20261126_lampard_legend/01_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Frank_Lampard
+- id: style
+  heading: ランパードは、何で相手を上回ったのか
+  tier: 報道
+  telop: 遅れて入る走りと、遠くからのシュート
+  say:
+  - text: ランパードは、中盤のどこでもできる、攻守のそろった選手でした。
+    card:
+      type: table
+      title: ランパードの持ち味
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 位置
+        - 中盤（どこでも）
+      - - 武器1
+        - ゴール前へ遅れて入る走り
+      - - 武器2
+        - 遠くからの強いシュート
+      - - 武器3
+        - PKとフリーキック
+      - - 記録
+        - プレミアリーグ177ゴール（中盤で歴代最多）
+      highlight_row: 0
+    image: assets/images/20261126_lampard_legend/02_w.jpg
+  - text: 武器の1つ目は、ゴール前へ遅れて入ってくる走り。
+    card:
+      type: table
+      title: ランパードの持ち味
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 位置
+        - 中盤（どこでも）
+      - - 武器1
+        - ゴール前へ遅れて入る走り
+      - - 武器2
+        - 遠くからの強いシュート
+      - - 武器3
+        - PKとフリーキック
+      - - 記録
+        - プレミアリーグ177ゴール（中盤で歴代最多）
+      highlight_row: 1
+    image: assets/images/20261126_lampard_legend/03_w.jpg
+  - text: 後ろから、ペナルティエリアへ。ゴールになる場所へ、出ていきました。
+    card: none
+    image: assets/images/20261126_lampard_legend/04_w.jpg
+  - text: 2つ目は、遠くからの、強いシュート。
+    card:
+      type: table
+      title: ランパードの持ち味
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 位置
+        - 中盤（どこでも）
+      - - 武器1
+        - ゴール前へ遅れて入る走り
+      - - 武器2
+        - 遠くからの強いシュート
+      - - 武器3
+        - PKとフリーキック
+      - - 記録
+        - プレミアリーグ177ゴール（中盤で歴代最多）
+      highlight_row: 2
+    image: assets/images/20261126_lampard_legend/01_w.jpg
+  - text: 3つ目は、PKとフリーキック。
+    card:
+      type: table
+      title: ランパードの持ち味
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 位置
+        - 中盤（どこでも）
+      - - 武器1
+        - ゴール前へ遅れて入る走り
+      - - 武器2
+        - 遠くからの強いシュート
+      - - 武器3
+        - PKとフリーキック
+      - - 記録
+        - プレミアリーグ177ゴール（中盤で歴代最多）
+      highlight_row: 3
+    image: assets/images/20261126_lampard_legend/02_w.jpg
+  - text: プレミアリーグの最初の100ゴールのうち、18点がPKでした。
+    card: none
+    image: assets/images/20261126_lampard_legend/03_w.jpg
+  - text: プレミアリーグの通算は、177ゴール。中盤の選手では、歴代最多です。
+    card:
+      type: table
+      title: ランパードの持ち味
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 位置
+        - 中盤（どこでも）
+      - - 武器1
+        - ゴール前へ遅れて入る走り
+      - - 武器2
+        - 遠くからの強いシュート
+      - - 武器3
+        - PKとフリーキック
+      - - 記録
+        - プレミアリーグ177ゴール（中盤で歴代最多）
+      highlight_row: 4
+    image: assets/images/20261126_lampard_legend/04_w.jpg
+    emph: true
+  - text: イングランド代表でも、29ゴール。ワールドカップには、3大会に出ました。
+    card: none
+    image: assets/images/20261126_lampard_legend/01_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Frank_Lampard
+- id: match
+  heading: 2012年のCL決勝で、ランパードは何を決めたのか
+  tier: 報道
+  telop: PK戦の3人目、主将として
+  main: true
+  say:
+  - text: フランク・ランパード。
+    card: none
+    short_only: true
+  - text: 主将として、優勝杯を掲げた夜があります。
+    card: none
+    short_only: true
+  - text: 2012年5月19日、ドイツのミュンヘン。
+    card: none
+    image: assets/images/20261126_lampard_legend/02_w.jpg
+  - text: 欧州一を決める、チャンピオンズリーグの決勝。会場は、バイエルンの本拠地です。
+    card: none
+    image: assets/images/20261126_lampard_legend/03_w.jpg
+  - text: チェルシーの相手は、そのバイエルン。
+    card: none
+    image: assets/images/20261126_lampard_legend/04_w.jpg
+  - text: チェルシーは、主将のテリーが出場停止。ランパードが、主将を務めました。
+    card: none
+    image: assets/images/20261126_lampard_legend/01_w.jpg
+  - text: 83分、バイエルンが先制します。ミュラーのヘディングです。
+    card:
+      type: timeline
+      title: 2012年5月19日 CL決勝 バイエルン戦
+      rows:
+      - - 83分
+        - ミュラーが決めて、バイエルンが先制
+      - - 88分
+        - ドログバのヘディングで、チェルシーが同点
+      - - PK戦
+        - 4対3でチェルシーの優勝。3人目がランパード
+      focus: 0
+      highlight_row: 0
+    image: assets/images/20261126_lampard_legend/02_w.jpg
+  - text: 88分、チェルシーのコーナーキック。ドログバのヘディングで、同点。
+    card:
+      type: timeline
+      title: 2012年5月19日 CL決勝 バイエルン戦
+      rows:
+      - - 83分
+        - ミュラーが決めて、バイエルンが先制
+      - - 88分
+        - ドログバのヘディングで、チェルシーが同点
+      - - PK戦
+        - 4対3でチェルシーの優勝。3人目がランパード
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261126_lampard_legend/03_w.jpg
+  - text: 延長戦でも、決着はつきません。バイエルンのPKは、チェフが止めました。
+    card: none
+    image: assets/images/20261126_lampard_legend/04_w.jpg
+  - text: 勝負は、PK戦に。
+    card: none
+    image: assets/images/20261126_lampard_legend/01_w.jpg
+  - text: チェルシーの1人目は外れて、2人目のダビド・ルイスが決めます。
+    card: none
+    image: assets/images/20261126_lampard_legend/02_w.jpg
+  - text: 3人目が、ランパード。ゴールの中央へ、強く、高いシュート。
+    card:
+      type: timeline
+      title: 2012年5月19日 CL決勝 バイエルン戦
+      rows:
+      - - 83分
+        - ミュラーが決めて、バイエルンが先制
+      - - 88分
+        - ドログバのヘディングで、チェルシーが同点
+      - - PK戦
+        - 4対3でチェルシーの優勝。3人目がランパード
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261126_lampard_legend/03_w.jpg
+    emph: true
+  - text: 最後はドログバが決めて、4対3。チェルシーの優勝です。
+    card: none
+    image: assets/images/20261126_lampard_legend/04_w.jpg
+  - text: ロンドンのクラブとして、初めての、ヨーロッパ王者でした。
+    card: none
+    image: assets/images/20261126_lampard_legend/01_w.jpg
+  - text: ランパードは、テリーと2人で、優勝杯を掲げました。
+    card: none
+    image: assets/images/20261126_lampard_legend/02_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Frank_Lampard
+  - https://en.wikipedia.org/wiki/2012_UEFA_Champions_League_final
+- id: after
+  heading: ランパードは、現役のあと何をしているのか
+  tier: 報道
+  telop: 監督として、2025-26年にリーグ優勝
+  say:
+  - text: 2017年2月、ランパードは、引退を決めました。
+    card:
+      type: timeline
+      title: 現役のあとの歩み
+      rows:
+      - - 2017年2月
+        - 現役の引退を発表
+      - - 2018年5月
+        - 2部のダービー・カウンティの監督に
+      - - 2019年7月
+        - チェルシーの監督に（〜2021年1月）
+      - - 2024年
+        - コヴェントリー・シティの監督に
+      focus: 0
+      highlight_row: 0
+    image: assets/images/20261126_lampard_legend/03_w.jpg
+  - text: 2018年5月、イングランド2部の、ダービー・カウンティの監督になります。
+    card:
+      type: timeline
+      title: 現役のあとの歩み
+      rows:
+      - - 2017年2月
+        - 現役の引退を発表
+      - - 2018年5月
+        - 2部のダービー・カウンティの監督に
+      - - 2019年7月
+        - チェルシーの監督に（〜2021年1月）
+      - - 2024年
+        - コヴェントリー・シティの監督に
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261126_lampard_legend/04_w.jpg
+  - text: 1年目で、昇格プレーオフの決勝まで進みました。
+    card: none
+    image: assets/images/20261126_lampard_legend/01_w.jpg
+  - text: 2019年7月、古巣のチェルシーの監督に。
+    card:
+      type: timeline
+      title: 現役のあとの歩み
+      rows:
+      - - 2017年2月
+        - 現役の引退を発表
+      - - 2018年5月
+        - 2部のダービー・カウンティの監督に
+      - - 2019年7月
+        - チェルシーの監督に（〜2021年1月）
+      - - 2024年
+        - コヴェントリー・シティの監督に
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261126_lampard_legend/02_w.jpg
+  - text: 1年目は、リーグ4位。FAカップは、決勝まで進みました。
+    card: none
+    image: assets/images/20261126_lampard_legend/03_w.jpg
+  - text: そのあと、エバートンの監督も、務めます。
+    card: none
+    image: assets/images/20261126_lampard_legend/04_w.jpg
+  - text: 2024年、コヴェントリー・シティの監督に。
+    card:
+      type: timeline
+      title: 現役のあとの歩み
+      rows:
+      - - 2017年2月
+        - 現役の引退を発表
+      - - 2018年5月
+        - 2部のダービー・カウンティの監督に
+      - - 2019年7月
+        - チェルシーの監督に（〜2021年1月）
+      - - 2024年
+        - コヴェントリー・シティの監督に
+      focus: 3
+      highlight_row: 0
+    image: assets/images/20261126_lampard_legend/01_w.jpg
+  - text: そして2025-26シーズン、2部のチャンピオンシップで、優勝します。
+    card: none
+    image: assets/images/20261126_lampard_legend/02_w.jpg
+    emph: true
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Frank_Lampard
+- id: secret
+  heading: ランパードには、どんな意外な話があるのか
+  tier: 報道
+  telop: 2位の年間最優秀、9年連続の2桁、歴代1位
+  say:
+  - text: ここで、ランパードの意外な一面を3つ。
+    card: none
+    image: assets/images/20261126_lampard_legend/03_w.jpg
+  - text: 1つ目。2005年、バロンドールと、FIFA年間最優秀選手の、どちらも2位。
+    card:
+      type: table
+      title: 知られざる、3つの話
+      columns:
+      - いつ
+      - 何があったか
+      rows:
+      - - 2005年
+        - バロンドールとFIFA年間最優秀選手で、ともに2位
+      - - 2012年2月
+        - プレミアで、9シーズン連続の2桁ゴール
+      - - 2013年5月
+        - チェルシーの歴代最多得点者に
+      highlight_row: 0
+    image: assets/images/20261126_lampard_legend/04_w.jpg
+  - text: 優勝したのは、ロナウジーニョでした。
+    card: none
+    image: assets/images/20261126_lampard_legend/01_w.jpg
+  - text: 2つ目。プレミアリーグで、9シーズン続けて、10ゴール以上。
+    card:
+      type: table
+      title: 知られざる、3つの話
+      columns:
+      - いつ
+      - 何があったか
+      rows:
+      - - 2005年
+        - バロンドールとFIFA年間最優秀選手で、ともに2位
+      - - 2012年2月
+        - プレミアで、9シーズン連続の2桁ゴール
+      - - 2013年5月
+        - チェルシーの歴代最多得点者に
+      highlight_row: 1
+    image: assets/images/20261126_lampard_legend/02_w.jpg
+  - text: 2012年2月に、この記録を達成した、ただ1人の選手になりました。
+    card: none
+    image: assets/images/20261126_lampard_legend/03_w.jpg
+  - text: 3つ目。2013年5月、アストン・ヴィラ戦。
+    card:
+      type: table
+      title: 知られざる、3つの話
+      columns:
+      - いつ
+      - 何があったか
+      rows:
+      - - 2005年
+        - バロンドールとFIFA年間最優秀選手で、ともに2位
+      - - 2012年2月
+        - プレミアで、9シーズン連続の2桁ゴール
+      - - 2013年5月
+        - チェルシーの歴代最多得点者に
+      highlight_row: 2
+    image: assets/images/20261126_lampard_legend/04_w.jpg
+  - text: 2ゴールで、タンブリングの記録を超え、チェルシーの歴代最多得点者に。
+    card: none
+    image: assets/images/20261126_lampard_legend/01_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Frank_Lampard
+- id: view
+  heading: 211ゴールは、いつ積み上がったのか
+  tier: 背景
+  telop: 211点のうち108点は、5年に集中
+  viewpoint: true
+  say:
+  - text: 最後に、ランパードのチェルシーでの13年を、3つの時期に分けて比べます。
+    card:
+      type: table
+      title: チェルシーでのゴール（期間ごと）
+      columns:
+      - 期間
+      - 年数
+      - ゴール
+      - 1年あたり
+      rows:
+      - - 2001-02〜2004-05
+        - '4'
+        - 49点
+        - 12.3点
+      - - 2005-06〜2009-10
+        - '5'
+        - 108点
+        - 21.6点
+      - - 2010-11〜2013-14
+        - '4'
+        - 54点
+        - 13.5点
+      highlight_row: 0
+    image: assets/images/20261126_lampard_legend/02_w.jpg
+  - text: 2001-02から2004-05の4年間は、49ゴール。1年あたり12.3点。
+    card:
+      type: table
+      title: チェルシーでのゴール（期間ごと）
+      columns:
+      - 期間
+      - 年数
+      - ゴール
+      - 1年あたり
+      rows:
+      - - 2001-02〜2004-05
+        - '4'
+        - 49点
+        - 12.3点
+      - - 2005-06〜2009-10
+        - '5'
+        - 108点
+        - 21.6点
+      - - 2010-11〜2013-14
+        - '4'
+        - 54点
+        - 13.5点
+      highlight_row: 0
+    image: assets/images/20261126_lampard_legend/03_w.jpg
+  - text: ところが、2005-06から2009-10の5年間は、108ゴール。
+    card:
+      type: table
+      title: チェルシーでのゴール（期間ごと）
+      columns:
+      - 期間
+      - 年数
+      - ゴール
+      - 1年あたり
+      rows:
+      - - 2001-02〜2004-05
+        - '4'
+        - 49点
+        - 12.3点
+      - - 2005-06〜2009-10
+        - '5'
+        - 108点
+        - 21.6点
+      - - 2010-11〜2013-14
+        - '4'
+        - 54点
+        - 13.5点
+      highlight_row: 1
+    image: assets/images/20261126_lampard_legend/04_w.jpg
+    emph: true
+    mark:
+      kind: circle
+      row: 1
+      col: 2
+  - text: 1年あたり21.6点。5年とも、20点台でした。
+    card: none
+    image: assets/images/20261126_lampard_legend/01_w.jpg
+  - text: 2010-11から2013-14の4年間は、54ゴール。1年あたり13.5点です。
+    card:
+      type: table
+      title: チェルシーでのゴール（期間ごと）
+      columns:
+      - 期間
+      - 年数
+      - ゴール
+      - 1年あたり
+      rows:
+      - - 2001-02〜2004-05
+        - '4'
+        - 49点
+        - 12.3点
+      - - 2005-06〜2009-10
+        - '5'
+        - 108点
+        - 21.6点
+      - - 2010-11〜2013-14
+        - '4'
+        - 54点
+        - 13.5点
+      highlight_row: 2
+    image: assets/images/20261126_lampard_legend/02_w.jpg
+  - text: 211ゴールのうち、108ゴール。約半分が、この5年に集まりました。
+    card: none
+    image: assets/images/20261126_lampard_legend/03_w.jpg
+  - text: ほかの8年の平均は、12.9点。この5年は、その約1.7倍です。
+    card: none
+    image: assets/images/20261126_lampard_legend/04_w.jpg
+  - text: 中盤の選手の、ゴールの黄金期でした。
+    card: none
+    image: assets/images/20261126_lampard_legend/01_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Frank_Lampard

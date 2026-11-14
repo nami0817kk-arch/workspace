@@ -1,0 +1,694 @@
+{
+ "club_title": "1._FC_Köln",
+ "season_title": "2026–27_1._FC_Köln_season",
+ "squad": [
+  {
+   "no": "1",
+   "pos": "GK",
+   "nat": "GER",
+   "name": "Marvin Schwäbe",
+   "page": "Marvin Schwäbe",
+   "dob": "1995-04-25",
+   "captain": true,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 155,
+   "club_goals": 0
+  },
+  {
+   "no": "2",
+   "pos": "DF",
+   "nat": "SUI",
+   "name": "Joël Schmied",
+   "page": "Joël Schmied",
+   "dob": "1998-09-23",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 33,
+   "club_goals": 0
+  },
+  {
+   "no": "3",
+   "pos": "DF",
+   "nat": "CRO",
+   "name": "Borna Sosa",
+   "page": "Borna Sosa",
+   "dob": "1998-01-21",
+   "captain": false,
+   "loan": true,
+   "team": "Croatia",
+   "caps": 26,
+   "club_caps": 5,
+   "club_goals": 0
+  },
+  {
+   "no": "4",
+   "pos": "DF",
+   "nat": "GER",
+   "name": "Timo Hübers",
+   "page": "Timo Hübers",
+   "dob": "1996-07-20",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 117,
+   "club_goals": 7
+  },
+  {
+   "no": "5",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Tom Krauß",
+   "page": "Tom Krauß",
+   "dob": "2001-06-22",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 8,
+   "club_goals": 0
+  },
+  {
+   "no": "6",
+   "pos": "MF",
+   "nat": "TUN",
+   "name": "Ellyes Skhiri",
+   "page": "Ellyes Skhiri",
+   "dob": "1995-05-10",
+   "captain": false,
+   "loan": false,
+   "team": "Tunisia",
+   "caps": 86,
+   "club_caps": 4,
+   "club_goals": 0
+  },
+  {
+   "no": "7",
+   "pos": "FW",
+   "nat": "GER",
+   "name": "Luca Waldschmidt",
+   "page": "Luca Waldschmidt",
+   "dob": "1996-05-19",
+   "captain": false,
+   "loan": false,
+   "team": "Germany",
+   "caps": 7,
+   "club_caps": 58,
+   "club_goals": 13
+  },
+  {
+   "no": "8",
+   "pos": "MF",
+   "nat": "ISL",
+   "name": "Ísak Jóhannesson",
+   "page": "Ísak Jóhannesson",
+   "dob": "2003-03-23",
+   "captain": false,
+   "loan": false,
+   "team": "Iceland",
+   "caps": 48,
+   "club_caps": 39,
+   "club_goals": 2
+  },
+  {
+   "no": "9",
+   "pos": "FW",
+   "nat": "GER",
+   "name": "Ragnar Ache",
+   "page": "Ragnar Ache",
+   "dob": "1998-07-28",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 33,
+   "club_goals": 8
+  },
+  {
+   "no": "10",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Said El Mala",
+   "page": "Said El Mala",
+   "dob": "2006-08-26",
+   "captain": false,
+   "loan": false,
+   "team": "Germany",
+   "caps": 2,
+   "club_caps": 41,
+   "club_goals": 15
+  },
+  {
+   "no": "11",
+   "pos": "FW",
+   "nat": "ENG",
+   "name": "Reigan Heskey",
+   "page": "Reigan Heskey",
+   "dob": "2008-01-18",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 3,
+   "club_goals": 0
+  },
+  {
+   "no": "14",
+   "pos": "DF",
+   "nat": "GHA",
+   "name": "Gideon Mensah",
+   "page": "Gideon Mensah (footballer, born 1998)",
+   "dob": "1998-07-18",
+   "captain": false,
+   "loan": false,
+   "team": "Ghana",
+   "caps": 46,
+   "club_caps": 4,
+   "club_goals": 0
+  },
+  {
+   "no": "15",
+   "pos": "FW",
+   "nat": "BIH",
+   "name": "Imad Rondić",
+   "page": "Imad Rondić",
+   "dob": "1999-02-16",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 10,
+   "club_goals": 1
+  },
+  {
+   "no": "17",
+   "pos": "MF",
+   "nat": "BEL",
+   "name": "Alessio Castro-Montes",
+   "page": "Alessio Castro-Montes",
+   "dob": "1997-05-17",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 20,
+   "club_goals": 1
+  },
+  {
+   "no": "19",
+   "pos": "FW",
+   "nat": "GER",
+   "name": "Malek El Mala",
+   "page": "Malek El Mala",
+   "dob": "2005-04-02",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 1,
+   "club_goals": 1
+  },
+  {
+   "no": "20",
+   "pos": "GK",
+   "nat": "GER",
+   "name": "Ron-Robert Zieler",
+   "page": "Ron-Robert Zieler",
+   "dob": "1989-02-12",
+   "captain": false,
+   "loan": false,
+   "team": "Germany",
+   "caps": 6,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "21",
+   "pos": "GK",
+   "nat": "FRA",
+   "name": "Martin James",
+   "page": "Martin James (French footballer)",
+   "dob": "2008-02-14",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "22",
+   "pos": "DF",
+   "nat": "ENG",
+   "name": "Jahmai Simpson-Pusey",
+   "page": "Jahmai Simpson-Pusey",
+   "dob": "2005-11-04",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 8,
+   "club_goals": 0
+  },
+  {
+   "no": "23",
+   "pos": "MF",
+   "nat": "AUS",
+   "name": "Paul Okon-Engstler",
+   "page": "Paul Okon-Engstler",
+   "dob": "2005-01-24",
+   "captain": false,
+   "loan": false,
+   "team": "Australia",
+   "caps": 12,
+   "club_caps": 6,
+   "club_goals": 0
+  },
+  {
+   "no": "24",
+   "pos": "DF",
+   "nat": "GEO",
+   "name": "Luka Lochoshvili",
+   "page": "Luka Lochoshvili",
+   "dob": "1998-05-29",
+   "captain": false,
+   "loan": false,
+   "team": "Georgia",
+   "caps": 36,
+   "club_caps": 7,
+   "club_goals": 0
+  },
+  {
+   "no": "27",
+   "pos": "FW",
+   "nat": "NED",
+   "name": "Thijs Dallinga",
+   "page": "Thijs Dallinga",
+   "dob": "2000-08-03",
+   "captain": false,
+   "loan": true,
+   "team": "Netherlands",
+   "caps": 1,
+   "club_caps": 3,
+   "club_goals": 2
+  },
+  {
+   "no": "28",
+   "pos": "DF",
+   "nat": "NOR",
+   "name": "Sebastian Sebulonsen",
+   "page": "Sebastian Sebulonsen",
+   "dob": "2000-01-27",
+   "captain": false,
+   "loan": false,
+   "team": "Norway",
+   "caps": 1,
+   "club_caps": 36,
+   "club_goals": 0
+  },
+  {
+   "no": "29",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Jan Thielmann",
+   "page": "Jan Thielmann",
+   "dob": "2002-05-26",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 169,
+   "club_goals": 13
+  },
+  {
+   "no": "30",
+   "pos": "FW",
+   "nat": "GER",
+   "name": "Marius Bülter",
+   "page": "Marius Bülter",
+   "dob": "1993-03-29",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 39,
+   "club_goals": 5
+  },
+  {
+   "no": "31",
+   "pos": "MF",
+   "nat": "POR",
+   "name": "Gil Neves",
+   "page": "Gil Neves",
+   "dob": "2008-02-09",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "33",
+   "pos": "DF",
+   "nat": "NED",
+   "name": "Rav van den Berg",
+   "page": "Rav van den Berg",
+   "dob": "2004-07-07",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 14,
+   "club_goals": 0
+  },
+  {
+   "no": "34",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Fayssal Harchaoui",
+   "page": "Fayssal Harchaoui",
+   "dob": "",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": null,
+   "club_goals": null
+  },
+  {
+   "no": "37",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Linton Maina",
+   "page": "Linton Maina",
+   "dob": "1999-06-23",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 123,
+   "club_goals": 10
+  },
+  {
+   "no": "44",
+   "pos": "GK",
+   "nat": "GER",
+   "name": "Matthias Köbbing",
+   "page": "Matthias Köbbing",
+   "dob": "",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": null,
+   "club_goals": null
+  },
+  {
+   "no": "47",
+   "pos": "FW",
+   "nat": "ENG",
+   "name": "Mikey Moore",
+   "page": "Mikey Moore",
+   "dob": "2007-08-11",
+   "captain": false,
+   "loan": true,
+   "team": "",
+   "caps": null,
+   "club_caps": 8,
+   "club_goals": 0
+  },
+  {
+   "no": "49",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "David Fürst",
+   "page": "David Fürst",
+   "dob": "",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": null,
+   "club_goals": null
+  }
+ ],
+ "results": [
+  [
+   "29 August 2026",
+   "1",
+   "1. FC Köln",
+   "3–2",
+   "TSG Hoffenheim"
+  ],
+  [
+   "4 September 2026",
+   "2",
+   "VfB Stuttgart",
+   "4–1",
+   "1. FC Köln"
+  ],
+  [
+   "12 September 2026",
+   "3",
+   "1. FC Köln",
+   "1–1",
+   "Werder Bremen"
+  ],
+  [
+   "19 September 2026",
+   "4",
+   "Hamburger SV",
+   "2–1",
+   "1. FC Köln"
+  ],
+  [
+   "10 October 2026",
+   "5",
+   "1. FC Köln",
+   "2–1",
+   "Borussia Mönchengladbach"
+  ],
+  [
+   "17 October 2026",
+   "6",
+   "Eintracht Frankfurt",
+   "1–0",
+   "1. FC Köln"
+  ],
+  [
+   "24 October 2026",
+   "7",
+   "1. FC Köln",
+   "0–0",
+   "Schalke 04"
+  ],
+  [
+   "31 October 2026",
+   "8",
+   "Union Berlin",
+   "1–1",
+   "1. FC Köln"
+  ],
+  [
+   "7 November 2026",
+   "9",
+   "1. FC Köln",
+   "",
+   "Bayer Leverkusen"
+  ],
+  [
+   "21 November 2026",
+   "10",
+   "Bayern Munich",
+   "",
+   "1. FC Köln"
+  ],
+  [
+   "28 November 2026",
+   "11",
+   "1. FC Köln",
+   "",
+   "SV Elversberg"
+  ],
+  [
+   "5 December 2026",
+   "12",
+   "FC Augsburg",
+   "",
+   "1. FC Köln"
+  ],
+  [
+   "12 December 2026",
+   "13",
+   "1. FC Köln",
+   "",
+   "RB Leipzig"
+  ],
+  [
+   "19 December 2026",
+   "14",
+   "Mainz 05",
+   "",
+   "1. FC Köln"
+  ],
+  [
+   "9 January 2027",
+   "15",
+   "1. FC Köln",
+   "",
+   "SC Freiburg"
+  ],
+  [
+   "13 January 2027",
+   "16",
+   "1. FC Köln",
+   "",
+   "Borussia Dortmund"
+  ],
+  [
+   "16 January 2027",
+   "17",
+   "SC Paderborn",
+   "",
+   "1. FC Köln"
+  ],
+  [
+   "23 January 2027",
+   "18",
+   "TSG Hoffenheim",
+   "",
+   "1. FC Köln"
+  ],
+  [
+   "30 January 2027",
+   "19",
+   "1. FC Köln",
+   "",
+   "VfB Stuttgart"
+  ],
+  [
+   "6 February 2027",
+   "20",
+   "Werder Bremen",
+   "",
+   "1. FC Köln"
+  ],
+  [
+   "13 February 2027",
+   "21",
+   "1. FC Köln",
+   "",
+   "Hamburger SV"
+  ],
+  [
+   "20 February 2027",
+   "22",
+   "Borussia Mönchengladbach",
+   "",
+   "1. FC Köln"
+  ],
+  [
+   "27 February 2027",
+   "23",
+   "1. FC Köln",
+   "",
+   "Eintracht Frankfurt"
+  ],
+  [
+   "3 March 2027",
+   "24",
+   "Schalke 04",
+   "",
+   "1. FC Köln"
+  ],
+  [
+   "6 March 2027",
+   "25",
+   "1. FC Köln",
+   "",
+   "Union Berlin"
+  ],
+  [
+   "13 March 2027",
+   "26",
+   "Bayer Leverkusen",
+   "",
+   "1. FC Köln"
+  ],
+  [
+   "20 March 2027",
+   "27",
+   "1. FC Köln",
+   "",
+   "Bayern Munich"
+  ],
+  [
+   "3 April 2027",
+   "28",
+   "SV Elversberg",
+   "",
+   "1. FC Köln"
+  ],
+  [
+   "10 April 2027",
+   "29",
+   "1. FC Köln",
+   "",
+   "FC Augsburg"
+  ],
+  [
+   "17 April 2027",
+   "30",
+   "RB Leipzig",
+   "",
+   "1. FC Köln"
+  ],
+  [
+   "24 April 2027",
+   "31",
+   "1. FC Köln",
+   "",
+   "Mainz 05"
+  ],
+  [
+   "8 May 2027",
+   "32",
+   "SC Freiburg",
+   "",
+   "1. FC Köln"
+  ],
+  [
+   "15 May 2027",
+   "33",
+   "Borussia Dortmund",
+   "",
+   "1. FC Köln"
+  ],
+  [
+   "22 May 2027",
+   "34",
+   "1. FC Köln",
+   "",
+   "SC Paderborn"
+  ],
+  [
+   "24 August 2026",
+   "First round",
+   "Würzburger Kickers",
+   "1–2",
+   "1. FC Köln"
+  ],
+  [
+   "27 October 2026",
+   "Second round",
+   "1. FC Köln",
+   "5–0",
+   "Union Berlin"
+  ]
+ ]
+}

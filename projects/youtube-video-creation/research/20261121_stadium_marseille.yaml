@@ -1,0 +1,713 @@
+# スタジアム紹介シリーズ：マルセイユの本拠地（スタッド・ヴェロドローム、11/21 予定）。雛形は 11/17 ベティスの回。
+# 題材の選び方（2026-11-12）：プレミア20・ラ・リーガの大物は済み。欧州7リーグのリーグ・アンの大物としてマルセイユ。11/21 の同日他シリーズ（ユニフォーム＝バイエルン、比べる＝クヴァラツヘリア(PSG)×ユルドゥズ、選手紹介＝ヴィルツ）と重ならない。PSG（パルク・デ・プランス）は比べるのクヴァラツヘリアと重なるので外した。
+#   選んだ理由：ユーロ準決勝を3回開いた器（en ウィキペディア「初の欧州の会場」）／「1998年に屋根を外し、2014年にかけ直した」という強い一点／改修のたびの席と最多入場の比べで見立てが作れる。
+#   重なりの確認：scripts/*stadium_*・posted.json・covered.yaml に無し（grep 済み）。picks は research/20261119_picks.txt。
+# 一次情報の突き合わせ：en・fr ウィキペディア。開場1937-06-13 OM2-1トリノ／礎石1935-04-28／設計プロカン／当初35000／1960 OM本拠／1970-71 約55000／1985 走路撤去／1998 60031席・屋根撤去（fr：3億9190万フラン、設計ビュフィ）／2011-14 工事 2014-10-16 開き 67394席（4万2000→2013-08から4万8000は fr）／鉄骨5500t／2016ユーロ6試合・準決勝フランス2-0ドイツ 64078（fr）／1984 準決勝フランス3-2ポルトガル延長 54848／1998W杯 7試合／最多：2004-05-06 ニューカッスル 58897（en）・2025-04-19 モンペリエ 66312（en）。
+#   金額：2010年の発表2億6700万（fr は「annoncé en 2010」）・会計検査院の見直し5億5100万（fr・複数の報道。ただし範囲が割れる：281.3M（工事費）・約350M（市の負担）・10.51億（総額・利払い含む）の記述あり。一次の検査院文書は未確認）→台本は「と伝えられます」。
+#   食い違い（台本には入れない）：en は2011〜14に費用2億6700万のうち自己負担1.5億、fr は検査院5億5100万。en の1984年の席（4万2000＝ロッジ建設）と1985年の4万8000は fr の工事中の数字とぶつかる。最多入場は en の football record 66312（2025-04-19）、fr は欧州カップ最多65771（2025-09-30 OM対アヤックス）で別物。ラグビー最多は66818（fr）と66760（en）で割れる。ESPN の今季ホーム入場は0で使えない。
+#   2026-07：BPCE グループが命名権（CEPAC ヴェロドローム）。台本は「別の銀行グループの名前」とだけ書き、読みの割れる固有名を避けた。
+# 読みが割れる名前：ヴェロドローム／プロカン／ビュフィ／タピ／プラティニ／アレマ／ブイグ／トリノ（イタリア語読み）。
+date: 2026年11月12日
+slot: other_1
+format: news
+series: スタジアム紹介
+voice_min: 0
+people: []
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  id: stadium_marseille
+  league: france
+  league_name: リーグ・アン
+  kind: other
+  topic: マルセイユ
+  title: マルセイユのヴェロドローム、屋根を外した器に、なぜ屋根をかけ直したのか
+  question: 1998年に屋根を外したヴェロドロームに、なぜ2014年、屋根をかけ直したのか
+  lead: ユーロの準決勝を3回開いた器です。
+  hook: ''
+  opening_image: assets/images/20261121_stadium_marseille/01_w.jpg
+  end_bg: assets/images/20261121_stadium_marseille/04_w.jpg
+  takeaway: ヴェロドロームは1937年に開き、1998年に屋根を外して6万31席、2014年に鉄骨の屋根を付けて6万7394席になった。工事の見積もりは2010年の2億6700万ユーロから、会計検査院の見直しで5億5100万ユーロと伝えられ、2.06倍。最多の入場は、どちらの改修のあとも席の98%ほどで、席が7363増えて最多は7415人増えた
+  short_title: ヴェロドローム、屋根を外して、かけ直した
+thumbnail:
+  layout: scene
+  bold: false
+  callouts:
+  - ユーロ準決勝を3回開催
+  - 鉄骨の屋根は5500トン
+  photo: assets/images/20261121_stadium_marseille/01_w.jpg
+  line1: マルセイユのヴェロドローム
+  line2: 屋根を外して、かけ直した
+  tags:
+  - マルセイユ
+  - リーグ・アン
+  - スタジアム紹介
+sections:
+- id: data
+  main: true
+  heading: ユーロの準決勝を3回開いた器は、いまどんな姿なのか
+  bg: assets/images/20261121_stadium_marseille/01_w.jpg
+  card: &id001
+    type: table
+    title: ヴェロドロームの基礎DATA
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 持ち主
+      - マルセイユ市
+    - - 開場
+      - 1937年6月13日
+    - - 収容
+      - 6万7394人
+    - - 屋根
+      - あり（2014年から）
+    - - 運営
+      - OM（2018年12月から）
+    - - 名前
+      - 2026年7月に替わった
+  narrator: 解説
+  tier: 報道
+  telop: 1937年に開場。収容は6万7394席。ユーロの準決勝を3回開いた
+  sources: &id002
+  - https://en.wikipedia.org/wiki/Stade_V%C3%A9lodrome
+  - https://fr.wikipedia.org/wiki/Stade_V%C3%A9lodrome
+  - https://www.ccomptes.fr/fr/publications/commune-de-marseille-marche-de-partenariat-du-stade-velodrome-bouches-du-rhone
+  say:
+  - text: マルセイユの本拠地、ヴェロドロームの話です。
+    card: none
+    image: assets/images/20261121_stadium_marseille/01_w.jpg
+    short_only: true
+  - text: 1960年、1984年、2016年。ユーロの準決勝を、この器が3回、開きました。
+    card: none
+    image: assets/images/20261121_stadium_marseille/01_w.jpg
+    emph: true
+  - text: ヨーロッパの競技場では、初めてと伝えられます。
+    card: none
+    image: assets/images/20261121_stadium_marseille/01_w.jpg
+  - text: 開場は、1937年6月13日。収容は、6万7394席です。
+    card: *id001
+    image: assets/images/20261121_stadium_marseille/01_w.jpg
+  - text: 持ち主は、マルセイユ市です。2018年12月からは、OMが運営しています。
+    card:
+      type: table
+      title: ヴェロドロームの基礎DATA
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 持ち主
+        - マルセイユ市
+      - - 開場
+        - 1937年6月13日
+      - - 収容
+        - 6万7394人
+      - - 屋根
+        - あり（2014年から）
+      - - 運営
+        - OM（2018年12月から）
+      - - 名前
+        - 2026年7月に替わった
+      highlight_row: 4
+    image: assets/images/20261121_stadium_marseille/01_w.jpg
+  - text: 名前は、2016年から10年間、オランジュ・ヴェロドロームでした。
+    card:
+      type: table
+      title: ヴェロドロームの基礎DATA
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 持ち主
+        - マルセイユ市
+      - - 開場
+        - 1937年6月13日
+      - - 収容
+        - 6万7394人
+      - - 屋根
+        - あり（2014年から）
+      - - 運営
+        - OM（2018年12月から）
+      - - 名前
+        - 2026年7月に替わった
+      highlight_row: 5
+    image: assets/images/20261121_stadium_marseille/01_w.jpg
+  - text: 2026年7月に、別の銀行グループの名前へ替わりました。
+    card: none
+    image: assets/images/20261121_stadium_marseille/01_w.jpg
+  - text: 3回の準決勝を開いた器は、1998年に屋根を外し、2014年にかけ直しています。
+    card:
+      type: stats
+      title: ヴェロドロームの数字
+      items:
+      - - '1937'
+        - 年
+        - 開場
+      - - '67394'
+        - 席
+        - いまの収容
+      - - '3'
+        - 回
+        - ユーロ準決勝の開催
+      focus: 2
+    image: assets/images/20261121_stadium_marseille/01_w.jpg
+    emph: true
+- id: history
+  heading: 自転車の競技場だった器は、なぜ、サッカーの器になったのか
+  bg: assets/images/20261121_stadium_marseille/03_w.jpg
+  card:
+    type: timeline
+    title: ヴェロドロームの歩み
+    rows:
+    - - 1937年6月
+      - 開場（3万5000人）
+    - - 1938年
+      - W杯の準決勝を開く
+    - - 1960年
+      - OMが本拠地にする
+    - - 1984年
+      - ユーロ準決勝を開く
+    - - 1985年
+      - 自転車の走路を撤去
+    - - 2014年
+      - 屋根つきに
+    focus: 1937年6月
+    highlight_row: 0
+  narrator: 解説
+  tier: 背景
+  telop: 1937年に自転車の走路のある競技場として開き、1960年にOMの本拠地になった
+  sources: *id002
+  say:
+  - text: ヴェロドロームは、自転車の競技場のことです。
+    card: none
+    image: assets/images/20261121_stadium_marseille/03_w.jpg
+    emph: true
+  - text: 設計は、アンリ・プロカン。礎石は、1935年4月28日に置かれました。
+    card:
+      type: timeline
+      title: ヴェロドロームの歩み
+      rows:
+      - - 1937年6月
+        - 開場（3万5000人）
+      - - 1938年
+        - W杯の準決勝を開く
+      - - 1960年
+        - OMが本拠地にする
+      - - 1984年
+        - ユーロ準決勝を開く
+      - - 1985年
+        - 自転車の走路を撤去
+      - - 2014年
+        - 屋根つきに
+      focus: 1937年6月
+      highlight_row: 0
+    image: assets/images/20261121_stadium_marseille/03_w.jpg
+  - text: 初めの収容は、3万5000人です。
+    card: none
+    image: assets/images/20261121_stadium_marseille/03_w.jpg
+  - text: 1937年6月13日、OM対トリノの親善試合で開きました。
+    card: none
+    image: assets/images/20261121_stadium_marseille/03_w.jpg
+  - text: OMが、2対1で勝ちました。
+    card: none
+    image: assets/images/20261121_stadium_marseille/03_w.jpg
+  - text: 1938年のW杯では、準決勝のイタリア対ブラジルが、ここでありました。
+    card:
+      type: timeline
+      title: ヴェロドロームの歩み
+      rows:
+      - - 1937年6月
+        - 開場（3万5000人）
+      - - 1938年
+        - W杯の準決勝を開く
+      - - 1960年
+        - OMが本拠地にする
+      - - 1984年
+        - ユーロ準決勝を開く
+      - - 1985年
+        - 自転車の走路を撤去
+      - - 2014年
+        - 屋根つきに
+      focus: 1937年6月
+      highlight_row: 1
+    image: assets/images/20261121_stadium_marseille/03_w.jpg
+  - text: イタリアが、2対1で勝っています。
+    card: none
+    image: assets/images/20261121_stadium_marseille/03_w.jpg
+  - text: OMがここを本拠地にしたのは、1960年です。
+    card:
+      type: timeline
+      title: ヴェロドロームの歩み
+      rows:
+      - - 1937年6月
+        - 開場（3万5000人）
+      - - 1938年
+        - W杯の準決勝を開く
+      - - 1960年
+        - OMが本拠地にする
+      - - 1984年
+        - ユーロ準決勝を開く
+      - - 1985年
+        - 自転車の走路を撤去
+      - - 2014年
+        - 屋根つきに
+      focus: 1937年6月
+      highlight_row: 2
+    image: assets/images/20261121_stadium_marseille/03_w.jpg
+  - text: 1970年から71年に、照明塔が付き、収容は約5万5000になりました。
+    card: none
+    image: assets/images/20261121_stadium_marseille/03_w.jpg
+  - text: 1984年のユーロでは、準決勝のフランス対ポルトガルです。
+    card:
+      type: timeline
+      title: ヴェロドロームの歩み
+      rows:
+      - - 1937年6月
+        - 開場（3万5000人）
+      - - 1938年
+        - W杯の準決勝を開く
+      - - 1960年
+        - OMが本拠地にする
+      - - 1984年
+        - ユーロ準決勝を開く
+      - - 1985年
+        - 自転車の走路を撤去
+      - - 2014年
+        - 屋根つきに
+      focus: 1937年6月
+      highlight_row: 3
+    image: assets/images/20261121_stadium_marseille/03_w.jpg
+  - text: 延長の119分に、プラティニが決めて、フランスが3対2で勝ちます。
+    card: none
+    image: assets/images/20261121_stadium_marseille/03_w.jpg
+    emph: true
+  - text: 入場は5万4848人で、この器での代表戦の最多です。
+    card: none
+    image: assets/images/20261121_stadium_marseille/03_w.jpg
+  - text: 1985年に、会長のベルナール・タピが、自転車の走路を外しました。
+    card:
+      type: timeline
+      title: ヴェロドロームの歩み
+      rows:
+      - - 1937年6月
+        - 開場（3万5000人）
+      - - 1938年
+        - W杯の準決勝を開く
+      - - 1960年
+        - OMが本拠地にする
+      - - 1984年
+        - ユーロ準決勝を開く
+      - - 1985年
+        - 自転車の走路を撤去
+      - - 2014年
+        - 屋根つきに
+      focus: 1937年6月
+      highlight_row: 4
+    image: assets/images/20261121_stadium_marseille/03_w.jpg
+- id: roof98
+  heading: なぜ、1998年のW杯に向けて、屋根を外して建て直したのか
+  bg: assets/images/20261121_stadium_marseille/05_w.jpg
+  card:
+    type: table
+    title: 1998年W杯、ヴェロドロームの試合
+    columns:
+    - 試合
+    - 結果
+    rows:
+    - - 開幕週（6月12日）
+      - フランス3−0南アフリカ
+    - - 準々決勝（7月4日）
+      - オランダ2−1アルゼンチン
+    - - 準決勝（7月7日）
+      - ブラジル1−1オランダ（PK4−2）
+    highlight_row: 2
+  narrator: 解説
+  tier: 報道
+  telop: 1998年に収容を6万31席にして、屋根は外された。費用は3億9190万フランと伝えられる
+  sources: *id002
+  say:
+  - text: 1998年のW杯のために、器は大きく建て直されます。
+    card: none
+    image: assets/images/20261121_stadium_marseille/05_w.jpg
+  - text: 設計は、ジャン＝ピエール・ビュフィです。
+    card: none
+    image: assets/images/20261121_stadium_marseille/05_w.jpg
+  - text: 収容は、6万31席になりました。屋根は、外されました。
+    card:
+      type: table
+      title: 屋根と席の歩み
+      columns:
+      - 時期
+      - 屋根と席
+      rows:
+      - - 1998年のあと
+        - 屋根なし・6万31席
+      - - 2011〜13年の工事中
+        - 4万2000席（のちに4万8000）
+      - - 2014年のあと
+        - 屋根あり・6万7394席
+      highlight_row: 0
+    image: assets/images/20261121_stadium_marseille/05_w.jpg
+    emph: true
+  - text: 費用は、3億9190万フランと伝えられます。
+    card: none
+    image: assets/images/20261121_stadium_marseille/05_w.jpg
+  - text: この器で、W杯は7試合ありました。
+    card: none
+    image: assets/images/20261121_stadium_marseille/05_w.jpg
+  - text: 6月12日は、フランスが南アフリカに、3対0で勝ちます。
+    card:
+      type: table
+      title: 1998年W杯、ヴェロドロームの試合
+      columns:
+      - 試合
+      - 結果
+      rows:
+      - - 開幕週（6月12日）
+        - フランス3−0南アフリカ
+      - - 準々決勝（7月4日）
+        - オランダ2−1アルゼンチン
+      - - 準決勝（7月7日）
+        - ブラジル1−1オランダ（PK4−2）
+      highlight_row: 0
+    image: assets/images/20261121_stadium_marseille/05_w.jpg
+  - text: 7月4日の準々決勝は、オランダがアルゼンチンに、2対1。
+    card:
+      type: table
+      title: 1998年W杯、ヴェロドロームの試合
+      columns:
+      - 試合
+      - 結果
+      rows:
+      - - 開幕週（6月12日）
+        - フランス3−0南アフリカ
+      - - 準々決勝（7月4日）
+        - オランダ2−1アルゼンチン
+      - - 準決勝（7月7日）
+        - ブラジル1−1オランダ（PK4−2）
+      highlight_row: 1
+    image: assets/images/20261121_stadium_marseille/05_w.jpg
+  - text: 7月7日の準決勝は、ブラジル対オランダです。
+    card:
+      type: table
+      title: 1998年W杯、ヴェロドロームの試合
+      columns:
+      - 試合
+      - 結果
+      rows:
+      - - 開幕週（6月12日）
+        - フランス3−0南アフリカ
+      - - 準々決勝（7月4日）
+        - オランダ2−1アルゼンチン
+      - - 準決勝（7月7日）
+        - ブラジル1−1オランダ（PK4−2）
+      highlight_row: 2
+    image: assets/images/20261121_stadium_marseille/05_w.jpg
+    emph: true
+  - text: 1対1のあと、PK戦は、ブラジルが4対2で勝ちました。
+    card: none
+    image: assets/images/20261121_stadium_marseille/05_w.jpg
+  - text: 屋根の無い器は、その後、16年、使われました。
+    card: none
+    image: assets/images/20261121_stadium_marseille/05_w.jpg
+- id: roof14
+  heading: なぜ、2014年に、屋根をかけ直したのか
+  bg: assets/images/20261121_stadium_marseille/04_w.jpg
+  card:
+    type: table
+    title: 屋根と席の歩み
+    columns:
+    - 時期
+    - 屋根と席
+    rows:
+    - - 1998年のあと
+      - 屋根なし・6万31席
+    - - 2011〜13年の工事中
+      - 4万2000席（のちに4万8000）
+    - - 2014年のあと
+      - 屋根あり・6万7394席
+    highlight_row: 2
+  narrator: 解説
+  tier: 報道
+  telop: 2016年のユーロに向けて2011年から工事。2014年10月16日に、屋根つきで開いた
+  sources: *id002
+  say:
+  - text: 2016年のユーロの会場になるため、また大きな工事が決まりました。
+    card: none
+    image: assets/images/20261121_stadium_marseille/04_w.jpg
+  - text: 工事は、2011年3月から、2014年の夏までです。
+    card: none
+    image: assets/images/20261121_stadium_marseille/04_w.jpg
+  - text: 屋根は、鉄骨で、5500トンの構造です。
+    card: none
+    image: assets/images/20261121_stadium_marseille/04_w.jpg
+    emph: true
+  - text: 工事のあいだ、席は4万2000まで減らして、試合を続けました。
+    card:
+      type: table
+      title: 屋根と席の歩み
+      columns:
+      - 時期
+      - 屋根と席
+      rows:
+      - - 1998年のあと
+        - 屋根なし・6万31席
+      - - 2011〜13年の工事中
+        - 4万2000席（のちに4万8000）
+      - - 2014年のあと
+        - 屋根あり・6万7394席
+      highlight_row: 1
+    image: assets/images/20261121_stadium_marseille/04_w.jpg
+  - text: 2013年8月からは、4万8000席です。
+    card: none
+    image: assets/images/20261121_stadium_marseille/04_w.jpg
+  - text: 2014年10月16日に、屋根のある器が開きました。
+    card: none
+    image: assets/images/20261121_stadium_marseille/04_w.jpg
+  - text: 席は、この工事で、増えました。
+    card:
+      type: table
+      title: 屋根と席の歩み
+      columns:
+      - 時期
+      - 屋根と席
+      rows:
+      - - 1998年のあと
+        - 屋根なし・6万31席
+      - - 2011〜13年の工事中
+        - 4万2000席（のちに4万8000）
+      - - 2014年のあと
+        - 屋根あり・6万7394席
+      highlight_row: 2
+    image: assets/images/20261121_stadium_marseille/04_w.jpg
+  - text: 1998年の6万31席より、7363席、多い数です。
+    card: none
+    image: assets/images/20261121_stadium_marseille/04_w.jpg
+    emph: true
+  - text: 2016年のユーロでは、この器で6試合。
+    card: none
+    image: assets/images/20261121_stadium_marseille/04_w.jpg
+  - text: 準決勝は、7月7日、フランス対ドイツで、フランスが2対0で勝ちました。
+    card: none
+    image: assets/images/20261121_stadium_marseille/04_w.jpg
+  - text: 入場は、6万4078人でした。
+    card: none
+    image: assets/images/20261121_stadium_marseille/04_w.jpg
+- id: cost
+  heading: なぜ、見積もりの2億6700万ユーロは、5億5100万ユーロと言われるのか
+  bg: assets/images/20261121_stadium_marseille/04_w.jpg
+  card:
+    type: table
+    title: 2014年の工事の金額（報道）
+    columns:
+    - 項目
+    - 中身
+    rows:
+    - - 2010年の発表
+      - 2億6700万ユーロ
+    - - 会計検査院の見直し（報道）
+      - 5億5100万ユーロ
+    - - 鉄骨の屋根
+      - 5500トン
+    - - 建設会社への支払い
+      - 2045年まで
+    highlight_row: 1
+  narrator: 解説
+  tier: 報道
+  telop: 2010年の発表は2億6700万ユーロ。会計検査院の見直しは5億5100万ユーロと伝えられる
+  sources: *id002
+  say:
+  - text: この工事は、公と民が組む方式です。
+    card: none
+    image: assets/images/20261121_stadium_marseille/04_w.jpg
+  - text: 建設会社ブイグの子会社、アレマが、建てて、2045年まで維持します。
+    card:
+      type: table
+      title: 2014年の工事の金額（報道）
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 2010年の発表
+        - 2億6700万ユーロ
+      - - 会計検査院の見直し（報道）
+        - 5億5100万ユーロ
+      - - 鉄骨の屋根
+        - 5500トン
+      - - 建設会社への支払い
+        - 2045年まで
+      highlight_row: 3
+    image: assets/images/20261121_stadium_marseille/04_w.jpg
+  - text: 2010年の発表では、費用は、2億6700万ユーロでした。
+    card:
+      type: table
+      title: 2014年の工事の金額（報道）
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 2010年の発表
+        - 2億6700万ユーロ
+      - - 会計検査院の見直し（報道）
+        - 5億5100万ユーロ
+      - - 鉄骨の屋根
+        - 5500トン
+      - - 建設会社への支払い
+        - 2045年まで
+      highlight_row: 0
+    image: assets/images/20261121_stadium_marseille/04_w.jpg
+    emph: true
+  - text: のちに、会計検査院が、5億5100万ユーロと見直した、と伝えられます。
+    card:
+      type: table
+      title: 2014年の工事の金額（報道）
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 2010年の発表
+        - 2億6700万ユーロ
+      - - 会計検査院の見直し（報道）
+        - 5億5100万ユーロ
+      - - 鉄骨の屋根
+        - 5500トン
+      - - 建設会社への支払い
+        - 2045年まで
+      highlight_row: 1
+    image: assets/images/20261121_stadium_marseille/04_w.jpg
+  - text: その一部は、2045年まで、アレマに支払われます。
+    card:
+      type: table
+      title: 2014年の工事の金額（報道）
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 2010年の発表
+        - 2億6700万ユーロ
+      - - 会計検査院の見直し（報道）
+        - 5億5100万ユーロ
+      - - 鉄骨の屋根
+        - 5500トン
+      - - 建設会社への支払い
+        - 2045年まで
+      highlight_row: 3
+    image: assets/images/20261121_stadium_marseille/04_w.jpg
+  - text: 割ると、見積もりの2.06倍です。
+    card:
+      type: calc
+      title: 見積もりの何倍になったか（自分で割った）
+      terms:
+      - - 5億5100万ユーロ
+        - 見直し後（報道）
+      - - 2億6700万ユーロ
+        - 2010年の発表
+      - - 2.06倍
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+    image: assets/images/20261121_stadium_marseille/04_w.jpg
+    emph: true
+  - text: 2021年2月には、市が、この器の売却を発表しました。
+    card: none
+    image: assets/images/20261121_stadium_marseille/04_w.jpg
+  - text: いまも、器は市のもの。運営は、OMです。
+    card: none
+    image: assets/images/20261121_stadium_marseille/04_w.jpg
+- id: view
+  viewpoint: true
+  heading: 見立て・屋根をかけ直した器に、席の増えた分だけ人は入っているのか
+  bg: assets/images/20261121_stadium_marseille/01_w.jpg
+  card:
+    type: table
+    title: 最多の入場と席
+    columns:
+    - 改修
+    - 最多の入場
+    - 席
+    rows:
+    - - 1998年のあと
+      - 5万8897人（2004年）
+      - 6万31
+    - - 2014年のあと
+      - 6万6312人（2025年）
+      - 6万7394
+    highlight_row: 1
+  narrator: 解説
+  tier: 報道
+  telop: 最多の入場は、どちらの改修のあとも席の98%。席が7363増えて、最多は7415人増えた
+  sources: *id002
+  say:
+  - text: では、屋根をかけ直して増えた席に、人は入っているのか。数字は11月12日時点です。
+    card: none
+    image: assets/images/20261121_stadium_marseille/01_w.jpg
+    emph: true
+  - text: 1998年の改修後の最多は、2004年のニューカッスル戦。
+    card:
+      type: table
+      title: 最多の入場と席
+      columns:
+      - 改修
+      - 最多の入場
+      - 席
+      rows:
+      - - 1998年のあと
+        - 5万8897人（2004年）
+        - 6万31
+      - - 2014年のあと
+        - 6万6312人（2025年）
+        - 6万7394
+      highlight_row: 0
+    image: assets/images/20261121_stadium_marseille/01_w.jpg
+  - text: 欧州の大会の準決勝で、5万8897人でした。
+    card: none
+    image: assets/images/20261121_stadium_marseille/01_w.jpg
+  - text: 当時の席は、6万31。割ると、98.1%。
+    card: none
+    image: assets/images/20261121_stadium_marseille/01_w.jpg
+  - text: 2014年のあとの最多は、2025年4月19日、モンペリエ戦の6万6312人。
+    card:
+      type: table
+      title: 最多の入場と席
+      columns:
+      - 改修
+      - 最多の入場
+      - 席
+      rows:
+      - - 1998年のあと
+        - 5万8897人（2004年）
+        - 6万31
+      - - 2014年のあと
+        - 6万6312人（2025年）
+        - 6万7394
+      highlight_row: 1
+    image: assets/images/20261121_stadium_marseille/01_w.jpg
+    mark:
+      kind: circle
+      row: 1
+  - text: 席は、6万7394。割ると、98.4%です。
+    card:
+      type: calc
+      title: 最多の入りは、席の何%か（自分で割った）
+      terms:
+      - - 6万6312人
+        - 2014年のあとの最多
+      - - 6万7394席
+        - いまの席
+      - - 98.4%
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+    image: assets/images/20261121_stadium_marseille/01_w.jpg
+  - text: 席は、7363増えました。最多の入場は、7415人、増えています。
+    card: none
+    image: assets/images/20261121_stadium_marseille/01_w.jpg
+    emph: true
+  - text: 増えた席の数より、増えた入場の数のほうが、わずかに多い。
+    card: none
+    image: assets/images/20261121_stadium_marseille/01_w.jpg
+  - text: 屋根のあるなしに関わらず、最多の入りは、席のほぼ98%です。
+    card: none
+    image: assets/images/20261121_stadium_marseille/01_w.jpg
+    emph: true

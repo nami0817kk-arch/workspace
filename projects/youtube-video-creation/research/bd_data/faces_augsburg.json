@@ -1,0 +1,24 @@
+{
+ "augsburg": {
+  "ハラー": {
+   "role": "legend",
+   "file": "assets/photos/bd/augsburg/augsburg_legend_2faaddc8.jpg",
+   "page": "Helmut_Haller"
+  },
+  "バイアー": {
+   "role": "legend",
+   "file": "assets/photos/bd/augsburg/augsburg_legend_8fef49fe.jpg",
+   "page": "Daniel_Baier"
+  },
+  "ク・ジャチョル": {
+   "role": "legend",
+   "file": "assets/photos/bd/augsburg/augsburg_legend_b3e27742.jpg",
+   "page": "Koo_Ja-cheol"
+  },
+  "宇佐美貴史": {
+   "role": "japan",
+   "file": "assets/photos/bd/augsburg/augsburg_japan_9c0deac4.jpg",
+   "page": "Takashi_Usami"
+  }
+ }
+}

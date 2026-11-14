@@ -1,0 +1,369 @@
+# クラブの財政：クリスタル・パレス（11/8 日、シリーズ「クラブの財政」、key: finance_palace、型は news）。
+#
+# 題材の選び方：デロイト Football Money League 2026（2024/25）の順で、財政の回をまだ出していないクラブから。
+#   23位ブライトンは 11/6 に出した。24位エヴァートン（2億3400万ユーロ）は、2024/25 の決算で女子チームとグディソン・パークの関連会社への売却益（4920万ポンド）が損益の主役
+#   （二次情報 theesk・ToffeeWeb で確認）→ 女子サッカーを扱わない決まりに触れるので外す（11/2・11/6 の担当と同じ判断）。
+#   → 未出の最上位は **25位クリスタル・パレス（2億3250万ユーロ）**。26位ボーンマス（2億1850万）は次の候補に残す。
+#
+# 重なりの確認（2026-11-05）：scripts/*finance_* にパレスは無い。直近30日のパレスの本は、10/23 スタジアム・10/26 ユニフォーム（別のシリーズ）、
+#   ニュースのショート（10/19 鎌田のブライトン戦・10/26 鎌田のニューカッスル戦）、10/08 ランキング。財政の切り口は無い。
+#   research/20261107_picks.txt にもパレスは無い（11/8 は代表クロアチア・ブレーメン・コンテ・ルーニー）。
+# ★今季も1部：ESPN の 2026-27 English Premier League 順位表 API（2026-11-05 取得）で 18位・勝点7・9試合。台本では順位を言わない（小さく見せない）。
+# ★日本との接点：鎌田大地が所属（英語版 Wikipedia「Daichi Kamada」infobox：2023–2024 Lazio、2024– Crystal Palace）＝この決算の年に加わった。
+#   冨安健洋も所属（クラブ公式「Takehiro Tomiyasu signs for Crystal Palace」。Wikipedia infobox 2026– Crystal Palace、前は Ajax）。
+#   FAカップ決勝（2025-05-17、マンチェスター・シティに1-0）のエゼの得点は、マテタと鎌田のワンツーから始まった攻め（英語版 Wikipedia「2025 FA Cup final」本文、共同通信を出典に引く）。
+#
+# 軸は「**クラブ史上初の大きなタイトルの年に、本業の赤字が2倍になった。それでも黒字で終われたのはなぜか**」。
+#   答え：優勝で入った賞金は440万ポンド。費用はスタッフへの優勝の報奨などで1890万増え、買った選手の償却も800万増えた。
+#         本業（選手の売却の前）の損益は −2140万 → −4270万（2.0倍）。それを選手を売った利益 6610万（オリセのバイエルン移籍など）が埋めて、税引き前は807万の黒字。
+#   ★他の財政回と軸を重ねない：11/2 アヤックス＝CLで32位でも売却益で黒字、11/6 ブライトン＝売る利益が減って赤字。
+#     今回は「勝つと費用が増える」（優勝の報奨・試合数）を主役にし、売却益はそれを埋めた側として置く。
+#   ★女子チームの話は入れない。オーナーの交代（決算の後のできごと）・欧州の大会の出場をめぐる話は入れない（法的な話に触れる）。
+#   ★決算のあとの選手の売り買いの注記（差し引き3740万の支払い）は、どの移籍が入るか分からないので入れない。
+#
+# **出どころ（読んだもの）**
+#   ○ CPFC Limited（会社番号 07270793）Full accounts made up to 30 June 2025（Companies House、2026-04-12 提出、32頁、画像PDF。頁を画像にして目で読んだ）
+#       https://find-and-update.company-information.service.gov.uk/company/07270793/filing-history/MzUxMzkxNjM3NWFkaXF6a2N4/document?format=pdf&download=0
+#       Strategic Report p.2 KPI（£000、2025／2024）：Average league attendance 24,389／24,561、Final league position 12th／10th、TV matches 18／15、
+#            Turnover 195,304／189,310、Profit on player sales 66,078／1,341、Player wage costs (110,829)／(101,884)、Operating expenses (excl. D&A) (180,454)／(161,526)、
+#            EBITDA 14,850／27,784、Profit/(loss) before tax 8,070／(33,563)
+#       p.2「Winning the first major silverware in the Club's history」「finished 12th, setting a new Club record of 53 points」
+#       p.3「The Club generated over £66m in profit from player sales, notably: Michael Olise, Joachim Andersen, and Sam Johnstone」「signed from Reading for £8m in 2021」
+#            「the Club's parent company concluded a capital raise of £37.5m from investors」
+#       p.4「A fall of £3.6m in broadcast income from finishing two places lower in 12th was mostly offset by strong sponsorship income growth of £2.9m and prize money associated with our historic cup victory and a growth of 12% in gate receipt income despite season ticket prices being frozen」
+#            「operating expenses have increased from £161.5m to £180.4m driven principally by bonuses paid out to staff through underlying contracts owing to our successful FA Cup run. This cup run, plus our improved performance in the Carabao cup, increased operating expenses through a higher number of games being played. In addition, increases in payroll taxes and pay to casual staff have also caused an increase.」
+#       p.5「net liabilities include a £50m waiver of intercompany debt passed down from the parent company」
+#       p.14 損益計算書：Turnover 195,304／189,310、Operating expenses before D&A (180,454)／(161,526)、Depreciation (3,585)／(3,186)、Amortisation (53,986)／(45,948)、
+#            Operating loss before profit on disposal (42,721)／(21,350)、Profit on disposal of players 66,078／1,341、plant (161)／7、Operating profit/(loss) 23,196／(20,002)、
+#            Interest receivable 1,794／593、Interest payable (16,707)／(14,606)、FX (213)／452、Profit/(loss) before tax 8,070／(33,563)、Tax (662)／-、Profit/(loss) for the year 7,408／(33,563)
+#       p.21 注3：Broadcasting 142,296／145,451、Sponsorship and advertising 18,774／15,875、Gate receipts 15,491／13,809、Other commercial 11,335／10,167、Other income 7,408／4,008
+#            「Other income - ... including prize money for cup fixtures of £4.4m (2024: £0.2m)」
+#       p.21 注4：Staff costs 145,478／132,444、Other operating charges 34,976／29,082
+#       p.22 注6：Wages and salaries 127,279／116,687、Social security 17,811／15,402
+#   ○ クラブの「financial review 24/25」（クラブが作った冊子、6頁。https://theesk.org/wp-content/uploads/2026/04/crystal-palace-annual-accounts-202425.pdf に置かれていたもの）
+#       こちらは親会社グループの数（Turnover 196,623 など）で、上の CPFC Limited の数とわずかに違う。台本は監査済みの CPFC Limited の数にそろえる。
+#   ○ デロイト Football Money League 2026（requests で本文、2026-11-05）：「25 Crystal Palace 232.5」（€m）
+#   ○ ESPN 順位表 API（2026-11-05）：18位 Crystal Palace 7点 9試合（台本には入れない）
+#   ○ 英語版 Wikipedia「Daichi Kamada」「Takehiro Tomiyasu」「Michael Olise」（infobox）、「2025 FA Cup final」（日付 2025-05-17・得点の流れ）
+#   ○ クラブ公式「Takehiro Tomiyasu signs for Crystal Palace」 https://www.cpfc.co.uk/news/announcement/palace-sign-takehiro-tomiyasu/
+#   × 確かめられなかったもの：2025-26（2026年6月期）の決算（まだ出ていない）、オリセの移籍金の額（決算に無い。台本に額を入れない）、
+#       優勝の報奨の額（決算は理由だけ書く）。どれも台本に入れない。
+#
+# 自分で計算した数（検算済み）
+#   収入の内訳 2025：142.296＋18.774＋15.491＋11.335＋7.408＝195.304 ✓／2024：145.451＋15.875＋13.809＋10.167＋4.008＝189.310 ✓
+#   収入の増え：195.304−189.310＝5.994→約600万（+3.2%）
+#   放映権の割合：142.296÷195.304＝72.9%→約73%。放映権の減り（大会の分も含む全体）：145.451−142.296＝3.155→約320万（クラブはリーグの順位で約360万減と説明）
+#   試合の日：15.491÷13.809＝1.122→約12%増 ✓（クラブ「12%」）。スポンサー・広告：18.774−15.875＝2.899→約290万 ✓
+#   費用（償却などを除く）：180.454−161.526＝18.928→約1890万 ✓（クラブ「nearly £19m」）
+#   人件費：145.478−132.444＝13.034→約1300万（+9.8%）。収入に対する割合 145.478÷195.304＝74.5%／132.444÷189.310＝70.0%
+#   その他の費用：34.976−29.082＝5.894→約590万。人件費＋その他＝18.928 ✓
+#   償却：53.986−45.948＝8.038→約800万
+#   板（増減の内訳）は段を3つにまとめた：収入 +6.0／人件費などの費用 −18.9（人件費 −13.034＋その他 −5.894）／償却 −8.4（選手の償却 −8.038＋設備の減価償却 −0.399）。−21.4＋6.0−18.9−8.4＝−42.7 ✓
+#   本業（選手の売却の前）の損益：−21.350→−42.721。42.721÷21.350＝2.001→2倍
+#     内訳：−21.350＋5.994（収入）−13.034（人件費）−5.894（その他の費用）−8.038（償却）−0.399（設備の減価償却）＝−42.721 ✓
+#   税引き前：−42.721＋66.078−0.161＋1.794−16.707−0.213＝8.070 ✓。利息など（設備の売却損を含む）：−0.161＋1.794−16.707−0.213＝−15.287→−15.3／2024：0.007＋0.593−14.606＋0.452＝−13.554→−13.6
+#   表の検算：2025 −42.7＋66.1−15.3＝8.1 ✓／2024 −21.4＋1.3−13.6＝−33.7（丸めで −33.6 と0.1ずれる。表は決算の値 −33.6 を書く）
+#   選手を売った利益：66.078÷1.341＝49.3→約49倍
+#   費用の増え ÷ 大会の賞金：18.928÷4.4＝4.30→約4.3倍
+#   選手を売った利益 ÷ 本業の赤字：66.078÷42.721＝1.547→約1.5倍
+#   税引き前の振れ：8.070＋33.563＝41.633→約4160万
+#
+# 写真：assets/images/20261108_finance_palace/（Commons、出典は credits.json）。01 優勝パレードのバス（2025-05-26）、02 ウェンブリーで優勝を祝う選手（2025-05-17、原版が小さいので画面だけ）、
+#   04〜06 本拠地セルハースト・パーク（10/23 スタジアム回の再利用）、07・08 鎌田大地（10/26 ユニフォーム回の再利用、背番号18）、09 パレードを待つファン（同）。
+date: 2026年11月5日
+slot: other_1
+format: news
+series: クラブの財政
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- クリスタル・パレス
+- 鎌田大地
+theme:
+  end_bg: assets/images/20261108_finance_palace/04_w.jpg
+  id: finance_palace
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: クリスタル・パレス
+  title: クリスタル・パレス、初優勝の年に本業の赤字が2倍。それでも黒字だったのはなぜか
+  question: クリスタル・パレスは2024-25に、クラブ史上初の大きなタイトル、FAカップを取った。その年、選手の売却を除いた本業の赤字は、2140万から4270万ポンドへ2倍になった。それでも税引き前は黒字。何が赤字を広げ、何が埋めたのか
+  lead: クラブ史上初のタイトル。その年、本業の赤字は2倍に。クリスタル・パレス。
+  opening_image: assets/images/20261108_finance_palace/07_w.jpg
+  takeaway: クリスタル・パレスの2024-25の決算（クラブの運営会社の年次報告、監査済み）は、収入が1億9530万ポンドで約600万の増え。FAカップ優勝の賞金は440万。一方で、償却などを除く費用は優勝の報奨や試合数の増えで約1890万増え、買った選手の償却も約800万増えた。選手の売却を除いた本業の損益は、2140万から4270万ポンドの赤字へ2倍に。それを、オリセのバイエルン移籍などの選手を売った利益6610万が埋め、税引き前は807万ポンドの黒字（前の年は3356万の赤字）。人件費は収入の約74%（前の年は約70%）。親会社は5000万ポンドの貸付を帳消しにした
+  short_title: パレス、初優勝の年に本業の赤字が2倍
+thumbnail:
+  layout: number
+  crest_pos: right
+  photo: assets/images/20261108_finance_palace/01_w.jpg
+  short_photo: assets/images/20261108_finance_palace/10_v.jpg
+  number: 本業の赤字2倍
+  line1: クリスタル・パレスの決算
+  line2: 初優勝の年になぜ黒字
+  callouts: [売った利益6610万]
+  tags:
+  - クリスタル・パレス
+  - プレミアリーグ
+  - クラブの財政
+  - 鎌田大地
+  - FAカップ
+sections:
+- id: rev
+  heading: パレスの収入は、何でできているのか
+  tier: 報道
+  telop: 収入は1億9530万ポンド。いちばん大きいのは放映権の1億4230万
+  narrator: 解説
+  card: &rev_bars
+    type: bars
+    title: クリスタル・パレスの収入の内訳（2024-25、百万ポンド）
+    unit: 百万ポンド
+    items:
+    - {label: 放映権, value: 142.3, highlight: true}
+    - {label: スポンサー・広告, value: 18.8}
+    - {label: 試合の日, value: 15.5}
+    - {label: グッズ・飲食など, value: 11.3}
+    - {label: その他（賞金を含む）, value: 7.4}
+  say:
+  - text: 使う数字は、2026年11月5日時点で出ている、パレスの最新の決算です。
+    image: assets/images/20261108_finance_palace/04_w.jpg
+    card: none
+  - text: ロンドンのクリスタル・パレス。日本代表の鎌田大地と、冨安健洋がプレーしています。
+    image: assets/images/20261108_finance_palace/07_w.jpg
+    card: none
+  - text: 鎌田は2024年の夏に、イタリアのラツィオから加わりました。
+    card: none
+  - text: その最初のシーズンに、パレスはFAカップで優勝します。
+    image: assets/images/20261108_finance_palace/02_w.jpg
+    card: none
+  - text: 決勝はマンチェスター・シティに1対0。ゴールにつながる攻めには、鎌田も絡みました。
+    card: none
+  - text: クラブの発表では、創立から初めて手にした主要タイトルです。
+    image: assets/images/20261108_finance_palace/01_w.jpg
+    card: none
+  - text: パレスの決算の1年は、7月から翌年の6月まで。
+    card: none
+  - text: 今回見るのは、2024年から25年の1年間です。
+    image: assets/images/20261108_finance_palace/05_w.jpg
+    card: none
+  - text: 収入は、1億9530万ポンド。
+    emph: true
+    card: *rev_bars
+  - text: 柱は、テレビの放映権。1億4230万ポンドあります。
+    card: *rev_bars
+  - text: 次がスポンサーと広告、試合の日の入場料が続きます。
+    card: *rev_bars
+  - text: 割合にすると、収入の約73%がテレビからのお金です。
+    image: assets/images/20261108_finance_palace/06_w.jpg
+    card: none
+  sources:
+  - https://find-and-update.company-information.service.gov.uk/company/07270793/filing-history/MzUxMzkxNjM3NWFkaXF6a2N4/document?format=pdf&download=0
+  - https://en.wikipedia.org/wiki/Daichi_Kamada
+  - https://en.wikipedia.org/wiki/2025_FA_Cup_final
+  - https://www.cpfc.co.uk/news/announcement/palace-sign-takehiro-tomiyasu/
+- id: cup
+  heading: 優勝で、収入はどれだけ増えたのか
+  tier: 報道
+  telop: 収入は約600万ポンドの増え。優勝の賞金は440万
+  narrator: 解説
+  card: &cup_table
+    type: table
+    title: クリスタル・パレスの収入（百万ポンド）
+    columns: [項目, 2023-24, 2024-25]
+    rows:
+    - [大会の賞金, '0.2', '4.4']
+    - [放映権, '145.5', '142.3']
+    - [試合の日, '13.8', '15.5']
+    - [スポンサー・広告, '15.9', '18.8']
+    - [収入の合計, '189.3', '195.3']
+    highlight_row: 0
+  say:
+  - text: 優勝の年、パレスに入った大会の賞金は、440万ポンド。
+    emph: true
+    card: *cup_table
+  - text: 前の年は、20万でした。
+    card: *cup_table
+  - text: リーグ戦は勝ち点53。クラブの記録を塗り替えました。
+    image: assets/images/20261108_finance_palace/04_w.jpg
+    card: none
+  - text: ただ順位は、前の年の10位から12位へ。
+    card: none
+  - text: 順位が2つ下がり、リーグの放映権は約360万減った、とクラブは説明しています。
+    card:
+      <<: *cup_table
+      highlight_row: 1
+  - text: 試合の日の収入は、カップ戦の試合が増えて、約12%の増え。
+    card:
+      <<: *cup_table
+      highlight_row: 2
+  - text: 年間のシーズン券の値段は、据え置いたままでした。
+    image: assets/images/20261108_finance_palace/09_w.jpg
+    card: none
+  - text: スポンサーなどは、約290万の増えです。
+    card: none
+  - text: 合わせて収入は、前の年から約600万。3.2%の増えにとどまりました。
+    card:
+      <<: *cup_table
+      highlight_row: 4
+  sources:
+  - https://find-and-update.company-information.service.gov.uk/company/07270793/filing-history/MzUxMzkxNjM3NWFkaXF6a2N4/document?format=pdf&download=0
+- id: cost
+  main: true
+  heading: 優勝の年に、本業の赤字はなぜ2倍になったのか
+  tier: 報道
+  telop: 本業の損益は、2140万から4270万ポンドの赤字へ
+  narrator: 解説
+  card: &cost_wf
+    type: waterfall
+    title: パレスの本業の損益の動き（百万ポンド）
+    unit: 百万ポンド
+    start: [2023-24の本業の損益, -21.4]
+    steps:
+    - [収入, 6.0]
+    - [人件費などの費用, -18.9]
+    - [償却, -8.4]
+    total: [2024-25の本業の損益, -42.7]
+  say:
+  - text: 鎌田のパレスは、初めてのタイトルの年に、本業の赤字が2倍になりました。
+    short_only: true
+    image: assets/images/20261108_finance_palace/07_w.jpg
+    card: none
+  - text: ここでの本業は、選手の売却を入れる前の損益のこと。
+    image: assets/images/20261108_finance_palace/02_w.jpg
+    card: none
+  - text: 本業の赤字は、2140万から4270万ポンドに。ちょうど2倍です。
+    emph: true
+    card: *cost_wf
+  - text: 収入の増えより、ずっと大きく膨らんだのが費用でした。
+    card: *cost_wf
+  - text: 人件費は、1億3240万から1億4550万ポンドへ。約1300万の増え。
+    card:
+      <<: *cost_wf
+      highlight: 人件費などの費用
+  - text: クラブの説明では、主な理由は、FAカップ優勝でスタッフに払った報奨です。
+    image: assets/images/20261108_finance_palace/01_w.jpg
+    card: none
+  - text: 契約にあらかじめ決めてあった、勝ったときの上乗せです。
+    card: none
+  - text: カップ戦を勝ち進んで試合が増え、その分の費用もかかりました。
+    card: none
+  - text: 雇い主が払う税と、試合の日に雇う人の給料が上がったことも、挙げています。
+    card: none
+  - text: 費用は、選手の償却を別にしても、合わせて約1890万の増え。
+    emph: true
+    image: assets/images/20261108_finance_palace/06_w.jpg
+    card: none
+  - text: 償却とは、払った移籍金を契約の年数で割り、毎年の費用に回すもの。
+    card: none
+  - text: その償却も増えました。
+    card: none
+  - text: 4590万から、5400万ポンドへ。
+    card:
+      <<: *cost_wf
+      highlight: 償却
+  sources:
+  - https://find-and-update.company-information.service.gov.uk/company/07270793/filing-history/MzUxMzkxNjM3NWFkaXF6a2N4/document?format=pdf&download=0
+- id: sale
+  heading: それでも、なぜ黒字で終われたのか
+  tier: 報道
+  telop: 選手を売った利益は、130万から6610万ポンドへ
+  narrator: 解説
+  card: &sale_table
+    type: table
+    title: パレスの損益（百万ポンド）
+    columns: [項目, 2023-24, 2024-25]
+    rows:
+    - [本業の損益, '−21.4', '−42.7']
+    - [選手を売った利益, '+1.3', '+66.1']
+    - [利息など, '−13.6', '−15.3']
+    - [税引き前の損益, '−33.6', '+8.1']
+    highlight_row: 1
+  say:
+  - text: 赤字を埋めたのは、選手を売った利益です。
+    image: assets/images/20261108_finance_palace/05_w.jpg
+    card: none
+  - text: 前の年の130万ポンドから、6610万ポンドへ。約49倍です。
+    emph: true
+    card: *sale_table
+  - text: クラブが名前を挙げたのは、3人の選手。
+    card: *sale_table
+  - text: マイケル・オリセ、ヨアキム・アンデルセン、サム・ジョンストン。
+    card: *sale_table
+  - text: 中でもオリセは、2021年に800万ポンドで、レディングから加わった選手です。
+    image: assets/images/20261108_finance_palace/04_w.jpg
+    card: none
+  - text: パレスで力を伸ばし、ドイツのバイエルンへ移りました。
+    card: none
+  - text: 借入の利息などを引いて、税引き前の損益は、807万ポンドの黒字。
+    emph: true
+    card:
+      <<: *sale_table
+      highlight_row: 3
+  - text: 前の年は3356万ポンドのマイナス。1年で約4160万の振れです。
+    card:
+      <<: *sale_table
+      highlight_row: 3
+  sources:
+  - https://find-and-update.company-information.service.gov.uk/company/07270793/filing-history/MzUxMzkxNjM3NWFkaXF6a2N4/document?format=pdf&download=0
+  - https://en.wikipedia.org/wiki/Michael_Olise
+- id: view
+  viewpoint: true
+  heading: 見立て・パレスは、勝つほどお金が要るのか
+  tier: 背景
+  telop: 費用の増えは、優勝の賞金の約4.3倍。売った利益は、本業の赤字の約1.5倍
+  narrator: 解説
+  card: &view_table
+    type: table
+    title: 自分で割ってみた（パレスの決算）
+    columns: [比べ, 答え]
+    rows:
+    - [費用の増え ÷ 優勝の年の賞金, 約4.3倍]
+    - [選手を売った利益 ÷ 本業の赤字, 約1.5倍]
+    - [人件費 ÷ 収入（2024-25）, 約74%]
+    highlight_row: 0
+  say:
+  - text: ここからは見立てです。決算の数字どうしを、割り算で比べます。
+    image: assets/images/20261108_finance_palace/02_w.jpg
+    card: none
+  - text: 勝ったことで膨らんだ費用は、優勝の賞金の約4.3倍になります。
+    emph: true
+    mark:
+      kind: circle
+      row: 0
+      col: 1
+    card: *view_table
+  - text: 優勝の賞金だけでは、勝ったことで増えた費用に届きませんでした。
+    card: *view_table
+  - text: 人件費は、収入の約70%から、約74%へ上がりました。
+    card:
+      <<: *view_table
+      highlight_row: 2
+  - text: 題への答えです。赤字を広げたのは、勝ったことで増えた費用と、償却。
+    image: assets/images/20261108_finance_palace/01_w.jpg
+    card: none
+  - text: 穴をふさいだのは、オリセたちの売却。その利益は、本業の赤字の約1.5倍です。
+    emph: true
+    card:
+      <<: *view_table
+      highlight_row: 1
+  - text: 親会社も、この年に5000万ポンドの貸付を、帳消しにしています。
+    image: assets/images/20261108_finance_palace/05_w.jpg
+    card: none
+  - text: さらに投資家から、3750万ポンドを新たに集めています。
+    card: none
+  - text: 会長のスティーブ・パリッシュは、決算でこう書いています。
+    card: &chair_doc
+      type: document
+      label: クリスタル・パレス 会長の言葉（2024-25の年次報告、訳）
+      paragraphs:
+      - 競争力のあるチームを作りつつ、時が来れば、選手の価値を売却の利益に変える。
+      - その利益は、チームを強くするために、全額を選手の獲得に回した。
+      highlight: [売却の利益に変える]
+  - text: 時が来れば選手を売って利益に変え、その利益は獲得に回す、と。
+    card: *chair_doc
+  - text: 売れる選手がいない年に、勝つほど増える費用を、パレスは何で埋めるのか。
+    emph: true
+    image: assets/images/20261108_finance_palace/08_w.jpg
+    card: none
+  sources:
+  - https://find-and-update.company-information.service.gov.uk/company/07270793/filing-history/MzUxMzkxNjM3NWFkaXF6a2N4/document?format=pdf&download=0
+  - https://theesk.org/wp-content/uploads/2026/04/crystal-palace-annual-accounts-202425.pdf

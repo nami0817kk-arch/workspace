@@ -1,0 +1,462 @@
+# ジャンルイジ・ブッフォン（元イタリア代表GK）の紹介。シリーズ「レジェンドの紹介（世界）」2026-11-10。型は 11/8 ルーニーと同じ9節（フック→基礎DATA→日本との接点→歩み→持ち味→あの試合→記録と現役の終わり→マル秘話→見立て）。
+# **FotMob・DataMB・FBref・Sofascore・Transfermarkt は不使用**。数字は英語版 Wikipedia（Gianluigi Buffon の成績表・本文・Records、2006 FIFA World Cup final、2002 FIFA World Cup Group G、2013 FIFA Confederations Cup Group A）、BBC 2023-08-02 の引退の記事と、自分で足した・割った値だけ。
+# **私生活・法的な問題は入れない**（2000年の卒業証書の件・2006年の賭けの捜査・家族・結婚・病気は使わない）。2006年のクラブの降格は「処分で2部へ」とだけ言う（不正の中身・ブッフォン本人の捜査は言わない）。引退後の代表の役職は言わない（2026-04 に退任。いまの肩書きは台本で言わない）。
+#
+# **重なりの確認（2026-11-06）**：scripts/・research/covered.yaml・research/posted.json を「ブッフォン／Buffon」で grep。主役の回は無し（10/10 の代表出場数の回 scripts/20261010_record_caps.md にイタリアの1位として名前と176試合が出るだけ）。レジェンド既出（ジダン・ロナウジーニョ・シャビ・イニエスタ・ベッカム・ロナウド・アンリ・イブラヒモビッチ・マルディーニ・カカ・ジェラード・ドログバ・ピルロ・トッティ・カシージャス・デル・ピエロ・トーレス・ルーニー）と重ならない。research/20261109_picks.txt（11/9〜11/11 のスタジアム・ユニフォームはビルバオ・レアル・バレンシア・アトレティコ）とも重ならない。
+# **引退の確認（一次情報に近いもの）**：BBC Sport「Gianluigi Buffon: Italy legend retires aged 45」（2023-08-02、https://www.bbc.com/sport/football/66378584 を requests で取得）。本文「Former Italy goalkeeper and World Cup winner Gianluigi Buffon has retired from football aged 45」、本人のSNS投稿の引用「That's all folks. You gave me everything. I gave you everything. We did it together.」、パルマ会長の談話。Wikipedia「On 2 August 2023 ... announced his retirement」、最後の試合は 2023-05-30 の2部昇格プレーオフ準決勝の第1戦。→ **選手としては現役ではない（48歳）**。
+# **日本との接点**：①1993年、日本開催の U-17 世界選手権にイタリアの U-17 で参加（Wikipedia「took part at the 1993 FIFA U-17 World Championship in Japan」。出場試合数は確かめていないので「加わった」とだけ言う）。②2002年W杯、イタリアの1次リーグは日本で3試合：6/3 札幌ドーム エクアドルに2-0、6/8 カシマスタジアム クロアチアに1-2、6/13 大分 メキシコと1-1（Wikipedia「2002 FIFA World Cup Group G」）。ブッフォンは大会の全時間に出場、エクアドル戦は無失点（Wikipedia 本人の記事「played every minute」「keeping a clean sheet in the opening match against Ecuador」）。③2013-06-19 コンフェデ杯（ブラジル・レシフェ）日本に4-3。ブッフォンはキャプテンで先発（試合表）。日本は本田のPK21分・香川33分で2-0、イタリアはデ・ロッシ41分・オウンゴール50分・バロテッリのPK52分で逆転、岡崎69分で3-3、ジョビンコ86分で4-3（Wikipedia「2013 FIFA Confederations Cup Group A」）。
+# **数字の出どころと自分で足した値**
+# - 成績表（Wikipedia、公式戦）：パルマ1期目 220試合＋2期目 45試合＝265、ユヴェントス1期目 656＋2期目 29＝685（Wikipedia の Records「685, behind Del Piero 705」と一致）、パリ・サンジェルマン 25。Career total 975（265+685+25＝975 と一致）。イタリア代表 176試合。クラブと代表の合計 1,151試合（自分で足した値：975+176。Wikipedia の冒頭「over 1,150 professional career appearances」と合う）。**年代別代表は含めない**。
+# - セリエA 657試合はリーグの歴代1位（Wikipedia の Records、BBC 2023-08-02「a record 657 appearances in the Italian top flight」）。2020-07-04 トリノ戦で648試合目、マルディーニの647を抜く（Wikipedia）。
+# - 代表176試合はGKで世界1位、イタリア代表でも1位（Wikipedia の冒頭、BBC「the most-capped goalkeeper of all time with 176 appearances for Italy」）。2013-10-11 デンマーク戦で137試合目、カンナバーロを抜いてイタリア1位（Wikipedia）。2018年、W杯の出場を逃したあと代表を退く（BBC）。
+# - 1995-11-19、17歳295日でセリエAデビュー（パルマ、監督スカーラ）。1991年にパルマの下部組織へ（13歳）。1998-99 にUEFAカップ・コッパ・イタリア。2001-07-03 ユヴェントスへ、GKとして当時の世界最高の移籍金（金額は言わない）、ユヴェントスで最初の2季に連続でリーグ優勝（Wikipedia）。
+# - 2006-07、ユヴェントスは2部（セリエB）。ブッフォンは37試合に出て、2部優勝で1季で1部へ（成績表と本文）。2006-09-09 リミニ戦（1-1）が2部の初戦（Commons の写真の説明）。
+# - 2018-19 パリ・サンジェルマン（リーグ優勝）、2019 ユヴェントスへ戻る、2021-06 パルマへ（当時2部）。
+# - 2016年：セリエAで974分連続無失点、リーグの記録（それまでの記録はロッシの929分）。2016-03-20 トリノ戦で更新、ベロッティのPKで止まる（Wikipedia）。974÷90＝10.8→「およそ11試合分」。
+# - 2006年W杯：7試合で2失点（W杯の記録）、無失点5試合、ヤシン賞（大会の最優秀GK）。2失点はどちらも流れの中ではない（アメリカ戦のオウンゴール、決勝のジダンのPK）（Wikipedia）。
+# **山場**：2006-07-09 W杯決勝、ベルリン、フランス戦。7分ジダンのPK、19分マテラッツィで1-1、延長104分にサニョルのクロスからのジダンのヘディングを、ブッフォンが指先でバーの上へ。本人がのちに「キャリアでいちばん大事なセーブ」と話した（Wikipedia の本人の記事。語りで紹介するだけで、声の引用にはしない）。PK戦5-3、トレゼゲのキックがバーに当たって外れる、最後はグロッソ（Wikipedia の決勝の記事）。ジダンの退場の件は言わない（ジダンを小さく見せない）。
+# **本人の言葉**：2023-08-02 引退の日のSNS投稿（BBC が引用）「That's all folks. You gave me everything. I gave you everything. We did it together.」
+# **マル秘話**：①パルマの下部組織では最初は中盤の選手。1990年W杯のカメルーンのGKエンコノに憧れてGKへ、2週間で下部組織の正GKに。②1997-98、インテルのロナウドのPKを止め、ユニフォームの下のスーパーマンのシャツを見せた→あだ名「スーパーマン」。③2017年、GKとして初めてセリエAの年間最優秀選手（Wikipedia）。
+# **見立て（自分で足した・割った値）**：成績表の季ごと（公式戦）。1995-96〜2007-08 の13季：9+28+46+51+43+43（パルマ220）＋45+48+39+48+24+40+35（ユヴェントス279）＝499試合、1季38.4。2008-09〜2022-23 の15季：30+35+17+35+44+48+47+44+43+34＋25＋15+14＋26+19＝476試合、1季31.7。合計975と一致。代表は年ごと：1997〜2007年 80試合、2008〜2018年 96試合（合計176と一致）。30歳になった2008年を境に、前 499+80＝579、後 476+96＝572。後ろの割合 572÷1151＝49.7%→ほぼ半分。ユヴェントスの7連覇（2011-12〜2017-18、ブッフォン33〜40歳）の7季は 35+44+48+47+44+43+34＝295試合、1季42.1（最初の13季の38.4より多い）。
+# **入れなかったもの**：卒業証書の件・賭けの捜査・家族・結婚・病気、移籍金の金額、2010年W杯のけが、PSG退団の経緯、引退後の代表の役職と退任、2026年W杯予選の話、ジダンの退場、U-17世界選手権の試合数、ESPN・AS のセーブの順位。
+# **読みで怪しいもの**：ブッフォン、ジャンルイジ、パルマ、ユヴェントス、パリ・サンジェルマン、カッラーラ、トスカーナ、エンコノ、マテラッツィ、ジダン、トレゼゲ、グロッソ、サニョル、カンナバーロ、マルディーニ、ジョビンコ、デ・ロッシ、バロテッリ、本田圭佑、香川真司、岡崎慎司、札幌、鹿島、大分、レシフェ、コンフェデレーションズカップ、ヤシン賞、セリエA。「最多」「最年少」は使わず言い換える。「2006-07」のような書き方はしない。
+title: ブッフォンは、どんな選手だった？ 1151試合は、いつ積み上がったのか
+format: news
+short_title: ブッフォンは、どんな選手だった？
+series: レジェンドの紹介
+topic: ジャンルイジ・ブッフォン
+date: 2026年11月6日
+slot: other_1
+people: [ジャンルイジ・ブッフォン]
+watch: 毎日、数字でサッカーを読み解きます
+theme: {id: legend_buffon, league: italy, league_name: セリエA, kind: other, topic: ジャンルイジ・ブッフォン, title: ブッフォンは、どんな選手だった？ 1151試合は、いつ積み上がったのか, question: クラブと代表で1151試合に出たGKブッフォンは、その試合をいつ積み上げたのか, takeaway: 30歳になった2008年より前が579試合、後が572試合。1151試合のほぼ半分は30歳を過ぎてから。33歳から40歳の7連覇の季は、1季42試合と10代・20代より多かった,
+  nameplate: ジャンルイジ・ブッフォン｜元イタリア代表 GK, opening_image: assets/images/20261110_buffon_legend/02_w.jpg, end_bg: assets/images/20261110_buffon_legend/09_w.jpg, bgm: assets/audio/bgm_calm.wav, outro_title: 毎日、数字でサッカーを読み解きます}
+thumbnail:
+  line1: ブッフォン、通算1151試合
+  line2: W杯優勝、7試合で2失点
+  tags: [ユヴェントス]
+  photo: assets/images/20261110_buffon_legend/panel_07.jpg
+  photos: []
+  short_photo: assets/images/20261110_buffon_legend/07_v.jpg
+sections:
+- id: hook
+  heading: ブッフォンは、何試合ゴールを守ったのか
+  tier: 報道
+  telop: クラブと代表、28年の記録
+  card: &hk
+    type: stats
+    title: ブッフォン 元GK（48歳）
+    items:
+    - ['1151', 試合, クラブと代表の公式戦]
+    - ['176', 試合, イタリア代表]
+    - ['657', 試合, セリエA]
+    focus: 0
+  say:
+  - {text: イタリア代表の出場数で、歴代1位に立つ選手がいます。, card: none, image: assets/images/20261110_buffon_legend/07_w.jpg}
+  - {text: ポジションはゴールキーパー。代表の176試合は、GKとして世界一の数です。, card: none, image: assets/images/20261110_buffon_legend/09_w.jpg}
+  - text: クラブと代表の公式戦を合わせると、1151試合。
+    card: *hk
+    image: assets/images/20261110_buffon_legend/01_w.jpg
+    emph: true
+    callword: 1151試合
+  - text: ジャンルイジ・ブッフォン。イタリアのリーグでも、657試合はいちばん多い数字です。
+    card:
+      type: stats
+      title: ブッフォン 元GK（48歳）
+      items:
+      - ['1151', 試合, クラブと代表の公式戦]
+      - ['176', 試合, イタリア代表]
+      - ['657', 試合, セリエA]
+      focus: 2
+    image: assets/images/20261110_buffon_legend/04_w.jpg
+  - {text: そして日本とも、15歳のころから縁のある選手です。, card: none, image: assets/images/20261110_buffon_legend/09_w.jpg}
+  - {text: 17歳から45歳まで、28年の道のりを、数字で見ていきます。, card: none, image: assets/images/20261110_buffon_legend/07_w.jpg}
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Gianluigi_Buffon', 'https://www.bbc.com/sport/football/66378584']
+- id: data
+  heading: ブッフォンは、いつ、どこで生まれ、どんな選手か
+  tier: 報道
+  telop: ブッフォンの基礎DATA
+  card: &dt
+    type: table
+    title: ジャンルイジ・ブッフォン
+    columns: [項目, 内容]
+    rows: &dtr
+    - [生年月日, 1978年1月28日・イタリア]
+    - [ポジション, ゴールキーパー]
+    - [クラブ, パルマ・ユヴェントスほか]
+    - [代表, イタリア代表 176試合]
+    - [現役を終えた, 2023年・パルマ]
+    highlight_row: 0
+  say:
+  - text: ブッフォンは1978年1月28日、トスカーナ州のカッラーラに生まれました。
+    card: *dt
+    image: assets/images/20261110_buffon_legend/07_w.jpg
+  - text: 身長は192センチ。大きな体の、ゴールキーパーです。
+    card:
+      type: table
+      title: ジャンルイジ・ブッフォン
+      columns: [項目, 内容]
+      rows: *dtr
+      highlight_row: 1
+    image: assets/images/20261110_buffon_legend/02_w.jpg
+  - text: 主なクラブは、パルマと、ユヴェントスの2つ。
+    card:
+      type: table
+      title: ジャンルイジ・ブッフォン
+      columns: [項目, 内容]
+      rows: *dtr
+      highlight_row: 2
+    image: assets/images/20261110_buffon_legend/01_w.jpg
+  - text: イタリア代表では、2010年からキャプテンも務めました。
+    card:
+      type: table
+      title: ジャンルイジ・ブッフォン
+      columns: [項目, 内容]
+      rows: *dtr
+      highlight_row: 3
+    image: assets/images/20261110_buffon_legend/09_w.jpg
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Gianluigi_Buffon']
+- id: japan
+  heading: ブッフォンと日本には、どんな縁があったのか
+  tier: 報道
+  telop: 15歳の日本、札幌のW杯、そして4対3
+  card: &jp
+    type: timeline
+    title: ブッフォンと日本
+    rows: &jpr
+    - [1993年, 15歳で日本の世界大会へ]
+    - [2002年6月, W杯 日本で3試合]
+    - [2013年6月, キャプテンとして日本と対戦]
+    focus: 0
+    highlight_row: 0
+  say:
+  - text: ブッフォンと日本の縁は、1993年。日本で開かれた、17歳以下の世界大会です。
+    card: *jp
+    image: assets/images/20261110_buffon_legend/04_w.jpg
+  - {text: 15歳のブッフォンは、イタリアの一員として、この大会に加わりました。, card: none}
+  - text: 2002年には、日本と韓国のワールドカップ。イタリアは日本で3試合を戦います。
+    card:
+      type: timeline
+      title: ブッフォンと日本
+      rows: *jpr
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261110_buffon_legend/05_w.jpg
+  - {text: 札幌、鹿島、大分。ブッフォンは大会のすべての時間で、ゴールを守りました。, card: none, image: assets/images/20261110_buffon_legend/04_w.jpg}
+  - {text: 札幌ドームのエクアドル戦は、2対0の勝ちで、無失点でした。, card: none}
+  - text: 2013年6月には、ブラジルでの大会で、キャプテンとして日本と戦います。
+    card:
+      type: timeline
+      title: ブッフォンと日本
+      rows: *jpr
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261110_buffon_legend/06_w.jpg
+  - {text: 日本は本田圭佑のPKと、香川真司のゴールで、先に2点を取りました。, card: none, image: assets/images/20261110_buffon_legend/05_w.jpg}
+  - {text: イタリアは3点を返して逆転。岡崎慎司のゴールで、日本が追いつきます。, card: none}
+  - {text: 決着は86分。ジョビンコのゴールで、イタリアが4対3で勝ちました。, card: none, image: assets/images/20261110_buffon_legend/06_w.jpg, emph: true}
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Gianluigi_Buffon', 'https://en.wikipedia.org/wiki/2002_FIFA_World_Cup_Group_G', 'https://en.wikipedia.org/wiki/2013_FIFA_Confederations_Cup_Group_A']
+- id: career
+  heading: 17歳でデビューしたブッフォンは、どこでゴールを守ってきたのか
+  tier: 報道
+  telop: パルマからユヴェントス、そしてパルマへ
+  card: &cr
+    type: timeline
+    title: 歩んできた道
+    rows: &crr
+    - ['1995', 17歳でデビュー]
+    - ['2001', ユヴェントスへ]
+    - ['2006', 2部に落ちても残る]
+    - ['2018', パリ・サンジェルマンへ]
+    - ['2021', パルマへ戻る]
+    focus: 0
+  say:
+  - text: ブッフォンのデビューは、1995年11月、17歳。13歳から育った、パルマでした。
+    card: *cr
+    image: assets/images/20261110_buffon_legend/04_w.jpg
+  - text: 2001年7月、23歳でユヴェントスへ。GKでは当時、世界一高い移籍金でした。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *crr
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261110_buffon_legend/01_w.jpg
+  - {text: 移って最初の2シーズンで、続けてリーグ優勝を果たします。, card: none, image: assets/images/20261110_buffon_legend/02_w.jpg}
+  - text: 2006年、ユヴェントスは処分を受けて、2部に落とされます。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *crr
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261110_buffon_legend/08_w.jpg
+  - {text: ワールドカップ王者のブッフォンは、クラブに残りました。, card: none, image: assets/images/20261110_buffon_legend/08_w.jpg, emph: true}
+  - {text: 2部で37試合に出て優勝。1シーズンで1部へ戻しています。, card: none}
+  - text: 2018年には、フランスのパリ・サンジェルマンへ。ここでもリーグ優勝です。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *crr
+      focus: 3
+      highlight_row: 0
+    image: assets/images/20261110_buffon_legend/10_w.jpg
+  - text: 1年でユヴェントスに戻り、2021年には、2部にいたパルマへ帰りました。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *crr
+      focus: 4
+      highlight_row: 0
+    image: assets/images/20261110_buffon_legend/03_w.jpg
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Gianluigi_Buffon']
+- id: style
+  heading: ブッフォンは、何で相手を上回ったのか
+  tier: 報道
+  telop: 反応の速さ、位置取り、そして前に出る守り
+  card: &st
+    type: table
+    title: ブッフォンの持ち味
+    columns: [項目, 中身]
+    rows: &str
+    - [武器1, 速い反応と、跳ぶ力]
+    - [武器2, 位置取りと、落ち着き]
+    - [武器3, 前に出て止める守り]
+    - [記録, セリエAで974分 無失点]
+    highlight_row: 0
+  say:
+  - text: ブッフォンの武器の1つ目は、速い反応。大きな体で、遠いシュートにも跳んで届きます。
+    card: *st
+    image: assets/images/20261110_buffon_legend/11_w.jpg
+  - text: 次に、位置取りと落ち着き。大事な場面でも、慌てずに構えて止めました。
+    card:
+      type: table
+      title: ブッフォンの持ち味
+      columns: [項目, 中身]
+      rows: *str
+      highlight_row: 1
+    image: assets/images/20261110_buffon_legend/07_w.jpg
+  - text: そして、前に出る守り。抜け出した相手に、ゴールを飛び出して向かっていきます。
+    card:
+      type: table
+      title: ブッフォンの持ち味
+      columns: [項目, 中身]
+      rows: *str
+      highlight_row: 2
+    image: assets/images/20261110_buffon_legend/03_w.jpg
+  - text: 2016年、イタリアのセリエAで974分、1点も取られませんでした。
+    card:
+      type: table
+      title: ブッフォンの持ち味
+      columns: [項目, 中身]
+      rows: *str
+      highlight_row: 3
+    image: assets/images/20261110_buffon_legend/02_w.jpg
+    emph: true
+  - {text: それまでの記録の929分を、45分上回るリーグの新記録。およそ11試合分です。, card: none, image: assets/images/20261110_buffon_legend/11_w.jpg}
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Gianluigi_Buffon']
+- id: match
+  heading: 2006年のワールドカップ決勝で、ブッフォンは何を止めたのか
+  tier: 報道
+  main: true
+  telop: 延長104分、ジダンのヘディング
+  card: &mt
+    type: timeline
+    title: 2006年7月9日 W杯決勝 フランス戦
+    rows: &mtr
+    - [7分, ジダンのPKで先制される]
+    - [19分, マテラッツィが追いつく]
+    - [104分, ジダンのヘディングを止める]
+    - [PK戦, 5対3で世界一]
+    focus: 0
+    highlight_row: 0
+  say:
+  - {text: ジャンルイジ・ブッフォン。, short_only: true, card: none, image: assets/images/20261110_buffon_legend/12_w.jpg}
+  - {text: ワールドカップの決勝で、世界一を守った1つのセーブがあります。, short_only: true, card: none, image: assets/images/20261110_buffon_legend/12_w.jpg}
+  - {text: 2006年7月9日、ドイツのベルリン。ワールドカップの決勝、相手はフランスです。, card: none, image: assets/images/20261110_buffon_legend/12_w.jpg}
+  - text: 7分、ジダンのPK。この大会でブッフォンが取られた、2点目の失点でした。
+    card: *mt
+    image: assets/images/20261110_buffon_legend/12_w.jpg
+  - text: 19分、マテラッツィのゴールで、イタリアが追いつきました。
+    card:
+      type: timeline
+      title: 2006年7月9日 W杯決勝 フランス戦
+      rows: *mtr
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261110_buffon_legend/12_w.jpg
+  - {text: そのまま延長に入った104分、右からのクロスに、ジダンが頭で合わせます。, card: none, image: assets/images/20261110_buffon_legend/12_w.jpg}
+  - {text: 高く跳び上がったブッフォンが、そのボールを、クロスバーの外へ逃がします。, short_only: true, card: none, image: assets/images/20261110_buffon_legend/12_w.jpg, emph: true}
+  - text: 強いヘディングを、ブッフォンは跳んで、指先でバーの上にはじき出しました。
+    main_only: true
+    card:
+      type: timeline
+      title: 2006年7月9日 W杯決勝 フランス戦
+      rows: *mtr
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261110_buffon_legend/09_w.jpg
+    emph: true
+    callword: 104分
+  - {text: ブッフォンはのちに、これがキャリアでいちばん大事なセーブだったと話しています。, card: none, image: assets/images/20261110_buffon_legend/12_w.jpg}
+  - text: 決着はPK戦。イタリアが5対3で制して、世界一に。
+    card:
+      type: timeline
+      title: 2006年7月9日 W杯決勝 フランス戦
+      rows: *mtr
+      focus: 3
+      highlight_row: 0
+    image: assets/images/20261110_buffon_legend/12_w.jpg
+  - {text: 大会の7試合で失点は2。1試合あたり0.29点です。, card: none, image: assets/images/20261110_buffon_legend/12_w.jpg}
+  - {text: しかも2点とも、流れの中から決められた失点ではありません。, card: none}
+  - {text: 大会でいちばんのゴールキーパーの賞も、ブッフォンが手にしました。, card: none, image: assets/images/20261110_buffon_legend/07_w.jpg}
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/2006_FIFA_World_Cup_final', 'https://en.wikipedia.org/wiki/Gianluigi_Buffon']
+- id: after
+  heading: ブッフォンは、どんな記録を残して現役を終えたのか
+  tier: 報道
+  telop: 2つの出場記録と、45歳の引退
+  card: &af
+    type: timeline
+    title: 記録と、現役の終わり
+    rows: &afr
+    - [2013年10月, 代表の出場でイタリア1位に]
+    - [2020年7月, セリエAの出場記録を更新]
+    - [2023年8月, 45歳で引退]
+    focus: 0
+    highlight_row: 0
+  say:
+  - text: 2013年10月、ブッフォンは137試合目の代表戦で、カンナバーロを抜きます。
+    card: *af
+    image: assets/images/20261110_buffon_legend/05_w.jpg
+  - {text: イタリア代表で、いちばん多く試合に出た選手になりました。, card: none}
+  - {text: 代表を退いたのは2018年。40歳まで、出場の数を伸ばし続けました。, card: none, image: assets/images/20261110_buffon_legend/06_w.jpg}
+  - text: 2020年7月には、セリエAで648試合目。マルディーニの記録を抜きました。
+    card:
+      type: timeline
+      title: 記録と、現役の終わり
+      rows: *afr
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261110_buffon_legend/03_w.jpg
+  - {text: 最後のパルマでの2シーズンを経て、2023年8月、45歳で現役を終えます。, card: none, image: assets/images/20261110_buffon_legend/04_w.jpg}
+  - text: 引退の日、ブッフォンが残した言葉です。
+    card:
+      type: timeline
+      title: 記録と、現役の終わり
+      rows: *afr
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261110_buffon_legend/07_w.jpg
+  - {voice: ブッフォン, text: これでおしまい。みんなは、僕にすべてをくれた。, card: none, pause: 0.6, image: assets/images/20261110_buffon_legend/07_w.jpg}
+  - {voice: ブッフォン, text: 僕も、すべてを捧げた。一緒に、成し遂げたんだ。, card: none, cont: true}
+  quotes_from: ['https://www.bbc.com/sport/football/66378584']
+  sources: ['https://www.bbc.com/sport/football/66378584', 'https://en.wikipedia.org/wiki/Gianluigi_Buffon']
+- id: secret
+  heading: ブッフォンには、どんな意外な話があるのか
+  tier: 報道
+  telop: 中盤の少年、スーパーマン、そして初めての賞
+  card: &sc
+    type: table
+    title: 知られざる、3つの話
+    columns: [いつ, 何があったか]
+    rows: &scr
+    - [少年時代, 最初は中盤の選手だった]
+    - [19歳ごろ, スーパーマンのシャツ]
+    - [2017年, GKで初めてリーグの最優秀選手]
+    highlight_row: 0
+  say:
+  - {text: ブッフォンにまつわる、意外な話を3つ紹介します。, card: none, image: assets/images/20261110_buffon_legend/02_w.jpg}
+  - text: 1つ目。パルマの下部組織では、最初は中盤の選手でした。
+    card: *sc
+    image: assets/images/20261110_buffon_legend/04_w.jpg
+  - {text: 憧れたのは、1990年のワールドカップで見た、カメルーンのGKエンコノ。, card: none}
+  - {text: ゴールキーパーに移ると、わずか2週間でチームの1番手になりました。, card: none, image: assets/images/20261110_buffon_legend/04_w.jpg}
+  - text: 2つ目。パルマ時代、インテルのロナウドのPKを止めたときのこと。
+    card:
+      type: table
+      title: 知られざる、3つの話
+      columns: [いつ, 何があったか]
+      rows: *scr
+      highlight_row: 1
+    image: assets/images/20261110_buffon_legend/11_w.jpg
+  - {text: ブッフォンは、ユニフォームの下に着ていたシャツを見せます。, card: none}
+  - {text: 描かれていたのは、スーパーマン。それが、あだ名になりました。, card: none, image: assets/images/20261110_buffon_legend/11_w.jpg, emph: true}
+  - text: 3つ目。2017年、GKとして初めて、セリエAの年間最優秀選手に。
+    card:
+      type: table
+      title: 知られざる、3つの話
+      columns: [いつ, 何があったか]
+      rows: *scr
+      highlight_row: 2
+    image: assets/images/20261110_buffon_legend/07_w.jpg
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Gianluigi_Buffon']
+- id: view
+  heading: 1151試合は、どの時期に積み上がったのか
+  tier: 背景
+  viewpoint: true
+  telop: 1151試合のほぼ半分は、30歳を過ぎてから
+  card: &vw
+    type: table
+    title: ブッフォン 30歳の前と後（公式戦）
+    columns: [期間, クラブ, 代表, 合計]
+    rows: &vwr
+    - [2008年より前, '499', '80', '579']
+    - [2008年から, '476', '96', '572']
+    highlight_row: 0
+  say:
+  - text: 最後に、1151試合を、30歳になった2008年の前と後に分けて比べます。
+    card: *vw
+    image: assets/images/20261110_buffon_legend/01_w.jpg
+  - text: 2008年より前は、クラブと代表で579試合。
+    card:
+      type: table
+      title: ブッフォン 30歳の前と後（公式戦）
+      columns: [期間, クラブ, 代表, 合計]
+      rows: *vwr
+      highlight_row: 0
+    image: assets/images/20261110_buffon_legend/04_w.jpg
+  - text: 2008年からは、572試合。差は、わずか7試合です。
+    card:
+      type: table
+      title: ブッフォン 30歳の前と後（公式戦）
+      columns: [期間, クラブ, 代表, 合計]
+      rows: *vwr
+      highlight_row: 1
+    image: assets/images/20261110_buffon_legend/02_w.jpg
+    emph: true
+    mark: {kind: circle, row: 1, col: 3}
+  - {text: 代表では、2008年より前の80試合より、30歳からの96試合が多いのです。, card: none, image: assets/images/20261110_buffon_legend/06_w.jpg}
+  - text: 次は、ユヴェントスがリーグを7連覇した7シーズン。
+    card:
+      type: table
+      title: ユヴェントス 1シーズンあたりの試合数（公式戦）
+      columns: [期間, シーズン, 試合, 1季あたり]
+      rows: &vwr2
+      - [デビューからの13季, '13', '499', '38.4']
+      - [7連覇の7季, '7', '295', '42.1']
+      highlight_row: 0
+    image: assets/images/20261110_buffon_legend/01_w.jpg
+  - {text: このとき、ブッフォンは33歳から40歳でした。}
+  - text: この7季で295試合。1シーズンに42試合です。
+    card:
+      type: table
+      title: ユヴェントス 1シーズンあたりの試合数（公式戦）
+      columns: [期間, シーズン, 試合, 1季あたり]
+      rows: *vwr2
+      highlight_row: 1
+    image: assets/images/20261110_buffon_legend/03_w.jpg
+    mark: {kind: circle, row: 1, col: 3}
+  - {text: 17歳からの13季の、1シーズン38試合より多いペースでした。}
+  - {text: 1151試合のほぼ半分は、30歳を過ぎてから。, card: none, image: assets/images/20261110_buffon_legend/04_w.jpg}
+  - {text: 30代の半ばに、出番はむしろ増えていたのです。, card: none, image: assets/images/20261110_buffon_legend/07_w.jpg}
+  - {text: 17歳のデビューから、ベルリンの指先、そして45歳まで。, card: none}
+  - {text: それが、ジャンルイジ・ブッフォンです。, card: none, image: assets/images/20261110_buffon_legend/09_w.jpg}
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Gianluigi_Buffon']

@@ -1,0 +1,377 @@
+# クラブの財政：ウェストハム（11/16 月、シリーズ「クラブの財政」、key: finance_westham、型は news）。
+#
+# 題材の選び方：11/12 ブレントフォード・11/14 リーズの次。デロイト Football Money League の順で、財政の回をまだ出していない収益の大きいクラブを探した。
+#   既出（scripts/*finance_*）：バルサ・シティ・アーセナル・レアル・PSG・バイエルン・リヴァプール・マンU・トッテナム・チェルシー・インテル・ヴィラ・ユヴェントス・アトレティコ・ミラン・ニューカッスル・ドルトムント・ナポリ・シュトゥットガルト・ベンフィカ・フランクフルト・ローマ・アヤックス・ブライトン・パレス・ボーンマス・ブレントフォード・リーズ。
+#   未出の大きいクラブのうち、一次の決算が Companies House で読め、収入が最大（2億2755万ポンド）なのがウェストハム。エヴァートンは女子チーム絡みで外した前例（11/12）。
+#   同日 11/18 の担当（セルティック）とクラブが別。
+#
+# ★今季の立場（重要）：ウェストハムは 2025-26 に降格した。ESPN の 2026-27 English Premier League 順位表 API（2026-11-12 取得）に載っていない。
+#   プレミアリーグ公式 premierleague.com「West Ham relegated despite win over Leeds on final day」（2026-05-24、勝点39、14年続いた1部から）で確認。
+#   → 台本は「決算の1年（2024-25、2025年5月まで）」と、決算書に書かれた見通し（降格を入れた想定）、その後に降格した事実（2026-05-24）だけ。いまの2部の順位・成績は言わない（確かめていない）。
+# ★日本との接点：決算・今季の所属に日本人選手は確かめられない。無理に入れない（10/6 の決定）。
+#
+# 軸は「**14位だった年に、赤字1億417万ポンド（前の年は黒字5722万）。差の約半分は『選手を売った利益』が7640万減ったこと。決算はすでに、夏の資金不足と、降格の想定を書いていた**」。
+#   ★他の財政回と軸を重ねない：11/12 ブレントフォード＝給料の重さ、11/10 ボーンマス＝売却益が黒字に変えた、11/8 パレス＝勝つと費用が増える、11/6 ブライトン＝売る利益が減る。
+#     今回は「収入の減り（14位・欧州なし）」と「売却益が消えた年の赤字」と「決算に書かれた降格の想定」。ブライトンと同じ「売る利益が減る」だが、ここでは赤字の差の中身を1つずつ数える。
+#   ★オーナー・株主の個人名は言わない（決算の記載は「shareholders」「investing owners」の範囲）。報道の買収の話は入れない（確かめていない）。
+#   ★決算のあとの2025-26 の数字は出ていない。台本は決算の1年と、決算書の見通しと、降格の事実だけ。
+#
+# **出どころ（読んだもの）**
+#   ○ WH Holding Limited（会社番号 05993863、ウェストハム・ユナイテッドの親会社）Annual Report and Financial Statements for the year ended 31 May 2025（Companies House、2026-02-27 提出、60頁、監査 PwC、画像PDF。頁を画像にして目で読んだ。承認は 2025-12-17）
+#       https://find-and-update.company-information.service.gov.uk/company/05993863/filing-history/MzUwNzUwNjY1NmFkaXF6a2N4/document?format=pdf&download=0
+#       Strategic Report p.4：「Turnover at £227.6m was down £42.1m on the previous year, largely due to the lower position in the Premier league (14th v 9th) and no European income, as we participated in the UEFA Europa League in the previous season.」（損益計算書は 227,552／269,740。差は 42.188 なので台本は約4219万）
+#            「the Club ... provide funds to significantly enhance the squad during the 2024-25 summer transfer window with six new additions to the squad at a total cost of £132.6m (see note 11), alongside three outgoings」
+#            「the season was ultimately disappointing as adverse results led to the appointment of Graham Potter as new Head Coach, replacing Julen Lopetegui in January」「The 14th place at season end was below expectations」
+#            「The consolidated balance sheet ... total shareholders' funds have decreased from 31 May 2024 by £103.6m, creating a total shareholders deficit of £4.3m」
+#       p.5：「Broadcasting revenue of £132.4m (2024: £167.0m) ... positional fee awarded for finishing 14th ... facility fees for having been selected for eighteen 'live' Premier League matches」「Match income at £39.3m is £5.3m lower」「Commercial income, at £42.2m, is higher than last year by £0.3m」「Retail income at £13.7m is down £2.5m」
+#            「The primary reason for the change from a profit before taxation of £57.2m in 2023-2024 to the net loss before tax for the year of £104.2m is lower profit on sales of players of £20.0m compared to the previous financial year of £96.3m.」
+#            「The Club renewed its £40.0m overdraft facility with Barclays ... through 15th July 2026. In addition ... On 28th July 2025, the Club entered a new long-term facility with Rights and Media Funding Limited (RMF)」
+#       p.8 Going Concern：「base forecast ... assuming the club remains in the Premier League following the 2025-26 season」「new long-term financing facility with RMF for £124.0m which does not expire within the going concern period and is repayable in June 2030」
+#            「the Group is forecasting a liquidity shortfall in Summer 2026」「The Board has also considered a severe but plausible scenario. This scenario includes relegation at the end of the 2025-26 season ... Relegation is the main business risk that warrants scenario analysis.」
+#            「Player sales ... Shareholder funding: ... certain of the investing owners have committed jointly, by signing a letter of support, to provide ... sufficient level of financial support」
+#       p.13 KPI：League position 14th／9th。Average league gate 62,432／62,463。（Wage:turnover ratio 67.2%／59.7% は定義が年で違う〔2025は賃金と給与のみ＝152,926÷227,552、2024は人件費合計＝160,969÷269,740〕ので台本に使わない）
+#       p.28 損益計算書（£000、2025／2024）：Group turnover 227,552／269,740、Other operating income 3,896／6,929、Operating costs (336,244)／(307,433)〔うち選手の償却 99,408／83,489〕、
+#            Group operating loss (104,796)／(30,764)、Profit on disposal of players 19,954／96,313、Interest receivable 2,667／5,013、Interest payable (21,993)／(13,341)、
+#            Loss before taxation (104,168)／profit 57,221、Tax 581（credit）／–、Loss after taxation (103,587)／57,221。選手の売買を除く営業（Operations excluding player trading）(5,388)／52,725
+#       p.43 注5：Employment costs 175,893／160,969、Amortisation of intangible fixed assets 99,408／83,489。注6：Wages and salaries 152,926／140,747、Social security 22,638／19,917、Pension 329／305、計 175,893／160,969。平均従業員 1,009／881（うちパート 529／498）
+#       p.45 注7：Profit on sale of players 19,954／96,313。注9 Interest payable：secured loans 323／1,459、bank overdraft 2,403／1,513、Other finance costs 4,093／2,407、Implied interest on transfer fees payable with extended payment terms 15,174／7,962
+#       p.46 注11 Intangible Assets：Player registrations 取得 Additions 132,644、Disposals（取得原価）(62,190)、Charge for the year 99,408、Net book value 223,152／213,949
+#   ○ プレミアリーグ公式 premierleague.com（2026-05-24）：降格の確認。ESPN 順位表 API（2026-11-12）：2026-27 の1部の表にウェストハムは無い
+#   × 確かめられなかったもの：6人の補強の名前と額（決算に無い）、売った3人の名前と額（決算に無い）、降格後の2部での順位、2025-26 の決算（まだ出ていない）、降格後にオーナー・株主の資金がどう動いたか。どれも台本に入れない。
+#
+# 自分で計算した数（検算済み）
+#   収入の減り：269.740−227.552＝42.188→約4219万（15.6%）。放映権の減り 167.0−132.4＝34.6→約3460万。÷収入の減り 34.6÷42.188＝82.0%→約8割
+#   前の年の内訳（本文の増減から）：入場料 39.3＋5.3＝44.6／商業 42.2−0.3＝41.9／グッズ 13.7＋2.5＝16.2。167.0＋44.6＋41.9＋16.2＝269.7 ✓
+#   人件費：175.893−160.969＝14.924→約1490万（9.3%）。÷収入：175.893÷227.552＝77.3%→約77%／160.969÷269.740＝59.7%→約60%
+#   償却：99.408−83.489＝15.919→約1590万。補強の取得：132.644→約1億3264万
+#   選手の売買を除く営業損益：52.725→−5.388（差 58.113）
+#   差：57.221−(−104.168)＝161.389→約1億6139万。選手を売った利益の減り 96.313−19.954＝76.359→約7640万。÷差 76.359÷161.389＝47.3%→約47%
+#   収入の減り＋売却益の減り＝42.188＋76.359＝118.547→÷差 73.5%→約73%
+#   利息など（受取−支払）：2025 2.667−21.993＝−19.326／2024 5.013−13.341＝−8.328。差 10.998→約1100万
+#   分割払いの移籍金の利息：15.174÷7.962＝1.906→約1.9倍
+#   税引き前：52.725−83.489+96.313−8.328＝57.221 ✓／−5.388−99.408+19.954−19.326＝−104.168 ✓
+#   waterfall：57.221−42.188−76.359−15.919−15.925（その他の収入の減り3.033＋運営の費用の増え12.892）−10.998＝−104.168 ✓
+#   最終の赤字：103.587→約1億359万。税の戻り 0.581→約58万
+#
+# 写真：assets/images/20261116_finance_westham/（出典は credits.json）。ロンドン・スタジアムの外観・上空・内部（Commons。10/25 スタジアム回の再利用、別シリーズ）。
+date: 2026年11月12日
+slot: other_1
+format: news
+series: クラブの財政
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- ウェストハム
+theme:
+  end_bg: assets/images/20261116_finance_westham/01_w.jpg
+  id: finance_westham
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: ウェストハム
+  title: ウェストハム、赤字1億417万ポンド。降格の1年前に何があったのか
+  question: ウェストハムの2024-25の決算は、1億417万ポンドの赤字。前の年は5722万ポンドの黒字だった。差の中身は何で、決算は何を見込んでいたのか
+  lead: 14位の年に、赤字1億417万ポンド。ウェストハム。
+  opening_image: assets/images/20261116_finance_westham/01_w.jpg
+  takeaway: ウェストハムの2024-25の決算（親会社の年次報告、監査済み）は、14位の年に、税引き前で1億417万ポンドの赤字（前の年は5722万の黒字）。差の約47%は選手を売った利益の減り（9631万から1995万）で、収入の減り（約4219万、放映権が約8割）と合わせて約73%。人件費は約1490万増えて収入の約77%。決算は2026年夏の資金不足を見込み、降格を含む想定と、株主の支援の書簡を書いていた。2026年5月、14年続いた1部から降りた。
+  short_title: ウェストハム、14位の年に赤字1億417万ポンド
+thumbnail:
+  layout: number
+  crest_pos: left
+  photo: assets/images/20261116_finance_westham/01_w.jpg
+  short_photo: assets/images/20261116_finance_westham/01_w_v.jpg
+  number: 1億417万
+  line1: ウェストハム 赤字
+  line2: 降格の1年前の決算
+  callouts: [前の年は黒字5722万]
+  tags:
+  - ウェストハム
+  - プレミアリーグ
+  - クラブの財政
+  - チャンピオンシップ
+  - 降格
+sections:
+- id: rev
+  heading: 収入は、なぜ4219万ポンド減ったのか
+  tier: 報道
+  telop: 収入は2億2755万ポンド。放映権が約3460万の減り
+  narrator: 解説
+  card: &rev_table
+    type: table
+    title: ウェストハムの収入（百万ポンド）
+    columns: &rv_cols [項目, 2023-24, 2024-25]
+    rows: &rv_rows
+    - [放映権, '167.0', '132.4']
+    - [入場料, '44.6', '39.3']
+    - [商業収入, '41.9', '42.2']
+    - [グッズ, '16.2', '13.7']
+    - [収入の合計, '269.7', '227.6']
+    highlight_row: 4
+  say:
+  - text: ウェストハムの最新の決算は、2025年5月までの1年分です。
+    image: assets/images/20261116_finance_westham/01_w.jpg
+    card: none
+  - text: 2026年2月に、提出されました。
+    image: assets/images/20261116_finance_westham/01_w.jpg
+    card: none
+  - text: この年、リーグ戦は14位。前の年は9位でした。
+    image: assets/images/20261116_finance_westham/02_w.jpg
+    card: none
+  - text: 1月には、ヘッドコーチがロペテギからグレアム・ポッターに替わりました。
+    image: assets/images/20261116_finance_westham/03_w.jpg
+    card: none
+  - text: 収入は、2億2755万ポンド。前の年から、約4219万の減りです。
+    emph: true
+    card: *rev_table
+  - text: 減りのうち、約8割が放映権です。
+    card:
+      <<: *rev_table
+      highlight_row: 0
+  - text: 1億6700万から、1億3240万ポンドへ。約3460万の減り。
+    emph: true
+    card:
+      <<: *rev_table
+      highlight_row: 0
+  - text: 決算が挙げる理由は、2つ。
+    image: assets/images/20261116_finance_westham/04_w.jpg
+    card: none
+  - text: 順位が下がったことと、前の年にあったヨーロッパの試合が無かったことです。
+    image: assets/images/20261116_finance_westham/04_w.jpg
+    card: none
+  - text: 入場料も、約530万減って3930万ポンド。
+    card:
+      <<: *rev_table
+      highlight_row: 1
+  - text: ヨーロッパリーグのホームの試合が、無かったためです。
+    card:
+      <<: *rev_table
+      highlight_row: 1
+  - text: 商業収入は4220万ポンド。約30万の増えで、ほぼ横ばいでした。
+    card:
+      <<: *rev_table
+      highlight_row: 2
+  - text: グッズは約250万減って、1370万ポンドです。
+    card:
+      <<: *rev_table
+      highlight_row: 3
+  sources:
+  - https://find-and-update.company-information.service.gov.uk/company/05993863/filing-history/MzUwNzUwNjY1NmFkaXF6a2N4/document?format=pdf&download=0
+- id: cost
+  heading: ウェストハムの給料と選手の値段は、なぜ増えたのか
+  tier: 報道
+  telop: 人件費は約1490万の増え。収入の約77%
+  narrator: 解説
+  card: &cost_table
+    type: table
+    title: ウェストハムの収入と費用（百万ポンド）
+    columns: &ct_cols [項目, 2023-24, 2024-25]
+    rows: &ct_rows
+    - [収入の合計, '269.7', '227.6']
+    - [人件費, '161.0', '175.9']
+    - [選手の償却, '83.5', '99.4']
+    - [選手の売買を除く営業損益, '52.7', −5.4]
+    - [収入に占める人件費, 60%, 77%]
+    highlight_row: 1
+  say:
+  - text: 出ていくお金を見ます。人件費は、1億6097万から、1億7589万ポンド。
+    emph: true
+    card: *cost_table
+  - text: 約1490万の増えです。ウェストハムは、収入が減ったのに、人件費は増えました。
+    card: *cost_table
+  - text: 収入のうち人件費が占める割合は、約60%から約77%に。
+    card:
+      <<: *cost_table
+      highlight_row: 4
+  - text: 従業員の平均は1009人。前の年は881人。
+    image: assets/images/20261116_finance_westham/02_w.jpg
+    card: none
+  - text: 2024年の夏には、6人の新戦力を迎えました。
+    image: assets/images/20261116_finance_westham/04_w.jpg
+    card: none
+  - text: かかった金額は、合わせて1億3264万ポンドです。
+    image: assets/images/20261116_finance_westham/04_w.jpg
+    card: none
+  - text: 買った選手の値段は、契約の年数に分けて、毎年の費用にします。これが償却です。
+    image: assets/images/20261116_finance_westham/03_w.jpg
+    card: none
+  - text: 償却は、8343万から9941万ポンド。約1590万の増え。
+    card:
+      <<: *cost_table
+      highlight_row: 2
+  - text: 選手の売買を除いた営業損益は、5273万ポンドの黒字から、539万ポンドの赤字に。
+    emph: true
+    card:
+      <<: *cost_table
+      highlight_row: 3
+  - text: 売却の利益を除くと、本業は黒字を保てませんでした。
+    image: assets/images/20261116_finance_westham/01_w.jpg
+    card: none
+  sources:
+  - https://find-and-update.company-information.service.gov.uk/company/05993863/filing-history/MzUwNzUwNjY1NmFkaXF6a2N4/document?format=pdf&download=0
+- id: loss
+  main: true
+  heading: 1億417万ポンドの赤字は、どこから生まれたのか
+  tier: 報道
+  telop: 前の年は黒字5722万。差は1億6139万ポンド
+  narrator: 解説
+  card: &loss_table
+    type: table
+    title: ウェストハムの損益（百万ポンド）
+    columns: &ls_cols [項目, 2023-24, 2024-25]
+    rows: &ls_rows
+    - [選手の売買を除く営業損益, '52.7', −5.4]
+    - [選手の償却, −83.5, −99.4]
+    - [選手を売った利益, '+96.3', '+20.0']
+    - [利息など, −8.3, −19.3]
+    - [税引き前の損益, '+57.2', −104.2]
+    highlight_row: 4
+  say:
+  - text: ウェストハムは、前の年の黒字から、1億417万ポンドの赤字になりました。
+    short_only: true
+    image: assets/images/20261116_finance_westham/01_w.jpg
+    card: none
+  - text: 前の年は、5722万ポンドの黒字でした。
+    card: *loss_table
+  - text: 差は、1億6139万ポンドです。
+    emph: true
+    card: *loss_table
+  - text: いちばん大きいのは、選手を売った利益。つまり、売却益です。
+    card:
+      <<: *loss_table
+      highlight_row: 2
+  - text: 9631万から、1995万ポンドへ。約7640万の減り。
+    emph: true
+    card:
+      <<: *loss_table
+      highlight_row: 2
+  - text: 差の、約47%が、この1つです。
+    image: assets/images/20261116_finance_westham/02_w.jpg
+    card: none
+  - text: 利息など、お金の出入りも、悪くなりました。
+    card:
+      <<: *loss_table
+      highlight_row: 3
+  - text: 差し引きの支払いは、833万から、1933万ポンドに。
+    card:
+      <<: *loss_table
+      highlight_row: 3
+  - text: 移籍金を分けて払う分の利息は、796万から1517万ポンド。
+    image: assets/images/20261116_finance_westham/04_w.jpg
+    card: none
+  - text: 約1.9倍です。
+    emph: true
+    image: assets/images/20261116_finance_westham/04_w.jpg
+    card: none
+  - text: 税の戻りは、約58万ポンド。最終の赤字は、1億359万ポンドです。
+    image: assets/images/20261116_finance_westham/03_w.jpg
+    card: none
+  - text: 株主の持ち分は、マイナス430万ポンドになりました。
+    image: assets/images/20261116_finance_westham/01_w.jpg
+    card: none
+  - text: 前の年から、約1億360万ポンドの減りです。
+    emph: true
+    image: assets/images/20261116_finance_westham/01_w.jpg
+    card: none
+  sources:
+  - https://find-and-update.company-information.service.gov.uk/company/05993863/filing-history/MzUwNzUwNjY1NmFkaXF6a2N4/document?format=pdf&download=0
+- id: view
+  viewpoint: true
+  heading: 見立て・決算は、降格の想定まで書いていた
+  tier: 背景
+  telop: 夏の資金不足を見込み、降格の想定も書いた
+  narrator: 解説
+  card: &view_wf
+    type: waterfall
+    title: ウェストハムの税引き前の損益の動き（百万ポンド）
+    unit: 百万ポンド
+    start: &vw_start [2023-24の損益, 57.2]
+    steps: &vw_steps
+    - [収入, -42.2]
+    - [選手を売った利益, -76.4]
+    - [選手の償却, -15.9]
+    - [その他の収入と運営の費用, -15.9]
+    - [利息など, -11.0]
+    total: &vw_total [2024-25の損益, -104.2]
+  say:
+  - text: 見立てに入ります。まず、赤字までの差を、順に見ます。
+    image: assets/images/20261116_finance_westham/03_w.jpg
+    card: none
+  - text: いちばん大きいのは、売却益の減り。次が、収入の減りです。
+    emph: true
+    card: *view_wf
+  - text: 収入と売却益の減りは、合わせて約1億1855万ポンド。
+    card:
+      type: waterfall
+      title: ウェストハムの税引き前の損益の動き（百万ポンド）
+      unit: 百万ポンド
+      start: *vw_start
+      steps: *vw_steps
+      total: *vw_total
+      highlight: 選手を売った利益
+  - text: 赤字までの差の、約73%です。
+    card:
+      type: waterfall
+      title: ウェストハムの税引き前の損益の動き（百万ポンド）
+      unit: 百万ポンド
+      start: *vw_start
+      steps: *vw_steps
+      total: *vw_total
+      highlight: 選手を売った利益
+  - text: 決算には、この先の資金の見通しも書かれています。
+    image: assets/images/20261116_finance_westham/02_w.jpg
+    card: none
+  - text: 2025年7月、クラブは、長期の借り入れを結びました。
+    image: assets/images/20261116_finance_westham/04_w.jpg
+    card: none
+  - text: 額は1億2400万ポンド。返済は、2030年6月です。
+    image: assets/images/20261116_finance_westham/04_w.jpg
+    card: none
+  - text: 銀行から必要なときに借りられる枠も、4000万ポンドあります。
+    image: assets/images/20261116_finance_westham/01_w.jpg
+    card: none
+  - text: それでも、基本の見通しでは、2026年の夏に、資金が足りなくなると書かれています。
+    emph: true
+    image: assets/images/20261116_finance_westham/01_w.jpg
+    card: none
+  - text: 足りない分は、選手の売却と、株主の資金で補う計画です。
+    image: assets/images/20261116_finance_westham/01_w.jpg
+    card: none
+  - text: 株主の一部は、必要な支援をする、という書簡に署名しています。
+    image: assets/images/20261116_finance_westham/03_w.jpg
+    card: none
+  - text: さらに、厳しいが起こりうる場合の想定に、降格が入っています。
+    emph: true
+    image: assets/images/20261116_finance_westham/02_w.jpg
+    card: none
+  - text: この決算が承認されたのは、2025年12月17日です。
+    image: assets/images/20261116_finance_westham/01_w.jpg
+    card: none
+  - text: 2026年5月24日。14年続いた1部から、ウェストハムは降りました。
+    emph: true
+    image: assets/images/20261116_finance_westham/04_w.jpg
+    card: none
+  - text: 最終節はリーズに3対0で勝ちましたが、届きませんでした。
+    image: assets/images/20261116_finance_westham/04_w.jpg
+    card: none
+  - text: 題への答えです。赤字の主因は、売却益の減りと、放映権の減りでした。
+    emph: true
+    card:
+      type: table
+      title: 自分で割ってみた（ウェストハムの決算）
+      columns: [比べ, 答え]
+      rows:
+      - [放映権の減り ÷ 収入の減り, 約82%]
+      - [売却益の減り ÷ 赤字までの差, 約47%]
+      - [収入の減り＋売却益の減り ÷ 差, 約73%]
+      - [人件費 ÷ 収入, 約77%]
+      highlight_row: 2
+    mark:
+      kind: circle
+      row: 2
+      col: 1
+  - text: 次の決算の注目は、2部の収入で、この年の人件費の重さをどう支えるのか。
+    emph: true
+    image: assets/images/20261116_finance_westham/03_w.jpg
+    card: none
+  sources:
+  - https://find-and-update.company-information.service.gov.uk/company/05993863/filing-history/MzUwNzUwNjY1NmFkaXF6a2N4/document?format=pdf&download=0

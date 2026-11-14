@@ -1,0 +1,695 @@
+# クラブの財政：ポルト（11/26 木、シリーズ「クラブの財政」、key: finance_porto、型は news）。
+# 題材：2025-26（2026年6月期）の報告書が 2026-10-08 に公表。11/24 のスポルティング（黒字・社債）と対にして、「売却益があっても赤字・資本マイナス」。ポルトガル1部。既出無し（scripts に sano_psv_porto はあるが財政ではない）。
+# ★確かめられなかったこと（重要）：クラブの報告書・CMVM の提出文書の本文は読めなかった（fcporto.pt の投資家ページは動的で PDF のURLが取れず、CMVM も取れず）。
+#   数字は A Bola（2026-10-08）・RTP/Lusa・Flashscore が一致して伝える連結の数字。最終 −21.1（前 +39.2）／親会社帰属 −26.3／売買を除く収入 150.3（前 149.5）・費用 180.0（前 147.1）／選手の売買の結果 55.9／子会社の売却益 23.96（ポルト・セグーロ 9.2）／
+#   資本 −29.67（前 −10.46）・総資産 523・負債 552.7／入場18.1(+33%)・グッズ14.5(+31%)・法人席11.5・広告+8%・UEFA賞金+39%／純金融債務 −29（前年6月比）／前半の人件費 51.256（前年同期 38.2、+34%、A Bola 2026-02-18、契約解除の補償 5.5）。
+#   ★未解決の食い違い：A Bola は「選手の売買などを除く営業の結果は +2.6」と書き、RTP は「売買を除く収入−費用＝−29.7」「連結の営業結果 +2.63」と書く。台本は RTP の −29.7（収入150.3−費用180.0 で検算が合う）だけを使い、+2.63 は使わない。
+#   ★費用の内訳（通年の人件費・償却・金融費用）が取れていないので、「売買の利益と売却益を足してなぜ最終が赤字か」の中身は台本で言わない（見立ては収入と費用の増えの比べだけ）。
+#   台本は「報道」の確度。公開前に CMVM／クラブの Relatório e Contas 2025/26 で突き合わせることを勧める。
+# ★使わなかったもの：選手団の市場価値（出どころ不明）、チャンピオンズリーグ不在の影響（記事の文が不明瞭）、クラブワールドカップの額（逆算になる）、2026年夏の買い入れ（記事で年が食い違う）。
+# ★言わないこと：会長・個人名、女子チーム、賭け。日本との接点：無し。
+# 自分で計算した数（検算済み）
+#   費用÷収入 180.0÷150.3=1.198／費用の増え 180.0−147.1=32.9／収入の増え 150.3−149.5=0.8／費用の増率 32.9÷147.1=22.4%
+#   資本の悪化 −29.67−(−10.46)=−19.21／負債÷総資産 552.7÷523=1.057／資産−負債 523−552.7=−29.7 ✓（資本と一致）
+# 写真：Wikimedia Commons（Estádio do Dragão の壁面のドラゴン、スタジアムの遠景。出典は credits.json）。01・02 は壁面の切り出しで人は写らない。
+date: 2026年11月13日
+slot: other_1
+format: news
+series: クラブの財政
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- ポルト
+theme:
+  end_bg: assets/images/20261126_finance_porto/01_w.jpg
+  id: finance_porto
+  league: england
+  league_name: ポルトガル1部
+  kind: other
+  topic: ポルト
+  title: ポルト、売却益があっても赤字2110万ユーロ。資本がマイナスになった理由
+  question: ポルトは2025-26に、選手の売買で5590万ユーロの利益を出した。それでも連結の最終は2110万ユーロの赤字で、6月末の資本はマイナス2967万ユーロ。何が起きたのか
+  lead: 選手の売買で5590万ユーロの利益。それでも赤字。資本はマイナス。ポルト。
+  opening_image: assets/images/20261126_finance_porto/01_w.jpg
+  takeaway: ポルトの2025-26の決算（2026年6月まで、報道による）は、連結の最終が2110万ユーロの赤字（前の年は3920万の黒字）。選手の売買の利益は5590万、子会社の売却益は約2400万あったが、売買を除く収入1億5030万に対し費用は1億8000万ユーロで、収入を費用が約1.2倍上回った。資本はマイナス2967万ユーロ（前の年はマイナス1046万）。情報は11月13日時点。
+  short_title: ポルト、売却益があっても赤字。資本はマイナスに
+thumbnail:
+  layout: number
+  photo: assets/images/20261126_finance_porto/01_w.jpg
+  short_photo: assets/images/20261126_finance_porto/01_w_v.jpg
+  number: −2967万
+  line1: ポルト 資本の悪化
+  line2: 売却益があっても赤字
+  callouts:
+  - 最終は赤字2110万
+  tags:
+  - ポルト
+  - クラブの財政
+  - ポルトガル
+  - プリメイラ・リーガ
+  - ポルトガル1部
+sections:
+- id: rev
+  heading: ポルトの収入は、2025-26にどこが伸びたのか
+  tier: 報道
+  telop: 売買を除く収入は横ばい。入場とグッズが3割増
+  narrator: 解説
+  card:
+    type: table
+    title: ポルトの収入（百万ユーロ）
+    columns:
+    - 項目
+    - 2025-26
+    - 前の年比
+    rows:
+    - - 売買を除く収入
+      - '150.3'
+      - ほぼ横ばい
+    - - 入場の収入
+      - '18.1'
+      - +33%
+    - - グッズの収入
+      - '14.5'
+      - +31%
+    - - 法人席の収入
+      - '11.5'
+      - +9%
+    - - UEFAの賞金
+      - ―
+      - +39%
+    - - 広告の収入
+      - ―
+      - +8%
+  say:
+  - text: ポルトの直近の決算は、2026年6月までの1年間のものです。
+    image: assets/images/20261126_finance_porto/01_w.jpg
+    card: none
+  - text: 2026年10月に、会社が報告書を公表しました。
+    image: assets/images/20261126_finance_porto/01_w.jpg
+    card: none
+  - text: 以下の数字は、連結のものです。報道によります。
+    image: assets/images/20261126_finance_porto/01_w.jpg
+    card: none
+  - text: 選手の売買を除いた収入は、1億5030万ユーロ。前年の1億4950万とほぼ同じ。
+    emph: true
+    card:
+      type: table
+      title: ポルトの収入（百万ユーロ）
+      columns:
+      - 項目
+      - 2025-26
+      - 前の年比
+      rows:
+      - - 売買を除く収入
+        - '150.3'
+        - ほぼ横ばい
+      - - 入場の収入
+        - '18.1'
+        - +33%
+      - - グッズの収入
+        - '14.5'
+        - +31%
+      - - 法人席の収入
+        - '11.5'
+        - +9%
+      - - UEFAの賞金
+        - ―
+        - +39%
+      - - 広告の収入
+        - ―
+        - +8%
+      highlight_row: 0
+  - text: 前の年の収入には、クラブワールドカップの分が入っていました。
+    image: assets/images/20261126_finance_porto/02_w.jpg
+    card: none
+  - text: その分を除くと、約13%伸びています。
+    image: assets/images/20261126_finance_porto/02_w.jpg
+    card: none
+  - text: 入場の収入は、1810万ユーロ。約33%の増えです。
+    card:
+      type: table
+      title: ポルトの収入（百万ユーロ）
+      columns:
+      - 項目
+      - 2025-26
+      - 前の年比
+      rows:
+      - - 売買を除く収入
+        - '150.3'
+        - ほぼ横ばい
+      - - 入場の収入
+        - '18.1'
+        - +33%
+      - - グッズの収入
+        - '14.5'
+        - +31%
+      - - 法人席の収入
+        - '11.5'
+        - +9%
+      - - UEFAの賞金
+        - ―
+        - +39%
+      - - 広告の収入
+        - ―
+        - +8%
+      highlight_row: 1
+  - text: グッズの収入は、1450万ユーロ。約31%の増え。
+    card:
+      type: table
+      title: ポルトの収入（百万ユーロ）
+      columns:
+      - 項目
+      - 2025-26
+      - 前の年比
+      rows:
+      - - 売買を除く収入
+        - '150.3'
+        - ほぼ横ばい
+      - - 入場の収入
+        - '18.1'
+        - +33%
+      - - グッズの収入
+        - '14.5'
+        - +31%
+      - - 法人席の収入
+        - '11.5'
+        - +9%
+      - - UEFAの賞金
+        - ―
+        - +39%
+      - - 広告の収入
+        - ―
+        - +8%
+      highlight_row: 2
+  - text: 法人席は、1150万ユーロ。約9%の増えです。
+    card:
+      type: table
+      title: ポルトの収入（百万ユーロ）
+      columns:
+      - 項目
+      - 2025-26
+      - 前の年比
+      rows:
+      - - 売買を除く収入
+        - '150.3'
+        - ほぼ横ばい
+      - - 入場の収入
+        - '18.1'
+        - +33%
+      - - グッズの収入
+        - '14.5'
+        - +31%
+      - - 法人席の収入
+        - '11.5'
+        - +9%
+      - - UEFAの賞金
+        - ―
+        - +39%
+      - - 広告の収入
+        - ―
+        - +8%
+      highlight_row: 3
+  - text: 欧州サッカー連盟の賞金は、約39%の増え。広告は、約8%の増えです。
+    card:
+      type: table
+      title: ポルトの収入（百万ユーロ）
+      columns:
+      - 項目
+      - 2025-26
+      - 前の年比
+      rows:
+      - - 売買を除く収入
+        - '150.3'
+        - ほぼ横ばい
+      - - 入場の収入
+        - '18.1'
+        - +33%
+      - - グッズの収入
+        - '14.5'
+        - +31%
+      - - 法人席の収入
+        - '11.5'
+        - +9%
+      - - UEFAの賞金
+        - ―
+        - +39%
+      - - 広告の収入
+        - ―
+        - +8%
+      highlight_row: 4
+  sources:
+  - https://www.abola.pt/noticias/fc-porto-apresenta-relatorio-e-contas-com-prejuizo-de-211-milhoes-de-euros-2026100819535094923
+  - https://www.rtp.pt/noticias/fc-porto/fc-porto-sad-passa-de-lucro-de-392-me-a-prejuizo-de-263-me-em-202526_d1770582
+  - https://www.flashscore.pt/noticias/fc-porto-fecha-epoca-2025-26-com-prejuizo-de-21-1m/8tGmAp9M/
+  - https://www.abola.pt/noticias/custos-com-pessoal-do-fc-porto-disparam-34porcento-e-atingem-os-euro512-m-2026021818572597315
+- id: cost
+  heading: ポルトは、費用と選手の買い入れに、どこまで使ったのか
+  tier: 報道
+  telop: 売買を除く費用は約22%増の1億8000万ユーロ
+  narrator: 解説
+  card:
+    type: table
+    title: ポルトの収入と費用（売買を除く、百万ユーロ）
+    columns:
+    - 項目
+    - 2025-26
+    - 前の年
+    rows:
+    - - 売買を除く収入
+      - '150.3'
+      - '149.5'
+    - - 売買を除く費用
+      - '180.0'
+      - '147.1'
+    - - 収入−費用
+      - −29.7
+      - '+2.4'
+  say:
+  - text: 次に、ポルトの費用です。売買を除く費用は、1億4710万から1億8000万ユーロ。
+    emph: true
+    card:
+      type: table
+      title: ポルトの収入と費用（売買を除く、百万ユーロ）
+      columns:
+      - 項目
+      - 2025-26
+      - 前の年
+      rows:
+      - - 売買を除く収入
+        - '150.3'
+        - '149.5'
+      - - 売買を除く費用
+        - '180.0'
+        - '147.1'
+      - - 収入−費用
+        - −29.7
+        - '+2.4'
+      highlight_row: 1
+  - text: 約22%の増えです。
+    card:
+      type: table
+      title: ポルトの収入と費用（売買を除く、百万ユーロ）
+      columns:
+      - 項目
+      - 2025-26
+      - 前の年
+      rows:
+      - - 売買を除く収入
+        - '150.3'
+        - '149.5'
+      - - 売買を除く費用
+        - '180.0'
+        - '147.1'
+      - - 収入−費用
+        - −29.7
+        - '+2.4'
+      highlight_row: 1
+  - text: 売買を除く収入と費用の差は、約240万の黒字から、約2970万の赤字へ。
+    emph: true
+    card:
+      type: table
+      title: ポルトの収入と費用（売買を除く、百万ユーロ）
+      columns:
+      - 項目
+      - 2025-26
+      - 前の年
+      rows:
+      - - 売買を除く収入
+        - '150.3'
+        - '149.5'
+      - - 売買を除く費用
+        - '180.0'
+        - '147.1'
+      - - 収入−費用
+        - −29.7
+        - '+2.4'
+      highlight_row: 2
+  - text: 7月から12月の人件費は、5126万ユーロ。前年同期から約34%の増え。
+    image: assets/images/20261126_finance_porto/02_w.jpg
+    card: none
+  - text: この中に、契約解除の補償が550万ユーロ含まれます。
+    image: assets/images/20261126_finance_porto/03_w.jpg
+    card: none
+  - text: 2025年夏の買い入れは、約1億1000万ユーロ。1回の移籍期間で過去最大。
+    image: assets/images/20261126_finance_porto/03_w.jpg
+    card: none
+  - text: 1年の買い入れは、冬を含めて、約1億2000万ユーロです。
+    image: assets/images/20261126_finance_porto/03_w.jpg
+    card: none
+  sources:
+  - https://www.abola.pt/noticias/fc-porto-apresenta-relatorio-e-contas-com-prejuizo-de-211-milhoes-de-euros-2026100819535094923
+  - https://www.rtp.pt/noticias/fc-porto/fc-porto-sad-passa-de-lucro-de-392-me-a-prejuizo-de-263-me-em-202526_d1770582
+  - https://www.flashscore.pt/noticias/fc-porto-fecha-epoca-2025-26-com-prejuizo-de-21-1m/8tGmAp9M/
+  - https://www.abola.pt/noticias/custos-com-pessoal-do-fc-porto-disparam-34porcento-e-atingem-os-euro512-m-2026021818572597315
+- id: main
+  main: true
+  heading: 選手の売却益があっても、なぜ赤字になったのか
+  tier: 報道
+  telop: 最終は2110万ユーロの赤字。資本はマイナス2967万
+  narrator: 解説
+  card:
+    type: table
+    title: ポルトの損益と資本（百万ユーロ）
+    columns:
+    - 項目
+    - 2025-26
+    - 前の年
+    rows:
+    - - 最終の損益（連結）
+      - −21.1
+      - '+39.2'
+    - - 選手の売買の利益
+      - '55.9'
+      - ―
+    - - 子会社の売却益
+      - '24.0'
+      - ―
+    - - 資本（6月末）
+      - −29.7
+      - −10.5
+    - - 総資産
+      - '523.0'
+      - ―
+    - - 負債
+      - '552.7'
+      - ―
+  say:
+  - text: ポルトは、2025-26に、赤字を出しました。
+    short_only: true
+    image: assets/images/20261126_finance_porto/01_w.jpg
+    card: none
+  - text: 選手の売買で利益が出ても、赤字でした。
+    short_only: true
+    image: assets/images/20261126_finance_porto/01_w.jpg
+    card: none
+  - text: 連結の最終の損益は、3920万の黒字から、2110万ユーロの赤字へ。
+    emph: true
+    card:
+      type: table
+      title: ポルトの損益と資本（百万ユーロ）
+      columns:
+      - 項目
+      - 2025-26
+      - 前の年
+      rows:
+      - - 最終の損益（連結）
+        - −21.1
+        - '+39.2'
+      - - 選手の売買の利益
+        - '55.9'
+        - ―
+      - - 子会社の売却益
+        - '24.0'
+        - ―
+      - - 資本（6月末）
+        - −29.7
+        - −10.5
+      - - 総資産
+        - '523.0'
+        - ―
+      - - 負債
+        - '552.7'
+        - ―
+      highlight_row: 0
+  - text: 親会社の株主に帰属する分だけだと、2630万ユーロの赤字です。
+    image: assets/images/20261126_finance_porto/01_w.jpg
+    card: none
+  - text: 選手の売買の利益は、5590万ユーロです。
+    card:
+      type: table
+      title: ポルトの損益と資本（百万ユーロ）
+      columns:
+      - 項目
+      - 2025-26
+      - 前の年
+      rows:
+      - - 最終の損益（連結）
+        - −21.1
+        - '+39.2'
+      - - 選手の売買の利益
+        - '55.9'
+        - ―
+      - - 子会社の売却益
+        - '24.0'
+        - ―
+      - - 資本（6月末）
+        - −29.7
+        - −10.5
+      - - 総資産
+        - '523.0'
+        - ―
+      - - 負債
+        - '552.7'
+        - ―
+      highlight_row: 1
+  - text: 子会社の売却益も、約2400万ユーロありました。
+    card:
+      type: table
+      title: ポルトの損益と資本（百万ユーロ）
+      columns:
+      - 項目
+      - 2025-26
+      - 前の年
+      rows:
+      - - 最終の損益（連結）
+        - −21.1
+        - '+39.2'
+      - - 選手の売買の利益
+        - '55.9'
+        - ―
+      - - 子会社の売却益
+        - '24.0'
+        - ―
+      - - 資本（6月末）
+        - −29.7
+        - −10.5
+      - - 総資産
+        - '523.0'
+        - ―
+      - - 負債
+        - '552.7'
+        - ―
+      highlight_row: 2
+  - text: 子会社の1つ、ポルト・セグーロを売った益が、920万ユーロです。
+    image: assets/images/20261126_finance_porto/02_w.jpg
+    card: none
+  - text: それでも、本業の収支は、赤字のままでした。
+    image: assets/images/20261126_finance_porto/02_w.jpg
+    card: none
+  - text: 6月末の資本は、マイナス1046万から、マイナス2967万ユーロへ。
+    emph: true
+    callword: 資本
+    card:
+      type: table
+      title: ポルトの損益と資本（百万ユーロ）
+      columns:
+      - 項目
+      - 2025-26
+      - 前の年
+      rows:
+      - - 最終の損益（連結）
+        - −21.1
+        - '+39.2'
+      - - 選手の売買の利益
+        - '55.9'
+        - ―
+      - - 子会社の売却益
+        - '24.0'
+        - ―
+      - - 資本（6月末）
+        - −29.7
+        - −10.5
+      - - 総資産
+        - '523.0'
+        - ―
+      - - 負債
+        - '552.7'
+        - ―
+      highlight_row: 3
+  - text: 総資産は、5億2300万ユーロ。負債は、5億5270万ユーロです。
+    card:
+      type: table
+      title: ポルトの損益と資本（百万ユーロ）
+      columns:
+      - 項目
+      - 2025-26
+      - 前の年
+      rows:
+      - - 最終の損益（連結）
+        - −21.1
+        - '+39.2'
+      - - 選手の売買の利益
+        - '55.9'
+        - ―
+      - - 子会社の売却益
+        - '24.0'
+        - ―
+      - - 資本（6月末）
+        - −29.7
+        - −10.5
+      - - 総資産
+        - '523.0'
+        - ―
+      - - 負債
+        - '552.7'
+        - ―
+      highlight_row: 4
+  - text: 負債が、総資産を上回っている状態です。
+    emph: true
+    card:
+      type: table
+      title: ポルトの損益と資本（百万ユーロ）
+      columns:
+      - 項目
+      - 2025-26
+      - 前の年
+      rows:
+      - - 最終の損益（連結）
+        - −21.1
+        - '+39.2'
+      - - 選手の売買の利益
+        - '55.9'
+        - ―
+      - - 子会社の売却益
+        - '24.0'
+        - ―
+      - - 資本（6月末）
+        - −29.7
+        - −10.5
+      - - 総資産
+        - '523.0'
+        - ―
+      - - 負債
+        - '552.7'
+        - ―
+      highlight_row: 5
+  - text: 純金融債務は、前の年の6月末から、2900万ユーロ縮みました。
+    image: assets/images/20261126_finance_porto/02_w.jpg
+    card: none
+  sources:
+  - https://www.abola.pt/noticias/fc-porto-apresenta-relatorio-e-contas-com-prejuizo-de-211-milhoes-de-euros-2026100819535094923
+  - https://www.rtp.pt/noticias/fc-porto/fc-porto-sad-passa-de-lucro-de-392-me-a-prejuizo-de-263-me-em-202526_d1770582
+  - https://www.flashscore.pt/noticias/fc-porto-fecha-epoca-2025-26-com-prejuizo-de-21-1m/8tGmAp9M/
+  - https://www.abola.pt/noticias/custos-com-pessoal-do-fc-porto-disparam-34porcento-e-atingem-os-euro512-m-2026021818572597315
+- id: view
+  heading: 見立て・ポルトの赤字は、何から来たのか
+  tier: 背景
+  telop: 費用の増えが、収入の増えを大きく上回った
+  narrator: 解説
+  viewpoint: true
+  card:
+    type: table
+    title: 自分で割ってみた（ポルトの決算）
+    columns:
+    - 比べ
+    - 答え
+    rows:
+    - - 売買を除く収入の増え
+      - 約80万ユーロ
+    - - 売買を除く費用の増え
+      - 約3290万ユーロ
+    - - 費用 ÷ 収入
+      - 約1.2倍
+    - - 資本の悪化
+      - 約1920万ユーロ
+    - - 負債 ÷ 総資産
+      - 約1.06倍
+  say:
+  - text: 見立てに入ります。ポルトの赤字を、収入と費用の増えで比べます。
+    image: assets/images/20261126_finance_porto/03_w.jpg
+    card: none
+  - text: 収入の増えは、約80万ユーロ。費用の増えは、約3290万ユーロ。
+    emph: true
+    mark:
+      kind: circle
+      row: 1
+      col: 1
+    card:
+      type: table
+      title: 自分で割ってみた（ポルトの決算）
+      columns:
+      - 比べ
+      - 答え
+      rows:
+      - - 売買を除く収入の増え
+        - 約80万ユーロ
+      - - 売買を除く費用の増え
+        - 約3290万ユーロ
+      - - 費用 ÷ 収入
+        - 約1.2倍
+      - - 資本の悪化
+        - 約1920万ユーロ
+      - - 負債 ÷ 総資産
+        - 約1.06倍
+      highlight_row: 1
+  - text: 費用は、収入の約1.2倍です。
+    card:
+      type: table
+      title: 自分で割ってみた（ポルトの決算）
+      columns:
+      - 比べ
+      - 答え
+      rows:
+      - - 売買を除く収入の増え
+        - 約80万ユーロ
+      - - 売買を除く費用の増え
+        - 約3290万ユーロ
+      - - 費用 ÷ 収入
+        - 約1.2倍
+      - - 資本の悪化
+        - 約1920万ユーロ
+      - - 負債 ÷ 総資産
+        - 約1.06倍
+      highlight_row: 2
+  - text: 題への答えです。選手の売却益があっても、費用の増えが大きかったからです。
+    emph: true
+    image: assets/images/20261126_finance_porto/03_w.jpg
+    card: none
+  - text: 資本は、約1920万ユーロ悪くなりました。
+    card:
+      type: table
+      title: 自分で割ってみた（ポルトの決算）
+      columns:
+      - 比べ
+      - 答え
+      rows:
+      - - 売買を除く収入の増え
+        - 約80万ユーロ
+      - - 売買を除く費用の増え
+        - 約3290万ユーロ
+      - - 費用 ÷ 収入
+        - 約1.2倍
+      - - 資本の悪化
+        - 約1920万ユーロ
+      - - 負債 ÷ 総資産
+        - 約1.06倍
+      highlight_row: 3
+  - text: 負債は、総資産の約1.06倍です。
+    emph: true
+    card:
+      type: table
+      title: 自分で割ってみた（ポルトの決算）
+      columns:
+      - 比べ
+      - 答え
+      rows:
+      - - 売買を除く収入の増え
+        - 約80万ユーロ
+      - - 売買を除く費用の増え
+        - 約3290万ユーロ
+      - - 費用 ÷ 収入
+        - 約1.2倍
+      - - 資本の悪化
+        - 約1920万ユーロ
+      - - 負債 ÷ 総資産
+        - 約1.06倍
+      highlight_row: 4
+  - text: 次の決算の注目は、費用の増えを抑えて、売買に頼らず、資本を戻せるのか。
+    emph: true
+    image: assets/images/20261126_finance_porto/03_w.jpg
+    card: none
+  sources:
+  - https://www.abola.pt/noticias/fc-porto-apresenta-relatorio-e-contas-com-prejuizo-de-211-milhoes-de-euros-2026100819535094923
+  - https://www.rtp.pt/noticias/fc-porto/fc-porto-sad-passa-de-lucro-de-392-me-a-prejuizo-de-263-me-em-202526_d1770582
+  - https://www.flashscore.pt/noticias/fc-porto-fecha-epoca-2025-26-com-prejuizo-de-21-1m/8tGmAp9M/
+  - https://www.abola.pt/noticias/custos-com-pessoal-do-fc-porto-disparam-34porcento-e-atingem-os-euro512-m-2026021818572597315

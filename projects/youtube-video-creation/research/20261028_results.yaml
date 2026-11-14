@@ -1,0 +1,68 @@
+# 候補テーマ（2026年10月28日）
+# collect が作った下書き。見出しに書いてあることだけが入っている。
+# tier / topic / league は判断が要るので、目で見て埋めること。
+date: "2026年10月28日"
+candidates:
+  - id: milan_bologna_serie
+    title: "Milan 2 - 4 Bologna（Serie A）"
+    topic: "ミラン"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: italy    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5749720
+    hours_ago: 12.9   # フィードの時刻から
+    goals: true        # 試合データから自動で立てた
+    numbers: true        # 試合データから自動で立てた
+    sources:
+      - https://www.fotmob.com/matches/x/5749720
+
+  - id: parma_udinese_serie
+    title: "Parma 0 - 0 Udinese（Serie A）"
+    topic: "パルマ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: italy    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5749726
+    hours_ago: 12.9   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5749726
+
+  - id: venezia_inter_serie
+    title: "Venezia 0 - 2 Inter（Serie A）"
+    topic: "ヴェネツィア"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: italy    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5749729
+    hours_ago: 12.9   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5749729
+
+  - id: genoa_juventus_serie
+    title: "Genoa 2 - 0 Juventus（Serie A）"
+    topic: "ジェノア"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: italy    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5749724
+    hours_ago: 12.9   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5749724
+
+  - id: monza_napoli_serie
+    title: "Monza 1 - 4 Napoli（Serie A）"
+    topic: "モンツァ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: italy    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5749725
+    hours_ago: 12.9   # フィードの時刻から
+    goals: true        # 試合データから自動で立てた
+    sources:
+      - https://www.fotmob.com/matches/x/5749725
+

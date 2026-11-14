@@ -1,0 +1,606 @@
+# クラブの財政：スポルティング（11/24 火、シリーズ「クラブの財政」、key: finance_sporting、型は news）。
+# 題材：2025-26（2026年6月期）の決算が 2026-09-22 に公表。リヨン・ラツィオと軸を分け、「黒字なのに資産の約9割が負債」。ポルトガル1部（ベンフィカは 10/28 に済み）。picks・posted・scripts に既出無し。
+# ★確かめられなかったこと（重要）：クラブの決算書・CMVM（証券監督当局）の提出文書の本文は読めなかった（sporting.pt は Cloudflare、CMVM は動的）。
+#   数字は A Bola（2026-09-22）・RTP/Lusa・The Portugal Post が一致して伝える連結の数字：売上300・売買を除く収入187.7(+27%)・純利益34.7(前20、+74%)・営業の利益50.7(+12%)・資本75.6(+85%)・総資産726.9・負債651.3・買い入れ120.7(+62%)・売却117.2・欧州の大会80.3・法人席10.9・社債225(2025-10、5.75%、28年)。
+#   台本は「報道」の確度。公開前に CMVM／クラブの Relatório e Contas 2025/26 で突き合わせることを勧める。
+#   使わなかった数：EBITDA116（1社のみ）・前の年の総資産/負債（％からの逆算）・個々の選手の移籍金（記事で食い違い）。ギェケレシュのアーセナル移籍は名前と行き先だけ。法人席の+35%（1社のみ）。
+# ★言わないこと：オーナー・個人名、女子チーム、賭け。日本との接点：無し。
+# 自分で計算した数（検算済み）
+#   純利益÷売上 34.7÷300=11.6%／営業の利益÷売上 50.7÷300=16.9%／売買を除く収入÷売上 187.7÷300=62.6%／欧州の大会÷売上 80.3÷300=26.8%
+#   負債÷総資産 651.3÷726.9=89.6%／資本÷総資産 75.6÷726.9=10.4%／負債÷資本 651.3÷75.6=8.6倍／資本＋負債 75.6+651.3=726.9 ✓
+#   社債 225×5.75%=12.94／12.94÷34.7=37.3%／225÷651.3=34.5%／買い入れ−売却 120.7−117.2=3.5／5年の黒字 約117
+# 写真：Wikimedia Commons（Estádio Alvalade XXI。出典は credits.json）。目で確認：人の顔は写らない（01・02）。03 はスタジアム外壁のサポーターの絵の下の部分を切り出し。
+date: 2026年11月13日
+slot: other_1
+format: news
+series: クラブの財政
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- スポルティング
+theme:
+  end_bg: assets/images/20261124_finance_sporting/01_w.jpg
+  id: finance_sporting
+  league: england
+  league_name: ポルトガル1部
+  kind: other
+  topic: スポルティング
+  title: スポルティング、5年連続の黒字3470万ユーロ。それでも資産の約9割が負債の理由
+  question: スポルティングは2025-26に、売上3億ユーロ、純利益3470万ユーロと5年連続で黒字を出した。それなのに、資産7億2690万ユーロのうち、負債が6億5130万ユーロある。なぜか
+  lead: 5年連続の黒字。それでも、資産の約9割は、負債。スポルティング。
+  opening_image: assets/images/20261124_finance_sporting/01_w.jpg
+  takeaway: スポルティングの2025-26の決算（2026年6月まで、報道による）は、売上3億ユーロ（前の年から約13%増）、純利益3470万ユーロで5年連続の黒字。一方、資産7億2690万ユーロに対し、負債は6億5130万、資本は7560万ユーロで、資産の約9割が負債。2025年10月に出した2億2500万ユーロの社債が、負債の増えの主因と報じられている。情報は11月13日時点。
+  short_title: スポルティング、黒字なのに資産の約9割が負債
+thumbnail:
+  layout: number
+  photo: assets/images/20261124_finance_sporting/01_w.jpg
+  short_photo: assets/images/20261124_finance_sporting/01_w_v.jpg
+  number: 9割
+  line1: スポルティング 5年黒字
+  line2: なのに負債が資産の9割
+  callouts:
+  - 資本は7560万ユーロ
+  tags:
+  - スポルティング
+  - クラブの財政
+  - ポルトガル
+  - リスボン
+  - プリメイラ・リーガ
+sections:
+- id: rev
+  heading: スポルティングの売上は、2025-26にどこが伸びたのか
+  tier: 報道
+  telop: 売上は3億ユーロ。売買を除く収入が約27%増
+  narrator: 解説
+  card:
+    type: table
+    title: スポルティングの収入（百万ユーロ）
+    columns:
+    - 項目
+    - 2025-26
+    - 前の年比
+    rows:
+    - - 売上の合計
+      - '300.0'
+      - +13%
+    - - 売買を除く収入
+      - '187.7'
+      - +27%
+    - - ヨーロッパの大会の収入
+      - '80.3'
+      - ―
+    - - 法人席の収入
+      - '10.9'
+      - ―
+  say:
+  - text: スポルティングの直近の決算は、2026年6月までの1年間のものです。
+    image: assets/images/20261124_finance_sporting/01_w.jpg
+    card: none
+  - text: 2026年9月に、会社が決算を公表しました。
+    image: assets/images/20261124_finance_sporting/01_w.jpg
+    card: none
+  - text: ここで読むのは、報道が伝えた連結の数字です。
+    image: assets/images/20261124_finance_sporting/01_w.jpg
+    card: none
+  - text: 売上は、2億6500万から3億ユーロへ。約13%の増えです。
+    emph: true
+    card:
+      type: table
+      title: スポルティングの収入（百万ユーロ）
+      columns:
+      - 項目
+      - 2025-26
+      - 前の年比
+      rows:
+      - - 売上の合計
+        - '300.0'
+        - +13%
+      - - 売買を除く収入
+        - '187.7'
+        - +27%
+      - - ヨーロッパの大会の収入
+        - '80.3'
+        - ―
+      - - 法人席の収入
+        - '10.9'
+        - ―
+      highlight_row: 0
+  - text: 売買を除く収入は、1億8770万ユーロ。前の年から、約27%の増え。
+    emph: true
+    card:
+      type: table
+      title: スポルティングの収入（百万ユーロ）
+      columns:
+      - 項目
+      - 2025-26
+      - 前の年比
+      rows:
+      - - 売上の合計
+        - '300.0'
+        - +13%
+      - - 売買を除く収入
+        - '187.7'
+        - +27%
+      - - ヨーロッパの大会の収入
+        - '80.3'
+        - ―
+      - - 法人席の収入
+        - '10.9'
+        - ―
+      highlight_row: 1
+  - text: 売上のうち、売買を除く収入は、約63%です。
+    image: assets/images/20261124_finance_sporting/02_w.jpg
+    card: none
+  - text: ヨーロッパの大会の収入は、8030万ユーロ。売上の約27%です。
+    card:
+      type: table
+      title: スポルティングの収入（百万ユーロ）
+      columns:
+      - 項目
+      - 2025-26
+      - 前の年比
+      rows:
+      - - 売上の合計
+        - '300.0'
+        - +13%
+      - - 売買を除く収入
+        - '187.7'
+        - +27%
+      - - ヨーロッパの大会の収入
+        - '80.3'
+        - ―
+      - - 法人席の収入
+        - '10.9'
+        - ―
+      highlight_row: 2
+  - text: 法人席の収入は、1090万ユーロです。
+    card:
+      type: table
+      title: スポルティングの収入（百万ユーロ）
+      columns:
+      - 項目
+      - 2025-26
+      - 前の年比
+      rows:
+      - - 売上の合計
+        - '300.0'
+        - +13%
+      - - 売買を除く収入
+        - '187.7'
+        - +27%
+      - - ヨーロッパの大会の収入
+        - '80.3'
+        - ―
+      - - 法人席の収入
+        - '10.9'
+        - ―
+      highlight_row: 3
+  sources:
+  - https://www.abola.pt/noticias/contas-de-20252026-sporting-com-lucro-de-euro347-milhoes-2026092216570300616
+  - https://www.rtp.pt/noticias/sporting/lucro-da-sporting-sad-dispara-74-para-quase-35-me-em-202526_d1767079
+  - https://theportugalpost.com/posts/sporting-reports-record-300m-revenue-and-35m-profit
+- id: trade
+  heading: スポルティングは、選手の買い入れと売却に、どれだけ動いたのか
+  tier: 報道
+  telop: 買い入れは約62%増。売却とほぼ同じ額
+  narrator: 解説
+  card:
+    type: table
+    title: スポルティングの選手の売買と利益（百万ユーロ）
+    columns:
+    - 項目
+    - 2025-26
+    - 前の年比
+    rows:
+    - - 選手の買い入れ
+      - '120.7'
+      - +62%
+    - - 選手の売却
+      - '117.2'
+      - ―
+    - - 営業の利益
+      - '50.7'
+      - +12%
+  say:
+  - text: 次に、スポルティングの選手の売買です。
+    image: assets/images/20261124_finance_sporting/02_w.jpg
+    card: none
+  - text: 選手の買い入れは、1億2070万ユーロ。前の年から、約62%の増えです。
+    emph: true
+    card:
+      type: table
+      title: スポルティングの選手の売買と利益（百万ユーロ）
+      columns:
+      - 項目
+      - 2025-26
+      - 前の年比
+      rows:
+      - - 選手の買い入れ
+        - '120.7'
+        - +62%
+      - - 選手の売却
+        - '117.2'
+        - ―
+      - - 営業の利益
+        - '50.7'
+        - +12%
+      highlight_row: 0
+  - text: 選手の売却は、1億1720万ユーロです。
+    card:
+      type: table
+      title: スポルティングの選手の売買と利益（百万ユーロ）
+      columns:
+      - 項目
+      - 2025-26
+      - 前の年比
+      rows:
+      - - 選手の買い入れ
+        - '120.7'
+        - +62%
+      - - 選手の売却
+        - '117.2'
+        - ―
+      - - 営業の利益
+        - '50.7'
+        - +12%
+      highlight_row: 1
+  - text: 買い入れと売却は、ほぼ同じ額です。差し引きは、約350万ユーロの買い越し。
+    image: assets/images/20261124_finance_sporting/02_w.jpg
+    card: none
+  - text: 2025年夏には、ギェケレシュがアーセナルへ移りました。
+    image: assets/images/20261124_finance_sporting/03_w.jpg
+    card: none
+  - text: 営業の利益は、5070万ユーロ。前の年から、約12%の増えです。
+    emph: true
+    card:
+      type: table
+      title: スポルティングの選手の売買と利益（百万ユーロ）
+      columns:
+      - 項目
+      - 2025-26
+      - 前の年比
+      rows:
+      - - 選手の買い入れ
+        - '120.7'
+        - +62%
+      - - 選手の売却
+        - '117.2'
+        - ―
+      - - 営業の利益
+        - '50.7'
+        - +12%
+      highlight_row: 2
+  - text: 売上に対する営業の利益は、約17%です。
+    image: assets/images/20261124_finance_sporting/03_w.jpg
+    card: none
+  sources:
+  - https://www.abola.pt/noticias/contas-de-20252026-sporting-com-lucro-de-euro347-milhoes-2026092216570300616
+  - https://www.rtp.pt/noticias/sporting/lucro-da-sporting-sad-dispara-74-para-quase-35-me-em-202526_d1767079
+  - https://theportugalpost.com/posts/sporting-reports-record-300m-revenue-and-35m-profit
+- id: bal
+  main: true
+  heading: 黒字なのに、資産の約9割が負債なのはなぜか
+  tier: 報道
+  telop: 資産7億2690万ユーロのうち、負債が6億5130万
+  narrator: 解説
+  card:
+    type: table
+    title: スポルティングの利益と負債（百万ユーロ）
+    columns:
+    - 項目
+    - 2025-26
+    - 前の年比
+    rows:
+    - - 純利益
+      - '34.7'
+      - +74%
+    - - 総資産
+      - '726.9'
+      - ―
+    - - 負債
+      - '651.3'
+      - ―
+    - - 資本（6月末）
+      - '75.6'
+      - +85%
+  say:
+  - text: スポルティングは、2025-26も、黒字でした。
+    short_only: true
+    image: assets/images/20261124_finance_sporting/03_w.jpg
+    card: none
+  - text: ところが、資産の約9割は、負債です。
+    short_only: true
+    image: assets/images/20261124_finance_sporting/01_w.jpg
+    card: none
+  - text: 純利益は、2000万から3470万ユーロへ。約74%の増え。5年連続の黒字です。
+    emph: true
+    card:
+      type: table
+      title: スポルティングの利益と負債（百万ユーロ）
+      columns:
+      - 項目
+      - 2025-26
+      - 前の年比
+      rows:
+      - - 純利益
+        - '34.7'
+        - +74%
+      - - 総資産
+        - '726.9'
+        - ―
+      - - 負債
+        - '651.3'
+        - ―
+      - - 資本（6月末）
+        - '75.6'
+        - +85%
+      highlight_row: 0
+  - text: 一方、総資産は7億2690万ユーロ。負債は6億5130万ユーロです。
+    card:
+      type: table
+      title: スポルティングの利益と負債（百万ユーロ）
+      columns:
+      - 項目
+      - 2025-26
+      - 前の年比
+      rows:
+      - - 純利益
+        - '34.7'
+        - +74%
+      - - 総資産
+        - '726.9'
+        - ―
+      - - 負債
+        - '651.3'
+        - ―
+      - - 資本（6月末）
+        - '75.6'
+        - +85%
+      highlight_row: 2
+  - text: 負債は、総資産の約9割に当たります。
+    emph: true
+    card:
+      type: table
+      title: スポルティングの利益と負債（百万ユーロ）
+      columns:
+      - 項目
+      - 2025-26
+      - 前の年比
+      rows:
+      - - 純利益
+        - '34.7'
+        - +74%
+      - - 総資産
+        - '726.9'
+        - ―
+      - - 負債
+        - '651.3'
+        - ―
+      - - 資本（6月末）
+        - '75.6'
+        - +85%
+      highlight_row: 2
+  - text: 資本は、7560万ユーロ。前の年から、約85%の増えです。
+    emph: true
+    card:
+      type: table
+      title: スポルティングの利益と負債（百万ユーロ）
+      columns:
+      - 項目
+      - 2025-26
+      - 前の年比
+      rows:
+      - - 純利益
+        - '34.7'
+        - +74%
+      - - 総資産
+        - '726.9'
+        - ―
+      - - 負債
+        - '651.3'
+        - ―
+      - - 資本（6月末）
+        - '75.6'
+        - +85%
+      highlight_row: 3
+  - text: 資本は、総資産の約10%です。
+    card:
+      type: table
+      title: スポルティングの利益と負債（百万ユーロ）
+      columns:
+      - 項目
+      - 2025-26
+      - 前の年比
+      rows:
+      - - 純利益
+        - '34.7'
+        - +74%
+      - - 総資産
+        - '726.9'
+        - ―
+      - - 負債
+        - '651.3'
+        - ―
+      - - 資本（6月末）
+        - '75.6'
+        - +85%
+      highlight_row: 3
+  - text: 負債の増えの主因は、社債だと報じられています。
+    callword: 社債
+    image: assets/images/20261124_finance_sporting/01_w.jpg
+    card: none
+  - text: 2025年10月に、2億2500万ユーロの社債を出しました。
+    image: assets/images/20261124_finance_sporting/02_w.jpg
+    card: none
+  - text: 金利は年5.75%、期間は28年です。
+    image: assets/images/20261124_finance_sporting/02_w.jpg
+    card: none
+  - text: 利息だけで、毎年約1294万ユーロになります。
+    image: assets/images/20261124_finance_sporting/02_w.jpg
+    card: none
+  - text: 社債の額は、負債の約35%に当たります。
+    image: assets/images/20261124_finance_sporting/03_w.jpg
+    card: none
+  sources:
+  - https://www.abola.pt/noticias/contas-de-20252026-sporting-com-lucro-de-euro347-milhoes-2026092216570300616
+  - https://www.rtp.pt/noticias/sporting/lucro-da-sporting-sad-dispara-74-para-quase-35-me-em-202526_d1767079
+  - https://theportugalpost.com/posts/sporting-reports-record-300m-revenue-and-35m-profit
+- id: view
+  heading: 見立て・スポルティングの黒字は、何に支えられているのか
+  tier: 背景
+  telop: 黒字でも、資本は資産の約10%
+  narrator: 解説
+  viewpoint: true
+  card:
+    type: table
+    title: 自分で割ってみた（スポルティングの決算）
+    columns:
+    - 比べ
+    - 答え
+    rows:
+    - - 純利益 ÷ 売上
+      - 約11.6%
+    - - ヨーロッパの大会の収入 ÷ 売上
+      - 約27%
+    - - 資本 ÷ 総資産
+      - 約10%
+    - - 負債 ÷ 資本
+      - 約8.6倍
+    - - 社債の年の利息 ÷ 純利益
+      - 約37%
+  say:
+  - text: 見立てに入ります。スポルティングの黒字を、割り算で確かめます。
+    image: assets/images/20261124_finance_sporting/03_w.jpg
+    card: none
+  - text: 売上に対する純利益は、約11.6%です。
+    emph: true
+    card:
+      type: table
+      title: 自分で割ってみた（スポルティングの決算）
+      columns:
+      - 比べ
+      - 答え
+      rows:
+      - - 純利益 ÷ 売上
+        - 約11.6%
+      - - ヨーロッパの大会の収入 ÷ 売上
+        - 約27%
+      - - 資本 ÷ 総資産
+        - 約10%
+      - - 負債 ÷ 資本
+        - 約8.6倍
+      - - 社債の年の利息 ÷ 純利益
+        - 約37%
+      highlight_row: 0
+  - text: ヨーロッパの大会の収入は、売上の約27%です。
+    card:
+      type: table
+      title: 自分で割ってみた（スポルティングの決算）
+      columns:
+      - 比べ
+      - 答え
+      rows:
+      - - 純利益 ÷ 売上
+        - 約11.6%
+      - - ヨーロッパの大会の収入 ÷ 売上
+        - 約27%
+      - - 資本 ÷ 総資産
+        - 約10%
+      - - 負債 ÷ 資本
+        - 約8.6倍
+      - - 社債の年の利息 ÷ 純利益
+        - 約37%
+      highlight_row: 1
+  - text: 資本は、総資産の約10%。負債は、資本の約8.6倍です。
+    emph: true
+    mark:
+      kind: circle
+      row: 3
+      col: 1
+    card:
+      type: table
+      title: 自分で割ってみた（スポルティングの決算）
+      columns:
+      - 比べ
+      - 答え
+      rows:
+      - - 純利益 ÷ 売上
+        - 約11.6%
+      - - ヨーロッパの大会の収入 ÷ 売上
+        - 約27%
+      - - 資本 ÷ 総資産
+        - 約10%
+      - - 負債 ÷ 資本
+        - 約8.6倍
+      - - 社債の年の利息 ÷ 純利益
+        - 約37%
+      highlight_row: 3
+  - text: 社債の年の利息は、純利益の約37%に当たります。
+    card:
+      type: table
+      title: 自分で割ってみた（スポルティングの決算）
+      columns:
+      - 比べ
+      - 答え
+      rows:
+      - - 純利益 ÷ 売上
+        - 約11.6%
+      - - ヨーロッパの大会の収入 ÷ 売上
+        - 約27%
+      - - 資本 ÷ 総資産
+        - 約10%
+      - - 負債 ÷ 資本
+        - 約8.6倍
+      - - 社債の年の利息 ÷ 純利益
+        - 約37%
+      highlight_row: 4
+  - text: 題への答えです。黒字でも、資本は資産の約1割しかありません。
+    emph: true
+    card:
+      type: table
+      title: 自分で割ってみた（スポルティングの決算）
+      columns:
+      - 比べ
+      - 答え
+      rows:
+      - - 純利益 ÷ 売上
+        - 約11.6%
+      - - ヨーロッパの大会の収入 ÷ 売上
+        - 約27%
+      - - 資本 ÷ 総資産
+        - 約10%
+      - - 負債 ÷ 資本
+        - 約8.6倍
+      - - 社債の年の利息 ÷ 純利益
+        - 約37%
+      highlight_row: 2
+  - text: 残りの約9割は、負債でできています。
+    card:
+      type: table
+      title: 自分で割ってみた（スポルティングの決算）
+      columns:
+      - 比べ
+      - 答え
+      rows:
+      - - 純利益 ÷ 売上
+        - 約11.6%
+      - - ヨーロッパの大会の収入 ÷ 売上
+        - 約27%
+      - - 資本 ÷ 総資産
+        - 約10%
+      - - 負債 ÷ 資本
+        - 約8.6倍
+      - - 社債の年の利息 ÷ 純利益
+        - 約37%
+      highlight_row: 3
+  - text: 決算のあと、2026年夏の選手の売却は、1億5610万ユーロとの伝え方もあります。
+    image: assets/images/20261124_finance_sporting/03_w.jpg
+    card: none
+  - text: 次の決算の注目は、ヨーロッパの収入が続くか。社債の利息を、利益で支えられるのか。
+    emph: true
+    image: assets/images/20261124_finance_sporting/01_w.jpg
+    card: none
+  sources:
+  - https://www.abola.pt/noticias/contas-de-20252026-sporting-com-lucro-de-euro347-milhoes-2026092216570300616
+  - https://www.rtp.pt/noticias/sporting/lucro-da-sporting-sad-dispara-74-para-quase-35-me-em-202526_d1767079
+  - https://theportugalpost.com/posts/sporting-reports-record-300m-revenue-and-35m-profit

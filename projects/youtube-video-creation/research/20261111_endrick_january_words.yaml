@@ -1,0 +1,174 @@
+# 取材メモ（2026年11月11日）エンドリッキ「1月に何が起こるかは分からない」。ミラン・ローマの噂に本人が語った（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-11。requests（ブラウザUA）と WebFetch で本文を読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。
+# 題材の元: Football Italia 2026-11-10 14:36 UTC「Real Madrid star Endrick opens up amid Milan and Roma links: 'I don't know what will happen'」（全文）／Calciomercato.com 2026-11-10 11:42（イタリア語。全文を requests で読んだ）。
+# 出どころ: 本人はブラジルの Globo に語った（Football Italia は「he told Globo」、Calciomercato は「ha detto a Globo」）。両記事とも英語・イタリア語に訳されたもの。
+#   Globo の原文（ポルトガル語）は読めていない。→ 台本の言葉は、英語とイタリア語の2つの記事の一致する所を私が日本語にしたもの。2つの訳で食い違う所は使わない。
+#   gazzetta・footmercato は当たっていない（この2記事で本人の言葉が両方そろったので）。
+# 本人の言葉（英語 Football Italia ／ イタリア語 Calciomercato）:
+#   "I don't know what will happen in January, it's all in God's hands. I'm only asking to be able to do what's best for my career. Whatever happens, happens."
+#   ／ "Non so cosa succederà a gennaio, è tutto nelle mani di Dio. Chiedo solo di poter fare ciò che è meglio per la mia carriera, quello che succederà succederà."
+#   "I'm still young, I'm only 20, I don't have to take off and throw myself off a cliff. Let's see what happens. I can only say that I want to play, be happy, help my teammates, score goals and provide assists, like I did at Lyon. That was one of the best things that's ever happened to me and one of the happiest times of my life."
+#   "You all know who we have at Real Madrid and who's ahead of me. Mbappé is a great player, he came second in the Ballon d'Or. I try to take the opportunities I'm given and do my best."
+#   "Mourinho is a great person. Every day he comes to me and asks how I am, but he never talks about football. He wants to know about my private life. I like his attitude, he cares. I'll always give my all for Real Madrid, which comes first."
+#   （Calciomercato だけにある「5分、10分の出場…」は Football Italia に無いので使わない）
+# 報道の部分（本人の言葉ではない）:
+#   ・Football Italia（Calciomercato.com の引用）: ミランとローマが状況を追っている。レアルは去年のリヨンのようなレンタルを望むが、両クラブは完全移籍か、レアルの買い戻し条項が高い買い取りオプションを求めている。
+#     契約は2030年まで。評価額は約6,000万ユーロ。（年俸・移籍金の数字は台本に入れない）
+#   ・モウリーニョ監督はローマ戦の前に「出ていかない」旨を話していた（Football Italia「said before that match that the forward wasn't going anywhere」。Calciomercato は TNT Sports の発言として引用）。
+#   ・Calciomercato: エンドリッキはアンチェロッティ監督に招集され、日本戦（11月14日）とシンガポール戦（11月17日）に臨む。→ 10/30 の取材（CBF の発表。20261030_brazil_japan_squad）と一致。
+#   → 「1月に退団しそう」というカルチョメルカートの見立てと As 紙の年俸は台本に入れない（本人の言葉と取り違えやすい）。
+# ESPN の試合データで確かめたこと（今季のリーグ戦とCL。site.api.espn.com summary）:
+#   エンドリッキの出場は7試合。9/15 エルチェ戦 86分から（テュアメニと交代）／10/14 ローマ戦（CL）59分から（ヴィニシウスと交代）・85分に頭で3-3の同点ゴール／
+#   10/18 セビージャ戦 先発・69分にブラヒム・ディアスと交代／10/21 ライプツィヒ戦（CL）88分から／11/1 ラシン・サンタンデール戦 85分から／11/4 AEKアテネ戦（CL）67分から／11/7 バレンシア戦 84分から。
+#   上記以外のリーグ戦・CLの試合は出場なし（ベンチ外を含む）。先発は1試合だけ（自分で数えた）。8月の親善試合は数えない。
+# 前の本との重なり: 20261015_real_roma_cl（85分の同点ゴール）／20261030_brazil_japan_squad（ブラジル26人。エンドリッキは名前が出るだけ）。→ 今回の初出は、本人の1月と出場機会についての言葉・ミランとローマの条件。ゴールは「その中に10/14のローマ戦の同点弾がある」と一言だけ。
+# 本人の言葉: あり（Globo への発言）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+# 写真: assets/images/20261111_endrick_january_words/（credits.json）。Commons の2023〜24年の写真。代理店の写真は使っていない。レアルのユニの写真は見つからず、01＝ブラジル代表のウェア、02・03＝パルメイラス時代。
+slot: foreign
+date: "2026年11月11日"
+format: news
+no_main: true
+people: [エンドリッキ, レアル・マドリード, モウリーニョ監督, ミラン, ローマ, エムバペ]
+
+short_style: Y
+short_hook_quote: 1月に何が起こるかは分かりません。
+short_photos:
+  - assets/images/20261111_endrick_january_words/01_v.jpg
+  - assets/images/20261111_endrick_january_words/02_v.jpg
+  - assets/images/20261111_endrick_january_words/03_v.jpg
+short_question: エンドリッキは、1月にレアル・マドリードを離れると思いますか。
+short_telops: []
+
+theme:
+  id: endrick_january_words
+  league: spain
+  league_name: ラ・リーガ
+  prefix: ""
+  title: エンドリッキ「1月に何が起こるかは分からない」。ミラン・ローマ報道に語る
+  hook: ""
+  question: ミランとローマの噂について、エンドリッキ本人は何を語ったのか
+  takeaway: エンドリッキは1月の去就を「すべては神の手の中」と語り、リヨンでの日々のように試合に出て、ゴールとアシストを重ねたいと話した。今季のリーグ戦とCLでの出場は7試合で、先発はセビージャ戦の1試合だけ
+
+thumbnail:
+  layout: face
+  line1: エンドリッキ 1月の去就
+  line2: 本人「神の手の中」
+  tags: [エンドリッキ, レアル・マドリード]
+  photo: assets/images/20261111_endrick_january_words/01_w.jpg
+  short_photo: assets/images/20261111_endrick_january_words/01_v.jpg
+
+answer: 1月に何が起こるかは分からない。すべては神の手の中。試合に出て、幸せでいたい
+watch: 11月14日（日本時間19時15分）、日本代表対ブラジル代表
+
+sections:
+  - id: what
+    main: true
+    heading: エンドリッキが語った、1月の去就
+    tier: 報道
+    telop: エンドリッキ「すべては神の手の中です」
+    say:
+      - text: ミランとローマの噂が出るレアル・マドリードのエンドリッキが、1月の去就を聞かれました。
+        image: assets/images/20261111_endrick_january_words/01_v.jpg
+      - voice: エンドリッキ
+        text: 1月に何が起こるかは分かりません。
+        emph: true
+      - voice: エンドリッキ
+        text: すべては神の手の中です。
+        cont: true
+      - voice: エンドリッキ
+        text: 自分のキャリアにとって、
+        cont: true
+      - voice: エンドリッキ
+        text: いちばん良いことができるよう願っています。
+        cont: true
+      - text: 20歳は、こうも話しました。
+        image: assets/images/20261111_endrick_january_words/02_v.jpg
+      - voice: エンドリッキ
+        text: 僕はまだ若い、20歳です。
+      - voice: エンドリッキ
+        text: 飛び出して、崖から身を投げる必要はありません。
+        cont: true
+      - voice: エンドリッキ
+        text: 言えるのは、プレーしたい、幸せでいたい、
+      - voice: エンドリッキ
+        text: ゴールとアシストを決めたい、ということです。
+        cont: true
+      - voice: エンドリッキ
+        text: リヨンでそうしていたように。
+        cont: true
+        image: assets/images/20261111_endrick_january_words/03_v.jpg
+      - voice: エンドリッキ
+        text: リヨンでの時間は、人生で最も幸せな時期の一つでした。
+        emph: true
+    official: false
+    sources:
+      - https://football-italia.net/real-madrid-star-endrick-opens-up-milan-roma/
+      - https://www.calciomercato.com/liste/real-madrid-endrick-voglio-giocare-non-so-cosa-succedera-a-gennaio-devo-pensare-a-cio-che-e-meglio-per-la-mia-carriera-il-punto-su-milan-e-roma/blta21752b3578c4b5e
+  - id: place
+    heading: エンドリッキは、いまのレアルでの立場をどう語ったのか
+    tier: 報道
+    telop: エンドリッキ「モウリーニョ監督は気にかけてくれる」
+    say:
+      - text: レアルでの出番について、エンドリッキはこう話しました。
+        card: none
+      - voice: エンドリッキ
+        text: レアルに誰がいて、僕の前に誰がいるか、皆さん知っています。
+      - voice: エンドリッキ
+        text: エムバペは素晴らしい選手です。
+        cont: true
+      - voice: エンドリッキ
+        text: 与えられたチャンスで、全力を出そうとしています。
+        cont: true
+      - text: モウリーニョ監督については、こう語っています。
+      - voice: エンドリッキ
+        text: 毎日、調子を聞いてくれます。でも、サッカーの話はしません。
+      - voice: エンドリッキ
+        text: 私生活を知りたがる。気にかけてくれているんです。
+        cont: true
+      - voice: エンドリッキ
+        text: レアルのために、いつも全力を尽くします。
+        cont: true
+      - voice: エンドリッキ
+        text: 何より先に来るのは、レアルです。
+        cont: true
+    official: false
+    sources:
+      - https://football-italia.net/real-madrid-star-endrick-opens-up-milan-roma/
+      - https://www.calciomercato.com/liste/real-madrid-endrick-voglio-giocare-non-so-cosa-succedera-a-gennaio-devo-pensare-a-cio-che-e-meglio-per-la-mia-carriera-il-punto-su-milan-e-roma/blta21752b3578c4b5e
+  - id: clubs
+    heading: ミランとローマは、エンドリッキに何を求めているのか
+    tier: 報道
+    telop: ミラン・ローマは完全移籍か、買い取りオプションを求める
+    say:
+      - text: ミランとローマが、エンドリッキの状況を見ていると伝えられています。
+        card: {type: table, title: エンドリッキ 報道された条件, columns: [項目, 内容], rows: [[レアルの希望, レンタル], [ミラン・ローマ, 完全移籍か買い取りオプション], [契約, 2030年まで], [評価額, 約6000万ユーロ]], highlight_row: 1}
+      - text: レアルは、去年のリヨンのようなレンタルを望んでいます。
+      - text: 両クラブは、それより良い条件を求めているとされます。
+      - text: 完全移籍か、買い取りの権利を付けた貸し出しです。レアルが買い戻す金額は、高く設定される形です。
+      - text: ローマ戦の前には、モウリーニョ監督が、エンドリッキは出ていかないと話していました。
+        card: none
+    official: false
+    sources:
+      - https://football-italia.net/real-madrid-star-endrick-opens-up-milan-roma/
+      - https://www.calciomercato.com/liste/real-madrid-endrick-voglio-giocare-non-so-cosa-succedera-a-gennaio-devo-pensare-a-cio-che-e-meglio-per-la-mia-carriera-il-punto-su-milan-e-roma/blta21752b3578c4b5e
+  - id: view
+    viewpoint: true
+    heading: エンドリッキの今季の出番は、どれだけあったのか
+    tier: 背景
+    telop: 今季の出場は7試合、先発は1試合
+    say:
+      - text: 見立てです。今季のリーグ戦とチャンピオンズリーグで、エンドリッキの出場は7試合。
+        card: {type: table, title: エンドリッキ 今季の出場7試合, columns: [相手, 出場], rows: [[エルチェ, 86分から], [ローマ（CL）, 59分から], [セビージャ, 先発（69分まで）], [ライプツィヒ（CL）, 88分から], [ラシン・サンタンデール, 85分から], [AEKアテネ（CL）, 67分から], [バレンシア, 84分から]], highlight_row: 2}
+      - text: 先発は、10月18日のセビージャ戦の1試合だけです。
+      - text: 残る6試合は、途中出場でした。
+      - text: その中に、10月14日のローマ戦の同点ゴールがあります。
+        emph: true
+      - text: エンドリッキは、14日に日本と戦うブラジル代表にも選ばれています。
+        card: none
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401915414
+      - https://www.espn.com/soccer/match/_/gameId/401882839
+      - https://www.espn.com/soccer/match/_/gameId/401882808
+      - https://www.calciomercato.com/liste/real-madrid-endrick-voglio-giocare-non-so-cosa-succedera-a-gennaio-devo-pensare-a-cio-che-e-meglio-per-la-mia-carriera-il-punto-su-milan-e-roma/blta21752b3578c4b5e

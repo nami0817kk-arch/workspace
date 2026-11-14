@@ -1,0 +1,375 @@
+# クラブの財政：ボーンマス（11/10 火、シリーズ「クラブの財政」、key: finance_bournemouth、型は news）。
+#
+# 題材の選び方：デロイト Football Money League 2026（2024/25）の順で、財政の回をまだ出していないクラブから。
+#   1〜22位は既出または対象外（20位ウェストハムは今季2部、21位ガラタサライはトルコ）。23位ブライトン（11/6）・25位クリスタル・パレス（11/8）は既出。
+#   24位エヴァートンは女子チームの売却益が損益の主役（11/2・11/6・11/8 の担当と同じ判断で外す）。
+#   → 未出の最上位は **26位ボーンマス（2億1850万ユーロ。11/8 担当の控えの値）**。27位ローマは既出、28位フェネルバフチェはトルコ、29位ウルヴスは今季2部、30位ブレントフォードは次の候補に残す。
+#
+# 重なりの確認（2026-11-06）：scripts/*finance_* にボーンマスは無い。直近30日のボーンマスの本は、10/9 スタジアム・10/28 ユニフォーム（別のシリーズ）、
+#   ニュースのショート（10/23 ミラン戦 3-0）。財政の切り口は無い。research/20261109_picks.txt にもボーンマスは無い（11/10 は ケルン・コロンビア・エメリ・ブッフォン）。
+#   エメリ（ヴィラ監督）と同じ日だが、クラブは別（ヴィラの財政は 10/20 に出している）。
+# ★今季も1部：ESPN の 2026-27 English Premier League 順位表 API（2026-11-06 取得）で 8位・勝点12・9試合。台本では順位を言わない。
+# ★日本との接点：2024-25 の決算の年にも今季にも、ボーンマスの日本人選手は確かめられない。無理に入れない（10/6 の決定）。
+#
+# 軸は「**入場料は収入の3.7%。前の年に6627万ポンドの赤字だったクラブが、過去最高の9位の年に黒字になった。何が変えたのか**」。
+#   答え：選手を売った利益が 25万 → 9102万ポンド（約360倍）。ソランケ（トッテナム、2024-08）とハイセン（レアル・マドリード、2025-06-01）がこの決算の年。
+#         ただし売却を除いた本業の損益は −5595万 → −6274万で、赤字は約680万広がった（人件費が2225万増え、収入の87%）。
+#   ★他の財政回と軸を重ねない：11/8 パレス＝勝つと費用が増える（優勝の報奨）、11/6 ブライトン＝売る利益が減って赤字、11/2 アヤックス＝CLで32位でも売却益で黒字。
+#     今回は「小さなクラブの収入の形（入場料3.7%・リーグの分配81%）」を主役にし、売却益の振れの大きさ（約360倍）を山場に。
+#   ★選手の移籍金の額は、クラブが確認した「ハイセンの契約にあった5000万ポンドの条項」だけを言う。ソランケの額は報道の数字なので言わない。
+#   ★決算は売った選手の名前を挙げていない。台本は「この決算の1年のあいだに移った」と言い、「利益の中身は○○」とは言わない。
+#
+# **出どころ（読んだもの）**
+#   ○ AFC Bournemouth Limited, Annual Report and Financial Statements for the year ended 30 June 2025（Companies House 06632170、2026-03-29 提出、57頁、監査 PwC）
+#       https://find-and-update.company-information.service.gov.uk/company/06632170/filing-history/MzUxMjMxNTAzMWFkaXF6a2N4/document?format=pdf&download=0
+#       画像PDF。requests で取り、pypdfium2 で頁を画像にして目で読んだ（下の数字はすべて画像で読んだ値、£000）。
+#       p.2 Strategic report：「The Club finished in 9th position in the Premier League with a record points tally of 56 points」「to remain in the Premier League for the ninth season in the Club's history」
+#            「The gain on player registration disposals amounted to £91.0m (2024: £0.3m)」「increased amortisation costs of £69.1m (2024: £61.6m)」「increase in total staff costs to £158.4m (2024: £136.2m)」
+#            「Revenue was up by £20.9m to £181.7m (2024: £160.8m). This increase is mainly attributable to the increased central distributions」
+#            「Other operating income increased by £8.6m to £17.4m ... income received for players on loan at other clubs which amounted to £15.2m (2024: £8.3m)」
+#            「Finance costs have increased to £18.7m (2024: £10.8m)」「operating profit of £28.3m (2024: loss of £55.7m)」「profit before taxation of £14.9m (2024: loss of £66.3m)」
+#       p.3：「Black Knight Football Club UK Limited, loaned the Club £77.5m ... At 30 June 2025 the value of these loans is £Nil (30 June 2024: £89.8m) following the partial repayment and conversion of shareholder loans to A ordinary shares」
+#       p.4 Principal risks：「As one of the smallest clubs in the top echelons of the English football pyramid in terms of stadium size and revenues, such improvements are seen as vital」
+#       p.15 損益計算書（2025／2024）：Revenue 181,716／160,792、Other operating income 17,398／8,825、Profit on disposal of players' registrations 91,017／251、
+#            Staff costs (158,422)／(136,170)、Depreciation and amortisation (72,154)／(64,007)、Other operating expenses (31,281)／(25,385)、Operating profit/(loss) 28,274／(55,694)、
+#            Investment income 5,312／191、Finance costs (18,699)／(10,762)、Profit/(loss) before tax 14,887／(66,265)、Tax –
+#       p.31 注5 Revenue by class：Match and season ticket 6,738／6,531、Premier League income 147,999／135,631、Sponsorship and advertising 18,107／12,120、
+#            Hospitality and events 4,672／3,226、Shop merchandise 1,868／1,542、Other income 2,332／1,742
+#       p.32 注7：Amortisation of intangibles 69,165／61,616。注9 Staff costs 合計 158,422／136,170、平均の従業員 923／807（うち試合の日のスタッフ 536）
+#       p.55 注35 Post balance sheet events：「Since 30 June 2025, the playing registrations of certain footballers have been disposed of, for total initial consideration of £102,115,000, resulting in an accounting profit on disposal of £39,611,000.」
+#            「Subsequent to 30 June 2025 the playing registrations of certain players were acquired for a total consideration, including associated costs, of £115,884,000.」
+#   ○ ソランケのトッテナム移籍（2024-08-10 完了）：PA の配信（Express & Star「Tottenham complete Dominic Solanke signing」2024-08-10）。ボーンマスの最高経営責任者が「クラブが受け取った最大の額」と話した（同じ記事）。
+#       https://www.expressandstar.com/sport/uk-sports/2024/08/10/tottenham-complete-dominic-solanke-signing-in-deal-worth-up-to-65m/
+#   ○ ハイセンのレアル・マドリード移籍：レアル・マドリード公式「Official Statement: Huijsen」（2025-05-17）、契約は 2025-06-01〜2030-06-30（報道の引用で確認。公式ページは WebFetch でエラー）。
+#       ボーンマスが「レアル・マドリードが5000万ポンドの契約解除条項を使った」と確認（PA 配信、Express & Star）。
+#       https://www.realmadrid.com/en-US/news/football/first-team/latest-news/comunicado-oficial-huijsen-17-05-2025
+#       https://www.expressandstar.com/uk-sports/real-madrid-agree-deal-to-sign-bournemouth-defender-dean-huijsen-5698606
+#   ○ ESPN 順位表 API（2026-11-06）：8位 AFC Bournemouth 12点 9試合（台本には入れない）
+#   × 確かめられなかったもの：売却益 9102万の選手ごとの内訳（決算に無い）、2025-26 の決算（まだ出ていない）、決算の年のスタジアムの定員（今は12,357。改修で増えた途中なので数を言わない）。どれも台本に入れない。
+#
+# 自分で計算した数（検算済み）
+#   収入の内訳 2025：6.738＋147.999＋18.107＋4.672＋1.868＋2.332＝181.716 ✓
+#   収入の増え：181.716−160.792＝20.924→約2090万（+13.0%）
+#   リーグの分配の割合：147.999÷181.716＝81.4%→約81%。入場料（試合とシーズン券）：6.738÷181.716＝3.71%→3.7%
+#   スポンサー・広告：18.107−12.120＝5.987→約600万（+49%）
+#   人件費：158.422−136.170＝22.252→約2230万。収入に対する割合 158.422÷181.716＝87.2%／136.170÷160.792＝84.7%
+#   償却など：72.154−64.007＝8.147→約810万。選手の償却 69.165−61.616＝7.549→約750万
+#   その他の営業収入：17.398−8.825＝8.573→約860万（うち貸し出した選手のお金 15.199−8.257＝6.942）
+#   その他の費用：31.281−25.385＝5.896→約590万
+#   本業（選手の売却の前）の損益：2025 28.274−91.017＝−62.743／2024 −55.694−0.251＝−55.945。広がり 6.798→約680万
+#     増減の内訳：−55.945＋20.924＋8.573−22.252−8.147−5.896＝−62.743 ✓（板は3段：収入と貸し出し等 +29.5／人件費 −22.3／償却とその他の費用 −14.0）
+#   選手を売った利益：91.017÷0.251＝362.6→約360倍
+#   税引き前：28.274＋5.312−18.699＝14.887 ✓。振れ：14.887＋66.265＝81.152→約8120万
+#   表（損益）：2025 −62.7＋91.0−13.4＝14.9 ✓（利息など＝5.312−18.699＝−13.387）／2024 −55.9＋0.3−10.6＝−66.2（丸めで0.1ずれ。表は決算の −66.3 を書く。利息など 0.191−10.762＝−10.571）
+#   売った利益 ÷ 入場料：91.017÷6.738＝13.5→約13.5倍
+#   人件費 ÷ 入場料：158.422÷6.738＝23.5→約23.5倍
+#
+# 写真：assets/images/20261110_finance_bournemouth/（出典は credits.json）。01〜03 本拠地ヴァイタリティ・スタジアム（Commons、Mr Ignavy、CC BY-SA 2.0）、
+#   04 並ぶ選手（2025-12、CC0）、05 フラム戦の遠景（2024-12、CC0）、07・08 選手（10/23 回の再利用、CC0）、10_v ショート用。
+date: 2026年11月6日
+slot: other_1
+format: news
+series: クラブの財政
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- ボーンマス
+theme:
+  end_bg: assets/images/20261110_finance_bournemouth/01_w.jpg
+  id: finance_bournemouth
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: ボーンマス
+  title: ボーンマス、入場料は収入の3.7%。赤字を黒字に変えたのは何か
+  question: ボーンマスは2024-25に、勝ち点56のクラブ記録で9位。その年、入場料の収入は全体の3.7%しかない。前の年に6627万ポンドの赤字だった決算は、1489万ポンドの黒字になった。何が黒字に変え、本業はどうだったのか
+  lead: 入場料は、収入の3.7%。それでも黒字に。ボーンマス。
+  opening_image: assets/images/20261110_finance_bournemouth/01_w.jpg
+  takeaway: ボーンマスの2024-25の決算（クラブの運営会社の年次報告、監査済み）は、収入が1億8170万ポンドで約2090万の増え。うちリーグからの分配が約81%、試合とシーズン券の入場料は3.7%。黒字の主役は選手を売った利益で、前の年の25万から9102万ポンドへ約360倍。ソランケとハイセンがこの1年のうちに移った。ただし売却を除いた本業の損益は、5595万から6274万ポンドの赤字へ約680万広がった。人件費は収入の約87%。税引き前は1489万ポンドの黒字（前の年は6627万の赤字）。決算のあとの夏にも、選手を売って3961万の利益が出ている
+  short_title: ボーンマス、入場料は収入の3.7%
+thumbnail:
+  layout: number
+  crest_pos: right
+  photo: assets/images/20261110_finance_bournemouth/01_w.jpg
+  short_photo: assets/images/20261110_finance_bournemouth/10_v.jpg
+  number: 3.7%
+  line1: ボーンマス 入場料は収入の
+  line2: 赤字6600万から黒字へ
+  callouts: [売った利益は360倍]
+  tags:
+  - ボーンマス
+  - プレミアリーグ
+  - クラブの財政
+  - ハイセン
+  - ソランケ
+sections:
+- id: rev
+  heading: ボーンマスの収入は、何でできているのか
+  tier: 報道
+  telop: 収入は1億8170万ポンド。リーグからの分配が約81%
+  narrator: 解説
+  card: &rev_bars
+    type: bars
+    title: ボーンマスの収入の内訳（2024-25、百万ポンド）
+    unit: 百万ポンド
+    items:
+    - {label: リーグからの分配, value: 148.0, highlight: true}
+    - {label: スポンサー・広告, value: 18.1}
+    - {label: 試合とシーズン券, value: 6.7}
+    - {label: ホスピタリティ, value: 4.7}
+    - {label: グッズ・その他, value: 4.2}
+  say:
+  - text: 今回の数字は、ボーンマスが2026年3月に出した、いちばん新しい決算です。
+    image: assets/images/20261110_finance_bournemouth/01_w.jpg
+    card: none
+  - text: イングランド南の海辺の町、ボーンマス。プレミアリーグでは、この年が9季目でした。
+    image: assets/images/20261110_finance_bournemouth/03_w.jpg
+    card: none
+  - text: 2024年から25年のシーズンは、勝ち点56。クラブの記録で、順位は9位です。
+    image: assets/images/20261110_finance_bournemouth/05_w.jpg
+    card: none
+  - text: 決算の1年は、7月から翌年の6月まで。その1年の収入は、1億8170万ポンド。
+    emph: true
+    card: *rev_bars
+  - text: いちばん大きいのは、プレミアリーグからの分配金。1億4800万ポンドにのぼります。
+    card: *rev_bars
+  - text: テレビの放映権と、順位に応じた賞金がここに入ります。
+    card: *rev_bars
+  - text: 全体の約81%が、リーグから来るお金です。
+    image: assets/images/20261110_finance_bournemouth/02_w.jpg
+    card: none
+  - text: では、試合の日の入場料とシーズン券は。673万ポンドです。
+    emph: true
+    card:
+      <<: *rev_bars
+      items:
+      - {label: リーグからの分配, value: 148.0}
+      - {label: スポンサー・広告, value: 18.1}
+      - {label: 試合とシーズン券, value: 6.7, highlight: true}
+      - {label: ホスピタリティ, value: 4.7}
+      - {label: グッズ・その他, value: 4.2}
+  - text: 収入の全体の、4%にも届きません。
+    card: none
+    image: assets/images/20261110_finance_bournemouth/01_w.jpg
+  - text: クラブ自身も、決算にこう書いています。
+    card: none
+  - text: スタジアムの大きさと収入では、上のリーグで最も小さいクラブの1つだ、と。
+    image: assets/images/20261110_finance_bournemouth/01_w.jpg
+    card: none
+  sources:
+  - https://find-and-update.company-information.service.gov.uk/company/06632170/filing-history/MzUxMjMxNTAzMWFkaXF6a2N4/document?format=pdf&download=0
+- id: cost
+  heading: 記録の年に、お金の出入りはどう変わったのか
+  tier: 報道
+  telop: 収入は約2090万の増え。人件費は約2230万の増え
+  narrator: 解説
+  card: &rev_table
+    type: table
+    title: ボーンマスの収入と費用（百万ポンド）
+    columns: &rt_cols [項目, 2023-24, 2024-25]
+    rows: &rt_rows
+    - [リーグからの分配, '135.6', '148.0']
+    - [スポンサー・広告, '12.1', '18.1']
+    - [収入の合計, '160.8', '181.7']
+    - [人件費, '136.2', '158.4']
+    - [選手の償却, '61.6', '69.2']
+    highlight_row: 2
+  say:
+  - text: ボーンマスの収入は、前の年から約2090万ポンド。13%の増えです。
+    emph: true
+    card: *rev_table
+  - text: クラブは決算で、増えた分は主にリーグの分配金だと説明しています。
+    card:
+      type: table
+      title: ボーンマスの収入と費用（百万ポンド）
+      columns: *rt_cols
+      rows: *rt_rows
+      highlight_row: 0
+  - text: 9位に上がって、賞金と放映権の取り分が増えました。
+    image: assets/images/20261110_finance_bournemouth/05_w.jpg
+    card: none
+    card:
+      type: table
+      title: ボーンマスの収入と費用（百万ポンド）
+      columns: *rt_cols
+      rows: *rt_rows
+      highlight_row: 0
+  - text: スポンサーと広告も、1210万から1810万ポンドへ。約5割の増えです。
+    card:
+      type: table
+      title: ボーンマスの収入と費用（百万ポンド）
+      columns: *rt_cols
+      rows: *rt_rows
+      highlight_row: 1
+  - text: ところが、費用も同じように膨らみました。
+    image: assets/images/20261110_finance_bournemouth/04_w.jpg
+    card: none
+  - text: 人件費は、1億3620万から1億5840万ポンドへ。約2230万の増えです。
+    emph: true
+    card:
+      type: table
+      title: ボーンマスの収入と費用（百万ポンド）
+      columns: *rt_cols
+      rows: *rt_rows
+      highlight_row: 3
+  - text: 収入の増えより、人件費の増えのほうが大きかったことになります。
+    card:
+      type: table
+      title: ボーンマスの収入と費用（百万ポンド）
+      columns: *rt_cols
+      rows: *rt_rows
+      highlight_row: 3
+  - text: 人件費は、収入の約87%。前の年は、約85%でした。
+    card: none
+    image: assets/images/20261110_finance_bournemouth/04_w.jpg
+  - text: この年、選手の獲得に使った額は、1億430万ポンドでした。
+    card: none
+    image: assets/images/20261110_finance_bournemouth/07_w.jpg
+  - text: 選手の償却は、移籍金を契約の年数で分けて、毎年の費用に積むものです。
+    card: none
+  - text: その償却が、6160万から6920万ポンドに増えています。
+    card:
+      type: table
+      title: ボーンマスの収入と費用（百万ポンド）
+      columns: *rt_cols
+      rows: *rt_rows
+      highlight_row: 4
+  sources:
+  - https://find-and-update.company-information.service.gov.uk/company/06632170/filing-history/MzUxMjMxNTAzMWFkaXF6a2N4/document?format=pdf&download=0
+- id: sale
+  main: true
+  heading: 6600万ポンドの赤字は、なぜ1年で黒字になったのか
+  tier: 報道
+  telop: 選手を売った利益は、25万から9102万ポンドへ
+  narrator: 解説
+  card: &sale_table
+    type: table
+    title: ボーンマスの損益（百万ポンド）
+    columns: &st_cols [項目, 2023-24, 2024-25]
+    rows: &st_rows
+    - [本業の損益, −55.9, −62.7]
+    - [選手を売った利益, '+0.3', '+91.0']
+    - [利息など, −10.6, −13.4]
+    - [税引き前の損益, −66.3, '+14.9']
+    highlight_row: 1
+  say:
+  - text: ボーンマスは、前の年の6627万ポンドの赤字から、1年で黒字になりました。
+    short_only: true
+    image: assets/images/20261110_finance_bournemouth/04_w.jpg
+    card: none
+  - text: 流れを変えたのは、選手の売却でした。
+    image: assets/images/20261110_finance_bournemouth/05_w.jpg
+    card: none
+  - text: 前の年の25万ポンドから、9102万ポンドへ。約360倍です。
+    emph: true
+    card: *sale_table
+  - text: この決算の1年のあいだに、2人の主力がクラブを離れました。
+    card: *sale_table
+  - text: 1人目は、2024年の夏にトッテナムへ移ったストライカー、ドミニク・ソランケ。
+    card: none
+    image: assets/images/20261110_finance_bournemouth/02_w.jpg
+  - text: クラブの最高経営責任者は、クラブが受け取った中で最も大きい額だと話しています。
+    card: none
+  - text: 2人目は、センターバックのディーン・ハイセン。
+    card: none
+    image: assets/images/20261110_finance_bournemouth/03_w.jpg
+  - text: 2024年の夏にユベントスから加わり、1年でレアル・マドリードへ移りました。
+    card: none
+  - text: 決まった額を払えば引き抜ける、5000万ポンドの条項を、レアルが使いました。
+    card: none
+  - text: 選手を貸し出して得たお金も、前の年の約1.8倍の1520万ポンドに。
+    card: none
+    image: assets/images/20261110_finance_bournemouth/08_w.jpg
+  - text: 利息の支払いなどを差し引くと、税を引く前で1489万ポンドの黒字。
+    emph: true
+    card:
+      type: table
+      title: ボーンマスの損益（百万ポンド）
+      columns: *st_cols
+      rows: *st_rows
+      highlight_row: 3
+  - text: 前の年からの振れは、約8120万ポンドです。
+    card:
+      type: table
+      title: ボーンマスの損益（百万ポンド）
+      columns: *st_cols
+      rows: *st_rows
+      highlight_row: 3
+  sources:
+  - https://find-and-update.company-information.service.gov.uk/company/06632170/filing-history/MzUxMjMxNTAzMWFkaXF6a2N4/document?format=pdf&download=0
+  - https://www.expressandstar.com/sport/uk-sports/2024/08/10/tottenham-complete-dominic-solanke-signing-in-deal-worth-up-to-65m/
+  - https://www.realmadrid.com/en-US/news/football/first-team/latest-news/comunicado-oficial-huijsen-17-05-2025
+  - https://www.expressandstar.com/uk-sports/real-madrid-agree-deal-to-sign-bournemouth-defender-dean-huijsen-5698606
+- id: view
+  viewpoint: true
+  heading: 見立て・ボーンマスは、売らずに黒字にできるのか
+  tier: 背景
+  telop: 売った利益は、入場料の約13.5倍。本業の赤字は約680万広がった
+  narrator: 解説
+  card: &view_wf
+    type: waterfall
+    title: 本業の損益の動き（百万ポンド）
+    unit: 百万ポンド
+    start: &vw_start [2023-24の本業の損益, -55.9]
+    steps: &vw_steps
+    - [収入（貸し出しを含む）, 29.5]
+    - [人件費, -22.3]
+    - [償却とその他の費用, -14.0]
+    total: &vw_total [2024-25の本業の損益, -62.7]
+  say:
+  - text: ここからは見立てです。本業の動きと、売却の大きさを比べます。
+    image: assets/images/20261110_finance_bournemouth/02_w.jpg
+    card: none
+  - text: 売却を除くと、本業の損益は、5595万から6274万ポンドの赤字へ。
+    emph: true
+    card: *view_wf
+  - text: 記録の年に収入は増えても、赤字は約680万ポンド広がっていました。
+    card: *view_wf
+  - text: いちばん大きく引き下げたのは、人件費の増えです。
+    card:
+      type: waterfall
+      title: 本業の損益の動き（百万ポンド）
+      unit: 百万ポンド
+      start: *vw_start
+      steps: *vw_steps
+      total: *vw_total
+      highlight: 人件費
+  - text: いっぽう売却の利益は、入場料の収入の約13.5倍にあたります。
+    emph: true
+    image: assets/images/20261110_finance_bournemouth/01_w.jpg
+    card: &view_table
+      type: table
+      title: 自分で割ってみた（ボーンマスの決算）
+      columns: [比べ, 答え]
+      rows:
+      - [選手を売った利益 ÷ 入場料, 約13.5倍]
+      - [人件費 ÷ 入場料, 約23.5倍]
+      - [人件費 ÷ 収入, 約87%]
+      highlight_row: 0
+    mark:
+      kind: circle
+      row: 0
+      col: 1
+  - text: 人件費は入場料の約23.5倍。スタジアムのお金だけでは、とても回りません。
+    card:
+      <<: *view_table
+      highlight_row: 1
+  - text: 題への答えです。黒字に変えたのは、ソランケとハイセンたちの売却。
+    image: assets/images/20261110_finance_bournemouth/07_w.jpg
+    card: none
+  - text: 親会社も7750万ポンドを貸し、年度末までに貸付は返済と株への切り替えで0に。
+    image: assets/images/20261110_finance_bournemouth/03_w.jpg
+    card: none
+  - text: 決算のあとの夏にも、選手を売って3961万ポンドの利益が出ました。
+    card: none
+  - text: 同じ夏に、選手の獲得には1億1588万ポンドを使っています。
+    card: none
+  - text: 売って黒字、買って本業は赤字。
+    image: assets/images/20261110_finance_bournemouth/04_w.jpg
+    card: none
+  - text: 次に売る選手が育つまで、ボーンマスはこの形を続けられるのか。
+    emph: true
+    image: assets/images/20261110_finance_bournemouth/04_w.jpg
+    card: none
+  sources:
+  - https://find-and-update.company-information.service.gov.uk/company/06632170/filing-history/MzUxMjMxNTAzMWFkaXF6a2N4/document?format=pdf&download=0

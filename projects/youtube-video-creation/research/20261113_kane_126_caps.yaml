@@ -1,0 +1,160 @@
+# 取材メモ（2026年11月13日）ケイン、イングランド代表126試合目で最多出場記録を更新。その夜にPKで決勝点（ネーションズリーグ・クロアチア戦。ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-13。requests（ブラウザUA）で BBC・Marca の本文を全文読み、ESPN（site.api.espn.com）で試合と順位を確かめた。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元（全文を読んだ）:
+#   BBC Sport 2026-11-12「Leader, role model, extraordinary - how Kane's 'fairytale' came true」（試合前の記事。126試合目・シルトンの125） https://www.bbc.co.uk/sport/football/articles/c60qkdj4lp34o
+#   BBC Sport 2026-11-12 試合のライブ「England vs Croatia LIVE」（試合後のケイン・トゥヘル監督の ITV 取材の書き起こし、試合記事＝Alex Howell） https://www.bbc.co.uk/sport/football/live/cr5yn1g2qe6et
+#   BBC Sport 2026-11-12 選手採点（Sami Mokbel「Kane scores winner but who else made an impression?」） https://www.bbc.co.uk/sport/football/articles/c64gnd7vd912o
+#   Marca 2026-11-12「Harry Kane, récord y clasificación」（試合の記事。ケインの言葉は無い） https://www.marca.com/futbol/nations-league/cronica/2026/11/12/harry-kane-record-clasificacion.html
+#   kicker は読んでいない（BBC・Marca・ESPN で足りたので）。
+# 写真の出どころ（BBC の写真は説明に Getty／Reuters とあるため使わない。Commons の前の回の取り込み分を出どころごと引き継いだ。いずれも2026年6月の W杯のケイン）:
+#   https://commons.wikimedia.org/wiki/File:Harry_Kane_England_v_Ghana_23_June_2026-130.jpg
+#   https://commons.wikimedia.org/wiki/File:Harry_Kane_England_v_Panama_27_June_26-092.jpg
+#   https://commons.wikimedia.org/wiki/File:Harry_Kane_England_v_Ghana_23_June_2026-067.jpg
+#   https://commons.wikimedia.org/wiki/File:Harry_Kane_England_v_Panama_27_June_26-141.jpg
+# 出典で確かめたこと:
+#   ・BBC（試合前）: 11年前の2015年に21歳でデビュー。12日のクロアチア戦（ウェンブリー）が126試合目で、ピーター・シルトン（GK、1970〜90年に125試合）を抜き、イングランド男子の歴代最多出場。試合前にウィリアム王子とシルトンから額入りの特別なシャツを受け取った。
+#   ・BBC（ライブ記事）: ケインは33歳。ケインは試合前にバロンドールのトロフィーを掲げた（2026年のバロンドール）。PKで決めたのは代表92点目。
+#   ・Marca: 試合前にバロンドールを観客に見せ、126試合の記録で表彰された。シルトンが126の背番号入りのシャツを手渡した。
+#   ・ESPN（uefa.nations summary event=401861150, 2026-11-12 19:45Z、ウェンブリー）: イングランド 2-1 クロアチア。24分 モーガン・ロジャーズ（アシスト ベリンガム）／59分 ペタル・スチッチ（クロアチア。コーナーから）／64分 ケイン PK（右足、中央）。ケインは先発。
+#       BBC：PKはクアンサがスモルチッチに引っ張られて得たもの。VAR確認のあと、ケインはボールを真ん中に蹴り込んだ。
+#   ・BBC：この勝利でイングランドは来年のネーションズリーグ準々決勝進出が決まった。日曜（15日）にグループ3の首位スペインとの試合で、勝てば首位に立つ。
+#   ・ESPN の順位（uefa.nations standings, グループA3, 2026-11-13 取得）: スペイン 5試合5勝 勝ち点15（得失点差+9）／イングランド 5試合4勝1敗 勝ち点12（+12）。日程（scoreboard dates=20261115）: 11/15 19:45Z スペイン対イングランド（ESPN 表記 England at Spain）。
+#   ・本人の言葉（ITV の試合直後の取材。BBC ライブ記事の書き起こし＝英語。台本は私が日本語にしたもの。ITV の映像は見ていない）:
+#       "An incredible gesture, reception at the start of the game. Once the game starts, it's about getting the win, getting the three points."
+#       "I missed my last one for Bayern, so I think it's always important to try and bounce back with the next one. Try to not miss two in a row but executing. I practiced yesterday like I always do and it's just about going out there and doing it out on the pitch."
+#       "It's the perfect opportunity now on Sunday to try and prove ourselves."
+#   ・トゥヘル監督の言葉（ITV。BBC ライブ記事）: "We got the job done and it was important because it was a special occasion for Harry [Kane] and he scored the winner, so perfect evening."
+# 食い違い: ①Marca の関連見出し（記事内のリンク）に「Kane agranda su leyenda con un doblete」とあるが、記事本文・BBC・ESPN とも得点はPK1点のみ（ESPN の試合記録はケインの得点1）→ 1点で書く。「2得点」は使わない（10/6 のチェコ戦の見出しと取り違えやすい）。
+#   ②Marca は「クロアチアの同点の3分後にクアンサがPKを得た」と書くが、ESPN の分はスチッチ59分・ケイン64分（BBC は5分後）→ 分は ESPN に合わせ、「3分後」は使わない。
+#   ③本人の言葉は英語の書き起こしだけ。日本語は私の訳で、2回目の PK の言葉（「2回続けて外さないように」）は語順をなぞらず意味で訳した。
+# 前の本との重なり: 20261007_record_kane（125試合に並んだ夜に2得点）、20261106_kane_bayern_2029、20261027_kane_ballon_dor。今回の初出: 126試合目での更新と、その夜の決勝PK・本人の言葉。10/6 のチェコ戦・バロンドール・バイエルンとの契約は繰り返さない。
+# 【言わないこと】2得点（誤り）／バイエルンの前のPKを外した試合の中身（本人の言葉の中だけ）／今後100点の目標（BBC の映像見出しのみで本文を読んでいない）／スペイン戦の予想／クロアチアの4連敗など相手側の話。
+# 本人の言葉: あり（ケイン、トゥヘル監督。BBC が ITV 取材を書き起こし）。Y。海外の題として18時以降の枠。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: overseas
+date: "2026年11月13日"
+format: news
+no_main: true
+people: [ケイン, イングランド代表, トゥヘル監督, シルトン]
+
+short_style: Y
+short_hook_quote: 試合の初めの、あの歓迎は信じられないものでした。
+short_photos:
+  - assets/images/20261113_kane_126_caps/01_v.jpg
+  - assets/images/20261113_kane_126_caps/02_v.jpg
+  - assets/images/20261113_kane_126_caps/03_v.jpg
+  - assets/images/20261113_kane_126_caps/04_v.jpg
+short_question: ケインは、スペイン戦でも決めると思いますか。
+short_telops: []
+
+theme:
+  id: kane_126_caps
+  league: england
+  league_name: イングランド代表
+  prefix: ""
+  title: ケイン、代表126試合目で歴代最多出場。その夜にPKで決勝点
+  hook: ""
+  question: ケインは、代表最多出場の夜を、何と語ったのか
+  takeaway: ケインは126試合目でシルトンの125試合を抜き、同じ夜のクロアチア戦に決勝点のPKを決めた。本人は、歓迎に感謝しつつ「試合が始まれば勝ち点3がすべて」と語り、次は15日のスペイン戦
+
+thumbnail:
+  layout: face
+  line1: ケイン 126試合目
+  line2: 最多出場の夜に決勝点
+  tags: [ケイン, イングランド代表, シルトン]
+  photo: assets/images/20261113_kane_126_caps/01_w.jpg
+  short_photo: assets/images/20261113_kane_126_caps/01_v.jpg
+
+answer: 歓迎に感謝しつつ、始まれば勝ち点3がすべて。最多出場の夜に、PKで決勝点を決めた
+watch: 15日のスペイン戦（ネーションズリーグ）
+
+sections:
+  - id: what
+    main: true
+    heading: 最多出場の夜、ケインは試合前の歓迎をどう語ったのか
+    tier: 報道
+    telop: ケイン「あの歓迎は信じられないものでした」
+    say:
+      - text: 12日、イングランド代表のケインが、126試合目の出場で、シルトンの125試合を抜きました。
+        short_only: true
+        image: assets/images/20261113_kane_126_caps/01_w.jpg
+      - voice: ケイン
+        text: 試合の初めの、あの歓迎は信じられないものでした。
+        emph: true
+        image: assets/images/20261113_kane_126_caps/03_w.jpg
+      - voice: ケイン
+        text: 試合が始まれば、勝つことがすべてです。
+        cont: true
+        image: assets/images/20261113_kane_126_caps/04_w.jpg
+      - voice: ケイン
+        text: 勝ち点3を取ることです。
+        cont: true
+        image: assets/images/20261113_kane_126_caps/01_w.jpg
+      - text: ケインは試合前に、ウィリアム王子と、記録を持っていたシルトンから、特別なシャツを受け取りました。
+        image: assets/images/20261113_kane_126_caps/02_w.jpg
+      - text: 64分には、PKを決めました。クロアチアに2対1で勝つ、決勝点でした。
+        image: assets/images/20261113_kane_126_caps/03_w.jpg
+      - text: PKの前の気持ちは、次のとおりです。
+        image: assets/images/20261113_kane_126_caps/04_w.jpg
+      - voice: ケイン
+        text: バイエルンでの前のPKは、外しました。
+        image: assets/images/20261113_kane_126_caps/03_w.jpg
+      - voice: ケイン
+        text: 次で取り返すことが、いつも大事です。
+        cont: true
+        image: assets/images/20261113_kane_126_caps/01_w.jpg
+      - voice: ケイン
+        text: 2回続けて外さないように、決めるだけでした。
+        cont: true
+        emph: true
+        image: assets/images/20261113_kane_126_caps/03_w.jpg
+    official: false
+    sources:
+      - https://www.bbc.co.uk/sport/football/live/cr5yn1g2qe6et
+      - https://www.bbc.co.uk/sport/football/articles/c60qkdj4lp34o
+      - https://www.espn.com/soccer/match/_/gameId/401861150
+  - id: match
+    heading: ケインの決勝点を、トゥヘル監督はどう見たのか
+    tier: 報道
+    telop: トゥヘル監督「完璧な夜だった」
+    say:
+      - text: 12日のクロアチア戦は、ウェンブリーでした。
+        card: {type: table, title: ネーションズリーグ イングランド 2-1 クロアチア, columns: [分, 得点], rows: [[24分, ロジャーズ], [59分, スチッチ（クロアチア）], [64分, ケイン（PK）]], highlight_row: 2}
+        image: assets/images/20261113_kane_126_caps/01_w.jpg
+      - text: ケインは、これが代表92点目でした。
+        card: none
+        image: assets/images/20261113_kane_126_caps/04_w.jpg
+      - text: トゥヘル監督は、試合後にこう語りました。
+        image: assets/images/20261113_kane_126_caps/03_w.jpg
+      - voice: トゥヘル監督
+        text: ハリーにとって、特別な機会でした。
+        image: assets/images/20261113_kane_126_caps/01_w.jpg
+      - voice: トゥヘル監督
+        text: そして彼が、決勝点を決めた。完璧な夜です。
+        cont: true
+        emph: true
+        image: assets/images/20261113_kane_126_caps/03_w.jpg
+    official: false
+    sources:
+      - https://www.bbc.co.uk/sport/football/live/cr5yn1g2qe6et
+      - https://www.bbc.co.uk/sport/football/articles/c64gnd7vd912o
+      - https://www.espn.com/soccer/match/_/gameId/401861150
+  - id: view
+    viewpoint: true
+    heading: 次は日曜、首位スペインとの直接対決
+    tier: 背景
+    telop: 勝てばグループ首位に立つ
+    say:
+      - text: 見立てです。この勝利で、イングランドは来年の準々決勝進出を決めました。
+        card: {type: table, title: ネーションズリーグ グループA3, columns: [順位, 国, 勝ち点], rows: [[1位, スペイン, 15], [2位, イングランド, 12]], highlight_row: 1}
+        image: assets/images/20261113_kane_126_caps/02_w.jpg
+      - text: 15日のスペイン戦に勝てば、イングランドは首位に立ちます。ケインは次のように語っています。
+        card: none
+      - voice: ケイン
+        text: 日曜は、自分たちを証明するための、絶好の機会です。
+        emph: true
+        image: assets/images/20261113_kane_126_caps/04_w.jpg
+    official: false
+    sources:
+      - https://www.bbc.co.uk/sport/football/articles/c64gnd7vd912o
+      - https://www.espn.com/soccer/match/_/gameId/401861175

@@ -1,0 +1,119 @@
+# 取材メモ（2026年11月8日）鈴木彩艶、リバプールの獲得候補に。34歳アリソンの後継として（ニュースのショート。見せ方 X＝冒頭1秒に強い一言）
+# 取材: 2026-11-08。requests（ブラウザUA）で本文を全文読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: フットボール・トライブ日本語版 2026-11-07「鈴木彩艶がリバプールの獲得候補に！アリソンの後継者として注目されている」（全文）。
+#   https://football-tribe.com/japan/2026/11/07/361096/
+# 元の媒体（辿れたところまで）:
+#   ・Football365 11/7「Liverpool to let legend 'leave in the summer' with Aston Villa ace eyed as heir」（全文を読んだ。
+#       https://www.football365.com/news/liverpool-let-alisson-becker-leave-summer-aston-villa-zion-suzuki-replacement ）
+#       Tribe の記事はこれを日本語にしたもの。F365 は Football Insider（記者 Pete O'Rourke。「リバプールはアリソンの退団に備え、複数のGKを調べている」）と
+#       TEAMtalk（記者 Bailey。「リバプールは鈴木をチェックした大クラブの1つ。アリソンの長期的な将来がアンフィールドで議論されている」）を引いている。
+#       F365 の本文: アリソンは34歳。シュートストップと1対1は世界屈指だが、配球でたびたびリバプールに不利益。フェネルバフチェ戦で「ふわっとした高いボールを処理できず」決勝点につながった。
+#       今夏はユベントスが強く関心、リバプールは契約を12カ月延長するオプションを行使。契約は今季末まで。母国ブラジル復帰の話も。
+#   ・Football ZONE 683248（TEAMtalk を引く。全文）: 鈴木は今夏パルマからヴィラへ完全移籍、エメリ監督の下でレギュラーに定着、公式戦13試合に出場。移籍金は推定3000万ポンド（約63億円）。
+#       TEAMtalk は鈴木の「スイーパーキーパーとしての能力や、配球力を生かしたビルドアップ」を評価。関心を寄せるのはレアル・マドリード・PSG・アーセナル・マンC・リバプール・トッテナム（いずれも TEAMtalk の報道）。
+#   ・リバプール公式サイトの media watch（https://www.liverpoolfc.com/news/zion-suzuki-transfer-eyed-by-arsenal-and-liverpool 。CaughtOffside の転載で、クラブの見解ではないと注記あり）: 鈴木は24歳。ヴィラ加入は今夏、パルマから。
+#   ・ESPN（site.api.espn.com uefa.champions event=401915382）: フェネルバフチェ 3-2 リバプール（11/4 17:45 UTC＝日本時間11/5 未明）。79分 ムリキ（F、ヘディング、アシストはブラウン）。ESPN の試合記録はアリソンのプレーの中身（落球）を載せていない。
+#   ・サッカーキング 2026-11-04（2224321）: 日本代表28人のGK3人に鈴木彩艶（アストン・ヴィラ）。14日にブラジル、17日にパラグアイ。
+#   ・年齢は Wikidata の生年月日から 2026-11-08 時点: 鈴木彩艶 2002-08-21（24）／アリソン・ベッカー 1992-10-02（34）。
+# 食い違い・扱い: ①「アリソンが高いボールを処理できなかった」は F365（と Tribe）だけで、ESPN では確かめられない → 「報道では」と断り、決勝点の分・得点者は言わない。
+#   ②日付: Tribe は「11月5日」開催（日本時間）、ESPN は 11/4 の夜（UTC）→ 台本は日付を言わない。③獲得候補は Football Insider・TEAMtalk ともに 報道（クラブの発表なし）。→ 確度は報道どまり、「獲得へ」とは言わない。
+#   ④F365 は「契約は今季末まで」、Tribe は「今季終了後に退団する可能性」→ 台本は「今季の終わりに」と報道の言い方に合わせる。
+# 前の本との重なり: scripts/20261020_suzuki_yui_spurs_interest（トッテナムの関心）・20261030_suzuki_villa_gk（1月の不在）・20261107_suzuki_best_save_nominee（月間セーブ候補）。
+#   → 今回の初出は「リバプールの名前とアリソンの後継」。トッテナムの話は言わない。レアル・PSG の名前は出さない（別の報道で10/20 に近い話を扱っている）。アーセナル・マンCは「ほかにも」と一言だけ。
+# 本人の言葉: 無い（鈴木の言葉はこの話題には無い）。X。
+# 反応: 0件（作らない。approve は --no-voices）。
+# 写真: assets/images/20261108_suzuki_liverpool_candidate/ 01=バルサ戦のセーブ（ゲキサカ 11/4。縦は小さい）／02=日本代表（フォトグラファー表記 Shimpei Konada。写真代理店ではない）／03=日本代表でガッツポーズ（ゲキサカ 10/1 の写真）。
+#   どれも日本代表のユニフォームか前の試合のもので、今回の話（ヴィラ・リバプール）の写真ではない。ヴィラ公式の gallery は選手を特定できなかった。サッカーキングの鈴木の写真（ロゴ入り）は外した。
+slot: japanese
+date: "2026年11月8日"
+format: news
+no_main: true
+people: [鈴木彩艶, アストン・ヴィラ, アリソン, リバプール]
+
+short_style: X
+short_hook_word: アリソンの後継候補
+short_photos:
+  - assets/images/20261108_suzuki_liverpool_candidate/03_v.jpg
+  - assets/images/20261108_suzuki_liverpool_candidate/02_v.jpg
+  - assets/images/20261108_suzuki_liverpool_candidate/01_v.jpg
+short_question: 鈴木彩艶は、リバプールへ移るべきだと思いますか。
+short_telops: []
+
+theme:
+  id: suzuki_liverpool_candidate
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: 鈴木彩艶、リバプールの獲得候補に。34歳アリソンの後継として名前が挙がった
+  hook: ""
+  question: リバプールは、なぜ鈴木彩艶を後継の候補に挙げたと報じられたのか
+  takeaway: 34歳のアリソンに対し、鈴木彩艶は24歳で10歳差。シュートを止める力が世界屈指のアリソンに対し、鈴木は足元の配球と組み立てを評価されている。ただし獲得は報道の段階で、クラブの発表はない
+
+thumbnail:
+  layout: face
+  line1: 鈴木彩艶 リバプールの候補
+  line2: アリソンの後継に名前
+  tags: [鈴木彩艶, リバプール]
+  photo: assets/images/20261108_suzuki_liverpool_candidate/03_w.jpg
+  short_photo: assets/images/20261108_suzuki_liverpool_candidate/03_v.jpg
+
+answer: アリソンは34歳で、今季限りの契約。報道では、リバプールが後継の候補に24歳の鈴木を挙げている
+watch: 11月14日（土）、日本代表のブラジル戦（シンガポール）
+
+sections:
+  - id: what
+    main: true
+    heading: リバプールは、誰の後継として鈴木彩艶の名前を挙げたのか
+    tier: 報道
+    telop: リバプールの獲得候補に鈴木彩艶（報道）
+    say:
+      - text: アストン・ヴィラの鈴木彩艶が、リバプールの獲得候補に挙がっていると報じられました。
+      - text: 名前が出たのは、リバプールのGK、アリソンの後継です。
+        card: {type: table, title: リバプールの正GKと、候補に挙がった鈴木, columns: [所属, 名前, 位置, 年齢], rows: [[リバプール, アリソン・ベッカー, GK, 34], [アストン・ヴィラ, 鈴木彩艶, GK, 24]], highlight_row: 1}
+      - text: アリソンは、今季の終わりにクラブを離れる可能性があると報じられています。
+        card: none
+      - text: 今夏はユベントスが強い関心を寄せましたが、リバプールは契約を1年延ばす権利を使いました。
+        image: assets/images/20261108_suzuki_liverpool_candidate/02_w.jpg
+      - text: そのうえで、新しい正GKを探していて、鈴木は候補に入っているということです。
+        emph: true
+      - text: 評価されているのは、足元の配球と、ビルドアップです。
+      - text: ただし、あくまで報道の段階です。
+        image: assets/images/20261108_suzuki_liverpool_candidate/02_w.jpg
+    official: false
+    sources:
+      - https://football-tribe.com/japan/2026/11/07/361096/
+      - https://www.football365.com/news/liverpool-let-alisson-becker-leave-summer-aston-villa-zion-suzuki-replacement
+  - id: story
+    heading: リバプールが探す後継者に、鈴木彩艶の何が合うと報じられたのか
+    tier: 報道
+    telop: アリソンはシュートに強く、鈴木は配球が評価されている
+    say:
+      - text: アリソンは、シュートを止める力と、1対1の強さで、世界トップクラスと評されてきました。
+        image: assets/images/20261108_suzuki_liverpool_candidate/03_w.jpg
+      - text: ただ、リバプールが2対3で敗れたフェネルバフチェ戦では、高いボールの処理を誤りました。
+      - text: それが相手の決勝点につながったと、伝えられています。
+        image: assets/images/20261108_suzuki_liverpool_candidate/02_w.jpg
+      - text: 配球で足を引っぱる場面も増えた、という伝え方もあります。
+        card: none
+      - text: 鈴木は今夏、パルマからヴィラへ移りました。
+        image: assets/images/20261108_suzuki_liverpool_candidate/03_w.jpg
+      - text: エメリ監督のもとで正GKに定着し、足元の配球が評価されています。
+    official: false
+    sources:
+      - https://www.football365.com/news/liverpool-let-alisson-becker-leave-summer-aston-villa-zion-suzuki-replacement
+      - https://www.football-zone.net/archives/683248
+      - https://www.espn.com/soccer/match/_/gameId/401915382
+  - id: view
+    viewpoint: true
+    heading: 鈴木彩艶に関心を寄せるのは、リバプールだけなのか
+    tier: 背景
+    telop: アリソン34歳、鈴木彩艶24歳。10歳差
+    say:
+      - text: 見立てです。鈴木に関心を寄せているのは、リバプールだけではありません。
+      - text: アーセナルやマンチェスター・シティの名前も、候補として伝わっています。
+      - text: 年齢は、アリソンが34歳、鈴木は24歳。10歳の差があります。
+        card: {type: table, title: 年齢の比べ, columns: [名前, 年齢], rows: [[アリソン・ベッカー, 34], [鈴木彩艶, 24]], highlight_row: 1}
+    official: false
+    sources:
+      - https://www.football-zone.net/archives/683248
+      - https://www.soccer-king.jp/news/japan/national/20261104/2224321.html

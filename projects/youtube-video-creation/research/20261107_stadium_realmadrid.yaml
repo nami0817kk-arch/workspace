@@ -1,0 +1,484 @@
+# スタジアム紹介シリーズ：レアル・マドリードの本拠地（ベルナベウ、11/7 予定）。雛形は 11/5 バルセロナの回。
+# 題材の選び方（2026-11-05）：指示書 20261107 の推し（ラ・リーガの続き。アトレティコ 11/1・バルセロナ 11/5 は済み）。
+#   重なりの確認：scripts/*stadium_* にベルナベウ・レアルは無し。covered.yaml・posted.json にも stadium_realmadrid は無い。
+#   直近30日のレアルの本：財政 finance_realmadrid（10/9、改修の投資14億770万ユーロ・借入11億7000万）・finance_real_barca（10/18）・ニュースのショート数本。
+#     クラブ紹介 ll17 は 9/26 で30日の外。財政と重ねないよう、この回は改修の費用の額は言わない（借入の総額を1行だけ）。軸は「芝を地下にしまう」「収容の数字がそろわない」「W杯決勝の8万席」。
+#   picks（research/20261107_picks.txt）に「スタジアム: レアル・マドリード（ベルナベウ）」を先に書いた（ユニフォームの担当がレアルを避けるため）。
+# 今季のラ・リーガ所属（一次情報）：ESPN の ラ・リーガ（esp.1）2026-27 のレアル・マドリードの日程（teams/86/schedule?season=2026）に 8/22〜11/1 の11試合。会場は Santiago Bernabéu。
+# 収容（クラブの公式の数字は無い。数字が割れていることそのものを見立てにする）：
+#   改修の計画 8万1044／会長フロレンティーノ・ペレス「8万、上下1000」／FIFA の評価報告（2030年W杯の招致の書類）7万8297（StadiumDB 2025-03-04・2026-03-07）。
+#   FIFA が決勝に求めるのは8万席（同）。8万−7万8297＝1703（StadiumDB 2026-03-07「約1700席の追加を検討」と合う）。
+#   ウィキペディア en・es の表の 8万3186（2024年から）は出どころが書かれていないので言わない（9/26 のクラブ紹介 ll17 では 8万3186 と言っている）。
+#   NFL 2025-11-16 の入場 7万8610（ウィキペディア en、Commons の写真の画面にも 78,610）。
+# 入場（ESPN の試合記録。11月5日時点。記録が0の2試合＝8/30 マラガ・9/12 ラージョは使わない）：
+#   8/26 レアル・ソシエダ 7万2226（4対1、久保建英が先発）／9/8 インテル（CL）7万4858（2対1）／10/10 ビジャレアル 7万5242（1対0）／10/18 セビージャ 7万3907（4対1）／10/21 ライプツィヒ（CL）7万3016（4対1）
+#   合計36万9249・平均7万3849.8＝約7万3850。最多7万5242。8万−7万5242＝4758。
+# 芝（ATJ の事例ページ・ウィキペディア es・SENER の発表 2021-12-09）：板6枚、1枚 107×11.6m・約1500トン、地下約30mの「ヒポゲウム」（光・水・空調のある部屋）。動かす時間は5時間未満と6時間で割れるので言わない。
+# 屋根：開け閉めに15〜20分（ウィキペディア es）。360度の画面（同）。
+# 歩み（ウィキペディア en・es）：1947年12月14日開場、最初の収容7万5145。1955年1月4日 会員の総会で会長サンティアゴ・ベルナベウの名に。会長は1943〜1978年。
+#   最多の入場 12万9690（1956年4月19日 ミラン戦、en）。欧州杯・CL決勝 1957（レアル2対0フィオレンティーナ）・1969・1980・2010（インテル2対0バイエルン）。1964年欧州選手権決勝。1982年W杯決勝（イタリア3対1西ドイツ）。2018年リベルタドーレス杯決勝の第2戦（リーベル3対1ボカ）。
+#   改修：2014年1月31日 設計の案が決まる／2015年2月 裁判所が街の計画の変更を無効に／2017年5月31日 マドリード市が承認／2019年6月 工事開始（FCC）。
+#   2020年3月1日 クラシコ2対0が最後→アルフレド・ディ・ステファノ・スタジアム→2021年9月12日 セルタ戦5対2で560日ぶりに戻る（人数を絞って1万9874人。AP など）。
+#   借入は11億7000万ユーロ、年6000万を30年（ウィキペディア es）。2025年11月に名前から「サンティアゴ」を外し「ベルナベウ」に（ウィキペディア es、Football España 2025-11-12）。
+# 試合以外の催し：2024年5月29〜30日 テイラー・スウィフト（改修後初のコンサート）／2024年7月 カロルG 4公演／2024年9月から大きなコンサートは止まったまま（近くの住民の音の苦情。StadiumDB 2026-05・06）。
+#   2025年11月16日 NFL ドルフィンズ16対13コマンダーズ（延長）7万8610／2025年12月 クリスマスの催し（Commons の写真）／2026年4月23〜30日 マドリード・オープンの練習コート（ATP・puntodebreak。試合は別会場）。
+#   裁判の中身（2026年5月の判決・6月の最高裁）は言わない（法の話に寄せない。苦情で止まった事実だけ）。
+# 2030年W杯決勝：FIFA は未発表（StadiumDB 2026-03 は「会場の一覧は2026年12月に承認」、10月の報道は「2028年より前には発表しない」）。台本は「まだ決まっていない」だけ。
+# 日本との接点（サッカーの縁）：①工事が始まった2019年6月に久保建英がレアルに入った（同じ月。1行）②8/26 のレアル・ソシエダ戦で久保が先発（ESPN の先発表）。
+# 言わなかったもの：改修の費用の総額（財政の回と重なる・出どころで割れる）／8万3186／コンサートの裁判／テニスの選手名／2030年決勝の見込みの%。
+# 写真：assets/images/20261107_stadium_realmadrid/（credits.json）。8枚とも Commons（CC0・CC BY・CC BY-SA）。古い時代の写真は取れていない（Commons が 429）。
+date: 2026年11月5日
+slot: other_1
+format: news
+series: スタジアム紹介
+voice_min: 0
+people: []
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  id: stadium_realmadrid
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: レアル・マドリード
+  title: レアル・マドリードの本拠地ベルナベウ、芝を地下30メートルにしまうのはなぜ？
+  question: 改修を終えたベルナベウは、なぜ芝を地下にしまう仕組みを持ち、何人入る器になったのか
+  lead: 芝が、地下へ消える。
+  hook: ''
+  opening_image: assets/images/20261107_stadium_realmadrid/03_w.jpg
+  end_bg: assets/images/20261107_stadium_realmadrid/02_w.jpg
+  takeaway: ベルナベウの芝は6枚の板に分かれ、地下およそ30メートルにしまえる。試合以外の催しに床を使うための仕組みだが、大きなコンサートは2024年9月から止まったまま。収容はクラブが一つの数字を出しておらず、W杯の招致の書類では7万8297人で、FIFA が決勝に求める8万席に1703席足りない。今季、入場の記録が残る5試合の平均は約7万3850人、最多は7万5242人
+  short_title: ベルナベウ、芝を地下にしまう器
+thumbnail:
+  layout: scene
+  bold: false
+  callouts:
+  - 芝は6枚に分かれる
+  - W杯決勝は8万席が条件
+  photo: assets/images/20261107_stadium_realmadrid/03_w.jpg
+  line1: レアルの本拠地ベルナベウ
+  line2: 芝は地下30メートルへ
+  tags:
+  - レアル・マドリード
+  - ラ・リーガ
+  - スタジアム紹介
+sections:
+- id: data
+  main: true
+  heading: ベルナベウの芝は、どこへ消えるのか
+  bg: assets/images/20261107_stadium_realmadrid/03_w.jpg
+  tier: 報道
+  telop: 芝は6枚の板に分かれ、地下およそ30メートルへ。1枚は約1500トン
+  narrator: 解説
+  card:
+    type: table
+    title: ベルナベウの基礎DATA
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 呼び名
+      - ベルナベウ（2025年11月から）
+    - - 持ち主
+      - レアル・マドリード
+    - - 開場
+      - 1947年12月
+    - - 改修の工事
+      - 2019年6月から
+    - - 屋根
+      - 開け閉めできる
+    - - 芝
+      - 6枚に分けて地下へ
+  say:
+  - text: レアル・マドリードの本拠地、ベルナベウの話です。
+    short_only: true
+    image: assets/images/20261107_stadium_realmadrid/03_w.jpg
+    card: none
+  - text: ベルナベウの芝は、試合が終わると、6枚に分かれて地下へ消えます。
+    emph: true
+    image: assets/images/20261107_stadium_realmadrid/03_w.jpg
+    card: none
+  - text: しまう先は、地下およそ30メートル。試合のない日に、床を空けるためです。
+    image: assets/images/20261107_stadium_realmadrid/03_w.jpg
+    card: &id_pitch
+      type: stats
+      title: 地下にしまう芝の板
+      items:
+      - - '6'
+        - 枚
+        - 芝の板
+      - - '30'
+        - メートル
+        - 地下の深さ（およそ）
+      - - '1500'
+        - トン
+        - 1枚の重さ（およそ）
+      focus: 1
+  - text: 1枚は長さ107メートル、幅11.6メートル。重さは約1500トン。
+    image: assets/images/20261107_stadium_realmadrid/03_w.jpg
+    card:
+      <<: *id_pitch
+      focus: 2
+  - text: 2025年11月からは、呼び名をベルナベウだけにしました。
+    image: assets/images/20261107_stadium_realmadrid/02_w.jpg
+    card:
+      type: table
+      title: ベルナベウの基礎DATA
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 呼び名
+        - ベルナベウ（2025年11月から）
+      - - 持ち主
+        - レアル・マドリード
+      - - 開場
+        - 1947年12月
+      - - 改修の工事
+        - 2019年6月から
+      - - 屋根
+        - 開け閉めできる
+      - - 芝
+        - 6枚に分けて地下へ
+      highlight_row: 0
+  - text: 屋根も開け閉めでき、閉めるのにかかるのは15分から20分です。
+    image: assets/images/20261107_stadium_realmadrid/08_w.jpg
+    card: none
+  sources:
+  - https://cadeengineering.com/study-case/automation-system-for-santiago-bernabeu-stadium/2/
+  - https://es.wikipedia.org/wiki/Estadio_Santiago_Bernab%C3%A9u
+  - https://www.group.sener/noticias/retractable-pitch-santiago-bernabeu-stadium-project-conceived-developed-by-sener/?lang=en
+  - https://www.football-espana.net/2025/11/12/real-madrid-make-new-stadium-name-official-with-new-branding
+- id: history
+  heading: ベルナベウは、なぜ会長の名前で呼ばれてきたのか
+  bg: assets/images/20261107_stadium_realmadrid/01_w.jpg
+  tier: 背景
+  telop: 開場は1947年。1955年に会長の名前に。決勝の舞台はヨーロッパの王者を決める大会で4度、W杯で1度
+  narrator: 解説
+  card: &id_hist
+    type: timeline
+    title: ベルナベウの歩み
+    rows:
+    - - 1947年12月
+      - 開場。収容7万5145人
+    - - 1955年1月
+      - 会長の名前に
+    - - 1956年4月
+      - 最多の入場、12万9690人
+    - - 1982年7月
+      - W杯決勝、イタリアが優勝
+    - - 2010年5月
+      - CL決勝、インテルが優勝
+    focus: 1955年1月
+    highlight_row: 0
+  say:
+  - text: この器の始まりは、1947年の12月。最初の収容は、7万5145人でした。
+    image: assets/images/20261107_stadium_realmadrid/02_w.jpg
+    card:
+      <<: *id_hist
+      highlight_row: 0
+  - text: 1955年1月、会員の総会で、当時の会長サンティアゴ・ベルナベウの名が付きます。
+    emph: true
+    image: assets/images/20261107_stadium_realmadrid/02_w.jpg
+    card:
+      <<: *id_hist
+      highlight_row: 1
+  - text: この器が建ったのは、その会長の時代でした。
+    image: assets/images/20261107_stadium_realmadrid/02_w.jpg
+    card: none
+  - text: 記録に残る最も多い入場は、1956年4月のミラン戦。12万9690人。
+    image: assets/images/20261107_stadium_realmadrid/01_w.jpg
+    card:
+      <<: *id_hist
+      highlight_row: 2
+  - text: 開いたときの収容と比べて、1.7倍あまり。
+    image: assets/images/20261107_stadium_realmadrid/01_w.jpg
+    card:
+      <<: *id_hist
+      highlight_row: 2
+  - text: ヨーロッパの王者を決める大会の決勝は、ここで4度。
+    image: assets/images/20261107_stadium_realmadrid/01_w.jpg
+    card: none
+  - text: 1957年には、地元のレアルが勝ちました。
+    image: assets/images/20261107_stadium_realmadrid/01_w.jpg
+    card: none
+  - text: 1982年には、ワールドカップの決勝。イタリアが、西ドイツを3対1で破りました。
+    image: assets/images/20261107_stadium_realmadrid/01_w.jpg
+    card:
+      <<: *id_hist
+      highlight_row: 3
+  - text: 2010年には、チャンピオンズリーグの決勝。
+    image: assets/images/20261107_stadium_realmadrid/01_w.jpg
+    card: none
+  - text: 優勝はインテル。バイエルンに2点差を付けました。
+    image: assets/images/20261107_stadium_realmadrid/01_w.jpg
+    card:
+      <<: *id_hist
+      highlight_row: 4
+  - text: 2018年には、南米の王者を決める大会の決勝まで。
+    image: assets/images/20261107_stadium_realmadrid/08_w.jpg
+    card: none
+  - text: リーベル・プレートとボカの一戦が、海を渡ってマドリードへ来ました。
+    image: assets/images/20261107_stadium_realmadrid/08_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Santiago_Bernab%C3%A9u_Stadium
+  - https://es.wikipedia.org/wiki/Estadio_Santiago_Bernab%C3%A9u
+- id: rebuild
+  heading: 改修は、なぜ工事の始まりまで5年かかったのか
+  bg: assets/images/20261107_stadium_realmadrid/06_w.jpg
+  tier: 背景
+  telop: 案は2014年に決まり、工事は2019年6月から。2021年9月に560日ぶりに戻った
+  narrator: 解説
+  card: &id_reb
+    type: timeline
+    title: 改修の歩み
+    rows:
+    - - 2014年1月
+      - 設計の案が決まる
+    - - 2015年2月
+      - 裁判所が街の計画の変更を無効に
+    - - 2017年5月
+      - マドリード市が認める
+    - - 2019年6月
+      - 工事が始まる
+    - - 2021年9月
+      - 560日ぶりに戻る
+    focus: 2019年6月
+    highlight_row: 0
+  say:
+  - text: いまの形に作り直す設計の案が決まったのは、2014年の1月です。
+    image: assets/images/20261107_stadium_realmadrid/06_w.jpg
+    card:
+      <<: *id_reb
+      highlight_row: 0
+  - text: ところが2015年、裁判所が街の計画の変更を無効にして、話は止まります。
+    image: assets/images/20261107_stadium_realmadrid/06_w.jpg
+    card:
+      <<: *id_reb
+      highlight_row: 1
+  - text: 案を作り直し、マドリード市が認めたのは、2017年の5月。
+    image: assets/images/20261107_stadium_realmadrid/06_w.jpg
+    card:
+      <<: *id_reb
+      highlight_row: 2
+  - text: 重機が入ったのは、2019年の6月。案が決まってから、5年あまりあとでした。
+    emph: true
+    image: assets/images/20261107_stadium_realmadrid/06_w.jpg
+    card:
+      <<: *id_reb
+      highlight_row: 3
+  - text: 同じ2019年の6月、久保建英が、レアル・マドリードに入っています。
+    image: assets/images/20261107_stadium_realmadrid/02_w.jpg
+    card: none
+  - text: 2020年3月のクラシコを最後に、レアルはベルナベウを離れます。
+    image: assets/images/20261107_stadium_realmadrid/02_w.jpg
+    card: none
+  - text: その後のホームの試合は、練習場にある小さなスタジアムで。
+    image: assets/images/20261107_stadium_realmadrid/06_w.jpg
+    card: none
+  - text: 名前は、アルフレド・ディ・ステファノ・スタジアムです。
+    image: assets/images/20261107_stadium_realmadrid/06_w.jpg
+    card: none
+  - text: 戻ったのは、2021年9月12日。560日ぶりでした。
+    emph: true
+    image: assets/images/20261107_stadium_realmadrid/08_w.jpg
+    card:
+      <<: *id_reb
+      highlight_row: 4
+  - text: 工事中のまま迎えたセルタ戦は、5対2の勝ち。人数を絞り、1万9874人の前でした。
+    image: assets/images/20261107_stadium_realmadrid/08_w.jpg
+    card:
+      <<: *id_reb
+      highlight_row: 4
+  - text: 改修のための借り入れは、全部で11億7000万ユーロ。30年かけて返していきます。
+    image: assets/images/20261107_stadium_realmadrid/02_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Santiago_Bernab%C3%A9u_Stadium
+  - https://es.wikipedia.org/wiki/Estadio_Santiago_Bernab%C3%A9u
+  - https://www.malaymail.com/news/sports/2021/09/13/benzema-hat-trick-gives-madrid-winning-return-to-bernabeu/2005071
+- id: events
+  heading: 芝を地下にしまって、何に使ってきたのか
+  bg: assets/images/20261107_stadium_realmadrid/07_w.jpg
+  tier: 報道
+  telop: 大きなコンサートは2024年9月から止まったまま。2025年11月のNFLには7万8610人
+  narrator: 解説
+  card: &id_ev
+    type: timeline
+    title: 芝をしまって開いた催し
+    rows:
+    - - 2024年5月
+      - 改修のあと初めてのコンサート
+    - - 2024年9月
+      - 大きなコンサートが止まる
+    - - 2025年11月
+      - NFLの公式戦、7万8610人
+    - - 2025年12月
+      - クリスマスの催し
+    - - 2026年4月
+      - テニスの大会の練習コート
+    focus: 2025年11月
+    highlight_row: 0
+  say:
+  - text: 芝をしまう仕組みを作ったのは、スペインの技術会社です。
+    image: assets/images/20261107_stadium_realmadrid/03_w.jpg
+    card: none
+  - text: 芝の板は地下で、光と水と空調のある部屋に収まり、傷まずに待ちます。
+    image: assets/images/20261107_stadium_realmadrid/03_w.jpg
+    card: none
+  - text: 空いた床は、コンサートや展示の会場になります。
+    image: assets/images/20261107_stadium_realmadrid/07_w.jpg
+    card: none
+  - text: 2024年5月、改修のあと初めてのコンサート。テイラー・スウィフトの2日間でした。
+    image: assets/images/20261107_stadium_realmadrid/08_w.jpg
+    card:
+      <<: *id_ev
+      highlight_row: 0
+  - text: ところが、2024年の9月から、大きなコンサートは止まったまま。
+    emph: true
+    image: assets/images/20261107_stadium_realmadrid/02_w.jpg
+    card:
+      <<: *id_ev
+      highlight_row: 1
+  - text: 近くに住む人たちから、音の苦情が出たためです。
+    image: assets/images/20261107_stadium_realmadrid/02_w.jpg
+    card: none
+  - text: 代わりに開いたのが、アメリカンフットボールでした。
+    image: assets/images/20261107_stadium_realmadrid/04_w.jpg
+    card: none
+  - text: 2025年11月16日、アメリカのプロリーグ、エヌエフエルの公式戦です。
+    image: assets/images/20261107_stadium_realmadrid/04_w.jpg
+    card: none
+  - text: 入ったのは、7万8610人です。
+    emph: true
+    image: assets/images/20261107_stadium_realmadrid/05_w.jpg
+    card: none
+  - text: 12月には、芝をしまった床で、クリスマスの催しも開かれました。
+    image: assets/images/20261107_stadium_realmadrid/07_w.jpg
+    card:
+      <<: *id_ev
+      highlight_row: 3
+  - text: 2026年4月には、テニスの大会の練習コートが、ここに置かれています。
+    image: assets/images/20261107_stadium_realmadrid/07_w.jpg
+    card:
+      <<: *id_ev
+      highlight_row: 4
+  sources:
+  - https://en.wikipedia.org/wiki/Santiago_Bernab%C3%A9u_Stadium
+  - https://stadiumdb.com/news/2026/05/spain_real_madrid_found_not_guilty_court_issues_ruling_over_noise_at_bernabeu
+  - https://www.puntodebreak.com/en/2026/03/25/the-mutua-madrid-open-2026-will-install-training-courts-at-the-santiago-bernabeu-stadium
+  - https://www.group.sener/noticias/retractable-pitch-santiago-bernabeu-stadium-project-conceived-developed-by-sener/?lang=en
+- id: view
+  viewpoint: true
+  heading: 見立て・ベルナベウには何人入り、W杯の決勝に届くのか
+  bg: assets/images/20261107_stadium_realmadrid/01_w.jpg
+  tier: 報道
+  telop: 招致の書類では7万8297人。FIFA が決勝に求める8万席まで1703席。今季の最多は7万5242人
+  narrator: 解説
+  card: &id_view
+    type: table
+    title: ベルナベウの人数、5つの数字
+    columns:
+    - 何の数字
+    - 人数
+    rows:
+    - - 改修の計画
+      - 8万1044人
+    - - 会長の話
+      - 8万人前後
+    - - W杯の招致の書類
+      - 7万8297人
+    - - NFLの試合の入場
+      - 7万8610人
+    - - 今季のサッカーの最多
+      - 7万5242人
+    highlight_row: 2
+  say:
+  - text: では、ベルナベウには、何人入るのか。実は、数字がそろっていません。
+    emph: true
+    image: assets/images/20261107_stadium_realmadrid/01_w.jpg
+    card: none
+  - text: 改修の計画では、8万1044人。会長は、8万人前後と話しています。
+    image: assets/images/20261107_stadium_realmadrid/01_w.jpg
+    card:
+      <<: *id_view
+      highlight_row: 0
+  - text: 2030年のワールドカップの招致の書類では、7万8297人です。
+    image: assets/images/20261107_stadium_realmadrid/01_w.jpg
+    card:
+      <<: *id_view
+      highlight_row: 2
+    mark:
+      kind: circle
+      row: 2
+  - text: 国際サッカー連盟が決勝に求めるのは、8万席。書類の数字より1703席多い。
+    emph: true
+    image: assets/images/20261107_stadium_realmadrid/01_w.jpg
+    card:
+      type: calc
+      title: 決勝の条件まで何席か（自分で引いた）
+      terms:
+      - - 8万席
+        - FIFA の決勝の条件
+      - - 7万8297人
+        - 招致の書類の数字
+      - - 1703席
+        - 引いた答え
+      ops:
+      - −
+      - ＝
+  - text: 会長の話の8万人前後でも、条件ぎりぎり。
+    image: assets/images/20261107_stadium_realmadrid/01_w.jpg
+    card: none
+  - text: 今季の入場は、どうか。数字は、11月5日の時点です。
+    image: assets/images/20261107_stadium_realmadrid/08_w.jpg
+    card: none
+  - text: 入場の記録が残る5試合で、いちばん入ったのは10月10日のビジャレアル戦。
+    image: assets/images/20261107_stadium_realmadrid/08_w.jpg
+    card: none
+  - text: 7万5242人。招致の書類の数字より、3055人少なめです。
+    image: assets/images/20261107_stadium_realmadrid/08_w.jpg
+    card: &id_att
+      type: table
+      title: 今季のベルナベウの入場（記録が残る5試合）
+      columns:
+      - 相手
+      - 入場
+      rows:
+      - - レアル・ソシエダ
+        - 7万2226人
+      - - インテル
+        - 7万4858人
+      - - ビジャレアル
+        - 7万5242人
+      - - セビージャ
+        - 7万3907人
+      - - ライプツィヒ
+        - 7万3016人
+      - - 平均
+        - 約7万3850人
+      highlight_row: 2
+  - text: 8月26日のレアル・ソシエダ戦では、久保建英が先発。7万2226人の前でした。
+    image: assets/images/20261107_stadium_realmadrid/08_w.jpg
+    card:
+      <<: *id_att
+      highlight_row: 0
+  - text: 5試合の平均は、約7万3850人。アメフトの試合より、5千人近く少なめです。
+    image: assets/images/20261107_stadium_realmadrid/05_w.jpg
+    card:
+      <<: *id_att
+      highlight_row: 5
+  - text: ワールドカップの決勝の会場は、まだ決まっていません。
+    image: assets/images/20261107_stadium_realmadrid/01_w.jpg
+    card: none
+  - text: 芝を地下にしまう器は、あと約2％の席を足せるのか。
+    emph: true
+    image: assets/images/20261107_stadium_realmadrid/01_w.jpg
+    card: none
+  sources:
+  - https://stadiumdb.com/news/2025/03/spain_what_is_the_final_capacity_of_bernabeu_real_wants_more
+  - https://stadiumdb.com/news/2026/03/world_four_stadiums_one_match_where_will_the_2030_world_cup_final_be_held
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/teams/86/schedule?season=2026（2026-27 ラ・リーガ、レアル・マドリードのホーム）
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/teams/86/schedule?season=2026
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/summary?event=401882919
+  - https://en.wikipedia.org/wiki/Santiago_Bernab%C3%A9u_Stadium

@@ -1,0 +1,474 @@
+# 監督紹介：アントニオ・コンテ（11/8 日、シリーズ「監督紹介」、key: manager_conte、型は news）。9節の型（2026-10-20 決定）。見本は 20261106_manager_slot。
+# 順：フック→基礎DATA→（日本との接点＝無し）→歩みと転機→戦術の色（実例の試合1つ）→数字で見る→本人の言葉→マル秘話→見立て。
+#
+# **題材の選び方（2026-11-05）**：既出12人（グアルディオラ・アンチェロッティ・モウリーニョ・クロップ・シメオネ・アルテタ・フリック・ベンゲル・ファーガソン・トゥヘル・ルイス・エンリケ・スロット）以外の大物。
+#   ・シャビ・アロンソ（チェルシー監督）は大物だが、直近30日に covered.yaml でニュース3件（10/24 退場ゼロほか）、scripts/ でも 10/23 レバークーゼンのクラブ紹介・10/24 のチェルシーのニュースなど9本に名前が出る。外した。
+#   ・ポステコグルーは日本との接点（横浜F・マリノス）が強いが、Jリーグの話が軸になり、大物の順でも後ろ。エメリ・マレスカ・ナーゲルスマンは直近の scripts に名前が複数出る。ジダンは 10/18 のレジェンドで出ている。
+#   ・コンテ：イタリアのセリエAを3つの違うクラブで制した初めての監督（ユヴェントス・インテル・ナポリ）＋チェルシーでプレミア優勝。大物。
+#   **重なりの確認（2026-11-05 に自分で）**：research/posted.json に「コンテ」0件、research/covered.yaml に0件。scripts/ は 10/17 の kvaratskhelia（クヴァラツヘリアの退団の経緯に1行）だけで、監督コンテを主役にした本は無い。
+#   同じ 11/8 の他の担当（research/20261107_picks.txt）：代表＝クロアチア、クラブ紹介＝ブレーメン。人名・国（イタリア）は重ならない。
+#   **日本との接点**：コンテが率いたチームに日本人選手は見当たらない（ユヴェントス2011-14・チェルシー・インテル2019-21（長友は2018年に離れている）・トッテナム・ナポリの在籍を英語版で確認）。日本代表との対戦も無い。→ 節は置かない（10/6 の決定どおり、無理に入れない）。
+#
+# **いまの立場**：無所属（前ナポリ監督）。
+#   ○ 英語版 Wikipedia「Antonio Conte」（2026-11-05 版）本文：「his most recent managerial stint being at Serie A club Napoli」「At the end of the 2025–26 season … Conte left the club by mutual consent at the conclusion of the season」。
+#   ○ イタリア語版（Aggiornato = 4 giugno 2026）：監督歴は「2024-2026 Napoli」で終わる。
+#   ○ 検索（2026-11-05）：10月下旬の報道まで「次のクラブは未定」（ユヴェントス・マンU・イタリア代表のうわさ止まり）。**クラブの公式発表は見つからない**。英語版の infobox に「2026–」の空欄が残り、10月に匿名の書き換えと差し戻しが数回あった（うわさの書き込みと見て数えない）。
+#     → 台本は「次のクラブは、まだ発表されていません」とだけ言う。うわさの名前は出さない。
+#
+# **通算（台本とサムネをそろえる）**＝英語版 Wikipedia「Managerial record by team and tenure」（updated match played 24 May 2026）：
+#   アレッツォ 12試合1勝・15試合8勝／バーリ 67試合32勝／アタランタ 14試合3勝／シエナ 44試合22勝／ユヴェントス 151試合102勝34分15敗／イタリア代表 25試合14勝／チェルシー 106試合69勝17分20敗／インテル 102試合64勝23分15敗／トッテナム 76試合41勝12分23敗／ナポリ 91試合52勝22分17敗。Career total 703試合408勝165分130敗。
+#   自分で足して一致（12+15+67+14+44+151+25+106+102+76+91＝703、1+8+32+3+22+102+14+69+64+41+52＝408）。下部組織は含まない（トップチームと代表だけ。アレッツォは2回の就任＝10チーム）。
+#   勝率（自分で割った）：通算 58.0%、ユヴェントス 67.5%、チェルシー 65.1%、インテル 62.7%、ナポリ 57.1%、トッテナム 53.9%、イタリア代表 56.0%。
+#   ※アレッツォ〜シエナの行に「citation needed」の札。上の大きなクラブの行と合計は出典つき。確度は 報道。
+#   **ナポリは季ごとの表で突き合わせた**（英語版「2024–25 SSC Napoli season」「2025–26 …」の Overall record）：
+#     2024-25：セリエA 24勝10分4敗（勝ち点 24×3+10＝82、インテルに1点差で優勝）・コッパ・イタリア 1勝1分1敗 → 41試合25勝11分5敗。
+#     2025-26：セリエA 23勝7分8敗（2位、勝ち点76）・コッパ 0勝2分・スーペルコッパ 2勝（優勝）・CL 2勝2分4敗（リーグフェーズ敗退） → 50試合27勝11分12敗。
+#     合計 91試合52勝22分17敗 ＝ 通算の表と一致。
+#   タイトル（Honours・Manager）：セリエB 2008-09（バーリ）／セリエA 2011-12・12-13・13-14（ユヴェントス）・2020-21（インテル）・2024-25（ナポリ）＝5回／スーペルコッパ 2012・2013・2025-26／プレミアリーグ 2016-17・FA杯 2017-18（チェルシー）。
+#
+# **基礎**：1969-07-31 イタリア・レッチェ生まれ（2026-11-05 時点で57歳）。選手：MF。レッチェ（1985-91）→ユヴェントス（1991-2004）。英語版本文：1986-04-06 に16歳でセリエAデビュー。ユヴェントスで13季、公式戦418試合43得点、主将も務めた。CL 1995-96 優勝。イタリア代表20試合2得点、1994年W杯・EURO2000 で準優勝。
+#
+# **歩みの細部**（英語版本文と各季の記事）：
+#   2006 アレッツォ（2部）で監督に。2007-08 途中からバーリ、2008-09 にセリエBで優勝して昇格。2009 アタランタ（翌年1月に辞任）。2010-11 シエナを1部へ昇格させる。
+#   2011-05 ユヴェントス監督に。前の2季は7位・7位（英語版「2009–10」「2010–11 Juventus FC season」の league result）。1季目 2011-12 は38試合無敗（23勝15分、勝ち点84）で優勝＝20チーム38節になってから初の無敗優勝。2013-14 は勝ち点102（33勝）のセリエA記録。3連覇。
+#   2014-08 イタリア代表。EURO2016 でベルギーに2-0、スペインに2-0、準々決勝でドイツとPK負け（1-1、PK 5-6）。
+#   2016-07 チェルシー。前の季のチェルシーは10位（英語版「2015–16 Chelsea F.C. season」）。2016-17 プレミア優勝（30勝3分5敗、勝ち点93）。2018 FA杯優勝、7月に解任。
+#   2019-05 インテル。2020-21 に11年ぶりのセリエA優勝、ユヴェントスの9連覇を止めた。
+#   2021-11 トッテナム、2021-22 は4位でCL出場権。2023-03 合意で退任。
+#   2024-06 ナポリ。前の季のナポリは10位（英語版「2023–24 SSC Napoli season」）。2024-25 に優勝＝3つの違うクラブでセリエAを制した初めての監督（英語版、The Athletic 2025-05-23 を出典に）。2025-12-22 スーペルコッパ優勝（リヤドでボローニャに2-0）。2025-26 は2位、2026-05 に合意で退任。
+#   英語版：CL では16強を越えたのは1回だけ、という批判がある（見立てで公平に触れる）。
+#
+# **戦術の色**＝2016-17 のチェルシー（英語版「2016–17 Chelsea F.C. season」本文）：
+#   9月24日 アーセナルに0-3（その前にリヴァプールにも負け、9月は勝ち点9のうち1）。→ 10月1日 ハル戦（アウェー）で 3-4-3 に変え、2-0（ウィリアン・コスタ）。後ろはケーヒル・ダビド・ルイス・アスピリクエタ、両脇にマルコス・アロンソとモーゼス。
+#   リーグ13連勝（12月31日 ストーク戦で13、1月4日 トッテナムに負けて止まる）。11月5日 エヴァートンに5-0（シュート21本対1本）。英語版 Conte：実況のジョン・モットソンが「プレミアで見た最高の90分」と評した。
+#   季の終わりに30勝（当時のプレミア最多）、勝ち点93。コンテは10・11・12月の月間最優秀監督＝3か月続けては史上初。
+#   ユヴェントスでは 3-5-2 で、ピルロを後ろの司令塔に（英語版の Style of management）。
+#
+# **本人の言葉**：
+#   ①2013年12月 ドバイ、グローブ・サッカー・アウォーズでの発言（FourFourTwo 2013-12-29「Great Italian tacticians influenced me, says Conte」。requests で本文を読んで確かめた）：
+#     "I did not have Zinedine Zidane or Roberto Baggio's talent as a player, and I have played with both" / "my efforts and work-rate, my willingness to sacrifice fitness and humility made up for my lack of pure talent" / "As a manager, my first thought from day one was that I wanted to find solutions for my players when the ball reached them, as I could not."
+#     "I want them to understand why we are doing certain things and why those things are useful."
+#
+# **マル秘話**（英語版の Style of management）：
+#   ・ピルロの自伝：最初のあいさつで「このチームは2季続けて7位だ。どうかしている」。ピルロは「その一回の話で、私もユヴェントスも心をつかまれた」。
+#   ・EURO2016、ボヌッチら選手は、話し出すと聞き入ってしまうコンテを「ゴッドファーザー」と呼んだ。（ボヌッチの名は読みが割れるので台本では「選手たち」）
+#   ・チェルシーでは食堂の食事を絞り、試合の前の晩は選手をスタンフォード・ブリッジのそばのホテルに泊めた。
+#   ・選手のころ：EURO2000 の初戦トルコ戦で、オーバーヘッドで得点（2-1）。
+#
+# **入れなかったもの**：シエナ時代の八百長の通報義務の処分（2016年に無罪。法的な問題は入れない決まり）、2023年の手術（病気）、家族・私生活、トッテナム退任前の会見の発言（選手を小さく見せる言葉）、チェルシーの解任の補償金、ブッフォンへの激高の逸話（言葉が荒い）、次の就任先のうわさ、1996年東京のインターコンチネンタル杯（けがで欠場＝けがの話）、FotMob・女子・ニュースの反応。
+date: 2026年11月5日
+slot: other_1
+format: news
+series: 監督紹介
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- コンテ
+theme:
+  end_bg: assets/images/20261108_manager_conte/03_w.jpg
+  id: manager_conte
+  league: italy
+  league_name: セリエA
+  kind: other
+  topic: コンテ
+  title: コンテ、前ナポリ監督はどんな人？10位のチームを1年目で優勝させた理由は
+  question: 前ナポリ監督のアントニオ・コンテは、どんな人なのか。沈んだチームを1年目で優勝させられるのは、なぜなのか
+  lead: 前ナポリ監督、アントニオ・コンテ。
+  opening_image: assets/images/20261108_manager_conte/02_o.jpg
+  takeaway: 7位のユヴェントス、10位のチェルシー、10位のナポリ。どれも就任1季目で優勝させた。通算703試合408勝、勝率58.0%。欧州の大会ではCLの16強を越えたのが1回だけで、次の仕事はそこを越えられるかを見ている
+  short_title: コンテ、3つのクラブでセリエA優勝の道のり
+  nameplate: アントニオ・コンテ｜前ナポリ監督
+thumbnail:
+  line1: コンテ、703試合408勝
+  line2: 史上初、3クラブでセリエA制覇
+  tags:
+  - ナポリ
+  photo: assets/images/20261108_manager_conte/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261108_manager_conte/01_v.jpg
+sections:
+- id: hook
+  main: true
+  heading: 3つのクラブでセリエA優勝。コンテとは、どんな監督なのか
+  tier: 報道
+  telop: 違う3つのクラブでセリエAを制した、初めての監督
+  narrator: 解説
+  card: &hook_stats
+    type: stats
+    title: コンテが監督として取ったリーグ優勝
+    items:
+    - ['3', クラブ, セリエAを制したクラブの数]
+    - ['5', 回, イタリアのリーグ優勝]
+    - ['1', 回, イングランドのプレミア優勝]
+    focus: 0
+  say:
+  - text: 違う3つのクラブでセリエAを制した、初めての監督です。
+    image: assets/images/20261108_manager_conte/03_w.jpg
+    emph: true
+    card: none
+  - text: それがコンテ。ユヴェントス、インテル、そしてナポリです。
+    card:
+      <<: *hook_stats
+      focus: 0
+  - text: イタリアのリーグで優勝すること、5回。
+    card:
+      <<: *hook_stats
+      focus: 1
+  - text: イングランドに渡っても、チェルシーで1季目にプレミアを制覇しています。
+    image: assets/images/20261108_manager_conte/02_w.jpg
+    card:
+      <<: *hook_stats
+      focus: 2
+  sources:
+  - https://en.wikipedia.org/wiki/Antonio_Conte
+  - https://en.wikipedia.org/wiki/2024%E2%80%9325_SSC_Napoli_season
+- id: data
+  heading: コンテは、いつ、どこで、どんな道を歩いた人か
+  tier: 報道
+  telop: アントニオ・コンテの基礎DATA
+  narrator: 解説
+  card: &data_table
+    type: table
+    title: アントニオ・コンテ（57歳）の基礎DATA
+    columns: [項目, 中身]
+    rows:
+    - [生年月日, 1969年7月31日（イタリア・レッチェ）]
+    - [選手のころ, MF。ユヴェントスで13季、主将も]
+    - [監督, ユヴェントス、イタリア代表、チェルシー、インテル、ナポリほか]
+    - [タイトル, セリエA5回、プレミアリーグ1回]
+    - [いま, 2026年5月にナポリを退任]
+    highlight_row: 0
+  say:
+  - text: コンテは1969年7月31日、イタリア南部のレッチェの生まれ。57歳です。
+    image: assets/images/20261108_manager_conte/03_w.jpg
+    card:
+      <<: *data_table
+      highlight_row: 0
+  - text: 現役のポジションは中盤。ユヴェントスで13季プレーして、主将も任されました。
+    card:
+      <<: *data_table
+      highlight_row: 1
+  - text: 監督としては、ユヴェントスとイタリア代表、
+    image: assets/images/20261108_manager_conte/02_w.jpg
+    card:
+      <<: *data_table
+      highlight_row: 2
+  - text: そしてチェルシー、インテル、トッテナム、ナポリを率いました。
+    card:
+      <<: *data_table
+      highlight_row: 2
+  - text: 2026年5月、ナポリとは話し合いのうえで別れました。
+    image: assets/images/20261108_manager_conte/02_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Antonio_Conte
+  - https://it.wikipedia.org/wiki/Antonio_Conte
+- id: career
+  heading: 2部の監督から、3つのリーグの優勝監督へ。何があったのか
+  tier: 背景
+  telop: 歩みと転機。バーリ、ユヴェントス、チェルシー、インテル、ナポリ
+  narrator: 解説
+  card: &career_tl
+    type: timeline
+    title: コンテの歩み
+    rows:
+    - [2009年, 2部のバーリで優勝し、1部へ]
+    - [2011年, 7位続きのユヴェントスで、無敗優勝]
+    - [2016年, 10位だったチェルシーで、プレミア優勝]
+    - [2021年, インテルで11年ぶりの優勝]
+    - [2025年, 10位だったナポリで優勝]
+    focus: 0
+  say:
+  - text: コンテの監督の始まりは、2006年。2部のアレッツォでした。
+    image: assets/images/20261108_manager_conte/02_w.jpg
+    card: none
+  - text: 2009年には、2部のバーリを優勝させて、1部へ上げます。
+    card:
+      <<: *career_tl
+      focus: 0
+  - text: 2011年、古巣ユヴェントスの監督に。チームは2季続けて7位でした。
+    card:
+      <<: *career_tl
+      focus: 1
+  - text: その1季目、リーグ戦38試合で1度も負けずに優勝します。
+    emph: true
+    callword: 無敗優勝
+    card: none
+  - text: 3季目には勝ち点102。イタリアのリーグの記録を作って、3連覇です。
+    card: none
+  - text: 2016年、チェルシーへ。前の季は10位のチームを、1季目で優勝させました。
+    image: assets/images/20261108_manager_conte/03_w.jpg
+    card:
+      <<: *career_tl
+      focus: 2
+  - text: 2021年にはインテルで、11年ぶりの優勝。ユヴェントスの9連覇を止めました。
+    card:
+      <<: *career_tl
+      focus: 3
+  - text: そして2024年、前の季に10位だったナポリへ。
+    image: assets/images/20261108_manager_conte/02_w.jpg
+    card:
+      <<: *career_tl
+      focus: 4
+  - text: 2025年5月、インテルを勝ち点1上回って、ここでも1季目で優勝しました。
+    emph: true
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Antonio_Conte
+  - https://en.wikipedia.org/wiki/2010%E2%80%9311_Juventus_FC_season
+  - https://en.wikipedia.org/wiki/2011%E2%80%9312_Juventus_FC_season
+  - https://en.wikipedia.org/wiki/2013%E2%80%9314_Juventus_FC_season
+  - https://en.wikipedia.org/wiki/2015%E2%80%9316_Chelsea_F.C._season
+  - https://en.wikipedia.org/wiki/2023%E2%80%9324_SSC_Napoli_season
+  - https://en.wikipedia.org/wiki/2024%E2%80%9325_SSC_Napoli_season
+- id: style
+  heading: 負けが続いたチェルシーで、コンテは何を変えたのか
+  tier: 報道
+  telop: 戦術の色。2016年10月、後ろを3人にしたチェルシー
+  narrator: 解説
+  card: &style_doc
+    type: document
+    label: 2016年秋のチェルシー（プレミアリーグ）
+    paragraphs:
+    - 9月24日、アーセナルに0対3。
+    - 10月1日のハル戦から、後ろを3人にする形へ。
+    - 両脇の選手が、守りにも攻めにも走る。
+    - そこからリーグ戦13連勝。
+    highlight:
+    - 後ろを3人
+    - 13連勝
+  say:
+  - text: 戦い方の色がはっきり出たのが、チェルシーの1季目の秋です。
+    image: assets/images/20261108_manager_conte/02_w.jpg
+    card: *style_doc
+  - text: 9月24日、アーセナルに0対3。その前にはリヴァプールにも負けていました。
+    card: *style_doc
+  - text: そこでコンテは、10月1日のハル・シティ戦から、守りの後ろを3人に変えます。
+    card: *style_doc
+  - text: 両脇の選手は、守るときは下がり、攻めるときは前へ。
+    card: *style_doc
+  - text: この形で、ハル・シティに2対0の勝ち。
+    image: assets/images/20261108_manager_conte/03_w.jpg
+    card: none
+  - text: ここから、リーグ戦で13連勝が始まりました。
+    image: assets/images/20261108_manager_conte/04_w.jpg
+    emph: true
+    callword: 13連勝
+    card: none
+  - text: 11月5日には、エヴァートンに5対0の勝ち。
+    image: assets/images/20261108_manager_conte/03_w.jpg
+    card: none
+  - text: シュートは21本、相手は1本だけでした。
+    card: none
+  - text: 名物の実況アナウンサーが、プレミアで見た最高の90分と話したほどです。
+    card: none
+  - text: ユヴェントスのころも、後ろは3人。
+    card: none
+  - text: ピルロを、後ろから試合を組み立てる役にしています。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/2016%E2%80%9317_Chelsea_F.C._season
+  - https://en.wikipedia.org/wiki/Antonio_Conte
+- id: numbers
+  heading: 通算703試合、勝率が高いのはどのクラブか
+  tier: 報道
+  telop: 通算408勝。勝率はユヴェントス67.5%、チェルシー65.1%
+  narrator: 解説
+  card: &rate_bars
+    type: bars
+    title: コンテの勝率（チームごと、%）
+    unit: '%'
+    items:
+    - label: トッテナム
+      value: 53.9
+    - label: ナポリ
+      value: 57.1
+    - label: インテル
+      value: 62.7
+    - label: チェルシー
+      value: 65.1
+    - label: ユヴェントス
+      value: 67.5
+      highlight: true
+  say:
+  - text: コンテの成績を、数字で見ていきます。
+    image: assets/images/20261108_manager_conte/02_w.jpg
+    card: &total_stats
+      type: stats
+      title: コンテの監督通算（2006年から）
+      items:
+      - ['703', 試合, イタリア代表を含む]
+      - ['408', 勝, 引き分け165・負け130]
+      - ['58', '%', 勝率]
+      focus: 1
+  - text: 監督になってからの通算は、703試合で408勝。勝率は58%です。
+    emph: true
+    card:
+      <<: *total_stats
+      focus: 1
+  - text: チームごとに見ると、いちばん高いのはユヴェントス。
+    image: assets/images/20261108_manager_conte/03_w.jpg
+    card: *rate_bars
+  - text: 151試合で102勝、67.5%です。
+    card: *rate_bars
+  - text: チェルシーは106試合で69勝。65.1%でした。
+    card: *rate_bars
+  - text: チェルシーの1季目は、リーグ戦で30勝。
+    card: none
+  - text: 当時のプレミアで、いちばん多い勝ち星でした。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Antonio_Conte
+  - https://en.wikipedia.org/wiki/2016%E2%80%9317_Chelsea_F.C._season
+- id: words
+  heading: 本人は、自分の才能をどう語ったのか
+  tier: 報道
+  telop: コンテの言葉。2013年12月、ドバイの授賞式で
+  narrator: 解説
+  card: &words_doc
+    type: document
+    label: コンテの言葉（訳）。2013年12月、ドバイの授賞式で
+    paragraphs:
+    - 選手のころの私には、ジダンやバッジョのような才能はありませんでした。
+    - 足りない才能は、努力と運動量、そして謙虚さで補っていました。
+    - 監督になって最初に考えたのは、ボールが来たときの答えを、選手に用意することです。
+    highlight:
+    - 才能はありませんでした
+    - 答えを、選手に用意する
+  say:
+  - text: 本人の言葉です。2013年12月、ドバイでの授賞式で、こう話しています。
+    image: assets/images/20261108_manager_conte/03_w.jpg
+    card: *words_doc
+  - voice: コンテ
+    text: 選手のころの私には、
+  - voice: コンテ
+    text: ジダンやバッジョのような才能はありませんでした。
+    cont: true
+  - voice: コンテ
+    text: 足りない才能は、努力と運動量、
+    cont: true
+  - voice: コンテ
+    text: そして謙虚さで補っていました。
+    cont: true
+  - voice: コンテ
+    text: 監督になって最初に考えたのは、
+    cont: true
+    image: assets/images/20261108_manager_conte/01_w.jpg
+    card: none
+  - voice: コンテ
+    text: ボールが来たときの答えを、選手に用意することです。
+    cont: true
+  - voice: コンテ
+    text: 私には、それができなかったからです。
+    cont: true
+    pause: 0.5
+  - text: なぜその動きをするのか、選手には分かったうえで動いてほしい、とも話しています。
+    image: assets/images/20261108_manager_conte/04_w.jpg
+    card: none
+  quotes_from:
+  - https://www.fourfourtwo.com/news/great-italian-tacticians-influenced-me-says-conte
+  sources:
+  - https://www.fourfourtwo.com/news/great-italian-tacticians-influenced-me-says-conte
+- id: secret
+  heading: 数字の外にある話。最初のあいさつで、何を言ったのか
+  tier: 背景
+  telop: ユヴェントスでの最初の一言は「2季続けて7位。どうかしている」
+  narrator: 解説
+  card: &sec_table
+    type: table
+    title: 数字の外にある話
+    columns: [いつ, 何があったか]
+    rows:
+    - [2000年, ユーロの初戦で、オーバーヘッドの得点]
+    - [2011年, ユヴェントスでの最初のあいさつ]
+    - [2016年, 代表の選手から「ゴッドファーザー」]
+    - [2016年, チェルシーで食事と前の晩の宿まで決める]
+    highlight_row: 0
+  say:
+  - text: ここから、コンテの数字の外の話。
+    image: assets/images/20261108_manager_conte/02_w.jpg
+    card: none
+  - text: 選手のころ、2000年のヨーロッパ選手権、ユーロの初戦でオーバーヘッドの得点。
+    card:
+      <<: *sec_table
+      highlight_row: 0
+  - text: 2011年、ユヴェントスでの最初のあいさつ。
+    card:
+      <<: *sec_table
+      highlight_row: 1
+  - text: 2季続けて7位だ、どうかしている、と言い切りました。
+    emph: true
+    card:
+      <<: *sec_table
+      highlight_row: 1
+  - text: その場にいたピルロは、自伝で、その一回の話で心をつかまれたと書いています。
+    card:
+      <<: *sec_table
+      highlight_row: 1
+  - text: 2016年のユーロでは、話し出すと聞き入ってしまうコンテを、
+    image: assets/images/20261108_manager_conte/01_w.jpg
+    card: none
+  - text: 代表の選手たちがゴッドファーザーと呼びました。
+    card: none
+  - text: チェルシーでは、練習場で出す食事を絞りました。
+    image: assets/images/20261108_manager_conte/03_w.jpg
+    card:
+      <<: *sec_table
+      highlight_row: 3
+  - text: 試合の前の晩は、選手をスタジアムのそばのホテルに泊めています。
+    card:
+      <<: *sec_table
+      highlight_row: 3
+  sources:
+  - https://en.wikipedia.org/wiki/Antonio_Conte
+- id: view
+  viewpoint: true
+  heading: 見立て・1季目に強いコンテは、欧州の壁を越えられるのか
+  tier: 背景
+  telop: 7位、10位、10位のチームを、どれも1季目で優勝させた
+  narrator: 解説
+  card: &view_table
+    type: table
+    title: 自分で数えてみた（就任の前の季の順位と、1季目）
+    columns: [クラブ, 前の季, 1季目]
+    rows:
+    - [ユヴェントス（2011年）, 7位, 優勝]
+    - [チェルシー（2016年）, 10位, 優勝]
+    - [ナポリ（2024年）, 10位, 優勝]
+    - [インテル（2019年）, 4位, 2位]
+    highlight_row: 0
+  say:
+  - text: 見立てです。就任する前の季の順位と、コンテの1季目を並べました。
+    image: assets/images/20261108_manager_conte/03_w.jpg
+    card: *view_table
+  - text: ユヴェントスは7位から、優勝。
+    card:
+      <<: *view_table
+      highlight_row: 0
+  - text: チェルシーは10位から、ナポリも10位から、どちらも1季目で優勝です。
+    emph: true
+    mark: {kind: circle, row: 2, col: 1}
+    card:
+      <<: *view_table
+      highlight_row: 2
+  - text: インテルだけは1季目が2位で、2季目に優勝しました。
+    card:
+      <<: *view_table
+      highlight_row: 3
+  - text: 負けが続けば形を変える決断と、選手に答えを用意しておく準備。
+    image: assets/images/20261108_manager_conte/01_w.jpg
+    card: none
+  - text: 沈んだチームを1季目から立て直せる理由は、そこにあると考えます。
+    card: none
+  - text: 一方で、チャンピオンズリーグでは、16強の先へ進んだのは1度だけです。
+    card: none
+  - text: 次の行き先は、まだ公式には出ていません。
+    card: none
+  - text: 次の仕事で、欧州の大会の壁を越えられるかに注目です。
+    image: assets/images/20261108_manager_conte/02_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Antonio_Conte
+  - https://en.wikipedia.org/wiki/2010%E2%80%9311_Juventus_FC_season
+  - https://en.wikipedia.org/wiki/2015%E2%80%9316_Chelsea_F.C._season
+  - https://en.wikipedia.org/wiki/2023%E2%80%9324_SSC_Napoli_season

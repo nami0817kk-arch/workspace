@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import datetime
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -893,9 +894,17 @@ def ja_club(team: str) -> str:
     return team
 
 
+# **セリエAの別名**（2026-11-13）。シーズン記事の表は「Milan」「Internazionale」と書く。
+# そのまま比べると「Milan」が Inter Milan に当たり、「Internazionale」はどこにも当たらない
+TEAM_ALIAS = {"Milan": "AC Milan", "Internazionale": "Inter Milan", "Inter": "Inter Milan"}
+
+
 def club_matches(team: str, club_title: str) -> bool:
+    team = TEAM_ALIAS.get(team.strip(), team)
     base = (club_title.replace("_", " ").replace(" F.C.", "").replace(" A.F.C.", "").replace("AFC ", "")
-            .replace(" CF", "").replace(" C.F.", "").replace(" FC", "").replace(" de Fútbol", ""))
+            .replace(" C.F.", "").replace(" FC", "").replace(" de Fútbol", ""))
+    # " CF" は語の終わりのときだけ外す（セリエAの Genoa CFC が「Genoa C」になった。2026-11-13）
+    base = re.sub(r" CF\b", "", base)
     t = team.replace("AFC ", "").strip()
     # 頭の1語で比べると、マンチェスター・シティとユナイテッドを取り違える
     if base == t or base in t or t in base:

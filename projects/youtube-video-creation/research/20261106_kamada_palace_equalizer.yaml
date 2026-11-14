@@ -1,0 +1,148 @@
+# 取材メモ（2026年11月6日）鎌田大地、10人のパレスを救う後半ATの同点弾（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-06。requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約は使っていない（検索は記事のURLを探すためだけ）。ブラウザの道具は使っていない。
+# 題材の元: サッカーキング 2026-11-06「鎌田大地が劇的同点弾＆石渡ネルソンが欧州大会初得点…／EL・ECLまとめ」（全文）。
+# 出典で確かめたこと:
+#   ・ESPN の試合データ（site.api.espn.com summary event=401915526、11/5 17:45 UTC）:
+#       クリスタル・パレス 1-1 ホッフェンハイム。7分 プラス（ホッフェンハイム）／77分 ウォートン（パレス）が2枚目の警告で退場／90+1分 鎌田（右足）。
+#       鎌田・町田浩樹とも先発で交代なし（＝フル出場）。冨安はメンバー外（theWORLD「怪我で引き続きメンバー外」）。
+#   ・ゲキサカ 462602（全文）: 前半4分の鎌田のゴールはオフサイド。後半10分に鎌田がボランチへ下がる。後半32分ウォートン退場。
+#       後半AT1分、ミッチェルの折り返しに鎌田、GKバウマンの股下を抜く。鎌田のEL2点目。パレスは2試合連続ドロー。
+#   ・サッカーダイジェスト（Yahoo 535427d6）: 「町田と相手GKの股を続け様に抜き」。シャドーで先発。
+#   ・クラブ公式の試合記事（cpfc.co.uk report-highlights-crystal-palace-hoffenheim-europa-league-november-2026）: 90+1 Kamada levels … after converting Mitchell's cushioned header.
+#   ・本人の言葉（日刊スポーツ／Yahoo 0789747809、TNTスポーツのインタビュー）:
+#       「ゴールは少しラッキーなところもあった。勝ち点1という結果には満足していない。改善しなければならない点がたくさんある」
+#       「今日のような試合をしていたら、たくさん失点して確実に負ける。気を引き締めなければならない。守備でも攻撃でも、もっとうまくプレーする必要がある」
+#       → 日本語の記事の言葉を一字一句そのまま使う（30字を超える1文だけ読点で2行に割った）。TNT の英語の原文は読めていない。
+#   ・現地の評価:
+#       ガーディアン（2026-11-05 Paul MacInnes、全文）"A late, late strike from Daichi Kamada saved Crystal Palace from embarrassment"
+#       → 訳「鎌田大地の土壇場の一撃が、パレスを恥から救った」。
+#       東スポWEB（Yahoo 18c4c191）が引くスカイスポーツ・TNTスポーツ・FOOTBALL365・LONDON NOW → 孫引きなので台本には使わない。
+#   ・順位（ESPN standings 11/6 取得）: パレスはプレミア 9試合 勝ち点7 で18位。EL は4試合で勝ち点5（日刊スポーツ「1勝2分1敗」）。ホッフェンハイム 勝ち点4。
+#   ・次の試合: ESPN scoreboard 2026-11-08 Liverpool at Crystal Palace（日曜、ホーム）。
+# 記事どうしの食い違い:
+#   ・同点弾のクロスを上げた人: ゲキサカ・theWORLD「ミンゲサ」、クラブ公式「ピノ」→ 台本はクロスの人を言わない（ミッチェルの折り返しは一致）。
+#   ・退場の分: ESPN 77分、ゲキサカ・日刊「後半32分」で一致。
+# 自分で数えたもの: 退場（77分）から同点（90+1分）まで14分。10人で戦った時間の中で取った点。
+# 前の本との重なり: 20261016_kamada_el_goal（EL初ゴール）／20261019・1023・1026 のパレスの試合。→ 今回の初出: 後半ATの同点弾・町田との日本人対決・10人・本人の「満足していない」。
+# 本人の言葉: あり（日刊スポーツ）。Y。
+# 反応: 2件（サッカーダイジェストの記事が引いたネットの投稿。全文のまま）。
+slot: japanese
+date: "2026年11月6日"
+format: news
+no_main: true
+people: [鎌田大地, 町田浩樹, クリスタル・パレス, ホッフェンハイム, ウォートン, ミッチェル, リヴァプール]
+
+short_style: Y
+short_hook_quote: 勝ち点1という結果には満足していない。
+short_photos:
+  - assets/images/20261106_kamada_palace_equalizer/02_v.jpg
+  - assets/images/20261106_kamada_palace_equalizer/03_v.jpg
+  - assets/images/20261106_kamada_palace_equalizer/04_v.jpg
+short_question: 鎌田大地は、日曜のリヴァプール戦でも点を取ると思いますか。
+short_telops: []
+
+theme:
+  id: kamada_palace_equalizer
+  league: england
+  league_name: ヨーロッパリーグ
+  prefix: ""
+  title: 鎌田大地、10人のパレスを救った土壇場の同点弾。それでも「満足していない」
+  hook: ""
+  question: 10人で負けかけた試合で同点弾を決めた鎌田大地は、試合後に何を語ったのか
+  takeaway: 退場から同点まで14分。10人のパレスを救ったのは鎌田のEL2点目だった。それでも本人は勝ち点1に満足せず、次は日曜のリヴァプール戦
+
+thumbnail:
+  layout: face
+  line1: 鎌田大地 後半ATの同点弾
+  line2: それでも「満足していない」
+  tags: [鎌田大地, クリスタル・パレス]
+  photo: assets/images/20261106_kamada_palace_equalizer/02_w.jpg
+  short_photo: assets/images/20261106_kamada_palace_equalizer/02_v.jpg
+
+answer: ゴールは少しラッキー。勝ち点1には満足していない、改善すべき点がたくさんある
+watch: 日曜のリヴァプール戦（ホーム）
+
+sections:
+  - id: what
+    main: true
+    heading: 10人のパレスを救った同点弾のあと、鎌田大地が語ったこと
+    tier: 報道
+    telop: 鎌田大地「勝ち点1という結果には満足していない」
+    say:
+      - text: クリスタル・パレスの鎌田大地が、ヨーロッパリーグで後半アディショナルタイムに同点弾。
+      - text: 退場者を出して0対1、負けかけたパレスを、この1点が救い、試合は1対1の引き分けに。
+      - text: 試合のあと、鎌田はこう話しました。
+      - voice: 鎌田大地
+        text: ゴールは少しラッキーなところもあった。
+      - voice: 鎌田大地
+        text: 勝ち点1という結果には満足していない。
+        emph: true
+      - voice: 鎌田大地
+        text: 改善しなければならない点がたくさんある。
+        cont: true
+      - text: 試合を振り返ります。相手はホッフェンハイム。町田浩樹が最終ラインでフル出場した、日本人対決でした。
+        image: assets/images/20261106_kamada_palace_equalizer/03_w.jpg
+      - text: パレスは前半7分に先制を許し、77分には味方のウォートンが2枚目のイエローカードで退場します。
+      - text: そして後半アディショナルタイム1分。ミッチェルの折り返しに、鎌田が右足で合わせます。
+        image: assets/images/20261106_kamada_palace_equalizer/02_w.jpg
+      - text: 町田の足の間と、ゴールキーパーの股下を続けて抜くシュートでした。
+        emph: true
+      - text: 地元イギリスのガーディアン紙は、こう書きました。
+        image: assets/images/20261106_kamada_palace_equalizer/04_w.jpg
+      - voice: ガーディアン
+        text: 鎌田大地の土壇場の一撃が、パレスを恥から救った。
+      - voice: ネット民
+        text: 持ってるとしかいいようがない
+        short_voice: true
+      - voice: ネット民
+        text: 後半ATの股抜き２連チャンは熱すぎる
+    official: false
+    quotes_from: [日刊スポーツ, ガーディアン, サッカーダイジェスト]
+    sources:
+      - https://news.yahoo.co.jp/articles/0789747809b47b55c237e490af13a5d3dea6cd81
+      - https://www.theguardian.com/football/2026/nov/05/kamadas-late-leveller-rescues-point-for-10-man-crystal-palace-and-denies-hoffenheim
+      - https://news.yahoo.co.jp/articles/535427d6a926e6e067c266d605aa903826a60fdf
+      - https://web.gekisaka.jp/news/uel/detail/?462602-462602-fl
+      - https://www.espn.com/soccer/match/_/gameId/401915526
+      - https://www.cpfc.co.uk/news/match-reports/report-highlights-crystal-palace-hoffenheim-europa-league-november-2026/
+      - https://www.soccer-king.jp/news/world/el/20261106/2225056.html
+  - id: game
+    heading: 0対1、退場から14分後の同点弾
+    tier: 報道
+    telop: クリスタル・パレス 1-1 ホッフェンハイム
+    say:
+      - text: 退場から同点まで14分。鎌田は、試合の内容についてもこう話しています。
+        card: {type: table, title: クリスタル・パレス 1-1 ホッフェンハイム, columns: [分, できごと], rows: [[7分, プラスの得点で0対1], [77分, ウォートン退場で10人に], [90+1分, 鎌田の同点弾]], highlight_row: 2}
+      - voice: 鎌田大地
+        text: 今日のような試合をしていたら、
+        card: none
+      - voice: 鎌田大地
+        text: たくさん失点して確実に負ける。
+        cont: true
+      - voice: 鎌田大地
+        text: 守備でも攻撃でも、もっとうまくプレーする必要がある。
+        cont: true
+    official: false
+    quotes_from: [日刊スポーツ]
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401915526
+      - https://news.yahoo.co.jp/articles/0789747809b47b55c237e490af13a5d3dea6cd81
+  - id: view
+    viewpoint: true
+    heading: この1点で、パレスの立ち位置はどう変わったか
+    tier: 背景
+    telop: ELは4試合で勝ち点5。プレミアは18位
+    say:
+      - text: 見立てです。この勝ち点1で、パレスはヨーロッパリーグ4試合で勝ち点5。
+        card: {type: table, title: 試合後の立ち位置, columns: [大会, パレス], rows: [[ヨーロッパリーグ, 4試合 勝ち点5], [プレミアリーグ, 9試合 勝ち点7・18位]], highlight_row: 0}
+      - text: 相手のホッフェンハイムの勝ち点4を、1つ上回りました。
+      - text: ただプレミアリーグでは、9試合で勝ち点7の18位にいます。
+        card: {type: table, title: 試合後の立ち位置, columns: [大会, パレス], rows: [[ヨーロッパリーグ, 4試合 勝ち点5], [プレミアリーグ, 9試合 勝ち点7・18位]], highlight_row: 1}
+      - text: 鎌田が口にした改善は、すぐに試されます。
+        card: none
+      - text: 次は日曜、ホームでリヴァプールと戦います。
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/v2/sports/soccer/eng.1/standings
+      - https://news.yahoo.co.jp/articles/0789747809b47b55c237e490af13a5d3dea6cd81
+      - https://www.espn.com/soccer/match/_/gameId/401879243

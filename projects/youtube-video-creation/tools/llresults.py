@@ -33,7 +33,7 @@ import clubleague  # noqa: E402
 
 DATA = clubleague.data_dir()
 # ESPN のリーグ記号（2026-09-28 ブンデスリーガ版で切り替えにした）
-ESPN_LEAGUE = {"laliga": "esp.1", "bundesliga": "ger.1", "premier": "eng.1"}[clubleague.name()]
+ESPN_LEAGUE = {"laliga": "esp.1", "bundesliga": "ger.1", "serie_a": "ita.1", "premier": "eng.1"}[clubleague.name()]
 URL = "https://site.api.espn.com/apis/site/v2/sports/soccer/" + ESPN_LEAGUE + "/scoreboard?dates={day}"
 # ESPN の表記 → clubs.json の英語版記事名（名前の合わないものだけ）
 ESPN_TO_WIKI = {
@@ -65,6 +65,8 @@ ESPN_TO_WIKI = {
     "TSG Hoffenheim": "TSG 1899 Hoffenheim",
     "Werder Bremen": "SV Werder Bremen",
     "Bayer Leverkusen": "Bayer 04 Leverkusen",
+    # セリエA（2026-11-13。ESPN の20クラブの表記を 8/15〜の試合で確かめた。他は部分一致で当たる）
+    "Internazionale": "Inter Milan",
 }
 
 

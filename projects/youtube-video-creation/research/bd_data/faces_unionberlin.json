@@ -1,0 +1,29 @@
+{
+ "unionberlin": {
+  "ベニャミナ": {
+   "role": "legend",
+   "file": "assets/photos/bd/unionberlin/unionberlin_legend_629695d4.jpg",
+   "page": "Karim_Benyamina"
+  },
+  "マトゥシュカ": {
+   "role": "legend",
+   "file": "assets/photos/bd/unionberlin/unionberlin_legend_772d83dc.jpg",
+   "page": "Torsten_Mattuschka"
+  },
+  "クルーゼ": {
+   "role": "legend",
+   "file": "assets/photos/bd/unionberlin/unionberlin_legend_a4f5ce66.jpg",
+   "page": "Max_Kruse"
+  },
+  "ルストリネッリ": {
+   "role": "manager",
+   "file": "assets/photos/bd/unionberlin/unionberlin_manager_02152569.jpg",
+   "page": "Mauro_Lustrinelli"
+  },
+  "原口元気": {
+   "role": "japan",
+   "file": "assets/photos/bd/unionberlin/unionberlin_japan_019d01ca.jpg",
+   "page": "Genki_Haraguchi"
+  }
+ }
+}

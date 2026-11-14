@@ -1,0 +1,24 @@
+{
+ "elversberg": {
+  "シュテフェン": {
+   "role": "legend",
+   "file": "assets/photos/bd/elversberg/elversberg_legend_2eb53074.jpg",
+   "page": "Horst Steffen"
+  },
+  "アスラーニ": {
+   "role": "legend",
+   "file": "assets/photos/bd/elversberg/elversberg_legend_fcf022c2.jpg",
+   "page": "Fisnik Asllani"
+  },
+  "ペトコフ": {
+   "role": "legend",
+   "file": "assets/photos/bd/elversberg/elversberg_legend_aba80e4e.jpg",
+   "page": "Lukas Petkov"
+  },
+  "フェルハウアー": {
+   "role": "legend",
+   "file": "assets/photos/bd/elversberg/elversberg_legend_23f6b249.jpg",
+   "page": "Robin Fellhauer"
+  }
+ }
+}

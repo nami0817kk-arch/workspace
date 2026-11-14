@@ -1,0 +1,838 @@
+# アリエン・ロッベン（元オランダ代表FW、バイエルン10シーズン）の紹介。シリーズ「レジェンドの紹介（世界）」2026-11-24 用。8節（フック→基礎DATA→歩み→持ち味→あの試合→現役の終わり→マル秘話→見立て）。日本との接点は、2010年W杯の日本戦でベンチだったこと以外に一次情報で確かめられなかったので節を置かない。
+# **FotMob・DataMB・FBref・Sofascore・Transfermarkt 不使用**。数字は英語版 Wikipedia（Arjen Robben の成績表・本文・Honours、2013 UEFA Champions League final、2012 UEFA Champions League final）と自分で足した・割った値だけ。
+# **私生活・法的な問題は入れない**（結婚・家族・病気の話・ダイブの批判は台本に出さない）。
+# **重なりの確認（2026-11-13）**：scripts/・covered.yaml・posted.json・research/2026111*_picks.txt を「ロッベン／Robben」で grep。主役の回は無し（カシージャス・ロナウジーニョの回に名前が出るだけ）。同じ日（11/24）の別シリーズに同名なし。
+# **引退の確認**：Wikipedia「2019-07-04 引退を発表、2020-06-27 フローニンゲンに復帰、2021-07-15 に2度目で最後の引退を発表」→ 現役ではない（42歳）。
+# **数字の出どころと自分で足した値**
+# - バイエルン：公式戦 309試合144ゴール（成績表の合計）。シーズン別ゴール 09-10 23、10-11 13、11-12 19、12-13 13、13-14 21、14-15 19、15-16 7、16-17 16、17-18 7、18-19 6（合計144と一致）。オランダ代表 96試合37ゴール。サムネの表：バイエルン309/144＋オランダ代表96/37＝405試合181点（自分で足した値。ほかのクラブは除く）。
+# - 決勝4敗：本文「fourth major cup final he had been on the losing side during the last two years (FIFA World Cup final, two Champions League finals and the DFB-Pokal)」。2010 CL決勝はインテルに0-2、2012 ドイツ杯決勝はドルトムントに2-5（2012 CL決勝のページ）。2010-07 W杯決勝はスペインに0-1。ロッベンは2010・2012 の CL決勝に先発（2012 CL決勝ページ）。
+# - 主要タイトル（ブンデスリーガ・ドイツ杯・CL）は Honours から自分で数えた：09-10＝BL・ドイツ杯の2個、10-11・11-12＝0、12-13＝BL・ドイツ杯・CLの3個、13-14＝2、14-15＝1、15-16＝2、16-17＝1、17-18＝1、18-19＝2。合計14個（BL8・ドイツ杯5・CL1）。2009-12＝2個、2012-19＝12個。1年あたり 2÷3＝0.67、12÷7＝1.71（約2.6倍）。ゴール 55÷3＝18.3、89÷7＝12.7。
+# - 2013-05-25 CL決勝（ウェンブリー）バイエルン2-1ドルトムント。マンジュキッチ60分（ロッベンとリベリーの連携）、ギュンドアンPK、ロッベン89分（残り1分、リベリーのヒールパスから左足）。UEFA 最優秀選手。バイエルンは4年で3度目の決勝・2010、2012は敗退。ドイツ勢どうしのCL決勝は初。「Mr Wembley」は本文。
+# - 2012-05-19 CL決勝（アリアンツ・アレーナ）チェルシー1-1バイエルン、PK戦3-4。延長戦でドログバがリベリーを倒してPK、ロッベンのキックをチェフが止める。
+# - 2019-05-18 フランクフルト戦5-1でリーグ最後のゴール・8回目のBL優勝、2019-05-25 ドイツ杯決勝ライプツィヒ3-0で5回目のドイツ杯。2017-10-10 代表引退。2015-02-21 パーダーボルン6-0で2ゴール＝対戦した全BLクラブから得点。2018 11回目の国内リーグ優勝でクライフ（10回）超え。2010 ドイツ年間最優秀選手＝4人目の外国人・初のオランダ人。2025-08 パデルの大会に出場（本文）。
+# **本人の言葉**：取れていない。声の行は置かない。
+# **入れなかったもの**：私生活・家族、病気の検査の話、ダイブの批判、2007年のスペイン移籍の経緯、チェルシー時代のケガの細部、2014年W杯の細部。
+# **読みで怪しいもの**：アリエン・ロッベン、フローニンゲン、リベリー（リベリ）、ロベリー、マンジュキッチ、ギュンドアン、チェフ、パーダーボルン、ライプツィヒ、フランクフルト、ドルトムント、ウェンブリー、PSV、パデル。
+title: ロッベンは、どんな選手だった？ 決勝で4度負けたあと、何が変わったのか
+format: news
+short_title: ロッベンは、どんな選手だった？
+series: レジェンドの紹介
+topic: アリエン・ロッベン
+date: 2026年11月13日
+slot: other_1
+people:
+- アリエン・ロッベン
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  id: legend_robben
+  league: germany
+  league_name: ブンデスリーガ
+  kind: other
+  topic: アリエン・ロッベン
+  title: ロッベンは、どんな選手だった？ 決勝で4度負けたあと、何が変わったのか
+  question: 決勝で4度負けたロッベンは、そのあと何が変わったのか
+  takeaway: バイエルンでの主要タイトルは、2009〜12年の3年間で2個（年0.7個）、2012〜19年の7年間で12個（年1.7個）。ゴールは年18点から年13点に減ったのに、タイトルのペースは約2.6倍になった
+  nameplate: アリエン・ロッベン｜元オランダ代表 FW
+  opening_image: assets/images/20261124_robben_legend/04_w.jpg
+  end_bg: assets/images/20261124_robben_legend/04_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+  outro_title: 毎日、数字でサッカーを読み解きます
+thumbnail:
+  line1: ロッベン、405試合181点
+  line2: 決勝に4度負けて、CL優勝
+  tags:
+  - バイエルン
+  photo: assets/images/20261124_robben_legend/panel_01.jpg
+  board: assets/images/20261124_robben_legend/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261124_robben_legend/02_v.jpg
+sections:
+- id: hook
+  heading: ロッベンは、決勝で何を決めたのか
+  tier: 報道
+  telop: 89分の決勝ゴール、決勝4敗のあと
+  say:
+  - text: 2013年5月25日。ウェンブリーで、89分に決勝点を決めた選手がいます。
+    card: none
+    image: assets/images/20261124_robben_legend/04_w.jpg
+  - text: チャンピオンズリーグ決勝。バイエルン対ドルトムント、ドイツ勢どうしです。
+    card: none
+    image: assets/images/20261124_robben_legend/02_w.jpg
+  - text: アリエン・ロッベン。バイエルンでの公式戦は、309試合144ゴールです。
+    card:
+      type: stats
+      title: アリエン・ロッベン 元FW（42歳）
+      items:
+      - - '4'
+        - 度
+        - 決勝で負けた（2010〜2012年）
+      - - '144'
+        - ゴール
+        - バイエルンの公式戦
+      - - '12'
+        - 個
+        - その後7年の主要タイトル
+      focus: 1
+    image: assets/images/20261124_robben_legend/05_w.jpg
+  - text: ところが、その前の3年間。決勝では、4度負けていました。
+    card:
+      type: stats
+      title: アリエン・ロッベン 元FW（42歳）
+      items:
+      - - '4'
+        - 度
+        - 決勝で負けた（2010〜2012年）
+      - - '144'
+        - ゴール
+        - バイエルンの公式戦
+      - - '12'
+        - 個
+        - その後7年の主要タイトル
+      focus: 0
+    image: assets/images/20261124_robben_legend/03_w.jpg
+    emph: true
+    callword: 4度
+  - text: ワールドカップの決勝、チャンピオンズリーグの決勝が2度、そしてドイツ杯の決勝です。
+    card: none
+    image: assets/images/20261124_robben_legend/04_w.jpg
+  - text: そのあとの7年間で獲った主要タイトルは、12個。
+    card:
+      type: stats
+      title: アリエン・ロッベン 元FW（42歳）
+      items:
+      - - '4'
+        - 度
+        - 決勝で負けた（2010〜2012年）
+      - - '144'
+        - ゴール
+        - バイエルンの公式戦
+      - - '12'
+        - 個
+        - その後7年の主要タイトル
+      focus: 2
+    image: assets/images/20261124_robben_legend/02_w.jpg
+  - text: 決勝で負けたあとの、7年間をたどります。
+    card: none
+    image: assets/images/20261124_robben_legend/05_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Arjen_Robben
+- id: data
+  heading: ロッベンは、いつ、どこで生まれ、どんな選手か
+  tier: 報道
+  telop: ロッベンの基礎DATA
+  say:
+  - text: ロッベンは1984年1月23日、オランダに生まれました。
+    card:
+      type: table
+      title: アリエン・ロッベン
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 生年月日
+        - 1984年1月23日・オランダ
+      - - ポジション
+        - ウイング（右サイド中心）
+      - - クラブ
+        - フローニンゲン、PSV、チェルシー、レアル、バイエルン
+      - - 代表
+        - オランダ代表 96試合
+      - - 現役を終えた
+        - 2021年・37歳
+      highlight_row: 0
+    image: assets/images/20261124_robben_legend/03_w.jpg
+  - text: ポジションは、ウイング。おもに、右サイドでプレーしました。
+    card:
+      type: table
+      title: アリエン・ロッベン
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 生年月日
+        - 1984年1月23日・オランダ
+      - - ポジション
+        - ウイング（右サイド中心）
+      - - クラブ
+        - フローニンゲン、PSV、チェルシー、レアル、バイエルン
+      - - 代表
+        - オランダ代表 96試合
+      - - 現役を終えた
+        - 2021年・37歳
+      highlight_row: 1
+    image: assets/images/20261124_robben_legend/04_w.jpg
+  - text: 所属は、フローニンゲン、PSV、チェルシー、レアル・マドリード、バイエルン。
+    card:
+      type: table
+      title: アリエン・ロッベン
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 生年月日
+        - 1984年1月23日・オランダ
+      - - ポジション
+        - ウイング（右サイド中心）
+      - - クラブ
+        - フローニンゲン、PSV、チェルシー、レアル、バイエルン
+      - - 代表
+        - オランダ代表 96試合
+      - - 現役を終えた
+        - 2021年・37歳
+      highlight_row: 2
+    image: assets/images/20261124_robben_legend/02_w.jpg
+  - text: オランダ代表では、96試合に出ています。
+    card:
+      type: table
+      title: アリエン・ロッベン
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 生年月日
+        - 1984年1月23日・オランダ
+      - - ポジション
+        - ウイング（右サイド中心）
+      - - クラブ
+        - フローニンゲン、PSV、チェルシー、レアル、バイエルン
+      - - 代表
+        - オランダ代表 96試合
+      - - 現役を終えた
+        - 2021年・37歳
+      highlight_row: 3
+    image: assets/images/20261124_robben_legend/05_w.jpg
+  - text: 2019年に引退を表明。いったん復帰して、2021年に、2度目の引退をしました。
+    card:
+      type: table
+      title: アリエン・ロッベン
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 生年月日
+        - 1984年1月23日・オランダ
+      - - ポジション
+        - ウイング（右サイド中心）
+      - - クラブ
+        - フローニンゲン、PSV、チェルシー、レアル、バイエルン
+      - - 代表
+        - オランダ代表 96試合
+      - - 現役を終えた
+        - 2021年・37歳
+      highlight_row: 4
+    image: assets/images/20261124_robben_legend/03_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Arjen_Robben
+- id: career
+  heading: ロッベンは、どこでプレーしてきたのか
+  tier: 報道
+  telop: フローニンゲンから、5つのクラブへ
+  say:
+  - text: ロッベンは、オランダ北東部で生まれ、地元のフローニンゲンでプロになります。
+    card: none
+    image: assets/images/20261124_robben_legend/04_w.jpg
+  - text: 1年目から、クラブの年間表彰を受けました。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows:
+      - - 2000〜02
+        - フローニンゲンでプロに。1年目に年間最優秀選手
+      - - '2002'
+        - PSVへ。1年目にオランダのリーグ優勝
+      - - '2004'
+        - チェルシーへ。プレミアリーグを2連覇
+      - - '2007'
+        - レアル・マドリードへ。1年目にリーグ優勝
+      - - '2009'
+        - バイエルンへ。10シーズンを過ごす
+      - - '2019'
+        - バイエルンを離れ、引退を表明
+      focus: 0
+      highlight_row: 0
+    image: assets/images/20261124_robben_legend/02_w.jpg
+  - text: 2002年、PSVへ。1年目に、オランダのリーグ優勝です。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows:
+      - - 2000〜02
+        - フローニンゲンでプロに。1年目に年間最優秀選手
+      - - '2002'
+        - PSVへ。1年目にオランダのリーグ優勝
+      - - '2004'
+        - チェルシーへ。プレミアリーグを2連覇
+      - - '2007'
+        - レアル・マドリードへ。1年目にリーグ優勝
+      - - '2009'
+        - バイエルンへ。10シーズンを過ごす
+      - - '2019'
+        - バイエルンを離れ、引退を表明
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261124_robben_legend/05_w.jpg
+  - text: 2004年、チェルシーへ。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows:
+      - - 2000〜02
+        - フローニンゲンでプロに。1年目に年間最優秀選手
+      - - '2002'
+        - PSVへ。1年目にオランダのリーグ優勝
+      - - '2004'
+        - チェルシーへ。プレミアリーグを2連覇
+      - - '2007'
+        - レアル・マドリードへ。1年目にリーグ優勝
+      - - '2009'
+        - バイエルンへ。10シーズンを過ごす
+      - - '2019'
+        - バイエルンを離れ、引退を表明
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261124_robben_legend/03_w.jpg
+  - text: プレミアリーグを、2シーズン続けて制しました。
+    card: none
+    image: assets/images/20261124_robben_legend/04_w.jpg
+  - text: 2007年、スペインのレアル・マドリードへ。1年目に、ラ・リーガ優勝。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows:
+      - - 2000〜02
+        - フローニンゲンでプロに。1年目に年間最優秀選手
+      - - '2002'
+        - PSVへ。1年目にオランダのリーグ優勝
+      - - '2004'
+        - チェルシーへ。プレミアリーグを2連覇
+      - - '2007'
+        - レアル・マドリードへ。1年目にリーグ優勝
+      - - '2009'
+        - バイエルンへ。10シーズンを過ごす
+      - - '2019'
+        - バイエルンを離れ、引退を表明
+      focus: 3
+      highlight_row: 0
+    image: assets/images/20261124_robben_legend/02_w.jpg
+  - text: 2009年、ドイツのバイエルンへ。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows:
+      - - 2000〜02
+        - フローニンゲンでプロに。1年目に年間最優秀選手
+      - - '2002'
+        - PSVへ。1年目にオランダのリーグ優勝
+      - - '2004'
+        - チェルシーへ。プレミアリーグを2連覇
+      - - '2007'
+        - レアル・マドリードへ。1年目にリーグ優勝
+      - - '2009'
+        - バイエルンへ。10シーズンを過ごす
+      - - '2019'
+        - バイエルンを離れ、引退を表明
+      focus: 4
+      highlight_row: 0
+    image: assets/images/20261124_robben_legend/05_w.jpg
+  - text: バイエルンでは、10シーズンを過ごしました。
+    card: none
+    image: assets/images/20261124_robben_legend/03_w.jpg
+  - text: そして2019年、35歳でバイエルンを離れ、引退を表明しました。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows:
+      - - 2000〜02
+        - フローニンゲンでプロに。1年目に年間最優秀選手
+      - - '2002'
+        - PSVへ。1年目にオランダのリーグ優勝
+      - - '2004'
+        - チェルシーへ。プレミアリーグを2連覇
+      - - '2007'
+        - レアル・マドリードへ。1年目にリーグ優勝
+      - - '2009'
+        - バイエルンへ。10シーズンを過ごす
+      - - '2019'
+        - バイエルンを離れ、引退を表明
+      focus: 5
+      highlight_row: 0
+    image: assets/images/20261124_robben_legend/04_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Arjen_Robben
+- id: style
+  heading: ロッベンは、何で相手を上回ったのか
+  tier: 報道
+  telop: 右から切れ込む、左足のシュート
+  say:
+  - text: ロッベンは、右サイドから中へ切れ込む、ウイングでした。
+    card:
+      type: table
+      title: ロッベンの持ち味
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 位置
+        - ウイング（右サイド中心）
+      - - 武器1
+        - 右から切れ込んで、左足で打つシュート
+      - - 武器2
+        - スピードと、一対一のドリブル
+      - - 武器3
+        - リベリーと左右を入れ替わる動き
+      - - 記録
+        - オランダ代表 96試合37ゴール
+      highlight_row: 0
+    image: assets/images/20261124_robben_legend/02_w.jpg
+  - text: 武器の1つ目は、切れ込んでからの、左足のシュート。
+    card:
+      type: table
+      title: ロッベンの持ち味
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 位置
+        - ウイング（右サイド中心）
+      - - 武器1
+        - 右から切れ込んで、左足で打つシュート
+      - - 武器2
+        - スピードと、一対一のドリブル
+      - - 武器3
+        - リベリーと左右を入れ替わる動き
+      - - 記録
+        - オランダ代表 96試合37ゴール
+      highlight_row: 1
+    image: assets/images/20261124_robben_legend/05_w.jpg
+  - text: リーグ戦のゴールは、左足が134点、右足が10点です。
+    card: none
+    image: assets/images/20261124_robben_legend/03_w.jpg
+  - text: 2つ目は、スピードと、一対一のドリブル。
+    card:
+      type: table
+      title: ロッベンの持ち味
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 位置
+        - ウイング（右サイド中心）
+      - - 武器1
+        - 右から切れ込んで、左足で打つシュート
+      - - 武器2
+        - スピードと、一対一のドリブル
+      - - 武器3
+        - リベリーと左右を入れ替わる動き
+      - - 記録
+        - オランダ代表 96試合37ゴール
+      highlight_row: 2
+    image: assets/images/20261124_robben_legend/04_w.jpg
+  - text: 守る相手を抜き去って、ゴールの近くまで運びました。
+    card: none
+    image: assets/images/20261124_robben_legend/02_w.jpg
+  - text: 3つ目は、左のリベリーとの組み合わせ。2人は、左右を入れ替わりながら攻めました。
+    card:
+      type: table
+      title: ロッベンの持ち味
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 位置
+        - ウイング（右サイド中心）
+      - - 武器1
+        - 右から切れ込んで、左足で打つシュート
+      - - 武器2
+        - スピードと、一対一のドリブル
+      - - 武器3
+        - リベリーと左右を入れ替わる動き
+      - - 記録
+        - オランダ代表 96試合37ゴール
+      highlight_row: 3
+    image: assets/images/20261124_robben_legend/05_w.jpg
+  - text: 2人は、あわせて「ロベリー」と呼ばれました。
+    card: none
+    image: assets/images/20261124_robben_legend/03_w.jpg
+  - text: オランダ代表でも、37ゴールを決めています。
+    card:
+      type: table
+      title: ロッベンの持ち味
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 位置
+        - ウイング（右サイド中心）
+      - - 武器1
+        - 右から切れ込んで、左足で打つシュート
+      - - 武器2
+        - スピードと、一対一のドリブル
+      - - 武器3
+        - リベリーと左右を入れ替わる動き
+      - - 記録
+        - オランダ代表 96試合37ゴール
+      highlight_row: 4
+    image: assets/images/20261124_robben_legend/04_w.jpg
+    emph: true
+  - text: ワールドカップでは、2010年が準優勝、2014年が3位です。
+    card: none
+    image: assets/images/20261124_robben_legend/02_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Arjen_Robben
+- id: match
+  heading: 2013年のCL決勝で、ロッベンは何を決めたのか
+  tier: 報道
+  telop: 89分、リベリーのヒールパスから
+  main: true
+  say:
+  - text: アリエン・ロッベン。
+    card: none
+    short_only: true
+  - text: 89分に、決勝ゴールを決めた夜があります。
+    card: none
+    short_only: true
+  - text: 2013年5月25日、ロンドンのウェンブリー・スタジアム。
+    card: none
+    image: assets/images/20261124_robben_legend/05_w.jpg
+  - text: ヨーロッパ王者を決める、決勝です。
+    card: none
+    image: assets/images/20261124_robben_legend/03_w.jpg
+  - text: バイエルンの相手は、同じドイツのドルトムント。
+    card: none
+    image: assets/images/20261124_robben_legend/04_w.jpg
+  - text: ドイツのクラブどうしの決勝は、これが初めてでした。
+    card: none
+    image: assets/images/20261124_robben_legend/02_w.jpg
+  - text: バイエルンにとって、4年で3度目の決勝。前の2回は、負けています。
+    card: none
+    image: assets/images/20261124_robben_legend/05_w.jpg
+  - text: 1年前の決勝では、延長戦のPKを、ゴールキーパーのチェフに止められました。
+    card: none
+    image: assets/images/20261124_robben_legend/03_w.jpg
+  - text: その試合は、PK戦で負けています。
+    card: none
+    image: assets/images/20261124_robben_legend/04_w.jpg
+  - text: 60分、ロッベンとリベリーのつなぎから、マンジュキッチが先制。
+    card:
+      type: timeline
+      title: 2013年5月25日 CL決勝 ドルトムント戦
+      rows:
+      - - 60分
+        - マンジュキッチが決めて、バイエルンが先制
+      - - 68分
+        - ドルトムントがPKで同点
+      - - 89分
+        - ロッベンが決勝点。2対1でバイエルンの優勝
+      focus: 0
+      highlight_row: 0
+    image: assets/images/20261124_robben_legend/02_w.jpg
+  - text: すぐあと、ドルトムントがPKで追いつきます。
+    card:
+      type: timeline
+      title: 2013年5月25日 CL決勝 ドルトムント戦
+      rows:
+      - - 60分
+        - マンジュキッチが決めて、バイエルンが先制
+      - - 68分
+        - ドルトムントがPKで同点
+      - - 89分
+        - ロッベンが決勝点。2対1でバイエルンの優勝
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261124_robben_legend/05_w.jpg
+  - text: 同点のまま、残りは1分。
+    card: none
+    image: assets/images/20261124_robben_legend/03_w.jpg
+  - text: リベリーが、かかとで出したパス。ロッベンが抜け出して、左足で決めます。
+    card: none
+    image: assets/images/20261124_robben_legend/04_w.jpg
+    emph: true
+  - text: 2対1の勝ち。バイエルンが、ヨーロッパの王者になりました。
+    card:
+      type: timeline
+      title: 2013年5月25日 CL決勝 ドルトムント戦
+      rows:
+      - - 60分
+        - マンジュキッチが決めて、バイエルンが先制
+      - - 68分
+        - ドルトムントがPKで同点
+      - - 89分
+        - ロッベンが決勝点。2対1でバイエルンの優勝
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261124_robben_legend/02_w.jpg
+  - text: ロッベンは、この試合の、マン・オブ・ザ・マッチでした。
+    card: none
+    image: assets/images/20261124_robben_legend/05_w.jpg
+  - text: 以来、「ミスター・ウェンブリー」と呼ばれています。
+    card: none
+    image: assets/images/20261124_robben_legend/03_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Arjen_Robben
+  - https://en.wikipedia.org/wiki/2013_UEFA_Champions_League_final
+  - https://en.wikipedia.org/wiki/2012_UEFA_Champions_League_final
+- id: after
+  heading: ロッベンは、どんな形で現役を終えたのか
+  tier: 報道
+  telop: 最後の年に、リーグとドイツ杯
+  say:
+  - text: 2017年10月、ワールドカップ予選で敗退したあと、オランダ代表を引退します。
+    card:
+      type: timeline
+      title: 現役の終わりと、その後
+      rows:
+      - - 2017年10月
+        - オランダ代表から引退（96試合37ゴール）
+      - - 2019年5月
+        - 8回目のリーグ優勝。7月に引退を発表
+      - - 2020年6月
+        - 古巣のフローニンゲンに復帰
+      - - 2021年7月
+        - 2度目の引退を発表
+      focus: 0
+      highlight_row: 0
+    image: assets/images/20261124_robben_legend/04_w.jpg
+  - text: 2018年12月には、「今季が最後」と、話しました。
+    card: none
+    image: assets/images/20261124_robben_legend/02_w.jpg
+  - text: 2019年5月18日、フランクフルト戦で、リーグ最後のゴール。5対1の勝ち。
+    card: none
+    image: assets/images/20261124_robben_legend/05_w.jpg
+  - text: バイエルンはリーグ優勝。ロッベンにとって、8回目でした。
+    card:
+      type: timeline
+      title: 現役の終わりと、その後
+      rows:
+      - - 2017年10月
+        - オランダ代表から引退（96試合37ゴール）
+      - - 2019年5月
+        - 8回目のリーグ優勝。7月に引退を発表
+      - - 2020年6月
+        - 古巣のフローニンゲンに復帰
+      - - 2021年7月
+        - 2度目の引退を発表
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261124_robben_legend/03_w.jpg
+  - text: 1週間後のドイツ杯の決勝は、ライプツィヒに3対0。5回目のドイツ杯です。
+    card: none
+    image: assets/images/20261124_robben_legend/04_w.jpg
+  - text: 2019年7月、現役の引退を発表しました。
+    card: none
+    image: assets/images/20261124_robben_legend/02_w.jpg
+  - text: ところが、2020年6月、古巣のフローニンゲンに復帰します。
+    card:
+      type: timeline
+      title: 現役の終わりと、その後
+      rows:
+      - - 2017年10月
+        - オランダ代表から引退（96試合37ゴール）
+      - - 2019年5月
+        - 8回目のリーグ優勝。7月に引退を発表
+      - - 2020年6月
+        - 古巣のフローニンゲンに復帰
+      - - 2021年7月
+        - 2度目の引退を発表
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261124_robben_legend/05_w.jpg
+  - text: そして2021年7月、2度目の、最後の引退を発表しました。
+    card:
+      type: timeline
+      title: 現役の終わりと、その後
+      rows:
+      - - 2017年10月
+        - オランダ代表から引退（96試合37ゴール）
+      - - 2019年5月
+        - 8回目のリーグ優勝。7月に引退を発表
+      - - 2020年6月
+        - 古巣のフローニンゲンに復帰
+      - - 2021年7月
+        - 2度目の引退を発表
+      focus: 3
+      highlight_row: 0
+    image: assets/images/20261124_robben_legend/03_w.jpg
+    emph: true
+  - text: 2025年8月には、パデルの大会に出場しています。
+    card: none
+    image: assets/images/20261124_robben_legend/04_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Arjen_Robben
+- id: secret
+  heading: ロッベンには、どんな意外な話があるのか
+  tier: 報道
+  telop: オランダ人初の年間最優秀、クライフ超え
+  say:
+  - text: ここで、ロッベンの意外な一面を3つ。
+    card: none
+    image: assets/images/20261124_robben_legend/02_w.jpg
+  - text: 1つ目。2010年、ドイツの年間最優秀選手に選ばれました。
+    card:
+      type: table
+      title: 知られざる、3つの話
+      columns:
+      - いつ
+      - 何があったか
+      rows:
+      - - 2010年
+        - ドイツの年間最優秀選手。オランダ人で初
+      - - 2015年2月
+        - 対戦した全クラブから、ゴールを決める
+      - - 2018年
+        - 国内リーグ優勝は通算11回目。クライフを超える
+      highlight_row: 0
+    image: assets/images/20261124_robben_legend/05_w.jpg
+  - text: 外国人として4人目、オランダ人では初めてでした。
+    card: none
+    image: assets/images/20261124_robben_legend/03_w.jpg
+  - text: 2つ目。2015年2月、パーダーボルン戦で2ゴール。
+    card:
+      type: table
+      title: 知られざる、3つの話
+      columns:
+      - いつ
+      - 何があったか
+      rows:
+      - - 2010年
+        - ドイツの年間最優秀選手。オランダ人で初
+      - - 2015年2月
+        - 対戦した全クラブから、ゴールを決める
+      - - 2018年
+        - 国内リーグ優勝は通算11回目。クライフを超える
+      highlight_row: 1
+    image: assets/images/20261124_robben_legend/04_w.jpg
+  - text: これで、対戦したブンデスリーガの全クラブから、ゴールを決めたことになります。
+    card: none
+    image: assets/images/20261124_robben_legend/02_w.jpg
+  - text: 3つ目。2018年、7回目のブンデスリーガ優勝。
+    card:
+      type: table
+      title: 知られざる、3つの話
+      columns:
+      - いつ
+      - 何があったか
+      rows:
+      - - 2010年
+        - ドイツの年間最優秀選手。オランダ人で初
+      - - 2015年2月
+        - 対戦した全クラブから、ゴールを決める
+      - - 2018年
+        - 国内リーグ優勝は通算11回目。クライフを超える
+      highlight_row: 2
+    image: assets/images/20261124_robben_legend/05_w.jpg
+  - text: 国内リーグ優勝は通算11回目。クライフの10回を超え、オランダ人で最多に。
+    card: none
+    image: assets/images/20261124_robben_legend/03_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Arjen_Robben
+- id: view
+  heading: 決勝で負けたあと、何が変わったのか
+  tier: 背景
+  telop: ゴールは減り、タイトルは約2.6倍
+  viewpoint: true
+  say:
+  - text: 最後に、ロッベンのバイエルンでの10年を、2つの時期に分けて比べます。
+    card:
+      type: table
+      title: バイエルンでの主要タイトルとゴール
+      columns:
+      - 期間
+      - 年数
+      - 主要タイトル
+      - ゴール
+      rows:
+      - - 2009-10〜2011-12
+        - '3'
+        - 2個
+        - 55点
+      - - 2012-13〜2018-19
+        - '7'
+        - 12個
+        - 89点
+      - - 合計
+        - '10'
+        - 14個
+        - 144点
+      highlight_row: 0
+    image: assets/images/20261124_robben_legend/04_w.jpg
+  - text: 数えるのは、ブンデスリーガ、ドイツ杯、チャンピオンズリーグの3つです。
+    card: none
+    image: assets/images/20261124_robben_legend/02_w.jpg
+  - text: 2009-10から2011-12の3年間は、主要タイトルが2個。
+    card:
+      type: table
+      title: バイエルンでの主要タイトルとゴール
+      columns:
+      - 期間
+      - 年数
+      - 主要タイトル
+      - ゴール
+      rows:
+      - - 2009-10〜2011-12
+        - '3'
+        - 2個
+        - 55点
+      - - 2012-13〜2018-19
+        - '7'
+        - 12個
+        - 89点
+      - - 合計
+        - '10'
+        - 14個
+        - 144点
+      highlight_row: 0
+    image: assets/images/20261124_robben_legend/05_w.jpg
+  - text: この時期に、決勝で4度、負けました。
+    card: none
+    image: assets/images/20261124_robben_legend/03_w.jpg
+  - text: ところが、2012-13から2018-19の7年間は、12個。
+    card:
+      type: table
+      title: バイエルンでの主要タイトルとゴール
+      columns:
+      - 期間
+      - 年数
+      - 主要タイトル
+      - ゴール
+      rows:
+      - - 2009-10〜2011-12
+        - '3'
+        - 2個
+        - 55点
+      - - 2012-13〜2018-19
+        - '7'
+        - 12個
+        - 89点
+      - - 合計
+        - '10'
+        - 14個
+        - 144点
+      highlight_row: 1
+    image: assets/images/20261124_robben_legend/04_w.jpg
+    emph: true
+    mark:
+      kind: circle
+      row: 1
+      col: 2
+  - text: 1年あたりにならすと、0.7個から、1.7個へ。約2.6倍です。
+    card: none
+    image: assets/images/20261124_robben_legend/02_w.jpg
+  - text: 一方、ゴールは、1年あたり約18点から、約13点に減りました。
+    card: none
+    image: assets/images/20261124_robben_legend/05_w.jpg
+  - text: ゴールが減っても、チームが勝つ年は、増えました。
+    card: none
+    image: assets/images/20261124_robben_legend/03_w.jpg
+  - text: 決勝に負け続けた選手は、そのあと、勝つ側にいました。
+    card: none
+    image: assets/images/20261124_robben_legend/04_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Arjen_Robben

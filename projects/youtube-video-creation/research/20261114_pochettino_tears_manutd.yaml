@@ -1,0 +1,136 @@
+# 取材メモ（2026年11月14日）ポチェッティーノ、涙で語った「米国代表を去る最も難しい決断」。マンU就任の正式発表（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-14。requests（ブラウザUA）で Sky Sports の本文を全文読んだ。ESPN の記事ページは自動取得で本文が返らず（HTTP 202・空）、WebFetch で要点を読んだ（要約の道具なので、ESPN の数字は「ESPNが伝える」として扱い、本人の引用は Sky の原文だけを使う）。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元:
+#   Sky Sports 2026-11-13「Mauricio Pochettino: New Man Utd head coach in tears as he labels leaving USMNT toughest decision of career」 https://www.skysports.com/football/news/11661/13611887/mauricio-pochettino-new-man-utd-head-coach-in-tears-as-he-labels-leaving-usmnt-toughest-decision-of-career
+#   ESPN 2026-11-13（Jeff Carlisle）「Tearful Pochettino on USMNT exit: Toughest decision of my career」 https://www.espn.com/soccer/story/_/id/50470928/pochettino-leave-usmnt-nov-17-cherundolo-interim-december
+#   ESPN 2026-11-13「Man United confirm Mauricio Pochettino as Michael Carrick replacement」 https://www.espn.com/soccer/story/_/id/50469660/man-united-mauricio-pochettino-manager-michael-carrick
+# 写真の出どころ（本人の写真を探すため）:
+#   https://www.skysports.com/football/news/11661/13611887/mauricio-pochettino-new-man-utd-head-coach-in-tears-as-he-labels-leaving-usmnt-toughest-decision-of-career
+#   https://www.espn.com/soccer/story/_/id/50470928/pochettino-leave-usmnt-nov-17-cherundolo-interim-december
+#   https://www.espn.com/soccer/story/_/id/50469660/man-united-mauricio-pochettino-manager-michael-carrick
+#   https://www.espn.com/soccer/story/_/id/50470622/mauricio-pochettino-tottenham-man-united
+#   https://www.espn.com/soccer/story/_/id/50471147/harry-redknapp-mauricio-pochettino-man-united
+#   https://www.espn.com/soccer/story/_/id/50470402/live-updates-mauricio-pochettino-usmnt-man-united
+#   https://www.espn.com/soccer/story/_/id/50462254/pochettino-usmnt-tenure-mercenary-feel
+# 出典で確かめたこと（Sky 原文）:
+#   ・ポチェッティーノはマイケル・キャリックの後任として就任。2029年の夏までの契約。数か月前に米国代表との契約を2030年W杯まで延長したばかり。
+#   ・マンUでの仕事は11月18日に始まる。その前に米国代表のハイチ戦2試合を指揮する。会見は「最後から2番目の試合（penultimate game）」の前に開かれ、涙を見せた。
+#   ・本人の言葉（原文。台本は日本語に訳した。訳は意味を変えない）:
+#       "In some part, this is a very sad decision. In another part, we are professionals. This is the next step to try and make your dreams come true,"
+#       "It all happened so quickly. By Sunday afternoon there was contact. You always were transparent and always tried to build something together. We learned a lot from you all, this amazing country and you amazing people. This is one of the most difficult decisions of my career. Thank you so much."
+#       （なぜ米国代表を離れるのかと聞かれ）"It's obvious,"…"They [US Soccer Federation] know that not many opportunities can happen in your career like a side the size of Manchester United." "When that arrives, it's difficult to turn down."
+#       "I am a professional person and the emotional link between us we have built in this two years is to show the commitment and respect and care and love,"（最後まで米国代表を率いる理由。台本には使わない）
+#   ・初戦はリヴァプール戦（11月22日、アンフィールド、現地16:30）。クラブでの練習は3回。Sky の日程表: 11/22 リヴァプール(a)、11/25 スポルティングCP(a)、11/28 ブレントフォード(h)、12/2 ニューカッスル(a)。
+# ESPN（WebFetch の要約）が伝えること: マンUの正式発表。契約は2年半。ESPN は、マンUが米国サッカー連盟に約1000万ドル（750万ポンド）の契約解除金を払うと伝える→報道扱い（台本は「ESPNは…と伝えています」）。米国代表の12月キャンプはスティーブ・チェルンドロが暫定で指揮。
+# 食い違い: ①ESPN の見出しは「Toughest decision of my career」（最も難しい）、Sky が載せた原文は「one of the most difficult decisions」（最も難しい決断の一つ）→台本は Sky の原文の「一つ」を使う。②キャリックの解任日は Sky が「水曜」、ESPN（WebFetch の要約）が「木曜」と書く→台本には解任日を書かない。③題材の見出しの「ノーと言えなかった」は本人の言葉そのものではない。原文は「断るのは難しい（it's difficult to turn down）」→台本はこちらだけを使い、「ノーと言えなかった」とは書かない。
+# 前の本との重なり: 20261111_manutd_carrick_pochettino（引き分け後のキャリックの言葉・去就の協議・後任候補としてのポチェッティーノ）。今回の初出: 正式発表、本人の涙の会見、18日合流、初戦。キャリックの去就・候補報道の話は繰り返さない。
+# 【言わないこと】マンUの順位・不振の原因／ポチェッティーノの過去のクラブでの評価／リヴァプール戦の予想／キャリックの去就の経緯。
+# 本人の言葉: あり（ポチェッティーノ。Sky Sports。英語を日本語に訳した）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: overseas
+date: "2026年11月14日"
+format: news
+no_main: true
+people: [ポチェッティーノ, マンチェスター・ユナイテッド, 米国代表]
+
+short_style: Y
+short_hook_quote: これは、私のキャリアで最も難しい決断の一つです。
+short_photos:
+  - assets/images/20261114_pochettino_tears_manutd/01_v.jpg
+  - assets/images/20261114_pochettino_tears_manutd/03_v.jpg
+  - assets/images/20261114_pochettino_tears_manutd/05_v.jpg
+short_question: 米国代表を去ってマンUを選んだポチェッティーノの決断は、正しかったと思いますか。
+short_telops: []
+
+theme:
+  id: pochettino_tears_manutd
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: ポチェッティーノ、涙で語った米国代表を去る決断。マンUの誘いは「断るのは難しい」
+  hook: ""
+  question: ポチェッティーノは、涙を見せた会見で、なぜマンUを選んだと語ったのか
+  takeaway: 「キャリアの中で、マンUのような規模のクラブの話はそう何度も起こらない。それが来たら断るのは難しい」。契約は2029年夏まで、18日に仕事を始め、初戦は22日のリヴァプール戦
+
+thumbnail:
+  layout: face
+  line1: ポチェッティーノ 涙
+  line2: 断るのは難しい
+  tags: [ポチェッティーノ, マンチェスター・ユナイテッド, 米国代表]
+  photo: assets/images/20261114_pochettino_tears_manutd/01_w.jpg
+  short_photo: assets/images/20261114_pochettino_tears_manutd/01_v.jpg
+
+answer: 米国代表を去る決断を「最も難しい決断の一つ」と涙で語り、マンUの話は「断るのは難しい」と話した。18日に仕事を始め、初戦は22日のリヴァプール戦
+watch: 22日のリヴァプール戦（アンフィールド）
+
+sections:
+  - id: what
+    main: true
+    heading: 涙のポチェッティーノは、米国代表を去る決断をどう語ったか
+    tier: 報道
+    telop: ポチェッティーノ「最も難しい決断の一つ」
+    say:
+      - text: マンU新監督のポチェッティーノが、米国代表を去る決断を、涙で語りました。
+        image: assets/images/20261114_pochettino_tears_manutd/01_w.jpg
+      - voice: ポチェッティーノ
+        text: これは、私のキャリアで最も難しい決断の一つです。
+        image: assets/images/20261114_pochettino_tears_manutd/03_w.jpg
+      - voice: ポチェッティーノ
+        text: ある意味では、とても悲しい決断です。
+      - voice: ポチェッティーノ
+        text: 別の面では、私たちはプロです。
+        cont: true
+      - voice: ポチェッティーノ
+        text: これは、夢を叶えようとするための、次のステップです。
+        cont: true
+        image: assets/images/20261114_pochettino_tears_manutd/05_w.jpg
+      - text: なぜ米国代表を離れるのかと聞かれると、こう答えました。
+      - voice: ポチェッティーノ
+        text: キャリアの中で、マンチェスター・ユナイテッドのような、
+        image: assets/images/20261114_pochettino_tears_manutd/01_w.jpg
+      - voice: ポチェッティーノ
+        text: 規模のクラブの話は、そう何度も起こりません。
+        cont: true
+      - voice: ポチェッティーノ
+        text: それが来たら、断るのは難しいのです。
+        cont: true
+        emph: true
+    official: false
+    sources:
+      - https://www.skysports.com/football/news/11661/13611887/mauricio-pochettino-new-man-utd-head-coach-in-tears-as-he-labels-leaving-usmnt-toughest-decision-of-career
+      - https://www.espn.com/soccer/story/_/id/50470928/pochettino-leave-usmnt-nov-17-cherundolo-interim-december
+  - id: team
+    heading: すべてはあっという間だった。契約と、離れる時期は
+    tier: 報道
+    telop: 契約は2029年夏まで。18日に仕事を始める
+    say:
+      - text: 数か月前に、米国代表との契約を、2030年のW杯まで延ばしたばかりでした。
+        image: assets/images/20261114_pochettino_tears_manutd/03_w.jpg
+      - voice: ポチェッティーノ
+        text: すべてがあっという間でした。
+      - voice: ポチェッティーノ
+        text: 日曜の午後には、連絡がありました。
+        cont: true
+        emph: true
+      - text: マンUとの契約は、2029年の夏までです。
+        image: assets/images/20261114_pochettino_tears_manutd/05_w.jpg
+      - text: マンUは約1000万ドルの契約解除金を、米国サッカー連盟に払うと報じられています。
+      - text: 米国代表のハイチとの2試合は、最後まで指揮します。
+      - text: そのあと18日に、マンUで新しい仕事を始めます。
+    official: false
+    sources:
+      - https://www.skysports.com/football/news/11661/13611887/mauricio-pochettino-new-man-utd-head-coach-in-tears-as-he-labels-leaving-usmnt-toughest-decision-of-career
+      - https://www.espn.com/soccer/story/_/id/50469660/man-united-mauricio-pochettino-manager-michael-carrick
+  - id: view
+    viewpoint: true
+    heading: ポチェッティーノの初陣は、いつ来るのか
+    tier: 背景
+    telop: 初戦は22日、アンフィールドでのリヴァプール戦
+    say:
+      - text: 見立てです。ポチェッティーノの初陣は、22日のリヴァプールとの敵地戦です。
+        card: {type: table, title: マンU 就任後の日程, columns: [日付, 予定], rows: [[11月18日, マンUで仕事を始める], [11月22日, リヴァプール戦（アウェー）], [11月25日, スポルティング戦（アウェー）], [11月28日, ブレントフォード戦（ホーム）]], highlight_row: 1}
+      - text: クラブでの練習は、リヴァプール戦の前に3回だけです。
+        card: none
+    official: false
+    sources:
+      - https://www.skysports.com/football/news/11661/13611887/mauricio-pochettino-new-man-utd-head-coach-in-tears-as-he-labels-leaving-usmnt-toughest-decision-of-career

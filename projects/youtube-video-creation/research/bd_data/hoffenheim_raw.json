@@ -1,0 +1,640 @@
+{
+ "club_title": "TSG_1899_Hoffenheim",
+ "season_title": "2026–27_TSG_1899_Hoffenheim_season",
+ "squad": [
+  {
+   "no": "1",
+   "pos": "GK",
+   "nat": "GER",
+   "name": "Oliver Baumann",
+   "page": "Oliver Baumann",
+   "dob": "1990-06-02",
+   "captain": true,
+   "loan": false,
+   "team": "Germany",
+   "caps": 13
+  },
+  {
+   "no": "2",
+   "pos": "DF",
+   "nat": "CZE",
+   "name": "Robin Hranáč",
+   "page": "Robin Hranáč",
+   "dob": "2000-01-29",
+   "captain": false,
+   "loan": false,
+   "team": "Czech Republic",
+   "caps": 20
+  },
+  {
+   "no": "4",
+   "pos": "DF",
+   "nat": "GER",
+   "name": "Sean Dulic",
+   "page": "Sean Dulic",
+   "dob": "2005-06-06",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "5",
+   "pos": "DF",
+   "nat": "TUR",
+   "name": "Ozan Kabak",
+   "page": "Ozan Kabak",
+   "dob": "2000-03-25",
+   "captain": false,
+   "loan": false,
+   "team": "Turkey",
+   "caps": 33
+  },
+  {
+   "no": "7",
+   "pos": "MF",
+   "nat": "KOS",
+   "name": "Leon Avdullahu",
+   "page": "Leon Avdullahu",
+   "dob": "2004-02-23",
+   "captain": false,
+   "loan": false,
+   "team": "Kosovo",
+   "caps": 11
+  },
+  {
+   "no": "8",
+   "pos": "MF",
+   "nat": "AUT",
+   "name": "Patrick Wimmer",
+   "page": "Patrick Wimmer",
+   "dob": "2001-05-30",
+   "captain": false,
+   "loan": false,
+   "team": "Austria",
+   "caps": 36
+  },
+  {
+   "no": "9",
+   "pos": "FW",
+   "nat": "GER",
+   "name": "Max Moerstedt",
+   "page": "Max Moerstedt",
+   "dob": "2006-01-15",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "10",
+   "pos": "FW",
+   "nat": "CZE",
+   "name": "Adam Hložek",
+   "page": "Adam Hložek",
+   "dob": "2002-07-25",
+   "captain": false,
+   "loan": false,
+   "team": "Czech Republic",
+   "caps": 50
+  },
+  {
+   "no": "11",
+   "pos": "FW",
+   "nat": "KOS",
+   "name": "Fisnik Asllani",
+   "page": "Fisnik Asllani",
+   "dob": "2002-08-08",
+   "captain": false,
+   "loan": false,
+   "team": "Kosovo",
+   "caps": 20
+  },
+  {
+   "no": "13",
+   "pos": "DF",
+   "nat": "BRA",
+   "name": "Bernardo",
+   "page": "Bernardo (footballer, born 1995)",
+   "dob": "1995-05-14",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "14",
+   "pos": "FW",
+   "nat": "DEN",
+   "name": "Adam Daghim",
+   "page": "Adam Daghim",
+   "dob": "2005-09-28",
+   "captain": false,
+   "loan": false,
+   "team": "Denmark",
+   "caps": 4
+  },
+  {
+   "no": "15",
+   "pos": "DF",
+   "nat": "FRA",
+   "name": "Valentin Gendrey",
+   "page": "Valentin Gendrey",
+   "dob": "2000-06-21",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "16",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Luis Engelns",
+   "page": "Luis Engelns",
+   "dob": "2007-03-11",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "17",
+   "pos": "MF",
+   "nat": "BEL",
+   "name": "Nathan De Cat",
+   "page": "Nathan De Cat",
+   "dob": "2008-07-19",
+   "captain": false,
+   "loan": false,
+   "team": "Belgium",
+   "caps": 1
+  },
+  {
+   "no": "18",
+   "pos": "MF",
+   "nat": "NED",
+   "name": "Wouter Burger",
+   "page": "Wouter Burger",
+   "dob": "2001-02-16",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "19",
+   "pos": "FW",
+   "nat": "GER",
+   "name": "Tim Lemperle",
+   "page": "Tim Lemperle",
+   "dob": "2002-02-05",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "20",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Bambasé Conté",
+   "page": "Bambasé Conté",
+   "dob": "2003-07-07",
+   "captain": false,
+   "loan": false,
+   "team": "Germany",
+   "caps": 3
+  },
+  {
+   "no": "21",
+   "pos": "DF",
+   "nat": "KOS",
+   "name": "Albian Hajdari",
+   "page": "Albian Hajdari",
+   "dob": "2003-05-18",
+   "captain": false,
+   "loan": false,
+   "team": "Kosovo",
+   "caps": 8
+  },
+  {
+   "no": "22",
+   "pos": "MF",
+   "nat": "AUT",
+   "name": "Alexander Prass",
+   "page": "Alexander Prass",
+   "dob": "2001-05-26",
+   "captain": false,
+   "loan": false,
+   "team": "Austria",
+   "caps": 24
+  },
+  {
+   "no": "27",
+   "pos": "FW",
+   "nat": "CRO",
+   "name": "Andrej Kramarić",
+   "page": "Andrej Kramarić",
+   "dob": "1991-06-19",
+   "captain": false,
+   "loan": false,
+   "team": "Croatia",
+   "caps": 119
+  },
+  {
+   "no": "28",
+   "pos": "DF",
+   "nat": "JPN",
+   "name": "Kōki Machida",
+   "page": "Kōki Machida",
+   "dob": "1997-08-25",
+   "captain": false,
+   "loan": false,
+   "team": "Japan",
+   "caps": 17
+  },
+  {
+   "no": "29",
+   "pos": "DF",
+   "nat": "GER",
+   "name": "Natnael Abraha",
+   "page": "Natnael Abraha",
+   "dob": "",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "32",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Cajetan Lenz",
+   "page": "Cajetan Lenz",
+   "dob": "2006-06-16",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "34",
+   "pos": "DF",
+   "nat": "CZE",
+   "name": "Vladimír Coufal",
+   "page": "Vladimír Coufal",
+   "dob": "1992-08-22",
+   "captain": false,
+   "loan": false,
+   "team": "Czech Republic",
+   "caps": 67
+  },
+  {
+   "no": "36",
+   "pos": "GK",
+   "nat": "ISL",
+   "name": "Lúkas Petersson",
+   "page": "Lúkas Petersson",
+   "dob": "2004-02-09",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "37",
+   "pos": "GK",
+   "nat": "GER",
+   "name": "Luca Philipp",
+   "page": "Luca Philipp",
+   "dob": "",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "39",
+   "pos": "DF",
+   "nat": "NED",
+   "name": "Mats Rots",
+   "page": "Mats Rots",
+   "dob": "2006-03-11",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  }
+ ],
+ "results": [
+  [
+   "29 August 2026",
+   "1",
+   "1. FC Köln",
+   "3–2",
+   "TSG Hoffenheim"
+  ],
+  [
+   "5 September 2026",
+   "2",
+   "TSG Hoffenheim",
+   "2–3",
+   "Borussia Dortmund"
+  ],
+  [
+   "12 September 2026",
+   "3",
+   "TSG Hoffenheim",
+   "2–1",
+   "VfB Stuttgart"
+  ],
+  [
+   "20 September 2026",
+   "4",
+   "SC Paderborn",
+   "3–1",
+   "TSG Hoffenheim"
+  ],
+  [
+   "10 October 2026",
+   "5",
+   "TSG Hoffenheim",
+   "2–3",
+   "Hamburger SV"
+  ],
+  [
+   "18 October 2026",
+   "6",
+   "Borussia Mönchengladbach",
+   "1–2",
+   "TSG Hoffenheim"
+  ],
+  [
+   "25 October 2026",
+   "7",
+   "TSG Hoffenheim",
+   "3–0",
+   "Bayer Leverkusen"
+  ],
+  [
+   "31 October 2026",
+   "8",
+   "Werder Bremen",
+   "",
+   "TSG Hoffenheim"
+  ],
+  [
+   "8 November 2026",
+   "9",
+   "TSG Hoffenheim",
+   "",
+   "Schalke 04"
+  ],
+  [
+   "21 November 2026",
+   "10",
+   "Eintracht Frankfurt",
+   "",
+   "TSG Hoffenheim"
+  ],
+  [
+   "29 November 2026",
+   "11",
+   "TSG Hoffenheim",
+   "",
+   "FC Augsburg"
+  ],
+  [
+   "4–6 December 2026",
+   "12",
+   "SC Freiburg",
+   "",
+   "TSG Hoffenheim"
+  ],
+  [
+   "11–13 December 2026",
+   "13",
+   "TSG Hoffenheim",
+   "",
+   "Bayern Munich"
+  ],
+  [
+   "18–20 December 2026",
+   "14",
+   "Union Berlin",
+   "",
+   "TSG Hoffenheim"
+  ],
+  [
+   "8–10 January 2027",
+   "15",
+   "TSG Hoffenheim",
+   "",
+   "SV Elversberg"
+  ],
+  [
+   "12–14 January 2027",
+   "16",
+   "Mainz 05",
+   "",
+   "TSG Hoffenheim"
+  ],
+  [
+   "15–17 January 2027",
+   "17",
+   "TSG Hoffenheim",
+   "",
+   "RB Leipzig"
+  ],
+  [
+   "22–24 January 2027",
+   "18",
+   "TSG Hoffenheim",
+   "",
+   "1. FC Köln"
+  ],
+  [
+   "29–31 January 2027",
+   "19",
+   "Borussia Dortmund",
+   "",
+   "TSG Hoffenheim"
+  ],
+  [
+   "5–7 February 2027",
+   "20",
+   "VfB Stuttgart",
+   "",
+   "TSG Hoffenheim"
+  ],
+  [
+   "12–14 February 2027",
+   "21",
+   "TSG Hoffenheim",
+   "",
+   "SC Paderborn"
+  ],
+  [
+   "19–21 February 2027",
+   "22",
+   "Hamburger SV",
+   "",
+   "TSG Hoffenheim"
+  ],
+  [
+   "26–28 February 2027",
+   "23",
+   "TSG Hoffenheim",
+   "",
+   "Borussia Mönchengladbach"
+  ],
+  [
+   "2–4 March 2027",
+   "24",
+   "Bayer Leverkusen",
+   "",
+   "TSG Hoffenheim"
+  ],
+  [
+   "5–7 March 2027",
+   "25",
+   "TSG Hoffenheim",
+   "",
+   "Werder Bremen"
+  ],
+  [
+   "12–14 March 2027",
+   "26",
+   "Schalke 04",
+   "",
+   "TSG Hoffenheim"
+  ],
+  [
+   "19–21 March 2027",
+   "27",
+   "TSG Hoffenheim",
+   "",
+   "Eintracht Frankfurt"
+  ],
+  [
+   "2–4 April 2027",
+   "28",
+   "FC Augsburg",
+   "",
+   "TSG Hoffenheim"
+  ],
+  [
+   "9–11 April 2027",
+   "29",
+   "TSG Hoffenheim",
+   "",
+   "SC Freiburg"
+  ],
+  [
+   "16–18 April 2027",
+   "30",
+   "Bayern Munich",
+   "",
+   "TSG Hoffenheim"
+  ],
+  [
+   "23–25 April 2027",
+   "31",
+   "TSG Hoffenheim",
+   "",
+   "Union Berlin"
+  ],
+  [
+   "7–9 May 2027",
+   "32",
+   "SV Elversberg",
+   "",
+   "TSG Hoffenheim"
+  ],
+  [
+   "14–16 May 2027",
+   "33",
+   "TSG Hoffenheim",
+   "",
+   "Mainz 05"
+  ],
+  [
+   "22 May 2027",
+   "34",
+   "RB Leipzig",
+   "",
+   "TSG Hoffenheim"
+  ],
+  [
+   "22 August 2026",
+   "First round",
+   "Erzgebirge Aue",
+   "0–4",
+   "TSG Hoffenheim"
+  ],
+  [
+   "28 October 2026",
+   "Second round",
+   "Holstein Kiel",
+   "1–1",
+   "TSG Hoffenheim"
+  ],
+  [
+   "17 September 2026",
+   "1",
+   "OFI",
+   "2–0",
+   "TSG Hoffenheim"
+  ],
+  [
+   "15 October 2026",
+   "2",
+   "TSG Hoffenheim",
+   "2–3",
+   "Beşiktaş"
+  ],
+  [
+   "22 October 2026",
+   "3",
+   "TSG Hoffenheim",
+   "3–0",
+   "Lyon"
+  ],
+  [
+   "5 November 2026",
+   "4",
+   "Crystal Palace",
+   "",
+   "TSG Hoffenheim"
+  ],
+  [
+   "26 November 2026",
+   "5",
+   "TSG Hoffenheim",
+   "",
+   "Sturm Graz"
+  ],
+  [
+   "10 December 2026",
+   "6",
+   "Anderlecht",
+   "",
+   "TSG Hoffenheim"
+  ],
+  [
+   "21 January 2027",
+   "7",
+   "Olympiacos",
+   "",
+   "TSG Hoffenheim"
+  ],
+  [
+   "28 January 2027",
+   "8",
+   "TSG Hoffenheim",
+   "",
+   "Ferencváros"
+  ]
+ ]
+}

@@ -1,0 +1,129 @@
+# 取材メモ（2026年11月8日）マンU、降格圏に転落。1986年11月以来（ニュースのショート。見せ方 Y＝キャリック監督の言葉から始める）
+# 取材: 2026-11-08。python requests（ブラウザUA）と WebFetch で本文を読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 読んだ出典:
+#   ・ESPN 記事 50410672「Man United hit 40-year low after dropping into Premier League relegation zone」（2026-11-07 20:09 UTC。content.core.api.espn.com の本文を全部読んだ。PA の情報を含む）:
+#       「フォレストの 3-1 勝ちでシティが3連敗し、ユナイテッドは降格圏（下位3つ）に入った。**9試合以上を終えた時点で、降格圏で1日を終えるのは 1986年11月以来**（そのときは15試合を終えて21位）。」
+#       「日曜にサンダーランドがチェルシーに勝ち、パレスがリヴァプールに負けなければ、ユナイテッドはヴィラ戦の前に最下位に落ちる」「リーグ戦で勝っていないのは 8/30 のイプスウィッチ戦（5-2、ホーム）以来」「今季はクラブのプレミア史上最悪の滑り出しで、40年で最悪」。
+#       キャリック監督（金曜の会見。ESPN/PA の英語）: "Obviously it's a positive reaction" ／ "I have seen enough from the players. I know what we're capable of. I've said it enough. I know exactly what we're capable of, and we all do." ／ "We've just not proved it enough lately, but we know it's there."
+#   ・ESPN 記事 50410354（フォレスト 3-1 シティ）: フォレストの勝ちでユナイテッドが降格圏に入ったこと。
+#   ・ESPN の順位表（site.api.espn.com/apis/v2/sports/soccer/eng.1/standings、11/7 の試合のあと）: 16位フォレスト 10試合・勝ち点9／17位コヴェントリー 10試合・勝ち点9／**18位 マンU 9試合・1勝4分4敗・勝ち点7・得失点−5**／19位 パレス 9試合・勝ち点7・得失点−12／20位 サンダーランド 9試合・勝ち点5。
+#   ・ESPN の team schedule（マンU・id 360）: 8/22 ハル 0-2、8/30 イプスウィッチ 5-2、9/6 エヴァートン 2-2、9/13 マンC 0-1、9/20 フルハム 1-1、10/10 トッテナム 1-1、10/18 リーズ 1-1、10/25 ボーンマス 0-3、10/31 チェルシー 0-2（いずれもマンUの得点を先に書いた）。
+#   ・ESPN scoreboard 2026-11-08: マンU 対 アストン・ヴィラ 16:30 UTC（日曜、ホーム）。サンダーランド対チェルシー・パレス対リヴァプール・ブライトン対ブレントフォード・イプスウィッチ対ボーンマスは 14:00 UTC（まだ未消化）。
+#   ・Wikipedia 英語版「1986–87 Manchester United F.C. season」（背景の確認だけ）: アトキンソン監督の解任は 11月4〜5日（記述が割れる）、ファーガソンの就任は 11月6日。当時のリーグは22チームで、ユナイテッドは 10/4 21位・10/11 20位・11/1 19位・11/8 20位。→ ESPN の「1986年11月」とは矛盾しない。ただし**「降格圏」の定義が当時と違う**（22チームで下位2つが自動降格、3つ目は入れ替え戦）ので、「21位・15試合」は台本に書かない。
+#   ・フットボールチャンネル（11/7 17:10）: 試合前の順位は17位・勝ち点7（パレスと同点）。
+# 自分で数えたもの:
+#   ・マンUは**9試合で勝ち点7（1勝4分4敗）**。リーグ戦の勝利は 8/30 が最後で、**そのあとの7試合は 0勝4分3敗**（9/6 2-2・9/13 0-1・9/20 1-1・10/10 1-1・10/18 1-1・10/25 0-3・10/31 0-2）。
+#   ・順位表で17位コヴェントリーとの勝ち点差は2。**ヴィラに勝てば勝ち点10で、勝ち点9のフォレスト・コヴェントリーを上回る**（ほかの試合の結果が変わらなければ）。
+# **前提の確認**: 「40年ぶり」はESPNの記述（「9試合以上を終えた時点で降格圏で1日を終えるのは 1986年11月以来」）。出どころは ESPN 1社（PA の情報を含む）で、自分では過去の全シーズンの順位を数えていない。→ tier は「報道」。台本は「報道では」と添えて言い、「40年ぶりの低さ」とは言い切らない（題の「40年ぶり」は「1986年11月以来」と書き、年数の計算は 2026−1986＝40 で一致）。ESPN の「21位」は Wikipedia の表と食い違う（20位まで）ので台本に出さない。
+#   題材の一覧は「マンUが降格圏に転落。40年ぶりの低さ」。**「低さ」と読めるのは順位が降格圏という意味で、勝ち点の低さではない**（勝ち点7の「40年で最悪」の滑り出しは ESPN の別の文。こちらも1社なので使わない）。
+# **日付の注意**: 降格圏に落ちたのは 11/7 の試合が終わった時点（マンUの試合は無い）。**マンUは 11/8 16:30 UTC（日本時間 11/9 01:30）にアストン・ヴィラ戦**。結果が出れば順位が変わる。台本は「7日の試合が終わった時点」と日付で縛る。公開が 11/9 になるなら見直し。
+# 食い違い: ①フットボールチャンネルの「17位」は試合前の順位。ESPN の順位表の18位は試合後。→ 台本は「18位」（7日のあと）。②ESPN は「1986年11月に21位（15試合後）」、Wikipedia の表は 20位まで。→ 順位の数字は台本で使わない。③アトキンソン解任日が 11/4 と 11/5 で Wikipedia 内でも割れる。→ 台本は「1986年11月」だけ。
+# 本人の言葉: あり（キャリック監督。金曜の会見。ESPN/PA の引用＝報道。英語を日本語にした。**この言葉は降格圏に落ちる前＝金曜の発言**なので、台本は「金曜」と日付を言う）。Y。
+# 反応: 0件（X・Reddit は読めない。作らない。approve は --no-voices）。海外の反応（現地ファン）は混ぜられなかった。
+# 写真: manutd.com の記事の主写真（クラブ公式）と ESPN の記事の主写真から photopool で3枚。01 トレーニングの選手（誰かは確かめていない・背景のみ）、02 キャリック監督の会見、03 うなだれる選手（ブルーノ・フェルナンデスに見える。名前は台本で言わない）。
+# 前の本との重なり: **20261107_carrick_ferguson_success**（キャリックの会見の別の言葉「不可能ではありません」。就任40年のファーガソンの話）、20261106 以前のマンUの回。→ 今回の初出は「降格圏に落ちた」事実と「7試合未勝利」の数。ファーガソンの就任・成功の話・「不可能ではありません」は繰り返さない。1986年の話は「降格圏で1日を終えたのは1986年11月以来」の1文だけ。
+slot: match
+date: "2026年11月8日"
+format: news
+no_main: true
+people: [マンU, マンチェスター・ユナイテッド, キャリック, ノッティンガム・フォレスト, アストン・ヴィラ]
+
+short_style: Y
+short_hook_quote: 最近は、それを十分に示せていません。
+short_question: マンチェスター・ユナイテッドは、アストン・ヴィラ戦で降格圏を抜けられると思いますか。
+short_photos:
+  - assets/images/20261108_man_united_relegation_zone/02_v.jpg
+  - assets/images/20261108_man_united_relegation_zone/03_v.jpg
+  - assets/images/20261108_man_united_relegation_zone/01_v.jpg
+  - assets/images/20261108_man_united_relegation_zone/02_v.jpg
+short_telops: []
+
+theme:
+  id: man_united_relegation_zone
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: マンU、降格圏に転落。1986年11月以来のことが起きた
+  hook: ""
+  question: マンチェスター・ユナイテッドは、7日の試合のあと、なぜ降格圏にいるのか
+  takeaway: マンUは9試合で勝ち点7。リーグ戦は8月30日から7試合勝てず、18位に落ちた。勝てば勝ち点10で、降格圏の外に出られる
+
+thumbnail:
+  layout: face
+  line1: マンU 降格圏に転落
+  line2: 1986年11月以来
+  tags: [マンチェスター・ユナイテッド, キャリック]
+  photo: assets/images/20261108_man_united_relegation_zone/02_w.jpg
+  photos:
+    - assets/images/20261108_man_united_relegation_zone/02_w.jpg
+    - assets/images/20261108_man_united_relegation_zone/03_w.jpg
+  short_photo: assets/images/20261108_man_united_relegation_zone/02_v.jpg
+
+answer: フォレストがシティに勝って勝ち点9になり、勝ち点7のマンUは18位に。リーグ戦で勝てていないのは7試合
+watch: 8日、ホームでのアストン・ヴィラ戦
+
+sections:
+  - id: what
+    main: true
+    heading: マンUは、なぜ降格圏に落ちたのか
+    tier: 報道
+    telop: マンU、降格圏へ。9試合以上では1986年11月以来
+    say:
+      - text: 7日の試合が終わった時点で、マンUが、プレミアリーグの18位に落ちました。20クラブのうち、下の3つが降格圏です。
+        image: assets/images/20261108_man_united_relegation_zone/03_w.jpg
+      - text: マンUは、この日、試合をしていません。順位を動かしたのは、フォレストでした。
+      - text: フォレストが、シティに3対1で勝って勝ち点9に伸び、勝ち点7のマンUを抜いたんです。
+      - text: マンUは、リーグ戦で7試合、勝てていません。
+      - text: 9試合以上を終えて降格圏で1日を終えるのは、1986年11月以来だと報じられています。
+        card: {type: table, title: プレミアリーグ 7日のあと, columns: [順位, クラブ, 試合, 勝ち点], rows: [[16位, ノッティンガム・フォレスト, 10, 9], [17位, コヴェントリー, 10, 9], [18位, マンチェスター・U, 9, 7], [19位, クリスタル・パレス, 9, 7], [20位, サンダーランド, 9, 5]], highlight_row: 2}
+      - text: 金曜、キャリック監督は、チームについてこう話していました。
+        card: none
+        image: assets/images/20261108_man_united_relegation_zone/02_w.jpg
+      - voice: マイケル・キャリック
+        text: 選手たちを、十分に見てきました。
+      - voice: マイケル・キャリック
+        text: 何ができるかは、分かっています。
+        cont: true
+      - voice: マイケル・キャリック
+        text: 最近は、それを十分に示せていません。
+        emph: true
+      - voice: マイケル・キャリック
+        text: でも、力はそこにあると分かっています。
+        cont: true
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50410672
+      - https://site.api.espn.com/apis/v2/sports/soccer/eng.1/standings
+  - id: story
+    heading: マンUは、リーグ戦でいつから勝てていないのか
+    tier: 報道
+    telop: マンUのリーグ戦、8月30日から7試合勝てず
+    say:
+      - text: マンUのリーグ戦の最後の勝利は、8月30日のイプスウィッチ戦。5対2でした。
+        image: assets/images/20261108_man_united_relegation_zone/03_w.jpg
+      - text: その後の内訳は、4つの引き分けと、3つの敗戦です。
+        card: {type: table, title: マンUのリーグ戦 8月30日のあと, columns: [日付, 相手, スコア], rows: [[9月6日, エヴァートン, 2-2], [9月13日, マンチェスター・C, 0-1], [9月20日, フルハム, 1-1], [10月10日, トッテナム, 1-1], [10月18日, リーズ, 1-1], [10月25日, ボーンマス, 0-3], [10月31日, チェルシー, 0-2]], highlight_row: 6}
+      - text: 直近の2試合は、無得点の2連敗です。
+        card: none
+        emph: true
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/teams/360/schedule
+      - https://www.espn.com/soccer/story/_/id/50410672
+  - id: view
+    viewpoint: true
+    heading: マンUは、アストン・ヴィラ戦で降格圏を抜けられるのか
+    tier: 背景
+    telop: マンU、勝てば勝ち点10。降格圏の外へ
+    say:
+      - text: 見立てです。マンUは9試合で勝ち点7。17位コヴェントリーとは、勝ち点2差です。
+        image: assets/images/20261108_man_united_relegation_zone/03_w.jpg
+      - text: 次は、8日の日曜、ホームでのアストン・ヴィラ戦です。
+      - text: 日曜のほかの試合の結果次第では、ヴィラ戦の前に最下位まで落ちる可能性があります。
+      - text: ただ、そのヴィラ戦に勝てば勝ち点10で、勝ち点9のフォレストとコヴェントリーを上回ります。
+        emph: true
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/v2/sports/soccer/eng.1/standings
+      - https://www.espn.com/soccer/story/_/id/50410672
+short_title: "マンU、降格圏に転落。1986年11月以来のことが起きた"

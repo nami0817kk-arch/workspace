@@ -1,0 +1,213 @@
+# ブンデスリーガ チーム紹介 ⑬ヴェルダー・ブレーメン（見本は 11/6 のハンブルガーSV）。2026-11-05 作成。情報は11月5日時点。
+# 事実は research/bd_data/bremen_research.md（出典付き）から。アルファベットは読み上げに残さない。
+# 今季の結果と得点者は ESPN の試合データで数えた。順位の言い方で選手・クラブを小さく見せない。
+title: ブレーメンは2度落ちて、2度とも1年で戻った。なぜすぐに1部へ帰れたのか
+short_title: ブレーメン、なぜ2度とも1年で1部へ
+opening: "ヴェーザー川のほとり、緑と白のクラブ。"
+hook: 1部を離れたのは、64季のうち2季だけです。
+thumbnail:
+  line1: ブレーメン、1部62季
+  line2: 2度落ちて2度とも1年で復帰
+  crest_main: [ブレーメン]
+  tags: [ブレーメン, ヴェルダー・ブレーメン, ブンデスリーガ, 奥寺康彦, 大迫勇也, 菅原由勢, フュルクルク, ピサロ]
+  layout: classic
+
+reasons:
+- "1部は今季で62季目。バイエルンと並ぶ、ブンデスリーガで最も多い数です。"
+- "2度、2部に落ちています。でも2度とも、1年で戻ってきました。"
+- "11月5日の時点で5位。昨季15位のチームが、8試合で負けは1つです。"
+reasons_focus: [1, 2, 3]
+reasons_telop: 1部62季はバイエルンと並ぶ最多。2度の降格から、どちらも1年で復帰。今季は8試合で1敗
+reasons_rows:
+- ["理由1", "1部62季はバイエルンと並ぶ最多"]
+- ["理由2", "2度の降格から、どちらも1年で復帰"]
+- ["理由3", "今季は8試合で1敗、5位"]
+reasons_sources:
+- https://en.wikipedia.org/wiki/SV_Werder_Bremen
+- https://en.wikipedia.org/wiki/List_of_SV_Werder_Bremen_seasons
+- https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/teams/137/schedule?season=2026
+- https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings
+
+data:
+- 創立は**1899年**。綱引きの大会でボールを勝ち取った、16歳の学生たちが作りました。
+- 本拠地のヴェーザーシュタディオンは、1909年から同じ場所にあります。
+- ドイツ王者は**4回**。ドイツカップは6回です。
+- ヨーロッパでは、1992年にカップウィナーズカップで優勝しています。
+- 昨季は**15位**。勝ち点32で残りました。
+data_focus: [0, 3, 5, 6, 8]
+
+story_sections:
+  - id: japan
+    heading: 奥寺康彦から菅原由勢まで。ブレーメンと日本は、どうつながってきたのか
+    tier: 背景
+    telop: 1981年に奥寺康彦が加入。キリンカップで2度優勝。大迫勇也、菅原由勢もプレー
+    narrator: 解説
+    say:
+      - text: 1981年、ブレーメンに日本人が加わります。奥寺康彦です。
+        image: assets/backgrounds/stadium_ブレーメン_in.png
+        card:
+          type: table
+          title: ブレーメンと日本
+          columns: ["年", "出来事"]
+          rows:
+            - ["1981年", "奥寺康彦が加入"]
+            - ["1982・86年", "日本のキリンカップで優勝"]
+            - ["2018年", "大迫勇也が加入"]
+            - ["2025年", "菅原由勢が加入"]
+      - ウイングだった奥寺を、監督のレーハーゲルはサイドバックで使いました。
+      - 1986年までの5季で、リーグ戦**159試合**。チームは2位に3回入っています。
+      - text: 1982年と86年には、日本で開かれたキリンカップで優勝。
+        card: none
+        image: assets/backgrounds/stadium_ブレーメン.png
+      - 86年は東京で日本代表に2対0。決勝ではパルメイラスに、延長の末4対2で勝ちました。
+      - text: 2018年には、大迫勇也がケルンから加わります。
+        card: none
+        image: assets/images/bd_bremen_pair_japan/01.jpg
+      - 3季で、リーグ戦**75試合11得点**。
+      - 昨季は菅原由勢が、サウサンプトンから期限付きで加わり、リーグ戦31試合に出ました。
+    sources:
+      - https://en.wikipedia.org/wiki/Yasuhiko_Okudera
+      - https://en.wikipedia.org/wiki/Kirin_Cup_Soccer
+      - https://en.wikipedia.org/wiki/Yuya_Osako
+      - https://en.wikipedia.org/wiki/Yukinari_Sugawara
+  - id: golden
+    heading: 2度落ちたブレーメンは、なぜ2度とも1年で1部に戻れたのか
+    tier: 背景
+    telop: 1980年と2021年に降格。どちらも翌年に昇格。1部は今季で62季目
+    narrator: 解説
+    main: true
+    say:
+      - text: 1963年に始まったブンデスリーガ。ブレーメンは、最初の16クラブの1つです。
+        image: assets/backgrounds/stadium_ブレーメン.png
+      - 初めて落ちたのは1980年。34試合で93失点し、17位でした。
+      - text: 翌季の2部北は42試合。30勝を挙げ、**97得点**で1位。1年で戻ります。
+        card:
+          type: table
+          title: 2度の降格と復帰
+          columns: ["季", "結果"]
+          rows:
+            - ["1979〜80年", "17位で降格"]
+            - ["1980〜81年", "2部北で1位、昇格"]
+            - ["2020〜21年", "17位で降格"]
+            - ["2021〜22年", "2部で2位、昇格"]
+      - text: その1981年の4月、監督に就いたのがオットー・レーハーゲルです。
+        card: none
+        image: assets/images/bd_bremen_pair_rehhagel/01.jpg
+      - 14年の在任で、ブンデスリーガ優勝が2回、ドイツカップも2回。
+      - 1992年にはカップウィナーズカップで、ヨーロッパの頂点にも立ちました。
+      - text: 2度目の降格は2021年。17位で、41年ぶりでした。
+        image: assets/backgrounds/stadium_ブレーメン.png
+      - 前の年も16位で入れ替え戦に回り、アウェーゴールの差で残っていました。
+      - text: 2部での1季目、ニクラス・フュルクルクがリーグ戦**19得点**。
+        image: assets/images/bd_bremen_pair_fullkrug/01.jpg
+      - チームは2位に入り、また1年で戻ります。
+      - 1部は、今季で62季目。同じ数を持つのは、バイエルンだけです。
+    sources:
+      - https://en.wikipedia.org/wiki/SV_Werder_Bremen
+      - https://en.wikipedia.org/wiki/List_of_SV_Werder_Bremen_seasons
+      - https://en.wikipedia.org/wiki/Otto_Rehhagel
+      - https://en.wikipedia.org/wiki/Niclas_F%C3%BCllkrug
+
+features:
+- "ブレーメンの特徴の1つめは、名前です。"
+- "ヴェルダーは、ドイツ語で「川の中洲」。最初に試合をした、川べりのグラウンドから来ています。"
+- "2つめは、ゴールのあと。スタジアムに霧笛が鳴り、「500マイル」という歌が流れます。"
+- "3つめは、エンブレム。1929年から、ひし形にWの形です。"
+- "2002年からは、クリスマス前の最後の試合だけ、ひし形の代わりにモミの木が入ります。"
+features_marks: [1, 3]
+features_telop: 名前は「川の中洲」。ゴールのあとに霧笛。クリスマス前はエンブレムがモミの木に
+features_rows:
+- ["名前", "ヴェルダーは「川の中洲」"]
+- ["ゴールのあと", "霧笛と「500マイル」"]
+- ["エンブレム", "クリスマス前はモミの木"]
+features_sources:
+- https://en.wikipedia.org/wiki/SV_Werder_Bremen
+- https://de.wikipedia.org/wiki/Werder_Bremen
+
+episode:
+  id: episode
+  heading: 2004年、ブレーメンはどうやって初めての2冠を手にしたのか
+  tier: 背景
+  telop: 1999年にシャーフが監督に。2004年、リーグとドイツカップの2冠
+  narrator: 解説
+  card:
+    type: table
+    title: シャーフのブレーメン
+    columns: ["", ""]
+    rows:
+      - ["1999年", "シャーフが監督に"]
+      - ["2003〜04年", "リーグ22勝、79得点"]
+      - ["2004年5月", "リーグ優勝"]
+      - ["2004年5月", "ドイツカップ優勝"]
+  say:
+    - text: 1999年5月、トーマス・シャーフが監督に就きます。ブレーメンの元選手で、育成のコーチでした。
+      image: assets/images/bd_bremen_schaaf/scene.jpg
+    - 数週間後のドイツカップ決勝で、バイエルンにPK戦で勝ちました。
+    - 2003年から04年のシーズン、リーグ戦34試合で22勝、**79得点**。
+    - アイウトンが**28得点**。ブレーメンの選手が1季で挙げた、いちばん多い数です。
+    - text: 5月8日、ミュンヘンでバイエルンに3対1。
+      card: none
+      image: assets/backgrounds/stadium_ブレーメン_in.png
+    - 2位のバイエルンに勝ち点6の差をつけて、優勝しました。
+    - ドイツカップの決勝もアーヘンに3対2。初めての、リーグとカップの2冠です。
+  sources:
+    - https://en.wikipedia.org/wiki/2003%E2%80%9304_SV_Werder_Bremen_season
+    - https://en.wikipedia.org/wiki/SV_Werder_Bremen
+
+legends:
+- - ピサロは、ペルーのフォワード。1999年にブレーメンへ来て、5度にわたって在籍しました。
+  - 2019年には40歳でゴールを決め、ブンデスリーガの最年長得点の記録を作ります。
+  - "リーグ戦**250試合109得点**。クラブの歴代最多得点です。"
+- - クローゼは、ドイツのフォワード。2004年に、カイザースラウテルンから加わりました。
+  - 2005年から06年のシーズンに25得点で得点王。ドイツの年間最優秀選手にも選ばれます。
+  - "2007年まで、リーグ戦**89試合53得点**。"
+- - ディエゴは、ブラジルの攻撃的な中盤。2006年に加わりました。
+  - 2009年は、ドイツカップの優勝と、UEFAカップの決勝進出を経験します。
+  - "2009年まで、リーグ戦**84試合38得点**。"
+legend_rows:
+- ["ピサロ", "1999-2020に5度", "リーグ250試合109得点"]
+- ["クローゼ", "2004-2007", "リーグ89試合53得点"]
+- ["ディエゴ", "2006-2009", "リーグ84試合38得点"]
+legend_sources:
+- - https://en.wikipedia.org/wiki/Claudio_Pizarro
+- - https://en.wikipedia.org/wiki/Miroslav_Klose
+- - https://en.wikipedia.org/wiki/Diego_(footballer,_born_1985)
+
+manager:
+- 今季の監督は、ダニエル・ティウネ。**52歳**です。
+- 選手時代はオスナブリュックの中盤で、リーグ戦161試合61得点。
+- 2020年から21年には、ハンブルガーSVの監督も務めました。
+- 2026年2月4日に就任し、昨季は15位で残留させました。
+manager_telop: 監督はティウネ。2026年2月に就任
+manager_rows:
+- ["監督", "ダニエル・ティウネ"]
+- ["就任", "2026年2月4日"]
+- ["前の仕事", "デュッセルドルフの監督"]
+manager_sources:
+- https://en.wikipedia.org/wiki/Daniel_Thioune
+- https://en.wikipedia.org/wiki/SV_Werder_Bremen
+
+squad_about:
+  ニクラス・フュルクルク: ニクラス・フュルクルクは、ドイツ代表で**24試合**。
+  カール・ヘイン: カール・ヘインは、エストニア代表で**49試合**。
+
+season:
+- text: ブレーメンは、ここまでの8試合で4勝3分1敗。勝ち点は15。
+  card:
+    type: stats
+    title: 今季のリーグ戦（8試合）
+    items:
+    - ["15", "", "勝ち点"]
+    - ["9", "", "フュルクルクの得点"]
+    - ["1", "", "負け"]
+    focus: 1
+- 負けたのは、開幕のフライブルク戦だけ。そこから7試合、負けていません。
+- text: チームの17得点のうち、**9点**がフュルクルクです。
+  mark: {kind: circle, item: 1}
+- text: 2部から1年で戻った季に19点を取った選手が、ウェストハムから期限付きで帰ってきました。
+  card: none
+  image: assets/images/bd_bremen_pair_fullkrug/01.jpg
+- 勝ち点は1試合あたり**1.88**。昨季の0.94の、ほぼ倍です。
+- 得点は1試合2.13で、昨季の1.09から増えました。失点は1.75で、昨季の1.76とほぼ同じです。
+- text: 11月22日には、ホームにハンブルガーSVを迎えます。北の2クラブのダービーです。
+  image: assets/backgrounds/stadium_ブレーメン_in.png

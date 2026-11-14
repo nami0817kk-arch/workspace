@@ -1,0 +1,123 @@
+# 取材メモ（2026年11月11日）鈴木唯人が今季5点目＋オウンゴール誘発。試合後に本人が語ったこと（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-11。requests（ブラウザUA）と WebFetch で本文を読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。
+# 題材の元: サッカーキング 2026-11-08「鈴木唯人が今季5点目＆OG誘発と大活躍！ フライブルクが公式戦4連勝…後藤啓介もPK獲得」（見出しのみ。本文は読んでいない）。
+# 出典で確かめたこと:
+#   ・ESPN の試合データ（site.api.espn.com ger.1 summary event=401884741、11/8 16:30 UTC キックオフ＝日本時間 11/9 1:30）:
+#       フライブルク 2-0 ウニオン・ベルリン。55分 オウンゴール（ラニ・ケディラ、ウニオン）／67分 鈴木唯人（右足、右サイドのエリア内から中央へ）。
+#       鈴木は先発、85分にヘーラーと交代。後藤啓介は68分にマタノビッチと交代で出場。84分にグリフォのPKはレノウが止めた（今回は使わない）。
+#   ・ゲキサカ 462864 試合記録: 得点者 [フ]オウンゴール(55分)、鈴木唯人(67分)。鈴木は85分に交代。→ ESPN と一致。
+#   ・デイリースポーツ 2026-11-10（全文を読んだ）: 1-0の後半22分に今季5点目。自陣からのカウンターで一気にゴール前へ走り込み、味方の縦パスで抜け出し、
+#       前に出てきたGKの位置を見極め、軽く浮かせて流し込んだ。約2カ月ぶり。後半40分までプレー。試合の最優秀選手にも選出。開幕節はハットトリック。
+#       本人: 「少しトラップが流れすぎてしまったが、良かった」／「戦う部分、走る部分。そういうベーシックなところに立ち返ってやろうと思っていた」／「いい感覚が徐々に戻ってきている」
+#   ・スポーツニッポン 2026-11-10（Yahoo!ニュース配信、全文を読んだ）: 9月19日以来の今季5点目。後半10分の先制点にも関与＝ドリブルで3人を引きつけて右にパスを出し、MFベステの折り返しがオウンゴールになった。
+#       本人コメントはデイリーと同じ3つ。ブラジルなどと対戦する日本代表のシンガポール遠征に向かう。
+#   ・ESPN 順位表（ger.1 standings、11/11 取得）: 1位バイエルン 9試合 勝ち点21、2位ドルトムント 21、3位フライブルク 19。（日刊スポーツ見出し: 首位バイエルンに勝ち点2差）
+#   ・公式戦4連勝: サッカーキング見出し。直前3連勝（ヴォルフスブルク3-2・アウクスブルク2-1・トラブゾンスポル1-0）は scripts/20261106_goto_suzuki_freiburg の取材で確認済み。
+# 自分で数えたもの: 9月19日→11月8日 = 50日。得点2つ（オウンゴール・鈴木）のどちらにも鈴木が絡んだ。
+# 前の本との重なり: 20261106_goto_suzuki_freiburg（3連勝・後藤と鈴木の起用）／20261026_suzuki_yuito_bayern／20261027_bd_freiburg。
+#   → 今回の初出: ウニオン戦のゴールの中身・オウンゴール誘発・試合後の本人の言葉・50日ぶり。後藤の起用の話は繰り返さない。PKの失敗は題から離れるので使わない。
+# 本人の言葉: あり（デイリー・スポニチ、日本語の原文のまま）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月11日"
+format: news
+no_main: true
+people: [鈴木唯人, フライブルク, ウニオン・ベルリン, ベステ, バイエルン]
+
+short_style: Y
+short_hook_quote: いい感覚が徐々に戻ってきている。
+short_photos:
+  - assets/images/20261111_suzuki_yui_freiburg/02_v.jpg
+  - assets/images/20261111_suzuki_yui_freiburg/03_v.jpg
+  - assets/images/20261111_suzuki_yui_freiburg/01_v.jpg
+short_question: 鈴木唯人は、日本代表のシンガポール遠征でも点を取ると思いますか。
+short_telops: []
+
+theme:
+  id: suzuki_yui_freiburg
+  league: germany
+  league_name: ブンデスリーガ
+  prefix: ""
+  title: 鈴木唯人、50日ぶりの今季5点目。2得点に絡んだ試合後に語ったこと
+  hook: ""
+  question: 2つの得点に絡んだ鈴木唯人は、試合後に何を語ったのか
+  takeaway: 鈴木唯人は9月19日以来、50日ぶりの今季5点目。フライブルクの2点のどちらにも絡み、公式戦4連勝で勝ち点19の3位。首位バイエルンとは2点差のまま、日本代表のシンガポール遠征へ向かう
+
+thumbnail:
+  layout: face
+  line1: 鈴木唯人 今季5点目
+  line2: 戻ってきている
+  tags: [鈴木唯人, フライブルク]
+  photo: assets/images/20261111_suzuki_yui_freiburg/02_w.jpg
+  short_photo: assets/images/20261111_suzuki_yui_freiburg/02_v.jpg
+
+answer: 戦う、走るという基本に立ち返った。いい感覚が徐々に戻ってきている
+watch: 日本代表のシンガポール遠征
+
+sections:
+  - id: what
+    main: true
+    heading: 今季5点目のあと、鈴木唯人が語ったこと
+    tier: 報道
+    telop: 鈴木唯人「いい感覚が徐々に戻ってきている」
+    say:
+      - text: フライブルクの鈴木唯人が、ウニオン・ベルリン戦で今季5点目。
+      - text: 2対0で勝った試合の後、25歳はこう話しました。
+      - voice: 鈴木唯人
+        text: 戦う部分、走る部分。
+        emph: true
+      - voice: 鈴木唯人
+        text: そういうベーシックなところに立ち返ってやろうと思っていた。
+        cont: true
+      - text: 先制点は後半10分、相手のオウンゴール。ここにも、鈴木が絡んでいました。
+        image: assets/images/20261111_suzuki_yui_freiburg/03_w.jpg
+      - text: ドリブルで相手を引きつけて、右へパス。ベステの折り返しが、オウンゴールになりました。
+        card: {type: table, title: フライブルクの2点と鈴木唯人, columns: [分, 得点, 鈴木], rows: [[後半10分, オウンゴール, ドリブルで3人を引きつけパス], [後半22分, 鈴木唯人, 自分で決めた]], highlight_row: 0}
+      - text: そして後半22分、今度は自分のゴールです。
+        card: none
+      - text: 自陣からのカウンターで、一気にゴール前へ走り込みます。
+      - text: 縦パスで抜け出すと、前に出てきたキーパーを見て、軽く浮かせて流し込みました。
+      - voice: 鈴木唯人
+        text: 少しトラップが流れすぎてしまったが、良かった。
+      - text: 9月19日以来の、今季5点目。開幕節のハットトリックから始まったシーズンでした。
+        image: assets/images/20261111_suzuki_yui_freiburg/01_w.jpg
+      - text: 試合の最優秀選手にも選ばれました。
+        image: assets/images/20261111_suzuki_yui_freiburg/02_w.jpg
+      - voice: 鈴木唯人
+        text: いい感覚が徐々に戻ってきている。
+        emph: true
+    official: false
+    sources:
+      - https://www.daily.co.jp/soccer/2026/11/10/0021017763.shtml
+      - https://news.yahoo.co.jp/articles/8b55c5ecd66d0162e814f36064923848691717ff
+      - https://web.gekisaka.jp/news/world/detail/?462864-462864-fl
+      - https://www.espn.com/soccer/match/_/gameId/401884741
+  - id: game
+    heading: 2対0の勝利と、公式戦4連勝
+    tier: 報道
+    telop: フライブルク 2-0 ウニオン・ベルリン。公式戦4連勝
+    say:
+      - text: 鈴木唯人は後半40分までプレーし、フライブルクは公式戦4連勝。
+      - text: 勝ち点19で、ブンデスリーガ3位です。首位のバイエルンとは、勝ち点2差。
+        card: {type: table, title: ブンデスリーガ 9試合を終えて, columns: [順位, クラブ, 勝ち点], rows: [[1位, バイエルン, 21], [2位, ドルトムント, 21], [3位, フライブルク, 19]], highlight_row: 2}
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401884741
+      - https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings
+  - id: view
+    viewpoint: true
+    heading: 50日ぶりのゴールで、鈴木唯人は何を取り戻したか
+    tier: 背景
+    telop: 前のゴールから50日。2点のどちらにも絡んだ
+    say:
+      - text: 見立てです。鈴木唯人のゴールは、9月19日から50日ぶりでした。
+        card: {type: table, title: 鈴木唯人 ウニオン戦, columns: [項目, 数字], rows: [[フライブルクの得点, 2点], [鈴木が絡んだ得点, 2点], [前のゴールから, 50日]], highlight_row: 1}
+      - text: 止まっていた50日を、2点への関与で取り戻した試合でした。
+      - text: 本人が語ったのは、戦う、走るという基本への立ち返りでした。
+        emph: true
+        card: none
+      - text: 次は、ブラジルなどと対戦する日本代表のシンガポール遠征です。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401884741
+      - https://web.gekisaka.jp/news/world/detail/?462864-462864-fl

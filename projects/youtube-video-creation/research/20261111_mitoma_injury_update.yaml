@@ -1,0 +1,120 @@
+# 取材メモ（2026年11月11日）三笘薫の復帰時期。ヒュルツェラー監督「この試合で復帰すると断言することはできません」（ニュースのショート。見せ方 Y＝監督の言葉から始める）
+# 取材: 2026-11-11。requests（ブラウザUA）と WebFetch で本文を読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。
+# 題材の元: フットボールトライブ 2026-11-10「三笘薫の負傷状況が更新、「復帰すると断言することはできません」」（全文）。
+# 出どころ: Tribe は英『Sussex Express』（「三笘薫とツィマス、ブライトンが負傷状況を更新」）を日本語で紹介。引用の日本語は Tribe の訳。Sussex Express の原文は読めていない。
+# 誰の発言か: ブライトンのファビアン・ヒュルツェラー監督（Tribe 本文「ヒュルツェラー監督は、次のように語った」）。→ 監督の発言。三笘本人の言葉ではない。
+# 監督の言葉（Tribe の訳）:
+#   「復帰できるという大きな期待と確信を持っています。ただ、さらに1〜2週間必要になる可能性もあります。そのため、この試合で復帰すると断言することはできません」
+#   「薫に必要な時間を与えます。最高の状態で復帰すれば、我々にとって非常に重要な存在になることは分かっています」
+#   「この試合」＝ 現地11月22日のハル・シティ戦（アウェー）。
+# 出典で確かめたこと:
+#   ・Tribe: 三笘は今季まだ出場していない／5月にハムストリングを負傷して以来離脱／29歳／ブライトンは第10節消化で2位。ツィマスは昨年12月に前十字靭帯を断裂（今回は使わない）。
+#   ・ESPN eng.1 順位表（11/11 取得）: 1位アーセナル 勝ち点27、2位ブライトン 10試合 勝ち点22、3位マンC 21。
+#   ・ESPN team 331 schedule: 直近は 11/8 ブライトン 2-0 ブレントフォード、次は 11/22（14:00 UTC＝日本時間23:00）ハル・シティ戦（アウェー）。ハルは今季プレミア昇格組（ESPN の20クラブに入っている）。
+#       今季10試合 7勝1分2敗（自分で数えた。勝ち点22と一致）。
+#   ・ESPN event 740946（2026-05-09 ブライトン 3-0 ウルヴァーハンプトン）: 58分「ヴェルトマンが三笘と交代（負傷のため）」。三笘は先発・警告1枚（24分）。
+#       → 「5月」はこの試合。台本では「5月9日の試合で58分にピッチを退いた」と言う（部位の左右・手術は Tribe に書かれていないので言わない）。
+#   ・自分で数えたもの: 5/9 から 11/22 まで 197日（約6か月半）。
+# 前の本との重なり: 20261107_tanaka_mitoma_words（田中碧「順調に回復しているみたい」）／20260905 mitoma_return・20260909（監督が復帰時期に言及）／20260912 契約／20261003 free。
+#   → 今回の初出: 11/22 のハル戦という具体的な日付と「さらに1〜2週間」の言葉。田中の「近いうち」は一言だけ受ける（言葉は繰り返さない）。契約・移籍の話は入れない。
+# 本人の言葉: 無し（監督の言葉）。見せ方は Y（監督の言葉から始める）。
+# 反応: 0件（作らない。approve は --no-voices）。
+# 写真: assets/images/20261111_mitoma_injury_update/（credits.json）。
+slot: japanese
+date: "2026年11月11日"
+format: news
+no_main: true
+people: [三笘薫, ブライトン, ヒュルツェラー監督, ハル・シティ]
+
+short_style: Y
+short_hook_quote: ただ、さらに1〜2週間必要になる可能性もあります。
+short_photos:
+  - assets/images/20261111_mitoma_injury_update/01_v.jpg
+  - assets/images/20261111_mitoma_injury_update/02_v.jpg
+  - assets/images/20261111_mitoma_injury_update/05_v.jpg
+short_question: 三笘薫は、11月22日のハル戦に間に合うと思いますか。
+short_telops: []
+
+theme:
+  id: mitoma_injury_update
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: 三笘薫、復帰は11月22日に間に合うか。監督「断言することはできません」
+  hook: ""
+  question: ブライトンの監督は、三笘薫の復帰時期をどう語ったのか
+  takeaway: 5月9日に負傷してから、11月22日のハル戦までは197日。監督は復帰への確信を語る一方、さらに1〜2週間かかる可能性もあるとして、この試合での復帰を約束しなかった
+
+thumbnail:
+  layout: face
+  line1: 三笘薫 復帰の時期
+  line2: 監督「断言できない」
+  tags: [三笘薫, ブライトン]
+  photo: assets/images/20261111_mitoma_injury_update/01_w.jpg
+  short_photo: assets/images/20261111_mitoma_injury_update/01_v.jpg
+
+answer: 復帰への確信はあるが、さらに1〜2週間かかる可能性もあり、11月22日のハル戦での復帰は断言できない
+watch: 11月22日（日本時間23時）、アウェーのハル・シティ戦
+
+sections:
+  - id: what
+    main: true
+    heading: 三笘薫の復帰について、ブライトンの監督が語ったこと
+    tier: 報道
+    telop: ヒュルツェラー監督「断言することはできません」
+    say:
+      - text: ブライトンの三笘薫は、5月に負傷して離脱中。22日のハル・シティ戦に間に合うのか、監督が答えました。
+        image: assets/images/20261111_mitoma_injury_update/01_v.jpg
+      - voice: ヒュルツェラー監督
+        text: 復帰できるという大きな期待と確信を持っています。
+      - voice: ヒュルツェラー監督
+        text: ただ、さらに1〜2週間必要になる可能性もあります。
+        emph: true
+      - voice: ヒュルツェラー監督
+        text: そのため、この試合で復帰すると断言することはできません。
+        cont: true
+      - voice: ヒュルツェラー監督
+        text: 薫に必要な時間を与えます。
+      - voice: ヒュルツェラー監督
+        text: 最高の状態で復帰すれば、
+        image: assets/images/20261111_mitoma_injury_update/02_v.jpg
+        cont: true
+      - voice: ヒュルツェラー監督
+        text: 我々にとって非常に重要な存在になることは分かっています。
+        cont: true
+    official: false
+    sources:
+      - https://football-tribe.com/japan/2026/11/10/361173/
+  - id: since
+    heading: 三笘が最後にプレミアに出たのは、いつだったのか
+    tier: 報道
+    telop: 5月9日、58分に負傷交代。今季は出場なし
+    say:
+      - text: 三笘薫が最後にピッチに立ったのは、5月9日のウルヴァーハンプトン戦です。
+        image: assets/images/20261111_mitoma_injury_update/02_v.jpg
+      - text: 先発して、試合の58分に負傷でピッチを退きました。
+      - text: 以来、ハムストリングの負傷で離脱が続いています。今季の出場は、まだありません。
+      - text: 三笘が出ないまま、ブライトンは10試合を終えて7勝1分2敗。勝ち点22で、2位にいます。
+        image: assets/images/20261111_mitoma_injury_update/01_v.jpg
+        card: {type: table, title: ブライトン 今季プレミア10試合, columns: [成績, 数], rows: [[勝ち, 7], [引き分け, 1], [負け, 2], [勝ち点, 22]], highlight_row: 3}
+      - text: 三笘薫の回復について、川崎フロンターレ時代の仲間の田中碧は、先週「近いうちに再びプレーできる状態になる」と話していました。
+    official: false
+    sources:
+      - https://football-tribe.com/japan/2026/11/10/361173/
+      - https://www.espn.com/soccer/match/_/gameId/740946
+      - https://site.api.espn.com/apis/v2/sports/soccer/eng.1/standings
+      - https://football-tribe.com/japan/2026/11/06/361058/
+  - id: view
+    viewpoint: true
+    heading: 11月22日のハル戦まで、三笘は何日離れていることになるのか
+    tier: 背景
+    telop: 5月9日から11月22日まで197日
+    say:
+      - text: 見立てです。三笘薫が5月9日に負傷してから、次のハル戦まで197日。約6か月半です。
+        image: assets/images/20261111_mitoma_injury_update/02_v.jpg
+      - text: 次のハル・シティ戦は、11月22日の日本時間23時。三笘の名前がメンバーに入るかが、注目されます。
+        emph: true
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/teams/331/schedule
+      - https://www.espn.com/soccer/match/_/gameId/740946

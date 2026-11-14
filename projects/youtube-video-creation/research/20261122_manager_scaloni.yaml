@@ -1,0 +1,406 @@
+# 監督紹介：リオネル・スカローニ（11/22 日、シリーズ「監督紹介」、key: manager_scaloni、型は news）。8節（日本との接点は無し）。見本は 20261118_manager_nagelsmann。
+# 順：フック→基礎DATA→歩みと転機→戦術の色（実例の試合1つ）→数字で見る→本人の言葉→マル秘話→見立て。
+#
+# **題材の選び方（2026-11-12）**：既出18人以外の大物から。W杯優勝1回・コパ2回の現役のアルゼンチン代表監督。契約更新の話が動いている（いま見る理由）。
+#   **重なりの確認（2026-11-12 に自分で）**：scripts/ に「監督紹介」でスカローニを主題にした本は無い。ニュースでは 2026-09-12「スカローニの契約が12月で切れる」（scaloni_contract）と 09-30（メッシの10番）があるが、
+#     台本では過去回に触れない（決まり）。同じ 11/22 の他担当（20261119_picks.txt）：代表＝スイス、レジェンド（世界）＝シェフチェンコ。同じ人・国は無し。
+#     ※アルゼンチン代表の回が将来出るときは、この回と重ねないこと。
+#
+# **いまの立場**：現職のアルゼンチン代表監督（2018年就任）。契約は 2026年12月まで（covered.yaml の 9/12 の回、Infobae）。
+#   ○ 英語版 Wikipedia「Lionel Scaloni」（2026-11-12 に action=raw で読んだ）：「the head coach of the Argentina national team」。2026 W杯決勝（0-1 スペイン、延長）のあとタピア会長が留任を支持。
+#   ○ 2026-10-21〜22 の報道（WebSearch：Tribuna・Yahoo Sports・Football Today ほか）：AFA と合意、2年契約（2028年）＋2030年W杯までの延長の選択肢。**署名は確かめられていない**（La Nación「あとは署名だけ」と dpa が報じた、まで）。台本は「報道」で、「合意したと報じられている」。
+#
+# **通算（台本とサムネをそろえる）**＝英語版「Managerial statistics」（As of match played 6 October 2026）。**アルゼンチン代表（トップチーム）のみ**：107試合79勝18分10敗、231得点57失点（得失点差+174）。
+#   U-20（6試合4勝1分1敗）は除く。勝率 79÷107＝73.8%、引き分け 16.8%、負け 9.3%。10÷107 で約10.7試合に1度しか負けない。1試合平均 2.16点・0.53失点。
+#   ※前日（11/12）時点で 10/6 より後に試合があったかは確かめていない。台本は「10月6日まで」。
+#
+# **歩み**（英語版本文）：2016-10 セビージャでサンパオリのコーチ補佐 → 2017 サンパオリの代表補佐 → 2018 U-20 監督 → 2018-08 アイマールとともに暫定監督、2018-11 正式。
+#   マラドーナが「交通整理もできない」と批判（英語版）。2019 コパ・アメリカ3位。契約を2022年まで延長。2021 コパ・アメリカ優勝（ブラジルに1-0、28年ぶりのタイトル）。2022 フィナリッシマ（イタリアに3-0、ウェンブリー）。
+#   2022 W杯：初戦サウジに1-2（36戦不敗が止まる）→ メキシコ2-0・ポーランド2-0 → 豪2-1 → オランダ（PK）→ クロアチア3-0 → 決勝フランス 3-3（PK4-2）で優勝。2024 コパ優勝（コロンビアに1-0、延長）。
+#   2026 W杯：グループ（アルジェリア・オーストリア・ヨルダン）3勝 → カーボベルデ3-2・エジプト3-2 → スイス3-1（延長）→ 準決勝イングランド（先に失点、終盤に2点）→ 決勝スペインに0-1（延長）。
+#   **史上初：3つの主要な国際大会を続けて制した監督**（英語版）。
+#
+# **戦術の色**＝2024 コパ決勝（英語版）：延長前半の97分に、ラウタロ・マルティネス、パレデス、ロ・チェルソの3人を同時に投入。112分、ラウタロが決勝点（コロンビアに1-0）。交代が評価された。
+#   チームづくり：結束・率直な意思疎通・役割の明確化（英語版）。呼び名「スカロネタ」（国内のメディアが付けた）。最も尊敬する監督はアンチェロッティ（本人談、英語版）。
+#
+# **日本との接点**：無し（入れない）。
+#
+# **本人の言葉**：2026-07-19 の決勝のあと（Al Jazeera／Reuters 2026-07-20、2026-11-12 に WebFetch で読んだ）。原文：“They deserved the victory. That's reality. We need to accept it.”
+#   “So in order to continue, you need a great deal of things, especially resetting your mind, rebooting.”／“I will see out my contract, and I feel the need to think.”／“I will talk to the president.”
+#   ※原語はスペイン語の会見で、英語訳からの重訳。
+# **マル秘話**（英語版）：イタリアのマルケ州アスコリ・ピチェーノに祖先。アルゼンチンとイタリアの二重国籍。2006年1月31日、ウェスト・ハムへレンタル、FAカップ決勝でPK負け。2006 W杯代表で出番はメキシコ戦の1試合（延長に勝利）。
+#   2019年4月、マヨルカで自転車に乗っていて車にはねられた（数時間で退院）。2024年、故郷プハトに通りに名前が付いた。
+#
+# **入れなかったもの**：私生活（結婚・家族）、メッシの引退・10番の話、AFA 会長の疑惑、ボーナスの話、FotMob・女子・ニュースの反応、他の代表監督との優劣。
+date: 2026年11月12日
+slot: other_1
+format: news
+series: 監督紹介
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- スカローニ
+theme:
+  end_bg: assets/images/20261122_manager_scaloni/01_w.jpg
+  id: manager_scaloni
+  league: spain
+  league_name: アルゼンチン代表
+  kind: other
+  topic: スカローニ
+  title: スカローニ、アルゼンチン代表監督はどんな人？批判から、なぜ世界一になれたのか
+  question: アルゼンチン代表のリオネル・スカローニ監督は、どんな人なのか。2018年に経験の浅さを批判された人が、なぜW杯とコパ・アメリカを続けて制する監督になったのか
+  lead: アルゼンチン代表監督、リオネル・スカローニ。
+  opening_image: assets/images/20261122_manager_scaloni/01_w.jpg
+  takeaway: 107試合で79勝、勝率73.8%。負けは10試合だけで、約11試合に1回。2021年のコパ、2022年のW杯、2024年のコパと、主要な大会を続けて制した初めての監督になった。2026年のW杯は決勝で敗れ、契約は12月まで。2028年までの更新で合意と報じられている
+  short_title: スカローニ、3つの大会を続けて制した監督
+  nameplate: リオネル・スカローニ｜アルゼンチン代表監督
+thumbnail:
+  line1: スカローニ、通算79勝
+  line2: 史上初、主要大会3連続優勝
+  tags: []
+  photo: assets/images/20261122_manager_scaloni_b/panel_01.jpg
+  board: assets/images/20261122_manager_scaloni_b/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261122_manager_scaloni/01_v.jpg
+sections:
+- id: hook
+  main: true
+  heading: 批判された監督が、史上初の3連続優勝。スカローニとは、どんな監督なのか
+  tier: 報道
+  telop: 主要な大会を、続けて3つ制した初めての監督
+  narrator: 解説
+  card: &hook_stats
+    type: stats
+    title: スカローニの歩み
+    items:
+    - ['107', 試合, アルゼンチン代表で指揮]
+    - ['79', 勝, 負けは10試合だけ]
+    - ['3', 大会, 続けて優勝。史上初]
+    focus: 0
+  say:
+  - text: 主要な国際大会を、続けて3つ制した監督。史上初です。それがスカローニです。
+    image: assets/images/20261122_manager_scaloni/01_w.jpg
+    emph: true
+    card: none
+  - text: アルゼンチン代表を率いて、2018年から8年目。
+    card:
+      <<: *hook_stats
+      focus: 0
+  - text: 勝率は、7割を超えます。負けは、ごくわずかです。
+    image: assets/images/20261122_manager_scaloni/01_w.jpg
+    emph: true
+    card:
+      <<: *hook_stats
+      focus: 1
+  - text: 2021年のコパ・アメリカ、2022年のワールドカップ、
+  - text: 2024年のコパ・アメリカです。
+    card:
+      <<: *hook_stats
+      focus: 2
+  - text: 就任した2018年には、経験の浅さを、強く批判された人でした。
+    card: none
+  - text: 2026年のワールドカップも、決勝まで進みました。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Lionel_Scaloni
+- id: data
+  heading: スカローニは、いつ、どこで、どんな道を歩いた人か
+  tier: 報道
+  telop: リオネル・スカローニの基礎DATA
+  narrator: 解説
+  card: &data_table
+    type: table
+    title: リオネル・スカローニ（48歳）の基礎DATA
+    columns: [項目, 中身]
+    rows:
+    - [生年月日, 1978年5月16日（アルゼンチン・プハト）]
+    - [選手のころ, 右サイドバック。デポルティボで優勝]
+    - [監督, アルゼンチン代表（2018年から）]
+    - [タイトル, W杯1回、コパ・アメリカ2回、フィナリッシマ1回]
+    - [いま, 契約は2026年12月まで。更新で合意と報道]
+    highlight_row: 0
+  say:
+  - text: スカローニは、1978年5月16日の生まれ。48歳です。
+    image: assets/images/20261122_manager_scaloni/01_w.jpg
+    card:
+      <<: *data_table
+      highlight_row: 0
+  - text: 選手のころは右サイドバック。スペインのデポルティボで優勝しました。
+    image: assets/images/20261122_manager_scaloni/01_w.jpg
+    card:
+      <<: *data_table
+      highlight_row: 1
+  - text: 2006年のワールドカップにも、選手として出ています。
+    card: none
+  - text: 監督は、2018年からアルゼンチン代表です。
+    card:
+      <<: *data_table
+      highlight_row: 2
+  - text: タイトルは、W杯が1回、コパ・アメリカが2回、フィナリッシマが1回です。
+    card:
+      <<: *data_table
+      highlight_row: 3
+  sources:
+  - https://en.wikipedia.org/wiki/Lionel_Scaloni
+- id: career
+  heading: 経験の浅さを批判された2018年から、世界一へ。スカローニは何を積み上げたのか
+  tier: 背景
+  telop: 歩みと転機。暫定監督からW杯優勝まで
+  narrator: 解説
+  card: &career_tl
+    type: timeline
+    title: スカローニの歩み
+    rows:
+    - [2018年, 暫定監督から正式な監督に]
+    - [2021年, コパ・アメリカ優勝。28年ぶりのタイトル]
+    - [2022年, ワールドカップで優勝]
+    - [2024年, コパ・アメリカで連覇]
+    - [2026年, W杯は決勝で敗れる]
+    focus: 0
+  say:
+  - text: スカローニは、2018年のワールドカップのあと、暫定監督として代表に入りました。
+    image: assets/images/20261122_manager_scaloni/01_w.jpg
+    card:
+      <<: *career_tl
+      focus: 0
+  - text: その年の11月に、正式な監督に。
+    card:
+      <<: *career_tl
+      focus: 0
+  - text: 経験の少なさに、批判が集まりました。
+  - text: マラドーナは「交通整理もできない」と言いました。
+    emph: true
+    card: none
+  - text: 2019年のコパ・アメリカは3位。それでも、契約は延びました。
+    image: assets/images/20261122_manager_scaloni/01_w.jpg
+    card: none
+  - text: 2021年、決勝でブラジルに1対0。
+  - text: アルゼンチンにとって、28年ぶりのタイトルでした。
+    emph: true
+    card:
+      <<: *career_tl
+      focus: 1
+  - text: 2022年のワールドカップは、初戦でサウジアラビアに1対2で敗れます。
+    card: none
+  - text: そこから勝ち上がり、決勝はフランスと3対3。PK戦4対2で、優勝しました。
+    card:
+      <<: *career_tl
+      focus: 2
+  - text: 2024年のコパ・アメリカは、延長の末にコロンビアへ1対0で勝って、連覇です。
+    image: assets/images/20261122_manager_scaloni/01_w.jpg
+    card:
+      <<: *career_tl
+      focus: 3
+  - text: 2026年のワールドカップは、決勝でスペインに0対1。延長での敗戦でした。
+    emph: true
+    card:
+      <<: *career_tl
+      focus: 4
+  sources:
+  - https://en.wikipedia.org/wiki/Lionel_Scaloni
+- id: style
+  heading: 交代が決めた2024年の決勝。スカローニのチームは、どんな形なのか
+  tier: 報道
+  telop: 戦術の色。2024年コパ決勝、延長に入れた3人の交代
+  narrator: 解説
+  card: &style_doc
+    type: document
+    label: 2024 コパ・アメリカ 決勝 対コロンビア
+    paragraphs:
+    - 延長前半の97分に、ラウタロ、パレデス、ロ・チェルソの3人を同時に投入。
+    - 112分、ラウタロが決勝点。
+    - 結果は、1対0。
+    - 交代が、評価された。
+    highlight:
+    - 3人を同時に投入
+    - 決勝点
+  say:
+  - text: 形がよく出たのが、2024年のコパ・アメリカ決勝、コロンビア戦です。
+    image: assets/images/20261122_manager_scaloni/01_w.jpg
+    card: *style_doc
+  - text: 延長に入った97分、ラウタロ、パレデス、ロ・チェルソの3人を、同時に入れました。
+    card: *style_doc
+  - text: 112分にラウタロが決めて、1対0の勝ちです。
+    emph: true
+    callword: 決勝点
+    card: *style_doc
+  - text: この交代は、大きく評価されました。
+    image: assets/images/20261122_manager_scaloni/01_w.jpg
+    card: none
+  - text: スカローニは、チームの結束と、率直な話し合いを大事にします。
+    card: none
+  - text: 一人ひとりに、チームでの役割と価値をはっきり伝える。
+    card: none
+  - text: 国内では、「スカロネタ」と呼ばれています。
+  - text: 目標にしているのは、アンチェロッティだと話しています。
+    image: assets/images/20261122_manager_scaloni/01_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Lionel_Scaloni
+- id: numbers
+  heading: 107試合で79勝。数字で見ると、どこで強いのか
+  tier: 報道
+  telop: 107試合79勝、負けは10試合。勝率73.8%
+  narrator: 解説
+  card: &rate_bars
+    type: bars
+    title: スカローニの成績の内訳（107試合、%）
+    unit: '%'
+    items:
+    - label: 勝ち
+      value: 73.8
+      highlight: true
+    - label: 引き分け
+      value: 16.8
+    - label: 負け
+      value: 9.3
+  say:
+  - text: ここからは、スカローニの成績を数字で。
+    image: assets/images/20261122_manager_scaloni/01_w.jpg
+    card: &total_stats
+      type: stats
+      title: スカローニの代表通算（10月6日まで）
+      items:
+      - ['107', 試合, アルゼンチン代表]
+      - ['79', 勝, 引き分け18・負け10]
+      - ['73.8', '%', 勝率]
+      focus: 0
+  - text: 通算は107試合。勝ったのは79試合です。
+    emph: true
+    card:
+      <<: *total_stats
+      focus: 1
+  - text: 内訳を見ると、勝ちが73.8%。引き分けは16.8%です。
+    image: assets/images/20261122_manager_scaloni/01_w.jpg
+    card: *rate_bars
+  - text: 負けは10試合で、9.3%。約11試合に1回しか、負けていません。
+    emph: true
+    card: *rate_bars
+  sources:
+  - https://en.wikipedia.org/wiki/Lionel_Scaloni
+- id: words
+  heading: 決勝のあと、スカローニは何を語ったのか
+  tier: 報道
+  telop: スカローニの言葉。2026年7月、W杯決勝のあとで
+  narrator: 解説
+  card: &words_doc
+    type: document
+    label: スカローニの言葉（訳）。2026年7月19日
+    paragraphs:
+    - 彼らが勝つにふさわしかった。それが現実で、受け入れなければなりません。
+    - 続けるためには、気持ちをリセットすることが必要です。
+    - 契約は全うします。そして、考える時間が必要です。
+    highlight:
+    - 受け入れなければなりません
+    - 契約は全うします
+  say:
+  - text: 2026年7月19日、スペインに敗れた決勝のあと、スカローニはこう話しました。
+    image: assets/images/20261122_manager_scaloni/01_w.jpg
+    card: *words_doc
+  - voice: スカローニ
+    text: 彼らが勝つにふさわしかった。
+  - voice: スカローニ
+    text: それが現実で、受け入れなければなりません。
+    cont: true
+    image: assets/images/20261122_manager_scaloni/01_w.jpg
+    card: none
+  - voice: スカローニ
+    text: 続けるためには、気持ちをリセットすることが必要です。
+  - voice: スカローニ
+    text: 契約は全うします。そして、考える時間が必要です。
+    pause: 0.5
+  - text: それから3か月あまり。10月下旬には、更新で合意したと報じられました。
+    image: assets/images/20261122_manager_scaloni/01_w.jpg
+    card: none
+  quotes_from:
+  - https://www.aljazeera.com/sports/2026/7/20/tearful-scaloni-uncertain-of-argentina-future-after-world-cup-loss
+  sources:
+  - https://www.aljazeera.com/sports/2026/7/20/tearful-scaloni-uncertain-of-argentina-future-after-world-cup-loss
+- id: secret
+  heading: 数字に出ない話。スカローニの原点は、どこにあるのか
+  tier: 背景
+  telop: 二重国籍。ウェスト・ハムでFAカップ決勝
+  narrator: 解説
+  card: &sec_table
+    type: table
+    title: 数字の外にある話
+    columns: [いつ, 何があったか]
+    rows:
+    - [ルーツ, イタリアのマルケ州。二重国籍]
+    - [2006年, ウェスト・ハムへ移り、FAカップ決勝へ]
+    - [2006年, W杯のメキシコ戦に先発し、延長で勝利]
+    - [2019年, 自転車でけがをしたが、数時間で退院]
+    - [2024年, 故郷プハトに、名前の付いた通りができる]
+    highlight_row: 0
+  say:
+  - text: では、スカローニの、数字の外の話を。
+    image: assets/images/20261122_manager_scaloni/01_w.jpg
+    card: none
+  - text: 祖先は、イタリアのマルケ州。アルゼンチンとイタリアの、二重国籍です。
+    card:
+      <<: *sec_table
+      highlight_row: 0
+  - text: 2006年1月、ウェスト・ハムにレンタルで移りました。
+    image: assets/images/20261122_manager_scaloni/01_w.jpg
+    card:
+      <<: *sec_table
+      highlight_row: 1
+  - text: チームはFAカップ決勝へ。PK戦で、リバプールに敗れました。
+    card: none
+  - text: 同じ年のワールドカップでは、メキシコ戦に先発して、延長の勝利に立ち会っています。
+    card:
+      <<: *sec_table
+      highlight_row: 2
+  - text: 2024年には、生まれ故郷のプハトで、通りに名前が付けられました。
+    image: assets/images/20261122_manager_scaloni/01_w.jpg
+    card:
+      <<: *sec_table
+      highlight_row: 4
+  sources:
+  - https://en.wikipedia.org/wiki/Lionel_Scaloni
+- id: view
+  viewpoint: true
+  heading: 見立て・10試合しか負けていない。勝率73.8%の中身は、何なのか
+  tier: 背景
+  telop: 勝ち73.8%・引き分け16.8%・負け9.3%
+  narrator: 解説
+  card: &view_table
+    type: table
+    title: 自分で割ってみた（スカローニの107試合）
+    columns: [結果, 試合, 割合]
+    rows:
+    - [勝ち, '79', 73.8%]
+    - [引き分け, '18', 16.8%]
+    - [負け, '10', 9.3%]
+    - [得点, '231', 1試合2.16点]
+    - [失点, '57', 1試合0.53点]
+    highlight_row: 2
+  say:
+  - text: 見立てです。スカローニのチームの得点と失点を、1試合あたりに直します。
+    image: assets/images/20261122_manager_scaloni/01_w.jpg
+    card: *view_table
+  - text: 取った点は231点。1試合では、2.16点です。
+    card:
+      <<: *view_table
+      highlight_row: 3
+  - text: 取られた点は57点。1試合では、0.53点。
+    emph: true
+    mark: {kind: circle, row: 4, col: 2}
+    card:
+      <<: *view_table
+      highlight_row: 4
+  - text: 取る点の、4分の1しか取られていません。
+    image: assets/images/20261122_manager_scaloni/01_w.jpg
+    emph: true
+    card:
+      <<: *view_table
+      highlight_row: 4
+  - text: 負けにくさの中身は、その差にあります。
+    card: none
+  - text: 契約は、2026年12月まで。
+    card: none
+  - text: 2028年までの更新で合意と報じられていて、次の2年がどう始まるのか、注目です。
+    image: assets/images/20261122_manager_scaloni/01_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Lionel_Scaloni

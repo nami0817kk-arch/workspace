@@ -1,0 +1,142 @@
+# 取材メモ（2026年11月13日）中村敬斗、3度目のブラジル戦へ「代表で負けていい試合なんかない」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-13。requests（ブラウザUA）で本文を全文読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: サッカーキング 2026-11-12（By サッカーキング編集部）「中村敬斗、3度目のブラジル戦へ「何も気負うことはない。いつも通りみんなで力を合わせて」「代表で負けていい試合なんかない」」（全文） https://www.soccer-king.jp/news/japan/national/20261112/2227151.html
+# 写真の出どころ（本人の写真を探すため）:
+#   https://www.soccer-king.jp/news/japan/national/20261112/2227151.html
+#   https://www.soccer-king.jp/news/world/el/20261106/2225023.html
+#   https://web.gekisaka.jp/news/world/detail/?461356-461356-fl
+#   https://web.gekisaka.jp/news/uel/detail/?462603-462603-fl
+#   https://web.gekisaka.jp/news/japan/detail/?462978-462978-fl
+#   https://web.gekisaka.jp/news/japan/detail/?463011-463011-fl
+#   https://web.gekisaka.jp/news/japan/detail/?463014-463014-fl
+#   https://web.gekisaka.jp/news/japan/detail/?463007-463007-fl
+#   https://www.soccer-king.jp/news/japan/national/20261110/2226285.html
+#   https://www.soccer-king.jp/news/japan/national/20261111/2226536.html
+#   https://www.soccer-king.jp/news/japan/national/20261111/2226735.html
+#   https://www.soccer-king.jp/news/japan/national/20261112/2226695.html
+# 出典で確かめたこと:
+#   ・12日、『MIZUHO BLUE CHALLENGE THE KALLANG FOOTBALL SERIES SINGAPORE』ブラジル戦に向け、シンガポールで練習。約1年で3回目の対戦（地の文）。
+#   ・中村の言葉（原文。サッカーキング。字は変えていない。括弧は記者の補足。台本は読点で行に分けた）:
+#       「(ブラジル代表とは約1年間で)3回目の対戦ということで、何も気負うことはないと思いますし、いつも通りみんなで力を合わせて頑張りたい」
+#       「ワールドカップという一番大きな舞台で負けてしまったので、本当に残念でした。代表で負けていい試合なんかないですし、次のワールドカップに向けてFIFAランキングもすごく大事になってくると思います」
+#       「ブラジル、パラグアイはポイントも稼げると思いますし、一つでも順位を上げて、次のワールドカップで優位になるようにという思いもあります」
+#   ・地の文: 昨年10月の対戦では2点ビハインドから同点ゴールをマークし、歴史的勝利の立役者。W杯の決勝トーナメント1回戦は先発したが、押し込まれる展開の中で66分に途中交代し、チームも2失点で逆転負け。FIFAランキングはW杯のグループステージのポット分けのほか、事前キャンプ地の優先権など、大会を勝ち進むうえの要素にも関わる。
+#   ・ESPN（fifa.friendly summary event=757632, 2025-10-14 10:30Z）: 日本 3-2 ブラジル。26分 パウロ・エンリケ、32分 マルティネッリで日本は0-2。52分 南野拓実、62分 中村敬斗（アシスト 伊東純也）で2-2、71分 上田綺世で逆転。→「2点ビハインドから同点ゴール」は ESPN と一致。
+#   ・ESPN（fifa.world summary event=760487, 2026-06-29）: ブラジル 2-1 日本。66分に鈴木唯人が中村敬斗に代わって出場（中村は交代）。ゲキサカ・サッカーキングの「66分に途中交代」と一致。
+#   ・日程: 14日ブラジル戦、17日パラグアイ戦。
+# 食い違い: なし。「昨年10月」は ESPN の日付（2025年10月14日）と一致。
+# 前の本との重なり: 20261106_nakamura_kubo_lyon_sociedad（リヨンの試合）、20261021_nakamura_keito_red_apology（退場の謝罪）。ブラジル戦の中村の話は台本に無い（scripts を grep）。今回の初出: 3度目のブラジル戦と、FIFAランキングを意識した本人の言葉。リヨンの話・退場の話は繰り返さない。
+# 【言わないこと】リヨンでの成績・退場の話／ブラジル戦の起用予想／FIFAランキングの順位の数字（本人も言っていない）／伊東のアシストの細部。
+# 本人の言葉: あり（中村敬斗。サッカーキング）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月13日"
+format: news
+no_main: true
+people: [中村敬斗, リヨン, ブラジル代表, 日本代表]
+
+short_style: Y
+short_hook_quote: 代表で負けていい試合なんかないですし、
+short_photos:
+  - assets/images/20261113_nakamura_brazil_third/03_v.jpg
+  - assets/images/20261113_nakamura_brazil_third/11_v.jpg
+  - assets/images/20261113_nakamura_brazil_third/12_v.jpg
+short_question: 中村敬斗は、14日のブラジル戦でゴールを決めると思いますか。
+short_telops: []
+
+theme:
+  id: nakamura_brazil_third
+  league: japan
+  league_name: 日本代表
+  prefix: ""
+  title: 中村敬斗、3度目のブラジル戦へ「代表で負けていい試合なんかない」
+  hook: ""
+  question: 3度目のブラジル戦を前に、中村敬斗は何を語ったのか
+  takeaway: 中村は「代表で負けていい試合なんかない」と話し、ブラジル戦とパラグアイ戦でFIFAランキングのポイントを稼ぐ意識も明かした
+
+thumbnail:
+  layout: face
+  line1: 中村敬斗 3度目のブラジル戦
+  line2: 負けていい試合はない
+  tags: [中村敬斗, ブラジル代表, 日本代表]
+  photo: assets/images/20261113_nakamura_brazil_third/03_w.jpg
+  short_photo: assets/images/20261113_nakamura_brazil_third/03_v.jpg
+
+answer: 気負わず、W杯の悔しさと次のW杯のランキングを意識して、ブラジル戦に向かう
+watch: 14日のブラジル戦（シンガポール）
+
+sections:
+  - id: what
+    main: true
+    heading: 3度目のブラジル戦を前に、中村敬斗は何を語ったか
+    tier: 報道
+    telop: 中村敬斗「代表で負けていい試合なんかない」
+    say:
+      - text: 日本代表の中村敬斗が、ブラジルとの3度目の対戦を前に語りました。
+        image: assets/images/20261113_nakamura_brazil_third/03_w.jpg
+      - voice: 中村敬斗
+        text: 代表で負けていい試合なんかないですし、
+        image: assets/images/20261113_nakamura_brazil_third/12_w.jpg
+      - voice: 中村敬斗
+        text: 次のワールドカップに向けて、
+        cont: true
+        image: assets/images/20261113_nakamura_brazil_third/11_w.jpg
+      - voice: 中村敬斗
+        text: FIFAランキングもすごく大事になってくると思います。
+        cont: true
+        emph: true
+        image: assets/images/20261113_nakamura_brazil_third/03_w.jpg
+      - text: 中村は昨年10月、日本が3対2で勝ったブラジル戦で、0対2から同点ゴールを決めました。
+        image: assets/images/20261113_nakamura_brazil_third/11_w.jpg
+      - text: W杯の決勝トーナメントでは先発しましたが、66分に交代し、チームは逆転負けでした。
+        image: assets/images/20261113_nakamura_brazil_third/04_w.jpg
+      - voice: 中村敬斗
+        text: ワールドカップという一番大きな舞台で負けてしまったので、
+        image: assets/images/20261113_nakamura_brazil_third/11_w.jpg
+      - voice: 中村敬斗
+        text: 本当に残念でした。
+        cont: true
+        image: assets/images/20261113_nakamura_brazil_third/12_w.jpg
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20261112/2227151.html
+      - https://www.espn.com/soccer/match/_/gameId/757632
+      - https://www.espn.com/soccer/match/_/gameId/760487
+  - id: team
+    heading: ブラジル戦とパラグアイ戦で、中村敬斗が狙うものは何か
+    tier: 報道
+    telop: 中村敬斗「次のW杯で優位になるように」
+    say:
+      - text: 日本代表は14日にブラジル、17日にパラグアイと戦います。中村は、この2試合の意味をこう話しました。
+        image: assets/images/20261113_nakamura_brazil_third/03_w.jpg
+      - voice: 中村敬斗
+        text: ブラジル、パラグアイはポイントも稼げると思いますし、
+        image: assets/images/20261113_nakamura_brazil_third/04_w.jpg
+      - voice: 中村敬斗
+        text: 一つでも順位を上げて、
+        cont: true
+        image: assets/images/20261113_nakamura_brazil_third/12_w.jpg
+      - voice: 中村敬斗
+        text: 次のワールドカップで優位になるようにという思いもあります。
+        cont: true
+        emph: true
+        image: assets/images/20261113_nakamura_brazil_third/11_w.jpg
+      - text: フィファランキングは、W杯のグループステージの組み分けや、事前キャンプ地を選ぶ順番にも関わります。
+        image: assets/images/20261113_nakamura_brazil_third/03_w.jpg
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20261112/2227151.html
+  - id: view
+    viewpoint: true
+    heading: 中村敬斗の「3回目」のブラジル戦は、これまでどうだったか
+    tier: 背景
+    telop: 昨年10月は0-2から同点弾。W杯は66分に交代
+    say:
+      - text: 見立てです。中村がブラジルと戦うのは、この約1年で3回目です。
+        card: {type: table, title: 中村敬斗の対ブラジル, columns: [試合, 中村], rows: [[2025年10月 日本3-2ブラジル, 62分に同点ゴール], [2026年6月 W杯 ブラジル2-1日本, 先発・66分に交代]], highlight_row: 0}
+      - text: 1度目は同点ゴール、2度目は66分で交代でした。
+        card: none
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/757632
+      - https://www.espn.com/soccer/match/_/gameId/760487

@@ -1,0 +1,532 @@
+# スタジアム紹介シリーズ：セビージャの本拠地（ラモン・サンチェス・ピスファン、11/15 予定）。雛形は 11/13 レアル・ソシエダの回（20261113_stadium_realsociedad）。
+# 題材の選び方（2026-11-12）：指示書 20261115 の「ラ・リーガの続き」。済み＝アトレティコ・バルサ・レアル・ビルバオ・バレンシア・ソシエダ。残り＝セビージャ・ベティス・ビジャレアル。
+#   セビージャを選んだ理由：ビッグクラブ（EL最多優勝）／「7万7000人から4万3751席へ縮んだ器を、壊して建て直す」という強い一点／W杯準決勝・欧州決勝3つを開いた歴史／今季のホーム入場の数字で見立てが作れる。
+#   picks（research/20261115_picks.txt）：同じ11/15のユニフォームはバレンシア。重ならない。11/17 のスタジアムはベティス（自分の2本目）。ビジャレアルは残す。
+#   重なりの確認：scripts/*stadium_* にセビージャは無し（posted.json・covered.yaml も grep 済み）。
+# 一次情報の突き合わせ：
+#   ESPN esp.1 teams/243 の2026-27日程。ホーム入場の記録あり5試合＝ラージョ 36777（8/15）・バレンシア 39939（9/11）・バルセロナ 41145（9/19）・オサスナ 38523（10/26）・アラベス 38803（11/6）。アトレティコ戦（8/29）は入場0＝記録なしで除外。合計195187÷5＝39037.4。
+#   ピスファン：es・en ウィキペディア（開場1958-09-07、礎石1956-12-02、収容43751、スペイン代表25試合20勝5分負け無し、1937年に土地購入開始、1975年初めに外壁完成・最大7万7000超、1982年約7万500、1998年UEFA全席座席で62000→45500、2015年42714、2018年+1300）。
+#   W杯準決勝 1982-07-08 3-3 PK 5-4／欧州王者決定戦 1986-05-07 0-0 PK 2-0／EL決勝 2022-05-18 1-1 PK 5-4・入場38842（いずれも英語版ウィキペディアで確認）。
+#   建て直し：stadiumdb 2026-04（市が仮承認・約5万5000席・全面屋根・地下駐車場）、2026-02（会長の話・ピッチを下げる・北ゴール裏1段・資金は将来収入を担保にした借入・ツアー年10万人に近い・ラ・カルトゥーハは技術的・一時的）、2023-12（当初の着工予定 2026年6月1日）。費用は es ウィキペディア（3億〜3.5億ユーロ）。壊すのは2027年と報じる El Gol Digital（検索結果の要約から。本文は未読）。
+# 読みが割れる名前：ピスファン（Pizjuán。ピスフアンとも）／ネルビオン／ステアウア・ブカレスト／ラ・カルトゥーハ。
+date: 2026年11月12日
+slot: other_1
+format: news
+series: スタジアム紹介
+voice_min: 0
+people: []
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  id: stadium_sevilla
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: セビージャ
+  title: セビージャのピスファン、7万席を超えた器が縮み、また壊して建て直すのはなぜ？
+  question: 7万人を超えた器が縮んだピスファンを、なぜいま壊して建て直すのか
+  lead: スペイン代表が負けない器です。
+  hook: ''
+  opening_image: assets/images/20261115_stadium_sevilla/06_w.jpg
+  end_bg: assets/images/20261115_stadium_sevilla/01_w.jpg
+  takeaway: ピスファンは1958年に開き、収容は1975年の最大7万7000人あまりから、座席化で4万3751席まで縮んだ。いまは壊して約5万5000席に建て直す計画で、屋根は客席の全体にかかる。ただ今季のホーム5試合（記録が残る分）の平均は3万9037人で、いまの席の89.2％。5万5000席を埋めるには、今季の平均の1.41倍が要る
+  short_title: ピスファン、7万席の器が縮み、また建て直す
+thumbnail:
+  layout: scene
+  bold: false
+  callouts:
+  - 目標は約5万5000席
+  - 今季の入りは89.2％
+  photo: assets/images/20261115_stadium_sevilla/06_w.jpg
+  line1: セビージャのピスファン
+  line2: 7万席を超えた器が縮んだ
+  tags:
+  - セビージャ
+  - ラ・リーガ
+  - スタジアム紹介
+sections:
+- id: data
+  main: true
+  heading: スペイン代表が25試合負けなかった器は、どんな器か
+  bg: assets/images/20261115_stadium_sevilla/06_w.jpg
+  card: &id001
+    type: table
+    title: ピスファンの基礎DATA
+    columns: &id002
+    - 項目
+    - 内容
+    rows: &id003
+    - - 持ち主
+      - セビージャ
+    - - 開場
+      - 1958年9月7日
+    - - 収容
+      - 4万3751人
+    - - 場所
+      - ネルビオン地区
+    - - 名前
+      - 元会長の名前
+    - - スペイン代表
+      - 25試合 負けなし
+  narrator: 解説
+  tier: 報道
+  telop: 1958年に開場。収容は4万3751席。スペイン代表は、ここで負けていない
+  sources:
+  - https://es.wikipedia.org/wiki/Estadio_Ram%C3%B3n_S%C3%A1nchez-Pizju%C3%A1n
+  - https://en.wikipedia.org/wiki/Ram%C3%B3n_S%C3%A1nchez-Pizju%C3%A1n_Stadium
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/teams/243/schedule?season=2026（2026-27 ラ・リーガ、セビージャの日程）
+  say:
+  - text: セビージャの本拠地、ピスファンの話です。
+    card: none
+    image: assets/images/20261115_stadium_sevilla/06_w.jpg
+    short_only: true
+  - text: ここでスペイン代表は、25試合を戦って、1度も負けていません。
+    card: none
+    image: assets/images/20261115_stadium_sevilla/06_w.jpg
+    emph: true
+  - text: 20勝5引き分け。1958年の開場から続く、記録です。
+    card: none
+    image: assets/images/20261115_stadium_sevilla/06_w.jpg
+  - text: 名前は、元会長のラモン・サンチェス・ピスファンから取りました。
+    card: *id001
+    image: assets/images/20261115_stadium_sevilla/01_w.jpg
+  - text: いまの収容は4万3751席。持ち主は、セビージャ自身です。
+    card:
+      type: stats
+      title: ピスファンの数字
+      items:
+      - - '1958'
+        - 年
+        - 開場
+      - - '43751'
+        - 席
+        - いまの収容
+      - - '25'
+        - 試合
+        - スペイン代表は負けなし
+      focus: 2
+    image: assets/images/20261115_stadium_sevilla/01_w.jpg
+  - text: 1982年のワールドカップでは、準決勝の1試合も、ここで開かれました。
+    card:
+      type: table
+      title: ピスファンの基礎DATA
+      columns: *id002
+      rows: *id003
+      highlight_row: 5
+    image: assets/images/20261115_stadium_sevilla/01_w.jpg
+- id: history
+  heading: 7万7000人を入れた器は、なぜ4万席まで縮んだのか
+  bg: assets/images/20261115_stadium_sevilla/02_w.jpg
+  card:
+    type: timeline
+    title: ピスファンの歩み
+    rows: &id004
+    - - 1937年
+      - 土地の買い取りが始まる
+    - - 1956年12月
+      - 礎石を置く
+    - - 1958年9月
+      - ピスファンが開場
+    - - 1975年
+      - 外壁が閉じる（収容は最大）
+    - - 1998年
+      - 全席を座席にする
+    - - 2015年
+      - 内外装を改修
+    focus: 1958年9月
+    highlight_row: 0
+  narrator: 解説
+  tier: 背景
+  telop: 1975年に外壁が閉じて最大7万7000人あまり。座席化で4万席台へ縮んだ
+  sources:
+  - https://es.wikipedia.org/wiki/Estadio_Ram%C3%B3n_S%C3%A1nchez-Pizju%C3%A1n
+  - https://en.wikipedia.org/wiki/Ram%C3%B3n_S%C3%A1nchez-Pizju%C3%A1n_Stadium
+  say:
+  - text: ピスファンの前の本拠地は、ネルビオンの古い競技場でした。
+    card: none
+    image: assets/images/20261115_stadium_sevilla/02_w.jpg
+  - text: 土地の買い取りを始めたのは、1937年です。
+    card:
+      type: timeline
+      title: ピスファンの歩み
+      rows: *id004
+      focus: 1958年9月
+      highlight_row: 0
+    image: assets/images/20261115_stadium_sevilla/02_w.jpg
+  - text: 当時の会長は、ラモン・サンチェス・ピスファンでした。
+    card:
+      type: timeline
+      title: ピスファンの歩み
+      rows: *id004
+      focus: 1958年9月
+      highlight_row: 0
+    image: assets/images/20261115_stadium_sevilla/02_w.jpg
+  - text: その会長は、1956年に亡くなります。
+    card:
+      type: timeline
+      title: ピスファンの歩み
+      rows: *id004
+      focus: 1958年9月
+      highlight_row: 1
+    image: assets/images/20261115_stadium_sevilla/02_w.jpg
+  - text: あとを継いだ会長が、同じ年の12月に、礎石を置きました。
+    card:
+      type: timeline
+      title: ピスファンの歩み
+      rows: *id004
+      focus: 1958年9月
+      highlight_row: 1
+    image: assets/images/20261115_stadium_sevilla/02_w.jpg
+  - text: 開場は、1958年9月7日です。
+    card:
+      type: timeline
+      title: ピスファンの歩み
+      rows: *id004
+      focus: 1958年9月
+      highlight_row: 2
+    image: assets/images/20261115_stadium_sevilla/03_w.jpg
+  - text: 外壁がぐるりと閉じたのは、1975年のはじめ。
+    card:
+      type: timeline
+      title: ピスファンの歩み
+      rows: *id004
+      focus: 1958年9月
+      highlight_row: 3
+    image: assets/images/20261115_stadium_sevilla/03_w.jpg
+  - text: このときの収容は、最大の7万7000人あまり。いまの約1.8倍です。
+    card: none
+    image: assets/images/20261115_stadium_sevilla/03_w.jpg
+    emph: true
+  - text: 1982年のワールドカップに合わせて改修し、収容は約7万500になります。
+    card:
+      type: line
+      title: ピスファンの収容の移り変わり
+      x:
+      - '1975'
+      - '1982'
+      - '1998'
+      - '2015'
+      - いま
+      series:
+      - - 収容
+        - - 77000
+          - 70500
+          - 45500
+          - 42714
+          - 43751
+      unit: 席
+      focus: 収容
+    image: assets/images/20261115_stadium_sevilla/05_w.jpg
+  - text: ところが、1998年に、ヨーロッパサッカー連盟が、全席を座席にするよう求めます。
+    card: none
+    image: assets/images/20261115_stadium_sevilla/05_w.jpg
+  - text: 立ち見をなくした結果、6万2000席から、4万5500席へ。
+    card:
+      type: timeline
+      title: ピスファンの歩み
+      rows: *id004
+      focus: 1958年9月
+      highlight_row: 4
+    image: assets/images/20261115_stadium_sevilla/05_w.jpg
+  - text: 2015年の夏の改修で、4万2714席まで減りました。
+    card:
+      type: timeline
+      title: ピスファンの歩み
+      rows: *id004
+      focus: 1958年9月
+      highlight_row: 5
+    image: assets/images/20261115_stadium_sevilla/03_w.jpg
+  - text: 2018年の夏には、ゴール裏の通路をなくして、1300席を足しています。
+    card: none
+    image: assets/images/20261115_stadium_sevilla/03_w.jpg
+  - text: 7万7000から4万3751へ。3万3000人あまり、小さくなりました。
+    card: none
+    image: assets/images/20261115_stadium_sevilla/03_w.jpg
+    emph: true
+- id: bignights
+  heading: ピスファンは、どんな大一番を開いてきたのか
+  bg: assets/images/20261115_stadium_sevilla/04_w.jpg
+  card:
+    type: table
+    title: ピスファンの大一番
+    columns: &id005
+    - 年
+    - 試合
+    - 結果
+    rows: &id006
+    - - '1982'
+      - W杯 準決勝 西ドイツ対フランス
+      - 3対3（PK 5対4）
+    - - '1986'
+      - 欧州王者決定戦 ステアウア対バルセロナ
+      - 0対0（PK 2対0）
+    - - '2022'
+      - EL決勝 フランクフルト対レンジャーズ
+      - 1対1（PK 5対4）
+    highlight_row: 0
+  narrator: 解説
+  tier: 背景
+  telop: W杯の準決勝、欧州王者決定戦、EL決勝。3つとも、PK戦で決まった
+  sources:
+  - https://en.wikipedia.org/wiki/1982_FIFA_World_Cup_knockout_stage
+  - https://en.wikipedia.org/wiki/1986_European_Cup_final
+  - https://en.wikipedia.org/wiki/2022_UEFA_Europa_League_final
+  - https://es.wikipedia.org/wiki/Estadio_Ram%C3%B3n_S%C3%A1nchez-Pizju%C3%A1n
+  say:
+  - text: 1982年のワールドカップでは、ピスファンで2試合が開かれました。
+    card:
+      type: table
+      title: ピスファンの大一番
+      columns: *id005
+      rows: *id006
+      highlight_row: 0
+    image: assets/images/20261115_stadium_sevilla/04_w.jpg
+  - text: 1次リーグのブラジル対ソ連。そして、準決勝の西ドイツ対フランスです。
+    card: none
+    image: assets/images/20261115_stadium_sevilla/04_w.jpg
+  - text: 7月8日の準決勝は、3対3。PK戦を、西ドイツが5対4で制しました。
+    card:
+      type: table
+      title: ピスファンの大一番
+      columns: *id005
+      rows: *id006
+      highlight_row: 0
+    image: assets/images/20261115_stadium_sevilla/04_w.jpg
+    emph: true
+  - text: 1986年5月7日は、ヨーロッパ王者を決める決勝です。
+    card: none
+    image: assets/images/20261115_stadium_sevilla/06_w.jpg
+  - text: ステアウア・ブカレストが、バルセロナに、PK戦を2対0で勝ちました。
+    card:
+      type: table
+      title: ピスファンの大一番
+      columns: *id005
+      rows: *id006
+      highlight_row: 1
+    image: assets/images/20261115_stadium_sevilla/06_w.jpg
+  - text: スペインでこの決勝を開いた器は、全部で4つ。ピスファンは、その1つです。
+    card: none
+    image: assets/images/20261115_stadium_sevilla/06_w.jpg
+  - text: 2022年5月18日には、ヨーロッパリーグの決勝が開かれました。
+    card: none
+    image: assets/images/20261115_stadium_sevilla/06_w.jpg
+  - text: フランクフルトがレンジャーズに、PK戦を5対4で制しています。
+    card:
+      type: table
+      title: ピスファンの大一番
+      columns: *id005
+      rows: *id006
+      highlight_row: 2
+    image: assets/images/20261115_stadium_sevilla/06_w.jpg
+  - text: 3つの大一番は、3つとも、PK戦で決まりました。
+    card: none
+    image: assets/images/20261115_stadium_sevilla/06_w.jpg
+    emph: true
+- id: rebuild
+  heading: なぜ、ネルビオンの器を壊して、建て直すのか
+  bg: assets/images/20261115_stadium_sevilla/07_w.jpg
+  card:
+    type: table
+    title: 新しいピスファンの計画
+    columns: &id007
+    - 項目
+    - 計画
+    rows: &id008
+    - - 席
+      - 約5万5000
+    - - 屋根
+      - 客席の全体
+    - - ピッチ
+      - 低く下げる
+    - - 北ゴール裏
+      - 1段の急なスタンド
+    - - 駐車場
+      - 地下2層
+    - - 費用
+      - 約3億〜3億5000万ユーロ
+    highlight_row: 0
+  narrator: 解説
+  tier: 報道
+  telop: 席は約5万5000へ。屋根は全面。着工の日程は、報道ごとに食い違う
+  sources:
+  - https://stadiumdb.com/news/2026/04/spain_new_ramon_sanchezpizjuan_approved_how_will_sevillas_stadium_change
+  - https://stadiumdb.com/news/2026/02/spain_a_stadium_for_decades_sevilla_president_on_the_project_finances_and_club_identity
+  - https://stadiumdb.com/news/2023/12/spain_new_stadium_for_sevilla_fc_officially_presented
+  - https://es.wikipedia.org/wiki/Estadio_Ram%C3%B3n_S%C3%A1nchez-Pizju%C3%A1n
+  say:
+  - text: セビージャは、ピスファンを壊して、建て直す計画を進めています。
+    card:
+      type: table
+      title: 新しいピスファンの計画
+      columns: *id007
+      rows: *id008
+      highlight_row: 0
+    image: assets/images/20261115_stadium_sevilla/07_w.jpg
+    emph: true
+  - text: 2026年4月に、市が計画を仮に承認したと伝えられました。
+    card: none
+    image: assets/images/20261115_stadium_sevilla/07_w.jpg
+  - text: 目標は、いまより約1万1000席多い、約5万5000席です。
+    card:
+      type: table
+      title: 新しいピスファンの計画
+      columns: *id007
+      rows: *id008
+      highlight_row: 0
+    image: assets/images/20261115_stadium_sevilla/07_w.jpg
+  - text: 屋根は、客席の全体にかけます。
+    card:
+      type: table
+      title: 新しいピスファンの計画
+      columns: *id007
+      rows: *id008
+      highlight_row: 0
+    image: assets/images/20261115_stadium_sevilla/07_w.jpg
+  - text: ピッチは低く下げます。器の高さは変えずに、傾斜の急な客席にするためです。
+    card:
+      type: table
+      title: 新しいピスファンの計画
+      columns: *id007
+      rows: *id008
+      highlight_row: 2
+    image: assets/images/20261115_stadium_sevilla/07_w.jpg
+  - text: 北ゴール裏は、1段の急なスタンド。ほかの3面は、3段のままです。
+    card:
+      type: table
+      title: 新しいピスファンの計画
+      columns: *id007
+      rows: *id008
+      highlight_row: 3
+    image: assets/images/20261115_stadium_sevilla/08_w.jpg
+  - text: 真ん中の段には、貸し切りの席や、もてなしの場が入ります。
+    card: none
+    image: assets/images/20261115_stadium_sevilla/08_w.jpg
+  - text: 地下には、2層の駐車場。外壁の通りには、店やレストランが並びます。
+    card:
+      type: table
+      title: 新しいピスファンの計画
+      columns: *id007
+      rows: *id008
+      highlight_row: 4
+    image: assets/images/20261115_stadium_sevilla/08_w.jpg
+  - text: ねらいは、試合のない日も稼げる器です。
+    card: none
+    image: assets/images/20261115_stadium_sevilla/08_w.jpg
+  - text: スタジアムツアーの客は、年に10万人に近づいています。
+    card: none
+    image: assets/images/20261115_stadium_sevilla/08_w.jpg
+  - text: クラブの財政のために、試合の日の収入を増やしたい、という事情も伝えられます。
+    card: none
+    image: assets/images/20261115_stadium_sevilla/08_w.jpg
+  - text: 費用は、約3億から3億5000万ユーロと伝えられます。
+    card:
+      type: table
+      title: 新しいピスファンの計画
+      columns: *id007
+      rows: *id008
+      highlight_row: 5
+    image: assets/images/20261115_stadium_sevilla/07_w.jpg
+  - text: 会長は、器が自分で費用を払う形にして、補強の予算には手をつけないと話しています。
+    card: none
+    image: assets/images/20261115_stadium_sevilla/07_w.jpg
+  - text: 着工の日程は、伝える先で食い違います。
+    card: none
+    image: assets/images/20261115_stadium_sevilla/07_w.jpg
+    emph: true
+  - text: 2023年の計画は、2026年6月の着工でした。
+    card: none
+    image: assets/images/20261115_stadium_sevilla/07_w.jpg
+  - text: いまは、壊すのは2027年と伝えられています。
+    card: none
+    image: assets/images/20261115_stadium_sevilla/07_w.jpg
+  - text: 工事のあいだの試合は、ラ・カルトゥーハで、という案があります。
+    card: none
+    image: assets/images/20261115_stadium_sevilla/07_w.jpg
+  - text: 近所の住民からは、反対の声も出ています。
+    card: none
+    image: assets/images/20261115_stadium_sevilla/07_w.jpg
+- id: view
+  viewpoint: true
+  heading: 見立て・5万5000席は、埋まるのか
+  bg: assets/images/20261115_stadium_sevilla/01_w.jpg
+  card: &id009
+    type: table
+    title: 今季のピスファンの入場（記録が残る5試合）
+    columns:
+    - 相手
+    - 入場
+    rows:
+    - - ラージョ
+      - 3万6777人
+    - - バレンシア
+      - 3万9939人
+    - - バルセロナ
+      - 4万1145人
+    - - オサスナ
+      - 3万8523人
+    - - アラベス
+      - 3万8803人
+    - - 平均
+      - 3万9037人
+    highlight_row: 5
+  narrator: 解説
+  tier: 報道
+  telop: 今季の平均は3万9037人。5万5000席を埋めるには1.41倍が要る
+  sources:
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/teams/243/schedule?season=2026（2026-27 ラ・リーガ、セビージャのホームの入場）
+  - https://en.wikipedia.org/wiki/2022_UEFA_Europa_League_final
+  - https://stadiumdb.com/news/2026/04/spain_new_ramon_sanchezpizjuan_approved_how_will_sevillas_stadium_change
+  say:
+  - text: では、いまの1.26倍の5万5000席は、埋まるのか。
+    card: none
+    image: assets/images/20261115_stadium_sevilla/01_w.jpg
+    emph: true
+  - text: 11月12日時点の数字で見ます。
+    card: none
+    image: assets/images/20261115_stadium_sevilla/01_w.jpg
+  - text: 今季、入場の記録が残るホームは5試合。
+    card: none
+    image: assets/images/20261115_stadium_sevilla/01_w.jpg
+  - text: いちばん多かったのは、バルセロナ戦の4万1145人。
+    card: none
+    image: assets/images/20261115_stadium_sevilla/01_w.jpg
+  - text: それでも、いまの席に、2606人足りません。
+    card: none
+    image: assets/images/20261115_stadium_sevilla/01_w.jpg
+  - text: 5試合の平均は3万9037人。いまの4万3751席の、89.2％です。
+    card: *id009
+    image: assets/images/20261115_stadium_sevilla/06_w.jpg
+    mark:
+      kind: circle
+      row: 5
+  - text: 5万5000席に広げると、今季の平均の1.41倍が要ります。
+    card:
+      type: calc
+      title: 5万5000席を埋めるには、いまの何倍か（自分で割った）
+      terms:
+      - - 5万5000席
+        - 建て直し後の席
+      - - 3万9037人
+        - 今季の平均の入場
+      - - 1.41倍
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+    image: assets/images/20261115_stadium_sevilla/06_w.jpg
+  - text: いちばん入ったバルセロナ戦でも、あと1万3855人足りません。
+    card: none
+    image: assets/images/20261115_stadium_sevilla/06_w.jpg
+    emph: true
+  - text: 2022年のヨーロッパリーグ決勝の入場は、3万8842人。
+    card: none
+    image: assets/images/20261115_stadium_sevilla/01_w.jpg
+  - text: 今季の平均より、195人少ない数です。
+    card: none
+    image: assets/images/20261115_stadium_sevilla/01_w.jpg
+  - text: 席は、建てれば増えます。
+    card: none
+    image: assets/images/20261115_stadium_sevilla/01_w.jpg
+  - text: 問われるのは、毎試合、平均より約1万6000人多く集められるかです。
+    card: none
+    image: assets/images/20261115_stadium_sevilla/01_w.jpg
+    emph: true

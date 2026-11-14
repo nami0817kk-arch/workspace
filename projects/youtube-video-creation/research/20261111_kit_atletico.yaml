@@ -1,0 +1,463 @@
+# ユニフォームとエンブレムの歴史 アトレティコ・マドリード（11/6 作成、11/11 分）。ラ・リーガの3本目。雛形は 11/7 バルセロナ回。
+# 題の問い：アトレティコの赤と白は、もとは青と白だった。なぜ替わったのか（答え＝イングランドでブラックバーンの青白が買えず、サウサンプトンの赤白を持ち帰った、とする話。マットレスの布の話もある）
+# 選んだ理由：指示書 20261109「ユニフォームはラ・リーガの続き。レアル・マドリード → アトレティコ」。11/9 にレアル・マドリード、11/11 にアトレティコ。
+#   同じ日（11/11）のスタジアム紹介はラ・リーガの続き（アトレティコは 11/1 に済み）→ 同じクラブにならない（research/20261109_picks.txt に先に書いた）。
+# 重なり確認（2026-11-06）：scripts/*kit_* にアトレティコは無し。直近30日：20261101_stadium_atletico（10日前・スタジアム。本拠地の名前・リヤド・エア・メトロポリターノ）、20261022_finance_atletico（20日前・財政）。
+#   41日前（30日の外）の 20260926_ll04_atletico（クラブ紹介）が、ブラックバーン→サウサンプトンの話とマットレスの愛称を言っている。30日の外なので使うが、言い方は変え、紋章と胸の名前を主にする。
+#   この回では、本拠地の名前・お金（リヤド・エアの額）は言わない。
+# 今季のリーグ：ウィキペディア en "2026–27 Atlético Madrid season"（ラ・リーガ25季連続）。
+# 取材：requests と WebFetch・WebSearch だけ。ブラウザ操作・JS実行は使っていない。クラブ公式（atleticodemadrid.com）は Cloudflare の確認で読めなかった（403）。
+#   読んだ：ウィキペディア en "Atlético Madrid"（Foundation・Athletic Aviación・Colours and badge・Kit suppliers and shirt sponsors）、
+#     es "Club Atlético de Madrid"（Historia y evolución del escudo）、es "Historia del uniforme del Club Atlético de Madrid"（Uniforme・Proveedores y patrocinadores と注）、
+#     en "Kyocera"（2000年1月に三田工業を買い、京セラミタに）、en "Tamagotchi"（1996-11-23 に日本で発売）。
+#   紋章の投票：football-espana（2023-06-30。68,894人・88.68%・2024-07-01 から）、検索の要旨（クラブの発表：77,690人が参加、138,881人の56%）。
+# ---- 食い違い・断ったこと ----
+#   ・赤白の由来は2つの説：①ブラックバーンの青白を買いに行ったエロルドゥイが見つけられず、帰りの港町サウサンプトンの赤白を買った（en・es。es は「1909年のクリスマス休み」、en は「1909年の終わり」）。
+#     en は 2023年の調べでサンダーランドとする説も挙げる。②赤白のしまはマットレスの布と同じで安く作れた（en。愛称コルチョネロスの元）。→ どちらも「とされる」「説」と言い、決めない。
+#   ・赤白を着た年：en・es とも 1911年。パンツ：en は「青のまま」、es は「1921年に青に決める」→ 台本は「パンツは青」とだけ。
+#   ・ミタの年：en は 1989-90、es は 1988-1990 → 台本は「1980年代の終わり」。
+#   ・京セラの背中の年：es は 2006-2014、en は 2005-06 から → 台本は「2000年代から2010年代にかけて」。
+#   ・たまごっち：es の注「バンダイは胸と袖とパンツに。たまごっちはリーグ戦の最後の2試合で胸に」→ そのまま。
+#   ・コロンビア映画（2003年から2年）：en「16本の映画の題」→ 数はそのまま「16本」と言う。
+#   ・マルベーリャの名前が胸に3度：en・es の表（1990-93、1994-96、1997-99）。当時の会長の話（法の問題）は入れない。
+#   ・紋章：es ＝1903-13 はアスレティックの帯の形（青白・AC）、1913-17 は赤白、1917 にマドリード市の紋章の熊と木（マドロニョ）と7つの星、1939-47 はアビアシオンの翼、1947 に翼と冠が消えて「クラシック」、2017-24 は作り直し（熊と木が青・向きが逆・上が丸い）、2023-06-30 の投票で 88.68%、2024-07-01 に戻る。
+#     en は「1917年に紋章、1947年からシャツに」。→ 台本は es の流れ、年は 1917・1939・1947・2017・2024 だけ言う。
+#   ・リヤド・エアの胸：es の表（2023-24 から 2026-27）。今季のシャツに入っていることは検索の要旨（クラブの発表の見出し）でも合う。額は言わない。
+#   ・ナイキ：en「2001年から」。
+# ---- 自分で数えた数 ----
+#   青白：1903→1911＝8年。赤白：1911→2026＝115年。クラシックの紋章：1947→2017＝70年。作り直しの紋章：2017→2024＝7年。70÷7＝10倍。
+#   投票：68,894÷77,690＝88.68%（発表どおり）。胸に入った日本の会社：ミタ（胸）・バンダイ（胸、たまごっち）・京セラ（背中）＝3つ。
+# ---- 日本との接点 ----
+#   ①1980年代の終わり、胸に日本の複写機の会社ミタ（三田工業）。②1996年から97年、胸にバンダイ、最後の2試合はたまごっち。③背中に京セラ（2000年に三田工業を買っている）。
+# 言わなかったもの：本拠地の名前（10日前のスタジアム回）／リヤド・エア・プラス500の額／会長の話／アゼルバイジャンの協賛への批判（政治）。
+# 写真：assets/images/20261111_kit_atletico/（credits.json）。Commons（CC BY・CC BY-SA・CC0）。代理店・放送映像・エンブレム画像は使っていない。
+#   1963年の写真は Nationaal Archief（オランダ国立公文書館）の Anefo 収蔵で CC0。
+date: 2026年11月6日
+slot: other_5
+format: news
+series: ユニフォームとエンブレムの歴史
+voice_min: 0
+people:
+- アトレティコ・マドリード
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  end_bg: assets/images/20261111_kit_atletico/p_team15_w.jpg
+  id: kit_atletico
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: アトレティコ・マドリード
+  title: アトレティコ・マドリードの赤白、もとは青と白。なぜ替わった？
+  question: アトレティコ・マドリードはなぜ青と白から赤と白に替わり、熊と木の紋章はなぜ会員の投票で戻され、胸にはどんな日本の名前が入ってきたのか
+  opening_image: assets/images/20261111_kit_atletico/p_fans_w.jpg
+  lead: 赤白の前は、青と白。
+  hook: ''
+  takeaway: アトレティコ・マドリードの赤と白は1911年から115年。それまでの8年は、親のクラブと同じ青と白だった。1947年からのクラシックの紋章は70年続き、2017年に作り直した紋章は、会員の88.68%の投票で7年で戻された。胸と背中には、ミタ、バンダイのたまごっち、京セラと、日本の会社が3つ入った
+  hook_unused: ''
+thumbnail:
+  layout: classic
+  callouts:
+  - 胸に日本の会社も
+  - 紋章は投票で戻った
+  photo: assets/images/20261111_kit_atletico/p_team15_w.jpg
+  short_photo: assets/images/20261111_kit_atletico/p_team15_v.jpg
+  line1: アトレティコの赤白は
+  line2: もとは青と白だった
+  tags:
+  - アトレティコ・マドリード
+  - ユニフォーム
+  - エンブレム
+  - たまごっち
+  - 京セラ
+  - ラ・リーガ
+x-cards:
+  stripes: &stripes
+    type: timeline
+    title: アトレティコのシャツの歩み
+    rows:
+    - - 1903年
+      - 創立。親のクラブと同じ青と白
+    - - 1909年
+      - 青白のシャツを買いに、イングランドへ
+    - - 1911年
+      - 赤と白のしまに。パンツは青
+    - - 今季
+      - 赤と白のしま、115年
+    focus: 1911年
+    highlight_row: 0
+  crest: &crest
+    type: timeline
+    title: 胸の紋章の歩み
+    rows:
+    - - 1903年
+      - 親のクラブの印。青と白
+    - - 1917年
+      - マドリードの熊と木、7つの星
+    - - 1939年
+      - 空軍のクラブと一つに。翼が付く
+    - - 1947年
+      - 翼が消え、クラシックの紋章
+    - - 2017年
+      - 作り直した紋章
+    - - 2024年
+      - 投票で、クラシックに戻る
+    focus: 2024年
+    highlight_row: 0
+  vote: &vote
+    type: stats
+    title: 2023年6月、紋章を決める会員の投票
+    items:
+    - - '77690'
+      - 人
+      - 投票した会員
+    - - '68894'
+      - 人
+      - 前の紋章に戻す
+    - - '88.68'
+      - '%'
+      - 戻すが占めた割合
+    focus: 2
+  japan: &japan
+    type: timeline
+    title: アトレティコと日本の会社
+    rows:
+    - - 1980年代の終わり
+      - 胸に、複写機のミタ
+    - - 1996年
+      - 胸に、バンダイ
+    - - 1997年
+      - 最後の2試合、胸にたまごっち
+    - - 2000年代〜
+      - 背中に、京セラ
+    focus: 1997年
+    highlight_row: 0
+  chest: &chest
+    type: table
+    title: アトレティコの胸に入った名前（おもなもの）
+    columns:
+    - いつから
+    - 名前
+    rows:
+    - - 1990年から
+      - マルベーリャ（3度）
+    - - 2003年から
+      - 映画の題、16本
+    - - 2012年から
+      - アゼルバイジャン
+    - - 2015年から
+      - プラス500
+    - - 2023年から
+      - リヤド・エア
+    highlight_row: 0
+  view: &view
+    type: table
+    title: アトレティコの赤白と紋章を数える（自分で数えた）
+    columns:
+    - 何を
+    - 数
+    rows:
+    - - 青と白の時代（1903年〜）
+      - 8年
+    - - 赤と白のしま（1911年〜）
+      - 115年
+    - - クラシックの紋章（1947年〜2017年）
+      - 70年
+    - - 作り直した紋章（2017年〜2024年）
+      - 7年
+    highlight_row: 0
+sections:
+- id: stripes
+  main: true
+  heading: アトレティコの赤と白は、なぜ青と白から替わったのか
+  bg: assets/images/20261111_kit_atletico/p_team15_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 1903年の創立から8年は、親のクラブと同じ青と白。1911年から赤と白のしま。由来は、買えなかった青白の代わりとする話と、マットレスの布の話
+  card: *stripes
+  say:
+  - text: 今回はアトレティコ・マドリード。赤白のしまと、熊の紋章と、胸の名前の話です。
+    image: assets/images/20261111_kit_atletico/p_fans_w.jpg
+    card: none
+  - text: クラブが生まれたのは、1903年4月。レアル・マドリードの、1年あとです。
+    image: assets/images/20261111_kit_atletico/p_team15_w.jpg
+    card:
+      <<: *stripes
+      highlight_row: 0
+  - text: つくったのは、マドリードで学んでいた、バスク出身の学生3人でした。
+    image: assets/images/20261111_kit_atletico/p_team15_w.jpg
+    card: none
+  - text: 最初は、北部の町ビルバオのアスレティック・クラブの、マドリード支部でした。
+    image: assets/images/20261111_kit_atletico/p_team15_w.jpg
+    card: none
+  - text: だからシャツも、親のクラブと同じ、青と白の半分ずつでした。
+    image: assets/images/20261111_kit_atletico/p_team15_w.jpg
+    card: none
+    emph: true
+    callword: 最初は青と白
+  - text: その青と白は、イングランドのブラックバーンのシャツを、買ってきたものとされます。
+    image: assets/images/20261111_kit_atletico/p_1963_w.jpg
+    card: none
+  - text: 1909年の終わり、クラブの役員が、新しいシャツを買いにイングランドへ渡ります。
+    image: assets/images/20261111_kit_atletico/p_1963_w.jpg
+    card:
+      <<: *stripes
+      highlight_row: 1
+  - text: ところが、ブラックバーンの青と白は、見つかりませんでした。
+    image: assets/images/20261111_kit_atletico/p_1963_w.jpg
+    card: none
+  - text: 代わりに持ち帰ったのが、帰りの船が出る港町、サウサンプトンの赤と白です。
+    image: assets/images/20261111_kit_atletico/p_1963_w.jpg
+    card: none
+    emph: true
+  - text: 1911年、アトレティコは、この赤と白のしまに替えました。
+    image: assets/images/20261111_kit_atletico/p_1963_w.jpg
+    card:
+      <<: *stripes
+      highlight_row: 2
+  - text: パンツは、青のままです。
+    image: assets/images/20261111_kit_atletico/p_fans_w.jpg
+    card: none
+  - text: もう一つの説が、マットレスの布。
+    image: assets/images/20261111_kit_atletico/p_fans_w.jpg
+    card: none
+  - text: 赤と白のしまは、当時のマットレスと同じ布で、安く作れた、というものです。
+    image: assets/images/20261111_kit_atletico/p_fans_w.jpg
+    card: none
+  - text: いまも呼ばれる愛称、コルチョネロス、マットレス職人は、ここから来たとされます。
+    image: assets/images/20261111_kit_atletico/p_fans_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Atl%C3%A9tico_Madrid
+  - https://es.wikipedia.org/wiki/Historia_del_uniforme_del_Club_Atl%C3%A9tico_de_Madrid
+- id: crest
+  heading: 熊と木の紋章は、なぜ会員の投票で戻されたのか
+  bg: assets/images/20261111_kit_atletico/p_team14_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 1917年にマドリードの熊と木と7つの星。1939年に翼、1947年にクラシックの形。2017年の作り直しは、2023年の投票で88.68%が戻すを選んだ
+  card: *crest
+  say:
+  - text: 胸の紋章も、最初は親のクラブの印でした。
+    image: assets/images/20261111_kit_atletico/p_team14_w.jpg
+    card:
+      <<: *crest
+      highlight_row: 0
+  - text: 1917年、マドリードの町の紋章から、熊と木と、7つの星を取り入れます。
+    image: assets/images/20261111_kit_atletico/p_team14_w.jpg
+    card:
+      <<: *crest
+      highlight_row: 1
+    emph: true
+  - text: 星は北斗七星。熊は、実はめすの熊で、おおぐま座にかけています。
+    image: assets/images/20261111_kit_atletico/p_team14_w.jpg
+    card: none
+  - text: 1939年、空軍の人たちがつくったクラブと一つになり、紋章には翼が付きました。
+    image: assets/images/20261111_kit_atletico/p_team14_w.jpg
+    card:
+      <<: *crest
+      highlight_row: 2
+  - text: 翼が消えたのは1947年。名前も、いまのアトレティコ・マドリードになりました。
+    image: assets/images/20261111_kit_atletico/p_team14_w.jpg
+    card:
+      <<: *crest
+      highlight_row: 3
+  - text: このときの形が、ファンがクラシックと呼ぶ紋章です。70年、胸にありました。
+    image: assets/images/20261111_kit_atletico/p_team14_w.jpg
+    card: none
+  - text: 2017年、クラブは紋章を作り直します。熊と木は青くなり、向きも逆になりました。
+    image: assets/images/20261111_kit_atletico/p_azer_w.jpg
+    card:
+      <<: *crest
+      highlight_row: 4
+  - text: これに、多くのファンが反発します。
+    image: assets/images/20261111_kit_atletico/p_azer_w.jpg
+    card: none
+  - text: 2023年6月、クラブは会員の投票で決めることにしました。
+    image: assets/images/20261111_kit_atletico/p_azer_w.jpg
+    card: none
+  - text: 投票したのは、7万7690人。
+    image: assets/images/20261111_kit_atletico/p_azer_w.jpg
+    card:
+      <<: *vote
+      focus: 0
+  - text: 前の紋章に戻すを選んだのは、88.68%でした。
+    image: assets/images/20261111_kit_atletico/p_team15_w.jpg
+    card:
+      <<: *vote
+      focus: 2
+    emph: true
+    callword: 88.68%が戻す
+  - text: 2024年7月、クラシックの紋章が、胸に戻りました。
+    image: assets/images/20261111_kit_atletico/p_team15_w.jpg
+    card:
+      <<: *crest
+      highlight_row: 5
+  sources:
+  - https://es.wikipedia.org/wiki/Club_Atl%C3%A9tico_de_Madrid
+  - https://en.wikipedia.org/wiki/Atl%C3%A9tico_Madrid
+  - https://www.football-espana.net/2023/06/30/atletico-madrid-members-score-victory-for-fan-power-as-old-badge-set-to-return
+- id: japan
+  heading: アトレティコの胸に、日本の名前が入ったのはいつか
+  bg: assets/images/20261111_kit_atletico/p_kyocera_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 1980年代の終わりに胸にミタ。1996年から97年はバンダイ、最後の2試合はたまごっち。背中には京セラ
+  card: *japan
+  say:
+  - text: アトレティコの胸には、日本の会社の名前も入っています。
+    image: assets/images/20261111_kit_atletico/p_kyocera_w.jpg
+    card: none
+  - text: 1980年代の終わり、胸にあったのは、日本の複写機の会社、ミタでした。
+    image: assets/images/20261111_kit_atletico/p_kyocera_w.jpg
+    card:
+      <<: *japan
+      highlight_row: 0
+  - text: 1996年から97年のシーズンは、日本のおもちゃの会社、バンダイ。
+    image: assets/images/20261111_kit_atletico/p_kyocera_w.jpg
+    card:
+      <<: *japan
+      highlight_row: 1
+  - text: そして、リーグ戦の最後の2試合だけ、胸の名前が、たまごっちに替わりました。
+    image: assets/images/20261111_kit_atletico/p_kyocera_w.jpg
+    card:
+      <<: *japan
+      highlight_row: 2
+    emph: true
+    callword: 胸にたまごっち
+  - text: 日本で発売されたのは、1996年11月。その半年ほどあとのことです。
+    image: assets/images/20261111_kit_atletico/p_team14_w.jpg
+    card: none
+  - text: もう一つが、京セラ。
+    image: assets/images/20261111_kit_atletico/p_team14_w.jpg
+    card:
+      <<: *japan
+      highlight_row: 3
+  - text: 2000年代から2010年代にかけて、背中の番号の下にありました。
+    image: assets/images/20261111_kit_atletico/p_kyocera_w.jpg
+    card: none
+  - text: 京セラは、2000年に、あのミタの会社を買っています。
+    image: assets/images/20261111_kit_atletico/p_kyocera_w.jpg
+    card: none
+    emph: true
+  - text: 胸のミタと、背中の京セラは、つながっていたことになります。
+    image: assets/images/20261111_kit_atletico/p_kyocera_w.jpg
+    card: none
+  sources:
+  - https://es.wikipedia.org/wiki/Historia_del_uniforme_del_Club_Atl%C3%A9tico_de_Madrid
+  - https://en.wikipedia.org/wiki/Atl%C3%A9tico_Madrid
+  - https://en.wikipedia.org/wiki/Kyocera
+  - https://en.wikipedia.org/wiki/Tamagotchi
+- id: chest
+  heading: 今季までの胸には、どんな名前が入ってきたのか
+  bg: assets/images/20261111_kit_atletico/p_azer_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 町の名前、16本の映画の題、国の名前。2023年からはサウジアラビアの航空会社、リヤド・エア
+  card: *chest
+  say:
+  - text: アトレティコの胸には、ほかにも変わった名前が並びます。
+    image: assets/images/20261111_kit_atletico/p_azer_w.jpg
+    card: none
+  - text: 1990年代には、スペイン南部の町、マルベーリャの名前が、3度、胸に入りました。
+    image: assets/images/20261111_kit_atletico/p_azer_w.jpg
+    card:
+      <<: *chest
+      highlight_row: 0
+  - text: 2003年からの2シーズンは、映画の会社が胸を買い、映画の題を入れました。
+    image: assets/images/20261111_kit_atletico/p_azer_w.jpg
+    card:
+      <<: *chest
+      highlight_row: 1
+  - text: 胸に入った映画の題は、16本。ほかのクラブには例のない数とされています。
+    image: assets/images/20261111_kit_atletico/p_azer_w.jpg
+    card: none
+    emph: true
+  - text: 2012年からは、国の名前。カスピ海に面した、アゼルバイジャンです。
+    image: assets/images/20261111_kit_atletico/p_team14_w.jpg
+    card:
+      <<: *chest
+      highlight_row: 2
+  - text: 2015年からはネットの会社、プラス500。
+    image: assets/images/20261111_kit_atletico/p_team14_w.jpg
+    card:
+      <<: *chest
+      highlight_row: 3
+  - text: 胸の名前では、いちばん長い7シーズンです。
+    image: assets/images/20261111_kit_atletico/p_team14_w.jpg
+    card: none
+  - text: そして2023年からが、サウジアラビアの航空会社、リヤド・エア。
+    image: assets/images/20261111_kit_atletico/p_team15_w.jpg
+    card:
+      <<: *chest
+      highlight_row: 4
+  - text: 今季で4シーズン目です。
+    image: assets/images/20261111_kit_atletico/p_team15_w.jpg
+    card: none
+  - text: シャツを作るのは、2001年からナイキ。
+    image: assets/images/20261111_kit_atletico/p_team15_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Atl%C3%A9tico_Madrid
+  - https://es.wikipedia.org/wiki/Historia_del_uniforme_del_Club_Atl%C3%A9tico_de_Madrid
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_Atl%C3%A9tico_Madrid_season
+- id: view
+  viewpoint: true
+  heading: 見立て・赤白の115年と、7年で戻された紋章
+  bg: assets/images/20261111_kit_atletico/p_team15_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 青と白は8年、赤と白は115年。クラシックの紋章は70年、作り直しは7年。長さは10倍
+  card: *view
+  say:
+  - text: アトレティコの赤白と紋章を、数で並べます。
+    image: assets/images/20261111_kit_atletico/p_team15_w.jpg
+    card: none
+  - text: 青と白の時代は、8年。
+    image: assets/images/20261111_kit_atletico/p_team15_w.jpg
+    card:
+      <<: *view
+      highlight_row: 0
+  - text: 赤と白のしまは、1911年から115年です。
+    image: assets/images/20261111_kit_atletico/p_team15_w.jpg
+    card:
+      <<: *view
+      highlight_row: 1
+  - text: 紋章は、クラシックの形が70年。
+    image: assets/images/20261111_kit_atletico/p_team14_w.jpg
+    card:
+      <<: *view
+      highlight_row: 2
+  - text: 作り直した紋章は、7年で戻されました。
+    image: assets/images/20261111_kit_atletico/p_team14_w.jpg
+    card:
+      <<: *view
+      highlight_row: 3
+    mark:
+      kind: circle
+      row: 3
+  - text: 長さで比べると、10倍の差です。
+    image: assets/images/20261111_kit_atletico/p_team14_w.jpg
+    card:
+      type: calc
+      title: 2つの紋章の長さ（自分で割った）
+      terms:
+      - - 70年
+        - クラシック
+      - - 7年
+        - 作り直し
+      - - 10倍
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+    emph: true
+  - text: 胸の名前は、町、映画、国、会社と替わってきました。
+    image: assets/images/20261111_kit_atletico/p_fans_w.jpg
+    card: none
+  - text: それでも、しまの色と紋章の形だけは、ファンが手放しませんでした。
+    image: assets/images/20261111_kit_atletico/p_fans_w.jpg
+    card: none
+    emph: true
+  sources:
+  - https://es.wikipedia.org/wiki/Club_Atl%C3%A9tico_de_Madrid
+  - https://en.wikipedia.org/wiki/Atl%C3%A9tico_Madrid

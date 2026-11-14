@@ -1,0 +1,451 @@
+format: news
+voice_min: 0
+slot: other_1
+date: 2026年11月13日
+people:
+- ミラン
+- 本田圭佑
+- パオロ・マルディーニ
+- アンドリー・シェフチェンコ
+- カカ
+- ルベン・アモリム
+short_title: ミラン、2部に2度落ちて欧州王者5度
+series: セリエAチーム紹介
+theme:
+  id: sa_milan
+  league: italy
+  league_name: セリエA
+  kind: other
+  topic: ミラン
+  title: ミランは、2部に2度落ちた。そこからどうやって、欧州王者に5度なったのか？
+  question: ミランは、2部に2度落ちた。そこからどうやって、欧州王者に5度なったのか
+  hook: ''
+  lead: 北イタリアの大都市、ミラノの、赤と黒のクラブ。
+  opening_image: assets/stats/sa_milan_data_t.png
+  takeaway: 11月13日時点で、リーグ戦11試合の勝ち点は1試合2.18で、昨シーズン38試合の1.84を上回る。得点は2.09で昨シーズンの1.39を大きく上回る一方、失点も1.18で昨シーズンの0.92より多い。ヨーロッパリーグは4試合で1勝3敗で、リーグ戦の好調を欧州に持ち込めるかが今季の物差し
+thumbnail:
+  line1: ミラン
+  line2: 2部に2度落ちて欧州王者5度
+  crest_main:
+  - ミラン
+  tags:
+  - ミラン
+  - ACミラン
+  - セリエA
+  - 本田圭佑
+  layout: classic
+  board: assets/stats/sa_milan_data_t.png
+sections:
+- id: data
+  heading: いま見る理由と基礎DATA
+  main: true
+  tier: 背景
+  telop: 昨季は5位でCLに届かず。6月にアモリム監督が就任。今季は11試合で負けが1つだけの4位
+  narrator: キャスター
+  say:
+  - text: 昨季は5位で、チャンピオンズリーグに届きませんでした。
+    image: assets/stats/sa_milan_data_r1.png
+    no_telop: true
+  - text: 6月に、ルベン・アモリム監督が就任しました。
+    image: assets/stats/sa_milan_data_r2.png
+    no_telop: true
+  - text: 今季の負けは、ここまで1試合だけ。4位につけています。
+    image: assets/stats/sa_milan_data_r3.png
+    no_telop: true
+  - image: assets/stats/sa_milan_data0.png
+    text: 創立は**1899年**。イングランド人のハーバート・キルピンが作りました。
+    no_telop: true
+  - image: assets/backgrounds/stadium_ミラン.png
+    text: 本拠地はサン・シーロ。収容は**7万5710人**で、イタリア最大。インテルと共用です。
+  - image: assets/stats/sa_milan_map.png
+    text: ホームタウンはミラノ。ロンバルディア州。北イタリアの大都市です。
+    no_telop: true
+  - image: assets/stats/sa_milan_cups.png
+    text: リーグ優勝は**19回**。ヨーロッパ王者は**7回**。うち5回は、2部に落ちたあとです。
+    no_telop: true
+  - image: assets/stats/sa_milan_data8.png
+    text: 昨シーズンは**5位**。勝ち点70、4位のコモと1点差でした。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/AC_Milan
+  - https://en.wikipedia.org/wiki/2026–27_AC_Milan_season
+  - https://site.api.espn.com/apis/v2/sports/soccer/ita.1/standings
+  bg: assets/backgrounds/stadium_ミラン_in.png
+  official: false
+- id: rise
+  heading: 2部に落ちたミランは、どうやって欧州王者に戻ったのか
+  tier: 背景
+  telop: 1980年に八百長事件の罰で初の2部。1986年にベルルスコーニが買収。1989年から欧州王者
+  narrator: 解説
+  main: true
+  say:
+  - text: 1980年。ミランは、八百長事件の罰で、初めて2部に落とされます。
+    image: assets/backgrounds/stadium_ミラン_in.png
+    card:
+      type: table
+      title: ミランの歩み
+      columns:
+      - 年
+      - 出来事
+      rows:
+      - - 1980年
+        - 八百長事件で初めて2部へ
+      - - 1983年
+        - 2度目の2部優勝で1部へ
+      - - 1986年
+        - ベルルスコーニが買収
+      - - 1989年
+        - 欧州王者に（翌年も）
+      - - 2007年
+        - 7度目の欧州王者
+  - 1年で2部を優勝して戻りますが、翌年にまた落ちます。
+  - 1983年に、2度目の2部優勝で、1部へ戻りました。
+  - text: 1986年。実業家のシルヴィオ・ベルルスコーニが、倒産寸前のクラブを買います。
+    card: none
+    image: assets/backgrounds/stadium_ミラン.png
+  - 巨額のお金を入れて、監督にアリゴ・サッキを呼びました。
+  - 獲得したのは、オランダ代表のフリット、ファン・バステン、ライカールトです。
+  - 1988年、9年ぶりのリーグ優勝。
+  - 翌年は、ヨーロッパの頂点を決める決勝で、ステアウア・ブカレストに4対0で勝ちます。
+  - 翌1990年も、ベンフィカに1対0で勝ちました。
+  - 連覇は、2017年にレアル・マドリードが達成するまで、ミランが最後でした。
+  - 1994年は、決勝でバルセロナに4対0で勝ちました。
+  - 2003年は、PK戦でユベントスに勝ちます。
+  - 2007年は、リヴァプールに2対1で、7度目の優勝です。
+  sources:
+  - https://en.wikipedia.org/wiki/AC_Milan
+  bg: assets/backgrounds/stadium_ミラン_in.png
+  official: false
+- id: japan
+  heading: 本田圭佑はミランで、どんな時間を過ごしたのか
+  tier: 背景
+  telop: 2014年1月にCSKAモスクワから加入。リーグ戦81試合9得点、2017年まで
+  narrator: 解説
+  say:
+  - text: ミランでプレーした日本人に、本田圭佑がいます。
+    image: assets/images/sa_milan_honda_w/01.jpg
+    card:
+      type: table
+      title: ミランと日本
+      columns:
+      - 年
+      - 出来事
+      rows:
+      - - 2014年
+        - CSKAモスクワから加入
+      - - 2014-15年
+        - リーグ戦29試合6得点
+      - - 2017年
+        - パチューカへ
+  - 2014年1月、ロシアのツェスカモスクワから加わりました。
+  - 2017年までのリーグ戦は、**81試合9得点**。
+  - 2014年から15年は、リーグ戦**29試合6得点**でした。
+  - text: 2017年に、メキシコのパチューカへ移ります。
+    card: none
+    image: assets/backgrounds/stadium_ミラン_in.png
+  sources:
+  - https://en.wikipedia.org/wiki/Keisuke_Honda
+  bg: assets/backgrounds/stadium_ミラン_in.png
+  official: false
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: クラブの色は赤と黒。名前は英語のつづり。本拠地サン・シーロは地区の名前
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - クラブの色
+      - 赤と黒
+    - - クラブ名
+      - 英語のつづり
+    - - サン・シーロ
+      - 地区の名前
+  say:
+  - クラブの色は、赤と黒です。
+  - 創立者のキルピンが、前のクラブから持ってきたシャツの色でした。
+  - 赤は選手の燃える情熱。黒は、相手の恐れを表すと、キルピンは語りました。
+  - クラブ名は、英語のつづりの「ミラン」。イタリア語の「ミラノ」ではありません。
+  - 本拠地のサン・シーロは、地区の名前です。
+  - 正式な名前は、ジュゼッペ・メアッツァ・スタジアムです。
+  sources:
+  - https://en.wikipedia.org/wiki/AC_Milan
+  bg: assets/backgrounds/stadium_ミラン_in.png
+  official: false
+- id: episode
+  heading: 1991年から93年、ミランはなぜ、58試合も負けなかったのか
+  tier: 背景
+  telop: 1991年5月から93年3月、リーグ戦58試合負けなし。1991年から92年は無敗で優勝
+  narrator: 解説
+  card:
+    type: table
+    title: 58試合の無敗
+    columns: &id001
+    - ''
+    - ''
+    rows:
+    - - 無敗の試合数
+      - 58試合
+    - - 始まり
+      - 1991年5月、パルマと0対0
+  say:
+  - text: 1991年。サッキに代わって監督になったのは、元選手のカペッロです。
+    image: assets/backgrounds/stadium_ミラン_in.png
+  - この年から、ミランは3年続けて、リーグ優勝します。
+  - 負けない日々の始まりは、1991年5月26日。パルマと0対0の引き分けでした。
+  - 1991年から92年は、リーグ戦で1度も負けずに優勝します。
+  - text: 無敗で優勝したのは、イタリアの1部で初めてです。
+    card:
+      type: table
+      title: 58試合の無敗
+      columns: *id001
+      rows:
+      - - 終わり
+        - 1993年3月、パルマに0対1
+      - - 1991-92年
+        - 負けなしで優勝
+  - 前にシーズン無敗だったのは、1978年から79年のペルージャだけ。ただ2位でした。
+  - 負けなしは、**58試合**続きます。セリエAの記録です。
+  - 止めたのは、1993年3月21日。ホームでのパルマ戦で、0対1で負けました。
+  - 始まりも終わりも、パルマとの試合でした。
+  sources:
+  - https://en.wikipedia.org/wiki/AC_Milan
+  bg: assets/backgrounds/stadium_ミラン_in.png
+  official: false
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - &id002
+      - マルディーニ
+      - 1984-2009
+      - 902試合
+  say:
+  - text: マルディーニは、1984年から2009年まで、ミラン一筋のディフェンダーです。
+    image: assets/photos/sa/milan/milan_legend_88437701.jpg
+  - リーグ戦**647試合**は、セリエAの最多記録。ミランでの全大会では**902試合**でした。
+  - 在籍中のミランは、ヨーロッパの頂点に5回立ちました。
+  sources:
+  - https://en.wikipedia.org/wiki/Paolo_Maldini
+  - https://en.wikipedia.org/wiki/Andriy_Shevchenko
+  - https://en.wikipedia.org/wiki/Kak%C3%A1
+  - https://en.wikipedia.org/wiki/AC_Milan
+  bg: assets/backgrounds/stadium_ミラン_in.png
+  official: false
+- id: legends2
+  heading: このクラブを語る3人（2人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id002
+    - &id003
+      - シェフチェンコ
+      - 1999-2006
+      - 175得点・歴代2位
+  say:
+  - text: シェフチェンコは、ウクライナ代表のフォワード。1999年から2006年まで。
+    image: assets/photos/sa/milan/milan_legend_916487a6.jpg
+  - リーグ戦**208試合127得点**。ミランでの通算は**175得点**で、クラブ歴代2位です。
+  - 2006年にチェルシーへ移り、2008年に、貸し出しでミランに戻りました。
+  sources:
+  - https://en.wikipedia.org/wiki/Paolo_Maldini
+  - https://en.wikipedia.org/wiki/Andriy_Shevchenko
+  - https://en.wikipedia.org/wiki/Kak%C3%A1
+  - https://en.wikipedia.org/wiki/AC_Milan
+  bg: assets/backgrounds/stadium_ミラン_in.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id002
+    - *id003
+    - - カカ
+      - 2003-2009
+      - 193試合70得点
+  say:
+  - text: カカは、ブラジル代表のミッドフィールダー。2003年にミランへ来ました。
+    image: assets/photos/sa/milan/milan_legend_0d55e70c.jpg
+  - リーグ戦**193試合70得点**。
+  - 2009年、6700万ユーロの移籍金で、スペインの名門へ。
+  - 当時の世界最高額でしたが、記録は1か月もたたずに破られました。
+  - 2013年には、ミランに戻っています。
+  sources:
+  - https://en.wikipedia.org/wiki/Paolo_Maldini
+  - https://en.wikipedia.org/wiki/Andriy_Shevchenko
+  - https://en.wikipedia.org/wiki/Kak%C3%A1
+  - https://en.wikipedia.org/wiki/AC_Milan
+  bg: assets/backgrounds/stadium_ミラン_in.png
+  official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はアモリム。2026年6月に就任。前はマンチェスター・ユナイテッドの監督
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - ルベン・アモリム
+    - - 就任
+      - 2026年6月
+    - - 前の仕事
+      - マンチェスター・ユナイテッドの監督
+  say:
+  - ミランの今季の監督は、ポルトガル人のルベン・アモリム。**41歳**です。
+  - 選手のときは、ポルトガル代表として、ワールドカップに2度出ています。
+  - 監督としては、スポルティングで、リーグ優勝を2度。
+  - 2024年にマンチェスター・ユナイテッドへ移ります。
+  - 2025年には、ヨーロッパリーグの決勝に進みました。
+  - 率いたのは、2026年1月までです。
+  - ミランの監督になったのは、2026年6月です。
+  sources:
+  - https://en.wikipedia.org/wiki/AC_Milan
+  - https://en.wikipedia.org/wiki/R%C3%BAben_Amorim
+  bg: assets/backgrounds/stadium_ミラン_in.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は27人です。
+    image: assets/stats/sa_milan_gk.png
+    no_telop: true
+  - image: assets/stats/sa_milan_gk_f.png
+    text: ゴールキーパーは3人。
+    no_telop: true
+  - image: assets/stats/sa_milan_gk_f.png
+    text: 主将を務めるのが**マイク・メニャン**。
+    no_telop: true
+  - image: assets/stats/sa_milan_df.png
+    text: ディフェンダーは10人。
+    no_telop: true
+  - image: assets/stats/sa_milan_mf.png
+    text: ミッドフィールダーは11人。
+    no_telop: true
+  - image: assets/stats/sa_milan_fw.png
+    text: フォワードは3人。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/AC_Milan
+  bg: assets/backgrounds/stadium_ミラン_in.png
+  official: false
+- id: season
+  heading: 7勝3引き分け1敗のミランは、ヨーロッパでも勝てるのか
+  tier: 報道
+  telop: 11月13日時点でセリエA11試合7勝3分1敗。23得点13失点。4位。ヨーロッパリーグは4試合で1勝3敗
+  narrator: 解説
+  card:
+    type: table
+    title: セリエAの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - トリノ（アウェー）
+      - 2対1
+    - - 第2節
+      - ヴェネツィア（ホーム）
+      - 2対0
+    - - 第3節
+      - ユベントス（アウェー）
+      - 1対1
+    - - 第4節
+      - ラツィオ（アウェー）
+      - 2対2
+    - - 第5節
+      - レッチェ（ホーム）
+      - 3対0
+    - - 第6節
+      - サッスオーロ（アウェー）
+      - 1対1
+    - - 第7節
+      - アタランタ（ホーム）
+      - 3対2
+    - - 第8節
+      - ウディネーゼ（アウェー）
+      - 2対0
+    - - 第9節
+      - ボローニャ（ホーム）
+      - 2対4
+    - - 第10節
+      - インテル（ホーム）
+      - 3対1
+    - - 第11節
+      - ジェノア（アウェー）
+      - 2対1
+  say:
+  - text: ミランはセリエAで11試合を終えて、**7勝3引き分け1敗**です。
+  - 順位は**4位**、勝ち点は24。首位ラツィオとは5差です。
+  - text: 得点は**23**。
+    card:
+      type: stats
+      title: 今季のリーグ戦（11試合）
+      items:
+      - - '23'
+        - ''
+        - 得点
+      - - '13'
+        - ''
+        - 失点
+      - - '24'
+        - ''
+        - 勝ち点
+      focus: 0
+  - text: 失点は**13**。
+    mark:
+      kind: circle
+      item: 1
+  - 得点は1試合2.09。昨シーズンの1.39を、大きく上回ります。
+  - 失点は1.18で、昨シーズンの0.92より増えました。
+  - 勝ち点は1試合2.18。昨シーズンの1.84を超えています。
+  - 唯一の黒星は、10月28日。ホームでボローニャに2対4で負けました。
+  - 3日後の10月31日は、ダービー。インテルに3対1で勝ちました。
+  - ヨーロッパリーグは、4試合で1勝3敗です。
+  - text: 11月22日には、ホームでフロジノーネと戦います。
+  sources:
+  - https://www.espn.com/soccer/team/results/_/name/milan
+  - https://site.api.espn.com/apis/v2/sports/soccer/ita.1/standings
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_AC_Milan_season
+  bg: assets/backgrounds/stadium_ミラン_in.png
+  official: false
+  viewpoint: true
+watch: 毎日、数字でサッカーを読み解きます

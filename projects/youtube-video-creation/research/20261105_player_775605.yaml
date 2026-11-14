@@ -1,0 +1,537 @@
+# パブロ・バリオス（アトレティコ・マドリード／スペイン代表）の紹介。選手紹介の8節の型（2026-11-05 公開分、シリーズ「有名選手の紹介」。key: player_775605）。情報の時点は 2026-11-04（試合は 11/3 の CL バイエルン戦まで）。
+# **FotMob は使わない。**数字は Transfermarkt API の試合記録（控え research/raw/20261105_barrios_tm.json・_tm_season.json・_tm_games.json）と、自分で割った90分あたり。
+# **選んだ理由・重なり確認（2026-11-04）**：player_pool.py list を市場価値の上位から見て、直近の紹介を出していない最上位が 22位のバリオス（10/21 のムシアラの回の予告に「22.パブロ・バリオス」と残っていた人）。
+#   scripts/・research/posted.json・covered.yaml を「バリオス／Barrios／775605」で grep：紹介・比べるは0件（20261021_player_581678 の予告の行だけ）。
+#   アトレティコは 11/1 にスタジアム紹介（20261101_stadium_atletico）を出しているが、選手紹介とは中身が別。11/5 のスタジアムはバルセロナ（picks.txt）。
+#   今季もラ・リーガの1部：TM の試合記録で 26/27 のラ・リーガ8試合（8/19〜10/31）、英語版Wikipedia（club_update 2026-10-31）も current club = Atlético Madrid・背番号8。現役。
+#   外した候補：24 シュロッターベック・26 ヌメチャ（どちらも値がバリオスより下）、32 佐野海舟（日本人で引きは強いが、10/28 に佐野のニュース本編・マインツのクラブ紹介があり近い）。
+# **数字の軸**：トップチームと代表の通算（全公式戦）：アトレティコ152試合8得点（ラ・リーガ107・2／国王杯15・2／欧州27・2／クラブW杯3・2）、スペイン代表4試合0得点 → 156試合8得点。
+#   英語版Wikipedia の通算表（2026-11-03 の試合まで）と TM の季ごとの数が一致。Bチーム（2022-23 セグンダ・フェデラシオン12試合1得点）は数えていない。
+#   市場価値（TM）：2022-09-26 に 10万ユーロ（アトレティコB、19歳）→ 2024-12 5000万 → 2025-12 6000万 → 2026-06 5500万 → 2026-10-05 7000万（最高）。7000÷10＝700倍。
+#   季ごと（クラブの全公式戦、TM）：24/25 44試合・3267分・3得点4アシスト（90分あたり得点＋アシスト 0.19）／25/26 35試合・2452分・1得点3アシスト（0.15）／26/27 12試合・817分・1得点1アシスト（0.22）。
+# **一次情報・出典**：英語版Wikipedia（下部組織・デビュー・背番号・五輪・代表）、Wikipedia「Football at the 2024 Summer Olympics – Men's tournament – Knockout stage」（日本0-3スペイン、2024-08-02 リヨン）、
+#   Opta Analyst（2026-10-13 マンU戦の47秒の先制点、クラブのCLで2番目に早い得点）、ESPN の日程（11/8 ホームのバルセロナ戦）。
+#   本人の言葉：Soccerway（Flashscore）の記事「Estar en el primer equipo del Atlético es cumplir un sueño」（トップチーム昇格のころ、2023年1月ごろ）からスペイン語を訳した。
+# **入れなかったもの**：けがの部位・経過（欠場した試合の数だけ）、移籍の噂（チェルシー・PSG 等）、日本戦のアシスト（TM は1と記録するが、試合の記録で確かめられなかった）、W杯2026（出場の記録が無い）。
+# **写真**：Commons は五輪の円陣1枚だけ（Kilyann Le Hen、CC BY 4.0。顔は写っていない）。ほかは記事の主写真（que.es 2枚・Soccerway 2枚・esdiario 1枚）。透かしは無いが、元は通信社の写真の可能性がある（引き受ける危険）。
+date: 2026年11月5日
+slot: other_1
+format: news
+series: 有名選手の紹介
+people:
+- パブロ・バリオス
+theme:
+  id: player_775605
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: アトレティコ・マドリード
+  title: バリオスってどんな選手？ 10万ユーロの19歳は、なぜ700倍になったのか
+  question: パブロ・バリオスは、どこで値を上げ、いまのアトレティコで何を見せているのか
+  takeaway: 通算156試合8得点。市場価値は10万ユーロから7000万ユーロへ。今季は817分で1得点1アシスト、90分あたりの得点とアシストは0.22で、ここ3季でいちばん高い
+  nameplate: パブロ・バリオス｜アトレティコ・マドリード MF／スペイン代表
+  opening_image: assets/images/20261105_player_775605/s1/01_w.jpg
+  end_bg: assets/images/20261105_player_775605/e1/01_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+watch: 毎日、数字でサッカーを読み解きます
+short_title: パブロ・バリオスってどんな選手？
+thumbnail:
+  line1: バリオス、通算156試合8点
+  line2: 五輪で日本を破り金メダル
+  tags:
+  - アトレティコ・マドリード
+  photo: assets/images/20261105_player_775605/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261105_player_775605/s1/01_v.jpg
+sections:
+- id: hook
+  heading: 10万ユーロの19歳は、なぜアトレティコの8番になったのか
+  tier: 報道
+  telop: 10万ユーロから、7000万ユーロへ
+  narrator: 解説
+  card: &hook_card
+    type: stats
+    title: パブロ・バリオスの数字
+    items:
+    - - '10万'
+      - ユーロ
+      - 19歳のときの市場価値
+    - - '7000万'
+      - ユーロ
+      - いまの市場価値
+    - - '47'
+      - 秒
+      - 10月のマンU戦の先制点
+    focus: 1
+  say:
+  - text: アトレティコ・マドリードの背番号8、パブロ・バリオス。
+    image: assets/images/20261105_player_775605/q2/01_w.jpg
+    card: none
+  - text: 2022年、19歳のときの市場価値は、10万ユーロでした。
+    image: assets/images/20261105_player_775605/s1/b.jpg
+    card:
+      <<: *hook_card
+      focus: 0
+  - text: いまは7000万ユーロ。なんと700倍です。
+    card:
+      <<: *hook_card
+      focus: 1
+    emph: true
+  - text: 10月のチャンピオンズリーグ、マンU戦では、開始47秒で先制ゴール。
+    card:
+      <<: *hook_card
+      focus: 2
+  - text: しかも子どものころは、町のライバル、レアル・マドリードの下部組織にいた選手です。
+    image: assets/images/20261105_player_775605/e1/01_w.jpg
+    card: none
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/pablo-barrios/profil/spieler/775605
+  - https://theanalyst.com/articles/atletico-madrid-vs-man-utd-stats-champions-league-10-2026
+  - https://en.wikipedia.org/wiki/Pablo_Barrios_(footballer)
+- id: data
+  heading: バリオスは、いまどこで、いくらと見られている選手か
+  tier: 報道
+  telop: パブロ・バリオスの基礎DATA
+  narrator: 解説
+  card: &data_card
+    type: table
+    title: パブロ・バリオス（アトレティコ・マドリード）
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 所属
+      - アトレティコ・マドリード（8番）
+    - - ポジション
+      - セントラルMF
+    - - 生年月日
+      - 2003年6月15日（23歳）
+    - - 出身
+      - スペイン・マドリード
+    - - 利き足
+      - 右足
+    - - 代表
+      - スペイン（4試合0得点）
+    - - 契約・市場価値
+      - 2030年まで・7000万ユーロ
+    source: Transfermarkt
+  say:
+  - text: バリオスの持ち場は、中盤の真ん中。セントラルミッドフィルダーです。
+    image: assets/images/20261105_player_775605/q2/01_w.jpg
+    card: none
+  - text: 生まれは2003年6月15日、マドリード。いま23歳です。
+    image: assets/images/20261105_player_775605/s2/b.jpg
+    card:
+      <<: *data_card
+      highlight_row: 2
+  - text: スペイン代表では、ここまで4試合に出ています。
+    card:
+      <<: *data_card
+      highlight_row: 5
+  - text: アトレティコとの契約は、2030年の夏まで。
+    card:
+      <<: *data_card
+      highlight_row: 6
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/pablo-barrios/profil/spieler/775605
+  - https://en.wikipedia.org/wiki/Pablo_Barrios_(footballer)
+- id: olympics
+  heading: バリオスは、パリ五輪で日本とどう戦ったのか
+  tier: 報道
+  telop: パリ五輪の6試合
+  narrator: 解説
+  card: &olympics_card
+    type: table
+    title: バリオス パリ五輪の6試合（2024年）
+    columns:
+    - 日付
+    - 試合
+    - 出場
+    rows:
+    - - 7月24日
+      - ウズベキスタン戦 2-1
+      - 90分
+    - - 7月27日
+      - ドミニカ共和国戦 3-1
+      - 66分
+    - - 7月30日
+      - エジプト戦 1-2
+      - 27分
+    - - 8月2日
+      - 準々決勝 日本戦 3-0
+      - 90分
+    - - 8月5日
+      - 準決勝 モロッコ戦 2-1
+      - 62分
+    - - 8月9日
+      - 決勝 フランス戦 5-3
+      - 120分
+    source: Transfermarkt
+    highlight_row: 0
+  say:
+  - text: 日本のサッカーファンが、この選手を見ていた試合があります。
+    image: assets/images/20261105_player_775605/o1/01_w.jpg
+    card: none
+  - text: 2024年のパリ五輪。バリオスは、スペインの6試合すべてに出ました。
+    card:
+      <<: *olympics_card
+      highlight_row: 0
+  - text: 8月2日の準々決勝は、リヨンでの日本戦。
+    card:
+      <<: *olympics_card
+      highlight_row: 3
+  - text: バリオスは90分出場し、スペインが3対0で勝っています。
+    card:
+      <<: *olympics_card
+      highlight_row: 3
+    emph: true
+  - text: 準決勝はモロッコに2対1。
+    card:
+      <<: *olympics_card
+      highlight_row: 4
+  - text: 決勝はパリでのフランス戦。延長までもつれて、5対3でした。
+    image: assets/images/20261105_player_775605/o1/01_w.jpg
+    card: none
+  - text: バリオスは120分を戦い抜き、金メダルを手にしました。
+    card: none
+  - text: 同じ年の11月、中盤の選手2人のけがで、スペイン代表に初めて呼ばれます。
+    image: assets/images/20261105_player_775605/q2/01_w.jpg
+    card: none
+  - text: 11月18日のスイス戦で、途中から11分。これがA代表のデビューでした。
+    card: none
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Football_at_the_2024_Summer_Olympics_%E2%80%93_Men%27s_tournament_%E2%80%93_Knockout_stage
+  - https://www.transfermarkt.com/pablo-barrios/leistungsdatendetails/spieler/775605
+  - https://en.wikipedia.org/wiki/Pablo_Barrios_(footballer)
+- id: career
+  heading: レアルの下部組織にいた少年は、どうやってアトレティコの8番になったのか
+  tier: 背景
+  telop: レアルの下部組織から、アトレティコへ
+  narrator: 解説
+  card: &career_card
+    type: timeline
+    title: バリオスの歩み
+    rows:
+    - - '2011'
+      - レアル・マドリードの下部組織へ
+    - - '2017'
+      - アトレティコの下部組織へ
+    - - '2022'
+      - 19歳でラ・リーガのデビュー
+    - - '2023'
+      - トップチームに昇格、背番号24
+    - - '2024'
+      - 背番号8を受け継ぐ
+    focus: '2011'
+  say:
+  - text: バリオスがサッカーを始めたのは、マドリードの町のクラブでした。
+    image: assets/images/20261105_player_775605/s1/01_w.jpg
+    card: none
+  - text: 2011年、レアル・マドリードの下部組織へ。
+    image: assets/images/20261105_player_775605/s1/b.jpg
+    card:
+      <<: *career_card
+      focus: '2011'
+  - text: そして2017年、町のライバルのアトレティコに移ります。
+    card:
+      <<: *career_card
+      focus: '2017'
+  - text: 2022年10月29日、カディス戦の途中出場で、ラ・リーガにデビュー。
+    card:
+      <<: *career_card
+      focus: '2022'
+  - text: 2023年1月には、トップチームに正式に上がります。
+    card:
+      <<: *career_card
+      focus: '2023'
+  - text: その年の3月、市場価値は500万ユーロ。ここから一気に伸びていきます。
+    image: assets/images/20261105_player_775605/s2/01_w.jpg
+    card: none
+  - text: 2024年の夏、下部組織の先輩サウールがクラブを離れます。
+    card: none
+  - text: 空いた背番号8を受け継いだのが、バリオスでした。
+    image: assets/images/20261105_player_775605/s2/b.jpg
+    card:
+      <<: *career_card
+      focus: '2024'
+    emph: true
+  - text: 市場価値は、その年の12月に5000万ユーロまで上がります。
+    card:
+      <<: *career_card
+      focus: '2024'
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Pablo_Barrios_(footballer)
+  - https://www.transfermarkt.com/pablo-barrios/marktwertverlauf/spieler/775605
+- id: past
+  heading: バリオスは、各季で何試合に出て、いくつ点に絡んだのか
+  tier: 報道
+  telop: アトレティコでの5季
+  narrator: 解説
+  card: &past_card
+    type: table
+    title: バリオス 各季の数字（全公式戦・クラブのみ）
+    columns:
+    - シーズン
+    - 試合
+    - 出場時間
+    - 得点
+    - アシスト
+    rows:
+    - - 22/23
+      - '26'
+      - 913分
+      - '2'
+      - '1'
+    - - 23/24
+      - '35'
+      - 1978分
+      - '1'
+      - '2'
+    - - 24/25
+      - '44'
+      - 3267分
+      - '3'
+      - '4'
+    - - 25/26
+      - '35'
+      - 2452分
+      - '1'
+      - '3'
+    - - 26/27
+      - '12'
+      - 817分
+      - '1'
+      - '1'
+    source: Transfermarkt
+    highlight_row: 0
+  say:
+  - text: バリオスの、アトレティコでの季ごとの数字です。
+    image: assets/images/20261105_player_775605/s2/b.jpg
+    card:
+      <<: *past_card
+      highlight_row: 0
+  - text: いちばん出たのは2024年から25年のシーズン。44試合、3267分です。
+    card:
+      <<: *past_card
+      highlight_row: 2
+    emph: true
+  - text: この季はクラブワールドカップのシアトル戦で、1人で2得点もしています。
+    card:
+      <<: *past_card
+      highlight_row: 2
+  - text: 次の2025年から26年は35試合。けがで、20試合以上を欠場しました。
+    card:
+      <<: *past_card
+      highlight_row: 3
+  - text: 続いて通算です。アトレティコでは152試合で8得点。
+    image: assets/images/20261105_player_775605/s1/b.jpg
+    card: &total_card
+      type: table
+      title: バリオス 通算（トップチームと代表）
+      columns:
+      - 所属
+      - 試合
+      - 得点
+      rows:
+      - - アトレティコ・マドリード
+        - '152'
+        - '8'
+      - - スペイン代表
+        - '4'
+        - '0'
+      - - 合計
+        - '156'
+        - '8'
+      source: Transfermarkt
+      highlight_row: 0
+  - text: スペイン代表を足すと、通算156試合で8得点になります。
+    card:
+      <<: *total_card
+      highlight_row: 2
+  - text: 点を取るより、真ん中でボールを運び、つなぐのが持ち場の選手です。
+    card: none
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/pablo-barrios/leistungsdatendetails/spieler/775605
+  - https://en.wikipedia.org/wiki/Pablo_Barrios_(footballer)
+- id: season
+  heading: 今季のバリオスは、アトレティコで何を見せているのか
+  tier: 報道
+  main: true
+  telop: 今季ここまで
+  narrator: 解説
+  card: &season_card
+    type: table
+    title: 今季のバリオス（11月3日まで）
+    columns:
+    - 大会
+    - 内容
+    rows:
+    - - ラ・リーガ
+      - 8試合・527分・0得点1アシスト
+    - - チャンピオンズリーグ
+      - 4試合・290分・1得点
+    source: Transfermarkt
+    highlight_row: 0
+  say:
+  - text: アトレティコの8番、バリオス。今季ここまでの中身を見ます。
+    image: assets/images/20261105_player_775605/e1/01_w.jpg
+    card: none
+    short_only: true
+  - text: ラ・リーガでは、8月29日のセビージャ戦でアシスト。3対1の勝利です。
+    image: assets/images/20261105_player_775605/s1/b.jpg
+    card:
+      <<: *season_card
+      highlight_row: 0
+  - text: 9月の半ばには、けがで3試合を欠場しました。
+    card: none
+  - text: 10月10日に戻ると、その3日後にマンUとの一戦が来ます。
+    image: assets/images/20261105_player_775605/e1/01_w.jpg
+    card: none
+  - text: 味方のバエナのパスを受けて、開始47秒で先制ゴール。
+    image: assets/images/20261105_player_775605/s1/b.jpg
+    card:
+      <<: *season_card
+      highlight_row: 1
+    emph: true
+  - text: アトレティコのチャンピオンズリーグで、2番目に早い得点でした。
+    card:
+      <<: *season_card
+      highlight_row: 1
+  - text: 試合は2対0。アトレティコの、今季のチャンピオンズリーグ初勝利です。
+    card: none
+  - text: 合わせて今季は、12試合で1得点1アシスト。
+    image: assets/images/20261105_player_775605/q2/01_w.jpg
+    card: none
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/pablo-barrios/leistungsdatendetails/spieler/775605
+  - https://theanalyst.com/articles/atletico-madrid-vs-man-utd-stats-champions-league-10-2026
+- id: words
+  heading: バリオスは、トップチームに上がったとき何を語ったのか。本人の言葉
+  tier: 報道
+  telop: 本人の言葉
+  narrator: 解説
+  card: &words_card
+    type: document
+    label: トップチームに上がったころの言葉（訳）
+    paragraphs:
+    - 夢をかなえたようなものです。テレビで見ていたロッカールームとスタッフの一員になれるなんて、信じられない。
+    - チョロは、落ち着いてと言ってくれる。Bチームでいつもやってきたように、やればいいと。
+    highlight:
+    - 夢をかなえた
+    - 落ち着いて
+  say:
+  - text: トップチームに上がったころの、バリオスの言葉です。
+    image: assets/images/20261105_player_775605/s2/b.jpg
+    card: none
+  - voice: バリオス
+    text: 夢をかなえたようなものです。
+    card: *words_card
+  - voice: バリオス
+    text: テレビで見ていたロッカールームとスタッフの、
+    card: *words_card
+    cont: true
+  - voice: バリオス
+    text: 一員になれるなんて、信じられない。
+    card: *words_card
+    cont: true
+    pause: 0.5
+  - text: チョロとは、シメオネ監督のあだ名です。
+    image: assets/images/20261105_player_775605/s1/b.jpg
+    card: none
+  - voice: バリオス
+    text: チョロは、落ち着いてと言ってくれる。
+    card: *words_card
+  - voice: バリオス
+    text: Bチームでいつもやってきたように、やればいいと。
+    card: *words_card
+    cont: true
+    pause: 0.5
+  - text: テレビで見ていた側から、いまはその真ん中で8番を背負う側になりました。
+    image: assets/images/20261105_player_775605/q2/01_w.jpg
+    card: none
+  quotes_from:
+  - Soccerway https://es.soccerway.com/noticias/pablo-barrios-estar-en-el-primer-equipo-del-atletico-es-cumplir-un-sueno/jJmZflof
+  sources:
+  - https://es.soccerway.com/noticias/pablo-barrios-estar-en-el-primer-equipo-del-atletico-es-cumplir-un-sueno/jJmZflof
+- id: view
+  heading: ここ3季で、バリオスの数字は何が変わったのか
+  tier: 背景
+  viewpoint: true
+  narrator: 解説
+  telop: 3つの季を、同じ物差しで
+  card: &view_card
+    type: table
+    title: バリオス クラブの全公式戦（11月3日まで）
+    columns:
+    - 項目
+    - 24/25
+    - 25/26
+    - 26/27
+    rows:
+    - - 出場
+      - 44試合
+      - 35試合
+      - 12試合
+    - - 出場時間
+      - 3267分
+      - 2452分
+      - 817分
+    - - 得点＋アシスト
+      - '7'
+      - '4'
+      - '2'
+    - - 90分あたり
+      - '0.19'
+      - '0.15'
+      - '0.22'
+    - - 季末の市場価値
+      - 5500万
+      - 5500万
+      - 7000万（10月）
+    source: Transfermarkt
+    highlight_row: 0
+  say:
+  - text: 締めくくりに、バリオスのここ3つの季を、同じ物差しで並べます。
+    image: assets/images/20261105_player_775605/s2/b.jpg
+    card:
+      <<: *view_card
+      highlight_row: 0
+  - text: ゴールとアシストの合計を、90分あたりに直すと、2024年から25年は0.19。
+    card:
+      <<: *view_card
+      highlight_row: 3
+  - text: けがの多かった昨季は0.15。
+    card:
+      <<: *view_card
+      highlight_row: 3
+  - text: 今季はここまで0.22。3つの季で、いちばん高い数字です。
+    card:
+      <<: *view_card
+      highlight_row: 3
+    emph: true
+    mark:
+      kind: circle
+      row: 3
+  - text: 市場価値も、昨季の終わりの5500万ユーロから、10月にはこれまでで最高の値へ。
+    card:
+      <<: *view_card
+      highlight_row: 4
+  - text: ただし今季はまだ817分。昨季の3分の1ほどの時間で出た数字です。
+    image: assets/images/20261105_player_775605/e1/01_w.jpg
+    card: none
+  - text: 数字は、11月4日時点のもの。
+    card: none
+  - text: 次は11月8日、ホームでのバルセロナ戦。
+    card: none
+  - text: 中盤の真ん中で、この数字がどこまで伸びるかに注目です。
+    card: none
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/pablo-barrios/leistungsdatendetails/spieler/775605
+  - https://www.transfermarkt.com/pablo-barrios/marktwertverlauf/spieler/775605

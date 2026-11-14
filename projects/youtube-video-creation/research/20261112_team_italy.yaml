@@ -1,0 +1,438 @@
+# 代表チーム紹介 イタリア代表（11/11 作成。固定シリーズ9「代表チーム紹介」。見本は 11/10 のコロンビア代表 scripts/20261110_team_colombia.md）。7節：フック→基礎DATA（板）→日本との関係→歴史と転機（年表）→看板選手（表）→いまのチーム→見立て。
+# **選んだ理由**：W杯優勝4回の国が3大会続けて本大会を逃している（2018・2022・2026）という軸と、日本との対戦3試合（1936年五輪0-8・2001年1-1・2013年コンフェデ杯3-4）が揃っていて、2013年は日本が2点リードしていた。代表チーム紹介は未出（scripts/・research/posted.json・research/covered.yaml を grep。イタリア代表が主役の本は無い。10/10〜10/11 の記録系の台本に名前が出るだけ）。11/10 のブッフォンの回とは別日で、時間が空いたので重ならない。
+# **外した候補**：韓国（11/14 の別本として作る）、アメリカ・セネガル・モロッコ・スイス・デンマーク（日本との接点がイタリアほど強い軸にならない）、インドネシア・タイ（2027年アジアカップ組で日本の次の公式戦の相手だが大物ではない。次の機会）。
+# **軸**：「優勝4回の国が、3大会続けてW杯を逃した。日本は3度戦って未勝利だが、2013年は2点リードしていた」。答えは見立ての節（自分で数えて割る）。
+# ---- 確かめたこと（2026-11-11。requests で Wikipedia の生の wikitext を読んだ。WebFetch の要約は使っていない）----
+#  ・FIFAランク：15位（Module:SportsRankings/data/FIFA World Rankings、updated 7 October 2026）。日本は17位。点数は書かない。
+#  ・W杯：優勝4回（1934・1938・1982・2006）、18大会出場（Italy at the FIFA World Cup の冒頭）。2018・2022・2026は予選敗退（同じ記事の表で3大会が Did not qualify）。ユーロ：優勝1968・2020（infobox）。最多出場ブッフォン176、最多得点リーヴァ35。愛称 Gli Azzurri。主将ドンナルンマ（infobox・現招集メンバー表）。
+#  ・日本との全対戦（Japan national football team records and statistics の表「ITA 1936 2013 3 0 1 2 4 13」。Japan national football team results (2010–2019)・(2000–2009)・records の五輪表）：1936年ベルリン五輪準々決勝 0-8／2001-11-07 キリンチャレンジ杯（埼玉スタジアム2002）1-1／2013-06-19 コンフェデ杯 3-4（レシフェ）。2020年以降の日本の試合に ITA は無い（results (2020–present) を grep して0件）。W杯での対戦は無い（Japan at the FIFA World Cup の表で ITA は主催国の行にしか出ない）。
+#  ・2013-06-19（2013 FIFA Confederations Cup Group A の試合の枠）：日本の得点は本田21分（PK）・香川33分・岡崎69分。イタリアはデ・ロッシ41分・内田のオウンゴール50分・バロテッリ52分（PK）・ジョヴィンコ86分。観衆40,489。日本の監督はザッケローニ（イタリア人。Japan national football team records の監督表で2010〜2014、55試合）。MOMは香川。
+#  ・2026年W杯予選（UEFA）：Group I はイタリア・ノルウェー・イスラエル・エストニア・モルドバ。ノルウェーに2025-06-06 0-3（オスロ）・2025-11-16 1-4。予選全体（プレーオフ込み）10試合7勝1分2敗24得点13失点（Italy at the FIFA World Cup の2026の行）。→自分で数えた：ノルウェー2試合は1得点7失点、のこり8試合は23得点6失点。
+#  ・プレーオフ（2026 FIFA World Cup qualification – UEFA second round）：準決勝 2026-03-26 イタリア2-0北アイルランド（ベルガモ、トナーリ56分・ケアン80分）。決勝 2026-03-31 ボスニア・ヘルツェゴビナ1-1イタリア（ゼニツァ、ケアン15分・タバコヴィッチ79分）、延長でも動かずPK戦1-4で敗退（エスポジト・クリスタンテが失敗、トナーリは成功）。
+#  ・監督：ガットゥーゾ（2025年6月就任）→2026年4月10日にU21のバルディーニ監督が6月の親善試合の暫定指揮（Italy national football team の本文）→2026年7月28日、新会長マラゴーが「ロベルト・マンチーニの代表監督復帰」とクラウディオ・ラニエーリの技術部長就任を発表（figc.it が出典）。マンチーニは2018年5月14日に就任、2023年8月に辞任（約5年）。ユーロ2020優勝時の監督。ガットゥーゾが辞めた理由は確かめていないので言わない。
+#  ・W杯のあと（Italy national football team の試合の枠）：6/3 ルクセンブルク0-1イタリア／6/7 ギリシャ0-1イタリア（どちらもU21中心）。ネーションズリーグ2026-27 Aリーグ：9/25 イタリア0-2ベルギー（ローマ）、9/28 トルコ1-4イタリア（バストーニ9分・フラッテージ22分・カヨーデ27分・Pエスポジト50分）、10/2 フランス1-1イタリア（オリーズ55分・バストーニ68分）、10/5 イタリア3-1トルコ。→2勝1分1敗8得点5失点。次は 11/12 フランス（サン・シーロ）、11/15 ベルギー（ブリュッセル）。
+#  ・W杯優勝後（2006のあと）：2010年 グループ3試合0勝2分1敗4-5、2014年 3試合1勝0分2敗2-3（Italy at the FIFA World Cup の表）。→2大会6試合1勝2分3敗。
+#  ・看板選手（年齢は2026-11-11時点、生年月日から計算。所属は招集メンバー表の club、2026-10-05時点の出場数）：ドンナルンマ（マンチェスター・シティ、GK、1999-02-25）27・87試合／バストーニ（インテル、DF、1999-04-13）27・46試合5得点／バレッラ（インテル、MF、1997-02-07）29・73試合10得点／トナーリ（トッテナム、MF、2000-05-08）26・36試合4得点／ピオ・エスポジト（インテル、FW、2005-06-28）21・13試合7得点／カラフィオーリ（アーセナル、DF、2002-05-19）24・17試合1得点。
+# ---- 言わないもの ----
+#  ・ガットゥーゾの退任の理由／ミラン・ユヴェントスの内部事情／八百長・賭博の話／過去の事故（スペルガ）／戦術の説明／私生活・怪我／審判の判定への不満。
+# ---- 写真（assets/images/20261112_team_italy/、出典は credits.json）----
+#  ・2025年6月 オスロの先発11人（MichaelEmilio、CC BY 4.0）。2021年7月 ユーロ優勝杯とマッタレッラ大統領（Presidenza della Repubblica。ライセンスタグ未確認＝要確認）。2012年ユーロ決勝の先発（Football.ua のタグ、656px と小さい）。マンチーニ（Fars News のタグ、466px と小さい）。代理店・放送映像は使っていない。日本戦の写真は Commons に見つからず無い。
+#  ・基礎DATAの板の中身は research/raw/20261112_team_italy_board.json（tools/clubdata.py で assets/stats/tb_italy_data*.png を描いた）。
+date: 2026年11月12日（情報は11月11日時点）
+slot: other_1
+format: news
+series: 代表チーム紹介
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+short_photos:
+- assets/images/20261112_team_italy/b01_xi2025_v.jpg
+- assets/images/20261112_team_italy/b02_euro2020_v.jpg
+people:
+- イタリア代表
+- ロベルト・マンチーニ
+- ジャンルイジ・ドンナルンマ
+- アルベルト・ザッケローニ
+- 本田圭佑
+- 香川真司
+theme:
+  id: team_italy
+  league: japan
+  league_name: イタリア代表
+  kind: preview
+  topic: イタリア代表
+  title: イタリア代表は、日本がまだ勝てない相手。優勝4度の国が、なぜW杯を逃したのか
+  question: イタリアは日本に3度戦って未勝利だが、W杯優勝4回の国が、なぜ3大会続けて本大会に出られていないのか
+  lead: 日本が、まだ勝てていない優勝4度の国。
+  hook: ''
+  opening_image: assets/stats/tb_italy_data_t.png
+  end_bg: assets/images/20261112_team_italy/b01_xi2025_w.jpg
+  takeaway: イタリアのW杯予選は10試合で24得点13失点。ノルウェーとの2試合だけで7失点で、のこり8試合は23得点6失点だった。プレーオフはPK戦で敗れて3大会連続の予選敗退。マンチーニ監督は7月に復帰し、ネーションズリーグは4試合で2勝1分1敗。11月はフランス、ベルギーと戦う。
+thumbnail:
+  board: assets/stats/tb_italy_data.png
+  short_photo: assets/images/20261112_team_italy/b01_xi2025_v.jpg
+  line1: イタリア代表
+  line2: W杯優勝4度、日本は未勝利
+  crest_main:
+  - イタリア
+  tags:
+  - イタリア代表
+  - ワールドカップ
+  - 日本代表
+  - 日本対イタリア
+  - マンチーニ
+  - 代表チーム紹介
+sections:
+- id: hook
+  heading: 優勝4度のイタリアに、日本はまだ勝てていない
+  main: true
+  tier: 背景
+  telop: 日本は、イタリアと3度戦って未勝利
+  narrator: 解説
+  say:
+  - text: ヨーロッパのイタリア代表。フィファランクは15位の国です。
+    short_only: true
+    image: assets/stats/tb_italy_data_t.png
+    no_telop: true
+  - text: ワールドカップで4度優勝した国に、日本は3度戦って、一度も勝てていません。
+    image: assets/stats/tb_italy_data_t.png
+    no_telop: true
+  - text: 戦績は、日本から見て0勝1分け2敗。ワールドカップで戦ったことはありません。
+    image: assets/stats/tb_italy_data_r1.png
+    no_telop: true
+  - text: いちばん惜しかったのは、2013年のコンフェデレーションズカップ。**3対4**の負けでした。
+    image: assets/stats/tb_italy_data_r1.png
+    no_telop: true
+    emph: true
+  - text: ところがそのイタリアは、2026年のワールドカップに、出られませんでした。3大会続けてです。
+    image: assets/images/20261112_team_italy/b01_xi2025_w.jpg
+    no_telop: true
+  - text: 優勝4度の国は、なぜ本大会を逃し続けているのでしょうか。
+    image: assets/stats/tb_italy_data_t.png
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Italy_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_records_and_statistics
+- id: data
+  heading: イタリア代表は、どんな数字を持つ国なのか
+  tier: 背景
+  telop: イタリア代表の基礎DATA
+  narrator: 解説
+  say:
+  - text: イタリアのフィファランクは、10月7日の発表で**15位**。日本は17位です。
+    image: assets/stats/tb_italy_data0.png
+    no_telop: true
+  - text: ワールドカップの優勝は4回。1934年、1938年、1982年、2006年です。
+    image: assets/stats/tb_italy_data1.png
+    no_telop: true
+  - text: ヨーロッパ選手権は、1968年と2020年大会で優勝しました。
+    image: assets/stats/tb_italy_data2.png
+    no_telop: true
+  - text: 監督は、ロベルト・マンチーニ。7月に、代表監督への復帰が発表されました。
+    image: assets/stats/tb_italy_data4.png
+    no_telop: true
+  - text: 主将は、ゴールキーパーのドンナルンマです。
+    image: assets/stats/tb_italy_data5.png
+    no_telop: true
+  - text: 代表の最多出場は、ブッフォンの176試合です。
+    image: assets/stats/tb_italy_data7.png
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Module:SportsRankings/data/FIFA_World_Rankings
+  - https://en.wikipedia.org/wiki/Italy_national_football_team
+  - https://en.wikipedia.org/wiki/Italy_at_the_FIFA_World_Cup
+- id: japan
+  heading: 日本は、イタリアとどう戦ってきたのか
+  tier: 背景
+  telop: 通算3試合、日本から見て0勝1分2敗
+  narrator: 解説
+  card: &id_jp
+    type: table
+    title: 日本とイタリアの試合（全3試合）
+    columns:
+    - 年月
+    - 大会
+    - 日本から見た結果
+    rows:
+    - - 1936年
+      - ベルリン五輪 準々決勝
+      - 0-8
+    - - 2001年11月
+      - キリンチャレンジ杯
+      - 1-1
+    - - 2013年6月
+      - コンフェデ杯
+      - 3-4
+  say:
+  - text: 3試合を、年代順にたどります。
+    image: assets/stats/tb_italy_data8.png
+    card: *id_jp
+  - text: 最初は1936年、ベルリン五輪の準々決勝です。0対8の負けでした。
+    card:
+      <<: *id_jp
+      highlight_row: 0
+  - text: 2001年は、埼玉スタジアムでのキリンチャレンジ杯。1対1の引き分けです。
+    image: assets/images/20261112_team_italy/b03_oslo_arrival_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 1
+  - text: 2013年、各大陸の王者が集まるコンフェデレーションズカップ。
+    image: assets/images/20261112_team_italy/b01_xi2025_w.jpg
+    card: none
+  - text: 前半、本田圭佑のPKと香川真司のゴールで、日本が2点をリードしました。
+    card:
+      <<: *id_jp
+      highlight_row: 2
+  - text: 前半41分にデ・ロッシが1点を返し、後半5分に内田篤人のオウンゴール。
+    card:
+      <<: *id_jp
+      highlight_row: 2
+  - text: 2分後には、バロテッリがPKを決めて、イタリアが逆転します。
+    card:
+      <<: *id_jp
+      highlight_row: 2
+  - text: 日本は岡崎慎司のゴールで追いつきましたが、86分にジョヴィンコに決められました。
+    image: assets/images/20261112_team_italy/b02_euro2020_w.jpg
+    card: none
+  - text: この試合の日本の監督は、イタリア人のザッケローニでした。
+    emph: true
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_records_and_statistics
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(2000%E2%80%932009)
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(2010%E2%80%932019)
+  - https://en.wikipedia.org/wiki/2013_FIFA_Confederations_Cup_Group_A
+- id: history
+  heading: イタリアは、どうやって世界の頂点に立ったのか
+  tier: 背景
+  telop: W杯4度、欧州選手権2度の優勝
+  narrator: 解説
+  card: &id_hist
+    type: timeline
+    title: イタリア代表の歩み
+    rows:
+    - - 1934・38年
+      - W杯で連覇
+    - - 1968年
+      - 欧州選手権で初優勝
+    - - 1982年
+      - W杯3度目の優勝
+    - - 2006年
+      - W杯4度目の優勝
+    - - 2021年
+      - ユーロ2020で優勝
+    - - 2026年
+      - W杯予選のプレーオフで敗退
+    focus: 2006年
+  say:
+  - text: イタリアは1934年と1938年、ワールドカップで2大会続けて優勝。
+    image: assets/images/20261112_team_italy/b03_oslo_arrival_w.jpg
+    card: *id_hist
+  - text: 1968年には、ヨーロッパ選手権で初めての優勝です。
+    card:
+      <<: *id_hist
+      highlight_row: 1
+  - text: 3度目のワールドカップ優勝は1982年。4度目は2006年でした。
+    image: assets/images/20261112_team_italy/b01_xi2025_w.jpg
+    card:
+      <<: *id_hist
+      highlight_row: 3
+  - text: 2006年のあと、ワールドカップに出たのは2010年と2014年の2大会だけです。
+    card: none
+  - text: その6試合は、1勝2分け3敗。2大会とも、1次リーグで敗退しました。
+    card: none
+  - text: それでも、ヨーロッパでは強さを見せます。
+    image: assets/images/20261112_team_italy/b02_euro2020_w.jpg
+    card: none
+  - text: 2021年に、ユーロ2020で優勝。監督は、いまと同じマンチーニでした。
+    card:
+      <<: *id_hist
+      highlight_row: 4
+  - text: ただ、その翌年の2022年のワールドカップには、出られませんでした。
+    image: assets/images/20261112_team_italy/b04_euro_trophy_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Italy_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/Italy_national_football_team
+- id: players
+  heading: いまの看板選手は、誰なのか
+  tier: 背景
+  telop: 看板選手を、所属・名前・位置・年齢で
+  narrator: 解説
+  card: &id_pl
+    type: table
+    title: イタリア代表の看板選手
+    columns:
+    - 所属
+    - 名前
+    - 位置
+    - 年齢
+    rows:
+    - - マンC
+      - ドンナルンマ
+      - GK
+      - '27'
+    - - インテル
+      - バストーニ
+      - DF
+      - '27'
+    - - インテル
+      - バレッラ
+      - MF
+      - '29'
+    - - トッテナム
+      - トナーリ
+      - MF
+      - '26'
+    - - インテル
+      - ピオ・エスポジト
+      - FW
+      - '21'
+    - - アーセナル
+      - カラフィオーリ
+      - DF
+      - '24'
+  say:
+  - text: 11月に招集された、イタリアの看板選手です。
+    image: assets/images/20261112_team_italy/b01_xi2025_w.jpg
+    card: *id_pl
+  - text: 主将のドンナルンマは、マンチェスター・シティのゴールキーパーです。
+    card:
+      <<: *id_pl
+      highlight_row: 0
+  - text: 代表87試合は、今回の招集メンバーで最も多い数。
+    card:
+      <<: *id_pl
+      highlight_row: 0
+  - text: 守備のバストーニは、10月にフランスから1点を取り、引き分けに持ち込みました。
+    image: assets/images/20261112_team_italy/b02_euro2020_w.jpg
+    card:
+      <<: *id_pl
+      highlight_row: 1
+  - text: 中盤のバレッラは、2番目に多い73試合で、10得点を決めています。
+    card:
+      <<: *id_pl
+      highlight_row: 2
+  - text: トナーリは、プレーオフの北アイルランド戦で、先制点を決めました。
+    image: assets/images/20261112_team_italy/b01_xi2025_w.jpg
+    card: none
+  - text: 21歳のピオ・エスポジトは、代表13試合で7得点。2試合に1点より多いペースです。
+    card:
+      <<: *id_pl
+      highlight_row: 4
+  sources:
+  - https://en.wikipedia.org/wiki/Italy_national_football_team
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_qualification_%E2%80%93_UEFA_second_round
+- id: now
+  heading: ワールドカップのあとのイタリアは、いまどうなっているのか
+  tier: 背景
+  telop: ネーションズリーグは4試合で2勝1分1敗
+  narrator: 解説
+  card: &id_nw
+    type: table
+    title: 2026-27ネーションズリーグ イタリアの4試合
+    columns:
+    - 日付
+    - 相手
+    - イタリアの結果
+    rows:
+    - - 9月25日
+      - ベルギー
+      - 0-2
+    - - 9月28日
+      - トルコ（敵地）
+      - 4-1
+    - - 10月2日
+      - フランス（敵地）
+      - 1-1
+    - - 10月5日
+      - トルコ
+      - 3-1
+  say:
+  - text: 3月のプレーオフは、本大会に出られるかを決める最後の関門でした。
+    image: assets/images/20261112_team_italy/b01_xi2025_w.jpg
+    card: none
+  - text: 準決勝は、北アイルランドに2対0の勝ち。
+    card: none
+  - text: 決勝は、ボスニア・ヘルツェゴビナと1対1のまま延長。PK戦は1対4でした。
+    card: none
+  - text: 7月28日、マンチーニが代表監督に戻ると発表されました。
+    image: assets/images/20261112_team_italy/b04_euro_trophy_w.jpg
+    card: none
+  - text: 2018年からの5年間で、ユーロ2020の優勝に導いた監督です。
+    card: none
+  - text: ネーションズリーグは、ヨーロッパの国どうしが戦う大会。
+    image: assets/images/20261112_team_italy/b02_euro2020_w.jpg
+    card: none
+  - text: イタリアは、その最上位のAリーグにいます。
+    card: none
+  - text: 復帰後は、4試合で2勝1分け1敗。
+    image: assets/images/20261112_team_italy/b01_xi2025_w.jpg
+    card: *id_nw
+  - text: 9月25日は、ベルギーに0対2の負け。
+    card:
+      <<: *id_nw
+      highlight_row: 0
+  - text: 3日後のトルコ戦は、4対1の勝ちです。
+    card:
+      <<: *id_nw
+      highlight_row: 1
+  - text: バストーニ、フラッテージ、カヨーデ、ピオ・エスポジトが決めました。
+    card:
+      <<: *id_nw
+      highlight_row: 1
+  - text: フランスと1対1で引き分け、10月5日のトルコ戦は3対1。
+    card:
+      <<: *id_nw
+      highlight_row: 3
+  - text: 次は、11月12日にミラノでフランス、15日にブリュッセルでベルギーと戦います。
+    image: assets/images/20261112_team_italy/b03_oslo_arrival_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Italy_national_football_team
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_qualification_%E2%80%93_UEFA_second_round
+- id: viewpoint
+  viewpoint: true
+  heading: イタリアは、なぜW杯を3大会続けて逃したのか
+  tier: 背景
+  telop: ノルウェー2試合で7失点。のこり8試合は6失点
+  narrator: 解説
+  card: &id_vp
+    type: table
+    title: イタリア W杯予選（プレーオフ込み）の点
+    columns:
+    - 区切り
+    - 試合
+    - 得点
+    - 失点
+    rows:
+    - - ノルウェー戦
+      - '2'
+      - '1'
+      - '7'
+    - - のこりの試合
+      - '8'
+      - '23'
+      - '6'
+    - - 予選の全体
+      - '10'
+      - '24'
+      - '13'
+  say:
+  - text: 見立てです。ワールドカップ予選を、ノルウェー戦とのこりに分けて数えます。
+    image: assets/images/20261112_team_italy/b01_xi2025_w.jpg
+    card: none
+  - text: 予選の全体は、24得点13失点。7勝1分け2敗でした。
+    card:
+      <<: *id_vp
+      highlight_row: 2
+  - text: 2敗は、どちらもノルウェー戦。0対3と1対4で、7点を失っています。
+    emph: true
+    mark:
+      kind: circle
+      row: 0
+      col: 失点
+    card:
+      <<: *id_vp
+      highlight_row: 0
+  - text: ノルウェーとの2試合だけで、予選の失点13のうち、半分以上です。
+    card:
+      <<: *id_vp
+      highlight_row: 0
+  - text: イタリアはのこりの8試合で、23得点6失点。プレーオフの2試合も入っています。
+    mark:
+      kind: circle
+      row: 1
+      col: 得点
+    card:
+      <<: *id_vp
+      highlight_row: 1
+  - text: そのうちボスニア戦は、延長まで戦って同点のまま。決着はPK戦でした。
+    image: assets/images/20261112_team_italy/b03_oslo_arrival_w.jpg
+    card: none
+  - text: 11月のフランス戦とベルギー戦で、守りが戻るのか。それが注目点です。
+    image: assets/images/20261112_team_italy/b04_euro_trophy_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Italy_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_qualification_%E2%80%93_UEFA_second_round
+  - https://en.wikipedia.org/wiki/Italy_national_football_team

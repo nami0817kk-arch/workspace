@@ -1,0 +1,387 @@
+# クラブの財政：リーズ・ユナイテッド（11/14 土、シリーズ「クラブの財政」、key: finance_leeds、型は news）。
+#
+# 題材の選び方：11/12 のブレントフォード（デロイト28位）の次。デロイトの順で未出のクラブは、29位フラメンゴ（ブラジル）・30位マルセイユ（決算が一次で読めない）しか残らないので、
+#   一次の決算（Companies House）が読めて、今季プレミアにいる大きめのクラブへ広げた。リーズは 2024-25 に2部で優勝した年の決算で、「昇格の年の財政」が他の財政回と軸が違う。
+#   外した候補：ノッティンガム・フォレスト（決算は読めるが、日本との接点・軸が弱い）、エヴァートン（女子チーム絡みで外す）、ウルヴス（今季2部）。
+#   日本人（田中碧）が所属し、決算書の本文にも名前がある（日本との接点・ヒットの条件）。
+#
+# 重なりの確認（2026-11-11）：scripts/*finance_* にリーズは無い。直近30日のリーズの本は、10/16 ユニフォーム・10/18〜19 田中碧のニュース・10/26 スタジアム・11/8 田中碧のニュース（別のシリーズ）。
+#   財政の切り口は無い。research/20261112_picks.txt に同日のクラブは無い（11/14 の他の担当と別）。
+# ★今季も1部：ESPN の 2026-27 English Premier League 順位表 API（2026-11-11 取得）で 9位・勝点14・10試合。台本では順位を言わない（小さく見せない）。
+# ★日本との接点：決算書の Strategic Report に「Ao Tanaka」が、決算の年に加わった選手として書かれている（永久移籍の獲得）。台本は「この年に加わった選手の1人が、日本代表の田中碧」とだけ言う。
+#
+# 軸は「**2部優勝・勝ち点100の年に、赤字は4918万ポンド。それを埋めたのは、親会社の出資1億800万ポンドだった。プレミアに上がると、何が変わるのか**」。
+#   ★他の財政回と軸を重ねない：11/12 ブレントフォード＝給料の重さと売却の時間差、11/10 ボーンマス＝売却益、11/8 パレス＝勝つと費用が増える。今回は「出資で赤字を埋める」と「昇格で条件が付く支払い」。
+#   ★ブレントフォードと同じ「リーグの分配」の話は、2部では収入の約33%と小さい、と1行だけ。
+#   ★決算のあとの2025-26 の数字は出ていない。台本は決算の1年（2024-25）と、決算書に書かれた条件付きの支払い（2025/26 の成績に応じる）だけ。
+#   ★オーナー（親会社）の個人名は言わない。決算の「controlling party」の記載の範囲（アメリカの会社が親会社）だけ。
+#
+# **出どころ（読んだもの）**
+#   ○ Leeds United Football Club Limited（会社番号 06233875）Consolidated Financial Statements for the year ended 30 June 2025（Companies House、2026-04-12 提出、34頁、監査 Gibson Booth、画像PDF。頁を画像にして目で読んだ）
+#       https://find-and-update.company-information.service.gov.uk/company/06233875/filing-history/MzUxMzY0MzA3NWFkaXF6a2N4/document?format=pdf&download=0
+#       Strategic Report p.2：「securing promotion back to the Premier League ... with the club winning the title with 100 points」
+#            「permanent additions were made to the squad with the arrivals of Jayden Bogle, Alex Cairns, Ao Tanaka, Largie Ramazani, Joe Rodon, Isaac Schmidt」
+#            「A fine 17 game unbeaten run began in December and lasted until March, which included a 7-0 home win against Cardiff City」「Promotion ... following the 6-0 victory over Stoke City at Elland Road. The league title was then secured on the final day ... 2-1 victory away at Plymouth Argyle, the club's sixth victory in a row」
+#            「partnering with global leader in the energy drink and sports media sectors Red Bull on a new multi-year sponsorship deal, with BOXT moving from the front of the shirt to the sleeve」
+#            「Record breaking numbers for ticketing and membership sales」「record breaking sales for the away shirt, with 15,000 sold on the first day」
+#       p.3 KPI：「increase in turnover from £127.6m to £136.8m driven by strong commercial revenues」（本文は136.8。損益計算書は136.989。台本は損益計算書と注4の値を使う）「Ticketing revenues increased by 3% from £30.6m to £31.7m」
+#            「other commercial revenue ... increased by £16.2m from £9.5m to £25.7m」（注4は25.890。台本は注4の値）「the only club in the United Kingdom's third biggest metropolitan area」
+#       p.13 損益計算書（£、2025／2024）：Turnover 136,989,330／127,558,280、Cost of sales (21,973,543)／(26,243,272)、Gross profit 115,015,787／101,315,008、Administrative expenses (183,417,168)／(177,568,583)、
+#            Operating loss (68,401,381)／(76,253,575)、Gain on disposal of players' registrations 24,765,848／33,694,289、Interest receivable 6,527,809／3,395,256、Interest payable (12,070,164)／(21,647,455)、
+#            Loss before taxation (49,177,888)／(60,811,485)、Tax –／–
+#       p.22 注4 Turnover：Gate receipts 31,647,912／30,633,661、Television and broadcasting income 1,619,209／2,626,275、Merchandising income 24,560,557／25,410,723、Central distributions 45,609,311／51,017,155、
+#            Other commercial revenue 25,890,452／9,496,047、Catering income 7,614,479／8,314,712、Educational services 47,410／59,707
+#       p.23 注5 Amortisation of intangible assets 45,727,629／59,590,307。注7 Staff costs：Wages and salaries 90,806,450／73,952,221、Social security 11,648,886／9,797,841、Pension 268,918／280,374、計 102,724,254／84,030,436
+#       p.24 注11：「The company has losses of approximately £296 million (2024: £291 million) to carry forward against future profits.」
+#       p.31 注26 Contingencies：「future payments of up to £22,742,918 (2024: £9,580,109) may be payable dependent on the club's retention of (2024: promotion to) FA Premier League status and/or players appearances for the club. ... may also incur bonuses payable of £39,454,389 (2024: £19,247,061) conditional on the performance of both players and football management throughout the 2025/26 season.」
+#            注27 Related party：「Capital contributions 107,996,000 (2024: 140,736,100) ... £44,750,000 in July 2024; £25,000,000 in September 2024; £8,246,000 in October 2024; and £30,000,000 in June 2025; from a shareholder of the company.」
+#       p.32 注28：「49ers Enterprises Global Football Group LLC, a company registered in USA, is the immediate and ultimate parent company.」
+#   ○ ESPN 順位表 API（2026-11-11）：9位 Leeds United 14点 10試合（台本には入れない）
+#   × 確かめられなかったもの：売った選手ごとの売却益の内訳（決算に無い）、昇格後のプレミアの分配金の額（決算のあとの数字。台本に入れない）、2025-26 の決算（まだ出ていない）、
+#     出資の「shareholder」が1つの会社かどうか（注27の記載のまま「親会社」と言わず「株主」の範囲）→ 台本は「株主」と言い、親会社の名前は出さない。
+#
+# 自分で計算した数（検算済み）
+#   損益の底：−68.401＋24.766＋6.528−12.070＝−49.177 ✓（決算 −49.178、丸め）。前の年：−76.254＋33.694＋3.395−21.647＝−60.812 ✓（決算 −60.811）
+#   収入の増え：136.989−127.558＝9.431→約940万（+7.4%）
+#   リーグの分配の割合：45.609÷136.989＝33.3%→約33%。減り：51.017−45.609＝5.408→約540万
+#   入場料の増え：31.648−30.634＝1.014→約100万（+3.3%）。その他の商業：25.890−9.496＝16.394→約1640万、25.890÷9.496＝2.73→約2.7倍
+#   グッズ：24.561−25.411＝−0.850→約85万の減り
+#   人件費：102.724÷136.989＝75.0%→75%／84.030÷127.558＝65.9%→約66%。増え 102.724−84.030＝18.694→約1870万
+#   選手の償却：45.728−59.590＝−13.863→約1390万の減り
+#   営業損益：−76.254→−68.401（7.853 縮んだ→約790万）
+#   選手を売った利益：33.694→24.766（減り 8.928→約890万）
+#   利息など（受取−支払）：2025 6.528−12.070＝−5.542／2024 3.395−21.647＝−18.252。差 12.710→約1270万
+#   運営の費用（売上原価＋管理費）：205.391／203.812、差 1.579→約160万の増え
+#   waterfall：−60.811＋9.431−1.579−8.928＋12.710＝−49.177 ✓
+#   出資：44.75＋25.0＋8.246＋30.0＝107.996→約1億800万。÷赤字 107.996÷49.178＝2.196→約2.2倍。前の年 140.736→約1億4070万
+#   条件付きの支払い：22.743＋39.454＝62.197→約6220万。前の年 9.580＋19.247＝28.827。62.197÷28.827＝2.157→約2.2倍。÷赤字 62.197÷49.178＝1.265→約1.3倍
+#
+# 写真：assets/images/20261114_finance_leeds/（出典は credits.json）。01〜03 本拠地エランド・ロード（Commons、Arne Müseler CC BY-SA 3.0 de／Lufc83 CC BY-SA 3.0・4.0）、
+#   04〜06 田中碧（クラブ公式の写真。10/18〜11/8 の田中碧の回の再利用。出どころは credits.json）。
+date: 2026年11月11日
+slot: other_1
+format: news
+series: クラブの財政
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- リーズ
+- 田中碧
+theme:
+  end_bg: assets/images/20261114_finance_leeds/01_w.jpg
+  id: finance_leeds
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: リーズ
+  title: リーズ、2部優勝の年に赤字4918万ポンド。昇格で何が変わるのか
+  question: リーズは2024-25に、2部で勝ち点100の優勝をして昇格した。その年の決算は、4918万ポンドの赤字。埋めたのは、株主の出資1億800万ポンドだった。プレミアに上がると、何が変わるのか
+  lead: 勝ち点100で優勝した年に、赤字4918万ポンド。リーズ。
+  opening_image: assets/images/20261114_finance_leeds/01_w.jpg
+  takeaway: リーズの2024-25の決算（クラブの運営会社の年次報告、監査済み）は、2部で勝ち点100の優勝をした年で、収入は1億3699万ポンド（約940万の増え）。2部のリーグからの分配は約33%と小さく、増えたのはスポンサーなどの商業収入（約1640万の増え）。人件費は約1870万増えて収入の約75%、税引き前は4918万ポンドの赤字（前の年は6081万）。それを埋めたのは株主の出資1億800万ポンドで、赤字の約2.2倍。決算には、プレミアの順位などに応じて払う条件付きの支払いが最大約6220万ポンド（前の年の約2.2倍）書かれている。昇格で変わるのは、収入の形と、条件付きの支払いの重さ
+  short_title: リーズ、2部優勝でも赤字4918万ポンド
+thumbnail:
+  layout: number
+  crest_pos: right
+  photo: assets/images/20261114_finance_leeds/01_w.jpg
+  short_photo: assets/images/20261114_finance_leeds/04_w_v.jpg
+  number: 100点
+  line1: リーズ 2部優勝
+  line2: それでも赤字4918万ポンド
+  callouts: [株主が1億800万入れた]
+  tags:
+  - リーズ
+  - プレミアリーグ
+  - クラブの財政
+  - 田中碧
+  - チャンピオンシップ
+sections:
+- id: rev
+  heading: 優勝の年の収入は、何でできているのか
+  tier: 報道
+  telop: 収入は1億3699万ポンド。リーグの分配は約33%
+  narrator: 解説
+  card: &rev_bars
+    type: bars
+    title: リーズの収入の内訳（2024-25、百万ポンド）
+    unit: 百万ポンド
+    items:
+    - {label: リーグの分配, value: 45.6}
+    - {label: 入場料, value: 31.6}
+    - {label: スポンサーなど商業, value: 25.9, highlight: true}
+    - {label: グッズ, value: 24.6}
+    - {label: 飲食など, value: 9.3}
+  say:
+  - text: リーズの最新の決算は、2026年4月に公表されています。
+    image: assets/images/20261114_finance_leeds/01_w.jpg
+    card: none
+  - text: 2024年から25年のシーズン、リーズは2部で戦いました。
+    image: assets/images/20261114_finance_leeds/02_w.jpg
+    card: none
+  - text: 12月から3月まで、17試合負けませんでした。カーディフには7対0。
+    image: assets/images/20261114_finance_leeds/03_w.jpg
+    card: none
+  - text: 結果は、勝ち点100で優勝。昇格はストーク戦の6対0で決まり、優勝は最終節でした。
+    image: assets/images/20261114_finance_leeds/01_w.jpg
+    card: none
+  - text: その1年の収入は、1億3699万ポンド。前の年から、約940万の増えです。
+    emph: true
+    card: *rev_bars
+  - text: ただし、プレミアのような巨額の放映権は、2部にはありません。
+    card: *rev_bars
+  - text: リーグからの分配は4561万ポンド。収入の約33%にとどまります。
+    card:
+      <<: *rev_bars
+      items:
+      - {label: リーグの分配, value: 45.6, highlight: true}
+      - {label: 入場料, value: 31.6}
+      - {label: スポンサーなど商業, value: 25.9}
+      - {label: グッズ, value: 24.6}
+      - {label: 飲食など, value: 9.3}
+  - text: 前の年から、約540万ポンド減っています。
+    image: assets/images/20261114_finance_leeds/01_w.jpg
+    card: none
+  - text: かわりに伸びたのが、スポンサーなどの商業収入です。
+    image: assets/images/20261114_finance_leeds/02_w.jpg
+    card: none
+  - text: 949万から2589万ポンドへ。約2.7倍です。
+    emph: true
+    card:
+      <<: *rev_bars
+      items:
+      - {label: リーグの分配, value: 45.6}
+      - {label: 入場料, value: 31.6}
+      - {label: スポンサーなど商業, value: 25.9, highlight: true}
+      - {label: グッズ, value: 24.6}
+      - {label: 飲食など, value: 9.3}
+  - text: 決算は、エナジードリンクのレッドブルとの複数年契約を挙げています。
+    image: assets/images/20261114_finance_leeds/03_w.jpg
+    card: none
+  - text: 入場料も、約100万増えて3165万ポンド。
+    card: none
+    image: assets/images/20261114_finance_leeds/02_w.jpg
+  - text: チケットとシーズン会員は、過去最高の売れ行きでした。
+    card: none
+  - text: この年に加わった選手の1人が、日本代表の田中碧です。
+    image: assets/images/20261114_finance_leeds/04_w.jpg
+    card: none
+  sources:
+  - https://find-and-update.company-information.service.gov.uk/company/06233875/filing-history/MzUxMzY0MzA3NWFkaXF6a2N4/document?format=pdf&download=0
+- id: cost
+  heading: 優勝の年に、給料はどこまで増えたのか
+  tier: 報道
+  telop: 人件費は約1870万の増え。収入の約75%
+  narrator: 解説
+  card: &cost_table
+    type: table
+    title: リーズの収入と費用（百万ポンド）
+    columns: &ct_cols [項目, 2023-24, 2024-25]
+    rows: &ct_rows
+    - [収入の合計, '127.6', '137.0']
+    - [人件費, '84.0', '102.7']
+    - [選手の償却, '59.6', '45.7']
+    - [営業損益, −76.3, −68.4]
+    - [収入に占める人件費, 66%, 75%]
+    highlight_row: 1
+  say:
+  - text: リーズのお金の出ていくほうを見ます。人件費は、8403万から1億272万ポンド。
+    emph: true
+    card: *cost_table
+  - text: 約1870万の増えで、収入の増えの2倍にあたります。
+    card: *cost_table
+  - text: 人件費の割合は、約66%から75%に。
+    image: assets/images/20261114_finance_leeds/04_w.jpg
+    card: none
+  - text: 優勝の年に、給料を増やして戦ったことになります。
+    image: assets/images/20261114_finance_leeds/06_w.jpg
+    card: none
+  - text: 働く人は、平均1415人。うち1123人は、試合の日だけのスタッフです。
+    image: assets/images/20261114_finance_leeds/03_w.jpg
+    card: none
+  - text: いっぽう、償却は減りました。
+    card:
+      <<: *cost_table
+      highlight_row: 2
+  - text: 償却は、買った選手の値段を、契約の年数に分けて毎年の費用にする計算です。
+    image: assets/images/20261114_finance_leeds/02_w.jpg
+    card: none
+  - text: 5959万から4573万ポンド。約1390万の減りです。
+    card:
+      <<: *cost_table
+      highlight_row: 2
+  - text: 営業損益は、7625万から6840万ポンドの赤字に縮みました。
+    emph: true
+    card:
+      <<: *cost_table
+      highlight_row: 3
+  - text: それでも、赤字は赤字です。
+    image: assets/images/20261114_finance_leeds/01_w.jpg
+    card: none
+  sources:
+  - https://find-and-update.company-information.service.gov.uk/company/06233875/filing-history/MzUxMzY0MzA3NWFkaXF6a2N4/document?format=pdf&download=0
+- id: sale
+  main: true
+  heading: 4918万ポンドの赤字を、誰が埋めたのか
+  tier: 報道
+  telop: 株主の出資は1億800万ポンド。赤字の約2.2倍
+  narrator: 解説
+  card: &sale_table
+    type: table
+    title: リーズの損益（百万ポンド）
+    columns: &st_cols [項目, 2023-24, 2024-25]
+    rows: &st_rows
+    - [営業損益, −76.3, −68.4]
+    - [選手を売った利益, '+33.7', '+24.8']
+    - [利息など, −18.3, −5.5]
+    - [税引き前の損益, −60.8, −49.2]
+    highlight_row: 3
+  say:
+  - text: リーズは、2部で優勝した年に、赤字でした。昇格の年も、お金は足りていませんでした。
+    short_only: true
+    image: assets/images/20261114_finance_leeds/01_w.jpg
+    card: none
+  - text: 売却の利益は、2477万ポンド。前の年より約890万、減っています。
+    card:
+      <<: *sale_table
+      highlight_row: 1
+  - text: 利息なども、減りました。
+    image: assets/images/20261114_finance_leeds/02_w.jpg
+    card:
+      <<: *sale_table
+      highlight_row: 2
+  - text: 支払う利息が、2165万から1207万ポンドに。
+    image: assets/images/20261114_finance_leeds/02_w.jpg
+    card:
+      <<: *sale_table
+      highlight_row: 2
+  - text: 差し引きで、赤字は6081万から4918万ポンドへ。
+    emph: true
+    card:
+      <<: *sale_table
+      highlight_row: 3
+  - text: それでも、4918万ポンドの穴は残ります。
+    image: assets/images/20261114_finance_leeds/03_w.jpg
+    card: none
+  - text: 埋めたのは、株主からの出資です。
+    emph: true
+    card: &fund_bars
+      type: bars
+      title: 株主の出資（2024-25、百万ポンド）
+      unit: 百万ポンド
+      items:
+      - {label: 2024年7月, value: 44.75}
+      - {label: 2024年9月, value: 25.0}
+      - {label: 2024年10月, value: 8.2}
+      - {label: 2025年6月, value: 30.0}
+  - text: 7月に4475万、9月に2500万ポンド。
+    card: *fund_bars
+  - text: 10月に825万、翌年の6月に3000万ポンド。
+    card: *fund_bars
+  - text: 合わせて、約1億800万ポンド。赤字の約2.2倍です。
+    emph: true
+    card:
+      <<: *fund_bars
+      items:
+      - {label: 2024年7月, value: 44.75, highlight: true}
+      - {label: 2024年9月, value: 25.0, highlight: true}
+      - {label: 2024年10月, value: 8.2, highlight: true}
+      - {label: 2025年6月, value: 30.0, highlight: true}
+  - text: 前の年の出資は、1億4074万ポンドでした。
+    card: none
+    image: assets/images/20261114_finance_leeds/01_w.jpg
+  - text: 決算は、親会社がアメリカの会社だと記しています。
+    card: none
+    image: assets/images/20261114_finance_leeds/02_w.jpg
+  - text: この出資は、借金ではなく、クラブの資本として入ったお金です。
+    card: none
+  sources:
+  - https://find-and-update.company-information.service.gov.uk/company/06233875/filing-history/MzUxMzY0MzA3NWFkaXF6a2N4/document?format=pdf&download=0
+- id: view
+  viewpoint: true
+  heading: 見立て・リーズは、昇格で何が変わるのか
+  tier: 背景
+  telop: 条件付きの支払いは最大約6220万ポンド。前の年の約2.2倍
+  narrator: 解説
+  card: &view_wf
+    type: waterfall
+    title: リーズの税引き前の損益の動き（百万ポンド）
+    unit: 百万ポンド
+    start: &vw_start [2023-24の損益, -60.8]
+    steps: &vw_steps
+    - [収入, 9.4]
+    - [運営の費用, -1.6]
+    - [選手を売った利益, -8.9]
+    - [利息など, 12.7]
+    total: &vw_total [2024-25の損益, -49.2]
+  say:
+  - text: 見立てに入ります。まず、リーズの赤字が縮んだ理由を、順に見ます。
+    image: assets/images/20261114_finance_leeds/03_w.jpg
+    card: none
+  - text: 収入の増えと、利息の減りが、赤字を縮めました。
+    emph: true
+    card: *view_wf
+  - text: 売却の利益の減りは、赤字を広げた側です。
+    card:
+      type: waterfall
+      title: リーズの税引き前の損益の動き（百万ポンド）
+      unit: 百万ポンド
+      start: *vw_start
+      steps: *vw_steps
+      total: *vw_total
+      highlight: 選手を売った利益
+  - text: 赤字が縮んだのは、売ったからではなく、利息が減ったからです。
+    card: *view_wf
+  - text: 決算には、もう1つ、重い数字があります。
+    image: assets/images/20261114_finance_leeds/02_w.jpg
+    card: none
+  - text: プレミアに残ることなどが条件の支払いです。
+    emph: true
+    image: assets/images/20261114_finance_leeds/01_w.jpg
+    card: none
+  - text: 選手の移籍金のうち、最大2274万ポンド。
+    card: &view_table
+      type: table
+      title: 自分で割ってみた（リーズの決算）
+      columns: [比べ, 答え]
+      rows:
+      - [条件付きの支払い（合計）, 約6220万ポンド]
+      - [前の年の条件付きの支払い, 約2880万ポンド]
+      - [条件付きの支払い ÷ 赤字, 約1.3倍]
+      - [出資 ÷ 赤字, 約2.2倍]
+      highlight_row: 0
+    mark:
+      kind: circle
+      row: 0
+      col: 1
+  - text: 選手のボーナスなどで、最大3945万ポンド。
+    card:
+      <<: *view_table
+      highlight_row: 0
+  - text: 2025年から26年のシーズンの成績に応じて払います。
+    card:
+      <<: *view_table
+      highlight_row: 0
+  - text: 合わせて約6220万ポンド。前の年の、約2.2倍です。
+    emph: true
+    card:
+      <<: *view_table
+      highlight_row: 1
+  - text: 赤字の約1.3倍にあたります。
+    card:
+      <<: *view_table
+      highlight_row: 2
+  - text: 題への答えです。昇格で、収入の形が変わります。
+    image: assets/images/20261114_finance_leeds/03_w.jpg
+    card: none
+  - text: 2部では約33%だったリーグの分配が、プレミアでは大きな柱になる、と見ています。
+    image: assets/images/20261114_finance_leeds/02_w.jpg
+    card: none
+  - text: 同時に、条件付きの支払いも重くなりました。
+    image: assets/images/20261114_finance_leeds/01_w.jpg
+    card: none
+  - text: 次の決算の注目は、出資に頼らず、収入で給料を支えられるのか。
+    emph: true
+    image: assets/images/20261114_finance_leeds/03_w.jpg
+    card: none
+  sources:
+  - https://find-and-update.company-information.service.gov.uk/company/06233875/filing-history/MzUxMzY0MzA3NWFkaXF6a2N4/document?format=pdf&download=0

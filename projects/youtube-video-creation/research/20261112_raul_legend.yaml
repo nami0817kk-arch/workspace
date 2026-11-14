@@ -1,0 +1,669 @@
+# ラウール・ゴンサレス（元スペイン代表FW）の紹介。シリーズ「レジェンドの紹介（世界）」2026-11-12。型は 11/10 ブッフォンと同じ9節（フック→基礎DATA→日本との接点→歩み→持ち味→あの試合→記録と現役の終わり→マル秘話→見立て）。
+# **FotMob・DataMB・FBref・Sofascore・Transfermarkt は不使用**。数字は英語版 Wikipedia（Raúl González の成績表・本文、1998 Intercontinental Cup、2002 Intercontinental Cup、2000 UEFA Champions League final）と、自分で足した・割った値だけ。
+# **私生活・法的な問題は入れない**。引退後の役職（監督など）は台本で言わない。
+# **重なりの確認（2026-11-11）**：scripts/・research/covered.yaml・research/posted.json を「ラウール／Raúl」で grep。主役の回は無し。レジェンド既出（ジダン・ロナウジーニョ・シャビ・イニエスタ・ベッカム・ロナウド・アンリ・イブラヒモビッチ・マルディーニ・カカ・ジェラード・ドログバ・ピルロ・トッティ・カシージャス・デル・ピエロ・トーレス・ルーニー・ブッフォン）と重ならない。research/20261112_picks.txt 参照。
+# **引退の確認**：Wikipedia「On 16 October 2015 ... Raúl would retire at the end of the season」、Guardian 2015-11-16「New York Cosmos bid farewell to Raul with NASL title victory」（Soccer Bowl 2015、2015-11-15）。→ 選手としては現役ではない（2026年11月時点で49歳）。
+# **日本との接点**：①1998-12-01 トヨタカップ（東京・国立競技場）レアル・マドリード 2-1 ヴァスコ・ダ・ガマ。ナーザのオウンゴール25分で先制、ジュニーニョ56分で同点、ラウール83分で決勝点。最優秀選手はラウール（Wikipedia「1998 Intercontinental Cup」）。②2002-12-03 トヨタカップ（横浜・国際総合競技場）レアル・マドリード 2-0 オリンピア。ロナウド14分・グティ84分。ラウールは先発（左で背番号7、Wikipedia「2002 Intercontinental Cup」）。優勝の記録は本人の記事の Honours（1998・2002）と一致。
+# **数字の出どころと自分で足した値**
+# - 成績表（Wikipedia、公式戦）：レアル・マドリード 741試合323点（季ごとの合計と一致）、Real Madrid C 9試合16点・Real Madrid B 1試合0点、シャルケ 98試合40点、アル・サッド 61試合16点、ニューヨーク・コスモス 32試合9点。Career total 942試合404点（741+98+61+32+10=942、323+40+16+9+16=404 と一致）。スペイン代表 102試合44点。クラブと代表の合計 1044試合448点（自分で足した値：942+102、404+44）。**年代別代表は含めない**。
+# - クラブの得点記録：2009-02-15 スポルティング・ヒホン戦でディ・ステファノの307点を抜く（Wikipedia）。チャンピオンズリーグ71点（レアル66・シャルケ5。Wikipedia）。2011-02-15 バレンシア戦でヨーロッパの大会の得点でゲルト・ミュラーを抜く（Wikipedia）。
+# - スペイン代表：2002-09-07 ギリシャ戦で29点目、ヒエロの記録に並ぶ。2003-02-12 ドイツ戦（パルマ・デ・マヨルカ）で2点、記録を抜く（Wikipedia）。2002年からキャプテン、2006年に代表を退く。
+# - レアル・マドリードのチャンピオンズリーグ優勝：1998・2000・2002。ラウールは1999-2000・2000-01 の得点王（Wikipedia）。
+# **山場**：2000-05-24 チャンピオンズリーグ決勝、パリ（スタッド・ド・フランス）、バレンシア戦。39分モリエンテスの頭で先制、67分マクマナマンのボレー、75分ラウールがカウンターからカニサレスをかわして3点目、3-0（Wikipedia「2000 UEFA Champions League final」）。スペインのクラブどうしの初めての決勝。
+# **マル秘話**：①Real Madrid C で9試合16点、うち1試合で5点（対 CD Corralejo）。トップチームへはバルダーノ監督が引き上げた。②1999年10月、カンプ・ノウで得点して指を唇に当てた（Wikipedia）。③2002-03 は虫垂炎で入院、それでもリーグ16点（Wikipedia）。
+# **見立て（自分で足した・割った値）**：レアル・マドリードの季ごと（公式戦、試合/点）94-95 30/10、95-96 52/26、96-97 47/22、97-98 49/15、98-99 49/29、99-00 57/29、00-01 50/32、01-02 55/29、02-03 47/25、03-04 53/20、04-05 43/13、05-06 32/7、06-07 43/12、07-08 48/23、08-09 47/24、09-10 39/7（合計 741/323 と一致）。1998-99〜2001-02 の4季：試合 49+57+50+55=211、点 29+29+32+29=119、1季29.8点（4で割る）。ほかの12季：試合 741-211=530、点 323-119=204、1季17.0点。119÷323＝36.8%→37%。29.8÷17.0＝1.75→およそ1.8倍。10点以上の季は16季中14季（7点の季が05-06 と09-10）。
+# **入れなかったもの**：移籍の経緯・私生活・家族・監督としての経歴と現在の役職、ロナウドとの得点争い、ほかの選手との比較、左右どちらの足か（記述が怪しい）、「最多」「最年少」。
+# **読みで怪しいもの**：ラウール・ゴンサレス、ディ・ステファノ、ヴァスコ・ダ・ガマ、オリンピア、ロナウド、グティ、モリエンテス、マクマナマン、カニサレス、ヒエロ、ゲルト・ミュラー、シャルケ、アル・サッド、コスモス、カンプ・ノウ、コルラレホ、スポルティング・ヒホン。「2006-07」のような書き方はしない。
+title: ラウールは、どんな選手だった？ 323点は、いつ生まれたのか
+format: news
+short_title: ラウールは、どんな選手だった？
+series: レジェンドの紹介
+topic: ラウール・ゴンサレス
+date: 2026年11月11日
+slot: other_1
+people: [ラウール・ゴンサレス]
+watch: 毎日、数字でサッカーを読み解きます
+theme: {id: legend_raul, league: spain, league_name: ラ・リーガ, kind: other, topic: ラウール・ゴンサレス, title: ラウールは、どんな選手だった？ 323点は、いつ生まれたのか, question: レアル・マドリードで323点を決めたラウールは、その点をいつ積み上げたのか, takeaway: 323点のうち119点、37%は1998年から2002年の4シーズンに生まれた。1シーズン29.8点は、ほかの12シーズン（17.0点）のおよそ1.8倍。16シーズンのうち14シーズンで10点以上を決めている,
+  nameplate: ラウール・ゴンサレス｜元スペイン代表 FW, opening_image: assets/images/20261112_raul_legend/05_w.jpg, end_bg: assets/images/20261112_raul_legend/01_w.jpg, bgm: assets/audio/bgm_calm.wav, outro_title: 毎日、数字でサッカーを読み解きます}
+thumbnail:
+  line1: ラウール、通算1044試合
+  line2: レアルで323点、CL3度優勝
+  tags: [レアル・マドリード]
+  photo: assets/images/20261112_raul_legend/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261112_raul_legend/01_v.jpg
+sections:
+- id: hook
+  heading: ラウールは、何点を決めたのか
+  tier: 報道
+  telop: クラブと代表、21年の記録
+  say:
+  - text: レアル・マドリードで、323点を決めた選手がいます。
+    card: none
+    image: assets/images/20261112_raul_legend/01_w.jpg
+  - text: 2009年、往年の名選手ディ・ステファノの307点を抜き、クラブで1位に。
+    card: none
+    image: assets/images/20261112_raul_legend/02_w.jpg
+  - text: クラブと代表を合わせると、1044試合で448点。
+    card:
+      type: stats
+      title: ラウール・ゴンサレス 元FW（49歳）
+      items:
+      - - '448'
+        - 点
+        - クラブと代表の公式戦
+      - - '323'
+        - 点
+        - レアル・マドリード
+      - - '71'
+        - 点
+        - チャンピオンズリーグ
+      focus: 0
+    image: assets/images/20261112_raul_legend/03_w.jpg
+    emph: true
+    callword: 448点
+  - text: ラウール・ゴンサレス。チャンピオンズリーグでも、71点を決めています。
+    card:
+      type: stats
+      title: ラウール・ゴンサレス 元FW（49歳）
+      items:
+      - - '448'
+        - 点
+        - クラブと代表の公式戦
+      - - '323'
+        - 点
+        - レアル・マドリード
+      - - '71'
+        - 点
+        - チャンピオンズリーグ
+      focus: 2
+    image: assets/images/20261112_raul_legend/05_w.jpg
+  - text: そして日本とは、東京と横浜の、2つの試合で縁があります。
+    card: none
+    image: assets/images/20261112_raul_legend/01_w.jpg
+  - text: 17歳のデビューから38歳の引退まで。21年を、数字でたどります。
+    card: none
+    image: assets/images/20261112_raul_legend/02_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Ra%C3%BAl_Gonz%C3%A1lez
+- id: data
+  heading: ラウールは、いつ、どこで生まれ、どんな選手か
+  tier: 報道
+  telop: ラウールの基礎DATA
+  say:
+  - text: ラウールは1977年6月27日、スペインのマドリードに生まれました。
+    card:
+      type: table
+      title: ラウール・ゴンサレス
+      columns:
+      - 項目
+      - 内容
+      rows: &id001
+      - - 生年月日
+        - 1977年6月27日・スペイン
+      - - ポジション
+        - フォワード
+      - - クラブ
+        - レアル・マドリードほか
+      - - 代表
+        - スペイン代表 102試合
+      - - 現役を終えた
+        - 2015年・ニューヨーク・コスモス
+      highlight_row: 0
+    image: assets/images/20261112_raul_legend/03_w.jpg
+  - text: 身長は180センチ。ポジションはフォワードです。
+    card:
+      type: table
+      title: ラウール・ゴンサレス
+      columns:
+      - 項目
+      - 内容
+      rows: *id001
+      highlight_row: 1
+    image: assets/images/20261112_raul_legend/05_w.jpg
+  - text: 主なクラブは、レアル・マドリード。16年間、プレーしました。
+    card:
+      type: table
+      title: ラウール・ゴンサレス
+      columns:
+      - 項目
+      - 内容
+      rows: *id001
+      highlight_row: 2
+    image: assets/images/20261112_raul_legend/01_w.jpg
+  - text: スペイン代表では102試合。2002年には、代表の主将になりました。
+    card:
+      type: table
+      title: ラウール・ゴンサレス
+      columns:
+      - 項目
+      - 内容
+      rows: *id001
+      highlight_row: 3
+    image: assets/images/20261112_raul_legend/02_w.jpg
+  - text: 現役を終えたのは2015年、38歳のときです。
+    card:
+      type: table
+      title: ラウール・ゴンサレス
+      columns:
+      - 項目
+      - 内容
+      rows: *id001
+      highlight_row: 4
+    image: assets/images/20261112_raul_legend/03_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Ra%C3%BAl_Gonz%C3%A1lez
+- id: japan
+  heading: ラウールと日本には、どんな縁があったのか
+  tier: 報道
+  telop: 国立競技場の決勝点と、横浜の2度目の優勝
+  say:
+  - text: 日本との縁は、2回あります。ヨーロッパと南米の王者が戦う、トヨタカップです。
+    card:
+      type: timeline
+      title: ラウールと日本
+      rows: &id002
+      - - 1998年12月
+        - 東京でヴァスコ・ダ・ガマと対戦
+      - - 2002年12月
+        - 横浜でオリンピアと対戦
+      focus: 0
+      highlight_row: 0
+    image: assets/images/20261112_raul_legend/05_w.jpg
+  - text: 1回目は1998年12月1日、東京の国立競技場です。
+    card: none
+    image: assets/images/20261112_raul_legend/01_w.jpg
+  - text: 相手は、ブラジルのヴァスコ・ダ・ガマ。
+    card: none
+    image: assets/images/20261112_raul_legend/02_w.jpg
+  - text: 先制は、相手のオウンゴール。同点にされます。
+    card: none
+    image: assets/images/20261112_raul_legend/03_w.jpg
+  - text: 83分、ラウールが決勝点。2対1で勝ちました。
+    card: none
+    image: assets/images/20261112_raul_legend/05_w.jpg
+  - text: この試合の最優秀選手は、ラウールでした。
+    card: none
+    image: assets/images/20261112_raul_legend/01_w.jpg
+    emph: true
+  - text: 2回目は2002年12月3日、横浜の競技場。相手は、パラグアイのオリンピアです。
+    card:
+      type: timeline
+      title: ラウールと日本
+      rows: *id002
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261112_raul_legend/02_w.jpg
+  - text: ロナウドとグティのゴールで、2対0。ラウールも先発して、2回目の優勝です。
+    card: none
+    image: assets/images/20261112_raul_legend/03_w.jpg
+  - text: 東京で1回、横浜で1回。日本の競技場で、ヨーロッパの王者として戦いました。
+    card: none
+    image: assets/images/20261112_raul_legend/05_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Ra%C3%BAl_Gonz%C3%A1lez
+  - https://en.wikipedia.org/wiki/1998_Intercontinental_Cup
+  - https://en.wikipedia.org/wiki/2002_Intercontinental_Cup
+- id: career
+  heading: 17歳でデビューしたラウールは、どこでプレーしてきたのか
+  tier: 報道
+  telop: レアル・マドリードから、ドイツ、カタール、アメリカへ
+  say:
+  - text: ラウールは1994年、17歳でレアル・マドリードのトップチームへ。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: &id003
+      - - '1994'
+        - 17歳でトップチームに
+      - - '1998'
+        - チャンピオンズリーグ優勝
+      - - '2003'
+        - キャプテンに
+      - - '2010'
+        - ドイツのシャルケへ
+      - - '2012'
+        - カタールのアル・サッドへ
+      - - '2015'
+        - アメリカで現役を終える
+      focus: 0
+      highlight_row: 0
+    image: assets/images/20261112_raul_legend/01_w.jpg
+  - text: 最初のシーズンで、リーグ優勝を経験します。
+    card: none
+    image: assets/images/20261112_raul_legend/02_w.jpg
+  - text: 1998年、2000年、2002年。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *id003
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261112_raul_legend/03_w.jpg
+  - text: ラウールは、この5年で、ヨーロッパの王者に3回なりました。
+    card: none
+    image: assets/images/20261112_raul_legend/05_w.jpg
+  - text: 2000年の優勝は、クラブにとって通算8回目のヨーロッパ王者でした。
+    card: none
+    image: assets/images/20261112_raul_legend/01_w.jpg
+  - text: ラウールは2003年に、キャプテンを引き継ぎます。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *id003
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261112_raul_legend/02_w.jpg
+  - text: 2010年まで、その役目を務めました。
+    card: none
+    image: assets/images/20261112_raul_legend/03_w.jpg
+  - text: 2010年、ドイツのシャルケへ。2シーズンで98試合、40ゴールを挙げました。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *id003
+      focus: 3
+      highlight_row: 0
+    image: assets/images/20261112_raul_legend/05_w.jpg
+  - text: ラウールは2012年に、カタールのアル・サッドへ。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *id003
+      focus: 4
+      highlight_row: 0
+    image: assets/images/20261112_raul_legend/01_w.jpg
+  - text: そして2015年、アメリカのニューヨーク・コスモスへ移ります。
+    card: none
+    image: assets/images/20261112_raul_legend/02_w.jpg
+  - text: コスモスでの1シーズンを最後に、現役を終えました。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *id003
+      focus: 5
+      highlight_row: 0
+    image: assets/images/20261112_raul_legend/03_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Ra%C3%BAl_Gonz%C3%A1lez
+- id: style
+  heading: ラウールは、何で相手を上回ったのか
+  tier: 報道
+  telop: 点を取るだけではない、5つの持ち味
+  say:
+  - text: ラウールの位置は、センターフォワード。
+    card:
+      type: table
+      title: ラウールの持ち味
+      columns:
+      - 項目
+      - 中身
+      rows: &id004
+      - - 位置
+        - センターフォワード、トップ下
+      - - 武器1
+        - ボールを扱う技術と視野
+      - - 武器2
+        - 空中戦の強さ
+      - - 武器3
+        - どの距離からも決める力
+      - - 記録
+        - レッドカードは一度もなし
+      highlight_row: 0
+    image: assets/images/20261112_raul_legend/05_w.jpg
+  - text: FWの後ろで組み立てる、トップ下もこなしました。
+    card: none
+    image: assets/images/20261112_raul_legend/01_w.jpg
+  - text: 武器の1つ目は、ボールを扱う技術と、視野の広さ。
+    card:
+      type: table
+      title: ラウールの持ち味
+      columns:
+      - 項目
+      - 中身
+      rows: *id004
+      highlight_row: 1
+    image: assets/images/20261112_raul_legend/02_w.jpg
+  - text: 味方へのパスで、ゴールを演出する力もありました。
+    card: none
+    image: assets/images/20261112_raul_legend/03_w.jpg
+  - text: 2つ目は、空中戦の強さ。高いボールにも、頭で合わせました。
+    card:
+      type: table
+      title: ラウールの持ち味
+      columns:
+      - 項目
+      - 中身
+      rows: *id004
+      highlight_row: 2
+    image: assets/images/20261112_raul_legend/05_w.jpg
+  - text: 3つ目は、どの距離からでも決める力。ふわりと浮かすループシュートも、持ち味でした。
+    card:
+      type: table
+      title: ラウールの持ち味
+      columns:
+      - 項目
+      - 中身
+      rows: *id004
+      highlight_row: 3
+    image: assets/images/20261112_raul_legend/01_w.jpg
+  - text: そして、キャリアを通して、レッドカードは一度も受けていません。
+    card:
+      type: table
+      title: ラウールの持ち味
+      columns:
+      - 項目
+      - 中身
+      rows: *id004
+      highlight_row: 4
+    image: assets/images/20261112_raul_legend/02_w.jpg
+    emph: true
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Ra%C3%BAl_Gonz%C3%A1lez
+- id: match
+  heading: 2000年のチャンピオンズリーグ決勝で、ラウールは何を決めたのか
+  tier: 報道
+  main: true
+  telop: パリの決勝、75分の3点目
+  say:
+  - text: ラウール・ゴンサレス。
+    card: none
+    image: assets/images/20261112_raul_legend/03_w.jpg
+    short_only: true
+  - text: チャンピオンズリーグの決勝で、勝利を決めるゴールがありました。
+    card: none
+    image: assets/images/20261112_raul_legend/05_w.jpg
+    short_only: true
+  - text: 2000年5月24日、パリ。決勝は、スペインのクラブどうしの対戦でした。
+    card: none
+    image: assets/images/20261112_raul_legend/01_w.jpg
+  - text: レアル・マドリードの相手は、バレンシア。
+    card: none
+    image: assets/images/20261112_raul_legend/02_w.jpg
+  - text: 39分、モリエンテスのヘディングで先制します。
+    card:
+      type: timeline
+      title: 2000年5月24日 CL決勝 バレンシア戦
+      rows: &id005
+      - - 39分
+        - モリエンテスが頭で先制
+      - - 67分
+        - マクマナマンのボレー
+      - - 75分
+        - ラウールが3点目
+      focus: 0
+      highlight_row: 0
+    image: assets/images/20261112_raul_legend/03_w.jpg
+  - text: 67分には、マクマナマンの豪快なボレー。2対0と、リードを広げます。
+    card:
+      type: timeline
+      title: 2000年5月24日 CL決勝 バレンシア戦
+      rows: *id005
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261112_raul_legend/05_w.jpg
+  - text: そして終盤。バレンシアのコーナーキックを、レアルがはね返します。
+    card: none
+    image: assets/images/20261112_raul_legend/01_w.jpg
+  - text: カウンターで抜け出したラウールが、キーパーのカニサレスをかわします。
+    card:
+      type: timeline
+      title: 2000年5月24日 CL決勝 バレンシア戦
+      rows: *id005
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261112_raul_legend/02_w.jpg
+    emph: true
+    callword: 75分
+  - text: ゴールネットを揺らしました。
+    card: none
+    image: assets/images/20261112_raul_legend/03_w.jpg
+  - text: 結果は3対0の勝ち。ラウールは、この大会で10点を決めて、得点王にもなりました。
+    card: none
+    image: assets/images/20261112_raul_legend/05_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/2000_UEFA_Champions_League_final
+  - https://en.wikipedia.org/wiki/Ra%C3%BAl_Gonz%C3%A1lez
+- id: after
+  heading: ラウールは、どんな記録を残して現役を終えたのか
+  tier: 報道
+  telop: 3つの得点記録と、38歳の最後の優勝
+  say:
+  - text: 2003年2月、ドイツとの試合で2得点。
+    card:
+      type: timeline
+      title: 記録と、現役の終わり
+      rows: &id006
+      - - 2003年2月
+        - 代表の得点記録を更新
+      - - 2009年2月
+        - レアルの得点記録を更新
+      - - 2011年2月
+        - ヨーロッパの大会の得点記録を更新
+      - - 2015年11月
+        - 優勝とともに現役を終える
+      focus: 0
+      highlight_row: 0
+    image: assets/images/20261112_raul_legend/01_w.jpg
+  - text: 元主将ヒエロの29点を抜いて、代表の記録を更新しました。
+    card: none
+    image: assets/images/20261112_raul_legend/02_w.jpg
+  - text: 2009年2月には、レアル・マドリードで、ディ・ステファノの記録を超えました。
+    card:
+      type: timeline
+      title: 記録と、現役の終わり
+      rows: *id006
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261112_raul_legend/03_w.jpg
+  - text: 2011年2月には、バレンシアとの試合でゴール。
+    card:
+      type: timeline
+      title: 記録と、現役の終わり
+      rows: *id006
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261112_raul_legend/05_w.jpg
+  - text: ヨーロッパの大会の得点で、名手ゲルト・ミュラーを抜きます。
+    card: none
+    image: assets/images/20261112_raul_legend/01_w.jpg
+  - text: 2015年10月、コスモスで、今季限りの引退を発表します。
+    card: none
+    image: assets/images/20261112_raul_legend/02_w.jpg
+  - text: 11月15日、北米リーグの決勝。コスモスが3対2で優勝します。
+    card:
+      type: timeline
+      title: 記録と、現役の終わり
+      rows: *id006
+      focus: 3
+      highlight_row: 0
+    image: assets/images/20261112_raul_legend/03_w.jpg
+  - text: ラウールは、3点目をアシストしました。
+    card: none
+    image: assets/images/20261112_raul_legend/05_w.jpg
+  - text: 17歳で始まった現役生活は、38歳で、優勝とともに終わりました。
+    card: none
+    image: assets/images/20261112_raul_legend/01_w.jpg
+    emph: true
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Ra%C3%BAl_Gonz%C3%A1lez
+  - https://www.theguardian.com/football/2015/nov/15/new-york-cosmos-bid-farewell-to-raul-with-nasl-title-victory
+- id: secret
+  heading: ラウールには、どんな意外な話があるのか
+  tier: 報道
+  telop: 1試合5点、指を唇に、そして虫垂炎
+  say:
+  - text: ラウールには、知られていない話が、3つあります。
+    card: none
+    image: assets/images/20261112_raul_legend/02_w.jpg
+  - text: 1つ目。17歳のころ、レアル・マドリードのCチームで、9試合16点。
+    card:
+      type: table
+      title: 知られざる、3つの話
+      columns:
+      - いつ
+      - 何があったか
+      rows: &id007
+      - - 17歳のころ
+        - Cチームで9試合16点
+      - - 1999年10月
+        - カンプ・ノウで指を唇に
+      - - 2002年から2003年
+        - 虫垂炎でも16点
+      highlight_row: 0
+    image: assets/images/20261112_raul_legend/03_w.jpg
+  - text: なかには、1人で5点を取った試合も。
+    card: none
+    image: assets/images/20261112_raul_legend/05_w.jpg
+  - text: この活躍のあと、トップチームに引き上げられます。
+    card: none
+    image: assets/images/20261112_raul_legend/01_w.jpg
+  - text: 2つ目。1999年10月、敵地カンプ・ノウで、ゴールを決めたラウール。
+    card:
+      type: table
+      title: 知られざる、3つの話
+      columns:
+      - いつ
+      - 何があったか
+      rows: *id007
+      highlight_row: 1
+    image: assets/images/20261112_raul_legend/02_w.jpg
+  - text: ほぼ10万人の観客の前で、指を唇に当てて、静かに、のポーズ。
+    card: none
+    image: assets/images/20261112_raul_legend/03_w.jpg
+    emph: true
+  - text: 3つ目。2002年から2003年にかけてのシーズン、虫垂炎で入院します。
+    card:
+      type: table
+      title: 知られざる、3つの話
+      columns:
+      - いつ
+      - 何があったか
+      rows: *id007
+      highlight_row: 2
+    image: assets/images/20261112_raul_legend/05_w.jpg
+  - text: それでも、リーグ戦で16点。チームは、リーグを制しました。
+    card: none
+    image: assets/images/20261112_raul_legend/01_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Ra%C3%BAl_Gonz%C3%A1lez
+- id: view
+  heading: 323点は、どの時期に生まれたのか
+  tier: 背景
+  viewpoint: true
+  telop: 323点の37%は、4シーズンに
+  say:
+  - text: 最後に、323点を、どの時期に決めたのかで見ます。
+    card:
+      type: table
+      title: レアル・マドリードの得点（公式戦）
+      columns:
+      - 期間
+      - シーズン
+      - 試合
+      - 得点
+      - 1季の得点
+      rows: &id008
+      - - 1998年から2002年
+        - '4'
+        - '211'
+        - '119'
+        - '29.8'
+      - - ほかの12シーズン
+        - '12'
+        - '530'
+        - '204'
+        - '17.0'
+      highlight_row: 0
+    image: assets/images/20261112_raul_legend/02_w.jpg
+  - text: 1998年から2002年の、4シーズン。211試合で、119点です。
+    card:
+      type: table
+      title: レアル・マドリードの得点（公式戦）
+      columns:
+      - 期間
+      - シーズン
+      - 試合
+      - 得点
+      - 1季の得点
+      rows: *id008
+      highlight_row: 0
+    image: assets/images/20261112_raul_legend/03_w.jpg
+  - text: 323点の37%を、16シーズンのうち、4シーズンで決めました。
+    card:
+      type: table
+      title: レアル・マドリードの得点（公式戦）
+      columns:
+      - 期間
+      - シーズン
+      - 試合
+      - 得点
+      - 1季の得点
+      rows: *id008
+      highlight_row: 0
+    image: assets/images/20261112_raul_legend/05_w.jpg
+  - text: 1シーズンあたり、29.8点。
+    card:
+      type: table
+      title: レアル・マドリードの得点（公式戦）
+      columns:
+      - 期間
+      - シーズン
+      - 試合
+      - 得点
+      - 1季の得点
+      rows: *id008
+      highlight_row: 0
+    image: assets/images/20261112_raul_legend/01_w.jpg
+    mark:
+      kind: circle
+      row: 0
+      col: 4
+    emph: true
+  - text: ほかの12シーズンは、530試合で204点。1シーズンは17.0点です。
+    card:
+      type: table
+      title: レアル・マドリードの得点（公式戦）
+      columns:
+      - 期間
+      - シーズン
+      - 試合
+      - 得点
+      - 1季の得点
+      rows: *id008
+      highlight_row: 1
+    image: assets/images/20261112_raul_legend/02_w.jpg
+  - text: ピークの4シーズンは、ほかのおよそ1.8倍のペースでした。
+    card:
+      type: table
+      title: レアル・マドリードの得点（公式戦）
+      columns:
+      - 期間
+      - シーズン
+      - 試合
+      - 得点
+      - 1季の得点
+      rows: *id008
+      highlight_row: 1
+    image: assets/images/20261112_raul_legend/03_w.jpg
+    mark:
+      kind: circle
+      row: 1
+      col: 4
+  - text: ピークの外でも、16シーズン中14シーズンで、10点以上です。
+    card: none
+    image: assets/images/20261112_raul_legend/05_w.jpg
+  - text: 17歳のデビューから、38歳の最後の試合まで。それが、ラウール・ゴンサレスです。
+    card: none
+    image: assets/images/20261112_raul_legend/01_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Ra%C3%BAl_Gonz%C3%A1lez

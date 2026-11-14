@@ -1,0 +1,130 @@
+# 取材メモ（2026年11月14日）菅原由勢、W杯のブラジル戦の教訓。「0分から90分までスキなくやることが大事」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-14。requests（ブラウザUA）で本文を全文読み、site.api.espn.com で確かめた。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: ゲキサカ 2026-11-14 04:30（取材・文 竹内達也）「菅原由勢は“2戦連続”のブラジル戦へ、W杯の教訓胸に「0分から90分までスキなくやることが大事」」（全文） https://web.gekisaka.jp/news/japan/detail/?463128-463128-fl
+#   サッカーキング 2026-11-13「「納得いかない時も…」初招集から6年、菅原由勢がラスト2試合となる森保監督に感謝「最後は良い形で終われるように」」（全文。森保監督への感謝の話は今回の題の外なので台本に使わない） https://www.soccer-king.jp/news/japan/national/20261113/2227407.html
+# 写真の出どころ（本人の写真を探すため）:
+#   https://web.gekisaka.jp/news/japan/detail/?463128-463128-fl
+#   https://www.soccer-king.jp/news/japan/national/20261113/2227407.html
+#   https://www.soccer-king.jp/news/world/ita/20261108/2225448.html
+#   https://www.soccer-king.jp/news/world/ita/20261028/2222027.html
+# 出典で確かめたこと:
+#   ・ゲキサカの地の文: 北中米W杯後の9月・10月シリーズは招集外。ラウンド32の終了間際の失点時、右ウイングバックで出場。スコアラーのマルティネッリは目の前にいた。後ろにはビニシウスもいた。試合後「いろんな状況の中でもっと最適な判断を自分がすべきだった」と話していた。9・10月以降、長谷部誠コーチのもとでハイプレスを軸にした守備、4バックの本格採用が進む。右SBでの出場が見込まれる。
+#   ・ESPN（fifa.world summary event=760487, 2026-06-29 17:00Z）: ブラジル 2-1 日本。29分 佐野海舟で日本が先制、56分 カゼミーロ（アシスト ガブリエル・マガリャンエス）で同点、90分+5 マルティネッリ（アシスト ブルーノ・ギマランイス）で逆転。菅原由勢は66分に堂安律に代わって途中出場（keyEvents「Yukinari Sugawara replaces Ritsu Doan」）。ESPN は守備の位置（ウイングバック）までは書かない→「右ウイングバック」はゲキサカの地の文として扱う（台本では使わない）。
+#   ・菅原の言葉（原文。ゲキサカ。字は変えていない。台本は読点で行に分けた）:
+#       「いろんな状況の中でもっと最適な判断を自分がすべきだった」（W杯の試合後の言葉。ゲキサカの地の文に引用）
+#       「全ての試合が自分の成長につながっていると思うし、完璧な選手になろうとする中でいろんなことがある。1試合1試合の経験を無駄にせず、日々学びながらやれているので、…」（台本は「1試合1試合の経験を無駄にせず、日々学びながらやれているので」だけを引く）
+#       「しっかり最初の0分から90分までスキなくやることが大事。僕らも前回対戦した時とはフォーメーションもやり方も違うので、また違った試合になると思う。アグレッシブに戦うことが大事」
+# 食い違い: なし。ゲキサカ「ラウンド32」は日本語記事の表記で、ESPN では決勝トーナメント1回戦（6/29）。同じ試合。「2戦連続のブラジル戦」は、W杯の次の対戦がこの試合、の意味（9・10月は招集外）。
+# 前の本との重なり: 20261111〜13 の台本に菅原の話は無い（scripts を grep）。W杯のブラジル戦の流れ（失点の場面）は 20261113_tanaka_brazil_rematch・20261113_ito_brazil_improve が別の人の言葉で触れているので、点の経緯は表の1枚だけにして、菅原の言葉と66分の出場に絞る。サッカーキングの森保監督への感謝（初招集2020年10月・25試合）は今回の題の外なので使わない。
+# 【言わないこと】ブラジル戦の結果・起用の予想の断定（「出場が見込まれる」は記事の言葉の範囲で）／失点の責任の評価／森保監督への感謝の話。
+# 本人の言葉: あり（菅原由勢。ゲキサカ）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月14日"
+format: news
+no_main: true
+people: [菅原由勢, カリアリ, 日本代表, ブラジル代表]
+
+short_style: Y
+short_hook_quote: 0分から90分まで、スキなくやることが大事
+short_photos:
+  - assets/images/20261114_sugawara_brazil_zero_to_90/01_v.jpg
+  - assets/images/20261114_sugawara_brazil_zero_to_90/11_v.jpg
+  - assets/images/20261114_sugawara_brazil_zero_to_90/03_v.jpg
+short_question: 菅原由勢は、14日のブラジル戦でスキのない90分を見せられると思いますか。
+short_telops: []
+
+theme:
+  id: sugawara_brazil_zero_to_90
+  league: japan
+  league_name: 日本代表
+  prefix: ""
+  title: 菅原由勢、2戦連続のブラジル戦へ。W杯の失点で刻んだ教訓
+  hook: ""
+  question: W杯でブラジルに終盤の失点を許した菅原由勢は、再戦で何を見せるつもりなのか
+  takeaway: 菅原はW杯で66分から出て、90分すぎの決勝点をピッチで見た。「0分から90分までスキなく」という言葉は、その試合への答えに聞こえる
+
+thumbnail:
+  layout: face
+  line1: 菅原由勢 ブラジル戦へ
+  line2: 0分から90分までスキなく
+  tags: [菅原由勢, カリアリ, 日本代表]
+  photo: assets/images/20261114_sugawara_brazil_zero_to_90/01_w.jpg
+  short_photo: assets/images/20261114_sugawara_brazil_zero_to_90/01_v.jpg
+
+answer: 菅原はW杯の教訓から、0分から90分までスキなくやり、アグレッシブに戦うと話した
+watch: 14日のブラジル戦（シンガポール）
+
+sections:
+  - id: what
+    main: true
+    heading: 菅原由勢は、W杯のブラジル戦で何を教訓にしたのか
+    tier: 報道
+    telop: 菅原由勢「経験を無駄にせず」
+    say:
+      - text: W杯でブラジルに1対2で敗れた日本代表。14日に再戦します。
+        image: assets/images/20261114_sugawara_brazil_zero_to_90/01_w.jpg
+      - text: DFの菅原由勢は、あの試合のあと、こう話していました。
+      - voice: 菅原由勢
+        text: いろんな状況の中で、もっと最適な判断を自分がすべきだった。
+        image: assets/images/20261114_sugawara_brazil_zero_to_90/11_w.jpg
+      - text: 決勝トーナメント1回戦で、菅原は66分から途中出場しています。
+      - text: 90分すぎに決勝点を決めたブラジルのマルティネッリは、目の前にいました。
+      - text: その思いは、今も変わらないといいます。
+      - voice: 菅原由勢
+        text: 1試合1試合の経験を無駄にせず、
+        image: assets/images/20261114_sugawara_brazil_zero_to_90/03_w.jpg
+      - voice: 菅原由勢
+        text: 日々学びながらやれているので。
+        cont: true
+        emph: true
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463128-463128-fl
+      - https://www.espn.com/soccer/match/_/gameId/760487
+  - id: team
+    heading: 菅原由勢は、再戦のブラジル戦をどう戦うと話したか
+    tier: 報道
+    telop: 菅原由勢「アグレッシブに戦うことが大事」
+    say:
+      - text: 再戦では、日本の戦い方も変わっています。
+        image: assets/images/20261114_sugawara_brazil_zero_to_90/01_w.jpg
+      - text: 9月・10月から、長谷部誠コーチのもとで、高い位置から圧力をかける守備に取り組んでいます。
+      - text: 4バックの採用も進み、菅原は右サイドバックでの出場が見込まれています。
+        image: assets/images/20261114_sugawara_brazil_zero_to_90/11_w.jpg
+      - voice: 菅原由勢
+        text: しっかり最初の0分から90分まで、スキなくやることが大事。
+      - voice: 菅原由勢
+        text: 僕らも前回対戦した時とは、
+        cont: true
+      - voice: 菅原由勢
+        text: フォーメーションもやり方も違うので、
+        cont: true
+        image: assets/images/20261114_sugawara_brazil_zero_to_90/03_w.jpg
+      - voice: 菅原由勢
+        text: また違った試合になると思う。
+        cont: true
+      - voice: 菅原由勢
+        text: アグレッシブに戦うことが大事。
+        cont: true
+        emph: true
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463128-463128-fl
+  - id: view
+    viewpoint: true
+    heading: 菅原由勢は、W杯のブラジル戦のどこでピッチにいたのか
+    tier: 背景
+    telop: 66分に菅原由勢が出場。90分+5に決勝点
+    say:
+      - text: 見立てです。菅原由勢が出たのは、ブラジルに同点にされた10分後でした。
+        card: {type: table, title: W杯ラウンド32 ブラジル 2-1 日本, columns: [時間, できごと], rows: [[29分, 佐野海舟が先制（日本）], [56分, カゼミーロが同点（ブラジル）], [66分, 菅原由勢が堂安律に代わって出場], [90分+5, マルティネッリが決勝点（ブラジル）]], highlight_row: 2}
+        image: assets/images/20261114_sugawara_brazil_zero_to_90/01_w.jpg
+      - text: 出場から決勝点まで、およそ30分でした。「0分から90分まで」という言葉は、その試合への答えに聞こえます。
+        card: none
+      - text: 再戦は14日のブラジル戦です。
+        card: none
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/760487
+      - https://web.gekisaka.jp/news/japan/detail/?463128-463128-fl

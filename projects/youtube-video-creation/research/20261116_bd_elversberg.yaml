@@ -1,0 +1,453 @@
+format: news
+voice_min: 0
+slot: other_1
+date: 2026年11月12日
+people:
+- エルフェルスベルク
+- ホルスト・シュテフェン
+- フィスニク・アスラーニ
+- ルカス・ペトコフ
+- ヴィンセント・ヴァーグナー
+- ユネス・エブヌタリブ
+short_title: エルフェルスベルク、4部優勝から4年で初の1部へ
+series: ブンデスリーガチーム紹介
+theme:
+  id: bd_elversberg
+  league: germany
+  league_name: ブンデスリーガ
+  kind: other
+  topic: エルフェルスベルク
+  title: エルフェルスベルクは、4部優勝からわずか4年で、なぜ初めての1部に立てたのか？
+  question: どんなクラブなのか
+  hook: ''
+  lead: ザールラント州の小さな町、シュピーゼン＝エルフェルスベルク。
+  opening_image: assets/stats/bd_elversberg_data_t.png
+  takeaway: 11月12日時点で、リーグ戦9試合の勝ち点13のうち9はホームの4試合で、アウェーの5試合は4。1試合あたりでは、ホームが2.25でアウェーは0.80。昇格したばかりの今季、アウェーでも勝ち点を積めるかが物差し
+thumbnail:
+  line1: エルフェルスベルク
+  line2: 4部優勝から4年で初の1部
+  crest_main:
+  - エルフェルスベルク
+  tags:
+  - エルフェルスベルク
+  - SVエルフェルスベルク
+  - ブンデスリーガ
+  - 初の1部
+  layout: classic
+  board: assets/stats/bd_elversberg_data_t.png
+sections:
+- id: data
+  heading: いま見る理由と基礎DATA
+  main: true
+  tier: 背景
+  telop: 2022年に4部で優勝。2026年に初の1部。今季は9試合で7位。開幕戦はレバークーゼンに勝利
+  narrator: キャスター
+  say:
+  - text: 2022年は4部のリーグ。そのクラブが、2026年は初めて1部です。
+    image: assets/stats/bd_elversberg_data_r1.png
+    no_telop: true
+  - text: 昇格したばかりの今季は、9試合を終えて7位です。
+    image: assets/stats/bd_elversberg_data_r2.png
+    no_telop: true
+  - text: 開幕戦では、レバークーゼンに3対2で勝ちました。
+    image: assets/stats/bd_elversberg_data_r3.png
+    no_telop: true
+  - image: assets/stats/bd_elversberg_data0.png
+    text: 創立は**1907年**。1914年に一度解散して、1918年に作り直されました。
+    no_telop: true
+  - image: assets/stats/bd_elversberg_data1.png
+    text: 愛称は「黒と白」。クラブの色も、黒と白です。
+    no_telop: true
+  - image: assets/stats/bd_elversberg_data2.png
+    text: ホームタウンは、ザールラント州のシュピーゼン＝エルフェルスベルクです。
+    no_telop: true
+  - image: assets/backgrounds/stadium_エルフェルスベルク.png
+    text: 本拠地はウルサファーム・アレーナ。1部の基準に合わせて、増築を進めています。
+  - image: assets/stats/bd_elversberg_data4.png
+    text: 会員は**1万4千人**を超えます。
+    no_telop: true
+  - image: assets/stats/bd_elversberg_data6.png
+    text: ドイツカップでは、2010年にハノーファー、2022年にレバークーゼンを破りました。
+    no_telop: true
+  - image: assets/stats/bd_elversberg_cups.png
+    text: タイトルは、2023年の3部優勝。4部の優勝は、2017年と2022年の2回です。
+    no_telop: true
+  - image: assets/stats/bd_elversberg_data7.png
+    text: 1部は、今季が初めてです。2026年の5月に、昇格が決まりました。
+    no_telop: true
+  - image: assets/stats/bd_elversberg_data8.png
+    text: 昨シーズンは、2部で**2位**。勝ち点は59でした。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/SV_Elversberg
+  - https://en.wikipedia.org/wiki/2026–27_SV_Elversberg_season
+  - https://de.wikipedia.org/wiki/SV_Elversberg
+  - https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings
+  bg: assets/backgrounds/stadium_エルフェルスベルク_in.png
+  official: false
+- id: rise
+  heading: 4部で優勝したエルフェルスベルクは、どうやって2部まで駆け上がったのか
+  tier: 背景
+  telop: 2022年に4部で優勝。2023年に3部で優勝。2024年から25年は、2部3位
+  narrator: 解説
+  main: true
+  say:
+  - text: 2022年。エルフェルスベルクは、4部のリーグで優勝して、3部に上がります。
+    card:
+      type: table
+      title: エルフェルスベルクの歩み
+      columns:
+      - 年
+      - 出来事
+      rows:
+      - - 2022年
+        - 4部で優勝、3部へ
+      - - 2023年
+        - 3部で優勝、2部へ
+      - - 2025年
+        - 2部3位、入れ替え戦で敗れる
+      - - 2026年
+        - 2部2位、初の1部
+  - 監督は、ホルスト・シュテフェン。2018年の11月から率いていました。
+  - 翌年の3部でも、首位で終えます。2023年、2部への昇格が決まります。
+  - text: 2部の1年目は、11位でした。
+    card: none
+    image: assets/backgrounds/stadium_エルフェルスベルク.png
+  - 2年目の2024年12月。クラブの歴史で初めて、2部の首位に立ちます。
+  - 前半戦を終えて、4位。後半戦はリーグで2番目に良い成績で、3位に入りました。
+  - 3位でも、昇格できるとは限りません。
+  - 1部の16位との入れ替え戦が待っていました。
+  - ここまでが、4部優勝から3年です。
+  sources:
+  - https://de.wikipedia.org/wiki/SV_Elversberg
+  - https://en.wikipedia.org/wiki/SV_Elversberg
+  bg: assets/backgrounds/stadium_エルフェルスベルク_in.png
+  official: false
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 本拠地の名前は木の名前から。命名権は製薬会社ウルサファーム。クラブの色は黒と白
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 本拠地の名前
+      - 大きな木「カイザーリンデ」
+    - - 命名権
+      - 製薬会社ウルサファーム
+    - - クラブの色
+      - 黒と白
+  say:
+  - text: エルフェルスベルクの本拠地の名前は、大きな木に由来します。
+    image: assets/backgrounds/stadium_エルフェルスベルク_in.png
+  - そばにあった木の名前は、カイザーリンデ。
+  - その木は、2015年の3月に、嵐で倒れてしまいました。
+  - いまの名前は、製薬会社ウルサファームの命名権です。
+  - 2014年に、10年契約を結びました。
+  - クラブの色は、黒と白です。
+  sources:
+  - https://en.wikipedia.org/wiki/SV_Elversberg
+  - https://en.wikipedia.org/wiki/Waldstadion_an_der_Kaiserlinde
+  bg: assets/backgrounds/stadium_エルフェルスベルク_in.png
+  official: false
+- id: episode
+  heading: エルフェルスベルクは、1点差で届かなかった翌年に、なぜ1部へ上がれたのか
+  tier: 背景
+  telop: 2025年の入れ替え戦は、合計3対4で敗れた。2026年は、最終節に3対0で勝って2位
+  narrator: 解説
+  card:
+    type: table
+    title: 1部まで、あと1点だった年
+    columns: &id001
+    - ''
+    - ''
+    rows:
+    - - 入れ替え戦（2025年）
+      - 合計3対4で敗退
+  say:
+  - text: 2025年の5月。2部3位のエルフェルスベルクは、入れ替え戦に臨みます。
+    image: assets/backgrounds/stadium_エルフェルスベルク_in.png
+  - 相手は、1部のハイデンハイムでした。
+  - 勝てば、クラブ初の1部でした。
+  - 1試合目は、2対2で引き分け。続く2試合目は、ホームで1対2の負け。
+  - text: ハイデンハイムの決勝点は、試合終了間際のロスタイムでした。
+    card:
+      type: table
+      title: 1部まで、あと1点だった年
+      columns: *id001
+      rows:
+      - - 監督
+        - シュテフェンから交代
+  - 合計は3対4の負け。たった1点差で、昇格を逃しました。
+  - シュテフェン監督は、その5月にクラブを離れて、ブレーメンの監督になります。
+  - 後任は、ヴィンセント・ヴァーグナー。
+  - 主将を含む11人が出て、13人が加わる大きな入れ替えでした。
+  - text: それでも、シーズンは好調です。第8節で、この季はじめて首位に立ちました。
+    card:
+      type: table
+      title: 1部まで、あと1点だった年
+      columns: *id001
+      rows:
+      - - 2026年
+        - 2部2位、初の1部
+  - 冬には、前半戦で12得点のユネス・エブヌタリブが、フランクフルトへ移ります。
+  - そして最終節。ミュンスターに3対0で勝って、2位。初めての1部が決まりました。
+  sources:
+  - https://de.wikipedia.org/wiki/SV_Elversberg
+  - https://en.wikipedia.org/wiki/SV_Elversberg
+  bg: assets/backgrounds/stadium_エルフェルスベルク_in.png
+  official: false
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - - シュテフェン
+      - 2018-2025
+      - 4部から2部3位へ
+  say:
+  - text: シュテフェンは、エルフェルスベルクを率いた監督です。
+    image: assets/photos/bd/elversberg/elversberg_legend_2eb53074.jpg
+  - 2018年の11月から、2025年の5月までです。
+  - 4部で優勝し、3部でも優勝。2部では、3位まで導きました。
+  - 6年半あまり、同じクラブで指揮を執り続けました。
+  sources:
+  - https://en.wikipedia.org/wiki/Horst_Steffen
+  - https://de.wikipedia.org/wiki/SV_Elversberg
+  bg: assets/backgrounds/stadium_エルフェルスベルク_in.png
+  official: false
+- id: legends2
+  heading: このクラブを語る3人（2人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - - シュテフェン
+      - 2018-2025
+      - 4部から2部3位へ
+    - - フェルハウアー
+      - 2019-2025
+      - 161試合14得点
+  say:
+  - text: フェルハウアーは、エルフェルスベルクの主将だった選手です。
+    image: assets/photos/bd/elversberg/elversberg_legend_23f6b249.jpg
+  - 守備的なミッドフィールダーと、右サイドバックでプレーしました。
+  - 2019年から25年に、リーグ戦**161試合14得点**。
+  - 4部から2部まで、クラブの階段を、ピッチの上で上りました。
+  - 2025年の夏に、アウクスブルクへ移っています。
+  sources:
+  - https://en.wikipedia.org/wiki/Robin_Fellhauer
+  - https://de.wikipedia.org/wiki/SV_Elversberg
+  bg: assets/backgrounds/stadium_エルフェルスベルク_in.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - - シュテフェン
+      - 2018-2025
+      - 4部から2部3位へ
+    - - フェルハウアー
+      - 2019-2025
+      - 161試合14得点
+    - - ペトコフ
+      - 2024-
+      - 1部のクラブ初ゴール
+  say:
+  - text: ペトコフは、2024年にエルフェルスベルクへ移ってきたフォワードです。
+    image: assets/photos/bd/elversberg/elversberg_legend_aba80e4e.jpg
+  - 2025年から26年は、2部のリーグ戦で**13得点**。
+  - クラブでいちばん多い得点でした。
+  - 今季の開幕戦、8分。クラブが1部で初めて挙げた得点は、この選手でした。
+  sources:
+  - https://en.wikipedia.org/wiki/Lukas_Petkov
+  - https://de.wikipedia.org/wiki/SV_Elversberg
+  bg: assets/backgrounds/stadium_エルフェルスベルク_in.png
+  official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はヴァーグナー。2025年に就任して、1年目で初の1部へ
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - ヴィンセント・ヴァーグナー
+    - - 就任
+      - 2025年
+    - - 前の仕事
+      - ホッフェンハイムU23の監督
+  say:
+  - エルフェルスベルクの今季の監督は、ヴィンセント・ヴァーグナー。**40歳**です。
+  - 2022年から25年は、ホッフェンハイムのU23を率いました。
+  - 4部から3部へ上げたのも、そのチームです。
+  - 2025年に、エルフェルスベルクの監督になりました。
+  - 就任1年目で、クラブを初めての1部に導いています。
+  sources:
+  - https://en.wikipedia.org/wiki/SV_Elversberg
+  - https://en.wikipedia.org/wiki/Vincent_Wagner
+  bg: assets/backgrounds/stadium_エルフェルスベルク_in.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: エルフェルスベルクの今季の登録選手は25人です。
+    image: assets/stats/bd_elversberg_gk.png
+    no_telop: true
+  - image: assets/stats/bd_elversberg_gk_f.png
+    text: ゴールキーパーは3人。
+    no_telop: true
+  - image: assets/stats/bd_elversberg_gk_f.png
+    text: ニコラス・クリストフはリーグ戦で**159試合**。
+    no_telop: true
+  - image: assets/stats/bd_elversberg_gk_f.png
+    text: フランク・レーマンはリーグ戦で**153試合**。
+    no_telop: true
+  - image: assets/stats/bd_elversberg_df_f.png
+    text: ディフェンダーは8人。
+    no_telop: true
+  - image: assets/stats/bd_elversberg_df_f.png
+    text: 主将を務めるのが**ルカス・ピンカート**。
+    no_telop: true
+  - image: assets/stats/bd_elversberg_df_f.png
+    text: リーグ戦で**116試合**に出ています。
+    no_telop: true
+  - image: assets/stats/bd_elversberg_df_f.png
+    text: マクシミリアン・ローアはリーグ戦で**64試合**。
+    no_telop: true
+  - image: assets/stats/bd_elversberg_mf_f.png
+    text: ミッドフィールダーは9人。
+    no_telop: true
+  - image: assets/stats/bd_elversberg_mf_f.png
+    text: フレデリク・シュマールはリーグ戦で**62試合**。
+    no_telop: true
+  - image: assets/stats/bd_elversberg_mf_f.png
+    text: トム・ツィマーシードはリーグ戦で**59試合**。
+    no_telop: true
+  - image: assets/stats/bd_elversberg_fw_f.png
+    text: フォワードは5人。
+    no_telop: true
+  - image: assets/stats/bd_elversberg_fw_f.png
+    text: ルカ・シュネルバッハーはリーグ戦で**185試合**。
+    no_telop: true
+  - image: assets/stats/bd_elversberg_fw_f.png
+    text: ルカス・ペトコフはリーグ戦で**19得点**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/SV_Elversberg
+  bg: assets/backgrounds/stadium_エルフェルスベルク_in.png
+  official: false
+- id: season
+  heading: 初めての1部のエルフェルスベルクは、アウェーでも勝ち点を積めるのか
+  tier: 報道
+  telop: 11月12日時点で9試合4勝1分4敗。勝ち点13で7位。ホームは勝ち点9、アウェーは4
+  narrator: 解説
+  card:
+    type: table
+    title: ブンデスリーガの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - レバークーゼン（ホーム）
+      - 3対2
+    - - 第2節
+      - ボルシアMG（アウェー）
+      - 4対3
+    - - 第3節
+      - バイエルン（ホーム）
+      - 1対2
+    - - 第4節
+      - シャルケ（アウェー）
+      - 0対0
+    - - 第5節
+      - ウニオン・ベルリン（アウェー）
+      - 0対1
+    - - 第6節
+      - アウクスブルク（ホーム）
+      - 4対3
+    - - 第7節
+      - ライプツィヒ（アウェー）
+      - 0対4
+    - - 第8節
+      - マインツ（ホーム）
+      - 4対1
+    - - 第9節
+      - ドルトムント（アウェー）
+      - 1対2
+  say:
+  - text: エルフェルスベルクは、ここまで9試合で**4勝1引き分け4敗**です。
+  - 順位は7位で、勝ち点は13。降格圏の17位、シャルケの6を、大きく上回っています。
+  - text: ただ、勝ち点13のうち、**9**はホームの4試合です。
+    card:
+      type: stats
+      title: 今季のリーグ戦（9試合）
+      items:
+      - - '9'
+        - ''
+        - ホームの勝ち点
+      - - '4'
+        - ''
+        - アウェーの勝ち点
+      - - '13'
+        - ''
+        - 合計
+      focus: 0
+  - text: アウェーの5試合は、勝ち点**4**です。
+    mark:
+      kind: circle
+      item: 1
+  - text: ホームの3勝は、開幕戦のレバークーゼン戦から始まりました。
+    card: none
+    image: assets/backgrounds/stadium_エルフェルスベルク_in.png
+  - アウェーの1勝より、2つ多い数。
+  - 続いて、アウクスブルクに4対3で、マインツに4対1で勝っています。
+  - ホームの得点は1試合**3.00**で、失点は2.00。
+  - アウェーは、得点が1試合1.00。失点は2.00です。
+  - text: 11月21日には、ホームでフライブルクと戦います。
+    image: assets/backgrounds/stadium_エルフェルスベルク.png
+  sources:
+  - https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_SV_Elversberg_season
+  bg: assets/backgrounds/stadium_エルフェルスベルク_in.png
+  official: false
+  viewpoint: true
+watch: 毎日、数字でサッカーを読み解きます

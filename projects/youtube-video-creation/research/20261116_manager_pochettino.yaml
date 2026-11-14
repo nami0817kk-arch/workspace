@@ -1,0 +1,481 @@
+# 監督紹介：マウリシオ・ポチェッティーノ（11/16 月、シリーズ「監督紹介」、key: manager_pochettino、型は news）。9節の型。見本は 20261114_manager_kompany。
+# 順：フック→基礎DATA→日本との接点（2025年9月 アメリカ対日本）→歩みと転機→戦術の色（実例の試合1つ）→数字で見る→本人の言葉→マル秘話→見立て。
+#
+# **題材の選び方（2026-11-12）**：既出16人（グアルディオラ〜アロンソ・コンパニ）以外の大物から。
+#   ・ジダン（10/03・10/18 と重なる）、森保一（10/06）、アッレグリ・インザーギ・マレスカは外した（アッレグリ・インザーギは別の回で名前は出ているが、日本との接点が薄い）。
+#   ・ポチェッティーノ：アメリカ代表監督。英語版 Wikipedia の冒頭で確認（is the head coach of the United States national soccer team）。
+#     ussoccer.com の公式発表（2026-08-03）で「契約は2030年まで」を一次情報で確認。
+#   **重なりの確認（2026-11-12 に自分で）**：scripts/20260911_poch.md はニュース（9年前のプレミア優勝に異議）。20261111_manutd_carrick_pochettino はマンUのニュース。
+#     「監督紹介」の本は無い。同じ 11/16 の他の担当・11/18 のナーゲルスマンと人も重ならない（research/20261115_picks.txt）。
+#
+# **いまの立場**：アメリカ代表監督（2024-09-10 から。2026-08-03 に契約を2030年まで延長）。
+#   ○ ussoccer.com「U.S. Soccer Federation and Mauricio Pochettino Agree to New Contract Through 2030」（2026-08-03、2026-11-12 に requests で本文を読んだ）。
+#   ○ 英語版 Wikipedia「Mauricio Pochettino」冒頭（2026-11-12）：is the head coach of the United States national soccer team。
+#
+# **通算（台本とサムネをそろえる）**＝英語版「Managerial statistics」（As of match played 6 October 2026）の行ごとの値。
+#   エスパニョール 161試合53勝38分70敗／サウサンプトン 60試合23勝18分19敗／トッテナム 293試合160勝60分73敗／PSG 84試合55勝15分14敗／チェルシー 51試合26勝11分14敗／アメリカ代表 35試合21勝2分12敗。
+#   **クラブの監督としての通算は、自分で足した**：161+60+293+84+51＝649、53+23+160+55+26＝317、38+18+60+15+11＝142、70+19+73+14+14＝190（317+142+190＝649）。勝率 317÷649＝48.8%。
+#   **Wikipedia の「Career Total」行（685試合337勝146分202敗）は、行の合計（クラブ649＋代表35＝684試合338勝144分202敗）と合わない**ので使わない。
+#   勝率（自分で割って確認）：エスパニョール 32.9%、サウサンプトン 38.3%、トッテナム 54.6%、PSG 65.5%、チェルシー 51.0%、アメリカ代表 60.0%（表の値と一致）。
+#   エスパニョール＋サウサンプトン 76÷221＝34.4%、トッテナム以降（トッテナム・PSG・チェルシー・アメリカ）262÷463＝56.6%。差 22.2 ポイント。
+#   監督としてのタイトル：PSG のリーグ・アン 2021-22・クープ・ド・フランス 2020-21・トロフェ・デ・シャンピオン 2020（Honours）。リーグ優勝は PSG の1回だけ。
+#
+# **歩み**（英語版本文）：2009-01 エスパニョール／2013-01 サウサンプトン（2013-14 は8位＝プレミアで過去最高に並ぶ）／2014-05 トッテナム（2016-17 は2位・勝ち点86でクラブ最多。2019-05 CL決勝で
+#   リヴァプールに0-2。2019-11-19 に14位で解任）／2021-01 PSG（2020-21 は国内杯、2021-22 リーグ優勝。2022-07 に退任）／2023-07 チェルシー（2023-24 は6位、EFLカップ決勝は延長で0-1。2024-05-21 に双方合意で退任）／2024-09-10 アメリカ代表。
+#
+# **戦術の色**＝2026年W杯 アメリカ 4-1 パラグアイ（英語版本文：3-4-3 の変形、積極的なプレス、切り替えの速さ。W杯のアメリカで最多得点の試合、1930年以来の最大タイの勝ち）。
+#   ビエルサ（ニューウェルズ時代の師）を「フットボールの父」と呼ぶ（Style of coaching）。トッテナムは2015-16と2016-17の2季とも、守備1回あたりの相手のパス数がリーグ最少（プレミアリーグの分析）。
+#
+# **W杯2026**：パラグアイ 4-1／オーストラリア 2-0／トルコ 2-3（主力10人を休ませた）／R32 ボスニア・ヘルツェゴビナ 2-0／R16 ベルギー 1-4。5試合すべてで得点・合計11点（4+2+2+2+1）。W杯の勝利3は、アメリカの監督として最多（公式発表）。
+#
+# **日本との接点**：2025-09-09 親善試合 アメリカ 2-0 日本（オハイオ州コロンバス。ゼンデハス30分、バログン64分）。英語版「United States men's national soccer team results (2020–present)」の2025年の節で確認。
+#   ポチェッティーノは当時のアメリカ代表監督（2024-09 から）。
+#
+# **本人の言葉**：ussoccer.com 2026-08-03（契約延長の発表）。原文：“Working together with U.S. Soccer over the past two years, it has become clear to us that there is tremendous potential to make the Men’s National Team program even stronger. The passion we experienced from the fans throughout the World Cup only strengthened our belief in what is possible here. We want to try to have a lasting impact on the sport in the country that has welcomed us so warmly and for that impact to extend beyond results on the field.”
+# **マル秘話**（英語版 Early life・Southampton・Personal life、ガーディアン 2017-04-29）：農場で働く父のもとに生まれる。13歳でロサリオ・セントラルの練習に週2回、バスで160マイル。サウサンプトン時代、英語は分かったが会見はスペイン語の通訳（思いを十分に表すため）。
+#   “I believe in energía universal… It is connected. Nothing happens for causality… Maybe, it is one of the reasons that Harry always scores in derbies.”（ガーディアン 2017-04-29、requests で本文確認）。
+#
+# **入れなかったもの**：家族・息子の話（私生活）、2019年CL決勝前の火渡りの練習とその評価（監督を小さく見せる書き方になる）、チェルシー退任の内紛の詳細、トランプのレッドカード取り消しの政治の話、女子・FotMob・ニュースの反応。
+date: 2026年11月12日
+slot: other_1
+format: news
+series: 監督紹介
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- ポチェッティーノ
+theme:
+  end_bg: assets/images/20261116_manager_pochettino/02_w.jpg
+  id: manager_pochettino
+  league: england
+  league_name: アメリカ代表
+  kind: other
+  topic: ポチェッティーノ
+  title: ポチェッティーノ、アメリカ代表監督はどんな人？名将が、なぜW杯で記録を作れたのか
+  question: アメリカ代表監督のマウリシオ・ポチェッティーノは、どんな人なのか。クラブでプレミア2位とチャンピオンズリーグ決勝まで進んだ監督が、なぜ代表のワールドカップで記録を作れたのか
+  lead: アメリカ代表監督、マウリシオ・ポチェッティーノ。
+  opening_image: assets/images/20261116_manager_pochettino/02_w.jpg
+  takeaway: 勝率は、エスパニョールとサウサンプトンで34.4%、トッテナム以降で56.6%。22ポイント上がった。2026年のワールドカップは5試合で11ゴール、アメリカの監督として最多の3勝。リーグ優勝はPSGの1回だけで、契約は2030年まで。次の大会でベスト16の先に進めるかを見ている
+  short_title: ポチェッティーノ、アメリカでW杯最多3勝
+  nameplate: マウリシオ・ポチェッティーノ｜アメリカ代表監督
+thumbnail:
+  line1: ポチェッティーノ、317勝
+  line2: アメリカでW杯、最多の3勝
+  tags: []
+  photo: assets/images/20261116_manager_pochettino_b/panel_01.jpg
+  board: assets/images/20261116_manager_pochettino_b/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261116_manager_pochettino/04_v.jpg
+sections:
+- id: hook
+  main: true
+  heading: 2026年のW杯で、アメリカ代表に記録を作らせた。ポチェッティーノとは、どんな監督なのか
+  tier: 報道
+  telop: アメリカ代表、W杯で最多の3勝
+  narrator: 解説
+  card: &hook_stats
+    type: stats
+    title: ポチェッティーノのアメリカ代表（2026年W杯）
+    items:
+    - ['3', 勝, アメリカの監督として最多]
+    - ['11', 点, 5試合すべてで得点]
+    - ['5', 試合, ベスト16まで]
+    focus: 0
+  say:
+  - text: アメリカ代表で、ワールドカップ最多の3勝。それがポチェッティーノです。
+    image: assets/images/20261116_manager_pochettino/02_w.jpg
+    emph: true
+    card: none
+  - text: ワールドカップの3勝は、アメリカ代表の監督として、最多の数字です。
+    card:
+      <<: *hook_stats
+      focus: 0
+  - text: 初戦のパラグアイ戦は、4対1の勝ち。
+    card:
+      <<: *hook_stats
+      focus: 0
+  - text: 5試合のすべてで点を取り、合計は11ゴールでした。
+    image: assets/images/20261116_manager_pochettino/01_w.jpg
+    emph: true
+    card:
+      <<: *hook_stats
+      focus: 1
+  - text: 8月には、契約が2030年まで延びています。
+    card:
+      <<: *hook_stats
+      focus: 2
+  sources:
+  - https://en.wikipedia.org/wiki/Mauricio_Pochettino
+  - https://ussoccer.com/stories/2026/08/usmnt/mauricio-pochettino-head-coach-new-contract-through-2030
+- id: data
+  heading: ポチェッティーノは、いつ、どこで、どんな道を歩いた人か
+  tier: 報道
+  telop: マウリシオ・ポチェッティーノの基礎DATA
+  narrator: 解説
+  card: &data_table
+    type: table
+    title: マウリシオ・ポチェッティーノ（54歳）の基礎DATA
+    columns: [項目, 中身]
+    rows:
+    - [生年月日, 1972年3月2日（アルゼンチン）]
+    - [選手のころ, センターバック。アルゼンチン代表20試合]
+    - [クラブ, ニューウェルズ、エスパニョール、PSG、ボルドー]
+    - [監督, エスパニョール、サウサンプトン、トッテナム、PSG、チェルシー]
+    - [いま, 2024年9月からアメリカ代表監督。契約は2030年まで]
+    highlight_row: 0
+  say:
+  - text: ポチェッティーノは1972年3月2日、アルゼンチンの生まれ。54歳です。
+    image: assets/images/20261116_manager_pochettino/02_w.jpg
+    card:
+      <<: *data_table
+      highlight_row: 0
+  - text: 現役ではセンターバック。アルゼンチン代表は20試合です。
+    card:
+      <<: *data_table
+      highlight_row: 1
+  - text: 監督は、エスパニョール、サウサンプトン、トッテナム。
+    image: assets/images/20261116_manager_pochettino/01_w.jpg
+    card:
+      <<: *data_table
+      highlight_row: 3
+  - text: そして、パリ・サンジェルマン、チェルシーと渡りました。
+    image: assets/images/20261116_manager_pochettino/01_w.jpg
+    card:
+      <<: *data_table
+      highlight_row: 3
+  - text: 2024年9月から、アメリカ代表の監督です。
+    card:
+      <<: *data_table
+      highlight_row: 4
+  sources:
+  - https://en.wikipedia.org/wiki/Mauricio_Pochettino
+- id: japan
+  heading: 2025年のコロンバス。ポチェッティーノと日本は、どこでつながるのか
+  tier: 報道
+  telop: 2025年9月、アメリカ対日本
+  narrator: 解説
+  card: &jp_table
+    type: table
+    title: 2025年9月 アメリカ対日本
+    columns: [項目, 中身]
+    rows:
+    - [試合, アメリカ対日本（親善試合）]
+    - [日付, 2025年9月9日]
+    - [場所, アメリカ・オハイオ州コロンバス]
+    - [結果, アメリカ 2-0 日本]
+    - [得点, ゼンデハス30分、バログン64分]
+    highlight_row: 0
+  say:
+  - text: 日本との縁は、2025年9月の親善試合です。
+    image: assets/images/20261116_manager_pochettino/02_w.jpg
+    card:
+      <<: *jp_table
+      highlight_row: 0
+  - text: 場所は、アメリカのオハイオ州、コロンバス。
+    card:
+      <<: *jp_table
+      highlight_row: 2
+  - text: 前半30分にゼンデハス、後半19分にバログン。
+  - text: アメリカが、2対0で勝ちました。
+    image: assets/images/20261116_manager_pochettino/01_w.jpg
+    card:
+      <<: *jp_table
+      highlight_row: 3
+  - text: ポチェッティーノがアメリカを率いて、日本と戦ったのは、この試合です。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/United_States_men%27s_national_soccer_team_results_(2020%E2%80%93present)
+  - https://en.wikipedia.org/wiki/Mauricio_Pochettino
+- id: career
+  heading: エスパニョールからアメリカ代表まで。ポチェッティーノは何を積み上げたのか
+  tier: 背景
+  telop: 歩みと転機。トッテナム、PSG、チェルシー、アメリカ
+  narrator: 解説
+  card: &career_tl
+    type: timeline
+    title: ポチェッティーノの歩み
+    rows:
+    - [2009年, エスパニョールの監督に]
+    - [2013年, サウサンプトンへ。8位はクラブ最高に並ぶ]
+    - [2014年, トッテナムへ。2016-17は2位、勝ち点86]
+    - [2019年, CL決勝で敗れ、11月に解任]
+    - [2021年, PSGへ。2021-22にリーグ優勝]
+    - [2024年, チェルシーを1年で離れ、アメリカ代表へ]
+    focus: 0
+  say:
+  - text: 監督になったのは、2009年。古巣のエスパニョールでした。
+    image: assets/images/20261116_manager_pochettino/02_w.jpg
+    card:
+      <<: *career_tl
+      focus: 0
+  - text: ポチェッティーノは2013年にサウサンプトンへ。
+    card:
+      <<: *career_tl
+      focus: 1
+  - text: 翌2013-14は8位。プレミアリーグで、過去最高に並ぶ順位でした。
+    card:
+      <<: *career_tl
+      focus: 1
+  - text: 2014年にはトッテナム。2016-17は、勝ち点86で2位。クラブの最多でした。
+    image: assets/images/20261116_manager_pochettino/01_w.jpg
+    emph: true
+    card:
+      <<: *career_tl
+      focus: 2
+  - text: 2019年5月には、クラブ初のチャンピオンズリーグ決勝へ。
+    card:
+      <<: *career_tl
+      focus: 3
+  - text: 決勝は、リヴァプールに0対2で敗れました。
+    card:
+      <<: *career_tl
+      focus: 3
+  - text: その年の11月に、14位で解任されています。
+    card: none
+  - text: 2021年1月にはパリ・サンジェルマン。
+  - text: 2021-22に、リーグ・アンを制しました。
+    image: assets/images/20261116_manager_pochettino/02_w.jpg
+    emph: true
+    card:
+      <<: *career_tl
+      focus: 4
+  - text: 2023年にチェルシー。1年で、双方が合意して離れました。
+    card:
+      <<: *career_tl
+      focus: 5
+  - text: 2024年9月に、アメリカ代表の監督になります。
+    image: assets/images/20261116_manager_pochettino/01_w.jpg
+    card:
+      <<: *career_tl
+      focus: 5
+  sources:
+  - https://en.wikipedia.org/wiki/Mauricio_Pochettino
+- id: style
+  heading: 1930年以来の大勝。ポチェッティーノのサッカーは、どんな形なのか
+  tier: 報道
+  telop: 戦術の色。高い位置から奪い、速く攻める
+  narrator: 解説
+  card: &style_doc
+    type: document
+    label: 2026年6月 ワールドカップ アメリカ対パラグアイ
+    paragraphs:
+    - 4対1。アメリカの初戦。
+    - 形は3-4-3。高い位置からのプレスと、速い切り替え。
+    - ワールドカップで、アメリカの最多得点の試合。
+    - 1930年以来のいちばん大きな勝ちに並ぶ。
+    highlight:
+    - 4対1
+    - 3-4-3
+  say:
+  - text: 形がよく出たのが、2026年6月、ワールドカップ初戦のパラグアイ戦です。
+    image: assets/images/20261116_manager_pochettino/02_w.jpg
+    card: *style_doc
+  - text: 4対1の勝ちです。
+    emph: true
+    callword: 4対1
+    card: *style_doc
+  - text: 形は3-4-3。高い位置からボールを奪いに行き、奪ったら、一気に攻めました。
+    card: *style_doc
+  - text: ワールドカップで、アメリカがいちばん多く点を取った試合でした。
+    image: assets/images/20261116_manager_pochettino/01_w.jpg
+    card: none
+  - text: 選手のころの師は、ビエルサ。ポチェッティーノは「フットボールの父」と呼びます。
+    card: none
+  - text: トッテナムでも、同じ考え方でした。
+    image: assets/images/20261116_manager_pochettino/02_w.jpg
+    card: none
+  - text: 2015-16と2016-17。2季とも、リーグで最少の数字でした。
+  - text: 相手に自由にパスを回させない、という数字です。
+    image: assets/images/20261116_manager_pochettino/02_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Mauricio_Pochettino
+- id: numbers
+  heading: クラブで649試合。数字で見ると、どこで強いのか
+  tier: 報道
+  telop: クラブの監督として317勝。勝率はPSGの65.5%がいちばん上
+  narrator: 解説
+  card: &rate_bars
+    type: bars
+    title: ポチェッティーノの勝率（チームごと、%）
+    unit: '%'
+    items:
+    - label: エスパニョール
+      value: 32.9
+    - label: サウサンプトン
+      value: 38.3
+    - label: トッテナム
+      value: 54.6
+    - label: PSG
+      value: 65.5
+      highlight: true
+    - label: チェルシー
+      value: 51.0
+    - label: アメリカ代表
+      value: 60.0
+  say:
+  - text: ここからは、ポチェッティーノの成績を数字で。
+    image: assets/images/20261116_manager_pochettino/01_w.jpg
+    card: &total_stats
+      type: stats
+      title: ポチェッティーノのクラブ監督通算（10月6日まで）
+      items:
+      - ['649', 試合, 5つのクラブ]
+      - ['317', 勝, 引き分け142・負け190]
+      - ['48.8', '%', 勝率]
+      focus: 0
+  - text: クラブの監督としての通算は、649試合。勝ったのは、317試合です。
+    emph: true
+    card:
+      <<: *total_stats
+      focus: 1
+  - text: チームごとに割ると、いちばん高いのはパリ・サンジェルマンです。
+    image: assets/images/20261116_manager_pochettino/02_w.jpg
+    card: *rate_bars
+  - text: パリ・サンジェルマンは、84試合で55勝。勝率は65.5%。
+    card: *rate_bars
+  - text: トッテナムは、293試合で160勝。54.6%でした。
+    card: *rate_bars
+  - text: エスパニョールは32.9%、サウサンプトンは38.3%。どちらも30%台です。
+    image: assets/images/20261116_manager_pochettino/01_w.jpg
+    card: none
+  - text: アメリカ代表は、35試合で21勝。60.0%です。
+    card: *rate_bars
+  sources:
+  - https://en.wikipedia.org/wiki/Mauricio_Pochettino
+- id: words
+  heading: アメリカで、結果の外に何を残したいのか
+  tier: 報道
+  telop: ポチェッティーノの言葉。2026年8月、契約延長の発表で
+  narrator: 解説
+  card: &words_doc
+    type: document
+    label: ポチェッティーノの言葉（訳）。2026年8月
+    paragraphs:
+    - この2年間で、男子代表は、もっと強くできると、はっきり分かりました。
+    - ワールドカップで受けたファンの情熱が、その信念をさらに強めました。
+    - 温かく迎えてくれた国のサッカーに、残る影響を残したい。結果の外にも。
+    highlight:
+    - もっと強くできる
+    - 結果の外にも
+  say:
+  - text: 2026年8月、契約を2030年まで延ばした発表で、こう話しました。
+    image: assets/images/20261116_manager_pochettino/02_w.jpg
+    card: *words_doc
+  - voice: ポチェッティーノ
+    text: この2年間、連盟と一緒に働いて、はっきり見えてきました。
+  - voice: ポチェッティーノ
+    text: 男子代表は、もっと強くできる。その大きな可能性が。
+    cont: true
+  - voice: ポチェッティーノ
+    text: ワールドカップのファンの情熱が、信念を、さらに強めました。
+    image: assets/images/20261116_manager_pochettino/01_w.jpg
+    card: none
+  - voice: ポチェッティーノ
+    text: 温かく迎えてくれた国のサッカーに、残り続ける影響を残したい。
+  - voice: ポチェッティーノ
+    text: その影響は、結果の外にまで広げたいのです。
+    cont: true
+    pause: 0.5
+  quotes_from:
+  - https://ussoccer.com/stories/2026/08/usmnt/mauricio-pochettino-head-coach-new-contract-through-2030
+  sources:
+  - https://ussoccer.com/stories/2026/08/usmnt/mauricio-pochettino-head-coach-new-contract-through-2030
+- id: secret
+  heading: 数字に出ない話。ポチェッティーノは、何を信じて戦っているのか
+  tier: 背景
+  telop: 農家の子。会見はスペイン語。「すべてはつながっている」
+  narrator: 解説
+  card: &sec_table
+    type: table
+    title: 数字の外にある話
+    columns: [いつ, 何があったか]
+    rows:
+    - [生まれ, アルゼンチンの小さな町。父は農場で働く]
+    - [13歳, 週2回、バスで160マイル。ロサリオの練習へ]
+    - [イングランド, 英語は分かるが、会見はスペイン語の通訳]
+    - [2017年, 「すべてはつながっている」と語る]
+    highlight_row: 1
+  say:
+  - text: では、数字の外の話を。
+    image: assets/images/20261116_manager_pochettino/01_w.jpg
+    card: none
+  - text: ポチェッティーノは、アルゼンチンの小さな町で、農場で働く父のもとに生まれました。
+    card:
+      <<: *sec_table
+      highlight_row: 0
+  - text: 13歳のころは、ロサリオの練習に、週2回通いました。
+  - text: バスで160マイル、約260キロです。
+    image: assets/images/20261116_manager_pochettino/02_w.jpg
+    card:
+      <<: *sec_table
+      highlight_row: 1
+  - text: イングランドでは、英語が分かっても、会見はスペイン語の通訳を付けました。
+    card:
+      <<: *sec_table
+      highlight_row: 2
+  - text: 思いを十分に伝えるためでした。
+    card:
+      <<: *sec_table
+      highlight_row: 2
+  - text: 2017年には、「すべてはつながっている。何も偶然では起きない」と話しました。
+    image: assets/images/20261116_manager_pochettino/01_w.jpg
+    card:
+      <<: *sec_table
+      highlight_row: 3
+  - text: ケインがダービーでいつも点を取るのも、その一つかもしれない、と続けています。
+    card:
+      <<: *sec_table
+      highlight_row: 3
+  quotes_from:
+  - https://www.theguardian.com/football/blog/2017/apr/29/energia-universal-mauricio-pochetinno-tottenham-revolution
+  sources:
+  - https://en.wikipedia.org/wiki/Mauricio_Pochettino
+  - https://www.theguardian.com/football/blog/2017/apr/29/energia-universal-mauricio-pochetinno-tottenham-revolution
+- id: view
+  viewpoint: true
+  heading: 見立て・勝率は22ポイント上がった。アメリカで、その先に届くか
+  tier: 背景
+  telop: 勝率はトッテナムを境に、34.4%から56.6%へ
+  narrator: 解説
+  card: &view_table
+    type: table
+    title: 自分で割ってみた（ポチェッティーノのチームごとの勝率）
+    columns: [チーム, 試合, 勝率]
+    rows:
+    - [エスパニョール, '161', 32.9%]
+    - [サウサンプトン, '60', 38.3%]
+    - [トッテナム, '293', 54.6%]
+    - [PSG, '84', 65.5%]
+    - [チェルシー, '51', 51.0%]
+    - [アメリカ代表, '35', 60.0%]
+    highlight_row: 2
+  say:
+  - text: 見立てです。ポチェッティーノの勝率を、チームごとに割りました。
+    image: assets/images/20261116_manager_pochettino/02_w.jpg
+    card: *view_table
+  - text: エスパニョールとサウサンプトンは、合わせて34.4%でした。
+    card:
+      <<: *view_table
+      highlight_row: 0
+  - text: トッテナム以降の4チームは、合わせて56.6%。どのチームも50%を超えています。
+    emph: true
+    mark: {kind: circle, row: 2, col: 2}
+    card:
+      <<: *view_table
+      highlight_row: 2
+  - text: 2014年を境に、勝率は22ポイント上がったことになります。
+    image: assets/images/20261116_manager_pochettino/01_w.jpg
+    card: none
+  - text: 一方で、監督としてのリーグ優勝は、1回だけです。
+  - text: 2021-22の、パリ・サンジェルマンでした。
+    card: none
+  - text: 2026年のワールドカップは、ベスト16でベルギーに1対4で敗れました。
+    image: assets/images/20261116_manager_pochettino/02_w.jpg
+    card: none
+  - text: 勝つ形を、ベスト16の先でも出せるか。
+    card: none
+  - text: 契約は2030年まで。次のワールドカップに注目です。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Mauricio_Pochettino

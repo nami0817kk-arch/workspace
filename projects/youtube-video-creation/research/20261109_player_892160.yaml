@@ -1,0 +1,540 @@
+# ルカ・ヴシュコヴィッチ（ブライトン／クロアチア代表）の紹介。選手紹介の8節の型（2026-11-09 公開分、シリーズ「有名選手の紹介」。key: player_892160）。情報の時点は 2026-11-06（試合は 11/5 のカンファレンスリーグ・ヘタフェ戦まで）。
+# **FotMob は使わない。**数字は Transfermarkt API の試合記録（控え research/raw/20261109_vuskovic_tm.json）と、自分で数えた勝ち負け・失点。
+# **選んだ理由・重なり確認（2026-11-06）**：player_pool.py list を市場価値の上位から見て、紹介を出していない人は 26 ヌメチャ・28 マレン・30 カマラ・31 ヴシュコヴィッチ（1〜25・27・29 は紹介済み。24 シュロッターベックは 11/7）。
+#   TM の今の値はヴシュコヴィッチ 6500万（2026-10-07）・ヌメチャ 6500万・マレン 5500万・カマラ 5500万。ヌメチャは 11/7 のシュロッターベックと同じドルトムントなので外し、ヴシュコヴィッチを 11/9、マレンを 11/11 に。
+#   scripts/・research/posted.json・covered.yaml を「ヴシュコヴィッチ／Vuskovic／892160」で grep：0件。ブライトンの財政（11/6）・クロアチア代表（11/8）とは人名の組み合わせが別。
+#   現役・今季もプレミア1部：TM の試合記録でプレミア9試合（8/23〜10/31）、英語版Wikipedia（club_update 2026-10-25）も current club = Brighton & Hove Albion・背番号44。ブライトン公式 2026-07-14 に5年契約（＋1年の選択権）の発表。
+# **数字の軸**：トップチームと代表の通算（全公式戦。ハイドゥクのU19は数えない）：ハイドゥク11試合1得点・ラドミアク14・3・ウェステルロー36・7・ハンブルク30・6・ブライトン15・1（クラブ106試合18得点）＋クロアチア代表10試合1得点 → 116試合19得点。
+#   英語版Wikipedia の通算表（11/5 まで：クラブ 106・18、代表 10・1）と TM の試合記録が一致。
+#   市場価値（TM）：2023-06 600万ユーロ（16歳、ハイドゥク）→ 2025-06 1200万（ウェステルロー）→ 2025-10 1800万 → 2025-12 4000万 → 2026-03 6000万（ハンブルク）→ 2026-10 6500万（最高・いま）。ハンブルクの1季で 1200万→6000万＝5倍。
+#   季ごと（クラブの全公式戦、TM）：22/23 ハイドゥク 11試合・765分・1得点／23/24 ラドミアク 14・1151分・3／24/25 ウェステルロー 36・2965分・7／25/26 ハンブルク 30・2652分・6／26/27 ブライトン 15・1180分・1（1アシスト）。
+#   今季のプレミア9試合（TM、すべて先発）：8/23 ヴィラ4-0、8/30 チェルシー3-4、9/5 リーズ1-1（得点）、9/13 コヴェントリー5-0（78分）、9/19 アーセナル3-0、10/10 サンダーランド2-0、10/18 パレス5-0、10/25 リバプール0-2、10/31 シティ1-0。6勝1分2敗・失点7・無失点6。
+#   ハンブルクのブンデス（TM、25/26）：出た28試合 9勝9分10敗・失点42（1.50）・無失点5／出なかった5試合 0勝1分4敗・失点12。
+#   プレミアの順位：英語版Wikipedia「2026–27 Premier League」（11/2 まで）で3位・9試合6勝1分2敗・24得点7失点・勝ち点19。首位アーセナルは8勝1敗で、その1敗が 9/19 のブライトン戦。
+# **一次情報・出典**：ブライトン公式（2026-07-14 の契約の発表とヒュルツェラー監督の言葉、9/5 リーズ戦の記事）、ハンブルク公式（2026-05-21「Luka Vušković's unforgettable year」の本人の言葉と季の数字）、英語版Wikipedia（ハイドゥクのデビュー・トッテナム・W杯）。
+#   リーズ戦の記事：リーズの先制は田中碧の折り返しをボーグルが押し込んだもの。ヴシュコヴィッチの同点はデ・カイペルのCKを頭で（ブライトン公式は72分、Sky は71分→分は言わない）。
+#   本人の言葉：ハンブルク公式の英語版から訳した。監督の言葉：ブライトン公式の発表から訳した。
+# **入れなかったもの**：移籍金（報道の額だけで公式が無い）、兄マリオの件（法的な問題）、W杯のクロアチアの勝ち負けの細部、ネーションズリーグの大敗、9/16 のカップ戦の扱い（アシストのみ表に）。
+#   年間ベストゴール：Wikipedia は「受賞」、ハンブルク公式は「次点」と食い違う → 言わない。12月の月間ベストゴール（ARD）だけ言う。
+# **写真**：ブライトン公式（契約の発表・リーズ戦）、ハンブルク公式（3枚）、Commons（Bryan Berlin CC BY-SA 4.0 ×2、2026年W杯のクロアチアの練習着）。
+date: 2026年11月6日
+slot: other_1
+format: news
+series: 有名選手の紹介
+people:
+- ルカ・ヴシュコヴィッチ
+theme:
+  id: player_892160
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: ブライトン
+  title: ヴシュコヴィッチってどんな選手？ 市場価値5倍の19歳は、何を変えたのか
+  question: ルカ・ヴシュコヴィッチは、ハンブルクの1季で何を見せ、ブライトンの守りをどう変えているのか
+  takeaway: 通算116試合19得点。ハンブルクの1季で市場価値は1200万から6000万ユーロへ。ブライトンではプレミア9試合すべてに先発し、1試合あたりの失点はハンブルクの1.50から0.78へ
+  nameplate: ルカ・ヴシュコヴィッチ｜ブライトン DF／クロアチア代表
+  opening_image: assets/images/20261109_player_892160/c2/01_w.jpg
+  end_bg: assets/images/20261109_player_892160/b1/01_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+watch: 毎日、数字でサッカーを読み解きます
+short_title: ルカ・ヴシュコヴィッチってどんな選手？
+thumbnail:
+  line1: ヴシュコヴィッチ、116戦
+  line2: 1季で市場価値が5倍に
+  tags:
+  - ブライトン
+  photo: assets/images/20261109_player_892160/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261109_player_892160/c1/01_v.jpg
+sections:
+- id: hook
+  heading: 19歳のセンターバックは、なぜ1季で市場価値が5倍になったのか
+  tier: 報道
+  telop: 1季で市場価値5倍の19歳
+  narrator: 解説
+  card: &hook_card
+    type: stats
+    title: ルカ・ヴシュコヴィッチの数字
+    items:
+    - - '5'
+      - 倍
+      - ハンブルクの1季で上がった市場価値
+    - - '6'
+      - 点
+      - ブンデスのセンターバックで最多
+    - - '6'
+      - 試合
+      - 今季プレミアの無失点（9試合中）
+    focus: 0
+  say:
+  - text: 2025年の夏。18歳のセンターバックが、ドイツのハンブルクへ移りました。
+    image: assets/images/20261109_player_892160/h3/01_w.jpg
+    card: none
+  - text: ルカ・ヴシュコヴィッチ。その1季で、市場価値は1200万から6000万ユーロへ。
+    image: assets/images/20261109_player_892160/h2/01_w.jpg
+    card:
+      <<: *hook_card
+      focus: 0
+    emph: true
+  - text: 5倍です。ブンデスリーガのセンターバックで、いちばん多い6点も取りました。
+    card:
+      <<: *hook_card
+      focus: 1
+  - text: 今季はブライトンで、プレミアリーグの9試合すべてに先発。
+    image: assets/images/20261109_player_892160/b2/01_w.jpg
+    card:
+      <<: *hook_card
+      focus: 2
+  - text: チームは3位。9試合のうち6試合で、相手を0点に抑えています。
+    card: none
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/luka-vuskovic/marktwertverlauf/spieler/892160
+  - https://www.hsv.de/en/news/luka-vuskovics-unforgettable-year-at-the-volkspark
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_Premier_League
+- id: data
+  heading: ヴシュコヴィッチは、いまどこで、いくらと見られている選手か
+  tier: 報道
+  telop: ルカ・ヴシュコヴィッチの基礎DATA
+  narrator: 解説
+  card: &data_card
+    type: table
+    title: ルカ・ヴシュコヴィッチ（ブライトン）
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 所属
+      - ブライトン（44番）
+    - - ポジション
+      - センターバック
+    - - 生年月日
+      - 2007年2月24日（19歳）
+    - - 出身
+      - クロアチア・スプリト
+    - - 身長・利き足
+      - 193cm・右足
+    - - 代表
+      - クロアチア（10試合1得点）
+    - - 契約・市場価値
+      - 2031年まで・6500万ユーロ
+    source: Transfermarkt
+  say:
+  - text: ヴシュコヴィッチは193センチの右利き。守りの中央を任されています。
+    image: assets/images/20261109_player_892160/b1/01_w.jpg
+    card: none
+  - text: 生まれは2007年2月24日、クロアチアのスプリト。いま19歳です。
+    image: assets/images/20261109_player_892160/c1/01_w.jpg
+    card:
+      <<: *data_card
+      highlight_row: 2
+  - text: 19歳にして、クロアチア代表では、もう10試合に出ています。
+    card:
+      <<: *data_card
+      highlight_row: 5
+  - text: 市場価値は6500万ユーロ。10月に、また上がりました。
+    card:
+      <<: *data_card
+      highlight_row: 6
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/luka-vuskovic/profil/spieler/892160
+  - https://en.wikipedia.org/wiki/Luka_Vu%C5%A1kovi%C4%87
+- id: career
+  heading: 16歳でデビューした少年は、どうやって4つの国を渡ったのか
+  tier: 背景
+  telop: スプリトから、4つの国へ
+  narrator: 解説
+  card: &career_card
+    type: timeline
+    title: ヴシュコヴィッチの歩み
+    rows:
+    - - '2023'
+      - 16歳でハイドゥク・スプリトのトップデビュー
+    - - '2024'
+      - ポーランド、ベルギーへ期限付きで移籍
+    - - '2025'
+      - トッテナムに合流、ハンブルクへ期限付きで移籍
+    - - '2026'
+      - W杯に出場、ブライトンと5年契約
+    focus: '2023'
+  say:
+  - text: ヴシュコヴィッチの家は、ひいおじいさんの代から、地元のクラブに関わってきました。
+    image: assets/images/20261109_player_892160/c1/01_w.jpg
+    card: none
+  - text: クロアチアのスプリトにある、ハイドゥクです。
+    card: none
+  - text: 2023年2月26日、16歳の誕生日の2日後に、トップチームで先発デビュー。
+    image: assets/images/20261109_player_892160/c2/01_w.jpg
+    card:
+      <<: *career_card
+      focus: '2023'
+  - text: 相手は宿敵のディナモ・ザグレブ。クロアチア1部の、最年少の出場記録に並びました。
+    card:
+      <<: *career_card
+      focus: '2023'
+  - text: その年の9月には、トッテナムと、2025年に加わる約束を結びます。
+    card:
+      <<: *career_card
+      focus: '2023'
+  - text: 加わるまでの間は、期限付きで外へ出ます。
+    image: assets/images/20261109_player_892160/h1/01_w.jpg
+    card: none
+  - text: 行き先は、ポーランドのラドミアクと、ベルギーのウェステルロー。
+    card: none
+  - text: ベルギーでは36試合で7点。センターバックで、です。
+    image: assets/images/20261109_player_892160/c1/01_w.jpg
+    card:
+      <<: *career_card
+      focus: '2024'
+    emph: true
+  - text: 2025年の夏、トッテナムに合流。ただ公式戦では出番がありません。
+    card:
+      <<: *career_card
+      focus: '2025'
+  - text: そこで本人が、試合に出るための期限付き移籍を願い出ます。
+    card:
+      <<: *career_card
+      focus: '2025'
+  - text: 行き先は、1部に戻ったばかりのハンブルクでした。
+    image: assets/images/20261109_player_892160/h3/01_w.jpg
+    card: none
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Luka_Vu%C5%A1kovi%C4%87
+  - https://www.tottenhamhotspur.com/news/2023/september/vuskovic-to-join-spurs/
+  - https://www.hsv.de/en/news/hsv-sign-luka-vuskovic-on-loan
+- id: style
+  heading: ハンブルクの1季で、ヴシュコヴィッチは何がリーグで一番だったのか
+  tier: 報道
+  telop: ハンブルクの1季
+  narrator: 解説
+  card: &style_card
+    type: table
+    title: ヴシュコヴィッチ ハンブルクの1季（2025年から26年）
+    columns:
+    - 項目
+    - 数字
+    rows:
+    - - ブンデスリーガ
+      - 28試合・6得点
+    - - 競り合いの勝率
+      - 69.1%（リーグ1位）
+    - - 1試合の空中戦の勝ち
+      - 18回（9月のウニオン戦）
+    - - 新人の月間賞
+      - 4回
+    source: Transfermarkt
+    highlight_row: 0
+  say:
+  - text: ヴシュコヴィッチのハンブルクでの1季を、数字で見ます。
+    image: assets/images/20261109_player_892160/h2/01_w.jpg
+    card: none
+  - text: ブンデスリーガで6点。頭で合わせる形が多く、セットプレーで相手の脅威になりました。
+    card:
+      <<: *style_card
+      highlight_row: 0
+  - text: 競り合いに勝った割合は69.1%。これも、リーグでいちばん高い数字でした。
+    card:
+      <<: *style_card
+      highlight_row: 1
+    emph: true
+  - text: 9月のウニオン・ベルリン戦では、1試合で空中戦に18回勝っています。
+    card:
+      <<: *style_card
+      highlight_row: 2
+  - text: 12月のブレーメン戦では、さそりのように足を後ろへ振り上げたゴール。
+    image: assets/images/20261109_player_892160/h1/01_w.jpg
+    card: none
+    callword: さそり蹴り
+  - text: このゴールは、12月の月間ベストゴールになります。
+    card: none
+  - text: 新人の月間賞は4回。最後はファンの投票で、チームの最優秀選手にも。
+    image: assets/images/20261109_player_892160/h3/01_w.jpg
+    card:
+      <<: *style_card
+      highlight_row: 3
+  quotes_from: []
+  sources:
+  - https://www.hsv.de/en/news/luka-vuskovics-unforgettable-year-at-the-volkspark
+  - https://en.wikipedia.org/wiki/Luka_Vu%C5%A1kovi%C4%87
+  - https://www.transfermarkt.com/luka-vuskovic/leistungsdatendetails/spieler/892160
+- id: past
+  heading: ヴシュコヴィッチは、各季で何試合に出て、いくつ点を取ったのか
+  tier: 報道
+  telop: 5つのクラブの5季
+  narrator: 解説
+  card: &past_card
+    type: table
+    title: ヴシュコヴィッチ 各季の数字（全公式戦・クラブのみ）
+    columns:
+    - シーズン
+    - 所属
+    - 試合
+    - 出場時間
+    - 得点
+    rows:
+    - - 22/23
+      - ハイドゥク
+      - '11'
+      - 765分
+      - '1'
+    - - 23/24
+      - ラドミアク
+      - '14'
+      - 1151分
+      - '3'
+    - - 24/25
+      - ウェステルロー
+      - '36'
+      - 2965分
+      - '7'
+    - - 25/26
+      - ハンブルク
+      - '30'
+      - 2652分
+      - '6'
+    - - 26/27
+      - ブライトン
+      - '15'
+      - 1180分
+      - '1'
+    source: Transfermarkt
+    highlight_row: 0
+  say:
+  - text: ヴシュコヴィッチの、プロになってからの5季を、クラブごとに並べます。
+    image: assets/images/20261109_player_892160/c2/01_w.jpg
+    card:
+      <<: *past_card
+      highlight_row: 0
+  - text: いちばん出たのは、ベルギーの2024年から25年です。
+    card:
+      <<: *past_card
+      highlight_row: 2
+  - text: 7点のうち1点は、クラブ・ブルージュ戦のゴール。
+    card:
+      <<: *past_card
+      highlight_row: 2
+  - text: ベルギーリーグの、その季の最優秀ゴール賞を取っています。
+    card:
+      <<: *past_card
+      highlight_row: 2
+    emph: true
+  - text: 4つの国のリーグで、毎季、点を取っています。
+    image: assets/images/20261109_player_892160/h2/01_w.jpg
+    card: none
+  - text: 続いて通算です。クラブでは106試合で18得点。
+    image: assets/images/20261109_player_892160/b2/01_w.jpg
+    card: &total_card
+      type: table
+      title: ヴシュコヴィッチ 通算（トップチームと代表）
+      columns:
+      - 所属
+      - 試合
+      - 得点
+      rows:
+      - - クラブ（5つ）
+        - '106'
+        - '18'
+      - - クロアチア代表
+        - '10'
+        - '1'
+      - - 合計
+        - '116'
+        - '19'
+      source: Transfermarkt
+      highlight_row: 0
+  - text: 代表の分も足して、通算は116試合19得点です。
+    card:
+      <<: *total_card
+      highlight_row: 2
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/luka-vuskovic/leistungsdatendetails/spieler/892160
+  - https://en.wikipedia.org/wiki/Luka_Vu%C5%A1kovi%C4%87
+- id: season
+  heading: W杯のあと、ブライトンでのヴシュコヴィッチは何を見せているのか
+  tier: 報道
+  main: true
+  telop: W杯と今季
+  narrator: 解説
+  card: &season_card
+    type: table
+    title: 今季のヴシュコヴィッチ（11月5日まで）
+    columns:
+    - 大会
+    - 内容
+    rows:
+    - - プレミアリーグ
+      - 9試合・798分・1得点
+    - - リーグカップ
+      - 1試合・90分・1アシスト
+    - - カンファレンスリーグ（予選を含む）
+      - 5試合・292分
+    source: Transfermarkt
+    highlight_row: 0
+  say:
+  - text: ブライトンの44番、ヴシュコヴィッチ。W杯から今季までを見ます。
+    image: assets/images/20261109_player_892160/b2/01_w.jpg
+    card: none
+    short_only: true
+  - text: 2026年6月17日、W杯のイングランド戦で先発。
+    image: assets/images/20261109_player_892160/c2/01_w.jpg
+    card: none
+  - text: クロアチアの選手として、W杯で最年少の出場でした。
+    card: none
+    emph: true
+  - text: その年の7月14日、ブライトンが5年契約を発表します。
+    image: assets/images/20261109_player_892160/b2/01_w.jpg
+    card: none
+  - text: リーグ戦では、ここまで一度も先発を外れていません。
+    image: assets/images/20261109_player_892160/b2/01_w.jpg
+    card:
+      <<: *season_card
+      highlight_row: 0
+  - text: 9月5日のリーズ戦。先に点を取ったのはリーズでした。
+    card:
+      <<: *season_card
+      highlight_row: 0
+  - text: 起点は、日本代表の田中碧の折り返しです。
+    card:
+      <<: *season_card
+      highlight_row: 0
+  - text: 後半、コーナーキックを頭で合わせて同点。これが移籍後の初ゴールです。
+    image: assets/images/20261109_player_892160/b2/01_w.jpg
+    card: none
+  - text: 9月19日はアーセナルに3対0。首位アーセナルにとって、今季ただ1つの負け。
+    image: assets/images/20261109_player_892160/h2/01_w.jpg
+    card: none
+  - text: 10月31日には、敵地でマンチェスター・シティに1対0で勝ちました。
+    image: assets/images/20261109_player_892160/b1/01_w.jpg
+    card: none
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/luka-vuskovic/leistungsdatendetails/spieler/892160
+  - https://www.brightonandhovealbion.com/media-article/mft-pl-bhalee-match-report-2026
+  - https://www.brightonandhovealbion.com/media-article/mft-transfer-news-luka-vuskovic-tottenham-july-2026
+  - https://en.wikipedia.org/wiki/Luka_Vu%C5%A1kovi%C4%87
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_Premier_League
+- id: words
+  heading: ハンブルクを第2の故郷と呼んだ19歳を、ブライトンの監督はどう見ているのか。本人と監督の言葉
+  tier: 報道
+  telop: 本人と監督の言葉
+  narrator: 解説
+  card: &words_card
+    type: document
+    label: ハンブルクの1季を終えての言葉（訳、2026年5月）
+    paragraphs:
+    - このクラブを、少し愛しすぎているかもしれません。
+    - ハンブルクは、僕の第2の故郷になりました。
+    highlight:
+    - 愛しすぎている
+    - 第2の故郷
+  say:
+  - text: 2026年5月、ハンブルクでの1季を終えたときの、本人の言葉です。
+    image: assets/images/20261109_player_892160/h3/01_w.jpg
+    card: none
+  - voice: ヴシュコヴィッチ
+    text: このクラブを、少し愛しすぎているかもしれません。
+    card: *words_card
+  - voice: ヴシュコヴィッチ
+    text: ハンブルクは、僕の第2の故郷になりました。
+    card: *words_card
+    cont: true
+    pause: 0.5
+  - text: 2か月後、迎え入れたブライトンのヒュルツェラー監督の評価です。
+    image: assets/images/20261109_player_892160/b1/01_w.jpg
+    card: none
+  - voice: ヒュルツェラー
+    text: 昨季、とても高いレベルでやれることを示しました。
+    card: &coach_card
+      type: document
+      label: ブライトンの監督の言葉（訳、2026年7月）
+      paragraphs:
+      - 昨季、とても高いレベルでやれることを示しました。
+      - まだ若い。プレミアリーグの求めるものに慣れる時間は要ります。
+      - それでも、落ち着いてこなすと信じています。
+      highlight:
+      - とても高いレベル
+      - 慣れる時間
+  - voice: ヒュルツェラー
+    text: まだ若い。プレミアリーグの求めるものに慣れる時間は要ります。
+    card: *coach_card
+    cont: true
+  - voice: ヒュルツェラー
+    text: それでも、落ち着いてこなすと信じています。
+    card: *coach_card
+    cont: true
+    pause: 0.5
+  quotes_from:
+  - ハンブルガーSV公式 https://www.hsv.de/en/news/luka-vuskovics-unforgettable-year-at-the-volkspark
+  - ブライトン公式 https://www.brightonandhovealbion.com/media-article/mft-transfer-news-luka-vuskovic-tottenham-july-2026
+  sources:
+  - https://www.hsv.de/en/news/luka-vuskovics-unforgettable-year-at-the-volkspark
+  - https://www.brightonandhovealbion.com/media-article/mft-transfer-news-luka-vuskovic-tottenham-july-2026
+- id: view
+  heading: ハンブルクとブライトンで、ヴシュコヴィッチが出た試合の守りは何が違うのか
+  tier: 背景
+  viewpoint: true
+  narrator: 解説
+  telop: ハンブルクの28試合と、ブライトンの9試合
+  card: &view_card
+    type: table
+    title: ヴシュコヴィッチが出たリーグ戦
+    columns:
+    - 項目
+    - ハンブルク（25/26）
+    - ブライトン（今季）
+    rows:
+    - - 試合
+      - '28'
+      - '9'
+    - - 勝ち・分け・負け
+      - 9勝9分10敗
+      - 6勝1分2敗
+    - - 1試合あたりの失点
+      - '1.50'
+      - '0.78'
+    - - 無失点の試合
+      - '5'
+      - '6'
+    source: Transfermarkt
+    highlight_row: 0
+  say:
+  - text: 締めくくりに、ヴシュコヴィッチが出たリーグ戦を、2つのクラブで比べます。
+    image: assets/images/20261109_player_892160/h2/01_w.jpg
+    card: none
+  - text: ハンブルクで出た28試合は、9勝9分け10敗。
+    image: assets/images/20261109_player_892160/b2/01_w.jpg
+    card:
+      <<: *view_card
+      highlight_row: 1
+  - text: ブライトンの9試合は、6勝1分け2敗です。
+    image: assets/images/20261109_player_892160/b2/01_w.jpg
+    card:
+      <<: *view_card
+      highlight_row: 1
+  - text: 失点は1試合あたり、1.50から0.78へ。ほぼ半分です。
+    card:
+      <<: *view_card
+      highlight_row: 2
+    emph: true
+    mark:
+      kind: circle
+      row: 2
+  - text: 無失点の試合は、ハンブルクで5つ。ブライトンでは9試合で、もう6つ。
+    card:
+      <<: *view_card
+      highlight_row: 3
+  - text: ただ、昇格1年目のハンブルクと、いま3位のブライトンでは、周りの顔ぶれが違います。
+    image: assets/images/20261109_player_892160/h1/01_w.jpg
+    card: none
+  - text: それでもハンブルクで、出なかった5試合の失点は、1試合あたり2.40でした。
+    card: none
+  - text: リーグ戦では、まだ1試合も休まず、この守りを続けています。
+    image: assets/images/20261109_player_892160/b1/01_w.jpg
+    card: none
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/luka-vuskovic/leistungsdatendetails/spieler/892160
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_Premier_League

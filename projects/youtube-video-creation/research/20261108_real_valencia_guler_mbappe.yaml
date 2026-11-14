@@ -1,0 +1,119 @@
+# 取材メモ（2026年11月8日）レアル、バレンシアに3-0。ギュレルが1ゴール1アシスト、ムバッペは7試合連続ゴール（ニュースのショート。見せ方 X＝冒頭に強い一言）
+# 取材: 2026-11-08。python requests（ブラウザUA）と WebFetch で本文を読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 読んだ出典:
+#   ・ESPN の試合データ（site.api.espn.com .../esp.1/summary?event=401882808）: 28分 フェデリコ・バルベルデ（右足、エリア外、セットプレーの流れ）／36分 アルダ・ギュレル（右足、ゴール前）／75分 キリアン・ムバッペ（右足、右の6ヤードの角から、**アシスト ギュレル＝スルーパス**）／79分 ホセ・ガヤ（バレンシア）レッドカード（直前にムバッペへの反則）／81分 ムバッペ イエロー。バレンシア 0-3 レアル。シュート レアル19本（枠内11）・バレンシア4本（枠内2）、ボール保持 68.3%対31.7%。
+#   ・マルカ marca.com 2026-11-07 の試合レポート「El Madrid de Arda deslumbra en Mestalla」（スペイン語）: ギュレルは「エジルを思わせる役割」で「imponente（見事な）アシスト」。28分はムバッペの斜めの動きを止めたマフェオへの反則から、FK の跳ね返りをバルベルデが低く強く決めた。36分はベリンガムが左からえぐって折り返し、ムバッペは届かず、ギュレルが近くから押し込んだ。75分は「ギュレルが右で受け、プレシャーの中で振り向き、見ずに置いたパス」。79分はガヤが「roja directa」（一発退場）。ガヤがムバッペの抜け出しを止めた。
+#   ・マルカの「uno a uno」（選手採点）: **ギュレルは最終採点 10**（ハーフタイムも9）。「genialidad（天才的なプレー）」と書く。
+#   ・ムンド・デポルティボ mundodeportivo.com 2026-11-07「Triunfo fácil del Real Madrid ante el Valencia」（スペイン語）: 28分・36分・75分（「a pase de Arda Güler」）の流れは ESPN と一致。ガヤは79分に「roja directa por una falta a Mbappé」。「ocho triunfos seguidos」。バレンシアは12試合で勝ち点9（「sigue en la UCI」＝崖っぷち）。
+#   ・フットボールチャンネル（2026-11-08 07:04）: 得点者は一致。ムバッペは「公式戦7試合連続ゴール」、今季通算17点。レアルは「公式戦8連勝」「リーグ5連勝」。ムバッペの3点目の分を「74分」、バルベルデの得点の流れ（FK のこぼれ球）は一致。
+# 自分で数えたもの（ESPN の team schedule・standings・各試合の summary）:
+#   ・**レアルの公式戦8連勝**：9/20 アトレティコ戦の敗戦のあと、10/10 ビジャレアル（1-0）・10/14 ローマ（CL、4-3）・10/18 セビージャ（4-1）・10/21 ライプツィヒ（CL、4-1）・10/25 バルセロナ（2-1）・11/1 ラシン・サンタンデール（3-0）・11/4 AEK（CL、3-2）・11/7 バレンシア（3-0）＝8試合。リーグ戦はそのうち5連勝（10/10・10/18・10/25・11/1・11/7）。（ESPN のデータは CL・リーグ戦。ほかの大会の試合は見つからなかった）
+#   ・**ムバッペの連続ゴール**：11/4 までの6試合で8点（10/14 ローマ1・10/18 セビージャ2・10/21 ライプツィヒ1・10/25 バルセロナ2・11/1 ラシン1・11/4 AEK1、前の取材メモ research/20261105_real_aek_mbappe_6.yaml で ESPN データから数えた）に、11/7 の1点を足して**7試合連続・9点**。フットボールチャンネルの「7試合連続」と一致。
+#   ・順位（ESPN standings、11/7 の試合のあと）: 1位 バルセロナ 11試合・10勝1敗・勝ち点30（得失点+34）／**2位 レアル 12試合・10勝2敗・勝ち点30（+21）**／3位 アトレティコ 11試合・勝ち点28。**レアルとバルサは勝ち点30で並ぶ。バルサは1試合少なく、8日にアトレティコと対戦**（ESPN scoreboard: 20:00 UTC）。
+#   ・バレンシア：12試合で勝ち点9・19位（ESPN）。
+# 食い違い: ①**ムバッペの3点目の分**：ESPN データ・マルカ・ムンド・デポルティボは75分、フットボールチャンネルは74分。→ **75分**を使う。②**「暫定首位」**：フットボールチャンネルは「勝ち点30で暫定首位に浮上」と書くが、ESPN の順位表はバルサが得失点差で1位でレアルは2位（勝ち点は同じ30）。→ **「首位」と言わず、「勝ち点30でバルサと並んだ（バルサは1試合少ない）」**と数字で書く。③ESPN のデータでギュレルの36分の得点は「アシストなし」だが、マルカ・ムンド・デポルティボは「ベリンガムの折り返しが相手DFに当たって、ギュレルが押し込む」。→ 台本は「ベリンガムの折り返しのこぼれ」と言い、アシストとは言わない。④ギュレルの「アシスト」は75分の1つだけ（ESPN の統計 goalAssists=1、totalGoals=1）。
+#   題材の一覧の見出しは「ギュレルがムバッペに3点目を演出」だが、**ギュレルは自分も1点決めている**（36分）。→ 台本は「1ゴール1アシスト」で組む。
+# 本人の言葉: 無し。ギュレル・ムバッペ・モウリーニョの試合後の言葉は、読めた範囲（ESPN・マルカ・ムンド・デポルティボ・フットボールチャンネル）に無かった。AS（as.com）は 403 で本文を読めず、kicker（kicker.de）も 403。レアル公式の試合レポートは 11/8 朝の時点でまだ載っていなかった。→ X（冒頭に強い一言「ギュレル1G1A」）。
+# 反応: 0件（X・Reddit は読めない。作らない。approve は --no-voices）。**海外メディアの評価（マルカの採点10点・「エジルを思わせる」）は、反応の投稿ではなく評論なので「見立て」の材料として使う**（媒体名は台本で出さない。「現地の」と言う）。
+# 写真: 取材メモの出典（マルカ・ムンド・デポルティボ・フットボールチャンネルほか）の主写真から photopool で3枚（BBC のロゴ画像は外した）。01 ゴールを喜ぶ選手（マルカの主写真・背番号は一部しか見えず、ギュレルかは**要確認**。台本では「ギュレル」の画像として説明していない）、02 レアルの選手たちの集合（ムバッペが右に写る・ピンクのユニフォーム）、03 チームメイトに囲まれるベルナルド・シウバ（脇役）。
+# 前の本との重なり: **20261105_real_aek_mbappe_6**（AEK戦・ムバッペ6試合連続ゴール）、20261101 レアルのラシン戦、20261107_stadium_realmadrid。→ 今回の初出は「7試合連続」の7つ目・ギュレルの1ゴール1アシスト・ガヤの退場。AEK戦の6試合の内訳（ローマ・セビージャ…）は繰り返さない。
+slot: match
+date: "2026年11月8日"
+format: news
+no_main: true
+people: [レアル・マドリード, バレンシア, ギュレル, ムバッペ, バルベルデ, ガヤ, モウリーニョ]
+
+short_style: X
+short_hook_word: ギュレル1G1A
+short_question: ムバッペの連続ゴールは、何試合まで続くと思いますか。
+short_photos:
+  - assets/images/20261108_real_valencia_guler_mbappe/01_v.jpg
+  - assets/images/20261108_real_valencia_guler_mbappe/02_v.jpg
+  - assets/images/20261108_real_valencia_guler_mbappe/03_v.jpg
+  - assets/images/20261108_real_valencia_guler_mbappe/01_v.jpg
+short_telops: []
+
+theme:
+  id: real_valencia_guler_mbappe
+  league: spain
+  league_name: ラ・リーガ
+  prefix: ""
+  title: レアル、バレンシアに3-0。ギュレルが1ゴール1アシストの夜に起きたこと
+  hook: ""
+  question: レアルは、バレンシアのホームで、どうやって3対0で勝ったのか
+  takeaway: ギュレルは1ゴール1アシスト。ムバッペは7試合連続ゴールで、レアルは公式戦8連勝。勝ち点30でバルサと並んだ（バルサは1試合少ない）
+
+thumbnail:
+  layout: scene
+  line1: レアル バレンシアに3-0
+  line2: ギュレルが1ゴール1アシスト
+  tags: [レアル・マドリード, ギュレル, ムバッペ]
+  photo: assets/images/20261108_real_valencia_guler_mbappe/01_w.jpg
+  short_photo: assets/images/20261108_real_valencia_guler_mbappe/01_v.jpg
+
+answer: バルベルデの先制、ギュレルの追加点、ギュレルのスルーパスからムバッペの3点目。79分にバレンシアのガヤが一発退場
+watch: 8日のアトレティコ対バルセロナ
+
+sections:
+  - id: what
+    main: true
+    heading: レアルは、バレンシアのホームで、どうやって3対0で勝ったのか
+    tier: 報道
+    telop: レアル、バレンシアに3-0。公式戦8連勝
+    say:
+      - text: レアル・マドリードが、バレンシアのホームで、3対0で勝ちました。
+        image: assets/images/20261108_real_valencia_guler_mbappe/01_w.jpg
+      - text: 7日のラ・リーガ。これで、公式戦8連勝です。
+      - text: 28分、ムバッペが倒されて得たフリーキックのこぼれ球を、バルベルデが決めて先制しました。
+        image: assets/images/20261108_real_valencia_guler_mbappe/02_w.jpg
+      - text: 36分、ベリンガムの折り返しが相手に当たってこぼれ、ギュレルが押し込んで2点目です。
+        image: assets/images/20261108_real_valencia_guler_mbappe/01_w.jpg
+        card: {type: table, title: バレンシア 0-3 レアル 得点, columns: [分, 得点者, 中身], rows: [[28分, バルベルデ, FKのこぼれ球], [36分, ギュレル, 折り返しのこぼれ], [75分, ムバッペ, ギュレルのパスから]], highlight_row: 2}
+      - text: そして75分。ギュレルが右で受けてスルーパス。ムバッペが決めて、3点目のリードです。
+        image: assets/images/20261108_real_valencia_guler_mbappe/02_w.jpg
+        card: none
+        emph: true
+      - text: 79分には、バレンシアのガヤが、ムバッペへの反則で一発退場になりました。
+      - text: ギュレルは1ゴール1アシスト。ムバッペは、7試合連続ゴールです。
+      - text: この試合のシュートは、レアル19本に対してバレンシア4本。枠内は11本対2本でした。
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/summary?event=401882808
+      - https://www.marca.com/futbol/primera-division/cronica/2026/11/07/madrid-arda-deslumbra-mestalla.html
+      - https://www.mundodeportivo.com/futbol/real-madrid/20261107/1004248458/triunfo-facil-real-madrid-valencia.html
+  - id: guler
+    heading: ギュレルの1ゴール1アシストは、現地でどう見られたのか
+    tier: 報道
+    telop: 現地の採点で、ギュレルは10点
+    say:
+      - text: 現地スペインの採点では、レアルのギュレルに10点がつきました。
+        image: assets/images/20261108_real_valencia_guler_mbappe/01_w.jpg
+        emph: true
+      - text: 現地の記事は、ギュレルの役割を、エジルを思わせるものだと書いています。エジルは、かつてレアルでプレーした、パスの名手です。
+        image: assets/images/20261108_real_valencia_guler_mbappe/02_w.jpg
+      - text: 3点目のパスは、プレッシャーの中で振り向いて、見ずに出した一本でした。
+        image: assets/images/20261108_real_valencia_guler_mbappe/01_w.jpg
+    official: false
+    sources:
+      - https://www.marca.com/futbol/real-madrid/2026/11/07/real-madrid-valencia-valoracion-comentarios.html
+      - https://www.marca.com/futbol/primera-division/cronica/2026/11/07/madrid-arda-deslumbra-mestalla.html
+  - id: view
+    viewpoint: true
+    heading: ムバッペの7試合連続ゴールで、レアルはどこに並んだのか
+    tier: 背景
+    telop: ムバッペ7試合9ゴール。レアルは勝ち点30
+    say:
+      - text: 見立てです。ムバッペは、7試合連続ゴールで、この7試合の合計は9点です。
+        image: assets/images/20261108_real_valencia_guler_mbappe/02_w.jpg
+        card: {type: table, title: ラ・リーガ 7日のあと, columns: [順位, クラブ, 試合, 勝ち点], rows: [[1位, バルセロナ, 11, 30], [2位, レアル・マドリード, 12, 30], [3位, アトレティコ・マドリード, 11, 28]], highlight_row: 1}
+      - text: レアルは勝ち点30で、バルセロナと並びました。バルサは1試合少なく、8日にアトレティコと戦います。
+        card: none
+        emph: true
+      - text: ラ・リーガは、ここから中断に入ります。
+        image: assets/images/20261108_real_valencia_guler_mbappe/01_w.jpg
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/v2/sports/soccer/esp.1/standings
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/summary?event=401882808
+      - https://www.footballchannel.jp/2026/11/08/post1056293/
+short_title: "レアル、バレンシアに3-0。ギュレルが1ゴール1アシストの夜に起きたこと"

@@ -1,0 +1,124 @@
+# 取材メモ（2026年11月5日）ライプツィヒ2-3マンC。78分のハーランド弾でシティは今季CL初の連勝。試合後の「もう少し上げないと」（ニュースのショート。見せ方 Y＝ハーランドの言葉から始める）
+# 取材: 2026-11-05。python requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。
+# 読んだ出典:
+#   ・ESPN の試合データ（site.api.espn.com .../uefa.champions/summary?event=401915306、11/4 20:00 UTC）: 37分 ルカのオウンゴール（シティ）／49分 バク（ライプツィヒ）／58分 エンソ・フェルナンデス（ヘッド、アシスト ンディアイエ）／61分 ヌサ（ライプツィヒ）／78分 ハーランド（左足、至近距離、アシスト エリオット・アンダーソン）。ライプツィヒ 2-3 シティ。
+#   ・サッカーキング 2224774（試合レポート。全部読んだ）: 得点と分は ESPN データと一致。「今季CLで初の連勝」「プレミアリーグでは2連敗中」。次節は24日、シティはホームでナポリ。
+#       **食い違い**: サッカーキングの書き出しは「現地時間5日」、実際は4日の夜（ESPN データ 11/4 20:00 UTC）。台本は「現地4日」。
+#   ・ESPN 記事 50322776（PA／ESPN Research の試合レポート。全部読んだ）: ハーランドはライプツィヒ相手に9試合で13点目（どのクラブに対しても最多）。今季14点目、CL通算61試合で62点。シティはこの勝ちで7位。
+#   ・ESPN 記事 50382966「Erling Haaland tells Man City to 'step up'…」（TNT Sports の取材。全部読んだ）＋マンチェスター・シティ公式 mancity.com の「Haaland post RB Leipzig reaction」（クラブ公式）:
+#       "I think we need to step up a little bit." "…when we were 1-0, I think we needed to push forward a bit more to go at it, go for the second and then hopefully go for the third. That's what we have to do as a club. We have to work on that."
+#       "13 touches, it's not the most but what is the most important? I helped the team to win so I'm super happy." / ESPN: "It was just his 13th touch of the game."
+#       → **クラブ公式でも "we need to step up a little bit" で一致＝確かめられた本人の言葉**。台本は英語を日本語にした（語順はなぞらない）。
+# 自分で数えたもの: 13点÷9試合＝約1.4点（ライプツィヒ相手）。CL通算 62点÷61試合＝約1.02点。
+# 本人の言葉: あり（ハーランド＝TNT Sports／ESPN／クラブ公式）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+# 写真: マンC公式のギャラリー・記事から photopool で集める。
+# 前の本との重なり: ハーランド関連の直近の本は posted.json に無し（人名・クラブ名で引いた）。日本の接点は無し。
+slot: match
+date: "2026年11月5日"
+format: news
+no_main: true
+people: [ハーランド, マンチェスター・シティ, ライプツィヒ, マレスカ監督, エリオット・アンダーソン]
+
+short_style: Y
+short_hook_quote: 僕らは、もう少しレベルを上げないといけない。
+short_question: ハーランドの言う「もう一段」を、シティはナポリ戦で見せられると思いますか。
+short_photos:
+  - assets/images/20261105_city_leipzig_haaland/01_v.jpg
+  - assets/images/20261105_city_leipzig_haaland/02_v.jpg
+  - assets/images/20261105_city_leipzig_haaland/05_v.jpg
+  - assets/images/20261105_city_leipzig_haaland/04_v.jpg
+short_telops: []
+
+theme:
+  id: city_leipzig_haaland
+  league: england
+  league_name: チャンピオンズリーグ
+  prefix: ""
+  title: ハーランド決勝弾、シティが今季CL初の連勝。語った「もう少し上げないと」
+  hook: ""
+  question: 勝ったあとのハーランドは、なぜ「もう少し上げないといけない」と言ったのか
+  takeaway: ハーランドはライプツィヒ相手に9試合で13点。この夜の決勝点は、この試合13回目のボールタッチだった。シティは7位に上がった
+
+thumbnail:
+  layout: face
+  line1: ハーランド 決勝弾のあとで
+  line2: 「もう少し上げないと」
+  tags: [ハーランド, マンチェスター・シティ]
+  photo: assets/images/20261105_city_leipzig_haaland/01_w.jpg
+  photos:
+    - assets/images/20261105_city_leipzig_haaland/01_w.jpg
+    - assets/images/20261105_city_leipzig_haaland/05_w.jpg
+  short_photo: assets/images/20261105_city_leipzig_haaland/01_v.jpg
+
+answer: 1対0のとき、もっと前へ出て2点目、3点目を取りにいくべきだった。それがクラブとしてやるべきこと
+watch: 24日のナポリ戦（ホーム）
+
+sections:
+  - id: what
+    main: true
+    heading: 決勝点のあと、ハーランドは何を語ったのか
+    tier: 確定
+    telop: ハーランド「もう少し上げないといけない」
+    say:
+      - text: 現地4日、マンチェスター・シティがライプツィヒに3対2で勝ちました。
+      - text: 2度追いつかれたあと、78分にハーランドが決勝点。ゴール前に飛び込みました。
+        image: assets/images/20261105_city_leipzig_haaland/01_w.jpg
+      - voice: アーリング・ハーランド
+        text: 僕らは、もう少しレベルを上げないといけない。
+        emph: true
+      - voice: アーリング・ハーランド
+        text: 1対0のとき、もっと前へ出るべきでした。
+        cont: true
+      - voice: アーリング・ハーランド
+        text: 2点目、3点目を取りにいくべきでした。
+        cont: true
+      - voice: アーリング・ハーランド
+        text: それが、クラブとしてやるべきことです。
+        cont: true
+      - text: プレミアリーグで2連敗中のシティにとって、今季のチャンピオンズリーグ初の連勝です。
+        image: assets/images/20261105_city_leipzig_haaland/04_w.jpg
+      - text: その決勝点は、アンダーソンの低いクロスを、ハーランドが左足で押し込んだものでした。
+        image: assets/images/20261105_city_leipzig_haaland/02_w.jpg
+      - text: この試合13回目のボールタッチでした。
+        image: assets/images/20261105_city_leipzig_haaland/05_w.jpg
+      - voice: アーリング・ハーランド
+        text: 触った回数は多くない。
+        cont: true
+      - voice: アーリング・ハーランド
+        text: でも大事なのは、チームを勝たせることです。
+        cont: true
+    official: true
+    sources:
+      - https://www.mancity.com/news/mens/haaland-post-rb-leipzig-reaction-ucl-4-nov-63929404
+      - https://www.espn.com/soccer/story/_/id/50382966/erling-haaland-man-city-rb-leipzig-uefa-champions-league
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915306
+      - https://www.soccer-king.jp/news/world/cl/20261105/2224774.html
+  - id: leipzig
+    heading: ハーランドは、ライプツィヒ相手に何点取っているのか
+    tier: 報道
+    telop: ライプツィヒ相手に9試合で13点
+    say:
+      - text: この1点で、ハーランドはライプツィヒ相手に9試合で13点目です。
+        card: {type: table, title: ハーランド ライプツィヒ戦, columns: [試合, 得点], rows: [[9, 13]], highlight_row: 0}
+      - text: 1つのクラブに対する得点として、最多になりました。
+        card: none
+    official: false
+    sources:
+      - https://www.espn.com/soccer/report/_/gameId/401915306
+      - https://www.mancity.com/news/mens/haaland-post-rb-leipzig-reaction-ucl-4-nov-63929404
+  - id: view
+    viewpoint: true
+    heading: ハーランドの得点ペースは、どれほどか
+    tier: 背景
+    telop: ライプツィヒ戦は1試合に約1.4点
+    say:
+      - text: 見立てです。ハーランドのライプツィヒ相手の得点は、1試合に約1.4点。
+      - text: チャンピオンズリーグ通算の約1.0点を、上回っています。
+        emph: true
+      - text: 次は24日、ホームでナポリを迎えます。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/report/_/gameId/401915306
+      - https://www.soccer-king.jp/news/world/cl/20261105/2224774.html
+short_title: "ハーランド決勝弾、シティが今季CL初の連勝。語った「もう少し上げないと」"

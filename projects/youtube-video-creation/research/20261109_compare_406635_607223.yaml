@@ -1,0 +1,367 @@
+# 取材メモ（11/9 月、シリーズ「比べる」、key: compare_406635_607223）。フィル・フォーデン（マンチェスター・シティ・26歳）×ラヤン・シェルキ（マンチェスター・シティ・23歳）。
+# **情報の時点は 2026-11-06**。**FotMob・DataMB は使っていない**。数字は Transfermarkt（2026-11-06 取得。控え: research/raw/20261109_foden_tm.json・20261109_cherki_tm.json）。
+#   Transfermarkt 番号：フォーデン 406635・シェルキ 607223。API（tmapi-alpha）の player・market-value-history・performance-season（2019〜2026季）・performance-game（2023〜2026季）を2.5秒あけて取得。
+# **選んだ理由**：同じシティの攻撃的MF2人。昨季（25/26）クラブの公式戦で絡んだ点は フォーデン17・シェルキ25、1つ絡むまで約179分と約114分。
+#   今季（26/27、11/6 まで）はフォーデン約91分・シェルキ約103分で、フォーデンが前に出ている（どちらも 450分超・900分未満＝標本が小さい）。
+#   市場価値はフォーデンが 2024-05 の 1億5000万€（最高）から 6500万€、シェルキは 2025-06 の 4500万€ から 1億1000万€（最高）。2026年に入って逆転。比べる軸が立つ。
+#   重なり：scripts/*compare*・posted.json・covered.yaml・scripts/2026100[7-9]〜202611* を grep。フォーデンは直近30日に名前すら無い。シェルキは試合ニュースで名前が出るだけ（10/29 ブライトン戦のPKの回など）。2人の比べ・選手紹介は無い。
+#   picks（research/20261109_picks.txt）：11/9 の選手紹介はヴシュコヴィッチ、スタジアムはサン・マメス、ユニフォームはレアル。人名は重ならない。
+#   **外した候補**：デ・ブライネ×モドリッチ（モドリッチは 11/8 のクロアチア代表の回の主役級）・エンソ×マック・アリスター（10/23 アルゼンチン代表の回の看板選手）・ギョケレシュ×セシュコ（セシュコの今季は206分で 450分に届かない）・
+#   サラー／レオン（今季はトルコ＝扱う7リーグの外。11/7 の担当の控え）・クヴァラツヘリア（長期離脱。11/7 の担当の控え）・エキティケ（今季0分）。
+# **2人とも今季も扱うリーグの1部**：シティ（プレミア）。ESPN の日程で確かめた（research/raw/20261109_mancity_espn_schedule.json）。
+#   **注意**：11/7（日本時間11/8 2:30）にアウェーのフォレスト戦がある。公開（11/9）の時点では1試合ぶん古い。台本は「11月6日までの数字」と言い、次の試合の日程は言わない。
+# **使った数**（TM の performance-season。クラブのトップチームの公式戦＝リーグ・CL・FAカップ・リーグカップ・コミュニティシールド・スーパーカップ・クラブW杯。**代表戦・五輪・ユースは混ぜない**）
+#   フォーデン：23/24 53試合 4276分 27点13A（GB1 35/2871/19/8・CL 8/684/5/3・FAC 5/436/2/1・KLUB 2/146/1/1・USC 1/90・GBCS 1/32・CGB 1/17）
+#              24/25 49試合 2993分 13点7A（GB1 28/1781/7/2・CL 9/688/3/2・FAC 6/228/0/2・2025年夏のクラブW杯 4/148/3/1・CGB 2/148）
+#              25/26 50試合 3048分 10点7A＝17（GB1 33/2085/7/5・CL 7/508/2/1・CGB 6/302/1/1・FAC 4/153）。Wikipedia「10 goals and seven assists in all competitions」と一致
+#              26/27 12試合 731分 4点4A＝8（GB1 7/352/1/2・CL 3/229/3/1・GBCS 1/60・CGB 1/90/0/1）。3点は 10/20 CL ホーム AEK 5-1 のハットトリック（TM の試合記録と Wikipedia。CLで初めて）
+#   シェルキ：24/25 リヨン 44試合 3098分 12点20A（FR1 30/2048/8/11・EL 12/915/4/8・FRC 2/135/0/1）。リーグ・アンのアシスト王（11）・ELのアシスト王（8）＝Wikipedia
+#             25/26 シティ 52試合 2854分 10点15A＝25（GB1 33/1786/4/12・CL 8/394/3/0・FAC 6/397/0/2・CGB 5/277/3/1）。2025年夏のクラブW杯 4/120/1/1 は TM では 24/25 に数える
+#             26/27 15試合 927分 6点3A＝9（GB1 8/475/4/2・CL 4/287/1/0・CGB 2/135/1/1・GBCS 1/30）。8/28 アウェーのパレス戦で2点（TM・Wikipedia 4-1）
+#   1つ絡むまで：25/26 フォーデン 3048÷17＝179.3／シェルキ 2854÷25＝114.2（差 約65分）。26/27 フォーデン 731÷8＝91.4／シェルキ 927÷9＝103.0
+#   プレミアだけの25/26：フォーデン 33試合 7点5A、シェルキ 33試合 4点12A
+# 市場価値（TM の推移）：フォーデン 2023-12 1億1000万€→2024-05-27 1億5000万€（最高）→2024-12 1億4000万→2025-05-30 1億→2025-12-09 8000万→2026-06-03 7000万→2026-10-07 6500万
+#   シェルキ 2023-12 2500万€→2024-06-03 2500万→2024-12-10 3000万→2025-06-03 4500万→2025-12-09 5000万→2026-06-03 9000万→2026-10-07 1億1000万（最高）。2026-03-09 はフォーデン8000万・シェルキ6500万、2026-06-03 で逆転
+# プロフィール（TM・Wikipedia）：フォーデン 2000-05-28 ストックポート生・イングランド代表・シティの下部組織・2017-11-21 トップでデビュー・左利き・契約 2030年まで（2026-07-22 延長）。
+#   タイトル：プレミア6回（17/18・18/19・20/21・21/22・22/23・23/24）・CL 2022-23・FAカップ 3回・リーグカップ 5回。2023-24 のPFA年間最優秀選手・FWA・プレミアの年間最優秀選手。
+#   シェルキ 2003-08-17 リヨン生・フランス代表（2025-06-05 デビュー）・リヨンの下部組織・2025-06-10 にシティへ5年契約（報道の移籍金は 3650万€＋追加600万€）・両利き（TM）。2025-08-14 に 10番。25/26 のPFAベストイレブン。
+#   2025-26 にシティは FAカップ・リーグカップを取った（2人とも Wikipedia の Honours に 2025–26）。
+# 写真：f1 シティ公式（選手ページの写真。右の「2030」の字を切り落とした）・f2/f3/f4 Commons（2023 CL ライプツィヒ戦、CC BY-SA 4.0 Steffen Prößdorf）・
+#   c1/c2 シティ公式（選手ページの写真）・c3/c4/c5 Commons（2026 W杯 フランス代表、CC BY-SA 4.0 Bryan Berlin）。pair_a/b/c は pairphoto で組んだ。
+slot: other_1
+date: "2026年11月6日"
+format: news
+series: 比べる
+people:
+  - フィル・フォーデン
+  - ラヤン・シェルキ
+  - マンチェスター・シティ
+
+theme:
+  end_bg: assets/images/20261109_compare_406635_607223/pair_c/01.jpg
+  id: compare_406635_607223
+  league: england
+  kind: other
+  topic: フォーデンとシェルキ
+  prefix: ""
+  title: フォーデンとシェルキ、昨季に絡んだ点は17と25。8つの差は今季どうなったのか
+  hook: ""
+  question: シティの攻撃的MF2人。昨季はシェルキが速く点に絡み、市場価値も追い越した。11月6日までの今季、その差はどう動いているのか
+  takeaway: 昨季に1つ絡むまでの時間はフォーデン約179分・シェルキ約114分でシェルキが約65分速かった。今季はフォーデン約91分・シェルキ約103分で入れ替わっているが、どちらも900分未満の小さな数
+  league_name: プレミアリーグ
+  opening_image: assets/images/20261109_compare_406635_607223/pair_b/01.jpg
+
+short_title: フォーデンとシェルキ、昨季に絡んだ点は17と25
+
+thumbnail:
+  photo: assets/images/20261109_compare_406635_607223/pair_b/01.jpg
+  photos:
+    - assets/images/20261109_compare_406635_607223/f2/01_t.jpg
+    - assets/images/20261109_compare_406635_607223/c1/01_t.jpg
+  short_photo: assets/images/20261109_compare_406635_607223/pair_b/01_v.jpg
+  face_link: VS
+  line1: フォーデンとシェルキ
+  line2: シティの昨季 17と25
+  tags: [フォーデン, シェルキ, マンチェスター・シティ]
+
+answer: 昨季はシェルキが約65分速く点に絡んだ。今季はフォーデンが前に出ているが、まだ小さな数
+watch: 毎日、数字でサッカーを読み解きます
+
+sections:
+  - id: hook
+    heading: 同じシティで、昨季の2人はいくつの点に絡んだのか
+    tier: 報道
+    telop: 2025年から26年 クラブの公式戦
+    narrator: 解説
+    card: &hookcard
+      type: stats
+      title: 得点＋アシスト（昨季・クラブの公式戦）
+      items:
+        - ["17", つ, フォーデン]
+        - ["25", つ, シェルキ]
+        - ["約65", 分差, 1つ絡むまでの時間]
+      focus: 2
+    say:
+      - text: マンチェスター・シティで育った、フィル・フォーデン。
+        image: assets/images/20261109_compare_406635_607223/f1/01_w.jpg
+        card: none
+      - text: そして、昨季リヨンから加わった、ラヤン・シェルキ。
+        image: assets/images/20261109_compare_406635_607223/c2/01_w.jpg
+        card: none
+      - text: どちらも、前線の後ろでボールを受けて攻撃を組み立てる、攻撃的MFです。
+        image: assets/images/20261109_compare_406635_607223/pair_b/01.jpg
+        card: none
+      - text: 比べるのは、11月6日までのクラブの公式戦です。
+        image: assets/images/20261109_compare_406635_607223/f2/01_b.jpg
+        card: {<<: *hookcard, focus: 0}
+      - text: 昨季、得点とアシストで絡んだ点は、フォーデンが17、シェルキが25。
+        image: assets/images/20261109_compare_406635_607223/c3/01_b.jpg
+        card: {<<: *hookcard, focus: 1}
+      - text: 1つの点に絡むのに要した時間は、シェルキが約65分も短い計算です。
+        emph: true
+        image: assets/images/20261109_compare_406635_607223/c3/01_b.jpg
+        card: {<<: *hookcard, focus: 2}
+      - text: ところが今季に入って、この並びが動いています。
+        image: assets/images/20261109_compare_406635_607223/pair_c/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/phil-foden/leistungsdaten/spieler/406635
+      - https://www.transfermarkt.com/rayan-cherki/leistungsdaten/spieler/607223
+
+  - id: data
+    heading: フォーデンとシェルキは、どこで育ち、いまいくらの選手なのか
+    tier: 報道
+    telop: 26歳と23歳
+    narrator: 解説
+    card: &datacard
+      type: duel
+      left: {name: フォーデン, club: マンC, photo: assets/images/20261109_compare_406635_607223/f1/01_sq.jpg, color: "#6cabdd"}
+      right: {name: シェルキ, club: マンC, photo: assets/images/20261109_compare_406635_607223/c1/01_sq.jpg, color: "#e8b400"}
+      rows:
+        - [生まれた日, 2000年5月28日, 2003年8月17日]
+        - [代表, イングランド, フランス]
+        - [育ったクラブ, シティ, リヨン]
+        - [トップに出た時, 2017年11月, 2025年6月]
+        - [契約, 2030年まで, 2030年まで]
+        - [市場価値, 6500万€, 1億1000万€]
+      bars: false
+      note: 育ったクラブは下部組織。シェルキはシティに来た時。市場価値はそれぞれの最新の値
+    say:
+      - text: フォーデンは26歳。シティの下部組織で育ち、2017年にトップで初出場。
+        image: assets/images/20261109_compare_406635_607223/f2/01_b.jpg
+        card: {<<: *datacard, highlight_row: 育ったクラブ}
+      - text: プレミア優勝は6回。2024年には、選手の投票で年間最優秀選手に。
+        image: assets/images/20261109_compare_406635_607223/f3/01_w.jpg
+        card: none
+      - text: シェルキは23歳。生まれ育ったリヨンのアカデミー出身で、2025年6月に加入。
+        image: assets/images/20261109_compare_406635_607223/c5/01_b.jpg
+        card: {<<: *datacard, highlight_row: トップに出た時}
+      - text: リヨン最後の季は、リーグ・アンとヨーロッパリーグの両方でアシスト王。
+        image: assets/images/20261109_compare_406635_607223/c4/01_w.jpg
+        card: none
+      - text: 市場価値は、フォーデンが6500万ユーロ、シェルキが1億1000万ユーロです。
+        image: assets/images/20261109_compare_406635_607223/c1/01_b.jpg
+        card: {<<: *datacard, highlight_row: 市場価値}
+    sources:
+      - https://www.transfermarkt.com/phil-foden/profil/spieler/406635
+      - https://www.transfermarkt.com/rayan-cherki/profil/spieler/607223
+      - https://en.wikipedia.org/wiki/Phil_Foden
+      - https://en.wikipedia.org/wiki/Rayan_Cherki
+
+  - id: seasons
+    heading: 季ごとに並べると、2人はいくつの点に絡んできたのか
+    tier: 報道
+    telop: 季ごとの数（クラブの公式戦）
+    narrator: 解説
+    card: &seasoncard
+      type: table
+      title: 季ごとの数（クラブのトップチームの公式戦）
+      columns: [選手, 季, 試合, 得点, アシスト]
+      rows:
+        - [フォーデン, 23/24, "53", "27", "13"]
+        - [フォーデン, 24/25, "49", "13", "7"]
+        - [シェルキ, 24/25, "44", "12", "20"]
+        - [フォーデン, 25/26, "50", "10", "7"]
+        - [シェルキ, 25/26, "52", "10", "15"]
+      note: シェルキの24/25はリヨン。フォーデンの24/25には2025年夏のクラブW杯を含む
+    say:
+      - text: まずは、ここ数年を季ごとに見ていきます。
+        image: assets/images/20261109_compare_406635_607223/f2/01_b.jpg
+        card: *seasoncard
+      - text: フォーデンが最も多くの点に絡んだのは、2023年から24年の季。
+        image: assets/images/20261109_compare_406635_607223/f3/01_b.jpg
+        card: {<<: *seasoncard, highlight_row: 0}
+      - text: 53試合で27点13アシスト。
+        image: assets/images/20261109_compare_406635_607223/f3/01_b.jpg
+        card: {<<: *seasoncard, highlight_row: 0}
+      - text: シェルキは翌年、リヨンで44試合、12点20アシスト。
+        image: assets/images/20261109_compare_406635_607223/c5/01_b.jpg
+        card: {<<: *seasoncard, highlight_row: 2}
+      - text: そして2人がそろった昨季、2025年から26年の季。
+        image: assets/images/20261109_compare_406635_607223/pair_a/01.jpg
+        card: none
+      - text: フォーデンは50試合で10点7アシスト。
+        image: assets/images/20261109_compare_406635_607223/f2/01_b.jpg
+        card: {<<: *seasoncard, highlight_row: 3}
+      - text: シェルキは52試合で、同じ10点に15アシスト。アシストで大きく上回りました。
+        emph: true
+        image: assets/images/20261109_compare_406635_607223/c3/01_b.jpg
+        card: {<<: *seasoncard, highlight_row: 4}
+      - text: プレミアリーグでは、移って最初の季に12アシスト。
+        image: assets/images/20261109_compare_406635_607223/c2/01_w.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/phil-foden/leistungsdaten/spieler/406635
+      - https://www.transfermarkt.com/rayan-cherki/leistungsdaten/spieler/607223
+      - https://en.wikipedia.org/wiki/Rayan_Cherki
+
+  - id: value
+    heading: 2人の市場価値は、いつ入れ替わったのか
+    tier: 報道
+    telop: 市場価値の歩み
+    narrator: 解説
+    card: &valuecard
+      type: line
+      title: 市場価値の歩み（百万ユーロ）
+      x: ["23年12月", "24年6月", "24年12月", "25年6月", "25年12月", "26年6月", "26年10月"]
+      series:
+        - [フォーデン, [110, 150, 140, 100, 80, 70, 65]]
+        - [シェルキ, [25, 25, 30, 45, 50, 90, 110]]
+      focus: シェルキ
+      note: 各時点の直前に出た値。フォーデンの24年6月は2024年5月27日の値
+    say:
+      - text: 次に、市場価値の歩みです。
+        image: assets/images/20261109_compare_406635_607223/f1/01_b.jpg
+        card: *valuecard
+      - text: フォーデンの最高は、プレミアの年間最優秀選手に選ばれた直後。
+        image: assets/images/20261109_compare_406635_607223/f1/01_b.jpg
+        card: {<<: *valuecard, highlight: 24年6月}
+      - text: 2024年5月の、1億5000万ユーロ。
+        image: assets/images/20261109_compare_406635_607223/f1/01_b.jpg
+        card: {<<: *valuecard, highlight: 24年6月}
+      - text: シェルキは、シティに移る直前の2025年6月で4500万ユーロ。
+        image: assets/images/20261109_compare_406635_607223/c1/01_b.jpg
+        card: {<<: *valuecard, highlight: 25年6月}
+      - text: そこから1年で2倍になり、2026年6月に、フォーデンを追い越しました。
+        emph: true
+        image: assets/images/20261109_compare_406635_607223/c1/01_b.jpg
+        card: {<<: *valuecard, highlight: 26年6月}
+      - text: いまの値が、シェルキにとってはこれまでの最高です。
+        image: assets/images/20261109_compare_406635_607223/c2/01_w.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/phil-foden/marktwertverlauf/spieler/406635
+      - https://www.transfermarkt.com/rayan-cherki/marktwertverlauf/spieler/607223
+
+  - id: split
+    heading: 1つの点に絡むまでの時間は、今季どう動いているのか
+    tier: 報道
+    main: true
+    telop: 出場時間÷得点＋アシスト
+    narrator: 解説
+    card: &splitcard
+      type: duel
+      left: {name: フォーデン, club: マンC, photo: assets/images/20261109_compare_406635_607223/f1/01_sq.jpg, color: "#6cabdd"}
+      right: {name: シェルキ, club: マンC, photo: assets/images/20261109_compare_406635_607223/c1/01_sq.jpg, color: "#e8b400"}
+      rows:
+        - [昨季の出場時間, 3048分, 2854分]
+        - [昨季の得点＋アシスト, "17", "25"]
+        - [昨季に1つ絡むまで, 約179分, 約114分]
+        - [今季の出場時間, 731分, 927分]
+        - [今季の得点＋アシスト, "8", "9"]
+        - [今季に1つ絡むまで, 約91分, 約103分]
+      bars: [昨季の出場時間, 昨季の得点＋アシスト, 今季の出場時間, 今季の得点＋アシスト]
+      lower: [昨季に1つ絡むまで, 今季に1つ絡むまで]
+      note: クラブの公式戦。今季は11月6日まで。かかった時間は出場時間÷得点＋アシストで、自分で計算した値
+    say:
+      - text: シティの攻撃的MF、26歳のフォーデンと23歳のシェルキ。
+        short_only: true
+        image: assets/images/20261109_compare_406635_607223/pair_b/01.jpg
+        card: none
+      - text: 出場した分数を、得点とアシストの合計で割ります。
+        image: assets/images/20261109_compare_406635_607223/f2/01_b.jpg
+        card: {<<: *splitcard, highlight_row: 昨季の出場時間}
+      - text: 昨季は、フォーデンが約179分に1つ、シェルキが約114分に1つでした。
+        image: assets/images/20261109_compare_406635_607223/c3/01_b.jpg
+        card: {<<: *splitcard, highlight_row: 昨季に1つ絡むまで}
+      - text: 今季は、フォーデンが731分で4点4アシスト。
+        image: assets/images/20261109_compare_406635_607223/f3/01_b.jpg
+        card: {<<: *splitcard, highlight_row: 今季の得点＋アシスト}
+      - text: 1つ絡むまでは約91分。昨季のおよそ半分です。
+        emph: true
+        image: assets/images/20261109_compare_406635_607223/f4/01_w.jpg
+        card: none
+      - text: シェルキは927分で6点3アシスト、約103分に1つ。
+        image: assets/images/20261109_compare_406635_607223/c5/01_b.jpg
+        card: {<<: *splitcard, highlight_row: 今季に1つ絡むまで}
+      - text: 絡んだ点の数は8と9。昨季の8つの差は、1つまで縮まりました。
+        image: assets/images/20261109_compare_406635_607223/pair_b/01.jpg
+        card: none
+      - text: 昨季とは逆に、今季はフォーデンのほうが、約12分速く点に絡んでいます。
+        image: assets/images/20261109_compare_406635_607223/pair_c/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/phil-foden/leistungsdaten/spieler/406635
+      - https://www.transfermarkt.com/rayan-cherki/leistungsdaten/spieler/607223
+
+  - id: now
+    heading: 今季の2人は、どの試合で点を取ってきたのか
+    tier: 報道
+    telop: 2026年から27年 11月6日時点
+    narrator: 解説
+    card: &nowcard
+      type: duel
+      left: {name: フォーデン, club: マンC, photo: assets/images/20261109_compare_406635_607223/f1/01_sq.jpg, color: "#6cabdd"}
+      right: {name: シェルキ, club: マンC, photo: assets/images/20261109_compare_406635_607223/c1/01_sq.jpg, color: "#e8b400"}
+      rows:
+        - [試合, "12", "15"]
+        - [リーグの得点, "1", "4"]
+        - [CLの得点, "3", "1"]
+        - [アシスト, "4", "3"]
+      bars: [試合, リーグの得点, CLの得点, アシスト]
+      note: 今季のクラブの公式戦（11月6日時点）。どちらもまだ900分に届かない小さな数
+    say:
+      - text: 今季の中身も見ておきます。
+        image: assets/images/20261109_compare_406635_607223/c5/01_b.jpg
+        card: {<<: *nowcard, highlight_row: 試合}
+      - text: フォーデンの4点のうち3点は、10月20日のチャンピオンズリーグ。
+        image: assets/images/20261109_compare_406635_607223/f3/01_b.jpg
+        card: {<<: *nowcard, highlight_row: CLの得点}
+      - text: ギリシャのクラブに、ホームで5対1と勝った試合です。
+        image: assets/images/20261109_compare_406635_607223/f3/01_b.jpg
+        card: {<<: *nowcard, highlight_row: CLの得点}
+      - text: シティで4度目、チャンピオンズリーグでは初の、1試合3得点です。
+        emph: true
+        image: assets/images/20261109_compare_406635_607223/f3/01_w.jpg
+        card: none
+      - text: シェルキはリーグ戦で4点。8月28日のクリスタル・パレス戦で2点。
+        image: assets/images/20261109_compare_406635_607223/c2/01_b.jpg
+        card: {<<: *nowcard, highlight_row: リーグの得点}
+      - text: どちらも出場は900分未満。標本の小さい数字です。
+        image: assets/images/20261109_compare_406635_607223/pair_c/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/phil-foden/leistungsdaten/spieler/406635
+      - https://www.transfermarkt.com/rayan-cherki/leistungsdaten/spieler/607223
+      - https://en.wikipedia.org/wiki/Phil_Foden
+      - https://en.wikipedia.org/wiki/Rayan_Cherki
+
+  - id: view
+    heading: 見立て・昨季の65分差は、今季どこまで縮んだのか
+    tier: 背景
+    viewpoint: true
+    narrator: 解説
+    telop: 数字の違いが示すもの
+    card: &viewcard
+      type: duel
+      left: {name: フォーデン, club: マンC, photo: assets/images/20261109_compare_406635_607223/f1/01_sq.jpg, color: "#6cabdd"}
+      right: {name: シェルキ, club: マンC, photo: assets/images/20261109_compare_406635_607223/c1/01_sq.jpg, color: "#e8b400"}
+      rows:
+        - [昨季に1つ絡むまで, 約179分, 約114分]
+        - [今季に1つ絡むまで, 約91分, 約103分]
+        - [市場価値の最高, 1億5000万€, 1億1000万€]
+        - [いまの市場価値, 6500万€, 1億1000万€]
+      lower: [昨季に1つ絡むまで, 今季に1つ絡むまで]
+      bars: false
+      note: クラブの公式戦。出場時間÷得点＋アシストで、自分で計算した値。今季は900分未満
+    say:
+      - text: 見立てです。昨季は、シェルキが約65分速く点に絡み、市場価値も上回りました。
+        image: assets/images/20261109_compare_406635_607223/c1/01_b.jpg
+        card: {<<: *viewcard, highlight_row: 昨季に1つ絡むまで}
+      - text: 今季は、その前後が入れ替わりました。
+        mark: {kind: circle, row: 1}
+        image: assets/images/20261109_compare_406635_607223/f2/01_b.jpg
+        card: {<<: *viewcard, highlight_row: 今季に1つ絡むまで}
+      - text: 今季のフォーデンは、2023年から24年の季の約107分より、約16分速いペース。
+        emph: true
+        image: assets/images/20261109_compare_406635_607223/f3/01_w.jpg
+        card: none
+      - text: 一方で市場価値は、いまもシェルキが上。
+        image: assets/images/20261109_compare_406635_607223/c1/01_b.jpg
+        card: {<<: *viewcard, highlight_row: いまの市場価値}
+      - text: 点に絡む速さと値段の並びが、別々の向きに動く2人。この先も注目です。
+        image: assets/images/20261109_compare_406635_607223/pair_c/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/phil-foden/leistungsdaten/spieler/406635
+      - https://www.transfermarkt.com/rayan-cherki/leistungsdaten/spieler/607223

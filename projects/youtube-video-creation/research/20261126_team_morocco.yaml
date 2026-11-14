@@ -1,0 +1,908 @@
+# 代表チーム紹介 モロッコ代表（11/13 作成。見本は 11/22 のスイス代表）。7節：フック→基礎DATA→日本との関係（あるとき）→歴史と転機（年表）→看板選手（表）→いまのチーム→見立て。
+date: 2026年11月26日（情報は11月13日時点）
+slot: other_1
+format: news
+series: 代表チーム紹介
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+short_photos:
+- assets/images/20261126_team_morocco/b01_v.jpg
+- assets/images/20261126_team_morocco/b03_v.jpg
+people:
+- モロッコ代表
+- ハキミ
+- ワフビ
+- 日本代表
+- ワールドカップ
+theme:
+  id: team_morocco
+  league: japan
+  league_name: モロッコ代表
+  kind: preview
+  topic: モロッコ代表
+  title: モロッコ代表は、大会3か月前に監督を替えた。なぜ、W杯ベスト8に入れたのか
+  question: モロッコは2026年3月に監督が替わったのに、なぜW杯で2大会続けて準々決勝以上に進めたのか
+  lead: 監督を替えて3か月。それでも、W杯ベスト8。
+  hook: ''
+  opening_image: assets/stats/tb_morocco_data_t.png
+  end_bg: assets/images/20261126_team_morocco/b02_w.jpg
+  takeaway: モロッコは2026年のW杯でベスト8。2022年のベスト4に続いて、2大会続けて準々決勝以上に進んだ。大会の3か月前に監督が替わったが、得点は2022年の6から10に増え、6人が分け合った。11月はニジェールと対戦する。
+thumbnail:
+  board: assets/stats/tb_morocco_data.png
+  short_photo: assets/images/20261126_team_morocco/b01_v.jpg
+  line1: モロッコ代表
+  line2: 監督交代でも、W杯ベスト8
+  crest_main:
+  - モロッコ
+  tags:
+  - モロッコ代表
+  - ハキミ
+  - ワフビ
+  - 日本代表
+  - ワールドカップ
+  - 代表チーム紹介
+sections:
+- id: hook
+  heading: モロッコは、監督が替わって、何が起きたのか
+  tier: 背景
+  telop: 大会3か月前に監督交代。それでもベスト8
+  narrator: 解説
+  main: true
+  say:
+  - text: モロッコ代表。フィファランクは7位の国です。
+    image: assets/stats/tb_morocco_data_t.png
+    short_only: true
+    no_telop: true
+  - text: 2026年のワールドカップで、モロッコは、ベスト8に進みました。
+    image: assets/stats/tb_morocco_data_t.png
+    no_telop: true
+  - text: 2022年のベスト4に続いて、今回も準々決勝まで残りました。
+    image: assets/stats/tb_morocco_data_r1.png
+    no_telop: true
+    emph: true
+  - text: ところが、その3か月前の2026年3月に、監督が替わっていました。
+    image: assets/images/20261126_team_morocco/b01_w.jpg
+    no_telop: true
+  - text: 新しい監督は、U-20ワールドカップで優勝したばかりの、ワフビです。
+    image: assets/images/20261126_team_morocco/b03_w.jpg
+    no_telop: true
+  - text: 監督が替わったモロッコは、どうやって8強に残ったのでしょうか。
+    image: assets/stats/tb_morocco_data_t.png
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Morocco_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/Morocco_national_football_team
+  - https://www.cafonline.com/news/morocco-turn-to-ouahbi-for-leadership-after-coach-walid-regraguis-departure/
+- id: data
+  heading: モロッコ代表は、どんな数字を持つ国なのか
+  tier: 背景
+  telop: モロッコ代表の基礎DATA
+  narrator: 解説
+  say:
+  - text: モロッコのフィファランクは、10月7日の発表で**7位**。日本は17位です。
+    image: assets/stats/tb_morocco_data0.png
+    no_telop: true
+  - text: W杯の本大会に出るのは、7回目。最高成績は、2022年のベスト4です。
+    image: assets/stats/tb_morocco_data1.png
+    no_telop: true
+  - text: 直近は2026年。フランスに0対2で負けて、ベスト8でした。
+    image: assets/stats/tb_morocco_data2.png
+    no_telop: true
+  - text: アフリカ選手権は、優勝2回。1976年と、2025年です。
+    image: assets/stats/tb_morocco_data3.png
+    no_telop: true
+  - text: 監督は、ワフビ。2026年3月に就任しました。
+    image: assets/stats/tb_morocco_data5.png
+    no_telop: true
+  - text: 主将はハキミ。パリ・サンジェルマンのディフェンダーです。
+    image: assets/stats/tb_morocco_data6.png
+    no_telop: true
+  - text: 日本とは、A代表どうしでは、まだ対戦がありません。
+    image: assets/stats/tb_morocco_data8.png
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Morocco_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/Morocco_national_football_team
+  - https://en.wikipedia.org/wiki/Module:SportsRankings/data/FIFA_World_Rankings
+- id: history
+  heading: モロッコは、どんな道でベスト8に戻ってきたのか
+  tier: 背景
+  telop: 1970年の初出場から、2大会続けて準々決勝以上
+  narrator: 解説
+  card:
+    type: timeline
+    title: モロッコ代表の歩み
+    rows:
+    - - 1970年
+      - W杯初出場。アフリカ勢で初の勝ち点
+    - - 1986年
+      - グループを首位通過。ベスト16
+    - - 1998年
+      - ノルウェーと2-2。1次リーグ敗退
+    - - 2018年
+      - 20年ぶりの本大会。1次リーグ敗退
+    - - 2022年
+      - スペイン、ポルトガルを破る。ベスト4
+    - - 2026年
+      - カナダに3-0。ベスト8
+    focus: 2026年
+  say:
+  - text: モロッコの初めてのW杯は、1970年でした。
+    image: assets/images/20261126_team_morocco/b02_w.jpg
+    card:
+      type: timeline
+      title: モロッコ代表の歩み
+      rows:
+      - - 1970年
+        - W杯初出場。アフリカ勢で初の勝ち点
+      - - 1986年
+        - グループを首位通過。ベスト16
+      - - 1998年
+        - ノルウェーと2-2。1次リーグ敗退
+      - - 2018年
+        - 20年ぶりの本大会。1次リーグ敗退
+      - - 2022年
+        - スペイン、ポルトガルを破る。ベスト4
+      - - 2026年
+        - カナダに3-0。ベスト8
+      focus: 2026年
+  - text: ブルガリアと1対1で引き分けて、アフリカ勢で初めて、勝ち点を取りました。
+    card:
+      type: timeline
+      title: モロッコ代表の歩み
+      rows:
+      - - 1970年
+        - W杯初出場。アフリカ勢で初の勝ち点
+      - - 1986年
+        - グループを首位通過。ベスト16
+      - - 1998年
+        - ノルウェーと2-2。1次リーグ敗退
+      - - 2018年
+        - 20年ぶりの本大会。1次リーグ敗退
+      - - 2022年
+        - スペイン、ポルトガルを破る。ベスト4
+      - - 2026年
+        - カナダに3-0。ベスト8
+      focus: 2026年
+      highlight_row: 0
+  - text: 1986年は、グループを首位で通過。ベスト16でした。
+    image: assets/images/20261126_team_morocco/b03_w.jpg
+    card:
+      type: timeline
+      title: モロッコ代表の歩み
+      rows:
+      - - 1970年
+        - W杯初出場。アフリカ勢で初の勝ち点
+      - - 1986年
+        - グループを首位通過。ベスト16
+      - - 1998年
+        - ノルウェーと2-2。1次リーグ敗退
+      - - 2018年
+        - 20年ぶりの本大会。1次リーグ敗退
+      - - 2022年
+        - スペイン、ポルトガルを破る。ベスト4
+      - - 2026年
+        - カナダに3-0。ベスト8
+      focus: 2026年
+      highlight_row: 1
+  - text: 1994年と1998年は、1次リーグで敗退。
+    card:
+      type: timeline
+      title: モロッコ代表の歩み
+      rows:
+      - - 1970年
+        - W杯初出場。アフリカ勢で初の勝ち点
+      - - 1986年
+        - グループを首位通過。ベスト16
+      - - 1998年
+        - ノルウェーと2-2。1次リーグ敗退
+      - - 2018年
+        - 20年ぶりの本大会。1次リーグ敗退
+      - - 2022年
+        - スペイン、ポルトガルを破る。ベスト4
+      - - 2026年
+        - カナダに3-0。ベスト8
+      focus: 2026年
+      highlight_row: 2
+  - text: 1998年は、ノルウェーと2対2でした。
+    card:
+      type: timeline
+      title: モロッコ代表の歩み
+      rows:
+      - - 1970年
+        - W杯初出場。アフリカ勢で初の勝ち点
+      - - 1986年
+        - グループを首位通過。ベスト16
+      - - 1998年
+        - ノルウェーと2-2。1次リーグ敗退
+      - - 2018年
+        - 20年ぶりの本大会。1次リーグ敗退
+      - - 2022年
+        - スペイン、ポルトガルを破る。ベスト4
+      - - 2026年
+        - カナダに3-0。ベスト8
+      focus: 2026年
+      highlight_row: 2
+  - text: そのあと、2018年に、20年ぶりに本大会へ戻りました。
+    image: assets/images/20261126_team_morocco/b02_w.jpg
+    card:
+      type: timeline
+      title: モロッコ代表の歩み
+      rows:
+      - - 1970年
+        - W杯初出場。アフリカ勢で初の勝ち点
+      - - 1986年
+        - グループを首位通過。ベスト16
+      - - 1998年
+        - ノルウェーと2-2。1次リーグ敗退
+      - - 2018年
+        - 20年ぶりの本大会。1次リーグ敗退
+      - - 2022年
+        - スペイン、ポルトガルを破る。ベスト4
+      - - 2026年
+        - カナダに3-0。ベスト8
+      focus: 2026年
+      highlight_row: 3
+  - text: 2022年は、スペインとポルトガルを倒して、ベスト4。
+    card:
+      type: timeline
+      title: モロッコ代表の歩み
+      rows:
+      - - 1970年
+        - W杯初出場。アフリカ勢で初の勝ち点
+      - - 1986年
+        - グループを首位通過。ベスト16
+      - - 1998年
+        - ノルウェーと2-2。1次リーグ敗退
+      - - 2018年
+        - 20年ぶりの本大会。1次リーグ敗退
+      - - 2022年
+        - スペイン、ポルトガルを破る。ベスト4
+      - - 2026年
+        - カナダに3-0。ベスト8
+      focus: 2026年
+      highlight_row: 4
+  - text: アフリカ勢で、初めての4強でした。
+    card:
+      type: timeline
+      title: モロッコ代表の歩み
+      rows:
+      - - 1970年
+        - W杯初出場。アフリカ勢で初の勝ち点
+      - - 1986年
+        - グループを首位通過。ベスト16
+      - - 1998年
+        - ノルウェーと2-2。1次リーグ敗退
+      - - 2018年
+        - 20年ぶりの本大会。1次リーグ敗退
+      - - 2022年
+        - スペイン、ポルトガルを破る。ベスト4
+      - - 2026年
+        - カナダに3-0。ベスト8
+      focus: 2026年
+      highlight_row: 4
+  - text: 2026年は、ベスト16を勝ち抜いて、8強に残りました。
+    image: assets/images/20261126_team_morocco/b03_w.jpg
+    card:
+      type: timeline
+      title: モロッコ代表の歩み
+      rows:
+      - - 1970年
+        - W杯初出場。アフリカ勢で初の勝ち点
+      - - 1986年
+        - グループを首位通過。ベスト16
+      - - 1998年
+        - ノルウェーと2-2。1次リーグ敗退
+      - - 2018年
+        - 20年ぶりの本大会。1次リーグ敗退
+      - - 2022年
+        - スペイン、ポルトガルを破る。ベスト4
+      - - 2026年
+        - カナダに3-0。ベスト8
+      focus: 2026年
+      highlight_row: 5
+  sources:
+  - https://en.wikipedia.org/wiki/Morocco_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/Morocco_national_football_team
+- id: players
+  heading: いまの看板選手は、誰なのか
+  tier: 背景
+  telop: 看板選手を、所属・名前・位置・年齢で
+  narrator: 解説
+  card:
+    type: table
+    title: モロッコ代表の看板選手
+    columns:
+    - 所属
+    - 名前
+    - 位置
+    - 年齢
+    rows:
+    - - パリ・サンジェルマン
+      - ハキミ
+      - DF
+      - '28'
+    - - バイエルン
+      - サイバリ
+      - MF
+      - '25'
+    - - パナシナイコス
+      - ウナヒ
+      - MF
+      - '26'
+    - - レアル・マドリード
+      - ブラヒム・ディアス
+      - FW
+      - '27'
+    - - アル・ヒラル
+      - ブヌ
+      - GK
+      - '35'
+  say:
+  - text: W杯のピッチに立った、主力を並べます。
+    image: assets/images/20261126_team_morocco/b02_w.jpg
+    card:
+      type: table
+      title: モロッコ代表の看板選手
+      columns:
+      - 所属
+      - 名前
+      - 位置
+      - 年齢
+      rows:
+      - - パリ・サンジェルマン
+        - ハキミ
+        - DF
+        - '28'
+      - - バイエルン
+        - サイバリ
+        - MF
+        - '25'
+      - - パナシナイコス
+        - ウナヒ
+        - MF
+        - '26'
+      - - レアル・マドリード
+        - ブラヒム・ディアス
+        - FW
+        - '27'
+      - - アル・ヒラル
+        - ブヌ
+        - GK
+        - '35'
+  - text: ハキミは、主将。所属は、パリ・サンジェルマンです。
+    card:
+      type: table
+      title: モロッコ代表の看板選手
+      columns:
+      - 所属
+      - 名前
+      - 位置
+      - 年齢
+      rows:
+      - - パリ・サンジェルマン
+        - ハキミ
+        - DF
+        - '28'
+      - - バイエルン
+        - サイバリ
+        - MF
+        - '25'
+      - - パナシナイコス
+        - ウナヒ
+        - MF
+        - '26'
+      - - レアル・マドリード
+        - ブラヒム・ディアス
+        - FW
+        - '27'
+      - - アル・ヒラル
+        - ブヌ
+        - GK
+        - '35'
+      highlight_row: 0
+  - text: W杯のハイチ戦で、ゴールを決めました。
+    image: assets/images/20261126_team_morocco/b01_w.jpg
+    card: none
+  - text: サイバリは、バイエルンのミッドフィールダー。W杯で、3得点です。
+    card:
+      type: table
+      title: モロッコ代表の看板選手
+      columns:
+      - 所属
+      - 名前
+      - 位置
+      - 年齢
+      rows:
+      - - パリ・サンジェルマン
+        - ハキミ
+        - DF
+        - '28'
+      - - バイエルン
+        - サイバリ
+        - MF
+        - '25'
+      - - パナシナイコス
+        - ウナヒ
+        - MF
+        - '26'
+      - - レアル・マドリード
+        - ブラヒム・ディアス
+        - FW
+        - '27'
+      - - アル・ヒラル
+        - ブヌ
+        - GK
+        - '35'
+      highlight_row: 1
+  - text: ウナヒは、パナシナイコス所属。カナダ戦で、2得点でした。
+    image: assets/images/20261126_team_morocco/b03_w.jpg
+    card:
+      type: table
+      title: モロッコ代表の看板選手
+      columns:
+      - 所属
+      - 名前
+      - 位置
+      - 年齢
+      rows:
+      - - パリ・サンジェルマン
+        - ハキミ
+        - DF
+        - '28'
+      - - バイエルン
+        - サイバリ
+        - MF
+        - '25'
+      - - パナシナイコス
+        - ウナヒ
+        - MF
+        - '26'
+      - - レアル・マドリード
+        - ブラヒム・ディアス
+        - FW
+        - '27'
+      - - アル・ヒラル
+        - ブヌ
+        - GK
+        - '35'
+      highlight_row: 2
+  - text: ブラヒム・ディアスは、レアル・マドリードのフォワード。
+    card:
+      type: table
+      title: モロッコ代表の看板選手
+      columns:
+      - 所属
+      - 名前
+      - 位置
+      - 年齢
+      rows:
+      - - パリ・サンジェルマン
+        - ハキミ
+        - DF
+        - '28'
+      - - バイエルン
+        - サイバリ
+        - MF
+        - '25'
+      - - パナシナイコス
+        - ウナヒ
+        - MF
+        - '26'
+      - - レアル・マドリード
+        - ブラヒム・ディアス
+        - FW
+        - '27'
+      - - アル・ヒラル
+        - ブヌ
+        - GK
+        - '35'
+      highlight_row: 3
+  - text: 代表では、34試合で15得点です。
+    card:
+      type: table
+      title: モロッコ代表の看板選手
+      columns:
+      - 所属
+      - 名前
+      - 位置
+      - 年齢
+      rows:
+      - - パリ・サンジェルマン
+        - ハキミ
+        - DF
+        - '28'
+      - - バイエルン
+        - サイバリ
+        - MF
+        - '25'
+      - - パナシナイコス
+        - ウナヒ
+        - MF
+        - '26'
+      - - レアル・マドリード
+        - ブラヒム・ディアス
+        - FW
+        - '27'
+      - - アル・ヒラル
+        - ブヌ
+        - GK
+        - '35'
+      highlight_row: 3
+  - text: ブヌは、アル・ヒラルのゴールキーパー。代表で99試合の、守護神です。
+    image: assets/images/20261126_team_morocco/b03_w.jpg
+    card:
+      type: table
+      title: モロッコ代表の看板選手
+      columns:
+      - 所属
+      - 名前
+      - 位置
+      - 年齢
+      rows:
+      - - パリ・サンジェルマン
+        - ハキミ
+        - DF
+        - '28'
+      - - バイエルン
+        - サイバリ
+        - MF
+        - '25'
+      - - パナシナイコス
+        - ウナヒ
+        - MF
+        - '26'
+      - - レアル・マドリード
+        - ブラヒム・ディアス
+        - FW
+        - '27'
+      - - アル・ヒラル
+        - ブヌ
+        - GK
+        - '35'
+      highlight_row: 4
+  - text: 登録メンバーに、日本のクラブの選手は入っていません。
+    image: assets/images/20261126_team_morocco/b02_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Morocco_national_football_team
+  - https://en.wikipedia.org/wiki/Morocco_at_the_FIFA_World_Cup
+- id: now
+  heading: W杯のあとのモロッコは、いまどうなっているのか
+  tier: 背景
+  telop: W杯はグループ無敗からベスト8まで
+  narrator: 解説
+  card:
+    type: table
+    title: 2026年W杯 モロッコの6試合
+    columns:
+    - 段階
+    - 相手
+    - モロッコの結果
+    rows:
+    - - グループ
+      - ブラジル
+      - 1-1
+    - - グループ
+      - スコットランド
+      - 1-0
+    - - グループ
+      - ハイチ
+      - 4-2
+    - - 32強
+      - オランダ
+      - 1-1（PK戦3-2）
+    - - 16強
+      - カナダ
+      - 3-0
+    - - 8強
+      - フランス
+      - 0-2
+  say:
+  - text: 2026年のW杯で、モロッコ代表は、グループCを無敗で通過しました。
+    image: assets/images/20261126_team_morocco/b01_w.jpg
+    card:
+      type: table
+      title: 2026年W杯 モロッコの6試合
+      columns:
+      - 段階
+      - 相手
+      - モロッコの結果
+      rows:
+      - - グループ
+        - ブラジル
+        - 1-1
+      - - グループ
+        - スコットランド
+        - 1-0
+      - - グループ
+        - ハイチ
+        - 4-2
+      - - 32強
+        - オランダ
+        - 1-1（PK戦3-2）
+      - - 16強
+        - カナダ
+        - 3-0
+      - - 8強
+        - フランス
+        - 0-2
+  - text: 初戦は、ブラジルと1対1の引き分け。
+    card:
+      type: table
+      title: 2026年W杯 モロッコの6試合
+      columns:
+      - 段階
+      - 相手
+      - モロッコの結果
+      rows:
+      - - グループ
+        - ブラジル
+        - 1-1
+      - - グループ
+        - スコットランド
+        - 1-0
+      - - グループ
+        - ハイチ
+        - 4-2
+      - - 32強
+        - オランダ
+        - 1-1（PK戦3-2）
+      - - 16強
+        - カナダ
+        - 3-0
+      - - 8強
+        - フランス
+        - 0-2
+      highlight_row: 0
+  - text: スコットランドに1対0の勝ち、ハイチに4対2の勝ちです。
+    card:
+      type: table
+      title: 2026年W杯 モロッコの6試合
+      columns:
+      - 段階
+      - 相手
+      - モロッコの結果
+      rows:
+      - - グループ
+        - ブラジル
+        - 1-1
+      - - グループ
+        - スコットランド
+        - 1-0
+      - - グループ
+        - ハイチ
+        - 4-2
+      - - 32強
+        - オランダ
+        - 1-1（PK戦3-2）
+      - - 16強
+        - カナダ
+        - 3-0
+      - - 8強
+        - フランス
+        - 0-2
+      highlight_row: 2
+  - text: 32強は、オランダと1対1。PK戦を3対2で制しました。
+    image: assets/images/20261126_team_morocco/b02_w.jpg
+    card:
+      type: table
+      title: 2026年W杯 モロッコの6試合
+      columns:
+      - 段階
+      - 相手
+      - モロッコの結果
+      rows:
+      - - グループ
+        - ブラジル
+        - 1-1
+      - - グループ
+        - スコットランド
+        - 1-0
+      - - グループ
+        - ハイチ
+        - 4-2
+      - - 32強
+        - オランダ
+        - 1-1（PK戦3-2）
+      - - 16強
+        - カナダ
+        - 3-0
+      - - 8強
+        - フランス
+        - 0-2
+      highlight_row: 3
+  - text: 16強はカナダに3対0の勝ち。ウナヒが2点です。
+    card:
+      type: table
+      title: 2026年W杯 モロッコの6試合
+      columns:
+      - 段階
+      - 相手
+      - モロッコの結果
+      rows:
+      - - グループ
+        - ブラジル
+        - 1-1
+      - - グループ
+        - スコットランド
+        - 1-0
+      - - グループ
+        - ハイチ
+        - 4-2
+      - - 32強
+        - オランダ
+        - 1-1（PK戦3-2）
+      - - 16強
+        - カナダ
+        - 3-0
+      - - 8強
+        - フランス
+        - 0-2
+      highlight_row: 4
+  - text: 8強のフランス戦は、0対2で敗れました。
+    image: assets/images/20261126_team_morocco/b03_w.jpg
+    card:
+      type: table
+      title: 2026年W杯 モロッコの6試合
+      columns:
+      - 段階
+      - 相手
+      - モロッコの結果
+      rows:
+      - - グループ
+        - ブラジル
+        - 1-1
+      - - グループ
+        - スコットランド
+        - 1-0
+      - - グループ
+        - ハイチ
+        - 4-2
+      - - 32強
+        - オランダ
+        - 1-1（PK戦3-2）
+      - - 16強
+        - カナダ
+        - 3-0
+      - - 8強
+        - フランス
+        - 0-2
+      highlight_row: 5
+  - text: モロッコは、2030年大会を、スペイン、ポルトガルと共催します。
+    image: assets/images/20261126_team_morocco/b02_w.jpg
+    card: none
+  - text: 11月は、アフリカ選手権の予選で、ニジェールと2試合です。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Morocco_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/Morocco_national_football_team
+- id: viewpoint
+  heading: モロッコは、なぜ監督交代のあとでも勝ち上がれたのか
+  tier: 背景
+  telop: 2022年は6得点。2026年は10得点
+  narrator: 解説
+  card:
+    type: table
+    title: モロッコのW杯 数えた数字
+    columns:
+    - 項目
+    - 2022年
+    - 2026年
+    rows:
+    - - 試合
+      - '7'
+      - '6'
+    - - 勝ち
+      - '3'
+      - '3'
+    - - 得点
+      - '6'
+      - '10'
+    - - 失点
+      - '5'
+      - '6'
+    - - 最終順位
+      - 4位
+      - 7位
+  viewpoint: true
+  say:
+  - text: 見立てです。モロッコの2022年と今回を、数字で見比べます。
+    image: assets/images/20261126_team_morocco/b03_w.jpg
+    card: none
+  - text: 勝ちは3と3で、同じ。得点は6から10に、増えました。
+    emph: true
+    mark:
+      kind: circle
+      row: 2
+      col: 2026年
+    card:
+      type: table
+      title: モロッコのW杯 数えた数字
+      columns:
+      - 項目
+      - 2022年
+      - 2026年
+      rows:
+      - - 試合
+        - '7'
+        - '6'
+      - - 勝ち
+        - '3'
+        - '3'
+      - - 得点
+        - '6'
+        - '10'
+      - - 失点
+        - '5'
+        - '6'
+      - - 最終順位
+        - 4位
+        - 7位
+      highlight_row: 2
+  - text: 失点は5から6。ほとんど変わりません。
+    card:
+      type: table
+      title: モロッコのW杯 数えた数字
+      columns:
+      - 項目
+      - 2022年
+      - 2026年
+      rows:
+      - - 試合
+        - '7'
+        - '6'
+      - - 勝ち
+        - '3'
+        - '3'
+      - - 得点
+        - '6'
+        - '10'
+      - - 失点
+        - '5'
+        - '6'
+      - - 最終順位
+        - 4位
+        - 7位
+      highlight_row: 3
+  - text: 最終順位は、4位から7位です。
+    image: assets/images/20261126_team_morocco/b01_w.jpg
+    card:
+      type: table
+      title: モロッコのW杯 数えた数字
+      columns:
+      - 項目
+      - 2022年
+      - 2026年
+      rows:
+      - - 試合
+        - '7'
+        - '6'
+      - - 勝ち
+        - '3'
+        - '3'
+      - - 得点
+        - '6'
+        - '10'
+      - - 失点
+        - '5'
+        - '6'
+      - - 最終順位
+        - 4位
+        - 7位
+      highlight_row: 4
+  - text: 10得点は、6人で分けました。最多はサイバリの3、ウナヒとラヒミが2点ずつです。
+    card: none
+  - text: ほかの3点は、ハキミなど3人が、1点ずつ決めました。
+    image: assets/images/20261126_team_morocco/b02_w.jpg
+    card: none
+  - text: 大会の3か月前に監督が替わっても、得点は2022年より4点増えました。
+    card: none
+  - text: ワフビのもとで、2030年の自国開催まで、この高さを保てるか。
+    image: assets/images/20261126_team_morocco/b03_w.jpg
+    card: none
+  - text: そこを、次の見どころにします。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Morocco_at_the_FIFA_World_Cup
+  - https://www.cafonline.com/news/morocco-turn-to-ouahbi-for-leadership-after-coach-walid-regraguis-departure/

@@ -1,0 +1,362 @@
+# クラブの財政：セルティック（11/18 水、シリーズ「クラブの財政」、key: finance_celtic、型は news）。
+#
+# 題材の選び方：11/16 ウェストハム（収入2億2755万ポンド）の次。収益の大きいクラブから未出を探した。
+#   既出：バルサ・シティ・アーセナル・レアル・PSG・バイエルン・リヴァプール・マンU・トッテナム・チェルシー・インテル・ヴィラ・ユヴェントス・アトレティコ・ミラン・ニューカッスル・ドルトムント・ナポリ・シュトゥットガルト・ベンフィカ・フランクフルト・ローマ・アヤックス・ブライトン・パレス・ボーンマス・ブレントフォード・リーズ（11/14）・ウェストハム（11/16）。
+#   セルティックは収入1億4360万ポンド（決算）で、上場会社（Celtic plc）の年次報告が文字PDFで一次として読め、日本人選手の名前が決算書の本文に出る（日本との接点・ヒットの条件）。
+#   外した候補：ノッティンガム・フォレスト（軸・日本との接点が弱い）、エヴァートン（女子チーム絡みで外した前例）、ウルヴス（今季2部）、レンジャーズ（日本人の接点が確かめられない）。
+#
+# ★日本との接点：決算書（Financial Review）に、2024-25に手放した選手として 古橋亨梧・岩田智輝・小林友希、売却益の対象として 古橋亨梧・岩田智輝、2025年夏の獲得として 山田新・稲村隼翔 の名前が出る。台本は決算に書かれた事実だけ言う（移籍先・額は決算に無いので言わない）。
+# ★今季の立場：決算のあとの2025-26 の数字は出ていない。台本は決算の1年（2024-25、2025年6月まで）と、決算書に書かれた決算のあとの出来事（2025年夏の獲得・放出、2025-26 の欧州）だけ。いまの順位・成績は言わない（確かめていない）。
+#
+# 軸は「**CLで稼ぎ、売って、買った年。利益は4569万ポンドなのに、現金は前の年と同じ。稼いだお金はどこへ行ったのか**」。
+#   ★他の財政回と軸を重ねない：11/16 ウェストハム＝売却益が消えた年の赤字、11/12 ブレントフォード＝給料の重さ、11/10 ボーンマス＝売却益が黒字に変えた（ここは「売却益が利益の増えの約9割」だが、今回の主役は『利益と現金のずれ』）。
+#   ★オーナー・株主の個人名は言わない（取締役の報酬の表の名前も言わない）。
+#
+# **出どころ（読んだもの）**
+#   ○ Celtic plc Annual Report year ended 30 June 2025（クラブ公式 cdn.celticfc.com、2025-09-19 公表、43頁の文字PDF。pypdf で本文を抽出して読んだ）
+#       https://cdn.celticfc.com/assets/Celtic_plc_Annual_Report_2025.pdf
+#       Chairman's Statement p.2〜3：「Revenue increased to £143.6m (2024: £124.6m) ... driven by a significant uplift in matchday income and UEFA rights distributions following a successful Champions League campaign」「Profit after tax ... £33.9m (2024: £13.4m) ... substantial gains from player trading of £31.5m (2024: £6.6m)」
+#            「year-end cash remained broadly flat at £77.3m (2024: £77.2m)」「First team labour costs were the highest levels in the history of the Club」「including committed agent fees, £42.6m was invested in player acquisitions during the year, more than doubling the prior year spend, marking the highest single-season investment in the Club's history including twice breaking the Club transfer record」
+#            「playing eight group stage matches, earning 12 points and finishing 21st out of 36. This led to a high-profile play-off tie against Bayern Munich, where we exited the competition by a single goal following an aggregate 3-2 defeat」
+#            「winning the Scottish Premiership for the fourth consecutive season ... lifted the Premier Sports Cup ... Scottish Cup Final ... lost on penalties to Aberdeen」「29 home matches played at Celtic Park (2024: 24 games)」
+#            「signing 11 players ... Shin Yamada, Ross Doohan, Benjamin Nygren, Kieran Tierney, Callum Osmand, Hayato Inamura, Michel-Ange Balikwisha, Sebastian Tounekti and Kelechi Iheanacho along with the temporary transfers of Jahmai Simpson-Pusey and Marcelo Saracchi」
+#            「The registrations of Gustaf Lagerbielke, Nicolas Kühn, Adam Idah, Mitchel Frame, Marco Tilio and Hyeok-kyu Kwon were permanently transferred to other clubs」
+#       Summary p.3：Group revenue +15.2% to £143.6m。Operating expenses £117.1m (+11.1%)。Gain on sale £31.5m (2024: £6.6m)。Acquisition of player registrations £38.6m (2024: £16.6m)。Profit before tax £45.7m (2024: £17.8m)。Year-end cash £77.3m (2024: £77.2m)
+#       Financial Review p.7〜8：「The profit before tax of £45.7m is an increase of £27.9m from FY24. £24.9m of this increase was due to significant gains from player trading」
+#            Revenue：Football and stadium operations 61.2／50.0（+11.2、home matches 29 vs 24、two additional UCL and three additional domestic cup）、Merchandise 30.1／30.1、Multimedia and other commercial 52.3／44.5（+7.8、UEFA central distributions）、計 143.6／124.6
+#            Labour (74.8)／(65.6)（+9.2、14.0%）、Other operating expenses (42.3)／(39.8)、Operating expenses (117.1)／(105.4)
+#            「During the financial year the Group permanently disposed of the registrations of Matt O'Riley, Kyogo Furuhashi, Mikey Johnston, Alexandro Bernabei, Tomoki Iwata, Hyeon-gyu Oh, Bosun Lawal and Yuki Kobayashi.」
+#            「The gain on sale of £31.5m (2024: £6.6m) ... reflects the gains achieved on the outgoing transfers of Matt O'Riley, Kyogo Furuhashi, Mikey Johnston, Tomoki Iwata as well as a number of contingent fees」
+#            「Total receivables at 30 June 2025 are £63.2m compared with £47.0m in 2024 ... including amounts due in relation to the outgoing transfers of Matt O'Riley, Kyogo Furuhashi, Alexandro Bernabei, Mikey Johnston and Tomoki Iwata」
+#            「UEFA competition participation in season 2025/26 will come in the form of the Europa League after disappointingly missing out on Champions League qualification」
+#            Net player trading：Amortisation (13.8)／(11.5)、Gain on sale 31.5／6.6、Net 17.7／(4.9)。Intangible assets NBV £27.9m → £45.5m
+#       p.26 損益計算書（£000、2025／2024）：Revenue 143,597／124,580、Operating expenses (117,062)／(105,394)、Profit from trading before intangible asset transactions and exceptional items 26,535／19,186、Exceptional (2,005)／203、
+#            Amortisation (13,845)／(11,483)、Profit on disposal of intangible assets 31,488／6,637、Operating profit 42,173／14,543、Finance income 5,082／4,726、Finance expense (1,568)／(1,444)、Profit before tax 45,687／17,825、Tax (11,753)／(4,441)、Profit 33,934／13,384
+#       p.26 貸借対照表：Cash 77,310／77,228、Trade receivables（非流動）23,026／5,310、（流動）43,170／42,624
+#       p.33 注9 Staff：Wages and salaries 65,850／57,814、Social security 7,798／6,703、Pension 1,115／1,078、計 74,763／65,595。Average employees 1,008／1,051（Players and football administration staff 208／198、Administration and retail staff 800／853）
+#       p.34 注13：「total tax payments in the year were £12.4m (2024: £7.0m)」。p.35 注16：PPE additions 10,745（Barrowfield 7.9）。注17：Intangible Additions 38,557／16,618、Disposals (cost) (14,147)、(accumulated amortisation) (8,816)
+#       p.20 Five Year Record：Revenue 143,597／124,580／119,851、Profit on disposal 31,488／6,637／14,441、League position 1／1／1、League points 92／93／99
+#   ○ 2025-26 の欧州：決算の本文（Europa League）。ほかの報道は使わない
+#   × 確かめられなかったもの：売った選手の移籍先・額（決算に無い）、2025-26 の決算（まだ出ていない）、現金の動き（キャッシュフロー計算書の頁は画像で読んでいない。台本は「現金は増えなかった」と、決算に書かれた支出〔買い入れ・納税・設備投資〕の額を並べるだけで、現金の増減の内訳とは言わない）、
+#     デロイトの順位の一次（読めず）。どれも台本に入れない。
+#
+# 自分で計算した数（検算済み）
+#   収入の増え：143.597−124.580＝19.017→約1900万。試合・スタジアム 61.2−50.0＝11.2→約1120万、放映・UEFA・商業 52.3−44.5＝7.8→約780万。グッズは同じ（30.1）
+#   人件費：74.763−65.595＝9.168→約920万。÷収入：74.763÷143.597＝52.1%→約52%／65.595÷124.580＝52.7%→約53%
+#   選手の買い入れ（取得額）：38.557÷16.618＝2.32→約2.3倍。償却：13.845−11.483＝2.362→約240万
+#   利益の増え：45.687−17.825＝27.862→約2786万。売却益の増え 31.488−6.637＝24.851→約2485万。÷利益の増え 24.851÷27.862＝89.2%→約9割。売却益の倍率 31.488÷6.637＝4.74→約4.7倍
+#   売却益を除いた利益：45.687−31.488＝14.199／17.825−6.637＝11.188→約1420万／約1119万、増え 3.011→約300万
+#   選手の売買を除いた利益（決算の「trading before asset transactions」）：19.186→26.535
+#   未収：63.2−47.0＝16.2→約1620万
+#   現金：77.310／77.228（差 0.082→約8万）。納税：12.4÷7.0＝1.77→約1.8倍
+#   表：2025 143.597−117.062−13.845＋31.488＋(−2.005＋5.082−1.568＝1.509)＝45.687 ✓／2024 124.580−105.394−11.483＋6.637＋(0.203＋4.726−1.444＝3.485)＝17.825 ✓
+#   waterfall（税引き前の動き）：17.825＋19.017−11.668−4.570（償却の増え2.362＋減損の増え2.208）＋24.851＋0.232（利息など）＝45.687 ✓
+#
+# 写真：assets/images/20261118_finance_celtic/（出典は credits.json）。01〜04・06 セルティック・パーク（Commons。Vincenzo.togni CC BY-SA 4.0／edward mcmaihin・Thomas Nugent CC BY-SA 2.0）、05 古橋亨梧（Commons、Keiteay CC0。背番号8の後ろ姿）、07 前田大然（10/18 の回の再利用・台本では使わない）。
+date: 2026年11月12日
+slot: other_1
+format: news
+series: クラブの財政
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- セルティック
+- 古橋亨梧
+- 岩田智輝
+theme:
+  end_bg: assets/images/20261118_finance_celtic/01_w.jpg
+  id: finance_celtic
+  # league は集計の鍵で scotland が無いので england を置き、中身は league_name で上書きする（10/28 ベンフィカの回と同じ）
+  league: england
+  league_name: スコットランド・プレミアシップ
+  kind: other
+  topic: セルティック
+  title: セルティック、利益4569万ポンドの年に、現金が増えなかった理由
+  question: セルティックは2024-25に、CLの8試合を戦い、税引き前で4569万ポンドの利益を出した。それなのに、年末の現金は前の年とほぼ同じだった。稼いだお金は、どこへ行ったのか
+  lead: 利益4569万ポンド。それでも現金は、ほぼ同じ。セルティック。
+  opening_image: assets/images/20261118_finance_celtic/01_w.jpg
+  takeaway: セルティックの2024-25の決算（上場会社の年次報告、監査済み）は、CLの8試合を戦った年で、収入は1億4360万ポンド（約1900万の増え）、税引き前の利益は4569万ポンド（前の年は1783万）。利益の増え約2786万のうち約9割は選手を売った利益（古橋亨梧・岩田智輝らを含む）で、売却益を除くと増えは約300万。人件費は約920万増えたが収入の約52%で同じ水準、選手の買い入れは約2.3倍。現金は7731万ポンドで前の年と同じ。他クラブからの未収は約1620万増えた。
+  short_title: セルティック、利益4569万ポンドなのに現金は同じ
+thumbnail:
+  layout: number
+  photo: assets/images/20261118_finance_celtic/01_w.jpg
+  short_photo: assets/images/20261118_finance_celtic/01_w_v.jpg
+  number: 4569万
+  line1: セルティック 利益
+  line2: それでも現金は増えず
+  callouts: [売却益は約4.7倍]
+  tags:
+  - セルティック
+  - クラブの財政
+  - 古橋亨梧
+  - 岩田智輝
+  - スコットランド
+sections:
+- id: rev
+  heading: セルティックの収入は、チャンピオンズリーグの年にどれだけ増えたのか
+  tier: 報道
+  telop: 収入は1億4360万ポンド。約1900万の増え
+  narrator: 解説
+  card: &rev_table
+    type: table
+    title: セルティックの収入（百万ポンド）
+    columns: &rv_cols [項目, 2023-24, 2024-25]
+    rows: &rv_rows
+    - [試合・スタジアム, '50.0', '61.2']
+    - [グッズ, '30.1', '30.1']
+    - [放映・UEFA・商業など, '44.5', '52.3']
+    - [収入の合計, '124.6', '143.6']
+    highlight_row: 3
+  say:
+  - text: セルティックの最新の決算は、2025年6月までの1年分です。
+    image: assets/images/20261118_finance_celtic/01_w.jpg
+    card: none
+  - text: 公表は、2025年9月でした。
+    image: assets/images/20261118_finance_celtic/01_w.jpg
+    card: none
+  - text: この年、ホームの試合は29。前の年は24でした。
+    image: assets/images/20261118_finance_celtic/02_w.jpg
+    card: none
+  - text: チャンピオンズリーグは、新しい方式で8試合。
+    image: assets/images/20261118_finance_celtic/04_w.jpg
+    card: none
+  - text: 勝ち点12で、36チーム中21位でした。
+    image: assets/images/20261118_finance_celtic/04_w.jpg
+    card: none
+  - text: プレーオフでは、バイエルンに、2試合合計3対2で敗れました。
+    image: assets/images/20261118_finance_celtic/03_w.jpg
+    card: none
+  - text: 収入は、1億4360万ポンド。前の年から、約1900万の増え。
+    emph: true
+    card: *rev_table
+  - text: 試合・スタジアムの収入は、5000万から6120万ポンドへ。
+    card:
+      <<: *rev_table
+      highlight_row: 0
+  - text: 約1120万の増え。ホームの試合が5つ増えたことが、理由に挙がっています。
+    card:
+      <<: *rev_table
+      highlight_row: 0
+  - text: 放映や、ヨーロッパの大会の分配などの収入も、約780万増えました。
+    card:
+      <<: *rev_table
+      highlight_row: 2
+  - text: グッズは、3010万ポンドで、前の年と同じでした。
+    card:
+      <<: *rev_table
+      highlight_row: 1
+  sources:
+  - https://cdn.celticfc.com/assets/Celtic_plc_Annual_Report_2025.pdf
+- id: cost
+  heading: セルティックは、給料と選手の買い入れに、どこまで使ったのか
+  tier: 報道
+  telop: 人件費は約920万の増え。選手の買い入れは約2.3倍
+  narrator: 解説
+  card: &cost_table
+    type: table
+    title: セルティックの収入と費用（百万ポンド）
+    columns: &ct_cols [項目, 2023-24, 2024-25]
+    rows: &ct_rows
+    - [収入の合計, '124.6', '143.6']
+    - [人件費, '65.6', '74.8']
+    - [選手の買い入れ, '16.6', '38.6']
+    - [選手の償却, '11.5', '13.8']
+    - [収入に占める人件費, 53%, 52%]
+    highlight_row: 1
+  say:
+  - text: 次に、セルティックの支出です。人件費は、6560万から7476万ポンド。
+    emph: true
+    card: *cost_table
+  - text: 約920万の増えで、決算は、クラブの歴史でいちばん高い水準と書いています。
+    card: *cost_table
+  - text: それでも、収入に対する人件費の比率は、約53%から約52%。
+    card:
+      <<: *cost_table
+      highlight_row: 4
+  - text: 収入も増えたので、ほぼ同じです。
+    card:
+      <<: *cost_table
+      highlight_row: 4
+  - text: 平均の従業員数は1008人。前の年は1051人でした。
+    image: assets/images/20261118_finance_celtic/06_w.jpg
+    card: none
+  - text: 選手の買い入れは、3856万ポンド。前の年の、約2.3倍です。
+    emph: true
+    card:
+      <<: *cost_table
+      highlight_row: 2
+  - text: 代理人の手数料を含めると、4260万ポンド。
+    image: assets/images/20261118_finance_celtic/04_w.jpg
+    card: none
+  - text: クラブの歴史で、1シーズンの最高額です。
+    image: assets/images/20261118_finance_celtic/04_w.jpg
+    card: none
+  - text: クラブの移籍金の記録も、この年に2度、更新しました。
+    image: assets/images/20261118_finance_celtic/02_w.jpg
+    card: none
+  - text: 選手を買った代金は、契約の年数で割って、毎年の費用に入れます。これが償却です。
+    image: assets/images/20261118_finance_celtic/03_w.jpg
+    card: none
+  - text: 償却は、1148万から1385万ポンド。約240万の増え。
+    card:
+      <<: *cost_table
+      highlight_row: 3
+  sources:
+  - https://cdn.celticfc.com/assets/Celtic_plc_Annual_Report_2025.pdf
+- id: profit
+  main: true
+  heading: 利益4569万ポンドは、どこから来て、現金はどこへ行ったのか
+  tier: 報道
+  telop: 利益の増えの約9割は、選手を売った利益
+  narrator: 解説
+  card: &profit_table
+    type: table
+    title: セルティックの損益（百万ポンド）
+    columns: &pf_cols [項目, 2023-24, 2024-25]
+    rows: &pf_rows
+    - [収入, '124.6', '143.6']
+    - [運営の費用, −105.4, −117.1]
+    - [選手の償却, −11.5, −13.8]
+    - [選手を売った利益, '+6.6', '+31.5']
+    - [利息・減損など, '+3.5', '+1.5']
+    - [税引き前の利益, '17.8', '45.7']
+    highlight_row: 5
+  say:
+  - text: セルティックは、2024-25に大きな利益を出しました。
+    short_only: true
+    image: assets/images/20261118_finance_celtic/01_w.jpg
+    card: none
+  - text: その増えの中身は、選手の売却でした。
+    short_only: true
+    image: assets/images/20261118_finance_celtic/01_w.jpg
+    card: none
+  - text: 前の年の税引き前の利益は、1783万ポンドでした。
+    card: *profit_table
+  - text: 増えたのは、約2786万ポンドです。
+    emph: true
+    card: *profit_table
+  - text: このうち、約2485万が、売却益の増え。約9割です。
+    card:
+      <<: *profit_table
+      highlight_row: 3
+  - text: 664万から、3149万ポンドへ。約4.7倍。
+    emph: true
+    card:
+      <<: *profit_table
+      highlight_row: 3
+  - text: 売却益の理由として、決算に名前が出るのは4人。
+    image: assets/images/20261118_finance_celtic/05_w.jpg
+    card: none
+  - text: オライリー、古橋亨梧、ジョンストン、岩田智輝です。
+    image: assets/images/20261118_finance_celtic/05_w.jpg
+    card: none
+  - text: この年に手放した選手には、小林友希の名前も並んでいます。
+    image: assets/images/20261118_finance_celtic/05_w.jpg
+    card: none
+  - text: ところが、現金はどうだったのか。年末の残高は、7731万ポンドです。
+    image: assets/images/20261118_finance_celtic/04_w.jpg
+    card: none
+  - text: 前の年は、7723万ポンド。ほぼ、増えていません。
+    emph: true
+    image: assets/images/20261118_finance_celtic/04_w.jpg
+    card: none
+  - text: 主な支出は、選手の買い入れと、納税と、設備投資です。
+    card: &cash_bars
+      type: bars
+      title: セルティックの主な支出（2024-25、百万ポンド）
+      unit: 百万ポンド
+      items:
+      - {label: 選手の買い入れ, value: 38.6, highlight: true}
+      - {label: 納税, value: 12.4}
+      - {label: 設備投資, value: 10.7}
+  - text: 納税は、前の年の約1.8倍でした。
+    card: *cash_bars
+  - text: 売った選手のお金は、まだ入っていない分もあります。
+    image: assets/images/20261118_finance_celtic/03_w.jpg
+    card: none
+  - text: 他クラブからの未収は、4700万から6320万ポンドへ。約1620万の増えです。
+    emph: true
+    image: assets/images/20261118_finance_celtic/04_w.jpg
+    card: none
+  - text: 未収の中身に、オライリーや古橋、岩田らの移籍の残りが入っています。
+    image: assets/images/20261118_finance_celtic/05_w.jpg
+    card: none
+  sources:
+  - https://cdn.celticfc.com/assets/Celtic_plc_Annual_Report_2025.pdf
+- id: view
+  viewpoint: true
+  heading: 見立て・セルティックの稼ぎは、次の年にどう動くのか
+  tier: 背景
+  telop: 売却益を除くと、利益の増えは約300万
+  narrator: 解説
+  card: &view_wf
+    type: waterfall
+    title: セルティックの税引き前の利益の動き（百万ポンド）
+    unit: 百万ポンド
+    start: &vw_start [2023-24の利益, 17.8]
+    steps: &vw_steps
+    - [収入, 19.0]
+    - [運営の費用, -11.7]
+    - [償却と減損, -4.6]
+    - [選手を売った利益, 24.9]
+    - [利息など, 0.2]
+    total: &vw_total [2024-25の利益, 45.7]
+  say:
+  - text: 見立てに入ります。まず、利益の増えの中身を、順に見ます。
+    image: assets/images/20261118_finance_celtic/02_w.jpg
+    card: none
+  - text: 増やしたのは、収入と、売却益。
+    emph: true
+    card: *view_wf
+  - text: 減らしたのは、運営の費用と、償却など。
+    card:
+      type: waterfall
+      title: セルティックの税引き前の利益の動き（百万ポンド）
+      unit: 百万ポンド
+      start: *vw_start
+      steps: *vw_steps
+      total: *vw_total
+      highlight: 運営の費用
+  - text: 売却益を除くと、利益は1119万から1420万ポンド。増えは約300万です。
+    emph: true
+    card: &view_table
+      type: table
+      title: 自分で割ってみた（セルティックの決算）
+      columns: [比べ, 答え]
+      rows:
+      - [売却益の増え ÷ 利益の増え, 約89%]
+      - [売却益を除いた利益の増え, 約300万ポンド]
+      - [人件費 ÷ 収入（前の年は約53%）, 約52%]
+      - [未収の増え, 約1620万ポンド]
+      highlight_row: 1
+    mark:
+      kind: circle
+      row: 1
+      col: 1
+  - text: 題への答えです。利益は増えましたが、現金は増えませんでした。
+    image: assets/images/20261118_finance_celtic/04_w.jpg
+    card: none
+  - text: 稼いだ分は、選手の買い入れや設備投資に使われました。
+    card:
+      <<: *view_table
+      highlight_row: 3
+  - text: 売った分の一部は、まだ入っていません。
+    card:
+      <<: *view_table
+      highlight_row: 3
+  - text: セルティックの2025年の夏は、獲得が11人、完全移籍の放出が6人。
+    image: assets/images/20261118_finance_celtic/03_w.jpg
+    card: none
+  - text: この中に、山田新と、稲村隼翔の2人の日本人が入っています。
+    emph: true
+    image: assets/images/20261118_finance_celtic/06_w.jpg
+    card: none
+  - text: 決算は、翌シーズンのヨーロッパの大会が、ヨーロッパリーグだと書いています。
+    image: assets/images/20261118_finance_celtic/01_w.jpg
+    card: none
+  - text: 次の決算の注目は、売却益に頼らず、本業の利益で、買い入れの支払いを賄えるのか。
+    emph: true
+    image: assets/images/20261118_finance_celtic/04_w.jpg
+    card: none
+  sources:
+  - https://cdn.celticfc.com/assets/Celtic_plc_Annual_Report_2025.pdf

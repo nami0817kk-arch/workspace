@@ -1,0 +1,75 @@
+{
+ "title": "ブレーメン 基礎DATA",
+ "colors": [
+  "#1D9053",
+  "#FFFFFF"
+ ],
+ "crest": "assets/crests/ブレーメン.png",
+ "tiles": [
+  [
+   "クラブ創立",
+   "1899年",
+   "2月4日。16歳の学生たちが作った"
+  ],
+  [
+   "愛称",
+   "ヴェルデラナー",
+   "「川の中洲の人たち」。緑と白とも"
+  ],
+  [
+   "ホームタウン",
+   "ブレーメン",
+   "ドイツ北部の港町"
+  ],
+  [
+   "本拠地",
+   "ヴェーザーシュタディオン",
+   "1909年から同じ場所。収容 42,100人"
+  ],
+  [
+   "クラブの形",
+   "会員のクラブ",
+   "会員は約6万8,000人（2026年7月）"
+  ],
+  [
+   "タイトル歴",
+   "ドイツ王者 4回",
+   "ドイツカップは6回"
+  ],
+  [
+   "ヨーロッパ",
+   "カップウィナーズカップ",
+   "1992年に優勝。2009年はUEFAカップ準優勝"
+  ],
+  [
+   "クラブ記録",
+   "1部に62季",
+   "今季で62季目。バイエルンと並ぶ最多"
+  ],
+  [
+   "昨季の順位",
+   "15位",
+   "勝ち点32で残留"
+  ]
+ ],
+ "trophies": [
+  [
+   "ブンデスリーガ",
+   4
+  ],
+  [
+   "DFBポカール",
+   6
+  ],
+  [
+   "カップウィナーズカップ",
+   1
+  ]
+ ],
+ "sources": [
+  "https://en.wikipedia.org/wiki/SV_Werder_Bremen",
+  "https://de.wikipedia.org/wiki/Werder_Bremen",
+  "https://en.wikipedia.org/wiki/List_of_SV_Werder_Bremen_seasons"
+ ],
+ "notes": "取材の控えは research/bd_data/bremen_research.md。創立 1899-02-04（英語版 History）・愛称 Die Werderaner（The River Islanders）/ Die Grün-Weißen（英語版 infobox）・本拠地 Weserstadion 1909年から・収容42,100（英語版 Stadium 節）。会員68,000（ドイツ語版 infobox、Stand 1. Juli 2026、出典 kicker）。ドイツ王者4回・DFBポカール6回・CWC 1991-92・UEFAカップ準優勝 2008-09 は英語版 Honours。1部に62季は自分で数えた：1963-64〜2026-27 の64季から降格した 1980-81・2021-22 の2季を引く。英語版 lead「share the record for most seasons played in the Bundesliga with Bayern Munich」（バイエルンは1965-66から62季）。昨季15位・勝点32は List of SV Werder Bremen seasons（8勝8分18敗）。"
+}

@@ -1,0 +1,111 @@
+# 取材メモ（2026年11月8日）パラグアイ代表、日本戦のメンバー27人。W杯の26人から何人入れ替わったか（ニュースのショート。見せ方 X＝冒頭1秒に強い一言）
+# 取材: 2026-11-08。requests（ブラウザUA）で本文を全文読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: サッカーキング 2026-11-07「パラグアイ代表が11月の日本代表戦に臨むメンバー27名発表！　D・ゴメスやエンシソら選出」（全文。パラグアイサッカー協会が7日に発表したと書く）。
+#   https://www.soccer-king.jp/news/world/southamerica/20261107/2225452.html
+# 出典で確かめたこと:
+#   ・サッカーキング（11/7）: 13日にシンガポール代表、17日に日本代表と対戦（MIZUHO BLUE CHALLENGE THE KALLANG FOOTBALL SERIES SINGAPORE）。アルファロ監督は2024年8月から指揮。
+#       ブライトンで三笘薫と同僚の MF ディエゴ・ゴメス、イプスウィッチで前田大然とチームメイトの FW フリオ・エンシソらが選出。日本戦は17日21時10分キックオフ予定（日本テレビ系で全国ネット生中継）。
+#       27人（GK4・DF9・MF8・FW6）。所属: リール（ヒル）・サンダーランド（アルデレーテ）・ブライトン（D・ゴメス）・イプスウィッチ（エンシソ）・セルタ（クエンカ）・ディナモ・モスクワ（カセレス）ほか。
+#   ・サッカーキング（6/2、https://www.soccer-king.jp/news/world/wc/20260602/2166337.html 全文）: W杯の最終26人（パラグアイサッカー協会が6/1発表）。W杯のとき、ヒルはサン・ロレンソ、エンシソはストラスブール、カバジェロはポーツマスだった。
+#   ・年齢は Wikidata の生年月日から 2026-11-08 時点で計算: ヒル 2000-06-11（26）／エンシソ 2004-01-23（22）／アルデレーテ 1996-12-26（29）／ディエゴ・ゴメス 2003-03-27（23）。
+#   ・協会の公式発表（apf.org.py）までは辿れていない → 報道どまり。
+# 自分で数えたもの（2つの記事の名簿を突き合わせた。名前の日本語表記が両記事で同じものを同一人物とした）:
+#   ・27人のうち、W杯の26人にも入っていたのは15人（ヒル・オルベイラ・カセレス・G・ゴメス・J・アロンソ・アルデレーテ・マイダナ・D・ゴメス・マガリャンイス・ボバディージャ・オヘダ・ガラルサ・カバジェロ・アルミロン・エンシソ）。
+#       今回から入ったのは12人（インスフラン・ロハス・F・フェレイラ・ガマーラ・コロネル・A・ベニテス・クエンカ・デルマス・ビジャサンティ・ヴェルク・H・ベニテス・モラレス）。W杯の26人から外れたのは11人。
+#   ・所属の地域（今回の27人）: パラグアイ国内7／欧州6（フランス1・イングランド3・スペイン1・ロシア1）／ブラジル5／MLS 4／アルゼンチン3／UAE 1／メキシコ1。W杯の26人で欧州は6人（イングランド3・フランス・イタリア・ロシア）。
+#   ・日本代表の発表（11/4）とあわせると、14日にブラジル、17日にパラグアイ（日本）。
+# 前の本との重なり: scripts/20261106_team_paraguay（W杯決勝Tの成績とPK戦）・20261104_japan_squad_brazil_paraguay（日本の招集28人）。今回の初出は「パラグアイの27人の顔ぶれと、W杯の26人との入れ替わり」。W杯のPK戦の話は言わない。
+# 本人の言葉: 無い（メンバー発表のみ）。X。
+# 反応: 0件（作らない。approve は --no-voices）。
+# 写真: assets/images/20261108_paraguay_squad_japan/ 01=ヒル／02=エンシソ／03=アルデレーテ（03_w は子供の顔を切るので使わない）／04=ディエゴ・ゴメス。01〜03は Commons（Bryan Berlin、CC BY-SA 4.0、2026-07-04 W杯フランス戦）、04 は 11/6 の本の b03 を再掲。
+slot: japanese
+date: "2026年11月8日"
+format: news
+no_main: true
+people: [パラグアイ代表, ディエゴ・ゴメス, フリオ・エンシソ, アルファロ監督]
+
+short_style: X
+short_hook_word: 27人中12人が新顔
+short_photos:
+  - assets/images/20261108_paraguay_squad_japan/04_v.jpg
+  - assets/images/20261108_paraguay_squad_japan/02_v.jpg
+  - assets/images/20261108_paraguay_squad_japan/01_v.jpg
+  - assets/images/20261108_paraguay_squad_japan/03_v.jpg
+short_question: 17日の日本戦で、パラグアイの選手のうち誰がいちばん危険だと思いますか。
+short_telops: []
+
+theme:
+  id: paraguay_squad_japan
+  league: japan
+  league_name: パラグアイ代表
+  prefix: ""
+  title: パラグアイ代表、日本戦のメンバー27人。W杯のあとで12人が入れ替わった
+  hook: ""
+  question: 17日に日本と戦うパラグアイは、W杯のあとでどこが変わったのか
+  takeaway: パラグアイの27人のうちW杯の26人にも入っていたのは15人で、12人は新顔。欧州のクラブの選手は6人で、W杯のときと同じ人数だが、ヒルはリール、エンシソはイプスウィッチへ移った
+
+thumbnail:
+  layout: classic
+  line1: パラグアイ代表 27人
+  line2: W杯から12人入れ替え
+  tags: [パラグアイ代表, 日本代表]
+  photos:
+    - assets/images/20261108_paraguay_squad_japan/04_w.jpg
+    - assets/images/20261108_paraguay_squad_japan/02_w.jpg
+    - assets/images/20261108_paraguay_squad_japan/01_w.jpg
+  short_photo: assets/images/20261108_paraguay_squad_japan/04_v.jpg
+
+answer: 27人のうち15人はW杯と同じ、12人が新顔。欧州組は6人のままだが、顔ぶれは動いた
+watch: 11月17日（火）21時10分、日本代表のパラグアイ戦（シンガポール）
+
+sections:
+  - id: what
+    main: true
+    heading: 日本と戦うパラグアイは、27人のメンバーに誰を選んだのか
+    tier: 報道
+    telop: パラグアイ代表 日本戦のメンバー27人を発表
+    say:
+      - text: パラグアイ代表が、日本戦を含む遠征のメンバー27人を発表しました。
+      - text: ワールドカップのときの26人から、12人が入れ替わっています。
+      - text: シンガポールで、13日にシンガポール代表、17日の21時10分から日本代表と戦います。
+      - text: 欧州では、プレミアリーグから3人。ブライトンで三笘薫と同じチームのディエゴ・ゴメス。
+        image: assets/images/20261108_paraguay_squad_japan/04_w.jpg
+      - text: イプスウィッチで前田大然のチームメイト、フリオ・エンシソ。
+        card: {type: table, title: パラグアイ代表 欧州の主な選手, columns: [所属, 名前, 位置, 年齢], rows: [[ブライトン, ディエゴ・ゴメス, MF, 23], [イプスウィッチ, フリオ・エンシソ, FW, 22], [サンダーランド, オマル・アルデレーテ, DF, 29], [リール, オルランド・ヒル, GK, 26]], highlight_row: 1}
+        image: assets/images/20261108_paraguay_squad_japan/02_w.jpg
+      - text: サンダーランドのDF、オマル・アルデレーテも入りました。
+        card: {type: table, title: パラグアイ代表 欧州の主な選手, columns: [所属, 名前, 位置, 年齢], rows: [[ブライトン, ディエゴ・ゴメス, MF, 23], [イプスウィッチ, フリオ・エンシソ, FW, 22], [サンダーランド, オマル・アルデレーテ, DF, 29], [リール, オルランド・ヒル, GK, 26]], highlight_row: 2}
+      - text: GKでは、フランスのリールに所属するオルランド・ヒルが入りました。
+        card: {type: table, title: パラグアイ代表 欧州の主な選手, columns: [所属, 名前, 位置, 年齢], rows: [[ブライトン, ディエゴ・ゴメス, MF, 23], [イプスウィッチ, フリオ・エンシソ, FW, 22], [サンダーランド, オマル・アルデレーテ, DF, 29], [リール, オルランド・ヒル, GK, 26]], highlight_row: 3}
+        image: assets/images/20261108_paraguay_squad_japan/01_w.jpg
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/southamerica/20261107/2225452.html
+  - id: story
+    heading: W杯の26人から、27人のうち何人が入れ替わったのか
+    tier: 報道
+    telop: W杯の26人と同じは15人、新顔は12人
+    say:
+      - text: W杯のパラグアイ代表は、6月1日に26人が発表されました。
+      - text: 今回の27人のうち、W杯の26人にも入っていたのは15人。
+        card: {type: table, title: パラグアイ代表 W杯の26人との比べ, columns: [区分, 人数], rows: [[W杯の26人にも入っていた, 15], [今回から入った, 12], [W杯の26人から外れた, 11]], highlight_row: 0}
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/southamerica/20261107/2225452.html
+      - https://www.soccer-king.jp/news/world/wc/20260602/2166337.html
+  - id: view
+    viewpoint: true
+    heading: 入れ替わったパラグアイの27人で、欧州の顔ぶれはどう動いたのか
+    tier: 背景
+    telop: 欧州のクラブの選手は6人。W杯と同じ人数
+    say:
+      - text: 見立てです。欧州のクラブに所属するパラグアイの選手は、27人のうち6人。
+        card: {type: table, title: パラグアイ代表 27人の所属, columns: [所属の地域, 人数], rows: [[パラグアイ国内, 7], [欧州, 6], [ブラジル, 5], [アメリカのMLS, 4], [アルゼンチン, 3]], highlight_row: 1}
+      - text: W杯の26人でも、欧州は6人でした。
+        card: none
+      - text: 人数は同じでも、顔ぶれは動きました。ヒルはW杯のときはアルゼンチンのサン・ロレンソ、今はリールです。
+      - text: エンシソはフランスのストラスブールから、イプスウィッチへ。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/southamerica/20261107/2225452.html
+      - https://www.soccer-king.jp/news/world/wc/20260602/2166337.html

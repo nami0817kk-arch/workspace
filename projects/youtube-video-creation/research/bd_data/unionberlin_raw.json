@@ -1,0 +1,676 @@
+{
+ "club_title": "1._FC_Union_Berlin",
+ "season_title": "2026–27_1._FC_Union_Berlin_season",
+ "squad": [
+  {
+   "no": "1",
+   "pos": "GK",
+   "nat": "DEN",
+   "name": "Frederik Rønnow",
+   "page": "Frederik Rønnow",
+   "dob": "1992-08-04",
+   "captain": false,
+   "loan": false,
+   "team": "Denmark",
+   "caps": 10,
+   "club_caps": 134,
+   "club_goals": 0
+  },
+  {
+   "no": "2",
+   "pos": "DF",
+   "nat": "GER",
+   "name": "Felix Uduokhai",
+   "page": "Felix Uduokhai",
+   "dob": "1997-09-09",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 6,
+   "club_goals": 0
+  },
+  {
+   "no": "3",
+   "pos": "DF",
+   "nat": "GER",
+   "name": "Andrik Markgraf",
+   "page": "Andrik Markgraf",
+   "dob": "",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "4",
+   "pos": "DF",
+   "nat": "BEL",
+   "name": "Zeno Van Den Bosch",
+   "page": "Zeno Van Den Bosch",
+   "dob": "2003-07-06",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 7,
+   "club_goals": 0
+  },
+  {
+   "no": "5",
+   "pos": "DF",
+   "nat": "GER",
+   "name": "Marvin Friedrich",
+   "page": "Marvin Friedrich",
+   "dob": "1995-12-13",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 125,
+   "club_goals": 8
+  },
+  {
+   "no": "6",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Aljoscha Kemlein",
+   "page": "Aljoscha Kemlein",
+   "dob": "2004-08-02",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 55,
+   "club_goals": 1
+  },
+  {
+   "no": "7",
+   "pos": "FW",
+   "nat": "SCO",
+   "name": "Oliver Burke",
+   "page": "Oliver Burke",
+   "dob": "1997-04-07",
+   "captain": false,
+   "loan": false,
+   "team": "Scotland",
+   "caps": 13,
+   "club_caps": 32,
+   "club_goals": 6
+  },
+  {
+   "no": "8",
+   "pos": "MF",
+   "nat": "TUN",
+   "name": "Rani Khedira",
+   "page": "Rani Khedira",
+   "dob": "1994-01-27",
+   "captain": false,
+   "loan": false,
+   "team": "Tunisia",
+   "caps": 6,
+   "club_caps": 157,
+   "club_goals": 8
+  },
+  {
+   "no": "9",
+   "pos": "FW",
+   "nat": "TUR",
+   "name": "Livan Burcu",
+   "page": "Livan Burcu",
+   "dob": "2004-09-28",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 25,
+   "club_goals": 1
+  },
+  {
+   "no": "11",
+   "pos": "MF",
+   "nat": "KOR",
+   "name": "Jeong Woo-yeong",
+   "page": "Jeong Woo-yeong",
+   "dob": "1999-09-20",
+   "captain": false,
+   "loan": false,
+   "team": "South Korea",
+   "caps": 22,
+   "club_caps": 60,
+   "club_goals": 7
+  },
+  {
+   "no": "13",
+   "pos": "MF",
+   "nat": "HUN",
+   "name": "András Schäfer",
+   "page": "András Schäfer",
+   "dob": "1999-04-13",
+   "captain": false,
+   "loan": false,
+   "team": "Hungary",
+   "caps": 49,
+   "club_caps": 106,
+   "club_goals": 5
+  },
+  {
+   "no": "14",
+   "pos": "DF",
+   "nat": "AUT",
+   "name": "Leopold Querfeld",
+   "page": "Leopold Querfeld",
+   "dob": "2003-12-20",
+   "captain": false,
+   "loan": false,
+   "team": "Austria",
+   "caps": 5,
+   "club_caps": 62,
+   "club_goals": 6
+  },
+  {
+   "no": "15",
+   "pos": "DF",
+   "nat": "GER",
+   "name": "Tom Rothe",
+   "page": "Tom Rothe",
+   "dob": "2004-10-29",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 54,
+   "club_goals": 5
+  },
+  {
+   "no": "17",
+   "pos": "DF",
+   "nat": "GHA",
+   "name": "Derrick Köhn",
+   "page": "Derrick Köhn",
+   "dob": "1999-02-04",
+   "captain": false,
+   "loan": false,
+   "team": "Ghana",
+   "caps": 3,
+   "club_caps": 32,
+   "club_goals": 2
+  },
+  {
+   "no": "18",
+   "pos": "DF",
+   "nat": "CRO",
+   "name": "Josip Juranović",
+   "page": "Josip Juranović",
+   "dob": "1995-08-16",
+   "captain": false,
+   "loan": false,
+   "team": "Croatia",
+   "caps": 40,
+   "club_caps": 64,
+   "club_goals": 3
+  },
+  {
+   "no": "19",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Janik Haberer",
+   "page": "Janik Haberer",
+   "dob": "1994-04-02",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 116,
+   "club_goals": 8
+  },
+  {
+   "no": "20",
+   "pos": "MF",
+   "nat": "SUI",
+   "name": "Michel Aebischer",
+   "page": "Michel Aebischer",
+   "dob": "1997-01-06",
+   "captain": false,
+   "loan": false,
+   "team": "Switzerland",
+   "caps": 47,
+   "club_caps": 8,
+   "club_goals": 0
+  },
+  {
+   "no": "21",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Tim Skarke",
+   "page": "Tim Skarke",
+   "dob": "1996-09-07",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 66,
+   "club_goals": 2
+  },
+  {
+   "no": "23",
+   "pos": "FW",
+   "nat": "SRB",
+   "name": "Andrej Ilić",
+   "page": "Andrej Ilić",
+   "dob": "2000-04-03",
+   "captain": false,
+   "loan": false,
+   "team": "Serbia",
+   "caps": 1,
+   "club_caps": 48,
+   "club_goals": 12
+  },
+  {
+   "no": "24",
+   "pos": "MF",
+   "nat": "DEN",
+   "name": "Robert Skov",
+   "page": "Robert Skov",
+   "dob": "1996-05-20",
+   "captain": false,
+   "loan": false,
+   "team": "Denmark",
+   "caps": 14,
+   "club_caps": 19,
+   "club_goals": 2
+  },
+  {
+   "no": "25",
+   "pos": "GK",
+   "nat": "GER",
+   "name": "Carl Klaus",
+   "page": "Carl Klaus",
+   "dob": "1994-01-16",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 4,
+   "club_goals": 0
+  },
+  {
+   "no": "27",
+   "pos": "FW",
+   "nat": "CRO",
+   "name": "Marin Ljubičić",
+   "page": "Marin Ljubičić (footballer, born 2002)",
+   "dob": "2002-02-28",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 18,
+   "club_goals": 3
+  },
+  {
+   "no": "28",
+   "pos": "DF",
+   "nat": "AUT",
+   "name": "Christopher Trimmel",
+   "page": "Christopher Trimmel",
+   "dob": "1987-02-24",
+   "captain": true,
+   "loan": false,
+   "team": "Austria",
+   "caps": 25,
+   "club_caps": 350,
+   "club_goals": 5
+  },
+  {
+   "no": "29",
+   "pos": "FW",
+   "nat": "CIV",
+   "name": "Emmanuel Latte Lath",
+   "page": "Emmanuel Latte Lath",
+   "dob": "1999-01-01",
+   "captain": false,
+   "loan": true,
+   "team": "Ivory Coast",
+   "caps": 4,
+   "club_caps": 6,
+   "club_goals": 1
+  },
+  {
+   "no": "30",
+   "pos": "MF",
+   "nat": "SUI",
+   "name": "Kastriot Imeri",
+   "page": "Kastriot Imeri",
+   "dob": "2000-06-27",
+   "captain": false,
+   "loan": false,
+   "team": "Switzerland",
+   "caps": 1,
+   "club_caps": 3,
+   "club_goals": 0
+  },
+  {
+   "no": "31",
+   "pos": "GK",
+   "nat": "GER",
+   "name": "Matheo Raab",
+   "page": "Matheo Raab",
+   "dob": "1998-12-18",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 2,
+   "club_goals": 0
+  },
+  {
+   "no": "32",
+   "pos": "FW",
+   "nat": "JAM",
+   "name": "Mekhi Gray",
+   "page": "Mekhi Gray",
+   "dob": "2007-02-19",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 3,
+   "club_goals": 0
+  },
+  {
+   "no": "34",
+   "pos": "DF",
+   "nat": "FRA",
+   "name": "Stanley Nsoki",
+   "page": "Stanley Nsoki",
+   "dob": "1999-04-09",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 13,
+   "club_goals": 1
+  },
+  {
+   "no": "38",
+   "pos": "FW",
+   "nat": "GER",
+   "name": "Julien Friedrich",
+   "page": "Julien Friedrich",
+   "dob": "",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "49",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Linus Güther",
+   "page": "Linus Güther",
+   "dob": "2010-04-08",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 2,
+   "club_goals": 0
+  }
+ ],
+ "results": [
+  [
+   "",
+   "1",
+   "Union Berlin",
+   "3–3",
+   "Eintracht Frankfurt"
+  ],
+  [
+   "5 September 2026",
+   "2",
+   "Bayer Leverkusen",
+   "4–0",
+   "Union Berlin"
+  ],
+  [
+   "11 September 2026",
+   "3",
+   "Union Berlin",
+   "1–3",
+   "Schalke 04"
+  ],
+  [
+   "18 September 2026",
+   "4",
+   "Bayern Munich",
+   "7–0",
+   "Union Berlin"
+  ],
+  [
+   "10 October 2026",
+   "5",
+   "Union Berlin",
+   "1–0",
+   "SV Elversberg"
+  ],
+  [
+   "17 October 2026",
+   "6",
+   "Union Berlin",
+   "0–0",
+   "Borussia Dortmund"
+  ],
+  [
+   "24 October 2026",
+   "7",
+   "FC Augsburg",
+   "1–1",
+   "Union Berlin"
+  ],
+  [
+   "1 November 2026",
+   "8",
+   "Union Berlin",
+   "1–1",
+   "1. FC Köln"
+  ],
+  [
+   "8 November 2026",
+   "9",
+   "SC Freiburg",
+   "2–0",
+   "Union Berlin"
+  ],
+  [
+   "21 November 2026",
+   "10",
+   "Union Berlin",
+   "",
+   "RB Leipzig"
+  ],
+  [
+   "28 November 2026",
+   "11",
+   "Mainz 05",
+   "",
+   "Union Berlin"
+  ],
+  [
+   "4 December - 6 December 2026",
+   "12",
+   "Union Berlin",
+   "",
+   "Hamburger SV"
+  ],
+  [
+   "11 December – 13 December 2026",
+   "13",
+   "VfB Stuttgart",
+   "",
+   "Union Berlin"
+  ],
+  [
+   "18 December – 20 December 2026",
+   "14",
+   "Union Berlin",
+   "",
+   "TSG Hoffenheim"
+  ],
+  [
+   "8 January 2027 – 10 January 2027",
+   "15",
+   "Werder Bremen",
+   "",
+   "Union Berlin"
+  ],
+  [
+   "12 January – 14 January 2027",
+   "16",
+   "Union Berlin",
+   "",
+   "SC Paderborn 07"
+  ],
+  [
+   "15 January – 17 January 2027",
+   "17",
+   "Borussia Mönchengladbach",
+   "",
+   "Union Berlin"
+  ],
+  [
+   "22 January – 24 January 2027",
+   "18",
+   "Eintracht Frankfurt",
+   "",
+   "Union Berlin"
+  ],
+  [
+   "29 January – 31 January 2027",
+   "19",
+   "Union Berlin",
+   "",
+   "Bayer Leverkusen"
+  ],
+  [
+   "5 February – 7 February 2027",
+   "20",
+   "Schalke",
+   "",
+   "Union Berlin"
+  ],
+  [
+   "12 February – 14 February 2027",
+   "21",
+   "Union Berlin",
+   "",
+   "Bayern Munich"
+  ],
+  [
+   "19 February – 21 February 2027",
+   "22",
+   "SV Elversberg",
+   "",
+   "Union Berlin"
+  ],
+  [
+   "26 February – 28 February 2027",
+   "23",
+   "Borussia Dortmund",
+   "",
+   "Union Berlin"
+  ],
+  [
+   "2 March – 4 March 2027",
+   "24",
+   "Union Berlin",
+   "",
+   "FC Augsburg"
+  ],
+  [
+   "5 March – 7 March 2027",
+   "25",
+   "1. FC Köln",
+   "",
+   "Union Berlin"
+  ],
+  [
+   "12 March – 14 March 2027",
+   "26",
+   "Union Berlin",
+   "",
+   "SC Freiburg"
+  ],
+  [
+   "19 March – 21 March 2027",
+   "27",
+   "RB Leipzig",
+   "",
+   "Union Berlin"
+  ],
+  [
+   "2 April – 4 April 2027",
+   "28",
+   "Union Berlin",
+   "",
+   "Mainz 05"
+  ],
+  [
+   "9 April – 11 April 2027",
+   "29",
+   "Hamburger SV",
+   "",
+   "Union Berlin"
+  ],
+  [
+   "16 April – 18 April 2027",
+   "30",
+   "Union Berlin",
+   "",
+   "VfB Stuttgart"
+  ],
+  [
+   "23 April – 25 April 2027",
+   "31",
+   "TSG Hoffenheim",
+   "",
+   "Union Berlin"
+  ],
+  [
+   "7 May – 9 May 2027",
+   "32",
+   "Union Berlin",
+   "",
+   "Werder Bremen"
+  ],
+  [
+   "14 May – 16 May 2027",
+   "33",
+   "SC Paderborn 07",
+   "",
+   "Union Berlin"
+  ],
+  [
+   "22 May 2027",
+   "34",
+   "Union Berlin",
+   "",
+   "Borussia Mönchengladbach"
+  ],
+  [
+   "",
+   "First round",
+   "Eintracht Braunschweig",
+   "2–4",
+   "Union Berlin"
+  ],
+  [
+   "",
+   "Second round",
+   "1. FC Köln",
+   "5–0",
+   "Union Berlin"
+  ]
+ ]
+}

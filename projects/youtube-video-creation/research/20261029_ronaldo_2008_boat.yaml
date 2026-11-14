@@ -1,0 +1,164 @@
+# 取材メモ（2026年10月29日）ロナウドの2008年が「史上最高のバロンドール」に（B.O.A.T. 投票）（ショートだけ・見せ方 X＝冒頭に強い一言）
+# 取材: 2026-10-29。題材の元は 20261029_topics_src.yaml の 21。「投票の主催者・方法・結果を本文で確かめる」ことが条件。
+#   A Bola「Cristiano Ronaldo de 2008 eleito o melhor Bola de Ouro de sempre」（abola.pt/noticias/…2026102817561875016。requests で本文を全部読んだ）:
+#     主催＝フランス・フットボール誌（France Football）。授賞式の2日後に発表。公式の賞でも「超バロンドール」でもない、と同誌自身が説明している。
+#     方法＝今回は記者ではなく、同誌の読者・ユーザーが投票。バロンドールを2回以上受賞した選手のなかから、特定の1つの受賞年を選ぶ。1票1ユーロ。投票者は2027年の授賞式のチケット2枚の抽選の資格。
+#     数字＝2回以上投票した人が5009人。うち 10〜26回が44人、5〜9回が300人、2〜4回が4665人（5009＝44+300+4665 を足して確かめた）。記事に「投票者の総数」は無い。
+#     結果＝1位 クリスティアーノ・ロナウド2008、2位 メッシ2012（上位20位は画像の一覧を読んだ。1位から: R2008, M2012, R2017, M2023, R2016, R2014, M2015, R2013, M2011, M2009, M2019, M2021, ロナウド・ナザーリオ2002, M2010, ロナウド・ナザーリオ1997, キーガン1979, クライフ1974, プラティニ1984, ベッケンバウアー1976, ファン・バステン1988。Rはクリスティアーノ・ロナウド、Mはメッシ）。
+#   フット・メルカート「Cristiano Ronaldo 2008 élu plus grand Ballon d'Or de l'histoire」（28日19:23。requests で本文を読んだ）: バロンドール70周年の記念。2007/08のマンチェスター・ユナイテッド時代が選ばれた。
+#     1位R2008・2位M2012・3位R2017・4位M2023。「2人が上位12位を分け合う」。プラティニ1984は18位。順位は「主観的」と書いている。31の受賞年の全順位あり（A Bola の上位20と順が一致）。
+#   自分で数えたこと: 上位12位のうちメッシ7（2012・2023・2015・2011・2009・2019・2021）、ロナウド5（2008・2017・2016・2014・2013）。2回以上投票した5009人のうち4665人＝約93%が2〜4回。
+#   マルカ（marca.com/…/cristiano-ronaldo-2008-gana-b-t-mejor-balon-oro-historia.html）は requests で開けたが本文は取れず（ヘッダだけ）、AS は403。WebFetch も不可。→ 本文を読んだのは A Bola と フット・メルカートの2本。
+# 言わないこと: 2008年のシーズンの得点数・タイトルの数（本文で確かめられていない）、投票の総数・得票率（記事に無い。途中経過の%は使わない）、メッシの2012年の中身、
+#   10/27〜28 に作ったバロンドール授賞式の題（ケイン・ヤマル・ムバッペ・デンベレ）の中身、ロナウドの発言（無い）、B.O.A.T. が「本当の史上最高」という言い方。
+# 本人の言葉: 無い → 型は X。
+# 確度: 結果・方法・人数は報道（A Bola）。順位の上位4つはフット・メルカートと一致（報道2社）。数え直した数字は自分で数えたもの（背景）。
+# 反応: 作らない（0件）。
+# 写真: Commons が混んでいて新規に取れず、手元にある CC の3枚（本人の背番号7・顔を目で確認）。2008年当時の写真は無い。
+#   01＝2026年7月 ポルトガル代表（CC BY-SA 4.0 / Bryan Berlin。10/26 の代表の回と同じ試合）、
+#   05＝2026年7月 ポルトガル代表の別コマ（CC BY-SA 4.0 / Bryan Berlin、10/26 の代表の回の p01 と同じ。2022年のユナイテッドの写真は小さすぎて外した）、
+#   07＝マンチェスター・ユナイテッドのユニフォーム、プレミアのワッペン付き（10/19 の CL の回で使用。撮影時期は2000年代と見える）。
+#   ★写真の不安：新規の写真ではなく（10/19・10/26 の再利用）、2008年当時のものも無い。2026年のポルトガル代表が2枚、ユナイテッドの赤い7番が1枚。ショートでは 1.78倍に伸びる（△）。
+slot: other_1
+date: "2026年10月29日"
+format: news
+no_main: true
+people: [クリスティアーノ・ロナウド, メッシ, プラティニ, ロナウド・ナザーリオ]
+
+short_style: X
+short_hook_word: 1票1ユーロ
+short_photos:
+  - assets/images/20261029_ronaldo_2008_boat/07_v.jpg
+  - assets/images/20261029_ronaldo_2008_boat/01_v.jpg
+  - assets/images/20261029_ronaldo_2008_boat/05_v.jpg
+
+short_question: ロナウドの2008年とメッシの2012年、あなたはどちらが上だと思いますか。
+short_hook: ロナウドの2008年が、バロンドール史上最高に選ばれました。投票は、1票1ユーロでした。
+short_telops:
+  - {match: 70周年, text: バロンドール70周年/記念の投票}
+  - {match: 1位, text: 1位 ロナウド2008/2位 メッシ2012}
+  - {match: 1票は1ユーロ, text: 1票1ユーロ/2回以上の投票は5009人}
+  - {match: 12位, text: 上位12位/メッシ7・ロナウド5}
+
+theme:
+  id: ronaldo_2008_boat
+  league: ""
+  league_name: ""
+  prefix: ""
+  title: ロナウドの2008年が史上最高に。この投票の中身は？
+  hook: ""
+  question: ロナウドの2008年が選ばれた投票は、どんな投票だったのか
+  takeaway: 記念の投票は1票1ユーロで、複数回の投票もできた。上位12位はメッシ7つ・ロナウド5つで、公式の賞ではない
+
+thumbnail:
+  line1: ロナウドの2008年が1位
+  line2: 1票1ユーロの投票
+  tags: [クリスティアーノ・ロナウド]
+  photo: assets/images/20261029_ronaldo_2008_boat/07_w.jpg
+  short_photo: assets/images/20261029_ronaldo_2008_boat/07_v.jpg
+
+answer: 2008年のロナウドが1位。1票1ユーロの記念の投票で、公式の賞ではない
+watch: ロナウドの2008年が選ばれた投票の中身
+
+sections:
+  - id: what
+    main: true
+    heading: 史上最高のバロンドールに、ロナウドの2008年
+    tier: 報道
+    telop: 1位は、ロナウドの2008年
+    say:
+      - text: バロンドールが、70周年を迎えました。
+        short_only: true
+        image: assets/images/20261029_ronaldo_2008_boat/07_w.jpg
+        card: none
+      - text: 主催のフランス・フットボール誌が、記念の投票を行いました。
+        short_only: true
+        image: assets/images/20261029_ronaldo_2008_boat/01_w.jpg
+        card: none
+      - text: 選んだのは、歴代で最高のバロンドール。選手ではなく、ある年の受賞を選ぶ投票です。
+        image: assets/images/20261029_ronaldo_2008_boat/05_w.jpg
+        card: none
+      - text: 水曜、結果が出ました。1位は、クリスティアーノ・ロナウドの2008年。
+        emph: true
+        image: assets/images/20261029_ronaldo_2008_boat/07_w.jpg
+        card: none
+      - text: 2位は、メッシの2012年です。
+        image: assets/images/20261029_ronaldo_2008_boat/01_w.jpg
+        card: {type: table, title: 史上最高のバロンドール 上位4つ, columns: [順位, 選手, 年], rows: [[1位, ロナウド, 2008年], [2位, メッシ, 2012年], [3位, ロナウド, 2017年], [4位, メッシ, 2023年]], highlight_row: 0}
+      - text: 3位はロナウドの2017年。4位がメッシの2023年です。
+        image: assets/images/20261029_ronaldo_2008_boat/05_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.abola.pt/noticias/cristiano-ronaldo-de-2008-eleito-o-melhor-bola-de-ouro-de-sempre-2026102817561875016
+      - https://www.footmercato.net/a7976010724410306017-cristiano-ronaldo-2008-elu-plus-grand-ballon-dor-de-lhistoire
+
+  - id: how
+    heading: 投票は、どんな仕組みだったのか
+    tier: 報道
+    telop: 選ぶのは読者。1票は1ユーロ
+    say:
+      - text: 選ぶのは、記者ではなく、雑誌の読者とユーザーです。
+        image: assets/images/20261029_ronaldo_2008_boat/07_w.jpg
+        card: none
+      - text: 対象は、バロンドールを2回以上とった選手の受賞年です。
+        image: assets/images/20261029_ronaldo_2008_boat/05_w.jpg
+        card: none
+      - text: 1票は1ユーロ。
+        emph: true
+        image: assets/images/20261029_ronaldo_2008_boat/01_w.jpg
+        card: none
+      - text: 投票した人は、2027年の授賞式のチケット2枚の抽選に参加できました。
+        image: assets/images/20261029_ronaldo_2008_boat/07_w.jpg
+        card: none
+      - text: 主催者は、公式の賞ではないと説明しています。
+        image: assets/images/20261029_ronaldo_2008_boat/05_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.abola.pt/noticias/cristiano-ronaldo-de-2008-eleito-o-melhor-bola-de-ouro-de-sempre-2026102817561875016
+
+  - id: count
+    heading: 2回以上投票した人は5009人
+    tier: 報道
+    telop: 2回以上の投票は5009人
+    say:
+      - text: 2回以上投票した人は、5009人でした。
+        image: assets/images/20261029_ronaldo_2008_boat/01_w.jpg
+        card: {type: table, title: 2回以上投票した人（5009人）, columns: [投票回数, 人数], rows: [[2〜4回, 4665人], [5〜9回, 300人], [10〜26回, 44人]], highlight_row: 2}
+      - text: 4665人が2〜4回。5〜9回が300人です。
+        image: assets/images/20261029_ronaldo_2008_boat/07_w.jpg
+        card: none
+      - text: 10回から26回も投票した人が、44人いました。
+        image: assets/images/20261029_ronaldo_2008_boat/05_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.abola.pt/noticias/cristiano-ronaldo-de-2008-eleito-o-melhor-bola-de-ouro-de-sempre-2026102817561875016
+
+  - id: view
+    viewpoint: true
+    heading: 上位12位は、ロナウドとメッシだけ
+    tier: 背景
+    telop: 上位12位は、メッシ7・ロナウド5
+    say:
+      - text: 見立てです。上位12位は、すべてロナウドかメッシの受賞年でした。
+        image: assets/images/20261029_ronaldo_2008_boat/05_w.jpg
+        card: none
+      - text: 数えると、メッシが7つ、ロナウドが5つです。
+        image: assets/images/20261029_ronaldo_2008_boat/07_w.jpg
+        card: {type: table, title: 上位12位の内訳, columns: [選手, 受賞年の数], rows: [[メッシ, 7つ], [ロナウド, 5つ]], highlight_row: 1}
+      - text: ほかの選手が入るのは、13位のロナウド・ナザーリオから。
+        image: assets/images/20261029_ronaldo_2008_boat/05_w.jpg
+        card: none
+      - text: プラティニの1984年は、18位です。
+        image: assets/images/20261029_ronaldo_2008_boat/07_w.jpg
+        card: none
+      - text: これは公式の賞ではなく、1票1ユーロの記念の投票の順位です。
+        image: assets/images/20261029_ronaldo_2008_boat/05_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.abola.pt/noticias/cristiano-ronaldo-de-2008-eleito-o-melhor-bola-de-ouro-de-sempre-2026102817561875016
+      - https://www.footmercato.net/a7976010724410306017-cristiano-ronaldo-2008-elu-plus-grand-ballon-dor-de-lhistoire
+short_title: "ロナウドの2008年が史上最高に。この投票の中身は？"
