@@ -479,6 +479,21 @@
     if (!c.length) c = YA.AWAKE_FORMS.filter((f) => f.pos.includes(p.main) || f.pos.includes(pos));
     return r.weighted(c, (f) => Math.pow(f.abs.reduce((s, a) => s + (p.ab[a] || 6), 0) / f.abs.length, 2));
   }
+  // ---------- 覚醒の図鑑：形20種のうち、あなたの子が目覚めた形（やり込み）----------
+  // w.dex[形のk] = { y:年目, name:最初の子, n:回数 }。5・10・20種で育成基金のごほうび
+  YA.DEX_REWARD = { 5: 300, 10: 600, 20: 1000 };
+  YA.dexCount = (w) => Object.keys(w.dex || {}).length;
+  YA.dexAdd = function (w, p, f) {
+    const d = (w.dex = w.dex || {});
+    if (d[f.k]) { d[f.k].n++; return; }
+    d[f.k] = { y: w.year, name: p.name, n: 1 };
+    const c = YA.dexCount(w);
+    const gift = YA.DEX_REWARD[c];
+    if (gift) {
+      w.fund = (w.fund || 0) + gift;
+      if (YA.noteTier) YA.noteTier(w, 1, `覚醒の図鑑が${c}種になりました。育成基金に${gift}万円が届きました`);
+    } else if (YA.noteTier) YA.noteTier(w, 2, `覚醒の図鑑に「${f.name}」が載りました（${c}/${YA.AWAKE_FORMS.length}）`);
+  };
   YA.awaken = function (w, p, r) {
     r = r || YA.rngOf((w.seed | 0) * 3 + abs(w) + YA.hash(p.id));
     const from = YA.rating(p);
@@ -496,6 +511,7 @@
     p.conf = clamp(p.conf + 15, 0, 100);
     p.hist.unshift({ y: w.year, w: w.week, t: `覚醒した：${f.name}（特性「${f.trait}」・総合力 ${from}→${p.awake.to}）` });
     w.awakeN = { y: w.year, n: (w.awakeN && w.awakeN.y === w.year ? w.awakeN.n : 0) + 1 };
+    YA.dexAdd(w, p, f);
     // 次の覚醒が残っている子には、次の鍵が現れる
     p.keys = n < (p.awN || 1) ? rollKeys(w, p, r, 2, 1.3, (p.keys || []).map((k) => k.id)) : [];
     YA.addTr(w, p, 10);

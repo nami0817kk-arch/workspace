@@ -427,12 +427,14 @@ async function clearEvents() {
         if (n === 'トップ') ok(txt().includes('トップ監督の注文'), 'トップ監督の注文の画面');
         if (n === '移籍') ok(txt().includes('クラブ移籍'), 'クラブ移籍の画面');
       }
-      for (const n of ['実績', '殿堂', '年表', '育成基金', '卒業生名鑑']) {
+      for (const n of ['実績', '図鑑', '殿堂', '年表', '育成基金', '卒業生名鑑']) {
         btn(n, d.querySelector('.tabs')).click();
         ok(errors.length === 0, n + 'の画面で例外なし: ' + errors.slice(0, 2).join('|'));
       }
+      btn('図鑑', d.querySelector('.tabs')).click();
+      ok(txt().includes('覚醒の図鑑 0/20') && txt().includes('？'), '図鑑：20種が？で並ぶ');
       btn('実績', d.querySelector('.tabs')).click();
-      ok(txt().includes('/66') && txt().includes('銅'), '実績は66個の銅銀金');
+      ok(txt().includes('/69') && txt().includes('銅'), '実績は69個の銅銀金');
       rail('ホーム');
       ok(txt().includes('系譜') && txt().includes('次の実績'), 'ホームに系譜の小窓と次の実績');
       rail('設定');

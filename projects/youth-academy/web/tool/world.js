@@ -668,7 +668,23 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
     const wm = YA.newWorld(11);
     const ach = YA.achievements(wm);
     ok(ach.length === YA.ACH_COUNT && ach.length >= 60 && ach.every((x) => typeof x.done === 'boolean'), '実績の一覧が出る');
-    ok(YA.noticeKind('Aが怪我（3週）') === '怪我' && YA.noticeKind('なにか') === 'そのほか', 'お知らせの種類を分ける');
+    {
+      // 覚醒の図鑑：載る・数が増えない・5種でごほうび・実績に出る
+      const wd = YA.newWorld(12);
+      const pl = Object.values(wd.players).find((x) => x.grade === 1);
+      const f0 = YA.AWAKE_FORMS[0];
+      const fund0 = wd.fund || 0;
+      YA.dexAdd(wd, pl, f0);
+      YA.dexAdd(wd, pl, f0);
+      ok(YA.dexCount(wd) === 1 && wd.dex[f0.k].n === 2, '図鑑：同じ形は1種のまま回数が増える');
+      for (const f of YA.AWAKE_FORMS.slice(1, 5)) YA.dexAdd(wd, pl, f);
+      ok(YA.dexCount(wd) === 5 && wd.fund === fund0 + YA.DEX_REWARD[5], '図鑑：5種で育成基金300万円');
+      ok(YA.achievements(wd).find((x) => x.k === 'dex0').done, '図鑑：実績「5種そろえる」に届く');
+      for (const f of YA.AWAKE_FORMS.slice(5)) YA.dexAdd(wd, pl, f);
+      ok(YA.dexCount(wd) === YA.AWAKE_FORMS.length && wd.fund === fund0 + 300 + 600 + 1000, '図鑑：20種で合計1900万円');
+      JSON.parse(JSON.stringify(wd));
+    }
+    ok(YA.noticeKind('Aが怪我（3週）') === '怪我'&& YA.noticeKind('なにか') === 'そのほか', 'お知らせの種類を分ける');
     ok(YA.renamePlayer(wm, Object.keys(wm.players)[0], '').ok === false && YA.renamePlayer(wm, Object.keys(wm.players)[0], '新しい名前').ok, '名前を書き換えられる');
     const sm0 = YA.careerSummary(wm);
     ok(sm0.ach.length === ach.length && Array.isArray(sm0.best), '指導者人生のまとめが作れる');
@@ -1014,13 +1030,13 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
 {
   const wl = YA.newWorld(31);
   const al0 = YA.achievements(wl);
-  ok(al0.length === 66 && new Set(al0.map((a) => a.k)).size === 66, '実績は66個で重ならない');
+  ok(al0.length === YA.ACH_COUNT && YA.ACH_COUNT === 69 && new Set(al0.map((a) => a.k)).size === 69, '実績は69個で重ならない');
   ok(YA.ACH_FIELDS.every((f) => al0.some((a) => a.field === f)) && ['銅', '銀', '金'].every((t) => al0.some((a) => a.tier === t)), '5分野・銅銀金がそろう');
   ok(!!YA.nextAchievement(wl), '次に届きそうな実績が出る');
   let years = 0;
   while (wl.year < 9 && years++ < 600) YA.simulate(wl, { until: 'week', stopOnImportant: false });
   const hofN = wl.alumni.filter((a) => a.hof).length, fullN = wl.alumni.filter((a) => a.hof === 'full').length;
-  console.log('8年後 卒業生', wl.alumni.length, '殿堂候補以上', hofN, '正式', fullN, '基金', wl.fund, '実績', YA.achievements(wl).filter((a) => a.done).length + '/66');
+  console.log('8年後 卒業生', wl.alumni.length, '殿堂候補以上', hofN, '正式', fullN, '基金', wl.fund, '実績', YA.achievements(wl).filter((a) => a.done).length + '/69');
   console.log('殿堂候補の点', wl.alumni.filter((a) => a.hof).map((a) => a.hof + ':' + a.age + ':' + (a.nat * 2 + (a.titles || []).length * 2 + (a.awards || []).length + Math.floor((a.apps || 0) / 150) + (a.abroad ? 1 : 0))).join(' '));
   ok(hofN >= 1, '8年で殿堂候補が出る');
   { const c = wl.alumni.find((a) => a.hof === 'cand' && (a.nat || 0) * 2 + (a.titles || []).length * 2 + (a.awards || []).length >= 6); if (c) { c.age = 31; YA.alumniTick(wl); ok(c.hof === 'full' || c.retired, '殿堂候補が点を満たして30代になると正式に殿堂入りする'); } }
