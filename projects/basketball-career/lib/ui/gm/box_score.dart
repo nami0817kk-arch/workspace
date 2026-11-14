@@ -39,6 +39,14 @@ class _BoxScoreState extends State<_BoxScore> {
             style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: g.winner == mine ? GmColors.good : GmColors.bad)),
         const SizedBox(height: 6),
         _QuarterTable(g: g),
+        if (g.flow.length >= 12) ...[
+          const SizedBox(height: 12),
+          GameFlowCard(g: g, mine: mine),
+        ],
+        if (g.plays.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          _PlaysCard(g: g),
+        ],
         if (g.hasChance) ...[
           const SizedBox(height: 12),
           _ChanceCard(g: g, mine: mine),
@@ -152,7 +160,8 @@ class _ChanceCard extends StatelessWidget {
         const SizedBox(height: 6),
         const Text(
           '強さは、けが人を除いた先発と控えの力・ポジション・出場時間・方針・相性・ヘッドコーチから毎試合数える。'
-          'その差(ホームは+1)で勝つ見込みが決まり、勝敗・点・選手ごとの数字はそこから計算している。',
+          'その差(ホームは+1)が、シュートの入りやすさとミスの多さに効く。試合は1回の攻めずつ(1チーム約100回)、'
+          'コートの5人・打つ人の能力・方針を使って進めていて、勝敗も選手ごとの数字もそこで起きたことをそのまま数えている。',
           style: TextStyle(fontSize: 11, color: GmColors.sub, height: 1.4),
         ),
       ]),
@@ -347,6 +356,8 @@ class _QuarterTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final q = g.quarters;
+    final ot = g.overtime;
+    final n = g.overtimes;
     Widget line(int team, int pts, List<int> qs) => Padding(
           padding: const EdgeInsets.symmetric(vertical: 4),
           child: Row(children: [
@@ -366,12 +377,110 @@ class _QuarterTable extends StatelessWidget {
       child: Column(children: [
         Row(children: [
           const Expanded(child: SizedBox()),
-          for (final h in ['1Q', '2Q', '3Q', '4Q']) SizedBox(width: 34, child: Text(h, textAlign: TextAlign.right, style: const TextStyle(fontSize: 11, color: GmColors.sub))),
+          for (final h in ['1Q', '2Q', '3Q', '4Q', for (var k = 0; k < n; k++) k == 0 ? '延長' : '延$k']) SizedBox(width: 34, child: Text(h, textAlign: TextAlign.right, style: const TextStyle(fontSize: 11, color: GmColors.sub))),
           const SizedBox(width: 46, child: Text('計', textAlign: TextAlign.right, style: TextStyle(fontSize: 11, color: GmColors.sub))),
         ]),
-        line(g.away, g.awayPts, q.length == 8 ? q.sublist(4) : const []),
-        line(g.home, g.homePts, q.length == 8 ? q.sublist(0, 4) : const []),
+        line(g.away, g.awayPts, q.length == 8 ? [...q.sublist(4), for (var k = 0; k < n; k++) ot[k * 2 + 1]] : const []),
+        line(g.home, g.homePts, q.length == 8 ? [...q.sublist(0, 4), for (var k = 0; k < n; k++) ot[k * 2]] : const []),
       ]),
     );
   }
+}
+
+/// 試合の流れ(1分ごとの点差。上が自分のリード)。リードの入れ替わりと最大リードも出す。
+class GameFlowCard extends StatelessWidget {
+  const GameFlowCard({super.key, required this.g, required this.mine});
+  final GameResult g;
+  final int mine;
+
+  @override
+  Widget build(BuildContext context) {
+    final sign = g.home == mine ? 1 : -1;
+    final f = [0, for (final x in g.flow) x * sign];
+    final myMax = f.reduce((a, b) => a > b ? a : b);
+    final oppMax = -f.reduce((a, b) => a < b ? a : b);
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(color: GmColors.panelHi, borderRadius: BorderRadius.circular(12)),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        Row(children: [
+          const Text('試合の流れ', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: GmColors.sub)),
+          const Spacer(),
+          Text('リードの入れ替わり ${g.leadChanges}回', style: const TextStyle(fontSize: 12)),
+        ]),
+        const SizedBox(height: 6),
+        SizedBox(height: 90, child: CustomPaint(painter: _FlowPainter(f), size: Size.infinite)),
+        const SizedBox(height: 4),
+        Row(children: [
+          Text('${teamDefs[mine].short} 最大${myMax > 0 ? '$myMax点' : 'リードなし'}',
+              style: const TextStyle(fontSize: 11, color: GmColors.ball, fontWeight: FontWeight.bold)),
+          const Spacer(),
+          Text('${teamDefs[g.opponentOf(mine)].short} 最大${oppMax > 0 ? '$oppMax点' : 'リードなし'}', style: const TextStyle(fontSize: 11, color: GmColors.sub)),
+        ]),
+      ]),
+    );
+  }
+}
+
+class _FlowPainter extends CustomPainter {
+  _FlowPainter(this.f);
+  final List<int> f;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final maxAbs = f.fold(8, (m, x) => x.abs() > m ? x.abs() : m).toDouble();
+    final mid = size.height / 2;
+    double x(int i) => size.width * i / (f.length - 1);
+    double y(int v) => mid - v / maxAbs * (mid - 4);
+    final grid = Paint()
+      ..color = GmColors.line
+      ..strokeWidth = 1;
+    canvas.drawLine(Offset(0, mid), Offset(size.width, mid), grid);
+    // クォーターの区切り(12分ごと)
+    for (var q = 12; q < f.length - 1; q += 12) {
+      canvas.drawLine(Offset(x(q), 0), Offset(x(q), size.height), grid..color = GmColors.line.withValues(alpha: 0.5));
+    }
+    Path area(bool up) {
+      final p = Path()..moveTo(0, mid);
+      for (var i = 0; i < f.length; i++) {
+        final v = up ? (f[i] > 0 ? f[i] : 0) : (f[i] < 0 ? f[i] : 0);
+        p.lineTo(x(i), y(v));
+      }
+      return p
+        ..lineTo(size.width, mid)
+        ..close();
+    }
+
+    canvas.drawPath(area(true), Paint()..color = GmColors.ball.withValues(alpha: 0.55));
+    canvas.drawPath(area(false), Paint()..color = GmColors.sub.withValues(alpha: 0.45));
+  }
+
+  @override
+  bool shouldRepaint(covariant _FlowPainter old) => old.f != f;
+}
+
+/// 見せ場(終盤の得点と逆転)。
+class _PlaysCard extends StatelessWidget {
+  const _PlaysCard({required this.g});
+  final GameResult g;
+
+  @override
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(color: GmColors.panelHi, borderRadius: BorderRadius.circular(12)),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+          const Text('終盤の流れ', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: GmColors.sub)),
+          const SizedBox(height: 4),
+          for (final p in g.plays)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 1.5),
+              child: Text(p,
+                  style: TextStyle(
+                      fontSize: 12,
+                      fontFeatures: const [FontFeature.tabularFigures()],
+                      fontWeight: p.contains('逆転') ? FontWeight.bold : null,
+                      color: p.contains('逆転') ? GmColors.gold : null)),
+            ),
+        ]),
+      );
 }
