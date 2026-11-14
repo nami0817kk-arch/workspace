@@ -53,6 +53,7 @@
 - 創作の物語を避ける決まり（no-creative-story-content）は動画の決まりで、ゲームの台詞・出来事には当てはめない（ユーザー指示）。
 - 広告・課金（3段目）：Flutter 側は `app/lib/monetization/`（`bridge.dart`＝ページとの橋・`entitlements.dart`＝権利の保存・`purchase_service.dart`・`ad_service.dart`＝護送ボートから写した期限切れ対応）。docs/app-pitfalls.md の1〜3番に沿う（届いた購入は待ち手が居なくても受け取り、受け取りが済むまで完了通知を返さない／動画は見終えたら画面を離れても受け取る／広告は期限切れで読み直す）。商品ID: youth_remove_ads・youth_keen_eye・youth_save_slot・youth_ticket_1・youth_ticket_3（App Store Connect に同じIDで作る）。広告ユニットIDは既定がテスト用で、リリースの workflow が Secrets（YOUTH_ADMOB_APP_ID_IOS / _REWARDED_IOS / _INTERSTITIAL_IOS）から差し替える。
 - BGM（決定121）は音源を持たず合成（`YA.bgm`。ホームと試合で曲が変わる・設定で消せる）。iPhone だけ（決定122）、文字の大きさは小中大（決定123）。
+- **押せないボタンには必ず理由を付ける**（2026-11-14 ユーザー指摘「タッチできない」）：`h('button', { disabled: 条件, why: '理由' })`。押せないボタンは指が通り抜けて反応しないので、触れた位置に押せないボタンがあれば `YA.toast` で `why` を3.5秒出す（ui.js）。画面の点検が「理由の無い押せないボタン」を見つけたら落ちる。
 - 画面を直したら、ブラウザで絵にして目で確かめる（`node web/tool/build.js web/dist/index.html` → `python -m http.server` → 844×390）。
 - リリース: `youth-academy-ios-release.yml`（workflow_dispatch、`upload_to_testflight=true`）。Secret は `YOUTH_ACADEMY_IOS_PROVISIONING_PROFILE_BASE64` のみ新規。
   Bundle ID `com.namiki.youthacademy`、App Store Connect の Apple ID 6828073461。ビルド番号は `app/pubspec.yaml` の `+N`。

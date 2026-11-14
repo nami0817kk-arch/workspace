@@ -287,7 +287,7 @@
   }
   function fundTab(body, w) {
     body.append(h('div', { class: 'h' }, `育成基金 ${w.fund || 0}万円`), h('div', { class: 'note' }, '卒業生の大きな移籍で入る連帯貢献金の半分が貯まります。クラブの予算とは別で、使い道は自分で決めます（赤字にはできません）。'));
-    for (const u of YA.FUND_USES) body.append(h('div', { class: 'pitem', style: 'cursor:default;gap:6px;margin-top:4px' }, h('div', { class: 'grow' }, h('b', {}, `${u.name}（${u.cost}万円）`), h('div', { class: 'note' }, u.note)), h('button', { class: 'btn sm', disabled: (w.fund || 0) < u.cost, onclick: () => { const r = YA.fundUse(w, u.k); YA.saveWorld(); rerender(); } }, '使う')));
+    for (const u of YA.FUND_USES) body.append(h('div', { class: 'pitem', style: 'cursor:default;gap:6px;margin-top:4px' }, h('div', { class: 'grow' }, h('b', {}, `${u.name}（${u.cost}万円）`), h('div', { class: 'note' }, u.note)), h('button', { class: 'btn sm', disabled: (w.fund || 0) < u.cost, why: `育成基金が足りません（${u.cost}万円）`, onclick: () => { const r = YA.fundUse(w, u.k); YA.saveWorld(); rerender(); } }, '使う')));
   }
   function viewLineage(main) {
     const w = U().app.w;

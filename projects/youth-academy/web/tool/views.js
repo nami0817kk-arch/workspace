@@ -496,6 +496,15 @@ async function clearEvents() {
       ok(!A.w.pendingContract && !txt().includes('3年の契約が終わりました'), '「ここへ移る」を押すと先へ進める');
       A.w.club.trust = Math.max(t0, 50);
     }
+    // 押せないボタンには、触れたときに出す理由（data-why）がある
+    {
+      const noWhy = () => [...d.querySelectorAll('#app button[disabled]')].filter((b) => !b.dataset.why).map((b) => b.textContent.trim().slice(0, 16));
+      const bad = [];
+      for (const k of ['ホーム', '選手', 'クラブ']) { rail(k); await sleep(10); bad.push(...noWhy()); }
+      for (const k of ['予算と施設', 'スタッフ', 'スカウト', 'セレクション', '内部昇格', '概要']) { const bb = btn(k); if (bb) { bb.click(); await sleep(10); bad.push(...noWhy()); } }
+      ok(bad.length === 0, '押せないボタンには理由がある: ' + bad.slice(0, 5).join('|'));
+      ok(typeof w.YA.toast === 'function', '押せないボタンに触れたら理由を出す仕組みがある');
+    }
     // 機能面の画面
     rail('選手');
     await sleep(10);

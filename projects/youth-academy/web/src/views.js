@@ -95,13 +95,13 @@
     const readAt = w.readAt || 0;
     const unread = w.inbox.filter((n) => YA.noticeTier(w, n) <= 2 && ((n.year || 0) * 100 + (n.week || 0)) > readAt).length;
     mid.querySelector('.h').textContent = unread ? `お知らせ（新しい${unread}件）` : 'お知らせ';
-    for (const n of pinned) list.append(h('div', { class: 'pitem', style: 'cursor:default;align-items:flex-start;background:#fff8e1' }, h('b', { style: 'font-size:10px;color:#a37b00;flex:none' }, '留'), h('span', { class: 'grow', style: 'font-size:11.5px;line-height:1.4' }, (n.week ? `${n.week}週 ` : '') + n.text), h('button', { class: 'btn sm', style: 'min-height:24px;padding:0 6px', onclick: () => { w.pins = w.pins.filter((k) => k !== nkey(n)); YA.saveWorld(); rerender(); } }, '外す')));
+    for (const n of pinned) list.append(h('div', { class: 'pitem', style: 'cursor:default;align-items:flex-start;background:#fff8e1' }, h('b', { style: 'font-size:10px;color:#a37b00;flex:none' }, '留'), h('span', { class: 'grow', style: 'font-size:11.5px;line-height:1.4' }, (n.week ? `${n.week}週 ` : '') + n.text), h('button', { class: 'btn sm', style: 'min-height:32px;padding:0 9px', onclick: () => { w.pins = w.pins.filter((k) => k !== nkey(n)); YA.saveWorld(); rerender(); } }, '外す')));
     const items = w.inbox.filter((n) => (showLog || YA.noticeTier(w, n) <= 2) && w.pins.indexOf(nkey(n)) < 0).slice(-14).reverse();
     for (const n of items) {
       const et = YA.noticeTier(w, n);
       const dot = et === 1 ? '#d63a3a' : et === 2 ? '#1f6feb' : '#b9c7de';
       const isNew = ((n.year || 0) * 100 + (n.week || 0)) > readAt && et <= 2;
-      list.append(h('div', { class: 'pitem', style: 'align-items:flex-start;cursor:default' + (isNew ? ';font-weight:700' : '') }, h('span', { style: `width:8px;height:8px;border-radius:50%;background:${dot};margin-top:4px;flex:none` }), h('span', { class: 'grow ' + (et === 3 ? 'sub' : ''), style: 'font-size:11.5px;line-height:1.4;cursor:pointer', onclick: () => { if (n.pid && w.players[n.pid]) { U().app.pSel = n.pid; U().app.tab = 'players'; rerender(); } } }, (n.week ? `${n.week}週 ` : '') + n.text), et <= 2 ? h('button', { class: 'btn sm', style: 'min-height:24px;padding:0 6px;flex:none', onclick: () => { w.pins = (w.pins || []).concat([nkey(n)]).slice(-5); YA.saveWorld(); rerender(); } }, '留める') : null));
+      list.append(h('div', { class: 'pitem', style: 'align-items:flex-start;cursor:default' + (isNew ? ';font-weight:700' : '') }, h('span', { style: `width:8px;height:8px;border-radius:50%;background:${dot};margin-top:4px;flex:none` }), h('span', { class: 'grow ' + (et === 3 ? 'sub' : ''), style: 'font-size:11.5px;line-height:1.4;cursor:pointer', onclick: () => { if (n.pid && w.players[n.pid]) { U().app.pSel = n.pid; U().app.tab = 'players'; rerender(); } } }, (n.week ? `${n.week}週 ` : '') + n.text), et <= 2 ? h('button', { class: 'btn sm', style: 'min-height:32px;padding:0 9px;flex:none', onclick: () => { w.pins = (w.pins || []).concat([nkey(n)]).slice(-5); YA.saveWorld(); rerender(); } }, '留める') : null));
     }
     mid.append(list, h('div', { class: 'row', style: 'gap:5px;margin-top:5px' }, h('button', { class: 'btn sm', onclick: () => { U().app.showLog = !showLog; rerender(); } }, showLog ? '記録だけのお知らせを隠す' : '記録だけのお知らせも見る'), unread ? h('button', { class: 'btn sm', onclick: () => { w.readAt = w.year * 100 + w.week; YA.saveWorld(); rerender(); } }, 'すべて読んだ') : null));
     // 右：気にかけたい子
@@ -294,7 +294,7 @@
         fatBar(p, 42),
         h('button', { class: 'btn sm', style: 'width:116px;justify-content:space-between;gap:2px', onclick: () => pickFocus(p) }, p.train.policy && p.train.policy !== 'manual' ? h('span', { class: 'chip gray', style: 'font-size:9px;padding:0 3px' }, { strong: '得', weak: '苦', pos: '位' }[p.train.policy]) : null, h('span', { class: 'grow', style: 'text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0' }, p.train.focus || '未設定'), p.train.focus ? h('span', { class: 'sub' }, p.ab[p.train.focus]) : null),
         h('button', { class: 'btn sm', style: 'width:150px;justify-content:space-between;white-space:nowrap;gap:2px', onclick: () => pickTrait(p) }, h('span', { style: 'overflow:hidden;text-overflow:ellipsis' }, tp || '未設定'), tp ? h('span', { class: 'sub' }, wk + '週') : null),
-        h('button', { class: 'btn sm' + (p.rest ? ' on' : ''), style: 'width:52px', disabled: p.inj > 0, onclick: () => { p.rest = p.rest === null ? 'light' : p.rest === 'light' ? 'rest' : null; YA.saveWorld(); const st = table.scrollTop; rerender(); const t2 = document.querySelector('.card.pbody.scroll'); if (t2) t2.scrollTop = st; } }, p.inj > 0 ? '療養' : p.rest === 'rest' ? '休み' : p.rest === 'light' ? '軽め' : '通常')));
+        h('button', { class: 'btn sm' + (p.rest ? ' on' : ''), style: 'width:52px', disabled: p.inj > 0, why: '怪我をしている子は、休ませ方を変えられません', onclick: () => { p.rest = p.rest === null ? 'light' : p.rest === 'light' ? 'rest' : null; YA.saveWorld(); const st = table.scrollTop; rerender(); const t2 = document.querySelector('.card.pbody.scroll'); if (t2) t2.scrollTop = st; } }, p.inj > 0 ? '療養' : p.rest === 'rest' ? '休み' : p.rest === 'light' ? '軽め' : '通常')));
     }
     wrap.append(days, bulk, bulk2, table);
     main.append(wrap);
@@ -374,7 +374,7 @@
       h('span', { class: 'chip trait' }, '伸びしろ ', YA.starsEl([YA.coachStars(w, sel), YA.coachStars(w, sel)]), h('small', { style: 'font-weight:600;opacity:.85' }, YA.futureRange(w, sel).text)), ...flags(sel),
       YA.starOpen(w, sel)
         ? h('button', { class: 'btn sm', onclick: () => { const r = YA.setStar(w, sel, !sel.star); ui.starMsg = r.msg; YA.saveWorld(); rerender(); } }, sel.star ? '★ を外す' : `★ 注目の印（高${sel.grade} ${YA.starsIn(w, sel.grade).length}/${YA.STAR_MAX}）`)
-        : (sel.star ? h('span', { class: 'chip trait', title: '入団のときに決めた★です' }, '★ 入団時に決めた子') : h('button', { class: 'btn sm', disabled: true, onclick: () => { ui.starMsg = YA.STAR_CLOSED; rerender(); } }, '★ は入団時に決める')), sel.star || sel.awake ? null : h('small', { class: 'sub', style: 'align-self:center' }, '覚醒するのは★の子だけ'),
+        : (sel.star ? h('span', { class: 'chip trait', title: '入団のときに決めた★です' }, '★ 入団時に決めた子') : h('button', { class: 'btn sm', disabled: true, why: YA.STAR_CLOSED, onclick: () => { ui.starMsg = YA.STAR_CLOSED; rerender(); } }, '★ は入団時に決める')), sel.star || sel.awake ? null : h('small', { class: 'sub', style: 'align-self:center' }, '覚醒するのは★の子だけ'),
       h('button', { class: 'btn sm', onclick: () => swapTeam(sel) }, sel.team === 'A' ? 'Bに回す' : 'Aに上げる')));
     // 面談
     // 進路（決定142）：希望・トップへの近さ・選んだ道、そのあとに面談
@@ -398,7 +398,7 @@
     // 会話の形（決定71）：相手の一言 → 言葉の違う選択肢3つ → 相手の返事と結果
     const su = YA.talkSetup(w, sel);
     talk.append(h('div', { class: 'card', style: 'padding:6px 9px;margin:4px 0;background:#f5f8fd' }, h('b', {}, sel.name.split(' ')[0] + '：'), `「${su.line}」`));
-    talk.append(h('div', { class: 'fm-row', style: 'margin-top:4px' }, su.opts.map((t) => h('button', { class: 'btn', disabled: !can, onclick: () => { const r = YA.talk(w, sel.id, t.k); res.replaceChildren(h('div', {}, r.ok ? `${sel.name.split(' ')[0]}は、${r.line}${r.small ? '（' + r.small + '）' : ''}${r.extra ? ' / ' + r.extra : ''}` : r.msg)); YA.saveWorld(); talkBtns(); } }, t.label))));
+    talk.append(h('div', { class: 'fm-row', style: 'margin-top:4px' }, su.opts.map((t) => h('button', { class: 'btn', disabled: !can, why: '面談は1人と月1回までです。来月また話せます', onclick: () => { const r = YA.talk(w, sel.id, t.k); res.replaceChildren(h('div', {}, r.ok ? `${sel.name.split(' ')[0]}は、${r.line}${r.small ? '（' + r.small + '）' : ''}${r.extra ? ' / ' + r.extra : ''}` : r.msg)); YA.saveWorld(); talkBtns(); } }, t.label))));
     talk.append(res);
     const talkBtns = () => { for (const b of talk.querySelectorAll('button')) b.disabled = true; };
     // 様子（決定142）：調子・不満・性格・コーチの一言、チームでの役割とポジション、最近のこと

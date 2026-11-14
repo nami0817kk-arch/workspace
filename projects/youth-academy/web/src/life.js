@@ -106,8 +106,8 @@
       h('div', { class: 'h' }, '指導の方針'),
       h('div', { class: 'note' }, open ? '年度はじめ（4週まで）に決めます。方針と逆の接し方が続くと、子どもたちが戸惑います。' : '方針を変えられるのは、年度はじめ（4週まで）です。'),
       ...YA.POLICY_AXES.map(([k, n, a, b]) => h('div', { class: 'row', style: 'gap:4px;margin-top:3px' }, h('span', { class: 'note', style: 'width:64px' }, n),
-        h('button', { class: 'btn sm' + (!pol[k] ? ' on' : ''), disabled: !open, onclick: () => { YA.setCoachPolicy(w, k, 0); YA.saveWorld && YA.saveWorld(); U.render(); } }, a),
-        h('button', { class: 'btn sm' + (pol[k] ? ' on' : ''), disabled: !open, onclick: () => { YA.setCoachPolicy(w, k, 1); YA.saveWorld && YA.saveWorld(); U.render(); } }, b))),
+        h('button', { class: 'btn sm' + (!pol[k] ? ' on' : ''), disabled: !open, why: '方針を変えられるのは、年度はじめ（4週まで）です', onclick: () => { YA.setCoachPolicy(w, k, 0); YA.saveWorld && YA.saveWorld(); U.render(); } }, a),
+        h('button', { class: 'btn sm' + (pol[k] ? ' on' : ''), disabled: !open, why: '方針を変えられるのは、年度はじめ（4週まで）です', onclick: () => { YA.setCoachPolicy(w, k, 1); YA.saveWorld && YA.saveWorld(); U.render(); } }, b))),
       h('div', { class: 'note', style: 'margin-top:4px;color:var(--ink)' }, st ? `あなたの流儀：${st}（指導者になった卒業生が受け継ぎます）` : '3年続けると、あなたの「流儀」が見えてきます'));
   };
 
