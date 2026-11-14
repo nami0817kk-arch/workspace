@@ -408,6 +408,129 @@ extension GameStateFinance on GameState {
     return true;
   }
 
+  /// 別の国のクラブを新しく立ち上げて、続きを遊ぶ。その国の規則に従い、
+  /// 新しい国のピラミッド(5部制)の4部から始まる。実績は殿堂に残る。
+  Future<bool> buyClubInCountry(LeagueTheme theme) async {
+    final save = _save;
+    final reason = saleReason;
+    if (save == null || reason == null) return false;
+    if (theme == currentLeagueTheme) return false;
+    const startTier = 4;
+    final rng = Random();
+    final names =
+        NamePool.themedClubNames(theme, teamsPerLeague * totalDivisionTiers);
+    var ni = 0;
+    String nextName() => names[ni++];
+    int strengthForTier(int tier) =>
+        (40 + (totalDivisionTiers - tier) * 10 + rng.nextInt(35)).clamp(20, 99);
+
+    save.ownerLegacies.add(_legacyOfCurrentClub(reason));
+
+    final userTeam = PlayerGenerator.generateSquad(
+        id: 'user', name: nextName(), strengthTier: 60);
+    final others = List<League?>.filled(totalDivisionTiers, null);
+    League? mine;
+    final cpuInMine = <Team>[];
+    for (var tier = 1; tier <= totalDivisionTiers; tier++) {
+      final teams = <Team>[
+        if (tier == startTier) userTeam,
+        for (var i = 0;
+            i < (tier == startTier ? teamsPerLeague - 1 : teamsPerLeague);
+            i++)
+          PlayerGenerator.generateSquad(
+            id: tier == startTier ? 'cpu$i' : 'div${tier}_$i',
+            name: nextName(),
+            strengthTier: strengthForTier(tier),
+          ),
+      ];
+      for (final t in teams) {
+        LineupUtils.autoFill(t);
+      }
+      final league = League(
+        teams: teams,
+        fixtures: FixtureGenerator.generateDoubleRoundRobin(teams),
+        season: save.league.season,
+      );
+      if (tier == startTier) {
+        mine = league;
+        cpuInMine.addAll(teams.where((t) => t.id != 'user'));
+      } else {
+        others[tier - 1] = league;
+      }
+    }
+
+    save.userTeamId = 'user';
+    save.clubName = userTeam.name;
+    save.leagueName = theme.label;
+    save.ruleSet = RuleSet.forTheme(theme);
+    save.league = mine!;
+    save.otherDivisionLeagues = others;
+    save.currentDivisionTier = startTier;
+    save.cups = [
+      CupEngine.createKnockout(
+        type: CupType.domestic,
+        name: theme.domesticCupName,
+        teamIds: mine.teams.map((t) => t.id).toList(),
+      ),
+    ];
+    save.continentalCup = null;
+    save.continentalTeams = [];
+    save.friendlies = _generateFriendlies(mine.teams, 'user');
+    final rival = cpuInMine[rng.nextInt(cpuInMine.length)];
+    save.rivalTeamId = rival.id;
+    save.rivalTeamName = rival.name;
+    save.rivalPast = [0, 0, 0];
+    save.pendingJobOfferTeamId = null;
+    save.pendingOwnerEvent = null;
+    save.pendingPressConference = null;
+    save.pendingContractNegotiation = null;
+    save.incomingOffers = [];
+    save.proposals = [];
+    save.declinedProposalIds = [];
+    save.confidence = 60;
+    save.shareholderExpectation = 60;
+    save.ownerShare = 100;
+    save.budget = (6000 * save.difficulty.initialBudgetFactor).round();
+    save.infrastructure = ClubInfrastructure();
+    save.sponsorDeal = null;
+    save.namingDeal = null;
+    save.pendingNamingOffers = [];
+    save.pendingSponsorOffers = SponsorEngine.generateOffers(
+        userTeam.overallRating,
+        tier: startTier);
+    save.tvHolidaySeasons = 0;
+    save.bankLoans = [];
+    save.youthProspects = [];
+    save.projects = {};
+    save.advisors = {};
+    save.communityLevel = 0;
+    save.reserveFund = 0;
+    save.insured = false;
+    save.retiredLegends.clear();
+    save.retiredNumberIds.clear();
+    save.boardTargetRank = _difficultyAdjustedTarget(
+      BoardEngine.estimateTargetRank(save.league, 'user'),
+    );
+    save.boardCupTargetRound = _estimateDomesticCupTarget();
+    save.wageBudget = BoardEngine.wageBudgetFor(
+      tier: startTier,
+      currentWeeklyWageBill: weeklyWageBill,
+    );
+    save.clubHistory.add(userTeam.name);
+    save.clubValueHistory.clear();
+    if (save.ownerGoal == OwnerGoal.clubValue) {
+      save.ownerGoalStartValue = clubValue.total;
+    }
+    transferMarket = TransferMarket.generate();
+    _refreshScoutCandidates();
+    _refreshStaffCandidates();
+    _addTimeline(Tr.pick('${theme.label}(${theme.flavorLabel})で新しいクラブ${userTeam.name}を立ち上げた',
+        'Founded ${userTeam.name} in the ${theme.label}'));
+    _notify();
+    await _persist();
+    return true;
+  }
+
   /// ライバルクラブ(開幕時に決定、以後固定)。未設定の場合はnull。
   Team? get rivalTeam {
     final id = _save?.rivalTeamId;
