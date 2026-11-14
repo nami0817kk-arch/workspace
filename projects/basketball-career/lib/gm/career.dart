@@ -2064,7 +2064,7 @@ class Career {
   void scoutProspect(Prospect p) {
     if (phase != Phase.draft || scoutsLeft <= 0 || p.scouted || p.pickedBy != null) return;
     scoutsLeft--;
-    scout(p, rng);
+    scout(p, rng, level: me.staffLevel(Staff.scout));
   }
 
   /// 動画を見てスカウトを2回増やす(ドラフトごとに1度)。
