@@ -20,7 +20,7 @@ void main() {
 
     final swingWin = at(55, win) - at(27, win);
     final swingMoney = at(55, money) - at(27, money);
-    expect(swingWin, greaterThan(swingMoney + 10));
+    expect(swingWin, greaterThan(swingMoney + 5));
   });
 
   test('忠誠の選手は前のチームへの関心が高い', () {

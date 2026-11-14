@@ -232,8 +232,11 @@ const trainingNotes = [
 
 /// オフの成長の記録(自分のチームの1人分)。
 class GrowthLine {
-  const GrowthLine({required this.name, required this.age, required this.before, required this.after, this.focus});
+  const GrowthLine({required this.name, required this.age, required this.before, required this.after, this.focus, this.parts = const []});
   final String name;
+
+  /// 伸びの内訳(年齢・育成・練習・出場時間・性格。力のもとの数字で)。
+  final List<(String, int)> parts;
 
   /// 1つ年を取ったあとの年齢。
   final int age;
@@ -243,13 +246,25 @@ class GrowthLine {
 
   int get delta => after - before;
 
-  Map<String, dynamic> toJson() => {'n': name, 'a': age, 'b': before, 'f': after, if (focus != null) 'fo': focus!.index};
+  Map<String, dynamic> toJson() => {
+        'n': name,
+        'a': age,
+        'b': before,
+        'f': after,
+        if (focus != null) 'fo': focus!.index,
+        if (parts.isNotEmpty) 'pt': [for (final (l, v) in parts) [l, v]],
+      };
   static GrowthLine fromJson(Map<String, dynamic> j) => GrowthLine(
         name: j['n'] as String,
         age: j['a'] as int,
         before: j['b'] as int,
         after: j['f'] as int,
         focus: j['fo'] is int && (j['fo'] as int) >= 0 && (j['fo'] as int) < Attr.values.length ? Attr.values[j['fo'] as int] : null,
+        parts: [
+          if (j['pt'] is List)
+            for (final x in j['pt'] as List)
+              if (x is List && x.length == 2 && x[0] is String && x[1] is int) (x[0] as String, x[1] as int),
+        ],
       );
 }
 
@@ -801,6 +816,9 @@ class Career {
 
   /// 人気(0〜100)。勝つ・プレーオフに出ると上がる。観客の入りに効く。
   int hype = 50;
+
+  /// メディア好きの主力(上から9人)がいると、シーズンの終わりに人気が上がる(1人+2、2人まで)。
+  int get mediaHype => 2 * me.order.take(9).where((p) => hasTrait(p, Trait.media)).length.clamp(0, 2);
 
   /// 入場料の段階([ticketPrices] の番号)。
   int priceLevel = 1;
@@ -1412,7 +1430,7 @@ class Career {
       // 勝ちたい選手は、勝ち負けに敏感
       if (personalityOf(p).value == Value.win) d += pct >= 0.55 ? 1 : pct < 0.4 ? -2 : 0;
       if (skillOf(Skill.charisma) > 0) d += 1;
-      d += const [1, 0, -1][me.training.clamp(0, 2)];
+      d += me.training == 2 && hasTrait(p, Trait.grinder) ? 0 : const [1, 0, -1][me.training.clamp(0, 2)];
       final before = p.morale;
       p.morale = (p.morale + d).clamp(0, 100);
       if (before >= 20 && p.morale < 20) _log('${p.name}(${me.def.short})がトレードを希望');
@@ -1712,7 +1730,7 @@ class Career {
     }
     final goalDelta = goals.where((g) => g.kind != GoalKind.wins).fold(0, (n, g) => n + (g.met! ? goalTrust : -goalTrust));
     // 人気: 勝率とプレーオフで動く
-    hype = (hype + ((me.winPct - 0.5) * 40).round() + const [-4, 3, 6, 9, 12, 16][res]).clamp(0, 100);
+    hype = (hype + ((me.winPct - 0.5) * 40).round() + const [-4, 3, 6, 9, 12, 16][res] + mediaHype).clamp(0, 100);
     // オーナーの性格に合う年は、信頼に上乗せが付く(嫌われて減ることはない)
     final liked = switch (ownerType) {
       OwnerType.winNow => res >= 3 ? 5 : 0,
@@ -1864,6 +1882,8 @@ class Career {
       for (final p in t.roster) {
         final start = p.ovr;
         var d = ageOneYear(p, rng);
+        final byAge = d;
+        var byCoach = 0, byTraining = 0;
         p.injured = 0;
         // コーチの段階で若手の伸びが変わる(力が上がる年だけ)
         final coach = t.staffLevel(Staff.development);
@@ -1876,11 +1896,29 @@ class Career {
             if (p.pot < p.ovr) p.pot = p.ovr;
             p.lastDelta += b;
             d += b;
+            byCoach = b;
           }
         }
         if (t.index == mine) {
-          d += _train(p, d);
-          growth.add(GrowthLine(name: p.name, age: p.age, before: start, after: p.ovr, focus: p.focus));
+          byTraining = _train(p, d);
+          d += byTraining;
+        }
+        // 出場時間と性格(どのチームも。乱数は使わない)
+        final extra = extraGrowth(p, d);
+        for (final (label, v) in extra) {
+          p.ovr = (p.ovr + v).clamp(35, 99);
+          if (label == Trait.lateBloomer.label && v > 0 && p.pot < p.ovr + 1) p.pot = math.min(99, p.ovr + 1);
+          if (p.pot < p.ovr) p.pot = p.ovr;
+          p.lastDelta += v;
+          d += v;
+        }
+        if (t.index == mine) {
+          growth.add(GrowthLine(name: p.name, age: p.age, before: start, after: p.ovr, focus: p.focus, parts: [
+            if (byAge != 0) (p.age <= 25 ? '年齢(若さ)' : '年齢', byAge),
+            if (byCoach != 0) ('育成コーチ', byCoach),
+            if (byTraining != 0) ('練習の強さ', byTraining),
+            ...extra,
+          ]));
         }
         p.years--;
         p.tenure++;
@@ -2147,6 +2185,7 @@ class Career {
     }
     // 気持ちが低い選手は、残るなら高く求める
     if (t.index == mine) f *= 1 + (60 - p.morale).clamp(0, 60) / 250;
+    if (t.index == mine && t.roster.contains(p) && p.tenure >= 1 && hasTrait(p, Trait.hometown)) f *= 0.9;
     final sal = p.ovr < 58 ? minSalary : (fairSalary(p.ovr, p.age) * f).round().clamp(minSalary, maxSalaryFor(p.exp));
     final own = t.index == mine && t.roster.contains(p);
     final maxYears = p.age >= 33 ? 1 : p.age >= 30 ? 2 : own ? ownMaxYears : 4;
@@ -2450,7 +2489,7 @@ class Career {
     if (team == mine) v += (hype - 50) / 5 + (me.chem - 50) / 10;
     // 価値観: 勝ちたい選手は勝率をさらに重く見る。忠誠と地元っ子は前のチームに残りたがる
     final pers = personalityOf(p);
-    if (pers.value == Value.win) v += (t.winPct - 0.5) * 50;
+    if (pers.value == Value.win) v += (t.winPct - 0.5) * 25;
     if (lastTeamOf(p) == team) {
       if (pers.value == Value.loyal) v += 10;
       if (pers.traits.contains(Trait.hometown)) v += 12;
