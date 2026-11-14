@@ -2268,9 +2268,9 @@ function nextRank(p,c){for(var i=0;i<RANKS.length;i++)if(!rankOk(RANKS[i],p,c))r
 /* 審査の解放（2026-11-14）：前はポイント（体力合宿2・ペア対決4・公開ライブ7）で、2シーズン目に全部そろっていた。
    いまは経験で解放する（far ポイントに届いても解放）。前のポイントで解放済みだった人からは取り上げない（unlockedOf が c.unl に移す） */
 var UNLOCK={camp:2,duo:4,live:7};
-var UNLOCK_X={camp:{h:'誰かを覚醒させる',p:'誰かを覚醒させた',far:15,chk:function(S,E){return S.tr.some(function(t){return t.awoke;});}},
-  duo:{h:'コンビを結成する',p:'コンビを結成した',far:30,chk:function(S,E){for(var k in (S.bond||{}))if(S.bond[k].combo)return true;return false;}},
-  live:{h:'平均視聴率8%以上でシーズンを終える',p:'平均視聴率8%以上でシーズンを終えた',far:45,chk:function(S,E){return E.avgR>=8;}}};
+var UNLOCK_X={camp:{h:'誰かを覚醒させる',p:'誰かを覚醒させた',far:20,chk:function(S,E){return S.tr.some(function(t){return t.awoke;});}},
+  duo:{h:'コンビを結成する',p:'コンビを結成した',far:40,chk:function(S,E){for(var k in (S.bond||{}))if(S.bond[k].combo)return true;return false;}},
+  live:{h:'平均視聴率8%以上でシーズンを終える',p:'平均視聴率8%以上でシーズンを終えた',far:60,chk:function(S,E){return E.avgR>=8;}}};
 function unlockedOf(c){if(!c.unl){c.unl={};if(c.seasons)for(var k in UNLOCK)if((c.points||0)>=UNLOCK[k])c.unl[k]=c.seasons;}return c.unl;}
 function lockedFormats(c){var u=unlockedOf(c),o={};for(var k in UNLOCK_X)if(!u[k])o[k]=UNLOCK_X[k].h+'（またはプロデューサー歴 '+UNLOCK_X[k].far+'ポイント）';return o;}
 /* 追加パックの中身を、プロデューサー歴の節目のごほうびとして入れる（2026-11-14）。売り場は出さない（PACK_SALE=false のまま） */
