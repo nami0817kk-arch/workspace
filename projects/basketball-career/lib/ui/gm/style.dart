@@ -77,7 +77,6 @@ ThemeData gmTheme() {
       labelStyle: TextStyle(fontFamily: 'NotoSansJP', fontSize: 12),
       padding: EdgeInsets.symmetric(horizontal: 2),
       labelPadding: EdgeInsets.symmetric(horizontal: 4),
-      visualDensity: VisualDensity.compact,
     ),
   );
 }
