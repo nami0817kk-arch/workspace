@@ -246,6 +246,7 @@ class Player {
     this.raise = 0,
     List<List<int>>? career,
     this.focus,
+    this.traitsKnown = false,
   })  : career = career ?? [],
         attrs = attrs ?? makeAttrs(pos, _idNoise(id)),
         stats = stats ?? Stats(),
@@ -339,6 +340,9 @@ class Player {
   /// 練習の重点(自分のチームだけ。オフに、この能力が伸びてほかが少し落ちる)。
   Attr? focus;
 
+  /// 性格をスカウトで調べてあるか(ドラフトの前に。同じチームに2年いなくても見える)。
+  bool traitsKnown;
+
   /// このリーグでの年ごとの成績([シーズン, チーム, 試合, 得点, リバウンド, アシスト]、古い順)。
   final List<List<int>> career;
 
@@ -408,6 +412,7 @@ class Player {
         if (raise != 0) 'rz': raise,
         if (career.isNotEmpty) 'cr': career,
         if (focus != null) 'fo': focus!.index,
+        if (traitsKnown) 'tk': 1,
       };
 
   static Player fromJson(Map<String, dynamic> j) => Player(
@@ -438,6 +443,7 @@ class Player {
         tenDayCount: ((j['tc'] as int?) ?? 0).clamp(0, 5),
         raise: ((j['rz'] as int?) ?? 0).clamp(0, 8),
         focus: j['fo'] is int && (j['fo'] as int) >= 0 && (j['fo'] as int) < Attr.values.length ? Attr.values[j['fo'] as int] : null,
+        traitsKnown: j['tk'] == 1,
         career: [
           for (final r in (j['cr'] as List? ?? const []))
             if (r is List && r.length == 6) [for (final x in r) x as int],

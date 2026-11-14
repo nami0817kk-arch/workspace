@@ -80,7 +80,7 @@ const playInSeeds = 10;
 enum Staff {
   coach('ヘッドコーチ', '試合の采配(チームの強さ)'),
   trainer('トレーナー', 'けがの少なさ・治りの早さ'),
-  scout('スカウト', 'ドラフトで送れるスカウトの数'),
+  scout('スカウト', 'ドラフトで送れるスカウトの数と、調べた見立ての細かさ'),
   development('育成コーチ', '若手の伸び・練習の重点');
 
   const Staff(this.label, this.effect);

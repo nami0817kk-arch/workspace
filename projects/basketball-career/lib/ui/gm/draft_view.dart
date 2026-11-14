@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../gm/career.dart';
 import '../../gm/draft.dart';
 import '../../gm/draft_show.dart';
+import '../../gm/league.dart';
+import '../../gm/personality.dart';
 import '../../gm/player.dart';
 import '../../monetization/monetization.dart';
 import '../gm_controller.dart';
@@ -436,8 +438,21 @@ Future<void> _showProspect(BuildContext context, GmController c, Prospect p, int
               if (p.scouted) ...[
                 line('得意', good.map((a) => a.label).join('・'), color: GmColors.good),
                 line('苦手', bad.label, color: GmColors.bad),
-              ] else
-                line('得意・苦手', 'スカウトを送ると分かる'),
+                line('性格', personalityOf(pl).line, color: GmColors.gold),
+                Text(
+                  '${personalityOf(pl).value.text}。${personalityOf(pl).traits.map((t) => t.text).join('。')}。',
+                  style: const TextStyle(fontSize: 11, color: GmColors.sub, height: 1.4),
+                ),
+              ] else ...[
+                line('得意・苦手・性格', 'スカウトを送ると分かる'),
+                Builder(builder: (_) {
+                  final k = (car.me.staffLevel(Staff.scout) - 1).clamp(0, 2);
+                  return Text(
+                    'いまのスカウト(段階${k + 1})なら、OVR は±${shown((p.ovrLo + p.ovrHi) ~/ 2 + scoutOvrHalf[k]) - shown((p.ovrLo + p.ovrHi) ~/ 2)}、POT は±${shown((p.potLo + p.potHi) ~/ 2 + scoutPotHalf[k]) - shown((p.potLo + p.potHi) ~/ 2)}ほどまで狭まる',
+                    style: const TextStyle(fontSize: 11, color: GmColors.sub),
+                  );
+                }),
+              ],
               const SizedBox(height: 12),
               Row(
                 children: [
