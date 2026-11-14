@@ -1787,7 +1787,7 @@ function finalEval(S,Dopt){
   var streams0=Math.round(song*song*song/1000*180)/10,E0={D:D,n:n,avgR:avgR,goods:goods,streams:streams0};
   var missions=(S.missions||[]).map(function(k){var m=missionOf(k);return {k:k,t:m.t,ok:!!m.chk(S,E0)};});
   total+=missions.filter(function(m){return m.ok;}).length*MISSION_PT+diffOf(S).tot;
-  var g=total>=82?'S':total>=68?'A':total>=56?'B':total>=46?'C':'D';
+  var g=total>=87?'S':total>=68?'A':total>=54?'B':total>=46?'C':'D';
   var streams=Math.round(song*song*song/1000*180)/10; // 万回
   return {combos:combos,D:D,n:n,sk:sk,q:q,fanScore:fanScore,coh:coh,song:song,show:show,total:total,grade:g,roles:roles,miss:miss,trustAvg:trustAvg,avgR:avgR,streams:streams,talk:talk,sd:sd,bond:bond,goods:goods,bads:bads,feud:feud,pressN:pressN,crs:crs,leadB:leadB,match:match,L:L,missions:missions,promo:promo,confAvg:confAvg,mo:Mo,dtot:diffOf(S).tot};
 }
