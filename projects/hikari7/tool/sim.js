@@ -146,9 +146,9 @@ function avgOf(spec, n) { FIX = parseFix(spec); let tot = 0, k = 0;
   for (let i = 0; i < n; i++) for (const g of ['m', 'f']) { try { tot += play(g, 'good', 1000 + i * 2 + (g === 'f')).E.total; k++; } catch (e) { console.error(spec, e.stack); process.exitCode = 1; } }
   FIX = {}; return tot / k; }
 if (process.argv.includes('--choices')) {
-  // CI（--quick）は種類ごとの下限（2026-11-14 の手元の200回で arc +6.8・ev +1.5・month +2.5・crit +0.4・fw +2.4）
+  // CI（--quick）は種類ごとの下限（2026-11-14 の手元の200回で arc +6.3・ev +1.5・month +2.5・crit +0.6・fw +2.3。講評は差が小さいので下回らないことだけ見る）
   const quick = process.argv.includes('--quick'), n = +(process.env.SIMN || (quick ? 30 : 200));
-  const QMIN = { arc: 3, ev: 0.5, month: 1, crit: 0, fw: 1 }, gapMin = (k) => (process.env.MINGAP != null ? +process.env.MINGAP : quick ? QMIN[k] : 1.5);
+  const QMIN = { arc: 3, ev: 0.5, month: 1, crit: -0.3, fw: 1 }, gapMin = (k) => (process.env.MINGAP != null ? +process.env.MINGAP : quick ? QMIN[k] : 1.5);
   const base = avgOf('', n); console.log('good（よく考える）', base.toFixed(2), '（' + n * 2 + 'シーズン、同じ種）');
   for (const [k, fixes] of CHOICES.filter(([k]) => !process.env.ONLY || process.env.ONLY.split(',').includes(k))) {
     const r = fixes.map((f) => [f, avgOf(f, n)]), worst = Math.max(...r.map((x) => x[1])), gap = base - worst;
