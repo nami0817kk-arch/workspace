@@ -40,9 +40,17 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v7
+      # **バージョンを固定する。** `channel: stable` だけだと Flutter が
+      # 上がった日に、こちらが何も触っていなくても CI が赤くなる。
+      # 実際 2026-11-14 に `package:flutter/material.dart` が deprecated に
+      # なって（3.47.0 以降）、**触っていないファイルも含め42件**で
+      # `flutter analyze` が落ちた。手元の開発は 3.47.2 で、
+      # バランスの実測値もこの版で取っている。
+      # 上げるときは、上げること自体を1つの変更として測る。
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
+          flutter-version: 3.47.2
 
       - name: Install dependencies
         run: flutter pub get
