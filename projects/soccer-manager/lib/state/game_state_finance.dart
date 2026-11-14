@@ -502,8 +502,12 @@ extension GameStateFinance on GameState {
     // グッズ収入(マーチャンダイジング)。試合の有無に関わらず、監督の評価
     // (=クラブの知名度)が高いほど、商業施設が充実しているほど増える。
     // チケット・スポンサーだけに依存しない収入源として資金繰りを下支えする。
-    final merchandiseIncome =
-        ((40 + managerReputation) * commercialMultiplier).round();
+    final merchandiseIncome = ((40 +
+                managerReputation +
+                ProjectEngine.weeklyMerchandiseBonus(
+                    _save!.projects, managerReputation)) *
+            commercialMultiplier)
+        .round();
     // 営業の配分を厚くすると収入が増え、削ると減る(初期の配分で1倍)。
     final boost = _save!.marketingBoostWeeks > 0
         ? GameStateSquad.marketingBoostMultiplier
@@ -580,6 +584,42 @@ extension GameStateFinance on GameState {
           '${ruleSet.label} breach: ${penalty.reason}. ${parts.join(', ')}.'),
       context: Tr.pick('リーグの規則', 'League rules'),
     );
+  }
+
+  /// 投資案件に着手する。費用は着手時に払う。
+  Future<bool> startProject(ClubProject p) async {
+    final save = _save;
+    if (save == null || ProjectEngine.started(save.projects, p)) return false;
+    if (p.cost > save.budget) return false;
+    _book(LedgerCategory.facilities, -p.cost);
+    save.projects[p.name] = p.buildSeasons;
+    _logNews(
+      Tr.pick('${p.label}に着手しました(${p.cost}万円・完成まで${p.buildSeasons}季)',
+          'Started ${p.label} (${p.cost}, ${p.buildSeasons} season(s) to build)'),
+      context: Tr.pick('投資案件', 'Projects'),
+    );
+    _notify();
+    await _persist();
+    return true;
+  }
+
+  /// シーズン末に建設を進め、稼働中の提携クラブの効果を与える。
+  void _tickProjects() {
+    final save = _save!;
+    final wasPartnerActive =
+        ProjectEngine.isActive(save.projects, ClubProject.partnerClub);
+    final done = ProjectEngine.tick(save.projects);
+    for (final p in done) {
+      _logNews(
+        Tr.pick('${p.label}が完成しました', '${p.label} is complete'),
+        context: Tr.pick('投資案件', 'Projects'),
+      );
+    }
+    // 完成した季からではなく、稼働している季の末から効く。
+    if (wasPartnerActive) {
+      save.managerReputation = (save.managerReputation + 2).clamp(0, 100);
+      save.confidence = (save.confidence + 1).clamp(0, 100);
+    }
   }
 
   /// 永久欠番にした選手か。

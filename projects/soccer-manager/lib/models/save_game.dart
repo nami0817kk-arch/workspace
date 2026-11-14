@@ -126,6 +126,9 @@ class SaveGame {
   /// オーナーの持分(%)。外部の株主へ売ると減る。51〜100。
   int ownerShare;
 
+  /// 投資案件。名前→完成までの残り季数(0は稼働中)。
+  Map<String, int> projects;
+
   /// 永久欠番にした殿堂の選手の id。
   List<String> retiredNumberIds;
 
@@ -442,6 +445,7 @@ class SaveGame {
     this.ownerGoalStartValue = 0,
     this.ownerShare = 100,
     List<String>? retiredNumberIds,
+    Map<String, int>? projects,
     this.insured = false,
     this.reserveFund = 0,
     this.communityLevel = 0,
@@ -550,6 +554,7 @@ class SaveGame {
         pendingSponsorOffers = pendingSponsorOffers ?? [],
         pendingNamingOffers = pendingNamingOffers ?? [],
         retiredNumberIds = retiredNumberIds ?? [],
+        projects = projects ?? {},
         pendingInstallments = pendingInstallments ?? [],
         friendlies = friendlies ?? [],
         incomingOffers = incomingOffers ?? [],
@@ -639,6 +644,7 @@ class SaveGame {
         'ownerGoalStartValue': ownerGoalStartValue,
         'ownerShare': ownerShare,
         'retiredNumberIds': retiredNumberIds,
+        'projects': projects,
         'insured': insured,
         'reserveFund': reserveFund,
         'communityLevel': communityLevel,
@@ -755,6 +761,9 @@ class SaveGame {
             ?.map((k, v) => MapEntry(int.parse('$k'), v as int)),
         ownerGoalStartValue: json['ownerGoalStartValue'] as int? ?? 0,
         ownerShare: json['ownerShare'] as int? ?? 100,
+        projects: (json['projects'] as Map?)
+                ?.map((k, v) => MapEntry('$k', v as int)) ??
+            {},
         retiredNumberIds: (json['retiredNumberIds'] as List?)
                 ?.map((e) => e as String)
                 .toList() ??

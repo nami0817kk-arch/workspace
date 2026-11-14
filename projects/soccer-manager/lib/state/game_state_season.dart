@@ -761,6 +761,7 @@ extension GameStateSeason on GameState {
     _enforceLeagueRules();
     _holdShareholdersMeeting();
     _resolveSeasonRisks();
+    _tickProjects();
     _recordClubValue();
     _scoreClubPolicy(finalRank: finalRank);
     _advanceEconomy();
