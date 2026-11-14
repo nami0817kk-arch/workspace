@@ -9,10 +9,16 @@
   const ST = (p, g, v) => p.pers && p.pers[g] === v;
   const abs = (w) => w.year * 100 + w.week;
 
-  // ---------- ★注目（決定85）：各学年4人まで、いつでも付け替えられる ----------
+  // ---------- ★注目（決定85。決定150で「入団時に決める」へ）：各学年4人まで ----------
+  // ★は新入生の入団から4週のうちに決める（そのあとは付け替えられない）。初年度だけは最初の36人もいつでも付け外しできる
   YA.STAR_MAX = 4;
+  YA.STAR_WEEKS = 4;
+  YA.starGrades = (w) => (w.year <= 1 ? [1, 2, 3] : w.week <= YA.STAR_WEEKS ? [1] : []);
+  YA.starOpen = (w, p) => YA.starGrades(w).includes(p.grade);
+  YA.STAR_CLOSED = '★は入団から4週のうちに決めます（初年度だけは自由に付け外しできます）。今年の新入生は、次の入団のときにまた選べます';
   YA.starsIn = (w, grade) => Object.values(w.players).filter((p) => p.star && p.grade === grade);
   YA.setStar = function (w, p, on) {
+    if (!YA.starOpen(w, p)) return { ok: false, msg: YA.STAR_CLOSED };
     if (!on) {
       p.star = false;
       return { ok: true, msg: `${p.name}の★を外しました（鍵の進み具合と信頼は残ります）` };
@@ -28,7 +34,7 @@
   // おまかせ進行・最初の4週の勧め：伸びしろの星が高い子から、空いている枠に★を付ける
   YA.starPick = (w, grade) => Object.values(w.players).filter((p) => p.grade === grade && !p.star && !(p.aw && !(p.keys || []).length)).sort((a, b) => YA.coachStars(w, b) - YA.coachStars(w, a) || (b.fast ? 1 : 0) - (a.fast ? 1 : 0) || YA.rating(b) - YA.rating(a));
   YA.autoStars = function (w) {
-    for (const g of [1, 2, 3]) {
+    for (const g of YA.starGrades(w)) {
       let n = YA.starsIn(w, g).length;
       for (const p of YA.starPick(w, g)) {
         if (n >= YA.STAR_MAX) break;
@@ -192,7 +198,12 @@
   };
   // 最初の4週：鍵の短い子（見た目では分からない）に★を勧める
   YA.starRecommend = function (w) {
-    if (!w || w.year > 1 || w.week > 4) return null;
+    if (!w || w.week > YA.STAR_WEEKS) return null;
+    if (w.year > 1) {
+      if (YA.starsIn(w, 1).length >= YA.STAR_MAX) return null;
+      const n = YA.starPick(w, 1)[0];
+      return n ? `今年の新入生は、入団から${YA.STAR_WEEKS}週のうちに★を決めます。${n.name}は伸びしろが大きそうです（${YA.starsIn(w, 1).length}/${YA.STAR_MAX}）。` : null;
+    }
     const p = Object.values(w.players).find((q) => q.fast && !q.star);
     if (!p) return null;
     return `高${p.grade}の${p.name}は、何かきっかけがあれば早く化けそうです。★を付けてみては。`;
@@ -500,6 +511,13 @@
   };
 
   // ---------- 節目の会話（決定109）：★の子に、3年間の節目ごとに来る ----------
+  // ★の子の、この一年の伸び（年度はじめの総合力 p.o0 から）
+  const termGrow = (p) => {
+    if (p.o0 == null) return 'ここまで頑張ってきた';
+    const a = YA.rate(p.o0);
+    const b = YA.rate(YA.ovr(p));
+    return b > a ? `${a}から${b}へ伸びた` : `${b}のまま、土台を固めた`;
+  };
   const LINES = {
     star: [
       (p) => `${p.name}を呼んで、これから特に見ていくと伝えた。「えっ、自分ですか……がんばります」`,
@@ -520,16 +538,21 @@
       (p, w, x) => `${p.name}と話していて、はっきり見えた。この子が化けるには――「${KEYS[x.key].clear((p.keys || []).find((k) => k.id === x.key) || { need: KEYS[x.key].need }, w)}」`,
       (p, w, x) => `コーチが言った。「${fam(p)}は、${KEYS[x.key].clear((p.keys || []).find((k) => k.id === x.key) || { need: KEYS[x.key].need }, w)}――それが、きっかけになりそうです」`,
     ],
+    term: [
+      (p, w) => `${p.name}と、この一年を振り返った。総合力は${termGrow(p)}。「来年は、もっと上を目指します」`,
+      (p, w) => `年度末、${p.name}が自分から話しかけてきた。「一年で、${termGrow(p)}。自分でも驚いてます」`,
+      (p, w) => `${p.name}に、この一年のことを聞いた。${termGrow(p)}。「見てもらえて、よかったです」`,
+    ],
     grad: [
       (p) => `卒業式の朝、${p.name}が来た。「3年間、ありがとうございました。監督に見てもらえて、よかったです」`,
       (p) => `${p.name}が最後の練習のあと、しばらくグラウンドを見ていた。「ここで、全部教わりました」`,
       (p) => `卒業式。${p.name}は泣かないと決めていたらしいが、最後の礼で声が詰まった`,
     ],
   };
-  const NAMES = { star: '★注目：最初の話', debut: '節目：初めての出場', wall: '節目：壁', hint: '節目：鍵が見えた', grad: '節目：卒業式' };
+  const NAMES = { star: '★注目：最初の話', debut: '節目：初めての出場', wall: '節目：壁', hint: '節目：鍵が見えた', term: '節目：この一年', grad: '節目：卒業式' };
   function milestone(w, p, kind, x) {
     p.ms = p.ms || {};
-    if (kind !== 'hint' && p.ms[kind]) return;
+    if (kind !== 'hint' && kind !== 'term' && p.ms[kind]) return;
     p.ms[kind] = abs(w);
     w.forced = (w.forced || []).concat([{ id: 'ms', pid: p.id, x: null, ms: kind, key: x && x.key, week: w.week, year: w.year }]);
   }
@@ -540,6 +563,7 @@
     debut: [msOpt('「よくやった」と肩をたたく', 'warm'), msOpt('「ここからが本番だ」と次を求める', 'push'), msOpt('良かった所と課題を一つずつ伝える', 'firm')],
     wall: [msOpt('「必ず越えられる」と信じて待つ', 'warm'), msOpt('一緒に原因を探し、練習を組み直す', 'push'), msOpt('「誰でも通る道だ」とあえて厳しくする', 'firm')],
     hint: [msOpt('本人に「ここが鍵だ」と伝える', 'push', 2), msOpt('伝えずに、そうなる場を作ってやる', 'wait')],
+    term: [msOpt('「この調子で行こう」と次の一年を任せる', 'push', 1), msOpt('伸びを一緒に喜ぶ', 'warm', 1), msOpt('「まだまだ足りない」とあえて締める', 'firm')],
     grad: [msOpt('「お前は、ここからだ」と送り出す', 'push'), msOpt('「三年間、ありがとう」と握手する', 'warm'), msOpt('黙ってうなずく', 'wait')],
   };
   YA.EVENTS.push({ id: 'ms', name: '節目の会話', weight: 0, pick: () => null, text: () => '', opts: MS_OPTS.debut });
@@ -570,7 +594,17 @@
   // 卒業式の前の週（39週）に、★の高3と最後の会話
   YA.gradTalks = function (w) {
     if (w.week !== YA.WEEKS - 1) return;
-    for (const p of Object.values(w.players)) if (p.star && p.grade === 3) milestone(w, p, 'grad');
+    for (const p of Object.values(w.players)) {
+      if (!p.star) continue;
+      milestone(w, p, p.grade === 3 ? 'grad' : 'term');
+    }
+  };
+  // 年度はじめの総合力を控える（この一年の伸びを、年度末の会話で見せるため）
+  const ys0 = YA.yearStart;
+  YA.yearStart = function (w) {
+    const r = ys0.apply(this, arguments);
+    for (const p of Object.values(w.players)) p.o0 = Math.round(YA.ovr(p) * 10) / 10;
+    return r;
   };
   const aw0 = YA.awakeWeek;
   YA.awakeWeek = function (w) {

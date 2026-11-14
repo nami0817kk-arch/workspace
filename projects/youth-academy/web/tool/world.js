@@ -930,6 +930,38 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   for (let i = 0; i < YA.STAR_MAX; i++) ok(YA.setStar(w0, g1[i], true).ok, '★を付けられる ' + i);
   ok(!YA.setStar(w0, g1[YA.STAR_MAX], true).ok && !g1[YA.STAR_MAX].star, '★は各学年4人まで');
   ok(YA.setStar(w0, g1[0], false).ok && YA.setStar(w0, g1[YA.STAR_MAX], true).ok, '外せば別の子に付け替えられる');
+  // ★は入団から4週のうちに決める（決定150）。初年度だけは最初の36人もいつでも付け外しできる
+  {
+    const g2 = Object.values(w0.players).filter((p) => p.grade === 2);
+    ok(g2.length > 0 && YA.starOpen(w0, g2[0]) && YA.starOpen(w0, g1[0]), '初年度は全学年で★を決められる');
+    w0.week = 30;
+    ok(YA.starOpen(w0, g2[0]), '初年度は何週目でも決められる');
+    const wn = YA.newWorld(9);
+    wn.year = 2;
+    wn.week = 3;
+    const n1 = Object.values(wn.players).filter((p) => p.grade === 1);
+    const n2 = Object.values(wn.players).filter((p) => p.grade === 2);
+    ok(YA.setStar(wn, n1[0], true).ok && n1[0].star, '2年目の入団から4週のうちは新入生に★を付けられる');
+    ok(!YA.setStar(wn, n2[0], true).ok && !n2[0].star, '2年目は高2に★を付けられない');
+    wn.week = YA.STAR_WEEKS + 1;
+    ok(!YA.setStar(wn, n1[1], true).ok && !n1[1].star, '入団から4週をすぎると新入生にも付けられない');
+    ok(!YA.setStar(wn, n1[0], false).ok && n1[0].star, '入団から4週をすぎると外せない（付け替えもできない）');
+    ok(/入団/.test(YA.setStar(wn, n1[1], true).msg), '付けられない理由が入団時に決める旨で出る');
+    // 年度末：★の高1・高2との「この一年」の節目の会話
+    wn.week = YA.WEEKS - 1;
+    n1[0].o0 = Math.round(YA.ovr(n1[0]) * 10) / 10 - 0.6;
+    YA.gradTalks(wn);
+    const fx = (wn.forced || []).filter((e) => e.id === 'ms' && e.pid === n1[0].id && e.ms === 'term');
+    ok(fx.length === 1, '★の高1に年度末の「この一年」の会話が出る');
+    ok(/から.*へ伸びた/.test(YA.eventView(wn, fx[0]).text || JSON.stringify(YA.eventView(wn, fx[0]))), 'この一年の伸び（年度はじめ→いま）が会話に出る');
+    YA.yearStart(wn);
+    ok(n1[0].o0 != null && Math.abs(n1[0].o0 - Math.round(YA.ovr(n1[0]) * 10) / 10) < 0.01, '年度はじめに総合力を控える');
+    // 卒業後も★の子は便りで追える
+    wn.alumni.push({ name: '試験 卒業', year: 1, star: true, status: 'pro', club: '試験FC', league: 'J2', apps: 12, goals: 3, retired: false });
+    wn.week = 20;
+    YA.alumniTick(wn);
+    ok(((wn.letters || {})[wn.year] || []).some((t) => /試験 卒業★/.test(t)), '卒業した★の子が便りに出る');
+  }
   const ks = YA.keysOf(w0, g1[1]);
   ok(ks.length >= 2 && ks.length <= 3 && new Set(ks.map((k) => k.sys)).size === ks.length, '鍵は2〜3個で系統が重ならない ' + ks.map((k) => k.id));
   ok(JSON.stringify(YA.keysOf(w0, g1[1])) === JSON.stringify(ks), '同じ子の鍵は変わらない');
