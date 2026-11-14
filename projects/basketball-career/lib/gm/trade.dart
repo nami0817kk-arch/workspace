@@ -134,8 +134,11 @@ class TradeOffer {
 
 /// 相手の答え。
 class TradeVerdict {
-  const TradeVerdict(this.ok, this.reason, this.ratio);
+  const TradeVerdict(this.ok, this.reason, this.ratio, [this.notes = const []]);
   final bool ok;
+
+  /// 相手の見方の説明(足りないポジションを高く見た、など)。
+  final List<String> notes;
 
   /// 断る理由(受けるなら空)。
   final String reason;
@@ -185,11 +188,17 @@ String? salaryRuleProblem(Team t, int incoming, int outgoing, {int maxSingleOut 
   return null;
 }
 
+/// [t] のチームで、[pos] の選手がトレードのあと何人いるか([out] の選手は出ていく)。けが人は数えない。
+int positionCount(Team t, Pos pos, {Set<int> out = const {}}) => t.roster.where((p) => p.pos == pos && p.injured == 0 && !out.contains(p.id)).length;
+
+/// ポジションの足りなさから来る、受け取る選手の値打ちの上乗せ(0人なら1.2倍、1人なら1.1倍、2人以上は1倍)。
+double positionNeed(int count) => count <= 0 ? 1.2 : count == 1 ? 1.1 : 1.0;
+
 /// こちら([mine])からの申し込みを、相手がどう見るか。
 ///
 /// [slots] はチームごとの指名の見込みの順番(探す間は変わらないので、先に一度だけ計算して渡せる)。
 TradeVerdict judgeTrade(List<Team> teams, List<DraftPick> picks, int mine, TradeOffer o, int nowSeason,
-    {Map<int, int>? slots, int rosterLimit = maxRoster, double hardness = 1.0}) {
+    {Map<int, int>? slots, int rosterLimit = maxRoster, double hardness = 1.0, bool needs = false}) {
   final me = teams[mine], them = teams[o.partner];
   final give = [for (final id in o.give) me.roster.firstWhere((p) => p.id == id)];
   final get = [for (final id in o.get) them.roster.firstWhere((p) => p.id == id)];
@@ -212,7 +221,22 @@ TradeVerdict judgeTrade(List<Team> teams, List<DraftPick> picks, int mine, Trade
   final s2 = stepienProblem(teams, picks, o.partner, o.getPicks, o.givePicks);
   if (s2 != null) return TradeVerdict(false, s2, 0);
   final mode = them.mode;
-  var inV = give.fold(0.0, (s, p) => s + playerValue(p, mode));
+  // 相手のチームに足りないポジションの選手は、高く見る([needs] のとき。こちらからの申し込みだけ)
+  final notes = <String>[];
+  final outIds = {...o.get};
+  var inV = 0.0;
+  for (final p in give) {
+    var v = playerValue(p, mode);
+    if (needs && v > 0) {
+      final have = positionCount(them, p.pos, out: outIds);
+      final f = positionNeed(have);
+      if (f > 1) {
+        v *= f;
+        notes.add('${them.def.short}は${p.pos.short}が${have == 0 ? 'いなくなる' : '1人しかいない'}ので、${p.name}を高く見ている');
+      }
+    }
+    inV += v;
+  }
   var outV = get.fold(0.0, (s, p) => s + playerValue(p, mode));
   for (final i in o.givePicks) {
     inV += pickValue(picks[i], mode, slots?[picks[i].from] ?? slotGuess(teams, picks[i].from), nowSeason, protect: o.protections[i]);
@@ -230,8 +254,8 @@ TradeVerdict judgeTrade(List<Team> teams, List<DraftPick> picks, int mine, Trade
   }
   final need = requiredValue(outV) * hardness;
   final ratio = need <= 0 ? 2.0 : inV / need;
-  if (ratio >= 1) return TradeVerdict(true, '', ratio);
-  return TradeVerdict(false, ratio >= 0.8 ? 'あと少し足りない' : ratio >= 0.5 ? '釣り合っていない' : '話にならない', ratio);
+  if (ratio >= 1) return TradeVerdict(true, '', ratio, notes);
+  return TradeVerdict(false, ratio >= 0.8 ? 'あと少し足りない' : ratio >= 0.5 ? '釣り合っていない' : '話にならない', ratio, notes);
 }
 
 /// 申し込みを成立させる(選手と指名権を入れ替える)。

@@ -142,6 +142,8 @@ class _TradeTabState extends State<TradeTab> {
     final them = car.teams[_partner];
     final o = _offer;
     final verdict = o.isEmpty ? null : car.judge(o);
+    // 選手が動くときは、両チームの強さと勝ち数の見込みがどう変わるか
+    final impact = o.give.isEmpty && o.get.isEmpty ? null : car.tradeImpact(o);
     final gs = car.me.roster.where((p) => _give.contains(p.id)).fold(0, (s, p) => s + p.salary);
     final ts = them.roster.where((p) => _get.contains(p.id)).fold(0, (s, p) => s + p.salary);
     return Column(children: [
@@ -267,6 +269,26 @@ class _TradeTabState extends State<TradeTab> {
               ]),
               const SizedBox(height: 4),
               _Reaction(verdict: verdict),
+              if (impact != null) ...[
+                const SizedBox(height: 3),
+                Text(
+                  '強さ ${impact.myBefore.toStringAsFixed(1)}→${impact.myAfter.toStringAsFixed(1)}'
+                  '(見込み ${impact.winsBefore.round()}→${impact.winsAfter.round()}勝)・'
+                  '相手 ${impact.theirBefore.toStringAsFixed(1)}→${impact.theirAfter.toStringAsFixed(1)}',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: impact.myAfter > impact.myBefore + 0.05
+                          ? GmColors.good
+                          : impact.myAfter < impact.myBefore - 0.05
+                              ? GmColors.bad
+                              : GmColors.sub),
+                ),
+              ],
+              if (verdict != null && verdict.notes.isNotEmpty)
+                Text(verdict.notes.first, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 11, color: GmColors.gold)),
             ]),
           ),
           const SizedBox(width: 14),

@@ -139,6 +139,16 @@ void main() {
     });
     await _shoot(t, '5_team', await _with(mid), act: (t) => _tap(t, 'チーム', first: true));
     await _shoot(t, '6_trade', await _with(mid), act: (t) => _tap(t, 'トレード', first: true));
+    // 選手を選んだあと(相手の反応・強さと勝ち数の見込みの変化)
+    await _shoot(t, '6c_trade_offer', await _with(mid), act: (t) async {
+      await _tap(t, 'トレード', first: true);
+      // 相手のいちばん上の選手を選ぶ(一覧は画面に入った分しか作られないので、行の部品で探す)
+      await t.ensureVisible(find.byType(PlayerRow).first);
+      await t.pump(const Duration(milliseconds: 300));
+      await t.tap(find.byType(PlayerRow).first);
+      await t.pump();
+      await t.pump(const Duration(milliseconds: 400));
+    });
     // トレード成立の画面(届いた申し込みを受ける)
     Career? offered;
     for (final seed in [3, 7, 11, 19]) {
