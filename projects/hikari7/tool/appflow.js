@@ -168,4 +168,51 @@ const START = `S=newGame('m','normal',null);var c=S.tr.slice();S.sel=c.slice(0,S
   ok(!g.run("reviewDue({seasons:20,reviewAsked:3,reviewAt:4},'S')"), '頼むのは3回まで');
 }
 
+// ===== プロデューサー歴の節目（2026-11-14：2シーズン目以降に遊ぶ理由） =====
+{
+  const CAR = (o) => ({ hikari7_career: JSON.stringify(Object.assign({ seasons: 0, points: 0, hall: [] }, o)) });
+  const FINISH = "S.tr.slice(0,6).forEach(function(t){t.status='debut';});startPrep(S);S.prep.leader=S.tr[0].id;S.phase='month';S.month={w:4,busy:0,fan:0,song:0,coh:0,log:[]};";
+  // 追加パックは売らずに、節目のごほうびとして入る（PACK_SALE=false のまま）
+  const a = boot({ adFree: false, store: CAR({ seasons: 10, points: 40 }), owned: { story: false, audition: false } });
+  ok(a.run("fmtKeys().indexOf('acap')") >= 0 && a.run('packArcKeys().length') === 0, '10シーズンを終えた人には審査パックが入り、物語パックはまだ');
+  ok(!a.run('PACK_SALE') && !/data-a="buypack"/.test(a.run('vTitleShop()')), 'ごほうびで入っても、売り場は出さない');
+  a.run('hikariSetApp({owned:{story:false,audition:false}})');
+  ok(a.run("fmtKeys().indexOf('acap')") >= 0, 'ストアの返事（買っていない）が来ても、ごほうびの中身は外さない');
+  const b = boot({ adFree: false, store: CAR({ seasons: 20, points: 90 }), owned: {} });
+  ok(b.run('packArcKeys().length') === 6 && b.run("fmtKeys().indexOf('acap')") >= 0, '20シーズンを終えた人には物語パックも入る');
+  const c = boot({ adFree: false, store: CAR({ seasons: 9, points: 40 }), owned: {} });
+  ok(c.run("fmtKeys().indexOf('acap')") < 0, '9シーズンではまだ入らない');
+  c.run(START + FINISH); c.press('monthdone'); c.run('hikariBetweenDone()');
+  ok(c.run("fmtKeys().indexOf('acap')") >= 0 && /ごほうび/.test(c.run('S.careerNews.news.join("|")')), '10シーズン目を終えたその場で入り、知らせが出る');
+  ok(c.run('saveUsesPack(JSON.stringify({fmt:["acap"]}))'), '審査パックを使った保存は見分けられる（読むときに中身を足す）');
+
+  // 審査の解放は経験で。前のポイントで解放済みの人からは取り上げない
+  const d = boot({ adFree: false, store: CAR({ seasons: 3, points: 5 }), owned: {} });
+  ok(d.run('JSON.stringify(Object.keys(lockedFormats(loadCareer())))') === '["live"]', '前に5ポイントだった人は、体力合宿とペア対決を持ったまま');
+  d.run(START + FINISH); d.press('monthdone'); d.run('hikariBetweenDone()');
+  const du = JSON.parse(d.run('JSON.stringify(loadCareer().unl)'));
+  ok(du.camp && du.duo, '次のシーズンを終えて保存しても、解放済みの審査は消えない');
+  const e = boot({ adFree: false, store: CAR({}), owned: {} });
+  ok(e.run('Object.keys(lockedFormats(loadCareer())).length') === 3, 'はじめての人は3つとも閉じている');
+  e.run(START);
+  ok(e.run("Object.keys(S.locked).length") === 3 && /覚醒/.test(e.run('S.locked.camp')), '閉じた審査には、開く条件（経験）が出る');
+  e.run("S.tr[0].awoke=true;" + FINISH); e.press('monthdone'); e.run('hikariBetweenDone()');
+  ok(e.run('!!loadCareer().unl.camp') && /体力合宿/.test(e.run('S.careerNews.news.join("|")')), '誰かを覚醒させたシーズンを終えると体力合宿が開く');
+  ok(e.run('loadCareer().seasons') === 1 && !e.run('loadCareer().unl.duo'), 'コンビを結成していなければペア対決は閉じたまま');
+
+  // 肩書きの先は、難しさの実績も要る
+  ok(e.run("rankOf(300,{achv:{}})[1]") === '番組の顔' && e.run("rankOf(300,{achv:{hardA5:1,legendA3:1,legendS:1}})[1]") === 'ひかりの名プロデューサー', '番組の顔より先の肩書きは、難しさの実績が無いと上がらない');
+  // 結末の手がかり：まだ見ていない結末に近づく条件を、いつもの3つに足す
+  const ms = JSON.parse(e.run("JSON.stringify(pickMissions({endings:{}}))"));
+  ok(ms.length === 4 && e.run(`!!missionOf(${JSON.stringify(ms[3])}).end`) && ms.slice(0, 3).every((k) => !e.run(`missionOf(${JSON.stringify(k)}).end`)), '依頼はいつもの3つ＋結末の手がかり1つ');
+  const allSeen = '{' + e.run("ENDS.map(function(x){return JSON.stringify(x.k)+':1';}).join(',')") + '}';
+  ok(e.run(`pickMissions({endings:${allSeen}}).length`) === 3, '結末をすべて見た人には、手がかりを出さない');
+  ok(e.run("(function(){for(var i=0;i<200;i++){var m=pickMissions({endings:{}}).map(missionOf),bad=m.some(function(a){return m.some(function(b){return a!==b&&missionClash(a,b);});});if(bad)return false;}return true;})()"), '手がかりと重なる・食い違う依頼は一緒に出さない');
+  // はじめてのシーズンの C は休止からの再出発
+  e.run(START + "S.first=1;" + FINISH);
+  ok(e.run("(function(){var D=S.tr.filter(function(t){return t.status==='debut';});for(var i=0;i<30;i++){if(endShape(S,{q:.3},{tier:3,D:D,coh:30,combos:[],L:null}).k!=='restart')return false;}return true;})()"), 'はじめてのシーズンの C は、解散ではなく休止からの再出発になる');
+  e.run('S.first=0');
+  ok(e.run("(function(){var D=S.tr.filter(function(t){return t.status==='debut';});for(var i=0;i<30;i++){if(endShape(S,{q:.3},{tier:3,D:D,coh:30,combos:[],L:null}).k!=='restart')return true;}return false;})()"), '2シーズン目からの C は、これまでどおり解散の筋もある');
+}
+
 if (fails) { console.error(fails + '件 外れ'); process.exitCode = 1; } else console.log('すべて通った');

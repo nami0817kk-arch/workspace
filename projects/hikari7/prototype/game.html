@@ -1555,8 +1555,9 @@ function decide(S){S.retryRes=null;
   var passed=A.filter(function(t){return S.pass[t.id];}),failed=A.filter(function(t){return !S.pass[t.id];});
   var ang=0,ok=0,cm=[];
   failed.forEach(function(t){var p=pr[t.id];
-    if(p<=3){S.showTrust-=6;S.wDrama+=2;ang++;cm.push([t.giv+hon(S)+'を落とすなんて信じられない。見る気なくした',1]);}
-    else if(p<=6){S.showTrust-=3;S.wDrama+=1;ang++;cm.push(['え、'+t.giv+hon(S)+'不合格？ 納得いかない',1]);}
+    var am=diffOf(S).ang||1;
+    if(p<=3){S.showTrust-=6*am;S.wDrama+=2;ang++;cm.push([t.giv+hon(S)+'を落とすなんて信じられない。見る気なくした',1]);}
+    else if(p<=6){S.showTrust-=3*am;S.wDrama+=1;ang++;cm.push(['え、'+t.giv+hon(S)+'不合格？ 納得いかない',1]);}
     t.status=f.fin?'final':'out';t.outRound=S.rnd;logT(S,t,f.fin?'最終審査で、デビューメンバーには選ばれなかった':'この審査で不合格になった');
     relsOf(S,t.id).forEach(function(r){var o=S.tr[r.o];if(!S.pass[o.id]||o.status!=='alive')return;o.griefFor=t.id;o.conf-=o.temper==='sensai'?10:6;logT(S,o,relsOf(S,o.id).filter(function(x){return x.o===t.id;})[0].n+'の'+t.giv+'が不合格に。「'+t.giv+'の分まで」と話した');if(R()<.6)cm.push([t.giv+hon(S)+'と'+o.giv+hon(S)+'が抱き合う場面で泣いた',0]);});});
   passed.forEach(function(t){var p=pr[t.id],q=perfRank[t.id];
@@ -1642,7 +1643,7 @@ function finalEval(S,Dopt){
   var streams0=Math.round(song*song*song/1000*180)/10,E0={D:D,n:n,avgR:avgR,goods:goods,streams:streams0};
   var missions=(S.missions||[]).map(function(k){var m=missionOf(k);return {k:k,t:m.t,ok:!!m.chk(S,E0)};});
   total+=missions.filter(function(m){return m.ok;}).length*MISSION_PT+diffOf(S).tot;
-  var g=total>=80?'S':total>=68?'A':total>=56?'B':total>=46?'C':'D';
+  var g=total>=82?'S':total>=68?'A':total>=56?'B':total>=46?'C':'D';
   var streams=Math.round(song*song*song/1000*180)/10; // 万回
   return {combos:combos,D:D,n:n,sk:sk,q:q,fanScore:fanScore,coh:coh,song:song,show:show,total:total,grade:g,roles:roles,miss:miss,trustAvg:trustAvg,avgR:avgR,streams:streams,talk:talk,sd:sd,bond:bond,goods:goods,leadB:leadB,match:match,L:L,missions:missions,promo:promo,confAvg:confAvg,mo:Mo,dtot:diffOf(S).tot};
 }
@@ -1914,7 +1915,7 @@ function initV5(S){
     var rs=relsOf(S,t.id).filter(function(r){return r.k==='old'||r.k==='senpai';});
     var gs=['center','top','pop','final','center','top','final'];if(rs.length)gs.push('together','together','together');
     t.goal=pick(gs);t.goalP=t.goal==='together'?rs[0].o:null;});
-  S.fmt=DEFAULT_FMT.slice();buildRounds(S);var cr=loadCareer();S.locked=lockedFormats(cr.points);S.missions=pickMissions();S.diff=DIFF[S.diff]?S.diff:'normal';S.budget+=Math.min(20,cr.seasons*4)+DIFF[S.diff].bud+10*perkLv(S,'bud');S.showTrust+=5*perkLv(S,'trust');if(S.chal==='poor')S.budget=Math.round(S.budget/2);if(S.chal==='rookie')S.tr.forEach(function(t){t.pot=Math.round(t.pot*.9*100)/100;});S.warns=0;S.tr.forEach(initTraits);S.album=[];S.touch={};S.reqs=[];S.ap=0;S.centerReq=null;S.sub=null;S.show=null;
+  S.fmt=DEFAULT_FMT.slice();buildRounds(S);var cr=loadCareer();S.first=cr.seasons?0:1;S.locked=lockedFormats(cr);S.missions=pickMissions(cr);S.diff=DIFF[S.diff]?S.diff:'normal';S.budget+=Math.min(20,cr.seasons*4)+DIFF[S.diff].bud+10*perkLv(S,'bud');S.showTrust+=5*perkLv(S,'trust');if(S.chal==='poor')S.budget=Math.round(S.budget/2);if(S.chal==='rookie')S.tr.forEach(function(t){t.pot=Math.round(t.pot*.9*100)/100;});S.warns=0;S.tr.forEach(initTraits);S.album=[];S.touch={};S.reqs=[];S.ap=0;S.centerReq=null;S.sub=null;S.show=null;
 }
 var TIERN=['距離がある','打ち解けてきた','信頼している','本音で話せる'];
 function tierOf(t){return t.trust>=80?3:t.trust>=60?2:t.trust>=40?1:0;}
@@ -2238,7 +2239,22 @@ var MISSIONS=[
   {k:'pair',t:'幼なじみか同じ地元の2人を一緒にデビューさせる',chk:function(S,E){var ids=E.D.map(function(t){return t.id;});return S.rels.some(function(r){return (r.k==='old'||r.k==='town')&&ids.indexOf(r.a)>=0&&ids.indexOf(r.b)>=0;});}}
 ];
 var MISSION_PT=2;
-function pickMissions(){var out=[],pool=shuffle(MISSIONS.slice());pool.forEach(function(m){if(out.length>=3)return;if(out.some(function(o){return o===m.x||m.k===o;}))return;if(out.some(function(o){return MISSIONS.filter(function(z){return z.k===o;})[0].x===m.k;}))return;out.push(m.k);});return out;}
+/* 結末の手がかりの依頼（2026-11-14）：人数・リーダーなし・コンビ・覚醒・ライバルの結末は、自分でそう選ばないと出ず、図鑑の中のヒントでしか分からなかった。
+   まだ見ていない結末に近づく条件を、シーズンの始めに依頼の4つめとして足す（end＝近づく結末。xs＝一緒に出さない依頼）。
+   いつもの3つは減らさない（減らすと、手がかりに乗らない人の平均が1点ほど下がった） */
+var END_MISSIONS=[
+  {k:'eSmall',end:'small',t:'5人以下のグループにする',xs:['big','small'],chk:function(S,E){return E.n<=5;}},
+  {k:'eBig8',end:'big8',t:'8人組でデビューさせる',xs:['big','small'],chk:function(S,E){return E.n>=8;}},
+  {k:'eNoLead',end:'noLead',t:'リーダーを置かずにデビューさせる',chk:function(S,E){return !!(S.prep&&S.prep.leader===-1);}},
+  {k:'eRival',end:'rival',t:'ライバルのふたりを一緒にデビューさせる',chk:function(S,E){var ids=E.D.map(function(t){return t.id;});return (S.rels||[]).some(function(r){return r.k==='rival'&&ids.indexOf(r.a)>=0&&ids.indexOf(r.b)>=0;});}},
+  {k:'eGold',end:'gold',t:'覚醒した子を3人以上デビューさせる',chk:function(S,E){return E.D.filter(function(t){return t.awoke;}).length>=3;}},
+  {k:'eCombo3',end:'combo3',t:'コンビ3組を一緒にデビューさせる',chk:function(S,E){return combosIn(S,E.D.map(function(t){return t.id;})).length>=3;}}
+];
+END_MISSIONS.forEach(function(m){m.tag='結末の手がかり';MISSIONS.push(m);});
+function missionClash(a,b){return a.k===b.k||a.x===b.k||b.x===a.k||(a.xs||[]).indexOf(b.k)>=0||(b.xs||[]).indexOf(a.k)>=0;}
+function pickMissions(c){var out=[],seen=(c&&c.endings)||{},em=END_MISSIONS.filter(function(m){return !seen[m.end];}),e=em.length?pick(em):null;
+  shuffle(MISSIONS.filter(function(m){return !m.end;})).forEach(function(m){if(out.length>=3)return;if(out.some(function(o){return missionClash(o,m);})||(e&&missionClash(e,m)))return;out.push(m);});
+  if(e)out.push(e);return out.map(function(m){return m.k;});}
 function missionOf(k){return MISSIONS.filter(function(m){return m.k===k;})[0];}
 function roundTarget(r,S){return 4.5+.5*r+(S?diffOf(S).tg+(S.chal==='strict'?.5:0):0);}
 /* プロデューサー歴（端末に残る。シーズンをまたぐ） */
@@ -2246,18 +2262,31 @@ var CKEY='hikari7_career';
 function loadCareer(){try{var c=JSON.parse(HStore.get(CKEY));if(c&&c.hall)return c;}catch(e){}return {seasons:0,points:0,hall:[]};}
 function saveCareer(c){try{HStore.set(CKEY,JSON.stringify(c));}catch(e){}}
 var RANKS=[[0,'新人プロデューサー'],[4,'若手プロデューサー'],[10,'中堅プロデューサー'],[20,'敏腕プロデューサー'],[35,'伝説のプロデューサー']];
-function rankOf(p){var r=RANKS[0];RANKS.forEach(function(x){if(p>=x[0])r=x;});return r;}
-function nextRank(p){for(var i=0;i<RANKS.length;i++)if(RANKS[i][0]>p)return RANKS[i];return null;}
+function rankOk(x,p,c){return p>=x[0]&&(!x[2]||!!(c&&c.achv&&c.achv[x[2]]));}
+function rankOf(p,c){var r=RANKS[0];RANKS.forEach(function(x){if(rankOk(x,p,c))r=x;});return r;}
+function nextRank(p,c){for(var i=0;i<RANKS.length;i++)if(!rankOk(RANKS[i],p,c))return RANKS[i];return null;}
+/* 審査の解放（2026-11-14）：前はポイント（体力合宿2・ペア対決4・公開ライブ7）で、2シーズン目に全部そろっていた。
+   いまは経験で解放する（far ポイントに届いても解放）。前のポイントで解放済みだった人からは取り上げない（unlockedOf が c.unl に移す） */
 var UNLOCK={camp:2,duo:4,live:7};
-function lockedFormats(p){var o={};for(var k in UNLOCK)if(p<UNLOCK[k])o[k]=UNLOCK[k];return o;}
+var UNLOCK_X={camp:{h:'誰かを覚醒させる',p:'誰かを覚醒させた',far:20,chk:function(S,E){return S.tr.some(function(t){return t.awoke;});}},
+  duo:{h:'コンビを結成する',p:'コンビを結成した',far:40,chk:function(S,E){for(var k in (S.bond||{}))if(S.bond[k].combo)return true;return false;}},
+  live:{h:'平均視聴率8%以上でシーズンを終える',p:'平均視聴率8%以上でシーズンを終えた',far:60,chk:function(S,E){return E.avgR>=8;}}};
+function unlockedOf(c){if(!c.unl){c.unl={};if(c.seasons)for(var k in UNLOCK)if((c.points||0)>=UNLOCK[k])c.unl[k]=c.seasons;}return c.unl;}
+function lockedFormats(c){var u=unlockedOf(c),o={};for(var k in UNLOCK_X)if(!u[k])o[k]=UNLOCK_X[k].h+'（またはプロデューサー歴 '+UNLOCK_X[k].far+'ポイント）';return o;}
+/* 追加パックの中身を、プロデューサー歴の節目のごほうびとして入れる（2026-11-14）。売り場は出さない（PACK_SALE=false のまま） */
+var PACK_REWARD={audition:10,story:20};
+var PACK_EARN={};
+function loadPackEarn(){try{var c=loadCareer(),o={};for(var k in PACK_REWARD)if((c.seasons||0)>=PACK_REWARD[k])o[k]=1;PACK_EARN=o;}catch(e){}}
 var GRADE_PT={S:5,A:3,B:2,C:1,D:0};
 /* 評価のお願い（2026-10-28）：評価0件で検索の順位が上がらなかった。1シーズン目からB以上で頼み、3シーズンあけて最大3回（iOS も年3回まで） */
 function reviewDue(c,grade){return 'SAB'.indexOf(grade)>=0&&(c.reviewAsked||0)<3&&c.seasons>=(c.reviewAt||1);}
-function recordCareer(S,E){if(S.recorded)return null;S.recorded=true;var c=loadCareer(),before=c.points,rk0=rankOf(before)[1];
+function recordCareer(S,E){if(S.recorded)return null;S.recorded=true;var c=loadCareer(),before=c.points,rk0=rankOf(before,c)[1],unl=unlockedOf(c);
   var got=GRADE_PT[E.grade]+E.missions.filter(function(m){return m.ok;}).length;c.seasons++;mergeDex(S,c);addMeikan(S,E,c);if(S.daily){if(!c.daily)c.daily={};var db=c.daily[S.daily];if(!db||E.total>db.t)c.daily[S.daily]={t:Math.round(E.total*10)/10,gr:E.grade};}addStats(S,E,c);got=Math.round(got*diffOf(S).pt);var ach=checkAchv(S,E,c);got+=ach.length;var chNews=null;if(S.chal&&'SA'.indexOf(E.grade)>=0){if(!c.chal)c.chal={};var first=!c.chal[S.chal];if(first||E.grade==='S')c.chal[S.chal]=E.grade;if(first){got+=CHAL_PT;chNews='チャレンジ「'+chalOf(S.chal).n+'」を達成した（＋'+CHAL_PT+'ポイント）';}}c.points+=got;
   c.hall.unshift({name:gName(S.prep),grade:E.grade,total:Math.round(E.total),g:S.g,n:E.n,members:E.D.map(function(t){return t.giv;}),mem:E.D.map(function(t){return {n:t.giv,img:t.img,sp:t.spec,aw:t.awoke?1:0,lead:E.L&&E.L.id===t.id?1:0};}),color:S.prep.color,song:S.prep.songs?S.prep.songs[S.prep.song||0]:null,diff:S.diff,chal:S.chal||null,daily:S.daily||null,season:c.seasons});c.hall=c.hall.slice(0,20);saveCareer(c);
-  var news=ach.map(function(a){return '実績「'+a.t+'」を取った（'+a.d+'）';});if(chNews)news.unshift(chNews);for(var k in UNLOCK)if(before<UNLOCK[k]&&c.points>=UNLOCK[k])news.push('審査「'+FORMATS[k].t+'」が使えるようになった');
-  var rk1=rankOf(c.points)[1];if(rk1!==rk0)news.unshift('肩書きが「'+rk1+'」になった');
+  var news=ach.map(function(a){return '実績「'+a.t+'」を取った（'+a.d+'）';});if(chNews)news.unshift(chNews);for(var k in UNLOCK_X)if(!unl[k]){var ux=UNLOCK_X[k],byX=!!ux.chk(S,E);if(byX||c.points>=ux.far){unl[k]=c.seasons;news.push('審査「'+FORMATS[k].t+'」が使えるようになった（'+(byX?ux.p:'プロデューサー歴 '+ux.far+'ポイント')+'）');}}
+  for(var pk in PACK_REWARD)if(c.seasons===PACK_REWARD[pk]&&!(typeof APP!=='undefined'&&APP&&APP.owned&&APP.owned[pk]))news.push('プロデューサー歴'+PACK_REWARD[pk]+'シーズンのごほうび：「'+PACKS[pk].n+'」の中身が入った（'+PACKS[pk].d+'）');
+  saveCareer(c);applyPacks();
+  var rk1=rankOf(c.points,c)[1];if(rk1!==rk0)news.unshift('肩書きが「'+rk1+'」になった');
   if(reviewDue(c,E.grade)&&typeof APP!=='undefined'&&APP){c.reviewAsked=(c.reviewAsked||0)+1;c.reviewAt=c.seasons+3;saveCareer(c);appPost({type:'review'});}
   S.careerNews={got:got,points:c.points,news:news};return S.careerNews;}
 /* レッスンのおまかせ：疲れた子は休ませ、課題のある子は課題を、ほかは今回見られる力のうち弱いところを1つずつ */
@@ -2335,7 +2364,7 @@ var ACHV=[
   {k:'gradeS',t:'伝説の番組',d:'S評価を取る',chk:function(S,E){return E.grade==='S';}},
   {k:'big8',t:'大所帯',d:'8人組でA評価以上',chk:function(S,E){return E.n>=8&&'SA'.indexOf(E.grade)>=0;}},
   {k:'five',t:'少数精鋭',d:'5人組でA評価以上',chk:function(S,E){return E.n===5&&'SA'.indexOf(E.grade)>=0;}},
-  {k:'mission3',t:'スポンサーの信頼',d:'依頼を3つともかなえる',chk:function(S,E){return E.missions.length===3&&E.missions.every(function(m){return m.ok;});}},
+  {k:'mission3',t:'スポンサーの信頼',d:'依頼を3つともかなえる',chk:function(S,E){var ms=E.missions.filter(function(m){return !missionOf(m.k).end;});return ms.length===3&&ms.every(function(m){return m.ok;});}},
   {k:'honne3',t:'聞き上手',d:'1シーズンで3人の本音を聞く',chk:function(S,E){return S.tr.filter(function(t){return t.honne;}).length>=3;}},
   {k:'calm',t:'穏やかな番組',d:'一度も荒れずにシーズンを終える',chk:function(S,E){return S.history.every(function(h){return !h.angry;});}},
   {k:'rating8',t:'お茶の間の話題',d:'平均視聴率8%以上',chk:function(S,E){return E.avgR>=8;}},
@@ -2352,7 +2381,7 @@ function checkAchv(S,E,c){if(!c.achv)c.achv={};var got=[];ACHV.forEach(function(
 /* 難易度：制作費・局の目標・最後の評価・もらえるポイントが変わる */
 var DIFF={easy:{n:'やさしい',d:'制作費が多く、局の目標が低い。ポイントは半分',bud:40,tg:-.5,tot:4,pt:.5},
   normal:{n:'ふつう',d:'標準',bud:0,tg:0,tot:0,pt:1},
-  hard:{n:'きびしい',d:'制作費が少なく、局の目標が高い。ポイントは1.5倍',bud:-20,tg:.5,tot:-4,pt:1.5}};
+  hard:{n:'きびしい',d:'制作費が少なく、局の目標が高い。関われる回数が1回少なく、人気の子を落とすと荒れやすい。ポイントは1.5倍',bud:-20,tg:.5,tot:-2,pt:1.5,ap:-1,ang:1.5}};
 function diffOf(S){return DIFF[(S&&S.diff)||'normal'];}
 
 
@@ -3137,9 +3166,9 @@ var PACK_AUDITION={
 var PACK_SALE=false;
 var PACKS={story:{n:'物語パック',id:'hikari7_story_pack',d:'新しいひとりの物語6つ（書道の家・合唱団育ち・双子の片方・豆腐屋の朝・盛り上げ役・動画の歌い手）、合宿の出来事12、お出かけの場面4つ'},
   audition:{n:'審査パック',id:'hikari7_audition_pack',d:'新しい審査の型3つ（アカペラ審査・路上ライブ・ミュージカル）。構成会議で選べるようになる'}};
-function packOwned(k){if(typeof APP==='undefined'||!APP)return true;return !!(APP.owned&&APP.owned[k]);}
+function packOwned(k){if(typeof APP==='undefined'||!APP)return true;return !!(APP.owned&&APP.owned[k])||!!PACK_EARN[k];}
 var packDone={};
-function applyPacks(force){
+function applyPacks(force){loadPackEarn();
   if((force||packOwned('story'))&&!packDone.story){packDone.story=1;var P=PACK_STORY,k;if(!OUT_BASE)OUT_BASE=OUTS.map(function(x){return x.sc.length;});
     for(k in P.arcs){ARCS[k]=P.arcs[k];ARC_TONE[k]=P.tones[k];if(P.honne[k])HONNE[k]=P.honne[k];}
     P.evx.forEach(function(x){if(!EVX_BY[x.id]){EVX.push(x);EVX_BY[x.id]=x;}});
@@ -3910,6 +3939,8 @@ function endShape(S,E,x){var tier=x.tier,D=x.D,coh=x.coh,nC=x.combos.length,L=x.
   var bonded=(L&&L.trust>=60)||D.some(function(a){return D.some(function(b){var bo=a.id<b.id&&S.bond&&S.bond[bkey(a.id,b.id)];return bo&&bo.v>=55;});});
   var q=E.q||0;
   if(tier===2){if(star&&coh<55&&R()<.3){o.k='soloStar';o.endY=ri(6,8);o.star=star;}return o;}
+  /* はじめてのシーズンの C は、解散ではなく休止から戻る筋にする（初めての1本が解散で終わらないように。2026-11-14） */
+  if(tier===3&&S.first){o.k='restart';o.hy=ri(3,4);o.ry=o.hy+2;return o;}
   var w={},ks=tier===3?['restart','reunion','oneNight','underdog','allBloom','soloStar','fade']:['reunion','oneNight','underdog','allBloom','soloStar','shortD'];
   w.restart=coh>=45?1:0;w.reunion=(coh>=50||nC)?(tier===3?1:.6):0;w.oneNight=bonded?(tier===3?1:.9):0;w.underdog=und?.9:0;w.allBloom=q>=.65?.7:0;w.soloStar=star?.7:0;w.fade=1.6;w.shortD=2;
   o.k=wpick(w,ks);
@@ -4149,8 +4180,8 @@ function noteEnding(S){var F=S.future;if(!F||!F.end||!endOf(F.end)||S.endRec)ret
   try{var c=loadCareer(),e=endOf(F.end);if(!c.endings)c.endings={};var isNew=!c.endings[F.end];S.endNew=isNew?1:0;
     if(isNew)c.endings[F.end]={s:c.seasons,g:F.g,gr:F.grade};
     if(c.hall&&c.hall[0]&&c.hall[0].season===c.seasons&&!c.hall[0].end)c.hall[0].end=F.end;
-    var rk0=rankOf(c.points)[1],ach=checkAchv(S,finalEval(S),c);c.points+=ach.length;saveCareer(c);
-    var cn=S.careerNews;if(cn){ach.forEach(function(a){cn.news.push('実績「'+a.t+'」を取った（'+a.d+'）');});if(isNew)cn.news.unshift('新しい結末を解放：'+e.n);cn.got+=ach.length;cn.points=c.points;var rk1=rankOf(c.points)[1];if(rk1!==rk0)cn.news.unshift('肩書きが「'+rk1+'」になった');}
+    var rk0=rankOf(c.points,c)[1],ach=checkAchv(S,finalEval(S),c);c.points+=ach.length;saveCareer(c);
+    var cn=S.careerNews;if(cn){ach.forEach(function(a){cn.news.push('実績「'+a.t+'」を取った（'+a.d+'）');});if(isNew)cn.news.unshift('新しい結末を解放：'+e.n);cn.got+=ach.length;cn.points=c.points;var rk1=rankOf(c.points,c)[1];if(rk1!==rk0)cn.news.unshift('肩書きが「'+rk1+'」になった');}
   }catch(er){}}
 function startEnding(S){S.future=makeFuture(S,finalEval(S));S.ending=true;noteEnding(S);try{var c=loadCareer();if(c.hall&&c.hall[0]&&c.hall[0].season===c.seasons&&!c.hall[0].songs){c.hall[0].songs=S.future.songs.slice();saveCareer(c);}}catch(e){}}
 
@@ -4180,7 +4211,7 @@ function toneParts(t,tone){if(!t||!t.temperRev||!TONE_MOD[tone])return [];var fx
 
 /* ---------- フェーズ1：プロデューサーの心得（2026-10-03） ----------
    シーズンで得たポイントを使って、次のシーズンからずっと効く強化を解放する。
-   肩書きと審査の解放は「得たポイントの合計」で決まり、心得に使っても下がらない。使ったぶんは c.spent に記録する */
+   肩書きは「得たポイントの合計」（と難しさの実績）で決まり、心得に使っても下がらない。使ったぶんは c.spent に記録する */
 var PERKS=[
   {k:'bud',n:'スポンサーの人脈',d:'シーズンの始めの制作費 +10万',max:3,cost:[2,4,6]},
   {k:'watch',n:'目利き',d:'応募動画をじっくり見られる人数 +1',max:2,cost:[3,6]},
@@ -4198,7 +4229,7 @@ function buyPerk(k){var c=loadCareer(),p=PERKS.filter(function(x){return x.k===k
 function resetPerks(){var c=loadCareer();c.perk={};c.spent=0;saveCareer(c);}
 function watchMax(S){return WATCH_MAX+perkLv(S,'watch');}
 function seatCost(S){return SEAT_COST-10*perkLv(S,'seat');}
-function apMax(S){return AP_MAX+perkLv(S,'ap')-(S&&S.chal==='busy'?1:0);}
+function apMax(S){return AP_MAX+perkLv(S,'ap')-(S&&S.chal==='busy'?1:0)+(diffOf(S).ap||0);}
 
 /* ---------- フェーズ2：チャレンジ（縛りのあるシーズン） ----------
    1シーズンに1つ選べる。A評価以上で達成。初めて達成するとポイント +3 */
@@ -4247,11 +4278,13 @@ EV_TONE.alumni='hsf';
 function addStats(S,E,c){var st=c.stats||(c.stats={debut:0,awoke:0,combo:0,honne:0,grade:{},best:0,bestStreams:0,diff:{},alumni:0});
   st.debut+=E.n;st.awoke+=S.tr.filter(function(t){return t.awoke;}).length;for(var k in (S.bond||{}))if(S.bond[k].combo)st.combo++;
   st.honne+=S.tr.filter(function(t){return t.honne;}).length;st.grade[E.grade]=(st.grade[E.grade]||0)+1;st.best=Math.max(st.best,Math.round(E.total*10)/10);
-  st.bestStreams=Math.max(st.bestStreams,Math.round(E.streams));var dk=(S.diff||'normal');if(!st.diff[dk]||'SABCD'.indexOf(E.grade)<'SABCD'.indexOf(st.diff[dk]))st.diff[dk]=E.grade;if(S.alumniDone)st.alumni++;}
+  st.bestStreams=Math.max(st.bestStreams,Math.round(E.streams));var dk=(S.diff||'normal');if(!st.diff[dk]||'SABCD'.indexOf(E.grade)<'SABCD'.indexOf(st.diff[dk]))st.diff[dk]=E.grade;if(S.alumniDone)st.alumni++;if('SA'.indexOf(E.grade)>=0){if(!st.dA)st.dA={};st.dA[dk]=(st.dA[dk]||0)+1;}}
 /* ---------- フェーズ10：肩書きを増やす ---------- */
 RANKS.push([55,'時代をつくるプロデューサー'],[80,'名誉プロデューサー'],[120,'番組の顔']);
+/* 2026-11-14：この先の肩書きは、ポイントに加えて難しさの実績が要る（3つめ＝要る実績） */
+RANKS.push([150,'局を背負うプロデューサー','hardA5'],[190,'伝説を越えたプロデューサー','legendA3'],[240,'ひかりの名プロデューサー','legendS']);
 /* ---------- フェーズ11：難易度「伝説」（きびしいでS評価を取ると解放） ---------- */
-DIFF.legend={n:'伝説',d:'制作費がとても少なく、局の目標がとても高い。ポイントは2倍',bud:-35,tg:1,tot:-8,pt:2};
+DIFF.legend={n:'伝説',d:'制作費がとても少なく、局の目標がとても高い。関われる回数が2回少なく、人気の子を落とすととても荒れる。ポイントは2倍',bud:-35,tg:1,tot:-4,pt:2,ap:-2,ang:2};
 function legendOpen(){var c=loadCareer();return !!(c.achv&&c.achv.hardS);}
 /* ---------- フェーズ9：実績を30個に ---------- */
 ACHV.push(
@@ -4268,7 +4301,12 @@ ACHV.push(
   {k:'end5',t:'結末の収集家',d:'結末を5種類見る（結末の図鑑）',chk:function(S,E,c){return Object.keys(c.endings||{}).length>=5;}},
   {k:'end10',t:'十の結末',d:'結末を10種類見る（結末の図鑑）',chk:function(S,E,c){return Object.keys(c.endings||{}).length>=10;}},
   {k:'endSplit',t:'別れの先に',d:'解散や休止の結末を3種類見る',chk:function(S,E,c){return ENDS.filter(function(e){return e.sp&&(c.endings||{})[e.k];}).length>=3;}},
-  {k:'endAll',t:'すべての結末',d:'結末をすべて見る（結末の図鑑）',chk:function(S,E,c){return ENDS.every(function(e){return (c.endings||{})[e.k];});}}
+  {k:'endAll',t:'すべての結末',d:'結末をすべて見る（結末の図鑑）',chk:function(S,E,c){return ENDS.every(function(e){return (c.endings||{})[e.k];});}},
+  /* 難しさごとの目標（2026-11-14）：肩書きと実績が15シーズンほどで尽きていた */
+  {k:'hardA5',t:'きびしい局の常連',d:'難しさ「きびしい」以上でA評価以上を5回',chk:function(S,E,c){var d=(c.stats||{}).dA||{};return (d.hard||0)+(d.legend||0)>=5;}},
+  {k:'legendS',t:'伝説の満点',d:'難しさ「伝説」でS評価',chk:function(S,E){return S.diff==='legend'&&E.grade==='S';}},
+  {k:'legendA3',t:'伝説を三度',d:'難しさ「伝説」でA評価以上を3回',chk:function(S,E,c){return (((c.stats||{}).dA||{}).legend||0)>=3;}},
+  {k:'allS',t:'どの局でも満点',d:'4つの難しさすべてでS評価',chk:function(S,E,c){var d=(c.stats||{}).diff||{};return ['easy','normal','hard','legend'].every(function(k){return d[k]==='S';});}}
 );
 /* ---------- フェーズ12：シーズンのふりかえり ---------- */
 var HL_ORDER=['覚醒','コンビ結成','本音','目標達成','戦友','今回の1位','センター','特性','克服'];
@@ -4407,7 +4445,7 @@ function vTitle(){
   if(ui.tsub==='new')return vTitleNew();
   if(ui.tsub==='rec')return vTitleRec();
   if(ui.tsub==='shop')return vTitleShop();
-  var sv=load(),c=loadCareer(),rk=rankOf(c.points);
+  var sv=load(),c=loadCareer(),rk=rankOf(c.points,c);
   var seats='';for(var i=0;i<7;i++){var mid=i===3;seats+='<div class="tseat'+(mid?' mid':'')+'" style="animation-delay:'+(.5+Math.abs(i-3)*.12).toFixed(2)+'s"><img decoding="async" class="face" src="'+faceURL(ui.g,i*2+(mid?1:0))+'" alt=""><i></i></div>';}
   var h='<div class="tscr"><div class="tbgm">'+bgmBtn(true)+'</div>'+
     '<div class="tlogo"><div class="tkick">オーディション番組プロデュース</div><div class="logo7 tbig"><span>ひかりの</span>指名</div><p class="ttag">名前を呼ぶのは、あなた。</p></div>'+
@@ -4460,7 +4498,7 @@ function vTitleNew(){
 
   if(loadCareer().seasons===0)h+='<div class="card firstflow"><div class="mh">はじめての方へ：1シーズンの流れ</div><ol class="tight"><li><b>書類・動画審査</b>　40人から最大24人を選ぶ</li><li><b>構成会議</b>　4つの審査の順番を決める</li><li><b>審査ごとに</b>　制作会議 → レッスン → 関わる時間 → 出来事 → ステージ → 講評 → <b>合否はあなたが決める</b></li><li><b>最終審査</b>　デビューメンバーを5〜8人選ぶ</li><li><b>デビュー後1か月</b>　活動を選び、評価とグループのその後を見る</li></ol><p class="small muted">1シーズンは30〜40分。迷ったら「おまかせ」や、画面の上に出るコツを見てください。</p></div>';
 
-  h+='<div class="card small"><b>遊び方</b><ul class="tight"><li>応募者40人から最大24人を書類・動画審査で選ぶ（能力は一部しか見えない）</li><li>構成会議で、'+fmtKeys().length+'種類の審査から4つを選んで順番を決める（最後は最終審査）</li><li>毎シーズン、スポンサーから3つの依頼が来る。局は審査ごとに目標の視聴率を示し、届かないと制作費が減る</li><li>シーズンを終えるたびにポイントがたまり、肩書きが上がって、使える審査が増える</li><li>審査ごとに、制作会議 → レッスン → 関わる時間（話す・出かける・ふたりと話す、と相談）→ 出来事 → <b>ステージ本番</b> → 講評 → <b>合否はあなたが決める</b></li><li>顔を押すと、その子の個人ページ（来た理由・目標・好み・物語・関係・思い出）が開く</li><li>世間の人気は決定には使わないが、人気の子を落とすと荒れる</li><li>練習生には特性がある。ふたりごとの相性と絆が深まると「ふたりの物語」が進み、息が合えばコンビになる。ひとりの物語を正しく支えきると覚醒する</li><li>最終審査でデビューメンバーを5〜8人選び、グループ名・リーダー・曲の方向を決めて、デビュー後1か月の反響で評価される。最後にグループのその後がエンドロールで流れる</li></ul><p class="muted">試作 v18。1シーズン約30〜40分。練習生は毎回ちがう顔ぶれです。</p></div>';
+  h+='<div class="card small"><b>遊び方</b><ul class="tight"><li>応募者40人から最大24人を書類・動画審査で選ぶ（能力は一部しか見えない）</li><li>構成会議で、'+fmtKeys().length+'種類の審査から4つを選んで順番を決める（最後は最終審査）</li><li>毎シーズン、スポンサーから3つの依頼が来る（まだ見ていない結末があれば、その手がかりの依頼が1つ増える）。局は審査ごとに目標の視聴率を示し、届かないと制作費が減る</li><li>シーズンを終えるたびにポイントがたまり、肩書きが上がる。番組での経験（覚醒・コンビ・視聴率）で使える審査が増え、10・20シーズン目を終えるとごほうびがある</li><li>審査ごとに、制作会議 → レッスン → 関わる時間（話す・出かける・ふたりと話す、と相談）→ 出来事 → <b>ステージ本番</b> → 講評 → <b>合否はあなたが決める</b></li><li>顔を押すと、その子の個人ページ（来た理由・目標・好み・物語・関係・思い出）が開く</li><li>世間の人気は決定には使わないが、人気の子を落とすと荒れる</li><li>練習生には特性がある。ふたりごとの相性と絆が深まると「ふたりの物語」が進み、息が合えばコンビになる。ひとりの物語を正しく支えきると覚醒する</li><li>最終審査でデビューメンバーを5〜8人選び、グループ名・リーダー・曲の方向を決めて、デビュー後1か月の反響で評価される。最後にグループのその後がエンドロールで流れる</li></ul><p class="muted">試作 v18。1シーズン約30〜40分。練習生は毎回ちがう顔ぶれです。</p></div>';
   return h;
 }
 function vSelect(){
@@ -4647,7 +4685,7 @@ function vResult(){
   if(S.ending)return vEnding();
   var E=finalEval(S),P=S.prep||{names:['（名前なし）'],name:0},h='<h2>デビューから1か月</h2>'+poster(E,P)+resultCard(E,P);
   var cn=S.careerNews;
-  if(cn)h+='<div class="card career"><div class="mh">プロデューサー歴</div><div>このシーズンで <b>＋'+cn.got+'ポイント</b>（合計 '+cn.points+'）・'+esc(rankOf(cn.points)[1])+'</div>'+cn.news.map(function(x){return '<div class="newu">'+esc(x)+'</div>';}).join('')+'</div>';
+  if(cn)h+='<div class="card career"><div class="mh">プロデューサー歴</div><div>このシーズンで <b>＋'+cn.got+'ポイント</b>（合計 '+cn.points+'）・'+esc(rankOf(cn.points,loadCareer())[1])+'</div>'+cn.news.map(function(x){return '<div class="newu">'+esc(x)+'</div>';}).join('')+'</div>';
 
   function bar(lbl,v,note){return '<div style="margin:10px 0"><div class="kv" style="border:none;padding:0"><span>'+lbl+'</span><b>'+Math.round(v)+'</b></div><div class="bar" style="height:10px"><i class="grow" style="width:'+Math.round(v)+'%;background:var(--accent)"></i></div><div class="small muted">'+note+'</div></div>';}
   h+='<div class="card">'+bar('デビュー曲の反響（35%）',E.song,'実力（平均'+Math.round(E.sk)+'）とファンの数のかけ算。どちらかが欠けると伸びない')+
@@ -4805,7 +4843,7 @@ function vFormat(){
   h+=missionBox();
   h+='<h3>審査の種類</h3><div class="fpool">';
   fmtKeys().forEach(function(k){var f=FORMATS[k],u=!!used[k],lk=S.locked&&S.locked[k];
-    if(lk){h+='<div class="fcard used"><div class="fh"><b>🔒 '+esc(f.t)+'</b>'+hypeStars(f.hype)+'</div><div class="small muted">プロデューサー歴 '+lk+'ポイントで使えるようになる</div></div>';return;}
+    if(lk){h+='<div class="fcard used"><div class="fh"><b>🔒 '+esc(f.t)+'</b>'+hypeStars(f.hype)+'</div><div class="small muted">'+esc(lk)+'で使えるようになる</div></div>';return;}
     h+='<div class="fcard'+(u?' used':'')+'"><div class="fh"><b>'+esc(f.t)+'</b>'+hypeStars(f.hype)+'</div><div class="small">'+esc(f.desc)+'</div><div class="fg"><span class="hp up">'+esc(f.good)+'</span><span class="hp dn">'+esc(f.bad)+'</span></div>'+
       (u?'<div class="small muted">組み込み済み</div>':'<button class="btn-s" data-a="fadd" data-v="'+k+'" '+(free<0?'disabled':'')+'>'+(free<0?'空きがない（×で外す）':'第'+(free+1)+'審査に入れる')+'</button>')+'</div>';});
   h+='</div>';
@@ -4825,11 +4863,12 @@ function planFmtBox(){
 
 function missionBox(E){var ms=S.missions||[];if(!ms.length)return '';
   var h='<div class="card mission"><div class="mh">スポンサーの依頼 <span class="small muted">1つかなえるごとに最後の評価に＋'+MISSION_PT+'点</span></div>';
-  ms.forEach(function(k,i){var m=missionOf(k),ok=E?E.missions[i].ok:null;h+='<div class="mi">'+(ok===true?'<span class="ok">✓</span>':ok===false?'<span class="ng">✗</span>':'<span class="dot">・</span>')+esc(m.t)+'</div>';});
+  ms.forEach(function(k,i){var m=missionOf(k),ok=E?E.missions[i].ok:null;h+='<div class="mi">'+(ok===true?'<span class="ok">✓</span>':ok===false?'<span class="ng">✗</span>':'<span class="dot">・</span>')+esc(m.t)+(m.tag?' <span class="tag lt">'+esc(m.tag)+'</span>':'')+'</div>';});
   return h+'</div>';}
-function careerBox(){var c=loadCareer(),rk=rankOf(c.points),nx=nextRank(c.points);
-  var h='<div class="card career"><div class="mh">プロデューサー歴</div><div class="rk">'+esc(rk[1])+'</div><div class="small muted">'+c.seasons+'シーズン・'+c.points+'ポイント'+(nx?'（次の肩書きまで あと'+(nx[0]-c.points)+'）':'')+'</div>';
-  var lk=lockedFormats(c.points),ks=Object.keys(lk);if(ks.length)h+='<div class="small" style="margin-top:6px">まだ使えない審査：'+ks.map(function(k){return esc(FORMATS[k].t)+'（'+lk[k]+'ポイント）';}).join('・')+'</div>';
+function careerBox(){var c=loadCareer(),rk=rankOf(c.points,c),nx=nextRank(c.points,c),nxa=nx&&nx[2]?ACHV.filter(function(a){return a.k===nx[2];})[0]:null;
+  var h='<div class="card career"><div class="mh">プロデューサー歴</div><div class="rk">'+esc(rk[1])+'</div><div class="small muted">'+c.seasons+'シーズン・'+c.points+'ポイント'+(nx?'（次の肩書き'+(nx[0]>c.points?'まで あと'+(nx[0]-c.points):'')+(nxa&&!(c.achv&&c.achv[nxa.k])?(nx[0]>c.points?'・':'には')+'実績「'+esc(nxa.t)+'」も':'')+'）':'')+'</div>';
+  var lk=lockedFormats(c),ks=Object.keys(lk);if(ks.length)h+='<div class="small" style="margin-top:6px">まだ使えない審査：'+ks.map(function(k){return esc(FORMATS[k].t)+'（'+esc(lk[k])+'）';}).join('・')+'</div>';
+  var pw=Object.keys(PACK_REWARD).filter(function(k){return (c.seasons||0)<PACK_REWARD[k];});if(pw.length&&!PACK_SALE)h+='<div class="small" style="margin-top:6px">プロデューサー歴のごほうび：'+pw.map(function(k){return esc(PACKS[k].n)+'（'+PACK_REWARD[k]+'シーズン目を終えると・あと'+(PACK_REWARD[k]-(c.seasons||0))+'）';}).join('・')+'</div>';
   var ac=c.achv||{},na=ACHV.filter(function(a){return ac[a.k];}).length;h+='<details class="achv"><summary>実績 '+na+' / '+ACHV.length+'</summary>'+ACHV.map(function(a){return '<div class="'+(ac[a.k]?'got':'')+'">'+(ac[a.k]?'★':'☆')+' <b>'+esc(a.t)+'</b> <span class="small muted">'+esc(a.d)+'</span></div>';}).join('')+'</details>';
   h+=statsBox(c)+dexBox(c)+meikanBox(c)+discoBox(c);
   if(c.hall.length){h+='<div class="mh" style="margin-top:10px">殿堂</div>';c.hall.slice(0,ui.hallAll?20:5).forEach(function(x){h+='<details class="hall"><summary><b class="gr g-'+x.grade+'">'+x.grade+'</b><span><b'+(x.color!=null?' style="color:'+GCOLORS[x.color][1]+'"':'')+'>'+esc(x.name)+'</b> <span class="small muted">第'+x.season+'シーズン・'+(x.g==='f'?'女性':'男性')+x.n+'人・'+x.total+'点</span><br><span class="small muted">'+x.members.map(esc).join('・')+'</span></span></summary>'+
