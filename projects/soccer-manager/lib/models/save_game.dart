@@ -107,6 +107,12 @@ class SaveGame {
   /// このクラブのいる国の財務規則。
   RuleSet ruleSet;
 
+  /// シーズンごとのクラブ価値(万円)。シーズン終了時に記録する。
+  Map<int, int> clubValueHistory;
+
+  /// 目標「クラブ価値を2倍に」を選んだときのクラブ価値。選ぶまでは 0。
+  int ownerGoalStartValue;
+
   /// 補強が禁止されている残りのシーズン数(規則違反の罰)。
   int transferBanSeasons;
 
@@ -400,6 +406,8 @@ class SaveGame {
     this.marketingBoostWeeks = 0,
     List<SeasonLedger>? ledgers,
     this.ruleSet = RuleSet.britain,
+    Map<int, int>? clubValueHistory,
+    this.ownerGoalStartValue = 0,
     this.transferBanSeasons = 0,
     this.pendingPointsDeduction = 0,
     this.pendingOwnerEvent,
@@ -484,6 +492,7 @@ class SaveGame {
         clubHistory = clubHistory ?? [],
         ownerLegacies = ownerLegacies ?? [],
         ledgers = ledgers ?? [],
+        clubValueHistory = clubValueHistory ?? {},
         achievedGoals = achievedGoals ?? [],
         freeAgents = freeAgents ?? [],
         retiredLegends = retiredLegends ?? [],
@@ -580,6 +589,8 @@ class SaveGame {
         'marketingBoostWeeks': marketingBoostWeeks,
         'ledgers': ledgers.map((l) => l.toJson()).toList(),
         'ruleSet': ruleSet.name,
+        'clubValueHistory': clubValueHistory.map((k, v) => MapEntry('$k', v)),
+        'ownerGoalStartValue': ownerGoalStartValue,
         'transferBanSeasons': transferBanSeasons,
         'pendingPointsDeduction': pendingPointsDeduction,
         'pendingOwnerEvent': pendingOwnerEvent?.name,
@@ -685,6 +696,9 @@ class SaveGame {
         ruleSet: RuleSet.values
             .where((r) => r.name == json['ruleSet'])
             .firstOrNull ?? RuleSet.britain,
+        clubValueHistory: (json['clubValueHistory'] as Map?)
+            ?.map((k, v) => MapEntry(int.parse('$k'), v as int)),
+        ownerGoalStartValue: json['ownerGoalStartValue'] as int? ?? 0,
         transferBanSeasons: json['transferBanSeasons'] as int? ?? 0,
         pendingPointsDeduction: json['pendingPointsDeduction'] as int? ?? 0,
         ledgers: (json['ledgers'] as List?)

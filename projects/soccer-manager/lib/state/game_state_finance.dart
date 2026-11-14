@@ -145,6 +145,7 @@ extension GameStateFinance on GameState {
     if (save == null || !selectableOwnerGoals.contains(goal)) return;
     save.ownerGoal = goal;
     save.ownerGoalStartSeason = save.league.season;
+    save.ownerGoalStartValue = clubValue.total;
     _notify();
     await _persist();
   }
@@ -173,6 +174,9 @@ extension GameStateFinance on GameState {
           (r) => r.divisionTier == 1 || (r.promoted && r.divisionTier == 2)),
       wonCup: recs.any((r) => r.cupsWon.isNotEmpty),
       budget: save.budget,
+      valueRatio: save.ownerGoalStartValue > 0
+          ? clubValue.total / save.ownerGoalStartValue
+          : 0,
     );
     if (met) {
       save.achievedGoals.add(Tr.pick(
@@ -392,6 +396,11 @@ extension GameStateFinance on GameState {
       currentWeeklyWageBill: weeklyWageBill,
     );
     save.clubHistory.add(team.name);
+    // クラブ価値は新しいクラブのものとして数え直す。
+    save.clubValueHistory.clear();
+    if (save.ownerGoal == OwnerGoal.clubValue) {
+      save.ownerGoalStartValue = clubValue.total;
+    }
     _refreshStaffCandidates();
     _notify();
     await _persist();
@@ -566,6 +575,72 @@ extension GameStateFinance on GameState {
       context: Tr.pick('リーグの規則', 'League rules'),
     );
   }
+
+  /// いまのクラブ価値と内訳。
+  ClubValue get clubValue {
+    final save = _save;
+    if (save == null) {
+      return ClubValueEngine.compute(
+        playersValue: 0,
+        facilityLevels: const [],
+        staffLevels: const [],
+        leagueTitles: 0,
+        cupTitles: 0,
+        managerReputation: 0,
+        annualOperatingIncome: 0,
+        cash: 0,
+        debt: 0,
+      );
+    }
+    final mine = save.seasonHistory.where((r) => r.clubName == save.clubName);
+    // 稼ぐ力は、直近に終えたシーズンの営業収入。まだ無ければ今の週収入から見積もる。
+    final past = save.ledgers
+        .where((l) => l.season < save.league.season && l.operatingIncome > 0)
+        .toList();
+    final matchdays = save.league.fixtures.fold<int>(
+        0, (m, f) => f.matchday > m ? f.matchday : m);
+    final annual = past.isNotEmpty
+        ? past.last.operatingIncome
+        : weeklyIncomeFor(save.userTeamId) * matchdays;
+    return ClubValueEngine.compute(
+      playersValue:
+          userTeam.players.fold<int>(0, (s, p) => s + p.marketValue),
+      facilityLevels: [
+        for (final f in FacilityType.values)
+          save.infrastructure.facilityLevel(f),
+      ],
+      staffLevels: [
+        for (final r in StaffRole.values)
+          save.infrastructure.staffFor(r)?.effectiveLevel ?? 0,
+      ],
+      leagueTitles: mine.where((r) => r.wonLeague).length,
+      cupTitles: mine.fold<int>(0, (t, r) => t + r.cupsWon.length),
+      managerReputation: save.managerReputation,
+      annualOperatingIncome: annual,
+      cash: save.budget,
+      debt: outstandingLoanDebt,
+    );
+  }
+
+  /// 過去のシーズン末のクラブ価値(シーズン順)。
+  List<(int, int)> get clubValueHistory => [
+        for (final e in (_save?.clubValueHistory.entries.toList() ?? [])
+          ..sort((a, b) => a.key.compareTo(b.key)))
+          (e.key, e.value),
+      ];
+
+  /// 今シーズンの終わりのクラブ価値を記録する。
+  void _recordClubValue() {
+    final save = _save!;
+    save.clubValueHistory[save.league.season] = clubValue.total;
+    while (save.clubValueHistory.length > SaveGame.maxLedgerSeasons) {
+      save.clubValueHistory.remove(save.clubValueHistory.keys.reduce(min));
+    }
+  }
+
+  /// テスト用: シーズン末のクラブ価値の記録だけを走らせる。
+  @visibleForTesting
+  void debugRecordClubValue() => _recordClubValue();
 
   /// 今シーズンの収支の記録。
   SeasonLedger get currentLedger =>
