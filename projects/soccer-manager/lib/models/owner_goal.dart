@@ -16,6 +16,9 @@ enum OwnerGoal {
 
   /// 資金を大きく増やす。
   richClub,
+
+  /// クラブ価値を、目標を選んだときの2倍にする。
+  clubValue,
 }
 
 extension OwnerGoalInfo on OwnerGoal {
@@ -25,6 +28,7 @@ extension OwnerGoalInfo on OwnerGoal {
         OwnerGoal.winCup => Tr.pick('国内カップ優勝', 'Win the domestic cup'),
         OwnerGoal.richClub =>
           Tr.pick('資金を${OwnerGoalRules.richTarget}万円に', 'Build funds to ${OwnerGoalRules.richTarget}'),
+        OwnerGoal.clubValue => Tr.pick('クラブ価値を2倍に', 'Double the club value'),
       };
 
   /// 期限(選んだシーズンから数えて何シーズン以内か)。
@@ -33,6 +37,7 @@ extension OwnerGoalInfo on OwnerGoal {
         OwnerGoal.reachTopDivision => 5,
         OwnerGoal.winCup => 8,
         OwnerGoal.richClub => 6,
+        OwnerGoal.clubValue => 8,
       };
 }
 
@@ -43,6 +48,9 @@ class OwnerGoalRules {
   /// 「資金を増やす」の目標額(万円)。
   static const int richTarget = 18000;
 
+  /// 「クラブ価値を増やす」の倍率。
+  static const double valueTarget = 2.0;
+
   /// 達成済みか。[wonTopLeague]=選んでから1部でリーグ優勝した、
   /// [promotedOrTop]=選んでから昇格した/いま1部にいる、[wonCup]=選んでから
   /// 国内カップで優勝した、[budget]=いまの資金。
@@ -52,12 +60,14 @@ class OwnerGoalRules {
     required bool promotedOrTop,
     required bool wonCup,
     required int budget,
+    double valueRatio = 0,
   }) =>
       switch (goal) {
         OwnerGoal.leagueTitle => wonTopLeague,
         OwnerGoal.reachTopDivision => promotedOrTop,
         OwnerGoal.winCup => wonCup,
         OwnerGoal.richClub => budget >= richTarget,
+        OwnerGoal.clubValue => valueRatio >= valueTarget,
       };
 
   /// 期限を過ぎたか。[season]は終えたばかりのシーズン、[startSeason]は目標を選んだシーズン。
