@@ -2041,6 +2041,8 @@ var ARC_MISS_REP={
 /* 気質には合う（受け止め方が前向きな）語りかけでも、場面に合わずに外れたときの返事 */
 ARC_MISS_REP.ok=['{N}は前向きにうなずいた。ただ、いちばん引っかかっていることには届かなかった。','{N}の顔は少し明るくなったが、話の芯は少しずれていた。','気持ちは上を向いたが、{N}の悩みそのものは、まだそこに残っていた。'];
 var ARC_MISS_CLUE=['この場面では、別の声のかけ方のほうが届いたのかもしれない。','{N}がほしかったのは、別の言葉だったのかもしれない。'];
+/* 乱数を使わずに、まだ出していない文を選ぶ（外れの文で乱数がずれて、出来事などの引きが変わらないように） */
+function pickSeen(S,b,L,mp,h){var U=S?(S.txSeen||(S.txSeen={})):{},u=U[b]||(U[b]={});for(var i=0;i<L.length;i++){var x=L[(h+i)%L.length];if(!u[x]){u[x]=1;return ftFill(x,mp||{});}}L.forEach(function(x){delete u[x];});var y=L[h%L.length];u[y]=1;return ftFill(y,mp||{});}
 function missOk(t,tone){var m=TONE_MOD[tone]&&tpick(TONE_MOD[tone],t);if(!m)return false;var fx=m[0];return !((fx.conf||0)<0||(fx.trust||0)<0);}
 function temperCands(t){var n=t.ngT||'';return Object.keys(TEMPER).filter(function(k){for(var i=0;i<n.length;i++)if((ARC_NG[k]||'').indexOf(n.charAt(i))<0)return false;return true;});}
 function temperHalf(t,tone){if(t.temperRev||!tone)return;if((t.ngT||'').indexOf(tone)<0)t.ngT=(t.ngT||'')+tone;if(temperCands(t).length<=1)t.temperRev=true;}
@@ -2053,10 +2055,10 @@ function arcChoose(S,t,i){
   var mp={N:t.giv};
   if(hit){t.trust+=ARC_HIT;t.conf+=ARC_HIT;normT(t);}else{var dc=t.conf-b.conf,dt=t.trust-b.trust;t.conf-=Math.max(0,Math.min(ARC_MISSP,12+dc));t.trust-=Math.max(0,Math.min(ARC_MISSP,12+dt));normT(t);
     if((ARC_NG[t.temper]||'').indexOf(tone)>=0){miss=' '+t.giv+'には「'+TONEN[tone]+'」が合わないようだ。';temperHalf(t,tone);}
-    else miss=' '+pickNew(S,'amc',[ARC_MISS_CLUE],mp);}
+    else miss=' '+pickSeen(S,'amc',ARC_MISS_CLUE,mp,t.id+step);}
   if(t.temperRev===false&&t.arc.step>=2)t.temperRev=true;
   if(t.arc.step===3&&t.arc.score>=3)awaken(S,t);
-  var rep=(hit?arcText(S,t,c[4]):pickNew(S,'am'+(missOk(t,tone)?'ok':tone),[ARC_MISS_REP[missOk(t,tone)?'ok':tone]||ARC_MISS_REP.s],mp))+(sfx?' '+sfx:'')+miss;t.lastDelta=deltaOf(b,t);
+  var rep=(hit?arcText(S,t,c[4]):pickSeen(S,'am'+(missOk(t,tone)?'ok':tone),ARC_MISS_REP[missOk(t,tone)?'ok':tone]||ARC_MISS_REP.s,mp,t.id+step))+(sfx?' '+sfx:'')+miss;t.lastDelta=deltaOf(b,t);
   logT(S,t,'「'+a.name+'」'+arcText(S,t,c[0])+' → '+rep);return rep;
 }
 function arcEnd(S,t){if(!t.arc)return '';var a=ARCS[t.arc.k];

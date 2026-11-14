@@ -147,7 +147,7 @@ function avgOf(spec, n) { FIX = parseFix(spec); let tot = 0, k = 0;
   FIX = {}; return tot / k; }
 if (process.argv.includes('--choices')) {
   // CI（--quick）は種類ごとの下限（2026-11-14 の手元の200回で arc +6.3・ev +1.5・month +2.5・fw +2.3。講評は 11-15 に +0.9→+1.8、--quick は揺れが大きいので下限は低め）
-  const quick = process.argv.includes('--quick'), n = +(process.env.SIMN || (quick ? 30 : 200));
+  const quick = process.argv.includes('--quick'), n = +(process.env.SIMN || (quick ? 60 : 200)); // quick は 2026-11-15 に 30→60（30 では出来事の差が種しだいで ±0.6 ぶれ、200 で master より大きいのに下限 0.5 を割った）
   const QMIN = { arc: 3, ev: 0.5, month: 1, crit: 0.3, fw: 1 }, gapMin = (k) => (process.env.MINGAP != null ? +process.env.MINGAP : quick ? QMIN[k] : 1.5);
   const base = avgOf('', n); console.log('good（よく考える）', base.toFixed(2), '（' + n * 2 + 'シーズン、同じ種）');
   for (const [k, fixes] of CHOICES.filter(([k]) => !process.env.ONLY || process.env.ONLY.split(',').includes(k))) {
