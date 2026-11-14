@@ -87,6 +87,14 @@ class BlockReport {
 
   int get played => wins + losses;
 
+  /// 試合前の勝つ見込みを足した、見込みどおりなら勝てた数(見込みの無い前の版の試合は数えない)。
+  double expectedWinsOf(int mine) => games.where((g) => g.hasChance).fold(0.0, (n, g) => n + g.chanceOf(mine));
+
+  /// 見込みが4割未満で勝った試合(番狂わせの勝ち)と、6割より上で負けた試合(取りこぼし)。
+  int upsetWinsOf(int mine) => games.where((g) => g.hasChance && g.winner == mine && g.chanceOf(mine) < 0.4).length;
+  int letdownsOf(int mine) => games.where((g) => g.hasChance && g.winner != mine && g.chanceOf(mine) > 0.6).length;
+  bool get hasChances => games.any((g) => g.hasChance);
+
   /// [games] を渡さなければ、直前の区切りの試合のうち、進めた分(後ろから)を使う。
   static BlockReport make(Career c, BlockSnapshot s, [List<GameResult>? games]) {
     final me = c.me;

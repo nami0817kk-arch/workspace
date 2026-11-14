@@ -20,6 +20,7 @@ import 'package:basketball_career/gm/career.dart';
 import 'package:basketball_career/gm/player.dart';
 import 'package:basketball_career/gm/rating.dart';
 import 'package:basketball_career/ui/app.dart';
+import 'package:basketball_career/ui/gm/common.dart';
 import 'package:basketball_career/ui/gm/progress_tab.dart';
 import 'package:basketball_career/ui/gm_controller.dart';
 import 'package:flutter/material.dart';
@@ -103,6 +104,13 @@ void main() {
     final mid = careerAt(3, 12)..startSeason();
     mid.playBlock();
     await _shoot(t, '4_home_season', await _with(mid));
+    await _shoot(t, '4d_box_score', await _with(mid), act: (t) async {
+      final row = find.byType(GameRow).first;
+      await t.ensureVisible(row);
+      await t.pumpAndSettle();
+      await t.tap(row);
+      await t.pumpAndSettle();
+    });
     final rep = careerAt(3, 12)..startSeason();
     await _shoot(t, '4b_block_report', await _with(rep), act: (t) async {
       await _tap(t, '次の20試合へ');

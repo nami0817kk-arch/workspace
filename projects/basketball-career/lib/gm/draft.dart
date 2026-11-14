@@ -104,14 +104,18 @@ Map<Prospect, int> mockRanks(List<Prospect> pool) {
 
 /// その年の候補を作る(指名の数より多め)。
 /// [name] を渡すと、その名前の作り方を使う(リーグの中で重ならないように)。
-List<Prospect> makeProspects(Rng rng, int Function() nextId, int count, {String Function()? name}) {
+/// ドラフトの層を厚くする候補の数(指名の数＋8人に足す。合わせて約100人)。
+const deepProspects = 32;
+
+/// [deep] なら、どれも下の層(2巡目の後半〜指名されない層。たまに隠れた逸材)。
+List<Prospect> makeProspects(Rng rng, int Function() nextId, int count, {String Function()? name, bool deep = false}) {
   final list = <Prospect>[];
   for (var i = 0; i < count; i++) {
     // 上位の候補ほど伸びしろが大きい。たまに隠れた逸材がいる
-    final tier = i < 5 ? 0 : i < 18 ? 1 : 2;
+    final tier = deep ? 3 : i < 5 ? 0 : i < 18 ? 1 : 2;
     final age = 19 + rng.nextInt(4);
-    var ovr = [58, 52, 46][tier] + rng.nextInt(9);
-    var pot = ovr + [22, 18, 12][tier] + rng.nextInt(10) - (age - 19) * 2;
+    var ovr = [58, 52, 46, 42][tier] + rng.nextInt(9);
+    var pot = ovr + [22, 18, 12, 10][tier] + rng.nextInt(10) - (age - 19) * 2;
     if (rng.chance(0.08)) pot += 10;
     ovr = ovr.clamp(40, 70);
     pot = pot.clamp(ovr + 3, 95);
