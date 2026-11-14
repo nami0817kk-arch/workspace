@@ -128,6 +128,9 @@ class SaveGame {
   /// オーナーの持分(%)。外部の株主へ売ると減る。51〜100。
   int ownerShare;
 
+  /// 宿敵との過去のシーズンの通算戦績(勝・分・敗)。
+  List<int> rivalPast;
+
   /// 新規開始で選んだシナリオと、クラブの年表。
   StartScenario scenario;
   List<TimelineEntry> timeline;
@@ -462,6 +465,7 @@ class SaveGame {
     Map<String, int>? advisors,
     List<ManagerProposal>? proposals,
     this.scenario = StartScenario.standard,
+    List<int>? rivalPast,
     List<TimelineEntry>? timeline,
     List<String>? declinedProposalIds,
     this.insured = false,
@@ -576,6 +580,7 @@ class SaveGame {
         advisors = advisors ?? {},
         proposals = proposals ?? [],
         timeline = timeline ?? [],
+        rivalPast = rivalPast ?? [0, 0, 0],
         declinedProposalIds = declinedProposalIds ?? [],
         pendingInstallments = pendingInstallments ?? [],
         friendlies = friendlies ?? [],
@@ -670,6 +675,7 @@ class SaveGame {
         'advisors': advisors,
         'proposals': proposals.map((p) => p.toJson()).toList(),
         'scenario': scenario.name,
+        'rivalPast': rivalPast,
         'timeline': timeline.map((e) => e.toJson()).toList(),
         'declinedProposalIds': declinedProposalIds,
         'insured': insured,
@@ -788,6 +794,8 @@ class SaveGame {
             ?.map((k, v) => MapEntry(int.parse('$k'), v as int)),
         ownerGoalStartValue: json['ownerGoalStartValue'] as int? ?? 0,
         ownerShare: json['ownerShare'] as int? ?? 100,
+        rivalPast: (json['rivalPast'] as List?)?.map((e) => e as int).toList() ??
+            [0, 0, 0],
         scenario: StartScenario.values
                 .where((s) => s.name == json['scenario'])
                 .firstOrNull ??

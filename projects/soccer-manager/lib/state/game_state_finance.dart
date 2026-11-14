@@ -419,6 +419,54 @@ extension GameStateFinance on GameState {
     }
   }
 
+  /// 今シーズンの宿敵との戦績(終わった試合だけ)。
+  ({int won, int draw, int lost}) get rivalRecordThisSeason {
+    final save = _save;
+    if (save == null) return (won: 0, draw: 0, lost: 0);
+    var w = 0, d = 0, l = 0;
+    for (final f in save.league.fixtures) {
+      final r = f.result;
+      if (r == null || !isRivalFixture(f)) continue;
+      final mine = f.homeTeamId == save.userTeamId ? r.homeGoals : r.awayGoals;
+      final theirs = f.homeTeamId == save.userTeamId ? r.awayGoals : r.homeGoals;
+      if (mine > theirs) {
+        w++;
+      } else if (mine == theirs) {
+        d++;
+      } else {
+        l++;
+      }
+    }
+    return (won: w, draw: d, lost: l);
+  }
+
+  /// 宿敵との通算の戦績(過去のシーズン+今季)。
+  ({int won, int draw, int lost}) get rivalRecord {
+    final save = _save;
+    if (save == null) return (won: 0, draw: 0, lost: 0);
+    final now = rivalRecordThisSeason;
+    final past = save.rivalPast;
+    return (
+      won: past[0] + now.won,
+      draw: past[1] + now.draw,
+      lost: past[2] + now.lost,
+    );
+  }
+
+  /// シーズン末に、今季の宿敵との戦績を通算へ足す。
+  void _closeRivalSeason() {
+    final save = _save!;
+    final now = rivalRecordThisSeason;
+    if (now.won + now.draw + now.lost == 0) return;
+    save.rivalPast[0] += now.won;
+    save.rivalPast[1] += now.draw;
+    save.rivalPast[2] += now.lost;
+    if (now.won >= 2 && now.lost == 0) {
+      _addTimeline(Tr.pick('宿敵に今季は負けなし(${now.won}勝${now.draw}分)',
+          'Unbeaten against the rivals this season (${now.won}W ${now.draw}D)'));
+    }
+  }
+
   /// 指定した対戦カードが自クラブ対ライバルクラブの「ダービー」かどうか。
   bool isRivalFixture(Fixture f) {
     final rivalId = _save?.rivalTeamId;

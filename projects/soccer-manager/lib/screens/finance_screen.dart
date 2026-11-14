@@ -22,6 +22,7 @@ import '../widgets/media_deals_card.dart';
 import '../widgets/project_card.dart';
 import '../widgets/proposal_card.dart';
 import '../widgets/risk_card.dart';
+import '../widgets/rival_card.dart';
 import '../widgets/rules_card.dart';
 import '../widgets/reward_funds_card.dart';
 import '../widgets/responsive_body.dart';
@@ -154,6 +155,7 @@ class FinanceScreen extends StatelessWidget {
             const ProjectCard(),
             const AdvisorCard(),
             const RiskCard(),
+            const RivalCard(),
             const ClubTimelineCard(),
             const RulesCard(),
             const SizedBox(height: 16),

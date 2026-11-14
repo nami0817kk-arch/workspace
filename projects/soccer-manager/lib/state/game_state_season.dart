@@ -1137,6 +1137,7 @@ extension GameStateSeason on GameState {
         cupsWon: cupsWonThisSeason,
       ),
     );
+    _closeRivalSeason();
     if (finalRank == 1) {
       _addTimeline(Tr.pick('$playedTier部リーグで優勝', 'Won the tier $playedTier league'));
     }
