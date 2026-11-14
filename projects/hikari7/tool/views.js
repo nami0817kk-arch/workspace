@@ -61,6 +61,16 @@ ctx.__shot = () => {
   seen[run('S?S.phase:"title"')] = 1;
 };
 
+// 講評の画面（2026-11-15）：選ぶ子は1人1行、押すと8択のシート。前の「1人に8つのボタン」の列が戻っていないか
+let critChk = 0;
+ctx.__critChk = (sheet) => {
+  const h = app.innerHTML, n = run('Object.keys(critSet(S)).length'), rows = (h.match(/class="crrow/g) || []).length;
+  if (rows !== n) errs.push('critique: 行が ' + rows + '（選ぶ子は ' + n + '人）');
+  if (/class="seg crg|data-a="crit" /.test(h) && !sheet) errs.push('critique: シートの外に講評のボタンが並んでいる');
+  if (sheet && (h.match(/class="crop/g) || []).length !== run('CRIT.length')) errs.push('critique: シートの選択肢が ' + (h.match(/class="crop/g) || []).length + '個');
+  critChk++;
+};
+
 function season(g, diff, chal) {
   run(`S=newGame('${g}','${diff}',${chal ? `'${chal}'` : 'null'});__shot();
   var c=S.tr.slice();watchVideo(S,c[0].id);S.sel=c.slice(0,S.caps.sel).map(function(t){return t.id;});confirmSelect(S);__shot();startSeason(S);
@@ -73,7 +83,8 @@ function season(g, diff, chal) {
     var pl=pairList(S)[0];if(pl&&S.ap>0){doPair(S,pl.a,pl.b);__shot();S.talk=null;}
     S.ap=0;afterTalk(S);__shot();if(S.phase==='interview'){__shot();applyInterview(S);}
     while(S.phase==='event'){__shot();resolveEvent(S,r%3);__shot();nextEvent(S);}
-    __shot();S.phase='stage';__shot();if(ROUNDS[r].crit){S.phase='critique';alive(S).forEach(function(t){S.crit[t.id]=ri(0,CRIT.length-1);});__shot();applyCritique(S);__shot();}
+    __shot();S.phase='stage';__shot();if(ROUNDS[r].crit){S.phase='critique';__shot();__critChk(false);var cs=Object.keys(critSet(S));ui.critOpen=+cs[0];__shot();__critChk(true);ui.critOpen=+cs[cs.length-1];__shot();__critChk(true);ui.critOpen=null;
+      alive(S).forEach(function(t){S.crit[t.id]=ri(0,CRIT.length-1);});__shot();__critChk(false);applyCritique(S);__shot();}
     applyFeature(S);toNight(S);if(S.phase==='night'){__shot();nightSkip(S);S.phase='judge';}
     var B=alive(S),res=S.stage.res,n=ROUNDS[r].fin?Math.min(6,S.caps.finMax,B.length):capOf(S);
     B.sort(function(a,b){return res[b.id].sc-res[a.id].sc;}).slice(0,n).forEach(function(t){S.pass[t.id]=true;});__shot();
@@ -97,6 +108,7 @@ if (clash.length) { console.error('札の名前が、ほかの部品の見た目
 if (tinyFs.length) { console.error('12px 未満の字の指定: ' + [...new Set(tinyFs)].join(' ')); process.exitCode = 1; }
 if (!smallRule) { console.error('<small> を12px未満にしない指定（small{font-size:max(12px,…)}）が無い'); process.exitCode = 1; }
 else console.log('字の大きさの指定: 12px 未満 ' + tinyFs.length + '件');
+if (!critChk) { console.error('講評の画面の点検が1回も走っていない'); process.exitCode = 1; } else console.log('講評の画面の点検 ' + critChk + '回（1人1行・8択のシート）');
 if (!setOk) { console.error('保存した設定が、開き直すと初期値に戻っている'); process.exitCode = 1; }
 if (miss.length) { console.error('描けていない画面:', miss.join(' ')); process.exitCode = 1; }
 if (errs.length) { console.error('エラー', errs.length + '件'); errs.slice(0, 10).forEach((e) => console.error('  ' + e)); process.exitCode = 1; }
