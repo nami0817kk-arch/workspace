@@ -1,6 +1,7 @@
 import 'package:basketball_career/gm/career.dart';
 import 'package:basketball_career/gm/game_sim.dart';
 import 'package:basketball_career/gm/league.dart';
+import 'package:basketball_career/gm/player.dart';
 import 'package:basketball_career/gm/rng.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -74,5 +75,32 @@ void main() {
     expect(back.leadChanges, g.leadChanges);
     expect(back.overtime, g.overtime);
     expect(back.box.fold(0, (n, l) => n + l.pts), g.ptsOf(car.mine));
+  });
+
+  test('細かい能力とバッジが試合に効く: 外のシュートを上げた選手は3ポイントがよく入り、バッジが付く', () {
+    final car = Career.start(seed: 31);
+    final h = car.teams[3], a = car.teams[4];
+    final p = h.order[1];
+    (int, int) run() {
+      var m = 0, at = 0;
+      for (var k = 0; k < 300; k++) {
+        final s = simulateGame(h, a, Rng(k + 7), homeStr: h.strength, awayStr: a.strength);
+        final l = boxLineAt(s.home, s.home.order.indexOf(p));
+        m += l.tpm;
+        at += l.tpa;
+      }
+      return (m, at);
+    }
+
+    final saved = p.attrs[Attr.outside.index];
+    p.attrs[Attr.outside.index] = 99 - p.ovr; // 外のシュートを99まで上げる
+    expect(badgeTierOf(p, Attr.outside), 3);
+    final (m1, a1) = run();
+    p.attrs[Attr.outside.index] = 50 - p.ovr; // 50まで下げる
+    expect(badgeTierOf(p, Attr.outside), -1);
+    final (m0, a0) = run();
+    p.attrs[Attr.outside.index] = saved;
+    expect(a1, greaterThan(a0), reason: 'うまいほど3ポイントを多く打つ');
+    expect(m1 / a1, greaterThan(m0 / a0 + 0.05), reason: 'うまいほどよく入る');
   });
 }
