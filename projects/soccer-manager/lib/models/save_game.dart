@@ -22,6 +22,7 @@ import 'season_award.dart';
 import 'season_record.dart';
 import 'sponsor.dart';
 import 'club_vision.dart';
+import 'ledger.dart';
 import 'staff_member.dart';
 import 'team.dart';
 import '../l10n/tr.dart';
@@ -95,6 +96,26 @@ class SaveGame {
 
   /// 広告のご褒美で貯めた営業ブーストの残り(節数)。1節ごとに1減る。
   int marketingBoostWeeks;
+
+  /// シーズンごとの収支の記録(新しい順ではなく、シーズン順)。直近
+  /// [maxLedgerSeasons] 季分だけ残す。
+  List<SeasonLedger> ledgers;
+
+  static const int maxLedgerSeasons = 10;
+
+  /// そのシーズンの収支の記録。無ければ作る。古いものは捨てる。
+  SeasonLedger ledgerFor(int season) {
+    for (final l in ledgers) {
+      if (l.season == season) return l;
+    }
+    final created = SeasonLedger(season);
+    ledgers.add(created);
+    ledgers.sort((a, b) => a.season.compareTo(b.season));
+    while (ledgers.length > maxLedgerSeasons) {
+      ledgers.removeAt(0);
+    }
+    return created;
+  }
 
   /// 判断待ちの事件。無ければ null。
   OwnerEventKind? pendingOwnerEvent;
@@ -367,6 +388,7 @@ class SaveGame {
     List<OwnerLegacy>? ownerLegacies,
     this.ownerGoal,
     this.marketingBoostWeeks = 0,
+    List<SeasonLedger>? ledgers,
     this.pendingOwnerEvent,
     this.bigMatchSeason = 0,
     this.bigMatchesUsed = 0,
@@ -448,6 +470,7 @@ class SaveGame {
         trophyHistory = trophyHistory ?? [],
         clubHistory = clubHistory ?? [],
         ownerLegacies = ownerLegacies ?? [],
+        ledgers = ledgers ?? [],
         achievedGoals = achievedGoals ?? [],
         freeAgents = freeAgents ?? [],
         retiredLegends = retiredLegends ?? [],
@@ -542,6 +565,7 @@ class SaveGame {
         'ownerLegacies': ownerLegacies.map((l) => l.toJson()).toList(),
         'ownerGoal': ownerGoal?.name,
         'marketingBoostWeeks': marketingBoostWeeks,
+        'ledgers': ledgers.map((l) => l.toJson()).toList(),
         'pendingOwnerEvent': pendingOwnerEvent?.name,
         'bigMatchSeason': bigMatchSeason,
         'bigMatchesUsed': bigMatchesUsed,
@@ -642,6 +666,10 @@ class SaveGame {
             .firstOrNull,
         ownerGoalStartSeason: json['ownerGoalStartSeason'] as int? ?? 1,
         marketingBoostWeeks: json['marketingBoostWeeks'] as int? ?? 0,
+        ledgers: (json['ledgers'] as List?)
+                ?.map((e) => SeasonLedger.fromJson(e as Map<String, dynamic>))
+                .toList() ??
+            [],
         pendingOwnerEvent: OwnerEventKind.values
             .where((k) => k.name == json['pendingOwnerEvent'])
             .firstOrNull,

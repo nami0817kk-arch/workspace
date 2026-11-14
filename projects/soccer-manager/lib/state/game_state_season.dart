@@ -482,7 +482,7 @@ extension GameStateSeason on GameState {
     if (userInvolved) {
       if (match.winnerId == userId) {
         final prize = GameState.domesticCupWinPrizeFor(match.round);
-        _save!.budget += prize;
+        _book(LedgerCategory.prize, prize);
         _save!.careerCupPrize += prize;
         lastCupPrizeNote = Tr.pick(
             '勝利賞金として$prize万円を獲得!', 'You collected $prize in prize money!');
@@ -511,7 +511,7 @@ extension GameStateSeason on GameState {
     }
     if (cup.isComplete && cup.championId == userId && !cup.rewardClaimed) {
       cup.rewardClaimed = true;
-      _save!.budget += 700;
+      _book(LedgerCategory.prize, 700);
       _save!.careerCupPrize += 700;
       _save!.confidence = (_save!.confidence + 10).clamp(0, 100);
       _save!.trophyHistory.add(Tr.pick(
@@ -533,7 +533,7 @@ extension GameStateSeason on GameState {
         ((r.homeTeamId == userId && r.homeGoals > r.awayGoals) ||
             (r.awayTeamId == userId && r.awayGoals > r.homeGoals));
     if (userWon) {
-      _save!.budget += GameState.continentalGroupWinPrize;
+      _book(LedgerCategory.prize, GameState.continentalGroupWinPrize);
       _save!.careerCupPrize += GameState.continentalGroupWinPrize;
       lastCupPrizeNote = Tr.pick('勝利賞金として${GameState.continentalGroupWinPrize}万円を獲得!',
           'You collected ${GameState.continentalGroupWinPrize} in prize money!');
@@ -552,7 +552,7 @@ extension GameStateSeason on GameState {
     final userInTie = tie.teamAId == userId || tie.teamBId == userId;
     if (userInTie) {
       if (tie.isComplete && tie.winnerId == userId) {
-        _save!.budget += GameState.continentalTieWinPrize;
+        _book(LedgerCategory.prize, GameState.continentalTieWinPrize);
         _save!.careerCupPrize += GameState.continentalTieWinPrize;
         lastCupPrizeNote = Tr.pick('勝ち上がり賞金として${GameState.continentalTieWinPrize}万円を獲得!',
             'You collected ${GameState.continentalTieWinPrize} for going through!');
@@ -564,7 +564,7 @@ extension GameStateSeason on GameState {
     }
     if (cup.isComplete && cup.championId == userId && !cup.rewardClaimed) {
       cup.rewardClaimed = true;
-      _save!.budget += 1500;
+      _book(LedgerCategory.prize, 1500);
       _save!.careerCupPrize += 1500;
       _save!.confidence = (_save!.confidence + 20).clamp(0, 100);
       _save!.trophyHistory.add(Tr.pick(
@@ -702,7 +702,7 @@ extension GameStateSeason on GameState {
       teamCount: league.teams.length,
     );
     prizeMoney = (prizeMoney * pow(0.6, playedTier - 1)).round();
-    _save!.budget += prizeMoney;
+    _book(LedgerCategory.prize, prizeMoney);
     final confidenceDelta = BoardEngine.confidenceDeltaForSeasonEnd(
       finalRank: finalRank,
       targetRank: _save!.boardTargetRank,
@@ -748,7 +748,7 @@ extension GameStateSeason on GameState {
       var bonus = (300 * pow(0.6, playedTier - 1)).round();
       final exceeded = _save!.boardTargetRank - finalRank >= 3;
       if (exceeded) bonus = (bonus * 1.5).round();
-      _save!.budget += bonus;
+      _book(LedgerCategory.prize, bonus);
       lastBoardBonusNote = exceeded
           ? Tr.pick('理事会目標を大きく上回り、報奨金$bonus万円が支給されました!',
               "You beat the board's target comfortably, and they have paid you a $bonus bonus!")
@@ -945,7 +945,7 @@ extension GameStateSeason on GameState {
       // 支給される(放映権料・スポンサー収入の増加分)。これがないと
       // 戦力差を埋める資金がなく、昇格と降格を往復し続けることになる。
       final promotionBonus = BoardEngine.promotionBonusFor(newTier);
-      _save!.budget += promotionBonus;
+      _book(LedgerCategory.prize, promotionBonus);
       lastPromotionBonus = promotionBonus;
       lastDivisionChangeMessage = userInPromotionPlayoff
           ? Tr.pick(

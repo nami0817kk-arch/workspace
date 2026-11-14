@@ -102,7 +102,7 @@ extension GameStateSquad on GameState {
   int claimPurchasedFunds(FundsPack pack) {
     if (_save == null) return 0;
     final amount = purchasedFundsAmount(pack);
-    _save!.budget += amount;
+    _book(LedgerCategory.other, amount);
     _logNews(Tr.pick('${pack.label}で$amount万円をクラブ資金に追加した。',
         'You added $amount to the club budget from a ${pack.label}.'));
     _notify();
@@ -114,7 +114,7 @@ extension GameStateSquad on GameState {
   /// (負の値で減額も可能)。設定画面の管理者専用メニューからのみ呼ばれる。
   void addDebugFunds(int amount) {
     if (_save == null) return;
-    _save!.budget += amount;
+    _book(LedgerCategory.other, amount);
     _notify();
     _persist();
   }
@@ -494,7 +494,7 @@ extension GameStateSquad on GameState {
     if (lvl >= ClubInfrastructure.maxLevel) return false;
     final cost = facilityUpgradeCostFor(type);
     if (_save!.budget < cost) return false;
-    _save!.budget -= cost;
+    _book(LedgerCategory.facilities, -(cost));
     infra.upgradeFacility(type);
     _notify();
     await _persist();
@@ -656,7 +656,7 @@ extension GameStateSquad on GameState {
     if (_save == null || !_save!.preseasonCampPending) return false;
     if (_save!.budget < camp.cost) return false;
 
-    _save!.budget -= camp.cost;
+    _book(LedgerCategory.facilities, -(camp.cost));
     _save!.preseasonCampPending = false;
 
     final team = userTeam;

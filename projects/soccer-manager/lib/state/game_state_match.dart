@@ -345,7 +345,7 @@ extension GameStateMatch on GameState {
       );
     }
     for (final inst in List<Installment>.from(_save!.pendingInstallments)) {
-      _save!.budget -= inst.weeklyAmount;
+      _book(LedgerCategory.transfers, -(inst.weeklyAmount));
       inst.weeksRemaining -= 1;
       if (inst.weeksRemaining <= 0) {
         _save!.pendingInstallments.remove(inst);
@@ -354,7 +354,7 @@ extension GameStateMatch on GameState {
 
     // 融資の週次返済。
     for (final loan in List<BankLoan>.from(_save!.bankLoans)) {
-      _save!.budget -= loan.weeklyRepayment;
+      _book(LedgerCategory.financing, -(loan.weeklyRepayment));
       loan.weeksRemaining -= 1;
       if (loan.weeksRemaining <= 0) {
         _save!.bankLoans.remove(loan);
@@ -366,7 +366,7 @@ extension GameStateMatch on GameState {
     for (final deposit in List<FixedDeposit>.from(_save!.fixedDeposits)) {
       deposit.weeksRemaining -= 1;
       if (deposit.weeksRemaining <= 0) {
-        _save!.budget += deposit.maturityValue;
+        _book(LedgerCategory.financing, deposit.maturityValue);
         _save!.fixedDeposits.remove(deposit);
         lastMaturedDeposits.add(deposit);
       }
@@ -421,7 +421,7 @@ extension GameStateMatch on GameState {
       },
     );
     for (final d in lastYouthDepartures) {
-      _save!.budget += d.compensation;
+      _book(LedgerCategory.playerSales, d.compensation);
       _logNews(
         d.poached
             ? Tr.pick(
@@ -646,17 +646,24 @@ extension GameStateMatch on GameState {
         actualAttendance: actualAttendance,
       );
     }
-    _save!.budget += income;
+    // 収入は内訳ごとに記録する。ダービーで増えた分は観客収入に入れる。
+    final incomeParts = weeklyIncomeParts(_save!.userTeamId);
+    final partsTotal =
+        incomeParts.gate + incomeParts.sponsor + incomeParts.merchandise;
+    _book(LedgerCategory.gate, incomeParts.gate + (income - partsTotal));
+    _book(LedgerCategory.sponsor, incomeParts.sponsor);
+    _book(LedgerCategory.merchandise, incomeParts.merchandise);
     // 営業ブーストは、収入が入った節で1つ使う。
     if (_save!.marketingBoostWeeks > 0) _save!.marketingBoostWeeks -= 1;
-    _save!.budget -= weeklyWageBill;
+    _book(LedgerCategory.staffWages, -_save!.infrastructure.totalStaffWeeklyWage);
+    _book(LedgerCategory.playerWages, -ContractEngine.weeklyWageBill(userTeam));
 
     // リーグ公式戦にスタメン出場した選手には出場手当を支払う(親善試合・カップ戦は対象外)。
     if (userFixture != null) {
       lastAppearanceFeesPaid = userTeam.players
           .where((p) => userTeam.startingXI.contains(p.id))
           .fold<int>(0, (s, p) => s + p.appearanceFee);
-      _save!.budget -= lastAppearanceFeesPaid;
+      _book(LedgerCategory.appearanceFees, -(lastAppearanceFeesPaid));
     } else {
       lastAppearanceFeesPaid = 0;
     }
