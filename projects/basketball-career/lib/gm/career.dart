@@ -2185,7 +2185,7 @@ class Career {
     }
     // 気持ちが低い選手は、残るなら高く求める
     if (t.index == mine) f *= 1 + (60 - p.morale).clamp(0, 60) / 250;
-    if (t.index == mine && t.roster.contains(p) && hasTrait(p, Trait.hometown)) f *= 0.9;
+    if (t.index == mine && t.roster.contains(p) && p.tenure >= 1 && hasTrait(p, Trait.hometown)) f *= 0.9;
     final sal = p.ovr < 58 ? minSalary : (fairSalary(p.ovr, p.age) * f).round().clamp(minSalary, maxSalaryFor(p.exp));
     final own = t.index == mine && t.roster.contains(p);
     final maxYears = p.age >= 33 ? 1 : p.age >= 30 ? 2 : own ? ownMaxYears : 4;

@@ -1479,7 +1479,8 @@ void main() {
 
   group('オーナー', () {
     test('目標に届かず信頼がなくなると解任。動画で1度だけ取り消せる', () {
-      final c = careerAt(14, 1);
+      // 弱いチームで、目標を82勝にして確実に届かないようにする
+      final c = careerAt(14, 28);
       c.trust = 1;
       c.startSeason();
       c.target = gamesPerSeason;

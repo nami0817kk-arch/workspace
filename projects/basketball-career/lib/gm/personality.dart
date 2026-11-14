@@ -17,7 +17,7 @@ enum Trait {
   grinder('練習の虫', '練習熱心。27歳までは毎オフ伸びやすく、30歳からは落ちにくい。きつい練習でも気持ちが下がらない'),
   troublemaker('問題児', '和を乱す。相性が下がる'),
   clutch('大舞台に強い', '接戦の終盤(4Q残り5分・8点差以内と延長)でシュートが入りやすい'),
-  hometown('地元っ子', '今のチームを離れたがらない。再契約で求める年俸が1割安い'),
+  hometown('地元っ子', '今のチームを離れたがらない。1年以上いたチームとの再契約で、求める年俸が1割安い'),
   media('メディア好き', '人気を呼ぶ。主力にいるとシーズンの終わりにチームの人気が上がる'),
   fragile('けがしがち', 'けがが多い(起きやすさ1.6倍)'),
   lateBloomer('遅咲き', '遅れて伸びる。22歳までは伸びが鈍く、24〜28歳でもう一段伸びる'),
@@ -59,7 +59,9 @@ bool personalityKnown(Player p) => p.tenure >= 2;
 bool hasTrait(Player p, Trait t) => personalityOf(p).traits.contains(t);
 
 /// 試合ごとの調子の幅(シュートが入る見込みの±)。ムラっ気は大きく、安定感は小さい。
-double formRange(Player p) => hasTrait(p, Trait.streaky)
+var tuneForm = true;
+var tuneMinutes = true;
+double formRange(Player p) => !tuneForm ? 0 : hasTrait(p, Trait.streaky)
     ? 0.045
     : hasTrait(p, Trait.steady)
         ? 0.008
@@ -81,7 +83,7 @@ List<(String, int)> extraGrowth(Player p, int d) {
   var ovr = p.ovr;
   bool room() => ovr < p.pot;
   final s = p.stats;
-  if (p.age <= 25 && d >= 0) {
+  if (tuneMinutes && p.age <= 25 && d >= 0) {
     if (s.gp >= 20 && s.mpg >= 28 && room()) {
       parts.add(('出場時間', 1));
       ovr++;
