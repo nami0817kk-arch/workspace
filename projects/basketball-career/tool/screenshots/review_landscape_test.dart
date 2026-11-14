@@ -104,7 +104,14 @@ void main() {
     final mid = careerAt(3, 12)..startSeason();
     mid.playBlock();
     await _shoot(t, '4_home_season', await _with(mid));
-    await _shoot(t, '4d_box_score', await _with(mid), act: (t) async {
+    await _shoot(t, '4d_box_score', await _with(careerAt(3, 12)..startSeason()), act: (t) async {
+      await _tap(t, '次の20試合へ');
+      await t.pumpAndSettle();
+      final list = find.textContaining('試合ごとの結果');
+      await t.scrollUntilVisible(list, 200, scrollable: find.byType(Scrollable).last);
+      await t.pumpAndSettle();
+      await t.tap(list);
+      await t.pumpAndSettle();
       final row = find.byType(GameRow).first;
       await t.ensureVisible(row);
       await t.pumpAndSettle();
