@@ -20,15 +20,12 @@ Player _player(int id, {int age = 24, int ovr = 60, int pot = 75}) =>
     Player(id: id, name: '選手$id', pos: Pos.sf, age: age, ovr: ovr, pot: pot, salary: 30, years: 2, exp: 3);
 
 void main() {
-  test('出場時間: 若手はよく出ると伸び、ほとんど出ないと伸びが削られる', () {
+  test('出場時間: 23歳までの若手は、ほとんど出ないと伸びが削られる', () {
     final id = _idWith(Trait.leader);
-    final starter = _player(id)..stats = Stats(gp: 70, min: 70 * 31);
-    expect(extraGrowth(starter, 2), [('出場時間', 1)]);
-    final bench = _player(id)..stats = Stats(gp: 10, min: 40);
+    final starter = _player(id, age: 22)..stats = Stats(gp: 70, min: 70 * 31);
+    expect(extraGrowth(starter, 2), isEmpty);
+    final bench = _player(id, age: 22)..stats = Stats(gp: 10, min: 40);
     expect(extraGrowth(bench, 2), [('出場時間', -1)]);
-    // 伸びしろに届いていれば、出場時間でも伸びない
-    final capped = _player(id, ovr: 75, pot: 75)..stats = Stats(gp: 70, min: 70 * 31);
-    expect(extraGrowth(capped, 0), isEmpty);
     // 30歳は出場時間で変わらない
     final vet = _player(id, age: 30)..stats = Stats(gp: 10, min: 40);
     expect(extraGrowth(vet, -1), isEmpty);
@@ -38,6 +35,7 @@ void main() {
     final g = _idWith(Trait.grinder);
     final full = Stats(gp: 50, min: 50 * 20);
     expect(extraGrowth(_player(g)..stats = full, 1), [('練習の虫', 1)]);
+    expect(extraGrowth(_player(g)..stats = full, 3), isEmpty, reason: '大きく伸びた年は上乗せしない');
     expect(extraGrowth(_player(g, age: 32)..stats = full, -3), [('練習の虫', 1)]);
     final lb = _idWith(Trait.lateBloomer);
     expect(extraGrowth(_player(lb, age: 21)..stats = full, 4), [('遅咲き', -1)]);

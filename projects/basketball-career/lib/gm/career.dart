@@ -2489,7 +2489,7 @@ class Career {
     if (team == mine) v += (hype - 50) / 5 + (me.chem - 50) / 10;
     // 価値観: 勝ちたい選手は勝率をさらに重く見る。忠誠と地元っ子は前のチームに残りたがる
     final pers = personalityOf(p);
-    if (pers.value == Value.win) v += (t.winPct - 0.5) * 50;
+    if (pers.value == Value.win) v += (t.winPct - 0.5) * 25;
     if (lastTeamOf(p) == team) {
       if (pers.value == Value.loyal) v += 10;
       if (pers.traits.contains(Trait.hometown)) v += 12;

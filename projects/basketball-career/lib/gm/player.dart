@@ -137,7 +137,7 @@ const secondApron = 2217;
 
 /// ぜいたく税で下がる信頼。
 /// ぜいたく税の線を超えたときに、1シーズンで減る信頼の上限(2026-11-14。上限が無いと、年俸が膨らんだ優勝チームが税だけで解任されていた)。
-const maxTaxTrust = 25;
+const maxTaxTrust = 40;
 
 int luxuryTaxTrust(int payroll) => payroll <= taxLine ? 0 : math.min(maxTaxTrust, ((payroll - taxLine) / 10).ceil());
 

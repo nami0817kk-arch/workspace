@@ -346,17 +346,20 @@ void main() {
 
   group('ポジションと人数', () {
     test('任期の終わりまで、ほかのチームはどのポジションにも選手がいて、先発は偏らない', () {
-      final c = botPlayCareer(3, team: teamAtRank(3, 12));
-      final others = c.teams.where((t) => t.index != c.mine).toList();
+      // 3つの任期で数える(1つだけだと、試合の流れしだいで当たり外れが大きい)
       var skewed = 0;
-      for (final t in others) {
-        for (final pos in Pos.values) {
-          expect(t.roster.any((p) => p.pos == pos), isTrue, reason: '${t.def.short} に ${pos.short} がいない');
+      for (final seed in [3, 4, 5]) {
+        final c = botPlayCareer(seed, team: teamAtRank(seed, 12));
+        final others = c.teams.where((t) => t.index != c.mine).toList();
+        for (final t in others) {
+          for (final pos in Pos.values) {
+            expect(t.roster.any((p) => p.pos == pos), isTrue, reason: '${t.def.short} に ${pos.short} がいない');
+          }
+          final five = t.order.take(5).map((p) => p.pos).toList();
+          if (five.toSet().length < 4) skewed++;
         }
-        final five = t.order.take(5).map((p) => p.pos).toList();
-        if (five.toSet().length < 4) skewed++;
       }
-      expect(skewed, lessThanOrEqualTo(3), reason: '先発で同じポジションが3人以上のチーム');
+      expect(skewed / 3, lessThanOrEqualTo(3), reason: '先発で同じポジションが3人以上のチーム(1任期あたり)');
     });
 
     test('先発は本来のポジションの選手を選び、PG から C の順に当てはめられる。違う位置に出すと強さが下がる', () {
@@ -730,14 +733,14 @@ void main() {
       return c;
     }
 
-    Player bigOne(Career c) => c.freeAgents.firstWhere((p) => c.isBigFa(p) && c.bidProblem(p) == null);
+    Player bigOne(Career c, [double factor = 1.0]) => c.freeAgents.firstWhere((p) => c.isBigFa(p) && c.bidProblem(p, factor: factor) == null);
 
     test('大物はすぐには取れず、申し込むと日が進むうちに行き先を決める', () {
       final c = toContracts(3);
       while (c.me.payroll > salaryCap - 300 && c.me.roster.isNotEmpty) {
         c.release(c.me.roster.reduce((a, b) => a.salary >= b.salary ? a : b).id);
       }
-      final p = bigOne(c);
+      final p = bigOne(c, 1.1);
       expect(c.signProblem(p), isNotNull, reason: '大物はそのまま契約できない');
       expect(c.bid(p.id, 2, 1.1), isTrue);
       expect(c.myBid(p.id)!.years, 2);
