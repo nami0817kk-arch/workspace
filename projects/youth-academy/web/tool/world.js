@@ -971,6 +971,13 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
       }
       ok(ok6 && YA.LIFE_EVENTS.length >= 35 && n6 >= 25, '暮らしの出来事：文と選択肢が出て、選べる ' + n6 + '/' + YA.LIFE_EVENTS.length);
       JSON.parse(JSON.stringify(w6));
+      // 伸びしろの「将来○〜○」は200を超えない（伸びしろが極端に大きい子でも）
+      {
+        const wz = YA.newWorld(71);
+        let mx = 0, bad = 0;
+        for (const q of Object.values(wz.players)) { q.pot += 400; for (const k of Object.keys(q.ab)) q.ab[k] = Math.min(20, q.ab[k] + 6); const fr = YA.futureRange(wz, q); mx = Math.max(mx, fr.hi); if (fr.lo > fr.hi || fr.hi > 200 || /2[0-9]{2}|[3-9][0-9]{2}/.test(fr.text.replace('200', ''))) bad++; }
+        ok(mx <= 200 && bad === 0, '伸びしろの将来の幅は200を超えない（最大' + mx + '）');
+      }
       // 機能面
       const wf = YA.newWorld(61);
       const pa = Object.values(wf.players)[0], pb = Object.values(wf.players)[1];
