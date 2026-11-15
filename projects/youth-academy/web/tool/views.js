@@ -453,6 +453,19 @@ async function clearEvents() {
         const gk = { pos: 'GK', apps: 40, goals: 0, assists: 0, cleans: 14, titles: [], awards: [], seasons: [{ y: 3, club: 'FCバルセロナ', league: 'ラ・リーガ', apps: 30, goals: 0, assists: 0, cleans: 11, titles: [], awards: [] }] };
         const e2 = w.YA.alumniStats(A.w, gk).textContent;
         ok(e2.includes('完封 14') && !e2.includes('得点') && !e2.includes('アシスト'), 'GK の成績は完封で、得点・アシストを出さない');
+        // 経歴をまとめたページ（2026-11-15）
+        const ca = Object.assign({}, fa, { name: '経歴 試し', year: 2, age: 24, status: 'pro', abroad: true, club: 'ロイヤル・マドリード', league: 'ラ・リーガ', ovr: 17.6, ovr0: 13.5, main: 'ST', star: true, transfers: 1, feeTotal: 52000, valueMax: 90000,
+          rHist: [{ y: 1, g: 1, r: 70 }, { y: 2, g: 2, r: 88 }], cs: { apps: 40, goals: 22, assists: 7 }, form: '点取り屋', traits: ['決定力'], note: 'プロ契約',
+          moves: [{ y: 4, age: 21, from: '川崎 フロンティエラ', fromLg: 'J1リーグ', to: 'ロイヤル・マドリード', toLg: 'ラ・リーガ', fee: 52000, share: 780, abroad: true }],
+          titles: [{ y: 4, name: 'ラ・リーガ優勝' }], mem: [{ y: 1, w: 3, k: 'star', q: 'ここで一番になる' }] });
+        ca.seasons = [{ y: 4, age: 21, club: 'ロイヤル・マドリード', league: 'ラ・リーガ', apps: 30, goals: 12, assists: 5, value: 90000, bd: 4, titles: ['ラ・リーガ優勝'], awards: ['バロンドール 4位'] }];
+        const before = d.querySelectorAll('.sheet').length;
+        w.YA.careerPage(A.w, ca);
+        const sheets = d.querySelectorAll('.sheet');
+        const e3 = sheets[sheets.length - 1].textContent;
+        ok(errors.length === 0 && sheets.length === before + 1, '経歴のページが開く: ' + errors.slice(0, 2).join('|'));
+        ok(['ユース時代', '高1 70', 'Aの公式戦 40試合', '覚醒：点取り屋', '年ごとの成績', '市場価値', '9億円', '移籍の歴史', '川崎 フロンティエラ → ロイヤル・マドリード', '5.2億円', '移籍金の合計 5.2億円', 'タイトルと賞', 'ユースでの思い出', 'ここで一番になる', 'バロンドール 最高4位'].every((x) => e3.includes(x)), '経歴のページに、ユース時代・年ごとの成績・市場価値・移籍金・賞・思い出が出る');
+        sheets[sheets.length - 1].remove();
       }
       for (const n of ['実績', '図鑑', '殿堂', '年表', '育成基金', '卒業生名鑑']) {
         btn(n, d.querySelector('.tabs')).click();

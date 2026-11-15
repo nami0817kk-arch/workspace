@@ -1256,6 +1256,14 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
     for (let y = 0; y < 6; y++) { wb.year++; YA.alumniTick(wb); for (const a of wb.alumni) { const s = a.seasons.slice(-1)[0]; if (s && s.y === wb.year && s.bd) ranks.push(s.bd); } winners += wb.alumni.filter((a) => a.seasons.slice(-1)[0] && a.seasons.slice(-1)[0].y === wb.year && a.seasons.slice(-1)[0].bd === 1).length > 1 ? 99 : 0; }
     ok(ranks.length >= 10 && ranks.every((x) => x >= 1 && x <= 30) && winners === 0, 'バロンドールの順位は1〜30で、1位は年に1人（' + ranks.length + '件）');
     ok(wb.alumni.every((a) => a.pos !== 'GK' || (!a.goals && !a.assists)), '世界一級の GK でも点は取らない');
+    // 移籍金と市場価値（2026-11-15「移籍金とかもみたい」）
+    const mv = wt2.alumni.filter((a) => (a.moves || []).length);
+    ok(mv.length >= 1 && mv.every((a) => a.moves.length === a.transfers && a.moves.every((m) => m.fee > 0 && m.from && m.to && m.from !== m.to) && a.feeTotal === a.moves.reduce((t, m) => t + m.fee, 0)), '移籍は移籍金・どこから・どこへが残り、合計と合う（' + mv.length + '人）');
+    ok(mv.every((a) => a.moves.every((m, i) => i === 0 || a.moves[i - 1].to === m.from)), '移籍の記録はつながる（前の行き先が次の出どころ）');
+    const pros = wt2.alumni.filter((a) => a.status === 'pro' && (a.seasons || []).length);
+    ok(pros.every((a) => a.seasons.filter((x) => x.club && YA.clubLeague(x.club) || x.value != null).every((x) => x.value == null || x.value >= 0)) && pros.some((a) => a.seasons.some((x) => x.value > 0)), 'プロの年ごとの市場価値');
+    ok(YA.marketValue({ status: 'pro', abroad: true, ovr: 18, age: 24 }) > YA.marketValue({ status: 'pro', abroad: false, ovr: 18, age: 24 }) && YA.marketValue({ status: 'pro', abroad: true, ovr: 18, age: 22 }) > YA.marketValue({ status: 'pro', abroad: true, ovr: 18, age: 31 }) && YA.marketValue({ status: 'univ', ovr: 18, age: 22 }) === 0, '市場価値：海外は高く、若いほど高い。プロ以外は0');
+    ok(YA.yen(0) === '0円' && YA.yen(3500) === '3500万円' && YA.yen(12000) === '1.2億円' && YA.yen(704000) === '70億円' && YA.yen(10000) === '1億円', 'お金の見せ方');
   }
   const names = new Set(YA.PRO_CLUBS.map((c) => c.name));
   ok(wt2.alumni.filter((a) => a.status === 'pro' && !a.abroad).every((a) => names.has(a.club)), '国内の移籍先は固定のクラブ表から');

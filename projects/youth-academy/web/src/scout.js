@@ -437,7 +437,7 @@
     const own = status === 'pro' && !p._sold && w.top && YA.rate(o) >= YA.topCutLine(w);
     const dl = domLeague(o);
     let jc = null;
-    return { name: p.name, pos: p.pos, main: p.main, year: w.year, ovr: o, note, grade: 3, age: 18, status,
+    return { name: p.name, pos: p.pos, main: p.main, year: w.year, ovr: o, ovr0: o, note, grade: 3, age: 18, status,
       club: status === 'pro' ? (own ? w.top.name : ab ? ab.club : (jc = jClub(w, r, dl, o))) : status === 'univ' ? r.pick(UNIV) : '社会人',
       league: status === 'pro' ? (own ? YA.J_NAME[w.top.j] : ab ? ab.league : YA.clubLeague(jc) || dl) : status === 'univ' ? '大学リーグ' : '社会人リーグ',
       apps: 0, goals: 0, nat: 0, youthCaps: (p.youthCaps || 0) + (p.nat || 0), natGoals: 0, transfers: 0, retired: false, traits: p.traits.slice(), pushed: p._push || null, abroad, seasons: [], titles: [], awards: [] };
@@ -458,6 +458,15 @@
     return v >= BD_LINE ? v : null;
   };
   YA.BD_LINE = BD_LINE;
+  // 市場価値（万円）：移籍金と同じ物差し（海外は高い）に、年齢の掛け目（若いほど高く、30歳を過ぎると下がる）
+  YA.marketValue = function (a) {
+    if (a.status !== 'pro' || a.retired) return 0;
+    const base = a.abroad ? Math.pow(Math.max(0, a.ovr - 9), 2.2) * 560 : Math.pow(Math.max(0, a.ovr - 9), 2) * 80;
+    const ag = a.age <= 21 ? 1.3 : a.age <= 24 ? 1.15 : a.age <= 28 ? 1 : a.age <= 30 ? 0.7 : 0.4;
+    return Math.round((base * ag) / 10) * 10;
+  };
+  // お金の見せ方：1億以上は「X.X億円」
+  YA.yen = (m) => (!m ? '0円' : m >= 10000 ? `${(m / 10000).toFixed(m >= 100000 ? 0 : 1).replace(/\.0$/, '')}億円` : `${m}万円`);
   // 成績の1行（GK は完封、ほかは得点とアシスト）。古い保存でアシストが無い年は出さない
   YA.statLine = function (x, gk) {
     if (gk) return `${x.apps || 0}試合` + (x.cleans != null ? `・完封${x.cleans}` : '');
@@ -527,6 +536,7 @@
       s.bd = rank;
       a.bdBest = Math.min(a.bdBest || 99, rank);
     }
+    if (a.status === 'pro') { s.value = YA.marketValue(a); a.valueMax = Math.max(a.valueMax || 0, s.value); }
     a.apps += apps;
     a.goals += goals;
     a.assists = (a.assists || 0) + assists;
@@ -567,6 +577,7 @@
           const abroad = a.ovr >= 13.8 && a.age <= 27 && r() < clamp(0.35 + (a.ovr - 15) * 0.12, 0.35, 0.9);
           const fee = Math.round(abroad ? Math.pow(Math.max(0, a.ovr - 9), 2.2) * 560 : Math.pow(Math.max(0, a.ovr - 9), 2) * 80);
           const share = Math.round(fee * 0.015);
+          const from = a.club, fromLg = a.league;
           a.transfers++;
           if (abroad) {
             const ab = abroadPick(r, a.ovr, a.ovr >= 15.3);
@@ -579,7 +590,11 @@
             a.league = YA.clubLeague(a.club) || domLeague(a.ovr);
           }
           contrib += share;
-          YA.noteTier(w, 1, say(w, a, 'move', [`卒業生の${a.name}が${a.club}（${a.league}）へ${abroad ? '海外移籍' : '移籍'}（移籍金およそ${fee}万円）。連帯貢献金 +${share}万円が育成基金に入ります`, `${a.name}の${abroad ? '海外挑戦' : '移籍'}が決まった。行き先は${a.club}（${a.league}）。移籍金およそ${fee}万円のうち、連帯貢献金 +${share}万円が育成基金へ`, `${a.club}（${a.league}）が${a.name}を獲得。${abroad ? '海の向こうへ。' : ''}育てたクラブとして連帯貢献金 +${share}万円が入ります（移籍金およそ${fee}万円）`, `${a.name}、${a.club}へ。「${abroad ? '向こうでも、ユースで覚えたことをやるだけ' : '新しい場所で、もう一段上へ'}」。連帯貢献金 +${share}万円（移籍金およそ${fee}万円）`]));
+          // 移籍の記録（2026-11-15「移籍金とかもみたい」）：年・どこから・どこへ・移籍金・連帯貢献金
+          a.moves = a.moves || [];
+          a.moves.push({ y: w.year, age: a.age, from, fromLg, to: a.club, toLg: a.league, fee, share, abroad });
+          a.feeTotal = (a.feeTotal || 0) + fee;
+          YA.noteTier(w, 1, say(w, a, 'move', [`卒業生の${a.name}が${a.club}（${a.league}）へ${abroad ? '海外移籍' : '移籍'}（移籍金およそ${YA.yen(fee)}）。連帯貢献金 +${share}万円が育成基金に入ります`, `${a.name}の${abroad ? '海外挑戦' : '移籍'}が決まった。行き先は${a.club}（${a.league}）。移籍金およそ${YA.yen(fee)}のうち、連帯貢献金 +${share}万円が育成基金へ`, `${a.club}（${a.league}）が${a.name}を獲得。${abroad ? '海の向こうへ。' : ''}育てたクラブとして連帯貢献金 +${share}万円が入ります（移籍金およそ${YA.yen(fee)}）`, `${a.name}、${a.club}へ。「${abroad ? '向こうでも、ユースで覚えたことをやるだけ' : '新しい場所で、もう一段上へ'}」。連帯貢献金 +${share}万円（移籍金およそ${YA.yen(fee)}）`]));
         }
         // U-21代表（決定16）：21歳以下で力のある卒業生。のちにフル代表の足がかり
         if (a.age <= 21 && a.ovr >= 13.4 && r() < 0.2) {
