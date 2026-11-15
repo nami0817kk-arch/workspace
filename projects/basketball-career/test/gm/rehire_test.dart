@@ -77,4 +77,15 @@ void main() {
     expect(c.jobOffers, isEmpty);
     expect(c.canTakeJob, isFalse);
   });
+
+  test('GM の格がどの段階でも、誘いの選び方は止まり、重ならない(候補の数が7の倍数でも)', () {
+    final c = _fired();
+    for (var pts = 0; pts <= 3000; pts += 50) {
+      c.gmPoints = pts;
+      final offers = c.debugMakeOffers();
+      expect(offers.toSet().length, offers.length);
+      expect(offers.length, c.gmLevel >= 3 ? 3 : 2);
+      expect(offers, isNot(contains(c.mine)));
+    }
+  });
 }

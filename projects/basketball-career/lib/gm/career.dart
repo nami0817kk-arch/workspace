@@ -470,15 +470,13 @@ class Career {
     final window = (8 + 2 * gmLevel).clamp(8, weak.length);
     final pool = weak.take(window).toList();
     final n = gmLevel >= 3 ? 3 : 2;
-    final out = <int>[];
-    var k = (seed * 31 + season * 17) % pool.length;
-    while (out.length < n && out.length < pool.length) {
-      final t = pool[k % pool.length];
-      if (!out.contains(t)) out.add(t);
-      k += 7;
-    }
-    return out;
+    // 種とシーズンで決めた所から順に回す(飛び飛びに選ぶと、候補の数によっては同じチームを引き続けて終わらない)
+    final k = (seed * 31 + season * 17) % pool.length;
+    return [for (var i = 0; i < pool.length; i++) pool[(k + i) % pool.length]].take(n).toList();
   }
+
+  /// 誘いの選び方(テストで、格のどの段階でも止まることを確かめる)。
+  List<int> debugMakeOffers() => _makeOffers();
 
   bool get canTakeJob => fired && phase == Phase.seasonEnd && jobOffers.isNotEmpty;
 
