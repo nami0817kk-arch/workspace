@@ -51,7 +51,7 @@
     { k: 'vsTop', when: 'season', ok: (a, w) => !!(w.top && a.club !== w.top.name && !a.abroad), w: () => 0.5, tier: 2,
       t: [(a, x, w) => `卒業生の${a.name}（${a.club}）が古巣の${w.top.name}と対戦。${x.win ? '勝って' : '負けて'}も、試合のあとユース時代の仲間とあいさつした`, (a, x, w) => `${w.top.name}戦で${a.name}が先発。古巣のサポーターから拍手が起きた`, (a, x, w) => `${a.club}の${sur(a)}が古巣${w.top.name}相手に${x.win ? '決勝点' : '奮闘'}。「育ててもらった場所なので複雑です」`] },
     { k: 'abroadPress', when: 'season', ok: (a) => a.abroad, w: () => 1.4, tier: 3,
-      t: [(a, x) => `${a.league}の地元紙が卒業生の${a.name}（${a.club}）に${x.score}点。「東洋から来た頭脳」`, (a) => `${a.club}の${sur(a)}の特集が現地のテレビで流れた`, (a) => `${a.name}が${a.club}のファン投票で今月の最優秀選手に`, (a) => `現地の記者が${a.name}を「この冬いちばんの掘り出し物」と書いた`] },
+      t: [(a, x) => `${YA.leagueCountry ? YA.leagueCountry(a.league) : a.league}の地元紙が卒業生の${a.name}（${a.club}）に${x.score}点。「東洋から来た頭脳」`, (a) => `${a.club}の${sur(a)}の特集が現地のテレビで流れた`, (a) => `${a.name}が${a.club}のファン投票で今月の最優秀選手に`, (a) => `現地の記者が${a.name}を「この冬いちばんの掘り出し物」と書いた`] },
     { k: 'abroadLife', when: 'any', ok: (a) => a.abroad, w: () => 0.8, tier: 3,
       t: [(a) => `${a.club}にいる卒業生の${a.name}から近況。「言葉はまだ半分。でもピッチの上では通じます」`, (a) => `${a.name}（${a.club}）が現地で語学学校に通い始めたそうだ`, (a) => `${a.name}から写真が届いた。雪のグラウンドで、ユースのジャージを着ていた`, (a) => `${a.club}の${sur(a)}は日本食が恋しいらしい。「みそ汁が飲みたい」`] },
     { k: 'coachChange', when: 'season', ok: () => true, w: () => 0.4, tier: 3,
@@ -93,6 +93,7 @@
   YA.proNewsWeek = function (w) {
     const key = w.year * 100 + w.week;
     if (w.pnKey === key) return [];
+    if (YA.fixClubNames) YA.fixClubNames(w);
     w.pnKey = key;
     const pros = (w.alumni || []).filter((a) => a.status === 'pro' && !a.retired && a.club);
     if (!pros.length) return [];
@@ -156,6 +157,7 @@
   // 系譜タブの小タブ「クラブ」：卒業生が行きうるクラブと強さ（2026-11-15「クラブごとの強さ見せて」）
   YA.lineageExtraTabs = YA.lineageExtraTabs || [];
   function clubsTab(body, w) {
+    YA.fixClubNames(w);
     const h = YA._ui.h;
     const now = {}, ever = {};
     for (const a of w.alumni || []) {
@@ -165,7 +167,7 @@
     const groups = [['J1リーグ', 1], ['J2リーグ', 2], ['J3リーグ', 3]].map(([lg, t]) => [lg, (YA.PRO_CLUBS || []).filter((c) => (w.top && c.name === w.top.name ? w.top.j : c.tier) === t).map((c) => [c.name + (w.top && c.name === w.top.name ? '（自分のクラブのトップ）' : ''), YA.clubStr(c.name, w)])])
       .concat(YA.ABROAD_LEAGUES.map((x) => [x[1] + '（' + x[0] + '）', YA.ABROAD_CLUBS[x[1]].map((c) => [c[0], c[1]]), x[1]]));
     const total = groups.reduce((n, g) => n + g[1].length, 0);
-    body.append(h('div', { class: 'h' }, `移籍先のクラブ（${total}）`), h('div', { class: 'note' }, '数字はクラブの強さ（選手の総合力と同じ0〜200の物差し）。卒業生は、自分の総合力より少し上のクラブへ移りやすい。強いクラブほど優勝しやすい。'));
+    body.append(h('div', { class: 'h' }, `移籍先のクラブ（${total}・${groups.length}リーグ）`), h('div', { class: 'note' }, '数字はクラブの強さ（選手の総合力と同じ0〜200の物差し）。クラブ名は架空です。卒業生は、自分の総合力より少し上のクラブへ移りやすい。強いクラブほど優勝しやすい。'));
     const list = h('div', { class: 'scroll', style: 'flex:1;min-height:0;margin-top:4px' });
     for (const [title, clubs, key] of groups) {
       const lgR = YA.rate((YA.LEAGUE_LV || {})[key || title] || 12);
