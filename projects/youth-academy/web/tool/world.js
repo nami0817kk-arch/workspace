@@ -22,6 +22,7 @@ require(path.join(__dirname, '../src/scout2.js'));
 require(path.join(__dirname, '../src/club5.js'));
 require(path.join(__dirname, '../src/life.js'));
 require(path.join(__dirname, '../src/func.js'));
+require(path.join(__dirname, '../src/pronews.js'));
 require(path.join(__dirname, '../src/shop.js'));
 require(path.join(__dirname, '../src/imgdata.js'));
 require(path.join(__dirname, '../src/art.js'));
@@ -1238,7 +1239,10 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   ok([1, 2, 3].every((y) => early.filter((a) => a.year === y).length <= 5), '在学中のプロ契約は1年に数人まで');
   const names = new Set(YA.PRO_CLUBS.map((c) => c.name));
   ok(wt2.alumni.filter((a) => a.status === 'pro' && !a.abroad).every((a) => names.has(a.club)), '国内の移籍先は固定のクラブ表から');
-  const abroadNames = new Set([].concat(...Object.values(YA.ABROAD_CLUBS)));
+  ok(Object.values(YA.ABROAD_CLUBS).reduce((n, l) => n + l.length, 0) >= 70 && YA.ABROAD_LEAGUES.length >= 11, '海外のクラブは70以上・11リーグ');
+  ok(YA.PRO_CLUBS.every((c) => { const v = YA.clubStr(c.name); return v >= 94 && v <= 150; }) && [].concat(...Object.values(YA.ABROAD_CLUBS)).every((c) => c[1] >= 110 && c[1] <= 190), 'どのクラブにも強さがある');
+  ok(wt2.alumni.filter((a) => a.status === 'pro' && !a.retired && !(wt2.top && a.club === wt2.top.name)).every((a) => YA.clubLeague(a.club) === a.league), '卒業生のリーグはクラブのリーグと一致する');
+  const abroadNames = new Set([].concat(...Object.values(YA.ABROAD_CLUBS)).map((c) => c[0]));
   ok(wt2.alumni.filter((a) => a.status === 'pro' && a.abroad).every((a) => abroadNames.has(a.club)), '海外の移籍先も固定のクラブ表から');
   ok(Object.keys(wt2.players).length >= 34 && Object.keys(wt2.players).length <= 44, 'プロ契約で抜けても人数は保つ');
 }
@@ -1342,6 +1346,28 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   ok(v && /覚醒/.test(v.text) && v.text.indexOf(q.aw.trait) >= 0 && !/undefined|null|NaN/.test(v.text), '覚醒の知らせ ' + (v && v.text));
   ok(YA.AWAKE_FORMS.length >= 20 && YA.AWAKE_FORMS.every((f) => f.as.every((t) => YA.TRAITS.indexOf(t) >= 0) && f.abs.every((a) => YA.AB_FIELD.concat(YA.AB_GK).indexOf(a) >= 0)), '覚醒の形は20種類・中身が正しい');
   ok(YA.AWAKE_FORMS.every((f) => f.as.length === 4 && new Set(f.as).size === 4), '覚醒の特性はどの形も4つ');
+  // プロの卒業生からの知らせ：どの種類のどの言い回しも、文が崩れない。毎週届き、同じ種類が続かない
+  {
+    const wn = YA.newWorld(7);
+    const kid = Object.values(wn.players).find((p) => p.pos === 'MF');
+    const mk = (o) => Object.assign({ name: '山田 太郎', pos: 'MF', year: 1, age: 24, ovr: 15, status: 'pro', club: '横浜 ブルーテイル', league: 'J1リーグ', abroad: false, nat: 1, u21: 1, bond: 4, apps: 60, goals: 10, pnDebut: 1, pnInj: 3 }, o);
+    wn.top = wn.top || { name: 'トップ' };
+    let cnt = 0, bad = [];
+    for (const d of YA.PRO_NEWS) for (const f of d.t) for (const a of [mk({}), mk({ abroad: true, league: 'ブンデスリーガ', club: 'ミュンスター', pos: 'GK' })]) {
+      const t = f(a, { opp: '浦和', min: 30, late: 89, n: 3, score: '7.5', full: true, num: 33, wk: 4, yr: 2, win: true, gift: 50, kid, pos: 'MF' }, wn);
+      cnt++;
+      if (typeof t !== 'string' || t.length < 12 || /undefined|NaN|null|\[object/.test(t)) bad.push(d.k + ':' + t);
+    }
+    ok(YA.PRO_NEWS.length >= 30 && YA.PRO_NEWS.every((d) => d.t.length >= 3), 'プロの知らせは30種類以上・どれも3通り以上 ' + YA.PRO_NEWS.length);
+    ok(!bad.length, 'プロの知らせの文が崩れない（' + cnt + '通り） ' + bad.slice(0, 2).join(' / '));
+    wn.alumni = [mk({ name: '佐藤 一' }), mk({ name: '鈴木 二', pos: 'FW', age: 19, pnDebut: 0, pnInj: 0 }), mk({ name: '高橋 三', pos: 'DF', fav: true, pnInj: 0 }), mk({ name: '田中 四', pos: 'GK', abroad: true, league: 'ラ・リーガ', club: 'バレンシア', pnInj: 0 })];
+    const got = [];
+    for (let wk = 1; wk <= 30; wk++) { wn.week = wk; got.push(...YA.proNewsWeek(wn)); }
+    const ks = wn.alumni.flatMap((a) => (a.news || []).map((n) => n.k));
+    ok(got.length >= 20 && new Set(ks).size >= 10, 'シーズン中は毎週のように知らせが届き、種類がばらける ' + got.length + '件・' + new Set(ks).size + '種');
+    let rep = 0; for (let i = 1; i < wn.pnRecent.length; i++) if (wn.pnRecent[i].k === wn.pnRecent[i - 1].k) rep++;
+    ok(rep === 0, '同じ種類の知らせが続けて届かない');
+  }
   // 金の特性：試合で GOLD_USES 回効き、関わる能力の平均が GOLD_AB 以上で変わる
   {
     const wg = YA.newWorld(5);
