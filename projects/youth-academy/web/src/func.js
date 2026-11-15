@@ -372,7 +372,7 @@
     for (const x of a.rHist || []) t.push({ y: x.y, t: `高${x.g}：総合力${x.r}` });
     for (const m of a.mem || []) if (['chain', 'awake', 'path', 'wall', 'star', 'pitch', 'quit'].indexOf(m.k) >= 0) t.push({ y: m.y, t: `${(YA.MEM_NAME || {})[m.k] || m.k}${m.q ? '：「' + m.q + '」' : ''}` });
     t.push({ y: a.year, t: `卒業 → ${a.club || ''}${a.league ? '（' + a.league + '）' : ''}` });
-    for (const s of a.seasons || []) t.push({ y: s.y, t: `${s.club}：${s.apps}試合${s.goals}得点${(s.titles || []).length ? '・' + s.titles.join('・') : ''}${(s.awards || []).length ? '・' + s.awards.join('・') : ''}` });
+    for (const s of a.seasons || []) t.push({ y: s.y, t: `${s.club}：${YA.statLine(s, a.pos === 'GK')}${(s.titles || []).length ? '・' + s.titles.join('・') : ''}${(s.awards || []).length ? '・' + s.awards.join('・') : ''}` });
     if (a.hof) t.push({ y: a.hofY || a.year, t: a.hof === 'full' ? '殿堂入り' : '殿堂候補' });
     if (a.retired) t.push({ y: a.retY || w.year, t: '現役を引退' });
     if (a.coached) t.push({ y: w.year, t: 'コーチとして戻った' });
@@ -397,6 +397,93 @@
     const play = !s ? 'ベンチから声を出していた' : s.goals >= 5 ? 'ゴール前で何度も相手を脅かしていた' : s.apps >= 20 ? '中心選手として90分走り切った' : '途中から出て、短い時間で見せ場を作った';
     return { ok: true, msg: `${a.club}の試合を観に行った。${a.name}は${play}。${fan.length ? `一緒に行った★の子${fan.length}人が、目を輝かせていた（自信 +3）` : ''}` };
   };
+  // 卒業生の成績の表（2026-11-15「バロンドールとかの要素・ゴール数やアシスト、出場数」）。GK は得点・アシストの代わりに完封
+  YA.alumniStats = function (w, a) {
+    const h = H();
+    const ss = (a.seasons || []).filter((x) => x.apps != null);
+    if (!ss.length) return null;
+    const gk = a.pos === 'GK';
+    const aw = (a.awards || []).map((x) => x.name);
+    const n = (re) => aw.filter((x) => re.test(x)).length;
+    const big = [['バロンドール', n(/^バロンドール$/)], ['ゴールデンシュー', n(/ゴールデンシュー/)], ['ヤシン・トロフィー', n(/ヤシン/)], ['コパ・トロフィー', n(/コパ・トロフィー/)], ['得点王', n(/得点王$/)], ['アシスト王', n(/アシスト王$/)], ['最優秀GK', n(/最優秀GK$/)], ['年間MVP', n(/年間MVP$/)], ['ベストイレブン', n(/ベストイレブン$/)]].filter((x) => x[1]);
+    const cell = (v, wd) => h('span', { style: `width:${wd || 38}px;text-align:right;flex:none` }, v);
+    const head = (v, wd) => h('span', { style: `width:${wd || 38}px;text-align:right;flex:none;font-size:10px;color:var(--sub);font-weight:800` }, v);
+    return h('div', {},
+      h('div', { class: 'h', style: 'margin-top:4px' }, '成績'),
+      h('div', { class: 'row', style: 'flex-wrap:wrap;gap:4px' },
+        h('span', { class: 'chip trait' }, `出場 ${a.apps || 0}`),
+        gk ? h('span', { class: 'chip trait' }, `完封 ${a.cleans || 0}`) : h('span', { class: 'chip trait' }, `得点 ${a.goals || 0}`),
+        gk ? null : h('span', { class: 'chip trait' }, `アシスト ${a.assists || 0}`),
+        h('span', { class: 'chip gray' }, `タイトル ${(a.titles || []).length}`),
+        a.nat ? h('span', { class: 'chip gray' }, `日本代表 ${a.nat}回${a.natGoals ? '・' + a.natGoals + '得点' : ''}`) : null,
+        a.bdBest ? h('span', { class: 'chip pers' }, a.bdBest === 1 ? `バロンドール ${n(/^バロンドール$/)}回` : `バロンドール 最高${a.bdBest}位`) : null,
+        ...big.filter((x) => x[0] !== 'バロンドール').map((x) => h('span', { class: 'chip pers' }, x[0] + (x[1] > 1 ? ` ×${x[1]}` : '')))),
+      h('div', { class: 'plist', style: 'margin-top:4px' },
+        h('div', { class: 'pitem', style: 'cursor:default;background:none;gap:4px' }, h('span', { style: 'width:44px;flex:none;font-size:10px;color:var(--sub);font-weight:800' }, '年'), h('span', { class: 'grow', style: 'font-size:10px;color:var(--sub);font-weight:800' }, 'クラブ'), head('出場'), ...(gk ? [head('完封')] : [head('得点'), head('アシスト', 44)]), head('バロンドール', 70)),
+        ss.slice().reverse().map((x) => h('div', { class: 'pitem', style: 'cursor:default;gap:4px;font-size:11.5px' },
+          h('span', { class: 'sub', style: 'width:44px;flex:none' }, `${x.y}年目`),
+          h('span', { class: 'grow', style: 'min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap' }, `${x.club}（${x.league}）`),
+          cell(x.apps), ...(gk ? [cell(x.cleans != null ? x.cleans : '―')] : [cell(x.goals), cell(x.assists != null ? x.assists : '―', 44)]),
+          cell(x.bd ? (x.bd === 1 ? '受賞' : x.bd + '位') : '―', 70)))));
+  };
+  // 選手の経歴をまとめたページ（2026-11-15「選手の経歴をまとめたページも欲しい」）。
+  // ユース時代（高1〜高3の総合力・Aの公式戦の成績・覚醒・特性）→ 卒業 → プロの年ごとの成績と市場価値 → 移籍と移籍金 → タイトルと賞 → 思い出
+  YA.careerPage = function (w, a) {
+    const h = H();
+    const gk = a.pos === 'GK';
+    const count = (list) => { const m = {}; for (const x of list || []) m[x.name] = (m[x.name] || 0) + 1; return Object.entries(m).map(([k, n]) => k + (n > 1 ? ` ×${n}` : '')); };
+    const sec = (t, ...kids) => h('div', { style: 'display:flex;flex-direction:column;gap:4px;margin-top:6px' }, h('div', { class: 'h' }, t), ...kids);
+    const th = (v, wd, left) => h('span', { style: `width:${wd}px;flex:none;text-align:${left ? 'left' : 'right'};font-size:10px;color:var(--sub);font-weight:800` }, v);
+    const td = (v, wd, left) => h('span', { style: `width:${wd}px;flex:none;text-align:${left ? 'left' : 'right'}` }, v);
+    const ss = (a.seasons || []).filter((x) => x.apps != null);
+    const moves = a.moves || [];
+    const val = YA.marketValue ? YA.marketValue(a) : 0;
+    const status = a.status === 'pro' ? (a.retired ? '引退' : `${a.club}（${a.league}）`) : a.status === 'univ' ? `${a.club}（大学）` : a.status === 'left' ? '在学中に退団' : `${a.club || '社会人'}`;
+    const first = a.status === 'pro' ? (moves.length ? moves[0].from : a.club) : a.club || '社会人';
+    YA._v.modal((close) => h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(860px,98%);max-height:96%;padding:12px;gap:4px;overflow:auto' },
+      h('div', { class: 'row', style: 'gap:6px' },
+        h('span', { class: 'pos ' + a.pos }, (YA.POS_LABEL && YA.POS_LABEL[a.main]) || a.pos),
+        h('b', { style: 'font-size:16px' }, a.name + (a.star ? ' ★' : '')),
+        h('span', { class: 'sub grow' }, `${a.year}年目卒・${a.age != null ? a.age + '歳' : ''}・いま ${status}`),
+        h('button', { class: 'btn sm', onclick: close }, '閉じる')),
+      h('div', { class: 'note' }, `総合力 ${YA.rate(a.ovr)}（${YA.levelOf ? YA.levelOf(YA.rate(a.ovr)) : ''}）` + (a.status === 'pro' && !a.retired ? `・市場価値 ${YA.yen(val)}` : '') + (a.valueMax ? `・最高 ${YA.yen(a.valueMax)}` : '') + (a.hof ? `・${a.hof === 'full' ? '殿堂入り' : '殿堂候補'}` : '')),
+      h('div', { class: 'row', style: 'flex-wrap:wrap;gap:4px' },
+        h('span', { class: 'chip trait' }, `出場 ${a.apps || 0}`),
+        gk ? h('span', { class: 'chip trait' }, `完封 ${a.cleans || 0}`) : h('span', { class: 'chip trait' }, `得点 ${a.goals || 0}`),
+        gk ? null : h('span', { class: 'chip trait' }, `アシスト ${a.assists || 0}`),
+        h('span', { class: 'chip gray' }, `タイトル ${(a.titles || []).length}`),
+        h('span', { class: 'chip gray' }, `移籍 ${a.transfers || 0}回・移籍金の合計 ${YA.yen(a.feeTotal || 0)}`),
+        a.nat ? h('span', { class: 'chip gray' }, `日本代表 ${a.nat}回${a.natGoals ? '・' + a.natGoals + '得点' : ''}`) : null,
+        a.bdBest ? h('span', { class: 'chip pers' }, a.bdBest === 1 ? `バロンドール ${(a.awards || []).filter((x) => x.name === 'バロンドール').length}回` : `バロンドール 最高${a.bdBest}位`) : null),
+      sec('ユース時代',
+        h('div', { class: 'note' }, [
+          (a.rHist || []).length ? '総合力 ' + a.rHist.map((x) => `高${x.g} ${x.r}`).join(' → ') + ` → 卒業時 ${YA.rate(a.ovr0 || a.ovr)}` : `卒業時の総合力 ${YA.rate(a.ovr0 || a.ovr)}`,
+          a.cs ? `Aの公式戦 ${a.cs.apps}試合` + (gk ? '' : `・${a.cs.goals}得点・${a.cs.assists}アシスト`) : null,
+          a.form ? `覚醒：${a.form}` : null,
+          a.youthCaps ? `年代別の代表 ${a.youthCaps}回` : null,
+          a.note ? `卒業：${a.note}` : null,
+        ].filter(Boolean).join('　／　')),
+        (a.traits || []).length ? h('div', { class: 'row', style: 'flex-wrap:wrap;gap:3px' }, a.traits.map((t) => h('span', { class: 'chip trait' }, t))) : null),
+      sec('年ごとの成績',
+        ss.length ? h('div', { style: 'overflow-x:auto' }, h('div', { class: 'plist', style: 'min-width:640px' },
+          h('div', { class: 'pitem', style: 'cursor:default;background:none;gap:4px' }, th('年', 44, 1), th('年齢', 32, 1), h('span', { class: 'grow', style: 'font-size:10px;color:var(--sub);font-weight:800' }, 'クラブ（リーグ）'), th('出場', 32), ...(gk ? [th('完封', 32), th('', 40)] : [th('得点', 32), th('アシスト', 40)]), th('市場価値', 64), th('タイトル・賞', 180, 1)),
+          ss.slice().reverse().map((x) => h('div', { class: 'pitem', style: 'cursor:default;gap:4px;font-size:11px' },
+            td(`${x.y}年目`, 44, 1), td(`${x.age}歳`, 32, 1),
+            h('span', { class: 'grow', style: 'min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap' }, `${x.club}（${x.league}）`),
+            td(x.apps, 32), ...(gk ? [td(x.cleans != null ? x.cleans : '―', 32), td('', 40)] : [td(x.goals, 32), td(x.assists != null ? x.assists : '―', 40)]),
+            td(x.value ? YA.yen(x.value) : '―', 64),
+            h('span', { style: 'width:180px;flex:none;font-size:10px' }, (x.titles || []).concat(x.awards || []).join('・') || '―')))))
+          : h('div', { class: 'note' }, 'まだ記録はありません。卒業から1年たつと、ここに年ごとの成績が並びます。')),
+      sec('移籍の歴史',
+        h('div', { class: 'plist' },
+          h('div', { class: 'pitem', style: 'cursor:default;gap:6px;font-size:11px' }, td(`${a.year}年目`, 44, 1), h('span', { class: 'grow' }, `ユース → ${first}${a.status === 'univ' ? '（大学）' : ''}`), td(a.status === 'pro' || moves.length ? 'プロ契約' : '―', 90)),
+          moves.map((m) => h('div', { class: 'pitem', style: 'cursor:default;gap:6px;font-size:11px' }, td(`${m.y}年目`, 44, 1), h('span', { class: 'grow', style: 'min-width:0' }, `${m.from} → ${m.to}（${m.toLg}）${m.abroad ? '・海外' : ''}`), h('b', { style: 'width:90px;flex:none;text-align:right' }, YA.yen(m.fee))))),
+        moves.length ? h('div', { class: 'note' }, `連帯貢献金（育成基金へ）の合計 ${YA.yen(moves.reduce((t, m) => t + (m.share || 0), 0))}`) : h('div', { class: 'note' }, (a.transfers || 0) > 0 ? '前の移籍は記録の形が古く、移籍金が残っていません。' : 'まだ移籍していません。')),
+      (a.titles || []).length || (a.awards || []).length ? sec('タイトルと賞',
+        (a.titles || []).length ? h('div', { class: 'row', style: 'flex-wrap:wrap;gap:4px' }, count(a.titles).map((x) => h('span', { class: 'chip trait' }, x))) : null,
+        (a.awards || []).length ? h('div', { class: 'row', style: 'flex-wrap:wrap;gap:4px' }, count(a.awards).map((x) => h('span', { class: 'chip pers' }, x))) : null) : null,
+      (a.mem || []).some((m) => m.q) ? sec('ユースでの思い出', h('div', { class: 'plist' }, a.mem.filter((m) => m.q).slice(0, 6).map((m) => h('div', { class: 'pitem', style: 'cursor:default;gap:6px;font-size:11px' }, td(`${m.y}年目`, 44, 1), h('span', { class: 'grow' }, `${(YA.MEM_NAME || {})[m.k] || ''}：「${m.q}」`))))) : null));
+  };
   YA.alumniModal = function (w, a) {
     if (YA.fixClubNames) YA.fixClubNames(w);
     const h = H();
@@ -406,12 +493,14 @@
       const draw = () => {
         box.replaceChildren(
           h('div', { class: 'row' }, h('div', { class: 'h grow' }, `${a.name}（${a.year}年目卒${a.age ? '・' + a.age + '歳' : ''}）`), h('button', { class: 'btn sm', onclick: close }, '閉じる')),
-          h('div', { class: 'note' }, `${a.club || ''}${a.league ? '（' + a.league + (YA.clubStr && YA.clubStr(a.club, w) != null ? '・クラブの強さ ' + YA.clubStr(a.club, w) : '') + '）' : ''}・本人 ${YA.rate(a.ovr)}・通算${a.apps || 0}試合${a.goals || 0}得点・絆 ${a.bond == null ? '-' : a.bond}/6`),
+          h('div', { class: 'note' }, `${a.club || ''}${a.league ? '（' + a.league + (YA.clubStr && YA.clubStr(a.club, w) != null ? '・クラブの強さ ' + YA.clubStr(a.club, w) : '') + '）' : ''}・本人 ${YA.rate(a.ovr)}・通算${YA.statLine(a, a.pos === 'GK')}${a.bdBest ? '・バロンドール最高' + a.bdBest + '位' : ''}・絆 ${a.bond == null ? '-' : a.bond}/6`),
           h('div', { class: 'row', style: 'gap:5px;flex-wrap:wrap;margin:4px 0' },
             h('button', { class: 'btn sm' + (a.fav ? ' on' : ''), onclick: () => { a.fav = !a.fav; save(); draw(); } }, a.fav ? '★ 追っている（外す）' : '☆ この子を追う'),
             h('button', { class: 'btn sm', onclick: () => { const r = YA.alumniContact(w, a); msg.textContent = r.msg; save(); draw(); } }, '連絡する（年1回）'),
-            h('button', { class: 'btn sm', onclick: () => { const r = YA.alumniWatch(w, a); msg.textContent = r.msg; save(); draw(); } }, '試合を観に行く（年1回）')),
+            h('button', { class: 'btn sm', onclick: () => { const r = YA.alumniWatch(w, a); msg.textContent = r.msg; save(); draw(); } }, '試合を観に行く（年1回）'),
+            h('button', { class: 'btn sm pri', onclick: () => YA.careerPage(w, a) }, '経歴をまとめて見る')),
           msg,
+          YA.alumniStats(w, a),
           (a.news || []).length ? h('div', { class: 'h', style: 'margin-top:4px' }, '最近の知らせ') : null,
           (a.news || []).length ? h('div', { class: 'plist' }, a.news.slice(-8).reverse().map((x) => h('div', { class: 'pitem', style: 'cursor:default;gap:6px' }, h('span', { class: 'sub', style: 'width:72px;flex:none' }, `${x.y}年目 ${x.w}週`), h('span', {}, x.t)))) : null,
           h('div', { class: 'h', style: 'margin-top:4px' }, 'その後の年表'),
@@ -427,7 +516,7 @@
     const r = at1.apply(this, arguments);
     for (const a of (w.alumni || []).filter((x) => x.fav && !x.retired)) {
       const s = (a.seasons || []).slice(-1)[0];
-      if (s && s.y === w.year) YA.noteTier(w, 2, `追っている${a.name}：${s.club}で${s.apps}試合${s.goals}得点${(s.titles || []).length ? '・' + s.titles.join('・') : ''}`);
+      if (s && s.y === w.year) YA.noteTier(w, 2, `追っている${a.name}：${s.club}で${YA.statLine(s, a.pos === 'GK')}${(s.titles || []).length ? '・' + s.titles.join('・') : ''}`);
     }
     return r;
   };

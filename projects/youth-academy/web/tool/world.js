@@ -1237,6 +1237,34 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   ok(own.length >= 1 && own.every((a) => a.club === wt2.top.name || a.transfers > 0), 'トップ昇格の子は自分のクラブのトップへ');
   const early = wt2.alumni.filter((a) => /高.でトップ昇格/.test(a.note));
   ok([1, 2, 3].every((y) => early.filter((a) => a.year === y).length <= 5), '在学中のプロ契約は1年に数人まで');
+  // 卒業生の成績：GK は点もアシストも0で完封を数える。ほかはアシストも付く（2026-11-15）
+  {
+    const al = wt2.alumni.filter((a) => (a.seasons || []).length);
+    const gks = al.filter((a) => a.pos === 'GK'), fs = al.filter((a) => a.pos !== 'GK');
+    ok(gks.every((a) => !a.goals && !a.assists && a.seasons.every((x) => !x.goals && !x.assists && x.cleans != null && x.cleans <= x.apps)), 'GK の卒業生に得点・アシストが付かず、完封は出場以下');
+    ok(fs.every((a) => a.seasons.every((x) => x.assists != null && x.cleans == null)) && fs.some((a) => a.assists > 0), 'GK 以外はアシストが付く');
+    ok(!gks.some((a) => (a.awards || []).some((x) => /得点王|アシスト王|ゴールデンシュー/.test(x.name))) && !fs.some((a) => (a.awards || []).some((x) => /最優秀GK|ヤシン/.test(x.name))), '賞は位置に合う');
+    ok(YA.statLine({ apps: 30, cleans: 11 }, true) === '30試合・完封11' && YA.statLine({ apps: 30, goals: 8, assists: 5 }, false) === '30試合8得点5アシスト' && YA.statLine({ apps: 3, goals: 1 }, false) === '3試合1得点', '成績の1行（古い保存はアシストを出さない）');
+    // バロンドール：順位は1〜30、1位はその年に1人だけ。点の線より下は候補に入らない
+    const mk = (o) => Object.assign({ status: 'pro', abroad: true, pos: 'FW', ovr: 18.6 }, o);
+    const ss = (o) => Object.assign({ apps: 30, goals: 25, assists: 8, titles: [], awards: [], league: 'プレミアリーグ' }, o);
+    ok(YA.ballonScore(mk({}), ss({}), true, 160) >= YA.BD_LINE && YA.ballonScore(mk({ ovr: 14 }), ss({}), true, 160) == null && YA.ballonScore(mk({ abroad: false }), ss({}), true, 160) == null, 'バロンドールの点：力があり5大リーグで数字を残すと候補、力が足りない・国内は入らない');
+    ok(YA.ballonScore(mk({}), ss({ titles: ['チャンピオンズリーグ優勝', 'プレミアリーグ優勝'] }), true, 160) > YA.ballonScore(mk({}), ss({}), true, 160) + 10, 'CL とリーグの優勝はバロンドールの点を上げる');
+    const wb = YA.newWorld(5); wb.year = 9; wb.alumni = [];
+    for (let i = 0; i < 12; i++) wb.alumni.push({ name: '試し ' + i, pos: i % 4 ? 'FW' : 'GK', main: i % 4 ? 'ST' : 'GK', year: 1, ovr: 18.9, status: 'pro', abroad: true, club: 'ロイヤル・マドリード', league: 'ラ・リーガ', age: 25, apps: 0, goals: 0, nat: 1, transfers: 0, seasons: [], titles: [], awards: [] });
+    let winners = 0, ranks = [];
+    for (let y = 0; y < 6; y++) { wb.year++; YA.alumniTick(wb); for (const a of wb.alumni) { const s = a.seasons.slice(-1)[0]; if (s && s.y === wb.year && s.bd) ranks.push(s.bd); } winners += wb.alumni.filter((a) => a.seasons.slice(-1)[0] && a.seasons.slice(-1)[0].y === wb.year && a.seasons.slice(-1)[0].bd === 1).length > 1 ? 99 : 0; }
+    ok(ranks.length >= 10 && ranks.every((x) => x >= 1 && x <= 30) && winners === 0, 'バロンドールの順位は1〜30で、1位は年に1人（' + ranks.length + '件）');
+    ok(wb.alumni.every((a) => a.pos !== 'GK' || (!a.goals && !a.assists)), '世界一級の GK でも点は取らない');
+    // 移籍金と市場価値（2026-11-15「移籍金とかもみたい」）
+    const mv = wt2.alumni.filter((a) => (a.moves || []).length);
+    ok(mv.length >= 1 && mv.every((a) => a.moves.length === a.transfers && a.moves.every((m) => m.fee > 0 && m.from && m.to && m.from !== m.to) && a.feeTotal === a.moves.reduce((t, m) => t + m.fee, 0)), '移籍は移籍金・どこから・どこへが残り、合計と合う（' + mv.length + '人）');
+    ok(mv.every((a) => a.moves.every((m, i) => i === 0 || a.moves[i - 1].to === m.from)), '移籍の記録はつながる（前の行き先が次の出どころ）');
+    const pros = wt2.alumni.filter((a) => a.status === 'pro' && (a.seasons || []).length);
+    ok(pros.every((a) => a.seasons.filter((x) => x.club && YA.clubLeague(x.club) || x.value != null).every((x) => x.value == null || x.value >= 0)) && pros.some((a) => a.seasons.some((x) => x.value > 0)), 'プロの年ごとの市場価値');
+    ok(YA.marketValue({ status: 'pro', abroad: true, ovr: 18, age: 24 }) > YA.marketValue({ status: 'pro', abroad: false, ovr: 18, age: 24 }) && YA.marketValue({ status: 'pro', abroad: true, ovr: 18, age: 22 }) > YA.marketValue({ status: 'pro', abroad: true, ovr: 18, age: 31 }) && YA.marketValue({ status: 'univ', ovr: 18, age: 22 }) === 0, '市場価値：海外は高く、若いほど高い。プロ以外は0');
+    ok(YA.yen(0) === '0円' && YA.yen(3500) === '3500万円' && YA.yen(12000) === '1.2億円' && YA.yen(704000) === '70億円' && YA.yen(10000) === '1億円', 'お金の見せ方');
+  }
   const names = new Set(YA.PRO_CLUBS.map((c) => c.name));
   ok(wt2.alumni.filter((a) => a.status === 'pro' && !a.abroad).every((a) => names.has(a.club)), '国内の移籍先は固定のクラブ表から');
   ok(Object.values(YA.ABROAD_CLUBS).reduce((n, l) => n + l.length, 0) >= 300 && YA.ABROAD_LEAGUES.length >= 35 && ['プレミアリーグ', 'ラ・リーガ', 'セリエA', 'チャンピオンシップ（イングランド2部）', 'セリエB（イタリア2部）'].every((k) => YA.ABROAD_CLUBS[k].length >= 20), '海外のクラブは300以上・35リーグ・5大リーグは2部まで全チーム');

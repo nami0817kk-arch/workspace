@@ -360,7 +360,7 @@
     const r = lt0.apply(this, arguments);
     for (const a of w.alumni || []) {
       if (!a.star || a.year >= w.year || a.retired) continue;
-      const tail = a.status === 'pro' ? `${a.club}（${a.league}）で通算${a.apps || 0}試合${a.goals || 0}得点` : a.status === 'univ' ? `${a.club}で四年間のプレー中` : `${a.club}で続けている`;
+      const tail = a.status === 'pro' ? `${a.club}（${a.league}）で通算${YA.statLine(a, a.pos === 'GK')}` : a.status === 'univ' ? `${a.club}で四年間のプレー中` : `${a.club}で続けている`;
       YA.noteTier(w, 2, `卒業生の${a.name}★（${a.year}年目卒）：${tail}`);
     }
     const n = ((w.letters || {})[w.year] || []).length;

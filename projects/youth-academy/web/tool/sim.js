@@ -261,5 +261,22 @@ ok(fxTraits > 200 && fxPers > 20, 'fx が少ない');
   const f = YA.tacticFitOf(home, 'ポゼッション');
   ok(typeof f.fit === 'number' && ['◎', '○', '△', '✕'].includes(f.mark) && f.abs.length === 5, '戦術の相性が出る');
 }
+// GK は点もアシストも記録しない（2026-11-15「ゴールキーパーなのにゴールしているバグとかないように」）。
+// キッカーに GK を指定しても蹴らない
+{
+  let bad = 0, n = 0;
+  for (let s = 1; s <= 200; s++) {
+    const m = mk(s, s % 3, false);
+    for (const t of [m.home, m.away]) {
+      const g = m.onPitch(t).find((x) => x.pos === 'GK');
+      if (g && s % 2) { t.tactic = t.tactic || {}; t.tactic.pk = g.p.id; t.tactic.fk = g.p.id; t.tactic.ck = g.p.id; }
+    }
+    let guard = 0;
+    while (!m.finished && guard++ < 1000) m.step();
+    for (const t of [m.home, m.away]) for (const x of m.onPitch(t)) if (x.pos === 'GK') { n++; if ((x.p.st.goals || 0) + (x.p.st.assists || 0) > 0) bad++; }
+    for (const sc of m.scenes) if (sc.goal) for (const t of [m.home, m.away]) for (const x of m.onPitch(t)) if (x.pos === 'GK' && (sc.shooter === x.p.id || sc.assist === x.p.id)) bad++;
+  }
+  ok(n >= 300 && bad === 0, 'GK が点かアシストを記録した ' + bad + '/' + n);
+}
 console.log(fails ? '失敗 ' + fails : 'すべて通過');
 process.exit(fails ? 1 : 0);
