@@ -107,7 +107,8 @@ void main() {
     await _shoot(t, '4e_next_opponent', await _with(mid), act: (t) async {
       final card = find.text('次の相手の分析');
       await t.scrollUntilVisible(card, 200, scrollable: find.descendant(of: find.byType(ProgressTab), matching: find.byType(Scrollable)).first);
-      await t.drag(find.descendant(of: find.byType(ProgressTab), matching: find.byType(Scrollable)).first, const Offset(0, 330));
+      // 見出しを画面の上へ(欄の全体が見える)
+      await t.ensureVisible(card);
       await t.pumpAndSettle();
     });
     await _shoot(t, '4d_box_score', await _with(careerAt(3, 12)..startSeason()), act: (t) async {

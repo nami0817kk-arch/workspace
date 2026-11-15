@@ -123,7 +123,7 @@ class NextOpponentCard extends StatelessWidget {
   }
 }
 
-/// 中央から左右に伸びる差の帯(±6で端まで)。
+/// 中央から左右に伸びる差の帯(±12で端まで。弱い相手でも差が見分けられる幅)。
 class _EdgeBar extends StatelessWidget {
   const _EdgeBar({required this.d});
   final double d;
@@ -135,7 +135,7 @@ class _EdgeBar extends StatelessWidget {
       builder: (context, cons) {
         final half = cons.maxWidth / 2;
         return TweenAnimationBuilder<double>(
-          tween: Tween(begin: 0, end: (d / 6).clamp(-1.0, 1.0)),
+          tween: Tween(begin: 0, end: (d / 12).clamp(-1.0, 1.0)),
           duration: const Duration(milliseconds: 600),
           curve: Curves.easeOutCubic,
           builder: (context, v, _) => Stack(
