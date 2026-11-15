@@ -1,3 +1,4 @@
+import '../l10n/tr.dart';
 import '../models/player.dart';
 import '../models/team.dart';
 
@@ -50,8 +51,9 @@ class SigningProposalEngine {
     for (final p in inGroup.take(maxCount)) {
       result.add(SigningProposal(
         player: p,
-        reason: '${groupLabel(weakest)}の層が薄いので、主力を上回る'
-            '総合力${p.overall}の選手です。',
+        reason: Tr.pick(
+            '${groupLabel(weakest)}の層が薄いので、主力を上回る総合力${p.overall}の選手です。',
+            'Our ${groupLabel(weakest)} depth is thin, and he is rated ${p.overall}, above our regulars.'),
       ));
     }
     if (result.length < maxCount) {
@@ -63,7 +65,8 @@ class SigningProposalEngine {
       for (final p in rest.take(maxCount - result.length)) {
         result.add(SigningProposal(
           player: p,
-          reason: '市場で目を引く総合力${p.overall}の選手です。',
+          reason: Tr.pick('市場で目を引く総合力${p.overall}の選手です。',
+              'A standout on the market, rated ${p.overall}.'),
         ));
       }
     }
@@ -95,8 +98,8 @@ class SigningProposalEngine {
 
   static String groupLabel(PositionGroup g) => switch (g) {
         PositionGroup.gk => 'GK',
-        PositionGroup.def => 'ディフェンス',
-        PositionGroup.mid => 'ミッドフィールド',
-        PositionGroup.att => 'フォワード',
+        PositionGroup.def => Tr.pick('ディフェンス', 'defense'),
+        PositionGroup.mid => Tr.pick('ミッドフィールド', 'midfield'),
+        PositionGroup.att => Tr.pick('フォワード', 'attack'),
       };
 }

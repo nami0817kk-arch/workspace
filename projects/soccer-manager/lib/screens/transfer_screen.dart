@@ -200,7 +200,9 @@ class _TransferScreenState extends State<TransferScreen>
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          '${pr.player.name}(${pr.player.position.label}・${pr.player.age}歳)',
+                                          Tr.pick(
+                                              '${pr.player.name}(${pr.player.position.label}・${pr.player.age}歳)',
+                                              '${pr.player.name} (${pr.player.position.label}, ${pr.player.age})'),
                                           style: const TextStyle(
                                               fontWeight: FontWeight.bold),
                                         ),
