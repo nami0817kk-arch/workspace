@@ -101,8 +101,9 @@ MatchInProgress match({
   Appearance appearance = Appearance.start,
   List<int> conceded = const [],
   int seed = 1,
+  Scenario? at,
 }) {
-  final scenario = ScenarioPool.defence.first;
+  final scenario = at ?? ScenarioPool.defence.first;
   return MatchInProgress(
     matchday: 1,
     opponent: _opponent,
@@ -252,10 +253,15 @@ void main() {
 
     test('守備の統率者は、無失点のときだけ評価が上がる', () {
       double rating(List<Trait> traits, List<int> conceded) {
+        // 外しても失点しない局面で確かめる。自陣の局面は外すと失点する
+        // ことがあり（`Exposure`）、無失点かどうかが手の成否で変わってしまう。
         final m = match(
           minutes: const [40],
           traits: traits,
           conceded: conceded,
+          at: ScenarioPool.defence.firstWhere(
+            (s) => s.options.every((o) => o.exposure == Exposure.none),
+          ),
         );
         m.choose(m.current.options.first);
         return m.finish().rating!;
