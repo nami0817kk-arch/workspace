@@ -16,6 +16,7 @@ from naze import worldmap  # noqa: E402
 BOX = (57.6, 43.0, 62.4, 47.2)
 Z = 9
 PPD = 256 * 2 ** Z / 360
+LAKE = (58.0, 43.45, 61.85, 46.85)      # 1960 年の湖が収まる四角(経度・緯度。地図から読んだ)
 LEVELS = {"1960": 53.4, "1971": 51.1, "1976": 48.3, "1989": 39.1}
 
 
@@ -28,6 +29,12 @@ def main():
     kx = np.cos(np.radians((BOX[1] + BOX[3]) / 2))
     for yr, lv in LEVELS.items():
         m = (e < lv).astype(np.uint8)
+        # 湖の外の低い土地(シルダリヤの下流・南のデルタ)まで広がらないよう、1960 年の湖の範囲(地図で読んだ四角)で切る
+        x0, x1 = int((LAKE[0] - BOX[0]) * PPD), int((LAKE[2] - BOX[0]) * PPD)
+        y0, y1 = int((BOX[3] - LAKE[3]) * PPD), int((BOX[3] - LAKE[1]) * PPD)
+        clip = np.zeros_like(m)
+        clip[y0:y1, x0:x1] = 1
+        m = m * clip
         n, lab, st, _ = cv2.connectedComponentsWithStats(m, 4)
         cx, cy = int((60.0 - BOX[0]) * PPD), int((BOX[3] - 45.0) * PPD)    # 湖の真ん中あたり(60E, 45N)とつながる低地だけ
         keep = np.zeros_like(m)
