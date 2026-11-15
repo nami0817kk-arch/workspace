@@ -365,7 +365,7 @@ class Formulas {
   /// ——**毎試合 0.18点ぶんクラブが弱かった**。同じ強さのクラブに居ても
   /// リーグ優勝が CM 1.4 / DM 1.2 / WG 1.1 回、CB・GK は 4.0 回だった。
   static double teammateGoalShareFor(Position position) => switch (position) {
-    Position.st => 0.70,
+    Position.st => 0.62,
     Position.wg => 0.84,
     Position.am => 0.97,
     Position.cm || Position.dm => 0.97,
