@@ -198,9 +198,64 @@ class PlayoffRunScreen extends StatefulWidget {
   State<PlayoffRunScreen> createState() => _PlayoffRunScreenState();
 }
 
-class _PlayoffRunScreenState extends State<PlayoffRunScreen> {
+class _PlayoffRunScreenState extends State<PlayoffRunScreen> with SingleTickerProviderStateMixin {
   int _series = 0;
   int _shown = 0;
+
+  /// 流して見ている(1試合ずつ自動で出す)。接戦で止まる(2026-11-16、2K のプレーオフは1試合1行で流れ、接戦だけ入って見る)。
+  bool _auto = false;
+
+  /// 開いている試合(流れのグラフと終盤を出す)。
+  int? _open;
+
+  late final AnimationController _tick = AnimationController(vsync: this, duration: const Duration(milliseconds: 550))
+    ..addStatusListener((st) {
+      if (st != AnimationStatus.completed || !mounted || !_auto) return;
+      _step();
+    });
+
+  @override
+  void dispose() {
+    _tick.dispose();
+    super.dispose();
+  }
+
+  /// 接戦(5点差以内・延長・第7戦)。
+  static bool close(GameResult g, int index) => (g.homePts - g.awayPts).abs() <= 5 || g.overtimes > 0 || index == 6;
+
+  List<Series> _mine() => [
+    for (final s in widget.c.career!.playoffs)
+      if (s.high == widget.c.career!.mine || s.low == widget.c.career!.mine) s,
+  ];
+
+  void _step() {
+    final list = _mine();
+    if (_series >= list.length) return;
+    final s = list[_series];
+    if (_shown >= s.games.length) {
+      setState(() => _auto = false);
+      return;
+    }
+    final i = _shown;
+    setState(() {
+      _shown++;
+      if (close(s.games[i], i)) {
+        // 接戦は止めて、流れを開いて見せる
+        _auto = false;
+        _open = i;
+      }
+    });
+    if (_auto && _shown < s.games.length) _tick.forward(from: 0);
+    if (_shown >= s.games.length) setState(() => _auto = false);
+  }
+
+  void _play() {
+    setState(() {
+      _auto = true;
+      _open = null;
+    });
+    _step();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -246,19 +301,48 @@ class _PlayoffRunScreenState extends State<PlayoffRunScreen> {
                     style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: won ? GmColors.gold : GmColors.bad),
                   ),
                 ),
-              for (final (i, g) in games.indexed)
-                InkWell(
-                  onTap: () => showBoxScore(context, g, mine),
-                  child: Row(children: [
-                    SizedBox(width: 56, child: Text('第${i + 1}戦', style: const TextStyle(fontSize: 12, color: GmColors.sub))),
-                    Expanded(child: GameRow(g: g, mine: mine)),
-                  ]),
+              for (final (i, g) in games.indexed) ...[
+                // 1試合1行。新しく出た行は横から滑り込む
+                TweenAnimationBuilder<double>(
+                  key: ValueKey('${_series}_$i'),
+                  tween: Tween(begin: 0, end: 1),
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeOutCubic,
+                  builder: (context, t, child) => Opacity(
+                    opacity: t,
+                    child: Transform.translate(offset: Offset(24 * (1 - t), 0), child: child),
+                  ),
+                  child: InkWell(
+                    onTap: () => setState(() => _open = _open == i ? null : i),
+                    onLongPress: () => showBoxScore(context, g, mine),
+                    child: Row(children: [
+                      SizedBox(width: 50, child: Text('第${i + 1}戦', style: const TextStyle(fontSize: 12, color: GmColors.sub))),
+                      Expanded(child: GameRow(g: g, mine: mine)),
+                      if (close(g, i))
+                        const Padding(padding: EdgeInsets.only(left: 4), child: Tag('接戦', color: GmColors.gold)),
+                      Icon(_open == i ? Icons.expand_less_rounded : Icons.expand_more_rounded, size: 18, color: GmColors.sub),
+                    ]),
+                  ),
                 ),
+                if (_open == i)
+                  Padding(
+                    padding: const EdgeInsets.only(left: 50, bottom: 6),
+                    child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                      GameFlowCard(g: g, mine: mine),
+                      for (final pl in g.plays.reversed.take(4).toList().reversed)
+                        Text('・$pl', style: const TextStyle(fontSize: 11, height: 1.5)),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: TextButton(onPressed: () => showBoxScore(context, g, mine), child: const Text('ボックススコア', style: TextStyle(fontSize: 12))),
+                      ),
+                    ]),
+                  ),
+              ],
               if (games.isNotEmpty) ...[
                 for (final h in car.highlightsOf([games.last]))
                   Padding(padding: const EdgeInsets.only(top: 4), child: Text('・$h', style: const TextStyle(fontSize: 13, color: GmColors.gold))),
                 const SizedBox(height: 4),
-                const Text('試合を押すと、ボックススコアが見られる。', style: TextStyle(fontSize: 12, color: GmColors.sub)),
+                const Text('試合を押すと流れのグラフと終盤、長押しでボックススコア。「流して見る」は接戦で止まる。', style: TextStyle(fontSize: 12, color: GmColors.sub)),
               ],
             ]),
           ),
@@ -270,8 +354,20 @@ class _PlayoffRunScreenState extends State<PlayoffRunScreen> {
                 Expanded(
                   child: OutlinedButton(
                     style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(44)),
-                    onPressed: () => setState(() => _shown = s.games.length),
+                    onPressed: () => setState(() {
+                      _auto = false;
+                      _shown = s.games.length;
+                    }),
                     child: const Text('シリーズの結果まで'),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: OutlinedButton.icon(
+                    style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(44)),
+                    onPressed: _auto ? null : _play,
+                    icon: const Icon(Icons.fast_forward_rounded, size: 18),
+                    label: Text(_auto ? '流している…' : '流して見る'),
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -281,11 +377,14 @@ class _PlayoffRunScreenState extends State<PlayoffRunScreen> {
                 child: FilledButton.icon(
                   style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(44)),
                   onPressed: () => setState(() {
+                    _auto = false;
                     if (!done) {
+                      _open = close(s.games[_shown], _shown) ? _shown : null;
                       _shown++;
                     } else {
                       _series++;
                       _shown = 0;
+                      _open = null;
                     }
                   }),
                   icon: Icon(done ? Icons.arrow_forward_rounded : Icons.sports_basketball_rounded),

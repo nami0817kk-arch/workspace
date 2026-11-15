@@ -183,6 +183,30 @@ void main() {
       await t.ensureVisible(head);
       await t.pumpAndSettle();
     });
+    // 流して見る(接戦で止まり、流れが開く)
+    final po2 = careerAt(4, 3)..startSeason();
+    while (po2.phase == Phase.season) {
+      po2.declineIncoming();
+      po2.playBlock();
+    }
+    await _shoot(t, '4c2_playoff_stream', await _with(po2), act: (t) async {
+      final b = find.textContaining(RegExp('プレーオフを戦う|プレーオフの結果を見る'));
+      await t.ensureVisible(b);
+      await t.pump(const Duration(milliseconds: 300));
+      await t.tap(b);
+      for (var i = 0; i < 3; i++) {
+        await t.pump(const Duration(milliseconds: 400));
+      }
+      // 知らせの幕が重なることがあるので、ボタンの動作を直接呼ぶ
+      if (find.text('OK').evaluate().isNotEmpty) {
+        await t.tap(find.text('OK'));
+        await t.pump(const Duration(milliseconds: 400));
+      }
+      t.widget<ButtonStyleButton>(find.ancestor(of: find.text('流して見る'), matching: find.bySubtype<ButtonStyleButton>()).first).onPressed!();
+      for (var i = 0; i < 12; i++) {
+        await t.pump(const Duration(milliseconds: 300));
+      }
+    });
     await _shoot(t, '5_team', await _with(mid), act: (t) => _tap(t, 'チーム', first: true));
     await _shoot(t, '6_trade', await _with(mid), act: (t) => _tap(t, 'トレード', first: true));
     // 選手を選んだあと(相手の反応・強さと勝ち数の見込みの変化)

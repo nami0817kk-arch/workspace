@@ -156,6 +156,59 @@ void scout(Prospect p, Rng rng, {int level = 2}) {
     ..potHi = ph;
 }
 
+/// シーズン中の下調べで調べ済みにする(乱数を使わない。幅のずれは id から決める)。
+void scoutQuiet(Prospect p, {int level = 2}) {
+  if (p.scouted) return;
+  p.scouted = true;
+  p.player.traitsKnown = true;
+  final k = (level - 1).clamp(0, 2);
+  (int, int) range(int truth, int half, int salt) {
+    final shift = _idBits(p, salt, half * 2 + 1) - half;
+    final lo = truth - half + shift, hi = truth + half + shift;
+    return (math.min(lo, truth).clamp(30, 99), math.max(hi, truth).clamp(30, 99));
+  }
+
+  final (ol, oh) = range(p.player.ovr, scoutOvrHalf[k], 12);
+  final (pl, ph) = range(p.player.pot, scoutPotHalf[k], 13);
+  p
+    ..ovrLo = ol
+    ..ovrHi = oh
+    ..potLo = pl
+    ..potHi = ph;
+}
+
+/// シーズン中にスカウトを向ける先(2026-11-16、2K の MyGM ではスカウトが受信箱に来て「誰を見るか」を聞く)。
+/// 保存は番号なので、増やすときは後ろに足す。
+enum ScoutFocus {
+  top('1巡目の上位'),
+  guards('ガード'),
+  wings('フォワード'),
+  bigs('センター'),
+  sleepers('掘り出し物(2巡目あたり)');
+
+  const ScoutFocus(this.label);
+  final String label;
+
+  /// この向け先に入る候補か([rank] は模擬ドラフトの予想順位、1始まり)。
+  bool matches(Prospect p, int rank) => switch (this) {
+    ScoutFocus.top => rank <= 14,
+    ScoutFocus.guards => p.player.pos.guard,
+    ScoutFocus.wings => !p.player.pos.guard && !p.player.pos.big,
+    ScoutFocus.bigs => p.player.pos.big,
+    ScoutFocus.sleepers => rank > 30,
+  };
+}
+
+/// 模擬ドラフトを出す媒体(実在の名前は使わない)。
+const mockMedia = ['スポーツ紙', '専門誌', 'データサイト'];
+
+/// 媒体ごとの予想順位(世間の見立てに、媒体ごとの見方のぶれを足す。乱数を使わない)。
+Map<Prospect, int> mediaRanks(List<Prospect> pool, int media) {
+  int score(Prospect p) => consensusOf(p) * 2 + _idBits(p, 20 + media, 13) - 6;
+  final open = pool.where((p) => p.pickedBy == null).toList()..sort((a, b) => score(b).compareTo(score(a)));
+  return {for (var i = 0; i < open.length; i++) open[i]: i + 1};
+}
+
 /// 新人の年俸と年数(何番目の指名か、0始まり)。1巡目は4年(最後の2年はチームの選択権、年俸は指名順)、2巡目は2年。
 /// 1番目で1,400万ドル、30番目で360万ドルほど(2025-26 の実際の新人の年俸の表に近い)。
 (int, int) rookieContract(int overall) {

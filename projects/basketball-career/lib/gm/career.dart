@@ -251,8 +251,11 @@ const trainingNotes = [
 
 /// オフの成長の記録(自分のチームの1人分)。
 class GrowthLine {
-  const GrowthLine({required this.name, required this.age, required this.before, required this.after, this.focus, this.parts = const []});
+  const GrowthLine({required this.name, required this.age, required this.before, required this.after, this.focus, this.parts = const [], this.team = -1});
   final String name;
+
+  /// いたチーム(リーグ全体の成長の発表で使う。自分の選手の行では -1)。
+  final int team;
 
   /// 伸びの内訳(年齢・育成・練習・出場時間・性格。力のもとの数字で)。
   final List<(String, int)> parts;
@@ -272,12 +275,14 @@ class GrowthLine {
         'f': after,
         if (focus != null) 'fo': focus!.index,
         if (parts.isNotEmpty) 'pt': [for (final (l, v) in parts) [l, v]],
+        if (team >= 0) 't': team,
       };
   static GrowthLine fromJson(Map<String, dynamic> j) => GrowthLine(
         name: j['n'] as String,
         age: j['a'] as int,
         before: j['b'] as int,
         after: j['f'] as int,
+        team: (j['t'] as int?) ?? -1,
         focus: j['fo'] is int && (j['fo'] as int) >= 0 && (j['fo'] as int) < Attr.values.length ? Attr.values[j['fo'] as int] : null,
         parts: [
           if (j['pt'] is List)
@@ -653,6 +658,60 @@ class Career {
   /// 今季のオーナーとの目標の話し合いの答え(0: 受けた、1: 下げてもらった、2: もっと上を約束した)。
   int goalStance = 0;
 
+  /// シーズン中のスカウトの向け先(遊ぶ人が受信箱で答えるまでは null。自動で遊ぶ GM は答えないので、下調べはたまらない)。
+  ScoutFocus? scoutFocus;
+
+  /// 向け先ごとの下調べ(0〜100%)。ドラフトの初めに、25%ごとに1人を調べ済みにする。
+  List<int> scoutPrep = List.filled(ScoutFocus.values.length, 0);
+
+  /// このドラフトで、シーズン中の下調べから調べ済みにした候補の数。
+  int prepScouted = 0;
+
+  /// 区切りの終わりのスカウトの報告。向け先が決まっていれば下調べを進め、次の向け先を聞く。
+  void _scoutReport() {
+    final level = me.staffLevel(Staff.scout);
+    final f = scoutFocus;
+    final gain = 20 + 6 * (level - 1);
+    if (f != null) scoutPrep[f.index] = (scoutPrep[f.index] + gain).clamp(0, 100);
+    for (final m in inbox) {
+      if (m.kind == MsgKind.scoutFocus && m.needsAnswer) m.answer = f?.index ?? 0;
+    }
+    final coach = me.coachOf(Staff.scout);
+    final who = coach == null ? 'スカウト' : 'スカウトの${coach.name}';
+    final lines = [
+      if (f == null)
+        'ドラフトの候補を見に行きたい。どこを重点に見るか決めてほしい(決めると、区切りごとに下調べが進む)。'
+      else
+        '「${f.label}」を見てきた。下調べ ${scoutPrep[f.index]}%(+$gain)。',
+      for (final x in ScoutFocus.values)
+        if (scoutPrep[x.index] > 0) '・${x.label} ${scoutPrep[x.index]}% → ドラフトの初めに${scoutPrep[x.index] ~/ 25}人を調べ済みに',
+      '次はどこを見るか。',
+    ];
+    _mail(Sender.staff, '$whoの報告', lines.join('\n'), kind: MsgKind.scoutFocus, choices: [for (final x in ScoutFocus.values) x.label]);
+  }
+
+  /// ドラフトの初めに、シーズン中の下調べを候補に当てる(乱数を使わない)。
+  void _applyScoutPrep() {
+    prepScouted = 0;
+    if (scoutPrep.every((v) => v == 0)) return;
+    final ranks = mockRanks(prospects);
+    final level = me.staffLevel(Staff.scout);
+    final byRank = [...prospects]..sort((a, b) => ranks[a]!.compareTo(ranks[b]!));
+    for (final f in ScoutFocus.values) {
+      final n = (scoutPrep[f.index] ~/ 25).clamp(0, 4);
+      var done = 0;
+      for (final p in byRank) {
+        if (done >= n) break;
+        if (p.scouted || !f.matches(p, ranks[p]!)) continue;
+        scoutQuiet(p, level: level);
+        done++;
+      }
+      prepScouted += done;
+    }
+    scoutPrep = List.filled(ScoutFocus.values.length, 0);
+    if (prepScouted > 0) _mail(Sender.staff, 'シーズン中の下調べ', 'シーズン中の下調べで、$prepScouted人の候補を初めから調べ済みにした(見立ての幅が狭く、性格も分かる)。');
+  }
+
   /// 通しの区切りの番号(シーズン×4＋区切り)。約束の期限に使う。
   int get blockIndex => season * blocksPerSeason + block;
 
@@ -761,6 +820,10 @@ class Career {
     m
       ..answer = choice
       ..read = true;
+    if (m.kind == MsgKind.scoutFocus) {
+      scoutFocus = ScoutFocus.values[choice.clamp(0, ScoutFocus.values.length - 1)];
+      return;
+    }
     if (m.kind == MsgKind.ownerGoal) {
       // 下げてもらうと今すぐ信頼が減り、シーズンの終わりにも少し引かれる。上を約束すると、果たせば信頼と格の点
       if (m.season != season || phase != Phase.season || roundAt > 0) return;
@@ -818,6 +881,7 @@ class Career {
       case MsgKind.info:
       case MsgKind.press:
       case MsgKind.ownerGoal:
+      case MsgKind.scoutFocus:
         break;
     }
   }
@@ -1612,6 +1676,7 @@ class Career {
     }
     if (block == tradeDeadlineBlock - 1) _deadlineWarning();
     _checkPromises();
+    _scoutReport();
     if (block < blocksPerSeason) _mailAfterBlock();
     if (block <= tradeDeadlineBlock && rng.chance(0.5)) _aiTrades(1);
     if (block >= blocksPerSeason) {
@@ -1623,6 +1688,29 @@ class Career {
 
   /// このオフの自分のチームの成長(年を取る前と後の力)。
   List<GrowthLine> growth = [];
+
+  /// このオフのリーグ全体の成長(伸び・落ちの大きい選手。2026-11-16、Basketball GM ではオフの成長の発表が
+  /// 遊ぶ人の話題になっている)。力のもとの数字で、差の大きい順に残す。
+  List<GrowthLine> leagueGrowth = [];
+
+  void _noteLeagueGrowth(GrowthLine g) {
+    if ((g.after - g.before).abs() < 2) return;
+    leagueGrowth.add(g);
+    if (leagueGrowth.length > 48) {
+      leagueGrowth.sort((a, b) => (b.after - b.before).abs().compareTo((a.after - a.before).abs()));
+      // 伸びと落ちをそれぞれ残す
+      final up = [for (final x in leagueGrowth) if (x.after > x.before) x].take(12);
+      final down = [for (final x in leagueGrowth) if (x.after < x.before) x].take(12);
+      leagueGrowth = [...up, ...down];
+    }
+  }
+
+  /// このオフに大きく伸びた選手(上から [n] 人)と、落ちた選手。
+  List<GrowthLine> leagueRisers([int n = 6]) => ([for (final x in leagueGrowth) if (x.after > x.before) x]..sort((a, b) => (b.after - b.before).compareTo(a.after - a.before))).take(n).toList();
+  List<GrowthLine> leagueFallers([int n = 6]) => ([for (final x in leagueGrowth) if (x.after < x.before) x]..sort((a, b) => (a.after - a.before).compareTo(b.after - b.before))).take(n).toList();
+
+  /// 来季の強さ予想(今の強さの順。0が1位)。
+  List<int> powerRanking() => [for (final t in [...teams]..sort((a, b) => b.strength.compareTo(a.strength))) t.index];
 
   void setTraining(int level) => me.training = level.clamp(0, 2);
 
@@ -2160,6 +2248,7 @@ class Career {
     }
     news = [];
     growth = [];
+    leagueGrowth = [];
     optionPending = [];
     for (final p in [...freeAgents, ...me.roster]) {
       p
@@ -2205,6 +2294,7 @@ class Career {
           p.lastDelta += v;
           d += v;
         }
+        _noteLeagueGrowth(GrowthLine(name: p.name, age: p.age, before: start, after: p.ovr, team: t.index));
         if (t.index == mine) {
           growth.add(GrowthLine(name: p.name, age: p.age, before: start, after: p.ovr, focus: p.focus, parts: [
             if (byAge != 0) (p.age <= 25 ? '年齢(若さ)' : '年齢', byAge),
@@ -2301,6 +2391,7 @@ class Career {
     }
 
     prospects = [...main, ...makeProspects(deepRng, nextId, deepProspects, name: deepName, deep: true)];
+    _applyScoutPrep();
     board = [];
     draftAt = 0;
     draftLog = [];
@@ -2811,6 +2902,18 @@ class Career {
   double _bidScore(Player p, FaBid b) {
     final ask = askOf(p, teams[b.team]).salary;
     return interest(p, b.team) + (b.salary / ask - 1) * _moneyWeight(p) + math.min(b.years, askOf(p, me).maxYears) * 1.5;
+  }
+
+  /// 選手がいま傾いているチーム(申し込みの中で、選手の目から最も良いもの)。申し込みが無ければ -1。
+  /// 2026-11-16、2K27 の FA は選手ごとに「どこに傾いているか」が見える。乱数は使わない。
+  int leaningTo(Player p) {
+    final bs = bids[p.id];
+    if (bs == null || bs.isEmpty) return -1;
+    var best = bs.first;
+    for (final b in bs.skip(1)) {
+      if (_bidScore(p, b) > _bidScore(p, best)) best = b;
+    }
+    return best.team;
   }
 
   /// 今の申し込みで、自分のチームを選ぶ見込み(0〜1)。画面用の目安で、乱数は使わない。
@@ -3593,6 +3696,9 @@ class Career {
         'ea': extAsked,
         'ib': [for (final m in inbox) m.toJson()],
         'mid': _msgId,
+        if (scoutFocus != null) 'sf': scoutFocus!.index,
+        'sp': scoutPrep,
+        if (prepScouted > 0) 'ps': prepScouted,
         if (promises.isNotEmpty) 'pr': [for (final x in promises) x.toJson()],
         'wd': word,
         'gs': goalStance,
@@ -3616,6 +3722,7 @@ class Career {
         'mvm': [for (final a in monthly) a.toJson()],
         'cp': [for (final c in coachPool) c.toJson()],
         'gr': [for (final g in growth) g.toJson()],
+        if (leagueGrowth.isNotEmpty) 'lgr': [for (final g in leagueGrowth) g.toJson()],
         'fd': faDay,
         'bd': {for (final e in bids.entries) '${e.key}': [for (final b in e.value) b.toJson()]},
         'fl': faLog,
@@ -3701,6 +3808,9 @@ class Career {
       ..extAsked = [for (final x in (j['ea'] as List? ?? const [])) x as int]
       ..inbox = [for (final m in maps('ib')) Message.fromJson(m)]
       .._msgId = (j['mid'] as int?) ?? 1
+      ..scoutFocus = j['sf'] is int ? ScoutFocus.values[(j['sf'] as int).clamp(0, ScoutFocus.values.length - 1)] : null
+      ..scoutPrep = [for (var i = 0; i < ScoutFocus.values.length; i++) (j['sp'] is List && (j['sp'] as List).length > i) ? ((j['sp'] as List)[i] as int) : 0]
+      ..prepScouted = (j['ps'] as int?) ?? 0
       ..promises = [for (final x in maps('pr')) Promise.fromJson(x)]
       ..word = (j['wd'] as int?) ?? startWord
       ..goalStance = (j['gs'] as int?) ?? 0
@@ -3730,6 +3840,7 @@ class Career {
       ..monthly = [for (final a in maps('mvm')) Award.fromJson(a)]
       ..coachPool = [for (final x in maps('cp')) Coach.fromJson(x)]
       ..growth = [for (final g in maps('gr')) GrowthLine.fromJson(g)]
+      ..leagueGrowth = [for (final g in maps('lgr')) GrowthLine.fromJson(g)]
       ..faDay = ((j['fd'] as int?) ?? 0).clamp(0, faDays)
       ..bids = {
         for (final e in (j['bd'] as Map? ?? const {}).entries)
