@@ -22,6 +22,7 @@ import '../widgets/player_face_avatar.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/responsive_body.dart';
 import '../l10n/tr.dart';
+import '../widgets/screen_bar.dart';
 
 /// 布陣の攻守の偏りを「+5%」「±0%」の形にする。
 ///
@@ -42,8 +43,9 @@ class LineupScreen extends StatelessWidget {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(Tr.pick('スタメン・戦術', 'Squad & tactics')),
+        appBar: screenBar(
+          context,
+          title: Tr.pick('スタメン・戦術', 'Squad & tactics'),
           // この画面は下タブの一員でもあり、ホームやガイドから直接
           // 開かれもする。開かれた場合は戻る手段が要る。
           //
@@ -52,12 +54,10 @@ class LineupScreen extends StatelessWidget {
           // 戻る手段が本当に無くなる(「はじめの一歩」から開くと詰んだ)。
           leading: Navigator.of(context).canPop() ? const BackButton() : null,
           actions: const [QuickAccessMenuButton()],
-          bottom: TabBar(
-            tabs: [
-              Tab(text: Tr.pick('フォーメーション', 'Formation')),
-              Tab(text: Tr.pick('戦術', 'Tactics')),
-            ],
-          ),
+          tabs: [
+            Tr.pick('フォーメーション', 'Formation'),
+            Tr.pick('戦術', 'Tactics'),
+          ],
         ),
         drawer: const QuickAccessDrawer(),
         body: const ResponsiveBody(

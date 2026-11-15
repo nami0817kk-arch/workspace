@@ -14,6 +14,7 @@ import 'player_compare_screen.dart';
 import '../l10n/tr.dart';
 import '../theme/semantic_colors.dart';
 import '../widgets/transfer_table.dart';
+import '../widgets/screen_bar.dart';
 
 enum TransferSortOption { overall, potential, marketValue, age }
 
@@ -109,9 +110,16 @@ class _TransferScreenState extends State<TransferScreen>
     );
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(Tr.pick('移籍市場', 'Transfers')),
+      appBar: screenBar(
+        context,
+        title: Tr.pick('移籍市場', 'Transfers'),
         leading: widget.embedded ? null : const BackButton(),
+        controller: _tabController,
+        tabs: [
+          Tr.pick('市場', 'Market'),
+          Tr.pick('フリーエージェント (${gameState.freeAgents.length})',
+              'Free agents (${gameState.freeAgents.length})'),
+        ],
         actions: [
           PopupMenuButton<TransferSortOption>(
             icon: const Icon(Icons.sort),
@@ -138,15 +146,6 @@ class _TransferScreenState extends State<TransferScreen>
           ),
           const QuickAccessMenuButton(),
         ],
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: [
-            Tab(text: Tr.pick('市場', 'Market')),
-            Tab(
-                text: Tr.pick('フリーエージェント (${gameState.freeAgents.length})',
-                    'Free agents (${gameState.freeAgents.length})')),
-          ],
-        ),
       ),
       drawer: const QuickAccessDrawer(),
       body: ResponsiveBody(
@@ -203,6 +202,7 @@ class _TransferScreenState extends State<TransferScreen>
                 Flexible(
                   flex: 3,
                   child: PositionFilterBar(
+                    compact: true,
                     value: _filter,
                     onChanged: (v) => setState(() => _filter = v),
                   ),

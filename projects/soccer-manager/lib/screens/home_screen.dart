@@ -49,6 +49,7 @@ import '../logic/prematch_check.dart';
 import '../models/club_vision.dart';
 import '../models/preseason_camp.dart';
 import '../l10n/tr.dart';
+import '../widgets/screen_bar.dart';
 
 /// 移籍オファーを選手ごとにグループ化し、各グループ内は金額の高い順に並べる
 /// (複数クラブが競合している場合、最高額が先頭に来る)。
@@ -101,22 +102,27 @@ class HomeScreen extends StatelessWidget {
       child: Scaffold(
         // ヘッダーにエンブレムを出す。クラブ名だけだと、どの画面も
         // 同じ見出しに見えて「自分のクラブ」の感じが出ない。
-        appBar: AppBar(
-          titleSpacing: 0,
-          title: Row(
-            children: [
-              ClubEmblem(
-                teamId: userTeam.id,
-                teamName: save.clubName,
-                size: 28,
+        // 左メニューに埋め込まれた横画面では、上バーにクラブ名があるので
+        // この帯は出さない(同じ名前が二重になり、縦の高さも食う)。
+        appBar: EmbeddedInShell.of(context)
+            ? null
+            : AppBar(
+                titleSpacing: 0,
+                title: Row(
+                  children: [
+                    ClubEmblem(
+                      teamId: userTeam.id,
+                      teamName: save.clubName,
+                      size: 28,
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child:
+                          Text(save.clubName, overflow: TextOverflow.ellipsis),
+                    ),
+                  ],
+                ),
               ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Text(save.clubName, overflow: TextOverflow.ellipsis),
-              ),
-            ],
-          ),
-        ),
         drawer: const QuickAccessDrawer(),
         body: ResponsiveBody(
           maxWidth: wide ? 1100 : 720,

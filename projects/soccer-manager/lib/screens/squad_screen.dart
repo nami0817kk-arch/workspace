@@ -20,6 +20,7 @@ import '../widgets/squad_table.dart';
 import 'player_detail_screen.dart';
 import '../l10n/tr.dart';
 import '../theme/semantic_colors.dart';
+import '../widgets/screen_bar.dart';
 
 enum SquadSortOption {
   position,
@@ -383,10 +384,11 @@ class _SquadScreenState extends State<SquadScreen> {
         ?.playerRatings;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_compareMode
+      appBar: screenBar(
+        context,
+        title: _compareMode
             ? Tr.pick('選手を2人選択', 'Pick two players')
-            : Tr.pick('スカッド', 'Squad')),
+            : Tr.pick('スカッド', 'Squad'),
         // 下タブの一員でもあり、ホームやガイドから直接開かれもする。
         // 開かれた場合は戻るボタンを出す(ドロワーがあると既定では出ない)。
         leading: Navigator.of(context).canPop() ? const BackButton() : null,
@@ -473,6 +475,7 @@ class _SquadScreenState extends State<SquadScreen> {
             Padding(
               padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
               child: PositionFilterBar(
+                wrap: wide,
                 value: _filterGroup,
                 onChanged: (g) => setState(() => _filterGroup = g),
               ),
@@ -495,6 +498,8 @@ class _SquadScreenState extends State<SquadScreen> {
                           style: const TextStyle(fontSize: 12),
                         ),
                         visualDensity: VisualDensity.compact,
+                        labelPadding:
+                            const EdgeInsets.symmetric(horizontal: 2),
                         selected: _statusFilter == f,
                         onSelected: (_) => setState(() => _statusFilter = f),
                       ),
@@ -910,7 +915,7 @@ class _SquadLayout extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(width: 330, child: ListView(children: header)),
+        SizedBox(width: 340, child: ListView(children: header)),
         const VerticalDivider(width: 1),
         Expanded(child: list),
       ],

@@ -28,6 +28,7 @@ import '../widgets/reward_funds_card.dart';
 import '../widgets/responsive_body.dart';
 import 'player_detail_screen.dart';
 import '../l10n/tr.dart';
+import '../widgets/screen_bar.dart';
 
 class FinanceScreen extends StatelessWidget {
   const FinanceScreen({super.key, this.embedded = false});
@@ -57,20 +58,19 @@ class FinanceScreen extends StatelessWidget {
     return DefaultTabController(
       length: 5,
       child: Scaffold(
-      appBar: AppBar(
-        title: Text(Tr.pick('クラブ経営', 'Club finances')),
+      appBar: screenBar(
+        context,
+        title: Tr.pick('クラブ経営', 'Club finances'),
         leading: embedded ? null : const BackButton(),
         actions: const [QuickAccessMenuButton()],
-        bottom: TabBar(
-          isScrollable: true,
-          tabs: [
-            Tab(text: Tr.pick('概要', 'Overview')),
-            Tab(text: Tr.pick('収支・契約', 'Accounts')),
-            Tab(text: Tr.pick('資金・取引', 'Funding')),
-            Tab(text: Tr.pick('投資・規則', 'Projects')),
-            Tab(text: Tr.pick('記録', 'Records')),
-          ],
-        ),
+        scrollable: true,
+        tabs: [
+          Tr.pick('概要', 'Overview'),
+          Tr.pick('収支・契約', 'Accounts'),
+          Tr.pick('資金・取引', 'Funding'),
+          Tr.pick('投資・規則', 'Projects'),
+          Tr.pick('記録', 'Records'),
+        ],
       ),
       drawer: const QuickAccessDrawer(),
       body: TabBarView(

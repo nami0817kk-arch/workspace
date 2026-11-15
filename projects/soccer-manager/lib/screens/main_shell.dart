@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import '../services/feedback_service.dart';
 import '../state/game_state.dart';
 import '../widgets/club_emblem.dart';
+import '../widgets/quick_access_drawer.dart';
+import '../widgets/screen_bar.dart';
 import 'finance_screen.dart';
 import 'fixtures_screen.dart';
 import 'home_screen.dart';
@@ -30,6 +32,7 @@ class MainShell extends StatefulWidget {
 
 class _MainShellState extends State<MainShell> {
   _Page _page = _Page.status;
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   // 縦画面の5タブ(チームは選手/先発を切り替える)。
   static const _narrowPages = [
@@ -134,6 +137,8 @@ class _MainShellState extends State<MainShell> {
         setState(() => _page = _Page.status);
       },
       child: Scaffold(
+        key: _scaffoldKey,
+        drawer: wide ? const QuickAccessDrawer() : null,
         body: wide
             ? Column(
                 children: [
@@ -152,6 +157,7 @@ class _MainShellState extends State<MainShell> {
                             page: _page,
                             badge: homeBadgeCount,
                             onSelect: _go,
+                            onMore: () => _scaffoldKey.currentState?.openDrawer(),
                           ),
                         ),
                         const VerticalDivider(width: 1),
@@ -163,9 +169,11 @@ class _MainShellState extends State<MainShell> {
                                   .appBarTheme
                                   .copyWith(toolbarHeight: 40),
                             ),
-                            child: IndexedStack(
-                              index: _widePages.indexOf(_page),
-                              children: _wideTabs,
+                            child: EmbeddedInShell(
+                              child: IndexedStack(
+                                index: _widePages.indexOf(_page),
+                                children: _wideTabs,
+                              ),
                             ),
                           ),
                         ),
@@ -194,7 +202,8 @@ class _MainShellState extends State<MainShell> {
   }
 }
 
-/// 横画面の上バー。クラブ・日付・資金と、試合を進めるボタン。
+/// 横画面の上バー(バスケGM と同じ作り)。クラブの印と、2行(クラブ名/季・節・部)、
+/// 資金、試合を進めるボタン。高さは 52 で固定。
 class _FmTopBar extends StatelessWidget {
   const _FmTopBar({required this.gameState});
 
@@ -203,7 +212,7 @@ class _FmTopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final save = gameState.save;
-    if (save == null) return const SizedBox(height: 40);
+    if (save == null) return const SizedBox(height: 52);
     final league = save.league;
     final next = league.nextUnplayedFixture;
     final matchday = next?.matchday ??
@@ -211,56 +220,71 @@ class _FmTopBar extends StatelessWidget {
             ? 0
             : league.fixtures.map((f) => f.matchday).reduce((a, b) => a > b ? a : b));
     final scheme = Theme.of(context).colorScheme;
-    final small = Theme.of(context).textTheme.bodySmall;
+    final sub = TextStyle(fontSize: 12, color: scheme.onSurfaceVariant);
     return Container(
+      height: 52,
       color: scheme.surfaceContainerHighest,
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Row(
         children: [
+          ClubEmblem(
+            teamId: gameState.userTeam.id,
+            teamName: save.clubName,
+            size: 34,
+          ),
+          const SizedBox(width: 10),
           Expanded(
-            child: Row(
+            flex: 3,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ClubEmblem(
-                  teamId: gameState.userTeam.id,
-                  teamName: save.clubName,
-                  size: 24,
+                Text(
+                  save.clubName,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                      fontSize: 15, fontWeight: FontWeight.bold),
                 ),
-                const SizedBox(width: 8),
-                Flexible(
-                  child: Text(save.clubName,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontWeight: FontWeight.bold)),
+                Text(
+                  Tr.pick(
+                      '第${league.season}季 第$matchday節・${save.currentDivisionTier}部',
+                      'Season ${league.season} MD $matchday • Tier ${save.currentDivisionTier}'),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: sub,
                 ),
-                const SizedBox(width: 16),
-                Flexible(
-                  child: Text(
-                    Tr.pick(
-                        '第${league.season}季 第$matchday節・${save.currentDivisionTier}部',
-                        'Season ${league.season} MD $matchday • Tier ${save.currentDivisionTier}'),
-                    overflow: TextOverflow.ellipsis,
-                    style: small,
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Flexible(
-                  child: Text(
-                    Tr.pick('資金 ${save.budget}万円', 'Funds ${save.budget}'),
-                    overflow: TextOverflow.ellipsis,
-                    style: small?.copyWith(
-                      color: save.budget < 0 ? scheme.error : null,
-                      fontWeight: FontWeight.bold,
-                    ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            flex: 2,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(Tr.pick('資金', 'Funds'), style: sub.copyWith(fontSize: 11)),
+                Text(
+                  Tr.pick('${save.budget}万円', '${save.budget}'),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: save.budget < 0 ? scheme.error : null,
                   ),
                 ),
               ],
             ),
           ),
+          const SizedBox(width: 12),
           if (next != null && gameState.saleReason == null)
             FilledButton.icon(
               style: FilledButton.styleFrom(
-                minimumSize: const Size(0, 32),
+                minimumSize: const Size(0, 36),
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                padding: const EdgeInsets.symmetric(horizontal: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 14),
               ),
               onPressed: gameState.isBusy
                   ? null
@@ -274,76 +298,136 @@ class _FmTopBar extends StatelessWidget {
   }
 }
 
-/// 横画面の左メニュー。見出しごとに行き先を並べる(FMのサイドメニュー)。
+/// 横画面の左メニュー(バスケGM と同じ作り)。幅 88 に、アイコンの下に名前。
+/// 選んでいる項目は左に太い印と薄い下地。いちばん下に、その他の画面への入口。
 class _FmSidebar extends StatelessWidget {
   const _FmSidebar({
     required this.page,
     required this.badge,
     required this.onSelect,
+    required this.onMore,
   });
 
   final _Page page;
   final int badge;
   final void Function(_Page) onSelect;
+  final VoidCallback onMore;
+
+  static const double _itemHeight = 54;
 
   @override
   Widget build(BuildContext context) {
-    final groups = <(String, List<(_Page, IconData, String)>)>[
+    final entries = <(_Page, IconData, IconData, String)>[
+      (_Page.status, Icons.home_outlined, Icons.home, Tr.pick('状況', 'Status')),
       (
-        Tr.pick('クラブ', 'Club'),
-        [
-          (_Page.status, Icons.inbox_outlined, Tr.pick('状況', 'Status')),
-          (_Page.finance, Icons.account_balance_outlined, Tr.pick('経営', 'Finance')),
-        ],
+        _Page.finance,
+        Icons.account_balance_outlined,
+        Icons.account_balance,
+        Tr.pick('経営', 'Finance')
       ),
       (
-        Tr.pick('チーム', 'Team'),
-        [
-          (_Page.squad, Icons.groups_outlined, Tr.pick('選手', 'Players')),
-          (_Page.lineup, Icons.checklist_outlined, Tr.pick('先発', 'Lineup')),
-        ],
+        _Page.squad,
+        Icons.groups_outlined,
+        Icons.groups,
+        Tr.pick('選手', 'Players')
       ),
       (
-        Tr.pick('移籍', 'Transfers'),
-        [
-          (_Page.transfer, Icons.swap_horiz_outlined, Tr.pick('補強', 'Signings')),
-        ],
+        _Page.lineup,
+        Icons.checklist_outlined,
+        Icons.checklist,
+        Tr.pick('先発', 'Lineup')
       ),
       (
-        Tr.pick('競技', 'Competition'),
-        [
-          (_Page.league, Icons.leaderboard_outlined, Tr.pick('リーグ', 'League')),
-        ],
+        _Page.transfer,
+        Icons.swap_horiz_outlined,
+        Icons.swap_horiz,
+        Tr.pick('補強', 'Signings')
+      ),
+      (
+        _Page.league,
+        Icons.leaderboard_outlined,
+        Icons.leaderboard,
+        Tr.pick('リーグ', 'League')
       ),
     ];
     final scheme = Theme.of(context).colorScheme;
-    return SizedBox(
-      width: 148,
-      child: ListView(
-        padding: const EdgeInsets.symmetric(vertical: 4),
-        children: [
-          for (final (title, entries) in groups) ...[
-            Padding(
-              padding: const EdgeInsets.fromLTRB(12, 8, 12, 2),
-              child: Text(title,
-                  style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
-                      color: scheme.onSurfaceVariant)),
-            ),
-            for (final (p, icon, label) in entries)
-              ListTile(
-                dense: true,
-                visualDensity: VisualDensity.compact,
-                selected: page == p,
-                selectedTileColor: scheme.secondaryContainer,
-                leading: p == _Page.status && badge > 0
-                    ? Badge(label: Text('$badge'), child: Icon(icon, size: 20))
-                    : Icon(icon, size: 20),
-                title: Text(label),
-                onTap: () => onSelect(p),
+
+    Widget item({
+      required Widget icon,
+      required String label,
+      required bool on,
+      required VoidCallback onTap,
+    }) =>
+        InkWell(
+          onTap: onTap,
+          child: Container(
+            height: _itemHeight,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: on ? scheme.primary.withValues(alpha: 0.12) : null,
+              border: Border(
+                left: BorderSide(
+                  color: on ? scheme.primary : Colors.transparent,
+                  width: 3,
+                ),
               ),
-          ],
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                icon,
+                const SizedBox(height: 2),
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: on ? FontWeight.bold : FontWeight.normal,
+                    color: on ? scheme.onSurface : scheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+
+    return Container(
+      width: 88,
+      color: scheme.surfaceContainerLow,
+      child: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  for (final (p, icon, selectedIcon, label) in entries)
+                    item(
+                      on: page == p,
+                      label: label,
+                      onTap: () => onSelect(p),
+                      icon: () {
+                        final i = Icon(
+                          page == p ? selectedIcon : icon,
+                          size: 22,
+                          color: page == p
+                              ? scheme.primary
+                              : scheme.onSurfaceVariant,
+                        );
+                        return p == _Page.status && badge > 0
+                            ? Badge(label: Text('$badge'), child: i)
+                            : i;
+                      }(),
+                    ),
+                ],
+              ),
+            ),
+          ),
+          const Divider(height: 1),
+          item(
+            on: false,
+            label: Tr.pick('その他', 'More'),
+            onTap: onMore,
+            icon: Icon(Icons.menu, size: 22, color: scheme.onSurfaceVariant),
+          ),
         ],
       ),
     );
