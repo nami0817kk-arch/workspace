@@ -336,4 +336,81 @@ const START = `S=newGame('m','normal',null);var c=S.tr.slice();S.sel=c.slice(0,S
     && a.run(`(function(){var t={temper:'makezu',temperRev:false};temperHalf(t,'s');return t.temperRev;})()`) === true, '気質に合わない語りかけで外れると、気質の候補が絞られる（1つになれば明かす）');
 }
 
+// ===== 広告を消す案内（2026-11-15：買う理由が伝わる場面で控えめに） =====
+{
+  const CAR = (o) => ({ hikari7_career: JSON.stringify(Object.assign({ seasons: 0, points: 0, hall: [] }, o)) });
+  const FINISH = "S.tr.slice(0,6).forEach(function(t){t.status='debut';});startPrep(S);S.prep.leader=S.tr[0].id;S.phase='month';S.month={w:4,busy:0,fan:0,song:0,coh:0,log:[]};";
+  const APPV = (o, store) => Object.assign({ adFree: false, canBuy: true, price: '¥370', store: store || {}, owned: {} }, o);
+  // 全画面広告を出して閉じるまで。案内が出たかを返す
+  const endSeason = (g, shown) => { g.run(START + FINISH); g.press('monthdone'); if (shown !== false) g.run("hikariAdShowing('inter')"); g.run('hikariBetweenDone()'); return !!g.run('ui.upsell'); };
+
+  const a = boot(APPV({}, CAR({ seasons: 0 })));
+  ok(!endSeason(a) && a.run('S.phase') === 'result', '1シーズン目は案内を出さず、広告を閉じたらそのまま進む');
+
+  const b = boot(APPV({}, CAR({ seasons: 1 })));
+  ok(endSeason(b) && b.run('S.phase') === 'month', '2シーズン目は、全画面広告を閉じた直後に案内を出し、まだ先へ進まない');
+  const card = b.run('vUpsell()');
+  ok(/この広告が出なくなり、動画の特典も動画なしで受け取れます/.test(card) && /（¥370）/.test(card) && /data-a="upbuy"/.test(card) && /data-a="upclose"/.test(card), '案内には値段と得なこと、［買う］と［閉じる］がある');
+  ok(/class="ov"/.test(b.run('(render(),document.querySelector("#app").innerHTML)')), '案内は画面に重ねて描かれる');
+  b.press('upbuy');
+  ok(b.posts.filter((p) => p.type === 'buy').length === 1 && b.run('S.phase') === 'month', '［買う］で購入をアプリに頼む（先へは進まない）');
+  b.run("hikariSetApp({adFree:true})");
+  ok(/広告を消しました/.test(b.run('vUpsell()')), '買えたら、お礼と「エンドロールへ」に変わる');
+  b.press('upclose');
+  ok(b.run('S.phase') === 'result' && b.run('S.ending') === true && !b.run('ui.upsell'), '閉じるとエンドロールへ進む');
+
+  const c = boot(APPV({}, CAR({ seasons: 1 })));
+  ok(endSeason(c), '2シーズン目に案内が出る');
+  c.press('upclose');
+  ok(c.run('S.phase') === 'result' && c.run('loadCareer().upAt') === 2, '［閉じる］で先へ進み、出したシーズンを覚える');
+  const gaps = [];
+  for (let i = 0; i < 4; i++) { c.run('S=null;'); gaps.push(endSeason(c)); if (c.run('ui.upsell')) c.press('upclose'); }
+  ok(JSON.stringify(gaps) === '[false,false,true,false]', '3シーズンに1回まで（2で出したら3・4は出さず、5で出す）: ' + JSON.stringify(gaps));
+
+  const d = boot(APPV({}, CAR({ seasons: 4, upAt: 2 })));
+  ok(!endSeason(d, false) && d.run('S.phase') === 'result', '全画面広告が出なかったとき（読み込めなかった）は案内を出さない');
+  const d2 = boot(APPV({}, CAR({ seasons: 4, upAt: 2 })));
+  d2.run(START + FINISH); d2.press('monthdone'); d2.run("hikariAdShowing('inter')"); d2.run('hikariBetweenDone()'); d2.run('hikariBetweenDone()');
+  ok(d2.run('!!ui.upsell') && d2.run('S.phase') === 'month', '閉じた知らせが重ねて届いても、案内は飛ばされない');
+  d2.press('monthdone');
+  ok(d2.posts.filter((p) => p.type === 'between').length === 1, '案内を出している間は、全画面広告を頼み直さない');
+  // 同じシーズンに2回出さない（ゲームの途中で閉じて、同じシーズンをもう一度終える）
+  d2.run('ui.upsell=0;');
+  ok(!d2.run('upsellDue()'), '同じシーズンに2回出さない');
+
+  const e = boot(APPV({ adFree: true }, CAR({ seasons: 5 })));
+  ok(!endSeason(e) && !e.posts.some((p) => p.type === 'between'), '広告を消した人には出さない');
+  const f = boot(APPV({ canBuy: false }, CAR({ seasons: 5 })));
+  ok(!endSeason(f) && f.run('S.phase') === 'result', '課金が使えないときは出さない');
+  const t = boot(null);
+  ok(t.run('APP===null') && !t.run('upsellDue()'), 'テスト版（アプリの外）では出さない');
+
+  // 値段が取れないときは値段を出さない
+  const g = boot(APPV({ price: null }, CAR({ seasons: 1 })));
+  ok(endSeason(g) && !/（|null|undefined/.test(g.run('vUpsell()').replace(/<[^>]+>/g, '')), '値段が取れないときは、案内に値段を出さない');
+  ok(!/null|undefined|（）/.test(g.run('(S=null,vTitle())')), 'タイトルでも、値段が取れないときは値段を出さない');
+
+  // タイトル：値段と得なことを1行で、目立つボタン
+  const h = boot(APPV({}, CAR({ seasons: 0 })));
+  const tt = h.run('vTitle()');
+  ok(/class="tbuy"><button class="btn-s" data-a="buy" >広告を消す（¥370）<\/button><div class="tbd">全画面広告が消え、動画の特典も動画なしで使えます/.test(tt), 'タイトルの「広告を消す」に値段と得なことが添えてある');
+  ok((tt.match(/data-a="buy"/g) || []).length === 1, 'タイトルの「広告を消す」のボタンは1つだけ');
+  const ht = boot(APPV({ adFree: true }, CAR({ seasons: 0 }))).run('vTitle()');
+  ok(!/class="tbuy"/.test(ht) && /広告を消しています/.test(ht), '買った人のタイトルには売り込みを出さない');
+
+  // 動画の特典の行に添える一言：1シーズンに1回だけ
+  const k = boot(APPV({}, CAR({ seasons: 0 })));
+  k.run(START);
+  const r1 = k.run("adRow('adslot','x','y')"), r2 = k.run("adRow('adslot','x','y')"), r3 = k.run("adRow('adbudget','x','y')");
+  ok(/広告を消す（¥370）と、動画なしで受け取れます/.test(r1) && /動画なしで受け取れます/.test(r2), '動画の特典の行に「広告を消すと動画なしで受け取れます」を添える（同じ行を描き直しても消えない）');
+  ok(!/uphint/.test(r3), '同じシーズンのほかの動画の行には添えない');
+  k.run('S.rnd++');
+  ok(!/uphint/.test(k.run("adRow('adslot','x','y')")), '次の審査の同じ行にも添えない（1シーズンに1回）');
+  k.run("var s2=newGame('m','normal',null);S=s2;");
+  ok(/uphint/.test(k.run("adRow('adbudget','x','y')")), '次のシーズンでは、また1回だけ添える');
+  const m = boot(APPV({ adFree: true }));
+  m.run(START);
+  ok(!/uphint/.test(m.run("adRow('adslot','x','y')")), '広告を消した人には添えない');
+}
+
 if (fails) { console.error(fails + '件 外れ'); process.exitCode = 1; } else console.log('すべて通った');
