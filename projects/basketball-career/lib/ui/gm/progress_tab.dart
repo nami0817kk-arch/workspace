@@ -555,6 +555,33 @@ class ProgressTab extends StatelessWidget {
   Future<void> _run(BuildContext context, Future<BlockReport?> Function() play) async {
     final nav = Navigator.of(context);
     await showBlockReport(nav, c, await play());
+    final hurt = c.injuryStop;
+    if (hurt == null || !nav.mounted) return;
+    // 先発がけがをした: 組み直すかを聞く
+    final auto = await showDialog<bool>(
+      context: nav.context,
+      builder: (ctx) => AlertDialog(
+        icon: const Icon(Icons.healing_rounded, color: GmColors.bad, size: 36),
+        title: Text('${hurt.name}がけが'),
+        content: SizedBox(
+          width: 460,
+          child: Text(
+            '先発の${hurt.name}(${hurt.pos.short}・OVR${shown(hurt.ovr)})が${hurt.injuryText.isEmpty ? 'けがで、あと${hurt.injured}試合休む' : hurt.injuryText}。\n'
+            '自動で組み直すと、けが人を順の後ろへ回し、出場時間を自動に戻す。今のままなら、決めた順と出場時間を残し、休む分は上の選手から足す。',
+            style: const TextStyle(height: 1.5),
+          ),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: const Text('今のまま')),
+          FilledButton(onPressed: () => Navigator.of(ctx).pop(true), child: const Text('自動で組み直す')),
+        ],
+      ),
+    );
+    if (auto == true) {
+      c.benchInjured();
+    } else {
+      c.keepRotation();
+    }
   }
 
   /// プレーオフを戦い、自分のシリーズを1試合ずつ見せる。

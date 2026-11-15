@@ -1,4 +1,5 @@
 import 'career.dart';
+import 'player.dart';
 
 /// 実績。任期をまたいで端末に残る。
 enum Achievement {
@@ -15,7 +16,19 @@ enum Achievement {
   level10('殿堂のGM', 'GM の格が10になる'),
   lottery('くじを引き当てる', 'ドラフトで全体1位の指名権を手にする'),
   capMaster('身の丈経営', 'ぜいたく税を払わずに優勝する'),
-  mvp('MVPを育てる', '自分のチームの選手がMVPに選ばれる');
+  mvp('MVPを育てる', '自分のチームの選手がMVPに選ばれる'),
+
+  // 縛りの実績(2026-11-15、ユーザー「更に調査」。Basketball GM の「年俸が上限の半分以下で優勝」のような縛りが、
+  // 長く遊ぶ目標になっているという声から)。保存は名前なので、並びは変えてよい
+  quickRebuild('3年で頂点', '強さ23位以下のチームを任され、3シーズン以内に優勝する'),
+  threePeat('3連覇', '3年続けて優勝する'),
+  homegrownCore('生え抜きの先発', '自分で指名した選手を先発に3人以上置いて優勝する'),
+  youngTitle('若き王者', '先発5人の平均年齢が25歳以下で優勝する'),
+  veteranTitle('ベテランの意地', '先発5人の平均年齢が31歳以上で優勝する'),
+  underCap('倹約の優勝', '年俸の合計が上限(1.65億ドル)以下のまま優勝する'),
+  sweep('完全制覇', 'プレーオフを1敗もせずに優勝する'),
+  allGoals('オーナーの信頼', 'オーナーの目標を1シーズンで全部果たす'),
+  wordKeeper('有言実行', 'GMの言葉の重みを90まで上げる');
 
   const Achievement(this.title, this.text);
   final String title;
@@ -69,13 +82,36 @@ class Profile {
       if (h.champion && c.lastTax == 0) Achievement.capMaster,
       if (c.awardsOf(c.season).any((a) => a.kind == AwardKind.mvp && a.team == c.mine)) Achievement.mvp,
       if (c.me.roster.any((p) => c.draftedIds.contains(p.id) && p.ovr >= 80)) Achievement.homegrown,
+      ...challengesOf(c),
     ];
     return _grant(got);
+  }
+
+  /// 縛りの実績のうち、このシーズンで果たしたもの(シーズンの終わりに見る)。
+  static List<Achievement> challengesOf(Career c) {
+    final h = c.history.last;
+    final starters = c.me.order.take(5).toList();
+    final age = starters.isEmpty ? 0.0 : starters.fold(0, (n, p) => n + p.age) / starters.length;
+    final mine = [for (final s in c.playoffs) if (s.high == c.mine || s.low == c.mine) s];
+    final lost = mine.fold(0, (n, s) => n + (s.high == c.mine ? s.lowWins : s.highWins));
+    final n = c.history.length;
+    return [
+      if (h.champion && c.startRank >= 22 && n <= 3) Achievement.quickRebuild,
+      if (h.champion && n >= 3 && c.history[n - 2].champion && c.history[n - 3].champion) Achievement.threePeat,
+      if (h.champion && starters.where((p) => c.draftedIds.contains(p.id)).length >= 3) Achievement.homegrownCore,
+      if (h.champion && starters.length == 5 && age <= 25) Achievement.youngTitle,
+      if (h.champion && starters.length == 5 && age >= 31) Achievement.veteranTitle,
+      if (h.champion && c.me.payroll <= salaryCap) Achievement.underCap,
+      if (h.champion && mine.isNotEmpty && lost == 0) Achievement.sweep,
+      if (c.goals.isNotEmpty && c.goals.every((g) => g.met == true)) Achievement.allGoals,
+      if (c.word >= 90) Achievement.wordKeeper,
+    ];
   }
 
   /// 動きのたびに呼ぶ(トレード・ドラフトの順番)。
   List<Achievement> recordProgress(Career c) => _grant([
         if (c.tradesDone >= 8) Achievement.dealer,
+        if (c.word >= 90) Achievement.wordKeeper,
         if (c.phase == Phase.draft && c.order.isNotEmpty && c.picks[c.order.first].owner == c.mine) Achievement.lottery,
         if (c.me.roster.any((p) => c.draftedIds.contains(p.id) && p.ovr >= 80)) Achievement.homegrown,
       ]);
