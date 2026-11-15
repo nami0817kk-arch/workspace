@@ -645,6 +645,11 @@ final List<_GuideSection> _sections = [
         'リードして${Formulas.situationalMinute}分を過ぎたら、つなぐ手が'
         '×${Formulas.stakesHoldPlay}、外したときの減点が×${Formulas.stakesHoldFailure}。'
         '手の横に「今は重い」「今は軽い」「外すと痛い」と出る。',
+    '自陣の局面で手を外すと、そのまま失点することがある。シュートを打たれれば'
+        '${(Formulas.concedeOnShot * 100).round()}%、決定機を与えれば'
+        '${(Formulas.concedeOnChance * 100).round()}%、PKなら'
+        '${(Formulas.concedeOnPenalty * 100).round()}%で決まる。手の横に「外すと失点○%」と出る。'
+        '前に出て奪う手は外すと危ないが、通ればこの後の失点を1つ防ぐ（「通れば1点防ぐ」）。',
     '終盤の局面はそのときのスコアで中身が変わり、追いかけているならリスクを取る局面、'
         'リードしているなら時間の使い方を問う局面が来る。',
     '1試合の1/4くらいは逆足で対応することになる。逆足の精度が低いとそこで落ちる。',

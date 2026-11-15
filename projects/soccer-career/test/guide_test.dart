@@ -41,6 +41,7 @@ void main() {
       '2つ以上で達成',
       '出た試合',
       '手の値打ちが変わる',
+      '外すと失点',
     ]) {
       expect(text, contains(name), reason: name);
     }

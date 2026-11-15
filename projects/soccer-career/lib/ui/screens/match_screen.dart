@@ -445,6 +445,7 @@ class _ScenarioView extends StatelessWidget {
               assistConversion: match.assistConversionAt(match.currentMinute),
               factors: match.distinctFactorsFor(scenario.options[i]),
               stakesNote: match.stakesNoteFor(scenario.options[i]),
+              concedeNote: MatchInProgress.concedeNoteFor(scenario.options[i]),
               onPressed: () => onChoose(i),
             ),
             const SizedBox(height: 8),
@@ -578,6 +579,7 @@ class _OptionButton extends StatelessWidget {
     required this.assistConversion,
     required this.factors,
     required this.stakesNote,
+    required this.concedeNote,
     required this.onPressed,
   });
 
@@ -621,6 +623,11 @@ class _OptionButton extends StatelessWidget {
   /// 外すと痛い）。判定と同じ式（`MatchInProgress.stakesNoteFor`）から引く。
   /// 見えない計算で答えが変わるだけだと、迷いではなく当てずっぽうになる。
   final String? stakesNote;
+
+  /// **外したら、それがそのまま失点になる確率**（外すと失点30%）。
+  /// 判定と同じ式（`MatchInProgress.concedeNoteFor`）から引く。
+  /// 守る選手の3つの手は、ここでしか見分けが付かないことが多い。
+  final String? concedeNote;
 
   final VoidCallback onPressed;
 
@@ -730,6 +737,15 @@ class _OptionButton extends StatelessWidget {
                         : theme.colorScheme.onErrorContainer,
                   ),
                 ),
+              if (concedeNote != null)
+                Padding(
+                  padding: const EdgeInsets.only(right: 6),
+                  child: Tag(
+                    concedeNote!,
+                    background: theme.colorScheme.errorContainer,
+                    foreground: theme.colorScheme.onErrorContainer,
+                  ),
+                ),
               if (option.outcome != Outcome.play)
                 // 手が通る確率と、それが点になる確率は別。
                 // 「決まるのは半分ほど」を数字で見せておく。
@@ -787,6 +803,18 @@ class _OptionButton extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 6),
                   child: Text(
                     '監督好み',
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: theme.colorScheme.primary,
+                    ),
+                  ),
+                ),
+              // 通れば、この後に入るはずだった失点が1つ消える。
+              // 危ない手を選ぶ理由は、ここにしか書いていない。
+              if (option.preventsGoal)
+                Padding(
+                  padding: const EdgeInsets.only(left: 6),
+                  child: Text(
+                    '通れば1点防ぐ',
                     style: theme.textTheme.labelSmall?.copyWith(
                       color: theme.colorScheme.primary,
                     ),

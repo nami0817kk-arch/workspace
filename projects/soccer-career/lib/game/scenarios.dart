@@ -29,6 +29,31 @@ enum ComboRole {
   finish,
 }
 
+/// **外したときに、相手にどれだけの好機を渡すか**（2026-11-15）。
+///
+/// 以前は手を外しても評価点が下がるだけで、失点は試合開始時に決まった
+/// まま動かなかった。「競り負け、決定的なヘディングを許した」と書いて
+/// あっても、スコアは何も変わらない。守る選手の3つの手は種類が揃って
+/// いて（センターバックは12局面のうち9つが3つとも止める手）、
+/// 状況の重み（`MatchStakes`）でも差が付かなかった。差を付けられるのは
+/// **外したときに何が起きるか**だけ。
+///
+/// 段は失敗の文と揃える。「スローインを与えた」手に失点の危なさを
+/// 付けると、画面が嘘をつく（`concede_test` が見張る）。
+enum Exposure {
+  /// 外しても、すぐ失点にはつながらない。
+  none,
+
+  /// シュートを打たれる。
+  shot,
+
+  /// 決定機を与える。
+  chance,
+
+  /// PK を与える・PK を止めにいく。
+  penalty,
+}
+
 /// 局面で選べる1つの手。
 class ScenarioOption {
   const ScenarioOption({
@@ -41,6 +66,7 @@ class ScenarioOption {
     required this.failureText,
     this.foul = 0,
     this.preventsGoal = false,
+    this.exposure = Exposure.none,
   });
 
   final String label;
@@ -72,6 +98,9 @@ class ScenarioOption {
   /// 止めるための反則が「警告を受けるだけの損な手」にならないように、
   /// 実際に防いでいるものを効かせる。
   final bool preventsGoal;
+
+  /// 外したときに相手へ渡す好機。自陣の局面の手にだけ付く。
+  final Exposure exposure;
 }
 
 /// その局面が出てくる展開。
@@ -199,6 +228,8 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '一気に間合いを詰め、足元でシュートを止めた。',
           failureText: '飛び出しが早く、ループで頭上を抜かれた。',
+          exposure: Exposure.chance,
+          preventsGoal: true,
         ),
         ScenarioOption(
           label: '構えてコースを消す',
@@ -208,6 +239,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '体を大きく見せてコースを消し、正面で止めた。',
           failureText: '読みが外れ、逆を突かれた。',
+          exposure: Exposure.chance,
         ),
         ScenarioOption(
           label: '足を使って時間を稼ぐ',
@@ -216,7 +248,8 @@ class ScenarioPool {
           difficulty: 50,
           outcome: Outcome.play,
           successText: '寄せる角度を変えて遅らせ、DFの帰陣を待てた。',
-          failureText: '中途半端な位置取りで、簡単に決められた。',
+          failureText: '中途半端な位置取りで、簡単に打たれた。',
+          exposure: Exposure.chance,
         ),
       ],
     ),
@@ -233,6 +266,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '混戦を避けて遠くへ弾き出した。',
           failureText: 'パンチングが弱く、こぼれ球を押し込まれかけた。',
+          exposure: Exposure.shot,
         ),
         ScenarioOption(
           label: 'キャッチに行く',
@@ -242,6 +276,8 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '最高点で掴み、そのまま速攻を始めた。',
           failureText: '手から弾き、目の前に落としてしまった。',
+          exposure: Exposure.chance,
+          preventsGoal: true,
         ),
         ScenarioOption(
           label: 'ラインに留まってDFに任せる',
@@ -251,6 +287,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: 'DFがクリアしやすい位置を保ち、危険を消した。',
           failureText: 'DFと譲り合い、誰も触れなかった。',
+          exposure: Exposure.shot,
         ),
       ],
     ),
@@ -267,6 +304,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '読み勝った。両手で弾き出し、スタジアムが沸いた。',
           failureText: '逆に飛んだ。ボールは反対側へ。',
+          exposure: Exposure.penalty,
         ),
         ScenarioOption(
           label: 'ぎりぎりまで待つ',
@@ -276,6 +314,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '最後まで待ち、反応でセーブした。',
           failureText: '待ちすぎて、隅への強いボールに届かなかった。',
+          exposure: Exposure.penalty,
         ),
         ScenarioOption(
           label: '中央で構える',
@@ -285,6 +324,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: 'キッカーが迷った。真ん中に蹴ったボールを止めた。',
           failureText: 'キッカーは迷わず隅へ蹴った。',
+          exposure: Exposure.penalty,
         ),
       ],
     ),
@@ -319,6 +359,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '落ち着いて繋ぎ、ビルドアップを始めた。',
           failureText: 'DFへのパスが弱く、相手FWに狙われた。',
+          exposure: Exposure.shot,
         ),
       ],
     ),
@@ -335,6 +376,8 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '揺れるボールを胸に収めた。',
           failureText: '手から弾き、こぼれ球を詰められた。',
+          exposure: Exposure.chance,
+          preventsGoal: true,
         ),
         ScenarioOption(
           label: '横に弾く',
@@ -344,6 +387,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '無理をせず、コーナーへ弾き出した。',
           failureText: '弾いた先に相手がいた。',
+          exposure: Exposure.shot,
         ),
         ScenarioOption(
           label: '体で受ける',
@@ -352,7 +396,8 @@ class ScenarioPool {
           difficulty: 52,
           outcome: Outcome.play,
           successText: '体の正面で受け止め、こぼれ球も自分で抑えた。',
-          failureText: '当たったボールが股を抜けた。',
+          failureText: '当たったボールが、股の間へ転がった。',
+          exposure: Exposure.chance,
         ),
       ],
     ),
@@ -368,7 +413,9 @@ class ScenarioPool {
           difficulty: 70,
           outcome: Outcome.play,
           successText: 'エリア外で先に触り、大きくクリアした。',
-          failureText: '間に合わず、無人のゴールへ蹴り込まれた。',
+          failureText: '間に合わず、無人のゴールを狙われた。',
+          exposure: Exposure.chance,
+          preventsGoal: true,
         ),
         ScenarioOption(
           label: 'エリア内で待って処理する',
@@ -378,6 +425,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '慌てず待ち、エリア内で確実に処理した。',
           failureText: '待ちすぎて、FWにボールを収められた。',
+          exposure: Exposure.shot,
         ),
         ScenarioOption(
           label: 'DFに声をかけて任せる',
@@ -387,6 +435,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '声で味方を動かし、DFが先に触った。',
           failureText: '指示が伝わらず、DFとぶつかった。',
+          exposure: Exposure.chance,
         ),
       ],
     ),
@@ -402,7 +451,9 @@ class ScenarioPool {
           difficulty: 72,
           outcome: Outcome.play,
           successText: '混戦の中で掴み切った。試合を締めた。',
-          failureText: '触れず、こぼれ球を押し込まれた。',
+          failureText: '触れず、こぼれ球を詰められた。',
+          exposure: Exposure.chance,
+          preventsGoal: true,
         ),
         ScenarioOption(
           label: 'ライン上で待つ',
@@ -412,6 +463,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: 'ライン上で反応し、至近距離を止めた。',
           failureText: '密集で視界を塞がれ、反応できなかった。',
+          exposure: Exposure.chance,
         ),
         ScenarioOption(
           label: 'クリア後に前へ投げて速攻',
@@ -421,6 +473,7 @@ class ScenarioPool {
           outcome: Outcome.assist,
           successText: 'クリアを拾って前へ投げ、無人のゴールに味方が決めた。',
           failureText: '投げたボールが弱く、相手に渡った。',
+          exposure: Exposure.shot,
         ),
       ],
     ),
@@ -437,6 +490,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '拳で遠くへ弾いた。危険な場所から消えた。',
           failureText: '中途半端な弾きが、相手の前にこぼれた。',
+          exposure: Exposure.shot,
         ),
         ScenarioOption(
           label: '飛び出して掴む',
@@ -446,6 +500,8 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '人垣の中から両手で掴み取った。ゴール前が静かになる。',
           failureText: '人に当たって届かず、ゴール前に落ちた。',
+          exposure: Exposure.chance,
+          preventsGoal: true,
         ),
         ScenarioOption(
           label: 'ライン上に残って備える',
@@ -454,7 +510,8 @@ class ScenarioPool {
           difficulty: 52,
           outcome: Outcome.play,
           successText: '至近距離のヘディングに反応し、足で止めた。',
-          failureText: '見送ったボールが、そのままネットに吸い込まれた。',
+          failureText: '見送ったボールが、そのままゴールへ向かった。',
+          exposure: Exposure.chance,
         ),
       ],
     ),
@@ -471,6 +528,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: 'タッチラインの外まで蹴り出した。まずは安全に。',
           failureText: 'ミートせず、相手の足元へ転がった。',
+          exposure: Exposure.shot,
         ),
         ScenarioOption(
           label: '持ち出してかわす',
@@ -480,6 +538,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '一歩ずらして寄せをかわし、時間を作った。',
           failureText: '足元をつつかれ、無人のゴールを晒した。',
+          exposure: Exposure.chance,
         ),
         ScenarioOption(
           label: '空いた味方へ短くつける',
@@ -489,6 +548,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '寄せの外へ的確につけ、相手のプレスを外した。',
           failureText: 'パスが弱く、危険な位置で奪われた。',
+          exposure: Exposure.shot,
         ),
       ],
     ),
@@ -504,7 +564,9 @@ class ScenarioPool {
           difficulty: 70,
           outcome: Outcome.play,
           successText: '体ごと覆いかぶさり、ボールを収めた。',
-          failureText: '一歩遅れ、蹴り込まれた。',
+          failureText: '一歩遅れ、先に足を出された。',
+          exposure: Exposure.chance,
+          preventsGoal: true,
         ),
         ScenarioOption(
           label: '足でコーナーに逃げる',
@@ -514,6 +576,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '伸ばした足に当て、ラインの外へ逃した。',
           failureText: '当たりが甘く、ゴール前に残ってしまった。',
+          exposure: Exposure.shot,
         ),
         ScenarioOption(
           label: '構え直して次に備える',
@@ -523,6 +586,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '角度を切って構え、至近距離の一撃を弾き返した。',
           failureText: '重心が残り、逆を突かれた。',
+          exposure: Exposure.chance,
         ),
       ],
     ),
@@ -539,6 +603,8 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '濡れたボールを、指先までしっかり掴んだ。',
           failureText: '手からこぼれ、ゴール前に転がった。',
+          exposure: Exposure.chance,
+          preventsGoal: true,
         ),
         ScenarioOption(
           label: '両手で確実に弾く',
@@ -548,6 +614,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '無理をせず前に弾き、味方がクリアした。',
           failureText: '弾いた先に相手がいた。',
+          exposure: Exposure.shot,
         ),
         ScenarioOption(
           label: '味方に任せて声を出す',
@@ -557,6 +624,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '一声でDFが動き、危なげなく処理した。',
           failureText: '声が届かず、味方と交錯した。',
+          exposure: Exposure.shot,
         ),
       ],
     ),
@@ -573,6 +641,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: 'ラインが揃い、相手の攻撃が窮屈になった。',
           failureText: '中途半端に上げ、背後を取られた。',
+          exposure: Exposure.chance,
         ),
         ScenarioOption(
           label: '自分が高い位置を取る',
@@ -582,6 +651,8 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '背後のボールを先回りして処理した。',
           failureText: '出た背中を狙われ、ループを浴びた。',
+          exposure: Exposure.chance,
+          preventsGoal: true,
         ),
         ScenarioOption(
           label: '深く構えて跳ね返しに備える',
@@ -590,7 +661,8 @@ class ScenarioPool {
           difficulty: 50,
           outcome: Outcome.play,
           successText: '立て続けのシュートを、体で止め続けた。',
-          failureText: '押し込まれ続け、ついにこじ開けられた。',
+          failureText: '押し込まれ続け、シュートを浴びた。',
+          exposure: Exposure.shot,
         ),
       ],
     ),
@@ -679,6 +751,8 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '一歩目が早かった。ペナルティエリアの外で刈り取る。',
           failureText: '判断が遅れ、先に触られた。',
+          exposure: Exposure.chance,
+          preventsGoal: true,
         ),
         ScenarioOption(
           label: '大きくクリアしてやり過ごす',
@@ -688,6 +762,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '無理をせず遠くへ。危険な時間をやり過ごした。',
           failureText: 'ミートせず、相手の前へ転がった。',
+          exposure: Exposure.shot,
         ),
         ScenarioOption(
           label: '拾ってそのまま前線へ繋ぐ',
@@ -715,6 +790,8 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '人の間を抜けて掴み取った。味方の息が整う。',
           failureText: '触れずに後ろへ流れ、慌ててゴールへ戻った。',
+          exposure: Exposure.chance,
+          preventsGoal: true,
         ),
         ScenarioOption(
           label: 'パンチングで遠くへ弾く',
@@ -724,6 +801,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '確実に、そして遠くへ弾いた。二次攻撃は無い。',
           failureText: '当たりが浅く、目の前にこぼれた。',
+          exposure: Exposure.shot,
         ),
         ScenarioOption(
           label: 'ゴールを空けずに構える',
@@ -733,6 +811,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '動かない判断が正しかった。ヘディングを正面で受ける。',
           failureText: '立ち位置が半歩ずれ、際どいコースを許した。',
+          exposure: Exposure.shot,
         ),
       ],
     ),
@@ -785,6 +864,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '狙える場所を消し切った。壁に当たって終わる。',
           failureText: '壁の位置がずれ、空けた側を狙われた。',
+          exposure: Exposure.shot,
         ),
         ScenarioOption(
           label: '壁を薄くして自分で見る',
@@ -794,6 +874,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '視界を確保していた。反応して弾き出す。',
           failureText: '見えていても届かなかった。',
+          exposure: Exposure.chance,
         ),
         ScenarioOption(
           label: '味方に指示して人を捕まえる',
@@ -803,6 +884,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '大声で全員を動かした。誰も自由にさせない。',
           failureText: '指示が通らず、ニアで一人余らせた。',
+          exposure: Exposure.shot,
         ),
       ],
     ),
@@ -1788,6 +1870,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '一人で相手を2人剥がし、チームが息を吹き返した。',
           failureText: '囲まれ、危険な位置で奪われた。',
+          exposure: Exposure.shot,
         ),
         ScenarioOption(
           label: '縦に速く展開して逃げる',
@@ -1806,6 +1889,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '起点を消し続け、波が止まった。',
           failureText: '振り切られ、決定機を作られた。',
+          exposure: Exposure.chance,
         ),
       ],
     ),
@@ -2112,6 +2196,8 @@ class ScenarioPool {
           successText: '足を伸ばして完璧なタックル。ボールだけを奪った。',
           failureText: '簡単にかわされ、決定機を作られた。',
           foul: 0.45,
+          exposure: Exposure.chance,
+          preventsGoal: true,
         ),
         ScenarioOption(
           label: '間合いを保って遅らせる',
@@ -2121,6 +2207,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '距離を保って遅らせ、味方の帰陣を待った。',
           failureText: '下がりすぎてシュートを許した。',
+          exposure: Exposure.shot,
         ),
         ScenarioOption(
           label: '体を当てて外へ追い出す',
@@ -2131,6 +2218,7 @@ class ScenarioPool {
           successText: '体を当ててタッチラインの外へ追い出した。',
           failureText: '倒してしまい、危険な位置でFKを与えた。',
           foul: 0.45,
+          exposure: Exposure.shot,
         ),
       ],
     ),
@@ -2147,6 +2235,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '高い打点で跳ね返し、危険を完全に排除した。',
           failureText: '競り負け、決定的なヘディングを許した。',
+          exposure: Exposure.chance,
         ),
         ScenarioOption(
           label: 'コースに入ってブロック',
@@ -2156,6 +2245,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '体を投げ出してシュートをブロックした。',
           failureText: '一歩遅く、コースを空けてしまった。',
+          exposure: Exposure.shot,
         ),
         ScenarioOption(
           label: '前に出てインターセプト',
@@ -2165,6 +2255,8 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '読み切って前で断ち切り、そのまま攻撃に転じた。',
           failureText: '飛び出しが空振りし、背後を使われた。',
+          exposure: Exposure.chance,
+          preventsGoal: true,
         ),
       ],
     ),
@@ -2190,6 +2282,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '数歩持ち上がって相手を外し、確実に繋いだ。',
           failureText: '奪われて、自陣で決定機を与えた。',
+          exposure: Exposure.chance,
         ),
         ScenarioOption(
           label: '安全に大きく蹴り出す',
@@ -2249,6 +2342,8 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '完璧なラインコントロール。旗が上がった。',
           failureText: 'ラインが揃わず、1人が残して裏を取られた。',
+          exposure: Exposure.chance,
+          preventsGoal: true,
         ),
         ScenarioOption(
           label: '走り合いで潰す',
@@ -2258,6 +2353,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '走り負けせず、シュートコースを消した。',
           failureText: 'スピードで置き去りにされた。',
+          exposure: Exposure.chance,
         ),
         ScenarioOption(
           label: 'ラインを下げて守る',
@@ -2267,6 +2363,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '無理をせず下がって、ゴール前を固めた。',
           failureText: '下がりすぎて、ミドルシュートを打たれた。',
+          exposure: Exposure.shot,
         ),
       ],
     ),
@@ -2282,7 +2379,9 @@ class ScenarioPool {
           difficulty: 74,
           outcome: Outcome.play,
           successText: 'ライン上で掻き出した。歓声が上がる。',
-          failureText: '間に合わず、ボールはネットへ。',
+          failureText: '間に合わず、ボールはゴールへ向かった。',
+          exposure: Exposure.chance,
+          preventsGoal: true,
         ),
         ScenarioOption(
           label: 'スライディングでコースを消す',
@@ -2292,6 +2391,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '滑り込んでブロック。大きなファインプレー。',
           failureText: '滑ったが届かなかった。',
+          exposure: Exposure.chance,
         ),
         ScenarioOption(
           label: 'GKの位置に入って構える',
@@ -2300,7 +2400,8 @@ class ScenarioPool {
           difficulty: 48,
           outcome: Outcome.play,
           successText: '体を大きく見せて、シュートを自分に当てさせた。',
-          failureText: '構えたが、股を抜かれた。',
+          failureText: '構えたが、股の間を狙われた。',
+          exposure: Exposure.chance,
         ),
       ],
     ),
@@ -2351,6 +2452,8 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '思い切って足を伸ばし、ボールだけを突いた。',
           failureText: 'かわされ、2対0になった。',
+          exposure: Exposure.chance,
+          preventsGoal: true,
         ),
         ScenarioOption(
           label: '遅らせて味方の戻りを待つ',
@@ -2360,6 +2463,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '下がりながら時間を作り、味方が戻ってきた。',
           failureText: '下がりすぎて、シュートコースを与えた。',
+          exposure: Exposure.shot,
         ),
         ScenarioOption(
           label: 'ファウルで止める',
@@ -2369,6 +2473,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: 'カードは出たが、決定的な場面を消した。',
           failureText: '倒しきれず、そのまま持ち運ばれた。',
+          exposure: Exposure.chance,
         ),
       ],
     ),
@@ -2422,6 +2527,8 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '前を向かせず、ボールを引き出す前に潰した。',
           failureText: '空けた背後を、別の選手に使われた。',
+          exposure: Exposure.chance,
+          preventsGoal: true,
         ),
         ScenarioOption(
           label: '受け渡してコースを消す',
@@ -2431,6 +2538,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '味方に受け渡し、縦のパスコースを消し切った。',
           failureText: '受け渡しが曖昧になり、間で受けられた。',
+          exposure: Exposure.shot,
         ),
         ScenarioOption(
           label: '距離を取ってスペースを埋める',
@@ -2440,6 +2548,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '危険な場所を先に埋め、何もさせなかった。',
           failureText: '自由に持たれ、決定的なパスを通された。',
+          exposure: Exposure.chance,
         ),
       ],
     ),
@@ -2456,6 +2565,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '当てるだけでいい。大きく蹴り出した。',
           failureText: '空振り。ボールは足元を抜けていった。',
+          exposure: Exposure.chance,
         ),
         ScenarioOption(
           label: '足を伸ばしてつつく',
@@ -2464,7 +2574,9 @@ class ScenarioPool {
           difficulty: 68,
           outcome: Outcome.play,
           successText: 'シュートの瞬間に爪先が届き、コースを変えた。',
-          failureText: '足に当たらず、そのまま流し込まれた。',
+          failureText: '足に当たらず、フリーで打たれた。',
+          exposure: Exposure.chance,
+          preventsGoal: true,
         ),
         ScenarioOption(
           label: 'GKに預ける',
@@ -2474,6 +2586,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '落ち着いてGKへ。危険な時間が終わった。',
           failureText: '弱いバックパスを狙われた。',
+          exposure: Exposure.chance,
         ),
       ],
     ),
@@ -2490,6 +2603,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '触れずに寄せ切り、苦し紛れのシュートに終わらせた。',
           failureText: '寄せ切れず、狙い澄まされた。',
+          exposure: Exposure.chance,
         ),
         ScenarioOption(
           label: '足を出して止める',
@@ -2499,6 +2613,8 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '完璧なタイミング。ボールだけを大きく弾いた。',
           failureText: '足に掛かった。主審がスポットを指した。',
+          exposure: Exposure.penalty,
+          preventsGoal: true,
         ),
         ScenarioOption(
           label: 'コースだけ消して見送る',
@@ -2507,7 +2623,8 @@ class ScenarioPool {
           difficulty: 57,
           outcome: Outcome.play,
           successText: 'シュートコースに入り、体に当てて防いだ。',
-          failureText: '中途半端な位置取りで、股を抜かれた。',
+          failureText: '中途半端な位置取りで、股の間を狙われた。',
+          exposure: Exposure.chance,
         ),
       ],
     ),
@@ -2632,6 +2749,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '一番高い位置で触った。危なげなくクリア。',
           failureText: '競り負けて、頭で逸らされた。',
+          exposure: Exposure.shot,
         ),
         ScenarioOption(
           label: 'GKに任せてコースを消す',
@@ -2641,6 +2759,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '触らずに人を捕まえた。GKが安心して出られる。',
           failureText: '中途半端に手を出し、GKと交錯した。',
+          exposure: Exposure.chance,
         ),
         ScenarioOption(
           label: '前へ大きく蹴り出して起点にする',
@@ -2650,6 +2769,7 @@ class ScenarioPool {
           outcome: Outcome.assist,
           successText: 'クリアがそのまま前線へ届き、試合を決める1点になった。',
           failureText: '中途半端な高さになり、拾われて押し込まれかけた。',
+          exposure: Exposure.shot,
         ),
       ],
     ),
@@ -2667,6 +2787,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '足を出さずに時間を稼いだ。味方が戻ってくる。',
           failureText: '下がりすぎて、打たれる距離を渡した。',
+          exposure: Exposure.shot,
         ),
         ScenarioOption(
           label: '体を当てて外へ追い出す',
@@ -2676,6 +2797,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '肩でぶつかって外へ。危険な角度は消えた。',
           failureText: '当たりが浅く、中へ入り込まれた。',
+          exposure: Exposure.shot,
         ),
         ScenarioOption(
           label: '足を出して奪い切る',
@@ -2686,6 +2808,8 @@ class ScenarioPool {
           successText: '完璧なタックル。ボールだけを奪った。',
           failureText: '足に引っ掛けた。危険な位置でのファウル。',
           foul: 0.45,
+          exposure: Exposure.shot,
+          preventsGoal: true,
         ),
       ],
     ),
@@ -2712,6 +2836,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '落ち着いて回した。相手が追いかけるだけの時間になる。',
           failureText: '狙われていた。危ない位置で引っ掛けた。',
+          exposure: Exposure.shot,
         ),
         ScenarioOption(
           label: '相手を誘い出してかわす',
@@ -2721,6 +2846,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '寄せてきた相手を外し、味方を前に進ませた。',
           failureText: '自陣で失った。肝を冷やす場面になった。',
+          exposure: Exposure.chance,
         ),
       ],
     ),
@@ -2749,6 +2875,8 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '走り切って追いついた。最後は体を入れて止める。',
           failureText: '離された。数的不利のまま運ばれる。',
+          exposure: Exposure.chance,
+          preventsGoal: true,
         ),
         ScenarioOption(
           label: '中を切って遅らせる',
@@ -2758,6 +2886,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '外へ追い出した。味方が戻る時間を作れた。',
           failureText: '中を通された。危ない場面になった。',
+          exposure: Exposure.shot,
         ),
       ],
     ),

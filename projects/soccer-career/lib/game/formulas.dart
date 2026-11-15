@@ -372,6 +372,20 @@ class Formulas {
     Position.sb || Position.cb || Position.gk => 1.0,
   };
 
+  /// **守る選手が出る試合の、試合開始時の失点の割り増し**（2026-11-15）。
+  ///
+  /// 自陣の局面では、外せば失点が増え（`Exposure`）、前に出て奪う手が
+  /// 通れば失点が1つ消える（`preventsGoal`）。測ると消えるほうが多く、
+  /// 守る選手のクラブだけ出た試合の失点が 1.01 → 0.84 に減り、
+  /// リーグ優勝が 1.0 → 2.4〜3.2回に膨らんだ（`test/concede_sim.dart`）。
+  /// 味方の得点を差し引く（[teammateGoalShareFor]）のと同じ形で、
+  /// **選択で動くぶんを先に置いておく**。上手く守れば平均より減り、
+  /// まずい手を選べば増える。途中出場は局面が少ないので半分。
+  static double concedeShareFor(Position position) => switch (position) {
+    Position.gk || Position.cb || Position.sb => 1.17,
+    _ => 1.0,
+  };
+
   /// **試合を動かす展開**（局面ではないが、残りの試合の条件を変えるもの）。
   ///
   /// 試合の中でプレイヤーに関わるのは 2〜6 の局面だけで、**そのあいだに
@@ -1237,6 +1251,27 @@ class Formulas {
   /// 自動で進めるときに、止めるための反則を「安いだけの手」とも
   /// 「損なだけの手」とも見ないようにするための重み。
   static const double ratingPerGoalPrevented = 0.6;
+
+  /// **前に出て奪い、この後の失点を1つ消したときの評価点**（2026-11-15）。
+  ///
+  /// 止めるための反則（[ratingPerGoalPrevented]）と同じ 0.6 を払ったら、
+  /// 守る選手の平均評価が +0.15、リーグ優勝が 1.0 → 2.5回に膨らんだ。
+  /// 反則は必ず警告を払うが、奪う手は通れば何も払わない。そのぶん軽くする。
+  static const double ratingPerStop = 0.3;
+
+  /// **手を外して、そのまま失点したときの評価点**（2026-11-15）。
+  /// 止めたとき（[ratingPerGoalPrevented]）と同じ大きさで裏返す。
+  /// 片方だけだと、自動進行がどちらかの手に倒れる。
+  static const double ratingPerGoalCaused = -0.6;
+
+  /// 外してシュートを打たれたとき、それが決まる確率。
+  static const double concedeOnShot = 0.12;
+
+  /// 外して決定機を与えたとき、それが決まる確率。
+  static const double concedeOnChance = 0.3;
+
+  /// PK を与えた・止められなかったとき、それが決まる確率。
+  static const double concedeOnPenalty = 0.75;
 
   /// 警告を受けた試合の評価点への響き。退場はその倍。
   static const double ratingPerYellow = -0.35;
