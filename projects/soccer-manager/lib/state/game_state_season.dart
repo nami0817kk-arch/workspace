@@ -709,6 +709,9 @@ extension GameStateSeason on GameState {
       targetRank: _save!.boardTargetRank,
     );
     _save!.confidence = (_save!.confidence + confidenceDelta).clamp(0, 100);
+    // 期待への慣れ。勝ち続けるうちにサポーターの目は肥え、満点に張り付いた
+    // ままだと緊張が無くなる(放置3シーズンの実測で94〜97に張り付いた)。
+    _save!.confidence = BoardEngine.afterAdaptation(_save!.confidence);
 
     // 理事会の路線。1年を通して守れていたかを、ここで一度だけ評価する。
     final visionDelta = BoardEngine.confidenceDeltaForVisionSeason(
