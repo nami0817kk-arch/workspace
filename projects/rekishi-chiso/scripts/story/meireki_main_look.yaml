@@ -1,0 +1,696 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：明暦の大火は、江戸の何を変えたのか（scripts/meireki-story.yaml）。chiso/storymain.py が読む。
+# 11-15 作成（11/19 12:00 公開予定）。rosetta_main_look.yaml を写した。絵は Gemini（Chrome・無料版）で新しく作る。人物の顔は描かない（後ろ姿・手元・風景・物）。遺体・惨状は描かない。
+script: scripts/meireki-story.yaml
+out: meireki_story_main
+art_dir: out/story/meireki/main
+main_art_dir: out/story/meireki/main
+ai_disclosure: この動画の情景の画像は、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+chapters:
+  0:
+    label: 序章 燃えた日ではない
+    now: null
+    dates:
+      5: 1657年1月
+      9: null
+  1:
+    label: 第1章 本郷丸山から
+    now: 1657年1月18日
+    dates: {}
+  2:
+    label: 第2章 二つの火と天守
+    now: 1657年1月19日
+    dates: {}
+  3:
+    label: 第3章 死者10万人の出どころ
+    now: null
+    dates:
+      29: 1661年
+      35: 1657年2月
+      37: 1675年
+      38: null
+  4:
+    label: 第4章 火元と振袖火事
+    now: null
+    dates:
+      45: 1848年
+      46: 1854年
+      47: 1884年
+      48: 1908年
+      51: 1660年
+      52: null
+  5:
+    label: 第5章 粥と米の値
+    now: 1657年1月21日
+    dates:
+      59: 1657年2月
+      65: 1657年1月26日
+  6:
+    label: 第6章 石垣だけが残った
+    now: 1657年
+    dates:
+      68: 1659年8月
+      69: 1657年9月
+      70: 1659年9月
+      74: null
+  7:
+    label: 第7章 広小路と火除地
+    now: 1657年1月27日
+    dates:
+      83: 1659年
+      84: 1658年9月
+      88: 1656年10月
+      89: 1657年8月
+      90: 1660年
+      91: 1718年
+      92: 1657年
+      94: null
+  8:
+    label: 第8章 大火は江戸を作り替えたのか
+    now: null
+    dates: {}
+  9:
+    label: まとめ 明暦の大火は、江戸の何を変えたのか
+    now: null
+    dates: {}
+no_tag_from: 107
+references:
+- 内閣府 災害教訓の継承に関する専門調査会『1657 明暦の江戸大火』（2004）
+- 『東京市史稿』・『寛政重脩諸家譜』・『玉露叢』
+- 斎藤月岑『武江年表』・浅井了意『むさしあぶみ』
+- 岩本馨『明暦の大火「都市改造」という神話』（2021）
+ai:
+  K01:
+    scene: 夕暮れの江戸城。堀の向こうの高い石垣の上に、白壁の5層の天守がそびえる（江戸時代前期、人物なし、穏やかな夕焼け）
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  K02:
+    scene: 夕暮れの空の下、江戸城の高い石垣の土台だけが残り、その上には何も建っていない（江戸時代、人物なし、広い空）
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  K03:
+    scene: 冬の乾いた江戸の町並み。瓦のない板葺き屋根の町家が並び、砂ぼこりが舞う（江戸時代前期、薄黄色の空、人は小さく後ろ姿）
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  K04:
+    scene: 江戸の高台にある寺の山門と境内。強い風に砂ぼこりと木の枝が揺れる（江戸時代前期、午後、人物は小さな後ろ姿だけ）
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  K05:
+    scene: 強い風にあおられて燃える江戸の町家の連なりを、高台から遠景で見下ろす。橙色の炎と黒い煙、火の粉が舞う（夕方、人は豆粒ほど。惨状や遺体は描かない）
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  K06:
+    scene: 江戸の川にかかる木の橋と河岸。遠くで町が燃え、荷物を背負った人々が小さく橋を渡っていく後ろ姿（江戸時代前期、夕方、遠景）
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  K07:
+    scene: 江戸の隅田川の河口。帆を張った船が浮かび、対岸の町が赤く燃え、その火が水面に映る（江戸時代前期、夕暮れ、遠景、人物なし）
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  K08:
+    scene: 江戸の武家屋敷が並ぶ通り。長い白壁の塀と門、煙と火の粉が風に流れる（江戸時代前期、夕景、人は小さな後ろ姿）
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  K09:
+    scene: お堀ごしに見る、燃える江戸城の5層の天守。白壁の建物に火が回り、夕焼けと煙が空を染める（江戸時代前期、遠景、人物なし）
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  K10:
+    scene: 一夜明けた江戸の焼け跡。焼けた梁と灰の平地が広がり、遠くに江戸湾と朝の光（江戸時代前期、人はほとんどいない遠景、遺体は描かない）
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  K11:
+    scene: 冬の朝、うっすらと雪が降る江戸の焼け跡。仮小屋の前の大きな釜から湯気が上がり、並ぶ人々の後ろ姿（江戸時代前期、人の顔は描かない）
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  K12:
+    scene: 江戸時代後期の木版の摺り工房。彫られた版木と、刷り上がった紙が並ぶ机、墨の道具（手元と物だけ、人物の顔は描かない、暖色の光）
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  K13:
+    scene: 行灯の灯る机の上に、開かれた和綴じの古い記録の頁と筆、硯。頁には読めない筆文字が並ぶ（江戸時代、人物は手元だけ）
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  K14:
+    scene: 古い蔵の書庫。棚いっぱいに和綴じの本が積まれ、窓から細い光が差す（江戸時代、人物なし）
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  K15:
+    scene: 冬の朝の寺の境内。石の供養塔と線香の煙、手を合わせる人々の小さな後ろ姿（江戸時代、静かで厳かな雰囲気、顔は描かない）
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  K16:
+    scene: 静かな座敷の衣桁に、色鮮やかな女物の振袖が掛けられている。人物はいない（江戸時代の商家の座敷、淡い光）
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  K17:
+    scene: 浅草の米蔵と堀。米俵が山のように積まれ、荷船が着いている（江戸時代前期、昼、人は小さな後ろ姿）
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  K18:
+    scene: 木箱をたくさん積んだ川船が、大坂の水路の石垣ぞいを進む（江戸時代前期、朝、人物は小さな後ろ姿）
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  K19:
+    scene: 江戸城の石垣の普請。大きな石を木のそりで運び、組み上げる人々の後ろ姿（江戸時代前期、昼、足場と綱）
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  K20:
+    scene: 広く作り直された江戸の通りと、火除けの土手に植えられた松並木。行き交う人々の小さな姿（江戸時代前期、明るい昼）
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  K21:
+    scene: 隅田川に架かる長い木の橋（両国橋）。対岸に広がる空き地と町、船が行き交う（江戸時代前期、朝の光、遠景）
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  K22:
+    scene: 江戸湾ぞいの築地の埋め立て地に建つ、新しい武家屋敷の長屋門と白壁（江戸時代前期、海と空、人は小さい）
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  K23:
+    scene: 火の見櫓のある江戸の消防の屋敷。纏と鳶口が並ぶ（江戸時代前期、昼、人は法被の後ろ姿だけ）
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  K24:
+    scene: 浅草の田んぼの中を通る日本堤の土手道。遠くに新しい町並みが見える（江戸時代前期、朝、人は小さな後ろ姿）
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  YEND:
+    scene: 夜明けの江戸城の石垣と堀と空（終了画面、右半分に余白）
+    lock:
+    - 1.0
+    - 0.5
+    - 0.5
+paint_fx: {}
+shots:
+- 0 ai:K02 wide
+- 1 ai:K09 left
+- 2 ai:K14 left
+- 3 ai:K16 wide
+- 4 ai:K01 right
+- 5 ai:K03 wide
+- 6 ai:K08 left
+- 7 ai:K03 right
+- 8 ai:K04 wide
+- 9 ai:K04 left
+- 10 ai:K13 wide
+- 11 ai:K14 wide
+- 12 ai:K05 wide
+- 13 ai:K06 left
+- 14 ai:K07 wide
+- 15 ai:K10 wide
+- 16 ai:K06 right
+- 17 ai:K08 right
+- 18 ai:K05 left
+- 19 ai:K05 right
+- 20 ai:K09 wide
+- 21 ai:K01 wide
+- 22 ai:K08 right
+- 23 ai:K07 left
+- 24 ai:K09 left
+- 25 ai:K13 right
+- 26 ai:K10 left
+- 27 ai:K15 wide
+- 28 ai:K13 left
+- 29 ai:K14 right
+- 30 ai:K13 wide
+- 31 ai:K14 left
+- 32 ai:K13 right
+- 33 ai:K14 wide
+- 34 ai:K10 right
+- 35 ai:K15 left
+- 36 ai:K10 left
+- 37 ai:K15 right
+- 38 ai:K10 wide
+- 39 ai:K16 left
+- 40 ai:K16 wide
+- 41 ai:K04 right
+- 42 ai:K13 left
+- 43 ai:K14 wide
+- 44 ai:K16 right
+- 45 ai:K12 wide
+- 46 ai:K13 right
+- 47 ai:K12 left
+- 48 ai:K14 right
+- 49 ai:K16 left
+- 50 ai:K03 left
+- 51 ai:K04 left
+- 52 ai:K08 left
+- 53 ai:K14 wide
+- 54 ai:K04 wide
+- 55 ai:K10 right
+- 56 ai:K11 wide
+- 57 ai:K11 left
+- 58 ai:K17 wide
+- 59 ai:K18 wide
+- 60 ai:K10 left
+- 61 ai:K14 left
+- 62 ai:K18 right
+- 63 ai:K08 right
+- 64 ai:K13 wide
+- 65 ai:K11 right
+- 66 ai:K01 left
+- 67 ai:K19 wide
+- 68 ai:K01 right
+- 69 ai:K19 left
+- 70 ai:K01 wide
+- 71 ai:K13 right
+- 72 ai:K14 right
+- 73 ai:K20 left
+- 74 ai:K02 wide
+- 75 ai:K20 right
+- 76 ai:K13 left
+- 77 ai:K03 wide
+- 78 ai:K20 wide
+- 79 ai:K22 wide
+- 80 ai:K01 left
+- 81 ai:K22 right
+- 82 ai:K04 right
+- 83 ai:K21 wide
+- 84 ai:K23 wide
+- 85 ai:K20 right
+- 86 ai:K20 left
+- 87 ai:K22 left
+- 88 ai:K14 right
+- 89 ai:K24 wide
+- 90 ai:K03 right
+- 91 ai:K23 right
+- 92 ai:K22 left
+- 93 ai:K13 left
+- 94 ai:K20 wide
+- 95 ai:K14 wide
+- 96 ai:K13 right
+- 97 ai:K20 left
+- 98 ai:K14 left
+- 99 ai:K22 right
+- 100 ai:K13 left
+- 101 ai:K01 wide
+- 102 ai:K02 left
+- 103 ai:K10 wide
+- 104 ai:K10 left
+- 105 ai:K20 wide
+- 106 ai:K16 wide
+- 107 ai:K02 wide
+- 108 ai:K02 right
+- 109 ai:YEND wide
+- end ai:YEND wide
+focus: {}
+fx:
+  K05:
+    fire:
+      region:
+      - 0.1
+      - 0.35
+      - 0.9
+      - 0.8
+    sparks:
+      region:
+      - 0.1
+      - 0.2
+      - 0.9
+      - 0.7
+  K09:
+    fire:
+      region:
+      - 0.3
+      - 0.25
+      - 0.8
+      - 0.75
+    sparks:
+      region:
+      - 0.3
+      - 0.1
+      - 0.8
+      - 0.6
+  K07:
+    water:
+      region:
+      - 0
+      - 0.65
+      - 1
+      - 1.0
+  K11:
+    mist:
+      region:
+      - 0.1
+      - 0.4
+      - 0.9
+      - 0.8
+parts:
+- type: versus3
+  from: 25
+  to: 25
+  items:
+  - - 明暦炎上記
+    - 800町あまり
+  - - 武江年表
+    - 400町
+  - - 玉露叢
+    - 間口4万8千間（片側800・両側400）
+  every: 2.0
+- type: quote
+  from: 30
+  to: 30
+  label: 史料
+  text: 焼死十万七千四十六人／といへり
+  source: 斎藤月岑『武江年表』（19世紀中ごろ）
+- type: quote
+  from: 42
+  to: 42
+  label: 史料
+  text: 当時の火災の記録に出てこず／事実とは異なる
+  source: 内閣府の報告書 2004年（要旨）
+- type: quote
+  from: 64
+  to: 64
+  label: 史料
+  text: 官庫の蓄積は／これらの用にあてるためだ
+  source: 寛政重脩諸家譜（保科正之の言葉・要旨）
+- type: quote
+  from: 71
+  to: 71
+  label: 史料
+  text: 戦に役立たず／ただ遠くを見るためのもの／人の力を費やすな
+  source: 寛政重脩諸家譜（保科正之の言葉・要旨）
+- type: quote
+  from: 72
+  to: 72
+  label: 史料
+  text: 幕府の工事が長引けば／下々の障りになる
+  source: 別の記録（東京市史稿の引用・要旨）
+- type: quote
+  from: 96
+  to: 96
+  label: 要点
+  text: 都市は防災に無防備なまま出発し／災害のたびに対策を重ねてきた
+  source: 内閣府 専門調査会の報告書 2004年（要旨）
+figures: []
+stills:
+- line: 0
+  note: 冒頭
+- line: 9
+  note: 出火
+- line: 21
+  note: 天守
+- line: 34
+  note: 死者
+- line: 42
+  note: 振袖
+- line: 61
+  note: 下賜金
+- line: 70
+  note: 天守台
+- line: 89
+  note: 吉原
+- line: 107
+  note: 余韻
+- end: true
+  note: 終了画面

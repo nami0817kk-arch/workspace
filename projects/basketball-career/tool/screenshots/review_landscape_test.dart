@@ -223,9 +223,46 @@ void main() {
       await _tap(t, '全部開ける');
       await _tap(t, 'ドラフトへ');
       await settle(t);
+      // 実績の知らせ(くじを引き当てる)が出ていたら閉じる
+      if (find.text('OK').evaluate().isNotEmpty) {
+        await t.tap(find.text('OK'));
+        await settle(t);
+      }
     }
 
     await _shoot(t, '10_draft', await _with(draft), act: openDraft);
+    // 動きの途中(指名の発表・スカウトで幅が狭まるところ)
+    await _shoot(t, '10b2_pick_intro', await _with(toDraft()), act: (t) async {
+      await openDraft(t);
+      final b = find.widgetWithText(FilledButton, '指名').first;
+      await t.ensureVisible(b);
+      await t.pumpAndSettle();
+      await t.tap(b);
+      // 実績の知らせ(くじを引き当てる)が重なったら閉じる。出てくる途中は押せないので、出きってから押す
+      // 閉じかけの知らせを押すと下の発表まで飛ばしてしまうので、押すのは1回だけ
+      var closed = false;
+      for (var i = 0; i < 9; i++) {
+        await t.pump(const Duration(milliseconds: 100));
+        if (!closed && i >= 3 && find.text('OK').evaluate().isNotEmpty) {
+          await t.tap(find.text('OK'));
+          closed = true;
+        }
+      }
+    });
+    await _shoot(t, '10b3_scouting', await _with(toDraft()), act: (t) async {
+      await openDraft(t);
+      final b = find.widgetWithText(OutlinedButton, 'スカウト').first;
+      await t.ensureVisible(b);
+      await t.pumpAndSettle();
+      await t.tap(b);
+      await t.pump(const Duration(milliseconds: 50));
+      if (find.text('OK').evaluate().isNotEmpty) {
+        await t.tap(find.text('OK'));
+      }
+      for (var i = 0; i < 3; i++) {
+        await t.pump(const Duration(milliseconds: 60));
+      }
+    });
     await _shoot(t, '10c_pick_reveal', await _with(toDraft()), act: (t) async {
       await openDraft(t);
       final b = find.widgetWithText(FilledButton, '指名').first;
