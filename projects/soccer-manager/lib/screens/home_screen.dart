@@ -7,6 +7,7 @@ import '../widgets/owner_event_card.dart';
 import '../widgets/owner_goal_card.dart';
 import '../widgets/two_pane.dart';
 import '../logic/calendar_engine.dart';
+import '../logic/sale_advice_engine.dart';
 import '../logic/match_engine.dart' show HalfResult;
 import '../models/formation.dart';
 import '../models/incoming_offer.dart';
@@ -61,6 +62,13 @@ List<List<IncomingOffer>> _groupOffersByPlayer(GameState gameState) {
     group.sort((a, b) => b.amount.compareTo(a.amount));
   }
   return byPlayer.values.toList();
+}
+
+Player? _playerOf(GameState gameState, IncomingOffer offer) {
+  for (final p in gameState.userTeam.players) {
+    if (p.id == offer.playerId) return p;
+  }
+  return null;
 }
 
 class HomeScreen extends StatelessWidget {
@@ -606,6 +614,24 @@ class HomeScreen extends StatelessWidget {
                                         child: Text(Tr.pick('承諾', 'Accept')),
                                       ),
                                     ],
+                                  ),
+                                // 監督の見立て。買い手ごとに1行。
+                                for (int i = 0; i < entry.length; i++)
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 2),
+                                    child: Text(
+                                      Tr.pick('監督: ', 'Manager: ') +
+                                          SaleAdviceEngine.advise(
+                                            entry[i],
+                                            _playerOf(gameState, entry[i]),
+                                            gameState.userTeam,
+                                          ).comment,
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color:
+                                            Theme.of(context).colorScheme.onSurfaceVariant,
+                                      ),
+                                    ),
                                   ),
                               ],
                             ),

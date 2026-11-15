@@ -74,6 +74,16 @@ class NextActionAdvisor {
       ));
     }
 
+    // 他クラブから売却のオファーが届いている。承認するか断るかを決める。
+    if (save.incomingOffers.isNotEmpty) {
+      actions.add(NextAction(
+        message: Tr.pick(
+            '${save.incomingOffers.first.playerName}に売却のオファーが届いています。承認するか断るかを決めてください。',
+            'An offer for ${save.incomingOffers.first.playerName} has arrived. Accept or turn it down.'),
+        target: NextActionTarget.squad,
+      ));
+    }
+
     // 資金がマイナス。放置すると理事会の信頼度が毎週削られる。
     if (save.budget < 0) {
       actions.add(NextAction(
