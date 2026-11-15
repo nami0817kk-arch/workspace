@@ -141,7 +141,12 @@ class OffSummaryScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(children: [
           Expanded(
-            child: ListView(padding: const EdgeInsets.fromLTRB(14, 8, 14, 16), children: [
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // 左: 自分のチームの強さと出入り
+                Expanded(
+                  child: ListView(padding: const EdgeInsets.fromLTRB(14, 8, 4, 16), children: [
               Card(
                 child: Padding(
                   padding: const EdgeInsets.all(12),
@@ -171,6 +176,21 @@ class OffSummaryScreen extends StatelessWidget {
               SectionTitle('出た選手(${s.left.length}人)'),
               if (s.left.isEmpty) const Text('いない', style: TextStyle(color: GmColors.sub)),
               for (final x in s.left) changeLine(x, arrived: false),
+                  ]),
+                ),
+                // 右: リーグ全体のオフの成長と、来季の強さ予想・大きな移籍(2026-11-16)
+                Expanded(
+                  child: ListView(padding: const EdgeInsets.fromLTRB(4, 0, 14, 16), children: [
+              if (car.leagueGrowth.isNotEmpty) ...[
+                const SectionTitle('リーグのオフの成長'),
+                Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Expanded(child: _GrowthList(car: car, title: '大きく伸びた', list: car.leagueRisers(), up: true)),
+                  const SizedBox(width: 10),
+                  Expanded(child: _GrowthList(car: car, title: '大きく落ちた', list: car.leagueFallers(), up: false)),
+                ]),
+              ],
+              const SectionTitle('来季の強さ予想'),
+              _PowerRanking(car: car),
               if (s.bigMoves.isNotEmpty) ...[
                 const SectionTitle('リーグの大きな移籍'),
                 for (final m in s.bigMoves)
@@ -187,7 +207,10 @@ class OffSummaryScreen extends StatelessWidget {
                     ]),
                   ),
               ],
-            ]),
+                  ]),
+                ),
+              ],
+            ),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(14, 0, 14, 10),
@@ -198,6 +221,115 @@ class OffSummaryScreen extends StatelessWidget {
           ),
         ]),
       ),
+    );
+  }
+}
+
+/// オフに大きく伸びた(落ちた)選手の一覧。自分の選手は橙。
+class _GrowthList extends StatelessWidget {
+  const _GrowthList({required this.car, required this.title, required this.list, required this.up});
+  final Career car;
+  final String title;
+  final List<GrowthLine> list;
+  final bool up;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = up ? GmColors.good : GmColors.bad;
+    return Container(
+      padding: const EdgeInsets.fromLTRB(10, 6, 10, 6),
+      decoration: BoxDecoration(color: GmColors.panel, borderRadius: BorderRadius.circular(8), border: Border.all(color: GmColors.line)),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        Text(title, style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: color)),
+        if (list.isEmpty) const Text('いない', style: TextStyle(fontSize: 12, color: GmColors.sub)),
+        for (final (i, g) in list.indexed)
+          TweenAnimationBuilder<double>(
+            tween: Tween(begin: 0, end: 1),
+            duration: Duration(milliseconds: 300 + 80 * i),
+            builder: (context, t, child) {
+              final k = ((t * (300 + 80 * i) - 80 * i) / 300).clamp(0.0, 1.0);
+              return Opacity(opacity: k, child: child);
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 2),
+              child: Row(children: [
+                if (g.team >= 0) TeamBadge(team: g.team, size: 18),
+                const SizedBox(width: 6),
+                Expanded(
+                  child: Text(
+                    '${g.name}(${g.age}歳)',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontSize: 12, fontWeight: g.team == car.mine ? FontWeight.bold : null, color: g.team == car.mine ? GmColors.ball : null),
+                  ),
+                ),
+                Text('${shown(g.before)}→${shown(g.after)}', style: const TextStyle(fontSize: 11, color: GmColors.sub)),
+                const SizedBox(width: 6),
+                SizedBox(
+                  width: 30,
+                  child: Text(
+                    '${up ? '+' : ''}${shown(g.after) - shown(g.before)}',
+                    textAlign: TextAlign.right,
+                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: color),
+                  ),
+                ),
+              ]),
+            ),
+          ),
+      ]),
+    );
+  }
+}
+
+/// 来季の強さ予想。上位10チームと、自分のチーム(10位より下なら最後に)。
+class _PowerRanking extends StatelessWidget {
+  const _PowerRanking({required this.car});
+  final Career car;
+
+  @override
+  Widget build(BuildContext context) {
+    final order = car.powerRanking();
+    final myRank = order.indexOf(car.mine);
+    final shownRows = [for (var i = 0; i < 10 && i < order.length; i++) i, if (myRank >= 10) myRank];
+    final top = car.teams[order.first].strength;
+    return Container(
+      padding: const EdgeInsets.fromLTRB(10, 6, 10, 6),
+      decoration: BoxDecoration(color: GmColors.panel, borderRadius: BorderRadius.circular(8), border: Border.all(color: GmColors.line)),
+      child: Column(children: [
+        for (final i in shownRows)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 2),
+            child: Row(children: [
+              SizedBox(width: 26, child: Text('${i + 1}', style: TextStyle(fontWeight: FontWeight.bold, color: i < 3 ? GmColors.gold : GmColors.sub))),
+              TeamBadge(team: order[i], size: 18),
+              const SizedBox(width: 6),
+              SizedBox(
+                width: 190,
+                child: Text(
+                  car.teams[order[i]].name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontSize: 12, fontWeight: order[i] == car.mine ? FontWeight.bold : null, color: order[i] == car.mine ? GmColors.ball : null),
+                ),
+              ),
+              // 1位との差を帯で
+              Expanded(
+                child: TweenAnimationBuilder<double>(
+                  tween: Tween(begin: 0, end: (1 - (top - car.teams[order[i]].strength) / 12).clamp(0.05, 1.0)),
+                  duration: const Duration(milliseconds: 700),
+                  curve: Curves.easeOutCubic,
+                  builder: (context, v, _) => LinearProgressIndicator(
+                    value: v,
+                    minHeight: 6,
+                    color: order[i] == car.mine ? GmColors.ball : GmColors.sub,
+                    backgroundColor: GmColors.line,
+                    borderRadius: BorderRadius.circular(3),
+                  ),
+                ),
+              ),
+            ]),
+          ),
+      ]),
     );
   }
 }
