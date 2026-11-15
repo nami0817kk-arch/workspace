@@ -19,11 +19,20 @@ function el(attrs) {
   };
 }
 
+// 結果のシェアの画像を描く canvas の代わり（描いた字を覚え、data URL を返す）
+function fakeCanvas(log) {
+  const c2d = new Proxy({ texts: log, measureText: (t) => ({ width: String(t).length * 20 }), fillText: (t) => log.push(String(t)),
+    createLinearGradient: () => ({ addColorStop() {} }), createRadialGradient: () => ({ addColorStop() {} }) }, {
+    get: (o, k) => (k in o ? o[k] : () => {}), set: (o, k, v) => { o[k] = v; return true; } });
+  return { width: 0, height: 0, getContext: () => c2d, toDataURL: (t) => 'data:' + (t || 'image/png') + ';base64,/9j/AAAA' };
+}
+function FakeImage() { const im = this; Object.defineProperty(im, 'src', { set(v) { im._src = v; if (im.onload) im.onload(); }, get() { return im._src; } }); }
+
 let fails = 0;
 const ok = (c, msg) => { if (!c) { fails++; console.error('NG: ' + msg); } else console.log('ok: ' + msg); };
 
 function boot(appVals) {
-  const posts = [], timers = [];
+  const posts = [], timers = [], drawn = [];
   let click = null;
   const app = el();
   const ctx = {
@@ -35,14 +44,14 @@ function boot(appVals) {
     localStorage: { getItem: () => null, setItem() {}, removeItem() {} },
     navigator: {}, performance: { now: () => Date.now() },
     HikariApp: { postMessage: (s) => posts.push(JSON.parse(s)) },
-    __HIKARI_APP: appVals,
+    __HIKARI_APP: appVals, Image: FakeImage,
   };
   ctx.window = ctx;
   ctx.scrollTo = () => {};
   ctx.matchMedia = () => ({ matches: false, addEventListener() {} });
   ctx.document = {
     querySelector: (s) => (s === '#app' ? app : el()), querySelectorAll: () => [], getElementById: () => el(),
-    addEventListener: (t, f) => { if (t === 'click') click = f; }, createElement: () => el(), body: el(), documentElement: el(), hidden: false,
+    addEventListener: (t, f) => { if (t === 'click') click = f; }, createElement: (t) => (t === 'canvas' ? fakeCanvas(drawn) : el()), body: el(), documentElement: el(), hidden: false,
   };
   vm.createContext(ctx);
   vm.runInContext(code, ctx);
@@ -53,7 +62,7 @@ function boot(appVals) {
     const t = el(attrs);
     click({ target: { closest: () => t }, preventDefault() {} });
   };
-  return { run, press, posts, timers, ctx };
+  return { run, press, posts, timers, ctx, drawn };
 }
 
 // 1シーズン目を合否まで進める（tool/views.js と同じ進め方を短くしたもの）
@@ -411,6 +420,41 @@ const START = `S=newGame('m','normal',null);var c=S.tr.slice();S.sel=c.slice(0,S
   const m = boot(APPV({ adFree: true }));
   m.run(START);
   ok(!/uphint/.test(m.run("adRow('adslot','x','y')")), '広告を消した人には添えない');
+}
+
+// ===== 結果をシェア（2026-11-15）：結果の画面とエンドロールの最後にボタン、押すと画像と文をアプリへ =====
+{
+  const FINISH = "S.tr.slice(0,6).forEach(function(t){t.status='debut';});startPrep(S);S.prep.color=1;S.prep.leader=S.tr[0].id;S.phase='month';S.month={w:4,busy:0,fan:0,song:0,coh:0,log:[]};";
+  const g = boot({ adFree: true, store: {}, owned: {} });
+  g.run(START + FINISH); g.press('monthdone');
+  ok(g.run('S.phase') === 'result' && /data-a="share"/.test(g.run('vEnding()')), 'エンドロールの最後（結末の札）に「結果をシェア」がある');
+  g.run('S.ending=false;');
+  const vr = g.run('vResult()');
+  ok(/class="sharebar"><button class="btn" data-a="share">結果をシェア<\/button>/.test(vr), '結果の画面（評価とデビュー組の札の下）に「結果をシェア」がある');
+  g.press('share');
+  const sh = g.posts.filter((p) => p.type === 'share');
+  ok(sh.length === 1, '押すとアプリへシェアの頼みが1つ行く');
+  const m = sh[0] || {};
+  ok(/^data:image\/jpeg;base64,/.test(m.img || ''), '頼みに画像（data URL）が入る');
+  const gn = g.run('gName(S.prep)'), E = JSON.parse(g.run('JSON.stringify({g:finalEval(S).grade,t:finalEval(S).total.toFixed(1)})'));
+  ok(m.text === '#ひかりの指名 でデビューさせたグループ『' + gn + '』は評価' + E.g + '（' + E.t + '点）！\nhttps://apps.apple.com/jp/app/id6818817877', '文はグループ名・評価・点とストアの URL（' + JSON.stringify(m.text) + '）');
+  ok(((m.text || '').match(/#/g) || []).length === 1 && !/アイドル/.test(m.text || ''), 'ハッシュタグは1つだけ、「アイドル」と書かない');
+  ok(m.rect && m.rect.w > 0 && m.rect.h > 0, '押したボタンの位置を渡す（iPad の共有シートの元）');
+  ok(g.drawn.includes(gn) && g.drawn.includes('ひかりの') && g.drawn.includes('指名') && g.drawn.includes(E.g) && g.drawn.includes(E.t), '画像に題名・グループ名・評価・点を描く');
+  const names = JSON.parse(g.run("JSON.stringify(finalEval(S).D.map(function(t){return t.name;}))"));
+  ok(names.every((n) => g.drawn.includes(n)) && g.drawn.some((t) => /人の応募者から、\d+人を選び抜いた/.test(t)), 'デビュー組の名前とひと言を描く');
+  ok(!g.drawn.some((t) => /undefined|NaN|アイドル/.test(t)), '描いた字に undefined・NaN・「アイドル」が無い');
+  g.press('share');
+  ok(g.posts.filter((p) => p.type === 'share').length === 1, '返事が来るまでは、もう一度押しても二重に送らない');
+  g.run('hikariShareDone(true,null)'); g.press('share');
+  ok(g.posts.filter((p) => p.type === 'share').length === 2, '共有シートを閉じた返事のあとは、また押せる');
+  g.run("ui.toast=null;hikariShareDone(false,'共有できませんでした')");
+  ok(g.run('ui.toast') === '共有できませんでした', '共有できなかったときは知らせを出す');
+  // Web のテスト版（アプリの外）：アプリへは送らず、保存か navigator.share で代わりにする
+  const w = boot(null);
+  w.run(START + FINISH); w.press('monthdone'); w.run('S.ending=false;');
+  w.press('share');
+  ok(!w.posts.some((p) => p.type === 'share') && /画像を保存しました/.test(w.run('ui.toast') || ''), 'Web のテスト版では画像の保存に代わる');
 }
 
 if (fails) { console.error(fails + '件 外れ'); process.exitCode = 1; } else console.log('すべて通った');

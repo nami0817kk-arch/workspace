@@ -63,7 +63,33 @@ ctx.__shot = () => {
   if (app.innerHTML.length < 80) errs.push(run('S?S.phase:"title"') + ': 画面が空');
   if (app.innerHTML.includes('表示中に問題が起きました')) errs.push(run('S?S.phase:"title"') + ': 復帰の画面が出た');
   seen[run('S?S.phase:"title"')] = 1;
+  if (run('!!(S&&S.phase==="result")')) shareChk();
 };
+
+// 結果をシェアの画像（2026-11-15）：結果の画面を描くたびに、シェアの画像も仮の canvas に描く。
+// 例外・座標の NaN・字の undefined/NaN・中身の欠け（題名・評価・デビュー組の名前）を数える
+let shareN = 0;
+function shareChk() {
+  const texts = [], bad = [];
+  const c2d = new Proxy({ measureText: (t) => ({ width: String(t).length * 20 }), createLinearGradient: () => ({ addColorStop() {} }), createRadialGradient: () => ({ addColorStop() {} }) }, {
+    get: (o, k) => (k in o ? o[k] : (...a) => {
+      if (k === 'fillText') texts.push(String(a[0]));
+      if (a.some((x) => typeof x === 'number' && !isFinite(x))) bad.push(k + '(' + a.join(',') + ')');
+    }),
+    set: (o, k, v) => { o[k] = v; return true; },
+  });
+  ctx.__c2d = c2d;
+  const ph = run('S.phase+(S.ending?"(ending)":"")');
+  try { run('(function(){var E=finalEval(S),P=S.prep||{names:["x"],name:0};drawShare(__c2d,S,E,P,shareMembers(E).map(function(){return null;}));})()'); }
+  catch (e) { errs.push('share ' + ph + ': ' + e.message); return; }
+  shareN++;
+  const need = ['ひかりの', '指名', run('finalEval(S).grade'), run('finalEval(S).total.toFixed(1)')].concat(JSON.parse(run('JSON.stringify(finalEval(S).D.map(function(t){return t.name;}))')));
+  const miss = need.filter((x) => !texts.includes(x));
+  if (miss.length) errs.push('share: 描いていない ' + miss.join('・'));
+  if (bad.length) errs.push('share: 数でない座標 ' + bad.slice(0, 2).join(' '));
+  const ng = texts.filter((t) => /undefined|NaN|null|アイドル/.test(t));
+  if (ng.length) errs.push('share: 字の漏れ ' + ng[0]);
+}
 
 // 講評の画面（2026-11-15）：選ぶ子は1人1行、押すと8択のシート。前の「1人に8つのボタン」の列が戻っていないか
 let critChk = 0;
@@ -118,6 +144,7 @@ if (clash.length) { console.error('札の名前が、ほかの部品の見た目
 if (tinyFs.length) { console.error('12px 未満の字の指定: ' + [...new Set(tinyFs)].join(' ')); process.exitCode = 1; }
 if (!smallRule) { console.error('<small> を12px未満にしない指定（small{font-size:max(12px,…)}）が無い'); process.exitCode = 1; }
 else console.log('字の大きさの指定: 12px 未満 ' + tinyFs.length + '件');
+if (!shareN) { console.error('シェアの画像の点検が1回も走っていない'); process.exitCode = 1; } else console.log('シェアの画像の点検 ' + shareN + '回（描くときのエラー・字の漏れ・中身の欠け）');
 if (!critChk) { console.error('講評の画面の点検が1回も走っていない'); process.exitCode = 1; } else console.log('講評の画面の点検 ' + critChk + '回（1人1行・8択のシート）');
 if (hitMiss.length) { console.error('押せる範囲の指定が無い: ' + hitMiss.join('・')); process.exitCode = 1; }
 else console.log('押せる範囲の指定: ' + Object.keys(hitRules).length + '件あり');
