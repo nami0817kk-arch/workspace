@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../logic/signing_proposal_engine.dart';
+import '../logic/transfer_terms_engine.dart';
 import '../models/player.dart';
 import '../models/save_game.dart';
 import '../services/feedback_service.dart';
@@ -419,6 +420,7 @@ class _TransferScreenState extends State<TransferScreen>
     final save = gameState.save!;
     final total = player.marketValue;
     final downPayment = (total * 0.3).round();
+    final agentFee = TransferTermsEngine.agentFee(total);
     final loanFee = (total * GameState.loanFeeRatioPercent / 100).round();
     final buyOptionFee = (total * GameState.loanBuyOptionRatio).round();
 
@@ -440,8 +442,8 @@ class _TransferScreenState extends State<TransferScreen>
                 leading: const Icon(Icons.payments),
                 title: Text(Tr.pick('一括で獲得', 'Pay it all now')),
                 subtitle:
-                    Text(Tr.pick('$total万円を即座に支払う', 'Pay $total immediately')),
-                enabled: save.budget >= total,
+                    Text(Tr.pick('$total万円を即座に支払う(別に代理人手数料$agentFee万円)', 'Pay $total immediately (plus $agentFee agent fee)')),
+                enabled: save.budget >= total + agentFee,
                 onTap: () {
                   Navigator.pop(ctx);
                   _acquire(
@@ -473,7 +475,7 @@ class _TransferScreenState extends State<TransferScreen>
                 title: Text(Tr.pick('分割払いで獲得', 'Pay in instalments')),
                 subtitle: Text(Tr.pick('頭金$downPayment万円 + 残額を4週で均等払い',
                     '$downPayment down, the rest in equal payments over 4 weeks')),
-                enabled: save.budget >= downPayment,
+                enabled: save.budget >= downPayment + agentFee,
                 onTap: () {
                   Navigator.pop(ctx);
                   _acquire(

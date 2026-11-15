@@ -9,16 +9,42 @@ extension GameStateTransfer on GameState {
     final idx = transferMarket.indexWhere((p) => p.id == playerId);
     if (idx < 0) return false;
     final player = transferMarket[idx];
-    if (_save!.budget < player.marketValue) return false;
+    final fee = TransferTermsEngine.agentFee(player.marketValue);
+    if (_save!.budget < player.marketValue + fee) return false;
     if (userTeam.players.length >= maxSquadSize) return false;
     if (!_wageBudgetAllowsSigning(player.wage)) return false;
     _book(LedgerCategory.transfers, -(player.marketValue));
+    _bookAgentFee(player, fee);
     ContractEngine.applyTransferContract(player);
     userTeam.players.add(player);
     transferMarket.removeWhere((p) => p.id == playerId);
     _notify();
     await _persist();
     return true;
+  }
+
+  /// 代理人手数料を払う(移籍金とは別の費用)。
+  void _bookAgentFee(Player player, int fee) {
+    if (fee <= 0) return;
+    _book(LedgerCategory.transfers, -fee);
+    _logNews(
+        Tr.pick('${player.name}の代理人に手数料$fee万円を支払った。',
+            'Paid $fee in agent fees for ${player.name}.'),
+        context: Tr.pick('移籍', 'Transfer'));
+  }
+
+  /// 売却条項が付いた選手を売るとき、売却額の一部を元のクラブへ払う。
+  void _paySellOn(Player player, int salePrice) {
+    final percent = _save!.sellOnClauses.remove(player.id);
+    if (percent == null) return;
+    final pay = TransferTermsEngine.sellOnPayment(
+        salePrice: salePrice, percent: percent);
+    if (pay <= 0) return;
+    _book(LedgerCategory.transfers, -pay);
+    _logNews(
+        Tr.pick('${player.name}の売却条項により、元のクラブへ$pay万円を支払った。',
+            'Paid $pay to his former club under the sell-on clause for ${player.name}.'),
+        context: Tr.pick('移籍', 'Transfer'));
   }
 
   /// 値切りオファーが受け入れられる確率(0.0〜1.0)。市場価値の満額なら
@@ -46,7 +72,8 @@ extension GameStateTransfer on GameState {
     final idx = transferMarket.indexWhere((p) => p.id == playerId);
     if (idx < 0) return (attempted: false, accepted: false);
     final player = transferMarket[idx];
-    if (offer <= 0 || _save!.budget < offer) {
+    if (offer <= 0 ||
+        _save!.budget < offer + TransferTermsEngine.agentFee(offer)) {
       return (attempted: false, accepted: false);
     }
     if (userTeam.players.length >= maxSquadSize) {
@@ -64,6 +91,16 @@ extension GameStateTransfer on GameState {
       return (attempted: true, accepted: false);
     }
     _book(LedgerCategory.transfers, -(offer));
+    _bookAgentFee(player, TransferTermsEngine.agentFee(offer));
+    final clause = TransferTermsEngine.sellOnPercent(
+        offer: offer, marketValue: player.marketValue);
+    if (clause > 0) {
+      _save!.sellOnClauses[player.id] = clause;
+      _logNews(
+          Tr.pick('${player.name}の獲得で、売り手に売却条項($clause%)を約束した。',
+              'To land ${player.name} we agreed a $clause% sell-on clause with the seller.'),
+          context: Tr.pick('移籍', 'Transfer'));
+    }
     ContractEngine.applyTransferContract(player);
     userTeam.players.add(player);
     transferMarket.removeWhere((p) => p.id == playerId);
@@ -156,6 +193,7 @@ extension GameStateTransfer on GameState {
     team.startingXI.remove(playerId);
     _clearPlayerRoleReferences(team, playerId);
     _book(LedgerCategory.playerSales, net);
+    _paySellOn(player, net);
     _placeSoldPlayerAtCpuClub(player);
     // ダイナミクス: チームリーダーの放出はロッカールーム全体を動揺させる。
     if (wasTeamLeader) {
@@ -395,11 +433,13 @@ extension GameStateTransfer on GameState {
     final player = transferMarket[idx];
     final total = player.marketValue;
     final downPayment = (total * 0.3).round();
-    if (_save!.budget < downPayment) return false;
+    final fee = TransferTermsEngine.agentFee(total);
+    if (_save!.budget < downPayment + fee) return false;
     lastSigningBlockReason = null;
     if (!_wageBudgetAllowsSigning(player.wage)) return false;
 
     _book(LedgerCategory.transfers, -(downPayment));
+    _bookAgentFee(player, fee);
     const weeks = 4;
     final remaining = total - downPayment;
     _save!.pendingInstallments.add(
@@ -881,6 +921,7 @@ extension GameStateTransfer on GameState {
     }
     _movePlayerToBuyer(player, offer.buyerClubName);
     _book(LedgerCategory.playerSales, offer.amount);
+    _paySellOn(player, offer.amount);
     _notify();
     await _persist();
     return true;
