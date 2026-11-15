@@ -437,12 +437,13 @@ async function clearEvents() {
       rail('系譜');
       ok(A.tab === 'lineage' && ['系譜図', '卒業生名鑑', '殿堂', '実績', '年表', '育成基金'].every((x) => txt().includes(x)), '系譜タブに6つの見出し');
       ok(!!d.querySelector('.lin-svg svg') || txt().includes('最初の卒業式'), '系譜図か空の案内が出る');
-      for (const n of ['ライバル', 'トップ', '移籍']) {
+      for (const n of ['ライバル', 'トップ', '移籍', 'クラブ']) {
         btn(n, d.querySelector('.tabs')).click();
         ok(errors.length === 0, n + 'の画面で例外なし: ' + errors.slice(0, 2).join('|'));
         if (n === 'ライバル') ok(txt().includes('名物のライバル監督') && txt().includes('対戦成績'), 'ライバル監督の画面');
         if (n === 'トップ') ok(txt().includes('トップ監督の注文'), 'トップ監督の注文の画面');
         if (n === '移籍') ok(txt().includes('クラブ移籍'), 'クラブ移籍の画面');
+        if (n === 'クラブ') ok(txt().includes('移籍先のクラブ（121）') && txt().includes('マドリード・ブランコス') && txt().includes('リーグの水準'), '移籍先のクラブと強さの画面');
       }
       for (const n of ['実績', '図鑑', '殿堂', '年表', '育成基金', '卒業生名鑑']) {
         btn(n, d.querySelector('.tabs')).click();

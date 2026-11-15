@@ -153,6 +153,36 @@
     return r;
   };
 
+  // 系譜タブの小タブ「クラブ」：卒業生が行きうるクラブと強さ（2026-11-15「クラブごとの強さ見せて」）
+  YA.lineageExtraTabs = YA.lineageExtraTabs || [];
+  function clubsTab(body, w) {
+    const h = YA._ui.h;
+    const now = {}, ever = {};
+    for (const a of w.alumni || []) {
+      if (a.status === 'pro' && !a.retired && a.club) now[a.club] = (now[a.club] || []).concat([a.name]);
+      for (const c of new Set((a.seasons || []).map((s) => s.club).filter(Boolean))) ever[c] = (ever[c] || 0) + 1;
+    }
+    const groups = [['J1リーグ', 1], ['J2リーグ', 2], ['J3リーグ', 3]].map(([lg, t]) => [lg, (YA.PRO_CLUBS || []).filter((c) => (w.top && c.name === w.top.name ? w.top.j : c.tier) === t).map((c) => [c.name + (w.top && c.name === w.top.name ? '（自分のクラブのトップ）' : ''), YA.clubStr(c.name, w)])])
+      .concat(YA.ABROAD_LEAGUES.map((x) => [x[1] + '（' + x[0] + '）', YA.ABROAD_CLUBS[x[1]].map((c) => [c[0], c[1]]), x[1]]));
+    const total = groups.reduce((n, g) => n + g[1].length, 0);
+    body.append(h('div', { class: 'h' }, `移籍先のクラブ（${total}）`), h('div', { class: 'note' }, '数字はクラブの強さ（選手の総合力と同じ0〜200の物差し）。卒業生は、自分の総合力より少し上のクラブへ移りやすい。強いクラブほど優勝しやすい。'));
+    const list = h('div', { class: 'scroll', style: 'flex:1;min-height:0;margin-top:4px' });
+    for (const [title, clubs, key] of groups) {
+      const lgR = YA.rate((YA.LEAGUE_LV || {})[key || title] || 12);
+      list.append(h('div', { class: 'h', style: 'margin-top:6px;font-size:13px' }, `${title}　リーグの水準 ${lgR}`));
+      for (const [name, str] of clubs.slice().sort((x, y) => y[1] - x[1])) {
+        const ours = now[name.replace('（自分のクラブのトップ）', '')] || [];
+        list.append(h('div', { class: 'pitem', style: 'cursor:default;gap:6px;align-items:center' },
+          h('span', { style: 'width:42px;flex:none;text-align:right;font-weight:800' }, String(str)),
+          h('div', { style: 'width:90px;flex:none;height:6px;border-radius:3px;background:var(--line);overflow:hidden' }, h('div', { style: `width:${Math.max(4, Math.min(100, ((str - 90) / 95) * 100))}%;height:100%;background:${str >= 165 ? '#d9a400' : str >= 145 ? 'var(--acc,#1f6feb)' : '#7a8aa0'}` })),
+          h('span', { class: 'grow' }, name),
+          ours.length ? h('span', { class: 'chip trait' }, `卒業生 ${ours.length}人`) : ever[name] ? h('span', { class: 'sub' }, `かつて${ever[name]}人`) : null));
+      }
+    }
+    body.append(list);
+  }
+  YA.lineageExtraTabs.push(['clubs', 'クラブ', clubsTab]);
+
   // 年度末：シーズン中に知らせたゴールは、その年の成績の最低の数にする（ゴールの知らせと成績が食い違わない）
   const at0 = YA.alumniTick;
   YA.alumniTick = function (w) {

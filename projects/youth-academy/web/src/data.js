@@ -355,6 +355,15 @@
     }
     return 200;
   };
+  // 0〜200 から内部の値へ（クラブの強さを、能力の平均と比べるため）
+  YA.unrate = function (r) {
+    for (let i = 1; i < RATE_PTS.length; i++) {
+      const [x0, y0] = RATE_PTS[i - 1];
+      const [x1, y1] = RATE_PTS[i];
+      if (r <= y1) return x0 + ((Math.max(r, y0) - y0) / (y1 - y0)) * (x1 - x0);
+    }
+    return 20;
+  };
   YA.rating = (p) => YA.rate(YA.ovr(p));
   // 水準の表（総合力のめやす）
   YA.LEVELS = [

@@ -405,7 +405,7 @@
       const draw = () => {
         box.replaceChildren(
           h('div', { class: 'row' }, h('div', { class: 'h grow' }, `${a.name}（${a.year}年目卒${a.age ? '・' + a.age + '歳' : ''}）`), h('button', { class: 'btn sm', onclick: close }, '閉じる')),
-          h('div', { class: 'note' }, `${a.club || ''}${a.league ? '（' + a.league + '）' : ''}・通算${a.apps || 0}試合${a.goals || 0}得点・絆 ${a.bond == null ? '-' : a.bond}/6`),
+          h('div', { class: 'note' }, `${a.club || ''}${a.league ? '（' + a.league + (YA.clubStr && YA.clubStr(a.club, w) != null ? '・クラブの強さ ' + YA.clubStr(a.club, w) : '') + '）' : ''}・本人 ${YA.rate(a.ovr)}・通算${a.apps || 0}試合${a.goals || 0}得点・絆 ${a.bond == null ? '-' : a.bond}/6`),
           h('div', { class: 'row', style: 'gap:5px;flex-wrap:wrap;margin:4px 0' },
             h('button', { class: 'btn sm' + (a.fav ? ' on' : ''), onclick: () => { a.fav = !a.fav; save(); draw(); } }, a.fav ? '★ 追っている（外す）' : '☆ この子を追う'),
             h('button', { class: 'btn sm', onclick: () => { const r = YA.alumniContact(w, a); msg.textContent = r.msg; save(); draw(); } }, '連絡する（年1回）'),
