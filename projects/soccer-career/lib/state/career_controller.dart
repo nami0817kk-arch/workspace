@@ -62,6 +62,9 @@ class WeekReport {
     this.deadBall,
     this.newInjury,
     this.recovered = false,
+    this.declined,
+    this.shielded = const [],
+    this.declineRedirected = false,
   });
 
   /// その試合で起きたこと（得点・失点の時間）。
@@ -86,6 +89,16 @@ class WeekReport {
   final TrainingCompanion companion;
 
   final Detail? trained;
+
+  /// **その試合のあとに衰えた詳細能力**（2026-11-15）。衰え始める前は null。
+  final Detail? declined;
+
+  /// 衰えから守ったカテゴリ（その週の練習が扱うもの）。休養の週は空。
+  /// 衰えた週は、練習しているカテゴリには必ず当たらない。
+  final List<AttributeKey> shielded;
+
+  /// 本来は守ったカテゴリに当たるはずで、別の能力が受けたか（測定用）。
+  final bool declineRedirected;
 
   /// その週に覚えた個人技。
   final Signature? learned;
@@ -1399,8 +1412,16 @@ class CareerController extends ChangeNotifier {
       lastWeek = WeekReport(timeline: match.timeline, recovered: recovered);
     } else {
       final before = _sumOf(player.attributes);
+      Detail? declined;
+      var shielded = false;
       player = player.copyWith(
         attributes: _match.grow(
+          // その週に練習するカテゴリは衰えから守られる。
+          protect: state.menu.keys,
+          declined: (detail, wasShielded) {
+            declined = detail;
+            shielded = wasShielded;
+          },
           development: state.development,
           // 狙った項目を積む。**伸びたかどうかではなく狙った回数**を数える——
           // 頭打ちで土台に回された回も入れないと、鎖の深い項目は永久に尖れない。
@@ -1542,6 +1563,9 @@ class CareerController extends ChangeNotifier {
         redirected: week.redirected,
         deadBall: match.deadBallText,
         newInjury: newInjury,
+        declined: declined,
+        shielded: declined == null ? const [] : state.menu.keys,
+        declineRedirected: shielded,
       );
     }
 

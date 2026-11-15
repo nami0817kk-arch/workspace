@@ -532,6 +532,35 @@ class Formulas {
   static const int peakAge = 27;
   static const int declineAge = 31;
 
+  /// **衰え始めた年の、1試合あたりの衰えの確率**（2026-11-15）。
+  static const double declineChanceBase = 0.25;
+
+  /// 衰え始めてから1年ごとに上がる確率。歳とともに落ちる速さが上がる。
+  /// 以前は一定の 0.25 で、31歳から35歳でも総合力が 0.6 しか下がらず、
+  /// 「何を守るか」を練習で選んでも守るものが無かった。
+  static const double declinePerYear = 0.06;
+
+  /// 衰えの確率の上限。
+  static const double declineChanceMax = 0.6;
+
+  /// その年の衰えの確率。
+  static double declineChanceFor(int yearsPast) =>
+      (declineChanceBase + declinePerYear * yearsPast.clamp(0, 20)).clamp(
+        0.0,
+        declineChanceMax,
+      );
+
+  /// **衰えはどこから来るか。** 走力と身体を、ほかの3倍の重みで引く。
+  /// 現実の選手も脚から落ちる。技術と頭は残る。
+  static int declineWeightFor(AttributeKey key, {required bool goalkeeper}) =>
+      switch (key) {
+        AttributeKey.pace || AttributeKey.physical => 3,
+        // フィールドの選手は GK の能力が落ちても何も変わらない。
+        // そこに当てると衰えが空振りになる（以前は 3/22 が空振りだった）。
+        AttributeKey.goalkeeping => goalkeeper ? 3 : 0,
+        _ => 1,
+      };
+
   /// 身体の消耗 0〜100。**最近どう踏み込んできたか**を映す。
   ///
   /// 実測（40キャリア×3条件）で、「流す」に上振れが一つも無かった——

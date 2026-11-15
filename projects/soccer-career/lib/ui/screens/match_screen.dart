@@ -1216,6 +1216,21 @@ class _MatchSummary extends StatelessWidget {
                   ),
                 ),
               ],
+              // **衰えは、何を守ったかと一緒に出す。** 落ちたことだけ書くと、
+              // 練習を選ぶ意味が見えない（2026-11-15）。
+              if (week.declined != null) ...[
+                const SizedBox(height: 12),
+                Text(
+                  week.shielded.isEmpty
+                      ? '衰え: ${week.declined!.label} が 1 落ちた'
+                      : '衰え: ${week.declined!.label} が 1 落ちた'
+                            '（守ったのは ${week.shielded.map((k) => k.label).join('・')}）',
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.error,
+                  ),
+                ),
+              ],
               if (week.drilled != null) ...[
                 const SizedBox(height: 12),
                 Text(

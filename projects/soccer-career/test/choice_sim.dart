@@ -152,6 +152,32 @@ void main() {
         '／ どう育てても同じ ${fixed - revived}'
         '${dead.isEmpty ? '' : '  例: ${dead.join(' ')}'}',
       );
+      // **育て方で最善の手が変わる局面**（答えが決まっているかどうかに関係なく）。
+      // 上の「育て方を変えると別の手になる」は、答えが決まっている局面の中しか
+      // 数えない。決まっている局面が0になると、何をしても0になる（2026-11-15 に
+      // それを根拠に「育て方が効いていない」と読み違えかけた）。
+      var buildFlips = 0;
+      var compared = 0;
+      for (final id in flat.keys) {
+        final tops = <String>{};
+        var enough = true;
+        for (final build in byBuild.values) {
+          final counts = build[id];
+          if (counts == null || counts.values.fold(0, (a, b) => a + b) < 20) {
+            enough = false;
+            break;
+          }
+          tops.add(
+            counts.entries.reduce((a, b) => a.value > b.value ? a : b).key,
+          );
+        }
+        if (!enough) continue;
+        compared++;
+        if (tops.length > 1) buildFlips++;
+      }
+      if (!quick) {
+        print('    育て方で一番多い手が変わる局面 $buildFlips / $compared');
+      }
       final total = byStakes.values.fold(0, (a, r) => a + r[0]);
       final parts = [
         for (final s in MatchStakes.values)
