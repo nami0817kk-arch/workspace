@@ -251,8 +251,11 @@ const trainingNotes = [
 
 /// オフの成長の記録(自分のチームの1人分)。
 class GrowthLine {
-  const GrowthLine({required this.name, required this.age, required this.before, required this.after, this.focus, this.parts = const []});
+  const GrowthLine({required this.name, required this.age, required this.before, required this.after, this.focus, this.parts = const [], this.team = -1});
   final String name;
+
+  /// いたチーム(リーグ全体の成長の発表で使う。自分の選手の行では -1)。
+  final int team;
 
   /// 伸びの内訳(年齢・育成・練習・出場時間・性格。力のもとの数字で)。
   final List<(String, int)> parts;
@@ -272,12 +275,14 @@ class GrowthLine {
         'f': after,
         if (focus != null) 'fo': focus!.index,
         if (parts.isNotEmpty) 'pt': [for (final (l, v) in parts) [l, v]],
+        if (team >= 0) 't': team,
       };
   static GrowthLine fromJson(Map<String, dynamic> j) => GrowthLine(
         name: j['n'] as String,
         age: j['a'] as int,
         before: j['b'] as int,
         after: j['f'] as int,
+        team: (j['t'] as int?) ?? -1,
         focus: j['fo'] is int && (j['fo'] as int) >= 0 && (j['fo'] as int) < Attr.values.length ? Attr.values[j['fo'] as int] : null,
         parts: [
           if (j['pt'] is List)
@@ -1530,6 +1535,29 @@ class Career {
   /// このオフの自分のチームの成長(年を取る前と後の力)。
   List<GrowthLine> growth = [];
 
+  /// このオフのリーグ全体の成長(伸び・落ちの大きい選手。2026-11-16、Basketball GM ではオフの成長の発表が
+  /// 遊ぶ人の話題になっている)。力のもとの数字で、差の大きい順に残す。
+  List<GrowthLine> leagueGrowth = [];
+
+  void _noteLeagueGrowth(GrowthLine g) {
+    if ((g.after - g.before).abs() < 2) return;
+    leagueGrowth.add(g);
+    if (leagueGrowth.length > 48) {
+      leagueGrowth.sort((a, b) => (b.after - b.before).abs().compareTo((a.after - a.before).abs()));
+      // 伸びと落ちをそれぞれ残す
+      final up = [for (final x in leagueGrowth) if (x.after > x.before) x].take(12);
+      final down = [for (final x in leagueGrowth) if (x.after < x.before) x].take(12);
+      leagueGrowth = [...up, ...down];
+    }
+  }
+
+  /// このオフに大きく伸びた選手(上から [n] 人)と、落ちた選手。
+  List<GrowthLine> leagueRisers([int n = 6]) => ([for (final x in leagueGrowth) if (x.after > x.before) x]..sort((a, b) => (b.after - b.before).compareTo(a.after - a.before))).take(n).toList();
+  List<GrowthLine> leagueFallers([int n = 6]) => ([for (final x in leagueGrowth) if (x.after < x.before) x]..sort((a, b) => (a.after - a.before).compareTo(b.after - b.before))).take(n).toList();
+
+  /// 来季の強さ予想(今の強さの順。0が1位)。
+  List<int> powerRanking() => [for (final t in [...teams]..sort((a, b) => b.strength.compareTo(a.strength))) t.index];
+
   void setTraining(int level) => me.training = level.clamp(0, 2);
 
   /// チームの方針の [axis] 番目の軸を [choice](0・1・2)にする。
@@ -2065,6 +2093,7 @@ class Career {
     }
     news = [];
     growth = [];
+    leagueGrowth = [];
     optionPending = [];
     for (final p in [...freeAgents, ...me.roster]) {
       p
@@ -2110,6 +2139,7 @@ class Career {
           p.lastDelta += v;
           d += v;
         }
+        _noteLeagueGrowth(GrowthLine(name: p.name, age: p.age, before: start, after: p.ovr, team: t.index));
         if (t.index == mine) {
           growth.add(GrowthLine(name: p.name, age: p.age, before: start, after: p.ovr, focus: p.focus, parts: [
             if (byAge != 0) (p.age <= 25 ? '年齢(若さ)' : '年齢', byAge),
@@ -3519,6 +3549,7 @@ class Career {
         'mvm': [for (final a in monthly) a.toJson()],
         'cp': [for (final c in coachPool) c.toJson()],
         'gr': [for (final g in growth) g.toJson()],
+        if (leagueGrowth.isNotEmpty) 'lgr': [for (final g in leagueGrowth) g.toJson()],
         'fd': faDay,
         'bd': {for (final e in bids.entries) '${e.key}': [for (final b in e.value) b.toJson()]},
         'fl': faLog,
@@ -3628,6 +3659,7 @@ class Career {
       ..monthly = [for (final a in maps('mvm')) Award.fromJson(a)]
       ..coachPool = [for (final x in maps('cp')) Coach.fromJson(x)]
       ..growth = [for (final g in maps('gr')) GrowthLine.fromJson(g)]
+      ..leagueGrowth = [for (final g in maps('lgr')) GrowthLine.fromJson(g)]
       ..faDay = ((j['fd'] as int?) ?? 0).clamp(0, faDays)
       ..bids = {
         for (final e in (j['bd'] as Map? ?? const {}).entries)
