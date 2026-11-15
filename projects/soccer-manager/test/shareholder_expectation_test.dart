@@ -64,10 +64,14 @@ void main() {
       if (gameState.isHalfTime) await gameState.playSecondHalf();
 
       expect(save.shareholderExpectation, lessThan(start));
-      // 信頼度は試合結果(1試合±3)でしか動かない。資金の減点(-8)は受けない。
+      // 信頼度は試合結果(1試合±3)で動く。資金の減点(-8)は受けない。
+      // 週の処理には、突発の出来事・お知らせ・オーナーの機嫌などの
+      // 小さな増減も乱数で混ざる(2026-11-15、CI で +5 を観測して不安定だった)。
+      // -8 の減点が入れば(負け -3 と合わせて -11)この下限を割るので、
+      // 「資金の減点を受けない」ことは今も検査できる。
       expect(
         save.confidence,
-        inInclusiveRange(confidenceBefore - 3, confidenceBefore + 3),
+        inInclusiveRange(confidenceBefore - 7, confidenceBefore + 8),
       );
     });
 
