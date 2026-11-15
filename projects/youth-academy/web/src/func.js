@@ -398,6 +398,7 @@
     return { ok: true, msg: `${a.club}の試合を観に行った。${a.name}は${play}。${fan.length ? `一緒に行った★の子${fan.length}人が、目を輝かせていた（自信 +3）` : ''}` };
   };
   YA.alumniModal = function (w, a) {
+    if (YA.fixClubNames) YA.fixClubNames(w);
     const h = H();
     YA._v.modal((close) => {
       const box = h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(640px,96%);padding:12px;gap:6px;max-height:92%;overflow:auto' });
