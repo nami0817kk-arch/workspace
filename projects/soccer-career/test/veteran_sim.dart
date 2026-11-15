@@ -52,9 +52,9 @@ void main() {
         onWeekState: (c) {
           final week = c.lastWeek;
           final age = c.state!.player.age;
-          if (week?.declined == null) return;
+          if (week.declined == null) return;
           declined[age] = (declined[age] ?? 0) + 1;
-          if (week!.declineRedirected) {
+          if (week.declineRedirected) {
             shielded[age] = (shielded[age] ?? 0) + 1;
           }
         },

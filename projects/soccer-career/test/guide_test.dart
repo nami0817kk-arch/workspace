@@ -43,6 +43,7 @@ void main() {
       '手の値打ちが変わる',
       '外すと失点',
       '通っても失点',
+      '何を守るか',
     ]) {
       expect(text, contains(name), reason: name);
     }
