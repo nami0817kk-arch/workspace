@@ -26,7 +26,7 @@
 | `docs/RELEASE.md` | TestFlight と App Store への出し方（護送ボートの手順を写したもの）。リリースは `hikari7-ios-release.yml` |
 | `tool/make_bgm.py` | BGM 6曲を作る（`platform/ai-lab` の audiogen で合成。生成AIではない）。`app/assets/audio/bgm/` に MP3 |
 | `tool/make_voice.py` | 台詞の声を作る（手元の VOICEVOX ENGINE で合成）。`app/assets/audio/voice/<声>/<FNV>.mp3` と `index.json`。足りない分だけ作る |
-| `tool/screenshots.py` | App Store の掲載画像を撮る（iPhone 中型 1206×2622・iPad 13インチ、各7枚。2026-10-08 に必須が中型に変わった。手元の Edge を画面なしで動かす。先に `build_app_web.py`）。iPad は文字の大きさ「とても大きい」で撮る |
+| `tool/screenshots.py` | App Store の掲載画像を撮る（iPhone 中型 1206×2622・iPad 13インチ、各7枚。2026-10-08 に必須が中型に変わった。手元の Edge を画面なしで動かす。先に `build_app_web.py`）。iPad は文字の大きさ「とても大きい」で撮る。**Edge は `open_edge()` で開き `close_edge()` で閉じる**（`terminate()` だけだと Edge が子ごと残る。2026-11-15 に 26 個・4.5GB 残っていた。撮影の使い捨てスクリプトもこの 2 つを使う） |
 | `tool/store_images.py` | 掲載画像に見出し・添え書きを付けて並べ直す（1.0.1〜。見せ場を先に）。`build/store/` に出す |
 | `tool/make_icon.py` | アプリアイコンを作る（元の絵は `art/icon_src.jpg`。2026-10-04 に FLUX.1 schnell の10案からユーザーが選んだ「3人のうち真ん中だけにスポットライト」） |
 | `fonts/` | 見出し書体 Dela Gothic One（OFL）。使う字だけに絞って埋め込む |
