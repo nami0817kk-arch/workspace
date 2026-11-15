@@ -867,7 +867,7 @@ class HomeScreen extends StatelessWidget {
                         const SizedBox(height: 12),
                         FilledButton(
                           onPressed: () => _playMatch(context),
-                          child: Text(Tr.pick('試合を行う', 'Play the match')),
+                          child: Text(Tr.pick('次の節へ', 'Next matchday')),
                         ),
                         const SizedBox(height: 4),
                         Row(

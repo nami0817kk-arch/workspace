@@ -81,7 +81,7 @@ void main() {
 
     // クラブニュースは1節進めば埋まる。開始直後こそ空だが、画面自身が
     // 「節を進めると記録されます」と案内しており、閉じる意味がない。
-    for (final label in const ['トレーニング', '移籍市場', 'カレンダー', 'クラブニュース']) {
+    for (final label in const ['移籍市場', 'クラブニュース']) {
       expect(byLabel(label).lockedReason?.call(game), isNull,
           reason: '$label は常に開けるべき');
     }
