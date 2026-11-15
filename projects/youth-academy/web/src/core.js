@@ -10,12 +10,12 @@
   const abs = (w) => w.year * 100 + w.week;
 
   // ---------- ★注目（決定85。決定150で「入団時に決める」へ）：各学年4人まで ----------
-  // ★は新入生の入団から4週のうちに決める（そのあとは付け替えられない）。初年度だけは最初の36人もいつでも付け外しできる
+  // ★は新入生の入団から4週のうちに決める（そのあとは付け替えられない）。初年度も同じで、高1だけ（決定：上級生には付けない）
   YA.STAR_MAX = 4;
   YA.STAR_WEEKS = 4;
-  YA.starGrades = (w) => (w.year <= 1 ? [1, 2, 3] : w.week <= YA.STAR_WEEKS ? [1] : []);
+  YA.starGrades = (w) => (w.week <= YA.STAR_WEEKS ? [1] : []);
   YA.starOpen = (w, p) => YA.starGrades(w).includes(p.grade);
-  YA.STAR_CLOSED = '★は入団から4週のうちに決めます（初年度だけは自由に付け外しできます）。今年の新入生は、次の入団のときにまた選べます';
+  YA.STAR_CLOSED = '★は高1にだけ、入団から4週のうちに付けます。高2・高3には付けられません。次の新入生が入ったら、また選べます';
   YA.starsIn = (w, grade) => Object.values(w.players).filter((p) => p.star && p.grade === grade);
   YA.setStar = function (w, p, on) {
     if (!YA.starOpen(w, p)) return { ok: false, msg: YA.STAR_CLOSED };
@@ -32,7 +32,7 @@
     return { ok: true, msg: `${p.name}に★を付けました。面談や試合で、覚醒の鍵のヒントが少しずつ見えてきます` };
   };
   // おまかせ進行・最初の4週の勧め：伸びしろの星が高い子から、空いている枠に★を付ける
-  YA.starPick = (w, grade) => Object.values(w.players).filter((p) => p.grade === grade && !p.star && !(p.aw && !(p.keys || []).length)).sort((a, b) => YA.coachStars(w, b) - YA.coachStars(w, a) || (b.fast ? 1 : 0) - (a.fast ? 1 : 0) || YA.rating(b) - YA.rating(a));
+  YA.starPick = (w, grade) => Object.values(w.players).filter((p) => p.grade === grade && !p.star && !(p.aw && !(p.keys || []).length)).sort((a, b) => (w.year === 1 ? (b.fast ? 1 : 0) - (a.fast ? 1 : 0) : 0) || YA.coachStars(w, b) - YA.coachStars(w, a) || (b.fast ? 1 : 0) - (a.fast ? 1 : 0) || YA.rating(b) - YA.rating(a));
   YA.autoStars = function (w) {
     for (const g of YA.starGrades(w)) {
       let n = YA.starsIn(w, g).length;
@@ -176,7 +176,7 @@
   // ---------- 教え方（決定128）----------
   YA.INTRO = [
     ['ユースの指導者になった', '高1〜高3の36人を預かり、3年かけて育てて送り出します。勝つことと、育てること。その両方を任されています。'],
-    ['★注目の子を選ぶ', '★は各学年4人まで。★の子だけが「覚醒の鍵」を持っています。面談や試合で鍵のヒントを見つけ、満たすと覚醒します。'],
+    ['★注目の子を選ぶ', '★は高1に4人まで、入団から4週のうちに付けます。★の子だけが「覚醒の鍵」を持っています。3年かけて鍵のヒントを見つけ、満たすと覚醒します。'],
     ['毎週やること', '練習の画面を確かめて「この週で行く」。試合の週は布陣と戦い方を決めてキックオフ。出来事が起きたら、言葉をかけて選びます。'],
     ['系譜を伸ばす', '卒業した子がプロや代表で活躍すると、あなたの系譜が伸びます。大きな移籍では連帯貢献金も入ります。'],
   ];
@@ -200,14 +200,11 @@
   // 最初の4週：鍵の短い子（見た目では分からない）に★を勧める
   YA.starRecommend = function (w) {
     if (!w || w.week > YA.STAR_WEEKS) return null;
-    if (w.year > 1) {
-      if (YA.starsIn(w, 1).length >= YA.STAR_MAX) return null;
-      const n = YA.starPick(w, 1)[0];
-      return n ? `今年の新入生は、入団から${YA.STAR_WEEKS}週のうちに★を決めます。${n.name}は伸びしろが大きそうです（${YA.starsIn(w, 1).length}/${YA.STAR_MAX}）。` : null;
-    }
-    const p = Object.values(w.players).find((q) => q.fast && !q.star);
-    if (!p) return null;
-    return `高${p.grade}の${p.name}は、何かきっかけがあれば早く化けそうです。★を付けてみては。`;
+    if (YA.starsIn(w, 1).length >= YA.STAR_MAX) return null;
+    const n = YA.starPick(w, 1)[0];
+    if (!n) return null;
+    const why = n.fast ? 'は、何かきっかけがあれば早く化けそうです' : 'は伸びしろが大きそうです';
+    return `高1には、入団から${YA.STAR_WEEKS}週のうちに★を決めます。${n.name}${why}（${YA.starsIn(w, 1).length}/${YA.STAR_MAX}）。`;
   };
 
   // ---------- 信頼（決定110）：★の子ごとに5段階 ----------
@@ -235,8 +232,11 @@
     senpai: { sys: '人', ok: () => true, need: 6, vague: '慕っている先輩の背中から、何かを学びそうだ', clear: (k, w) => `${k.withName || '先輩'}（高3）と同じAの試合に${k.need}回出る`, due: 'y' },
     captain: { sys: '人', ok: (p) => p.grade >= 2, need: 8, vague: '人の上に立つことで、ひと皮むけそうだ', clear: (k) => `キャプテンか副キャプテンを${k.need}週任せる` },
     trust: { sys: '人', ok: () => true, need: 1, vague: '監督との関係が、鍵を握っていそうだ', clear: () => '監督への信頼が「深く信頼」（5/5）になる' },
-    conf: { sys: '心', ok: () => true, need: 5, vague: '自信を持ち続けられれば、化けそうだ', clear: (k) => `自信70以上を${k.need}週続ける` },
+    conf: { sys: '心', ok: () => true, need: 4, vague: '自信を持ち続けられれば、化けそうだ', clear: (k) => `自信${YA.CONF_KEY}以上を${k.need}週続ける` },
     wall: { sys: '心', ok: () => true, need: 1, vague: '一度つまずいて、それを越えることが大事そうだ', clear: () => '壁（伸び悩み）に当たり、それを越える' },
+    // 初年度の高1の早咲き（fast）だけが持つ鍵。AでもBでも進む
+    bstart: { sys: '育て方', ok: (p) => !!p._earlyRoll, need: 8, vague: '試合の経験を積めば、何かがつながりそうだ', clear: (k) => `AかBの試合で${k.need}試合先発する` },
+    bshine: { sys: '試合', ok: (p) => !!p._earlyRoll, need: 3, vague: '下の試合でも、目立つ活躍が続けば殻を破りそうだ', clear: (k) => `AかBの試合で採点6.5以上を${k.need}回` },
     top: { sys: '外', ok: (p) => p.grade >= 2, need: 1, vague: '上の世界を肌で知ることが、刺激になりそうだ', clear: () => 'トップチームの練習に参加する', due: 'g3' },
     away: { sys: '外', ok: () => true, need: 3, vague: '知らない相手、知らない土地での経験が効きそうだ', clear: (k) => `大会でAに${k.need}試合出る（夏・冬の大会）` },
   };
@@ -284,13 +284,25 @@
     return out;
   }
   // ★を付けたときに初めて鍵が決まる（同じ子なら同じ鍵）。鍵の短い子（fast）は2個・軽い
+  // 鍵の重さ（2026-11-15「もう少し覚醒させたい」で軽くした）：3個になる割合と、必要な回数の倍率
+  YA.KEY3 = 0.3;
+  YA.KEY_MULT = 0.85;
+  YA.CONF_KEY = 65;
+  YA.FIRST_FAST = 4;
+  YA.EARLY_KEYS = ['bstart', 'bshine'];
+  YA.EARLY_MULT = 0.4;
   YA.keysOf = function (w, p) {
     if (p.keys) return p.keys;
     const r = YA.rngOf((w.seed | 0) * 13 + YA.hash(p.id) * 7 + 5);
     if (p.awN == null) p.awN = awakeTimes(r);
     p.awDone = p.awDone || 0;
-    const n = p.fast ? 2 : r.chance(0.5) ? 2 : 3;
-    p.keys = rollKeys(w, p, r, n, p.fast ? 0.5 : 1);
+    const n = p.fast ? 2 : r.chance(YA.KEY3) ? 3 : 2;
+    // 初年度の高1の fast は、高1でも満たせる鍵（Aの試合に出なくてよいもの）から軽く選ぶ
+    const early = p.fast && w.year === 1 && p.grade === 1;
+    const avoid = early ? Object.keys(KEYS).filter((id) => !YA.EARLY_KEYS.includes(id)) : undefined;
+    if (early) p._earlyRoll = true;
+    p.keys = rollKeys(w, p, r, n, early ? YA.EARLY_MULT : p.fast ? YA.KEY_MULT * 0.5 : YA.KEY_MULT, avoid);
+    delete p._earlyRoll;
     return p.keys;
   };
   YA.keyText = function (w, p, k) {
@@ -333,10 +345,51 @@
   }
   YA.keyProgress = progress;
 
+  // ---------- 上位の特性（金）：試合で効いた回数を数え、条件がそろえば金に変わる ----------
+  YA.goldReady = function (p, t) {
+    const aff = YA.TRAIT_AFF[t] || [];
+    const ab = aff.length ? aff.reduce((s, n) => s + (p.ab[n] || 0), 0) / aff.length : 0;
+    const used = (p.trUse && p.trUse[t]) || 0;
+    return { used, ab: Math.round(ab * 10) / 10, ok: used >= YA.GOLD_USES && ab >= YA.GOLD_AB };
+  };
+  YA.goldCheck = function (w, p) {
+    for (const t of p.traits) {
+      if (!YA.GOLD[t] || YA.isGold(p, t) || !YA.goldReady(p, t).ok) continue;
+      p.gold = (p.gold || []).concat([t]);
+      p.hist.unshift({ y: w.year, w: w.week, t: `特性「${t}」が金の特性「${YA.GOLD[t]}」に変わった` });
+      YA.noteTier(w, 1, `${p.num}番 ${p.name}の「${t}」が、金の特性「${YA.GOLD[t]}」に変わった（効きが${YA.GOLD_MULT}倍）`, p.id);
+    }
+  };
+  YA.traitUse = function (w, m) {
+    const seen = new Set();
+    for (const [k, n] of Object.entries(m.trUse || {})) {
+      const i = k.indexOf('|');
+      const p = w.players[k.slice(0, i)];
+      if (!p) continue;
+      const t = k.slice(i + 1);
+      p.trUse = p.trUse || {};
+      p.trUse[t] = (p.trUse[t] || 0) + n;
+      seen.add(p);
+    }
+    for (const p of seen) YA.goldCheck(w, p);
+  };
+
   // ---------- 試合のあと：鍵の進み・信頼 ----------
   const applyMatch0 = YA.applyMatch;
   YA.applyMatch = function (w, m, which, opp, scheduled) {
     applyMatch0(w, m, which, opp, scheduled);
+    YA.traitUse(w, m);
+    if (which === 'B') {
+      const tb = m.home;
+      const sb = new Set(tb.lineup.map((s) => s.pid));
+      for (const id of Object.keys(tb.players)) {
+        const p = w.players[id], st = tb.players[id].st;
+        if (!p || !p.keys || !st || !(st.minutes > 0)) continue;
+        if (sb.has(id)) progress(w, p, 'bstart', 1);
+        if (st.rating >= 6.5) progress(w, p, 'bshine', 1);
+      }
+      return;
+    }
     if (which !== 'A' || !scheduled) return;
     const team = m.home;
     const big = opp && opp.kindLabel && !/^リーグ/.test(opp.kindLabel);
@@ -357,6 +410,8 @@
       if (ga === 0 && st.minutes >= 60) progress(w, p, 'clean', 1);
       if (st.rating >= 7.5) progress(w, p, 'shine', 1);
       if (startIds.has(id)) progress(w, p, 'starter', 1);
+      if (startIds.has(id)) progress(w, p, 'bstart', 1);
+      if (st.rating >= 6.5) progress(w, p, 'bshine', 1);
       if (big) progress(w, p, 'away', 1);
       const k = (p.keys || []).find((x) => x.id === 'convert' && !x.done);
       const slot = team.startSlot && team.startSlot[id];
@@ -420,7 +475,7 @@
         p._inWall = false;
         if (p.conf >= 45) progress(w, p, 'wall', 1);
       }
-      p._confRun = p.conf >= 70 ? (p._confRun || 0) + 1 : 0;
+      p._confRun = p.conf >= YA.CONF_KEY ? (p._confRun || 0) + 1 : 0;
       for (const k of p.keys) if (k.id === 'conf' && !k.done) { k.have = Math.min(k.need, p._confRun); if (p._confRun) k.h = Math.max(k.h, 1); if (k.have >= k.need) progress(w, p, 'conf', 0); }
       if (capIds.has(p.id)) progress(w, p, 'captain', 1);
       if (YA.trustLv(p) >= 5) progress(w, p, 'trust', 1);
@@ -451,27 +506,28 @@
 
   // ---------- 覚醒の形と特性（決定108）----------
   // as は試合の中で同じ働きをする元の特性（engine の has がこれも見る）。覚醒でしか手に入らない名前で札に出る
+  // 覚醒の特性は、ひとつの名前に4つの特性が入る（2026-11-15「もう少し特性の数増やして」で2〜3個から4個に）
   YA.AWAKE_FORMS = [
-    { k: 'conductor', name: '司令塔として目覚める', pos: ['DM', 'CM', 'AM'], abs: ['パス', '視野', '判断', 'テクニック'], trait: '王様のパス', as: ['スルーパス', 'サイドチェンジ'] },
-    { k: 'wall', name: '最終ラインの壁になる', pos: ['CB'], abs: ['タックル', 'マーク', 'ヘディング', '強さ', 'ポジショニング'], trait: '鉄壁', as: ['空中戦の競り', 'シュートブロック', '1対1の粘り'] },
-    { k: 'scorer', name: '点取り屋として目覚める', pos: ['ST', 'SS'], abs: ['フィニッシュ', 'オフザボール', '冷静さ', 'ファーストタッチ'], trait: '決定力の怪物', as: ['こぼれ球への嗅覚', 'ニアへの飛び込み', '巻いて流し込むシュート'] },
-    { k: 'flash', name: '韋駄天になる', pos: ['LW', 'RW', 'LM', 'RM', 'LWB', 'RWB', 'LB', 'RB', 'ST'], abs: ['加速', 'スピード', 'ドリブル', '敏しょう性'], trait: '置き去りの加速', as: ['縦への突破', '裏への抜け出し'] },
-    { k: 'keeper', name: '守護神になる', pos: ['GK'], abs: ['反応', '1対1', 'ハンドリング', '集中'], trait: '神の手', as: ['PKストップ', '前に出るGK'] },
-    { k: 'magic', name: 'ドリブルの魔術師になる', pos: ['LW', 'RW', 'AM', 'SS'], abs: ['ドリブル', 'テクニック', '敏しょう性', 'バランス'], trait: '魔法のドリブル', as: ['カットイン', 'ひらめき'] },
-    { k: 'hunter', name: 'ボールの狩人になる', pos: ['DM', 'CM', 'CB'], abs: ['タックル', '予測', '運動量', 'マーク'], trait: '刈り取る者', as: ['ボール奪取', '読みのインターセプト', '即時奪回'] },
-    { k: 'sky', name: '空の王になる', pos: ['CB', 'ST'], abs: ['ヘディング', 'ジャンプ', '強さ'], trait: '空の支配者', as: ['空中戦の競り', 'ヘディングシュート'] },
-    { k: 'cannon', name: '大砲を手に入れる', pos: ['DM', 'CM', 'AM', 'SS', 'ST'], abs: ['ロングシュート', 'テクニック', '強さ'], trait: '大砲', as: ['弾丸ミドル'] },
-    { k: 'crosser', name: 'クロスの職人になる', pos: ['LB', 'RB', 'LWB', 'RWB', 'LM', 'RM', 'LW', 'RW'], abs: ['クロス', 'パス', 'スタミナ'], trait: '針の穴のクロス', as: ['アーリークロス', '曲がるCK'] },
-    { k: 'engine', name: '走る心臓になる', pos: ['DM', 'CM', 'LM', 'RM', 'LWB', 'RWB'], abs: ['運動量', 'スタミナ', 'チームワーク'], trait: '無尽蔵', as: ['オーバーラップ', '前線からの守備'] },
-    { k: 'leader', name: '最後尾の指揮官になる', pos: ['CB', 'DM', 'GK'], abs: ['判断', '集中', 'チームワーク', 'ポジショニング'], trait: '最後尾の指揮官', as: ['ラインコントロール', '声で味方を動かす'] },
-    { k: 'fighter', name: '闘将になる', pos: ['CB', 'LB', 'RB', 'LWB', 'RWB', 'DM', 'CM', 'LM', 'RM', 'AM', 'LW', 'RW', 'SS', 'ST'], abs: ['強さ', '運動量', '冷静さ'], trait: '燃える闘将', as: ['声で味方を動かす', '1対1の粘り'] },
-    { k: 'fantasista', name: 'ファンタジスタになる', pos: ['AM', 'SS'], abs: ['視野', 'テクニック', 'ファーストタッチ'], trait: '異次元の視野', as: ['ひらめき', 'スルーパス', 'ワンツー'] },
-    { k: 'post', name: '前線の柱になる', pos: ['ST'], abs: ['強さ', 'バランス', 'ファーストタッチ'], trait: '背中の壁', as: ['ポストプレー', '背負ってからのターン', 'タメを作る'] },
-    { k: 'setpiece', name: 'セットプレーの名手になる', pos: ['CM', 'AM', 'LM', 'RM', 'LW', 'RW', 'LB', 'RB'], abs: ['プレースキック', 'テクニック', 'クロス'], trait: '魔法の右足', as: ['直接FK', '曲がるCK'] },
-    { k: 'wing', name: 'サイドの翼になる', pos: ['LB', 'RB', 'LWB', 'RWB'], abs: ['スピード', 'クロス', 'オフザボール', 'スタミナ'], trait: '翼', as: ['オーバーラップ', 'アーリークロス'] },
-    { k: 'reader', name: '読みの名手になる', pos: ['CB', 'LB', 'RB', 'DM'], abs: ['予測', 'ポジショニング', '集中'], trait: '未来を読む', as: ['読みのインターセプト', 'カバーリング'] },
-    { k: 'sweeperk', name: '攻撃の起点になるGKへ', pos: ['GK'], abs: ['配球', '飛び出し', 'エリアの支配'], trait: '最初の攻撃者', as: ['速い配球', '足元のうまいGK'] },
-    { k: 'ice', name: '氷の心臓を持つ', pos: ['SS', 'AM', 'LW', 'RW', 'ST'], abs: ['冷静さ', 'フィニッシュ', '判断'], trait: '氷の心臓', as: ['巻いて流し込むシュート', 'ループシュート'] },
+    { k: 'conductor', name: '司令塔として目覚める', pos: ['DM', 'CM', 'AM'], abs: ['パス', '視野', '判断', 'テクニック'], trait: '王様のパス', as: ['スルーパス', 'サイドチェンジ', '下がって受ける', '試合を落ち着かせる'] },
+    { k: 'wall', name: '最終ラインの壁になる', pos: ['CB'], abs: ['タックル', 'マーク', 'ヘディング', '強さ', 'ポジショニング'], trait: '鉄壁', as: ['空中戦の競り', 'シュートブロック', '1対1の粘り', 'カバーリング'] },
+    { k: 'scorer', name: '点取り屋として目覚める', pos: ['ST', 'SS'], abs: ['フィニッシュ', 'オフザボール', '冷静さ', 'ファーストタッチ'], trait: '決定力の怪物', as: ['こぼれ球への嗅覚', 'ニアへの飛び込み', '巻いて流し込むシュート', '裏への抜け出し'] },
+    { k: 'flash', name: '韋駄天になる', pos: ['LW', 'RW', 'LM', 'RM', 'LWB', 'RWB', 'LB', 'RB', 'ST'], abs: ['加速', 'スピード', 'ドリブル', '敏しょう性'], trait: '置き去りの加速', as: ['縦への突破', '裏への抜け出し', 'ボールを運ぶ', 'カットイン'] },
+    { k: 'keeper', name: '守護神になる', pos: ['GK'], abs: ['反応', '1対1', 'ハンドリング', '集中'], trait: '神の手', as: ['PKストップ', '前に出るGK', 'パンチング', 'クロスへの強さ'] },
+    { k: 'magic', name: 'ドリブルの魔術師になる', pos: ['LW', 'RW', 'AM', 'SS'], abs: ['ドリブル', 'テクニック', '敏しょう性', 'バランス'], trait: '魔法のドリブル', as: ['カットイン', 'ひらめき', 'ファウルをもらう', 'ボールを運ぶ'] },
+    { k: 'hunter', name: 'ボールの狩人になる', pos: ['DM', 'CM', 'CB'], abs: ['タックル', '予測', '運動量', 'マーク'], trait: '刈り取る者', as: ['ボール奪取', '読みのインターセプト', '即時奪回', 'スライディング'] },
+    { k: 'sky', name: '空の王になる', pos: ['CB', 'ST'], abs: ['ヘディング', 'ジャンプ', '強さ'], trait: '空の支配者', as: ['空中戦の競り', 'ヘディングシュート', 'ニアへの飛び込み', 'シュートブロック'] },
+    { k: 'cannon', name: '大砲を手に入れる', pos: ['DM', 'CM', 'AM', 'SS', 'ST'], abs: ['ロングシュート', 'テクニック', '強さ'], trait: '大砲', as: ['弾丸ミドル', 'こぼれ球への嗅覚', '直接FK', 'ボールを運ぶ'] },
+    { k: 'crosser', name: 'クロスの職人になる', pos: ['LB', 'RB', 'LWB', 'RWB', 'LM', 'RM', 'LW', 'RW'], abs: ['クロス', 'パス', 'スタミナ'], trait: '針の穴のクロス', as: ['アーリークロス', '曲がるCK', 'サイドチェンジ', 'オーバーラップ'] },
+    { k: 'engine', name: '走る心臓になる', pos: ['DM', 'CM', 'LM', 'RM', 'LWB', 'RWB'], abs: ['運動量', 'スタミナ', 'チームワーク'], trait: '無尽蔵', as: ['オーバーラップ', '前線からの守備', '即時奪回', 'ボールを運ぶ'] },
+    { k: 'leader', name: '最後尾の指揮官になる', pos: ['CB', 'DM', 'GK'], abs: ['判断', '集中', 'チームワーク', 'ポジショニング'], trait: '最後尾の指揮官', as: ['ラインコントロール', '声で味方を動かす', '試合を落ち着かせる', 'カバーリング'] },
+    { k: 'fighter', name: '闘将になる', pos: ['CB', 'LB', 'RB', 'LWB', 'RWB', 'DM', 'CM', 'LM', 'RM', 'AM', 'LW', 'RW', 'SS', 'ST'], abs: ['強さ', '運動量', '冷静さ'], trait: '燃える闘将', as: ['声で味方を動かす', '1対1の粘り', 'ボール奪取', 'スライディング'] },
+    { k: 'fantasista', name: 'ファンタジスタになる', pos: ['AM', 'SS'], abs: ['視野', 'テクニック', 'ファーストタッチ'], trait: '異次元の視野', as: ['ひらめき', 'スルーパス', 'ワンツー', '下がって受ける'] },
+    { k: 'post', name: '前線の柱になる', pos: ['ST'], abs: ['強さ', 'バランス', 'ファーストタッチ'], trait: '背中の壁', as: ['ポストプレー', '背負ってからのターン', 'タメを作る', 'ヘディングシュート'] },
+    { k: 'setpiece', name: 'セットプレーの名手になる', pos: ['CM', 'AM', 'LM', 'RM', 'LW', 'RW', 'LB', 'RB'], abs: ['プレースキック', 'テクニック', 'クロス'], trait: '魔法の右足', as: ['直接FK', '曲がるCK', 'サイドチェンジ', 'アーリークロス'] },
+    { k: 'wing', name: 'サイドの翼になる', pos: ['LB', 'RB', 'LWB', 'RWB'], abs: ['スピード', 'クロス', 'オフザボール', 'スタミナ'], trait: '翼', as: ['オーバーラップ', 'アーリークロス', '縦への突破', '即時奪回'] },
+    { k: 'reader', name: '読みの名手になる', pos: ['CB', 'LB', 'RB', 'DM'], abs: ['予測', 'ポジショニング', '集中'], trait: '未来を読む', as: ['読みのインターセプト', 'カバーリング', 'ラインコントロール', 'ボール奪取'] },
+    { k: 'sweeperk', name: '攻撃の起点になるGKへ', pos: ['GK'], abs: ['配球', '飛び出し', 'エリアの支配'], trait: '最初の攻撃者', as: ['速い配球', '足元のうまいGK', '前に出るGK', '試合を落ち着かせる'] },
+    { k: 'ice', name: '氷の心臓を持つ', pos: ['SS', 'AM', 'LW', 'RW', 'ST'], abs: ['冷静さ', 'フィニッシュ', '判断'], trait: '氷の心臓', as: ['巻いて流し込むシュート', 'ループシュート', '試合を落ち着かせる', 'ファウルをもらう'] },
   ];
   function formFor(p, r) {
     const pos = p.best || p.main;
@@ -635,8 +691,9 @@
   YA.newWorld = function (seed, opts) {
     const w = nw0(seed, opts);
     const r = YA.rngOf((seed | 0) * 29 + 3);
-    const c = Object.values(w.players).filter((p) => p.grade <= 2);
-    const n = r.chance(0.5) ? 1 : 2;
+    // 初年度に★を付けられるのは高1だけなので、早く化けそうな子（fast）は高1に3人置く（2026-11-15「一年目に2人くらい」）
+    const c = Object.values(w.players).filter((p) => p.grade === 1);
+    const n = YA.FIRST_FAST;
     for (let i = 0; i < n && c.length; i++) c.splice(r.int(0, c.length - 1), 1)[0].fast = true;
     return w;
   };

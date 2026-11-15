@@ -82,6 +82,44 @@ for (let s = 1; s <= 100; s++) {
 console.log('効いた特性の記録', fxTraits, '性格', fxPers);
 ok(fxTraits > 200 && fxPers > 20, 'fx が少ない');
 
+// 3b. 2026-11-15 に足した特性28個が、どれも試合のどこかで効く（両チームの全員に持たせて回す）
+{
+  const NEW = ['ノールックパス', '股抜き', 'ファーで待つ', 'マイナスの折り返し', 'ダイレクトシュート', '両足のシュート', '体を寄せる', '最後の砦', '戻りの速さ', 'PKの名手', '至近距離のセーブ', 'ミドルに強いGK', 'トラップの名手', 'ドリブルの緩急', 'GKとの駆け引き', 'シュートフェイント', 'グラウンダーのクロス', 'ワンタッチパス', '3人目の動き', '高い打点', 'コースを切る', 'マンマーク', '正確なタックル', 'ハイプレスの先頭', '低く速いCK', '無回転FK', '終盤に強い', 'ビッグセーブ'];
+  ok(NEW.every((t) => YA.TRAITS.indexOf(t) >= 0) && YA.TRAITS.length === new Set(YA.TRAITS).size, '新しい特性が一覧にあり、重なりがない');
+  // 札は守備側2つまでしか出ないので、効き（足した数が0より大きい）で数える
+  const seen = new Set();
+  const P = YA.Match.prototype, tb0 = P.traitBonus, dt0 = P.defTrait;
+  P.traitBonus = function (sc, p, t) { const v = tb0.apply(this, arguments); if (v > 0) seen.add(t); return v; };
+  P.defTrait = function (sc, d, t) { const v = dt0.apply(this, arguments); if (v.b > 0) seen.add(t); return v; };
+  for (let s = 1; s <= 120 && NEW.some((t) => !seen.has(t)); s++) {
+    const m = mk(s, s % 3, false);
+    for (const t of [m.home, m.away]) for (const p of Object.values(t.players)) p.traits = p.traits.concat(NEW.filter((x) => p.traits.indexOf(x) < 0));
+    if (s % 2) m.home.tactic.crossType = 'low';
+    let g = 0;
+    while (!m.finished && g++ < 1000) m.step();
+  }
+  P.traitBonus = tb0;
+  P.defTrait = dt0;
+  ok(NEW.every((t) => seen.has(t)), '新しい特性がすべて試合で効く（効かなかったもの：' + NEW.filter((t) => !seen.has(t)).join('・') + '）');
+}
+
+// 3c. 金の特性：持っている子は札が「金特性」になり、効きが1.6倍
+{
+  ok(Object.keys(YA.GOLD).every((t) => YA.TRAITS.indexOf(t) >= 0) && new Set(Object.values(YA.GOLD)).size === Object.keys(YA.GOLD).length, '金の特性のもとが一覧にあり、名前が重ならない');
+  const seenG = new Set();
+  for (let s = 1; s <= 80 && seenG.size < 3; s++) {
+    const m = mk(s, s % 3, false);
+    for (const p of Object.values(m.home.players)) { p.traits = p.traits.concat(['スルーパス', 'ボール奪取', '弾丸ミドル'].filter((x) => p.traits.indexOf(x) < 0)); p.gold = ['スルーパス', 'ボール奪取', '弾丸ミドル']; }
+    let g = 0;
+    while (!m.finished && g++ < 1000) m.step();
+    for (const sc of m.scenes) for (const f of sc.fx) if (f.kind === 'gold') seenG.add(f.tag);
+  }
+  ok(seenG.size >= 2, '金の特性が試合の札に出る ' + [...seenG].join('・'));
+  const fake = { traits: ['スルーパス'], gold: ['スルーパス'] };
+  const mm = mk(1, 0, false);
+  ok(mm.traitBonus({ fx: [], side: 'home' }, Object.assign(Object.values(mm.home.players)[0], fake), 'スルーパス', 3, 'x') === 3 * YA.GOLD_MULT, '金の特性の効きは1.6倍');
+}
+
 // 4. 交代の決まり：5人まで・窓3回・GK同士
 {
   const m2 = mk(2, 0);

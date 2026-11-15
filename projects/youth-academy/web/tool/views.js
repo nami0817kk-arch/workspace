@@ -465,6 +465,17 @@ async function clearEvents() {
     rail('試合');
     ok(txt().includes('キックオフ'), '試合の前の画面');
     ok(errors.length === 0, '例外: ' + errors.slice(0, 3).join(' | '));
+    // 金の特性：詳しい画面に金の札と、金までの進み具合が出る
+    {
+      const gp = Object.values(A.w.players).find((p) => p.pos !== 'GK');
+      gp.traits = ['スルーパス', 'ボール奪取'];
+      gp.gold = ['スルーパス'];
+      gp.trUse = { ボール奪取: 4 };
+      A.pSel = gp.id; A.tab = 'players'; w.YA._ui.render();
+      btn('能力').click();
+      ok(!!d.querySelector('.chip.gold') && txt().includes('金 針の穴を通すパス'), '金の特性の札が出る');
+      ok(txt().includes('金まで：「ボール奪取」→「ボールハンター」') && txt().includes('4/' + w.YA.GOLD_USES), '金までの進み具合が出る');
+    }
     // 先発をBに下げる：代わりに入る子を選ぶ画面が出て、選ぶと入れ替わる
     {
       const sid = A.w.lineupA[4].pid;

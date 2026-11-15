@@ -1278,12 +1278,20 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   for (let i = 0; i < YA.STAR_MAX; i++) ok(YA.setStar(w0, g1[i], true).ok, '★を付けられる ' + i);
   ok(!YA.setStar(w0, g1[YA.STAR_MAX], true).ok && !g1[YA.STAR_MAX].star, '★は各学年4人まで');
   ok(YA.setStar(w0, g1[0], false).ok && YA.setStar(w0, g1[YA.STAR_MAX], true).ok, '外せば別の子に付け替えられる');
-  // ★は入団から4週のうちに決める（決定150）。初年度だけは最初の36人もいつでも付け外しできる
+  // ★は入団から4週のうちに決める（決定150）。初年度も高1だけ
   {
     const g2 = Object.values(w0.players).filter((p) => p.grade === 2);
-    ok(g2.length > 0 && YA.starOpen(w0, g2[0]) && YA.starOpen(w0, g1[0]), '初年度は全学年で★を決められる');
+    ok(g2.length > 0 && !YA.starOpen(w0, g2[0]) && YA.starOpen(w0, g1[0]), '初年度も★は高1だけ');
+    const g3 = Object.values(w0.players).filter((p) => p.grade === 3);
+    ok(!YA.setStar(w0, g3[0], true).ok && !g3[0].star, '初年度も高3には★を付けられない');
     w0.week = 30;
-    ok(YA.starOpen(w0, g2[0]), '初年度は何週目でも決められる');
+    ok(!YA.starOpen(w0, g1[1]), '初年度も入団から4週をすぎると決められない');
+    // 初年度の早咲き：高1に fast が置かれ、★を付けると AでもBでも進む軽い鍵を持つ（一年目に2人くらい覚醒）
+    const wf1 = YA.newWorld(12);
+    const fs = Object.values(wf1.players).filter((p) => p.fast);
+    ok(fs.length === YA.FIRST_FAST && fs.every((p) => p.grade === 1), '初年度の早咲きは高1に' + YA.FIRST_FAST + '人');
+    ok(YA.setStar(wf1, fs[0], true).ok && fs[0].keys.length === 2 && fs[0].keys.every((k) => YA.EARLY_KEYS.includes(k.id)), '初年度の早咲きの鍵は試合に出れば進むもの');
+    ok(/早く化け/.test(YA.starRecommend(wf1) || ''), '初年度の★のおすすめは早咲きの子');
     const wn = YA.newWorld(9);
     wn.year = 2;
     wn.week = 3;
@@ -1333,14 +1341,35 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   const v = ev && YA.eventView(w0, ev);
   ok(v && /覚醒/.test(v.text) && v.text.indexOf(q.aw.trait) >= 0 && !/undefined|null|NaN/.test(v.text), '覚醒の知らせ ' + (v && v.text));
   ok(YA.AWAKE_FORMS.length >= 20 && YA.AWAKE_FORMS.every((f) => f.as.every((t) => YA.TRAITS.indexOf(t) >= 0) && f.abs.every((a) => YA.AB_FIELD.concat(YA.AB_GK).indexOf(a) >= 0)), '覚醒の形は20種類・中身が正しい');
+  ok(YA.AWAKE_FORMS.every((f) => f.as.length === 4 && new Set(f.as).size === 4), '覚醒の特性はどの形も4つ');
+  // 金の特性：試合で GOLD_USES 回効き、関わる能力の平均が GOLD_AB 以上で変わる
+  {
+    const wg = YA.newWorld(5);
+    const pg = Object.values(wg.players).find((p) => p.pos !== 'GK');
+    pg.traits = ['スルーパス'];
+    pg.trUse = { スルーパス: YA.GOLD_USES - 1 };
+    for (const a of YA.TRAIT_AFF['スルーパス']) pg.ab[a] = YA.GOLD_AB + 1;
+    YA.goldCheck(wg, pg);
+    ok(!YA.isGold(pg, 'スルーパス'), '回数が足りないと金にならない');
+    pg.trUse.スルーパス = YA.GOLD_USES;
+    for (const a of YA.TRAIT_AFF['スルーパス']) pg.ab[a] = YA.GOLD_AB - 1;
+    YA.goldCheck(wg, pg);
+    ok(!YA.isGold(pg, 'スルーパス'), '能力が足りないと金にならない');
+    for (const a of YA.TRAIT_AFF['スルーパス']) pg.ab[a] = YA.GOLD_AB + 1;
+    YA.goldCheck(wg, pg);
+    ok(YA.isGold(pg, 'スルーパス') && /針の穴/.test(pg.hist[0].t), '条件がそろうと金の特性に変わる');
+    ok(YA.goldReady(pg, 'スルーパス').ok, '金までの進み具合が読める');
+  }
   // ★の付いていない子は覚醒しない。おまかせで3年回すと★の子が何人か覚醒する
   let star = 0, other = 0, yrs = 0;
   for (const seed of [8, 21]) {
     const wa = YA.newWorld(seed);
-    for (let y = 0; y < 3; y++) {
-      const yy = wa.year; let g = 0; yrs++;
+    // ★は高1だけなので、初年度は覚醒がほぼ起きない。2年目からの3年でならす
+    for (let y = 0; y < 4; y++) {
+      const yy = wa.year; let g = 0;
+      if (y === 0) ok(Object.values(wa.players).every((p) => !p.star || p.grade === 1), '初年度の★は高1だけ（おまかせ）');
       while (wa.year === yy && g++ < 60) YA.simulate(wa, { until: 'week', stopOnImportant: false });
-      star += wa.awakeN && wa.awakeN.y === yy ? wa.awakeN.n : 0;
+      if (y > 0) { yrs++; star += wa.awakeN && wa.awakeN.y === yy ? wa.awakeN.n : 0; }
       ok(Object.values(wa.players).every((p) => !p.star || YA.starsIn(wa, p.grade).length <= YA.STAR_MAX), '★は各学年4人まで（おまかせ）');
     }
     other += Object.values(wa.players).filter((p) => p.awake && !p.awake.form).length;
@@ -1423,7 +1452,8 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   const w3 = YA.newWorld(41);
   const kinds = new Set(), paths = [];
   let gy = 0, startY = w3.year;
-  while (w3.year < startY + 3 && gy++ < 200) {
+  // ★は初年度から高1だけなので、★の高3が出るのは3年目。全員がトップに上がる年もあるので、面談が出るまで5年まで回す
+  while ((w3.year < startY + 3 || !paths.length) && w3.year < startY + 5 && gy++ < 320) {
     YA.autoPlan(w3);
     if (w3.week === 26) w3.campChoice = 'domestic';
     if (w3.scouting) YA.autoScout(w3);
