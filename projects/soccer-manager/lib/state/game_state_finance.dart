@@ -738,6 +738,15 @@ extension GameStateFinance on GameState {
     if (save.transferBanSeasons > 0) save.transferBanSeasons -= 1;
     final penalty = ruleReport.penalty;
     if (penalty == null) return;
+    if (save.league.season <= RulesEngine.graceSeasons) {
+      _logNews(
+        Tr.pick(
+            '${ruleSet.label}の規則に違反する状態です(${penalty.reason})。最初のシーズンは猶予されますが、来季からは罰を受けます。',
+            'You are in breach of the ${ruleSet.label} rules (${penalty.reason}). The first season is a grace period; from next season you will be penalised.'),
+        context: Tr.pick('リーグの規則', 'League rules'),
+      );
+      return;
+    }
     if (penalty.fine > 0) _book(LedgerCategory.other, -penalty.fine);
     save.confidence = (save.confidence - penalty.trustLoss).clamp(0, 100);
     save.transferBanSeasons = max(save.transferBanSeasons, penalty.banSeasons);

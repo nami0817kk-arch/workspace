@@ -73,11 +73,43 @@ class LedgerCard extends StatelessWidget {
               Text(Tr.pick('まだ試合が行われていません。節が進むと内訳が出ます。',
                   'No matches yet. The breakdown appears as the season goes on.'))
             else ...[
-              _Heading(Tr.pick('収入', 'Income')),
-              ...incomeRows,
-              const SizedBox(height: 6),
-              _Heading(Tr.pick('支出', 'Expenses')),
-              ...costRows,
+              // 幅があれば、収入と支出を左右に並べる(FMの収支表)。
+              LayoutBuilder(
+                builder: (context, c) {
+                  final incomeCol = Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _Heading(Tr.pick('収入', 'Income')),
+                      ...incomeRows,
+                    ],
+                  );
+                  final costCol = Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _Heading(Tr.pick('支出', 'Expenses')),
+                      ...costRows,
+                    ],
+                  );
+                  if (c.maxWidth < 520) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        incomeCol,
+                        const SizedBox(height: 6),
+                        costCol,
+                      ],
+                    );
+                  }
+                  return Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(child: incomeCol),
+                      const SizedBox(width: 24),
+                      Expanded(child: costCol),
+                    ],
+                  );
+                },
+              ),
               if (otherRows.isNotEmpty) ...[
                 const SizedBox(height: 6),
                 _Heading(Tr.pick('損益に含めないもの・その他', 'Not in profit / other')),
@@ -142,13 +174,35 @@ class LedgerCard extends StatelessWidget {
             if (past.isNotEmpty) ...[
               const Divider(height: 20),
               _Heading(Tr.pick('過去の損益', 'Past seasons')),
+              // 季・営業収入・人件費・損益を1行の表で。
+              Row(
+                children: [
+                  Expanded(
+                      child: Text(Tr.pick('季', 'Season'),
+                          style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold))),
+                  _Cell(Tr.pick('営業収入', 'Income'), bold: true),
+                  _Cell(Tr.pick('人件費', 'Wages'), bold: true),
+                  _Cell(Tr.pick('損益', 'Profit'), bold: true),
+                ],
+              ),
               for (final l in past.reversed)
-                _Line(
-                  label: Tr.pick('第${l.season}季', 'Season ${l.season}'),
-                  value: _money(l.profit),
-                  color: l.profit >= 0
-                      ? SemanticColors.positive(context)
-                      : SemanticColors.negative(context),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 2),
+                  child: Row(
+                    children: [
+                      Expanded(
+                          child: Text(Tr.pick('第${l.season}季', 'S${l.season}'),
+                              style: const TextStyle(fontSize: 12))),
+                      _Cell('${l.operatingIncome}'),
+                      _Cell('${l.wageCost}'),
+                      _Cell(
+                        '${l.profit >= 0 ? '+' : ''}${l.profit}',
+                        color: l.profit >= 0
+                            ? SemanticColors.positive(context)
+                            : SemanticColors.negative(context),
+                      ),
+                    ],
+                  ),
                 ),
             ],
           ],
@@ -199,4 +253,31 @@ class _Line extends StatelessWidget {
       ),
     );
   }
+}
+
+/// 表の1列(右寄せの数字)。
+class _Cell extends StatelessWidget {
+  const _Cell(this.text, {this.bold = false, this.color});
+
+  final String text;
+  final bool bold;
+  final Color? color;
+
+  @override
+  Widget build(BuildContext context) => SizedBox(
+        width: 72,
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.centerRight,
+          child: Text(
+            text,
+            textAlign: TextAlign.right,
+            style: TextStyle(
+              fontSize: bold ? 11 : 12,
+              fontWeight: bold ? FontWeight.bold : null,
+              color: color,
+            ),
+          ),
+        ),
+      );
 }

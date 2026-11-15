@@ -13,6 +13,7 @@ import '../widgets/responsive_body.dart';
 import 'player_compare_screen.dart';
 import '../l10n/tr.dart';
 import '../theme/semantic_colors.dart';
+import '../widgets/transfer_table.dart';
 
 enum TransferSortOption { overall, potential, marketValue, age }
 
@@ -168,12 +169,61 @@ class _TransferScreenState extends State<TransferScreen>
     List<Player> players,
   ) {
     final windowOpen = gameState.isTransferWindowOpen;
+    final screen = MediaQuery.sizeOf(context);
+    final wide = screen.width > screen.height;
     return Column(
       children: [
         _TransferWindowBanner(
           open: windowOpen,
           label: gameState.transferWindowStatusLabel,
         ),
+        if (wide) ...[
+          // 横画面は高さが足りない。資金・枠・検索を1行にまとめ、表を広く見せる。
+          Padding(
+            padding: const EdgeInsets.fromLTRB(12, 6, 12, 0),
+            child: Row(
+              children: [
+                Text(Tr.pick('資金 ${save.budget}万円', 'Funds ${save.budget}'),
+                    style: Theme.of(context).textTheme.titleSmall),
+                const SizedBox(width: 12),
+                Text(
+                  Tr.pick(
+                      'スカッド ${gameState.userTeam.players.length}/$maxSquadSize',
+                      'Squad ${gameState.userTeam.players.length}/$maxSquadSize'),
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                if (squadFull) ...[
+                  const SizedBox(width: 8),
+                  Text(
+                    Tr.pick('枠が上限です', 'Squad full'),
+                    style: const TextStyle(color: Colors.orange, fontSize: 12),
+                  ),
+                ],
+                const SizedBox(width: 12),
+                Flexible(
+                  flex: 3,
+                  child: PositionFilterBar(
+                    value: _filter,
+                    onChanged: (v) => setState(() => _filter = v),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Flexible(
+                  flex: 2,
+                  child: TextField(
+                    controller: _searchController,
+                    onChanged: (v) => setState(() => _query = v),
+                    decoration: InputDecoration(
+                      hintText: Tr.pick('選手名で検索', 'Search by name'),
+                      prefixIcon: const Icon(Icons.search, size: 18),
+                      isDense: true,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ] else ...[
         Padding(
           padding: const EdgeInsets.all(16),
           child: Row(
@@ -236,10 +286,19 @@ class _TransferScreenState extends State<TransferScreen>
             ),
           ),
         ),
+        ],
         Expanded(
           child: players.isEmpty
               ? Center(child: Text(Tr.pick('該当する選手はいません', 'No players match')))
-              : ListView.builder(
+              : (!_compareMode)
+                  ? TransferTable(
+                      players: players,
+                      market: true,
+                      budget: save.budget,
+                      canSign: !squadFull && windowOpen,
+                      onSign: (p) => _showAcquireSheet(context, p),
+                    )
+                  : ListView.builder(
                   padding: const EdgeInsets.all(16),
                   itemCount: players.length,
                   itemBuilder: (context, i) {
@@ -422,33 +481,12 @@ class _TransferScreenState extends State<TransferScreen>
               ? Center(
                   child: Text(Tr.pick('現在フリーエージェントはいません',
                       'There are no free agents right now')))
-              : ListView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: freeAgents.length,
-                  itemBuilder: (context, i) {
-                    final p = freeAgents[i];
-                    return Card(
-                      margin: const EdgeInsets.only(bottom: 8),
-                      child: ListTile(
-                        leading: PlayerFaceAvatar(
-                          playerId: p.id,
-                          position: p.position,
-                        ),
-                        title: Text(p.name, overflow: TextOverflow.ellipsis),
-                        subtitle: Text(
-                          Tr.pick(
-                              '${p.age}歳 / ${p.position.label} / 総合 ${p.overall} / 週俸 ${p.wage}万円',
-                              'Age ${p.age} / ${p.position.label} / overall ${p.overall} / wage ${p.wage}'),
-                        ),
-                        trailing: FilledButton(
-                          onPressed: (squadFull || !windowOpen)
-                              ? null
-                              : () => _signFreeAgent(context, p),
-                          child: Text(Tr.pick('獲得する', 'Sign him')),
-                        ),
-                      ),
-                    );
-                  },
+              : TransferTable(
+                  players: freeAgents,
+                  market: false,
+                  budget: 0,
+                  canSign: !squadFull && windowOpen,
+                  onSign: (p) => _signFreeAgent(context, p),
                 ),
         ),
       ],
