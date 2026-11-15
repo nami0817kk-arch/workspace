@@ -3,9 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../logic/next_action_advisor.dart';
 import '../screens/finance_screen.dart';
-import '../screens/lineup_screen.dart';
 import '../screens/squad_screen.dart';
-import '../screens/training_screen.dart';
 import '../screens/transfer_screen.dart';
 import '../screens/youth_screen.dart';
 import '../services/feedback_service.dart';
@@ -21,8 +19,6 @@ class NextActionCard extends StatelessWidget {
   const NextActionCard({super.key});
 
   static Widget _screenFor(NextActionTarget target) => switch (target) {
-        NextActionTarget.lineup => const LineupScreen(),
-        NextActionTarget.training => const TrainingScreen(),
         NextActionTarget.squad => const SquadScreen(),
         NextActionTarget.youth => const YouthScreen(),
         NextActionTarget.finance => const FinanceScreen(),
@@ -30,8 +26,6 @@ class NextActionCard extends StatelessWidget {
       };
 
   static String _labelFor(NextActionTarget target) => switch (target) {
-        NextActionTarget.lineup => Tr.pick('スタメンへ', 'Open the XI'),
-        NextActionTarget.training => Tr.pick('トレーニングへ', 'Open training'),
         NextActionTarget.squad => Tr.pick('スカッドへ', 'Open the squad'),
         NextActionTarget.youth => Tr.pick('ユースへ', 'Open the academy'),
         NextActionTarget.finance => Tr.pick('財務へ', 'Open finances'),

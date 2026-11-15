@@ -38,19 +38,6 @@ void main() {
     expect(NextActionAdvisor.top(game.save!, game.userTeam), isNull);
   });
 
-  test('今週のトレーニングが残っていれば促す', () async {
-    final game = await newGame();
-    game.save!.trainingDoneThisWeek = false;
-    game.save!.budget = 5000;
-    for (final p in game.userTeam.players) {
-      p.contractYearsRemaining = 3;
-    }
-    game.save!.youthProspects.clear();
-
-    final action = NextActionAdvisor.top(game.save!, game.userTeam);
-    expect(action?.target, NextActionTarget.training);
-  });
-
   test('資金マイナスは、ほかの用事を追い越す', () async {
     final game = await newGame();
     game.save!.trainingDoneThisWeek = false; // 普通ならこちらが先
@@ -147,9 +134,9 @@ void main() {
   test('出すのは常に1件', () async {
     final game = await newGame();
     game.save!.budget = -100;
-    game.save!.trainingDoneThisWeek = false;
 
-    final all = NextActionAdvisor.all(game.save!, game.userTeam);
+    final all = NextActionAdvisor.all(game.save!, game.userTeam,
+        transferDeadlineMatchdaysLeft: 1);
     expect(all.length, greaterThan(1), reason: '検査の前提が崩れている');
     expect(NextActionAdvisor.top(game.save!, game.userTeam), isNotNull);
   });
