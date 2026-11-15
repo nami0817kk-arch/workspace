@@ -5,7 +5,9 @@ import '../../gm/career.dart';
 import '../../gm/league.dart';
 import '../gm_controller.dart';
 import 'box_score.dart';
+import 'champion_screen.dart';
 import 'common.dart';
+import 'motion.dart';
 import 'inbox_screen.dart';
 import 'style.dart';
 
@@ -318,6 +320,19 @@ class _PlayoffRunScreenState extends State<PlayoffRunScreen> {
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: champ ? GmColors.gold : null),
           ),
+          if (champ) ...[
+            const SizedBox(height: 10),
+            // 優勝の祝い(紙吹雪・ファイナルMVP・勝ち上がりの道・オーナーの言葉)
+            PopIn(
+              ms: 900,
+              child: FilledButton.icon(
+                style: FilledButton.styleFrom(backgroundColor: GmColors.gold, foregroundColor: Colors.black, minimumSize: const Size.fromHeight(48)),
+                onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(fullscreenDialog: true, builder: (_) => ChampionScreen(car: car))),
+                icon: const Icon(Icons.celebration_rounded),
+                label: const Text('優勝パレードへ', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w900)),
+              ),
+            ),
+          ],
           const SizedBox(height: 12),
           if (f != null)
             Card(

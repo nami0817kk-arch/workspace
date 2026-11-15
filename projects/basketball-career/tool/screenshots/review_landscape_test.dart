@@ -20,6 +20,7 @@ import 'package:basketball_career/gm/career.dart';
 import 'package:basketball_career/gm/player.dart';
 import 'package:basketball_career/gm/rating.dart';
 import 'package:basketball_career/ui/app.dart';
+import 'package:basketball_career/ui/gm/champion_screen.dart';
 import 'package:basketball_career/ui/gm/common.dart';
 import 'package:basketball_career/ui/gm/progress_tab.dart';
 import 'package:basketball_career/ui/gm_controller.dart';
@@ -129,6 +130,25 @@ void main() {
     await _shoot(t, '4b_block_report', await _with(rep), act: (t) async {
       await _tap(t, '次の20試合へ');
     });
+    // 優勝の祝い(優勝するまで種を替えて、プレーオフを終えたところで開く。紙吹雪の途中で撮る)
+    Career? champ;
+    for (var seed = 1; seed <= 40 && champ == null; seed++) {
+      final x = careerAt(seed, 0)..startSeason();
+      var g = 0;
+      while (x.phase != Phase.seasonEnd && g++ < 60) {
+        botStep(x);
+      }
+      if (x.champion == x.mine) champ = x;
+    }
+    if (champ != null) {
+      final won = champ;
+      await _shoot(t, '4f_champion', await _with(won), act: (t) async {
+        Navigator.of(t.element(find.byType(Scaffold).first)).push(MaterialPageRoute<void>(builder: (_) => ChampionScreen(car: won)));
+        for (var i = 0; i < 16; i++) {
+          await t.pump(const Duration(milliseconds: 150));
+        }
+      });
+    }
     final po = careerAt(4, 3)..startSeason();
     while (po.phase == Phase.season) {
       po.declineIncoming();

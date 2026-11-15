@@ -177,17 +177,44 @@ class GmController extends ChangeNotifier {
     await _maybeInterstitial();
     final snap = BlockSnapshot.of(c);
     final games = <GameResult>[];
+    injuryStop = null;
     while (c.phase == Phase.season && (!toDeadline || c.block < tradeDeadlineBlock)) {
       final before = c.lastGames.length;
       final fromStart = c.roundAt == blockStart(c.block);
+      final starters = _healthyStarters(c);
       c.playBlock();
       games.addAll(fromStart ? c.lastGames : c.lastGames.sublist(before));
       await money?.tournamentPlayed();
       if (c.incoming != null) break;
+      // 先発がけがをしたら止めて聞く(2K でも、けがのたびにシムが止まり組み直すかを聞かれる)
+      injuryStop = _newlyHurt(c, starters);
+      if (injuryStop != null) break;
     }
     _record(c);
     _changed();
     return BlockReport.make(c, snap, games);
+  }
+
+  /// まとめて進めている途中で、先発の選手が長めのけがをした(画面が止めて「組み直すか」を聞く)。聞いたら null に戻す。
+  Player? injuryStop;
+
+  static Set<int> _healthyStarters(Career c) => {for (final p in c.me.order.take(5)) if (p.injured == 0) p.id};
+
+  /// [before] で元気だった先発のうち、3試合以上休むけがをした選手(力の高い順の1人)。
+  static Player? _newlyHurt(Career c, Set<int> before) {
+    final hurt = [for (final p in c.me.roster) if (before.contains(p.id) && p.injured >= 3) p]..sort((a, b) => b.ovr.compareTo(a.ovr));
+    return hurt.firstOrNull;
+  }
+
+  /// 「自動で組み直す」: けが人を後ろへ回し、出場時間を自動に戻す。
+  void benchInjured() {
+    injuryStop = null;
+    _act((c) => c.benchInjured());
+  }
+
+  void keepRotation() {
+    injuryStop = null;
+    _changed();
   }
 
   void toggleTradeBlock(int id) => _act((c) => c.toggleTradeBlock(id));
@@ -209,7 +236,9 @@ class GmController extends ChangeNotifier {
     if (c == null || c.phase != Phase.season || busy) return null;
     if (c.roundAt == blockStart(c.block)) await _maybeInterstitial();
     final snap = BlockSnapshot.of(c);
+    final starters = _healthyStarters(c);
     final ended = c.playWeek();
+    injuryStop = c.phase == Phase.season ? _newlyHurt(c, starters) : null;
     if (ended) await money?.tournamentPlayed();
     _record(c);
     _changed();

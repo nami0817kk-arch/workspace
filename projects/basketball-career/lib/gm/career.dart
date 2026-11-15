@@ -3329,6 +3329,14 @@ class Career {
     return true;
   }
 
+  /// けが人を順の後ろへ回し、出場時間を自動に戻す(まとめて進める途中で主力がけがをしたときの「自動で組み直す」)。
+  void benchInjured() {
+    if (phase == Phase.over) return;
+    final o = me.order;
+    me.rotation = [for (final p in o) if (p.injured == 0) p.id, for (final p in o) if (p.injured > 0) p.id];
+    me.minutes = {};
+  }
+
   /// 先発と控えの順を決める([ids] は上から。空なら自動に戻す)。
   void setRotation(List<int> ids) {
     if (phase == Phase.over) return;
