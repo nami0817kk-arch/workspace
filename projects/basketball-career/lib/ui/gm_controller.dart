@@ -240,7 +240,10 @@ class GmController extends ChangeNotifier {
     unawaited(Sfx.play(SoundEffect.tick));
   }
   void passPick() => _act((c) => c.passPick());
-  void scoutProspect(Prospect p) => _act((c) => c.scoutProspect(p));
+  void scoutProspect(Prospect p) {
+    _act((c) => c.scoutProspect(p));
+    unawaited(Sfx.play(SoundEffect.chime));
+  }
   void toggleBoard(Prospect p) => _act((c) => c.toggleBoard(p));
   void resign(int id, int years) {
     _act((c) => c.resign(id, years));
