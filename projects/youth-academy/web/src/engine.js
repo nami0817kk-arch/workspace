@@ -338,7 +338,11 @@
     // セットプレーのキッカー（自分で決めていれば、その選手が出ている間は）
     taker(t, kind) {
       const id = t.tactic && t.tactic[kind];
-      return id && t.onPitch && t.onPitch.has(id) ? t.players[id] : null;
+      if (!id || !t.onPitch || !t.onPitch.has(id)) return null;
+      // GK の位置に立っている子は蹴らない（キーパーの得点を出さない。2026-11-15）
+      const i = t.lineup.findIndex((s) => s.pid === id);
+      if (i >= 0 && slotPos(i, t.lineup[i]) === 'GK') return null;
+      return t.players[id];
     }
     dutyOf(t, i) {
       return YA.DUTY[t.lineup[i].duty] || YA.DUTY.sup;

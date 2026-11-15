@@ -445,6 +445,15 @@ async function clearEvents() {
         if (n === '移籍') ok(txt().includes('クラブ移籍'), 'クラブ移籍の画面');
         if (n === 'クラブ') ok(txt().includes('移籍先のクラブ（367・38リーグ）') && txt().includes('ロイヤル・マドリード') && txt().includes('リーグの水準'), '移籍先のクラブと強さの画面');
       }
+      // 卒業生の成績の表：得点・アシスト・出場とバロンドール。GK は完封（2026-11-15）
+      {
+        const fa = { pos: 'FW', apps: 60, goals: 20, assists: 9, titles: [], awards: [{ y: 3, name: 'バロンドール 4位' }, { y: 3, name: 'ラ・リーガ アシスト王' }], bdBest: 4, seasons: [{ y: 3, club: 'ロイヤル・マドリード', league: 'ラ・リーガ', apps: 30, goals: 12, assists: 5, bd: 4, titles: [], awards: [] }] };
+        const e1 = w.YA.alumniStats(A.w, fa).textContent;
+        ok(['出場 60', '得点 20', 'アシスト 9', 'バロンドール 最高4位', 'アシスト王', 'ロイヤル・マドリード'].every((x) => e1.includes(x)), '卒業生の成績の表（得点・アシスト・バロンドール）');
+        const gk = { pos: 'GK', apps: 40, goals: 0, assists: 0, cleans: 14, titles: [], awards: [], seasons: [{ y: 3, club: 'FCバルセロナ', league: 'ラ・リーガ', apps: 30, goals: 0, assists: 0, cleans: 11, titles: [], awards: [] }] };
+        const e2 = w.YA.alumniStats(A.w, gk).textContent;
+        ok(e2.includes('完封 14') && !e2.includes('得点') && !e2.includes('アシスト'), 'GK の成績は完封で、得点・アシストを出さない');
+      }
       for (const n of ['実績', '図鑑', '殿堂', '年表', '育成基金', '卒業生名鑑']) {
         btn(n, d.querySelector('.tabs')).click();
         ok(errors.length === 0, n + 'の画面で例外なし: ' + errors.slice(0, 2).join('|'));

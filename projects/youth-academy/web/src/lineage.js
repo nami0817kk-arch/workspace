@@ -257,7 +257,7 @@
       h('div', { class: 'note' }, 'フル代表・J1で長く主力・海外で活躍・大きな移籍に届くと「候補」。引退のときに生涯の成績で正式に殿堂入りします。'));
     body.append(h('div', { class: 'plist', style: 'margin-top:5px' }, hof.map((a) => h('div', { class: 'pitem', style: `cursor:default;align-items:flex-start;gap:6px;border-left:4px solid ${a.hof === 'full' ? '#d9a400' : '#9aa6b8'}` },
       h('span', { class: 'chip', style: `background:${a.hof === 'full' ? '#d9a400' : '#9aa6b8'};color:#fff` }, a.hof === 'full' ? '殿堂入り' : '候補'),
-      h('div', { class: 'grow' }, h('b', {}, a.name), h('div', { class: 'note' }, `${a.year}年卒・${a.club}（${a.league}）・通算${a.apps}試合${a.goals}得点・代表${a.nat || 0}・タイトル${(a.titles || []).length}`), a.hof === 'full' ? h('div', { class: 'note', style: 'color:var(--ink)' }, `恩師のひとこと：「${YA.hofWord(w, a)}」`) : null)))));
+      h('div', { class: 'grow' }, h('b', {}, a.name), h('div', { class: 'note' }, `${a.year}年卒・${a.club}（${a.league}）・通算${YA.statLine(a, a.pos === 'GK')}・代表${a.nat || 0}・タイトル${(a.titles || []).length}`), a.hof === 'full' ? h('div', { class: 'note', style: 'color:var(--ink)' }, `恩師のひとこと：「${YA.hofWord(w, a)}」`) : null)))));
     if (!hof.length) body.append(h('div', { class: 'note', style: 'margin-top:6px' }, 'まだ殿堂入りした卒業生はいません。'));
   }
   function chronTab(body, w) {

@@ -362,10 +362,13 @@
   // 卒業生のいちばんの勲章（一覧の札に出す）
   YA.alumniHighlight = function (a) {
     const aw = (a.awards || []).map((x) => x.name);
-    for (const k of ['バロンドール', 'バロンドール候補（30人）', 'W杯出場', 'アジア年間最優秀選手', '年間MVP', '得点王', 'ベストイレブン', '新人王']) {
+    if (aw.includes('バロンドール')) { const n = aw.filter((x) => x === 'バロンドール').length; return 'バロンドール' + (n > 1 ? `×${n}` : ''); }
+    if (a.bdBest && a.bdBest <= 10) return `バロンドール${a.bdBest}位`;
+    for (const k of ['ゴールデンシュー（欧州得点王）', 'ヤシン・トロフィー（世界最優秀GK）', 'コパ・トロフィー（21歳以下の最優秀）', 'バロンドール候補（30人）', 'W杯出場', 'アジア年間最優秀選手', '年間MVP', '得点王', 'ベストイレブン', '新人王']) {
       const n = aw.filter((x) => x === k || x.endsWith(' ' + k)).length;
-      if (n) return k.replace('（30人）', '') + (n > 1 ? `×${n}` : '');
+      if (n) return k.replace(/（.*）/, '') + (n > 1 ? `×${n}` : '');
     }
+    if (a.bdBest) return `バロンドール${a.bdBest}位`;
     if (a.nat) return `日本代表${a.nat}回`;
     if (a.u21) return 'U-21代表';
     return null;
@@ -378,7 +381,8 @@
       h('div', { class: 'row', style: 'gap:6px' }, h('span', { class: 'pos ' + a.pos }, YA.POS_LABEL[a.main] || a.pos), h('b', { style: 'font-size:15px' }, a.name), h('span', { class: 'sub' }, `${a.year}年卒・いま${a.age}歳${a.retired ? '（引退）' : ''}`), h('span', { class: 'grow' }), h('button', { class: 'btn sm', onclick: close }, '閉じる')),
       h('div', { class: 'note' }, a.status === 'left' ? '在学中に退団した子です。' : `いま：${a.club || '-'}${a.league ? '（' + a.league + '）' : ''}　卒業時：${a.note || ''}　総合力 ${YA.rate(a.ovr)}（${YA.levelOf(YA.rate(a.ovr))}）`),
       h('div', { class: 'row', style: 'flex-wrap:wrap;gap:4px' },
-        h('span', { class: 'chip trait' }, `通算 ${a.apps}試合・${a.goals}得点`),
+        h('span', { class: 'chip trait' }, a.pos === 'GK' ? `通算 ${a.apps}試合・完封${a.cleans || 0}` : `通算 ${a.apps}試合・${a.goals}得点・${a.assists || 0}アシスト`),
+        a.bdBest ? h('span', { class: 'chip trait' }, a.bdBest === 1 ? `バロンドール ${(a.awards || []).filter((x) => x.name === 'バロンドール').length}回` : `バロンドール 最高${a.bdBest}位`) : null,
         a.nat ? h('span', { class: 'chip trait' }, `日本代表 ${a.nat}回` + (a.natGoals ? `・${a.natGoals}得点` : '')) : null,
         a.u21 ? h('span', { class: 'chip gray' }, `U-21代表 ${a.u21}回`) : null,
         a.youthCaps ? h('span', { class: 'chip gray' }, `ユース年代の代表 ${a.youthCaps}回`) : null,
@@ -387,8 +391,8 @@
       (a.awards || []).length ? h('div', {}, h('div', { class: 'h' }, '個人の賞・代表'), h('div', { class: 'row', style: 'flex-wrap:wrap;gap:4px' }, count(a.awards).map((x) => h('span', { class: 'chip pers' }, x)))) : null,
       h('div', { class: 'h' }, '年ごとの経歴'),
       ss.length ? h('div', { class: 'plist' },
-        h('div', { class: 'pitem', style: 'cursor:default;background:none;font-size:10px;color:var(--sub);font-weight:800' }, h('span', { style: 'width:46px' }, '年'), h('span', { style: 'width:34px' }, '年齢'), h('span', { class: 'grow' }, 'クラブ（リーグ）'), h('span', { style: 'width:40px;text-align:right' }, '出場'), h('span', { style: 'width:40px;text-align:right' }, '得点'), h('span', { style: 'width:190px' }, 'タイトル・賞')),
-        ss.map((x) => h('div', { class: 'pitem', style: 'cursor:default;font-size:11px' }, h('span', { style: 'width:46px' }, `${x.y}年目`), h('span', { style: 'width:34px' }, `${x.age}歳`), h('span', { class: 'grow', style: 'min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap' }, `${x.club}（${x.league}）`), h('b', { style: 'width:40px;text-align:right' }, x.apps), h('b', { style: 'width:40px;text-align:right' }, x.goals), h('span', { style: 'width:190px;font-size:10px' }, x.titles.concat(x.awards).join('・') || '―'))))
+        h('div', { class: 'pitem', style: 'cursor:default;background:none;font-size:10px;color:var(--sub);font-weight:800' }, h('span', { style: 'width:46px' }, '年'), h('span', { style: 'width:34px' }, '年齢'), h('span', { class: 'grow' }, 'クラブ（リーグ）'), h('span', { style: 'width:36px;text-align:right' }, '出場'), ...(a.pos === 'GK' ? [h('span', { style: 'width:36px;text-align:right' }, '完封'), h('span', { style: 'width:36px' })] : [h('span', { style: 'width:36px;text-align:right' }, '得点'), h('span', { style: 'width:36px;text-align:right' }, 'アシスト')]), h('span', { style: 'width:190px' }, 'タイトル・賞')),
+        ss.map((x) => h('div', { class: 'pitem', style: 'cursor:default;font-size:11px' }, h('span', { style: 'width:46px' }, `${x.y}年目`), h('span', { style: 'width:34px' }, `${x.age}歳`), h('span', { class: 'grow', style: 'min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap' }, `${x.club}（${x.league}）`), h('b', { style: 'width:36px;text-align:right' }, x.apps), ...(a.pos === 'GK' ? [h('b', { style: 'width:36px;text-align:right' }, x.cleans != null ? x.cleans : '―'), h('span', { style: 'width:36px' })] : [h('b', { style: 'width:36px;text-align:right' }, x.goals), h('b', { style: 'width:36px;text-align:right' }, x.assists != null ? x.assists : '―')]), h('span', { style: 'width:190px;font-size:10px' }, x.titles.concat(x.awards).join('・') || '―'))))
         : h('div', { class: 'note' }, 'まだ記録はありません。卒業から1年たつと、ここに年ごとの経歴が並びます。'),
     ));
   }
@@ -420,7 +424,7 @@
         const top = YA.alumniHighlight(a);
         return h('button', { class: 'pitem', style: 'align-items:flex-start', onclick: () => (YA.alumniModal ? YA.alumniModal(w, a) : alumniCareer(a)) }, a.fav ? h('b', { style: 'color:#e6a800' }, '★') : null, h('span', { class: 'pos ' + a.pos }, YA.POS_LABEL[a.main] || a.pos),
           h('div', { class: 'grow', style: 'text-align:left;min-width:0' }, h('b', {}, a.name), h('div', { class: 'note' }, (a.status === 'left' ? '退団' : `${a.year}年卒・${a.age}歳`) + (a.club ? `・${a.club}` : '') + (a.league && a.status !== 'left' ? `（${a.league}）` : '') + (a.retired ? '・引退' : ''))),
-          a.status === 'pro' || a.status === 'univ' ? h('span', { class: 'sub', style: 'font-size:10.5px;white-space:nowrap' }, `通算${a.apps}試合・${a.goals}得点`) : null,
+          a.status === 'pro' || a.status === 'univ' ? h('span', { class: 'sub', style: 'font-size:10.5px;white-space:nowrap' }, `通算${YA.statLine(a, a.pos === 'GK')}`) : null,
           (a.titles || []).length ? h('span', { class: 'chip trait' }, `タイトル${a.titles.length}`) : null,
           top ? h('span', { class: 'chip pers' }, top) : null,
           h('span', { class: 'chip ' + (a.status === 'pro' ? 'trait' : 'gray') }, a.status === 'pro' ? (a.abroad ? '海外' : 'プロ') : a.status === 'univ' ? '大学' : a.status === 'left' ? '退団' : '社会人'));
