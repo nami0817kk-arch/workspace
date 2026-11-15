@@ -1,0 +1,626 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：兵馬俑は、なぜ地下に埋められたのか（scripts/heibayo-story.yaml）。chiso/storymain.py が読む。
+# 11-15 作成（11/19 19:00 公開予定）。rosetta_main_look.yaml を写した。絵は Gemini（Chrome・無料版）で作る。実在人物の顔は描かない。秦の場面は秦の装備だけ。
+script: scripts/heibayo-story.yaml
+out: heibayo_story_main
+art_dir: out/story/heibayo/main
+main_art_dir: out/story/heibayo/main
+ai_disclosure: この動画の情景の画像は、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+chapters:
+  0:
+    label: 序章 一言もない8000体
+    now: null
+    dates: {}
+  1:
+    label: 第1章 井戸の底の陶片
+    now: 1974年3月
+    dates:
+      16: 1974年7月
+  2:
+    label: 第2章 史記は何を書いたか
+    now: 紀元前246年
+    dates:
+      25: 2026年9月
+      27: 紀元前210年
+  3:
+    label: 第3章 人を埋めていた国
+    now: 紀元前7世紀
+    dates:
+      33: 紀元前384年
+      34: 紀元前210年
+      37: 2015年
+      40: 紀元前3世紀
+  4:
+    label: 第4章 体に刻まれた名前
+    now: 紀元前3世紀
+    dates:
+      44: 2019年
+      46: 紀元前244年
+      48: 2014年
+      53: 2019年
+      55: 2023年
+  5:
+    label: 第5章 顔は1体ずつ違うのか
+    now: null
+    dates:
+      58: 2014年
+      61: 2017年
+      64: 2026年10月
+  6:
+    label: 第6章 色と火
+    now: null
+    dates:
+      73: 2024年
+      74: 2023年
+      75: 2003年
+      79: 2023年
+  7:
+    label: 第7章 陵を造った人々
+    now: null
+    dates: {}
+  8:
+    label: 第8章 8000体の勘定
+    now: 2024年12月
+    dates:
+      99: 2022年
+      100: 2026年
+  9:
+    label: まとめ なぜ地下に埋められたのか
+    now: null
+    dates: {}
+no_tag_from: 112
+references:
+- 『史記』秦始皇本紀・秦本紀
+- 秦始皇帝陵博物院・陝西省文物局の発表（2023）・李岡院長の説明（央視、2024）
+- Li ほか（Antiquity, 2014）・Quinn ほか（Antiquity, 2017）・Martinón-Torres ほか（2019）の論文
+- 新華社・人民日報海外版・澎湃新聞・文匯報・中国新聞網の報道
+- ナショナルジオグラフィック（2016）・Science News（2003）
+ai:
+  H01:
+    scene: 薄暗く長い地下の坑に、素焼きの土色の兵士の像が整然と並ぶ。天井には土と木の梁の跡、差し込む一筋の光
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  A02:
+    scene: 1974年、黄土高原の農村の夕方。作業着と帽子の農民たちが井戸のまわりで土を掘る（遠景）
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  A03:
+    scene: 井戸の底から見上げる構図。黄土の壁から素焼きの陶片と人の像の上半身がのぞく。懐中電灯の光
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  A04:
+    scene: 簡素な作業場の机に広げた陶片と、継ぎ合わされた素焼きの兵士像の上半身（1970年代の中国、手元）
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  A05:
+    scene: 発掘が始まった現場の全景。大きな四角い坑を掘る人々、竹かごと手押し車、黄土の壁（遠景）
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  B01:
+    scene: 驪山のふもとの平原に広がる巨大な土の墳丘（始皇帝陵）の遠景。夕焼け
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  B02:
+    scene: 紀元前3世紀の秦の工事現場。粗末な麻の服の人々が土を運び、木の足場を組む。背景に驪山（遠景）
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  B03:
+    scene: 紀元前1世紀ごろの中国の書斎。机に巻かれた竹簡（無地）、筆、硯、灯り。人物は後ろ姿
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  B04:
+    scene: 暗い地下の広間。床に銀色に光る川と海の模型、天井には星の模様（想像の場面）
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  C01:
+    scene: 古い墓の坑を上から見た発掘現場。黄土の層、考古学者の手と刷毛
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  C02:
+    scene: 秦の葬送。松明の夜、素焼きの人形を載せた荷車を、秦の衣服の人々が墓へ運ぶ（遠景）
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  D01:
+    scene: 秦の陶工の工房。粘土をこねる人、棚に並ぶ胴・腕・頭の素焼きの部品、窯の火
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  D02:
+    scene: 窯のそばの台に、焼き上がった素焼きの兵士像の頭部がずらりと並ぶ。顔つきは1つずつ違う
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  D03:
+    scene: 青銅の剣・矛・戈・弩が台に整然と並ぶ。昼の光
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  D04:
+    scene: 青銅の弩の引き金の小さな部品を並べた机のクローズアップ。やすりと職人の手元
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  D05:
+    scene: 素焼きの兵士像の顔のクローズアップ3〜4体分。髭・髷・髪型がそれぞれ違う。土色
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  D06:
+    scene: 素焼きの粘土の表面に残った指紋のマクロ写真風の絵（浅い溝、斜めの光）
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  E01:
+    scene: 現代の修復室。ピンセットと白手袋の手が、割れた素焼きの破片を接ぎ合わせる（手元）
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  E02:
+    scene: 掘り出されたばかりの兵士像の肩に、赤・緑・紫の彩色が少し残り、まわりの土は湿っている。接写
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  E03:
+    scene: 火災のあとの坑の内部。焦げて黒くなった木の梁、赤く焼けた土の壁、人はいない
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  F01:
+    scene: 黄土の斜面に並ぶ簡素な墓の発掘。考古学の杭と白い糸、瓦の破片が土の上に（遠景）
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  G01:
+    scene: 現代の大きな屋根の下、発掘の坑を見下ろす回廊。人々の影（小さく）。文字・看板なし
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  G02:
+    scene: 研究室の机。坑の平面図（方眼・文字なし）、定規、ペン、素焼きの小さな破片
+    pan: h
+    crops:
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  YEND:
+    scene: 夜明けの黄土の平原と、遠くの大きな墳丘。右半分は空と大地の余白（終了画面）
+    lock:
+    - 1.0
+    - 0.5
+    - 0.5
+paint_fx: {}
+shots:
+- 0 ai:H01 wide
+- 1 ai:G02 left
+- 2 ai:A02 wide
+- 3 ai:H01 right
+- 4 ai:E02 left
+- 5 ai:B01 wide
+- 6 ai:F01 left
+- 7 ai:A03 wide
+- 8 ai:A02 left
+- 9 ai:A03 right
+- 10 ai:E02 wide
+- 11 ai:A05 right
+- 12 ai:F01 wide
+- 13 ai:A02 right
+- 14 ai:A03 wide
+- 15 ai:C01 left
+- 16 ai:A05 wide
+- 17 ai:H01 left
+- 18 ai:B01 right
+- 19 ai:B03 wide
+- 20 ai:B01 left
+- 21 ai:B02 wide
+- 22 ai:B04 wide
+- 23 ai:B02 left
+- 24 ai:G02 right
+- 25 ai:B04 left
+- 26 ai:B01 wide
+- 27 ai:B02 right
+- 28 ai:C02 wide
+- 29 ai:B03 left
+- 30 ai:C01 wide
+- 31 ai:C02 left
+- 32 ai:C01 right
+- 33 ai:B03 right
+- 34 ai:C02 right
+- 35 ai:D01 left
+- 36 ai:C01 left
+- 37 ai:D01 right
+- 38 ai:C02 wide
+- 39 ai:B03 left
+- 40 ai:H01 right
+- 41 ai:D01 wide
+- 42 ai:D04 wide
+- 43 ai:D01 left
+- 44 ai:D02 wide
+- 45 ai:D05 left
+- 46 ai:D03 wide
+- 47 ai:D04 left
+- 48 ai:D01 left
+- 49 ai:D04 left
+- 50 ai:G02 wide
+- 51 ai:D03 left
+- 52 ai:D03 wide
+- 53 ai:E02 right
+- 54 ai:D03 left
+- 55 ai:D05 wide
+- 56 ai:D06 left
+- 57 ai:D02 wide
+- 58 ai:E01 wide
+- 59 ai:D02 left
+- 60 ai:E01 left
+- 61 ai:D01 wide
+- 62 ai:D02 right
+- 63 ai:D05 wide
+- 64 ai:D06 wide
+- 65 ai:E01 left
+- 66 ai:D05 left
+- 67 ai:E01 right
+- 68 ai:D02 wide
+- 69 ai:D05 left
+- 70 ai:E02 wide
+- 71 ai:D06 left
+- 72 ai:E01 right
+- 73 ai:E02 wide
+- 74 ai:E01 wide
+- 75 ai:D06 left
+- 76 ai:A03 wide
+- 77 ai:E03 wide
+- 78 ai:H01 left
+- 79 ai:E03 right
+- 80 ai:B02 wide
+- 81 ai:F01 left
+- 82 ai:G01 wide
+- 83 ai:C01 right
+- 84 ai:B02 wide
+- 85 ai:A05 left
+- 86 ai:D01 left
+- 87 ai:D03 wide
+- 88 ai:F01 wide
+- 89 ai:D01 wide
+- 90 ai:B01 left
+- 91 ai:D01 right
+- 92 ai:D02 left
+- 93 ai:G01 wide
+- 94 ai:G01 left
+- 95 ai:G02 wide
+- 96 ai:D04 left
+- 97 ai:D02 left
+- 98 ai:G01 right
+- 99 ai:A05 wide
+- 100 ai:G01 wide
+- 101 ai:H01 wide
+- 102 ai:B01 right
+- 103 ai:F01 wide
+- 104 ai:G01 left
+- 105 ai:H01 right
+- 106 ai:B04 wide
+- 107 ai:C02 right
+- 108 ai:B03 wide
+- 109 ai:D04 left
+- 110 ai:C01 wide
+- 111 ai:G02 right
+- 112 ai:A03 wide
+- 113 ai:YEND wide
+- end ai:YEND wide
+focus: {}
+fx: {}
+parts:
+- type: quote
+  from: 21
+  to: 21
+  label: 史料
+  text: 天下の徒、70万人あまりを送り／泉を3重に掘り、銅で外側の棺を固めた
+  source: 『史記』秦始皇本紀（要旨）
+- type: quote
+  from: 33
+  to: 33
+  label: 史料
+  text: 献公の元年／従死を止めた
+  source: 『史記』秦本紀（要旨）
+- type: quote
+  from: 37
+  to: 37
+  label: 史料
+  text: 始めて俑を作った者には／子孫がなくなるだろう／人の形に似せて、使うからだ
+  source: 孔子の言葉（信立祥の2015年の取材より・要旨）
+- type: versus3
+  from: 62
+  to: 62
+  items:
+  - - 中国の報道
+    - 8000体
+  - - クインたち2017
+    - 約7000体（馬を含む）
+  - - 院長の推算
+    - 8000近く
+  every: 2.0
+- type: quote
+  from: 102
+  to: 102
+  label: 要点
+  text: 大型の帝王陵は／必要な技術の条件が／そろうまで発掘しない
+  source: 1997年の国務院の通知（2026年の報道・要旨）
+figures: []
+stills:
+- line: 0
+  note: 冒頭
+- line: 9
+  note: 発見
+- line: 21
+  note: 史記
+- line: 37
+  note: 孔子
+- line: 65
+  note: 指紋
+- line: 73
+  note: 彩色
+- line: 95
+  note: 勘定
+- line: 113
+  note: 余韻
+- end: true
+  note: 終了画面

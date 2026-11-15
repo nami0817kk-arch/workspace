@@ -1,0 +1,152 @@
+# 物語完結型ショート ロゼッタストーン s1（2026-11-15）。本編 scripts/rosetta-story.yaml（11/18 12:00 公開、https://youtu.be/ULryhFAAhgQ）から。11/19 に予約。
+# 形式は habsburg_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（dev/output/rekishi-chiso/research/ロゼッタ_facts_20261114.yaml）と本編の # fact: だけ。
+# 絵：本編の AI 絵（out/story/rosetta/main/）の切り出しだけ。新しい絵は作らない。切り口：見つかった日と見つかり方の食い違い（序章）
+# 計算（自分で数え直した）：1799年7月（7/14〜25 は同じ月の中）。年数の計算なし
+# 本編の最後の「解いたのは誰か」の答えは、このショートでは明かさない。
+title: "ロゼッタストーン｜見つかった日は、分かっていない"
+yt_title: "ロゼッタストーンが見つかった日は、はっきりしない　よく言われる15日も19日も当時の記録では裏づけられない　石はもとからロゼッタにあったのでもない"
+description: |-
+  ロゼッタストーンが見つかった日は、はっきりしません。よく言われる15日と19日は、どちらも当時の記録では裏づけられず、研究者のルクラントは、1799年7月14日から25日のあいだ、と見ています。
+  見つかり方も記録で違い、石はもとからロゼッタにあったのではない、とも考えられています。
+  では、この石に刻まれていたのは、どんな文だったのか。本編は概要欄のリンクからどうぞ。
+  https://youtu.be/ULryhFAAhgQ
+hashtags:
+- "#ロゼッタストーン"
+- "#古代エジプト"
+- "#世界史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。人物の姿も、特定の資料を写したものではありません。"
+art_dir: out/story/rosetta
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: rosetta_story_s1
+header:
+  tag: "1799年7月"
+  title: "見つかった日は、《分からない》"
+now:
+- {at: "1799年7月", text: "1799年7月　砦の工事で見つかる", point: 0}
+- {at: "7月14日", text: "7月14日〜25日　ルクラントの見立て", point: 1}
+timeline:
+- {label: "1799/7"}
+- {label: "7/14"}
+shots:
+  C03_1:
+    kind: "ai"
+    file: "rosetta/main/C03.jpg"
+    focus: [0.8, 0.5]
+    move: "left"
+    must: "砦の壁を壊す兵士と、壁の中から顔を出す黒い石板"
+  C02_2:
+    kind: "ai"
+    file: "rosetta/main/C02.jpg"
+    focus: [0.2, 0.5]
+    move: "right"
+    must: "ナイル河口の砦とナポレオン軍の兵士"
+  C03_3:
+    kind: "ai"
+    file: "rosetta/main/C03.jpg"
+    focus: [0.3, 0.5]
+    move: "in"
+    must: "砦の壁を壊す兵士と、壁の中から顔を出す黒い石板"
+  C02_4:
+    kind: "ai"
+    file: "rosetta/main/C02.jpg"
+    focus: [0.75, 0.5]
+    move: "left"
+    must: "海ぞいの砦"
+  C03_5:
+    kind: "ai"
+    file: "rosetta/main/C03.jpg"
+    focus: [0.7, 0.5]
+    move: "left"
+    must: "古い壁の石と土ぼこり"
+  C02_6:
+    kind: "ai"
+    file: "rosetta/main/C02.jpg"
+    focus: [0.3, 0.5]
+    move: "right"
+    must: "ロゼッタの砦と町"
+  C03_7:
+    kind: "ai"
+    file: "rosetta/main/C03.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "壊された壁と石板"
+  C04_8:
+    kind: "ai"
+    file: "rosetta/main/C04.jpg"
+    focus: [0.2, 0.5]
+    move: "right"
+    must: "夕景の古い神殿の柱と砂地"
+  C04_9:
+    kind: "ai"
+    file: "rosetta/main/C04.jpg"
+    focus: [0.8, 0.5]
+    move: "left"
+    must: "崩れた神殿の石柱"
+  C05_10:
+    kind: "ai"
+    file: "rosetta/main/C05.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "3段の文字が刻まれた黒い石板のクローズアップ"
+lines:
+  # fact: rosetta-A01
+- 語り: "ロゼッタストーンが見つかった日は、実は、はっきりしない。"
+  shot: C03_1
+  tone: 強調
+  pause: 0.12
+  # fact: rosetta-A04, rosetta-A06
+- 語り: "1799年7月。ナイルのほとり、ロゼッタの町で、ナポレオンの軍が、古い砦を、直していた。"
+  shot: C02_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: rosetta-A05
+- 語り: "工事の途中で、黒っぽい石が、出てきた。見つけたのは、工兵将校のブシャール、と伝わる。"
+  shot: C03_3
+  tone: しみじみ
+  pause: 0.12
+  # fact: rosetta-A05
+- 語り: "見つかり方は、記録で違う。大英博物館は、砦の増築部の、基礎を掘っていた、と書く。"
+  shot: C02_4
+  tone: しみじみ
+  pause: 0.12
+  # fact: rosetta-A05
+- 語り: "研究者のルクラントは、古い壁の中に、再利用されていた、と書く。"
+  shot: C03_5
+  tone: 重い
+  pause: 0.12
+  # fact: rosetta-A01, rosetta-A02
+- 語り: "よく言われる15日と19日は、どちらも、当時の記録では、裏づけられない。"
+  shot: C02_6
+  tone: 重い
+  pause: 0.12
+  # fact: rosetta-A01
+- 語り: "ルクラントは、7月14日から25日のあいだ、と見ている。"
+  shot: C03_7
+  tone: しみじみ
+  pause: 0.12
+  # fact: rosetta-A07
+- 語り: "しかも、石は、もとからロゼッタに、あったのではない、と考えられている。"
+  shot: C04_8
+  tone: 重い
+  pause: 0.12
+  # fact: rosetta-A07
+- 語り: "ナイル・デルタ内陸の神殿、おそらくサイスから、運ばれてきた、という説が、有力だ。"
+  shot: C04_9
+  tone: しみじみ
+  pause: 0.12
+  # fact: rosetta-A11
+- 語り: "では、この石に刻まれていた、《答え》とは、どんな文だったのか。"
+  shot: C05_10
+  tone: 疑問
+  pause: 0.15
