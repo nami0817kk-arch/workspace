@@ -443,7 +443,7 @@ async function clearEvents() {
         if (n === 'ライバル') ok(txt().includes('名物のライバル監督') && txt().includes('対戦成績'), 'ライバル監督の画面');
         if (n === 'トップ') ok(txt().includes('トップ監督の注文'), 'トップ監督の注文の画面');
         if (n === '移籍') ok(txt().includes('クラブ移籍'), 'クラブ移籍の画面');
-        if (n === 'クラブ') ok(txt().includes('移籍先のクラブ（188・25リーグ）') && txt().includes('ロイヤル・マドリード') && txt().includes('リーグの水準'), '移籍先のクラブと強さの画面');
+        if (n === 'クラブ') ok(txt().includes('移籍先のクラブ（367・38リーグ）') && txt().includes('ロイヤル・マドリード') && txt().includes('リーグの水準'), '移籍先のクラブと強さの画面');
       }
       for (const n of ['実績', '図鑑', '殿堂', '年表', '育成基金', '卒業生名鑑']) {
         btn(n, d.querySelector('.tabs')).click();

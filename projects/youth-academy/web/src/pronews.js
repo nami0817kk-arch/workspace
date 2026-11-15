@@ -165,7 +165,7 @@
       for (const c of new Set((a.seasons || []).map((s) => s.club).filter(Boolean))) ever[c] = (ever[c] || 0) + 1;
     }
     const groups = [['J1リーグ', 1], ['J2リーグ', 2], ['J3リーグ', 3]].map(([lg, t]) => [lg, (YA.PRO_CLUBS || []).filter((c) => (w.top && c.name === w.top.name ? w.top.j : c.tier) === t).map((c) => [c.name + (w.top && c.name === w.top.name ? '（自分のクラブのトップ）' : ''), YA.clubStr(c.name, w)])])
-      .concat(YA.ABROAD_LEAGUES.map((x) => [x[1] + '（' + x[0] + '）', YA.ABROAD_CLUBS[x[1]].map((c) => [c[0], c[1]]), x[1]]));
+      .concat(YA.ABROAD_LEAGUES.map((x) => [x[1].includes(x[0]) ? x[1] : x[1] + '（' + x[0] + '）', YA.ABROAD_CLUBS[x[1]].map((c) => [c[0], c[1]]), x[1]]));
     const total = groups.reduce((n, g) => n + g[1].length, 0);
     body.append(h('div', { class: 'h' }, `移籍先のクラブ（${total}・${groups.length}リーグ）`), h('div', { class: 'note' }, '数字はクラブの強さ（選手の総合力と同じ0〜200の物差し）。クラブ名は架空です。卒業生は、自分の総合力より少し上のクラブへ移りやすい。強いクラブほど優勝しやすい。'));
     const list = h('div', { class: 'scroll', style: 'flex:1;min-height:0;margin-top:4px' });
