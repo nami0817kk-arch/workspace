@@ -384,8 +384,8 @@ class Formulas {
   static double concedeShareFor(Position position) => switch (position) {
     // 受け身の手（`lingering`）を入れて失点が増えたぶん、2026-11-15 に
     // 1.17 から下げた。GK は自陣の局面しか引かないので、もう一段下げる。
-    Position.gk => 1.12,
-    Position.cb || Position.sb => 1.15,
+    Position.gk => 1.08,
+    Position.cb || Position.sb => 1.08,
     _ => 1.0,
   };
 
