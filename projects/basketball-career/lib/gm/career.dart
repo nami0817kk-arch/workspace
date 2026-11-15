@@ -559,6 +559,60 @@ class Career {
   /// 今季のオーナーとの目標の話し合いの答え(0: 受けた、1: 下げてもらった、2: もっと上を約束した)。
   int goalStance = 0;
 
+  /// シーズン中のスカウトの向け先(遊ぶ人が受信箱で答えるまでは null。自動で遊ぶ GM は答えないので、下調べはたまらない)。
+  ScoutFocus? scoutFocus;
+
+  /// 向け先ごとの下調べ(0〜100%)。ドラフトの初めに、25%ごとに1人を調べ済みにする。
+  List<int> scoutPrep = List.filled(ScoutFocus.values.length, 0);
+
+  /// このドラフトで、シーズン中の下調べから調べ済みにした候補の数。
+  int prepScouted = 0;
+
+  /// 区切りの終わりのスカウトの報告。向け先が決まっていれば下調べを進め、次の向け先を聞く。
+  void _scoutReport() {
+    final level = me.staffLevel(Staff.scout);
+    final f = scoutFocus;
+    final gain = 20 + 6 * (level - 1);
+    if (f != null) scoutPrep[f.index] = (scoutPrep[f.index] + gain).clamp(0, 100);
+    for (final m in inbox) {
+      if (m.kind == MsgKind.scoutFocus && m.needsAnswer) m.answer = f?.index ?? 0;
+    }
+    final coach = me.coachOf(Staff.scout);
+    final who = coach == null ? 'スカウト' : 'スカウトの${coach.name}';
+    final lines = [
+      if (f == null)
+        'ドラフトの候補を見に行きたい。どこを重点に見るか決めてほしい(決めると、区切りごとに下調べが進む)。'
+      else
+        '「${f.label}」を見てきた。下調べ ${scoutPrep[f.index]}%(+$gain)。',
+      for (final x in ScoutFocus.values)
+        if (scoutPrep[x.index] > 0) '・${x.label} ${scoutPrep[x.index]}% → ドラフトの初めに${scoutPrep[x.index] ~/ 25}人を調べ済みに',
+      '次はどこを見るか。',
+    ];
+    _mail(Sender.staff, '$whoの報告', lines.join('\n'), kind: MsgKind.scoutFocus, choices: [for (final x in ScoutFocus.values) x.label]);
+  }
+
+  /// ドラフトの初めに、シーズン中の下調べを候補に当てる(乱数を使わない)。
+  void _applyScoutPrep() {
+    prepScouted = 0;
+    if (scoutPrep.every((v) => v == 0)) return;
+    final ranks = mockRanks(prospects);
+    final level = me.staffLevel(Staff.scout);
+    final byRank = [...prospects]..sort((a, b) => ranks[a]!.compareTo(ranks[b]!));
+    for (final f in ScoutFocus.values) {
+      final n = (scoutPrep[f.index] ~/ 25).clamp(0, 4);
+      var done = 0;
+      for (final p in byRank) {
+        if (done >= n) break;
+        if (p.scouted || !f.matches(p, ranks[p]!)) continue;
+        scoutQuiet(p, level: level);
+        done++;
+      }
+      prepScouted += done;
+    }
+    scoutPrep = List.filled(ScoutFocus.values.length, 0);
+    if (prepScouted > 0) _mail(Sender.staff, 'シーズン中の下調べ', 'シーズン中の下調べで、$prepScouted人の候補を初めから調べ済みにした(見立ての幅が狭く、性格も分かる)。');
+  }
+
   /// 通しの区切りの番号(シーズン×4＋区切り)。約束の期限に使う。
   int get blockIndex => season * blocksPerSeason + block;
 
@@ -667,6 +721,10 @@ class Career {
     m
       ..answer = choice
       ..read = true;
+    if (m.kind == MsgKind.scoutFocus) {
+      scoutFocus = ScoutFocus.values[choice.clamp(0, ScoutFocus.values.length - 1)];
+      return;
+    }
     if (m.kind == MsgKind.ownerGoal) {
       // 下げてもらうと今すぐ信頼が減り、シーズンの終わりにも少し引かれる。上を約束すると、果たせば信頼と格の点
       if (m.season != season || phase != Phase.season || roundAt > 0) return;
@@ -724,6 +782,7 @@ class Career {
       case MsgKind.info:
       case MsgKind.press:
       case MsgKind.ownerGoal:
+      case MsgKind.scoutFocus:
         break;
     }
   }
@@ -1518,6 +1577,7 @@ class Career {
     }
     if (block == tradeDeadlineBlock - 1) _deadlineWarning();
     _checkPromises();
+    _scoutReport();
     if (block < blocksPerSeason) _mailAfterBlock();
     if (block <= tradeDeadlineBlock && rng.chance(0.5)) _aiTrades(1);
     if (block >= blocksPerSeason) {
@@ -2206,6 +2266,7 @@ class Career {
     }
 
     prospects = [...main, ...makeProspects(deepRng, nextId, deepProspects, name: deepName, deep: true)];
+    _applyScoutPrep();
     board = [];
     draftAt = 0;
     draftLog = [];
@@ -3496,6 +3557,9 @@ class Career {
         'ea': extAsked,
         'ib': [for (final m in inbox) m.toJson()],
         'mid': _msgId,
+        if (scoutFocus != null) 'sf': scoutFocus!.index,
+        'sp': scoutPrep,
+        if (prepScouted > 0) 'ps': prepScouted,
         if (promises.isNotEmpty) 'pr': [for (final x in promises) x.toJson()],
         'wd': word,
         'gs': goalStance,
@@ -3599,6 +3663,9 @@ class Career {
       ..extAsked = [for (final x in (j['ea'] as List? ?? const [])) x as int]
       ..inbox = [for (final m in maps('ib')) Message.fromJson(m)]
       .._msgId = (j['mid'] as int?) ?? 1
+      ..scoutFocus = j['sf'] is int ? ScoutFocus.values[(j['sf'] as int).clamp(0, ScoutFocus.values.length - 1)] : null
+      ..scoutPrep = [for (var i = 0; i < ScoutFocus.values.length; i++) (j['sp'] is List && (j['sp'] as List).length > i) ? ((j['sp'] as List)[i] as int) : 0]
+      ..prepScouted = (j['ps'] as int?) ?? 0
       ..promises = [for (final x in maps('pr')) Promise.fromJson(x)]
       ..word = (j['wd'] as int?) ?? startWord
       ..goalStance = (j['gs'] as int?) ?? 0

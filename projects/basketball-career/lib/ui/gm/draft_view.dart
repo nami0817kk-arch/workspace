@@ -195,6 +195,7 @@ class _DraftViewState extends State<DraftView> {
               [
                 if (myPicks.isNotEmpty) '欲しい選手の「指名」を押す(迷ったら予想順位が高い選手)',
                 if (before != null && before > 0) '次の指名までに$before人取られる(予想順位が赤い選手)',
+                if (car.prepScouted > 0) 'シーズン中の下調べで${car.prepScouted}人を調査済み',
                 '契約中 ${car.signedCount}人(オフは$offseasonRoster人まで・開幕までに$maxRoster人)',
               ].join('・'),
               maxLines: 1,
@@ -488,6 +489,13 @@ class _ProspectPanel extends StatelessWidget {
             ],
           ),
           Text('${pl.age}歳・${backgroundOf(p)}・予想$rank位', maxLines: 2, style: const TextStyle(fontSize: 11, color: GmColors.sub)),
+          // 媒体ごとの模擬ドラフト(同じ候補でも順位が違う)
+          Text(
+            '各社の予想: ${[for (var m = 0; m < mockMedia.length; m++) '${mockMedia[m]}${mediaRanks(car.prospects, m)[p] ?? '-'}位'].join('・')}',
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontSize: 10, color: GmColors.sub),
+          ),
           head('見立て'),
           range('OVR', p.ovrLo, p.ovrHi),
           range('POT', p.potLo, p.potHi),
