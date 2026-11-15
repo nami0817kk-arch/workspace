@@ -43,8 +43,8 @@ PAMIR, TIAN = (72.5, 38.6), (75.0, 41.5)
 ARAL = (60.0, 45.05, 4.8, 0)
 ARAL_T = (60.0, 44.7, 4.4, 35)
 BASIN = (64.0, 42.6, 19.0, 0)
-WESTV = (59.0, 45.0, 2.0, 30)
-NORTHV = (61.0, 46.3, 1.7, 30)
+WESTV = (59.0, 45.0, 3.4, 20)
+NORTHV = (61.0, 46.2, 3.2, 20)
 ARAL_P = (60.0, 45.05, 3.4, 0)
 BASIN_P = (63.5, 42.5, 13.0, 0)
 NORTH_P = (61.0, 46.3, 1.3, 0)
@@ -148,7 +148,7 @@ P["ch2"] = dict(title="第2章 出口のない湖", cta=False, lines=[
 # ---- 第3章 川の水の行方 -----------------------------------------------------------------------------------
 P["ch3"] = dict(title="第3章 川の水の行方", cta=False, lines=[
     dict(id="c1", text="では、川の水は、どこへ行ったのか。", scene=MAP(BASIN, *RIVERS(), step=2, tr="zoom")),
-    dict(id="c2", text="アムダリヤ川は、パミールの山から、約2,600km流れてきます。", scene=MAP(BASIN, LINE(AMU, RIVER, 12, id="r_amu3"), PIN(PAMIR, "パミール", id="p_pa3"), LABEL((63.2, 39.6), "アムダリヤ川", 52, BLUE), step=2)),
+    dict(id="c2", text="アムダリヤ川は、パミールの山から、約2,600km流れてきます。", scene=MAP(BASIN, LINE(AMU, RIVER, 12, id="r_amu3"), PIN(PAMIR, "パミール", id="p_pa3"), LABEL((61.6, 42.4), "アムダリヤ川", 52, BLUE), step=2)),
     dict(id="c3", text="山を出るときの水は、1年に約62km³。", scene=BARS([("山を出る", 62, BLUE), ("湖に届く", 40, YEL)], title="アムダリヤ川（km³／年、1960年より前）", note=M2014, fmt="{}", step=2)),
     dict(id="c4", text="ところが、湖に届くのは、1960年より前でも約40km³でした。"),
     dict(id="c5", text="砂漠を渡るあいだに、3分の1が消えていたのです。", scene=MAP(BASIN, LINE(AMU, RIVER, 12, id="r_amu3b"), step=2, view_to=(62.5, 40.5, 11, 25))),
@@ -237,7 +237,7 @@ P["s3"] = dict(title="縮んだ湖の広さを、割り算1つで当ててみた
     dict(id="n1", text="アラル海が縮んだあとの広さは、割り算1つで、ほぼ当てられます。", scene=MAP(ARAL_P, SHORE("1960", alpha=0.0))),
     dict(id="n2", text="1年に空へ出る水の深さは、雨と雪の分を引いて、約0.84m。", scene=CARD("約0.84m", sub="1年に空へ出る深さ", view=ARAL_P, count=False)),
     dict(id="n3", text="入ってくる水を、この深さで割る。それが、湖が保てる広さです。", scene=CARD("入る水÷0.84m", sub="湖が保てる広さ", view=ARAL_P, count=False)),
-    dict(id="n4", text="1992年から2011年の20年間。入った水は、平均で1年に約8.8km³。"),
+    dict(id="n4", text="1992年から2011年の20年間。入った水は、平均で1年に約8.8km³。", scene=MAP(BASIN_P, *RIVERS(tag="n"), view_to=(62.0, 44.0, 7.0, 0))),
     dict(id="n5", text="割ると、約1万400km²。2018年に測った広さは、約9,700km²。ほぼ同じです。", scene=BARS([("割り算の答え", 10400, YEL), ("2018年に測った広さ", 9668, BLUE)], title="広さ（km²）", fmt="{:,}")),
     dict(id="n6", text="湖は、入る水に見合う大きさまで、縮んだのです。", scene=MAP(ARAL_P, SHORE("1960", alpha=0.0), tr="whip")),
 ])
