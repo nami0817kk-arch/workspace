@@ -18,6 +18,38 @@ Future<void> nextFaDayWithReport(BuildContext context, GmController c) {
 
 String _pct(double v) => '${(v * 100).round()}%';
 
+/// 自由契約の最終日: このオフの勝ち組・負け組(2026-11-16、2K27 の FA の終わりのまとめ)。
+List<Widget> _balance(Career car) {
+  final (win, lose) = faBalance(car);
+  if (win.isEmpty && lose.isEmpty) return const [];
+  Widget line(FaBalance b, bool good) => Padding(
+    padding: const EdgeInsets.symmetric(vertical: 1.5),
+    child: Row(children: [
+      TeamBadge(team: b.team, size: 18),
+      const SizedBox(width: 6),
+      Expanded(
+        child: Text(
+          good ? '${car.teams[b.team].def.short}(${b.names.take(2).join('・')})' : car.teams[b.team].def.short,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(fontWeight: b.team == car.mine ? FontWeight.bold : null, color: b.team == car.mine ? GmColors.ball : null),
+        ),
+      ),
+      Text('${b.net > 0 ? '+' : ''}${b.net}', style: TextStyle(fontWeight: FontWeight.bold, color: good ? GmColors.good : GmColors.bad)),
+    ]),
+  );
+  return [
+    const Text('このオフの勝ち組・負け組', style: TextStyle(fontWeight: FontWeight.bold, color: GmColors.ball)),
+    Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [for (final b in win) line(b, true)])),
+      const SizedBox(width: 12),
+      Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [for (final b in lose) line(b, false)])),
+    ]),
+    const Text('数字は取った選手と出ていった選手の力の差(力70を超えた分)。', style: TextStyle(fontSize: 11, color: GmColors.sub)),
+    const SizedBox(height: 8),
+  ];
+}
+
 /// 自由契約の1日の発表。自分の申し込みの結果・その日の契約・まだ決まっていない大物。
 Future<void> showFaDayReport(NavigatorState nav, GmController c, FaDayReport r) {
   final car = c.career!;
@@ -93,10 +125,18 @@ Future<void> showFaDayReport(NavigatorState nav, GmController c, FaDayReport r) 
                   child: Row(children: [
                     Expanded(child: Text('${p.name}(${p.pos.short}・OVR${shown(p.ovr)})', maxLines: 1, overflow: TextOverflow.ellipsis)),
                     Text(n == 0 ? '申し込みなし' : '$nチームが申し込み', style: TextStyle(fontSize: 12, color: n > 0 ? GmColors.gold : GmColors.sub)),
+                    // いま傾いているチーム
+                    if (car.leaningTo(p) >= 0) ...[
+                      const SizedBox(width: 8),
+                      const Text('有力', style: TextStyle(fontSize: 11, color: GmColors.sub)),
+                      const SizedBox(width: 3),
+                      TeamBadge(team: car.leaningTo(p), size: 18),
+                    ],
                   ]),
                 ),
               const SizedBox(height: 8),
             ],
+            if (r.daysLeft <= 0) ..._balance(car),
             Text(r.daysLeft > 0 ? 'あと${r.daysLeft}日。日が進むほど、迷っている選手も決めていく。' : '自由契約の日程は終わった。',
                 style: const TextStyle(fontSize: 12, color: GmColors.sub)),
           ]),
