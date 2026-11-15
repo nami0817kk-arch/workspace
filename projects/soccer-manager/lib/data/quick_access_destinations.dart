@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import '../screens/achievements_screen.dart';
 import '../screens/awards_screen.dart';
 import '../screens/best_eleven_screen.dart';
+import '../screens/club_calendar_screen.dart';
 import '../screens/club_screen.dart';
+import '../screens/contract_board_screen.dart';
 import '../screens/analysis_screen.dart';
 import '../screens/cup_screen.dart';
 import '../screens/finance_screen.dart';
@@ -61,6 +63,18 @@ String? _needsFirstSeason(GameState game) {
 
 // 同上。final だと最初のアクセス時の言語でラベルが固定される。
 List<QuickAccessDestination> get quickAccessDestinations => [
+      QuickAccessDestination(
+        icon: Icons.event_note,
+        label: Tr.pick('クラブの年間予定', 'Club calendar'),
+        color: Colors.teal.shade600,
+        builder: (_) => const ClubCalendarScreen(),
+      ),
+      QuickAccessDestination(
+        icon: Icons.badge_outlined,
+        label: Tr.pick('登録と契約', 'Registration & contracts'),
+        color: Colors.brown.shade600,
+        builder: (_) => const ContractBoardScreen(),
+      ),
       QuickAccessDestination(
         icon: Icons.work_outline,
         label: Tr.pick('オーナーの仕事', 'Owner\'s work'),
