@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'screen_bar.dart';
+
 /// 画面本体をワイド画面(デスクトップブラウザ等)では中央寄せ・最大幅制限し、
 /// スマートフォン等の狭い画面では従来通り全幅で表示するラッパー。
 /// PC等の広いウィンドウでリスト・カードが不必要に間延びするのを防ぐ。
@@ -11,6 +13,9 @@ class ResponsiveBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 左メニューに埋め込まれた横画面では、どのページも同じ全幅にそろえる
+    // (ページごとに中身の幅が違うと、切り替えるたびに画面がガタつく)。
+    if (EmbeddedInShell.of(context)) return child;
     return Center(
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: maxWidth),

@@ -16,6 +16,7 @@ import '../widgets/youth_league_table.dart';
 import '../widgets/responsive_body.dart';
 import 'scout_report_screen.dart';
 import '../l10n/tr.dart';
+import '../widgets/screen_bar.dart';
 
 /// 大陸カップ出場資格が得られる順位(GameState.startNextSeasonの`finalRank <= 2`と一致)。
 const int _continentalQualifyCount = 2;
@@ -44,22 +45,20 @@ class FixturesScreen extends StatelessWidget {
     return DefaultTabController(
       length: 2 + otherDivisions.length + (youthLeague == null ? 0 : 1),
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(Tr.pick('日程・順位表', 'Fixtures & table')),
+        appBar: screenBar(
+          context,
+          title: Tr.pick('日程・順位表', 'Fixtures & table'),
           // いまは下タブ専用だが、スタメン・スカッドと同じ作り(ドロワーあり)
           // なので、どこかから開かれた瞬間に戻れなくなる。先に塞いでおく。
           leading: Navigator.of(context).canPop() ? const BackButton() : null,
-          bottom: TabBar(
-            isScrollable: otherDivisions.isNotEmpty,
-            tabs: [
-              Tab(text: Tr.pick('順位表', 'Table')),
-              Tab(text: Tr.pick('日程', 'Fixtures')),
-              for (final (tier, _) in otherDivisions)
-                Tab(text: Tr.pick('$tier部順位表', 'Tier $tier table')),
-              if (youthLeague != null)
-                Tab(text: Tr.pick('ユース', 'Academy')),
-            ],
-          ),
+          scrollable: otherDivisions.isNotEmpty,
+          tabs: [
+            Tr.pick('順位表', 'Table'),
+            Tr.pick('日程', 'Fixtures'),
+            for (final (tier, _) in otherDivisions)
+              Tr.pick('$tier部順位表', 'Tier $tier table'),
+            if (youthLeague != null) Tr.pick('ユース', 'Academy'),
+          ],
           actions: [
             IconButton(
               icon: const Icon(Icons.query_stats),
