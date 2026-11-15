@@ -139,7 +139,7 @@ void main() {
           await tester.pump();
           tester.takeException();
           expect(
-            find.text(lang == AppLanguage.english ? "Owner's work" : 'オーナーの仕事'),
+            find.text(lang == AppLanguage.english ? 'Club calendar' : 'クラブの年間予定'),
             findsWidgets,
             reason: '$langLabel のはずが、その言語の見出しが描画されていない',
           );

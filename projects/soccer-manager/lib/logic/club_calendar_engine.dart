@@ -65,7 +65,7 @@ class ClubCalendarEngine {
         ClubEvent(
           matchday: mid,
           kind: ClubEventKind.window,
-          title: Tr.pick('冬の移籍期間(第$mid〜${mid + 2}節)', 'Winter window (MD $mid–${mid + 2})'),
+          title: Tr.pick('冬の移籍期間(第$mid〜${mid + 2}節)', 'Winter window (MD $mid-${mid + 2})'),
           detail: Tr.pick('補強の追加と、不要な選手の放出ができる。',
               'Add signings and move on players you do not need.'),
         ),

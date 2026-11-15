@@ -80,7 +80,8 @@ class ContractBoardScreen extends StatelessWidget {
         for (final p in expiring)
           Card(
             child: ListTile(
-              title: Text('${p.name}(${p.position.label}・${p.age}歳)'),
+              title: Text(Tr.pick('${p.name}(${p.position.label}・${p.age}歳)',
+                  '${p.name} (${p.position.label}, ${p.age})')),
               subtitle: Text(Tr.pick(
                   '総合力 ${p.overall}・契約残り${p.contractYearsRemaining}年・週給 ${p.wage}万円',
                   'Overall ${p.overall} • ${p.contractYearsRemaining}y left • wage ${p.wage}')),
