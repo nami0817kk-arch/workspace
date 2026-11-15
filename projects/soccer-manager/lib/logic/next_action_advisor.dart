@@ -23,7 +23,7 @@ class NextAction {
 }
 
 /// 行き先。画面そのものを持たせると、このファイルが UI に依存してしまう。
-enum NextActionTarget { lineup, training, squad, youth, finance, transfer }
+enum NextActionTarget { squad, youth, finance, transfer }
 
 /// いまのクラブの状態を見て、次にやることを1つだけ挙げる。
 ///
@@ -71,24 +71,6 @@ class NextActionAdvisor {
             'You are in the red. The board will lose patience if it stays that way.'),
         target: NextActionTarget.finance,
         urgent: true,
-      ));
-    }
-
-    // スタメンが組めていない。試合に影響する。
-    if (team.startingXI.length < 11) {
-      actions.add(NextAction(
-        message: Tr.pick('スタメンが${team.startingXI.length}人です。11人そろえてください。',
-            'Only ${team.startingXI.length} players are in your XI. Fill all eleven.'),
-        target: NextActionTarget.lineup,
-        urgent: true,
-      ));
-    }
-
-    // 今週のトレーニングが残っている。毎週の積み上げなので、逃すと戻らない。
-    if (!save.trainingDoneThisWeek) {
-      actions.add(NextAction(
-        message: Tr.pick('今週のトレーニングがまだです。', 'This week\'s training is still waiting.'),
-        target: NextActionTarget.training,
       ));
     }
 
