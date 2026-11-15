@@ -57,6 +57,38 @@ class FaDayReport {
   final List<(Player, int)> open;
 }
 
+/// 自由契約の勝ち組・負け組の1行(取った力 − 出ていった力。見せる数字で、力70を超えた分を足す)。
+class FaBalance {
+  const FaBalance(this.team, this.gained, this.lost, this.names);
+  final int team, gained, lost;
+
+  /// 取った選手の名前(力の高い順)。
+  final List<String> names;
+  int get net => gained - lost;
+}
+
+/// このオフの自由契約で得をしたチームと損をしたチーム(上から [n] つずつ)。乱数は使わない。
+(List<FaBalance>, List<FaBalance>) faBalance(Career c, {int n = 3}) {
+  int worth(int ovr) => (shown(ovr) - 70).clamp(0, 99);
+  final gained = <int, int>{}, lost = <int, int>{};
+  final names = <int, List<FaMove>>{};
+  for (final m in c.faMoves) {
+    gained[m.team] = (gained[m.team] ?? 0) + worth(m.ovr);
+    names.putIfAbsent(m.team, () => []).add(m);
+    // 前のチーム(最後にシーズンを終えたチーム)から見れば、出ていった力
+    final p = [for (final t in c.teams) ...t.roster].where((x) => x.id == m.id).firstOrNull;
+    final from = p == null ? -1 : c.lastTeamOf(p);
+    if (from >= 0 && from != m.team) lost[from] = (lost[from] ?? 0) + worth(m.ovr);
+  }
+  final all = [
+    for (final t in c.teams)
+      FaBalance(t.index, gained[t.index] ?? 0, lost[t.index] ?? 0, [for (final m in (names[t.index] ?? <FaMove>[])..sort((a, b) => b.ovr.compareTo(a.ovr))) m.name]),
+  ]..sort((a, b) => b.net.compareTo(a.net));
+  final win = all.where((x) => x.net > 0).take(n).toList();
+  final lose = all.reversed.where((x) => x.net < 0).take(n).toList();
+  return (win, lose);
+}
+
 FaDayReport faDayReport(Career c, FaSnapshot s) {
   final today = c.faMoves.where((m) => m.day == s.day).toList()..sort((a, b) => b.ovr.compareTo(a.ovr));
   final mine = <BidResult>[];

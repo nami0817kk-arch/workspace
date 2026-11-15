@@ -2748,6 +2748,18 @@ class Career {
     return interest(p, b.team) + (b.salary / ask - 1) * _moneyWeight(p) + math.min(b.years, askOf(p, me).maxYears) * 1.5;
   }
 
+  /// 選手がいま傾いているチーム(申し込みの中で、選手の目から最も良いもの)。申し込みが無ければ -1。
+  /// 2026-11-16、2K27 の FA は選手ごとに「どこに傾いているか」が見える。乱数は使わない。
+  int leaningTo(Player p) {
+    final bs = bids[p.id];
+    if (bs == null || bs.isEmpty) return -1;
+    var best = bs.first;
+    for (final b in bs.skip(1)) {
+      if (_bidScore(p, b) > _bidScore(p, best)) best = b;
+    }
+    return best.team;
+  }
+
   /// 今の申し込みで、自分のチームを選ぶ見込み(0〜1)。画面用の目安で、乱数は使わない。
   double winChanceOf(Player p) {
     final mineBid = myBid(p.id);
