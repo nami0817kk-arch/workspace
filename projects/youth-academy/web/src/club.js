@@ -306,7 +306,11 @@
   const away = (p) => p.away > 0 || p.inj > 0;
 
   E.push({ id: 'top', name: 'トップチームの打診', weight: 0.9,
-    pick: (w, r) => { const p = best(w, (q) => q.grade >= 2 && !away(q) && q.team === 'A' && YA.ovr(q) >= 10.8); return p && r.chance(0.7) ? p : null; },
+    pick: (w, r) => {
+      const keyed = best(w, (q) => q.star && q.grade >= 2 && !away(q) && YA.ovr(q) >= 10 && (q.keys || []).some((k) => k.id === 'top' && !k.done));
+      if (keyed && r.chance(0.8)) return keyed;
+      const p = best(w, (q) => q.grade >= 2 && !away(q) && q.team === 'A' && YA.ovr(q) >= 10.8); return p && r.chance(0.7) ? p : null;
+    },
     text: (p, w) => `トップチーム（${w.top ? w.top.name + '・' + YA.J_NAME[w.top.j] : 'トップ'}）の監督から連絡があった。「${pname(p)}（総合力${YA.rating(p)}）を、今週の練習に参加させてほしい」`,
     opts: [
       o('応じる（今週は不在。本人は大きく伸びる）', 'push', (w, p) => { p.away = 1; p.conf = clamp(p.conf + 6, 0, 100); for (const a of ['判断', '予測', 'ファーストタッチ', 'パス']) p.prog[a] = (p.prog[a] || 0) + 0.9; YA.addTrust(w, 3, 'トップへの協力'); YA.addRep(w, 1); }),

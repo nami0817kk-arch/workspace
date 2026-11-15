@@ -230,7 +230,7 @@
     senpai: { sys: '人', ok: () => true, need: 6, vague: '慕っている先輩の背中から、何かを学びそうだ', clear: (k, w) => `${k.withName || '先輩'}（高3）と同じAの試合に${k.need}回出る`, due: 'y' },
     captain: { sys: '人', ok: (p) => p.grade >= 2, need: 8, vague: '人の上に立つことで、ひと皮むけそうだ', clear: (k) => `キャプテンか副キャプテンを${k.need}週任せる` },
     trust: { sys: '人', ok: () => true, need: 1, vague: '監督との関係が、鍵を握っていそうだ', clear: () => '監督への信頼が「深く信頼」（5/5）になる' },
-    conf: { sys: '心', ok: () => true, need: 5, vague: '自信を持ち続けられれば、化けそうだ', clear: (k) => `自信70以上を${k.need}週続ける` },
+    conf: { sys: '心', ok: () => true, need: 4, vague: '自信を持ち続けられれば、化けそうだ', clear: (k) => `自信${YA.CONF_KEY}以上を${k.need}週続ける` },
     wall: { sys: '心', ok: () => true, need: 1, vague: '一度つまずいて、それを越えることが大事そうだ', clear: () => '壁（伸び悩み）に当たり、それを越える' },
     top: { sys: '外', ok: (p) => p.grade >= 2, need: 1, vague: '上の世界を肌で知ることが、刺激になりそうだ', clear: () => 'トップチームの練習に参加する', due: 'g3' },
     away: { sys: '外', ok: () => true, need: 3, vague: '知らない相手、知らない土地での経験が効きそうだ', clear: (k) => `大会でAに${k.need}試合出る（夏・冬の大会）` },
@@ -279,13 +279,17 @@
     return out;
   }
   // ★を付けたときに初めて鍵が決まる（同じ子なら同じ鍵）。鍵の短い子（fast）は2個・軽い
+  // 鍵の重さ（2026-11-15「もう少し覚醒させたい」で軽くした）：3個になる割合と、必要な回数の倍率
+  YA.KEY3 = 0.3;
+  YA.KEY_MULT = 0.85;
+  YA.CONF_KEY = 65;
   YA.keysOf = function (w, p) {
     if (p.keys) return p.keys;
     const r = YA.rngOf((w.seed | 0) * 13 + YA.hash(p.id) * 7 + 5);
     if (p.awN == null) p.awN = awakeTimes(r);
     p.awDone = p.awDone || 0;
-    const n = p.fast ? 2 : r.chance(0.5) ? 2 : 3;
-    p.keys = rollKeys(w, p, r, n, p.fast ? 0.5 : 1);
+    const n = p.fast ? 2 : r.chance(YA.KEY3) ? 3 : 2;
+    p.keys = rollKeys(w, p, r, n, p.fast ? YA.KEY_MULT * 0.5 : YA.KEY_MULT);
     return p.keys;
   };
   YA.keyText = function (w, p, k) {
@@ -415,7 +419,7 @@
         p._inWall = false;
         if (p.conf >= 45) progress(w, p, 'wall', 1);
       }
-      p._confRun = p.conf >= 70 ? (p._confRun || 0) + 1 : 0;
+      p._confRun = p.conf >= YA.CONF_KEY ? (p._confRun || 0) + 1 : 0;
       for (const k of p.keys) if (k.id === 'conf' && !k.done) { k.have = Math.min(k.need, p._confRun); if (p._confRun) k.h = Math.max(k.h, 1); if (k.have >= k.need) progress(w, p, 'conf', 0); }
       if (capIds.has(p.id)) progress(w, p, 'captain', 1);
       if (YA.trustLv(p) >= 5) progress(w, p, 'trust', 1);

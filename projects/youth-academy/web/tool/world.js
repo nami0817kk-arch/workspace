@@ -1427,7 +1427,8 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   const w3 = YA.newWorld(41);
   const kinds = new Set(), paths = [];
   let gy = 0, startY = w3.year;
-  while (w3.year < startY + 3 && gy++ < 200) {
+  // ★は初年度から高1だけなので、★の高3が出るのは3年目。全員がトップに上がる年もあるので、面談が出るまで5年まで回す
+  while ((w3.year < startY + 3 || !paths.length) && w3.year < startY + 5 && gy++ < 320) {
     YA.autoPlan(w3);
     if (w3.week === 26) w3.campChoice = 'domestic';
     if (w3.scouting) YA.autoScout(w3);
