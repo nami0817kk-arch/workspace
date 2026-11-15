@@ -446,6 +446,8 @@
         gq += g;
       }
       if (opt.cross) gq += this.traitBonus(sc, gkp, 'クロスへの強さ', 2, '高いボールに強く出た') + this.traitBonus(sc, gkp, 'パンチング', 1, 'パンチングで逃れた');
+      if (opt.oneOnOne || opt.cross) gq += this.traitBonus(sc, gkp, '至近距離のセーブ', 1.5, '至近距離で体を残して反応した');
+      if (kind === 'long' || opt.fk) gq += this.traitBonus(sc, gkp, 'ミドルに強いGK', 2, '遠いシュートを落ち着いて弾いた');
       if (opt.fk || opt.pk) gq += 0;
       gq += this.persMod(sc, def, gkp, 'defend') * 0.5;
       const sq = q - diff + this.persMod(sc, att, shooter, 'shot') + this.markPenalty(att, def, shooter, sc) * -1 + this.tacticEdge(att, def) * 0.8 - this.tacticEdge(def, att) * 0.5 + this.fitShot(att, def);
@@ -601,7 +603,7 @@
     // 裏への抜け出し
     _through(sc, att, def) {
       const rng = this.rng;
-      const passer = this.pickActor(att, ['MF', 'FW'], ['パス', '視野', 'テクニック'], ['スルーパス', 'ひらめき'], [], sc, ['pass']);
+      const passer = this.pickActor(att, ['MF', 'FW'], ['パス', '視野', 'テクニック'], ['スルーパス', 'ひらめき', 'ノールックパス'], [], sc, ['pass']);
       const runner = this.pickActor(att, ['FW', 'MF'], ['オフザボール', '加速', 'スピード'], ['裏への抜け出し'], [passer.id], sc, ['run']);
       const dl = this.defLineY(def);
       const d1 = this.pickDefender(def, 'L', sc);
@@ -618,6 +620,8 @@
       D += lc.b;
       const cov = this.defTrait(sc, def, 'カバーリング', 2, '後ろからカバーに走った', ['DF']);
       D += cov.b;
+      D += this.defTrait(sc, def, '最後の砦', 1.5, '最後の最後で足を伸ばした', ['DF']).b;
+      P += this.traitBonus(sc, passer, 'ノールックパス', 1.5, '目線で相手を外して通した');
       const x = clamp(this.pos(att, runner)[0] + (rng() - 0.5) * 14, 12, 56);
       const px = clamp(this.pos(att, passer)[0] + (rng() - 0.5) * 8, 14, 54);
       const gkp = this.gk(def);
@@ -674,7 +678,7 @@
       const rng = this.rng;
       const left = rng() < 0.5 - (att.tactic.dir || 0) * 0.3;
       const crosser = this.pickActor(att, ['DF', 'MF', 'FW'], ['クロス', 'ドリブル', 'スタミナ'], ['アーリークロス', 'オーバーラップ'], [], sc, ['cross']);
-      const header = this.pickActor(att, ['FW', 'MF', 'DF'], ['ヘディング', 'ジャンプ', 'ポジショニング'], ['ヘディングシュート', 'ニアへの飛び込み'], [crosser.id], sc, ['finish']);
+      const header = this.pickActor(att, ['FW', 'MF', 'DF'], ['ヘディング', 'ジャンプ', 'ポジショニング'], ['ヘディングシュート', 'ニアへの飛び込み', 'ファーで待つ'], [crosser.id], sc, ['finish']);
       const dEnd = this.pickDefender(def, 'C', sc);
       sc.actors = { crosser: crosser.id, header: header.id };
       sc.defs = [dEnd.id];
@@ -690,6 +694,8 @@
       if (ct === 'high') H += 0.6 + (header.height - 178) * 0.05;
       if (ct === 'low') H += this.traitBonus(sc, header, 'ニアへの飛び込み', 1.5, 'ニアへの低いボールに飛び込んだ');
       if (ct === 'early') C += 1;
+      if (ct !== 'low') H += this.traitBonus(sc, header, 'ファーで待つ', 2, '大外で待って合わせた');
+      C += this.traitBonus(sc, crosser, 'マイナスの折り返し', 1.5, 'ゴールライン際から折り返した');
       const fx = left ? 4 : 64;
       const hx = 34 + (rng() - 0.5) * 6;
       const gkp = this.gk(def);
@@ -740,6 +746,8 @@
       Q += this.markPenalty(att, def, d, sc) * -1;
       const pr = this.defTrait(sc, def, '1対1の粘り', 2.5, '足を出させず粘り強く対応した', ['DF', 'MF']);
       let D = effAvg(df, ['タックル', 'マーク', '敏しょう性', '予測'], this) + pr.b + this.persMod(sc, def, df, 'defend');
+      Q += this.traitBonus(sc, d, '股抜き', 1.5, '股を抜いて置き去りにした');
+      D += this.defTrait(sc, def, '体を寄せる', 1.5, '肩を入れて体で止めた', ['DF', 'MF']).b;
       const sx = left ? 8 : 60;
       const ix = left ? 24 : 44;
       const gkp = this.gk(def);
@@ -763,7 +771,7 @@
         // ペナルティエリア内で倒された
         this._fx(sc, d, d.traits.indexOf('ファウルをもらう') >= 0 ? 'trait' : 'pers', d.traits.indexOf('ファウルをもらう') >= 0 ? 'ファウルをもらう' : 'ずる賢い', '体を入れてファウルを誘った');
         const k = this.taker(att, 'pk') || this.pickActor(att, ['MF', 'FW'], ['PK', 'フィニッシュ', '冷静さ'], [], [], sc);
-        const res = this.shot(sc, att, def, k, effAvg(k, ['PK', '冷静さ', 'フィニッシュ'], this), 0, 'pk', { pk: true });
+        const res = this.shot(sc, att, def, k, effAvg(k, ['PK', '冷静さ', 'フィニッシュ'], this) + this.traitBonus(sc, k, 'PKの名手', 2, 'GKの動きを見て蹴り込んだ'), 0, 'pk', { pk: true });
         sc.actors.kicker = k.id;
         this.finish(sc, att, def, res, k, null);
         const gx = res.result === 'goal' ? (rng() < 0.5 ? 31 : 37) : 34;
@@ -793,10 +801,10 @@
     // ミドルシュート
     _longshot(sc, att, def) {
       const rng = this.rng;
-      const s = this.pickActor(att, ['MF', 'FW', 'DF'], ['ロングシュート', 'フィニッシュ', 'テクニック'], ['弾丸ミドル'], [], sc);
+      const s = this.pickActor(att, ['MF', 'FW', 'DF'], ['ロングシュート', 'フィニッシュ', 'テクニック'], ['弾丸ミドル', '両足のシュート'], [], sc);
       const gkp = this.gk(def);
       sc.actors = { shooter: s.id };
-      let q = effAvg(s, ['ロングシュート', 'テクニック', '冷静さ'], this) + this.traitBonus(sc, s, '弾丸ミドル', 3.5, '迷わず振り抜いた弾丸ミドル');
+      let q = effAvg(s, ['ロングシュート', 'テクニック', '冷静さ'], this) + this.traitBonus(sc, s, '弾丸ミドル', 3.5, '迷わず振り抜いた弾丸ミドル') + this.traitBonus(sc, s, '両足のシュート', 1.5, '逆足でも迷わず振り抜いた');
       if (this.instr(att, s).shoot) {
         q += 1;
         this._fx(sc, s, 'instr', 'シュートを打て', '指示どおり積極的に打った');
@@ -911,7 +919,7 @@
     _counter(sc, att, def) {
       const rng = this.rng;
       const c = this.pickActor(att, ['MF', 'FW'], ['ドリブル', 'スピード', '判断', '加速'], ['ボールを運ぶ', '縦への突破', '裏への抜け出し'], [], sc, ['運ぶ', '裏を狙う']);
-      const f = this.pickActor(att, ['FW', 'MF'], ['フィニッシュ', 'オフザボール', 'スピード'], ['裏への抜け出し', 'ニアへの飛び込み'], [c.id], sc, ['run', 'finish']);
+      const f = this.pickActor(att, ['FW', 'MF'], ['フィニッシュ', 'オフザボール', 'スピード'], ['裏への抜け出し', 'ニアへの飛び込み', 'ダイレクトシュート'], [c.id], sc, ['run', 'finish']);
       const reb = this.pickActor(att, ['MF', 'DF'], ['タックル', '予測', 'ポジショニング'], ['ボール奪取', '読みのインターセプト', '即時奪回'], [c.id, f.id], sc, ['press']);
       this.traitBonus(sc, reb, 'ボール奪取', 0, 'ボールを奪い取った');
       this.traitBonus(sc, reb, '読みのインターセプト', 0, '縦パスを読んでカット');
@@ -926,6 +934,7 @@
       const rec = this.defTrait(sc, def, 'スライディング', 2.5, '追いついてスライディングで止めにいった', ['DF', 'MF']);
       const cov = this.defTrait(sc, def, 'カバーリング', 1.5, '戻って守備のカバーに入った', ['DF']);
       let D = (effAvg(d1, ['スピード', 'ポジショニング', '予測'], this) + effAvg(d2, ['スピード', 'ポジショニング', '予測'], this)) / 2 + rec.b + cov.b - (def.tactic.line - 0.4) * 3;
+      D += this.defTrait(sc, def, '戻りの速さ', 2, '全力で戻って追いついた', ['DF', 'MF']).b;
       const cx = 34 + (rng() - 0.5) * 18;
       const mk = (end) => [
         { t: 0, pos: { [reb.id]: [cx, 36], [c.id]: [cx + 4, 40], [f.id]: [cx - 8, 52], [d1.id]: [cx - 9, 64], [d2.id]: [cx + 9, 64] }, ball: [cx, 36, 0], cap: reb.num + '番 ボール奪取' },
@@ -942,7 +951,7 @@
         sc.dur = 4.8;
         return;
       }
-      const res = this.shot(sc, att, def, f, effAvg(f, ['フィニッシュ', '冷静さ', '判断'], this) + this.traitBonus(sc, f, 'ニアへの飛び込み', 1, '素早く前に入った'), 1.8, 'counter', { oneOnOne: true });
+      const res = this.shot(sc, att, def, f, effAvg(f, ['フィニッシュ', '冷静さ', '判断'], this) + this.traitBonus(sc, f, 'ニアへの飛び込み', 1, '素早く前に入った') + this.traitBonus(sc, f, 'ダイレクトシュート', 1.5, 'ワンタッチで合わせた'), 1.8, 'counter', { oneOnOne: true });
       this.finish(sc, att, def, res, f, c);
       const gx = res.result === 'goal' ? (rng() < 0.5 ? 31 : 37) : 34;
       sc.frames = mk([

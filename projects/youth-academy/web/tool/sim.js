@@ -82,6 +82,21 @@ for (let s = 1; s <= 100; s++) {
 console.log('効いた特性の記録', fxTraits, '性格', fxPers);
 ok(fxTraits > 200 && fxPers > 20, 'fx が少ない');
 
+// 3b. 2026-11-15 に足した特性12個が、どれも試合のどこかで効く（両チームの全員に持たせて回す）
+{
+  const NEW = ['ノールックパス', '股抜き', 'ファーで待つ', 'マイナスの折り返し', 'ダイレクトシュート', '両足のシュート', '体を寄せる', '最後の砦', '戻りの速さ', 'PKの名手', '至近距離のセーブ', 'ミドルに強いGK'];
+  ok(NEW.every((t) => YA.TRAITS.indexOf(t) >= 0) && YA.TRAITS.length === new Set(YA.TRAITS).size, '新しい特性が一覧にあり、重なりがない');
+  const seen = new Set();
+  for (let s = 1; s <= 120 && seen.size < NEW.length; s++) {
+    const m = mk(s, s % 3, false);
+    for (const t of [m.home, m.away]) for (const p of Object.values(t.players)) p.traits = p.traits.concat(NEW.filter((x) => p.traits.indexOf(x) < 0));
+    let g = 0;
+    while (!m.finished && g++ < 1000) m.step();
+    for (const sc of m.scenes) for (const f of sc.fx) if (NEW.indexOf(f.tag) >= 0) seen.add(f.tag);
+  }
+  ok(seen.size === NEW.length, '新しい特性がすべて試合で効く（効かなかったもの：' + NEW.filter((t) => !seen.has(t)).join('・') + '）');
+}
+
 // 4. 交代の決まり：5人まで・窓3回・GK同士
 {
   const m2 = mk(2, 0);
