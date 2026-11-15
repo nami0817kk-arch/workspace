@@ -4,6 +4,7 @@
 手順(計算の回): kana / voice / compose / all   … 画面は題材の ep.py の frame() が描く
 点検(両方): qc … compose のあと。通らなければ投稿できない(naze/qc.py)
 映像の点検(世界の地図の回): vqc … 描く前でも使える(naze/vqc.py)。qc の中でも走る
+compose は 20 秒以上の動画をコマで分けて同時に描く(数は NAZE_JOBS、無ければ空きメモリから。NAZE_JOBS=1 で今まで通り)
 """
 from __future__ import annotations
 
@@ -54,6 +55,12 @@ def main(argv=None) -> int:
         from . import qc
         from . import terrain_ep, sim_ep
         return 0 if qc.pre(ep, out, terrain_ep if kind == "terrain" else sim_ep, out.name) else 1
+    if step == "seg":                                     # 分けて描くときの 1 切れ(compose._parallel が呼ぶ): seg <題材> <a> <b> <出力>
+        from . import compose
+        from . import terrain_ep, sim_ep
+        fr, _ = (terrain_ep if kind == "terrain" else sim_ep).frame_fn(ep, out)
+        compose.render_video(fr, int(argv[2]), int(argv[3]), Path(argv[4]))
+        return 0
     if kind == "terrain":
         from . import terrain_ep as K
         if step == "kana":

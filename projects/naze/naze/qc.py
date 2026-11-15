@@ -230,6 +230,22 @@ def run(ep: dict, out: Path, kind_mod, name: str) -> bool:
     return res["passed"]
 
 
+def estimate(fr, nf: int, k: int = 6) -> dict:
+    """書き出しにかかる時間の見込み。全体に散らした k コマを描いて 1 コマの時間を測り、同時に描く数で割る。
+    同時に描くと 1 つずつは遅くなる(メモリと芯の取り合い)ので 1.8 倍しておく(ジオイドのショートで 4 つ同時が 1 つの 2.2 倍速だった、2026-11-15)。"""
+    import time
+    from . import compose
+    j = compose.jobs(nf)
+    ts = []
+    for i in range(k):
+        f = 1 + int((nf - 1) * (i + 0.5) / k)
+        t0 = time.time()
+        fr(f)
+        ts.append(time.time() - t0)
+    per = sorted(ts)[len(ts) // 2]
+    return dict(per=per, jobs=j, min=per * nf * (1.8 if j > 1 else 1.0) / j / 60)
+
+
 def pre(ep: dict, out: Path, kind_mod, name: str) -> bool:
     """書き出しの前の点検(`python -m naze pre`)。動画は要らない。台本と、全コマの重なり・はみ出しを見て、行ごとのコマを並べる。
     書き出し(1 本 1 時間)のあとで重なりが見つかり作り直しが続いたので足した(2026-11-15、海面の回で 4 本を 2 回ずつ書き出した)。
@@ -241,7 +257,11 @@ def pre(ep: dict, out: Path, kind_mod, name: str) -> bool:
         F += f
         Wn += w
     p = sheet(ep, tl, fr, out, "pre_sheet.png")
+    est = estimate(fr, nf)
+    if est["min"] > 15:
+        Wn.append(f"書き出しの見込みが {est['min']:.0f} 分(15 分超え)。重い絵(毎コマ描き直す地球・立体)を軽くできないか見る")
     md = [f"# 書き出し前の点検 {name}", "", f"結果: {'通過' if not F else '✖ 直してから書き出す'}", "",
+          f"書き出しの見込み: 約 {est['min']:.0f} 分(1 コマ {est['per']:.2f} 秒 × {nf} コマ ÷ 同時 {est['jobs']})", "",
           "## ✖ 直すもの", *(f"- {x}" for x in F or ["なし"]), "", "## △ 目で確かめるもの", *(f"- {x}" for x in Wn or ["なし"]), "",
           f"行ごとのコマ: {p.name}(色の目盛りなど reg=False の字は数えていないので目で見る)"]
     (out / "pre.md").write_text("\n".join(md) + "\n", encoding="utf-8")

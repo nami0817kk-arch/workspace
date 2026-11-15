@@ -95,4 +95,5 @@ def sfx_events(ep: dict, out: Path) -> list:
 def final(ep: dict, out: Path, name: str) -> Path:
     fr, n = frame_fn(ep, out)
     audio = sfx.mix(out / "narration.wav", sfx_events(ep, out), out / "narration_sfx.wav") if ep.get("sfx", True) else out / "narration.wav"
-    return compose.write(fr, n, audio, out / f"{name}.mp4", bgm=ep.get("bgm"))
+    return compose.write(fr, n, audio, out / f"{name}.mp4", bgm=ep.get("bgm"),
+                         folder=Path(ep["_mod"].__file__).parent)
