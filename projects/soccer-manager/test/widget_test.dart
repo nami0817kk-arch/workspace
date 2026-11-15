@@ -60,7 +60,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('テストFC'), findsWidgets);
-    expect(find.text('チーム'), findsOneWidget); // 左メニューの見出し
+    expect(find.text('選手'), findsOneWidget); // 左メニューの項目
   });
 
   testWidgets(
