@@ -820,6 +820,18 @@ class _OptionButton extends StatelessWidget {
                     ),
                   ),
                 ),
+              // 受け身の手は、通っても攻撃が終わらない。易しさの代わりに
+              // 払っているものを書かないと、いつも同じ手を押すことになる。
+              if (option.lingering)
+                Padding(
+                  padding: const EdgeInsets.only(left: 6),
+                  child: Text(
+                    '通っても失点${(Formulas.concedeOnLinger * 100).round()}%',
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: theme.colorScheme.error,
+                    ),
+                  ),
+                ),
               // **布石は印が無いとただの無難な手に見える。**
               if (role == ComboRole.setup && !setupReady)
                 Padding(

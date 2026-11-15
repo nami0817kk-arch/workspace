@@ -33,6 +33,7 @@ MatchInProgress _match(
   List<int> conceded = const [],
   int seed = 1,
   Position position = Position.cb,
+  Attributes? attributes,
 }) => MatchInProgress(
   matchday: 1,
   opponent: _club('rival'),
@@ -44,7 +45,7 @@ MatchInProgress _match(
     name: 'P',
     age: 24,
     position: position,
-    attributes: _low,
+    attributes: attributes ?? _low,
     potential: 90,
   ),
   club: _club('mine'),
@@ -123,6 +124,67 @@ void main() {
             .where((o) => o.preventsGoal && !o.isTacticalFoul);
         expect(prevents.length, greaterThanOrEqualTo(6), reason: '$family');
       }
+    });
+  });
+
+  group('受け身の手', () {
+    final lingering = [
+      for (final s in _all)
+        for (final o in s.options)
+          if (o.lingering) (s, o),
+    ];
+
+    test('受け身の手は自陣にだけあり、奪う手とは兼ねない', () {
+      expect(lingering.length, greaterThanOrEqualTo(12));
+      for (final (s, o) in lingering) {
+        expect(s.spot.isOwnHalf, isTrue, reason: s.id);
+        expect(o.preventsGoal, isFalse, reason: '${s.id}「${o.label}」');
+        // 「危険を完全に排除した」と書いてある手が、通っても失点したら嘘になる。
+        for (final w in ['完全に', '排除', '終わらせた']) {
+          expect(
+            o.successText.contains(w),
+            isFalse,
+            reason: '${s.id}「${o.label}」の成功の文が攻撃の終わりを言い切っている',
+          );
+        }
+      }
+    });
+
+    test('受け身の手しか無い局面は作らない', () {
+      for (final s in _all) {
+        if (!s.options.any((o) => o.lingering)) continue;
+        expect(s.options.any((o) => !o.lingering), isTrue, reason: s.id);
+      }
+    });
+
+    test('通っても、続いた攻撃で失点することがある', () {
+      final duel = ScenarioPool.forFamily(ScenarioFamily.defence)
+          .firstWhere((s) => s.id == 'df-duel');
+      final delay = duel.options.firstWhere((o) => o.lingering);
+      var success = 0, caused = 0;
+      for (var seed = 0; seed < 2000; seed++) {
+        final m = _match(
+          duel,
+          seed: seed,
+          attributes: Attributes.fromDetails({
+            for (final d in Detail.values) d: 70,
+          }),
+        );
+        final r = m.choose(delay);
+        if (!r.success) continue;
+        success++;
+        if (m.goalsCaused > 0) {
+          caused++;
+          expect(r.text, contains('失点'));
+        }
+      }
+      expect(success, greaterThan(300));
+      expect(caused / success, closeTo(Formulas.concedeOnLinger, 0.03));
+    });
+
+    test('通ったときの値打ちは、止めた手より軽い', () {
+      expect(Formulas.lingerSuccessFactor, lessThan(1));
+      expect(Formulas.concedeOnLinger, lessThan(Formulas.concedeOnShot));
     });
   });
 
@@ -243,6 +305,18 @@ void main() {
         return;
       }
       fail('一度も通らなかった');
+    });
+
+    test('警告を受けていれば、反則で止める見積もりに退場の重さが乗る', () {
+      final stop = ScenarioPool.forFamily(ScenarioFamily.defence)
+          .firstWhere((s) => s.options.any((o) => o.isTacticalFoul));
+      final foul = stop.options.firstWhere((o) => o.isTacticalFoul);
+      final clean = _match(stop);
+      final booked = _match(stop)..yellowMinutes.add(10);
+      expect(
+        clean.expectedDelta(foul) - booked.expectedDelta(foul),
+        closeTo(-Formulas.ratingPerRedCard, 1e-9),
+      );
     });
 
     test('段が上がるほど、決まる確率が上がる', () {
