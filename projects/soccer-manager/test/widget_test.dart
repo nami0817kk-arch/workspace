@@ -83,7 +83,7 @@ void main() {
     expect(find.text('選手'), findsOneWidget);
     await tester.tap(find.text('選手'));
     await tester.pumpAndSettle();
-    expect(find.text('試合を行う'), findsOneWidget); // 上バーの進めるボタンは残る
+    expect(find.text('次の節へ'), findsOneWidget); // 上バーの進めるボタンは残る
 
     // ブラウザ/端末の戻る操作を発火する。
     await tester.binding.handlePopRoute();

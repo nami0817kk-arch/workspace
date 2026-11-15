@@ -9,19 +9,17 @@ import '../widgets/screen_bar.dart';
 import 'finance_screen.dart';
 import 'fixtures_screen.dart';
 import 'home_screen.dart';
-import 'lineup_screen.dart';
 import 'squad_screen.dart';
-import 'team_tabs.dart';
 import 'transfer_screen.dart';
 import '../l10n/tr.dart';
 
 /// 画面の行き先。横画面は左のメニューに全部を並べ(FM風)、縦画面は下の5タブにまとめる。
-enum _Page { status, finance, squad, lineup, transfer, league }
+enum _Page { status, finance, squad, transfer, league }
 
 /// 状況/経営/補強/チーム/リーグのシェル。
 ///
 /// 横画面(スマホの標準)では、Football Manager のように、上に日付・資金・
-/// 「試合を行う」を置いた常駐のバーと、左に常設のメニューを置く。縦画面では
+/// 「次の節へ」を置いた常駐のバーと、左に常設のメニューを置く。縦画面では
 /// 下のナビゲーションに5タブでまとめる。
 class MainShell extends StatefulWidget {
   const MainShell({super.key});
@@ -46,16 +44,16 @@ class _MainShellState extends State<MainShell> {
     HomeScreen(),
     FinanceScreen(embedded: true),
     TransferScreen(embedded: true),
-    TeamTabs(),
+    SquadScreen(),
     FixturesScreen(),
   ];
 
-  // 横画面の6画面(左メニューの並びと同じ)。
+  // 横画面の5画面(左メニューの並びと同じ)。先発・戦術は、勝負の試合を
+  // 宣言したときだけ開く。ふだんの入口には置かない。
   static const _widePages = [
     _Page.status,
     _Page.finance,
     _Page.squad,
-    _Page.lineup,
     _Page.transfer,
     _Page.league,
   ];
@@ -63,7 +61,6 @@ class _MainShellState extends State<MainShell> {
     HomeScreen(),
     FinanceScreen(embedded: true),
     SquadScreen(),
-    LineupScreen(),
     TransferScreen(embedded: true),
     FixturesScreen(),
   ];
@@ -77,9 +74,7 @@ class _MainShellState extends State<MainShell> {
     return count;
   }
 
-  int _narrowIndex() => _page == _Page.lineup
-      ? _narrowPages.indexOf(_Page.squad)
-      : _narrowPages.indexOf(_page);
+  int _narrowIndex() => _narrowPages.indexOf(_page);
 
   void _go(_Page p) {
     FeedbackService.tap();
@@ -290,7 +285,7 @@ class _FmTopBar extends StatelessWidget {
                   ? null
                   : () => const HomeScreen().playMatch(context),
               icon: const Icon(Icons.play_arrow, size: 18),
-              label: Text(Tr.pick('試合を行う', 'Play the match')),
+              label: Text(Tr.pick('次の節へ', 'Next matchday')),
             ),
         ],
       ),
@@ -330,12 +325,6 @@ class _FmSidebar extends StatelessWidget {
         Icons.groups_outlined,
         Icons.groups,
         Tr.pick('選手', 'Players')
-      ),
-      (
-        _Page.lineup,
-        Icons.checklist_outlined,
-        Icons.checklist,
-        Tr.pick('先発', 'Lineup')
       ),
       (
         _Page.transfer,
