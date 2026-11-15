@@ -1,1 +1,2 @@
 "CFBundleDisplayName" = "Hikari no Shimei";
+"NSPhotoLibraryAddUsageDescription" = "Saves the result image you share to Photos.";

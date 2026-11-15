@@ -812,6 +812,8 @@ body.stg .btn:not(.sub):not(.ad):not(.warnb){color:#fff;text-shadow:0 1px 2px rg
 @keyframes toastIn{from{opacity:0;transform:translateY(16px) scale(.96)}to{opacity:1;transform:none}}
 /* 5. 最後の評価を判子のように押す */
 .rcard{position:relative;overflow:hidden}
+.sharebar{display:flex;flex-direction:column;align-items:center;gap:2px;margin:6px 0 12px}.sharebar .btn{max-width:360px;margin:4px auto}
+.ecard .shareend{margin-top:16px}
 .rcard .rg .gr{font-size:40px;padding:4px 16px;border-radius:14px;animation:stampIn .7s cubic-bezier(.2,1.5,.35,1) .3s both;box-shadow:0 6px 18px rgba(0,0,0,.25)}
 .rcard .rg span{animation:fadeup .5s ease-out .8s both}
 @keyframes stampIn{0%{opacity:0;transform:scale(2.4) rotate(-14deg)}60%{opacity:1;transform:scale(.92) rotate(3deg)}100%{transform:none}}
@@ -5404,7 +5406,7 @@ function resultCard(E,P,noGrade){var col=P.color!=null?GCOLORS[P.color][1]:'#e9b
 function vResult(){
   if(!S.future){S.future=makeFuture(S,finalEval(S));if(S.recorded)noteEnding(S);}
   if(S.ending)return vEnding();
-  var E=finalEval(S),P=S.prep||{names:['（名前なし）'],name:0},h='<h2>デビューから1か月</h2>'+poster(E,P,true)+resultCard(E,P,true);
+  var E=finalEval(S),P=S.prep||{names:['（名前なし）'],name:0},h='<h2>デビューから1か月</h2>'+poster(E,P,true)+resultCard(E,P,true)+shareBar();
   var cn=S.careerNews;
   if(cn)h+='<div class="card career"><div class="mh">プロデューサー歴</div><div>このシーズンで <b>＋'+cn.got+'ポイント</b>（合計 '+cn.points+'）・'+esc(rankOf(cn.points,loadCareer())[1])+'</div>'+cn.news.map(function(x){return '<div class="newu">'+esc(x)+'</div>';}).join('')+'</div>';
 
@@ -5470,6 +5472,89 @@ function nextBox(){var c=loadCareer(),nx=nextRank(c.points,c),nxa=nx&&nx[2]?ACHV
   if(bk.length)rows.push(['約','「また必ず会おう」と約束した子 <b>'+bk.length+'人</b>。次のシーズンに再挑戦してくることがある<div class="nxf">'+bk.slice(0,8).map(function(t){return faceImg(t,'sm');}).join('')+'</div>']);
   if(!rows.length)return '';
   return '<h3>次のシーズンでできること</h3><div class="card nextbox">'+rows.map(function(r){return '<div class="nxr"><i aria-hidden="true">'+r[0]+'</i><div>'+r[1]+'</div></div>';}).join('')+'</div>';}
+
+/* ---------- 結果をシェア（2026-11-15）：遊んだ人が X・LINE に結果を流し、見た人がストアへ来る入り口 ----------
+   画像は縦 1080×1350（4:5）。シェアはほぼスマホから行われ、X・Instagram・LINE のスマホの流れでは
+   縦長の方が切られずに大きく出る（横 1.91:1 は画面の幅の帯にしかならず、顔8人と名前が小さくなる）。
+   アプリでは画像（data URL）と文をアプリへ渡して iOS の共有シートを出す（bridge の share）。
+   Web のテスト版では navigator.share（画像を渡せる端末）か、画像の保存で代わりにする。 */
+var STORE_URL='https://apps.apple.com/jp/app/id6818817877',SHARE_W=1080,SHARE_H=1350;
+var SHARE_GRADE={S:'#b98410',A:'#7445d6',B:'#2d6bd3',C:'#1a9468',D:'#6b6480'};
+var SHARE_HEAD='"Dela Gothic One","Hiragino Maru Gothic ProN","M PLUS Rounded 1c",sans-serif',SHARE_BODY='"M PLUS Rounded 1c","Hiragino Maru Gothic ProN","Yu Gothic UI","Meiryo",sans-serif';
+function shareBar(){return '<div class="sharebar"><button class="btn" data-a="share">結果をシェア</button><span class="small muted">結果の画像と、ひと言をシェアできます</span></div>';}
+/* 送る文。押し売りにしない。ハッシュタグは1つだけ */
+function shareText(S,E,P){return '#ひかりの指名 でデビューさせたグループ『'+gName(P)+'』は評価'+E.grade+'（'+E.total.toFixed(1)+'点）！\n'+STORE_URL;}
+/* 画像のひと言：応募者の中から何人を選んだか（数はゲームの中のもの） */
+function shareLine(S,E){return S.tr.length+'人の応募者から、'+E.D.length+'人を選び抜いた';}
+/* 並べる順：リーダーを先頭に */
+function shareMembers(E){var L=E.L,D=E.D.filter(function(t){return !L||t.id!==L.id;});return L?[L].concat(D):D.slice();}
+function shareRows(n){return n<=4?[n]:[Math.ceil(n/2),Math.floor(n/2)];}
+/* 幅に収まるまで字を小さくする（下限 min） */
+function shareFit(c,txt,maxW,size,min,fam,wt){for(;size>min;size-=2){c.font=(wt||400)+' '+size+'px '+fam;if(c.measureText(txt).width<=maxW)return size;}c.font=(wt||400)+' '+min+'px '+fam;return min;}
+/* 描く（c は 2D の文脈、imgs は顔の絵。読めなかった顔は null で、名前の頭文字の丸にする） */
+function drawShare(c,S,E,P,imgs){var W=SHARE_W,H=SHARE_H,col=P.color!=null?GCOLORS[P.color][1]:'#e9ba4b',EK=S.future&&S.future.end?endOf(S.future.end):null;
+  var g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,'#241a4a');g.addColorStop(.55,'#171030');g.addColorStop(1,'#0d0a1c');c.fillStyle=g;c.fillRect(0,0,W,H);
+  /* 上からのスポットライト（グループの色） */
+  var rg=c.createRadialGradient(W/2,0,40,W/2,0,760);rg.addColorStop(0,col+'55');rg.addColorStop(1,col+'00');c.fillStyle=rg;c.fillRect(0,0,W,H);
+  c.save();var bg=c.createLinearGradient(0,0,0,H*.62);bg.addColorStop(0,'rgba(255,255,255,.09)');bg.addColorStop(1,'rgba(255,255,255,0)');c.fillStyle=bg;[[W*.18,-1],[W*.82,1]].forEach(function(b){c.beginPath();c.moveTo(b[0]-30,0);c.lineTo(b[0]+30,0);c.lineTo(W/2+b[1]*420,H*.62);c.lineTo(W/2+b[1]*120,H*.62);c.closePath();c.fill();});c.restore();
+  /* 小さな光の粒（毎回同じ位置） */
+  c.save();c.fillStyle='#ffe8a8';for(var i=0;i<34;i++){var x=(i*197+61)%W,y=(i*313+29)%(H*.5),r=(i%3)+1.5;c.globalAlpha=.18+(i%4)*.08;c.beginPath();c.arc(x,y,r,0,Math.PI*2);c.fill();}c.restore();
+  c.textAlign='center';c.textBaseline='alphabetic';
+  /* 題名とロゴ（起動画面と同じ組み方：金の「ひかりの」＋白の「指名」） */
+  c.fillStyle='#e9ba4b';c.font='400 34px '+SHARE_HEAD;c.fillText('ひかりの',W/2,82);
+  c.fillStyle='#ffffff';c.font='400 76px '+SHARE_HEAD;c.fillText('指名',W/2,162);
+  /* デビュー決定 */
+  c.fillStyle='#ffd76a';c.font='800 30px '+SHARE_BODY;c.fillText('デビュー決定',W/2,228);
+  c.strokeStyle='rgba(255,215,106,.55)';c.lineWidth=2;c.beginPath();c.moveTo(W/2-250,218);c.lineTo(W/2-110,218);c.moveTo(W/2+110,218);c.lineTo(W/2+250,218);c.stroke();
+  /* グループ名 */
+  var gn=gName(P)||'（名前なし）';shareFit(c,gn,W-120,92,44,SHARE_HEAD);c.save();c.shadowColor=col;c.shadowBlur=26;c.fillStyle=col;c.fillText(gn,W/2,328);c.restore();
+  if(P.songs){var sg='デビュー曲「'+P.songs[P.song||0]+'」';c.fillStyle='rgba(255,255,255,.86)';shareFit(c,sg,W-160,30,22,SHARE_BODY,700);c.fillText(sg,W/2,378);}
+  /* 評価と点 */
+  var gc=SHARE_GRADE[E.grade]||'#6b6480',bx=W/2-250,by=410,bs=150;
+  c.fillStyle=gc;shareRound(c,bx,by,bs,bs,30);c.fill();c.strokeStyle='rgba(255,255,255,.5)';c.lineWidth=4;c.stroke();
+  c.fillStyle='#ffffff';c.font='400 110px '+SHARE_HEAD;c.fillText(E.grade,bx+bs/2,by+bs/2+40);
+  c.textAlign='left';c.fillStyle='rgba(255,255,255,.75)';c.font='800 32px '+SHARE_BODY;c.fillText('評価',bx+bs+40,by+50);
+  var sc=E.total.toFixed(1);c.fillStyle='#ffffff';c.font='400 100px '+SHARE_HEAD;c.fillText(sc,bx+bs+36,by+bs-12);var sw=c.measureText(sc).width;
+  c.font='800 40px '+SHARE_BODY;c.fillText('点',bx+bs+44+sw,by+bs-14);c.textAlign='center';
+  /* デビュー組の顔と名前 */
+  var M=shareMembers(E),rows=shareRows(M.length),fs=rows.length>1?160:200,rowH=fs+92,top=rows.length>1?598:690,k=0;
+  rows.forEach(function(n,ri){var cw=Math.min(250,(W-80)/n),x0=W/2-cw*n/2,y=top+ri*(rowH+14);
+    for(var j=0;j<n;j++,k++){var t=M[k],cx=x0+cw*(j+.5),cy=y+fs/2,im=imgs[k],lead=E.L&&t.id===E.L.id;
+      c.save();c.beginPath();c.arc(cx,cy,fs/2,0,Math.PI*2);c.closePath();c.fillStyle='#3a2d66';c.fill();c.clip();
+      if(im){c.drawImage(im,cx-fs/2,cy-fs/2,fs,fs);}else{c.fillStyle='#ffffff';c.font='400 '+Math.round(fs*.42)+'px '+SHARE_HEAD;c.fillText(String(t.giv||t.name||'？').charAt(0),cx,cy+fs*.15);}
+      c.restore();c.strokeStyle=lead?'#ffd76a':col;c.lineWidth=lead?8:5;c.beginPath();c.arc(cx,cy,fs/2,0,Math.PI*2);c.stroke();
+      c.fillStyle='#ffffff';shareFit(c,t.name,cw-12,32,20,SHARE_BODY,800);c.fillText(t.name,cx,y+fs+42);
+      c.fillStyle=lead?'#ffd76a':'rgba(255,255,255,.7)';c.font='700 24px '+SHARE_BODY;c.fillText(lead?'リーダー':SPEC[t.spec]+'担当',cx,y+fs+74);}});
+  /* ひと言と結末 */
+  var ln=shareLine(S,E);c.fillStyle='#ffffff';shareFit(c,ln,W-120,44,28,SHARE_BODY,800);c.fillText(ln,W/2,1180);
+  if(EK){var en='結末「'+EK.n+'」';c.fillStyle='#ffd76a';shareFit(c,en,W-160,30,22,SHARE_BODY,700);c.fillText(en,W/2,1230);}
+  /* 下の帯 */
+  c.fillStyle='rgba(255,255,255,.08)';c.fillRect(0,H-66,W,66);c.fillStyle='rgba(255,255,255,.78)';c.font='700 26px '+SHARE_BODY;c.fillText('ひかりの指名｜オーディション番組のプロデューサーになるゲーム',W/2,H-24);}
+function shareRound(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.lineTo(x+w-r,y);c.quadraticCurveTo(x+w,y,x+w,y+r);c.lineTo(x+w,y+h-r);c.quadraticCurveTo(x+w,y+h,x+w-r,y+h);c.lineTo(x+r,y+h);c.quadraticCurveTo(x,y+h,x,y+h-r);c.lineTo(x,y+r);c.quadraticCurveTo(x,y,x+r,y);c.closePath();}
+/* 顔の絵を読み、書体を待ってから描いて、data URL を返す（作れなければ null） */
+function shareImage(S,E,P,cb){var M=shareMembers(E),imgs=M.map(function(){return null;}),left=M.length+1,done=false;
+  function fin(){if(done)return;done=true;try{var cv=document.createElement('canvas');cv.width=SHARE_W;cv.height=SHARE_H;var c=cv.getContext('2d');drawShare(c,S,E,P,imgs);cb(cv.toDataURL('image/jpeg',.92));}catch(e){cb(null);}}
+  function one(){if(--left<=0)fin();}
+  setTimeout(fin,4000);
+  M.forEach(function(t,i){var src=FACE_IMG[S.g]&&FACE_IMG[S.g][t.img];if(!src||!/^data:image\//.test(src)){one();return;}
+    try{var im=new Image();im.onload=function(){imgs[i]=im;one();};im.onerror=one;im.src=src;}catch(e){one();}});
+  try{if(document.fonts&&document.fonts.load){Promise.all(['400 40px "Dela Gothic One"','800 30px "M PLUS Rounded 1c"'].map(function(f){return document.fonts.load(f).catch(function(){});})).then(one,one);}else one();}catch(e){one();}}
+function doShare(el){if(!S||S.phase!=='result'||ui.sharing)return;var E=finalEval(S),P=S.prep||{names:['（名前なし）'],name:0},txt=shareText(S,E,P),r=null;
+  try{var b=el&&el.getBoundingClientRect&&el.getBoundingClientRect();if(b)r={x:Math.round(b.left),y:Math.round(b.top),w:Math.round(b.width),h:Math.round(b.height)};}catch(e){}
+  ui.sharing=true;clearTimeout(ui.shareT);ui.shareT=setTimeout(function(){ui.sharing=false;},15000);
+  shareImage(S,E,P,function(url){
+    if(!url){ui.sharing=false;toast('画像を作れませんでした');render();return;}
+    if(APP){appPost({type:'share',img:url,text:txt,rect:r});return;}
+    webShare(url,txt);});}
+/* アプリから：共有シートを閉じた（ok=false でも、黙って閉じただけなら知らせは出さない） */
+window.hikariShareDone=function(ok,msg){ui.sharing=false;clearTimeout(ui.shareT);if(msg){toast(msg);render();}};
+function webShare(url,txt){var name='hikari-shimei.jpg',f=null;
+  try{var b=atob(url.split(',')[1]),u=new Uint8Array(b.length);for(var i=0;i<b.length;i++)u[i]=b.charCodeAt(i);f=new File([u],name,{type:'image/jpeg'});}catch(e){}
+  var nav=window.navigator||{};
+  if(f&&nav.share&&nav.canShare&&nav.canShare({files:[f]})){nav.share({files:[f],text:txt}).then(function(){ui.sharing=false;},function(){ui.sharing=false;});return;}
+  try{var a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();if(a.remove)a.remove();}catch(e){}
+  try{if(nav.clipboard&&nav.clipboard.writeText)nav.clipboard.writeText(txt).catch(function(){});}catch(e){}
+  ui.sharing=false;toast('画像を保存しました。文はコピーしました');render();}
 
 
 /* ---------- v4 の画面 ---------- */
@@ -5854,7 +5939,7 @@ function vEnding(){var F=S.future,E=finalEval(S),others=S.tr.filter(function(t){
     ((E.combos||[]).length?'<div><small>コンビ</small>'+E.combos.map(function(c){return esc(c.n)+'（'+esc(S.tr[c.a].giv)+'・'+esc(S.tr[c.b].giv)+'）';}).join('<br>')+'</div>':'')+
     '<div><small>声</small>'+VOICE_NAMES.map(function(n){return 'VOICEVOX:'+esc(n);}).join('<br>')+'</div><div><small>音楽</small>つるはし社</div>'+'<div><small>番組の平均視聴率</small>'+E.avgR.toFixed(1)+'%</div><div><small>プロデューサー</small>あなた</div></div>';
   var EK=F.end?endOf(F.end):null;
-  h+='<div class="ecard last"><div class="esub">ひかりの指名</div>'+(EK?'<div class="eend">— 結末：'+esc(EK.n)+' —</div><div class="small">'+esc(EK.d)+'</div>'+(S.endNew?'<div class="enew">新しい結末を解放しました</div>':''):'')+'<div class="etitle">おしまい</div><div class="small">見守ってくれて、ありがとう。</div></div>';
+  h+='<div class="ecard last"><div class="esub">ひかりの指名</div>'+(EK?'<div class="eend">— 結末：'+esc(EK.n)+' —</div><div class="small">'+esc(EK.d)+'</div>'+(S.endNew?'<div class="enew">新しい結末を解放しました</div>':''):'')+'<div class="etitle">おしまい</div><div class="small">見守ってくれて、ありがとう。</div>'+'<button class="btn-s shareend" data-a="share">結果をシェア</button></div>';
   h+='</div><div class="ebar"><button class="btn-s" data-a="endpause">'+(ui.endPause?'再生':'止める')+'</button><button class="btn-s" data-a="endfast">'+(ui.endFast?'ふつうの速さ':'早送り')+'</button><button class="btn-s" data-a="endok">結果を見る</button></div></div>';
   return h;}
 function futureBox(){var F=S.future;if(!F)return '';
@@ -6118,6 +6203,7 @@ document.addEventListener('click',function(ev){
     case 'endfast':ui.endFast=!ui.endFast;ui.endPause=false;render();break;
     case 'endpause':if(!ui.endStatic){ui.endPause=!ui.endPause;render();}break;
     case 'endok':ui.endY=null;ui.endFast=false;ui.endPause=false;ui.endForce=false;go(function(){S.ending=false;});window.scrollTo(0,0);break;
+    case 'share':doShare(el);break;
     case 'endagain':ui.endY=null;ui.endForce=true;go(function(){S.ending=true;});break;
     case 'tfilter':ui.tfilter=v;render();break;
     case 'perk':if(buyPerk(v)){ui.perkOpen=true;toast('心得を解放した。次のシーズンから効きます');}else render();break;

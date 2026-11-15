@@ -19,6 +19,8 @@ dependencies:
   in_app_purchase_storekit: ^0.4.13
   url_launcher: ^6.3.2
   webview_flutter: ^4.13.0
+  # 結果のシェア（iOS の共有シート）。版は固定（13.3.1 は 2026-10-01 公開）
+  share_plus: 13.3.1
 
 dev_dependencies:
   flutter_test:

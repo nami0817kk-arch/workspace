@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui' show Rect;
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hikari7/game/bridge.dart';
@@ -411,5 +412,94 @@ void main() {
     }
     expect(html.contains('localStorage.getItem(') && !html.contains('try{return localStorage.getItem(k)'), isFalse);
     expect(html.contains('テスト版</div>'), isFalse, reason: 'テスト版の札はアプリに入れない');
+    expect(html.contains("appPost({type:'share'") && html.contains('window.hikariShareDone'), isTrue, reason: '結果のシェア');
+  });
+
+  group('結果のシェア', () {
+    // 1×1 の JPEG の頭だけ（中身は見ない。data URL を読めるかだけ）
+    final jpg = base64Encode([0xFF, 0xD8, 0xFF, 0xE0, 1, 2, 3, 4]);
+    Future<(GameBridge, List<String>, List<ShareRequest>)> sb({bool fail = false, bool noShare = false}) async {
+      SharedPreferences.setMockInitialValues({});
+      final p = await SharedPreferences.getInstance();
+      final js = <String>[];
+      final got = <ShareRequest>[];
+      final b = GameBridge(
+        money: Monetization(p, ads: FakeAds(), store: FakeStore()),
+        store: WebStore(p),
+        runJs: (s) async => js.add(s),
+        openUrl: (_) async {},
+        showLicenses: () {},
+        share: noShare
+            ? null
+            : (r) async {
+                if (fail) throw StateError('x');
+                got.add(r);
+                return true;
+              },
+      );
+      return (b, js, got);
+    }
+
+    test('画像と文が共有シートに渡り、閉じたらゲームに返す', () async {
+      final (b, js, got) = await sb();
+      const text = '#ひかりの指名 でデビューさせたグループ『テスト』は評価A（78.0点）！\nhttps://apps.apple.com/jp/app/id6818817877';
+      await b.handle(jsonEncode({
+        'type': 'share',
+        'img': 'data:image/jpeg;base64,$jpg',
+        'text': text,
+        'rect': {'x': 20, 'y': 300, 'w': 335, 'h': 52},
+      }));
+      expect(got, hasLength(1));
+      expect(got.single.mime, 'image/jpeg');
+      expect(got.single.bytes.take(2), [0xFF, 0xD8]);
+      expect(got.single.text, text);
+      expect(got.single.origin, const Rect.fromLTWH(20, 300, 335, 52));
+      expect(js.last, 'window.hikariShareDone&&hikariShareDone(true,null)');
+    });
+
+    test('画像でないもの・文が無いもの・大きすぎるものは渡さず、ゲームのボタンは戻す', () async {
+      final (b, js, got) = await sb();
+      final bad = [
+        {'type': 'share', 'img': 'https://example.com/a.jpg', 'text': 'x'},
+        {'type': 'share', 'img': 'data:text/html;base64,$jpg', 'text': 'x'},
+        {'type': 'share', 'img': 'data:image/png;base64,$jpg', 'text': ''},
+        {'type': 'share', 'img': 'data:image/png;base64,$jpg'},
+        {'type': 'share', 'img': 'data:image/png;base64,@@@', 'text': 'x'},
+        {'type': 'share', 'img': 'data:image/png;base64,$jpg', 'text': 'x' * 501},
+      ];
+      for (final m in bad) {
+        await b.handle(jsonEncode(m));
+      }
+      expect(got, isEmpty);
+      expect(js, hasLength(bad.length));
+      expect(js.every((s) => s.startsWith('window.hikariShareDone&&hikariShareDone(false,')), isTrue);
+    });
+
+    test('共有シートが失敗しても落ちず、ゲームに返す。位置が無くても渡せる', () async {
+      final (b, js, _) = await sb(fail: true);
+      await b.handle(jsonEncode({'type': 'share', 'img': 'data:image/png;base64,$jpg', 'text': 'x'}));
+      expect(js.single, startsWith('window.hikariShareDone&&hikariShareDone(false,'));
+      final (b2, js2, got2) = await sb();
+      await b2.handle(jsonEncode({'type': 'share', 'img': 'data:image/png;base64,$jpg', 'text': 'x', 'rect': {'x': 'a'}}));
+      expect(got2.single.origin, isNull);
+      expect(got2.single.mime, 'image/png');
+      expect(js2.single, contains('(true,'));
+      final (b3, js3, _) = await sb(noShare: true);
+      await b3.handle(jsonEncode({'type': 'share', 'img': 'data:image/png;base64,$jpg', 'text': 'x'}));
+      expect(js3.single, contains('(false,'));
+    });
+
+    test('iPad の吹き出しの元は WebView の中に収め、大きさ0にしない', () {
+      const view = Rect.fromLTWH(0, 59, 820, 1121);
+      expect(shareOrigin(const Rect.fromLTWH(20, 300, 335, 52), view), const Rect.fromLTWH(20, 359, 335, 52));
+      for (final r in [null, const Rect.fromLTWH(5000, 5000, 10, 10), const Rect.fromLTWH(10, 10, 0, 0)]) {
+        final o = shareOrigin(r, view);
+        expect(o.width >= 1 && o.height >= 1, isTrue);
+        expect(view.contains(o.center), isTrue);
+      }
+      // はみ出した分は切る
+      final o = shareOrigin(const Rect.fromLTWH(700, 1100, 300, 100), view);
+      expect(o, const Rect.fromLTRB(700, 1159, 820, 1180));
+    });
   });
 }
