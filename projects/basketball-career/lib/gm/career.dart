@@ -4,6 +4,7 @@ import 'difficulty.dart';
 import 'draft.dart';
 import 'gm_people.dart';
 import 'inbox.dart';
+import 'promise.dart';
 import 'league.dart';
 import 'names.dart';
 import 'personality.dart';
@@ -549,6 +550,87 @@ class Career {
   static const inboxLimit = 40;
   int _msgId = 1;
 
+  /// GM の約束(受信箱の返事から)。新しい順。
+  List<Promise> promises = [];
+
+  /// GM の言葉の重み(0〜100)。約束を守ると上がり、破ると下がる。返事の効き目に掛かる。
+  int word = startWord;
+
+  /// 今季のオーナーとの目標の話し合いの答え(0: 受けた、1: 下げてもらった、2: もっと上を約束した)。
+  int goalStance = 0;
+
+  /// 通しの区切りの番号(シーズン×4＋区切り)。約束の期限に使う。
+  int get blockIndex => season * blocksPerSeason + block;
+
+  /// まだ期限が来ていない約束。
+  List<Promise> get openPromises => [for (final x in promises) if (x.open) x];
+
+  void _promise(PromiseKind kind, int due, {Player? p}) {
+    // 同じ選手・同じ種類の約束は重ねない
+    promises.removeWhere((x) => x.open && x.kind == kind && x.player == p?.id);
+    promises.insert(0, Promise(kind: kind, season: season, due: due, player: p?.id, name: p?.name ?? ''));
+    if (promises.length > 30) promises.removeRange(30, promises.length);
+  }
+
+  /// 約束を守った・破ったときの、選手とチームと言葉の重みの動き。
+  void _settle(Promise x, bool kept) {
+    x.state = kept ? PromiseState.kept : PromiseState.broken;
+    final p = x.player == null ? null : me.roster.where((y) => y.id == x.player).firstOrNull;
+    if (kept) {
+      word = (word + wordKept).clamp(0, 100);
+      me.chem = (me.chem + 3).clamp(0, 100);
+      if (p != null) p.morale = (p.morale + 6).clamp(0, 100);
+    } else {
+      word = (word - wordBroken).clamp(0, 100);
+      me.chem = (me.chem - 5).clamp(0, 100);
+      // 約束を破ると、本人だけでなくロッカールーム全体が GM の言葉を疑う
+      for (final y in me.roster) {
+        y.morale = (y.morale - (y == p ? 20 : 3)).clamp(0, 100);
+      }
+    }
+    final who = x.name.isEmpty ? '' : '${x.name}「';
+    final body = switch ((x.kind, kept)) {
+      (PromiseKind.starter, true) => '$who約束どおり先発で使ってくれた。信じてよかった」',
+      (PromiseKind.starter, false) => '$who先発で使うと言ったはずだ。話が違う」(本人の気持ち-20・チームの相性-5)',
+      (PromiseKind.trade, true) => 'トレードの希望に応えた。ほかの選手も、GM は言ったことを守ると見ている。',
+      (PromiseKind.trade, false) => '$who探すと言ったのに、締め切りが過ぎても何も起きなかった」(本人の気持ち-20・チームの相性-5)',
+      (PromiseKind.playoffs, true) => '記者に「優勝を狙う」と言ったとおり、プレーオフに進んだ。人気が上がった。',
+      (PromiseKind.playoffs, false) => '記者に「優勝を狙う」と言ったのに、プレーオフに届かなかった。報道が厳しくなり、人気と信頼が下がった。',
+    };
+    _mail(x.kind == PromiseKind.playoffs ? Sender.press : Sender.player, kept ? '約束を守った: ${x.line}' : '約束を破った: ${x.line}',
+        '$body\nGMの言葉の重み ${kept ? '+$wordKept' : '-$wordBroken'}(いま$word・${wordLabel(word)})', player: x.player);
+  }
+
+  /// 区切りの終わりに、約束の期限と中身を確かめる。
+  void _checkPromises() {
+    final now = blockIndex;
+    for (final x in openPromises) {
+      final p = x.player == null ? null : me.roster.where((y) => y.id == x.player).firstOrNull;
+      switch (x.kind) {
+        case PromiseKind.starter:
+          if (p == null) {
+            x.state = PromiseState.voided;
+          } else if (p.injured <= 0 && !me.order.take(5).contains(p)) {
+            _settle(x, false);
+          } else if (now >= x.due) {
+            _settle(x, true);
+          }
+        case PromiseKind.trade:
+          if (p == null) {
+            _settle(x, true);
+          } else if (now >= x.due) {
+            _settle(x, false);
+          }
+        case PromiseKind.playoffs:
+          break;
+      }
+    }
+    // 目標の話し合いに答えないまま区切りを進めたら、受けたことにする
+    for (final m in inbox) {
+      if (m.kind == MsgKind.ownerGoal && m.needsAnswer) m.answer = 0;
+    }
+  }
+
   /// 返事を待っている知らせ・読んでいない知らせの数。
   int get unread => inbox.where((m) => !m.read || m.needsAnswer).length;
 
@@ -585,12 +667,28 @@ class Career {
     m
       ..answer = choice
       ..read = true;
+    if (m.kind == MsgKind.ownerGoal) {
+      // 下げてもらうと今すぐ信頼が減り、シーズンの終わりにも少し引かれる。上を約束すると、果たせば信頼と格の点
+      if (m.season != season || phase != Phase.season || roundAt > 0) return;
+      goalStance = choice;
+      if (choice == 1) {
+        target -= 5;
+        trust = (trust - 3).clamp(0, 100);
+      } else if (choice == 2) {
+        target += 4;
+      }
+      return;
+    }
     if (m.kind == MsgKind.press) {
       // 強気は人気を呼ぶが、勝てていないと信頼を失う。慎重は信頼が少し上がる。はぐらかすと人気が少し下がる
       switch (choice) {
         case 0:
           hype = (hype + 3).clamp(0, 100);
           trust = (trust + (me.winPct >= 0.5 ? 1 : -2)).clamp(0, 100);
+          // 強気に答えると、プレーオフに進むことが約束になる(シーズンに1つ)
+          if (phase == Phase.season && !promises.any((x) => x.kind == PromiseKind.playoffs && x.season == season)) {
+            _promise(PromiseKind.playoffs, season * blocksPerSeason + blocksPerSeason);
+          }
         case 1:
           trust = (trust + 1).clamp(0, 100);
         default:
@@ -600,21 +698,32 @@ class Career {
     }
     final p = m.player == null ? null : me.roster.where((x) => x.id == m.player).firstOrNull;
     if (p == null) return;
+    // 約束の効き目は GM の言葉の重みで変わる(破ってきた GM の約束は、選手があまり喜ばない)
+    final w = wordScale(word);
     switch (m.kind) {
       case MsgKind.minutes:
         if (choice == 0) {
-          // 先発に入れる: いまの順の5番目に入れる
+          // 先発に入れる: いまの順の5番目に入れる。2区切りのあいだ先発から外すと約束を破ったことになる
           final order = [for (final x in me.order) x.id]..remove(p.id);
           order.insert(4.clamp(0, order.length), p.id);
           me.rotation = order;
-          p.morale = (p.morale + 15).clamp(0, 100);
+          p.morale = (p.morale + (15 * w).round()).clamp(0, 100);
+          _promise(PromiseKind.starter, blockIndex + 2, p: p);
         } else {
           p.morale = (p.morale - 8).clamp(0, 100);
         }
       case MsgKind.tradeRequest:
-        p.morale = (p.morale + (choice == 0 ? 8 : -6)).clamp(0, 100);
+        if (choice == 0) {
+          // 次のトレードの締め切りまでに出す約束
+          final due = block < tradeDeadlineBlock ? season * blocksPerSeason + tradeDeadlineBlock : (season + 1) * blocksPerSeason + tradeDeadlineBlock;
+          p.morale = (p.morale + (8 * w).round()).clamp(0, 100);
+          _promise(PromiseKind.trade, due, p: p);
+        } else {
+          p.morale = (p.morale - 6).clamp(0, 100);
+        }
       case MsgKind.info:
       case MsgKind.press:
+      case MsgKind.ownerGoal:
         break;
     }
   }
@@ -1320,10 +1429,27 @@ class Career {
       _mail(Sender.agent, '${p.name}の代理人から', '${p.name}の契約は今季で切れる。延長の話をしたい(チームの画面で選手を押すと申し出られる)。'
           '求める年俸は${money(extensionAsk(p).salary)}ほど。', player: p.id);
     }
-    _mail(Sender.owner, '$season年目の目標', [
-      'オーナーからの今シーズンの目標:',
-      for (final g in goals) '・${g.kind == GoalKind.wins ? '$target勝する' : g.kind.label}',
-    ].join('\n'));
+    goalStance = 0;
+    // 前のシーズンの話し合いが残っていたら、受けたことにして閉じる
+    for (final m in inbox) {
+      if (m.kind == MsgKind.ownerGoal && m.needsAnswer) m.answer = 0;
+    }
+    _mail(
+      Sender.owner,
+      '$season年目の目標の話し合い',
+      [
+        'オーナーからの今シーズンの目標:',
+        for (final g in goals) '・${g.kind == GoalKind.wins ? '$target勝する' : g.kind.label}',
+        '',
+        '勝ち数の目標は話し合える。最初の区切りを進めるまでに答える(答えなければこのまま受ける)。',
+      ].join('\n'),
+      kind: MsgKind.ownerGoal,
+      choices: [
+        'この目標で受ける',
+        '${target - 5}勝に下げてもらう(すぐ信頼-3、終わりに-5)',
+        '${target + 4}勝を約束する(果たせば信頼+8・格の点+10、外せば信頼-3)',
+      ],
+    );
     block = 0;
     roundAt = 0;
     lastGames = [];
@@ -1391,6 +1517,7 @@ class Career {
       _pickAllStars();
     }
     if (block == tradeDeadlineBlock - 1) _deadlineWarning();
+    _checkPromises();
     if (block < blocksPerSeason) _mailAfterBlock();
     if (block <= tradeDeadlineBlock && rng.chance(0.5)) _aiTrades(1);
     if (block >= blocksPerSeason) {
@@ -1792,7 +1919,20 @@ class Career {
     };
     // 予算を守った年(上限か税の手前を約束していたとき)
     final kept = budgetLevel < 2 && me.payroll <= budgetCap ? (budgetLevel == 0 ? 6 : 3) : 0;
-    final raw = ((me.wins - target) * 1.5).round() + resultTrust[res] - lastTax + goalDelta + liked + kept;
+    // 目標の話し合い: 下げてもらった年は少し引かれ、上を約束した年は果たせば上乗せ・外せば減る
+    final stance = switch (goalStance) {
+      1 => -5,
+      2 => me.wins >= target ? 8 : -3,
+      _ => 0,
+    };
+    // 記者に「優勝を狙う」と言った約束
+    for (final x in openPromises.where((x) => x.kind == PromiseKind.playoffs && x.season == season)) {
+      final ok = goalOk(OwnerGoal(GoalKind.playoffs));
+      _settle(x, ok);
+      hype = (hype + (ok ? 3 : -4)).clamp(0, 100);
+      trust = (trust + (ok ? 2 : -2)).clamp(0, 100);
+    }
+    final raw = ((me.wins - target) * 1.5).round() + resultTrust[res] - lastTax + goalDelta + liked + kept + stance;
     // オーナーの厳しさ: 信頼が減るときだけ、難しさの倍率をかける
     final delta = raw < 0 ? (raw * difficulty.ownerStrict).round() : raw;
     trust = (trust + delta).clamp(0, 100);
@@ -1903,6 +2043,9 @@ class Career {
       if (g.met == true) add('オーナーの目標「${g.kind.label}」', 5);
     }
     if (lastProfit > 0 && !goals.any((g) => g.kind == GoalKind.profit && g.met == true)) add('黒字', 5);
+    if (goalStance == 2 && me.wins >= target) add('オーナーに約束した$target勝を果たした', 10);
+    final keptNow = promises.where((x) => x.season == season && x.state == PromiseState.kept).length;
+    if (keptNow > 0) add('選手や記者との約束を守った($keptNow件)', 3 * keptNow.clamp(0, 3));
     final before = gmLevel;
     final total = parts.fold(0, (n, x) => n + x.points);
     gmPoints += total;
@@ -3345,6 +3488,9 @@ class Career {
         'ea': extAsked,
         'ib': [for (final m in inbox) m.toJson()],
         'mid': _msgId,
+        if (promises.isNotEmpty) 'pr': [for (final x in promises) x.toJson()],
+        'wd': word,
+        'gs': goalStance,
         'asi': allStarIds,
         'hg': haggled,
         if (rfa.isNotEmpty) 'rf': rfa,
@@ -3445,6 +3591,9 @@ class Career {
       ..extAsked = [for (final x in (j['ea'] as List? ?? const [])) x as int]
       ..inbox = [for (final m in maps('ib')) Message.fromJson(m)]
       .._msgId = (j['mid'] as int?) ?? 1
+      ..promises = [for (final x in maps('pr')) Promise.fromJson(x)]
+      ..word = (j['wd'] as int?) ?? startWord
+      ..goalStance = (j['gs'] as int?) ?? 0
       ..allStarIds = [for (final x in (j['asi'] as List? ?? const [])) x as int]
       ..haggled = [for (final x in (j['hg'] as List? ?? const [])) x as int]
       ..rfa = [for (final x in (j['rf'] as List? ?? const [])) x as int]
