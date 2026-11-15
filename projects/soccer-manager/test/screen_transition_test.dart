@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:soccer_manager/l10n/tr.dart';
 import 'package:soccer_manager/main.dart';
-import 'package:soccer_manager/screens/training_screen.dart';
+import 'package:soccer_manager/screens/transfer_screen.dart';
 
 /// 画面遷移の品質を固定するテスト。
 ///
@@ -57,7 +57,7 @@ void main() {
     // ホームのクラブ運営タイルまでスクロールする。scrollUntilVisible は
     // 見つかるまで繰り返し評価するので、.last のような空集合で例外になる
     // ファインダは渡せない。
-    final tile = find.text('Training');
+    final tile = find.text('Transfers');
     await tester.scrollUntilVisible(tile, 200,
         scrollable: find.byType(Scrollable).first);
     await tester.pumpAndSettle();
@@ -69,7 +69,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(
-      find.byType(TrainingScreen),
+      find.byType(TransferScreen),
       findsOneWidget,
       reason: '同じ画面が複数積まれている。連打で二重にpushされている。',
     );
