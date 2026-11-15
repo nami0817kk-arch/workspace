@@ -411,10 +411,12 @@
     a.seasons = a.seasons || [];
     a.seasons.push(s);
     // 大きな知らせ
-    for (const t of s.titles) YA.noteTier(w, 2, `卒業生の${a.name}（${a.club}）が${t}`);
-    for (const x of s.awards) YA.noteTier(w, /バロンドール$|W杯|年間最優秀|MVP/.test(x) ? 1 : 2, `卒業生の${a.name}が${x}`);
+    for (const t of s.titles) YA.noteTier(w, 2, say(w, a, t, [`卒業生の${a.name}（${a.club}）が${t}`, `${a.club}が${t}。卒業生の${a.name}もその中にいた`, `${t}！${a.club}の${a.name}がトロフィーを掲げた`, `${a.name}（${a.club}）、${t}。優勝メダルの写真が送られてきた`]));
+    for (const x of s.awards) YA.noteTier(w, /バロンドール$|W杯|年間最優秀|MVP/.test(x) ? 1 : 2, say(w, a, x, [`卒業生の${a.name}が${x}`, `${x}に卒業生の${a.name}！`, `${a.name}（${a.club}）が${x}に。表彰式でユース時代の話をした`]));
     return s;
   }
+  // 年度末の知らせの言い回し（2026-11-15「パターンふやして」）。子の名前と年で決まる
+  const say = (w, a, k, list) => list[YA.hash(a.name + k + w.year) % list.length];
   YA.alumniTick = function (w) {
     const r = YA.rngOf(w.seed * 67 + w.year * 29);
     let contrib = 0;
@@ -429,7 +431,7 @@
         a.status = 'pro';
         a.league = domLeague(a.ovr);
         a.club = jClub(w, r, a.league);
-        YA.noteTier(w, 2, `卒業生の${a.name}が大学を経てプロ入りしました（${a.club}・${a.league}）`);
+        YA.noteTier(w, 2, say(w, a, 'univ', [`卒業生の${a.name}が大学を経てプロ入りしました（${a.club}・${a.league}）`, `大学で力をつけた${a.name}が、${a.club}（${a.league}）とプロ契約`, `${a.name}、遠回りしてプロへ。大学4年間のあと${a.club}に入る（${a.league}）`, `「大学に行ってよかった」――${a.name}が${a.club}（${a.league}）でプロになります`]));
       }
       if (a.status === 'pro') {
         // 国内は力で昇格・降格のあるリーグへ。このクラブのトップにいる子は、トップの部で出る
@@ -453,16 +455,16 @@
             a.club = jClub(w, r, a.league);
           }
           contrib += share;
-          YA.noteTier(w, 1, `卒業生の${a.name}が${a.club}（${a.league}）へ${abroad ? '海外移籍' : '移籍'}（移籍金およそ${fee}万円）。連帯貢献金 +${share}万円が育成基金に入ります`);
+          YA.noteTier(w, 1, say(w, a, 'move', [`卒業生の${a.name}が${a.club}（${a.league}）へ${abroad ? '海外移籍' : '移籍'}（移籍金およそ${fee}万円）。連帯貢献金 +${share}万円が育成基金に入ります`, `${a.name}の${abroad ? '海外挑戦' : '移籍'}が決まった。行き先は${a.club}（${a.league}）。移籍金およそ${fee}万円のうち、連帯貢献金 +${share}万円が育成基金へ`, `${a.club}（${a.league}）が${a.name}を獲得。${abroad ? '海の向こうへ。' : ''}育てたクラブとして連帯貢献金 +${share}万円が入ります（移籍金およそ${fee}万円）`, `${a.name}、${a.club}へ。「${abroad ? '向こうでも、ユースで覚えたことをやるだけ' : '新しい場所で、もう一段上へ'}」。連帯貢献金 +${share}万円（移籍金およそ${fee}万円）`]));
         }
         // U-21代表（決定16）：21歳以下で力のある卒業生。のちにフル代表の足がかり
         if (a.age <= 21 && a.ovr >= 13.4 && r() < 0.2) {
           a.u21 = (a.u21 || 0) + 1;
-          if (a.u21 === 1) YA.noteTier(w, 1, `卒業生の${a.name}がU-21日本代表に選ばれました`);
+          if (a.u21 === 1) YA.noteTier(w, 1, say(w, a, 'u21', [`卒業生の${a.name}がU-21日本代表に選ばれました`, `U-21日本代表のメンバーに${a.name}の名前がありました`, `${a.name}が初めてU-21代表へ。ユースの後輩たちが発表をスマホで見ていた`]));
         }
         if (a.ovr >= 15.8 && r() < clamp((a.u21 ? 0.12 : 0.08) + (a.ovr - 15.8) * 0.15, 0.08, 0.85)) {
           a.nat = (a.nat || 0) + 1;
-          if (a.nat === 1) YA.noteTier(w, 1, `卒業生の${a.name}が日本代表に初めて選ばれました！`);
+          if (a.nat === 1) YA.noteTier(w, 1, say(w, a, 'nat', [`卒業生の${a.name}が日本代表に初めて選ばれました！`, `日本代表のメンバー発表。${a.name}の名前が読み上げられた！`, `${a.name}、ついに日本代表へ。このユースから育った子が、日の丸を背負う`, `「ここまで来られたのは、ユースの3年間があったから」――${a.name}が日本代表に初選出`]));
         }
       }
       if (a.status !== 'left') careerSeason(w, a, r);
