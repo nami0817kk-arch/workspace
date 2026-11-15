@@ -150,6 +150,10 @@ class SaveGame {
 
   /// 保険に入っているか、災害基金の残高(万円)、地域貢献のレベル(0〜5)。
   bool insured;
+
+  /// オーナーの仕事を最後に打ったシーズン(仕事のID → シーズン)。
+  /// 1シーズンに1回ずつ。
+  Map<String, int> ownerWorkDoneSeason;
   int reserveFund;
   int communityLevel;
 
@@ -469,6 +473,7 @@ class SaveGame {
     List<TimelineEntry>? timeline,
     List<String>? declinedProposalIds,
     this.insured = false,
+    Map<String, int>? ownerWorkDoneSeason,
     this.reserveFund = 0,
     this.communityLevel = 0,
     this.transferBanSeasons = 0,
@@ -582,6 +587,7 @@ class SaveGame {
         timeline = timeline ?? [],
         rivalPast = rivalPast ?? [0, 0, 0],
         declinedProposalIds = declinedProposalIds ?? [],
+        ownerWorkDoneSeason = ownerWorkDoneSeason ?? {},
         pendingInstallments = pendingInstallments ?? [],
         friendlies = friendlies ?? [],
         incomingOffers = incomingOffers ?? [],
@@ -679,6 +685,7 @@ class SaveGame {
         'timeline': timeline.map((e) => e.toJson()).toList(),
         'declinedProposalIds': declinedProposalIds,
         'insured': insured,
+        'ownerWorkDoneSeason': ownerWorkDoneSeason,
         'reserveFund': reserveFund,
         'communityLevel': communityLevel,
         'transferBanSeasons': transferBanSeasons,
@@ -824,6 +831,8 @@ class SaveGame {
                 .toList() ??
             [],
         insured: json['insured'] as bool? ?? false,
+        ownerWorkDoneSeason: (json['ownerWorkDoneSeason'] as Map?)
+            ?.map((k, v) => MapEntry(k as String, v as int)),
         reserveFund: json['reserveFund'] as int? ?? 0,
         communityLevel: json['communityLevel'] as int? ?? 0,
         clubPolicy: ClubPolicy.values

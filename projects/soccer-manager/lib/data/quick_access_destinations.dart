@@ -12,6 +12,7 @@ import '../screens/guide_screen.dart';
 import '../screens/hall_of_fame_screen.dart';
 import '../screens/league_ranking_screen.dart';
 import '../screens/news_screen.dart';
+import '../screens/owner_work_screen.dart';
 import '../screens/season_history_screen.dart';
 import '../screens/settings_screen.dart';
 import '../screens/transfer_screen.dart';
@@ -60,6 +61,12 @@ String? _needsFirstSeason(GameState game) {
 
 // 同上。final だと最初のアクセス時の言語でラベルが固定される。
 List<QuickAccessDestination> get quickAccessDestinations => [
+      QuickAccessDestination(
+        icon: Icons.work_outline,
+        label: Tr.pick('オーナーの仕事', 'Owner\'s work'),
+        color: Colors.indigo.shade600,
+        builder: (_) => const OwnerWorkScreen(),
+      ),
       QuickAccessDestination(
         icon: Icons.swap_horiz,
         label: Tr.pick('移籍市場', 'Transfers'),
