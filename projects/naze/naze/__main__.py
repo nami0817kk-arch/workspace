@@ -50,6 +50,10 @@ def main(argv=None) -> int:
         from . import qc
         from . import terrain_ep, sim_ep
         return 0 if qc.run(ep, out, terrain_ep if kind == "terrain" else sim_ep, out.name) else 1
+    if step == "pre":                                     # 書き出しの前の点検(声のあと。重なり・はみ出し・台本と行ごとのコマ)
+        from . import qc
+        from . import terrain_ep, sim_ep
+        return 0 if qc.pre(ep, out, terrain_ep if kind == "terrain" else sim_ep, out.name) else 1
     if kind == "terrain":
         from . import terrain_ep as K
         if step == "kana":

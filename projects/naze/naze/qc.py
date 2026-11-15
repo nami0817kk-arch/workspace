@@ -176,7 +176,7 @@ def sound(video: Path) -> tuple[list, list, dict]:
     return fails, warns, dict(LUFS=lufs, peak=peak)
 
 
-def sheet(ep: dict, tl: dict, frame_fn, out: Path) -> Path:
+def sheet(ep: dict, tl: dict, frame_fn, out: Path, fname: str = "qc_sheet.png") -> Path:
     """行ごとに真ん中のコマを 1 枚ずつ並べ、行の id を添える。"""
     tw = 270 if H > W else 480
     th = int(tw * H / W)
@@ -191,7 +191,7 @@ def sheet(ep: dict, tl: dict, frame_fn, out: Path) -> Path:
         x, y = (i % cols) * tw, (i // cols) * (th + 34)
         s.paste(im, (x, y + 34))
         d.text((x + 8, y + 4), f"{i + 1}. {l['id']}  {l['start']:.1f}s", font=ov.font(22), fill=(230, 230, 230))
-    p = out / "qc_sheet.png"
+    p = out / fname
     s.save(p)
     return p
 
@@ -228,6 +228,25 @@ def run(ep: dict, out: Path, kind_mod, name: str) -> bool:
     (out / "qc.md").write_text("\n".join(md) + "\n", encoding="utf-8")
     print("\n".join(md))
     return res["passed"]
+
+
+def pre(ep: dict, out: Path, kind_mod, name: str) -> bool:
+    """書き出しの前の点検(`python -m naze pre`)。動画は要らない。台本と、全コマの重なり・はみ出しを見て、行ごとのコマを並べる。
+    書き出し(1 本 1 時間)のあとで重なりが見つかり作り直しが続いたので足した(2026-11-15、海面の回で 4 本を 2 回ずつ書き出した)。
+    ここで ✖ が無くなり、pre_sheet.png を目で見てから compose する。"""
+    tl = json.loads((out / "timeline.json").read_text(encoding="utf-8"))
+    fr, nf = kind_mod.frame_fn(ep, out)
+    F, Wn = [], []
+    for f, w in (script(ep, tl), layout(fr, nf)):
+        F += f
+        Wn += w
+    p = sheet(ep, tl, fr, out, "pre_sheet.png")
+    md = [f"# 書き出し前の点検 {name}", "", f"結果: {'通過' if not F else '✖ 直してから書き出す'}", "",
+          "## ✖ 直すもの", *(f"- {x}" for x in F or ["なし"]), "", "## △ 目で確かめるもの", *(f"- {x}" for x in Wn or ["なし"]), "",
+          f"行ごとのコマ: {p.name}(色の目盛りなど reg=False の字は数えていないので目で見る)"]
+    (out / "pre.md").write_text("\n".join(md) + "\n", encoding="utf-8")
+    print("\n".join(md))
+    return not F
 
 
 def gate(video: Path) -> None:

@@ -44,7 +44,7 @@ text, ease = base.text, base.ease
 
 base.MAP = worldmap.Map(lat0=34, bases=[((100, 0, 170, 60), 5), ((120, 18, 158, 48), 7),
                                          ((126.3, 25.5, 129.1, 27.2), 10), ((139.2, 37.0, 143.6, 39.8), 10),
-                                         ((143.5, 43.0, 146.5, 45.0), 10), ((137.6, 34.6, 139.9, 36.1), 11)])
+                                         ((143.5, 43.0, 146.5, 45.0), 10), ((137.6, 34.0, 139.9, 37.4), 11)])   # 縦の画面で富士山の上下が粗い絵になったので南北を広げた(2026-11-15)
 MAP = base.MAP
 base.STEPS = ["1 平らなはずの海", "2 水は重力にそろう", "3 インド洋の下", "4 日本の見えない海面", "5 水平とは"]
 
@@ -52,12 +52,19 @@ LOW_PT, HIGH_PT = (78.75, 4.67), (147.33, -8.42)          # (経度, 緯度) sim
 
 
 # ---- 見えない海面の色 ---------------------------------------------------------------------------------------
-def gcolor(n: np.ndarray, a: float = 1.0) -> np.ndarray:
-    """高さ(m) → 色。低い=青、0=うすい灰、高い=赤。"""
+def _gcolor_exact(n: np.ndarray) -> np.ndarray:
     k = np.clip(n / 100.0, -1, 1)[..., None]
     mid = np.array([225, 225, 215], np.float32)
-    c = np.where(k < 0, mid + (LOW - mid) * (-k), mid + (HIGH - mid) * k)
-    return c
+    return np.where(k < 0, mid + (LOW - mid) * (-k), mid + (HIGH - mid) * k).astype(np.float32)
+
+
+_GLUT = _gcolor_exact(np.linspace(-100, 100, 4001, dtype=np.float32))      # 0.05m 刻みの色の表
+
+
+def gcolor(n: np.ndarray, a: float = 1.0) -> np.ndarray:
+    """高さ(m) → 色。低い=青、0=うすい灰、高い=赤。表を引くだけ(2 本の式を全画素で計算すると 1 コマ 0.2 秒かかった。2026-11-15)"""
+    i = np.clip(np.asarray(n, np.float32) * 20 + 2000.5, 0, 4000).astype(np.int32)
+    return _GLUT[i]
 
 
 @lru_cache(maxsize=1)
@@ -81,7 +88,7 @@ def _contours():
 def _supersample(fn, img, sc, t, u):
     lay = Image.new("RGBA", (W * SS, H * SS), (0, 0, 0, 0))
     fn(ImageDraw.Draw(lay, "RGBA"), sc, t, u)
-    img.alpha_composite(lay.resize((W, H), Image.LANCZOS))
+    img.alpha_composite(lay.resize((W, H), Image.BOX))      # ちょうど半分なので BOX で十分(LANCZOS の半分の時間。2026-11-15)
 
 
 def _space(img, t):
@@ -118,7 +125,11 @@ def draw_potato(img, sc, t, u):
     scale = 10000.0 / 6371000.0 * ex                      # 1 万倍に大きくした高さ(地球の半径を 1)
     R = sc.get("r", 0.40) * H / (1 + 85 * scale * 1.0) * (1 + 0.03 * u)
     cx, cy = W / 2 + sc.get("dx", 0.0) * W, H / 2 + sc.get("dy", 0.0) * H
-    yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
+    # 地球と光の輪がかかる四角だけを計算する(画面全体だと 1 コマ 3 秒かかった。2026-11-15)
+    rmax = R * (1 + scale * float(np.abs(N).max())) * 1.08 + 6
+    X0, X1 = max(0, int(cx - rmax)), min(W, int(math.ceil(cx + rmax)))
+    Y0, Y1 = max(0, int(cy - rmax)), min(H, int(math.ceil(cy + rmax)))
+    yy, xx = np.mgrid[Y0:Y1, X0:X1].astype(np.float32)
     x, y = (xx - cx) / R, -(yy - cy) / R
     la0, lo0 = math.radians(lat0), math.radians(lon0)
     rho = np.ones_like(x)
@@ -147,13 +158,13 @@ def draw_potato(img, sc, t, u):
     L /= np.linalg.norm(L)
     light = np.clip(0.30 + 0.85 * (nrm @ L), 0.22, 1.2)[..., None]
     col = col * light
-    bg = np.asarray(img.convert("RGB")).astype(np.float32)
+    bg = np.asarray(img.convert("RGB"))[Y0:Y1, X0:X1].astype(np.float32)
     rr = np.sqrt(x * x + y * y) / rho
     glow = np.clip(1 - (rr - 1) / 0.07, 0, 1) * (rr > 1)
     bg = bg + glow[..., None] * np.array([70, 140, 255], np.float32) * 0.7
     m = cv2.GaussianBlur(inside.astype(np.float32), (0, 0), 0.8)[..., None]
     out = col * m + bg * (1 - m)
-    img.paste(Image.fromarray(np.clip(out, 0, 255).astype(np.uint8)).convert("RGBA"), (0, 0))
+    img.paste(Image.fromarray(np.clip(out, 0, 255).astype(np.uint8)).convert("RGBA"), (X0, Y0))
     d = ImageDraw.Draw(img, "RGBA")
     for (plon, plat), lab, colr in sc.get("marks", []):
         px, py, pz = _geo_xy(math.radians(plat), math.radians(plon), la0, lo0)
@@ -175,8 +186,8 @@ def draw_potato(img, sc, t, u):
 
 
 def _legend(d):
-    x0, y0 = (W - 330, H - 330) if LAND else (W / 2 - 300, H - 430)
-    w, h = (40, 220) if LAND else (600, 36)
+    x0, y0 = (W - 300, H - 520) if LAND else (W / 2 - 220, H - 560)    # 横は長い字幕の端とぶつかったので上へ(2026-11-15)
+    w, h = (40, 220) if LAND else (440, 30)
     for i in range(60):
         v = 100 - 200 * i / 59 if LAND else -100 + 200 * i / 59
         c = tuple(int(q) for q in gcolor(np.array([v]))[0])
@@ -185,12 +196,12 @@ def _legend(d):
         else:
             d.rectangle([x0 + w * i / 60, y0, x0 + w * (i + 1) / 60 + 1, y0 + h], fill=c + (255,))
     if LAND:
-        text(d, (x0 + w + 16, y0), "+100m", 32, WHITE, "lm", reg=False)
-        text(d, (x0 + w + 16, y0 + h / 2), "0", 32, WHITE, "lm", reg=False)
-        text(d, (x0 + w + 16, y0 + h), "-100m", 32, WHITE, "lm", reg=False)
+        text(d, (x0 + w + 16, y0), "+100m", 32, WHITE, "lm")
+        text(d, (x0 + w + 16, y0 + h / 2), "0", 32, WHITE, "lm")
+        text(d, (x0 + w + 16, y0 + h), "-100m", 32, WHITE, "lm")
     else:
-        text(d, (x0, y0 + h + 30), "-100m", 30, WHITE, "lm", reg=False)
-        text(d, (x0 + w, y0 + h + 30), "+100m", 30, WHITE, "rm", reg=False)
+        text(d, (x0 - 14, y0 + h / 2), "-100m", 30, WHITE, "rm")   # 縦は字幕の上に1行で(2026-11-14)
+        text(d, (x0 + w + 14, y0 + h / 2), "+100m", 30, WHITE, "lm")
 
 
 # ---- 平らな地図 ----------------------------------------------------------------------------------------------
@@ -342,16 +353,16 @@ def draw_plumb(img, sc, t, u):
     d = ImageDraw.Draw(img, "RGBA")
     mode = sc.get("mode", "mountain")
     lab = {"plain": "重りは真下を指し、水面はそれに直角", "mountain": "山のそばでは、重りが山へ引かれる", "heavy": "下が重い → 水が寄って盛り上がる", "light": "下が軽い → 水が離れてへこむ"}[mode]
-    text(d, (W / 2, 160 if LAND else 330), sc.get("title", lab), 56 if LAND else 46, WHITE)
+    text(d, (W / 2, 132 if LAND else 330), sc.get("title", lab), 56 if LAND else 46, WHITE)
     c = W * 0.5
     if mode == "heavy":
-        text(d, (c, H - 150 if LAND else H * 0.42 + 425), "重い岩", 48, WHITE)
+        text(d, (c, H - 300 if LAND else H * 0.42 + 425), "重い岩", 48, WHITE)
     elif mode == "light":
-        text(d, (c, H - 150 if LAND else H * 0.42 + 425), "熱くて軽い岩", 48, WHITE)
+        text(d, (c, H - 300 if LAND else H * 0.42 + 425), "熱くて軽い岩", 48, WHITE)
     elif mode == "mountain":
         text(d, (W * 0.78, H * (0.52 if LAND else 0.42) - 260), "山", 52, WHITE)
     if sc.get("note"):
-        text(d, (W / 2, H * 0.52 - 420 if LAND else 420), sc["note"], 44, YEL)
+        text(d, (W / 2, 186 if LAND else 405), sc["note"], 36 if LAND else 40, YEL)
 
 
 # ---- まん丸と、つぶれたみかん ---------------------------------------------------------------------------------
@@ -387,10 +398,11 @@ def draw_ellip(img, sc, t, u):
     f = 0.16 * a
     text(d, (cx + R * (1 + f * 0.4) * 0.5, cy + 44), "赤道 6,378km", 44, WHITE)
     text(d, (cx + 26, cy - R * (1 - f) * 0.5), "北極 6,357km", 44, WHITE, "lm")
-    text(d, (W / 2, 150 if LAND else 330), sc.get("title", "地球は、つぶれたみかんの形"), 56 if LAND else 46, WHITE)
-    text(d, (W / 2, H - (70 if LAND else 360)), "つぶれ方は大きくして描いています", 34, DIM)
+    # 下は字幕の場所なので、注は題のすぐ下に置く(2026-11-14 qc の重なり)
+    text(d, (W / 2, 132 if LAND else 330), sc.get("title", "地球は、つぶれたみかんの形"), 56 if LAND else 46, WHITE)
+    text(d, (W / 2, 184 if LAND else 392), "つぶれ方は大きくして描いています", 34, DIM)
     if sc.get("geo"):
-        text(d, (W / 2, H - (130 if LAND else 430)), "青い線：本当の海面（でこぼこを大きくして描いています）", 40, BLUE)
+        text(d, (W / 2, 222 if LAND else 446), "青い線：本当の海面（でこぼこも大きくして描いています）", 36 if LAND else 32, BLUE)
 
 
 # ---- 地球の断面(マントル) -------------------------------------------------------------------------------------
@@ -456,7 +468,7 @@ def draw_mantle(img, sc, t, u):
 # ---- 富士山の下の 3 つの面 ------------------------------------------------------------------------------------
 def _draw_levels(d, sc, t, u):
     S = SS
-    yE = H * 0.80                                          # 物差しの地球
+    yE = H * (0.74 if LAND else 0.68)                      # 物差しの地球(字幕の上に収める)
     yG = yE - 120                                          # 見えない海面(43m を大きくして描く)
     a = ease(u * 2)
     xs = np.linspace(0, W, 120)
@@ -479,7 +491,7 @@ def draw_levels(img, sc, t, u):
     base.back(img)
     _supersample(_draw_levels, img, sc, t, u)
     d = ImageDraw.Draw(img, "RGBA")
-    yE = H * 0.80
+    yE = H * (0.74 if LAND else 0.68)
     yG = yE - 120
     cx = W * 0.5
     top = H * 0.24
@@ -490,9 +502,12 @@ def draw_levels(img, sc, t, u):
     if a > 0.2:
         text(d, (cx + 320, (top + yG) / 2), "3,776m", 54, BLUE, "lm")
     if ease(u * 2 - 0.8) > 0.6:
-        text(d, (cx - 350, (top + yE) / 2), "3,818m", 54, (255, 190, 80), "rm")
+        if LAND:
+            text(d, (cx - 350, (top + yE) / 2), "3,818m", 54, (255, 190, 80), "rm")
+        else:                                                      # 縦は左端で切れたので線の右へ(2026-11-15)
+            text(d, (cx - 316, (top + yE) / 2 - 60), "3,818m", 44, (255, 190, 80), "lm")
     text(d, (W / 2, 160 if LAND else 330), sc.get("title", "富士山の山頂を、2つの0mから測る"), 52 if LAND else 44, WHITE)
-    text(d, (W / 2, H - 40), "43mの差は大きくして描いています", 32, DIM, "md")
+    text(d, (W / 2, 218 if LAND else H - 40), "43mの差は大きくして描いています", 32, DIM, "mm" if LAND else "md")
 
 
 # ---- 氷と海面 -------------------------------------------------------------------------------------------------
@@ -530,8 +545,8 @@ def draw_iceprint(img, sc, t, u):
     text(d, (W * 0.20, H * 0.56 - 260), "氷", 54, WHITE)
     if melt and u > 0.4:
         text(d, (W * 0.45, H * 0.56 - 130), "近くは下がる", 50, BLUE)
-        text(d, (W * 0.85, H * 0.56 - 110), "遠くは上がる", 50, RED)
-        text(d, (W * 0.62, H - 120), "氷から最大2,000km（NASA）", 42, YEL)
+        text(d, (W * (0.85 if LAND else 0.76), H * 0.56 - 110), "遠くは上がる", 50 if LAND else 44, RED)     # 縦は右端で切れた(2026-11-15)
+        text(d, (W * 0.62, H * 0.56 + 170), "氷から最大2,000km（NASA）", 42, YEL)     # 字幕の帯から上へ(2026-11-15)
 
 
 # ---- 数字の札 -------------------------------------------------------------------------------------------------

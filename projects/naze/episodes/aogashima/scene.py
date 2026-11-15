@@ -302,7 +302,9 @@ def draw_cards(img, sc, t, u):
         if i == n - 1 and a >= 1.0:       # いちばん新しい札に、光の帯がゆっくり横切る(止まった画面にしない)
             ph = (t * 0.45) % 1.0
             bx = x0 + (x1 - x0 - 110) * ph
-            d.rounded_rectangle([bx, y + 6, bx + 110, y + hh - 6], 14, fill=(255, 255, 255, 60))
+            lay = Image.new("RGBA", img.size, (0, 0, 0, 0))      # RGBA の画像に直接描くと重ねずに置き換わり、白い四角になった(2026-11-15)
+            ImageDraw.Draw(lay).rounded_rectangle([bx, y + 6, bx + 110, y + hh - 6], 14, fill=(255, 255, 255, 60))
+            img.alpha_composite(lay)
 
 
 # ---- 図の質を上げた版(2026-11-11「2Dの画像の質を上げたい」) ------------------------------------------------

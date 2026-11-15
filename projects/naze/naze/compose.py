@@ -35,7 +35,8 @@ def write(frame: Callable[[int], Image.Image], n: int, audio: Path, out: Path, b
                 f"[2:a]volume={bgm_gain}[b];[1:a][b]amix=inputs=2:duration=first:dropout_transition=0,loudnorm=I=-15:TP=-1.5[a]", "-map", "0:v", "-map", "[a]"]
     else:
         cmd += ["-af", _loudnorm(audio) + ",alimiter=limit=0.84:level=false"]      # 効果音の重なりでピークが上限を超えないように
-    cmd += ["-c:v", "libx264", "-preset", "medium", "-crf", "20", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "160k", "-ar", "48000",
+    # veryfast: medium の 1/3 ほどの CPU とメモリ。本編は long で medium に圧縮し直すので画質の差は残らない(2026-11-14)
+    cmd += ["-c:v", "libx264", "-preset", "veryfast", "-crf", "20", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "160k", "-ar", "48000",
             "-shortest", "-movflags", "+faststart", str(out)]
     pr = subprocess.Popen(cmd, stdin=subprocess.PIPE)
     for i in range(1, n + 1):

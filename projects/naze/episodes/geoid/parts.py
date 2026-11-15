@@ -79,7 +79,7 @@ _a9 = POT((20, 20), to=(40, 15), ex=0.0, tint=0.0, step=0, legend=False)
 _a12 = POT((150, 0), to=(120, 5), ex=0.0, tint=1.0, step=0, title="人工衛星で測った海面の高さ")
 _a19 = GMAP((88, 5, 70), (92, 5, 64), step=0, marks=[M_LOW], line=(LOW, (103.1, 4.67)), line_label="東へ 約2,700km")
 _a21 = S("gprof", 0, ex=(0.0, 1.0))
-_a26 = BARS([("海面の高い所と低い所の差", 193, BLUE), ("東京タワー", 333, GREY)], title="高さ（m）", note="重力の模型 EGM2008 から計算", fmt="{}m", step=0)
+_a26 = BARS([("海面の高低差", 193, BLUE), ("東京タワー", 333, GREY)], title="高さ（m）", note="重力の模型 EGM2008 から計算", fmt="{}m", step=0)
 P["ch1"] = dict(title="第1章 平らなはずの海", cta=False, lines=[
     dict(id="a1", text="インド洋の真ん中では、海面がまわりより約100m低くなっています。", scene=_a1),
     dict(id="a2", text="30階建てのビルが、まるごと沈む深さです。", scene=_a1),
@@ -97,7 +97,7 @@ P["ch1"] = dict(title="第1章 平らなはずの海", cta=False, lines=[
     dict(id="a14", text="狂いは、数cmほどです。", scene=CARD("数cm", sub="衛星で測る海面の高さの狂い", step=0, count=False)),
     dict(id="a15", text="そうして描いた海面の地図が、こちらです。", scene=GMAP((0, 10, 360), (60, 5, 300), step=0)),
     dict(id="a16", text="高さの差を、1万倍に大きくしています。", scene=POT((40, 10), to=(70, 6), ex=(0.0, 1.0), step=0, note="高さの差を1万倍に大きくしています")),
-    dict(id="a17", text="インド洋の真ん中、スリランカの南に、大きなくぼみがあります。", scene=GMAP((80, 8, 70), (79, 6, 52), step=0, marks=[M_LOW], names=[((80.7, 7.8), "スリランカ"), ((78.5, 21), "インド")])),
+    dict(id="a17", text="インド洋の真ん中、スリランカの南に、大きなくぼみがあります。", scene=GMAP((80, 8, 70), (79, 6, 52), step=0, marks=[M_LOW], names=[((82.5, 9.0), "スリランカ"), ((78.0, 15.5), "インド")])),
     dict(id="a18", text="いちばん深い所で、約107mです。", scene=CARD("約107m", sub="いちばん低い海面（スリランカの南）", note="重力の模型 EGM2008 から計算", step=0)),
     dict(id="a19", text="縁から底まで、近い東側でも約2,700kmあります。", scene=_a19),
     dict(id="a20", text="日本列島が、すっぽり入る長さです。", scene=_a19),
@@ -184,8 +184,8 @@ P["ch3"] = dict(title="第3章 インド洋の下は軽い", cta=False, lines=[
 ])
 
 # ---- 第4章 日本の見えない海面 --------------------------------------------------------------------------------
-_d4 = MAP(JP, LABEL(TOKYO, "東京 37m", 52, YEL, on="東京"), LABEL(SAPPORO, "札幌 32m", 52, YEL, on="札幌"), LABEL(FUKUOKA, "福岡 33m", 52, YEL, on="福岡"), step=3, view_to=(138.5, 37.2, 23, 0))
-_d6 = MAP(JP_ALL, LABEL(CHICHI, "父島 49m", 52, YEL, on="父島"), LABEL(YONA, "与那国島 23m", 52, YEL, on="与那国"), step=3, view_to=(136.0, 31.0, 38, 0))
+_d4 = MAP(JP, LABEL(TOKYO, "東京 37m", 52, YEL, on="東京"), LABEL((141.35, 42.2), "札幌 32m", 52, YEL, on="札幌"), LABEL(FUKUOKA, "福岡 33m", 52, YEL, on="福岡"), step=3, view_to=(137.0, 37.5, 31, 0))
+_d6 = MAP(JP_ALL, LABEL(CHICHI, "父島 49m", 52, YEL, on="父島"), LABEL(YONA, "与那国島 23m", 52, YEL, on="与那国"), step=3, view_to=(134.5, 28.6, 40, 0))
 _d8 = S("levels", 3, title="見えない海面は、陸の下にも続く")
 _d11 = S("levels", 3)
 _d18 = MAP(JP, LINE([TOKYO, (140.9, 38.3), SAPPORO], id="r_n"), LINE([TOKYO, (135.5, 34.7), FUKUOKA], id="r_s"), step=3, view_to=(137.5, 36.5, 20, 0))
