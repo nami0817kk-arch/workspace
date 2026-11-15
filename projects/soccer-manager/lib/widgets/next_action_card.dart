@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../logic/next_action_advisor.dart';
+import '../logic/signing_proposal_engine.dart';
 import '../screens/finance_screen.dart';
 import '../screens/squad_screen.dart';
 import '../screens/transfer_screen.dart';
@@ -38,9 +39,17 @@ class NextActionCard extends StatelessWidget {
     final save = gameState.save;
     if (save == null) return const SizedBox.shrink();
 
+    final proposals = gameState.isTransferWindowOpen
+        ? SigningProposalEngine.propose(
+            gameState.userTeam,
+            gameState.transferMarket,
+            budget: save.budget,
+          )
+        : const <SigningProposal>[];
     final action = NextActionAdvisor.top(
       save,
       gameState.userTeam,
+      hasSigningProposals: proposals.isNotEmpty,
       transferDeadlineMatchdaysLeft: gameState.isTransferWindowOpen
           ? gameState.transferWindowMatchdaysLeft
           : null,
@@ -89,6 +98,13 @@ class NextActionCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      Text(
+                        Tr.pick('今週の決断', 'This week\'s decision'),
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: scheme.onSurfaceVariant,
+                        ),
+                      ),
                       Text(
                         action.message,
                         style: const TextStyle(fontWeight: FontWeight.w600),

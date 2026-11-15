@@ -1,31 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../logic/signing_proposal_engine.dart';
 import '../models/player.dart';
 import '../models/save_game.dart';
 import '../services/feedback_service.dart';
 import '../state/game_state.dart';
 import '../widgets/player_face_avatar.dart';
-import '../widgets/player_stat_chips.dart';
-import '../widgets/position_filter_bar.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/responsive_body.dart';
-import 'player_compare_screen.dart';
 import '../l10n/tr.dart';
 import '../theme/semantic_colors.dart';
 import '../widgets/transfer_table.dart';
 import '../widgets/screen_bar.dart';
 
 enum TransferSortOption { overall, potential, marketValue, age }
-
-extension on TransferSortOption {
-  String get label => switch (this) {
-        TransferSortOption.overall => Tr.pick('総合力', 'Overall'),
-        TransferSortOption.potential => Tr.pick('ポテンシャル', 'Potential'),
-        TransferSortOption.marketValue => Tr.pick('移籍金(安い順)', 'Fee (cheapest)'),
-        TransferSortOption.age => Tr.pick('年齢(若い順)', 'Age (youngest)'),
-      };
-}
 
 class TransferScreen extends StatefulWidget {
   const TransferScreen({super.key, this.embedded = false});
@@ -73,15 +62,8 @@ class TransferScreen extends StatefulWidget {
 
 class _TransferScreenState extends State<TransferScreen>
     with SingleTickerProviderStateMixin {
-  PositionGroup? _filter;
-  TransferSortOption _sort = TransferSortOption.overall;
-
-  /// 比較モードで選んだ2人。買う判断は「誰と比べて良いか」で決まるのに、
-  /// 市場では横並びで見る手段が無かった(自軍のスカッドにはある)。
-  bool _compareMode = false;
-  final List<String> _compareSelected = [];
-  final _searchController = TextEditingController();
-  String _query = '';
+  /// オーナーが見送った候補。この画面を開いているあいだだけ覚える。
+  final Set<String> _passed = {};
   late final TabController _tabController;
 
   @override
@@ -92,7 +74,6 @@ class _TransferScreenState extends State<TransferScreen>
 
   @override
   void dispose() {
-    _searchController.dispose();
     _tabController.dispose();
     super.dispose();
   }
@@ -102,12 +83,6 @@ class _TransferScreenState extends State<TransferScreen>
     final gameState = context.watch<GameState>();
     final save = gameState.save!;
     final squadFull = gameState.userTeam.players.length >= maxSquadSize;
-    final players = TransferScreen.filterAndSort(
-      gameState.transferMarket,
-      group: _filter,
-      query: _query,
-      sort: _sort,
-    );
 
     return Scaffold(
       appBar: screenBar(
@@ -121,29 +96,6 @@ class _TransferScreenState extends State<TransferScreen>
               'Free agents (${gameState.freeAgents.length})'),
         ],
         actions: [
-          PopupMenuButton<TransferSortOption>(
-            icon: const Icon(Icons.sort),
-            tooltip: Tr.pick('並び替え', 'Sort'),
-            initialValue: _sort,
-            onSelected: (v) => setState(() => _sort = v),
-            itemBuilder: (context) => [
-              for (final option in TransferSortOption.values)
-                PopupMenuItem(value: option, child: Text(option.label)),
-            ],
-          ),
-          IconButton(
-            icon: Icon(_compareMode ? Icons.close : Icons.compare_arrows),
-            tooltip: _compareMode
-                ? Tr.pick('比較をやめる', 'Stop comparing')
-                : Tr.pick('2人を選んで比較', 'Pick two to compare'),
-            onPressed: () {
-              FeedbackService.tap();
-              setState(() {
-                _compareMode = !_compareMode;
-                _compareSelected.clear();
-              });
-            },
-          ),
           const QuickAccessMenuButton(),
         ],
       ),
@@ -152,7 +104,7 @@ class _TransferScreenState extends State<TransferScreen>
         child: TabBarView(
           controller: _tabController,
           children: [
-            _buildMarketTab(context, gameState, save, squadFull, players),
+            _buildProposalTab(context, gameState, save, squadFull),
             _buildFreeAgentTab(context, gameState, squadFull),
           ],
         ),
@@ -160,284 +112,145 @@ class _TransferScreenState extends State<TransferScreen>
     );
   }
 
-  Widget _buildMarketTab(
+  /// 監督の補強提案。オーナーは市場を探さず、候補を買う/見送るで決める。
+  Widget _buildProposalTab(
     BuildContext context,
     GameState gameState,
     SaveGame save,
     bool squadFull,
-    List<Player> players,
   ) {
     final windowOpen = gameState.isTransferWindowOpen;
-    final screen = MediaQuery.sizeOf(context);
-    final wide = screen.width > screen.height;
+    final proposals = SigningProposalEngine.propose(
+      gameState.userTeam,
+      gameState.transferMarket,
+      budget: save.budget,
+      passed: _passed,
+    );
     return Column(
       children: [
         _TransferWindowBanner(
           open: windowOpen,
           label: gameState.transferWindowStatusLabel,
         ),
-        if (wide) ...[
-          // 横画面は高さが足りない。資金・枠・検索を1行にまとめ、表を広く見せる。
-          Padding(
-            padding: const EdgeInsets.fromLTRB(12, 6, 12, 0),
-            child: Row(
-              children: [
-                Text(Tr.pick('資金 ${save.budget}万円', 'Funds ${save.budget}'),
-                    style: Theme.of(context).textTheme.titleSmall),
-                const SizedBox(width: 12),
-                Text(
-                  Tr.pick(
-                      'スカッド ${gameState.userTeam.players.length}/$maxSquadSize',
-                      'Squad ${gameState.userTeam.players.length}/$maxSquadSize'),
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-                if (squadFull) ...[
-                  const SizedBox(width: 8),
-                  Text(
-                    Tr.pick('枠が上限です', 'Squad full'),
-                    style: const TextStyle(color: Colors.orange, fontSize: 12),
-                  ),
-                ],
-                const SizedBox(width: 12),
-                Flexible(
-                  flex: 3,
-                  child: PositionFilterBar(
-                    compact: true,
-                    value: _filter,
-                    onChanged: (v) => setState(() => _filter = v),
-                  ),
-                ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
+          child: Row(
+            children: [
+              Text(Tr.pick('資金 ${save.budget}万円', 'Funds ${save.budget}'),
+                  style: Theme.of(context).textTheme.titleSmall),
+              const SizedBox(width: 12),
+              Text(
+                Tr.pick(
+                    'スカッド ${gameState.userTeam.players.length}/$maxSquadSize',
+                    'Squad ${gameState.userTeam.players.length}/$maxSquadSize'),
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+              if (squadFull) ...[
                 const SizedBox(width: 8),
-                Flexible(
-                  flex: 2,
-                  child: TextField(
-                    controller: _searchController,
-                    onChanged: (v) => setState(() => _query = v),
-                    decoration: InputDecoration(
-                      hintText: Tr.pick('選手名で検索', 'Search by name'),
-                      prefixIcon: const Icon(Icons.search, size: 18),
-                      isDense: true,
-                    ),
-                  ),
+                Text(
+                  Tr.pick('枠が上限です', 'Squad full'),
+                  style: const TextStyle(color: Colors.orange, fontSize: 12),
                 ),
               ],
-            ),
-          ),
-        ] else ...[
-        Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Flexible(
-                child: Text(
-                  Tr.pick('資金: ${save.budget}万円', 'Funds: ${save.budget}'),
-                  style: Theme.of(context).textTheme.titleMedium,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              const SizedBox(width: 8),
-              Flexible(
-                child: Text(
-                  Tr.pick(
-                      'スカッド: ${gameState.userTeam.players.length}/$maxSquadSize',
-                      'Squad: ${gameState.userTeam.players.length}/$maxSquadSize'),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
             ],
           ),
         ),
-        if (squadFull)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(12, 0, 12, 4),
+          child: Align(
+            alignment: Alignment.centerLeft,
             child: Text(
-              Tr.pick('スカッドが上限のため、獲得するには誰かを放出してください。',
-                  'Your squad is full. Release someone before you sign anyone.'),
-              style: const TextStyle(color: Colors.orange),
-            ),
-          ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: PositionFilterBar(
-            value: _filter,
-            onChanged: (v) => setState(() => _filter = v),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-          child: TextField(
-            controller: _searchController,
-            onChanged: (v) => setState(() => _query = v),
-            decoration: InputDecoration(
-              hintText: Tr.pick('選手名で検索', 'Search by name'),
-              prefixIcon: const Icon(Icons.search),
-              isDense: true,
-              suffixIcon: _query.isEmpty
-                  ? null
-                  : IconButton(
-                      icon: const Icon(Icons.clear),
-                      tooltip: Tr.pick('検索をクリア', 'Clear the search'),
-                      onPressed: () {
-                        _searchController.clear();
-                        setState(() => _query = '');
-                      },
-                    ),
+              Tr.pick('監督が挙げた補強の候補です。買うか見送るかを決めてください。',
+                  'Candidates your manager picked. Sign them or pass.'),
+              style: Theme.of(context).textTheme.bodySmall,
             ),
           ),
         ),
-        ],
         Expanded(
-          child: players.isEmpty
-              ? Center(child: Text(Tr.pick('該当する選手はいません', 'No players match')))
-              : (!_compareMode)
-                  ? TransferTable(
-                      players: players,
-                      market: true,
-                      budget: save.budget,
-                      canSign: !squadFull && windowOpen,
-                      onSign: (p) => _showAcquireSheet(context, p),
-                    )
-                  : ListView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: players.length,
-                  itemBuilder: (context, i) {
-                    final p = players[i];
-                    final affordable = save.budget >= p.marketValue;
-                    return Card(
-                      margin: const EdgeInsets.only(bottom: 8),
-                      child: ListTile(
-                        // 説明が2行、右端が「移籍金+ボタン」の2段になるため、
-                        // 既定の高さでは縦にはみ出す(実際に12px溢れた)。
-                        isThreeLine: true,
-                        leading: PlayerFaceAvatar(
-                          playerId: p.id,
-                          position: p.position,
-                        ),
-                        title: Row(
-                          children: [
-                            Flexible(
-                              child: Text(
-                                p.name,
-                                overflow: TextOverflow.ellipsis,
-                                // 名前が主役。既定の太さだと、下に続く
-                                // 数字と同じ重さに見えていた。
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w700),
+          child: proposals.isEmpty
+              ? Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Text(
+                      Tr.pick('いまは監督から候補がありません。次の節のあとにまた挙がります。',
+                          'No candidates right now. Your manager will suggest more after the next matchday.'),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                )
+              : ListView(
+                  padding: const EdgeInsets.all(12),
+                  children: [
+                    for (final pr in proposals)
+                      Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  PlayerFaceAvatar(
+                                      playerId: pr.player.id,
+                                      position: pr.player.position),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          Tr.pick(
+                                              '${pr.player.name}(${pr.player.position.label}・${pr.player.age}歳)',
+                                              '${pr.player.name} (${pr.player.position.label}, ${pr.player.age})'),
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(
+                                          Tr.pick(
+                                              '総合力 ${pr.player.overall}・移籍金 ${pr.player.marketValue}万円',
+                                              'Overall ${pr.player.overall} • Fee ${pr.player.marketValue}'),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodySmall,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                            if (!affordable) ...[
-                              const SizedBox(width: 6),
-                              Tooltip(
-                                message: Tr.pick(
-                                    '資金不足で獲得できません', 'You cannot afford him'),
-                                child: Icon(
-                                  Icons.lock_outline,
-                                  size: 14,
-                                  color: Colors.grey.shade600,
-                                ),
+                              const SizedBox(height: 6),
+                              Text(pr.reason),
+                              const SizedBox(height: 8),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  TextButton(
+                                    onPressed: () {
+                                      FeedbackService.tap();
+                                      setState(() => _passed.add(pr.player.id));
+                                    },
+                                    child: Text(Tr.pick('見送る', 'Pass')),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  FilledButton(
+                                    onPressed: windowOpen && !squadFull
+                                        ? () => _showAcquireSheet(
+                                            context, pr.player)
+                                        : null,
+                                    child: Text(Tr.pick('買う', 'Sign')),
+                                  ),
+                                ],
                               ),
                             ],
-                          ],
+                          ),
                         ),
-                        // 1行に全部つなげると3行に折り返し、「総/合 69」
-                        // 「移籍/金 1602万」のように語の途中で切れていた。
-                        // 買うかどうかは実力と値段で決めるので、その2つを
-                        // 2行目にまとめ、所属や年齢と分けて読めるようにする。
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              Tr.pick(
-                                  '${p.originClubName ?? '所属不明'} / ${p.age}歳 / ${p.position.label}',
-                                  "${p.originClubName ?? 'Club unknown'} / age ${p.age} / ${p.position.label}"),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            // **1行につなげない。** 「総合78 潜在82
-                            // 移籍金1602万」と並べると、どこが数字でどこが
-                            // 見出しなのか目で切り分ける必要があった。
-                            // 札に分けると、数字だけを拾って読める。
-                            const SizedBox(height: 4),
-                            Wrap(
-                              spacing: 5,
-                              runSpacing: 4,
-                              children: [
-                                StatChip(
-                                  label: Tr.pick('総合', 'OVR'),
-                                  value: '${p.overall}',
-                                  color: OverallBadge.colorFor(
-                                      context, p.overall),
-                                ),
-                                StatChip(
-                                  label: Tr.pick('潜在', 'POT'),
-                                  value: '${p.potential}',
-                                ),
-                                StatChip(
-                                  label: Tr.pick('移籍金', 'Fee'),
-                                  value: Tr.pick('${p.marketValue}万',
-                                      '${p.marketValue}'),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        // 値段は説明の2行目に入れる。ボタンの上に積むと、
-                        // タップ領域(48x48)を削るか縦にはみ出すかのどちらかに
-                        // なった(CIのアクセシビリティ検査で両方とも落ちた)。
-                        trailing: _compareMode
-                            ? Checkbox(
-                                value: _compareSelected.contains(p.id),
-                                onChanged: (_) => _toggleCompare(context, p.id),
-                              )
-                            : FilledButton(
-                                onPressed: (squadFull || !windowOpen)
-                                    ? null
-                                    : () => _showAcquireSheet(context, p),
-                                child: Text(Tr.pick('獲得する', 'Sign him')),
-                              ),
-                        onTap: _compareMode
-                            ? () => _toggleCompare(context, p.id)
-                            : null,
                       ),
-                    );
-                  },
+                  ],
                 ),
         ),
       ],
     );
-  }
-
-  /// 比較する選手を選ぶ。2人そろったら比較画面へ進み、戻ったら選択を解く。
-  void _toggleCompare(BuildContext context, String playerId) {
-    FeedbackService.tap();
-    setState(() {
-      if (_compareSelected.contains(playerId)) {
-        _compareSelected.remove(playerId);
-        return;
-      }
-      // 3人目を選んだら古い方を落とす。「選び直すには解除から」だと手数が
-      // 増えるだけで、間違えたときに面倒になる。
-      if (_compareSelected.length >= 2) _compareSelected.removeAt(0);
-      _compareSelected.add(playerId);
-    });
-    if (_compareSelected.length < 2) return;
-
-    Navigator.of(context)
-        .push(
-          MaterialPageRoute<void>(
-            builder: (_) => PlayerCompareScreen(
-              playerAId: _compareSelected[0],
-              playerBId: _compareSelected[1],
-            ),
-          ),
-        )
-        .then((_) {
-      if (!mounted) return;
-      setState(() {
-        _compareMode = false;
-        _compareSelected.clear();
-      });
-    });
   }
 
   Widget _buildFreeAgentTab(

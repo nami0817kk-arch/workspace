@@ -49,6 +49,7 @@ class NextActionAdvisor {
     SaveGame save,
     Team team, {
     int? transferDeadlineMatchdaysLeft,
+    bool hasSigningProposals = false,
   }) {
     final actions = <NextAction>[];
 
@@ -61,6 +62,25 @@ class NextActionAdvisor {
             : Tr.pick('移籍ウィンドウの締切まであと$left節です。',
                 'The transfer window shuts in $left matchdays.'),
         target: NextActionTarget.transfer,
+      ));
+    }
+
+    // 監督から補強の候補が届いている。買うか見送るかを決める。
+    if (hasSigningProposals) {
+      actions.add(NextAction(
+        message: Tr.pick('監督から補強の候補が届いています。買うか見送るかを決めてください。',
+            'Your manager has sent signing candidates. Sign them or pass.'),
+        target: NextActionTarget.transfer,
+      ));
+    }
+
+    // 他クラブから売却のオファーが届いている。承認するか断るかを決める。
+    if (save.incomingOffers.isNotEmpty) {
+      actions.add(NextAction(
+        message: Tr.pick(
+            '${save.incomingOffers.first.playerName}に売却のオファーが届いています。承認するか断るかを決めてください。',
+            'An offer for ${save.incomingOffers.first.playerName} has arrived. Accept or turn it down.'),
+        target: NextActionTarget.squad,
       ));
     }
 
@@ -108,9 +128,11 @@ class NextActionAdvisor {
     SaveGame save,
     Team team, {
     int? transferDeadlineMatchdaysLeft,
+    bool hasSigningProposals = false,
   }) {
     final actions = all(save, team,
-        transferDeadlineMatchdaysLeft: transferDeadlineMatchdaysLeft);
+        transferDeadlineMatchdaysLeft: transferDeadlineMatchdaysLeft,
+        hasSigningProposals: hasSigningProposals);
     if (actions.isEmpty) return null;
     // 損が確定しているものを先に出す。
     final urgent = actions.where((a) => a.urgent);

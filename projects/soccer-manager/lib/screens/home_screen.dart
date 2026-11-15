@@ -7,6 +7,7 @@ import '../widgets/owner_event_card.dart';
 import '../widgets/owner_goal_card.dart';
 import '../widgets/two_pane.dart';
 import '../logic/calendar_engine.dart';
+import '../logic/sale_advice_engine.dart';
 import '../logic/match_engine.dart' show HalfResult;
 import '../models/formation.dart';
 import '../models/incoming_offer.dart';
@@ -61,6 +62,13 @@ List<List<IncomingOffer>> _groupOffersByPlayer(GameState gameState) {
     group.sort((a, b) => b.amount.compareTo(a.amount));
   }
   return byPlayer.values.toList();
+}
+
+Player? _playerOf(GameState gameState, IncomingOffer offer) {
+  for (final p in gameState.userTeam.players) {
+    if (p.id == offer.playerId) return p;
+  }
+  return null;
 }
 
 class HomeScreen extends StatelessWidget {
@@ -607,6 +615,24 @@ class HomeScreen extends StatelessWidget {
                                       ),
                                     ],
                                   ),
+                                // 監督の見立て。買い手ごとに1行。
+                                for (int i = 0; i < entry.length; i++)
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 2),
+                                    child: Text(
+                                      Tr.pick('監督: ', 'Manager: ') +
+                                          SaleAdviceEngine.advise(
+                                            entry[i],
+                                            _playerOf(gameState, entry[i]),
+                                            gameState.userTeam,
+                                          ).comment,
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color:
+                                            Theme.of(context).colorScheme.onSurfaceVariant,
+                                      ),
+                                    ),
+                                  ),
                               ],
                             ),
                           ),
@@ -1025,6 +1051,15 @@ class HomeScreen extends StatelessWidget {
       return;
     }
     if (!context.mounted) return;
+    // 勝負の試合でなければ、試合は見守るだけ。数秒のダイジェストと、
+    // 2つの期待の動きだけを見せる。
+    if (!gameState.isNextMatchBig) {
+      final fixture = gameState.save?.league.nextUnplayedFixture;
+      if (fixture != null) {
+        await _quickSimNextMatch(context, fixture);
+        return;
+      }
+    }
     final HalfResult? firstHalf;
     try {
       firstHalf = await gameState.playNextMatchday(interactive: true);
@@ -1054,6 +1089,8 @@ class HomeScreen extends StatelessWidget {
     final opponentName = teams.firstWhere((t) => t.id == opponentId).name;
     final userTeamName = gameState.userTeam.name;
 
+    final supportBefore = gameState.save!.confidence;
+    final shareBefore = gameState.save!.shareholderExpectation;
     final MatchResult? result;
     try {
       result = await gameState.playNextMatchdayQuickSim();
@@ -1070,6 +1107,9 @@ class HomeScreen extends StatelessWidget {
       userTeamName: userTeamName,
       opponentName: opponentName,
       teams: teams,
+      supportDelta: (gameState.save?.confidence ?? supportBefore) - supportBefore,
+      shareDelta:
+          (gameState.save?.shareholderExpectation ?? shareBefore) - shareBefore,
     );
     if (!context.mounted) return;
     _showMatchdayNotifications(context, gameState);
@@ -1098,6 +1138,8 @@ class HomeScreen extends StatelessWidget {
     required String userTeamName,
     required String opponentName,
     required List<Team> teams,
+    int supportDelta = 0,
+    int shareDelta = 0,
   }) async {
     final isHome = result.homeTeamId == userTeamId;
     final userGoals = isHome ? result.homeGoals : result.awayGoals;
@@ -1162,6 +1204,20 @@ class HomeScreen extends StatelessWidget {
                             color: resultColor,
                             fontWeight: FontWeight.bold,
                           ),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _MeterDelta(
+                          label: Tr.pick('サポーター', 'Fans'), delta: supportDelta),
+                    ),
+                    Expanded(
+                      child: _MeterDelta(
+                          label: Tr.pick('株主', 'Shareholders'),
+                          delta: shareDelta),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 12),
                 if (goals.isEmpty)
@@ -2503,6 +2559,32 @@ class _BandPill extends StatelessWidget {
           fontWeight: FontWeight.w600,
         ),
       ),
+    );
+  }
+}
+
+/// 見守った試合で、期待のメーターがどれだけ動いたか。
+class _MeterDelta extends StatelessWidget {
+  const _MeterDelta({required this.label, required this.delta});
+
+  final String label;
+  final int delta;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = delta > 0
+        ? SemanticColors.positive(context)
+        : delta < 0
+            ? SemanticColors.negative(context)
+            : SemanticColors.neutral(context);
+    final text = delta > 0 ? '+$delta' : '$delta';
+    return Row(
+      children: [
+        Text('$label ', style: const TextStyle(fontSize: 13)),
+        Text(text,
+            style: TextStyle(
+                fontSize: 14, fontWeight: FontWeight.bold, color: color)),
+      ],
     );
   }
 }
