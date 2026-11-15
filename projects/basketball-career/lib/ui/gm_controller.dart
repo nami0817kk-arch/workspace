@@ -259,6 +259,12 @@ class GmController extends ChangeNotifier {
   }
 
   void toOffseason() => _act((c) => c.toOffseason());
+
+  /// 解任されたあと、ほかのチームの誘いを受ける。
+  void takeJob(int team) {
+    _act((c) => c.takeJob(team));
+    unawaited(Sfx.play(SoundEffect.chime));
+  }
   void exerciseOption(int id) => _act((c) => c.exerciseOption(id));
   void declineOption(int id) => _act((c) => c.declineOption(id));
 

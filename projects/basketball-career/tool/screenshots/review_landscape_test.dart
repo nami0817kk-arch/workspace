@@ -164,6 +164,25 @@ void main() {
         if (i < 3 && find.byType(FilledButton).evaluate().isNotEmpty) await t.tap(find.byType(FilledButton).last);
       }
     });
+    // 解任されたあとの、ほかのチームからの誘い
+    final fired = careerAt(8, 10)..startSeason();
+    var fg = 0;
+    while (fired.phase != Phase.playoffs && fg++ < 60) {
+      botStep(fired);
+    }
+    fired
+      ..trust = 1
+      ..target = 82;
+    fg = 0;
+    while (fired.phase != Phase.seasonEnd && fg++ < 60) {
+      botStep(fired);
+    }
+    await _shoot(t, '14c_job_offers', await _with(fired), act: (t) async {
+      final head = find.text('ほかのチームからの誘い');
+      await t.scrollUntilVisible(head, 200, scrollable: find.descendant(of: find.byType(ProgressTab), matching: find.byType(Scrollable)).first);
+      await t.ensureVisible(head);
+      await t.pumpAndSettle();
+    });
     await _shoot(t, '5_team', await _with(mid), act: (t) => _tap(t, 'チーム', first: true));
     await _shoot(t, '6_trade', await _with(mid), act: (t) => _tap(t, 'トレード', first: true));
     // 選手を選んだあと(相手の反応・強さと勝ち数の見込みの変化)

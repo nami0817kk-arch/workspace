@@ -28,6 +28,31 @@ class HistoryScreen extends StatelessWidget {
             child: ListView(
               padding: const EdgeInsets.fromLTRB(14, 4, 14, 24),
               children: [
+                // GM の経歴(受け持ったチームごと)
+                const SectionTitle('GMの経歴'),
+                _card([
+                  for (final r in car.gmCareer())
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 3),
+                      child: Row(children: [
+                        TeamBadge(team: r.team, size: 22),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            car.teams[r.team].name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(fontWeight: FontWeight.bold, color: r.team == car.mine ? GmColors.ball : null),
+                          ),
+                        ),
+                        Text(
+                          '${r.from}〜${r.to}年目・${r.wins}勝${r.losses}敗・PO${r.playoffs}回${r.titles > 0 ? '・優勝${r.titles}回' : ''}',
+                          style: TextStyle(fontSize: 12, color: r.titles > 0 ? GmColors.gold : GmColors.sub),
+                        ),
+                      ]),
+                    ),
+                  Text('GM の格 Lv${car.gmLevel}(通算${car.gmPoints}点)', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
+                ]),
                 const SectionTitle('歴代の優勝'),
                 _card([
                   if (car.champs.isEmpty) const Text('まだ優勝したチームはない。', style: TextStyle(color: GmColors.sub)),
