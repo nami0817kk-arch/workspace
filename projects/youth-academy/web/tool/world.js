@@ -1342,6 +1342,24 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   ok(v && /覚醒/.test(v.text) && v.text.indexOf(q.aw.trait) >= 0 && !/undefined|null|NaN/.test(v.text), '覚醒の知らせ ' + (v && v.text));
   ok(YA.AWAKE_FORMS.length >= 20 && YA.AWAKE_FORMS.every((f) => f.as.every((t) => YA.TRAITS.indexOf(t) >= 0) && f.abs.every((a) => YA.AB_FIELD.concat(YA.AB_GK).indexOf(a) >= 0)), '覚醒の形は20種類・中身が正しい');
   ok(YA.AWAKE_FORMS.every((f) => f.as.length === 4 && new Set(f.as).size === 4), '覚醒の特性はどの形も4つ');
+  // 金の特性：試合で GOLD_USES 回効き、関わる能力の平均が GOLD_AB 以上で変わる
+  {
+    const wg = YA.newWorld(5);
+    const pg = Object.values(wg.players).find((p) => p.pos !== 'GK');
+    pg.traits = ['スルーパス'];
+    pg.trUse = { スルーパス: YA.GOLD_USES - 1 };
+    for (const a of YA.TRAIT_AFF['スルーパス']) pg.ab[a] = YA.GOLD_AB + 1;
+    YA.goldCheck(wg, pg);
+    ok(!YA.isGold(pg, 'スルーパス'), '回数が足りないと金にならない');
+    pg.trUse.スルーパス = YA.GOLD_USES;
+    for (const a of YA.TRAIT_AFF['スルーパス']) pg.ab[a] = YA.GOLD_AB - 1;
+    YA.goldCheck(wg, pg);
+    ok(!YA.isGold(pg, 'スルーパス'), '能力が足りないと金にならない');
+    for (const a of YA.TRAIT_AFF['スルーパス']) pg.ab[a] = YA.GOLD_AB + 1;
+    YA.goldCheck(wg, pg);
+    ok(YA.isGold(pg, 'スルーパス') && /針の穴/.test(pg.hist[0].t), '条件がそろうと金の特性に変わる');
+    ok(YA.goldReady(pg, 'スルーパス').ok, '金までの進み具合が読める');
+  }
   // ★の付いていない子は覚醒しない。おまかせで3年回すと★の子が何人か覚醒する
   let star = 0, other = 0, yrs = 0;
   for (const seed of [8, 21]) {

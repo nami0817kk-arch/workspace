@@ -345,10 +345,40 @@
   }
   YA.keyProgress = progress;
 
+  // ---------- 上位の特性（金）：試合で効いた回数を数え、条件がそろえば金に変わる ----------
+  YA.goldReady = function (p, t) {
+    const aff = YA.TRAIT_AFF[t] || [];
+    const ab = aff.length ? aff.reduce((s, n) => s + (p.ab[n] || 0), 0) / aff.length : 0;
+    const used = (p.trUse && p.trUse[t]) || 0;
+    return { used, ab: Math.round(ab * 10) / 10, ok: used >= YA.GOLD_USES && ab >= YA.GOLD_AB };
+  };
+  YA.goldCheck = function (w, p) {
+    for (const t of p.traits) {
+      if (!YA.GOLD[t] || YA.isGold(p, t) || !YA.goldReady(p, t).ok) continue;
+      p.gold = (p.gold || []).concat([t]);
+      p.hist.unshift({ y: w.year, w: w.week, t: `特性「${t}」が金の特性「${YA.GOLD[t]}」に変わった` });
+      YA.noteTier(w, 1, `${p.num}番 ${p.name}の「${t}」が、金の特性「${YA.GOLD[t]}」に変わった（効きが${YA.GOLD_MULT}倍）`, p.id);
+    }
+  };
+  YA.traitUse = function (w, m) {
+    const seen = new Set();
+    for (const [k, n] of Object.entries(m.trUse || {})) {
+      const i = k.indexOf('|');
+      const p = w.players[k.slice(0, i)];
+      if (!p) continue;
+      const t = k.slice(i + 1);
+      p.trUse = p.trUse || {};
+      p.trUse[t] = (p.trUse[t] || 0) + n;
+      seen.add(p);
+    }
+    for (const p of seen) YA.goldCheck(w, p);
+  };
+
   // ---------- 試合のあと：鍵の進み・信頼 ----------
   const applyMatch0 = YA.applyMatch;
   YA.applyMatch = function (w, m, which, opp, scheduled) {
     applyMatch0(w, m, which, opp, scheduled);
+    YA.traitUse(w, m);
     if (which === 'B') {
       const tb = m.home;
       const sb = new Set(tb.lineup.map((s) => s.pid));

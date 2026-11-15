@@ -210,6 +210,14 @@
       gain ? h('span', { style: 'color:#1a9d57;font-weight:900;font-size:10px;width:18px' }, '+' + gain) : h('span', { style: 'width:18px' }),
       yr ? h('span', { style: 'color:#7b879b;font-weight:700;font-size:9.5px;width:20px' }, (yr > 0 ? '+' : '') + yr) : h('span', { style: 'width:20px' }));
   }
+  // 金の特性に近いもの（試合で効いた回数と能力）。世界の選手だけ（trUse を持つ。p.tu は戦術理解なので別名）
+  function goldHint(p) {
+    if (!YA.goldReady || !p.ab || !p.traits) return null;
+    const c = p.traits.filter((x) => YA.GOLD && YA.GOLD[x] && !YA.isGold(p, x)).map((x) => [x, YA.goldReady(p, x)]).sort((a, b) => (b[1].used / YA.GOLD_USES + b[1].ab / YA.GOLD_AB) - (a[1].used / YA.GOLD_USES + a[1].ab / YA.GOLD_AB))[0];
+    if (!c) return null;
+    const aff = (YA.TRAIT_AFF[c[0]] || []).join('・');
+    return h('div', { class: 'sub', style: 'margin-top:2px' }, `金まで：「${c[0]}」→「${YA.GOLD[c[0]]}」　試合で効いた ${Math.min(c[1].used, YA.GOLD_USES)}/${YA.GOLD_USES}回・${aff}の平均 ${c[1].ab}/${YA.GOLD_AB}`);
+  }
   function playerCard(t, p, opts) {
     opts = opts || {};
     const idx = t.lineup.findIndex((x) => x.pid === p.id);
@@ -221,7 +229,7 @@
       h('div', { class: 'row' }, posChip(p), h('div', { class: 'grow' }, h('div', { class: 'h' }, `${p.num}  ${p.name}`, p.grade ? `  （高${p.grade}）` : ''), h('div', { class: 'sub' }, `${p.height}cm  /  調子 ${p.form > 0 ? '+' : ''}${p.form}  /  自信 ${Math.round(p.conf)}  /  戦術理解 ${Math.round(p.tu == null ? 40 : p.tu)}` + (p.nation && p.nation !== '日本' ? `  /  ${p.nation}` : '')))),
       h('div', { style: 'margin-top:5px' }, h('div', { class: 'note' }, 'ポジションの適性'), aptBlock(p)),
       h('div', { style: 'margin-top:5px' }, h('div', { class: 'note' }, '性格'), persExplain(p)),
-      h('div', { style: 'margin-top:5px' }, h('div', { class: 'note' }, '特性'), h('div', { class: 'row', style: 'flex-wrap:wrap;gap:3px' }, p.traits.length ? p.traits.map((x) => h('span', { class: 'chip trait' }, x)) : h('span', { class: 'sub' }, 'なし'))),
+      h('div', { style: 'margin-top:5px' }, h('div', { class: 'note' }, '特性'), h('div', { class: 'row', style: 'flex-wrap:wrap;gap:3px' }, p.traits.length ? p.traits.map((x) => (YA.isGold(p, x) ? h('span', { class: 'chip gold', title: '金の特性（もとは「' + x + '」・効き' + YA.GOLD_MULT + '倍）' }, '金 ' + YA.GOLD[x]) : h('span', { class: 'chip trait', title: YA.GOLD && YA.GOLD[x] ? '金の特性「' + YA.GOLD[x] + '」になれる' : '' }, x))) : h('span', { class: 'sub' }, 'なし')), goldHint(p)),
     );
     const list = opts.all ? (isGK ? YA.AB_GK.concat(['フィールド']) : YA.AB_FIELD) : top.slice(0, 8).map((x) => x[0]);
     if (opts.all) {
@@ -1081,7 +1089,7 @@
           const row = sceneHead.querySelector('.tagrow');
           while (S.tagShown < S.tags.length && R.t >= 1.3 + S.tagShown * 0.55) {
             const f = S.tags[S.tagShown++];
-            row.append(h('div', { class: 'tag' }, h('span', { class: 'chip ' + f.kind }, f.kind === 'trait' ? '特性' : f.kind === 'pers' ? '性格' : '指示'), h('span', {}, f.tag), h('small', {}, `${f.num}番 ${surname({ name: f.name })}：${f.text}`)));
+            row.append(h('div', { class: 'tag' }, h('span', { class: 'chip ' + f.kind }, f.kind === 'trait' ? '特性' : f.kind === 'gold' ? '金特性' : f.kind === 'awake' ? '覚醒' : f.kind === 'pers' ? '性格' : '指示'), h('span', {}, f.tag), h('small', {}, `${f.num}番 ${surname({ name: f.name })}：${f.text}`)));
           }
           if (R.t >= sc.dur) endScene();
         } else {
@@ -1176,7 +1184,7 @@
     }
     const ins = Object.values(cnt).sort((a, b) => b.g - a.g || b.n - a.n).slice(0, 5);
     if (!ins.length) right.append(h('div', { class: 'note' }, 'この試合は、特性や性格が目立つ場面がありませんでした。'));
-    for (const c of ins) right.append(h('div', { class: 'insight' }, h('span', { class: 'chip ' + c.f.kind }, c.f.kind === 'trait' ? '特性' : c.f.kind === 'awake' ? '覚醒' : c.f.kind === 'pers' ? '性格' : '指示'), ` ${c.f.num}番 ${surname({ name: c.f.name })}の「${c.f.tag}」が${c.n}回効いた` + (c.g ? `（うち得点${c.g}）` : '')));
+    for (const c of ins) right.append(h('div', { class: 'insight' }, h('span', { class: 'chip ' + c.f.kind }, c.f.kind === 'trait' ? '特性' : c.f.kind === 'gold' ? '金特性' : c.f.kind === 'awake' ? '覚醒' : c.f.kind === 'pers' ? '性格' : '指示'), ` ${c.f.num}番 ${surname({ name: c.f.name })}の「${c.f.tag}」が${c.n}回効いた` + (c.g ? `（うち得点${c.g}）` : '')));
     for (const n of summary.notes) right.append(h('div', { class: 'insight bad' }, n.text));
     const sh = m.stats.home;
     const sa = m.stats.away;

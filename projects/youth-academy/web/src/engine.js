@@ -264,12 +264,24 @@
       }
       return b;
     }
+    // 特性が効いた回数（札が出たかどうかに関わらず）。金の特性の条件に使う
+    _use(p, trait) {
+      if (p.traits.indexOf(trait) < 0) return;
+      const u = (this.trUse = this.trUse || {});
+      const k = p.id + '|' + trait;
+      u[k] = (u[k] || 0) + 1;
+    }
     traitBonus(sc, p, trait, amount, text) {
       if (!has(p, trait)) return 0;
+      this._use(p, trait);
       if (p.traits.indexOf(trait) < 0) {
         // 覚醒の特性：札は覚醒の名前で出し、効きは少し強い
         this._fx(sc, p, 'awake', p.aw.trait, text);
         return amount * 1.4;
+      }
+      if (YA.isGold(p, trait)) {
+        this._fx(sc, p, 'gold', YA.GOLD[trait], text);
+        return amount * YA.GOLD_MULT;
       }
       this._fx(sc, p, 'trait', trait, text);
       return amount;
@@ -278,7 +290,12 @@
     defTrait(sc, def, trait, amount, text, pos) {
       const xs = this.onPitch(def).filter((x) => has(x.p, trait) && (!pos || pos.indexOf(x.pos) >= 0));
       if (!xs.length) return { b: 0, p: null };
-      const x = xs[0];
+      const x = xs.find((y) => YA.isGold(y.p, trait)) || xs[0];
+      this._use(x.p, trait);
+      if (YA.isGold(x.p, trait)) {
+        this._fx(sc, x.p, 'gold', YA.GOLD[trait], text);
+        return { b: amount * YA.GOLD_MULT, p: x.p };
+      }
       this._fx(sc, x.p, 'trait', trait, text);
       return { b: amount, p: x.p };
     }
@@ -448,6 +465,8 @@
       if (opt.cross) gq += this.traitBonus(sc, gkp, 'クロスへの強さ', 2, '高いボールに強く出た') + this.traitBonus(sc, gkp, 'パンチング', 1, 'パンチングで逃れた');
       if (opt.oneOnOne || opt.cross) gq += this.traitBonus(sc, gkp, '至近距離のセーブ', 1.5, '至近距離で体を残して反応した');
       if (kind === 'long' || opt.fk) gq += this.traitBonus(sc, gkp, 'ミドルに強いGK', 2, '遠いシュートを落ち着いて弾いた');
+      gq += this.traitBonus(sc, gkp, 'ビッグセーブ', 1, '指先で弾き出した');
+      if (this.min >= 75) q += this.traitBonus(sc, shooter, '終盤に強い', 1.5, '終盤でも足が止まらなかった');
       if (opt.fk || opt.pk) gq += 0;
       gq += this.persMod(sc, def, gkp, 'defend') * 0.5;
       const sq = q - diff + this.persMod(sc, att, shooter, 'shot') + this.markPenalty(att, def, shooter, sc) * -1 + this.tacticEdge(att, def) * 0.8 - this.tacticEdge(def, att) * 0.5 + this.fitShot(att, def);
@@ -456,7 +475,8 @@
       this.stats[this.side(att)].shots++;
       // 守備のブロック
       const blk = this.defTrait(sc, def, 'シュートブロック', 0.14, '体を投げ出して止めにいった', ['DF', 'MF']);
-      if (!opt.pk && rng() < 0.06 + blk.b + (opt.crowd ? 0.08 : 0)) {
+      const cut = opt.pk ? { b: 0 } : this.defTrait(sc, def, 'コースを切る', 0.06, 'シュートコースを消した', ['DF', 'MF']);
+      if (!opt.pk && rng() < 0.06 + blk.b + cut.b + (opt.crowd ? 0.08 : 0)) {
         return { result: 'blocked', blocker: blk.p || this.pickDefender(def, 'C', sc) };
       }
       if (rng() > onP) return { result: rng() < 0.18 ? 'post' : 'missed' };
@@ -613,6 +633,7 @@
       let P = effAvg(passer, ['パス', '視野', 'テクニック'], this) + this.traitBonus(sc, passer, 'スルーパス', 3, '一瞬の隙間を見つけて通した') + this.traitBonus(sc, passer, 'ひらめき', 1.5, '誰も予想しないパスを出した');
       P += this.persMod(sc, att, passer, 'pass');
       let R = effAvg(runner, ['オフザボール', '加速', 'スピード'], this) + this.traitBonus(sc, runner, '裏への抜け出し', 3.5, '最終ラインの背中を取った');
+      R += this.traitBonus(sc, runner, 'トラップの名手', 1.5, 'ピタリと止めて前を向いた');
       R += this.persMod(sc, att, runner, 'duel');
       const rr = this.roleOf(att, runner);
       let D = (effAvg(d1, ['ポジショニング', '予測', 'スピード'], this) + effAvg(d2, ['ポジショニング', '予測', 'スピード'], this)) / 2 - (def.tactic.line - 0.5) * 4;
@@ -656,7 +677,7 @@
       // 抜け出して1対1
       const Fq = effAvg(runner, ['フィニッシュ', '冷静さ', '判断'], this) + ((YA.ROLE_DEF[rr] && YA.ROLE_DEF[rr].tags.indexOf('finish') >= 0) ? 1 : 0);
       const loop = this.traitBonus(sc, runner, 'ループシュート', 1.5, '前に出たGKの頭上を狙った');
-      const res = this.shot(sc, att, def, runner, Fq + loop, 1.5, 'through', { oneOnOne: true });
+      const res = this.shot(sc, att, def, runner, Fq + loop + this.traitBonus(sc, runner, 'GKとの駆け引き', 1.5, 'GKの重心を見て逆を突いた'), 1.5, 'through', { oneOnOne: true });
       this.finish(sc, att, def, res, runner, passer);
       const gx = res.result === 'goal' ? (rng() < 0.5 ? 30.5 : 37.5) : 34;
       sc.frames = base([
@@ -689,6 +710,7 @@
       H += (header.height - 178) * 0.12 + this.persMod(sc, att, header, 'duel');
       const aer = this.defTrait(sc, def, '空中戦の競り', 2.5, '体をぶつけて競り合った', ['DF']);
       let D = effAvg(dEnd, ['ヘディング', 'ジャンプ', 'ポジショニング', '強さ'], this) + aer.b + (dEnd.height - 178) * 0.12 + this.persMod(sc, def, dEnd, 'duel');
+      D += this.defTrait(sc, def, 'マンマーク', 1.5, 'ぴったり付いて自由にさせなかった', ['DF']).b;
       // クロスの種類（早い・高い・低い）
       const ct = att.tactic.crossType;
       if (ct === 'high') H += 0.6 + (header.height - 178) * 0.05;
@@ -696,6 +718,7 @@
       if (ct === 'early') C += 1;
       if (ct !== 'low') H += this.traitBonus(sc, header, 'ファーで待つ', 2, '大外で待って合わせた');
       C += this.traitBonus(sc, crosser, 'マイナスの折り返し', 1.5, 'ゴールライン際から折り返した');
+      if (ct === 'low') C += this.traitBonus(sc, crosser, 'グラウンダーのクロス', 2, '速いグラウンダーを送り込んだ');
       const fx = left ? 4 : 64;
       const hx = 34 + (rng() - 0.5) * 6;
       const gkp = this.gk(def);
@@ -747,6 +770,7 @@
       const pr = this.defTrait(sc, def, '1対1の粘り', 2.5, '足を出させず粘り強く対応した', ['DF', 'MF']);
       let D = effAvg(df, ['タックル', 'マーク', '敏しょう性', '予測'], this) + pr.b + this.persMod(sc, def, df, 'defend');
       Q += this.traitBonus(sc, d, '股抜き', 1.5, '股を抜いて置き去りにした');
+      Q += this.traitBonus(sc, d, 'ドリブルの緩急', 1.5, '止まってから一気に加速した');
       D += this.defTrait(sc, def, '体を寄せる', 1.5, '肩を入れて体で止めた', ['DF', 'MF']).b;
       const sx = left ? 8 : 60;
       const ix = left ? 24 : 44;
@@ -782,7 +806,7 @@
         sc.dur = 6.4;
         return;
       }
-      const sq = effAvg(d, ['フィニッシュ', 'テクニック', '冷静さ'], this) + (cut ? this.traitBonus(sc, d, '巻いて流し込むシュート', 3, 'ファーサイドへ巻いて流し込んだ') : 0) + (cut && d.traits.indexOf('逆足') >= 0 ? 0 : 0) + (cut ? (d.ab['逆足の精度'] - 10) * 0.15 : 0);
+      const sq = effAvg(d, ['フィニッシュ', 'テクニック', '冷静さ'], this) + this.traitBonus(sc, d, 'シュートフェイント', 1.5, '打つと見せて一つかわした') + (cut ? this.traitBonus(sc, d, '巻いて流し込むシュート', 3, 'ファーサイドへ巻いて流し込んだ') : 0) + (cut && d.traits.indexOf('逆足') >= 0 ? 0 : 0) + (cut ? (d.ab['逆足の精度'] - 10) * 0.15 : 0);
       const res = this.shot(sc, att, def, d, sq, cut ? 0.5 : 1.8, 'dribble', {});
       this.finish(sc, att, def, res, d, null);
       const px = cut ? ix : sx;
@@ -831,6 +855,7 @@
       sc.actors = { kicker: k.id };
       const wall = this.onPitch(def).filter((x) => x.pos === 'DF' || x.pos === 'MF').slice(0, 4).map((x) => x.p.id);
       let q = effAvg(k, ['プレースキック', 'テクニック', 'フィニッシュ'], this) + this.traitBonus(sc, k, '直接FK', 4, '壁を越えて曲げた直接FK') + this.persMod(sc, att, k, 'shot');
+      q += this.traitBonus(sc, k, '無回転FK', 2, '無回転で揺れながら落ちた');
       const res = this.shot(sc, att, def, k, q, 3.2, 'fk', { fk: true });
       this.finish(sc, att, def, res, k, null);
       const wallPos = {};
@@ -857,7 +882,9 @@
       const right = rng() < 0.5;
       const cx = right ? 68 : 0;
       let K = effAvg(k, ['プレースキック', 'クロス', 'テクニック'], this) + this.traitBonus(sc, k, '曲がるCK', 3, '狙いすました曲がるボールを送った');
+      K += this.traitBonus(sc, k, '低く速いCK', 1.5, 'ニアへ低く速いボールを入れた');
       let H = effAvg(h, ['ヘディング', 'ジャンプ', '強さ', 'ポジショニング'], this) + this.traitBonus(sc, h, 'ヘディングシュート', 2.5, '高い打点で合わせた') + this.traitBonus(sc, h, '空中戦の競り', 2, 'ぶつかり合いに競り勝った') + (h.height - 178) * 0.12;
+      H += this.traitBonus(sc, h, '高い打点', 1.5, '頭ひとつ抜けた打点で合わせた');
       const aer = this.defTrait(sc, def, '空中戦の競り', 2.5, '体を当てて競り合った', ['DF']);
       let D = effAvg(dd, ['ヘディング', 'ジャンプ', '強さ', 'マーク'], this) + aer.b + (dd.height - 178) * 0.12 + 1;
       const hx = 34 + (rng() - 0.5) * 8;
@@ -935,6 +962,7 @@
       const cov = this.defTrait(sc, def, 'カバーリング', 1.5, '戻って守備のカバーに入った', ['DF']);
       let D = (effAvg(d1, ['スピード', 'ポジショニング', '予測'], this) + effAvg(d2, ['スピード', 'ポジショニング', '予測'], this)) / 2 + rec.b + cov.b - (def.tactic.line - 0.4) * 3;
       D += this.defTrait(sc, def, '戻りの速さ', 2, '全力で戻って追いついた', ['DF', 'MF']).b;
+      D += this.defTrait(sc, def, '正確なタックル', 1.5, 'ボールだけを正確に刈った', ['DF', 'MF']).b;
       const cx = 34 + (rng() - 0.5) * 18;
       const mk = (end) => [
         { t: 0, pos: { [reb.id]: [cx, 36], [c.id]: [cx + 4, 40], [f.id]: [cx - 8, 52], [d1.id]: [cx - 9, 64], [d2.id]: [cx + 9, 64] }, ball: [cx, 36, 0], cap: reb.num + '番 ボール奪取' },
@@ -978,6 +1006,7 @@
       sc.actors = { runner: a.id, wall: b.id };
       sc.defs = [d1.id, d2.id];
       let Q = effAvg(a, ['パス', 'オフザボール', '判断'], this) + effAvg(b, ['ファーストタッチ', 'パス', 'テクニック'], this) * 0.8 + this.traitBonus(sc, a, 'ワンツー', 2.5, '壁に当てて素早く走り直した') + this.traitBonus(sc, b, 'ポストプレー', 1.5, '体で収めて落とした') + this.traitBonus(sc, b, '下がって受ける', 1.5, '下がって受けて落とした') + this.traitBonus(sc, b, 'タメを作る', 1.5, '一呼吸おいて時間を作った') + this.traitBonus(sc, b, '背負ってからのターン', 0, '');
+      Q += this.traitBonus(sc, b, 'ワンタッチパス', 1.5, 'ダイレクトではたいた') + this.traitBonus(sc, a, '3人目の動き', 1.5, '3人目として飛び出した');
       Q = Q / 1.8;
       const pr = this.defTrait(sc, def, 'ボール奪取', 2, '間に入ってボールを奪いにいった', ['DF', 'MF']);
       let D = (effAvg(d1, ['マーク', '予測', 'ポジショニング'], this) + effAvg(d2, ['マーク', '予測', 'ポジショニング'], this)) / 2 + pr.b;
@@ -1015,6 +1044,7 @@
       sc.actors = { presser: p.id, finisher: f.id };
       sc.defs = [victim.id];
       let P = effAvg(p, ['タックル', '運動量', '予測'], this) + this.traitBonus(sc, p, '前線からの守備', 3, '前から追いかけて圧力をかけた') + this.traitBonus(sc, p, '即時奪回', 2, '失った直後に奪い返した') + this.traitBonus(sc, p, 'ボール奪取', 2, '体を入れて奪い取った') + this.persMod(sc, att, p, 'duel') + att.tactic.press * 2;
+      P += this.traitBonus(sc, p, 'ハイプレスの先頭', 1.5, '先頭で限定して追い込んだ');
       let V = effAvg(victim, ['ファーストタッチ', 'テクニック', '冷静さ', 'パス'], this) + this.persMod(sc, def, victim, 'defend') - 1;
       const px = 34 + (rng() - 0.5) * 24;
       const mk = (end) => [
