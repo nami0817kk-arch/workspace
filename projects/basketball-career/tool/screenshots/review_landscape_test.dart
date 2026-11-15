@@ -104,6 +104,12 @@ void main() {
     final mid = careerAt(3, 12)..startSeason();
     mid.playBlock();
     await _shoot(t, '4_home_season', await _with(mid));
+    await _shoot(t, '4e_next_opponent', await _with(mid), act: (t) async {
+      final card = find.text('次の相手の分析');
+      await t.scrollUntilVisible(card, 200, scrollable: find.descendant(of: find.byType(ProgressTab), matching: find.byType(Scrollable)).first);
+      await t.drag(find.descendant(of: find.byType(ProgressTab), matching: find.byType(Scrollable)).first, const Offset(0, 330));
+      await t.pumpAndSettle();
+    });
     await _shoot(t, '4d_box_score', await _with(careerAt(3, 12)..startSeason()), act: (t) async {
       await _tap(t, '次の20試合へ');
       await t.pumpAndSettle();

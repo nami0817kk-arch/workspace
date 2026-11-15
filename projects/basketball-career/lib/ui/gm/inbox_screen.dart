@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../gm/career.dart';
 import '../../gm/inbox.dart';
+import '../../gm/league.dart';
+import '../../gm/promise.dart';
 import '../gm_controller.dart';
 import 'style.dart';
 
@@ -137,6 +140,8 @@ class _InboxScreenState extends State<InboxScreen> {
                                 ),
                               ),
                             ),
+                            const SizedBox(height: 6),
+                            PromiseBox(car: car),
                           ],
                         ),
                       ),
@@ -304,6 +309,95 @@ class _MessageCard extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// GM の言葉の重みと、いま抱えている約束(返事で約束したこと。期限まで見張られる)。
+class PromiseBox extends StatelessWidget {
+  const PromiseBox({super.key, required this.car});
+  final Career car;
+
+  String _due(Promise x) {
+    if (x.kind == PromiseKind.playoffs) return 'シーズンの終わり';
+    final s = x.due ~/ blocksPerSeason, b = x.due % blocksPerSeason;
+    return '${s == car.season ? '' : '$s年目の'}${b == 0 ? '開幕' : '$b区切り目の終わり'}まで';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final open = car.openPromises;
+    final done = [for (final x in car.promises) if (x.state == PromiseState.kept || x.state == PromiseState.broken) x].take(2).toList();
+    final w = car.word;
+    final color = w >= 70 ? GmColors.good : w >= 45 ? GmColors.gold : GmColors.bad;
+    return Container(
+      padding: const EdgeInsets.fromLTRB(10, 6, 10, 6),
+      decoration: BoxDecoration(
+        color: GmColors.panel,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: open.isEmpty ? GmColors.line : GmColors.gold.withValues(alpha: 0.5)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.handshake_rounded, size: 14, color: GmColors.gold),
+              const SizedBox(width: 4),
+              Text(open.isEmpty ? '約束' : '約束(${open.length})', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+              const Spacer(),
+              const Text('GMの言葉の重み ', style: TextStyle(fontSize: 10, color: GmColors.sub)),
+              Text('$w・${wordLabel(w)}', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: color)),
+            ],
+          ),
+          const SizedBox(height: 3),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(2),
+            child: TweenAnimationBuilder<double>(
+              tween: Tween(end: w / 100),
+              duration: const Duration(milliseconds: 600),
+              curve: Curves.easeOutCubic,
+              builder: (context, v, _) => LinearProgressIndicator(value: v, minHeight: 4, color: color, backgroundColor: GmColors.line),
+            ),
+          ),
+          if (open.isEmpty && done.isEmpty)
+            const Padding(
+              padding: EdgeInsets.only(top: 4),
+              child: Text('選手や記者への返事は約束になる。守ると言葉が重くなり、破ると本人とチームの気持ちが下がる。', style: TextStyle(fontSize: 10, color: GmColors.sub, height: 1.4)),
+            ),
+          for (final x in open)
+            Padding(
+              padding: const EdgeInsets.only(top: 3),
+              child: Row(
+                children: [
+                  const Icon(Icons.schedule_rounded, size: 12, color: GmColors.gold),
+                  const SizedBox(width: 4),
+                  Expanded(child: Text(x.line, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 11))),
+                  Text(_due(x), style: const TextStyle(fontSize: 10, color: GmColors.sub)),
+                ],
+              ),
+            ),
+          for (final x in done)
+            Padding(
+              padding: const EdgeInsets.only(top: 3),
+              child: Row(
+                children: [
+                  Icon(x.state == PromiseState.kept ? Icons.check_circle_rounded : Icons.cancel_rounded, size: 12, color: x.state == PromiseState.kept ? GmColors.good : GmColors.bad),
+                  const SizedBox(width: 4),
+                  Expanded(
+                    child: Text(
+                      '${x.line}(${x.state == PromiseState.kept ? '守った' : '破った'})',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontSize: 11, color: GmColors.sub),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+        ],
       ),
     );
   }

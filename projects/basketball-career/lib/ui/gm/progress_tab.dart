@@ -16,6 +16,7 @@ import 'draft_show_screen.dart';
 import 'inbox_screen.dart';
 import 'negotiate_dialog.dart';
 import 'offseason_show_screen.dart';
+import 'opponent_card.dart';
 import 'player_card.dart';
 import 'skills_screen.dart';
 import 'trade_show_screen.dart';
@@ -272,6 +273,7 @@ class ProgressTab extends StatelessWidget {
       ..._offerCard(context, car),
       ..._inboxCard(context, car),
       ..._scheduleCard(car),
+      if (car.phase == Phase.season) NextOpponentCard(car: car),
       _pressCard(car),
       _goalsCard(car),
       ..._injuryCard(car),
