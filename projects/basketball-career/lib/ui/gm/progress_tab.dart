@@ -673,6 +673,34 @@ class ProgressTab extends StatelessWidget {
               label: Text(c.needsAd ? '動画を見て、オーナーを説得する(1回だけ)' : 'オーナーを説得する(1回だけ)'),
             ),
           ],
+          // ほかのチームからの誘い(2026-11-16。受けると、格と実績を持ってそのチームの GM になる)
+          if (car.canTakeJob) ...[
+            const SizedBox(height: 12),
+            _head('ほかのチームからの誘い', icon: Icons.mark_email_unread_rounded, color: GmColors.gold),
+            const SizedBox(height: 4),
+            Text('GM の格 Lv${car.gmLevel}を見て、声がかかった。受けると、そのチームの GM としてオフから続ける(信頼は40から)。',
+                style: const TextStyle(fontSize: 12, color: GmColors.sub, height: 1.5)),
+            for (final t in car.jobOffers)
+              Padding(
+                padding: const EdgeInsets.only(top: 6),
+                child: Row(children: [
+                  TeamBadge(team: t, size: 30),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      Text(car.teams[t].name, style: const TextStyle(fontWeight: FontWeight.bold)),
+                      Text('${record(car.teams[t])}・強さ${car.strengthRank(t) + 1}位・${Outlook.of(car.strengthRank(t)).label}',
+                          style: const TextStyle(fontSize: 12, color: GmColors.sub)),
+                    ]),
+                  ),
+                  FilledButton(
+                    style: FilledButton.styleFrom(minimumSize: const Size(0, 34)),
+                    onPressed: c.busy ? null : () => c.takeJob(t),
+                    child: const Text('このチームへ'),
+                  ),
+                ]),
+              ),
+          ],
           const SizedBox(height: 8),
           OutlinedButton(onPressed: c.busy ? null : c.toOffseason, child: const Text('任期を終える')),
         ]),

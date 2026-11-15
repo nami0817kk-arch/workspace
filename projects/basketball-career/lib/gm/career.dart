@@ -405,6 +405,9 @@ class Career {
     ];
     c.coachPool = c._makeCoaches(0, start: false);
     c.startRank = c.strengthRank(c.mine);
+    c.stints = [
+      [c.mine, 1],
+    ];
     return c;
   }
 
@@ -415,9 +418,98 @@ class Career {
   /// 難しさ(始めるときに選び、途中では変えない)。
   Difficulty difficulty = Difficulty.normal;
 
-  /// 自分のチーム。
-  final int mine;
+  /// 自分のチーム(解任されたあと、誘いを受けると替わる)。
+  int mine;
   Team get me => teams[mine];
+
+  /// GM の経歴: 受け持ったチームと、任された最初のシーズン([チーム, シーズン] の並び)。
+  /// 2026-11-16、Basketball GM の GM History・2K26 の GM Legacy のように、任期をまたいだ足跡を残す。
+  List<List<int>> stints = [];
+
+  /// 経歴の行(チームごとのシーズン・勝敗・プレーオフ・優勝)。古い保存で経歴が無ければ、今のチームの1行。
+  List<({int team, int from, int to, int wins, int losses, int playoffs, int titles})> gmCareer() {
+    final st = stints.isEmpty
+        ? [
+            [mine, 1],
+          ]
+        : stints;
+    return [
+      for (var i = 0; i < st.length; i++)
+        () {
+          final from = st[i][1];
+          final to = i + 1 < st.length ? st[i + 1][1] - 1 : season;
+          final hs = [for (final h in history) if (h.season >= from && h.season <= to) h];
+          return (
+            team: st[i][0],
+            from: from,
+            to: to,
+            wins: hs.fold(0, (n, h) => n + h.wins),
+            losses: hs.fold(0, (n, h) => n + h.losses),
+            playoffs: hs.where((h) => h.result >= 1).length,
+            titles: hs.where((h) => h.champion).length,
+          );
+        }(),
+    ];
+  }
+
+  /// そのシーズンに受け持っていたチーム。
+  int teamOfSeason(int s) {
+    var t = stints.isEmpty ? mine : stints.first[0];
+    for (final x in stints) {
+      if (x[1] <= s) t = x[0];
+    }
+    return t;
+  }
+
+  /// 解任されたときに届いた、ほかのチームからの誘い(チームの番号)。GM の格が高いほど、強めのチームからも来る。
+  List<int> jobOffers = [];
+
+  /// 誘いを作る(乱数を使わない。弱いほうのチームから、格に応じた幅で選ぶ)。
+  List<int> _makeOffers() {
+    final weak = [for (final t in [...teams]..sort((a, b) => a.strength.compareTo(b.strength))) if (t.index != mine) t.index];
+    final window = (8 + 2 * gmLevel).clamp(8, weak.length);
+    final pool = weak.take(window).toList();
+    final n = gmLevel >= 3 ? 3 : 2;
+    // 種とシーズンで決めた所から順に回す(飛び飛びに選ぶと、候補の数によっては同じチームを引き続けて終わらない)
+    final k = (seed * 31 + season * 17) % pool.length;
+    return [for (var i = 0; i < pool.length; i++) pool[(k + i) % pool.length]].take(n).toList();
+  }
+
+  /// 誘いの選び方(テストで、格のどの段階でも止まることを確かめる)。
+  List<int> debugMakeOffers() => _makeOffers();
+
+  bool get canTakeJob => fired && phase == Phase.seasonEnd && jobOffers.isNotEmpty;
+
+  /// 誘いを受けて、ほかのチームの GM になる。GM の格・実績・言葉の重みは持っていく。
+  /// チームに付いていたもの(施設・オーナー・予算・約束・トレードブロック・2ウェイ)は新しいチームのものに替わる。
+  void takeJob(int team) {
+    if (!canTakeJob || !jobOffers.contains(team)) return;
+    final old = mine;
+    // 前のチームの2ウェイの選手は自由契約へ(ほかのチームは2ウェイを使わない)
+    freeAgents.addAll(teams[old].twoWay);
+    teams[old].twoWay.clear();
+    for (final x in promises.where((x) => x.open)) {
+      x.state = PromiseState.voided;
+    }
+    tradeBlock = [];
+    extAsked = [];
+    h2h = {};
+    facilities = [1, 1, 1];
+    facilityDebt = 0;
+    budgetLevel = 2;
+    goalStance = 0;
+    mine = team;
+    ownerType = OwnerType.values[(seed * 7 + mine) % OwnerType.values.length];
+    startRank = strengthRank(mine);
+    trust = 40;
+    fired = false;
+    jobOffers = [];
+    stints.add([team, season + 1]);
+    _mail(Sender.owner, '${teams[team].name}のGMに就任',
+        '${teams[old].def.short}を離れ、${teams[team].name}のGMになった。オーナーは「${ownerType.label}」。信頼は40から始まる。\n'
+        'チームの状態は「${outlook.label}」。${outlook.text}');
+    _log('GM の交代: ${teams[team].def.short}が新しい GM を迎えた');
+  }
 
   /// 任されたときの強さの順位(0始まり)と、そこから決まるチームの状態。
   int startRank = 0;
@@ -2026,6 +2118,7 @@ class Career {
     trust = (trust + delta).clamp(0, 100);
     history.add(SeasonRecord(season: season, wins: me.wins, losses: me.losses, rank: confRank, result: res, trustAfter: trust, target: target));
     if (trust <= 0) fired = true;
+    jobOffers = fired ? _makeOffers() : [];
     _awardRating(res);
     if (finals != null) champs.add([season, champion, finals!.loser]);
     // 選手の年ごとの成績を残す(シーズンの終わりにいたチームで)
@@ -3592,6 +3685,8 @@ class Career {
         'target': target,
         'ru': rescueUsed,
         'fired': fired,
+        'st': stints,
+        if (jobOffers.isNotEmpty) 'jo': jobOffers,
         'hist': [for (final h in history) h.toJson()],
         'news': news,
         if (incoming != null) 'inc': incoming!.toJson(),
@@ -3651,6 +3746,11 @@ class Career {
     if (c.teams.length != teamDefs.length) throw const FormatException('teams');
     c
       ..startRank = (j['sr'] as int?) ?? 0
+      ..stints = [
+        for (final x in (j['st'] as List? ?? const []))
+          if (x is List && x.length == 2) [x[0] as int, x[1] as int],
+      ]
+      ..jobOffers = [for (final x in (j['jo'] as List? ?? const [])) x as int]
       ..difficulty = Difficulty.fromIndex(j['df'])
       ..gmPoints = (j['gp'] as int?) ?? 0
       ..gmPointsFirst10 = (j['gp10'] as int?) ?? 0

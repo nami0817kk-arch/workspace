@@ -164,6 +164,25 @@ void main() {
         if (i < 3 && find.byType(FilledButton).evaluate().isNotEmpty) await t.tap(find.byType(FilledButton).last);
       }
     });
+    // 解任されたあとの、ほかのチームからの誘い
+    final fired = careerAt(8, 10)..startSeason();
+    var fg = 0;
+    while (fired.phase != Phase.playoffs && fg++ < 60) {
+      botStep(fired);
+    }
+    fired
+      ..trust = 1
+      ..target = 82;
+    fg = 0;
+    while (fired.phase != Phase.seasonEnd && fg++ < 60) {
+      botStep(fired);
+    }
+    await _shoot(t, '14c_job_offers', await _with(fired), act: (t) async {
+      final head = find.text('ほかのチームからの誘い');
+      await t.scrollUntilVisible(head, 200, scrollable: find.descendant(of: find.byType(ProgressTab), matching: find.byType(Scrollable)).first);
+      await t.ensureVisible(head);
+      await t.pumpAndSettle();
+    });
     // 流して見る(接戦で止まり、流れが開く)
     final po2 = careerAt(4, 3)..startSeason();
     while (po2.phase == Phase.season) {
