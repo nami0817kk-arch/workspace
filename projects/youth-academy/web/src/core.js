@@ -32,7 +32,7 @@
     return { ok: true, msg: `${p.name}に★を付けました。面談や試合で、覚醒の鍵のヒントが少しずつ見えてきます` };
   };
   // おまかせ進行・最初の4週の勧め：伸びしろの星が高い子から、空いている枠に★を付ける
-  YA.starPick = (w, grade) => Object.values(w.players).filter((p) => p.grade === grade && !p.star && !(p.aw && !(p.keys || []).length)).sort((a, b) => YA.coachStars(w, b) - YA.coachStars(w, a) || (b.fast ? 1 : 0) - (a.fast ? 1 : 0) || YA.rating(b) - YA.rating(a));
+  YA.starPick = (w, grade) => Object.values(w.players).filter((p) => p.grade === grade && !p.star && !(p.aw && !(p.keys || []).length)).sort((a, b) => (w.year === 1 ? (b.fast ? 1 : 0) - (a.fast ? 1 : 0) : 0) || YA.coachStars(w, b) - YA.coachStars(w, a) || (b.fast ? 1 : 0) - (a.fast ? 1 : 0) || YA.rating(b) - YA.rating(a));
   YA.autoStars = function (w) {
     for (const g of YA.starGrades(w)) {
       let n = YA.starsIn(w, g).length;
@@ -202,7 +202,9 @@
     if (!w || w.week > YA.STAR_WEEKS) return null;
     if (YA.starsIn(w, 1).length >= YA.STAR_MAX) return null;
     const n = YA.starPick(w, 1)[0];
-    return n ? `高1には、入団から${YA.STAR_WEEKS}週のうちに★を決めます。${n.name}は伸びしろが大きそうです（${YA.starsIn(w, 1).length}/${YA.STAR_MAX}）。` : null;
+    if (!n) return null;
+    const why = n.fast ? 'は、何かきっかけがあれば早く化けそうです' : 'は伸びしろが大きそうです';
+    return `高1には、入団から${YA.STAR_WEEKS}週のうちに★を決めます。${n.name}${why}（${YA.starsIn(w, 1).length}/${YA.STAR_MAX}）。`;
   };
 
   // ---------- 信頼（決定110）：★の子ごとに5段階 ----------
@@ -232,6 +234,9 @@
     trust: { sys: '人', ok: () => true, need: 1, vague: '監督との関係が、鍵を握っていそうだ', clear: () => '監督への信頼が「深く信頼」（5/5）になる' },
     conf: { sys: '心', ok: () => true, need: 4, vague: '自信を持ち続けられれば、化けそうだ', clear: (k) => `自信${YA.CONF_KEY}以上を${k.need}週続ける` },
     wall: { sys: '心', ok: () => true, need: 1, vague: '一度つまずいて、それを越えることが大事そうだ', clear: () => '壁（伸び悩み）に当たり、それを越える' },
+    // 初年度の高1の早咲き（fast）だけが持つ鍵。AでもBでも進む
+    bstart: { sys: '育て方', ok: (p) => !!p._earlyRoll, need: 8, vague: '試合の経験を積めば、何かがつながりそうだ', clear: (k) => `AかBの試合で${k.need}試合先発する` },
+    bshine: { sys: '試合', ok: (p) => !!p._earlyRoll, need: 3, vague: '下の試合でも、目立つ活躍が続けば殻を破りそうだ', clear: (k) => `AかBの試合で採点6.5以上を${k.need}回` },
     top: { sys: '外', ok: (p) => p.grade >= 2, need: 1, vague: '上の世界を肌で知ることが、刺激になりそうだ', clear: () => 'トップチームの練習に参加する', due: 'g3' },
     away: { sys: '外', ok: () => true, need: 3, vague: '知らない相手、知らない土地での経験が効きそうだ', clear: (k) => `大会でAに${k.need}試合出る（夏・冬の大会）` },
   };
@@ -283,13 +288,21 @@
   YA.KEY3 = 0.3;
   YA.KEY_MULT = 0.85;
   YA.CONF_KEY = 65;
+  YA.FIRST_FAST = 4;
+  YA.EARLY_KEYS = ['bstart', 'bshine'];
+  YA.EARLY_MULT = 0.4;
   YA.keysOf = function (w, p) {
     if (p.keys) return p.keys;
     const r = YA.rngOf((w.seed | 0) * 13 + YA.hash(p.id) * 7 + 5);
     if (p.awN == null) p.awN = awakeTimes(r);
     p.awDone = p.awDone || 0;
     const n = p.fast ? 2 : r.chance(YA.KEY3) ? 3 : 2;
-    p.keys = rollKeys(w, p, r, n, p.fast ? YA.KEY_MULT * 0.5 : YA.KEY_MULT);
+    // 初年度の高1の fast は、高1でも満たせる鍵（Aの試合に出なくてよいもの）から軽く選ぶ
+    const early = p.fast && w.year === 1 && p.grade === 1;
+    const avoid = early ? Object.keys(KEYS).filter((id) => !YA.EARLY_KEYS.includes(id)) : undefined;
+    if (early) p._earlyRoll = true;
+    p.keys = rollKeys(w, p, r, n, early ? YA.EARLY_MULT : p.fast ? YA.KEY_MULT * 0.5 : YA.KEY_MULT, avoid);
+    delete p._earlyRoll;
     return p.keys;
   };
   YA.keyText = function (w, p, k) {
@@ -336,6 +349,17 @@
   const applyMatch0 = YA.applyMatch;
   YA.applyMatch = function (w, m, which, opp, scheduled) {
     applyMatch0(w, m, which, opp, scheduled);
+    if (which === 'B') {
+      const tb = m.home;
+      const sb = new Set(tb.lineup.map((s) => s.pid));
+      for (const id of Object.keys(tb.players)) {
+        const p = w.players[id], st = tb.players[id].st;
+        if (!p || !p.keys || !st || !(st.minutes > 0)) continue;
+        if (sb.has(id)) progress(w, p, 'bstart', 1);
+        if (st.rating >= 6.5) progress(w, p, 'bshine', 1);
+      }
+      return;
+    }
     if (which !== 'A' || !scheduled) return;
     const team = m.home;
     const big = opp && opp.kindLabel && !/^リーグ/.test(opp.kindLabel);
@@ -356,6 +380,8 @@
       if (ga === 0 && st.minutes >= 60) progress(w, p, 'clean', 1);
       if (st.rating >= 7.5) progress(w, p, 'shine', 1);
       if (startIds.has(id)) progress(w, p, 'starter', 1);
+      if (startIds.has(id)) progress(w, p, 'bstart', 1);
+      if (st.rating >= 6.5) progress(w, p, 'bshine', 1);
       if (big) progress(w, p, 'away', 1);
       const k = (p.keys || []).find((x) => x.id === 'convert' && !x.done);
       const slot = team.startSlot && team.startSlot[id];
@@ -634,8 +660,9 @@
   YA.newWorld = function (seed, opts) {
     const w = nw0(seed, opts);
     const r = YA.rngOf((seed | 0) * 29 + 3);
-    const c = Object.values(w.players).filter((p) => p.grade <= 2);
-    const n = r.chance(0.5) ? 1 : 2;
+    // 初年度に★を付けられるのは高1だけなので、早く化けそうな子（fast）は高1に3人置く（2026-11-15「一年目に2人くらい」）
+    const c = Object.values(w.players).filter((p) => p.grade === 1);
+    const n = YA.FIRST_FAST;
     for (let i = 0; i < n && c.length; i++) c.splice(r.int(0, c.length - 1), 1)[0].fast = true;
     return w;
   };

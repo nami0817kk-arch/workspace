@@ -1286,6 +1286,12 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
     ok(!YA.setStar(w0, g3[0], true).ok && !g3[0].star, '初年度も高3には★を付けられない');
     w0.week = 30;
     ok(!YA.starOpen(w0, g1[1]), '初年度も入団から4週をすぎると決められない');
+    // 初年度の早咲き：高1に fast が置かれ、★を付けると AでもBでも進む軽い鍵を持つ（一年目に2人くらい覚醒）
+    const wf1 = YA.newWorld(12);
+    const fs = Object.values(wf1.players).filter((p) => p.fast);
+    ok(fs.length === YA.FIRST_FAST && fs.every((p) => p.grade === 1), '初年度の早咲きは高1に' + YA.FIRST_FAST + '人');
+    ok(YA.setStar(wf1, fs[0], true).ok && fs[0].keys.length === 2 && fs[0].keys.every((k) => YA.EARLY_KEYS.includes(k.id)), '初年度の早咲きの鍵は試合に出れば進むもの');
+    ok(/早く化け/.test(YA.starRecommend(wf1) || ''), '初年度の★のおすすめは早咲きの子');
     const wn = YA.newWorld(9);
     wn.year = 2;
     wn.week = 3;
