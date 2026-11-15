@@ -103,6 +103,12 @@ for (const [g, d, c] of cases) season(g, d, c);
 run(`['S','B','C','D','C','D'].forEach(function(gr){S.future=makeFuture(S,Object.assign({},finalEval(S),{grade:gr}));S.ending=true;__shot();S.ending=false;__shot();});`);
 run(`S=null;ui.tsub='new';__shot();ui.tsub='rec';__shot();ui.tsub=null;ui.settings=true;__shot();ui.settings=false;ui.gloss=true;__shot();ui.gloss=false;ui.hallAll=true;ui.meikanAll=true;__shot();`);
 run(`S=newGame('m','normal',null,todayKey());__shot();S=null;`);
+// アプリの中の画面（2026-11-15）：タイトルの「広告を消す」・動画の特典に添える一言・全画面広告のあとの案内
+run(`APP={adFree:false,canBuy:true,price:'¥370',store:{},owned:{},prices:{}};S=null;__shot();
+  S=newGame('f','normal',null);var c=S.tr.slice();S.sel=c.slice(0,S.caps.sel).map(function(t){return t.id;});confirmSelect(S);startSeason(S);applyPlan(S);__shot();
+  S.tr.slice(0,6).forEach(function(t){t.status='debut';});startPrep(S);S.prep.leader=S.tr[0].id;startMonth(S);__shot();
+  ui.upsell=1;__shot();APP.price=null;__shot();APP.adFree=true;__shot();ui.upsell=0;S=null;__shot();APP=null;`);
+if (!/class="tbuy"/.test(run(`(function(){APP={adFree:false,canBuy:true,price:'¥370'};var h=vTitle();APP=null;return h;})()`))) errs.push('title: アプリの「広告を消す」が描けていない');
 
 const need = ['title', 'select', 'format', 'plan', 'lesson', 'lres', 'talk', 'interview', 'event', 'stage', 'critique', 'judge', 'call', 'prep', 'month', 'result'];
 const miss = need.filter((p) => !seen[p]);

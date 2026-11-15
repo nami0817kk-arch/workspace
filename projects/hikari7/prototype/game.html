@@ -746,6 +746,10 @@ body.ttl::before{content:'';position:fixed;inset:0;z-index:0;background:conic-gr
 .trank{display:flex;gap:8px;justify-content:center;margin-top:14px;font-size:12px;color:#e8def9}.trank span{padding:2px 10px;border-radius:999px;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.18)}
 .tnote{color:var(--fg);text-align:left;width:100%;max-width:420px}
 .tapp{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:12px}.tapp .btn-s{background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.28)}.tapp .small{color:#e8def9}
+/* 広告を消す：タイトルでほかの小ボタンより目立たせる（2026-11-15） */
+.tbuy{margin-top:14px;display:flex;flex-direction:column;align-items:center;gap:4px}.tbuy .btn-s{background:rgba(233,186,75,.2);color:#fff;border:1.5px solid #e9ba4b;font-weight:800;font-size:14px;min-height:44px;padding:0 20px}.tbuy .btn-s:disabled{opacity:.5}.tbuy .tbd{font-size:12px;color:#e8def9;text-align:center;line-height:1.5;padding:0 8px}
+.upsell .uph{font-weight:800;font-size:16px;margin-bottom:6px}.upsell p{margin:0;line-height:1.6;font-size:14px}.upsell .acts{display:flex;gap:10px;margin-top:14px}.upsell .acts .btn{flex:1;min-height:46px;margin:0}
+.uphint{font-size:12px;margin:-4px 0 10px 6px;line-height:1.5}
 .tcopy{margin-top:14px;font-size:12px;color:rgba(255,255,255,.7)}
 .tsubhd{display:flex;align-items:center;gap:10px;margin:10px 0 8px}.tsubhd b{font-size:18px}
 body.reduce.ttl::before,body.reduce .logo7.tbig,body.reduce .tseat,body.reduce .tmenu,body.reduce .tkick,body.reduce .ttag{animation:none}
@@ -5068,6 +5072,7 @@ function render0(){
   else if(ui.settings)h+=vSettings();
   else if(S&&ui.prof!=null&&S.tr[ui.prof])h+=vProfile(S.tr[ui.prof]);
   else if(S&&S.bursts&&S.bursts.length){h+=burstBox();if(ui.lastBurst!==S.bursts.length+':'+S.bursts[0].title){ui.lastBurst=S.bursts.length+':'+S.bursts[0].title;setTimeout(function(){sfx('fan');haptic('success');},60);}}
+  if(ui.upsell&&S&&APP)h+=vUpsell();
   if(ui.toast)h+='<div class="apptoast" role="status">'+esc(ui.toast)+'</div>';
   if(ui.adWait==='inter')h+='<div class="adwait"><div>エンドロールへ…</div></div>';
   else if(ui.adWait)h+='<div class="adwait"><div>動画を読み込んでいます…<br><button class="btn-s" data-a="adcancel" style="margin-top:12px">やめる</button></div></div>';
@@ -5082,7 +5087,7 @@ function render0(){
   try{syncBgm();setTimeout(autoSay,120);}catch(e){}
   try{enterAnim();typeLine();countUp();hudAnim();}catch(e){}
   try{document.querySelectorAll('#app button.on,#app .chip.on').forEach(function(b){b.setAttribute('aria-pressed','true');});document.querySelectorAll('#app .ov,#app .burst,#app .ending').forEach(function(d){d.setAttribute('role','dialog');d.setAttribute('aria-modal','true');});}catch(e){}
-  var endOn=!!(S&&S.phase==='result'&&S.ending&&ui.prof==null);document.body.style.overflow=(ui.prof!=null||endOn||ui.settings||ui.gloss||(S&&S.phase==='critique'&&!S.critDone&&ui.critOpen!=null))?'hidden':'';
+  var endOn=!!(S&&S.phase==='result'&&S.ending&&ui.prof==null);document.body.style.overflow=(ui.prof!=null||endOn||ui.upsell||ui.settings||ui.gloss||(S&&S.phase==='critique'&&!S.critDone&&ui.critOpen!=null))?'hidden':'';
   if(endOn){var rl=document.querySelector('.ending .roll');if(rl&&!rl.classList.contains('static')){if(ui.endY!=null)rl.style.transform='translateY('+ui.endY+'px)';startRoll();}}
   if(showTimer){clearTimeout(showTimer);showTimer=null;}
   if(S&&S.phase==='show'&&S.show&&S.show.seq&&ui.showAuto&&ui.prof==null){showTimer=setTimeout(function(){showTimer=null;if(!S||S.phase!=='show'||!ui.showAuto)return;if(S.show.pos>=S.show.seq.length-1)S.phase='stage';else S.show.pos++;save();render();window.scrollTo(0,0);},ui.showMs||6000);}
@@ -5122,7 +5127,8 @@ function vTitle(){
     '<div class="trank"><span>'+esc(rk[1])+'</span>'+(c.seasons?'<span>'+c.seasons+'シーズン</span>':'<span>はじめてのシーズン</span>')+'</div>';
   var qf=null;try{qf=HStore.get('hikari7_quit');}catch(e){}if(!sv&&qf&&!ui.loadBroken){var qb=loadBak();if(qb)h+='<div class="note tnote">前にやめたシーズン（'+(qb.rnd>0&&qb.fmt?'第'+qb.rnd+'審査':'書類審査')+'・'+(qb.g==='f'?'女性':'男性')+'）に戻れます（1回だけ）。<br><button class="btn-s" data-a="frombak">やめたシーズンに戻る</button></div>';}
   if(!sv&&ui.loadBroken){var bk=loadBak();h+='<div class="note tnote"><b>前回の続きが読み込めませんでした。</b>'+(bk?'ひとつ前の場面の保存から戻せます。<br><button class="btn-s" data-a="frombak">ひとつ前の保存から続ける</button>':'保存の予備もありません。新しいシーズンを始めてください。')+'</div>';}
-  if(APP)h+='<div class="tapp">'+(APP.adFree?'<span class="small">広告を消しています。ありがとうございます。</span>':'<button class="btn-s" data-a="buy" '+(APP.canBuy?'':'disabled')+'>広告を消す'+(APP.price?'（'+esc(APP.price)+'）':'')+'</button>')+'<button class="btn-s" data-a="restore">購入を復元</button><button class="btn-s" data-a="privacy">プライバシー</button><button class="btn-s" data-a="support">サポート</button><button class="btn-s" data-a="licenses">ライセンス</button></div>';
+  if(APP&&!APP.adFree)h+='<div class="tbuy"><button class="btn-s" data-a="buy" '+(APP.canBuy?'':'disabled')+'>広告を消す'+(APP.price?'（'+esc(APP.price)+'）':'')+'</button><div class="tbd">全画面広告が消え、動画の特典も動画なしで使えます</div></div>';
+  if(APP)h+='<div class="tapp">'+(APP.adFree?'<span class="small">広告を消しています。ありがとうございます。</span>':'')+'<button class="btn-s" data-a="restore">購入を復元</button><button class="btn-s" data-a="privacy">プライバシー</button><button class="btn-s" data-a="support">サポート</button><button class="btn-s" data-a="licenses">ライセンス</button></div>';
   h+='<div class="tcopy">© つるはし社</div></div>';
   return h;
 }
@@ -5131,6 +5137,16 @@ function interN(){try{var o=JSON.parse(HStore.get(INTKEY)||'null');return o&&o.s
 /* 全画面広告を出してよいか：エンドロールの前に1シーズン1回だけ（2026-10-04 ユーザー決定。審査の間には出さない）。出すと決めたら数える */
 function interOk(count){try{if(!S||interN()>=1)return false;if(count)HStore.set(INTKEY,JSON.stringify({sid:S.sid,n:interN()+1}));return true;}catch(e){return false;}}
 /* デビュー後1か月に入ったら、そのときだけ読み込んでもらう（起動時から読み続けない） */
+/* 広告を消す案内（2026-11-15 依頼「買う理由が伝わる場面で控えめに」）：全画面広告を閉じた直後に1枚だけ。
+   2シーズン目から・3シーズンに1回まで・同じシーズンに2回出さない。買った人・テスト版・買えないときは出さない */
+var UPSELL_GAP=3;
+function upsellDue(){try{if(!APP||APP.adFree||!APP.canBuy||!S)return false;var c=loadCareer(),no=(c.seasons||0)+1;if(no<2||c.upSid===S.sid)return false;return c.upAt==null||no-c.upAt>=UPSELL_GAP;}catch(e){return false;}}
+function upsellMark(){var c=loadCareer();c.upAt=(c.seasons||0)+1;c.upSid=S.sid;saveCareer(c);}
+function vUpsell(){var pr=APP.price?'（'+esc(APP.price)+'）':'';
+  if(APP.adFree)return '<div class="ov"><div class="sheet upsell"><div class="uph">広告を消しました</div><p>ありがとうございます。これからは全画面広告が出ず、動画の特典も動画なしで受け取れます。</p><div class="acts"><button class="btn" data-a="upclose">エンドロールへ</button></div></div></div>';
+  return '<div class="ov"><div class="sheet upsell"><div class="uph">広告を消す'+pr+'</div><p>この広告が出なくなり、動画の特典も動画なしで受け取れます。買い切りです。</p><div class="acts"><button class="btn sub" data-a="upclose">閉じる</button><button class="btn" data-a="upbuy" '+(APP.canBuy?'':'disabled')+'>買う</button></div></div></div>';}
+/* 動画の特典の行に添える一言：1シーズンに1回だけ（最初に出た行に付け、そこから動かさない） */
+function upHint(a){if(!APP||APP.adFree||!APP.canBuy||!S)return '';var k=a+':'+S.rnd;if(!S.upHint)S.upHint=k;if(S.upHint!==k)return '';return '<div class="uphint muted">広告を消す'+(APP.price?'（'+esc(APP.price)+'）':'')+'と、動画なしで受け取れます</div>';}
 function interPrep(){if(APP&&!APP.adFree&&S&&interOk(false))appPost({type:'prepInter'});}
 function vTitleShop(){
   var h='<div class="tsubhd"><button class="btn-s" data-a="tsub" data-v="">‹ タイトルへ</button><b>'+(PACK_SALE?'追加パック':'広告を消す')+'</b></div>';
@@ -5545,7 +5561,7 @@ function telop(sub,extra){var f=ROUNDS[S.rnd];return '<div class="telop tlc"><di
 /* 審査名の1行の帯（会議のあとの場面）。第何審査・どの段階かは上の段階のタブに出ているので、ここは審査名と条件だけ。info は HTML（呼ぶ側で esc 済み） */
 function roundBand(sub,info){var f=ROUNDS[S.rnd];return '<div class="rband" aria-label="'+esc('第'+S.rnd+'審査 '+sub)+'"><div class="rb1"><b>'+esc(f.name)+'</b></div>'+(info?'<div class="rb2">'+info+'</div>':'')+'</div>';}
 /* 動画広告の特典の小さな行（2026-11-14：本題より上の金の点線の大きな箱をやめた）。data-a は今までと同じ */
-function adRow(a,label,note){return '<button class="btn ad adrow" data-a="'+a+'">'+adIcon()+'<span><b>'+esc(label)+'</b><span class="small muted">'+esc(note)+'</span></span></button>';}
+function adRow(a,label,note){return '<button class="btn ad adrow" data-a="'+a+'">'+adIcon()+'<span><b>'+esc(label)+'</b><span class="small muted">'+esc(note)+'</span></span></button>'+upHint(a);}
 function stageHero(){var ch='';for(var i=0;i<7;i++){var x=110+i*30,gold=i===3;
     ch+='<g transform="translate('+x+',124) scale(.85)"><rect x="-11" y="-24" width="22" height="20" rx="4" fill="'+(gold?'#e9ba4b':'#4d3c80')+'"/><rect x="-13" y="-6" width="26" height="6" rx="2" fill="'+(gold?'#f6d77e':'#5e4d93')+'"/><rect x="-11" y="0" width="3" height="12" fill="#2c2150"/><rect x="8" y="0" width="3" height="12" fill="#2c2150"/></g>';}
   return '<svg class="hsvg" viewBox="0 0 400 150" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="spg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3c8" stop-opacity=".7"/><stop offset="1" stop-color="#fff3c8" stop-opacity="0"/></linearGradient><linearGradient id="flg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b1d52"/><stop offset="1" stop-color="#110b22"/></linearGradient></defs>'+
@@ -5783,7 +5799,7 @@ function withAd(fn){if(S&&S.chal==='noad'){toast('チャレンジ「自力で勝
   clearTimeout(ui.adT);ui.adT=setTimeout(function(){if(pendingAd){appPost({type:'rewardCancel',id:ui.adId});pendingAd=null;ui.adWait=false;toast('動画を読み込めませんでした。少し待ってからもう一度お試しください');render();}},90000);}
 window.hikariAdWaiting=function(){ui.adWait=true;render();};
 /* 広告の表示が始まった：待ちの打ち切りを止める（長い動画・App Store から戻るまでを取りこぼさない） */
-window.hikariAdShowing=function(id){if(id==='inter'){clearTimeout(ui.betT);return;}if(id===ui.adId)clearTimeout(ui.adT);};
+window.hikariAdShowing=function(id){if(id==='inter'){clearTimeout(ui.betT);ui.interShown=true;return;}if(id===ui.adId)clearTimeout(ui.adT);};
 window.hikariBetweenDone=function(){if(ui.betw)ui.betw();};
 window.hikariAdResult=function(ok,msg,id){if(id!=null&&id!==ui.adId)return;clearTimeout(ui.adT);var f=pendingAd;pendingAd=null;ui.adWait=false;if(ok&&f&&S){f();save();}else if(msg)toast(msg);render();};
 window.hikariSetApp=function(o){if(!APP)return;if(!ui.themeSent){ui.themeSent=true;pushTheme();}for(var k in o)if(k!=='msg')APP[k]=o[k];try{applyPacks();}catch(e){}if(o.msg)toast(o.msg);render();};
@@ -6154,6 +6170,8 @@ document.addEventListener('click',function(ev){
     case 'nightok':go(function(){S.phase='judge';});window.scrollTo(0,0);break;
     case 'pair':ui.talkY=window.scrollY;go(function(){doPair(S,id,+v);});window.scrollTo(0,0);break;
     case 'buy':appPost({type:'buy'});break;
+    case 'upbuy':if(APP&&!APP.adFree)appPost({type:'buy'});break;
+    case 'upclose':if(!ui.upsell)break;ui.upsell=0;go(function(){finishMonth(S);});window.scrollTo(0,0);break;
     case 'restore':appPost({type:'restore'});break;
     case 'privacy':appPost({type:'open',url:'https://hikari7.pages.dev/privacy.html'});break;
     case 'support':appPost({type:'open',url:'https://hikari7.pages.dev/support.html'});break;
@@ -6207,8 +6225,8 @@ document.addEventListener('click',function(ev){
     case 'gcolor':go(function(){S.prep.color=+v;});break;
     case 'gsong':go(function(){S.prep.song=+v;});break;
     case 'prepok':go(function(){startMonth(S);});window.scrollTo(0,0);break;
-    case 'monthdone':var adv=function(){if(!ui.betw)return;ui.betw=null;clearTimeout(ui.betT);ui.adWait=false;go(function(){finishMonth(S);});window.scrollTo(0,0);};
-      if(ui.betw)break;ui.betw=adv;if(APP&&!APP.adFree&&interOk(true)){ui.adWait='inter';render();appPost({type:'between',rnd:ROUNDS.length});ui.betT=setTimeout(adv,5000);}else adv();break;
+    case 'monthdone':var adv=function(){if(!ui.betw)return;ui.betw=null;clearTimeout(ui.betT);ui.adWait=false;var sh=ui.interShown;ui.interShown=false;if(sh&&upsellDue()){upsellMark();ui.upsell=1;render();return;}go(function(){finishMonth(S);});window.scrollTo(0,0);};
+      if(ui.betw||ui.upsell)break;ui.betw=adv;if(APP&&!APP.adFree&&interOk(true)){ui.interShown=false;ui.adWait='inter';render();appPost({type:'between',rnd:ROUNDS.length});ui.betT=setTimeout(adv,5000);}else adv();break;
     case 'week':go(function(){weekDo(S,v);});window.scrollTo(0,0);break;
     case 'tr':go(function(){S.lesson.train[id]=[v];if(v==='rest'&&S.lesson.sp)delete S.lesson.sp[id];});break;
     case 'trpick':go(function(){S.lesson.train[id]=[v];if(v==='rest'&&S.lesson.sp)delete S.lesson.sp[id];});break;
