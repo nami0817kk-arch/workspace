@@ -3,7 +3,7 @@
 #   python -m src.cli sources --new
 sites:
 - host: derbyderbyderby.it
-  seen: 49
+  seen: 50
   days:
   - '2026-09-02'
   - '2026-09-03'
@@ -31,12 +31,13 @@ sites:
   - '2026-11-08'
   - '2026-11-09'
   - '2026-11-13'
+  - '2026-11-15'
   examples:
   - https://www.derbyderbyderby.it/calcio-italiano/monza-juric-dopo-la-vittoria-sul-torino-se-ci-salviamo-sara-un-grande-risultato/?intcmp=gazzanet-derbyderbyderby
   - https://www.derbyderbyderby.it/calcio-estero/monza-ecco-zeballos-in-italia-per-il-mito-di-maradona-e-i-consigli-di-paredes/?intcmp=gazzanet-derbyderbyderby
   - https://www.derbyderbyderby.it/calcio-italiano/lunione-che-non-ti-aspetti-haslem-con-la-maglia-del-frosinone/?intcmp=gazzanet-derbyderbyderby
 - host: forzaroma.info
-  seen: 22
+  seen: 23
   days:
   - '2026-09-02'
   - '2026-09-05'
@@ -50,6 +51,7 @@ sites:
   - '2026-11-09'
   - '2026-11-11'
   - '2026-11-13'
+  - '2026-11-15'
   examples:
   - https://www.forzaroma.info/news-as-roma/rodrigo-mora-gasperini-fondamentale-nella-mia-scelta-e-un-sogno-giocare-con-dybala/?intcmp=gazzanet-forzaroma
   - https://www.forzaroma.info/news-as-roma/fenerbahce-guendouzi-squalificato-salta-la-roma-greenwood-ci-sara-ecco-perche/?intcmp=gazzanet-forzaroma
@@ -235,6 +237,19 @@ sites:
   - https://www.genoaoggi.it/calciomercato/mercato-genoa/ehizibue-al-genoa-anni-fa-dissi-no-oggi-e-il-modo-migliore-per-chiedere-perdono/?intcmp=gazzanet-genoaoggi
   - https://www.genoaoggi.it/notizie/genoa-de-rossi-pari-frosinone/?intcmp=gazzanet-genoaoggi
   - https://www.genoaoggi.it/coppa-italia/de-rossi-promuove-il-genoa-risposte-positive-traore-ed-el-shaarawy-possono-fare-la-differenza/?intcmp=gazzanet-genoaoggi
+- host: cittaceleste.it
+  seen: 11
+  days:
+  - '2026-09-10'
+  - '2026-09-12'
+  - '2026-09-14'
+  - '2026-09-24'
+  - '2026-10-14'
+  - '2026-11-15'
+  examples:
+  - https://www.cittaceleste.it/news/lazio-fabiani-leuropa-e-lobiettivo-mercato-i-voti-a-fine-anno-lanno-scorso/?refresh_ce
+  - https://www.cittaceleste.it/news/lazio-pinamonti-gattuso-molto-esigente-a-immobile-chiederei/
+  - https://www.cittaceleste.it/news/lazio-diogo-leite-primi-minuti-e-adesso/
 - host: samuraigoal.doorblog.jp
   seen: 10
   days:
@@ -243,18 +258,6 @@ sites:
   examples:
   - https://samuraigoal.doorblog.jp/archives/63437489.html
   - https://samuraigoal.doorblog.jp/archives/63450028.html
-- host: cittaceleste.it
-  seen: 10
-  days:
-  - '2026-09-10'
-  - '2026-09-12'
-  - '2026-09-14'
-  - '2026-09-24'
-  - '2026-10-14'
-  examples:
-  - https://www.cittaceleste.it/news/lazio-fabiani-leuropa-e-lobiettivo-mercato-i-voti-a-fine-anno-lanno-scorso/?refresh_ce
-  - https://www.cittaceleste.it/news/lazio-pinamonti-gattuso-molto-esigente-a-immobile-chiederei/
-  - https://www.cittaceleste.it/news/lazio-diogo-leite-primi-minuti-e-adesso/
 - host: cagliaricalcio-news.it
   seen: 8
   days:

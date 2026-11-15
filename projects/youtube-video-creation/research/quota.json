@@ -535,5 +535,11 @@
     "thumbnails.set": 30,
     "playlistItems.insert": 20,
     "playlists.insert": 1
+  },
+  "2026-11-14": {
+    "channels.list": 10,
+    "playlistItems.list": 10,
+    "videos.insert": 10,
+    "thumbnails.set": 10
   }
 }
