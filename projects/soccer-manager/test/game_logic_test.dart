@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:soccer_manager/logic/transfer_terms_engine.dart';
 import 'package:soccer_manager/l10n/tr.dart';
 import 'package:soccer_manager/logic/achievement_engine.dart';
 import 'package:soccer_manager/logic/ai_transfer_engine.dart';
@@ -283,7 +284,9 @@ void main() {
     await gameState.startNewGame('テストFC');
     final beforeCount = gameState.userTeam.players.length;
     final target = gameState.transferMarket.first;
-    gameState.save!.budget = target.marketValue + 100;
+    // 移籍金のほかに代理人手数料が掛かる。
+    gameState.save!.budget =
+        target.marketValue + TransferTermsEngine.agentFee(target.marketValue) + 100;
     // 週給予算(BD3)に引っかかると獲得が拒否されるため、余裕を明示的に与える
     // (与えないと、市場の顔ぶれ次第でごく稀に失敗する不安定なテストになる)。
     gameState.save!.wageBudget = 999999;

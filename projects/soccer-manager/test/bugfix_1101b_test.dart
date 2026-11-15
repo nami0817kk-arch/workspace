@@ -118,7 +118,7 @@ void main() {
     final target = game.transferMarket.first;
     target.contractYearsRemaining = 1;
     target.age = 33;
-    game.save!.budget = target.marketValue + 100;
+    game.save!.budget = target.marketValue * 2;
     game.save!.wageBudget = 999999;
 
     expect(await game.buyPlayer(target.id), isTrue);

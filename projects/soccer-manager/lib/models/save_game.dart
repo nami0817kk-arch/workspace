@@ -150,6 +150,14 @@ class SaveGame {
 
   /// 保険に入っているか、災害基金の残高(万円)、地域貢献のレベル(0〜5)。
   bool insured;
+
+  /// オーナーの仕事を最後に打ったシーズン(仕事のID → シーズン)。
+  /// 1シーズンに1回ずつ。
+  Map<String, int> ownerWorkDoneSeason;
+
+  /// 売却条項(選手のID → 元のクラブへ渡す率%)。値切って買った選手を売るとき、
+  /// 売却額のこの割合を元のクラブへ払う。
+  Map<String, int> sellOnClauses;
   int reserveFund;
   int communityLevel;
 
@@ -469,6 +477,8 @@ class SaveGame {
     List<TimelineEntry>? timeline,
     List<String>? declinedProposalIds,
     this.insured = false,
+    Map<String, int>? ownerWorkDoneSeason,
+    Map<String, int>? sellOnClauses,
     this.reserveFund = 0,
     this.communityLevel = 0,
     this.transferBanSeasons = 0,
@@ -582,6 +592,8 @@ class SaveGame {
         timeline = timeline ?? [],
         rivalPast = rivalPast ?? [0, 0, 0],
         declinedProposalIds = declinedProposalIds ?? [],
+        ownerWorkDoneSeason = ownerWorkDoneSeason ?? {},
+        sellOnClauses = sellOnClauses ?? {},
         pendingInstallments = pendingInstallments ?? [],
         friendlies = friendlies ?? [],
         incomingOffers = incomingOffers ?? [],
@@ -679,6 +691,8 @@ class SaveGame {
         'timeline': timeline.map((e) => e.toJson()).toList(),
         'declinedProposalIds': declinedProposalIds,
         'insured': insured,
+        'ownerWorkDoneSeason': ownerWorkDoneSeason,
+        'sellOnClauses': sellOnClauses,
         'reserveFund': reserveFund,
         'communityLevel': communityLevel,
         'transferBanSeasons': transferBanSeasons,
@@ -824,6 +838,10 @@ class SaveGame {
                 .toList() ??
             [],
         insured: json['insured'] as bool? ?? false,
+        ownerWorkDoneSeason: (json['ownerWorkDoneSeason'] as Map?)
+            ?.map((k, v) => MapEntry(k as String, v as int)),
+        sellOnClauses: (json['sellOnClauses'] as Map?)
+            ?.map((k, v) => MapEntry(k as String, v as int)),
         reserveFund: json['reserveFund'] as int? ?? 0,
         communityLevel: json['communityLevel'] as int? ?? 0,
         clubPolicy: ClubPolicy.values

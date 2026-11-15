@@ -313,6 +313,37 @@ extension GameStateFinance on GameState {
     return true;
   }
 
+  /// オーナーの仕事を、いま打てるか。今季すでに打っている・資金が足りない
+  /// ときは打てない。
+  bool canDoOwnerWork(OwnerWork work) {
+    final save = _save;
+    if (save == null) return false;
+    if (save.ownerWorkDoneSeason[work.id] == save.league.season) return false;
+    return save.budget >= work.cost;
+  }
+
+  /// 今季すでに打った仕事か。
+  bool ownerWorkDoneThisSeason(OwnerWork work) {
+    final save = _save;
+    return save != null && save.ownerWorkDoneSeason[work.id] == save.league.season;
+  }
+
+  /// オーナーの仕事を打つ。資金と2つの期待に反映し、今季は打ち止めにする。
+  Future<bool> doOwnerWork(String id) async {
+    final save = _save;
+    if (save == null) return false;
+    final work = ownerWorks.where((w) => w.id == id).firstOrNull;
+    if (work == null || !canDoOwnerWork(work)) return false;
+    save.confidence = (save.confidence + work.supporters).clamp(0, 100);
+    save.shareholderExpectation =
+        (save.shareholderExpectation + work.shareholders).clamp(0, 100);
+    _book(LedgerCategory.other, work.funds);
+    save.ownerWorkDoneSeason[work.id] = save.league.season;
+    _notify();
+    await _persist();
+    return true;
+  }
+
   /// テスト用: その節の事件の判定だけを走らせる。
   @visibleForTesting
   void debugRaiseOwnerEvent(int matchday) => _maybeRaiseOwnerEvent(matchday);

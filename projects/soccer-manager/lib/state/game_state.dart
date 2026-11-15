@@ -69,6 +69,8 @@ import '../logic/board_engine.dart';
 import '../logic/budget_engine.dart';
 import '../models/budget_plan.dart';
 import '../models/owner_event.dart';
+import '../models/owner_work.dart';
+import '../logic/transfer_terms_engine.dart';
 import '../models/owner_goal.dart';
 import '../models/owner_legacy.dart';
 import '../logic/shareholder_engine.dart';

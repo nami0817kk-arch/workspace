@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../services/feedback_service.dart';
 import '../state/game_state.dart';
 import '../widgets/club_emblem.dart';
+import '../widgets/manager_report_card.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/screen_bar.dart';
 import 'finance_screen.dart';
@@ -273,6 +274,8 @@ class _FmTopBar extends StatelessWidget {
               ],
             ),
           ),
+          const SizedBox(width: 12),
+          const ExpectationMeters(compact: true),
           const SizedBox(width: 12),
           if (next != null && gameState.saleReason == null)
             FilledButton.icon(

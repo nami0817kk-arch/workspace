@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import '../screens/achievements_screen.dart';
 import '../screens/awards_screen.dart';
 import '../screens/best_eleven_screen.dart';
+import '../screens/club_calendar_screen.dart';
 import '../screens/club_screen.dart';
+import '../screens/contract_board_screen.dart';
 import '../screens/analysis_screen.dart';
 import '../screens/cup_screen.dart';
 import '../screens/finance_screen.dart';
@@ -12,6 +14,7 @@ import '../screens/guide_screen.dart';
 import '../screens/hall_of_fame_screen.dart';
 import '../screens/league_ranking_screen.dart';
 import '../screens/news_screen.dart';
+import '../screens/owner_work_screen.dart';
 import '../screens/season_history_screen.dart';
 import '../screens/settings_screen.dart';
 import '../screens/transfer_screen.dart';
@@ -60,6 +63,24 @@ String? _needsFirstSeason(GameState game) {
 
 // 同上。final だと最初のアクセス時の言語でラベルが固定される。
 List<QuickAccessDestination> get quickAccessDestinations => [
+      QuickAccessDestination(
+        icon: Icons.event_note,
+        label: Tr.pick('クラブの年間予定', 'Club calendar'),
+        color: Colors.teal.shade600,
+        builder: (_) => const ClubCalendarScreen(),
+      ),
+      QuickAccessDestination(
+        icon: Icons.badge_outlined,
+        label: Tr.pick('登録と契約', 'Registration & contracts'),
+        color: Colors.brown.shade600,
+        builder: (_) => const ContractBoardScreen(),
+      ),
+      QuickAccessDestination(
+        icon: Icons.work_outline,
+        label: Tr.pick('オーナーの仕事', 'Owner\'s work'),
+        color: Colors.indigo.shade600,
+        builder: (_) => const OwnerWorkScreen(),
+      ),
       QuickAccessDestination(
         icon: Icons.swap_horiz,
         label: Tr.pick('移籍市場', 'Transfers'),
