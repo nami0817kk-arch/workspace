@@ -263,7 +263,8 @@ void main() {
             (s) => s.options.every((o) => o.exposure == Exposure.none),
           ),
         );
-        m.choose(m.current.options.first);
+        // 得点に繋がる手だと評価が上限（10.0）に張り付いて差が見えない。
+        m.choose(m.current.options.firstWhere((o) => o.outcome == Outcome.play));
         return m.finish().rating!;
       }
 

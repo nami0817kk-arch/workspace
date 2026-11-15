@@ -382,7 +382,10 @@ class Formulas {
   /// **選択で動くぶんを先に置いておく**。上手く守れば平均より減り、
   /// まずい手を選べば増える。途中出場は局面が少ないので半分。
   static double concedeShareFor(Position position) => switch (position) {
-    Position.gk || Position.cb || Position.sb => 1.17,
+    // 受け身の手（`lingering`）を入れて失点が増えたぶん、2026-11-15 に
+    // 1.17 から下げた。GK は自陣の局面しか引かないので、もう一段下げる。
+    Position.gk => 1.08,
+    Position.cb || Position.sb => 1.08,
     _ => 1.0,
   };
 
@@ -1263,6 +1266,21 @@ class Formulas {
   /// 止めたとき（[ratingPerGoalPrevented]）と同じ大きさで裏返す。
   /// 片方だけだと、自動進行がどちらかの手に倒れる。
   static const double ratingPerGoalCaused = -0.6;
+
+  /// **受け身の手が通っても、続いた攻撃で失点する確率**（2026-11-15）。
+  /// 外したときのシュート（[concedeOnShot]）より低く置く——通ったのに
+  /// 外したより危ないなら、受け身の手を選ぶ理由が無くなる。
+  static const double concedeOnLinger = 0.08;
+
+  /// **受け身の手が通ったときの評価の重み**（2026-11-15）。
+  /// 遅らせた・構えた・蹴り返したは、止めたのとは違う。通りやすさだけで
+  /// 決まる並びを、ここで初めて崩す（失点の確率を足しただけでは、
+  /// 見積もりが 0.02 しか動かず、どの局面の答えも変わらなかった）。
+  static const double lingerSuccessFactor = 0.7;
+
+  /// 受け身の手が通ったあと、続いた攻撃で失点したときの評価点。
+  /// 手そのものは通っているので、外して失点したときの半分。
+  static const double ratingPerLingerGoal = -0.3;
 
   /// 外してシュートを打たれたとき、それが決まる確率。
   static const double concedeOnShot = 0.12;

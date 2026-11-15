@@ -1055,7 +1055,8 @@ class MatchInProgress {
     var delta = success
         ? Formulas.ratingPerSuccess *
               Formulas.ratingSuccessWeight(chance) *
-              (option.outcome == Outcome.play ? up : 1.0)
+              (option.outcome == Outcome.play ? up : 1.0) *
+              (option.lingering ? Formulas.lingerSuccessFactor : 1.0)
         : Formulas.ratingPerFailure *
               Formulas.ratingFailureWeight(chance) *
               stakesFailureFactor(stakesNow);
@@ -1107,6 +1108,18 @@ class MatchInProgress {
         delta += option.isTacticalFoul
             ? Formulas.ratingPerGoalPrevented
             : Formulas.ratingPerStop;
+      }
+    }
+
+    // **受け身の手は、通っても攻撃が終わらない。**
+    if (success && option.lingering) {
+      if (_random.nextDouble() < Formulas.concedeOnLinger) {
+        concededMinutes
+          ..add(currentMinute)
+          ..sort();
+        goalsCaused++;
+        delta += Formulas.ratingPerLingerGoal;
+        text = '$text だが攻撃は続き、最後は失点した。';
       }
     }
 
@@ -1226,7 +1239,8 @@ class MatchInProgress {
     var gain =
         Formulas.ratingPerSuccess *
         Formulas.ratingSuccessWeight(p) *
-        (attack ? 1.0 : up);
+        (attack ? 1.0 : up) *
+        (option.lingering ? Formulas.lingerSuccessFactor : 1.0);
     if (attack) gain += Formulas.ratingPerChance * up;
     if (comboLands(option)) gain += Formulas.ratingPerCombo * up;
     // 自動進行にもノリを見せる。見ないと、自動で進めるだけでは
@@ -1248,21 +1262,33 @@ class MatchInProgress {
     }
     // カードのぶんを引く。ここを入れないと、自動進行が「止めるための反則」を
     // 代償なしの安い手として選び続ける。
+    // すでに警告を受けていれば、次の1枚は退場になる。見積もりがそれを
+    // 知らないと、守り切る局面で「掴んで止める」がいつも最善になる。
+    final cardCost =
+        Formulas.ratingPerYellow +
+        (yellowCards >= 1 ? Formulas.ratingPerRedCard : 0.0);
     final card = option.isTacticalFoul
-        ? Formulas.ratingPerYellow
-        : (1 - p) * cardChanceFor(option) * Formulas.ratingPerYellow;
+        ? cardCost
+        : (1 - p) * cardChanceFor(option) * cardCost;
     // 止めたぶんも数える。片方だけ入れると、ただ損な手に見える。
-    // 奪う手が消せるのは「この後に入るはずだった失点」だけ。予定そのものは
+    // 止める手が消せるのは「この後に入るはずだった失点」だけ。予定そのものは
     // 隠されているので、力関係と残り時間から出る見込みで数える
-    // （アシストの見込みと同じ形）。反則のほうは以前のまま。
+    // （アシストの見込みと同じ形）。反則で止める手も同じ——見込みを掛けずに
+    // 0.6 を丸ごと数えていたので、守り切る終盤でも「掴んで止める」が
+    // いつも最善だった（2026-11-15）。
     final prevented = !option.preventsGoal
         ? 0.0
-        : option.isTacticalFoul
-        ? p * Formulas.ratingPerGoalPrevented
-        : p * Formulas.ratingPerStop * concedeLaterChance(currentMinute);
+        : p *
+              (option.isTacticalFoul
+                  ? Formulas.ratingPerGoalPrevented
+                  : Formulas.ratingPerStop) *
+              concedeLaterChance(currentMinute);
     // 外して失点するぶん。止めたぶんと対にして入れる。
     final caused =
-        (1 - p) * concedeChanceOf(option) * Formulas.ratingPerGoalCaused;
+        (1 - p) * concedeChanceOf(option) * Formulas.ratingPerGoalCaused +
+        (option.lingering
+            ? p * Formulas.concedeOnLinger * Formulas.ratingPerLingerGoal
+            : 0.0);
     return p * gain +
         (1 - p) *
             Formulas.ratingPerFailure *
