@@ -1843,6 +1843,8 @@ class MatchEngine {
     Development development = const Development(),
     void Function(Detail detail)? aimed,
     void Function(AttributeKey key, int step)? toPoints,
+    List<AttributeKey> protect = const [],
+    void Function(Detail detail, bool shielded)? declined,
   }) {
     if (rating == null) return player.attributes;
 
@@ -1852,7 +1854,24 @@ class MatchEngine {
         player.personality.declineAgeOffset +
         declineOffset;
     if (player.age >= declineAge && _random.nextDouble() < 0.25) {
-      return player.attributes.bumpDetail(_randomDetail(), -1);
+      // **衰えの行き先は、その週に練習しているカテゴリを避ける**（2026-11-15）。
+      // 以前は無作為の1項目が落ちるだけで、25歳を過ぎると週の9割で何も
+      // 起きないうえ、落ちる側にも選ぶ余地が無かった。落ちる回数と量は
+      // 変えない——変わるのは「どこが落ちるか」だけ。
+      var detail = _randomDetail();
+      var shielded = false;
+      if (protect.contains(detail.category)) {
+        final open = [
+          for (final d in Detail.values)
+            if (!protect.contains(d.category)) d,
+        ];
+        if (open.isNotEmpty) {
+          detail = open[_random.nextInt(open.length)];
+          shielded = true;
+        }
+      }
+      declined?.call(detail, shielded);
+      return player.attributes.bumpDetail(detail, -1);
     }
 
     if (rating < Formulas.growthRatingThreshold) return player.attributes;

@@ -31,6 +31,9 @@ void main() {
     final overall = <int, int>{};
     final seen = <int, int>{};
     final polish = <int, int>{};
+    // 衰えた週と、そのうち練習で守ったぶんを別の能力が受けた週。
+    final declined = <int, int>{};
+    final shielded = <int, int>{};
     var totalMastery = 0;
 
     for (var seed = 0; seed < n; seed++) {
@@ -46,6 +49,15 @@ void main() {
           effort: TrainingEffort.hard,
         ),
         seed,
+        onWeekState: (c) {
+          final week = c.lastWeek;
+          final age = c.state!.player.age;
+          if (week?.declined == null) return;
+          declined[age] = (declined[age] ?? 0) + 1;
+          if (week!.declineRedirected) {
+            shielded[age] = (shielded[age] ?? 0) + 1;
+          }
+        },
         onWeek: (age, attributes, ovr, mastery) {
           if (lastMastery >= 0 && mastery > lastMastery) {
             polish[age] = (polish[age] ?? 0) + 1;
@@ -67,7 +79,7 @@ void main() {
     }
 
     print('引退時の磨き合計 平均 ${(totalMastery / n).toStringAsFixed(2)} / 15');
-    print('歳  週数   伸びた  割合    磨いた  何かあった週  総合力');
+    print('歳  週数   伸びた  割合    磨いた  何かあった週  総合力  衰えた  うち守った  選択が効いた週');
     for (final age in weeks.keys.toList()..sort()) {
       final w = weeks[age]!;
       final u = up[age] ?? 0;
@@ -77,7 +89,9 @@ void main() {
         '$age  ${w.toString().padLeft(4)}  ${u.toString().padLeft(5)}  '
         '${(u / w * 100).toStringAsFixed(1).padLeft(5)}%  '
         '${pol.toString().padLeft(5)}   '
-        '${((u + pol) / w * 100).toStringAsFixed(1).padLeft(5)}%       $o',
+        '${((u + pol) / w * 100).toStringAsFixed(1).padLeft(5)}%       $o'
+        '  ${(declined[age] ?? 0).toString().padLeft(5)}  ${(shielded[age] ?? 0).toString().padLeft(8)}'
+        '  ${((u + pol + (shielded[age] ?? 0)) / w * 100).toStringAsFixed(1).padLeft(8)}%',
       );
     }
   }, timeout: const Timeout(Duration(minutes: 30)));
