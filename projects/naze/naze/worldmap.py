@@ -703,6 +703,14 @@ class Map:
                 cv2.polylines(arr, segs, False, col + (int(A * 0.35),), wd * 3, cv2.LINE_AA)
             cv2.polylines(arr, segs, False, col + (A,), wd, cv2.LINE_AA)
             lay.alpha_composite(Image.fromarray(arr, "RGBA"))
+        elif kind == "area":                                    # 経緯度の多角形(いくつでも)を塗る。昔の湖の広さなど(アラル海の回)
+            import cv2
+            arr = np.zeros((H, W, 4), np.uint8)
+            rings = [np.array([v.px(*p) for p in r], np.int32) for r in L["rings"] if len(r) > 2]
+            cv2.fillPoly(arr, rings, col + (int(A * L.get("alpha", 0.45)),), cv2.LINE_AA)
+            if L.get("width", 4):
+                cv2.polylines(arr, rings, True, col + (A,), L.get("width", 4), cv2.LINE_AA)
+            lay.alpha_composite(Image.fromarray(arr, "RGBA"))
         elif kind == "arrow":
             x0, y0 = v.px(*L["a"])
             x1, y1 = v.px(*L["b"])
