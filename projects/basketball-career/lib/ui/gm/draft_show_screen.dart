@@ -6,6 +6,7 @@ import '../../gm/draft_show.dart';
 import '../../gm/player.dart';
 import '../gm_controller.dart';
 import 'common.dart';
+import 'motion.dart';
 import 'style.dart';
 
 /// ドラフトくじの発表。1巡目の上位(くじで決まる4つ)を、4番目から1つずつ開ける。
@@ -85,6 +86,22 @@ class _LotteryScreenState extends State<LotteryScreen> {
       ),
       child: Row(children: [
         SizedBox(width: 44, child: Text('${r.slot}番', style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16))),
+        // 開けると、札がめくれるように回って中身が出る
+        Expanded(
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 520),
+            switchInCurve: Curves.easeOutBack,
+            transitionBuilder: (child, a) => AnimatedBuilder(
+              animation: a,
+              builder: (context, child) => Transform(
+                alignment: Alignment.center,
+                transform: Matrix4.identity()..rotateX((1 - a.value) * 1.4),
+                child: Opacity(opacity: a.value.clamp(0.0, 1.0), child: child),
+              ),
+              child: child,
+            ),
+            layoutBuilder: (current, previous) => Stack(alignment: Alignment.centerLeft, children: [...previous, ?current]),
+            child: Row(key: ValueKey(covered), children: [
         if (covered) ...[
           const Icon(Icons.help_outline_rounded, color: GmColors.gold, size: 22),
           const SizedBox(width: 8),
@@ -112,6 +129,9 @@ class _LotteryScreenState extends State<LotteryScreen> {
             ),
           ),
         ],
+            ]),
+          ),
+        ),
       ]),
     );
   }
@@ -133,7 +153,7 @@ Future<void> showPickReveal(NavigatorState nav, GmController c, Prospect mine, L
         child: SingleChildScrollView(
           child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, mainAxisSize: MainAxisSize.min, children: [
             Row(children: [
-              _gradeBadge(g.grade),
+              PopIn(delay: 0.25, ms: 1100, child: _gradeBadge(g.grade)),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -155,8 +175,16 @@ Future<void> showPickReveal(NavigatorState nav, GmController c, Prospect mine, L
               if (lost.isNotEmpty)
                 Text('注目していた ${lost.map((p) => p.player.name).join('・')} は取られた', style: const TextStyle(color: GmColors.bad, fontSize: 12)),
               const SizedBox(height: 4),
-              for (final p in others.take(12))
-                Padding(
+              for (final (i, p) in others.take(12).indexed)
+                // 他チームの指名は上から順に流れ込む
+                TweenAnimationBuilder<double>(
+                  tween: Tween(begin: 0, end: 1),
+                  duration: Duration(milliseconds: 300 + 70 * i),
+                  builder: (context, t, child) {
+                    final k = ((t * (300 + 70 * i) - 70 * i) / 300).clamp(0.0, 1.0);
+                    return Opacity(opacity: k, child: Transform.translate(offset: Offset(16 * (1 - k), 0), child: child));
+                  },
+                  child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 1.5),
                   child: Row(children: [
                     SizedBox(width: 36, child: Text('${p.pickNo}', style: const TextStyle(color: GmColors.sub))),
@@ -172,6 +200,7 @@ Future<void> showPickReveal(NavigatorState nav, GmController c, Prospect mine, L
                     ),
                     if (board.contains(p.player.id)) const Icon(Icons.star_rounded, size: 16, color: GmColors.gold),
                   ]),
+                  ),
                 ),
               if (others.length > 12) Text('ほか${others.length - 12}人', style: const TextStyle(color: GmColors.sub, fontSize: 12)),
             ],

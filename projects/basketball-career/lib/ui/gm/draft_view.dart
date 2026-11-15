@@ -11,6 +11,7 @@ import '../gm_controller.dart';
 import 'common.dart';
 import 'draft_show_screen.dart';
 import 'gm_table.dart';
+import 'motion.dart';
 import 'style.dart';
 
 /// 候補の並べ方。
@@ -55,6 +56,8 @@ class _DraftViewState extends State<DraftView> {
     c.pickProspect(p);
     final since = picksSince(car, before);
     if (since.isEmpty || since.first != p) return;
+    await showPickIntro(nav, p);
+    if (!nav.mounted) return;
     await showPickReveal(nav, c, p, since.skip(1).toList());
     await _summaryIfOver(nav);
   }
@@ -106,7 +109,11 @@ class _DraftViewState extends State<DraftView> {
                   width: wide ? 270 : 220,
                   child: ListView(
                     children: [
-                      if (sel != null) _ProspectPanel(c: c, p: sel, rank: ranks[sel]!, onPick: _pick),
+                      if (sel != null)
+                        SlideInSwitcher(
+                          id: sel.player.id,
+                          child: _ProspectPanel(c: c, p: sel, rank: ranks[sel]!, onPick: _pick),
+                        ),
                       if (taken.isNotEmpty) ...[
                         const SizedBox(height: 8),
                         GmTable(
@@ -281,7 +288,14 @@ class _DraftViewState extends State<DraftView> {
                     numCell('$rank', color: gone ? GmColors.bad : null, bold: true),
                     InkWell(
                       onTap: c.busy ? null : () => c.toggleBoard(p),
-                      child: Icon(starred ? Icons.star_rounded : Icons.star_border_rounded, size: 18, color: starred ? GmColors.gold : GmColors.sub),
+                      child: PopIcon(
+                        on: starred,
+                        onIcon: Icons.star_rounded,
+                        offIcon: Icons.star_border_rounded,
+                        size: 18,
+                        onColor: GmColors.gold,
+                        offColor: GmColors.sub,
+                      ),
                     ),
                     Row(
                       children: [
@@ -293,14 +307,14 @@ class _DraftViewState extends State<DraftView> {
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
-                        if (p.scouted) ...[const SizedBox(width: 4), const Tag('調査済', color: GmColors.gold)],
+                        if (p.scouted) ...[const SizedBox(width: 4), const PopIn(child: Tag('調査済', color: GmColors.gold))],
                       ],
                     ),
                     Text(pl.pos.short, style: const TextStyle(fontSize: 11, color: GmColors.sub)),
                     numCell('${pl.age}'),
                     if (wide) Text('${st.ppg}-${st.rpg}-${st.apg}', maxLines: 1, style: const TextStyle(fontSize: 11, color: GmColors.sub)),
-                    _RangeCell(lo: p.ovrLo, hi: p.ovrHi),
-                    _RangeCell(lo: p.potLo, hi: p.potHi),
+                    _RangeCell(key: ValueKey(pl.id), lo: p.ovrLo, hi: p.ovrHi),
+                    _RangeCell(key: ValueKey(pl.id), lo: p.potLo, hi: p.potHi),
                     FittedBox(
                       fit: BoxFit.scaleDown,
                       child: Row(
@@ -342,23 +356,26 @@ class _DraftViewState extends State<DraftView> {
 
 /// 見えている幅(数字と細い帯)。
 class _RangeCell extends StatelessWidget {
-  const _RangeCell({required this.lo, required this.hi});
+  const _RangeCell({super.key, required this.lo, required this.hi});
   final int lo, hi;
 
+  /// スカウトで幅が狭まると、数字と帯が寄っていく。
   @override
-  Widget build(BuildContext context) => Column(
+  Widget build(BuildContext context) => AnimatedRange(lo: lo, hi: hi, builder: (context, l, h) => _bar(l, h));
+
+  Widget _bar(double lo, double hi) => Column(
     mainAxisSize: MainAxisSize.min,
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: [
       Text(
-        '${shown(lo)}〜${shown(hi)}',
+        '${shown(lo.round())}〜${shown(hi.round())}',
         textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: GmColors.ovr(hi)),
+        style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: GmColors.ovr(hi.round())),
       ),
       LayoutBuilder(
         builder: (context, cons) {
           final w = cons.maxWidth;
-          double x(int v) => w * ((v - 35) / 65).clamp(0.0, 1.0);
+          double x(double v) => w * ((v - 35) / 65).clamp(0.0, 1.0);
           return SizedBox(
             height: 4,
             child: Stack(
@@ -369,7 +386,7 @@ class _RangeCell extends StatelessWidget {
                   bottom: 0,
                   left: x(lo),
                   width: (x(hi) - x(lo)).clamp(3.0, w),
-                  child: Container(color: GmColors.ovr(hi)),
+                  child: Container(color: GmColors.ovr(hi.round())),
                 ),
               ],
             ),
@@ -422,12 +439,37 @@ class _ProspectPanel extends StatelessWidget {
         ],
       ),
     );
-    return Container(
+    Widget range(String k, int lo, int hi) => Padding(
+      padding: const EdgeInsets.symmetric(vertical: 1),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 92,
+            child: Text(k, style: const TextStyle(fontSize: 11, color: GmColors.sub)),
+          ),
+          Expanded(
+            child: AnimatedRange(
+              lo: lo,
+              hi: hi,
+              builder: (context, l, h) => Text(
+                '${shown(l.round())}〜${shown(h.round())}',
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: GmColors.ovr(h.round())),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    // スカウトすると枠が金色に光り、得意・苦手・性格が開く
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 450),
+      curve: Curves.easeOut,
       padding: const EdgeInsets.fromLTRB(10, 8, 10, 10),
       decoration: BoxDecoration(
         color: GmColors.panel,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: p.scouted ? GmColors.gold.withValues(alpha: 0.6) : GmColors.line),
+        border: Border.all(color: p.scouted ? GmColors.gold.withValues(alpha: 0.6) : GmColors.line, width: p.scouted ? 1.5 : 1),
+        boxShadow: [if (p.scouted) BoxShadow(color: GmColors.gold.withValues(alpha: 0.18), blurRadius: 10)],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -447,26 +489,53 @@ class _ProspectPanel extends StatelessWidget {
           ),
           Text('${pl.age}歳・${backgroundOf(p)}・予想$rank位', maxLines: 2, style: const TextStyle(fontSize: 11, color: GmColors.sub)),
           head('見立て'),
-          line('OVR', '${shown(p.ovrLo)}〜${shown(p.ovrHi)}', color: GmColors.ovr(p.ovrHi)),
-          line('POT', '${shown(p.potLo)}〜${shown(p.potHi)}', color: GmColors.ovr(p.potHi)),
-          if (p.scouted) ...[
-            line('得意', good.map((a) => a.label).join('・'), color: GmColors.good),
-            line('苦手', bad.label, color: GmColors.bad),
-            line('性格', personalityOf(pl).line, color: GmColors.gold),
-            Text('${personalityOf(pl).value.text}。${personalityOf(pl).traits.map((t) => t.text).join('。')}。', style: const TextStyle(fontSize: 10, color: GmColors.sub, height: 1.4)),
-          ] else ...[
-            line('得意・苦手・性格', 'スカウトで分かる'),
-            Builder(
-              builder: (_) {
-                final k = (car.me.staffLevel(Staff.scout) - 1).clamp(0, 2);
-                final om = (p.ovrLo + p.ovrHi) ~/ 2, pm = (p.potLo + p.potHi) ~/ 2;
-                return Text(
-                  'いまのスカウト(段階${k + 1})なら OVR ±${shown(om + scoutOvrHalf[k]) - shown(om)}・POT ±${shown(pm + scoutPotHalf[k]) - shown(pm)} ほどまで狭まる',
-                  style: const TextStyle(fontSize: 10, color: GmColors.sub, height: 1.4),
-                );
-              },
+          range('OVR', p.ovrLo, p.ovrHi),
+          range('POT', p.potLo, p.potHi),
+          AnimatedSize(
+            duration: const Duration(milliseconds: 320),
+            curve: Curves.easeOutCubic,
+            alignment: Alignment.topCenter,
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 420),
+              // 前の中身はすぐ消し、新しい中身だけを浮かび上がらせる(重なって読めなくならないように)
+              switchOutCurve: const Threshold(1),
+              transitionBuilder: (child, a) => FadeTransition(
+                opacity: a,
+                child: SlideTransition(
+                  position: Tween(begin: const Offset(0, 0.15), end: Offset.zero).animate(a),
+                  child: child,
+                ),
+              ),
+              layoutBuilder: (current, previous) => Stack(alignment: Alignment.topCenter, children: [...previous, ?current]),
+              child: Column(
+                key: ValueKey(p.scouted),
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (p.scouted) ...[
+                    line('得意', good.map((a) => a.label).join('・'), color: GmColors.good),
+                    line('苦手', bad.label, color: GmColors.bad),
+                    line('性格', personalityOf(pl).line, color: GmColors.gold),
+                    Text(
+                      '${personalityOf(pl).value.text}。${personalityOf(pl).traits.map((t) => t.text).join('。')}。',
+                      style: const TextStyle(fontSize: 10, color: GmColors.sub, height: 1.4),
+                    ),
+                  ] else ...[
+                    line('得意・苦手・性格', 'スカウトで分かる'),
+                    Builder(
+                      builder: (_) {
+                        final k = (car.me.staffLevel(Staff.scout) - 1).clamp(0, 2);
+                        final om = (p.ovrLo + p.ovrHi) ~/ 2, pm = (p.potLo + p.potHi) ~/ 2;
+                        return Text(
+                          'いまのスカウト(段階${k + 1})なら OVR ±${shown(om + scoutOvrHalf[k]) - shown(om)}・POT ±${shown(pm + scoutPotHalf[k]) - shown(pm)} ほどまで狭まる',
+                          style: const TextStyle(fontSize: 10, color: GmColors.sub, height: 1.4),
+                        );
+                      },
+                    ),
+                  ],
+                ],
+              ),
             ),
-          ],
+          ),
           head('コンバイン(身体測定)'),
           line('身長・体重', '${h}cm・${w}kg'),
           line('ウイングスパン', '${span}cm'),
@@ -481,7 +550,7 @@ class _ProspectPanel extends StatelessWidget {
                 child: OutlinedButton.icon(
                   style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(30), padding: EdgeInsets.zero),
                   onPressed: c.busy ? null : () => c.toggleBoard(p),
-                  icon: Icon(starred ? Icons.star_rounded : Icons.star_border_rounded, size: 16, color: starred ? GmColors.gold : null),
+                  icon: PopIcon(on: starred, onIcon: Icons.star_rounded, offIcon: Icons.star_border_rounded, size: 16, onColor: GmColors.gold),
                   label: Text(starred ? '注目を外す' : '注目する', style: const TextStyle(fontSize: 12)),
                 ),
               ),

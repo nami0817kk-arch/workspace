@@ -104,27 +104,33 @@ class GmTable extends StatelessWidget {
             ),
           ),
           for (final (i, r) in rows.indexed)
-            Material(
+            // 選んだ行の下地は、すっと色が移る(2026-11-15)
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeOut,
               color: r.highlight
                   ? GmColors.ball.withValues(alpha: 0.16)
                   : i.isOdd
                   ? GmColors.panelHi.withValues(alpha: 0.45)
-                  : Colors.transparent,
-              child: InkWell(
-                onTap: r.onTap,
-                child: Container(
-                  height: rowHeight,
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
-                  decoration: r.divider
-                      ? const BoxDecoration(
-                          border: Border(top: BorderSide(color: GmColors.line, width: 1.5)),
-                        )
-                      : null,
-                  child: Opacity(
-                    opacity: r.dim ? 0.5 : 1,
-                    child: DefaultTextStyle.merge(
-                      style: const TextStyle(fontSize: 12, fontFeatures: [FontFeature.tabularFigures()]),
-                      child: Row(children: [for (var k = 0; k < cols.length; k++) _cell(cols[k], r.cells[k])]),
+                  : GmColors.panel.withValues(alpha: 0),
+              child: Material(
+                type: MaterialType.transparency,
+                child: InkWell(
+                  onTap: r.onTap,
+                  child: Container(
+                    height: rowHeight,
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    decoration: r.divider
+                        ? const BoxDecoration(
+                            border: Border(top: BorderSide(color: GmColors.line, width: 1.5)),
+                          )
+                        : null,
+                    child: Opacity(
+                      opacity: r.dim ? 0.5 : 1,
+                      child: DefaultTextStyle.merge(
+                        style: const TextStyle(fontSize: 12, fontFeatures: [FontFeature.tabularFigures()]),
+                        child: Row(children: [for (var k = 0; k < cols.length; k++) _cell(cols[k], r.cells[k])]),
+                      ),
                     ),
                   ),
                 ),
