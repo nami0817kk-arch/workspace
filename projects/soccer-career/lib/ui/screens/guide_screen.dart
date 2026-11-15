@@ -637,8 +637,15 @@ final List<_GuideSection> _sections = [
     '選べないものも試合を動かす。相手に退場者が出れば'
         ' +${(Formulas.numbersUpBonus * 100).round()}%、'
         '終盤に相手が前がかりになれば得点の手が通りやすくなる。逆もある。',
-    '終盤（75分以降）に同点以下から決めた得点は、評価点が重く付く。'
-        '終盤の局面はそのときのスコアで中身が変わり、追いかけているならリスクを取る局面、'
+    '試合の状況で、手の値打ちが変わる。追いかけている時間（1点差なら'
+        '${Formulas.situationalMinute}分、2点差なら${Formulas.bigDeficitMinute}分から）と'
+        '同点の終盤（${Formulas.lateGameMinute}分以降）は、決めにいく手の評価が'
+        '×${Formulas.decisiveGoalFactor.toStringAsFixed(1)}、つなぐだけの手は'
+        '×${Formulas.stakesChasePlay}（同点なら×${Formulas.stakesLevelPlay}）。'
+        'リードして${Formulas.situationalMinute}分を過ぎたら、つなぐ手が'
+        '×${Formulas.stakesHoldPlay}、外したときの減点が×${Formulas.stakesHoldFailure}。'
+        '手の横に「今は重い」「今は軽い」「外すと痛い」と出る。',
+    '終盤の局面はそのときのスコアで中身が変わり、追いかけているならリスクを取る局面、'
         'リードしているなら時間の使い方を問う局面が来る。',
     '1試合の1/4くらいは逆足で対応することになる。逆足の精度が低いとそこで落ちる。',
   ]),
