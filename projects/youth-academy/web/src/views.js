@@ -336,7 +336,7 @@
     if (!p.star && !p.aw) return h('div', {});
     const lv = YA.trustLv(p);
     const box = h('div', { class: 'card', style: 'padding:6px 9px;margin:2px 0 6px;background:#fffaf0;border-color:#f0cf55' },
-      h('div', { class: 'row', style: 'gap:8px;flex-wrap:wrap' }, h('b', {}, '覚醒の鍵'), h('span', { class: 'chip gray' }, `信頼 ${'●'.repeat(lv)}${'○'.repeat(5 - lv)} ${YA.TRUST_NAME[lv]}`), p.aw ? h('span', { class: 'chip trait' }, `${p.aw.form}・特性「${p.aw.trait}」`) : null));
+      h('div', { class: 'row', style: 'gap:8px;flex-wrap:wrap' }, h('b', {}, '覚醒の鍵'), h('span', { class: 'chip gray' }, `信頼 ${'●'.repeat(lv)}${'○'.repeat(5 - lv)} ${YA.TRUST_NAME[lv]}`), p.aw ? h('span', { class: 'chip trait', title: (p.aw.as || []).join('・') }, `${p.aw.form}・特性「${p.aw.trait}」`) : null, p.aw && (p.aw.as || []).length ? h('small', { class: 'sub', style: 'flex-basis:100%' }, `覚醒の特性「${p.aw.trait}」：${p.aw.as.join('・')}`) : null));
     const ks = p.star ? YA.keysOf(w, p) : [];
     if (ks.length) box.append(...ks.map((k) => h('div', { style: 'font-size:12px;' + (k.done ? 'color:#1e6b37;font-weight:700' : '') }, `［${k.sys}］ ` + YA.keyText(w, p, k))));
     else if (p.aw) box.append(h('div', { class: 'sub', style: 'font-size:12px' }, 'いまは次の鍵の気配はない'));

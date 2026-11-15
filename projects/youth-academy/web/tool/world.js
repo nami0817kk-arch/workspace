@@ -1341,6 +1341,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   const v = ev && YA.eventView(w0, ev);
   ok(v && /覚醒/.test(v.text) && v.text.indexOf(q.aw.trait) >= 0 && !/undefined|null|NaN/.test(v.text), '覚醒の知らせ ' + (v && v.text));
   ok(YA.AWAKE_FORMS.length >= 20 && YA.AWAKE_FORMS.every((f) => f.as.every((t) => YA.TRAITS.indexOf(t) >= 0) && f.abs.every((a) => YA.AB_FIELD.concat(YA.AB_GK).indexOf(a) >= 0)), '覚醒の形は20種類・中身が正しい');
+  ok(YA.AWAKE_FORMS.every((f) => f.as.length === 4 && new Set(f.as).size === 4), '覚醒の特性はどの形も4つ');
   // ★の付いていない子は覚醒しない。おまかせで3年回すと★の子が何人か覚醒する
   let star = 0, other = 0, yrs = 0;
   for (const seed of [8, 21]) {
