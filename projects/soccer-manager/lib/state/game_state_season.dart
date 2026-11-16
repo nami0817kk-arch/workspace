@@ -833,6 +833,11 @@ extension GameStateSeason on GameState {
     );
     final investmentBonus =
         YouthInvestmentEngine.qualityBonus(_save!.youthMomentum);
+    // 施設予算の効きも同じ仕組みで、もっとゆっくり蓄積する。
+    _save!.facilityMomentum = FacilityInvestmentEngine.nextMomentum(
+      momentum: _save!.facilityMomentum,
+      ratio: BudgetEngine.ratio(_save!.budgetPlan, BudgetCategory.facilities),
+    );
     _save!.pendingYouthIntake = List.generate(
       intakeCount,
       (_) => ScoutingEngine.generateAcademyGraduate(

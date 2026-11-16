@@ -164,6 +164,9 @@ class SaveGame {
 
   /// 育成の蓄積(倍率)。育成予算の効きの時間差を表す。初期の配分で 1.0。
   double youthMomentum;
+
+  /// 施設の蓄積(倍率)。施設予算の効きの時間差(3〜5年)。初期の配分で 1.0。
+  double facilityMomentum;
   int reserveFund;
   int communityLevel;
 
@@ -487,6 +490,7 @@ class SaveGame {
     Map<String, int>? sellOnClauses,
     this.partnerClubId,
     this.youthMomentum = 1.0,
+    this.facilityMomentum = 1.0,
     this.reserveFund = 0,
     this.communityLevel = 0,
     this.transferBanSeasons = 0,
@@ -703,6 +707,7 @@ class SaveGame {
         'sellOnClauses': sellOnClauses,
         'partnerClubId': partnerClubId,
         'youthMomentum': youthMomentum,
+        'facilityMomentum': facilityMomentum,
         'reserveFund': reserveFund,
         'communityLevel': communityLevel,
         'transferBanSeasons': transferBanSeasons,
@@ -854,6 +859,8 @@ class SaveGame {
             ?.map((k, v) => MapEntry(k as String, v as int)),
         partnerClubId: json['partnerClubId'] as String?,
         youthMomentum: (json['youthMomentum'] as num?)?.toDouble() ?? 1.0,
+        facilityMomentum:
+            (json['facilityMomentum'] as num?)?.toDouble() ?? 1.0,
         reserveFund: json['reserveFund'] as int? ?? 0,
         communityLevel: json['communityLevel'] as int? ?? 0,
         clubPolicy: ClubPolicy.values

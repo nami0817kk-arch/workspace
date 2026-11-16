@@ -8,9 +8,10 @@ import 'package:soccer_manager/state/game_state.dart';
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
-  test('仕事は30件で、IDが重複せず、名前と説明が全部ある', () {
-    expect(ownerWorks.length, 30);
-    expect(ownerWorks.map((w) => w.id).toSet().length, 30);
+  test('仕事は33件(通常30+危機3)で、IDが重複せず、名前と説明が全部ある', () {
+    expect(ownerWorks.length, 33);
+    expect(ownerWorks.where((w) => !w.onlyInRed).length, 30);
+    expect(ownerWorks.map((w) => w.id).toSet().length, 33);
     for (final w in ownerWorks) {
       expect(w.title, isNotEmpty, reason: w.id);
       expect(w.description, isNotEmpty, reason: w.id);

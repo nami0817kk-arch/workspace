@@ -319,6 +319,7 @@ extension GameStateFinance on GameState {
     final save = _save;
     if (save == null) return false;
     if (save.ownerWorkDoneSeason[work.id] == save.league.season) return false;
+    if (work.onlyInRed && save.budget >= 0) return false;
     return save.budget >= work.cost;
   }
 
@@ -769,6 +770,7 @@ extension GameStateFinance on GameState {
     var matchdayIncome = ((base + (stadiumLevel - 1) * 80) *
             userAttendanceFactor *
             _save!.ticketPricing.revenueMultiplier *
+            FacilityInvestmentEngine.gateMultiplier(_save!.facilityMomentum) *
             commercialMultiplier)
         .round();
     // 2部リーグは1部より観客動員が少ない(userAttendanceFactorに反映済み)。
