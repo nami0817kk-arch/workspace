@@ -23,6 +23,7 @@ require(path.join(__dirname, '../src/club5.js'));
 require(path.join(__dirname, '../src/life.js'));
 require(path.join(__dirname, '../src/func.js'));
 require(path.join(__dirname, '../src/pronews.js'));
+require(path.join(__dirname, '../src/staracts.js'));
 require(path.join(__dirname, '../src/shop.js'));
 require(path.join(__dirname, '../src/imgdata.js'));
 require(path.join(__dirname, '../src/art.js'));
@@ -1692,6 +1693,43 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   try { for (const sd of [3, 4]) { const t = YA.testStart({ seed: sd, tier: 2, years: 2 }); YA.testYear(t); YA.testYear(t); notes += (t.w.notes || []).filter((n) => /コーチに任せた/.test(n.t || n.text || n)).length + JSON.stringify(t.w).split('コーチに任せた').length - 1; } } finally { YA.rollEvents = re0; }
   ok(st + ot > 40 && ot / (st + ot) <= 0.2 && st / (st + ot) >= 0.8, '★以外の子の出来事は控えめ（★' + st + '・ほか' + ot + '・大事なもの' + keep + '）');
   ok(autoLeft === 0 && notes > 0, '★以外の子の退団・プロの話・怪我・進路は選ばせず、コーチに任せたお知らせになる（残り' + autoLeft + '・お知らせ' + notes + '）');
+}
+// ★の子に自分からできること（2026-11-16「★の選手に自分からできるアクションを増やしたい」）
+{
+  const w = YA.newWorld(21);
+  const g1 = Object.values(w.players).filter((q) => q.grade === 1 && !q.inj);
+  const p = g1[0], p2 = g1[1], other = Object.values(w.players).find((q) => q.grade === 2);
+  YA.setStar(w, p, true); YA.setStar(w, p2, true);
+  ok(YA.STAR_ACTS.length === 6 && YA.starActWhy(w, other, 'meal') === '★の子だけにできることです', '★の子だけにできる働きかけが6つ');
+  const tr0 = p.tr == null ? 50 : p.tr;
+  let r = YA.starAct(w, p, 'meal');
+  ok(r.ok && p.tr > tr0 && r.line && (p.mem || []).some((m) => m.k === 'sa'), 'ご飯に連れて行くと信頼が上がり、記憶に残る');
+  ok(/週に1回/.test(YA.starActWhy(w, p, 'meal')), '同じ働きかけは同じ子に間をあける');
+  const fat0 = p.fat;
+  r = YA.starAct(w, p, 'stay');
+  ok(r.ok && p.fat === Math.min(100, fat0 + 10) && YA.starActLeft(w) === 0, '居残り練習は疲れる。週の回数を使い切る');
+  ok(/今週の分/.test(YA.starActWhy(w, p2, 'meal')) && !YA.starAct(w, p2, 'meal').ok, '週の回数を超えると押せない');
+  w.week++;
+  ok(YA.starActLeft(w) === YA.STAR_ACT_WEEK, '次の週は回数が戻る');
+  w.alumni = [];
+  ok(/卒業生がまだ/.test(YA.starActWhy(w, p, 'ob')), 'プロの卒業生がいないと会わせられない');
+  w.alumni.push({ name: '先輩 太郎', pos: p.pos, main: p.main, status: 'pro', retired: false, club: 'ロイヤル・マドリード', ovr: 16, bond: 4, year: 1 });
+  const c0 = p.conf;
+  r = YA.starAct(w, p, 'ob');
+  ok(r.ok && p.conf > c0 && /先輩 太郎/.test(r.msg) && /年1回/.test(YA.starActWhy(w, p, 'ob') || '年1回'), '卒業生に会わせると自信が上がる');
+  // 約束：届いたら自信と信頼と能力、届かなければ下がる
+  w.week++;
+  r = YA.starAct(w, p, 'pact');
+  ok(r.ok && p.pact && /いま 0\/\d/.test(YA.pactLine(w, p)) && !!YA.starActWhy(w, p, 'pact'), '目標を約束する（進みが見え、続けては約束できない）');
+  const sum0 = Object.values(p.ab).reduce((t, v) => t + v, 0), cf0 = p.conf;
+  p.cs[p.pact.t] = (p.cs[p.pact.t] || 0) + p.pact.need;
+  w.week++; YA.rivalWeek(w);
+  ok(!p.pact && p.conf > cf0 && Object.values(p.ab).reduce((t, v) => t + v, 0) >= sum0, '約束に届くと自信が上がって伸びる');
+  r = YA.starAct(w, p2, 'pact');
+  const cf2 = p2.conf;
+  ok(r.ok && p2.pact, '別の★の子とも約束できる');
+  w.week += YA.PACT_WEEKS; YA.rivalWeek(w);
+  ok(!p2.pact && p2.conf < cf2, '約束に届かないと自信が下がる');
 }
 console.log(fails ? '失敗 ' + fails : '育成の点検: すべて通過');
 process.exit(fails ? 1 : 0);

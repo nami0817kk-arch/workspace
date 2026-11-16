@@ -402,6 +402,8 @@
     talk.append(h('div', { class: 'card', style: 'padding:6px 9px;margin:4px 0;background:#f5f8fd' }, h('b', {}, sel.name.split(' ')[0] + '：'), `「${su.line}」`));
     talk.append(h('div', { class: 'fm-row', style: 'margin-top:4px' }, su.opts.map((t) => h('button', { class: 'btn', disabled: !can, why: '面談は1人と月1回までです。来月また話せます', onclick: () => { const r = YA.talk(w, sel.id, t.k); res.replaceChildren(h('div', {}, r.ok ? `${sel.name.split(' ')[0]}は、${r.line}${r.small ? '（' + r.small + '）' : ''}${r.extra ? ' / ' + r.extra : ''}` : r.msg)); YA.saveWorld(); talkBtns(); } }, t.label))));
     talk.append(res);
+    // ★の子にだけ：自分からできる働きかけ（staracts.js）
+    if (YA.starActsEl) { const sa = YA.starActsEl(w, sel, rerender); if (sa) talk.append(sa); }
     const talkBtns = () => { for (const b of talk.querySelectorAll('button')) b.disabled = true; };
     // 様子（決定142）：調子・不満・性格・コーチの一言、チームでの役割とポジション、最近のこと
     const ops = h('div', {});
