@@ -1,0 +1,148 @@
+# 取材メモ（2026年11月15日）森保監督、ブラジル撃破に「世界トップ基準で選手たちがやり遂げてくれた」。次戦がラストマッチ（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-15。requests（ブラウザUA）で本文を全文読み、site.api.espn.com で確かめた。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: ゲキサカ 2026-11-14（ゲキサカ編集部）「ブラジル撃破に森保監督「世界トップ基準で選手たちがやり遂げてくれた」次戦ラストマッチも「これまで通りベストを」」（全文） https://web.gekisaka.jp/news/japan/detail/?463198-463198-fl
+#   サッカーキング 2026-11-14「ブラジル相手に劇的勝利！ 森保監督「自分たちが何ができるかというところを、世界トップ基準で選手たちがやり遂げてくれた」」（全文。発言はこちらのほうが長いので、言葉はサッカーキングの全文を基にした） https://www.soccer-king.jp/news/japan/national/20261114/2227723.html
+# 写真の出どころ（本人の写真を探すため）:
+#   https://web.gekisaka.jp/news/japan/detail/?463198-463198-fl
+#   https://web.gekisaka.jp/news/japan/detail/?463110-463110-fl
+#   https://web.gekisaka.jp/news/japan/detail/?462496-462496-fl
+#   退任の根拠: 20261114 取材メモ（ゲキサカ 463110「今回の2連戦で退任」）。
+# 出典で確かめたこと:
+#   ・ESPN（fifa.friendly summary event=401916337、2026-11-14 10:15 UTC、シンガポール）: 日本 3-2 ブラジル。15分 久保／19分 中村／33分 ヴィニシウス／75分 ヴィニシウス／90+1分 坂元（VAR確認）。
+#   ・ESPN（fifa.friendly event=757632、2025-10-14 東京スタジアム）: 日本 3-2 ブラジル。ゲキサカ「昨年の対戦では2点ビハインドからの逆転で金星」、サッカーキング「1年前に日本で行われ、同じスコアで勝利」と合う（2点ビハインドの内訳は ESPN の keyEvents に全部は出ないので、ゲキサカの表現として使う）。
+#   ・ESPN（fifa.world event=760487、2026-06-29）: ブラジル 2-1 日本。29分 佐野海舟で日本が先制、56分 カゼミーロで同点、90+5分 マルティネッリで逆転 → 「1点リードから逆転負け」（ゲキサカ）と合う。
+#   ・森保監督の言葉（原文。サッカーキングの全文。ゲキサカにも同じ発言の短い版。字は変えていない。台本は読点・自然な切れ目で行に分けた。「世界トップ基準で今日は」の所は途中から始めない）:
+#       「我々がリードしたことによって、相手がさらにテンションが上がって、その中で自分たちが何ができるかというところを、世界トップ基準で今日は選手たちがやり遂げてくれたと思っています」
+#       「…アグレッシブに自信を持って勇気を持ってチャレンジしながらも、きっちり我慢するところは我慢しながら、いい戦いをしてくれたかなと思います」（ゲキサカの表記は「アグレッシブに自信を持って、勇気を持ってチャレンジしながらも…良い戦いをしてくれたかなと思う」。サッカーキングに統一。読点はゲキサカの位置を使った）
+#       「…日本が世界一になれるということを一緒に夢見て、テレビの前の皆さんにも応援と共闘し続けていただけたらと思っています」（文の途中から。前は「親善試合ではありますけど、こういう勝利と戦いを積み重ねて、ワールドカップの舞台でも勝てると思うので、選手たちには引き続きチャレンジしてほしいと思いますし、」）
+#       「一戦一戦戦っていくということで、これまでもやってきましたし、次のパラグアイ戦に向けて勝利と成長を目指して、これまで通りベストを尽くしたいと思います」
+#   ・ゲキサカ地の文: 試合前、「攻撃も守備もアグレッシブに戦っていこう」としつつ「勢いだけにならずメリハリをつけていこう」と送り出した。次戦（17日パラグアイ戦）が森保ジャパンのラストマッチ。
+#   ・サッカーキング: 次戦は「自身ラストマッチ」、パラグアイ戦は 11/17（火）。ESPN scoreboard 2026-11-17: Paraguay at Japan 13:10 UTC（日本時間 22:10）。→ 台本は「17日」とだけ言う。
+#   ・サッカーキング: 今回のブラジルは日本の実力を評価した本気の戦い。→ 使わない（題の外）。
+# 食い違い: ゲキサカの発言の短い版（「世界トップ基準で選手たちがやり遂げてくれた」）とサッカーキングの全文（「…世界トップ基準で今日は選手たちがやり遂げてくれたと思っています」）で語の数が違う。サッカーキングの全文に統一。ゲキサカの「3失点目後にアンチェロッティ監督とラフィーニャが退場」は ESPN で 90+2分（ラフィーニャ）と合うが、題の外なので使わない（ラフィーニャは別の本）。
+# 前の本との重なり: 20261114_moriyasu_best_worst_game（前日の取材。ベスト・ワーストゲーム・レガシー）、20261111_doan_asiacup_words 他。今回の初出: 試合直後のフラッシュインタビュー（世界トップ基準・次戦がラスト）。8年間の話・オマーン戦は繰り返さない。
+# 【言わないこと】後任の話／退場・判定の話／森保監督の戦績の評価／W杯の戦い方への評価。
+# 本人の言葉: あり（森保一。サッカーキング・ゲキサカ）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月15日"
+format: news
+no_main: true
+people: [森保一]
+
+short_style: Y
+short_hook_quote: 我々がリードしたことによって、
+short_photos:
+  - assets/images/20261115_moriyasu_brazil_world_top/02_v.jpg
+  - assets/images/20261115_moriyasu_brazil_world_top/04_v.jpg
+  - assets/images/20261115_moriyasu_brazil_world_top/01_v.jpg
+short_question: 森保一監督のラストマッチ、パラグアイ戦で日本は勝つと思いますか。
+short_telops: []
+
+theme:
+  id: moriyasu_brazil_world_top
+  league: japan
+  league_name: 日本代表
+  prefix: ""
+  title: 森保監督、ブラジル撃破に「世界トップ基準で選手たちがやり遂げてくれた」
+  hook: ""
+  question: ブラジルに勝った直後、森保一監督は選手たちを何と評したのか
+  takeaway: 直近3回のブラジル戦は、どれも試合の途中で形勢が動いた。今回は2点を先に取りながら追いつかれ、後半アディショナルタイムに勝ち越した
+
+thumbnail:
+  layout: face
+  line1: 森保監督 ブラジル撃破
+  line2: 「世界トップ基準」
+  tags: [森保一, 日本代表, ブラジル代表]
+  photo: assets/images/20261115_moriyasu_brazil_world_top/02_w.jpg
+  short_photo: assets/images/20261115_moriyasu_brazil_world_top/02_v.jpg
+
+answer: 本気になった相手に、選手たちが世界トップ基準でやり遂げた。次もこれまで通りベストを尽くす
+watch: 17日のパラグアイ戦（森保監督のラストマッチ）
+
+sections:
+  - id: what
+    main: true
+    heading: ブラジルに勝った直後、森保一監督は選手たちを何と評したか
+    tier: 報道
+    telop: 森保監督「世界トップ基準で今日は選手たちがやり遂げてくれた」
+    say:
+      - text: 後半アディショナルタイムの勝ち越しでブラジルを破った直後、森保一監督が語りました。
+        image: assets/images/20261115_moriyasu_brazil_world_top/02_w.jpg
+      - voice: 森保一
+        text: 我々がリードしたことによって、
+        emph: true
+      - voice: 森保一
+        text: 相手がさらにテンションが上がって、
+        cont: true
+      - voice: 森保一
+        text: その中で自分たちが何ができるかというところを、
+        cont: true
+        image: assets/images/20261115_moriyasu_brazil_world_top/04_w.jpg
+      - voice: 森保一
+        text: 世界トップ基準で今日は
+        cont: true
+      - voice: 森保一
+        text: 選手たちがやり遂げてくれたと思っています。
+        cont: true
+        emph: true
+      - text: 日本は前半に2点を先に取り、追いつかれたあと、勝ち越しました。
+        image: assets/images/20261115_moriyasu_brazil_world_top/02_w.jpg
+      - text: 試合前に伝えた、アグレッシブに戦いつつ、勢いだけにならないことについても評価しました。
+      - voice: 森保一
+        text: アグレッシブに自信を持って、
+      - voice: 森保一
+        text: 勇気を持ってチャレンジしながらも、
+        cont: true
+      - voice: 森保一
+        text: きっちり我慢するところは我慢しながら、
+        cont: true
+        image: assets/images/20261115_moriyasu_brazil_world_top/01_w.jpg
+      - voice: 森保一
+        text: いい戦いをしてくれたかなと思います。
+        cont: true
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20261114/2227723.html
+      - https://web.gekisaka.jp/news/japan/detail/?463198-463198-fl
+      - https://www.espn.com/soccer/match/_/gameId/401916337
+  - id: view
+    viewpoint: true
+    heading: 直近3回のブラジル戦は、森保ジャパンにとってどんな試合だったか
+    tier: 背景
+    telop: ブラジル戦、直近3試合は途中で形勢が動いた
+    say:
+      - text: 見立てです。森保一監督は直近3回、ブラジルと撃ち合いました。
+        card: {type: table, title: 日本とブラジルの直近3試合, columns: [試合, 結果, 展開], rows: [[2025年10月, 日本 3-2, 2点ビハインドから逆転], [2026年6月 W杯, 日本 1-2, 1点リードから逆転負け], [2026年11月, 日本 3-2, 2点先取から追いつかれ勝ち越し]], highlight_row: 2}
+      - text: 直近3試合は日本の2勝1敗。勝った2試合は、どちらも3対2でした。
+        card: none
+        image: assets/images/20261115_moriyasu_brazil_world_top/04_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401916337
+      - https://www.espn.com/soccer/match/_/gameId/757632
+      - https://www.espn.com/soccer/match/_/gameId/760487
+  - id: next
+    heading: 森保監督のラストマッチを前に、何と語ったか
+    tier: 報道
+    telop: 森保監督「これまで通りベストを尽くしたい」
+    say:
+      - text: 17日のパラグアイ戦が、今回の2連戦で退任する森保監督のラストマッチです。
+        image: assets/images/20261115_moriyasu_brazil_world_top/02_w.jpg
+      - voice: 森保一
+        text: 一戦一戦戦っていくということで、
+      - voice: 森保一
+        text: これまでもやってきましたし、
+        cont: true
+      - voice: 森保一
+        text: 次のパラグアイ戦に向けて、勝利と成長を目指して、
+        cont: true
+      - voice: 森保一
+        text: これまで通りベストを尽くしたいと思います。
+        cont: true
+        emph: true
+      - text: 最後は、日本が世界一になれるという夢を、テレビの前の人たちとも一緒に見たい、と呼びかけました。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20261114/2227723.html
+      - https://web.gekisaka.jp/news/japan/detail/?463198-463198-fl

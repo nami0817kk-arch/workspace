@@ -3,7 +3,7 @@
 #   python -m src.cli sources --new
 sites:
 - host: derbyderbyderby.it
-  seen: 49
+  seen: 50
   days:
   - '2026-09-02'
   - '2026-09-03'
@@ -31,12 +31,13 @@ sites:
   - '2026-11-08'
   - '2026-11-09'
   - '2026-11-13'
+  - '2026-11-15'
   examples:
   - https://www.derbyderbyderby.it/calcio-italiano/monza-juric-dopo-la-vittoria-sul-torino-se-ci-salviamo-sara-un-grande-risultato/?intcmp=gazzanet-derbyderbyderby
   - https://www.derbyderbyderby.it/calcio-estero/monza-ecco-zeballos-in-italia-per-il-mito-di-maradona-e-i-consigli-di-paredes/?intcmp=gazzanet-derbyderbyderby
   - https://www.derbyderbyderby.it/calcio-italiano/lunione-che-non-ti-aspetti-haslem-con-la-maglia-del-frosinone/?intcmp=gazzanet-derbyderbyderby
 - host: forzaroma.info
-  seen: 22
+  seen: 25
   days:
   - '2026-09-02'
   - '2026-09-05'
@@ -50,6 +51,8 @@ sites:
   - '2026-11-09'
   - '2026-11-11'
   - '2026-11-13'
+  - '2026-11-15'
+  - '2026-11-16'
   examples:
   - https://www.forzaroma.info/news-as-roma/rodrigo-mora-gasperini-fondamentale-nella-mia-scelta-e-un-sogno-giocare-con-dybala/?intcmp=gazzanet-forzaroma
   - https://www.forzaroma.info/news-as-roma/fenerbahce-guendouzi-squalificato-salta-la-roma-greenwood-ci-sara-ecco-perche/?intcmp=gazzanet-forzaroma
@@ -72,6 +75,24 @@ sites:
   - https://www.tuttobolognaweb.it/mercato/tedesco/?intcmp=gazzanet-tuttobolognaweb
   - https://www.tuttobolognaweb.it/news/dovbyk-emozionato-per-il-gol-ma-dobbiamo-migliorare/?intcmp=gazzanet-tuttobolognaweb
   - https://www.tuttobolognaweb.it/mercato/il-ritorno-di-theate-oggi-il-bologna-e-diverso-tedesco-grande-mister/?intcmp=gazzanet-tuttobolognaweb
+- host: fcinter1908.it
+  seen: 19
+  days:
+  - '2026-09-05'
+  - '2026-09-09'
+  - '2026-09-19'
+  - '2026-09-23'
+  - '2026-09-26'
+  - '2026-10-17'
+  - '2026-10-21'
+  - '2026-10-22'
+  - '2026-10-30'
+  - '2026-11-11'
+  - '2026-11-16'
+  examples:
+  - https://www.fcinter1908.it/news/interviste/sneijder-inter-triplete-ausilio-chivu-dumfries/?intcmp=gazzanet-fcinter1908
+  - https://www.fcinter1908.it/cronaca-live/youth-league-real-madrid-inter/?intcmp=gazzanet-fcinter1908
+  - https://www.fcinter1908.it/partite/conferenze-stampa/fabregas-roma-inter-como-frosinone/?intcmp=gazzanet-fcinter1908
 - host: dailymail.com
   seen: 18
   days:
@@ -84,23 +105,6 @@ sites:
   - https://www.dailymail.com/sport/football/article-16097269/Tottenham-sign-Chelsea-winger-Mykhailo-Mudryk-season-long-loan.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
   - https://www.dailymail.com/sport/football/article-16098909/Chelsea-transfer-window-Enzo-Fernandez.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
   - https://www.dailymail.com/sport/football/article-16098687/Footballer-tears-mum.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
-- host: fcinter1908.it
-  seen: 17
-  days:
-  - '2026-09-05'
-  - '2026-09-09'
-  - '2026-09-19'
-  - '2026-09-23'
-  - '2026-09-26'
-  - '2026-10-17'
-  - '2026-10-21'
-  - '2026-10-22'
-  - '2026-10-30'
-  - '2026-11-11'
-  examples:
-  - https://www.fcinter1908.it/news/interviste/sneijder-inter-triplete-ausilio-chivu-dumfries/?intcmp=gazzanet-fcinter1908
-  - https://www.fcinter1908.it/cronaca-live/youth-league-real-madrid-inter/?intcmp=gazzanet-fcinter1908
-  - https://www.fcinter1908.it/partite/conferenze-stampa/fabregas-roma-inter-como-frosinone/?intcmp=gazzanet-fcinter1908
 - host: mondoudinese.it
   seen: 16
   days:
@@ -235,6 +239,19 @@ sites:
   - https://www.genoaoggi.it/calciomercato/mercato-genoa/ehizibue-al-genoa-anni-fa-dissi-no-oggi-e-il-modo-migliore-per-chiedere-perdono/?intcmp=gazzanet-genoaoggi
   - https://www.genoaoggi.it/notizie/genoa-de-rossi-pari-frosinone/?intcmp=gazzanet-genoaoggi
   - https://www.genoaoggi.it/coppa-italia/de-rossi-promuove-il-genoa-risposte-positive-traore-ed-el-shaarawy-possono-fare-la-differenza/?intcmp=gazzanet-genoaoggi
+- host: cittaceleste.it
+  seen: 11
+  days:
+  - '2026-09-10'
+  - '2026-09-12'
+  - '2026-09-14'
+  - '2026-09-24'
+  - '2026-10-14'
+  - '2026-11-15'
+  examples:
+  - https://www.cittaceleste.it/news/lazio-fabiani-leuropa-e-lobiettivo-mercato-i-voti-a-fine-anno-lanno-scorso/?refresh_ce
+  - https://www.cittaceleste.it/news/lazio-pinamonti-gattuso-molto-esigente-a-immobile-chiederei/
+  - https://www.cittaceleste.it/news/lazio-diogo-leite-primi-minuti-e-adesso/
 - host: samuraigoal.doorblog.jp
   seen: 10
   days:
@@ -243,18 +260,6 @@ sites:
   examples:
   - https://samuraigoal.doorblog.jp/archives/63437489.html
   - https://samuraigoal.doorblog.jp/archives/63450028.html
-- host: cittaceleste.it
-  seen: 10
-  days:
-  - '2026-09-10'
-  - '2026-09-12'
-  - '2026-09-14'
-  - '2026-09-24'
-  - '2026-10-14'
-  examples:
-  - https://www.cittaceleste.it/news/lazio-fabiani-leuropa-e-lobiettivo-mercato-i-voti-a-fine-anno-lanno-scorso/?refresh_ce
-  - https://www.cittaceleste.it/news/lazio-pinamonti-gattuso-molto-esigente-a-immobile-chiederei/
-  - https://www.cittaceleste.it/news/lazio-diogo-leite-primi-minuti-e-adesso/
 - host: cagliaricalcio-news.it
   seen: 8
   days:
