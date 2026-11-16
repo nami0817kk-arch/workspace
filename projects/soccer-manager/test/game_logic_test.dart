@@ -2754,9 +2754,11 @@ void main() {
       await gameState.playSecondHalf();
     }
 
-    expect(gameState.trainingDoneThisWeek, isFalse);
+    // 練習はコーチ陣が節の処理で必ず行う。すでに行われているので、
+    // 手で呼んでも二重には行われない。
+    expect(gameState.trainingDoneThisWeek, isTrue);
     final afterMatchday = await gameState.runWeeklyTraining();
-    expect(afterMatchday, isTrue);
+    expect(afterMatchday, isFalse);
   });
 
   test(
