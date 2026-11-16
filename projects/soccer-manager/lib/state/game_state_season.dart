@@ -869,23 +869,7 @@ extension GameStateSeason on GameState {
     } else if (finalRank > _save!.boardTargetRank + 2) {
       _save!.managerReputation = (_save!.managerReputation - 5).clamp(0, 100);
     }
-    // 評価が高く好成績を残すと、他クラブから監督就任オファーが届くことがある(1部のみ)。
-    if (playedTier == 1 &&
-        _save!.pendingJobOfferTeamId == null &&
-        _save!.managerReputation >= 55 &&
-        finalRank <= (league.teams.length / 2).ceil()) {
-      final candidates = league.teams
-          .where(
-            (t) =>
-                t.id != _save!.userTeamId &&
-                t.overallRating > userTeam.overallRating,
-          )
-          .toList()
-        ..sort((a, b) => b.overallRating.compareTo(a.overallRating));
-      if (candidates.isNotEmpty && Random().nextDouble() < 0.25) {
-        _save!.pendingJobOfferTeamId = candidates.first.id;
-      }
-    }
+    // 監督としての就任オファーは出さない(オーナーは別のクラブの監督にならない)。
 
     // 昇格・降格を解決する。ユーザーの現在ティア以外は節ごとに並行して
     // 消化してきたため、その最終順位順をそのまま使う(改めてシミュレート

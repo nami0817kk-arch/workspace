@@ -1124,11 +1124,7 @@ extension GameStateMatch on GameState {
       // (引き分け時のPK戦・敗退時の信頼度低下・賞金・優勝処理を含む)。
       _applyLiveCupResult(merged);
     }
-    _save!.pendingPressConference = PressConferenceEngine.generateFor(
-      result: merged,
-      userTeamId: _save!.userTeamId,
-    );
-
+    // 記者会見は出さない(オーナーの仕事ではない)。
     _liveFixture = null;
     _liveCupKind = null;
     _liveCupHome = null;

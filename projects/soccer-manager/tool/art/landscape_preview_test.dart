@@ -27,7 +27,6 @@ import 'package:soccer_manager/monetization/funds_pack.dart';
 import 'package:soccer_manager/monetization/monetization_controller.dart';
 import 'package:soccer_manager/monetization/purchase_service.dart';
 import 'package:soccer_manager/screens/main_shell.dart';
-import 'package:soccer_manager/screens/training_screen.dart';
 import 'package:soccer_manager/state/game_state.dart';
 import 'package:soccer_manager/state/settings_controller.dart';
 
@@ -128,10 +127,6 @@ void main() {
       await shoot('tab${i + 1}_${labels[i]}');
     }
 
-    navKey.currentState!.push(
-        MaterialPageRoute<void>(builder: (_) => const TrainingScreen()));
-    await tester.pump();
-    await shoot('training');
     tester.takeException();
   });
 }

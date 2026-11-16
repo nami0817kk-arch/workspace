@@ -68,8 +68,6 @@ class _MainShellState extends State<MainShell> {
 
   int _pendingHomeActionCount(GameState gameState) {
     var count = 0;
-    if (gameState.pendingPressConference != null) count++;
-    if (gameState.pendingJobOfferTeam != null) count++;
     count += gameState.pendingYouthIntake.length;
     count += gameState.incomingOffers.length;
     return count;

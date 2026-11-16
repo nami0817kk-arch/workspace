@@ -34,7 +34,6 @@ import '../widgets/next_action_card.dart';
 import '../widgets/season_review_card.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/responsive_body.dart';
-import 'calendar_screen.dart';
 import 'cup_screen.dart';
 import 'finance_screen.dart';
 import 'glossary_screen.dart';
@@ -450,10 +449,6 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
               if (gameState.pendingOwnerEvent != null) const OwnerEventCard(),
-              if (gameState.pendingPressConference != null)
-                _PressConferenceCard(gameState: gameState),
-              if (gameState.pendingJobOfferTeam != null)
-                _JobOfferCard(gameState: gameState),
               if (gameState.pendingSuperCup != null)
                 _SuperCupCard(gameState: gameState),
               if (gameState.isUserDomesticCupMatchUpNext)
@@ -1796,105 +1791,6 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-class _PressConferenceCard extends StatelessWidget {
-  final GameState gameState;
-
-  const _PressConferenceCard({required this.gameState});
-
-  @override
-  Widget build(BuildContext context) {
-    final question = gameState.pendingPressConference!;
-    return Card(
-      color: Theme.of(context).colorScheme.surfaceContainerHighest,
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                const Icon(Icons.mic, size: 18),
-                const SizedBox(width: 6),
-                Text(Tr.pick('記者会見', 'Press conference'),
-                    style: Theme.of(context).textTheme.titleSmall),
-              ],
-            ),
-            const SizedBox(height: 6),
-            Text(question.prompt),
-            const SizedBox(height: 8),
-            for (int i = 0; i < question.options.length; i++)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 6),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: OutlinedButton(
-                    onPressed: () {
-                      FeedbackService.tap();
-                      gameState.answerPressConference(i);
-                    },
-                    child: Text(
-                      question.options[i].label,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _JobOfferCard extends StatelessWidget {
-  final GameState gameState;
-
-  const _JobOfferCard({required this.gameState});
-
-  @override
-  Widget build(BuildContext context) {
-    final team = gameState.pendingJobOfferTeam!;
-    return Card(
-      color: Theme.of(context).colorScheme.tertiaryContainer,
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(Tr.pick('他クラブからのオファー', 'An offer from another club'),
-                style: Theme.of(context).textTheme.titleSmall),
-            const SizedBox(height: 4),
-            Text(Tr.pick(
-                '${team.name}の監督就任オファーが届いています(総合力 ${team.overallRating})',
-                '${team.name} want you as their manager (overall ${team.overallRating})')),
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    FeedbackService.tap();
-                    gameState.declineJobOffer();
-                  },
-                  child: Text(Tr.pick('断る', 'Turn it down')),
-                ),
-                const SizedBox(width: 8),
-                FilledButton(
-                  onPressed: () {
-                    FeedbackService.success();
-                    gameState.acceptJobOffer();
-                  },
-                  child: Text(Tr.pick('就任する', 'Take the job')),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class _SuperCupCard extends StatelessWidget {
   final GameState gameState;
 
@@ -2016,16 +1912,6 @@ class _ThisWeekCard extends StatelessWidget {
                         .titleSmall
                         ?.copyWith(fontWeight: FontWeight.bold),
                   ),
-                ),
-                TextButton.icon(
-                  icon: const Icon(Icons.calendar_month, size: 16),
-                  label: Text(Tr.pick('カレンダー', 'Calendar')),
-                  onPressed: () {
-                    FeedbackService.tap();
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => const CalendarScreen()),
-                    );
-                  },
                 ),
               ],
             ),
