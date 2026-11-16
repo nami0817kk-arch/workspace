@@ -1,0 +1,131 @@
+# 物語完結型ショート 大ピラミッド s2（2026-11-16）。本編 scripts/pyramid-story.yaml（11/20 19:00 公開予定、https://youtu.be/B-vlbAtwegY）から。11/21 12:30 に予約。
+# 形式は meireki_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カードと本編の # fact: だけ。
+# 絵：本編の AI 絵の切り出しだけ。C10・C20・C21・C22・C24 は使わない。遺体・顔は出さない。
+# 切り口：本編の第1章＝ヘロドトスの10万人は、造られてから約2100年あとに、エジプトで聞いた話として書かれた。
+# 計算（自分で計算し直した）：ヘロドトス 前450年ごろ − 着工 前2550年ごろ ＝ 約2100年／道10年＋本体20年＝30年。
+# 人数：レーナーが紹介した技術者の調査は4000〜5000人、ハワスは3万6000人（常時と臨時）。レーナーの「約2万人」は本人の発言と確認できないので使わない。
+title: "大ピラミッド｜10万人は、約2100年あとに書かれた"
+yt_title: "大ピラミッドを造ったのは10万人　この有名な数字は、造られてから約2100年あとに、エジプトで聞いた話だった"
+description: |-
+  大ピラミッドを10万人が造った、という有名な数字は、ギリシャの歴史家ヘロドトスが書いたものです。書かれたのは紀元前5世紀、造られてから約2100年あとで、エジプトで聞いた話として書かれています。
+  今の見積もりは、技術者の調査を引いた4000〜5000人から、ハワスの3万6000人まで割れています。10万人は、そのどれよりも多い数です。
+  本編では、ヘロドトスの記録と、同じ時代の日誌、労働者の町と墓を並べています。本編は概要欄のリンクからどうぞ。
+  https://youtu.be/B-vlbAtwegY
+hashtags:
+- "#大ピラミッド"
+- "#ヘロドトス"
+- "#世界史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。人の顔は描いていません。創作の台詞は入れていません。"
+art_dir: out/story/pyramid
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: pyramid_story_s2
+header:
+  tag: "大ピラミッド　ヘロドトス"
+  title: "10万人は、《約2100年あと》の話"
+now:
+- {at: "造られてから", text: "約4500年前　クフ王の時代", point: 0}
+- {at: "紀元前5世紀", text: "紀元前5世紀　ヘロドトス", point: 1}
+timeline:
+- {label: "前2560ごろ"}
+- {label: "前450ごろ"}
+shots:
+  H01_1:
+    kind: "ai"
+    file: "pyramid/main/C23.jpg"
+    focus: [0.45, 0.5]
+    move: "in"
+    must: "星空の下の大ピラミッド"
+  C09_2:
+    kind: "ai"
+    file: "pyramid/main/C09.jpg"
+    focus: [0.52, 0.5]
+    move: "in"
+    must: "大ピラミッドを見上げる旅人の後ろ姿"
+  C05_3:
+    kind: "ai"
+    file: "pyramid/main/C05.jpg"
+    focus: [0.45, 0.5]
+    move: "right"
+    must: "採石場の作業員の列"
+  C09_4:
+    kind: "ai"
+    file: "pyramid/main/C09.jpg"
+    focus: [0.3, 0.5]
+    move: "left"
+    must: "夕暮れのピラミッド群"
+  C13_5:
+    kind: "ai"
+    file: "pyramid/main/C13.jpg"
+    focus: [0.75, 0.5]
+    move: "left"
+    must: "町とピラミッド"
+  C06_6:
+    kind: "ai"
+    file: "pyramid/main/C06.jpg"
+    focus: [0.75, 0.5]
+    move: "right"
+    must: "岸に積まれた石"
+  C04_7:
+    kind: "ai"
+    file: "pyramid/main/C04.jpg"
+    focus: [0.3, 0.5]
+    move: "right"
+    must: "ナイルの船とピラミッド"
+  C07_8:
+    kind: "ai"
+    file: "pyramid/main/C07.jpg"
+    focus: [0.35, 0.5]
+    move: "in"
+    must: "巻物"
+lines:
+  # fact: pyramid-P09, pyramid-P10
+- 語り: "大ピラミッドを造ったのは、10万人。この有名な数字は、造られてから、約2100年あとに、書かれたものだ。"
+  shot: H01_1
+  tone: 強調
+  pause: 0.12
+  # fact: pyramid-P10
+- 語り: "書いたのは、ギリシャの歴史家、ヘロドトス。紀元前5世紀に、エジプトを旅した人だ。"
+  shot: C09_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: pyramid-P09
+- 語り: "10万人が、3か月ごとに交代で働いた。石を運ぶ道に10年、ピラミッドに20年。あわせて30年、と書いた。"
+  shot: C05_3
+  tone: しみじみ
+  pause: 0.12
+  # fact: pyramid-P10
+- 語り: "ただし、これは、エジプトで聞いた話として、書かれている。"
+  shot: C09_4
+  tone: 重い
+  pause: 0.12
+  # fact: pyramid-P12
+- 語り: "クフ王が、エジプト人を、1人残らず、自分のために働かせた、とも書く。英訳のこの章に、奴隷という言葉は、出てこない。"
+  shot: C13_5
+  tone: 重い
+  pause: 0.12
+  # fact: pyramid-P21
+- 語り: "今の見積もりは、どうか。技術者の調査を引いた紹介では、4000人から5000人。エジプトの考古学者ハワスは、常時と臨時を合わせて、3万6000人。"
+  shot: C06_6
+  tone: しみじみ
+  pause: 0.12
+  # fact: pyramid-P21
+- 語り: "見積もりは、大きく割れる。それでも、10万人は、そのどれよりも、多い。"
+  shot: C04_7
+  tone: 重い
+  pause: 0.12
+  # fact: pyramid-P03, pyramid-P05
+- 語り: "では、造られた時代に書かれた記録には、何が残っていたのか。"
+  shot: C07_8
+  tone: 疑問
+  pause: 0.15

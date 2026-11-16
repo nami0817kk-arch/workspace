@@ -1,0 +1,367 @@
+# 物語型の本編の見た目と絵の割り当て：生類憐みの令は、本当に悪法だったのか（scripts/shorui-story.yaml）。chiso/storymain.py が読む。
+# 11-16 作成（11/21 12:00 公開予定）。pyramid_main_look.yaml を写した。絵は Gemini（Chrome）で作る。人物の顔・動物の死体・惨状は描かない。
+script: scripts/shorui-story.yaml
+out: shorui_story_main
+art_dir: out/story/shorui/main
+main_art_dir: out/story/shorui/main
+ai_disclosure: この動画の情景の画像は、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+chapters:
+  0:
+    label: 序章 犬の悪法？
+    now: null
+    dates: {}
+  1:
+    label: 第1章 犬公方と呼ばれた将軍
+    now: 1646年
+    dates:
+      8: 1680年
+      10: null
+  2:
+    label: 第2章 中野の犬小屋
+    now: 1695年5月
+    dates:
+      14: 1695年10月
+      19: null
+      20: 1708年
+      21: null
+      22: 1991年
+  3:
+    label: 第3章 犬だけではなかった触れ
+    now: 1685年7月
+    dates:
+      26: 1685年11月
+      27: 1687年正月
+      28: 1687年4月
+      29: 1690年
+      30: 1688年
+      31: null
+      32: 1687〜1693年
+      33: 1700年
+      34: null
+  4:
+    label: 第4章 罰せられた人々
+    now: 1687年4月
+    dates:
+      39: 1689年
+      40: 1694年
+      41: 1705年
+      42: 1696年8月
+      43: 1702年10月
+      44: 1706年
+      45: null
+  5:
+    label: 第5章 悪い評判の出どころ
+    now: null
+    dates:
+      48: 2013年
+      49: null
+      50: 1930年
+      51: 1685〜1686年
+      52: 2014年
+      53: null
+      54: 1691〜1692年
+      56: null
+  6:
+    label: 第6章 死から10日後
+    now: 1709年正月
+    dates:
+      62: 1709年正月20日
+      64: null
+  7:
+    label: 第7章 教科書が書き換えた
+    now: 1983年
+    dates:
+      73: 1988〜1999年
+      74: 2021年
+      76: null
+  8:
+    label: まとめ 生類憐みの令は、本当に悪法だったのか
+    now: null
+    dates: {}
+no_tag_from: 83
+references:
+- 溝口元・高山晴子「『生類憐みの令』の動物観」（上）（下）『生物学史研究』99・100号（2019・2020）。『徳川実紀』の記事の抜き書き
+- 根崎光男「生類憐み政策下における放鷹制度の変容過程」（2000）・「生類憐み政策の成立に関する一考察」（2005）
+- 山崎久登〈書評〉根崎光男『犬と鷹の江戸時代』（2017）
+- 中野区「なかの物語 其の五」・中野区報 2024年2月20日号
+- 塚本学・辻達也ほか、辞典の項目（世界大百科事典・日本大百科全書）
+- ケンペル『日本誌』英訳（1727）第1巻
+ai:
+  N01:
+    scene: 元禄の江戸の郊外、武蔵野の台地に広がる巨大な犬の囲い。竹垣と板塀、茅葺きの長屋の犬舎の列（高所からの遠景）
+    pan: h
+    crops: &id001
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  N02:
+    scene: 犬の囲いの内部。茅葺きの犬舎の前で和犬たちが寝そべる冬の午後（人なし）
+    pan: h
+    crops: *id001
+  N03:
+    scene: 元禄の江戸の町の通り。町家の並ぶ土の道を野良犬が歩く（町人は小さな後ろ姿）
+    pan: h
+    crops: *id001
+  N04:
+    scene: 朝もやの江戸城の堀と石垣と櫓（人物なし）
+    pan: h
+    crops: *id001
+  N05:
+    scene: 農家の土間。桶の白米、味噌の壺、干した小魚（人物なし）
+    pan: h
+    crops: *id001
+  N06:
+    scene: 蔵の前に積まれた米俵と荷車（人足は小さな後ろ姿）
+    pan: h
+    crops: *id001
+  N07:
+    scene: 武蔵野の農家の庭で、農民の後ろ姿が和犬に餌をやる秋の夕方
+    pan: h
+    crops: *id001
+  N08:
+    scene: 東海道の宿場町の夜。旅籠の行灯と提灯
+    pan: h
+    crops: *id001
+  N10:
+    scene: 夜明けの寺の山門。石段の上の竹かごと布の包み、石灯籠
+    pan: h
+    crops: *id001
+  N11:
+    scene: 夕暮れの街道の松並木。荷を積んだ馬を引く馬子の後ろ姿
+    pan: h
+    crops: *id001
+  N12:
+    scene: 農村の古い厩。藁の上で休む年老いた馬と牛
+    pan: h
+    crops: *id001
+  N13:
+    scene: 朝もやの江戸湾に浮かぶ小さな釣り船
+    pan: h
+    crops: *id001
+  N14:
+    scene: 日本橋の魚市場の店先。桶の魚・貝・鰻
+    pan: h
+    crops: *id001
+  N15:
+    scene: 奉行所の中庭。白い砂利と筵、縁側と障子（人なし）
+    pan: h
+    crops: *id001
+  N16:
+    scene: 荒れた海の向こうの神津島の崖と小さな帆船
+    pan: h
+    crops: *id001
+  N17:
+    scene: 役所の書院。文机の和紙の書付の束、筆と硯、行灯
+    pan: h
+    crops: *id001
+  N18:
+    scene: 寺の本堂の護摩の炎と煙、僧の小さな後ろ姿
+    pan: h
+    crops: *id001
+  N19:
+    scene: 江戸中ごろの儒学者の書斎。和綴じの本と巻物、文机
+    pan: h
+    crops: *id001
+  N20:
+    scene: 東海道を江戸へ向かうオランダ商館の一行の行列の遠景
+    pan: h
+    crops: *id001
+  N21:
+    scene: 雪の降る正月の江戸城の夕暮れ（人物なし）
+    pan: h
+    crops: *id001
+  N22:
+    scene: 冬の朝、江戸の屋根から鳶と烏の群れが空へ飛び立つ
+    pan: h
+    crops: *id001
+  N23:
+    scene: 春の中野の桃園。満開の紅白の桃の並木
+    pan: h
+    crops: *id001
+  N24:
+    scene: 夕暮れの江戸の路地を、子どもの小さな後ろ姿が犬と歩く
+    pan: h
+    crops: *id001
+  N25:
+    scene: 現代の研究室の机。古い和本と虫眼鏡、ノート、窓の光（人物なし）
+    pan: h
+    crops: *id001
+  N26:
+    scene: 夕暮れの江戸の町並みと遠くの富士山
+    pan: h
+    crops: *id001
+  NEND:
+    scene: 夜明けの武蔵野の空と雑木林の遠景（終了画面、右半分に余白）
+    pan: h
+    lock:
+    - 1.0
+    - 0.5
+    - 0.5
+paint_fx: {}
+shots:
+- 0 ai:N10 wide
+- 1 ai:N03 left
+- 2 ai:N01 wide
+- 3 ai:N04 right
+- 4 ai:N08 wide
+- 5 ai:N17 left
+- 6 ai:N21 wide
+- 7 ai:N04 left
+- 8 ai:N26 wide
+- 9 ai:N03 right
+- 10 ai:N25 wide
+- 11 ai:N19 left
+- 12 ai:N01 right
+- 13 ai:N03 left
+- 14 ai:N01 left
+- 15 ai:N02 wide
+- 16 ai:N01 right
+- 17 ai:N02 left
+- 18 ai:N05 wide
+- 19 ai:N07 wide
+- 20 ai:N06 wide
+- 21 ai:N24 wide
+- 22 ai:N02 right
+- 23 ai:N17 right
+- 24 ai:N03 wide
+- 25 ai:N17 left
+- 26 ai:N14 wide
+- 27 ai:N08 left
+- 28 ai:N10 left
+- 29 ai:N24 right
+- 30 ai:N08 right
+- 31 ai:N12 wide
+- 32 ai:N13 wide
+- 33 ai:N14 right
+- 34 ai:N24 left
+- 35 ai:N15 wide
+- 36 ai:N11 wide
+- 37 ai:N12 left
+- 38 ai:N19 right
+- 39 ai:N16 wide
+- 40 ai:N04 wide
+- 41 ai:N11 right
+- 42 ai:N03 right
+- 43 ai:N15 left
+- 44 ai:N02 wide
+- 45 ai:N25 left
+- 46 ai:N18 wide
+- 47 ai:N18 left
+- 48 ai:N25 right
+- 49 ai:N19 wide
+- 50 ai:N18 right
+- 51 ai:N17 wide
+- 52 ai:N25 wide
+- 53 ai:N20 wide
+- 54 ai:N20 right
+- 55 ai:N03 left
+- 56 ai:N19 left
+- 57 ai:N17 right
+- 58 ai:N25 left
+- 59 ai:N21 left
+- 60 ai:N21 wide
+- 61 ai:N17 left
+- 62 ai:N22 wide
+- 63 ai:N01 wide
+- 64 ai:N02 left
+- 65 ai:N10 wide
+- 66 ai:N19 right
+- 67 ai:N25 right
+- 68 ai:N23 wide
+- 69 ai:N24 wide
+- 70 ai:N25 wide
+- 71 ai:N19 left
+- 72 ai:N04 left
+- 73 ai:N25 left
+- 74 ai:N03 wide
+- 75 ai:N17 right
+- 76 ai:N19 wide
+- 77 ai:N26 left
+- 78 ai:N10 wide
+- 79 ai:N16 left
+- 80 ai:N01 left
+- 81 ai:N20 left
+- 82 ai:N02 right
+- 83 ai:N24 right
+- 84 ai:N23 left
+- 85 ai:N26 wide
+- 86 ai:NEND wide
+- end ai:NEND wide
+focus: {}
+fx: {}
+parts:
+- type: versus3
+  from: 17
+  to: 17
+  items:
+  - - 徳川実紀
+    - 10万頭
+  - - ほかの記録
+    - 5万・8万匹
+  - - 中野区の案内
+    - 数万〜30万頭
+  every: 2.5
+- type: quote
+  from: 28
+  to: 28
+  label: 史料
+  text: 捨子あらば、うたへ出るに及ばず／其土人等介抱して養育するか
+  source: 『徳川実紀』1687年4月11日（溝口・高山 2020 の抜き書き）
+- type: quote
+  from: 37
+  to: 37
+  label: 要点
+  text: 死罪にもできるが／このたびはまず流罪
+  source: 1687年4月の触れ（根崎光男 2005 による）
+- type: versus3
+  from: 51
+  to: 51
+  items:
+  - - 最初の触れ
+    - 1685年7月
+  - - 隆光、江戸へ
+    - 1686年
+  every: 3.0
+- type: quote
+  from: 55
+  to: 55
+  label: 史料
+  text: to kill them is a capital Crime／（犬を殺すのは死罪）
+  source: ケンペル『日本誌』英訳 1727年 第1巻
+- type: quote
+  from: 56
+  to: 56
+  label: 史料
+  text: 一禽一獣の事のため…／凡そ幾十万人
+  source: 新井白石『折たく柴の記』（溝口・高山 2019 の引用）
+- type: quote
+  from: 66
+  to: 66
+  label: 要点
+  text: 捨子・捨牛馬禁令は／以後も長く幕法として生き
+  source: 塚本学「生類憐みの令」世界大百科事典
+figures: []
+stills:
+- line: 0
+  note: 冒頭
+- line: 17
+  note: 頭数のくい違い
+- line: 28
+  note: 捨て子の触れ
+- line: 51
+  note: 年が合わない
+- line: 62
+  note: 放たれた鳥
+- line: 84
+  note: 余韻
+- end: true
+  note: 終了画面

@@ -1,0 +1,131 @@
+# 物語完結型ショート タイタニック s1（2026-11-16）。本編 scripts/titanic-story.yaml（11/20 12:00 公開予定、https://youtu.be/SdhomuxqfF4）から。11/21 に予約。
+# 形式は meireki_s1〜s5.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（dev/output/rekishi-chiso/research/titanic_facts_20261115.yaml）と本編の # fact: だけ。
+# 絵：本編の AI 絵（out/story/titanic/main/ の S01〜S21）の切り出しだけ。新しい絵は作らない。遺体・惨状・顔は絵にしない。
+# 切り口：沈没の「2時20分」は、二等航海士ライトラーが時計で見た時刻ではない（本編の冒頭の一点）。米上院の報告書の0時47分も、船の時刻に直すと2時20分。
+# 計算（自分で数え直した）：D号 2:20−2:05＝15分／米上院 NY 0:47＋1:33＝2:20（B-21。差1時間33分は米上院の報告書の衝突 23:46と22:13から）
+title: "タイタニック｜沈没の2時20分を、二等航海士は時計で見ていない"
+yt_title: "タイタニックが沈んだ「午前2時20分」　二等航海士ライトラーは、この時刻を時計で見ていなかった　アメリカ上院の調査での答え"
+description: |-
+  タイタニックが沈んだのは、午前2時20分とされています。この時刻を、二等航海士のライトラーは、時計で見ていません。アメリカ上院の調査で、2時20分は聞いた話で、士官どうしで出した結論だった、と答えています。
+  英国の報告書は、2時20分を沈んだ時刻としました。アメリカ上院の報告書のニューヨーク時間0時47分も、報告書の時差1時間33分で船の時刻に直すと、2時20分になります。
+  本編では、衝突から沈没までの2時間40分を、無線の記録と英米2つの調査から、時刻の順にたどっています。本編は概要欄のリンクからどうぞ。
+  https://youtu.be/SdhomuxqfF4
+hashtags:
+- "#タイタニック"
+- "#世界史"
+- "#歴史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。人物の姿も、特定の人を写したものではありません。創作の台詞は入れていません。"
+art_dir: out/story/titanic
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: titanic_story_s1
+header:
+  tag: "タイタニック号　沈没の時刻"
+  title: "沈没の《2時20分》は、どこから"
+now:
+- {at: "午前2時20分", text: "4月15日　午前2時20分", point: 1}
+- {at: "2時5分", text: "4月15日　2時5分", point: 0}
+- {at: "船が沈んだ時刻", text: "4月15日　午前2時20分", point: 1}
+timeline:
+- {label: "2:05"}
+- {label: "2:20"}
+shots:
+  S21_1:
+    kind: "ai"
+    file: "titanic/main/S21.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "S21"
+  S17_2:
+    kind: "ai"
+    file: "titanic/main/S17.jpg"
+    focus: [0.3, 0.5]
+    move: "left"
+    must: "S17"
+  S04_3:
+    kind: "ai"
+    file: "titanic/main/S04.jpg"
+    focus: [0.72, 0.5]
+    move: "right"
+    must: "S04"
+  S09_4:
+    kind: "ai"
+    file: "titanic/main/S09.jpg"
+    focus: [0.62, 0.5]
+    move: "left"
+    must: "S09"
+  S18_5:
+    kind: "ai"
+    file: "titanic/main/S18.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    must: "S18"
+  S20_6:
+    kind: "ai"
+    file: "titanic/main/S20.jpg"
+    focus: [0.6, 0.5]
+    move: "in"
+    must: "S20"
+  S16_7:
+    kind: "ai"
+    file: "titanic/main/S16.jpg"
+    focus: [0.4, 0.5]
+    move: "left"
+    must: "S16"
+  S01_8:
+    kind: "ai"
+    file: "titanic/main/S01.jpg"
+    focus: [0.45, 0.5]
+    move: "right"
+    must: "S01"
+lines:
+  # fact: C-19
+- 語り: "タイタニックが沈んだのは、午前2時20分。この時刻を、二等航海士のライトラーは、時計で見ていない。"
+  shot: S21_1
+  tone: 強調
+  pause: 0.12
+  # fact: C-19
+- 語り: "アメリカ上院の調査で、ライトラーは、2時20分は聞いた話で、士官どうしで出した結論だ、と答えた。"
+  shot: S17_2
+  tone: 重い
+  pause: 0.12
+  # fact: C-19
+- 語り: "自分の時計は、部屋に置いたままだった。"
+  shot: S04_3
+  tone: しみじみ
+  pause: 0.12
+  # fact: C-10
+- 語り: "最後のボート、D号が降りたのは、英国の報告書で、2時5分。沈む、15分前だ。"
+  shot: S09_4
+  tone: 重い
+  pause: 0.12
+  # fact: C-20
+- 語り: "乗客のビーズリーは、どの話も2時20分ごろで一致する、と本に書いた。沈んだ少しあと、自分の艇の時計は、2時30分だった、とも書く。"
+  shot: S18_5
+  tone: しみじみ
+  pause: 0.12
+  # fact: B-21
+- 語り: "英国の報告書は、2時20分を、船が沈んだ時刻とした。"
+  shot: S20_6
+  tone: 重い
+  pause: 0.12
+  # fact: B-21
+- 語り: "アメリカ上院の報告書は、ニューヨーク時間の0時47分。報告書の時差、1時間33分を足すと、これも2時20分になる。"
+  shot: S16_7
+  tone: しみじみ
+  pause: 0.12
+  # fact: C-19
+- 語り: "時計で見た人のいない、2時20分。沈むまでの2時間40分に、何があったのか。"
+  shot: S01_8
+  tone: 疑問
+  pause: 0.15
