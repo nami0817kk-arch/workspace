@@ -160,6 +160,7 @@ class _MainShellState extends State<MainShell> {
                         Expanded(
                           // 上のバーがあるので、各画面の見出しの帯は低くする。
                           child: Theme(
+                            // 密な FM 風の見た目は main.dart の FmThemeScope が当てる。
                             data: Theme.of(context).copyWith(
                               appBarTheme: Theme.of(context)
                                   .appBarTheme

@@ -12,6 +12,7 @@ import 'state/game_state.dart';
 import 'state/settings_controller.dart';
 import 'screens/onboarding_screen.dart';
 import 'screens/start_screen.dart';
+import 'widgets/fm_panel.dart';
 import 'widgets/landscape_scale.dart';
 import 'widgets/save_error_notifier.dart';
 
@@ -239,9 +240,11 @@ class SoccerManagerApp extends StatelessWidget {
                 // 保存の失敗はどの画面の操作でも起きるので、個々の画面では
                 // なくここで拾って知らせる。
                 child: LandscapeScale(
-                  child: SaveErrorNotifier(
-                    child: _DeliverPendingPurchases(
-                      child: _SaveOnPause(child: child!),
+                  child: FmThemeScope(
+                    child: SaveErrorNotifier(
+                      child: _DeliverPendingPurchases(
+                        child: _SaveOnPause(child: child!),
+                      ),
                     ),
                   ),
                 ),

@@ -28,6 +28,7 @@ import '../widgets/busy_overlay.dart';
 import '../widgets/club_emblem.dart';
 import '../widgets/match_widgets.dart';
 import '../widgets/inbox_card.dart';
+import '../widgets/fm_panel.dart';
 import '../widgets/manager_report_card.dart';
 import '../widgets/next_action_card.dart';
 import '../widgets/season_review_card.dart';
@@ -176,7 +177,7 @@ class HomeScreen extends StatelessWidget {
                         end: Alignment.bottomRight,
                         colors: [top, bottom],
                       ),
-                      borderRadius: BorderRadius.circular(18),
+                      borderRadius: BorderRadius.circular(fmRadius(context, 18)),
                       boxShadow: [
                         BoxShadow(
                           color: bottom.withValues(alpha: 0.35),
@@ -186,7 +187,7 @@ class HomeScreen extends StatelessWidget {
                       ],
                     ),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(18),
+                      borderRadius: BorderRadius.circular(fmRadius(context, 18)),
                       child: Stack(
                         children: [
                           // 右に薄くエンブレムを敷く。名前を二度書かずに
@@ -2113,7 +2114,7 @@ class _StatTile extends StatelessWidget {
       button: true,
       hint: Tr.pick('用語の説明を開く', 'Open the explanation'),
       child: InkWell(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(fmRadius(context, 16)),
         onTap: () {
           FeedbackService.tap();
           Navigator.of(context).push(
@@ -2139,7 +2140,7 @@ class _StatTile extends StatelessWidget {
         // その項目の色をごく薄く混ぜて、気配だけ残す。
         color: Color.alphaBlend(
             color.withValues(alpha: 0.035), scheme.surfaceContainer),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(fmRadius(context, 16)),
         border: Border.all(color: scheme.outlineVariant.withValues(alpha: 0.7)),
       ),
       child: Column(
@@ -2250,9 +2251,9 @@ class _ActionTile extends StatelessWidget {
     final locked = lockedReason;
     return Material(
       color: color.withValues(alpha: locked == null ? 0.12 : 0.05),
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(fmRadius(context, 16)),
       child: InkWell(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(fmRadius(context, 16)),
         // 押しても開けないので、無反応にせず理由を出す。
         onTap: locked == null
             ? onTap

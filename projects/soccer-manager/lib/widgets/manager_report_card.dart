@@ -6,6 +6,7 @@ import '../logic/club_health_engine.dart';
 import '../logic/manager_report_engine.dart';
 import '../state/game_state.dart';
 import '../theme/semantic_colors.dart';
+import 'fm_panel.dart';
 
 /// 2つの期待(サポーター・株主)のメーター。0〜100 のバーと数字。
 class ExpectationMeters extends StatelessWidget {
@@ -135,35 +136,21 @@ class ManagerReportCard extends StatelessWidget {
           : save.ledgerFor(league.season).wageRatio,
       budget: save.budget,
     );
-    final scheme = Theme.of(context).colorScheme;
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(Icons.assignment_ind_outlined,
-                    size: 18, color: scheme.primary),
-                const SizedBox(width: 6),
-                Text(Tr.pick('監督からの報告', 'Report from the manager'),
-                    style: Theme.of(context).textTheme.titleSmall),
-              ],
-            ),
-            const SizedBox(height: 6),
-            Text(report.headline,
-                style: const TextStyle(fontWeight: FontWeight.w600)),
-            const SizedBox(height: 6),
-            for (final l in report.lines)
-              Text(l, style: Theme.of(context).textTheme.bodySmall),
-            const SizedBox(height: 10),
-            const ExpectationMeters(),
-            const SizedBox(height: 8),
-            _HealthLine(health: health),
-          ],
-        ),
+    return FmPanel(
+      title: Tr.pick('監督からの報告', 'Report from the manager'),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(report.headline,
+              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+          const SizedBox(height: 6),
+          for (final l in report.lines)
+            Text(l, style: Theme.of(context).textTheme.bodySmall),
+          const SizedBox(height: 8),
+          const ExpectationMeters(),
+          const SizedBox(height: 6),
+          _HealthLine(health: health),
+        ],
       ),
     );
   }

@@ -9,6 +9,7 @@ import '../models/owner_work.dart';
 import '../services/feedback_service.dart';
 import '../state/game_state.dart';
 import '../theme/semantic_colors.dart';
+import '../widgets/fm_panel.dart';
 import '../widgets/responsive_body.dart';
 
 /// オーナーの仕事。資金と2つの期待を動かす手を、分野ごとに並べる。
@@ -135,16 +136,12 @@ class _PartnerCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final game = context.watch<GameState>();
     final partner = game.partnerClub;
-    return Card(
-      margin: const EdgeInsets.only(top: 12),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
+    return FmPanel(
+      title: Tr.pick('提携クラブ', 'Partner club'),
+      margin: const EdgeInsets.only(top: 8),
+      child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(Tr.pick('提携クラブ', 'Partner club'),
-                style: Theme.of(context).textTheme.titleSmall),
-            const SizedBox(height: 4),
             Text(
               Tr.pick(
                   '毎季の提携費${PartnerClubEngine.seasonCost}万円で、サポーターと株主の期待が+${PartnerClubEngine.supportersBonus}ずつ上がる。資金が足りない季は解消される。',
@@ -196,7 +193,6 @@ class _PartnerCard extends StatelessWidget {
             ),
           ],
         ),
-      ),
     );
   }
 }
@@ -210,16 +206,12 @@ class _PromoCard extends StatelessWidget {
     final game = context.watch<GameState>();
     final active = game.activeMatchdayPromo;
     final budget = game.save?.budget ?? 0;
-    return Card(
-      margin: const EdgeInsets.only(top: 12),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
+    return FmPanel(
+      title: Tr.pick('試合日のイベント(次の節)', 'Matchday event (next game)'),
+      margin: const EdgeInsets.only(top: 8),
+      child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(Tr.pick('試合日のイベント(次の節)', 'Matchday event (next game)'),
-                style: Theme.of(context).textTheme.titleSmall),
-            const SizedBox(height: 4),
             if (active != null) ...[
               Text(Tr.pick('決定済み: ${active.title}', 'Set: ${active.title}'),
                   style: const TextStyle(fontWeight: FontWeight.bold)),
@@ -254,7 +246,6 @@ class _PromoCard extends StatelessWidget {
                 ),
           ],
         ),
-      ),
     );
   }
 }
@@ -267,16 +258,12 @@ class _DirectiveCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final game = context.watch<GameState>();
     final current = game.ownerDirective;
-    return Card(
-      margin: const EdgeInsets.only(top: 12),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
+    return FmPanel(
+      title: Tr.pick('監督への一言(次の節)', 'A word to the manager (next game)'),
+      margin: const EdgeInsets.only(top: 8),
+      child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(Tr.pick('監督への一言(次の節)', 'A word to the manager (next game)'),
-                style: Theme.of(context).textTheme.titleSmall),
-            const SizedBox(height: 4),
             Text(
               current == null
                   ? Tr.pick('いまは監督に任せています。', 'Leaving it to the manager.')
@@ -309,7 +296,6 @@ class _DirectiveCard extends StatelessWidget {
             ],
           ],
         ),
-      ),
     );
   }
 }
