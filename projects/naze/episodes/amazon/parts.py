@@ -96,7 +96,7 @@ def BARS(items, title=None, note=None, fmt="{}", step=None, tr=None):
 
 
 SGB, IBGE, MINE = "マナウス港の水位計（SGBほか）", "ブラジル地理統計院（2022年）", "自分で測った（標高データ）"
-LEVEL = BARS([("いちばん高い水位（2021年）", 30.02, BLUE), ("いちばん低い水位（2024年）", 12.11, YEL)], title="マナウスの川の水位（m）", note=SGB, fmt="{}")
+LEVEL = BARS([("最高（2021年）", 30.02, BLUE), ("最低（2024年）", 12.11, YEL)], title="マナウスの川の水位（m）", note=SGB, fmt="{}")
 WIDTH = BARS([("西経59.5度", 24.6, BLUE), ("西経58.5度", 38.8, BLUE), ("西経57.5度", 58.7, YEL), ("西経56.5度", 59.3, YEL), ("西経55.5度", 42.5, BLUE)],
              title="川の低い谷の幅（km）", note=MINE, fmt="{}")
 
@@ -167,8 +167,8 @@ P["ch4"] = dict(title="第4章 橋の先に町がない", cta=False, lines=[
     dict(id="d7", text="マナウスの外は、大半が森です。", scene=MAP(BASIN_T, STATE(alpha=0.15, id="st_d2"), step=3)),
     dict(id="d8", text="橋をかけても、渡った先に、行き先の町がないのです。"),
     dict(id="d9", text="2011年、マナウスの前を流れる支流、ネグロ川には、橋がかかりました。", section=True, scene=MAP(MANV, PIN(MANAUS, "マナウス", id="p_md2"), PIN(IRANDUBA, "イランドゥバ", id="p_ir"), LINE([MANAUS, IRANDUBA], YEL, 8, id="r_br"), step=3)),
-    dict(id="d10", text="マナウスと、向こう岸の町イランドゥバを結ぶ橋です。"),
-    dict(id="d11", text="人が多い所には、橋はかかる。少ない所には、かからない。それだけのことなのです。"),
+    dict(id="d10", text="マナウスと、向こう岸の町イランドゥバを結ぶ橋です。", scene=CARD("2011年", sub="支流ネグロ川の橋（マナウス〜イランドゥバ）", view=MANV, step=3, count=False)),
+    dict(id="d11", text="人が多い所には、橋はかかる。少ない所には、かからない。それだけのことなのです。", scene=MAP(BASIN_T, RIV("d11"), PIN(MANAUS, "マナウス", id="p_md3"), step=3)),
 ])
 
 # ---- 第5章 川が道 -----------------------------------------------------------------------------------------
