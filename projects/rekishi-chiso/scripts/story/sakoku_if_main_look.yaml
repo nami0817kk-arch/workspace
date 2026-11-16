@@ -1,0 +1,215 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：もしも江戸幕府が鎖国しなかったら（scripts/sakoku-if-story.yaml）。chiso/storymain.py が読む。
+# 11-16 作成（11/21 19:00 公開）。kiyomori_fukuhara_main_look.yaml を写した。台本には手を入れない（承認のあと）。
+# 絵の方針：AI 絵（Gemini）。T01・B01〜B25 はこの回のために作る（out/story/sakoku_if/main/sakoku_if_<名>.jpg）。
+#   実在の人物の顔は描かない（後ろ姿・遠景）。旗・家紋・字は入れない。処刑・戦い・遺体・火の手は描かない。
+script: scripts/sakoku-if-story.yaml
+out: sakoku_if_story_main
+art_dir: out/story/sakoku_if/ph
+main_art_dir: out/story/sakoku_if/main
+ai_disclosure: この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+
+chapters:
+  0: {label: 序章 50年後の船, now: 1673年, dates: {1: null}}
+  1: {label: 第1章 家康が夢見た太平洋, now: 1609年9月30日, dates: {10: 1610年8月1日, 13: 1611年, 15: 1613年, 16: null, 17: 1615年, 18: 1620年, 20: 1623年}}
+  2: {label: 第2章 分岐1 スペインを断らなかったら, now: 1623年, dates: {23: 1624年, 25: 1625年8月4日, 27: 1624年, 28: null, 30: 1628年, 31: 1630年, 33: 1635年, 34: null}}
+  3: {label: 第3章 分岐2 ポルトガル船を止めなかったら, now: 1604年, dates: {45: null, 46: 1618年, 47: 1634年, 48: 1637年, 51: 1639年, 54: 1640年, 58: null, 59: 1647年7月26日, 63: null}}
+  4: {label: 第4章 分岐3 オランダが平戸に残っていたら, now: 1609年, dates: {71: 1628年, 72: 1613年, 75: 1640年11月, 79: 1641年5月, 80: 1641年6月25日, 82: 1685年, 83: 2011年9月20日, 84: null}}
+  5: {label: 第5章 王の結婚相手, now: 1673年, dates: {99: null}}
+  6: {label: まとめ もしも江戸幕府が鎖国しなかったら, now: null, dates: {}}
+
+references:
+  - "José Eugenio Borao『La colonia de japoneses en Manila…』／Yayoi Kawamura（Anales del Museo de América, 2024）／Ángel J. Bravo（神田外語大学紀要26, 2014）"
+  - "Fernando de Silva の国王あて書簡（1625年8月4日、Blair & Robertson『The Philippine Islands』22巻の英訳）"
+  - "御宿町国際交流協会『通商交渉に夢をかける徳川家康と夢ついえた伊達政宗』（2014）・仙台市博物館・玉名市・船の科学館・山川日本史小辞典"
+  - "箭内健次「糸割符商人研究序説（一）」（史淵70, 1956）・「一六四〇年のマカオ使節に関する一資料」（史淵78, 1959、「異国天川よりの誓の書付」の翻刻を含む）"
+  - "G. Schreurs（一橋大学経済研究所 SSPJ DP17-009, 2017）／島根県 石見銀山の資料（岡美穂子『商人と宣教師』2010 の表）／Macao 400 Years（澳門基金會）"
+  - "Duarte Correa の記録（1643年リスボン刊、英訳）／南島原市／ブリタニカ国際大百科事典（クーケバッケル）／日本大百科全書（鎖国令）／文化遺産オンライン「正保四年長崎警備の図」"
+  - "国立国会図書館「日蘭交流の歴史を歩く」／長崎市 出島・ナガジン／平戸市・平戸観光協会／L. Bok & R. ten Dam（Shared Cemeteries, 2020）"
+  - "Louis Cullen（Japan Review 31, 国際日本文化研究センター, 2017）／Encyclopaedia Britannica 11th ed.（1911）／Indian Antiquary 53（1924）／大英図書館 India Office Records G/12/16"
+no_tag_from: 111
+
+ai:
+  T01: {scene: 夕暮れの長崎の港に並ぶ、17世紀前半のポルトガルの大型帆船と小型帆船、はしけの小舟、丘に広がる瓦屋根の町（サムネと同じ絵）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B01: {scene: 夏の長崎の湾に一隻だけ停泊する17世紀後半のイギリスの帆船、それを遠巻きに囲む日本の小舟（旗は描かない）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B02: {scene: 夜の荒れた海辺、岩礁に乗り上げて傾いた大型のガレオン船、浜辺に松明の小さな灯, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B03: {scene: 夜明けの浜辺の漁村、遭難した外国の船員たちを村人が助けて運ぶ小さな後ろ姿の遠景, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B04: {scene: 朝日の大海原を進む中型の西洋式帆船（日本で造られた船）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B05: {scene: 17世紀のメキシコ・アカプルコの湾、乾いた丘と石の砦、停泊するガレオン船, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B06: {scene: 霧の大洋の水平線、かすかな島影のような雲、帆船の舳先から見た眺め, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B07: {scene: 南の海を進む江戸時代初めの日本の大型の朱印船（ジャンク型、むしろの帆）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B08: {scene: 17世紀初めのマニラの港、石の城壁と教会の塔、ガレオン船と中国風のジャンク船, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B09: {scene: 南九州の港で待たされる小さな西洋の帆船、港の向こうに噴煙を上げる火山, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B10: {scene: ろうそくの灯る木の机の上の、封蝋の付いた古い西洋の手紙と羽根ペン（字は読めない）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B11: {scene: 熱帯の大河の港町（17世紀のシャム）、寺院の塔とヤシの木、停泊するジャンク船, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B12: {scene: 長崎の港に停泊するポルトガルの小型帆船、荷を運ぶはしけの小舟（人は小さな後ろ姿）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B13: {scene: 薄暗い商人の蔵に並ぶ、白い生糸の束と銀の延べ板の静物, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B14: {scene: 海に面した崖の上の古い城跡の石垣を、沖から見た遠景（戦いは描かない）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B15: {scene: 17世紀のマカオの港、丘の上の教会と石の砦、停泊するポルトガル船, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B16: {scene: 行灯の光の下の、和紙の古文書と硯と筆（字は読めない）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B17: {scene: 長崎の湾を横切って小舟をつないだ舟橋と、たくさんの小舟、湾の奥に2隻の西洋の帆船（江戸時代前期）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B18: {scene: 江戸時代初めの平戸の港、白い石造りの西洋式倉庫と瓦屋根の建物、小さな帆船, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B19: {scene: 取り壊されている途中の白い石造りの倉庫、崩れた石と足場、作業する人の小さな後ろ姿, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B20: {scene: 高台から見た長崎の港と、扇の形の小さな人工の島（出島）の遠景、17世紀, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B21: {scene: 扇形の人工島の中の通り、白壁の倉庫と木造の二階建ての商館、閉じた門（人は描かない）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B22: {scene: 17世紀の台湾の海辺に建つ西洋式の石の城砦と、近くに停泊する日本の大型船, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B23: {scene: 夕暮れの平戸の港から出ていく一隻のイギリスの帆船、見送る港町, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B24: {scene: 江戸時代の役所の大きな門と石段、門前の静かな通り（人は描かない）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B25: {scene: 夕暮れの誰もいない長崎の海と遠くの山並み（終了画面。右半分を空けた構図）, crops: {left: [1.12, 0.45, 0.5], wide: [1.12, 0.5, 0.5]}, lock: [1.0, 0.5, 0.5]}
+
+credits: {}
+
+shots:
+  - 0 ai:B01 wide
+  - 1 ai:B23 wide
+  - 2 ai:T01 wide
+  - 3 ai:B12 wide
+  - 4 ai:B20 wide
+  - 5 ai:B04 wide
+  - 6 ai:B02 wide
+  - 7 ai:B02 left
+  - 8 ai:B03 wide
+  - 9 ai:B04 wide
+  - 10 ai:B01 right
+  - 11 ai:B05 wide
+  - 12 ai:B04 right
+  - 13 ai:B01 wide
+  - 14 ai:B06 right
+  - 15 ai:B04 left
+  - 16 ai:B07 wide
+  - 17 ai:B08 wide
+  - 18 ai:B10 right
+  - 19 ai:B07 right
+  - 20 ai:B08 right
+  - 21 ai:B09 wide
+  - 22 ai:B08 wide
+  - 23 ai:B09 wide
+  - 24 ai:B16 left
+  - 25 ai:B10 wide
+  - 26 ai:B10 left
+  - 27 ai:B16 wide
+  - 28 ai:B08 right
+  - 29 ai:B07 wide
+  - 30 ai:B11 wide
+  - 31 ai:B08 left
+  - 32 ai:B07 right
+  - 33 ai:B24 wide
+  - 34 ai:B09 right
+  - 35 ai:B05 right
+  - 36 ai:B16 left
+  - 37 ai:T01 wide
+  - 38 ai:B11 left
+  - 39 ai:B08 wide
+  - 40 ai:T01 right
+  - 41 ai:B12 wide
+  - 42 ai:B15 wide
+  - 43 ai:B12 left
+  - 44 ai:B13 wide
+  - 45 ai:B13 left
+  - 46 ai:B12 right
+  - 47 ai:B13 right
+  - 48 ai:B14 wide
+  - 49 ai:B10 left
+  - 50 ai:B14 right
+  - 51 ai:B16 wide
+  - 52 ai:B15 left
+  - 53 ai:B15 right
+  - 54 ai:B10 right
+  - 55 ai:B16 left
+  - 56 ai:B12 wide
+  - 57 ai:B24 wide
+  - 58 ai:T01 left
+  - 59 ai:B12 left
+  - 60 ai:B17 left
+  - 61 ai:B09 right
+  - 62 ai:B12 right
+  - 63 ai:T01 wide
+  - 64 ai:B13 wide
+  - 65 ai:B15 wide
+  - 66 ai:B14 wide
+  - 67 ai:T01 right
+  - 68 ai:B18 wide
+  - 69 ai:B19 wide
+  - 70 ai:B18 left
+  - 71 ai:B22 wide
+  - 72 ai:B23 wide
+  - 73 ai:B23 left
+  - 74 ai:B18 right
+  - 75 ai:B24 wide
+  - 76 ai:B19 wide
+  - 77 ai:B19 left
+  - 78 ai:B19 right
+  - 79 ai:B20 wide
+  - 80 ai:B21 wide
+  - 81 ai:B21 left
+  - 82 ai:B13 left
+  - 83 ai:B18 right
+  - 84 ai:B20 right
+  - 85 ai:B24 wide
+  - 86 ai:B16 right
+  - 87 ai:B18 wide
+  - 88 ai:B20 left
+  - 89 ai:B19 wide
+  - 90 ai:B21 right
+  - 91 ai:T01 wide
+  - 92 ai:B20 wide
+  - 93 ai:B01 wide
+  - 94 ai:B01 left
+  - 95 ai:B06 left
+  - 96 ai:B10 wide
+  - 97 ai:B23 right
+  - 98 ai:B01 right
+  - 99 ai:B10 left
+  - 100 ai:B16 wide
+  - 101 ai:B24 right
+  - 102 ai:B01 wide
+  - 103 ai:T01 left
+  - 104 ai:B20 wide
+  - 105 ai:T01 wide
+  - 106 ai:B05 wide
+  - 107 ai:B15 wide
+  - 108 ai:B21 wide
+  - 109 ai:B12 wide
+  - 110 ai:B18 left
+  - 111 ai:B01 left
+  - 112 ai:B25 wide
+  - end ai:B25 wide
+
+figures:
+  - {from: 30, to: 32, spec: {type: map, reveal: true, title: 探り合いの海（1628〜1630年）, bounds: [98.0, 136.0, 8.0, 36.0], places: [[シャム, 100.57, 14.35], [マニラ, 120.98, 14.60], [長崎, 129.87, 32.75], [薩摩, 130.55, 31.60]]}}
+  - {from: 52, to: 53, spec: {type: map, reveal: true, title: マカオと長崎, bounds: [108.0, 136.0, 16.0, 38.0], places: [[マカオ, 113.54, 22.19], [長崎, 129.87, 32.75]]}}
+  - {from: 79, to: 80, spec: {type: map, reveal: true, title: 平戸から出島へ（1641年）, bounds: [129.2, 130.4, 32.5, 33.6], places: [[平戸, 129.55, 33.37], [長崎, 129.87, 32.75]]}}
+
+focus: {}
+
+fx:
+  B25: {mist: {region: [0.0, 0.55, 1.0, 1.0]}}
+  B06: {mist: {region: [0.0, 0.3, 1.0, 0.8]}}
+  B16: {lamp: {region: [0.0, 0.0, 0.5, 0.6]}}
+
+paint_fx: {}
+
+parts:
+  - {type: quote, from: 25, to: 25, label: 史料, text: 使節は大きな費用をかけたのに／受け取ってもらえずに戻った, source: フィリピン総督シルバの国王あて書簡（1625年8月4日。今の言葉に）}
+  - {type: versus3, from: 48, to: 49, every: 4,
+     items: [[南島原市, およそ3万7千人], [コレアの記録 1643年, 男だけで3万5千超]]}
+  - {type: quote, from: 51, to: 51, label: 史料, text: 自今以後　かれうた渡海の儀／停止せられおわんぬ, source: 1639年の禁令（日本大百科全書の引く本文）}
+  - {type: quote, from: 55, to: 55, label: 史料, text: 宣教師が日本へ渡ると知らせた者に／銀40貫目の褒美, source: 「異国天川よりの誓の書付」（八代 松井家文書。今の言葉に）}
+  - {type: versus3, from: 60, to: 60, every: 4,
+     items: [[マカオ側の通史, 兵5万], [徳川実紀の引用, 4万8千300余人]]}
+  - {type: versus3, from: 77, to: 77, every: 4,
+     items: [[平戸の側, 1639年築造倉庫], [オランダ側の解説, Anno Christi 1640]]}
+  - {type: quote, from: 85, to: 85, label: 要点, text: すべての外国との商いを／1つの港に集める, source: L. カレン（Japan Review 31, 2017。今の言葉に）}
+  - {type: quote, from: 99, to: 99, label: 史料, text: 旗の十字は／ポルトガルと同じ宗教のしるし, source: Indian Antiquary 53巻（1924年。今の言葉に）}
+  - {type: quote, from: 101, to: 102, label: 要点, text: 扉を閉ざした相手は／カトリックの国, source: 岩生成一の説（カレン 2017 の紹介。今の言葉に）}
+
+stills:
+  - {line: 0, note: 冒頭（0秒）}
+  - {line: 25, note: 第2章 シルバの書簡}
+  - {line: 30, note: 第2章 地図}
+  - {line: 48, note: 第3章 原城の人数の食い違い}
+  - {line: 51, note: 第3章 禁令}
+  - {line: 60, note: 第3章 1647年の人数}
+  - {line: 77, note: 第4章 刻銘の食い違い}
+  - {line: 79, note: 第4章 地図}
+  - {line: 101, note: 第5章 岩生の説}
+  - {end: true, note: 終了画面の空き}
