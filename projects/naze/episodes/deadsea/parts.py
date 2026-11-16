@@ -36,7 +36,7 @@ AQABA = (35.0, 29.53)
 
 REGION = (35.45, 31.6, 2.6, 0)
 SEA = (35.45, 31.45, 0.9, 0)
-SEA_T = (35.45, 31.38, 0.8, 35)
+SEA_T = (35.45, 31.38, 0.9, 30)
 NORTHV = (35.47, 31.58, 0.55, 25)
 SOUTHV = (35.45, 31.2, 0.6, 25)
 WIDE = (35.6, 31.2, 7.5, 0)
@@ -105,7 +105,7 @@ P = {}
 P["ch1"] = dict(title="第1章 いちばん低い湖", cta=False, lines=[
     dict(id="a1", text="陸の上で、いちばん低い水面。それが、死海です。", scene=MAP(WIDE, step=0, view_to=SEA)),
     dict(id="a2", text="2018年の水面は、海面より433m下。", scene=CARD("海面下433m", sub="死海の水面（2018年10月）", note=VEY, step=0, count=False)),
-    dict(id="a3", text="東京タワーを水面に立てても、てっぺんは、まだ海面より100m下です。", scene=BARS([("死海の水面（海面から下へ）", 433, BLUE), ("東京タワー", 333, GREY)], title="高さ（m）", note=VEY, fmt="{}", step=0)),
+    dict(id="a3", text="東京タワーを水面に立てても、てっぺんは、まだ海面より100m下です。", scene=BARS([("死海の水面の深さ", 433, BLUE), ("東京タワー", 333, GREY)], title="高さ（m）", note=VEY, fmt="{}", step=0)),
     dict(id="a4", text="しかも、その水面は、毎年、約1.1mずつ下がっています。", scene=MAP(SEA_T, SHORE("2000", alpha=0.0, width=5), step=0)),
     dict(id="a5", text="40年で、30m。ビルの10階分です。", scene=CARD("40年で30m", sub="死海の水面が下がった高さ", note=MOE, step=0, count=False)),
     dict(id="a6", text="水は、どこへ消えているのか。", style="question", sub="海面下433mの湖\n【水はどこへ】消えている", scene=MAP(SEA, step=0)),
@@ -122,11 +122,11 @@ P["ch2"] = dict(title="第2章 入る水と出る水", cta=False, lines=[
     dict(id="b2", text="死海にも、出ていく川がありません。", scene=MAP(REGION, JRIVER("b"), step=1)),
     dict(id="b3", text="入った水は、蒸発して、空へ出ていくだけです。"),
     dict(id="b4", text="空へ出る水は、1年に、深さ約1m分です。", scene=CARD("約1m", sub="1年に蒸発する水の深さ", note=VEY, step=1, count=False)),
-    dict(id="b5", text="入る水は、湖の底から湧く地下水が、1年に約1.7億m³。", scene=BARS([("湖の底などから湧く地下水", 1.7, BLUE), ("ヨルダン川（いま）", 0.6, RIVER), ("まわりから流れ込む水", 0.6, GREY), ("湖の上の雨", 0.45, GREY)], title="1年に入る水（億m³）", note=VEY + "（ヨルダン川は0.6〜4億m³）", fmt="{}", step=1)),
-    dict(id="b6", text="まわりから流れ込む水と、雨が、あわせて約1億m³。"),
-    dict(id="b7", text="ヨルダン川は、年によって、0.6億から4億m³です。"),
+    dict(id="b5", text="入る水は、湖の底から湧く地下水が、1年に約1.7億m³。", scene=BARS([("湖底などの湧き水", 1.7, BLUE), ("ヨルダン川（いま）", 0.6, RIVER), ("まわりの流れ込み", 0.6, GREY), ("湖の上の雨", 0.45, GREY)], title="1年に入る水（億m³）", note=VEY + "（ヨルダン川は0.6〜4億m³）", fmt="{}", step=1)),
+    dict(id="b6", text="まわりから流れ込む水と、雨が、あわせて約1億m³。", scene=CARD("約1億m³", sub="まわりの流れ込みと雨（1年）", note=VEY, view=REGION, step=1)),
+    dict(id="b7", text="ヨルダン川は、年によって、0.6億から4億m³です。", scene=MAP(REGION, JRIVER("b7"), PIN(GALILEE, "ガリラヤ湖", id="p_gb"), step=1)),
     dict(id="b8", text="では、1年に、どれだけ減っているのか。", section=True, scene=MAP(SEA_T, SHORE("2000", id="s00c"), step=1)),
-    dict(id="b9", text="2000年の北の湖を、標高データで測ると、約641km²。", scene=BARS([("死海の北の湖（2000年）", 641, BLUE), ("琵琶湖", 669, GREY)], title="広さ（km²）", note="自分で測った・国土地理院", fmt="{:,}", step=1)),
+    dict(id="b9", text="2000年の北の湖を、標高データで測ると、約641km²。", scene=BARS([("死海（2000年）", 641, BLUE), ("琵琶湖", 669, GREY)], title="広さ（km²）", note="自分で測った・国土地理院", fmt="{:,}", step=1)),
     dict(id="b10", text="琵琶湖と、ほぼ同じ広さです。"),
     dict(id="b11", text="この広さで、毎年1.1m下がる。掛け算すると、約7億m³です。", scene=CARD("約7億m³", sub="1年に湖から減る水（1.1m × 641km²）", note="自分で計算", step=1, count=False)),
     dict(id="b12", text="東京ドーム、約570杯分の水が、毎年、消えているのです。", scene=BARS([("1年に減る水", 7.05, YEL), ("東京ドーム1杯", 0.0124, GREY)], title="水の量（億m³）", note="自分で計算", fmt="{}", step=1)),
@@ -141,7 +141,7 @@ P["ch3"] = dict(title="第3章 ヨルダン川", cta=False, lines=[
     dict(id="c5", text="ガリラヤ湖の出口には、デガニアのダムがあります。", section=True, scene=MAP(REGION, JRIVER("c2"), PIN(DEGANIA, "デガニアのダム", id="p_de"), step=2, view_to=(35.57, 32.4, 1.2, 25))),
     dict(id="c6", text="その下のアルモットのダムとあわせて、ヨルダン川の流れは、ほとんど止まりました。"),
     dict(id="c7", text="湖の水は、まわりの国の水道と、畑に使われます。", scene=CARD("約14億m³", sub="上流で使われる水（1年）", note=ICL, view=REGION, step=2)),
-    dict(id="c8", text="上流で使われる水は、1年に約14億m³。湖から減る水の、2倍の量です。"),
+    dict(id="c8", text="上流で使われる水は、1年に約14億m³。湖から減る水の、2倍の量です。", scene=BARS([("上流で使われる水", 14, YEL), ("1年に湖から減る水", 7.05, BLUE)], title="水の量（億m³、1年）", note=ICL + "・自分で計算", fmt="{}", step=2)),
     dict(id="c9", text="それに合わせて、死海の下がり方も、速くなりました。", scene=BARS([("1970〜80年代", 0.7, BLUE), ("2018年ごろ", 1.2, YEL)], title="1年に下がる高さ（m）", note=MOE, fmt="{}", step=2)),
     dict(id="c10", text="1970年代から80年代は、1年に約0.7m。いまは約1.2mです。"),
     dict(id="c11", text="入る水が減った分だけ、水面が下がる。ここまでは、アラル海と同じです。", scene=MAP(SEA, SHORE("1978", alpha=0.0, id="l78c"), SHORE("2000", id="s00d"), step=2)),
@@ -157,10 +157,10 @@ P["ch4"] = dict(title="第4章 南の池", cta=False, lines=[
     dict(id="d6", text="普通は、湖の水が減るのは、川の水を取ったからだと思いますよね。", scene=MAP(SEA_T, step=3)),
     dict(id="d7", text="ところが、ここでは、湖の水そのものを、池にくみ上げています。"),
     dict(id="d8", text="イスラエルの会社ICLは、2018年に、北の湖から約4.3億m³をくみ上げました。", scene=BARS([("くみ上げた水", 4.3, YEL), ("湖へ戻した水", 2.7, BLUE), ("差し引き", 1.6, RED)], title="ICLの池の水（億m³、2018年）", note=ICL, fmt="{}", step=3)),
-    dict(id="d9", text="戻したのは約2.7億m³。差し引き、約1.6億m³が、池で空へ出ていきます。"),
+    dict(id="d9", text="戻したのは約2.7億m³。差し引き、約1.6億m³が、池で空へ出ていきます。", scene=MAP(SOUTHV, PIN(PONDS, "塩を取る池", id="p_po9"), LINE([(35.43, 31.42), PONDS], YEL, 8, id="r_pump"), step=3)),
     dict(id="d10", text="ヨルダン側の工場もあわせると、正味約2.5億m³。", scene=CARD("約4割", sub="水面が下がる分のうち、塩を取る池の分", note=VEY, view=SOUTHV, step=3, count=False)),
     dict(id="d11", text="論文の見積もりでは、水面が下がる分の、約4割にあたります。"),
-    dict(id="d12", text="さっきの7億m³と比べると、35%。自分の計算でも、ほぼ同じです。"),
+    dict(id="d12", text="さっきの7億m³と比べると、35%。自分の計算でも、ほぼ同じです。", scene=BARS([("塩を取る池（正味）", 2.5, YEL), ("1年に湖から減る水", 7.05, BLUE)], title="水の量（億m³）", note=VEY + "・自分で計算", fmt="{}", step=3)),
     dict(id="d13", text="水が引いた岸では、地面に穴が開き始めました。", section=True, scene=MAP(NORTHV, SHORE("1978", alpha=0.0, id="l78d"), PIN(EINGEDI, "エンゲディ", id="p_en"), step=3)),
     dict(id="d14", text="地下の塩の層に真水が入り、塩がとけて、穴になるのです。"),
     dict(id="d15", text="2015年の時点で、その数は約5,500個です。", scene=CARD("約5,500個", sub="死海の岸に開いた穴（2015年）", note=MOE, view=NORTHV, step=3)),
@@ -177,7 +177,7 @@ P["ch5"] = dict(title="第5章 止まらない理由", cta=True, lines=[
     dict(id="e4", text="次に、紅海から、水を引いたら。", section=True, scene=MAP(WIDE, LINE([AQABA, (35.4, 31.1)], YEL, 8, id="r_rs"), PIN(AQABA, "紅海", id="p_aq"), step=4)),
     dict(id="e5", text="考えられてきたのは、1年に約2.5億m³を、管で運ぶ案です。"),
     dict(id="e6", text="自分で割ってみます。2.5億m³を、641km²に広げると、深さ約0.39m。", scene=CARD("約0.39m", sub="2.5億m³ ÷ 641km²", note="自分で計算", view=WIDE, step=4, count=False)),
-    dict(id="e7", text="1.1mから引くと、まだ、1年に約0.7m下がります。", scene=BARS([("いま", 1.1, YEL), ("紅海から2.5億m³入れたら", 0.71, BLUE)], title="1年に下がる高さ（m）", note="自分で計算", fmt="{}", step=4)),
+    dict(id="e7", text="1.1mから引くと、まだ、1年に約0.7m下がります。", scene=BARS([("いま", 1.1, YEL), ("紅海から入れたら", 0.71, BLUE)], title="1年に下がる高さ（m）", note="自分で計算", fmt="{}", step=4)),
     dict(id="e8", text="ICLの見込みも、約0.75m。ほぼ同じ答えです。"),
     dict(id="e9", text="止めるには、毎年減る約7億m³を、まるごと足すしかありません。", scene=CARD("約7億m³", sub="水面を止めるのに要る水（1年）", note="自分で計算", step=4, count=False)),
     dict(id="e10", text="まとめます。", section=True, scene=CARDS_N(1)),
@@ -193,7 +193,7 @@ P["ch5"] = dict(title="第5章 止まらない理由", cta=True, lines=[
 # ---- ショート ---------------------------------------------------------------------------------------------
 P["s1"] = dict(title="陸でいちばん低い湖は、40年で30m下がった", lines=[
     dict(id="k1", text="陸の上で、いちばん低い水面。死海です。", scene=MAP(SEA_P, SHORE("2000", id="s00k"))),
-    dict(id="k2", text="2018年の水面は、海面より433m下。東京タワーを立てても、てっぺんはまだ海面の下です。", scene=BARS([("死海の水面（海面から下へ）", 433, BLUE), ("東京タワー", 333, GREY)], title="高さ（m）", fmt="{}")),
+    dict(id="k2", text="2018年の水面は、海面より433m下。東京タワーを立てても、てっぺんはまだ海面の下です。", scene=BARS([("死海の水面の深さ", 433, BLUE), ("東京タワー", 333, GREY)], title="高さ（m）", fmt="{}")),
     dict(id="k3", text="その水面は、毎年、約1.1mずつ下がっています。", scene=MAP(SEA_P, SHORE("1978", alpha=0.0, id="l78k"), SHORE("2000", id="s00k2"))),
     dict(id="k4", text="40年で、30m。ビルの10階分です。", scene=CARD("40年で30m", sub="死海の水面が下がった高さ", view=SEA_P, count=False)),
     dict(id="k5", text="理由の1つは、入ってくるヨルダン川の水が、9割減ったことです。", scene=MAP(REGION_P, JRIVER("k"))),
