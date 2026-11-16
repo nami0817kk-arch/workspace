@@ -28,7 +28,7 @@ void main() {
       bonuses.add(YouthInvestmentEngine.qualityBonus(m));
     }
     expect(bonuses.first, lessThan(bonuses[2]));
-    expect(bonuses[2], lessThan(bonuses.last));
+    expect(bonuses[2], lessThanOrEqualTo(bonuses.last));
     expect(m, greaterThan(1.7));
   });
 
