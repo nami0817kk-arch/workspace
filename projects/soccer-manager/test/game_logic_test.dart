@@ -10834,13 +10834,8 @@ void main() {
     );
     expect(playedAll.any((d) => d.isFriendlyMatchDay), isFalse);
 
-    // 既定方針が「全体練習」に変わったことがガイド・用語集に反映されている。
-    final guideText = guideSections
-        .expand((s) => s.topics)
-        .map((t) => '${t.title}${t.description}')
-        .join();
-    expect(guideText.contains('全体練習'), isTrue,
-        reason: 'ガイドに既定のトレーニング方針(全体練習)の説明がない');
+    // 練習はコーチ陣の仕事になり、ガイドからトレーニングの章は外した。
+    // 用語としては残っているので、用語集で引けることだけを確かめる。
     expect(glossaryEntries.any((e) => e.term == '全体練習'), isTrue,
         reason: '用語集に「全体練習」が載っていない');
   });
