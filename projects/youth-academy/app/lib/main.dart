@@ -155,14 +155,8 @@ class _MatchScreenState extends State<MatchScreen> with WidgetsBindingObserver {
 
   Future<void> _load() async {
     final html = await rootBundle.loadString('assets/web/index.html');
-    final store = <String, String>{};
-    for (final key in widget.prefs.getKeys()) {
-      if (key.startsWith(_prefix)) {
-        final v = widget.prefs.getString(key);
-        if (v != null) store[key.substring(_prefix.length)] = v;
-      }
-    }
-    await _web.loadHtmlString(injectBoot(html, store));
+    final all = {for (final k in widget.prefs.getKeys()) k: widget.prefs.get(k)};
+    await _web.loadHtmlString(injectBoot(html, collectStore(all, prefix: _prefix)));
   }
 
   @override

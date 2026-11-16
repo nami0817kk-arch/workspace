@@ -87,6 +87,17 @@ void main() {
 
   Map<String, dynamic> lastEnt() => (sent.lastWhere((m) => m['ev'] == 'ent'))['v'] as Map<String, dynamic>;
 
+  test('受け取りの控えは ya_ の外に置き、前の名前（ya_ent_seen）の控えも引き継ぐ', () async {
+    SharedPreferences.setMockInitialValues({'ya_ent_seen': <String>['youth_ticket_1:t1']});
+    final p = await SharedPreferences.getInstance();
+    final e = Entitlements();
+    expect(await e.grant(p, 'youth_ticket_1', purchaseId: 't1'), isFalse);
+    expect(await e.grant(p, 'youth_ticket_1', purchaseId: 't2'), isTrue);
+    expect(p.containsKey('ya_ent_seen'), isFalse);
+    expect(p.getStringList('ent_seen'), containsAll(<String>['youth_ticket_1:t1', 'youth_ticket_1:t2']));
+    expect(p.getKeys().where((k) => k.startsWith('ya_')).every((k) => p.get(k) is String), isTrue);
+  });
+
   test('最初は何も買っていない（セーブ枠の追加0・チケット0）', () {
     final e = Entitlements.load(prefs);
     expect([e.noAds, e.eye, e.slots, e.tickets], [false, false, 0, 0]);

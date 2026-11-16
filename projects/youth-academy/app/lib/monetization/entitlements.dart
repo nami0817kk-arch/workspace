@@ -24,7 +24,14 @@ class Entitlements {
   int tickets;
 
   static const key = 'ya_ent';
-  static const seenKey = 'ya_ent_seen';
+  // 受け取り済みの取引の控え。ページに渡す保存（`ya_` で始まる文字の値）と混ざらないよう `ya_` の外に置く。
+  // 2026-11-17：前は `ya_ent_seen`（文字の並び）で、起動時の読み込みが `ya_` の全部を文字として読もうとして落ち、課金した人が起動できなくなった
+  static const seenKey = 'ent_seen';
+  static const oldSeenKey = 'ya_ent_seen';
+  static List<String> seenOf(SharedPreferences p) {
+    final v = p.get(seenKey) ?? p.get(oldSeenKey);
+    return v is List ? v.whereType<String>().toList() : <String>[];
+  }
   static const maxSlots = 4;
 
   Map<String, Object> toJson() => {'noAds': noAds, 'eye': eye, 'slots': slots, 'tickets': tickets};
@@ -50,7 +57,7 @@ class Entitlements {
   /// [purchaseId] が同じものは二度渡さない（落ちたあとの再送で増えすぎないように）。
   Future<bool> grant(SharedPreferences p, String productId, {String? purchaseId}) async {
     final tag = purchaseId == null || purchaseId.isEmpty ? null : '$productId:$purchaseId';
-    if (tag != null && (p.getStringList(seenKey) ?? <String>[]).contains(tag)) return false;
+    if (tag != null && seenOf(p).contains(tag)) return false;
     switch (productId) {
       case productRemoveAds:
         noAds = true;
@@ -67,9 +74,10 @@ class Entitlements {
     }
     await save(p);
     if (tag != null) {
-      final seen = p.getStringList(seenKey) ?? <String>[];
+      final seen = seenOf(p);
       seen.add(tag);
       await p.setStringList(seenKey, seen.length > 60 ? seen.sublist(seen.length - 60) : seen);
+      if (p.containsKey(oldSeenKey)) await p.remove(oldSeenKey);
     }
     return true;
   }

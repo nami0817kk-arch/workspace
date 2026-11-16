@@ -13,6 +13,16 @@ bool needsReload(Object? probeResult) {
   return n == null || n <= 0;
 }
 
+/// 保存（prefs）から、ページへ渡す値を集める。`ya_` で始まる「文字」の値だけを拾う。
+/// 文字の並びなど別の型が `ya_` に混ざっていても落ちない（2026-11-17：課金の控えが文字の並びで入っていて、起動が止まった）
+Map<String, String> collectStore(Map<String, Object?> all, {String prefix = 'ya_'}) {
+  final store = <String, String>{};
+  all.forEach((key, v) {
+    if (key.startsWith(prefix) && v is String) store[key.substring(prefix.length)] = v;
+  });
+  return store;
+}
+
 String injectBoot(String html, Map<String, String> store) {
   // </script> を含む値でページが壊れないように、< をエスケープして渡す
   final json = jsonEncode({'store': store}).replaceAll('<', '${String.fromCharCode(92)}u003c');

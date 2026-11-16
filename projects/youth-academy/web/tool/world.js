@@ -1758,5 +1758,10 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   ok(natPerYear <= 0.8, '日本代表は数年に1〜2人（' + natPerYear.toFixed(2) + '人/年）');
   ok(YA.retireWord({ age: 19, quit: true }) === 'サッカーをやめた' && YA.retireWord({ age: 34 }) === '引退', '若くしてやめた子は「サッカーをやめた」');
 }
+// 分野ごとの点検（tool/checks/*.js）。それぞれ module.exports = (YA, ok) => { ... } の形。
+// 2026-11-17：108件の直しを分野ごとに並べて進めるため、点検の置き場を分けた（world.js の末尾の取り合いを避ける）
+for (const f of require('fs').readdirSync(path.join(__dirname, 'checks')).filter((x) => x.endsWith('.js')).sort()) {
+  try { require(path.join(__dirname, 'checks', f))(YA, ok); } catch (er) { ok(false, 'checks/' + f + ' が例外: ' + (er && er.stack ? er.stack.split(String.fromCharCode(10)).slice(0, 3).join(' | ') : er)); }
+}
 console.log(fails ? '失敗 ' + fails : '育成の点検: すべて通過');
 process.exit(fails ? 1 : 0);
