@@ -104,7 +104,36 @@ class FmRow extends StatelessWidget {
 /// 詰めた一覧、小さいボタン。既存のテーマの色はそのまま使う。
 ThemeData fmDenseTheme(ThemeData base) {
   final scheme = base.colorScheme;
+  // 文字も一回り小さくして、1画面の情報量を増やす。見出しは明朝(セリフ)を
+  // やめ、小さい太字にそろえる(FM の見出しは小さく、太い)。
+  final body = base.textTheme.bodyMedium?.fontFamily;
+  var text = base.textTheme.apply(fontSizeFactor: 0.93);
+  TextStyle? head(TextStyle? s, double size) => s?.copyWith(
+      fontFamily: body, fontSize: size, fontWeight: FontWeight.bold);
+  text = text.copyWith(
+    headlineMedium: head(text.headlineMedium, 19),
+    headlineSmall: head(text.headlineSmall, 17),
+    titleLarge: head(text.titleLarge, 15),
+    titleMedium: head(text.titleMedium, 13.5),
+    titleSmall: head(text.titleSmall, 12.5),
+  );
   return base.copyWith(
+    textTheme: text,
+    // 見出しの帯。明朝(セリフ)をやめ、太字の小さい字で、少し濃い下地にする。
+    appBarTheme: base.appBarTheme.copyWith(
+      backgroundColor: scheme.surfaceContainerHighest,
+      toolbarHeight: 40,
+      titleTextStyle: TextStyle(
+        fontFamily: base.textTheme.bodyMedium?.fontFamily,
+        fontSize: 14,
+        fontWeight: FontWeight.bold,
+        color: scheme.onSurface,
+      ),
+    ),
+    tabBarTheme: base.tabBarTheme.copyWith(
+      labelStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+      unselectedLabelStyle: const TextStyle(fontSize: 12),
+    ),
     cardTheme: CardThemeData(
       elevation: 0,
       color: scheme.surfaceContainerLow,

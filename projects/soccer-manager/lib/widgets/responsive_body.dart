@@ -16,6 +16,9 @@ class ResponsiveBody extends StatelessWidget {
     // 左メニューに埋め込まれた横画面では、どのページも同じ全幅にそろえる
     // (ページごとに中身の幅が違うと、切り替えるたびに画面がガタつく)。
     if (EmbeddedInShell.of(context)) return child;
+    // 横画面(FM風)は、その他メニューから開く画面も全幅にそろえる。
+    final size = MediaQuery.sizeOf(context);
+    if (size.width > size.height) return child;
     return Center(
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: maxWidth),
