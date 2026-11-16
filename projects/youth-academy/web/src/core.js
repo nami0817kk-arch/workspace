@@ -308,7 +308,9 @@
   YA.keyText = function (w, p, k) {
     const d = KEYS[k.id];
     if (!d) return '？';
-    const due = k.due ? `（期限：${k.due % 100 === YA.WEEKS ? (Math.floor(k.due / 100) === w.year ? '今年度の終わり' : `${Math.floor(k.due / 100) - w.year}年後の冬`) : ''}まで）` : '';
+    // 期限：今年度の終わり／N年後の冬。過ぎた鍵（年度をまたいで、まだ切り替わる前）は「期限切れ」（2026-11-16 画面の点検で「-1年後の冬」と出ていた）
+    const dy = k.due ? Math.floor(k.due / 100) - w.year : 0;
+    const due = !k.due ? '' : dy < 0 || k.due < w.year * 100 + w.week ? '（期限切れ）' : `（期限：${dy === 0 ? '今年度の終わり' : `${dy}年後の冬`}まで）`;
     if (k.done) return '✓ ' + d.clear(k, w);
     if (k.h >= 2) return d.clear(k, w) + (d.need > 1 || k.need > 1 ? `　${k.have}/${k.need}` : '') + due;
     if (k.h >= 1) return d.vague + (k.due ? '（急いだほうがよさそうだ）' : '');

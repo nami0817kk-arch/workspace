@@ -274,7 +274,9 @@
       h('div', { class: 'note', style: 'color:var(--ink)' }, '線ごとの戦術理解：' + Object.entries(t.lines).filter(([, v]) => v != null).map(([k, v]) => `${k} ${v}`).join('・')),
       h('div', { class: 'note' }, '理解が足りない子：' + t.low.map((p) => `${p.name}（${Math.round(p.tu == null ? 40 : p.tu)}）`).join('・') + '。重点「判断」や試合の出場で上がります。'),
       h('div', { class: 'h', style: 'margin-top:6px' }, '展開ごとの指示（後半、点差で切り替える）'), sel('lose', '負けていたら'), sel('win', '勝っていたら'));
-    (main.querySelector('.pbody') || main).append(card);
+    // 右の欄（スクロールする）に入れる。main に直接足すと、曜日の欄に重なって描かれていた（2026-11-16 画面の点検）
+    card.style.flex = 'none';
+    (main.querySelector('[data-train-right]') || main.querySelector('.pbody') || main).append(card);
   };
 
   // ---------- クラブの記録帳 ----------
@@ -493,7 +495,7 @@
       const draw = () => {
         box.replaceChildren(
           h('div', { class: 'row' }, h('div', { class: 'h grow' }, `${a.name}（${a.year}年目卒${a.age ? '・' + a.age + '歳' : ''}）`), h('button', { class: 'btn sm', onclick: close }, '閉じる')),
-          h('div', { class: 'note' }, `${a.club || ''}${a.league ? '（' + a.league + (YA.clubStr && YA.clubStr(a.club, w) != null ? '・クラブの強さ ' + YA.clubStr(a.club, w) : '') + '）' : ''}・本人 ${YA.rate(a.ovr)}・通算${YA.statLine(a, a.pos === 'GK')}${a.bdBest ? '・バロンドール最高' + a.bdBest + '位' : ''}・絆 ${a.bond == null ? '-' : a.bond}/6`),
+          h('div', { class: 'note' }, `${a.club || ''}${a.league ? '（' + a.league + (YA.clubStr && YA.clubStr(a.club, w) != null ? '・クラブの強さ ' + YA.clubStr(a.club, w) : '') + '）' : ''}・本人 ${YA.rate(a.ovr)}・通算${YA.statLine(a, a.pos === 'GK')}${a.bdBest ? '・バロンドール最高' + a.bdBest + '位' : ''}${a.bond == null ? '' : `・絆 ${a.bond}/6`}`),
           h('div', { class: 'row', style: 'gap:5px;flex-wrap:wrap;margin:4px 0' },
             h('button', { class: 'btn sm' + (a.fav ? ' on' : ''), onclick: () => { a.fav = !a.fav; save(); draw(); } }, a.fav ? '★ 追っている（外す）' : '☆ この子を追う'),
             h('button', { class: 'btn sm', onclick: () => { const r = YA.alumniContact(w, a); msg.textContent = r.msg; save(); draw(); } }, '連絡する（年1回）'),

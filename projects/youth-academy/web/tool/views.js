@@ -168,6 +168,8 @@ async function clearEvents() {
   btn('閉じる').click();
   btn('← 1枚の画面へ').click();
   ok(txt().includes('チームの重点'), '1枚の画面へ戻れる');
+  // 2026-11-16 画面の点検：戦術理解の欄は右の欄（スクロールする）の中。main に直に足すと曜日の欄に重なっていた
+  { const rt = d.querySelector('[data-train-right]'); ok(!!rt && [...rt.querySelectorAll('.h')].some((x) => x.textContent.startsWith('戦術理解の内訳')), '戦術理解の欄は練習の右の欄に入る'); }
   // 選手
   rail('選手');
   ok(txt().includes('進路') && txt().includes('様子') && txt().includes('特性') && txt().includes('性格'), '選手の詳細（能力・様子・進路）');

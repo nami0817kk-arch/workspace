@@ -402,7 +402,7 @@
     const w = W();
     const ui = U().app;
     ui.mt = ui.mt || 'alumni';
-    const tabs = h('div', { class: 'tabs', style: 'width:420px' }, [['alumni', '卒業生名鑑'], ['rec', '記録'], ['bteam', 'Bチーム'], ['ach', '実績と引退'], ['help', '用語集'], ['set', '設定']].map(([k, n]) => h('button', { class: 'btn' + (ui.mt === k ? ' on' : ''), onclick: () => { ui.mt = k; rerender(); } }, n)));
+    const tabs = h('div', { class: 'tabs' }, [['alumni', '卒業生名鑑'], ['rec', '記録'], ['bteam', 'Bチーム'], ['ach', '実績と引退'], ['help', '用語集'], ['set', '設定']].map(([k, n]) => h('button', { class: 'btn' + (ui.mt === k ? ' on' : ''), onclick: () => { ui.mt = k; rerender(); } }, n)));
     const body = h('div', { class: 'card pbody', style: 'flex:1;min-height:0' });
     if (ui.mt === 'alumni') {
       // 絞り込み：全員・プロ・海外・代表・タイトル
@@ -424,7 +424,7 @@
         const top = YA.alumniHighlight(a);
         return h('button', { class: 'pitem', style: 'align-items:flex-start', onclick: () => (YA.alumniModal ? YA.alumniModal(w, a) : alumniCareer(a)) }, a.fav ? h('b', { style: 'color:#e6a800' }, '★') : null, h('span', { class: 'pos ' + a.pos }, YA.POS_LABEL[a.main] || a.pos),
           h('div', { class: 'grow', style: 'text-align:left;min-width:0' }, h('b', {}, a.name), h('div', { class: 'note' }, (a.status === 'left' ? '退団' : `${a.year}年卒・${a.age}歳`) + (a.club ? `・${a.club}` : '') + (a.league && a.status !== 'left' ? `（${a.league}）` : '') + (a.retired ? '・引退' : ''))),
-          a.status === 'pro' || a.status === 'univ' ? h('span', { class: 'sub', style: 'font-size:10.5px;white-space:nowrap' }, `通算${YA.statLine(a, a.pos === 'GK')}`) : null,
+          (a.status === 'pro' || a.status === 'univ') && a.apps > 0 ? h('span', { class: 'sub', style: 'font-size:10.5px;white-space:nowrap' }, `通算${YA.statLine(a, a.pos === 'GK')}`) : null, // 卒業したばかりで0試合の子には出さない
           (a.titles || []).length ? h('span', { class: 'chip trait' }, `タイトル${a.titles.length}`) : null,
           top ? h('span', { class: 'chip pers' }, top) : null,
           h('span', { class: 'chip ' + (a.status === 'pro' ? 'trait' : 'gray') }, a.status === 'pro' ? (a.abroad ? '海外' : 'プロ') : a.status === 'univ' ? '大学' : a.status === 'left' ? '退団' : '社会人'));

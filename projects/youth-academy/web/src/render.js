@@ -1214,7 +1214,7 @@
       // 選手
       const m = this.match;
       if (m) {
-        const R = Math.max(7, s * 1.65);
+        const R = Math.max(8.5, s * 2); // 2026-11-16 画面の点検：iPhone の横向きで丸と背番号が小さかった（7→8.5px以上）
         const order = Object.keys(this.base).sort((a, b) => (this.focus.includes(a) ? 1 : 0) - (this.focus.includes(b) ? 1 : 0));
         const labels = [];
         for (const id of order) {
