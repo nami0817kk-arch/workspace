@@ -6,6 +6,7 @@ import '../../gm/player.dart';
 import '../../gm/trade.dart';
 import '../gm_controller.dart';
 import 'common.dart';
+import 'gm_table.dart';
 import 'player_card.dart';
 import 'style.dart';
 import 'trade_show_screen.dart';
@@ -54,45 +55,6 @@ class _TradeTabState extends State<TradeTab> {
     giveSwaps: [..._giveSwaps],
     getSwaps: [..._getSwaps],
   );
-
-  /// トレードブロック。載せた選手ごとに、いま届く申し込みを集めて見られる。
-  Widget _blockCard(BuildContext context, Career car) {
-    final onBlock = [for (final id in car.tradeBlock) ...car.me.roster.where((p) => p.id == id)];
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const Row(
-              children: [
-                Icon(Icons.campaign_rounded, color: GmColors.ball, size: 20),
-                SizedBox(width: 6),
-                Text('トレードブロック', style: TextStyle(fontWeight: FontWeight.bold)),
-                SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    '出してよい選手を、チームの画面で押して載せる',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 12, color: GmColors.sub),
-                  ),
-                ),
-              ],
-            ),
-            if (onBlock.isNotEmpty)
-              for (final p in onBlock)
-                Row(
-                  children: [
-                    Expanded(child: Text('${p.name}(OVR ${shown(p.ovr)})', maxLines: 1, overflow: TextOverflow.ellipsis)),
-                    TextButton(onPressed: !car.canTrade || widget.c.busy ? null : () => _showBlockOffers(context, car, p), child: const Text('申し込みを集める')),
-                  ],
-                ),
-          ],
-        ),
-      ),
-    );
-  }
 
   Future<void> _showBlockOffers(BuildContext context, Career car, Player p) {
     final offers = car.blockOffers(p.id);
@@ -161,155 +123,99 @@ class _TradeTabState extends State<TradeTab> {
     final impact = o.give.isEmpty && o.get.isEmpty ? null : car.tradeImpact(o);
     final gs = car.me.roster.where((p) => _give.contains(p.id)).fold(0, (s, p) => s + p.salary);
     final ts = them.roster.where((p) => _get.contains(p.id)).fold(0, (s, p) => s + p.salary);
+    final pr = car.gmPerson(_partner);
+    // 選んだものの名前(下の欄に並べる)
+    String names(Iterable<Player> ps, Iterable<int> picks) => [
+      for (final p in ps) p.name,
+      for (final i in picks) car.picks[i].label(car.teams, car.season),
+    ].join('・');
+    final giveNames = names(car.me.roster.where((p) => _give.contains(p.id)), _givePicks);
+    final getNames = names(them.roster.where((p) => _get.contains(p.id)), _getPicks);
     return Column(
       children: [
-        // 相手を選ぶ
-        SizedBox(
-          height: 44,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.fromLTRB(10, 6, 10, 2),
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: ActionChip(
-                  avatar: const Icon(Icons.person_search_rounded, size: 18, color: GmColors.ball),
-                  label: const Text('選手から探す'),
-                  onPressed: () => _findPlayer(context, car),
-                ),
-              ),
-              for (var t = 0; t < teamDefs.length; t++)
-                if (t != car.mine)
-                  Padding(
-                    padding: const EdgeInsets.only(right: 6),
-                    child: ChoiceChip(
-                      avatar: TeamBadge(team: t, size: 16),
-                      label: Text(teamDefs[t].short),
-                      selected: _partner == t,
-                      onSelected: (_) => _setPartner(t),
-                    ),
-                  ),
-            ],
-          ),
-        ),
         Expanded(
-          child: ListView(
-            padding: const EdgeInsets.fromLTRB(10, 4, 10, 12),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              if (!car.canTrade)
-                const Padding(
-                  padding: EdgeInsets.only(bottom: 8),
-                  child: Text('今はトレードできない(シーズン中は締め切りまで。オフの契約・シーズン前はできる)。', style: TextStyle(color: GmColors.bad)),
-                ),
-              _blockCard(context, car),
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
-                  child: Row(
-                    children: [
-                      TeamBadge(team: _partner, size: 36),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('${them.name}(${them.mode.label})', style: const TextStyle(fontWeight: FontWeight.bold)),
-                            Text(them.mode.wants, style: const TextStyle(fontSize: 13, color: GmColors.gold)),
-                            Text(
-                              'GM ${car.gmPerson(_partner).name}(${car.gmPerson(_partner).style.label}): ${car.gmPerson(_partner).style.text}',
-                              style: const TextStyle(fontSize: 12, color: GmColors.sub),
-                            ),
-                            Text('年俸 ${money(them.payroll)}・${them.roster.length}人', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
-                          ],
-                        ),
+              // 左: 相手のチーム(縦に一覧。2026-11-16、ユーザー「トレードがやりにくい」。横に流すチップから変えた)
+              SizedBox(width: 176, child: _partnerList(context, car)),
+              const VerticalDivider(width: 1, color: GmColors.line),
+              Expanded(
+                child: ListView(
+                  padding: const EdgeInsets.fromLTRB(8, 6, 8, 10),
+                  children: [
+                    if (!car.canTrade)
+                      const Padding(
+                        padding: EdgeInsets.only(bottom: 6),
+                        child: Text('今はトレードできない(シーズン中は締め切りまで。オフの契約・シーズン前はできる)。', style: TextStyle(color: GmColors.bad, fontSize: 12)),
                       ),
-                    ],
-                  ),
-                ),
-              ),
-              // 受け取る側と出す側を横に並べる(2026-11-14、詰めた画面に)
-              LayoutBuilder(
-                builder: (context, cons) {
-                  final get = <Widget>[
-                    SectionTitle('受け取る(${them.def.short})'),
-                    for (final p in lineup(them.roster))
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 6),
-                        child: PlayerRow(
-                          p: p,
-                          team: _partner,
-                          selected: _get.contains(p.id),
-                          onTap: () => setState(() => _get.contains(p.id) ? _get.remove(p.id) : _get.add(p.id)),
-                          onLongPress: () => showPlayerCard(context, car, p, _partner),
-                        ),
-                      ),
-                    _pickChips(car, _partner, _getPicks),
-                    _swapChips(car, _getSwaps, '相手の1巡目と入れ替えられる権利を受け取る'),
-                  ];
-                  final give = <Widget>[
-                    const SectionTitle('出す(自分のチーム)'),
-                    for (final p in lineup(car.me.roster))
-                      if (!car.expiring.contains(p.id))
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 6),
-                          child: PlayerRow(
-                            p: p,
-                            team: car.mine,
-                            selected: _give.contains(p.id),
-                            onTap: () => setState(() => _give.contains(p.id) ? _give.remove(p.id) : _give.add(p.id)),
-                            onLongPress: () => showPlayerCard(context, car, p, car.mine),
+                    // 相手の要点(1行)
+                    Row(
+                      children: [
+                        TeamBadge(team: _partner, size: 26),
+                        const SizedBox(width: 6),
+                        Flexible(
+                          child: Text(
+                            '${them.name}(${them.mode.label})',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
                           ),
                         ),
-                    _pickChips(car, car.mine, _givePicks),
-                    _swapChips(car, _giveSwaps, '自分の1巡目と入れ替えられる権利を渡す'),
-                    for (final i in _givePicks.where((i) => car.picks[i].round == 1 && car.picks[i].protect == 0))
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 6),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Text('${car.picks[i].when(car.season)}の1巡目の保護', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
-                            ),
-                            for (final n in const [0, 5, 10, 14])
-                              Padding(
-                                padding: const EdgeInsets.only(left: 4),
-                                child: ChoiceChip(
-                                  visualDensity: VisualDensity.compact,
-                                  label: Text(n == 0 ? 'なし' : '上位$n', style: const TextStyle(fontSize: 12)),
-                                  selected: (_protect[i] ?? 0) == n,
-                                  onSelected: (_) => setState(() => _protect[i] = n),
-                                ),
-                              ),
-                          ],
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            '${them.mode.wants}・GM ${pr.name}(${pr.style.label})・年俸 ${money(them.payroll)}・${them.roster.length}人',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(fontSize: 11, color: GmColors.sub),
+                          ),
                         ),
-                      ),
-                  ];
-                  if (cons.maxWidth < 700) return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [...get, ...give]);
-                  return Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: get),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: give),
-                      ),
-                    ],
-                  );
-                },
+                      ],
+                    ),
+                    _blockLine(context, car),
+                    const SizedBox(height: 4),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              _rosterTable(context, car, _partner, '受け取る(${them.def.short})', _get, color: GmColors.good),
+                              const SizedBox(height: 6),
+                              _pickTable(car, _partner, _getPicks, give: false),
+                              _swapChips(car, _getSwaps, '相手の1巡目と入れ替えられる権利を受け取る'),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              _rosterTable(context, car, car.mine, '出す(自分のチーム)', _give, color: GmColors.bad),
+                              const SizedBox(height: 6),
+                              _pickTable(car, car.mine, _givePicks, give: true),
+                              _swapChips(car, _giveSwaps, '自分の1巡目と入れ替えられる権利を渡す'),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
         ),
         // 申し込みの欄(いつも下に見える)
         Container(
-          padding: const EdgeInsets.fromLTRB(14, 8, 14, 8),
+          padding: const EdgeInsets.fromLTRB(14, 6, 14, 6),
           decoration: const BoxDecoration(
             color: GmColors.panelHi,
             border: Border(top: BorderSide(color: GmColors.line)),
           ),
-          // 横画面は縦が短いので、左に件数と相手の反応、右にボタンを並べて、欄の高さを抑える
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -321,29 +227,38 @@ class _TradeTabState extends State<TradeTab> {
                     Row(
                       children: [
                         Expanded(
-                          child: Text('出す ${_give.length + _givePicks.length}件(年俸 ${money(gs)})', style: const TextStyle(fontSize: 12, color: GmColors.bad)),
+                          child: Text(
+                            giveNames.isEmpty ? '出す: まだ選んでいない' : '出す: $giveNames(${money(gs)})',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(fontSize: 12, color: GmColors.bad, fontWeight: FontWeight.bold),
+                          ),
                         ),
+                        const Icon(Icons.swap_horiz_rounded, size: 16, color: GmColors.sub),
                         Expanded(
                           child: Text(
-                            '受け取る ${_get.length + _getPicks.length}件(年俸 ${money(ts)})',
+                            getNames.isEmpty ? '受け取る: まだ選んでいない' : '受け取る: $getNames(${money(ts)})',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.right,
-                            style: const TextStyle(fontSize: 12, color: GmColors.good),
+                            style: const TextStyle(fontSize: 12, color: GmColors.good, fontWeight: FontWeight.bold),
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 3),
                     _Reaction(verdict: verdict),
                     if (impact != null) ...[
-                      const SizedBox(height: 3),
+                      const SizedBox(height: 2),
                       Text(
                         '強さ ${impact.myBefore.toStringAsFixed(1)}→${impact.myAfter.toStringAsFixed(1)}'
                         '(見込み ${impact.winsBefore.round()}→${impact.winsAfter.round()}勝)・'
-                        '相手 ${impact.theirBefore.toStringAsFixed(1)}→${impact.theirAfter.toStringAsFixed(1)}',
+                        '相手 ${impact.theirBefore.toStringAsFixed(1)}→${impact.theirAfter.toStringAsFixed(1)}'
+                        '${verdict != null && verdict.notes.isNotEmpty ? '・${verdict.notes.first}' : ''}',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: 11,
                           fontWeight: FontWeight.bold,
                           color: impact.myAfter > impact.myBefore + 0.05
                               ? GmColors.good
@@ -353,33 +268,40 @@ class _TradeTabState extends State<TradeTab> {
                         ),
                       ),
                     ],
-                    if (verdict != null && verdict.notes.isNotEmpty)
-                      Text(
-                        verdict.notes.first,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(fontSize: 11, color: GmColors.gold),
-                      ),
                   ],
                 ),
               ),
-              const SizedBox(width: 14),
+              const SizedBox(width: 12),
               SizedBox(
-                width: 300,
+                width: 330,
                 child: Row(
                   children: [
+                    IconButton(
+                      tooltip: '選んだものを全部外す',
+                      onPressed: o.isEmpty
+                          ? null
+                          : () => setState(() {
+                              _give.clear();
+                              _get.clear();
+                              _givePicks.clear();
+                              _getPicks.clear();
+                              _giveSwaps.clear();
+                              _getSwaps.clear();
+                            }),
+                      icon: const Icon(Icons.clear_all_rounded),
+                    ),
                     Expanded(
                       child: OutlinedButton.icon(
-                        style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(42)),
+                        style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(40)),
                         onPressed: (_get.isEmpty && _getPicks.isEmpty) || !car.canTrade || c.busy ? null : () => _ask(context, verdict),
-                        icon: const Icon(Icons.forum_rounded, size: 20),
+                        icon: const Icon(Icons.forum_rounded, size: 18),
                         label: FittedBox(fit: BoxFit.scaleDown, child: Text(_give.isEmpty && _givePicks.isEmpty ? '相手に聞く' : '何を足せば受ける?')),
                       ),
                     ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: FilledButton.icon(
-                        style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(42)),
+                        style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(40)),
                         onPressed: verdict != null && verdict.ok && !c.busy ? () => _propose(context) : null,
                         icon: const Icon(Icons.handshake_rounded),
                         label: const Text('申し込む'),
@@ -391,6 +313,200 @@ class _TradeTabState extends State<TradeTab> {
             ],
           ),
         ),
+      ],
+    );
+  }
+
+  /// 相手のチームの一覧(縦)。上に「選手から探す」。
+  Widget _partnerList(BuildContext context, Career car) {
+    final teams = [for (var t = 0; t < teamDefs.length; t++) if (t != car.mine) t];
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(8, 6, 8, 4),
+          child: OutlinedButton.icon(
+            style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(32), padding: EdgeInsets.zero),
+            onPressed: () => _findPlayer(context, car),
+            icon: const Icon(Icons.person_search_rounded, size: 16, color: GmColors.ball),
+            label: const Text('選手から探す', style: TextStyle(fontSize: 12)),
+          ),
+        ),
+        Expanded(
+          child: ListView(
+            children: [
+              for (final t in teams)
+                Material(
+                  color: t == _partner ? GmColors.ball.withValues(alpha: 0.18) : Colors.transparent,
+                  child: InkWell(
+                    onTap: () => _setPartner(t),
+                    child: Container(
+                      height: 34,
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      decoration: BoxDecoration(
+                        border: Border(left: BorderSide(color: t == _partner ? GmColors.ball : Colors.transparent, width: 3)),
+                      ),
+                      child: Row(
+                        children: [
+                          TeamBadge(team: t, size: 20),
+                          const SizedBox(width: 6),
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  teamDefs[t].short,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(fontSize: 12, fontWeight: t == _partner ? FontWeight.bold : null),
+                                ),
+                                Text(
+                                  '${record(car.teams[t])}・${car.teams[t].mode.label}',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(fontSize: 9, color: GmColors.sub),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// トレードブロック(1行。載せた選手ごとに「申し込みを集める」)。
+  Widget _blockLine(BuildContext context, Career car) {
+    final onBlock = [for (final id in car.tradeBlock) ...car.me.roster.where((p) => p.id == id)];
+    return Padding(
+      padding: const EdgeInsets.only(top: 4),
+      child: Wrap(
+        spacing: 6,
+        runSpacing: 4,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: [
+          const Icon(Icons.campaign_rounded, color: GmColors.ball, size: 15),
+          Text(onBlock.isEmpty ? 'トレードブロック: 出してよい選手を、チームの画面で押して載せる' : 'トレードブロック:', style: const TextStyle(fontSize: 11, color: GmColors.sub)),
+          for (final p in onBlock)
+            ActionChip(
+              visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              label: Text('${p.name}の申し込みを集める', style: const TextStyle(fontSize: 11)),
+              onPressed: !car.canTrade || widget.c.busy ? null : () => _showBlockOffers(context, car, p),
+            ),
+        ],
+      ),
+    );
+  }
+
+  /// 選手の表(先発の順)。行を押すと選ぶ、長押しで選手のカード。
+  Widget _rosterTable(BuildContext context, Career car, int team, String title, Set<int> chosen, {required Color color}) {
+    final mine = team == car.mine;
+    final players = [
+      for (final p in lineup(car.teams[team].roster))
+        if (!mine || !car.expiring.contains(p.id)) p,
+    ];
+    return GmTable(
+      title: title,
+      trailing: Text('${chosen.length}人を選択', style: TextStyle(fontSize: 11, color: chosen.isEmpty ? GmColors.sub : color)),
+      rowHeight: 28,
+      cols: const [
+        GmCol('', width: 22),
+        GmCol('選手', flex: 1, align: TextAlign.left),
+        GmCol('位', width: 26),
+        GmCol('歳', width: 24),
+        GmCol('OVR', width: 32),
+        GmCol('年俸', width: 80, align: TextAlign.right),
+        GmCol('残', width: 22),
+      ],
+      rows: [
+        for (final p in players)
+          GmRow(
+            [
+              Icon(chosen.contains(p.id) ? Icons.check_box_rounded : Icons.check_box_outline_blank_rounded, size: 16, color: chosen.contains(p.id) ? color : GmColors.sub),
+              Row(
+                children: [
+                  Flexible(
+                    child: Text(p.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.bold)),
+                  ),
+                  if (p.injured > 0) const Padding(padding: EdgeInsets.only(left: 3), child: Icon(Icons.healing_rounded, size: 12, color: GmColors.bad)),
+                  if (car.tradeBlock.contains(p.id)) const Padding(padding: EdgeInsets.only(left: 3), child: Icon(Icons.campaign_rounded, size: 12, color: GmColors.ball)),
+                ],
+              ),
+              Text(p.pos.short, style: const TextStyle(fontSize: 10, color: GmColors.sub)),
+              numCell('${p.age}'),
+              numCell('${shown(p.ovr)}', color: GmColors.ovr(p.ovr), bold: true),
+              numCell(money(p.salary)),
+              numCell('${p.years}', color: GmColors.sub),
+            ],
+            highlight: chosen.contains(p.id),
+            onTap: () => setState(() => chosen.contains(p.id) ? chosen.remove(p.id) : chosen.add(p.id)),
+            onLongPress: () => showPlayerCard(context, car, p, team),
+          ),
+      ],
+    );
+  }
+
+  /// 指名権の表(近い4年。先の年は開いて出す)。自分の1巡目は保護をその場で選べる。
+  Widget _pickTable(Career car, int team, Set<int> chosen, {required bool give}) {
+    final all = car.picksOf(team);
+    if (all.isEmpty) return const SizedBox.shrink();
+    final near = [
+      for (final i in all)
+        if (_farPicks || car.picks[i].season - car.season < 4 || chosen.contains(i)) i,
+    ];
+    return GmTable(
+      title: '指名権(${all.length}本)',
+      trailing: near.length < all.length || _farPicks
+          ? InkWell(
+              onTap: () => setState(() => _farPicks = !_farPicks),
+              child: Text(_farPicks ? '先の年を閉じる' : '先の年も(${all.length - near.length}本)', style: const TextStyle(fontSize: 11, color: GmColors.ball)),
+            )
+          : null,
+      rowHeight: 26,
+      cols: const [
+        GmCol('', width: 22),
+        GmCol('指名権', flex: 1, align: TextAlign.left),
+        GmCol('保護', width: 132, align: TextAlign.right),
+      ],
+      rows: [
+        for (final i in near)
+          GmRow(
+            [
+              Icon(chosen.contains(i) ? Icons.check_box_rounded : Icons.check_box_outline_blank_rounded, size: 16, color: chosen.contains(i) ? GmColors.ball : GmColors.sub),
+              Text(car.picks[i].label(car.teams, car.season), maxLines: 1, overflow: TextOverflow.ellipsis),
+              give && chosen.contains(i) && car.picks[i].round == 1 && car.picks[i].protect == 0
+                  ? Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        for (final n in const [0, 5, 10, 14])
+                          InkWell(
+                            onTap: () => setState(() => _protect[i] = n),
+                            child: Container(
+                              margin: const EdgeInsets.only(left: 2),
+                              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                              decoration: BoxDecoration(
+                                color: (_protect[i] ?? 0) == n ? GmColors.ball.withValues(alpha: 0.3) : Colors.transparent,
+                                borderRadius: BorderRadius.circular(4),
+                                border: Border.all(color: GmColors.line),
+                              ),
+                              child: Text(n == 0 ? 'なし' : '上位$n', style: const TextStyle(fontSize: 10)),
+                            ),
+                          ),
+                      ],
+                    )
+                  : Text(car.picks[i].protect > 0 ? '上位${car.picks[i].protect}' : '', style: const TextStyle(fontSize: 10, color: GmColors.sub)),
+            ],
+            highlight: chosen.contains(i),
+            onTap: () => setState(() => chosen.contains(i) ? chosen.remove(i) : chosen.add(i)),
+          ),
       ],
     );
   }
@@ -424,37 +540,6 @@ class _TradeTabState extends State<TradeTab> {
 
   /// 先の年の指名権まで出すか(指名権は7年先まである。ふだんは近い4年だけ並べる)。
   bool _farPicks = false;
-
-  Widget _pickChips(Career car, int team, Set<int> chosen) {
-    final all = car.picksOf(team);
-    if (all.isEmpty) return const SizedBox.shrink();
-    final near = [
-      for (final i in all)
-        if (_farPicks || car.picks[i].season - car.season < 4 || chosen.contains(i)) i,
-    ];
-    return Padding(
-      padding: const EdgeInsets.only(top: 2, bottom: 6),
-      child: Wrap(
-        spacing: 6,
-        runSpacing: 6,
-        crossAxisAlignment: WrapCrossAlignment.center,
-        children: [
-          for (final i in near)
-            FilterChip(
-              label: Text('指名権 ${car.picks[i].label(car.teams, car.season)}', style: const TextStyle(fontSize: 12)),
-              selected: chosen.contains(i),
-              onSelected: (v) => setState(() => v ? chosen.add(i) : chosen.remove(i)),
-            ),
-          if (near.length < all.length || _farPicks)
-            TextButton(
-              style: TextButton.styleFrom(minimumSize: const Size(0, 32), visualDensity: VisualDensity.compact),
-              onPressed: () => setState(() => _farPicks = !_farPicks),
-              child: Text(_farPicks ? '先の年を閉じる' : '先の年の指名権(${all.length - near.length}本)', style: const TextStyle(fontSize: 12)),
-            ),
-        ],
-      ),
-    );
-  }
 
   /// リーグ全体の選手から探す。選ぶと、その選手のチームを相手にして、受け取る側に入れる。
   Future<void> _findPlayer(BuildContext context, Career car) async {
