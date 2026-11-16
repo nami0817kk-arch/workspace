@@ -65,6 +65,22 @@ class LifeEvents {
   /// 出来事が起きるかどうか。
   bool fires() => _random.nextDouble() < chancePerMatch;
 
+  /// **返事を待っている打診（スポンサー・腕章）。** あれば次の試合のあとに必ず出す。
+  ///
+  /// 打診はホームに「スポンサーの話が来ている」と出るのに、答える場は
+  /// 出来事の抽選でしか来なかった。1試合 24% × 候補 数十件のうちの1件なので、
+  /// 1シーズン待っても来ないことが多く、利用者から「選ぶ場所が無い」と
+  /// 問い合わせが来た（2026-11-16）。来ていると見せた話は、すぐ答えさせる。
+  LifeEvent? offerWaiting(LifeContext context) {
+    for (final e in catalogue) {
+      final r = e.requirement;
+      if ((r.needsSponsorOffer || r.needsCaptaincy) && r.matches(context)) {
+        return e;
+      }
+    }
+    return null;
+  }
+
   static const List<LifeEvent> catalogue = [
     // ---- 人が出てくる ----
     LifeEvent(
@@ -801,6 +817,9 @@ class LifeEvents {
           '監督に呼ばれた。来季のキャプテンをやってほしい、と言う。'
           '責任は重い。',
       requirement: LifeRequirement(needsCaptaincy: true),
+      // 腕章の打診は毎季来うる。一度きりにすると、一度断った後の打診に
+      // 答える場が無くなり、「腕章の打診が来ている」が出たままになる。
+      once: false,
       choices: [
         LifeChoice(
           label: '受ける',
