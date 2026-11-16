@@ -246,10 +246,21 @@
     body.append(h('div', { class: 'row', style: 'gap:4px;flex-wrap:wrap' }, h('div', { class: 'h grow' }, `実績 ${all.filter((a) => a.done).length}/${all.length}`), ...['すべて'].concat(YA.ACH_FIELDS).map((n, i) => h('button', { class: 'btn sm' + (ui.af2 === i ? ' on' : ''), onclick: () => { ui.af2 = i; rerender(); } }, n))));
     const list = all.filter((a) => !ui.af2 || a.field === YA.ACH_FIELDS[ui.af2 - 1]);
     const tcol = { 銅: '#b5733b', 銀: '#8d99ab', 金: '#d9a400' };
-    body.append(h('div', { class: 'plist', style: 'margin-top:5px' }, list.map((a) => h('div', { class: 'pitem', style: 'cursor:default;gap:6px;' + (a.done ? '' : 'opacity:.6') },
-      h('span', { class: 'chip', style: `background:${tcol[a.tier]};color:#fff` }, a.tier),
-      h('span', { class: 'grow', style: 'font-size:12px' }, a.name),
-      h('span', { class: 'note' }, a.done ? '達成' : `${Math.min(a.cur, a.goal)}/${a.goal}`)))));
+    // 銅・銀・金を1行にまとめる（2026-11-16 69行の縦の一覧だった）。次の段までの進み具合をバーで
+    const groups = [];
+    for (const a of list) { const g = groups[groups.length - 1]; if (g && g.k === a.k.slice(0, -1)) g.items.push(a); else groups.push({ k: a.k.slice(0, -1), items: [a] }); }
+    body.append(h('div', { class: 'plist', style: 'margin-top:5px' }, groups.map((g) => {
+      const next = g.items.find((a) => !a.done);
+      const top = next || g.items[g.items.length - 1];
+      const prev = next ? g.items[g.items.indexOf(next) - 1] : null;
+      const lo = prev ? prev.goal : 0;
+      const pct = next ? Math.max(0, Math.min(100, ((Math.min(top.cur, top.goal) - lo) / Math.max(1, top.goal - lo)) * 100)) : 100;
+      return h('div', { class: 'pitem', style: 'cursor:default;gap:6px;flex-wrap:wrap' },
+        h('span', { class: 'grow', style: 'font-size:12px;min-width:180px' + (next ? '' : ';font-weight:800') }, top.name),
+        h('div', { class: 'bar', style: 'width:90px;flex:none' }, h('i', { style: `width:${pct}%;background:${next ? '#2f7ed8' : '#d9a400'}` })),
+        h('span', { class: 'note', style: 'width:64px;flex:none;text-align:right' }, next ? `${Math.min(top.cur, top.goal).toLocaleString('en-US')}/${top.goal.toLocaleString('en-US')}` : 'すべて達成'),
+        ...g.items.map((a) => h('span', { class: 'chip', title: a.name, style: `flex:none;padding:0 6px;${a.done ? `background:${tcol[a.tier]};color:#fff` : 'background:#eef2f8;color:#9aa6b8'}` }, a.tier)));
+    })));
   }
   function hallTab(body, w) {
     const hof = w.alumni.filter((a) => a.hof).sort((a, b) => (b.hof === 'full') - (a.hof === 'full') || b.ovr - a.ovr);
@@ -278,11 +289,14 @@
     body.append(h('div', { class: 'h' }, `覚醒の図鑑 ${n}/${all.length}`), h('div', { class: 'note' }, '★の子が覚醒すると、その形が載ります。形は位置と能力に加えて、節目や出来事でどう接してきたか（寄り添う・厳しく・背中を押す・任せる）で出やすさが変わります。5種・10種・20種で育成基金のごほうび（300・600・1000万円）。'));
     const next = [5, 10, 20].find((x) => x > n);
     if (next) body.append(h('div', { class: 'note', style: 'margin-top:3px' }, `次のごほうびまで あと${next - n}種（${YA.DEX_REWARD[next]}万円）`));
-    body.append(h('div', { class: 'plist scroll', style: 'margin-top:5px;flex:1;min-height:0' }, all.map((f) => {
+    // 4列の札にして、見つけた形を金色で先に（2026-11-16 見つけた形が一覧のいちばん下にあった）
+    const sorted = all.slice().sort((x, y) => (!!(w.dex || {})[y.k]) - (!!(w.dex || {})[x.k]));
+    body.append(h('div', { class: 'scroll', style: 'margin-top:5px;flex:1;min-height:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:max-content;gap:5px;align-content:start' }, sorted.map((f) => {
       const d = (w.dex || {})[f.k];
-      return h('div', { class: 'pitem', style: 'cursor:default;gap:6px;' + (d ? '' : 'opacity:.6') },
-        h('span', { class: 'chip ' + (d ? 'trait' : 'gray') }, d ? '載った' : '？'),
-        h('div', { class: 'grow' }, h('b', {}, d ? f.name : '？？？？'), h('div', { class: 'note' }, d ? `特性「${f.trait}」・最初の子 ${d.name}（${d.y}年目）・${d.n}回` : `向く位置：${f.pos.slice(0, 4).map((x) => YA.posJa ? YA.posJa(x) : x).join('・')}／${leanHint(f)}`)));
+      return h('div', { class: 'card', title: d ? '' : leanHint(f), style: 'padding:6px 7px;display:flex;flex-direction:column;gap:2px;min-height:74px;flex:none;' + (d ? 'background:linear-gradient(180deg,#fff8d6,#ffefb0);border-color:#e6c200' : 'background:#f3f6fb;opacity:.85') },
+        h('div', { class: 'row', style: 'gap:4px' }, h('span', { style: `font-size:16px;color:${d ? '#c99a00' : '#b9c3d3'}` }, d ? '★' : '？'), h('b', { style: 'font-size:12px;line-height:1.25' }, d ? f.name : '？？？？')),
+        h('div', { class: 'note', style: 'font-size:10.5px;line-height:1.35' }, d ? `特性「${f.trait}」` : `向く位置：${f.pos.slice(0, 3).map((x) => YA.posJa ? YA.posJa(x) : x).join('・')}`),
+        h('div', { class: 'note', style: 'font-size:10px;line-height:1.35' }, d ? `最初の子 ${d.name}（${d.y}年目）・${d.n}回` : leanHint(f)));
     })));
   }
   function fundTab(body, w) {

@@ -77,6 +77,7 @@ const btn = (t, scope) => [...(scope || d).querySelectorAll('button')].find((b) 
 // 画面に出ている文字だけを見る（ページに埋め込んだスクリプトの文字を拾うと、何でも通ってしまう）
 const txt = () => d.getElementById('app').textContent;
 const rail = (k) => btn(k, d.getElementById('rail')).click();
+// 2026-11-16 左の帯の最後は「ほか」（中は名鑑・記録・Bチーム・実績と引退・用語集・設定）
 
 // 出来事が出ていたら、最初の選択肢で全部片付ける
 async function clearEvents() {
@@ -175,6 +176,7 @@ async function clearEvents() {
   ok(txt().includes('進路') && txt().includes('様子') && txt().includes('特性') && txt().includes('性格'), '選手の詳細（能力・様子・進路）');
   btn('様子').click();
   ok(txt().includes('調子') && txt().includes('コーチの一言'), '選手の様子');
+  ok(![...d.querySelectorAll('#main .chip.gray')].some((c) => c.textContent === 'ふつう'), '性格に「ふつう」の札を並べない（2026-11-16）');
   btn('進路').click();
   ok(txt().includes('本人の希望') && txt().includes('トップへの近さ'), '選手の進路（希望・トップへの近さ）');
   // 面談の一言と選択肢は選手の状態で変わる（talkSetup）ので、どれかが出ていれば押す
@@ -213,7 +215,7 @@ async function clearEvents() {
     if (k === '順位と日程') ok(/今年の日程（いま\d+週）/.test(txt()) && txt().includes('セレクション') && txt().includes('卒業式') && [...d.querySelectorAll('#main .chip')].some((c) => c.textContent === '今'), '今年の日程は表で、今週の行に印（2026-11-16）');
     if (k === 'スタッフ') ok(/いまの.+（能力\d+）→ 能力\d+（[+-]?\d+）/.test(txt()) || txt().includes('はいません'), 'スタッフ候補にいまのスタッフとの差（2026-11-16）');
   }
-  rail('設定');
+  rail('ほか');
   btn('記録').click();
   ok(txt().includes('主な記録') && txt().includes('リーグの履歴'), '記録の画面');
   btn('設定', d.getElementById('main')).click();
@@ -263,6 +265,8 @@ async function clearEvents() {
     btn(k).click();
     await sleep(10);
   }
+  // 2026-11-16 相手の分析：先発に位置の札（分析の担当がいれば）と要注意の印
+  ok(txt().includes('先発（') && (w.YA.analysisLevel(A.w) < 1 || (d.querySelectorAll('#main .plist .pos').length >= 11 && txt().includes('要注意'))), '相手の分析に先発の位置と要注意');
   // 編成（FM風）：先発・ベンチ・控え外を、タップ→タップで入れ替える
   [...d.querySelectorAll('.tabs button')].find((b) => b.textContent.trim() === '編成').click();
   // おまかせ編成：押すと11人がそろい、適性の合わない先発が減る
@@ -402,7 +406,7 @@ async function clearEvents() {
     btn('閉じる', d.querySelector('.sheet')).click();
     ok(A.w.year >= 3, '1年おまかせで年度が進む ' + A.w.year);
     // 設定：セーブ枠・書き出し・復元・効果音
-    rail('設定');
+    rail('ほか');
     btn('設定', d.getElementById('main')).click();
     ok(txt().includes('セーブ枠') && txt().includes('効果音') && !!btn('書き出す') && !!btn('復元する'), '設定の画面');
     ok(txt().includes('点検用：新しい世界でシミュレーション') && !!btn('実行') && !!btn('10年'), '点検用シミュレーションの設定');
@@ -425,29 +429,29 @@ async function clearEvents() {
     btn('復元する', d.querySelector('.sheet')).click();
     await sleep(20);
     ok(!d.querySelector('.sheet') && A.w.players, '書き出したデータを復元できる');
-    rail('設定');
+    rail('ほか');
     btn('卒業生名鑑').click();
     ok(d.querySelectorAll('#main .pitem').length >= 12, '卒業生が名鑑に並ぶ');
     // 段2：設定の文字の大きさ・お知らせの重さ、実績、名前の書き換え
-    rail('設定');
+    rail('ほか');
     btn('設定', d.getElementById('main')).click();
     ok(txt().includes('文字の大きさ') && txt().includes('お知らせの重さ') && txt().includes('必ず止める'), '設定に文字の大きさとお知らせの重さ');
     btn('大', d.getElementById('main')).click();
     ok(d.getElementById('app').style.zoom !== '', '文字の大きさが変わる');
     btn('標準', d.getElementById('main')).click();
-    rail('設定');
+    rail('ほか');
     btn('実績と引退').click();
-    rail('設定');
+    rail('ほか');
     btn('設定', d.getElementById('main')).click();
     ok(txt().includes('名前の書き換え') && txt().includes('クラブ名') === false || txt().includes('名前の書き換え'), '設定に名前の書き換え');
     rail('練習');
     ok(txt().includes('先週と同じ') && txt().includes('おまかせ') && txt().includes('疲れの高い子'), '練習に一括ボタン');
-    rail('設定');
+    rail('ほか');
     btn('Bチーム').click();
     ok(txt().includes('Bチームの指揮') && txt().includes('起用方針'), 'Bチームの指揮の画面');
     btn('下級生を優先').click();
     ok(A.w.bCtl && A.w.bCtl.policy === 'young', 'Bの起用方針を選べる');
-    rail('設定');
+    rail('ほか');
     btn('実績と引退').click();
     ok(txt().includes('実績') && txt().includes('引退する') && txt().includes('リーグ優勝を1回'), '実績と引退の画面');
     // 2段目その1：系譜タブ（決定139）
@@ -493,9 +497,13 @@ async function clearEvents() {
       ok(txt().includes('覚醒の図鑑 ') && txt().includes('/20') && txt().includes('？'), '図鑑：20種が並び、未発見は？');
       btn('実績', d.querySelector('.tabs')).click();
       ok(txt().includes('/69') && txt().includes('銅'), '実績は69個の銅銀金');
+      ok(d.querySelectorAll('#main .plist > .pitem').length === 23, '実績は銅銀金を1行にまとめて23行（2026-11-16）');
+      btn('図鑑', d.querySelector('.tabs')).click();
+      { const g = [...d.querySelectorAll('#main .scroll')].find((e) => e.style.display === 'grid'); ok(!!g && g.children.length === 20 && g.style.gridTemplateColumns.includes('repeat(4'), '図鑑は4列の札（2026-11-16）'); }
+      btn('実績', d.querySelector('.tabs')).click();
       rail('ホーム');
       ok(txt().includes('系譜') && txt().includes('次の実績'), 'ホームに系譜の小窓と次の実績');
-      rail('設定');
+      rail('ほか');
       ok(txt().includes('設定') || txt().includes('実績と引退'), '歯車から設定へ');
     }
     // フリー対戦（成績に残らない）
@@ -574,7 +582,7 @@ async function clearEvents() {
     if (first2) first2.click();
     ok(txt().includes('総合力') && txt().includes('別の子と比べる'), '2人の比較が出る');
     if (btn('閉じる')) btn('閉じる').click();
-    rail('設定');
+    rail('ほか');
     if (btn('用語集')) { btn('用語集').click(); ok(txt().includes('覚醒の鍵') && txt().includes('連帯貢献金'), '用語集'); }
     rail('ホーム');
     ok(txt().includes('お知らせ') && (txt().includes('留める') || txt().includes('すべて読んだ') || true), 'お知らせに留める');

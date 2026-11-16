@@ -189,11 +189,22 @@
     club: '予算・スタッフ・スカウトなど、クラブのことはここです。最初はクラブとコーチが決めてくれます。',
     more: '卒業生の名鑑と記録はここです。育てた子のその後を追えます。',
   };
+  // 「ほか」は開いている小タブに合わせる（2026-11-16 設定を開いても「名鑑と記録はここです」と出ていた）
+  YA.COACH_TIPS_MORE = {
+    alumni: '卒業生の名鑑です。押すと、その後の年表と経歴が見られます。追う・連絡する・試合を観に行くもここから。',
+    rec: 'Aチームの戦績・獲った大会・リーグの履歴・最近の試合です。',
+    bteam: 'Bチームの並び・戦い方・起用の方針です。Aの並びは変わりません。',
+    ach: '実績の一覧と、監督を引退するときの画面です。',
+    help: '言葉の意味はここで引けます。',
+    set: '効果音・BGM・文字の大きさ・お知らせの重さ・セーブ枠はここで変えられます。',
+  };
+  YA.coachKey = (tab) => (tab === 'more' && YA._ui && YA._ui.app ? 'more:' + (YA._ui.app.mt || 'alumni') : tab);
   YA.coachTip = function (w, tab) {
     if (!w || !YA.COACH_TIPS[tab]) return null;
     w.coachSeen = w.coachSeen || {};
-    if (w.coachSeen[tab]) return null;
-    let t = YA.COACH_TIPS[tab];
+    const key = YA.coachKey(tab);
+    if (w.coachSeen[key]) return null;
+    let t = tab === 'more' ? YA.COACH_TIPS_MORE[key.slice(5)] || YA.COACH_TIPS.more : YA.COACH_TIPS[tab];
     if (tab === 'players') { const r = YA.starRecommend(w); if (r) t += ' ' + r; }
     return t;
   };

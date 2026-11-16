@@ -270,9 +270,15 @@
     let drag = null;
     function draw() {
       layer.replaceChildren();
+      // 名前と位置の札の重なりを避ける（2026-11-16「西村」と「岡田」などが重なっていた）。
+      // 名前は丸の上が基本。すぐ上に別の子がいれば丸の下へ。位置の札は丸の右が基本で、右に近い子がいれば名前と反対側の下か上へ
+      const pts = t.lineup.map((sl) => at(sl.x, sl.y));
+      const near = (i, fx) => pts.some((q, j) => j !== i && fx(q.sx - pts[i].sx, q.sy - pts[i].sy));
       t.lineup.forEach((sl, i) => {
         const p = t.players[sl.pid];
         const { sx, sy } = at(sl.x, sl.y);
+        const nameBelow = near(i, (dx, dy) => Math.abs(dx) < 11 && dy < 0 && dy > -13);
+        const posAlt = near(i, (dx, dy) => dx > 0 && dx < 17 && Math.abs(dy) < 6);
         const pos = YA.posOfSlot(sl, i);
         const p15 = YA.pos15OfSlot(sl, i);
         const grade = YA.aptGrade(p.apt ? p.apt[p15] : 17);
@@ -282,9 +288,9 @@
         // 適性が合っていない枠は、丸のふちを黄（△）・赤（×）にする
         const ring = grade === '×' ? '#ff4d4d' : grade === '△' ? '#ffd54a' : '#fff';
         g.append(s('circle', { r: 4.6, cx: 0.4, cy: 0.9, fill: 'rgba(0,0,0,.3)' }), s('circle', { r: 4.6, fill: colors[pos], stroke: ring, 'stroke-width': ring === '#fff' ? 0.9 : 1.5 }), s('text', { y: 1.7, 'text-anchor': 'middle', fill: '#fff', 'font-size': 4.6, 'font-weight': 900 }, p.num));
-        g.append(lab(-5.8, '#fff', 3.4, surname(p)));
+        g.append(lab(nameBelow ? 8.6 : -5.8, '#fff', 3.4, surname(p)));
         // ポジション名と適性は丸の右に（縦に並ぶ最終ラインでも、名前と重ならない）
-        if (p15 !== 'GK') g.append(s('text', { x: 5.3, y: 1.1, 'text-anchor': 'start', fill: ring === '#fff' ? '#fff6c2' : ring, 'font-size': 2.8, 'font-weight': 900, stroke: 'rgba(0,0,0,.55)', 'stroke-width': 0.8, 'paint-order': 'stroke' }, YA.POS_LABEL[p15] + (p15 === 'GK' ? '' : YA.aptLabel(p.apt ? p.apt[p15] : 17))));
+        if (p15 !== 'GK') g.append(s('text', Object.assign({ x: 5.3, y: 1.1, 'text-anchor': 'start', fill: ring === '#fff' ? '#fff6c2' : ring, 'font-size': 2.8, 'font-weight': 900, stroke: 'rgba(0,0,0,.55)', 'stroke-width': 0.8, 'paint-order': 'stroke' }, posAlt ? { x: 0, y: nameBelow ? -5.6 : 8.2, 'text-anchor': 'middle' } : {}), YA.POS_LABEL[p15] + (p15 === 'GK' ? '' : YA.aptLabel(p.apt ? p.apt[p15] : 17))));
         if ((opts.showRole && opts.showRole()) || sel) {
           const fit = YA.Match.prototype.roleFit.call(null, t, i);
           g.append(s('text', { x: 5.3, y: p15 === 'GK' ? 1.1 : 4.3, 'text-anchor': 'start', fill: fit < 0 ? '#ffb3b3' : fit > 0 ? '#fff3b0' : '#e8f5ec', 'font-size': 2.3, 'font-weight': 800, stroke: 'rgba(0,0,0,.55)', 'stroke-width': 0.7, 'paint-order': 'stroke' }, (sl.role.length > 4 ? sl.role.slice(0, 4) + '…' : sl.role) + (YA.DUTY[sl.duty] ? '・' + YA.DUTY[sl.duty].short : '')));
@@ -609,7 +615,21 @@
         const lvl = app.w && YA.analysisLevel ? YA.analysisLevel(app.w) : 2;
         const lines = app.w && YA.analysis ? YA.analysis(app.w, ot, oo) : [`型：${ot.tactic.type} / 布陣：${ot.formation}`];
         body.append(h('div', { class: 'plist' }, lines.map((l) => h('div', { class: 'insight', style: 'margin-bottom:3px' }, l))));
-        body.append(h('div', { class: 'plist', style: 'margin-top:6px' }, ot.lineup.map((x) => { const q = ot.players[x.pid]; return h('div', { class: 'pitem' }, h('span', { class: 'num' }, q.num), h('span', { class: 'nm' }, q.name), h('span', { class: 'sub grow' }, lvl >= 2 ? q.traits.join('・') : '')); })));
+        // 相手の先発：位置・力・特性（2026-11-16 名前の一覧だけだった）。分析の段階で見える量が変わる：1＝位置、2＝力の目安と特性、3＝力の数字。要注意の子に印
+        const keyIds = new Set(ot.lineup.slice(1).map((x) => ot.players[x.pid]).sort((a2, b2) => YA.ovr(b2) - YA.ovr(a2)).slice(0, lvl >= 2 ? 3 : lvl >= 1 ? 1 : 0).map((q) => q.id));
+        body.append(h('div', { class: 'note', style: 'margin-top:6px' }, lvl >= 3 ? '先発（分析担当が詳しく調べた）' : lvl >= 2 ? '先発（力は目安）' : lvl >= 1 ? '先発（位置まで。分析の担当が育つと力と特性も見える）' : '先発（分析の担当がいないので、名前だけ）'));
+        body.append(h('div', { class: 'plist', style: 'margin-top:2px' }, ot.lineup.map((x, i) => {
+          const q = ot.players[x.pid];
+          const p15 = YA.pos15OfSlot(x, i);
+          const r = YA.rating(q);
+          const rTxt = lvl >= 3 ? String(r) : lvl >= 2 ? `${Math.floor(r / 10) * 10}台` : '';
+          return h('div', { class: 'pitem', style: 'cursor:default;gap:5px' + (keyIds.has(q.id) ? ';background:#fff4e5;border-color:#f0a020' : '') },
+            lvl >= 1 ? posChip({ pos: YA.posOfSlot(x, i), main: p15 }) : null,
+            h('span', { class: 'num' }, q.num), h('span', { class: 'nm', style: 'flex:none' }, q.name),
+            keyIds.has(q.id) ? h('span', { class: 'fit bad', style: 'flex:none' }, '要注意') : null,
+            h('span', { class: 'sub grow', style: 'min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap' }, lvl >= 2 ? q.traits.join('・') : ''),
+            rTxt ? h('b', { style: 'flex:none;width:44px;text-align:right' }, rTxt) : null);
+        })));
       }
       if (st.tab !== 'instr' && st.tab !== 'shout' && st.msgs.length) body.append(msgBox());
     }
@@ -775,7 +795,7 @@
   const TABS = [['home', 'ホーム', '⌂'], ['players', '選手', '☺'], ['train', '練習', '✎'], ['match', '試合', '⚽'], ['club', 'クラブ', '▦'], ['lineage', '系譜', '❖']];
   function renderRail() {
     const rail = document.getElementById('rail');
-    rail.replaceChildren(h('div', { class: 'logo' }, 'ユースの', h('br'), '系譜'), ...TABS.map(([k, n, ic]) => h('button', { class: 'tab' + (app.tab === k ? ' on' : ''), onclick: () => { if (app.view === 'play') return; app.tab = k; render(); } }, h('i', {}, ic), n)), h('button', { class: 'tab' + (app.tab === 'more' ? ' on' : ''), style: 'margin-top:auto', onclick: () => { if (app.view === 'play') return; app.tab = 'more'; render(); } }, h('i', {}, '⚙'), '設定'));
+    rail.replaceChildren(h('div', { class: 'logo' }, 'ユースの', h('br'), '系譜'), ...TABS.map(([k, n, ic]) => h('button', { class: 'tab' + (app.tab === k ? ' on' : ''), onclick: () => { if (app.view === 'play') return; app.tab = k; render(); } }, h('i', {}, ic), n)), h('button', { class: 'tab' + (app.tab === 'more' ? ' on' : ''), style: 'margin-top:auto', onclick: () => { if (app.view === 'play') return; app.tab = 'more'; render(); } }, h('i', {}, '☰'), 'ほか')); // 2026-11-16 案A：中は名鑑・記録・Bチーム・実績と引退・用語集・設定なので「ほか」に
   }
   let renderKey = '';
   function render() {
@@ -818,7 +838,7 @@
     // 画面ごとのコーチの一言（決定128）：初めて開いたときだけ
     // 案内と重なるときは、コーチの一言を先に出す（縦が狭いので1本ずつ）
     const ct = ct0;
-    if (ct) main.prepend(h('div', { class: 'tut coach' }, h('span', { class: 'tutb' }, 'コーチ'), h('span', { class: 'grow' }, ct), h('button', { class: 'btn sm', onclick: () => { app.w.coachSeen[app.tab] = 1; YA.saveWorld(); render(); } }, 'わかった')));
+    if (ct) main.prepend(h('div', { class: 'tut coach' }, h('span', { class: 'tutb' }, 'コーチ'), h('span', { class: 'grow' }, ct), h('button', { class: 'btn sm', onclick: () => { app.w.coachSeen[YA.coachKey ? YA.coachKey(app.tab) : app.tab] = 1; YA.saveWorld(); render(); } }, 'わかった')));
     // 最初の説明（決定128）：始めたときに数枚。設定から読み返せる
     if (app.w && !app.w.introSeen && app.view !== 'play' && YA.showIntro) YA.showIntro();
     restore();

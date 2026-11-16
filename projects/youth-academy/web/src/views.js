@@ -305,7 +305,18 @@
         h('button', { class: 'btn sm', style: 'width:150px;justify-content:space-between;white-space:nowrap;gap:2px', onclick: () => pickTrait(p) }, h('span', { style: 'overflow:hidden;text-overflow:ellipsis' }, tp || '未設定'), tp ? h('span', { class: 'sub' }, wk + '週') : null),
         h('button', { class: 'btn sm' + (p.rest ? ' on' : ''), style: 'width:52px', disabled: p.inj > 0, why: '怪我をしている子は、休ませ方を変えられません', onclick: () => { p.rest = p.rest === null ? 'light' : p.rest === 'light' ? 'rest' : null; YA.saveWorld(); const st = table.scrollTop; rerender(); const t2 = document.querySelector('.card.pbody.scroll'); if (t2) t2.scrollTop = st; } }, p.inj > 0 ? '療養' : p.rest === 'rest' ? '休み' : p.rest === 'light' ? '軽め' : '通常')));
     }
-    wrap.append(days, bulk, bulk2, table);
+    // 上の帯を2行に詰める（2026-11-16 4行あって表が4人しか見えなかった）。
+    // 1行目：戻る・曜日・まとめ操作、2行目：対象・重点・今週。入りきらない分は横に送る
+    const strip = 'display:flex;gap:4px;align-items:center;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;flex:none';
+    const flat = (el) => { for (const c of [...el.querySelectorAll('button, b, .sub, .note')]) { c.style.flex = 'none'; c.style.whiteSpace = 'nowrap'; } return el; };
+    const back = bulk.firstChild;
+    for (const c of [...days.children]) { c.style.flex = 'none'; c.style.maxWidth = '150px'; c.style.minHeight = '32px'; }
+    const row1 = flat(h('div', { style: strip }, back, ...days.children, h('span', { style: 'width:6px;flex:none' }), ...[...bulk.children].filter((c) => c !== back)));
+    const r2a = bulk2.children[0], r2b = bulk2.children[1];
+    const note2 = r2b.querySelector('.note');
+    if (note2) { bulk2.title = note2.textContent; note2.remove(); }
+    const row2 = flat(h('div', { class: 'card', style: strip + ';padding:3px 6px', title: bulk2.title || '' }, ...r2a.children, h('span', { style: 'width:10px;flex:none' }), ...r2b.children));
+    wrap.append(row1, row2, table);
     main.append(wrap);
   }
   function confirmSlot(w) {
@@ -368,8 +379,11 @@
     const sorts = h('select', { title: '並び替え', style: 'padding:3px 4px;min-height:32px;border:1px solid #b9c7de;border-radius:8px;font:inherit;font-size:11px' }, ...[['pos', '並び：位置'], ['ovr', '並び：総合力'], ['grow', '並び：伸び'], ['trust', '並び：信頼'], ['conf', '並び：自信'], ['fat', '並び：疲れ'], ['mins', '並び：出場']].map(([k, n]) => h('option', { value: k, selected: ui.psort === k }, n)));
     sorts.addEventListener('change', () => { ui.psort = sorts.value; rerender(); });
     sorts.addEventListener('pointerdown', (e) => e.stopPropagation());
-    chips.append(sorts);
-    left.append(chips, list);
+    // 絞り込みは1行に（入りきらない分は横に送る）。並び替えは左に固定（2026-11-16 案A：3行で一覧が7人しか見えなかった）
+    chips.style.cssText = 'flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;flex:1;min-width:0';
+    for (const b of chips.children) { b.style.flex = 'none'; b.style.whiteSpace = 'nowrap'; }
+    sorts.style.flex = 'none';
+    left.append(h('div', { class: 'row', style: 'gap:4px;margin-bottom:4px;flex-wrap:nowrap' }, sorts, chips), list);
     const right = h('div', { class: 'card pbody pdetail', style: 'flex:1;min-width:0' });
     const info = h('div', {});
     if (ui.starMsg) { info.append(h('div', { class: 'note', style: 'color:var(--ink)' }, ui.starMsg)); ui.starMsg = null; }
@@ -380,7 +394,8 @@
     const head = (h('div', { class: 'row', style: 'flex-wrap:wrap;gap:5px;padding:2px 2px 0' },
       YA.faceEl(W(), sel, 40),
       h('span', { class: 'chip gray' }, `${gradeName(sel.grade)} / ${sel.team}チーム`), h('span', { class: 'chip gray' }, `疲れ ${Math.round(sel.fat)}`), h('span', { class: 'chip gray' }, `出場 ${sel.mins}分`),
-      h('span', { class: 'chip trait' }, '伸びしろ ', YA.starsEl([YA.coachStars(w, sel), YA.coachStars(w, sel)]), h('small', { style: 'font-weight:600;opacity:.85' }, YA.futureRange(w, sel).text)), ...flags(sel).filter((e) => e && e.textContent !== '★注目'), // ★は右の印で出すので二重にしない
+      // 見出しを2行に収める（2026-11-16 3行あった）。将来の幅の水準名は押したときの説明へ
+      h('span', { class: 'chip trait', title: YA.futureRange(w, sel).text }, '伸びしろ ', YA.starsEl([YA.coachStars(w, sel), YA.coachStars(w, sel)]), h('small', { style: 'font-weight:600;opacity:.85' }, YA.futureRange(w, sel).text.replace(/（.*?）/, ''))), ...flags(sel).filter((e) => e && e.textContent !== '★注目'), // ★は右の印で出すので二重にしない
       YA.starOpen(w, sel)
         ? h('button', { class: 'btn sm', onclick: () => { const r = YA.setStar(w, sel, !sel.star); ui.starMsg = r.msg; YA.saveWorld(); rerender(); } }, sel.star ? '★ を外す' : `★ 注目の印（高${sel.grade} ${YA.starsIn(w, sel.grade).length}/${YA.STAR_MAX}）`)
         : (sel.star ? h('span', { class: 'chip trait', title: '入団のときに決めた★です' }, '★ 入団時に決めた子') : h('button', { class: 'btn sm', disabled: true, why: YA.STAR_CLOSED, onclick: () => { ui.starMsg = YA.STAR_CLOSED; rerender(); } }, '★ は入団時に決める')), sel.star || sel.awake ? null : h('small', { class: 'sub', style: 'align-self:center' }, '覚醒するのは★の子だけ'),
@@ -417,12 +432,15 @@
     {
       const g = (v, lo, hi) => (v >= hi ? '良い' : v <= lo ? '低い' : 'ふつう');
       const unrest = sel.unrest > 3 ? '不満が溜まっている' : sel.unrest > 1.5 ? '少し気にしていることがある' : '不満はなさそう';
-      const pers = Object.values(sel.pers || {}).filter(Boolean).slice(0, 8);
+      // 「ふつう」は札にしない（2026-11-16 6つ並んでいた）。目立つ性格だけ札にして、残りは「ほかはふつう」
+      const persAll = Object.values(sel.pers || {}).filter(Boolean);
+      const pers = persAll.filter((t) => t !== 'ふつう').slice(0, 8);
+      const persNorm = persAll.length - persAll.filter((t) => t !== 'ふつう').length;
       const tip = sel.inj > 0 ? '怪我の回復が先です。無理に出さないで、完治を待ちましょう。' : sel.fat >= 70 ? '疲れが溜まっています。今週は休ませるか、軽めにしたほうがよさそうです。' : sel.unrest > 3 ? 'ひとこと声をかけてあげてください（進路タブの面談）。' : sel.conf < 35 ? '自信を失っています。出番か、励ましの言葉が効きそうです。' : sel.conf >= 70 ? '乗っています。この流れを切らさずに使いたい子です。' : '目立った心配はありません。';
       ops.append(h('div', { class: 'card', style: 'padding:6px 9px;margin:4px 0;background:#f5f8fd' },
         h('div', { class: 'h' }, '調子'),
         h('div', { class: 'row', style: 'flex-wrap:wrap;gap:5px;margin:3px 0' }, h('span', { class: 'chip gray' }, `自信 ${Math.round(sel.conf)}（${g(sel.conf, 35, 70)}）`), h('span', { class: 'chip gray' }, `疲れ ${Math.round(sel.fat)}`), h('span', { class: 'chip gray' }, unrest), sel.inj > 0 ? h('span', { class: 'fit bad' }, `怪我 あと${sel.inj}週`) : null),
-        h('div', { class: 'row', style: 'flex-wrap:wrap;gap:4px;margin:3px 0' }, h('span', { class: 'sub' }, '性格：'), ...pers.map((t) => h('span', { class: 'chip gray' }, t))),
+        h('div', { class: 'row', style: 'flex-wrap:wrap;gap:4px;margin:3px 0' }, h('span', { class: 'sub' }, '性格：'), ...pers.map((t) => h('span', { class: 'chip gray' }, t)), persNorm ? h('span', { class: 'sub', style: 'font-size:11px' }, pers.length ? 'ほかはふつう' : 'どれもふつう') : null),
         h('div', { class: 'note', style: 'color:var(--ink)' }, 'コーチの一言：' + tip)));
     }
     ops.append(YA.playerExtras(w, sel));
