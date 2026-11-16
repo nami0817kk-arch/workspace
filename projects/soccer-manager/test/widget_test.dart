@@ -156,7 +156,7 @@ void main() {
   });
 
   testWidgets(
-      'quick-sim ("結果だけ見る") shows a result dialog with the score '
+      'next matchday ("次の節へ") shows a result dialog with the score '
       'instead of only a snackbar', (WidgetTester tester) async {
     // ホーム画面のListViewの遅延構築で次節カードが画面外にならないよう、
     // 十分縦長なビューポートにしておく。
@@ -177,7 +177,8 @@ void main() {
     await tester.tap(find.text('創設する'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('結果だけ見る'));
+    // 試合はいつも数秒のダイジェスト(結果のダイアログ)で見せる。
+    await tester.tap(find.text('次の節へ').first);
     await tester.pumpAndSettle();
 
     expect(find.textContaining('結果: '), findsOneWidget);
