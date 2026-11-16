@@ -259,6 +259,21 @@ void main() {
     });
     await _shoot(t, '7_market', await _with(mid), act: (t) => _tap(t, '補強', first: true));
     await _shoot(t, '8_league', await _with(mid), act: (t) => _tap(t, 'リーグ', first: true));
+    // ドラフトの全体(1回ドラフトを終えた2年目のシーズン前: 過去のドラフトと次の指名の順)
+    final after = careerAt(5, 12)..startSeason();
+    var ag = 0;
+    while (after.phase != Phase.preseason && ag++ < 300) {
+      if (after.phase == Phase.seasonEnd) after.fired = false;
+      botStep(after);
+    }
+    await _shoot(t, '8d_draft_board', await _with(after), act: (t) async {
+      await _tap(t, 'リーグ', first: true);
+      await _tap(t, 'ドラフト');
+    });
+    await _shoot(t, '8c_rankings', await _with(mid), act: (t) async {
+      await _tap(t, 'リーグ', first: true);
+      await _tap(t, 'ランキング');
+    });
     await _shoot(t, '9_inbox', await _with(mid), act: (t) => _tap(t, '受信箱', first: true));
 
     final draft = careerAt(5, 28);
