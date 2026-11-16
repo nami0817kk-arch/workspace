@@ -119,6 +119,9 @@ ThemeData fmDenseTheme(ThemeData base) {
   );
   return base.copyWith(
     textTheme: text,
+    // 押せる範囲を見た目どおりにする(チップやボタンの上下に余白が付き、
+    // 並べたときに行の間が広がっていた)。
+    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
     // 見出しの帯。明朝(セリフ)をやめ、太字の小さい字で、少し濃い下地にする。
     appBarTheme: base.appBarTheme.copyWith(
       backgroundColor: scheme.surfaceContainerHighest,

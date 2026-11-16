@@ -7,7 +7,6 @@ import '../widgets/owner_goal_card.dart';
 import '../widgets/two_pane.dart';
 import '../logic/calendar_engine.dart';
 import '../logic/sale_advice_engine.dart';
-import '../models/formation.dart';
 import '../models/incoming_offer.dart';
 import '../models/league.dart';
 import '../models/league_theme.dart';
@@ -37,7 +36,6 @@ import 'finance_screen.dart';
 import 'glossary_screen.dart';
 import 'match_screen.dart';
 import 'player_detail_screen.dart';
-import 'scout_report_screen.dart';
 import 'start_screen.dart';
 import 'youth_intake_screen.dart';
 import '../logic/board_target_progress.dart';
@@ -218,11 +216,10 @@ class HomeScreen extends StatelessWidget {
                                       ),
                                     ),
                                     const SizedBox(width: 8),
+                                    // 布陣は監督が決めるので、オーナーの帯には出さない。
                                     _BandPill(
                                         text: Tr.pick('S${league.season}',
                                             'S${league.season}')),
-                                    const SizedBox(width: 6),
-                                    _BandPill(text: userTeam.formation.label),
                                   ],
                                 ),
                                 const SizedBox(height: 14),
@@ -380,7 +377,8 @@ class HomeScreen extends StatelessWidget {
                     ),
                     _StatTile(
                       icon: Icons.star,
-                      label: Tr.pick('監督としての評価', 'Your reputation'),
+                      // オーナーとしての世間の評価(グッズ収入などに効く)。
+                      label: Tr.pick('オーナーの評判', 'Your reputation'),
                       glossaryTerm: Tr.pick('監督としての評価', 'Reputation'),
                       value: '${gameState.managerReputation}',
                       progress: gameState.managerReputation / 100,
@@ -788,31 +786,15 @@ class HomeScreen extends StatelessWidget {
                           onPressed: () => _playMatch(context),
                           child: Text(Tr.pick('次の節へ', 'Next matchday')),
                         ),
-                        const SizedBox(height: 4),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            TextButton(
-                              onPressed: () =>
-                                  _quickSimNextMatch(context, next),
-                              child: Text(
-                                Tr.pick('結果だけ見る', 'Just the result'),
-                                style: const TextStyle(fontSize: 12),
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () => _showScoutReport(context, next),
-                              child: Text(
-                                Tr.pick('偵察レポート', 'Scout report'),
-                                style: const TextStyle(fontSize: 12),
-                              ),
-                            ),
-                          ],
-                        ),
+                        // 「結果だけ見る」は「次の節へ」と同じ動きになり、
+                        // 偵察レポートは監督の仕事なので、どちらも置かない。
                       ],
                     ),
                   ),
                 ),
+              // 横画面では、どの画面も左メニューの項目から開ける。同じ入口を
+              // 大きなタイルで並べ直すと、状況ページが縦に長くなるだけなので出さない。
+              if (!EmbeddedInShell.of(context)) ...[
               const SizedBox(height: 16),
               Text(Tr.pick('クラブ運営', 'Running the club'),
                   style: Theme.of(context).textTheme.titleMedium),
@@ -839,6 +821,7 @@ class HomeScreen extends StatelessWidget {
                   ],
                 ),
               ),
+              ],
             ],
           ),
         ),
@@ -865,22 +848,6 @@ class HomeScreen extends StatelessWidget {
     final home = league.teams.firstWhere((t) => t.id == f.homeTeamId).name;
     final away = league.teams.firstWhere((t) => t.id == f.awayTeamId).name;
     return '$home vs $away';
-  }
-
-  void _showScoutReport(BuildContext context, Fixture fixture) {
-    final gameState = context.read<GameState>();
-    final userTeam = gameState.userTeam;
-    final league = gameState.save!.league;
-    final opponentId = fixture.homeTeamId == userTeam.id
-        ? fixture.awayTeamId
-        : fixture.homeTeamId;
-    final opponent = league.teams.firstWhere((t) => t.id == opponentId);
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) =>
-            ScoutReportScreen(opponent: opponent, userTeam: userTeam),
-      ),
-    );
   }
 
   Future<void> _playMatch(BuildContext context) async {
