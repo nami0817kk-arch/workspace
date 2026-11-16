@@ -256,6 +256,12 @@ def pre(ep: dict, out: Path, kind_mod, name: str) -> bool:
     for f, w in (script(ep, tl), layout(fr, nf)):
         F += f
         Wn += w
+    mp = getattr(ep["_mod"], "MAP", None)
+    if mp is not None:                                        # 世界の地図の回は、寄りすぎのぼけなども描く前に見る(qc と同じ vqc)
+        from . import vqc                                     # アラル海の回で、qc の ✖ 7 本のうち 6 本がぼけで、書き出し 2 時間が無駄になった(2026-11-16)
+        vf, vw, _ = vqc.check(ep, out, mp)
+        F += vf
+        Wn += vw
     p = sheet(ep, tl, fr, out, "pre_sheet.png")
     est = estimate(fr, nf)
     if est["min"] > 15:
