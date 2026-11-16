@@ -216,11 +216,11 @@
   YA.eventView = function (w, e) { if (e.id === 'staffev' && !sprep(w, e)) return null; return v1.apply(this, arguments); };
   const r1 = YA.resolveEvent;
   YA.resolveEvent = function (w, e, idx) { if (e.id === 'staffev') sprep(w, e); return r1.apply(this, arguments); };
-  YA.STAFF_EV_P = 0.05;
+  YA.STAFF_EV_P = 0.03;
   YA.staffEventWeek = function (w) {
     if (!w.club || w.week >= YA.WEEKS - 1) return;
     const r = YA.rngOf((w.seed | 0) * 53 + w.year * 40 + w.week);
-    if (!r.chance(YA.STAFF_EV_P)) return; // 2026-11-15「★以外のイベントが多発する」で 0.1→0.05
+    if (!r.chance(YA.STAFF_EV_P)) return; // 2026-11-15「★以外のイベントが多発する」で 0.1→0.03
     const recent = w.staffEvRecent || [];
     const order = SE.slice().sort((a, b) => (YA.hash(a.id + w.year + w.week) % 101) - (YA.hash(b.id + w.year + w.week) % 101));
     for (const d of order) {

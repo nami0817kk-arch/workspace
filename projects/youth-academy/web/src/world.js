@@ -821,7 +821,27 @@
         noteTier(w, 1, p.num + '番 ' + p.name + ' の性格が変わった：' + old + ' → ' + next, p.id);
       }
     }
-    return out;
+    return YA.autoNonStar(w, out);
+  };
+  // ★以外の子の大事な出来事（退団・プロの話・怪我・進路）は、選ばせずにコーチに任せてお知らせだけにする
+  //（2026-11-15「★以外のイベントが多発する」「まだ多い」「更に減らす」）。★がいない年（初年度の最初）はそのまま
+  YA.EV_AUTO_NONSTAR = ['quit', 'early', 'top', 'injury', 'career'];
+  YA.autoNonStar = function (w, out) {
+    if (!Object.values(w.players).some((q) => q.star)) return out;
+    return out.filter((e) => {
+      const p = e.pid && w.players[e.pid];
+      if (!p || p.star || YA.EV_AUTO_NONSTAR.indexOf(e.id) < 0) return true;
+      try {
+        const v = YA.eventView(w, e);
+        if (!v) return false;
+        const i = Math.min(YA.autoChoice ? YA.autoChoice(e.id) : 0, v.opts.length - 1);
+        const rr = YA.resolveEvent(w, e, i);
+        noteTier(w, e.id === 'quit' || e.id === 'early' ? 1 : 2, `${pname(p)}：${v.name} → コーチに任せた（${v.opts[i]}）${rr.line ? '。' + rr.line : ''}${rr.leave ? '。' + rr.leave : ''}`, p.id);
+        return false;
+      } catch (er) {
+        return true;
+      }
+    });
   };
 
   YA.eventView = function (w, e) {
