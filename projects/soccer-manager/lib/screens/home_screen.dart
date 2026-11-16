@@ -42,7 +42,6 @@ import 'start_screen.dart';
 import 'youth_intake_screen.dart';
 import '../logic/board_target_progress.dart';
 import '../models/club_vision.dart';
-import '../models/preseason_camp.dart';
 import '../l10n/tr.dart';
 import '../widgets/screen_bar.dart';
 
@@ -501,21 +500,6 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-              // 開幕前のキャンプ。方針を選ぶか見送るまで促す。
-              if (gameState.save?.preseasonCampPending ?? false)
-                Card(
-                  color: scheme.secondaryContainer,
-                  child: ListTile(
-                    leading: const Icon(Icons.terrain),
-                    title: Text(Tr.pick('シーズン前キャンプ', 'Pre-season camp')),
-                    subtitle: Text(Tr.pick('開幕までの数週間をどう使うか決めます',
-                        'Decide how to spend the weeks before kick-off')),
-                    trailing: FilledButton(
-                      onPressed: () => _showCampSheet(context),
-                      child: Text(Tr.pick('決める', 'Decide')),
-                    ),
-                  ),
-                ),
               if (gameState.pendingYouthIntake.isNotEmpty)
                 Card(
                   color: scheme.secondaryContainer,
@@ -629,40 +613,6 @@ class HomeScreen extends StatelessWidget {
                               ],
                             ),
                           ),
-                      ],
-                    ),
-                  ),
-                ),
-              if (!seasonComplete &&
-                  save.friendlies.any((f) => f.result == null))
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          Tr.pick('親善試合', 'Friendly'),
-                          style: Theme.of(context).textTheme.titleSmall,
-                        ),
-                        for (int i = 0; i < save.friendlies.length; i++)
-                          if (save.friendlies[i].result == null)
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 4),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      _fixtureLabel(league, save.friendlies[i]),
-                                    ),
-                                  ),
-                                  OutlinedButton(
-                                    onPressed: () => _playFriendly(context, i),
-                                    child: Text(Tr.pick('開催', 'Play it')),
-                                  ),
-                                ],
-                              ),
-                            ),
                       ],
                     ),
                   ),
@@ -1377,20 +1327,6 @@ class HomeScreen extends StatelessWidget {
     }
   }
 
-  Future<void> _playFriendly(BuildContext context, int index) async {
-    final gameState = context.read<GameState>();
-    final result = await gameState.playFriendly(index);
-    if (context.mounted && result != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(Tr.pick(
-              '親善試合結果: ${result.homeGoals} - ${result.awayGoals}',
-              'Friendly: ${result.homeGoals} - ${result.awayGoals}')),
-        ),
-      );
-    }
-  }
-
   /// シーズン開始時の通知(昇降格・報奨金・引退・契約満了・契約警告・
   /// 緊急補強・年間監督賞・スーパーカップ)をまとめて表示する。従来は
   /// SnackBarを最大8件連続表示しており(1件5秒のキューで長時間流れ続け、
@@ -1800,29 +1736,6 @@ class _ThisWeekCard extends StatelessWidget {
                 ],
               ),
             ],
-            const SizedBox(height: 6),
-            Row(
-              children: [
-                Icon(
-                  gameState.trainingDoneThisWeek
-                      ? Icons.check_circle
-                      : Icons.fitness_center,
-                  size: 18,
-                  color: gameState.trainingDoneThisWeek
-                      ? SemanticColors.positive(context)
-                      : Colors.orange,
-                ),
-                const SizedBox(width: 6),
-                Expanded(
-                  child: Text(
-                    gameState.trainingDoneThisWeek
-                        ? Tr.pick('今週のトレーニングは実施済み', 'You have trained this week')
-                        : Tr.pick('今週のトレーニングは未実施',
-                            'You have not trained this week'),
-                  ),
-                ),
-              ],
-            ),
           ],
         ),
       ),
@@ -2168,53 +2081,6 @@ class _SaleScreen extends StatelessWidget {
       ),
     );
   }
-}
-
-/// キャンプの方針を選ぶシート。
-void _showCampSheet(BuildContext context) {
-  final gameState = context.read<GameState>();
-  showModalBottomSheet<void>(
-    context: context,
-    builder: (sheetContext) => SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(Tr.pick('シーズン前キャンプ', 'Pre-season camp'),
-                style: Theme.of(sheetContext).textTheme.titleMedium),
-            const SizedBox(height: 4),
-            Text(
-              Tr.pick('どれを選んでも、得るものと引き換えに何かを削ります。',
-                  'Each option gains you something at the cost of something else.'),
-              style: TextStyle(
-                  fontSize: 12,
-                  color: SemanticColors.subtleText(sheetContext)),
-            ),
-            const SizedBox(height: 12),
-            for (final camp in PreseasonCamp.values)
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                title: Text(camp.label),
-                subtitle: Text(
-                  camp.cost == 0
-                      ? camp.description
-                      : Tr.pick('${camp.description}（費用${camp.cost}万円）',
-                          '${camp.description} (${camp.cost})'),
-                  style: const TextStyle(fontSize: 12),
-                ),
-                enabled: (gameState.save?.budget ?? 0) >= camp.cost,
-                onTap: () async {
-                  Navigator.pop(sheetContext);
-                  await gameState.choosePreseasonCamp(camp);
-                },
-              ),
-          ],
-        ),
-      ),
-    ),
-  );
 }
 
 /// 見出しの帯に置く小さな札。シーズンとフォーメーションに使う。

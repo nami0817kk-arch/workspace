@@ -131,8 +131,8 @@ ThemeData fmDenseTheme(ThemeData base) {
       ),
     ),
     tabBarTheme: base.tabBarTheme.copyWith(
-      labelStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-      unselectedLabelStyle: const TextStyle(fontSize: 12),
+      labelStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, fontFamily: body),
+      unselectedLabelStyle: TextStyle(fontSize: 12, fontFamily: body),
     ),
     cardTheme: CardThemeData(
       elevation: 0,
@@ -156,7 +156,25 @@ ThemeData fmDenseTheme(ThemeData base) {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
       ),
     ),
+    // 枠だけのボタンも、小さく詰める(目標の選択肢などが縦に長く並ばないように)。
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
+        minimumSize: const Size(0, 30),
+        textStyle: TextStyle(fontSize: 12, fontFamily: body),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
+      ),
+    ),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        minimumSize: const Size(0, 30),
+        textStyle: TextStyle(fontSize: 12, fontFamily: body),
+      ),
+    ),
     chipTheme: base.chipTheme.copyWith(
+      padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 0),
+      labelPadding: const EdgeInsets.symmetric(horizontal: 6),
+      labelStyle: TextStyle(fontSize: 12, fontFamily: body),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
     ),
   );
