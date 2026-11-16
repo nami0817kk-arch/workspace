@@ -782,6 +782,9 @@
   ];
 
   // 今週の出来事を作る（1〜2件。必ず止まる）
+  // ★以外の子の出来事が通る割合と、いつも通す出来事
+  YA.NONSTAR_KEEP = 0.3;
+  YA.EV_KEEP_ALWAYS = ['quit', 'injury', 'early', 'top', 'nat', 'natcall'];
   YA.rollEvents = function (w) {
     const r = YA.rngOf(w.seed * 17 + w.year * 555 + w.week * 11);
     const n = r.chance(0.42) ? 1 : r.chance(0.12) ? 2 : 0;
@@ -789,12 +792,15 @@
     for (const f of w.forced || []) out.push(f);
     w.forced = [];
     const used = new Set();
+    const hasStar = Object.values(w.players).some((p) => p.star);
     for (let k = 0; k < n; k++) {
       const defs = YA.EVENTS.filter((e) => e.weight > 0);
       for (let tries = 0; tries < 8; tries++) {
         const ev = r.weighted(defs, (e) => e.weight);
         const p = ev.pick(w, r);
         if (!p || used.has(p.id) || used.has(ev.id)) continue;
+        // ★以外の子の出来事は控えめに（2026-11-15「★以外のイベントが多発する」）。★がいる年だけ。大事なもの（退団・怪我・プロの話）は残す
+        if (w.players[p.id] && !p.star && hasStar && YA.EV_KEEP_ALWAYS.indexOf(ev.id) < 0 && r() > YA.NONSTAR_KEEP) break;
         used.add(p.id);
         used.add(ev.id);
         out.push({ id: ev.id, pid: p.id || null, x: p._club != null ? p._club : p._staff, week: w.week, year: w.year });

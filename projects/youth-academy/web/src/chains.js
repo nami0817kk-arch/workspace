@@ -297,7 +297,10 @@
     const fresh = all.filter((x) => recent.indexOf(x.k) < 0);
     const cands = fresh.length ? fresh : all;
     if (!cands.length) return;
-    const pick = cands[r.int(0, cands.length - 1)];
+    // ★の子の続き物を先に（2026-11-15「★以外のイベントが多発する」）。★以外の子で始まるのは YA.NONSTAR_KEEP の割合だけ
+    const stars = cands.filter((x) => x.p.star);
+    const pick = stars.length && r() < 0.8 ? stars[r.int(0, stars.length - 1)] : cands[r.int(0, cands.length - 1)];
+    if (!pick.p.star && Object.values(w.players).some((q) => q.star) && r() > (YA.NONSTAR_KEEP != null ? YA.NONSTAR_KEEP : 1)) return;
     const p = pick.p;
     w.chainRecent = recent.concat([pick.k]).slice(-6);
     if (CH[pick.k].once) w.chainYr[pick.k] = w.year;
