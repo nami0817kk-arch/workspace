@@ -1288,8 +1288,8 @@ class HomeScreen extends StatelessWidget {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(
-          content: Text(Tr.pick('$monthlyAward 月間最優秀監督賞を受賞しました！',
-              'You won Manager of the Month for $monthlyAward.'))));
+          content: Text(Tr.pick('$monthlyAward クラブの監督が月間最優秀監督賞を受賞しました！',
+              'Your manager won Manager of the Month for $monthlyAward.'))));
       gameState.lastMonthlyManagerAward = null;
     }
   }
@@ -1332,7 +1332,7 @@ class HomeScreen extends StatelessWidget {
     }
     if (gameState.lastSeasonManagerAwardWon) {
       messages.add(
-          (Tr.pick('年間最優秀監督賞を受賞しました！', 'You won Manager of the Year.'), true));
+          (Tr.pick('クラブの監督が年間最優秀監督賞を受賞しました！', 'Your manager won Manager of the Year.'), true));
       gameState.lastSeasonManagerAwardWon = false;
     }
     final superCupNews = gameState.lastSuperCupNews;
