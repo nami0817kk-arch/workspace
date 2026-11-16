@@ -310,9 +310,7 @@ extension GameStateSeason on GameState {
     _liveCupMatch = cupMatch;
     _liveCupTie = tie;
     _liveSubstitutionsUsed = 0;
-    lastLiveCupNote = null;
     lastCupPrizeNote = null;
-    lastShootout = null;
     _liveWasInteractive = true; // カップのライブ観戦は常に決定機の判断あり
     _liveFirstHalfState = MatchEngine.beginInteractiveHalf(
       home: home,
@@ -343,7 +341,6 @@ extension GameStateSeason on GameState {
         }
         CupEngine.applyMatchResult(cup, allTeamsForCups, match, merged);
         cup.lastPlayedAtMatchday = _currentLeagueMatchdayMarker;
-        _noteLiveCupPenalty(match.penaltyWinnerId, merged);
         _afterDomesticCupMatchApplied(match);
       case LiveCupKind.continentalGroup:
         final cup = _save!.continentalCup;
@@ -373,7 +370,6 @@ extension GameStateSeason on GameState {
         ContinentalCupEngine.applyKnockoutLegResult(
             cup, allTeamsForCups, tie, merged);
         cup.lastPlayedAtMatchday = _currentLeagueMatchdayMarker;
-        _noteLiveCupPenalty(tie.penaltyWinnerId, merged);
         _afterContinentalKnockoutLegApplied(tie);
       case LiveCupKind.superCup:
         final match = _liveCupMatch;
@@ -382,41 +378,20 @@ extension GameStateSeason on GameState {
         if (merged.homeGoals == merged.awayGoals) {
           match.penaltyWinnerId = _runLiveShootout().winnerId;
         }
-        _noteLiveCupPenalty(match.penaltyWinnerId, merged);
         _afterSuperCupApplied(match);
     }
     _evaluateAchievements();
   }
 
   /// ライブ観戦のカップ戦がPK戦にもつれた際、1本ずつのシュートアウトを
-  /// 実施して勝者を決める。記録は[lastShootout]に保持し、フルタイム画面が
+  /// 実施して勝者を決める。記録は[_lastShootout]に保持し、フルタイム画面が
   /// 1本ごとの成否を演出表示する。自クラブが勝てばPK戦勝利数も記録する。
   PenaltyShootoutResult _runLiveShootout() {
     final shootout = CupEngine.simulateShootout(_liveCupHome!, _liveCupAway!);
-    lastShootout = shootout;
     if (shootout.winnerId == _save!.userTeamId) {
       _save!.pkShootoutWins++;
     }
     return shootout;
-  }
-
-  /// ライブ観戦したカップ試合が同点でPK戦にもつれた場合、フルタイム画面で
-  /// 表示する決着の文言をセットする。
-  void _noteLiveCupPenalty(String? penaltyWinnerId, MatchResult merged) {
-    if (penaltyWinnerId == null) return;
-    final shootout = lastShootout;
-    // 2レグ制では最終レグ自体は引き分けでなくても合計同点でPK戦になり得る
-    // ため、シュートアウト記録がある場合はスコア条件を問わず文言を出す。
-    if (shootout == null && merged.homeGoals != merged.awayGoals) return;
-    final winner = teamById(penaltyWinnerId) ??
-        (penaltyWinnerId == _liveCupHome?.id ? _liveCupHome : _liveCupAway);
-    if (winner == null) return;
-    lastLiveCupNote = shootout != null
-        ? Tr.pick(
-            'PK戦 ${shootout.homeScore}-${shootout.awayScore} の末、${winner.name}が勝ち上がり!',
-            '${winner.name} go through ${shootout.homeScore}-${shootout.awayScore} on penalties!')
-        : Tr.pick('PK戦の末、${winner.name}が勝ち上がり!',
-            '${winner.name} go through on penalties!');
   }
 
   /// 自クラブが関わるカップ試合に、リーグ戦と同じ試合後効果(疲労・負傷・
@@ -709,6 +684,9 @@ extension GameStateSeason on GameState {
       targetRank: _save!.boardTargetRank,
     );
     _save!.confidence = (_save!.confidence + confidenceDelta).clamp(0, 100);
+    // 期待への慣れ。勝ち続けるうちにサポーターの目は肥え、満点に張り付いた
+    // ままだと緊張が無くなる(放置3シーズンの実測で94〜97に張り付いた)。
+    _save!.confidence = BoardEngine.afterAdaptation(_save!.confidence);
 
     // 理事会の路線。1年を通して守れていたかを、ここで一度だけ評価する。
     final visionDelta = BoardEngine.confidenceDeltaForVisionSeason(
@@ -737,7 +715,13 @@ extension GameStateSeason on GameState {
     // 株主の期待: 黒字でシーズンを終えれば上がり、赤字なら下がる。
     _save!.shareholderExpectation = ShareholderEngine.applied(
       _save!.shareholderExpectation,
-      ShareholderEngine.deltaForSeasonEnd(budget: _save!.budget) +
+      ShareholderEngine.deltaForSeasonEnd(
+            budget: _save!.budget,
+            profit: _save!.ledgerFor(_save!.league.season).profit,
+            operatingIncome:
+                _save!.ledgerFor(_save!.league.season).operatingIncome,
+            wageRatio: _save!.ledgerFor(_save!.league.season).wageRatio,
+          ) +
           BudgetEngine.dividendExpectationDelta(_save!.budgetPlan),
     );
 
@@ -756,6 +740,8 @@ extension GameStateSeason on GameState {
           : Tr.pick('理事会目標を達成し、報奨金$bonus万円が支給されました!',
               "You met the board's target, and they have paid you a $bonus bonus!");
     }
+
+    _settlePartnerClub();
 
     // 国の財務規則(収支規則・ライセンス)の判定。違反なら罰を科す。
     _enforceLeagueRules();
@@ -815,12 +801,25 @@ extension GameStateSeason on GameState {
     final infra = _save!.infrastructure;
     // ユースインテーク: 複数候補を一括生成し、選抜はユーザーに委ねる。
     final intakeCount = 3 + Random().nextInt(3);
+    // 育成予算の効き。蓄積は毎季末にいまの配分へ近づき、受け入れの質に返る。
+    _save!.youthMomentum = YouthInvestmentEngine.nextMomentum(
+      momentum: _save!.youthMomentum,
+      ratio: BudgetEngine.ratio(_save!.budgetPlan, BudgetCategory.youth),
+    );
+    final investmentBonus =
+        YouthInvestmentEngine.qualityBonus(_save!.youthMomentum);
+    // 施設予算の効きも同じ仕組みで、もっとゆっくり蓄積する。
+    _save!.facilityMomentum = FacilityInvestmentEngine.nextMomentum(
+      momentum: _save!.facilityMomentum,
+      ratio: BudgetEngine.ratio(_save!.budgetPlan, BudgetCategory.facilities),
+    );
     _save!.pendingYouthIntake = List.generate(
       intakeCount,
       (_) => ScoutingEngine.generateAcademyGraduate(
         // 有望な子を見つけてこられるかは見極めの仕事。
         youthCoachLevel: infra.staffAttributeLevel(
             StaffRole.youthCoach, StaffAttribute.judging),
+        investmentBonus: investmentBonus,
       ),
     );
 
@@ -845,23 +844,7 @@ extension GameStateSeason on GameState {
     } else if (finalRank > _save!.boardTargetRank + 2) {
       _save!.managerReputation = (_save!.managerReputation - 5).clamp(0, 100);
     }
-    // 評価が高く好成績を残すと、他クラブから監督就任オファーが届くことがある(1部のみ)。
-    if (playedTier == 1 &&
-        _save!.pendingJobOfferTeamId == null &&
-        _save!.managerReputation >= 55 &&
-        finalRank <= (league.teams.length / 2).ceil()) {
-      final candidates = league.teams
-          .where(
-            (t) =>
-                t.id != _save!.userTeamId &&
-                t.overallRating > userTeam.overallRating,
-          )
-          .toList()
-        ..sort((a, b) => b.overallRating.compareTo(a.overallRating));
-      if (candidates.isNotEmpty && Random().nextDouble() < 0.25) {
-        _save!.pendingJobOfferTeamId = candidates.first.id;
-      }
-    }
+    // 監督としての就任オファーは出さない(オーナーは別のクラブの監督にならない)。
 
     // 昇格・降格を解決する。ユーザーの現在ティア以外は節ごとに並行して
     // 消化してきたため、その最終順位順をそのまま使う(改めてシミュレート

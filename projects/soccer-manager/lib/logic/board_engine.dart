@@ -188,6 +188,19 @@ class BoardEngine {
     return -3;
   }
 
+  /// この値を超えた分の一部を、シーズン終了時に失う(期待への慣れ)。
+  static const int adaptationLine = 75;
+
+  /// 慣れで失う割合(%)。
+  static const int adaptationPercent = 40;
+
+  /// シーズン終了時の慣れを反映した信頼度。[adaptationLine] 以下は変わらない。
+  static int afterAdaptation(int confidence) {
+    if (confidence <= adaptationLine) return confidence;
+    final lost = ((confidence - adaptationLine) * adaptationPercent / 100).round();
+    return (confidence - lost).clamp(0, 100);
+  }
+
   /// シーズン終了時の順位評価による信頼度の増減量を返す。
   static int confidenceDeltaForSeasonEnd({
     required int finalRank,

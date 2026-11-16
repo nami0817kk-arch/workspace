@@ -177,6 +177,18 @@ extension GameStateFinance on GameState {
       valueRatio: save.ownerGoalStartValue > 0
           ? clubValue.total / save.ownerGoalStartValue
           : 0,
+      topFourCount:
+          recs.where((r) => r.divisionTier == 1 && r.finalRank <= 4).length,
+      unbeaten: recs.any((r) => r.played > 0 && r.lost == 0),
+      stadiumLevel: save.infrastructure.facilityLevel(FacilityType.stadium),
+      healthScore: ClubHealthEngine.assess(
+        supporter: save.confidence,
+        shareholder: save.shareholderExpectation,
+        wageRatio: save.ledgerFor(season).wageRatio,
+        budget: save.budget,
+      ).score,
+      supporter: save.confidence,
+      shareholder: save.shareholderExpectation,
     );
     if (met) {
       save.achievedGoals.add(Tr.pick(
@@ -201,62 +213,12 @@ extension GameStateFinance on GameState {
     }
   }
 
-  /// 1シーズンに宣言できる勝負の試合の数。
-  static const int bigMatchesPerSeason = 4;
-
-  /// 今シーズンに宣言できる勝負の試合の残り。シーズンが変わると満タンに戻る。
-  int get bigMatchesLeft {
-    final save = _save;
-    if (save == null) return 0;
-    final used = save.bigMatchSeason == save.league.season ? save.bigMatchesUsed : 0;
-    return (GameStateFinance.bigMatchesPerSeason - used)
-        .clamp(0, GameStateFinance.bigMatchesPerSeason);
-  }
-
-  /// 次の自クラブの試合が、宣言した勝負の試合か。
-  bool get isNextMatchBig {
-    final save = _save;
-    if (save == null) return false;
-    final next = save.league.nextUnplayedFixture;
-    return next != null &&
-        save.bigMatchSeason == save.league.season &&
-        save.bigMatchDeclaredMatchday == next.matchday;
-  }
-
-  /// 次の試合を勝負の試合と宣言する。回数が尽きている・試合が無い・
-  /// すでに宣言済みなら何もしない。宣言した試合だけ、戦術と先発を自分で決める。
-  Future<bool> declareBigMatch() async {
-    final save = _save;
-    if (save == null || isNextMatchBig || bigMatchesLeft <= 0) return false;
-    final next = save.league.nextUnplayedFixture;
-    if (next == null) return false;
-    if (save.bigMatchSeason != save.league.season) {
-      save.bigMatchSeason = save.league.season;
-      save.bigMatchesUsed = 0;
-    }
-    save.bigMatchesUsed += 1;
-    save.bigMatchDeclaredMatchday = next.matchday;
-    _notify();
-    await _persist();
-    return true;
-  }
-
-  /// 宣言を取り消す(回数は戻る)。
-  Future<void> cancelBigMatch() async {
-    final save = _save;
-    if (save == null || !isNextMatchBig) return;
-    save.bigMatchesUsed = (save.bigMatchesUsed - 1).clamp(0, 999);
-    save.bigMatchDeclaredMatchday = -1;
-    _notify();
-    await _persist();
-  }
-
-  /// 勝負の試合でない節は、監督が先発とメンタリティを決める。穴(負傷・出場停止)
-  /// を埋め、水準が高ければ相手との力関係から構えを、さらに高ければ最善の先発を選ぶ。自分で決めた先発と戦術が効くのは、
-  /// 宣言した勝負の試合だけ。
+  /// 試合にオーナーは直接関わらない。先発と構えは、毎節かならず監督が決める。
+  /// 穴(負傷・出場停止)を埋め、水準が高ければ相手との力関係から構えを、
+  /// さらに高ければ最善の先発を選ぶ。
   void _managerPreparesMatch(Fixture next) {
     final save = _save;
-    if (save == null || isNextMatchBig) return;
+    if (save == null) return;
     final user = userTeam;
     final oppId = next.homeTeamId == user.id ? next.awayTeamId : next.homeTeamId;
     final opp = _findTeam(save.league.teams, oppId);
@@ -319,7 +281,9 @@ extension GameStateFinance on GameState {
     final save = _save;
     if (save == null) return false;
     if (save.ownerWorkDoneSeason[work.id] == save.league.season) return false;
-    return save.budget >= work.cost;
+    if (work.onlyInRed && save.budget >= 0) return false;
+    // 支出が要らない手は、資金がマイナスでも打てる(危機の手がそう)。
+    return work.cost == 0 || save.budget >= work.cost;
   }
 
   /// 今季すでに打った仕事か。
@@ -343,6 +307,133 @@ extension GameStateFinance on GameState {
     await _persist();
     return true;
   }
+
+  /// 提携クラブ。いなければ null。
+  Team? get partnerClub {
+    final save = _save;
+    final id = save?.partnerClubId;
+    if (save == null || id == null) return null;
+    return save.league.teams.where((t) => t.id == id).firstOrNull;
+  }
+
+  /// 提携できる相手(自クラブ以外)。
+  List<Team> get partnerCandidates {
+    final save = _save;
+    if (save == null) return const [];
+    return save.league.teams.where((t) => t.id != save.userTeamId).toList();
+  }
+
+  /// 他クラブと提携する。すでに提携していれば結び直す。自クラブや
+  /// 存在しないクラブとは結べない。
+  Future<bool> setPartnerClub(String teamId) async {
+    final save = _save;
+    if (save == null) return false;
+    if (teamId == save.userTeamId) return false;
+    final team = save.league.teams.where((t) => t.id == teamId).firstOrNull;
+    if (team == null) return false;
+    save.partnerClubId = teamId;
+    _logNews(
+        Tr.pick('${team.name}と提携した。毎季の提携費は${PartnerClubEngine.seasonCost}万円。',
+            'Partnered with ${team.name}. The fee is ${PartnerClubEngine.seasonCost} per season.'),
+        context: Tr.pick('提携', 'Partnership'));
+    _notify();
+    await _persist();
+    return true;
+  }
+
+  /// 提携を解消する。
+  Future<void> clearPartnerClub() async {
+    final save = _save;
+    if (save == null || save.partnerClubId == null) return;
+    save.partnerClubId = null;
+    _notify();
+    await _persist();
+  }
+
+  /// シーズン終了時の提携の処理。提携費を払い、2つの期待を上げる。
+  /// 払えなければ提携は解消される。
+  void _settlePartnerClub() {
+    final save = _save!;
+    final team = partnerClub;
+    if (team == null) {
+      save.partnerClubId = null;
+      return;
+    }
+    if (!PartnerClubEngine.canAfford(save.budget)) {
+      save.partnerClubId = null;
+      _logNews(
+          Tr.pick('資金が足りず、${team.name}との提携は解消された。',
+              'The partnership with ${team.name} lapsed for lack of funds.'),
+          context: Tr.pick('提携', 'Partnership'));
+      return;
+    }
+    _book(LedgerCategory.other, -PartnerClubEngine.seasonCost);
+    save.confidence =
+        (save.confidence + PartnerClubEngine.supportersBonus).clamp(0, 100);
+    save.shareholderExpectation = (save.shareholderExpectation +
+            PartnerClubEngine.shareholdersBonus)
+        .clamp(0, 100);
+    _logNews(
+        Tr.pick('${team.name}との提携で、知名度が上がった。',
+            'The partnership with ${team.name} raised our profile.'),
+        context: Tr.pick('提携', 'Partnership'));
+  }
+
+  /// テスト用: 提携の季末の処理だけを走らせる。
+  @visibleForTesting
+  void debugSettlePartnerClub() => _settlePartnerClub();
+
+  /// 次の節に打つと決めた試合日のイベント。無ければ null。
+  MatchdayPromo? get activeMatchdayPromo {
+    final id = _save?.matchdayPromoId;
+    if (id == null) return null;
+    return matchdayPromos.where((p) => p.id == id).firstOrNull;
+  }
+
+  /// 次の節の試合日のイベントを決める。費用を先に払う。すでに決めていれば
+  /// 先に取り消さないと決められない。資金が足りなくても決められない。
+  Future<bool> setMatchdayPromo(String id) async {
+    final save = _save;
+    if (save == null || save.matchdayPromoId != null) return false;
+    final promo = matchdayPromos.where((p) => p.id == id).firstOrNull;
+    if (promo == null) return false;
+    if (promo.cost > 0 && save.budget < promo.cost) return false;
+    if (promo.cost > 0) _book(LedgerCategory.other, -promo.cost);
+    save.matchdayPromoId = promo.id;
+    _notify();
+    await _persist();
+    return true;
+  }
+
+  /// 決めた試合日のイベントを取り消す。節の前なので、費用は戻る。
+  Future<bool> cancelMatchdayPromo() async {
+    final save = _save;
+    final promo = activeMatchdayPromo;
+    if (save == null || promo == null) return false;
+    if (promo.cost > 0) _book(LedgerCategory.other, promo.cost);
+    save.matchdayPromoId = null;
+    _notify();
+    await _persist();
+    return true;
+  }
+
+  /// 節を終えたとき、試合日のイベントの効きを2つの期待に反映して使い切る。
+  void _consumeMatchdayPromo() {
+    final save = _save!;
+    final promo = activeMatchdayPromo;
+    if (promo == null) {
+      save.matchdayPromoId = null;
+      return;
+    }
+    save.confidence = (save.confidence + promo.supporters).clamp(0, 100);
+    save.shareholderExpectation =
+        (save.shareholderExpectation + promo.shareholders).clamp(0, 100);
+    save.matchdayPromoId = null;
+  }
+
+  /// テスト用: 節を終えたときの試合日のイベントの処理だけを走らせる。
+  @visibleForTesting
+  void debugConsumeMatchdayPromo() => _consumeMatchdayPromo();
 
   /// テスト用: その節の事件の判定だけを走らせる。
   @visibleForTesting
@@ -694,6 +785,8 @@ extension GameStateFinance on GameState {
     var matchdayIncome = ((base + (stadiumLevel - 1) * 80) *
             userAttendanceFactor *
             _save!.ticketPricing.revenueMultiplier *
+            FacilityInvestmentEngine.gateMultiplier(_save!.facilityMomentum) *
+            (activeMatchdayPromo?.gateMultiplier ?? 1.0) *
             commercialMultiplier)
         .round();
     // 2部リーグは1部より観客動員が少ない(userAttendanceFactorに反映済み)。
@@ -778,13 +871,16 @@ extension GameStateFinance on GameState {
       );
       return;
     }
-    if (penalty.fine > 0) _book(LedgerCategory.other, -penalty.fine);
+    final fine = (penalty.fine *
+            AdvisorEngine.fineMultiplier(
+                save.advisors[Advisor.legal.name] ?? 0))
+        .round();
+    if (fine > 0) _book(LedgerCategory.other, -fine);
     save.confidence = (save.confidence - penalty.trustLoss).clamp(0, 100);
     save.transferBanSeasons = max(save.transferBanSeasons, penalty.banSeasons);
     save.pendingPointsDeduction += penalty.pointsDeduction;
     final parts = <String>[
-      if (penalty.fine > 0)
-        Tr.pick('罰金${penalty.fine}万円', 'fine of ${penalty.fine}'),
+      if (fine > 0) Tr.pick('罰金$fine万円', 'fine of $fine'),
       if (penalty.pointsDeduction > 0)
         Tr.pick('来季の勝ち点${penalty.pointsDeduction}剥奪',
             '${penalty.pointsDeduction} points docked next season'),

@@ -24,6 +24,7 @@ class OwnerWork {
     required this.funds,
     required this.supporters,
     required this.shareholders,
+    this.onlyInRed = false,
   });
 
   /// 保存に使う名前。変えると既存セーブの「今季やった」記録が外れる。
@@ -38,6 +39,9 @@ class OwnerWork {
 
   /// 株主の期待の増減。
   final int shareholders;
+
+  /// 資金がマイナスのときだけ打てる(経営危機の手)。
+  final bool onlyInRed;
 
   String get title => ownerWorkTexts[id]!.$1;
   String get description => ownerWorkTexts[id]!.$2;
@@ -193,6 +197,21 @@ Map<String, (String, String)> get ownerWorkTexts => {
         Tr.pick('省エネとごみ削減。ファンにも株主にも悪くない。',
             'Save energy and cut waste. Good for fans and shareholders.')
       ),
+      'restructuring': (
+        Tr.pick('再建計画(人員整理)', 'Restructuring plan'),
+        Tr.pick('資金がマイナスのときの非常手段。人員を整理して資金を作るが、ファンの反発は大きい。',
+            'An emergency step when in the red. Trim staff for cash; fans push back hard.')
+      ),
+      'emergency_loan': (
+        Tr.pick('緊急融資', 'Emergency loan'),
+        Tr.pick('資金がマイナスのとき、銀行から急ぎで借りる。株主は条件の悪さを責める。',
+            'When in the red, borrow in a hurry. Shareholders resent the terms.')
+      ),
+      'fire_sale': (
+        Tr.pick('資産の投げ売り', 'Fire sale'),
+        Tr.pick('資金がマイナスのとき、設備やグッズ在庫を急いで現金化する。',
+            'When in the red, cash out equipment and stock in a hurry.')
+      ),
       'town_festival': (
         Tr.pick('地元の祭りに出店', 'Join the town festival'),
         Tr.pick('祭りに屋台を出して、地域に溶け込む。',
@@ -200,7 +219,7 @@ Map<String, (String, String)> get ownerWorkTexts => {
       ),
     };
 
-/// 全30件。表示は分野ごとにまとめて出す。
+/// 全33件(30件の通常の手と、資金がマイナスのときだけの危機の手3件)。表示は分野ごとにまとめて出す。
 const List<OwnerWork> ownerWorks = [
   // 営業・収入
   OwnerWork(id: 'merch_drive', category: OwnerWorkCategory.sales, funds: -150, supporters: 1, shareholders: 3),
@@ -236,5 +255,9 @@ const List<OwnerWork> ownerWorks = [
   OwnerWork(id: 'charity_match', category: OwnerWorkCategory.community, funds: -300, supporters: 5, shareholders: 0),
   OwnerWork(id: 'school_visit', category: OwnerWorkCategory.community, funds: -80, supporters: 3, shareholders: 0),
   OwnerWork(id: 'eco_stadium', category: OwnerWorkCategory.community, funds: -350, supporters: 2, shareholders: 3),
+  // 経営危機(資金がマイナスのときだけ)
+  OwnerWork(id: 'restructuring', category: OwnerWorkCategory.finance, funds: 1500, supporters: -6, shareholders: 4, onlyInRed: true),
+  OwnerWork(id: 'emergency_loan', category: OwnerWorkCategory.finance, funds: 2500, supporters: 0, shareholders: -5, onlyInRed: true),
+  OwnerWork(id: 'fire_sale', category: OwnerWorkCategory.finance, funds: 800, supporters: -3, shareholders: 0, onlyInRed: true),
   OwnerWork(id: 'town_festival', category: OwnerWorkCategory.community, funds: -150, supporters: 3, shareholders: 1),
 ];

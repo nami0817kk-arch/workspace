@@ -229,10 +229,8 @@ extension GameStateMatch on GameState {
     _maybeRaiseOwnerEvent(next.matchday);
     _refreshProposals();
 
-    // トレーニング自動化が有効な場合、この節の分をここで自動的に実施する。
-    if (userTeam.autoTrainingEnabled) {
-      await runWeeklyTraining();
-    }
+    // 練習はコーチ陣の仕事。オーナーは触れないので、この節の分をここで必ず実施する。
+    await runWeeklyTraining();
 
     // 週の経過による負傷回復と自然な疲労回復(休養日)。
     // 疲労回復は個別のトレーニング方針(休養特訓)とは別に、全チーム・
@@ -571,7 +569,6 @@ extension GameStateMatch on GameState {
       if (isUserFixture) {
         userFixture = f;
         _liveWasInteractive = interactive;
-        lastShootout = null;
         final state = MatchEngine.beginInteractiveHalf(
           home: home,
           away: away,
@@ -656,6 +653,8 @@ extension GameStateMatch on GameState {
     _book(LedgerCategory.merchandise, incomeParts.merchandise);
     // 営業ブーストは、収入が入った節で1つ使う。
     if (_save!.marketingBoostWeeks > 0) _save!.marketingBoostWeeks -= 1;
+    // 試合日のイベントも、収入が入った節で使い切る。
+    _consumeMatchdayPromo();
     _book(LedgerCategory.staffWages, -_save!.infrastructure.totalStaffWeeklyWage);
     _book(LedgerCategory.playerWages, -ContractEngine.weeklyWageBill(userTeam));
 
@@ -821,7 +820,6 @@ extension GameStateMatch on GameState {
       }
       userFixture = f;
       _liveWasInteractive = interactive;
-      lastShootout = null;
       final secondHalf = progress?.secondHalf;
       if (progress != null && secondHalf != null) {
         // 前半は終わっていた。ハーフタイムから再開し、後半は続きから。
@@ -1122,11 +1120,7 @@ extension GameStateMatch on GameState {
       // (引き分け時のPK戦・敗退時の信頼度低下・賞金・優勝処理を含む)。
       _applyLiveCupResult(merged);
     }
-    _save!.pendingPressConference = PressConferenceEngine.generateFor(
-      result: merged,
-      userTeamId: _save!.userTeamId,
-    );
-
+    // 記者会見は出さない(オーナーの仕事ではない)。
     _liveFixture = null;
     _liveCupKind = null;
     _liveCupHome = null;

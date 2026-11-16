@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../l10n/tr.dart';
+import '../logic/club_health_engine.dart';
 import '../logic/manager_report_engine.dart';
 import '../state/game_state.dart';
 import '../theme/semantic_colors.dart';
+import 'fm_panel.dart';
 
 /// 2つの期待(サポーター・株主)のメーター。0〜100 のバーと数字。
 class ExpectationMeters extends StatelessWidget {
@@ -126,34 +128,58 @@ class ManagerReportCard extends StatelessWidget {
       weeklyNet: weeklyNet,
       lastResult: lastResult,
     );
-    final scheme = Theme.of(context).colorScheme;
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(Icons.assignment_ind_outlined,
-                    size: 18, color: scheme.primary),
-                const SizedBox(width: 6),
-                Text(Tr.pick('監督からの報告', 'Report from the manager'),
-                    style: Theme.of(context).textTheme.titleSmall),
-              ],
-            ),
-            const SizedBox(height: 6),
-            Text(report.headline,
-                style: const TextStyle(fontWeight: FontWeight.w600)),
-            const SizedBox(height: 6),
-            for (final l in report.lines)
-              Text(l, style: Theme.of(context).textTheme.bodySmall),
-            const SizedBox(height: 10),
-            const ExpectationMeters(),
-          ],
-        ),
+    final health = ClubHealthEngine.assess(
+      supporter: save.confidence,
+      shareholder: save.shareholderExpectation,
+      wageRatio: league.fixtures.isEmpty
+          ? 0
+          : save.ledgerFor(league.season).wageRatio,
+      budget: save.budget,
+    );
+    return FmPanel(
+      title: Tr.pick('監督からの報告', 'Report from the manager'),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(report.headline,
+              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+          const SizedBox(height: 6),
+          for (final l in report.lines)
+            Text(l, style: Theme.of(context).textTheme.bodySmall),
+          const SizedBox(height: 8),
+          const ExpectationMeters(),
+          const SizedBox(height: 6),
+          _HealthLine(health: health),
+        ],
       ),
+    );
+  }
+}
+
+/// 経営診断の1行。点数とA〜Eの評価。
+class _HealthLine extends StatelessWidget {
+  const _HealthLine({required this.health});
+
+  final ClubHealth health;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = switch (health.grade) {
+      'A' || 'B' => SemanticColors.positive(context),
+      'C' => SemanticColors.neutral(context),
+      _ => SemanticColors.negative(context),
+    };
+    return Row(
+      children: [
+        Text(Tr.pick('経営診断 ', 'Club health '),
+            style: const TextStyle(fontSize: 13)),
+        Text(health.grade,
+            style: TextStyle(
+                fontSize: 18, fontWeight: FontWeight.bold, color: color)),
+        const SizedBox(width: 6),
+        Text('${health.score}/100',
+            style: Theme.of(context).textTheme.bodySmall),
+      ],
     );
   }
 }

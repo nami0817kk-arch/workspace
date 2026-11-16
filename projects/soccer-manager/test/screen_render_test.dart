@@ -14,7 +14,6 @@ import 'package:soccer_manager/main.dart';
 import 'package:soccer_manager/state/game_state.dart';
 import 'package:soccer_manager/screens/fixtures_screen.dart';
 import 'package:soccer_manager/screens/home_screen.dart';
-import 'package:soccer_manager/screens/lineup_screen.dart';
 import 'package:soccer_manager/screens/squad_screen.dart';
 import 'package:soccer_manager/state/settings_controller.dart';
 
@@ -43,7 +42,6 @@ List<({String label, WidgetBuilder builder})> _screensUnderTest() => [
         (label: d.label, builder: d.builder),
       (label: 'ホーム', builder: (_) => const HomeScreen()),
       (label: 'スカッド', builder: (_) => const SquadScreen()),
-      (label: '戦術', builder: (_) => const LineupScreen()),
       (label: '日程', builder: (_) => const FixturesScreen()),
     ];
 

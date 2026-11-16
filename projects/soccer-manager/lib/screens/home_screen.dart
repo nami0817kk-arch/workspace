@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../data/quick_access_destinations.dart';
-import '../widgets/big_match_bar.dart';
 import '../widgets/owner_event_card.dart';
 import '../widgets/owner_goal_card.dart';
 import '../widgets/two_pane.dart';
 import '../logic/calendar_engine.dart';
 import '../logic/sale_advice_engine.dart';
-import '../logic/match_engine.dart' show HalfResult;
 import '../models/formation.dart';
 import '../models/incoming_offer.dart';
 import '../models/league.dart';
@@ -28,24 +26,21 @@ import '../widgets/busy_overlay.dart';
 import '../widgets/club_emblem.dart';
 import '../widgets/match_widgets.dart';
 import '../widgets/inbox_card.dart';
+import '../widgets/fm_panel.dart';
 import '../widgets/manager_report_card.dart';
 import '../widgets/next_action_card.dart';
 import '../widgets/season_review_card.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/responsive_body.dart';
-import 'calendar_screen.dart';
 import 'cup_screen.dart';
 import 'finance_screen.dart';
 import 'glossary_screen.dart';
-import 'lineup_screen.dart';
-import 'live_match_screen.dart';
 import 'match_screen.dart';
 import 'player_detail_screen.dart';
 import 'scout_report_screen.dart';
 import 'start_screen.dart';
 import 'youth_intake_screen.dart';
 import '../logic/board_target_progress.dart';
-import '../logic/prematch_check.dart';
 import '../models/club_vision.dart';
 import '../models/preseason_camp.dart';
 import '../l10n/tr.dart';
@@ -176,7 +171,7 @@ class HomeScreen extends StatelessWidget {
                         end: Alignment.bottomRight,
                         colors: [top, bottom],
                       ),
-                      borderRadius: BorderRadius.circular(18),
+                      borderRadius: BorderRadius.circular(fmRadius(context, 18)),
                       boxShadow: [
                         BoxShadow(
                           color: bottom.withValues(alpha: 0.35),
@@ -186,7 +181,7 @@ class HomeScreen extends StatelessWidget {
                       ],
                     ),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(18),
+                      borderRadius: BorderRadius.circular(fmRadius(context, 18)),
                       child: Stack(
                         children: [
                           // 右に薄くエンブレムを敷く。名前を二度書かずに
@@ -449,10 +444,6 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
               if (gameState.pendingOwnerEvent != null) const OwnerEventCard(),
-              if (gameState.pendingPressConference != null)
-                _PressConferenceCard(gameState: gameState),
-              if (gameState.pendingJobOfferTeam != null)
-                _JobOfferCard(gameState: gameState),
               if (gameState.pendingSuperCup != null)
                 _SuperCupCard(gameState: gameState),
               if (gameState.isUserDomesticCupMatchUpNext)
@@ -676,50 +667,6 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-              // スタメンに出場できない選手が混ざっていると、試合では無言で
-              // 除外されて人数の足りない布陣で戦うことになるため、事前に
-              // 警告して編成画面へ誘導する。
-              if (!seasonComplete)
-                Builder(builder: (context) {
-                  final byId = {for (final p in userTeam.players) p.id: p};
-                  final unavailable = [
-                    for (final id in userTeam.startingXI)
-                      if (byId[id] != null &&
-                          (byId[id]!.isInjured ||
-                              byId[id]!.isSuspended ||
-                              byId[id]!.isOnInternationalDuty ||
-                              byId[id]!.isLoanedOut))
-                        byId[id]!,
-                  ];
-                  if (unavailable.isEmpty) return const SizedBox.shrink();
-                  String reasonOf(Player p) => p.isInjured
-                      ? Tr.pick('負傷', 'Injured')
-                      : p.isSuspended
-                          ? Tr.pick('出場停止', 'Suspended')
-                          : p.isOnInternationalDuty
-                              ? Tr.pick('代表召集', 'International duty')
-                              : Tr.pick('ローン中', 'Out on loan');
-                  return Card(
-                    color: scheme.errorContainer,
-                    child: ListTile(
-                      leading: const Icon(Icons.personal_injury),
-                      title: Text(Tr.pick(
-                          'スタメンに出場できない選手が${unavailable.length}人います',
-                          '${unavailable.length} of your XI cannot play')),
-                      subtitle: Text(
-                        Tr.pick(
-                            '${unavailable.map((p) => '${p.name}(${reasonOf(p)})').join('、')}。このままでは人数の欠けた布陣で試合に臨みます。',
-                            "${unavailable.map((p) => '${p.name} (${reasonOf(p)})').join(', ')}. As things stand you go into the match short-handed."),
-                      ),
-                      trailing: const Icon(Icons.chevron_right),
-                      onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => const LineupScreen(),
-                        ),
-                      ),
-                    ),
-                  );
-                }),
               // スポンサー未契約のまま気づかず収入を取りこぼすことが多いため、
               // オファーが届いている間はホームに警告カードを常設する。
               if (save.sponsorDeal == null &&
@@ -886,7 +833,6 @@ class HomeScreen extends StatelessWidget {
                         ),
                         // いま何が結果に効いているか。戦術・習熟度・指示と
                         // 効く要素が増えたのに、それを見る場所が無かった。
-                        const BigMatchBar(),
                         const SizedBox(height: 12),
                         FilledButton(
                           onPressed: () => _playMatch(context),
@@ -987,96 +933,14 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  /// 試合前の確認。取りこぼしがあるときだけ止める。
-  ///
-  /// 問題が無い週にも確認を挟むと、毎週タップが1回増えるだけになる。
-  /// 戻り値が false なら試合を始めない(利用者がスタメンを直しに行く)。
-  static Future<bool> _confirmLineup(
-      BuildContext context, GameState gameState) async {
-    final warnings = PreMatchCheck.run(gameState.userTeam);
-    if (warnings.isEmpty) return true;
-
-    final proceed = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(Tr.pick('このまま試合に入りますか？', 'Go into the match like this?')),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            for (final w in warnings)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 6),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(
-                      w.serious ? Icons.error_outline : Icons.info_outline,
-                      size: 16,
-                      color: w.serious
-                          ? SemanticColors.negative(context)
-                          : SemanticColors.neutral(context),
-                    ),
-                    const SizedBox(width: 6),
-                    Expanded(child: Text(w.message)),
-                  ],
-                ),
-              ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(ctx, false);
-              Navigator.of(context).push(
-                MaterialPageRoute<void>(builder: (_) => const LineupScreen()),
-              );
-            },
-            child: Text(Tr.pick('スタメンを直す', 'Fix the XI')),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            child: Text(Tr.pick('このまま試合へ', 'Play anyway')),
-          ),
-        ],
-      ),
-    );
-    return proceed ?? false;
-  }
-
   Future<void> _playMatch(BuildContext context) async {
     FeedbackService.tap();
     final gameState = context.read<GameState>();
-    // 先発の穴は、勝負の試合でなければ監督が埋める。確かめるのは自分で決める試合だけ。
-    if (gameState.isNextMatchBig && !await _confirmLineup(context, gameState)) {
-      return;
-    }
-    if (!context.mounted) return;
-    // 勝負の試合でなければ、試合は見守るだけ。数秒のダイジェストと、
-    // 2つの期待の動きだけを見せる。
-    if (!gameState.isNextMatchBig) {
-      final fixture = gameState.save?.league.nextUnplayedFixture;
-      if (fixture != null) {
-        await _quickSimNextMatch(context, fixture);
-        return;
-      }
-    }
-    final HalfResult? firstHalf;
-    try {
-      firstHalf = await gameState.playNextMatchday(interactive: true);
-    } catch (e) {
-      if (context.mounted) _showProgressFailedSnackBar(context, e);
-      return;
-    }
-    if (!context.mounted) return;
-    _showMatchdayNotifications(context, gameState);
-
-    if (firstHalf != null) {
-      await Navigator.of(context)
-          .push(MaterialPageRoute(builder: (_) => const LiveMatchScreen()));
-    }
-    if (context.mounted) _showMonthlyAwardNotification(context, gameState);
-    if (context.mounted) showAchievementUnlockNotification(context, gameState);
+    // 試合にオーナーは直接関わらない。先発も構えも監督が決め、見せるのは
+    // 数秒のダイジェストと、2つの期待の動きだけ。
+    final fixture = gameState.save?.league.nextUnplayedFixture;
+    if (fixture == null) return;
+    await _quickSimNextMatch(context, fixture);
   }
 
   /// ライブ観戦せず、次節の結果だけを一括で確定させる(クイックシム)。
@@ -1795,105 +1659,6 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-class _PressConferenceCard extends StatelessWidget {
-  final GameState gameState;
-
-  const _PressConferenceCard({required this.gameState});
-
-  @override
-  Widget build(BuildContext context) {
-    final question = gameState.pendingPressConference!;
-    return Card(
-      color: Theme.of(context).colorScheme.surfaceContainerHighest,
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                const Icon(Icons.mic, size: 18),
-                const SizedBox(width: 6),
-                Text(Tr.pick('記者会見', 'Press conference'),
-                    style: Theme.of(context).textTheme.titleSmall),
-              ],
-            ),
-            const SizedBox(height: 6),
-            Text(question.prompt),
-            const SizedBox(height: 8),
-            for (int i = 0; i < question.options.length; i++)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 6),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: OutlinedButton(
-                    onPressed: () {
-                      FeedbackService.tap();
-                      gameState.answerPressConference(i);
-                    },
-                    child: Text(
-                      question.options[i].label,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _JobOfferCard extends StatelessWidget {
-  final GameState gameState;
-
-  const _JobOfferCard({required this.gameState});
-
-  @override
-  Widget build(BuildContext context) {
-    final team = gameState.pendingJobOfferTeam!;
-    return Card(
-      color: Theme.of(context).colorScheme.tertiaryContainer,
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(Tr.pick('他クラブからのオファー', 'An offer from another club'),
-                style: Theme.of(context).textTheme.titleSmall),
-            const SizedBox(height: 4),
-            Text(Tr.pick(
-                '${team.name}の監督就任オファーが届いています(総合力 ${team.overallRating})',
-                '${team.name} want you as their manager (overall ${team.overallRating})')),
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    FeedbackService.tap();
-                    gameState.declineJobOffer();
-                  },
-                  child: Text(Tr.pick('断る', 'Turn it down')),
-                ),
-                const SizedBox(width: 8),
-                FilledButton(
-                  onPressed: () {
-                    FeedbackService.success();
-                    gameState.acceptJobOffer();
-                  },
-                  child: Text(Tr.pick('就任する', 'Take the job')),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class _SuperCupCard extends StatelessWidget {
   final GameState gameState;
 
@@ -1925,13 +1690,6 @@ class _SuperCupCard extends StatelessWidget {
               child: Wrap(
                 spacing: 8,
                 children: [
-                  if (gameState.canPlaySuperCupLive)
-                    FilledButton.icon(
-                      onPressed: () =>
-                          playCupMatchLive(context, LiveCupKind.superCup),
-                      icon: const Icon(Icons.sports_soccer),
-                      label: Text(Tr.pick('ライブで戦う', 'Watch it live')),
-                    ),
                   OutlinedButton(
                     onPressed: () => _play(context),
                     child: Text(Tr.pick('クイック消化', 'Sim it')),
@@ -2015,16 +1773,6 @@ class _ThisWeekCard extends StatelessWidget {
                         .titleSmall
                         ?.copyWith(fontWeight: FontWeight.bold),
                   ),
-                ),
-                TextButton.icon(
-                  icon: const Icon(Icons.calendar_month, size: 16),
-                  label: Text(Tr.pick('カレンダー', 'Calendar')),
-                  onPressed: () {
-                    FeedbackService.tap();
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => const CalendarScreen()),
-                    );
-                  },
                 ),
               ],
             ),
@@ -2113,7 +1861,7 @@ class _StatTile extends StatelessWidget {
       button: true,
       hint: Tr.pick('用語の説明を開く', 'Open the explanation'),
       child: InkWell(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(fmRadius(context, 16)),
         onTap: () {
           FeedbackService.tap();
           Navigator.of(context).push(
@@ -2139,7 +1887,7 @@ class _StatTile extends StatelessWidget {
         // その項目の色をごく薄く混ぜて、気配だけ残す。
         color: Color.alphaBlend(
             color.withValues(alpha: 0.035), scheme.surfaceContainer),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(fmRadius(context, 16)),
         border: Border.all(color: scheme.outlineVariant.withValues(alpha: 0.7)),
       ),
       child: Column(
@@ -2250,9 +1998,9 @@ class _ActionTile extends StatelessWidget {
     final locked = lockedReason;
     return Material(
       color: color.withValues(alpha: locked == null ? 0.12 : 0.05),
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(fmRadius(context, 16)),
       child: InkWell(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(fmRadius(context, 16)),
         // 押しても開けないので、無反応にせず理由を出す。
         onTap: locked == null
             ? onTap

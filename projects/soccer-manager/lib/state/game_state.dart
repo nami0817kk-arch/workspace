@@ -71,6 +71,11 @@ import '../models/budget_plan.dart';
 import '../models/owner_event.dart';
 import '../models/owner_work.dart';
 import '../logic/transfer_terms_engine.dart';
+import '../logic/partner_club_engine.dart';
+import '../logic/youth_investment_engine.dart';
+import '../logic/facility_investment_engine.dart';
+import '../logic/club_health_engine.dart';
+import '../models/matchday_promo.dart';
 import '../models/owner_goal.dart';
 import '../models/owner_legacy.dart';
 import '../logic/shareholder_engine.dart';
@@ -83,7 +88,6 @@ import '../logic/happiness_engine.dart';
 import '../logic/investment_engine.dart';
 import '../logic/loan_engine.dart';
 import '../logic/manager_career_engine.dart';
-import '../logic/press_conference_engine.dart';
 import '../logic/player_generator.dart';
 import '../logic/promotion_engine.dart';
 import '../logic/retirement_engine.dart';
@@ -293,14 +297,6 @@ class GameState extends ChangeNotifier {
   /// 直近のrunWeeklyTrainingで実際に変化(成長・衰え)があった選手の一覧
   /// (1回表示したら呼び出し側でクリアする想定)。
   List<PlayerGrowthSummary> lastTrainingResults = [];
-
-  /// 直近の週次トレーニングで紅白戦に参加した(=実戦感覚を維持できた)
-  /// スタメン外の選手の人数。トレーニング結果の表示に使う。
-  int lastPracticeMatchCount = 0;
-
-  /// 直近のリザーブ(Bチーム)の試合結果。人数が足りず行われなかった週は null。
-  /// セーブには残さない。次の週次処理で必ず入れ替わるため。
-  ReserveMatchResult? lastReserveMatch;
 
   /// 直近の節送りで行われたユース練習試合の結果(候補が0人ならnull)。
   /// ユース画面での直近戦の表示に使う(セーブデータには保存しない)。
@@ -1191,14 +1187,6 @@ class GameState extends ChangeNotifier {
   Weather? _liveCupWeather;
   CupMatch? _liveCupMatch;
   CupTie? _liveCupTie;
-
-  /// ライブ観戦したカップ試合がPK戦で決着した場合などの補足文言
-  /// (フルタイム画面で表示する。次のライブ試合開始時にクリアされる)。
-  String? lastLiveCupNote;
-
-  /// 直近のライブ観戦カップ戦がPK戦にもつれた場合の、1本ごとの記録
-  /// (フルタイム画面の演出用。セーブには保存しない一時データ)。
-  PenaltyShootoutResult? lastShootout;
 
   /// 現在進行中のライブ試合が「決定機の判断あり(インタラクティブ)」で
   /// 開始されたかどうか。ライブ観戦での勝利数(実績)のカウントに使う。

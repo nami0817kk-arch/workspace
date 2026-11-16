@@ -2754,9 +2754,11 @@ void main() {
       await gameState.playSecondHalf();
     }
 
-    expect(gameState.trainingDoneThisWeek, isFalse);
+    // 練習はコーチ陣が節の処理で必ず行う。すでに行われているので、
+    // 手で呼んでも二重には行われない。
+    expect(gameState.trainingDoneThisWeek, isTrue);
     final afterMatchday = await gameState.runWeeklyTraining();
-    expect(afterMatchday, isTrue);
+    expect(afterMatchday, isFalse);
   });
 
   test(
@@ -3221,8 +3223,7 @@ void main() {
     expect(player.internationalDutyWeeksRemaining, 1);
   });
 
-  test(
-      'GameState.playSecondHalf generates a press conference question that can be answered',
+  test('GameState.playSecondHalf no longer raises a press conference (owner game)',
       () async {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
@@ -3231,15 +3232,7 @@ void main() {
 
     await gameState.playSecondHalf();
 
-    expect(gameState.pendingPressConference, isNotNull);
-    final confidenceBefore = gameState.save!.confidence;
-    final option = gameState.pendingPressConference!.options.first;
-
-    await gameState.answerPressConference(0);
-
     expect(gameState.pendingPressConference, isNull);
-    expect(gameState.save!.confidence,
-        (confidenceBefore + option.confidenceDelta).clamp(0, 100));
   });
 
   test(

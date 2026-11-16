@@ -66,8 +66,11 @@ class ScoutingEngine {
   }
 
   /// シーズン終了時にアカデミーから無償で昇格候補が生まれる。ユースコーチのレベルが質を高める。
-  static Player generateAcademyGraduate({int youthCoachLevel = 1}) {
-    final bonus = (youthCoachLevel - 1) * 3;
+  static Player generateAcademyGraduate({
+    int youthCoachLevel = 1,
+    int investmentBonus = 0,
+  }) {
+    final bonus = (youthCoachLevel - 1) * 3 + investmentBonus;
     return _generateProspect(tierMin: 40 + bonus, tierMax: 70 + bonus);
   }
 

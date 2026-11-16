@@ -348,13 +348,11 @@ extension GameStateSquad on GameState {
     // リザーブ(Bチーム)の試合。トップに絡めない選手が公式戦に近い形で
     // 出場する。人数が足りるならこちらを行い、足りないときだけ紅白戦に
     // 落とす。両方やると疲労も成長も二重取りになる。
-    lastReserveMatch = ReserveMatchEngine.play(
+    final reserveMatch = ReserveMatchEngine.play(
       userTeam,
       opponentName: Tr.pick('リザーブ', 'Reserves'),
     );
-    lastPracticeMatchCount = lastReserveMatch == null
-        ? TrainingEngine.applyIntraSquadMatch(userTeam).length
-        : 0;
+    if (reserveMatch == null) TrainingEngine.applyIntraSquadMatch(userTeam);
     for (final p in userTeam.players) {
       if (p.hadBreakthroughThisWeek) _save!.breakthroughCount++;
       if (p.acquiredTraitThisWeek != null) _save!.traitsAcquired++;

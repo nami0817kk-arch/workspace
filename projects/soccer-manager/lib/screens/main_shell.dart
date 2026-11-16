@@ -68,8 +68,6 @@ class _MainShellState extends State<MainShell> {
 
   int _pendingHomeActionCount(GameState gameState) {
     var count = 0;
-    if (gameState.pendingPressConference != null) count++;
-    if (gameState.pendingJobOfferTeam != null) count++;
     count += gameState.pendingYouthIntake.length;
     count += gameState.incomingOffers.length;
     return count;
@@ -160,6 +158,7 @@ class _MainShellState extends State<MainShell> {
                         Expanded(
                           // 上のバーがあるので、各画面の見出しの帯は低くする。
                           child: Theme(
+                            // 密な FM 風の見た目は main.dart の FmThemeScope が当てる。
                             data: Theme.of(context).copyWith(
                               appBarTheme: Theme.of(context)
                                   .appBarTheme

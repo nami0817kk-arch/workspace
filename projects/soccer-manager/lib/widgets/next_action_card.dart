@@ -10,6 +10,7 @@ import '../screens/youth_screen.dart';
 import '../services/feedback_service.dart';
 import '../state/game_state.dart';
 import '../theme/semantic_colors.dart';
+import 'fm_panel.dart';
 import '../l10n/tr.dart';
 
 /// いま手を付けるべきこと1件を、行き先付きで出す。
@@ -76,7 +77,7 @@ class NextActionCard extends StatelessWidget {
       child: Material(
         color: Color.alphaBlend(
             accent.withValues(alpha: 0.07), scheme.surfaceContainerHigh),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(fmRadius(context, 16)),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: go,

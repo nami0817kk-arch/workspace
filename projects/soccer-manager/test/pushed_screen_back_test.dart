@@ -8,7 +8,6 @@ import 'package:soccer_manager/l10n/tr.dart';
 import 'package:soccer_manager/monetization/ad_service.dart';
 import 'package:soccer_manager/monetization/monetization_controller.dart';
 import 'support/stub_purchase_service.dart';
-import 'package:soccer_manager/screens/lineup_screen.dart';
 import 'package:soccer_manager/screens/main_shell.dart';
 import 'package:soccer_manager/screens/squad_screen.dart';
 import 'package:soccer_manager/state/settings_controller.dart';
@@ -65,7 +64,6 @@ void main() {
   }
 
   for (final entry in {
-    'スタメン': const LineupScreen(),
     'スカッド': const SquadScreen(),
   }.entries) {
     testWidgets('${entry.key}を開いたら戻るボタンがある', (tester) async {
