@@ -178,11 +178,12 @@
   YA.eventView = function (w, e) { if (e.id === 'lifeev' && !lprep(w, e)) return null; return v0.apply(this, arguments); };
   const r1 = YA.resolveEvent;
   YA.resolveEvent = function (w, e, idx) { if (e.id === 'lifeev') lprep(w, e); return r1.apply(this, arguments); };
+  YA.LIFE_EV_P = 0.03;
   YA.lifeEventWeek = function (w) {
     if (!w.club || w.week >= YA.WEEKS) return;
     const r = YA.rngOf((w.seed | 0) * 67 + w.year * 40 + w.week);
     w.lifeDone = w.lifeDone && w.lifeDone.y === w.year ? w.lifeDone : { y: w.year, ids: [] };
-    if (!r.chance(0.18)) return;
+    if (!r.chance(YA.LIFE_EV_P)) return; // 2026-11-15「★以外のイベントが多発する」で 0.18→0.03
     const cands = LE.filter((d) => w.lifeDone.ids.indexOf(d.id) < 0 && (() => { try { return !!d.c(w); } catch (er) { return false; } })());
     if (!cands.length) return;
     const d = cands[r.int(0, cands.length - 1)];

@@ -398,7 +398,7 @@
     { text: 'クラブから要望が届いた。「スポンサー行事に、主力を2人出してほしい」', yes: (w) => { const ps = Object.values(w.players).filter((p) => p.team === 'A' && !away(p)).sort((a, b) => YA.ovr(b) - YA.ovr(a)).slice(0, 2); ps.forEach((p) => (p.away = 1)); }, yesMsg: '主力2人が今週は不在になる', trust: [5, -5] },
     { text: 'クラブから要望が届いた。「地元の中学生向けの体験練習会を開きたい。練習を1日使えるか」', yes: (w) => { w.plan.days[4] = { menu: '回復', int: 'light' }; YA.addRep(w, 2); }, yesMsg: '金曜が体験練習会になり、評判が上がる', trust: [3, -4] },
   ];
-  E.push({ id: 'club', name: 'クラブの要望', weight: 0.8, club: true,
+  E.push({ id: 'club', name: 'クラブの要望', weight: 0.3, club: true, // 2026-11-15「更に減らす」で 0.8→0.3
     pick: (w, r) => ({ id: '', _club: r.int(0, CLUB_REQ.length - 1) }),
     text: (p, w) => CLUB_REQ[w._clubReq || 0].text,
     opts: [

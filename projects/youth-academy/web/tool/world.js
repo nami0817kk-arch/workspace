@@ -1685,5 +1685,13 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   ok(c0.seen === 1 && (keen[1] - keen[0]) < (base[1] - base[0]), '見抜く目で候補の幅が狭まる（見た回数は変わらない）');
   YA.entSet(null);
 }
+// ★以外の子の出来事は控えめ（2026-11-15「★以外のイベントが多発する」「まだ多い」）：選手の出来事のうち★以外は2割まで（大事なものを除く）
+{
+  const re0 = YA.rollEvents; let st = 0, ot = 0, keep = 0, autoLeft = 0, notes = 0;
+  YA.rollEvents = function (w) { const out = re0.apply(this, arguments); if (Object.values(w.players).some((p) => p.star)) for (const e of out) { const p = e.pid && w.players[e.pid]; if (!p) continue; if (p.star) st++; else if (YA.EV_AUTO_NONSTAR.indexOf(e.id) >= 0) autoLeft++; else if (YA.EV_KEEP_ALWAYS.indexOf(e.id) >= 0) keep++; else ot++; } return out; };
+  try { for (const sd of [3, 4]) { const t = YA.testStart({ seed: sd, tier: 2, years: 2 }); YA.testYear(t); YA.testYear(t); notes += (t.w.notes || []).filter((n) => /コーチに任せた/.test(n.t || n.text || n)).length + JSON.stringify(t.w).split('コーチに任せた').length - 1; } } finally { YA.rollEvents = re0; }
+  ok(st + ot > 40 && ot / (st + ot) <= 0.2 && st / (st + ot) >= 0.8, '★以外の子の出来事は控えめ（★' + st + '・ほか' + ot + '・大事なもの' + keep + '）');
+  ok(autoLeft === 0 && notes > 0, '★以外の子の退団・プロの話・怪我・進路は選ばせず、コーチに任せたお知らせになる（残り' + autoLeft + '・お知らせ' + notes + '）');
+}
 console.log(fails ? '失敗 ' + fails : '育成の点検: すべて通過');
 process.exit(fails ? 1 : 0);

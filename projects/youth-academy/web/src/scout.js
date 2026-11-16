@@ -711,7 +711,9 @@
     if (w.week === 35) YA.closeSelection(w);
     // 38週：卒業する上位の子から、進路の相談が届く
     if (w.week === 38) {
-      const sr = Object.values(w.players).filter((p) => p.grade === 3 && YA.ovr(p) >= 10.8).sort((a, b) => YA.ovr(b) - YA.ovr(a)).slice(0, 4);
+      // ★の子は全員、★以外は上位1人まで（2026-11-15「★以外のイベントが多発する」）
+      const g3 = Object.values(w.players).filter((p) => p.grade === 3 && YA.ovr(p) >= 10.8).sort((a, b) => YA.ovr(b) - YA.ovr(a));
+      const sr = g3.filter((p) => p.star).concat(g3.filter((p) => !p.star).slice(0, 1)).slice(0, 4);
       w.forced = (w.forced || []).concat(sr.map((p) => ({ id: 'career', pid: p.id, week: w.week, year: w.year })));
     }
     if (YA.rivalWeek) YA.rivalWeek(w);
