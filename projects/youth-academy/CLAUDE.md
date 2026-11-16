@@ -54,6 +54,7 @@
 - 特性や性格が場面に効いたら `scene.fx` に記録し、画面の札に出す（守る側は守備が成功したときだけ）。
 - 創作の物語を避ける決まり（no-creative-story-content）は動画の決まりで、ゲームの台詞・出来事には当てはめない（ユーザー指示）。
 - 広告・課金（3段目）：Flutter 側は `app/lib/monetization/`（`bridge.dart`＝ページとの橋・`entitlements.dart`＝権利の保存・`purchase_service.dart`・`ad_service.dart`＝護送ボートから写した期限切れ対応）。docs/app-pitfalls.md の1〜3番に沿う（届いた購入は待ち手が居なくても受け取り、受け取りが済むまで完了通知を返さない／動画は見終えたら画面を離れても受け取る／広告は期限切れで読み直す）。商品ID: youth_remove_ads・youth_keen_eye・youth_save_slot・youth_ticket_1・youth_ticket_3（App Store Connect に同じIDで作る）。広告ユニットIDは既定がテスト用で、リリースの workflow が Secrets（YOUTH_ADMOB_APP_ID_IOS / _REWARDED_IOS / _INTERSTITIAL_IOS）から差し替える。
+- **別アプリから戻ったときの真っ白**（2026-11-15 ユーザー指摘）：iOS は裏に回った WebView の中身を落とすことがある。`main.dart` が、中身が落ちた知らせ（`webContentProcessTerminated`）と、戻ったとき（`AppLifecycleState.resumed`）に `#app` の中身を確かめて（`aliveProbe`・`needsReload`、boot.dart）、真っ白なら保存（prefs）から読み直す。保存は `store.set` のたびに Flutter へ送っているので、最後に保存したところから再開する。
 - BGM（決定121）は音源を持たず合成（`YA.bgm`。ホームと試合で曲が変わる・設定で消せる）。iPhone だけ（決定122）、文字の大きさは小中大（決定123）。
 - **押せないボタンには必ず理由を付ける**（2026-11-14 ユーザー指摘「タッチできない」）：`h('button', { disabled: 条件, why: '理由' })`。押せないボタンは指が通り抜けて反応しないので、触れた位置に押せないボタンがあれば `YA.toast` で `why` を3.5秒出す（ui.js）。画面の点検が「理由の無い押せないボタン」を見つけたら落ちる。
 - 画面を直したら、ブラウザで絵にして目で確かめる（`node web/tool/build.js web/dist/index.html` → `python -m http.server` → 844×390）。
