@@ -241,6 +241,10 @@ class SoccerManagerApp extends StatelessWidget {
                 // なくここで拾って知らせる。
                 child: LandscapeScale(
                   child: FmThemeScope(
+                    dark: buildTheme(
+                      Brightness.dark,
+                      boldText: settings.boldTextMode,
+                    ),
                     child: SaveErrorNotifier(
                       child: _DeliverPendingPurchases(
                         child: _SaveOnPause(child: child!),

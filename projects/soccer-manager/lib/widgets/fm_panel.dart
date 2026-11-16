@@ -168,17 +168,83 @@ double fmRadius(BuildContext context, double normal) {
   return size.width > size.height ? 4 : normal;
 }
 
-/// 横画面のときだけ、中の画面すべてに FM 風の密なテーマを当てる。
+/// FM 風の暗い配色。白地ではなく、暗い青灰の下地に、少し明るい箱を重ね、
+/// 強調は青。箱ごとに明るさを1段ずつ上げて、枠線と合わせて層を見せる。
+ThemeData fmDarkTheme(ThemeData darkBase) {
+  const surface = Color(0xFF0F151D);
+  const accent = Color(0xFF4FA3F7);
+  final scheme = darkBase.colorScheme.copyWith(
+    brightness: Brightness.dark,
+    surface: surface,
+    surfaceContainerLowest: const Color(0xFF0B1017),
+    surfaceContainerLow: const Color(0xFF151C26),
+    surfaceContainer: const Color(0xFF19222D),
+    surfaceContainerHigh: const Color(0xFF1E2833),
+    surfaceContainerHighest: const Color(0xFF263241),
+    outline: const Color(0xFF5A6B7F),
+    outlineVariant: const Color(0xFF2C3846),
+    onSurface: const Color(0xFFE6EBF1),
+    onSurfaceVariant: const Color(0xFF9BA9BA),
+    primary: accent,
+    onPrimary: const Color(0xFF06121F),
+    primaryContainer: const Color(0xFF1B3550),
+    onPrimaryContainer: const Color(0xFFD3E6FA),
+    secondary: const Color(0xFFD4AE5A),
+    onSecondary: const Color(0xFF1A1407),
+    tertiaryContainer: const Color(0xFF3A3020),
+    onTertiaryContainer: const Color(0xFFF2E3BC),
+    errorContainer: const Color(0xFF4A2327),
+    onErrorContainer: const Color(0xFFFFD9DB),
+  );
+  final themed = darkBase.copyWith(
+    colorScheme: scheme,
+    scaffoldBackgroundColor: surface,
+    canvasColor: surface,
+    dividerColor: scheme.outlineVariant,
+  );
+  final dense = fmDenseTheme(themed);
+  return dense.copyWith(
+    // 文字の色も暗い下地に合わせる(明るい版の黒い文字のままだと読めない)。
+    textTheme: dense.textTheme
+        .apply(bodyColor: scheme.onSurface, displayColor: scheme.onSurface),
+    primaryTextTheme: dense.primaryTextTheme
+        .apply(bodyColor: scheme.onSurface, displayColor: scheme.onSurface),
+    iconTheme: dense.iconTheme.copyWith(color: scheme.onSurface),
+    scaffoldBackgroundColor: surface,
+    navigationBarTheme: themed.navigationBarTheme.copyWith(
+      backgroundColor: scheme.surfaceContainer,
+    ),
+    inputDecorationTheme: themed.inputDecorationTheme.copyWith(
+      fillColor: scheme.surfaceContainerHighest.withValues(alpha: 0.5),
+    ),
+  );
+}
+
+/// 横画面のときだけ、中の画面すべてに FM 風の暗い密なテーマを当てる。
 /// ホームの外(その他メニューから開く画面)も同じ見た目にそろう。
+/// 横画面は設定の明暗にかかわらず暗い見た目で固定する(縦画面は設定どおり)。
 class FmThemeScope extends StatelessWidget {
-  const FmThemeScope({super.key, required this.child});
+  const FmThemeScope({super.key, required this.child, this.dark});
 
   final Widget child;
+
+  /// アプリの暗いテーマ。渡されなければ、いまのテーマの暗い版を作る。
+  final ThemeData? dark;
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
     if (size.width <= size.height) return child;
-    return Theme(data: fmDenseTheme(Theme.of(context)), child: child);
+    // 文字の大きさは、いまのテーマ(MaterialApp が整えたもの)を土台にし、
+    // 配色だけを暗い版に差し替える。
+    final current = Theme.of(context);
+    final base = current.copyWith(
+      brightness: Brightness.dark,
+      colorScheme: dark?.colorScheme ??
+          ColorScheme.fromSeed(
+              seedColor: current.colorScheme.primary,
+              brightness: Brightness.dark),
+    );
+    return Theme(data: fmDarkTheme(base), child: child);
   }
 }
