@@ -37,6 +37,7 @@ const html = read('shell.html')
   .replace('/*__LIFE__*/', () => read('life.js'))
   .replace('/*__FUNC__*/', () => read('func.js'))
   .replace('/*__PRONEWS__*/', () => read('pronews.js'))
+  .replace('/*__STARACTS__*/', () => read('staracts.js'))
   .replace('/*__SHOP__*/', () => read('shop.js'))
   .replace('/*__VIEWS3__*/', () => read('views3.js'))
   .replace('/*__IMGDATA__*/', () => read('imgdata.js'))
@@ -177,6 +178,19 @@ async function clearEvents() {
   // 面談の一言と選択肢は選手の状態で変わる（talkSetup）ので、どれかが出ていれば押す
   (['褒める', '課題を伝える', '悩みを聞く', 'できていることを褒める', '背中を押す'].map((t) => btn(t)).find(Boolean) || btn('不安をゆっくり聞く') || btn('足りない点を伝える') || btn('期待していると伝える') || btn('焦らなくていいと聞く') || btn('さらに上を求める') || btn('気を引き締める') || btn('しっかり見ていると伝える') || btn('話を聞く')).click();
   ok(txt().includes('自信'), '面談の反応');
+  // ★の子と過ごす（2026-11-16）：★の子の進路の画面に6つの働きかけ。押すと本人の一言と結果が出て、週の回数が減る
+  {
+    const sp = A.w.players[A.pSel];
+    sp.star = true; sp.inj = 0; sp.fat = 10;
+    A.w.saUsed = null;
+    w.YA._ui.render();
+    btn('進路').click();
+    ok(['★の子と過ごす（今週あと2回', '居残り練習に付き合う', '試合の映像を一緒に見る', '覚醒の手がかりを話し合う', 'ご飯に連れて行く', '目標を約束する', '卒業生に会わせる'].every((x) => txt().includes(x)), '★の子の働きかけが並ぶ');
+    btn('ご飯に連れて行く').click();
+    ok(errors.length === 0 && txt().includes('今週あと1回') && txt().includes('信頼+8') && txt().includes('「'), 'ご飯に連れて行くと結果と本人の一言が出る: ' + errors.slice(0, 2).join('|'));
+    const mb = [...d.querySelectorAll('#main button')].find((b) => b.textContent.startsWith('ご飯に連れて行く'));
+    ok(mb && mb.disabled && /週に1回/.test(mb.dataset.why || ''), '続けては押せず、理由が付く ' + (mb && [mb.disabled, mb.dataset.why, mb.textContent].join('|')));
+  }
   btn('GK', d.querySelector('.fm-row')).click();
   btn('怪我', d.querySelector('.fm-row')).click();
   btn('全員', d.querySelector('.fm-row')).click();
