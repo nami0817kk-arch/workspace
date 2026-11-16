@@ -171,8 +171,6 @@ class SaveGame {
   /// 次の節に打つ試合日のイベントのID。無ければ null。節を終えると消える。
   String? matchdayPromoId;
 
-  /// 次の節に監督へ出した指示(OwnerDirective の name)。無ければ null。
-  String? ownerDirectiveName;
   int reserveFund;
   int communityLevel;
 
@@ -498,7 +496,6 @@ class SaveGame {
     this.youthMomentum = 1.0,
     this.facilityMomentum = 1.0,
     this.matchdayPromoId,
-    this.ownerDirectiveName,
     this.reserveFund = 0,
     this.communityLevel = 0,
     this.transferBanSeasons = 0,
@@ -717,7 +714,6 @@ class SaveGame {
         'youthMomentum': youthMomentum,
         'facilityMomentum': facilityMomentum,
         'matchdayPromoId': matchdayPromoId,
-        'ownerDirectiveName': ownerDirectiveName,
         'reserveFund': reserveFund,
         'communityLevel': communityLevel,
         'transferBanSeasons': transferBanSeasons,
@@ -872,7 +868,6 @@ class SaveGame {
         facilityMomentum:
             (json['facilityMomentum'] as num?)?.toDouble() ?? 1.0,
         matchdayPromoId: json['matchdayPromoId'] as String?,
-        ownerDirectiveName: json['ownerDirectiveName'] as String?,
         reserveFund: json['reserveFund'] as int? ?? 0,
         communityLevel: json['communityLevel'] as int? ?? 0,
         clubPolicy: ClubPolicy.values

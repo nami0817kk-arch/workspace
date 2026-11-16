@@ -13,7 +13,6 @@ import 'package:soccer_manager/screens/fixtures_screen.dart';
 import 'package:soccer_manager/screens/player_compare_screen.dart';
 import 'package:soccer_manager/screens/player_detail_screen.dart';
 import 'package:soccer_manager/screens/scout_report_screen.dart';
-import 'package:soccer_manager/screens/lineup_screen.dart';
 import 'package:soccer_manager/screens/squad_screen.dart';
 import 'package:soccer_manager/screens/youth_intake_screen.dart';
 import 'package:soccer_manager/state/game_state.dart';
@@ -53,7 +52,6 @@ void main() {
     // ドロワーの遷移先に加えて、ホームやガイドのカードから直接開かれる画面。
     final targets = <String, WidgetBuilder>{
       for (final d in quickAccessDestinations) d.label: d.builder,
-      'スタメン': (_) => const LineupScreen(),
       'スカッド': (_) => const SquadScreen(),
       'ユースインテーク': (_) => const YouthIntakeScreen(),
       // いまは下タブ専用。将来どこかから開かれたときに備えて一緒に見る。

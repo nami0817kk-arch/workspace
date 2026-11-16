@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import '../l10n/tr.dart';
 import '../logic/partner_club_engine.dart';
 import '../models/matchday_promo.dart';
-import '../models/owner_directive.dart';
 import '../models/owner_work.dart';
 import '../services/feedback_service.dart';
 import '../state/game_state.dart';
@@ -35,7 +34,6 @@ class OwnerWorkScreen extends StatelessWidget {
                         'Funds ${save.budget}. Each move can be made once per season.'),
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
-                  const _DirectiveCard(),
                   const _PromoCard(),
                   const _PartnerCard(),
                   for (final cat in OwnerWorkCategory.values) ...[
@@ -244,56 +242,6 @@ class _PromoCard extends StatelessWidget {
                     child: Text(Tr.pick('決める', 'Set')),
                   ),
                 ),
-          ],
-        ),
-    );
-  }
-}
-
-/// 監督への一言の指示(次の節)。
-class _DirectiveCard extends StatelessWidget {
-  const _DirectiveCard();
-
-  @override
-  Widget build(BuildContext context) {
-    final game = context.watch<GameState>();
-    final current = game.ownerDirective;
-    return FmPanel(
-      title: Tr.pick('監督への一言(次の節)', 'A word to the manager (next game)'),
-      margin: const EdgeInsets.only(top: 8),
-      child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              current == null
-                  ? Tr.pick('いまは監督に任せています。', 'Leaving it to the manager.')
-                  : Tr.pick('指示中: ${current.label}', 'Ordered: ${current.label}'),
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 6),
-            Wrap(
-              spacing: 8,
-              children: [
-                for (final d in OwnerDirective.values)
-                  ChoiceChip(
-                    label: Text(d.label),
-                    selected: current == d,
-                    onSelected: (_) =>
-                        context.read<GameState>().setOwnerDirective(d),
-                  ),
-                if (current != null)
-                  TextButton(
-                    onPressed: () =>
-                        context.read<GameState>().clearOwnerDirective(),
-                    child: Text(Tr.pick('任せる', 'Leave it')),
-                  ),
-              ],
-            ),
-            if (current != null) ...[
-              const SizedBox(height: 4),
-              Text(current.description,
-                  style: Theme.of(context).textTheme.bodySmall),
-            ],
           ],
         ),
     );

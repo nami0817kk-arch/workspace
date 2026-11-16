@@ -213,66 +213,12 @@ extension GameStateFinance on GameState {
     }
   }
 
-  /// 1シーズンに宣言できる勝負の試合の数。
-  static const int bigMatchesPerSeason = 4;
-
-  /// 今シーズンに宣言できる勝負の試合の残り。シーズンが変わると満タンに戻る。
-  int get bigMatchesLeft {
-    final save = _save;
-    if (save == null) return 0;
-    final used = save.bigMatchSeason == save.league.season ? save.bigMatchesUsed : 0;
-    return (GameStateFinance.bigMatchesPerSeason - used)
-        .clamp(0, GameStateFinance.bigMatchesPerSeason);
-  }
-
-  /// 次の自クラブの試合が、宣言した勝負の試合か。
-  bool get isNextMatchBig {
-    final save = _save;
-    if (save == null) return false;
-    final next = save.league.nextUnplayedFixture;
-    return next != null &&
-        save.bigMatchSeason == save.league.season &&
-        save.bigMatchDeclaredMatchday == next.matchday;
-  }
-
-  /// 次の試合を勝負の試合と宣言する。回数が尽きている・試合が無い・
-  /// すでに宣言済みなら何もしない。宣言した試合だけ、戦術と先発を自分で決める。
-  Future<bool> declareBigMatch() async {
-    final save = _save;
-    if (save == null || isNextMatchBig || bigMatchesLeft <= 0) return false;
-    final next = save.league.nextUnplayedFixture;
-    if (next == null) return false;
-    if (save.bigMatchSeason != save.league.season) {
-      save.bigMatchSeason = save.league.season;
-      save.bigMatchesUsed = 0;
-    }
-    save.bigMatchesUsed += 1;
-    save.bigMatchDeclaredMatchday = next.matchday;
-    _notify();
-    await _persist();
-    return true;
-  }
-
-  /// 宣言を取り消す(回数は戻る)。
-  Future<void> cancelBigMatch() async {
-    final save = _save;
-    if (save == null || !isNextMatchBig) return;
-    save.bigMatchesUsed = (save.bigMatchesUsed - 1).clamp(0, 999);
-    save.bigMatchDeclaredMatchday = -1;
-    _notify();
-    await _persist();
-  }
-
-  /// 勝負の試合でない節は、監督が先発とメンタリティを決める。穴(負傷・出場停止)
-  /// を埋め、水準が高ければ相手との力関係から構えを、さらに高ければ最善の先発を選ぶ。自分で決めた先発と戦術が効くのは、
-  /// 宣言した勝負の試合だけ。
+  /// 試合にオーナーは直接関わらない。先発と構えは、毎節かならず監督が決める。
+  /// 穴(負傷・出場停止)を埋め、水準が高ければ相手との力関係から構えを、
+  /// さらに高ければ最善の先発を選ぶ。
   void _managerPreparesMatch(Fixture next) {
     final save = _save;
     if (save == null) return;
-    // 指示は次の節で使い切る。勝負の試合なら自分で決めるので、指示は流れる。
-    final directive = ownerDirective;
-    save.ownerDirectiveName = null;
-    if (isNextMatchBig) return;
     final user = userTeam;
     final oppId = next.homeTeamId == user.id ? next.awayTeamId : next.homeTeamId;
     final opp = _findTeam(save.league.teams, oppId);
@@ -291,34 +237,6 @@ extension GameStateFinance on GameState {
         opponentRating: opp.overallRating,
       );
     }
-    // オーナーの一言の指示は、監督の判断より優先する。
-    if (directive != null) user.mentality = directive.mentality;
-  }
-
-  /// 次の節に監督へ出した指示。無ければ null。
-  OwnerDirective? get ownerDirective {
-    final name = _save?.ownerDirectiveName;
-    if (name == null) return null;
-    return OwnerDirective.values.where((d) => d.name == name).firstOrNull;
-  }
-
-  /// 次の節への指示を出す(出し直せば上書き)。
-  Future<bool> setOwnerDirective(OwnerDirective directive) async {
-    final save = _save;
-    if (save == null) return false;
-    save.ownerDirectiveName = directive.name;
-    _notify();
-    await _persist();
-    return true;
-  }
-
-  /// 指示を取り下げる(監督に任せる)。
-  Future<void> clearOwnerDirective() async {
-    final save = _save;
-    if (save == null || save.ownerDirectiveName == null) return;
-    save.ownerDirectiveName = null;
-    _notify();
-    await _persist();
   }
 
   /// 判断待ちの事件。無ければ null。

@@ -76,7 +76,6 @@ import '../logic/youth_investment_engine.dart';
 import '../logic/facility_investment_engine.dart';
 import '../logic/club_health_engine.dart';
 import '../models/matchday_promo.dart';
-import '../models/owner_directive.dart';
 import '../models/owner_goal.dart';
 import '../models/owner_legacy.dart';
 import '../logic/shareholder_engine.dart';

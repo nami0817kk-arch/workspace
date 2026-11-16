@@ -6,12 +6,10 @@ import '../logic/cup_engine.dart';
 import '../models/continental_cup.dart';
 import '../models/cup.dart';
 import '../models/team.dart';
-import '../services/feedback_service.dart';
 import '../state/game_state.dart';
 import '../theme/semantic_colors.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/responsive_body.dart';
-import 'live_match_screen.dart';
 import 'match_screen.dart';
 import '../l10n/tr.dart';
 
@@ -23,26 +21,6 @@ void showCupPrizeSnackBar(BuildContext context, GameState gameState) {
   if (note == null) return;
   gameState.lastCupPrizeNote = null;
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(note)));
-}
-
-/// 自クラブのカップ試合をライブ観戦で開始し、試合画面へ遷移する。
-/// リーグ戦のライブ観戦と同じ画面・同じ操作(決定機の判断・交代・采配)で
-/// 戦える。開始できなかった場合はSnackBarで知らせる。
-Future<void> playCupMatchLive(BuildContext context, LiveCupKind kind) async {
-  FeedbackService.tap();
-  final gameState = context.read<GameState>();
-  final started = await gameState.startCupMatchLive(kind);
-  if (!context.mounted) return;
-  if (!started) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-          content: Text(
-              Tr.pick('今はライブで開始できません', 'You cannot start it live right now'))),
-    );
-    return;
-  }
-  await Navigator.of(context)
-      .push(MaterialPageRoute(builder: (_) => const LiveMatchScreen()));
 }
 
 class CupScreen extends StatelessWidget {
@@ -138,28 +116,9 @@ class _DomesticCupTab extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: Column(
               children: [
-                if (gameState.canPlayNextDomesticCupMatchLive)
-                  SizedBox(
-                    width: double.infinity,
-                    child: FilledButton.icon(
-                      onPressed: () =>
-                          playCupMatchLive(context, LiveCupKind.domestic),
-                      icon: const Icon(Icons.sports_soccer),
-                      label: Text(
-                          Tr.pick('自クラブの試合をライブで戦う', 'Watch your tie live')),
-                    ),
-                  ),
-                if (gameState.canPlayNextDomesticCupMatchLive)
-                  const SizedBox(height: 6),
                 SizedBox(
                   width: double.infinity,
-                  child: gameState.canPlayNextDomesticCupMatchLive
-                      ? OutlinedButton(
-                          onPressed: () => _playNext(context),
-                          child: Text(Tr.pick(
-                              '観戦せず結果だけ確定(クイック消化)', 'Just settle the result')),
-                        )
-                      : FilledButton(
+                  child: FilledButton(
                           onPressed: gameState.canPlayNextDomesticCupMatch
                               ? () => _playNext(context)
                               : null,
@@ -285,28 +244,9 @@ class _ContinentalCupTab extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: Column(
               children: [
-                if (gameState.canPlayNextContinentalMatchLive)
-                  SizedBox(
-                    width: double.infinity,
-                    child: FilledButton.icon(
-                      onPressed: () => playCupMatchLive(
-                          context, LiveCupKind.continentalGroup),
-                      icon: const Icon(Icons.sports_soccer),
-                      label: Text(
-                          Tr.pick('自クラブの試合をライブで戦う', 'Watch your tie live')),
-                    ),
-                  ),
-                if (gameState.canPlayNextContinentalMatchLive)
-                  const SizedBox(height: 6),
                 SizedBox(
                   width: double.infinity,
-                  child: gameState.canPlayNextContinentalMatchLive
-                      ? OutlinedButton(
-                          onPressed: () => _playNextGroup(context),
-                          child: Text(Tr.pick(
-                              '観戦せず結果だけ確定(クイック消化)', 'Just settle the result')),
-                        )
-                      : FilledButton(
+                  child: FilledButton(
                           onPressed: gameState.canPlayNextContinentalMatch
                               ? () => _playNextGroup(context)
                               : null,
@@ -333,28 +273,9 @@ class _ContinentalCupTab extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: Column(
               children: [
-                if (gameState.canPlayNextContinentalMatchLive)
-                  SizedBox(
-                    width: double.infinity,
-                    child: FilledButton.icon(
-                      onPressed: () => playCupMatchLive(
-                          context, LiveCupKind.continentalKnockout),
-                      icon: const Icon(Icons.sports_soccer),
-                      label: Text(
-                          Tr.pick('自クラブのレグをライブで戦う', 'Watch your leg live')),
-                    ),
-                  ),
-                if (gameState.canPlayNextContinentalMatchLive)
-                  const SizedBox(height: 6),
                 SizedBox(
                   width: double.infinity,
-                  child: gameState.canPlayNextContinentalMatchLive
-                      ? OutlinedButton(
-                          onPressed: () => _playNextKnockoutLeg(context),
-                          child: Text(Tr.pick(
-                              '観戦せず結果だけ確定(クイック消化)', 'Just settle the result')),
-                        )
-                      : FilledButton(
+                  child: FilledButton(
                           onPressed: gameState.canPlayNextContinentalMatch
                               ? () => _playNextKnockoutLeg(context)
                               : null,
