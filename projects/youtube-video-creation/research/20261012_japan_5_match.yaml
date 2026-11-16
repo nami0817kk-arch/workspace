@@ -1,0 +1,132 @@
+# 日本人選手 の取材メモ（2026年10月12日）
+# 試合記録は ESPN（event 401878972）：24分 高井のオウンゴール、34分 Michez、39分 谷口のオウンゴール、44分 Bazdar、49分 Sebaoui、
+#   62分 Raman、71分 Soelle。高井・谷口とも先発（交代なし）。シュート 17対8、枠内 7対3、支配率 64.4対35.6。
+# 高井の出場は ESPN の9月の試合（9/2・9/5・9/12・9/20）の名簿で確かめた：9/12・9/20 は控えか登録外、ほかは名簿に無い。
+#   今回が初出場で初先発。DAZN の投稿も「ベルギーリーグデビュー戦」。
+# 順位は ESPN の順位表（8試合 2勝2分4敗 勝ち点8、12位）。9/12・9/20・10/11 と3連敗。
+# 加入時の本人の言葉はクラブ公式の発表（2026-09-01、Yahoo! の公式ページに全文）。
+# 反応は X の個人の投稿（全文）。報道・まとめのアカウントは外した。
+#   @PaGPaG_Uedalove「高井オウンゴール→谷口「1人じゃないよ」(イケメンOG)」
+#   @sagami_no「シントト、高井谷口揃ってオウンゴールで敗戦！？」
+#   @1020manju「高井谷口大丈夫だ、ノイアーもブンデス記録のオウンゴールやらかしたんだ」
+# 写真：Commons に高井の写真が無い。クラブ公式の加入発表の写真（STVV の会見ボード、背番号4のユニフォーム）を
+#   pressphoto.py で取り込んだ（代理店の印は無い。許諾は得ていない＝引き受ける危険）。16:9 は顔が横の8割に来るよう手で切った
+#   （facecrop は横の位置を決められない）。縦は facecrop。どちらも開いて頭と顎が入っているのを見た。
+slot: japan
+date: "2026年10月12日"
+topic: "高井幸大"
+people:
+  - "高井幸大"
+  - "谷口彰悟"
+
+theme:
+  id: "takai_stvv_debut"
+  league: ""
+  league_name: "ベルギー1部"
+  prefix: ""
+  title: "高井幸大のベルギーデビュー戦、谷口彰悟と2人で記録したもの"
+  hook: ""
+  question: "高井幸大のデビュー戦で、シント＝トロイデンはなぜ押していたのに負けたのか"
+  takeaway: "シュートは17本対8本で押していた。メヘレンが自分で決めたのは2点だけで、4失点の半分は日本人2人のオウンゴールだった"
+  opening_image: assets/images/20261012_japan_5_takai/01_w.jpg
+
+thumbnail:
+  layout: face
+  photo: assets/images/20261012_japan_5_takai/01_w.jpg
+  short_photo: assets/images/20261012_japan_5_takai/01_v.jpg
+  line1: "高井幸大デビュー戦"
+  line2: "谷口と2人で●●"
+  tags:
+    - "高井幸大"
+    - "谷口彰悟"
+
+answer: "押していたのはシント＝トロイデン。それでも日本人2人のオウンゴールが重く、3対4で敗れた"
+watch: "高井が次の試合でも先発するか"
+
+sections:
+  - id: score
+    heading: 試合はこうなった
+    tier: 報道
+    telop: "メヘレン4-3シント＝トロイデン"
+    say:
+      - "シント＝トロイデンは、アウェーでメヘレンに3対4で敗れました。"
+      - "高井幸大は移籍後初めての出場で、谷口彰悟とそろって先発しました。"
+    official: false
+    sources:
+      - "https://www.espn.com/soccer/match/_/gameId/401878972"
+
+  - id: words
+    heading: 加入のときの言葉
+    tier: 報道
+    telop: "9月の加入発表で"
+    say:
+      - "9月の加入のとき、高井は谷口についてこう話していました。"
+      - voice: 高井幸大
+        text: "谷口選手とは、川崎フロンターレと日本代表で、"
+      - voice: 高井幸大
+        text: "ともにプレーした経験があります。"
+        cont: true
+    official: false
+    sources:
+      - "https://sports.yahoo.co.jp/official/detail/2026090100135-spnaviow"
+
+  - id: owngoals
+    heading: 2つのオウンゴール
+    tier: 報道
+    telop: "24分 高井、39分 谷口"
+    main: true
+    say:
+      - text: "ベルギーでデビューした高井幸大の試合で、日本人2人がオウンゴールを記録しました。"
+        short_only: true
+      - "24分、高井のオウンゴールでメヘレンが先制しました。"
+      - "34分に2点目を許し、39分には谷口もオウンゴール。"
+      - "前半は1対3。2点のリードを許して折り返しました。"
+      - "後半は49分と71分に1点ずつ返しましたが、"
+      - "62分に許した4点目が重く、あと1点届きませんでした。"
+    official: false
+    sources:
+      - "https://www.espn.com/soccer/match/_/gameId/401878972"
+
+  - id: numbers
+    heading: 押していたのはシント＝トロイデン
+    tier: 報道
+    telop: "シュート17本対8本"
+    viewpoint: true
+    say:
+      - text: "シュートは17本対8本。ボールを持っていた時間も64%でした。"
+        card: {type: table, title: 試合の数字, columns: [項目, シント＝トロイデン, メヘレン], rows: [['シュート', '17', '8'], ['枠内シュート', '7', '3'], ['ボール保持', '64%', '36%'], ['自分たちで決めた点', '3', '2']], highlight_row: 0}
+        main_only: true
+      - text: "メヘレンが自分で決めた点は、シュート8本で2点だけ。"
+        card: {type: table, title: 試合の数字, columns: [項目, シント＝トロイデン, メヘレン], rows: [['シュート', '17', '8'], ['枠内シュート', '7', '3'], ['ボール保持', '64%', '36%'], ['自分たちで決めた点', '3', '2']], highlight_row: 3}
+        main_only: true
+      - text: "4失点のうち半分は、日本人2人のオウンゴールでした。"
+        card: none
+    official: false
+    sources:
+      - "https://www.espn.com/soccer/match/_/gameId/401878972"
+
+  - id: next
+    heading: 3連敗で12位
+    tier: 報道
+    telop: "3連敗　12位"
+    say:
+      - "シント＝トロイデンはこれで3連敗。8試合を終えて12位です。"
+    official: false
+    sources:
+      - "https://www.espn.com/soccer/team/_/id/2843"
+
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: "「1人じゃないよ」"
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: 高井オウンゴール→谷口「1人じゃないよ」(イケメンOG)
+        image: assets/images/20261012_japan_5_takai/02_w.jpg
+      - voice: ネット民
+        text: シントト、高井谷口揃ってオウンゴールで敗戦！？
+      - voice: ネット民
+        text: 高井谷口大丈夫だ、ノイアーもブンデス記録のオウンゴールやらかしたんだ
+    sources:
+      - "https://x.com/search?q=%E9%AB%98%E4%BA%95%20%E3%82%AA%E3%82%A6%E3%83%B3%E3%82%B4%E3%83%BC%E3%83%AB%20-filter%3Alinks%20lang%3Aja&f=live"

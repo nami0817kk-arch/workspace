@@ -1,0 +1,69 @@
+# 日本人以外の大きい話 の取材メモ（2026年10月12日）
+# 1本＝1テーマ。まとめではなく、1つの話を掘る
+# 埋めたら python -m src.cli draft このファイル で台本になる
+slot: world
+date: "2026年10月12日"
+
+theme:
+  id: "sassuolo_milan"
+  league: "italy"
+  prefix: ""
+  title: "ミランと1対1のサッスオーロ。監督が褒めた中身"
+  hook: "先制されたサッスオーロが68分に追いつく。監督が評価したのは得点ではなかった"
+  question: "先制されて追いつき、取り消された得点もあった試合で、監督は何を評価したのか"
+  takeaway: "先制されてから追いついた試合を、監督は「成熟」と評価した。ただし前半の終わりは下がりすぎたと認めている"
+  # 見立ての節（数字で比べて分かったこと・次に何が起きるか）には viewpoint: true を付ける（2026-09-28）
+
+thumbnail:
+  line1: "サッスオーロ、ミランと1対1"
+  line2: "監督が褒めた中身は"
+  tags:
+    - "サッスオーロ"
+    - "アクイラーニ"
+  photo: ""          # 点検用の仮。顔写真は未決（代理店の写真は使えない。クラブ公式か自前で取る）
+
+answer: "先制されても、局面ごとに何をするかが分かっていた。前半の終わりに下がりすぎたことが、次の課題として残る"
+watch: "ミランに追いつかれず、次の試合でも後半に同じ形が出るか"
+
+sections:
+  - id: what
+    heading: 何が起きたか
+    tier: 報道
+    telop: "1対1。63分に先制され、68分に追いつく"
+    say:
+      - "サッスオーロが、ホームのマペイ・スタジアムでミランと、いちたいいちで引き分けました。"
+      - "六十三分にミランのあどりあん・らびおが先制しますが、六十八分にサッスオーロのかす・おーでんたーるが追いつきます。"
+      - "とるすとぅぇっとの得点は、きえろん・ぼうい の ブロックが不正と判断されて取り消されています。"
+    official: false
+    sources:
+      - "https://www.espn.com/soccer/report/_/gameId/401874789"
+      - "https://www.tuttomercatoweb.com/serie-a/sassuolo-ferma-milan-aquilani-prova-maturita-miei-vorrei-rivedere-gol-annullato-2282280"
+
+  - id: why
+    heading: 監督は何を評価したのか
+    tier: 報道
+    telop: "評価は得点ではなく「成熟」"
+    say:
+      - "アクイラーニ監督は、いちばん大事なのは、チームが試合の局面を分かって動けていたことだと話しています。"
+      - "最初の三十分は良かったが、そのあと下がりすぎて相手に押し込まれた、とも認めています。"
+      - "監督は、こういうサッカーを続ければ、どの相手とも戦える、とも話しています。"
+    official: false
+    viewpoint: true
+    sources:
+      - "https://www.tuttomercatoweb.com/serie-a/sassuolo-ferma-milan-aquilani-prova-maturita-miei-vorrei-rivedere-gol-annullato-2282280"
+    # 原文（TMW、Sky Sport への発言）: "Prima mezz'ora fatta bene, poi ci siamo abbassati un po' lasciando a loro il pallino e così abbiamo rischiato."
+    # 原文（TMW）: "Quando parlo di maturità intendo quello: capire il momento della partita. Nei momenti di difficoltà ci rifugiamo sulle nostre cose. Il Milan è forte, ci sta che ti faccia soffrire ma proprio per questo sono contento perché ho visto una squadra matura."
+    # 原文（Corriere dello Sport）: "Giocando così possiamo competere con tutti, anche se il Milan è una squadra forte..."
+    # 見出しの「maturity」は原文の maturità（成熟・大人の試合運び）。英訳ではなく、ここでは「成熟」と読む
+
+  - id: next
+    heading: これからどうなる
+    tier: 報道
+    telop: "レイセンの怪我、次は未確認"
+    say:
+      - "サッスオーロは、レイセンが二十六分に怪我で交代しています。どの程度の怪我かは、まだ分かっていません。"
+      - "監督は、取り消された得点について、もう一度見てみたいと話しています。"
+    official: false
+    sources:
+      - "https://www.espn.com/soccer/report/_/gameId/401874789"
+      - "https://www.tuttomercatoweb.com/serie-a/sassuolo-ferma-milan-aquilani-prova-maturita-miei-vorrei-rivedere-gol-annullato-2282280"
