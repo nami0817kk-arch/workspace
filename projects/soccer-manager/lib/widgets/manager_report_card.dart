@@ -52,7 +52,7 @@ class _Meter extends StatelessWidget {
         ? SemanticColors.negative(context)
         : v >= ManagerReportEngine.goodLine
             ? SemanticColors.positive(context)
-            : SemanticColors.neutral(context);
+            : Theme.of(context).colorScheme.primary;
     final size = compact ? 11.0 : 13.0;
     return Row(
       mainAxisSize: MainAxisSize.min,

@@ -1886,9 +1886,15 @@ class _StatTile extends StatelessWidget {
         // 真っ平らな灰色にすると、今度は整いすぎて素っ気ない。地の色に
         // その項目の色をごく薄く混ぜて、気配だけ残す。
         color: Color.alphaBlend(
-            color.withValues(alpha: 0.035), scheme.surfaceContainer),
+            color.withValues(alpha: 0.035),
+            scheme.brightness == Brightness.dark
+                ? scheme.surfaceContainerHigh
+                : scheme.surfaceContainer),
         borderRadius: BorderRadius.circular(fmRadius(context, 16)),
-        border: Border.all(color: scheme.outlineVariant.withValues(alpha: 0.7)),
+        border: Border.all(
+            color: scheme.brightness == Brightness.dark
+                ? scheme.outline.withValues(alpha: 0.55)
+                : scheme.outlineVariant.withValues(alpha: 0.7)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
