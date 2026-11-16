@@ -145,12 +145,13 @@
   YA.eventView = function (w, e) { if (e.id === 'clubev' && !cprep(w, e)) return null; return v0.apply(this, arguments); };
   const r0 = YA.resolveEvent;
   YA.resolveEvent = function (w, e, idx) { if (e.id === 'clubev') cprep(w, e); return r0.apply(this, arguments); };
+  YA.CLUB_EV_P = 0.06;
   YA.clubEventWeek = function (w) {
     if (!w.club || w.week >= YA.WEEKS - 1) return;
     const r = YA.rngOf((w.seed | 0) * 59 + w.year * 40 + w.week);
     w.clubEvDone = w.clubEvDone && w.clubEvDone.y === w.year ? w.clubEvDone : { y: w.year, ids: [] };
     const cands = CE.filter((d) => w.clubEvDone.ids.indexOf(d.id) < 0 && (() => { try { return !!d.c(w); } catch (er) { return false; } })());
-    if (!cands.length || !r.chance(0.35)) return;
+    if (!cands.length || !r.chance(YA.CLUB_EV_P)) return; // 2026-11-15「★以外のイベントが多発する」で 0.35→0.06
     const d = cands[r.int(0, cands.length - 1)];
     w.clubEvDone.ids.push(d.id);
     w.forced = (w.forced || []).concat([{ id: 'clubev', ck: d.id, pid: null, x: null, week: w.week, year: w.year }]);

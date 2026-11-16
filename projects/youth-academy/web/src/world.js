@@ -783,7 +783,7 @@
 
   // 今週の出来事を作る（1〜2件。必ず止まる）
   // ★以外の子の出来事が通る割合と、いつも通す出来事
-  YA.NONSTAR_KEEP = 0.3;
+  YA.NONSTAR_KEEP = 0.15;
   YA.EV_KEEP_ALWAYS = ['quit', 'injury', 'early', 'top', 'nat', 'natcall'];
   YA.rollEvents = function (w) {
     const r = YA.rngOf(w.seed * 17 + w.year * 555 + w.week * 11);
