@@ -1188,14 +1188,6 @@ class GameState extends ChangeNotifier {
   CupMatch? _liveCupMatch;
   CupTie? _liveCupTie;
 
-  /// ライブ観戦したカップ試合がPK戦で決着した場合などの補足文言
-  /// (フルタイム画面で表示する。次のライブ試合開始時にクリアされる)。
-  String? lastLiveCupNote;
-
-  /// 直近のライブ観戦カップ戦がPK戦にもつれた場合の、1本ごとの記録
-  /// (フルタイム画面の演出用。セーブには保存しない一時データ)。
-  PenaltyShootoutResult? lastShootout;
-
   /// 現在進行中のライブ試合が「決定機の判断あり(インタラクティブ)」で
   /// 開始されたかどうか。ライブ観戦での勝利数(実績)のカウントに使う。
   bool _liveWasInteractive = false;

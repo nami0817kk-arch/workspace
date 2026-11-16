@@ -310,9 +310,7 @@ extension GameStateSeason on GameState {
     _liveCupMatch = cupMatch;
     _liveCupTie = tie;
     _liveSubstitutionsUsed = 0;
-    lastLiveCupNote = null;
     lastCupPrizeNote = null;
-    lastShootout = null;
     _liveWasInteractive = true; // カップのライブ観戦は常に決定機の判断あり
     _liveFirstHalfState = MatchEngine.beginInteractiveHalf(
       home: home,
@@ -343,7 +341,6 @@ extension GameStateSeason on GameState {
         }
         CupEngine.applyMatchResult(cup, allTeamsForCups, match, merged);
         cup.lastPlayedAtMatchday = _currentLeagueMatchdayMarker;
-        _noteLiveCupPenalty(match.penaltyWinnerId, merged);
         _afterDomesticCupMatchApplied(match);
       case LiveCupKind.continentalGroup:
         final cup = _save!.continentalCup;
@@ -373,7 +370,6 @@ extension GameStateSeason on GameState {
         ContinentalCupEngine.applyKnockoutLegResult(
             cup, allTeamsForCups, tie, merged);
         cup.lastPlayedAtMatchday = _currentLeagueMatchdayMarker;
-        _noteLiveCupPenalty(tie.penaltyWinnerId, merged);
         _afterContinentalKnockoutLegApplied(tie);
       case LiveCupKind.superCup:
         final match = _liveCupMatch;
@@ -382,41 +378,20 @@ extension GameStateSeason on GameState {
         if (merged.homeGoals == merged.awayGoals) {
           match.penaltyWinnerId = _runLiveShootout().winnerId;
         }
-        _noteLiveCupPenalty(match.penaltyWinnerId, merged);
         _afterSuperCupApplied(match);
     }
     _evaluateAchievements();
   }
 
   /// ライブ観戦のカップ戦がPK戦にもつれた際、1本ずつのシュートアウトを
-  /// 実施して勝者を決める。記録は[lastShootout]に保持し、フルタイム画面が
+  /// 実施して勝者を決める。記録は[_lastShootout]に保持し、フルタイム画面が
   /// 1本ごとの成否を演出表示する。自クラブが勝てばPK戦勝利数も記録する。
   PenaltyShootoutResult _runLiveShootout() {
     final shootout = CupEngine.simulateShootout(_liveCupHome!, _liveCupAway!);
-    lastShootout = shootout;
     if (shootout.winnerId == _save!.userTeamId) {
       _save!.pkShootoutWins++;
     }
     return shootout;
-  }
-
-  /// ライブ観戦したカップ試合が同点でPK戦にもつれた場合、フルタイム画面で
-  /// 表示する決着の文言をセットする。
-  void _noteLiveCupPenalty(String? penaltyWinnerId, MatchResult merged) {
-    if (penaltyWinnerId == null) return;
-    final shootout = lastShootout;
-    // 2レグ制では最終レグ自体は引き分けでなくても合計同点でPK戦になり得る
-    // ため、シュートアウト記録がある場合はスコア条件を問わず文言を出す。
-    if (shootout == null && merged.homeGoals != merged.awayGoals) return;
-    final winner = teamById(penaltyWinnerId) ??
-        (penaltyWinnerId == _liveCupHome?.id ? _liveCupHome : _liveCupAway);
-    if (winner == null) return;
-    lastLiveCupNote = shootout != null
-        ? Tr.pick(
-            'PK戦 ${shootout.homeScore}-${shootout.awayScore} の末、${winner.name}が勝ち上がり!',
-            '${winner.name} go through ${shootout.homeScore}-${shootout.awayScore} on penalties!')
-        : Tr.pick('PK戦の末、${winner.name}が勝ち上がり!',
-            '${winner.name} go through on penalties!');
   }
 
   /// 自クラブが関わるカップ試合に、リーグ戦と同じ試合後効果(疲労・負傷・

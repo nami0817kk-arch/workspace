@@ -569,7 +569,6 @@ extension GameStateMatch on GameState {
       if (isUserFixture) {
         userFixture = f;
         _liveWasInteractive = interactive;
-        lastShootout = null;
         final state = MatchEngine.beginInteractiveHalf(
           home: home,
           away: away,
@@ -821,7 +820,6 @@ extension GameStateMatch on GameState {
       }
       userFixture = f;
       _liveWasInteractive = interactive;
-      lastShootout = null;
       final secondHalf = progress?.secondHalf;
       if (progress != null && secondHalf != null) {
         // 前半は終わっていた。ハーフタイムから再開し、後半は続きから。
