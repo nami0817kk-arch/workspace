@@ -1,0 +1,132 @@
+# 物語完結型ショート タイタニック s3（2026-11-16）。本編 scripts/titanic-story.yaml（11/20 12:00 公開予定、https://youtu.be/SdhomuxqfF4）から。11/21 に予約。
+# 形式は meireki_s1〜s5.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（dev/output/rekishi-chiso/research/titanic_facts_20261115.yaml）と本編の # fact: だけ。
+# 絵：本編の AI 絵（out/story/titanic/main/ の S01〜S21）の切り出しだけ。新しい絵は作らない。遺体・惨状・顔は絵にしない。
+# 切り口：近くにいたカリフォルニアン号の無線士エバンズが、タイタニックから受けた返事が、米上院（黙れ、黙れ、私は忙しい）と英国調査（邪魔するな）で違う。その後エバンズは寝た。
+# 計算（自分で数え直した）：なし（時刻はカリフォルニアン号の船内時刻のまま。タイタニックの時刻と引き算しない）
+title: "タイタニック｜近くの船の無線士への返事は、米英の調査で違う"
+yt_title: "タイタニック　近くの船の無線士が受けた返事は「黙れ」か「邪魔するな」か　アメリカ上院と英国の調査で違う証言"
+description: |-
+  タイタニックが沈んだ夜、近くにいたカリフォルニアン号の無線士エバンズは、タイタニックに、氷に囲まれて止まっている、と送りました。
+  返ってきた言葉は、アメリカ上院の証言では「黙れ、黙れ、私は忙しい、ケープレースと交信中だ」。英国の調査の証言では「邪魔するな」です。そのあと、エバンズはヘッドホンを外して寝ました。この船の無線士は、エバンズ1人でした。
+  本編では、衝突から沈没までの2時間40分を、無線の記録と英米2つの調査から、時刻の順にたどっています。本編は概要欄のリンクからどうぞ。
+  https://youtu.be/SdhomuxqfF4
+hashtags:
+- "#タイタニック"
+- "#世界史"
+- "#歴史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。人物の姿も、特定の人を写したものではありません。創作の台詞は入れていません。"
+art_dir: out/story/titanic
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: titanic_story_s3
+header:
+  tag: "カリフォルニアン号　無線士エバンズ"
+  title: "返事は《黙れ》か、《邪魔するな》か"
+now:
+- {at: "タイタニックが沈んだ夜", text: "4月14日の夜　北大西洋", point: 0}
+- {at: "アメリカ上院で", text: "4月　アメリカ上院", point: 1}
+- {at: "英国の調査では", text: "5月　英国の調査", point: 2}
+timeline:
+- {label: "4/14"}
+- {label: "4月"}
+- {label: "5月"}
+shots:
+  S12_1:
+    kind: "ai"
+    file: "titanic/main/S12.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "S12"
+  S13_2:
+    kind: "ai"
+    file: "titanic/main/S13.jpg"
+    focus: [0.3, 0.5]
+    move: "right"
+    must: "S13"
+  S02_3:
+    kind: "ai"
+    file: "titanic/main/S02.jpg"
+    focus: [0.72, 0.5]
+    move: "left"
+    must: "S02"
+  S17_4:
+    kind: "ai"
+    file: "titanic/main/S17.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    must: "S17"
+  S16_5:
+    kind: "ai"
+    file: "titanic/main/S16.jpg"
+    focus: [0.55, 0.5]
+    move: "left"
+    must: "S16"
+  S13_6:
+    kind: "ai"
+    file: "titanic/main/S13.jpg"
+    focus: [0.75, 0.5]
+    move: "right"
+    must: "S13"
+  S12_7:
+    kind: "ai"
+    file: "titanic/main/S12.jpg"
+    focus: [0.78, 0.5]
+    move: "left"
+    must: "S12"
+  S10_8:
+    kind: "ai"
+    file: "titanic/main/S10.jpg"
+    focus: [0.6, 0.5]
+    move: "in"
+    must: "S10"
+lines:
+  # fact: A-03
+- 語り: "タイタニックが沈んだ夜。近くの船の無線士が受けた返事は、アメリカと英国の調査で、違っている。"
+  shot: S12_1
+  tone: 強調
+  pause: 0.12
+  # fact: A-02
+- 語り: "カリフォルニアン号の無線士、エバンズは、タイタニックに、氷に囲まれて、止まっている、と送った。"
+  shot: S13_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: A-02, A-03
+- 語り: "アメリカ上院で、エバンズは、黙れ、黙れ、私は忙しい、ケープレースと交信中だ、と返された、と述べた。"
+  shot: S02_3
+  tone: 重い
+  pause: 0.12
+  # fact: A-03
+- 語り: "ところが、英国の調査では、同じエバンズが、返事は、邪魔するな、だった、と述べている。"
+  shot: S17_4
+  tone: 重い
+  pause: 0.12
+  # fact: A-03
+- 語り: "英国の報告書は、邪魔するな、を採った。カリフォルニアン号の信号が強すぎて、ケープレースが聞こえなかったからで、考えた上での返事ではない、とした。"
+  shot: S16_5
+  tone: しみじみ
+  pause: 0.12
+  # fact: A-04
+- 語り: "エバンズは、そのあと、ヘッドホンを外して寝た。カリフォルニアン号の時計で、英国の調査では11時30分、アメリカでは11時35分だ。"
+  shot: S13_6
+  tone: 重い
+  pause: 0.12
+  # fact: A-04
+- 語り: "この船の無線士は、エバンズ1人だった。"
+  shot: S12_7
+  tone: 重い
+  pause: 0.12
+  # fact: A-17
+- 語り: "では、タイタニックが打った遭難信号は、誰に届いたのか。"
+  shot: S10_8
+  tone: 疑問
+  pause: 0.15
