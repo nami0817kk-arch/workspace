@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 
 import '../l10n/tr.dart';
 import '../logic/partner_club_engine.dart';
+import '../models/matchday_promo.dart';
+import '../models/owner_directive.dart';
 import '../models/owner_work.dart';
 import '../services/feedback_service.dart';
 import '../state/game_state.dart';
@@ -32,6 +34,8 @@ class OwnerWorkScreen extends StatelessWidget {
                         'Funds ${save.budget}. Each move can be made once per season.'),
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
+                  const _DirectiveCard(),
+                  const _PromoCard(),
                   const _PartnerCard(),
                   for (final cat in OwnerWorkCategory.values) ...[
                     Padding(
@@ -190,6 +194,119 @@ class _PartnerCard extends StatelessWidget {
                 ),
               ],
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// 試合日のイベント。次の節の観客収入とサポーターの期待を動かす。
+class _PromoCard extends StatelessWidget {
+  const _PromoCard();
+
+  @override
+  Widget build(BuildContext context) {
+    final game = context.watch<GameState>();
+    final active = game.activeMatchdayPromo;
+    final budget = game.save?.budget ?? 0;
+    return Card(
+      margin: const EdgeInsets.only(top: 12),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(Tr.pick('試合日のイベント(次の節)', 'Matchday event (next game)'),
+                style: Theme.of(context).textTheme.titleSmall),
+            const SizedBox(height: 4),
+            if (active != null) ...[
+              Text(Tr.pick('決定済み: ${active.title}', 'Set: ${active.title}'),
+                  style: const TextStyle(fontWeight: FontWeight.bold)),
+              const SizedBox(height: 4),
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: () =>
+                      context.read<GameState>().cancelMatchdayPromo(),
+                  child: Text(Tr.pick('取り消す(費用は戻る)', 'Cancel (refund)')),
+                ),
+              ),
+            ] else
+              for (final p in matchdayPromos)
+                ListTile(
+                  dense: true,
+                  contentPadding: EdgeInsets.zero,
+                  title: Text(p.title),
+                  subtitle: Text(
+                    '${p.description}\n'
+                    '${Tr.pick('費用 ${p.cost}万円', 'Cost ${p.cost}')} / '
+                    '${Tr.pick('観客収入', 'Gate')} x${p.gateMultiplier.toStringAsFixed(2)} / '
+                    '${Tr.pick('サポーター', 'Fans')} ${p.supporters >= 0 ? '+' : ''}${p.supporters}',
+                  ),
+                  isThreeLine: true,
+                  trailing: FilledButton(
+                    onPressed: p.cost > budget
+                        ? null
+                        : () => context.read<GameState>().setMatchdayPromo(p.id),
+                    child: Text(Tr.pick('決める', 'Set')),
+                  ),
+                ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// 監督への一言の指示(次の節)。
+class _DirectiveCard extends StatelessWidget {
+  const _DirectiveCard();
+
+  @override
+  Widget build(BuildContext context) {
+    final game = context.watch<GameState>();
+    final current = game.ownerDirective;
+    return Card(
+      margin: const EdgeInsets.only(top: 12),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(Tr.pick('監督への一言(次の節)', 'A word to the manager (next game)'),
+                style: Theme.of(context).textTheme.titleSmall),
+            const SizedBox(height: 4),
+            Text(
+              current == null
+                  ? Tr.pick('いまは監督に任せています。', 'Leaving it to the manager.')
+                  : Tr.pick('指示中: ${current.label}', 'Ordered: ${current.label}'),
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 6),
+            Wrap(
+              spacing: 8,
+              children: [
+                for (final d in OwnerDirective.values)
+                  ChoiceChip(
+                    label: Text(d.label),
+                    selected: current == d,
+                    onSelected: (_) =>
+                        context.read<GameState>().setOwnerDirective(d),
+                  ),
+                if (current != null)
+                  TextButton(
+                    onPressed: () =>
+                        context.read<GameState>().clearOwnerDirective(),
+                    child: Text(Tr.pick('任せる', 'Leave it')),
+                  ),
+              ],
+            ),
+            if (current != null) ...[
+              const SizedBox(height: 4),
+              Text(current.description,
+                  style: Theme.of(context).textTheme.bodySmall),
+            ],
           ],
         ),
       ),

@@ -268,7 +268,11 @@ extension GameStateFinance on GameState {
   /// 宣言した勝負の試合だけ。
   void _managerPreparesMatch(Fixture next) {
     final save = _save;
-    if (save == null || isNextMatchBig) return;
+    if (save == null) return;
+    // 指示は次の節で使い切る。勝負の試合なら自分で決めるので、指示は流れる。
+    final directive = ownerDirective;
+    save.ownerDirectiveName = null;
+    if (isNextMatchBig) return;
     final user = userTeam;
     final oppId = next.homeTeamId == user.id ? next.awayTeamId : next.homeTeamId;
     final opp = _findTeam(save.league.teams, oppId);
@@ -287,6 +291,34 @@ extension GameStateFinance on GameState {
         opponentRating: opp.overallRating,
       );
     }
+    // オーナーの一言の指示は、監督の判断より優先する。
+    if (directive != null) user.mentality = directive.mentality;
+  }
+
+  /// 次の節に監督へ出した指示。無ければ null。
+  OwnerDirective? get ownerDirective {
+    final name = _save?.ownerDirectiveName;
+    if (name == null) return null;
+    return OwnerDirective.values.where((d) => d.name == name).firstOrNull;
+  }
+
+  /// 次の節への指示を出す(出し直せば上書き)。
+  Future<bool> setOwnerDirective(OwnerDirective directive) async {
+    final save = _save;
+    if (save == null) return false;
+    save.ownerDirectiveName = directive.name;
+    _notify();
+    await _persist();
+    return true;
+  }
+
+  /// 指示を取り下げる(監督に任せる)。
+  Future<void> clearOwnerDirective() async {
+    final save = _save;
+    if (save == null || save.ownerDirectiveName == null) return;
+    save.ownerDirectiveName = null;
+    _notify();
+    await _persist();
   }
 
   /// 判断待ちの事件。無ければ null。
@@ -432,6 +464,58 @@ extension GameStateFinance on GameState {
   /// テスト用: 提携の季末の処理だけを走らせる。
   @visibleForTesting
   void debugSettlePartnerClub() => _settlePartnerClub();
+
+  /// 次の節に打つと決めた試合日のイベント。無ければ null。
+  MatchdayPromo? get activeMatchdayPromo {
+    final id = _save?.matchdayPromoId;
+    if (id == null) return null;
+    return matchdayPromos.where((p) => p.id == id).firstOrNull;
+  }
+
+  /// 次の節の試合日のイベントを決める。費用を先に払う。すでに決めていれば
+  /// 先に取り消さないと決められない。資金が足りなくても決められない。
+  Future<bool> setMatchdayPromo(String id) async {
+    final save = _save;
+    if (save == null || save.matchdayPromoId != null) return false;
+    final promo = matchdayPromos.where((p) => p.id == id).firstOrNull;
+    if (promo == null) return false;
+    if (promo.cost > 0 && save.budget < promo.cost) return false;
+    if (promo.cost > 0) _book(LedgerCategory.other, -promo.cost);
+    save.matchdayPromoId = promo.id;
+    _notify();
+    await _persist();
+    return true;
+  }
+
+  /// 決めた試合日のイベントを取り消す。節の前なので、費用は戻る。
+  Future<bool> cancelMatchdayPromo() async {
+    final save = _save;
+    final promo = activeMatchdayPromo;
+    if (save == null || promo == null) return false;
+    if (promo.cost > 0) _book(LedgerCategory.other, promo.cost);
+    save.matchdayPromoId = null;
+    _notify();
+    await _persist();
+    return true;
+  }
+
+  /// 節を終えたとき、試合日のイベントの効きを2つの期待に反映して使い切る。
+  void _consumeMatchdayPromo() {
+    final save = _save!;
+    final promo = activeMatchdayPromo;
+    if (promo == null) {
+      save.matchdayPromoId = null;
+      return;
+    }
+    save.confidence = (save.confidence + promo.supporters).clamp(0, 100);
+    save.shareholderExpectation =
+        (save.shareholderExpectation + promo.shareholders).clamp(0, 100);
+    save.matchdayPromoId = null;
+  }
+
+  /// テスト用: 節を終えたときの試合日のイベントの処理だけを走らせる。
+  @visibleForTesting
+  void debugConsumeMatchdayPromo() => _consumeMatchdayPromo();
 
   /// テスト用: その節の事件の判定だけを走らせる。
   @visibleForTesting
@@ -784,6 +868,7 @@ extension GameStateFinance on GameState {
             userAttendanceFactor *
             _save!.ticketPricing.revenueMultiplier *
             FacilityInvestmentEngine.gateMultiplier(_save!.facilityMomentum) *
+            (activeMatchdayPromo?.gateMultiplier ?? 1.0) *
             commercialMultiplier)
         .round();
     // 2部リーグは1部より観客動員が少ない(userAttendanceFactorに反映済み)。

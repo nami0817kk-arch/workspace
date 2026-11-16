@@ -656,6 +656,8 @@ extension GameStateMatch on GameState {
     _book(LedgerCategory.merchandise, incomeParts.merchandise);
     // 営業ブーストは、収入が入った節で1つ使う。
     if (_save!.marketingBoostWeeks > 0) _save!.marketingBoostWeeks -= 1;
+    // 試合日のイベントも、収入が入った節で使い切る。
+    _consumeMatchdayPromo();
     _book(LedgerCategory.staffWages, -_save!.infrastructure.totalStaffWeeklyWage);
     _book(LedgerCategory.playerWages, -ContractEngine.weeklyWageBill(userTeam));
 
