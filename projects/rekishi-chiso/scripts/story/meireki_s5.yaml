@@ -1,0 +1,131 @@
+# 物語完結型ショート 明暦の大火 s5（2026-11-15）。本編 scripts/meireki-story.yaml（11/19 12:00 公開予定、https://youtu.be/YMXFgwO0dWI）から。11/20 に予約。
+# 形式は toyamaru_s1〜s5.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（dev/output/rekishi-chiso/research/明暦の大火_facts_20261115.yaml）と本編の # fact: だけ。
+# 絵：本編の AI 絵（out/story/meireki/main/ の K01〜K24・YEND）の切り出しだけ。新しい絵は作らない。燃える場面（K05〜K09）は5本とも使わない（本編で繰り返したため）。遺体・惨状・顔は絵にしない。
+# 切り口：大火のあとの救い（粥6000石・米価3.5倍・金蔵が焼けた・下賜金15万〜16万両・正之の言葉・助けは庶民に後手）
+# 計算（自分で数え直した）：6,000石×150kg＝900t／7斗÷2斗＝3.5倍／2月12日まで（2月2日に延長、以後は隔日）
+title: "明暦の大火｜幕府が出した粥は6000石、米の値は3.5倍"
+yt_title: "明暦の大火のあと、幕府は粥6,000石を出した　米の値は1両2斗、基準の7斗は3.5倍の量　助けは庶民に後手だったと報告書は書く"
+description: |-
+  明暦の大火が消えた直後の1657年1月21日、幕府は粥の施行を始めました。江戸の6か所に仮小屋を建て、浅草の米蔵から、1日1000俵の米を出し、2月12日まで続けました。出した米は、合計6000石、およそ900トンです。
+  米の値は、1両で2斗まで跳ね上がり、幕府は1両で7斗より高く売るなと触れました。実勢の3.5倍の量です。町人に下された金は、記録によって15万両とも16万両とも書かれます。
+  内閣府の報告書は、庶民への援助は後手に回ることが多かった、と総括します。本編は概要欄のリンクからどうぞ。
+  亡くなった方々に、敬意を払って作っています。
+  https://youtu.be/YMXFgwO0dWI
+hashtags:
+- "#明暦の大火"
+- "#江戸"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。人の顔は描いていません。亡くなった方々に敬意を払って作っています。創作の台詞は入れていません。"
+art_dir: out/story/meireki
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: meireki_story_s5
+header:
+  tag: "明暦の大火　救う"
+  title: "大火のあと、粥を《6000石》出した"
+now:
+- {at: "1月21日", text: "1月21日　粥を配りはじめる", point: 0}
+- {at: "2月12日", text: "2月12日　粥を終える", point: 1}
+timeline:
+- {label: "1/21"}
+- {label: "2/12"}
+shots:
+  K17_1:
+    kind: "ai"
+    file: "meireki/main/K17.jpg"
+    focus: [0.3, 0.5]
+    move: "right"
+    must: "米蔵と米俵"
+  K11_2:
+    kind: "ai"
+    file: "meireki/main/K11.jpg"
+    focus: [0.8, 0.5]
+    move: "left"
+    must: "粥の小屋"
+  K17_3:
+    kind: "ai"
+    file: "meireki/main/K17.jpg"
+    focus: [0.8, 0.5]
+    move: "left"
+    must: "米蔵と米俵"
+  K18_4:
+    kind: "ai"
+    file: "meireki/main/K18.jpg"
+    focus: [0.3, 0.5]
+    move: "right"
+    must: "堀の船荷"
+  K20_5:
+    kind: "ai"
+    file: "meireki/main/K20.jpg"
+    focus: [0.3, 0.5]
+    move: "right"
+    must: "家の並ぶ町"
+  K22_6:
+    kind: "ai"
+    file: "meireki/main/K22.jpg"
+    focus: [0.3, 0.5]
+    move: "right"
+    must: "城の門と白壁"
+  K15_7:
+    kind: "ai"
+    file: "meireki/main/K15.jpg"
+    focus: [0.3, 0.5]
+    move: "right"
+    must: "雪の寺"
+  K10_8:
+    kind: "ai"
+    file: "meireki/main/K10.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "焼け跡の朝"
+lines:
+  # fact: meireki-C08
+- 語り: "明暦の大火の直後の、1月21日。幕府は、浅草の米蔵から、1日に1000俵の米を出し、粥を配りはじめた。"
+  shot: K17_1
+  tone: 強調
+  pause: 0.12
+  # fact: meireki-C08
+- 語り: "予定は9日間。けれど、飢えた人が多く、2月12日まで続けた。米は、合計6000石、およそ900トンだ。"
+  shot: K11_2
+  tone: 重い
+  pause: 0.12
+  # fact: meireki-C09
+- 語り: "米の値は、1両で2斗しか買えないほど、跳ね上がった。幕府は、1両で7斗より高く売るな、と触れた。実勢の、3.5倍の量だ。"
+  shot: K17_3
+  tone: 重い
+  pause: 0.12
+  # fact: meireki-C13
+- 語り: "江戸城の金蔵は、焼けていた。幕府は、大坂や二条城の備えの銀を、取り寄せた。"
+  shot: K18_4
+  tone: 重い
+  pause: 0.12
+  # fact: meireki-C10, meireki-C11
+- 語り: "町人には、金が下された。『玉露叢』は16万両、『明暦日記』は15万両。記録で、割れる。"
+  shot: K20_5
+  tone: 重い
+  pause: 0.12
+  # fact: meireki-C14
+- 語り: "役人が、金庫が空になる、と心配すると、保科正之は、蓄えはこの用にあてるためだ、と答えた、と寛政重脩諸家譜は伝える。"
+  shot: K22_6
+  tone: 重い
+  pause: 0.12
+  # fact: meireki-C18
+- 語り: "それでも、助けは、庶民に行き渡らなかった。大雪で、凍死者が大勢出た。報告書は、援助は後手に回ることが多かった、と書く。"
+  shot: K15_7
+  tone: 重い
+  pause: 0.12
+  # fact: meireki-C13, meireki-C18
+- 語り: "金蔵が焼けた江戸で、あなたなら、誰から先に、助けますか。"
+  shot: K10_8
+  tone: 疑問
+  pause: 0.15

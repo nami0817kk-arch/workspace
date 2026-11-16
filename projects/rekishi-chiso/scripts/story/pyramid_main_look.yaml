@@ -1,0 +1,311 @@
+# 物語型の本編の見た目と絵の割り当て：大ピラミッドは、誰がどうやって造ったのか（scripts/pyramid-story.yaml）。chiso/storymain.py が読む。
+# 11-15 作成（11/20 19:00 公開予定）。rosetta_main_look.yaml を写した。絵は Gemini（Chrome）で作る。人物の顔は描かない。
+script: scripts/pyramid-story.yaml
+out: pyramid_story_main
+art_dir: out/story/pyramid/main
+main_art_dir: out/story/pyramid/main
+ai_disclosure: この動画の情景の画像は、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+chapters:
+  0:
+    label: 序章 日誌が語らなかったこと
+    now: 2013年
+    dates:
+      4: null
+  1:
+    label: 第1章 10万人と、約2100年あとの記録
+    now: 紀元前5世紀
+    dates: {}
+  2:
+    label: 第2章 約230万個を割り算する
+    now: null
+    dates: {}
+  3:
+    label: 第3章 洞窟のパピルス
+    now: 2013年
+    dates:
+      29: 紀元前2560年ごろ
+  4:
+    label: 第4章 労働者の町と墓
+    now: 1988年
+    dates:
+      44: 1990年
+  5:
+    label: 第5章 船と濡れた砂と坂道
+    now: null
+    dates:
+      52: 2022年
+      54: 2024年
+      57: 紀元前1880年ごろ
+      59: 2014年
+      61: 2018年
+      66: 2007年
+  6:
+    label: 第6章 3つの記録を並べる
+    now: null
+    dates: {}
+  7:
+    label: 第7章 何年かかったのか
+    now: null
+    dates: {}
+  8:
+    label: まとめ 大ピラミッドは、誰がどうやって造ったのか
+    now: null
+    dates: {}
+no_tag_from: 88
+references:
+- タレ『紅海のパピルス』（2017）・タレとマルアールの報告（2014）
+- ヘロドトス『歴史』第2巻（ローリンソン訳）
+- AERA（古代エジプト研究協会）『ピラミッドの失われた都市』
+- ハワス（2003）の記事・各報道
+- シーシャら（PNAS 2022）・ゴーネイムら（2024）の論文・報道
+ai:
+  C02:
+    scene: 紅海の岸辺の岩山にある、石灰岩を掘った洞窟の入り口。夕暮れ、砂と岩、発掘用の木の足場（人はいない）
+    pan: h
+    crops: &id001
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  C03:
+    scene: 薄暗い洞窟の奥。石の台に積まれたパピルスの巻物の束がランプの灯りに浮かぶ（人物なし、文字は描かない）
+    pan: h
+    crops: *id001
+  C04:
+    scene: 古代エジプトの木造の帆船が、朝のナイル川で白い石灰岩のブロックを積んで進む（4500年前のエジプト、遠景、乗員は小さな後ろ姿）
+    pan: h
+    crops: *id001
+  C05:
+    scene: 白い石灰岩の採石場。切り出された大きな石のブロック、砂ぼこり、遠くに小さな作業員の後ろ姿の列（昼）
+    pan: h
+    crops: *id001
+  C06:
+    scene: ナイル川の運河の船着き場。木の船が並び、白い石のブロックが岸に積まれている（古代エジプト、昼、遠景）
+    pan: h
+    crops: *id001
+  C07:
+    scene: 机の上のパピルスの巻物と葦のペン、黒インクの壺、ランプの光のクローズアップ（人物なし、文字は描かない）
+    pan: h
+    crops: *id001
+  C08:
+    scene: 紅海の青い海に突き出た石の突堤と、岸に並ぶ丸い大きな石の錨（古代の港の遺跡、朝、人はいない）
+    pan: h
+    crops: *id001
+  C09:
+    scene: 古代ギリシャの外套を着た旅人の小さな後ろ姿が、夕暮れの大ピラミッドを見上げている（遠景、案内人の影が隣に）
+    pan: h
+    crops: *id001
+  C10:
+    scene: 建設中の大ピラミッドの遠景。石の斜面と木の足場、石を橇で引く小さな人影の長い列（昼、人物の顔は見えない）
+    pan: h
+    crops: *id001
+  C11:
+    scene: 濡れた砂の上を、石を載せた橇を縄で引く人々の列。先頭の人が砂に水を注ぐ（古代エジプト、遠景、後ろ姿）
+    pan: h
+    crops: *id001
+  C12:
+    scene: 泥レンガの建物の中にパンを焼く石の窯がいくつも並び、湯気が上がっている（古代エジプト、人物なし）
+    pan: h
+    crops: *id001
+  C13:
+    scene: 泥レンガの低い家並みが広がる古代エジプトの労働者の町の全景。夕暮れ、遠くに大ピラミッド（人は小さな点）
+    pan: h
+    crops: *id001
+  C14:
+    scene: 円形の泥レンガの穀物倉庫（サイロ）が並ぶ敷地。麦の山、砂色の空（人物なし）
+    pan: h
+    crops: *id001
+  C15:
+    scene: 砂漠の高台に、日干しレンガの低い墓が並ぶ。遠くに大ピラミッド、夕景（人物なし、遺体は描かない）
+    pan: h
+    crops: *id001
+  C16:
+    scene: 発掘現場。筆で砂を払う手元と、土器のかけら（人物は手元だけ、昼）
+    pan: h
+    crops: *id001
+  C17:
+    scene: アスワンの赤みがかった花崗岩の採石場。ナイル川の岸に大きな岩のブロック（夕景、人はいない）
+    pan: h
+    crops: *id001
+  C18:
+    scene: 砂漠の中を細く流れる古いナイルの支流を上から見た景色。青い水路と緑の帯、遠くにいくつものピラミッド
+    pan: h
+    crops: *id001
+  C19:
+    scene: 白い石の採石場の斜面に刻まれた坂道と、その両側の階段、等間隔の丸い柱穴（古代の採石場、夕景、人物なし）
+    pan: h
+    crops: *id001
+  C20:
+    scene: 積みかけの大ピラミッド。木の足場と石の斜面、小さな作業員の後ろ姿が遠くに見える（昼）
+    pan: h
+    crops: *id001
+  C21:
+    scene: ピラミッドの外側をらせん状にのぼる土と石の坂道（想像図風、昼、遠景、人物は小さな点）
+    pan: h
+    crops: *id001
+  C22:
+    scene: ピラミッドの内部の通路。石の壁、細長い天井、ランプの光（人物なし、文字は描かない）
+    pan: h
+    crops: *id001
+  C23:
+    scene: 満天の星空の下の大ピラミッドのシルエット。静かな夜（人物なし）
+    pan: h
+    crops: *id001
+  C24:
+    scene: 暗い博物館の展示室で、ガラスのケースの中の古いパピルスの断片にスポットライトが当たる（文字は読めない形、人物なし）
+    pan: h
+    crops: *id001
+  C25:
+    scene: 古代エジプトの墓の石灰岩の壁に刻まれた、大きな像を載せた橇を人々が引く場面の壁画（様式化された浅いレリーフ、顔の細部なし、文字なし）
+    pan: h
+    crops: *id001
+  H01:
+    scene: 夜明けのギザの大ピラミッド。砂漠の遠景、金色の朝日、静かな空気（古王国の時代の姿。外側の白い石灰岩の化粧石がまだ残る滑らかなピラミッド）
+    pan: h
+    crops: *id001
+  YEND:
+    scene: 夜明けの砂漠と空の遠景（終了画面、右半分に余白）
+    pan: h
+    lock:
+    - 1.0
+    - 0.5
+    - 0.5
+paint_fx: {}
+shots:
+- 0 ai:C02 wide
+- 1 ai:C24 left
+- 2 ai:C03 right
+- 3 ai:C04 wide
+- 4 ai:C09 left
+- 5 ai:C09 right
+- 6 ai:H01 left
+- 7 ai:C10 wide
+- 8 ai:C07 right
+- 9 ai:C09 wide
+- 10 ai:C07 left
+- 11 ai:C10 right
+- 12 ai:C09 left
+- 13 ai:C07 right
+- 14 ai:C20 wide
+- 15 ai:C24 left
+- 16 ai:C06 right
+- 17 ai:C20 left
+- 18 ai:C10 wide
+- 19 ai:C10 left
+- 20 ai:C20 right
+- 21 ai:C10 right
+- 22 ai:C05 wide
+- 23 ai:C17 left
+- 24 ai:C17 right
+- 25 ai:C04 right
+- 26 ai:C02 left
+- 27 ai:C03 right
+- 28 ai:C08 wide
+- 29 ai:C03 left
+- 30 ai:C07 wide
+- 31 ai:C04 left
+- 32 ai:C06 wide
+- 33 ai:C05 right
+- 34 ai:H01 left
+- 35 ai:C06 right
+- 36 ai:C24 wide
+- 37 ai:C03 wide
+- 38 ai:C16 wide
+- 39 ai:C13 left
+- 40 ai:C13 right
+- 41 ai:C12 wide
+- 42 ai:C14 wide
+- 43 ai:C12 left
+- 44 ai:C15 wide
+- 45 ai:C16 wide
+- 46 ai:C15 right
+- 47 ai:C16 left
+- 48 ai:C22 wide
+- 49 ai:C15 left
+- 50 ai:C04 wide
+- 51 ai:C18 wide
+- 52 ai:C06 left
+- 53 ai:C04 right
+- 54 ai:C18 right
+- 55 ai:H01 wide
+- 56 ai:C18 left
+- 57 ai:C25 wide
+- 58 ai:C11 wide
+- 59 ai:C11 left
+- 60 ai:C25 left
+- 61 ai:C05 left
+- 62 ai:C19 left
+- 63 ai:C19 right
+- 64 ai:C17 left
+- 65 ai:C21 wide
+- 66 ai:C22 left
+- 67 ai:C20 wide
+- 68 ai:H01 right
+- 69 ai:C24 left
+- 70 ai:C09 right
+- 71 ai:C03 left
+- 72 ai:C13 wide
+- 73 ai:C14 left
+- 74 ai:C10 wide
+- 75 ai:C15 left
+- 76 ai:C12 right
+- 77 ai:C20 right
+- 78 ai:C09 wide
+- 79 ai:C06 right
+- 80 ai:C20 left
+- 81 ai:C24 right
+- 82 ai:C21 left
+- 83 ai:H01 wide
+- 84 ai:C10 right
+- 85 ai:C15 right
+- 86 ai:C22 right
+- 87 ai:C21 wide
+- 88 ai:C03 wide
+- 89 ai:C23 wide
+- 90 ai:YEND wide
+- end ai:YEND wide
+focus: {}
+fx: {}
+parts:
+- type: quote
+  from: 37
+  to: 37
+  label: 史料
+  text: 新しいことは学べない／けれど、初めて手がかりを与える
+  source: タレの発言 2013年（要旨）
+- type: quote
+  from: 49
+  to: 49
+  label: 史料
+  text: 奴隷なら、王のそばに／自分の墓は造れなかった
+  source: ハワス 2010年の報道（要旨）
+- type: quote
+  from: 64
+  to: 64
+  label: 史料
+  text: 造り方と結ぶのは／無理がある
+  source: クーニー 2018年の報道（要旨）
+figures: []
+stills:
+- line: 0
+  note: 冒頭
+- line: 26
+  note: 洞窟
+- line: 44
+  note: 墓地
+- line: 61
+  note: 坂道
+- line: 74
+  note: 記録を並べる
+- line: 88
+  note: 余韻
+- end: true
+  note: 終了画面
