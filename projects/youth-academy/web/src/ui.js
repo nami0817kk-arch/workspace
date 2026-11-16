@@ -928,13 +928,13 @@
     const stopBtn = h('button', { class: 'btn pri sm', style: 'min-height:34px;min-width:76px' }, '止める');
     const autoBtn = h('button', { class: 'btn sm', style: 'min-height:34px' });
     const skipBtn = h('button', { class: 'btn sm', style: 'min-height:34px', onclick: () => { cleanupPlay(); let e; let g = 0; while (!m.finished && g++ < 5000) { const ev = m.step(); if (ev.type === 'full') e = ev; } finishMatch(m, e); app.view = 'result'; render(); } }, '結果まで');
-    const top = h('div', { class: 'topbar' }, h('div', { class: 'scoreboard' }, YA.emblemEl(app.w, m.home.name, 18), h('span', { class: 'tn' }, m.home.short), scoreHome, h('span', { style: 'color:#8fa3c4' }, '-'), scoreAway, h('span', { class: 'tn' }, m.away.short), YA.emblemEl(app.w, m.away.name, 18)), clock, h('div', { class: 'grow' }), skipBtn, autoBtn, stopBtn);
+    const speeds = h('div', { class: 'speeds' });
+    const top = h('div', { class: 'topbar' }, h('div', { class: 'scoreboard' }, YA.emblemEl(app.w, m.home.name, 18), h('span', { class: 'tn' }, m.home.short), scoreHome, h('span', { style: 'color:#8fa3c4' }, '-'), scoreAway, h('span', { class: 'tn' }, m.away.short), YA.emblemEl(app.w, m.away.name, 18)), clock, h('div', { class: 'grow' }), speeds, skipBtn, autoBtn, stopBtn);
     const stage = h('div', { class: 'stage' });
     const cv = h('canvas', {});
     const sceneHead = h('div', { class: 'scene-head' });
+    // 速さのボタンはボードの外（上の帯）に出した（2026-11-16 ボードを大きく）
     const ctl = h('div', { class: 'ctl' });
-    const speeds = h('div', { class: 'speeds' });
-    ctl.append(speeds);
     const bannerBox = h('div', {});
     stage.append(cv, sceneHead, ctl, bannerBox);
     const commMin = h('span', { class: 'min' }, "0'");

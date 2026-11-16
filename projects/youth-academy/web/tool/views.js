@@ -210,6 +210,8 @@ async function clearEvents() {
     if (k === 'スタッフ') ok(txt().includes('技術コーチ') && txt().includes('スタッフ候補') && txt().includes('監督との関係') && txt().includes('得意は'), 'スタッフの画面（性格・得意・関係が出る）');
     if (k === 'スカウト') ok(txt().includes('来年の高1') && txt().includes('スカウトに出る'), 'スカウトの画面');
     if (k === '順位と日程') ok(txt().includes('プレミアリーグ') || txt().includes('プリンスリーグ') || txt().includes('県リーグ'), '順位表');
+    if (k === '順位と日程') ok(/今年の日程（いま\d+週）/.test(txt()) && txt().includes('セレクション') && txt().includes('卒業式') && [...d.querySelectorAll('#main .chip')].some((c) => c.textContent === '今'), '今年の日程は表で、今週の行に印（2026-11-16）');
+    if (k === 'スタッフ') ok(/いまの.+（能力\d+）→ 能力\d+（[+-]?\d+）/.test(txt()) || txt().includes('はいません'), 'スタッフ候補にいまのスタッフとの差（2026-11-16）');
   }
   rail('設定');
   btn('記録').click();

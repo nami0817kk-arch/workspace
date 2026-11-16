@@ -97,7 +97,9 @@
     const nkey = (n) => `${n.year || 0}-${n.week || 0}-${String(n.text).slice(0, 24)}`;
     w.pins = (w.pins || []).filter((k) => w.inbox.some((n) => nkey(n) === k));
     const pinned = w.inbox.filter((n) => w.pins.indexOf(nkey(n)) >= 0);
-    const readAt = w.readAt || 0;
+    // ホームを開いたら、その週より前のお知らせは既読にする（2026-11-16 案A：「新しい193件」と溜まり続けていた）。数は今週の分だけ
+    w.readAt = Math.max(w.readAt || 0, w.year * 100 + w.week - 1);
+    const readAt = w.readAt;
     const unread = w.inbox.filter((n) => YA.noticeTier(w, n) <= 2 && ((n.year || 0) * 100 + (n.week || 0)) > readAt).length;
     mid.querySelector('.h').textContent = unread ? `お知らせ（新しい${unread}件）` : 'お知らせ';
     for (const n of pinned) list.append(h('div', { class: 'pitem', style: 'cursor:default;align-items:flex-start;background:#fff8e1' }, h('b', { style: 'font-size:10px;color:#a37b00;flex:none' }, '留'), h('span', { class: 'grow', style: 'font-size:11.5px;line-height:1.4' }, (n.week ? `${n.week}週 ` : '') + n.text), h('button', { class: 'btn sm', style: 'min-height:32px;padding:0 9px', onclick: () => { w.pins = w.pins.filter((k) => k !== nkey(n)); YA.saveWorld(); rerender(); } }, '外す')));

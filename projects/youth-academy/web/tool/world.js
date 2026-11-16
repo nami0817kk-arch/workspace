@@ -1269,8 +1269,11 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   }
   const names = new Set(YA.PRO_CLUBS.map((c) => c.name));
   ok(wt2.alumni.filter((a) => a.status === 'pro' && !a.abroad).every((a) => names.has(a.club)), '国内の移籍先は固定のクラブ表から');
-  ok(Object.values(YA.ABROAD_CLUBS).reduce((n, l) => n + l.length, 0) >= 300 && YA.ABROAD_LEAGUES.length >= 35 && ['プレミアリーグ', 'ラ・リーガ', 'セリエA', 'チャンピオンシップ（イングランド2部）', 'セリエB（イタリア2部）'].every((k) => YA.ABROAD_CLUBS[k].length >= 20), '海外のクラブは300以上・35リーグ・5大リーグは2部まで全チーム');
+  ok(Object.values(YA.ABROAD_CLUBS).reduce((n, l) => n + l.length, 0) >= 300 && YA.ABROAD_LEAGUES.length >= 35 && ['プレミアリーグ', 'ラ・リーガ', 'セリエA', 'チャンピオンシップ・イングランド2部', 'セリエB・イタリア2部'].every((k) => YA.ABROAD_CLUBS[k].length >= 20), '海外のクラブは300以上・35リーグ・5大リーグは2部まで全チーム');
   ok(Object.keys(YA.CLUB_RENAME).every((k) => YA.clubStr(k) != null && YA.clubLeague(k)), '古い保存のクラブ名も新しい名前で引ける');
+  ok(YA.ABROAD_LEAGUES.every((x) => !/[（）]/.test(x[1])), 'リーグ名にかっこが入らない（クラブ名のあとのかっこと二重にならない）');
+  { const wd = YA.newWorld(4); wd.alumni = [{ name: '海外 太郎', year: 1, abroad: true, status: 'pro', club: 'パレルモ・ロザネーロ', league: 'セリエB・イタリア2部', pos: 'FW', ovr: 15 }]; const v = YA.eventView(wd, { id: 'abroaddeal', who: '海外 太郎', ay: 1 }); ok(v && /移籍が決まりました/.test(v.text) && !/話が来ています/.test(v.text) && !/（[^（）]*（/.test(v.text) && v.opts.length === 3, '海外移籍の相談は決まったあとの電話で、かっこが二重にならない'); }
+  { const wo = { alumni: [{ club: 'パレルモ・ロザネーロ', abroad: true, league: 'セリエB（イタリア2部）', seasons: [{ club: 'パレルモ・ロザネーロ', league: 'セリエB（イタリア2部）' }], moves: [{ from: 'a', to: 'b', fromLg: 'J1リーグ', toLg: 'セリエB（イタリア2部）' }] }] }; YA.fixClubNames(wo); const a = wo.alumni[0]; ok(a.league === 'セリエB・イタリア2部' && a.seasons[0].league === a.league && a.moves[0].toLg === a.league && YA.clubLeague(a.club) === a.league, '古い保存のリーグ名を移し替える'); }
   { const wo = { alumni: [{ club: 'マドリード・ブランコス', abroad: true, league: 'ラ・リーガ', seasons: [{ club: 'ロンドン・ガナーズ' }] }] }; YA.fixClubNames(wo); ok(wo.alumni[0].club === 'ロイヤル・マドリード' && wo.alumni[0].seasons[0].club === 'ロンドン・アーセナルズ', '古い保存のクラブ名を移し替える'); }
   { const wo = { alumni: [{ club: 'FCミュンヘン', abroad: true, league: 'ブンデスリーガ', seasons: [{ club: 'リヤドFC' }] }] }; YA.fixClubNames(wo); ok(wo.alumni[0].club === 'バヴァリア・ミュンヘン' && wo.alumni[0].seasons[0].club === 'リヤド・ヴィクトリー', '前回の名前（国の型）も移し替える'); }
   ok(YA.PRO_CLUBS.every((c) => { const v = YA.clubStr(c.name); return v >= 94 && v <= 150; }) && [].concat(...Object.values(YA.ABROAD_CLUBS)).every((c) => c[1] >= 105 && c[1] <= 190), 'どのクラブにも強さがある');

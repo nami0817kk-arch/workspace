@@ -1131,7 +1131,7 @@
     view() {
       const w = this.w;
       const h = this.h;
-      const fit = Math.min((w - 16) / (L + 8), (h - 10) / (W + 6));
+      const fit = Math.min((w - 12) / (L + 6), (h - 4) / (W + 3)); // 余白を詰めてボードを大きく（2026-11-16）
       const s = fit * this.cam.zoom;
       // 見える範囲がピッチからはみ出しすぎないように中心を寄せる
       const halfX = w / 2 / s;

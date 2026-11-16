@@ -178,7 +178,13 @@
     const left2 = YA.staffChangesLeft(w);
     right.append(title('スタッフ候補'), h('div', { class: 'note', style: 'margin-bottom:5px' }, lv === 'low' ? '信頼度が低いので、スタッフはクラブが決めます' : lv === 'mid' ? `信頼度が中くらいなので、今年あと${left2}人だけ入れ替えられます` : '信頼度が高いので、自由に入れ替えられます'));
     const msg = h('div', { class: 'msglog' });
-    for (const m of w.market) right.append(card(h('div', { class: 'row' }, h('span', { class: 'chip pers', style: 'min-width:78px;justify-content:center' }, m.role), h('b', { class: 'grow' }, m.name + (m.ob ? '（OB）' : '')), h('span', { class: 'chip trait' }, '能力 ' + m.ab), h('span', { class: 'sub' }, m.salary + '万'), h('button', { class: 'btn sm', disabled: left2 <= 0, why: YA.trustLevel(w) === 'low' ? '信頼度が低いので、スタッフはクラブが決めます' : '今年スタッフを入れ替えられる回数を使い切りました', onclick: () => { const r = YA.hire(w, m.id); if (r.ok) { save(); rerender(); } else { msg.replaceChildren(h('div', {}, r.msg)); } } }, '採用'))));
+    for (const m of w.market) right.append(card(h('div', { class: 'row' }, h('span', { class: 'chip pers', style: 'min-width:78px;justify-content:center' }, m.role), h('b', { class: 'grow' }, m.name + (m.ob ? '（OB）' : '')), h('span', { class: 'chip trait' }, '能力 ' + m.ab), h('span', { class: 'sub' }, m.salary + '万'), h('button', { class: 'btn sm', disabled: left2 <= 0, why: YA.trustLevel(w) === 'low' ? '信頼度が低いので、スタッフはクラブが決めます' : '今年スタッフを入れ替えられる回数を使い切りました', onclick: () => { const r = YA.hire(w, m.id); if (r.ok) { save(); rerender(); } else { msg.replaceChildren(h('div', {}, r.msg)); } } }, '採用')), (() => {
+      // いまの同じ役のスタッフとの差（2026-11-16）。行が詰まるので2行目に
+      const cur = w.club.staff.find((x) => x.role === m.role);
+      if (!cur) return h('div', { class: 'note', style: 'margin-top:2px' }, `いま${m.role}はいません`);
+      const d = m.ab - cur.ab, ds = m.salary - cur.salary;
+      return h('div', { class: 'note', style: 'margin-top:2px;color:var(--ink)' }, `いまの${m.role}：${cur.name}（能力${cur.ab}）→ `, h('b', { style: 'color:' + (d > 0 ? '#1e6b37' : d < 0 ? '#b02020' : 'inherit') }, `能力${m.ab}（${d > 0 ? '+' : ''}${d}）`), `・給料 ${ds >= 0 ? '+' : ''}${ds}万`);
+    })()));
     right.append(msg);
     body.append(h('div', { style: 'display:flex;gap:8px;align-items:flex-start' }, left, right));
   }
@@ -330,7 +336,20 @@
     const right = h('div', { style: 'flex:1;min-width:0' });
     const cupRow = (name, c) => h('div', { class: 'row', style: 'padding:3px 0' }, h('b', { style: 'width:104px' }, name), h('span', { class: 'grow' }, c.result ? c.result : c.alive ? (c.round ? `${c.round}回戦を突破中` : 'これから') : ''));
     right.append(card(title('大会'), cupRow(YA.CUP_NAME.summer, w.cup.summer), cupRow(YA.CUP_NAME.winter, w.cup.winter), h('div', { class: 'note' }, '負けたら終わりのトーナメントです（10〜12週・27〜30週）。')));
-    right.append(card(title('今年の日程'), h('div', { class: 'note', style: 'line-height:1.7' }, '1〜9週 リーグ前半／10〜12週 日本クラブユース選手権／13〜25週 リーグ後半／26週 夏合宿・遠征／27〜30週 Jユースカップ／25〜27週（11月）内部昇格／1〜27週（4〜11月）スカウト・28週（12月）に返事／31〜34週（1月）セレクション／40週 卒業式')));
+    // 今年の日程：月ごとの縦の表。今週に当たる行に印（2026-11-16 1段落の長い文だった）
+    {
+      const SCH = [[1, 9, 'リーグ前半'], [10, 12, (YA.CUP_NAME && YA.CUP_NAME.summer) || '夏の大会'], [13, 25, 'リーグ後半'], [26, 26, '夏合宿・遠征'], [27, 30, (YA.CUP_NAME && YA.CUP_NAME.winter) || '冬の大会'], [25, 27, '内部昇格（中3の練習参加）'], [1, 27, 'スカウト（声をかけるのは4〜11月）'], [28, 28, 'スカウトの返事'], [31, 34, 'セレクション'], [40, 40, '卒業式']].sort((x, y) => x[0] - y[0] || x[1] - y[1]);
+      const mon = (wk) => YA.calendar(wk).month;
+      const rowsS = SCH.map(([s0, s1, t]) => {
+        const now = w.week >= s0 && w.week <= s1;
+        const m0 = mon(s0), m1 = mon(s1);
+        return h('div', { class: 'pitem', style: 'cursor:default;gap:6px;padding:3px 8px;min-height:0;font-size:11.5px;' + (now ? 'background:#fff7d6;border-color:#f0cf55;font-weight:800' : '') },
+          h('span', { style: 'width:62px;flex:none' }, s0 === s1 ? `${s0}週` : `${s0}〜${s1}週`),
+          h('span', { class: 'sub', style: 'width:58px;flex:none' }, m0 === m1 ? m0 : `${m0}〜${m1}`),
+          h('span', { class: 'grow' }, t), now ? h('span', { class: 'chip trait', style: 'font-size:10px;padding:0 5px' }, '今') : null);
+      });
+      right.append(card(title(`今年の日程（いま${w.week}週）`), h('div', { class: 'plist', style: 'gap:2px' }, rowsS)));
+    }
     right.append(card(title('通算の対戦成績'), ...(Object.keys(w.h2h || {}).length ? Object.entries(w.h2h).slice(-6).map(([n, v]) => h('div', { class: 'row', style: 'padding:2px 0;font-size:11px' }, h('span', { class: 'grow' }, n), h('span', { class: 'sub' }, `${v[0]}勝${v[1]}分${v[2]}敗`))) : [h('div', { class: 'note' }, 'まだありません')])));
     body.append(h('div', { style: 'display:flex;gap:8px;align-items:flex-start' }, left, right));
   }

@@ -349,17 +349,18 @@
   };
   YA.EVENTS.push({ id: 'abroaddeal', name: '海外移籍の相談', weight: 0, pick: () => null, text: () => '', opts: [] });
   YA.EVENT_ABOUT = YA.EVENT_ABOUT || {};
-  YA.EVENT_ABOUT.abroaddeal = '卒業生が海外のクラブへ移ります。恩師として相談に乗ると、育成基金や本人との絆に響きます。';
+  YA.EVENT_ABOUT.abroaddeal = '卒業生の海外移籍が決まりました。送り出すときのひとことが、育成基金や本人との絆に響きます。';
   const run = (label, fn) => ({ label, kind: null, run: (w) => { const r = fn(w) || {}; return { line: r.line || '', small: r.small || '' }; } });
   function dealPrep(w, e) {
     const a = (w.alumni || []).find((x) => x.name === e.who && x.year === e.ay);
     const def = YA.EVENTS.find((x) => x.id === 'abroaddeal');
     if (!a || !def) return false;
-    def.text = () => `卒業生の${a.name}から電話があった。「${a.club}（${a.league}）から話が来ています。どうしたらいいでしょうか」`;
+    // 移籍は年度末に決まっている（この出来事はそのあと）。決まったあとの電話にする（2026-11-16「話が来ています」と食い違っていた）
+    def.text = () => `卒業生の${a.name}から電話があった。「${a.club}（${a.league}）への移籍が決まりました。行く前に、ひとこともらえますか」`;
     def.opts = [
-      run('出場できるクラブを選べと助言する', () => { a.bond = Math.min(6, (a.bond == null ? 3 : a.bond) + 1); a.ovr = Math.round((a.ovr + 0.2) * 10) / 10; return { line: '「試合に出られる所にします」', small: '本人との絆 +1' }; }),
-      run('移籍金がきちんと入る形にしてもらう', (ww) => { ww.fund = (ww.fund || 0) + 150; ww.fundIn = (ww.fundIn || 0) + 150; return { line: '育成クラブへの分配が、きちんと入ることになった。', small: '育成基金 +150万円' }; }),
-      run('本人の夢を応援する', () => { a.bond = Math.min(6, (a.bond == null ? 3 : a.bond) + 1); return { line: '「行ってきます」' }; }),
+      run('「まず試合に出ることだけ考えろ」と送り出す', () => { a.bond = Math.min(6, (a.bond == null ? 3 : a.bond) + 1); a.ovr = Math.round((a.ovr + 0.2) * 10) / 10; return { line: '「はい。向こうで一から見せて、出られるようにします」', small: '本人との絆 +1' }; }),
+      run('育成クラブへの分配をきちんと確かめておく', (ww) => { ww.fund = (ww.fund || 0) + 150; ww.fundIn = (ww.fundIn || 0) + 150; return { line: '育成クラブへの分配が、きちんと入ることになった。', small: '育成基金 +150万円' }; }),
+      run('「夢をかなえてこい」と背中を押す', () => { a.bond = Math.min(6, (a.bond == null ? 3 : a.bond) + 1); return { line: '「行ってきます」' }; }),
     ];
     return true;
   }
