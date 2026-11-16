@@ -14,7 +14,6 @@ import '../widgets/match_widgets.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/youth_league_table.dart';
 import '../widgets/responsive_body.dart';
-import 'scout_report_screen.dart';
 import '../l10n/tr.dart';
 import '../widgets/screen_bar.dart';
 
@@ -888,29 +887,19 @@ class _UserFixtureList extends StatelessWidget {
                   .withValues(alpha: 0.3)
               : null,
           child: ListTile(
-            onTap: () {
-              if (result != null) {
-                final home = league.teams.firstWhere(
-                  (t) => t.id == f.homeTeamId,
-                );
-                final away = league.teams.firstWhere(
-                  (t) => t.id == f.awayTeamId,
-                );
-                _showFixtureResultDialog(context, result, home, away);
-              } else {
-                final userTeam = league.teams.firstWhere(
-                  (t) => t.id == userTeamId,
-                );
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => ScoutReportScreen(
-                      opponent: opponent,
-                      userTeam: userTeam,
-                    ),
-                  ),
-                );
-              }
-            },
+            // 終わった試合だけ、結果の詳しい中身を開ける。これからの試合の
+            // 相手の分析は監督の仕事なので開かない。
+            onTap: result == null
+                ? null
+                : () {
+                    final home = league.teams.firstWhere(
+                      (t) => t.id == f.homeTeamId,
+                    );
+                    final away = league.teams.firstWhere(
+                      (t) => t.id == f.awayTeamId,
+                    );
+                    _showFixtureResultDialog(context, result, home, away);
+                  },
             leading: SizedBox(
               width: 76,
               child: Row(
