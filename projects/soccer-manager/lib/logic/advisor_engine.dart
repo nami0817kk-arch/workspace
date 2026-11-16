@@ -9,12 +9,16 @@ enum Advisor {
   scouting,
 
   /// 広報: 毎季末にサポーターの期待が上がり、不祥事の傷が浅くなる。
-  pr;
+  pr,
+
+  /// 法務: 財務規則の違反で科される罰金が軽くなる。
+  legal;
 
   String get label => switch (this) {
         finance => Tr.pick('財務顧問', 'Finance advisor'),
         scouting => Tr.pick('強化顧問', 'Development advisor'),
         pr => Tr.pick('広報顧問', 'PR advisor'),
+        legal => Tr.pick('法務顧問', 'Legal advisor'),
       };
 
   String effect(int level) => switch (this) {
@@ -22,6 +26,8 @@ enum Advisor {
         scouting => Tr.pick('施設の増築費 -${level * 4}%', 'Facility cost -${level * 4}%'),
         pr => Tr.pick('毎季末にサポーターの期待+$level、不祥事の傷が軽くなる',
             'Supporters +$level each season end; scandals hurt less'),
+        legal => Tr.pick('規則違反の罰金 -${level * 15}%',
+            'Rule-breach fines -${level * 15}%'),
       };
 }
 
@@ -40,7 +46,11 @@ class AdvisorEngine {
   static double facilityCostMultiplier(int scoutingLevel) =>
       1 - 0.04 * scoutingLevel;
 
-  /// 3人の報酬の合計(毎季)。
+  /// 規則違反の罰金に掛ける倍率。法務顧問のレベルが高いほど軽くなる。
+  static double fineMultiplier(int legalLevel) =>
+      (1 - 0.15 * legalLevel).clamp(0.0, 1.0);
+
+  /// 全顧問の報酬の合計(毎季)。
   static int totalSalary(Map<String, int> levels) => Advisor.values
       .fold<int>(0, (s, a) => s + salary(levels[a.name] ?? 0));
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../l10n/tr.dart';
+import '../logic/club_health_engine.dart';
 import '../logic/manager_report_engine.dart';
 import '../state/game_state.dart';
 import '../theme/semantic_colors.dart';
@@ -126,6 +127,14 @@ class ManagerReportCard extends StatelessWidget {
       weeklyNet: weeklyNet,
       lastResult: lastResult,
     );
+    final health = ClubHealthEngine.assess(
+      supporter: save.confidence,
+      shareholder: save.shareholderExpectation,
+      wageRatio: league.fixtures.isEmpty
+          ? 0
+          : save.ledgerFor(league.season).wageRatio,
+      budget: save.budget,
+    );
     final scheme = Theme.of(context).colorScheme;
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
@@ -151,9 +160,39 @@ class ManagerReportCard extends StatelessWidget {
               Text(l, style: Theme.of(context).textTheme.bodySmall),
             const SizedBox(height: 10),
             const ExpectationMeters(),
+            const SizedBox(height: 8),
+            _HealthLine(health: health),
           ],
         ),
       ),
+    );
+  }
+}
+
+/// 経営診断の1行。点数とA〜Eの評価。
+class _HealthLine extends StatelessWidget {
+  const _HealthLine({required this.health});
+
+  final ClubHealth health;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = switch (health.grade) {
+      'A' || 'B' => SemanticColors.positive(context),
+      'C' => SemanticColors.neutral(context),
+      _ => SemanticColors.negative(context),
+    };
+    return Row(
+      children: [
+        Text(Tr.pick('経営診断 ', 'Club health '),
+            style: const TextStyle(fontSize: 13)),
+        Text(health.grade,
+            style: TextStyle(
+                fontSize: 18, fontWeight: FontWeight.bold, color: color)),
+        const SizedBox(width: 6),
+        Text('${health.score}/100',
+            style: Theme.of(context).textTheme.bodySmall),
+      ],
     );
   }
 }

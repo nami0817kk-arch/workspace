@@ -856,13 +856,16 @@ extension GameStateFinance on GameState {
       );
       return;
     }
-    if (penalty.fine > 0) _book(LedgerCategory.other, -penalty.fine);
+    final fine = (penalty.fine *
+            AdvisorEngine.fineMultiplier(
+                save.advisors[Advisor.legal.name] ?? 0))
+        .round();
+    if (fine > 0) _book(LedgerCategory.other, -fine);
     save.confidence = (save.confidence - penalty.trustLoss).clamp(0, 100);
     save.transferBanSeasons = max(save.transferBanSeasons, penalty.banSeasons);
     save.pendingPointsDeduction += penalty.pointsDeduction;
     final parts = <String>[
-      if (penalty.fine > 0)
-        Tr.pick('罰金${penalty.fine}万円', 'fine of ${penalty.fine}'),
+      if (fine > 0) Tr.pick('罰金$fine万円', 'fine of $fine'),
       if (penalty.pointsDeduction > 0)
         Tr.pick('来季の勝ち点${penalty.pointsDeduction}剥奪',
             '${penalty.pointsDeduction} points docked next season'),
