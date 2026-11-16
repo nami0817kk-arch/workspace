@@ -309,7 +309,7 @@ def border_between(a: str, b: str) -> list:
 class Base:
     """1 つの範囲の下地。cols は色＋陰影＋国境、e は高さ、ppd は 1 度あたりの画素(経度は kx 倍で縮めない。等間隔の格子)。"""
 
-    def __init__(self, bbox, z: int, kx: float, inland_low: bool = False):
+    def __init__(self, bbox, z: int, kx: float, inland_low: bool = False, photo_gain=None):
         import cv2
         self.bbox, self.z = bbox, z
         lo0, la0, lo1, la1 = bbox
@@ -330,6 +330,10 @@ class Base:
         self.kx = kx
         try:
             src = gsi_photo(bbox, z, self.ppd) if z >= 11 and in_japan(bbox) else bluemarble(bbox, self.ppd)
+            if photo_gain is not None and z >= 11 and in_japan(bbox):   # 空中写真の色が青く寄った所(屋久島)を、RGB ごとの倍率で戻す
+                f = src.astype(np.float32)
+                w = np.clip((200 - f.mean(axis=2, keepdims=True)) / 60, 0, 1)   # 明るい雲・砂浜は白のまま
+                src = np.clip(f * (1 - w) + f * np.array(photo_gain, np.float32) * w, 0, 255).astype(np.uint8)
             photo = cv2.resize(src, (self.w, h), interpolation=cv2.INTER_AREA)
             landm = None
             if inland_low:                                    # 海面より低い陸(死海の谷)を海にしない: 国の形の内側は陸
@@ -482,9 +486,11 @@ def k_wipe(L: dict) -> float:
 
 
 class Map:
-    def __init__(self, lat0: float, bases: Sequence[tuple], relief: float = 0.06, finish: bool = True, inland_low: bool = False):
+    def __init__(self, lat0: float, bases: Sequence[tuple], relief: float = 0.06, finish: bool = True, inland_low: bool = False,
+                 photo_gain=None):
         self.kx = math.cos(math.radians(lat0))
         self.inland_low = inland_low                          # 海面より低い陸がある回(死海)。Base.__init__ を見る
+        self.photo_gain = photo_gain                          # 空中写真の色の倍率(R, G, B)。青く寄った写真の回(屋久島)
         self.spec = list(bases)
         self._bases = None
         self.relief = relief                                  # 6,000m の山を画面の高さの何倍持ち上げるか(傾けたとき)
@@ -495,7 +501,7 @@ class Map:
     @property
     def bases(self) -> List[Base]:
         if self._bases is None:
-            self._bases = [Base(bb, z, self.kx, self.inland_low) for bb, z in self.spec]     # 粗い順
+            self._bases = [Base(bb, z, self.kx, self.inland_low, self.photo_gain) for bb, z in self.spec]     # 粗い順
         return self._bases
 
     def view(self, lon, lat, span, tilt=0.0) -> View:
