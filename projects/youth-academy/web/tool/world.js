@@ -44,7 +44,7 @@ function playYear(w, opts) {
   while (w.year === y && guard++ < 200) {
     if (opts.auto !== false) YA.autoPlan(w);
     if (opts.talk) { const p = Object.values(w.players)[w.week % 30]; YA.talk(w, p.id, 'praise'); }
-    if (w.week === 26 && opts.camp) w.campChoice = opts.camp;
+    if (w.week === YA.CAMP_WEEK && opts.camp) w.campChoice = opts.camp;
     // スカウト：暦に合わせて自動で（4〜11月に出て、11月に内部昇格、1月にセレクション）
     if (opts.scout && w.scouting) YA.autoScout(w);
     YA.startWeek(w);
@@ -1259,7 +1259,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
     ok(wb.alumni.every((a) => a.pos !== 'GK' || (!a.goals && !a.assists)), '世界一級の GK でも点は取らない');
     // 移籍金と市場価値（2026-11-15「移籍金とかもみたい」）
     const mv = wt2.alumni.filter((a) => (a.moves || []).length);
-    ok(mv.length >= 1 && mv.every((a) => a.moves.length === a.transfers && a.moves.every((m) => m.fee > 0 && m.from && m.to && m.from !== m.to) && a.feeTotal === a.moves.reduce((t, m) => t + m.fee, 0)), '移籍は移籍金・どこから・どこへが残り、合計と合う（' + mv.length + '人）');
+    ok(mv.length >= 1 && mv.every((a) => a.moves.length === a.transfers && a.moves.every((m) => m.fee >= 0 && m.from && m.to && m.from !== m.to) && a.feeTotal === a.moves.reduce((t, m) => t + m.fee, 0)), '移籍は移籍金・どこから・どこへが残り、合計と合う（' + mv.length + '人）');
     ok(mv.every((a) => a.moves.every((m, i) => i === 0 || a.moves[i - 1].to === m.from)), '移籍の記録はつながる（前の行き先が次の出どころ）');
     ok(mv.every((a) => a.moves.every((m) => { const ss = (a.seasons || []).find((x) => x.y === m.y); return !ss || ss.club === m.from; })), '移籍した年の成績は、移籍する前のクラブで付く');
     const pros = wt2.alumni.filter((a) => a.status === 'pro' && (a.seasons || []).length);
@@ -1521,7 +1521,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   // ★は初年度から高1だけなので、★の高3が出るのは3年目。全員がトップに上がる年もあるので、面談が出るまで5年まで回す
   while ((w3.year < startY + 3 || !paths.length) && w3.year < startY + 5 && gy++ < 320) {
     YA.autoPlan(w3);
-    if (w3.week === 26) w3.campChoice = 'domestic';
+    if (w3.week === YA.CAMP_WEEK) w3.campChoice = 'domestic';
     if (w3.scouting) YA.autoScout(w3);
     YA.startWeek(w3);
     for (const e of w3.events.slice()) {
@@ -1738,6 +1738,25 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   ok(r.ok && p2.pact, '別の★の子とも約束できる');
   w.week += YA.PACT_WEEKS; YA.rivalWeek(w);
   ok(!p2.pact && p2.conf < cf2, '約束に届かないと自信が下がる');
+}
+// 現実に合わせた数字（2026-11-17「各機能の品質と現実性を向上」）
+{
+  const sch = []; for (let k = 1; k <= 40; k++) sch.push(YA.SCHED(k));
+  const lw = sch.map((s, i) => [s, i + 1]).filter(([s]) => s.t === 'league');
+  ok(lw.length === 22 && new Set(lw.map(([s]) => s.n)).size === 22, '暦：リーグは22節');
+  const sw = sch.map((s, i) => [s, i + 1]).filter(([s]) => s.t === 'cup' && s.cup === 'summer').map(([, k]) => YA.calendar(k).month);
+  ok(sw.length === 3 && sw.every((m) => m === '7月' || m === '8月') && YA.calendar(YA.CAMP_WEEK).month === '8月' && YA.SCHED(YA.CAMP_WEEK).t === 'camp', '暦：夏の大会は7〜8月、夏合宿は8月（前は11月だった）');
+  ok(YA.LEAGUE_GAMES['J1リーグ'] === 38 && YA.LEAGUE_GAMES['チャンピオンシップ・イングランド2部'] === 46 && YA.LEAGUE_GAMES['ブンデスリーガ'] === 34, 'リーグごとの試合数');
+  const al = []; for (const sd of [2, 5]) { const t = YA.testStart({ seed: sd, tier: 2, years: 8 }); for (let y = 0; y < 8; y++) YA.testYear(t); al.push(...t.w.alumni); }
+  const ss = al.flatMap((a) => (a.seasons || []).map((s) => [a, s])).filter(([a]) => a.status === 'pro');
+  ok(ss.every(([, s]) => s.apps <= (YA.LEAGUE_GAMES[s.league] || 38)), '出場はリーグの試合数まで');
+  const first = al.flatMap((a) => (a.moves || []).filter((m) => m.abroad && /^J/.test(m.fromLg || '')).map((m) => m.toLg));
+  ok(first.length >= 5 && first.filter((lg) => YA.FIRST_ABROAD.indexOf(lg) >= 0).length / first.length >= 0.8, '最初の海外移籍は中堅のリーグから（' + first.length + '件）');
+  const fees = al.flatMap((a) => (a.moves || []).map((m) => m.fee));
+  ok(fees.some((f) => f === 0) && fees.some((f) => f > 0) && new Set(fees).size > fees.length * 0.5, '移籍金に幅があり、契約満了の0円もある');
+  const natPerYear = al.filter((a) => a.nat).length / 16;
+  ok(natPerYear <= 0.8, '日本代表は数年に1〜2人（' + natPerYear.toFixed(2) + '人/年）');
+  ok(YA.retireWord({ age: 19, quit: true }) === 'サッカーをやめた' && YA.retireWord({ age: 34 }) === '引退', '若くしてやめた子は「サッカーをやめた」');
 }
 console.log(fails ? '失敗 ' + fails : '育成の点検: すべて通過');
 process.exit(fails ? 1 : 0);

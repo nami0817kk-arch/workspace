@@ -278,5 +278,11 @@ ok(fxTraits > 200 && fxPers > 20, 'fx が少ない');
   }
   ok(n >= 300 && bad === 0, 'GK が点かアシストを記録した ' + bad + '/' + n);
 }
+// 2026-11-17：シュートは両チームで1試合20本前後（場面の外のシュートも数える）。得点は変わらない
+{
+  let sh = 0, g = 0; const n = 60;
+  for (let s = 1; s <= n; s++) { const m = run(s, s % 3); sh += m.stats.home.shots + m.stats.away.shots; g += m.score.home + m.score.away; ok(m.stats.home.onTarget <= m.stats.home.shots && m.stats.away.onTarget <= m.stats.away.shots, '枠内はシュート以下'); }
+  ok(sh / n >= 15 && sh / n <= 28 && g / sh < 0.2, 'シュートは両チームで1試合15〜28本、決まる割合は2割未満（' + (sh / n).toFixed(1) + '本）');
+}
 console.log(fails ? '失敗 ' + fails : 'すべて通過');
 process.exit(fails ? 1 : 0);

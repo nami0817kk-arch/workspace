@@ -73,6 +73,7 @@
   class Match {
     constructor(opts) {
       this.rng = YA.rngOf(opts.seed);
+      this._seed = opts.seed | 0;
       this.home = opts.home; // あなた（+y へ攻める）
       this.away = opts.away;
       this.settings = Object.assign({ autoStop: true }, opts.settings || {});
@@ -1112,6 +1113,36 @@
     }
 
     // 次の出来事を1つ進めて返す
+    // 見どころの場面の外のシュート（枠外・ブロック・GKの正面）を数字に足す。得点は変えない。
+    // 2026-11-17：場面のシュートだけ数えていて、両チームで1試合7本台（決まる割合が約36%）と現実（20本前後・1割ほど）から遠かった。
+    // 試合の乱数とは別の種を使うので、試合の結果は変わらない
+    addBackgroundShots() {
+      if (this._bgShots) return;
+      this._bgShots = true;
+      const r = YA.rngOf(this._seed * 131 + 7);
+      const share = this.homeShare();
+      const total = 10 + Math.floor(r() * 7);
+      for (const [att, sd, f] of [[this.home, 'home', share], [this.away, 'away', 1 - share]]) {
+        const def = att === this.home ? this.away : this.home;
+        const xs = this.onPitch(att).filter((x) => x.pos !== 'GK');
+        const gk = this.onPitch(def).find((x) => x.pos === 'GK');
+        if (!xs.length) continue;
+        const n = Math.round(total * f);
+        for (let k = 0; k < n; k++) {
+          const ws = xs.map((x) => (x.pos === 'FW' ? 3 : x.pos === 'MF' ? 1.6 : 0.5));
+          let v = r() * ws.reduce((a, b) => a + b, 0);
+          let i = 0;
+          while (v > ws[i] && i < ws.length - 1) v -= ws[i++];
+          const p = xs[i].p;
+          p.st.shots = (p.st.shots || 0) + 1;
+          this.stats[sd].shots++;
+          if (r() < 0.3) {
+            this.stats[sd].onTarget++;
+            if (gk && gk.p.st) gk.p.st.saves = (gk.p.st.saves || 0) + 1;
+          }
+        }
+      }
+    }
     step() {
       if (this.finished) return { type: 'full' };
       if (this.pendingStop) {
@@ -1127,6 +1158,7 @@
       this._justStopped = false;
       if (this.min >= 90) {
         this.finished = true;
+        this.addBackgroundShots();
         return { type: 'full', summary: this.summary() };
       }
       this.min++;

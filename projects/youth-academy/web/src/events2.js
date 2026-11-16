@@ -82,7 +82,7 @@
     { id: 's_welcome', name: '新入生の歓迎会', w: 2, when: (w) => w.week >= 2 && w.week <= 3, pick: (w, r) => pickOf(r, all(w).filter((p) => p.grade === 1)),
       text: (p) => `新入生の歓迎会。上級生が出し物を用意した。${p.name}が緊張した顔で前に出てきた。`,
       opts: [opt('一言ずつ話させる', 'push', (w) => { for (const q of all(w).filter((x) => x.grade === 1)) conf(q, 2); }), opt('上級生に盛り上げさせる', 'warm', (w) => { for (const q of all(w)) conf(q, 1); }), opt('早めに切り上げる', 'wait')] },
-    { id: 's_rain', name: '梅雨', w: 1.2, when: (w) => w.week >= 6 && w.week <= 9, pick: (w, r) => pickOf(r, all(w).filter((p) => (p.fat || 0) > 50)),
+    { id: 's_rain', name: '梅雨', w: 1.2, when: (w) => w.week >= 8 && w.week <= 12, pick: (w, r) => pickOf(r, all(w).filter((p) => (p.fat || 0) > 50)),
       text: (p) => `雨続きでグラウンドがぬかるんでいる。${p.name}が「体が重い」とこぼした。`,
       opts: [opt('室内で戦術の勉強に替える', 'warm', (w) => { for (const q of A(w)) prog(q, '判断', 0.1); }), opt('雨でもやる', 'push', (w) => { for (const q of all(w)) q.fat = clamp((q.fat || 0) + 3, 0, 100); }), opt('軽めにする', 'wait', (w) => { for (const q of all(w)) q.fat = clamp((q.fat || 0) - 4, 0, 100); })] },
     { id: 's_heat', name: '猛暑', w: 1.2, when: (w) => w.week >= 14 && w.week <= 18, pick: (w, r) => pickOf(r, all(w).filter((p) => (p.fat || 0) > 45)),

@@ -34,7 +34,7 @@
     ['fac', 3, '施設レベル{n}', [1, 3, 6], (w) => YA.facilityLevel(w)],
     ['clubs', 3, '{n}つのクラブを指導する', [2, 3, 5], (w) => ((w.club && w.club.careerClubs) || []).length + 1],
     ['long', 4, '10年以上プレーした卒業生が{n}人', [1, 3, 8], (w) => cnt(w.alumni, (a) => (a.seasons || []).length >= 10)],
-    ['ret', 4, '現役を引退した卒業生が{n}人', [1, 10, 30], (w) => cnt(w.alumni, (a) => a.retired)],
+    ['ret', 4, '現役を引退した卒業生が{n}人', [1, 10, 30], (w) => cnt(w.alumni, (a) => a.retired && !a.quit)],
     ['cand', 4, '殿堂候補になった卒業生が{n}人', [1, 5, 15], (w) => cnt(w.alumni, (a) => !!a.hof)],
   ];
   YA.ACH_COUNT = METRICS.length * 3;

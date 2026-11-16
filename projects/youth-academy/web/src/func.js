@@ -377,7 +377,7 @@
     t.push({ y: a.year, t: `卒業 → ${a.club || ''}${a.league ? '（' + a.league + '）' : ''}` });
     for (const s of a.seasons || []) t.push({ y: s.y, t: `${s.club}：${YA.statLine(s, a.pos === 'GK')}${(s.titles || []).length ? '・' + s.titles.join('・') : ''}${(s.awards || []).length ? '・' + s.awards.join('・') : ''}` });
     if (a.hof) t.push({ y: a.hofY || a.year, t: a.hof === 'full' ? '殿堂入り' : '殿堂候補' });
-    if (a.retired) t.push({ y: a.retY || w.year, t: '現役を引退' });
+    if (a.retired) t.push({ y: a.retY || w.year, t: a.quit ? 'サッカーをやめた' : '現役を引退' });
     if (a.coached) t.push({ y: w.year, t: 'コーチとして戻った' });
     return t.sort((x, y) => x.y - y.y);
   };
@@ -441,7 +441,7 @@
     const ss = (a.seasons || []).filter((x) => x.apps != null);
     const moves = a.moves || [];
     const val = YA.marketValue ? YA.marketValue(a) : 0;
-    const status = a.status === 'pro' ? (a.retired ? '引退' : `${a.club}（${a.league}）`) : a.status === 'univ' ? `${a.club}（大学）` : a.status === 'left' ? '在学中に退団' : `${a.club || '社会人'}`;
+    const status = a.status === 'pro' ? (a.retired ? YA.retireWord(a) : `${a.club}（${a.league}）`) : a.status === 'univ' ? `${a.club}（大学）` : a.status === 'left' ? '在学中に退団' : `${a.club || '社会人'}`;
     const first = a.status === 'pro' ? (moves.length ? moves[0].from : a.club) : a.club || '社会人';
     YA._v.modal((close) => h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(860px,98%);max-height:96%;padding:12px;gap:4px;overflow:auto' },
       h('div', { class: 'row', style: 'gap:6px' },

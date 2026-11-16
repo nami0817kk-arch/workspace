@@ -242,12 +242,12 @@
       const cut = YA.topCutLine ? YA.topCutLine(w) : 999;
       for (const p of Object.values(w.players)) if (p.grade === 3 && p.star && rate(p) < cut) push(w, { id: 'path', pid: p.id });
     }
-    if (w.week === 26 && w.campChoice && w.campChoice !== 'none') {
+    if (w.week === YA.CAMP_WEEK && w.campChoice && w.campChoice !== 'none') {
       for (const p of Object.values(w.players)) if (p.star) YA.hintUp(w, p, 0.4, '合宿');
       push(w, { id: 'scene', sc: 'camp' });
     }
-    if (w.week === 12 || w.week === 30) {
-      const k = w.week === 12 ? 'summer' : 'winter';
+    if (w.week === YA.SUMMER_CUP_WEEKS[1] || w.week === 30) {
+      const k = w.week === YA.SUMMER_CUP_WEEKS[1] ? 'summer' : 'winter';
       const c = w.cup && w.cup[k];
       if (c && c.alive && c.round === c.opps.length - 1) push(w, { id: 'scene', sc: 'cup', cup: k });
     }

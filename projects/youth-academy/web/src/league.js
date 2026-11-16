@@ -6,13 +6,16 @@
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
   // ---------- 1年の日程（40週）----------
-  // 1〜9週 リーグ前半／10〜12週 日本クラブユース選手権／13〜25週 リーグ後半／26週 夏合宿／27〜30週 冬の大会
+  // 1〜12週 リーグ前半（4〜7月初め）／13〜15週 日本クラブユース選手権（7〜8月）／16週 夏合宿（8月）／17〜26週 リーグ後半（8〜11月）／27〜30週 冬の大会
   // 40週 卒業式。入団の暦は scout.js（25〜27週 内部昇格／1〜27週 スカウト・28週に返事／31〜34週 セレクション）
+  // 2026-11-17：前は夏の大会が6〜7月、夏合宿が26週＝11月になっていた。現実の暦（クラブユース選手権は7月下旬〜8月、合宿は8月）に合わせた
+  YA.SUMMER_CUP_WEEKS = [13, 15];
+  YA.CAMP_WEEK = 16;
   YA.SCHED = function (week) {
-    if (week <= 9) return { t: 'league', n: week };
-    if (week <= 12) return { t: 'cup', cup: 'summer', round: week - 9 };
-    if (week <= 25) return { t: 'league', n: week - 3 };
-    if (week === 26) return { t: 'camp' };
+    if (week <= 12) return { t: 'league', n: week };
+    if (week <= 15) return { t: 'cup', cup: 'summer', round: week - 12 };
+    if (week === 16) return { t: 'camp' };
+    if (week <= 26) return { t: 'league', n: week - 4 };
     if (week >= 27 && week <= 30) return { t: 'cup', cup: 'winter', round: week - 26 };
     if (week === 40) return { t: 'ceremony' };
     return { t: 'none' };

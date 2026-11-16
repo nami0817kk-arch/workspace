@@ -434,7 +434,7 @@
   // 設定：同じ events に載せた 'club' 系の p は null として扱う
   YA.EVENT_NULL = new Set(['club', 'poach']);
 
-  // ---------- 夏合宿・遠征（26週）----------
+  // ---------- 夏合宿・遠征（16週＝8月。YA.CAMP_WEEK）----------
   YA.campOptions = function (w) {
     const b = YA.budget(w);
     const spent = w.club.spent.camp || 0;

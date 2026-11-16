@@ -148,7 +148,7 @@
     const left = h('div', { style: 'flex:1;min-width:0' });
     left.append(card(h('div', { class: 'row' }, h('b', { class: 'grow' }, `今年の予算 ${b.total}万円`), h('span', { class: 'chip gray' }, (c.solidarityIn != null && c.solidarityIn < (c.solidarityLast || 0)) ? `連帯貢献金 ${c.solidarityLast}万円のうち${c.solidarityIn}万円を含む` : `連帯貢献金 ${c.solidarityLast || 0}万円を含む`)),
       h('div', { class: 'note' }, `スタッフの給料 ${b.salaries}万円 → 残り ${b.free}万円を配分`), h('div', { class: 'note', style: 'color:var(--blue-d);margin-top:3px' }, info)));
-    for (const [k, n, note] of [['scout', 'スカウト', '候補の報告が増え、見に行ける'], ['camp', '合宿・遠征', '夏の合宿（26週）に使う'], ['facility', '施設', '積み立てて回復力が上がる']]) {
+    for (const [k, n, note] of [['scout', 'スカウト', '候補の報告が増え、見に行ける'], ['camp', '合宿・遠征', '夏の合宿（16週・8月）に使う'], ['facility', '施設', '積み立てて回復力が上がる']]) {
       const can = YA.canAlloc(w, k);
       const inp = h('input', { type: 'range', min: 0, max: 60, value: c.alloc[k], disabled: !can, style: 'flex:1' });
       const lab = h('b', { style: 'width:62px;text-align:right' }, `${b[k]}万`);
@@ -338,7 +338,7 @@
     right.append(card(title('大会'), cupRow(YA.CUP_NAME.summer, w.cup.summer), cupRow(YA.CUP_NAME.winter, w.cup.winter), h('div', { class: 'note' }, '負けたら終わりのトーナメントです（10〜12週・27〜30週）。')));
     // 今年の日程：月ごとの縦の表。今週に当たる行に印（2026-11-16 1段落の長い文だった）
     {
-      const SCH = [[1, 9, 'リーグ前半'], [10, 12, (YA.CUP_NAME && YA.CUP_NAME.summer) || '夏の大会'], [13, 25, 'リーグ後半'], [26, 26, '夏合宿・遠征'], [27, 30, (YA.CUP_NAME && YA.CUP_NAME.winter) || '冬の大会'], [25, 27, '内部昇格（中3の練習参加）'], [1, 27, 'スカウト（声をかけるのは4〜11月）'], [28, 28, 'スカウトの返事'], [31, 34, 'セレクション'], [40, 40, '卒業式']].sort((x, y) => x[0] - y[0] || x[1] - y[1]);
+      const SCH = [[1, 12, 'リーグ前半'], [13, 15, (YA.CUP_NAME && YA.CUP_NAME.summer) || '夏の大会'], [16, 16, '夏合宿・遠征'], [17, 26, 'リーグ後半'], [27, 30, (YA.CUP_NAME && YA.CUP_NAME.winter) || '冬の大会'], [25, 27, '内部昇格（中3の練習参加）'], [1, 27, 'スカウト（声をかけるのは4〜11月）'], [28, 28, 'スカウトの返事'], [31, 34, 'セレクション'], [40, 40, '卒業式']].sort((x, y) => x[0] - y[0] || x[1] - y[1]);
       const mon = (wk) => YA.calendar(wk).month;
       const rowsS = SCH.map(([s0, s1, t]) => {
         const now = w.week >= s0 && w.week <= s1;
@@ -397,7 +397,7 @@
     const ss = (a.seasons || []).slice().reverse();
     const count = (list) => { const m = {}; for (const x of list) m[x.name] = (m[x.name] || 0) + 1; return Object.entries(m).map(([k, n]) => k + (n > 1 ? ` ×${n}` : '')); };
     V().modal((close) => h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(720px,97%);max-height:96%;padding:10px 12px;gap:6px;overflow:auto' },
-      h('div', { class: 'row', style: 'gap:6px' }, h('span', { class: 'pos ' + a.pos }, YA.POS_LABEL[a.main] || a.pos), h('b', { style: 'font-size:15px' }, a.name), h('span', { class: 'sub' }, `${a.year}年卒・いま${a.age}歳${a.retired ? '（引退）' : ''}`), h('span', { class: 'grow' }), h('button', { class: 'btn sm', onclick: close }, '閉じる')),
+      h('div', { class: 'row', style: 'gap:6px' }, h('span', { class: 'pos ' + a.pos }, YA.POS_LABEL[a.main] || a.pos), h('b', { style: 'font-size:15px' }, a.name), h('span', { class: 'sub' }, `${a.year}年卒・いま${a.age}歳${a.retired ? '（' + YA.retireWord(a) + '）' : ''}`), h('span', { class: 'grow' }), h('button', { class: 'btn sm', onclick: close }, '閉じる')),
       h('div', { class: 'note' }, a.status === 'left' ? '在学中に退団した子です。' : `いま：${a.club || '-'}${a.league ? '（' + a.league + '）' : ''}　卒業時：${a.note || ''}　総合力 ${YA.rate(a.ovr)}（${YA.levelOf(YA.rate(a.ovr))}）`),
       h('div', { class: 'row', style: 'flex-wrap:wrap;gap:4px' },
         h('span', { class: 'chip trait' }, a.pos === 'GK' ? `通算 ${a.apps}試合・完封${a.cleans || 0}` : `通算 ${a.apps}試合・${a.goals}得点・${a.assists || 0}アシスト`),
