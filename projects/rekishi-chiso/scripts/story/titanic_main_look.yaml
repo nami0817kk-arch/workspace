@@ -1,0 +1,185 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：タイタニックの最期（scripts/titanic-story.yaml）。chiso/storymain.py が読む。
+# 11-15 作成（11/20 12:00 公開予定）。toyamaru_main_look.yaml を写した。台本には手を入れない（承認のあと）。決まりは docs/story-main.md・スキル rekishi-story-screen。
+# 絵の方針：AI 絵（S01〜S21・SEND）は Gemini（Chrome、無料版）。人物は後ろ姿・遠景（顔は出さない）。遺体や惨状は描かない。船の煙突は4本。文字・船名は入れない。
+script: scripts/titanic-story.yaml
+out: titanic_story_main
+art_dir: out/story/titanic/main
+main_art_dir: out/story/titanic/main
+ai_disclosure: この動画の情景・人物の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の人物の姿ではありません（画面の右上に「AI生成画像」と出しています）。
+
+chapters:
+  0: {label: 序章 氷の警報は届いていた, now: 1912年4月14日, dates: {}}
+  1: {label: 第1章 氷の警報は、なぜ船橋に届かなかったのか, now: 1912年4月14日, dates: {10: 1912年4月14日13時42分, 17: 1912年4月14日23時40分}}
+  2: {label: 第2章 衝突から最初のボートまで, now: 1912年4月14日23時40分, dates: {27: 1912年4月15日0時30分}}
+  3: {label: 第3章 5マイルか、19マイルか, now: 1912年4月15日0時45分, dates: {}}
+  4: {label: 第4章 CQDは誰に届いたのか, now: 1912年4月15日0時15分, dates: {54: 1912年4月15日0時35分, 60: 1912年4月15日1時11分}}
+  5: {label: 第5章 2時20分, now: 1912年4月15日1時45分, dates: {70: 1912年4月15日2時5分, 71: 1912年4月15日2時20分}}
+  6: {label: 第6章 何人乗って、何人助かったのか, now: null, dates: {}}
+  7: {label: 第7章 調査のあと, now: null, dates: {}}
+  8: {label: まとめ タイタニックの最期、記録から言えること, now: null, dates: {}}
+no_tag_from: 109
+
+references:
+  - アメリカ上院 Smith 委員会の調査記録と報告書（1912年。Titanic Inquiry Project）
+  - 英国の沈没事故調査（Lord Mersey）の証言と報告書（1912年。Titanic Inquiry Project）
+  - Lawrence Beesley, The Loss of the SS Titanic (1912)
+
+credits: {}
+
+ai:
+  S01: {scene: 夜の大西洋を進む四本煙突の大型客船の遠景（星空・凪）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S02: {scene: 無線室で受信機に向かう無線士の後ろ姿（電鍵とランプ）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S03: {scene: 夕暮れの大西洋に浮かぶ氷山の遠景, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S04: {scene: 海図室の机、海図と書類（文字なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S05: {scene: 船橋の舵輪と時計、後ろ姿の士官（顔は見せない）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S06: {scene: マストの上の見張り台、後ろ姿の見張り（夜）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S07: {scene: 夜の海に浮かぶ氷山の黒い影と船首の遠景, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S08: {scene: 甲板の吊り柱に並ぶ救命ボート（夜）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S09: {scene: 救命ボートが海面へ降ろされる遠景（小さな後ろ姿）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S10: {scene: 水平線に小さな灯りだけが見える夜の海, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S11: {scene: 夜空にあがる白い信号ロケットと遠い船影, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S12: {scene: 氷の海で停まる小型の貨客船（夜）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S13: {scene: 無線電信機の電鍵・コイル・ランプのアップ, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S14: {scene: 夜の海を全速で進む別の客船（煙突から煙）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S15: {scene: アメリカ上院の委員会室、後ろ姿の議員たち, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S16: {scene: 木の机の上の速記録と書類の山、ランプ, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S17: {scene: 英国の審問の広い広間、後ろ姿の人々, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S18: {scene: 夜明けの海に浮かぶ救命ボートの遠景（静か）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S19: {scene: 朝の港の桟橋に集まる人々の後ろ姿（傘）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S20: {scene: 夜の海で傾いた大型客船の遠景（灯りが並ぶ、人は描かない）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S21: {scene: 壁の古い時計（数字のない文字盤）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  SEND: {scene: 終了画面用。夜明けの大西洋の水平線（右半分を空ける）, lock: [1.0, 0.5, 0.5]}
+
+shots:
+  - 0 ai:S21 wide
+  - 1 ai:S15 wide
+  - 2 ai:S03 wide
+  - 3 ai:S02 wide
+  - 4 ai:S12 wide
+  - 5 ai:S01 wide
+  - 6 ai:S16 wide
+  - 7 ai:S01 left
+  - 8 ai:S03 left
+  - 9 ai:S04 wide
+  - 10 ai:S02 left
+  - 11 ai:S13 wide
+  - 12 ai:S12 left
+  - 13 ai:S02 right
+  - 14 ai:S06 wide
+  - 15 ai:S07 wide
+  - 16 ai:S05 wide
+  - 17 ai:S07 left
+  - 18 ai:S06 left
+  - 19 ai:S05 left
+  - 20 ai:S01 right
+  - 21 ai:S03 right
+  - 22 ai:S04 left
+  - 23 ai:S07 right
+  - 24 ai:S05 right
+  - 25 ai:S08 wide
+  - 26 ai:S09 wide
+  - 27 ai:S08 left
+  - 28 ai:S09 left
+  - 29 ai:S05 wide
+  - 30 ai:S08 right
+  - 31 ai:S09 right
+  - 32 ai:S08 wide
+  - 33 ai:S09 wide
+  - 34 ai:S04 right
+  - 35 ai:S08 right
+  - 36 ai:S09 right
+  - 37 ai:S10 wide
+  - 38 ai:S11 wide
+  - 39 ai:S12 right
+  - 40 ai:S10 left
+  - 41 ai:S11 left
+  - 42 ai:S12 wide
+  - 43 ai:S05 right
+  - 44 ai:S10 right
+  - 45 ai:S11 right
+  - 46 ai:S12 right
+  - 47 ai:S10 wide
+  - 48 ai:S12 left
+  - 49 ai:S13 left
+  - 50 ai:S02 wide
+  - 51 ai:S14 wide
+  - 52 ai:S13 right
+  - 53 ai:S14 left
+  - 54 ai:S02 right
+  - 55 ai:S14 right
+  - 56 ai:S13 wide
+  - 57 ai:S10 right
+  - 58 ai:S14 wide
+  - 59 ai:S13 right
+  - 60 ai:S02 left
+  - 61 ai:S14 right
+  - 62 ai:S13 left
+  - 63 ai:S02 wide
+  - 64 ai:S14 left
+  - 65 ai:S13 wide
+  - 66 ai:S02 left
+  - 67 ai:S11 wide
+  - 68 ai:S20 wide
+  - 69 ai:S21 left
+  - 70 ai:S20 left
+  - 71 ai:S15 left
+  - 72 ai:S16 left
+  - 73 ai:S20 right
+  - 74 ai:S21 right
+  - 75 ai:S20 wide
+  - 76 ai:S17 wide
+  - 77 ai:S18 wide
+  - 78 ai:S20 right
+  - 79 ai:S13 left
+  - 80 ai:S02 right
+  - 81 ai:S16 right
+  - 82 ai:S15 right
+  - 83 ai:S17 left
+  - 84 ai:S16 wide
+  - 85 ai:S15 wide
+  - 86 ai:S19 wide
+  - 87 ai:S16 right
+  - 88 ai:S17 right
+  - 89 ai:S15 right
+  - 90 ai:S16 left
+  - 91 ai:S19 left
+  - 92 ai:S17 wide
+  - 93 ai:S15 left
+  - 94 ai:S16 wide
+  - 95 ai:S19 right
+  - 96 ai:S17 right
+  - 97 ai:S16 left
+  - 98 ai:S18 left
+  - 99 ai:S17 left
+  - 100 ai:S01 wide
+  - 101 ai:S20 left
+  - 102 ai:S03 wide
+  - 103 ai:S21 wide
+  - 104 ai:S18 right
+  - 105 ai:S01 right
+  - 106 ai:S12 wide
+  - 107 ai:S21 right
+  - 108 ai:S18 wide
+  - 109 ai:S01 left
+  - 110 ai:SEND wide
+  - end ai:SEND wide
+
+focus: {}
+
+fx:
+  S02: {lamp: {region: [0.3, 0.4, 0.8, 0.85]}}
+  S13: {lamp: {region: [0.3, 0.4, 0.8, 0.85]}}
+
+parts:
+  - {type: quote, from: 1, to: 1, label: 史料, text: "2時20分に沈んだと聞いた／士官どうしで結論した", source: "二等航海士ライトラーの証言（アメリカ上院 1912年）"}
+  - {type: quote, from: 65, to: 65, label: 史料, text: "できるだけ急いで来てくれ／機関室がボイラーまで満ちてくる", source: "無線士コッタムの証言（英国調査 1912年）"}
+  - {type: quote, from: 104, to: 104, label: 要点, text: "言える＝警報は届いた／言えない＝返事・距離・人数", source: "この動画のまとめ"}
+
+figures: []
+
+stills:
+  - {line: 0, note: 冒頭（0秒）}
+  - {line: 51, note: 3つの時計}
+  - {line: 65, note: 最後の言葉}
+  - {line: 104, note: 要点}
+  - {end: true, note: 終了画面の空き}

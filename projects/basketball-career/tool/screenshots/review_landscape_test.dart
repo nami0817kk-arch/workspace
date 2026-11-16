@@ -213,9 +213,10 @@ void main() {
     await _shoot(t, '6c_trade_offer', await _with(mid), act: (t) async {
       await _tap(t, 'トレード', first: true);
       // 相手のいちばん上の選手を選ぶ(一覧は画面に入った分しか作られないので、行の部品で探す)
-      await t.ensureVisible(find.byType(PlayerRow).first);
+      final box = find.byIcon(Icons.check_box_outline_blank_rounded);
+      await t.ensureVisible(box.first);
       await t.pump(const Duration(milliseconds: 300));
-      await t.tap(find.byType(PlayerRow).first);
+      await t.tap(box.first);
       await t.pump();
       await t.pump(const Duration(milliseconds: 400));
     });

@@ -19,9 +19,12 @@ class GmCol {
 
 /// 表の1行。[cells] は列と同じ数。
 class GmRow {
-  const GmRow(this.cells, {this.onTap, this.highlight = false, this.dim = false, this.divider = false});
+  const GmRow(this.cells, {this.onTap, this.onLongPress, this.highlight = false, this.dim = false, this.divider = false});
   final List<Widget> cells;
   final VoidCallback? onTap;
+
+  /// 長押し(選手のカードを開くなど)。
+  final VoidCallback? onLongPress;
 
   /// 自分のチーム・選んでいる行(橙の下地)。
   final bool highlight;
@@ -117,6 +120,7 @@ class GmTable extends StatelessWidget {
                 type: MaterialType.transparency,
                 child: InkWell(
                   onTap: r.onTap,
+                  onLongPress: r.onLongPress,
                   child: Container(
                     height: rowHeight,
                     padding: const EdgeInsets.symmetric(horizontal: 4),
