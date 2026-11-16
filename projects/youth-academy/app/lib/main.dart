@@ -44,15 +44,17 @@ class MatchScreen extends StatefulWidget {
   State<MatchScreen> createState() => _MatchScreenState();
 }
 
-class _MatchScreenState extends State<MatchScreen> {
+class _MatchScreenState extends State<MatchScreen> with WidgetsBindingObserver {
   late final WebViewController _web;
   late final MonetizationBridge _bridge;
   bool _loaded = false;
+  bool _reloading = false;
   static const _prefix = 'ya_';
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _web = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(const Color(0xFFEAF0F8))
@@ -62,6 +64,10 @@ class _MatchScreenState extends State<MatchScreen> {
         NavigationDelegate(
           onPageFinished: (_) {
             if (mounted) setState(() => _loaded = true);
+          },
+          // 裏に回っているあいだに iOS が WebView の中身を落とすと、戻ったときに真っ白になる。落ちたと分かったら読み直す
+          onWebResourceError: (e) {
+            if (e.errorType == WebResourceErrorType.webContentProcessTerminated) unawaited(_reload());
           },
           // ページの中から別のサイトへ移らない
           onNavigationRequest: (r) {
@@ -83,6 +89,40 @@ class _MatchScreenState extends State<MatchScreen> {
     );
     unawaited(_bridge.start());
     unawaited(_load());
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  // 別アプリから戻ったら、ページに中身があるかを確かめる。無い（真っ白）・答えが返らないときは保存から読み直す
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) unawaited(_checkAlive());
+  }
+
+  Future<void> _checkAlive() async {
+    if (!_loaded || _reloading) return;
+    Object? r;
+    try {
+      r = await _web.runJavaScriptReturningResult(aliveProbe).timeout(const Duration(seconds: 2));
+    } catch (_) {
+      r = null;
+    }
+    if (needsReload(r)) await _reload();
+  }
+
+  Future<void> _reload() async {
+    if (_reloading || !mounted) return;
+    _reloading = true;
+    setState(() => _loaded = false);
+    try {
+      await _load();
+    } finally {
+      _reloading = false;
+    }
   }
 
   // 広告・課金の依頼なら橋へ、そうでなければ保存の依頼

@@ -11,6 +11,25 @@ void main() {
     expect(out, isNot(contains('/*__BOOT__*/')));
   });
 
+  test('別アプリから戻ったとき：中身が無い・答えが無いなら読み直す', () {
+    expect(needsReload(null), isTrue);
+    expect(needsReload(0), isTrue);
+    expect(needsReload('0'), isTrue);
+    expect(needsReload('"x"'), isTrue);
+    expect(needsReload(3), isFalse);
+    expect(needsReload('5'), isFalse);
+    expect(needsReload(2.0), isFalse);
+    expect(aliveProbe, contains('getElementById("app")'));
+  });
+
+  test('main.dart：戻ったときの確かめと、中身が落ちたときの読み直しがつながっている', () {
+    final src = File('lib/main.dart').readAsStringSync();
+    expect(src, contains('WidgetsBindingObserver'));
+    expect(src, contains('AppLifecycleState.resumed'));
+    expect(src, contains('webContentProcessTerminated'));
+    expect(src, contains('needsReload('));
+  });
+
   test('値に </script> が入っていてもページが壊れない', () {
     final out = injectBoot('<script>/*__BOOT__*/</script>', {'x': '</script><b>'});
     expect('</script>'.allMatches(out).length, 1);
