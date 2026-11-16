@@ -320,7 +320,8 @@ extension GameStateFinance on GameState {
     if (save == null) return false;
     if (save.ownerWorkDoneSeason[work.id] == save.league.season) return false;
     if (work.onlyInRed && save.budget >= 0) return false;
-    return save.budget >= work.cost;
+    // 支出が要らない手は、資金がマイナスでも打てる(危機の手がそう)。
+    return work.cost == 0 || save.budget >= work.cost;
   }
 
   /// 今季すでに打った仕事か。
