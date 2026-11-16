@@ -7,15 +7,33 @@ import '../widgets/club_emblem.dart';
 import '../widgets/manager_report_card.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/screen_bar.dart';
+import '../widgets/group_page.dart';
+import 'achievements_screen.dart';
+import 'analysis_screen.dart';
+import 'awards_screen.dart';
+import 'best_eleven_screen.dart';
+import 'club_calendar_screen.dart';
+import 'club_screen.dart';
+import 'contract_board_screen.dart';
+import 'cup_screen.dart';
 import 'finance_screen.dart';
 import 'fixtures_screen.dart';
+import 'hall_of_fame_screen.dart';
 import 'home_screen.dart';
+import 'league_ranking_screen.dart';
+import 'news_screen.dart';
+import 'owner_work_screen.dart';
+import 'season_history_screen.dart';
 import 'squad_screen.dart';
 import 'transfer_screen.dart';
+import 'youth_screen.dart';
 import '../l10n/tr.dart';
 
 /// 画面の行き先。横画面は左のメニューに全部を並べ(FM風)、縦画面は下の5タブにまとめる。
-enum _Page { status, finance, squad, transfer, league }
+///
+/// 横画面は7項目: 状況・財務・クラブ・選手・移籍・リーグ・オーナー室。
+/// 縦画面は下の5タブ(状況・財務・補強・選手・リーグ)。
+enum _Page { status, finance, club, squad, transfer, league, ownerRoom }
 
 /// 状況/経営/補強/チーム/リーグのシェル。
 ///
@@ -49,22 +67,72 @@ class _MainShellState extends State<MainShell> {
     FixturesScreen(),
   ];
 
-  // 横画面の5画面(左メニューの並びと同じ)。先発・戦術は、勝負の試合を
-  // 宣言したときだけ開く。ふだんの入口には置かない。
+  // 横画面の7項目(左メニューの並びと同じ)。関連する画面は、1つの項目の中に
+  // サブページとしてまとめる(GroupPage)。
   static const _widePages = [
     _Page.status,
     _Page.finance,
+    _Page.club,
     _Page.squad,
     _Page.transfer,
     _Page.league,
+    _Page.ownerRoom,
   ];
-  static const _wideTabs = [
-    HomeScreen(),
-    FinanceScreen(embedded: true),
-    SquadScreen(),
-    TransferScreen(embedded: true),
-    FixturesScreen(),
-  ];
+
+  List<Widget> get _wideTabs => [
+        const HomeScreen(),
+        const FinanceScreen(embedded: true),
+        GroupPage(
+          title: Tr.pick('クラブ', 'Club'),
+          tabs: [
+            GroupTab(Tr.pick('施設・スタッフ', 'Facilities & staff'),
+                (_) => const ClubScreen()),
+            GroupTab(Tr.pick('ユース・スカウト', 'Youth & scouting'),
+                (_) => const YouthScreen()),
+          ],
+        ),
+        GroupPage(
+          title: Tr.pick('選手', 'Players'),
+          tabs: [
+            GroupTab(Tr.pick('スカッド', 'Squad'), (_) => const SquadScreen()),
+            GroupTab(Tr.pick('登録と契約', 'Contracts'),
+                (_) => const ContractBoardScreen()),
+          ],
+        ),
+        const TransferScreen(embedded: true),
+        GroupPage(
+          title: Tr.pick('リーグ', 'League'),
+          tabs: [
+            GroupTab(Tr.pick('順位・日程', 'Table & fixtures'),
+                (_) => const FixturesScreen()),
+            GroupTab(Tr.pick('カップ戦', 'Cups'), (_) => const CupScreen()),
+            GroupTab(Tr.pick('ランキング', 'Rankings'),
+                (_) => const LeagueRankingScreen()),
+            GroupTab(Tr.pick('個人タイトル', 'Awards'),
+                (_) => const AwardsScreen()),
+          ],
+        ),
+        GroupPage(
+          title: Tr.pick('オーナー室', 'Owner\'s office'),
+          tabs: [
+            GroupTab(Tr.pick('オーナーの仕事', 'Owner\'s work'),
+                (_) => const OwnerWorkScreen()),
+            GroupTab(Tr.pick('年間予定', 'Calendar'),
+                (_) => const ClubCalendarScreen()),
+            GroupTab(Tr.pick('ニュース', 'News'), (_) => const NewsScreen()),
+            GroupTab(Tr.pick('シーズン分析', 'Analysis'),
+                (_) => const AnalysisScreen()),
+            GroupTab(Tr.pick('シーズン成績', 'Seasons'),
+                (_) => const SeasonHistoryScreen()),
+            GroupTab(Tr.pick('ベストイレブン', 'Team of the season'),
+                (_) => const BestElevenScreen()),
+            GroupTab(Tr.pick('殿堂', 'Hall of fame'),
+                (_) => const HallOfFameScreen()),
+            GroupTab(Tr.pick('実績', 'Achievements'),
+                (_) => const AchievementsScreen()),
+          ],
+        ),
+      ];
 
   int _pendingHomeActionCount(GameState gameState) {
     var count = 0;
@@ -73,7 +141,10 @@ class _MainShellState extends State<MainShell> {
     return count;
   }
 
-  int _narrowIndex() => _narrowPages.indexOf(_page);
+  int _narrowIndex() {
+    final i = _narrowPages.indexOf(_page);
+    return i < 0 ? 0 : i; // 横画面でだけある項目のとき、縦画面では状況に戻す。
+  }
 
   void _go(_Page p) {
     FeedbackService.tap();
@@ -132,7 +203,7 @@ class _MainShellState extends State<MainShell> {
       },
       child: Scaffold(
         key: _scaffoldKey,
-        drawer: wide ? const QuickAccessDrawer() : null,
+        drawer: wide ? const QuickAccessDrawer(onlyOthers: true) : null,
         body: wide
             ? Column(
                 children: [
@@ -310,7 +381,8 @@ class _FmSidebar extends StatelessWidget {
   final void Function(_Page) onSelect;
   final VoidCallback onMore;
 
-  static const double _itemHeight = 54;
+  // 7項目と「その他」が、横画面の低い高さ(約460)に収まる高さ。
+  static const double _itemHeight = 47;
 
   @override
   Widget build(BuildContext context) {
@@ -323,6 +395,12 @@ class _FmSidebar extends StatelessWidget {
         Tr.pick('経営', 'Finance')
       ),
       (
+        _Page.club,
+        Icons.apartment_outlined,
+        Icons.apartment,
+        Tr.pick('クラブ', 'Club')
+      ),
+      (
         _Page.squad,
         Icons.groups_outlined,
         Icons.groups,
@@ -332,13 +410,19 @@ class _FmSidebar extends StatelessWidget {
         _Page.transfer,
         Icons.swap_horiz_outlined,
         Icons.swap_horiz,
-        Tr.pick('補強', 'Signings')
+        Tr.pick('移籍', 'Transfers')
       ),
       (
         _Page.league,
         Icons.leaderboard_outlined,
         Icons.leaderboard,
         Tr.pick('リーグ', 'League')
+      ),
+      (
+        _Page.ownerRoom,
+        Icons.work_outline,
+        Icons.work,
+        Tr.pick('オーナー室', 'Office')
       ),
     ];
     final scheme = Theme.of(context).colorScheme;
