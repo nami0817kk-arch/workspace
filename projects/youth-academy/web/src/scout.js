@@ -558,6 +558,7 @@
       if (a.retired || a.age == null) continue;
       a.titles = a.titles || [];
       a.awards = a.awards || [];
+      let seasonDone = false;
       a.age++;
       if (a.age <= 23) a.ovr = Math.round((a.ovr + r() * (a.ovr >= 17.5 ? 0.08 : a.ovr >= 15.8 ? 0.2 : a.ovr >= 14 ? 0.35 : 0.6)) * 10) / 10; // 上に行くほど伸びは鈍る（200は歴史上No.1）
       else if (a.age >= 30) a.ovr = Math.round((a.ovr - r() * 0.5) * 10) / 10;
@@ -571,6 +572,9 @@
         // 国内は力で昇格・降格のあるリーグへ。このクラブのトップにいる子は、トップの部で出る
         if (w.top && a.club === w.top.name) a.league = YA.J_NAME[w.top.j];
         else a.league = YA.clubLeague(a.club) || (a.abroad ? a.league : domLeague(a.ovr));
+        // その年の成績は、いまいるクラブで付けてから移籍を決める（2026-11-16 画面の点検：移籍した年の成績が移籍先のクラブで記録されていた）
+        careerSeason(w, a, r);
+        seasonDone = true;
         const gap = YA.rate(a.ovr) - (YA.clubStr(a.club, w) || YA.rate(a.ovr));
         // 力のある選手ほど移籍が多く、海外へ出やすい（とても力があれば5大リーグ）
         if (a.age >= 19 && a.age <= 30 && r() < 0.17 + clamp((a.ovr - 15) * 0.06, 0, 0.3) * (a.abroad ? 0.4 : 1) + clamp((gap - 8) * 0.02, 0, 0.3)) {
@@ -606,7 +610,7 @@
           if (a.nat === 1) YA.noteTier(w, 1, say(w, a, 'nat', [`卒業生の${a.name}が日本代表に初めて選ばれました！`, `日本代表のメンバー発表。${a.name}の名前が読み上げられた！`, `${a.name}、ついに日本代表へ。このユースから育った子が、日の丸を背負う`, `「ここまで来られたのは、ユースの3年間があったから」――${a.name}が日本代表に初選出`]));
         }
       }
-      if (a.status !== 'left') careerSeason(w, a, r);
+      if (a.status !== 'left' && !seasonDone) careerSeason(w, a, r);
       if (a.age >= 33 || a.ovr < 9) {
         a.retired = true;
         a.note = '引退';
