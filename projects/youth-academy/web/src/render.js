@@ -1280,7 +1280,7 @@
             ctx.arc(q[0], q[1], R + 3 + k * R * 1.6, 0, Math.PI * 2);
             ctx.stroke();
           }
-          if (((isF && this.scene) || cb) && p) labels.push({ q, text: (cb ? '⚽ ' : '') + p.num + ' ' + String(p.name).split(' ')[0], gold: cb });
+          if (((isF && this.scene) || cb) && p) labels.push({ q, text: (cb ? '⚽ ' : '') + p.num + ' ' + String(p.name).split(' ')[0].split('・').pop(), gold: cb }); // 外国籍の子は最後の部分
         }
         // ボール（高いほど影から離れて大きく見える）
         const b = this.ball;

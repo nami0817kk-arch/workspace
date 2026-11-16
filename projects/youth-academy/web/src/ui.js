@@ -182,7 +182,8 @@
   }
 
   // ---------- 選手の表示 ----------
-  const surname = (p) => p.name.split(' ')[0];
+  // 名字だけ。外国籍の子（「ジャック・ウィルソン」のように中黒でつなぐ名前）は最後の部分（2026-11-16 ボードで長く出て重なっていた）
+  const surname = (p) => { const n = p.name.split(' ')[0]; return n.includes('・') ? n.split('・').pop() : n; };
   // 学年の印（自分のチームの選手だけ。相手は学年を持たない）
   const gtag = (p) => (p && p.grade ? h('span', { class: 'gtag g' + p.grade }, '高' + p.grade) : null);
   function persText(p) {
@@ -273,6 +274,7 @@
       // 名前と位置の札の重なりを避ける（2026-11-16「西村」と「岡田」などが重なっていた）。
       // 名前は丸の上が基本。すぐ上に別の子がいれば丸の下へ。位置の札は丸の右が基本で、右に近い子がいれば名前と反対側の下か上へ
       const pts = t.lineup.map((sl) => at(sl.x, sl.y));
+      const overlays = [];
       const near = (i, fx) => pts.some((q, j) => j !== i && fx(q.sx - pts[i].sx, q.sy - pts[i].sy));
       t.lineup.forEach((sl, i) => {
         const p = t.players[sl.pid];
@@ -292,8 +294,13 @@
         // ポジション名と適性は丸の右に（縦に並ぶ最終ラインでも、名前と重ならない）
         if (p15 !== 'GK') g.append(s('text', Object.assign({ x: 5.3, y: 1.1, 'text-anchor': 'start', fill: ring === '#fff' ? '#fff6c2' : ring, 'font-size': 2.8, 'font-weight': 900, stroke: 'rgba(0,0,0,.55)', 'stroke-width': 0.8, 'paint-order': 'stroke' }, posAlt ? { x: 0, y: nameBelow ? -5.6 : 8.2, 'text-anchor': 'middle' } : {}), YA.POS_LABEL[p15] + (p15 === 'GK' ? '' : YA.aptLabel(p.apt ? p.apt[p15] : 17))));
         if ((opts.showRole && opts.showRole()) || sel) {
+          // 役割の札は濃い下地を敷いて、隣の子の名前と重なっても読めるように（2026-11-16「ゴールキ…・守」が名前に重なっていた）
           const fit = YA.Match.prototype.roleFit.call(null, t, i);
-          g.append(s('text', { x: 5.3, y: p15 === 'GK' ? 1.1 : 4.3, 'text-anchor': 'start', fill: fit < 0 ? '#ffb3b3' : fit > 0 ? '#fff3b0' : '#e8f5ec', 'font-size': 2.3, 'font-weight': 800, stroke: 'rgba(0,0,0,.55)', 'stroke-width': 0.7, 'paint-order': 'stroke' }, (sl.role.length > 4 ? sl.role.slice(0, 4) + '…' : sl.role) + (YA.DUTY[sl.duty] ? '・' + YA.DUTY[sl.duty].short : '')));
+          const txt = (sl.role.length > 4 ? sl.role.slice(0, 4) + '…' : sl.role) + (YA.DUTY[sl.duty] ? '・' + YA.DUTY[sl.duty].short : '');
+          const ty = p15 === 'GK' ? 1.1 : posAlt ? 1.1 : 4.3;
+          // 札はほかの子の上に重ねるので、あとでまとめて最後に描く（選手の並びの順番は変えない）
+          overlays.push({ sel, el: s('g', { transform: `translate(${sx} ${sy})`, 'pointer-events': 'none' }, s('rect', { x: 4.9, y: ty - 2.3, width: txt.length * 2.3 + 1, height: 3.1, rx: 0.8, fill: 'rgba(12,28,56,.88)' }),
+            s('text', { x: 5.4, y: ty, 'text-anchor': 'start', fill: fit < 0 ? '#ffb3b3' : fit > 0 ? '#fff3b0' : '#e8f5ec', 'font-size': 2.3, 'font-weight': 800 }, txt)) });
         }
         g.addEventListener('pointerdown', (ev) => {
           ev.preventDefault();
@@ -347,6 +354,8 @@
         g.addEventListener('pointercancel', up);
         layer.append(g);
       });
+      // 役割の札は最後に（選んでいる子の札がいちばん上）
+      for (const o of overlays.sort((a, b) => a.sel - b.sel)) layer.append(o.el);
     }
     draw();
     wrap.redraw = draw;

@@ -1475,6 +1475,10 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   const svg = YA.lineageSvg(wl), mini = YA.lineageSvg(wl, { mini: true });
   ok(svg.startsWith('<svg') && svg.includes('年目') && mini.startsWith('<svg') && mini.length < svg.length, '系譜図が作れる');
   ok(YA.chronicle(wl).length > 5 && JSON.parse(JSON.stringify(wl)).fund === wl.fund, '年表が作れ、基金が保存される');
+  // 2026-11-16 年表：在学中のプロ契約は卒業と分けて数える。年末の評価・覚醒も載る
+  { const wc = JSON.parse(JSON.stringify(wl)); wc.alumni = wc.alumni.concat([{ name: '早咲 太郎', year: wc.year, note: 'プロ契約（高2でトップ昇格）', status: 'pro', pos: 'FW', main: 'ST', ovr: 14 }]); wc.club.eval = (wc.club.eval || []).concat([{ year: 1, letter: 'S' }]); wc.dex = Object.assign({}, wc.dex, { ftest: { name: '覚醒 花子', y: 1, n: 1 } });
+    const rows = YA.chronicle(wc); const ys = rows.filter((r) => r.y === wc.year);
+    ok(ys.some((r) => /在学中にプロ契約 1人（早咲 太郎）/.test(r.t)) && !ys.some((r) => /^1人が卒業/.test(r.t) && r.t.includes('早咲')) && rows.some((r) => r.t === '年末の評価 S') && rows.some((r) => /覚醒 花子が覚醒/.test(r.t)), '年表：在学中のプロ契約を分け、年末の評価と覚醒も載る'); }
   // 2段目その2：名物のライバル監督・トップ監督の注文・クラブ移籍
   const rcs = wl.rivalCoaches || [];
   console.log('ライバル', rcs.map((c) => `${c.k}:${c.teamName}:${c.rec.w}-${c.rec.d}-${c.rec.l}:${c.lin}`).join(' '), '／注文', (wl.topReq || []).map((q) => q.pos + ':' + q.res).join(','), '／トップ監督', wl.topCoach && wl.topCoach.name);

@@ -271,8 +271,15 @@
       body.append(h('div', { class: 'row', style: 'gap:4px;flex-wrap:wrap;margin-top:3px' }, ...w.lineupB.map((s, i) => { const p = w.players[s.pid]; return h('span', { style: 'display:flex;flex-direction:column;align-items:center;gap:1px' }, h('span', { class: 'note', style: 'font-size:9.5px' }, slotName(s, i)), chip(p, ui.bSel === i, () => { if (ui.bSel == null) ui.bSel = i; else if (ui.bSel === i) ui.bSel = null; else { YA.swapB(w, ui.bSel, s.pid); ui.bSel = null; YA.saveWorld(true); } rerender(); })); })));
       body.append(h('div', { class: 'note', style: 'margin-top:5px' }, '控え'), h('div', { class: 'row', style: 'gap:4px;flex-wrap:wrap;margin-top:3px' }, ...(w.benchB || []).map((id) => w.players[id]).filter(Boolean).map((p) => chip(p, false, () => { if (ui.bSel == null) return; YA.swapB(w, ui.bSel, p.id); ui.bSel = null; YA.saveWorld(true); rerender(); }))));
     }
+    // いまのBの先発（自分で決める以外のときも見えるように。2026-11-16 誰が出ているか見えなかった）
+    if (c.policy !== 'manual' && (w.lineupB || []).length) {
+      body.append(h('div', { class: 'h', style: 'margin-top:8px' }, 'Bの先発（いま）'), h('div', { style: 'display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:3px;margin-top:3px' },
+        ...w.lineupB.map((sl, i) => { const p = w.players[sl.pid]; if (!p) return null; const p15 = YA.pos15OfSlot(sl, i); return h('div', { class: 'pitem', style: 'cursor:default;gap:5px;padding:3px 6px;min-height:0' }, h('span', { class: 'pos ' + YA.posOfSlot(sl, i) }, YA.POS_LABEL[p15] || p15), h('span', { class: 'grow', style: 'min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px' }, `${p.num} ${p.name}`), h('span', { class: 'sub', style: 'font-size:10px' }, '高' + p.grade), h('b', { style: 'font-size:12px' }, YA.rating(p))); })));
+    }
+    // 結果は勝ち・引き分け・負けで色を分ける
     const rs = (w.resultsB || []).slice(-8).reverse();
-    body.append(h('div', { class: 'h', style: 'margin-top:8px' }, 'Bの最近の結果'), ...(rs.length ? rs.map((r) => h('div', { class: 'note', style: 'color:var(--ink)' }, `${r.year}年目${r.week}週　${r.gf}-${r.ga}　vs ${r.opp}`)) : [h('div', { class: 'note' }, 'まだ試合がありません')]));
+    const wdl = (r) => (r.gf > r.ga ? ['勝', '#1e6b37', '#e6f5ea'] : r.gf < r.ga ? ['負', '#b02020', '#fdeaea'] : ['分', '#5b6b85', '#eef2f8']);
+    body.append(h('div', { class: 'h', style: 'margin-top:8px' }, 'Bの最近の結果'), ...(rs.length ? [h('div', { class: 'plist', style: 'gap:2px;margin-top:3px' }, rs.map((r) => { const [t, fg, bg] = wdl(r); return h('div', { class: 'pitem', style: 'cursor:default;gap:8px;padding:3px 8px;min-height:0;font-size:12px' }, h('span', { style: `background:${bg};color:${fg};font-weight:900;border-radius:5px;padding:0 6px;flex:none` }, t), h('b', { style: `color:${fg};width:34px;flex:none` }, `${r.gf}-${r.ga}`), h('span', { class: 'grow' }, `vs ${r.opp}`), h('span', { class: 'sub' }, `${r.year}年目${r.week}週`)); }))] : [h('div', { class: 'note' }, 'まだ試合がありません')]));
   };
   YA.nameBlock = function (body) {
     const app = U().app;

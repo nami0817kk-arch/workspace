@@ -430,7 +430,25 @@
     body.append(hh('div', { class: 'h' }, '卒業生の便り'), hh('div', { class: 'note' }, '卒業生の移籍・代表・タイトル・殿堂などの知らせを、年ごとにまとめます（卒業式のころに届きます）。'));
     const list = hh('div', { class: 'scroll', style: 'flex:1;min-height:0;margin-top:4px' });
     if (!ys.length) list.append(hh('div', { class: 'note' }, 'まだ便りはありません。最初の卒業生が出ると届きます。'));
-    for (const y of ys) list.append(hh('div', { class: 'card', style: 'padding:6px 9px;margin-bottom:4px' }, hh('b', {}, `${y}年目の便り`), ...w.letters[y].map((t) => hh('div', { class: 'note', style: 'color:var(--ink)' }, '・' + t))));
+    // 卒業生ごとにまとめ、位置の札を付ける。押すとその子の画面（2026-11-16 小さな字の箇条書きだった）
+    const names = (w.alumni || []).slice().sort((a, b) => b.name.length - a.name.length);
+    for (const y of ys) {
+      const groups = new Map();
+      for (const t of w.letters[y]) {
+        const a = names.find((x) => t.includes(x.name)) || null;
+        const k = a ? a.name + '|' + a.year : '_';
+        if (!groups.has(k)) groups.set(k, { a, ts: [] });
+        groups.get(k).ts.push(t);
+      }
+      const card = hh('div', { class: 'card', style: 'padding:6px 9px;margin-bottom:6px;display:flex;flex-direction:column;gap:4px' }, hh('b', { style: 'font-size:13px' }, `${y}年目の便り`));
+      for (const { a, ts } of groups.values()) {
+        const head = a
+          ? hh('button', { class: 'pitem', style: 'gap:6px;padding:3px 6px;min-height:30px', onclick: () => YA.alumniModal && YA.alumniModal(w, a) }, hh('span', { class: 'pos ' + a.pos }, (YA.POS_LABEL && YA.POS_LABEL[a.main]) || a.pos), hh('b', {}, a.name), hh('span', { class: 'sub grow', style: 'min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap' }, a.club ? `${a.club}` : ''), hh('span', { class: 'sub' }, '開く ›'))
+          : hh('b', { class: 'sub' }, 'そのほか');
+        card.append(hh('div', {}, head, ...ts.map((t) => hh('div', { style: 'font-size:12px;line-height:1.5;padding-left:8px' }, '・' + t))));
+      }
+      list.append(card);
+    }
     body.append(list);
   }
   YA.lineageExtraTabs.push(['letters', '便り', lettersTab]);

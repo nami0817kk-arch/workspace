@@ -210,11 +210,24 @@
     for (const x of w.leagueHist || []) rows.push({ y: x.year, t: `${YA.levelNames(w)[x.level - 1]} ${x.rank}位`, k: x.rank === 1 ? 'gold' : '' });
     for (const t of w.trophies || []) rows.push({ y: t.year, t: `${t.name} ${t.rank || ''}`.trim(), k: 'gold' });
     const { ys, years } = YA.lineageData(w);
+    // 在学中のプロ契約（トップ昇格）は卒業と分けて数える（2026-11-16「3年目2週に1人が卒業」と出ていた）
+    const early = (a) => /高.でトップ昇格/.test(a.note || '');
     for (const y of ys) {
-      const al = years[y];
-      rows.push({ y, t: `${al.length}人が卒業（プロ入り${al.filter((a) => a.status === 'pro').length}人）`, k: '' });
+      const al = years[y].filter((a) => !early(a));
+      const ea = years[y].filter(early);
+      if (al.length) rows.push({ y, t: `${al.length}人が卒業（プロ入り${al.filter((a) => a.status === 'pro').length}人）`, k: '' });
+      if (ea.length) rows.push({ y, t: `在学中にプロ契約 ${ea.length}人（${ea.map((a) => a.name).join('・')}）`, k: 'gold' });
     }
     for (const a of w.alumni) if (a.hof) rows.push({ y: a.hofY || a.year, t: `${a.name}が殿堂${a.hof === 'full' ? '入り' : '候補に'}`, k: a.hof === 'full' ? 'gold' : '' });
+    // 年末の評価・覚醒・卒業生の大きな出来事（2026-11-16 年表が1年に2〜3行だった）
+    for (const e of (w.club && w.club.eval) || []) rows.push({ y: e.year, t: `年末の評価 ${e.letter}`, k: e.letter === 'S' || e.letter === 'A' ? 'gold' : '' });
+    for (const [k, d] of Object.entries(w.dex || {})) { const f = (YA.AWAKE_FORMS || []).find((x) => x.k === k); if (d && d.y) rows.push({ y: d.y, t: `${d.name}が覚醒（${f ? f.name : '新しい形'}）`, k: 'gold' }); }
+    const BIG = /バロンドール$|バロンドール [1-9]位$|W杯|ゴールデンシュー|コパ・トロフィー|ヤシン|年間MVP|得点王/;
+    for (const a of w.alumni) {
+      for (const m of a.moves || []) if (m.abroad && /^J/.test(m.fromLg || 'J')) rows.push({ y: m.y, t: `卒業生の${a.name}が海外へ（${m.to}）`, k: '' });
+      for (const x of a.awards || []) if (BIG.test(x.name)) rows.push({ y: x.y, t: `卒業生の${a.name}：${x.name}`, k: 'gold' });
+      for (const x of a.titles || []) if (/チャンピオンズリーグ/.test(x.name)) rows.push({ y: x.y, t: `卒業生の${a.name}：${x.name}`, k: 'gold' });
+    }
     return rows.sort((a, b) => a.y - b.y);
   };
 
@@ -273,7 +286,15 @@
   }
   function chronTab(body, w) {
     const rows = YA.chronicle(w);
-    body.append(h('div', { class: 'h' }, '年表'), h('div', { class: 'plist', style: 'margin-top:5px' }, rows.map((r) => h('div', { class: 'pitem', style: 'cursor:default;gap:6px' }, h('span', { class: 'sub', style: 'width:54px' }, `${r.y}年目`), h('span', { class: 'grow', style: r.k ? 'font-weight:800;color:#a37b00' : '' }, r.t)))));
+    // 年ごとの札（新しい年が上）
+    const byY = {};
+    for (const r of rows) (byY[r.y] = byY[r.y] || []).push(r);
+    const ys2 = Object.keys(byY).map(Number).sort((a, b) => b - a);
+    body.append(h('div', { class: 'h' }, '年表'), h('div', { class: 'scroll', style: 'margin-top:5px;flex:1;min-height:0;display:flex;flex-direction:column;gap:6px' }, ys2.map((y) => h('div', { class: 'card', style: 'padding:6px 10px;flex:none' + (y === w.year ? ';border-color:#f0cf55' : '') },
+      h('div', { class: 'row', style: 'gap:6px' }, h('b', { style: 'font-size:13px' }, `${y}年目`), y === w.year ? h('span', { class: 'chip trait', style: 'font-size:10px;padding:0 5px' }, 'いま') : null),
+      h('div', { style: 'display:flex;flex-wrap:wrap;gap:3px 12px;margin-top:3px' }, byY[y].map((r) => h('span', { style: 'font-size:12px;' + (r.k ? 'color:#a37b00;font-weight:800' : '') }, '・' + r.t)))))));
+    if (rows.length) return;
+    body.append(h('div', { class: 'plist', style: 'margin-top:5px' }, rows.map((r) => h('div', { class: 'pitem', style: 'cursor:default;gap:6px' }, h('span', { class: 'sub', style: 'width:54px' }, `${r.y}年目`), h('span', { class: 'grow', style: r.k ? 'font-weight:800;color:#a37b00' : '' }, r.t)))));
     if (!rows.length) body.append(h('div', { class: 'note' }, 'まだ記録はありません。'));
   }
   function treeTab(body, w) {
