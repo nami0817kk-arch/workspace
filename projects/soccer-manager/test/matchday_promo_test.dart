@@ -72,7 +72,10 @@ void main() {
     expect(withPromo, greaterThan(base));
 
     game.debugConsumeMatchdayPromo();
-    expect(game.weeklyIncomeParts(id).gate, base, reason: '節を終えたら元に戻る');
+    // 倍率は外れる。サポーターの期待が+1動くぶん、観客数がわずかに動くので、
+    // 完全一致ではなく近さで見る(イベントの+15%よりずっと小さい)。
+    expect(game.weeklyIncomeParts(id).gate, closeTo(base, base * 0.03),
+        reason: '節を終えたら元に戻る');
   });
 
   test('節を終えると、サポーターと株主の期待に反映されて使い切る', () async {
