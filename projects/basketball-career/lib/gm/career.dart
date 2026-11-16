@@ -292,6 +292,31 @@ class GrowthLine {
       );
 }
 
+/// 過去のドラフトの1指名(リーグ全体。2026-11-16、ユーザー「他チーム含めてドラフト見れない」)。
+class DraftRecord {
+  const DraftRecord({required this.season, required this.no, required this.team, required this.id, required this.name, required this.pos, required this.ovr, required this.pot});
+  final int season, no, team, id;
+  final String name;
+
+  /// 位置の番号([Pos] の index)。
+  final int pos;
+
+  /// 指名したときの本当の力と伸びしろ。
+  final int ovr, pot;
+
+  List<Object> toJson() => [season, no, team, id, name, pos, ovr, pot];
+  static DraftRecord fromJson(List<dynamic> j) => DraftRecord(
+    season: j[0] as int,
+    no: j[1] as int,
+    team: j[2] as int,
+    id: j[3] as int,
+    name: j[4] as String,
+    pos: j[5] as int,
+    ovr: j[6] as int,
+    pot: j[7] as int,
+  );
+}
+
 /// 殿堂に入る点の基準([Career.hallScore] がこれ以上)。
 const hallThreshold = 10;
 
@@ -2496,7 +2521,37 @@ class Career {
     scoutsLeft += 2;
   }
 
+  /// 過去のドラフト(新しい年から12年分)。
+  List<DraftRecord> draftHistory = [];
+
+  /// 記録のある年(新しい順)。
+  List<int> draftYears() => ({for (final x in draftHistory) x.season}.toList()..sort((a, b) => b.compareTo(a)));
+
+  /// 次のドラフトの指名の順の見込み(くじの前。今の勝率の低い順、同じなら戦力の低い順)。
+  /// 返すのは (元のチーム, 指名権の持ち主, 保護) の並び(1巡目のあと2巡目)。乱数は使わない。
+  List<(int, int, int)> projectedDraftOrder() {
+    // シーズン中とプレーオフは今の勝率で、それ以外(シーズン前など)はまだ試合が無いので戦力の低い順
+    final byStrength = phase != Phase.season && phase != Phase.playoffs;
+    final byRecord = [...teams]
+      ..sort((a, b) {
+        final w = byStrength ? 0 : a.winPct.compareTo(b.winPct);
+        return w != 0 ? w : a.strength.compareTo(b.strength);
+      });
+    return [
+      for (final round in [1, 2])
+        for (final t in byRecord)
+          for (final pk in picks)
+            if (pk.season == season && pk.round == round && pk.from == t.index) (pk.from, pk.owner, pk.protect),
+    ];
+  }
+
   void _endDraft() {
+    // リーグ全体の指名を残す(過去のドラフトの表)
+    for (final p in prospects) {
+      if (p.pickedBy == null || p.pickNo == null) continue;
+      draftHistory.add(DraftRecord(season: season, no: p.pickNo!, team: p.pickedBy!, id: p.player.id, name: p.player.name, pos: p.player.pos.index, ovr: p.player.ovr, pot: p.player.pot));
+    }
+    draftHistory.removeWhere((x) => x.season <= season - 12);
     // 指名されなかった候補の一部は、最低年俸の自由契約に
     for (final p in prospects.where((p) => p.pickedBy == null).take(4)) {
       p.player
@@ -3694,6 +3749,7 @@ class Career {
         'ea': extAsked,
         'ib': [for (final m in inbox) m.toJson()],
         'mid': _msgId,
+        if (draftHistory.isNotEmpty) 'dhx': [for (final x in draftHistory) x.toJson()],
         if (scoutFocus != null) 'sf': scoutFocus!.index,
         'sp': scoutPrep,
         if (prepScouted > 0) 'ps': prepScouted,
@@ -3806,6 +3862,10 @@ class Career {
       ..extAsked = [for (final x in (j['ea'] as List? ?? const [])) x as int]
       ..inbox = [for (final m in maps('ib')) Message.fromJson(m)]
       .._msgId = (j['mid'] as int?) ?? 1
+      ..draftHistory = [
+        for (final x in (j['dhx'] as List? ?? const []))
+          if (x is List && x.length == 8) DraftRecord.fromJson(x),
+      ]
       ..scoutFocus = j['sf'] is int ? ScoutFocus.values[(j['sf'] as int).clamp(0, ScoutFocus.values.length - 1)] : null
       ..scoutPrep = [for (var i = 0; i < ScoutFocus.values.length; i++) (j['sp'] is List && (j['sp'] as List).length > i) ? ((j['sp'] as List)[i] as int) : 0]
       ..prepScouted = (j['ps'] as int?) ?? 0

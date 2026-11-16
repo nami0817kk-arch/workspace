@@ -6,14 +6,66 @@ import '../../gm/league.dart';
 import '../../gm/player.dart';
 import '../gm_controller.dart';
 import 'common.dart';
+import 'draft_board_view.dart';
+import 'rankings_view.dart';
 import 'gm_table.dart';
 import 'history_screen.dart';
 import 'player_card.dart';
 import 'style.dart';
 
 /// リーグのタブ。順位・各チームの考え・これまでの成績。
-class LeagueTab extends StatelessWidget {
+/// リーグの画面。上の切り替えで、順位・ランキング(2026-11-16、ユーザー「リーグ内でのランキングがない」)。
+class LeagueTab extends StatefulWidget {
   const LeagueTab({super.key, required this.c});
+  final GmController c;
+
+  @override
+  State<LeagueTab> createState() => _LeagueTabState();
+}
+
+class _LeagueTabState extends State<LeagueTab> {
+  int _view = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    final car = widget.c.career!;
+    const views = ['順位', 'ランキング', 'ドラフト'];
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(14, 8, 14, 0),
+          child: Row(
+            children: [
+              for (final (i, v) in views.indexed)
+                Padding(
+                  padding: const EdgeInsets.only(right: 6),
+                  child: ChoiceChip(
+                    visualDensity: const VisualDensity(vertical: -3),
+                    showCheckmark: false,
+                    label: Text(v, style: const TextStyle(fontSize: 12)),
+                    selected: _view == i,
+                    onSelected: (_) => setState(() => _view = i),
+                  ),
+                ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: switch (_view) {
+            1 => Padding(padding: const EdgeInsets.fromLTRB(14, 6, 14, 8), child: RankingsView(car: car)),
+            2 => Padding(padding: const EdgeInsets.fromLTRB(14, 6, 14, 8), child: DraftBoardView(car: car)),
+            _ => _Standings(c: widget.c),
+          },
+        ),
+      ],
+    );
+  }
+}
+
+/// 東西の順位・MVP争い・オールスター・くじの見込みなど。
+class _Standings extends StatelessWidget {
+  const _Standings({required this.c});
   final GmController c;
 
   @override
