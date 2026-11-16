@@ -1,0 +1,133 @@
+# 物語完結型ショート 明暦の大火 s4（2026-11-15）。本編 scripts/meireki-story.yaml（11/19 12:00 公開予定、https://youtu.be/YMXFgwO0dWI）から。11/20 に予約。
+# 形式は toyamaru_s1〜s5.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（dev/output/rekishi-chiso/research/明暦の大火_facts_20261115.yaml）と本編の # fact: だけ。
+# 絵：本編の AI 絵（out/story/meireki/main/ の K01〜K24・YEND）の切り出しだけ。新しい絵は作らない。燃える場面（K05〜K09）は5本とも使わない（本編で繰り返したため）。遺体・惨状・顔は絵にしない。
+# 切り口：大火の前に決まっていたこと（吉原の移転は3か月あまり前・御三家と寺社は前から）と、60年あとのこと（町火消1718・瓦と土蔵造り1720）
+# 計算（自分で数え直した）：1656-10-09→1657-01-18（旧暦）＝3か月あまり／1718−1657＝61／1720−1657＝63
+title: "明暦の大火｜吉原の移転は、大火の3か月前に決まっていた"
+yt_title: "吉原の移転は、明暦の大火の前に決まっていた　1656年10月9日の告げ　瓦や土蔵造りが勧められたのは、大火の63年あと"
+description: |-
+  江戸の吉原は、明暦の大火のあと、浅草へ移りました。けれど、移転を命じられたのは、大火の前の1656年10月9日です。新吉原の書上は、町奉行が年寄を呼んで、今の場所は御用地になる、と告げたと書きます。
+  瓦や土蔵造りが勧められたのも、大火の直後ではなく、1720年のことです。大火が変えたものと、前から決まっていたものは、記録で分けられます。本編は概要欄のリンクからどうぞ。
+  https://youtu.be/YMXFgwO0dWI
+hashtags:
+- "#明暦の大火"
+- "#江戸"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。人の顔は描いていません。創作の台詞は入れていません。"
+art_dir: out/story/meireki
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: meireki_story_s4
+header:
+  tag: "明暦の大火　吉原と瓦"
+  title: "吉原の移転は、《大火の前》に決まった"
+now:
+- {at: "1656年", text: "1656年　告げ", point: 0}
+- {at: "1657年", text: "1657年　大火", point: 1}
+- {at: "1718年", text: "1718年　町火消", point: 2}
+- {at: "1720年", text: "1720年　瓦", point: 3}
+timeline:
+- {label: "1656"}
+- {label: "1657"}
+- {label: "1718"}
+- {label: "1720"}
+shots:
+  K24_1:
+    kind: "ai"
+    file: "meireki/main/K24.jpg"
+    focus: [0.3, 0.5]
+    move: "right"
+    must: "浅草の田の道"
+  K03_2:
+    kind: "ai"
+    file: "meireki/main/K03.jpg"
+    focus: [0.2, 0.5]
+    move: "right"
+    must: "江戸の町並み"
+  K24_3:
+    kind: "ai"
+    file: "meireki/main/K24.jpg"
+    focus: [0.8, 0.5]
+    move: "left"
+    must: "浅草の田の道"
+  K22_4:
+    kind: "ai"
+    file: "meireki/main/K22.jpg"
+    focus: [0.3, 0.5]
+    move: "right"
+    must: "城の門と白壁"
+  K03_5:
+    kind: "ai"
+    file: "meireki/main/K03.jpg"
+    focus: [0.7, 0.5]
+    move: "left"
+    must: "板葺きの町家の屋根"
+  K23_6:
+    kind: "ai"
+    file: "meireki/main/K23.jpg"
+    focus: [0.3, 0.5]
+    move: "right"
+    must: "火の見櫓のある町"
+  K20_7:
+    kind: "ai"
+    file: "meireki/main/K20.jpg"
+    focus: [0.8, 0.5]
+    move: "left"
+    must: "並ぶ町家"
+  K24_8:
+    kind: "ai"
+    file: "meireki/main/K24.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "浅草の田の道"
+lines:
+  # fact: meireki-C25
+- 語り: "江戸の吉原は、明暦の大火のあと、浅草へ移った。けれど、移ることが決まったのは、大火の前だ。"
+  shot: K24_1
+  tone: 強調
+  pause: 0.12
+  # fact: meireki-C25
+- 語り: "新吉原の書上によれば、1656年10月9日、町奉行が、吉原の年寄に、今の場所は御用地になる、と告げた。"
+  shot: K03_2
+  tone: 重い
+  pause: 0.12
+  # fact: meireki-C25
+- 語り: "大火は、翌1657年の1月18日。告げられたのは、その3か月あまり前だった。"
+  shot: K24_3
+  tone: 重い
+  pause: 0.12
+  # fact: meireki-A27
+- 語り: "御三家の屋敷を、城の外へ出す動きも、寺や社の移転も、大火の前から、続いていた。2021年の研究が、そう指摘する。"
+  shot: K22_4
+  tone: しみじみ
+  pause: 0.12
+  # fact: meireki-C31
+- 語り: "瓦や土蔵造りは、大火の直後に勧められた、と思われがちだ。ところが、1660年ごろの町触は、塗屋を勧めた一方、町家の屋根の瓦は、認めていなかった。"
+  shot: K03_5
+  tone: 重い
+  pause: 0.12
+  # fact: meireki-C30
+- 語り: "町人の町火消ができたのは、1718年。大火の61年あとだ。"
+  shot: K23_6
+  tone: しみじみ
+  pause: 0.12
+  # fact: meireki-C31
+- 語り: "瓦や土蔵造りが、勝手次第となったのは、1720年、大岡忠相の触。大火の63年あとだ。"
+  shot: K20_7
+  tone: 重い
+  pause: 0.12
+  # fact: meireki-A27, meireki-C25
+- 語り: "あなたは、江戸の何を、大火のせいだと思っていましたか。"
+  shot: K24_8
+  tone: 疑問
+  pause: 0.15

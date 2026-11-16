@@ -1,0 +1,140 @@
+# 物語完結型ショート 兵馬俑 s4（2026-11-15）。本編 scripts/heibayo-story.yaml（11/19 19:00 公開予定、https://youtu.be/Q89Ua_ST728）から。11/20 に予約。
+# 形式は toyamaru_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（dev/output/rekishi-chiso/research/兵馬俑_facts_20261115.yaml）と本編の # fact: だけ。
+# 絵：本編の AI 絵（out/story/heibayo/main/）の切り出しだけ。新しい絵は作らない。A04・B03・F01・G01 は使わない。遺体・顔は出さない。
+# 切り口：8000体は掘って数えた数ではない。計算：6000+1300+68＝7368、1974→2026＝52年。本編の他の数（指紋）は使わない。
+title: "兵馬俑｜8000体は、数えた数ではない"
+yt_title: "兵馬俑の「8000体」は、掘って数えた数ではなかった　院長は「正確な数字はない」と説明　足すと7368、でも新華社は「8000あまり」"
+description: |-
+  兵馬俑は、約8000体といわれます。ところが、秦始皇帝陵博物院の李岡院長は、2024年12月、正確な数字はない、と説明しました。
+  坑ごとの推定を足すと7368あまり。それでも新華社は、2019年に、8000あまり、と書いています。
+  始皇帝陵の本体は、今も掘られていません。それはなぜか。本編は概要欄のリンクからどうぞ。
+  https://youtu.be/Q89Ua_ST728
+hashtags:
+- "#兵馬俑"
+- "#世界史"
+- "#考古学"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。人物の姿も、特定の資料を写したものではありません。創作の台詞は入れていません。"
+art_dir: out/story/heibayo
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: heibayo_story_s4
+header:
+  tag: "兵馬俑　8000体"
+  title: "8000体は、《数えた数》ではない"
+now:
+- {at: "2024年12月", text: "2024年12月　院長の説明", point: 0}
+- {at: "2026年", text: "2026年　発見から52年", point: 1}
+timeline:
+- {label: "2024"}
+- {label: "2026"}
+shots:
+  H01_1:
+    kind: "ai"
+    file: "heibayo/main/H01.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "地下の坑に並ぶ兵士の像"
+  G02_2:
+    kind: "ai"
+    file: "heibayo/main/G02.jpg"
+    focus: [0.3, 0.5]
+    move: "right"
+    must: "坑の平面図の机"
+  G02_3:
+    kind: "ai"
+    file: "heibayo/main/G02.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "坑の平面図の机"
+  A05_4:
+    kind: "ai"
+    file: "heibayo/main/A05.jpg"
+    focus: [0.3, 0.5]
+    move: "right"
+    must: "発掘の大きな坑"
+  G02_5:
+    kind: "ai"
+    file: "heibayo/main/G02.jpg"
+    focus: [0.85, 0.5]
+    move: "left"
+    must: "坑の平面図の机"
+  A05_6:
+    kind: "ai"
+    file: "heibayo/main/A05.jpg"
+    focus: [0.8, 0.5]
+    move: "left"
+    must: "発掘の大きな坑"
+  C01_7:
+    kind: "ai"
+    file: "heibayo/main/C01.jpg"
+    focus: [0.3, 0.5]
+    move: "right"
+    must: "発掘現場の刷毛"
+  H01_8:
+    kind: "ai"
+    file: "heibayo/main/H01.jpg"
+    focus: [0.8, 0.5]
+    move: "left"
+    must: "地下の坑の兵士の像"
+  B01_9:
+    kind: "ai"
+    file: "heibayo/main/B01.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "始皇帝陵の遠景"
+lines:
+  # fact: heibayo-A32
+- 語り: "兵馬俑の、8000体という数は、掘って数えた数では、ない。"
+  shot: H01_1
+  tone: 強調
+  pause: 0.12
+  # fact: heibayo-A32
+- 語り: "2024年12月、博物院の李岡院長は、正確な数字は、ない、と説明した。"
+  shot: G02_2
+  tone: 重い
+  pause: 0.12
+  # fact: heibayo-A32
+- 語り: "一号坑の面積と、出土の密度から、6000あまり。二号坑と三号坑を足して、8000近くになる、と。"
+  shot: G02_3
+  tone: しみじみ
+  pause: 0.12
+  # fact: heibayo-A33
+- 語り: "二号坑は1300あまり、三号坑は68。足すと、7368あまり。8000近く、は、これを丸めたのかもしれない。"
+  shot: A05_4
+  tone: 重い
+  pause: 0.12
+  # fact: heibayo-A35
+- 語り: "しかも、新華社は2019年に、掘り出された陶俑と陶馬は、8000あまり、と書いた。食い違う。"
+  shot: G02_5
+  tone: 重い
+  pause: 0.12
+  # fact: heibayo-A34
+- 語り: "一号坑の第三次発掘は、約13年で、陶俑が220あまり。広さは、一号坑の約3パーセントだ。"
+  shot: A05_6
+  tone: しみじみ
+  pause: 0.12
+  # fact: heibayo-A37
+- 語り: "発見から、2026年まで、52年。それでも、掘り終えては、いない。"
+  shot: C01_7
+  tone: 重い
+  pause: 0.12
+  # fact: heibayo-C35
+- 語り: "そして、始皇帝陵の本体は、今も、掘られていない。"
+  shot: H01_8
+  tone: しみじみ
+  pause: 0.12
+  # fact: heibayo-C35
+- 語り: "1997年の国務院の通知は、技術の条件がそろうまで、掘らない、とする。その理由は、何か。"
+  shot: B01_9
+  tone: 疑問
+  pause: 0.15
