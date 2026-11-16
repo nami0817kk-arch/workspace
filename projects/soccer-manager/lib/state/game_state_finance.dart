@@ -177,6 +177,18 @@ extension GameStateFinance on GameState {
       valueRatio: save.ownerGoalStartValue > 0
           ? clubValue.total / save.ownerGoalStartValue
           : 0,
+      topFourCount:
+          recs.where((r) => r.divisionTier == 1 && r.finalRank <= 4).length,
+      unbeaten: recs.any((r) => r.played > 0 && r.lost == 0),
+      stadiumLevel: save.infrastructure.facilityLevel(FacilityType.stadium),
+      healthScore: ClubHealthEngine.assess(
+        supporter: save.confidence,
+        shareholder: save.shareholderExpectation,
+        wageRatio: save.ledgerFor(season).wageRatio,
+        budget: save.budget,
+      ).score,
+      supporter: save.confidence,
+      shareholder: save.shareholderExpectation,
     );
     if (met) {
       save.achievedGoals.add(Tr.pick(
