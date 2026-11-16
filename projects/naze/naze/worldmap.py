@@ -209,8 +209,9 @@ def shade_of(e: np.ndarray, px_m: float) -> np.ndarray:
     return sh / lz
 
 
-def compose(e: np.ndarray, photo: np.ndarray, px_m: float) -> np.ndarray:
-    """陸は衛星写真に陰影を重ね、海は深さの色分けに陰影。境は少しぼかしてなじませる。"""
+def compose(e: np.ndarray, photo: np.ndarray, px_m: float, landm: np.ndarray = None) -> np.ndarray:
+    """陸は衛星写真に陰影を重ね、海は深さの色分けに陰影。境は少しぼかしてなじませる。
+    landm(国の形の内側=1)を渡すと、海面より低くても国の内側は陸として写真で描く(死海・ヨルダンの谷)。"""
     import cv2
     sh = shade_of(e, px_m)
     sea = np.zeros(e.shape + (3,), np.float32)
@@ -221,7 +222,8 @@ def compose(e: np.ndarray, photo: np.ndarray, px_m: float) -> np.ndarray:
     land = photo.astype(np.float32)
     land = (land - 128) * 1.08 + 128 + 6                     # 少しだけ締める
     land *= np.clip(0.62 + 0.38 * sh, 0.55, 1.35)[..., None]
-    m = cv2.GaussianBlur((e > 0).astype(np.float32), (0, 0), 1.2)[..., None]
+    lm = (e > 0) if landm is None else ((e > 0) | (landm > 0))
+    m = cv2.GaussianBlur(lm.astype(np.float32), (0, 0), 1.2)[..., None]
     return np.clip(land * m + sea * (1 - m), 0, 255).astype(np.uint8)
 
 
@@ -307,7 +309,7 @@ def border_between(a: str, b: str) -> list:
 class Base:
     """1 つの範囲の下地。cols は色＋陰影＋国境、e は高さ、ppd は 1 度あたりの画素(経度は kx 倍で縮めない。等間隔の格子)。"""
 
-    def __init__(self, bbox, z: int, kx: float):
+    def __init__(self, bbox, z: int, kx: float, inland_low: bool = False):
         import cv2
         self.bbox, self.z = bbox, z
         lo0, la0, lo1, la1 = bbox
@@ -329,7 +331,16 @@ class Base:
         try:
             src = gsi_photo(bbox, z, self.ppd) if z >= 11 and in_japan(bbox) else bluemarble(bbox, self.ppd)
             photo = cv2.resize(src, (self.w, h), interpolation=cv2.INTER_AREA)
-            col = compose(self.e, photo, 111320 / self.ppd)
+            landm = None
+            if inland_low:                                    # 海面より低い陸(死海の谷)を海にしない: 国の形の内側は陸
+                lmi = Image.new("L", (self.w, h), 0)
+                dl = ImageDraw.Draw(lmi)
+                for code, rs in countries().items():
+                    for r in rs:
+                        if self._near(r):
+                            dl.polygon([self.xy(*q) for q in r], fill=1)
+                landm = np.asarray(lmi)
+            col = compose(self.e, photo, 111320 / self.ppd, landm)
         except Exception as e:                                # 写真が取れないときは色分けで描く
             print("衛星写真が取れない:", e)
             col = colorize(self.e, 111320 / self.ppd, 1.0)
@@ -471,8 +482,9 @@ def k_wipe(L: dict) -> float:
 
 
 class Map:
-    def __init__(self, lat0: float, bases: Sequence[tuple], relief: float = 0.06, finish: bool = True):
+    def __init__(self, lat0: float, bases: Sequence[tuple], relief: float = 0.06, finish: bool = True, inland_low: bool = False):
         self.kx = math.cos(math.radians(lat0))
+        self.inland_low = inland_low                          # 海面より低い陸がある回(死海)。Base.__init__ を見る
         self.spec = list(bases)
         self._bases = None
         self.relief = relief                                  # 6,000m の山を画面の高さの何倍持ち上げるか(傾けたとき)
@@ -483,7 +495,7 @@ class Map:
     @property
     def bases(self) -> List[Base]:
         if self._bases is None:
-            self._bases = [Base(bb, z, self.kx) for bb, z in self.spec]     # 粗い順
+            self._bases = [Base(bb, z, self.kx, self.inland_low) for bb, z in self.spec]     # 粗い順
         return self._bases
 
     def view(self, lon, lat, span, tilt=0.0) -> View:
