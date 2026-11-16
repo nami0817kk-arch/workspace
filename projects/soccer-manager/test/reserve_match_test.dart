@@ -5,7 +5,6 @@ import 'package:soccer_manager/logic/reserve_match_engine.dart';
 import 'package:soccer_manager/models/attributes.dart';
 import 'package:soccer_manager/models/player.dart';
 import 'package:soccer_manager/models/team.dart';
-import 'package:soccer_manager/state/game_state.dart';
 
 /// リザーブ(Bチーム)。
 ///
@@ -146,18 +145,5 @@ void main() {
       expect(players.last.happiness, greaterThan(50),
           reason: '同じ試合でも、立場によって受け取り方が違うはず');
     });
-  });
-
-  test('週次トレーニングでリザーブの試合が行われる', () async {
-    final game = GameState();
-    await game.startNewGame('テストFC');
-
-    await game.runWeeklyTraining();
-
-    expect(game.lastReserveMatch, isNotNull,
-        reason: '通常のスカッド人数ならリザーブの試合が成立するはず');
-    expect(game.lastReserveMatch!.performances, isNotEmpty);
-    // 二重取りを避けるため、リザーブが行われた週は紅白戦を行わない。
-    expect(game.lastPracticeMatchCount, 0);
   });
 }

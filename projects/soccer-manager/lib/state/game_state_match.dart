@@ -229,10 +229,8 @@ extension GameStateMatch on GameState {
     _maybeRaiseOwnerEvent(next.matchday);
     _refreshProposals();
 
-    // トレーニング自動化が有効な場合、この節の分をここで自動的に実施する。
-    if (userTeam.autoTrainingEnabled) {
-      await runWeeklyTraining();
-    }
+    // 練習はコーチ陣の仕事。オーナーは触れないので、この節の分をここで必ず実施する。
+    await runWeeklyTraining();
 
     // 週の経過による負傷回復と自然な疲労回復(休養日)。
     // 疲労回復は個別のトレーニング方針(休養特訓)とは別に、全チーム・
