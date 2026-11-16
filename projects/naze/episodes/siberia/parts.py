@@ -36,17 +36,17 @@ OB = [(85.0, 52.0), (83.0, 55.0), (77.0, 61.0), (69.0, 61.0), (66.0, 66.5), (67.
 YENISEI = [(92.0, 53.7), (92.9, 56.0), (90.0, 60.0), (86.5, 66.0), (86.2, 69.4), (82.5, 72.0)]
 LENA = [(106.0, 54.0), (115.0, 58.0), (122.0, 60.5), (129.7, 62.0), (127.5, 66.0), (125.5, 70.0), (127.0, 72.5)]
 
-ALL = (112.0, 60.0, 80.0, 0)
-ALL_T = (110.0, 56.0, 70.0, 25)
-WEST = (60.0, 60.0, 55.0, 0)
-SOUTHB = (100.0, 53.0, 45.0, 20)
-NORTHV = (95.0, 66.0, 40.0, 20)
-YAKV = (129.0, 62.0, 14.0, 20)
-NORV = (88.0, 69.0, 14.0, 20)
-ALL_P = (112.0, 60.0, 60.0, 0)
-WEST_P = (50.0, 62.0, 40.0, 0)
-SOUTHB_P = (100.0, 54.0, 35.0, 0)
-NORTH_P = (95.0, 66.0, 30.0, 0)
+ALL = (104.0, 60.0, 165.0, 0)
+ALL_T = (104.0, 56.0, 145.0, 25)
+WEST = (55.0, 61.0, 115.0, 0)
+SOUTHB = (100.0, 53.0, 95.0, 20)
+NORTHV = (100.0, 65.0, 85.0, 20)
+YAKV = (129.0, 62.0, 42.0, 15)
+NORV = (90.0, 68.0, 42.0, 15)
+ALL_P = (104.0, 60.0, 125.0, 0)
+WEST_P = (45.0, 62.0, 85.0, 0)
+SOUTHB_P = (100.0, 54.0, 75.0, 0)
+NORTH_P = (100.0, 65.0, 65.0, 0)
 
 
 def MAP(view, *layers, view_to=None, step=None, tr=None):
@@ -105,8 +105,8 @@ def BARS(items, title=None, note=None, fmt="{}", step=None, tr=None):
 
 
 CENSUS, MINE = "ロシア統計局（2021年国勢調査）", "自分で測った（Natural Earth）"
-LANDPOP = BARS([("北緯60度より北：土地", 39, GREY), ("北緯60度より北：町の人", 7, YEL),
-                ("北緯55度より南：土地", 35, GREY), ("北緯55度より南：町の人", 61, BLUE)], title="シベリア全体に占める割合（%）", note=MINE, fmt="{}%")
+LANDPOP = BARS([("60度より北：土地", 39, GREY), ("60度より北：町の人", 7, YEL),
+                ("55度より南：土地", 35, GREY), ("55度より南：町の人", 61, BLUE)], title="シベリア全体に占める割合（%）", note=MINE, fmt="{}%")
 
 ANSWERS = [("日本の30倍の土地に、日本の5分の1の人", "1km²あたり約2人。日本の150分の1"),
            ("寒さだけではない", "同じ北緯60度に、100万人の町がある"),
@@ -142,9 +142,9 @@ P["ch2"] = dict(title="第2章 寒さではない", cta=False, lines=[
     dict(id="b5", text="人は、南の端に寄っているのです。", scene=MAP(ALL_T, LAT(55, "b2", BLUE), PIN(NOVOSIB, "ノボシビルスク", id="p_nv"), PIN(KRASNO, "クラスノヤルスク", id="p_kr"), step=1)),
     dict(id="b6", text="普通は、北は寒いから、人が住めないと思いますよね。", section=True, scene=MAP(NORTHV, LAT(60, "b3"), step=1)),
     dict(id="b7", text="ところが、同じ北緯60度に、100万人を超える町があります。", scene=MAP(WEST, LAT(60, "b4"), PIN(HELSINKI, "ヘルシンキ", id="p_he"), PIN(STOCKHOLM, "ストックホルム", id="p_st"), step=1)),
-    dict(id="b8", text="フィンランドのヘルシンキ。北緯60.2度に、約111万人。", scene=BARS([("ヘルシンキ（北緯60.2度）", 111, BLUE), ("ストックホルム（北緯59.4度）", 126, BLUE), ("北緯60度より北のシベリアの町をすべて", 102, AREA)], title="町の人口（万人）", note=MINE, fmt="{}", step=1)),
-    dict(id="b9", text="スウェーデンのストックホルムは、北緯59.4度に、約126万人。"),
-    dict(id="b10", text="北緯60度より北のシベリアの町を、ぜんぶ足しても、約102万人です。"),
+    dict(id="b8", text="フィンランドのヘルシンキ。北緯60.2度に、約111万人。", scene=BARS([("ヘルシンキ", 111, BLUE), ("ストックホルム", 126, BLUE), ("シベリア北部", 102, AREA)], title="北緯60度前後の町の人口（万人）", note=MINE, fmt="{}", step=1)),
+    dict(id="b9", text="スウェーデンのストックホルムは、北緯59.4度に、約126万人。", scene=MAP(WEST, LAT(60, "b9"), PIN(STOCKHOLM, "ストックホルム", id="p_st9"), step=1)),
+    dict(id="b10", text="北緯60度より北のシベリアの町を、ぜんぶ足しても、約102万人です。", scene=CARD("約102万人", sub="北緯60度より北のシベリアの町、ぜんぶ", note=MINE, view=NORTHV, step=1)),
     dict(id="b11", text="もっと北にも、町はあります。北緯69度のムルマンスクに、約32万人。", scene=MAP(WEST, PIN(MURMANSK, "ムルマンスク", id="p_mu"), LAT(69, "b"), step=1)),
     dict(id="b12", text="ムルマンスクは、冬も凍らない港の町です。", scene=CARD("冬も凍らない港", sub="ムルマンスク（北緯69度）", view=WEST, step=1, count=False)),
     dict(id="b13", text="緯度だけでは、決まらない。では、シベリアの北には、何が足りないのか。"),
@@ -184,15 +184,15 @@ P["ch4"] = dict(title="第4章 鉄道の帯", cta=False, lines=[
 ])
 
 # ---- 第5章 北の町と答え ------------------------------------------------------------------------------------
-_CV = [(ALL, (112.0, 60.0, 70.0, 15)), (WEST, (40.0, 61.0, 45.0, 15)), (ALL_T, (110.0, 62.0, 60.0, 30)),
-       (SOUTHB, (95.0, 53.0, 38.0, 25)), (NORTHV, (90.0, 66.0, 34.0, 25))]
+_CV = [(ALL, (104.0, 60.0, 150.0, 15)), (WEST, (45.0, 61.0, 100.0, 15)), (ALL_T, (104.0, 62.0, 130.0, 30)),
+       (SOUTHB, (95.0, 53.0, 82.0, 25)), (NORTHV, (95.0, 66.0, 74.0, 25))]
 CARDS_N = lambda n: dict(shot="cards", items=ANSWERS, n=n, view=_CV[n - 1][0], view_to=_CV[n - 1][1], step=4)  # noqa: E731
 P["ch5"] = dict(title="第5章 北の町と答え", cta=True, lines=[
     dict(id="e1", text="それでも、北にも町はあります。", scene=MAP(NORTHV, PIN(NORILSK, "ノリリスク", id="p_no"), PIN(SURGUT, "スルグト", id="p_su"), PIN(YAKUTSK, "ヤクーツク", id="p_ya"), step=4, tr="zoom")),
     dict(id="e2", text="北緯69度のノリリスク。約17万人の町です。", scene=MAP(NORV, PIN(NORILSK, "ノリリスク", id="p_no2"), step=4)),
     dict(id="e3", text="地下に、ニッケルなどの大きな鉱山があります。"),
     dict(id="e4", text="国のほかの地域とつながる道路も鉄道もなく、行き来は飛行機と、川と海の船です。", scene=CARD("道路も鉄道もない", sub="ノリリスクと国のほかの地域", view=NORV, step=4, count=False)),
-    dict(id="e5", text="北緯61度のスルグトは、約40万人。石油の町です。", scene=BARS([("スルグト（北緯61度）", 40, YEL), ("ノリリスク（北緯69度）", 17, YEL)], title="北の町の人口（万人）", note=MINE, fmt="{}", step=4)),
+    dict(id="e5", text="北緯61度のスルグトは、約40万人。石油の町です。", scene=BARS([("スルグト", 40, YEL), ("ノリリスク", 17, YEL)], title="北の町の人口（万人）", note=MINE, fmt="{}", step=4)),
     dict(id="e6", text="北に町ができるのは、そこに掘る物があるときです。"),
     dict(id="e7", text="ヤクーツクは、凍った地面の上の、大きな町です。", scene=MAP(YAKV, PIN(YAKUTSK, "ヤクーツク", id="p_ya2"), LINE(LENA, RIVER, 10, id="le_e"), step=4)),
     dict(id="e8", text="町の前を流れるレナ川には、橋がありません。夏は船、冬は凍った川の上を渡ります。"),
@@ -227,7 +227,7 @@ P["s2"] = dict(title="北緯60度。ヘルシンキは111万人、シベリア�
 
 P["s3"] = dict(title="シベリアの大河は、なぜ役に立たないのか", lines=[
     dict(id="n1", text="シベリアには、世界でも指折りの大きな川があります。", scene=MAP(ALL_P, *RIVERS("n"))),
-    dict(id="n2", text="オビ川、エニセイ川、レナ川。", scene=MAP(ALL_P, *RIVERS("n2"), LABEL((73.0, 64.0), "オビ川", 44, RIVER), LABEL((91.0, 63.0), "エニセイ川", 44, RIVER), LABEL((123.0, 64.5), "レナ川", 44, RIVER))),
+    dict(id="n2", text="オビ川、エニセイ川、レナ川。", scene=MAP(ALL_P, *RIVERS("n2"), LABEL((64.0, 62.0), "オビ川", 44, RIVER), LABEL((96.0, 68.5), "エニセイ川", 44, RIVER), LABEL((127.0, 58.0), "レナ川", 44, RIVER))),
     dict(id="n3", text="ところが、どれも南から北へ流れて、凍る北極海に出ます。"),
     dict(id="n4", text="外の世界への道に、なりにくいのです。", scene=CARD("凍る海へ", sub="シベリアの大きな川の行き先", view=ALL_P, count=False)),
     dict(id="n5", text="しかも春は、南の上流から先にとけて、凍ったままの下流で、水があふれます。", scene=MAP(NORTH_P, *RIVERS("n3"))),

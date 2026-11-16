@@ -16,7 +16,7 @@ sys.modules["aoga_scene"] = base
 _spec.loader.exec_module(base)
 
 # ---- 地図の下地: 中央アジア → アラル海 → 湖のまわり --------------------------------------------------------
-base.MAP = worldmap.Map(lat0=58.0, bases=[((0, 30, 180, 82), 4), ((50, 38, 180, 80), 5), ((60, 42, 145, 74), 6)])
+base.MAP = worldmap.Map(lat0=58.0, bases=[((0, 30, 179.9, 82), 4), ((50, 38, 179.9, 80), 5), ((0, 45, 110, 75), 5), ((60, 42, 145, 74), 6)])
 MAP = base.MAP
 base.STEPS = ["1 日本の30倍", "2 寒さではない", "3 凍った地面と北へ流れる川", "4 鉄道の帯", "5 北の町と答え"]
 base.CUSTOM.update(bars=fig3d.draw_bars)
