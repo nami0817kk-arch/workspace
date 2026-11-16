@@ -16,9 +16,52 @@ class ShareholderEngine {
   /// 赤字(資金がマイナス)でシーズンを終えたときの減点。
   static const int redSeasonPenalty = 12;
 
+  /// 利益率(損益/営業収入)がこれ以上なら、株主は満足する(加点)。
+  static const double goodMargin = 0.15;
+
+  /// 利益率がこれ未満なら、黒字でも物足りない(減点)。
+  static const double thinMargin = 0.05;
+
+  /// 利益率が良いときの加点・薄いときの減点・赤字のときの減点。
+  static const int goodMarginBonus = 4;
+  static const int thinMarginPenalty = 4;
+  static const int lossMarginPenalty = 8;
+
+  /// 人件費率が目安を超えたときの減点(注意・危険)。
+  static const double wageWarn = 0.70;
+  static const double wageDanger = 0.85;
+  static const int wageWarnPenalty = 3;
+  static const int wageDangerPenalty = 6;
+
   /// シーズン終了時の収支評価による、株主の期待の増減量。
-  static int deltaForSeasonEnd({required int budget}) =>
-      budget >= 0 ? blackSeasonBonus : -redSeasonPenalty;
+  ///
+  /// 資金が0以上かどうかの基本の評価に、そのシーズンの利益率と人件費率を
+  /// 足す。放置で資金が増え続けても、稼ぎが薄い・人件費が重いと上がらない。
+  /// [profit] と [operatingIncome] を渡さないときは基本の評価だけ(旧来の挙動)。
+  static int deltaForSeasonEnd({
+    required int budget,
+    int? profit,
+    int? operatingIncome,
+    double wageRatio = 0,
+  }) {
+    var delta = budget >= 0 ? blackSeasonBonus : -redSeasonPenalty;
+    if (profit != null && operatingIncome != null && operatingIncome > 0) {
+      final margin = profit / operatingIncome;
+      if (margin >= goodMargin) {
+        delta += goodMarginBonus;
+      } else if (margin < 0) {
+        delta -= lossMarginPenalty;
+      } else if (margin < thinMargin) {
+        delta -= thinMarginPenalty;
+      }
+    }
+    if (wageRatio > wageDanger) {
+      delta -= wageDangerPenalty;
+    } else if (wageRatio > wageWarn) {
+      delta -= wageWarnPenalty;
+    }
+    return delta;
+  }
 
   /// 増減を適用した値(0〜100に収める)。
   static int applied(int current, int delta) =>

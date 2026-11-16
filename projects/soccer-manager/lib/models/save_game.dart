@@ -158,6 +158,12 @@ class SaveGame {
   /// 売却条項(選手のID → 元のクラブへ渡す率%)。値切って買った選手を売るとき、
   /// 売却額のこの割合を元のクラブへ払う。
   Map<String, int> sellOnClauses;
+
+  /// 提携しているクラブのID。いなければ null。
+  String? partnerClubId;
+
+  /// 育成の蓄積(倍率)。育成予算の効きの時間差を表す。初期の配分で 1.0。
+  double youthMomentum;
   int reserveFund;
   int communityLevel;
 
@@ -479,6 +485,8 @@ class SaveGame {
     this.insured = false,
     Map<String, int>? ownerWorkDoneSeason,
     Map<String, int>? sellOnClauses,
+    this.partnerClubId,
+    this.youthMomentum = 1.0,
     this.reserveFund = 0,
     this.communityLevel = 0,
     this.transferBanSeasons = 0,
@@ -693,6 +701,8 @@ class SaveGame {
         'insured': insured,
         'ownerWorkDoneSeason': ownerWorkDoneSeason,
         'sellOnClauses': sellOnClauses,
+        'partnerClubId': partnerClubId,
+        'youthMomentum': youthMomentum,
         'reserveFund': reserveFund,
         'communityLevel': communityLevel,
         'transferBanSeasons': transferBanSeasons,
@@ -842,6 +852,8 @@ class SaveGame {
             ?.map((k, v) => MapEntry(k as String, v as int)),
         sellOnClauses: (json['sellOnClauses'] as Map?)
             ?.map((k, v) => MapEntry(k as String, v as int)),
+        partnerClubId: json['partnerClubId'] as String?,
+        youthMomentum: (json['youthMomentum'] as num?)?.toDouble() ?? 1.0,
         reserveFund: json['reserveFund'] as int? ?? 0,
         communityLevel: json['communityLevel'] as int? ?? 0,
         clubPolicy: ClubPolicy.values

@@ -740,7 +740,13 @@ extension GameStateSeason on GameState {
     // 株主の期待: 黒字でシーズンを終えれば上がり、赤字なら下がる。
     _save!.shareholderExpectation = ShareholderEngine.applied(
       _save!.shareholderExpectation,
-      ShareholderEngine.deltaForSeasonEnd(budget: _save!.budget) +
+      ShareholderEngine.deltaForSeasonEnd(
+            budget: _save!.budget,
+            profit: _save!.ledgerFor(_save!.league.season).profit,
+            operatingIncome:
+                _save!.ledgerFor(_save!.league.season).operatingIncome,
+            wageRatio: _save!.ledgerFor(_save!.league.season).wageRatio,
+          ) +
           BudgetEngine.dividendExpectationDelta(_save!.budgetPlan),
     );
 
@@ -759,6 +765,8 @@ extension GameStateSeason on GameState {
           : Tr.pick('理事会目標を達成し、報奨金$bonus万円が支給されました!',
               "You met the board's target, and they have paid you a $bonus bonus!");
     }
+
+    _settlePartnerClub();
 
     // 国の財務規則(収支規則・ライセンス)の判定。違反なら罰を科す。
     _enforceLeagueRules();
@@ -818,12 +826,20 @@ extension GameStateSeason on GameState {
     final infra = _save!.infrastructure;
     // ユースインテーク: 複数候補を一括生成し、選抜はユーザーに委ねる。
     final intakeCount = 3 + Random().nextInt(3);
+    // 育成予算の効き。蓄積は毎季末にいまの配分へ近づき、受け入れの質に返る。
+    _save!.youthMomentum = YouthInvestmentEngine.nextMomentum(
+      momentum: _save!.youthMomentum,
+      ratio: BudgetEngine.ratio(_save!.budgetPlan, BudgetCategory.youth),
+    );
+    final investmentBonus =
+        YouthInvestmentEngine.qualityBonus(_save!.youthMomentum);
     _save!.pendingYouthIntake = List.generate(
       intakeCount,
       (_) => ScoutingEngine.generateAcademyGraduate(
         // 有望な子を見つけてこられるかは見極めの仕事。
         youthCoachLevel: infra.staffAttributeLevel(
             StaffRole.youthCoach, StaffAttribute.judging),
+        investmentBonus: investmentBonus,
       ),
     );
 

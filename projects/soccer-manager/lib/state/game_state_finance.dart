@@ -344,6 +344,81 @@ extension GameStateFinance on GameState {
     return true;
   }
 
+  /// 提携クラブ。いなければ null。
+  Team? get partnerClub {
+    final save = _save;
+    final id = save?.partnerClubId;
+    if (save == null || id == null) return null;
+    return save.league.teams.where((t) => t.id == id).firstOrNull;
+  }
+
+  /// 提携できる相手(自クラブ以外)。
+  List<Team> get partnerCandidates {
+    final save = _save;
+    if (save == null) return const [];
+    return save.league.teams.where((t) => t.id != save.userTeamId).toList();
+  }
+
+  /// 他クラブと提携する。すでに提携していれば結び直す。自クラブや
+  /// 存在しないクラブとは結べない。
+  Future<bool> setPartnerClub(String teamId) async {
+    final save = _save;
+    if (save == null) return false;
+    if (teamId == save.userTeamId) return false;
+    final team = save.league.teams.where((t) => t.id == teamId).firstOrNull;
+    if (team == null) return false;
+    save.partnerClubId = teamId;
+    _logNews(
+        Tr.pick('${team.name}と提携した。毎季の提携費は${PartnerClubEngine.seasonCost}万円。',
+            'Partnered with ${team.name}. The fee is ${PartnerClubEngine.seasonCost} per season.'),
+        context: Tr.pick('提携', 'Partnership'));
+    _notify();
+    await _persist();
+    return true;
+  }
+
+  /// 提携を解消する。
+  Future<void> clearPartnerClub() async {
+    final save = _save;
+    if (save == null || save.partnerClubId == null) return;
+    save.partnerClubId = null;
+    _notify();
+    await _persist();
+  }
+
+  /// シーズン終了時の提携の処理。提携費を払い、2つの期待を上げる。
+  /// 払えなければ提携は解消される。
+  void _settlePartnerClub() {
+    final save = _save!;
+    final team = partnerClub;
+    if (team == null) {
+      save.partnerClubId = null;
+      return;
+    }
+    if (!PartnerClubEngine.canAfford(save.budget)) {
+      save.partnerClubId = null;
+      _logNews(
+          Tr.pick('資金が足りず、${team.name}との提携は解消された。',
+              'The partnership with ${team.name} lapsed for lack of funds.'),
+          context: Tr.pick('提携', 'Partnership'));
+      return;
+    }
+    _book(LedgerCategory.other, -PartnerClubEngine.seasonCost);
+    save.confidence =
+        (save.confidence + PartnerClubEngine.supportersBonus).clamp(0, 100);
+    save.shareholderExpectation = (save.shareholderExpectation +
+            PartnerClubEngine.shareholdersBonus)
+        .clamp(0, 100);
+    _logNews(
+        Tr.pick('${team.name}との提携で、知名度が上がった。',
+            'The partnership with ${team.name} raised our profile.'),
+        context: Tr.pick('提携', 'Partnership'));
+  }
+
+  /// テスト用: 提携の季末の処理だけを走らせる。
+  @visibleForTesting
+  void debugSettlePartnerClub() => _settlePartnerClub();
+
   /// テスト用: その節の事件の判定だけを走らせる。
   @visibleForTesting
   void debugRaiseOwnerEvent(int matchday) => _maybeRaiseOwnerEvent(matchday);

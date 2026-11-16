@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../l10n/tr.dart';
+import '../logic/partner_club_engine.dart';
 import '../models/owner_work.dart';
 import '../services/feedback_service.dart';
 import '../state/game_state.dart';
@@ -31,6 +32,7 @@ class OwnerWorkScreen extends StatelessWidget {
                         'Funds ${save.budget}. Each move can be made once per season.'),
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
+                  const _PartnerCard(),
                   for (final cat in OwnerWorkCategory.values) ...[
                     Padding(
                       padding: const EdgeInsets.only(top: 16, bottom: 4),
@@ -111,6 +113,80 @@ class _WorkTile extends StatelessWidget {
               child: Text(done
                   ? Tr.pick('今季済み', 'Done')
                   : Tr.pick('実行', 'Do it')),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// 提携クラブ。毎季の提携費を払う代わりに、2つの期待が少し上がる。
+class _PartnerCard extends StatelessWidget {
+  const _PartnerCard();
+
+  @override
+  Widget build(BuildContext context) {
+    final game = context.watch<GameState>();
+    final partner = game.partnerClub;
+    return Card(
+      margin: const EdgeInsets.only(top: 12),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(Tr.pick('提携クラブ', 'Partner club'),
+                style: Theme.of(context).textTheme.titleSmall),
+            const SizedBox(height: 4),
+            Text(
+              Tr.pick(
+                  '毎季の提携費${PartnerClubEngine.seasonCost}万円で、サポーターと株主の期待が+${PartnerClubEngine.supportersBonus}ずつ上がる。資金が足りない季は解消される。',
+                  'Pay ${PartnerClubEngine.seasonCost} per season for +${PartnerClubEngine.supportersBonus} to both expectations. It lapses if funds run short.'),
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    partner == null
+                        ? Tr.pick('提携なし', 'No partner')
+                        : Tr.pick('提携中: ${partner.name}',
+                            'Partnered with ${partner.name}'),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                if (partner != null)
+                  TextButton(
+                    onPressed: () =>
+                        context.read<GameState>().clearPartnerClub(),
+                    child: Text(Tr.pick('解消', 'End')),
+                  ),
+                FilledButton(
+                  onPressed: () async {
+                    final id = await showDialog<String>(
+                      context: context,
+                      builder: (ctx) => SimpleDialog(
+                        title: Text(Tr.pick('提携するクラブ', 'Choose a partner')),
+                        children: [
+                          for (final t in game.partnerCandidates)
+                            SimpleDialogOption(
+                              onPressed: () => Navigator.pop(ctx, t.id),
+                              child: Text(t.name),
+                            ),
+                        ],
+                      ),
+                    );
+                    if (id != null && context.mounted) {
+                      await context.read<GameState>().setPartnerClub(id);
+                    }
+                  },
+                  child: Text(partner == null
+                      ? Tr.pick('提携する', 'Partner')
+                      : Tr.pick('変える', 'Change')),
+                ),
+              ],
             ),
           ],
         ),
