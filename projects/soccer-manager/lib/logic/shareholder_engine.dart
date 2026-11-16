@@ -24,14 +24,14 @@ class ShareholderEngine {
 
   /// 利益率が良いときの加点・薄いときの減点・赤字のときの減点。
   static const int goodMarginBonus = 4;
-  static const int thinMarginPenalty = 4;
-  static const int lossMarginPenalty = 8;
+  static const int thinMarginPenalty = 3;
+  static const int lossMarginPenalty = 5;
 
   /// 人件費率が目安を超えたときの減点(注意・危険)。
   static const double wageWarn = 0.70;
   static const double wageDanger = 0.85;
-  static const int wageWarnPenalty = 3;
-  static const int wageDangerPenalty = 6;
+  static const int wageWarnPenalty = 2;
+  static const int wageDangerPenalty = 4;
 
   /// シーズン終了時の収支評価による、株主の期待の増減量。
   ///
