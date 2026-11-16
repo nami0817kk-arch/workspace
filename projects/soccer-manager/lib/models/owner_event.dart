@@ -25,6 +25,36 @@ enum OwnerEventKind {
 
   /// 地元の自治体が、スタジアム周辺の再開発への出資を持ちかける。
   townRedevelopment,
+
+  /// 監査法人が、帳簿に懸念を示す。
+  auditConcern,
+
+  /// 企業が、スタジアムの命名権に高額を提示する。
+  namingOffer,
+
+  /// 他クラブが、ユースの逸材を引き抜こうとする。
+  youthPoach,
+
+  /// サポーターが、経営への抗議を行う。
+  fanProtest,
+
+  /// 新しいスポンサーが、特別な契約を提案する。
+  sponsorProposal,
+
+  /// コーチ陣が、方針をめぐって対立する。
+  staffDispute,
+
+  /// 主力が長期離脱し、緊急の補強を求められる。
+  injuryCrisis,
+
+  /// 放映権の再交渉の機会が来る。
+  broadcastTalks,
+
+  /// 自治体の税制が変わり、スタジアムの負担が増える。
+  taxChange,
+
+  /// 経営陣の不祥事が報じられる。
+  execScandal,
 }
 
 /// 事件への1つの答え。期待の増減と、資金の増減(万円)。
@@ -60,6 +90,26 @@ extension OwnerEventInfo on OwnerEventKind {
           Tr.pick('ライバルが挑発', 'The rivals taunt you'),
         OwnerEventKind.townRedevelopment =>
           Tr.pick('街の再開発の誘い', 'A town redevelopment offer'),
+        OwnerEventKind.auditConcern =>
+          Tr.pick('監査法人が懸念', 'Auditors raise concerns'),
+        OwnerEventKind.namingOffer =>
+          Tr.pick('命名権の高額オファー', 'A big naming-rights offer'),
+        OwnerEventKind.youthPoach =>
+          Tr.pick('ユースの逸材に引き抜き', 'A youth gem is being poached'),
+        OwnerEventKind.fanProtest =>
+          Tr.pick('サポーターが抗議', 'Fans protest'),
+        OwnerEventKind.sponsorProposal =>
+          Tr.pick('新スポンサーの提案', 'A new sponsor\'s proposal'),
+        OwnerEventKind.staffDispute =>
+          Tr.pick('コーチ陣が対立', 'The coaching staff are split'),
+        OwnerEventKind.injuryCrisis =>
+          Tr.pick('主力が長期離脱', 'A key man is out long-term'),
+        OwnerEventKind.broadcastTalks =>
+          Tr.pick('放映権の再交渉', 'Broadcast talks reopen'),
+        OwnerEventKind.taxChange =>
+          Tr.pick('税制の変更', 'A tax change'),
+        OwnerEventKind.execScandal =>
+          Tr.pick('経営陣の不祥事', 'An executive scandal'),
       };
 
   String get body => switch (this) {
@@ -87,6 +137,36 @@ extension OwnerEventInfo on OwnerEventKind {
         OwnerEventKind.townRedevelopment => Tr.pick(
             '自治体が、スタジアム周辺の再開発への出資を求めています。',
             'The town asks you to invest in redeveloping the area around the stadium.'),
+        OwnerEventKind.auditConcern => Tr.pick(
+            '監査法人が、帳簿の一部に説明を求めています。詳しく調べさせるか、穏便に済ませるか。',
+            'The auditors want an explanation of part of the books. Dig deep or smooth it over?'),
+        OwnerEventKind.namingOffer => Tr.pick(
+            '企業が、スタジアムの命名権に高額を提示しています。長年の呼び名が変わります。',
+            'A company is bidding big for the stadium name. The long-used name would change.'),
+        OwnerEventKind.youthPoach => Tr.pick(
+            '他クラブが、ユースの逸材に違約金つきで声をかけています。',
+            'Another club is moving for your best youth prospect, with a release fee.'),
+        OwnerEventKind.fanProtest => Tr.pick(
+            '補強の少なさに不満を持つサポーターが、スタジアムの外で抗議しています。',
+            'Fans unhappy about the lack of signings are protesting outside the ground.'),
+        OwnerEventKind.sponsorProposal => Tr.pick(
+            '新しいスポンサーが、大きな額と引き換えに、ユニフォームの大幅な変更を求めています。',
+            'A new sponsor offers big money in return for a major kit change.'),
+        OwnerEventKind.staffDispute => Tr.pick(
+            'ヘッドコーチとフィットネスコーチが、練習の方針で対立しています。',
+            'The head coach and the fitness coach disagree over training.'),
+        OwnerEventKind.injuryCrisis => Tr.pick(
+            '主力が長期離脱します。急いで補強するか、いる戦力で乗り切るか。',
+            'A key man is out for a long time. Rush a signing or ride it out?'),
+        OwnerEventKind.broadcastTalks => Tr.pick(
+            '放映権の再交渉が始まりました。強気に出るか、安定を取るか。',
+            'Broadcast talks have reopened. Push hard or take security?'),
+        OwnerEventKind.taxChange => Tr.pick(
+            '自治体の税制が変わり、スタジアムの負担が増えます。',
+            'A tax change raises the stadium\'s burden.'),
+        OwnerEventKind.execScandal => Tr.pick(
+            '経営陣の1人に不祥事が報じられました。処分するか、擁護するか。',
+            'One of your executives is caught in a scandal. Punish or defend?'),
       };
 
   List<OwnerEventOption> get options => switch (this) {
@@ -175,6 +255,115 @@ extension OwnerEventInfo on OwnerEventKind {
             OwnerEventOption(
                 label: Tr.pick('断る', 'Decline'),
                 supportersDelta: -2,
+                shareholdersDelta: 2),
+          ],
+        OwnerEventKind.auditConcern => [
+            OwnerEventOption(
+                label: Tr.pick('徹底的に調べさせる(-250万円)', 'Order a full review (-250)'),
+                supportersDelta: -1,
+                shareholdersDelta: 5,
+                fundsDelta: -250),
+            OwnerEventOption(
+                label: Tr.pick('穏便に済ませる', 'Smooth it over'),
+                supportersDelta: 1,
+                shareholdersDelta: -5),
+          ],
+        OwnerEventKind.namingOffer => [
+            OwnerEventOption(
+                label: Tr.pick('受ける(+900万円)', 'Accept (+900)'),
+                supportersDelta: -5,
+                shareholdersDelta: 3,
+                fundsDelta: 900),
+            OwnerEventOption(
+                label: Tr.pick('断って伝統を守る', 'Refuse, keep the name'),
+                supportersDelta: 4,
+                shareholdersDelta: -3),
+          ],
+        OwnerEventKind.youthPoach => [
+            OwnerEventOption(
+                label: Tr.pick('違約金を受けて送り出す(+400万円)', 'Sell him (+400)'),
+                supportersDelta: -3,
+                shareholdersDelta: 3,
+                fundsDelta: 400),
+            OwnerEventOption(
+                label: Tr.pick('プロ契約で引き止める(-200万円)', 'Tie him down (-200)'),
+                supportersDelta: 3,
+                shareholdersDelta: -2,
+                fundsDelta: -200),
+          ],
+        OwnerEventKind.fanProtest => [
+            OwnerEventOption(
+                label: Tr.pick('補強予算の増額を約束する', 'Promise more for signings'),
+                supportersDelta: 5,
+                shareholdersDelta: -4),
+            OwnerEventOption(
+                label: Tr.pick('方針は変えないと説明する', 'Explain, no change'),
+                supportersDelta: -4,
+                shareholdersDelta: 2),
+          ],
+        OwnerEventKind.sponsorProposal => [
+            OwnerEventOption(
+                label: Tr.pick('受ける(+700万円)', 'Accept (+700)'),
+                supportersDelta: -3,
+                shareholdersDelta: 4,
+                fundsDelta: 700),
+            OwnerEventOption(
+                label: Tr.pick('断る', 'Decline'),
+                supportersDelta: 2,
+                shareholdersDelta: -3),
+          ],
+        OwnerEventKind.staffDispute => [
+            OwnerEventOption(
+                label: Tr.pick('ヘッドコーチの方針を採る', 'Back the head coach'),
+                supportersDelta: 2,
+                shareholdersDelta: -1),
+            OwnerEventOption(
+                label: Tr.pick('両者を呼んで折衷案(-100万円)', 'Broker a compromise (-100)'),
+                supportersDelta: -1,
+                shareholdersDelta: 2,
+                fundsDelta: -100),
+          ],
+        OwnerEventKind.injuryCrisis => [
+            OwnerEventOption(
+                label: Tr.pick('緊急補強する(-600万円)', 'Sign cover (-600)'),
+                supportersDelta: 4,
+                shareholdersDelta: -2,
+                fundsDelta: -600),
+            OwnerEventOption(
+                label: Tr.pick('いる戦力で乗り切る', 'Make do'),
+                supportersDelta: -3,
+                shareholdersDelta: 2),
+          ],
+        OwnerEventKind.broadcastTalks => [
+            OwnerEventOption(
+                label: Tr.pick('強気で交渉する', 'Push hard'),
+                supportersDelta: -1,
+                shareholdersDelta: 4,
+                fundsDelta: 300),
+            OwnerEventOption(
+                label: Tr.pick('長期の安定契約を取る', 'Take a long, safe deal'),
+                supportersDelta: 2,
+                shareholdersDelta: -2),
+          ],
+        OwnerEventKind.taxChange => [
+            OwnerEventOption(
+                label: Tr.pick('負担を受け入れる(-350万円)', 'Absorb it (-350)'),
+                supportersDelta: 1,
+                shareholdersDelta: -3,
+                fundsDelta: -350),
+            OwnerEventOption(
+                label: Tr.pick('チケット代に転嫁する', 'Pass it to ticket prices'),
+                supportersDelta: -4,
+                shareholdersDelta: 2),
+          ],
+        OwnerEventKind.execScandal => [
+            OwnerEventOption(
+                label: Tr.pick('厳正に処分する', 'Punish firmly'),
+                supportersDelta: 4,
+                shareholdersDelta: -3),
+            OwnerEventOption(
+                label: Tr.pick('擁護して沈静化を待つ', 'Defend and wait it out'),
+                supportersDelta: -5,
                 shareholdersDelta: 2),
           ],
       };
