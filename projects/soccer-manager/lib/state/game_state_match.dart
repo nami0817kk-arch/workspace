@@ -1274,7 +1274,11 @@ extension GameStateMatch on GameState {
   /// を算出する。実際の試合結果には影響しない参考情報。
   List<TeamProjection> get seasonProjection => SeasonProjectionEngine.project(
         _save!.league,
-        relegationCount: PromotionEngine.swapCount,
+        relegationCount: _save!.currentDivisionTier < totalDivisionTiers
+            ? currentLeagueTheme
+                .rulesBelow(_save!.currentDivisionTier)
+                .relegationZone
+            : 0,
         // 大陸カップ出場枠は1部の上位2チームのみ(2部は対象外)。
         continentalQualifyCount: _save!.currentDivisionTier == 1 ? 2 : 0,
       );

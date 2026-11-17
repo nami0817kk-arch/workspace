@@ -1,4 +1,5 @@
 import '../models/league.dart';
+import '../models/league_theme.dart';
 import '../models/team.dart';
 import 'background_match_engine.dart';
 import 'cup_engine.dart';
@@ -117,31 +118,35 @@ class PromotionEngine {
   /// プレイされた側は[tier1PlayedOrder]/[tier2PlayedOrder]に最終順位順のチーム
   /// リストを渡す(片方のみ非null)。渡されなかった側はその場でシミュレートする。
   ///
-  /// 2部の昇格は上位2チームが自動昇格し、3位〜6位の4チームが昇格プレーオフ
-  /// (準決勝2試合+決勝、引き分けはPK戦)を行い、その勝者が3枠目の昇格を得る。
+  /// 入れ替えの数は[rules]で国ごとに変わる。既定は、上位2チームが自動昇格し、
+  /// 続く4チームが昇格プレーオフ(準決勝2試合+決勝、引き分けはPK戦)を行う形。
+  /// 入れ替え戦のある国では、上の部の降格圏のすぐ上と、下の部の自動昇格の
+  /// すぐ下が1試合を戦い、勝った方が上の部に入る。
   static PromotionResult resolve({
     required List<Team> tier1Teams,
     required List<Team> tier2Teams,
     List<Team>? tier1PlayedOrder,
     List<Team>? tier2PlayedOrder,
+    PromotionRules rules = PromotionRules.standard,
   }) {
     final orderedTier1 = tier1PlayedOrder ?? _simulateSeason(tier1Teams);
     final orderedTier2 = tier2PlayedOrder ?? _simulateSeason(tier2Teams);
 
-    final relegated = orderedTier1.sublist(orderedTier1.length - swapCount);
-    final remainingTier1 =
-        orderedTier1.take(orderedTier1.length - swapCount).toList();
+    final down = rules.autoDown.clamp(0, orderedTier1.length);
+    final relegated = orderedTier1.sublist(orderedTier1.length - down);
+    var remainingTier1 = orderedTier1.take(orderedTier1.length - down).toList();
 
-    List<Team> promoted;
-    List<Team> tier2Remainder;
-    List<PromotionPlayoffMatch> playoffMatches = const [];
+    var promoted = <Team>[];
+    var tier2Remainder = <Team>[];
+    var playoffMatches = <PromotionPlayoffMatch>[];
+    final extraRelegated = <Team>[];
 
-    if (orderedTier2.length >= automaticPromotionCount + playoffPoolSize) {
-      final autoPromoted = orderedTier2.take(automaticPromotionCount).toList();
-      final pool = orderedTier2
-          .skip(automaticPromotionCount)
-          .take(playoffPoolSize)
-          .toList();
+    final usePlayoff = rules.playoffPool >= 4 &&
+        orderedTier2.length >= rules.autoUp + rules.playoffPool;
+    if (usePlayoff) {
+      final autoPromoted = orderedTier2.take(rules.autoUp).toList();
+      final pool =
+          orderedTier2.skip(rules.autoUp).take(rules.playoffPool).toList();
 
       final semiA = _playSingleMatch(
         roundLabel: Tr.pick('昇格プレーオフ 準決勝', 'Play-off semi-final'),
@@ -153,10 +158,8 @@ class PromotionEngine {
         home: pool[1],
         away: pool[2],
       );
-      // 決勝のホームは、順位が上だった側。準決勝の組み合わせ順で決めていた
-      // ため、6位が勝ち上がると4位や5位を差し置いてホームになっていた。
-      // 準決勝は上位がホーム(1位vs4位 / 2位vs3位)なので、決勝だけ順位が
-      // 効かないのは筋が通らない。
+      // 決勝のホームは、順位が上だった側。準決勝は上位がホーム
+      // (1位vs4位 / 2位vs3位)なので、決勝だけ順位が効かないのは筋が通らない。
       final winnerA = pool.firstWhere((t) => t.id == semiA.winnerId);
       final winnerB = pool.firstWhere((t) => t.id == semiB.winnerId);
       final finalHome =
@@ -173,23 +176,93 @@ class PromotionEngine {
         (t) => t.id == finalMatch.winnerId,
       );
       promoted = [...autoPromoted, playoffWinner];
-      tier2Remainder = orderedTier2
-          .where((t) => !promoted.any((p) => p.id == t.id))
-          .toList();
     } else {
-      promoted = orderedTier2.take(swapCount).toList();
-      tier2Remainder = orderedTier2.skip(swapCount).toList();
+      promoted = orderedTier2.take(rules.autoUp).toList();
     }
 
+    // 入れ替え戦: 上の部で降格圏のすぐ上のクラブ(ホーム)と、下の部で
+    // 昇格の枠のすぐ下のクラブ。下の部が勝てば入れ替わる。
+    if (rules.relegationPlayoff &&
+        remainingTier1.isNotEmpty &&
+        orderedTier2.length > promoted.length) {
+      final upperSide = remainingTier1.last;
+      final lowerSide = orderedTier2
+          .firstWhere((t) => !promoted.any((p) => p.id == t.id));
+      final match = _playSingleMatch(
+        roundLabel: Tr.pick('入れ替え戦', 'Relegation play-off'),
+        home: upperSide,
+        away: lowerSide,
+      );
+      playoffMatches = [...playoffMatches, match];
+      if (match.winnerId == lowerSide.id) {
+        promoted = [...promoted, lowerSide];
+        remainingTier1 = remainingTier1.take(remainingTier1.length - 1).toList();
+        extraRelegated.add(upperSide);
+      }
+    }
+
+    tier2Remainder = orderedTier2
+        .where((t) => !promoted.any((p) => p.id == t.id))
+        .toList();
+    final allRelegated = [...relegated, ...extraRelegated];
+
     final newTier1 = [...remainingTier1, ...promoted];
-    final newTier2 = [...tier2Remainder, ...relegated];
+    final newTier2 = [...tier2Remainder, ...allRelegated];
 
     return PromotionResult(
       tier1: newTier1,
       tier2: newTier2,
       promotedTeamNames: promoted.map((t) => t.name).toList(),
-      relegatedTeamNames: relegated.map((t) => t.name).toList(),
+      relegatedTeamNames: allRelegated.map((t) => t.name).toList(),
       promotionPlayoff: playoffMatches,
     );
+  }
+
+  /// 各部のクラブ数を[targetSizes](1部から順)に合わせる。昇降格の数が
+  /// 上下で違う国や、国の形を変えた旧セーブで、部の大きさがずれたときに使う。
+  ///
+  /// 多すぎる部からは、いちばん弱いクラブを1つ下の部へ送る。少なすぎる部へは、
+  /// 1つ下の部のいちばん強いクラブを上げる。最下部が足りないときは[create]で
+  /// 新しく作り、余るときは外す。[protectedId]のクラブ(自クラブ)は動かさない。
+  static Map<int, List<Team>> resize(
+    Map<int, List<Team>> byTier,
+    List<int> targetSizes, {
+    required String protectedId,
+    required Team Function(int tier, int index) create,
+  }) {
+    final out = {
+      for (final e in byTier.entries) e.key: [...e.value],
+    };
+    final bottom = targetSizes.length;
+    int strength(Team t) => t.players.isEmpty
+        ? (t.retainedOverall ?? 50)
+        : t.overallRating;
+    for (var tier = 1; tier <= bottom; tier++) {
+      final teams = out[tier] ??= [];
+      final target = targetSizes[tier - 1];
+      while (teams.length > target) {
+        final movable = teams.where((t) => t.id != protectedId).toList()
+          ..sort((a, b) => strength(a).compareTo(strength(b)));
+        if (movable.isEmpty) break;
+        final weakest = movable.first;
+        teams.remove(weakest);
+        if (tier < bottom) (out[tier + 1] ??= []).add(weakest);
+      }
+      var made = 0;
+      while (teams.length < target) {
+        final below = out[tier + 1];
+        final movable = (below ?? const <Team>[])
+            .where((t) => t.id != protectedId)
+            .toList()
+          ..sort((a, b) => strength(b).compareTo(strength(a)));
+        if (tier < bottom && movable.isNotEmpty) {
+          below!.remove(movable.first);
+          teams.add(movable.first);
+        } else {
+          teams.add(create(tier, made++));
+        }
+      }
+    }
+    return out;
   }
 }

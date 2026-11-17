@@ -866,7 +866,7 @@ class GameState extends ChangeNotifier {
   /// ハードは1つ厳しくなる(1位〜リーグチーム数の範囲でクランプ)。
   int _difficultyAdjustedTarget(int target) {
     final delta = _save?.difficulty.boardTargetDelta ?? 0;
-    return (target + delta).clamp(1, teamsPerLeague);
+    return (target + delta).clamp(1, _save?.league.teams.length ?? teamsPerLeague);
   }
 
   Future<void> startNewGame(
@@ -891,7 +891,7 @@ class GameState extends ChangeNotifier {
     const userStartTier = totalDivisionTiers;
     final allNames = NamePool.themedClubNames(
       theme,
-      teamsPerLeague * totalDivisionTiers - 1,
+      theme.teamsByTier.fold<int>(0, (a, n) => a + n) - 1,
     );
     var nameIndex = 0;
     String nextName() => allNames[nameIndex++];
@@ -905,7 +905,7 @@ class GameState extends ChangeNotifier {
       return (base + rng.nextInt(35)).clamp(20, 99);
     }
 
-    const cpuCount = teamsPerLeague - 1;
+    final cpuCount = theme.teamsInTier(userStartTier) - 1;
     final cpuTeams = <Team>[];
     for (int i = 0; i < cpuCount; i++) {
       cpuTeams.add(
@@ -925,7 +925,7 @@ class GameState extends ChangeNotifier {
     for (int tier = 1; tier <= totalDivisionTiers; tier++) {
       if (tier == userStartTier) continue;
       final tierTeams = <Team>[
-        for (int i = 0; i < teamsPerLeague; i++)
+        for (int i = 0; i < theme.teamsInTier(tier); i++)
           PlayerGenerator.generateSquad(
             id: 'div${tier}_$i',
             name: nextName(),
