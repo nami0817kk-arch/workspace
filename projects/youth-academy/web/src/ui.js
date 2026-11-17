@@ -59,6 +59,8 @@
       else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
       else if (k === 'html') e.innerHTML = v;
       else if (k === 'why') e.dataset.why = v;
+      // 押すと下に説明を出す（title の長押しは iPhone で見えない。2026-11-17 点検）
+      else if (k === 'tip') { if (v) { e.dataset.tip = v; e.setAttribute('aria-label', v); } }
       else e.setAttribute(k, v === true ? '' : v);
     }
     for (const c of kids.flat()) if (c != null && c !== false) e.append(c.nodeType ? c : document.createTextNode(String(c)));
@@ -87,6 +89,9 @@
           return;
         }
       }
+      // 説明つきの札（tip）に触れたら、その説明を下に出す
+      const tipEl = ev.target && ev.target.closest && ev.target.closest('[data-tip]');
+      if (tipEl && !tipEl.closest('button')) YA.toast(tipEl.dataset.tip);
     }, true);
   } catch (e) { /* node での点検 */ }
   const svgNS = 'http://www.w3.org/2000/svg';
@@ -193,7 +198,7 @@
   function persChips(p, all) {
     const keys = Object.keys(p.pers).filter((g) => all || p.pers[g] !== 'ふつう');
     if (!keys.length) return [h('span', { class: 'chip gray' }, '性格：ふつう')];
-    return keys.map((g) => h('span', { class: 'chip pers', title: YA.PERS_NOTE[p.pers[g]] || '' }, p.pers[g]));
+    return keys.map((g) => h('span', { class: 'chip pers', tip: YA.PERS_NOTE[p.pers[g]] ? `${p.pers[g]}：${YA.PERS_NOTE[p.pers[g]]}` : '' }, p.pers[g]));
   }
   // 性格と、その意味（1行ずつ）
   function persExplain(p) {
@@ -208,8 +213,8 @@
     const bar = h('div', { class: 'bar', style: 'position:relative' }, h('i', { style: `width:${(v / 20) * 100}%;background:${c}` }));
     if (pg > 0.05) bar.append(h('i', { style: `position:absolute;left:${(v / 20) * 100}%;top:0;height:100%;width:${(pg / 20) * 100}%;background:#9bdcb4;border-radius:0 3px 3px 0` }));
     return h('div', { class: 'ab' }, h('b', {}, name), bar, h('em', { style: `color:${v >= 15 ? '#1a9d57' : 'inherit'}` }, v),
-      gain ? h('span', { style: 'color:#1a9d57;font-weight:900;font-size:10px;width:18px' }, '+' + gain) : h('span', { style: 'width:18px' }),
-      yr ? h('span', { style: 'color:#7b879b;font-weight:700;font-size:9.5px;width:20px' }, (yr > 0 ? '+' : '') + yr) : h('span', { style: 'width:20px' }));
+      gain ? h('span', { style: 'color:#1a9d57;font-weight:900;font-size:11px;width:20px' }, '+' + gain) : h('span', { style: 'width:20px' }),
+      yr ? h('span', { style: 'color:#7b879b;font-weight:700;font-size:11px;width:22px' }, (yr > 0 ? '+' : '') + yr) : h('span', { style: 'width:22px' }));
   }
   // 金の特性に近いもの（試合で効いた回数と能力）。世界の選手だけ（trUse を持つ。p.tu は戦術理解なので別名）
   function goldHint(p) {
@@ -230,7 +235,7 @@
       h('div', { class: 'row' }, posChip(p), h('div', { class: 'grow' }, h('div', { class: 'h' }, `${p.num}  ${p.name}`, p.grade ? `  （高${p.grade}）` : ''), h('div', { class: 'sub' }, `${p.height}cm  /  調子 ${p.form > 0 ? '+' : ''}${p.form}  /  自信 ${Math.round(p.conf)}  /  戦術理解 ${Math.round(p.tu == null ? 40 : p.tu)}` + (p.nation && p.nation !== '日本' ? `  /  ${p.nation}` : '')))),
       h('div', { style: 'margin-top:5px' }, h('div', { class: 'note' }, 'ポジションの適性'), aptBlock(p)),
       h('div', { style: 'margin-top:5px' }, h('div', { class: 'note' }, '性格'), persExplain(p)),
-      h('div', { style: 'margin-top:5px' }, h('div', { class: 'note' }, '特性'), h('div', { class: 'row', style: 'flex-wrap:wrap;gap:3px' }, p.traits.length ? p.traits.map((x) => (YA.isGold(p, x) ? h('span', { class: 'chip gold', title: '金の特性（もとは「' + x + '」・効き' + YA.GOLD_MULT + '倍）' }, '金 ' + YA.GOLD[x]) : h('span', { class: 'chip trait', title: YA.GOLD && YA.GOLD[x] ? '金の特性「' + YA.GOLD[x] + '」になれる' : '' }, x))) : h('span', { class: 'sub' }, 'なし')), goldHint(p)),
+      h('div', { style: 'margin-top:5px' }, h('div', { class: 'note' }, '特性'), h('div', { class: 'row', style: 'flex-wrap:wrap;gap:3px' }, p.traits.length ? p.traits.map((x) => (YA.isGold(p, x) ? h('span', { class: 'chip gold', tip: '金の特性（もとは「' + x + '」・効き' + YA.GOLD_MULT + '倍）' }, '金 ' + YA.GOLD[x]) : h('span', { class: 'chip trait', tip: YA.GOLD && YA.GOLD[x] ? `${x}：使い込むと金の特性「${YA.GOLD[x]}」になれる` : '' }, x))) : h('span', { class: 'sub' }, 'なし')), goldHint(p)),
     );
     const list = opts.all ? (isGK ? YA.AB_GK.concat(['フィールド']) : YA.AB_FIELD) : top.slice(0, 8).map((x) => x[0]);
     if (opts.all) {
@@ -292,7 +297,8 @@
         g.append(s('circle', { r: 4.6, cx: 0.4, cy: 0.9, fill: 'rgba(0,0,0,.3)' }), s('circle', { r: 4.6, fill: colors[pos], stroke: ring, 'stroke-width': ring === '#fff' ? 0.9 : 1.5 }), s('text', { y: 1.7, 'text-anchor': 'middle', fill: '#fff', 'font-size': 4.6, 'font-weight': 900 }, p.num));
         g.append(lab(nameBelow ? 8.6 : -5.8, '#fff', 3.4, surname(p)));
         // ポジション名と適性は丸の右に（縦に並ぶ最終ラインでも、名前と重ならない）
-        if (p15 !== 'GK') g.append(s('text', Object.assign({ x: 5.3, y: 1.1, 'text-anchor': 'start', fill: ring === '#fff' ? '#fff6c2' : ring, 'font-size': 2.8, 'font-weight': 900, stroke: 'rgba(0,0,0,.55)', 'stroke-width': 0.8, 'paint-order': 'stroke' }, posAlt ? { x: 0, y: nameBelow ? -5.6 : 8.2, 'text-anchor': 'middle' } : {}), YA.POS_LABEL[p15] + (p15 === 'GK' ? '' : YA.aptLabel(p.apt ? p.apt[p15] : 17))));
+        // GK も適性が合っていないときは記号を出す（ふちの色だけでは分からない。2026-11-17 点検）
+        if (p15 !== 'GK' || grade === '△' || grade === '×') g.append(s('text', Object.assign({ x: 5.3, y: 1.1, 'text-anchor': 'start', fill: ring === '#fff' ? '#fff6c2' : ring, 'font-size': 2.8, 'font-weight': 900, stroke: 'rgba(0,0,0,.55)', 'stroke-width': 0.8, 'paint-order': 'stroke' }, posAlt ? { x: 0, y: nameBelow ? -5.6 : 8.2, 'text-anchor': 'middle' } : {}), YA.POS_LABEL[p15] + (p15 === 'GK' ? grade : YA.aptLabel(p.apt ? p.apt[p15] : 17))));
         if ((opts.showRole && opts.showRole()) || sel) {
           // 役割の札は濃い下地を敷いて、隣の子の名前と重なっても読めるように（2026-11-16「ゴールキ…・守」が名前に重なっていた）
           const fit = YA.Match.prototype.roleFit.call(null, t, i);

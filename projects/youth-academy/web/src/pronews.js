@@ -183,7 +183,7 @@
     }
     body.append(list);
   }
-  YA.lineageExtraTabs.push(['clubs', 'クラブ', clubsTab]);
+  YA.lineageExtraTabs.push(['clubs', '移籍先クラブ', clubsTab]);
 
   // 年度末：シーズン中に知らせたゴールは、その年の成績の最低の数にする（ゴールの知らせと成績が食い違わない）
   const at0 = YA.alumniTick;
