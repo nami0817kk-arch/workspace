@@ -6,6 +6,7 @@ import 'package:basketball_career/gm/league.dart';
 import 'package:basketball_career/gm/trade.dart';
 import 'package:basketball_career/ui/app.dart';
 import 'package:basketball_career/ui/gm/progress_tab.dart';
+import 'package:basketball_career/ui/gm/trade_tab.dart';
 import 'package:basketball_career/ui/gm_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -112,6 +113,25 @@ void main() {
       expect(car.me.roster.any((p) => p.id == theirs.id), isTrue);
       expect(find.textContaining('トレードが成立した'), findsOneWidget);
     }
+  });
+
+  testWidgets('トレード: 相手の一覧は、選んでいるチームが見える所まで送られている', (tester) async {
+    _size(tester, 844, 390);
+    final c = await _controller({'gmHowtoSeen': true});
+    c.newCareer(teamAtRank(1, 15), seed: 1);
+    final car = c.career!;
+    await tester.pumpWidget(BasketballCareerApp(controller: c));
+    await tester.pumpAndSettle();
+    final last = car.mine == teamDefs.length - 1 ? teamDefs.length - 2 : teamDefs.length - 1;
+    tester.state<NavigatorState>(find.byType(Navigator).first).push(
+      MaterialPageRoute<void>(builder: (_) => Scaffold(body: TradeTab(c: c, initialPartner: last))),
+    );
+    await tester.pumpAndSettle();
+    final row = find.text(teamDefs[last].short).first;
+    final list = find.ancestor(of: row, matching: find.byType(Scrollable)).first;
+    expect(tester.state<ScrollableState>(list).position.pixels, greaterThan(0));
+    final r = tester.getRect(row), box = tester.getRect(list);
+    expect(r.top >= box.top && r.bottom <= box.bottom, isTrue, reason: '選んだチームの行が一覧の中に見えている');
   });
 
   testWidgets('続きは保存され、起動するとはじめの画面から「続きから」で戻れる', (tester) async {
