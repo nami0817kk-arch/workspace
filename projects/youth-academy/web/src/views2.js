@@ -146,7 +146,7 @@
     const lv = YA.trustLevel(w);
     const info = { low: '信頼度が低いので、配分はクラブが決めています（要望を出せるだけ）', mid: '信頼度が中くらいなので、スカウトと遠征の配分だけ変えられます', high: '信頼度が高いので、配分を自分で決められます' }[lv];
     const left = h('div', { style: 'flex:1;min-width:0' });
-    left.append(card(h('div', { class: 'row' }, h('b', { class: 'grow' }, `今年の予算 ${b.total}万円`), h('span', { class: 'chip gray' }, (c.solidarityIn != null && c.solidarityIn < (c.solidarityLast || 0)) ? `連帯貢献金 ${c.solidarityLast}万円のうち${c.solidarityIn}万円を含む` : `連帯貢献金 ${c.solidarityLast || 0}万円を含む`)),
+    left.append(card(h('div', { class: 'row' }, h('b', { class: 'grow' }, `今年の予算 ${b.total}万円`), h('span', { class: 'chip gray' }, (c.saleIn ? `トップの売却 ${c.saleIn}万円を含む・` : '') + `育成基金へ ${c.solidarityLast || 0}万円（連帯貢献金の半分）`)),
       h('div', { class: 'note' }, `スタッフの給料 ${b.salaries}万円 → 残り ${b.free}万円を配分`), h('div', { class: 'note', style: 'color:var(--blue-d);margin-top:3px' }, info)));
     for (const [k, n, note] of [['scout', 'スカウト', '候補の報告が増え、見に行ける'], ['camp', '合宿・遠征', '夏の合宿（16週・8月）に使う'], ['facility', '施設', '積み立てて回復力が上がる']]) {
       const can = YA.canAlloc(w, k);
@@ -450,7 +450,7 @@
       })));
       if (!al.length) body.append(h('div', { class: 'note', style: 'margin-top:6px' }, w.alumni.length ? '当てはまる卒業生はいません。' : '最初の卒業式（1年目の終わり）で、ここに並びます。卒業後も毎年、活躍が更新されます。'));
     } else if (ui.mt === 'rec') {
-      body.append(title('主な記録'), h('div', { class: 'row', style: 'flex-wrap:wrap;gap:5px;margin-bottom:6px' }, h('span', { class: 'chip trait' }, `Aチーム ${w.rec.w}勝${w.rec.d}分${w.rec.l}敗`), h('span', { class: 'chip gray' }, `プロ入り ${w.alumni.filter((a) => a.status === 'pro').length}人`), h('span', { class: 'chip gray' }, `代表経験 ${w.alumni.filter((a) => a.nat).length}人`), h('span', { class: 'chip gray' }, `連帯貢献金 ${w.club.solidarityLast || 0}万円（今年）`)));
+      body.append(title('主な記録'), h('div', { class: 'row', style: 'flex-wrap:wrap;gap:5px;margin-bottom:6px' }, h('span', { class: 'chip trait' }, `Aチーム ${w.rec.w}勝${w.rec.d}分${w.rec.l}敗`), h('span', { class: 'chip gray' }, `プロ入り ${w.alumni.filter((a) => a.status === 'pro').length}人`), h('span', { class: 'chip gray' }, `代表経験 ${w.alumni.filter((a) => a.nat).length}人`), h('span', { class: 'chip gray' }, `育成基金へ ${w.club.solidarityLast || 0}万円（今年度・連帯貢献金の半分）`)));
       body.append(title('獲得した大会'), ...(w.trophies && w.trophies.length ? w.trophies.map((t) => h('div', { class: 'pitem', style: 'cursor:default' }, h('span', { class: 'chip trait' }, t.rank), h('span', { class: 'nm grow' }, t.name), h('span', { class: 'sub' }, `${t.year}年目`))) : [h('div', { class: 'note' }, 'まだありません')]));
       body.append(title('リーグの履歴'), ...((w.leagueHist || []).slice().reverse().map((x) => h('div', { class: 'pitem', style: 'cursor:default' }, h('span', { class: 'sub', style: 'width:54px' }, `${x.year}年目`), h('span', { class: 'nm grow' }, YA.levelNames(w)[x.level - 1]), h('b', {}, `${x.rank}位（勝点${x.pts}）`)))));
       body.append(title('最近の試合'), ...w.results.slice(-10).reverse().map((r) => h('div', { class: 'pitem', style: 'cursor:default' }, h('span', { class: 'sub', style: 'width:68px' }, `${r.year}年目${r.week}週`), h('span', { class: 'nm grow' }, (r.kind ? r.kind + ' ' : '') + r.opp), h('b', { style: `color:${r.gf > r.ga ? '#1a9d57' : r.gf < r.ga ? '#d63a3a' : 'inherit'}` }, `${r.gf}-${r.ga}`))));
