@@ -408,7 +408,9 @@
     }
     if (which !== 'A' || !scheduled) return;
     const team = m.home;
-    const big = opp && opp.kindLabel && !/^リーグ/.test(opp.kindLabel);
+    // 新春フェスティバル・練習試合（1〜3月の試合）は鍵を進めない（大一番でもない）
+    const friendly = opp && /フェスティバル|練習試合/.test(opp.kindLabel || '');
+    const big = opp && opp.kindLabel && !/^リーグ/.test(opp.kindLabel) && !friendly;
     const ga = m.score.away;
     const startIds = new Set(team.lineup.map((s) => s.pid));
     const played = new Set(Object.keys(team.players).filter((id) => team.players[id].st && team.players[id].st.minutes > 0));
@@ -418,7 +420,7 @@
       p._weekMinsA = (p._weekMinsA || 0) + team.players[id].st.minutes;
       // 初出場の節目（★の子だけ）
       if (p.star && !(p.ms && p.ms.debut)) milestone(w, p, 'debut');
-      if (!p.keys) continue;
+      if (!p.keys || friendly) continue;
       const st = p.st;
       if (big && st.goals > 0) progress(w, p, 'bigGoal', 1);
       if (big && ga === 0 && st.minutes >= 60) progress(w, p, 'bigClean', 1);
@@ -681,12 +683,24 @@
     }
     return res1(w, e, idx);
   };
-  // 卒業式の前の週（39週）に、★の高3と最後の会話
+  // 卒業式の前の週（39週）に、★の高3と最後の会話。高1・高2の「この一年」は35〜38週に散らす
+  //（2026-11-17 直し：前は39週に★の子全員の会話がまとめて来て、1週に8件ほど重なっていた）
+  YA.TERM_WEEKS = [35, 36, 37, 38];
+  YA.termWeekOf = (w, p) => YA.TERM_WEEKS[YA.hash(String(p.id) + w.year) % YA.TERM_WEEKS.length];
   YA.gradTalks = function (w) {
-    if (w.week !== YA.WEEKS - 1) return;
     for (const p of Object.values(w.players)) {
       if (!p.star) continue;
-      milestone(w, p, p.grade === 3 ? 'grad' : 'term');
+      if (p.grade === 3 && w.week === YA.WEEKS - 1) milestone(w, p, 'grad');
+      else if (p.grade < 3) {
+        // 同じ週に重ならないよう、その週の「この一年」は2人まで（あふれた子は次の週へ）
+        const due = YA.termWeekOf(w, p);
+        if (w.week < due || w.week > YA.WEEKS - 1 || (p.ms && p.ms.termY === w.year)) continue;
+        const n = (w.forced || []).filter((f) => f.id === 'ms' && f.ms === 'term').length;
+        if (n >= 2 && w.week < YA.WEEKS - 1) continue;
+        p.ms = p.ms || {};
+        p.ms.termY = w.year;
+        milestone(w, p, 'term');
+      }
     }
   };
   // 年度はじめの総合力を控える（この一年の伸びを、年度末の会話で見せるため）

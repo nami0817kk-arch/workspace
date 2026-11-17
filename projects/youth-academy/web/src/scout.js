@@ -770,11 +770,16 @@
         w.forced = (w.forced || []).concat([{ id: 'natcall', pid: null, week: w.week, year: w.year }]);
       }
     }
-    // トップの打診の線を10以上上回った子には、その週に必ずトップから打診が来る
+    // トップの打診の線を10以上上回った高1・高2には、打診が来る（1年に1人まで・同じ子には年1回。2026-11-17 直し：前は毎週打診が来て、
+    // 年4〜5人がプロに抜けていた）。高3は内定にして卒業まで残す
     if (w.top && YA.earlyProLine) {
+      if (YA.naiteiCheck) YA.naiteiCheck(w);
       const line = YA.earlyProLine(w) + 10;
-      const hot = Object.values(w.players).filter((p) => YA.rating(p) >= line && !(p._earlyNo && w.year * 100 + w.week - p._earlyNo < 10)).sort((a, b) => YA.rating(b) - YA.rating(a))[0];
-      if (hot && !(w.forced || []).some((f) => f.id === 'early')) w.forced = (w.forced || []).concat([{ id: 'early', pid: hot.id, week: w.week, year: w.year }]);
+      const hot = YA.earlyCount(w) >= 1 ? null : Object.values(w.players).filter((p) => p.grade <= 2 && YA.rating(p) >= line && p._earlyAsk !== w.year && !(p._earlyNo && w.year * 100 + w.week - p._earlyNo < 10)).sort((a, b) => YA.rating(b) - YA.rating(a))[0];
+      if (hot && !(w.forced || []).some((f) => f.id === 'early')) {
+        hot._earlyAsk = w.year;
+        w.forced = (w.forced || []).concat([{ id: 'early', pid: hot.id, week: w.week, year: w.year }]);
+      }
     }
     let noticed = false;
     for (const p of Object.values(w.players)) {

@@ -1069,6 +1069,12 @@
         const dsp = Math.hypot(des[0], des[1]);
         const vtop = MOVE.sprint * mk.run;
         if (dsp > vtop) { des[0] *= vtop / dsp; des[1] *= vtop / dsp; } // 押されても全力より速くは走らない
+        // 動ける範囲の端（縦 -2.5〜L+2.5・横 -3〜W+3）の手前で止まれる速さまで落とす（端で急に止まると加速の上限を超える。2026-11-17）
+        {
+          const stopV = (gap) => Math.sqrt(2 * MOVE.acc * mk.acc * Math.max(0, gap)) * 0.9;
+          if (des[1] < 0) des[1] = Math.max(des[1], -stopV(p[1] + 2.5)); else des[1] = Math.min(des[1], stopV(L + 2.5 - p[1]));
+          if (des[0] < 0) des[0] = Math.max(des[0], -stopV(p[0] + 3)); else des[0] = Math.min(des[0], stopV(W + 3 - p[0]));
+        }
         const dv = [des[0] - v[0], des[1] - v[1]];
         const dvn = Math.hypot(dv[0], dv[1]);
         const mx = MOVE.acc * mk.acc * dt;

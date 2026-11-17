@@ -111,7 +111,7 @@ ok(cnt[1] === 12 && cnt[2] === 12 && cnt[3] === 12, '各学年12人 ' + JSON.str
 ok(Object.values(w.players).filter((p) => p.team === 'A').length === 20, 'Aは20人');
 const a0 = playYear(w, { talk: true, camp: 'domestic', scout: true });
 console.log('1年目 能力の合計の平均', a0.startAvg.toFixed(0), '->', a0.endAvg.toFixed(0), '出来事', a0.events, '怪我', a0.injuries);
-ok(a0.endAvg > a0.startAvg + 12, '1年で能力が伸びる');
+ok(a0.endAvg > a0.startAvg + 3, '1年で能力が伸びる'); // 2026-11-17：卒業時の平均を90前後に戻したので、1年の伸びは前の半分ほど
 ok(w.year === 2 && w.week === 1, '卒業式で次の年へ');
 ok(w.alumni.length >= 12, '卒業生が名鑑へ');
 const cnt2 = { 1: 0, 2: 0, 3: 0 };
@@ -119,7 +119,7 @@ Object.values(w.players).forEach((p) => cnt2[p.grade]++);
 ok(cnt2[1] === 12 && cnt2[3] >= 10, '学年が上がり新しい高1 ' + JSON.stringify(cnt2));
 ok(a0.events >= 12, '出来事が起きる ' + a0.events);
 ok(w.club.eval.length === 1 && 'SABCD'.includes(w.club.eval[0].letter), '年末の評価 ' + JSON.stringify(w.club.eval[0] && w.club.eval[0].letter));
-ok(w.rec.w + w.rec.d + w.rec.l >= 22 && w.rec.w + w.rec.d + w.rec.l <= 29, 'Aの試合は22〜29 ' + (w.rec.w + w.rec.d + w.rec.l));
+ok(w.rec.w + w.rec.d + w.rec.l >= 27 && w.rec.w + w.rec.d + w.rec.l <= 36, 'Aの試合は27〜36（1〜3月の新春フェスティバル・練習試合・夏のグループ戦を足した） ' + (w.rec.w + w.rec.d + w.rec.l));
 const a1 = playYear(w, {});
 console.log('2年目', a1.startAvg.toFixed(0), '->', a1.endAvg.toFixed(0));
 const a2 = playYear(w, {});
@@ -1258,7 +1258,10 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
     ok(ranks.length >= 10 && ranks.every((x) => x >= 1 && x <= 30) && winners === 0, 'バロンドールの順位は1〜30で、1位は年に1人（' + ranks.length + '件）');
     ok(wb.alumni.every((a) => a.pos !== 'GK' || (!a.goals && !a.assists)), '世界一級の GK でも点は取らない');
     // 移籍金と市場価値（2026-11-15「移籍金とかもみたい」）
-    const mv = wt2.alumni.filter((a) => (a.moves || []).length);
+    // 2026-11-17：卒業時の平均を90前後に戻したので、3年では移籍が起きないことがある。足りなければ1部のクラブを5年回して見る
+    let mvAl = wt2.alumni;
+    if (!mvAl.some((a) => (a.moves || []).length)) { const t5 = YA.testStart({ seed: 3, tier: 1 }); for (let y = 0; y < 5; y++) YA.testYear(t5); mvAl = t5.w.alumni; }
+    const mv = mvAl.filter((a) => (a.moves || []).length);
     ok(mv.length >= 1 && mv.every((a) => a.moves.length === a.transfers && a.moves.every((m) => m.fee >= 0 && m.from && m.to && m.from !== m.to) && a.feeTotal === a.moves.reduce((t, m) => t + m.fee, 0)), '移籍は移籍金・どこから・どこへが残り、合計と合う（' + mv.length + '人）');
     ok(mv.every((a) => a.moves.every((m, i) => i === 0 || a.moves[i - 1].to === m.from)), '移籍の記録はつながる（前の行き先が次の出どころ）');
     ok(mv.every((a) => a.moves.every((m) => { const ss = (a.seasons || []).find((x) => x.y === m.y); return !ss || ss.club === m.from; })), '移籍した年の成績は、移籍する前のクラブで付く');
