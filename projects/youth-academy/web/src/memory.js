@@ -10,7 +10,7 @@
 
   // ---------- 記憶を残す ----------
   YA.MEM_NAME = { scout: 'スカウトの見立て', star: '★を付けた日', debut: '初めての出場', wall: '壁', hint: '鍵が見えた', term: '年度末', grad: '卒業式', awake: '覚醒', path: '進路面談', ref: '紹介で来た',
-    unrest: '出番の不満', lowconf: '自信をなくした', injury: '怪我', quit: '辞めたいと言った', hot: '絶好調', rival: '張り合い', rivalry: '先発争い', family: '家庭の事情', homesick: 'ホームシック', parent: '保護者の相談', tired: '疲れ' };
+    unrest: '出番の不満', lowconf: '自信をなくした', injury: '怪我', quit: '辞めたいと言った', hot: '絶好調', rival: '張り合い', rivalry: '先発争い', family: '家庭の事情', homesick: 'ホームシック', parent: '保護者の相談', tired: '疲れ', yplan: '育成計画', mentorset: '師匠' };
   const MEM_EVENTS = new Set(['unrest', 'lowconf', 'injury', 'quit', 'hot', 'rival', 'rivalry', 'family', 'homesick', 'parent', 'tired']);
   const quoteOf = (label) => {
     const m = /「([^」]+)」/.exec(label || '');
@@ -116,7 +116,10 @@
     const p = e.pid ? w.players[e.pid] : null;
     if (e.id === 'path' && p) {
       p.wish = YA.wishOf(p);
-      v.text += ` 本人の希望は「${YA.WISH_WORD[p.wish]}」。希望に沿えば信頼が深まり、沿わなければ信頼が下がります（コーチのおすすめに沿うと、大学なら遅咲きの目があります）。`;
+      // 注記はおすすめの中身から作る（2026-11-17：おすすめが大学でなくても「大学なら遅咲き」と出ていた）
+      const rec = YA.pathCands ? YA.pathCands(p)[0] : null;
+      const recNote = rec === 'univ' ? 'おすすめの大学に進めば、遅咲きの目があります' : rec ? `コーチのおすすめは「${YA.WISH_WORD[rec] || rec}」の道です` : '';
+      v.text += ` 本人の希望は「${YA.WISH_WORD[p.wish]}」。希望に沿えば信頼が深まり、沿わなければ信頼が下がります${recNote ? `（${recNote}）` : ''}。`;
     }
     if (e.id === 'ms' && p && (e.ms === 'grad' || e.ms === 'term')) {
       const tail = (/（信頼 [^）]*）$/.exec(v.text) || [''])[0];
@@ -169,6 +172,7 @@
     'unrest:warm': () => [`出番がなくて腐りかけたとき、約束してもらえたのがうれしかったです。`, `出番なくて腐ってたとき、約束してくれたっすよね。`],
     'hot:push': () => [`調子のいいときに、もっと上を求めてもらえたのが良かったです。`, `調子いいときに「もっと上」って言ってくれたの、良かったっす。`],
     'chain': (x) => [x.m.q, x.m.q],
+    'sa': (x) => (x.m.q ? [x.m.q, x.m.q] : null),
     'pitch': (x) => (x.m.kept === false ? [`入るときに「${x.m.q}」と言われたのに、と思ったこともありました。`, `入るとき「${x.m.q}」って言われたのに、って思ったこともあったっす。`] : [`「${x.m.q}」――あの日そう言ってもらって、ここに決めました。`, `「${x.m.q}」って言われて、ここに決めたんすよ。`]),
     'promise:kept': () => [`「Aで使う」という約束を、ちゃんと守ってもらいました。`, `Aで使うって約束、守ってくれたっすよね。`],
     'promise:broken': () => [`約束を守ってもらえなかったこと、正直、悔しかったです。`, `約束、守ってもらえなかったの、悔しかったっす。`],
@@ -190,11 +194,17 @@
     const f = SAY_MEM[m.k + ':' + m.c] || SAY_MEM[m.k];
     if (!f) return null;
     const x = { awake: (p.awDone || 0) > 0, form: (p.aw && p.aw.form) || '', hi: YA.trustLv(p) >= 4, m };
-    let s = f(x)[reg(p)];
-    if (m.k !== 'chain' && YA.toneOf && YA.toneOf(p) === '無口') s = '……' + s;
+    const arr = f(x);
+    if (!arr) return null;
+    let s = arr[reg(p)];
+    // 本人の言葉をそのまま残した記憶（続き物・二人の時間）は、口調がもう付いている
+    if (m.k !== 'chain' && m.k !== 'sa' && YA.toneOf && YA.toneOf(p) === '無口') s = '……' + s;
     return s;
   };
   YA.recallMem = sayMem;
+  // かぎかっこの中に入れる台詞は、内側の「」を『』にする（2026-11-17：「「走る心臓になる」――…」」と二重になっていた）
+  const nest = (s) => String(s).replace(/「/g, '『').replace(/」/g, '』');
+  YA.nestQuote = nest;
   YA.recall = function (w, p, scene) {
     const sn = sur(p.name);
     if (scene === 'grad') {
@@ -202,16 +212,20 @@
       if (!m) return null;
       const promise = YA.memOf(p, 'star', 'push').length > 0;
       const broken = promise && !(p.awDone > 0);
-      const head = broken ? `卒業式の朝、${sn}がうつむいたまま来た。` : `卒業式の朝、${sn}が来た。`;
-      return `${head}「${sayMem(p, m)}${YA.trustLv(p) >= 4 ? reg(p) ? '　……三年間、あざっした。' : '　三年間、ありがとうございました。' : ''}」`;
+      // 最後の会話は39週（卒業式の前の週）なので「前の日」（2026-11-17：「卒業式の朝」と出ていた）
+      const head = broken ? `卒業式の前の日、${sn}がうつむいたまま来た。` : `卒業式の前の日、${sn}が来た。`;
+      return `${head}「${nest(sayMem(p, m))}${YA.trustLv(p) >= 4 ? reg(p) ? '　……三年間、あざっした。' : '　三年間、ありがとうございました。' : ''}」`;
     }
     // 年度末：この一年の記憶から
     const ys = (p.mem || []).filter((m) => m.y === w.year && m.k !== 'term' && m.k !== 'scout');
     const g = p.o0 == null ? '' : (() => { const a = YA.rate(p.o0), b = YA.rate(YA.ovr(p)); return b > a ? `総合力は${a}から${b}へ伸びた。` : `総合力は${b}のまま、土台を固めた。`; })();
     if (!ys.length) return `${sn}と、この一年を振り返った。${g}「来年は、もっと話しに来ます」`;
-    const m = ys[ys.length - 1];
+    // 名前の付いた記憶から選ぶ（2026-11-17：練習中の出来事など名前の無い記憶で「。のことを」と欠けていた）
+    const named = ys.filter((x) => SAY_MEM[x.k + ':' + x.c] || SAY_MEM[x.k] || YA.MEM_NAME[x.k]);
+    const m = named[named.length - 1];
+    if (!m) return `${sn}と、この一年を振り返った。${g}「来年は、もっと話しに来ます」`;
     const s = sayMem(p, m);
-    return `${sn}と、この一年を振り返った。${g}${s ? `「${s}」` : `${YA.MEM_NAME[m.k] || ''}のことを、本人もよく覚えていた。`}`;
+    return `${sn}と、この一年を振り返った。${g}${s ? `「${nest(s)}」` : `${YA.MEM_NAME[m.k]}のことを、本人もよく覚えていた。`}`;
   };
   // 卒業式の場面の挨拶：★の子は記憶から
   const say0 = YA.say;
@@ -219,7 +233,7 @@
     if (scene === 'thanks' && p && p.star && p.mem) {
       const m = YA.definingMem(p);
       const s = m && sayMem(p, m);
-      if (s) return s;
+      if (s) return nest(s);
     }
     return say0.apply(this, arguments);
   };
@@ -367,7 +381,15 @@
     const old = i >= 0 ? w.club.staff[i] : null;
     if (i >= 0) w.club.staff[i] = s;
     else w.club.staff.push(s);
+    // 雇ったときだけ印を付ける（a.coachY＝コーチになった年）。現役のプロのままコーチにはしない：引退して指導者に転身
     a.coached = true;
+    a.coachY = w.year;
+    if (a.status === 'pro' && !a.retired) {
+      a.retired = true;
+      a.quit = false;
+      a.retY = w.year;
+      a.note = '指導者に転身';
+    }
     YA.noteTier(w, 1, `${a.name}が${role}になりました${why ? '（' + why + '）' : ''}${old ? `。${old.name}さんとは、ここでお別れです` : ''}`);
     return s;
   };
@@ -383,7 +405,7 @@
       def.text = () => `${a.year}年目に送り出した${a.name}${a.star ? '★' : ''}が、${a.retired ? '現役を終えて' : a.coachPath ? '指導者の勉強を続けて' : '大学を出て'}訪ねてきた。「${m ? YA.recallMem(a, m) + '　' : ''}今度は、自分が教える側をやらせてもらえませんか」（${role}・腕前${YA.obAbOf(a)}／いまの${role}は${cur ? cur.name + '・腕前' + cur.ab : 'いない'}）`;
       def.opts = [
         run(`${role}として迎える`, (ww) => { YA.obJoin(ww, a); return { line: `${sur(a.name)}が、グラウンドに戻ってきた。`, small: `${role}が${a.name}に替わった。毎月、★の子に自分の経験を話す` }; }),
-        run('今は枠がないと伝える', (ww) => { a.coached = true; a.bond = Math.max(0, (a.bond || 3) - 1); return { line: '「そうですよね。また顔を出します」と笑って帰っていった。', small: '' }; }),
+        run('今は枠がないと伝える', (ww) => { a.obAsked = ww.year; a.bond = Math.max(0, (a.bond || 3) - 1); return { line: '「そうですよね。また顔を出します」と笑って帰っていった。', small: '' }; }),
       ];
     } else {
       def.text = () => `卒業生の${a.name}★（${a.club}）から電話があった。「地元に、ちょっと見てほしい中学生がいるんです。昔の自分みたいな子で」`;
@@ -412,10 +434,28 @@
   }
   YA.EXTRA_SIM_IMPORTANT = (YA.EXTRA_SIM_IMPORTANT || []).concat(['obret', 'ref']);
 
+  // 市場に並んだ卒業生を雇ったときだけ「コーチとして戻った」（2026-11-17 点検：市場に並べただけ・断っただけの子にも出ていた）
+  const hire0 = YA.hire;
+  YA.hire = function (w, id) {
+    const c = (w.market || []).find((x) => x.id === id);
+    const res = hire0.apply(this, arguments);
+    if (res && res.ok && c && c.ob) {
+      const a = (w.alumni || []).find((x) => x.name === c.alumniRef && (c.alumniY == null || x.year === c.alumniY));
+      if (a) { a.coached = true; a.coachY = w.year; }
+    }
+    return res;
+  };
   // 引退した年を控える（戻ってくるのは引退から3年のうち）
   const at0 = YA.alumniTick;
   YA.alumniTick = function (w) {
     const was = new Set((w.alumni || []).filter((a) => a.retired));
+    // 古い保存：a.coached は「市場に並んだ」「断った」でも付いていた。いまスタッフにいる子だけ雇った印にする
+    for (const a of w.alumni || []) {
+      if (!a.coached || a.coachY) continue;
+      const s = ((w.club && w.club.staff) || []).find((x) => x.ob && x.alumniRef === a.name);
+      if (s) a.coachY = a.retY || w.year;
+      else { a.coached = false; a.offered = a.offered || w.year; a.obAsked = a.obAsked || w.year; }
+    }
     const r = at0.apply(this, arguments);
     for (const a of w.alumni || []) if (a.retired && !was.has(a) && a.retY == null) a.retY = w.year;
     return r;
@@ -443,7 +483,7 @@
     if (w.week === 3) {
       const bd = (x) => (x.bond == null ? 3 : x.bond);
       const ready = (x) => (x.retired && x.retY != null && w.year - x.retY <= 3 && bd(x) >= 3) || (x.coachPath && w.year - x.year >= (x.coachPath >= 2 ? 2 : 4) && bd(x) >= 3) || ((x.status === 'univ' || x.status === 'amateur') && w.year - x.year >= 4 && bd(x) >= 5);
-      const a = (w.alumni || []).find((x) => x.mem && (x.star || x.coachPath) && !x.coached && x.status !== 'left' && x.path2 !== 'quit' && ready(x));
+      const a = (w.alumni || []).find((x) => x.mem && (x.star || x.coachPath) && !x.coached && !x.obAsked && x.status !== 'left' && x.path2 !== 'quit' && ready(x));
       if (a) fw(w, { id: 'obret', who: a.name, ay: a.year });
     }
     if (w.week === 10) {

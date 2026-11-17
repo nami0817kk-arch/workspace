@@ -30,6 +30,11 @@ void main() {
     expect(src, contains('needsReload('));
   });
 
+  test('起動時の読み込み：ya_ に文字の並びが混ざっていても落ちず、文字の値だけ渡す（課金すると起動しなくなっていた）', () {
+    final s = collectStore({'ya_world': '{"v":3}', 'ya_ent_seen': <String>['youth_ticket_1:1'], 'ya_n': 3, 'ent_seen': <String>['x'], 'other': 'z'});
+    expect(s, {'world': '{"v":3}'});
+  });
+
   test('値に </script> が入っていてもページが壊れない', () {
     final out = injectBoot('<script>/*__BOOT__*/</script>', {'x': '</script><b>'});
     expect('</script>'.allMatches(out).length, 1);

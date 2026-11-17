@@ -106,8 +106,9 @@
     const mine = m.scenes.filter((sc) => sc.side === 'home');
     const theirs = m.scenes.filter((sc) => sc.side === 'away');
     const poss = clamp(Math.round(100 * (0.65 * hs + 0.35 * (mine.length / Math.max(1, m.scenes.length)))), 25, 75);
-    const pg = (id) => (m.home.players[id] ? m.home.players[id].pos : null);
-    const won = theirs.filter((sc) => ['dispossessed', 'intercepted'].includes(sc.outcome) && (sc.defs || []).some((d) => pg(d) === 'MF' || pg(d) === 'FW')).length + mine.filter((sc) => sc.type === 'steal').length;
+    // 相手陣で奪った回数＝高い位置での奪取の場面で奪えた回数＋合間の相手陣での奪取（下の選手ごとの奪取のうち、前の子ほど相手陣で取る割合が高い）。
+    // 2026-11-17：前は自陣で止めた場面（DF 以外が絡んだもの）を数えていて、名前と中身がずれ、ほぼ0だった
+    const stealWon = mine.filter((sc) => sc.type === 'steal' && sc.outcome !== 'escaped').length;
     // 攻めた方向：自分の見どころの最初のボールの横の位置（0〜68m）
     const dir = { 左: 0, 中央: 0, 右: 0 };
     for (const sc of mine) {
@@ -132,8 +133,10 @@
       const tw = theirs.filter((sc) => (sc.defs || []).includes(p.id) && ['dispossessed', 'intercepted', 'stopped', 'blocked', 'cleared'].includes(sc.outcome)).length;
       const tk = p.pos === 'GK' ? 0 : Math.round(k * ({ DF: 3, MF: 2.4, FW: 0.9 }[p.pos] || 1.5) * (1.4 - hs) * (ab('タックル') / 11) * (0.7 + r() * 0.6)) + (tw ? 1 : 0);
       const steal = p.pos === 'GK' ? 0 : Math.round(k * ({ DF: 2.6, MF: 2.2, FW: 0.8 }[p.pos] || 1.5) * (1.4 - hs) * (ab('予測') / 11) * (0.7 + r() * 0.6)) + tw;
-      players.push({ id: p.id, num: p.num, name: p.name, pos: p.pos, mins: st.minutes, rating: st.rating, passes, pct, shots: st.shots || 0, goals: st.goals || 0, tackles: tk, steals: steal, saves: st.saves || 0 });
+      players.push({ id: p.id, num: p.num, name: p.name, pos: p.pos, mins: st.minutes, rating: st.rating, passes, pct, shots: st.shots || 0, goals: st.goals || 0, tackles: tk, steals: steal, saves: st.saves || 0, yellow: p.yellow || 0, red: !!p.sentOff });
     }
+    const highShare = { FW: 0.7, MF: 0.3, DF: 0.05, GK: 0 };
+    const won = stealWon + Math.round(players.reduce((t, x) => t + x.steals * (highShare[x.pos] || 0), 0) * (0.6 + hs * 0.8));
     players.sort((a, b) => b.rating - a.rating);
     // 効いた戦術の一言（決定114）
     const type = (m.home.tactic && m.home.tactic.type) || '戦い方';
@@ -142,11 +145,11 @@
     const sh = m.stats.home;
     let tactic;
     if (good >= 3 && topDir[1] >= 45) tactic = `「${type}」がはまった。${topDir[0]}から崩す形が${dir[topDir[0]]}回できた`;
-    else if (won >= 4) tactic = `「${type}」で前から奪えた。相手陣で${won}回ボールを取った`;
+    else if (stealWon >= 2 || won >= 7) tactic = `「${type}」で前から奪えた。相手陣で${won}回ボールを取った`;
     else if (poss <= 40 && m.score.home >= m.score.away) tactic = `ボールは持たれたが、「${type}」で耐えて勝ち点を取った`;
     else if (sh.shots <= 3) tactic = `「${type}」では崩しきれなかった。シュートは${sh.shots}本だけ`;
     else tactic = `「${type}」は五分。${topDir[0]}からの攻めが多かった（${topDir[1]}%）`;
-    return { poss, shots: sh.shots, onTarget: sh.onTarget, oppShots: m.stats.away.shots, won, dir: dirPct, players, tactic };
+    return { poss, shots: sh.shots, onTarget: sh.onTarget, oppShots: m.stats.away.shots, oppOnTarget: m.stats.away.onTarget, won, stealWon, cards: (m.cards || []).slice(), dir: dirPct, players, tactic };
   };
 
   // ---------- 練習の1枚（決定143）：チームの重点1つ・この週の見込み ----------
@@ -189,11 +192,22 @@
     club: '予算・スタッフ・スカウトなど、クラブのことはここです。最初はクラブとコーチが決めてくれます。',
     more: '卒業生の名鑑と記録はここです。育てた子のその後を追えます。',
   };
+  // 「ほか」は開いている小タブに合わせる（2026-11-16 設定を開いても「名鑑と記録はここです」と出ていた）
+  YA.COACH_TIPS_MORE = {
+    alumni: '卒業生の名鑑です。押すと、その後の年表と経歴が見られます。追う・連絡する・試合を観に行くもここから。',
+    rec: 'Aチームの戦績・獲った大会・リーグの履歴・最近の試合です。',
+    bteam: 'Bチームの並び・戦い方・起用の方針です。Aの並びは変わりません。',
+    ach: '実績の一覧と、監督を引退するときの画面です。',
+    help: '言葉の意味はここで引けます。',
+    set: '効果音・BGM・文字の大きさ・お知らせの重さ・セーブ枠はここで変えられます。',
+  };
+  YA.coachKey = (tab) => (tab === 'more' && YA._ui && YA._ui.app ? 'more:' + (YA._ui.app.mt || 'alumni') : tab);
   YA.coachTip = function (w, tab) {
     if (!w || !YA.COACH_TIPS[tab]) return null;
     w.coachSeen = w.coachSeen || {};
-    if (w.coachSeen[tab]) return null;
-    let t = YA.COACH_TIPS[tab];
+    const key = YA.coachKey(tab);
+    if (w.coachSeen[key]) return null;
+    let t = tab === 'more' ? YA.COACH_TIPS_MORE[key.slice(5)] || YA.COACH_TIPS.more : YA.COACH_TIPS[tab];
     if (tab === 'players') { const r = YA.starRecommend(w); if (r) t += ' ' + r; }
     return t;
   };
@@ -308,7 +322,9 @@
   YA.keyText = function (w, p, k) {
     const d = KEYS[k.id];
     if (!d) return '？';
-    const due = k.due ? `（期限：${k.due % 100 === YA.WEEKS ? (Math.floor(k.due / 100) === w.year ? '今年度の終わり' : `${Math.floor(k.due / 100) - w.year}年後の冬`) : ''}まで）` : '';
+    // 期限：今年度の終わり／N年後の冬。過ぎた鍵（年度をまたいで、まだ切り替わる前）は「期限切れ」（2026-11-16 画面の点検で「-1年後の冬」と出ていた）
+    const dy = k.due ? Math.floor(k.due / 100) - w.year : 0;
+    const due = !k.due ? '' : dy < 0 || k.due < w.year * 100 + w.week ? '（期限切れ）' : `（期限：${dy === 0 ? '今年度の終わり' : `${dy}年後の冬`}まで）`;
     if (k.done) return '✓ ' + d.clear(k, w);
     if (k.h >= 2) return d.clear(k, w) + (d.need > 1 || k.need > 1 ? `　${k.have}/${k.need}` : '') + due;
     if (k.h >= 1) return d.vague + (k.due ? '（急いだほうがよさそうだ）' : '');
@@ -392,7 +408,9 @@
     }
     if (which !== 'A' || !scheduled) return;
     const team = m.home;
-    const big = opp && opp.kindLabel && !/^リーグ/.test(opp.kindLabel);
+    // 新春フェスティバル・練習試合（1〜3月の試合）は鍵を進めない（大一番でもない）
+    const friendly = opp && /フェスティバル|練習試合/.test(opp.kindLabel || '');
+    const big = opp && opp.kindLabel && !/^リーグ/.test(opp.kindLabel) && !friendly;
     const ga = m.score.away;
     const startIds = new Set(team.lineup.map((s) => s.pid));
     const played = new Set(Object.keys(team.players).filter((id) => team.players[id].st && team.players[id].st.minutes > 0));
@@ -402,7 +420,7 @@
       p._weekMinsA = (p._weekMinsA || 0) + team.players[id].st.minutes;
       // 初出場の節目（★の子だけ）
       if (p.star && !(p.ms && p.ms.debut)) milestone(w, p, 'debut');
-      if (!p.keys) continue;
+      if (!p.keys || friendly) continue;
       const st = p.st;
       if (big && st.goals > 0) progress(w, p, 'bigGoal', 1);
       if (big && ga === 0 && st.minutes >= 60) progress(w, p, 'bigClean', 1);
@@ -581,7 +599,7 @@
   const ev = YA.EVENTS.find((e) => e.id === 'awake');
   if (ev) ev.text = (p) => {
     const a = p.awake || {};
-    return `${p.name}（高${p.grade}・${YA.POS_NAME15 ? YA.POS_NAME15[p.main] || p.main : p.main}）が覚醒した――${a.form || ''}。総合力 ${a.from}→${a.to}。覚醒の特性「${a.trait || ''}」が付いた。${(p.keys || []).length ? 'まだ先がありそうだ。新しい鍵の気配がする' : ''}`;
+    return `${p.name}（高${p.grade}・${YA.POS_NAME15 ? YA.POS_NAME15[p.main] || p.main : p.main}）が覚醒した――${a.form || ''}。${a.from === a.to ? `総合力 ${a.to}（数字は変わらないが、特性の効きが増す）` : `総合力 ${a.from}→${a.to}`}。覚醒の特性「${a.trait || ''}」が付いた。${(p.keys || []).length ? 'まだ先がありそうだ。新しい鍵の気配がする' : ''}`;
   };
 
   // ---------- 節目の会話（決定109）：★の子に、3年間の節目ごとに来る ----------
@@ -618,9 +636,9 @@
       (p, w) => `${p.name}に、この一年のことを聞いた。${termGrow(p)}。「見てもらえて、よかったです」`,
     ],
     grad: [
-      (p) => `卒業式の朝、${p.name}が来た。「3年間、ありがとうございました。監督に見てもらえて、よかったです」`,
+      (p) => `卒業式の前の日、${p.name}が来た。「3年間、ありがとうございました。監督に見てもらえて、よかったです」`,
       (p) => `${p.name}が最後の練習のあと、しばらくグラウンドを見ていた。「ここで、全部教わりました」`,
-      (p) => `卒業式。${p.name}は泣かないと決めていたらしいが、最後の礼で声が詰まった`,
+      (p) => `卒業式の前の日。${p.name}は泣かないと決めていたらしいが、最後の練習の礼で声が詰まった。`,
     ],
   };
   const NAMES = { star: '★注目：最初の話', debut: '節目：初めての出場', wall: '節目：壁', hint: '節目：鍵が見えた', term: '節目：この一年', grad: '節目：卒業式' };
@@ -665,12 +683,24 @@
     }
     return res1(w, e, idx);
   };
-  // 卒業式の前の週（39週）に、★の高3と最後の会話
+  // 卒業式の前の週（39週）に、★の高3と最後の会話。高1・高2の「この一年」は35〜38週に散らす
+  //（2026-11-17 直し：前は39週に★の子全員の会話がまとめて来て、1週に8件ほど重なっていた）
+  YA.TERM_WEEKS = [35, 36, 37, 38];
+  YA.termWeekOf = (w, p) => YA.TERM_WEEKS[YA.hash(String(p.id) + w.year) % YA.TERM_WEEKS.length];
   YA.gradTalks = function (w) {
-    if (w.week !== YA.WEEKS - 1) return;
     for (const p of Object.values(w.players)) {
       if (!p.star) continue;
-      milestone(w, p, p.grade === 3 ? 'grad' : 'term');
+      if (p.grade === 3 && w.week === YA.WEEKS - 1) milestone(w, p, 'grad');
+      else if (p.grade < 3) {
+        // 同じ週に重ならないよう、その週の「この一年」は2人まで（あふれた子は次の週へ）
+        const due = YA.termWeekOf(w, p);
+        if (w.week < due || w.week > YA.WEEKS - 1 || (p.ms && p.ms.termY === w.year)) continue;
+        const n = (w.forced || []).filter((f) => f.id === 'ms' && f.ms === 'term').length;
+        if (n >= 2 && w.week < YA.WEEKS - 1) continue;
+        p.ms = p.ms || {};
+        p.ms.termY = w.year;
+        milestone(w, p, 'term');
+      }
     }
   };
   // 年度はじめの総合力を控える（この一年の伸びを、年度末の会話で見せるため）

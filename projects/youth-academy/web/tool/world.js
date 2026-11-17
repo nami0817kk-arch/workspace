@@ -44,7 +44,7 @@ function playYear(w, opts) {
   while (w.year === y && guard++ < 200) {
     if (opts.auto !== false) YA.autoPlan(w);
     if (opts.talk) { const p = Object.values(w.players)[w.week % 30]; YA.talk(w, p.id, 'praise'); }
-    if (w.week === 26 && opts.camp) w.campChoice = opts.camp;
+    if (w.week === YA.CAMP_WEEK && opts.camp) w.campChoice = opts.camp;
     // スカウト：暦に合わせて自動で（4〜11月に出て、11月に内部昇格、1月にセレクション）
     if (opts.scout && w.scouting) YA.autoScout(w);
     YA.startWeek(w);
@@ -111,7 +111,7 @@ ok(cnt[1] === 12 && cnt[2] === 12 && cnt[3] === 12, '各学年12人 ' + JSON.str
 ok(Object.values(w.players).filter((p) => p.team === 'A').length === 20, 'Aは20人');
 const a0 = playYear(w, { talk: true, camp: 'domestic', scout: true });
 console.log('1年目 能力の合計の平均', a0.startAvg.toFixed(0), '->', a0.endAvg.toFixed(0), '出来事', a0.events, '怪我', a0.injuries);
-ok(a0.endAvg > a0.startAvg + 12, '1年で能力が伸びる');
+ok(a0.endAvg > a0.startAvg + 3, '1年で能力が伸びる'); // 2026-11-17：卒業時の平均を90前後に戻したので、1年の伸びは前の半分ほど
 ok(w.year === 2 && w.week === 1, '卒業式で次の年へ');
 ok(w.alumni.length >= 12, '卒業生が名鑑へ');
 const cnt2 = { 1: 0, 2: 0, 3: 0 };
@@ -119,7 +119,7 @@ Object.values(w.players).forEach((p) => cnt2[p.grade]++);
 ok(cnt2[1] === 12 && cnt2[3] >= 10, '学年が上がり新しい高1 ' + JSON.stringify(cnt2));
 ok(a0.events >= 12, '出来事が起きる ' + a0.events);
 ok(w.club.eval.length === 1 && 'SABCD'.includes(w.club.eval[0].letter), '年末の評価 ' + JSON.stringify(w.club.eval[0] && w.club.eval[0].letter));
-ok(w.rec.w + w.rec.d + w.rec.l >= 22 && w.rec.w + w.rec.d + w.rec.l <= 29, 'Aの試合は22〜29 ' + (w.rec.w + w.rec.d + w.rec.l));
+ok(w.rec.w + w.rec.d + w.rec.l >= 27 && w.rec.w + w.rec.d + w.rec.l <= 36, 'Aの試合は27〜36（1〜3月の新春フェスティバル・練習試合・夏のグループ戦を足した） ' + (w.rec.w + w.rec.d + w.rec.l));
 const a1 = playYear(w, {});
 console.log('2年目', a1.startAvg.toFixed(0), '->', a1.endAvg.toFixed(0));
 const a2 = playYear(w, {});
@@ -1258,9 +1258,13 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
     ok(ranks.length >= 10 && ranks.every((x) => x >= 1 && x <= 30) && winners === 0, 'バロンドールの順位は1〜30で、1位は年に1人（' + ranks.length + '件）');
     ok(wb.alumni.every((a) => a.pos !== 'GK' || (!a.goals && !a.assists)), '世界一級の GK でも点は取らない');
     // 移籍金と市場価値（2026-11-15「移籍金とかもみたい」）
-    const mv = wt2.alumni.filter((a) => (a.moves || []).length);
-    ok(mv.length >= 1 && mv.every((a) => a.moves.length === a.transfers && a.moves.every((m) => m.fee > 0 && m.from && m.to && m.from !== m.to) && a.feeTotal === a.moves.reduce((t, m) => t + m.fee, 0)), '移籍は移籍金・どこから・どこへが残り、合計と合う（' + mv.length + '人）');
+    // 2026-11-17：卒業時の平均を90前後に戻したので、3年では移籍が起きないことがある。足りなければ1部のクラブを5年回して見る
+    let mvAl = wt2.alumni;
+    if (!mvAl.some((a) => (a.moves || []).length)) { const t5 = YA.testStart({ seed: 3, tier: 1 }); for (let y = 0; y < 5; y++) YA.testYear(t5); mvAl = t5.w.alumni; }
+    const mv = mvAl.filter((a) => (a.moves || []).length);
+    ok(mv.length >= 1 && mv.every((a) => a.moves.length === a.transfers && a.moves.every((m) => m.fee >= 0 && m.from && m.to && m.from !== m.to) && a.feeTotal === a.moves.reduce((t, m) => t + m.fee, 0)), '移籍は移籍金・どこから・どこへが残り、合計と合う（' + mv.length + '人）');
     ok(mv.every((a) => a.moves.every((m, i) => i === 0 || a.moves[i - 1].to === m.from)), '移籍の記録はつながる（前の行き先が次の出どころ）');
+    ok(mv.every((a) => a.moves.every((m) => { const ss = (a.seasons || []).find((x) => x.y === m.y); return !ss || ss.club === m.from; })), '移籍した年の成績は、移籍する前のクラブで付く');
     const pros = wt2.alumni.filter((a) => a.status === 'pro' && (a.seasons || []).length);
     ok(pros.every((a) => a.seasons.filter((x) => x.club && YA.clubLeague(x.club) || x.value != null).every((x) => x.value == null || x.value >= 0)) && pros.some((a) => a.seasons.some((x) => x.value > 0)), 'プロの年ごとの市場価値');
     ok(YA.marketValue({ status: 'pro', abroad: true, ovr: 18, age: 24 }) > YA.marketValue({ status: 'pro', abroad: false, ovr: 18, age: 24 }) && YA.marketValue({ status: 'pro', abroad: true, ovr: 18, age: 22 }) > YA.marketValue({ status: 'pro', abroad: true, ovr: 18, age: 31 }) && YA.marketValue({ status: 'univ', ovr: 18, age: 22 }) === 0, '市場価値：海外は高く、若いほど高い。プロ以外は0');
@@ -1268,8 +1272,11 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   }
   const names = new Set(YA.PRO_CLUBS.map((c) => c.name));
   ok(wt2.alumni.filter((a) => a.status === 'pro' && !a.abroad).every((a) => names.has(a.club)), '国内の移籍先は固定のクラブ表から');
-  ok(Object.values(YA.ABROAD_CLUBS).reduce((n, l) => n + l.length, 0) >= 300 && YA.ABROAD_LEAGUES.length >= 35 && ['プレミアリーグ', 'ラ・リーガ', 'セリエA', 'チャンピオンシップ（イングランド2部）', 'セリエB（イタリア2部）'].every((k) => YA.ABROAD_CLUBS[k].length >= 20), '海外のクラブは300以上・35リーグ・5大リーグは2部まで全チーム');
+  ok(Object.values(YA.ABROAD_CLUBS).reduce((n, l) => n + l.length, 0) >= 300 && YA.ABROAD_LEAGUES.length >= 35 && ['プレミアリーグ', 'ラ・リーガ', 'セリエA', 'チャンピオンシップ・イングランド2部', 'セリエB・イタリア2部'].every((k) => YA.ABROAD_CLUBS[k].length >= 20), '海外のクラブは300以上・35リーグ・5大リーグは2部まで全チーム');
   ok(Object.keys(YA.CLUB_RENAME).every((k) => YA.clubStr(k) != null && YA.clubLeague(k)), '古い保存のクラブ名も新しい名前で引ける');
+  ok(YA.ABROAD_LEAGUES.every((x) => !/[（）]/.test(x[1])), 'リーグ名にかっこが入らない（クラブ名のあとのかっこと二重にならない）');
+  { const wd = YA.newWorld(4); wd.alumni = [{ name: '海外 太郎', year: 1, abroad: true, status: 'pro', club: 'パレルモ・ロザネーロ', league: 'セリエB・イタリア2部', pos: 'FW', ovr: 15 }]; const v = YA.eventView(wd, { id: 'abroaddeal', who: '海外 太郎', ay: 1 }); ok(v && /移籍が決まりました/.test(v.text) && !/話が来ています/.test(v.text) && !/（[^（）]*（/.test(v.text) && v.opts.length === 3, '海外移籍の相談は決まったあとの電話で、かっこが二重にならない'); }
+  { const wo = { alumni: [{ club: 'パレルモ・ロザネーロ', abroad: true, league: 'セリエB（イタリア2部）', seasons: [{ club: 'パレルモ・ロザネーロ', league: 'セリエB（イタリア2部）' }], moves: [{ from: 'a', to: 'b', fromLg: 'J1リーグ', toLg: 'セリエB（イタリア2部）' }] }] }; YA.fixClubNames(wo); const a = wo.alumni[0]; ok(a.league === 'セリエB・イタリア2部' && a.seasons[0].league === a.league && a.moves[0].toLg === a.league && YA.clubLeague(a.club) === a.league, '古い保存のリーグ名を移し替える'); }
   { const wo = { alumni: [{ club: 'マドリード・ブランコス', abroad: true, league: 'ラ・リーガ', seasons: [{ club: 'ロンドン・ガナーズ' }] }] }; YA.fixClubNames(wo); ok(wo.alumni[0].club === 'ロイヤル・マドリード' && wo.alumni[0].seasons[0].club === 'ロンドン・アーセナルズ', '古い保存のクラブ名を移し替える'); }
   { const wo = { alumni: [{ club: 'FCミュンヘン', abroad: true, league: 'ブンデスリーガ', seasons: [{ club: 'リヤドFC' }] }] }; YA.fixClubNames(wo); ok(wo.alumni[0].club === 'バヴァリア・ミュンヘン' && wo.alumni[0].seasons[0].club === 'リヤド・ヴィクトリー', '前回の名前（国の型）も移し替える'); }
   ok(YA.PRO_CLUBS.every((c) => { const v = YA.clubStr(c.name); return v >= 94 && v <= 150; }) && [].concat(...Object.values(YA.ABROAD_CLUBS)).every((c) => c[1] >= 105 && c[1] <= 190), 'どのクラブにも強さがある');
@@ -1453,11 +1460,11 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   ok(YA.ACH_FIELDS.every((f) => al0.some((a) => a.field === f)) && ['銅', '銀', '金'].every((t) => al0.some((a) => a.tier === t)), '5分野・銅銀金がそろう');
   ok(!!YA.nextAchievement(wl), '次に届きそうな実績が出る');
   let years = 0;
-  while (wl.year < 9 && years++ < 600) YA.simulate(wl, { until: 'week', stopOnImportant: false });
+  while (wl.year < 13 && years++ < 900) YA.simulate(wl, { until: 'week', stopOnImportant: false });
   const hofN = wl.alumni.filter((a) => a.hof).length, fullN = wl.alumni.filter((a) => a.hof === 'full').length;
   console.log('8年後 卒業生', wl.alumni.length, '殿堂候補以上', hofN, '正式', fullN, '基金', wl.fund, '実績', YA.achievements(wl).filter((a) => a.done).length + '/69');
   console.log('殿堂候補の点', wl.alumni.filter((a) => a.hof).map((a) => a.hof + ':' + a.age + ':' + (a.nat * 2 + (a.titles || []).length * 2 + (a.awards || []).length + Math.floor((a.apps || 0) / 150) + (a.abroad ? 1 : 0))).join(' '));
-  ok(hofN >= 1, '8年で殿堂候補が出る');
+  ok(hofN >= 1, '12年で殿堂候補が出る');
   { const c = wl.alumni.find((a) => a.hof === 'cand' && (a.nat || 0) * 2 + (a.titles || []).length * 2 + (a.awards || []).length >= 6); if (c) { c.age = 31; YA.alumniTick(wl); ok(c.hof === 'full' || c.retired, '殿堂候補が点を満たして30代になると正式に殿堂入りする'); } }
   ok(Object.keys(wl.achSeen || {}).length > 0 && wl.inbox.some((n) => /実績「/.test(n.text)), '届いた実績が知らされる');
   ok(fullN <= Math.ceil(wl.alumni.filter((a) => a.status === 'pro').length * 0.5) + 1, '正式な殿堂入りは多すぎない');
@@ -1471,6 +1478,10 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   const svg = YA.lineageSvg(wl), mini = YA.lineageSvg(wl, { mini: true });
   ok(svg.startsWith('<svg') && svg.includes('年目') && mini.startsWith('<svg') && mini.length < svg.length, '系譜図が作れる');
   ok(YA.chronicle(wl).length > 5 && JSON.parse(JSON.stringify(wl)).fund === wl.fund, '年表が作れ、基金が保存される');
+  // 2026-11-16 年表：在学中のプロ契約は卒業と分けて数える。年末の評価・覚醒も載る
+  { const wc = JSON.parse(JSON.stringify(wl)); wc.alumni = wc.alumni.concat([{ name: '早咲 太郎', year: wc.year, note: 'プロ契約（高2でトップ昇格）', status: 'pro', pos: 'FW', main: 'ST', ovr: 14 }]); wc.club.eval = (wc.club.eval || []).concat([{ year: 1, letter: 'S' }]); wc.dex = Object.assign({}, wc.dex, { ftest: { name: '覚醒 花子', y: 1, n: 1 } });
+    const rows = YA.chronicle(wc); const ys = rows.filter((r) => r.y === wc.year);
+    ok(ys.some((r) => /在学中にプロ契約 1人（早咲 太郎）/.test(r.t)) && !ys.some((r) => /^1人が卒業/.test(r.t) && r.t.includes('早咲')) && rows.some((r) => r.t === '年末の評価 S') && rows.some((r) => /覚醒 花子が覚醒/.test(r.t)), '年表：在学中のプロ契約を分け、年末の評価と覚醒も載る'); }
   // 2段目その2：名物のライバル監督・トップ監督の注文・クラブ移籍
   const rcs = wl.rivalCoaches || [];
   console.log('ライバル', rcs.map((c) => `${c.k}:${c.teamName}:${c.rec.w}-${c.rec.d}-${c.rec.l}:${c.lin}`).join(' '), '／注文', (wl.topReq || []).map((q) => q.pos + ':' + q.res).join(','), '／トップ監督', wl.topCoach && wl.topCoach.name);
@@ -1513,7 +1524,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   // ★は初年度から高1だけなので、★の高3が出るのは3年目。全員がトップに上がる年もあるので、面談が出るまで5年まで回す
   while ((w3.year < startY + 3 || !paths.length) && w3.year < startY + 5 && gy++ < 320) {
     YA.autoPlan(w3);
-    if (w3.week === 26) w3.campChoice = 'domestic';
+    if (w3.week === YA.CAMP_WEEK) w3.campChoice = 'domestic';
     if (w3.scouting) YA.autoScout(w3);
     YA.startWeek(w3);
     for (const e of w3.events.slice()) {
@@ -1647,7 +1658,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   ok(YA.REWARDS.length >= 2 && YA.AD.rewardPerDay === 3, 'ご褒美の動画は1日3回');
   const mem = {}; const st = { get: (k, d) => (mem[k] != null ? mem[k] : d), set: (k, v) => { mem[k] = v; } };
   ok(YA.rewardLeft(st) === 3, '今日のご褒美は3回');
-  st.set('adday', { d: new Date().toISOString().slice(0, 10), n: 3 });
+  st.set('adday', { d: YA.localDay(), n: 3 });
   ok(YA.rewardLeft(st) === 0, '3回見たら今日はもう出ない');
   // オリジナル選手
   YA.entSet({ tickets: 1 });
@@ -1730,6 +1741,30 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   ok(r.ok && p2.pact, '別の★の子とも約束できる');
   w.week += YA.PACT_WEEKS; YA.rivalWeek(w);
   ok(!p2.pact && p2.conf < cf2, '約束に届かないと自信が下がる');
+}
+// 現実に合わせた数字（2026-11-17「各機能の品質と現実性を向上」）
+{
+  const sch = []; for (let k = 1; k <= 40; k++) sch.push(YA.SCHED(k));
+  const lw = sch.map((s, i) => [s, i + 1]).filter(([s]) => s.t === 'league');
+  ok(lw.length === 22 && new Set(lw.map(([s]) => s.n)).size === 22, '暦：リーグは22節');
+  const sw = sch.map((s, i) => [s, i + 1]).filter(([s]) => s.t === 'cup' && s.cup === 'summer').map(([, k]) => YA.calendar(k).month);
+  ok(sw.length === 3 && sw.every((m) => m === '7月' || m === '8月') && YA.calendar(YA.CAMP_WEEK).month === '8月' && YA.SCHED(YA.CAMP_WEEK).t === 'camp', '暦：夏の大会は7〜8月、夏合宿は8月（前は11月だった）');
+  ok(YA.LEAGUE_GAMES['J1リーグ'] === 38 && YA.LEAGUE_GAMES['チャンピオンシップ・イングランド2部'] === 46 && YA.LEAGUE_GAMES['ブンデスリーガ'] === 34, 'リーグごとの試合数');
+  const al = []; for (const sd of [2, 5, 9]) { const t = YA.testStart({ seed: sd, tier: 2, years: 8 }); for (let y = 0; y < 8; y++) YA.testYear(t); al.push(...t.w.alumni); }
+  const ss = al.flatMap((a) => (a.seasons || []).map((s) => [a, s])).filter(([a]) => a.status === 'pro');
+  ok(ss.every(([, s]) => s.apps <= (YA.LEAGUE_GAMES[s.league] || 38)), '出場はリーグの試合数まで');
+  const first = al.flatMap((a) => (a.moves || []).filter((m) => m.abroad && /^J/.test(m.fromLg || '')).map((m) => m.toLg));
+  ok(first.length >= 5 && first.filter((lg) => YA.FIRST_ABROAD.indexOf(lg) >= 0).length / first.length >= 0.8, '最初の海外移籍は中堅のリーグから（' + first.length + '件）');
+  const fees = al.flatMap((a) => (a.moves || []).filter((m) => !m.join).map((m) => m.fee));
+  ok(fees.some((f) => f === 0) && fees.some((f) => f > 0) && new Set(fees).size > fees.length * 0.5, '移籍金に幅があり、契約満了の0円もある');
+  const natPerYear = al.filter((a) => a.nat).length / 24;
+  ok(natPerYear <= 0.8, '日本代表は数年に1〜2人（' + natPerYear.toFixed(2) + '人/年）');
+  ok(YA.retireWord({ age: 19, quit: true }) === 'サッカーをやめた' && YA.retireWord({ age: 34 }) === '引退', '若くしてやめた子は「サッカーをやめた」');
+}
+// 分野ごとの点検（tool/checks/*.js）。それぞれ module.exports = (YA, ok) => { ... } の形。
+// 2026-11-17：108件の直しを分野ごとに並べて進めるため、点検の置き場を分けた（world.js の末尾の取り合いを避ける）
+for (const f of require('fs').readdirSync(path.join(__dirname, 'checks')).filter((x) => x.endsWith('.js')).sort()) {
+  try { require(path.join(__dirname, 'checks', f))(YA, ok); } catch (er) { ok(false, 'checks/' + f + ' が例外: ' + (er && er.stack ? er.stack.split(String.fromCharCode(10)).slice(0, 3).join(' | ') : er)); }
 }
 console.log(fails ? '失敗 ' + fails : '育成の点検: すべて通過');
 process.exit(fails ? 1 : 0);

@@ -27,6 +27,24 @@
   };
   YA.SCENE_NAMES = SCENE_NAMES;
 
+  // 戦い方の相性を見る型。つまみを動かして「カスタム」になっても、元の型（baseType）で相性を見る
+  // （2026-11-17：テンポを 0.25→0.26 にしただけで相性が 0 になり、600試合で得失点差が −0.23→−0.77 に落ちていた）
+  YA.tacType = (tc) => (tc && YA.TAC_PROFILE && YA.TAC_PROFILE[tc.type] ? tc.type : tc && tc.baseType) || null;
+  // 型を替える。攻める方向・クロスの種類・キッカー（FK・CK・PK）は引き継ぐ（前は型を替えると消えていた）
+  YA.KEEP_TACTIC = ['dir', 'crossType', 'fk', 'ck', 'pk'];
+  YA.withType = function (old, type) {
+    const t = Object.assign({ type }, YA.TACTICS[type]);
+    for (const k of YA.KEEP_TACTIC) if (old && old[k] != null) t[k] = old[k];
+    if (t.dir == null) t.dir = 0;
+    return t;
+  };
+  // つまみを1つ動かす。型は「カスタム」にするが、元の型を覚えておく
+  YA.setKnob = function (tc, k, v) {
+    if (tc.type !== 'カスタム') tc.baseType = YA.TAC_PROFILE[tc.type] ? tc.type : tc.baseType;
+    tc[k] = v;
+    tc.type = 'カスタム';
+  };
+
   // 覚醒の特性（core.js の p.aw）は、元の特性と同じ働きをする
   const has = (p, t) => p.traits.indexOf(t) >= 0 || !!(p.aw && p.aw.as && p.aw.as.indexOf(t) >= 0);
   const pers = (p, g, v) => p.pers[g] === v;
@@ -73,10 +91,19 @@
   class Match {
     constructor(opts) {
       this.rng = YA.rngOf(opts.seed);
+      this._seed = opts.seed | 0;
       this.home = opts.home; // あなた（+y へ攻める）
       this.away = opts.away;
-      this.settings = Object.assign({ autoStop: true }, opts.settings || {});
+      // autoStop＝失点と節目（前半終了・残り15分）で止める。stopOnScore＝自分の得点でも止める（既定は止めない。2026-11-17）
+      this.settings = Object.assign({ autoStop: true, stopOnScore: false }, opts.settings || {});
       this.min = 0;
+      this.extra = 0; // 追加時間の何分目か（「45+2'」の 2）
+      // 実況の言い回しと、場面の外のファウルに使う乱数（試合の乱数とは別。同じ種なら同じ試合）
+      this.frng = YA.rngOf((opts.seed | 0) * 977 + 13);
+      this.cards = []; // { side, pid, kind:'Y'|'R', min, ml }
+      this.fouls = { home: 0, away: 0 };
+      this.recent = []; // 直近の実況（同じ文を続けない）
+      this.queuedFK = null; // ゴール前のファウルで、次の見どころを直接FKにする
       this.score = { home: 0, away: 0 };
       this.log = []; // 実況・出来事
       this.scenes = [];
@@ -106,8 +133,27 @@
         t.startSlot = {};
         t.lineup.forEach((s, i) => (t.startSlot[s.pid] = YA.pos15OfSlot(s, i)));
       }
-      this.keyMinutes = this._pickMinutes();
+      // 追加時間（前半1〜3分・後半2〜5分）と、キックオフの組（前半に蹴る側。後半は相手）
+      {
+        const r = YA.rngOf((opts.seed | 0) * 53 + 29);
+        this.add1 = 1 + Math.floor(r() * 3);
+        this.add2 = 2 + Math.floor(r() * 4);
+        this.kickoffSide = r() < 0.5 ? 'home' : 'away';
+      }
+      this.timeline = [];
+      for (let i = 1; i <= 45; i++) this.timeline.push([i, 0]);
+      for (let i = 1; i <= this.add1; i++) this.timeline.push([45, i]);
+      for (let i = 46; i <= 90; i++) this.timeline.push([i, 0]);
+      for (let i = 1; i <= this.add2; i++) this.timeline.push([90, i]);
+      this.ti = -1;
+      this.keyIdx = this._pickMinutes();
+      this.keyMinutes = this.keyIdx.map((k) => this.timeline[k][0]);
       this._refreshPen();
+    }
+    // 時刻の表示（「45+2」「90+3」）
+    minLabel(min, extra) {
+      if (min == null) { min = this.min; extra = this.extra; }
+      return extra ? min + '+' + extra : String(min);
     }
     // 置いた場所での力の落ち方（適性・利き足）を、全員に付け直す
     _refreshPen() {
@@ -120,13 +166,24 @@
       }
     }
 
+    // 見どころの時刻（timeline の番号）。後半と終盤・追加時間に少し寄せる（2026-11-17：前は 3〜89 分に平らだった。
+    // 実際の得点は後半が5〜6割、終盤15分がいちばん多い）
     _pickMinutes() {
       const n = 13 + this.rng.int(0, 2);
+      const tl = this.timeline;
+      const wOf = (k) => {
+        const [mn, ex] = tl[k];
+        if ((mn === 75 || mn === 46) && !ex) return 0; // 残り15分の節目・後半のキックオフ
+        if (mn < 3) return 0;
+        if (ex) return mn === 45 ? 1.15 : 1.35;
+        return mn <= 45 ? 1 : mn < 75 ? 1.12 : 1.3;
+      };
+      const ks = tl.map((_, k) => k).filter((k) => wOf(k) > 0);
       const out = [];
       let guard = 0;
       while (out.length < n && guard++ < 500) {
-        const m = this.rng.int(3, 89);
-        if (out.every((x) => Math.abs(x - m) >= 3) && m !== 45 && m !== 75) out.push(m);
+        const k = this.rng.weighted(ks, wOf);
+        if (out.every((x) => Math.abs(x - k) >= 3)) out.push(k);
       }
       return out.sort((a, b) => a - b);
     }
@@ -152,7 +209,7 @@
     // ---------- チームの強さ ----------
     // 戦術と選手の相性：その戦術で大事な能力を、合う選手たちがどれだけ持っているか（±の能力点）
     tacticFit(t) {
-      const pf = YA.TAC_PROFILE[t.tactic.type];
+      const pf = YA.TAC_PROFILE[YA.tacType(t.tactic)];
       if (!pf) return 0;
       const pick = (x) => {
         const p15 = YA.pos15OfSlot(x.s, x.i);
@@ -189,20 +246,20 @@
     }
     // 戦術の相性が、決定機の質にも出る（攻める側の合い具合 − 守る側の合い具合）
     fitShot(att, def) {
-      const pa = YA.TAC_PROFILE[att.tactic.type];
-      const pd = YA.TAC_PROFILE[def.tactic.type];
+      const pa = YA.TAC_PROFILE[YA.tacType(att.tactic)];
+      const pd = YA.TAC_PROFILE[YA.tacType(def.tactic)];
       return (pa ? this.tacticFit(att) * pa.att * 0.9 : 0) - (pd ? this.tacticFit(def) * pd.def * 0.6 : 0);
     }
     attPower(t) {
       const xs = this.onPitch(t).filter((x) => x.pos === 'FW' || x.pos === 'MF');
-      const pf = YA.TAC_PROFILE[t.tactic.type];
+      const pf = YA.TAC_PROFILE[YA.tacType(t.tactic)];
       return (pf ? this.tacticFit(t) * pf.att * 1.6 : 0) + xs.reduce((a, x) => a + (effAvg(x.p, ['パス', 'ドリブル', 'フィニッシュ', 'スピード', '視野', 'オフザボール'], this) + this.teamBonus(t, x.p)), 0) / Math.max(1, xs.length);
     }
     defPower(t) {
       const xs = this.onPitch(t).filter((x) => x.pos === 'DF' || x.pos === 'MF');
       const g = this.gk(t);
       const d = xs.reduce((a, x) => a + effAvg(x.p, ['タックル', 'マーク', 'ポジショニング', '予測', '運動量'], this), 0) / Math.max(1, xs.length);
-      const pf = YA.TAC_PROFILE[t.tactic.type];
+      const pf = YA.TAC_PROFILE[YA.tacType(t.tactic)];
       return d * 0.85 + effAvg(g, ['反応', '1対1', 'ハンドリング'], this) * 0.15 + (pf ? this.tacticFit(t) * pf.def * 1.6 : 0);
     }
     // リーダーがいるとまとまる／チームワーク
@@ -358,7 +415,7 @@
       const kk = (t, v) => 0.5 + (v - 0.5) * (t.tactRep == null ? 1 : t.tactRep);
       const tc = { tempo: kk(att, att.tactic.tempo), width: kk(att, att.tactic.width), press: kk(att, att.tactic.press), line: att.tactic.line };
       const dt = { line: kk(def, def.tactic.line), intensity: def.tactic.intensity };
-      const w = { through: 0.5, cross: 1, dribble: 0.9, longshot: 0.5, fk: 0.35, ck: 0.4, counter: 0.6, onetwo: 0.6, steal: 0.5, longthrow: 0 };
+      const w = { through: 0.5, cross: 1, dribble: 0.9, longshot: 0.5, fk: 0.15, ck: 0.4, counter: 0.6, onetwo: 0.6, steal: 0.5, longthrow: 0 };
       w.through *= 0.6 + 0.8 * tc.tempo;
       w.counter *= 0.4 + 1.4 * tc.tempo;
       w.onetwo *= 1.4 - 0.8 * tc.tempo;
@@ -382,6 +439,9 @@
         const fitK = this.roleFit(att, x.i) > 0 ? 1.25 : this.roleFit(att, x.i) < 0 ? 0.6 : 1;
         const dm = this.dutyOf(att, x.i);
         if (rd) for (const k of Object.keys(rd.boost)) w[k] += rd.boost[k] * fitK * dm.boostMul;
+        // 中盤の任務：攻撃は崩しの組み立て（ワンツー）に絡み、守備は残る（サポートは変わらない）。
+        // 2026-11-17：MF も守備の手柄の候補になり結果がぶれるので、任務の差を場面の出方にもはっきり出す
+        if (x.pos === 'MF') w.onetwo = Math.max(0.05, w.onetwo + 0.15 * (dm.boostMul - 1));
         const ins = this.instr(att, x.p);
         if (ins.dribble) w.dribble += 0.5;
         if (ins.shoot) w.longshot += 0.5;
@@ -408,6 +468,8 @@
       // 負けているほうが押し込む
       const sc = this.score.home - this.score.away;
       d += -sc * 0.3 * (this.min / 90);
+      // 退場で人数が減ったほうは押される
+      d -= (11 - h.lineup.length) * 1.3 - (11 - a.lineup.length) * 1.3;
       return clamp(0.5 + d * 0.055, 0.22, 0.78);
     }
 
@@ -435,11 +497,28 @@
     }
 
     // 守備側の「止める人」
+    // side は攻める側から見た左右（'L'＝攻める側の左）。守る側は向きが逆なので、攻める側の左は守る側の右（s.x >= 0.5）。
+    // 2026-11-17：前は守る側の向きで見ていて、ドリブルを止めに来るのが反対側のサイドバックだった（300試合で96%）。
+    // 候補は DF に加えて、守備の役割・任務を持つ DM・MF も（重みは少なめ。前は MF が止めた回数が0だった）
     pickDefender(def, side, sc) {
-      const ds = this.onPitch(def).filter((x) => x.pos === 'DF');
-      const cands = ds.filter((x) => (side === 'L' ? x.s.x < 0.5 : side === 'R' ? x.s.x >= 0.5 : true));
-      const xs = cands.length ? cands : ds;
-      return this.rng.pick(xs.length ? xs : this.onPitch(def).filter((x) => x.pos !== 'GK')).p;
+      const defTags = ['press', 'stay', 'cover', 'stop'];
+      const wOf = (x) => {
+        if (x.pos === 'DF') return 1;
+        if (x.pos !== 'MF') return 0;
+        const p15 = YA.pos15OfSlot(x.s, x.i);
+        const rd = YA.ROLE_DEF[x.s.role];
+        const duty = x.s.duty;
+        if (p15 === 'DM') return 0.5;
+        if (duty === 'def' || duty === 'stop' || duty === 'cover') return 0.4;
+        if (rd && rd.tags.some((tg) => defTags.indexOf(tg) >= 0)) return 0.3;
+        return 0;
+      };
+      const all = this.onPitch(def).filter((x) => wOf(x) > 0);
+      const onSide = (x) => (side === 'L' ? x.s.x >= 0.5 : side === 'R' ? x.s.x < 0.5 : true);
+      const cands = all.filter(onSide);
+      const xs = cands.length ? cands : all;
+      if (!xs.length) return this.rng.pick(this.onPitch(def).filter((x) => x.pos !== 'GK')).p;
+      return this.rng.weighted(xs, wOf).p;
     }
 
     markPenalty(att, def, shooter, sc) {
@@ -471,10 +550,10 @@
       if (kind === 'long' || opt.fk) gq += this.traitBonus(sc, gkp, 'ミドルに強いGK', 2, '遠いシュートを落ち着いて弾いた');
       gq += this.traitBonus(sc, gkp, 'ビッグセーブ', 1, '指先で弾き出した');
       if (this.min >= 75) q += this.traitBonus(sc, shooter, '終盤に強い', 1.5, '終盤でも足が止まらなかった');
-      if (opt.fk || opt.pk) gq += 0;
       gq += this.persMod(sc, def, gkp, 'defend') * 0.5;
       const sq = q - diff + this.persMod(sc, att, shooter, 'shot') + this.markPenalty(att, def, shooter, sc) * -1 + this.tacticEdge(att, def) * 0.8 - this.tacticEdge(def, att) * 0.5 + this.fitShot(att, def);
-      const onP = clamp(0.58 + (sq - 8) * 0.032, 0.25, 0.92);
+      // PK は枠に飛ぶ割合 0.85〜0.92（2026-11-17：前は外れが15〜25%と多かった）。直接FKは壁越しで枠に飛びにくい
+      const onP = opt.pk ? clamp(0.91 + (sq - 10) * 0.005, 0.88, 0.92) : opt.fk ? clamp(0.42 + (sq - 8) * 0.025, 0.2, 0.6) : clamp(0.58 + (sq - 8) * 0.032, 0.25, 0.92);
       att.players[shooter.id].st.shots++;
       this.stats[this.side(att)].shots++;
       // 守備のブロック
@@ -485,14 +564,16 @@
       }
       if (rng() > onP) return { result: rng() < 0.18 ? 'post' : 'missed' };
       this.stats[this.side(att)].onTarget++;
-      const saveP = clamp(0.33 + (gq - sq) * 0.04, 0.12, 0.8);
+      const saveP = opt.fk ? clamp(0.74 + (gq - sq) * 0.03, 0.55, 0.92) : clamp(0.33 + (gq - sq) * 0.04, 0.12, 0.8);
+      // GK にとって止めて当然の（打つ側には難しい）シュートか。決められたときだけ GK の採点を下げる
+      const easy = !opt.pk && (diff >= 3 || saveP >= 0.45);
       if (opt.pk) {
         const stop = this.traitBonus(sc, gkp, 'PKストップ', 0.14, 'コースを読んで止めにいった');
-        if (rng() < clamp(0.2 + (gq - sq) * 0.015 + stop, 0.08, 0.5)) return { result: 'saved', gk: gkp };
+        if (rng() < clamp(0.1 + (gq - sq) * 0.008 + stop, 0.05, 0.3)) return { result: 'saved', gk: gkp };
         return { result: 'goal' };
       }
       if (rng() < saveP) return { result: 'saved', gk: gkp };
-      return { result: 'goal' };
+      return { result: 'goal', easy };
     }
 
     // ---------- 場面の組み立て ----------
@@ -510,15 +591,21 @@
         }
       }
       sc.goal = sc.outcome === 'goal';
-      if (['intercepted', 'cleared', 'stopped', 'blocked', 'offside', 'dispossessed', 'escaped'].indexOf(sc.outcome) >= 0 && sc._pend) {
-        for (const f of sc._pend.slice(0, 2)) if (!sc.fx.some((x) => x.pid === f.pid && x.tag === f.tag)) sc.fx.push(f);
+      sc.ml = this.minLabel();
+      // 守る側が止めた結果（GK のセーブも。2026-11-17：前は 'saved' が無く、GK の特性の札が一度も出なかった）
+      const defSucc = ['intercepted', 'cleared', 'stopped', 'blocked', 'offside', 'dispossessed', 'escaped', 'saved'].indexOf(sc.outcome) >= 0;
+      if (defSucc && sc._pend) {
+        // セーブなら GK の札を先に
+        const gkId = this.gk(def).id;
+        const pend = sc.outcome === 'saved' ? sc._pend.slice().sort((a, b) => (b.pid === gkId) - (a.pid === gkId)) : sc._pend;
+        for (const f of pend.slice(0, 2)) if (!sc.fx.some((x) => x.pid === f.pid && x.tag === f.tag)) sc.fx.push(f);
       }
       delete sc._pend;
-      // 画面に出す札：結果を決めたほうの特性・性格を先に、最大3つ
-      const defSucc = ['intercepted', 'cleared', 'stopped', 'blocked', 'offside', 'dispossessed', 'escaped'].indexOf(sc.outcome) >= 0;
-      const kr = { trait: 0, instr: 1, pers: 2 };
+      // 画面に出す札：結果を決めたほうの特性・性格を先に、最大3つ。
+      // 守備の成功・オフサイド・セーブでは、攻める側の札は出さない（2026-11-17：オフサイドなのに攻める側の札が出ていた）
+      const kr = { trait: 0, gold: 0, awake: 0, instr: 1, pers: 2 };
       sc.fxShow = sc.fx
-        .filter((f) => sc.outcome !== 'offside' || f.tag === 'ラインコントロール' || !def.players[f.pid])
+        .filter((f) => !defSucc || !att.players[f.pid])
         .slice()
         .sort((a, b) => ((att.players[a.pid] ? 1 : 0) - (att.players[b.pid] ? 1 : 0)) * (defSucc ? 1 : -1) || kr[a.kind] - kr[b.kind])
         .slice(0, 3);
@@ -549,7 +636,8 @@
           att.players[assist.id].st.rating += 0.6;
         }
         this.score[this.side(att)]++;
-        this.gkOf(def).st.rating -= 0.3;
+        // GK の採点は、止めて当然のシュートを決められたときだけ下げる（2026-11-17：前はどの失点でも −0.3 で、GK が最下位だった）
+        if (res.easy) this.gkOf(def).st.rating -= 0.3;
         sc.scorer = shooter.id;
         sc.assist = assist && assist !== shooter ? assist.id : null;
         for (const pl of Object.values(def.players)) if (def.onPitch.has(pl.id)) pl.conf = clamp(pl.conf - 1.5, 0, 100);
@@ -606,21 +694,97 @@
       return fr;
     }
 
+    // 結果の一文。2〜3通りから選ぶ（2026-11-17：前は1通りで毎回同じ文だった）。言い回しの乱数は試合の乱数と別
     result_text(att, sc, res, shooter) {
       const n = shooter ? shooter.name : '';
       const nm = shooter ? shooter.num + '番 ' + n.split(' ')[0] : '';
+      const pk = (xs) => xs[Math.floor(this.frng() * xs.length)];
       switch (res.result) {
         case 'goal':
-          return nm + ' ゴール！';
-        case 'saved':
-          return nm + 'のシュートは ' + res.gk.name.split(' ')[0] + ' がセーブ';
+          return pk([nm + ' ゴール！', nm + ' が決めた！ゴール！', 'ネットが揺れた！' + nm + ' のゴール！']);
+        case 'saved': {
+          const g = res.gk.name.split(' ')[0];
+          return pk([nm + 'のシュートは ' + g + ' がセーブ', g + ' が好セーブ！' + nm + 'のシュートを止めた', nm + 'が打つも、' + g + ' が弾き出した']);
+        }
         case 'post':
-          return nm + 'のシュートは枠に当たった！';
-        case 'blocked':
-          return nm + 'のシュートは ' + res.blocker.name.split(' ')[0] + ' がブロック';
+          return pk([nm + 'のシュートは枠に当たった！', nm + 'のシュートはポストに嫌われた', '惜しい！' + nm + 'のシュートはバーを叩いた']);
+        case 'blocked': {
+          const b = res.blocker.name.split(' ')[0];
+          return pk([nm + 'のシュートは ' + b + ' がブロック', b + ' が体を投げ出して、' + nm + 'のシュートを防いだ', nm + 'が打つ…' + b + ' が足に当てた']);
+        }
         default:
-          return nm + 'のシュートは枠の外';
+          return pk([nm + 'のシュートは枠の外', nm + 'のシュートは枠をわずかに外れた', nm + 'が打ったが、ゴールの上へ']);
       }
+    }
+
+    // ===== ファウルとカード（2026-11-17 足した。前は p.yellow を持つだけで使っていなかった）=====
+    // ファウルした子にカードを出すか決める。短気・闘争的・スライディングで出やすい。2枚目で退場。乱数は this.frng
+    _foul(t, p, cardP, redP) {
+      const side = this.side(t);
+      this.fouls[side]++;
+      let pc = cardP + (pers(p, '感情の波', '短気') ? 0.12 : 0) + (pers(p, 'プレーの気質', '闘争的') ? 0.08 : 0) + (has(p, 'スライディング') ? 0.05 : 0) + (t.tactic.intensity - 0.5) * 0.1;
+      if (p.yellow) pc *= 0.7; // 1枚もらった子は気をつける
+      let card = null;
+      if (this.frng() < (redP || 0)) card = 'R';
+      else if (this.frng() < pc) card = p.yellow ? 'R2' : 'Y';
+      if (!card) return { card: null, txt: '' };
+      const nm = p.num + '番 ' + p.name.split(' ')[0];
+      if (card === 'Y') {
+        p.yellow = 1;
+        p.st.rating -= 0.3;
+        this.cards.push({ side, pid: p.id, kind: 'Y', min: this.min, ml: this.minLabel() });
+        this.log.push({ minute: this.min, ml: this.minLabel(), text: nm + ' にイエローカード', kind: 'card', side });
+        return { card, txt: '。' + nm + ' にイエローカード' };
+      }
+      p.yellow = (p.yellow || 0) + (card === 'R2' ? 1 : 0);
+      p.st.rating -= card === 'R2' ? 1.2 : 1.5;
+      this.cards.push({ side, pid: p.id, kind: 'R', second: card === 'R2', min: this.min, ml: this.minLabel() });
+      this.log.push({ minute: this.min, ml: this.minLabel(), text: nm + (card === 'R2' ? ' に2枚目のイエロー。退場' : ' に一発レッド。退場'), kind: 'card', side });
+      // ピッチから外すのは場面を見せ終わってから（次の step の頭）。場面のコマがその子を使っているため
+      (this._toSendOff = this._toSendOff || []).push([t, p]);
+      return { card: 'R', txt: '。' + nm + (card === 'R2' ? ' に2枚目のイエロー、退場！' : ' にレッドカード、退場！') };
+    }
+    // 退場：その子はピッチから外れ、以後は10人（GK は退場させない）
+    _sendOff(t, p) {
+      const i = t.lineup.findIndex((s) => s.pid === p.id);
+      if (i <= 0) return;
+      t.lineup.splice(i, 1);
+      t.onPitch.delete(p.id);
+      delete t.instr[p.id];
+      p.sentOff = true;
+      p.off = true;
+      for (const q of Object.values(t.players)) q._rk = null;
+      this._refreshPen();
+    }
+    // 場面の中のファウル。foulP＝止めた場面がファウルになる割合、cardP＝カードの割合
+    _sceneFoul(sc, def, p, att, foulP, cardP) {
+      const f = foulP + (pers(p, '感情の波', '短気') ? 0.12 : 0) + (pers(p, 'プレーの気質', '闘争的') ? 0.08 : 0) + (has(p, 'スライディング') ? 0.06 : 0) + (def.tactic.intensity - 0.5) * 0.1;
+      if (this.frng() >= f) return null;
+      const r = this._foul(def, p, cardP, 0.01);
+      sc.foul = { pid: p.id, card: r.card };
+      // ゴール前のファウルは、次の見どころを攻める側の直接FKにする
+      if (this.frng() < 0.4) this.queuedFK = this.side(att);
+      return r;
+    }
+    // PK：倒された所からキッカーが蹴るまで。pre＝それまでのコマ、at＝倒れた位置、t0＝倒れた時刻
+    _penalty(sc, att, def, victim, fouler, pre, at, t0, beats) {
+      const rng = this.rng;
+      const gkp = this.gk(def);
+      const k = this.taker(att, 'pk') || this.pickActor(att, ['MF', 'FW'], ['PK', 'フィニッシュ', '冷静さ'], [], [], sc);
+      const fo = this._foul(def, fouler, 0.35, 0.02);
+      const res = this.shot(sc, att, def, k, effAvg(k, ['PK', '冷静さ', 'フィニッシュ'], this) + this.traitBonus(sc, k, 'PKの名手', 2, 'GKの動きを見て蹴り込んだ'), 0, 'pk', { pk: true });
+      sc.actors.kicker = k.id;
+      sc.defs = [fouler.id];
+      sc.foul = { pid: fouler.id, card: fo.card };
+      this.finish(sc, att, def, res, k, null);
+      const gx = res.result === 'goal' ? (rng() < 0.5 ? 31 : 37) : 34;
+      const ps = { [victim.id]: at, [fouler.id]: [at[0] + 1, at[1] + 1] };
+      sc.frames = pre.concat([{ t: t0, pos: ps, ball: [at[0], at[1], 0], cap: 'ファウル！PK' }, { t: t0 + 1, pos: { [k.id]: [34, 90], [gkp.id]: [34, 104.5] }, ball: [34, 94, 0], cap: k.num + '番がPKを蹴る' }].concat(this.endFrames(sc, res, [34, 94], gkp.id, null, t0 + 1.8, gx)));
+      sc.type = 'pk';
+      sc.typeName = SCENE_NAMES.pk;
+      if (fo.txt) beats[beats.length - 1].text += fo.txt;
+      sc.beats = beats.concat([{ at: t0 + 1.2, text: k.num + '番 ' + k.name.split(' ')[0] + ' が蹴る' }, { at: t0 + 2.4, text: this.result_text(att, sc, res, k) }]);
+      sc.dur = t0 + 4;
     }
 
     // ===== 場面ごとの組み立て =====
@@ -674,7 +838,9 @@
         ]);
         sc.outcome = 'intercepted';
         who.st.rating += 0.4;
-        sc.beats = [{ at: 0.1, text: passer.num + '番 ' + passer.name.split(' ')[0] + ' がスルーパス' }, { at: 2.0, text: '…守備がうまく処理した（' + who.name.split(' ')[0] + '）' }];
+        const wn = who.name.split(' ')[0];
+        const tx = [wn + ' が先に触ってクリア', wn + ' が一歩早く足を伸ばしてカット', '…' + wn + ' が読んでいた。先に触って逃れた'][Math.floor(this.frng() * 3)];
+        sc.beats = [{ at: 0.1, text: passer.num + '番 ' + passer.name.split(' ')[0] + ' がスルーパス' }, { at: 2.0, text: tx }];
         sc.dur = 4.6;
         return;
       }
@@ -731,6 +897,11 @@
         { t: 0.8, pos: { [crosser.id]: [fx, 82], [header.id]: [hx + 3, 92], [dEnd.id]: [hx - 2, 94] }, ball: [fx + (left ? 1 : -1), 83, 0], cap: crosser.num + '番 クロス' },
         { t: 1.8, pos: { [header.id]: [hx, 96], [dEnd.id]: [hx - 1.4, 96] }, ball: [hx, 97, 3.4], cap: '空中戦' },
       ].concat(end);
+      // 競り合いでエリア内のファウル → PK（2026-11-17 足した）
+      if (this.frng() < 0.045 + (pers(dEnd, '感情の波', '短気') ? 0.02 : 0) + (pers(dEnd, 'プレーの気質', '闘争的') ? 0.02 : 0)) {
+        this._penalty(sc, att, def, header, dEnd, mk([]), [hx, 95], 2.4, [{ at: 0.1, text: crosser.num + '番 ' + crosser.name.split(' ')[0] + ' が' + (left ? '左' : '右') + 'からクロス' }, { at: 2.0, text: 'ゴール前の競り合いで ' + header.num + '番が倒された！PK' }]);
+        return;
+      }
       if (rng() > sig((C * 0.3 + H * 0.7 - D) * 0.22 - 0.2) * 0.92 + 0.04) {
         const cl = rng() < 0.5;
         sc.frames = mk([{ t: 2.5, pos: { [dEnd.id]: [hx - 1, 96] }, ball: [hx + 2, 100, 3.2] }, { t: 3.4, pos: { [dEnd.id]: [hx - 2, 94] }, ball: [hx + 6, 88, 0.2], cap: '跳ね返された' }]);
@@ -784,30 +955,31 @@
         { t: 1.0, pos: { [d.id]: [sx + (left ? 2 : -2), 72], [df.id]: [sx + (left ? 4 : -4), 74] }, ball: [sx + (left ? 2 : -2), 72.5, 0], cap: d.num + '番 仕掛ける' },
         { t: 1.7, pos: { [d.id]: [cut ? ix : sx, cut ? 77 : 82], [df.id]: [sx + (left ? 5 : -5), cut ? 80 : 79] }, ball: [cut ? ix : sx, cut ? 77.5 : 82.5, 0] },
       ].concat(end);
+      // エリア内で倒される（縦に抜けたときも、中へ切れ込んだときも。2026-11-17：前は縦の突破だけで、PK が1試合0.09本と少なかった）
       const fouled = rng() < 0.1 + (anyPers(d, 'ずる賢い') ? 0.06 : 0) + (has(d, 'ファウルをもらう') ? 0.1 : 0);
       if (rng() > sig((Q - D - 0.5) * 0.3) * 0.92 + 0.04) {
-        const pnl = df.pers['感情の波'] === '短気' && rng() < 0.3;
         sc.frames = mk([{ t: 2.4, pos: { [d.id]: [cut ? ix : sx, 78], [df.id]: [cut ? ix + 1 : sx, 78] }, ball: [cut ? ix + 3 : sx, 76, 0.3], cap: df.name.split(' ')[0] + ' が止めた' }]);
         sc.outcome = 'dispossessed';
-        df.st.rating += 0.4;
         d.conf = clamp(d.conf - 1, 0, 100);
-        sc.beats = [{ at: 0.1, text: d.num + '番 ' + d.name.split(' ')[0] + ' が' + (left ? '左' : '右') + 'で持つ' }, { at: 1.6, text: '仕掛けた！しかし ' + df.name.split(' ')[0] + ' が体を寄せて奪った' }];
+        sc.beats = [{ at: 0.1, text: d.num + '番 ' + d.name.split(' ')[0] + ' が' + (left ? '左' : '右') + 'で持つ' }];
+        // 止めた場面の一部はファウル（短気・闘争的・スライディングで増える）。ゴール前なら次の見どころが直接FK
+        const fo = this._sceneFoul(sc, def, df, att, 0.2, 0.3);
+        if (fo) {
+          df.st.rating += 0.1;
+          sc.beats.push({ at: 1.6, text: '仕掛けた！' + df.name.split(' ')[0] + ' が倒してしまった。ファウル' + fo.txt });
+          sc.frames[sc.frames.length - 1].cap = 'ファウル';
+        } else {
+          df.st.rating += 0.4;
+          sc.beats.push({ at: 1.6, text: '仕掛けた！しかし ' + df.name.split(' ')[0] + ' が体を寄せて奪った' });
+        }
         sc.dur = 4.4;
         return;
       }
-      if (fouled && !cut) {
+      if (fouled && (!cut || this.frng() < 0.5)) {
         // ペナルティエリア内で倒された
-        this._fx(sc, d, d.traits.indexOf('ファウルをもらう') >= 0 ? 'trait' : 'pers', d.traits.indexOf('ファウルをもらう') >= 0 ? 'ファウルをもらう' : 'ずる賢い', '体を入れてファウルを誘った');
-        const k = this.taker(att, 'pk') || this.pickActor(att, ['MF', 'FW'], ['PK', 'フィニッシュ', '冷静さ'], [], [], sc);
-        const res = this.shot(sc, att, def, k, effAvg(k, ['PK', '冷静さ', 'フィニッシュ'], this) + this.traitBonus(sc, k, 'PKの名手', 2, 'GKの動きを見て蹴り込んだ'), 0, 'pk', { pk: true });
-        sc.actors.kicker = k.id;
-        this.finish(sc, att, def, res, k, null);
-        const gx = res.result === 'goal' ? (rng() < 0.5 ? 31 : 37) : 34;
-        sc.frames = mk([{ t: 2.4, pos: { [d.id]: [sx + (left ? 6 : -6), 90], [df.id]: [sx + (left ? 7 : -7), 91] }, ball: [sx + (left ? 6 : -6), 90, 0], cap: 'ファウル！PK' }, { t: 3.4, pos: { [k.id]: [34, 90], [gkp.id]: [34, 104.5] }, ball: [34, 94, 0], cap: k.num + '番がPKを蹴る' }].concat(this.endFrames(sc, res, [34, 94], gkp.id, null, 4.2, gx)));
-        sc.type = 'pk';
-        sc.typeName = SCENE_NAMES.pk;
-        sc.beats = [{ at: 0.1, text: d.num + '番 ' + d.name.split(' ')[0] + ' が仕掛ける' }, { at: 2.2, text: 'エリア内で倒された！PK' }, { at: 3.6, text: k.num + '番 ' + k.name.split(' ')[0] + ' が蹴る' }, { at: 4.8, text: this.result_text(att, sc, res, k) }];
-        sc.dur = 6.4;
+        if (has(d, 'ファウルをもらう') || anyPers(d, 'ずる賢い')) this._fx(sc, d, d.traits.indexOf('ファウルをもらう') >= 0 ? 'trait' : 'pers', d.traits.indexOf('ファウルをもらう') >= 0 ? 'ファウルをもらう' : 'ずる賢い', '体を入れてファウルを誘った');
+        const fx0 = cut ? ix : sx + (left ? 6 : -6);
+        this._penalty(sc, att, def, d, df, mk([]), [fx0, 90], 2.4, [{ at: 0.1, text: d.num + '番 ' + d.name.split(' ')[0] + ' が仕掛ける' }, { at: 2.2, text: 'エリア内で倒された！PK' }]);
         return;
       }
       const sq = effAvg(d, ['フィニッシュ', 'テクニック', '冷静さ'], this) + this.traitBonus(sc, d, 'シュートフェイント', 1.5, '打つと見せて一つかわした') + (cut ? this.traitBonus(sc, d, '巻いて流し込むシュート', 3, 'ファーサイドへ巻いて流し込んだ') : 0) + (cut && d.traits.indexOf('逆足') >= 0 ? 0 : 0) + (cut ? (d.ab['逆足の精度'] - 10) * 0.15 : 0);
@@ -866,7 +1038,7 @@
       wall.forEach((id, i) => (wallPos[id] = [kx + (i - 1.5) * 1.4 + (34 - kx) * 0.35, 90]));
       const gx = res.result === 'goal' ? (kx > 34 ? 30.6 : 37.4) : 34;
       sc.frames = [
-        { t: 0, pos: Object.assign({ [k.id]: [kx - 3, 76] }, wallPos), ball: [kx, 80, 0] },
+        { t: 0, pos: Object.assign({ [k.id]: [kx - 0.6, 79.3] }, wallPos), ball: [kx, 80, 0] }, // 蹴る子はボールの横から（置いて蹴るセットプレーとして始める）
         { t: 1.2, pos: Object.assign({ [k.id]: [kx - 2, 78.5] }, wallPos), ball: [kx, 80, 0], cap: k.num + '番 直接FK' },
         { t: 1.8, pos: Object.assign({ [k.id]: [kx, 79.5], [gkp.id]: [34, 102] }, wallPos), ball: [kx, 80, 0] },
       ].concat(this.endFrames(sc, res, [kx, 80], gkp.id, null, 2.6, gx));
@@ -897,18 +1069,24 @@
         { t: 1.2, pos: { [k.id]: [cx + (right ? -1 : 1), 104.2], [h.id]: [hx + 1, 97.5], [dd.id]: [hx - 0.5, 98] }, ball: [cx, 105, 0], cap: k.num + '番 コーナーキック' },
         { t: 2.3, pos: { [h.id]: [hx, 98], [dd.id]: [hx - 1.2, 98] }, ball: [hx, 98.2, 3.4], cap: '競り合い' },
       ].concat(end);
+      // コーナーの競り合いで押し倒す → PK
+      if (this.frng() < 0.03 + (pers(dd, '感情の波', '短気') ? 0.02 : 0)) {
+        this._penalty(sc, att, def, h, dd, mk([]), [hx, 97], 3.0, [{ at: 0.1, text: (right ? '右' : '左') + 'からのコーナーキック' }, { at: 2.6, text: '競り合いで ' + h.num + '番が倒された！PK' }]);
+        return;
+      }
       if (rng() > sig(((K * 0.35 + H * 0.65) - D) * 0.22 - 0.1) * 0.9 + 0.04) {
         sc.frames = mk([{ t: 3.2, pos: { [dd.id]: [hx - 1, 98] }, ball: [hx - 5, 90, 2.4], cap: 'クリアされた' }, { t: 4.0, pos: {}, ball: [hx - 8, 80, 0.1] }]);
         sc.outcome = 'cleared';
         dd.st.rating += 0.3;
-        sc.beats = [{ at: 0.1, text: '左右どちらかのコーナーキック' }, { at: 1.3, text: k.num + '番 ' + k.name.split(' ')[0] + ' が蹴る' }, { at: 3.0, text: dd.name.split(' ')[0] + ' が先に触ってクリア' }];
+        const dn = dd.name.split(' ')[0];
+        sc.beats = [{ at: 0.1, text: (right ? '右' : '左') + 'からのコーナーキック' }, { at: 1.3, text: k.num + '番 ' + k.name.split(' ')[0] + ' が蹴る' }, { at: 3.0, text: [dn + ' が先に触ってクリア', dn + ' が頭で大きく跳ね返した', '競り合いは ' + dn + ' の勝ち。クリア'][Math.floor(this.frng() * 3)] }];
         sc.dur = 5.2;
         return;
       }
       const res = this.shot(sc, att, def, h, effAvg(h, ['ヘディング', 'フィニッシュ', '冷静さ'], this) + this.traitBonus(sc, h, 'ヘディングシュート', 2, '高い打点で合わせた') + (h.height - 178) * 0.1, 1.8, 'head', { cross: true, crowd: true });
       this.finish(sc, att, def, res, h, k);
       sc.frames = mk(this.endFrames(sc, res, [hx, 98], gkp.id, null, 3.0, hx > 34 ? 36.5 : 31.5));
-      sc.beats = [{ at: 0.1, text: 'コーナーキック' }, { at: 1.3, text: k.num + '番 ' + k.name.split(' ')[0] + ' が蹴る' }, { at: 2.2, text: h.num + '番 ' + h.name.split(' ')[0] + ' が競り勝った！' }, { at: 3.4, text: this.result_text(att, sc, res, h) }];
+      sc.beats = [{ at: 0.1, text: (right ? '右' : '左') + 'からのコーナーキック' }, { at: 1.3, text: k.num + '番 ' + k.name.split(' ')[0] + ' が蹴る' }, { at: 2.2, text: h.num + '番 ' + h.name.split(' ')[0] + ' が競り勝った！' }, { at: 3.4, text: this.result_text(att, sc, res, h) }];
       sc.dur = 5.8;
     }
 
@@ -949,7 +1127,7 @@
     // カウンター
     _counter(sc, att, def) {
       const rng = this.rng;
-      const c = this.pickActor(att, ['MF', 'FW'], ['ドリブル', 'スピード', '判断', '加速'], ['ボールを運ぶ', '縦への突破', '裏への抜け出し'], [], sc, ['運ぶ', '裏を狙う']);
+      const c = this.pickActor(att, ['MF', 'FW'], ['ドリブル', 'スピード', '判断', '加速'], ['ボールを運ぶ', '縦への突破', '裏への抜け出し'], [], sc, ['carry', 'run']); // 役割のタグで選ぶ（前は日本語で、どの役割にも当たっていなかった）
       const f = this.pickActor(att, ['FW', 'MF'], ['フィニッシュ', 'オフザボール', 'スピード'], ['裏への抜け出し', 'ニアへの飛び込み', 'ダイレクトシュート'], [c.id], sc, ['run', 'finish']);
       const reb = this.pickActor(att, ['MF', 'DF'], ['タックル', '予測', 'ポジショニング'], ['ボール奪取', '読みのインターセプト', '即時奪回'], [c.id, f.id], sc, ['press']);
       this.traitBonus(sc, reb, 'ボール奪取', 0, 'ボールを奪い取った');
@@ -978,8 +1156,18 @@
         const who = rec.p || cov.p || d1;
         sc.frames = mk([{ t: 3.2, pos: { [c.id]: [cx, 81], [who.id]: [cx + 1, 80] }, ball: [cx + 2, 80, 0.3], cap: who.name.split(' ')[0] + ' が止めた' }]);
         sc.outcome = 'stopped';
-        who.st.rating += 0.4;
-        sc.beats = [{ at: 0.1, text: reb.num + '番 ' + reb.name.split(' ')[0] + ' がボールを奪った！' }, { at: 1.4, text: 'カウンター発動…しかし ' + who.name.split(' ')[0] + ' が止めた' }];
+        sc.defs = [who.id].concat(sc.defs.filter((x) => x !== who.id)).slice(0, 2);
+        sc.beats = [{ at: 0.1, text: reb.num + '番 ' + reb.name.split(' ')[0] + ' がボールを奪った！' }];
+        // カウンターを止めるファウル（戦術的なファウルはカードが出やすい）
+        const fo = this._sceneFoul(sc, def, who, att, 0.18, 0.5);
+        if (fo) {
+          who.st.rating += 0.1;
+          sc.beats.push({ at: 1.4, text: 'カウンター発動…' + who.name.split(' ')[0] + ' が倒して止めた。ファウル' + fo.txt });
+          sc.frames[sc.frames.length - 1].cap = 'ファウル';
+        } else {
+          who.st.rating += 0.4;
+          sc.beats.push({ at: 1.4, text: 'カウンター発動…しかし ' + who.name.split(' ')[0] + ' が止めた' });
+        }
         sc.dur = 4.8;
         return;
       }
@@ -1075,32 +1263,112 @@
     }
 
     // ---------- 実況（見どころ以外） ----------
+    // 状況ごとに3〜5通り。相手側の状況や、直前の場面を受けた一言も候補にする。直近3行に出た文は避ける
+    // （2026-11-17：前は1試合に3通りほどで、14回続けて同じ文が出ていた）。乱数は this.frng（試合の結果は変えない）
     flavor() {
       const h = this.home;
       const a = this.away;
-      const r = this.rng;
-      const L1 = [];
+      const r = this.frng;
+      const nm = (p) => p.num + '番 ' + p.name.split(' ')[0];
+      const C = []; // [文, 重み]
+      const add = (w, xs) => { for (const x of xs) C.push([x, w / xs.length]); };
       const diff = this.score.home - this.score.away;
-      const ph = this.attPower(h) - this.defPower(a);
-      const pa = this.attPower(a) - this.defPower(h);
-      if (ph - pa > 1.5) L1.push(h.short + 'がボールを保持して試合を進める');
-      else if (pa - ph > 1.5) L1.push(a.short + 'がペースを握っている');
-      else L1.push('中盤での攻防が続く');
-      if (h.tactic.press > 0.7) L1.push(h.short + 'の前線からのプレスがはまる');
-      if (a.tactic.press > 0.7) L1.push(a.short + 'の激しいプレスにパスコースを探す');
-      if (h.tactic.tempo > 0.7) L1.push('縦に速く入れる' + h.short);
-      if (a.tactic.line < 0.3) L1.push(a.short + 'は自陣に引いて守りを固める');
-      if (a.tactic.line > 0.75) L1.push(a.short + 'は最終ラインを高く保つ');
-      if (this.min > 75 && diff === 0) L1.push('残り時間が少なくなり、一つのミスが命取りになる');
-      if (this.min > 75 && diff > 0) L1.push(h.short + 'がリードを守りにかかる');
-      if (this.min > 75 && diff < 0) L1.push(h.short + 'は同点を目指して前がかりになる');
+      const sh = this.homeShare();
+      const H = h.short;
+      const A = a.short;
+      if (sh > 0.58) add(3, [H + 'がボールを保持して試合を進める', H + 'が押し込む時間が続く', H + 'が相手陣内でパスを回す', A + 'は自陣で耐える時間', H + 'が主導権を握っている']);
+      else if (sh < 0.42) add(3, [A + 'がペースを握っている', A + 'に押し込まれる時間が続く', H + 'はなかなか前に運べない', A + 'がボールを動かして揺さぶる', H + 'は我慢の時間']);
+      else add(3, ['中盤での攻防が続く', '一進一退の展開', '互いに決め手を欠く', 'ボールが行き来する落ち着かない展開', '中盤で潰し合いが続く']);
+      for (const [t, o] of [[h, a], [a, h]]) {
+        if (t.tactic.press > 0.7) add(1.2, [t.short + 'の前線からのプレスがはまる', t.short + 'が高い位置から追い回す', o.short + 'は' + t.short + 'のプレスにパスコースを探す']);
+        if (t.tactic.tempo > 0.7) add(1, ['縦に速く入れる' + t.short, t.short + 'は奪ったら素早く前へ', t.short + 'がシンプルに裏を狙う']);
+        if (t.tactic.tempo < 0.35) add(1, [t.short + 'は後ろからじっくりつなぐ', t.short + 'が横パスで揺さぶる', t.short + 'は焦らずボールを動かす']);
+        if (t.tactic.line < 0.3) add(1, [t.short + 'は自陣に引いて守りを固める', t.short + 'は低い位置にブロックを作る', t.short + 'は守備を優先して構える']);
+        if (t.tactic.line > 0.75) add(1, [t.short + 'は最終ラインを高く保つ', t.short + 'のラインは高い。裏のスペースが空く', t.short + 'がコンパクトに押し上げる']);
+        if (t.tactic.width > 0.75) add(1, [t.short + 'はサイドを広く使う', t.short + 'が大きくサイドを変える', t.short + 'の両翼が高い位置を取る']);
+        if (t.lineup.length < 11) add(1.5, [t.short + 'は10人で耐える', '数的不利の' + t.short + 'は苦しい時間', t.short + 'は一人少ない分、全員で走る']);
+      }
+      if (this.min > 75 && diff === 0) add(2, ['残り時間が少なくなり、一つのミスが命取りになる', '同点のまま終盤へ', 'どちらも勝ち越しを狙って前へ']);
+      if (this.min > 75 && diff > 0) add(2, [H + 'がリードを守りにかかる', A + 'は追いつこうと前がかりに', H + 'は時間を使いながら試合を進める']);
+      if (this.min > 75 && diff < 0) add(2, [H + 'は同点を目指して前がかりになる', A + 'がリードを守りにかかる', H + 'は残り時間で何とか1点を']);
+      if (this.min < 10) add(1, ['立ち上がりは互いに様子をうかがう', '序盤から激しいボールの奪い合い', 'まずは落ち着いて入りたい']);
+      // 直前の場面を受けた一言（3分以内）
+      const last = this.scenes[this.scenes.length - 1];
+      if (last && this.min - last.minute <= 3 && this.min >= last.minute) {
+        const t = last.side === 'home' ? h : a;
+        const o = last.side === 'home' ? a : h;
+        if (last.goal) add(2.5, [t.short + 'は得点で勢いづいた', o.short + 'は失点を引きずらずに入りたい', 'ゴールのあと、' + o.short + 'が反撃に出る']);
+        else if (last.outcome === 'saved') add(1.5, ['好セーブのあと、' + o.short + 'が落ち着いてつなぐ', t.short + 'は惜しいチャンスだった', 'ゴール前の場面のあと、試合が落ち着く']);
+        else if (last.outcome === 'missed' || last.outcome === 'post') add(1.5, [t.short + 'は決めきれなかった', o.short + 'は助かった', '惜しい場面のあと、' + t.short + 'が再び押し込む']);
+        else add(1, [o.short + 'がしのいで、ボールを持ち直す', t.short + 'は攻め直し']);
+      }
       const tired = this.onPitch(h).filter((x) => x.p.stam < 45);
-      if (tired.length) L1.push(tired[0].p.num + '番 ' + tired[0].p.name.split(' ')[0] + ' の足が止まり始めている');
+      if (tired.length) add(1.2, [nm(tired[0].p) + ' の足が止まり始めている', nm(tired[0].p) + ' が苦しそうな表情', nm(tired[0].p) + ' は疲れが見える']);
+      const otired = this.onPitch(a).filter((x) => x.p.stam < 45);
+      if (otired.length) add(0.8, [A + 'の' + otired[0].p.num + '番の動きが落ちてきた', A + 'の足が止まり始めた']);
       const fire = this.onPitch(h).filter((x) => has(x.p, '声で味方を動かす'));
-      if (fire.length && r() < 0.4) L1.push(fire[0].p.num + '番 ' + fire[0].p.name.split(' ')[0] + ' の声で守備の陣形が整う');
+      if (fire.length) add(0.6, [nm(fire[0].p) + ' の声で守備の陣形が整う', nm(fire[0].p) + ' が大きな声で味方を動かす']);
       const calm = this.onPitch(h).filter((x) => has(x.p, '試合を落ち着かせる'));
-      if (calm.length && r() < 0.4) L1.push(calm[0].p.num + '番 ' + calm[0].p.name.split(' ')[0] + ' が試合を落ち着かせる');
-      return r.pick(L1);
+      if (calm.length) add(0.6, [nm(calm[0].p) + ' が試合を落ち着かせる', nm(calm[0].p) + ' がボールを持つと、流れが落ち着く']);
+      const ok = C.filter((c) => this.recent.indexOf(c[0]) < 0);
+      const xs = ok.length ? ok : C;
+      let v = r() * xs.reduce((s, c) => s + c[1], 0);
+      let out = xs[xs.length - 1][0];
+      for (const c of xs) if ((v -= c[1]) <= 0) { out = c[0]; break; }
+      this.recent.push(out);
+      if (this.recent.length > 3) this.recent.shift();
+      return out;
+    }
+
+    // 場面の外のファウル（毎分少しずつ。ボールを持たれている側がしやすい）。カードが出たときだけ実況に出す
+    _bgFoul() {
+      const r = this.frng;
+      const share = this.homeShare();
+      const def = r() < share ? this.away : this.home; // 押されている側がファウルしやすい
+      const att = this.other(def);
+      if (r() >= 0.1 + def.tactic.intensity * 0.06) return null;
+      const xs = this.onPitch(def).filter((x) => x.pos !== 'GK');
+      if (!xs.length) return null;
+      const wOf = (x) => (x.pos === 'FW' ? 0.5 : 1) * (pers(x.p, '感情の波', '短気') ? 1.8 : 1) * (pers(x.p, 'プレーの気質', '闘争的') ? 1.5 : 1) * (has(x.p, 'スライディング') ? 1.3 : 1) * (x.p.yellow ? 0.5 : 1);
+      let v = r() * xs.reduce((s, x) => s + wOf(x), 0);
+      let x = xs[xs.length - 1];
+      for (const y of xs) if ((v -= wOf(y)) <= 0) { x = y; break; }
+      const fo = this._foul(def, x.p, 0.1, 0.003);
+      // ゴール前のファウルなら、次の見どころを相手の直接FKにする
+      if (r() < 0.025) this.queuedFK = this.side(att);
+      if (!fo.card) return null;
+      return x.p.num + '番 ' + x.p.name.split(' ')[0] + '（' + def.short + '）のファウル' + fo.txt;
+    }
+
+    // 相手（あなたでない組）の采配：60分・76分に疲れた子を1〜2人交代し、負けていれば攻める型、勝っていれば堅守に寄せる（2026-11-17 足した）
+    _aiManage(t) {
+      if (t.isUser || !t.bench || !t.bench.length) return [];
+      const out = [];
+      const me = this.side(t);
+      const diff = this.score[me] - this.score[me === 'home' ? 'away' : 'home'];
+      // 交代：スタミナの低い順
+      const tired = this.onPitch(t).filter((x) => x.pos !== 'GK' && x.p.stam < 72).sort((a, b) => a.p.stam - b.p.stam);
+      const n = Math.min(this.min >= 75 ? 2 : 1 + (tired.length >= 3 ? 1 : 0), this.subsLeft(t), tired.length);
+      for (let k = 0; k < n && (this.windowsLeft(t) > 0 || t._winOpen); k++) {
+        const x = tired[k];
+        const p15 = YA.pos15OfSlot(x.s, x.i);
+        const fit = (q) => (q.apt && q.apt[p15] != null ? q.apt[p15] : q.pos === x.pos ? 15 : 8);
+        const cand = t.bench.map((id) => t.players[id]).filter((q) => q && !q.off && q.pos !== 'GK' && !(q.inj > 0)).sort((a, b) => fit(b) - fit(a) || abMean(b) - abMean(a))[0];
+        if (!cand) break;
+        const nm0 = x.p.num + '番';
+        if (this.substitute(t, x.p.id, cand.id).ok) out.push(t.short + 'の交代：' + nm0 + ' → ' + cand.num + '番');
+      }
+      this.closeWindow(t);
+      // 戦い方
+      const cur = t.tactic.type;
+      const want = diff < 0 ? (this.min >= 75 ? 'ハイプレス' : '縦に速い') : diff > 0 && this.min >= 75 ? '堅守' : null;
+      if (want && cur !== want && YA.TACTICS[want]) {
+        this.setType(t, want);
+        const txt = t.short + 'は戦い方を「' + want + '」に変えてきた';
+        this.log.push({ minute: this.min, ml: this.minLabel(), text: txt, kind: 'info', side: me });
+        out.push(txt);
+      }
+      return out;
     }
 
     // ---------- 時間の進行 ----------
@@ -1111,55 +1379,132 @@
       this.userStop = false;
     }
 
-    // 次の出来事を1つ進めて返す
+    // 見どころの場面の外のシュート（枠外・ブロック・GKの正面）を数字に足す。得点は変えない。
+    // 2026-11-17：場面のシュートだけ数えていて、両チームで1試合7本台（決まる割合が約36%）と現実（20本前後・1割ほど）から遠かった。
+    // 試合の乱数とは別の種を使うので、試合の結果は変わらない。GK のセーブは採点にも足す（1本 +0.2。2026-11-17）
+    addBackgroundShots() {
+      if (this._bgShots) return;
+      this._bgShots = true;
+      const r = YA.rngOf(this._seed * 131 + 7);
+      const share = this.homeShare();
+      const total = 10 + Math.floor(r() * 7);
+      for (const [att, sd, f] of [[this.home, 'home', share], [this.away, 'away', 1 - share]]) {
+        const def = att === this.home ? this.away : this.home;
+        const xs = this.onPitch(att).filter((x) => x.pos !== 'GK');
+        const gk = this.onPitch(def).find((x) => x.pos === 'GK');
+        if (!xs.length) continue;
+        const n = Math.round(total * f);
+        for (let k = 0; k < n; k++) {
+          const ws = xs.map((x) => (x.pos === 'FW' ? 3 : x.pos === 'MF' ? 1.6 : 0.5));
+          let v = r() * ws.reduce((a, b) => a + b, 0);
+          let i = 0;
+          while (v > ws[i] && i < ws.length - 1) v -= ws[i++];
+          const p = xs[i].p;
+          p.st.shots = (p.st.shots || 0) + 1;
+          this.stats[sd].shots++;
+          if (r() < 0.3) {
+            this.stats[sd].onTarget++;
+            if (gk && gk.p.st) {
+              gk.p.st.saves = (gk.p.st.saves || 0) + 1;
+              gk.p.st.rating += 0.2;
+            }
+          }
+        }
+      }
+    }
+    _flushSendOff() {
+      if (!this._toSendOff || !this._toSendOff.length) return;
+      for (const [t, p] of this._toSendOff) this._sendOff(t, p);
+      this._toSendOff = [];
+    }
+    // 次の出来事を1つ進めて返す。時刻は timeline（前半45分＋追加時間・後半45分＋追加時間）を1つずつ進める
     step() {
       if (this.finished) return { type: 'full' };
+      this._flushSendOff();
       if (this.pendingStop) {
         const reason = this.pendingStop;
         this.pendingStop = null;
         this.userStop = false;
-        return { type: 'stop', reason, minute: this.min };
+        return { type: 'stop', reason, minute: this.min, ml: this.minLabel() };
       }
-      if (this.userStop && !this._justStopped) {
+      if (this.userStop) {
         this.userStop = false;
-        return { type: 'stop', reason: 'user', minute: this.min };
+        return { type: 'stop', reason: 'user', minute: this.min, ml: this.minLabel() };
       }
-      this._justStopped = false;
-      if (this.min >= 90) {
-        this.finished = true;
-        return { type: 'full', summary: this.summary() };
-      }
-      this.min++;
-      this._tickPlayers();
-      if (this.min === 45 && !this.halfDone) {
+      const tl = this.timeline;
+      // 前半の追加時間が終わったら、前半終了（時間は進めない）
+      const h1End = 44 + this.add1;
+      if (this.ti === h1End && !this.halfDone) {
         this.halfDone = true;
         if (this.settings.autoStop) this.pendingStop = 'half';
-        this.log.push({ minute: 45, text: '前半終了', kind: 'info' });
-        return { type: 'tick', minute: 45, text: '前半終了。' + this.score.home + ' - ' + this.score.away, key: true };
+        this.log.push({ minute: 45, ml: this.minLabel(), text: '前半終了', kind: 'info' });
+        return { type: 'tick', minute: 45, ml: this.minLabel(), text: '前半終了。' + this.score.home + ' - ' + this.score.away, key: true };
       }
-      if (this.min === 75 && !this.lateDone) {
+      if (this.ti >= tl.length - 1) {
+        this.finished = true;
+        this.addBackgroundShots();
+        return { type: 'full', summary: this.summary() };
+      }
+      this.ti++;
+      [this.min, this.extra] = tl[this.ti];
+      const ml = this.minLabel();
+      this._tickPlayers();
+      if (this.ti === 45 + this.add1) {
+        // 後半のキックオフ（前半に蹴らなかった側）
+        const ks = this.kickoffSide === 'home' ? 'away' : 'home';
+        const tx = '後半開始。' + (ks === 'home' ? this.home.short : this.away.short) + 'のキックオフ';
+        this.log.push({ minute: 46, ml, text: tx, kind: 'info' });
+        return { type: 'tick', minute: 46, ml, text: tx, key: true, kickoff: ks };
+      }
+      if (this.extra === 1 && this.keyIdx.indexOf(this.ti) < 0) {
+        const tx = (this.min === 45 ? '前半' : '後半') + 'の追加時間は' + (this.min === 45 ? this.add1 : this.add2) + '分';
+        this.log.push({ minute: this.min, ml, text: tx, kind: 'info' });
+        return { type: 'tick', minute: this.min, ml, text: tx };
+      }
+      if (this.min === 75 && !this.extra && !this.lateDone) {
         this.lateDone = true;
         if (this.settings.autoStop) this.pendingStop = 'late';
-        return { type: 'tick', minute: 75, text: '残り15分。', key: true };
+        return { type: 'tick', minute: 75, ml, text: '残り15分。', key: true };
       }
-      if (this.keyMinutes.indexOf(this.min) >= 0) {
-        const att = this.pickAttacker();
+      // 相手の采配（60分・76分）
+      if ((this.min === 60 || this.min === 76) && !this.extra && this.keyIdx.indexOf(this.ti) < 0) {
+        const ai = this._aiManage(this.away);
+        if (ai.length) return { type: 'tick', minute: this.min, ml, text: ai.join('。') };
+      }
+      if (this.keyIdx.indexOf(this.ti) >= 0) {
+        let att;
+        let type;
+        if (this.queuedFK) {
+          // ゴール前のファウルから直接FK
+          att = this.queuedFK === 'home' ? this.home : this.away;
+          type = 'fk';
+          this.queuedFK = null;
+        } else {
+          att = this.pickAttacker();
+          const w = this.sceneWeights(att, this.other(att));
+          const types = Object.keys(w).filter((k) => w[k] > 0);
+          type = this.rng.weighted(types, (k) => w[k]);
+        }
         const def = this.other(att);
-        const w = this.sceneWeights(att, def);
-        const types = Object.keys(w).filter((k) => w[k] > 0);
-        const type = this.rng.weighted(types, (k) => w[k]);
         const sc = this.makeScene(att, def, type);
         this.scenes.push(sc);
         this.stats[sc.side].scenes++;
-        this.log.push({ minute: this.min, text: sc.beats[sc.beats.length - 1].text, kind: sc.goal ? 'goal' : 'scene', scene: sc.id });
+        this.log.push({ minute: this.min, ml, text: sc.beats[sc.beats.length - 1].text, kind: sc.goal ? 'goal' : 'scene', scene: sc.id });
         if (sc.goal && sc.side === 'away' && this.settings.autoStop) this.pendingStop = 'conceded';
-        if (sc.goal && sc.side === 'home' && this.settings.autoStop) this.pendingStop = 'scored';
+        // 自分の得点で止めるのは、設定で選んだときだけ（2026-11-17：前は得点のたびに止まっていた）
+        if (sc.goal && sc.side === 'home' && this.settings.autoStop && this.settings.stopOnScore) this.pendingStop = 'scored';
         this._afterScene(sc, att, def);
-        return { type: 'scene', scene: sc, minute: this.min };
+        return { type: 'scene', scene: sc, minute: this.min, ml };
       }
-      const text = this.min % 4 === 0 || this.rng() < 0.1 ? this.flavor() : null;
-      if (text) this.log.push({ minute: this.min, text, kind: 'flow' });
-      return { type: 'tick', minute: this.min, text };
+      const foul = this._bgFoul();
+      if (foul) {
+        this._flushSendOff();
+        this.log.push({ minute: this.min, ml, text: foul, kind: 'card' });
+        return { type: 'tick', minute: this.min, ml, text: foul, card: true };
+      }
+      const text = this.min % 4 === 0 || this.frng() < 0.1 ? this.flavor() : null;
+      if (text) this.log.push({ minute: this.min, ml, text, kind: 'flow' });
+      return { type: 'tick', minute: this.min, ml, text };
     }
 
     _afterScene(sc, att, def) {
@@ -1203,6 +1548,8 @@
       if (t.subsUsed >= 5) return { ok: false, msg: '交代は5人までです' };
       if (!t.onPitch.has(outPid)) return { ok: false, msg: 'ピッチにいない選手です' };
       if (t.bench.indexOf(inPid) < 0) return { ok: false, msg: 'ベンチにいない選手です' };
+      // 一度下げた子はもう出られない（2026-11-17：前は下げた子がベンチに戻り、もう一度出られた）
+      if (t.players[inPid].off) return { ok: false, msg: t.players[inPid].sentOff ? '退場した選手です' : '一度下げた選手は、もう出られません' };
       const gkOut = YA.posOfSlot(t.lineup[t.lineup.findIndex((s) => s.pid === outPid)], t.lineup.findIndex((s) => s.pid === outPid)) === 'GK';
       const gkIn = t.players[inPid].pos === 'GK';
       if (gkOut !== gkIn) return { ok: false, msg: 'GK はGKと交代します' };
@@ -1257,7 +1604,7 @@
       Object.assign(t.tactic, patch);
     }
     setType(t, type) {
-      t.tactic = Object.assign({ type, dir: t.tactic.dir || 0 }, YA.TACTICS[type]);
+      t.tactic = YA.withType(t.tactic, type);
     }
 
     // 1人への指示。性格しだいで聞き流す
@@ -1378,40 +1725,25 @@
       const sh = this.score.home;
       const sa = this.score.away;
       const notes = [];
-      const traitGoals = {};
-      for (const sc of this.scenes) {
-        if (sc.side !== 'home') continue;
-        for (const f of sc.fx) {
-          if (sc.goal || sc.outcome === 'saved' || sc.outcome === 'intercepted' || sc.outcome === 'cleared') {
-            const k = f.pid + '|' + f.kind + '|' + f.tag;
-            traitGoals[k] = (traitGoals[k] || 0) + 1;
-          }
-        }
-      }
-      const seen = {};
-      for (const sc of this.scenes) {
-        for (const f of sc.fx) {
-          const t = sc.side === 'home' ? this.home : this.away;
-          const key = f.pid + f.tag;
-          if (seen[key]) continue;
-          seen[key] = 1;
-        }
-      }
       for (const [pid, n] of Object.entries(this.discontent)) {
         const p = this.home.players[pid];
         if (p && n >= 8) notes.push({ kind: 'bad', text: p.num + '番 ' + p.name.split(' ')[0] + '：今の役割「' + this.roleOf(this.home, p) + '」が合っておらず、不満を感じている' });
       }
-      for (const t of [this.home]) {
-        for (const p of Object.values(t.players)) {
-          if (p.off === false && !t.onPitch.has(p.id)) continue;
+      // 勝ち負けの補正と、無失点の GK（+0.6）は両チーム同じ処理（2026-11-17：前はこちらだけで、相手の採点が10を超えていた）
+      const adj = (t, mine, theirs) => {
+        const rated = Object.values(t.players).filter((p) => p.st && p.st.minutes > 0);
+        for (const p of rated) {
+          let r = p.st.rating + (mine > theirs ? 0.3 : mine < theirs ? -0.3 : 0);
+          if (!theirs && p.pos === 'GK' && p.st.minutes >= 45) r += 0.6;
+          p.st.rating = clamp(r, 3, 10);
         }
-      }
-      const rated = Object.values(this.home.players).filter((p) => p.st.minutes > 0);
-      for (const p of rated) {
-        p.st.rating = clamp(p.st.rating + (sh > sa ? 0.3 : sh < sa ? -0.3 : 0), 3, 10);
-      }
-      rated.sort((a, b) => b.st.rating - a.st.rating);
-      return { score: { home: sh, away: sa }, mvp: rated[0] || null, rated, notes };
+        return rated.sort((a, b) => b.st.rating - a.st.rating);
+      };
+      const rated = adj(this.home, sh, sa);
+      adj(this.away, sa, sh);
+      const yc = (t) => this.cards.filter((c) => c.side === t && c.kind === 'Y').length;
+      const rc = (t) => this.cards.filter((c) => c.side === t && c.kind === 'R').length;
+      return { score: { home: sh, away: sa }, mvp: rated[0] || null, rated, notes, cards: { home: { y: yc('home'), r: rc('home') }, away: { y: yc('away'), r: rc('away') } } };
     }
   }
 

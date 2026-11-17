@@ -11,6 +11,8 @@
   YA.addTrust = function (w, d, why) {
     const c = w.club;
     const before = c.trust;
+    // 70を超えたら上がり幅を小さく（2026-11-17 直し：上に張り付いていた）
+    if (d > 0 && c.trust > 70) d *= Math.max(0.2, (100 - c.trust) / 30);
     c.trust = clamp(c.trust + d, 0, 100);
     if (why && Math.abs(c.trust - before) >= 1) YA.noteTier(w, 2, `クラブからの信頼度が${c.trust > before ? '上がりました' : '下がりました'}（${Math.round(before)}→${Math.round(c.trust)}）：${why}`);
   };
@@ -53,7 +55,9 @@
     const t = YA.staffAb(w, 'トレーナー');
     const b = YA.staffAb(w, '体コーチ');
     const fac = w.club.facility || 0;
-    return { recover: (t - 10) * 0.45 + fac * 1.2, inj: clamp(1 - (t - 10) * 0.035 - (b - 10) * 0.015 - fac * 0.04, 0.5, 1.25) };
+    // 施設の回復は1段0.6まで、合わせて4まで（2026-11-17 直し：施設1段で疲れが6に張り付いていた）。育成基金の医療・寮も少し効く
+    const fund = (k) => (YA.fundOn && YA.fundOn(w, k) ? 1 : 0);
+    return { recover: clamp((t - 10) * 0.35 + fac * 0.6 + fund('medical') * 1 + fund('dorm') * 1, -2, 4), inj: clamp(1 - (t - 10) * 0.035 - (b - 10) * 0.015 - fac * 0.04, 0.5, 1.25) * (fund('medical') ? 0.8 : 1) };
   };
 
   YA.genMarket = function (w) {
@@ -61,13 +65,14 @@
     const list = [];
     for (let i = 0; i < 7; i++) list.push(genStaff(r, r.pick(YA.ROLES_STAFF), 6, 16));
     // 卒業生が引退して戻ってくる
-    for (const a of w.alumni) if (a.retired && !a.coached && !a.mem && a.ovr >= 11 && r.chance(0.5)) {
+    for (const a of w.alumni) if (a.retired && !a.coached && !a.offered && !a.mem && a.ovr >= 11 && r.chance(0.5)) {
       const s = genStaff(r, r.pick(YA.ROLES_STAFF), 9, 15, true);
       s.name = a.name;
       s.ob = true;
       s.alumniRef = a.name;
+      s.alumniY = a.year;
       list.push(s);
-      a.coached = true;
+      a.offered = w.year; // 市場に並んだ印。雇ったときだけ a.coached・a.coachY（memory.js の YA.hire）
     }
     w.market = list;
   };
@@ -90,14 +95,29 @@
 
   // ---------- 予算 ----------
   const TIER_BASE = { 1: 4000, 2: 2000, 3: 1000 };
+  YA.TIER_BASE = TIER_BASE;
   YA.TIER_NAME = { 1: '1部', 2: '2部', 3: '3部' };
+  // 予算の目安：はじめのクラブの部と、いまのリーグの部を混ぜる（2026-11-17 直し：昇格しても予算が変わらなかった）
+  YA.tierBase = function (w) {
+    const c = w.club;
+    const lv = w.leagueLevel || c.tier;
+    return Math.round(TIER_BASE[c.tier] * 0.4 + TIER_BASE[lv] * 0.6);
+  };
+  // scout・camp は「予備の残り」を含めた使える額（予備は合宿・スカウトのどちらにも回せる。2026-11-17 直し：予備に使い道がなかった）。
+  // 配分そのものは scoutBase・campBase、予備の残りは reserveLeft
   YA.budget = function (w) {
     const c = w.club;
     const salaries = c.staff.reduce((s, x) => s + x.salary, 0);
     const free = Math.max(0, c.total - salaries);
     const a = c.alloc;
     const amt = (k) => Math.round((free * a[k]) / 100);
-    return { total: c.total, salaries, free, scout: amt('scout'), camp: amt('camp'), facility: amt('facility'), reserve: free - amt('scout') - amt('camp') - amt('facility') };
+    const sp = c.spent || { scout: 0, camp: 0 };
+    const scoutBase = amt('scout');
+    const campBase = amt('camp');
+    const reserve = free - scoutBase - campBase - amt('facility');
+    const reserveLeft = Math.max(0, reserve - Math.max(0, (sp.scout || 0) - scoutBase) - Math.max(0, (sp.camp || 0) - campBase));
+    const useOf = (base, spent) => (spent || 0) + Math.max(0, base - (spent || 0)) + reserveLeft;
+    return { total: c.total, salaries, free, scout: useOf(scoutBase, sp.scout), camp: useOf(campBase, sp.camp), facility: amt('facility'), reserve, reserveLeft, scoutBase, campBase };
   };
   // 配分を変えられるか（信頼度が低いとクラブが決める。中くらいは一部だけ）
   YA.canAlloc = function (w, k) {
@@ -131,33 +151,38 @@
   };
 
   // ---------- 年度はじめ：目標・約束事 ----------
+  // 目標の選択肢は易しい順に並べる（2026-11-17 直し：前は makeGoals の値が選択肢に無く、「難しく」で易しくなることがあった。
+  // 信頼度80では成績の目標を変えられなかった）。育成は「総合力（0〜200）の伸びの平均」で数え、部と施設で選択肢が変わる
+  // （前は能力の合計で、能力の数が少ないGKの伸びが小さく出ていた）
   const GOAL_DEF = {
-    result: { label: '成績', text: (g) => `リーグで${g.n}位以内`, opts: [4, 6, 8], key: 'n' },
-    develop: { label: '育成', text: (g) => `全選手の能力の合計を平均+${g.x}以上伸ばす`, opts: [18, 22, 28], key: 'x' },
-    promise: { label: '約束', text: (g) => `高1がAチームで合計${g.t}分以上出る`, opts: [1200, 2400, 4000], key: 't' },
+    result: { label: '成績', text: (g) => `リーグで${g.n}位以内`, opts: () => [10, 8, 6, 4, 2], key: 'n' },
+    develop: { label: '育成', text: (g) => `全選手の総合力を平均+${g.x}以上伸ばす`, opts: (w) => { const lv = (w.league && w.league.level) || w.leagueLevel || 2; const b = 7.3 + (3 - lv) * 0.6 + Math.min(3, (w.club && w.club.facility) || 0) * 0.4; return [-2, -1, 0, 1, 2].map((k) => Math.round(b + k * 1.5)); }, key: 'x' },
+    promise: { label: '約束', text: (g) => `高1がAチームで合計${g.t}分以上出る`, opts: () => [600, 1200, 1800, 2400, 3200], key: 't' },
   };
   YA.GOAL_DEF = GOAL_DEF;
+  YA.goalOpts = (w, k) => GOAL_DEF[k].opts(w);
   YA.makeGoals = function (w) {
     const c = w.club;
     const lv = w.league ? w.league.level : 2;
-    // 決定97：信頼度が上がるほどクラブの目標も上がる（評価と信頼度が張り付かない）
+    // 決定97：信頼度が上がるほどクラブの目標も上がる（評価と信頼度が張り付かない）。真ん中は選択肢の3番目
     const up = Math.round(((c.trust || 50) - 50) / 15);
-    c.goals = [{ k: 'result', n: clamp((lv === 1 ? 8 : 6) - up, 2, 10) }, { k: 'develop', x: clamp(22 + up * 2, 16, 30) }, { k: 'promise', t: 2400 + Math.max(0, up) * 300 }];
+    const at = (k, d) => YA.goalOpts(w, k)[clamp(2 + d, 0, 4)];
+    c.goals = [{ k: 'result', n: at('result', up + (lv === 1 ? -1 : 0)) }, { k: 'develop', x: at('develop', up) }, { k: 'promise', t: at('promise', clamp(up, 0, 1)) }];
     c.goalChanges = { low: 0, mid: 1, high: 2 }[YA.trustLevel(w)];
   };
   YA.goalText = (g) => GOAL_DEF[g.k].text(g);
-  // dir = +1 難しく（評価は高く出る）/ -1 易しく
+  // dir = +1 難しく（評価は高く出る）/ -1 易しく。選択肢の一つ隣へ
   YA.changeGoal = function (w, i, dir) {
     const c = w.club;
     if (c.goalChanges <= 0) return false;
     const g = c.goals[i];
     const d = GOAL_DEF[g.k];
-    const at = d.opts.indexOf(g[d.key]);
-    // result は数字が小さいほど難しい
-    const step = g.k === 'result' ? -dir : dir;
-    const nx = clamp(at + step, 0, d.opts.length - 1);
-    if (nx === at) return false;
-    g[d.key] = d.opts[nx];
+    const opts = d.opts(w);
+    let at = opts.indexOf(g[d.key]);
+    if (at < 0) at = opts.reduce((m, v, j) => (Math.abs(v - g[d.key]) < Math.abs(opts[m] - g[d.key]) ? j : m), 0); // 古い保存の値は近い選択肢から
+    const nx = clamp(at + dir, 0, opts.length - 1);
+    if (nx === at && opts[at] === g[d.key]) return false;
+    g[d.key] = opts[nx];
     g.bonus = (g.bonus || 0) + dir;
     c.goalChanges--;
     return true;
@@ -169,20 +194,24 @@
     const c = w.club;
     for (const p of Object.values(w.players)) {
       p.sum0 = YA.abSum(p);
+      p.r0 = YA.rating(p);
       p.minsA = 0;
       p.minsYr = 0;
     }
     c.staffChanges = 1;
     c.alloc = Object.assign({ scout: 18, camp: 14, facility: 8 }, c.alloc);
-    // 前の年の連帯貢献金などを予算に
-    // 連帯貢献金は予算に足すが、クラブの本体にも回るので、育成の予算に入るのは基本予算の6割まで
-    c.solidarityIn = Math.round(Math.min(c.solidarity || 0, TIER_BASE[c.tier] * 0.6));
+    // 連帯貢献金は予算に入らない（半分が育成基金・半分がクラブ本体。lineage.js の yearStart が先に移す）。
+    // 予算に入るのは、自分のトップが卒業生を売ったときの移籍金の一部（scout.js の c.topSale）。基本予算の6割まで
+    const tb = YA.tierBase(w);
+    c.saleIn = Math.round(Math.min(c.topSale || 0, tb * 0.6));
+    c.topSale = 0;
+    delete c.solidarityIn;
     // 決定98：予算は部ごとの目安の上下3割まで
-    c.total = Math.round(clamp(TIER_BASE[c.tier] * (0.85 + c.rep / 300) * (1 + (c.budgetAdj || 0)) + c.solidarityIn, TIER_BASE[c.tier] * 0.7, TIER_BASE[c.tier] * 1.3));
+    c.total = Math.round(clamp(tb * (0.85 + c.rep / 300) * (1 + (c.budgetAdj || 0)) + c.saleIn, tb * 0.7, tb * 1.3));
     c.solidarityLast = c.solidarity || 0;
     c.solidarity = 0;
-    c.facPts += YA.budget(w).facility;
     c.spent = { scout: 0, camp: 0 };
+    c.facPts += YA.budget(w).facility;
     c.facility = YA.facilityLevel(w);
     YA.genMarket(w);
     YA.newLeague(w);
@@ -196,12 +225,16 @@
     for (const p of Object.values(w.players)) if (p.dorm == null) p.dorm = r.chance(0.5);
   };
 
+  // 育成の目標のいまの値：総合力（0〜200）の伸びの平均（GKも同じ物差し。年度はじめの控え p.r0 から）
+  YA.developNow = function (w) {
+    const ps = Object.values(w.players).filter((p) => p.r0 != null || p.sum0 != null);
+    return ps.length ? ps.reduce((s, p) => s + (p.r0 != null ? YA.rating(p) - p.r0 : (YA.abSum(p) - p.sum0) / 3), 0) / ps.length : 0;
+  };
   // ---------- 年末の評価 ----------
   YA.evaluate = function (w) {
     const c = w.club;
     const rank = YA.myRank(w);
-    const ps = Object.values(w.players).filter((p) => p.sum0 != null);
-    const avg = ps.length ? ps.reduce((s, p) => s + (YA.abSum(p) - p.sum0), 0) / ps.length : 0;
+    const avg = YA.developNow(w);
     const g1 = Object.values(w.players).filter((p) => p.grade === 1).reduce((s, p) => s + (p.minsA || 0), 0);
     const res = c.goals.map((g) => {
       let val;
@@ -215,10 +248,12 @@
     const score = res.reduce((s, x) => s + x.score, 0);
     const letter = score >= 3 ? 'S' : score >= 2.3 ? 'A' : score >= 1.5 ? 'B' : score >= 0.8 ? 'C' : 'D';
     const d = score - 1.9; // B評価（2つ達成）はほぼ現状維持、A以上で信頼が上がり、C以下で下がる
-    c.trust = clamp(c.trust + d * 9, 0, 100);
-    c.trust += (50 - c.trust) * 0.15; // 信頼度は、少しずつ真ん中へ戻る（張り付かないように）
+    // 信頼度：高いほど上がりにくく（70を超えると逓減）、真ん中へ戻る力も強く（2026-11-17 直し：2部で1年目49→8年目93と張り付いていた）
+    const upK = d > 0 && c.trust > 70 ? Math.max(0.2, (100 - c.trust) / 30) : 1;
+    c.trust = clamp(c.trust + d * 9 * upK, 0, 100);
+    c.trust += (55 - c.trust) * 0.3;
     YA.addRep(w, d * 3 + (w.leagueEndMove === -1 ? 4 : w.leagueEndMove === 1 ? -4 : 0));
-    c.rep += (50 - c.rep) * 0.08; // 評判も、何もしなければ少しずつ真ん中へ戻る
+    c.rep += (50 - c.rep) * 0.15; // 評判も、何もしなければ真ん中へ戻る
     c.budgetAdj = clamp((c.budgetAdj || 0) + d * 0.05, -0.3, 0.4);
     w.rep = c.rep;
     const rec = { year: w.year, letter, score: Math.round(score * 10) / 10, rank, level: w.league ? w.league.level : 2, goals: res };
@@ -246,14 +281,18 @@
     // 一つ上・同じ・一つ下の部から1つずつ（端の部では同じ部が2つになるので、クラブの色で差をつける）
     const tiers = [clamp(base - 1, 1, 3), base, clamp(base + 1, 1, 3)];
     const FLAVOR = [['予算が多い', 0.15], ['予算はふつう', 0], ['予算は少なめ（そのぶん期待も低い）', -0.12]];
-    const names = ['横浜', '川崎', '大宮', '千葉', '東京', '名古屋', '大阪', '神戸', '広島', '福岡', '仙台', '札幌', '静岡', '新潟'];
-    const nick = ['ブルーウィング', 'シルバーホーク', 'アルバトロス', 'サンライズ', 'レッドフォックス', 'ノースウィンド', 'ミストラル', 'クレセント'];
-    const seen = new Set();
+    // 誘いのクラブは YA.PRO_CLUBS から、その部と地域で選ぶ（2026-11-17 直し：表に無い「横浜 ブルーウィングU-18」などが出ていた）。
+    // いまの地域と隣の地域を先に、無ければほかの地域から
+    const myRg = YA.regionOf ? YA.regionOf(w.clubName) : 1;
+    const seen = new Set([String(w.clubName || '')]);
     const out = [];
     tiers.forEach((t, i) => {
-      let n;
-      do n = r.pick(names) + ' ' + r.pick(nick) + 'U-18';
-      while (seen.has(n));
+      const free = (c) => !seen.has(c.name + 'U-18');
+      let pool = YA.PRO_CLUBS.filter((c) => c.tier === t && free(c));
+      const near = pool.filter((c) => Math.abs(c.region - myRg) <= 1);
+      if (near.length && r() < 0.7) pool = near;
+      if (!pool.length) pool = YA.PRO_CLUBS.filter(free);
+      const n = r.pick(pool).name + 'U-18';
       seen.add(n);
       const [note, adj] = FLAVOR[i];
       out.push({ tier: t, name: n, note, budgetAdj: adj, budget: Math.round(TIER_BASE[t] * (0.85 + rep / 300) * (1 + adj)) });
@@ -344,9 +383,9 @@
       return '年代別の日本代表から招集が届いた（1週間チームを離れる）。' + ids.map((id) => { const q = w.players[id]; return `${q.num}番 ${q.name}（${(YA.natTeamOf(q) || YA.YOUTH_NAT[1])[0]}・総合力${YA.rating(q)}）`; }).join('、') + `。選考ラインは U-18 ${YA.YOUTH_NAT[1][1]}・U-21 ${YA.YOUTH_NAT[0][1]}`;
     },
     opts: [
-      o('全員送り出す（本人は伸び、クラブの評判が上がる）', 'push', null, (w) => { const ids = (w._natCall || []).filter((id) => w.players[id]); for (const id of ids) natSend(w, w.players[id]); YA.addRep(w, ids.length); return { line: `${ids.length}人を送り出した。それぞれ1週間チームを離れる`, small: `評判 +${ids.length}・自信 +6` }; }),
-      o('Aの先発の子だけ残し、ほかは送り出す', 'wait', null, (w) => { const ids = (w._natCall || []).filter((id) => w.players[id]); const st = new Set((w.lineupA || []).map((x) => x.pid)); const go = ids.filter((id) => !st.has(id)); for (const id of go) natSend(w, w.players[id]); for (const id of ids.filter((x) => st.has(x))) { w.players[id].unrest += 1.5; w.players[id].conf = clamp(w.players[id].conf - 4, 0, 100); } YA.addRep(w, go.length - (ids.length - go.length) * 0.5); return { line: `${go.length}人を送り出し、${ids.length - go.length}人を残した。残った子は少し不満そうだ`, small: '' }; }),
-      o('全員断る（試合を優先する）', 'firm', null, (w) => { const ids = (w._natCall || []).filter((id) => w.players[id]); for (const id of ids) { w.players[id].unrest += 1.5; w.players[id].conf = clamp(w.players[id].conf - 6, 0, 100); } YA.addRep(w, -ids.length); return { line: '代表の招集を断った。協会からの評判と、本人たちの気持ちが下がった', small: `評判 -${ids.length}` }; }),
+      o('全員送り出す（本人は伸び、クラブの評判が上がる）', 'push', null, (w) => { const ids = (w._natCall || []).filter((id) => w.players[id]); for (const id of ids) natSend(w, w.players[id]); YA.addRep(w, ids.length); return { line: ids.length > 1 ? `${ids.length}人を送り出した。それぞれ1週間チームを離れる。` : `${w.players[ids[0]] ? w.players[ids[0]].name : ''}を送り出した。1週間チームを離れる。`, small: `評判 +${ids.length}・自信 +6` }; }),
+      o('Aの先発の子だけ残し、ほかは送り出す', 'wait', null, (w) => { const ids = (w._natCall || []).filter((id) => w.players[id]); const st = new Set((w.lineupA || []).map((x) => x.pid)); const go = ids.filter((id) => !st.has(id)); for (const id of go) natSend(w, w.players[id]); for (const id of ids.filter((x) => st.has(x))) { w.players[id].unrest += 1.5; w.players[id].conf = clamp(w.players[id].conf - 4, 0, 100); } YA.addRep(w, go.length - (ids.length - go.length) * 0.5); return { line: `${go.length}人を送り出し、${ids.length - go.length}人を残した。残った子は少し不満そうだ。`, small: '' }; }),
+      o('全員断る（試合を優先する）', 'firm', null, (w) => { const ids = (w._natCall || []).filter((id) => w.players[id]); for (const id of ids) { w.players[id].unrest += 1.5; w.players[id].conf = clamp(w.players[id].conf - 6, 0, 100); } YA.addRep(w, -ids.length); return { line: '代表の招集を断った。協会からの評判と、本人たちの気持ちが下がった。', small: `評判 −${ids.length}` }; }),
     ] });
   YA.EVENT_ABOUT = YA.EVENT_ABOUT || {};
   YA.EVENT_ABOUT.natcall = '年に2回（5月・1月）、選考ラインを超えた子が年代別の代表に選ばれます。送り出すと本人は伸び、クラブの評判が上がります。';
@@ -402,8 +441,8 @@
     pick: (w, r) => ({ id: '', _club: r.int(0, CLUB_REQ.length - 1) }),
     text: (p, w) => CLUB_REQ[w._clubReq || 0].text,
     opts: [
-      o('応じる', 'warm', null, (w) => { const q = CLUB_REQ[w._clubReq || 0]; q.yes(w); YA.addTrust(w, q.trust[0], '要望に応えた'); return { line: q.yesMsg, small: '信頼度 +' + q.trust[0] }; }),
-      o('断る', 'firm', null, (w) => { const q = CLUB_REQ[w._clubReq || 0]; YA.addTrust(w, q.trust[1], '要望を断った'); return { line: '要望を断った', small: '信頼度 ' + q.trust[1] }; }),
+      o('応じる', 'warm', null, (w) => { const q = CLUB_REQ[w._clubReq || 0]; q.yes(w); YA.addTrust(w, q.trust[0], '要望に応えた'); return { line: q.yesMsg + '。', small: '信頼度 +' + q.trust[0] }; }),
+      o('断る', 'firm', null, (w) => { const q = CLUB_REQ[w._clubReq || 0]; YA.addTrust(w, q.trust[1], '要望を断った'); return { line: '要望を断った。', small: '信頼度 −' + Math.abs(q.trust[1]) }; }),
     ] });
   E.push({ id: 'media', name: '取材', weight: 0.5,
     pick: (w, r) => { const c = Object.values(w.players).filter((p) => YA.ovr(p) > 11 && !away(p)); return c.length ? r.pick(c) : null; },
@@ -413,8 +452,8 @@
     pick: (w, r) => ({ id: '', _staff: r.int(0, w.club.staff.length - 1) }),
     text: (p, w) => { const s = w.club.staff[w._staffIdx || 0]; return `他のクラブが${s.name}（${s.role}）を引き抜こうとしている。本人は迷っているようだ`; },
     opts: [
-      o('給料を上げて引き止める', 'warm', null, (w) => { const s = w.club.staff[w._staffIdx || 0]; s.salary = Math.round(s.salary * 1.2); return { line: s.name + 'は残ることになった（給料 +20%）', small: '' }; }),
-      o('送り出す（後任はクラブが決める）', 'wait', null, (w, p, r) => { const s = w.club.staff[w._staffIdx || 0]; const n = YA.genStaffPublic(r, s.role); w.club.staff[w._staffIdx || 0] = n; return { line: `${s.name}は去った。後任は${n.name}（能力${n.ab}）`, small: '' }; }),
+      o('給料を上げて引き止める', 'warm', null, (w) => { const s = w.club.staff[w._staffIdx || 0]; s.salary = Math.round(s.salary * 1.2); return { line: s.name + 'は残ることになった。', small: '給料 +20%' }; }),
+      o('送り出す（後任はクラブが決める）', 'wait', null, (w, p, r) => { const s = w.club.staff[w._staffIdx || 0]; const n = YA.genStaffPublic(r, s.role); w.club.staff[w._staffIdx || 0] = n; return { line: `${s.name}は去った。後任は${n.name}（腕前${n.ab}）。`, small: '' }; }),
     ] });
   YA.genStaffPublic = (r, role) => genStaff(r, role, 5, 12);
 
@@ -426,37 +465,71 @@
       o('注意する', 'firm', (w) => { w.disc = clamp((w.disc == null ? 60 : w.disc) + 2, 0, 100); }),
       o('次の試合から外す', 'firm', (w, p) => { p.suspend = 1; w.disc = clamp((w.disc == null ? 60 : w.disc) + 5, 0, 100); if (p.team === 'A') p.unrest += 1.5; }),
       o('練習を厳しくする（全員）', 'wait', (w) => { for (const q of Object.values(w.players)) { q.fat = clamp(q.fat + 5, 0, 100); } w.disc = clamp((w.disc == null ? 60 : w.disc) + 4, 0, 100); }),
-      o('約束どおり処分する', 'firm', (w, p) => { const has = (w.rules || []).indexOf(rule) >= 0; w.disc = clamp((w.disc == null ? 60 : w.disc) + (has ? 8 : 3), 0, 100); if (has) YA.addTrust(w, 1); if (p.team === 'A' && YA.ovr(p) > 11.5) p.suspend = 1; }),
+      Object.assign(o('約束どおり処分する', 'firm', (w, p) => { const has = (w.rules || []).indexOf(rule) >= 0; w.disc = clamp((w.disc == null ? 60 : w.disc) + (has ? 8 : 3), 0, 100); if (has) YA.addTrust(w, 1); if (p.team === 'A' && YA.ovr(p) > 11.5) p.suspend = 1; }), { rule }),
     ] });
   E.push(DISC('fight', 'もめごと', (p) => `${pname(p)}が練習中に仲間と言い合いになった。周りが止めに入った`, '挨拶と片付けを徹底する', (p) => p.pers['感情の波'] === '短気' || p.pers['プレーの気質'] === '闘争的' || p.pers['気持ちの強さ'] === '負けず嫌い'));
   E.push(DISC('slack', '練習の手抜き', (p) => `${pname(p)}の練習が明らかに手抜きになっている。コーチが指摘してきた`, '練習は全力で走る', (p) => p.pers['練習への向き合い'] === '練習嫌い' || p.unrest > 2));
 
+  // 試合の無い週の選択肢（2026-11-17）：「試合を優先する」は「練習を優先する」に、「次の試合から外す」は出さない。
+  // 規律の「約束どおり処分する」は、その約束事を決めた年だけ。1人だけの代表招集は「送り出す／断る」の2択
+  // 出来事ごとに元の選択肢を _opts0 に控え、表示と結果の両方で同じ並びに組み直す（番号がずれないように）
+  const noMatch = (w) => { try { return !YA.matchOf(w); } catch (er) { return false; } };
+  const relabel = (op, label) => Object.assign({}, op, { label });
+  function prepOpts(w, e) {
+    const d = E.find((x) => x.id === e.id);
+    if (!d) return;
+    if (!d._opts0) d._opts0 = d.opts;
+    let list = d._opts0;
+    const nm = noMatch(w);
+    if (d.id === 'top' && nm) list = list.map((x) => (/試合を優先/.test(x.label) ? relabel(x, x.label.replace('試合を優先', '練習を優先')) : x));
+    if (d.id === 'fight' || d.id === 'slack') {
+      list = list.filter((x) => !(nm && /次の試合から外す/.test(x.label)) && !(x.rule && (w.rules || []).indexOf(x.rule) < 0));
+    }
+    if (d.id === 'natcall') {
+      const ids = (w._natCall || []).filter((id) => w.players[id]);
+      if (ids.length <= 1) list = [relabel(list[0], '送り出す（本人は伸び、クラブの評判が上がる）'), list[2]];
+      if (nm) list = list.map((x) => (/試合を優先/.test(x.label) ? relabel(x, x.label.replace('全員断る', ids.length <= 1 ? '断る' : '全員断る').replace('試合を優先', '練習を優先')) : ids.length <= 1 && /全員断る/.test(x.label) ? relabel(x, x.label.replace('全員断る', '断る')) : x));
+      else if (ids.length <= 1) list = list.map((x) => (/全員断る/.test(x.label) ? relabel(x, x.label.replace('全員断る', '断る')) : x));
+    }
+    d.opts = list;
+  }
+  const PREP_IDS = new Set(['top', 'fight', 'slack', 'natcall']);
+  const cv0 = YA.eventView;
+  YA.eventView = function (w, e) { if (e && PREP_IDS.has(e.id)) prepOpts(w, e); return cv0.apply(this, arguments); };
+  const cr0 = YA.resolveEvent;
+  YA.resolveEvent = function (w, e, idx) { if (e && PREP_IDS.has(e.id)) prepOpts(w, e); return cr0.apply(this, arguments); };
+
   // 設定：同じ events に載せた 'club' 系の p は null として扱う
   YA.EVENT_NULL = new Set(['club', 'poach']);
 
-  // ---------- 夏合宿・遠征（26週）----------
+  // ---------- 夏合宿・遠征（16週＝8月。YA.CAMP_WEEK）----------
+  // 合宿費は部ごとの予算に比例（2026-11-17 直し：前は150万・320万の決め打ちで、2部・3部は予算が足りず行けなかった）。
+  // 遠征費の配分で足りなければ、予備から回す（YA.budget の camp は予備の残りを含む）
+  YA.campCost = (w, k) => Math.round((YA.tierBase(w) * (k === 'overseas' ? 0.15 : 0.07)) / 10) * 10;
   YA.campOptions = function (w) {
     const b = YA.budget(w);
     const spent = w.club.spent.camp || 0;
     const left = b.camp - spent;
     const trust = w.club.trust;
+    const cd = YA.campCost(w, 'domestic');
+    const co = YA.campCost(w, 'overseas');
     return [
       { k: 'none', label: '行かない', cost: 0, ok: true, note: '通常どおり練習する' },
-      { k: 'domestic', label: '国内の合宿（練習1.3倍）', cost: 150, ok: left >= 150, note: '全員の自信 +2。疲れが溜まる' },
-      { k: 'overseas', label: '海外遠征（練習1.6倍・評判が上がる）', cost: 320, ok: left >= 320 && trust >= 50, note: '費用大。信頼度50以上が必要。疲れ・怪我のおそれも大きい' },
-    ].map((x) => Object.assign(x, { why: x.ok ? '' : trust < 50 && x.k === 'overseas' ? '信頼度が足りません' : '遠征費の配分が足りません' }));
+      { k: 'domestic', label: '国内の合宿（練習1.3倍）', cost: cd, ok: left >= cd, note: '全員の自信 +2。疲れが溜まる' + (b.campBase - spent < cd ? '（予備から回す）' : '') },
+      { k: 'overseas', label: '海外遠征（練習1.6倍・評判が上がる）', cost: co, ok: left >= co && trust >= 50, note: '費用大。信頼度50以上が必要。疲れ・怪我のおそれも大きい' + (b.campBase - spent < co ? '（予備から回す）' : '') },
+    ].map((x) => Object.assign(x, { why: x.ok ? '' : trust < 50 && x.k === 'overseas' ? '信頼度が足りません' : '遠征費の配分と予備を合わせても足りません' }));
   };
   YA.applyCamp = function (w) {
     const ch = w.campChoice || 'none';
     w.campMult = 1;
     if (ch === 'domestic') {
       w.campMult = 1.3;
-      w.club.spent.camp += 150;
+      w.club.spent.camp += YA.campCost(w, 'domestic');
       for (const p of Object.values(w.players)) p.conf = clamp(p.conf + 2, 0, 100);
       YA.noteTier(w, 2, '夏合宿で全員が鍛えられた（練習1.3倍）');
     } else if (ch === 'overseas') {
       w.campMult = 1.6;
-      w.club.spent.camp += 320;
+      w.club.spent.camp += YA.campCost(w, 'overseas');
       YA.addRep(w, 3);
       for (const p of Object.values(w.players)) { p.conf = clamp(p.conf + 4, 0, 100); p.fat = clamp(p.fat + 12, 0, 100); }
       YA.noteTier(w, 1, '海外遠征で大きな経験を積んだ（練習1.6倍・評判 +3）');
@@ -613,14 +686,33 @@
     YA.addTrust(w, 2, 'ユースからトップへ選手を送り出した');
     return a;
   };
+  // その年に在学中にトップへ上がった子の数
+  YA.earlyCount = (w) => (w._earlyY === w.year ? w._earlyN || 0 : 0);
+  // 高3がトップの主力と並ぶ力になったら、トップの内定（卒業まではユースに残り、卒業と同時にプロ。その年のプロ入りの目安に数える）
+  YA.naiteiCheck = function (w) {
+    if (!w.top || w.week >= YA.WEEKS) return null;
+    const line = YA.earlyProLine(w);
+    // 内定は1年に2人まで（在学中のトップ昇格と合わせて、その年のプロ入りの目安を超えないように）
+    if (Object.values(w.players).filter((q) => q.naitei === w.year).length + YA.earlyCount(w) >= 2) return null;
+    const p = Object.values(w.players).filter((q) => q.grade === 3 && !q.naitei && YA.rating(q) >= line).sort((a, b) => YA.rating(b) - YA.rating(a))[0];
+    if (!p) return null;
+    p.naitei = w.year;
+    p.hist.unshift({ y: w.year, w: w.week, t: 'トップチームの内定をもらった' });
+    YA.noteTier(w, 1, `トップチーム（${w.top.name}）が、${p.num}番 ${p.name}（高3・総合力${YA.rating(p)}）に内定を出しました。卒業まではユースでプレーし、卒業と同時にプロ契約です`, p.id);
+    YA.addRep(w, 1);
+    YA.addTrust(w, 1, 'ユースの子がトップの内定をもらった');
+    return p;
+  };
 
   // 出来事：トップチームからのプロ契約の打診（トップの主力と並ぶ力の子。高1はさらに上の子だけ）
   YA.EVENTS.push({ id: 'early', name: 'トップチームからのプロ契約の打診', weight: 3,
     pick: (w, r) => {
       if (!w.top) return null;
       const line = YA.earlyProLine(w);
-      // 在学中の契約はふつう1年に1人まで。主力をはっきり上回る子（+12）は、いつでも取りにくる
-      const c = Object.values(w.players).filter((p) => !(p.away > 0) && p.inj <= 0 && YA.rating(p) >= line + (p.grade >= 2 ? 0 : 12) + ((w._earlyN || 0) >= 2 && w._earlyY === w.year ? 12 : 0) && !(p._earlyNo && w.year * 100 + w.week - p._earlyNo < 10));
+      // 在学中の契約（ユースから抜ける）は高1・高2だけで、1年に1人まで。その年のプロ入りの目安（決定75：12人中2〜3人）に数える。
+      // 高3はトップの内定にして卒業まで残す（YA.naiteiCheck）。2026-11-17 直し：前は毎週打診が来て、年4〜5人がプロに抜けていた
+      if (YA.earlyCount(w) >= 1) return null;
+      const c = Object.values(w.players).filter((p) => p.grade <= 2 && !(p.away > 0) && p.inj <= 0 && YA.rating(p) >= line + (p.grade >= 2 ? 0 : 12) && !(p._earlyNo && w.year * 100 + w.week - p._earlyNo < 10));
       return c.length ? c.sort((a, b) => YA.rating(b) - YA.rating(a))[0] : null;
     },
     text: (p, w) => `トップチーム（${w.top.name}・${YA.J_NAME[w.top.j]}）が、${p.num}番 ${p.name}（高${p.grade}・総合力${YA.rating(p)}）にプロ契約を打診してきた。トップの主力と並ぶ力だ`,

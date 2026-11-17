@@ -40,6 +40,8 @@
       const t = teams.find((x) => x.id === rc.team);
       const d = rcDef(rc.k);
       if (!t || !d) { rc.teamName = ''; continue; }
+      // 監督が別のクラブへ移ったら一行で知らせる（2026-11-17：毎年黙って移り、一言が戦績と食い違っていた）
+      if (rc.teamName && rc.teamName !== t.name && YA.noteTier) YA.noteTier(w, 2, `${d.name}監督（${d.title}）が、${rc.teamName}から${t.name}の監督に移った。`);
       rc.teamName = t.name;
       t.coach = { name: d.name + ' 監督', kind: d.kind, note: d.title + '。' + d.line + d.note, named: d.k };
     }
@@ -75,6 +77,7 @@
       const m = rs[w.rivalIdx];
       const rc = (w.rivalCoaches || []).find((c) => c.teamName && c.teamName === m.opp);
       if (!rc) continue;
+      rc.last = { gf: m.gf, ga: m.ga, y: m.year, wk: m.week }; // 前回の結果の一言は、この監督との最後の試合で見る（club5.js）
       if (m.gf > m.ga) rc.rec.w++;
       else if (m.gf === m.ga) rc.rec.d++;
       else rc.rec.l++;
@@ -291,5 +294,5 @@
     const mv = (w.moves || []).slice().reverse();
     for (const m of mv) body.append(h('div', { class: 'note', style: 'margin-top:3px' }, `${m.y}年目：${m.from} → ${m.to}`));
   }
-  YA.lineageExtraTabs.push(['rival', 'ライバル', rivalTab], ['top', 'トップ', topTab], ['move', '移籍', moveTab]);
+  YA.lineageExtraTabs.push(['rival', 'ライバル', rivalTab], ['top', '監督の注文', topTab], ['move', '移籍', moveTab]);
 })();

@@ -11,6 +11,31 @@
   // おまかせのときの選び方（出来事ごとの既定。無難な側）
   const AUTO_CHOICE = { visit: 1, rival: 1, late: 1, fight: 1, slack: 1, quit: 0, injury: 0, top: 0, nat: 0, early: 0, natcall: 0, awake: 0 };
   YA.autoChoice = (id) => (AUTO_CHOICE[id] != null ? AUTO_CHOICE[id] : 0);
+  // おまかせの接し方：指導の方針（接し方：厳しさ／寄り添い）に合わせ、その子の性格に響きそうな言葉を選ぶ（2026-11-17 直し：
+  // 前はどの出来事も1つ目の選択肢で、寄り添う43・背中を押す23・厳しく6・任せる1と偏っていた）。
+  // 大事な出来事（退団・怪我・トップ・代表など）と、無難な側が決まっている出来事は AUTO_CHOICE のまま
+  YA.AUTO_FIXED = ['quit', 'injury', 'top', 'nat', 'early', 'natcall', 'awake', 'tired', 'career', 'path', 'club', 'poach', 'visit', 'late', 'fight', 'slack', 'jump', 'adapt'];
+  YA.TONE_PREF = { 0: { firm: 1.3, push: 1.1, wait: 0.8, warm: 0.5 }, 1: { warm: 1.3, wait: 1, push: 0.8, firm: 0.3 } };
+  YA.autoPick = function (w, e, v) {
+    const n = v && v.opts ? v.opts.length : 1;
+    const fixed = Math.min(YA.autoChoice(e.id), n - 1);
+    if (YA.AUTO_FIXED.indexOf(e.id) >= 0 || !v || !v.info) return fixed;
+    const def = YA.EVENTS.find((x) => x.id === e.id);
+    const p = e.pid && w.players[e.pid];
+    const tone = YA.policyOf ? YA.policyOf(w).tone : 1;
+    const pref = YA.TONE_PREF[tone ? 1 : 0];
+    let best = fixed;
+    let bv = -1e9;
+    (def ? def.opts : []).slice(0, n).forEach((o, i) => {
+      const kind = o.kind;
+      if (!kind || !pref[kind]) return;
+      const fit = p && YA.react ? YA.react(p, kind).c : 0;
+      const jitter = (YA.hash(String(e.id) + (e.pid || '') + w.year + '_' + w.week + '_' + i) % 100) / 100;
+      const v2 = pref[kind] * 3 + fit * 0.15 + jitter * 2.5;
+      if (v2 > bv) { bv = v2; best = i; }
+    });
+    return best;
+  };
 
   // 年度はじめ・成長・契約の画面で出る選択を、既定で済ませる
   YA.autoPrompts = function (w, notes) {
@@ -27,9 +52,14 @@
       }
     }
     if (w.pendingCoach) {
-      w.coach.teach = Math.min(20, w.coach.teach + 1);
+      // おまかせの指導者の成長は4つを順に（2026-11-17 直し：前は毎年「教える力」だけ上がり、伸びが年々大きくなっていた）
+      const ks = ['teach', 'eye', 'talk', 'tactic'];
+      const k = ks.slice().sort((a, b) => (w.coach[a] || 0) - (w.coach[b] || 0) || ks.indexOf(a) - ks.indexOf(b))[0];
+      w.coach[k] = Math.min(20, (w.coach[k] || 8) + 1);
       w.pendingCoach = false;
     }
+    // 育成基金：たまったら使う（2026-11-17 直し：前はおまかせで使わず、たまる一方だった）
+    if (YA.fundAuto) YA.fundAuto(w, notes);
     if (w.yearIntro) {
       w.rules = YA.RULES.slice(0, 2);
       w.yearIntro = false;
@@ -41,7 +71,7 @@
     if (!S) return;
     const wn = YA.scoutWindow(w);
     const best = (kind) => S.cands.filter((x) => x.kind === kind && x.status === 'open').sort((a, b) => (YA.ovr(b.p) + (b.p.pot - YA.abSum(b.p)) / 60) - (YA.ovr(a.p) + (a.p.pot - YA.abSum(a.p)) / 60));
-    const bud = YA.budget(w).scout;
+    const bud = YA.budget(w).scoutBase; // 予備は合宿にも回すので、おまかせのスカウトは配分の分まで
     if (!wn.scout && wn.explore && YA.scoutActsLeft(w) === YA.SCOUT_PER_MONTH) YA.scoutOut(w, 'local'); // 冬は月1回、残りの予算で下見
     if (wn.scout) {
       for (let i = 0; i < 3 && YA.scoutActsLeft(w) > 0 && w.club.spent.scout < bud * 0.7; i++) {
@@ -84,7 +114,10 @@
       YA.autoScout(w);
       if (YA.SCHED(w.week).t === 'camp' && !w.campChoice) {
         const opts = YA.campOptions(w);
-        w.campChoice = opts.find((x) => x.k === 'domestic' && x.ok) ? 'domestic' : 'none';
+        // 海外遠征は予算と信頼度に余裕があるときだけ（配分の分で足りるとき）
+        const b = YA.budget(w);
+        const ov = opts.find((x) => x.k === 'overseas' && x.ok && x.cost <= b.campBase - (w.club.spent.camp || 0));
+        w.campChoice = ov && w.club.trust >= 65 ? 'overseas' : opts.find((x) => x.k === 'domestic' && x.ok) ? 'domestic' : 'none';
       }
       if (o.autoPlan !== false) YA.autoPlan(w);
       YA.startWeek(w);
@@ -96,7 +129,7 @@
         if (YA.SIM_IMPORTANT.indexOf(e.id) >= 0) log.important++;
         const v = YA.eventView(w, e);
         if (v) {
-          const r = YA.resolveEvent(w, e, Math.min(YA.autoChoice(e.id), v.opts.length - 1));
+          const r = YA.resolveEvent(w, e, YA.autoPick(w, e, v));
           log.events.push(v.name);
           if (r.leave) log.notes.push(r.leave);
         }
@@ -406,6 +439,10 @@
   };
   if (globalThis.document && document.addEventListener) {
     document.addEventListener('visibilitychange', () => { if (document.hidden) YA.bgm._stop(); else YA.bgm._sync(); });
+    // 裏に回る・閉じるときは、まとめ書き（250ms 待ち）を待たずにすぐ書き出す（裏で WebView が落とされると最後の操作が消えていた）
+    const flush = () => { try { if (YA.saveWorld && YA._ui && YA._ui.app && YA._ui.app.w) YA.saveWorld(true); } catch (e) { /* 画面なし */ } };
+    document.addEventListener('visibilitychange', () => { if (document.hidden) flush(); });
+    if (globalThis.addEventListener) globalThis.addEventListener('pagehide', flush);
   }
 })();
 

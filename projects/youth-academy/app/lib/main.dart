@@ -127,16 +127,29 @@ class _MatchScreenState extends State<MatchScreen> with WidgetsBindingObserver {
 
   // 広告・課金の依頼なら橋へ、そうでなければ保存の依頼
   Future<void> _onMessage(String message) async {
-    if (await _bridge.handle(message)) return;
+    try {
+      if (await _bridge.handle(message)) return;
+    } catch (_) {
+      // 権利の書き込みに失敗した（端末の空きなど）。権利は元に戻っているので、ページへは今の権利を送り直す
+      _bridge.sendEnt();
+      return;
+    }
     await _save(message);
   }
 
   Future<void> _save(String message) async {
+    final obj = _parse(message.trim());
+    if (obj == null) return;
+    var ok = false;
     try {
-      final obj = _parse(message.trim());
-      if (obj == null) return;
-      await widget.prefs.setString('$_prefix${obj.$1}', obj.$2);
-    } catch (_) {}
+      ok = await widget.prefs.setString('$_prefix${obj.$1}', obj.$2);
+    } catch (_) {
+      ok = false;
+    }
+    // 書けなかったらページへ知らせる（ページは続いたら「保存できませんでした」と出す）
+    if (!ok && mounted) {
+      unawaited(_web.runJavaScript('window.YAnative && window.YAnative.onMsg(${jsonEncode(jsonEncode({'ev': 'saveFail', 'k': obj.$1}))});'));
+    }
   }
 
   (String, String)? _parse(String s) {
@@ -155,14 +168,8 @@ class _MatchScreenState extends State<MatchScreen> with WidgetsBindingObserver {
 
   Future<void> _load() async {
     final html = await rootBundle.loadString('assets/web/index.html');
-    final store = <String, String>{};
-    for (final key in widget.prefs.getKeys()) {
-      if (key.startsWith(_prefix)) {
-        final v = widget.prefs.getString(key);
-        if (v != null) store[key.substring(_prefix.length)] = v;
-      }
-    }
-    await _web.loadHtmlString(injectBoot(html, store));
+    final all = {for (final k in widget.prefs.getKeys()) k: widget.prefs.get(k)};
+    await _web.loadHtmlString(injectBoot(html, collectStore(all, prefix: _prefix)));
   }
 
   @override
