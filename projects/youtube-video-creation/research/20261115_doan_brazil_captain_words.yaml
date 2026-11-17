@@ -1,0 +1,123 @@
+# 取材メモ（2026年11月15日）堂安律、森保J最後のキャプテンでブラジル撃破「10回やって5割以上勝てる内容を追い求めている」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-15。requests（ブラウザUA）で本文を全文読み、site.api.espn.com で確かめた。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: ゲキサカ 2026-11-15 01:03（取材・文 矢内由美子）「森保J最後のキャプテン堂安律、ブラジルとの再戦で掴んだ手応え「10回やって5割以上勝てる内容を追い求めている」」（全文） https://web.gekisaka.jp/news/japan/detail/?463206-463206-fl
+#   サッカーキングの堂安の記事は見出しだけ確認（本文は読んでいない）。
+# 写真の出どころ（本人の写真を探すため。サッカーキングの写真は Getty Images なので使っていない）:
+#   https://web.gekisaka.jp/news/japan/detail/?463206-463206-fl
+#   https://web.gekisaka.jp/news/japan/detail/?463120-463120-fl
+#   https://web.gekisaka.jp/photonews/japan/detail/?463135-463135-pn
+# 出典で確かめたこと:
+#   ・ゲキサカ: 森保一監督から現体制最後のチームキャプテンを任された堂安（フランクフルト）。4-2-3-1の右サイドハーフで先発。前半15分の久保建英の先制点につながったカウンターを、堂安は「相手の特徴を見定めて突いた攻撃」と言い切った。森保監督との戦いは残り1試合（17日パラグアイ戦。試合後の記事の数え方）。
+#   ・ESPN の試合データ（fifa.friendly summary event=401916337、2026-11-14）: 日本 3-2 ブラジル。15分 久保建英（アシスト 堂安律のスルーパス）。堂安は先発で72分に坂元達裕と交代。
+#   ・堂安の言葉（原文。ゲキサカ。字は変えていない。括弧は記者の補足。台本は読点で行に分けた）:
+#       「今日は、過去(この1年間)にブラジルとやった2試合よりも勝つ確率の高い試合内容だったと思う。10回やって少しでも勝つ確率を上げていくことが日本代表のテーマ。カタールW杯の頃の、10回やって1回か2回勝てるかというところから脱却して、5割以上勝てるような試合内容を追い求めている。そういう意味では自信を持てるゲーム展開だった」
+#       「前に行く守備をしているので、すごくポジティブなんですよね。下がる守備じゃなくて、取りに行く守備。だから、ボールを奪った後もメンタル的に疲弊していないので、すぐにボールを受けに行ける」
+#     台本は括弧の補足「(この1年間)」を外して読む（記者の補足のため）。
+# 自分で数えたもの: カタールW杯の頃は「10回やって1〜2回」、いまの目標は「5割以上」＝5回以上。10回のうちの勝ちを3回分以上ふやしたい、という計算（1〜2回→5回以上）。
+# 食い違い: なし。
+# 前の本との重なり: 20261114_doan_last_captain（試合前の言葉「勝つのが当たり前になった」「名前負けしない」「ゆるっと終わらない」・通算111試合76勝）。今回の初出: 試合後の「勝つ確率」の言葉・前に行く守備・久保のゴールの場面。試合前の言葉と通算成績は繰り返さない。
+# 【言わないこと】試合前の言葉／通算成績／他の選手の評価／ブラジルの退場。
+# 本人の言葉: あり（堂安律。ゲキサカ）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月15日"
+format: news
+no_main: true
+people: [堂安律, 久保建英, 坂元達裕, 森保一, 日本代表, ブラジル代表]
+
+short_style: Y
+short_hook_quote: 10回やって少しでも勝つ確率を上げていくことが日本代表のテーマ。
+short_photos:
+  - assets/images/20261115_doan_brazil_captain_words/02_v.jpg
+  - assets/images/20261115_doan_brazil_captain_words/01_v.jpg
+  - assets/images/20261115_doan_brazil_captain_words/03_v.jpg
+short_question: 森保監督のラストマッチ、17日のパラグアイ戦でも日本は勝てると思いますか。
+short_telops: []
+
+theme:
+  id: doan_brazil_captain_words
+  league: japan
+  league_name: 日本代表
+  prefix: ""
+  title: 堂安律、最後のキャプテンでブラジルに勝って語った「10回やって」の先
+  hook: ""
+  question: ブラジルに勝った堂安律は、試合後に何を手応えとして語ったのか
+  takeaway: 堂安が目指すのは、カタールW杯の頃の「10回やって1回か2回」から「5割以上」へ。勝つ回数をあと3回分ふやすことだ
+
+thumbnail:
+  layout: face
+  line1: 堂安律 最後の主将
+  line2: 10回やって5割以上
+  tags: [堂安律, 日本代表, 森保J]
+  photo: assets/images/20261115_doan_brazil_captain_words/01_w.jpg
+  short_photo: assets/images/20261115_doan_brazil_captain_words/02_v.jpg
+
+answer: 堂安は「10回やって5割以上勝てる試合内容」を追い求めていると語り、ブラジル戦で自信を持った
+watch: 17日のパラグアイ戦（森保監督のラストマッチ）
+
+sections:
+  - id: what
+    main: true
+    heading: ブラジルに勝った堂安律は、何を手応えとして語ったか
+    tier: 報道
+    telop: 堂安律「10回やって5割以上勝てる内容を」
+    say:
+      - text: ブラジルに競り勝った一戦。森保監督のもとで最後のキャプテンを務めた堂安律が、試合後にこう語りました。
+        image: assets/images/20261115_doan_brazil_captain_words/02_w.jpg
+      - voice: 堂安律
+        text: 今日は、過去にブラジルとやった2試合よりも、
+      - voice: 堂安律
+        text: 勝つ確率の高い試合内容だったと思う。
+        cont: true
+      - voice: 堂安律
+        text: 10回やって少しでも勝つ確率を上げていくことが日本代表のテーマ。
+        emph: true
+      - voice: 堂安律
+        text: カタールW杯の頃の、
+      - voice: 堂安律
+        text: 10回やって1回か2回勝てるかというところから脱却して、
+        cont: true
+        image: assets/images/20261115_doan_brazil_captain_words/01_w.jpg
+      - voice: 堂安律
+        text: 5割以上勝てるような試合内容を追い求めている。
+        cont: true
+        emph: true
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463206-463206-fl
+      - https://www.espn.com/soccer/match/_/gameId/401916337
+  - id: play
+    heading: 堂安律は、勝てた理由をどう語ったか
+    tier: 報道
+    telop: 堂安律「取りに行く守備」
+    say:
+      - text: 前半15分の久保建英の先制点は、堂安のスルーパスから生まれました。
+        image: assets/images/20261115_doan_brazil_captain_words/03_w.jpg
+      - text: そのカウンターを、堂安は「相手の特徴を見定めて突いた攻撃」と言い切りました。
+      - text: 守備についても、こう話しています。
+      - voice: 堂安律
+        text: 前に行く守備をしているので、すごくポジティブなんですよね。
+      - voice: 堂安律
+        text: 下がる守備じゃなくて、取りに行く守備。
+        cont: true
+        emph: true
+      - voice: 堂安律
+        text: ボールを奪った後もメンタル的に疲弊していないので、すぐにボールを受けに行ける。
+        cont: true
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463206-463206-fl
+      - https://www.espn.com/soccer/match/_/gameId/401916337
+  - id: view
+    viewpoint: true
+    heading: 堂安律の言う「5割以上」は、どれだけ高い目標か
+    tier: 背景
+    telop: 「10回に1〜2回」から「10回に5回以上」へ
+    say:
+      - text: 見立てです。堂安律が語ったカタールW杯の頃の勝ち方は、10回やって1回か2回。いまの目標は、5割以上です。
+      - text: 10回のうち、勝つ回数をあと3回分ふやす計算です。
+        emph: true
+      - text: その目標を、森保監督と戦う最後の試合、17日のパラグアイ戦でも追います。
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463206-463206-fl

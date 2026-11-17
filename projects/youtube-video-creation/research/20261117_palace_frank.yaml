@@ -1,0 +1,123 @@
+# 取材メモ（2026年11月17日）クリスタル・パレスの新監督はトーマス・フランク。鎌田大地・冨安健洋の所属クラブ（ニュースのショート。見せ方 X＝冒頭1秒の強い一言。日本人の言葉は無し）
+# 取材: 2026-11-17。WebFetch と requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約・ブラウザの道具は使っていない。
+# 出典で確かめたこと:
+#   ・Sky Sports（2026-11-16 発表。全文）: パレスが新監督にトーマス・フランクを任命。契約は2029年夏まで（"until summer 2029"）。月曜（16日）に最初の練習を指揮。
+#       前任ピエール・サージュは11月12日に解任（今季7敗目＝リヴァプール戦の後）。フランクはブレントフォードを2018〜2025年の7年間率い、プレミアに昇格させ、2023年に9位。
+#       トッテナムは昨季ポステコグルーの後任になり、8か月足らず（記事は2月）で解任＝当時16位、降格圏と勝ち点5差。パレスは今季プレミア最下位・勝ち点7（残留圏まで2）。
+#       フランクの言葉: "I'm really, really looking forward to it." "Crystal Palace is an iconic club in England and in the Premier League."
+#       パーリッシュ会長の言葉は "He has a proven track record of both creating winning teams" と途中で切れて見えた → 使わない（… を補わない）。
+#       鎌田・冨安の名前は記事に出ない。
+#   ・ESPN（2026-11-16、全文）: 契約は3年（Sky の「2029年夏まで」と合う）。サージュは夏に就任して4か月で解任。パレスは10試合を終えて最下位。
+#       フランクの言葉: "It's an honour to sit here and be in charge of this fantastic Football Club." 会長パーリッシュ: "I'm delighted to be able to welcome Thomas to Crystal Palace."
+#   ・ESPN API（site.api.espn.com、11/17 取得）: プレミア順位 パレス 20位・10試合・勝ち点7／コベントリー 17位・勝ち点9／マンU 18位 8／サンダーランド 19位 8。
+#       パレスのロースター（eng.1 teams/384/roster）に Daichi Kamada（M）・Takehiro Tomiyasu（D）が載る。
+#       次の試合: scoreboard 2026-11-21 に「Crystal Palace at Coventry City」（15:00 UTC）。
+# 自分で数えたもの: 勝ち点差 9−7=2（Sky の「残留圏まで2」と一致）。
+# 食い違い・扱い:
+#   ①契約: Sky「2029年夏まで」、ESPN「3年」→ 台本は「3年契約、2029年夏まで」。
+#   ②サージュの在任: ESPN「4か月」。Sky は就任日を書かない → 「夏に就任して4か月」（ESPN の表現）。
+#   ③ブレントフォードの7年・2018〜2025年は Sky のみ。トッテナムの「2月に解任」は Sky のみ → 台本は「報道」。
+#   ④鎌田・冨安との接点: 「2人が所属するクラブの新監督」の事実だけ（ロースター）。2人の起用・評価は書かない。冨安は負傷離脱が続く時期があり、現状は未確認 → 触れない。
+#   ⑤写真: Sky の画像は自社の合成グラフィック（"FRANK APPOINTED" の文字入り）、ESPN の主写真は代理店の可能性がありURLで判別できない → フランクの写真は使わない。Commons にフランク監督の写真は無かった（同姓同名の別人が出た）。
+#       使った写真は Commons の「パレスの試合の写真」（Fredrikstad戦 2025-08-28 ×3、FA杯優勝 2025-05）。人物は特定していない。
+# 前の本との重なり: scripts/20261106_kamada_palace_equalizer・20261107_kamada_tomiyasu_words・20261113_kamada_asiacup_postponed（鎌田・冨安の話）。今回の初出は監督交代。posted/covered にフランク・サージュは無し。
+# 本人の言葉: フランクの就任の言葉あり（英語。ESPN）。ただし日本人の言葉ではなく、ユーザー指定どおり見せ方は X（冒頭は強い一言）。台本の本文では訳して引く。
+# 反応: 0件（探していない／作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月17日"
+format: news
+no_main: true
+people: [トーマス・フランク, ピエール・サージュ, 鎌田大地, 冨安健洋, クリスタル・パレス]
+
+short_style: X
+short_hook_word: 新監督
+short_photos:
+  - assets/images/20261117_palace_frank/01_v.jpg
+  - assets/images/20261117_palace_frank/02_v.jpg
+  - assets/images/20261117_palace_frank/03_v.jpg
+  - assets/images/20261117_palace_frank/04_v.jpg
+short_question: 新監督のフランクは、21日のコベントリー戦でパレスに初勝利をもたらすと思いますか。
+short_telops: []
+
+theme:
+  id: palace_frank
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: 鎌田大地・冨安健洋のパレス、新監督は元ブレントフォードの指揮官
+  hook: ""
+  question: 最下位に沈むパレスの新監督に、誰が就いたのか
+  takeaway: パレスは10試合を終えて最下位。サージュ前監督は4か月で去り、ブレントフォードを7年率いたフランクが3年契約で就任した。最初の試合は21日のコベントリー戦（アウェー）
+
+thumbnail:
+  layout: face
+  line1: パレス 新監督にフランク
+  line2: 鎌田・冨安のクラブ
+  tags: [クリスタル・パレス, 鎌田大地, 冨安健洋]
+  photo: assets/images/20261117_palace_frank/01_w.jpg
+  short_photo: assets/images/20261117_palace_frank/01_v.jpg
+
+answer: 前任サージュは夏に就任して4か月で解任。パレスは最下位・勝ち点7で、フランクが2029年夏までの契約で後を継いだ
+watch: 21日、アウェーのコベントリー戦
+
+sections:
+  - id: what
+    main: true
+    heading: パレスの新監督に、誰が就いたのか
+    tier: 報道
+    telop: パレス新監督にトーマス・フランク。3年契約
+    say:
+      - text: 鎌田大地と冨安健洋が所属するクリスタル・パレスが、新しい監督を発表しました。
+        short_only: true
+        image: assets/images/20261117_palace_frank/01_w.jpg
+      - voice: トーマス・フランク
+        text: このすばらしいクラブを率いることを、光栄に思います。
+        emph: true
+        image: assets/images/20261117_palace_frank/01_w.jpg
+      - text: 就任したのは、トーマス・フランク。契約は3年で、2029年の夏までです。
+        image: assets/images/20261117_palace_frank/02_w.jpg
+      - text: 前任のピエール・サージュは、夏に就任して、わずか4か月で解任されました。
+        image: assets/images/20261117_palace_frank/02_w.jpg
+      - text: パレスは今季10試合で、2勝1引き分け7敗。12日、7敗目となったリヴァプール戦のあとでした。
+      - text: フランクは、月曜に最初の練習を指揮しています。
+        image: assets/images/20261117_palace_frank/04_w.jpg
+    official: false
+    sources:
+      - https://www.skysports.com/football/news/11661/13610988/thomas-frank-crystal-palace-appoint-former-spurs-and-brentford-boss-as-pierre-sages-successor-at-selhurst-park
+      - https://www.espn.com/soccer/story/_/id/50462553/thomas-frank-appointed-new-crystal-palace-manager
+  - id: career
+    heading: フランクは、これまでどんな道を歩んできたのか
+    tier: 報道
+    telop: ブレントフォードを7年率い、トッテナムは8か月足らずで解任
+    say:
+      - text: フランクは、ブレントフォードを2018年から2025年まで、7年間率いました。
+        card: {type: table, title: トーマス・フランクの歩み, columns: [クラブ, 期間], rows: [[ブレントフォード, 2018〜2025年（7年）], [トッテナム, 昨季（8か月足らず）]], highlight_row: 0}
+        image: assets/images/20261117_palace_frank/02_w.jpg
+      - text: プレミアリーグに昇格させ、2023年には9位まで引き上げています。
+        card: none
+        image: assets/images/20261117_palace_frank/03_w.jpg
+      - text: その後はトッテナムで、ポステコグルー前監督の後を継ぎました。
+        image: assets/images/20261117_palace_frank/04_w.jpg
+      - text: ただ、8か月足らずで解任。当時は16位。下位3つの降格圏とは、勝ち点5差でした。
+        image: assets/images/20261117_palace_frank/01_w.jpg
+    official: false
+    sources:
+      - https://www.skysports.com/football/news/11661/13610988/thomas-frank-crystal-palace-appoint-former-spurs-and-brentford-boss-as-pierre-sages-successor-at-selhurst-park
+  - id: view
+    viewpoint: true
+    heading: フランクの最初の試合は、どんな相手なのか
+    tier: 背景
+    telop: 20位・勝ち点7。残留圏の17位まで勝ち点2
+    say:
+      - text: 見立てです。パレスは10試合を終えて20位、勝ち点は7です。
+        card: {type: table, title: プレミアリーグ 下位の順位（10試合を終えて）, columns: [順位, クラブ, 勝ち点], rows: [[17, コベントリー, 9], [18, マンチェスター・ユナイテッド, 8], [19, サンダーランド, 8], [20, パレス, 7]], highlight_row: 3}
+        image: assets/images/20261117_palace_frank/02_w.jpg
+      - text: 残留圏の17位、コベントリーまでは、勝ち点2差です。
+        card: none
+        image: assets/images/20261117_palace_frank/03_w.jpg
+      - text: フランクの最初の試合は、21日のコベントリー戦。アウェーで、その17位との直接対決に臨みます。
+        image: assets/images/20261117_palace_frank/04_w.jpg
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/v2/sports/soccer/eng.1/standings
+      - https://www.skysports.com/football/news/11661/13610988/thomas-frank-crystal-palace-appoint-former-spurs-and-brentford-boss-as-pierre-sages-successor-at-selhurst-park
