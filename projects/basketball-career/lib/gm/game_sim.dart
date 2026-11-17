@@ -53,7 +53,7 @@ class SimTeam {
     ];
     clutch = [for (final p in order) hasTrait(p, Trait.clutch)];
     form = List.filled(n, 0.0);
-    final usageExp = const [2.1, 1.7, 1.35][share];
+    final usageExp = const [1.75, 1.4, 1.1][share];
     wUse = [for (var i = 0; i < n; i++) _pow((out[i] + ins[i]) / 2 - 40, usageExp)];
     // ボールを持つ人ほどミスに関わり、ミスの少なさが高いほど減る
     wTov = [for (var i = 0; i < n; i++) (0.6 + sub(order[i], 'ボール運び') / 100 * (order[i].pos == Pos.pg ? 1.4 : 1.0)) * (1.5 - sSafe[i] / 100)];
