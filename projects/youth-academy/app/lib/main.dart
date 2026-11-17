@@ -132,11 +132,18 @@ class _MatchScreenState extends State<MatchScreen> with WidgetsBindingObserver {
   }
 
   Future<void> _save(String message) async {
+    final obj = _parse(message.trim());
+    if (obj == null) return;
+    var ok = false;
     try {
-      final obj = _parse(message.trim());
-      if (obj == null) return;
-      await widget.prefs.setString('$_prefix${obj.$1}', obj.$2);
-    } catch (_) {}
+      ok = await widget.prefs.setString('$_prefix${obj.$1}', obj.$2);
+    } catch (_) {
+      ok = false;
+    }
+    // 書けなかったらページへ知らせる（ページは続いたら「保存できませんでした」と出す）
+    if (!ok && mounted) {
+      unawaited(_web.runJavaScript('window.YAnative && window.YAnative.onMsg(${jsonEncode(jsonEncode({'ev': 'saveFail', 'k': obj.$1}))});'));
+    }
   }
 
   (String, String)? _parse(String s) {
