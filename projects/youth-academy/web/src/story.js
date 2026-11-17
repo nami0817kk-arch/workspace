@@ -63,7 +63,26 @@
       お調子者: ['おっ、いいっすね！　それでいきます！', 'マジっすか、やる気出てきました！', 'オッケーっす！　任せてください！'],
     },
   };
+  // 進路面談：希望と違う道を勧められたときの返事
+  SAY.pathNo = {
+    元気: ['……分かりました。そこでも、全力でやります。', '正直、悔しいです。でも、やるしかないですね。', 'はい……。切り替えて、がんばります。'],
+    クール: ['……そうですか。分かりました。', '納得はしていません。でも、従います。', '考えておきます。'],
+    丁寧: ['……承知しました。少し、考える時間をください。', 'ご意見は分かりました。家族とも相談してみます。', 'そういうお考えなのですね。……分かりました。'],
+    ぶっきらぼう: ['……そっすか。', '……まあ、言われたなら。', 'ふーん。……分かった。'],
+    おっとり: ['そっかあ……。ちょっと残念だけど、考えてみます。', 'うーん、そうなんですね。', '……分かりました。ゆっくり考えます。'],
+    熱血: ['……悔しいです！　でも、そこで見返します！', '納得いきません！　……でも、やります。', 'そうですか……。次で証明します！'],
+    弱気: ['……やっぱり、そうですよね。', 'あの……分かりました。', '……自分じゃ、無理ってことですよね。'],
+    生意気: ['……見る目、ないっすね。まあいいですけど。', 'へえ。そっちっすか。', '後悔しても知らないっすよ。'],
+    無口: ['……はい。', '（黙ってうつむいた）', '……。'],
+    お調子者: ['えー、マジっすか……。まあ、いっか！', 'ちょっとショックっす。でも切り替えます！', 'うーん、そうきましたか！'],
+  };
   YA.SAY = SAY;
+  // 台詞を名前つきの文にする。「（深く頭を下げた）」のような動作は、かぎかっこに入れない（2026-11-17）
+  YA.sayLine = function (p, s) {
+    const m = /^（([^）]+)）[\s　]*(.*)$/.exec(String(s));
+    if (!m) return `${p.name}「${s}」`;
+    return `${p.name}は${m[1]}。` + (m[2] ? `「${m[2]}」` : '');
+  };
   // 台詞を1つ選ぶ。直近に出したものは避ける
   YA.say = function (w, p, scene) {
     const list = (SAY[scene] && SAY[scene][YA.toneOf(p)]) || ['……'];
@@ -132,7 +151,7 @@
     if (e.sc === 'enter') {
       const news = all.filter((p) => p.grade === 1);
       const best = news.slice().sort((a, b) => YA.ovr(b) - YA.ovr(a))[0];
-      const g = news.slice(0, 3).map((p) => `${p.name}「${YA.say(w, p, 'greet')}」`).join(' ／ ');
+      const g = news.slice(0, 3).map((p) => YA.sayLine(p, YA.say(w, p, 'greet'))).join(' ／ ');
       return `入学式。新入生${news.length}人が並んだ。` + (best ? `スカウトが耳打ちした。「${best.name}（${best.pos}）は、今年いちばんの掘り出し物かもしれません」` : '') + ` ${g}`;
     }
     if (e.sc === 'camp') {
@@ -145,7 +164,7 @@
       return `${YA.CUP_NAME[e.cup]}、決勝の前。ここまで勝ち上がってきた。 ${rows.join(' ／ ')}。ロッカーでみんなが、こちらの言葉を待っている。`;
     }
     const grads = all.filter((p) => p.grade === 3).sort((a, b) => (b.star ? 1 : 0) - (a.star ? 1 : 0) || YA.ovr(b) - YA.ovr(a));
-    const shown = grads.slice(0, 4).map((p) => `${p.name}${p.star ? '★' : ''}「${YA.say(w, p, 'thanks')}」`).join(' ／ ');
+    const shown = grads.slice(0, 4).map((p) => YA.sayLine({ name: p.name + (p.star ? '★' : '') }, YA.say(w, p, 'thanks'))).join(' ／ ');
     return `卒業式。${grads.length}人がグラウンドに並び、順に挨拶をした。 ${shown}`;
   }
   const run = (line, fn) => ({ label: null, kind: null, run: (w, p, r) => { const s = fn ? fn(w) : ''; return { line, small: s || '' }; } });
@@ -197,7 +216,10 @@
     const out = res0(w, e, idx);
     if (e.id === 'path' && out) {
       const p = w.players[e.pid];
-      if (p) out.line = `${p.name}「${YA.say(w, p, 'path')}」`;
+      // 希望と違う道なら、ありがたがらない返事から（2026-11-17：希望と違っても「ありがとうございます」と言っていた）
+      const k = p && (YA.pathOptions(p)[idx] || {}).k;
+      const off = p && k && YA.wishOf && k !== YA.wishOf(p);
+      if (p) out.line = YA.sayLine(p, YA.say(w, p, off ? 'pathNo' : 'path'));
     }
     return out;
   };
@@ -373,7 +395,8 @@
   YA.EVENT_ABOUT.visit = '卒業した先輩が練習場に顔を出しました。★の子と話してもらうと、「憧れの卒業生と話す」の鍵や信頼が進みます。';
   const STAT = { pro: 'プロ', univ: '大学', amateur: '社会人' };
   YA.visitor = function (w) {
-    const list = (w.alumni || []).filter((a) => !a.retired || a.coached).filter((a) => a.age == null || a.age <= 34);
+    // 途中で退団した子（status 'left'）は卒業生ではないので、顔を出す候補に入れない（2026-11-17）
+    const list = (w.alumni || []).filter((a) => a.status !== 'left').filter((a) => !a.retired || a.coached).filter((a) => a.age == null || a.age <= 34);
     if (!list.length) return null;
     const ranked = list.slice().sort((a, b) => (b.ovr || 0) - (a.ovr || 0)).slice(0, 6);
     return ranked[YA.hash('visit' + w.year + w.seed) % ranked.length];
@@ -384,11 +407,11 @@
     const star = Object.values(w.players).filter((p) => p.star && p.grade <= 2);
     const said = (ww) => { if (a) a.visits = (a.visits || 0) + 1; };
     def.name = '卒業生が顔を出した';
-    def.text = () => a ? `卒業生の${a.name}（${a.year}年卒・${a.club || STAT[a.status] || ''}）が、オフの練習場にふらりと顔を出した。「近くまで来たので」。後輩たちの視線が集まっている。` : '卒業生が練習場に顔を出した。';
+    def.text = () => a ? `卒業生の${a.name}（${a.year}年目卒${a.club || STAT[a.status] ? '・' + (a.club || STAT[a.status]) : ''}）が、オフの練習場にふらりと顔を出した。「近くまで来たので」。後輩たちの視線が集まっている。` : '卒業生が練習場に顔を出した。';
     const run = (label, line, fn) => ({ label, kind: null, run: (ww, p, r) => { said(ww); return { line, small: fn ? fn(ww) : '' }; } });
     def.opts = [
       run('練習に混ざってもらう', '久しぶりに本気のボール回しをして、グラウンドが沸いた。', (ww) => { const l = Object.values(ww.players).filter((p) => p.team === 'A'); for (const p of l) p.conf = clamp((p.conf || 0) + 3, 0, 100); return 'Aの自信 +3'; }),
-      run(star.length ? '★の子と、じっくり話してもらう' : '後輩たちに、プロの話をしてもらう', star.length ? '憧れの先輩の言葉を、後輩たちは真剣に聞いた。' : '質問が止まらず、予定の時間を超えた。', (ww) => {
+      run(star.length ? '★の子と、じっくり話してもらう' : a && a.status === 'pro' ? '後輩たちに、プロの話をしてもらう' : a && a.status === 'univ' ? '後輩たちに、大学のサッカーの話をしてもらう' : '後輩たちに、卒業してからの話をしてもらう', star.length ? '憧れの先輩の言葉を、後輩たちは真剣に聞いた。' : '質問が止まらず、予定の時間を超えた。', (ww) => {
         if (!star.length) { for (const p of Object.values(ww.players)) p.conf = clamp((p.conf || 0) + 1, 0, 100); return '全員の自信 +1'; }
         for (const p of star) { YA.keyProgress(ww, p, 'alum', 1); YA.addTr(ww, p, 1, '憧れの卒業生と話した'); YA.hintUp(ww, p, 0.5, '卒業生の話'); }
         return `★の子${star.length}人の信頼 +1・鍵が進んだ`;

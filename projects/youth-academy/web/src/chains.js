@@ -9,6 +9,9 @@
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const sur = (p) => String(p.name).split(' ')[0];
   const absW = (w) => w.year * 40 + w.week;
+  // 試合の週の判定（出来事は週のはじめ＝その週の試合の前に出る）。前の週にA戦があったか／今週A戦があるか
+  YA.playedLastWeek = (w) => { const g = (w.results || []).slice(-1)[0]; return !!(g && g.year === w.year && g.week === w.week - 1); };
+  YA.matchThisWeek = (w) => { try { return !!(YA.matchOf && YA.matchOf(w)); } catch (er) { return false; } };
 
   // ---------- 事情（38種）----------
   // [key, 系統, 名前]
@@ -71,11 +74,35 @@
   // ---------- 本人の言葉（丁寧／くだけた）----------
   const CASUAL = new Set(['元気', '熱血', 'お調子者', '生意気', 'ぶっきらぼう']);
   const casual = (p) => YA.toneOf && CASUAL.has(YA.toneOf(p));
-  const casualize = (s) => s.replace(/ありがとうございました/g, 'あざした').replace(/でした([。」]|$)/g, 'だったっす$1').replace(/ました([。」]|$)/g, 'たっす$1').replace(/です([。」]|$)/g, 'っす$1');
+  // くだけた口調：「〜ました」は動詞の過去形に活用する（2026-11-17：前は「もらいたっす」「なりたっす」「〜んっす」と壊れていた）
+  // 直前の文字で活用を決める。い・り・ち→った／き→いた／ぎ→いだ／み・び・に→んだ／し→した／え段・漢字（見・来・出）→た
+  const E_ROW = 'えけげせぜてでねへべぺめれ';
+  const GODAN_PAST = { い: 'った', り: 'った', ち: 'った', き: 'いた', ぎ: 'いだ', み: 'んだ', び: 'んだ', に: 'んだ' };
+  const NEG_A = { い: 'わ', り: 'ら', ち: 'た', き: 'か', ぎ: 'が', み: 'ま', び: 'ば', に: 'な' };
+  // 一段（い段で終わるのに「た」がそのまま付く）：できる・起きる・生きる・過ぎる・〜てみる・感じる・信じる
+  const ICHI = (pre, c) => (c === 'き' && /[で起生]$/.test(pre)) || (c === 'ぎ' && /過$/.test(pre)) || (c === 'み' && /て$/.test(pre)) || (c === 'り' && /[借降下]$/.test(pre));
+  const isKana = (c) => /[ぁ-ん]/.test(c);
+  const casualize = (s) => s
+    .replace(/ありがとうございました/g, 'あざした')
+    .replace(/([てで])いました(?=[。」]|$)/g, '$1たっす')
+    .replace(/あり(ませんでした)(?=[。」]|$)/g, 'なかったっす')
+    .replace(/(.?)(.)(ませんでした|ました)(?=[。」]|$)/g, (m0, pre, c, tail) => {
+      const neg = tail === 'ませんでした';
+      if (c === 'き' && pre === '行') return pre + (neg ? 'かなかったっす' : 'ったっす');
+      if (!isKana(c) || E_ROW.indexOf(c) >= 0 || c === 'じ' || ICHI(pre, c)) return pre + c + (neg ? 'なかったっす' : 'たっす');
+      if (c === 'し') return pre + (neg ? 'しなかったっす' : 'したっす');
+      if (neg) return pre + (NEG_A[c] || c) + 'なかったっす';
+      return pre + (GODAN_PAST[c] ? GODAN_PAST[c] : c + 'た') + 'っす';
+    })
+    .replace(/でした(?=[。」]|$)/g, 'だったっす')
+    .replace(/んです(?=[。」]|$)/g, 'んすよ')
+    .replace(/です(?=[。」]|$)/g, 'っす');
+  YA.casualize = casualize;
   YA.voice = function (p, s) {
     let t = casual(p) ? casualize(s) : s;
     if (YA.toneOf && YA.toneOf(p) === '無口') t = '……' + t;
-    if (YA.toneOf && YA.toneOf(p) === '弱気') t = t.replace(/^/, 'あの……');
+    // 弱気：台詞が「……」で始まるときは「あの」だけを足す（「あの…………」にしない）
+    if (YA.toneOf && YA.toneOf(p) === '弱気') t = /^…/.test(t) ? 'あの' + t : 'あの……' + t;
     return t;
   };
   const say = (p, s) => `${sur(p)}「${YA.voice(p, s)}」`;
@@ -202,7 +229,7 @@
         mid: { t: 'まずは選手として頑張るらしい。', fx: () => {}, m: 'コーチになりたい気持ちは、今もあります。' },
         bad: { t: '教えることに自信をなくしたようだ。', fx: (w, p) => { conf(p, -4); }, m: '教えるのは難しいと知りました。' } } },
     hot: { name: '審判への抗議', eps: [
-      { t: (p) => `${p.name}が審判に食ってかかり、退場になった。ロッカーで黙り込んでいる。`, o: [['厳しく叱る', 'firm', 1], ['まず気持ちを聞く', 'warm', 1], ['次の試合は外す', 'push', 0]] },
+      { when: (w) => YA.playedLastWeek(w), t: (p) => `この前の試合で、${p.name}が審判に食ってかかり、退場になった。今日も黙り込んでいる。`, o: [['厳しく叱る', 'firm', 1], ['まず気持ちを聞く', 'warm', 1], ['次の試合は外す', 'push', 0]] },
       { t: (p) => `${p.name}の退場の件の続き。主将が「自分が見ておきます」と言ってきた。`, o: [['冷静さの練習を一緒に組む', 'warm', 2], ['主将に見張らせる', 'push', 1], ['放っておく', 'wait', -1]] }],
       ends: {
         hidden: { if: (w, p, st) => st.sc >= 4, t: (w, p) => `${p.name}が、地域のフェアプレー賞に選ばれた。あの退場から半年だ。`, fx: (w, p) => { ab(p, '冷静さ', 2); if (YA.addRep) YA.addRep(w, 2); }, m: '退場した自分が、フェアプレー賞をもらいました。' },
@@ -239,7 +266,8 @@
       c.st.sc += sc;
       c.st.picks.push(i);
       if (fx) fx(ww, q, c.st);
-      if (!last) { c.ep++; c.due = absW(ww) + 2 + (YA.hash(c.id + c.ep) % 2); return; }
+      // 次の話は2〜3週あと。話ごとに gap があればその週数あと（大会の前日→大会当日など）
+      if (!last) { c.ep++; c.due = absW(ww) + (ep.gap != null ? ep.gap : 2 + (YA.hash(c.id + c.ep) % 2)); return; }
       const end = endOf(ww, q, c);
       const E = d.ends[end];
       c.done = true;
@@ -260,7 +288,8 @@
     chainPrep(w, e);
     const c = chainOf(w, e);
     const out = r0.apply(this, arguments);
-    if (c && c.done && out) out.line = c.line + (out.line ? `（${out.line}）` : '');
+    // 結末でチームを去るときは、反応の文（「ありがとうございます」など）を添えない
+    if (c && c.done && out) out.line = c.line + (out.line && !out.leave ? `（${out.line}）` : '');
     else if (c && out) out.small = (out.small ? out.small + '・' : '') + '話は続く（数週あとに）';
     return out;
   };
@@ -272,6 +301,9 @@
     const now = absW(w);
     for (const c of w.chains) {
       if (c.due <= now && c.shown !== c.ep) {
+        // 話に時期の決まり（when：前の週に試合があった・今週が大会など）があれば、合う週まで待つ。合わないまま10週たてば打ち切る
+        const ep = CH[c.k] && CH[c.k].eps[c.ep];
+        if (ep && ep.when && !ep.when(w)) { if (now - c.due >= 10) c.done = true; continue; }
         c.shown = c.ep;
         w.forced = (w.forced || []).concat([{ id: 'chain', cid: c.id, pid: c.pid, week: w.week, year: w.year }]);
       }
@@ -294,6 +326,8 @@
       try { p = d.pick(w); } catch (er) { p = null; }
       if (p && w.players[p.id] && !busy.has(p.id) && !(p.chainDone || {})[k]) all.push({ k, p });
     }
+    // 1話目に時期の決まりがあるものは、合う週だけ始める
+    for (let i = all.length - 1; i >= 0; i--) { const e0 = CH[all[i].k].eps[0]; if (e0.when && !e0.when(w)) all.splice(i, 1); }
     const fresh = all.filter((x) => recent.indexOf(x.k) < 0);
     const cands = fresh.length ? fresh : all;
     if (!cands.length) return;
@@ -331,24 +365,31 @@
     childhood: '幼なじみと差がついてきた', idol: '憧れの先輩との差を感じている', shy: '人前で話すのが苦手で、言い出せずにいた', hot: '気持ちを抑えきれずにいる',
     helper: '人の世話ばかりで、自分のことが後回しになっている', writer: '口では言えないことを、ノートに書いていた', job: '夜のアルバイトで疲れが抜けない', sns: 'SNSの書き込みを気にしている', agent: '怪しい大人の言葉が頭から離れない',
   };
+  const TALK = new Set(['unrest', 'lowconf', 'quit', 'family']);
   const SEASON = (w) => (w.week >= 31 && w.week <= 36 ? '雪の残るグラウンドで。' : w.week >= 13 && w.week <= 18 ? '蒸し暑い練習のあと。' : w.week >= 6 && w.week <= 9 ? '雨の日の練習のあと。' : '');
   const quoteOf = (label) => { const m = /「([^」]+)」/.exec(label || ''); return m ? m[1] : String(label || '').replace(/（[^）]*）/g, '').trim(); };
   const ev1 = YA.eventView;
   YA.eventView = function (w, e) {
     const v = ev1.apply(this, arguments);
+    // 本文の終わりの句点をそろえる（2026-11-17：「…張り合う場面が増えた」のように抜けていた）
+    if (v && typeof v.text === 'string' && v.text && !/[。」）！？…』]$/.test(v.text)) v.text += '。';
     if (!v || !COMMON.has(e.id) || !e.pid) return v;
     const p = w.players[e.pid];
     if (!p) return v;
     const pre = [];
     const last = (p.mem || []).filter((m) => m.k === e.id).slice(-1)[0];
     if (last) pre.push(last.y === w.year ? `（${last.w}週にも同じことがあった。そのときは「${last.q}」）` : `（${w.year - last.y}年前、高${last.g || '?'}のときにも同じことがあった。そのときは「${last.q}」）`);
-    const s = SEASON(w);
+    // 季節の書き出しと、本音・事情の一文は、本人が話しに来る出来事だけ（怪我の相談や張り合いに付くと場面と合わない）
+    const talk = TALK.has(e.id);
+    const s = talk ? SEASON(w) : '';
     const lv = YA.trustLv(p);
     let tail = '';
-    if (lv <= 2) tail = '本音は話してくれなかった。';
-    else if ((p.bgKnow || 0) >= 2) tail = BG_FLAVOR[YA.bgOf(w, p)] ? `${BG_FLAVOR[p.bg]}。` : '';
-    else if ((p.bgKnow || 0) === 1) tail = `${SYS_HINT[YA.BG_SYS[YA.bgOf(w, p)]]}。`;
-    if (last && lv >= 4) tail += say(p, 'また同じことで、すみません');
+    if (talk) {
+      if (lv <= 2) tail = '本音は話してくれなかった。';
+      else if ((p.bgKnow || 0) >= 2) tail = BG_FLAVOR[YA.bgOf(w, p)] ? `${BG_FLAVOR[p.bg]}。` : '';
+      else if ((p.bgKnow || 0) === 1) tail = `${SYS_HINT[YA.BG_SYS[YA.bgOf(w, p)]]}。`;
+      if (last && lv >= 4) tail += say(p, 'また同じことで、すみません');
+    }
     v.text = pre.join('') + s + v.text + (tail ? ' ' + tail : '');
     return v;
   };

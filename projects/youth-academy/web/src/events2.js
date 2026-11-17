@@ -13,6 +13,9 @@
   const disc = (w, d) => { w.disc = clamp((w.disc || 60) + d, 0, 100); };
   const pickOf = (r, list) => (list.length ? list[r.int(0, list.length - 1)] : null);
   const opt = (label, kind, extra) => ({ label, kind, extra });
+  // チーム全体の出来事：特定の子を選ばず（p を持たない）、選んだことの結果を一文と小さな効き目で返す
+  const run = (label, line, fn) => ({ label, kind: null, run: (w) => ({ line, small: (fn && fn(w)) || '' }) });
+  const teamPick = (w, r) => (all(w).some((q) => q.star) && r() > (YA.NONSTAR_KEEP != null ? YA.NONSTAR_KEEP : 1) ? null : { id: '' });
 
   // ---------- 関係（13種）----------
   YA.REL_NAME = { friend: '同期の親友', rival: '犬猿の仲', mentor: '師弟', posrival: 'ポジション争い', childhood: '幼なじみ', room: '寮の同室', caprebel: '主将との反発', savior: '恩人', gk: 'GKの師弟', reconciled: '不仲から親友へ', faction: '派閥', overtaken: '追い抜いた後輩', samejh: '同じ中学' };
@@ -94,9 +97,11 @@
     { id: 's_firstkick', name: '初蹴り', w: 2, when: (w) => w.week === 31, pick: (w, r) => pickOf(r, all(w).filter((p) => p.grade === 3)),
       text: (p) => `新年の初蹴り。卒業間近の${p.name}たちが、最後の初蹴りだと言っている。`,
       opts: [opt('高3と後輩の試合をする', 'push', (w) => { for (const q of all(w)) conf(q, 1); }), opt('今年の目標を書かせる', 'warm', (w) => { for (const q of all(w).filter((x) => x.grade < 3)) conf(q, 1); }), opt('いつもどおり練習する', 'wait')] },
-    { id: 's_snow', name: '雪', w: 1.2, when: (w) => w.week >= 32 && w.week <= 35, pick: (w, r) => pickOf(r, all(w)),
+    { id: 's_snow', name: '雪', w: 1.2, when: (w) => w.week >= 32 && w.week <= 35, pick: teamPick,
       text: () => `大雪でグラウンドが真っ白だ。練習ができない。`,
-      opts: [opt('皆で雪かきをする', 'push', (w) => { for (const q of all(w)) { conf(q, 1); q.fat = clamp((q.fat || 0) + 3, 0, 100); } }), opt('体育館で体幹の練習', 'warm', (w) => { for (const q of all(w)) prog(q, 'バランス', 0.1); }), opt('休みにする', 'wait', (w) => { for (const q of all(w)) q.fat = clamp((q.fat || 0) - 8, 0, 100); })] },
+      opts: [run('皆で雪かきをする', 'みんなで雪をかいて、半面だけグラウンドが使えるようになった。', (w) => { for (const q of all(w)) { conf(q, 1); q.fat = clamp((q.fat || 0) + 3, 0, 100); } return '全員の自信 +1・疲れ +3'; }),
+        run('体育館で体幹の練習', '体育館で、体幹とバランスの練習をした。', (w) => { for (const q of all(w)) prog(q, 'バランス', 0.1); return '全員のバランスが少し伸びる'; }),
+        run('休みにする', '思いがけない休みに、寮は雪合戦で盛り上がった。', (w) => { for (const q of all(w)) q.fat = clamp((q.fat || 0) - 8, 0, 100); return '全員の疲れ −8'; })] },
     { id: 's_spring', name: '春休みの遠征', w: 1.2, when: (w) => w.week >= 37 && w.week <= 39, pick: (w, r) => pickOf(r, all(w).filter((p) => p.grade <= 2)),
       text: (p) => `春休みの遠征の行き先を決める。${p.name}が「強いところとやりたいです」と言う。`,
       opts: [opt('格上の相手を選ぶ', 'push', (w) => { for (const q of all(w).filter((x) => x.grade <= 2)) prog(q, '判断', 0.15); }), opt('勝てる相手で自信をつける', 'warm', (w) => { for (const q of all(w).filter((x) => x.grade <= 2)) conf(q, 2); }), opt('遠征はやめて休ませる', 'wait')] },
