@@ -214,7 +214,7 @@
     }
     body.append(list);
   }
-  YA.lineageExtraTabs.push(['clubs', 'クラブ', clubsTab]);
+  YA.lineageExtraTabs.push(['clubs', '移籍先クラブ', clubsTab]);
 
   // 年度末：シーズン中に知らせた数は、scout.js の careerSeason が賞を決める前に下限として当てた（2026-11-17 点検：
   // ここで後から得点を足していたので、賞の判定とずれて「1試合2点」が出ていた）。ここでは今年の数を戻すだけ

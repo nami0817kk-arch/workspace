@@ -26,6 +26,8 @@ button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:poin
 .btn:active{transform:translateY(2px);box-shadow:0 0 0 #b9c7de}
 .btn.pri{background:linear-gradient(180deg,#ffd84d,#f5c518);border-color:#c79a00;box-shadow:0 3px 0 #b08700;color:#3b2d00}
 .btn.pri:active{box-shadow:0 1px 0 #b08700;transform:translateY(2px)}
+.btn.danger{background:linear-gradient(180deg,#e85a4f,#c9342a);border-color:#9c2219;box-shadow:0 3px 0 #7d1a13;color:#fff}
+.btn.danger:active{box-shadow:0 1px 0 #7d1a13;transform:translateY(2px)}
 .btn.blue{background:linear-gradient(180deg,#3b86f5,#1f6feb);border-color:#154cb0;box-shadow:0 3px 0 #123f94;color:#fff}
 .btn.sm{padding:6px 10px;min-height:34px;font-size:12px;border-radius:8px}
 .btn.on{background:linear-gradient(180deg,#2c5bb0,#1f4a9a);color:#fff;border-color:#123f94;box-shadow:0 2px 0 #123f94}
@@ -37,7 +39,7 @@ button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:poin
 .chip.awake{background:linear-gradient(180deg,#ffe58a,#ffc93a);color:#4a3200;border:1px solid #d9a400;font-weight:900}
 .chip.instr{background:#ecdcff;color:#5a2a9a;border:1px solid #c8a8f2}
 .chip.gray{background:#eef2f8;color:var(--sub);border:1px solid var(--line)}
-.pos{display:inline-flex;align-items:center;justify-content:center;min-width:26px;height:20px;padding:0 5px;border-radius:10px;color:#fff;font-weight:900;font-size:9.5px;white-space:nowrap;box-shadow:0 1px 0 rgba(0,0,0,.25)}
+.pos{display:inline-flex;align-items:center;justify-content:center;min-width:26px;height:20px;padding:0 5px;border-radius:10px;color:#fff;font-weight:900;font-size:11px;white-space:nowrap;box-shadow:0 1px 0 rgba(0,0,0,.25)}
 .pos.GK{background:var(--gk)}.pos.DF{background:var(--df)}.pos.MF{background:var(--mf)}.pos.FW{background:var(--fw)}
 .h{font-weight:900;color:var(--navy);font-size:13px}
 .sub{color:var(--sub)}
@@ -213,3 +215,6 @@ button.pitem{min-height:34px}
 /* 練習の表：1行を低くして、多くの子が見えるように */
 .trainrow{padding-top:1px;padding-bottom:1px}
 .trainrow .btn.sm{min-height:26px;padding-top:1px;padding-bottom:1px}
+
+/* 押すと説明が出る札（data-tip）。下に点線を引いて、押せることを見せる */
+[data-tip]{cursor:pointer;text-decoration:underline dotted rgba(0,0,0,.35);text-underline-offset:2px}

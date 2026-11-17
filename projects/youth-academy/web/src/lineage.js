@@ -324,7 +324,7 @@
         h('span', { class: 'grow', style: 'font-size:12px;min-width:180px' + (next ? '' : ';font-weight:800') }, top.name),
         h('div', { class: 'bar', style: 'width:90px;flex:none' }, h('i', { style: `width:${pct}%;background:${next ? '#2f7ed8' : '#d9a400'}` })),
         h('span', { class: 'note', style: 'width:64px;flex:none;text-align:right' }, next ? `${Math.min(top.cur, top.goal).toLocaleString('en-US')}/${top.goal.toLocaleString('en-US')}` : 'すべて達成'),
-        ...g.items.map((a) => h('span', { class: 'chip', title: a.name, style: `flex:none;padding:0 6px;${a.done ? `background:${tcol[a.tier]};color:#fff` : 'background:#eef2f8;color:#9aa6b8'}` }, a.tier)));
+        ...g.items.map((a) => h('span', { class: 'chip', tip: a.name + (a.done ? '（達成）' : ''), style: `flex:none;padding:0 6px;${a.done ? `background:${tcol[a.tier]};color:#fff` : 'background:#eef2f8;color:#9aa6b8'}` }, a.tier)));
     })));
   }
   function hallTab(body, w) {
@@ -366,15 +366,21 @@
     const sorted = all.slice().sort((x, y) => (!!(w.dex || {})[y.k]) - (!!(w.dex || {})[x.k]));
     body.append(h('div', { class: 'scroll', style: 'margin-top:5px;flex:1;min-height:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:max-content;gap:5px;align-content:start' }, sorted.map((f) => {
       const d = (w.dex || {})[f.k];
-      return h('div', { class: 'card', title: d ? '' : leanHint(f), style: 'padding:6px 7px;display:flex;flex-direction:column;gap:2px;min-height:74px;flex:none;' + (d ? 'background:linear-gradient(180deg,#fff8d6,#ffefb0);border-color:#e6c200' : 'background:#f3f6fb;opacity:.85') },
+      return h('div', { class: 'card', style: 'padding:6px 7px;display:flex;flex-direction:column;gap:2px;min-height:74px;flex:none;' + (d ? 'background:linear-gradient(180deg,#fff8d6,#ffefb0);border-color:#e6c200' : 'background:#f3f6fb;opacity:.85') },
         h('div', { class: 'row', style: 'gap:4px' }, h('span', { style: `font-size:16px;color:${d ? '#c99a00' : '#b9c3d3'}` }, d ? '★' : '？'), h('b', { style: 'font-size:12px;line-height:1.25' }, d ? f.name : '？？？？')),
         h('div', { class: 'note', style: 'font-size:10.5px;line-height:1.35' }, d ? `特性「${f.trait}」` : `向く位置：${f.pos.slice(0, 3).map((x) => YA.posJa ? YA.posJa(x) : x).join('・')}`),
         h('div', { class: 'note', style: 'font-size:10px;line-height:1.35' }, d ? `最初の子 ${d.name}（${d.y}年目）・${d.n}回` : leanHint(f)));
     })));
   }
   function fundTab(body, w) {
-    body.append(h('div', { class: 'h' }, `育成基金 ${w.fund || 0}万円`), h('div', { class: 'note' }, '卒業生の大きな移籍で入る連帯貢献金の半分が貯まります。クラブの予算とは別で、使い道は自分で決めます（赤字にはできません）。'));
-    for (const u of YA.FUND_USES) body.append(h('div', { class: 'pitem', style: 'cursor:default;gap:6px;margin-top:4px' }, h('div', { class: 'grow' }, h('b', {}, `${u.name}（${u.cost}万円）`), h('div', { class: 'note' }, u.note)), h('button', { class: 'btn sm', disabled: !!YA.fundWhy(w, u.k), why: YA.fundWhy(w, u.k) || '', onclick: () => { const r = YA.fundUse(w, u.k); YA.saveWorld(); rerender(); } }, '使う')));
+    body.append(h('div', { class: 'h' }, `育成基金 ${YA.yen(w.fund || 0)}`), h('div', { class: 'note' }, '卒業生の大きな移籍で入る連帯貢献金の半分が貯まります。クラブの予算とは別で、使い道は自分で決めます（赤字にはできません）。'));
+    for (const u of YA.FUND_USES) body.append(h('div', { class: 'pitem', style: 'cursor:default;gap:6px;margin-top:4px' }, h('div', { class: 'grow' }, h('b', {}, `${u.name}（${YA.yen(u.cost)}）`), h('div', { class: 'note' }, u.note)), h('button', { class: 'btn sm', disabled: !!YA.fundWhy(w, u.k), why: YA.fundWhy(w, u.k) || '', onclick: () => fundAsk(w, u) }, '使う')));
+  }
+  // 使う前に確かめ、結果を知らせる（2026-11-17 点検：押すとすぐ減り、結果の文も捨てていた）
+  function fundAsk(w, u) {
+    const go = () => { const r = YA.fundUse(w, u.k); YA.saveWorld(); rerender(); if (YA.toast) YA.toast(r.msg + (r.ok ? `（残り${YA.yen(w.fund || 0)}）` : '')); };
+    if (!YA.confirmBox) return go();
+    YA.confirmBox(`育成基金から${YA.yen(u.cost)}を「${u.name}」に使いますか`, go, { yes: '使う', note: `${u.note}　使うと残りは${YA.yen((w.fund || 0) - u.cost)}です。` });
   }
   function viewLineage(main) {
     const w = U().app.w;

@@ -144,9 +144,9 @@
     body.append(h('div', { class: 'h', style: 'margin-top:8px' }, '書き出し・復元'), h('div', { class: 'row', style: 'gap:5px;flex-wrap:wrap;margin-top:3px' },
       h('button', { class: 'btn sm', onclick: exportBox }, '書き出す（コピーして保管）'),
       h('button', { class: 'btn sm', onclick: importBox }, '復元する（貼り付け）'),
-      store.get(YA.slotKey(app.slot) + '_bak', null) ? h('button', { class: 'btn sm', onclick: () => confirmBox('年度はじめの控えに戻しますか（いまの進み具合は消えます。' + ORIG_NOTE + '）', () => { app.w = store.get(YA.slotKey(app.slot) + '_bak', null); YA.saveWorld(true); rerender(); }) }, '控え（年度はじめ）に戻す') : null));
+      store.get(YA.slotKey(app.slot) + '_bak', null) ? h('button', { class: 'btn sm', onclick: () => confirmBox('年度はじめの控えに戻しますか（いまの進み具合は消えます。' + ORIG_NOTE + '）', () => { app.w = store.get(YA.slotKey(app.slot) + '_bak', null); YA.saveWorld(true); rerender(); }, { yes: '控えに戻す', danger: true }) }, '控え（年度はじめ）に戻す') : null));
     if (YA.devOn()) testBlock(body);
-    body.append(h('div', { class: 'h', style: 'margin-top:10px' }, 'この枠を最初からやり直す'), h('div', { class: 'note' }, '36人も成績も消えて、新しい指導者から始まります。'), h('button', { class: 'btn', style: 'margin-top:5px;color:#b02020', onclick: () => confirmBox('本当に最初からやり直しますか', () => { app.w = null; app.ng = null; store.set(YA.slotKey(app.slot), null); rerender(); }) }, '最初からやり直す'));
+    body.append(h('div', { class: 'h', style: 'margin-top:10px' }, 'この枠を最初からやり直す'), h('div', { class: 'note' }, '36人も成績も消えて、新しい指導者から始まります。'), h('button', { class: 'btn', style: 'margin-top:5px;color:#b02020', onclick: () => confirmBox('本当に最初からやり直しますか', () => { app.w = null; app.ng = null; store.set(YA.slotKey(app.slot), null); rerender(); }, { yes: 'やり直す', danger: true, note: '36人も成績も消えて、元に戻せません。' }) }, '最初からやり直す'));
   };
   // 控えに戻す・復元で、予約したオリジナル選手がどうなるか
   const ORIG_NOTE = '予約したオリジナル選手も戻ります（使ったチケットは戻りません）';
@@ -164,7 +164,7 @@
         h('span', { class: 'grow', style: 'font-size:11.5px' }, sum || '空き'),
         !cur && sum ? h('button', { class: 'btn sm', onclick: () => switchSlot(i) }, 'この枠で遊ぶ') : null,
         !cur && !sum ? h('button', { class: 'btn sm', onclick: () => switchSlot(i) }, '新しく始める') : null,
-        sum && !cur ? h('button', { class: 'btn sm', style: 'color:#b02020', onclick: () => confirmBox('枠' + (i + 1) + 'を削除しますか', () => { store.set(YA.slotKey(i), null); rerender(); }) }, '削除') : null));
+        sum && !cur ? h('button', { class: 'btn sm', style: 'color:#b02020', onclick: () => confirmBox('枠' + (i + 1) + 'を削除しますか', () => { store.set(YA.slotKey(i), null); rerender(); }, { yes: '削除する', danger: true, note: '消した枠は元に戻せません。' }) }, '削除') : null));
     }
   };
   // ---------- 点検用：新しい世界でNか年シミュレーション（いまの遊びには影響しない）----------
@@ -247,7 +247,7 @@
         a.note ? h('span', { class: 'note' }, a.note) : null));
     }
     body.append(h('div', { class: 'h', style: 'margin-top:10px' }, '引退'), h('div', { class: 'note' }, '指導者を引退して、ここまでの歩みをまとめます。引退すると続きは遊べません（書き出しで残せます）。'),
-      h('button', { class: 'btn', style: 'margin-top:5px;color:#b02020', onclick: () => confirmBox('指導者を引退しますか', () => { YA.retire(w); YA.saveWorld(true); rerender(); }) }, '引退する'));
+      h('button', { class: 'btn', style: 'margin-top:5px;color:#b02020', onclick: () => confirmBox('指導者を引退しますか', () => { YA.retire(w); YA.saveWorld(true); rerender(); }, { yes: '引退する', danger: true, note: '引退すると、この指導者の人生はここで終わります。' }) }, '引退する'));
   };
   YA.views = YA.views || {};
   YA.views.retired = function (main) {
@@ -266,8 +266,8 @@
     box.append(h('div', { class: 'note' }, (app.w.coachName || '指導者') + 'さんの歩み'));
     const lg = YA.legacyBank(U().store, app.w);
     box.append(h('div', { class: 'insight' }, lg.length ? `次の人生に付いてきてくれる教え子：${lg.join('・')}（新しく始めるときに1人選べます）` : '次の人生に付いてきてくれる教え子は、いません（絆の深い★の卒業生が付いてきます）'));
-    box.append(h('div', { class: 'insight' }, `プロ入りした卒業生 ${s.pros}人／代表経験者 ${s.nats}人／連帯貢献金 ${s.solid}万円`));
-    if (s.best.length) box.append(h('div', { class: 'h', style: 'margin-top:4px' }, '育てた主な子'), ...s.best.map((a) => h('div', { class: 'note', style: 'color:var(--ink)' }, `・${a.name}（${a.pos}・能力${YA.rate(a.ovr)}・${a.club || ''}）`)));
+    box.append(h('div', { class: 'insight' }, `プロ入りした卒業生 ${s.pros}人／代表経験者 ${s.nats}人／連帯貢献金 ${YA.yen(s.solid)}`));
+    if (s.best.length) box.append(h('div', { class: 'h', style: 'margin-top:4px' }, '育てた主な子'), ...s.best.map((a) => h('div', { class: 'note', style: 'color:var(--ink)' }, `・${a.name}（${a.pos}・総合力${YA.rate(a.ovr)}・${a.club || ''}）`)));
     if (s.trophies.length) box.append(h('div', { class: 'h', style: 'margin-top:4px' }, '獲ったもの'), ...s.trophies.map((t) => h('div', { class: 'note', style: 'color:var(--ink)' }, `・${t.year || ''}年 ${t.name}`)));
     box.append(h('div', { class: 'h', style: 'margin-top:4px' }, '実績'), ...s.ach.map((a) => h('div', { class: 'note', style: 'color:var(--ink)' }, (a.done ? '◎ ' : '・') + a.name)));
     box.append(h('div', { class: 'row', style: 'margin-top:8px;gap:6px' },
@@ -336,9 +336,14 @@
     body.append(h('div', { class: 'row', style: 'margin:3px 0' }, h('span', { class: 'grow' }, w.clubName), h('button', { class: 'btn sm', onclick: () => ask('クラブ名を変える', w.clubName, (v) => YA.renameClub(w, v)) }, '変更')));
     for (const t of w.league.teams.filter((x) => !x.me)) body.append(h('div', { class: 'row', style: 'margin:3px 0' }, h('span', { class: 'grow', style: 'font-size:11.5px' }, t.name), h('button', { class: 'btn sm', onclick: () => ask('相手クラブの名前を変える', t.name, (v) => YA.renameTeam(w, t.id, v)) }, '変更')));
   };
-  function confirmBox(text, ok) {
-    V().modal((close) => h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(420px,95%);padding:12px;gap:8px' }, h('div', { class: 'h' }, text), h('div', { class: 'row' }, h('button', { class: 'btn', onclick: close }, 'やめる'), h('button', { class: 'btn pri', onclick: () => { close(); ok(); } }, 'はい'))));
+  // 確認の窓。o.yes＝確定のボタンの言葉（動詞で。「はい」にしない）、o.danger＝取り返せない操作（確定は赤、「やめる」を主ボタンに）、o.note＝添え書き
+  function confirmBox(text, ok, o) {
+    o = o || {};
+    const danger = !!o.danger;
+    V().modal((close) => h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(420px,95%);padding:12px;gap:8px' }, h('div', { class: 'h' }, text), o.note ? h('div', { class: 'note' }, o.note) : null,
+      h('div', { class: 'row' }, h('button', { class: 'btn' + (danger ? ' pri' : ''), onclick: close }, 'やめる'), h('button', { class: 'btn ' + (danger ? 'danger' : 'pri'), onclick: () => { close(); ok(); } }, o.yes || '決める'))));
   }
+  YA.confirmBox = confirmBox;
   function switchSlot(i) {
     const app = U().app;
     YA.saveWorld(true);

@@ -294,5 +294,5 @@
     const mv = (w.moves || []).slice().reverse();
     for (const m of mv) body.append(h('div', { class: 'note', style: 'margin-top:3px' }, `${m.y}年目：${m.from} → ${m.to}`));
   }
-  YA.lineageExtraTabs.push(['rival', 'ライバル', rivalTab], ['top', 'トップ', topTab], ['move', '移籍', moveTab]);
+  YA.lineageExtraTabs.push(['rival', 'ライバル', rivalTab], ['top', '監督の注文', topTab], ['move', '移籍', moveTab]);
 })();
