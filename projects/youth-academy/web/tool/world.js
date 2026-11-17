@@ -1655,7 +1655,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   ok(YA.REWARDS.length >= 2 && YA.AD.rewardPerDay === 3, 'ご褒美の動画は1日3回');
   const mem = {}; const st = { get: (k, d) => (mem[k] != null ? mem[k] : d), set: (k, v) => { mem[k] = v; } };
   ok(YA.rewardLeft(st) === 3, '今日のご褒美は3回');
-  st.set('adday', { d: new Date().toISOString().slice(0, 10), n: 3 });
+  st.set('adday', { d: YA.localDay(), n: 3 });
   ok(YA.rewardLeft(st) === 0, '3回見たら今日はもう出ない');
   // オリジナル選手
   YA.entSet({ tickets: 1 });

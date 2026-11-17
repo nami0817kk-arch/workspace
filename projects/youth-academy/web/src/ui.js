@@ -99,27 +99,43 @@
 
   // ---------- 保存（端末内。Flutter があればそちらにも写す） ----------
   const mem = {};
+  const has = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
   const store = {
+    // 中身はあるのに読めなかった名前（壊れたセーブ）。黙って「無い」扱いにしない（loadCfg が見る）
+    broken: {},
     get(k, d) {
-      if (mem[k] != null) return mem[k];
+      // この起動で書いた値を先に見る（消した＝null もそのまま。起動時に渡された古い値に戻らないように）
+      if (has(mem, k)) return mem[k] != null ? mem[k] : d;
+      let bad = false;
       try {
         if (globalThis.__BOOT && globalThis.__BOOT.store && globalThis.__BOOT.store[k] != null) return JSON.parse(globalThis.__BOOT.store[k]);
-      } catch (e) {}
+      } catch (e) { bad = true; }
       try {
         const v = localStorage.getItem('ya_' + k);
         if (v != null) return JSON.parse(v);
-      } catch (e) {}
-      return mem[k] != null ? mem[k] : d;
+      } catch (e) { if (e instanceof SyntaxError) bad = true; }
+      if (bad) store.broken[k] = true;
+      return d;
     },
+    // 書けたら true（端末の保存か Flutter への受け渡しのどちらかが通れば。Flutter 側で書けなければ saveFail が届く）
     set(k, v) {
       mem[k] = v;
-      const j = JSON.stringify(v);
+      delete store.broken[k];
+      let ok = false;
+      let j;
+      try {
+        j = JSON.stringify(v);
+      } catch (e) {
+        return false;
+      }
       try {
         localStorage.setItem('ya_' + k, j);
+        ok = true;
       } catch (e) {}
       try {
-        if (globalThis.YouthApp) globalThis.YouthApp.postMessage(JSON.stringify({ k, v: j }));
+        if (globalThis.YouthApp) { globalThis.YouthApp.postMessage(JSON.stringify({ k, v: j })); ok = true; }
       } catch (e) {}
+      return ok;
     },
   };
 
@@ -171,9 +187,12 @@
     YA.sfx.on = store.get('sfx', true) !== false;
     if (YA.bgm) YA.bgm.on = store.get('bgm', true) !== false;
     if (YA.entSet) { YA.entSet(store.get('ent', null)); YA.shopStart(); }
-    const sw = store.get(YA.slotKey(app.slot), null);
+    const key = YA.slotKey(app.slot);
+    const sw = store.get(key, null);
     // 保存がなければ「新しく始める」画面（指導者の作成）から
     app.w = sw && sw.v >= 3 && sw.players && sw.lineupA ? sw : null;
+    // 保存はあるのに読めない（壊れている・形が違う）ときは、黙って新しく始めない。選ばせる（views3 の newgame が出す）
+    app.loadErr = !app.w && (sw != null || store.broken[key]) ? { slot: app.slot } : null;
     if (app.w) {
       if (!app.w.tut) app.w.tut = { on: false };
       [app.w.lineupA, app.w.lineupB].forEach((l) => l.forEach((sl, i) => YA.fixSlotRole(sl, i)));

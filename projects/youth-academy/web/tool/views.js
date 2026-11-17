@@ -426,7 +426,15 @@ async function clearEvents() {
     btn('復元する', d.querySelector('.sheet')).click();
     ok(txt().includes('読み取れませんでした'), '壊れたデータは復元しない');
     d.querySelector('.sheet textarea').value = exported;
-    btn('復元する', d.querySelector('.sheet')).click();
+    {
+      // 2026-11-17 課金の点検：復元は、いまの進み具合を上書きする前に確かめる（オリジナル選手の扱いも書く）
+      const w0 = A.w;
+      btn('復元する', d.querySelector('.sheet')).click();
+      await sleep(10);
+      const sheets = d.querySelectorAll('.sheet');
+      ok(sheets.length === 2 && /置き換えますか/.test(sheets[1].textContent) && /予約したオリジナル選手も戻ります/.test(sheets[1].textContent) && A.w === w0, '復元はすぐ上書きせず、確かめる');
+      btn('はい', sheets[1]).click();
+    }
     await sleep(20);
     ok(!d.querySelector('.sheet') && A.w.players, '書き出したデータを復元できる');
     rail('ほか');
@@ -587,10 +595,117 @@ async function clearEvents() {
     rail('ホーム');
     ok(txt().includes('お知らせ') && (txt().includes('留める') || txt().includes('すべて読んだ') || true), 'お知らせに留める');
     ok(errors.length === 0, '機能面の画面で例外なし: ' + errors.slice(0, 2).join('|'));
+    // ---------- 課金・保存の画面（2026-11-17 課金の点検） ----------
+    {
+      const Y = w.YA;
+      const posted = [];
+      w.YouthApp = { postMessage: (m) => posted.push(JSON.parse(m)) };
+      Y.shopPrices = {};
+      rail('ほか');
+      btn('設定', d.getElementById('main')).click();
+      await sleep(10);
+      ok(/セーブ枠（いま\d枠・無料は1枠）/.test(txt()), '課金: セーブ枠の見出しは「いまN枠・無料は1枠」');
+      ok(/最後に保存できた時刻|まだ保存していません/.test(txt()), '課金: 設定に最後に保存できた時刻');
+      const buyBtn = d.querySelector('button[data-pid="youth_remove_ads"]');
+      ok(buyBtn && buyBtn.disabled && /ストアに接続中/.test(buyBtn.dataset.why || '') && !/円/.test(buyBtn.textContent), '課金: 価格が取れていない商品は値段を出さず押せない（理由つき）');
+      ok(posted.some((m) => m.cmd === 'prices'), '課金: ショップを開いたら価格を取り直す');
+      Y.onNative({ ev: 'prices', map: { youth_remove_ads: '¥610', youth_keen_eye: '¥800', youth_save_slot: '¥250', youth_ticket_1: '¥250', youth_ticket_3: '¥610' } });
+      const buy2 = d.querySelector('button[data-pid="youth_remove_ads"]');
+      ok(buy2 && !buy2.disabled && buy2.textContent === '¥610', '課金: 価格が届いたら買える');
+      Y.onNative({ ev: 'ent', v: { slots: 4, tickets: 2, used: 0, spent: [] } });
+      const sb = d.querySelector('button[data-pid="youth_save_slot"]');
+      ok(sb && sb.disabled && /5枠/.test(sb.dataset.why || ''), '課金: セーブ枠が上限なら押せない（理由つき）');
+      // オリジナル選手：3人そろっていたら作れない
+      A.w.originals = [{ name: 'あ', pos: 'CM', stars: 3 }, { name: 'い', pos: 'CM', stars: 3 }, { name: 'う', pos: 'CM', stars: 3 }];
+      Y._ui.render();
+      const ob = btn('オリジナル選手を作る') || [...d.querySelectorAll('button')].find((b) => b.textContent === 'オリジナル選手を作る');
+      ok(ob && ob.disabled && /3人まで/.test(ob.dataset.why || ''), '課金: オリジナル選手が3人そろっていたら作るボタンは押せない（理由つき）');
+      A.w.originals = [];
+      Y._ui.render();
+      const ob2 = [...d.querySelectorAll('button')].find((b) => b.textContent === 'オリジナル選手を作る');
+      ob2.click();
+      d.querySelector('.sheet input[type=text]').value = '迎え 太郎';
+      d.querySelector('.sheet input[type=text]').dispatchEvent(new w.Event('input', { bubbles: true }));
+      posted.length = 0;
+      btn('この子を迎える').click();
+      await sleep(10);
+      ok(A.w.originals.length === 1 && A.w.originals[0].serial === 1 && posted.some((m) => m.cmd === 'useTicket') && posted.findIndex((m) => m.k === Y.slotKey(A.slot || 0)) < posted.findIndex((m) => m.cmd === 'useTicket'), '課金: 予約を保存してからチケットを使う（通し番号つき）');
+      ok(Y.ent.tickets === 1 && Y.ent.used === 1, '課金: 使ったチケットを数える');
+      ok([...d.querySelectorAll('#app button[disabled]')].every((b) => b.dataset.why), '課金: ショップの押せないボタンに理由がある');
+      // 控えに戻す確認に、オリジナル選手の扱い
+      const bakBtn = btn('控え（年度はじめ）に戻す');
+      if (bakBtn) { bakBtn.click(); ok(/予約したオリジナル選手も戻ります/.test(d.querySelector('.sheet').textContent), '課金: 控えに戻す確認に、予約したオリジナル選手の扱い'); btn('やめる', d.querySelector('.sheet')).click(); }
+      // 裏に回ったら、まとめ書きを待たずにすぐ保存する
+      posted.length = 0;
+      Y.saveWorld();
+      Object.defineProperty(d, 'hidden', { configurable: true, get: () => true });
+      d.dispatchEvent(new w.Event('visibilitychange'));
+      ok(posted.some((m) => m.k === Y.slotKey(A.slot || 0)), '課金: 裏に回ったらすぐ保存を書き出す');
+      Object.defineProperty(d, 'hidden', { configurable: true, get: () => false });
+      posted.length = 0;
+      w.dispatchEvent(new w.Event('pagehide'));
+      ok(posted.some((m) => m.k === Y.slotKey(A.slot || 0)), '課金: 閉じるとき（pagehide）も保存を書き出す');
+      // 保存に失敗し続けたら知らせる
+      Y.saveState.warned = false; Y.saveState.nativeFails = 0;
+      Y.onNative({ ev: 'saveFail' });
+      Y.onNative({ ev: 'saveFail' });
+      const toast = d.getElementById('ya-toast');
+      ok(toast && /保存できませんでした/.test(toast.textContent), '課金: 保存に続けて失敗したら「保存できませんでした」');
+      // ご褒美の動画：読み直しの後に届いた控えも受け取る
+      const pl = Object.values(A.w.players)[0];
+      pl.fat = 40;
+      posted.length = 0;
+      Y.onNative({ ev: 'adUnclaimed', list: [{ tag: 555, reward: { k: 'rest' } }] });
+      ok(pl.fat === 28 && posted.some((m) => m.cmd === 'adClaimed' && m.tag === 555), '課金: 読み直しの前に見終えた動画の特典が渡り、控えを消す');
+      Y.onNative({ ev: 'adDone', tag: 555, result: 'earned', reward: { k: 'rest' } });
+      ok(pl.fat === 28, '課金: 同じ動画の特典は二度渡らない');
+      // 空き枠で新しく始めたら、前の枠に戻れる
+      const slotNow = A.slot || 0;
+      const empty = [...d.querySelectorAll('#main button')].find((b) => b.textContent === '新しく始める');
+      if (empty) {
+        empty.click();
+        await sleep(10);
+        ok(!A.w && !!btn('やめて前の枠'), '課金: 空き枠で始めかけたら「やめて前の枠に戻る」');
+        btn('やめて前の枠').click();
+        await sleep(10);
+        ok(A.w && (A.slot || 0) === slotNow, '課金: 前の枠に戻れる');
+      } else ok(false, '課金: 空き枠の「新しく始める」が無い');
+      // 読めないセーブは、黙って新しく始めない
+      const wsave = A.w;
+      A.w = null;
+      A.loadErr = { slot: slotNow };
+      Y._ui.render();
+      ok(txt().includes('セーブを読めませんでした') && !!btn('新しく始める') && txt().includes('控え（年度はじめ）に戻す'), '課金: セーブが読めないときは控えに戻すか新しく始めるかを選ばせる');
+      ok([...d.querySelectorAll('#app button[disabled]')].every((b) => b.dataset.why), '課金: 読めないときの画面の押せないボタンに理由がある');
+      A.loadErr = null;
+      A.w = wsave;
+      Y.entSet(null);
+      Y.shopPrices = {};
+      delete w.YouthApp;
+      rail('ホーム');
+      ok(errors.length === 0, '課金の画面で例外なし: ' + errors.slice(0, 2).join('|'));
+    }
     // 引退のまとめに遺産ポイントが出る
     A.w.retired = { year: A.w.year, week: A.w.week };
     w.YA._ui.render();
     ok(txt().includes('付いてきてくれる教え子') && errors.length === 0, '引退のまとめに、次の人生に付いてくる教え子が出る: ' + errors.slice(0, 2).join('|'));
+    // 引退後は行き止まりにしない：名鑑・系譜・セーブ枠へ。新しく始めるは確かめてから
+    {
+      const wr = A.w;
+      btn('新しく始める').click();
+      ok(d.querySelector('.sheet') && /新しく始めますか/.test(d.querySelector('.sheet').textContent) && A.w === wr, '引退後の「新しく始める」は確かめてから');
+      btn('やめる', d.querySelector('.sheet')).click();
+      btn('名鑑・系譜を見る').click();
+      await sleep(10);
+      ok(txt().includes('卒業生') && !!btn('まとめに戻る'), '引退後も名鑑が見られる');
+      btn('系譜').click();
+      await sleep(10);
+      ok(errors.length === 0, '引退後に系譜を開いて例外なし: ' + errors.slice(0, 2).join('|'));
+      btn('まとめに戻る').click();
+      btn('セーブ枠').click();
+      ok(d.querySelector('.sheet') && /セーブ枠（いま/.test(d.querySelector('.sheet').textContent), '引退後にセーブ枠を開ける');
+      btn('閉じる', d.querySelector('.sheet')).click();
+    }
     console.log(fails ? '失敗 ' + fails : '画面の点検: すべて通過');
     process.exit(fails ? 1 : 0);
   }

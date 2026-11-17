@@ -15,6 +15,8 @@ dependencies:
   webview_flutter: ^4.13.0
   google_mobile_ads: ^9.1.0
   in_app_purchase: ^3.3.1
+  # 端末の購入記録（StoreKit 2 の Transaction.all）を読んで、返金・入れ直しを起動時に照らし合わせる
+  in_app_purchase_storekit: ^0.4.13
 
 dev_dependencies:
   flutter_test:

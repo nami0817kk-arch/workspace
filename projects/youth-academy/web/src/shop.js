@@ -8,11 +8,13 @@
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
   // ---------- 権利 ----------
-  YA.ENT0 = { noAds: false, eye: false, slots: 0, tickets: 0 };
+  // used＝これまでに使ったチケットの枚数（オリジナル選手の通し番号）、spent＝新入生として迎え終えた通し番号
+  YA.ENT0 = { noAds: false, eye: false, slots: 0, tickets: 0, used: 0, spent: [] };
+  YA.TICKET_MAX = 99;
   YA.ent = Object.assign({}, YA.ENT0);
   YA.entSet = function (e) {
     const x = Object.assign({}, YA.ENT0, e && typeof e === 'object' ? e : {});
-    YA.ent = { noAds: !!x.noAds, eye: !!x.eye, slots: clamp(x.slots | 0, 0, 4), tickets: clamp(x.tickets | 0, 0, 99) };
+    YA.ent = { noAds: !!x.noAds, eye: !!x.eye, slots: clamp(x.slots | 0, 0, 4), tickets: clamp(x.tickets | 0, 0, YA.TICKET_MAX), used: Math.max(0, x.used | 0), spent: Array.isArray(x.spent) ? x.spent.filter((n) => typeof n === 'number') : [] };
     return YA.ent;
   };
   // セーブ枠：最初は1枠。買うたびに+1（最大5）
@@ -23,11 +25,12 @@
   YA.SHOP = [
     { id: 'youth_remove_ads', key: 'noAds', name: '広告を消す', price: 610, once: true, note: '全画面の広告が出なくなります（ご褒美の動画は残ります）。買い切り。' },
     { id: 'youth_keen_eye', key: 'eye', name: '見抜く目', price: 800, once: true, note: '伸びしろの幅が狭まり、候補の性格と向いたポジションが早く分かります。買い切り。' },
-    { id: 'youth_save_slot', key: 'slot', name: 'セーブ枠の追加', price: 250, once: false, note: '1枠ふえます（最大5枠）。枠ごとに別のクラブで遊べます。' },
-    { id: 'youth_ticket_1', key: 'ticket', name: 'オリジナル選手チケット（1枚）', price: 250, once: false, note: '名前・顔・ポジション・性格・伸びしろを決めた選手を、来年度の新入生に迎えます。' },
-    { id: 'youth_ticket_3', key: 'ticket3', name: 'オリジナル選手チケット（3枚まとめ）', price: 610, once: false, note: '3枚ぶん。1枚ずつ買うより安くなります。' },
+    // 枠とチケットは消費型（App Store Connect の商品は変えられない）。端末にだけ残り、入れ直すと戻らないことをはっきり書く
+    { id: 'youth_save_slot', key: 'slot', name: 'セーブ枠の追加', price: 250, once: false, note: '1枠ふえます（最大5枠）。枠ごとに別のクラブで遊べます。この端末だけで使えます。アプリを入れ直したり機種変更したりすると戻りません（購入の復元でも戻りません）。' },
+    { id: 'youth_ticket_1', key: 'ticket', name: 'オリジナル選手チケット（1枚）', price: 250, once: false, add: 1, note: '名前・顔・ポジション・性格・伸びしろを決めた選手を、来年度の新入生に迎えます。この端末だけで使えます。入れ直すと戻りません（購入の復元でも戻りません）。' },
+    { id: 'youth_ticket_3', key: 'ticket3', name: 'オリジナル選手チケット（3枚まとめ）', price: 610, once: false, add: 3, note: '3枚ぶん。1枚ずつ買うより安くなります。この端末だけで使えます。入れ直すと戻りません（購入の復元でも戻りません）。' },
   ];
-  YA.shopPrices = {}; // ストアの表示価格 { productId: '¥610' }
+  YA.shopPrices = {}; // ストアの表示価格 { productId: '¥610' }。取れていない商品は値段を出さず、買えない（決め打ちの値段は出さない）
 
   // ---------- Flutter との橋 ----------
   // 送る：YouthApp.postMessage(JSON)。受ける：Flutter が YAnative.onMsg(JSON) を呼ぶ
@@ -39,13 +42,17 @@
     },
   };
   YA.shopMsg = ''; // 画面に出す直近の結果
+  YA.PURCHASE_MSG = { purchased: '購入できました', pending: '保護者の承認待ちです。承認されると届きます', canceled: '購入を取りやめました', unavailable: 'いまはストアに繋がりません', failed: '購入に失敗しました', undelivered: '支払いは済みましたが、受け取りに失敗しました。次にアプリを開いたときにもう一度受け取ります', busy: 'ほかの購入を手続き中です。終わってからもう一度', limit: 'これ以上は増やせません（上限です）' };
+  YA.RESTORE_MSG = { purchased: '購入を復元しました', unavailable: '復元できる買い切りの購入が見つかりませんでした', pending: '確認中です。届いたら反映されます', undelivered: '受け取りに失敗しました。次にアプリを開いたときにもう一度受け取ります', failed: '復元できませんでした' };
   YA.onNative = function (ev) {
     if (!ev || typeof ev !== 'object') return;
     if (ev.ev === 'ent') { YA.entSet(ev.v); if (YA.bgm) YA.bgm.unlock(); }
-    else if (ev.ev === 'prices') YA.shopPrices = Object.assign({}, ev.map || {});
-    else if (ev.ev === 'purchase') YA.shopMsg = { purchased: '購入できました', pending: '保護者の承認待ちです。承認されると届きます', canceled: '購入を取りやめました', unavailable: 'いまはストアに繋がりません', failed: '購入に失敗しました' }[ev.outcome] || '';
-    else if (ev.ev === 'restore') YA.shopMsg = ev.outcome === 'purchased' ? '購入を復元しました' : ev.outcome === 'unavailable' ? '復元できる購入が見つかりませんでした' : '復元できませんでした';
-    else if (ev.ev === 'adDone') { const f = adWait[ev.tag]; delete adWait[ev.tag]; if (f) f(ev.result); }
+    else if (ev.ev === 'prices') YA.shopPrices = Object.assign({}, YA.shopPrices, ev.map || {});
+    else if (ev.ev === 'purchase') YA.shopMsg = YA.PURCHASE_MSG[ev.outcome] || '';
+    else if (ev.ev === 'restore') YA.shopMsg = YA.RESTORE_MSG[ev.outcome] || YA.RESTORE_MSG.failed;
+    else if (ev.ev === 'adDone') adDone(ev);
+    else if (ev.ev === 'adUnclaimed') { for (const x of ev.list || []) if (x) adDone({ tag: x.tag, result: 'earned', reward: x.reward }); }
+    else if (ev.ev === 'saveFail') { if (YA.saveFailed) YA.saveFailed(); return; }
     if (YA._ui && YA._ui.render) { try { YA._ui.render(); } catch (e) { /* 画面なし */ } }
   };
   globalThis.YAnative = { onMsg: (s) => { try { YA.onNative(typeof s === 'string' ? JSON.parse(s) : s); } catch (e) { /* 壊れた通知は捨てる */ } } };
@@ -54,6 +61,13 @@
     YA.native.post({ cmd: 'hello', ids: YA.SHOP.map((x) => x.id) });
   };
   YA.buy = (id) => YA.native.post({ cmd: 'buy', id });
+  // ショップを開いたら、取れていない価格を取り直す（続けて何度も頼まない）
+  let pricesAsked = 0;
+  YA.askPrices = function () {
+    if (!YA.native.has() || YA.SHOP.every((x) => YA.shopPrices[x.id]) || Date.now() - pricesAsked < 5000) return false;
+    pricesAsked = Date.now();
+    return YA.native.post({ cmd: 'prices' });
+  };
   YA.restorePurchases = () => YA.native.post({ cmd: 'restore' });
 
   // ---------- 広告（決定130） ----------
@@ -73,7 +87,7 @@
       const m0 = YA.monthIdx(w.week);
       const r = wk0.apply(this, arguments);
       // 月の区切り（週が進んで月が替わった）
-      if (YA.monthIdx(w.week) !== m0 && YA.interstitialDue(w, 'month')) YA.adPending = true;
+      if (YA.monthIdx(w.week) !== m0 && YA.interstitialDue(w, 'month')) adDue();
       w.sharpEye = !!YA.ent.eye; // 見抜く目（伸びしろの幅が狭まる）
       return r;
     };
@@ -82,9 +96,14 @@
   if (am0) {
     YA.applyMatch = function (w) {
       const r = am0.apply(this, arguments);
-      if (YA.interstitialDue(w, 'match')) YA.adPending = true;
+      if (YA.interstitialDue(w, 'match')) adDue();
       return r;
     };
+  }
+  // 出す番になったら、Flutter に読み込みを頼む（起動時からは読まない。出すのは画面の区切りの flushAd）
+  function adDue() {
+    if (!YA.adPending) YA.native.post({ cmd: 'adPrep' });
+    YA.adPending = true;
   }
   YA.flushAd = function () {
     if (!YA.adPending) return false;
@@ -94,7 +113,9 @@
   // ご褒美の動画
   const adWait = {};
   let adTag = 0;
-  const today = () => new Date().toISOString().slice(0, 10);
+  // 端末の日付で数える（UTC で数えると、日本では朝9時に日が替わっていた）
+  const today = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
+  YA.localDay = today;
   YA.rewardLeft = function (store) {
     const d = store.get('adday', null);
     return d && d.d === today() ? Math.max(0, YA.AD.rewardPerDay - d.n) : YA.AD.rewardPerDay;
@@ -103,16 +124,50 @@
     { k: 'rest', name: '疲れを抜く', note: 'いまいる全員の疲れが少し抜けます', run: (w) => { for (const p of Object.values(w.players)) p.fat = Math.max(0, (p.fat || 0) - 12); return '全員の疲れ −12'; } },
     { k: 'eye', name: 'スカウトの見立てを詳しく', note: '選んだ候補の幅が狭まり、見立てが付きやすくなります（候補の画面から）', run: null },
   ];
-  // 動画を見て、見終えたら特典を渡す（結果は Flutter から adDone で届く）
-  YA.watchReward = function (store, done) {
+  // 特典の中身（reward）を渡す。rest＝全員の疲れ、boost＝候補 cid の見立てを詳しく。渡せたら結果の文、渡す相手が居なければ null
+  YA.applyReward = function (w, reward) {
+    if (!w || !reward) return null;
+    if (reward.k === 'rest') return YA.REWARDS[0].run(w);
+    if (reward.k === 'boost') {
+      const c = ((w.scouting && w.scouting.cands) || []).find((x) => x.id === reward.cid);
+      if (c) c.boost = true;
+      return c ? '候補の見立てが詳しくなりました' : '';
+    }
+    return '';
+  };
+  // 見終えた動画の受け取り。読み直しの前に見終えた分（adUnclaimed）も同じ道を通る。
+  // 同じ動画を二度渡さないよう、受け取った印を世界（w.adClaimed）に残してから Flutter の控えを消す
+  function adDone(ev) {
+    const f = adWait[ev.tag];
+    delete adWait[ev.tag];
+    let text = null;
+    if (ev.result === 'earned') {
+      const ui = YA._ui;
+      text = YA.claimReward(ui && ui.app ? ui.app.w : null, ev.tag, ev.reward, ui && ui.store);
+      if (!f && text) { try { YA.toast('見終えた動画の特典を受け取りました：' + text); } catch (e) { /* 画面なし */ } }
+    }
+    if (f) f(ev.result, text);
+  }
+  YA.claimReward = function (w, tag, reward, store) {
+    if (!w) return null; // 世界が無い（新しく始める画面）。控えは残し、次に開いたときに渡す
+    w.adClaimed = w.adClaimed || [];
+    if (w.adClaimed.indexOf(tag) >= 0) { YA.native.post({ cmd: 'adClaimed', tag }); return null; }
+    const text = YA.applyReward(w, reward);
+    if (text == null) return null;
+    w.adClaimed = w.adClaimed.concat([tag]).slice(-20);
+    if (store) { const d = store.get('adday', null); store.set('adday', { d: today(), n: (d && d.d === today() ? d.n : 0) + 1 }); }
+    if (YA.saveWorld) YA.saveWorld(true);
+    YA.native.post({ cmd: 'adClaimed', tag });
+    return text;
+  };
+  // 動画を見て、見終えたら特典を渡す（結果は Flutter から adDone で届く）。done(結果, 特典の文)
+  YA.watchReward = function (store, reward, done) {
     if (!YA.native.has()) return done('unavailable');
     if (YA.rewardLeft(store) <= 0) return done('limit');
-    const tag = ++adTag;
-    adWait[tag] = (res) => {
-      if (res === 'earned') { const d = store.get('adday', null); store.set('adday', { d: today(), n: (d && d.d === today() ? d.n : 0) + 1 }); }
-      done(res);
-    };
-    YA.native.post({ cmd: 'ad', kind: 'rewarded', tag });
+    // 読み直しのあとも重ならない番号（前のページの控えと取り違えない）
+    const tag = Date.now() * 10 + (adTag++ % 10);
+    adWait[tag] = done;
+    YA.native.post({ cmd: 'ad', kind: 'rewarded', tag, reward });
   };
   YA.rewardMsg = (res) => ({ earned: '見終えました。特典が入ります', limit: '今日の分は終わりました（1日3回まで）', unavailable: 'いま見られる動画がありません。あとでもう一度', closedEarly: '途中で閉じたので、特典は入りません', showFailed: '動画を表示できませんでした' }[res] || '');
 
@@ -139,7 +194,11 @@
   // 名前・顔・ポジション・利き足・性格・伸びしろを決める。入団時の能力は高1並み。次の年度の新入生として入る。
   YA.ORIG_POS = ['GK', 'CB', 'LB', 'RB', 'LWB', 'RWB', 'DM', 'CM', 'LM', 'RM', 'AM', 'LW', 'RW', 'SS', 'ST'];
   YA.ORIG_POT = { 1: 10, 2: 11.5, 3: 13, 4: 15, 5: 17.6 }; // 伸びしろの星 → 能力の平均の上限
+  YA.ORIG_MAX = 3;
+  YA.origFull = (w) => (w.originals || []).length >= YA.ORIG_MAX;
   YA.origValid = function (w, spec) {
+    // 上限はチケットを使う前に見る（3人そろっているのにチケットだけ減らない）
+    if (YA.origFull(w)) return '来年度に迎えられるオリジナル選手は3人までです';
     const name = String(spec.name || '').trim();
     if (!name || name.length > 12) return '名前は1〜12文字で決めてください';
     if (Object.values(w.players).some((p) => p.name === name) || (w.originals || []).some((o) => o.name === name)) return '同じ名前の子がいます';
@@ -151,14 +210,30 @@
     const err = YA.origValid(w, spec);
     if (err) return { ok: false, msg: err };
     if (YA.ent.tickets < 1) return { ok: false, msg: 'チケットがありません' };
-    if ((w.originals || []).length >= 3) return { ok: false, msg: '来年度に迎えられるオリジナル選手は3人までです' };
-    w.originals = (w.originals || []).concat([{ name: String(spec.name).trim(), pos: spec.pos, foot: spec.foot === 'L' ? 'L' : 'R', stars: spec.stars | 0, face: spec.face == null ? null : spec.face | 0, pers: Object.assign({}, spec.pers || {}) }]);
+    const o = { name: String(spec.name).trim(), pos: spec.pos, foot: spec.foot === 'L' ? 'L' : 'R', stars: spec.stars | 0, face: spec.face == null ? null : spec.face | 0, pers: Object.assign({}, spec.pers || {}) };
+    if (spec.serial != null) o.serial = spec.serial | 0; // 使ったチケットの通し番号（Flutter の権利と突き合わせる）
+    w.originals = (w.originals || []).concat([o]);
     return { ok: true, tickets: YA.ent.tickets };
+  };
+  // 予約したオリジナル選手のうち、本当にチケットを使っていて、まだ迎えていない子だけを残す。
+  // 書き出したセーブを復元して、同じチケットで二度迎える（増やす）のを防ぐ。legacy が true なら、
+  // 通し番号を持たない前の版の予約も残す（書き出しからの復元では残さない）
+  YA.origFilter = function (list, ent, legacy) {
+    const e = ent || YA.ent;
+    const seen = new Set();
+    return (list || []).filter((o) => {
+      if (!o) return false;
+      if (o.serial == null) return !!legacy;
+      const ok = o.serial >= 1 && o.serial <= (e.used | 0) && (e.spent || []).indexOf(o.serial) < 0 && !seen.has(o.serial);
+      seen.add(o.serial);
+      return ok;
+    });
   };
   const intake0 = YA.intake;
   if (intake0) {
     YA.intake = function (w, rng, used) {
-      const list = w.originals || [];
+      const list = YA.origFilter(w.originals, YA.ent, true);
+      const serials = list.filter((o) => o.serial != null).map((o) => o.serial);
       if (list.length) {
         w.scouting = w.scouting || YA.newScouting();
         const names = new Set(used);
@@ -178,7 +253,12 @@
           adds.push({ id: p.id, p, kind: 'int', prof: null, foreign: false, seen: 3, status: 'signed', rival: false, persSeen: true, amb: 5, where: null });
         }
         w.scouting.cands = adds.concat(w.scouting.cands || []);
-        w.originals = [];
+      }
+      w.originals = [];
+      // 迎え終えた通し番号を Flutter に控えてもらう（同じチケットで二度迎えない）
+      if (serials.length) {
+        YA.ent.spent = (YA.ent.spent || []).concat(serials);
+        YA.native.post({ cmd: 'ticketSpent', serials });
       }
       const res = intake0.apply(this, arguments);
       for (const p of Object.values(w.players)) if (p._orig && p.hist && p.hist[0] && /undefined|内部昇格/.test(p.hist[0].t) && p.grade === 1) p.hist[0].t = '入団';
@@ -190,7 +270,16 @@
   const U = () => YA._ui;
   const h = (...a) => U().h(...a);
   const rerender = () => U().render();
-  const priceOf = (it) => YA.shopPrices[it.id] || `${it.price}円`;
+  // 値段はストアの表示価格だけ（取れていなければ出さない。決め打ちの「610円」で別の値段を見せない）
+  const priceOf = (it) => YA.shopPrices[it.id] || '';
+  // 買えない理由（無ければ null）。上限に達した消費型は、買ってもお金だけ取られるので押せなくする
+  YA.buyWhy = function (it) {
+    if (!YA.native.has()) return '買い物はアプリでだけできます';
+    if (it.key === 'slot' && YA.ent.slots >= YA.SLOT_MAX - 1) return 'セーブ枠は5枠までです（いまが上限）';
+    if (it.add && YA.ent.tickets + it.add > YA.TICKET_MAX) return `チケットは${YA.TICKET_MAX}枚までしか持てません`;
+    if (!YA.shopPrices[it.id]) return 'ストアに接続中です。少し待ってから開き直してください';
+    return null;
+  };
   function stateOf(it) {
     if (it.key === 'noAds') return YA.ent.noAds ? '購入済み' : null;
     if (it.key === 'eye') return YA.ent.eye ? '購入済み' : null;
@@ -198,22 +287,24 @@
     return `チケット ${YA.ent.tickets}枚`;
   }
   YA.shopBlock = function (body) {
+    YA.askPrices();
     body.append(h('div', { class: 'h', style: 'margin-top:10px' }, 'ショップ'), h('div', { class: 'note' }, YA.native.has() ? '買い切りは、機種変更や入れ直しのあとに「購入を復元」で戻せます。' : 'ショップはアプリ版（iPhone）で使えます。'));
     for (const it of YA.SHOP) {
       const st = stateOf(it);
       const done = it.once && st === '購入済み';
       body.append(h('div', { class: 'card', style: 'padding:6px 9px;margin:4px 0;display:flex;align-items:center;gap:6px' },
         h('div', { class: 'grow' }, h('b', {}, it.name), h('div', { class: 'note' }, it.note), st ? h('div', { class: 'note', style: 'color:var(--ink)' }, st) : null),
-        done || (it.key === 'slot' && YA.ent.slots >= YA.SLOT_MAX - 1) ? null : h('button', { class: 'btn sm pri', disabled: !YA.native.has(), why: '買い物はアプリでだけできます', onclick: () => { YA.shopMsg = ''; YA.buy(it.id); } }, priceOf(it))));
+        done ? null : (() => { const why = YA.buyWhy(it); return h('button', { class: 'btn sm pri', 'data-pid': it.id, disabled: !!why, why: why || '', onclick: () => { YA.shopMsg = ''; YA.buy(it.id); } }, priceOf(it) || (YA.native.has() ? 'ストアに接続中' : '買う')); })()));
     }
-    body.append(h('div', { class: 'row', style: 'gap:6px;margin-top:4px' }, h('button', { class: 'btn sm', disabled: !YA.native.has(), onclick: () => { YA.shopMsg = ''; YA.restorePurchases(); } }, '購入を復元'), h('span', { class: 'note' }, YA.shopMsg || '')));
+    body.append(h('div', { class: 'row', style: 'gap:6px;margin-top:4px' }, h('button', { class: 'btn sm', disabled: !YA.native.has(), why: '購入の復元はアプリでだけできます', onclick: () => { YA.shopMsg = '確認しています…'; YA.restorePurchases(); rerender(); } }, '購入を復元'), h('span', { class: 'note' }, YA.shopMsg || '')));
     YA.origButton(body);
   };
   YA.origButton = function (body) {
     const w = U().app.w;
     if (!w) return;
     const n = (w.originals || []).length;
-    body.append(h('div', { class: 'row', style: 'gap:6px;margin-top:6px' }, h('button', { class: 'btn sm', disabled: YA.ent.tickets < 1, why: 'オリジナル選手のチケットがありません', onclick: () => origModal() }, 'オリジナル選手を作る'), h('span', { class: 'note' }, `チケット${YA.ent.tickets}枚／来年度に迎える予定 ${n}人`)));
+    const why = YA.origFull(w) ? `来年度に迎えられるのは${YA.ORIG_MAX}人までです（もう${n}人決まっています）` : YA.ent.tickets < 1 ? 'オリジナル選手のチケットがありません' : !YA.native.has() ? 'オリジナル選手はアプリでだけ作れます' : null;
+    body.append(h('div', { class: 'row', style: 'gap:6px;margin-top:6px' }, h('button', { class: 'btn sm', disabled: !!why, why: why || '', onclick: () => origModal() }, 'オリジナル選手を作る'), h('span', { class: 'note' }, `チケット${YA.ent.tickets}枚／来年度に迎える予定 ${n}人（${YA.ORIG_MAX}人まで）`)));
     if (n) body.append(h('div', { class: 'note' }, (w.originals || []).map((o) => `${o.name}（${YA.POS_LABEL ? YA.POS_LABEL[o.pos] || o.pos : o.pos}・伸びしろ${'★'.repeat(o.stars)}）`).join('、')));
   };
   function origModal() {
@@ -235,13 +326,18 @@
           h('div', { class: 'h', style: 'margin-top:4px' }, '性格（選ばなければ「ふつう」）'),
           ...Object.keys(PERS).map((g) => h('div', { class: 'row', style: 'gap:3px;flex-wrap:wrap' }, h('span', { class: 'sub', style: 'width:96px;font-size:10.5px' }, g), ...Object.keys(PERS[g]).map((t) => h('button', { class: 'btn sm' + ((st.pers[g] || 'ふつう') === t ? ' on' : ''), style: 'padding:2px 6px;min-height:26px;font-size:11px', onclick: () => { st.pers[g] = t; draw(); } }, t)))),
           h('div', { class: 'row', style: 'gap:6px;margin-top:6px' }, h('button', { class: 'btn pri', onclick: () => {
-            const r = YA.origValid(w, st) || (YA.ent.tickets < 1 ? 'チケットがありません' : null);
+            // 上限・入力・チケットを、チケットを使う前に全部確かめる
+            const r = YA.origValid(w, st) || (YA.ent.tickets < 1 ? 'チケットがありません' : null) || (YA.native.has() ? null : 'アプリ版でのみ作れます');
             if (r) { st.msg = r; draw(); return; }
-            // チケットを1枚使う（権利の書き込みは Flutter だけ。先に届けてから予定に入れる）
-            if (YA.native.has()) { YA.native.post({ cmd: 'useTicket' }); YA.ent.tickets = Math.max(0, YA.ent.tickets - 1); } else { st.msg = 'アプリ版でのみ作れます'; draw(); return; }
-            const res = YA.origCreate(w, Object.assign({}, st, { _ok: 1 }));
+            // 予定に入れて保存してから、チケットを1枚使う（権利の書き込みは Flutter だけ）。
+            // 通し番号は Flutter が数える「使った枚数」の次。書き出しの復元で同じチケットを二度使えないように突き合わせる
+            const serial = (YA.ent.used | 0) + 1;
+            const res = YA.origCreate(w, Object.assign({}, st, { serial }));
             if (!res.ok) { st.msg = res.msg; draw(); return; }
             YA.saveWorld(true);
+            YA.ent.tickets = Math.max(0, YA.ent.tickets - 1);
+            YA.ent.used = serial;
+            YA.native.post({ cmd: 'useTicket' });
             close();
             rerender();
           } }, 'この子を迎える（チケット1枚）'), h('span', { class: 'note', style: 'color:#c0392b' }, st.msg)));
@@ -257,11 +353,11 @@
     const card = h('div', { class: 'card', style: 'padding:6px 9px;margin-top:6px' }, h('div', { class: 'h' }, 'ご褒美の動画'));
     const msg = h('div', { class: 'note' }, YA.native.has() ? `今日あと${left}回。見終えると、全員の疲れが少し抜けます。` : 'アプリ版（iPhone）で使えます。');
     card.append(msg, h('button', { class: 'btn sm', disabled: !YA.native.has() || left <= 0, why: !YA.native.has() ? '動画はアプリでだけ見られます' : '今日はもう見られません（1日の回数を使い切りました）', style: 'margin-top:3px', onclick: () => {
-      YA.watchReward(st, (res) => {
-        let t = YA.rewardMsg(res);
-        if (res === 'earned') { t += '：' + YA.REWARDS[0].run(w); YA.saveWorld(); }
-        msg.textContent = t;
+      // 特典は受け取りの道（YA.claimReward）で渡す。読み直しの後でも同じ道で渡る
+      YA.watchReward(st, { k: 'rest' }, (res, text) => {
+        const t = YA.rewardMsg(res) + (res === 'earned' && text ? '：' + text : '');
         rerender();
+        try { YA.toast(t); } catch (e) { /* 画面なし */ }
       });
     } }, '動画を見る'));
     return card;
@@ -282,7 +378,7 @@
     if (c.boost || c.status !== 'open' || c.seen < 1) return null;
     const st = U().store;
     return h('button', { class: 'btn sm', disabled: !YA.native.has() || YA.rewardLeft(st) <= 0, why: !YA.native.has() ? '動画はアプリでだけ見られます' : '今日はもう見られません（1日3回まで）', style: 'margin-top:3px', onclick: () => {
-      YA.watchReward(st, (res) => { if (res === 'earned') { c.boost = true; YA.saveWorld(); } (rerenderFn || rerender)(); });
+      YA.watchReward(st, { k: 'boost', cid: c.id }, (res) => { if (res !== 'earned') { try { YA.toast(YA.rewardMsg(res)); } catch (e) { /* 画面なし */ } } (rerenderFn || rerender)(); });
     } }, '動画で詳しく見る');
   };
 })();

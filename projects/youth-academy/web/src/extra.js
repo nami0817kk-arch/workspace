@@ -406,6 +406,10 @@
   };
   if (globalThis.document && document.addEventListener) {
     document.addEventListener('visibilitychange', () => { if (document.hidden) YA.bgm._stop(); else YA.bgm._sync(); });
+    // 裏に回る・閉じるときは、まとめ書き（250ms 待ち）を待たずにすぐ書き出す（裏で WebView が落とされると最後の操作が消えていた）
+    const flush = () => { try { if (YA.saveWorld && YA._ui && YA._ui.app && YA._ui.app.w) YA.saveWorld(true); } catch (e) { /* 画面なし */ } };
+    document.addEventListener('visibilitychange', () => { if (document.hidden) flush(); });
+    if (globalThis.addEventListener) globalThis.addEventListener('pagehide', flush);
   }
 })();
 

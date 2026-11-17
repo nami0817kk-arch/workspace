@@ -7,27 +7,57 @@
   const W = () => U().app.w;
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
-  // 保存は少しまとめて（操作のたびに全部は書かない）
+  // 保存は少しまとめて（操作のたびに全部は書かない）。now ならすぐ書く（年度はじめの控えも同じ道で書く）
   let saveT = null;
+  // 保存の成否（続けて失敗したら知らせる・設定に最後に保存できた時刻を出す）
+  YA.saveState = { fails: 0, lastOk: null, lastFail: null, warned: false };
+  YA.saveResult = function (ok) {
+    const st = YA.saveState;
+    if (ok) {
+      st.fails = 0;
+      st.lastOk = Date.now();
+      st.warned = false;
+      return;
+    }
+    st.fails++;
+    st.lastFail = Date.now();
+    if (st.fails >= 2 && !st.warned) {
+      st.warned = true;
+      try { YA.toast('保存できませんでした。端末の空きを確かめてください（設定に最後に保存できた時刻があります）'); } catch (e) { /* 画面なし */ }
+    }
+  };
+  // Flutter 側で書けなかった（store.set の後から届く）。成功の知らせは来ないので、こちらは失敗だけを数える
+  YA.saveFailed = function () {
+    const st = YA.saveState;
+    st.nativeFails = (st.nativeFails || 0) + 1;
+    st.lastFail = Date.now();
+    if (st.nativeFails >= 2 && !st.warned) {
+      st.warned = true;
+      try { YA.toast('保存できませんでした。端末の空きを確かめてください（設定に最後に保存できた時刻があります）'); } catch (e) { /* 画面なし */ }
+    }
+  };
+  function writeWorld() {
+    const A = U().app;
+    if (!A.w) return;
+    let ok = false;
+    try {
+      const key = YA.slotKey(A.slot || 0);
+      ok = U().store.set(key, A.w) !== false;
+      // 年度はじめの控え（決定78：壊れたときのために）
+      if (A.w.week === 1 && A.w.phase === 'plan') U().store.set(key + '_bak', A.w);
+    } catch (e) {
+      ok = false;
+    }
+    YA.saveResult(ok);
+  }
   YA.saveWorld = function (now) {
     clearTimeout(saveT);
+    saveT = null;
+    if (now) return writeWorld();
     saveT = setTimeout(() => {
-      try {
-        const A = U().app;
-        if (!A.w) return;
-        const key = YA.slotKey(A.slot || 0);
-        U().store.set(key, A.w);
-        // 年度はじめの控え（決定78：壊れたときのために）
-        if (A.w.week === 1 && A.w.phase === 'plan') U().store.set(key + '_bak', A.w);
-      } catch (e) {}
+      saveT = null;
+      writeWorld();
     }, 250);
-    if (now) {
-      clearTimeout(saveT);
-      try {
-        const A = U().app;
-        if (A.w) U().store.set(YA.slotKey(A.slot || 0), A.w);
-      } catch (e) {}
-    }
   };
   const rerender = () => U().render();
 

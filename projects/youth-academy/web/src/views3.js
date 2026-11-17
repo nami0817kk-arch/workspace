@@ -12,6 +12,8 @@
   YA.views = YA.views || {};
   YA.views.newgame = function (main) {
     const app = U().app;
+    // セーブはあるのに読めなかった：黙って新しく始めず、控えに戻すか新しく始めるかを選ばせる
+    if (app.loadErr) return loadErrView(main);
     app.ng = app.ng || { name: '', career: 'grind', club: 2, points: { teach: 0, eye: 0, talk: 0, tactic: 0 }, noFire: false, legacy: null };
     const f = app.ng;
     const used = () => Object.values(f.points).reduce((a, b) => a + b, 0);
@@ -41,10 +43,27 @@
       }
     }
     main.append(h('div', { style: 'flex:1;min-height:0;display:flex;flex-direction:column;gap:6px' },
-      h('div', { class: 'row', style: 'gap:8px;padding:14px 12px;border-radius:12px;color:#fff;background:linear-gradient(90deg,rgba(8,16,36,.7),rgba(8,16,36,.15)),' + (YA.titleSrc() ? `url(${YA.titleSrc()}) center/cover` : '#223') }, h('div', { class: 'h grow', style: 'font-size:19px;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.6)' }, 'ユースの系譜　新しく始める'), h('button', { class: 'btn pri', style: 'min-width:150px;min-height:38px;font-size:14px', onclick: () => { const opts = YA.makeStart({ name: f.name, career: f.career, club: f.club, points: f.points, noFire: f.noFire }); if (f.legacy) opts.legacy = YA.legacyTake(U().store, f.legacy);
+      h('div', { class: 'row', style: 'gap:8px;padding:14px 12px;border-radius:12px;color:#fff;background:linear-gradient(90deg,rgba(8,16,36,.7),rgba(8,16,36,.15)),' + (YA.titleSrc() ? `url(${YA.titleSrc()}) center/cover` : '#223') }, h('div', { class: 'h grow', style: 'font-size:19px;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.6)' }, 'ユースの系譜　新しく始める'),
+        // 空き枠で始めかけたときは、前の枠に戻れる
+        app.prevSlot != null && app.prevSlot !== app.slot && U().store.get(YA.slotKey(app.prevSlot), null) ? h('button', { class: 'btn', style: 'min-height:38px', onclick: () => { const i = app.prevSlot; app.prevSlot = null; switchSlot(i); } }, `やめて前の枠（枠${app.prevSlot + 1}）に戻る`) : null,
+        h('button', { class: 'btn pri', style: 'min-width:150px;min-height:38px;font-size:14px', onclick: () => { const opts = YA.makeStart({ name: f.name, career: f.career, club: f.club, points: f.points, noFire: f.noFire }); if (f.legacy) opts.legacy = YA.legacyTake(U().store, f.legacy);
  app.w =YA.newWorld((Date.now() % 90000) + 7, opts); app.ng = null; app.tab = 'home'; app.view = 'pre'; YA.saveWorld(true); YA.sfx.play('whistle'); rerender(); } }, 'この指導者で始める')),
       h('div', { style: 'flex:1;min-height:0;display:flex;gap:8px' }, left, right)));
   };
+
+  function loadErrView(main) {
+    const app = U().app;
+    const store = U().store;
+    const key = YA.slotKey(app.slot || 0);
+    const bak = store.get(key + '_bak', null);
+    const bakOk = bak && bak.v >= 3 && bak.players && bak.lineupA;
+    const box = h('div', { class: 'card', style: 'margin:auto;max-width:520px;padding:16px;display:flex;flex-direction:column;gap:8px' });
+    box.append(h('div', { class: 'h', style: 'font-size:16px' }, 'セーブを読めませんでした'), h('div', { class: 'note', style: 'color:var(--ink)' }, `枠${(app.slot || 0) + 1}のセーブが壊れているか、読めない形でした。年度はじめの控えに戻すか、新しく始めるかを選んでください。書き出したセーブがあれば、新しく始めたあと設定の「復元する」で戻せます。`));
+    box.append(h('div', { class: 'row', style: 'gap:6px;flex-wrap:wrap' },
+      h('button', { class: 'btn pri', disabled: !bakOk, why: 'この枠には年度はじめの控えがありません', onclick: () => { app.loadErr = null; app.w = bak; app.tab = 'home'; app.view = 'pre'; YA.saveWorld(true); rerender(); } }, bakOk ? `控え（年度はじめ）に戻す：${YA.slotSummary(bak) || ''}` : '控え（年度はじめ）に戻す'),
+      h('button', { class: 'btn', onclick: () => confirmBox('新しく始めますか（読めなかったセーブは、新しく始めた時点で上書きされます）', () => { app.loadErr = null; rerender(); }) }, '新しく始める')));
+    main.append(box);
+  }
 
   // ---------- おまかせ進行（1週・次の試合・1年）----------
   // 開発用の道具（おまかせ進行・点検用シミュレーション）は、遊ぶ人には見せない。URL に ?dev を付けたときだけ出す
@@ -116,7 +135,26 @@
     YA.nameBlock(body);
     if (YA.shopBlock) YA.shopBlock(body);
     // セーブ枠
-    body.append(h('div', { class: 'h', style: 'margin-top:10px' }, `セーブ枠（無料${YA.SLOT_COUNT}つ）`), h('div', { class: 'note' }, '1つの遊びに自動セーブが1つ。枠ごとに別のクラブで遊べます。'));
+    YA.slotBlock(body);
+    // 最後に保存できた時刻（保存に失敗し続けていないかを見られるように）
+    const ss = YA.saveState || {};
+    const hm = (t) => { const d = new Date(t); return `${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`; };
+    body.append(h('div', { class: 'note', style: 'margin-top:2px' + (ss.lastFail && (!ss.lastOk || ss.lastFail > ss.lastOk) ? ';color:#b02020' : '') }, ss.lastOk ? `最後に保存できた時刻：${hm(ss.lastOk)}` + (ss.lastFail && ss.lastFail > ss.lastOk ? `（${hm(ss.lastFail)}に保存できませんでした）` : '') : ss.lastFail ? `保存できていません（${hm(ss.lastFail)}）` : 'この起動ではまだ保存していません'));
+    // 書き出し・復元・控え
+    body.append(h('div', { class: 'h', style: 'margin-top:8px' }, '書き出し・復元'), h('div', { class: 'row', style: 'gap:5px;flex-wrap:wrap;margin-top:3px' },
+      h('button', { class: 'btn sm', onclick: exportBox }, '書き出す（コピーして保管）'),
+      h('button', { class: 'btn sm', onclick: importBox }, '復元する（貼り付け）'),
+      store.get(YA.slotKey(app.slot) + '_bak', null) ? h('button', { class: 'btn sm', onclick: () => confirmBox('年度はじめの控えに戻しますか（いまの進み具合は消えます。' + ORIG_NOTE + '）', () => { app.w = store.get(YA.slotKey(app.slot) + '_bak', null); YA.saveWorld(true); rerender(); }) }, '控え（年度はじめ）に戻す') : null));
+    if (YA.devOn()) testBlock(body);
+    body.append(h('div', { class: 'h', style: 'margin-top:10px' }, 'この枠を最初からやり直す'), h('div', { class: 'note' }, '36人も成績も消えて、新しい指導者から始まります。'), h('button', { class: 'btn', style: 'margin-top:5px;color:#b02020', onclick: () => confirmBox('本当に最初からやり直しますか', () => { app.w = null; app.ng = null; store.set(YA.slotKey(app.slot), null); rerender(); }) }, '最初からやり直す'));
+  };
+  // 控えに戻す・復元で、予約したオリジナル選手がどうなるか
+  const ORIG_NOTE = '予約したオリジナル選手も戻ります（使ったチケットは戻りません）';
+  // セーブ枠の一覧（設定と、引退後の画面から）
+  YA.slotBlock = function (body) {
+    const app = U().app;
+    const store = U().store;
+    body.append(h('div', { class: 'h', style: 'margin-top:10px' }, `セーブ枠（いま${YA.SLOT_COUNT}枠・無料は1枠）`), h('div', { class: 'note' }, '1つの遊びに自動セーブが1つ。枠ごとに別のクラブで遊べます。'));
     for (let i = 0; i < YA.SLOT_COUNT; i++) {
       const cur = app.slot === i;
       const w = cur ? app.w : store.get(YA.slotKey(i), null);
@@ -128,13 +166,6 @@
         !cur && !sum ? h('button', { class: 'btn sm', onclick: () => switchSlot(i) }, '新しく始める') : null,
         sum && !cur ? h('button', { class: 'btn sm', style: 'color:#b02020', onclick: () => confirmBox('枠' + (i + 1) + 'を削除しますか', () => { store.set(YA.slotKey(i), null); rerender(); }) }, '削除') : null));
     }
-    // 書き出し・復元・控え
-    body.append(h('div', { class: 'h', style: 'margin-top:8px' }, '書き出し・復元'), h('div', { class: 'row', style: 'gap:5px;flex-wrap:wrap;margin-top:3px' },
-      h('button', { class: 'btn sm', onclick: exportBox }, '書き出す（コピーして保管）'),
-      h('button', { class: 'btn sm', onclick: importBox }, '復元する（貼り付け）'),
-      store.get(YA.slotKey(app.slot) + '_bak', null) ? h('button', { class: 'btn sm', onclick: () => confirmBox('年度はじめの控えに戻しますか（いまの進み具合は消えます）', () => { app.w = store.get(YA.slotKey(app.slot) + '_bak', null); YA.saveWorld(true); rerender(); }) }, '控え（年度はじめ）に戻す') : null));
-    if (YA.devOn()) testBlock(body);
-    body.append(h('div', { class: 'h', style: 'margin-top:10px' }, 'この枠を最初からやり直す'), h('div', { class: 'note' }, '36人も成績も消えて、新しい指導者から始まります。'), h('button', { class: 'btn', style: 'margin-top:5px;color:#b02020', onclick: () => confirmBox('本当に最初からやり直しますか', () => { app.w = null; app.ng = null; store.set(YA.slotKey(app.slot), null); rerender(); }) }, '最初からやり直す'));
   };
   // ---------- 点検用：新しい世界でNか年シミュレーション（いまの遊びには影響しない）----------
   function testBlock(body) {
@@ -221,6 +252,14 @@
   YA.views = YA.views || {};
   YA.views.retired = function (main) {
     const app = U().app;
+    // 引退後も名鑑・系譜は見られる（行き止まりにしない）
+    if (app.retBrowse && YA.views[app.retBrowse]) {
+      main.append(h('div', { class: 'row', style: 'gap:6px;margin:6px 8px 0' }, h('button', { class: 'btn sm', onclick: () => { app.retBrowse = null; rerender(); } }, '← まとめに戻る'),
+        h('button', { class: 'btn sm' + (app.retBrowse === 'more' ? ' on' : ''), onclick: () => { app.retBrowse = 'more'; app.mt = 'alumni'; rerender(); } }, '卒業生名鑑'),
+        h('button', { class: 'btn sm' + (app.retBrowse === 'lineage' ? ' on' : ''), onclick: () => { app.retBrowse = 'lineage'; rerender(); } }, '系譜')));
+      YA.views[app.retBrowse](main);
+      return;
+    }
     const s = YA.careerSummary(app.w);
     const box = h('div', { class: 'card', style: 'margin:10px;padding:12px' });
     box.append(h('div', { class: 'h', style: 'font-size:16px' }, `指導者人生のまとめ（${s.years}年）`));
@@ -232,8 +271,10 @@
     if (s.trophies.length) box.append(h('div', { class: 'h', style: 'margin-top:4px' }, '獲ったもの'), ...s.trophies.map((t) => h('div', { class: 'note', style: 'color:var(--ink)' }, `・${t.year || ''}年 ${t.name}`)));
     box.append(h('div', { class: 'h', style: 'margin-top:4px' }, '実績'), ...s.ach.map((a) => h('div', { class: 'note', style: 'color:var(--ink)' }, (a.done ? '◎ ' : '・') + a.name)));
     box.append(h('div', { class: 'row', style: 'margin-top:8px;gap:6px' },
+      h('button', { class: 'btn', onclick: () => { app.retBrowse = 'more'; app.mt = 'alumni'; rerender(); } }, '名鑑・系譜を見る'),
+      h('button', { class: 'btn', onclick: () => V().modal((close) => { const bx = h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(560px,96%);max-height:94%;padding:12px;gap:6px;overflow:auto' }); YA.slotBlock(bx); bx.append(h('button', { class: 'btn', onclick: close }, '閉じる')); return bx; }) }, 'セーブ枠'),
       h('button', { class: 'btn', onclick: exportBox }, 'セーブを書き出す'),
-      h('button', { class: 'btn pri', onclick: () => { const st = U().store; st.set(YA.slotKey(app.slot), null); app.w = null; app.ng = null; rerender(); } }, '新しく始める')));
+      h('button', { class: 'btn pri', onclick: () => confirmBox(`枠${(app.slot || 0) + 1}のセーブを消して新しく始めますか（この指導者人生の記録はこの枠から消えます。残したいときは先に「セーブを書き出す」か、別の枠で始めてください）`, () => { const st = U().store; st.set(YA.slotKey(app.slot), null); app.w = null; app.ng = null; app.retBrowse = null; rerender(); }) }, '新しく始める')));
     main.append(box);
   };
   // ---------- 名前の書き換え（決定52・54） ----------
@@ -301,6 +342,10 @@
   function switchSlot(i) {
     const app = U().app;
     YA.saveWorld(true);
+    // 空き枠へ移るときは、前の枠を覚えておく（新しく始める画面から戻れるように）
+    if (app.w && i !== app.slot) app.prevSlot = app.slot;
+    app.loadErr = null;
+    app.retBrowse = null;
     app.slot = i;
     U().store.set('slot', i);
     const w = U().store.get(YA.slotKey(i), null);
@@ -327,7 +372,23 @@
       const ta = h('textarea', { placeholder: '書き出したセーブデータを貼り付けます', style: 'width:100%;height:130px;font:10px monospace;border:1px solid #b9c7de;border-radius:8px;padding:6px' });
       const msg = h('div', { class: 'note' }, 'いまの枠のデータは、置き換わります。');
       return h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(680px,97%);padding:12px;gap:6px' }, h('div', { class: 'h' }, 'セーブデータの復元'), ta, msg,
-        h('div', { class: 'row' }, h('button', { class: 'btn', onclick: close }, 'やめる'), h('button', { class: 'btn pri', onclick: () => { const r = YA.importWorld(ta.value.trim()); if (!r.ok) { msg.textContent = r.msg; return; } app.w = r.world; YA.saveWorld(true); close(); rerender(); } }, '復元する')));
+        h('div', { class: 'row' }, h('button', { class: 'btn', onclick: close }, 'やめる'), h('button', { class: 'btn pri', onclick: () => {
+          const r = YA.importWorld(ta.value.trim());
+          if (!r.ok) { msg.textContent = r.msg; return; }
+          // いまの進み具合を上書きする前に確かめる
+          confirmBox(`枠${(app.slot || 0) + 1}を、貼り付けたセーブ（${YA.slotSummary(r.world) || ''}）で置き換えますか（いまの進み具合は消えます。${ORIG_NOTE}）`, () => {
+            // 書き出しの時点で予約していたオリジナル選手は、チケットの使用の記録と合うものだけ戻す（同じチケットで二度迎えない）
+            const before = (r.world.originals || []).length;
+            r.world.originals = YA.origFilter ? YA.origFilter(r.world.originals, YA.ent, false) : [];
+            const dropped = before - r.world.originals.length;
+            app.w = r.world;
+            app.loadErr = null;
+            YA.saveWorld(true);
+            close();
+            rerender();
+            if (dropped > 0) { try { YA.toast(`予約していたオリジナル選手のうち${dropped}人は、チケットの記録と合わないので戻しませんでした`); } catch (e) { /* 画面なし */ } }
+          });
+        } }, '復元する')));
     });
   }
 })();
