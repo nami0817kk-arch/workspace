@@ -79,6 +79,7 @@ import '../models/matchday_promo.dart';
 import '../models/owner_goal.dart';
 import '../models/owner_legacy.dart';
 import '../logic/shareholder_engine.dart';
+import '../logic/squad_registration_engine.dart';
 import '../logic/contract_engine.dart';
 import '../logic/continental_cup_engine.dart';
 import '../logic/dynamics_engine.dart';
@@ -131,20 +132,21 @@ part 'game_state_season.dart';
 /// 終えたシーズンの締めくくり。シーズン開始レポートに出す絵を決める。
 enum SeasonFinale { none, promoted, champion }
 
-const int maxSquadSize = 26;
+/// 在籍の総数の上限(21歳以下を含む)。登録の決まりは [SquadRegistration]。
+const int maxSquadSize = SquadRegistration.totalLimit;
 
 /// スカッドの最低人数。放出・ローン放出はこの人数を割り込む操作を拒否し、
 /// 契約満了・ローン満了でこれを下回った場合はフリーエージェントで自動補充
 /// される。12だと負傷・出場停止が重なった際に11人を組めなくなる危険が
 /// あるため(長期実測で12人に張り付く状態を確認)、ベンチ要員を含めて
 /// 最低限回る16人とする。
-const int minSquadSize = 16;
+const int minSquadSize = 18;
 
 /// シーズン開始時に自動補強で確保する推奨人数。最低人数ちょうど(16人)で
 /// 張り付くと、負傷者と出場停止が数人重なるだけでベンチが空になり、
 /// ローテーションの選択肢そのものが消えてしまう(長期実測で毎シーズン
 /// 16人に張り付くことを確認)。シーズン開始時だけこの人数まで底上げする。
-const int seasonStartSquadSize = 18;
+const int seasonStartSquadSize = 21;
 
 /// ライブ観戦できるカップ試合の種別。リーグ戦([GameState.playNextMatchday])
 /// と同じインタラクティブ進行を、どの大会の試合として開始するかを表す。
