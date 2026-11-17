@@ -1,0 +1,356 @@
+# 物語型の本編の見た目と絵の割り当て：家康の妻と息子は、なぜ死ななければならなかったのか？築山殿と信康（scripts/tsukiyama-story.yaml）。chiso/storymain.py が読む。
+# 11-17 作成（11/22 19:00 公開予定）。shorui_main_look.yaml を写した。絵は Gemini（Chrome）で作る。人の顔・遺体・惨状は描かない。明るい昼の光の絵を多めに。
+script: scripts/tsukiyama-story.yaml
+out: tsukiyama_story_main
+art_dir: out/story/tsukiyama/main
+main_art_dir: out/story/tsukiyama/main
+ai_disclosure: この動画の情景の画像は、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+chapters:
+  0:
+    label: 序章 なぜ死んだのか
+    now: null
+    dates: {}
+  1:
+    label: 第1章 岡崎の若い城主
+    now: 1559年
+    dates:
+      11: 1567年5月
+      14: 1570年
+      16: null
+  2:
+    label: 第2章 家臣の日記が書いた岡崎
+    now: 1579年8月
+    dates:
+      19: 1579年8月3日
+      20: 1579年8月4日
+      22: 1579年8月5日
+      23: 1579年8月9日
+      24: 1579年8月10日
+      25: 1579年8月12日
+      26: 1579年8月
+  3:
+    label: 第3章 徳姫の十二か条
+    now: 1579年7月
+    dates:
+      28: 1579年7月16日
+      30: null
+      34: 1622年
+      35: null
+  4:
+    label: 第4章 家康の思うとおりに
+    now: 1579年8月
+    dates:
+      43: 2023年
+      46: null
+  5:
+    label: 第5章 4年前の謀反
+    now: 1575年
+    dates:
+      53: 2021年
+      54: null
+      55: 1579年
+      58: 2023年
+      59: 1579年8月
+      60: null
+  6:
+    label: 第6章 御前谷と二俣城
+    now: 1579年8月29日
+    dates:
+      65: 1579年9月15日
+      66: 2018年
+      67: null
+  7:
+    label: 第7章 浜松と岡崎に残るもの
+    now: null
+    dates:
+      75: 1580年2月
+      76: null
+  8:
+    label: まとめ なぜ死んだのか
+    now: null
+    dates: {}
+no_tag_from: 84
+references:
+- 『家忠日記』『当代記』『松平記』『信長公記』の該当の記事（『岡崎市史 別巻 中巻』1934年の引用・『史料綜覧』巻11・『史籍雑纂』第2）
+- 大久保忠教『三河物語』（『雑史集』1912年の翻刻）。成立年は国立公文書館の解説による
+- 黒田基樹『徳川家康の最新研究』（朝日新書、2023）を再編集した PRESIDENT Online の記事・『家康の正妻 築山殿』（平凡社新書、2022）
+- 平山優『徳川家康と武田勝頼』（幻冬舎新書、2023）を再編集した記事・柴裕之の見方を紹介したサライ.jp の記事（2021）
+- 浜松市・岡崎市・岡崎市観光協会・浜松・浜名湖ツーリズムビューローの案内
+ai:
+  T01:
+    scene: 16世紀後半の三河の岡崎城。土塁と石垣の低い城、木造の櫓と板葺きの屋根、手前に矢作川と田んぼ。晴れた初夏の昼
+    pan: h
+    crops: &id001
+      wide: [1.18, 0.5, 0.5]
+      left: [1.18, 0.4, 0.5]
+      right: [1.18, 0.6, 0.5]
+  T02:
+    scene: 16世紀半ばの駿府の町並みと遠くの富士山。春の昼
+    pan: h
+    crops: *id001
+  T03:
+    scene: 武家の屋敷の庭。土を盛った小さな山（築山）と池、松、縁側（人なし）。晴れた昼
+    pan: h
+    crops: *id001
+  T04:
+    scene: 春の田園の道を進む婚礼の輿の行列（武士と供の小さな後ろ姿）
+    pan: h
+    crops: *id001
+  T05:
+    scene: 16世紀後半の遠江の浜松城の遠景。台地の上の城と広い平野。晴れた昼
+    pan: h
+    crops: *id001
+  T06:
+    scene: 夏の三河の田園と川、遠くの丘に小さな城。昼
+    pan: h
+    crops: *id001
+  T07:
+    scene: 文机の上の和綴じの日記帳と筆と硯、障子越しの昼の光（人なし）
+    pan: h
+    crops: *id001
+  T08:
+    scene: 夏の街道を進む騎馬の武士の一行の小さな後ろ姿。昼
+    pan: h
+    crops: *id001
+  T09:
+    scene: 三河の海辺の小さな港町と漁船、夏の昼
+    pan: h
+    crops: *id001
+  T10:
+    scene: 田んぼの間の道を行く足軽の列の小さな後ろ姿、夏の昼
+    pan: h
+    crops: *id001
+  T11:
+    scene: 湖のほとりの小さな城館と船着き場、夏の昼
+    pan: h
+    crops: *id001
+  T12:
+    scene: 畳の間の文机に並ぶ和紙の誓いの書付と筆、昼の光（人なし）
+    pan: h
+    crops: *id001
+  T13:
+    scene: 琵琶湖の岸の山の上に建つ安土城の高い天主の遠景。晴れた夏の昼
+    pan: h
+    crops: *id001
+  T15:
+    scene: 書院の床に置かれた漆の文箱と、封をした書状（人なし）。昼の光
+    pan: h
+    crops: *id001
+  T16:
+    scene: 江戸時代初めの書斎で、年老いた武士の小さな後ろ姿が文机で書き物をする。昼の光
+    pan: h
+    crops: *id001
+  T18:
+    scene: 16世紀後半の城下町の通り。町家と人々の小さな後ろ姿。昼
+    pan: h
+    crops: *id001
+  T21:
+    scene: 東海道の松並木の街道、遠くの山。晴れた昼
+    pan: h
+    crops: *id001
+  T22:
+    scene: 秋の湖のほとり、葦と静かな水面と遠くの丘（人なし）。昼
+    pan: h
+    crops: *id001
+  T23:
+    scene: 二つの川が合流する所の丘の上の小さな山城。秋の昼
+    pan: h
+    crops: *id001
+  T24:
+    scene: 秋の寺の境内、紅葉と小さな廟のお堂。昼
+    pan: h
+    crops: *id001
+  T25:
+    scene: 苔むした五輪塔と木漏れ日の境内（人なし）
+    pan: h
+    crops: *id001
+  T26:
+    scene: 小さな神社の社殿と石段、木々。昼
+    pan: h
+    crops: *id001
+  T28:
+    scene: 現代の研究室の机。古い和本と古文書、虫眼鏡、窓の光（人なし）
+    pan: h
+    crops: *id001
+  TEND:
+    scene: 晴れた空と三河の平野と遠くの山の遠景（終了画面、右半分に余白）
+    pan: h
+    lock: [1.0, 0.5, 0.5]
+paint_fx: {}
+shots:
+- 0 ai:T16 wide
+- 1 ai:T15 wide
+- 2 ai:T01 wide
+- 3 ai:T05 wide
+- 4 ai:T07 wide
+- 5 ai:T23 wide
+- 6 ai:T06 wide
+- 7 ai:T02 wide
+- 8 ai:T03 left
+- 9 ai:T03 right
+- 10 ai:T26 wide
+- 11 ai:T04 wide
+- 12 ai:T02 right
+- 13 ai:T01 left
+- 14 ai:T05 left
+- 15 ai:T18 wide
+- 16 ai:T24 left
+- 17 ai:T01 right
+- 18 ai:T07 left
+- 19 ai:T08 wide
+- 20 ai:T01 wide
+- 21 ai:T09 wide
+- 22 ai:T10 wide
+- 23 ai:T11 wide
+- 24 ai:T12 wide
+- 25 ai:T08 right
+- 26 ai:T06 left
+- 27 ai:T15 left
+- 28 ai:T13 wide
+- 29 ai:T08 right
+- 30 ai:T16 left
+- 31 ai:T15 right
+- 32 ai:T13 left
+- 33 ai:T15 wide
+- 34 ai:T16 right
+- 35 ai:T07 right
+- 36 ai:T12 left
+- 37 ai:T21 wide
+- 38 ai:T18 left
+- 39 ai:T01 left
+- 40 ai:T15 left
+- 41 ai:T07 wide
+- 42 ai:T13 right
+- 43 ai:T28 wide
+- 44 ai:T05 right
+- 45 ai:T16 wide
+- 46 ai:T21 left
+- 47 ai:T18 right
+- 48 ai:T10 left
+- 49 ai:T03 wide
+- 50 ai:T16 right
+- 51 ai:T28 left
+- 52 ai:T01 right
+- 53 ai:T28 right
+- 54 ai:T21 right
+- 55 ai:T15 right
+- 56 ai:T06 wide
+- 57 ai:T13 wide
+- 58 ai:T10 right
+- 59 ai:T08 left
+- 60 ai:T21 wide
+- 61 ai:T22 wide
+- 62 ai:T22 left
+- 63 ai:T05 wide
+- 64 ai:T22 right
+- 65 ai:T23 wide
+- 66 ai:T23 left
+- 67 ai:T24 wide
+- 68 ai:T06 right
+- 69 ai:T25 wide
+- 70 ai:T24 left
+- 71 ai:T25 left
+- 72 ai:T26 wide
+- 73 ai:T21 left
+- 74 ai:T26 left
+- 75 ai:T04 right
+- 76 ai:T03 right
+- 77 ai:T01 wide
+- 78 ai:T08 wide
+- 79 ai:T12 right
+- 80 ai:T16 wide
+- 81 ai:T28 wide
+- 82 ai:T28 left
+- 83 ai:T15 wide
+- 84 ai:T07 left
+- 85 ai:T24 right
+- 86 ai:TEND wide
+- end ai:TEND wide
+focus: {}
+fx: {}
+parts:
+- type: quote
+  from: 24
+  to: 24
+  label: 史料
+  text: 信康へ内音信申間敷候と／起請文
+  source: 『家忠日記』1579年8月10日（『岡崎市史』1934 の引用）
+- type: quote
+  from: 33
+  to: 33
+  label: 史料
+  text: 此分ならばとても物には成間敷候間／腹をきらせ給へと、家康へ可被申
+  source: 大久保忠教『三河物語』（『雑史集』1912 の翻刻）
+- type: versus3
+  from: 34
+  to: 34
+  items:
+  - - 事件
+    - 1579年
+  - - 三河物語の草稿
+    - 1622年
+  - - 仕上がり
+    - 1626年
+  every: 2.5
+- type: quote
+  from: 40
+  to: 40
+  label: 史料
+  text: 家康存分次第之由有返答
+  source: 『当代記』（『史籍雑纂』第2 の翻刻）
+- type: versus3
+  from: 42
+  to: 42
+  items:
+  - - 三河物語
+    - 酒井忠次
+  - - 松平記
+    - 忠次と大久保忠世
+  every: 3.0
+- type: quote
+  from: 44
+  to: 44
+  label: 要点
+  text: 処罰は家康から信長に申請したもの／信長は了解したにすぎない
+  source: 黒田基樹『徳川家康の最新研究』2023（PRESIDENT Online の再編集）
+- type: versus3
+  from: 63
+  to: 63
+  items:
+  - - 当代記
+    - 浜松で
+  - - 幕府の家康の記録
+    - 小藪村
+  - - のちの記録
+    - 富塚の御前谷
+  every: 2.5
+figures:
+- {from: 11, to: 13, spec: {type: people, title: 1567年 岡崎の若い夫婦,
+    nodes: [[徳川家康, 父・浜松城へ], [築山殿, 母・今川の一門], [松平信康, 岡崎城主], [徳姫, 妻・信長の娘]],
+    edges: [[徳川家康, 松平信康, 父と子], [築山殿, 松平信康, 母と子], [松平信康, 徳姫, 夫婦]]}}
+- {from: 20, to: 23, spec: {type: map, title: 1579年8月 信康の移り, bounds: [136.85, 137.95, 34.6, 35.05],
+    places: [[岡崎, 137.16, 34.95], [大浜, 136.99, 34.85], [西尾, 137.06, 34.86], [浜松, 137.73, 34.71], [堀江, 137.66, 34.78], [二俣, 137.81, 34.87]],
+    route: [岡崎, 大浜, 堀江], note: 4日 大浜へ／9日 堀江城へ}}
+- {from: 54, to: 54, spec: {type: people, title: 武田への向き合い方で割れた家臣団,
+    nodes: [[浜松, 東・武田と戦いぬく], [岡崎, 西・争いをやわらげる]],
+    edges: [[浜松, 岡崎, 割れ]]}}
+- {from: 65, to: 65, spec: {type: map, title: 1579年9月15日 二俣城, bounds: [136.85, 137.95, 34.6, 35.05],
+    places: [[岡崎, 137.16, 34.95], [大浜, 136.99, 34.85], [堀江, 137.66, 34.78], [二俣, 137.81, 34.87], [浜松, 137.73, 34.71]],
+    route: [大浜, 堀江, 二俣], note: 大浜へ移されて1か月と11日}}
+stills:
+- line: 0
+  note: 冒頭
+- line: 11
+  note: 関係図
+- line: 23
+  note: 移りの地図
+- line: 33
+  note: 腹を切らせよ
+- line: 40
+  note: 存分次第
+- line: 65
+  note: 二俣
+- line: 84
+  note: 余韻
+- end: true
+  note: 終了画面

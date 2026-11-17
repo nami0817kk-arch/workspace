@@ -1,0 +1,264 @@
+# 物語型の本編の見た目と絵の割り当て：篤姫は、江戸城を出たあとどう生きたのか（scripts/atsuhime-story.yaml）。chiso/storymain.py が読む。
+# 11-17 作成（11/22 12:00 公開予定）。shorui_main_look.yaml を写した。絵は Gemini（Chrome）で作った（明るい昼の光を多めに）。人物は小さな後ろ姿だけ・顔は描かない。
+# 実在の写真・絵（パブリックドメイン）は額（frame:）と部分（part:）で：天璋院とされる写真・家達・勝海舟・西郷隆盛・和宮・慶喜・ベアトの江戸城の濠。
+script: scripts/atsuhime-story.yaml
+out: atsuhime_story_main
+art_dir: out/story/atsuhime/main
+main_art_dir: out/story/atsuhime/main
+ai_disclosure: この動画の情景の画像は、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+chapters:
+  0:
+    label: 序章 「3日だけ」のはずだった
+    now: null
+    dates: {}
+  1:
+    label: 第1章 なぜ「3日だけ」と言われたのか
+    now: 慶応3年12月
+    dates:
+      15: 慶応4年正月
+      21: 慶応4年4月
+      24: 慶応4年4月10日
+      25: 慶応4年4月11日
+      29: 慶応4年閏4月
+      32: 慶応4年7月9日
+      34: null
+  2:
+    label: 第2章 薩摩の仕送りは本当に断ったのか
+    now: null
+    dates: {}
+  3:
+    label: 第3章 4歳の当主をどう育てたのか
+    now: null
+    dates:
+      54: 明治4年
+      55: 明治6年
+      57: null
+      60: 明治10年
+      62: 明治15年
+      65: null
+  4:
+    label: 第4章 勝海舟が語った篤姫
+    now: null
+    dates: {}
+  5:
+    label: 第5章 千駄ヶ谷の最期
+    now: 明治16年11月
+    dates:
+      91: null
+      94: 明治16年11月
+      96: null
+      99: 明治16年12月5日
+      102: null
+  6:
+    label: まとめ 篤姫は、江戸城を出たあとどう生きたのか
+    now: 明治17年
+    dates:
+      108: 明治19年
+      110: 2016年
+      111: null
+no_tag_from: 112
+references:
+- 『東京日日新聞』明治16年11月22日「徳川天璋院逝去」（『新聞集成明治編年史』第5巻、1940年に収録）　https://dl.ndl.go.jp/pid/1920354/1/221
+- 『幟仁親王日記』巻下（1937年）明治16年11月・12月の条　https://dl.ndl.go.jp/pid/1916171/1/149
+- 勝海舟 述・巌本善治 編『海舟座談』（岩波文庫、1930年）　https://dl.ndl.go.jp/pid/1186921/1/26
+- 戸川残花『海舟先生』（1910年）　https://dl.ndl.go.jp/pid/781219/1/55
+- 勝安芳 述『海舟先生氷川清話 続々編』（1898年）　https://dl.ndl.go.jp/pid/781231/1/60
+- 井原頼明『禁苑史話』（1944年）　https://dl.ndl.go.jp/pid/1042108/1/180
+- 畑尚子「江戸城二丸御殿」（東京都江戸東京博物館紀要 第5号、2015年）　https://edo-tokyo-museum.repo.nii.ac.jp/record/205/files/kiyo5_1-32.pdf
+- 小林明「天璋院篤姫が徳川存続をかけて戦った大奥最後の3カ月」（nippon.com、2022年）　https://www.nippon.com/ja/japan-topics/c10812/
+- 千代田区観光協会 まち歩きコース（江戸城無血開城）　https://visit-chiyoda.tokyo/app/course/detail/77
+- 国立国会図書館「近代日本人の肖像」徳川家達　https://www.ndl.go.jp/portrait/datas/296/
+- 特別展「西郷どん」出品目録（2018年）　https://museum.geidai.ac.jp/exhibit/2018/segodon/segodon_list_ja.pdf
+- 企画展「歴史をつなぐ天璋院の用箪笥」（江戸東京博物館・徳川記念財団、2016年）　https://www.nact.jp/artcommons/user/detail/49277
+- 川村清雄「下絵 天璋院肖像」（江戸東京博物館蔵、文化庁 ArtPlatform）　https://artplatform.go.jp/collections/W956265
+- 月岡芳年「天璋院殿」（やまと新聞附録『近世人物誌』、東京都立図書館デジタルアーカイブ）　https://archive.library.metro.tokyo.lg.jp/da/detail?tilcod=0000000003-00007013
+- サライ.jp「13代将軍・家定の正室、天璋院（篤姫）の生涯」（2023年）・「日本人のこころの言葉 徳川家達」（2017年）　https://serai.jp/hobby/1159419/2
+- 日本大百科全書・日本人名大辞典「天璋院」（コトバンク）　https://kotobank.jp/word/天璋院
+credits:
+  paintings/kazu_tenshoin_photo.png: 天璋院とされる写真（1883年以前。パブリックドメイン）
+  paintings/kakeizu_iesato_child.jpg: 徳川家達の少年時代の写真（パブリックドメイン）
+  paintings/kakeizu_iesato_peers.jpg: 公爵 徳川家達の写真（1940年以前。パブリックドメイン）
+  paintings/yoshinobu_katsu_kaishu.jpg: 勝海舟の写真（パブリックドメイン）
+  paintings/saigo_takamori_portrait.jpg: 西郷隆盛（キヨッソーネ系の肖像画。パブリックドメイン）
+  paintings/kazu_portrait_toyobunka.jpg: 和宮（昭和初期の刊行物より。パブリックドメイン）
+  paintings/yoshinobu_portrait_kawamura_oil.jpg: 川村清雄《徳川慶喜像》（パブリックドメイン）
+  paintings/yoshinobu_beato_yedo_castle_moat.jpg: フェリーチェ・ベアト撮影《江戸城の濠》1863〜70年代初め
+ai:
+  A01: {scene: 1868年春の晴れた昼、江戸城の石垣と堀、白壁の櫓と桜, pan: h, crops: &id001 {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  A02: {scene: 大奥の御殿の広い座敷、昼の光、掛け軸と蒔絵の硯箱（人なし）, pan: h, crops: *id001}
+  A03: {scene: 1868年1月の冬の朝、焼けた御殿から白い煙、雪の江戸城の遠景, pan: h, crops: *id001}
+  A05: {scene: 明治はじめの春の昼、大名屋敷の長屋門と白壁（一橋邸）、小さな後ろ姿2人, pan: h, crops: *id001}
+  A06: {scene: 武家屋敷の書院、文机の上の手紙・筆・硯、昼の光（人なし）, pan: h, crops: *id001}
+  A07: {scene: 初夏の昼、屋敷の縁側に座る白い頭巾の女性の小さな後ろ姿と庭の池, pan: h, crops: *id001}
+  A08: {scene: 明治はじめの築地、海辺の屋敷と松、帆掛け舟（秋の昼）, pan: h, crops: *id001}
+  A09: {scene: 座敷に並べた蒔絵の道具と金屏風、端に商人の後ろ姿, pan: h, crops: *id001}
+  A10: {scene: 錦江湾の向こうの桜島、青空と噴煙、帆船（昼）, pan: h, crops: *id001}
+  A11: {scene: 赤坂の屋敷の庭を歩く縞の木綿の少年と頭巾の女性の後ろ姿（春の昼）, pan: h, crops: *id001}
+  A12: {scene: 畳の上の縞の木綿の子どもの着物と草履（昼の光）, pan: h, crops: *id001}
+  A13: {scene: 明治10年ごろの横浜港、蒸気船と小舟（昼）, pan: h, crops: *id001}
+  A14: {scene: 明治10年代の千駄ヶ谷、雑木林と広い庭の大きな和風の屋敷（初夏の昼）, pan: h, crops: {wide: [1.18, 0.45, 0.55], left: [1.2, 0.38, 0.55], right: [1.2, 0.55, 0.6]}}
+  A15: {scene: 料理屋の二階座敷、漆の膳と料理、開いた障子の向こうの庭（昼）, pan: h, crops: *id001}
+  A16: {scene: 向島の隅田川べり、柳と料理屋、屋根船と小舟（春の昼）, pan: h, crops: {wide: [1.2, 0.62, 0.55], left: [1.2, 0.5, 0.6], right: [1.2, 0.66, 0.55]}}
+  A17: {scene: 船宿の土間、火鉢の鉄瓶から湯気、戸の向こうに川と小舟（昼）, pan: h, crops: *id001}
+  A18: {scene: 座敷の衣桁の藍の浴衣と白いシャツ、立てかけたこうもり傘（昼）, pan: h, crops: *id001}
+  A19: {scene: 縫い物をする女性の手元と黒い羽織の布（顔なし、昼の窓の光）, pan: h, crops: {wide: [1.2, 0.5, 0.62], right: [1.22, 0.6, 0.64]}}
+  A20: {scene: 明治の東京の町を歩く年配の男性と頭巾の女性の小さな後ろ姿、こうもり傘（晴れた昼）, pan: h, crops: *id001}
+  A21: {scene: 晩秋の千駄ヶ谷の屋敷の庭、紅葉と落ち葉（午後）, pan: h, crops: *id001}
+  A22: {scene: 晩秋の上野・寛永寺の墓所の石の門と大きな木立（昼、人物なし）, pan: v, crops: *id001}
+  A23: {scene: 蒔絵の小さな用箪笥、引き出しに筆と巻いた手紙（昼の光）, pan: h, crops: *id001}
+  A24: {scene: 晩秋の夕方、屋敷の長い縁側の廊下と障子（人物なし）, pan: h, crops: *id001}
+  A25: {scene: 春の昼、江戸城の堀端の道を進む小さな駕籠と供の後ろ姿の列（遠景）, pan: h, crops: *id001}
+  AEND: {scene: 春の昼の千駄ヶ谷の庭の遠景（終了画面、右半分に余白）, pan: h, lock: [1.0, 0.5, 0.5]}
+paint_fx: {}
+shots:
+# 序章（0〜10）
+- 0 ai:A25 wide
+- 1 ai:A02 wide
+- 2 ai:A01 wide
+- 3 frame:paintings/kazu_tenshoin_photo.png
+- 4 ai:A15 wide
+- 5 ai:A18 wide
+- 6 ai:A07 wide
+- 7 ai:A10 wide
+- 8 frame:paintings/kazu_tenshoin_photo.png
+- 9 ai:A05 wide            # 覚えてほしい名前（9〜10）の下地
+- 10 ai:A03 wide
+# 第1章（11〜35）
+- 11 ai:A03 right
+- 12 ai:A02 left
+- 13 part:paintings/yoshinobu_beato_yedo_castle_moat.jpg
+- 14 ai:A02 right
+- 15 ai:A01 left
+- 16 frame:paintings/yoshinobu_portrait_kawamura_oil.jpg
+- 17 frame:paintings/saigo_takamori_portrait.jpg
+- 18 ai:A06 wide
+- 19 part:paintings/yoshinobu_beato_yedo_castle_moat.jpg
+- 20 ai:A10 right
+- 21 ai:A07 left
+- 22 ai:A02 wide            # 史料の札（三日間と騙し賺して）
+- 23 ai:A25 right
+- 24 ai:A05 left
+- 25 part:paintings/yoshinobu_beato_yedo_castle_moat.jpg
+- 26 ai:A02 left
+- 27 ai:A01 right
+- 28 ai:A07 wide
+- 29 frame:paintings/kakeizu_iesato_child.jpg
+- 30 ai:A05 wide            # 図：男の役人 170→15
+- 31 ai:A05 right
+- 32 ai:A06 wide
+- 33 ai:A06 right
+- 34 ai:A10 wide
+- 35 frame:paintings/saigo_takamori_portrait.jpg
+# 第2章（36〜52）
+- 36 ai:A10 left            # 史料の札（年三万円）
+- 37 ai:A07 right
+- 38 frame:paintings/saigo_takamori_portrait.jpg
+- 39 ai:A06 left
+- 40 ai:A06 wide
+- 41 ai:A09 wide            # 図：薩摩の仕送り 書き方の違い
+- 42 ai:A01 right
+- 43 ai:A06 right
+- 44 ai:A07 wide
+- 45 ai:A08 wide
+- 46 ai:A09 left
+- 47 ai:A09 right
+- 48 ai:A10 wide
+- 49 ai:A10 right
+- 50 ai:A07 left
+- 51 ai:A11 wide
+- 52 ai:A12 wide
+# 第3章（53〜66）
+- 53 frame:paintings/kakeizu_iesato_child.jpg
+- 54 ai:A11 right
+- 55 ai:A05 wide            # 図：移り住んだ屋敷
+- 56 ai:A11 left
+- 57 ai:A11 wide
+- 58 ai:A12 left
+- 59 ai:A12 right
+- 60 ai:A13 wide
+- 61 ai:A14 wide
+- 62 ai:A14 right
+- 63 ai:A07 right
+- 64 frame:paintings/kakeizu_iesato_peers.jpg
+- 65 ai:A14 left
+- 66 frame:paintings/yoshinobu_katsu_kaishu.jpg
+# 第4章（67〜86）
+- 67 frame:paintings/yoshinobu_katsu_kaishu.jpg
+- 68 ai:A15 wide            # 史料の札（八百善・吉原）
+- 69 ai:A20 left
+- 70 ai:A07 left
+- 71 ai:A15 right
+- 72 ai:A17 wide
+- 73 ai:A06 right
+- 74 ai:A17 left
+- 75 ai:A15 right
+- 76 ai:A18 wide
+- 77 ai:A20 right            # 史料の札（蝙蝠傘を杖に）
+- 78 ai:A07 wide
+- 79 ai:A19 wide
+- 80 ai:A19 right
+- 81 frame:paintings/kazu_portrait_toyobunka.jpg
+- 82 ai:A14 wide
+- 83 frame:paintings/yoshinobu_portrait_kawamura_oil.jpg
+- 84 ai:A01 wide
+- 85 ai:A21 wide
+- 86 ai:A24 wide
+# 第5章（87〜104）
+- 87 ai:A24 right
+- 88 ai:A21 left
+- 89 ai:A21 right
+- 90 ai:A06 wide
+- 91 ai:A06 left             # 図：亡くなった日と年齢
+- 92 ai:A06 right
+- 93 ai:A21 wide
+- 94 ai:A07 wide
+- 95 ai:A11 wide             # 史料の札（母子の如く）
+- 96 ai:A15 left             # 図：記録の描き方
+- 97 ai:A20 wide
+- 98 ai:A07 left
+- 99 ai:A22 wide
+- 100 ai:A06 wide
+- 101 ai:A22 right
+- 102 frame:paintings/yoshinobu_katsu_kaishu.jpg
+- 103 ai:A23 wide
+- 104 ai:A14 wide
+# まとめ（105〜117）
+- 105 ai:A22 left             # 史料の札（一周忌の歌）
+- 106 ai:A21 wide
+- 107 frame:paintings/kazu_tenshoin_photo.png
+- 108 ai:A06 right
+- 109 ai:A23 wide
+- 110 ai:A23 left
+- 111 ai:A14 right
+- 112 ai:A01 wide
+- 113 ai:A12 wide
+- 114 ai:A20 wide
+- 115 ai:A14 wide
+- 116 ai:A25 wide
+- 117 ai:AEND wide
+- end ai:AEND wide
+focus: {}
+fx:
+  A17: {mist: {region: [0.18, 0.2, 0.45, 0.6], alpha: 0.10, speed: 4}}
+figures: []
+parts:
+- {type: names, from: 9, to: 10, title: この物語で覚えてほしい名前, every: 0.7,
+   items: [[篤姫（天璋院）, 13代将軍家定の妻, paintings/kazu_tenshoin_photo.png, [0.5, 0.25]],
+           [徳川家達, 4歳で徳川を継いだ当主, paintings/kakeizu_iesato_child.jpg, [0.5, 0.2]],
+           [勝海舟, 篤姫を「姉」と呼んだ幕臣, paintings/yoshinobu_katsu_kaishu.jpg, [0.5, 0.3]]]}
+- {type: quote, from: 22, to: 22, label: 史料, text: 三日間と騙し賺して／やつと承諾させた, source: 井原頼明『禁苑史話』（1944年）}
+- {type: quote, from: 36, to: 36, label: 史料, text: 一ヶ年金三萬圓を呈したい／固く辞して受けず, source: 井原頼明『禁苑史話』（1944年）}
+- {type: quote, from: 68, to: 68, label: 史料, text: 八百善にも二三度／吉原にも、芸者屋にも行つて, source: 勝海舟『海舟座談』（明治31年の談話）}
+- {type: quote, from: 77, to: 77, label: 史料, text: 蝙蝠傘を杖にして来てネ／「どうも、日傘よりも好い」, source: 勝海舟『海舟座談』（明治31年の談話）}
+- {type: quote, from: 95, to: 95, label: 史料, text: 主従と申すよりも寧ろ／母子の如く思ひ参らするが多し, source: 『東京日日新聞』明治16年11月22日}
+- {type: quote, from: 105, to: 105, label: 史料, text: くちもせでのこれる去年の袂とも／しらで時雨のまなくふるらん, source: 『海舟先生氷川清話 続々編』（1898年）}
+stills:
+- {line: 0, note: 冒頭（0秒）城を出る駕籠}
+- {line: 9, note: 覚えてほしい名前}
+- {line: 22, note: 3日間の史料}
+- {line: 30, note: 役人170→15}
+- {line: 41, note: 仕送りの食い違い}
+- {line: 68, note: 海舟座談}
+- {line: 91, note: 亡くなった日の食い違い}
+- {line: 105, note: 一周忌の歌}
+- {end: true, note: 終了画面}

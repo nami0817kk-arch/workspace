@@ -1,0 +1,132 @@
+# 物語完結型ショート 生類憐みの令 s5（2026-11-17）。本編 scripts/shorui-story.yaml（11/21 12:00 公開予定、https://youtu.be/CHq4clT-WUY）から。11/22 に予約。
+# 形式は titanic_s1〜s5.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（dev/output/rekishi-chiso/research/生類憐みの令_facts_20261116.yaml）と本編の # fact: だけ。
+# 絵：本編の AI 絵（out/story/shorui/main/ の N01〜N26）の切り出しだけ。新しい絵は作らない（N09・N19 は使わない。N19 には今の石油ファンヒーターとコンセントが描かれている）。犬や人の死体・惨状・顔は絵にしない。
+# 切り口：綱吉の死（1709年正月10日）から10日後、幕府は鳶と烏を放した。続けることは遺言だったのに廃止。それでも捨て子・捨て牛馬を禁じる触れは残った（本編の第6章）。
+# 計算（自分で計算し直した）：正月10日＋10日＝正月20日
+title: "生類憐みの令｜綱吉の死から10日後、鳥が放された"
+yt_title: "生類憐みの令　綱吉の死から10日後、鳶と烏が空へ放された　続けることが遺言だったのに、幕府は廃止へ"
+description: |-
+  1709年の正月10日、徳川綱吉が亡くなりました。生類憐みの令を続けることは綱吉の遺言だった、と根崎光男の論文は書きますが、幕府は廃止に踏み切り、10日後の正月20日、預かっていた鳶と烏をすべて放しました。
+  中野の犬小屋もなくなりました。けれど、捨て子と捨て牛馬を禁じる触れは、その後も長く幕府の法として生きた、と歴史学者の塚本学は書いています。
+  本編では、触れの中身・罰の記録・悪い評判の出どころを並べて、生類憐みの令は本当に悪法だったのかを確かめています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#生類憐みの令"
+- "#日本史"
+- "#歴史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。人物の姿も、特定の人を写したものではありません。創作の台詞は入れていません。"
+art_dir: out/story/shorui
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: shorui_story_s5
+header:
+  tag: "生類憐みの令　綱吉の死"
+  title: "死から《10日後》、放たれた鳥"
+now:
+- {at: "10日後", text: "1709年正月20日", point: 1}
+- {at: "正月10日", text: "1709年正月10日", point: 0}
+- {at: "正月20日", text: "1709年正月20日", point: 1}
+- {at: "2月2日", text: "1709年2月2日", point: 2}
+timeline:
+- {label: "1/10"}
+- {label: "1/20"}
+- {label: "2/2"}
+shots:
+  N22_1:
+    kind: "ai"
+    file: "shorui/main/N22.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "N22"
+  N21_2:
+    kind: "ai"
+    file: "shorui/main/N21.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "N21"
+  N04_3:
+    kind: "ai"
+    file: "shorui/main/N04.jpg"
+    focus: [0.65, 0.5]
+    move: "right"
+    must: "N04"
+  N22_4:
+    kind: "ai"
+    file: "shorui/main/N22.jpg"
+    focus: [0.35, 0.5]
+    move: "left"
+    must: "N22"
+  N01_5:
+    kind: "ai"
+    file: "shorui/main/N01.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    must: "N01"
+  N24_6:
+    kind: "ai"
+    file: "shorui/main/N24.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "N24"
+  N23_7:
+    kind: "ai"
+    file: "shorui/main/N23.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "N23"
+  N10_8:
+    kind: "ai"
+    file: "shorui/main/N10.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    must: "N10"
+lines:
+  # fact: shorui-16
+- 語り: "幕府が預かっていた、鳶と烏が、すべて空へ放された。綱吉の死から、10日後のことだ。"
+  shot: N22_1
+  tone: 強調
+  pause: 0.12
+  # fact: shorui-16
+- 語り: "1709年、宝永6年の正月10日。5代将軍、徳川綱吉は、亡くなった。6代将軍は、家宣だ。"
+  shot: N21_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: shorui-16
+- 語り: "根崎光男の論文によれば、生類憐みの令を続けることは、綱吉の遺言だった。それでも、幕府は、廃止に踏み切る。"
+  shot: N04_3
+  tone: 重い
+  pause: 0.12
+  # fact: shorui-16
+- 語り: "正月20日に、鳶と烏を放し、2月2日には、小石川の鶴も、放した。"
+  shot: N22_4
+  tone: しみじみ
+  pause: 0.12
+  # fact: shorui-16
+- 語り: "中野の犬小屋も、なくなった。そのために江戸の町から集めていたお金も、止められる。"
+  shot: N01_5
+  tone: しみじみ
+  pause: 0.12
+  # fact: shorui-17
+- 語り: "ところが、すべてが消えたのでは、ない。歴史学者の塚本学は、捨て子と、捨て牛馬を禁じる触れは、その後も長く、幕府の法として生きた、と書く。"
+  shot: N24_6
+  tone: 重い
+  pause: 0.12
+  # fact: shorui-11
+- 語り: "中野の犬小屋の跡の一部は、のちに8代将軍の吉宗が気に入り、紅白の桃を植えさせて、花見の名所、桃園になった。"
+  shot: N23_7
+  tone: しみじみ
+  pause: 0.12
+  # fact: shorui-17
+- 語り: "犬の囲いは消え、捨て子の触れは残った。生類憐みの令は、本当に、悪法だったのか。"
+  shot: N10_8
+  tone: 疑問
+  pause: 0.15
