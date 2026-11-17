@@ -367,7 +367,15 @@
     const old = i >= 0 ? w.club.staff[i] : null;
     if (i >= 0) w.club.staff[i] = s;
     else w.club.staff.push(s);
+    // 雇ったときだけ印を付ける（a.coachY＝コーチになった年）。現役のプロのままコーチにはしない：引退して指導者に転身
     a.coached = true;
+    a.coachY = w.year;
+    if (a.status === 'pro' && !a.retired) {
+      a.retired = true;
+      a.quit = false;
+      a.retY = w.year;
+      a.note = '指導者に転身';
+    }
     YA.noteTier(w, 1, `${a.name}が${role}になりました${why ? '（' + why + '）' : ''}${old ? `。${old.name}さんとは、ここでお別れです` : ''}`);
     return s;
   };
@@ -383,7 +391,7 @@
       def.text = () => `${a.year}年目に送り出した${a.name}${a.star ? '★' : ''}が、${a.retired ? '現役を終えて' : a.coachPath ? '指導者の勉強を続けて' : '大学を出て'}訪ねてきた。「${m ? YA.recallMem(a, m) + '　' : ''}今度は、自分が教える側をやらせてもらえませんか」（${role}・腕前${YA.obAbOf(a)}／いまの${role}は${cur ? cur.name + '・腕前' + cur.ab : 'いない'}）`;
       def.opts = [
         run(`${role}として迎える`, (ww) => { YA.obJoin(ww, a); return { line: `${sur(a.name)}が、グラウンドに戻ってきた。`, small: `${role}が${a.name}に替わった。毎月、★の子に自分の経験を話す` }; }),
-        run('今は枠がないと伝える', (ww) => { a.coached = true; a.bond = Math.max(0, (a.bond || 3) - 1); return { line: '「そうですよね。また顔を出します」と笑って帰っていった。', small: '' }; }),
+        run('今は枠がないと伝える', (ww) => { a.obAsked = ww.year; a.bond = Math.max(0, (a.bond || 3) - 1); return { line: '「そうですよね。また顔を出します」と笑って帰っていった。', small: '' }; }),
       ];
     } else {
       def.text = () => `卒業生の${a.name}★（${a.club}）から電話があった。「地元に、ちょっと見てほしい中学生がいるんです。昔の自分みたいな子で」`;
@@ -412,10 +420,28 @@
   }
   YA.EXTRA_SIM_IMPORTANT = (YA.EXTRA_SIM_IMPORTANT || []).concat(['obret', 'ref']);
 
+  // 市場に並んだ卒業生を雇ったときだけ「コーチとして戻った」（2026-11-17 点検：市場に並べただけ・断っただけの子にも出ていた）
+  const hire0 = YA.hire;
+  YA.hire = function (w, id) {
+    const c = (w.market || []).find((x) => x.id === id);
+    const res = hire0.apply(this, arguments);
+    if (res && res.ok && c && c.ob) {
+      const a = (w.alumni || []).find((x) => x.name === c.alumniRef && (c.alumniY == null || x.year === c.alumniY));
+      if (a) { a.coached = true; a.coachY = w.year; }
+    }
+    return res;
+  };
   // 引退した年を控える（戻ってくるのは引退から3年のうち）
   const at0 = YA.alumniTick;
   YA.alumniTick = function (w) {
     const was = new Set((w.alumni || []).filter((a) => a.retired));
+    // 古い保存：a.coached は「市場に並んだ」「断った」でも付いていた。いまスタッフにいる子だけ雇った印にする
+    for (const a of w.alumni || []) {
+      if (!a.coached || a.coachY) continue;
+      const s = ((w.club && w.club.staff) || []).find((x) => x.ob && x.alumniRef === a.name);
+      if (s) a.coachY = a.retY || w.year;
+      else { a.coached = false; a.offered = a.offered || w.year; a.obAsked = a.obAsked || w.year; }
+    }
     const r = at0.apply(this, arguments);
     for (const a of w.alumni || []) if (a.retired && !was.has(a) && a.retY == null) a.retY = w.year;
     return r;
@@ -443,7 +469,7 @@
     if (w.week === 3) {
       const bd = (x) => (x.bond == null ? 3 : x.bond);
       const ready = (x) => (x.retired && x.retY != null && w.year - x.retY <= 3 && bd(x) >= 3) || (x.coachPath && w.year - x.year >= (x.coachPath >= 2 ? 2 : 4) && bd(x) >= 3) || ((x.status === 'univ' || x.status === 'amateur') && w.year - x.year >= 4 && bd(x) >= 5);
-      const a = (w.alumni || []).find((x) => x.mem && (x.star || x.coachPath) && !x.coached && x.status !== 'left' && x.path2 !== 'quit' && ready(x));
+      const a = (w.alumni || []).find((x) => x.mem && (x.star || x.coachPath) && !x.coached && !x.obAsked && x.status !== 'left' && x.path2 !== 'quit' && ready(x));
       if (a) fw(w, { id: 'obret', who: a.name, ay: a.year });
     }
     if (w.week === 10) {
