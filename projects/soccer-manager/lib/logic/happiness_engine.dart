@@ -49,7 +49,6 @@ class HappinessEngine {
       }
 
       p.happiness = (p.happiness + delta).clamp(0, 100);
-      if (p.reassureCooldownWeeks > 0) p.reassureCooldownWeeks -= 1;
     }
 
     // ダイナミクス: チームリーダーの機嫌はロッカールーム全体に波及する。
@@ -71,19 +70,5 @@ class HappinessEngine {
         }
       }
     }
-  }
-
-  /// 選手と話し合い、不満度を引き上げる。連発を防ぐため不満度が高いうちは
-  /// 効果がなく、実施後は[reassureCooldownWeeks]の間は再実施できない。
-  static const int reassureThreshold = 70;
-  static const int reassureBoost = 20;
-  static const int reassureCooldownWeeks = 4;
-
-  static bool reassure(Player p) {
-    if (p.happiness >= reassureThreshold) return false;
-    if (p.reassureCooldownWeeks > 0) return false;
-    p.happiness = (p.happiness + reassureBoost).clamp(0, 100);
-    p.reassureCooldownWeeks = reassureCooldownWeeks;
-    return true;
   }
 }

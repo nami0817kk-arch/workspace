@@ -113,28 +113,6 @@ class PlayerDetailScreen extends StatelessWidget {
                 style: TextStyle(color: SemanticColors.subtleText(context)),
               ),
             ),
-          Builder(
-            builder: (context) {
-              final familiarities = [
-                for (final pos in Position.values)
-                  if (pos != p.position &&
-                      !p.secondaryPositions.contains(pos) &&
-                      p.familiarityFor(pos) > 0)
-                    (pos: pos, value: p.familiarityFor(pos)),
-              ]..sort((a, b) => b.value.compareTo(a.value));
-              if (familiarities.isEmpty) return const SizedBox.shrink();
-              return Padding(
-                padding: const EdgeInsets.only(top: 4),
-                child: Text(
-                  Tr.pick(
-                      'ポジション慣れ度(習得中): ${familiarities.map((f) => '${f.pos.label} ${f.value}/100').join(' / ')}${p.trainingConvertTargetPosition != null ? ' ★コンバート特訓中' : ''}',
-                      "Learning positions: ${familiarities.map((f) => '${f.pos.label} ${f.value}/100').join(' / ')}${p.trainingConvertTargetPosition != null ? ' ★retraining' : ''}"),
-                  style: TextStyle(
-                      color: SemanticColors.subtleText(context), fontSize: 12),
-                ),
-              );
-            },
-          ),
           if (seasonStats.appearances > 0)
             Padding(
               padding: const EdgeInsets.only(top: 4),

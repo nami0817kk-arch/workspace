@@ -42,35 +42,28 @@ class YouthDepartureEngine {
   ///
   /// - 年齢が上がるほど高い([restlessAge]未満は0)
   /// - 伸びしろが大きい選手ほど、他クラブの関心を集めて高い
-  /// - メンターが付いていると半分になる(クラブに居場所がある)
   /// - ユース施設が良いほど下がる
   static double weeklyDepartureChance(
     Player p, {
     required int facilityLevel,
-    required bool hasMentor,
   }) {
     if (p.age < restlessAge) return 0;
     final base = p.age >= departureAge ? 0.020 : 0.006;
     final room = ((p.potential - p.overall) / 50).clamp(0.0, 1.0);
     final facility = (1 - facilityLevel * 0.08).clamp(0.4, 1.0);
-    final mentor = hasMentor ? 0.5 : 1.0;
-    return (base * (1 + room) * facility * mentor).clamp(0.0, 1.0);
+    return (base * (1 + room) * facility).clamp(0.0, 1.0);
   }
 
   /// 週次の判定。去った選手を[prospects]から取り除き、記録を返す。
-  ///
-  /// [mentorIds]には、いまメンターが付いている有望株のIDを渡す。
   static List<YouthDeparture> resolveWeekly(
     List<Player> prospects, {
     required int facilityLevel,
-    Set<String> mentorIds = const {},
   }) {
     final departures = <YouthDeparture>[];
     for (final p in [...prospects]) {
       final chance = weeklyDepartureChance(
         p,
         facilityLevel: facilityLevel,
-        hasMentor: mentorIds.contains(p.id),
       );
       if (chance <= 0 || _rng.nextDouble() >= chance) continue;
 

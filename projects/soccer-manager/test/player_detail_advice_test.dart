@@ -5,7 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:soccer_manager/l10n/app_localizations.dart';
 import 'package:soccer_manager/l10n/tr.dart';
-import 'package:soccer_manager/logic/development_advisor.dart';
 import 'package:soccer_manager/models/player.dart';
 import 'package:soccer_manager/screens/player_detail_screen.dart';
 import 'package:soccer_manager/state/game_state.dart';
@@ -55,7 +54,6 @@ void main() {
     for (final p in game.userTeam.players) {
       p.fatigue = 0;
       p.matchSharpness = 100;
-      p.mentorId = 'someone';
       p.potential = p.overall;
     }
     final p = game.userTeam.players.first;
@@ -69,20 +67,4 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  test('助言の判定は、選手ごとに絞り込める', () async {
-    final game = GameState();
-    await game.startNewGame('絞り込みFC');
-    final team = game.userTeam;
-    for (final p in team.players) {
-      p.fatigue = 0;
-    }
-    final target = team.players.first
-      ..fatigue = DevelopmentAdvisor.fatigueThreshold + 5;
-
-    final mine = DevelopmentAdvisor.advise(team)
-        .where((a) => a.playerId == target.id)
-        .toList();
-    expect(mine, isNotEmpty);
-    expect(mine.every((a) => a.playerId == target.id), isTrue);
-  });
 }

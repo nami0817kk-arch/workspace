@@ -380,7 +380,6 @@ class SaveGame {
   /// 数えられないが、読み込んだ時点からカウントが始まる)。
   int negotiationSignings; // 値切り交渉で獲得が成立した回数
   int breakthroughCount; // 自クラブ選手の才能開花を見届けた回数
-  int traitsAcquired; // 特訓・指導で特性を習得させた回数
   int liveWins; // ライブ観戦(決定機の判断あり)で勝利した回数
   int careerCupPrize; // カップ戦で獲得した賞金・優勝報酬の通算(万円)
   int pkShootoutWins; // ライブ観戦のPK戦を制した回数
@@ -556,7 +555,6 @@ class SaveGame {
     this.careerSeasons = 0,
     this.negotiationSignings = 0,
     this.breakthroughCount = 0,
-    this.traitsAcquired = 0,
     this.liveWins = 0,
     this.careerCupPrize = 0,
     this.pkShootoutWins = 0,
@@ -793,7 +791,6 @@ class SaveGame {
         'careerSeasons': careerSeasons,
         'negotiationSignings': negotiationSignings,
         'breakthroughCount': breakthroughCount,
-        'traitsAcquired': traitsAcquired,
         'liveWins': liveWins,
         'careerCupPrize': careerCupPrize,
         'pkShootoutWins': pkShootoutWins,
@@ -1053,7 +1050,6 @@ class SaveGame {
         careerSeasons: json['careerSeasons'] as int? ?? 0,
         negotiationSignings: json['negotiationSignings'] as int? ?? 0,
         breakthroughCount: json['breakthroughCount'] as int? ?? 0,
-        traitsAcquired: json['traitsAcquired'] as int? ?? 0,
         liveWins: json['liveWins'] as int? ?? 0,
         careerCupPrize: json['careerCupPrize'] as int? ?? 0,
         pkShootoutWins: json['pkShootoutWins'] as int? ?? 0,

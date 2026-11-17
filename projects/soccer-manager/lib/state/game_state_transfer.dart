@@ -234,8 +234,6 @@ extension GameStateTransfer on GameState {
         .toList();
     final pool = fitting.isNotEmpty ? fitting : destinations;
     final dest = pool[GameState._transferOfferRng.nextInt(pool.length)];
-    // 自クラブ専用の育成設定(メンター等)は移籍先では引き継がない。
-    player.mentorId = null;
     player.contractYearsRemaining = 2 + GameState._transferOfferRng.nextInt(3);
     player.happiness = (player.happiness + 5).clamp(40, 90);
     dest.players.add(player);
@@ -390,35 +388,6 @@ extension GameStateTransfer on GameState {
     _save!.pendingContractNegotiation = null;
     _notify();
     _persist();
-  }
-
-  /// 選手と話し合い、不満度を引き上げる。既に十分満足している場合は失敗する。
-  Future<bool> reassurePlayer(String playerId) async {
-    if (_save == null) return false;
-    final player = userTeam.players.firstWhere((p) => p.id == playerId);
-    final ok = HappinessEngine.reassure(player);
-    if (ok) {
-      _notify();
-      await _persist();
-    }
-    return ok;
-  }
-
-  /// 選手個別に声をかけ、士気を高める。効果は性格の結果感応度で変動する
-  /// (T10の檄と同じ考え方)。クールダウン中は実施できない。
-  Future<bool> talkToPlayer(String playerId) async {
-    if (_save == null) return false;
-    final idx = userTeam.players.indexWhere((p) => p.id == playerId);
-    if (idx < 0) return false;
-    final player = userTeam.players[idx];
-    if (player.talkCooldownWeeks > 0) return false;
-    final delta =
-        (GameState.talkBaseMoraleBoost * player.personality.resultSensitivity).round();
-    player.morale = (player.morale + delta).clamp(0, 100);
-    player.talkCooldownWeeks = TrainingEngine.talkCooldownWeeks;
-    _notify();
-    await _persist();
-    return true;
   }
 
   /// スカッド全体で戦術ミーティングを行い、判断力・位置取り・チームワークを
@@ -963,7 +932,6 @@ extension GameStateTransfer on GameState {
     if (buyer == null || buyer.players.isEmpty) return;
     player.isTransferListed = false;
     player.releaseClause = null;
-    player.mentorId = null;
     ContractEngine.applyTransferContract(player);
     buyer.players.add(player);
   }

@@ -98,7 +98,6 @@ const _iconsById = <String, IconData>{
   'hall_of_fame': Icons.museum,
   'legend_collector': Icons.auto_stories,
   'breakthrough_10': Icons.rocket_launch,
-  'trait_teacher': Icons.psychology,
   // 監督キャリア
   'veteran_manager': Icons.military_tech,
   'reputation_elite': Icons.public,

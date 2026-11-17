@@ -273,7 +273,7 @@ class PlayerGenerator {
   }
 
   /// 指定ポジションの選手が、現実的に無理なくこなせるようになりうる
-  /// 副ポジションの候補一覧(ポジションコンバート特訓の対象選択にも使う)。
+  /// 副ポジションの候補一覧。
   static List<Position> secondaryCandidatesFor(Position position) =>
       _secondaryCandidates[position] ?? const [];
 

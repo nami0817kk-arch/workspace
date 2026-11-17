@@ -233,7 +233,7 @@ extension GameStateMatch on GameState {
     await runWeeklyTraining();
 
     // 週の経過による負傷回復と自然な疲労回復(休養日)。
-    // 疲労回復は個別のトレーニング方針(休養特訓)とは別に、全チーム・
+    // 疲労回復はトレーニング方針(休養)とは別に、全チーム・
     // 全選手へ毎週一律で適用する。CPUクラブは練習メニューを設定できず、
     // これを怠ると試合の疲労蓄積だけが積み重なって疲労が上限に張り付き
     // 続けてしまうため。復帰直後は試合勘が鈍っているためマッチシャープ
@@ -284,10 +284,6 @@ extension GameStateMatch on GameState {
       leagueRank: preMatchRank,
       boardTargetRank: _save!.boardTargetRank,
     );
-    // 個別声かけ(モチベーショントーク)のクールダウンも週次で減らす。
-    for (final p in userTeam.players) {
-      if (p.talkCooldownWeeks > 0) p.talkCooldownWeeks -= 1;
-    }
     if (userTeam.tacticalMeetingCooldownWeeks > 0) {
       userTeam.tacticalMeetingCooldownWeeks -= 1;
     }
@@ -384,8 +380,8 @@ extension GameStateMatch on GameState {
       GameState._aiTransferRng,
     );
 
-    // CPUクラブの簡易的な週次成長(ユーザーのように個別指導はできないが、
-    // 何もしないとユーザーだけがドリル等で伸び続けリーグ全体が停滞するため)。
+    // CPUクラブの簡易的な週次成長(施設・スタッフの上乗せは無いが、
+    // 何もしないとユーザーだけが伸び続けリーグ全体が停滞するため)。
     // あわせてセットプレー担当も自動更新し、移籍で放出入りした穴を埋める。
     for (final t in league.teams) {
       if (t.id == _save!.userTeamId) continue;
@@ -398,8 +394,6 @@ extension GameStateMatch on GameState {
     TrainingEngine.applyYouthAcademyGrowth(
       _save!.youthProspects,
       _save!.infrastructure.facilityLevel(FacilityType.youthFacility),
-      // メンターに指名された一軍のベテランは、ユースに足を運んで教える。
-      mentors: userTeam.players,
       coachSpecialty: _save!.infrastructure
               .staffFor(StaffRole.youthCoach)
               ?.specialty ??
@@ -414,10 +408,6 @@ extension GameStateMatch on GameState {
       _save!.youthProspects,
       facilityLevel:
           _save!.infrastructure.facilityLevel(FacilityType.youthFacility),
-      mentorIds: {
-        for (final p in _save!.youthProspects)
-          if (p.mentorId != null) p.id,
-      },
     );
     for (final d in lastYouthDepartures) {
       _book(LedgerCategory.playerSales, d.compensation);

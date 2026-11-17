@@ -363,20 +363,6 @@ List<GlossaryEntry> get glossaryEntries => [
             'How quickly you play (0-100). Quicker adds attacking threat, but tires the side.'),
       ),
       GlossaryEntry(
-        term: Tr.pick('メンター', 'Mentor'),
-        category: GlossaryCategory.condition,
-        description: Tr.pick(
-            '若手選手に付ける指導役のベテラン選手(28歳以上)。メンティーの成長率にボーナスが付き、メンター自身も指導のやりがいから士気が少し上がる。',
-            "An older player (28 or over) paired with a young one. The younger man grows faster, and the mentor's own morale lifts a little from the responsibility."),
-      ),
-      GlossaryEntry(
-        term: Tr.pick('ユースのメンター', 'Academy mentor'),
-        category: GlossaryCategory.condition,
-        description: Tr.pick(
-            'ユースの有望株に付ける一軍のベテラン(28歳以上)。施設での成長が速くなり、ユースでは練習では身に付かない性格特性を習得する道が開ける。1人のベテランが見られるのは1人だけで、一軍の若手のメンターとは兼任できない。',
-            "A first-team player of 28 or over, paired with an academy prospect. He grows faster in the academy, and it opens the only route to a personality trait while he is still there. A veteran can only look after one player, and cannot mentor a first-teamer at the same time."),
-      ),
-      GlossaryEntry(
         term: Tr.pick('生え抜き', 'Academy graduate'),
         category: GlossaryCategory.club,
         description: Tr.pick(
@@ -429,15 +415,8 @@ List<GlossaryEntry> get glossaryEntries => [
         term: Tr.pick('有望株の流出', 'Losing a prospect'),
         category: GlossaryCategory.condition,
         description: Tr.pick(
-            '19歳を過ぎた有望株は出場機会を求め、そのままにしておくとユースを去る。20歳を過ぎるとその確率は上がる。伸びしろの大きい選手は他クラブに引き抜かれ、伸び悩んだ選手は自分から去る。いずれも育成補償金が入る。メンターを付ける、ユース施設を上げる、一軍に昇格させる、のいずれかで引き止められる。',
-            'Past 19, a prospect wants first-team football and will leave the academy if nothing changes; past 20 it happens more often. The ones with room to grow get poached, the ones who stalled walk away. Either way you receive a development fee. A mentor, a better academy or a promotion to the first team will keep him.'),
-      ),
-      GlossaryEntry(
-        term: Tr.pick('特訓ドリル', 'Focus drill'),
-        category: GlossaryCategory.condition,
-        description: Tr.pick(
-            'チーム/個別のトレーニング方針とは別に、狙った能力値を集中的に伸ばす個別設定。1人あたり2つまで指定でき、同時に指定できる人数にはヘッドコーチのレベルに応じた上限がある。',
-            "Separate from the squad and individual focus, this drives one specific attribute hard. Up to two per player, with a cap on how many players at once that rises with your head coach's level."),
+            '19歳を過ぎた有望株は出場機会を求め、そのままにしておくとユースを去る。20歳を過ぎるとその確率は上がる。伸びしろの大きい選手は他クラブに引き抜かれ、伸び悩んだ選手は自分から去る。いずれも育成補償金が入る。ユース施設を上げる、一軍に昇格させる、のどちらかで引き止められる。',
+            'Past 19, a prospect wants first-team football and will leave the academy if nothing changes; past 20 it happens more often. The ones with room to grow get poached, the ones who stalled walk away. Either way you receive a development fee. A better academy or a promotion to the first team will keep him.'),
       ),
       GlossaryEntry(
         term: Tr.pick('全体練習', 'General training'),
@@ -559,13 +538,6 @@ List<GlossaryEntry> get glossaryEntries => [
             "A weekly record of a player's overall, matchday by matchday. His page draws it as a line, so you can see at a glance who is climbing and who has stalled. Kept for your own players and academy prospects, roughly a season's worth."),
       ),
       GlossaryEntry(
-        term: Tr.pick('育成アドバイザー', 'Development adviser'),
-        category: GlossaryCategory.condition,
-        description: Tr.pick(
-            'コーチ陣が育成面で手を打つべき選手を挙げてくれるトレーニング画面の提案。疲労が濃い選手、実戦感覚が落ちて成長が鈍っている選手、伸びしろが手つかずの若手(特訓ドリル・育成プラン未設定)、メンターのいない若手を検知する。',
-            'Your coaches flagging players who need attention, shown on the training screen. It picks up heavy fatigue, growth stalling from lost sharpness, young players with untouched potential and no drill or plan set, and young players without a mentor.'),
-      ),
-      GlossaryEntry(
         term: Tr.pick('戦術スタイル', 'Style of play'),
         category: GlossaryCategory.tactics,
         description: Tr.pick(
@@ -643,13 +615,6 @@ List<GlossaryEntry> get glossaryEntries => [
             'Only a handful of names change each week. A target you have your eye on will usually still be there next week, though not forever.'),
       ),
       GlossaryEntry(
-        term: Tr.pick('育成プラン(目標ロール)', 'Development plan'),
-        category: GlossaryCategory.condition,
-        description: Tr.pick(
-            '選手ごとに目標とするロール(プレースタイル)を設定する仕組み。週次トレーニングでそのロールが重視する能力値が優先的に伸びる。ポジションの大分類に合うロールのみ設定できる。',
-            'Setting a target role for a player. Weekly training then favours the attributes that role values. You can only choose roles that suit his position group.'),
-      ),
-      GlossaryEntry(
         term: Tr.pick('勝ち上がり賞金', 'Progression prize money'),
         category: GlossaryCategory.club,
         description: Tr.pick(
@@ -678,32 +643,11 @@ List<GlossaryEntry> get glossaryEntries => [
             'What you know about the next opponent: their strength, their key player and their recent form. Use it to prepare, for instance by putting a man-marker on the player it names.'),
       ),
       GlossaryEntry(
-        term: Tr.pick('個別声かけ(モチベーショントーク)', 'A quiet word'),
-        category: GlossaryCategory.condition,
-        description: Tr.pick(
-            '監督が選手個人に声をかけて士気(モラール)を高めるコマンド。効果の大きさは選手の性格による感応度で変わり、一度使うと同じ選手には数週間のクールダウンがある。',
-            'Taking a player aside to lift his morale. How much it moves depends on his personality, and you cannot go back to the same player for a few weeks.'),
-      ),
-      GlossaryEntry(
-        term: Tr.pick('話し合い', 'A talk'),
-        category: GlossaryCategory.condition,
-        description: Tr.pick(
-            '不満を抱えた選手と面談して不満度を和らげるコマンド。士気を対象にする個別声かけとは別物で、こちらにもクールダウンがある。移籍希望のフラグが立った選手を引き留める初手になる。',
-            'Sitting down with an unhappy player to ease his discontent. Separate from the quiet word, which targets morale, and it has its own cooldown. This is your first move when someone asks to leave.'),
-      ),
-      GlossaryEntry(
         term: Tr.pick('戦術ミーティング', 'Tactical meeting'),
         category: GlossaryCategory.condition,
         description: Tr.pick(
             'チーム全体で戦術理解を深めるミーティング。判断力・ポジショニング・チームワークといったメンタル系能力値がわずかに成長する。連発はできず、数週間のクールダウンがある。',
             'Working through the tactics with the whole squad. Decisions, positioning and teamwork all improve a little. You cannot hold them back to back; there is a cooldown of a few weeks.'),
-      ),
-      GlossaryEntry(
-        term: Tr.pick('ローテーション方針', 'Rotating focuses'),
-        category: GlossaryCategory.condition,
-        description: Tr.pick(
-            '選手個別のトレーニング方針を複数登録しておくと、週替わりで自動的に切り替わる仕組み。攻撃と守備を交互に鍛えるなど、毎週手動で切り替えなくてもバランス良く育成できる。',
-            'Queue up several training focuses for a player and he cycles through them week by week. Alternating attack and defence, say, without you changing it by hand every week.'),
       ),
       GlossaryEntry(
         term: Tr.pick('自動トレーニング', 'Automatic training'),
