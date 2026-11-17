@@ -133,7 +133,48 @@
   // ---------- 出来事（30種）----------
   const pick = (w, f) => staffOf(w).filter((s) => !(s.away > 0) && f(s));
   const one = (list, salt) => (list.length ? list[YA.hash(salt) % list.length] : null);
-  const run = (label, fn) => ({ label, kind: null, run: (w) => { const r = fn(w) || {}; return { line: r.line || '', small: r.small || '' }; } });
+  // 選んだことの効き目を、前後の数の差から小さく添える（2026-11-17：選んでも何も表示されない選択肢が多かった）。
+  // 自信・疲れ（人数ごと）・信頼度・評判・規律・育成基金・強化部長とスタッフとの関係を見る。結果の文に small が書いてあればそれを使う
+  YA.fxSnap = function (w) {
+    const ps = Object.values(w.players || {});
+    return {
+      conf: new Map(ps.map((p) => [p.id, p.conf || 0])), fat: new Map(ps.map((p) => [p.id, p.fat || 0])), n: ps.length, nA: ps.filter((p) => p.team === 'A').length,
+      trust: w.club ? w.club.trust : 0, rep: w.club ? w.club.rep : 0, disc: w.disc == null ? 60 : w.disc, fund: w.fund || 0,
+      dir: w.director ? w.director.rel : null, staff: new Map(((w.club && w.club.staff) || []).map((x) => [x.id || x.name, x.rel == null ? 50 : x.rel])),
+    };
+  };
+  const sgn = (d) => (d > 0 ? '+' : '−') + Math.abs(d);
+  YA.fxText = function (w, b) {
+    const a = YA.fxSnap(w);
+    const out = [];
+    const per = (k, name) => {
+      const ch = [];
+      for (const [id, v] of b[k]) if (a[k].has(id) && Math.round(a[k].get(id) - v) !== 0) ch.push(Math.round(a[k].get(id) - v));
+      if (!ch.length) return;
+      const d = Math.round(ch.reduce((x, y) => x + y, 0) / ch.length);
+      if (!d) return;
+      const who = ch.length >= b.n - 2 ? '全員の' : ch.length === b.nA ? 'Aの' : ch.length === 1 ? '' : `${ch.length}人の`;
+      out.push(`${who}${name} ${sgn(d)}`);
+    };
+    per('conf', '自信');
+    per('fat', '疲れ');
+    const one = (d, name) => { const r = Math.round(d); if (r) out.push(`${name} ${sgn(r)}`); };
+    one(a.trust - b.trust, '信頼度');
+    one(a.rep - b.rep, '評判');
+    one(a.disc - b.disc, '規律');
+    if (a.fund - b.fund) out.push(`育成基金 ${sgn(Math.round(a.fund - b.fund))}万円`);
+    if (b.dir != null && a.dir != null) one(a.dir - b.dir, '強化部長との関係');
+    let sd = 0;
+    for (const [id, v] of b.staff) if (a.staff.has(id)) sd += a.staff.get(id) - v;
+    one(sd, 'スタッフとの関係');
+    return out.join('・');
+  };
+  YA.fxRun = function (w, fn) {
+    const b = YA.fxSnap(w);
+    const r = fn(w) || {};
+    return { line: r.line || '', small: r.small || YA.fxText(w, b) };
+  };
+  const run = (label, fn) => ({ label, kind: null, run: (w) => YA.fxRun(w, fn) });
   const SE = [
     { id: 'clash', name: '意見がぶつかる', c: (w) => one(pick(w, (s) => /コーチ/.test(s.role)), w.week + 'cl'), t: (w, s) => `${s.role}の${s.name}が、練習の組み方に異を唱えてきた。「${YA.STAFF_PERS[s.pers].say}」`,
       o: (s) => [run('任せてみる', () => { addRel(s, 8); return { line: `${sur(s.name)}が張り切っている。`, small: '関係が深まった' }; }), run('自分のやり方を通す', () => { addRel(s, -6); return { line: '少し気まずい空気が流れた。', small: '関係が冷えた' }; }), run('二人で間を取る', () => { addRel(s, 3); return { line: '折り合いがついた。' }; })] },
@@ -164,7 +205,7 @@
     { id: 'method', name: '新しい練習法', c: (w) => one(pick(w, (s) => (s.pers === '理論派' || s.origin === '大学の研究者' || s.origin === '海外帰り') && /コーチ/.test(s.role)), w.year + 'me'), t: (w, s) => `${s.name}が「海外で流行っている練習法を試したい」と資料を持ってきた。`,
       o: (s) => [run('試す', (w) => { w.method = { y: w.year, by: s.name, ok: YA.hash(s.name + w.year) % 3 !== 0 }; addRel(s, 8); return { line: w.method.ok ? '子どもたちが新鮮そうに取り組んでいる。' : '最初は戸惑いが多いようだ。', small: w.method.ok ? '今年の伸びが少し上がる' : '' }; }), run('一部だけ取り入れる', () => { addRel(s, 3); return { line: '少しずつ試すことにした。' }; }), run('今のやり方を続ける', () => { addRel(s, -5); return { line: '残念そうに資料をしまった。' }; })] },
     { id: 'oldstory', name: '昔話', c: (w) => one(pick(w, (s) => s.origin === '元プロ' || s.pers === '元代表'), w.year + 'os'), t: (w, s) => `${s.name}が、子どもたちに現役時代の話をしてほしいと頼まれている。`,
-      o: (s) => [run('話してもらう', (w) => { for (const p of all(w)) conf(p, 2); addRel(s, 4); return { line: '子どもたちが身を乗り出して聞いていた。' }; }), run('失敗した話を頼む', (w) => { for (const p of all(w)) if ((p.conf || 50) < 45) conf(p, 5); addRel(s, 3); return { line: '自信をなくしていた子が、何度もうなずいていた。' }; }), run('練習を優先する', () => ({ line: '' }))] },
+      o: (s) => [run('話してもらう', (w) => { for (const p of all(w)) conf(p, 2); addRel(s, 4); return { line: '子どもたちが身を乗り出して聞いていた。' }; }), run('失敗した話を頼む', (w) => { for (const p of all(w)) if ((p.conf || 50) < 45) conf(p, 5); addRel(s, 3); return { line: '自信をなくしていた子が、何度もうなずいていた。' }; }), run('練習を優先する', () => { addRel(s, -1); return { line: '「また今度」と、少し残念そうだった。' }; })] },
     { id: 'license', name: '資格の勉強', c: (w) => one(pick(w, (s) => s.ab < 16 && /コーチ/.test(s.role)), w.year + 'lc'), t: (w, s) => `${s.name}が、上の指導者資格を取るために勉強している。講習の費用がかかる。`,
       o: (s) => [run('クラブで費用を出す', (w) => { s.ab = Math.min(18, s.ab + 1); s.salary = YA.salaryOf(s.ab); addRel(s, 6); return { line: '資格を取った。', small: '腕前+1・給料が上がった' }; }), run('自費で頑張れと言う', () => { addRel(s, -2); if (YA.hash(s.name + 'l') % 2) s.ab = Math.min(18, s.ab + 1); return { line: '時間はかかったが、取ったらしい。' }; }), run('今は現場に集中してほしいと頼む', () => { addRel(s, -4); return { line: '' }; })] },
     { id: 'shurt', name: 'コーチの怪我', c: (w) => one(pick(w, (s) => s.role === '体コーチ' || s.role === '技術コーチ'), w.week + 'sh'), t: (w, s) => `${s.name}が、デモンストレーション中に足を痛めた。`,
@@ -176,7 +217,7 @@
     { id: 'mediate', name: '間を取り持つ', c: (w) => (all(w).some((p) => (p.unrest || 0) >= 3) ? one(pick(w, (s) => s.pers === '面倒見' || s.pers === 'ムードメーカー'), w.week + 'md') : null), t: (w, s) => { const p = all(w).filter((x) => (x.unrest || 0) >= 3)[0]; return `${s.name}が「${p.name}と監督の間に、私が入りましょうか」と言ってきた。`; },
       o: (s) => [run('頼む', (w) => { const p = all(w).filter((x) => (x.unrest || 0) >= 3)[0]; if (p) p.unrest = Math.max(0, p.unrest - 2); addRel(s, 5); return { line: '少し空気がやわらいだ。' }; }), run('自分で話す', () => ({ line: '「分かりました」と引いた。' })), run('放っておく', () => { addRel(s, -2); return { line: '' }; })] },
     { id: 'defend', name: '同僚をかばう', c: (w) => (staffOf(w).some((s) => YA.staffRelLv(s) <= 2) ? one(pick(w, (s) => YA.staffRelLv(s) >= 4), w.week + 'df') : null), t: (w, s) => { const b = staffOf(w).find((x) => YA.staffRelLv(x) <= 2); return `${s.name}が「${b ? b.name : 'あの人'}は、悪い人じゃないんです」とかばいに来た。`; },
-      o: (s) => [run('話を聞いて、関係を立て直す', (w) => { const b = staffOf(w).find((x) => YA.staffRelLv(x) <= 2); if (b) addRel(b, 10); addRel(s, 3); return { line: '二人で食事に行くことにした。' }; }), run('考えておくと言う', () => ({ line: '' })), run('口を出すなと言う', () => { addRel(s, -6); return { line: '' }; })] },
+      o: (s) => [run('話を聞いて、関係を立て直す', (w) => { const b = staffOf(w).find((x) => YA.staffRelLv(x) <= 2); if (b) addRel(b, 10); addRel(s, 3); return { line: '二人で食事に行くことにした。' }; }), run('考えておくと言う', () => { addRel(s, 1); return { line: '「お願いします」と頭を下げて戻っていった。' }; }), run('口を出すなと言う', () => { addRel(s, -6); return { line: '' }; })] },
     { id: 'propose', name: 'クラブへの提言', c: (w) => one(pick(w, (s) => s.pers === '理論派' || s.pers === '野心家' || s.pers === '古株'), w.year + 'pp'), t: (w, s) => `${s.name}が、クラブに出す提言書を書いた。「育成の予算を増やすべきです」`,
       o: (s) => [run('連名で出す', (w) => { addRel(s, 6); if (w.club) w.club.trust = clamp(w.club.trust + (YA.hash(s.name + w.year) % 2 ? 2 : -2), 0, 100); return { line: 'クラブの反応は、半々だった。' }; }), run('本人の名前で出させる', () => { addRel(s, 2); return { line: '' }; }), run('今は出さないよう頼む', () => { addRel(s, -4); return { line: '' }; })] },
     { id: 'research', name: '研究の発表', c: (w) => one(pick(w, (s) => s.origin === '大学の研究者' || s.spec === 'データ' || s.spec === '映像の分析'), w.year + 'rs'), t: (w, s) => `${s.name}が、うちの練習のデータを学会で発表したいと言ってきた。`,
@@ -184,7 +225,7 @@
     { id: 'nickname', name: 'あだ名', c: (w) => one(pick(w, (s) => s.pers === 'ムードメーカー' || s.pers === '情熱'), w.week + 'nn'), t: (w, s) => { const p = all(w).find((x) => x.grade === 1); return `${s.name}が、高1の${p ? p.name : '子'}にあだ名を付けた。チームに一気に広まっている。`; },
       o: (s) => [run('笑って見守る', (w) => { for (const p of all(w).filter((x) => x.grade === 1)) conf(p, 2); return { line: '' }; }), run('本人が嫌がっていないか確かめる', () => { addRel(s, 1); return { line: '本人もまんざらでもないらしい。' }; }), run('やめさせる', () => { addRel(s, -4); return { line: '' }; })] },
     { id: 'oldpupil', name: '昔の教え子', c: (w) => one(pick(w, (s) => s.origin === '高校の先生' || (s.yrs || 0) >= 5), w.year + 'op'), t: (w, s) => `${s.name}の昔の教え子が、練習場に挨拶に来た。今は小学校の先生をしているらしい。`,
-      o: (s) => [run('子どもたちの前で話してもらう', (w) => { for (const p of all(w)) conf(p, 1); addRel(s, 4); return { line: '' }; }), run('二人の時間を作る', () => { addRel(s, 5); return { line: `${sur(s.name)}が、珍しく照れていた。` }; }), run('挨拶だけで帰ってもらう', () => ({ line: '' }))] },
+      o: (s) => [run('子どもたちの前で話してもらう', (w) => { for (const p of all(w)) conf(p, 1); addRel(s, 4); return { line: '' }; }), run('二人の時間を作る', () => { addRel(s, 5); return { line: `${sur(s.name)}が、珍しく照れていた。` }; }), run('挨拶だけで帰ってもらう', () => { addRel(s, -1); return { line: '短い挨拶をして、帰っていった。' }; })] },
     { id: 'teinen', name: '定年', c: (w) => one(pick(w, (s) => (s.yrs || 0) >= 10), w.year + 'tn'), t: (w, s) => `${s.name}が、今年度かぎりで退くと言ってきた。${s.yrs}年、このクラブにいた。`,
       o: (s) => [run('引退式を開く', (w) => { for (const p of all(w)) conf(p, 3); YA.staffLeave(w, s, `${s.yrs}年の勤めを終えて`); return { line: '卒業生たちも駆けつけた。' }; }), run('相談役として残ってもらう', () => { s.pers = '古株'; addRel(s, 6); return { line: '「まだまだ口を出しますよ」' }; }), run('静かに送り出す', (w) => { YA.staffLeave(w, s, '定年'); return { line: '' }; })] },
     { id: 'scoutfind', name: 'スカウトの掘り出し', c: (w) => (YA.scoutWindow && w.scouting ? one(pick(w, (s) => s.role === 'スカウト'), w.week + 'sf2') : null), t: (w, s) => `スカウトの${s.name}が「名前の知られていない中学に、面白い子がいます」と言ってきた。`,
@@ -194,7 +235,7 @@
     { id: 'analyst', name: '分析の提案', c: (w) => one(pick(w, (s) => s.role === '分析'), w.week + 'an'), t: (w, s) => `分析の${s.name}が「次の相手の弱点が見えました」と資料を持ってきた。`,
       o: (s) => [run('戦い方に取り入れる', (w) => { for (const p of all(w).filter((x) => x.team === 'A')) conf(p, 2); addRel(s, 6); return { line: '準備に手応えを感じている。', small: 'Aの自信 +2' }; }), run('選手にも見せる', (w) => { for (const p of all(w).filter((x) => x.team === 'A')) p.prog = Object.assign(p.prog || {}, { 判断: ((p.prog || {}).判断 || 0) + 0.1 }); addRel(s, 4); return { line: '' }; }), run('自分たちのサッカーをすると言う', () => { addRel(s, -4); return { line: '' }; })] },
     { id: 'gkcoach', name: 'GKコーチの居残り', c: (w) => one(pick(w, (s) => s.role === 'GKコーチ'), w.week + 'gk'), t: (w, s) => `GKコーチの${s.name}が、控えのGKと日が暮れるまで居残りをしている。`,
-      o: (s) => [run('明かりを点けて付き合う', (w) => { for (const p of all(w).filter((x) => x.pos === 'GK')) { p.prog = p.prog || {}; p.prog.反応 = (p.prog.反応 || 0) + 0.3; } addRel(s, 5); return { line: '' }; }), run('ほどほどにと言う', () => ({ line: '' })), run('帰らせる', () => { addRel(s, -3); return { line: '' }; })] },
+      o: (s) => [run('明かりを点けて付き合う', (w) => { for (const p of all(w).filter((x) => x.pos === 'GK')) { p.prog = p.prog || {}; p.prog.反応 = (p.prog.反応 || 0) + 0.3; } addRel(s, 5); return { line: '' }; }), run('ほどほどにと言う', () => { addRel(s, 1); return { line: '「あと10本だけ」と笑って、続けていた。' }; }), run('帰らせる', () => { addRel(s, -3); return { line: '' }; })] },
   ];
   YA.STAFF_EVENTS = SE.map((x) => x.id);
   YA.EVENTS.push({ id: 'staffev', name: 'スタッフの出来事', weight: 0, pick: () => null, text: () => '', opts: [] });

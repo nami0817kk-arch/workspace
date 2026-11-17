@@ -383,9 +383,9 @@
       return '年代別の日本代表から招集が届いた（1週間チームを離れる）。' + ids.map((id) => { const q = w.players[id]; return `${q.num}番 ${q.name}（${(YA.natTeamOf(q) || YA.YOUTH_NAT[1])[0]}・総合力${YA.rating(q)}）`; }).join('、') + `。選考ラインは U-18 ${YA.YOUTH_NAT[1][1]}・U-21 ${YA.YOUTH_NAT[0][1]}`;
     },
     opts: [
-      o('全員送り出す（本人は伸び、クラブの評判が上がる）', 'push', null, (w) => { const ids = (w._natCall || []).filter((id) => w.players[id]); for (const id of ids) natSend(w, w.players[id]); YA.addRep(w, ids.length); return { line: `${ids.length}人を送り出した。それぞれ1週間チームを離れる`, small: `評判 +${ids.length}・自信 +6` }; }),
-      o('Aの先発の子だけ残し、ほかは送り出す', 'wait', null, (w) => { const ids = (w._natCall || []).filter((id) => w.players[id]); const st = new Set((w.lineupA || []).map((x) => x.pid)); const go = ids.filter((id) => !st.has(id)); for (const id of go) natSend(w, w.players[id]); for (const id of ids.filter((x) => st.has(x))) { w.players[id].unrest += 1.5; w.players[id].conf = clamp(w.players[id].conf - 4, 0, 100); } YA.addRep(w, go.length - (ids.length - go.length) * 0.5); return { line: `${go.length}人を送り出し、${ids.length - go.length}人を残した。残った子は少し不満そうだ`, small: '' }; }),
-      o('全員断る（試合を優先する）', 'firm', null, (w) => { const ids = (w._natCall || []).filter((id) => w.players[id]); for (const id of ids) { w.players[id].unrest += 1.5; w.players[id].conf = clamp(w.players[id].conf - 6, 0, 100); } YA.addRep(w, -ids.length); return { line: '代表の招集を断った。協会からの評判と、本人たちの気持ちが下がった', small: `評判 -${ids.length}` }; }),
+      o('全員送り出す（本人は伸び、クラブの評判が上がる）', 'push', null, (w) => { const ids = (w._natCall || []).filter((id) => w.players[id]); for (const id of ids) natSend(w, w.players[id]); YA.addRep(w, ids.length); return { line: ids.length > 1 ? `${ids.length}人を送り出した。それぞれ1週間チームを離れる。` : `${w.players[ids[0]] ? w.players[ids[0]].name : ''}を送り出した。1週間チームを離れる。`, small: `評判 +${ids.length}・自信 +6` }; }),
+      o('Aの先発の子だけ残し、ほかは送り出す', 'wait', null, (w) => { const ids = (w._natCall || []).filter((id) => w.players[id]); const st = new Set((w.lineupA || []).map((x) => x.pid)); const go = ids.filter((id) => !st.has(id)); for (const id of go) natSend(w, w.players[id]); for (const id of ids.filter((x) => st.has(x))) { w.players[id].unrest += 1.5; w.players[id].conf = clamp(w.players[id].conf - 4, 0, 100); } YA.addRep(w, go.length - (ids.length - go.length) * 0.5); return { line: `${go.length}人を送り出し、${ids.length - go.length}人を残した。残った子は少し不満そうだ。`, small: '' }; }),
+      o('全員断る（試合を優先する）', 'firm', null, (w) => { const ids = (w._natCall || []).filter((id) => w.players[id]); for (const id of ids) { w.players[id].unrest += 1.5; w.players[id].conf = clamp(w.players[id].conf - 6, 0, 100); } YA.addRep(w, -ids.length); return { line: '代表の招集を断った。協会からの評判と、本人たちの気持ちが下がった。', small: `評判 −${ids.length}` }; }),
     ] });
   YA.EVENT_ABOUT = YA.EVENT_ABOUT || {};
   YA.EVENT_ABOUT.natcall = '年に2回（5月・1月）、選考ラインを超えた子が年代別の代表に選ばれます。送り出すと本人は伸び、クラブの評判が上がります。';
@@ -441,8 +441,8 @@
     pick: (w, r) => ({ id: '', _club: r.int(0, CLUB_REQ.length - 1) }),
     text: (p, w) => CLUB_REQ[w._clubReq || 0].text,
     opts: [
-      o('応じる', 'warm', null, (w) => { const q = CLUB_REQ[w._clubReq || 0]; q.yes(w); YA.addTrust(w, q.trust[0], '要望に応えた'); return { line: q.yesMsg, small: '信頼度 +' + q.trust[0] }; }),
-      o('断る', 'firm', null, (w) => { const q = CLUB_REQ[w._clubReq || 0]; YA.addTrust(w, q.trust[1], '要望を断った'); return { line: '要望を断った', small: '信頼度 ' + q.trust[1] }; }),
+      o('応じる', 'warm', null, (w) => { const q = CLUB_REQ[w._clubReq || 0]; q.yes(w); YA.addTrust(w, q.trust[0], '要望に応えた'); return { line: q.yesMsg + '。', small: '信頼度 +' + q.trust[0] }; }),
+      o('断る', 'firm', null, (w) => { const q = CLUB_REQ[w._clubReq || 0]; YA.addTrust(w, q.trust[1], '要望を断った'); return { line: '要望を断った。', small: '信頼度 −' + Math.abs(q.trust[1]) }; }),
     ] });
   E.push({ id: 'media', name: '取材', weight: 0.5,
     pick: (w, r) => { const c = Object.values(w.players).filter((p) => YA.ovr(p) > 11 && !away(p)); return c.length ? r.pick(c) : null; },
@@ -452,8 +452,8 @@
     pick: (w, r) => ({ id: '', _staff: r.int(0, w.club.staff.length - 1) }),
     text: (p, w) => { const s = w.club.staff[w._staffIdx || 0]; return `他のクラブが${s.name}（${s.role}）を引き抜こうとしている。本人は迷っているようだ`; },
     opts: [
-      o('給料を上げて引き止める', 'warm', null, (w) => { const s = w.club.staff[w._staffIdx || 0]; s.salary = Math.round(s.salary * 1.2); return { line: s.name + 'は残ることになった（給料 +20%）', small: '' }; }),
-      o('送り出す（後任はクラブが決める）', 'wait', null, (w, p, r) => { const s = w.club.staff[w._staffIdx || 0]; const n = YA.genStaffPublic(r, s.role); w.club.staff[w._staffIdx || 0] = n; return { line: `${s.name}は去った。後任は${n.name}（能力${n.ab}）`, small: '' }; }),
+      o('給料を上げて引き止める', 'warm', null, (w) => { const s = w.club.staff[w._staffIdx || 0]; s.salary = Math.round(s.salary * 1.2); return { line: s.name + 'は残ることになった。', small: '給料 +20%' }; }),
+      o('送り出す（後任はクラブが決める）', 'wait', null, (w, p, r) => { const s = w.club.staff[w._staffIdx || 0]; const n = YA.genStaffPublic(r, s.role); w.club.staff[w._staffIdx || 0] = n; return { line: `${s.name}は去った。後任は${n.name}（腕前${n.ab}）。`, small: '' }; }),
     ] });
   YA.genStaffPublic = (r, role) => genStaff(r, role, 5, 12);
 
@@ -465,10 +465,39 @@
       o('注意する', 'firm', (w) => { w.disc = clamp((w.disc == null ? 60 : w.disc) + 2, 0, 100); }),
       o('次の試合から外す', 'firm', (w, p) => { p.suspend = 1; w.disc = clamp((w.disc == null ? 60 : w.disc) + 5, 0, 100); if (p.team === 'A') p.unrest += 1.5; }),
       o('練習を厳しくする（全員）', 'wait', (w) => { for (const q of Object.values(w.players)) { q.fat = clamp(q.fat + 5, 0, 100); } w.disc = clamp((w.disc == null ? 60 : w.disc) + 4, 0, 100); }),
-      o('約束どおり処分する', 'firm', (w, p) => { const has = (w.rules || []).indexOf(rule) >= 0; w.disc = clamp((w.disc == null ? 60 : w.disc) + (has ? 8 : 3), 0, 100); if (has) YA.addTrust(w, 1); if (p.team === 'A' && YA.ovr(p) > 11.5) p.suspend = 1; }),
+      Object.assign(o('約束どおり処分する', 'firm', (w, p) => { const has = (w.rules || []).indexOf(rule) >= 0; w.disc = clamp((w.disc == null ? 60 : w.disc) + (has ? 8 : 3), 0, 100); if (has) YA.addTrust(w, 1); if (p.team === 'A' && YA.ovr(p) > 11.5) p.suspend = 1; }), { rule }),
     ] });
   E.push(DISC('fight', 'もめごと', (p) => `${pname(p)}が練習中に仲間と言い合いになった。周りが止めに入った`, '挨拶と片付けを徹底する', (p) => p.pers['感情の波'] === '短気' || p.pers['プレーの気質'] === '闘争的' || p.pers['気持ちの強さ'] === '負けず嫌い'));
   E.push(DISC('slack', '練習の手抜き', (p) => `${pname(p)}の練習が明らかに手抜きになっている。コーチが指摘してきた`, '練習は全力で走る', (p) => p.pers['練習への向き合い'] === '練習嫌い' || p.unrest > 2));
+
+  // 試合の無い週の選択肢（2026-11-17）：「試合を優先する」は「練習を優先する」に、「次の試合から外す」は出さない。
+  // 規律の「約束どおり処分する」は、その約束事を決めた年だけ。1人だけの代表招集は「送り出す／断る」の2択
+  // 出来事ごとに元の選択肢を _opts0 に控え、表示と結果の両方で同じ並びに組み直す（番号がずれないように）
+  const noMatch = (w) => { try { return !YA.matchOf(w); } catch (er) { return false; } };
+  const relabel = (op, label) => Object.assign({}, op, { label });
+  function prepOpts(w, e) {
+    const d = E.find((x) => x.id === e.id);
+    if (!d) return;
+    if (!d._opts0) d._opts0 = d.opts;
+    let list = d._opts0;
+    const nm = noMatch(w);
+    if (d.id === 'top' && nm) list = list.map((x) => (/試合を優先/.test(x.label) ? relabel(x, x.label.replace('試合を優先', '練習を優先')) : x));
+    if (d.id === 'fight' || d.id === 'slack') {
+      list = list.filter((x) => !(nm && /次の試合から外す/.test(x.label)) && !(x.rule && (w.rules || []).indexOf(x.rule) < 0));
+    }
+    if (d.id === 'natcall') {
+      const ids = (w._natCall || []).filter((id) => w.players[id]);
+      if (ids.length <= 1) list = [relabel(list[0], '送り出す（本人は伸び、クラブの評判が上がる）'), list[2]];
+      if (nm) list = list.map((x) => (/試合を優先/.test(x.label) ? relabel(x, x.label.replace('全員断る', ids.length <= 1 ? '断る' : '全員断る').replace('試合を優先', '練習を優先')) : ids.length <= 1 && /全員断る/.test(x.label) ? relabel(x, x.label.replace('全員断る', '断る')) : x));
+      else if (ids.length <= 1) list = list.map((x) => (/全員断る/.test(x.label) ? relabel(x, x.label.replace('全員断る', '断る')) : x));
+    }
+    d.opts = list;
+  }
+  const PREP_IDS = new Set(['top', 'fight', 'slack', 'natcall']);
+  const cv0 = YA.eventView;
+  YA.eventView = function (w, e) { if (e && PREP_IDS.has(e.id)) prepOpts(w, e); return cv0.apply(this, arguments); };
+  const cr0 = YA.resolveEvent;
+  YA.resolveEvent = function (w, e, idx) { if (e && PREP_IDS.has(e.id)) prepOpts(w, e); return cr0.apply(this, arguments); };
 
   // 設定：同じ events に載せた 'club' 系の p は null として扱う
   YA.EVENT_NULL = new Set(['club', 'poach']);

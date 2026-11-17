@@ -144,7 +144,8 @@
   YA.EVENTS.push({
     id: 'rivalry', name: '同じ位置のライバル意識', weight: 0.6,
     pick: (w, r) => {
-      const ps = Object.values(w.players).filter((p) => p.team === 'A' && p.grade <= 2);
+      // 怪我や不在の子は先発争いの話に出さない（2026-11-17）
+      const ps = Object.values(w.players).filter((p) => p.team === 'A' && p.grade <= 2 && !(p.inj > 0) && !(p.away > 0));
       const pair = [];
       for (const p of ps) { const q = ps.find((x) => x.id !== p.id && x.pos === p.pos && Math.abs(YA.ovr(x) - YA.ovr(p)) < 0.5 && x.id > p.id); if (q) pair.push([p, q]); }
       if (!pair.length) return null;
@@ -152,7 +153,7 @@
       p._rv = q.id;
       return p;
     },
-    text: (p, w) => `${p.num}番 ${p.name}と${(w.players[p._rv] || {}).name || '同じ位置の仲間'}が、先発の座を争って火花を散らしている。`,
+    text: (p, w) => { const q = w.players[p._rv]; return `${p.num}番 ${p.name}と${q ? q.num + '番 ' + q.name : '同じ位置の仲間'}が、先発の座を争って火花を散らしている。`; },
     opts: [
       { label: '競わせて伸ばす（全力でぶつかれ）', kind: 'push', extra: (w, p, r) => { const q = w.players[p._rv]; if (q) { p.conf = Math.min(100, p.conf + 3); q.conf = Math.min(100, q.conf + 3); if (r() < 0.25) { p.unrest += 1; q.unrest += 1; } } } },
       { label: '互いの良さを認め合わせる', kind: 'warm', extra: (w, p) => { const q = w.players[p._rv]; if (q) { p.unrest = Math.max(0, p.unrest - 0.5); q.unrest = Math.max(0, q.unrest - 0.5); } } },
