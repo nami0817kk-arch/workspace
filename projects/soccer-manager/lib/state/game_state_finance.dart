@@ -540,7 +540,8 @@ extension GameStateFinance on GameState {
     const startTier = 4;
     final rng = Random();
     final names =
-        NamePool.themedClubNames(theme, teamsPerLeague * totalDivisionTiers);
+        NamePool.themedClubNames(
+            theme, theme.teamsByTier.fold<int>(0, (a, n) => a + n));
     var ni = 0;
     String nextName() => names[ni++];
     int strengthForTier(int tier) =>
@@ -557,7 +558,10 @@ extension GameStateFinance on GameState {
       final teams = <Team>[
         if (tier == startTier) userTeam,
         for (var i = 0;
-            i < (tier == startTier ? teamsPerLeague - 1 : teamsPerLeague);
+            i <
+                (tier == startTier
+                    ? theme.teamsInTier(tier) - 1
+                    : theme.teamsInTier(tier));
             i++)
           PlayerGenerator.generateSquad(
             id: tier == startTier ? 'cpu$i' : 'div${tier}_$i',

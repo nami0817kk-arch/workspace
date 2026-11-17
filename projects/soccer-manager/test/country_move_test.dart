@@ -37,7 +37,7 @@ void main() {
     expect(gs.save!.currentDivisionTier, 4);
     expect(gs.save!.ownerLegacies.length, legacies + 1);
     expect(gs.save!.confidence, 60);
-    expect(gs.save!.league.teams.length, 20);
+    expect(gs.save!.league.teams.length, LeagueTheme.germany.teamsInTier(4));
     expect(gs.userTeam.id, 'user');
     expect(gs.save!.otherDivisionLeagues[3], isNull);
     expect(gs.save!.otherDivisionLeagues[0], isNotNull);

@@ -11,7 +11,7 @@ extension GameStateTransfer on GameState {
     final player = transferMarket[idx];
     final fee = TransferTermsEngine.agentFee(player.marketValue);
     if (_save!.budget < player.marketValue + fee) return false;
-    if (userTeam.players.length >= maxSquadSize) return false;
+    if (!_registrationAllows(player)) return false;
     if (!_wageBudgetAllowsSigning(player.wage)) return false;
     _book(LedgerCategory.transfers, -(player.marketValue));
     _bookAgentFee(player, fee);
@@ -21,6 +21,16 @@ extension GameStateTransfer on GameState {
     _notify();
     await _persist();
     return true;
+  }
+
+  /// 登録の決まり([SquadRegistration])で加えられるか。加えられないときは
+  /// 理由を[lastSigningBlockReason]に入れる(押しても何も起きない状態にしない)。
+  bool _registrationAllows(Player player) {
+    final reason = SquadRegistration.blockReason(userTeam, player);
+    if (reason == null) return true;
+    lastSigningBlockReason = reason;
+    _notify();
+    return false;
   }
 
   /// 代理人手数料を払う(移籍金とは別の費用)。
@@ -76,10 +86,10 @@ extension GameStateTransfer on GameState {
         _save!.budget < offer + TransferTermsEngine.agentFee(offer)) {
       return (attempted: false, accepted: false);
     }
-    if (userTeam.players.length >= maxSquadSize) {
+    lastSigningBlockReason = null;
+    if (!_registrationAllows(player)) {
       return (attempted: false, accepted: false);
     }
-    lastSigningBlockReason = null;
     if (!_wageBudgetAllowsSigning(player.wage)) {
       return (attempted: false, accepted: false);
     }
@@ -429,8 +439,8 @@ extension GameStateTransfer on GameState {
     if (!isTransferWindowOpen) return false;
     final idx = transferMarket.indexWhere((p) => p.id == playerId);
     if (idx < 0) return false;
-    if (userTeam.players.length >= maxSquadSize) return false;
     final player = transferMarket[idx];
+    if (!_registrationAllows(player)) return false;
     final total = player.marketValue;
     final downPayment = (total * 0.3).round();
     final fee = TransferTermsEngine.agentFee(total);
@@ -467,8 +477,8 @@ extension GameStateTransfer on GameState {
     if (!isTransferWindowOpen) return false;
     final idx = transferMarket.indexWhere((p) => p.id == playerId);
     if (idx < 0) return false;
-    if (userTeam.players.length >= maxSquadSize) return false;
     final player = transferMarket[idx];
+    if (!_registrationAllows(player)) return false;
     final fee = (player.marketValue * GameState.loanFeeRatioPercent / 100).round();
     if (_save!.budget < fee) return false;
     lastSigningBlockReason = null;
@@ -732,9 +742,9 @@ extension GameStateTransfer on GameState {
     if (_save == null) return false;
     lastSigningBlockReason = null;
     if (!isTransferWindowOpen) return false;
-    if (userTeam.players.length >= maxSquadSize) return false;
     final idx = _save!.freeAgents.indexWhere((p) => p.id == playerId);
     if (idx < 0) return false;
+    if (!_registrationAllows(_save!.freeAgents[idx])) return false;
     if (!_wageBudgetAllowsSigning(_save!.freeAgents[idx].wage)) return false;
     final player = _save!.freeAgents.removeAt(idx);
     ContractEngine.renewContract(player);

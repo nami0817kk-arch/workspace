@@ -322,6 +322,8 @@ class PlayerGenerator {
 
     final player = Player(
       id: id,
+      // 登録の決まりの「国内で育った選手」。6割ほどを国内育成にする。
+      homegrown: _rng.nextInt(5) < 3,
       name: NamePool.randomPlayerName(avoid: avoidNames),
       age: age,
       position: position,
@@ -525,7 +527,51 @@ class PlayerGenerator {
     }
   }
 
-  /// 1チーム分のスカッド構成（計23名）。
+  /// 上位のクラブのスカッド構成(計25名、GKは3人)。実在の1部のクラブは
+  /// 登録枠いっぱいの25人前後を抱える。
+  static const Map<Position, int> _largeSquadComposition = {
+    Position.gk: 3,
+    Position.dc: 4,
+    Position.dr: 2,
+    Position.dl: 2,
+    Position.wbr: 1,
+    Position.wbl: 1,
+    Position.dm: 2,
+    Position.mc: 2,
+    Position.mr: 1,
+    Position.ml: 1,
+    Position.amc: 1,
+    Position.amr: 1,
+    Position.aml: 1,
+    Position.st: 3,
+  };
+
+  /// 下位のクラブのスカッド構成(計22名)。お金が無いので少ない人数で回す。
+  static const Map<Position, int> _smallSquadComposition = {
+    Position.gk: 2,
+    Position.dc: 3,
+    Position.dr: 2,
+    Position.dl: 2,
+    Position.wbr: 1,
+    Position.wbl: 1,
+    Position.dm: 1,
+    Position.mc: 2,
+    Position.mr: 1,
+    Position.ml: 1,
+    Position.amc: 1,
+    Position.amr: 1,
+    Position.aml: 1,
+    Position.st: 3,
+  };
+
+  /// 強さに合わせたスカッド構成。強いクラブほど人数を多く抱える。
+  static Map<Position, int> compositionFor(int strengthTier) {
+    if (strengthTier >= 70) return _largeSquadComposition;
+    if (strengthTier < 50) return _smallSquadComposition;
+    return _squadComposition;
+  }
+
+  /// 中位のクラブのスカッド構成(計23名)。
   static const Map<Position, int> _squadComposition = {
     Position.gk: 2,
     Position.dc: 3,
@@ -550,7 +596,7 @@ class PlayerGenerator {
   }) {
     final players = <Player>[];
     final usedNames = <String>{};
-    _squadComposition.forEach((position, count) {
+    compositionFor(strengthTier).forEach((position, count) {
       for (int i = 0; i < count; i++) {
         final player = generate(
           position: position,

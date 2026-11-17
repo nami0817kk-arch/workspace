@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../l10n/tr.dart';
 import '../logic/contract_board_engine.dart';
 import '../logic/contract_engine.dart';
+import '../logic/squad_registration_engine.dart';
 import '../models/player.dart';
 import '../services/feedback_service.dart';
 import '../state/game_state.dart';
@@ -29,7 +30,10 @@ class ContractBoardScreen extends StatelessWidget {
 
   Widget _body(BuildContext context, GameState game) {
     final team = game.userTeam;
-    final room = ContractBoardEngine.registrationRoom(team, maxSquadSize);
+    final room = SquadRegistration.seniorLimit -
+        SquadRegistration.seniorCount(team);
+    final homegrown = SquadRegistration.homegrownSeniorCount(team);
+    final nonHomegrown = SquadRegistration.nonHomegrownSeniorCount(team);
     final byYears = ContractBoardEngine.byYearsRemaining(team);
     final expiring = ContractBoardEngine.expiring(team);
     final theme = Theme.of(context);
@@ -44,9 +48,27 @@ class ContractBoardScreen extends StatelessWidget {
           child: Column(
             children: [
               FmRow(
-                label: Tr.pick('登録人数', 'Registered'),
-                value: '${team.players.length}/$maxSquadSize',
+                label: Tr.pick('22歳以上の登録', 'Senior squad'),
+                value:
+                    '${SquadRegistration.seniorCount(team)}/${SquadRegistration.seniorLimit}',
                 valueColor: room < 0 ? theme.colorScheme.error : null,
+              ),
+              FmRow(
+                label: Tr.pick('うち国内育成', 'Homegrown'),
+                value: Tr.pick(
+                    '$homegrown人(${SquadRegistration.homegrownQuota}人を入れる)',
+                    '$homegrown (quota ${SquadRegistration.homegrownQuota})'),
+              ),
+              FmRow(
+                label: Tr.pick('うち国外育成', 'Trained abroad'),
+                value: '$nonHomegrown/${SquadRegistration.nonHomegrownLimit}',
+                valueColor: nonHomegrown > SquadRegistration.nonHomegrownLimit
+                    ? theme.colorScheme.error
+                    : null,
+              ),
+              FmRow(
+                label: Tr.pick('在籍の総数(21歳以下を含む)', 'Whole squad (incl. U21)'),
+                value: '${team.players.length}/$maxSquadSize',
               ),
               FmRow(
                 label: Tr.pick('登録の余裕', 'Room'),

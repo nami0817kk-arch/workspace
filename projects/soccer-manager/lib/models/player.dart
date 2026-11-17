@@ -1167,6 +1167,17 @@ class Player {
   /// 買ってきた選手と、育てた選手を見分けるための印。旧セーブは false。
   bool academyGraduate;
 
+  /// 国内で育った選手か(登録の決まりの「自国育成」)。生成時に決める。
+  /// 自クラブのユース出身([academyGraduate])も国内育成として数える。
+  bool homegrown;
+
+  bool get isHomegrown => homegrown || academyGraduate;
+
+  /// 旧セーブには印が無いので、id から決まった値を出す(読み込むたびに
+  /// 変わらないように、文字列の hashCode ではなく文字コードの和を使う)。
+  static bool homegrownFromId(String id) =>
+      id.codeUnits.fold<int>(0, (a, c) => a + c) % 5 < 3;
+
   /// 背番号。ユースから一軍へ昇格したとき、または移籍で加入したときに
   /// 割り当てる。旧セーブ・ユース在籍中は null。
   int? squadNumber;
@@ -1308,6 +1319,7 @@ class Player {
     this.youthMatchGoals = 0,
     this.squadNumber,
     this.academyGraduate = false,
+    this.homegrown = false,
     this.lastYouthMatchRating = 0,
     this.mentorId,
     this.drillAttributeKey,
@@ -1560,6 +1572,7 @@ class Player {
     put('mentorId', mentorId, null);
     put('squadNumber', squadNumber, null);
     put('academyGraduate', academyGraduate, false);
+    json['homegrown'] = homegrown;
     put('drillAttributeKey', drillAttributeKey, null);
     put('drillAttributeKey2', drillAttributeKey2, null);
     put('traitTrainingTarget', traitTrainingTarget?.name, null);
@@ -1691,6 +1704,8 @@ class Player {
       youthMatchGoals: json['youthMatchGoals'] as int? ?? 0,
       squadNumber: json['squadNumber'] as int?,
       academyGraduate: json['academyGraduate'] as bool? ?? false,
+      homegrown: json['homegrown'] as bool? ??
+          Player.homegrownFromId(json['id'] as String? ?? ''),
       lastYouthMatchRating:
           (json['lastYouthMatchRating'] as num?)?.toDouble() ?? 0,
       mentorId: json['mentorId'] as String?,

@@ -883,6 +883,7 @@ extension GameStateSeason on GameState {
         tier2Teams: lowerOrder,
         tier1PlayedOrder: upperOrder,
         tier2PlayedOrder: lowerOrder,
+        rules: currentLeagueTheme.rulesBelow(upperTier),
       );
       final upperIds = upperOrder.map((t) => t.id).toSet();
       final lowerIds = lowerOrder.map((t) => t.id).toSet();
@@ -896,18 +897,55 @@ extension GameStateSeason on GameState {
       incomingTeams[upperTier]!.addAll(promoted);
       incomingTeams[lowerTier]!.addAll(relegated);
 
-      if (lowerTier == playedTier) {
+      // 自クラブが出た試合(昇格プレーオフか入れ替え戦)があれば、それを見せる。
+      // 無ければ、下の部として戦った側のプレーオフを見せる。
+      final userId = _save!.userTeamId;
+      if (result.promotionPlayoff
+          .any((m) => m.homeId == userId || m.awayId == userId)) {
+        relevantPlayoffMatches = result.promotionPlayoff;
+      } else if (lowerTier == playedTier &&
+          !relevantPlayoffMatches
+              .any((m) => m.homeId == userId || m.awayId == userId)) {
         relevantPlayoffMatches = result.promotionPlayoff;
       }
     }
 
-    final newTeamsByTier = <int, List<Team>>{
+    final mergedByTier = <int, List<Team>>{
       for (int tier = 1; tier <= totalDivisionTiers; tier++)
         tier: [
           ...tierOrder[tier]!.where((t) => !outgoingIds[tier]!.contains(t.id)),
           ...incomingTeams[tier]!,
         ],
     };
+    // 国ごとの部の大きさに合わせる(旧セーブは全部20クラブだったので、
+    // 次のシーズンからこの形になる)。
+    final theme = currentLeagueTheme;
+    final resizeRng = Random();
+    // 新しく作るクラブの名前は、いまあるクラブと重ならないものから取る。
+    final usedNames = {
+      for (final teams in mergedByTier.values)
+        for (final t in teams) t.name,
+    };
+    final newClubNames = NamePool.themedClubNames(theme, 300)
+        .where((n) => !usedNames.contains(n))
+        .toList();
+    var nameCursor = 0;
+    final newTeamsByTier = PromotionEngine.resize(
+      mergedByTier,
+      theme.teamsByTier,
+      protectedId: _save!.userTeamId,
+      create: (tier, i) {
+        final t = PlayerGenerator.generateSquad(
+          id: 's${league.season + 1}_div${tier}_$i',
+          name: newClubNames[nameCursor++ % newClubNames.length],
+          strengthTier: (40 + (totalDivisionTiers - tier) * 10 +
+                  resizeRng.nextInt(35))
+              .clamp(20, 99),
+        );
+        LineupUtils.autoFill(t);
+        return t;
+      },
+    );
 
     var newTier = playedTier;
     for (final entry in newTeamsByTier.entries) {

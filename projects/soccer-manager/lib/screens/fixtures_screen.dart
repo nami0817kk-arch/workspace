@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../logic/promotion_engine.dart';
 import '../models/league.dart';
+import '../models/league_theme.dart';
 import '../models/match_result.dart';
 import '../models/team.dart';
 import '../services/feedback_service.dart';
@@ -349,9 +349,15 @@ class _StandingsTab extends StatelessWidget {
     final showContinental = divisionTier == 1;
     final showPromotion = divisionTier > 1;
     final showRelegation = divisionTier < totalDivisionTiers;
-    final relegationStart = rows.length - PromotionEngine.swapCount;
-    const autoPromotionEnd = PromotionEngine.automaticPromotionCount;
-    const playoffEnd = autoPromotionEnd + PromotionEngine.playoffPoolSize;
+    // 入れ替えの数は国ごとに違う(ドイツ・フランス風は入れ替え戦がある)。
+    final theme = context.read<GameState>().currentLeagueTheme;
+    final below = theme.rulesBelow(divisionTier);
+    final above = theme.rulesBelow(divisionTier - 1);
+    final relegationStart = rows.length - below.relegationZone;
+    final autoPromotionEnd = above.autoUp;
+    final playoffEnd = autoPromotionEnd +
+        (above.playoffPool > 0 ? above.playoffPool : 0) +
+        (above.relegationPlayoff ? 1 : 0);
     return Column(
       children: [
         Padding(
@@ -371,7 +377,9 @@ class _StandingsTab extends StatelessWidget {
                 ),
                 _ZoneLegend(
                   color: Colors.deepPurple.shade300,
-                  label: Tr.pick('昇格プレーオフ圏', 'Promotion play-offs'),
+                  label: above.relegationPlayoff
+                      ? Tr.pick('入れ替え戦圏', 'Relegation play-off')
+                      : Tr.pick('昇格プレーオフ圏', 'Promotion play-offs'),
                 ),
               ],
               if (showRelegation)
@@ -379,6 +387,14 @@ class _StandingsTab extends StatelessWidget {
                   color: SemanticColors.negative(context),
                   label: Tr.pick('降格圏', 'Relegation'),
                 ),
+              Text(
+                [
+                  if (showPromotion) theme.describeRules(divisionTier - 1),
+                  if (showRelegation) theme.describeRules(divisionTier),
+                ].join(' '),
+                style: TextStyle(
+                    fontSize: 11, color: SemanticColors.subtleText(context)),
+              ),
             ],
           ),
         ),

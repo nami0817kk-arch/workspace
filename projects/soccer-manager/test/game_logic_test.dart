@@ -1520,7 +1520,9 @@ void main() {
     final gameState = GameState();
     await gameState.startNewGame('テストFC', theme: LeagueTheme.spain);
 
-    expect(gameState.save!.league.teams.length, teamsPerLeague);
+    // 部のクラブ数は国ごと(スペイン風の5部は18)。
+    expect(gameState.save!.league.teams.length,
+        LeagueTheme.spain.teamsInTier(gameState.currentDivisionTier));
     expect(gameState.save!.leagueName, LeagueTheme.spain.label);
   });
 
@@ -3430,7 +3432,8 @@ void main() {
     expect(gameState.currentDivisionTier, 2);
     expect(gameState.lastDivisionChangeMessage, contains('降格'));
     expect(() => gameState.userTeam, returnsNormally);
-    expect(gameState.save!.league.teams.length, teamsPerLeague);
+    expect(gameState.save!.league.teams.length,
+        gameState.currentLeagueTheme.teamsInTier(2));
     expect(gameState.save!.otherDivisionLeagues[1], isNull);
     expect(
         gameState.save!.otherDivisionLeagues[0]!.teams.length, teamsPerLeague);
@@ -3560,8 +3563,13 @@ void main() {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
     final league = gameState.save!.league;
+    // 折り返しの節(クラブ数で変わる。24クラブなら46節の23節目)。
+    final half = league.fixtures
+            .map((f) => f.matchday)
+            .reduce((a, c) => a > c ? a : c) ~/
+        2;
     for (final f in league.fixtures) {
-      if (f.matchday < 19) {
+      if (f.matchday < half) {
         f.result ??= MatchResult(
           matchday: f.matchday,
           homeTeamId: f.homeTeamId,
