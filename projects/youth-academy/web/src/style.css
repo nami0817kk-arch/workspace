@@ -89,8 +89,8 @@ button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:poin
 
 /* 試合中 */
 .play{flex:1;min-height:0;display:flex;flex-direction:column;gap:2px}
-.topbar{display:flex;align-items:center;gap:6px;height:32px}
-.topbar .btn.sm{min-height:30px!important;padding-top:2px;padding-bottom:2px}
+.topbar{display:flex;align-items:center;gap:6px;height:38px}
+.topbar .btn.sm{min-height:34px!important;padding-top:2px;padding-bottom:2px}
 .scoreboard{display:flex;align-items:center;gap:8px;background:var(--navy);color:#fff;border-radius:10px;padding:2px 12px;box-shadow:var(--shadow-s);height:30px}
 .scoreboard .tn{font-weight:800;font-size:11px;max-width:96px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .scoreboard .sc{font-weight:900;font-size:22px;letter-spacing:1px;color:var(--yellow);font-variant-numeric:tabular-nums}
@@ -110,8 +110,8 @@ button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:poin
 .banner.opp .big{-webkit-text-stroke:2px #b02020;text-shadow:0 3px 0 #7a1010,0 6px 14px rgba(0,0,0,.45)}
 .banner .small{display:inline-block;margin-top:2px;background:rgba(20,40,75,.9);color:#fff;font-weight:800;border-radius:9px;padding:3px 12px;font-size:13px}
 .ctl{position:absolute;right:8px;top:8px;display:flex;flex-direction:column;gap:5px;align-items:flex-end}
-.speeds{display:flex;gap:2px;background:var(--navy);padding:2px;border-radius:9px}
-.speeds button{color:#c9d6f0;font-weight:800;font-size:11.5px;padding:0 9px;min-height:26px;border-radius:7px}
+.speeds{display:flex;gap:4px;background:var(--navy);padding:2px;border-radius:9px}
+.speeds button{color:#c9d6f0;font-weight:800;font-size:11.5px;padding:0 8px;min-height:34px;min-width:34px;border-radius:7px;white-space:nowrap}
 .speeds button.on{background:var(--yellow);color:#3b2d00}
 .comm{height:28px;background:#fff;border-radius:10px;box-shadow:var(--shadow-s);border:1px solid var(--line);display:flex;align-items:center;padding:0 12px;gap:8px;font-weight:700;font-size:13px;color:var(--navy);overflow:hidden}
 .comm .min{background:var(--navy);color:#fff;border-radius:6px;padding:1px 6px;font-size:11px;font-variant-numeric:tabular-nums}

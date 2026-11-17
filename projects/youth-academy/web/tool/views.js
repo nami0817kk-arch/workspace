@@ -260,7 +260,7 @@ async function clearEvents() {
   ok(A.w.phase === 'match', '出来事のあとは試合 ' + A.w.phase);
   ok(txt().includes('試合へ'), '試合へのボタン');
   btn('試合へ（').click();
-  ok(txt().includes('キックオフ') && txt().includes('vs') && txt().includes('全シミュレーション'), '今週の試合の前の画面');
+  ok(txt().includes('キックオフ') && txt().includes('vs') && txt().includes('結果まで'), '今週の試合の前の画面');
   for (const k of ['戦い方', '選手と役割', '相手の分析']) {
     btn(k).click();
     await sleep(10);
@@ -330,12 +330,26 @@ async function clearEvents() {
   fkSel.value = fkSel.options[2].value;
   fkSel.dispatchEvent(new w.Event('change', { bubbles: true }));
   ok(A.w.tactic.fk === fkSel.options[2].value, 'キッカーの指定が保存される');
+  // 布陣は「布陣：」のボタンから一覧で選ぶ。変えたら「元に戻す」で1回戻せる（2026-11-17）
   for (const f of ['4-4-2', '3-5-2', '4-2-3-1', '5-3-2', '4-3-3']) {
-    btn(f).click();
+    btn('布陣：').click();
+    btn(f, d.querySelector('.sheet')).click();
     ok(d.querySelectorAll('.board svg g').length >= 11, '形を変えても11人 ' + f);
   }
-  btn('保存', d.querySelector('.fm-row:last-child')).click();
-  btn('呼出').click();
+  ok(!!btn('元に戻す'), '布陣を変えたあとは「元に戻す」が押せる');
+  btn('元に戻す').click();
+  ok(!btn('元に戻す'), '元に戻すは1回だけ');
+  // 型：空の型は呼び出せない（理由つき）、保存→呼び出し、上書きは確かめる
+  btn('型').click();
+  const loads = [...d.querySelectorAll('.sheet button')].filter((b) => b.textContent === '呼び出す');
+  ok(loads.length === 3 && loads.every((b) => b.disabled && b.dataset.why), '空の型の「呼び出す」は押せず、理由がある');
+  btn('ここに保存', d.querySelector('.sheet')).click();
+  btn('型').click();
+  btn('呼び出す', d.querySelector('.sheet')).click();
+  btn('型').click();
+  btn('ここに保存', d.querySelector('.sheet')).click();
+  ok(txt().includes('上書きしますか'), '保存してある型への保存は上書きを確かめる');
+  btn('やめる', d.querySelector('.sheet')).click();
 
   // 試合中
   btn('キックオフ').click();
@@ -363,6 +377,8 @@ async function clearEvents() {
   btn('再開', d.querySelector('.sheet')).click();
   ok(!d.querySelector('.sheet'), '再開でパネルが閉じる');
   btn('結果まで').click();
+  ok(txt().includes('結果まで進めますか'), '結果までは確かめてから進む');
+  btn('結果まで進める').click();
   ok(txt().includes('見どころ') && txt().includes('気づき') && txt().includes('採点'), '試合後の画面');
   ok(A.w.phase === 'after' && A.w.rec.w + A.w.rec.d + A.w.rec.l === 1, '試合の結果が名簿の世界に入る');
   btn('ホームへ（次の週へ）').click();

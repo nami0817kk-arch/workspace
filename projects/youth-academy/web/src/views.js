@@ -272,8 +272,8 @@
       h('button', { class: 'btn sm', onclick: () => { YA.autoPlan(w); YA.saveWorld(); rerender(); } }, 'おまかせ'),
       h('button', { class: 'btn sm', onclick: () => { for (const p of Object.values(w.players)) if (p.fat > 60 && p.inj <= 0) p.rest = 'rest'; YA.saveWorld(); rerender(); } }, '疲れた子を休ます'),
       h('button', { class: 'btn sm', onclick: () => { for (const p of Object.values(w.players)) p.rest = null; YA.saveWorld(); rerender(); } }, '休み解除'),
-      ...[0, 1, 2].map((i) => h('button', { class: 'btn sm', title: '長押しではなく、保存→呼出', onclick: () => { if (w.menuSlots && w.menuSlots[i]) { YA.loadMenuSlot(w, i); YA.saveWorld(); rerender(); } } }, '型' + (i + 1) + (w.menuSlots && w.menuSlots[i] ? '●' : ''))),
-      h('button', { class: 'btn sm', onclick: () => confirmSlot(w) }, '保存'),
+      // 型は試合と同じ形：型を選んで「呼び出す／ここに保存」。空の型は押せない＋理由、上書きは確かめる（2026-11-17）
+      h('button', { class: 'btn sm', onclick: () => YA.slotModal({ title: '1週間のメニューの型', filled: [0, 1, 2].map((i) => !!(w.menuSlots && w.menuSlots[i])), onLoad: (i) => { YA.loadMenuSlot(w, i); YA.saveWorld(); rerender(); }, onSave: (i) => { YA.saveMenuSlot(w, i); YA.saveWorld(); rerender(); } }) }, '型' + (w.menuSlots && w.menuSlots.some(Boolean) ? '（' + w.menuSlots.filter(Boolean).length + '）' : '') + ' ▾'),
     );
     // まとめて設定：対象（全員・A・B・学年・ポジション）を選び、重点の方針や今週の強さをまとめて決める
     const inTarget = (p) => ui.tf === 'all' || p.team === ui.tf || String(p.grade) === ui.tf || p.pos === ui.tf;
@@ -318,9 +318,6 @@
     const row2 = flat(h('div', { class: 'card', style: strip + ';padding:3px 6px', title: bulk2.title || '' }, ...r2a.children, h('span', { style: 'width:10px;flex:none' }), ...r2b.children));
     wrap.append(row1, row2, table);
     main.append(wrap);
-  }
-  function confirmSlot(w) {
-    modal((close) => h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(420px,95%);padding:12px;gap:8px' }, h('div', { class: 'h' }, 'いまの1週間のメニューを、どの型に保存しますか'), h('div', { class: 'row' }, ...[0, 1, 2].map((i) => h('button', { class: 'btn', onclick: () => { YA.saveMenuSlot(w, i); YA.saveWorld(); close(); rerender(); } }, '型' + (i + 1) + (w.menuSlots && w.menuSlots[i] ? '（上書き）' : '')))), h('button', { class: 'btn', onclick: close }, 'やめる')));
   }
   function pickMenu(i) {
     const w = W();
