@@ -29,6 +29,7 @@ import '../widgets/responsive_body.dart';
 import 'player_detail_screen.dart';
 import '../l10n/tr.dart';
 import '../widgets/screen_bar.dart';
+import '../logic/economy_scale.dart';
 
 class FinanceScreen extends StatelessWidget {
   const FinanceScreen({super.key, this.embedded = false});
@@ -42,7 +43,10 @@ class FinanceScreen extends StatelessWidget {
     final save = gameState.save!;
     final team = gameState.userTeam;
     final income = gameState.weeklyIncomeFor(team.id);
-    final wageBill = gameState.weeklyWageBill;
+    // 毎節払う人件費(年俸を節の数で割った額)。給与の枠は週俸の合計で見る。
+    final wageBill =
+        gameState.matchdayPlayerWageCost + gameState.matchdayStaffWageCost;
+    final weeklyBill = gameState.weeklyWageBill;
     final loanRepayment = gameState.bankLoans.fold<int>(
       0,
       (s, l) => s + l.weeklyRepayment,
@@ -86,17 +90,17 @@ class FinanceScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            Tr.pick('資金: ${save.budget}万円', 'Funds: ${save.budget}'),
+                            Tr.pick('資金: ${formatMoney(save.budget)}', 'Funds: ${formatMoney(save.budget)}'),
                             style: Theme.of(context).textTheme.titleLarge,
                           ),
                           const SizedBox(height: 8),
-                          Text(Tr.pick('週間収入: +$income万円（観客動員・スポンサー・グッズ収入込み）',
-                              'Weekly income: +$income (gate receipts, sponsorship and merchandise)')),
-                          Text(Tr.pick('週間人件費: -$wageBill万円（スタッフ週俸込み）',
-                              'Weekly wages: -$wageBill (including staff)')),
+                          Text(Tr.pick('週間収入: +${formatMoney(income)}（観客動員・スポンサー・グッズ・放映権込み）',
+                              'Weekly income: +${formatMoney(income)} (gate, sponsorship, merchandise and broadcasting)')),
+                          Text(Tr.pick('週間人件費: -${formatMoney(wageBill)}（年俸を節の数で割った額・スタッフ込み）',
+                              'Weekly wages: -${formatMoney(wageBill)} (annual salaries spread over the matchdays, staff included)')),
                           if (loanRepayment > 0)
-                            Text(Tr.pick('週間融資返済: -$loanRepayment万円',
-                                'Weekly loan repayment: -$loanRepayment')),
+                            Text(Tr.pick('週間融資返済: -${formatMoney(loanRepayment)}',
+                                'Weekly loan repayment: -${formatMoney(loanRepayment)}')),
                           const SizedBox(height: 8),
                           _CashFlowBar(
                             income: income,
@@ -104,8 +108,8 @@ class FinanceScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            Tr.pick('週間収支: ${net >= 0 ? '+' : ''}$net万円',
-                                "Weekly balance: ${net >= 0 ? '+' : ''}$net"),
+                            Tr.pick('週間収支: ${net >= 0 ? '+' : ''}${formatMoney(net)}',
+                                "Weekly balance: ${net >= 0 ? '+' : ''}${formatMoney(net)}"),
                             style: TextStyle(
                               color: net >= 0
                                   ? SemanticColors.positive(context)
@@ -119,15 +123,15 @@ class FinanceScreen extends StatelessWidget {
                           Builder(builder: (context) {
                             final cap = gameState.wageBudgetCap;
                             final usage =
-                                cap > 0 ? (wageBill / cap).clamp(0.0, 1.0) : 0.0;
-                            final over = wageBill > cap;
+                                cap > 0 ? (weeklyBill / cap).clamp(0.0, 1.0) : 0.0;
+                            final over = weeklyBill > cap;
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   Tr.pick(
-                                      '週給予算(理事会設定): $wageBill / $cap万円${over ? '(超過中: 新規獲得は不可)' : ''}',
-                                      "Wage budget set by the board: $wageBill / $cap${over ? ' (over budget: no new signings)' : ''}"),
+                                      '給与予算(理事会設定・年額): ${formatMoney(annualFromWeekly(weeklyBill))} / ${formatMoney(annualFromWeekly(cap))}${over ? '(超過中: 新規獲得は不可)' : ''}',
+                                      "Wage budget set by the board (a year): ${formatMoney(annualFromWeekly(weeklyBill))} / ${formatMoney(annualFromWeekly(cap))}${over ? ' (over budget: no new signings)' : ''}"),
                                   style: TextStyle(
                                     fontSize: 13,
                                     fontWeight: FontWeight.bold,
@@ -182,8 +186,8 @@ class FinanceScreen extends StatelessWidget {
                           title: Text(inst.description),
                           subtitle: Text(Tr.pick('残り${inst.weeksRemaining}週',
                               '${Tr.plural(inst.weeksRemaining, 'week')} left')),
-                          trailing: Text(Tr.pick('-${inst.weeklyAmount}万円/週',
-                              '-${inst.weeklyAmount} per week')),
+                          trailing: Text(Tr.pick('-${formatMoney(inst.weeklyAmount)}/週',
+                              '-${formatMoney(inst.weeklyAmount)} per week')),
                         ),
                       ),
                   ],
@@ -199,8 +203,8 @@ class FinanceScreen extends StatelessWidget {
                           onTap: () => _openPlayer(context, p.id),
                           title: Text(p.name),
                           subtitle: Text(Tr.pick(
-                              '${p.position.label} / 週俸 ${p.wage}万円',
-                              '${p.position.label} / wage ${p.wage}')),
+                              '${p.position.label} / 年俸 ${formatMoney(annualFromWeekly(p.wage))}',
+                              '${p.position.label} / salary ${formatMoney(annualFromWeekly(p.wage))}')),
                           trailing: Text(Tr.pick('残り${p.loanWeeksRemaining}週',
                               '${Tr.plural(p.loanWeeksRemaining, 'week')} left')),
                         ),
@@ -238,7 +242,7 @@ class FinanceScreen extends StatelessWidget {
                           SizedBox(
                             width: 56,
                             child: Text(
-                                Tr.pick('${p.wage}万円', '${p.wage}'),
+                                formatMoney(annualFromWeekly(p.wage)),
                                 textAlign: TextAlign.right,
                                 style: const TextStyle(fontSize: 12)),
                           ),
@@ -382,7 +386,7 @@ class _SponsorSection extends StatelessWidget {
           subtitle: Text(ContractEngine.yearsShortLabel(deal.yearsRemaining)),
           trailing: Text(
             Tr.pick(
-                '+${deal.weeklyIncome}万円/週', '+${deal.weeklyIncome} per week'),
+                '+${formatMoney(deal.weeklyIncome)}/週', '+${formatMoney(deal.weeklyIncome)} per week'),
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
@@ -425,8 +429,8 @@ class _SponsorSection extends StatelessWidget {
               ),
               trailing: FilledButton(
                 onPressed: () => _choose(context, i),
-                child: Text(Tr.pick('+${offers[i].weeklyIncome}万円/週',
-                    '+${offers[i].weeklyIncome} per week')),
+                child: Text(Tr.pick('+${formatMoney(offers[i].weeklyIncome)}/週',
+                    '+${formatMoney(offers[i].weeklyIncome)} per week')),
               ),
             ),
           ),
@@ -479,7 +483,7 @@ class _LoanSection extends StatelessWidget {
                       child: Row(
                         children: [
                           Expanded(
-                              child: Text(Tr.pick('${loan.principal}万円', '${loan.principal}'),
+                              child: Text(formatMoney(loan.principal),
                                   style: const TextStyle(fontSize: 13))),
                           _LoanCell('${loan.weeksRemaining}'),
                           _LoanCell('${loan.totalRemaining}'),
@@ -499,7 +503,7 @@ class _LoanSection extends StatelessWidget {
               ListTile(
                 leading: const Icon(Icons.savings_outlined),
                 title: Text(Tr.pick(
-                    '借入可能額: $maxAmount万円', 'You can borrow up to $maxAmount')),
+                    '借入可能額: ${formatMoney(maxAmount)}', 'You can borrow up to ${formatMoney(maxAmount)}')),
                 subtitle: Text(Tr.pick('スタジアムの規模・オーナーの評判が高いほど上限が上がる',
                     'A bigger stadium and a better reputation raise the ceiling')),
               ),
@@ -574,7 +578,7 @@ class _LoanRequestSheetState extends State<_LoanRequestSheet> {
                 style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 4),
             Text(
-              Tr.pick('借入可能額: $maxAmount万円', 'You can borrow up to $maxAmount'),
+              Tr.pick('借入可能額: ${formatMoney(maxAmount)}', 'You can borrow up to ${formatMoney(maxAmount)}'),
               style: TextStyle(
                   color: SemanticColors.subtleText(context), fontSize: 12),
             ),
@@ -603,8 +607,8 @@ class _LoanRequestSheetState extends State<_LoanRequestSheet> {
                   amount <= 0
                       ? Tr.pick('借入額を入力してください', 'Enter an amount to borrow')
                       : Tr.pick(
-                          '週${LoanEngine.weeklyRepaymentFor(amount, term)}万円 × ${term.weeks}週 = 返済総額${LoanEngine.totalRepaymentFor(amount, term)}万円',
-                          '${LoanEngine.weeklyRepaymentFor(amount, term)} a week x ${Tr.plural(term.weeks, 'week')} = ${LoanEngine.totalRepaymentFor(amount, term)} repaid in total'),
+                          '週${formatMoney(LoanEngine.weeklyRepaymentFor(amount, term))} × ${term.weeks}週 = 返済総額${formatMoney(LoanEngine.totalRepaymentFor(amount, term))}',
+                          '${formatMoney(LoanEngine.weeklyRepaymentFor(amount, term))} a week x ${Tr.plural(term.weeks, 'week')} = ${formatMoney(LoanEngine.totalRepaymentFor(amount, term))} repaid in total'),
                 ),
                 enabled: amount > 0,
                 onTap:
@@ -627,7 +631,7 @@ class _LoanRequestSheetState extends State<_LoanRequestSheet> {
     messenger.showSnackBar(
       SnackBar(
           content: Text(ok
-              ? Tr.pick('$amount万円を借り入れました', 'You borrowed $amount')
+              ? Tr.pick('${formatMoney(amount)}を借り入れました', 'You borrowed ${formatMoney(amount)}')
               : Tr.pick('融資を申し込めませんでした', 'The loan was not approved'))),
     );
   }
@@ -651,16 +655,16 @@ class _InvestmentSection extends StatelessWidget {
             margin: const EdgeInsets.only(bottom: 6),
             child: ListTile(
               leading: const Icon(Icons.savings),
-              title: Text(Tr.pick('預入元本 ${deposit.principal}万円',
-                  'Principal ${deposit.principal}')),
+              title: Text(Tr.pick('預入元本 ${formatMoney(deposit.principal)}',
+                  'Principal ${formatMoney(deposit.principal)}')),
               subtitle: Text(
                 Tr.pick(
-                    '残り${deposit.weeksRemaining}週 / 満期時+${deposit.interestEarned}万円',
-                    '${Tr.plural(deposit.weeksRemaining, 'week')} left / +${deposit.interestEarned} at maturity'),
+                    '残り${deposit.weeksRemaining}週 / 満期時+${formatMoney(deposit.interestEarned)}',
+                    '${Tr.plural(deposit.weeksRemaining, 'week')} left / +${formatMoney(deposit.interestEarned)} at maturity'),
               ),
               trailing: Text(
-                Tr.pick('満期${deposit.maturityValue}万円',
-                    'Matures at ${deposit.maturityValue}'),
+                Tr.pick('満期${formatMoney(deposit.maturityValue)}',
+                    'Matures at ${formatMoney(deposit.maturityValue)}'),
                 style: TextStyle(color: SemanticColors.positive(context)),
               ),
             ),
@@ -669,7 +673,7 @@ class _InvestmentSection extends StatelessWidget {
           child: ListTile(
             leading: const Icon(Icons.account_balance_outlined),
             title: Text(Tr.pick(
-                '運用可能な資金: $available万円', 'Available to invest: $available')),
+                '運用可能な資金: ${formatMoney(available)}', 'Available to invest: ${formatMoney(available)}')),
             subtitle: Text(Tr.pick('満期まで引き出せない代わりに、満期時にまとまった利息を受け取れる',
                 'Locked away until it matures, and pays a lump of interest when it does')),
             trailing: FilledButton(
@@ -740,7 +744,7 @@ class _DepositRequestSheetState extends State<_DepositRequestSheet> {
             const SizedBox(height: 4),
             Text(
               Tr.pick(
-                  '運用可能な資金: $maxAmount万円', 'Available to invest: $maxAmount'),
+                  '運用可能な資金: ${formatMoney(maxAmount)}', 'Available to invest: ${formatMoney(maxAmount)}'),
               style: TextStyle(
                   color: SemanticColors.subtleText(context), fontSize: 12),
             ),
@@ -769,8 +773,8 @@ class _DepositRequestSheetState extends State<_DepositRequestSheet> {
                   amount <= 0
                       ? Tr.pick('預入額を入力してください', 'Enter an amount to deposit')
                       : Tr.pick(
-                          '満期時 ${InvestmentEngine.maturityValueFor(amount, term)}万円(利息+${InvestmentEngine.interestFor(amount, term)}万円)',
-                          'Matures at ${InvestmentEngine.maturityValueFor(amount, term)} (interest +${InvestmentEngine.interestFor(amount, term)})'),
+                          '満期時 ${formatMoney(InvestmentEngine.maturityValueFor(amount, term))}(利息+${formatMoney(InvestmentEngine.interestFor(amount, term))})',
+                          'Matures at ${formatMoney(InvestmentEngine.maturityValueFor(amount, term))} (interest +${formatMoney(InvestmentEngine.interestFor(amount, term))})'),
                 ),
                 enabled: amount > 0,
                 onTap:
@@ -794,7 +798,7 @@ class _DepositRequestSheetState extends State<_DepositRequestSheet> {
     messenger.showSnackBar(
       SnackBar(
           content: Text(ok
-              ? Tr.pick('$amount万円を預け入れました', 'You deposited $amount')
+              ? Tr.pick('${formatMoney(amount)}を預け入れました', 'You deposited ${formatMoney(amount)}')
               : Tr.pick('定期預金を組めませんでした', 'The deposit could not be opened'))),
     );
   }

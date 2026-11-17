@@ -49,8 +49,8 @@ extension GameStateSquad on GameState {
     if (_save == null) return 0;
     final amount = purchasedFundsAmount(pack);
     _book(LedgerCategory.other, amount);
-    _logNews(Tr.pick('${pack.label}で$amount万円をクラブ資金に追加した。',
-        'You added $amount to the club budget from a ${pack.label}.'));
+    _logNews(Tr.pick('${pack.label}で${formatMoney(amount)}をクラブ資金に追加した。',
+        'You added ${formatMoney(amount)} to the club budget from a ${pack.label}.'));
     _notify();
     _persist();
     return amount;
@@ -214,7 +214,7 @@ extension GameStateSquad on GameState {
   int facilityUpgradeCostFor(FacilityType type) {
     if (_save == null) return 0;
     final lvl = _save!.infrastructure.facilityLevel(type);
-    return (ClubInfrastructure.facilityUpgradeCost(lvl) *
+    return (scaledMoney(ClubInfrastructure.facilityUpgradeCost(lvl)) *
             BudgetEngine.facilityCostMultiplier(_save!.budgetPlan) *
             PolicyEngine.facilityCostMultiplier(_save!.clubPolicy) *
             AdvisorEngine.facilityCostMultiplier(
@@ -232,11 +232,12 @@ extension GameStateSquad on GameState {
     if (idx < 0) return false;
     final hired = _save!.staffCandidates[idx];
     final previous = _save!.infrastructure.staffFor(hired.role);
-    final severance = previous?.severance ?? 0;
+    final severance = scaledMoney(previous?.severance ?? 0);
 
     // 週俸の総額が給与予算を食い潰さないよう、選手と同じ枠で見る。
     // 入れ替えなら前任者の週俸は出ていかなくなるので、差額で見る。
-    if (!_wageBudgetAllowsSigning(hired.wage - (previous?.wage ?? 0))) {
+    if (!_wageBudgetAllowsSigning(
+        scaledMoney(hired.wage - (previous?.wage ?? 0)))) {
       return false;
     }
 
@@ -269,7 +270,7 @@ extension GameStateSquad on GameState {
     final current = _save!.infrastructure.staffFor(role);
     if (current == null) return false;
     _save!.infrastructure.staff[role] = null;
-    final severance = current.severance;
+    final severance = scaledMoney(current.severance);
     if (severance > 0) _book(LedgerCategory.staffWages, -severance);
     _logNews(
       Tr.pick('${current.name}が${role.label}を退任しました。',
@@ -448,9 +449,10 @@ extension GameStateSquad on GameState {
   /// 費用が払えなければ実施できない。見送る(none)ことはいつでもできる。
   Future<bool> choosePreseasonCamp(PreseasonCamp camp) async {
     if (_save == null || !_save!.preseasonCampPending) return false;
-    if (_save!.budget < camp.cost) return false;
+    final campCost = scaledMoney(camp.cost);
+    if (_save!.budget < campCost) return false;
 
-    _book(LedgerCategory.facilities, -(camp.cost));
+    _book(LedgerCategory.facilities, -campCost);
     _save!.preseasonCampPending = false;
 
     final team = userTeam;

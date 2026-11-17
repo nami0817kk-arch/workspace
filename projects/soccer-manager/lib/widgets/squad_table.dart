@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../l10n/tr.dart';
 import '../models/player.dart';
 import 'player_stat_chips.dart';
+import '../logic/economy_scale.dart';
 
 /// 選手の一覧を、情報の密な表で見せる(Football Manager の選手画面に寄せる)。
 ///
@@ -49,7 +50,7 @@ class SquadTable extends StatelessWidget {
               head(Tr.pick('総合', 'OVR'), width: 34),
               head(Tr.pick('疲', 'Fat'), width: 28),
               head(Tr.pick('契約', 'Term'), width: 34),
-              head(Tr.pick('週俸', 'Wage'), width: 36),
+              head(Tr.pick('年俸', 'Salary'), width: 52),
             ],
           ),
         ),
@@ -128,9 +129,14 @@ class SquadTable extends StatelessWidget {
                       color: expiring ? Colors.orange : base)),
             ),
             SizedBox(
-              width: 36,
-              child: Text('${p.wage}',
-                  textAlign: TextAlign.right, style: small.copyWith(color: base)),
+              width: 52,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerRight,
+                child: Text(formatMoney(annualFromWeekly(p.wage)),
+                    textAlign: TextAlign.right,
+                    style: small.copyWith(color: base)),
+              ),
             ),
           ],
         ),

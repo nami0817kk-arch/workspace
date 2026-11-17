@@ -21,6 +21,7 @@ import 'player_detail_screen.dart';
 import '../l10n/tr.dart';
 import '../theme/semantic_colors.dart';
 import '../widgets/screen_bar.dart';
+import '../logic/economy_scale.dart';
 
 enum SquadSortOption {
   position,
@@ -41,7 +42,7 @@ extension on SquadSortOption {
         SquadSortOption.overall => Tr.pick('総合力', 'Overall'),
         SquadSortOption.age => Tr.pick('年齢(若い順)', 'Age (youngest)'),
         SquadSortOption.potential => Tr.pick('ポテンシャル', 'Potential'),
-        SquadSortOption.wage => Tr.pick('週俸', 'Wage'),
+        SquadSortOption.wage => Tr.pick('年俸', 'Salary'),
         SquadSortOption.fatigue => Tr.pick('疲労が大きい順', 'Most tired'),
         SquadSortOption.sharpness => Tr.pick('実戦感覚が低い順', 'Least sharp'),
         SquadSortOption.happiness => Tr.pick('不満が大きい順', 'Least happy'),
@@ -214,8 +215,8 @@ class _SquadScreenState extends State<SquadScreen> {
                 const SizedBox(height: 4),
                 Text(
                   Tr.pick(
-                      '週俸: ${p.wage}万円 / ${ContractEngine.yearsLabel(p.contractYearsRemaining)}',
-                      'Wage: ${p.wage} / ${ContractEngine.yearsLabel(p.contractYearsRemaining)}'),
+                      '年俸: ${formatMoney(annualFromWeekly(p.wage))} / ${ContractEngine.yearsLabel(p.contractYearsRemaining)}',
+                      'Salary: ${formatMoney(annualFromWeekly(p.wage))} / ${ContractEngine.yearsLabel(p.contractYearsRemaining)}'),
                 ),
                 const SizedBox(height: 12),
                 if (gameState.save!.budget < totalCost)
@@ -223,10 +224,10 @@ class _SquadScreenState extends State<SquadScreen> {
                     padding: const EdgeInsets.only(bottom: 8),
                     child: Text(
                       Tr.pick(
-                          '資金が${totalCost - gameState.save!.budget}万円足りません'
-                              '（必要$totalCost万円 / 手元${gameState.save!.budget}万円）。',
-                          'You are ${totalCost - gameState.save!.budget} short '
-                              '(need $totalCost, you have ${gameState.save!.budget}).'),
+                          '資金が${formatMoney(totalCost - gameState.save!.budget)}足りません'
+                              '（必要${formatMoney(totalCost)} / 手元${formatMoney(gameState.save!.budget)}）。',
+                          'You are ${formatMoney(totalCost - gameState.save!.budget)} short '
+                              '(need ${formatMoney(totalCost)}, you have ${formatMoney(gameState.save!.budget)}).'),
                       style: TextStyle(
                           fontSize: 12,
                           color: SemanticColors.negative(context)),
@@ -259,8 +260,8 @@ class _SquadScreenState extends State<SquadScreen> {
                           },
                     child: Text(
                       Tr.pick(
-                          '契約更新する（基本$renewalCost万円 + サインボーナス$signingBonus万円 / 新契約${ContractEngine.negotiatedYears(p)}年 / 新出場手当$newAppearanceFee万円）',
-                          'Renew (base $renewalCost + signing bonus $signingBonus / ${Tr.plural(ContractEngine.negotiatedYears(p), 'year')} / new appearance fee $newAppearanceFee)'),
+                          '契約更新する（基本${formatMoney(renewalCost)} + サインボーナス${formatMoney(signingBonus)} / 新契約${ContractEngine.negotiatedYears(p)}年 / 新出場手当${formatMoney(newAppearanceFee)}）',
+                          'Renew (base ${formatMoney(renewalCost)} + signing bonus ${formatMoney(signingBonus)} / ${Tr.plural(ContractEngine.negotiatedYears(p), 'year')} / new appearance fee ${formatMoney(newAppearanceFee)})'),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -277,7 +278,7 @@ class _SquadScreenState extends State<SquadScreen> {
                         ),
                       );
                     },
-                    child: Text(Tr.pick('週俸交渉・放出など詳しい操作を開く',
+                    child: Text(Tr.pick('年俸交渉・放出など詳しい操作を開く',
                         'Open wage talks, release and other actions')),
                   ),
                 ),
@@ -963,8 +964,8 @@ class _SquadSummaryCard extends StatelessWidget {
                   label: Tr.pick('平均年齢', 'Avg age'),
                   value: Tr.pick('$avgAge歳', '$avgAge')),
               _SummaryItem(
-                  label: Tr.pick('週俸', 'Wage'),
-                  value: Tr.pick('$wageBill万', '$wageBill')),
+                  label: Tr.pick('年俸の合計', 'Salaries'),
+                  value: formatMoney(annualFromWeekly(wageBill))),
               _SummaryItem(
                 label: Tr.pick('負傷', 'Injured'),
                 value: '$injured',

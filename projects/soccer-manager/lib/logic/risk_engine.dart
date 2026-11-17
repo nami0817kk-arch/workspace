@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import '../l10n/tr.dart';
-import 'sponsor_engine.dart';
+import 'economy_scale.dart';
 
 /// 突発の出来事の種類。
 enum IncidentKind {
@@ -59,8 +59,8 @@ class RiskEngine {
   /// 地域貢献の最大レベル。
   static const int maxCommunityLevel = 5;
 
-  /// 保険料(万円/季)。
-  static int premium(int tier) => (120 * sqrt(SponsorEngine.tierFactor(tier))).round();
+  /// 保険料(万円/季)。部の規模で大きくなる。
+  static int premium(int tier) => scaleMoneyForTier(tier, 120);
 
   /// 地域貢献を1段上げる費用。
   static int communityCost(int nextLevel) => 300 * nextLevel;
@@ -83,8 +83,7 @@ class RiskEngine {
             .floor()
             .clamp(0, IncidentKind.values.length - 1)];
     // 地域貢献が厚いと、不祥事の評判被害が小さい。
-    final scale = sqrt(SponsorEngine.tierFactor(tier));
-    final loss = ((200 + sizeRoll * 500) * scale).round();
+    final loss = ((200 + sizeRoll * 500) * moneyScale(tier)).round();
     final trust = kind == IncidentKind.scandal
         ? max(0, 6 - communityLevel)
         : (kind == IncidentKind.disaster ? 2 : 0);

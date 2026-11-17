@@ -1,4 +1,5 @@
 import '../l10n/tr.dart';
+import 'economy_scale.dart';
 
 /// 監督からオーナーへの週次報告。
 class ManagerReport {
@@ -34,8 +35,8 @@ class ManagerReportEngine {
       Tr.pick('$tier部 $teamCount チーム中 $rank 位', 'Tier $tier: $rank of $teamCount'),
       if (lastResult != null) Tr.pick('直近: $lastResult', 'Last: $lastResult'),
       Tr.pick(
-          '週の収支 ${weeklyNet >= 0 ? '+' : ''}$weeklyNet万円(資金 $budget万円)',
-          'Weekly ${weeklyNet >= 0 ? '+' : ''}$weeklyNet (funds $budget)'),
+          '週の収支 ${weeklyNet >= 0 ? '+' : ''}${formatMoney(weeklyNet)}(資金 ${formatMoney(budget)})',
+          'Weekly ${weeklyNet >= 0 ? '+' : ''}${formatMoney(weeklyNet)} (funds ${formatMoney(budget)})'),
     ];
 
     final String headline;

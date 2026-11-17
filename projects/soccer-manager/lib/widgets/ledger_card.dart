@@ -6,14 +6,14 @@ import '../logic/ledger_engine.dart';
 import '../models/ledger.dart';
 import '../state/game_state.dart';
 import '../theme/semantic_colors.dart';
+import '../logic/economy_scale.dart';
 
 /// 今季の収支(損益計算書)と、人件費率・資金の見通し、過去の損益。
 /// クラブ経営の画面に置く。
 class LedgerCard extends StatelessWidget {
   const LedgerCard({super.key});
 
-  static String _money(int v) =>
-      Tr.pick('${v >= 0 ? '+' : ''}$v万円', '${v >= 0 ? '+' : ''}$v');
+  static String _money(int v) => formatMoneySigned(v);
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +42,7 @@ class LedgerCard extends StatelessWidget {
       LedgerCategory.gate,
       LedgerCategory.sponsor,
       LedgerCategory.merchandise,
+      LedgerCategory.broadcast,
       LedgerCategory.prize,
       LedgerCategory.playerSales,
     ]);
@@ -150,7 +151,7 @@ class LedgerCard extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               Tr.pick(
-                  '営業収入(観客・スポンサー・グッズ・賞金)に対する、選手・スタッフの給与と出場手当の割合。${(LedgerEngine.wageRatioWarn * 100).round()}%を超えると注意です。',
+                  '営業収入(観客・スポンサー・グッズ・放映権・賞金)に対する、選手・スタッフの給与と出場手当の割合。${(LedgerEngine.wageRatioWarn * 100).round()}%を超えると注意です。',
                   'Wages and appearance fees as a share of operating income. Above ${(LedgerEngine.wageRatioWarn * 100).round()}% is a warning.'),
               style: const TextStyle(fontSize: 12),
             ),
@@ -193,10 +194,10 @@ class LedgerCard extends StatelessWidget {
                       Expanded(
                           child: Text(Tr.pick('第${l.season}季', 'S${l.season}'),
                               style: const TextStyle(fontSize: 12))),
-                      _Cell('${l.operatingIncome}'),
-                      _Cell('${l.wageCost}'),
+                      _Cell(formatMoney(l.operatingIncome)),
+                      _Cell(formatMoney(l.wageCost)),
                       _Cell(
-                        '${l.profit >= 0 ? '+' : ''}${l.profit}',
+                        formatMoneySigned(l.profit),
                         color: l.profit >= 0
                             ? SemanticColors.positive(context)
                             : SemanticColors.negative(context),

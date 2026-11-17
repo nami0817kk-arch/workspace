@@ -15,6 +15,7 @@ import 'screens/start_screen.dart';
 import 'widgets/fm_panel.dart';
 import 'widgets/landscape_scale.dart';
 import 'widgets/save_error_notifier.dart';
+import 'logic/economy_scale.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -324,8 +325,8 @@ class _DeliverPendingPurchasesState extends State<_DeliverPendingPurchases> {
             // 「アプリを落としている間に決済が通った」ぶん。黙って資金が
             // 増えていると、何が起きたのか分からない。
             messenger?.showSnackBar(SnackBar(
-              content: Text(Tr.pick('購入ぶんの$granted万円をクラブ資金に追加しました',
-                  'Added $granted to the club budget from your purchase')),
+              content: Text(Tr.pick('購入ぶんの${formatMoney(granted)}をクラブ資金に追加しました',
+                  'Added ${formatMoney(granted)} to the club budget from your purchase')),
             ));
           }
         } finally {

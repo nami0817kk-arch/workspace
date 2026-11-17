@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../l10n/tr.dart';
 import '../models/player.dart';
 import 'player_stat_chips.dart';
+import '../logic/economy_scale.dart';
 
 /// 補強の候補を、情報の密な表で見せる(FM の移籍検索に寄せる)。
 ///
@@ -72,7 +73,7 @@ class TransferTable extends StatelessWidget {
               h(Tr.pick('位置', 'Pos'), 40),
               h(Tr.pick('総合', 'OVR'), 34),
               if (showPot) h(Tr.pick('潜在', 'POT'), 30),
-              h(market ? Tr.pick('移籍金', 'Fee') : Tr.pick('週俸', 'Wage'), 46),
+              h(market ? Tr.pick('移籍金', 'Fee') : Tr.pick('年俸', 'Salary'), 52),
               const SizedBox(width: 56),
             ],
           ),
@@ -119,8 +120,10 @@ class TransferTable extends StatelessWidget {
           SizedBox(width: 34, child: Center(child: OverallBadge(overall: p.overall))),
           if (showPot) cell('${p.potential}', 30),
           cell(
-            market ? '${p.marketValue}' : '${p.wage}',
-            46,
+            market
+                ? formatMoney(p.marketValue)
+                : formatMoney(annualFromWeekly(p.wage)),
+            52,
             style: small.copyWith(
               color: affordable ? null : scheme.error,
               fontWeight: FontWeight.w600,

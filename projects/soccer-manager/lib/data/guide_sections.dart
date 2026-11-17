@@ -235,7 +235,7 @@ List<GuideSection> get guideSections => [
           GuideTopic(
             title: Tr.pick('ローン(期限付き移籍)', 'Loans'),
             description: Tr.pick(
-                '一定期間だけ選手を貸し出す/借り受ける制度。ローン中の週俸は貸出先が負担し、期間満了で自動的に元クラブへ復帰する。買取オプション付きなら期間中に完全移籍へ切り替えられる。',
+                '一定期間だけ選手を貸し出す/借り受ける制度。ローン中の年俸は貸出先が負担し、期間満了で自動的に元クラブへ復帰する。買取オプション付きなら期間中に完全移籍へ切り替えられる。',
                 'Sending a player elsewhere, or taking one in, for a fixed spell. The receiving club pays his wages, and he returns automatically when it ends. With an option to buy, it can be made permanent at any point.'),
           ),
           GuideTopic(
@@ -293,7 +293,7 @@ List<GuideSection> get guideSections => [
         icon: Icons.account_balance,
         title: Tr.pick('クラブ経営(ファイナンス)画面', 'Finances screen'),
         overview: Tr.pick(
-            'クラブの資金繰りを管理する画面。収入(観客動員・スポンサー)と支出(週俸・ローン返済)を見ながら、融資や投資の判断を行う。',
+            'クラブの資金繰りを管理する画面。収入(観客動員・スポンサー)と支出(年俸・ローン返済)を見ながら、融資や投資の判断を行う。',
             'Where you manage the money. Weigh what comes in from the gate and sponsors against wages and loan repayments, and decide whether to borrow or invest.'),
         topics: [
           GuideTopic(

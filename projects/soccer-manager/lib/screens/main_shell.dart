@@ -28,6 +28,7 @@ import 'squad_screen.dart';
 import 'transfer_screen.dart';
 import 'youth_screen.dart';
 import '../l10n/tr.dart';
+import '../logic/economy_scale.dart';
 
 /// 画面の行き先。横画面は左のメニューに全部を並べ(FM風)、縦画面は下の5タブにまとめる。
 ///
@@ -340,7 +341,7 @@ class _FmTopBar extends StatelessWidget {
               children: [
                 Text(Tr.pick('資金', 'Funds'), style: sub.copyWith(fontSize: 11)),
                 Text(
-                  Tr.pick('${save.budget}万円', '${save.budget}'),
+                  formatMoney(save.budget),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(

@@ -6,6 +6,7 @@ import '../state/game_state.dart';
 import '../theme/semantic_colors.dart';
 import '../widgets/player_face_avatar.dart';
 import '../l10n/tr.dart';
+import '../logic/economy_scale.dart';
 
 /// 自クラブの選手2名を選び、能力値を並べて比較する画面。
 class PlayerCompareScreen extends StatelessWidget {
@@ -83,9 +84,9 @@ class PlayerCompareScreen extends StatelessWidget {
             lowerIsBetter: true,
           ),
           _CompareRow(
-            label: Tr.pick('週俸(万円)', 'Wage'),
-            left: a.wage,
-            right: b.wage,
+            label: Tr.pick('年俸(万円)', 'Salary'),
+            left: annualFromWeekly(a.wage),
+            right: annualFromWeekly(b.wage),
             lowerIsBetter: true,
           ),
           _CompareRow(

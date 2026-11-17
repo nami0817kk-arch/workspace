@@ -22,6 +22,8 @@ import '../widgets/player_face_avatar.dart';
 import '../widgets/stat_bar.dart';
 import '../l10n/tr.dart';
 import '../widgets/player_stat_chips.dart';
+import '../logic/economy_scale.dart';
+import 'dart:math';
 
 class PlayerDetailScreen extends StatelessWidget {
   final String playerId;
@@ -362,14 +364,14 @@ class PlayerDetailScreen extends StatelessWidget {
               );
             },
           ),
-          Text(Tr.pick('市場価値: ${p.marketValue}万円', 'Value: ${p.marketValue}')),
+          Text(Tr.pick('市場価値: ${formatMoney(p.marketValue)}', 'Value: ${formatMoney(p.marketValue)}')),
           Builder(
             builder: (context) {
               final b = p.marketValueBreakdown;
               return Text(
                 Tr.pick(
-                    '内訳: 基礎${b.base.round()}万円 + 伸びしろ${b.potentialBonus.round()}万円 を年齢×${b.ageFactor.toStringAsFixed(2)} 性格×${b.personalityFactor.toStringAsFixed(2)} 統率力×${b.leadershipFactor.toStringAsFixed(2)}',
-                    'Breakdown: base ${b.base.round()} + potential ${b.potentialBonus.round()}, times age ${b.ageFactor.toStringAsFixed(2)}, personality ${b.personalityFactor.toStringAsFixed(2)}, leadership ${b.leadershipFactor.toStringAsFixed(2)}'),
+                    '内訳: 基礎${formatMoney(b.base.round())} + 伸びしろ${formatMoney(b.potentialBonus.round())} を年齢×${b.ageFactor.toStringAsFixed(2)} 性格×${b.personalityFactor.toStringAsFixed(2)} 統率力×${b.leadershipFactor.toStringAsFixed(2)}',
+                    'Breakdown: base ${formatMoney(b.base.round())} + potential ${formatMoney(b.potentialBonus.round())}, times age ${b.ageFactor.toStringAsFixed(2)}, personality ${b.personalityFactor.toStringAsFixed(2)}, leadership ${b.leadershipFactor.toStringAsFixed(2)}'),
                 style: TextStyle(
                     fontSize: 11, color: SemanticColors.subtleText(context)),
               );
@@ -377,16 +379,16 @@ class PlayerDetailScreen extends StatelessWidget {
           ),
           Text(
             p.isLoan
-                ? Tr.pick('週俸: ${p.wage}万円 / ローン残り${p.loanWeeksRemaining}週',
-                    'Wage: ${p.wage} / ${Tr.plural(p.loanWeeksRemaining, 'week')} left on loan')
+                ? Tr.pick('年俸: ${formatMoney(annualFromWeekly(p.wage))} / ローン残り${p.loanWeeksRemaining}週',
+                    'Salary: ${formatMoney(annualFromWeekly(p.wage))} a year / ${Tr.plural(p.loanWeeksRemaining, 'week')} left on loan')
                 : Tr.pick(
-                    '週俸: ${p.wage}万円 / ${ContractEngine.yearsLabel(p.contractYearsRemaining)}',
-                    'Wage: ${p.wage} / ${ContractEngine.yearsLabel(p.contractYearsRemaining)}'),
+                    '年俸: ${formatMoney(annualFromWeekly(p.wage))} / ${ContractEngine.yearsLabel(p.contractYearsRemaining)}',
+                    'Salary: ${formatMoney(annualFromWeekly(p.wage))} a year / ${ContractEngine.yearsLabel(p.contractYearsRemaining)}'),
           ),
           if (p.releaseClause != null)
             Text(
-              Tr.pick('リリース条項: ${p.releaseClause}万円',
-                  'Release clause: ${p.releaseClause}'),
+              Tr.pick('リリース条項: ${formatMoney(p.releaseClause!)}',
+                  'Release clause: ${formatMoney(p.releaseClause!)}'),
               style: const TextStyle(color: Colors.deepPurple),
             ),
           const SizedBox(height: 4),
@@ -552,8 +554,8 @@ class PlayerDetailScreen extends StatelessWidget {
                           ? null
                           : () => _exerciseBuyOption(context),
                       child: Text(Tr.pick(
-                          '買取オプションを行使する（${p.loanBuyOptionFee}万円）',
-                          'Trigger the buy option (${p.loanBuyOptionFee})')),
+                          '買取オプションを行使する（${formatMoney(p.loanBuyOptionFee!)}）',
+                          'Trigger the buy option (${formatMoney(p.loanBuyOptionFee!)})')),
                     ),
                   ],
                 ],
@@ -571,8 +573,8 @@ class PlayerDetailScreen extends StatelessWidget {
             )
           else ...[
             Text(
-              Tr.pick('現在の出場手当: ${p.appearanceFee}万円/試合',
-                  'Current appearance fee: ${p.appearanceFee} per match'),
+              Tr.pick('現在の出場手当: ${formatMoney(p.appearanceFee)}/試合',
+                  'Current appearance fee: ${formatMoney(p.appearanceFee)} per match'),
               style: TextStyle(
                   fontSize: 12, color: SemanticColors.subtleText(context)),
             ),
@@ -603,11 +605,11 @@ class PlayerDetailScreen extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 4),
                 child: Text(
                   Tr.pick(
-                      '資金が${totalRenewalCost - gameState.save!.budget}万円足りません'
-                          '（必要$totalRenewalCost万円 / 手元${gameState.save!.budget}万円）。'
-                          '選手の放出や融資で資金を作るか、週俸交渉で更新してください。',
-                      'You are ${totalRenewalCost - gameState.save!.budget} short '
-                          '(need $totalRenewalCost, you have ${gameState.save!.budget}). '
+                      '資金が${formatMoney(totalRenewalCost - gameState.save!.budget)}足りません'
+                          '（必要${formatMoney(totalRenewalCost)} / 手元${formatMoney(gameState.save!.budget)}）。'
+                          '選手の放出や融資で資金を作るか、年俸交渉で更新してください。',
+                      'You are ${formatMoney(totalRenewalCost - gameState.save!.budget)} short '
+                          '(need ${formatMoney(totalRenewalCost)}, you have ${formatMoney(gameState.save!.budget)}). '
                           'Sell someone, take a loan, or re-sign him through wage talks.'),
                   style: TextStyle(
                       fontSize: 12, color: SemanticColors.negative(context)),
@@ -619,8 +621,8 @@ class PlayerDetailScreen extends StatelessWidget {
                   : () => _renew(context),
               child: Text(
                 Tr.pick(
-                    '契約更新する（基本$renewalCost万円 + サインボーナス$signingBonus万円 / +40週 / 新出場手当$newAppearanceFee万円）',
-                    'Renew his contract (base $renewalCost + signing bonus $signingBonus / +40 weeks / new appearance fee $newAppearanceFee)'),
+                    '契約更新する（基本${formatMoney(renewalCost)} + サインボーナス${formatMoney(signingBonus)} / +40週 / 新出場手当${formatMoney(newAppearanceFee)}）',
+                    'Renew his contract (base ${formatMoney(renewalCost)} + signing bonus ${formatMoney(signingBonus)} / +40 weeks / new appearance fee ${formatMoney(newAppearanceFee)})'),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -630,9 +632,9 @@ class PlayerDetailScreen extends StatelessWidget {
               onPressed: () => _negotiate(context, isNegotiatingThisPlayer),
               label: Text(
                 isNegotiatingThisPlayer
-                    ? Tr.pick('交渉を続ける（選手の対案: ${negotiation.counterWage}万円/週）',
-                        'Keep negotiating (their counter: ${negotiation.counterWage} per week)')
-                    : Tr.pick('週俸交渉で更新する', 'Re-sign after wage talks'),
+                    ? Tr.pick('交渉を続ける（選手の対案: 年俸${formatMoney(annualFromWeekly(negotiation.counterWage))}）',
+                        'Keep negotiating (their counter: ${formatMoney(annualFromWeekly(negotiation.counterWage))} a year)')
+                    : Tr.pick('年俸交渉で更新する', 'Re-sign after wage talks'),
               ),
             ),
             const SizedBox(height: 8),
@@ -643,10 +645,10 @@ class PlayerDetailScreen extends StatelessWidget {
                   : () => _confirmSell(context, netReleaseValue),
               child: Text(
                 netReleaseValue >= 0
-                    ? Tr.pick('放出する（$netReleaseValue万円 獲得）',
-                        'Release him (you receive $netReleaseValue)')
-                    : Tr.pick('放出する（違約金${-netReleaseValue}万円 支払い）',
-                        'Release him (you pay ${-netReleaseValue} in compensation)'),
+                    ? Tr.pick('放出する（${formatMoney(netReleaseValue)} 獲得）',
+                        'Release him (you receive ${formatMoney(netReleaseValue)})')
+                    : Tr.pick('放出する（違約金${formatMoney(-netReleaseValue)} 支払い）',
+                        'Release him (you pay ${formatMoney(-netReleaseValue)} in compensation)'),
               ),
             ),
             const SizedBox(height: 8),
@@ -805,21 +807,22 @@ class PlayerDetailScreen extends StatelessWidget {
     final negotiation = gameState.pendingContractNegotiation;
     if (negotiation == null) return;
     final controller = TextEditingController(
-      text: negotiation.counterWage.toString(),
+      // 年俸(万円)で入力してもらい、内部の週俸に直す。
+      text: annualFromWeekly(negotiation.counterWage).toString(),
     );
     await showDialog<void>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: Text(Tr.pick('週俸交渉', 'Wage negotiation')),
+        title: Text(Tr.pick('年俸交渉', 'Salary negotiation')),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(Tr.pick('現在の週俸: ${negotiation.initialWage}万円',
-                'Current wage: ${negotiation.initialWage}')),
+            Text(Tr.pick('現在の年俸: ${formatMoney(annualFromWeekly(negotiation.initialWage))}',
+                'Current salary: ${formatMoney(annualFromWeekly(negotiation.initialWage))} a year')),
             Text(
-              Tr.pick('選手の対案: ${negotiation.counterWage}万円/週',
-                  'His counter-offer: ${negotiation.counterWage} per week'),
+              Tr.pick('選手の対案: 年俸${formatMoney(annualFromWeekly(negotiation.counterWage))}',
+                  'His counter-offer: ${formatMoney(annualFromWeekly(negotiation.counterWage))} a year'),
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             Text(
@@ -834,7 +837,8 @@ class PlayerDetailScreen extends StatelessWidget {
               controller: controller,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
-                  labelText: Tr.pick('提示する週俸（万円）', 'Wage you are offering')),
+                  labelText: Tr.pick('提示する年俸（万円）',
+                      'Salary you are offering (in units of 10,000 yen)')),
             ),
           ],
         ),
@@ -848,9 +852,10 @@ class PlayerDetailScreen extends StatelessWidget {
           ),
           FilledButton(
             onPressed: () async {
-              final wage = int.tryParse(controller.text);
-              if (wage == null || wage <= 0) return;
-              final result = await gameState.offerContractWage(wage);
+              final annual = int.tryParse(controller.text);
+              if (annual == null || annual <= 0) return;
+              final result = await gameState
+                  .offerContractWage(max(1, (annual / 52).round()));
               if (dialogContext.mounted) Navigator.pop(dialogContext);
               if (context.mounted) {
                 _showNegotiationResultSnackBar(context, result);
@@ -872,7 +877,7 @@ class PlayerDetailScreen extends StatelessWidget {
       case ContractOfferResult.accepted:
         FeedbackService.success();
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(Tr.pick('週俸交渉が成立し、契約を更新しました',
+            content: Text(Tr.pick('年俸交渉が成立し、契約を更新しました',
                 'You agreed terms and renewed the contract'))));
         break;
       case ContractOfferResult.countered:
@@ -936,7 +941,7 @@ class PlayerDetailScreen extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(Tr.pick('市場価値: $marketValue万円', 'Value: $marketValue')),
+                Text(Tr.pick('市場価値: ${formatMoney(marketValue)}', 'Value: ${formatMoney(marketValue)}')),
                 const SizedBox(height: 8),
                 TextField(
                   controller: controller,
@@ -995,7 +1000,7 @@ class PlayerDetailScreen extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(Tr.pick('$weeks週間、他クラブへ貸し出します。期間中の週俸は放出先が負担します。',
+              Text(Tr.pick('$weeks週間、他クラブへ貸し出します。期間中の給与は放出先が負担します。',
                   'He goes out on loan for ${Tr.plural(weeks, 'week')}. The other club pays his wages while he is there.')),
               Slider(
                 value: weeks.toDouble(),
@@ -1060,10 +1065,10 @@ class PlayerDetailScreen extends StatelessWidget {
         title: Text(Tr.pick('この選手を放出しますか？', 'Release this player?')),
         content: Text(
           netReleaseValue >= 0
-              ? Tr.pick('$netReleaseValue万円を獲得しますが、元には戻せません。',
-                  'You receive $netReleaseValue, and this cannot be undone.')
-              : Tr.pick('違約金として${-netReleaseValue}万円を支払うことになりますが、元には戻せません。',
-                  'You pay ${-netReleaseValue} in compensation, and this cannot be undone.'),
+              ? Tr.pick('${formatMoney(netReleaseValue)}を獲得しますが、元には戻せません。',
+                  'You receive ${formatMoney(netReleaseValue)}, and this cannot be undone.')
+              : Tr.pick('違約金として${formatMoney(-netReleaseValue)}を支払うことになりますが、元には戻せません。',
+                  'You pay ${formatMoney(-netReleaseValue)} in compensation, and this cannot be undone.'),
         ),
         actions: [
           TextButton(

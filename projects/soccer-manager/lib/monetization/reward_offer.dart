@@ -1,3 +1,5 @@
+import '../logic/economy_scale.dart';
+
 /// リワード広告を1本見る、またはサポーター購入によって受け取れる特典。
 ///
 /// 特典を「資金」に絞っているのは、このゲームのバランスを10ラウンドかけて
@@ -15,10 +17,9 @@ class RewardOffer {
   /// 下部リーグでは少額でも効くが、1部で同じ額を配っても意味がない。
   /// 逆に1部の額を5部で配ると序盤の経営判断が消し飛ぶ。
   /// tier は1(最上位)〜5(最下位)。
-  static int fundsFor(int divisionTier) {
-    const byTier = {1: 1000, 2: 700, 3: 500, 4: 350, 5: 250};
-    return byTier[divisionTier] ?? 250;
-  }
+  ///
+  /// 5部の額(250万円)を部の規模(moneyScale)で大きくする。
+  static int fundsFor(int divisionTier) => scaleMoneyForTier(divisionTier, 250);
 
   /// 1日に受け取れる上限。
   ///

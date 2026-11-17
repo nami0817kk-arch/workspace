@@ -5,6 +5,7 @@ import '../l10n/tr.dart';
 import '../logic/budget_engine.dart';
 import '../models/budget_plan.dart';
 import '../state/game_state.dart';
+import '../logic/economy_scale.dart';
 
 /// オーナーが年の予算を5つの配り先へ配るカード。
 ///
@@ -28,7 +29,7 @@ class _BudgetPlanCardState extends State<BudgetPlanCard> {
 
     switch (c) {
       case BudgetCategory.signing:
-        return Tr.pick('週給の上限 ${pct(BudgetEngine.wageCapMultiplier(plan))}',
+        return Tr.pick('給与の上限 ${pct(BudgetEngine.wageCapMultiplier(plan))}',
             'Wage cap ${pct(BudgetEngine.wageCapMultiplier(plan))}');
       case BudgetCategory.youth:
         return Tr.pick('効きは育成まわりに(準備中)', 'Youth effect (coming soon)');
@@ -62,14 +63,14 @@ class _BudgetPlanCardState extends State<BudgetPlanCard> {
                 style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 4),
             Text(
-              Tr.pick('総額 $pool万円。1つ増やすと、他が比率に応じて減ります。',
-                  'Total $pool. Raising one lowers the others in proportion.'),
+              Tr.pick('総額 ${formatMoney(pool)}。1つ増やすと、他が比率に応じて減ります。',
+                  'Total ${formatMoney(pool)}. Raising one lowers the others in proportion.'),
               style: Theme.of(context).textTheme.bodySmall,
             ),
             const SizedBox(height: 8),
             for (final c in BudgetCategory.values) ...[
               Text('${c.label}  ${plan.share(c)}%'
-                  '(${amounts[c]}${Tr.pick('万円', '')})'),
+                  '(${formatMoney(amounts[c] ?? 0)})'),
               Text(_effect(c, plan),
                   style: Theme.of(context).textTheme.bodySmall),
               Slider(

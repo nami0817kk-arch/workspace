@@ -47,7 +47,7 @@ void main() {
       expect(gs.weeklyIncomeFor(save.userTeamId), greaterThan(before));
       expect(save.pendingNamingOffers, isEmpty);
       final p = gs.weeklyIncomeParts(save.userTeamId);
-      expect(p.gate + p.sponsor + p.merchandise,
+      expect(p.gate + p.sponsor + p.merchandise + p.broadcast,
           gs.weeklyIncomeFor(save.userTeamId));
     });
 

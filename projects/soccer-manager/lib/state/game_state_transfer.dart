@@ -38,8 +38,8 @@ extension GameStateTransfer on GameState {
     if (fee <= 0) return;
     _book(LedgerCategory.transfers, -fee);
     _logNews(
-        Tr.pick('${player.name}の代理人に手数料$fee万円を支払った。',
-            'Paid $fee in agent fees for ${player.name}.'),
+        Tr.pick('${player.name}の代理人に手数料${formatMoney(fee)}を支払った。',
+            'Paid ${formatMoney(fee)} in agent fees for ${player.name}.'),
         context: Tr.pick('移籍', 'Transfer'));
   }
 
@@ -52,8 +52,8 @@ extension GameStateTransfer on GameState {
     if (pay <= 0) return;
     _book(LedgerCategory.transfers, -pay);
     _logNews(
-        Tr.pick('${player.name}の売却条項により、元のクラブへ$pay万円を支払った。',
-            'Paid $pay to his former club under the sell-on clause for ${player.name}.'),
+        Tr.pick('${player.name}の売却条項により、元のクラブへ${formatMoney(pay)}を支払った。',
+            'Paid ${formatMoney(pay)} to his former club under the sell-on clause for ${player.name}.'),
         context: Tr.pick('移籍', 'Transfer'));
   }
 
@@ -158,8 +158,8 @@ extension GameStateTransfer on GameState {
     _save!.pendingInstallments.removeWhere((i) => i.playerId == playerId);
     if (outstanding <= 0) return;
     _book(LedgerCategory.transfers, -(outstanding));
-    _logNews(Tr.pick('移籍に伴い、分割払いの残金$outstanding万円を一括で精算した。',
-        'The remaining $outstanding of the instalment plan was settled in full on his departure.'));
+    _logNews(Tr.pick('移籍に伴い、分割払いの残金${formatMoney(outstanding)}を一括で精算した。',
+        'The remaining ${formatMoney(outstanding)} of the instalment plan was settled in full on his departure.'));
   }
 
   /// 放出により実際に得られる(あるいは支払う)純額。移籍金収入から
@@ -456,7 +456,7 @@ extension GameStateTransfer on GameState {
     _book(LedgerCategory.transfers, -(fee));
     player.isLoan = true;
     player.loanWeeksRemaining = GameState.loanDurationWeeks;
-    player.wage = (player.wage * 0.6).round().clamp(1, 999);
+    player.wage = max(1, (player.wage * 0.6).round());
     player.loanBuyOptionFee = withBuyOption
         ? (player.marketValue * GameState.loanBuyOptionRatio).round()
         : null;
@@ -485,7 +485,7 @@ extension GameStateTransfer on GameState {
     player.loanBuyOptionFee = null;
     // ローン中は週俸を6割に軽減していた(signLoanPlayer)ため、完全移籍化に
     // あたって元の水準に戻す。そのままだと恒久的に割引契約のままになる。
-    player.wage = (player.wage / 0.6).round().clamp(1, 999);
+    player.wage = max(1, (player.wage / 0.6).round());
     // 年数そのものを入れると今シーズンぶんが足りず、例えば32歳以上は1年で
     // 境界を迎えてその場で退団していた。獲得と同じ考え方で結ぶ。
     player.contractYearsRemaining = 0;
@@ -513,9 +513,9 @@ extension GameStateTransfer on GameState {
 
   int get scoutCost => _save == null
       ? 0
-      : ScoutingEngine.scoutCostFor(
+      : scaledMoney(ScoutingEngine.scoutCostFor(
           _save!.infrastructure.staffLevel(StaffRole.scout),
-        );
+        ));
 
   int get maxYouthProspects => _save == null
       ? 0
@@ -574,9 +574,9 @@ extension GameStateTransfer on GameState {
   /// スカウト網を手動で更新する1回あたりの費用(万円)。
   int get scoutRefreshCost => _save == null
       ? 0
-      : ScoutingEngine.refreshCostFor(
+      : scaledMoney(ScoutingEngine.refreshCostFor(
           _save!.infrastructure.staffLevel(StaffRole.scout),
-        );
+        ));
 
   /// 費用を払ってスカウト網を更新し、候補選手の顔ぶれを一新する。
   /// 資金が足りない場合は何もせずfalseを返す。
@@ -597,7 +597,7 @@ extension GameStateTransfer on GameState {
     final idx = scoutCandidates.indexWhere((p) => p.id == candidateId);
     if (idx < 0) return false;
     final infra = _save!.infrastructure;
-    final cost = ScoutingEngine.scoutCostFor(infra.staffLevel(StaffRole.scout));
+    final cost = scoutCost;
     final maxP = ScoutingEngine.maxProspectsFor(
       infra.facilityLevel(FacilityType.youthFacility),
     );
@@ -646,8 +646,8 @@ extension GameStateTransfer on GameState {
 
     if (_save!.budget < terms.signingBonus) {
       lastSigningBlockReason = Tr.pick(
-          '契約金${terms.signingBonus}万円が払えません(資金${_save!.budget}万円)。',
-          'You cannot cover the ${terms.signingBonus} signing fee (funds ${_save!.budget}).');
+          '契約金${formatMoney(terms.signingBonus)}が払えません(資金${formatMoney(_save!.budget)})。',
+          'You cannot cover the ${formatMoney(terms.signingBonus)} signing fee (funds ${formatMoney(_save!.budget)}).');
       _notify();
       return false;
     }
@@ -662,8 +662,8 @@ extension GameStateTransfer on GameState {
     userTeam.players.add(player);
     _logNews(
       Tr.pick(
-          'ユースの${player.name}がプロ契約(背番号${terms.squadNumber}・週俸${terms.weeklyWage}万円・${terms.years}年)を結び、一軍に昇格しました',
-          '${player.name} signed his first professional contract (no. ${terms.squadNumber}, wage ${terms.weeklyWage}, ${terms.years} years) and joined the first team'),
+          'ユースの${player.name}がプロ契約(背番号${terms.squadNumber}・年俸${formatMoney(annualFromWeekly(terms.weeklyWage))}・${terms.years}年)を結び、一軍に昇格しました',
+          '${player.name} signed his first professional contract (no. ${terms.squadNumber}, salary ${formatMoney(annualFromWeekly(terms.weeklyWage))}, ${terms.years} years) and joined the first team'),
       context: Tr.pick('ユース', 'Youth'),
     );
     _notify();
@@ -1000,9 +1000,9 @@ extension GameStateTransfer on GameState {
         _logNews(
           Tr.pick(
               '締切間際: ${deadlineOffer.buyerClubName}が${deadlineOffer.playerName}に'
-                  '${deadlineOffer.amount}万円を提示しました。',
+                  '${formatMoney(deadlineOffer.amount)}を提示しました。',
               'Deadline day: ${deadlineOffer.buyerClubName} bid '
-                  '${deadlineOffer.amount} for ${deadlineOffer.playerName}.'),
+                  '${formatMoney(deadlineOffer.amount)} for ${deadlineOffer.playerName}.'),
           context: Tr.pick('移籍', 'Transfers'),
         );
         return autoSold;

@@ -20,12 +20,16 @@ class LoanEngine {
 
   /// スタジアムのレベルと監督への世間の評価が高いほど、銀行からの信用が高く借入上限が上がる。
   /// 既存の融資残高はその分だけ借入余力から差し引かれる。
+  ///
+  /// [scale] はクラブの規模(部ごとの moneyScale)。上の部ほど大きく借りられる。
   static int maxBorrowable({
     required int stadiumLevel,
     required int reputation,
     required int outstandingDebt,
+    double scale = 1,
   }) {
-    final capacity = 1500 + stadiumLevel * 500 + reputation * 15;
+    final capacity =
+        ((1500 + stadiumLevel * 500 + reputation * 15) * scale).round();
     return (capacity - outstandingDebt).clamp(0, capacity);
   }
 

@@ -3,6 +3,7 @@ import 'dart:math';
 import '../l10n/tr.dart';
 import '../models/ledger.dart';
 import '../models/league_theme.dart';
+import 'economy_scale.dart';
 
 /// 国(リーグ)ごとの財務規則の式。実在のリーグ名は使わず「〜式」と呼ぶ。
 /// 名前(name)はセーブに残すので、変えない。
@@ -175,8 +176,8 @@ class RulesEngine {
     final red = l.profit < 0;
     final status = RuleStatus(
       label: Tr.pick('人件費と収支', 'Wages and result'),
-      detail: Tr.pick('人件費${l.wageCost} / 目安$limit万円・収支${l.profit}',
-          'Wages ${l.wageCost} / guide $limit, result ${l.profit}'),
+      detail: Tr.pick('人件費${formatMoney(l.wageCost)} / 目安${formatMoney(limit)}・収支${formatMoney(l.profit)}',
+          'Wages ${formatMoney(l.wageCost)} / guide ${formatMoney(limit)}, result ${formatMoney(l.profit)}'),
       level: (over && red) ? 2 : (over || red ? 1 : 0),
     );
     if (!(over && red)) return RuleReport(statuses: [status]);
@@ -198,7 +199,7 @@ class RulesEngine {
     final excess = max(0, l.wageCost - limit);
     final status = RuleStatus(
       label: Tr.pick('人件費の上限', 'Wage limit'),
-      detail: Tr.pick('${l.wageCost} / 上限$limit万円', '${l.wageCost} / limit $limit'),
+      detail: Tr.pick('${formatMoney(l.wageCost)} / 上限${formatMoney(limit)}', '${formatMoney(l.wageCost)} / limit ${formatMoney(limit)}'),
       level: excess > 0 ? 2 : (l.wageCost > limit * 0.9 ? 1 : 0),
     );
     if (excess == 0) return RuleReport(statuses: [status]);
@@ -208,8 +209,8 @@ class RulesEngine {
         fine: (excess * 0.3).round(),
         trustLoss: 6,
         pointsDeduction: min(9, 3 + excess * 3 ~/ max(1, limit)),
-        reason: Tr.pick('人件費が上限を$excess万円超えました',
-            'Wages passed the limit by $excess'),
+        reason: Tr.pick('人件費が上限を${formatMoney(excess)}超えました',
+            'Wages passed the limit by ${formatMoney(excess)}'),
       ),
     );
   }
@@ -221,7 +222,7 @@ class RulesEngine {
     final excess = max(0, l.wageCost - limit);
     final status = RuleStatus(
       label: Tr.pick('サラリーキャップ', 'Salary cap'),
-      detail: Tr.pick('${l.wageCost} / 天井$limit万円', '${l.wageCost} / cap $limit'),
+      detail: Tr.pick('${formatMoney(l.wageCost)} / 天井${formatMoney(limit)}', '${formatMoney(l.wageCost)} / cap ${formatMoney(limit)}'),
       level: excess > 0 ? 2 : (l.wageCost > limit * 0.9 ? 1 : 0),
     );
     if (excess == 0) return RuleReport(statuses: [status]);
@@ -230,8 +231,8 @@ class RulesEngine {
       penalty: RulePenalty(
         fine: (excess * 0.5).round(),
         trustLoss: 4,
-        reason: Tr.pick('人件費が天井を$excess万円超え、贅沢税が課されました',
-            'Wages passed the cap by $excess and a luxury tax applies'),
+        reason: Tr.pick('人件費が天井を${formatMoney(excess)}超え、贅沢税が課されました',
+            'Wages passed the cap by ${formatMoney(excess)} and a luxury tax applies'),
       ),
     );
   }
@@ -258,7 +259,7 @@ class RulesEngine {
     final level = loss > limit ? 2 : (loss > limit * 0.8 ? 1 : 0);
     final status = RuleStatus(
       label: Tr.pick('直近${window.length}季の累積赤字', 'Losses over ${window.length} seasons'),
-      detail: Tr.pick('$loss / 上限$limit万円', '$loss / limit $limit'),
+      detail: Tr.pick('${formatMoney(loss)} / 上限${formatMoney(limit)}', '${formatMoney(loss)} / limit ${formatMoney(limit)}'),
       level: level,
     );
     if (level < 2) return RuleReport(statuses: [status]);
@@ -270,8 +271,8 @@ class RulesEngine {
         fine: (excess * 0.1).round(),
         trustLoss: 10,
         pointsDeduction: points,
-        reason: Tr.pick('累積赤字が上限を$excess万円超えました',
-            'Cumulative losses passed the limit by $excess'),
+        reason: Tr.pick('累積赤字が上限を${formatMoney(excess)}超えました',
+            'Cumulative losses passed the limit by ${formatMoney(excess)}'),
       ),
     );
   }
@@ -290,7 +291,7 @@ class RulesEngine {
       RuleStatus(
         label: Tr.pick('債務超過', 'Insolvency'),
         detail: insolvent
-            ? Tr.pick('資金が$budget万円(マイナス)', 'Funds are $budget (negative)')
+            ? Tr.pick('資金が${formatMoney(budget)}(マイナス)', 'Funds are ${formatMoney(budget)} (negative)')
             : Tr.pick('なし', 'None'),
         level: insolvent ? 2 : 0,
       ),

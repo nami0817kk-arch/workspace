@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../l10n/tr.dart';
 import '../logic/media_deals_engine.dart';
 import '../state/game_state.dart';
+import '../logic/economy_scale.dart';
 
 /// スタジアムの命名権と、放映権の分配金の受け取り方。
 class MediaDealsCard extends StatelessWidget {
@@ -31,8 +32,8 @@ class MediaDealsCard extends StatelessWidget {
                 style: const TextStyle(fontWeight: FontWeight.bold)),
             if (naming != null)
               Text(Tr.pick(
-                  '${naming.name}: 週${naming.weeklyIncome}万円・残り${naming.yearsRemaining}年',
-                  '${naming.name}: ${naming.weeklyIncome}/week, ${naming.yearsRemaining} yr left'))
+                  '${naming.name}: 週${formatMoney(naming.weeklyIncome)}・残り${naming.yearsRemaining}年',
+                  '${naming.name}: ${formatMoney(naming.weeklyIncome)}/week, ${naming.yearsRemaining} yr left'))
             else if (offers.isEmpty)
               Text(Tr.pick('提示はありません(次のシーズン末に出ます)',
                   'No offers (next ones come at season end)'))
@@ -44,8 +45,8 @@ class MediaDealsCard extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(Tr.pick(
-                            '${offers[i].name} 週${offers[i].weeklyIncome}万円・${offers[i].yearsRemaining}年',
-                            '${offers[i].name} ${offers[i].weeklyIncome}/week, ${offers[i].yearsRemaining} yr')),
+                            '${offers[i].name} 週${formatMoney(offers[i].weeklyIncome)}・${offers[i].yearsRemaining}年',
+                            '${offers[i].name} ${formatMoney(offers[i].weeklyIncome)}/week, ${offers[i].yearsRemaining} yr')),
                       ),
                       FilledButton.tonal(
                         onPressed: () => gs.chooseNamingRights(i),
@@ -55,8 +56,8 @@ class MediaDealsCard extends StatelessWidget {
                   ),
                 ),
             const Divider(height: 24),
-            Text(Tr.pick('放映権の分配金(基準 ${MediaDealsEngine.tvBase(tier)}万円/季)',
-                'TV money (base ${MediaDealsEngine.tvBase(tier)}/season)'),
+            Text(Tr.pick('放映権の分配金(基準 ${formatMoney(MediaDealsEngine.tvBase(tier))}/季)',
+                'TV money (base ${formatMoney(MediaDealsEngine.tvBase(tier))}/season)'),
                 style: const TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 4),
             SegmentedButton<TvDeal>(
@@ -83,8 +84,8 @@ class MediaDealsCard extends StatelessWidget {
               OutlinedButton(
                 onPressed: () => gs.takeTvAdvance(),
                 child: Text(Tr.pick(
-                    '前払いを受ける(${MediaDealsEngine.advanceAmount(tier)}万円・以後${MediaDealsEngine.advanceHolidaySeasons}季は分配金なし)',
-                    'Take an advance (${MediaDealsEngine.advanceAmount(tier)}; no TV money for ${MediaDealsEngine.advanceHolidaySeasons} seasons)')),
+                    '前払いを受ける(${formatMoney(MediaDealsEngine.advanceAmount(tier))}・以後${MediaDealsEngine.advanceHolidaySeasons}季は分配金なし)',
+                    'Take an advance (${formatMoney(MediaDealsEngine.advanceAmount(tier))}; no TV money for ${MediaDealsEngine.advanceHolidaySeasons} seasons)')),
               ),
           ],
         ),

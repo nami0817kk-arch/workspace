@@ -8,10 +8,11 @@ enum LedgerCategory {
   gate, // 観客収入
   sponsor, // スポンサー収入
   merchandise, // グッズ収入
+  broadcast, // 放映権料(毎節の配分と季末の分配金)
   prize, // 賞金・ボーナス(リーグ・カップ・大陸・理事会・昇格)
   playerSales, // 選手の売却・ユースの補償金
-  playerWages, // 選手の週給
-  staffWages, // スタッフの週給
+  playerWages, // 選手の給与
+  staffWages, // スタッフの給与
   appearanceFees, // 出場手当
   transfers, // 補強費(獲得・分割払い・ローン料・契約更新・ユース昇格)
   facilities, // 施設・合宿・スカウト
@@ -22,6 +23,7 @@ enum LedgerCategory {
         gate => Tr.pick('観客収入', 'Gate receipts'),
         sponsor => Tr.pick('スポンサー', 'Sponsorship'),
         merchandise => Tr.pick('グッズ', 'Merchandise'),
+        broadcast => Tr.pick('放映権', 'Broadcasting'),
         prize => Tr.pick('賞金・ボーナス', 'Prizes & bonuses'),
         playerSales => Tr.pick('選手の売却', 'Player sales'),
         playerWages => Tr.pick('選手の給与', 'Player wages'),
@@ -35,7 +37,11 @@ enum LedgerCategory {
 
   /// 毎シーズンの営業から入る収入(売却益は含めない)。
   bool get isOperatingIncome =>
-      this == gate || this == sponsor || this == merchandise || this == prize;
+      this == gate ||
+      this == sponsor ||
+      this == merchandise ||
+      this == broadcast ||
+      this == prize;
 
   /// 人件費にあたる項目。
   bool get isWageCost =>

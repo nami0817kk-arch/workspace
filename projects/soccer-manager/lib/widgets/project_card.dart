@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../l10n/tr.dart';
 import '../logic/project_engine.dart';
 import '../state/game_state.dart';
+import '../logic/economy_scale.dart';
 
 /// 投資案件。着手して、しばらくしてから効果が出る。
 class ProjectCard extends StatelessWidget {
@@ -55,8 +56,8 @@ class ProjectCard extends StatelessWidget {
     if (left == null) {
       return FilledButton.tonal(
         onPressed: () => gs.startProject(p),
-        child: Text(Tr.pick('${p.cost}万円で着手(${p.buildSeasons}季)',
-            'Start ${p.cost} (${p.buildSeasons} season)')),
+        child: Text(Tr.pick('${formatMoney(gs.scaledMoney(p.cost))}で着手(${p.buildSeasons}季)',
+            'Start ${formatMoney(gs.scaledMoney(p.cost))} (${p.buildSeasons} season)')),
       );
     }
     return Text(left == 0

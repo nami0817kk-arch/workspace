@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../l10n/tr.dart';
 import '../logic/risk_engine.dart';
 import '../state/game_state.dart';
+import '../logic/economy_scale.dart';
 
 /// 保険・災害基金・地域貢献。突発の出来事に備え、サポーターとの関係を育てる。
 class RiskCard extends StatelessWidget {
@@ -37,24 +38,25 @@ class RiskCard extends StatelessWidget {
               contentPadding: EdgeInsets.zero,
               value: save.insured,
               onChanged: (v) => gs.setInsured(v),
-              title: Text(Tr.pick('保険に入る(毎季 ${RiskEngine.premium(tier)}万円)',
-                  'Insurance (${RiskEngine.premium(tier)} per season)')),
+              title: Text(Tr.pick('保険に入る(毎季 ${formatMoney(RiskEngine.premium(tier))})',
+                  'Insurance (${formatMoney(RiskEngine.premium(tier))} per season)')),
             ),
             Row(
               children: [
                 Expanded(
-                  child: Text(Tr.pick('災害基金 ${save.reserveFund}万円',
-                      'Disaster fund ${save.reserveFund}')),
+                  child: Text(Tr.pick('災害基金 ${formatMoney(save.reserveFund)}',
+                      'Disaster fund ${formatMoney(save.reserveFund)}')),
                 ),
                 TextButton(
-                  onPressed: () => gs.depositReserveFund(200),
-                  child: Text(Tr.pick('+200万円', '+200')),
+                  onPressed: () => gs.depositReserveFund(gs.scaledMoney(200)),
+                  child: Text('+${formatMoney(gs.scaledMoney(200))}'),
                 ),
                 TextButton(
                   onPressed: save.reserveFund > 0
-                      ? () => gs.depositReserveFund(-200)
+                      ? () => gs.depositReserveFund(
+                          -gs.scaledMoney(200).clamp(0, save.reserveFund))
                       : null,
-                  child: Text(Tr.pick('-200万円', '-200')),
+                  child: Text('-${formatMoney(gs.scaledMoney(200))}'),
                 ),
               ],
             ),
@@ -73,8 +75,8 @@ class RiskCard extends StatelessWidget {
                   ? () => gs.upgradeCommunity()
                   : null,
               child: Text(level < RiskEngine.maxCommunityLevel
-                  ? Tr.pick('Lv$nextにする(${RiskEngine.communityCost(next)}万円)',
-                      'Raise to Lv$next (${RiskEngine.communityCost(next)})')
+                  ? Tr.pick('Lv$nextにする(${formatMoney(gs.scaledMoney(RiskEngine.communityCost(next)))})',
+                      'Raise to Lv$next (${formatMoney(gs.scaledMoney(RiskEngine.communityCost(next)))})')
                   : Tr.pick('最大です', 'Maxed')),
             ),
           ],

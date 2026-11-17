@@ -31,6 +31,7 @@ void main() {
       final before = game.save!.budget;
 
       final target = game.transferMarket.first;
+      game.save!.wageBudget = 999999; // 年俸の枠で止めない
       expect(await game.buyPlayerOnInstallments(target.id), isTrue);
       expect(await game.sellPlayer(target.id), isTrue);
 
@@ -48,6 +49,7 @@ void main() {
       game.save!.budget = 100000;
 
       final target = game.transferMarket.first;
+      game.save!.wageBudget = 999999; // 年俸の枠で止めない
       await game.buyPlayerOnInstallments(target.id);
       await game.sellPlayer(target.id);
 
@@ -59,6 +61,9 @@ void main() {
       final game = GameState();
       await game.startNewGame('通常FC');
       game.save!.budget = 100000;
+      // 年俸の枠で止まると売り買いの前提が崩れる(市場の先頭が高い選手だと
+      // 1割ほどの確率で枠を超える)。ここで見たいのは資金の出入りだけ。
+      game.save!.wageBudget = 1000000;
 
       final target = game.transferMarket.first;
       expect(await game.buyPlayer(target.id), isTrue);

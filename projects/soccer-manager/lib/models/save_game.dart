@@ -112,6 +112,13 @@ class SaveGame {
   /// このクラブのいる国の財務規則。
   RuleSet ruleSet;
 
+  /// お金の桁の版。1 は全部が5部の規模だった頃、2 は部ごとに桁を変えた
+  /// 後(economy_scale.dart)。読み込み時に 1 なら一度だけ換算して 2 にする。
+  int economyVersion;
+
+  /// 今のお金の桁の版。新しいゲームはこの版で始まる。
+  static const int currentEconomyVersion = 2;
+
   /// 今シーズンの景気と、来シーズンの景気(予報)。
   EconomyPhase economyPhase;
   EconomyPhase economyNext;
@@ -469,7 +476,7 @@ class SaveGame {
     required this.league,
     // i18n-ignore: セーブに保存されるデータの既定値(上のコメント参照)。
     this.leagueName = 'リーグ',
-    this.budget = 6000,
+    this.budget = 20000, // 5部の年収の半年分ほど(GameState.initialBudgetTier5)
     this.boardTargetRank = 4,
     this.confidence = 60,
     this.shareholderExpectation = 60,
@@ -478,6 +485,7 @@ class SaveGame {
     this.marketingBoostWeeks = 0,
     List<SeasonLedger>? ledgers,
     this.ruleSet = RuleSet.britain,
+    this.economyVersion = currentEconomyVersion,
     this.economyPhase = EconomyPhase.normal,
     this.economyNext = EconomyPhase.normal,
     this.clubPolicy = ClubPolicy.balanced,
@@ -702,6 +710,7 @@ class SaveGame {
         'marketingBoostWeeks': marketingBoostWeeks,
         'ledgers': ledgers.map((l) => l.toJson()).toList(),
         'ruleSet': ruleSet.name,
+        'economyVersion': economyVersion,
         'economyPhase': economyPhase.name,
         'economyNext': economyNext.name,
         'clubPolicy': clubPolicy.name,
@@ -885,6 +894,8 @@ class SaveGame {
         clubPolicy: ClubPolicy.values
             .where((p) => p.name == json['clubPolicy'])
             .firstOrNull ?? ClubPolicy.balanced,
+        // 版が書かれていないのは、桁を変える前のセーブ。
+        economyVersion: json['economyVersion'] as int? ?? 1,
         economyPhase: EconomyPhase.values
             .where((e) => e.name == json['economyPhase'])
             .firstOrNull ?? EconomyPhase.normal,

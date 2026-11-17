@@ -58,6 +58,9 @@ enum OwnerEventKind {
 }
 
 /// 事件への1つの答え。期待の増減と、資金の増減(万円)。
+///
+/// 資金の増減は5部の規模の額で、実際には今いる部の規模に直して動く
+/// (GameState.scaledMoney)。だから見出しには額を書かず、画面で添える。
 class OwnerEventOption {
   final String label;
   final int supportersDelta;
@@ -176,14 +179,14 @@ extension OwnerEventInfo on OwnerEventKind {
                 supportersDelta: 4,
                 shareholdersDelta: -5),
             OwnerEventOption(
-                label: Tr.pick('売却を認める(+800万円)', 'Let him go (+800)'),
+                label: Tr.pick('売却を認める', 'Let him go'),
                 supportersDelta: -6,
                 shareholdersDelta: 4,
                 fundsDelta: 800),
           ],
         OwnerEventKind.sponsorExit => [
             OwnerEventOption(
-                label: Tr.pick('違約金を払って引き止める(-600万円)', 'Pay to keep them (-600)'),
+                label: Tr.pick('違約金を払って引き止める', 'Pay to keep them'),
                 supportersDelta: 0,
                 shareholdersDelta: -2,
                 fundsDelta: -600),
@@ -204,7 +207,7 @@ extension OwnerEventInfo on OwnerEventKind {
           ],
         OwnerEventKind.stadiumAging => [
             OwnerEventOption(
-                label: Tr.pick('全面改修する(-1200万円)', 'Renovate fully (-1200)'),
+                label: Tr.pick('全面改修する', 'Renovate fully'),
                 supportersDelta: 5,
                 shareholdersDelta: -4,
                 fundsDelta: -1200),
@@ -215,7 +218,7 @@ extension OwnerEventInfo on OwnerEventKind {
           ],
         OwnerEventKind.supporterMeeting => [
             OwnerEventOption(
-                label: Tr.pick('要望を受け入れる(-300万円)', 'Accept (-300)'),
+                label: Tr.pick('要望を受け入れる', 'Accept'),
                 supportersDelta: 6,
                 shareholdersDelta: -3,
                 fundsDelta: -300),
@@ -226,12 +229,12 @@ extension OwnerEventInfo on OwnerEventKind {
           ],
         OwnerEventKind.managerPoach => [
             OwnerEventOption(
-                label: Tr.pick('報酬を上げて引き止める(-400万円)', 'Raise his pay (-400)'),
+                label: Tr.pick('報酬を上げて引き止める', 'Raise his pay'),
                 supportersDelta: 3,
                 shareholdersDelta: -2,
                 fundsDelta: -400),
             OwnerEventOption(
-                label: Tr.pick('違約金を受け取って送り出す(+500万円)', 'Let him go (+500)'),
+                label: Tr.pick('違約金を受け取って送り出す', 'Let him go'),
                 supportersDelta: -5,
                 shareholdersDelta: 3,
                 fundsDelta: 500),
@@ -248,7 +251,7 @@ extension OwnerEventInfo on OwnerEventKind {
           ],
         OwnerEventKind.townRedevelopment => [
             OwnerEventOption(
-                label: Tr.pick('出資する(-800万円)', 'Invest (-800)'),
+                label: Tr.pick('出資する', 'Invest'),
                 supportersDelta: 4,
                 shareholdersDelta: -3,
                 fundsDelta: -800),
@@ -259,7 +262,7 @@ extension OwnerEventInfo on OwnerEventKind {
           ],
         OwnerEventKind.auditConcern => [
             OwnerEventOption(
-                label: Tr.pick('徹底的に調べさせる(-250万円)', 'Order a full review (-250)'),
+                label: Tr.pick('徹底的に調べさせる', 'Order a full review'),
                 supportersDelta: -1,
                 shareholdersDelta: 5,
                 fundsDelta: -250),
@@ -270,7 +273,7 @@ extension OwnerEventInfo on OwnerEventKind {
           ],
         OwnerEventKind.namingOffer => [
             OwnerEventOption(
-                label: Tr.pick('受ける(+900万円)', 'Accept (+900)'),
+                label: Tr.pick('受ける', 'Accept'),
                 supportersDelta: -5,
                 shareholdersDelta: 3,
                 fundsDelta: 900),
@@ -281,12 +284,12 @@ extension OwnerEventInfo on OwnerEventKind {
           ],
         OwnerEventKind.youthPoach => [
             OwnerEventOption(
-                label: Tr.pick('違約金を受けて送り出す(+400万円)', 'Sell him (+400)'),
+                label: Tr.pick('違約金を受けて送り出す', 'Sell him'),
                 supportersDelta: -3,
                 shareholdersDelta: 3,
                 fundsDelta: 400),
             OwnerEventOption(
-                label: Tr.pick('プロ契約で引き止める(-200万円)', 'Tie him down (-200)'),
+                label: Tr.pick('プロ契約で引き止める', 'Tie him down'),
                 supportersDelta: 3,
                 shareholdersDelta: -2,
                 fundsDelta: -200),
@@ -303,7 +306,7 @@ extension OwnerEventInfo on OwnerEventKind {
           ],
         OwnerEventKind.sponsorProposal => [
             OwnerEventOption(
-                label: Tr.pick('受ける(+700万円)', 'Accept (+700)'),
+                label: Tr.pick('受ける', 'Accept'),
                 supportersDelta: -3,
                 shareholdersDelta: 4,
                 fundsDelta: 700),
@@ -318,14 +321,14 @@ extension OwnerEventInfo on OwnerEventKind {
                 supportersDelta: 2,
                 shareholdersDelta: -1),
             OwnerEventOption(
-                label: Tr.pick('両者を呼んで折衷案(-100万円)', 'Broker a compromise (-100)'),
+                label: Tr.pick('両者を呼んで折衷案', 'Broker a compromise'),
                 supportersDelta: -1,
                 shareholdersDelta: 2,
                 fundsDelta: -100),
           ],
         OwnerEventKind.injuryCrisis => [
             OwnerEventOption(
-                label: Tr.pick('緊急補強する(-600万円)', 'Sign cover (-600)'),
+                label: Tr.pick('緊急補強する', 'Sign cover'),
                 supportersDelta: 4,
                 shareholdersDelta: -2,
                 fundsDelta: -600),
@@ -347,7 +350,7 @@ extension OwnerEventInfo on OwnerEventKind {
           ],
         OwnerEventKind.taxChange => [
             OwnerEventOption(
-                label: Tr.pick('負担を受け入れる(-350万円)', 'Absorb it (-350)'),
+                label: Tr.pick('負担を受け入れる', 'Absorb it'),
                 supportersDelta: 1,
                 shareholdersDelta: -3,
                 fundsDelta: -350),

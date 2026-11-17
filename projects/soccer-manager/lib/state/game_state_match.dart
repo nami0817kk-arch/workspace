@@ -414,10 +414,10 @@ extension GameStateMatch on GameState {
       _logNews(
         d.poached
             ? Tr.pick(
-                'ユースの${d.player.name}が他クラブに引き抜かれました(育成補償金 ${d.compensation}万円)',
-                'Academy player ${d.player.name} was poached by another club (compensation ${d.compensation})')
+                'ユースの${d.player.name}が他クラブに引き抜かれました(育成補償金 ${formatMoney(d.compensation)})',
+                'Academy player ${d.player.name} was poached by another club (compensation ${formatMoney(d.compensation)})')
             : Tr.pick(
-                'ユースの${d.player.name}が出場機会を求めてクラブを去りました(育成補償金 ${d.compensation}万円)',
+                'ユースの${d.player.name}が出場機会を求めてクラブを去りました(育成補償金 ${formatMoney(d.compensation)})',
                 'Academy player ${d.player.name} left in search of first-team football (compensation ${d.compensation})'),
         context: Tr.pick('ユース', 'Youth'),
       );
@@ -636,17 +636,22 @@ extension GameStateMatch on GameState {
     }
     // 収入は内訳ごとに記録する。ダービーで増えた分は観客収入に入れる。
     final incomeParts = weeklyIncomeParts(_save!.userTeamId);
-    final partsTotal =
-        incomeParts.gate + incomeParts.sponsor + incomeParts.merchandise;
+    final partsTotal = incomeParts.gate +
+        incomeParts.sponsor +
+        incomeParts.merchandise +
+        incomeParts.broadcast;
     _book(LedgerCategory.gate, incomeParts.gate + (income - partsTotal));
     _book(LedgerCategory.sponsor, incomeParts.sponsor);
     _book(LedgerCategory.merchandise, incomeParts.merchandise);
+    _book(LedgerCategory.broadcast, incomeParts.broadcast);
     // 営業ブーストは、収入が入った節で1つ使う。
     if (_save!.marketingBoostWeeks > 0) _save!.marketingBoostWeeks -= 1;
     // 試合日のイベントも、収入が入った節で使い切る。
     _consumeMatchdayPromo();
-    _book(LedgerCategory.staffWages, -_save!.infrastructure.totalStaffWeeklyWage);
-    _book(LedgerCategory.playerWages, -ContractEngine.weeklyWageBill(userTeam));
+    // 給与は年額(週俸×52)をその年の節の数で割って毎節払う。表示の年俸と
+    // 1年に払う総額が一致する。スタッフの給与は今の部の規模に直して払う。
+    _book(LedgerCategory.staffWages, -matchdayStaffWageCost);
+    _book(LedgerCategory.playerWages, -matchdayPlayerWageCost);
 
     // リーグ公式戦にスタメン出場した選手には出場手当を支払う(親善試合・カップ戦は対象外)。
     if (userFixture != null) {
@@ -707,8 +712,8 @@ extension GameStateMatch on GameState {
       final maturedTotal =
           lastMaturedDeposits.fold<int>(0, (s, d) => s + d.maturityValue);
       _logNews(
-          Tr.pick('定期預金が満期を迎え、$maturedTotal万円が払い戻されました',
-              'Your deposit matured and $maturedTotal was paid back'),
+          Tr.pick('定期預金が満期を迎え、${formatMoney(maturedTotal)}が払い戻されました',
+              'Your deposit matured and ${formatMoney(maturedTotal)} was paid back'),
           context: newsWeek);
     }
     if (lastAiTransferNews != null) {

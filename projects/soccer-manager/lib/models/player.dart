@@ -1,9 +1,9 @@
-import 'dart:math';
 
 import 'player_instruction.dart';
 import 'attributes.dart';
 import 'enum_json.dart';
 import '../l10n/tr.dart';
+import '../logic/economy_scale.dart';
 
 /// Football Manager風の詳細ポジション（14種類）。
 enum Position { gk, dr, dc, dl, wbr, wbl, dm, mr, mc, ml, amr, amc, aml, st }
@@ -138,13 +138,13 @@ extension SquadStatusInfo on SquadStatus {
       };
 
   String get description => switch (this) {
-        SquadStatus.keyPlayer => Tr.pick('毎試合の出場を約束。外すと大きく不満だが、週給要求も高い',
+        SquadStatus.keyPlayer => Tr.pick('毎試合の出場を約束。外すと大きく不満だが、給与要求も高い',
             'Promised a start every match. Leaving them out upsets them badly, and they demand high wages.'),
         SquadStatus.regular => Tr.pick('基本的に出場を想定する標準の立場',
             'The standard billing: expected to play most weeks.'),
         SquadStatus.rotation => Tr.pick('出場は状況次第。ベンチでも不満が溜まりにくい',
             'Plays as circumstances allow. Rarely unsettled by a spell on the bench.'),
-        SquadStatus.prospect => Tr.pick('出場より育成優先。不満はほぼ溜まらず週給も控えめ',
+        SquadStatus.prospect => Tr.pick('出場より育成優先。不満はほぼ溜まらず給与も控えめ',
             'Development before minutes. Barely ever unsettled, and cheap on wages.'),
       };
 
@@ -1359,9 +1359,11 @@ class Player {
     double personalityFactor,
     double leadershipFactor,
   }) get marketValueBreakdown {
-    final ovr = (overall - 40).clamp(0, 60);
-    final base = pow(ovr, 1.8) * 3;
-    final potentialBonus = (potential - overall).clamp(0, 40) * 15;
+    // 能力に対して指数で伸びる(総合78で約5億、85で約17億、95で約100億)。
+    final base = marketValueBase(overall);
+    // 伸びしろ1あたり、基礎の3%を上乗せする。以前は1あたり15万円の
+    // 足し算だったが、基礎が億の桁になると伸びしろが無いのと同じになる。
+    final potentialBonus = base * (potential - overall).clamp(0, 40) * 0.03;
     double ageFactor;
     if (age <= 21) {
       ageFactor = 1.4;
@@ -1392,7 +1394,7 @@ class Player {
         b.ageFactor *
         b.personalityFactor *
         b.leadershipFactor;
-    return value.round().clamp(50, 20000);
+    return value.round().clamp(minMarketValue, maxMarketValue);
   }
 
   /// セーブデータへの書き出し。既定値のままの項目は書き出さない

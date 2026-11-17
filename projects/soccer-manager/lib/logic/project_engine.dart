@@ -18,8 +18,8 @@ enum ClubProject {
       };
 
   String get summary => switch (this) {
-        fanApp => Tr.pick('完成後、グッズ収入が毎週25万円増えます',
-            'Once built, merchandise income rises by 25 a week'),
+        fanApp => Tr.pick('完成後、グッズ収入が毎週増えます(上の部ほど大きい)',
+            'Once built, merchandise income rises every week (more in higher divisions)'),
         clubShop => Tr.pick('完成後、評判の4分の1だけ、グッズ収入が毎週増えます',
             'Once built, merchandise rises weekly by a quarter of your reputation'),
         partnerClub => Tr.pick('完成後、毎季末に評判+2・サポーターの期待+1',

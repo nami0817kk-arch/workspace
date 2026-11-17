@@ -301,6 +301,7 @@ void main() {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
     final target = gameState.transferMarket.first;
+    gameState.save!.wageBudget = 999999; // 年俸の枠で止めない
     gameState.save!.budget = 0;
 
     final ok = await gameState.buyPlayer(target.id);
@@ -1179,6 +1180,7 @@ void main() {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
     final target = gameState.transferMarket.first;
+    gameState.save!.wageBudget = 999999; // 年俸の枠で止めない
     gameState.save!.budget = target.marketValue; // ローン料は移籍金の一部で足りるはず
 
     final ok = await gameState.signLoanPlayer(target.id);
@@ -1196,6 +1198,7 @@ void main() {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
     final target = gameState.transferMarket.first;
+    gameState.save!.wageBudget = 999999; // 年俸の枠で止めない
     final expectedFee =
         (target.marketValue * GameState.loanBuyOptionRatio).round();
     gameState.save!.budget = target.marketValue + expectedFee;
@@ -1223,6 +1226,7 @@ void main() {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
     final target = gameState.transferMarket.first;
+    gameState.save!.wageBudget = 999999; // 年俸の枠で止めない
     gameState.save!.budget = target.marketValue;
     await gameState.signLoanPlayer(target.id);
     gameState.save!.budget = 999999;
@@ -3515,6 +3519,7 @@ void main() {
 
     gameState.save!.budget = 999999;
     final target = gameState.transferMarket.first;
+    gameState.save!.wageBudget = 999999; // 年俸の枠で止めない
     final ok = await gameState.buyPlayer(target.id);
     expect(ok, isFalse);
   });
@@ -8286,7 +8291,8 @@ void main() {
     // ループ内アサーション(敗戦時にnoteが積まれない)は検証済み。
     if (noteAtWin != null) {
       final prize = GameState.domesticCupWinPrizeFor(roundAtWin!);
-      expect(noteAtWin, contains('$prize万円'));
+      // 5部の額なので、そのまま。表示は formatMoney(「35万」)。
+      expect(noteAtWin, contains('$prize万'));
     }
   });
 
@@ -8705,7 +8711,8 @@ void main() {
     final easyState = GameState();
     await easyState.startNewGame('イージーFC', difficulty: GameDifficulty.easy);
     expect(easyState.save!.difficulty, GameDifficulty.easy);
-    expect(easyState.save!.budget, 9000, reason: '初期資金6000万円の1.5倍');
+    expect(easyState.save!.budget, (GameState.initialBudgetTier5 * 1.5).round(),
+        reason: '初期資金(5部の年収の半年分)の1.5倍');
     expect(
       easyState.save!.boardTargetRank,
       (BoardEngine.estimateTargetRank(easyState.save!.league, 'user') + 2)
@@ -8715,7 +8722,8 @@ void main() {
 
     final hardState = GameState();
     await hardState.startNewGame('ハードFC', difficulty: GameDifficulty.hard);
-    expect(hardState.save!.budget, 3600, reason: '初期資金6000万円の0.6倍');
+    expect(hardState.save!.budget, (GameState.initialBudgetTier5 * 0.6).round(),
+        reason: '初期資金(5部の年収の半年分)の0.6倍');
     expect(
       hardState.save!.boardTargetRank,
       (BoardEngine.estimateTargetRank(hardState.save!.league, 'user') - 1)
@@ -8944,7 +8952,7 @@ void main() {
     gameState.save!.budget = target.marketValue + 10000;
     final bought = await gameState.buyPlayer(target.id);
     expect(bought, isFalse);
-    expect(gameState.lastSigningBlockReason, contains('週給予算'));
+    expect(gameState.lastSigningBlockReason, contains('給与予算'));
 
     // 上限を十分に広げれば同じ獲得が通る。
     gameState.save!.wageBudget = gameState.weeklyWageBill + target.wage + 50;

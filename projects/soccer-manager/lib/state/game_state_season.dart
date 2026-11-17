@@ -501,11 +501,11 @@ extension GameStateSeason on GameState {
         match.homeTeamId == userId || match.awayTeamId == userId;
     if (userInvolved) {
       if (match.winnerId == userId) {
-        final prize = GameState.domesticCupWinPrizeFor(match.round);
+        final prize = scaledMoney(GameState.domesticCupWinPrizeFor(match.round));
         _book(LedgerCategory.prize, prize);
         _save!.careerCupPrize += prize;
-        lastCupPrizeNote = Tr.pick(
-            '勝利賞金として$prize万円を獲得!', 'You collected $prize in prize money!');
+        lastCupPrizeNote = Tr.pick('勝利賞金として${formatMoney(prize)}を獲得!',
+            'You collected ${formatMoney(prize)} in prize money!');
         _logNews(lastCupPrizeNote!, context: Tr.pick('カップ戦', 'Cup'));
       } else if (cup.isEliminated(userId)) {
         // 理事会のカップ目標(到達ラウンド)と実際の成績を突き合わせる。
@@ -531,8 +531,9 @@ extension GameStateSeason on GameState {
     }
     if (cup.isComplete && cup.championId == userId && !cup.rewardClaimed) {
       cup.rewardClaimed = true;
-      _book(LedgerCategory.prize, 700);
-      _save!.careerCupPrize += 700;
+      final reward = scaledMoney(GameState.domesticCupChampionPrize);
+      _book(LedgerCategory.prize, reward);
+      _save!.careerCupPrize += reward;
       _save!.confidence = (_save!.confidence + 10).clamp(0, 100);
       _save!.trophyHistory.add(Tr.pick(
           'シーズン${_save!.league.season}: ${cup.name} 優勝',
@@ -553,10 +554,11 @@ extension GameStateSeason on GameState {
         ((r.homeTeamId == userId && r.homeGoals > r.awayGoals) ||
             (r.awayTeamId == userId && r.awayGoals > r.homeGoals));
     if (userWon) {
-      _book(LedgerCategory.prize, GameState.continentalGroupWinPrize);
-      _save!.careerCupPrize += GameState.continentalGroupWinPrize;
-      lastCupPrizeNote = Tr.pick('勝利賞金として${GameState.continentalGroupWinPrize}万円を獲得!',
-          'You collected ${GameState.continentalGroupWinPrize} in prize money!');
+      final prize = scaledMoney(GameState.continentalGroupWinPrize);
+      _book(LedgerCategory.prize, prize);
+      _save!.careerCupPrize += prize;
+      lastCupPrizeNote = Tr.pick('勝利賞金として${formatMoney(prize)}を獲得!',
+          'You collected ${formatMoney(prize)} in prize money!');
       _logNews(lastCupPrizeNote!, context: Tr.pick('カップ戦', 'Cup'));
     }
     if (cup.isEliminated(userId)) {
@@ -572,10 +574,11 @@ extension GameStateSeason on GameState {
     final userInTie = tie.teamAId == userId || tie.teamBId == userId;
     if (userInTie) {
       if (tie.isComplete && tie.winnerId == userId) {
-        _book(LedgerCategory.prize, GameState.continentalTieWinPrize);
-        _save!.careerCupPrize += GameState.continentalTieWinPrize;
-        lastCupPrizeNote = Tr.pick('勝ち上がり賞金として${GameState.continentalTieWinPrize}万円を獲得!',
-            'You collected ${GameState.continentalTieWinPrize} for going through!');
+        final prize = scaledMoney(GameState.continentalTieWinPrize);
+        _book(LedgerCategory.prize, prize);
+        _save!.careerCupPrize += prize;
+        lastCupPrizeNote = Tr.pick('勝ち上がり賞金として${formatMoney(prize)}を獲得!',
+            'You collected ${formatMoney(prize)} for going through!');
         _logNews(lastCupPrizeNote!, context: Tr.pick('カップ戦', 'Cup'));
       }
       if (cup.isEliminated(userId)) {
@@ -584,8 +587,9 @@ extension GameStateSeason on GameState {
     }
     if (cup.isComplete && cup.championId == userId && !cup.rewardClaimed) {
       cup.rewardClaimed = true;
-      _book(LedgerCategory.prize, 1500);
-      _save!.careerCupPrize += 1500;
+      final reward = scaledMoney(GameState.continentalChampionPrize);
+      _book(LedgerCategory.prize, reward);
+      _save!.careerCupPrize += reward;
       _save!.confidence = (_save!.confidence + 20).clamp(0, 100);
       _save!.trophyHistory.add(Tr.pick(
           'シーズン${_save!.league.season}: ${cup.name} 優勝',
@@ -721,7 +725,8 @@ extension GameStateSeason on GameState {
       finalRank: finalRank,
       teamCount: league.teams.length,
     );
-    prizeMoney = (prizeMoney * pow(0.6, playedTier - 1)).round();
+    // 5部の額(1部の額の0.6^4)を、戦った部の規模に直す。
+    prizeMoney = scaledMoneyFor(playedTier, (prizeMoney * pow(0.6, 4)).round());
     _book(LedgerCategory.prize, prizeMoney);
     _bookTvRights(finalRank: finalRank, teamCount: league.teams.length);
     final confidenceDelta = BoardEngine.confidenceDeltaForSeasonEnd(
@@ -775,15 +780,15 @@ extension GameStateSeason on GameState {
     // 上回った場合(3つ以上)は1.5倍に増額し、快挙をしっかり報いる。
     lastBoardBonusNote = null;
     if (finalRank <= _save!.boardTargetRank) {
-      var bonus = (300 * pow(0.6, playedTier - 1)).round();
+      var bonus = scaledMoneyFor(playedTier, (300 * pow(0.6, 4)).round());
       final exceeded = _save!.boardTargetRank - finalRank >= 3;
       if (exceeded) bonus = (bonus * 1.5).round();
       _book(LedgerCategory.prize, bonus);
       lastBoardBonusNote = exceeded
-          ? Tr.pick('理事会目標を大きく上回り、報奨金$bonus万円が支給されました!',
-              "You beat the board's target comfortably, and they have paid you a $bonus bonus!")
-          : Tr.pick('理事会目標を達成し、報奨金$bonus万円が支給されました!',
-              "You met the board's target, and they have paid you a $bonus bonus!");
+          ? Tr.pick('理事会目標を大きく上回り、報奨金${formatMoney(bonus)}が支給されました!',
+              "You beat the board's target comfortably, and they have paid you a ${formatMoney(bonus)} bonus!")
+          : Tr.pick('理事会目標を達成し、報奨金${formatMoney(bonus)}が支給されました!',
+              "You met the board's target, and they have paid you a ${formatMoney(bonus)} bonus!");
     }
 
     _settlePartnerClub();
@@ -1043,11 +1048,11 @@ extension GameStateSeason on GameState {
       lastPromotionBonus = promotionBonus;
       lastDivisionChangeMessage = userInPromotionPlayoff
           ? Tr.pick(
-              '昇格プレーオフを勝ち抜き、来シーズンは$newTier部リーグに昇格します！理事会から補強予算$promotionBonus万円が支給されました。',
-              'You came through the play-offs and go up to tier $newTier next season. The board has given you $promotionBonus to strengthen.')
+              '昇格プレーオフを勝ち抜き、来シーズンは$newTier部リーグに昇格します！理事会から補強予算${formatMoney(promotionBonus)}が支給されました。',
+              'You came through the play-offs and go up to tier $newTier next season. The board has given you ${formatMoney(promotionBonus)} to strengthen.')
           : Tr.pick(
-              '昇格達成！来シーズンは$newTier部リーグに昇格します。理事会から補強予算$promotionBonus万円が支給されました。',
-              'Promoted. You go up to tier $newTier next season, and the board has given you $promotionBonus to strengthen.');
+              '昇格達成！来シーズンは$newTier部リーグに昇格します。理事会から補強予算${formatMoney(promotionBonus)}が支給されました。',
+              'Promoted. You go up to tier $newTier next season, and the board has given you ${formatMoney(promotionBonus)} to strengthen.');
     } else if (userInPromotionPlayoff) {
       lastDivisionChangeMessage = Tr.pick(
           '昇格プレーオフで敗れ、来シーズンも$playedTier部リーグで戦います。',

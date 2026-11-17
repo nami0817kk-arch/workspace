@@ -15,6 +15,7 @@ import 'onboarding_screen.dart';
 import 'start_screen.dart';
 import '../theme/semantic_colors.dart';
 import '../monetization/ad_service.dart';
+import '../logic/economy_scale.dart';
 
 const String _privacyPolicyUrl =
     'https://soccer-manager.pages.dev/legal/privacy.html';
@@ -488,8 +489,8 @@ class SettingsScreen extends StatelessWidget {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(Tr.pick(
-                      '資金を${amount >= 0 ? '+' : ''}$amount万円しました',
-                      "Funds changed by ${amount >= 0 ? '+' : ''}$amount")),
+                      '資金を${amount >= 0 ? '+' : ''}${formatMoney(amount)}しました',
+                      "Funds changed by ${amount >= 0 ? '+' : ''}${formatMoney(amount)}")),
                 ),
               );
             },

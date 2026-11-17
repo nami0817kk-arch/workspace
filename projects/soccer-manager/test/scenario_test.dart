@@ -28,7 +28,7 @@ void main() {
   test('債務のシナリオは資金がマイナスで、株主の期待が低い', () async {
     final std = await start(StartScenario.standard);
     final gs = await start(StartScenario.debt);
-    expect(gs.save!.budget, -1500);
+    expect(gs.save!.budget, -(GameState.initialBudgetTier5 ~/ 4));
     expect(gs.save!.shareholderExpectation,
         lessThan(std.save!.shareholderExpectation));
   });

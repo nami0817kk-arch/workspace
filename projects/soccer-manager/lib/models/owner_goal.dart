@@ -1,4 +1,5 @@
 import '../l10n/tr.dart';
+import '../logic/economy_scale.dart';
 
 /// オーナーが自分で選ぶ、長い目で見た目標。
 ///
@@ -45,7 +46,7 @@ extension OwnerGoalInfo on OwnerGoal {
         OwnerGoal.reachTopDivision => Tr.pick('1部へ昇格', 'Reach the top division'),
         OwnerGoal.winCup => Tr.pick('国内カップ優勝', 'Win the domestic cup'),
         OwnerGoal.richClub =>
-          Tr.pick('資金を${OwnerGoalRules.richTarget}万円に', 'Build funds to ${OwnerGoalRules.richTarget}'),
+          Tr.pick('資金を${formatMoney(OwnerGoalRules.richTarget)}に', 'Build funds to ${formatMoney(OwnerGoalRules.richTarget)}'),
         OwnerGoal.clubValue => Tr.pick('クラブ価値を2倍に', 'Double the club value'),
         OwnerGoal.topFour => Tr.pick('1部で3シーズン4位以内', 'Finish top four three times'),
         OwnerGoal.unbeaten => Tr.pick('無敗でシーズンを終える', 'Go a season unbeaten'),
@@ -75,8 +76,8 @@ extension OwnerGoalInfo on OwnerGoal {
 class OwnerGoalRules {
   const OwnerGoalRules._();
 
-  /// 「資金を増やす」の目標額(万円)。
-  static const int richTarget = 18000;
+  /// 「資金を増やす」の目標額(万円)。10億。5部の初期資金(2億)の5倍。
+  static const int richTarget = 100000;
 
   /// 「クラブ価値を増やす」の倍率。
   static const double valueTarget = 2.0;

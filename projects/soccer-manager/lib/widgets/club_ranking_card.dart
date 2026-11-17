@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../l10n/tr.dart';
 import '../logic/club_ranking_engine.dart';
 import '../state/game_state.dart';
+import '../logic/economy_scale.dart';
 
 /// 世界クラブ価値番付。上位と、自クラブの位置。
 class ClubRankingCard extends StatelessWidget {
@@ -57,7 +58,7 @@ class ClubRankingCard extends StatelessWidget {
                     fontWeight: c.isUser ? FontWeight.bold : null),
               ),
             ),
-            Text(Tr.pick('${c.value}万円', '${c.value}')),
+            Text(formatMoney(c.value)),
           ],
         ),
       );

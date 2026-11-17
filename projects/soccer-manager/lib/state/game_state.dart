@@ -122,6 +122,7 @@ import '../models/preseason_camp.dart';
 import '../models/opposition_plan.dart';
 import '../models/player_instruction.dart';
 import '../models/staff_member.dart';
+import '../logic/economy_scale.dart';
 
 part 'game_state_squad.dart';
 part 'game_state_transfer.dart';
@@ -591,6 +592,94 @@ class GameState extends ChangeNotifier {
     _ensureWorldSquads(save);
     save.renumberDuplicatePlayerIds(PlayerGenerator.nextPlayerId);
     _dropDanglingJobOffer(save);
+    _migrateEconomyIfNeeded(save);
+  }
+
+  /// お金の桁を部ごとに変える前(版1)のセーブを、一度だけ新しい桁に直す。
+  ///
+  /// - 全選手(自クラブ・他クラブ・他国・移籍市場・フリーエージェント・
+  ///   ユース)の週俸を、新しい価値の曲線から作り直す。違約金条項と
+  ///   買い取りオプションは、価値が何倍になったかに合わせて直す。
+  /// - 資金・災害基金・スポンサーと命名権の契約の額・融資の残り・分割払い
+  ///   の残り・預金を、今の部の収入の倍率(incomeScale)倍にする。
+  /// - 古い桁で始まった交渉と移籍の申し出は、額が合わないので取り下げる。
+  void _migrateEconomyIfNeeded(SaveGame save) {
+    if (save.economyVersion >= SaveGame.currentEconomyVersion) return;
+    final scale = incomeScale(save.currentDivisionTier);
+    int up(int v) => (v * scale).round();
+
+    for (final p in save.allPlayers) {
+      final ratio = p.marketValue / max(1, GameState.legacyMarketValue(p));
+      p.wage = weeklyWageForValue(p.marketValue);
+      if (p.releaseClause != null) {
+        p.releaseClause = (p.releaseClause! * ratio).round();
+      }
+      if (p.loanBuyOptionFee != null) {
+        p.loanBuyOptionFee = (p.loanBuyOptionFee! * ratio).round();
+      }
+    }
+
+    save.budget = up(save.budget);
+    save.reserveFund = up(save.reserveFund);
+    for (final deal in [
+      if (save.sponsorDeal != null) save.sponsorDeal!,
+      if (save.namingDeal != null) save.namingDeal!,
+      ...save.pendingSponsorOffers,
+      ...save.pendingNamingOffers,
+    ]) {
+      deal.weeklyIncome = up(deal.weeklyIncome);
+    }
+    save.bankLoans = [
+      for (final l in save.bankLoans)
+        BankLoan(
+          id: l.id,
+          principal: up(l.principal),
+          weeklyRepayment: up(l.weeklyRepayment),
+          termWeeks: l.termWeeks,
+          weeksRemaining: l.weeksRemaining,
+        ),
+    ];
+    for (final i in save.pendingInstallments) {
+      i.weeklyAmount = up(i.weeklyAmount);
+    }
+    save.fixedDeposits = [
+      for (final d in save.fixedDeposits)
+        FixedDeposit(
+          id: d.id,
+          principal: up(d.principal),
+          maturityValue: up(d.maturityValue),
+          termWeeks: d.termWeeks,
+          weeksRemaining: d.weeksRemaining,
+        ),
+    ];
+    save.incomingOffers = [];
+    save.pendingContractNegotiation = null;
+    // 給与の枠は新しい桁で引き直す(古い枠のままだと誰も獲れない)。
+    final userTeam = _findTeam(save.league.teams, save.userTeamId);
+    if (userTeam != null) {
+      save.wageBudget = BoardEngine.wageBudgetFor(
+        tier: save.currentDivisionTier,
+        currentWeeklyWageBill: ContractEngine.weeklyWageBill(userTeam) +
+            scaleMoneyForTier(save.currentDivisionTier,
+                save.infrastructure.totalStaffWeeklyWage),
+      );
+    }
+    save.economyVersion = SaveGame.currentEconomyVersion;
+  }
+
+  /// 桁を変える前の市場価値(万円)。旧セーブの換算で、価値が何倍に
+  /// なったかを測るためだけに使う。
+  @visibleForTesting
+  static int legacyMarketValue(Player p) {
+    final b = p.marketValueBreakdown;
+    final ovr = (p.overall - 40).clamp(0, 60);
+    final base = pow(ovr, 1.8) * 3;
+    final potentialBonus = (p.potential - p.overall).clamp(0, 40) * 15;
+    final value = (base + potentialBonus) *
+        b.ageFactor *
+        b.personalityFactor *
+        b.leadershipFactor;
+    return value.round().clamp(50, 20000);
   }
 
   /// セーブデータ内の全選手IDを集め、[PlayerGenerator]のIDカウンターへ反映する。
@@ -1201,6 +1290,15 @@ class GameState extends ChangeNotifier {
 
   /// 国内カップで1勝するごとの賞金(単位: 資金)。ラウンドが深いほど高額。
   static int domesticCupWinPrizeFor(int round) => 20 + 15 * round;
+
+  /// 国内カップ優勝の報酬(5部の額)。
+  static const int domesticCupChampionPrize = 700;
+
+  /// 大陸カップ優勝の報酬(5部の額)。
+  static const int continentalChampionPrize = 1500;
+
+  /// 新しいゲームの初期資金(5部の額)。5部の年収の半年分ほど。
+  static const int initialBudgetTier5 = 20000;
 
   /// 大陸カップのグループステージで1勝するごとの賞金。
   static const int continentalGroupWinPrize = 40;

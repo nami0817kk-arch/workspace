@@ -75,7 +75,8 @@ void main() {
       await gs.startNewGame('テストFC');
       final id = gs.save!.userTeamId;
       final p = gs.weeklyIncomeParts(id);
-      expect(p.gate + p.sponsor + p.merchandise, gs.weeklyIncomeFor(id));
+      expect(p.gate + p.sponsor + p.merchandise + p.broadcast,
+          gs.weeklyIncomeFor(id));
       expect(p.gate, greaterThan(0));
       expect(p.merchandise, greaterThan(0));
     });
@@ -112,8 +113,9 @@ void main() {
       await gs.playNextMatchdayQuickSim();
       final l = gs.currentLedger;
       expect(l.of(LedgerCategory.playerWages), lessThan(0));
+      // 年俸(週俸×52)をその年の節の数で割って毎節払う。
       expect(-(l.of(LedgerCategory.playerWages) + l.of(LedgerCategory.staffWages)),
-          gs.weeklyWageBill);
+          gs.matchdayPlayerWageCost + gs.matchdayStaffWageCost);
     });
 
     test('今の収支が赤字なら、資金が尽きるまでの節数が出る', () async {
