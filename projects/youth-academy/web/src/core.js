@@ -106,8 +106,9 @@
     const mine = m.scenes.filter((sc) => sc.side === 'home');
     const theirs = m.scenes.filter((sc) => sc.side === 'away');
     const poss = clamp(Math.round(100 * (0.65 * hs + 0.35 * (mine.length / Math.max(1, m.scenes.length)))), 25, 75);
-    const pg = (id) => (m.home.players[id] ? m.home.players[id].pos : null);
-    const won = theirs.filter((sc) => ['dispossessed', 'intercepted'].includes(sc.outcome) && (sc.defs || []).some((d) => pg(d) === 'MF' || pg(d) === 'FW')).length + mine.filter((sc) => sc.type === 'steal').length;
+    // 相手陣で奪った回数＝高い位置での奪取の場面で奪えた回数＋合間の相手陣での奪取（下の選手ごとの奪取のうち、前の子ほど相手陣で取る割合が高い）。
+    // 2026-11-17：前は自陣で止めた場面（DF 以外が絡んだもの）を数えていて、名前と中身がずれ、ほぼ0だった
+    const stealWon = mine.filter((sc) => sc.type === 'steal' && sc.outcome !== 'escaped').length;
     // 攻めた方向：自分の見どころの最初のボールの横の位置（0〜68m）
     const dir = { 左: 0, 中央: 0, 右: 0 };
     for (const sc of mine) {
@@ -132,8 +133,10 @@
       const tw = theirs.filter((sc) => (sc.defs || []).includes(p.id) && ['dispossessed', 'intercepted', 'stopped', 'blocked', 'cleared'].includes(sc.outcome)).length;
       const tk = p.pos === 'GK' ? 0 : Math.round(k * ({ DF: 3, MF: 2.4, FW: 0.9 }[p.pos] || 1.5) * (1.4 - hs) * (ab('タックル') / 11) * (0.7 + r() * 0.6)) + (tw ? 1 : 0);
       const steal = p.pos === 'GK' ? 0 : Math.round(k * ({ DF: 2.6, MF: 2.2, FW: 0.8 }[p.pos] || 1.5) * (1.4 - hs) * (ab('予測') / 11) * (0.7 + r() * 0.6)) + tw;
-      players.push({ id: p.id, num: p.num, name: p.name, pos: p.pos, mins: st.minutes, rating: st.rating, passes, pct, shots: st.shots || 0, goals: st.goals || 0, tackles: tk, steals: steal, saves: st.saves || 0 });
+      players.push({ id: p.id, num: p.num, name: p.name, pos: p.pos, mins: st.minutes, rating: st.rating, passes, pct, shots: st.shots || 0, goals: st.goals || 0, tackles: tk, steals: steal, saves: st.saves || 0, yellow: p.yellow || 0, red: !!p.sentOff });
     }
+    const highShare = { FW: 0.7, MF: 0.3, DF: 0.05, GK: 0 };
+    const won = stealWon + Math.round(players.reduce((t, x) => t + x.steals * (highShare[x.pos] || 0), 0) * (0.6 + hs * 0.8));
     players.sort((a, b) => b.rating - a.rating);
     // 効いた戦術の一言（決定114）
     const type = (m.home.tactic && m.home.tactic.type) || '戦い方';
@@ -142,11 +145,11 @@
     const sh = m.stats.home;
     let tactic;
     if (good >= 3 && topDir[1] >= 45) tactic = `「${type}」がはまった。${topDir[0]}から崩す形が${dir[topDir[0]]}回できた`;
-    else if (won >= 4) tactic = `「${type}」で前から奪えた。相手陣で${won}回ボールを取った`;
+    else if (stealWon >= 2 || won >= 7) tactic = `「${type}」で前から奪えた。相手陣で${won}回ボールを取った`;
     else if (poss <= 40 && m.score.home >= m.score.away) tactic = `ボールは持たれたが、「${type}」で耐えて勝ち点を取った`;
     else if (sh.shots <= 3) tactic = `「${type}」では崩しきれなかった。シュートは${sh.shots}本だけ`;
     else tactic = `「${type}」は五分。${topDir[0]}からの攻めが多かった（${topDir[1]}%）`;
-    return { poss, shots: sh.shots, onTarget: sh.onTarget, oppShots: m.stats.away.shots, won, dir: dirPct, players, tactic };
+    return { poss, shots: sh.shots, onTarget: sh.onTarget, oppShots: m.stats.away.shots, oppOnTarget: m.stats.away.onTarget, won, stealWon, cards: (m.cards || []).slice(), dir: dirPct, players, tactic };
   };
 
   // ---------- 練習の1枚（決定143）：チームの重点1つ・この週の見込み ----------

@@ -183,6 +183,7 @@
     const c = store.get('cfg', null);
     app.cfg = c && c.lineup && c.lineup.length === 11 && c.bench && c.bench.length === 9 ? c : null;
     app.autoStop = store.get('autoStop', true);
+    app.stopOnScore = store.get('stopOnScore', false);
     app.slot = store.get('slot', 0);
     YA.sfx.on = store.get('sfx', true) !== false;
     if (YA.bgm) YA.bgm.on = store.get('bgm', true) !== false;
@@ -475,6 +476,40 @@
     t.formation = name;
   }
 
+  // ---------- 小さな窓（確かめる・選ぶ・型）。2026-11-17 ----------
+  // 窓は #main の上に重ねる。ボタンは高さ40px
+  function smallSheet(build) {
+    const main = document.getElementById('main');
+    const sheet = h('div', { class: 'sheet', style: 'z-index:30' });
+    const close = () => sheet.remove();
+    sheet.append(h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(440px,95%);max-height:94%;overflow:auto;padding:12px;gap:8px' }, build(close)));
+    main.append(sheet);
+    return close;
+  }
+  // 確かめてから進める（取り消せない操作の前に）
+  YA.confirmBox = function (text, okLabel, onOk, onCancel) {
+    smallSheet((close) => h('div', { style: 'display:flex;flex-direction:column;gap:10px' }, h('div', { class: 'h' }, text),
+      h('div', { class: 'row', style: 'gap:8px;justify-content:flex-end' },
+        h('button', { class: 'btn', style: 'min-height:40px;min-width:90px', onclick: () => { close(); if (onCancel) onCancel(); } }, 'やめる'),
+        h('button', { class: 'btn pri', style: 'min-height:40px;min-width:110px', onclick: () => { close(); onOk(); } }, okLabel))));
+  };
+  // 一覧から1つ選ぶ。items: [{ label, on, onclick }]
+  YA.pickModal = function (title, items) {
+    smallSheet((close) => h('div', { style: 'display:flex;flex-direction:column;gap:8px' }, h('div', { class: 'h' }, title),
+      h('div', { style: 'display:grid;grid-template-columns:repeat(3,1fr);gap:6px' }, items.map((it) => h('button', { class: 'btn' + (it.on ? ' on' : ''), style: 'min-height:40px', onclick: () => { close(); it.onclick(); } }, it.label))),
+      h('button', { class: 'btn', style: 'min-height:40px', onclick: close }, '閉じる')));
+  };
+  // 型を3つ持つ窓（試合の布陣・練習のメニューで同じ形）：型を選んで「呼び出す」か「ここに保存」。
+  // 空の型は呼び出せない（理由を出す）、保存してある型への保存は上書きを確かめる
+  YA.slotModal = function (o) {
+    smallSheet((close) => h('div', { style: 'display:flex;flex-direction:column;gap:8px' }, h('div', { class: 'h' }, o.title || '型'),
+      ...[0, 1, 2].map((k) => h('div', { class: 'row', style: 'gap:6px;align-items:center' },
+        h('b', { style: 'width:44px' }, '型' + (k + 1)), h('span', { class: 'sub grow' }, o.filled[k] ? '保存あり' : '空'),
+        h('button', { class: 'btn', style: 'min-height:40px', disabled: !o.filled[k], why: '型' + (k + 1) + 'はまだ空です。先に「ここに保存」してください', onclick: () => { close(); o.onLoad(k); } }, '呼び出す'),
+        h('button', { class: 'btn', style: 'min-height:40px', onclick: () => { close(); if (o.filled[k]) YA.confirmBox('型' + (k + 1) + 'に保存してある内容を上書きしますか？', '上書きする', () => o.onSave(k)); else o.onSave(k); } }, 'ここに保存'))),
+      h('button', { class: 'btn', style: 'min-height:40px', onclick: close }, '閉じる')));
+  };
+
   // ---------- 戦術パネル（試合前と停止中で共通） ----------
   function tacticPanel(t, o) {
     const root = h('div', { class: o.sheet ? 'sheet-body' : 'pre-body' });
@@ -497,20 +532,32 @@
     }
     board = boardEl(t, { selected: () => st.sel, showRole: () => !!st.showRole, onSelect: (i) => { if (st.tab === 'squad') { handlePick({ k: 'L', i }); return; } st.sel = i; if (o.tabs.some((x) => x[0] === 'role') && st.tab !== 'role' && st.tab !== 'sub') { st.tab = 'role'; renderTabs(); } renderBody(); board.redraw(); }, onChange });
     leftWrap.append(board, fmRow, saveRow);
-    let slotSel = 0;
+    // 布陣・型の行（2026-11-17：布陣は選ぶ形の1つのボタン、型の保存と呼出は小さな窓へ。どれも高さ34px以上）
+    // 布陣や型を変える前の並びを1回分だけ覚えて「元に戻す」で戻す（選手ごとに位置・役割・任務を戻すので、交代のあとでも崩れない）
+    const snap = () => ({ formation: t.formation, by: Object.fromEntries(t.lineup.map((x) => [x.pid, { x: x.x, y: x.y, role: x.role, duty: x.duty }])) });
+    const short11 = () => t.lineup.length < 11;
+    const BTN = 'min-height:34px;font-size:11px;padding:2px 6px';
     function renderFm() {
-      fmRow.replaceChildren(
-        h('button', { class: 'btn sm pri', onclick: () => { autoSquad(t); st.pick = null; st.msgs = ['おまかせで11人と役割を決めました（力とポジションの適性から）']; if (app.w) { render(); return; } onChange(); board.redraw(); } }, 'おまかせ編成'),
-        ...Object.keys(YA.FORMATIONS).map((n) => h('button', { class: 'btn sm' + (t.formation === n ? ' on' : ''), onclick: () => { applyFormation(t, n); onChange(); board.redraw(); } }, n)),
-      );
       const saved = store.get('forms', [null, null, null]);
-      saveRow.replaceChildren(
-        h('button', { class: 'btn sm' + (st.showRole ? ' on' : ''), onclick: () => { st.showRole = !st.showRole; renderFm(); board.redraw(); } }, '役割'),
-        h('span', { class: 'sub', style: 'align-self:center;font-weight:800' }, '保存'),
-        ...[0, 1, 2].map((k) => h('button', { class: 'btn sm' + (slotSel === k ? ' on' : ''), onclick: () => { slotSel = k; renderFm(); } }, saved[k] ? `型${k + 1}●` : `型${k + 1}`)),
-        h('button', { class: 'btn sm', onclick: () => { const sv = store.get('forms', [null, null, null]); sv[slotSel] = { slots: t.lineup.map((x) => ({ x: x.x, y: x.y, role: x.role, duty: x.duty })) }; store.set('forms', sv); st.msgs = ['型' + (slotSel + 1) + 'に保存しました']; renderFm(); renderBody(); } }, '保存'),
-        h('button', { class: 'btn sm', onclick: () => { const sv = store.get('forms', [null, null, null]); const f2 = sv[slotSel]; if (!f2) { st.msgs = ['型' + (slotSel + 1) + 'はまだ空です']; renderBody(); return; } f2.slots.forEach((x, i) => { t.lineup[i].x = x.x; t.lineup[i].y = x.y; if (x.role) { t.lineup[i].role = x.role; t.lineup[i].duty = x.duty; } fixRole(t, i); }); t.formation = 'カスタム'; board.redraw(); onChange(); } }, '呼出'),
+      fmRow.replaceChildren(
+        h('button', { class: 'btn sm pri', style: BTN, disabled: short11(), why: '退場者がいるので、おまかせ編成は使えません', onclick: () => { st.undo = snap(); autoSquad(t); st.pick = null; st.msgs = ['おまかせで11人と役割を決めました（力とポジションの適性から）']; if (app.w) { render(); return; } onChange(); board.redraw(); } }, 'おまかせ編成'),
+        h('button', { class: 'btn sm', style: BTN, disabled: short11(), why: '退場者がいるので、布陣の形は選べません（ボードで動かせます）', onclick: () => pickFormation() }, '布陣：' + (t.formation || 'カスタム') + ' ▾'),
+        h('button', { class: 'btn sm', style: BTN, disabled: short11(), why: '退場者がいるので、保存した型は呼び出せません', onclick: () => pickSlot() }, '型' + (saved.some(Boolean) ? '（' + saved.filter(Boolean).length + '）' : '') + ' ▾'),
+        h('button', { class: 'btn sm' + (st.showRole ? ' on' : ''), style: BTN, onclick: () => { st.showRole = !st.showRole; renderFm(); board.redraw(); } }, '役割'),
+        h('button', { class: 'btn sm', style: BTN, disabled: !st.undo, why: '戻せる変更がありません（布陣・型・おまかせを変えたあとに1回だけ戻せます）', onclick: () => { const u = st.undo; st.undo = null; t.lineup.forEach((x, i) => { const v = u.by[x.pid]; if (v) { x.x = v.x; x.y = v.y; x.role = v.role; x.duty = v.duty; } fixRole(t, i); }); t.formation = u.formation; st.msgs = ['布陣を元に戻しました']; board.redraw(); onChange(); } }, '元に戻す'),
       );
+      saveRow.replaceChildren();
+    }
+    function pickFormation() {
+      YA.pickModal('布陣を選ぶ', Object.keys(YA.FORMATIONS).map((n) => ({ label: n, on: t.formation === n, onclick: () => { st.undo = snap(); applyFormation(t, n); st.msgs = ['布陣を「' + n + '」にしました（「元に戻す」で戻せます）']; onChange(); board.redraw(); } })));
+    }
+    function pickSlot() {
+      YA.slotModal({
+        title: '布陣と役割の型',
+        filled: store.get('forms', [null, null, null]).map(Boolean),
+        onLoad: (k) => { const f2 = store.get('forms', [null, null, null])[k]; if (!f2) return; st.undo = snap(); f2.slots.forEach((x, i) => { if (!t.lineup[i]) return; t.lineup[i].x = x.x; t.lineup[i].y = x.y; if (x.role) { t.lineup[i].role = x.role; t.lineup[i].duty = x.duty; } fixRole(t, i); }); t.formation = 'カスタム'; st.msgs = ['型' + (k + 1) + 'を呼び出しました（「元に戻す」で戻せます）']; board.redraw(); onChange(); },
+        onSave: (k) => { const sv = store.get('forms', [null, null, null]); sv[k] = { slots: t.lineup.map((x) => ({ x: x.x, y: x.y, role: x.role, duty: x.duty })) }; store.set('forms', sv); st.msgs = ['型' + (k + 1) + 'に保存しました']; renderFm(); renderBody(); },
+      });
     }
 
     function renderTabs() {
@@ -523,10 +570,12 @@
       const sl = t.lineup[st.sel];
       const p = t.players[sl.pid];
       if (st.tab === 'tactic') {
-        body.append(h('div', { class: 'h' }, '戦い方の型'), h('div', { class: 'fm-row', style: 'margin:4px 0 6px' }, Object.keys(YA.TACTICS).map((n) => h('button', { class: 'btn sm' + (t.tactic.type === n ? ' on' : ''), onclick: () => { o.match ? o.match.setType(t, n) : (t.tactic = Object.assign({ type: n, dir: t.tactic.dir || 0 }, YA.TACTICS[n])); onChange(); } }, n + ' ' + YA.tacticFitOf(t, n).mark))));
+        body.append(h('div', { class: 'h' }, '戦い方の型'), h('div', { class: 'fm-row', style: 'margin:4px 0 6px' }, Object.keys(YA.TACTICS).map((n) => h('button', { class: 'btn sm' + (t.tactic.type === n ? ' on' : ''), onclick: () => { o.match ? o.match.setType(t, n) : (t.tactic = YA.withType(t.tactic, n)); onChange(); } }, n + ' ' + YA.tacticFitOf(t, n).mark))));
+        // つまみを動かして「カスタム」になっても、相性は元の型で見る（2026-11-17）
+        if (t.tactic.type === 'カスタム' && t.tactic.baseType) body.append(h('div', { class: 'note', style: 'margin:-2px 0 4px' }, `いまはカスタム（もとは「${t.tactic.baseType}」。相性はこの型で見ます）`));
         {
-          const cur = YA.tacticFitOf(t, t.tactic.type);
-          const pf = YA.TAC_PROFILE[t.tactic.type];
+          const cur = YA.tacticFitOf(t, YA.tacType(t.tactic));
+          const pf = YA.TAC_PROFILE[YA.tacType(t.tactic)];
           if (pf) {
             const wk = cur.abs.slice().sort((x, y) => x[1] - y[1]).slice(0, 2).map((x) => `${x[0]}${x[1].toFixed(1)}`).join('・');
             body.append(h('div', { class: 'insight', style: 'margin-bottom:4px;padding:5px 8px;font-size:11px;line-height:1.4' }, h('b', {}, `スタメンとの相性 ${cur.mark}`), `　${pf.why}。大事な能力：${pf.abs.join('・')}（先発で低いのは ${wk}）。練習するとこの能力が伸びやすくなります。`));
@@ -534,7 +583,7 @@
         }
         for (const [k, label, lo, hi] of YA.KNOBS) {
           const inp = h('input', { type: 'range', min: 0, max: 100, value: Math.round(t.tactic[k] * 100) });
-          inp.addEventListener('input', () => { t.tactic[k] = inp.value / 100; t.tactic.type = 'カスタム'; o.onChange && o.onChange(); });
+          inp.addEventListener('input', () => { YA.setKnob(t.tactic, k, inp.value / 100); o.onChange && o.onChange(); });
           inp.addEventListener('change', () => renderBody());
           body.append(h('div', { class: 'knob' }, h('label', {}, label), h('span', { class: 'l' }, lo), inp, h('span', {}, hi)));
         }
@@ -603,7 +652,8 @@
         benchP.forEach((q) => {
           const ok = !outP15 || (q.pos === 'GK') === outGK;
           const aptv = outP15 && q.apt ? q.apt[outP15] : null;
-          li.append(h('button', { class: 'pitem' + (st.subIn === q.id ? ' on' : ''), style: ok ? '' : 'opacity:.35', onclick: () => { st.subIn = q.id; renderBody(); } }, posChip(q), h('span', { class: 'num' }, q.num), h('span', { class: 'nm grow' }, surname(q)), gtag(q),
+          // 一度下げた子は灰色で押せない（2026-11-17：前はもう一度出られた）
+          li.append(h('button', { class: 'pitem' + (st.subIn === q.id ? ' on' : ''), style: q.off ? 'opacity:.35;background:#e3e7ee' : ok ? '' : 'opacity:.35', disabled: !!q.off, why: q.sentOff ? '退場した選手は出られません' : '一度下げた選手は、もう出られません', onclick: () => { st.subIn = q.id; renderBody(); } }, posChip(q), h('span', { class: 'num' }, q.num), h('span', { class: 'nm grow' }, surname(q)), gtag(q), q.off ? h('span', { class: 'chip gray', style: 'font-size:9.5px' }, '交代済み') : null,
             aptv != null ? h('span', { class: 'chip ' + (aptv >= 14 ? 'trait' : 'gray'), style: 'font-size:9.5px' }, '適' + aptv) : h('span', { class: 'sub', style: 'font-size:9.5px' }, q.traits.slice(0, 1).join('')),
             q.inj > 0 ? h('span', { class: 'fit bad' }, '怪') : null));
         });
@@ -910,7 +960,8 @@
     if (!sched) YA.OPPONENTS.forEach((o2, i) => top.append(h('button', { class: 'opp' + (i === app.opp ? ' on' : ''), onclick: () => { persistTeam(t); app.opp = i; render(); } }, h('b', {}, h('span', { class: 'sw', style: 'background:' + o2.color }), o2.name), h('span', {}, o2.desc))));
     const kick = h('div', { class: 'kick' },
       h('button', { class: 'btn pri', style: 'flex:1;font-size:14px', onclick: () => { persistTeam(t); startMatch(t, oppTeam, opp, sched); } }, 'キックオフ'),
-      h('button', { class: 'btn sm', onclick: () => { persistTeam(t); simulateAll(t, oppTeam, opp, sched); } }, '全シミュレーション'));
+      // 見ずに結果まで進める。試合中の「結果まで」と名前をそろえ、確かめてから進める（2026-11-17）
+      h('button', { class: 'btn sm', style: 'margin-left:10px', onclick: () => { persistTeam(t); YA.confirmBox('試合を見ずに、結果まで進めますか？（交代・指示はできません）', '結果まで進める', () => simulateAll(t, oppTeam, opp, sched)); } }, '結果まで'));
     top.append(kick);
     const panel = tacticPanel(t, { tabs: [['squad', '編成'], ['tactic', '戦い方'], ['role', '選手と役割'], ['opp', '相手の分析']], opp, oppTeam, onChange: () => { persistTeam(t); }, state: preState || {} });
     preState = panel.state;
@@ -939,7 +990,7 @@
   }
   function startMatch(t, oppTeam, opp, sched) {
     app.seed = (app.seed * 1103515245 + 12345) % 2147483647;
-    const m = new YA.Match({ seed: sched ? app.w.seed + app.w.week * 3 + app.w.year : app.seed, home: t, away: oppTeam, settings: { autoStop: app.autoStop } });
+    const m = new YA.Match({ seed: sched ? app.w.seed + app.w.week * 3 + app.w.year : app.seed, home: t, away: oppTeam, settings: { autoStop: app.autoStop, stopOnScore: !!app.stopOnScore } });
     m.opp = opp;
     m.scheduled = !!sched;
     app.match = m;
@@ -973,11 +1024,13 @@
     const scoreHome = h('span', { class: 'sc' }, '0');
     const scoreAway = h('span', { class: 'sc' }, '0');
     const clock = h('div', { class: 'clock' }, "0'");
-    const stopBtn = h('button', { class: 'btn pri sm', style: 'min-height:34px;min-width:76px' }, '止める');
-    const autoBtn = h('button', { class: 'btn sm', style: 'min-height:34px' });
-    const skipBtn = h('button', { class: 'btn sm', style: 'min-height:34px', onclick: () => { cleanupPlay(); let e; let g = 0; while (!m.finished && g++ < 5000) { const ev = m.step(); if (ev.type === 'full') e = ev; } finishMatch(m, e); app.view = 'result'; render(); } }, '結果まで');
+    const stopBtn = h('button', { class: 'btn pri sm', style: 'min-height:34px;min-width:70px' }, '止める');
+    const autoBtn = h('button', { class: 'btn sm', style: 'min-height:34px;white-space:nowrap' });
+    // 「結果まで」は確かめてから。止めるボタンから離して、時計の隣に置く（2026-11-17：前は確かめずに試合を飛ばし、止めるの2つ隣だった）
+    const skipNow = () => { cleanupPlay(); let e; let g = 0; while (!m.finished && g++ < 5000) { const ev = m.step(); if (ev.type === 'full') e = ev; } finishMatch(m, e); app.view = 'result'; render(); };
+    const skipBtn = h('button', { class: 'btn sm', style: 'min-height:34px;white-space:nowrap', onclick: () => { if (!play) return; const was = play.paused; play.paused = true; YA.confirmBox('残りを見ずに、結果まで進めますか？（交代・指示はできません）', '結果まで進める', skipNow, () => { if (play) play.paused = was; }); } }, '結果まで');
     const speeds = h('div', { class: 'speeds' });
-    const top = h('div', { class: 'topbar' }, h('div', { class: 'scoreboard' }, YA.emblemEl(app.w, m.home.name, 18), h('span', { class: 'tn' }, m.home.short), scoreHome, h('span', { style: 'color:#8fa3c4' }, '-'), scoreAway, h('span', { class: 'tn' }, m.away.short), YA.emblemEl(app.w, m.away.name, 18)), clock, h('div', { class: 'grow' }), speeds, skipBtn, autoBtn, stopBtn);
+    const top = h('div', { class: 'topbar' }, h('div', { class: 'scoreboard' }, YA.emblemEl(app.w, m.home.name, 18), h('span', { class: 'tn' }, m.home.short), scoreHome, h('span', { style: 'color:#8fa3c4' }, '-'), scoreAway, h('span', { class: 'tn' }, m.away.short), YA.emblemEl(app.w, m.away.name, 18)), clock, skipBtn, h('div', { class: 'grow' }), speeds, autoBtn, stopBtn);
     const stage = h('div', { class: 'stage' });
     const cv = h('canvas', {});
     const sceneHead = h('div', { class: 'scene-head' });
@@ -986,7 +1039,9 @@
     const bannerBox = h('div', {});
     stage.append(cv, sceneHead, ctl, bannerBox);
     const commMin = h('span', { class: 'min' }, "0'");
-    const commTx = h('span', { class: 'tx' }, 'キックオフ。' + m.home.short + 'の攻撃で試合が始まります');
+    // 開始の文は実際に蹴る側（2026-11-17：前はいつもこちらの攻撃と出ていた）
+    const koText = 'キックオフ。' + (m.kickoffSide === 'away' ? m.away.short : m.home.short) + 'のボールで試合が始まります';
+    const commTx = h('span', { class: 'tx' }, koText);
     const comm = h('div', { class: 'comm' }, commMin, commTx, h('span', { class: 'grow' }), h('span', { class: 'sub', style: 'font-size:10px' }, 'タップで経過'));
     wrap.append(top, stage, comm);
     main.append(wrap);
@@ -1002,23 +1057,34 @@
       speeds.replaceChildren(...SPEEDS.map(([k, n]) => h('button', { class: S.speed === k ? 'on' : '', onclick: () => { S.speed = k; app.speed = k; store.set('speed', k); refreshSpeeds(); } }, n)));
     }
     refreshSpeeds();
+    // 自動停止は3段：切る／失点と節目だけ（既定）／得点でも止める（2026-11-17：前は自分の得点でも必ず止まった）
     function refreshAuto() {
-      autoBtn.textContent = '自動停止 ' + (m.settings.autoStop ? 'ON' : 'OFF');
+      autoBtn.textContent = '自動停止 ' + (!m.settings.autoStop ? '切' : m.settings.stopOnScore ? '得点も' : '失点時');
       autoBtn.classList.toggle('on', m.settings.autoStop);
     }
-    autoBtn.onclick = () => { m.settings.autoStop = !m.settings.autoStop; app.autoStop = m.settings.autoStop; store.set('autoStop', app.autoStop); refreshAuto(); };
+    autoBtn.onclick = () => {
+      const st0 = !m.settings.autoStop ? 0 : m.settings.stopOnScore ? 2 : 1;
+      const nx = (st0 + 1) % 3;
+      m.settings.autoStop = nx > 0;
+      m.settings.stopOnScore = nx === 2;
+      app.autoStop = m.settings.autoStop;
+      app.stopOnScore = m.settings.stopOnScore;
+      store.set('autoStop', app.autoStop);
+      store.set('stopOnScore', app.stopOnScore);
+      refreshAuto();
+    };
     refreshAuto();
     const setComm = (min, tx) => { commMin.textContent = min + "'"; commTx.textContent = tx; };
     const logBox = () => {
       const ex = stage.querySelector('.logpop');
       if (ex) return ex.remove();
-      stage.append(h('div', { class: 'logpop', onclick: (e) => e.currentTarget.remove() }, m.log.slice(-10).reverse().map((l) => h('div', {}, h('b', {}, l.minute + "'"), l.text))));
+      stage.append(h('div', { class: 'logpop', onclick: (e) => e.currentTarget.remove() }, m.log.slice(-10).reverse().map((l) => h('div', {}, h('b', {}, (l.ml || l.minute) + "'"), l.text))));
     };
     comm.onclick = logBox;
     const upd = () => {
       scoreHome.textContent = m.score.home;
       scoreAway.textContent = m.score.away;
-      clock.textContent = m.min + "'";
+      clock.textContent = m.minLabel() + "'";
     };
 
     function openSheet(reason) {
@@ -1030,7 +1096,7 @@
       const panelBox = h('div', { style: 'flex:1;min-height:0;display:flex' });
       const close = () => { m.closeWindow(m.home); sheet.remove(); S.sheet = null; S.paused = false; S.stopWait = false; stopBtn.textContent = '止める'; stopBtn.disabled = false; };
       const subChip = h('span', { class: 'chip gray' }, `交代 あと${5 - m.home.subsUsed}人`);
-      const head = h('div', { class: 'sheet-top' }, h('div', { class: 'reason' }, `${m.min}'  ${titles[reason] || ''}   ${m.score.home} - ${m.score.away}`), subChip, h('button', { class: 'btn pri', style: 'min-width:92px', onclick: close }, '再開'));
+      const head = h('div', { class: 'sheet-top' }, h('div', { class: 'reason' }, `${m.minLabel()}'  ${titles[reason] || ''}   ${m.score.home} - ${m.score.away}`), subChip, h('button', { class: 'btn pri', style: 'min-width:92px', onclick: close }, '再開'));
       const panel = tacticPanel(m.home, { sheet: true, match: m, tabs: [['sub', '交代'], ['role', '布陣・役割'], ['tactic', '戦い方'], ['instr', '指示'], ['shout', '声かけ']], onChange: () => { upd(); subChip.textContent = `交代 あと${5 - m.home.subsUsed}人`; S.R.base = S.R.basePositions(); }, state: S.panelState });
       S.panelState = panel.state;
       panelBox.append(panel);
@@ -1064,7 +1130,7 @@
       S.beatShown = -1;
       R.startScene(sc);
       R.poss = sc.side;
-      sceneHead.replaceChildren(h('div', { class: 'scene-title' }, h('b', {}, sc.minute + "'"), sc.typeName), h('div', { class: 'tagrow' }));
+      sceneHead.replaceChildren(h('div', { class: 'scene-title' }, h('b', {}, (sc.ml || sc.minute) + "'"), sc.typeName), h('div', { class: 'tagrow' }));
       const tags = fxToShow(sc);
       S.tags = tags;
       bannerBox.replaceChildren();
@@ -1076,7 +1142,7 @@
       const sc = S.sc;
       S.mode = 'idle';
       const lastBeat = sc.beats[sc.beats.length - 1].text;
-      setComm(sc.minute, lastBeat);
+      setComm(sc.ml || sc.minute, lastBeat);
       upd();
       if (sc.goal) {
         const sp = (sc.side === 'home' ? m.home : m.away).players[sc.scorer];
@@ -1094,8 +1160,9 @@
     function handle(e) {
       if (e.type === 'tick') {
         upd();
-        if (e.text) setComm(e.minute, e.text);
-        else commMin.textContent = e.minute + "'";
+        if (e.text) setComm(e.ml || e.minute, e.text);
+        else commMin.textContent = (e.ml || e.minute) + "'";
+        if (e.card) YA.sfx.play('whistle');
         if (e.text && e.key) {
           S.hold = 0.6;
           YA.sfx.play('whistle');
@@ -1132,7 +1199,7 @@
           runR(dt * speedK());
           const sc = S.sc;
           // 実況の進み
-          for (let i = S.beatShown + 1; i < sc.beats.length; i++) if (R.t >= sc.beats[i].at) { setComm(sc.minute, sc.beats[i].text); S.beatShown = i; }
+          for (let i = S.beatShown + 1; i < sc.beats.length; i++) if (R.t >= sc.beats[i].at) { setComm(sc.ml || sc.minute, sc.beats[i].text); S.beatShown = i; }
           // 効いた特性・性格の札（少し遅れて出す）
           const row = sceneHead.querySelector('.tagrow');
           while (S.tagShown < S.tags.length && R.t >= 1.3 + S.tagShown * 0.55) {
@@ -1164,7 +1231,7 @@
     S.raf = requestAnimationFrame(frame);
     YA.sfx.play('whistle');
     // 場面のあとで止める：場面が終わったら次の step が stop を返す
-    setComm(0, 'キックオフ。' + m.home.short + 'の攻撃で試合が始まります');
+    setComm(0, koText);
   }
 
   // ---------- 試合後 ----------
@@ -1187,11 +1254,11 @@
     function numPane() {
       const box = h('div', {});
       const th = (t, wd) => h('b', { style: `width:${wd}px;text-align:right;font-size:10.5px` }, t);
-      box.append(h('div', { class: 'pitem', style: 'cursor:default;gap:5px;background:#f5f8fd' }, h('span', { class: 'grow', style: 'font-size:10.5px;font-weight:800' }, '選手'), th('分', 26), th('採点', 30), th('パス', 62), th('シュート', 46), th('タックル', 44), th('奪取', 30)));
+      box.append(h('div', { class: 'pitem', style: 'cursor:default;gap:5px;background:#f5f8fd' }, h('span', { class: 'grow', style: 'font-size:10.5px;font-weight:800' }, '選手'), th('分', 26), th('採点', 30), th('パス', 62), th('シュート', 46), th('タックル', 44), th('奪取', 30), th('札', 22)));
       box.append(h('div', { class: 'plist' }, NB.players.map((x) => {
         const p = m.home.players[x.id];
         const td = (t, wd) => h('span', { style: `width:${wd}px;text-align:right;font-size:11px` }, t);
-        return h('div', { class: 'pitem', style: 'cursor:default;gap:5px' }, posChip(p), h('span', { class: 'nm grow', style: 'min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px' }, `${x.num} ${surname(p)}`), td(x.mins, 26), h('b', { style: 'width:30px;text-align:right;font-size:11px' }, x.rating.toFixed(1)), td(x.pos === 'GK' ? `セーブ${x.saves}` : `${x.passes}本 ${x.pct}%`, 62), td(x.shots + (x.goals ? `（${x.goals}点）` : ''), 46), td(x.tackles, 44), td(x.steals, 30));
+        return h('div', { class: 'pitem', style: 'cursor:default;gap:5px' }, posChip(p), h('span', { class: 'nm grow', style: 'min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px' }, `${x.num} ${surname(p)}`), td(x.mins, 26), h('b', { style: 'width:30px;text-align:right;font-size:11px' }, x.rating.toFixed(1)), td(x.pos === 'GK' ? `セーブ${x.saves}` : `${x.passes}本 ${x.pct}%`, 62), td(x.shots + (x.goals ? `（${x.goals}点）` : ''), 46), td(x.tackles, 44), td(x.steals, 30), h('span', { style: 'width:22px;text-align:right;font-size:11px;font-weight:900;color:' + (x.red ? '#d62828' : '#b08a00') }, x.red ? '退' : x.yellow ? '黄' : ''));
       })));
       box.append(h('div', { class: 'note', style: 'margin-top:4px' }, 'パス・タックル・奪取は、見どころ以外の時間も含めた目安です。'));
       return box;
@@ -1212,8 +1279,18 @@
       const sh = sc.shooter ? who.players[sc.shooter] : null;
       const lastBeat = sc.beats[sc.beats.length - 1].text;
       const tags = sc.fxShow.map((f) => h('span', { class: 'chip ' + f.kind }, `${f.num}番 ${f.tag}`));
-      tl.append(h('div', { class: 'it' + (sc.goal ? (sc.side === 'home' ? ' goal' : ' ogoal') : '') }, h('div', { class: 'm' }, sc.minute + "'"), h('div', { class: 'tx' }, h('span', { class: 'nm' }, (sc.side === 'home' ? m.home.short : m.away.short) + ' ' + sc.typeName), ' ', lastBeat, h('div', { class: 'tags' }, tags))));
+      tl.append(h('div', { class: 'it' + (sc.goal ? (sc.side === 'home' ? ' goal' : ' ogoal') : '') }, h('div', { class: 'm' }, (sc.ml || sc.minute) + "'"), h('div', { class: 'tx' }, h('span', { class: 'nm' }, (sc.side === 'home' ? m.home.short : m.away.short) + ' ' + sc.typeName), ' ', lastBeat, h('div', { class: 'tags' }, tags))));
     }
+    // カード（2026-11-17）
+    for (const c of m.cards || []) {
+      const tm = c.side === 'home' ? m.home : m.away;
+      const p = tm.players[c.pid];
+      if (!p) continue;
+      tl.append(h('div', { class: 'it' }, h('div', { class: 'm' }, c.ml + "'"), h('div', { class: 'tx' }, h('span', { class: 'nm' }, tm.short + (c.kind === 'Y' ? ' イエロー' : ' 退場')), ' ', h('span', { style: 'display:inline-block;width:8px;height:11px;border-radius:1px;vertical-align:-1px;margin-right:4px;background:' + (c.kind === 'Y' ? '#f2c400' : '#d62828') }), p.num + '番 ' + surname(p) + (c.second ? '（2枚目）' : ''))));
+    }
+    // 時刻の順に並べ直す（「45+2」は45と46のあいだ）
+    const items = [...tl.children].map((el, i) => ({ el, i, k: (() => { const t0 = el.querySelector('.m').textContent.replace("'", ''); const [a, b] = t0.split('+'); return +a + (+b || 0) / 100; })() }));
+    items.sort((x, y) => x.k - y.k || x.i - y.i).forEach((x) => tl.append(x.el));
     lpane.append(tl);
     showL('tl');
     const right = h('div', { class: 'card pbody', style: 'width:250px;flex:none' });
@@ -1236,13 +1313,19 @@
     for (const n of summary.notes) right.append(h('div', { class: 'insight bad' }, n.text));
     const sh = m.stats.home;
     const sa = m.stats.away;
+    function cardLine() {
+      const cs = m.cards || [];
+      const n = (sd, k) => cs.filter((c) => c.side === sd && c.kind === k).length;
+      return h('div', { class: 'note', style: 'color:var(--ink)' }, 'カード　' + m.home.short + ' イエロー' + n('home', 'Y') + '・退場' + n('home', 'R') + '　-　' + m.away.short + ' イエロー' + n('away', 'Y') + '・退場' + n('away', 'R'));
+    }
     if (NB) {
       right.append(h('div', { class: 'insight' }, h('span', { class: 'chip instr' }, '戦術'), ' ' + NB.tactic));
       const bar = (lbl, v) => h('div', { class: 'row', style: 'gap:6px;font-size:11px' }, h('span', { style: 'width:30px' }, lbl), h('span', { style: 'flex:1;height:8px;background:#e6ebe2;border-radius:4px;overflow:hidden' }, h('span', { style: `display:block;height:100%;width:${v}%;background:#2a62c4` })), h('b', { style: 'width:34px;text-align:right' }, v + '%'));
       right.append(h('div', { class: 'h', style: 'margin-top:8px' }, '試合の数字'),
-        h('div', { class: 'note', style: 'color:var(--ink)' }, `保持 ${NB.poss}%　シュート ${sh.shots}（枠内${sh.onTarget}）- ${sa.shots}　相手陣で奪った ${NB.won}回`),
+        h('div', { class: 'note', style: 'color:var(--ink)' }, `保持 ${NB.poss}%　シュート ${sh.shots}（枠内${sh.onTarget}）- ${sa.shots}（枠内${sa.onTarget}）　相手陣で奪った ${NB.won}回`),
+        cardLine(),
         h('div', { class: 'note', style: 'margin-top:4px' }, '攻めた方向'), bar('左', NB.dir.左), bar('中央', NB.dir.中央), bar('右', NB.dir.右));
-    } else right.append(h('div', { class: 'h', style: 'margin-top:8px' }, 'シュート'), h('div', { class: 'note' }, `${m.home.short} ${sh.shots}（枠内${sh.onTarget}）  -  ${m.away.short} ${sa.shots}（枠内${sa.onTarget}）`));
+    } else right.append(h('div', { class: 'h', style: 'margin-top:8px' }, 'シュート'), h('div', { class: 'note' }, `${m.home.short} ${sh.shots}（枠内${sh.onTarget}）  -  ${m.away.short} ${sa.shots}（枠内${sa.onTarget}）`), cardLine());
     right.append(h('div', { class: 'h', style: 'margin-top:8px' }, '採点（上位）'));
     right.append(h('div', { class: 'plist' }, summary.rated.slice(0, 6).map((p, i) => h('div', { class: 'pitem' }, posChip(p), h('span', { class: 'nm grow' }, `${p.num} ${surname(p)}`), p.st.goals ? h('span', { class: 'chip gray' }, `${p.st.goals}得点`) : null, h('b', {}, p.st.rating.toFixed(1))))));
     wrap.append(h('div', { class: 'res-body' }, left, right));
