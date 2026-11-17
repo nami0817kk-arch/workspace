@@ -493,7 +493,6 @@ class _YouthScreenState extends State<YouthScreen> {
                               ),
                             ],
                           ),
-                          _MentorRow(prospect: p),
                           if (YouthDepartureEngine.isAtRisk(p))
                             Text(
                               Tr.pick(
@@ -651,74 +650,3 @@ class _YouthScreenState extends State<YouthScreen> {
   }
 }
 
-/// 有望株に付けるメンター(一軍のベテラン)の選択欄。
-///
-/// 性格特性はユースでは練習で身に付かず、メンターを通してしか手に入らない。
-/// 成長も速くなるが、ベテラン1人が見られるのは1人だけなので、誰に付けるかを
-/// 選ぶことになる。
-class _MentorRow extends StatelessWidget {
-  final Player prospect;
-
-  const _MentorRow({required this.prospect});
-
-  @override
-  Widget build(BuildContext context) {
-    final gameState = context.watch<GameState>();
-    final candidates =
-        gameState.youthMentorCandidates(forProspectId: prospect.id);
-    final current = prospect.mentorId == null
-        ? null
-        : gameState.userTeam.players
-            .where((p) => p.id == prospect.mentorId)
-            .firstOrNull;
-
-    // 付けられる相手が1人も居ないときは、空の選択欄を出しても押せるものが
-    // 無いだけなので、理由のほうを出す。
-    if (candidates.isEmpty && current == null) {
-      return Text(
-        Tr.pick('メンター: ${TrainingEngine.minMentorAge}歳以上の手の空いた選手がいません',
-            'Mentor: nobody aged ${TrainingEngine.minMentorAge}+ is free'),
-        style: const TextStyle(fontSize: 12),
-      );
-    }
-
-    return Row(
-      children: [
-        Text(Tr.pick('メンター: ', 'Mentor: '), style: const TextStyle(fontSize: 12)),
-        Flexible(
-          child: DropdownButton<String?>(
-            value: current?.id,
-            isDense: true,
-            isExpanded: true,
-            // 色は指定しない(暗いテーマで読めなくなる)。
-            style: const TextStyle(fontSize: 12),
-            hint: Text(Tr.pick('付けない', 'None'),
-                style: const TextStyle(fontSize: 12)),
-            items: [
-              DropdownMenuItem<String?>(
-                value: null,
-                child: Text(Tr.pick('付けない', 'None')),
-              ),
-              for (final m in [
-                if (current != null && !candidates.contains(current)) current,
-                ...candidates,
-              ])
-                DropdownMenuItem<String?>(
-                  value: m.id,
-                  child: Text(
-                    Tr.pick('${m.name} (${m.age}歳 / 総合${m.overall})',
-                        '${m.name} (${m.age} / ovr ${m.overall})'),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-            ],
-            onChanged: (id) {
-              FeedbackService.tap();
-              context.read<GameState>().setYouthProspectMentor(prospect.id, id);
-            },
-          ),
-        ),
-      ],
-    );
-  }
-}

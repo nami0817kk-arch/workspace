@@ -500,7 +500,7 @@ class _LoanSection extends StatelessWidget {
                 leading: const Icon(Icons.savings_outlined),
                 title: Text(Tr.pick(
                     '借入可能額: $maxAmount万円', 'You can borrow up to $maxAmount')),
-                subtitle: Text(Tr.pick('スタジアムの規模・監督としての評価が高いほど上限が上がる',
+                subtitle: Text(Tr.pick('スタジアムの規模・オーナーの評判が高いほど上限が上がる',
                     'A bigger stadium and a better reputation raise the ceiling')),
               ),
               Padding(

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../logic/attribute_context_engine.dart';
-import '../logic/development_advisor.dart';
 import '../logic/contract_engine.dart';
 import '../logic/retirement_engine.dart';
 import '../logic/dynamics_engine.dart';
@@ -86,13 +85,6 @@ class PlayerDetailScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          // この選手について、いま手を打つべきこと。
-          // 同じ判定をトレーニング画面の提案カードでも使っている。選手を
-          // 開いた人は、その画面まで見に行かないので、ここにも出す。
-          _AdviceCard(advices: [
-            for (final a in DevelopmentAdvisor.advise(team))
-              if (a.playerId == p.id) a,
-          ]),
           Row(
             children: [
               PlayerFaceAvatar(
@@ -562,36 +554,6 @@ class PlayerDetailScreen extends StatelessWidget {
           Text(Tr.pick('選手を操作', 'Player actions'),
               style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 8),
-          // スカッド・ステータス(出場機会の約束)。自クラブ所属の選手のみ
-          // 設定でき、ベンチ時の不満の増え方と契約の要求週給に影響する。
-          if (gameState.userTeam.players.any((tp) => tp.id == p.id)) ...[
-            Text(
-              Tr.pick('スカッド・ステータス(出場機会の約束)',
-                  'Squad status (what you promise them)'),
-              style: Theme.of(context).textTheme.titleSmall,
-            ),
-            const SizedBox(height: 4),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                for (final s in SquadStatus.values)
-                  ChoiceChip(
-                    label: Text(s.label),
-                    selected: p.squadStatus == s,
-                    onSelected: (_) =>
-                        context.read<GameState>().setSquadStatus(p.id, s),
-                  ),
-              ],
-            ),
-            const SizedBox(height: 4),
-            Text(
-              p.squadStatus.description,
-              style: TextStyle(
-                  fontSize: 12, color: SemanticColors.subtleText(context)),
-            ),
-            const SizedBox(height: 12),
-          ],
           if (p.isLoan)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8),
@@ -739,18 +701,6 @@ class PlayerDetailScreen extends StatelessWidget {
             ],
           ],
           const SizedBox(height: 8),
-          OutlinedButton.icon(
-            icon: const Icon(Icons.chat_bubble_outline),
-            onPressed:
-                p.reassureCooldownWeeks > 0 ? null : () => _reassure(context),
-            label: Text(
-              p.reassureCooldownWeeks > 0
-                  ? Tr.pick('話し合う（あと${p.reassureCooldownWeeks}週は待つ必要がある）',
-                      'Have a word (you must wait another ${Tr.plural(p.reassureCooldownWeeks, 'week')})')
-                  : Tr.pick('話し合う（不満度を和らげる）',
-                      'Have a word (eases their unhappiness)'),
-            ),
-          ),
           if (!p.isLoan && !p.isLoanedOut) ...[
             const SizedBox(height: 8),
             OutlinedButton.icon(
@@ -761,32 +711,6 @@ class PlayerDetailScreen extends StatelessWidget {
                 p.releaseClause == null
                     ? Tr.pick('リリース条項を設定する', 'Set a release clause')
                     : Tr.pick('リリース条項を変更する', 'Change the release clause'),
-              ),
-            ),
-            const SizedBox(height: 8),
-            OutlinedButton.icon(
-              icon: const Icon(Icons.shield),
-              onPressed: () {
-                FeedbackService.tap();
-                gameState.setCaptain(team.captainId == p.id ? null : p.id);
-              },
-              label: Text(team.captainId == p.id
-                  ? Tr.pick('キャプテンを解任する', 'Strip the captaincy')
-                  : Tr.pick('キャプテンに任命する', 'Make him captain')),
-            ),
-            const SizedBox(height: 8),
-            OutlinedButton.icon(
-              icon: const Icon(Icons.shield_outlined),
-              onPressed: () {
-                FeedbackService.tap();
-                gameState.setViceCaptain(
-                  team.viceCaptainId == p.id ? null : p.id,
-                );
-              },
-              label: Text(
-                team.viceCaptainId == p.id
-                    ? Tr.pick('副キャプテンを解任する', 'Strip the vice captaincy')
-                    : Tr.pick('副キャプテンに任命する', 'Make him vice captain'),
               ),
             ),
           ],
@@ -873,21 +797,6 @@ class PlayerDetailScreen extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  Future<void> _reassure(BuildContext context) async {
-    final gameState = context.read<GameState>();
-    final ok = await gameState.reassurePlayer(playerId);
-    ok ? FeedbackService.success() : FeedbackService.tap();
-    if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text(ok
-                ? Tr.pick('選手を安心させた', 'You put his mind at rest')
-                : Tr.pick('既に満足しており、話し合う必要はなさそうだ',
-                    'He is already content; there is nothing to talk about'))),
-      );
-    }
   }
 
   Future<void> _renew(BuildContext context) async {
@@ -1340,58 +1249,6 @@ class _KeyAttributesCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 11,
                         color: SemanticColors.subtleText(context),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-
-/// 選手1人ぶんの育成アドバイス。手を打つことが無ければ何も出さない。
-///
-/// 「問題ありません」と毎回書くと、本当に手を打つべきときの一行が埋もれる。
-class _AdviceCard extends StatelessWidget {
-  final List<DevelopmentAdvice> advices;
-
-  const _AdviceCard({required this.advices});
-
-  @override
-  Widget build(BuildContext context) {
-    if (advices.isEmpty) return const SizedBox.shrink();
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      color: Theme.of(context).colorScheme.secondaryContainer,
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            for (final a in advices)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 2),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(Icons.tips_and_updates_outlined,
-                        size: 16,
-                        color:
-                            Theme.of(context).colorScheme.onSecondaryContainer),
-                    const SizedBox(width: 6),
-                    Expanded(
-                      child: Text(
-                        '${a.kind.label}: ${a.message}',
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSecondaryContainer,
-                        ),
                       ),
                     ),
                   ],

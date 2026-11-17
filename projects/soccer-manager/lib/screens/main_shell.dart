@@ -220,7 +220,15 @@ class _MainShellState extends State<MainShell> {
                           right: false,
                           child: _FmSidebar(
                             page: _page,
-                            badge: homeBadgeCount,
+                            // 判断待ちがある項目に件数の印を付ける。
+                            // 状況: ユース受け入れ・売却オファー、
+                            // 移籍: 売却オファー、オーナー室: 事件の判断。
+                            badges: {
+                              _Page.status: homeBadgeCount,
+                              _Page.transfer: gameState.incomingOffers.length,
+                              _Page.ownerRoom:
+                                  gameState.pendingOwnerEvent == null ? 0 : 1,
+                            },
                             onSelect: _go,
                             onMore: () => _scaffoldKey.currentState?.openDrawer(),
                           ),
@@ -371,13 +379,13 @@ class _FmTopBar extends StatelessWidget {
 class _FmSidebar extends StatelessWidget {
   const _FmSidebar({
     required this.page,
-    required this.badge,
+    required this.badges,
     required this.onSelect,
     required this.onMore,
   });
 
   final _Page page;
-  final int badge;
+  final Map<_Page, int> badges;
   final void Function(_Page) onSelect;
   final VoidCallback onMore;
 
@@ -487,8 +495,9 @@ class _FmSidebar extends StatelessWidget {
                               ? scheme.primary
                               : scheme.onSurfaceVariant,
                         );
-                        return p == _Page.status && badge > 0
-                            ? Badge(label: Text('$badge'), child: i)
+                        final n = badges[p] ?? 0;
+                        return n > 0
+                            ? Badge(label: Text('$n'), child: i)
                             : i;
                       }(),
                     ),

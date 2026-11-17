@@ -7,7 +7,6 @@ import '../widgets/owner_goal_card.dart';
 import '../widgets/two_pane.dart';
 import '../logic/calendar_engine.dart';
 import '../logic/sale_advice_engine.dart';
-import '../models/formation.dart';
 import '../models/incoming_offer.dart';
 import '../models/league.dart';
 import '../models/league_theme.dart';
@@ -37,12 +36,10 @@ import 'finance_screen.dart';
 import 'glossary_screen.dart';
 import 'match_screen.dart';
 import 'player_detail_screen.dart';
-import 'scout_report_screen.dart';
 import 'start_screen.dart';
 import 'youth_intake_screen.dart';
 import '../logic/board_target_progress.dart';
 import '../models/club_vision.dart';
-import '../models/preseason_camp.dart';
 import '../l10n/tr.dart';
 import '../widgets/screen_bar.dart';
 
@@ -219,11 +216,10 @@ class HomeScreen extends StatelessWidget {
                                       ),
                                     ),
                                     const SizedBox(width: 8),
+                                    // 布陣は監督が決めるので、オーナーの帯には出さない。
                                     _BandPill(
                                         text: Tr.pick('S${league.season}',
                                             'S${league.season}')),
-                                    const SizedBox(width: 6),
-                                    _BandPill(text: userTeam.formation.label),
                                   ],
                                 ),
                                 const SizedBox(height: 14),
@@ -381,7 +377,8 @@ class HomeScreen extends StatelessWidget {
                     ),
                     _StatTile(
                       icon: Icons.star,
-                      label: Tr.pick('監督としての評価', 'Your reputation'),
+                      // オーナーとしての世間の評価(グッズ収入などに効く)。
+                      label: Tr.pick('オーナーの評判', 'Your reputation'),
                       glossaryTerm: Tr.pick('監督としての評価', 'Reputation'),
                       value: '${gameState.managerReputation}',
                       progress: gameState.managerReputation / 100,
@@ -501,21 +498,6 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-              // 開幕前のキャンプ。方針を選ぶか見送るまで促す。
-              if (gameState.save?.preseasonCampPending ?? false)
-                Card(
-                  color: scheme.secondaryContainer,
-                  child: ListTile(
-                    leading: const Icon(Icons.terrain),
-                    title: Text(Tr.pick('シーズン前キャンプ', 'Pre-season camp')),
-                    subtitle: Text(Tr.pick('開幕までの数週間をどう使うか決めます',
-                        'Decide how to spend the weeks before kick-off')),
-                    trailing: FilledButton(
-                      onPressed: () => _showCampSheet(context),
-                      child: Text(Tr.pick('決める', 'Decide')),
-                    ),
-                  ),
-                ),
               if (gameState.pendingYouthIntake.isNotEmpty)
                 Card(
                   color: scheme.secondaryContainer,
@@ -629,40 +611,6 @@ class HomeScreen extends StatelessWidget {
                               ],
                             ),
                           ),
-                      ],
-                    ),
-                  ),
-                ),
-              if (!seasonComplete &&
-                  save.friendlies.any((f) => f.result == null))
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          Tr.pick('親善試合', 'Friendly'),
-                          style: Theme.of(context).textTheme.titleSmall,
-                        ),
-                        for (int i = 0; i < save.friendlies.length; i++)
-                          if (save.friendlies[i].result == null)
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 4),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      _fixtureLabel(league, save.friendlies[i]),
-                                    ),
-                                  ),
-                                  OutlinedButton(
-                                    onPressed: () => _playFriendly(context, i),
-                                    child: Text(Tr.pick('開催', 'Play it')),
-                                  ),
-                                ],
-                              ),
-                            ),
                       ],
                     ),
                   ),
@@ -838,31 +786,15 @@ class HomeScreen extends StatelessWidget {
                           onPressed: () => _playMatch(context),
                           child: Text(Tr.pick('次の節へ', 'Next matchday')),
                         ),
-                        const SizedBox(height: 4),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            TextButton(
-                              onPressed: () =>
-                                  _quickSimNextMatch(context, next),
-                              child: Text(
-                                Tr.pick('結果だけ見る', 'Just the result'),
-                                style: const TextStyle(fontSize: 12),
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () => _showScoutReport(context, next),
-                              child: Text(
-                                Tr.pick('偵察レポート', 'Scout report'),
-                                style: const TextStyle(fontSize: 12),
-                              ),
-                            ),
-                          ],
-                        ),
+                        // 「結果だけ見る」は「次の節へ」と同じ動きになり、
+                        // 偵察レポートは監督の仕事なので、どちらも置かない。
                       ],
                     ),
                   ),
                 ),
+              // 横画面では、どの画面も左メニューの項目から開ける。同じ入口を
+              // 大きなタイルで並べ直すと、状況ページが縦に長くなるだけなので出さない。
+              if (!EmbeddedInShell.of(context)) ...[
               const SizedBox(height: 16),
               Text(Tr.pick('クラブ運営', 'Running the club'),
                   style: Theme.of(context).textTheme.titleMedium),
@@ -889,6 +821,7 @@ class HomeScreen extends StatelessWidget {
                   ],
                 ),
               ),
+              ],
             ],
           ),
         ),
@@ -915,22 +848,6 @@ class HomeScreen extends StatelessWidget {
     final home = league.teams.firstWhere((t) => t.id == f.homeTeamId).name;
     final away = league.teams.firstWhere((t) => t.id == f.awayTeamId).name;
     return '$home vs $away';
-  }
-
-  void _showScoutReport(BuildContext context, Fixture fixture) {
-    final gameState = context.read<GameState>();
-    final userTeam = gameState.userTeam;
-    final league = gameState.save!.league;
-    final opponentId = fixture.homeTeamId == userTeam.id
-        ? fixture.awayTeamId
-        : fixture.homeTeamId;
-    final opponent = league.teams.firstWhere((t) => t.id == opponentId);
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) =>
-            ScoutReportScreen(opponent: opponent, userTeam: userTeam),
-      ),
-    );
   }
 
   Future<void> _playMatch(BuildContext context) async {
@@ -1371,23 +1288,9 @@ class HomeScreen extends StatelessWidget {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(
-          content: Text(Tr.pick('$monthlyAward 月間最優秀監督賞を受賞しました！',
-              'You won Manager of the Month for $monthlyAward.'))));
+          content: Text(Tr.pick('$monthlyAward クラブの監督が月間最優秀監督賞を受賞しました！',
+              'Your manager won Manager of the Month for $monthlyAward.'))));
       gameState.lastMonthlyManagerAward = null;
-    }
-  }
-
-  Future<void> _playFriendly(BuildContext context, int index) async {
-    final gameState = context.read<GameState>();
-    final result = await gameState.playFriendly(index);
-    if (context.mounted && result != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(Tr.pick(
-              '親善試合結果: ${result.homeGoals} - ${result.awayGoals}',
-              'Friendly: ${result.homeGoals} - ${result.awayGoals}')),
-        ),
-      );
     }
   }
 
@@ -1429,7 +1332,7 @@ class HomeScreen extends StatelessWidget {
     }
     if (gameState.lastSeasonManagerAwardWon) {
       messages.add(
-          (Tr.pick('年間最優秀監督賞を受賞しました！', 'You won Manager of the Year.'), true));
+          (Tr.pick('クラブの監督が年間最優秀監督賞を受賞しました！', 'Your manager won Manager of the Year.'), true));
       gameState.lastSeasonManagerAwardWon = false;
     }
     final superCupNews = gameState.lastSuperCupNews;
@@ -1800,29 +1703,6 @@ class _ThisWeekCard extends StatelessWidget {
                 ],
               ),
             ],
-            const SizedBox(height: 6),
-            Row(
-              children: [
-                Icon(
-                  gameState.trainingDoneThisWeek
-                      ? Icons.check_circle
-                      : Icons.fitness_center,
-                  size: 18,
-                  color: gameState.trainingDoneThisWeek
-                      ? SemanticColors.positive(context)
-                      : Colors.orange,
-                ),
-                const SizedBox(width: 6),
-                Expanded(
-                  child: Text(
-                    gameState.trainingDoneThisWeek
-                        ? Tr.pick('今週のトレーニングは実施済み', 'You have trained this week')
-                        : Tr.pick('今週のトレーニングは未実施',
-                            'You have not trained this week'),
-                  ),
-                ),
-              ],
-            ),
           ],
         ),
       ),
@@ -1886,9 +1766,15 @@ class _StatTile extends StatelessWidget {
         // 真っ平らな灰色にすると、今度は整いすぎて素っ気ない。地の色に
         // その項目の色をごく薄く混ぜて、気配だけ残す。
         color: Color.alphaBlend(
-            color.withValues(alpha: 0.035), scheme.surfaceContainer),
+            color.withValues(alpha: 0.035),
+            scheme.brightness == Brightness.dark
+                ? scheme.surfaceContainerHigh
+                : scheme.surfaceContainer),
         borderRadius: BorderRadius.circular(fmRadius(context, 16)),
-        border: Border.all(color: scheme.outlineVariant.withValues(alpha: 0.7)),
+        border: Border.all(
+            color: scheme.brightness == Brightness.dark
+                ? scheme.outline.withValues(alpha: 0.55)
+                : scheme.outlineVariant.withValues(alpha: 0.7)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -2162,53 +2048,6 @@ class _SaleScreen extends StatelessWidget {
       ),
     );
   }
-}
-
-/// キャンプの方針を選ぶシート。
-void _showCampSheet(BuildContext context) {
-  final gameState = context.read<GameState>();
-  showModalBottomSheet<void>(
-    context: context,
-    builder: (sheetContext) => SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(Tr.pick('シーズン前キャンプ', 'Pre-season camp'),
-                style: Theme.of(sheetContext).textTheme.titleMedium),
-            const SizedBox(height: 4),
-            Text(
-              Tr.pick('どれを選んでも、得るものと引き換えに何かを削ります。',
-                  'Each option gains you something at the cost of something else.'),
-              style: TextStyle(
-                  fontSize: 12,
-                  color: SemanticColors.subtleText(sheetContext)),
-            ),
-            const SizedBox(height: 12),
-            for (final camp in PreseasonCamp.values)
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                title: Text(camp.label),
-                subtitle: Text(
-                  camp.cost == 0
-                      ? camp.description
-                      : Tr.pick('${camp.description}（費用${camp.cost}万円）',
-                          '${camp.description} (${camp.cost})'),
-                  style: const TextStyle(fontSize: 12),
-                ),
-                enabled: (gameState.save?.budget ?? 0) >= camp.cost,
-                onTap: () async {
-                  Navigator.pop(sheetContext);
-                  await gameState.choosePreseasonCamp(camp);
-                },
-              ),
-          ],
-        ),
-      ),
-    ),
-  );
 }
 
 /// 見出しの帯に置く小さな札。シーズンとフォーメーションに使う。

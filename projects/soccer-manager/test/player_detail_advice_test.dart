@@ -47,18 +47,8 @@ void main() {
         ),
       );
 
-  testWidgets('疲労が濃い選手を開くと、その指摘が出る', (tester) async {
-    final (game, settings) = await prepare(tester);
-    final p = game.userTeam.players.first;
-    p.fatigue = DevelopmentAdvisor.fatigueThreshold + 10;
-
-    await tester.pumpWidget(wrap(game, settings, p));
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 400));
-
-    expect(find.textContaining('疲労'), findsWidgets);
-  });
-
+  // 育成の助言は練習(コーチ陣の仕事)の話なので、オーナーが見る選手の
+  // 画面には出さない。判定そのもの(下の test)は残してある。
   testWidgets('手を打つことが無ければ、助言の枠を出さない', (tester) async {
     final (game, settings) = await prepare(tester);
     // 指摘の条件をすべて外す。

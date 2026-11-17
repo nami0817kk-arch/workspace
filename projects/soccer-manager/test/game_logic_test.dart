@@ -8904,26 +8904,21 @@ void main() {
   test(
       'guideSections and glossaryEntries cover the live-match experience '
       'and the newest transfer/training/cup features', () {
-    final live = guideSections.firstWhere(
-      (s) => s.title.contains('ライブ観戦'),
-    );
-    expect(live.topics.length, greaterThanOrEqualTo(5));
-    final liveTitles = live.topics.map((t) => t.title).join();
-    expect(liveTitles, contains('決定機'));
-    expect(liveTitles, contains('采配方針'));
-    expect(liveTitles, contains('ライブ交代'));
-    expect(liveTitles, contains('モメンタム'));
+    // オーナー型では、ライブ観戦・スタメン戦術・トレーニングの章は無く、
+    // 代わりに「オーナーの仕事」の章がある。
+    expect(guideSections.any((s) => s.title.contains('ライブ観戦')), isFalse);
+    expect(guideSections.any((s) => s.title == 'トレーニング画面'), isFalse);
+    final owner = guideSections.firstWhere((s) => s.title == 'オーナーの仕事');
+    final ownerTitles = owner.topics.map((t) => t.title).join();
+    expect(ownerTitles, contains('2つの期待'));
+    expect(ownerTitles, contains('次の節へ'));
+    expect(ownerTitles, contains('今週の決断'));
+    expect(ownerTitles, contains('売却と買い直し'));
 
     final transfer = guideSections.firstWhere((s) => s.title == '移籍市場画面');
     final transferTitles = transfer.topics.map((t) => t.title).join();
     expect(transferTitles, contains('値切り交渉'));
     expect(transferTitles, contains('持続的な移籍市場'));
-
-    final training = guideSections.firstWhere((s) => s.title == 'トレーニング画面');
-    expect(
-      training.topics.map((t) => t.title).join(),
-      contains('育成プラン'),
-    );
 
     final cups = guideSections.firstWhere((s) => s.title.contains('カップ戦'));
     expect(cups.topics.map((t) => t.title).join(), contains('勝ち上がり賞金'));
@@ -10839,13 +10834,8 @@ void main() {
     );
     expect(playedAll.any((d) => d.isFriendlyMatchDay), isFalse);
 
-    // 既定方針が「全体練習」に変わったことがガイド・用語集に反映されている。
-    final guideText = guideSections
-        .expand((s) => s.topics)
-        .map((t) => '${t.title}${t.description}')
-        .join();
-    expect(guideText.contains('全体練習'), isTrue,
-        reason: 'ガイドに既定のトレーニング方針(全体練習)の説明がない');
+    // 練習はコーチ陣の仕事になり、ガイドからトレーニングの章は外した。
+    // 用語としては残っているので、用語集で引けることだけを確かめる。
     expect(glossaryEntries.any((e) => e.term == '全体練習'), isTrue,
         reason: '用語集に「全体練習」が載っていない');
   });
