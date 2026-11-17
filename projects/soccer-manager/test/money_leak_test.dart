@@ -31,6 +31,7 @@ void main() {
       final before = game.save!.budget;
 
       final target = game.transferMarket.first;
+      game.save!.wageBudget = 999999; // 年俸の枠で止めない
       expect(await game.buyPlayerOnInstallments(target.id), isTrue);
       expect(await game.sellPlayer(target.id), isTrue);
 
@@ -48,6 +49,7 @@ void main() {
       game.save!.budget = 100000;
 
       final target = game.transferMarket.first;
+      game.save!.wageBudget = 999999; // 年俸の枠で止めない
       await game.buyPlayerOnInstallments(target.id);
       await game.sellPlayer(target.id);
 

@@ -301,6 +301,7 @@ void main() {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
     final target = gameState.transferMarket.first;
+    gameState.save!.wageBudget = 999999; // 年俸の枠で止めない
     gameState.save!.budget = 0;
 
     final ok = await gameState.buyPlayer(target.id);
@@ -1179,6 +1180,7 @@ void main() {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
     final target = gameState.transferMarket.first;
+    gameState.save!.wageBudget = 999999; // 年俸の枠で止めない
     gameState.save!.budget = target.marketValue; // ローン料は移籍金の一部で足りるはず
 
     final ok = await gameState.signLoanPlayer(target.id);
@@ -1196,6 +1198,7 @@ void main() {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
     final target = gameState.transferMarket.first;
+    gameState.save!.wageBudget = 999999; // 年俸の枠で止めない
     final expectedFee =
         (target.marketValue * GameState.loanBuyOptionRatio).round();
     gameState.save!.budget = target.marketValue + expectedFee;
@@ -1223,6 +1226,7 @@ void main() {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
     final target = gameState.transferMarket.first;
+    gameState.save!.wageBudget = 999999; // 年俸の枠で止めない
     gameState.save!.budget = target.marketValue;
     await gameState.signLoanPlayer(target.id);
     gameState.save!.budget = 999999;
@@ -3515,6 +3519,7 @@ void main() {
 
     gameState.save!.budget = 999999;
     final target = gameState.transferMarket.first;
+    gameState.save!.wageBudget = 999999; // 年俸の枠で止めない
     final ok = await gameState.buyPlayer(target.id);
     expect(ok, isFalse);
   });
