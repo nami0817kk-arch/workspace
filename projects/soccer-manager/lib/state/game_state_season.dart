@@ -43,7 +43,7 @@ extension GameStateSeason on GameState {
             id: 'f_${theme.name}_$i',
             name: names[i],
             // 1部の上から下まで(強豪から残留争いまで)の幅を持たせる。
-            strengthTier: 68 + rng.nextInt(27),
+            strengthTier: rollDivisionStrength(1, rng),
           ),
       ];
       for (final t in teams) {
@@ -1004,9 +1004,7 @@ extension GameStateSeason on GameState {
         final t = PlayerGenerator.generateSquad(
           id: 's${league.season + 1}_div${tier}_$i',
           name: newClubNames[nameCursor++ % newClubNames.length],
-          strengthTier: (40 + (totalDivisionTiers - tier) * 10 +
-                  resizeRng.nextInt(35))
-              .clamp(20, 99),
+          strengthTier: rollDivisionStrength(tier, resizeRng),
         );
         LineupUtils.autoFill(t);
         return t;

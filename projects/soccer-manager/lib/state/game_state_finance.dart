@@ -550,8 +550,7 @@ extension GameStateFinance on GameState {
             theme, theme.teamsByTier.fold<int>(0, (a, n) => a + n));
     var ni = 0;
     String nextName() => names[ni++];
-    int strengthForTier(int tier) =>
-        (40 + (totalDivisionTiers - tier) * 10 + rng.nextInt(35)).clamp(20, 99);
+    int strengthForTier(int tier) => rollDivisionStrength(tier, rng);
 
     save.ownerLegacies.add(_legacyOfCurrentClub(reason));
 
