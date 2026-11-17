@@ -11,19 +11,35 @@
   // 2026-11-17：前は夏の大会が6〜7月、夏合宿が26週＝11月になっていた。現実の暦（クラブユース選手権は7月下旬〜8月、合宿は8月）に合わせた
   YA.SUMMER_CUP_WEEKS = [13, 15];
   YA.CAMP_WEEK = 16;
+  // 2026-11-17：1〜3月にも試合を置いた（前は9週間試合が無かった）。31週＝プレミアのファイナル／昇格のプレーオフ（出られるときだけ）、
+  // 32・33週＝新春フェスティバル（全国のクラブと）、35・36週＝練習試合（遠征）。夏の大会は13〜15週がグループ戦3試合で、
+  // 上位2つが決勝トーナメントへ（決勝トーナメントは週が足りないので、グループ戦のあとに結果で決める）
   YA.SCHED = function (week) {
     if (week <= 12) return { t: 'league', n: week };
     if (week <= 15) return { t: 'cup', cup: 'summer', round: week - 12 };
     if (week === 16) return { t: 'camp' };
     if (week <= 26) return { t: 'league', n: week - 4 };
     if (week >= 27 && week <= 30) return { t: 'cup', cup: 'winter', round: week - 26 };
+    if (week === 31) return { t: 'cup', cup: 'post', round: 1 };
+    if (week === 32 || week === 33) return { t: 'cup', cup: 'fest', round: week - 31 };
+    if (week === 35 || week === 36) return { t: 'cup', cup: 'tm', round: week - 34 };
     if (week === 40) return { t: 'ceremony' };
     return { t: 'none' };
+  };
+  // 大会の週の名前
+  YA.cupLabel = function (w, s) {
+    const c = w && w.cup && w.cup[s.cup];
+    if (s.cup === 'summer') return YA.CUP_NAME.summer + ` グループ戦 第${s.round}戦`;
+    if (s.cup === 'post') return c && c.kind === 'final' ? 'プレミアリーグ ファイナル' : c && c.kind === 'playoff' ? '昇格のプレーオフ' : 'プレーオフ・ファイナル';
+    if (s.cup === 'fest') return YA.CUP_NAME.fest + ` 第${s.round}戦`;
+    if (s.cup === 'tm') return YA.CUP_NAME.tm + ` 第${s.round}戦`;
+    const n = c && c.opps ? c.opps.length : 4;
+    return YA.CUP_NAME[s.cup] + (s.round === n ? ' 決勝' : s.round === n - 1 ? ' 準決勝' : ` ${s.round}回戦`);
   };
   YA.weekLabel = function (w) {
     const s = YA.SCHED(w.week);
     if (s.t === 'league') return `リーグ第${s.n}節`;
-    if (s.t === 'cup') return YA.CUP_NAME[s.cup] + ` ${s.round}回戦`;
+    if (s.t === 'cup') return YA.cupLabel(w, s);
     const lab = { camp: '夏合宿・遠征', ceremony: '卒業式', none: '' }[s.t];
     if (lab) return lab;
     if (YA.scoutWindow && w.scouting) {
@@ -41,6 +57,19 @@
     return null;
   };
   YA.hasMatch = (week, w) => (w ? !!YA.matchOf(w) : week <= 30);
+  // 今週から n 週のうちに残っているAの試合の数（今週の試合が済んでいれば数えない）。夏の大会のグループ戦・新春フェスティバル・練習試合は必ずある
+  YA.aMatchesAhead = function (w, n) {
+    let k = 0;
+    for (let wk = w.week + (w.matchDone || w.phase === 'after' ? 1 : 0); wk < w.week + n && wk <= YA.WEEKS; wk++) {
+      const s = YA.SCHED(wk);
+      if (s.t === 'league') k++;
+      else if (s.t === 'cup') {
+        const c = w.cup && w.cup[s.cup];
+        if (c && (c.alive || (c.group && !c.groupDone))) k++;
+      }
+    }
+    return k;
+  };
 
   // ---------- リーグ ----------
   const AREAS = ['横浜', '川崎', '相模原', '千葉', '埼玉', '東京', '茨城', '静岡', '山梨', '栃木', '群馬', '長野', '船橋', '柏', '浦和', '藤沢'];
@@ -57,16 +86,21 @@
   const STYLE_DESC = { power: '体が強く、前から奪いにくる', tech: 'つないで崩す技術派', defend: '堅守速攻。裏抜けに注意' };
 
   function levelBase(level) {
-    return [10.6, 9.8, 9.0][level - 1]; // 決定96：部の差を詰め、上下の部を行ったり来たりしにくくする
+    // 決定96 で部の差を詰めた（10.6/9.8/9.0）が、昇格に偏り3部から5年以内にプレミアへ届いていた。2026-11-17 に少し広げた
+    return YA.LEVEL_BASE[level - 1];
   }
+  YA.LEVEL_BASE = [9.75, 8.75, 7.8]; // 卒業時の平均を90前後に戻したので、相手もそれに合わせた（前は 10.6/9.8/9.0）
+  YA.levelBase = levelBase;
   YA.LEVEL_NAMES = ['プレミアリーグ', 'プリンスリーグ', '県リーグ'];
+  // プレミアは EAST（北海道・東北／関東／中部）と WEST（関西／中国・四国／九州）に分かれる
+  YA.sideOf = (region) => (region <= 2 ? 0 : 1);
   const PRINCE = ['東北', '関東', '東海', '関西', '中国', '九州'];
   YA.levelNames = function (w) {
     const rg = YA.regionOf(w && w.clubName);
     return ['高円宮杯U-18 プレミアリーグ' + (rg <= 2 ? 'EAST' : 'WEST'), 'プリンスリーグ' + PRINCE[rg], '県リーグ1部'];
   };
   // 大会の名前（夏はクラブユース選手権、冬はJユースカップ）
-  YA.CUP_NAME = { summer: '日本クラブユース選手権', winter: 'Jユースカップ' };
+  YA.CUP_NAME = { summer: '日本クラブユース選手権', winter: 'Jユースカップ', post: 'プレーオフ・ファイナル', fest: '新春フェスティバル', tm: '練習試合（遠征）' };
   YA.LEVEL_EXP = [1, 0.8, 0.6]; // 試合の経験値（決定62：全国＞地域＞県）
 
   // ---------- プロクラブの表（地域名は実在の町、愛称は固定）。トップチーム・卒業生の移籍先・ユースのリーグの相手に使う ----------
@@ -113,10 +147,14 @@
       const ck = r.pick(COACH_KIND);
       out.push({ id: 'R' + region + '-' + out.length, name, kind, style, level, edge: Math.round((r() - 0.5) * 2.2 * 10) / 10, coach: { name: r.pick(COACH_SUR) + ' ' + r.pick(['監督', 'コーチ']), kind: ck[0], note: ck[1] } });
     };
-    // 全国（1部）：J1のユース11と、各地の強豪校
-    const j1 = YA.PRO_CLUBS.filter((c) => c.tier === 1);
-    for (const c of j1.map((c) => ({ c, k: r() })).sort((a, b) => a.k - b.k).slice(0, 12).map((x) => x.c)) add(c.name + 'U-18', 'club', 1);
-    while (out.filter((x) => x.level === 1).length < 20) add(r.pick(REGION_TOWNS[r.int(0, 5)]) + r.pick(HS), 'high', 1);
+    // 全国（1部＝プレミア）：自分と同じ側（EAST／WEST）の J1・J2 のユース10と、同じ側の強豪校（2026-11-17 直し：
+    // 前は全国から選んでいて、EAST に福岡・広島が入っていた）
+    const side = YA.sideOf(region);
+    const top = YA.PRO_CLUBS.filter((c) => YA.sideOf(c.region) === side && c.tier <= 2).sort((a, b) => a.tier - b.tier || r() - 0.5);
+    for (const c of top.slice(0, 10)) add(c.name + 'U-18', 'club', 1);
+    const towns = REGION_TOWNS.filter((t, i) => YA.sideOf(i) === side).flat();
+    let g1 = 0;
+    while (out.filter((x) => x.level === 1).length < 20 && g1++ < 300) add(r.pick(towns) + r.pick(HS), 'high', 1);
     // 地域（2部）：同じ地域のJクラブのユースと、地域の高校
     const mine = YA.PRO_CLUBS.filter((c) => c.region === region);
     for (const c of mine) add(c.name + 'U-18', 'club', 2);
@@ -136,6 +174,15 @@
 
   // 相手の強さは部ごとの幅の中で、世代ごとに入れ替わる（決定105。年とともに強くなり続ける作りはやめた）
   YA.genWave = (w, id) => (YA.rngOf((w.seed | 0) * 7 + YA.hash(String(id)) * 3 + w.year * 131)() - 0.5) * 1.1;
+  // 相手が自分を研究してくる分（2026-11-17 直し：相手の強さが固定で、年数がたつとプレミアも大会も楽勝だった）。
+  // 評判が高いほど、前の年に同じ部で上位だったほど、少し強く当たってくる（-0.15〜+0.45）
+  YA.oppAdj = function (w) {
+    const rep = w.club ? w.club.rep : 50;
+    const last = (w.leagueHist || [])[(w.leagueHist || []).length - 1];
+    const lv = w.leagueLevel || 2;
+    const top = last && last.level === lv && last.rank <= 3 ? 0.15 : 0;
+    return clamp(((rep - 50) / 50) * 0.3, -0.15, 0.3) + top;
+  };
   YA.newLeague = function (w) {
     const r = YA.rngOf(w.seed * 91 + w.year * 313 + (w.level || 2) * 7);
     const level = w.leagueLevel || 2;
@@ -153,7 +200,7 @@
       const ck = [c.coach.kind, c.coach.note];
       teams.push({
         id: 't' + i, cid: c.id, name, short: name.length > 9 ? name.slice(0, 9) : name, kind, style,
-        lvl: Math.round((levelBase(level) + c.edge + YA.genWave(w, c.id) + (r() - 0.5) * 0.4 + (kind === 'club' ? 0.3 : 0)) * 10) / 10,
+        lvl: Math.round((levelBase(level) + c.edge + YA.genWave(w, c.id) + (r() - 0.5) * 0.4 + (kind === 'club' ? 0.3 : 0) + (level === 1 && kind === 'club' ? 0.2 : 0) + YA.oppAdj(w)) * 10) / 10,
         formation: r.pick(['4-4-2', '4-3-3', '5-3-2', '4-2-3-1']), tactic: { power: 'ハイプレス', tech: 'ポゼッション', defend: '堅守' }[style],
         color: r.pick(['#c0392b', '#2c3e50', '#7f8c8d', '#8e44ad', '#d35400', '#16a085']),
         coach: { name: c.coach.name, kind: ck[0], note: ck[1] },
@@ -182,22 +229,108 @@
     w.league = { level, teams, rounds: order, table: tbl, done: 0, year: w.year };
   };
 
+  // 大会の相手は全国のJクラブのユースだけ（クラブユースの大会に高校は出ない）。強さは自分のリーグの部ではなく全国の水準で、
+  // そのクラブのトップの部で決まる（J1 のユースが強い）。2026-11-17 直し：前は自分の部で決まり、3部から18年中8年全国優勝していた
+  YA.NAT_CLUB_LVL = { 1: 0.15, 2: -0.4, 3: -0.95 }; // levelBase(1) からの差
+  YA.natClubs = function (w) {
+    return YA.PRO_CLUBS.filter((c) => c.name + 'U-18' !== w.clubName && c.name !== YA.topName(w)).map((c) => {
+      const id = 'N' + c.name;
+      return { id, name: c.name + 'U-18', tier: c.tier, kind: 'club', lvl: levelBase(1) + YA.NAT_CLUB_LVL[c.tier] + ((YA.hash(c.name) % 100) / 100 - 0.5) * 0.6 + YA.genWave(w, id) * 0.6 };
+    });
+  };
   YA.newCup = function (w) {
     const r = YA.rngOf(w.seed * 57 + w.year * 211);
-    const mk = (n, base) => Array.from({ length: n }, (_, i) => {
-      // 大会は全国から：Jクラブのユースか、各地の高校
-      const pool = YA.clubPool(r.int(0, 5));
-      const name = r.pick(pool.filter((c) => c.level <= 2 && c.name !== w.clubName)).name;
+    const used = new Set();
+    const nat = YA.natClubs(w);
+    const dress = (c, i, pre) => {
       const style = r.pick(['power', 'tech', 'defend']);
-      return { id: 'c' + i, name, short: name.length > 9 ? name.slice(0, 9) : name, style, lvl: Math.round((base + i * 0.55 + (r() - 0.5)) * 10) / 10, formation: r.pick(['4-4-2', '4-3-3', '5-3-2']), tactic: { power: 'ハイプレス', tech: 'ポゼッション', defend: '堅守' }[style], color: r.pick(['#c0392b', '#2c3e50', '#8e44ad', '#d35400']), coach: { name: r.pick(COACH_SUR) + ' 監督', kind: r.pick(COACH_KIND)[0], note: '' } };
-    });
-    const base = levelBase(w.leagueLevel || 2) - 0.3;
-    w.cup = { summer: { alive: true, round: 0, opps: mk(3, base), result: null }, winter: { alive: true, round: 0, opps: mk(4, base - 0.2), result: null } };
+      const name = (w.rename && w.rename[c.id]) || c.name;
+      return { id: pre + i, cid: c.id, name, short: name.length > 9 ? name.slice(0, 9) : name, kind: 'club', style, lvl: Math.round((c.lvl + YA.oppAdj(w) * 0.5 + (r() - 0.5) * 0.3) * 10) / 10, formation: r.pick(['4-4-2', '4-3-3', '5-3-2', '4-2-3-1']), tactic: { power: 'ハイプレス', tech: 'ポゼッション', defend: '堅守' }[style], color: r.pick(['#c0392b', '#2c3e50', '#8e44ad', '#d35400']), coach: { name: r.pick(COACH_SUR) + ' 監督', kind: r.pick(COACH_KIND)[0], note: '' } };
+    };
+    // 重み：強いクラブほど勝ち上がってくる（後ろの回ほど強い相手）
+    const draw = (n, pre, minLvl) => {
+      const out = [];
+      for (let i = 0; i < n; i++) {
+        const cand = nat.filter((c) => !used.has(c.id) && c.lvl >= (minLvl || 0));
+        const c = r.weighted(cand.length ? cand : nat.filter((x) => !used.has(x.id)), (x) => Math.exp((x.lvl - 10) * 1.2));
+        used.add(c.id);
+        out.push(dress(c, i, pre));
+      }
+      return out;
+    };
+    // 夏：グループ戦（4クラブで3試合。上位2つが16の決勝トーナメントへ）
+    const gopps = draw(3, 'g');
+    const ko = draw(4, 'k').sort((a, b) => a.lvl - b.lvl);
+    const winter = draw(4, 'c').sort((a, b) => a.lvl - b.lvl);
+    const fest = draw(2, 'f');
+    // 練習試合は、同じリーグの部のよそのクラブ（地域の別の相手）
+    const reg = YA.clubPool(YA.regionOf(w.clubName)).filter((c) => c.level === (w.leagueLevel || 2) && c.name !== w.clubName && !(w.league && w.league.teams.some((t) => t.cid === c.id)));
+    const tm = [0, 1].map((i) => { const c = reg.length ? reg[(YA.hash(w.year + '_' + i + w.seed) % reg.length)] : nat[i]; return Object.assign(dress({ id: c.id, name: c.name, lvl: levelBase(w.leagueLevel || 2) + (c.edge || 0) }, i, 't'), { kind: c.kind || 'club' }); });
+    const tbl = { me: { p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0 } };
+    for (const o of gopps) tbl[o.id] = { p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0 };
+    w.cup = {
+      summer: { alive: true, round: 0, group: true, gopps, gtable: tbl, gdone: 0, groupDone: false, opps: ko, result: null },
+      winter: { alive: true, round: 0, opps: winter, result: null },
+      post: { alive: false, round: 0, kind: null, opps: [], result: null },
+      fest: { alive: true, round: 0, friendly: true, opps: fest, result: null },
+      tm: { alive: true, round: 0, friendly: true, opps: tm, result: null },
+    };
   };
+  // 自分のAの強さ（相手の lvl と同じ物差し。相手の選手は lvl に位置の能力 +1.5 が乗るので、その分を引く）
+  YA.myLvl = function (w) {
+    const ps = (w.lineupA || []).map((s) => w.players[s.pid]).filter(Boolean);
+    return ps.length ? ps.reduce((a, p) => a + YA.ovr(p), 0) / ps.length - 1.5 : levelBase(w.leagueLevel || 2);
+  };
+  // 試合をせずに決める1試合（夏の決勝トーナメント）。引き分けはPK
+  YA.koWin = function (w, opp, r) {
+    const pw = clamp(0.5 + (YA.myLvl(w) - opp.lvl) * 0.32, 0.08, 0.92);
+    return r() < pw;
+  };
+  // 夏のグループ戦が終わったら、順位と決勝トーナメントの結果を決める
+  function summerAfterGroup(w) {
+    const c = w.cup.summer;
+    const r = YA.rngOf(w.seed * 23 + w.year * 97);
+    // よその組み合わせ（自分の試合以外の3試合）
+    const g = c.gopps;
+    for (const [a, b] of [[0, 1], [0, 2], [1, 2]]) addTable(c.gtable, g[a].id, g[b].id, goalsOf(r, g[a].lvl, g[b].lvl, true), goalsOf(r, g[b].lvl, g[a].lvl, false));
+    const rows = ['me'].concat(g.map((x) => x.id)).map((id) => Object.assign({ id }, c.gtable[id]));
+    rows.forEach((x) => (x.gd = x.gf - x.ga));
+    rows.sort((a, b) => b.p - a.p || b.gd - a.gd || b.gf - a.gf);
+    const rank = rows.findIndex((x) => x.id === 'me') + 1;
+    c.groupDone = true;
+    c.grank = rank;
+    if (rank > 2) {
+      c.alive = false;
+      c.result = `グループ${rank}位で敗退`;
+      YA.noteTier(w, 2, `${YA.CUP_NAME.summer}はグループ${rank}位で敗退。`);
+      return;
+    }
+    const NAMES = ['ベスト16', 'ベスト8', 'ベスト4', '準優勝'];
+    for (let i = 0; i < c.opps.length; i++) {
+      c.round = i + 1;
+      if (!YA.koWin(w, c.opps[i], r)) {
+        c.alive = false;
+        c.result = NAMES[i] + `（決勝トーナメントで${c.opps[i].name}に敗れた）`;
+        YA.noteTier(w, i >= 2 ? 1 : 2, `${YA.CUP_NAME.summer}はグループ${rank}位で決勝トーナメントへ進み、${NAMES[i]}。${c.opps[i].name}に敗れた`);
+        return;
+      }
+    }
+    c.alive = false;
+    c.result = '優勝';
+    w.trophies = (w.trophies || []).concat([{ year: w.year, name: YA.CUP_NAME.summer, rank: '優勝' }]);
+    YA.noteTier(w, 1, `${YA.CUP_NAME.summer}で優勝しました！（グループ${rank}位から決勝トーナメントを4つ勝ち抜いた）`);
+    if (w.club) YA.addRep(w, 4);
+  }
+  YA._summerAfterGroup = summerAfterGroup;
 
   // 今週の相手（試合用の定義）
   YA.opponentOf = function (w) {
     const s = YA.matchOf(w);
+    // Aの試合が無い週（Bだけの試合）：リーグの相手から（前は年とともに強くなる仮の相手だった）
+    if (!s && w.league) {
+      const t = w.league.teams.filter((x) => !x.me)[(w.week + w.year) % 11];
+      return Object.assign({}, t, { id: t.id + '_' + w.year + '_' + w.week, desc: STYLE_DESC[t.style] || '', home: w.week % 2 === 1, kindLabel: '' });
+    }
     if (!s || !w.league) {
       // 旧データの互換：週ごとに作る
       const r = YA.rngOf(w.seed * 31 + w.year * 1000 + w.week * 7);
@@ -212,10 +345,11 @@
       home = pair[0] === 'me';
       t = w.league.teams.find((x) => x.id === oid);
     } else {
-      t = w.cup[s.cup].opps[s.round - 1];
+      const c = w.cup[s.cup];
+      t = c.group ? c.gopps[s.round - 1] : c.opps[Math.min(s.round, c.opps.length) - 1];
       home = s.round % 2 === 1;
     }
-    return Object.assign({}, t, { id: t.id + '_' + w.year + '_' + w.week, desc: STYLE_DESC[t.style] + (t.coach && t.coach.note ? '／' + t.coach.name + '：' + t.coach.note : ''), home, kindLabel: s.t === 'league' ? `リーグ第${s.n}節` : YA.CUP_NAME[s.cup] + ` ${s.round}回戦` });
+    return Object.assign({}, t, { id: t.id + '_' + w.year + '_' + w.week, desc: STYLE_DESC[t.style] + (t.coach && t.coach.note ? '／' + t.coach.name + '：' + t.coach.note : ''), home, kindLabel: s.t === 'league' ? `リーグ第${s.n}節` : YA.cupLabel(w, s) });
   };
 
   // ポアソン風の得点（他クラブ同士の試合用）
@@ -283,7 +417,44 @@
     else if (gf === ga) h[1]++;
     else h[2]++;
     if (s.t === 'league') YA.leagueAdvance(w, s.n, opp.home ? [gf, ga] : [gf, ga]);
-    else {
+    else if (w.cup[s.cup].group) {
+      // 夏の大会のグループ戦
+      const c = w.cup[s.cup];
+      if (c.gdone >= s.round) return;
+      c.gdone = s.round;
+      addTable(c.gtable, 'me', c.gopps[s.round - 1].id, gf, ga);
+      YA.noteTier(w, 3, `${YA.CUP_NAME.summer}のグループ戦 第${s.round}戦：${gf}-${ga}`);
+      if (s.round >= c.gopps.length) summerAfterGroup(w);
+    } else if (w.cup[s.cup].friendly) {
+      const c = w.cup[s.cup];
+      c.round = s.round;
+      (c.rec = c.rec || []).push([gf, ga]);
+    } else if (s.cup === 'post') {
+      const c = w.cup.post;
+      let win = gf > ga;
+      let pk = '';
+      if (gf === ga) {
+        win = YA.rngOf(w.seed * 7 + w.week * 13 + w.year)() < 0.5 + (YA.pkBonus ? YA.pkBonus(w) : 0);
+        pk = win ? '（PK戦で勝利）' : '（PK戦で敗戦）';
+      }
+      c.round = 1;
+      c.alive = false;
+      if (c.kind === 'playoff') {
+        c.result = win ? '昇格' : '昇格ならず';
+        if (win) {
+          w.nextLevel = w.league.level - 1;
+          w.leagueEndMove = -1;
+        }
+        YA.noteTier(w, 1, win ? `昇格のプレーオフに勝ちました${pk}。来年は一つ上のリーグです` : `昇格のプレーオフに敗れました${pk}。来年も同じリーグです`);
+      } else {
+        c.result = win ? '優勝' : '準優勝';
+        if (win) {
+          w.trophies = (w.trophies || []).concat([{ year: w.year, name: 'プレミアリーグ ファイナル', rank: '優勝' }]);
+          if (w.club) YA.addRep(w, 4);
+        }
+        YA.noteTier(w, 1, win ? `プレミアリーグのファイナルに勝ち、日本一になりました${pk}！` : `プレミアリーグのファイナルに敗れ、準優勝でした${pk}`);
+      }
+    } else {
       const c = w.cup[s.cup];
       let win = gf > ga;
       let pk = '';
@@ -316,9 +487,28 @@
     const rows = YA.standings(w);
     const me = rows.find((x) => x.me);
     L.ended = true;
+    // 降格は最下位だけ。昇格は上位2つが31週のプレーオフ（他地域の上位と1試合）に勝ったときだけ。
+    // プレミア（1部）の1位は31週に EAST と WEST のファイナル（2026-11-17 直し：前は上位2つがそのまま昇格し、昇格に偏っていた）
     let move = 0;
-    if (me.rank <= 2 && L.level > 1) move = -1;
-    if (me.rank >= 11 && L.level < 3) move = 1;
+    if (me.rank >= 12 && L.level < 3) move = 1;
+    if (w.cup && w.cup.post) {
+      const po = w.cup.post;
+      const pr = YA.rngOf(w.seed * 3 + w.year * 211 + 5);
+      const rg = YA.regionOf(w.clubName);
+      if (me.rank <= 2 && L.level > 1) {
+        const pool = YA.clubPool((rg + 1 + pr.int(0, 4)) % 6).filter((c) => c.level === L.level);
+        const c = pr.pick(pool);
+        po.kind = 'playoff';
+        po.alive = true;
+        po.opps = [{ id: 'po', cid: c.id, name: c.name, short: c.name.slice(0, 9), kind: c.kind, style: c.style, lvl: Math.round((levelBase(L.level) + 0.45 + YA.oppAdj(w) * 0.5) * 10) / 10, formation: '4-4-2', tactic: { power: 'ハイプレス', tech: 'ポゼッション', defend: '堅守' }[c.style], color: '#2c3e50', coach: c.coach }];
+      } else if (me.rank === 1 && L.level === 1) {
+        const other = YA.clubPool(YA.sideOf(rg) ? 1 : 3).filter((c) => c.level === 1 && c.kind === 'club');
+        const c = pr.pick(other);
+        po.kind = 'final';
+        po.alive = true;
+        po.opps = [{ id: 'pf', cid: c.id, name: c.name, short: c.name.slice(0, 9), kind: c.kind, style: c.style, lvl: Math.round((levelBase(1) + 0.55) * 10) / 10, formation: '4-3-3', tactic: { power: 'ハイプレス', tech: 'ポゼッション', defend: '堅守' }[c.style], color: '#8e44ad', coach: c.coach }];
+      }
+    }
     L.finalRank = me.rank;
     w.lastStandings = rows;
     w.leagueHist = (w.leagueHist || []).concat([{ year: w.year, level: L.level, rank: me.rank, pts: me.p }]);

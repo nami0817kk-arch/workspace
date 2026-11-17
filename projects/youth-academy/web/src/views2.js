@@ -115,8 +115,7 @@
     const c = w.club;
     const lv = YA.trustLevel(w);
     const rank = YA.myRank(w);
-    const ps = Object.values(w.players).filter((p) => p.sum0 != null);
-    const avg = ps.length ? ps.reduce((s, p) => s + (YA.abSum(p) - p.sum0), 0) / ps.length : 0;
+    const avg = YA.developNow(w); // 育成の目標は総合力の伸びで数える（club.js）
     const g1 = Object.values(w.players).filter((p) => p.grade === 1).reduce((s, p) => s + (p.minsA || 0), 0);
     const left = h('div', { style: 'flex:1;min-width:0' });
     left.append(

@@ -137,12 +137,28 @@
     { k: 'facility', name: '施設の建て増し', cost: 800, note: '施設の積み立てが600万円（施設1段ぶん）進みます' },
     { k: 'trip', name: '海外遠征', cost: 600, note: '全員の自信が上がり、★の子との信頼が深まります' },
     { k: 'scout', name: '腕の良いスカウトを雇う', cost: 700, note: '今年は、月ごとに見に行ける回数が1回増えます' },
+    // 毎年くり返し使える使い道（2026-11-17 直し：前は使い道が少なく、10年目に予算の2.5倍たまっていた）。どれも1年に1回
+    { k: 'staff', name: 'スタッフの給料に回す', cost: 500, yearly: true, note: '今年の予算が500万円増えます（スタッフの入れ替えや遠征に使えます）' },
+    { k: 'medical', name: '医療とトレーナーの体制', cost: 400, yearly: true, note: '今年は怪我が2割減り、疲れが少し抜けやすくなります' },
+    { k: 'dorm', name: '寮の食事と設備', cost: 300, yearly: true, note: '今年は寮生の疲れが抜けやすく、全員の自信が少し上がります' },
   ];
+  // 押せない理由（押せるなら null）
+  YA.fundWhy = function (w, k) {
+    const u = YA.FUND_USES.find((x) => x.k === k);
+    if (!u) return '使い道がありません';
+    if ((w.fund || 0) < u.cost) return `育成基金が足りません（${u.cost}万円）`;
+    if (u.yearly && (w.fundYr || {})[k] === w.year) return '今年はもう使いました（1年に1回）';
+    if (k === 'scout' && w.scoutPlus) return '今年はもう雇っています';
+    return null;
+  };
   YA.fundUse = function (w, k) {
     const u = YA.FUND_USES.find((x) => x.k === k);
-    if (!u) return { ok: false, msg: '使い道がありません' };
-    if ((w.fund || 0) < u.cost) return { ok: false, msg: `育成基金が足りません（${u.cost}万円）` };
+    const why = YA.fundWhy(w, k);
+    if (why) return { ok: false, msg: why };
     w.fund -= u.cost;
+    if (u.yearly) (w.fundYr = w.fundYr || {})[k] = w.year;
+    if (k === 'staff') w.club.total += u.cost;
+    else if (k === 'dorm') for (const p of Object.values(w.players)) p.conf = clamp((p.conf || 50) + 2, 0, 100);
     if (k === 'facility') w.club.facPts = (w.club.facPts || 0) + 600;
     else if (k === 'trip') {
       for (const p of Object.values(w.players)) p.conf = clamp((p.conf || 50) + 5, 0, 100);
@@ -150,6 +166,19 @@
     } else if (k === 'scout') w.scoutPlus = 1;
     (w.fundLog = w.fundLog || []).push({ y: w.year, k, cost: u.cost });
     return { ok: true, msg: `${u.name}に${u.cost}万円を使いました` };
+  };
+  // 今年使った、くり返しの使い道か
+  YA.fundOn = (w, k) => (w.fundYr || {})[k] === w.year;
+  // おまかせ（年度はじめ）：基金がたまっていたら、施設→医療→寮→給料→スカウト→遠征の順に、手元に300万円ほど残して使う
+  YA.fundAuto = function (w, notes) {
+    const order = ['medical', 'dorm', 'facility', 'staff', 'scout', 'trip'];
+    for (let g = 0; g < 8; g++) {
+      const k = order.find((x) => !YA.fundWhy(w, x) && (w.fund || 0) - YA.FUND_USES.find((u) => u.k === x).cost >= 300 && !(x === 'facility' && YA.facilityLevel(w) >= 5));
+      if (!k) break;
+      const r = YA.fundUse(w, k);
+      if (notes && r.ok) notes.push(r.msg);
+      if (!r.ok) break;
+    }
   };
   // 年度はじめ：前の年の連帯貢献金を育成基金へ（予算には入れない）
   const yearStartBase = YA.yearStart;
@@ -322,7 +351,7 @@
   }
   function fundTab(body, w) {
     body.append(h('div', { class: 'h' }, `育成基金 ${w.fund || 0}万円`), h('div', { class: 'note' }, '卒業生の大きな移籍で入る連帯貢献金の半分が貯まります。クラブの予算とは別で、使い道は自分で決めます（赤字にはできません）。'));
-    for (const u of YA.FUND_USES) body.append(h('div', { class: 'pitem', style: 'cursor:default;gap:6px;margin-top:4px' }, h('div', { class: 'grow' }, h('b', {}, `${u.name}（${u.cost}万円）`), h('div', { class: 'note' }, u.note)), h('button', { class: 'btn sm', disabled: (w.fund || 0) < u.cost, why: `育成基金が足りません（${u.cost}万円）`, onclick: () => { const r = YA.fundUse(w, u.k); YA.saveWorld(); rerender(); } }, '使う')));
+    for (const u of YA.FUND_USES) body.append(h('div', { class: 'pitem', style: 'cursor:default;gap:6px;margin-top:4px' }, h('div', { class: 'grow' }, h('b', {}, `${u.name}（${u.cost}万円）`), h('div', { class: 'note' }, u.note)), h('button', { class: 'btn sm', disabled: !!YA.fundWhy(w, u.k), why: YA.fundWhy(w, u.k) || '', onclick: () => { const r = YA.fundUse(w, u.k); YA.saveWorld(); rerender(); } }, '使う')));
   }
   function viewLineage(main) {
     const w = U().app.w;
