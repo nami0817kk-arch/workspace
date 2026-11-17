@@ -592,6 +592,7 @@ extension GameStateFinance on GameState {
     save.league = mine!;
     save.otherDivisionLeagues = others;
     save.currentDivisionTier = startTier;
+    _ensureWorldSquads(save);
     save.cups = [
       CupEngine.createKnockout(
         type: CupType.domestic,

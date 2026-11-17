@@ -12,6 +12,51 @@ extension GameStateSeason on GameState {
   /// 生成されるのは「昇格を勝ち取った実際のスカッド」ではなく、保持していた
   /// 強度に見合う新しい選手たちになる。他ディビジョンの選手を見る画面は
   /// 無いので利用者からは分からないが、内部的には別物になる。
+  /// 全クラブに選手を持たせる(自国の全部と、他の4か国の1部)。
+  ///
+  /// 以前は他の部のクラブを強さの数字だけで保存していた。そういうセーブを
+  /// 読んだときは、その強さに合う選手をここで作る。他国の1部が無ければ作り、
+  /// 今の国と同じものがあれば外す(別の国のクラブを買い直したとき)。
+  void _ensureWorldSquads(SaveGame save) {
+    for (final l in save.otherDivisionLeagues) {
+      if (l == null) continue;
+      _ensureSquadsForActiveTier(l.teams);
+    }
+    final current = LeagueTheme.values.firstWhere(
+      (t) => t.label == save.leagueName,
+      orElse: () => LeagueTheme.england,
+    );
+    save.foreignLeagues.remove(current.name);
+    final rng = Random();
+    for (final theme in LeagueTheme.values) {
+      if (theme == current) continue;
+      final existing = save.foreignLeagues[theme.name];
+      if (existing != null) {
+        _ensureSquadsForActiveTier(existing.teams);
+        continue;
+      }
+      final count = theme.teamsInTier(1);
+      final names = NamePool.themedClubNames(theme, count);
+      final teams = [
+        for (var i = 0; i < count; i++)
+          PlayerGenerator.generateSquad(
+            id: 'f_${theme.name}_$i',
+            name: names[i],
+            // 1部の上から下まで(強豪から残留争いまで)の幅を持たせる。
+            strengthTier: 68 + rng.nextInt(27),
+          ),
+      ];
+      for (final t in teams) {
+        LineupUtils.autoFill(t);
+      }
+      save.foreignLeagues[theme.name] = League(
+        teams: teams,
+        fixtures: const [],
+        season: save.league.season,
+      );
+    }
+  }
+
   void _ensureSquadsForActiveTier(List<Team> teams) {
     for (final t in teams) {
       if (t.players.isNotEmpty) continue;
@@ -787,9 +832,25 @@ extension GameStateSeason on GameState {
       }
     }
 
+    // 自クラブの部の外(他の部・他国)の選手は練習で育たないので、年に1度
+    // 年齢に合わせて伸ばし、衰えさせる。
+    final activeIds = _save!.league.teams.map((t) => t.id).toSet();
+    final offscreenRng = Random();
+    for (final l in _save!.foreignLeagues.values) {
+      for (final t in l.teams) {
+        for (final p in t.players) {
+          p.age += 1;
+          OffscreenDevelopment.apply(p, offscreenRng);
+        }
+        RetirementEngine.resolveAndReplaceForCpu(t);
+      }
+    }
     for (final t in _save!.allTeams) {
       for (final p in t.players) {
         p.age += 1;
+        if (!activeIds.contains(t.id)) {
+          OffscreenDevelopment.apply(p, offscreenRng);
+        }
       }
       // CPUクラブは自クラブ(userTeam、下でRetirementEngine.resolveRetirements
       // を個別に呼ぶ)と違って移籍市場で世代交代しないため、ここで代わりに
