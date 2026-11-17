@@ -157,9 +157,9 @@
       h('div', { style: 'display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:5px;margin-top:4px' },
         YA.STAR_ACTS.map((d) => {
           const why = YA.starActWhy(w, p, d.k);
-          return h('button', { class: 'btn sm', style: 'flex-direction:column;align-items:flex-start;text-align:left;white-space:normal;min-height:44px', disabled: !!why, why: why || '', title: d.about,
+          return h('button', { class: 'btn sm', style: 'flex-direction:column;align-items:flex-start;text-align:left;white-space:normal;min-height:44px', disabled: !!why, why: why || '',
             onclick: () => { const r = YA.starAct(w, p, d.k); app.saMsg = { pid: p.id, t: r.msg, line: r.line }; if (YA.saveWorld) YA.saveWorld(); if (rerender) rerender(); } },
-          h('b', {}, d.name), h('small', { style: 'font-weight:600;opacity:.8' }, d.about.split('。')[0]));
+          h('b', {}, d.name), h('small', { style: 'font-weight:600;opacity:.8;font-size:10.5px;line-height:1.35' }, d.about)); // 説明は全文を本文に（title の長押しは iPhone で見えない）
         })),
       msg ? h('div', { class: 'card', style: 'padding:5px 8px;margin-top:5px;background:#fff' }, msg.line ? h('div', {}, h('b', {}, first(p) + '：'), `「${msg.line}」`) : null, h('div', { class: 'note', style: 'color:var(--ink)' }, msg.t)) : null);
   };
