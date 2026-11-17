@@ -35,6 +35,38 @@ class _TradeTabState extends State<TradeTab> {
   /// 出す1巡目の指名権に付ける保護(指名権の番号 → 上位いくつ)。
   final _protect = <int, int>{};
 
+  /// 相手のチームの一覧。選んでいるチームが見える所まで送る。
+  final _teamScroll = ScrollController();
+  static const _teamRowH = 34.0;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _revealPartner(animate: false));
+  }
+
+  @override
+  void dispose() {
+    _teamScroll.dispose();
+    super.dispose();
+  }
+
+  /// 選んでいるチームの行が一覧の外にあれば、真ん中あたりまで送る。
+  void _revealPartner({bool animate = true}) {
+    if (!mounted || !_teamScroll.hasClients) return;
+    final mine = widget.c.career!.mine;
+    final i = _partner > mine ? _partner - 1 : _partner;
+    final pos = _teamScroll.position;
+    final top = i * _teamRowH, bottom = top + _teamRowH;
+    if (top >= pos.pixels && bottom <= pos.pixels + pos.viewportDimension) return;
+    final to = (top - (pos.viewportDimension - _teamRowH) / 2).clamp(0.0, pos.maxScrollExtent);
+    if (animate) {
+      _teamScroll.animateTo(to, duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
+    } else {
+      _teamScroll.jumpTo(to);
+    }
+  }
+
   void _setPartner(int t) => setState(() {
     _partner = t;
     _get.clear();
@@ -334,6 +366,7 @@ class _TradeTabState extends State<TradeTab> {
         ),
         Expanded(
           child: ListView(
+            controller: _teamScroll,
             children: [
               for (final t in teams)
                 Material(
@@ -341,7 +374,7 @@ class _TradeTabState extends State<TradeTab> {
                   child: InkWell(
                     onTap: () => _setPartner(t),
                     child: Container(
-                      height: 34,
+                      height: _teamRowH,
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       decoration: BoxDecoration(
                         border: Border(left: BorderSide(color: t == _partner ? GmColors.ball : Colors.transparent, width: 3)),
@@ -545,6 +578,7 @@ class _TradeTabState extends State<TradeTab> {
   Future<void> _findPlayer(BuildContext context, Career car) async {
     final picked = await Navigator.of(context).push<(int, int)>(MaterialPageRoute(builder: (_) => _PlayerFinder(car: car)));
     if (picked == null || !mounted) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) => _revealPartner());
     setState(() {
       _partner = picked.$1;
       _get
