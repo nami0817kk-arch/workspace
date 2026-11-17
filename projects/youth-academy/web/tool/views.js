@@ -516,7 +516,7 @@ async function clearEvents() {
       await sleep(10);
       const sheets = d.querySelectorAll('.sheet');
       ok(sheets.length === 2 && /置き換えますか/.test(sheets[1].textContent) && /予約したオリジナル選手も戻ります/.test(sheets[1].textContent) && A.w === w0, '復元はすぐ上書きせず、確かめる');
-      btn('はい', sheets[1]).click();
+      btn('置き換える', sheets[1]).click();
     }
     await sleep(20);
     ok(!d.querySelector('.sheet') && A.w.players, '書き出したデータを復元できる');

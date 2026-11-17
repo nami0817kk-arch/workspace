@@ -137,7 +137,7 @@ module.exports = (YA, ok) => {
     const w = YA.newWorld(5);
     const p = Object.values(w.players)[0];
     w.rules = [];
-    w.week = 33;
+    w.week = 34; // 32・33週は新春フェスティバル（育成の直し）、34週は試合が無い
     const v = YA.eventView(w, { id: 'fight', pid: p.id, week: w.week, year: w.year });
     ok(v && !v.opts.some((x) => /約束どおり処分|次の試合から外す/.test(x)), '文の点検：約束事の無い年・試合の無い週の規律の選択肢 ' + (v && v.opts.join('／')));
     w.rules = YA.RULES.slice();

@@ -61,7 +61,7 @@
     box.append(h('div', { class: 'h', style: 'font-size:16px' }, 'セーブを読めませんでした'), h('div', { class: 'note', style: 'color:var(--ink)' }, `枠${(app.slot || 0) + 1}のセーブが壊れているか、読めない形でした。年度はじめの控えに戻すか、新しく始めるかを選んでください。書き出したセーブがあれば、新しく始めたあと設定の「復元する」で戻せます。`));
     box.append(h('div', { class: 'row', style: 'gap:6px;flex-wrap:wrap' },
       h('button', { class: 'btn pri', disabled: !bakOk, why: 'この枠には年度はじめの控えがありません', onclick: () => { app.loadErr = null; app.w = bak; app.tab = 'home'; app.view = 'pre'; YA.saveWorld(true); rerender(); } }, bakOk ? `控え（年度はじめ）に戻す：${YA.slotSummary(bak) || ''}` : '控え（年度はじめ）に戻す'),
-      h('button', { class: 'btn', onclick: () => confirmBox('新しく始めますか（読めなかったセーブは、新しく始めた時点で上書きされます）', () => { app.loadErr = null; rerender(); }) }, '新しく始める')));
+      h('button', { class: 'btn', onclick: () => confirmBox('新しく始めますか（読めなかったセーブは、新しく始めた時点で上書きされます）', () => { app.loadErr = null; rerender(); }, { yes: '新しく始める', danger: true }) }, '新しく始める')));
     main.append(box);
   }
 
@@ -338,6 +338,8 @@
   };
   // 確認の窓。o.yes＝確定のボタンの言葉（動詞で。「はい」にしない）、o.danger＝取り返せない操作（確定は赤、「やめる」を主ボタンに）、o.note＝添え書き
   function confirmBox(text, ok, o) {
+    // 試合の画面は (文, 確定の言葉, 関数) の形で呼ぶ（試合の直しと画面の直しを合わせた）
+    if (typeof ok === 'string') { const yes = ok; ok = o; o = { yes }; }
     o = o || {};
     const danger = !!o.danger;
     V().modal((close) => h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(420px,95%);padding:12px;gap:8px' }, h('div', { class: 'h' }, text), o.note ? h('div', { class: 'note' }, o.note) : null,
@@ -392,7 +394,7 @@
             close();
             rerender();
             if (dropped > 0) { try { YA.toast(`予約していたオリジナル選手のうち${dropped}人は、チケットの記録と合わないので戻しませんでした`); } catch (e) { /* 画面なし */ } }
-          });
+          }, { yes: '置き換える', danger: true });
         } }, '復元する')));
     });
   }

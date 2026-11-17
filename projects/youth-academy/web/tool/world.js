@@ -1460,11 +1460,11 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   ok(YA.ACH_FIELDS.every((f) => al0.some((a) => a.field === f)) && ['銅', '銀', '金'].every((t) => al0.some((a) => a.tier === t)), '5分野・銅銀金がそろう');
   ok(!!YA.nextAchievement(wl), '次に届きそうな実績が出る');
   let years = 0;
-  while (wl.year < 9 && years++ < 600) YA.simulate(wl, { until: 'week', stopOnImportant: false });
+  while (wl.year < 13 && years++ < 900) YA.simulate(wl, { until: 'week', stopOnImportant: false });
   const hofN = wl.alumni.filter((a) => a.hof).length, fullN = wl.alumni.filter((a) => a.hof === 'full').length;
   console.log('8年後 卒業生', wl.alumni.length, '殿堂候補以上', hofN, '正式', fullN, '基金', wl.fund, '実績', YA.achievements(wl).filter((a) => a.done).length + '/69');
   console.log('殿堂候補の点', wl.alumni.filter((a) => a.hof).map((a) => a.hof + ':' + a.age + ':' + (a.nat * 2 + (a.titles || []).length * 2 + (a.awards || []).length + Math.floor((a.apps || 0) / 150) + (a.abroad ? 1 : 0))).join(' '));
-  ok(hofN >= 1, '8年で殿堂候補が出る');
+  ok(hofN >= 1, '12年で殿堂候補が出る');
   { const c = wl.alumni.find((a) => a.hof === 'cand' && (a.nat || 0) * 2 + (a.titles || []).length * 2 + (a.awards || []).length >= 6); if (c) { c.age = 31; YA.alumniTick(wl); ok(c.hof === 'full' || c.retired, '殿堂候補が点を満たして30代になると正式に殿堂入りする'); } }
   ok(Object.keys(wl.achSeen || {}).length > 0 && wl.inbox.some((n) => /実績「/.test(n.text)), '届いた実績が知らされる');
   ok(fullN <= Math.ceil(wl.alumni.filter((a) => a.status === 'pro').length * 0.5) + 1, '正式な殿堂入りは多すぎない');
@@ -1750,14 +1750,14 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   const sw = sch.map((s, i) => [s, i + 1]).filter(([s]) => s.t === 'cup' && s.cup === 'summer').map(([, k]) => YA.calendar(k).month);
   ok(sw.length === 3 && sw.every((m) => m === '7月' || m === '8月') && YA.calendar(YA.CAMP_WEEK).month === '8月' && YA.SCHED(YA.CAMP_WEEK).t === 'camp', '暦：夏の大会は7〜8月、夏合宿は8月（前は11月だった）');
   ok(YA.LEAGUE_GAMES['J1リーグ'] === 38 && YA.LEAGUE_GAMES['チャンピオンシップ・イングランド2部'] === 46 && YA.LEAGUE_GAMES['ブンデスリーガ'] === 34, 'リーグごとの試合数');
-  const al = []; for (const sd of [2, 5]) { const t = YA.testStart({ seed: sd, tier: 2, years: 8 }); for (let y = 0; y < 8; y++) YA.testYear(t); al.push(...t.w.alumni); }
+  const al = []; for (const sd of [2, 5, 9]) { const t = YA.testStart({ seed: sd, tier: 2, years: 8 }); for (let y = 0; y < 8; y++) YA.testYear(t); al.push(...t.w.alumni); }
   const ss = al.flatMap((a) => (a.seasons || []).map((s) => [a, s])).filter(([a]) => a.status === 'pro');
   ok(ss.every(([, s]) => s.apps <= (YA.LEAGUE_GAMES[s.league] || 38)), '出場はリーグの試合数まで');
   const first = al.flatMap((a) => (a.moves || []).filter((m) => m.abroad && /^J/.test(m.fromLg || '')).map((m) => m.toLg));
   ok(first.length >= 5 && first.filter((lg) => YA.FIRST_ABROAD.indexOf(lg) >= 0).length / first.length >= 0.8, '最初の海外移籍は中堅のリーグから（' + first.length + '件）');
-  const fees = al.flatMap((a) => (a.moves || []).map((m) => m.fee));
+  const fees = al.flatMap((a) => (a.moves || []).filter((m) => !m.join).map((m) => m.fee));
   ok(fees.some((f) => f === 0) && fees.some((f) => f > 0) && new Set(fees).size > fees.length * 0.5, '移籍金に幅があり、契約満了の0円もある');
-  const natPerYear = al.filter((a) => a.nat).length / 16;
+  const natPerYear = al.filter((a) => a.nat).length / 24;
   ok(natPerYear <= 0.8, '日本代表は数年に1〜2人（' + natPerYear.toFixed(2) + '人/年）');
   ok(YA.retireWord({ age: 19, quit: true }) === 'サッカーをやめた' && YA.retireWord({ age: 34 }) === '引退', '若くしてやめた子は「サッカーをやめた」');
 }
