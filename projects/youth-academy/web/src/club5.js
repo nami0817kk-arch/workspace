@@ -9,7 +9,8 @@
   const conf = (p, d) => { if (p) p.conf = clamp((p.conf || 50) + d, 0, 100); };
   const pickOf = (r, list) => (list.length ? list[r.int(0, list.length - 1)] : null);
   const opt = (label, kind, extra) => ({ label, kind, extra });
-  const run = (label, fn) => ({ label, kind: null, run: (w) => { const r = fn(w) || {}; return { line: r.line || '', small: r.small || '' }; } });
+  // 効き目は staff.js の YA.fxRun が前後の差から小さく添える（2026-11-17）
+  const run = (label, fn) => ({ label, kind: null, run: (w) => (YA.fxRun ? YA.fxRun(w, fn) : (() => { const r = fn(w) || {}; return { line: r.line || '', small: r.small || '' }; })()) });
 
   // ---------- ライバル監督 ----------
   // 関係：対戦と出来事で動く（-100〜100）。宿敵／好敵手／認め合う
@@ -17,15 +18,15 @@
   const rcOf = (w, name) => { try { return (YA.rivalSync(w) || []).find((x) => x.teamName === name); } catch (e) { return null; } };
   const defOf = (k) => (YA.RIVAL_COACHES || []).find((d) => d.k === k) || {};
   const PRE = {
-    wall: { first: '「若いの。ユースの試合は、守った方が勝つ」', win: '「前は不覚を取った。今度は一点もやらん」', lose: '「また、守り切らせてもらう」', rivalry: '「お前のところとの試合は、眠れんよ」' },
-    poach: { first: '「いい選手を集めてますね。少し分けてほしいくらいです」', win: '「前回は勉強になりました。今日は取り返します」', lose: '「うちの子たち、また楽しみにしてますよ」', rivalry: '「今年も、いい子を何人か取り合いましたね」' },
-    teach: { first: '「勝ち負けより、子どもたちが何を持って帰るかです」', win: '「前回の負けで、うちの子たちは大きくなりました」', lose: '「今日もいい試合にしましょう」', rivalry: '「あなたの卒業生の便り、うちにも届いていますよ」' },
-    tact: { first: '「あなたの癖は、映像で全部見ました」', win: '「前回の試合、30回見直しました」', lose: '「今日も、同じ手で行きます」', rivalry: '「あなたの手は、もう読めています。読めているはずです」' },
+    wall: { first: '「若いの。ユースの試合は、守った方が勝つ」', win: '「前は不覚を取った。今度は一点もやらん」', lose: '「また、守り切らせてもらう」', draw: '「前は引き分けだった。今日は決着をつける」', rivalry: '「お前のところとの試合は、眠れんよ」' },
+    poach: { first: '「いい選手を集めてますね。少し分けてほしいくらいです」', win: '「前回は勉強になりました。今日は取り返します」', lose: '「うちの子たち、また楽しみにしてますよ」', draw: '「前回は引き分けでしたね。今日は勝たせてもらいます」', rivalry: '「今年も、いい子を何人か取り合いましたね」' },
+    teach: { first: '「勝ち負けより、子どもたちが何を持って帰るかです」', win: '「前回の負けで、うちの子たちは大きくなりました」', lose: '「今日もいい試合にしましょう」', draw: '「前回は引き分け。お互い、まだ伸びしろがありますね」', rivalry: '「あなたの卒業生の便り、うちにも届いていますよ」' },
+    tact: { first: '「あなたの癖は、映像で全部見ました」', win: '「前回の試合、30回見直しました」', lose: '「今日も、同じ手で行きます」', draw: '「前回の引き分け、最後の10分を何度も見ました」', rivalry: '「あなたの手は、もう読めています。読めているはずです」' },
   };
   const POST = {
     win: ['試合のあと、{n}監督が歩み寄ってきた。「……やられました。次は、こうはいかない」', '{n}監督は握手のあと、ベンチを振り返らずに帰っていった。'],
     lose: ['{n}監督が笑った。「いい試合でした。またやりましょう」', '{n}監督は「まだまだですね」とだけ言って去った。'],
-    draw: ['{n}監督と目が合った。互いに、苦笑いだった。'],
+    draw: ['{n}監督と目が合った。互いに、苦笑いだった。', '{n}監督は「決着は次ですね」と言って、握手の手を強く握った。', '引き分けのあと、{n}監督は黙って空を見上げていた。'],
     big: ['大差で勝った試合のあと、{n}監督は握手を拒んだ。', '大差で負けた試合のあと、{n}監督が「子どもたちに罪はない」と声をかけてきた。'],
   };
   const rw0 = YA.rivalWeek;
@@ -58,8 +59,9 @@
         const L = PRE[rc.k] || PRE.teach;
         const rec = rc.rec || { w: 0, d: 0, l: 0 };
         const n = rec.w + rec.d + rec.l;
-        const last = (w.results || []).filter((x) => x.opp === opp.name).slice(-1)[0];
-        const line = n === 0 ? L.first : Math.abs(w.rivalRel[rc.k] || 0) >= 30 ? L.rivalry : last && last.gf > last.ga ? L.win : L.lose;
+        // 前回の結果は、その監督との最後の試合で見る（2026-11-17：学校名で引いていたので、監督が移ると前の学校の結果を言っていた）
+        const last = rc.last || null;
+        const line = n === 0 || !last ? L.first : Math.abs(w.rivalRel[rc.k] || 0) >= 30 ? L.rivalry : last.gf > last.ga ? L.win : last.gf === last.ga ? L.draw || L.lose : L.lose;
         YA.noteTier(w, 1, `今週の相手は${d.name}（${d.title}）の${opp.name}。${line}（通算 ${rec.w}勝${rec.d}分${rec.l}敗）`);
       }
     } catch (er) { /* 日程の無い週 */ }
@@ -122,7 +124,7 @@
     { id: 'jointtrain', name: '合同練習の誘い', c: (w) => w.week >= 30 && w.week <= 38, t: (w) => { const d = (YA.RIVAL_COACHES || [])[YA.hash('jt' + w.year) % 4] || {}; return `${d.name || '名物監督'}から「冬に、合同練習をしませんか」と誘いが来た。`; },
       o: () => [run('受ける', (w) => { for (const p of all(w)) if (p.prog) p.prog.判断 = (p.prog.判断 || 0) + 0.15; const d = (YA.RIVAL_COACHES || [])[YA.hash('jt' + w.year) % 4]; if (d) w.rivalRel = Object.assign(w.rivalRel || {}, { [d.k]: ((w.rivalRel || {})[d.k] || 0) + 10 }); return { line: '手の内を見せ合う、いい練習になった。' }; }), run('手の内は見せないと断る', () => ({ line: '' })), run('高1だけで受ける', (w) => { for (const p of all(w).filter((x) => x.grade === 1)) conf(p, 3); return { line: '' }; })] },
     { id: 'poachkid', name: '引き抜き騒ぎ', c: (w) => all(w).some((p) => p.team === 'B' && p.grade <= 2 && (p.unrest || 0) >= 2), t: (w) => { const p = all(w).find((x) => x.team === 'B' && x.grade <= 2 && (x.unrest || 0) >= 2); return `氷室監督のクラブが、Bの${p.name}に声をかけているらしい。`; },
-      o: () => [run('本人と話して引き止める', (w) => { const p = all(w).find((x) => x.team === 'B' && x.grade <= 2 && (x.unrest || 0) >= 2); if (p) p.unrest = Math.max(0, p.unrest - 2); return { line: '' }; }), run('相手クラブに抗議する', (w) => { w.rivalRel = Object.assign(w.rivalRel || {}, { poach: ((w.rivalRel || {}).poach || 0) - 15 }); return { line: '氷室監督とは、口をきかなくなった。' }; }), run('本人の意思に任せる', (w) => { const p = all(w).find((x) => x.team === 'B' && x.grade <= 2 && (x.unrest || 0) >= 2); if (p && YA.hash(p.id) % 2) p._leave = true; return { line: '' }; })] },
+      o: () => [run('本人と話して引き止める', (w) => { const p = all(w).find((x) => x.team === 'B' && x.grade <= 2 && (x.unrest || 0) >= 2); if (p) p.unrest = Math.max(0, p.unrest - 2); return { line: '' }; }), run('相手クラブに抗議する', (w) => { w.rivalRel = Object.assign(w.rivalRel || {}, { poach: ((w.rivalRel || {}).poach || 0) - 15 }); return { line: '氷室監督とは、口をきかなくなった。' }; }), run('本人の意思に任せる', (w) => { const p = all(w).find((x) => x.team === 'B' && x.grade <= 2 && (x.unrest || 0) >= 2); if (!p) return { line: '' }; if (YA.hash(p.id) % 2) { p.unrest = (p.unrest || 0) + 2; return { line: `${p.name}は迷っている。気持ちが揺れているようだ。`, small: '不満 +2' }; } conf(p, 3); return { line: `${p.name}が自分から「ここで続けます」と言ってきた。`, small: '自信 +3' }; })] },
     { id: 'article', name: '取材記事', c: (w) => w.week === 21, t: (w) => { const d = (YA.RIVAL_COACHES || [])[YA.hash('ar' + w.year) % 4] || {}; return `サッカー雑誌に、${d.name || '名物監督'}のインタビューが載った。こちらのクラブにも触れている。`; },
       o: () => [run('記事を読む', (w) => { const d = (YA.RIVAL_COACHES || [])[YA.hash('ar' + w.year) % 4]; const v = d ? (w.rivalRel || {})[d.k] || 0 : 0; return { line: v >= 0 ? '「あそこの卒業生は、みんな顔がいい」と褒めてあった。' : '「あそこは、育てるより集めるのがうまい」と書かれていた。' }; }), run('子どもたちにも見せる', (w) => { for (const p of A(w)) conf(p, 1); return { line: '' }; }), run('読まない', () => ({ line: '' }))] },
   ];
@@ -163,7 +165,8 @@
     (w, x) => x.focus ? `今週の重点「${x.focus}」は、${x.fat > 55 ? '疲れもあって、まだ形になりきらない' : '少しずつ形になってきた'}。` : '',
     (w, x) => x.stay ? `${x.stay.name}が、今週も最後まで居残りをしていた。` : '',
     (w, x) => x.coach ? `${x.coach.role}の${sur(x.coach.name)}：「${(YA.STAFF_PERS[x.coach.pers] || {}).say || ''}」` : '',
-    (w, x) => (x.fat > 60 ? '全体に疲れが見える。週の後半は動きが重かった。' : x.fat < 35 ? '体が軽い。練習の強度を上げられそうだ。' : ''),
+    // 疲れの一言は、目立つ週だけ・3通りから（2026-11-17：「体が軽い…」が3割の週に出ていた）
+    (w, x) => (x.fat > 60 ? ['全体に疲れが見える。週の後半は動きが重かった。', '疲れが抜けきらず、足の止まる子が目立った。', '練習の終わりには、みんな肩で息をしていた。'][x.v % 3] : x.fat < 28 && x.v % 3 === 0 ? ['体が軽い。練習の強度を上げられそうだ。', '全体に動きがいい。疲れはほとんど残っていない。', '足がよく動いている。追い込むなら今だ。'][(x.v >> 2) % 3] : ''),
     (w, x) => (x.late ? `${x.late.name}が遅刻した。規律が少し緩んでいる。` : ''),
     (w, x) => (x.star ? `★の${x.star.name}は、${x.star.conf > 60 ? '表情が明るい' : '少し考え込んでいる'}。` : ''),
     (w, x) => (x.g1 ? `高1の${x.g1.name}が、上級生に食らいついていた。` : ''),
@@ -181,7 +184,9 @@
     (w, x) => (x.sun ? '夕焼けのなか、最後のミニゲームが盛り上がった。' : ''),
   ];
   YA.diaryOf = function (w) {
-    const ps = all(w);
+    // 怪我や代表・トップで不在の子は、活躍の文に出さない（2026-11-17：怪我中の子が紅白戦で好セーブしていた）。別メニューの文だけは怪我の子
+    const every = all(w);
+    const ps = every.filter((p) => !(p.inj > 0) && !(p.away > 0));
     const r = YA.rngOf((w.seed | 0) * 61 + w.year * 40 + w.week);
     const grow = ps.map((p) => [p, Object.values(p.gain || {}).reduce((a, b) => a + b, 0)]).sort((a, b) => b[1] - a[1]);
     const staff = (w.club && w.club.staff || []).filter((s) => /コーチ/.test(s.role));
@@ -191,9 +196,9 @@
       stay: pickOf(r, ps.filter((p) => (p.conf || 50) >= 65)), coach: staff.length && YA.STAFF_PERS ? (YA.staffInfo ? YA.staffInfo(pickOf(r, staff)) : null) : null,
       late: (w.disc || 60) < 50 ? pickOf(r, ps) : null, star: pickOf(r, ps.filter((p) => p.star)), g1: pickOf(r, ps.filter((p) => p.grade === 1 && (p.conf || 50) >= 55)),
       gk: r.chance(0.3) ? pickOf(r, ps.filter((p) => p.pos === 'GK')) : null, weather: w.week >= 31 && w.week <= 35 ? '雪の残るグラウンドで、足元が滑った。' : w.week >= 13 && w.week <= 18 ? '暑さで、給水の回数を増やした。' : w.week >= 6 && w.week <= 9 ? '雨で、室内の練習に切り替えた日があった。' : '',
-      inj: pickOf(r, ps.filter((p) => (p.inj || 0) > 0)), loud: r.chance(0.3) ? pickOf(r, ps.filter((p) => p.pers && Object.values(p.pers).some((v) => v === 'リーダー気質' || v === 'お調子者'))) : null,
+      inj: pickOf(r, every.filter((p) => (p.inj || 0) > 0)), loud: r.chance(0.3) ? pickOf(r, ps.filter((p) => p.pers && Object.values(p.pers).some((v) => v === 'リーダー気質' || v === 'お調子者'))) : null,
       quiet: r.chance(0.2) ? pickOf(r, ps.filter((p) => (p.conf || 50) < 40)) : null, pair: (() => { const f = (w.rel || []).find((q) => q.k === 'friend' && w.players[q.a] && w.players[q.b] && w.players[q.a].team === 'A'); return f && r.chance(0.3) ? [w.players[f.a], w.players[f.b]] : null; })(),
-      match: opp, newb: r.chance(0.25) ? pickOf(r, ps.filter((p) => p.grade <= 2)) : null, cap: r.chance(0.2) && w.captain ? w.players[w.captain] : null, b: r.chance(0.25) ? pickOf(r, ps.filter((p) => p.team === 'B')) : null, after: r.chance(0.15), sun: r.chance(0.15),
+      match: opp, v: r.int(0, 999), newb: r.chance(0.25) ? pickOf(r, ps.filter((p) => p.grade <= 2)) : null, cap: r.chance(0.2) && w.captain ? w.players[w.captain] : null, b: r.chance(0.25) ? pickOf(r, ps.filter((p) => p.team === 'B')) : null, after: r.chance(0.15), sun: r.chance(0.15),
     };
     const lines = DIARY.map((f) => { try { return f(w, x); } catch (e) { return ''; } }).filter(Boolean);
     const out = [];
@@ -214,6 +219,10 @@
   };
 
   // ---------- 練習中の出来事（20種・一話）----------
+  // チーム全体の出来事（偵察・雨の紅白戦・ミニゲーム・見物）は特定の子を選ばない。前は文に出てこない子の反応と自信が動いていた（2026-11-17）
+  const teamPick = (w, r) => (all(w).some((q) => q.star) && r() > (YA.NONSTAR_KEEP != null ? YA.NONSTAR_KEEP : 1) ? null : { id: '' });
+  const fit = (w) => all(w).filter((p) => !(p.inj > 0) && !(p.away > 0));
+  const discUp = (w, d) => { w.disc = clamp((w.disc || 60) + d, 0, 100); };
   const PE = [
     ['p_stay', '居残り', (w, r) => pickOf(r, all(w).filter((p) => (p.conf || 50) >= 60)), (p) => `練習が終わっても、${p.name}がひとりでシュートを打ち続けている。`, [opt('付き合う', 'warm', (w, p) => { p.prog = p.prog || {}; p.prog.フィニッシュ = (p.prog.フィニッシュ || 0) + 0.3; }), opt('早く帰らせる', 'firm', (w, p) => { p.fat = clamp((p.fat || 0) - 5, 0, 100); }), opt('好きにさせる', 'wait')]],
     ['p_clash', 'ぶつかり合い', (w, r) => pickOf(r, A(w).filter((p) => p.pos === 'DF')), (p) => `紅白戦で、${p.name}が激しく当たりすぎた。相手の子が倒れている。`, [opt('止めて注意する', 'firm'), opt('強度は大事だと認める', 'push', (w, p) => conf(p, 3)), opt('相手の子を先に気づかう', 'warm')]],
@@ -223,21 +232,35 @@
     ['p_gksave', 'GKの好セーブ', (w, r) => pickOf(r, all(w).filter((p) => p.pos === 'GK')), (p) => `${p.name}が、紅白戦で至近距離のシュートを止めた。`, [opt('皆の前で褒める', 'warm', (w, p) => conf(p, 5)), opt('次はキャッチしろと言う', 'push'), opt('何も言わない', 'wait')]],
     ['p_scold', 'コーチの叱責', (w, r) => pickOf(r, all(w).filter((p) => (p.conf || 50) < 50)), (p) => `コーチが${p.name}を強く叱った。${p.name}はうつむいている。`, [opt('あとで話を聞く', 'warm', (w, p) => conf(p, 5)), opt('コーチの側に立つ', 'firm'), opt('コーチと話す', 'push')]],
     ['p_teach', '後輩への指導', (w, r) => pickOf(r, all(w).filter((p) => p.grade === 3)), (p) => `${p.name}が、高1に止め方を教えている。`, [opt('時間を作ってやる', 'warm', (w) => { for (const q of all(w).filter((x) => x.grade === 1)) { q.prog = q.prog || {}; q.prog.ファーストタッチ = (q.prog.ファーストタッチ || 0) + 0.1; } }), opt('自分の練習を優先させる', 'firm'), opt('見守る', 'wait')]],
-    ['p_spy', '偵察', (w, r) => pickOf(r, A(w)), () => `練習場の外に、他クラブのスタッフらしき人が立っている。`, [opt('練習を非公開にする', 'firm'), opt('気にせず続ける', 'wait'), opt('声をかけてみる', 'warm', (w) => { if (YA.addRep) YA.addRep(w, 0); })]],
-    ['p_rain', '雨の紅白戦', (w, r) => pickOf(r, A(w)), () => `土砂降りの中の紅白戦。ボールが止まらない。`, [opt('そのまま続ける', 'push', (w) => { for (const q of A(w)) { q.prog = q.prog || {}; q.prog.ファーストタッチ = (q.prog.ファーストタッチ || 0) + 0.1; } }), opt('室内に移る', 'warm'), opt('早めに切り上げる', 'wait')]],
+    ['p_spy', '偵察', teamPick, () => `練習場の外に、他クラブのスタッフらしき人が立っている。`, [
+      run('練習を非公開にする', (w) => { discUp(w, 1); return { line: '幕を張って練習を続けた。手の内は見せなかった。', small: '規律 +1' }; }),
+      run('気にせず続ける', (w) => { for (const q of A(w)) conf(q, 1); return { line: 'いつもどおりの練習を見せた。子どもたちは少し張り切っていた。', small: 'Aの自信 +1' }; }),
+      run('声をかけてみる', (w) => { if (YA.addRep) YA.addRep(w, 1); return { line: '近くのクラブのスカウトだった。「いい練習をしてますね」と言って帰っていった。', small: '評判 +1' }; })]],
+    ['p_rain', '雨の紅白戦', teamPick, () => `土砂降りの中の紅白戦。ボールが止まらない。`, [
+      run('そのまま続ける', (w) => { for (const q of fit(w).filter((x) => x.team === 'A')) { q.prog = q.prog || {}; q.prog.ファーストタッチ = (q.prog.ファーストタッチ || 0) + 0.1; q.fat = clamp((q.fat || 0) + 3, 0, 100); } return { line: '泥だらけになりながら、最後までやり切った。', small: 'Aのファーストタッチが少し伸びる・疲れ +3' }; }),
+      run('室内に移る', (w) => { for (const q of all(w)) q.fat = clamp((q.fat || 0) - 3, 0, 100); return { line: '体育館で、止める・蹴るを確かめ直した。', small: '全員の疲れ −3' }; }),
+      run('早めに切り上げる', (w) => { for (const q of all(w)) q.fat = clamp((q.fat || 0) - 6, 0, 100); return { line: '早めに上がって、体を温めさせた。', small: '全員の疲れ −6' }; })]],
     ['p_longkick', 'ロングキック勝負', (w, r) => pickOf(r, all(w).filter((p) => p.pos === 'DF' || p.pos === 'GK')), (p) => `${p.name}たちが、練習のあとロングキックの飛距離を競っている。`, [opt('一緒に混ざる', 'warm', (w) => { for (const q of all(w)) conf(q, 1); }), opt('狙いの正確さも競わせる', 'push', (w, p) => { p.prog = p.prog || {}; p.prog.パス = (p.prog.パス || 0) + 0.2; }), opt('ほどほどにと言う', 'firm')]],
     ['p_sprint', '走り込み', (w, r) => pickOf(r, all(w).filter((p) => (p.fat || 0) < 50)), (p) => `走り込みで、${p.name}がずっと先頭を走っている。`, [opt('皆の手本だと褒める', 'warm', (w, p) => conf(p, 4)), opt('さらに追い込む', 'push', (w, p) => { p.fat = clamp((p.fat || 0) + 6, 0, 100); }), opt('ペースを守らせる', 'wait')]],
     ['p_tactic', '戦術の確認', (w, r) => pickOf(r, A(w)), (p) => `戦術の確認で、${p.name}が「こっちの方がいい」と意見を言ってきた。`, [opt('試してみる', 'push', (w, p) => conf(p, 4)), opt('理由を説明して戻す', 'warm'), opt('指示に従わせる', 'firm')]],
     ['p_ball', 'ボール磨き', (w, r) => pickOf(r, all(w).filter((p) => p.grade === 1)), (p) => `高1の${p.name}たちが、誰に言われたわけでもなくボールを磨いていた。`, [opt('ありがとうと伝える', 'warm', (w, p) => conf(p, 3)), opt('練習に戻れと言う', 'firm'), opt('黙って見ている', 'wait')]],
     ['p_lefty', '逆足の練習', (w, r) => pickOf(r, all(w).filter((p) => p.grade <= 2)), (p) => `${p.name}が、逆足で何度もボールを蹴っている。うまくいかない。`, [opt('付き合う', 'warm', (w, p) => { p.prog = p.prog || {}; p.prog.テクニック = (p.prog.テクニック || 0) + 0.2; }), opt('得意な足を伸ばせと言う', 'firm'), opt('続けさせる', 'wait')]],
-    ['p_minigame', 'ミニゲームの熱', (w, r) => pickOf(r, all(w)), () => `ミニゲームが白熱して、終わりの笛が聞こえないほどだ。`, [opt('延長を許す', 'warm', (w) => { for (const q of all(w)) conf(q, 1); }), opt('時間を守らせる', 'firm'), opt('もう1本だけ', 'push')]],
+    ['p_minigame', 'ミニゲームの熱', teamPick, () => `ミニゲームが白熱して、終わりの笛が聞こえないほどだ。`, [
+      run('延長を許す', (w) => { for (const q of all(w)) conf(q, 1); return { line: 'もう10分、笑い声が続いた。', small: '全員の自信 +1' }; }),
+      run('時間を守らせる', (w) => { discUp(w, 1); return { line: '笛の合図で、ぴたりと止まった。', small: '規律 +1' }; }),
+      run('もう1本だけ', (w) => { for (const q of A(w)) conf(q, 1); return { line: '最後の1本で決勝点が入り、大騒ぎになった。', small: 'Aの自信 +1' }; })]],
     ['p_video', '映像を見る', (w, r) => pickOf(r, A(w)), (p) => `${p.name}が、自分の試合の映像を見せてほしいと言ってきた。`, [opt('一緒に見る', 'warm', (w, p) => { p.prog = p.prog || {}; p.prog.判断 = (p.prog.判断 || 0) + 0.2; }), opt('分析担当に任せる', 'push'), opt('今は練習だと言う', 'firm')]],
     ['p_rest', '自主的な休み', (w, r) => pickOf(r, all(w).filter((p) => (p.fat || 0) >= 65)), (p) => `${p.name}が「今日は休ませてください」と言ってきた。疲れているのは確かだ。`, [opt('休ませる', 'warm', (w, p) => { p.rest = 'rest'; }), opt('軽めで参加させる', 'push', (w, p) => { p.rest = 'light'; }), opt('甘えるなと言う', 'firm')]],
     ['p_new', '新入りの壁', (w, r) => pickOf(r, all(w).filter((p) => p.grade === 1)), (p) => `${p.name}が、上級生のスピードについていけず、何度もボールを失っている。`, [opt('高1だけの練習を作る', 'warm', (w) => { for (const q of all(w).filter((x) => x.grade === 1)) conf(q, 2); }), opt('上級生の中に放り込み続ける', 'push', (w, p) => { p.prog = p.prog || {}; p.prog.判断 = (p.prog.判断 || 0) + 0.2; }), opt('見守る', 'wait')]],
-    ['p_fans', '練習の見物', (w, r) => pickOf(r, A(w)), () => `練習の見物に、近所の小学生が何人も来ている。`, [opt('サインに応じさせる', 'warm', (w) => { if (YA.addRep) YA.addRep(w, 1); }), opt('一緒にボールを蹴らせる', 'push', (w) => { for (const q of all(w)) conf(q, 1); }), opt('練習に集中させる', 'firm')]],
+    ['p_fans', '練習の見物', teamPick, () => `練習の見物に、近所の小学生が何人も来ている。`, [
+      run('サインに応じさせる', (w) => { if (YA.addRep) YA.addRep(w, 1); return { line: '小学生たちが、目を輝かせて帰っていった。', small: '評判 +1' }; }),
+      run('一緒にボールを蹴らせる', (w) => { for (const q of all(w)) conf(q, 1); return { line: '子どもたちに混ざって、選手たちも楽しそうだった。', small: '全員の自信 +1' }; }),
+      run('練習に集中させる', (w) => { discUp(w, 1); return { line: '見物の子たちは、静かに練習を見ていた。', small: '規律 +1' }; })]],
   ];
   YA.PRACTICE_EVENTS = PE.map((x) => x[0]);
-  for (const [id, name, pick, text, opts] of PE) YA.EVENTS.push({ id, name: '練習：' + name, weight: 0.25, pick, text: (p, w) => text(p, w), opts });
+  // 年度末の会話などで「○○のことを、本人もよく覚えていた」と引けるように、記憶の名前を足す（2026-11-17：無くて文が欠けていた）
+  YA.MEM_NAME = Object.assign(YA.MEM_NAME || {}, Object.fromEntries(PE.map((x) => [x[0], x[1]])));
+  for (const [id, name, pick, text, opts] of PE) YA.EVENTS.push({ id, name: '練習：' + name, weight: 0.25, pick: (w, r) => { const p = pick(w, r); return p && (p.inj > 0 || p.away > 0) ? null : p; }, text: (p, w) => text(p, w), opts });
   for (const [id] of PE) YA.EVENT_ABOUT[id] = '練習中の小さな出来事です。どう声をかけたかは、その子の記憶に残ります。';
   const quoteOf = (label) => String(label || '').replace(/（[^）]*）/g, '').trim();
   const pset = new Set(YA.PRACTICE_EVENTS);

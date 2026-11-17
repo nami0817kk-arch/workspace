@@ -133,7 +133,48 @@
   // ---------- 出来事（30種）----------
   const pick = (w, f) => staffOf(w).filter((s) => !(s.away > 0) && f(s));
   const one = (list, salt) => (list.length ? list[YA.hash(salt) % list.length] : null);
-  const run = (label, fn) => ({ label, kind: null, run: (w) => { const r = fn(w) || {}; return { line: r.line || '', small: r.small || '' }; } });
+  // 選んだことの効き目を、前後の数の差から小さく添える（2026-11-17：選んでも何も表示されない選択肢が多かった）。
+  // 自信・疲れ（人数ごと）・信頼度・評判・規律・育成基金・強化部長とスタッフとの関係を見る。結果の文に small が書いてあればそれを使う
+  YA.fxSnap = function (w) {
+    const ps = Object.values(w.players || {});
+    return {
+      conf: new Map(ps.map((p) => [p.id, p.conf || 0])), fat: new Map(ps.map((p) => [p.id, p.fat || 0])), n: ps.length, nA: ps.filter((p) => p.team === 'A').length,
+      trust: w.club ? w.club.trust : 0, rep: w.club ? w.club.rep : 0, disc: w.disc == null ? 60 : w.disc, fund: w.fund || 0,
+      dir: w.director ? w.director.rel : null, staff: new Map(((w.club && w.club.staff) || []).map((x) => [x.id || x.name, x.rel == null ? 50 : x.rel])),
+    };
+  };
+  const sgn = (d) => (d > 0 ? '+' : '−') + Math.abs(d);
+  YA.fxText = function (w, b) {
+    const a = YA.fxSnap(w);
+    const out = [];
+    const per = (k, name) => {
+      const ch = [];
+      for (const [id, v] of b[k]) if (a[k].has(id) && Math.round(a[k].get(id) - v) !== 0) ch.push(Math.round(a[k].get(id) - v));
+      if (!ch.length) return;
+      const d = Math.round(ch.reduce((x, y) => x + y, 0) / ch.length);
+      if (!d) return;
+      const who = ch.length >= b.n - 2 ? '全員の' : ch.length === b.nA ? 'Aの' : ch.length === 1 ? '' : `${ch.length}人の`;
+      out.push(`${who}${name} ${sgn(d)}`);
+    };
+    per('conf', '自信');
+    per('fat', '疲れ');
+    const one = (d, name) => { const r = Math.round(d); if (r) out.push(`${name} ${sgn(r)}`); };
+    one(a.trust - b.trust, '信頼度');
+    one(a.rep - b.rep, '評判');
+    one(a.disc - b.disc, '規律');
+    if (a.fund - b.fund) out.push(`育成基金 ${sgn(Math.round(a.fund - b.fund))}万円`);
+    if (b.dir != null && a.dir != null) one(a.dir - b.dir, '強化部長との関係');
+    let sd = 0;
+    for (const [id, v] of b.staff) if (a.staff.has(id)) sd += a.staff.get(id) - v;
+    one(sd, 'スタッフとの関係');
+    return out.join('・');
+  };
+  YA.fxRun = function (w, fn) {
+    const b = YA.fxSnap(w);
+    const r = fn(w) || {};
+    return { line: r.line || '', small: r.small || YA.fxText(w, b) };
+  };
+  const run = (label, fn) => ({ label, kind: null, run: (w) => YA.fxRun(w, fn) });
   const SE = [
     { id: 'clash', name: '意見がぶつかる', c: (w) => one(pick(w, (s) => /コーチ/.test(s.role)), w.week + 'cl'), t: (w, s) => `${s.role}の${s.name}が、練習の組み方に異を唱えてきた。「${YA.STAFF_PERS[s.pers].say}」`,
       o: (s) => [run('任せてみる', () => { addRel(s, 8); return { line: `${sur(s.name)}が張り切っている。`, small: '関係が深まった' }; }), run('自分のやり方を通す', () => { addRel(s, -6); return { line: '少し気まずい空気が流れた。', small: '関係が冷えた' }; }), run('二人で間を取る', () => { addRel(s, 3); return { line: '折り合いがついた。' }; })] },

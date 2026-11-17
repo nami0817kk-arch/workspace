@@ -6,7 +6,8 @@
   const all = (w) => Object.values(w.players);
   const A = (w) => all(w).filter((p) => p.team === 'A');
   const conf = (p, d) => { if (p) p.conf = clamp((p.conf || 50) + d, 0, 100); };
-  const run = (label, fn) => ({ label, kind: null, run: (w) => { const r = fn(w) || {}; return { line: r.line || '', small: r.small || '' }; } });
+  // 効き目は staff.js の YA.fxRun が前後の差から小さく添える（2026-11-17）
+  const run = (label, fn) => ({ label, kind: null, run: (w) => (YA.fxRun ? YA.fxRun(w, fn) : (() => { const r = fn(w) || {}; return { line: r.line || '', small: r.small || '' }; })()) });
   const rep = (w, d) => { if (YA.addRep) YA.addRep(w, d); };
   const trust = (w, d) => { if (w.club) w.club.trust = clamp(w.club.trust + d, 0, 100); };
   const disc = (w, d) => { w.disc = clamp((w.disc || 60) + d, 0, 100); };
