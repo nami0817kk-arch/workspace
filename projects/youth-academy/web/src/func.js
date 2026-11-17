@@ -374,11 +374,14 @@
     const t = [];
     for (const x of a.rHist || []) t.push({ y: x.y, t: `高${x.g}：総合力${x.r}` });
     for (const m of a.mem || []) if (['chain', 'awake', 'path', 'wall', 'star', 'pitch', 'quit'].indexOf(m.k) >= 0) t.push({ y: m.y, t: `${(YA.MEM_NAME || {})[m.k] || m.k}${m.q ? '：「' + m.q + '」' : ''}` });
-    t.push({ y: a.year, t: `卒業 → ${a.club || ''}${a.league ? '（' + a.league + '）' : ''}` });
+    // 卒業の行は最初の行き先（2026-11-17 点検：今のクラブが出ていて、大学経由も消えていた）
+    const c0 = a.club0 != null ? a.club0 : a.club, l0 = a.club0 != null ? a.league0 : a.league;
+    t.push({ y: a.year, t: `卒業 → ${c0 || ''}${l0 ? '（' + l0 + '）' : ''}` });
+    for (const m of a.moves || []) if (m.join) t.push({ y: m.y, t: `大学 → ${m.to}（${m.toLg}）でプロに` });
     for (const s of a.seasons || []) t.push({ y: s.y, t: `${s.club}：${YA.statLine(s, a.pos === 'GK')}${(s.titles || []).length ? '・' + s.titles.join('・') : ''}${(s.awards || []).length ? '・' + s.awards.join('・') : ''}` });
     if (a.hof) t.push({ y: a.hofY || a.year, t: a.hof === 'full' ? '殿堂入り' : '殿堂候補' });
     if (a.retired) t.push({ y: a.retY || w.year, t: a.quit ? 'サッカーをやめた' : '現役を引退' });
-    if (a.coached) t.push({ y: w.year, t: 'コーチとして戻った' });
+    if (a.coachY) t.push({ y: a.coachY, t: 'コーチとして戻った' }); // 雇った年だけ（市場に並んだ・断ったときは出さない）
     return t.sort((x, y) => x.y - y.y);
   };
   YA.alumniContact = function (w, a) {
@@ -418,7 +421,7 @@
         gk ? h('span', { class: 'chip trait' }, `完封 ${a.cleans || 0}`) : h('span', { class: 'chip trait' }, `得点 ${a.goals || 0}`),
         gk ? null : h('span', { class: 'chip trait' }, `アシスト ${a.assists || 0}`),
         h('span', { class: 'chip gray' }, `タイトル ${(a.titles || []).length}`),
-        a.nat ? h('span', { class: 'chip gray' }, `日本代表 ${a.nat}回${a.natGoals ? '・' + a.natGoals + '得点' : ''}`) : null,
+        a.nat ? h('span', { class: 'chip gray' }, `日本代表 ${a.caps != null ? a.caps : a.nat * 5}試合${a.natGoals ? '・' + a.natGoals + '得点' : ''}`) : null,
         a.bdBest ? h('span', { class: 'chip pers' }, a.bdBest === 1 ? `バロンドール ${n(/^バロンドール$/)}回` : `バロンドール 最高${a.bdBest}位`) : null,
         ...big.filter((x) => x[0] !== 'バロンドール').map((x) => h('span', { class: 'chip pers' }, x[0] + (x[1] > 1 ? ` ×${x[1]}` : '')))),
       h('div', { class: 'plist', style: 'margin-top:4px' },
@@ -442,7 +445,10 @@
     const moves = a.moves || [];
     const val = YA.marketValue ? YA.marketValue(a) : 0;
     const status = a.status === 'pro' ? (a.retired ? YA.retireWord(a) : `${a.club}（${a.league}）`) : a.status === 'univ' ? `${a.club}（大学）` : a.status === 'left' ? '在学中に退団' : `${a.club || '社会人'}`;
-    const first = a.status === 'pro' ? (moves.length ? moves[0].from : a.club) : a.club || '社会人';
+    // 卒業して最初に入ったところ（a.club0）。古い保存は最初の移籍の元から
+    const first = a.club0 != null ? a.club0 || '社会人' : a.status === 'pro' ? (moves.length ? moves[0].from : a.club) : a.club || '社会人';
+    const firstLg = a.club0 != null ? a.league0 : moves.length ? moves[0].fromLg : a.league;
+    const firstPro = !/大学|社会人/.test(firstLg || '') && (a.status === 'pro' || moves.length > 0);
     YA._v.modal((close) => h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(860px,98%);max-height:96%;padding:12px;gap:4px;overflow:auto' },
       h('div', { class: 'row', style: 'gap:6px' },
         h('span', { class: 'pos ' + a.pos }, (YA.POS_LABEL && YA.POS_LABEL[a.main]) || a.pos),
@@ -456,7 +462,7 @@
         gk ? null : h('span', { class: 'chip trait' }, `アシスト ${a.assists || 0}`),
         h('span', { class: 'chip gray' }, `タイトル ${(a.titles || []).length}`),
         h('span', { class: 'chip gray' }, `移籍 ${a.transfers || 0}回・移籍金の合計 ${YA.yen(a.feeTotal || 0)}`),
-        a.nat ? h('span', { class: 'chip gray' }, `日本代表 ${a.nat}回${a.natGoals ? '・' + a.natGoals + '得点' : ''}`) : null,
+        a.nat ? h('span', { class: 'chip gray' }, `日本代表 ${a.caps != null ? a.caps : a.nat * 5}試合${a.natGoals ? '・' + a.natGoals + '得点' : ''}`) : null,
         a.bdBest ? h('span', { class: 'chip pers' }, a.bdBest === 1 ? `バロンドール ${(a.awards || []).filter((x) => x.name === 'バロンドール').length}回` : `バロンドール 最高${a.bdBest}位`) : null),
       sec('ユース時代',
         h('div', { class: 'note' }, [
@@ -464,7 +470,7 @@
           a.cs ? `Aの公式戦 ${a.cs.apps}試合` + (gk ? '' : `・${a.cs.goals}得点・${a.cs.assists}アシスト`) : null,
           a.form ? `覚醒：${a.form}` : null,
           a.youthCaps ? `年代別の代表 ${a.youthCaps}回` : null,
-          a.note ? `卒業：${a.note}` : null,
+          a.note0 || a.note ? `卒業：${a.note0 || a.note}` : null,
         ].filter(Boolean).join('　／　')),
         (a.traits || []).length ? h('div', { class: 'row', style: 'flex-wrap:wrap;gap:3px' }, a.traits.map((t) => h('span', { class: 'chip trait' }, t))) : null),
       sec('年ごとの成績',
@@ -479,9 +485,9 @@
           : h('div', { class: 'note' }, 'まだ記録はありません。卒業から1年たつと、ここに年ごとの成績が並びます。')),
       sec('移籍の歴史',
         h('div', { class: 'plist' },
-          h('div', { class: 'pitem', style: 'cursor:default;gap:6px;font-size:11px' }, td(`${a.year}年目`, 44, 1), h('span', { class: 'grow' }, `ユース → ${first}${a.status === 'univ' ? '（大学）' : ''}`), td(a.status === 'pro' || moves.length ? 'プロ契約' : '―', 90)),
-          moves.map((m) => h('div', { class: 'pitem', style: 'cursor:default;gap:6px;font-size:11px' }, td(`${m.y}年目`, 44, 1), h('span', { class: 'grow', style: 'min-width:0' }, `${m.from} → ${m.to}（${m.toLg}）${m.abroad ? '・海外' : ''}`), h('b', { style: 'width:90px;flex:none;text-align:right' }, YA.yen(m.fee))))),
-        moves.length ? h('div', { class: 'note' }, `連帯貢献金（育成基金へ）の合計 ${YA.yen(moves.reduce((t, m) => t + (m.share || 0), 0))}`) : h('div', { class: 'note' }, (a.transfers || 0) > 0 ? '前の移籍は記録の形が古く、移籍金が残っていません。' : 'まだ移籍していません。')),
+          h('div', { class: 'pitem', style: 'cursor:default;gap:6px;font-size:11px' }, td(`${a.year}年目`, 44, 1), h('span', { class: 'grow' }, `ユース → ${first}${/大学/.test(firstLg || '') ? '（大学）' : ''}`), td(firstPro ? 'プロ契約' : '―', 90)),
+          moves.map((m) => h('div', { class: 'pitem', style: 'cursor:default;gap:6px;font-size:11px' }, td(`${m.y}年目`, 44, 1), h('span', { class: 'grow', style: 'min-width:0' }, `${m.from} → ${m.to}（${m.toLg}）${m.join ? '・加入' : m.abroad ? '・海外' : ''}`), h('b', { style: 'width:90px;flex:none;text-align:right' }, m.join ? 'プロ契約・0円' : YA.yen(m.fee))))),
+        moves.length ? h('div', { class: 'note' }, `連帯貢献金の合計 ${YA.yen(moves.reduce((t, m) => t + (m.share || 0), 0))}（国をまたぐ移籍だけ。半分が育成基金へ）`) : h('div', { class: 'note' }, (a.transfers || 0) > 0 ? '前の移籍は記録の形が古く、移籍金が残っていません。' : 'まだ移籍していません。')),
       (a.titles || []).length || (a.awards || []).length ? sec('タイトルと賞',
         (a.titles || []).length ? h('div', { class: 'row', style: 'flex-wrap:wrap;gap:4px' }, count(a.titles).map((x) => h('span', { class: 'chip trait' }, x))) : null,
         (a.awards || []).length ? h('div', { class: 'row', style: 'flex-wrap:wrap;gap:4px' }, count(a.awards).map((x) => h('span', { class: 'chip pers' }, x))) : null) : null,

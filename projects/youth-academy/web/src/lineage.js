@@ -73,9 +73,28 @@
 
   // ---------- 殿堂の2段（決定133）----------
   // 条件に届いた瞬間に「殿堂候補」（銀）。引退のときに生涯の成績で正式に殿堂入り（金）
-  const hofScore = YA.hofScore = (a) => (a.nat || 0) * 2 + (a.titles || []).length * 2 + (a.awards || []).length + Math.floor((a.apps || 0) / 150) + (a.abroad ? 1 : 0);
-  YA.hofCondition = (a) => a.status === 'pro' && (a.nat > 0 || (a.abroad && a.ovr >= 14.5 && a.apps >= 80) || (a.club && /J1/.test(a.league || '') && a.apps >= 200) || (a.transfers >= 3 && a.ovr >= 14.4));
-  YA.hofFull = (a) => hofScore(a) >= 4;
+  // 2026-11-17 点検：候補51%・殿堂入り17%とかんたんすぎた。候補は「日本代表・5大リーグ・主要タイトル・個人の大きな賞」のどれか。
+  // 殿堂入りは点が YA.HOF_FULL（9）以上。大学・社会人のタイトルと出場は数えない。代表は試合数（a.caps）で数える
+  const BIG5 = /^(プレミアリーグ|ラ・リーガ|ブンデスリーガ|セリエA|リーグ・アン)$/;
+  const proSeasons = (a) => (a.seasons || []).filter((s) => !/大学|社会人/.test(s.league || ''));
+  const big5Seasons = (a) => proSeasons(a).filter((s) => BIG5.test(s.league || '') && s.apps >= 10).length;
+  const capsOf = (a) => (a.caps != null ? a.caps : (a.nat || 0) * 5);
+  const MAJOR_T = /^(J1リーグ|プレミアリーグ|ラ・リーガ|ブンデスリーガ|セリエA|リーグ・アン)優勝$|^チャンピオンズリーグ優勝$|^ACL優勝$/;
+  const BIG_AW = /^バロンドール|ゴールデンシュー|コパ・トロフィー|ヤシン|アジア年間最優秀|^W杯出場|^(J1リーグ|プレミアリーグ|ラ・リーガ|ブンデスリーガ|セリエA|リーグ・アン) (年間MVP|得点王)$/;
+  YA.HOF_FULL = 9;
+  const hofScore = YA.hofScore = function (a) {
+    const caps = capsOf(a);
+    let v = (caps > 0 ? 2 : 0) + Math.min(6, Math.floor(caps / 15));
+    for (const t of a.titles || []) v += /^チャンピオンズリーグ/.test(t.name) ? 3 : /^(プレミアリーグ|ラ・リーガ|ブンデスリーガ|セリエA|リーグ・アン)優勝$/.test(t.name) ? 2 : /^(J1リーグ|ACL)優勝$/.test(t.name) ? 1 : 0;
+    for (const x of a.awards || []) v += x.name === 'バロンドール' ? 5 : /^バロンドール ([1-9]|10)位$/.test(x.name) ? 3 : /^バロンドール/.test(x.name) ? 1 : /ゴールデンシュー|コパ・トロフィー|ヤシン|アジア年間最優秀|^W杯出場/.test(x.name) ? 2 : /^(J1リーグ|プレミアリーグ|ラ・リーガ|ブンデスリーガ|セリエA|リーグ・アン) (年間MVP|得点王)$/.test(x.name) ? 1 : 0;
+    v += Math.min(3, Math.floor(proSeasons(a).reduce((t, s) => t + (s.apps || 0), 0) / 150));
+    v += Math.floor(big5Seasons(a) / 3);
+    return v;
+  };
+  // 5大リーグは主力（10試合以上）で3季。主要タイトルは5大リーグと CL の優勝（J1・ACL の優勝は点にだけ数える。
+  // 強いJクラブに卒業生が集まるので、J1優勝だけで候補にすると2割を超えた）
+  YA.hofCondition = (a) => proSeasons(a).length > 0 && (capsOf(a) > 0 || big5Seasons(a) >= 3 || (a.titles || []).some((t) => MAJOR_T.test(t.name) && !/^(J1リーグ|ACL)優勝$/.test(t.name)) || (a.awards || []).some((x) => BIG_AW.test(x.name)));
+  YA.hofFull = (a) => hofScore(a) >= YA.HOF_FULL;
   const HOF_WORDS = ['あの頃から、ひたむきな子でした。', 'いちばん最初に練習に来て、最後まで残る子でした。', '背中を押しただけです。歩いたのは本人です。', '卒業の日の顔を、いまも覚えています。', 'ここから世界へ行ったのだと思うと、誇らしい。'];
   YA.hofWord = (w, a) => HOF_WORDS[(a.name.length + a.year) % HOF_WORDS.length];
   const tickBase = YA.alumniTick;
@@ -88,7 +107,7 @@
         a.hofY = w.year;
         YA.noteTier(w, 2, `卒業生の${a.name}が殿堂候補になりました（${a.club}）`);
       }
-      if (a.hof === 'cand' && ((a.retired && !was.has(a) && YA.hofFull(a)) || (!a.retired && a.age >= 31 && hofScore(a) >= 6))) {
+      if (a.hof === 'cand' && ((a.retired && !was.has(a) && YA.hofFull(a)) || (!a.retired && a.age >= 31 && hofScore(a) >= YA.HOF_FULL + 3))) {
         a.hof = 'full';
         a.hofY = w.year;
         YA.noteTier(w, 1, `卒業生の${a.name}が殿堂入りしました。「${YA.hofWord(w, a)}」`);
@@ -184,7 +203,7 @@
   const yearStartBase = YA.yearStart;
   YA.yearStart = function (w) {
     const got = (w.club && w.club.solidarity) || 0;
-    const add = Math.round(got * 0.5); // 決定：連帯貢献金の5割が基金、残りはクラブ本体へ（予算には入れない）
+    const add = Math.round(got * 0.5); // 決定：連帯貢献金の5割が基金、残りはクラブ本体へ（予算には入れない）。知らせも「半分を育成基金へ」と書く
     if (w.club) w.club.solidarity = 0;
     yearStartBase(w);
     w.fund = (w.fund || 0) + add;
@@ -240,7 +259,7 @@
     for (const t of w.trophies || []) rows.push({ y: t.year, t: `${t.name} ${t.rank || ''}`.trim(), k: 'gold' });
     const { ys, years } = YA.lineageData(w);
     // 在学中のプロ契約（トップ昇格）は卒業と分けて数える（2026-11-16「3年目2週に1人が卒業」と出ていた）
-    const early = (a) => /高.でトップ昇格/.test(a.note || '');
+    const early = (a) => /高.でトップ昇格/.test(a.note0 || a.note || ''); // 引退で a.note は書き換わる。卒業のときの言葉は a.note0
     for (const y of ys) {
       const al = years[y].filter((a) => !early(a));
       const ea = years[y].filter(early);
@@ -253,7 +272,11 @@
     for (const [k, d] of Object.entries(w.dex || {})) { const f = (YA.AWAKE_FORMS || []).find((x) => x.k === k); if (d && d.y) rows.push({ y: d.y, t: `${d.name}が覚醒（${f ? f.name : '新しい形'}）`, k: 'gold' }); }
     const BIG = /バロンドール$|バロンドール [1-9]位$|W杯|ゴールデンシュー|コパ・トロフィー|ヤシン|年間MVP|得点王/;
     for (const a of w.alumni) {
-      for (const m of a.moves || []) if (m.abroad && /^J/.test(m.fromLg || 'J')) rows.push({ y: m.y, t: `卒業生の${a.name}が海外へ（${m.to}）`, k: '' });
+      for (const m of a.moves || []) {
+        if (m.abroad && /^J/.test(m.fromLg || 'J')) rows.push({ y: m.y, t: `卒業生の${a.name}が海外へ（${m.to}）`, k: '' });
+        if (m.join) rows.push({ y: m.y, t: `卒業生の${a.name}が大学からプロへ（${m.to}）`, k: '' });
+      }
+      if (a.natY1 != null) rows.push({ y: a.natY1, t: `卒業生の${a.name}が日本代表に初選出`, k: 'gold' });
       for (const x of a.awards || []) if (BIG.test(x.name)) rows.push({ y: x.y, t: `卒業生の${a.name}：${x.name}`, k: 'gold' });
       for (const x of a.titles || []) if (/チャンピオンズリーグ/.test(x.name)) rows.push({ y: x.y, t: `卒業生の${a.name}：${x.name}`, k: 'gold' });
     }
@@ -310,7 +333,7 @@
       h('div', { class: 'note' }, 'フル代表・J1で長く主力・海外で活躍・大きな移籍に届くと「候補」。引退のときに生涯の成績で正式に殿堂入りします。'));
     body.append(h('div', { class: 'plist', style: 'margin-top:5px' }, hof.map((a) => h('div', { class: 'pitem', style: `cursor:default;align-items:flex-start;gap:6px;border-left:4px solid ${a.hof === 'full' ? '#d9a400' : '#9aa6b8'}` },
       h('span', { class: 'chip', style: `background:${a.hof === 'full' ? '#d9a400' : '#9aa6b8'};color:#fff` }, a.hof === 'full' ? '殿堂入り' : '候補'),
-      h('div', { class: 'grow' }, h('b', {}, a.name), h('div', { class: 'note' }, `${a.year}年卒・${a.club}（${a.league}）・通算${YA.statLine(a, a.pos === 'GK')}・代表${a.nat || 0}・タイトル${(a.titles || []).length}`), a.hof === 'full' ? h('div', { class: 'note', style: 'color:var(--ink)' }, `恩師のひとこと：「${YA.hofWord(w, a)}」`) : null)))));
+      h('div', { class: 'grow' }, h('b', {}, a.name), h('div', { class: 'note' }, `${a.year}年卒・${a.club}（${a.league}）・通算${YA.statLine(a, a.pos === 'GK')}・代表${a.caps || 0}試合・タイトル${(a.titles || []).length}`), a.hof === 'full' ? h('div', { class: 'note', style: 'color:var(--ink)' }, `恩師のひとこと：「${YA.hofWord(w, a)}」`) : null)))));
     if (!hof.length) body.append(h('div', { class: 'note', style: 'margin-top:6px' }, 'まだ殿堂入りした卒業生はいません。'));
   }
   function chronTab(body, w) {

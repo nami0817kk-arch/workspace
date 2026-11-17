@@ -65,7 +65,8 @@
     const S = w.scouting;
     const D = dest ? YA.DESTS[dest] : null;
     const pos = rng.pick(['GK', 'CB', 'CB', 'LB', 'RB', 'DM', 'CM', 'CM', 'AM', 'LM', 'RM', 'LW', 'RW', 'SS', 'ST', 'ST']);
-    const used = new Set(Object.values(w.players).map((p) => p.name));
+    // 卒業生と同じ名前は付けない（2026-11-17 点検：1つのセーブで卒業生の9.5%が同じ氏名だった）
+    const used = new Set(Object.values(w.players).map((p) => p.name).concat((w.alumni || []).map((a) => a.name)));
     // セレクションの応募者は、取りこぼされた子が来る：原石（今は低いが伸びしろが大きい）・低め（今も伸びしろも低い）・位置ちがい（登録が合っていない）
     const prof = kind === 'sel' ? (() => { const x = rng(); return x < 0.4 ? 'raw' : x < 0.7 ? 'low' : 'mis'; })() : null;
     let q = clamp(rng.int(-2, 2) * (dest === 'wide' ? 1.1 : 0.8) + (kind === 'scout' ? (eyeOf(w) - 10) * 0.08 + (D ? D.q : 0) : 0) + (kind === 'int' ? 0.2 : 0), -2, 2.4);
@@ -275,6 +276,7 @@
     const S = w.scouting || YA.newScouting();
     const signed = S.cands.filter((c) => c.status === 'signed').slice(0, 12);
     const names = new Set(used);
+    for (const a of w.alumni || []) names.add(a.name); // 卒業生と同じ名前の子を入れない
     let n = 0;
     const FN = (YA.IMG && YA.IMG.faces.length) || 1;
     const faces = new Set(Object.values(w.players).map((q) => q.face).filter((f) => f != null).map((f) => f % FN));
@@ -431,7 +433,7 @@
   const FIRST_ABROAD = ['ジュピラー・プロ・リーグ', 'エールディビジ', 'プリメイラ・リーガ', 'スコティッシュ・プレミアシップ', 'オーストリア・ブンデスリーガ', 'スイス・スーパーリーグ', 'デンマーク・スーペルリーガ', '2.ブンデスリーガ・ドイツ2部', 'チャンピオンシップ・イングランド2部'];
   const VETERAN = ['MLS・アメリカ', 'サウジ・プロリーグ', 'スターズリーグ・カタール', 'UAEプロリーグ', '中国スーパーリーグ', 'タイ・リーグ1', 'Aリーグ・オーストラリア', 'Kリーグ1・韓国'];
   YA.FIRST_ABROAD = FIRST_ABROAD;
-  YA.retireWord = (a) => (a && (a.quit || (a.age != null && a.age < 28)) ? 'サッカーをやめた' : '引退');
+  YA.retireWord = (a) => (a && a.note === '指導者に転身' ? '指導者に転身' : a && (a.quit || (a.age != null && a.age < 28)) ? 'サッカーをやめた' : '引退');
   function abroadPick(r, o, bigOk, first, age) {
     const list = [];
     const rt = YA.rate(o);
@@ -481,12 +483,73 @@
     return v >= BD_LINE ? v : null;
   };
   YA.BD_LINE = BD_LINE;
-  // 市場価値（万円）：移籍金と同じ物差し（海外は高い）に、年齢の掛け目（若いほど高く、30歳を過ぎると下がる）
-  YA.marketValue = function (a) {
+  // 市場価値（万円）（2026-11-17 点検：国内^2×80／海外^2.2×560 の2本の式で、リーグを移るだけで10倍変わっていた。ピークも21歳だった）。
+  // 力と年齢の1本の式に、リーグの格の掛け目（J3 0.25・J2 0.4・J1 0.6〜中堅の海外 0.5〜1.1・5大リーグ 1.5）を掛ける
+  YA.leagueValueMult = function (lg) {
+    if (lg === 'J1リーグ') return 0.6;
+    if (lg === 'J2リーグ') return 0.4;
+    if (lg === 'J3リーグ') return 0.25;
+    const x = ABROAD.find((y) => y[1] === lg);
+    if (!x) return 0.4;
+    if (x[2]) return 1.5;
+    return clamp(0.5 + (YA.rate(LV[lg] || 12) - 115) * 0.022, 0.5, 1.1);
+  };
+  // 年齢の掛け目：〜20歳 1.1／21〜23歳 1.2／24〜26歳 1.3／27〜28歳 1.0／29歳 0.8／30歳 0.65／31歳 0.5／32歳 0.4／33歳〜 0.3
+  YA.ageValueMult = (age) => (age <= 20 ? 1.1 : age <= 23 ? 1.2 : age <= 26 ? 1.3 : age <= 28 ? 1 : age <= 29 ? 0.8 : age <= 30 ? 0.65 : age <= 31 ? 0.5 : age <= 32 ? 0.4 : 0.3);
+  YA.marketValue = function (a, lg) {
     if (a.status !== 'pro' || a.retired) return 0;
-    const base = a.abroad ? Math.pow(Math.max(0, a.ovr - 9), 2.2) * 560 : Math.pow(Math.max(0, a.ovr - 9), 2) * 80;
-    const ag = a.age <= 21 ? 1.3 : a.age <= 24 ? 1.15 : a.age <= 28 ? 1 : a.age <= 30 ? 0.7 : 0.4;
-    return Math.round((base * ag) / 10) * 10;
+    const base = Math.pow(Math.max(0, a.ovr - 9), 2.6) * 120;
+    const L = lg || a.league;
+    return Math.round((base * YA.ageValueMult(a.age) * (L ? YA.leagueValueMult(L) : a.abroad ? 1 : 0.6)) / 10) * 10; // リーグが分からないときは海外1.0・国内0.6
+  };
+  // ---------- 優勝クラブと個人の賞（2026-11-17 点検：同じ年・同じリーグで優勝クラブが2つ以上・新人王が何人も）----------
+  // 大会ごとに、その年の優勝クラブを1つ抽選して w.champY に控える。そのクラブで10試合以上出た卒業生だけが優勝メンバーになる
+  const NON_UEFA = ['サウジアラビア', 'アメリカ', '韓国', 'オーストラリア', 'ブラジル', 'アルゼンチン', 'メキシコ', 'カタール', 'アラブ首長国連邦', '中国', 'タイ'];
+  function pickChamp(r, list, soft) {
+    if (!list.length) return null;
+    const mx = Math.max(...list.map((c) => c[1]));
+    const ws = list.map((c) => Math.exp((c[1] - mx) / soft));
+    let x = r() * ws.reduce((t, v) => t + v, 0);
+    for (let i = 0; i < list.length; i++) { x -= ws[i]; if (x <= 0) return list[i][0]; }
+    return list[list.length - 1][0];
+  }
+  function jClubsOf(w, tiers) {
+    const th = w.top && (w.top.hist || []).find((x) => x.y === w.year);
+    return (YA.PRO_CLUBS || []).filter((c) => tiers.indexOf(w.top && c.name === w.top.name ? (th ? th.j : w.top.j) : c.tier) >= 0).map((c) => [c.name, YA.clubStr(c.name, w)]);
+  }
+  YA.champOf = function (w, comp) {
+    if (!w.champY || w.champY.y !== w.year) w.champY = { y: w.year, c: {} };
+    const C = w.champY.c;
+    if (comp in C) return C[comp];
+    const r = YA.rngOf((w.seed | 0) * 97 + w.year * 389 + YA.hash(comp));
+    let v = null;
+    const jm = /^J([123])リーグ優勝$/.exec(comp);
+    if (jm) {
+      // トップの成績が分かる部は、その順位に合わせる（1位ならトップ、そうでなければトップ以外から）
+      const th = w.top && (w.top.hist || []).find((x) => x.y === w.year);
+      const list = jClubsOf(w, [+jm[1]]);
+      if (th && th.j === +jm[1] && th.rank === 1) v = w.top.name;
+      else v = pickChamp(r, list.filter((c) => !(th && th.j === +jm[1] && c[0] === w.top.name)), 9); // J は力が近い（いちばん強いクラブで2割ほど）
+    } else if (comp === '天皇杯優勝') v = pickChamp(r, jClubsOf(w, [1, 2, 3]), 6);
+    else if (comp === 'ルヴァンカップ優勝') v = pickChamp(r, jClubsOf(w, [1]), 6);
+    else if (comp === 'ACL優勝') v = r() < 0.3 ? pickChamp(r, jClubsOf(w, [1]), 5) : null; // ほかの国のクラブが勝つ年が多い
+    else if (comp === '大学リーグ優勝') v = r() < 0.3 ? r.pick(UNIV) : null; // ほかの大学が勝つ年が多い
+    else if (comp === 'チャンピオンズリーグ優勝') {
+      const list = [];
+      for (const [cn, lg] of ABROAD) if (NON_UEFA.indexOf(cn) < 0 && !/2部/.test(lg)) for (const c of ABROAD_CLUBS[lg]) if (c[1] >= 140) list.push(c);
+      v = pickChamp(r, list, 4);
+    } else {
+      const m = /^(?:国内カップ:)?(.+?)(?:優勝)?$/.exec(comp);
+      const lg = m && m[1];
+      if (ABROAD_CLUBS[lg]) v = pickChamp(r, ABROAD_CLUBS[lg], /^国内カップ/.test(comp) ? 7 : 5);
+    }
+    C[comp] = v;
+    return v;
+  };
+  // 個人の賞は「年×リーグ×賞」で1人まで（ベストイレブンは11人まで）
+  YA.awardFree = function (w, name) {
+    if (!w.awdY || w.awdY.y !== w.year) w.awdY = { y: w.year, c: {} };
+    return (w.awdY.c[name] || 0) < (/ベストイレブン/.test(name) ? 11 : 1);
   };
   // お金の見せ方：1億以上は「X.X億円」
   YA.yen = (m) => (!m ? '0円' : m >= 10000 ? `${(m / 10000).toFixed(m >= 100000 ? 0 : 1).replace(/\.0$/, '')}億円` : `${m}万円`);
@@ -509,30 +572,33 @@
     const af = isGK ? 0 : AST_F[a.main] != null ? AST_F[a.main] : a.pos === 'FW' ? 0.5 : a.pos === 'MF' ? 0.7 : 0.25;
     // リーグごとの試合数（2026-11-17：プロは全部34試合だった。J1〜J3は2024年から38試合）
     const games = a.status === 'pro' ? LEAGUE_GAMES[lg] || 34 : a.status === 'univ' ? 22 : 18;
-    const apps = Math.round(clamp(games * (0.55 + rel * 0.18) + r.int(-4, 4), 0, games));
+    let apps = Math.round(clamp(games * (0.55 + rel * 0.18) + r.int(-4, 4), 0, games));
+    // 高卒の若手はすぐには出られない（2026-11-17 点検：19歳以下の最初のシーズンの中央値が27試合）。20歳までは×0.4〜0.6
+    if (a.status === 'pro' && a.age <= 20) apps = Math.round(apps * (0.4 + r() * 0.2));
+    // シーズン中の知らせ（pronews.js）で出た数は、その年の成績の下限にする。賞はこのあとで決める（知らせの上乗せで「1試合2点」が出ていた）
+    if (a.status === 'pro') apps = Math.min(games, Math.max(apps, a._ytdP || 0, a._msMin || 0, a._ytdG || 0));
     // 点を取る子は、リーグの中で力が抜けているほど伸びが大きい（得点王が20点前後になるように）
-    const goals = isGK || !apps ? 0 : Math.round(clamp(apps * fw * (0.22 + rel * 0.08 + Math.max(0, rel - 1.5) * 0.1 * fw) + r.int(-1, 2), 0, 40));
-    const assists = isGK || !apps ? 0 : Math.round(clamp(apps * af * (0.13 + rel * 0.04) + r.int(-1, 2), 0, 24));
+    let goals = isGK || !apps ? 0 : Math.round(clamp(apps * fw * (0.22 + rel * 0.08 + Math.max(0, rel - 1.5) * 0.1 * fw) + r.int(-1, 2), 0, 40));
+    let assists = isGK || !apps ? 0 : Math.round(clamp(apps * af * (0.13 + rel * 0.04) + r.int(-1, 2), 0, 24));
+    goals = Math.min(goals, Math.round(apps * 0.9)); // 1試合1点を超えない（社会人で力の抜けた子が18試合20点になっていた）
+    if (a.status === 'pro' && !isGK) { goals = Math.max(goals, a._ytdG || 0); assists = Math.max(assists, a._ytdA || 0); }
     const cleans = isGK && apps ? Math.round(apps * clamp(0.24 + ((cs != null ? cs : lgR) - lgR) * 0.006 + rel * 0.03, 0.06, 0.55)) : 0;
     const s = { y: w.year, age: a.age, club: a.club, league: lg, apps, goals, assists, titles: [], awards: [] };
     if (isGK) s.cleans = cleans;
-    const win = (name, p) => { if (r() < p) { s.titles.push(name); a.titles.push({ y: w.year, name }); } };
-    const award = (name, p) => { if (r() < p) { s.awards.push(name); a.awards.push({ y: w.year, name }); } };
-    // 強いクラブにいるほど優勝しやすい（リーグの水準よりどれだけ強いか）。本人が主力ならもう少し
-    const strong = clamp(0.03 + ((cs != null ? cs : lgR) - lgR) * 0.012 + rel * 0.01, 0.005, 0.3);
-    if (apps >= 10) {
-      win(lg + '優勝', strong);
-      if (a.status === 'pro' && !a.abroad) { win('天皇杯優勝', strong * 0.5); if (lg === 'J1リーグ') win('ルヴァンカップ優勝', strong * 0.5); }
-      if (a.abroad) win('国内カップ優勝', strong * 0.5);
-      if (a.abroad && cs != null && cs >= 150 && a.ovr >= 15) win('チャンピオンズリーグ優勝', clamp(0.01 + (cs - 150) * 0.004 + (a.ovr - 15) * 0.02, 0.01, 0.2));
-      if (lg === 'J1リーグ' && a.ovr >= 14) win('ACL優勝', 0.05);
+    // 優勝はその年に抽選したクラブだけ（YA.champOf）。そのクラブで10試合以上出ていればメンバー
+    const win = (comp, name) => { if (YA.champOf(w, comp) === a.club) { s.titles.push(name || comp); a.titles.push({ y: w.year, name: name || comp }); } };
+    const award = (name, p) => { if (YA.awardFree(w, name) && r() < p) { w.awdY.c[name] = (w.awdY.c[name] || 0) + 1; s.awards.push(name); a.awards.push({ y: w.year, name }); } };
+    if (apps >= 10 && a.status !== 'amateur') {
+      win(lg + '優勝');
+      if (a.status === 'pro' && !a.abroad) { win('天皇杯優勝'); if (lg === 'J1リーグ') { win('ルヴァンカップ優勝'); win('ACL優勝'); } }
+      if (a.abroad) { win('国内カップ:' + lg, '国内カップ優勝'); win('チャンピオンズリーグ優勝'); }
       // 個人の賞
       if (!isGK && goals >= Math.round((a.status === 'pro' ? 18 : 12) * games / 34)) award(lg + ' 得点王', clamp(0.15 + (goals - 18) * 0.04, 0.15, 0.6));
       if (!isGK && assists >= (a.status === 'pro' ? 9 : 7)) award(lg + ' アシスト王', clamp(0.2 + (assists - 9) * 0.06, 0.2, 0.6));
       if (isGK && rel >= 2 && cleans >= (a.status === 'pro' ? 12 : 8)) award(lg + ' 最優秀GK', clamp(0.12 + (rel - 2) * 0.08, 0.12, 0.45));
       if (rel >= 3.2) award(lg + ' ベストイレブン', clamp(0.06 + (rel - 3.2) * 0.08, 0, 0.3));
       if (rel >= 3.8) award(lg + ' 年間MVP', 0.05);
-      if (a.status === 'pro' && a.age <= 21 && !a.awards.some((x) => /新人/.test(x.name)) && rel >= 0.5) award(lg + ' 新人王', 0.3);
+      if (a.status === 'pro' && a.age <= 21 && !a.awards.some((x) => /新人/.test(x.name)) && rel >= 0.5) award(lg + ' 新人王', 0.07);
     }
     if (a.status === 'pro' && a.ovr >= 17.2 && w._asiaY !== w.year && r() < clamp((a.ovr - 17.2) * 0.2 + 0.08, 0.08, 0.4)) { w._asiaY = w.year; s.awards.push('アジア年間最優秀選手'); a.awards.push({ y: w.year, name: 'アジア年間最優秀選手' }); }
     // 世界の賞（2026-11-15「バロンドールとかの要素も入れて」）。どれもその年に1人だけ
@@ -549,6 +615,7 @@
       s.awards.push('W杯出場' + (g ? `（${g}得点）` : ''));
       a.awards.push({ y: w.year, name: 'W杯出場' });
       a.natGoals = (a.natGoals || 0) + g;
+      a.caps = (a.caps || 0) + 3 + r.int(0, 2);
     }
     // バロンドールは30位まで順位が付く。力（総合力）に、その年の数字・タイトル・リーグの格を足した点で決まる
     const bd = YA.ballonScore(a, s, big5, lgR);
@@ -575,44 +642,93 @@
   }
   // 年度末の知らせの言い回し（2026-11-15「パターンふやして」）。子の名前と年で決まる
   const say = (w, a, k, list) => list[YA.hash(a.name + k + w.year) % list.length];
+  // 卒業後の能力の動き（2026-11-17 点検：24〜29歳が平らのまま、30歳から急に下がっていた）。
+  // 23歳までは大きく伸び、24〜27歳は小さく伸び、28〜29歳は横ばい、30歳から下がる（33歳からはもう少し速く）
+  YA.alumniGrowth = function (a, r) {
+    if (a.age <= 23) return r() * (a.ovr >= 17.5 ? 0.08 : a.ovr >= 15.8 ? 0.2 : a.ovr >= 14 ? 0.35 : 0.6); // 上に行くほど伸びは鈍る（200は歴史上No.1）
+    if (a.age <= 27) return r() * (a.ovr >= 17.5 ? 0.03 : a.ovr >= 15.8 ? 0.08 : 0.15);
+    if (a.age <= 29) return (r() - 0.5) * 0.1;
+    return -(0.1 + r() * (a.age >= 33 ? 0.6 : 0.4));
+  };
+  // プロの引退（2026-11-17 点検：全員が33歳ちょうどで引退していた）。
+  // 30歳から (年齢−29)×0.12 の確率に、その年の出場が少ない分を足す。GK は3歳遅く、上限は 38歳（GK 40歳）
+  YA.retireChance = function (a, apps, games) {
+    const off = a.pos === 'GK' ? 3 : 0;
+    if (a.age >= 38 + (off ? 2 : 0)) return 1;
+    if (a.age < 30 + off) return 0;
+    const few = games ? clamp((0.5 - apps / games) * 0.5, 0, 0.25) : 0.15;
+    return clamp((a.age - 29 - off) * 0.12 + few, 0, 1);
+  };
   YA.alumniTick = function (w) {
     YA.fixClubNames(w);
     const r = YA.rngOf(w.seed * 67 + w.year * 29);
     let contrib = 0;
+    // トップのこの年の成績（昇格・降格の前の部）。トップにいる子の年の成績は、この部で付ける
+    const topH = w.top && (w.top.hist || []).find((x) => x.y === w.year);
     for (const a of w.alumni) {
       if (a.retired || a.age == null) continue;
       a.titles = a.titles || [];
       a.awards = a.awards || [];
+      // 最初の行き先を控える（2026-11-17 点検：年表の「卒業 →」が今のクラブになっていた）。古い保存は最初の移籍の元から
+      if (a.club0 == null) { const m0 = (a.moves || [])[0]; a.club0 = m0 ? m0.from : a.club || ''; a.league0 = m0 ? m0.fromLg : a.league || ''; }
+      if (a.note0 == null) a.note0 = a.note || '';
+      if (a.nat && a.caps == null) a.caps = a.nat * 5; // 古い保存：選ばれた年の数しかない
       let seasonDone = false;
       a.age++;
-      if (a.age <= 23) a.ovr = Math.round((a.ovr + r() * (a.ovr >= 17.5 ? 0.08 : a.ovr >= 15.8 ? 0.2 : a.ovr >= 14 ? 0.35 : 0.6)) * 10) / 10; // 上に行くほど伸びは鈍る（200は歴史上No.1）
-      else if (a.age >= 30) a.ovr = Math.round((a.ovr - r() * 0.5) * 10) / 10;
-      if (a.status === 'univ' && a.age >= 22 && a.ovr >= 12.4 && r() < (a.pushed === 'univ' ? 0.6 : 0.4)) {
+      a.ovr = Math.round((a.ovr + YA.alumniGrowth(a, r)) * 10) / 10;
+      // 大学（2026-11-17 点検：卒業生の78%がプロ、大学の子の約75%がプロに。33歳まで「大学リーグ」のままの子も）。
+      // プロになる機会は4年生（22歳）の1回だけ。線は13.0、確率は0.15〜0.25。23歳でプロでなければ社会人か、サッカーをやめる
+      if (a.status === 'univ' && a.age === 22 && a.ovr >= 13 && r() < clamp(0.15 + (a.ovr - 13) * 0.08, 0.15, 0.25) + (a.pushed === 'univ' ? 0.05 : 0)) {
+        const from = a.club;
         a.status = 'pro';
         a.club = jClub(w, r, domLeague(a.ovr), a.ovr);
         a.league = YA.clubLeague(a.club) || domLeague(a.ovr);
+        a.moves = a.moves || [];
+        a.moves.push({ y: w.year, age: a.age, from, fromLg: '大学リーグ', to: a.club, toLg: a.league, fee: 0, share: 0, abroad: false, join: true });
         YA.noteTier(w, 2, say(w, a, 'univ', [`卒業生の${a.name}が大学を経てプロ入りしました（${a.club}・${a.league}）`, `大学で力をつけた${a.name}が、${a.club}（${a.league}）とプロ契約`, `${a.name}、遠回りしてプロへ。大学4年間のあと${a.club}に入る（${a.league}）`, `「大学に行ってよかった」――${a.name}が${a.club}（${a.league}）でプロになります`]));
+      } else if (a.status === 'univ' && a.age >= 23) {
+        if (a.ovr >= 10.5 && r() < 0.6) {
+          a.status = 'amateur';
+          a.club = '社会人';
+          a.league = '社会人リーグ';
+          YA.noteTier(w, 3, `卒業生の${a.name}が大学を出て、社会人のチームで続けることになりました`);
+        } else {
+          a.retired = true;
+          a.quit = true;
+          a.status = 'amateur'; // 大学のまま残さない（面談で「やめる」を選んだ子と同じ形）
+          a.club = '一般企業';
+          a.league = '';
+          a.note = 'サッカーをやめた';
+          a.retY = w.year;
+          YA.noteTier(w, 3, `卒業生の${a.name}が大学でサッカーに区切りをつけ、別の道へ進みます`);
+          continue;
+        }
       }
       if (a.status === 'pro') {
-        // 国内は力で昇格・降格のあるリーグへ。このクラブのトップにいる子は、トップの部で出る
-        if (w.top && a.club === w.top.name) a.league = YA.J_NAME[w.top.j];
+        // 国内は力で昇格・降格のあるリーグへ。このクラブのトップにいる子は、トップがこの年に戦った部で出る
+        if (w.top && a.club === w.top.name) a.league = YA.J_NAME[topH ? topH.j : w.top.j];
         else a.league = YA.clubLeague(a.club) || (a.abroad ? a.league : domLeague(a.ovr));
         // その年の成績は、いまいるクラブで付けてから移籍を決める（2026-11-16 画面の点検：移籍した年の成績が移籍先のクラブで記録されていた）
         careerSeason(w, a, r);
         seasonDone = true;
         const gap = YA.rate(a.ovr) - (YA.clubStr(a.club, w) || YA.rate(a.ovr));
-        // 力のある選手ほど移籍が多く、海外へ出やすい（とても力があれば5大リーグ）
-        if (a.age >= 19 && a.age <= 30 && r() < 0.17 + clamp((a.ovr - 15) * 0.06, 0, 0.3) * (a.abroad ? 0.4 : 1) + clamp((gap - 8) * 0.02, 0, 0.3)) {
-          const abroad = (a.ovr >= 13.8 && a.age <= 27 && r() < clamp(0.35 + (a.ovr - 15) * 0.12, 0.35, 0.9)) || (a.age >= 30 && a.ovr >= 13 && r() < 0.25);
-          // 移籍金（2026-11-17：海外への移籍金が2.3億〜4.3億にほぼ固まっていた）。
-          // いまの市場価値に、残りの契約年数の分の掛け目（0.3〜1.6倍）。契約満了なら0円（Jから海外は25%・国内は35%・海外どうしは12%）
+        // 力のある選手ほど移籍が多く、海外へ出やすい（とても力があれば5大リーグ）。
+        // 34歳まで動く（2026-11-17 点検：30歳を過ぎると移籍がなかった）。契約を延長した年は動かない（延長の知らせの年に移籍していた）
+        const pMove = (0.17 + clamp((a.ovr - 15) * 0.06, 0, 0.3) * (a.abroad ? 0.4 : 1) + clamp((gap - 8) * 0.02, 0, 0.3)) * (a.age >= 31 ? 0.6 : 1);
+        if (a.age >= 19 && a.age <= 34 && a.extY !== w.year && r() < pMove) {
           const fromAbroad = !!a.abroad;
+          // 海外にいる子は海外どうしでも動く（28〜29歳の海外組が必ず J に戻っていた）
+          const abroad = fromAbroad
+            ? a.ovr >= 13 && r() < (a.age <= 29 ? clamp(0.55 + (a.ovr - 14) * 0.1, 0.55, 0.9) : 0.5)
+            : (a.ovr >= 13.8 && a.age <= 27 && r() < clamp(0.35 + (a.ovr - 15) * 0.12, 0.35, 0.9)) || (a.age >= 30 && a.ovr >= 13 && r() < 0.25);
+          const from = a.club, fromLg = a.league;
+          const ownTop = !!(w.top && from === w.top.name);
+          // 移籍金（2026-11-17）：いまのリーグでの市場価値に、残りの契約年数の分の掛け目（0.3〜1.6倍）。Jから海外は×2.2。
+          // 契約満了なら0円（Jから海外は25%・国内は35%・海外どうしは12%・30歳以上）
           const valNow = YA.marketValue(a);
           const freeP = abroad ? (fromAbroad ? 0.12 : 0.25) : 0.35;
           const mult = 0.3 + r() * 1.3;
-          const fee = a.age >= 30 || r() < freeP ? 0 : Math.round((valNow * mult * (abroad && !fromAbroad ? 2.2 : 1)) / 10) * 10;
-          const share = Math.round(fee * 0.015);
-          const from = a.club, fromLg = a.league;
+          const free = a.age >= 30 || r() < freeP;
           a.transfers++;
           if (abroad) {
             const ab = abroadPick(r, a.ovr, a.ovr >= 15.3, !fromAbroad, a.age);
@@ -624,12 +740,23 @@
             a.club = jClub(w, r, domLeague(a.ovr), a.ovr);
             a.league = YA.clubLeague(a.club) || domLeague(a.ovr);
           }
+          let fee = free ? 0 : valNow * mult * (abroad && !fromAbroad ? 2.2 : 1);
+          // 海外から J へは、J のクラブが払える額で頭打ち（2026-11-17 点検：海外→J の中央値2.5億が、J→海外の5900万より高かった）
+          if (fromAbroad && !abroad) fee = Math.min(fee, YA.marketValue(a) * 1.2);
+          fee = Math.round(fee / 10) * 10;
+          // 連帯貢献金は国をまたぐ移籍だけ（Jから海外・海外から J・海外どうし）。国内の移籍には付かない。
+          // 自分のトップから売ったときは連帯貢献金ではなく、移籍金の一部（5%）が来年のアカデミーの予算に入る
+          const intl = abroad || fromAbroad;
+          const share = intl && !ownTop ? Math.round(fee * 0.015) : 0;
+          const sale = ownTop ? Math.round(fee * 0.05) : 0;
+          if (sale) w.club.topSale = (w.club.topSale || 0) + sale;
           contrib += share;
           // 移籍の記録（2026-11-15「移籍金とかもみたい」）：年・どこから・どこへ・移籍金・連帯貢献金
           a.moves = a.moves || [];
-          a.moves.push({ y: w.year, age: a.age, from, fromLg, to: a.club, toLg: a.league, fee, share, abroad });
+          a.moves.push({ y: w.year, age: a.age, from, fromLg, to: a.club, toLg: a.league, fee, share, sale, abroad });
           a.feeTotal = (a.feeTotal || 0) + fee;
-          YA.noteTier(w, 1, say(w, a, 'move', [`卒業生の${a.name}が${a.club}（${a.league}）へ${abroad ? '海外移籍' : '移籍'}（${fee ? `移籍金およそ${YA.yen(fee)}）。連帯貢献金 +${share}万円が育成基金に入ります` : '契約満了で移籍金なし）'}`, `${a.name}の${abroad ? '海外挑戦' : '移籍'}が決まった。行き先は${a.club}（${a.league}）。${fee ? `移籍金およそ${YA.yen(fee)}のうち、連帯貢献金 +${share}万円が育成基金へ` : '契約満了で、移籍金はなし'}`, `${a.club}（${a.league}）が${a.name}を獲得。${abroad ? '海の向こうへ。' : ''}${fee ? `育てたクラブとして連帯貢献金 +${share}万円が入ります（移籍金およそ${YA.yen(fee)}）` : '契約満了での移籍（移籍金なし）'}`, `${a.name}、${a.club}へ。「${abroad ? '向こうでも、ユースで覚えたことをやるだけ' : '新しい場所で、もう一段上へ'}」${fee ? `。連帯貢献金 +${share}万円（移籍金およそ${YA.yen(fee)}）` : '。契約満了で移籍金はなし'}`]));
+          const money = !fee ? '契約満了で移籍金なし' : share ? `移籍金およそ${YA.yen(fee)}。連帯貢献金 ${share}万円（半分を育成基金へ）` : sale ? `移籍金およそ${YA.yen(fee)}。トップからの売却で、${sale}万円が来年のアカデミーの予算に入ります` : `移籍金およそ${YA.yen(fee)}。国内の移籍なので、連帯貢献金はありません`;
+          YA.noteTier(w, 1, say(w, a, 'move', [`卒業生の${a.name}が${a.club}（${a.league}）へ${abroad ? '海外移籍' : '移籍'}（${money}）`, `${a.name}の${abroad ? '海外挑戦' : '移籍'}が決まった。行き先は${a.club}（${a.league}）。${money}`, `${a.club}（${a.league}）が${a.name}を獲得。${abroad ? '海の向こうへ。' : ''}${money}`, `${a.name}、${a.club}へ。「${abroad ? '向こうでも、ユースで覚えたことをやるだけ' : '新しい場所で、もう一段上へ'}」${money}`]));
         }
         // U-21代表（決定16）：21歳以下で力のある卒業生。のちにフル代表の足がかり
         if (a.age <= 21 && a.ovr >= 13.4 && r() < 0.2) {
@@ -637,16 +764,32 @@
           if (a.u21 === 1) YA.noteTier(w, 1, say(w, a, 'u21', [`卒業生の${a.name}がU-21日本代表に選ばれました`, `U-21日本代表のメンバーに${a.name}の名前がありました`, `${a.name}が初めてU-21代表へ。ユースの後輩たちが発表をスマホで見ていた`]));
         }
         // 日本代表（2026-11-17：1つのユースから年1.25人が代表入りしていた。強いアカデミーでもフル代表は数年に1人ほど）。
-        // 線を総合力157（内部16.0）に上げ、初めて選ばれる子は卒業生全体で年1人まで
+        // 線を総合力157（内部16.0）に上げ、初めて選ばれる子は卒業生全体で年1人まで。
+        // 記録は試合数（a.caps。その年に2〜10試合）。a.nat は選ばれた年の数（2026-11-17 点検：「日本代表 N回」が年の数だった）
         const natFirst = !a.nat;
         if (a.ovr >= 16 && (!natFirst || w._natNewY !== w.year) && r() < clamp((a.u21 ? 0.12 : 0.08) + (a.ovr - 16) * 0.3, 0.08, 0.8) * (natFirst ? 0.8 : 1)) {
-          if (natFirst) w._natNewY = w.year;
+          if (natFirst) { w._natNewY = w.year; a.natY1 = w.year; }
           a.nat = (a.nat || 0) + 1;
+          const caps = clamp(Math.round(2 + (a.ovr - 16) * 4 + r.int(0, 4)), 2, 10);
+          a.caps = (a.caps || 0) + caps;
+          a.natLastY = w.year;
+          const gf = a.pos === 'GK' ? 0 : (GOAL_F[a.main] != null ? GOAL_F[a.main] : a.pos === 'FW' ? 1 : a.pos === 'MF' ? 0.45 : 0.1) * 0.3;
+          let ng = 0;
+          for (let i = 0; i < caps; i++) if (r() < gf) ng++;
+          // 知らせで届いた代表のゴールはもう数えてある（pronews.js の natGoal）
+          a.natGoals = (a.natGoals || 0) + Math.max(0, ng - (a._ytdNG || 0));
           if (a.nat === 1) YA.noteTier(w, 1, say(w, a, 'nat', [`卒業生の${a.name}が日本代表に初めて選ばれました！`, `日本代表のメンバー発表。${a.name}の名前が読み上げられた！`, `${a.name}、ついに日本代表へ。このユースから育った子が、日の丸を背負う`, `「ここまで来られたのは、ユースの3年間があったから」――${a.name}が日本代表に初選出`]));
         }
       }
       if (a.status !== 'left' && !seasonDone) careerSeason(w, a, r);
-      if (a.age >= 33 || a.ovr < 9) {
+      // 引退：プロは30歳から確率で。社会人は24歳から少しずつ。力が落ちきった子（9未満）はやめる
+      let stop = a.ovr < 9;
+      if (a.status === 'pro') {
+        const s = (a.seasons || [])[a.seasons.length - 1];
+        const cur = s && s.y === w.year;
+        if (r() < YA.retireChance(a, cur ? s.apps : 0, cur ? LEAGUE_GAMES[s.league] || 34 : 0)) stop = true;
+      } else if (a.status === 'amateur' && a.age >= 24 && r() < clamp(0.1 + (a.age - 24) * 0.04, 0.1, 0.6)) stop = true;
+      if (stop) {
         a.retired = true;
         // 若くてやめる子は「サッカーをやめた」。30歳を過ぎてからの「引退」と分ける（2026-11-17：19歳で「引退」と出ていた）
         a.quit = a.age < 28;

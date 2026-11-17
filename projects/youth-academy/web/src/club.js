@@ -65,13 +65,14 @@
     const list = [];
     for (let i = 0; i < 7; i++) list.push(genStaff(r, r.pick(YA.ROLES_STAFF), 6, 16));
     // 卒業生が引退して戻ってくる
-    for (const a of w.alumni) if (a.retired && !a.coached && !a.mem && a.ovr >= 11 && r.chance(0.5)) {
+    for (const a of w.alumni) if (a.retired && !a.coached && !a.offered && !a.mem && a.ovr >= 11 && r.chance(0.5)) {
       const s = genStaff(r, r.pick(YA.ROLES_STAFF), 9, 15, true);
       s.name = a.name;
       s.ob = true;
       s.alumniRef = a.name;
+      s.alumniY = a.year;
       list.push(s);
-      a.coached = true;
+      a.offered = w.year; // 市場に並んだ印。雇ったときだけ a.coached・a.coachY（memory.js の YA.hire）
     }
     w.market = list;
   };
@@ -199,12 +200,14 @@
     }
     c.staffChanges = 1;
     c.alloc = Object.assign({ scout: 18, camp: 14, facility: 8 }, c.alloc);
-    // 前の年の連帯貢献金などを予算に
-    // 連帯貢献金は予算に足すが、クラブの本体にも回るので、育成の予算に入るのは基本予算の6割まで
+    // 連帯貢献金は予算に入らない（半分が育成基金・半分がクラブ本体。lineage.js の yearStart が先に移す）。
+    // 予算に入るのは、自分のトップが卒業生を売ったときの移籍金の一部（scout.js の c.topSale）。基本予算の6割まで
     const tb = YA.tierBase(w);
-    c.solidarityIn = Math.round(Math.min(c.solidarity || 0, tb * 0.6));
+    c.saleIn = Math.round(Math.min(c.topSale || 0, tb * 0.6));
+    c.topSale = 0;
+    delete c.solidarityIn;
     // 決定98：予算は部ごとの目安の上下3割まで
-    c.total = Math.round(clamp(tb * (0.85 + c.rep / 300) * (1 + (c.budgetAdj || 0)) + c.solidarityIn, tb * 0.7, tb * 1.3));
+    c.total = Math.round(clamp(tb * (0.85 + c.rep / 300) * (1 + (c.budgetAdj || 0)) + c.saleIn, tb * 0.7, tb * 1.3));
     c.solidarityLast = c.solidarity || 0;
     c.solidarity = 0;
     c.spent = { scout: 0, camp: 0 };
