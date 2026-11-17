@@ -213,7 +213,7 @@ List<GlossaryEntry> get glossaryEntries => [
         term: Tr.pick('不満度', 'Happiness'),
         category: GlossaryCategory.condition,
         description: Tr.pick(
-            '選手のクラブへの満足度(0-100)。低いほど移籍を希望しやすくなる。出場機会・週俸・チーム成績・性格によって変動し、性格ごとの閾値を下回ると移籍希望のフラグが立つ。',
+            '選手のクラブへの満足度(0-100)。低いほど移籍を希望しやすくなる。出場機会・年俸・チーム成績・性格によって変動し、性格ごとの閾値を下回ると移籍希望のフラグが立つ。',
             'How content he is at the club (0-100). The lower it is, the more likely he asks to leave. Minutes, wages, results and his personality all move it, and each personality has its own threshold for requesting a move.'),
       ),
       GlossaryEntry(
@@ -245,11 +245,11 @@ List<GlossaryEntry> get glossaryEntries => [
             'How settled he is in a position that is not his own (0-100). It climbs with minutes there, and gradually eats away at the penalty for playing out of position.'),
       ),
       GlossaryEntry(
-        term: Tr.pick('週俸', 'Wage'),
+        term: Tr.pick('年俸', 'Salary'),
         category: GlossaryCategory.contractTransfer,
         description: Tr.pick(
-            '選手に毎週支払う給料(万円)。契約更新の交渉で決まり、性格ごとの賃金感応度によって要求額が変わる。',
-            'What he is paid each week. Set in contract talks, and how hard he pushes depends on his personality.'),
+            '選手に1年で支払う給料。市場価値に応じて決まり(価値が高いほど高い)、毎節その年の節の数で割って支払う。契約更新の交渉で上がり、性格ごとの賃金感応度によって要求額が変わる。',
+            'What he is paid a year. It follows his market value and is paid out over the matchdays. Contract talks raise it, and how hard he pushes depends on his personality.'),
       ),
       GlossaryEntry(
         term: Tr.pick('契約残り年数', 'Years remaining'),
@@ -307,7 +307,7 @@ List<GlossaryEntry> get glossaryEntries => [
         term: Tr.pick('ローン(期限付き移籍)', 'Loan'),
         category: GlossaryCategory.contractTransfer,
         description: Tr.pick(
-            '一定期間だけ他クラブへ選手を貸し出す/借り受ける制度。ローン中の選手の週俸は貸出先が負担し、期間満了で自動的に元クラブへ復帰する。買取オプション付きなら期間中に完全移籍へ切り替えられる。',
+            '一定期間だけ他クラブへ選手を貸し出す/借り受ける制度。ローン中の選手の年俸は貸出先が負担し、期間満了で自動的に元クラブへ復帰する。買取オプション付きなら期間中に完全移籍へ切り替えられる。',
             'Sending a player elsewhere, or taking one in, for a fixed spell. The receiving club pays his wages, and he returns automatically when it ends. With an option to buy, it can be made permanent at any point.'),
       ),
       GlossaryEntry(
@@ -408,7 +408,7 @@ List<GlossaryEntry> get glossaryEntries => [
         term: Tr.pick('プロ契約(昇格)', 'First professional contract'),
         category: GlossaryCategory.condition,
         description: Tr.pick(
-            'ユースから一軍へ上げるときに結ぶ契約。背番号が付き、市場価値に見合う週俸と契約金(一括)が発生する。契約金が払えない、または週給予算の枠が無いと昇格できない。昇格直後は一軍の強度に慣れておらず実戦感覚が低い状態から始まるため、出番を作れる時期に上げるかどうかの判断になる。',
+            'ユースから一軍へ上げるときに結ぶ契約。背番号が付き、市場価値に見合う年俸と契約金(一括)が発生する。契約金が払えない、または給与予算の枠が無いと昇格できない。昇格直後は一軍の強度に慣れておらず実戦感覚が低い状態から始まるため、出番を作れる時期に上げるかどうかの判断になる。',
             "The contract you sign when a prospect steps up. He takes a squad number, a wage in line with his market value and a one-off signing fee. Without the fee or the wage room, the promotion does not happen. He starts short of match sharpness until he adjusts, so the timing matters as much as the decision."),
       ),
       GlossaryEntry(
@@ -485,7 +485,7 @@ List<GlossaryEntry> get glossaryEntries => [
         term: Tr.pick('スカッド・ステータス', 'Squad status'),
         category: GlossaryCategory.contractTransfer,
         description: Tr.pick(
-            '選手に約束する出場機会の立場(キープレイヤー/主力/ローテーション/育成枠)。上の立場ほどベンチに置いたときの不満が大きく、契約交渉で求める週給も高くなる。選手詳細画面で設定する。',
+            '選手に約束する出場機会の立場(キープレイヤー/主力/ローテーション/育成枠)。上の立場ほどベンチに置いたときの不満が大きく、契約交渉で求める給与も高くなる。選手詳細画面で設定する。',
             'What you promise a player about his minutes: key player, first team, rotation or prospect. The higher the billing, the more he resents the bench and the more he asks for in wages. Set from his own page.'),
       ),
       GlossaryEntry(
@@ -496,10 +496,10 @@ List<GlossaryEntry> get glossaryEntries => [
             'How many came to the match: your stadium capacity times a turnout rate that moves with your league position, the board\'s confidence and your ticket prices, and which is lower the further down the pyramid you are. Matchday income follows from it, so a bad run thins the bank balance too.'),
       ),
       GlossaryEntry(
-        term: Tr.pick('週給予算', 'Wage budget'),
+        term: Tr.pick('給与予算', 'Wage budget'),
         category: GlossaryCategory.club,
         description: Tr.pick(
-            '理事会が設定する週給総額の上限。シーズン開始時にディビジョンと現在の人件費から決まり、上限を超える新規獲得はブロックされる。クラブ経営画面で使用状況を確認できる。',
+            '理事会が設定する給与の総額の上限。シーズン開始時にディビジョンと現在の人件費から決まり、上限を超える新規獲得はブロックされる。クラブ経営画面で使用状況を確認できる。',
             'The ceiling the board puts on your total weekly wages. It is set at the start of the season from your division and current bill, and any signing that would break it is blocked. The finances screen shows where you stand.'),
       ),
       GlossaryEntry(

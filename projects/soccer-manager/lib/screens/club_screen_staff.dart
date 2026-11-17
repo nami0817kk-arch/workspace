@@ -42,14 +42,15 @@ class _StaffCard extends StatelessWidget {
                 trailing: TextButton(
                   onPressed: () => gameState.dismissStaff(role),
                   child: Text(current.severance > 0
-                      ? Tr.pick('解任(違約金${current.severance}万円)',
-                          'Dismiss (severance ${current.severance})')
+                      ? Tr.pick('解任(違約金${formatMoney(context.read<GameState>().scaledMoney(current.severance))})',
+                          'Dismiss (severance ${formatMoney(context.read<GameState>().scaledMoney(current.severance))})')
                       : Tr.pick('解任', 'Dismiss')),
                 ),
               ),
               Text(
                 _staffEffectLabel(role, current.effectiveLevel,
-                    member: current),
+                    member: current,
+                    tier: context.read<GameState>().currentDivisionTier),
                 style: TextStyle(
                     fontSize: 11, color: SemanticColors.subtleText(context)),
               ),
@@ -151,8 +152,9 @@ class _StaffRow extends StatelessWidget {
                             : null,
                       ),
                     StatChip(
-                      label: Tr.pick('週俸', 'Wage'),
-                      value: Tr.pick('${staff.wage}万', '${staff.wage}'),
+                      label: Tr.pick('年俸', 'Salary'),
+                      value: formatMoney(annualFromWeekly(
+                          context.read<GameState>().scaledMoney(staff.wage))),
                     ),
                     StatChip(
                       label: Tr.pick('契約', 'Deal'),

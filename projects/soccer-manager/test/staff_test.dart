@@ -7,6 +7,7 @@ import 'package:soccer_manager/models/club_infrastructure.dart';
 import 'package:soccer_manager/models/save_game.dart';
 import 'package:soccer_manager/models/staff_member.dart';
 import 'package:soccer_manager/state/game_state.dart';
+import 'package:soccer_manager/logic/economy_scale.dart';
 
 /// スタッフを「人」として雇う仕組み。
 ///
@@ -107,7 +108,9 @@ void main() {
         final allowance = BoardEngine.staffWageAllowanceFor(tier);
         final expectedOne = StaffMember.askingWage(
             StaffMember.expectedAbilityForTier(tier));
-        expect(allowance, expectedOne * StaffRole.values.length,
+        // 5人ぶんを、その部の規模に直した額。
+        expect(allowance,
+            scaleMoneyForTier(tier, expectedOne * StaffRole.values.length),
             reason: 'tier$tier の見込みが5人ぶんになっていない');
       }
     });

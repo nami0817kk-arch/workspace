@@ -2,6 +2,7 @@ import 'dart:math';
 
 import '../models/sponsor.dart';
 import '../l10n/tr.dart';
+import 'economy_scale.dart';
 
 class SponsorEngine {
   static final Random _rng = Random();
@@ -57,8 +58,10 @@ class SponsorEngine {
     int managerReputation = 50,
     int stadiumLevel = 1,
   }) {
+    // 部の規模は incomeScale で掛ける(観客・グッズと同じ物差し)。契約の
+    // 額は結んだときの部で決まり、昇格しても切れるまではそのまま。
     final base = ((40 + overallRating.clamp(0, 99)) *
-            tierFactor(tier) *
+            incomeScale(tier) *
             reputationFactor(managerReputation) *
             stadiumFactor(stadiumLevel))
         .round();

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../l10n/tr.dart';
 import '../state/game_state.dart';
 import '../theme/semantic_colors.dart';
+import '../logic/economy_scale.dart';
 
 /// クラブ価値(いま売ったらいくらか、の目安)と内訳、シーズンごとの推移。
 class ClubValueCard extends StatelessWidget {
@@ -21,7 +22,7 @@ class ClubValueCard extends StatelessWidget {
         gameState.ownerGoal!.name == 'clubValue';
 
     Text money(int v, {bool bold = false, Color? color}) => Text(
-          Tr.pick('$v万円', '$v'),
+          formatMoney(v),
           style: TextStyle(
               fontWeight: bold ? FontWeight.bold : null, color: color),
         );
@@ -36,7 +37,7 @@ class ClubValueCard extends StatelessWidget {
                 style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 4),
             Text(
-              Tr.pick('${value.total}万円', '${value.total}'),
+              formatMoney(value.total),
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             if (goalActive)
@@ -76,9 +77,9 @@ class ClubValueCard extends StatelessWidget {
                       Text(
                         i > 0
                             ? Tr.pick(
-                                '${history[i].$2}万円 (${history[i].$2 - history[i - 1].$2 >= 0 ? '+' : ''}${history[i].$2 - history[i - 1].$2})',
-                                '${history[i].$2} (${history[i].$2 - history[i - 1].$2 >= 0 ? '+' : ''}${history[i].$2 - history[i - 1].$2})')
-                            : Tr.pick('${history[i].$2}万円', '${history[i].$2}'),
+                                '${formatMoney(history[i].$2)} (${history[i].$2 - history[i - 1].$2 >= 0 ? '+' : ''}${history[i].$2 - history[i - 1].$2})',
+                                '${formatMoney(history[i].$2)} (${history[i].$2 - history[i - 1].$2 >= 0 ? '+' : ''}${history[i].$2 - history[i - 1].$2})')
+                            : formatMoney(history[i].$2),
                         style: TextStyle(
                           color: i > 0 &&
                                   history[i].$2 < history[i - 1].$2

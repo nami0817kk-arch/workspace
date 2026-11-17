@@ -3,6 +3,7 @@ import 'dart:math';
 import '../l10n/tr.dart';
 import '../models/sponsor.dart';
 import 'sponsor_engine.dart';
+import 'economy_scale.dart';
 
 /// 放映権の分配金の受け取り方。
 enum TvDeal {
@@ -29,8 +30,10 @@ enum TvDeal {
 class MediaDealsEngine {
   const MediaDealsEngine._();
 
-  /// 放映権の基準額(万円/季)。上の部ほど大きい。
-  static int tvBase(int tier) => (600 * SponsorEngine.tierFactor(tier)).round();
+  /// 季末の分配金の基準額(万円/季)。上の部ほど大きい。毎節入る放映権料
+  /// (weeklyBroadcast)とは別に、季末に成績に応じて配られるぶん。
+  /// 1シーズンの放映権料の4分の1を基準にする。
+  static int tvBase(int tier) => (annualBroadcast(tier) * 0.25).round();
 
   /// その季に受け取る分配金。[rank]は最終順位(1が最上位)。
   static int tvPayout({
@@ -64,7 +67,7 @@ class MediaDealsEngine {
   }) {
     final r = rng ?? Random();
     final base = ((20 + stadiumLevel * 12) *
-            SponsorEngine.tierFactor(tier) *
+            incomeScale(tier) *
             SponsorEngine.reputationFactor(managerReputation))
         .round();
     final names = [

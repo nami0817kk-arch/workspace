@@ -42,6 +42,7 @@ import '../logic/board_target_progress.dart';
 import '../models/club_vision.dart';
 import '../l10n/tr.dart';
 import '../widgets/screen_bar.dart';
+import '../logic/economy_scale.dart';
 
 /// 移籍オファーを選手ごとにグループ化し、各グループ内は金額の高い順に並べる
 /// (複数クラブが競合している場合、最高額が先頭に来る)。
@@ -329,7 +330,7 @@ class HomeScreen extends StatelessWidget {
                     _StatTile(
                       icon: Icons.emoji_events,
                       label: Tr.pick('勝点', 'Points'),
-                      value: Tr.pick('${userRow.points}', '${userRow.points}'),
+                      value: '${userRow.points}',
                       sub: Tr.pick(
                           '${userRow.won}勝${userRow.draw}分${userRow.lost}敗',
                           '${userRow.won}W ${userRow.draw}D ${userRow.lost}L'),
@@ -338,9 +339,9 @@ class HomeScreen extends StatelessWidget {
                     _StatTile(
                       icon: Icons.account_balance_wallet,
                       label: Tr.pick('資金', 'Funds'),
-                      value: Tr.pick('${save.budget}万円', '${save.budget}'),
-                      sub: Tr.pick('週収支 ${net >= 0 ? '+' : ''}$net万円',
-                          "Weekly ${net >= 0 ? '+' : ''}$net"),
+                      value: formatMoney(save.budget),
+                      sub: Tr.pick('週収支 ${net >= 0 ? '+' : ''}${formatMoney(net)}',
+                          "Weekly ${net >= 0 ? '+' : ''}${formatMoney(net)}"),
                       color: net >= 0
                           ? SemanticColors.positive(context)
                           : SemanticColors.negative(context),
@@ -565,8 +566,8 @@ class HomeScreen extends StatelessWidget {
                                       Expanded(
                                         child: Text(
                                           Tr.pick(
-                                              '${entry[i].buyerClubName}が${entry[i].playerName}に${entry[i].amount}万円',
-                                              '${entry[i].buyerClubName} bid ${entry[i].amount} for ${entry[i].playerName}'),
+                                              '${entry[i].buyerClubName}が${entry[i].playerName}に${formatMoney(entry[i].amount)}',
+                                              '${entry[i].buyerClubName} bid ${formatMoney(entry[i].amount)} for ${entry[i].playerName}'),
                                         ),
                                       ),
                                       TextButton(
@@ -1153,8 +1154,8 @@ class HomeScreen extends StatelessWidget {
     if (maturedDeposits.isNotEmpty) {
       final total = maturedDeposits.fold<int>(0, (s, d) => s + d.maturityValue);
       messages.add((
-        Tr.pick('定期預金が満期を迎え、$total万円が払い戻されました',
-            'Your deposit matured and $total was paid back'),
+        Tr.pick('定期預金が満期を迎え、${formatMoney(total)}が払い戻されました',
+            'Your deposit matured and ${formatMoney(total)} was paid back'),
         false
       ));
       gameState.lastMaturedDeposits = [];
@@ -1165,8 +1166,8 @@ class HomeScreen extends StatelessWidget {
       // 実際に引かれた額を知らせないと、資金だけが理由なく減ったように
       // 見える。
       messages.add((
-        Tr.pick('出場給として$feesPaid万円を支払いました',
-            'You paid $feesPaid in appearance fees'),
+        Tr.pick('出場給として${formatMoney(feesPaid)}を支払いました',
+            'You paid ${formatMoney(feesPaid)} in appearance fees'),
         false
       ));
       gameState.lastAppearanceFeesPaid = 0;
@@ -1189,8 +1190,8 @@ class HomeScreen extends StatelessWidget {
       final compensation =
           departures.fold<int>(0, (sum, d) => sum + d.compensation);
       messages.add((
-        Tr.pick('ユースを去りました: $names(育成補償金 $compensation万円)',
-            'Left the academy: $names (development fee $compensation)'),
+        Tr.pick('ユースを去りました: $names(育成補償金 ${formatMoney(compensation)})',
+            'Left the academy: $names (development fee ${formatMoney(compensation)})'),
         true
       ));
       gameState.lastYouthDepartures = [];
@@ -1258,8 +1259,8 @@ class HomeScreen extends StatelessWidget {
         title: Text(Tr.pick('この移籍オファーを承諾しますか？', 'Accept this transfer offer?')),
         content: Text(
           Tr.pick(
-              '${offer.playerName}が${offer.buyerClubName}へ${offer.amount}万円で移籍します。この操作は元に戻せません。',
-              '${offer.playerName} joins ${offer.buyerClubName} for ${offer.amount}. This cannot be undone.'),
+              '${offer.playerName}が${offer.buyerClubName}へ${formatMoney(offer.amount)}で移籍します。この操作は元に戻せません。',
+              '${offer.playerName} joins ${offer.buyerClubName} for ${formatMoney(offer.amount)}. This cannot be undone.'),
         ),
         actions: [
           TextButton(

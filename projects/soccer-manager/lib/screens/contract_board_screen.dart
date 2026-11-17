@@ -10,6 +10,7 @@ import '../services/feedback_service.dart';
 import '../state/game_state.dart';
 import '../widgets/fm_panel.dart';
 import '../widgets/responsive_body.dart';
+import '../logic/economy_scale.dart';
 
 /// 登録と契約。登録人数・週給の合計・契約の残り年数と、更新の時期の選手。
 /// 契約が切れた選手は無償で去るので、主力は早めに更新する。
@@ -77,9 +78,9 @@ class ContractBoardScreen extends StatelessWidget {
                     : Tr.pick('${-room}人超過', '${-room} over'),
               ),
               FmRow(
-                label: Tr.pick('週給の合計', 'Weekly wages'),
-                value: Tr.pick('${ContractBoardEngine.weeklyWages(team)}万円',
-                    '${ContractBoardEngine.weeklyWages(team)}'),
+                label: Tr.pick('年俸の合計', 'Total salaries'),
+                value: formatMoney(
+                    annualFromWeekly(ContractBoardEngine.weeklyWages(team))),
               ),
               const Divider(),
               FmRow(
@@ -150,7 +151,9 @@ class ContractBoardScreen extends StatelessWidget {
                             Expanded(
                               flex: 2,
                               child: Text(
-                                  Tr.pick('週給 ${p.wage}', 'Wage ${p.wage}'),
+                                  Tr.pick(
+                                      '年俸 ${formatMoney(annualFromWeekly(p.wage))}',
+                                      'Salary ${formatMoney(annualFromWeekly(p.wage))}'),
                                   style: small),
                             ),
                             FilledButton(
@@ -163,7 +166,7 @@ class ContractBoardScreen extends StatelessWidget {
                                     }
                                   : null,
                               child: Text(Tr.pick(
-                                  '更新 ${cost(p)}万円', 'Renew ${cost(p)}')),
+                                  '更新 ${formatMoney(cost(p))}', 'Renew ${formatMoney(cost(p))}')),
                             ),
                           ],
                         ),

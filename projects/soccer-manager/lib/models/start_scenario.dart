@@ -23,8 +23,8 @@ enum StartScenario {
 
   String get description => switch (this) {
         standard => Tr.pick('ふつうの開始。', 'A normal start.'),
-        debt => Tr.pick('資金は-1500万円、株主の期待は低め。立て直しの腕が試されます。',
-            'Funds start at -1500 and shareholders are wary. A rebuilding job.'),
+        debt => Tr.pick('資金は-5,000万円、株主の期待は低め。立て直しの腕が試されます。',
+            'Funds start at -50m yen and shareholders are wary. A rebuilding job.'),
         patron => Tr.pick('資金が3倍、株主の期待は高め。理事会の目標も上がります。',
             'Triple the funds, but shareholders expect more and the board aims higher.'),
         academy => Tr.pick('資金は7割。ユース施設Lv3とトレーニング施設Lv2から始まります。',

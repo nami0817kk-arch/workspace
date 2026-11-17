@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../l10n/tr.dart';
 import '../logic/advisor_engine.dart';
 import '../state/game_state.dart';
+import '../logic/economy_scale.dart';
 
 /// 経営アドバイザー。レベルを上げるほど効果が大きく、毎季の報酬も増える。
 class AdvisorCard extends StatelessWidget {
@@ -23,8 +24,8 @@ class AdvisorCard extends StatelessWidget {
             Text(Tr.pick('経営アドバイザー', 'Advisors'),
                 style: Theme.of(context).textTheme.titleMedium),
             Text(
-              Tr.pick('毎季の報酬の合計 ${AdvisorEngine.totalSalary(save.advisors)}万円',
-                  'Total fees per season ${AdvisorEngine.totalSalary(save.advisors)}'),
+              Tr.pick('毎季の報酬の合計 ${formatMoney(gs.scaledMoney(AdvisorEngine.totalSalary(save.advisors)))}',
+                  'Total fees per season ${formatMoney(gs.scaledMoney(AdvisorEngine.totalSalary(save.advisors)))}'),
               style: const TextStyle(fontSize: 12),
             ),
             const SizedBox(height: 4),
@@ -49,7 +50,7 @@ class AdvisorCard extends StatelessWidget {
                   Text(
                     level == 0
                         ? Tr.pick('未契約', 'Not hired')
-                        : '${a.effect(level)}(${Tr.pick('${AdvisorEngine.salary(level)}万円/季', '${AdvisorEngine.salary(level)}/season')})',
+                        : '${a.effect(level)}(${Tr.pick('${formatMoney(gs.scaledMoney(AdvisorEngine.salary(level)))}/季', '${formatMoney(gs.scaledMoney(AdvisorEngine.salary(level)))}/season')})',
                     style: const TextStyle(fontSize: 12),
                   ),
                 ],

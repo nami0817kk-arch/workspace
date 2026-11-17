@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../l10n/tr.dart';
 import '../models/owner_event.dart';
 import '../state/game_state.dart';
+import '../logic/economy_scale.dart';
 
 /// オーナーの判断を迫る事件のカード。答えを選ぶまで残る。
 class OwnerEventCard extends StatelessWidget {
@@ -46,9 +47,15 @@ class OwnerEventCard extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 2, bottom: 8),
                 child: Text(
-                  Tr.pick(
-                      'サポーター${signed(options[i].supportersDelta)} / 株主${signed(options[i].shareholdersDelta)}',
-                      'Supporters ${signed(options[i].supportersDelta)} / Shareholders ${signed(options[i].shareholdersDelta)}'),
+                  [
+                    if (options[i].fundsDelta != 0)
+                      Tr.pick(
+                          '資金${formatMoneySigned(context.read<GameState>().scaledMoney(options[i].fundsDelta))}',
+                          'Funds ${formatMoneySigned(context.read<GameState>().scaledMoney(options[i].fundsDelta))}'),
+                    Tr.pick(
+                        'サポーター${signed(options[i].supportersDelta)} / 株主${signed(options[i].shareholdersDelta)}',
+                        'Supporters ${signed(options[i].supportersDelta)} / Shareholders ${signed(options[i].shareholdersDelta)}'),
+                  ].join(' / '),
                   style: theme.textTheme.bodySmall,
                 ),
               ),

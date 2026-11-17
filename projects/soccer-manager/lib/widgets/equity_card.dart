@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../l10n/tr.dart';
 import '../logic/equity_engine.dart';
 import '../state/game_state.dart';
+import '../logic/economy_scale.dart';
 
 /// オーナーの持分。外部の株主へ株式を売って資金を得る(増資)。売った分は
 /// 毎季の配当で出ていく。買い戻すにはプレミアが要る。
@@ -37,8 +38,8 @@ class EquityCard extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               Tr.pick(
-                  '${EquityEngine.step}%を売ると$sale万円。買い戻しは$buy万円。外部の株主には、黒字の半分が持分の割合で配当されます。持分は${EquityEngine.minOwnerShare}%を割れません。',
-                  'Selling ${EquityEngine.step}% raises $sale; buying back costs $buy. Outside holders share half of any profit. You must keep ${EquityEngine.minOwnerShare}%.'),
+                  '${EquityEngine.step}%を売ると${formatMoney(sale)}。買い戻しは${formatMoney(buy)}。外部の株主には、黒字の半分が持分の割合で配当されます。持分は${EquityEngine.minOwnerShare}%を割れません。',
+                  'Selling ${EquityEngine.step}% raises ${formatMoney(sale)}; buying back costs ${formatMoney(buy)}. Outside holders share half of any profit. You must keep ${EquityEngine.minOwnerShare}%.'),
               style: const TextStyle(fontSize: 12),
             ),
             const SizedBox(height: 8),

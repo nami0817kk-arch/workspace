@@ -74,18 +74,25 @@ class ClubValueEngine {
     required int annualOperatingIncome,
     required int cash,
     required int debt,
+    double scale = 1,
   }) {
-    final facilities =
-        facilityLevels.fold<int>(0, (s, l) => s + (l - 1).clamp(0, 99)) *
+    // 施設・スタッフ・ブランドの額は5部の規模で書いてある。[scale] は今の
+    // 部の規模(moneyScale)。
+    final facilities = ((facilityLevels.fold<int>(
+                    0, (s, l) => s + (l - 1).clamp(0, 99)) *
                 facilityPerLevel +
             staffLevels.fold<int>(0, (s, l) => s + l.clamp(0, 99)) *
-                staffPerLevel;
+                staffPerLevel) *
+        scale)
+        .round();
     return ClubValue(
       players: playersValue,
       facilities: facilities,
-      brand: leagueTitles * leagueTitleBrand +
-          cupTitles * cupTitleBrand +
-          managerReputation.clamp(0, 100) * reputationPerPoint,
+      brand: ((leagueTitles * leagueTitleBrand +
+                  cupTitles * cupTitleBrand +
+                  managerReputation.clamp(0, 100) * reputationPerPoint) *
+              scale)
+          .round(),
       earnings: (annualOperatingIncome * earningsMultiple).round(),
       cash: cash,
       debt: debt,

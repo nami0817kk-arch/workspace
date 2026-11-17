@@ -14,6 +14,7 @@ import '../l10n/tr.dart';
 import '../theme/semantic_colors.dart';
 import '../widgets/transfer_table.dart';
 import '../widgets/screen_bar.dart';
+import '../logic/economy_scale.dart';
 
 enum TransferSortOption { overall, potential, marketValue, age }
 
@@ -137,7 +138,7 @@ class _TransferScreenState extends State<TransferScreen>
           padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
           child: Row(
             children: [
-              Text(Tr.pick('資金 ${save.budget}万円', 'Funds ${save.budget}'),
+              Text(Tr.pick('資金 ${formatMoney(save.budget)}', 'Funds ${formatMoney(save.budget)}'),
                   style: Theme.of(context).textTheme.titleSmall),
               const SizedBox(width: 12),
               Text(
@@ -209,8 +210,8 @@ class _TransferScreenState extends State<TransferScreen>
                                         ),
                                         Text(
                                           Tr.pick(
-                                              '総合力 ${pr.player.overall}・移籍金 ${pr.player.marketValue}万円',
-                                              'Overall ${pr.player.overall} • Fee ${pr.player.marketValue}'),
+                                              '総合力 ${pr.player.overall}・移籍金 ${formatMoney(pr.player.marketValue)}',
+                                              'Overall ${pr.player.overall} • Fee ${formatMoney(pr.player.marketValue)}'),
                                           style: Theme.of(context)
                                               .textTheme
                                               .bodySmall,
@@ -274,7 +275,7 @@ class _TransferScreenState extends State<TransferScreen>
           child: Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              Tr.pick('移籍金なし・週俸のみで獲得できる選手です。',
+              Tr.pick('移籍金なし・年俸のみで獲得できる選手です。',
                   'These players cost no fee, only wages.'),
               style: TextStyle(
                   fontSize: 12, color: SemanticColors.subtleText(context)),
@@ -349,9 +350,9 @@ class _TransferScreenState extends State<TransferScreen>
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(Tr.pick('市場価値: $total万円', 'Value: $total')),
-                Text(Tr.pick('提示額: $offer万円(${(ratio * 100).round()}%)',
-                    'Your bid: $offer (${(ratio * 100).round()}%)')),
+                Text(Tr.pick('市場価値: ${formatMoney(total)}', 'Value: ${formatMoney(total)}')),
+                Text(Tr.pick('提示額: ${formatMoney(offer)}(${(ratio * 100).round()}%)',
+                    'Your bid: ${formatMoney(offer)} (${(ratio * 100).round()}%)')),
                 Slider(
                   value: ratio,
                   min: 0.6,
@@ -391,8 +392,8 @@ class _TransferScreenState extends State<TransferScreen>
       FeedbackService.success();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-            content: Text(Tr.pick('${player.name}を$submitted万円で獲得しました!',
-                'You signed ${player.name} for $submitted!'))),
+            content: Text(Tr.pick('${player.name}を${formatMoney(submitted)}で獲得しました!',
+                'You signed ${player.name} for ${formatMoney(submitted)}!'))),
       );
     } else if (result.attempted) {
       FeedbackService.error();
@@ -442,7 +443,7 @@ class _TransferScreenState extends State<TransferScreen>
                 leading: const Icon(Icons.payments),
                 title: Text(Tr.pick('一括で獲得', 'Pay it all now')),
                 subtitle:
-                    Text(Tr.pick('$total万円を即座に支払う(別に代理人手数料$agentFee万円)', 'Pay $total immediately (plus $agentFee agent fee)')),
+                    Text(Tr.pick('${formatMoney(total)}を即座に支払う(別に代理人手数料${formatMoney(agentFee)})', 'Pay ${formatMoney(total)} immediately (plus ${formatMoney(agentFee)} agent fee)')),
                 enabled: save.budget >= total + agentFee,
                 onTap: () {
                   Navigator.pop(ctx);
@@ -473,8 +474,8 @@ class _TransferScreenState extends State<TransferScreen>
               ListTile(
                 leading: const Icon(Icons.calendar_view_week),
                 title: Text(Tr.pick('分割払いで獲得', 'Pay in instalments')),
-                subtitle: Text(Tr.pick('頭金$downPayment万円 + 残額を4週で均等払い',
-                    '$downPayment down, the rest in equal payments over 4 weeks')),
+                subtitle: Text(Tr.pick('頭金${formatMoney(downPayment)} + 残額を4週で均等払い',
+                    '${formatMoney(downPayment)} down, the rest in equal payments over 4 weeks')),
                 enabled: save.budget >= downPayment + agentFee,
                 onTap: () {
                   Navigator.pop(ctx);
@@ -490,8 +491,8 @@ class _TransferScreenState extends State<TransferScreen>
                 title: Text(Tr.pick('ローンで獲得', 'Take him on loan')),
                 subtitle: Text(
                   Tr.pick(
-                      '契約金$loanFee万円・週俸6割・${GameState.loanDurationWeeks}週で契約終了',
-                      '$loanFee fee, 60% of his wages, ending after ${Tr.plural(GameState.loanDurationWeeks, 'week')}'),
+                      '契約金${formatMoney(loanFee)}・給与の6割を負担・${GameState.loanDurationWeeks}週で契約終了',
+                      '${formatMoney(loanFee)} fee, 60% of his wages, ending after ${Tr.plural(GameState.loanDurationWeeks, 'week')}'),
                 ),
                 enabled: save.budget >= loanFee,
                 onTap: () {
@@ -509,8 +510,8 @@ class _TransferScreenState extends State<TransferScreen>
                     Tr.pick('買取オプション付きローンで獲得', 'Loan with an option to buy')),
                 subtitle: Text(
                   Tr.pick(
-                      '契約金$loanFee万円・週俸6割・ローン期間中いつでも$buyOptionFee万円で完全移籍化可能',
-                      '$loanFee fee, 60% of his wages, and you can make it permanent for $buyOptionFee at any point'),
+                      '契約金${formatMoney(loanFee)}・給与の6割を負担・ローン期間中いつでも${formatMoney(buyOptionFee)}で完全移籍化可能',
+                      '${formatMoney(loanFee)} fee, 60% of his wages, and you can make it permanent for ${formatMoney(buyOptionFee)} at any point'),
                 ),
                 enabled: save.budget >= loanFee,
                 onTap: () {

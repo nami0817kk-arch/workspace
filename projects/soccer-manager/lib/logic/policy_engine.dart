@@ -26,7 +26,7 @@ enum ClubPolicy {
   String get summary => switch (this) {
         balanced => Tr.pick('どちらにも偏りません。', 'No lean either way.'),
         win => Tr.pick(
-            '週給の上限が10%広がる。目標順位に届けばサポーター+6、届かなければ-6。株主は毎季-3。',
+            '給与の上限が10%広がる。目標順位に届けばサポーター+6、届かなければ-6。株主は毎季-3。',
             'Wage cap +10%. Supporters +6 if you hit the target rank, -6 if not. Shareholders -3 every season.'),
         develop => Tr.pick(
             '施設の増築費が10%安くなる。若手(21歳以下)が${PolicyEngine.youngCountRequired}人以上いればサポーター+4・株主+2、いなければ両方-3。',

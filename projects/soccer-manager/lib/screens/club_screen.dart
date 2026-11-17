@@ -11,11 +11,13 @@ import '../l10n/tr.dart';
 import '../models/staff_member.dart';
 import '../theme/semantic_colors.dart';
 import '../widgets/player_stat_chips.dart';
+import '../logic/economy_scale.dart';
 
 part 'club_screen_staff.dart';
 
 /// スタッフ・施設の現在レベル(と最大未満なら次レベル)の具体的な効果を1行にまとめる。
-String _staffEffectLabel(StaffRole role, int level, {StaffMember? member}) {
+String _staffEffectLabel(StaffRole role, int level,
+    {StaffMember? member, int tier = 5}) {
   const maxLevel = ClubInfrastructure.maxLevel;
   switch (role) {
     case StaffRole.headCoach:
@@ -27,16 +29,18 @@ String _staffEffectLabel(StaffRole role, int level, {StaffMember? member}) {
           '成長倍率 ${cur.toStringAsFixed(2)}倍${next == null ? '' : ' → 次Lv: ${next.toStringAsFixed(2)}倍'}',
           "Growth x${cur.toStringAsFixed(2)}${next == null ? '' : ' → next level: x${next.toStringAsFixed(2)}'}");
     case StaffRole.scout:
-      final cur = ScoutingEngine.scoutCostFor(level);
+      final cur = scaleMoneyForTier(tier, ScoutingEngine.scoutCostFor(level));
       final curCount = ScoutingEngine.scoutCandidateCountFor(level);
       final next =
-          level < maxLevel ? ScoutingEngine.scoutCostFor(level + 1) : null;
+          level < maxLevel
+              ? scaleMoneyForTier(tier, ScoutingEngine.scoutCostFor(level + 1))
+              : null;
       final nextCount = level < maxLevel
           ? ScoutingEngine.scoutCandidateCountFor(level + 1)
           : null;
       return Tr.pick(
-          '費用$cur万円 / 候補$curCount人${next == null ? '' : ' → 次Lv: 費用$next万円 / 候補$nextCount人'}',
-          "$cur per signing / $curCount candidates${next == null ? '' : ' → next level: $next / $nextCount candidates'}");
+          '費用${formatMoney(cur)} / 候補$curCount人${next == null ? '' : ' → 次Lv: 費用${formatMoney(next)} / 候補$nextCount人'}',
+          "${formatMoney(cur)} per signing / $curCount candidates${next == null ? '' : ' → next level: ${formatMoney(next)} / $nextCount candidates'}");
     case StaffRole.physio:
       final cur = ClubInfrastructure.injuryFactor(level);
       final next =
@@ -166,13 +170,13 @@ class ClubScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      Tr.pick('資金: ${save.budget}万円', 'Funds: ${save.budget}'),
+                      Tr.pick('資金: ${formatMoney(save.budget)}', 'Funds: ${formatMoney(save.budget)}'),
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      Tr.pick('スタッフ週俸合計: ${infra.totalStaffWeeklyWage}万円',
-                          'Total staff wages: ${infra.totalStaffWeeklyWage}'),
+                      Tr.pick('スタッフの年俸の合計: ${formatMoney(annualFromWeekly(gameState.scaledMoney(infra.totalStaffWeeklyWage)))}',
+                          'Total staff salaries: ${formatMoney(annualFromWeekly(gameState.scaledMoney(infra.totalStaffWeeklyWage)))} a year'),
                       style: TextStyle(
                           fontSize: 12,
                           color: SemanticColors.subtleText(context)),
@@ -367,8 +371,8 @@ class _UpgradeCard extends StatelessWidget {
                       },
                 child: Text(isMax
                     ? Tr.pick('最大レベル', 'Fully upgraded')
-                    : Tr.pick('$costLabel $cost万円でアップグレード',
-                        'Upgrade for $cost ($costLabel)')),
+                    : Tr.pick('$costLabel ${formatMoney(cost)}でアップグレード',
+                        'Upgrade for ${formatMoney(cost)} ($costLabel)')),
               ),
             ),
           ],

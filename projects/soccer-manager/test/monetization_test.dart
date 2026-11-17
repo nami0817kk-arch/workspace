@@ -221,13 +221,20 @@ void main() {
       await gameState.startNewGame('テストFC');
       final id = gameState.save!.userTeamId;
       final plain = gameState.weeklyIncomeFor(id);
+      // 放映権は営業では増えない。
+      final broadcast = gameState.weeklyIncomeParts(id).broadcast;
 
       for (var i = 0; i < GameStateSquad.marketingBoostCap + 2; i++) {
         gameState.claimMarketingBoost();
       }
       expect(gameState.marketingBoostWeeks, GameStateSquad.marketingBoostCap);
-      expect(gameState.weeklyIncomeFor(id),
-          (plain * GameStateSquad.marketingBoostMultiplier).round());
+      expect(
+          gameState.weeklyIncomeFor(id),
+          closeTo(
+              ((plain - broadcast) * GameStateSquad.marketingBoostMultiplier)
+                      .round() +
+                  broadcast,
+              2));
     });
 
     test('シーズンの切り替わりでは全画面広告が出る', () async {

@@ -85,7 +85,8 @@ void main() {
       gs.save!.economyPhase = EconomyPhase.slump;
       final id = gs.save!.userTeamId;
       final p = gs.weeklyIncomeParts(id);
-      expect(p.gate + p.sponsor + p.merchandise, gs.weeklyIncomeFor(id));
+      expect(p.gate + p.sponsor + p.merchandise + p.broadcast,
+          gs.weeklyIncomeFor(id));
     });
 
     test('景気は保存して読み戻せ、無い旧セーブは平常で読める', () async {

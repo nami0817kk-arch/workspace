@@ -14,6 +14,7 @@ import '../widgets/quick_access_drawer.dart';
 import '../widgets/responsive_body.dart';
 import '../l10n/tr.dart';
 import '../theme/semantic_colors.dart';
+import '../logic/economy_scale.dart';
 
 /// 潜在能力と現在能力の差がこの値以上なら、伸びしろの大きい「有望株」として強調する。
 const int _wonderkidGap = 15;
@@ -129,7 +130,7 @@ class _YouthScreenState extends State<YouthScreen> {
                 children: [
                   Flexible(
                     child: Text(
-                      Tr.pick('資金: ${save.budget}万円', 'Funds: ${save.budget}'),
+                      Tr.pick('資金: ${formatMoney(save.budget)}', 'Funds: ${formatMoney(save.budget)}'),
                       style: Theme.of(context).textTheme.titleMedium,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -154,15 +155,15 @@ class _YouthScreenState extends State<YouthScreen> {
                   Expanded(
                     child: Text(
                       Tr.pick(
-                          'スカウト網（獲得費用: $scoutCost万円/人・${candidates.length}人閲覧可）',
-                          'Scouting network ($scoutCost per signing, ${candidates.length} to look at)'),
+                          'スカウト網（獲得費用: ${formatMoney(scoutCost)}/人・${candidates.length}人閲覧可）',
+                          'Scouting network (${formatMoney(scoutCost)} per signing, ${candidates.length} to look at)'),
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                   ),
                   IconButton(
                     icon: const Icon(Icons.refresh),
-                    tooltip: Tr.pick('候補を更新する（$refreshCost万円）',
-                        'Refresh the shortlist ($refreshCost)'),
+                    tooltip: Tr.pick('候補を更新する（${formatMoney(refreshCost)}）',
+                        'Refresh the shortlist (${formatMoney(refreshCost)})'),
                     onPressed: canRefresh ? () => _refresh(context) : null,
                   ),
                 ],
@@ -320,10 +321,10 @@ class _YouthScreenState extends State<YouthScreen> {
                           Text(
                             d.poached
                                 ? Tr.pick(
-                                    '${d.player.name}(${d.player.age}歳)が他クラブに引き抜かれました。育成補償金 ${d.compensation}万円',
-                                    '${d.player.name} (${d.player.age}) was poached by another club. Development fee ${d.compensation}')
+                                    '${d.player.name}(${d.player.age}歳)が他クラブに引き抜かれました。育成補償金 ${formatMoney(d.compensation)}',
+                                    '${d.player.name} (${d.player.age}) was poached by another club. Development fee ${formatMoney(d.compensation)}')
                                 : Tr.pick(
-                                    '${d.player.name}(${d.player.age}歳)が出場機会を求めて去りました。育成補償金 ${d.compensation}万円',
+                                    '${d.player.name}(${d.player.age}歳)が出場機会を求めて去りました。育成補償金 ${formatMoney(d.compensation)}',
                                     '${d.player.name} (${d.player.age}) left in search of first-team football. Development fee ${d.compensation}'),
                           ),
                       ],
@@ -534,10 +535,10 @@ class _YouthScreenState extends State<YouthScreen> {
           children: [
             Text(Tr.pick('背番号: ${terms.squadNumber}',
                 'Squad number: ${terms.squadNumber}')),
-            Text(Tr.pick('週俸: ${terms.weeklyWage}万円',
-                'Wage: ${terms.weeklyWage} per week')),
-            Text(Tr.pick('契約金: ${terms.signingBonus}万円(一括)',
-                'Signing fee: ${terms.signingBonus} (one-off)')),
+            Text(Tr.pick('年俸: ${formatMoney(annualFromWeekly(terms.weeklyWage))}',
+                'Salary: ${formatMoney(annualFromWeekly(terms.weeklyWage))} a year')),
+            Text(Tr.pick('契約金: ${formatMoney(terms.signingBonus)}(一括)',
+                'Signing fee: ${formatMoney(terms.signingBonus)} (one-off)')),
             Text(Tr.pick('契約年数: ${terms.years}年',
                 'Contract: ${terms.years} years')),
             const SizedBox(height: 8),

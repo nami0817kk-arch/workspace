@@ -175,9 +175,9 @@ class AchievementEngine {
           category: AchievementCategory.management,
           name: Tr.pick('潤沢な資金', 'Deep Pockets'),
           description: Tr.pick(
-              'クラブ資金が3万(万円)に到達する', "Build the club's funds up to 30,000"),
-          isUnlocked: (save, team) => save.budget >= 30000,
-          progress: (save, team) => (save.budget, 30000),
+              'クラブ資金が30億に到達する', "Build the club's funds up to 3bn yen"),
+          isUnlocked: (save, team) => save.budget >= 300000,
+          progress: (save, team) => (save.budget, 300000),
         ),
         Achievement(
           id: 'facilities_maxed',
@@ -220,7 +220,7 @@ class AchievementEngine {
           category: AchievementCategory.management,
           name: Tr.pick('賞金ハンター', 'Prize Hunter'),
           description: Tr.pick(
-              'カップ戦の賞金を通算1000万円獲得する', 'Collect 1,000 in cup prize money'),
+              'カップ戦の賞金を通算1,000万円獲得する', 'Collect 10m yen in cup prize money'),
           isUnlocked: (save, team) => save.careerCupPrize >= 1000,
           progress: (save, team) => (save.careerCupPrize, 1000),
         ),
