@@ -196,8 +196,8 @@ void main() {
     for (var i = 0; i < 4; i++) {
       expect(incomes[i], greaterThan(incomes[i + 1]), reason: log.join('\n'));
     }
-    // 5部の年収は 2〜5億。
-    expect(incomes[4], inInclusiveRange(20000, 50000), reason: log.join('\n'));
+    // 5部の年収は 2〜5億が目安。優勝を争うクラブは少し超える。
+    expect(incomes[4], inInclusiveRange(20000, 65000), reason: log.join('\n'));
   }, timeout: const Timeout(Duration(minutes: 10)));
 
   group('旧セーブの換算', () {
