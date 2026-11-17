@@ -191,8 +191,10 @@ void main() {
     final save = again.save!;
     final other = save.otherDivisionLeagues.firstWhere((l) => l != null)!;
     final opponent = other.teams.first;
-    expect(opponent.players, isEmpty,
-        reason: '前提: 別ディビジョンは再起動後に選手を持たない');
+    // 全クラブが選手を持つようになった(軽い形で保存して作り直す)ので、
+    // 再起動後も別ディビジョンの相手に選手が居る。
+    expect(opponent.players, isNotEmpty,
+        reason: '別ディビジョンも再起動後に選手を持つ');
     save.pendingSuperCup = CupMatch(
       round: 1,
       homeTeamId: again.userTeam.id,
