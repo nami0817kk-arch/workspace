@@ -7,8 +7,20 @@ import '../data/name_pool.dart';
 import 'training_engine.dart';
 
 class PlayerGenerator {
-  static final Random _rng = Random();
+  static Random _rng = Random();
   static int _idCounter = 0;
+
+  /// [seed]で決まる乱数で[body]を動かす。同じ種からは同じ選手ができる
+  /// (軽い形で保存した選手を作り直すのに使う。[PlayerStub])。
+  static T withSeed<T>(int seed, T Function() body) {
+    final saved = _rng;
+    _rng = Random(seed);
+    try {
+      return body();
+    } finally {
+      _rng = saved;
+    }
+  }
   static final RegExp _idPattern = RegExp(r'^pl(\d+)$');
 
   /// ロード直後に呼び出し、既存セーブ内の選手IDと衝突しないよう

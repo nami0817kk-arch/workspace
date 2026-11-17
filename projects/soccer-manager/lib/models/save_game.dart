@@ -334,6 +334,10 @@ class SaveGame {
   /// 昇格・降格の判定にそのまま使う。
   List<League?> otherDivisionLeagues;
 
+  /// 他の4か国の1部(国の名前 [LeagueTheme.name] ごと)。補強とスカウトの
+  /// 相手として、選手を持ったクラブを置いておく。試合はまだ進めない。
+  Map<String, League> foreignLeagues;
+
   // ここがセーブの大半を占めている(2026-09-03 実測)。
   //
   //   セーブ全体 1,090KB / うち otherDivisionLeagues 860KB (79%)
@@ -544,6 +548,7 @@ class SaveGame {
     this.rivalTeamName,
     this.pendingPressConference,
     List<League?>? otherDivisionLeagues,
+    Map<String, League>? foreignLeagues,
     this.currentDivisionTier = 1,
     this.careerWins = 0,
     this.careerDraws = 0,
@@ -619,7 +624,8 @@ class SaveGame {
         seasonAwards = seasonAwards ?? [],
         staffCandidates = staffCandidates ?? [],
         otherDivisionLeagues = otherDivisionLeagues ??
-            List<League?>.filled(totalDivisionTiers, null);
+            List<League?>.filled(totalDivisionTiers, null),
+        foreignLeagues = foreignLeagues ?? {};
 
   /// 全ディビジョンの全チーム(現在の所属ディビジョンも含む)。ID再採番や
   /// スーパーカップの対戦相手検索など、所属ティアを問わず全チームが必要な
@@ -636,6 +642,11 @@ class SaveGame {
   /// 見て引き上げる。ここに漏れがあると(以前は移籍市場・大陸カップの海外
   /// クラブが漏れていた)、再起動後に作った選手が既存の選手と同じIDになる。
   Iterable<Player> get allPlayers sync* {
+    for (final l in foreignLeagues.values) {
+      for (final t in l.teams) {
+        yield* t.players;
+      }
+    }
     for (final t in allTeams) {
       yield* t.players;
     }
@@ -771,6 +782,10 @@ class SaveGame {
         'otherDivisionLeagues': otherDivisionLeagues
             .map((l) => l?.toJson(includePlayers: false))
             .toList(),
+        'foreignLeagues': {
+          for (final e in foreignLeagues.entries)
+            e.key: e.value.toJson(includePlayers: false),
+        },
         'currentDivisionTier': currentDivisionTier,
         'careerWins': careerWins,
         'careerDraws': careerDraws,
@@ -1026,6 +1041,11 @@ class SaveGame {
                 )
                 .toList()
             : _legacyOtherDivisionLeagues(json),
+        foreignLeagues: (json['foreignLeagues'] as Map?)?.map(
+              (k, v) => MapEntry(
+                  k as String, League.fromJson(v as Map<String, dynamic>)),
+            ) ??
+            {},
         currentDivisionTier: json['currentDivisionTier'] as int? ?? 1,
         careerWins: json['careerWins'] as int? ?? 0,
         careerDraws: json['careerDraws'] as int? ?? 0,

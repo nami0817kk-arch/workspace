@@ -78,6 +78,7 @@ import '../logic/club_health_engine.dart';
 import '../models/matchday_promo.dart';
 import '../models/owner_goal.dart';
 import '../models/owner_legacy.dart';
+import '../logic/offscreen_development.dart';
 import '../logic/shareholder_engine.dart';
 import '../logic/squad_registration_engine.dart';
 import '../logic/contract_engine.dart';
@@ -588,6 +589,7 @@ class GameState extends ChangeNotifier {
   ///   画面が開くたびに落ち、セーブが詰む)。
   void _repairLoadedSave(SaveGame save) {
     _reseedPlayerIdCounter(save);
+    _ensureWorldSquads(save);
     save.renumberDuplicatePlayerIds(PlayerGenerator.nextPlayerId);
     _dropDanglingJobOffer(save);
   }
@@ -990,6 +992,7 @@ class GameState extends ChangeNotifier {
     // 開始時は全役職が空席。誰を先に雇うかが最初の判断になる。
     _refreshStaffCandidates();
     FreeAgentEngine.topUp(_save!.freeAgents);
+    _ensureWorldSquads(_save!);
     lastContractExpirations = [];
     isBusy = false;
     _notify();

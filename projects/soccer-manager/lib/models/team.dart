@@ -3,6 +3,7 @@ import 'opposition_plan.dart';
 import 'enum_json.dart';
 import 'formation.dart';
 import 'player.dart';
+import 'player_stub.dart';
 import 'tactic_preset.dart';
 import 'training_focus.dart';
 import '../l10n/tr.dart';
@@ -342,6 +343,9 @@ class Team {
         'tacticalMeetingCooldownWeeks': tacticalMeetingCooldownWeeks,
         'players':
             includePlayers ? players.map((p) => p.toJson()).toList() : const [],
+        // 他の部・他国のクラブは、選手を軽い形で残す([PlayerStub])。
+        if (!includePlayers)
+          'stubs': players.map(PlayerStub.encode).toList(),
         'retainedOverall': includePlayers ? retainedOverall : overallRating,
       };
 
@@ -422,10 +426,12 @@ class Team {
             json['tacticalMeetingCooldownWeeks'] as int? ?? 0,
         // 選手データを持たないセーブ(他ディビジョン)では空になる。旧セーブは
         // 必ず持っているので、そのときは従来どおり選手から強度を計算する。
-        players: (json['players'] as List?)
-                ?.map((e) => Player.fromJson(e as Map<String, dynamic>))
-                .toList() ??
-            [],
+        players: [
+          ...?(json['players'] as List?)
+              ?.map((e) => Player.fromJson(e as Map<String, dynamic>)),
+          ...?(json['stubs'] as List?)
+              ?.map((e) => PlayerStub.decode(e as List<dynamic>)),
+        ],
         retainedOverall: json['retainedOverall'] as int?,
       );
 
