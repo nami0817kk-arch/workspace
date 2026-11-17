@@ -613,14 +613,31 @@
     YA.addTrust(w, 2, 'ユースからトップへ選手を送り出した');
     return a;
   };
+  // その年に在学中にトップへ上がった子の数
+  YA.earlyCount = (w) => (w._earlyY === w.year ? w._earlyN || 0 : 0);
+  // 高3がトップの主力と並ぶ力になったら、トップの内定（卒業まではユースに残り、卒業と同時にプロ。その年のプロ入りの目安に数える）
+  YA.naiteiCheck = function (w) {
+    if (!w.top || w.week >= YA.WEEKS) return null;
+    const line = YA.earlyProLine(w);
+    const p = Object.values(w.players).filter((q) => q.grade === 3 && !q.naitei && YA.rating(q) >= line).sort((a, b) => YA.rating(b) - YA.rating(a))[0];
+    if (!p) return null;
+    p.naitei = w.year;
+    p.hist.unshift({ y: w.year, w: w.week, t: 'トップチームの内定をもらった' });
+    YA.noteTier(w, 1, `トップチーム（${w.top.name}）が、${p.num}番 ${p.name}（高3・総合力${YA.rating(p)}）に内定を出しました。卒業まではユースでプレーし、卒業と同時にプロ契約です`, p.id);
+    YA.addRep(w, 1);
+    YA.addTrust(w, 1, 'ユースの子がトップの内定をもらった');
+    return p;
+  };
 
   // 出来事：トップチームからのプロ契約の打診（トップの主力と並ぶ力の子。高1はさらに上の子だけ）
   YA.EVENTS.push({ id: 'early', name: 'トップチームからのプロ契約の打診', weight: 3,
     pick: (w, r) => {
       if (!w.top) return null;
       const line = YA.earlyProLine(w);
-      // 在学中の契約はふつう1年に1人まで。主力をはっきり上回る子（+12）は、いつでも取りにくる
-      const c = Object.values(w.players).filter((p) => !(p.away > 0) && p.inj <= 0 && YA.rating(p) >= line + (p.grade >= 2 ? 0 : 12) + ((w._earlyN || 0) >= 2 && w._earlyY === w.year ? 12 : 0) && !(p._earlyNo && w.year * 100 + w.week - p._earlyNo < 10));
+      // 在学中の契約（ユースから抜ける）は高1・高2だけで、1年に1人まで。その年のプロ入りの目安（決定75：12人中2〜3人）に数える。
+      // 高3はトップの内定にして卒業まで残す（YA.naiteiCheck）。2026-11-17 直し：前は毎週打診が来て、年4〜5人がプロに抜けていた
+      if (YA.earlyCount(w) >= 1) return null;
+      const c = Object.values(w.players).filter((p) => p.grade <= 2 && !(p.away > 0) && p.inj <= 0 && YA.rating(p) >= line + (p.grade >= 2 ? 0 : 12) && !(p._earlyNo && w.year * 100 + w.week - p._earlyNo < 10));
       return c.length ? c.sort((a, b) => YA.rating(b) - YA.rating(a))[0] : null;
     },
     text: (p, w) => `トップチーム（${w.top.name}・${YA.J_NAME[w.top.j]}）が、${p.num}番 ${p.name}（高${p.grade}・総合力${YA.rating(p)}）にプロ契約を打診してきた。トップの主力と並ぶ力だ`,
