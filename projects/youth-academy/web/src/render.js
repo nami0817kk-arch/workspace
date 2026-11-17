@@ -601,7 +601,15 @@
         } else T = (v0 - MOVE.passEnd) / MOVE.fric;
       }
       const h = kind === 'loft' ? Math.min(9, 1.2 + d * 0.16) : kind === 'shot' ? Math.min(1.4, d * 0.04) : 0;
-      this.fl = { by, from, to: [to[0], to[1], Math.max(0, to[2] || 0)], d: Math.max(0.5, dist(from, to)), T: Math.max(0.15, T), t: 0, kind, v0, h, z0: from[2] || 0, save };
+      // ごく短い転がるパスは、届く時間を 0.15 秒にそろえる。そのときは初速も合わせ直す
+      // （2026-11-18：時間だけ延ばしていて、球が先に着いて1コマ止まり、また転がり出していた。through の場面のシード3）
+      let vEnd = MOVE.passEnd;
+      if (kind === 'ground' && T < 0.15) {
+        T = 0.15;
+        v0 = (d + 0.5 * MOVE.fric * T * T) / T;
+        vEnd = Math.max(0, v0 - MOVE.fric * T);
+      }
+      this.fl = { by, from, to: [to[0], to[1], Math.max(0, to[2] || 0)], d: Math.max(0.5, dist(from, to)), T: Math.max(0.15, T), t: 0, kind, v0, vEnd, h, z0: from[2] || 0, save };
       if (by) this.lock[by] = 0.3;
       if (by && this.teamOf(by)) this.lastTouch = this.teamOf(by); // 最後に触ったチーム（外に出たときの再開に使う）
       // シュートには守る側の GK が飛ぶ：止める場面は落ちる所へ届き、決まる場面は手が届かない（6割まで）
@@ -645,7 +653,7 @@
           // 届いた：そのまま少し転がる（シュートはネットか、ラインの外へ）
           // 浮き球は弾んで少し遅くなるだけ（急に止まらない）
           // GK が止めた球は手の中で止まる（触った扱い）
-          const vEnd = fl.save ? 0.8 : fl.kind === 'ground' ? MOVE.passEnd : fl.kind === 'loft' ? MOVE.loft * 0.72 : MOVE.shot * 0.95;
+          const vEnd = fl.save ? 0.8 : fl.kind === 'ground' ? (fl.vEnd != null ? fl.vEnd : MOVE.passEnd) : fl.kind === 'loft' ? MOVE.loft * 0.72 : MOVE.shot * 0.95;
           this.bv = [dx * vEnd, dy * vEnd];
           this.ball[2] = fl.kind === 'shot' && !fl.save ? fl.to[2] : 0;
           this.fl = null;
