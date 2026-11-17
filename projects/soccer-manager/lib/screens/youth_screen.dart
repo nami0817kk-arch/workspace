@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../logic/scouting_engine.dart';
-import '../logic/training_engine.dart';
 import '../logic/youth_departure_engine.dart';
 import '../logic/youth_match_engine.dart';
 import '../models/player.dart';
@@ -447,51 +446,6 @@ class _YouthScreenState extends State<YouthScreen> {
                                   ? Colors.green
                                   : SemanticColors.subtleText(context),
                             ),
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                Tr.pick('育成方針: ', 'Focus: '),
-                                style: const TextStyle(fontSize: 12),
-                              ),
-                              DropdownButton<TrainingFocus?>(
-                                value: p.individualFocus,
-                                isDense: true,
-                                // 色は指定しない。**暗いテーマだと黒文字が
-                                // 背景に沈んで読めなくなる。** テーマに任せる。
-                                style: const TextStyle(fontSize: 12),
-                                hint: Text(
-                                  Tr.pick(
-                                      'ポジション別(既定)', 'By position (default)'),
-                                  style: const TextStyle(fontSize: 12),
-                                ),
-                                items: [
-                                  DropdownMenuItem<TrainingFocus?>(
-                                    value: null,
-                                    child: Text(Tr.pick(
-                                        'ポジション別(既定)', 'By position (default)')),
-                                  ),
-                                  for (final focus in const [
-                                    TrainingFocus.attack,
-                                    TrainingFocus.defense,
-                                    TrainingFocus.fitness,
-                                  ])
-                                    DropdownMenuItem<TrainingFocus?>(
-                                      value: focus,
-                                      child: Text(focus.label),
-                                    ),
-                                ],
-                                onChanged: (focus) {
-                                  FeedbackService.tap();
-                                  context
-                                      .read<GameState>()
-                                      .setYouthProspectTrainingFocus(
-                                        p.id,
-                                        focus,
-                                      );
-                                },
-                              ),
-                            ],
                           ),
                           if (YouthDepartureEngine.isAtRisk(p))
                             Text(

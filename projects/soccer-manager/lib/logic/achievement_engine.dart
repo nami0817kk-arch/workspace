@@ -296,19 +296,10 @@ class AchievementEngine {
           id: 'breakthrough_10',
           category: AchievementCategory.squad,
           name: Tr.pick('才能の開花請負人', 'Bringer of Breakthroughs'),
-          description: Tr.pick('週次トレーニングで才能開花を通算10回発生させる',
-              'Trigger ten breakthroughs in weekly training'),
+          description: Tr.pick('クラブの練習で選手の才能開花が通算10回起きる',
+              'See ten breakthroughs in the club\'s training'),
           isUnlocked: (save, team) => save.breakthroughCount >= 10,
           progress: (save, team) => (save.breakthroughCount, 10),
-        ),
-        Achievement(
-          id: 'trait_teacher',
-          category: AchievementCategory.squad,
-          name: Tr.pick('特性の伝道師', 'Teacher of Traits'),
-          description: Tr.pick('特訓・伝授で選手に特性を通算3回習得させる',
-              'Have players pick up three traits through training or mentoring'),
-          isUnlocked: (save, team) => save.traitsAcquired >= 3,
-          progress: (save, team) => (save.traitsAcquired, 3),
         ),
 
         // --- 監督キャリア ---

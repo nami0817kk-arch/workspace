@@ -3,7 +3,6 @@ import 'dart:math';
 import 'player_instruction.dart';
 import 'attributes.dart';
 import 'enum_json.dart';
-import 'training_focus.dart';
 import '../l10n/tr.dart';
 
 /// Football Manager風の詳細ポジション（14種類）。
@@ -877,11 +876,10 @@ extension PlayerTraitInfo on PlayerTrait {
       };
 }
 
-/// 選手特性の習得経路による分類。
-/// - [technical]: 具体的な技術・フィジカルの練習(特訓)で身につけられる。
-/// - [personality]: 練習では身につかず、メンター(チームメイト)や監督との
-///   関わり(声かけ)を通じて選手の中で育っていく。
-/// - [talent]: 生まれ持った資質であり、特訓によって後から獲得することはできない。
+/// 選手特性の分類。特性は加入した時点で決まり、あとから身に付くことはない。
+/// - [technical]: 具体的な技術・フィジカルの能力値と結びついた持ち味。
+/// - [personality]: 対戦相手・状況への向き合い方など、メンタル面の資質。
+/// - [talent]: 天候・年齢・調子の波など、生まれ持った資質。
 enum PlayerTraitCategory { technical, personality, talent }
 
 extension PlayerTraitCategoryInfo on PlayerTraitCategory {
@@ -890,23 +888,13 @@ extension PlayerTraitCategoryInfo on PlayerTraitCategory {
         PlayerTraitCategory.personality => Tr.pick('性格', 'Personality'),
         PlayerTraitCategory.talent => Tr.pick('才能', 'Natural'),
       };
-
-  String get acquisitionHint => switch (this) {
-        PlayerTraitCategory.technical => Tr.pick('特訓(練習)で狙って身につけられる',
-            'Can be picked up deliberately through focused training.'),
-        PlayerTraitCategory.personality => Tr.pick('メンターや監督の声かけを通じて育っていく',
-            'Grows through mentoring and words from the manager.'),
-        PlayerTraitCategory.talent => Tr.pick('生まれ持った資質。特訓では身につけられない',
-            'Innate. Cannot be acquired through training.'),
-      };
 }
 
 /// 各選手特性がどの分類に属するか。
-/// 技術: 特定の技術・フィジカル能力値に直結し、練習で伸ばせるもの。
-/// 性格: 対戦相手・状況への向き合い方やメンタル面の資質で、チームメイト
-///   (メンター)や監督との関わりの中で育つもの。
+/// 技術: 特定の技術・フィジカル能力値に直結するもの。
+/// 性格: 対戦相手・状況への向き合い方やメンタル面の資質。
 /// 才能: 天候・年齢・調子の波など、選手自身の生まれ持った資質や外的条件に
-///   左右され、練習では後天的に獲得できないもの。
+///   左右されるもの。
 extension PlayerTraitCategoryOf on PlayerTrait {
   PlayerTraitCategory get category => switch (this) {
         PlayerTrait.giantKiller => PlayerTraitCategory.personality,
@@ -1007,23 +995,6 @@ Position parsePosition(String raw) {
   }
 }
 
-/// セーブデータの技術特訓ターゲットを復元する。カテゴリ分類の導入以前の
-/// セーブデータでは技術以外の特性が入っている場合があるため、その場合は
-/// 練習では習得できない特性として黙って読み捨てる(null扱い)。
-PlayerTrait? _technicalTraitTargetFromJson(String? raw) {
-  if (raw == null) return null;
-  final trait = enumFromName(PlayerTrait.values, raw, PlayerTrait.streaky);
-  return trait.category == PlayerTraitCategory.technical ? trait : null;
-}
-
-/// セーブデータの性格特性ターゲットを復元する。性格カテゴリ以外の特性が
-/// 入っていた場合は同様に読み捨てる。
-PlayerTrait? _personalityTraitTargetFromJson(String? raw) {
-  if (raw == null) return null;
-  final trait = enumFromName(PlayerTrait.values, raw, PlayerTrait.streaky);
-  return trait.category == PlayerTraitCategory.personality ? trait : null;
-}
-
 class Player {
   final String id;
   String name;
@@ -1059,9 +1030,6 @@ class Player {
   int careerAppearances;
   int careerGoals;
 
-  /// 個別のトレーニング方針。nullの場合はチームの既定方針に従う。
-  TrainingFocus? individualFocus;
-
   /// 週俸（万円）
   int wage;
 
@@ -1074,15 +1042,6 @@ class Player {
 
   /// 不満度（0-100）。低いほど移籍を希望しやすくなる。
   int happiness;
-
-  /// 話し合い(reassure)の再実施までの残り週数。0なら実施可能。
-  /// 連発による不満度管理の形骸化を防ぐためのクールダウン。
-  int reassureCooldownWeeks;
-
-  /// 個別声かけ(モチベーショントーク)の再実施までの残り週数。0なら実施可能。
-  /// reassureが不満度(happiness)を対象にするのに対し、こちらは士気(morale)を
-  /// 対象にした短期的なコマンドで、連発を防ぐためのクールダウン。
-  int talkCooldownWeeks;
 
   /// ローンでの加入かどうか。ローン選手は契約更新・放出の対象外で、
   /// [loanWeeksRemaining]が0になると自動的にチームを離れる。
@@ -1191,52 +1150,6 @@ class Player {
   /// 昇格候補のみ記録され、選手詳細の成長推移グラフに使う。旧セーブは空。
   List<int> overallHistory;
 
-  /// メンター(指導役)に指名されたベテラン選手のID。若手選手の成長率に
-  /// ボーナスを与える代わりに、メンター自身の士気も少し上がる。
-  String? mentorId;
-
-  /// ピンポイントで重点的に伸ばしたい能力値。設定するとチーム/個別の
-  /// トレーニング方針とは別に、この1項目の成長確率が上乗せされる。
-  String? drillAttributeKey;
-
-  /// 2つ目のピンポイント特訓ドリル(任意)。[drillAttributeKey]より成長率は
-  /// 抑えめだが、同時に2項目を重点的に伸ばせる。
-  String? drillAttributeKey2;
-
-  /// 特性未保有の選手に対し、週次トレーニングで狙って習得させたい選手特性
-  /// ([PlayerTrait])。技術カテゴリの特性のみ指定できる(才能・性格の特性は
-  /// 練習では身につかないため)。設定すると毎週低確率でこの特性を獲得する
-  /// 判定が行われ、選手の能力値・年齢がその特性に適性が高いほど成功率が
-  /// 上がる。既に特性を持つ選手には効果がない。
-  PlayerTrait? traitTrainingTarget;
-
-  /// 特性未保有の選手に対し、メンター(チームメイト)や監督との関わりを
-  /// 通じて習得させたい性格カテゴリの選手特性。設定すると、有効なメンターが
-  /// いる週・監督が個別に声をかけた週に、低確率でこの特性を獲得する判定が
-  /// 行われる。既に特性を持つ選手には効果がない。
-  PlayerTrait? personalityTraitTrainingTarget;
-
-  /// 複数のトレーニング方針を登録し、週次トレーニングのたびに順番に
-  /// 切り替える個別ローテーション。設定されている間は[individualFocus]
-  /// より優先される。空またはnullならローテーションを使わない。
-  List<TrainingFocus>? focusRotation;
-
-  /// [focusRotation]の中で次に適用する方針のインデックス。
-  int rotationWeekIndex;
-
-  /// ポジションコンバート特訓(TrainingFocus.positionSwitch)で目標とする
-  /// ポジション(Position.name)。設定した場合、生成時に偶然割り当てられた
-  /// secondaryPositionsとは関係なく、このポジションの慣れ度を集中的に
-  /// 伸ばす。慣れ度が上限(100)に達するとsecondaryPositionsへ自動的に
-  /// 追加され、実際にそのポジションで起用できるようになる。
-  String? trainingConvertTargetPosition;
-
-  /// 育成プラン: この選手を将来どのロール(プレースタイル)に育てたいか。
-  /// 設定すると、週次トレーニングでそのロールの重視能力値
-  /// ([PlayerRoleInfo.keyAttributes])が優先的に伸びる追加の成長判定が
-  /// 行われる。選手のポジション大分類に合ったロールのみ設定できる。
-  PlayerRole? developmentTargetRole;
-
   /// 選手特性(格上キラー/横綱相撲/波がある)。持たない選手も多い(null)。
   PlayerTrait? trait;
 
@@ -1266,11 +1179,6 @@ class Player {
   /// のたびに設定し直す一時的なフラグで、セーブデータには保存しない。
   bool hadBreakthroughThisWeek = false;
 
-  /// 直近の週次トレーニングで特性トレーニングにより獲得した選手特性
-  /// (獲得しなかった場合はnull)。[TrainingEngine]が週次トレーニングの
-  /// たびに設定し直す一時的なフラグで、セーブデータには保存しない。
-  PlayerTrait? acquiredTraitThisWeek;
-
   Player({
     required this.id,
     required this.name,
@@ -1288,13 +1196,10 @@ class Player {
     this.suspendedMatches = 0,
     this.careerAppearances = 0,
     this.careerGoals = 0,
-    this.individualFocus,
     this.wage = 20,
     this.contractYearsRemaining = 2,
     this.personality = PlayerPersonality.balanced,
     this.happiness = 70,
-    this.reassureCooldownWeeks = 0,
-    this.talkCooldownWeeks = 0,
     this.isLoan = false,
     this.loanWeeksRemaining = 0,
     this.loanBuyOptionFee,
@@ -1321,15 +1226,6 @@ class Player {
     this.academyGraduate = false,
     this.homegrown = false,
     this.lastYouthMatchRating = 0,
-    this.mentorId,
-    this.drillAttributeKey,
-    this.drillAttributeKey2,
-    this.traitTrainingTarget,
-    this.personalityTraitTrainingTarget,
-    this.focusRotation,
-    this.rotationWeekIndex = 0,
-    this.trainingConvertTargetPosition,
-    this.developmentTargetRole,
     this.trait,
     this.growthType = PlayerGrowthType.balanced,
   })  : secondaryPositions = secondaryPositions ?? [],
@@ -1540,12 +1436,9 @@ class Player {
     put('suspendedMatches', suspendedMatches, 0);
     put('careerAppearances', careerAppearances, 0);
     put('careerGoals', careerGoals, 0);
-    put('individualFocus', individualFocus?.name, null);
     put('wage', wage, 20);
     put('personality', personality.name, PlayerPersonality.balanced.name);
     put('happiness', happiness, 70);
-    put('reassureCooldownWeeks', reassureCooldownWeeks, 0);
-    put('talkCooldownWeeks', talkCooldownWeeks, 0);
     put('isLoan', isLoan, false);
     put('loanWeeksRemaining', loanWeeksRemaining, 0);
     put('loanBuyOptionFee', loanBuyOptionFee, null);
@@ -1569,19 +1462,9 @@ class Player {
     put('overallHistory', overallHistory, null);
     put('youthMatchGoals', youthMatchGoals, 0);
     put('lastYouthMatchRating', lastYouthMatchRating, 0);
-    put('mentorId', mentorId, null);
     put('squadNumber', squadNumber, null);
     put('academyGraduate', academyGraduate, false);
     json['homegrown'] = homegrown;
-    put('drillAttributeKey', drillAttributeKey, null);
-    put('drillAttributeKey2', drillAttributeKey2, null);
-    put('traitTrainingTarget', traitTrainingTarget?.name, null);
-    put('personalityTraitTrainingTarget', personalityTraitTrainingTarget?.name,
-        null);
-    put('focusRotation', focusRotation?.map((f) => f.name).toList(), null);
-    put('rotationWeekIndex', rotationWeekIndex, 0);
-    put('trainingConvertTargetPosition', trainingConvertTargetPosition, null);
-    put('developmentTargetRole', developmentTargetRole?.name, null);
     put('trait', trait?.name, null);
     put('growthType', growthType.name, PlayerGrowthType.balanced.name);
     return json;
@@ -1636,13 +1519,6 @@ class Player {
       suspendedMatches: json['suspendedMatches'] as int? ?? 0,
       careerAppearances: json['careerAppearances'] as int? ?? 0,
       careerGoals: json['careerGoals'] as int? ?? 0,
-      individualFocus: json['individualFocus'] == null
-          ? null
-          : enumFromName(
-              TrainingFocus.values,
-              json['individualFocus'] as String?,
-              TrainingFocus.balanced,
-            ),
       wage: json['wage'] as int? ?? 20,
       contractYearsRemaining: _migrateContractYears(json),
       personality: enumFromName(
@@ -1651,8 +1527,6 @@ class Player {
         PlayerPersonality.balanced,
       ),
       happiness: json['happiness'] as int? ?? 70,
-      reassureCooldownWeeks: json['reassureCooldownWeeks'] as int? ?? 0,
-      talkCooldownWeeks: json['talkCooldownWeeks'] as int? ?? 0,
       isLoan: json['isLoan'] as bool? ?? false,
       loanWeeksRemaining: json['loanWeeksRemaining'] as int? ?? 0,
       loanBuyOptionFee: json['loanBuyOptionFee'] as int?,
@@ -1708,34 +1582,6 @@ class Player {
           Player.homegrownFromId(json['id'] as String? ?? ''),
       lastYouthMatchRating:
           (json['lastYouthMatchRating'] as num?)?.toDouble() ?? 0,
-      mentorId: json['mentorId'] as String?,
-      drillAttributeKey: json['drillAttributeKey'] as String?,
-      drillAttributeKey2: json['drillAttributeKey2'] as String?,
-      traitTrainingTarget: _technicalTraitTargetFromJson(
-        json['traitTrainingTarget'] as String?,
-      ),
-      personalityTraitTrainingTarget: _personalityTraitTargetFromJson(
-        json['personalityTraitTrainingTarget'] as String?,
-      ),
-      focusRotation: (json['focusRotation'] as List?)
-          ?.map(
-            (e) => enumFromName(
-              TrainingFocus.values,
-              e as String?,
-              TrainingFocus.balanced,
-            ),
-          )
-          .toList(),
-      rotationWeekIndex: json['rotationWeekIndex'] as int? ?? 0,
-      trainingConvertTargetPosition:
-          json['trainingConvertTargetPosition'] as String?,
-      developmentTargetRole: json['developmentTargetRole'] == null
-          ? null
-          : enumFromName(
-              PlayerRole.values,
-              json['developmentTargetRole'] as String?,
-              PlayerRole.standard,
-            ),
       trait: json['trait'] == null
           ? null
           : enumFromName(

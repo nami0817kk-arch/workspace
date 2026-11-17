@@ -27,9 +27,7 @@ enum NextActionTarget { squad, youth, finance, transfer }
 
 /// いまのクラブの状態を見て、次にやることを1つだけ挙げる。
 ///
-/// 画面は30以上あり、何から手を付ければよいのかが分からない。育成
-/// アドバイザー([DevelopmentAdvisor])はトレーニング画面の中だけで、
-/// 「そもそもその画面を開くべきか」は教えてくれなかった。
+/// 画面は30以上あり、何から手を付ければよいのかが分からない。
 ///
 /// 複数を並べると結局どれからか分からなくなるため、出すのは常に1件。
 class NextActionAdvisor {
@@ -101,8 +99,8 @@ class NextActionAdvisor {
     if (atRisk.isNotEmpty) {
       actions.add(NextAction(
         message: Tr.pick(
-            'ユースの${atRisk.first.name}(${atRisk.first.age}歳)が出場機会を求めています。昇格させるか、メンターを付けてください。',
-            '${atRisk.first.name} (${atRisk.first.age}) wants first-team football. Promote him or give him a mentor.'),
+            'ユースの${atRisk.first.name}(${atRisk.first.age}歳)が出場機会を求めています。昇格させるか、ユース施設を上げて引き止めてください。',
+            '${atRisk.first.name} (${atRisk.first.age}) wants first-team football. Promote him, or improve the academy to keep him.'),
         target: NextActionTarget.youth,
       ));
     }

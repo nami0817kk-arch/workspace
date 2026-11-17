@@ -27,7 +27,7 @@ void main() {
     final p = prospect(age: YouthDepartureEngine.restlessAge - 1);
     expect(
       YouthDepartureEngine.weeklyDepartureChance(p,
-          facilityLevel: 1, hasMentor: false),
+          facilityLevel: 1),
       0,
     );
   });
@@ -36,23 +36,14 @@ void main() {
     final young = prospect(age: YouthDepartureEngine.restlessAge);
     final old = prospect(age: YouthDepartureEngine.departureAge);
     double chance(Player p) => YouthDepartureEngine.weeklyDepartureChance(p,
-        facilityLevel: 1, hasMentor: false);
+        facilityLevel: 1);
     expect(chance(old), greaterThan(chance(young)));
-  });
-
-  test('メンターが付いていると去りにくい', () {
-    final p = prospect(age: YouthDepartureEngine.departureAge);
-    final withMentor = YouthDepartureEngine.weeklyDepartureChance(p,
-        facilityLevel: 1, hasMentor: true);
-    final without = YouthDepartureEngine.weeklyDepartureChance(p,
-        facilityLevel: 1, hasMentor: false);
-    expect(withMentor, lessThan(without));
   });
 
   test('ユース施設が良いほど引き止められる', () {
     final p = prospect(age: YouthDepartureEngine.departureAge);
     double chance(int level) => YouthDepartureEngine.weeklyDepartureChance(p,
-        facilityLevel: level, hasMentor: false);
+        facilityLevel: level);
     expect(chance(5), lessThan(chance(1)));
   });
 

@@ -112,7 +112,6 @@ import '../data/name_pool.dart';
 import '../models/first_run_step.dart';
 import '../monetization/funds_pack.dart';
 import '../l10n/tr.dart';
-import '../logic/development_advisor.dart';
 import '../logic/match_factor_engine.dart';
 import '../logic/reserve_match_engine.dart';
 import '../logic/staff_market.dart';
@@ -1083,12 +1082,6 @@ class GameState extends ChangeNotifier {
 
   /// 直近の[sellPlayer]で選手が移籍した行き先のニュース文言(表示用)。
   String? lastSaleNews;
-
-  /// 個別声かけ(モチベーショントーク)の基礎士気上昇量。reassure(不満度)
-  /// とは異なり士気(morale)を対象にした、より短い周期で使える個別コマンド。
-  /// クールダウン週数は[TrainingEngine.talkCooldownWeeks]で一元管理する
-  /// (週次トレーニングの性格特性習得判定からも参照するため)。
-  static const int talkBaseMoraleBoost = 10;
 
   /// 戦術ミーティングの再実施までのクールダウン週数。
   static const int tacticalMeetingCooldownWeeks = 3;

@@ -35,7 +35,6 @@ import 'package:soccer_manager/logic/season_projection_engine.dart';
 import 'package:soccer_manager/logic/sponsor_engine.dart';
 import 'package:soccer_manager/logic/tactics_ai.dart';
 import 'package:soccer_manager/logic/style_engine.dart';
-import 'package:soccer_manager/logic/development_advisor.dart';
 import 'package:soccer_manager/logic/youth_match_engine.dart';
 import 'package:soccer_manager/logic/training_engine.dart';
 import 'package:soccer_manager/logic/transfer_market.dart';
@@ -377,22 +376,6 @@ void main() {
     final academy = ScoutingEngine.generateAcademyGraduate();
     expect(scouted.age, inInclusiveRange(16, 19));
     expect(academy.age, inInclusiveRange(16, 19));
-  });
-
-  test('TrainingEngine respects a player individual focus override', () {
-    final team = PlayerGenerator.generateSquad(
-        id: 't5', name: 'Test FC', strengthTier: 60);
-    team.defaultTrainingFocus = TrainingFocus.rest;
-    final target = team.players.firstWhere((p) => p.position == Position.st);
-    target.individualFocus = TrainingFocus.attack;
-    target.setAttributeValue(AttributeKeys.finishing, 40);
-    target.potential = 99;
-    target.fatigue = 50;
-
-    // 個別方針(attack)が休養より疲労を増やす方向に働くことを確認する。
-    final fatigueBefore = target.fatigue;
-    TrainingEngine.applyWeeklyTraining(team);
-    expect(target.fatigue, greaterThanOrEqualTo(fatigueBefore));
   });
 
   test('MatchEngine.simulate runs without error under extreme tactic settings',
@@ -1154,28 +1137,6 @@ void main() {
 
     expect(starter.happiness, greaterThan(50));
     expect(benched.happiness, lessThan(50));
-  });
-
-  test(
-      'HappinessEngine.reassure raises happiness but not above the threshold gate',
-      () {
-    final p = PlayerGenerator.generate(position: Position.st, strengthTier: 60);
-    p.happiness = 20;
-
-    final ok = HappinessEngine.reassure(p);
-
-    expect(ok, isTrue);
-    expect(p.happiness, 40);
-  });
-
-  test('HappinessEngine.reassure fails once happiness is already high', () {
-    final p = PlayerGenerator.generate(position: Position.st, strengthTier: 60);
-    p.happiness = 80;
-
-    final ok = HappinessEngine.reassure(p);
-
-    expect(ok, isFalse);
-    expect(p.happiness, 80);
   });
 
   test('Player.wantsTransfer reflects personality-specific thresholds', () {
@@ -5359,66 +5320,6 @@ void main() {
   });
 
   test(
-      'GameState.setMentor rejects self-mentoring and under-age mentors, '
-      'and a valid mentor boosts the mentee\'s growth chance', () async {
-    final gameState = GameState();
-    await gameState.startNewGame('テストFC');
-    final team = gameState.userTeam;
-    final mentee = team.players.first;
-    final tooYoung = team.players.firstWhere(
-        (p) => p.id != mentee.id && p.age < TrainingEngine.minMentorAge,
-        orElse: () => team.players[1]);
-    tooYoung.age = 20;
-
-    expect(gameState.setMentor(mentee.id, mentee.id), isFalse);
-    expect(gameState.setMentor(mentee.id, tooYoung.id), isFalse);
-    expect(mentee.mentorId, isNull);
-
-    final veteran = team.players.firstWhere((p) => p.id != mentee.id);
-    veteran.age = 30;
-    expect(gameState.setMentor(mentee.id, veteran.id), isTrue);
-    expect(mentee.mentorId, veteran.id);
-
-    expect(gameState.setMentor(mentee.id, null), isTrue);
-    expect(mentee.mentorId, isNull);
-  });
-
-  test('a valid mentor increases the mentee\'s training growth chance', () {
-    int countWithMentor(bool withMentor) {
-      var growths = 0;
-      for (int i = 0; i < 400; i++) {
-        final mentee = makeFreshPlayer();
-        final mentor = makeFreshPlayer(age: 32);
-        if (withMentor) mentee.mentorId = mentor.id;
-        final team = Team(
-            id: 't',
-            name: 'T',
-            players: [mentee, mentor],
-            defaultTrainingFocus: TrainingFocus.fitness);
-        TrainingEngine.applyWeeklyTraining(team);
-        if (mentee.attributeValue(AttributeKeys.stamina) > 50) growths++;
-      }
-      return growths;
-    }
-
-    final withMentor = countWithMentor(true);
-    final withoutMentor = countWithMentor(false);
-    expect(withMentor, greaterThan(withoutMentor));
-  });
-
-  test(
-      'a mentor gains a small happiness boost after a week of valid '
-      'mentoring', () {
-    final mentee = makeFreshPlayer();
-    final mentor = makeFreshPlayer(age: 32);
-    mentee.mentorId = mentor.id;
-    mentor.happiness = 70;
-    final team = Team(id: 't', name: 'T', players: [mentee, mentor]);
-    TrainingEngine.applyWeeklyTraining(team);
-    expect(mentor.happiness, 71);
-  });
-
-  test(
       'TrainingFocus.positionSwitch grows familiarity for secondary '
       'positions without requiring a match appearance', () {
     final p = makeFreshPlayer(position: Position.mc);
@@ -5529,43 +5430,6 @@ void main() {
     expect(growths, greaterThan(0));
   });
 
-  test('GameState.setDrillAttribute sets and clears the drill attribute',
-      () async {
-    final gameState = GameState();
-    await gameState.startNewGame('テストFC');
-    final player = gameState.userTeam.players.first;
-
-    gameState.setDrillAttribute(player.id, AttributeKeys.finishing);
-    expect(player.drillAttributeKey, AttributeKeys.finishing);
-
-    gameState.setDrillAttribute(player.id, null);
-    expect(player.drillAttributeKey, isNull);
-  });
-
-  test(
-      'GameState.setPlayerTrainingConvertTarget lets a player convert to a '
-      "brand-new position not among their generated secondaryPositions",
-      () async {
-    final gameState = GameState();
-    await gameState.startNewGame('テストFC');
-    final player =
-        gameState.userTeam.players.firstWhere((p) => p.position == Position.mc);
-    player.secondaryPositions = [];
-    player.individualFocus = TrainingFocus.positionSwitch;
-
-    gameState.setPlayerTrainingConvertTarget(player.id, Position.dm);
-    expect(player.trainingConvertTargetPosition, Position.dm.name);
-    expect(player.canPlay(Position.dm), isFalse);
-
-    // 慣れ度が上限に達すると、実際に起用可能な副ポジションへ昇格するはず。
-    player.positionFamiliarity[Position.dm.name] = 100;
-    await gameState.runWeeklyTraining();
-
-    expect(player.secondaryPositions, contains(Position.dm));
-    expect(player.canPlay(Position.dm), isTrue);
-    expect(player.trainingConvertTargetPosition, isNull);
-  });
-
   test('GameState.addDebugFunds increases or decreases the club budget',
       () async {
     final gameState = GameState();
@@ -5579,136 +5443,9 @@ void main() {
     expect(gameState.save!.budget, before + 30000);
   });
 
-  test('a drill attribute grows noticeably more often than an undrilled one',
-      () {
-    int countFinishingGrowths(bool withDrill) {
-      var growths = 0;
-      for (int i = 0; i < 400; i++) {
-        final p = makeFreshPlayer();
-        if (withDrill) p.drillAttributeKey = AttributeKeys.finishing;
-        final team = Team(
-            id: 't',
-            name: 'T',
-            players: [p],
-            defaultTrainingFocus: TrainingFocus.rest);
-        TrainingEngine.applyWeeklyTraining(team);
-        if (p.attributeValue(AttributeKeys.finishing) > 50) growths++;
-      }
-      return growths;
-    }
-
-    final withDrill = countFinishingGrowths(true);
-    final withoutDrill = countFinishingGrowths(false);
-    expect(withDrill, greaterThan(withoutDrill));
-  });
-
   test(
-      'a second drill slot (drillAttributeKey2) grows its attribute more '
-      'often than an undrilled one, at a reduced rate vs the first slot', () {
-    int countPassingGrowths(bool withDrill) {
-      var growths = 0;
-      for (int i = 0; i < 400; i++) {
-        final p = makeFreshPlayer();
-        if (withDrill) p.drillAttributeKey2 = AttributeKeys.passing;
-        final team = Team(
-            id: 't',
-            name: 'T',
-            players: [p],
-            defaultTrainingFocus: TrainingFocus.rest);
-        TrainingEngine.applyWeeklyTraining(team);
-        if (p.attributeValue(AttributeKeys.passing) > 50) growths++;
-      }
-      return growths;
-    }
-
-    final withDrill = countPassingGrowths(true);
-    final withoutDrill = countPassingGrowths(false);
-    expect(withDrill, greaterThan(withoutDrill));
-  });
-
-  test(
-      'drillAttributeKey and drillAttributeKey2 grow independently on the '
-      'same player', () {
-    var bothGrowths = 0;
-    for (int i = 0; i < 400; i++) {
-      final p = makeFreshPlayer();
-      p.drillAttributeKey = AttributeKeys.finishing;
-      p.drillAttributeKey2 = AttributeKeys.passing;
-      final team = Team(
-          id: 't',
-          name: 'T',
-          players: [p],
-          defaultTrainingFocus: TrainingFocus.rest);
-      TrainingEngine.applyWeeklyTraining(team);
-      if (p.attributeValue(AttributeKeys.finishing) > 50 &&
-          p.attributeValue(AttributeKeys.passing) > 50) {
-        bothGrowths++;
-      }
-    }
-    expect(bothGrowths, greaterThan(0));
-  });
-
-  test(
-      'GameState.setDrillAttribute2 respects maxDrillSlots independently '
-      'from setDrillAttribute', () async {
-    final gameState = GameState();
-    await gameState.startNewGame('テストFC');
-    final players = gameState.userTeam.players;
-    expect(gameState.maxDrillSlots, 1);
-
-    final p0 = players[0];
-    final p1 = players[1];
-
-    expect(gameState.setDrillAttribute(p0.id, AttributeKeys.finishing), isTrue);
-    expect(
-        gameState.setDrillAttribute(p1.id, AttributeKeys.finishing), isFalse);
-
-    // 1つ目のドリル枠が埋まっていても、2つ目のドリル枠は独立してp0に設定できる。
-    expect(gameState.setDrillAttribute2(p0.id, AttributeKeys.passing), isTrue);
-    // 2つ目のドリル枠も上限に達したら、別の選手への新規指定は失敗する。
-    expect(gameState.setDrillAttribute2(p1.id, AttributeKeys.passing), isFalse);
-
-    gameState.setDrillAttribute2(p0.id, null);
-    expect(p0.drillAttributeKey2, isNull);
-  });
-
-  test(
-      'TrainingEngine._rollTraitAcquisition grants exactly the targeted '
-      'trait only when traitTrainingTarget is set and the player has no '
-      'trait yet', () {
-    int countAcquisitions(bool enabled, {bool alreadyHasTrait = false}) {
-      var count = 0;
-      for (int i = 0; i < 1500; i++) {
-        final p = makeFreshPlayer(determination: 99);
-        p.traitTrainingTarget = enabled ? PlayerTrait.clinicalFinisher : null;
-        if (alreadyHasTrait) p.trait = PlayerTrait.giantKiller;
-        final team = Team(
-            id: 't',
-            name: 'T',
-            players: [p],
-            defaultTrainingFocus: TrainingFocus.rest);
-        TrainingEngine.applyWeeklyTraining(team);
-        if (p.trait != null && !alreadyHasTrait) {
-          expect(p.trait, PlayerTrait.clinicalFinisher);
-          count++;
-        }
-      }
-      return count;
-    }
-
-    final enabledCount = countAcquisitions(true);
-    final disabledCount = countAcquisitions(false);
-    final alreadyHasTraitCount = countAcquisitions(true, alreadyHasTrait: true);
-
-    expect(enabledCount, greaterThan(0));
-    expect(disabledCount, 0);
-    expect(alreadyHasTraitCount, 0);
-  });
-
-  test(
-      'TrainingEngine.traitSuitability scales attribute-based trait chances '
-      'so a well-suited player acquires the targeted trait faster than a '
-      'poorly-suited one', () {
+      'TrainingEngine.traitSuitability is higher for a player whose attribute '
+      'matches the trait', () {
     // 適性そのものは乱数を通さずに確かめられる。抽選結果の比較だけに
     // 頼ると、たまたま逆転したときに「仕組みが壊れた」と読めてしまう。
     final wellSuitedPlayer = makeFreshPlayer(determination: 99)
@@ -5722,78 +5459,6 @@ void main() {
           poorlySuitedPlayer, PlayerTrait.clinicalFinisher)),
       reason: '適性の計算そのものが能力値を反映していない',
     );
-
-    // 適性が実際に抽選へ効いていることは、回数を数えて確かめるほかない。
-    // 800回では取得数が 30 前後と 12 前後で、標準偏差に対する差が小さく、
-    // まれに逆転する(実際にフルスイートで一度落ちた)。試行を増やして
-    // ばらつきを相対的に小さくする。
-    int countAcquisitions(int finishingValue) {
-      var count = 0;
-      for (int i = 0; i < 3000; i++) {
-        final p = makeFreshPlayer(determination: 99);
-        p.setAttributeValue(AttributeKeys.finishing, finishingValue);
-        p.traitTrainingTarget = PlayerTrait.clinicalFinisher;
-        final team = Team(
-            id: 't',
-            name: 'T',
-            players: [p],
-            defaultTrainingFocus: TrainingFocus.rest);
-        TrainingEngine.applyWeeklyTraining(team);
-        if (p.trait != null) count++;
-      }
-      return count;
-    }
-
-    final wellSuited = countAcquisitions(95);
-    final poorlySuited = countAcquisitions(10);
-    expect(wellSuited, greaterThan(poorlySuited));
-  });
-
-  test(
-      'a player who acquires a trait via training has acquiredTraitThisWeek '
-      'set to match the targeted trait, and it resets the following week', () {
-    Player? acquirer;
-    for (int i = 0; i < 1500; i++) {
-      final p = makeFreshPlayer(determination: 99);
-      p.traitTrainingTarget = PlayerTrait.clinicalFinisher;
-      final team = Team(
-          id: 't',
-          name: 'T',
-          players: [p],
-          defaultTrainingFocus: TrainingFocus.rest);
-      TrainingEngine.applyWeeklyTraining(team);
-      if (p.trait != null) {
-        acquirer = p;
-        break;
-      }
-    }
-    expect(acquirer, isNotNull);
-    expect(acquirer!.trait, PlayerTrait.clinicalFinisher);
-    expect(acquirer.acquiredTraitThisWeek, acquirer.trait);
-
-    // 翌週は特性を既に保有しているため一時フラグはリセットされ、再度は付与されない。
-    final team = Team(
-        id: 't',
-        name: 'T',
-        players: [acquirer],
-        defaultTrainingFocus: TrainingFocus.rest);
-    TrainingEngine.applyWeeklyTraining(team);
-    expect(acquirer.acquiredTraitThisWeek, isNull);
-  });
-
-  test(
-      'GameState.setTraitTrainingTarget sets and clears the targeted trait '
-      'on the target player', () async {
-    final gameState = GameState();
-    await gameState.startNewGame('テストFC');
-    final player = gameState.userTeam.players.first;
-    expect(player.traitTrainingTarget, isNull);
-
-    gameState.setTraitTrainingTarget(player.id, PlayerTrait.clinicalFinisher);
-    expect(player.traitTrainingTarget, PlayerTrait.clinicalFinisher);
-
-    gameState.setTraitTrainingTarget(player.id, null);
-    expect(player.traitTrainingTarget, isNull);
   });
 
   test(
@@ -5806,176 +5471,6 @@ void main() {
     expect(byCategory[PlayerTraitCategory.technical], 19);
     expect(byCategory[PlayerTraitCategory.personality], 20);
     expect(byCategory[PlayerTraitCategory.talent], 15);
-  });
-
-  test(
-      'GameState.setTraitTrainingTarget ignores non-technical traits '
-      '(personality/talent traits cannot be trained via drills)', () async {
-    final gameState = GameState();
-    await gameState.startNewGame('テストFC');
-    final player = gameState.userTeam.players.first;
-
-    gameState.setTraitTrainingTarget(player.id, PlayerTrait.giantKiller);
-    expect(player.traitTrainingTarget, isNull);
-
-    gameState.setTraitTrainingTarget(player.id, PlayerTrait.wonderkid);
-    expect(player.traitTrainingTarget, isNull);
-  });
-
-  test(
-      'GameState.setPersonalityTraitTrainingTarget sets/clears a personality '
-      'trait target and ignores non-personality traits', () async {
-    final gameState = GameState();
-    await gameState.startNewGame('テストFC');
-    final player = gameState.userTeam.players.first;
-    expect(player.personalityTraitTrainingTarget, isNull);
-
-    gameState.setPersonalityTraitTrainingTarget(
-      player.id,
-      PlayerTrait.warriorSpirit,
-    );
-    expect(player.personalityTraitTrainingTarget, PlayerTrait.warriorSpirit);
-
-    gameState.setPersonalityTraitTrainingTarget(player.id, null);
-    expect(player.personalityTraitTrainingTarget, isNull);
-
-    gameState.setPersonalityTraitTrainingTarget(
-      player.id,
-      PlayerTrait.clinicalFinisher,
-    );
-    expect(player.personalityTraitTrainingTarget, isNull);
-    gameState.setPersonalityTraitTrainingTarget(
-      player.id,
-      PlayerTrait.wonderkid,
-    );
-    expect(player.personalityTraitTrainingTarget, isNull);
-  });
-
-  test(
-      'personality trait acquisition never happens without a mentor or a '
-      "manager's talk this week, even when a personality target is set", () {
-    var count = 0;
-    for (int i = 0; i < 500; i++) {
-      final p = makeFreshPlayer(determination: 99);
-      p.personalityTraitTrainingTarget = PlayerTrait.warriorSpirit;
-      final team = Team(
-          id: 't',
-          name: 'T',
-          players: [p],
-          defaultTrainingFocus: TrainingFocus.rest);
-      TrainingEngine.applyWeeklyTraining(team);
-      if (p.trait != null) count++;
-    }
-    expect(count, 0);
-  });
-
-  test(
-      'a mentor grants personality trait acquisition a nonzero chance, and '
-      'the acquired trait exactly matches the targeted personality trait', () {
-    Player? acquirer;
-    for (int i = 0; i < 2000; i++) {
-      final p = makeFreshPlayer(determination: 99);
-      p.setAttributeValue(AttributeKeys.determination, 99);
-      p.personalityTraitTrainingTarget = PlayerTrait.warriorSpirit;
-      final mentor = makeFreshPlayer(age: 32);
-      p.mentorId = mentor.id;
-      final team = Team(
-          id: 't',
-          name: 'T',
-          players: [p, mentor],
-          defaultTrainingFocus: TrainingFocus.rest);
-      TrainingEngine.applyWeeklyTraining(team);
-      if (p.trait != null) {
-        acquirer = p;
-        break;
-      }
-    }
-    expect(acquirer, isNotNull);
-    expect(acquirer!.trait, PlayerTrait.warriorSpirit);
-    expect(acquirer.acquiredTraitThisWeek, PlayerTrait.warriorSpirit);
-  });
-
-  test(
-      "a manager's talk this week (fresh talkCooldownWeeks) also grants "
-      'personality trait acquisition a nonzero chance without any mentor', () {
-    Player? acquirer;
-    for (int i = 0; i < 2000; i++) {
-      final p = makeFreshPlayer(determination: 99);
-      p.personalityTraitTrainingTarget = PlayerTrait.warriorSpirit;
-      p.talkCooldownWeeks = TrainingEngine.talkCooldownWeeks;
-      final team = Team(
-          id: 't',
-          name: 'T',
-          players: [p],
-          defaultTrainingFocus: TrainingFocus.rest);
-      TrainingEngine.applyWeeklyTraining(team);
-      if (p.trait != null) {
-        acquirer = p;
-        break;
-      }
-    }
-    expect(acquirer, isNotNull);
-    expect(acquirer!.trait, PlayerTrait.warriorSpirit);
-  });
-
-  test(
-      'Player.fromJson drops a stale traitTrainingTarget/'
-      'personalityTraitTrainingTarget whose category no longer matches the '
-      'field (e.g. from a save predating trait categories)', () {
-    final player = makeFreshPlayer();
-    final json = player.toJson();
-    json['traitTrainingTarget'] = PlayerTrait.giantKiller.name;
-    json['personalityTraitTrainingTarget'] = PlayerTrait.clinicalFinisher.name;
-    final restored = Player.fromJson(json);
-    expect(restored.traitTrainingTarget, isNull);
-    expect(restored.personalityTraitTrainingTarget, isNull);
-  });
-
-  test(
-      'Player/Team round-trip through JSON preserves '
-      'personalityTraitTrainingTarget', () {
-    final player = makeFreshPlayer()
-      ..personalityTraitTrainingTarget = PlayerTrait.calmHead;
-    final restored = Player.fromJson(player.toJson());
-    expect(restored.personalityTraitTrainingTarget, PlayerTrait.calmHead);
-  });
-
-  test(
-      'a player with a focusRotation cycles through the listed foci weekly, '
-      'taking priority over individualFocus', () {
-    final p = makeFreshPlayer();
-    p.individualFocus = TrainingFocus.fitness;
-    p.focusRotation = [TrainingFocus.attack, TrainingFocus.rest];
-    final team = Team(id: 't', name: 'T', players: [p]);
-
-    final fatigueBefore1 = p.fatigue;
-    TrainingEngine.applyWeeklyTraining(team);
-    // 1週目はローテーションの1番目(attack)が適用され、疲労は増加するはず。
-    expect(p.fatigue, greaterThan(fatigueBefore1));
-    expect(p.rotationWeekIndex, 1);
-
-    p.fatigue = 80;
-    TrainingEngine.applyWeeklyTraining(team);
-    // 2週目はローテーションの2番目(rest)が適用され、疲労は大きく減少するはず。
-    expect(p.fatigue, lessThan(80));
-    expect(p.rotationWeekIndex, 0);
-  });
-
-  test(
-      'GameState.setPlayerFocusRotation sets and clears the rotation, '
-      'resetting the week index', () async {
-    final gameState = GameState();
-    await gameState.startNewGame('テストFC');
-    final player = gameState.userTeam.players.first;
-
-    gameState.setPlayerFocusRotation(
-        player.id, [TrainingFocus.attack, TrainingFocus.defense]);
-    expect(player.focusRotation, [TrainingFocus.attack, TrainingFocus.defense]);
-    player.rotationWeekIndex = 1;
-
-    gameState.setPlayerFocusRotation(player.id, null);
-    expect(player.focusRotation, isNull);
-    expect(player.rotationWeekIndex, 0);
   });
 
   test(
@@ -8029,7 +7524,7 @@ void main() {
     p.potential = 99;
     p.growthType = PlayerGrowthType.early;
     p.setAttributeValue(AttributeKeys.determination, 99);
-    p.individualFocus = TrainingFocus.attack;
+    gameState.userTeam.defaultTrainingFocus = TrainingFocus.attack;
 
     var flagged = false;
     for (int i = 0; i < 500 && !flagged; i++) {
@@ -8275,27 +7770,6 @@ void main() {
         .round()
         .clamp(50, 20000);
     expect(recombined, p.marketValue);
-  });
-
-  test(
-      'TrainingEngine.applyYouthAcademyGrowth respects a youth prospect\'s '
-      'individualFocus, growing the chosen attribute group instead of the '
-      'position-based default', () {
-    int finishingGrowths(TrainingFocus? focus) {
-      var growths = 0;
-      const trials = 400;
-      for (int i = 0; i < trials; i++) {
-        final p = makeFreshPlayer(position: Position.mc);
-        p.individualFocus = focus;
-        TrainingEngine.applyYouthAcademyGrowth([p], 5);
-        if (p.attributeValue(AttributeKeys.finishing) > 50) growths++;
-      }
-      return growths;
-    }
-
-    final withAttackFocus = finishingGrowths(TrainingFocus.attack);
-    final withDefenseFocus = finishingGrowths(TrainingFocus.defense);
-    expect(withAttackFocus, greaterThan(withDefenseFocus));
   });
 
   test(
@@ -8558,25 +8032,6 @@ void main() {
   });
 
   test(
-      'GameState.talkToPlayer boosts morale once, then blocks during '
-      'cooldown', () async {
-    final gameState = GameState();
-    await gameState.startNewGame('テストFC');
-    final player = gameState.userTeam.players.first;
-    player.morale = 50;
-
-    final ok1 = await gameState.talkToPlayer(player.id);
-    expect(ok1, isTrue);
-    expect(player.morale, greaterThan(50));
-    expect(player.talkCooldownWeeks, TrainingEngine.talkCooldownWeeks);
-
-    final moraleAfterFirst = player.morale;
-    final ok2 = await gameState.talkToPlayer(player.id);
-    expect(ok2, isFalse);
-    expect(player.morale, moraleAfterFirst);
-  });
-
-  test(
       'GameState.holdTacticalMeeting grows mental attributes for at least '
       'one player, then enforces a cooldown', () async {
     final gameState = GameState();
@@ -8608,13 +8063,8 @@ void main() {
     expect(ok2, isFalse);
   });
 
-  test('Player/Team round-trip through JSON preserves new cooldown fields', () {
-    final player =
-        PlayerGenerator.generate(position: Position.st, strengthTier: 60)
-          ..talkCooldownWeeks = 2;
-    final restoredPlayer = Player.fromJson(player.toJson());
-    expect(restoredPlayer.talkCooldownWeeks, 2);
-
+  test('Team round-trip through JSON preserves the tactical meeting cooldown',
+      () {
     final team = PlayerGenerator.generateSquad(
         id: 'json-team', name: 'JSON FC', strengthTier: 60)
       ..tacticalMeetingCooldownWeeks = 2;
@@ -8713,75 +8163,6 @@ void main() {
     final appsAfter = gameState.userTeam.players
         .fold<int>(0, (s, p) => s + p.careerAppearances);
     expect(appsAfter, greaterThan(appsBefore));
-  });
-
-  test(
-      'GameState.setDevelopmentTargetRole accepts only roles allowed for the '
-      "player's position group (standard is rejected), and the plan "
-      'round-trips through JSON', () async {
-    final gameState = GameState();
-    await gameState.startNewGame('テストFC');
-    final gk = gameState.userTeam.players
-        .firstWhere((p) => p.position.group == PositionGroup.gk);
-
-    gameState.setDevelopmentTargetRole(gk.id, PlayerRole.poacher);
-    expect(gk.developmentTargetRole, isNull, reason: 'FW用ロールはGKに設定できない');
-
-    gameState.setDevelopmentTargetRole(gk.id, PlayerRole.standard);
-    expect(gk.developmentTargetRole, isNull, reason: 'standardは目標にできない');
-
-    gameState.setDevelopmentTargetRole(gk.id, PlayerRole.sweeperKeeper);
-    expect(gk.developmentTargetRole, PlayerRole.sweeperKeeper);
-
-    final restored = Player.fromJson(gk.toJson());
-    expect(restored.developmentTargetRole, PlayerRole.sweeperKeeper);
-
-    gameState.setDevelopmentTargetRole(gk.id, null);
-    expect(gk.developmentTargetRole, isNull);
-  });
-
-  test(
-      'a development plan (target role) makes the weekly training grow that '
-      "role's key attributes clearly faster than an otherwise identical "
-      'player without a plan', () {
-    Team buildSoloTeam(String id, {PlayerRole? plan}) {
-      final p = Player(
-        id: '$id-p',
-        name: '$id-p',
-        age: 20,
-        position: Position.dm,
-        potential: 99,
-      );
-      for (final key in AttributeKeys.all) {
-        p.setAttributeValue(key, 30);
-      }
-      p.developmentTargetRole = plan;
-      final team = Team(id: id, name: id, players: [p]);
-      return team;
-    }
-
-    int keySum(Team t) {
-      final p = t.players.first;
-      return PlayerRole.anchorMan.keyAttributes
-          .fold<int>(0, (s, k) => s + p.attributeValue(k));
-    }
-
-    final planned = buildSoloTeam('plan', plan: PlayerRole.anchorMan);
-    final unplanned = buildSoloTeam('noplan');
-    const weeks = 200;
-    for (int i = 0; i < weeks; i++) {
-      // 疲労・負傷でトレーニング効果が偏らないよう、毎週リセットして
-      // 純粋な成長判定の差だけを比較する。
-      for (final t in [planned, unplanned]) {
-        final p = t.players.first;
-        p.fatigue = 0;
-        p.injuryWeeks = 0;
-      }
-      TrainingEngine.applyWeeklyTraining(planned);
-      TrainingEngine.applyWeeklyTraining(unplanned);
-    }
-    expect(keySum(planned), greaterThan(keySum(unplanned)),
-        reason: '育成プランの重視能力値(タックル・ポジショニング)が優先的に伸びるはず');
   });
 
   test(
@@ -8939,15 +8320,11 @@ void main() {
       'モメンタム(試合の流れ)',
       'クイック消化',
       '値切り交渉',
-      '育成プラン(目標ロール)',
       '勝ち上がり賞金',
       '天候',
       '記者会見',
       'スカウティングレポート(試合プレビュー)',
-      '個別声かけ(モチベーショントーク)',
-      '話し合い',
       '戦術ミーティング',
-      'ローテーション方針',
       '自動トレーニング',
       '契約解除の違約金',
       // 契約は年単位(AB1)のため、旧「契約残り週数」は年数表記へ更新済み。
@@ -9120,28 +8497,6 @@ void main() {
   });
 
   test(
-      'TrainingEngine.breakthroughPoolFor includes the attributes the '
-      'player is deliberately working on (drills and development plan) in '
-      'addition to the focus-based base pool', () {
-    final p = PlayerGenerator.generate(
-        position: Position.dc, strengthTier: 60, ageOverride: 20);
-    p.drillAttributeKey = AttributeKeys.finishing;
-    p.drillAttributeKey2 = AttributeKeys.pace;
-    p.developmentTargetRole = PlayerRole.ballPlayingDefender;
-
-    final pool = TrainingEngine.breakthroughPoolFor(p, TrainingFocus.defense);
-
-    expect(pool, contains(AttributeKeys.finishing),
-        reason: '特訓ドリルで狙っている能力値は才能開花の候補に入る');
-    expect(pool, contains(AttributeKeys.pace));
-    for (final k in PlayerRole.ballPlayingDefender.keyAttributes) {
-      expect(pool, contains(k), reason: '育成プラン(目標ロール)の重視能力値も候補に入る');
-    }
-    expect(pool, contains(AttributeKeys.tackling),
-        reason: 'フォーカス由来の基本候補群はそのまま残る');
-  });
-
-  test(
       'CupEngine.simulateShootout returns a consistent record: kicks '
       'alternate starting with the home team, the winner has the higher '
       'score, and per-team kick counts differ by at most one', () {
@@ -9211,7 +8566,6 @@ void main() {
     final save = SaveGame(clubName: 'テストFC', userTeamId: 'a', league: league)
       ..negotiationSignings = 2
       ..breakthroughCount = 11
-      ..traitsAcquired = 4
       ..liveWins = 12
       ..careerCupPrize = 1234
       ..pkShootoutWins = 3;
@@ -9219,7 +8573,6 @@ void main() {
     final restored = SaveGame.fromJson(save.toJson());
     expect(restored.negotiationSignings, 2);
     expect(restored.breakthroughCount, 11);
-    expect(restored.traitsAcquired, 4);
     expect(restored.liveWins, 12);
     expect(restored.careerCupPrize, 1234);
     expect(restored.pkShootoutWins, 3);
@@ -9227,14 +8580,12 @@ void main() {
     final legacyJson = save.toJson()
       ..remove('negotiationSignings')
       ..remove('breakthroughCount')
-      ..remove('traitsAcquired')
       ..remove('liveWins')
       ..remove('careerCupPrize')
       ..remove('pkShootoutWins');
     final legacy = SaveGame.fromJson(legacyJson);
     expect(legacy.negotiationSignings, 0);
     expect(legacy.breakthroughCount, 0);
-    expect(legacy.traitsAcquired, 0);
     expect(legacy.liveWins, 0);
     expect(legacy.careerCupPrize, 0);
     expect(legacy.pkShootoutWins, 0);
@@ -9250,7 +8601,6 @@ void main() {
       'bargain_hunter',
       'cup_prize_1000',
       'breakthrough_10',
-      'trait_teacher',
       'live_wins_10',
       'shootout_winner',
     };
@@ -9264,7 +8614,6 @@ void main() {
     save.negotiationSignings = 0;
     save.careerCupPrize = 999;
     save.breakthroughCount = 9;
-    save.traitsAcquired = 2;
     save.liveWins = 9;
     save.pkShootoutWins = 0;
     expect(unlockedIds().intersection(counterIds), isEmpty);
@@ -9272,7 +8621,6 @@ void main() {
     save.negotiationSignings = 1;
     save.careerCupPrize = 1000;
     save.breakthroughCount = 10;
-    save.traitsAcquired = 3;
     save.liveWins = 10;
     save.pkShootoutWins = 1;
     expect(unlockedIds(), containsAll(counterIds));
@@ -9993,55 +9341,6 @@ void main() {
   });
 
   test(
-      'DevelopmentAdvisor flags fatigue, low sharpness, untapped potential '
-      'and missing mentors, and stays quiet for well-managed squads', () {
-    Player make({required int age}) {
-      final p = PlayerGenerator.generate(
-          position: Position.mc, strengthTier: 55, ageOverride: age);
-      p.fatigue = 10;
-      p.matchSharpness = 80;
-      p.drillAttributeKey = AttributeKeys.passing;
-      p.mentorId = 'vet';
-      return p;
-    }
-
-    final veteran = make(age: 30);
-    final tired = make(age: 27)..fatigue = 90;
-    final rusty = make(age: 27)..matchSharpness = 20;
-    final rawTalent = make(age: 19)
-      ..drillAttributeKey = null
-      ..developmentTargetRole = null;
-    rawTalent.setAttributeValue(AttributeKeys.finishing, 30);
-    final noMentorKid = make(age: 19)..mentorId = null;
-    final team = Team(
-      id: 't',
-      name: 'T',
-      players: [veteran, tired, rusty, rawTalent, noMentorKid],
-    );
-
-    final advices = DevelopmentAdvisor.advise(team);
-    final kindsFor = <String, Set<AdviceKind>>{};
-    for (final a in advices) {
-      kindsFor.putIfAbsent(a.playerId, () => {}).add(a.kind);
-    }
-    expect(kindsFor[tired.id], contains(AdviceKind.highFatigue));
-    expect(kindsFor[rusty.id], contains(AdviceKind.lowSharpness));
-    if (rawTalent.potential - rawTalent.overall >=
-        DevelopmentAdvisor.potentialGapThreshold) {
-      expect(kindsFor[rawTalent.id], contains(AdviceKind.unusedPotential));
-    }
-    expect(kindsFor[noMentorKid.id], contains(AdviceKind.noMentor));
-    expect(kindsFor[veteran.id], isNull, reason: 'ケアの行き届いた選手には指摘が出ない');
-    expect(advices.length, lessThanOrEqualTo(DevelopmentAdvisor.maxAdvices));
-
-    // 重要度順(疲労が最優先)に並ぶ。
-    for (var i = 1; i < advices.length; i++) {
-      expect(advices[i].kind.index,
-          greaterThanOrEqualTo(advices[i - 1].kind.index));
-    }
-  });
-
-  test(
       'SquadScreen.filterAndSort supports the condition sorts and the '
       'starters/bench/needs-attention status filters', () {
     Player make() =>
@@ -10613,8 +9912,6 @@ void main() {
           reason: '$label: careerApps');
       expect(restored.careerGoals, p.careerGoals,
           reason: '$label: careerGoals');
-      expect(restored.individualFocus, p.individualFocus,
-          reason: '$label: individualFocus');
       expect(restored.wage, p.wage, reason: '$label: wage');
       expect(restored.contractYearsRemaining, p.contractYearsRemaining,
           reason: '$label: contractYears');
@@ -10655,25 +9952,6 @@ void main() {
           reason: '$label: loanStartOverall');
       expect(restored.overallHistory, p.overallHistory,
           reason: '$label: overallHistory');
-      expect(restored.mentorId, p.mentorId, reason: '$label: mentorId');
-      expect(restored.drillAttributeKey, p.drillAttributeKey,
-          reason: '$label: drill1');
-      expect(restored.drillAttributeKey2, p.drillAttributeKey2,
-          reason: '$label: drill2');
-      expect(restored.traitTrainingTarget, p.traitTrainingTarget,
-          reason: '$label: traitTarget');
-      expect(restored.personalityTraitTrainingTarget,
-          p.personalityTraitTrainingTarget,
-          reason: '$label: personalityTraitTarget');
-      expect(restored.focusRotation, p.focusRotation,
-          reason: '$label: focusRotation');
-      expect(restored.rotationWeekIndex, p.rotationWeekIndex,
-          reason: '$label: rotationIndex');
-      expect(restored.trainingConvertTargetPosition,
-          p.trainingConvertTargetPosition,
-          reason: '$label: convertTarget');
-      expect(restored.developmentTargetRole, p.developmentTargetRole,
-          reason: '$label: devRole');
       expect(restored.trait, p.trait, reason: '$label: trait');
       expect(restored.growthType, p.growthType, reason: '$label: growthType');
     }
@@ -10705,12 +9983,9 @@ void main() {
       ..suspendedMatches = 1
       ..careerAppearances = 210
       ..careerGoals = 61
-      ..individualFocus = TrainingFocus.attack
       ..wage = 340
       ..contractYearsRemaining = 4
       ..happiness = 22
-      ..reassureCooldownWeeks = 2
-      ..talkCooldownWeeks = 1
       ..isLoan = true
       ..loanWeeksRemaining = 12
       ..loanBuyOptionFee = 5200
@@ -10727,13 +10002,7 @@ void main() {
       ..youthMatchApps = 9
       ..youthMatchGoals = 4
       ..lastYouthMatchRating = 7.5
-      ..loanStartOverall = 58
-      ..rotationWeekIndex = 1
-      ..mentorId = 'mentor-1'
-      ..drillAttributeKey = AttributeKeys.finishing
-      ..drillAttributeKey2 = AttributeKeys.passing
-      ..focusRotation = [TrainingFocus.attack, TrainingFocus.fitness]
-      ..developmentTargetRole = PlayerRole.playmaker;
+      ..loanStartOverall = 58;
     custom.overallHistory.addAll([50, 51, 53]);
     custom.positionFamiliarity[Position.st.name] = 60;
     custom.injuryHistoryCounts[InjuryType.muscle.name] = 2;
@@ -10769,8 +10038,20 @@ void main() {
       'growthType': p.growthType.name,
       'personality': p.personality.name,
       'overallHistory': p.overallHistory,
-      'mentorId': null,
       'trait': p.trait?.name,
+      // 監督時代の個別育成の項目。いまは読まずに捨てる。
+      'mentorId': 'someone',
+      'individualFocus': 'attack',
+      'drillAttributeKey': AttributeKeys.finishing,
+      'drillAttributeKey2': AttributeKeys.passing,
+      'traitTrainingTarget': 'clinicalFinisher',
+      'personalityTraitTrainingTarget': 'warriorSpirit',
+      'focusRotation': ['attack', 'fitness'],
+      'rotationWeekIndex': 1,
+      'trainingConvertTargetPosition': 'dm',
+      'developmentTargetRole': 'playmaker',
+      'reassureCooldownWeeks': 2,
+      'talkCooldownWeeks': 1,
     };
     final fromVerbose = Player.fromJson(verbose);
     final fromSparse = Player.fromJson(sparse);
@@ -10780,6 +10061,8 @@ void main() {
     expect(fromVerbose.duty, fromSparse.duty);
     expect(fromVerbose.growthType, fromSparse.growthType);
     expect(fromVerbose.matchSharpness, fromSparse.matchSharpness);
+    expect(fromVerbose.toJson().keys.toSet(), fromSparse.toJson().keys.toSet(),
+        reason: '監督時代の項目が書き戻されている');
 
     // 未知のenum名は既定値へフォールバックし、例外にはならない。
     final corrupted = <String, dynamic>{

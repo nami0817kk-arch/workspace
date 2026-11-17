@@ -87,6 +87,5 @@ class YouthPromotionEngine {
     player.youthMatchApps = 0;
     player.youthMatchGoals = 0;
     player.lastYouthMatchRating = 0;
-    player.mentorId = null;
   }
 }
