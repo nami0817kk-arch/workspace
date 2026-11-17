@@ -1,0 +1,129 @@
+# 物語完結型ショート 生類憐みの令 s2（2026-11-17）。本編 scripts/shorui-story.yaml（11/21 12:00 公開予定、https://youtu.be/CHq4clT-WUY）から。11/22 に予約。
+# 形式は titanic_s1〜s5.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（dev/output/rekishi-chiso/research/生類憐みの令_facts_20261116.yaml）と本編の # fact: だけ。
+# 絵：本編の AI 絵（out/story/shorui/main/ の N01〜N26）の切り出しだけ。新しい絵は作らない（N09・N19 は使わない。N19 には今の石油ファンヒーターとコンセントが描かれている）。犬や人の死体・惨状・顔は絵にしない。
+# 切り口：中野の犬小屋の広さと頭数が、記録で倍ほど割れる（徳川実紀16万坪・10万頭に及ぶといわれた／根崎 翌年20万坪超／中野区 約30万坪・数万〜30万頭）。本編の第2章。
+# 計算（自分で計算し直した）：16万坪×3.306㎡＝52.9万㎡＝約53ヘクタール、÷東京ドーム4.68ヘクタール＝約11個分／30万坪÷16万坪＝1.9倍（ほぼ倍）／1695〜1709年＝足かけ15年（中野区の「15年間」と合う）
+title: "生類憐みの令｜中野の犬小屋は、16万坪か、30万坪か"
+yt_title: "生類憐みの令の中野の犬小屋　広さは16万坪か30万坪か、犬は10万頭か30万頭か　記録で倍ほど割れる「犬の囲い」"
+description: |-
+  生類憐みの令のもと、1695年に江戸の西の中野にできた犬の囲い。広さは、幕府の記録『徳川実紀』では16万坪、約53ヘクタールです。根崎光男の研究では翌年に20万坪を超え、中野区の案内では約30万坪と書かれています。
+  頭数も、『徳川実紀』の10万頭に及ぶといわれた、から、中野区の案内の数万から30万頭まで割れています。餌の費用は1年で金9万8000両あまりで、江戸の町人から集めた、とする研究があります。
+  本編では、触れの中身・罰の記録・悪い評判の出どころを並べて、生類憐みの令は本当に悪法だったのかを確かめています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#生類憐みの令"
+- "#日本史"
+- "#歴史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。人物の姿も、特定の人を写したものではありません。創作の台詞は入れていません。"
+art_dir: out/story/shorui
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: shorui_story_s2
+header:
+  tag: "中野の犬小屋"
+  title: "広さは《16万坪》か、30万坪か"
+now:
+- {at: "1695年", text: "1695年10月　中野", point: 0}
+- {at: "1709年", text: "1709年　廃止", point: 1}
+timeline:
+- {label: "1695"}
+- {label: "1709"}
+shots:
+  N01_1:
+    kind: "ai"
+    file: "shorui/main/N01.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "N01"
+  N03_2:
+    kind: "ai"
+    file: "shorui/main/N03.jpg"
+    focus: [0.35, 0.5]
+    move: "left"
+    must: "N03"
+  N01_3:
+    kind: "ai"
+    file: "shorui/main/N01.jpg"
+    focus: [0.35, 0.5]
+    move: "right"
+    must: "N01"
+  N01_4:
+    kind: "ai"
+    file: "shorui/main/N01.jpg"
+    focus: [0.65, 0.5]
+    move: "left"
+    must: "N01"
+  N02_5:
+    kind: "ai"
+    file: "shorui/main/N02.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    must: "N02"
+  N05_6:
+    kind: "ai"
+    file: "shorui/main/N05.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "N05"
+  N07_7:
+    kind: "ai"
+    file: "shorui/main/N07.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "N07"
+  N02_8:
+    kind: "ai"
+    file: "shorui/main/N02.jpg"
+    focus: [0.35, 0.5]
+    move: "right"
+    must: "N02"
+lines:
+  # fact: shorui-06
+- 語り: "中野に造られた、犬の囲い。その広さは、記録によって、倍ほども違う。"
+  shot: N01_1
+  tone: 強調
+  pause: 0.12
+  # fact: shorui-06
+- 語り: "1695年の10月29日、中野の犬小屋ができあがり、11月13日には、江戸の町の犬を、送り込み始めた。"
+  shot: N03_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: shorui-06
+- 語り: "幕府の記録では、広さは16万坪。約53ヘクタールで、東京ドームの、約11個分だ。"
+  shot: N01_3
+  tone: 重い
+  pause: 0.12
+  # fact: shorui-06
+- 語り: "歴史学者、根崎光男の研究では、翌年に20万坪を超えた。中野区の案内では、約30万坪だ。"
+  shot: N01_4
+  tone: 重い
+  pause: 0.12
+  # fact: shorui-06
+- 語り: "頭数も、割れる。『徳川実紀』は、まもなく10万頭に及ぶといわれた、と書く。中野区の案内は、数万から30万頭。"
+  shot: N02_5
+  tone: しみじみ
+  pause: 0.12
+  # fact: shorui-06
+- 語り: "根崎の研究では、犬小屋の費用は、すべて江戸の町人から集めた。餌の費用は、1年で、金9万8000両あまりだ。"
+  shot: N05_6
+  tone: 重い
+  pause: 0.12
+  # fact: shorui-06
+- 語り: "中野区の案内によれば、犬小屋は、1709年に廃止されるまで、15年間あった。"
+  shot: N07_7
+  tone: しみじみ
+  pause: 0.12
+  # fact: shorui-25
+- 語り: "ところが、触れの束を開くと、犬の話は、その一部でしかない。犬のほかに、何が守られていたのか。"
+  shot: N02_8
+  tone: 疑問
+  pause: 0.15
