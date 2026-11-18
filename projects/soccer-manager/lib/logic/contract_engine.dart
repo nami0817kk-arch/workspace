@@ -1,6 +1,9 @@
+import 'dart:math';
+
 import '../models/player.dart';
 import '../models/team.dart';
 import '../l10n/tr.dart';
+import 'economy_scale.dart';
 
 class ContractEngine {
   /// 週俸総額。他クラブへローン放出中の選手は放出先が週俸を負担するため含めない。
@@ -8,7 +11,96 @@ class ContractEngine {
       .where((p) => !p.isLoanedOut)
       .fold<int>(0, (s, p) => s + p.wage);
 
-  /// 残り契約年数の表示ラベル。契約は年単位で結ばれるため、そのまま表示する。
+  /// 契約の満了日の表示。「2028年6月まで」/ "until Jun 2028"。
+  /// 満了済み(フリーエージェント)は「契約なし」。
+  static String untilLabel(int endYear) {
+    if (endYear < Player.contractClockYear) {
+      return Tr.pick('契約なし', 'No contract');
+    }
+    return Tr.pick('$endYear年6月まで', 'until Jun $endYear');
+  }
+
+  /// [untilLabel]の短い形(表の列など)。「2028/6」/ "Jun 2028"。
+  static String untilShortLabel(int endYear) {
+    if (endYear < Player.contractClockYear) return Tr.pick('なし', 'None');
+    return Tr.pick('$endYear/6', 'Jun $endYear');
+  }
+
+  /// ごく狭い列向けの満了の年(「28年」/ "'28")。
+  static String untilTinyLabel(int endYear) {
+    if (endYear < Player.contractClockYear) return Tr.pick('なし', '-');
+    final yy = (endYear % 100).toString().padLeft(2, '0');
+    return Tr.pick('$yy年', "'$yy");
+  }
+
+  /// 選手の契約の表示(延長オプション・「延長しない」の印つき)。
+  static String contractLabel(Player p) {
+    final base = untilLabel(p.contractEndYear);
+    final marks = [
+      if (p.contractOption) Tr.pick('延長オプション付き', '1-year option'),
+      if (p.refusesRenewal) Tr.pick('延長しない', 'will not renew'),
+    ];
+    return marks.isEmpty ? base : '$base (${marks.join(Tr.pick('・', ', '))})';
+  }
+
+  /// 契約の長さの上限(年)。実在の決まりに寄せる: 最長5年、18歳未満は3年。
+  static const int maxContractYears = 5;
+  static const int maxMinorContractYears = 3;
+
+  /// プロ契約を結べる年齢。ユースの選手はこの年齢になるまで一軍の契約を
+  /// 結べない。
+  static const int minProfessionalAge = 16;
+
+  /// [age]歳の選手と結べる契約の長さの上限(年)。
+  static int capYears(int age) =>
+      age < 18 ? maxMinorContractYears : maxContractYears;
+
+  /// 今日結ぶ契約で選べる最も遅い満了の年。契約は結んだ日から数えて上限の
+  /// 年数以内に終わる。シーズン中(7/1〜翌6/30)のどの日に結んでも、
+  /// 5年なら今のシーズン末の4年後の6月30日が最後になる。
+  static int maxEndYearNow(int age) =>
+      Player.contractClockYear + capYears(age) - 1;
+
+  /// 7月1日に始まる契約(仮契約)で選べる最も遅い満了の年。
+  static int maxEndYearFromNextSeason(int age) =>
+      Player.contractClockYear + capYears(age);
+
+  /// 今日結ぶ契約で選べる満了の年(短い順)。最短は来季末(今のシーズン末で
+  /// 切れる契約を結び直しても意味がない)。
+  static List<int> endYearChoicesNow(int age) => [
+        for (var y = Player.contractClockYear + 1; y <= maxEndYearNow(age); y++)
+          y,
+      ];
+
+  /// 延長オプションを付けられるか。行使して1年延びても上限の年数に
+  /// 収まるときだけ([nextSeasonStart]は7月1日に始まる仮契約のとき true)。
+  static bool canAttachOption(int endYear, int age,
+          {bool nextSeasonStart = false}) =>
+      endYear + 1 <=
+      (nextSeasonStart ? maxEndYearFromNextSeason(age) : maxEndYearNow(age));
+
+  /// 延長オプションを付けると、選手は少し高い週俸を求める(行使されれば
+  /// 同じ週俸のまま1年縛られるので、その分を先に求める)。
+  static const double optionWageFactor = 1.05;
+
+  /// 延長オプションを行使できる期限(満了の年の3月31日)。
+  static DateTime optionDeadline(int endYear) => DateTime(endYear, 3, 31);
+
+  /// 今日[today]、選手の延長オプションを行使できるか。
+  static bool canExerciseOption(Player p, DateTime today) =>
+      p.contractOption &&
+      !p.isLoan &&
+      p.contractEndYear == Player.contractClockYear &&
+      !today.isAfter(optionDeadline(p.contractEndYear));
+
+  /// 延長オプションを行使する。満了が1年延び、年俸はそのまま。
+  static void exerciseOption(Player p) {
+    p.contractEndYear += 1;
+    p.contractOption = false;
+    p.refusesRenewal = false;
+  }
+
+  /// 残り契約年数の表示ラベル(スポンサー契約など、年数で持つ契約の表示)。
   static String yearsLabel(int yearsRemaining) {
     if (yearsRemaining <= 0) return Tr.pick('契約満了間近', 'Contract almost up');
     return Tr.pick(
@@ -52,10 +144,13 @@ class ContractEngine {
     return expired;
   }
 
-  /// 契約(年単位)をシーズン境界で1年分消化させ、契約切れとなった選手を
-  /// チームから除外する。除外された選手と、最終年に入り契約満了が近づいた
-  /// 選手(事前警告用)をそれぞれ返す(UI通知用)。ローン選手は対象外
-  /// (ローン期間は個別合意された週数で管理し、[advanceLoanWeek]で扱う)。
+  /// 7月1日に新しいシーズンへ入ったときの契約の処理。満了日(6月30日)を
+  /// 過ぎた選手をチームから外し、外した選手と、満了の年(最終年)に入った
+  /// 選手(事前の知らせ用)を返す。ローン選手は対象外(ローンは日付で持ち、
+  /// [advanceLoanWeek]で扱う)。
+  ///
+  /// 契約は満了の年で持つので、ここで年数を減らすことはしない。呼ぶ前に
+  /// [Player.contractClockYear]を新しいシーズンに合わせておくこと。
   static ({List<Player> expired, List<Player> nearingExpiry}) advanceSeason(
     Team team,
   ) {
@@ -63,12 +158,9 @@ class ContractEngine {
     final nearingExpiry = <Player>[];
     for (final p in List<Player>.from(team.players)) {
       if (p.isLoan) continue;
-      if (p.contractYearsRemaining > 0) {
-        p.contractYearsRemaining -= 1;
-      }
-      if (p.contractYearsRemaining <= 0) {
+      if (p.contractEndYear < Player.contractClockYear) {
         expired.add(p);
-      } else if (p.contractYearsRemaining == 1) {
+      } else if (p.contractEndYear == Player.contractClockYear) {
         nearingExpiry.add(p);
       }
     }
@@ -145,10 +237,30 @@ class ContractEngine {
   ///
   /// 足したあとは、更新した時点から数えて[negotiatedYears]シーズンぶん
   /// 在籍する。32歳なら今季＋来季。
-  static void renewContract(Player p, {int? years}) {
-    p.contractYearsRemaining = (years ?? negotiatedYears(p)) + 1;
+  ///
+  /// 満了の年は[endYear]で直接選ぶこともできる。どちらも契約の長さの上限
+  /// ([maxEndYearNow]: 最長5年、18歳未満は3年)に収める。
+  static void renewContract(
+    Player p, {
+    int? years,
+    int? endYear,
+    bool option = false,
+  }) {
+    final wanted =
+        endYear ?? Player.contractClockYear + (years ?? negotiatedYears(p));
+    final lo = Player.contractClockYear + 1;
+    final end = min(max(wanted, lo), max(lo, maxEndYearNow(p.age)));
+    p.contractEndYear = end;
+    p.contractOption = option && canAttachOption(end, p.age);
+    p.refusesRenewal = false;
     p.appearanceFee = appearanceFeeFor(p);
   }
+
+  /// 年数を選ばずに更新したときの満了の年([renewContract]の既定)。
+  static int defaultRenewalEndYear(Player p) => min(
+        Player.contractClockYear + negotiatedYears(p),
+        max(Player.contractClockYear + 1, maxEndYearNow(p.age)),
+      );
 
   /// 移籍で獲得した選手に、新しいクラブとの契約を結ばせる。
   ///
@@ -156,12 +268,120 @@ class ContractEngine {
   /// 次のシーズンの切り替わりでその場で退団していた。[renewContract]と同じく
   /// 今シーズンぶんの1年を足した年数を最低限とし、それより長く残っている
   /// 契約は縮めない。
-  static void applyTransferContract(Player p) {
-    final minimum = negotiatedYears(p) + 1;
-    if (p.contractYearsRemaining < minimum) {
-      p.contractYearsRemaining = minimum;
-    }
+  ///
+  /// 満了の年は上限([maxEndYearNow])より先にはしない。元のクラブとの
+  /// 延長オプション・「延長しない」は引き継がない([option]で新しく付ける)。
+  static void applyTransferContract(Player p, {bool option = false}) {
+    final cap = maxEndYearNow(p.age);
+    final minimum = Player.contractClockYear + negotiatedYears(p);
+    var end = p.contractEndYear;
+    if (end < minimum) end = minimum;
+    if (end > cap) end = cap;
+    if (end <= Player.contractClockYear) end = Player.contractClockYear + 1;
+    p.contractEndYear = end;
+    p.contractOption = option && canAttachOption(end, p.age);
+    p.refusesRenewal = false;
   }
+
+  // ---- 113. 「延長しない」と言い出す選手 ----
+
+  /// 満了の年(残り1年)に入ったとき、更新に応じない選手になる確率。
+  ///
+  /// - 土台 8%。
+  /// - 性格: 野心家・成り上がり志向は +12%、忠誠心の強い選手・模範選手は -6%。
+  /// - 不満: 満足度が50未満なら +25%、65未満なら +10%(出番が少ないと下がる)。
+  /// - 年俸の不満: 価値に見合う週俸の 3/4 に届かなければ +10%。
+  /// - 上限 60%。
+  static double refuseRenewalChance(Player p) {
+    var chance = 0.08;
+    switch (p.personality) {
+      case PlayerPersonality.ambitious:
+      case PlayerPersonality.driven:
+        chance += 0.12;
+      case PlayerPersonality.loyal:
+      case PlayerPersonality.modelCitizen:
+        chance -= 0.06;
+      default:
+        break;
+    }
+    if (p.happiness < 50) {
+      chance += 0.25;
+    } else if (p.happiness < 65) {
+      chance += 0.10;
+    }
+    if (p.wage * 4 < weeklyWageForValue(p.marketValue) * 3) chance += 0.10;
+    return chance.clamp(0.0, 0.6);
+  }
+
+  // ---- 114. 給料の未払いで契約を解除される ----
+
+  /// 資金のマイナスがこの週数(約2か月)続くと、給料を2か月分払えていない
+  /// ものとして選手に通告が届く(実在の決まり: 2か月分の未払いで、
+  /// 15日の催告のあと選手は契約を解除できる)。
+  static const int unpaidNoticeWeeks = 9;
+
+  /// 催告から15日(約2週)たっても払えなければ、選手は契約を解除して
+  /// 自由契約で出ていける。
+  static const int unpaidTerminationWeeks = 11;
+
+  /// 解除を考えるのは週俸の高い順にこの人数まで(行き先のある選手から出ていく)。
+  static const int unpaidWalkoutCandidates = 6;
+
+  /// 1人が1週のうちに解除する確率。
+  static const double unpaidWalkoutChance = 0.3;
+
+  /// 1週に出ていく人数の上限。
+  static const int unpaidWalkoutsPerWeek = 2;
+
+  /// 資金のマイナスが[negativeWeeks]週続いているとき、今週契約を解除して
+  /// 出ていく選手。ローン選手と貸し出し中の選手は含めない。
+  static List<Player> unpaidWageWalkouts(
+    Team team,
+    int negativeWeeks,
+    Random rng,
+  ) {
+    if (negativeWeeks < unpaidTerminationWeeks) return const [];
+    final candidates = team.players
+        .where((p) => !p.isLoan && !p.isLoanedOut)
+        .toList()
+      ..sort((a, b) => b.wage.compareTo(a.wage));
+    final leaving = <Player>[];
+    for (final p in candidates.take(unpaidWalkoutCandidates)) {
+      if (leaving.length >= unpaidWalkoutsPerWeek) break;
+      if (rng.nextDouble() < unpaidWalkoutChance) leaving.add(p);
+    }
+    return leaving;
+  }
+
+  // ---- 115. 合意して契約を解除する ----
+
+  /// 今日[today]から満了日(満了の年の6月30日)までの週数(切り上げ)。
+  static int weeksUntilExpiry(Player p, DateTime today) {
+    final end = DateTime.utc(p.contractEndYear, 6, 30);
+    final from = DateTime.utc(today.year, today.month, today.day);
+    final days = end.difference(from).inDays;
+    if (days <= 0) return 0;
+    return (days / 7).ceil();
+  }
+
+  /// 残りの年俸(満了までの週俸の合計、万円)。
+  static int remainingWages(Player p, DateTime today) =>
+      p.wage * weeksUntilExpiry(p, today);
+
+  /// 合意解除で払う割合(残りの年俸に対して)。半分〜全額。
+  ///
+  /// 若い選手ほど次のクラブを見つけやすいので少なくて済み、年を取った
+  /// 選手ほど残りを全部欲しがる(24歳で半分、34歳で全額へ、年齢でまっすぐ)。
+  /// 市場価値が残りの年俸を上回る選手は引く手あまたなので、さらに1割下がる。
+  static double mutualTerminationShare(Player p, DateTime today) {
+    final ageShare = ((p.age - 24) / 10).clamp(0.0, 1.0);
+    final inDemand = p.marketValue >= remainingWages(p, today);
+    return (0.5 + 0.5 * ageShare - (inDemand ? 0.1 : 0.0)).clamp(0.5, 1.0);
+  }
+
+  /// 合意して契約を解除するときに払う額(万円)。
+  static int mutualTerminationCost(Player p, DateTime today) =>
+      (remainingWages(p, today) * mutualTerminationShare(p, today)).round();
 
   /// 契約交渉で選手が受け入れる最低週俸(万円)。要求水準が高い性格ほど、
   /// より大きな昇給を求める。

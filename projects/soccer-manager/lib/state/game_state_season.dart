@@ -128,6 +128,8 @@ extension GameStateSeason on GameState {
     final d = SeasonCalendar.dateOnly(day);
     _save!.today = d;
     if (!d.isAfter(before)) return;
+    // 仮契約の解禁(1月1日)・延長オプションの期限(3月31日)。
+    _onContractDatesAdvanced(before, d);
     final theme = currentLeagueTheme;
     // 窓が開いたら、名簿の外だった選手もまた登録できる。
     if (TransferWindowCalendar.openedBetween(before, d, theme)) {
@@ -1019,6 +1021,10 @@ extension GameStateSeason on GameState {
       }
     }
 
+    // ここから先は新しいシーズン(7月1日)として契約を数える。引退の補充で
+    // 作る選手の満了の年も、新しいシーズンから数える。
+    Player.contractClockYear = Player.seasonEndYearOf(league.season + 1);
+
     // 自クラブの部の外(他の部・他国)の選手は練習で育たないので、年に1度
     // 年齢に合わせて伸ばし、衰えさせる。
     final activeIds = _save!.league.teams.map((t) => t.id).toSet();
@@ -1265,6 +1271,8 @@ extension GameStateSeason on GameState {
       fixtures: newFixtures,
       season: league.season + 1,
     );
+    // ここから新しいシーズン。契約の残り年数もこのシーズンから数える。
+    _syncContractClock();
     // 規則違反の勝ち点剥奪は、来季の順位表に反映する。
     if (_save!.pendingPointsDeduction > 0) {
       _save!.league.pointsAdjustments[_save!.userTeamId] =
@@ -1351,21 +1359,10 @@ extension GameStateSeason on GameState {
     _save!.retiredLegends.addAll(retirees);
     lastRetirements = retirees.map((p) => p.name).toList();
 
-    // 選手契約(年単位)をシーズン境界で1年分消化する(CPUクラブの契約は
-    // 管理対象外)。切れた契約はフリーエージェントプールへ移す。引退判定より
-    // 後に行うことで、緊急補強の安全網が最終的なスカッド人数を保証できる
-    // ようにする。
-    final contractResult = ContractEngine.advanceSeason(userTeam);
-    lastContractExpirations =
-        contractResult.expired.map((p) => p.name).toList();
-    lastContractWarnings =
-        contractResult.nearingExpiry.map((p) => p.name).toList();
-    for (final p in contractResult.expired) {
-      _clearPlayerRoleReferences(userTeam, p.id);
-      if (_save!.freeAgents.length < FreeAgentEngine.maxPoolSize) {
-        _save!.freeAgents.add(p);
-      }
-    }
+    // 7月1日: 満了日(6月30日)を過ぎた契約を自クラブも他のクラブも
+    // 終わらせ、仮契約の選手を移す。引退判定より後に行うことで、緊急補強の
+    // 安全網が最終的なスカッド人数を保証できるようにする。
+    _settleContractsAtSeasonStart();
     // 契約満了・引退により編成人数が最低人数を割り込んだ場合の緊急補強(安全網)。
     lastEmergencySignings = [];
     while (userTeam.players.length < seasonStartSquadSize) {
@@ -1548,6 +1545,19 @@ extension GameStateSeason on GameState {
       _logNews(
           Tr.pick('契約最終年に突入: ${lastContractWarnings.join('、')}',
               "Into the final year of their contract: ${lastContractWarnings.join(', ')}"),
+          context: newsCtx);
+    }
+    if (lastRenewalRefusals.isNotEmpty) {
+      _logNews(
+          Tr.pick(
+              '契約を延長しないと言い出した: ${lastRenewalRefusals.join('、')}。売るか、来年6月30日の満了でただで手放すことになります。',
+              "Refusing to sign a new deal: ${lastRenewalRefusals.join(', ')}. Sell them, or lose them for nothing when their deals run out on 30 Jun."),
+          context: newsCtx);
+    }
+    if (lastPreContractArrivals.isNotEmpty) {
+      _logNews(
+          Tr.pick('仮契約で加入: ${lastPreContractArrivals.join('、')}',
+              "Joined on pre-contracts: ${lastPreContractArrivals.join(', ')}"),
           context: newsCtx);
     }
     if (lastEmergencySignings.isNotEmpty) {

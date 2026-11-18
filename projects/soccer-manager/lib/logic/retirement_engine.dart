@@ -82,6 +82,10 @@ class RetirementEngine {
   /// (リーグデフレ)ため、この値が均衡点になる。
   static const int cpuRecruitStrengthBias = 3;
 
+  /// 契約満了・仮契約で抜けた CPU クラブの選手の代わり(引退の補充と同じ形)。
+  static Player cpuRecruitFor(Team team, Position position) =>
+      _generateCpuRecruit(team, position);
+
   static Player _generateCpuRecruit(Team team, Position position) =>
       PlayerGenerator.generate(
         position: position,

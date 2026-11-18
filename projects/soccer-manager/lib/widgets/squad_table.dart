@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../l10n/tr.dart';
+import '../logic/contract_engine.dart';
 import '../models/player.dart';
 import 'player_stat_chips.dart';
 import '../logic/economy_scale.dart';
@@ -125,8 +126,7 @@ class SquadTable extends StatelessWidget {
               child: Text(
                   p.isLoan
                       ? Tr.pick('借', 'Ln')
-                      : Tr.pick('${p.contractYearsRemaining}年',
-                          '${p.contractYearsRemaining}y'),
+                      : ContractEngine.untilTinyLabel(p.contractEndYear),
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
                   style: small.copyWith(

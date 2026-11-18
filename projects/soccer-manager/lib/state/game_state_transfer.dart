@@ -151,6 +151,9 @@ extension GameStateTransfer on GameState {
     if (_save?.pendingContractNegotiation?.playerId == playerId) {
       _save!.pendingContractNegotiation = null;
     }
+    // 7月1日より前に出ていった(売った・解除した)選手の仮契約は無くなる。
+    _save?.preContracts.removeWhere(
+        (c) => c.playerId == playerId && c.fromClubId == team.id);
     _settleInstallmentsFor(playerId);
   }
 
@@ -249,6 +252,8 @@ extension GameStateTransfer on GameState {
     final pool = fitting.isNotEmpty ? fitting : destinations;
     final dest = pool[GameState._transferOfferRng.nextInt(pool.length)];
     player.contractYearsRemaining = 2 + GameState._transferOfferRng.nextInt(3);
+    player.contractOption = false;
+    player.refusesRenewal = false;
     player.happiness = (player.happiness + 5).clamp(40, 90);
     dest.players.add(player);
     lastSaleNews = Tr.pick('${player.name}は${dest.name}へ移籍した。',
@@ -313,15 +318,28 @@ extension GameStateTransfer on GameState {
     );
   }
 
-  Future<bool> renewContract(String playerId) async {
+  /// 契約を更新する。満了の年は[endYear](省略時は年齢に応じた年数)。
+  /// ローン選手・仮契約で出ていく選手・「延長しない」選手とは更新できない
+  /// (理由は[lastSigningBlockReason])。
+  Future<bool> renewContract(
+    String playerId, {
+    int? endYear,
+    bool option = false,
+  }) async {
     if (_save == null) return false;
+    lastSigningBlockReason = null;
     final player = userTeam.players.firstWhere((p) => p.id == playerId);
-    if (player.isLoan) return false; // ローン選手には通常の契約更新は適用されない
+    final blocked = renewalBlockReason(player);
+    if (blocked != null) {
+      lastSigningBlockReason = blocked;
+      _notify();
+      return false;
+    }
     final cost = ContractEngine.renewalCost(player) +
         ContractEngine.signingBonusFor(player);
     if (_save!.budget < cost) return false;
     _book(LedgerCategory.transfers, -(cost));
-    ContractEngine.renewContract(player);
+    ContractEngine.renewContract(player, endYear: endYear, option: option);
     _notify();
     await _persist();
     return true;
@@ -332,16 +350,60 @@ extension GameStateTransfer on GameState {
       _save?.pendingContractNegotiation;
 
   /// 選手との週俸交渉を開始する(現在の週俸を起点に、選手側の最低希望額を提示する)。
-  void startContractNegotiation(String playerId) {
+  ///
+  /// 満了の年([endYear])と延長オプション([option])は交渉の前に決める。
+  /// オプションを付けると選手の求める週俸が5%上がる。更新できない選手
+  /// ([renewalBlockReason])とは始めない。
+  void startContractNegotiation(
+    String playerId, {
+    int? endYear,
+    bool option = false,
+  }) {
     if (_save == null) return;
+    lastSigningBlockReason = null;
     final player = userTeam.players.firstWhere((p) => p.id == playerId);
-    if (player.isLoan) return;
-    _save!.pendingContractNegotiation = ContractNegotiation(
+    final blocked = renewalBlockReason(player);
+    if (blocked != null) {
+      lastSigningBlockReason = blocked;
+      _notify();
+      return;
+    }
+    final negotiation = ContractNegotiation(
       playerId: playerId,
       initialWage: player.wage,
       offeredWage: player.wage,
-      counterWage: ContractEngine.initialDemand(player),
+      counterWage: 0,
+      endYear: endYear,
+      option: option,
     );
+    negotiation.counterWage =
+        (ContractEngine.initialDemand(player) * _optionFactor(negotiation))
+            .round();
+    _save!.pendingContractNegotiation = negotiation;
+    _notify();
+    _persist();
+  }
+
+  /// 交渉に延長オプションが付いていれば、求める週俸の倍率。
+  double _optionFactor(ContractNegotiation n) =>
+      n.option ? ContractEngine.optionWageFactor : 1.0;
+
+  /// 交渉中の満了の年・延長オプションを変える(求める週俸も合わせて変わる)。
+  void setNegotiationTerms({int? endYear, bool? option}) {
+    final n = _save?.pendingContractNegotiation;
+    if (n == null) return;
+    final player =
+        userTeam.players.where((p) => p.id == n.playerId).firstOrNull;
+    if (player == null) return;
+    final before = _optionFactor(n);
+    if (endYear != null) n.endYear = endYear;
+    if (option != null) n.option = option;
+    final end = n.endYear ??
+        Player.contractClockYear + ContractEngine.negotiatedYears(player);
+    if (n.option && !ContractEngine.canAttachOption(end, player.age)) {
+      n.option = false;
+    }
+    n.counterWage = (n.counterWage / before * _optionFactor(n)).round();
     _notify();
     _persist();
   }
@@ -369,14 +431,20 @@ extension GameStateTransfer on GameState {
       await _persist();
       return ContractOfferResult.walkedAway;
     }
-    final minAcceptable = ContractEngine.minimumAcceptableWage(player);
+    final minAcceptable = (ContractEngine.minimumAcceptableWage(player) *
+            _optionFactor(negotiation))
+        .round();
     if (wage >= minAcceptable) {
       final cost = ContractEngine.renewalCost(player) +
           ContractEngine.signingBonusFor(player);
       if (_save!.budget < cost) return ContractOfferResult.insufficientFunds;
       _book(LedgerCategory.transfers, -(cost));
       player.wage = wage;
-      ContractEngine.renewContract(player);
+      ContractEngine.renewContract(
+        player,
+        endYear: negotiation.endYear,
+        option: negotiation.option,
+      );
       _save!.pendingContractNegotiation = null;
       _notify();
       await _persist();
@@ -390,7 +458,10 @@ extension GameStateTransfer on GameState {
       return ContractOfferResult.walkedAway;
     }
     negotiation.offeredWage = wage;
-    negotiation.counterWage = ContractEngine.counterOffer(player, wage);
+    negotiation.counterWage = max(
+        minAcceptable,
+        (ContractEngine.counterOffer(player, wage) * _optionFactor(negotiation))
+            .round());
     _notify();
     await _persist();
     return ContractOfferResult.countered;
@@ -648,19 +719,31 @@ extension GameStateTransfer on GameState {
 
   /// 昇格の条件(週俸・契約金・年数・背番号)。押す前に見せるため、
   /// 実行と分けて計算できるようにしてある。
-  YouthPromotionTerms? youthPromotionTermsFor(String playerId) {
+  YouthPromotionTerms? youthPromotionTermsFor(
+    String playerId, {
+    int? years,
+    bool option = false,
+  }) {
     if (_save == null) return null;
     final player = _save!.youthProspects
         .where((p) => p.id == playerId)
         .firstOrNull;
     if (player == null) return null;
-    return YouthPromotionEngine.termsFor(userTeam, player);
+    return YouthPromotionEngine.termsFor(userTeam, player,
+        years: years, option: option);
   }
 
   /// ユースから一軍へ上げる。プロ契約を結ぶので、契約金と週給予算の枠が
   /// 必要になる。足りない場合は[lastSigningBlockReason]に理由を入れて
   /// false を返す(押しても何も起きない状態にしない)。
-  Future<bool> promoteYouthProspect(String playerId) async {
+  ///
+  /// プロ契約は16歳から。契約の年数([years]、今のシーズンを含める)と
+  /// 延長オプション([option])を選べる。
+  Future<bool> promoteYouthProspect(
+    String playerId, {
+    int? years,
+    bool option = false,
+  }) async {
     if (_save == null) return false;
     lastSigningBlockReason = null;
     if (userTeam.players.length >= maxSquadSize) {
@@ -673,7 +756,15 @@ extension GameStateTransfer on GameState {
     final idx = _save!.youthProspects.indexWhere((p) => p.id == playerId);
     if (idx < 0) return false;
     final player = _save!.youthProspects[idx];
-    final terms = YouthPromotionEngine.termsFor(userTeam, player);
+    if (!YouthPromotionEngine.oldEnough(player)) {
+      lastSigningBlockReason = Tr.pick(
+          'プロ契約は${ContractEngine.minProfessionalAge}歳から結べます(${player.name}は${player.age}歳)。',
+          'Professional contracts start at ${ContractEngine.minProfessionalAge} (${player.name} is ${player.age}).');
+      _notify();
+      return false;
+    }
+    final terms = YouthPromotionEngine.termsFor(userTeam, player,
+        years: years, option: option);
 
     if (_save!.budget < terms.signingBonus) {
       lastSigningBlockReason = Tr.pick(
@@ -741,15 +832,27 @@ extension GameStateTransfer on GameState {
   ///
   /// 所属の無い選手は移籍ではないので、窓の外でも取れる(実在の決まりと
   /// 同じ)。登録の枠と年俸の枠は窓の中と同じに見る。
-  Future<bool> signFreeAgent(String playerId) async {
+  ///
+  /// 満了の年は[endYear](省略時は年齢に応じた年数)。延長オプション
+  /// ([option])を付けると週俸が5%上がる。
+  Future<bool> signFreeAgent(
+    String playerId, {
+    int? endYear,
+    bool option = false,
+  }) async {
     if (_save == null) return false;
     lastSigningBlockReason = null;
     final idx = _save!.freeAgents.indexWhere((p) => p.id == playerId);
     if (idx < 0) return false;
     if (!_registrationAllows(_save!.freeAgents[idx])) return false;
-    if (!_wageBudgetAllowsSigning(_save!.freeAgents[idx].wage)) return false;
+    final candidate = _save!.freeAgents[idx];
+    final wage = option
+        ? (candidate.wage * ContractEngine.optionWageFactor).round()
+        : candidate.wage;
+    if (!_wageBudgetAllowsSigning(wage)) return false;
     final player = _save!.freeAgents.removeAt(idx);
-    ContractEngine.renewContract(player);
+    player.wage = wage;
+    ContractEngine.renewContract(player, endYear: endYear, option: option);
     userTeam.players.add(player);
     _notify();
     await _persist();

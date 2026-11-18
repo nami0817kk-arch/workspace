@@ -6,12 +6,20 @@ class ContractNegotiation {
   int counterWage;
   int roundsUsed;
 
+  /// 結ぶ契約の満了の年。null は年齢に応じた既定の年数。
+  int? endYear;
+
+  /// クラブ側の1年延長オプションを付けるか。
+  bool option;
+
   ContractNegotiation({
     required this.playerId,
     required this.initialWage,
     required this.offeredWage,
     required this.counterWage,
     this.roundsUsed = 0,
+    this.endYear,
+    this.option = false,
   });
 
   Map<String, dynamic> toJson() => {
@@ -20,6 +28,8 @@ class ContractNegotiation {
         'offeredWage': offeredWage,
         'counterWage': counterWage,
         'roundsUsed': roundsUsed,
+        if (endYear != null) 'endYear': endYear,
+        if (option) 'option': true,
       };
 
   factory ContractNegotiation.fromJson(Map<String, dynamic> json) =>
@@ -29,6 +39,8 @@ class ContractNegotiation {
         offeredWage: json['offeredWage'] as int,
         counterWage: json['counterWage'] as int,
         roundsUsed: json['roundsUsed'] as int? ?? 0,
+        endYear: json['endYear'] as int?,
+        option: json['option'] as bool? ?? false,
       );
 }
 
