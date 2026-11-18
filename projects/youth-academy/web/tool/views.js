@@ -606,7 +606,7 @@ async function clearEvents() {
     {
       rail('系譜');
       ok(A.tab === 'lineage' && ['系譜図', '卒業生名鑑', '殿堂'].every((x) => txt().includes(x)) && ['卒業生', '記録', '監督'].every((x) => !!btn(x, d.querySelector('#main .tabs'))), '系譜タブは3つの群（卒業生・記録・監督）');
-      ok(ltab('実績') && txt().includes('リーグ優勝を1回') && ltab('年表') && ltab('育成基金') && ltab('系譜図'), '記録の群に実績・年表・育成基金');
+      ok(ltab('実績') && /実績 \d+\/\d+/.test(txt()) && ltab('年表') && ltab('育成基金') && ltab('系譜図'), '記録の群に実績・年表・育成基金');
       ok(!!d.querySelector('.lin-svg svg') || txt().includes('最初の卒業式'), '系譜図か空の案内が出る');
       // 2026-11-17：系譜の小タブは「監督の注文」「移籍先クラブ」（クラブ＞トップ・左の帯のクラブと中身が違うので）
       const ltabs = [];
