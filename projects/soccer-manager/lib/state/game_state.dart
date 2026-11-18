@@ -1318,9 +1318,6 @@ class GameState extends ChangeNotifier {
   /// 直近の試合の観客動員数(ダービーなら増幅される)。未実施の場合はnull。
   int? lastMatchAttendance;
 
-  /// 直近の試合が祝日だったら、その祝日の名前(客が増えた)。
-  String? lastMatchHoliday;
-
   /// 直近の獲得操作が週給予算でブロックされた場合の理由文言(表示用)。
   String? lastSigningBlockReason;
 

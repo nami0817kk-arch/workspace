@@ -100,8 +100,11 @@ void main() {
         () async {
       final gs = GameState();
       await gs.startNewGame('暦FC');
-      // 第1節の前日まで進めて、月末と入金日を済ませておく。
-      final firstDay = gs.dateOfMatchday(1);
+      // 第1節は8月1日(放映権の入金日)と重なることがあるので、第2節で見る。
+      await gs.playNextMatchdayQuickSim();
+      final firstDay = gs.dateOfMatchday(2);
+      expect(MoneyCalendar.broadcastIndexOf(firstDay), isNull);
+      expect(firstDay.day, isNot(MoneyCalendar.monthEnd(firstDay.year, firstDay.month).day));
       gs.debugAdvanceTodayTo(firstDay.subtract(const Duration(days: 1)));
       final wagesBefore = gs.currentLedger.of(LedgerCategory.playerWages);
       final broadcastBefore = gs.currentLedger.of(LedgerCategory.broadcast);

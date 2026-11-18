@@ -6,6 +6,7 @@ import 'package:soccer_manager/l10n/tr.dart';
 import 'package:soccer_manager/logic/board_engine.dart';
 import 'package:soccer_manager/logic/contract_engine.dart';
 import 'package:soccer_manager/logic/economy_scale.dart';
+import 'package:soccer_manager/logic/money_calendar.dart';
 import 'package:soccer_manager/logic/sponsor_engine.dart';
 import 'package:soccer_manager/models/ledger.dart';
 import 'package:soccer_manager/models/owner_legacy.dart';
@@ -162,6 +163,8 @@ void main() {
       ..sort((a, b) => b.marketValue.compareTo(a.marketValue));
     final stars = top.take(3).toList();
     await playSeason(game, keepOwner: true);
+    // 5・6月の給与まで払って、年度(7/1〜6/30)の締めの数字で見る。
+    game.debugAdvanceTodayTo(MoneyCalendar.fiscalYearEnd(s.league.season));
     final l = s.ledgerFor(s.league.season);
     Tr.language = AppLanguage.japanese;
     log.add('$tier部: 年収${formatMoney(l.operatingIncome)}'

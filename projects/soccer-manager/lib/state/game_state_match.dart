@@ -625,7 +625,6 @@ extension GameStateMatch on GameState {
     final holiday = userFixture == null
         ? null
         : MoneyCalendar.holidayName(dateOfMatchday(md), currentLeagueTheme);
-    lastMatchHoliday = holiday;
 
     // ダービーは客が増える。ただし**入れる人数以上からは入場料を取れない**。
     // 観客数だけを収容人数で頭打ちにして、収入には倍率をそのまま掛けていた

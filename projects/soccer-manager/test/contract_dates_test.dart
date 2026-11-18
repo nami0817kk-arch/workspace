@@ -146,6 +146,8 @@ void main() {
       final cpu = game.save!.league.teams.firstWhere((t) => t.id != 'user');
       final theirs = cpu.players.first..contractEndYear = clock;
       final cpuSize = cpu.players.length;
+      // シーズンを終えた5月末から進める(1月1日の仮契約の処理は済んだ扱い)。
+      game.save!.today = DateTime(clock, 5, 31);
 
       await game.startNextSeason();
 

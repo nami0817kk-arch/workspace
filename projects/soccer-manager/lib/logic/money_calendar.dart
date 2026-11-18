@@ -150,7 +150,8 @@ class MoneyCalendar {
           LeagueTheme.england => {
               fromEaster(-2): Tr.pick('聖金曜日', 'Good Friday'),
               fromEaster(1): Tr.pick('イースターマンデー', 'Easter Monday'),
-              _nthWeekday(year, 5, DateTime.monday, 1): '5月の祝日',
+              _nthWeekday(year, 5, DateTime.monday, 1):
+                  Tr.pick('5月の祝日', 'Early May bank holiday'),
               _lastWeekday(year, 5, DateTime.monday): Tr.pick('春の祝日', 'Spring bank holiday'),
               _lastWeekday(year, 8, DateTime.monday): Tr.pick('夏の祝日', 'Summer bank holiday'),
               DateTime(year, 12, 26): Tr.pick('ボクシング・デー', 'Boxing Day'),
