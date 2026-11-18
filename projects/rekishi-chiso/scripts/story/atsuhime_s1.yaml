@@ -1,0 +1,137 @@
+# 物語完結型ショート 篤姫 s1（2026-11-18）。本編 scripts/atsuhime-story.yaml（11/22 12:00 公開予定、https://youtu.be/QA9Y8z3ZYFY）から。11/23 9:00 に予約。
+# 形式は shorui_s1〜s5.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（dev/output/rekishi-chiso/research/天璋院_facts_20261117.yaml）と本編の # fact: だけ。
+# 絵：本編の AI 絵（out/story/atsuhime/main/ の A01〜A25）の切り出しだけ。新しい絵は作らない。人物は小さな後ろ姿だけ。
+# 切り口：「3日だけ」と言いくるめられて城を出た（本編 序章・第1章、atsuhime-50・51・52・11）。
+# hook＝その3日は、どうなったのか（答えはこのショートの中：何日たっても誰も来ず、二度と戻らなかった）。
+# tease＝城を出た篤姫に、薩摩は何を申し出たのか（答えは本編 第2章：年3万円の仕送り）。
+# 計算（自分で数え直した）：慶応4年4月10日＝1868年5月2日。翌日の4月11日＝5月3日に城の引き渡し。『禁苑史話』は昭和19年＝1944年。
+# 理解テスト：①篤姫の話 ②1868年5月2日、江戸城から一橋家の屋敷へ ③「3日だけ」と言われて身の回りの物だけで出た ④誰も訪ねて来ず、二度と城に戻らなかった
+title: "篤姫｜「3日だけ」のはずの立ち退き"
+yt_title: "篤姫は「3日だけ」と言いくるめられて江戸城を出た　身の回りの物だけを持って、二度と戻らなかった"
+description: |-
+  江戸城を出るのを渋る篤姫を、老中たちは「3日間」だけと言いくるめて、ようやく承知させた、と昭和19年の『禁苑史話』は書いています。付き添いの女中たちも、着替えと化粧の道具くらいで出ていきました。
+  1868年5月2日（慶応4年4月10日）、篤姫は一橋家の屋敷に移り、翌日、江戸城は官軍に引き渡されます。けれど、何日たっても、篤姫を訪ねてくる人も、知らせも、無かった。
+  本編では、城を出たあとの15年あまりを、当時の新聞・勝海舟の談話・昭和の本でたどっています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#篤姫"
+- "#天璋院"
+- "#江戸城"
+- "#幕末"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。人物の顔は描いていません。創作の台詞は入れていません。"
+art_dir: out/story/atsuhime
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: atsuhime_story_s1
+header:
+  tag: "篤姫（13代将軍家定の妻）"
+  title: "《3日だけ》のはずの、立ち退き"
+now:
+- {at: "江戸城を出た", text: "1868年　江戸城", point: 0}
+- {at: "5月2日", text: "1868年5月2日　一橋邸", point: 0}
+- {at: "引き渡された", text: "1868年5月3日　江戸城", point: 1}
+timeline:
+- {label: "5月2日"}
+- {label: "5月3日"}
+# 台本だけの読み替え（区切りの崩れを直す。readings.yaml は変えない）
+readings:
+  "一橋家の屋敷": "ヒトツバシケの屋敷"
+shots:
+  A25_1:
+    kind: "ai"
+    file: "atsuhime/main/A25.jpg"
+    focus: [0.3, 0.5]
+    move: "in"
+    must: "A25"
+  A02_2:
+    kind: "ai"
+    file: "atsuhime/main/A02.jpg"
+    focus: [0.4, 0.5]
+    move: "left"
+    must: "A02"
+  A06_3:
+    kind: "ai"
+    file: "atsuhime/main/A06.jpg"
+    focus: [0.6, 0.5]
+    move: "right"
+    must: "A06"
+  A05_4:
+    kind: "ai"
+    file: "atsuhime/main/A05.jpg"
+    focus: [0.55, 0.5]
+    move: "left"
+    must: "A05"
+  A02_6:
+    kind: "ai"
+    file: "atsuhime/main/A02.jpg"
+    focus: [0.82, 0.5]
+    move: "right"
+    must: "A02"
+  A07_7:
+    kind: "ai"
+    file: "atsuhime/main/A07.jpg"
+    focus: [0.78, 0.5]
+    move: "left"
+    must: "A07"
+  A24_8:
+    kind: "ai"
+    file: "atsuhime/main/A24.jpg"
+    focus: [0.45, 0.5]
+    move: "in"
+    must: "A24"
+  A10_9:
+    kind: "ai"
+    file: "atsuhime/main/A10.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    must: "A10"
+lines:
+  # fact: atsuhime-50
+- 語り: "篤姫は、3日だけ、と言われて、江戸城を出た。その3日は、どうなったのか。"
+  shot: A25_1
+  tone: 強調
+  pause: 0.12
+  # fact: atsuhime-50
+- 語り: "昭和19年の本、禁苑史話によれば、城を出るのを渋る篤姫に、老中たちは、ずいぶん手こずった。"
+  shot: A02_2
+  tone: 重い
+  pause: 0.12
+  # fact: atsuhime-50
+- 語り: "そこで、3日間だけ、と言いくるめて、ようやく承知させた。3日なら、身の回りの物で足りる。女中たちも、着替えと、化粧の道具くらいで、出ていった。"
+  shot: A06_3
+  tone: 重い
+  pause: 0.12
+  # fact: atsuhime-11
+- 語り: "1868年5月2日。篤姫は、江戸城を出て、一橋家の屋敷に移った。"
+  shot: A05_4
+  tone: しみじみ
+  pause: 0.12
+  # fact: atsuhime-52
+- 語り: "翌日、城は、官軍に引き渡された。空になった大奥の座敷には、雪舟や、狩野探幽の掛け軸が、きちんと掛かっていた。"
+  shot: A02_6
+  tone: しみじみ
+  pause: 0.12
+  # fact: atsuhime-51
+- 語り: "けれど、何日たっても、篤姫を訪ねてくる人も、知らせも、無かった。"
+  shot: A07_7
+  tone: 重い
+  pause: 0.12
+- 語り: "篤姫は、そのまま、二度と、城には戻らなかった。"
+  shot: A24_8
+  tone: しみじみ
+  pause: 0.12
+  # tease：答えは本編 第2章（atsuhime-32）
+- 語り: "では、城を出た篤姫に、ふるさとの薩摩は、何を申し出たのか。"
+  shot: A10_9
+  tone: 疑問
+  pause: 0.15

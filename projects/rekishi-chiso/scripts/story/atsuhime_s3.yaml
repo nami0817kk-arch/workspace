@@ -1,0 +1,151 @@
+# 物語完結型ショート 篤姫 s3（2026-11-18）。本編 scripts/atsuhime-story.yaml（11/22 12:00 公開予定、https://youtu.be/QA9Y8z3ZYFY）から。11/23 13:30 に予約。
+# 形式は shorui_s1〜s5.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（dev/output/rekishi-chiso/research/天璋院_facts_20261117.yaml）と本編の # fact: だけ。
+# 絵：本編の AI 絵（out/story/atsuhime/main/ の A01〜A25）の切り出しだけ。新しい絵は作らない。人物は小さな後ろ姿だけ。
+# 切り口：4歳で徳川を継いだ家達に、篤姫は木綿のふだん着しか着せなかった（本編 第3章、atsuhime-29・15・17・19）。
+# hook＝4歳で継いだ男の子に、篤姫は何を着せたのか（答えはこのショートの中：ふたこという木綿のふだん着）。
+# tease＝家達が戻った翌年、千駄ヶ谷の屋敷で篤姫に何が起きたのか（答えは本編 第5章：1883年、湯殿でつまずき中風、atsuhime-35）。
+# 計算（自分で数え直した）：家達 文久3年7月11日＝1863年8月24日生まれ。継いだ慶応4年閏4月29日＝1868年6月19日 → 満4歳。
+#   留学 1877〜1882 → 5年。1882年に数えで 1882−1863＋1＝20歳。翌年＝1883年（篤姫の死）。
+# 理解テスト：①篤姫と、4歳で徳川を継いだ家達の話 ②1868年に継ぎ、1871年に東京、1877〜1882年イギリス ③外出にも木綿のふだん着だけを着せた ④数え20歳で近衛家の泰子と結婚し、一家のあるじになった
+title: "篤姫｜4歳の当主に着せた服"
+yt_title: "4歳で徳川の家を継いだ家達に、篤姫が着せたのは木綿のふだん着だった　勝海舟が語った育て方"
+description: |-
+  1868年、徳川の家は、満4歳の田安亀之助、のちの徳川家達が継ぎました。東京へ出た家達の赤坂の屋敷の中で、篤姫は別の棟に暮らしています。
+  勝海舟は、家達はそういうふうに育てたから、たいへん質素だ、外に出るときでも、ふたこ（木綿のふだん着）のほかは着せなかった、と語っています。
+  イギリス留学から戻った1882年、篤姫は、家達を近衛家の泰子と結婚させました。本編では、城を出たあとの15年あまりをたどっています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#篤姫"
+- "#天璋院"
+- "#徳川家達"
+- "#勝海舟"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。人物の顔は描いていません。創作の台詞は入れていません。"
+art_dir: out/story/atsuhime
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: atsuhime_story_s3
+header:
+  tag: "篤姫と徳川家達"
+  title: "4歳の当主に、《木綿》を着せる"
+now:
+- {at: "1868年", text: "1868年　継ぐ", point: 0}
+- {at: "明治4年", text: "1871年　赤坂", point: 1}
+- {at: "1877年", text: "1877年　留学", point: 2}
+- {at: "明治15年", text: "1882年　結婚", point: 3}
+timeline:
+- {label: "1868"}
+- {label: "1871"}
+- {label: "1877"}
+- {label: "1882"}
+# 台本だけの読み替え（区切りの崩れを直す。readings.yaml は変えない）
+readings:
+  "近衛家の泰子": "近衛けのひろこ"
+shots:
+  A12_1:
+    kind: "ai"
+    file: "atsuhime/main/A12.jpg"
+    focus: [0.4, 0.5]
+    move: "in"
+    must: "A12"
+  A01_2:
+    kind: "ai"
+    file: "atsuhime/main/A01.jpg"
+    focus: [0.68, 0.5]
+    move: "left"
+    must: "A01"
+  A11_3:
+    kind: "ai"
+    file: "atsuhime/main/A11.jpg"
+    focus: [0.3, 0.5]
+    move: "right"
+    must: "A11"
+  A20_4:
+    kind: "ai"
+    file: "atsuhime/main/A20.jpg"
+    focus: [0.7, 0.5]
+    move: "left"
+    must: "A20"
+  A12_5:
+    kind: "ai"
+    file: "atsuhime/main/A12.jpg"
+    focus: [0.62, 0.5]
+    move: "right"
+    must: "A12"
+  A13_6:
+    kind: "ai"
+    file: "atsuhime/main/A13.jpg"
+    focus: [0.35, 0.5]
+    move: "in"
+    must: "A13"
+  A14_7:
+    kind: "ai"
+    file: "atsuhime/main/A14.jpg"
+    focus: [0.45, 0.5]
+    move: "left"
+    must: "A14"
+  A11_8:
+    kind: "ai"
+    file: "atsuhime/main/A11.jpg"
+    focus: [0.6, 0.5]
+    move: "in"
+    must: "A11"
+  A21_9:
+    kind: "ai"
+    file: "atsuhime/main/A21.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    must: "A21"
+lines:
+  # fact: atsuhime-29
+- 語り: "4歳で、徳川の家を継いだ男の子に、篤姫は、何を着せたのか。"
+  shot: A12_1
+  tone: 強調
+  pause: 0.12
+- 語り: "1868年、徳川の家は、満で4歳の、田安亀之助が継いだ。のちの、徳川家達だ。"
+  shot: A01_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: atsuhime-15
+- 語り: "明治4年、家達は、東京へ出る。やがて、赤坂の家達の屋敷の中で、篤姫は、別の棟に暮らした。"
+  shot: A11_3
+  tone: しみじみ
+  pause: 0.12
+  # fact: atsuhime-29
+- 語り: "勝海舟は、こう語っている。家達は、そういうふうに育てたから、たいへん質素だ。"
+  shot: A20_4
+  tone: しみじみ
+  pause: 0.12
+  # fact: atsuhime-29
+- 語り: "外に出るときでも、ふたこという、木綿のふだん着のほかは、着せなかった。"
+  shot: A12_5
+  tone: 強調
+  pause: 0.12
+  # fact: atsuhime-17
+- 語り: "1877年、家達は、イギリスへ留学する。戻ったのは、5年後の、明治15年だった。"
+  shot: A13_6
+  tone: しみじみ
+  pause: 0.12
+  # fact: atsuhime-19
+- 語り: "その年、篤姫は、近衛家の泰子を、家達の妻に迎える。篤姫自身も、近衛家の養女になって、将軍に嫁いだ人だった。"
+  shot: A14_7
+  tone: しみじみ
+  pause: 0.12
+- 語り: "4歳で家を継いだ男の子は、数えで20歳。一家のあるじに、なった。"
+  shot: A11_8
+  tone: しみじみ
+  pause: 0.12
+  # tease：答えは本編 第5章（atsuhime-35）
+- 語り: "では、家達が戻った翌年、千駄ヶ谷の屋敷で、篤姫に、何が起きたのか。"
+  shot: A21_9
+  tone: 疑問
+  pause: 0.15
