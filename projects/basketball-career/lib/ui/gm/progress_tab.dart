@@ -10,6 +10,7 @@ import '../art/title_art.dart';
 import '../gm_controller.dart';
 import 'block_report_screen.dart';
 import 'box_score.dart';
+import 'calendar_screen.dart';
 import 'coaches_screen.dart';
 import 'common.dart';
 import 'draft_show_screen.dart';
@@ -288,7 +289,7 @@ class ProgressTab extends StatelessWidget {
       if (car.form.isNotEmpty) _formCard(context, car),
       ..._offerCard(context, car),
       ..._inboxCard(context, car),
-      ..._scheduleCard(car),
+      ..._scheduleCard(context, car),
       if (car.phase == Phase.season) NextOpponentCard(car: car),
       ..._columnCard(car),
       _pressCard(car),
@@ -365,7 +366,7 @@ class ProgressTab extends StatelessWidget {
   }
 
   /// これからの日程(次の5試合)。
-  List<Widget> _scheduleCard(Career car) {
+  List<Widget> _scheduleCard(BuildContext context, Career car) {
     final next = car.upcoming();
     if (next.isEmpty) return const [];
     return [
@@ -384,6 +385,15 @@ class ProgressTab extends StatelessWidget {
               Text(record(car.teams[opp]), style: const TextStyle(fontSize: 12, color: GmColors.sub)),
             ]),
           ),
+        Align(
+          alignment: Alignment.centerRight,
+          child: TextButton.icon(
+            key: const Key('open-calendar'),
+            onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => CalendarScreen(c: c))),
+            icon: const Icon(Icons.calendar_month_rounded, size: 16),
+            label: const Text('日程表(82試合)を見る', style: TextStyle(fontSize: 12.5)),
+          ),
+        ),
       ]),
     ];
   }
