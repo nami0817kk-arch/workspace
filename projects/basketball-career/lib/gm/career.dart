@@ -1756,6 +1756,7 @@ class Career {
       }
       storyIds = [];
       stayIds = [];
+      seasonLog = [];
       if (t.index != mine) _aiTrim(t);
     }
     _setModes();
@@ -1820,6 +1821,30 @@ class Career {
 
   /// 1週間に進める節の数。
   static const daysPerWeek = 3;
+
+  /// 今季の自分の試合([相手, ホームなら1, 自分の点, 相手の点]、古い順)。日程表に使う。
+  List<List<int>> seasonLog = [];
+
+  /// 順位が決まったら主力を休ませる(はじめは切。自動で遊ぶ確かめは使わない)。
+  bool restWhenSettled = false;
+
+  /// 順位が決まったあとに休ませる、主力の疲れの線。
+  static const settledRestLine = 25;
+
+  /// 残りの試合で、プレーオフに出るか出ないかがもう決まった(残り10試合以内)。
+  bool get standingSettled {
+    if (phase != Phase.season) return false;
+    final left = gamesPerSeason - roundAt;
+    if (left > 10) return false;
+    final table = standings(teams, east: me.east);
+    final rank = table.indexWhere((t) => t.index == mine);
+    if (rank < 0 || table.length < 11) return false;
+    // 6位以内で、7位に残り試合より多く勝ち越している(プレーインに落ちない)
+    if (rank < 6 && me.wins - table[6].wins > left) return true;
+    // 11位以下で、10位に残り試合でも追いつけない
+    if (rank >= 10 && table[9].wins - me.wins > left) return true;
+    return false;
+  }
 
   /// 采配する試合の乱数。リーグの乱数を使わず、季と節から決める(見ながら進めても、確定しても同じ試合になる)。
   int get liveSeed => (seed * 1000003 + season * 9176 + roundAt * 131 + 0x2545) & 0x7fffffff;
@@ -1906,6 +1931,10 @@ class Career {
     roundAt += n;
     _tickTenDay(n);
     lastGames = [...lastGames, ...games];
+    seasonLog = [
+      ...seasonLog,
+      for (final g in games) [g.opponentOf(mine), g.home == mine ? 1 : 0, g.ptsOf(mine), g.ptsAgainst(mine)],
+    ];
     form = [...form, for (final g in games) g.ptsOf(mine) - g.ptsAgainst(mine)];
     if (form.length > formLength) form = form.sublist(form.length - formLength);
     _checkGameRecords(games);
@@ -2112,11 +2141,16 @@ class Career {
   /// 自分の試合の前に、休ませる選手を決めて、その試合だけ出られないようにする(試合のあとに戻す)。
   /// 出られる選手が8人を切るときは休ませない。乱数は使わない。
   List<Player> _restBeforeGame() {
-    if (restIds.isEmpty) return const [];
+    final settled = restWhenSettled && standingSettled;
+    if (restIds.isEmpty && !settled) return const [];
     var healthy = me.roster.where((p) => p.injured == 0).length;
     final out = <Player>[];
-    final cands = [for (final p in me.roster) if (restIds.contains(p.id) && p.injured == 0 && p.wear >= wearRestLine) p]
-      ..sort((a, b) => b.wear.compareTo(a.wear));
+    // 順位が決まったあとは、疲れ$settledRestLine以上の主力(先発の5人)も休ませる
+    final starters = {for (final p in me.order.take(5)) p.id};
+    final cands = [
+      for (final p in me.roster)
+        if (p.injured == 0 && ((restIds.contains(p.id) && p.wear >= wearRestLine) || (settled && starters.contains(p.id) && p.wear >= settledRestLine))) p,
+    ]..sort((a, b) => b.wear.compareTo(a.wear));
     for (final p in cands) {
       if (healthy <= 8) break;
       p.injured = 1;
@@ -4184,6 +4218,8 @@ class Career {
         'asi': allStarIds,
         'hg': haggled,
         'myt': [for (final t in myTrades) t.toJson()],
+        'slg': seasonLog,
+        if (restWhenSettled) 'rws': true,
         'aga': {for (final e in agentAsks.entries) '${e.key}': e.value},
         'fp': fanPosts,
         'so': simStops,
@@ -4310,6 +4346,8 @@ class Career {
       ..allStarIds = [for (final x in (j['asi'] as List? ?? const [])) x as int]
       ..haggled = [for (final x in (j['hg'] as List? ?? const [])) x as int]
       ..myTrades = [for (final x in (j['myt'] as List? ?? const [])) MyTrade.fromJson(Map<String, dynamic>.from(x as Map))]
+      ..seasonLog = [for (final r in (j['slg'] as List? ?? const [])) [for (final x in r as List) x as int]]
+      ..restWhenSettled = j['rws'] == true
       ..agentAsks = {for (final e in ((j['aga'] as Map?) ?? const {}).entries) int.parse(e.key as String): e.value as int}
       ..fanPosts = [for (final x in (j['fp'] as List? ?? const [])) x as String]
       ..simStops = j['so'] == null ? [SimStop.offer.index, SimStop.injury.index] : [for (final x in j['so'] as List) x as int]

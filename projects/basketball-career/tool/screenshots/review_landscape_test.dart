@@ -151,6 +151,16 @@ void main() {
         await t.pumpAndSettle();
       }
     });
+    final cal = careerAt(3, 12)..startSeason();
+    cal.playBlock();
+    cal.playWeek();
+    await _shoot(t, '4k_calendar', await _with(cal), act: (t) async {
+      final btn = find.byKey(const Key('open-calendar'));
+      await t.scrollUntilVisible(btn, 200, scrollable: find.descendant(of: find.byType(ProgressTab), matching: find.byType(Scrollable)).first);
+      await t.pumpAndSettle();
+      await t.tap(btn);
+      await t.pumpAndSettle();
+    });
     await _shoot(t, '4g_wear', await _with(tired), act: (t) async {
       final card = find.text('疲れがたまっている');
       await t.scrollUntilVisible(card, 200, scrollable: find.descendant(of: find.byType(ProgressTab), matching: find.byType(Scrollable)).first);
