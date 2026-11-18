@@ -74,6 +74,18 @@ const w = dom.window;
 const d = w.document;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const btn = (t, scope) => [...(scope || d).querySelectorAll('button')].find((b) => b.textContent.includes(t) && !b.disabled);
+// 系譜の小タブは3つの群（卒業生・記録・監督）に分かれている（2026-11-18）。群を切り替えながら探して押す
+const ltab = (label) => {
+  const find = () => [...d.querySelectorAll('#main .tabs button:not(.grp)')].find((b) => b.textContent.trim() === label);
+  for (const g of ['卒業生', '記録', '監督']) {
+    if (find()) break;
+    const gb = [...d.querySelectorAll('#main .tabs button.grp')].find((x) => x.textContent.trim() === g);
+    if (gb) gb.click();
+  }
+  const b = find();
+  if (b) b.click();
+  return !!b;
+};
 // 画面に出ている文字だけを見る（ページに埋め込んだスクリプトの文字を拾うと、何でも通ってしまう）
 const txt = () => d.getElementById('app').textContent;
 const rail = (k) => btn(k, d.getElementById('rail')).click();
@@ -230,9 +242,20 @@ async function clearEvents() {
     const mb = [...d.querySelectorAll('#main button')].find((b) => b.textContent.startsWith('ご飯に連れて行く'));
     ok(mb && mb.disabled && /週に1回/.test(mb.dataset.why || ''), '続けては押せず、理由が付く ' + (mb && [mb.disabled, mb.dataset.why, mb.textContent].join('|')));
   }
-  btn('GK', d.querySelector('.fm-row')).click();
-  btn('怪我', d.querySelector('.fm-row')).click();
-  btn('全員', d.querySelector('.fm-row')).click();
+  // 絞り込みは選択欄1つ（2026-11-18）。選ぶと一覧が絞られ、件数が選択肢に出る
+  {
+    const fs = d.querySelector('select[title="絞り込み"]');
+    ok(!!fs && fs.options.length === 12 && /GK（\d+）/.test(fs.textContent), '選手の絞り込みは選択欄1つで件数つき');
+    const pick = (v) => { fs.value = v; fs.dispatchEvent(new w.Event('change')); };
+    pick('GK');
+    ok([...d.querySelectorAll('.plist.scroll .pitem')].every((b) => /GK/.test(b.textContent)), 'GKで絞ると GK だけ');
+    pick('inj');
+    pick('all');
+    ok(d.querySelectorAll('.plist.scroll .pitem').length === Object.keys(A.w.players).length, '全員に戻る');
+    // 名前は詳しい画面の帯に出る（2026-11-18）
+    const sp = A.w.players[A.pSel];
+    ok(!!d.querySelector('#main .pname') && d.querySelector('#main .pname').textContent.includes(sp.name), '選手の帯に名前');
+  }
   btn('Bに回す') || btn('Aに上げる');
   rail('クラブ');
   ok(txt().includes('予算と施設') && txt().includes('概要') && txt().includes('順位と日程'), 'クラブの8項目');
@@ -248,7 +271,7 @@ async function clearEvents() {
     if (k === 'スカウト') ok(txt().includes('来年の高1') && txt().includes('スカウトに出る'), 'スカウトの画面');
     if (k === '順位と日程') ok(txt().includes('プレミアリーグ') || txt().includes('プリンスリーグ') || txt().includes('県リーグ'), '順位表');
     if (k === '順位と日程') ok(/今年の日程（いま\d+週）/.test(txt()) && txt().includes('セレクション') && txt().includes('卒業式') && [...d.querySelectorAll('#main .chip')].some((c) => c.textContent === '今'), '今年の日程は表で、今週の行に印（2026-11-16）');
-    if (k === 'スタッフ') ok(/いまの.+（能力\d+）→ 能力\d+（[+-]?\d+）/.test(txt()) || txt().includes('はいません'), 'スタッフ候補にいまのスタッフとの差（2026-11-16）');
+    if (k === 'スタッフ') ok(/（いま .+・能力\d+）/.test(txt()) && /[+-]?\d+・給料[+−]/.test(txt()), 'スタッフ候補は役ごとに、いまのスタッフとの差を1行で（2026-11-18）');
     // 2026-11-17：お金は YA.yen（「万」だけの表示をしない）
     if (k === '予算と施設' || k === 'スタッフ' || k === 'スカウト') { const mt = d.getElementById('main').textContent; ok(!/\d万(?![円人回])/.test(mt), 'お金の表示に「万」だけが出ない（' + k + '） ' + ((mt.match(/.{0,8}\d万(?![円人回]).{0,4}/) || [''])[0])); }
   }
@@ -260,7 +283,7 @@ async function clearEvents() {
     await sleep(10);
     const hb = btn('採用');
     if (hb) {
-      const role = hb.closest('.card').querySelector('.chip.pers').textContent;
+      const role = hb.closest('.pitem').dataset.role;
       const before = A.w.club.staff.find((x) => x.role === role);
       hb.click();
       const sh = d.querySelector('.sheet');
@@ -286,7 +309,7 @@ async function clearEvents() {
   btn('記録').click();
   ok(txt().includes('主な記録') && txt().includes('リーグの履歴'), '記録の画面');
   btn('設定', d.getElementById('main')).click();
-  btn('卒業生名鑑').click();
+  ok(!btn('卒業生名鑑', d.querySelector('#main .tabs')), 'ほかに卒業生名鑑の重複が無い（系譜にまとめた）');
 
   // 選手のいない出来事（クラブの要望・スタッフの引き抜き）でも、画面が開いて選べる
   for (const [id, x] of [['club', 0], ['club', 1], ['club', 2], ['poach', 0]]) {
@@ -450,8 +473,22 @@ async function clearEvents() {
   ok(A.w.phase === 'after' && A.w.rec.w + A.w.rec.d + A.w.rec.l === 1, '試合の結果が名簿の世界に入る');
   btn('ホームへ（次の週へ）').click();
   ok(txt().includes('次の週へ') && txt().includes('試合が終わりました'), '試合後のホーム');
-  btn('次の週へ').click();
-  ok(A.w.week === 2 && A.w.phase === 'plan', '次の週へ進む');
+  // 同じ月なら「次の週へ ▶」1回で練習のまま進む。週のはじめで止まりたいときは下の小さいボタン（2026-11-18）
+  ok(!!btn('次の週へ ▶') && w.YA.weekChainable(A.w), '同じ月は「次の週へ ▶」で練習まで進める');
+  btn('練習やスカウトを見てから進む').click();
+  ok(A.w.week === 2 && A.w.phase === 'plan', '次の週へ進む（週のはじめで止まる）');
+  {
+    // 押したら1回で週のはじめを通り越す（出来事か試合か週の終わりまで）
+    const saved = JSON.stringify(A.w);
+    A.w.phase = 'after'; A.w.matchDone = true;
+    w.YA._ui.render();
+    rail('ホーム');
+    btn('次の週へ ▶').click();
+    ok(A.w.week === 3 && A.w.phase !== 'plan', '「次の週へ ▶」1回で練習まで進む ' + A.w.phase);
+    if (d.querySelector('.sheet')) d.querySelector('.sheet').remove();
+    A.w = JSON.parse(saved);
+    w.YA._ui.render();
+  }
 
   // 試合のない週：1年を最後まで進めて、卒業式と入学
   A.w.week = 40;
@@ -491,7 +528,12 @@ async function clearEvents() {
     // 設定：セーブ枠・書き出し・復元・効果音
     rail('ほか');
     btn('設定', d.getElementById('main')).click();
-    ok(txt().includes('セーブ枠') && txt().includes('効果音') && !!btn('書き出す') && !!btn('復元する'), '設定の画面');
+    // 設定は4つの小タブ（2026-11-18）
+    ok(['表示と音', 'お知らせ', '名前', 'セーブ・ショップ'].every((x) => !!btn(x, d.querySelector('.settabs'))), '設定は4つの小タブ');
+    btn('表示と音', d.querySelector('.settabs')).click();
+    ok(txt().includes('効果音') && txt().includes('文字の大きさ') && !txt().includes('セーブ枠（'), '設定の表示と音');
+    btn('セーブ・ショップ', d.querySelector('.settabs')).click();
+    ok(txt().includes('セーブ枠') && !!btn('書き出す') && !!btn('復元する'), '設定の画面');
     ok(txt().includes('点検用：新しい世界でシミュレーション') && !!btn('実行') && !!btn('10年'), '点検用シミュレーションの設定');
     const before = JSON.stringify(A.w.year) + A.w.clubName;
     btn('実行').click();
@@ -520,21 +562,25 @@ async function clearEvents() {
     }
     await sleep(20);
     ok(!d.querySelector('.sheet') && A.w.players, '書き出したデータを復元できる');
-    rail('ほか');
-    btn('卒業生名鑑').click();
+    rail('系譜');
+    ltab('卒業生名鑑');
     ok(d.querySelectorAll('#main .pitem').length >= 12, '卒業生が名鑑に並ぶ');
     // 段2：設定の文字の大きさ・お知らせの重さ、実績、名前の書き換え
     rail('ほか');
     btn('設定', d.getElementById('main')).click();
-    ok(txt().includes('文字の大きさ') && txt().includes('お知らせの重さ') && txt().includes('必ず止める'), '設定に文字の大きさとお知らせの重さ');
+    btn('お知らせ', d.querySelector('.settabs')).click();
+    ok(txt().includes('お知らせの重さ') && txt().includes('必ず止める') && !!btn('全部おすすめに戻す') === Object.keys(A.w.noticeTier || {}).length > 0, '設定のお知らせの重さ（全部おすすめに戻す）');
+    btn('表示と音', d.querySelector('.settabs')).click();
+    ok(txt().includes('文字の大きさ'), '設定に文字の大きさ');
     btn('大', d.getElementById('main')).click();
     ok(d.getElementById('app').style.zoom !== '', '文字の大きさが変わる');
     btn('標準', d.getElementById('main')).click();
     rail('ほか');
-    btn('実績と引退').click();
+    btn('引退', d.querySelector('#main .tabs')).click();
     rail('ほか');
     btn('設定', d.getElementById('main')).click();
-    ok(txt().includes('名前の書き換え') && txt().includes('クラブ名') === false || txt().includes('名前の書き換え'), '設定に名前の書き換え');
+    btn('名前', d.querySelector('.settabs')).click();
+    ok(txt().includes('名前の書き換え'), '設定に名前の書き換え');
     rail('練習');
     ok(txt().includes('先週と同じ') && txt().includes('おまかせ') && txt().includes('疲れの高い子'), '練習に一括ボタン');
     ok(!!A.w.lastPlan && !!btn('先週と同じ'), '週を進めたあとは「先週と同じ」を押せる');
@@ -544,8 +590,8 @@ async function clearEvents() {
     btn('下級生を優先').click();
     ok(A.w.bCtl && A.w.bCtl.policy === 'young', 'Bの起用方針を選べる');
     rail('ほか');
-    btn('実績と引退').click();
-    ok(txt().includes('実績') && txt().includes('引退する') && txt().includes('リーグ優勝を1回'), '実績と引退の画面');
+    btn('引退', d.querySelector('#main .tabs')).click();
+    ok(txt().includes('実績') && txt().includes('引退する') && !txt().includes('リーグ優勝を1回'), '引退の画面（実績の一覧は系譜へ）');
     // 取り返せない操作の確認：確定は動詞の赤いボタン、「やめる」が主ボタン（2026-11-17）
     {
       btn('引退する', d.getElementById('main')).click();
@@ -559,14 +605,16 @@ async function clearEvents() {
     // 2段目その1：系譜タブ（決定139）
     {
       rail('系譜');
-      ok(A.tab === 'lineage' && ['系譜図', '卒業生名鑑', '殿堂', '実績', '年表', '育成基金'].every((x) => txt().includes(x)), '系譜タブに6つの見出し');
+      ok(A.tab === 'lineage' && ['系譜図', '卒業生名鑑', '殿堂'].every((x) => txt().includes(x)) && ['卒業生', '記録', '監督'].every((x) => !!btn(x, d.querySelector('#main .tabs'))), '系譜タブは3つの群（卒業生・記録・監督）');
+      ok(ltab('実績') && txt().includes('リーグ優勝を1回') && ltab('年表') && ltab('育成基金') && ltab('系譜図'), '記録の群に実績・年表・育成基金');
       ok(!!d.querySelector('.lin-svg svg') || txt().includes('最初の卒業式'), '系譜図か空の案内が出る');
       // 2026-11-17：系譜の小タブは「監督の注文」「移籍先クラブ」（クラブ＞トップ・左の帯のクラブと中身が違うので）
-      const ltabs = [...d.querySelectorAll('.tabs button')].map((b) => b.textContent.trim());
+      const ltabs = [];
+      for (const g of ['卒業生', '記録', '監督']) { btn(g, d.querySelector('#main .tabs')).click(); ltabs.push(...[...d.querySelectorAll('#main .tabs button:not(.grp)')].map((b) => b.textContent.trim())); }
       ok(ltabs.includes('監督の注文') && ltabs.includes('移籍先クラブ') && !ltabs.includes('トップ') && !ltabs.includes('クラブ'), '系譜の小タブの名前が、ほかのトップ・クラブと重ならない ' + ltabs.join('・'));
       for (const n of ['ライバル', 'トップ', '移籍', 'クラブ']) {
         const label = { トップ: '監督の注文', クラブ: '移籍先クラブ' }[n] || n;
-        [...d.querySelectorAll('.tabs button')].find((b) => b.textContent.trim() === label).click();
+        ltab(label);
         ok(errors.length === 0, n + 'の画面で例外なし: ' + errors.slice(0, 2).join('|'));
         if (n === 'ライバル') ok(txt().includes('名物のライバル監督') && txt().includes('対戦成績'), 'ライバル監督の画面');
         if (n === 'トップ') ok(txt().includes('トップ監督の注文'), 'トップ監督の注文の画面');
@@ -596,14 +644,14 @@ async function clearEvents() {
         sheets[sheets.length - 1].remove();
       }
       for (const n of ['実績', '図鑑', '殿堂', '年表', '育成基金', '卒業生名鑑']) {
-        btn(n, d.querySelector('.tabs')).click();
+        ok(ltab(n), n + 'の小タブがある');
         ok(errors.length === 0, n + 'の画面で例外なし: ' + errors.slice(0, 2).join('|'));
       }
       // 育成基金：お金は YA.yen、使う前に確かめ、結果を知らせる（2026-11-17）
       {
         const f0 = A.w.fund;
         A.w.fund = 12000;
-        btn('育成基金', d.querySelector('.tabs')).click();
+        ltab('育成基金');
         ok(txt().includes('育成基金 1.2億円') && !/\d万(?![円人回])/.test(txt()), '育成基金の額は YA.yen（12000万円 → 1.2億円）');
         btn('使う', d.getElementById('main')).click();
         const sh = d.querySelector('.sheet');
@@ -613,19 +661,19 @@ async function clearEvents() {
         const t = d.getElementById('ya-toast');
         ok(A.w.fund < 12000 && !!t && /使いました/.test(t.textContent) && /残り/.test(t.textContent), '使うと結果の文が出る ' + (t && t.textContent));
         A.w.fund = f0;
-        btn('図鑑', d.querySelector('.tabs')).click();
+        ltab('図鑑');
         ok(![...d.querySelectorAll('#main .card[title]')].some((c) => c.getAttribute('title')), '図鑑の手がかりは title ではなく本文に');
-        btn('実績', d.querySelector('.tabs')).click();
+        ltab('実績');
         ok(d.querySelectorAll('#main .chip[data-tip]').length > 0 && !d.querySelector('#main .chip[title]'), '実績の銅銀金の札は押すと名前が出る');
       }
-      btn('図鑑', d.querySelector('.tabs')).click();
+      ltab('図鑑');
       ok(txt().includes('覚醒の図鑑 ') && txt().includes('/20') && txt().includes('？'), '図鑑：20種が並び、未発見は？');
-      btn('実績', d.querySelector('.tabs')).click();
+      ltab('実績');
       ok(txt().includes('/69') && txt().includes('銅'), '実績は69個の銅銀金');
       ok(d.querySelectorAll('#main .plist > .pitem').length === 23, '実績は銅銀金を1行にまとめて23行（2026-11-16）');
-      btn('図鑑', d.querySelector('.tabs')).click();
+      ltab('図鑑');
       { const g = [...d.querySelectorAll('#main .scroll')].find((e) => e.style.display === 'grid'); ok(!!g && g.children.length === 20 && g.style.gridTemplateColumns.includes('repeat(4'), '図鑑は4列の札（2026-11-16）'); }
-      btn('実績', d.querySelector('.tabs')).click();
+      ltab('実績');
       rail('ホーム');
       ok(txt().includes('系譜') && txt().includes('次の実績'), 'ホームに系譜の小窓と次の実績');
       rail('ほか');
@@ -698,8 +746,12 @@ async function clearEvents() {
     ok(!!sortSel && sortSel.options.length === 7, '選手一覧に並び替え');
     if (sortSel) { sortSel.value = 'ovr'; sortSel.dispatchEvent(new w.Event('change')); }
     await sleep(10);
-    btn('様子').click();
-    ok(txt().includes('他の子と比べる') && txt().includes('今年の育成計画') && txt().includes('伸び悩みの診断') && txt().includes('位置の転向練習'), '選手の様子に比べる・育成計画・診断・転向');
+    btn('育て方').click();
+    ok(txt().includes('今年の育成計画') && txt().includes('伸び悩みの診断') && txt().includes('位置の転向練習') && !txt().includes('この子との記憶'), '選手の育て方に育成計画・診断・転向');
+    btn('思い出').click();
+    ok(!txt().includes('今年の育成計画') && (txt().includes('最近のこと') || txt().includes('まだ思い出はありません')), '選手の思い出は別の小タブ');
+    btn('…').click();
+    ok(!!btn('PK戦のキッカー') && !!btn('名前を変える'), '「…」に比べる・PK・名前');
     btn('他の子と比べる').click();
     ok(!!d.querySelector('.sheet') && txt().includes('比べる子を選ぶ'), '比べる画面が開く');
     const sh2 = d.querySelector('.sheet');
@@ -720,6 +772,7 @@ async function clearEvents() {
       Y.shopPrices = {};
       rail('ほか');
       btn('設定', d.getElementById('main')).click();
+      btn('セーブ・ショップ', d.querySelector('.settabs')).click();
       await sleep(10);
       ok(/セーブ枠（いま\d枠・無料は1枠）/.test(txt()), '課金: セーブ枠の見出しは「いまN枠・無料は1枠」');
       ok(/最後に保存できた時刻|まだ保存していません/.test(txt()), '課金: 設定に最後に保存できた時刻');

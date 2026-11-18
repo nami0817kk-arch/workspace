@@ -82,7 +82,7 @@
   YA.WEEK_GO = WEEK_GO;
   // お知らせの重要度の札（色だけにしない）
   const NOTICE_TAG = { 1: ['大事', '#d63a3a', '#fff'], 2: ['通常', '#dbe9ff', '#134a9e'], 3: ['記録', '#eef2f8', '#5b6a85'] };
-  const noticeTag = (et) => { const t = NOTICE_TAG[et] || NOTICE_TAG[3]; return h('span', { class: 'ntag', style: `flex:none;font-size:10px;font-weight:800;line-height:1.5;padding:0 4px;border-radius:5px;margin-top:1px;background:${t[1]};color:${t[2]}` }, t[0]); };
+  const noticeTag = (et) => { const t = NOTICE_TAG[et] || NOTICE_TAG[3]; return h('span', { class: 'ntag', style: `flex:none;font-size:11px;font-weight:800;line-height:1.5;padding:0 4px;border-radius:5px;margin-top:1px;background:${t[1]};color:${t[2]}` }, t[0]); };
   YA.noticeTagText = (et) => (NOTICE_TAG[et] || NOTICE_TAG[3])[0];
 
   // ---------- ホーム ----------
@@ -98,7 +98,8 @@
     left.append(h('div', { class: 'row', style: 'gap:6px' }, YA.emblemEl(w, w.clubName, 24), h('div', { class: 'sub' }, w.clubName)),
       tn ? h('button', { class: 'chip gray', style: 'align-self:flex-start;border:none;cursor:pointer;min-height:34px;padding:4px 12px;white-space:normal;text-align:left;max-width:100%', onclick: () => { U().app.tab = 'club'; U().app.ct = 'top'; rerender(); } }, `トップ：${w.top.name}（${tn.league} 第${tn.round}節 ${tn.rank}位）`) : null,
       ...prom.map((x) => h('div', { class: 'fit bad', style: 'align-self:flex-start' }, `約束：${x.name.split(' ')[0]}を${x.why.replace('保護者に、', '')}（あと${Math.max(0, x.until - w.week + 1)}週）`)), h('div', { class: 'h', style: 'font-size:19px' }, `${w.year}年目  ${cal.month}第${cal.nth}週`), h('div', { class: 'note' }, `${YA.weekLabel(w) || '育成の週'} ／ ${YA.levelNames(w)[w.league.level - 1]} ${YA.myRank(w)}位 ／ ${w.rec.w}勝${w.rec.d}分${w.rec.l}敗`));
-    left.append(h('div', { style: 'border-top:1px dashed var(--line);padding-top:6px' }, h('div', { class: 'note' }, '今週の試合'), opp ? h('div', {}, h('b', {}, `${opp.home ? 'ホーム' : 'アウェイ'} vs ${opp.name}`), h('div', { class: 'note' }, opp.desc)) : h('div', { class: 'sub' }, 'なし（試合のない期間）。育成に集中できます')));
+    // 今週の試合は「次の週へ」のすぐ下に（2026-11-18 ユーザビリティ6：左の列の下に隠れていた）
+    const matchEl = h('div', { class: 'card', style: 'padding:5px 8px;background:#f5f8fd;box-shadow:none;flex:none' }, opp ? h('div', { class: 'row', style: 'gap:5px' }, h('span', { class: 'chip ' + (opp.home ? 'pers' : 'gray'), style: 'flex:none' }, opp.home ? 'ホーム' : 'アウェイ'), h('b', { style: 'min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap' }, `今週 vs ${opp.name}`)) : h('div', { class: 'sub' }, '今週は試合なし。育成に集中できます'), opp && opp.desc ? h('div', { class: 'note', style: 'display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden' }, opp.desc) : null);
     const S = YA.summaryOf(w);
     left.append(h('div', { class: 'row', style: 'flex-wrap:wrap;gap:4px' }, S.injured.length ? h('span', { class: 'fit bad' }, '怪我 ' + S.injured.length + '人') : null, S.tired.length ? h('span', { class: 'fit bad' }, '疲れ ' + S.tired.length + '人') : null, S.lowconf.length ? h('span', { class: 'fit bad' }, '自信なし ' + S.lowconf.length + '人') : null, S.hot.length ? h('span', { class: 'fit good' }, '好調・成長期 ' + S.hot.length + '人') : null));
     left.append(h('div', { class: 'grow' }));
@@ -125,11 +126,19 @@
     } else if (w.phase === 'match') {
       act.append(h('button', { class: 'btn pri', style: 'min-height:42px;font-size:14px', onclick: () => { U().app.tab = 'match'; U().app.free = false; U().app.view = 'pre'; rerender(); } }, '試合へ（布陣と戦い方を決める）'));
     } else {
-      act.append(h('div', { class: 'note' }, w.matchDone ? '試合が終わりました。Bチームの試合も済んでいます。' : '今週はここまで。'), h('button', { class: 'btn pri', style: 'min-height:42px;font-size:14px', onclick: () => endWeek() }, w.week >= YA.WEEKS ? '卒業式へ' : '次の週へ'));
+      // 同じ月のうちは「次の週へ」1回で、練習はそのまま出来事・試合まで進む（2026-11-18 ユーザビリティ9：毎週4回押していた）。
+      // 月が替わる週・年度の終わりは、これまでどおり週のはじめで止まって練習を組む
+      const chain = YA.weekChainable(w);
+      act.append(h('div', { class: 'note' }, w.matchDone ? '試合が終わりました。Bチームの試合も済んでいます。' : '今週はここまで。'), h('button', { class: 'btn pri', style: 'min-height:42px;font-size:14px', onclick: () => endWeek(chain) }, w.week >= YA.WEEKS ? '卒業式へ' : chain ? '次の週へ ▶' : '次の週へ（練習を組む）'));
+      if (chain) act.append(h('div', { class: 'note', style: 'margin-top:-3px' }, `${cal.month}の練習のまま進みます`), h('button', { class: 'btn sm', onclick: () => endWeek(false) }, '練習やスカウトを見てから進む'));
     }
     const simc = YA.simCard();
     if (simc) left.append(simc);
-    left.insertBefore(act, left.children[3]); // 主な操作は上に置き、スクロールしなくても押せるように
+    // 主な操作は週の見出しのすぐ下に置き、スクロールしなくても押せるように。その下に今週の試合
+    const wkHead = [...left.children].find((c) => c.classList && c.classList.contains('h'));
+    const after = wkHead && wkHead.nextSibling ? wkHead.nextSibling.nextSibling : left.children[3];
+    left.insertBefore(act, after || null);
+    left.insertBefore(matchEl, act.nextSibling);
     // 中：お知らせ＋先週の伸び
     const mid = h('div', { class: 'card pbody', style: 'flex:1;min-width:0' });
     mid.append(h('div', { class: 'h' }, 'お知らせ'));
@@ -143,16 +152,24 @@
     const readAt = w.readAt;
     const unread = w.inbox.filter((n) => YA.noticeTier(w, n) <= 2 && ((n.year || 0) * 100 + (n.week || 0)) > readAt).length;
     mid.querySelector('.h').textContent = unread ? `お知らせ（新しい${unread}件）` : 'お知らせ';
-    for (const n of pinned) list.append(h('div', { class: 'pitem', style: 'cursor:default;align-items:flex-start;background:#fff8e1' }, h('b', { style: 'font-size:10px;color:#a37b00;flex:none' }, '留'), h('span', { class: 'grow', style: 'font-size:11.5px;line-height:1.4' }, (n.week ? `${n.week}週 ` : '') + n.text), h('button', { class: 'btn sm', style: 'min-height:32px;padding:0 9px', onclick: () => { w.pins = w.pins.filter((k) => k !== nkey(n)); YA.saveWorld(); rerender(); } }, '外す')));
+    for (const n of pinned) list.append(h('div', { class: 'pitem', style: 'cursor:default;align-items:flex-start;background:#fff8e1' }, h('b', { style: 'font-size:11px;color:#a37b00;flex:none' }, '留'), h('span', { class: 'grow', style: 'font-size:11.5px;line-height:1.4' }, (n.week ? `${n.week}週 ` : '') + n.text), h('button', { class: 'btn sm', style: 'min-height:32px;padding:0 9px', onclick: () => { w.pins = w.pins.filter((k) => k !== nkey(n)); YA.saveWorld(); rerender(); } }, '外す')));
     const items = w.inbox.filter((n) => (showLog || YA.noticeTier(w, n) <= 2) && w.pins.indexOf(nkey(n)) < 0).slice(-14).reverse();
     for (const n of items) {
       const et = YA.noticeTier(w, n);
       const isNew = ((n.year || 0) * 100 + (n.week || 0)) > readAt && et <= 2;
       // 重要度は色の点だけでなく短い札で（2026-11-17 点検）。選手につながるお知らせには「›」
       const go = n.pid && w.players[n.pid];
-      list.append(h('div', { class: 'pitem', style: 'align-items:flex-start;cursor:default' + (isNew ? ';font-weight:700' : '') }, noticeTag(et), h('span', { class: 'grow ' + (et === 3 ? 'sub' : ''), style: 'font-size:11.5px;line-height:1.4;cursor:' + (go ? 'pointer' : 'default'), onclick: () => { if (go) { U().app.pSel = n.pid; U().app.tab = 'players'; rerender(); } } }, (n.week ? `${n.week}週 ` : '') + n.text, go ? h('b', { class: 'goarrow', style: 'color:var(--blue-d);margin-left:4px;font-size:13px' }, '›') : null), et <= 2 ? h('button', { class: 'btn sm', title: '留める（上に残す）', 'aria-label': '留める', style: 'min-height:32px;width:34px;padding:0;flex:none;font-size:14px', onclick: () => { w.pins = (w.pins || []).concat([nkey(n)]).slice(-5); YA.saveWorld(); rerender(); } }, '📌') : null));
+      // 留めるのは行の長押しで（2026-11-18 ユーザビリティ17：行ごとの📌が本文の幅を取っていた）
+      const row = h('div', { class: 'pitem', style: 'align-items:flex-start;cursor:' + (go ? 'pointer' : 'default') + (isNew ? ';font-weight:700' : '') }, noticeTag(et), h('span', { class: 'grow ' + (et === 3 ? 'sub' : ''), style: 'font-size:12px;line-height:1.45' }, (n.week ? `${n.week}週 ` : '') + n.text, go ? h('b', { class: 'goarrow', style: 'color:var(--blue-d);margin-left:4px;font-size:13px' }, '›') : null));
+      let lp = null, held = false;
+      if (et <= 2) {
+        row.addEventListener('pointerdown', () => { held = false; lp = setTimeout(() => { held = true; w.pins = (w.pins || []).concat([nkey(n)]).slice(-5); YA.saveWorld(); if (YA.toast) YA.toast('上に留めました（外すときは「外す」）'); rerender(); }, 550); });
+        for (const ev of ['pointerup', 'pointerleave', 'pointercancel']) row.addEventListener(ev, () => clearTimeout(lp));
+      }
+      row.addEventListener('click', () => { if (held) return; if (go) { U().app.pSel = n.pid; U().app.tab = 'players'; rerender(); } });
+      list.append(row);
     }
-    mid.append(list, h('div', { class: 'row', style: 'gap:5px;margin-top:5px' }, h('button', { class: 'btn sm', onclick: () => { U().app.showLog = !showLog; rerender(); } }, showLog ? '記録だけのものを隠す' : 'すべてのお知らせ'), unread ? h('button', { class: 'btn sm', onclick: () => { w.readAt = w.year * 100 + w.week; YA.saveWorld(); rerender(); } }, 'すべて読んだ') : null));
+    mid.append(list, h('div', { class: 'note', style: 'margin-top:3px' }, '大事・通常のお知らせは、長押しで上に留められます（5件まで）'), h('div', { class: 'row', style: 'gap:5px;margin-top:5px' }, h('button', { class: 'btn sm', onclick: () => { U().app.showLog = !showLog; rerender(); } }, showLog ? '記録だけのものを隠す' : 'すべてのお知らせ'), unread ? h('button', { class: 'btn sm', onclick: () => { w.readAt = w.year * 100 + w.week; YA.saveWorld(); rerender(); } }, 'すべて読んだ') : null));
     // 右：気にかけたい子
     const right = h('div', { class: 'card pbody', style: 'width:210px;flex:none' });
     right.append(h('div', { class: 'h' }, '今週気にかけたい子'));
@@ -188,17 +205,27 @@
   function afterEvents() {
     YA.afterEvents(W());
   }
-  function endWeek() {
+  // 「次の週へ」1回で練習まで進めてよいか：同じ年度の同じ月で、その月の練習を組んである
+  YA.weekChainable = function (w) {
+    if (!w || w.phase !== 'after' || w.week >= YA.WEEKS) return false;
+    return w.planMonth === w.year * 100 + YA.monthIdx(w.week + 1);
+  };
+  function endWeek(go) {
     const w = W();
     const wasEnd = w.week >= YA.WEEKS;
     const res = YA.endWeek(w);
     YA.saveWorld();
+    // 週のはじめに決めることがあれば止まる（契約・年度はじめ・合宿や入団の時期・出来事）
+    if (go && !wasEnd && w.phase === 'plan' && w.planMonth === w.year * 100 + YA.monthIdx(w.week) && !w.pendingContract && !w.pendingCoach && !w.yearIntro && !(YA.homeExtra && YA.homeExtra())) {
+      U().app.tab = 'home';
+      return runWeek();
+    }
     if (wasEnd && res) {
       U().app.holdPrompts = true;
       rerender();
       modal((close) => h('div', { class: 'sheet-in', style: 'align-self:center;max-height:92%;flex:none;width:min(640px,96%);margin:auto;padding:12px' },
         h('div', { class: 'h', style: 'font-size:16px' }, '卒業式'),
-        h('div', { class: 'note', style: 'margin:4px 0' }, `${res.out.length}人が巣立ち、新しい高1の${res.entered}人が入団しました（卒業生は「ほか」の名鑑で追えます）` + (res.contrib ? `　連帯貢献金が${YA.yen(res.contrib)}入りました。` : '')),
+        h('div', { class: 'note', style: 'margin:4px 0' }, `${res.out.length}人が巣立ち、新しい高1の${res.entered}人が入団しました（卒業生は「系譜」の名鑑で追えます）` + (res.contrib ? `　連帯貢献金が${YA.yen(res.contrib)}入りました。` : '')),
         res.eval ? h('div', { class: 'card', style: 'padding:7px 10px;font-size:12px' }, h('b', {}, `今年の評価：${res.eval.letter}`), '　', res.eval.goals.map((g) => `${g.label}：${g.text}（${g.val}）${g.ok ? '達成' : g.score ? '惜しい' : '届かず'}`).join(' ／ ')) : null,
         res.dismissed ? h('div', { class: 'insight bad' }, `解任されました。${res.dismissed.name}（${YA.TIER_NAME[res.dismissed.tier]}）の指導者になります`) : null,
         h('div', { class: 'pbody scroll', style: 'max-height:210px;padding:4px 6px' }, h('div', { class: 'plist' }, res.out.map((o) => h('div', { class: 'pitem' }, h('span', { class: 'pos ' + o.pos }, YA.POS_LABEL[o.main] || o.pos), h('span', { class: 'nm grow' }, o.name), h('span', { class: 'chip gray' }, '総合力 ' + YA.rate(o.ovr)), h('span', { class: 'sub' }, o.note))))),
@@ -218,20 +245,24 @@
     }
     modal((close) => {
       const p = v.p;
-      const box = h('div', { class: 'sheet-in', style: 'align-self:center;flex:none;width:min(660px,96%);margin:auto;padding:12px;gap:7px' });
+      const box = h('div', { class: 'sheet-in evbox', style: 'align-self:center;flex:none;width:min(780px,98%);max-height:100%;margin:auto;padding:10px 12px;gap:6px' });
+      // 横向きの低い画面に合わせて、左に人と台詞、右に選ぶボタン（2026-11-18 ユーザビリティ10：窓が画面の高さを超え、選ぶボタンが下に隠れていた）
       const render1 = () => {
+        const leftCol = h('div', { class: 'scroll', style: 'flex:1.15;min-width:0;min-height:0;display:flex;flex-direction:column;gap:6px;overflow-y:auto' },
+          p ? h('div', { class: 'row', style: 'gap:7px' }, YA.faceEl(w, p, 38), h('div', { style: 'min-width:0' }, h('div', { class: 'row', style: 'gap:5px' }, posc(p), h('b', { style: 'white-space:nowrap;font-size:13.5px' }, `${p.num}番 ${p.name}`), h('span', { class: 'sub' }, gradeName(p.grade))), h('div', { class: 'row', style: 'gap:3px;flex-wrap:wrap;margin-top:2px' }, U().persChips(p).slice(0, 3)))) : h('div', { class: 'row' }, h('span', { class: 'chip gray' }, w.clubName)),
+          h('div', { class: 'card', style: 'padding:8px 10px;font-size:13px;line-height:1.6;box-shadow:none' }, v.text),
+          v.staffNote ? h('div', { class: 'row', style: 'gap:6px;align-items:flex-start' }, h('span', { class: 'chip trait', style: 'flex:none' }, 'コーチ'), h('span', { style: 'font-size:12px;line-height:1.5' }, v.staffNote)) : null);
+        const rightCol = h('div', { class: 'scroll', style: 'flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;gap:5px;overflow-y:auto' },
+          v.about ? h('div', { class: 'note' }, v.about) : null,
+          ...v.info.map((o, i) => h('button', { class: 'btn', style: 'justify-content:flex-start;text-align:left;padding:7px 10px;gap:6px;flex:none;flex-wrap:wrap', onclick: () => choose(i) },
+            o.kind ? h('span', { class: 'chip gray', style: 'font-size:11px;flex:none' }, YA.KIND_LABEL[o.kind]) : null,
+            h('span', { class: 'grow' }, o.label),
+            o.rec ? h('span', { class: 'chip trait', style: 'flex:none;font-size:11px' }, o.rec) : null,
+            o.hint === 'good' ? h('span', { class: 'fit good', style: 'flex:none' }, '響きそう') : o.hint === 'bad' ? h('span', { class: 'fit bad', style: 'flex:none' }, '逆効果かも') : null)),
+          p && v.info.some((x) => x.hint) ? h('button', { class: 'note', style: 'text-align:left;text-decoration:underline dotted;align-self:flex-start', onclick: () => YA.toast && YA.toast('「響きそう」「逆効果かも」は、見えている性格からの目安です。同じ言葉でも、性格で受け止め方が変わります。') }, '？「響きそう」の目安とは') : null);
         box.replaceChildren(
           h('div', { class: 'row' }, h('span', { class: 'chip pers' }, '出来事'), h('b', {}, v.name), h('span', { class: 'grow' }), h('span', { class: 'sub' }, `残り${w.events.length}件`)),
-          p ? h('div', { class: 'row', style: 'gap:8px' }, posc(p), h('b', { style: 'white-space:nowrap' }, `${p.num}番 ${p.name}`), h('span', { class: 'sub' }, gradeName(p.grade)), U().persChips(p).slice(0, 4)) : h('div', { class: 'row' }, h('span', { class: 'chip gray' }, w.clubName)),
-          h('div', { class: 'card', style: 'padding:9px 11px;font-size:13px;line-height:1.6' }, v.text),
-          v.staffNote ? h('div', { class: 'row', style: 'gap:6px;align-items:flex-start' }, h('span', { class: 'chip trait', style: 'flex:none' }, 'コーチ'), h('span', { style: 'font-size:12px;line-height:1.5' }, v.staffNote)) : null,
-          v.about ? h('div', { class: 'note', style: 'margin-top:-2px' }, v.about) : null,
-          ...v.info.map((o, i) => h('button', { class: 'btn', style: 'justify-content:flex-start;text-align:left;padding:8px 12px;gap:6px', onclick: () => choose(i) },
-            o.kind ? h('span', { class: 'chip gray', style: 'font-size:10px;flex:none' }, YA.KIND_LABEL[o.kind]) : null,
-            h('span', { class: 'grow' }, o.label),
-            o.rec ? h('span', { class: 'chip trait', style: 'flex:none;font-size:10px' }, o.rec) : null,
-            o.hint === 'good' ? h('span', { class: 'fit good', style: 'flex:none' }, '響きそう') : o.hint === 'bad' ? h('span', { class: 'fit bad', style: 'flex:none' }, '逆効果かも') : null)),
-          p && v.info.some((x) => x.kind) ? h('div', { class: 'note' }, '「響きそう」「逆効果かも」は、見えている性格からの目安です。同じ言葉でも、性格で受け止め方が変わります。') : null,
+          h('div', { class: 'evcols', style: 'display:flex;gap:10px;min-height:0;flex:1' }, leftCol, rightCol),
         );
       };
       const choose = (i) => {
@@ -267,21 +298,21 @@
       left.append(h('button', { class: 'card', style: 'padding:4px 8px;display:flex;align-items:center;gap:8px;text-align:left;min-height:36px', onclick: () => pickMenu(i) },
         h('b', { style: 'width:22px;height:22px;border-radius:6px;background:var(--navy,#26385d);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;flex:none' }, DAYS[i]),
         h('span', { class: 'chip ' + (d.menu === '休み' || d.menu === '回復' ? 'gray' : d.menu === '練習試合' ? 'instr' : 'pers'), style: 'font-size:11.5px' }, d.menu),
-        h('span', { class: 'grow sub', style: 'font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis' }, m ? m.note : ''),
-        h('span', { style: 'font-size:10px;letter-spacing:1px;color:' + (lv === 3 ? '#c43c32' : lv === 0 ? '#9aa8be' : '#e0702a') }, '●'.repeat(lv) + '○'.repeat(3 - lv))));
+        h('span', { class: 'grow sub', style: 'font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis' }, m ? m.note : ''),
+        h('span', { style: 'font-size:11px;letter-spacing:1px;color:' + (lv === 3 ? '#c43c32' : lv === 0 ? '#9aa8be' : '#e0702a') }, '●'.repeat(lv) + '○'.repeat(3 - lv))));
     });
     // 土日：試合と休み（決めることはない）
     const opp = YA.matchOf(w) ? YA.opponentOf(w) : null;
-    for (const [dn, mn, note] of [['土', opp ? '試合' : '休み', opp ? `vs ${opp.name}` : '試合のない週'], ['日', '休み', '']]) left.append(h('div', { class: 'card', style: 'padding:4px 8px;display:flex;align-items:center;gap:8px;min-height:32px;opacity:.85' }, h('b', { style: 'width:22px;height:22px;border-radius:6px;background:var(--navy,#26385d);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;flex:none' }, dn), h('span', { class: 'chip ' + (mn === '試合' ? 'instr' : 'gray'), style: 'font-size:11.5px' }, mn), h('span', { class: 'grow sub', style: 'font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis' }, note)));
+    for (const [dn, mn, note] of [['土', opp ? '試合' : '休み', opp ? `vs ${opp.name}` : '試合のない週'], ['日', '休み', '']]) left.append(h('div', { class: 'card', style: 'padding:4px 8px;display:flex;align-items:center;gap:8px;min-height:32px;opacity:.85' }, h('b', { style: 'width:22px;height:22px;border-radius:6px;background:var(--navy,#26385d);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;flex:none' }, dn), h('span', { class: 'chip ' + (mn === '試合' ? 'instr' : 'gray'), style: 'font-size:11.5px' }, mn), h('span', { class: 'grow sub', style: 'font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis' }, note)));
     // 右上：チームの重点（1つ）
     const right = h('div', { 'data-train-right': '', style: 'flex:1;min-width:0;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:8px' });
     const tf = w.plan.teamFocus || null;
     right.append(h('div', { class: 'card', style: 'padding:7px 10px;display:flex;flex-direction:column;gap:5px' }, h('b', {}, 'チームの重点（1つ）'),
       h('div', { class: 'row', style: 'flex-wrap:wrap;gap:4px' }, ...Object.keys(YA.TEAM_FOCUS).map((k) => h('button', { class: 'btn sm' + (tf === k ? ' on' : ''), onclick: () => { w.plan.teamFocus = tf === k ? null : k; YA.saveWorld(); rerender(); } }, k))),
-      h('div', { class: 'sub', style: 'font-size:10.5px' }, tf ? `全員の ${YA.TEAM_FOCUS[tf].join('・')} が少し伸びやすくなる` : '選ぶと、全員のその分野が少し伸びやすくなる')));
+      h('div', { class: 'sub', style: 'font-size:11.5px' }, tf ? `全員の ${YA.TEAM_FOCUS[tf].join('・')} が少し伸びやすくなる` : '選ぶと、全員のその分野が少し伸びやすくなる')));
     // 右下：疲れの高い子（押すとこの週は休み）
     const tired = Object.values(w.players).filter((p) => p.inj <= 0 && (p.fat >= 55 || p.rest)).sort((a, b) => b.fat - a.fat).slice(0, 6);
-    const tb = h('div', { class: 'card', style: 'flex:none;padding:7px 10px;display:flex;flex-direction:column;gap:3px' }, h('div', {}, h('b', {}, '疲れの高い子 '), h('span', { class: 'sub', style: 'font-size:10.5px' }, '押すと この週は休み → 軽め → 通常')));
+    const tb = h('div', { class: 'card', style: 'flex:none;padding:7px 10px;display:flex;flex-direction:column;gap:3px' }, h('div', {}, h('b', {}, '疲れの高い子 '), h('span', { class: 'sub', style: 'font-size:11.5px' }, '押すと この週は休み → 軽め → 通常')));
     if (!tired.length) tb.append(h('div', { class: 'note' }, '疲れが溜まっている子はいません'));
     for (const p of tired) tb.append(h('button', { class: 'pitem', onclick: () => { p.rest = p.rest === null || p.rest === undefined ? 'rest' : p.rest === 'rest' ? 'light' : null; YA.saveWorld(); rerender(); } },
       posc(p), h('span', { class: 'nm', style: 'width:92px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap' }, p.name), fatBar(p, 80), h('b', { style: 'width:26px;text-align:right;color:#c43c32' }, Math.round(p.fat)), h('span', { class: 'chip ' + (p.rest === 'rest' ? 'instr' : p.rest === 'light' ? 'pers' : 'gray'), style: 'width:40px;justify-content:center' }, p.rest === 'rest' ? '休み' : p.rest === 'light' ? '軽め' : '練習')));
@@ -307,7 +338,7 @@
     const days = h('div', { class: 'days', style: 'display:flex;gap:5px' });
     w.plan.days.forEach((d, i) => {
       const m = YA.MENUS[d.menu];
-      days.append(h('button', { class: 'card', style: 'flex:1;padding:3px 7px;text-align:left;min-width:0;display:flex;align-items:center;gap:4px', onclick: () => pickMenu(i) }, h('b', { style: 'color:var(--blue-d)' }, DAYS[i]), h('span', { class: 'grow', style: 'font-weight:800;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis' }, d.menu), h('span', { class: 'chip ' + (d.int === 'hard' ? 'instr' : d.int === 'light' ? 'gray' : 'pers'), style: 'font-size:9.5px' }, YA.INTENS_NAMES[d.int])));
+      days.append(h('button', { class: 'card', style: 'flex:1;padding:3px 7px;text-align:left;min-width:0;display:flex;align-items:center;gap:4px', onclick: () => pickMenu(i) }, h('b', { style: 'color:var(--blue-d)' }, DAYS[i]), h('span', { class: 'grow', style: 'font-weight:800;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis' }, d.menu), h('span', { class: 'chip ' + (d.int === 'hard' ? 'instr' : d.int === 'light' ? 'gray' : 'pers'), style: 'font-size:10.5px' }, YA.INTENS_NAMES[d.int])));
     });
     const bulk = h('div', { class: 'row bulk', style: 'flex-wrap:wrap;gap:4px' },
       h('button', { class: 'btn sm on', onclick: () => { ui.trainDetail = false; rerender(); } }, '← 1枚の画面へ'),
@@ -333,7 +364,7 @@
     // 選手の表
     const rows = Object.values(w.players).filter(inTarget).sort((a, b) => (a.team === b.team ? 0 : a.team === 'A' ? -1 : 1) || YA.POS15.indexOf(a.main) - YA.POS15.indexOf(b.main) || b.grade - a.grade);
     const table = h('div', { class: 'card pbody scroll', style: 'flex:1;min-height:0;padding:4px 6px' });
-    table.append(h('div', { class: 'pitem', style: 'background:none;font-size:10px;color:var(--sub);font-weight:800' }, h('span', { style: 'width:22px' }), h('span', { style: 'width:20px' }), h('span', { class: 'grow' }, '選手'), h('span', { style: 'width:42px' }, '疲れ'), h('span', { style: 'width:116px' }, '重点にする能力'), h('span', { style: 'width:150px' }, '特性練習'), h('span', { style: 'width:52px' }, '今週')));
+    table.append(h('div', { class: 'pitem', style: 'background:none;font-size:11px;color:var(--sub);font-weight:800' }, h('span', { style: 'width:22px' }), h('span', { style: 'width:20px' }), h('span', { class: 'grow' }, '選手'), h('span', { style: 'width:42px' }, '疲れ'), h('span', { style: 'width:116px' }, '重点にする能力'), h('span', { style: 'width:150px' }, '特性練習'), h('span', { style: 'width:52px' }, '今週')));
     for (const p of rows) {
       const tp = p.train.trait;
       const lt = tp ? YA.learnable(p).find((x) => x.t === tp) : null;
@@ -344,7 +375,7 @@
         h('span', { class: 'num' }, p.num),
         h('span', { class: 'nm grow', style: 'min-width:0;overflow:hidden;text-overflow:ellipsis' }, p.name, ' ', h('span', { class: 'sub', style: 'font-weight:600' }, gradeName(p.grade) + (p.team === 'A' ? ' A' : ' B')), ' ', flags(p)),
         fatBar(p, 42),
-        h('button', { class: 'btn sm', style: 'width:116px;justify-content:space-between;gap:2px', onclick: () => pickFocus(p) }, p.train.policy && p.train.policy !== 'manual' ? h('span', { class: 'chip gray', style: 'font-size:9px;padding:0 3px' }, { strong: '得', weak: '苦', pos: '位' }[p.train.policy]) : null, h('span', { class: 'grow', style: 'text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0' }, p.train.focus || '未設定'), p.train.focus ? h('span', { class: 'sub' }, p.ab[p.train.focus]) : null),
+        h('button', { class: 'btn sm', style: 'width:116px;justify-content:space-between;gap:2px', onclick: () => pickFocus(p) }, p.train.policy && p.train.policy !== 'manual' ? h('span', { class: 'chip gray', style: 'font-size:10.5px;padding:0 3px' }, { strong: '得', weak: '苦', pos: '位' }[p.train.policy]) : null, h('span', { class: 'grow', style: 'text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0' }, p.train.focus || '未設定'), p.train.focus ? h('span', { class: 'sub' }, p.ab[p.train.focus]) : null),
         h('button', { class: 'btn sm', style: 'width:150px;justify-content:space-between;white-space:nowrap;gap:2px', onclick: () => pickTrait(p) }, h('span', { style: 'overflow:hidden;text-overflow:ellipsis' }, tp || '未設定'), tp ? h('span', { class: 'sub' }, wk + '週') : null),
         h('button', { class: 'btn sm' + (p.rest ? ' on' : ''), style: 'width:52px', disabled: p.inj > 0, why: '怪我をしている子は、休ませ方を変えられません', onclick: () => { p.rest = p.rest === null ? 'light' : p.rest === 'light' ? 'rest' : null; YA.saveWorld(); const st = table.scrollTop; rerender(); const t2 = document.querySelector('.card.pbody.scroll'); if (t2) t2.scrollTop = st; } }, p.inj > 0 ? '療養' : p.rest === 'rest' ? '休み' : p.rest === 'light' ? '軽め' : '通常')));
     }
@@ -370,7 +401,7 @@
     const w = W();
     modal((close) => h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(680px,97%);padding:10px;gap:7px' },
       h('div', { class: 'h' }, DAYS[i] + '曜日のメニュー'),
-      h('div', { style: 'display:grid;grid-template-columns:repeat(4,1fr);gap:5px' }, YA.MENU_NAMES.map((n) => h('button', { class: 'btn' + (w.plan.days[i].menu === n ? ' on' : ''), style: 'flex-direction:column;align-items:flex-start;padding:6px 8px;text-align:left', onclick: () => { w.plan.days[i].menu = n; YA.saveWorld(); close(); rerender(); } }, h('b', {}, n), h('span', { style: 'font-weight:600;font-size:10px;opacity:.8' }, YA.MENUS[n].note)))),
+      h('div', { style: 'display:grid;grid-template-columns:repeat(4,1fr);gap:5px' }, YA.MENU_NAMES.map((n) => h('button', { class: 'btn' + (w.plan.days[i].menu === n ? ' on' : ''), style: 'flex-direction:column;align-items:flex-start;padding:6px 8px;text-align:left', onclick: () => { w.plan.days[i].menu = n; YA.saveWorld(); close(); rerender(); } }, h('b', {}, n), h('span', { style: 'font-weight:600;font-size:11px;opacity:.8' }, YA.MENUS[n].note)))),
       h('div', { class: 'row' }, h('span', { class: 'sub' }, '強さ'), ...['light', 'normal', 'hard'].map((k) => h('button', { class: 'btn sm' + (w.plan.days[i].int === k ? ' on' : ''), onclick: () => { w.plan.days[i].int = k; YA.saveWorld(); close(); rerender(); } }, YA.INTENS_NAMES[k])), h('span', { class: 'grow' }), h('button', { class: 'btn sm', onclick: close }, '閉じる')),
       h('div', { class: 'note' }, 'きついほど伸びますが、疲れが溜まり怪我もしやすくなります。「回復」は疲れを抜く日です。GKはGKコーチが別メニューで見ます。')));
   }
@@ -386,7 +417,7 @@
     const list = YA.learnable(p);
     modal((close) => h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(680px,97%);max-height:94%;padding:10px;gap:6px' },
       h('div', { class: 'row' }, h('div', { class: 'h grow' }, `${p.name} の特性練習（習得の目安）`), h('button', { class: 'btn sm', onclick: () => { p.train.trait = null; YA.saveWorld(); close(); rerender(); } }, '外す'), h('button', { class: 'btn sm', onclick: close }, '閉じる')),
-      h('div', { class: 'scroll', style: 'display:grid;grid-template-columns:repeat(4,1fr);gap:4px;overflow:auto' }, list.map((x) => h('button', { class: 'btn sm' + (p.train.trait === x.t ? ' on' : ''), style: 'flex-direction:column;align-items:flex-start;gap:0', onclick: () => { p.train.trait = x.t; YA.saveWorld(); close(); rerender(); } }, h('b', {}, x.t), h('span', { style: 'font-weight:600;font-size:10px;opacity:.85' }, x.weeks <= 40 ? `約${x.weeks}週` : '1年では届かない')))),
+      h('div', { class: 'scroll', style: 'display:grid;grid-template-columns:repeat(4,1fr);gap:4px;overflow:auto' }, list.map((x) => h('button', { class: 'btn sm' + (p.train.trait === x.t ? ' on' : ''), style: 'flex-direction:column;align-items:flex-start;gap:0', onclick: () => { p.train.trait = x.t; YA.saveWorld(); close(); rerender(); } }, h('b', {}, x.t), h('span', { style: 'font-weight:600;font-size:11px;opacity:.85' }, x.weeks <= 40 ? `約${x.weeks}週` : '1年では届かない')))),
       h('div', { class: 'note' }, '覚えやすさは、その特性に効く能力2つで決まります。向いていない子は時間がかかります。')));
   }
 
@@ -413,20 +444,24 @@
     const f = ui.pf;
     ui.psort = ui.psort || 'pos';
     const SORTV = { ovr: (p) => YA.ovr(p), grow: (p) => Object.values(p.gain || {}).reduce((a, b) => a + b, 0), trust: (p) => (p.tr == null ? 50 : p.tr), fat: (p) => p.fat || 0, mins: (p) => p.minsA || 0, conf: (p) => p.conf || 0 };
-    const filtered = all.filter((p) => f === 'all' || f === p.team || f === String(p.grade) || f === p.pos || (f === 'star' && p.star) || (f === 'inj' && p.inj > 0)).sort((a, b) => (SORTV[ui.psort] ? SORTV[ui.psort](b) - SORTV[ui.psort](a) : 0) || (b.star ? 1 : 0) - (a.star ? 1 : 0) || YA.POS15.indexOf(a.main) - YA.POS15.indexOf(b.main) || b.grade - a.grade || YA.ovr(b) - YA.ovr(a));
+    const f2 = (p, k) => k === 'all' || k === p.team || k === String(p.grade) || k === p.pos || (k === 'star' && p.star) || (k === 'inj' && p.inj > 0);
+    const filtered = all.filter((p) => f2(p, f)).sort((a, b) => (SORTV[ui.psort] ? SORTV[ui.psort](b) - SORTV[ui.psort](a) : 0) || (b.star ? 1 : 0) - (a.star ? 1 : 0) || YA.POS15.indexOf(a.main) - YA.POS15.indexOf(b.main) || b.grade - a.grade || YA.ovr(b) - YA.ovr(a));
     if (!ui.pSel || !w.players[ui.pSel]) ui.pSel = (filtered[0] || all[0]).id;
     const sel = w.players[ui.pSel];
     const left = h('div', { class: 'card', style: 'width:286px;flex:none;display:flex;flex-direction:column;min-height:0;padding:5px' });
-    const chips = h('div', { class: 'fm-row', style: 'margin-bottom:4px' }, [['all', '全員'], ['A', 'A'], ['B', 'B'], ['1', '高1'], ['2', '高2'], ['3', '高3'], ['GK', 'GK'], ['DF', 'DF'], ['MF', 'MF'], ['FW', 'FW'], ['star', '★'], ['inj', '怪我']].map(([k, n]) => h('button', { class: 'btn sm' + (f === k ? ' on' : ''), style: 'padding:4px 8px;min-height:34px;min-width:36px;font-size:11.5px', onclick: () => { ui.pf = k; rerender(); } }, n)));
-    const list = h('div', { class: 'plist scroll', style: 'flex:1;min-height:0' }, filtered.map((p) => h('button', { class: 'pitem' + (p.id === sel.id ? ' on' : ''), onclick: () => { const changed = ui.pSel !== p.id; ui.pSel = p.id; const st = list.scrollTop; rerender(); const l2 = document.querySelector('.plist.scroll'); if (l2) l2.scrollTop = st; const d2 = document.querySelector('#main .pdetail'); if (changed && d2) d2.scrollTop = 0; } }, posc(p), YA.faceEl(W(), p, 24), h('span', { class: 'num' }, p.num), p.star ? h('span', { style: 'color:#e6a800;font-weight:900;flex:none;margin-right:-2px', title: '★注目の子' }, '★') : null, h('span', { class: 'nm grow', style: 'overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0' }, p.name), h('span', { class: 'sub', style: 'font-size:10px;flex:none' }, gradeName(p.grade) + p.team), h('b', { style: 'width:26px;text-align:right;flex:none' }, YA.rating(p)), h('span', { style: 'font-size:10px;color:#7a8aa6;width:22px;font-weight:800;flex:none;text-align:right', title: '伸びしろ（コーチの見立て）' }, '伸' + YA.coachStars(w, p)), p.inj > 0 ? h('span', { class: 'fit bad', style: 'flex:none' }, '怪') : null)));
+    // 絞り込みは選択欄1つに（2026-11-18 ユーザビリティ2：12個のボタンが横にはみ出し「高1」から先が見えなかった）
+    const FILT = [['all', '全員'], ['A', 'Aチーム'], ['B', 'Bチーム'], ['1', '高1'], ['2', '高2'], ['3', '高3'], ['GK', 'GK'], ['DF', 'DF'], ['MF', 'MF'], ['FW', 'FW'], ['star', '★の子'], ['inj', '怪我']];
+    const selStyle = 'padding:3px 4px;min-height:34px;border:1px solid #b9c7de;border-radius:8px;font:inherit;font-size:12px;min-width:0;flex:1';
+    const chips = h('select', { title: '絞り込み', style: selStyle }, ...FILT.map(([k, n]) => h('option', { value: k, selected: f === k }, (k === 'all' ? '絞り：' : '') + n + (k === 'all' ? '' : `（${all.filter((p) => f2(p, k)).length}）`))));
+    chips.addEventListener('change', () => { ui.pf = chips.value; rerender(); });
+    chips.addEventListener('pointerdown', (e) => e.stopPropagation());
+    const list = h('div', { class: 'plist scroll', style: 'flex:1;min-height:0' }, filtered.map((p) => h('button', { class: 'pitem' + (p.id === sel.id ? ' on' : ''), onclick: () => { const changed = ui.pSel !== p.id; ui.pSel = p.id; const st = list.scrollTop; rerender(); const l2 = document.querySelector('.plist.scroll'); if (l2) l2.scrollTop = st; const d2 = document.querySelector('#main .pdetail'); if (changed && d2) d2.scrollTop = 0; } }, posc(p), h('span', { class: 'num' }, p.num), p.star ? h('span', { style: 'color:#e6a800;font-weight:900;flex:none;margin-right:-2px', title: '★注目の子' }, '★') : null, h('span', { class: 'nm grow', style: 'overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0' }, p.name), h('span', { class: 'sub', style: 'font-size:11px;flex:none' }, gradeName(p.grade) + p.team), h('b', { style: 'width:26px;text-align:right;flex:none' }, YA.rating(p)), h('span', { style: 'font-size:11px;color:#7a8aa6;width:22px;font-weight:800;flex:none;text-align:right', title: '伸びしろ（コーチの見立て）' }, '伸' + YA.coachStars(w, p)), p.inj > 0 ? h('span', { class: 'fit bad', style: 'flex:none' }, '怪') : null)));
     // 並び替え（1つの選択欄にして、一覧の高さを削らない）
     const sorts = h('select', { title: '並び替え', style: 'padding:3px 4px;min-height:32px;border:1px solid #b9c7de;border-radius:8px;font:inherit;font-size:11px' }, ...[['pos', '並び：位置'], ['ovr', '並び：総合力'], ['grow', '並び：伸び'], ['trust', '並び：信頼'], ['conf', '並び：自信'], ['fat', '並び：疲れ'], ['mins', '並び：出場']].map(([k, n]) => h('option', { value: k, selected: ui.psort === k }, n)));
     sorts.addEventListener('change', () => { ui.psort = sorts.value; rerender(); });
     sorts.addEventListener('pointerdown', (e) => e.stopPropagation());
     // 絞り込みは1行に（入りきらない分は横に送る）。並び替えは左に固定（2026-11-16 案A：3行で一覧が7人しか見えなかった）
-    chips.style.cssText = 'flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;flex:1;min-width:0';
-    for (const b of chips.children) { b.style.flex = 'none'; b.style.whiteSpace = 'nowrap'; }
-    sorts.style.flex = 'none';
+    sorts.style.cssText = selStyle;
     left.append(h('div', { class: 'row', style: 'gap:4px;margin-bottom:4px;flex-wrap:nowrap' }, sorts, chips), list);
     const right = h('div', { class: 'card pbody pdetail', style: 'flex:1;min-width:0' });
     const info = h('div', {});
@@ -437,7 +472,10 @@
     // 追加の情報（伸びしろの目安・状態・履歴）
     const head = (h('div', { class: 'row', style: 'flex-wrap:wrap;gap:5px;padding:2px 2px 0' },
       YA.faceEl(W(), sel, 40),
-      h('span', { class: 'chip gray' }, `${gradeName(sel.grade)} / ${sel.team}チーム`), h('span', { class: 'chip gray' }, `疲れ ${Math.round(sel.fat)}`), h('span', { class: 'chip gray' }, `出場 ${sel.mins}分`),
+      // 名前を帯のいちばん前に（2026-11-18 ユーザビリティ1：名前が下の箱の中にしか無かった）
+      posc(sel), h('b', { class: 'pname', style: 'font-size:15px;color:var(--navy);white-space:nowrap' }, `${sel.num} ${sel.name}`),
+      h('span', { class: 'chip gray' }, `${gradeName(sel.grade)} / ${sel.team}チーム`), sel.fat >= 50 ? h('span', { class: 'fit bad' }, `疲れ ${Math.round(sel.fat)}`) : null,
+      h('button', { class: 'btn sm', 'aria-label': 'ほかの操作', style: 'min-width:38px;padding:4px 8px', onclick: () => playerMenu(w, sel) }, '…'),
       // 見出しを2行に収める（2026-11-16 3行あった）。将来の幅の水準名は押したときの説明へ
       // 水準名の説明は押すと下に出す（title の長押しは iPhone で見えない）。「将来」の字は11px（2026-11-17 点検）
       h('span', { class: 'chip trait', tip: '伸びしろ：' + YA.futureRange(w, sel).text }, '伸びしろ ', YA.starsEl([YA.coachStars(w, sel), YA.coachStars(w, sel)]), h('small', { style: 'font-weight:700;font-size:11px' }, YA.futureRange(w, sel).text.replace(/（.*?）/, ''))), ...flags(sel).filter((e) => e && e.textContent !== '★注目'), // ★は右の印で出すので二重にしない
@@ -488,22 +526,37 @@
         h('div', { class: 'row', style: 'flex-wrap:wrap;gap:4px;margin:3px 0' }, h('span', { class: 'sub' }, '性格：'), ...pers.map((t) => h('span', { class: 'chip gray' }, t)), persNorm ? h('span', { class: 'sub', style: 'font-size:11px' }, pers.length ? 'ほかはふつう' : 'どれもふつう') : null),
         h('div', { class: 'note', style: 'color:var(--ink)' }, 'コーチの一言：' + tip)));
     }
-    ops.append(YA.playerExtras(w, sel));
-    // 履歴
+    // 「様子」が1本の長い画面だったので、育て方（育成計画・診断・師匠・転向）と思い出（記憶・最近のこと）を別の小タブに（2026-11-18 ユーザビリティ11）
+    const ex = YA.playerExtras(w, sel);
+    const grow = h('div', {});
+    for (const c of [...ex.querySelectorAll('[data-grp="grow"]')]) grow.append(c);
+    ops.append(ex);
     if (YA.bgText) ops.append(h('div', { class: 'note', style: 'margin-top:6px;color:var(--ink)' }, '事情：' + YA.bgText(YA._ui.app.w, sel)));
-    if (sel.mem && sel.mem.length && YA.memLines) ops.append(h('div', { class: 'h', style: 'margin-top:8px' }, 'この子との記憶'), h('div', { class: 'note', style: 'color:var(--ink)' }, YA.memLines(sel).slice(0, 8).map((t) => h('div', {}, t))), YA.leanOf && YA.leanOf(sel).n ? h('div', { class: 'note' }, '育て方の傾き：' + Object.entries(YA.leanOf(sel).cnt).filter((x) => x[1]).sort((a, b) => b[1] - a[1]).map(([k, n]) => `${YA.KIND_LABEL[k]}${n}`).join('・') + '（覚醒の形の出やすさに効く）') : null);
-    if (sel.hist.length) ops.append(h('div', { class: 'h', style: 'margin-top:8px' }, '最近のこと'), h('div', { class: 'note', style: 'color:var(--ink)' }, sel.hist.slice(0, 6).map((x) => h('div', {}, `${x.y}年目 ${x.w}週：${x.t}`))));
+    const mem = h('div', {});
+    if (!(sel.mem && sel.mem.length) && !sel.hist.length) mem.append(h('div', { class: 'note' }, 'まだ思い出はありません。出来事や試合で選んだことが、ここに残ります。'));
+    if (sel.mem && sel.mem.length && YA.memLines) mem.append(h('div', { class: 'h', style: 'margin-top:8px' }, 'この子との記憶'), h('div', { class: 'note', style: 'color:var(--ink)' }, YA.memLines(sel).slice(0, 8).map((t) => h('div', {}, t))), YA.leanOf && YA.leanOf(sel).n ? h('div', { class: 'note' }, '育て方の傾き：' + Object.entries(YA.leanOf(sel).cnt).filter((x) => x[1]).sort((a, b) => b[1] - a[1]).map(([k, n]) => `${YA.KIND_LABEL[k]}${n}`).join('・') + '（覚醒の形の出やすさに効く）') : null);
+    if (sel.hist.length) mem.append(h('div', { class: 'h', style: 'margin-top:8px' }, '最近のこと'), h('div', { class: 'note', style: 'color:var(--ink)' }, sel.hist.slice(0, 10).map((x) => h('div', {}, `${x.y}年目 ${x.w}週：${x.t}`))));
     // 能力・面談・操作を切り替えて、スクロールせずに選手への操作へ届くようにする
     ui.pTab = ui.pTab || 'info';
-    const PT = [['info', '能力'], ['ops', '様子'], ['talk', '進路']];
+    const PT = [['info', '能力'], ['ops', '様子'], ['grow', '育て方'], ['mem', '思い出'], ['talk', '進路']];
     const tabsEl = h('div', { class: 'tabs' });
     const show = () => {
       tabsEl.replaceChildren(...PT.map(([k, n]) => h('button', { class: 'btn sm' + (ui.pTab === k ? ' on' : ''), onclick: () => { ui.pTab = k; show(); } }, n)));
-      right.replaceChildren(ui.pTab === 'talk' ? talk : ui.pTab === 'ops' ? ops : info);
+      right.replaceChildren({ talk, ops, grow, mem }[ui.pTab] || info);
       right.scrollTop = 0;
     };
     show();
     main.append(h('div', { style: 'flex:1;min-height:0;display:flex;gap:8px' }, left, h('div', { style: 'flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;min-height:0' }, head, tabsEl, right)));
+  }
+  // 選手の「…」：比べる・PK戦のキッカー・名前を変える（様子の画面の下にあった操作）
+  function playerMenu(w, sel) {
+    const pkIdx = (w.pkOrder || []).indexOf(sel.id);
+    const pkN = (w.pkOrder || []).filter((id) => w.players[id]).length;
+    modal((close) => h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(420px,95%);padding:12px;gap:7px' },
+      h('div', { class: 'row' }, h('div', { class: 'h grow' }, `${sel.num} ${sel.name}`), h('button', { class: 'btn sm', onclick: close }, '閉じる')),
+      h('button', { class: 'btn', onclick: () => { close(); YA.compareModal(w, sel); } }, '他の子と比べる'),
+      h('button', { class: 'btn' + (pkIdx >= 0 ? ' on' : ''), disabled: pkIdx < 0 && pkN >= 5, why: 'PK戦のキッカーは5人までです。先にだれかを外してください', onclick: () => { const r = YA.pkToggle(w, sel); U().app.starMsg = r.msg; YA.saveWorld(); close(); rerender(); } }, pkIdx >= 0 ? `PK戦のキッカー ${pkIdx + 1}番目（外す）` : `PK戦のキッカーに入れる（${pkN}/5）`),
+      h('button', { class: 'btn', onclick: () => { close(); YA.renameBox(sel); } }, '名前を変える')));
   }
   // 総合力の水準の表（200＝歴史上No.1）
   function levelTable(now) {
@@ -548,7 +601,7 @@
       h('div', {}, '今月 ', h('b', { style: 'color:#1a9d57' }, sum(G.month) ? '+' + sum(G.month) : '伸びなし'), ' ', h('span', { class: 'note' }, top(G.month))),
       h('div', {}, '今年 ', h('b', {}, sum(G.year) ? '+' + sum(G.year) : '伸びなし'), ' ', h('span', { class: 'note' }, top(G.year))),
       (() => { const tb = YA.tacticTrainBonus(W(), p); const parts = []; if (tb.tactic) parts.push(`戦術「${tb.tactic}」：${tb.tabs.join('・')}`); if (tb.role) parts.push(`役割「${tb.role}」：${tb.rabs.slice(0, 4).join('・')}`); return parts.length ? h('div', { class: 'note', style: 'color:var(--ink)' }, '練習で伸びやすい ', parts.join(' ／ ')) : null; })(),
-      h('div', { class: 'note', style: 'font-size:10px' }, '棒の薄い緑＝次の+1までの進み／右の緑＝今月・灰＝今年の伸び')));
+      h('div', { class: 'note', style: 'font-size:11px' }, '棒の薄い緑＝次の+1までの進み／右の緑＝今月・灰＝今年の伸び')));
     return box;
   }
   // Aの先発をBに下げる：その位置に入る子を、先に選んでもらう（Aのベンチ・Bから。位置の適性の順）
