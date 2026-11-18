@@ -91,6 +91,17 @@ extension GameStateTransfer on GameState {
     return chance.clamp(0.0, 1.0);
   }
 
+  /// 監督が補強の案に挙げられる選手(ある程度見えている選手だけ)。
+  List<Player> get proposalTargets {
+    final same = sameLeaguePlayerIds();
+    return [
+      for (final p in transferTargets)
+        if (knowledgeOf(p, sameLeagueIds: same) >=
+            ScoutKnowledge.proposalMinimum)
+          p,
+    ];
+  }
+
   /// 他のクラブが手放せる最少の人数。これを割るなら売らない。
   static const int minSquadToSell = 18;
 
@@ -195,6 +206,160 @@ extension GameStateTransfer on GameState {
           '${p.name}\'s loan is over and he has gone back to ${club.name}.'),
       context: Tr.pick('ローン', 'Loan'),
     );
+  }
+
+  // ---- スカウト(どれだけ見えているか) ----
+
+  /// スカウトを送れる地域(自国の各部と、他の国の1部)。
+  List<({String key, String label, List<Team> teams})> get scoutRegions {
+    if (_save == null) return const [];
+    final s = _save!;
+    final home = currentLeagueTheme;
+    return [
+      for (var tier = 1; tier <= s.otherDivisionLeagues.length; tier++)
+        (
+          key: 'home:$tier',
+          label: Tr.pick('${home.label} $tier部', '${home.label} tier $tier'),
+          teams: tier == s.currentDivisionTier
+              ? s.league.teams
+              : s.otherDivisionLeagues[tier - 1]?.teams ?? const <Team>[],
+        ),
+      for (final e in s.foreignLeagues.entries)
+        (
+          key: 'foreign:${e.key}',
+          label: Tr.pick(
+              '${LeagueTheme.values.firstWhere((t) => t.name == e.key, orElse: () => home).label} 1部',
+              '${LeagueTheme.values.firstWhere((t) => t.name == e.key, orElse: () => home).label} top flight'),
+          teams: e.value.teams,
+        ),
+    ];
+  }
+
+  /// 同じ部の他のクラブの選手(試合で見ているので最初から見えている)。
+  Set<String> sameLeaguePlayerIds() => _save == null
+      ? const {}
+      : {
+          for (final t in _save!.league.teams)
+            if (t.id != _save!.userTeamId)
+              for (final p in t.players) p.id,
+        };
+
+  /// [p]がどれだけ見えているか(0〜100%)。多くの選手を続けて見るときは
+  /// [sameLeagueIds]に[sameLeaguePlayerIds]を渡すと速い。
+  int knowledgeOf(Player p, {Set<String>? sameLeagueIds}) {
+    if (_save == null) return 0;
+    if (userTeam.players.contains(p)) return 100;
+    // 作り物の市場(テストが置く)の選手は、報告が揃っている扱い。
+    if (transferMarket.contains(p)) return 100;
+    final stored = _save!.scoutKnowledge[p.id] ?? 0;
+    final same = sameLeagueIds ?? sameLeaguePlayerIds();
+    final base = same.contains(p.id) ? ScoutKnowledge.sameLeagueBase : 0;
+    return max(stored, base).clamp(0, 100);
+  }
+
+  /// 総合力の見立て(幅)。見えていなければ null。
+  (int, int)? overallEstimate(Player p, {Set<String>? sameLeagueIds}) =>
+      ScoutKnowledge.range(
+          p.overall, knowledgeOf(p, sameLeagueIds: sameLeagueIds), p.id, 1);
+
+  /// 伸びしろ(潜在)の見立て(幅)。見えていなければ null。
+  (int, int)? potentialEstimate(Player p, {Set<String>? sameLeagueIds}) =>
+      ScoutKnowledge.range(
+          p.potential, knowledgeOf(p, sameLeagueIds: sameLeagueIds), p.id, 2);
+
+  int get _scoutJudging => _save!.infrastructure
+      .staffAttributeLevel(StaffRole.scout, StaffAttribute.judging);
+
+  /// 同時に送れる地域の数(1〜3)。
+  int get scoutSlots =>
+      _save == null ? 0 : ScoutKnowledge.slotsFor(_scoutJudging);
+
+  /// 1か所あたりの1週の出張費。
+  int get scoutTripCostPerWeek =>
+      _save == null ? 0 : ScoutKnowledge.weeklyTripCost(_save!.currentDivisionTier);
+
+  /// 送った地域で1週に見えてくる量(%)。
+  int get scoutWeeklyGain =>
+      _save == null ? 0 : ScoutKnowledge.weeklyGain(_scoutJudging);
+
+  bool isScoutRegionActive(String key) =>
+      _save?.scoutRegionKeys.contains(key) ?? false;
+
+  /// 地域にスカウトを送る・引き上げる。送れる数を超えるなら送らない(false)。
+  Future<bool> toggleScoutRegion(String key) async {
+    if (_save == null) return false;
+    final keys = _save!.scoutRegionKeys;
+    if (!keys.remove(key)) {
+      if (keys.length >= scoutSlots) return false;
+      if (!scoutRegions.any((r) => r.key == key)) return false;
+      keys.add(key);
+    }
+    _notify();
+    await _persist();
+    return true;
+  }
+
+  /// 地域の選手が平均でどれだけ見えているか(%)。
+  int regionKnowledgePercent(String key) {
+    final region = scoutRegions.where((r) => r.key == key).firstOrNull;
+    if (region == null) return 0;
+    final same = sameLeaguePlayerIds();
+    var sum = 0;
+    var n = 0;
+    for (final t in region.teams) {
+      if (t.id == _save!.userTeamId) continue;
+      for (final p in t.players) {
+        sum += knowledgeOf(p, sameLeagueIds: same);
+        n++;
+      }
+    }
+    return n == 0 ? 0 : (sum / n).round();
+  }
+
+  /// 日付が進んだぶん、送った地域と注目の選手が見えてくる。出張費を払う。
+  void _advanceScouting(DateTime before, DateTime after) {
+    if (_save == null) return;
+    final days = TransferWindowCalendar.daysBetween(before, after);
+    if (days <= 0) return;
+    final weeks = days / 7;
+    final k = _save!.scoutKnowledge;
+    final same = sameLeaguePlayerIds();
+    void raise(String id, int gain) {
+      final base = same.contains(id) ? ScoutKnowledge.sameLeagueBase : 0;
+      k[id] = min(100, max(k[id] ?? 0, base) + gain);
+    }
+
+    final regions = {for (final r in scoutRegions) r.key: r};
+    final active =
+        _save!.scoutRegionKeys.where(regions.containsKey).toList();
+    final gain = (scoutWeeklyGain * weeks).round();
+    if (active.isNotEmpty && gain > 0) {
+      for (final key in active) {
+        for (final t in regions[key]!.teams) {
+          if (t.id == _save!.userTeamId) continue;
+          for (final p in t.players) {
+            raise(p.id, gain);
+          }
+        }
+      }
+      final cost = (scoutTripCostPerWeek * active.length * weeks).round();
+      if (cost > 0) _book(LedgerCategory.facilities, -cost);
+    }
+    final watchGain = (ScoutKnowledge.watchWeeklyGain * weeks).round();
+    if (watchGain > 0) {
+      final mine = {for (final p in userTeam.players) p.id};
+      for (final id in _save!.watchlistPlayerIds) {
+        if (!mine.contains(id)) raise(id, watchGain);
+      }
+    }
+  }
+
+  /// もういない選手(引退・作り直し)の見え方を捨てる。7月1日に呼ぶ。
+  void _pruneScoutKnowledge() {
+    final k = _save!.scoutKnowledge;
+    if (k.isEmpty) return;
+    final alive = {for (final p in _save!.allPlayers) p.id};
+    k.removeWhere((id, _) => !alive.contains(id));
   }
 
   /// 市場の選手に移籍金[offer](万円)の値切りオファーを出す。成立すれば

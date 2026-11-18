@@ -104,6 +104,7 @@ import '../logic/fixture_generator.dart';
 import '../logic/free_agent_engine.dart';
 import '../logic/lineup_utils.dart';
 import '../logic/match_engine.dart';
+import '../logic/scout_knowledge.dart';
 import '../logic/scouting_engine.dart';
 import '../logic/season_projection_engine.dart';
 import '../logic/sponsor_engine.dart';

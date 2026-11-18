@@ -5551,8 +5551,9 @@ void main() {
     prospect.potential = 99;
     // 19歳を過ぎた有望株は出場機会を求めてユースを去る。ここで見たいのは
     // 「置いている間に伸びるか」なので、去らない年齢に固定しておく
-    // (固定せずに20節回して、途中で居なくなり CI が落ちた)。
-    prospect.age = YouthDepartureEngine.restlessAge - 1;
+    // (固定せずに20節回して、途中で居なくなり CI が落ちた)。誕生日が
+    // 来ると1つ歳を取るので、その分も余らせて2つ下にする。
+    prospect.age = YouthDepartureEngine.restlessAge - 2;
     final overallBefore = prospect.overall;
 
     for (int i = 0; i < 20; i++) {

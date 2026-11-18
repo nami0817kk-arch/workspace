@@ -49,10 +49,18 @@ void main() {
       await game.startNewGame('明細FC');
       game.save!.budget = 100000;
 
-      final target = legacyMarket(game).first;
       game.save!.wageBudget = 999999; // 年俸の枠で止めない
-      await game.buyPlayerOnInstallments(target.id);
-      await game.sellPlayer(target.id);
+      // 市場の選手は作るたびに違い、登録の決まりで買えない選手もいる。
+      // 買えた選手で確かめる。
+      String? targetId;
+      for (final p in [...legacyMarket(game)]) {
+        if (await game.buyPlayerOnInstallments(p.id)) {
+          targetId = p.id;
+          break;
+        }
+      }
+      expect(targetId, isNotNull, reason: '分割で買える選手がいない');
+      await game.sellPlayer(targetId!);
 
       expect(game.save!.newsLog.any((n) => n.text.contains('分割払いの残金')), isTrue,
           reason: '残金の精算が記録されていない');
