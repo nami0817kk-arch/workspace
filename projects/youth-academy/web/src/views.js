@@ -138,7 +138,10 @@
     const wkHead = [...left.children].find((c) => c.classList && c.classList.contains('h'));
     const after = wkHead && wkHead.nextSibling ? wkHead.nextSibling.nextSibling : left.children[3];
     left.insertBefore(act, after || null);
+    // やり残し（期限のある操作）は「次の週へ」のすぐ下に（2026-11-18「操作を忘れることとかある」。上に置くと進むボタンが画面の外に押し出された）
+    const todo = YA.todoCard ? YA.todoCard(w) : null;
     left.insertBefore(matchEl, act.nextSibling);
+    if (todo) left.insertBefore(todo, matchEl);
     // 中：お知らせ＋先週の伸び
     const mid = h('div', { class: 'card pbody', style: 'flex:1;min-width:0' });
     mid.append(h('div', { class: 'h' }, 'お知らせ'));
@@ -212,6 +215,7 @@
   };
   function endWeek(go) {
     const w = W();
+    if (YA.todoGate && YA.todoGate(w, () => endWeek(go))) return;
     const wasEnd = w.week >= YA.WEEKS;
     const res = YA.endWeek(w);
     YA.saveWorld();

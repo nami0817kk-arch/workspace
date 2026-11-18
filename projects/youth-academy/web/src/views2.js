@@ -471,7 +471,7 @@
       body.append(h('div', { class: 'plist', style: 'margin-top:5px' }, al.map((a) => {
         const top = YA.alumniHighlight(a);
         return h('button', { class: 'pitem', style: 'align-items:flex-start', onclick: () => (YA.alumniModal ? YA.alumniModal(w, a) : alumniCareer(a)) }, a.fav ? h('b', { style: 'color:#e6a800' }, '★') : null, h('span', { class: 'pos ' + a.pos }, YA.POS_LABEL[a.main] || a.pos),
-          h('div', { class: 'grow', style: 'text-align:left;min-width:0' }, h('b', {}, a.name), h('div', { class: 'note' }, (a.status === 'left' ? '退団' : `${a.year}年卒・${a.age}歳`) + (a.club ? `・${a.club}` : '') + (a.league && a.status !== 'left' ? `（${a.league}）` : '') + (a.retired ? '・引退' : ''))),
+          h('div', { class: 'grow', style: 'text-align:left;min-width:0' }, h('b', {}, a.name), h('div', { class: 'note' }, (a.status === 'left' ? '退団' : `${a.year}年卒・${a.age}歳`) + (a.club ? `・${a.club}` : '') + (a.league && a.status !== 'left' ? `（${a.league}）` : '') + (a.retired ? '・引退' : '')), YA.alumniTagline && YA.alumniTagline(a) ? h('div', { class: 'tagline', style: 'font-size:11.5px;color:var(--ink)' }, YA.alumniTagline(a)) : null),
           (a.status === 'pro' || a.status === 'univ') && a.apps > 0 ? h('span', { class: 'sub', style: 'font-size:11.5px;white-space:nowrap' }, `通算${YA.statLine(a, a.pos === 'GK')}`) : null, // 卒業したばかりで0試合の子には出さない
           (a.titles || []).length ? h('span', { class: 'chip trait' }, `タイトル${a.titles.length}`) : null,
           top ? h('span', { class: 'chip pers' }, top) : null,

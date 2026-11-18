@@ -641,7 +641,49 @@ async function clearEvents() {
         const e3 = sheets[sheets.length - 1].textContent;
         ok(errors.length === 0 && sheets.length === before + 1, '経歴のページが開く: ' + errors.slice(0, 2).join('|'));
         ok(['ユース時代', '高1 70', 'Aの公式戦 40試合', '覚醒：点取り屋', '年ごとの成績', '市場価値', '9億円', '移籍の歴史', '川崎 フロンティエラ → ロイヤル・マドリード', '5.2億円', '移籍金の合計 5.2億円', 'タイトルと賞', 'ユースでの思い出', 'ここで一番になる', 'バロンドール 最高4位'].every((x) => e3.includes(x)), '経歴のページに、ユース時代・年ごとの成績・市場価値・移籍金・賞・思い出が出る');
+        // 卒業生の紹介文（2026-11-18「概要欄が薄い、もっと文章で」）：経歴のページの上に2段落
+        ok(e3.includes('どんな子だったか') && e3.includes('卒業してから') && e3.includes('「点取り屋」に目覚めた') && e3.includes('高1で70だった総合力') && e3.includes('ロイヤル・マドリード（ラ・リーガ）へ移った'), '経歴のページに、ユース時代とその後の紹介文が出る');
         sheets[sheets.length - 1].remove();
+        {
+          const sa = Object.assign({}, ca, { route: 'セレクション', joinY: 2, pers: ['寡黙'], bg: 'bropro', capt: true, awY: 3, youthCaps: 2, bond: 5,
+            mem: [{ y: 3, k: 'path', c: 'univ', wish: 'abroad' }, { y: 3, k: 'grad', q: '監督に会えてよかった' }] });
+          const st = w.YA.alumniStory(A.w, sa);
+          ok(['2年目にセレクションを勝ち抜いて入ってきた', 'キャプテン', '性格は寡黙', '兄がプロ', '3年目に「点取り屋」に目覚めた', 'Aの公式戦には40試合に出て、22得点・7アシスト', '海外を望んだが、大学の道を選ばせた', '「監督に会えてよかった」', '絆は深い'].every((x) => st.youth.includes(x)), '紹介文（ユース時代）に、入団・性格・事情・伸び・覚醒・成績・進路・言葉・絆が入る: ' + st.youth);
+          ok(['卒業から1年', '通算', '移籍金 5.2億円', 'タイトルは'].every((x) => st.after.includes(x)), '紹介文（その後）に、年数・通算・移籍・タイトルが入る: ' + st.after);
+          ok(/^「点取り屋」に目覚めた、.+のST$/.test(w.YA.alumniTagline(sa)),'名鑑のひとこと紹介: ' + w.YA.alumniTagline(sa));
+          const bare = w.YA.alumniStory(A.w, { name: '古い 記録', pos: 'DF', main: 'CB', year: 2, ovr: 10, status: 'amateur', club: '社会人', league: '社会人リーグ', traits: [] });
+          ok(bare.youth.includes('監督が来たときには、もうチームにいた') && errors.length === 0, '記録の少ない古い卒業生でも紹介文が作れる: ' + bare.youth);
+        }
+      }
+      // やり残し（2026-11-18「操作を忘れることとかあるので、直したい」）：ホームの欄・タブの印・締め切りの週に一度止める
+      {
+        const keepW = A.w, keepTab = A.tab;
+        const tw = w.YA.newWorld(11);
+        tw.introSeen = true;
+        for (const p of Object.values(tw.players)) p.star = false;
+        tw.week = 4; tw.phase = 'after'; tw.matchDone = true; tw.events = [];
+        const L = w.YA.todoList(tw);
+        ok(L.some((x) => x.id === 'star' && x.hard && x.left === 0), '4週目で★が未定なら、締め切りのやり残しになる');
+        A.w = tw; A.tab = 'home'; w.YA._ui.render();
+        const card = d.querySelector('.todo');
+        ok(card && card.textContent.includes('高1の★注目を決める') && card.textContent.includes('今週まで'), 'ホームにやり残しの欄が出る');
+        ok(!!d.querySelector('#rail .tdot'), 'やり残しのあるタブに印が付く');
+        btn('次の週へ').click();
+        const sh = [...d.querySelectorAll('.sheet')].pop();
+        ok(sh && sh.textContent.includes('この週で締め切られるもの') && sh.textContent.includes('★は付けられなくなり') && tw.week === 4, '締め切りの週は「次の週へ」の前に一度止まる');
+        btn('戻って決める', sh).click();
+        ok(A.tab === 'players' && A.pSel === w.YA.starPick(tw, 1)[0].id && !d.querySelector('.sheet'), '「戻って決める」でその画面へ');
+        A.tab = 'home'; w.YA._ui.render();
+        btn('次の週へ').click();
+        btn('このまま進む', [...d.querySelectorAll('.sheet')].pop()).click();
+        ok(tw.week === 5 || tw.phase !== 'after', '「このまま進む」で週が進む');
+        d.querySelectorAll('.sheet').forEach((s) => s.remove());
+        tw.week = 27; tw.phase = 'after';
+        ok(w.YA.todoDue(tw).some((x) => x.id === 'int'), '11月の最後の週は、内部昇格が締め切りのやり残しになる');
+        tw.week = 12;
+        ok(!w.YA.todoDue(tw).length, '締め切りのない週は止めない');
+        A.w = keepW; A.tab = keepTab; w.YA._ui.render();
+        ok(errors.length === 0, 'やり残しで例外なし: ' + errors.slice(0, 2).join('|'));
       }
       for (const n of ['実績', '図鑑', '殿堂', '年表', '育成基金', '卒業生名鑑']) {
         ok(ltab(n), n + 'の小タブがある');
