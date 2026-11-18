@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'difficulty.dart';
 import 'draft.dart';
+import 'game_sim.dart';
 import 'gm_people.dart';
 import 'inbox.dart';
 import 'promise.dart';
@@ -1656,6 +1657,51 @@ class Career {
   /// 1週間に進める節の数。
   static const daysPerWeek = 3;
 
+  /// 采配する試合の乱数。リーグの乱数を使わず、季と節から決める(見ながら進めても、確定しても同じ試合になる)。
+  int get liveSeed => (seed * 1000003 + season * 9176 + roundAt * 131 + 0x2545) & 0x7fffffff;
+
+  /// 次の節の自分の試合(ホーム, アウェー)。レギュラーシーズン中で残っているときだけ。
+  (int, int)? get nextMyGame {
+    if (phase != Phase.season || block >= blocksPerSeason) return null;
+    final sched = seasonSchedule(teams.length);
+    if (roundAt >= sched.length || roundAt >= blockStart(block + 1)) return null;
+    for (final g in sched[roundAt]) {
+      if (g.$1 == mine || g.$2 == mine) return g;
+    }
+    return null;
+  }
+
+  /// 采配しながら見る途中の結果(リーグも選手も変えない)。[stopAt] の区切りで止める(null なら最後まで)。
+  SimResult? previewLive(List<GameCall?> calls, int? stopAt) {
+    final g = nextMyGame;
+    if (g == null) return null;
+    final rested = _restBeforeGame();
+    try {
+      final h = teams[g.$1], a = teams[g.$2];
+      return simulateGame(h, a, Rng(liveSeed),
+          homeStr: h.strength, awayStr: a.strength, record: true, calls: calls, stopAt: stopAt, side: g.$1 == mine ? 0 : 1);
+    } finally {
+      for (final p in rested) {
+        p.injured = 0;
+      }
+    }
+  }
+
+  List<GameCall?>? _liveCalls;
+
+  /// 采配した試合のある1節を進める(ほかの試合はふつうに進む)。区切りの終わりに着いたら true。
+  bool playLiveDay(List<GameCall?> calls) {
+    if (nextMyGame == null) return false;
+    final before = block;
+    _liveCalls = calls;
+    try {
+      _playRounds(1);
+    } finally {
+      _liveCalls = null;
+    }
+    return block != before;
+  }
+
   /// [n] 節進める。区切りの終わりに着いたら、区切りのあとの出来事(気持ち・相手同士のトレード・申し込み)を起こす。
   void _playRounds(int n) {
     if (phase != Phase.season || block >= blocksPerSeason || n <= 0) return;
@@ -1670,7 +1716,13 @@ class Career {
     for (final round in seasonSchedule(teams.length).sublist(roundAt, roundAt + n)) {
       for (final (h, a) in round) {
         final rested = h == mine || a == mine ? _restBeforeGame() : const <Player>[];
-        final g = playGame(teams[h], teams[a], rng, mine: mine, injuryScale: difficulty.injury * medicalScale, healScale: medicalScale);
+        final live = _liveCalls != null && (h == mine || a == mine);
+        final g = playGame(teams[h], teams[a], rng,
+            mine: mine,
+            injuryScale: difficulty.injury * medicalScale,
+            healScale: medicalScale,
+            liveSeed: live ? liveSeed : null,
+            calls: live ? _liveCalls! : const []);
         for (final p in rested) {
           p.injured = 0;
           p.restGames++;
