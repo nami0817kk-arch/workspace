@@ -474,7 +474,7 @@
       {
         label: '受け入れる（Bチームに加わる。伸びるが怪我に注意）', kind: 'push', extra: null,
         run: (w, p, r) => {
-          const used = new Set(Object.values(w.players).map((q) => q.name));
+          const used = YA.usedNames(w);
           const pos = r.pick(['CB', 'DM', 'CM', 'AM', 'LW', 'RW', 'ST']);
           const id = 'p' + ++w.nextId;
           const n = YA.genPlayer(r, id, 1, pos, 2.2, used);

@@ -348,7 +348,7 @@
     left.append(h('div', { class: 'note', style: 'margin-top:4px' }, '上位2チームは翌年に一つ上のリーグへ、下位2チームは一つ下のリーグへ。'));
     const right = h('div', { style: 'flex:1;min-width:0' });
     const cupRow = (name, c) => h('div', { class: 'row', style: 'padding:3px 0' }, h('b', { style: 'width:104px' }, name), h('span', { class: 'grow' }, c.result ? c.result : c.alive ? (c.round ? `${c.round}回戦を突破中` : 'これから') : ''));
-    right.append(card(title('大会'), cupRow(YA.CUP_NAME.summer, w.cup.summer), cupRow(YA.CUP_NAME.winter, w.cup.winter), h('div', { class: 'note' }, '負けたら終わりのトーナメントです（10〜12週・27〜30週）。')));
+    right.append(card(title('大会'), cupRow(YA.CUP_NAME.summer, w.cup.summer), cupRow(YA.CUP_NAME.winter, w.cup.winter), h('div', { class: 'note' }, '夏はグループ戦3試合（13〜15週）、上位2つが決勝トーナメントへ。冬は負けたら終わりのトーナメント（27〜30週）。')));
     // 今年の日程：月ごとの縦の表。今週に当たる行に印（2026-11-16 1段落の長い文だった）
     {
       const SCH = [[1, 12, 'リーグ前半'], [13, 15, (YA.CUP_NAME && YA.CUP_NAME.summer) || '夏の大会'], [16, 16, '夏合宿・遠征'], [17, 26, 'リーグ後半'], [27, 30, (YA.CUP_NAME && YA.CUP_NAME.winter) || '冬の大会'], [25, 27, '内部昇格（中3の練習参加）'], [1, 27, 'スカウト（声をかけるのは4〜11月）'], [28, 28, 'スカウトの返事'], [31, 34, 'セレクション'], [40, 40, '卒業式']].sort((x, y) => x[0] - y[0] || x[1] - y[1]);

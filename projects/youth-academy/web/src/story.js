@@ -160,16 +160,19 @@
     }
     if (e.sc === 'cup') {
       const c = w.cup && w.cup[e.cup];
-      const rows = c ? c.opps.map((o, i) => `${i === c.opps.length - 1 ? '決勝' : (i + 1) + '回戦'} ${o.name}${i < c.round ? ' ○' : ' ←これから'}`.replace('○', '○')).slice(0, c.opps.length) : [];
+      const RN = e.cup === 'summer' ? ['決勝T1回戦', '準々決勝', '準決勝', '決勝'] : null;
+      const rows = c ? c.opps.map((o, i) => `${i === c.opps.length - 1 ? '決勝' : RN ? RN[i] : (i + 1) + '回戦'} ${o.name}${i < c.round ? ' ○' : ' ←これから'}`) : [];
       return `${YA.CUP_NAME[e.cup]}、決勝の前。ここまで勝ち上がってきた。 ${rows.join(' ／ ')}。ロッカーでみんなが、こちらの言葉を待っている。`;
     }
     const grads = all.filter((p) => p.grade === 3).sort((a, b) => (b.star ? 1 : 0) - (a.star ? 1 : 0) || YA.ovr(b) - YA.ovr(a));
     const shown = grads.slice(0, 4).map((p) => YA.sayLine({ name: p.name + (p.star ? '★' : '') }, YA.say(w, p, 'thanks'))).join(' ／ ');
     return `卒業式。${grads.length}人がグラウンドに並び、順に挨拶をした。 ${shown}`;
   }
-  const run = (line, fn) => ({ label: null, kind: null, run: (w, p, r) => { const s = fn ? fn(w) : ''; return { line, small: s || '' }; } });
+  const run = (line, fn, after) => ({ label: null, kind: null, run: (w, p, r) => { const s = fn ? fn(w) : ''; const s2 = after ? after(w) : ''; return { line: line + (s2 ? ' ' + s2 : ''), small: s || '' }; } });
   function sceneOpts(w, e) {
-    const o = (label, line, fn) => Object.assign(run(line, fn), { label });
+    // 夏の決勝は場面で送り出したあとに決まる
+    const fin = e.sc === 'cup' && e.cup === 'summer' ? (ww) => { YA.summerFinal(ww); const c = ww.cup.summer; return c.result === '優勝' ? '決勝に勝って、優勝した！' : '決勝で敗れ、準優勝に終わった。'; } : null;
+    const o = (label, line, fn) => Object.assign(run(line, fn, fin), { label });
     if (e.sc === 'enter') return [
       o('「ようこそ。三年間、本気でやろう」と声をかける', '新入生の顔が引き締まった。', (ww) => { const l = Object.values(ww.players).filter((p) => p.grade === 1); bump(l, 'conf', 3); return `新入生の自信 +3`; }),
       o('「まず慣れることからだ」と肩の力を抜かせる', '新入生の肩から力が抜けた。', (ww) => { const l = Object.values(ww.players).filter((p) => p.grade === 1); bump(l, 'conf', 1); bump(l, 'fat', -5); return '新入生の自信 +1・疲れ −5'; }),
@@ -268,10 +271,15 @@
       for (const p of Object.values(w.players)) if (p.star) YA.hintUp(w, p, 0.4, '合宿');
       push(w, { id: 'scene', sc: 'camp' });
     }
-    if (w.week === YA.SUMMER_CUP_WEEKS[1] || w.week === 30) {
-      const k = w.week === YA.SUMMER_CUP_WEEKS[1] ? 'summer' : 'winter';
-      const c = w.cup && w.cup[k];
-      if (c && c.alive && c.round === c.opps.length - 1) push(w, { id: 'scene', sc: 'cup', cup: k });
+    // 夏はグループ戦のあとに決勝まで勝ち上がっていれば、次の週（16週）に決勝の前の場面。決勝の結果は場面のあと
+    const sc = w.cup && w.cup.summer;
+    if (sc && sc.finalPending) {
+      if (w.week === YA.SUMMER_CUP_WEEKS[1] + 1) push(w, { id: 'scene', sc: 'cup', cup: 'summer' });
+      else if (w.week > YA.SUMMER_CUP_WEEKS[1] + 1) YA.summerFinal(w); // 場面が出なかったときの保険
+    }
+    if (w.week === 30) {
+      const c = w.cup && w.cup.winter;
+      if (c && c.alive && c.round === c.opps.length - 1) push(w, { id: 'scene', sc: 'cup', cup: 'winter' });
     }
     // 進路面談を受けた子には、38週の一般の進路相談を出さない
     if (w.week === 38) w.forced = (w.forced || []).filter((e) => !(e.id === 'career' && w.players[e.pid] && w.players[e.pid]._p2));
