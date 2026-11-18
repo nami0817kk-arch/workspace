@@ -215,6 +215,8 @@ void main() {
     var picked = 0;
     var guard = 0;
     while (car.phase == Phase.draft && guard++ < 10) {
+      // 実績などの知らせが出ていれば閉じてから
+      await _closeDialogs(tester);
       if (car.canDraftPick) {
         final b = find.widgetWithText(FilledButton, '指名').first;
         await tester.ensureVisible(b);
