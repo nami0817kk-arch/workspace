@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:soccer_manager/logic/transfer_terms_engine.dart';
 import 'package:soccer_manager/models/save_game.dart';
 import 'package:soccer_manager/state/game_state.dart';
+import 'support/legacy_market.dart';
 
 /// 移籍の現実的な条件: 代理人手数料と売却条項。
 void main() {
@@ -38,7 +39,7 @@ void main() {
     test('一括で買うと、移籍金のほかに代理人手数料が引かれる', () async {
       final game = GameState();
       await game.startNewGame('手数料FC');
-      final target = game.transferMarket.first;
+      final target = legacyMarket(game).first;
       final fee = TransferTermsEngine.agentFee(target.marketValue);
       game.save!.budget = target.marketValue + fee + 7;
       game.save!.wageBudget = 999999;
@@ -50,7 +51,7 @@ void main() {
     test('手数料を含めて足りなければ買えない', () async {
       final game = GameState();
       await game.startNewGame('手数料FC');
-      final target = game.transferMarket.first;
+      final target = legacyMarket(game).first;
       game.save!.budget = target.marketValue; // 手数料の分が足りない
       game.save!.wageBudget = 999999;
 
@@ -61,7 +62,7 @@ void main() {
     test('分割払いでも、頭金のほかに代理人手数料が引かれる', () async {
       final game = GameState();
       await game.startNewGame('手数料FC');
-      final target = game.transferMarket.first;
+      final target = legacyMarket(game).first;
       final down = (target.marketValue * 0.3).round();
       final fee = TransferTermsEngine.agentFee(target.marketValue);
       game.save!.budget = 100000;
@@ -76,7 +77,7 @@ void main() {
       await game.startNewGame('条項FC');
       game.save!.budget = 1000000;
       game.save!.wageBudget = 999999;
-      final market = game.transferMarket;
+      final market = legacyMarket(game);
       final full = market[0];
       final cheap = market[1];
 

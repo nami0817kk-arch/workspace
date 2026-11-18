@@ -8,6 +8,7 @@ import 'package:soccer_manager/l10n/tr.dart';
 import 'package:soccer_manager/screens/player_compare_screen.dart';
 import 'package:soccer_manager/state/game_state.dart';
 import 'package:soccer_manager/state/settings_controller.dart';
+import 'support/legacy_market.dart';
 
 /// 市場の選手を比べられることの検査。
 ///
@@ -22,7 +23,7 @@ void main() {
     await game.startNewGame('探索FC');
 
     expect(game.playerById(game.userTeam.players.first.id), isNotNull);
-    expect(game.playerById(game.transferMarket.first.id), isNotNull,
+    expect(game.playerById(legacyMarket(game).first.id), isNotNull,
         reason: '市場の選手が見つからない');
     if (game.scoutCandidates.isNotEmpty) {
       expect(game.playerById(game.scoutCandidates.first.id), isNotNull,
@@ -42,7 +43,7 @@ void main() {
     });
     Tr.language = AppLanguage.japanese;
 
-    final market = game.transferMarket;
+    final market = legacyMarket(game);
     await tester.pumpWidget(MultiProvider(
       providers: [
         ChangeNotifierProvider<GameState>.value(value: game),

@@ -13,6 +13,7 @@ import 'package:soccer_manager/models/league_theme.dart';
 import 'package:soccer_manager/models/match_result.dart';
 import 'package:soccer_manager/models/player.dart';
 import 'package:soccer_manager/state/game_state.dart';
+import 'support/legacy_market.dart';
 
 /// 移籍の窓を日付で開け閉めする決まりの検査。
 void main() {
@@ -159,7 +160,7 @@ void main() {
     test('移籍金のかかる獲得・売却はできないが、自由契約の選手は取れる', () async {
       final game = await newGame();
       game.save!.today = DateTime(2026, 10, 15);
-      final target = game.transferMarket.firstWhere((p) => p.age >= 18);
+      final target = legacyMarket(game).firstWhere((p) => p.age >= 18);
       expect(await game.buyPlayer(target.id), isFalse);
       expect(await game.signLoanPlayer(target.id), isFalse);
 
@@ -186,7 +187,7 @@ void main() {
     test('登録中のGKが全員出られないときだけ、窓の外でもGKを1人ローンで取れる', () async {
       final game = await newGame();
       game.save!.today = DateTime(2026, 10, 15);
-      final market = game.transferMarket;
+      final market = legacyMarket(game);
       final gk = market.firstWhere((p) => p.age >= 18);
       gk.position = Position.gk;
       final gk2 = market.firstWhere((p) => p.age >= 18 && p.id != gk.id);
@@ -335,7 +336,7 @@ void main() {
 
     test('借りた選手は終わりの日に戻る(半年)', () async {
       final game = await newGame();
-      final target = game.transferMarket.firstWhere((p) => p.age >= 18)
+      final target = legacyMarket(game).firstWhere((p) => p.age >= 18)
         ..age = 21;
       expect(await game.signLoanPlayer(target.id, length: LoanLength.half),
           isTrue);
@@ -352,7 +353,7 @@ void main() {
 
     test('1年のローンはシーズンの切り替わり(7月1日)で終わる', () async {
       final game = await newGame();
-      final target = game.transferMarket.firstWhere((p) => p.age >= 18)
+      final target = legacyMarket(game).firstWhere((p) => p.age >= 18)
         ..age = 21;
       expect(await game.signLoanPlayer(target.id, length: LoanLength.full),
           isTrue);
@@ -428,10 +429,10 @@ void main() {
 
     test('他の国の18歳未満は獲れない。自国の18歳未満は獲れる', () async {
       final game = await newGame();
-      final foreign = game.transferMarket[0]
+      final foreign = legacyMarket(game)[0]
         ..age = 17
         ..originLeague = LeagueTheme.spain.name;
-      final domestic = game.transferMarket[1]
+      final domestic = legacyMarket(game)[1]
         ..age = 17
         ..originLeague = LeagueTheme.england.name;
       expect(await game.buyPlayer(foreign.id), isFalse);

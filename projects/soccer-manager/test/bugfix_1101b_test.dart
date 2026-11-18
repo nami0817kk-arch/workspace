@@ -17,6 +17,7 @@ import 'package:soccer_manager/models/match_result.dart';
 import 'package:soccer_manager/models/staff_member.dart';
 import 'package:soccer_manager/models/team.dart';
 import 'package:soccer_manager/state/game_state.dart';
+import 'support/legacy_market.dart';
 
 /// 2026-11-01 に見つかった不具合(4〜7e)の再現テスト。
 void main() {
@@ -115,7 +116,7 @@ void main() {
 
   test('5. 残り1年の選手を買っても、次の切り替わりで退団しない', () async {
     final game = await newGame();
-    final target = game.transferMarket.first;
+    final target = legacyMarket(game).first;
     target.contractYearsRemaining = 1;
     target.age = 33;
     game.save!.budget = target.marketValue * 2;

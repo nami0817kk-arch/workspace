@@ -12,6 +12,7 @@ import 'package:soccer_manager/state/game_state.dart';
 import 'package:soccer_manager/widgets/reward_funds_card.dart';
 
 import 'support/stub_purchase_service.dart';
+import 'support/legacy_market.dart';
 
 /// お金が湧く道・消える道の検査。
 ///
@@ -30,7 +31,7 @@ void main() {
       game.save!.budget = 100000;
       final before = game.save!.budget;
 
-      final target = game.transferMarket.first;
+      final target = legacyMarket(game).first;
       game.save!.wageBudget = 999999; // 年俸の枠で止めない
       expect(await game.buyPlayerOnInstallments(target.id), isTrue);
       expect(await game.sellPlayer(target.id), isTrue);
@@ -48,7 +49,7 @@ void main() {
       await game.startNewGame('明細FC');
       game.save!.budget = 100000;
 
-      final target = game.transferMarket.first;
+      final target = legacyMarket(game).first;
       game.save!.wageBudget = 999999; // 年俸の枠で止めない
       await game.buyPlayerOnInstallments(target.id);
       await game.sellPlayer(target.id);
@@ -65,7 +66,7 @@ void main() {
       // 1割ほどの確率で枠を超える)。ここで見たいのは資金の出入りだけ。
       game.save!.wageBudget = 1000000;
 
-      final target = game.transferMarket.first;
+      final target = legacyMarket(game).first;
       expect(await game.buyPlayer(target.id), isTrue);
       final afterBuy = game.save!.budget;
       final net = game.netReleaseValueFor(target.id);

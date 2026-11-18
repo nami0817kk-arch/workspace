@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:soccer_manager/logic/signing_proposal_engine.dart';
 import 'package:soccer_manager/state/game_state.dart';
+import 'support/legacy_market.dart';
 
 /// 補強は、監督が挙げた候補をオーナーが買う/見送るで決める形。
 void main() {
@@ -15,7 +16,7 @@ void main() {
 
   test('候補は最大3人で、市場にいる選手だけ', () async {
     final game = await newGame();
-    final market = game.transferMarket;
+    final market = legacyMarket(game);
     final proposals = SigningProposalEngine.propose(
       game.userTeam,
       market,
@@ -31,7 +32,7 @@ void main() {
 
   test('見送った選手は、次の候補に出ない', () async {
     final game = await newGame();
-    final market = game.transferMarket;
+    final market = legacyMarket(game);
     final first = SigningProposalEngine.propose(
       game.userTeam,
       market,
@@ -52,7 +53,7 @@ void main() {
     final game = await newGame();
     final proposals = SigningProposalEngine.propose(
       game.userTeam,
-      game.transferMarket,
+      legacyMarket(game),
       budget: 0,
     );
     for (final pr in proposals) {
