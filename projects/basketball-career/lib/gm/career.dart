@@ -2658,6 +2658,7 @@ class Career {
 
   void _startContracts() {
     haggled = [];
+    agentAsks = {};
     rfa = [];
     sheet = null;
     capYear++;
@@ -3557,6 +3558,49 @@ class Career {
   /// 値切りを断られた選手(断られるたびに1回足す。代理人との交渉は [maxHaggle] 回まで)。
   List<int> haggled = [];
 
+  /// 代理人の今の言い値(往復するたびに下がる。このオフのあいだ覚えている)。
+  Map<int, int> agentAsks = {};
+
+  Player? _talkTarget(int id) => expiring.contains(id) ? _mineById(id) : freeAgents.where((x) => x.id == id).firstOrNull;
+
+  /// 代理人がのむ最低の年俸。乱数は使わず、値切りに応じやすい選手ほど低い。30歳以上は長い契約なら安くてよい。
+  int agentFloor(Player p, int years) {
+    final ch = discountChance(p, freeAgent: !expiring.contains(p.id));
+    var f = 1 - (0.05 + 0.18 * ch);
+    if (p.age >= 30) f -= 0.02 * (years - 1);
+    f += ((p.id * 7919 + seed) % 5 - 2) / 100;
+    return (askOf(p, me).salary * f).round().clamp(minSalary, maxSalaryFor(p.exp));
+  }
+
+  /// 代理人の今の言い値。
+  int agentAskOf(Player p) => agentAsks[p.id] ?? askOf(p, me).salary;
+
+  /// 代理人に額を申し出る(契約はまだ結ばない。まとまったら [offer] を agreed で呼ぶ)。
+  /// 言い値に近ければまとまる。最低線より上なら間を取った額を返してくる。最低線より大きく低いと気を悪くする(気持ち-4)。
+  /// 往復は [haggleLimit] 回まで。使い切ると、言い値が最後の提示になる。
+  AgentReply talkAgent(int id, int years, int salary) {
+    final p = _talkTarget(id);
+    if (p == null) return const AgentReply(AgentMood.closed, 0);
+    final ask = askOf(p, me).salary, now = agentAskOf(p), floor = agentFloor(p, years);
+    final near = (ask * 0.03).round();
+    if (salary >= now - near) return AgentReply(AgentMood.agreed, math.min(salary, now));
+    if (haggleRounds(id) >= haggleLimit) return AgentReply(AgentMood.closed, now);
+    haggled.add(id);
+    if (salary < floor * 0.9) {
+      p.morale = (p.morale - 4).clamp(0, 100);
+      return AgentReply(AgentMood.insulted, now);
+    }
+    if (salary >= floor) {
+      final next = math.max(salary, ((now + salary) / 2).round());
+      if (next - salary <= near) return AgentReply(AgentMood.agreed, salary);
+      agentAsks[id] = next;
+      return AgentReply(haggleRounds(id) >= haggleLimit ? AgentMood.last : AgentMood.counter, next);
+    }
+    final next = math.max(floor, ((now + salary) / 2).round());
+    agentAsks[id] = next;
+    return AgentReply(haggleRounds(id) >= haggleLimit ? AgentMood.last : AgentMood.low, next);
+  }
+
   /// 代理人との値切りの交渉の最大の往復。
   static const maxHaggle = 3;
 
@@ -3582,13 +3626,14 @@ class Career {
 
   /// 契約を申し出る。[factor] は求める額に掛ける数(0.9 で1割安く、1.1 で1割高く)。受けたら true。
   /// 1割安くを断られると気持ちが4下がり、次は受けにくくなる(3回断られたら、このオフはもう値切れない)。1割高くは気持ちが10上がる。
-  bool offer(int id, int years, double factor) {
+  /// [agreed] なら代理人との交渉でまとまった額なので、値切りの見込みは見ない。
+  bool offer(int id, int years, double factor, {bool agreed = false}) {
     final partial = partialNext;
     partialNext = false;
     final exp = expiring.contains(id);
     final p = exp ? _mineById(id) : freeAgents.where((x) => x.id == id).firstOrNull;
     if (p == null) return false;
-    if (factor < 1) {
+    if (factor < 1 && !agreed) {
       final rounds = haggleRounds(id);
       if (rounds >= haggleLimit) return false;
       // 断られるたびに、次は受けにくくなる(代理人は往復するほど硬くなる)
@@ -3849,6 +3894,7 @@ class Career {
         'gs': goalStance,
         'asi': allStarIds,
         'hg': haggled,
+        'aga': {for (final e in agentAsks.entries) '${e.key}': e.value},
         if (rfa.isNotEmpty) 'rf': rfa,
         if (sheet != null) 'sh': sheet,
         'hy': hype,
@@ -3966,6 +4012,7 @@ class Career {
       ..goalStance = (j['gs'] as int?) ?? 0
       ..allStarIds = [for (final x in (j['asi'] as List? ?? const [])) x as int]
       ..haggled = [for (final x in (j['hg'] as List? ?? const [])) x as int]
+      ..agentAsks = {for (final e in ((j['aga'] as Map?) ?? const {}).entries) int.parse(e.key as String): e.value as int}
       ..rfa = [for (final x in (j['rf'] as List? ?? const [])) x as int]
       ..sheet = j['sh'] is List ? [for (final x in j['sh'] as List) x as int] : null
       ..hype = ((j['hy'] as int?) ?? 50).clamp(0, 100)
@@ -4020,4 +4067,33 @@ class Career {
 
   /// 優勝の回数。
   int get titles => history.where((h) => h.champion).length;
+}
+
+/// 代理人の返事。
+enum AgentMood {
+  /// まとまった。
+  agreed,
+
+  /// 間を取った額を返してきた。
+  counter,
+
+  /// まだ低いが、少し下げてきた。
+  low,
+
+  /// これが最後の提示(もう値切れない)。
+  last,
+
+  /// 低すぎて気を悪くした(額は下げない)。
+  insulted,
+
+  /// もう値切れない。
+  closed,
+}
+
+class AgentReply {
+  const AgentReply(this.mood, this.salary);
+  final AgentMood mood;
+
+  /// まとまった額、または代理人の今の言い値。
+  final int salary;
 }

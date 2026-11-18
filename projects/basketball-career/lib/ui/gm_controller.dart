@@ -110,6 +110,9 @@ class GmController extends ChangeNotifier {
     }
   }
 
+  /// 画面の中で直に変えた分(代理人との往復など)を保存する。
+  void touch() => _changed();
+
   void _changed() {
     _dirty = true;
     notifyListeners();
@@ -357,10 +360,10 @@ class GmController extends ChangeNotifier {
     if (car != null) car.partialNext = v;
   }
 
-  bool offer(int id, int years, double factor) {
+  bool offer(int id, int years, double factor, {bool agreed = false}) {
     final c = career;
     if (c == null || busy) return false;
-    final ok = c.offer(id, years, factor);
+    final ok = c.offer(id, years, factor, agreed: agreed);
     _record(c);
     _changed();
     return ok;

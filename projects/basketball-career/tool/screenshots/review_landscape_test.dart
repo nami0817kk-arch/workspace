@@ -11,6 +11,7 @@ library;
 // 生成器はテストの外にあるため、setMockInitialValues が警告になる。実体は flutter test で走らせる。
 // ignore_for_file: invalid_use_of_visible_for_testing_member
 
+import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 import 'dart:ui' as ui;
@@ -23,6 +24,7 @@ import 'package:basketball_career/ui/app.dart';
 import 'package:basketball_career/ui/gm/champion_screen.dart';
 import 'package:basketball_career/ui/gm/common.dart';
 import 'package:basketball_career/ui/gm/gm_table.dart';
+import 'package:basketball_career/ui/gm/negotiate_dialog.dart';
 import 'package:basketball_career/ui/gm/progress_tab.dart';
 import 'package:basketball_career/ui/gm_controller.dart';
 import 'package:flutter/material.dart';
@@ -464,6 +466,24 @@ void main() {
       await _tap(t, '補強', first: true);
       await _tap(t, '次の日へ');
       await settle(t);
+    });
+    final talk = await _with(toContracts());
+    await _shoot(t, '15d_agent_talk', talk, act: (t) async {
+      final car = talk.career!;
+      // 自由契約のふつうの選手は最低年俸ばかりなので、契約の切れる自分の選手と話す
+      final p = car.me.roster.where((p) => car.expiring.contains(p.id) && car.askOf(p, car.me).salary > minSalary * 2).first;
+      unawaited(negotiate(t.element(find.byType(Scaffold).first), talk, p, freeAgent: false));
+      await settle(t);
+      final chips = find.descendant(of: find.byKey(const Key('agent-talk')), matching: find.byType(ChoiceChip));
+      expect(chips, findsWidgets, reason: '代理人と値切る欄が出ている');
+      await t.ensureVisible(chips.first);
+      await t.pumpAndSettle();
+      await t.tap(chips.first);
+      await t.pumpAndSettle();
+      await t.tap(find.text('この額を申し出る'));
+      await t.pumpAndSettle();
+      if (find.byKey(const Key('agent-talk')).evaluate().isNotEmpty) await t.ensureVisible(find.byKey(const Key('agent-talk')));
+      await t.pumpAndSettle();
     });
     await _shoot(t, '15c_off_summary', await _with(toContracts()), act: (t) async {
       await t.scrollUntilVisible(find.text('自由契約の選手を見る'), 300, scrollable: progress);

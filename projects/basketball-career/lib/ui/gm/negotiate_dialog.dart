@@ -17,16 +17,20 @@ Future<void> negotiate(BuildContext context, GmController c, Player p, {required
   );
   if (picked == null) {
     car.partialNext = false; // やめたら、一部保証のスイッチは持ち越さない
+    c.touch(); // 代理人との往復は残す
     return;
   }
-  final (years, factor) = picked;
-  final ok = c.offer(p.id, years, factor);
+  final (years, rawFactor) = picked;
+  // 代理人とまとまった額は、求める額に掛ける数を負の数で受け取る
+  final agreed = rawFactor < 0;
+  final factor = rawFactor.abs();
+  final ok = c.offer(p.id, years, factor, agreed: agreed);
   messenger.showSnackBar(
     SnackBar(
       content: Text(
         ok
             ? '${p.name}と$years年 ${money(p.salary)}で契約した'
-            : factor < 1
+            : factor < 1 && !agreed
             ? '${p.name}は値下げを断った(気持ちが下がった)'
             : '契約できなかった(年俸の上限を確かめる)',
       ),
@@ -108,72 +112,76 @@ class _NegotiateDialogState extends State<_NegotiateDialog> {
             ? '${p.name}と延長の交渉'
             : '${p.name}と交渉',
       ),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '${widget.extension ? '来季から' : ''}求める年俸 ${money(ask.salary)}・最長${ask.maxYears}年・気持ち ${p.moraleLabel}',
-            style: const TextStyle(color: GmColors.sub),
-          ),
-          if (widget.bid)
-            Padding(
-              padding: const EdgeInsets.only(top: 4),
-              child: Text(
-                '関心 ${interestLabel(car.interest(p, car.mine))}・ほかの申し込み ${car.rivalBids(p.id)}チーム。'
-                '代理人の話では、いちばん重く見るのは「${car.faPriority(p)}」'
-                '(${switch (car.faPriority(p)) {
-                  '年俸の額' => '額を上げると大きく効く',
-                  '勝てるチーム' => '昨季の勝率が大きく効く',
-                  _ => '前のチームに残りたがる',
-                }})。'
-                '日が進むたびに、いちばん良い申し込みを選ぶことがある。',
-                style: const TextStyle(fontSize: 12, color: GmColors.sub, height: 1.4),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '${widget.extension ? '来季から' : ''}求める年俸 ${money(ask.salary)}・最長${ask.maxYears}年・気持ち ${p.moraleLabel}',
+              style: const TextStyle(color: GmColors.sub),
+            ),
+            if (widget.bid)
+              Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: Text(
+                  '関心 ${interestLabel(car.interest(p, car.mine))}・ほかの申し込み ${car.rivalBids(p.id)}チーム。'
+                  '代理人の話では、いちばん重く見るのは「${car.faPriority(p)}」'
+                  '(${switch (car.faPriority(p)) {
+                    '年俸の額' => '額を上げると大きく効く',
+                    '勝てるチーム' => '昨季の勝率が大きく効く',
+                    _ => '前のチームに残りたがる',
+                  }})。'
+                  '日が進むたびに、いちばん良い申し込みを選ぶことがある。',
+                  style: const TextStyle(fontSize: 12, color: GmColors.sub, height: 1.4),
+                ),
               ),
-            ),
-          if (widget.extension)
-            const Padding(
-              padding: EdgeInsets.only(top: 4),
-              child: Text('年数は、今の契約(残り1年)のあとに足す。求める額でも断られることがある。', style: TextStyle(fontSize: 12, color: GmColors.sub)),
-            ),
-          const SizedBox(height: 10),
-          const Text('年数', style: TextStyle(fontWeight: FontWeight.bold)),
-          const SizedBox(height: 4),
-          Wrap(
-            spacing: 6,
-            children: [
-              for (var y = 1; y <= ask.maxYears; y++) ChoiceChip(label: Text('$y年'), selected: _years == y, onSelected: (_) => setState(() => _years = y)),
-            ],
-          ),
-          if (!widget.bid && !widget.extension && car.partialOk(p, _years))
-            SwitchListTile(
-              contentPadding: EdgeInsets.zero,
-              dense: true,
-              title: const Text('一部保証にする', style: TextStyle(fontSize: 13)),
-              subtitle: const Text('2年目以降の年俸は半分だけ保証(放しても半分しか残らない)。選手は年俸+8%を求める。', style: TextStyle(fontSize: 11, color: GmColors.sub)),
-              value: _partial,
-              onChanged: (v) => setState(() {
-                _partial = v;
-                widget.car.partialNext = v;
-              }),
-            ),
-          const SizedBox(height: 12),
-          if (widget.bid) ...[
-            _option(context, '1割高く', '${money(at(1.1))}・選ばれやすい', 1.1),
-            _option(context, '求める額で', money(ask.salary), 1.0),
-            _option(context, '1割安く', '${money(at(0.9))}・選ばれにくい', 0.9),
-          ] else ...[
-            _option(context, '求める額で', '${money(ask.salary)}・${widget.extension ? 'たいてい受ける' : '必ず受ける'}', 1.0),
-            _option(context, '1割高く', '${money(at(1.1))}・気持ちが上がる', 1.1),
-            if (canHaggle)
-              _option(context, '1割安く', '${money(at(0.9))}・受ける見込み$chance%${widget.extension ? '' : '(あと${car.haggleLimit - rounds}回)'}', 0.9)
-            else
+            if (widget.extension)
               const Padding(
-                padding: EdgeInsets.only(top: 6),
-                child: Text('値下げは、もう申し出られない', style: TextStyle(fontSize: 12, color: GmColors.sub)),
+                padding: EdgeInsets.only(top: 4),
+                child: Text('年数は、今の契約(残り1年)のあとに足す。求める額でも断られることがある。', style: TextStyle(fontSize: 12, color: GmColors.sub)),
               ),
+            const SizedBox(height: 10),
+            const Text('年数', style: TextStyle(fontWeight: FontWeight.bold)),
+            const SizedBox(height: 4),
+            Wrap(
+              spacing: 6,
+              children: [
+                for (var y = 1; y <= ask.maxYears; y++) ChoiceChip(label: Text('$y年'), selected: _years == y, onSelected: (_) => setState(() => _years = y)),
+              ],
+            ),
+            if (!widget.bid && !widget.extension && car.partialOk(p, _years))
+              SwitchListTile(
+                contentPadding: EdgeInsets.zero,
+                dense: true,
+                title: const Text('一部保証にする', style: TextStyle(fontSize: 13)),
+                subtitle: const Text('2年目以降の年俸は半分だけ保証(放しても半分しか残らない)。選手は年俸+8%を求める。', style: TextStyle(fontSize: 11, color: GmColors.sub)),
+                value: _partial,
+                onChanged: (v) => setState(() {
+                  _partial = v;
+                  widget.car.partialNext = v;
+                }),
+              ),
+            const SizedBox(height: 12),
+            if (widget.bid) ...[
+              _option(context, '1割高く', '${money(at(1.1))}・選ばれやすい', 1.1),
+              _option(context, '求める額で', money(ask.salary), 1.0),
+              _option(context, '1割安く', '${money(at(0.9))}・選ばれにくい', 0.9),
+            ] else ...[
+              _option(context, '求める額で', '${money(ask.salary)}・${widget.extension ? 'たいてい受ける' : '必ず受ける'}', 1.0),
+              _option(context, '1割高く', '${money(at(1.1))}・気持ちが上がる', 1.1),
+              if (!widget.extension && ask.salary > minSalary)
+                _AgentTalk(car: car, p: p, years: _years, ask: ask.salary)
+              else if (canHaggle)
+                _option(context, '1割安く', '${money(at(0.9))}・受ける見込み$chance%${widget.extension ? '' : '(あと${car.haggleLimit - rounds}回)'}', 0.9)
+              else
+                const Padding(
+                  padding: EdgeInsets.only(top: 6),
+                  child: Text('値下げは、もう申し出られない', style: TextStyle(fontSize: 12, color: GmColors.sub)),
+                ),
+            ],
           ],
-        ],
+        ),
       ),
       actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('やめる'))],
     );
@@ -194,4 +202,103 @@ class _NegotiateDialogState extends State<_NegotiateDialog> {
       ),
     ),
   );
+}
+
+/// 代理人と額を往復する(求める額より安く結ぶ)。まとまったら、ダイアログを (年数, -掛ける数) で閉じる。
+class _AgentTalk extends StatefulWidget {
+  const _AgentTalk({required this.car, required this.p, required this.years, required this.ask});
+  final Career car;
+  final Player p;
+  final int years, ask;
+
+  @override
+  State<_AgentTalk> createState() => _AgentTalkState();
+}
+
+class _AgentTalkState extends State<_AgentTalk> {
+  final log = <String>[];
+  int? _pick;
+
+  @override
+  Widget build(BuildContext context) {
+    final car = widget.car, p = widget.p, ask = widget.ask;
+    final now = car.agentAskOf(p);
+    final left = car.haggleLimit - car.haggleRounds(p.id);
+    final steps = [
+      for (final f in const [0.8, 0.85, 0.9, 0.95])
+        if ((ask * f).round() < now && (ask * f).round() >= minSalary) (ask * f).round(),
+    ];
+    return Container(
+      key: const Key('agent-talk'),
+      margin: const EdgeInsets.only(top: 10),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        border: Border.all(color: GmColors.line),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text('代理人と値切る(あと$left回)', style: const TextStyle(fontWeight: FontWeight.bold)),
+          Text('代理人の言い値 ${money(now)}。低すぎる額は気を悪くさせる(気持ちが下がる)。', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
+          for (final l in log) Text(l, style: const TextStyle(fontSize: 12.5, height: 1.5)),
+          const SizedBox(height: 6),
+          if (left > 0 && steps.isNotEmpty)
+            Wrap(
+              spacing: 6,
+              runSpacing: 4,
+              children: [
+                for (final s in steps)
+                  ChoiceChip(
+                    label: Text(money(s), style: const TextStyle(fontSize: 12)),
+                    selected: _pick == s,
+                    onSelected: (_) => setState(() => _pick = s),
+                  ),
+              ],
+            ),
+          const SizedBox(height: 6),
+          Row(
+            children: [
+              if (left > 0 && steps.isNotEmpty)
+                Expanded(
+                  child: OutlinedButton(onPressed: _pick == null ? null : () => _talk(_pick!), child: const Text('この額を申し出る')),
+                ),
+              if (now < ask) ...[
+                const SizedBox(width: 6),
+                Expanded(
+                  child: FilledButton(
+                    onPressed: () => Navigator.pop(context, (widget.years, -now / ask)),
+                    child: FittedBox(child: Text('言い値${money(now)}で結ぶ')),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _talk(int salary) {
+    final car = widget.car, p = widget.p;
+    final r = car.talkAgent(p.id, widget.years, salary);
+    if (r.mood == AgentMood.agreed) {
+      Navigator.pop(context, (widget.years, -r.salary / widget.ask));
+      return;
+    }
+    setState(() {
+      _pick = null;
+      log.add(
+        '${money(salary)} → ${switch (r.mood) {
+          AgentMood.counter => '「間を取って${money(r.salary)}でどうだ」',
+          AgentMood.low => '「まだ低い。${money(r.salary)}までなら」',
+          AgentMood.last => '「${money(r.salary)}。これが最後だ」',
+          AgentMood.insulted => '「話にならない」(気持ちが下がった)',
+          AgentMood.closed => '「もう話すことはない。${money(r.salary)}だ」',
+          AgentMood.agreed => '',
+        }}',
+      );
+    });
+  }
 }
