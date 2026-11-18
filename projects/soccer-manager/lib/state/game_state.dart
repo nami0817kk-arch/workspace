@@ -20,6 +20,7 @@ import '../models/achievement.dart';
 import '../models/bank_loan.dart';
 import '../models/investment.dart';
 import '../models/ledger.dart';
+import '../logic/division_strength.dart';
 import '../logic/ledger_engine.dart';
 import '../logic/economy_engine.dart';
 import '../logic/advisor_engine.dart';
@@ -986,14 +987,8 @@ class GameState extends ChangeNotifier {
     var nameIndex = 0;
     String nextName() => allNames[nameIndex++];
 
-    // 上位ティアほど平均的なチーム力が高くなるようにする(1部が最強)。
-    // ユーザーの開始ティアでの強さ幅は、旧来の1部CPUと同じ(40-74)に揃え、
-    // 従来通りの難易度バランスを保つ。
-    int strengthForTier(int tier) {
-      final tiersAboveUser = userStartTier - tier;
-      final base = 40 + tiersAboveUser * 10;
-      return (base + rng.nextInt(35)).clamp(20, 99);
-    }
+    // 上位ティアほど強い(1部が最強)。部ごとの幅は division_strength.dart。
+    int strengthForTier(int tier) => rollDivisionStrength(tier, rng);
 
     final cpuCount = theme.teamsInTier(userStartTier) - 1;
     final cpuTeams = <Team>[];
