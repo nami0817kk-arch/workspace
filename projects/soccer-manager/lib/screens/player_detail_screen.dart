@@ -99,8 +99,9 @@ class PlayerDetailScreen extends StatelessWidget {
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
-                  Tr.pick('${p.position.fullLabel} ・ ${p.age}歳',
-                      '${p.position.fullLabel} • ${p.age}'),
+                  Tr.pick(
+                      '${p.position.fullLabel} ・ ${p.age}歳(誕生日 ${p.birthMonth}月${p.birthDay}日)',
+                      '${p.position.fullLabel} • ${p.age} (birthday ${TransferWindowCalendar.formatMonthDay(p.birthdayIn(2001))})'),
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
               ),
@@ -185,7 +186,9 @@ class PlayerDetailScreen extends StatelessWidget {
               Chip(label: Text(p.personality.label)),
               if (p.isOnInternationalDuty)
                 Chip(
-                  label: Text(Tr.pick('代表召集中', 'On international duty')),
+                  label: Text(p.onTournamentLeave
+                      ? Tr.pick('大会明けの休み', 'Post-tournament break')
+                      : Tr.pick('代表召集中', 'On international duty')),
                   backgroundColor: Colors.blueAccent,
                   labelStyle: const TextStyle(color: Colors.white),
                 ),
@@ -266,8 +269,11 @@ class PlayerDetailScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: 8),
               child: Text(
-                Tr.pick('代表召集中（あと${p.internationalDutyWeeksRemaining}週は出場不可）',
-                    'On international duty (away for another ${Tr.plural(p.internationalDutyWeeksRemaining, 'week')})'),
+                p.onTournamentLeave
+                    ? _tournamentLeaveText(context.read<GameState>())
+                    : Tr.pick(
+                        '代表召集中（あと${p.internationalDutyWeeksRemaining}週は出場不可）',
+                        'On international duty (away for another ${Tr.plural(p.internationalDutyWeeksRemaining, 'week')})'),
                 style: const TextStyle(
                   color: Colors.blueAccent,
                   fontWeight: FontWeight.bold,
@@ -371,8 +377,8 @@ class PlayerDetailScreen extends StatelessWidget {
               final b = p.marketValueBreakdown;
               return Text(
                 Tr.pick(
-                    '内訳: 基礎${formatMoney(b.base.round())} + 伸びしろ${formatMoney(b.potentialBonus.round())} を年齢×${b.ageFactor.toStringAsFixed(2)} 性格×${b.personalityFactor.toStringAsFixed(2)} 統率力×${b.leadershipFactor.toStringAsFixed(2)}',
-                    'Breakdown: base ${formatMoney(b.base.round())} + potential ${formatMoney(b.potentialBonus.round())}, times age ${b.ageFactor.toStringAsFixed(2)}, personality ${b.personalityFactor.toStringAsFixed(2)}, leadership ${b.leadershipFactor.toStringAsFixed(2)}'),
+                    '内訳: 基礎${formatMoney(b.base.round())} + 伸びしろ${formatMoney(b.potentialBonus.round())} を年齢×${b.ageFactor.toStringAsFixed(2)} 性格×${b.personalityFactor.toStringAsFixed(2)} 統率力×${b.leadershipFactor.toStringAsFixed(2)}${b.tournamentFactor != 1 ? ' 夏の大会の活躍×${b.tournamentFactor.toStringAsFixed(2)}' : ''}',
+                    'Breakdown: base ${formatMoney(b.base.round())} + potential ${formatMoney(b.potentialBonus.round())}, times age ${b.ageFactor.toStringAsFixed(2)}, personality ${b.personalityFactor.toStringAsFixed(2)}, leadership ${b.leadershipFactor.toStringAsFixed(2)}${b.tournamentFactor != 1 ? ', summer tournament ${b.tournamentFactor.toStringAsFixed(2)}' : ''}'),
                 style: TextStyle(
                     fontSize: 11, color: SemanticColors.subtleText(context)),
               );
@@ -1432,4 +1438,17 @@ class _KeyAttributesCard extends StatelessWidget {
       ),
     );
   }
+}
+
+/// 夏の大会のあとの休みの説明(合流の日つき)。
+String _tournamentLeaveText(GameState game) {
+  final back = game.tournamentReturnDate;
+  final name = game.summerTournament?.name ?? '';
+  if (back == null) {
+    return Tr.pick('夏の大会のあとの休み(まもなく合流)',
+        'Post-tournament break (back soon)');
+  }
+  final day = TransferWindowCalendar.formatMonthDay(back);
+  return Tr.pick('$nameのあとの休み($dayに合流するまで出場不可)',
+      'Break after the $name (cannot play until he rejoins on $day)');
 }

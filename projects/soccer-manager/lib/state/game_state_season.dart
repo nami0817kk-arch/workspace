@@ -132,6 +132,10 @@ extension GameStateSeason on GameState {
     _onContractDatesAdvanced(before, d);
     // 給与の月末・放映権の入金日。
     _settleMoneyDates(before, d);
+    // 誕生日が来た選手は1つ歳を取る。
+    _ageByBirthdays(before, d);
+    // 夏の大会に出た選手の合流。
+    _endTournamentLeaveIfDue(before, d);
     final theme = currentLeagueTheme;
     // 窓が開いたら、名簿の外だった選手もまた登録できる。
     if (TransferWindowCalendar.openedBetween(before, d, theme)) {
@@ -1031,13 +1035,13 @@ extension GameStateSeason on GameState {
     Player.contractClockYear = Player.seasonEndYearOf(league.season + 1);
 
     // 自クラブの部の外(他の部・他国)の選手は練習で育たないので、年に1度
-    // 年齢に合わせて伸ばし、衰えさせる。
+    // 年齢に合わせて伸ばし、衰えさせる。歳は誕生日に1つずつ取る
+    // (_ageByBirthdays)ので、ここでは足さない。
     final activeIds = _save!.league.teams.map((t) => t.id).toSet();
     final offscreenRng = Random();
     for (final l in _save!.foreignLeagues.values) {
       for (final t in l.teams) {
         for (final p in t.players) {
-          p.age += 1;
           OffscreenDevelopment.apply(p, offscreenRng);
         }
         RetirementEngine.resolveAndReplaceForCpu(t);
@@ -1045,7 +1049,6 @@ extension GameStateSeason on GameState {
     }
     for (final t in _save!.allTeams) {
       for (final p in t.players) {
-        p.age += 1;
         if (!activeIds.contains(t.id)) {
           OffscreenDevelopment.apply(p, offscreenRng);
         }
@@ -1503,6 +1506,7 @@ extension GameStateSeason on GameState {
     // だった選手も戻り、シーズン末までのローンはここで終わる。
     _setToday(SeasonCalendar.preseasonDate(_save!.league.season));
     _settleLoansByDate();
+    _startSummerTournament();
     _save!.boardReviewDoneThisSeason = false;
     _save!.pendingBoardReviewMessage = null;
     _save!.lastManagerOfMonthCheckpoint = 0;
@@ -1579,4 +1583,93 @@ extension GameStateSeason on GameState {
     // セーブが壊れても失うのは1シーズン以内で済む。
     await refreshSaveBackup();
   }
+
+  /// [before]の翌日から[after]までに誕生日が来た選手に、1つ歳を足す。
+  /// 殿堂入りした選手は引退したときの歳のまま。
+  void _ageByBirthdays(DateTime before, DateTime after) {
+    final legends = _save!.retiredLegends.toSet();
+    for (final p in _save!.allPlayers) {
+      if (legends.contains(p)) continue;
+      final n = p.birthdaysBetween(before, after);
+      if (n > 0) p.age += n;
+    }
+  }
+
+  /// 今年の夏の大会。無い年は null。
+  SummerTournament? get summerTournament =>
+      _save == null ? null : SummerTournament.of(today.year);
+
+  /// 大会に出た選手がまだ合流していなければ、その合流の日。
+  DateTime? get tournamentReturnDate {
+    final t = summerTournament;
+    if (t == null || !today.isBefore(t.returnDate)) return null;
+    return t.returnDate;
+  }
+
+  /// 7月1日、前の夏の大会の評判を消し、今年の大会に出た選手を決める。
+  /// 出た選手は合流の日まで休み、活躍した選手は市場価値が上がる。
+  void _startSummerTournament() {
+    for (final t in _worldTeams) {
+      for (final p in t.players) {
+        p.tournamentBoostPct = 0;
+        p.onTournamentLeave = false;
+      }
+    }
+    final tournament = summerTournament;
+    if (tournament == null) return;
+    final back = tournament.returnDate;
+    final away = today.isBefore(back);
+    final mine = <Player>[];
+    for (final t in _worldTeams) {
+      for (final p in t.players) {
+        if (!tournament.plays(p)) continue;
+        p.tournamentBoostPct = tournament.boostPctFor(p);
+        if (away) {
+          p.onTournamentLeave = true;
+          if (t.id == _save!.userTeamId) mine.add(p);
+        }
+      }
+    }
+    if (mine.isEmpty) return;
+    LineupUtils.autoFill(userTeam);
+    final names = mine.map((p) => p.name).join(Tr.pick('、', ', '));
+    _logNews(
+      Tr.pick(
+        '${tournament.name}に出た$namesは、大会のあとの休みを取って${TransferWindowCalendar.formatMonthDay(back)}に合流します。それまでは試合に出せません。',
+        '$names played at the ${tournament.name} and rejoin on ${TransferWindowCalendar.formatMonthDay(back)} after their break. They cannot play until then.',
+      ),
+      context: Tr.pick('代表', 'International'),
+    );
+  }
+
+  /// 合流の日を越えたら、休んでいた選手を戻す。休み明けは体が仕上がって
+  /// いないので、疲れが少し残った状態で戻る。
+  void _endTournamentLeaveIfDue(DateTime before, DateTime after) {
+    final tournament = SummerTournament.of(after.year);
+    if (tournament == null) return;
+    final back = tournament.returnDate;
+    if (!before.isBefore(back) || after.isBefore(back)) return;
+    final mine = <Player>[];
+    for (final t in _worldTeams) {
+      for (final p in t.players) {
+        if (!p.onTournamentLeave) continue;
+        p.onTournamentLeave = false;
+        if (p.fatigue < tournamentReturnFatigue) {
+          p.fatigue = tournamentReturnFatigue;
+        }
+        if (t.id == _save!.userTeamId) mine.add(p);
+      }
+    }
+    if (mine.isEmpty) return;
+    _logNews(
+      Tr.pick(
+        '${mine.map((p) => p.name).join('、')}が${tournament.name}のあとの休みを終えて合流しました。先発に戻すかは編成の画面で決めてください。',
+        '${mine.map((p) => p.name).join(', ')} rejoined after the ${tournament.name} break. Put them back in the side from the squad screen.',
+      ),
+      context: Tr.pick('代表', 'International'),
+    );
+  }
 }
+
+/// 夏の大会の休みから戻った選手の疲れ(これより低ければここまで上げる)。
+const int tournamentReturnFatigue = 30;

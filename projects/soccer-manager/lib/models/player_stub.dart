@@ -10,7 +10,8 @@ import 'player.dart';
 ///
 /// 並び: [id, 名前, 年齢, ポジション, 潜在, 総合力, 週俸, 満了の年(旧セーブは契約年数),
 ///        印(1=国内育成, 2=ユース出身), 性格, 成長の型, 特性(-1=無し),
-///        怪我のしやすさ, 通算出場, 通算得点]
+///        怪我のしやすさ, 通算出場, 通算得点, 大会で上がった価値(%), 大会明けの休み(1/0)]
+/// 最後の2つは後から足した。無いセーブは0として読む。
 class PlayerStub {
   static List<Object> encode(Player p) => [
         p.id,
@@ -28,6 +29,8 @@ class PlayerStub {
         p.injuryProneness,
         p.careerAppearances,
         p.careerGoals,
+        p.tournamentBoostPct,
+        p.onTournamentLeave ? 1 : 0,
       ];
 
   /// 8番目(添字7)の値を満了の年に直す。旧セーブは残り年数(0〜10)を
@@ -83,7 +86,9 @@ class PlayerStub {
           : PlayerTrait.values[traitIndex].name
       ..['injuryProneness'] = s[12] as int
       ..['careerAppearances'] = s[13] as int
-      ..['careerGoals'] = s[14] as int;
+      ..['careerGoals'] = s[14] as int
+      ..['tournamentBoostPct'] = s.length > 15 ? s[15] as int : 0
+      ..['onTournamentLeave'] = s.length > 16 && s[16] == 1;
     final player = Player.fromJson(json);
     matchOverall(player, targetOverall);
     return player;

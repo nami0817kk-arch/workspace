@@ -729,8 +729,11 @@ class _SquadScreenState extends State<SquadScreen> {
                                 if (p.isOnInternationalDuty) ...[
                                   const SizedBox(width: 6),
                                   Tooltip(
-                                    message: Tr.pick(
-                                        '代表召集中', 'On international duty'),
+                                    message: p.onTournamentLeave
+                                        ? Tr.pick('大会明けの休み',
+                                            'Post-tournament break')
+                                        : Tr.pick('代表召集中',
+                                            'On international duty'),
                                     child: const Icon(
                                       Icons.flag,
                                       size: 16,
@@ -785,6 +788,9 @@ class _SquadScreenState extends State<SquadScreen> {
                                           ? Tr.pick(
                                               '出場停止（あと${p.suspendedMatches}試合）',
                                               'Suspended (${Tr.plural(p.suspendedMatches, 'match', 'matches')})')
+                                          : p.onTournamentLeave
+                                              ? Tr.pick('大会明けの休み（合流前）',
+                                                  'Post-tournament break (not back yet)')
                                           : p.isOnInternationalDuty
                                               ? Tr.pick(
                                                   '代表召集中（あと${p.internationalDutyWeeksRemaining}週）',
