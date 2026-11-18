@@ -1167,9 +1167,13 @@ class Career {
     }
     if (block < tradeDeadlineBlock && roundAt >= 10) {
       final others = [for (final t in teams) if (t.index != mine) t]..sort((a, b) => a.winPct.compareTo(b.winPct));
-      final worst = others.first;
-      final star = ([...worst.roster.where((p) => p.age >= 27)]..sort((a, b) => b.ovr.compareTo(a.ovr))).firstOrNull;
-      if (star != null) out.add('うわさ: 不振の${worst.def.short}が${star.name}(${star.age}歳・OVR${shown(star.ovr)})の放出を探っているとの声');
+      // 下位3チームのうち、27歳以上の選手がいる最下位のチーム(若いチームしかいなければ出さない)
+      for (final worst in others.take(3)) {
+        final star = ([...worst.roster.where((p) => p.age >= 27)]..sort((a, b) => b.ovr.compareTo(a.ovr))).firstOrNull;
+        if (star == null) continue;
+        out.add('うわさ: 不振の${worst.def.short}が${star.name}(${star.age}歳・OVR${shown(star.ovr)})の放出を探っているとの声');
+        break;
+      }
     }
     return out;
   }
