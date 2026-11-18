@@ -295,6 +295,8 @@ class _RosterTabState extends State<RosterTab> {
         if (p.morale < 20) ('不満', GmColors.bad) else if (p.morale < 45) ('不満ぎみ', GmColors.gold),
         if (p.years == 1 && car.phase != Phase.contracts) ('今季まで', GmColors.gold),
         if (car.tradeBlock.contains(p.id)) ('ブロック', GmColors.ball),
+        if (p.wear >= wearRestLine && p.injured == 0) ('疲れ${p.wear}', p.wear > wearSlumpLine ? GmColors.bad : GmColors.gold),
+        if (car.restIds.contains(p.id)) ('休ませる', GmColors.sub),
         if (car.draftedIds.contains(p.id)) ('生え抜き', GmColors.good),
       ];
 
@@ -318,6 +320,8 @@ class _RosterTabState extends State<RosterTab> {
                 if (awardsSummary(car, p).isNotEmpty) _line('表彰', awardsSummary(car, p)),
                 if (p.allStars > 0) _line('オールスター', '${p.allStars}回'),
                 _line('気持ち', '${p.moraleLabel}(${p.morale})'),
+                if (car.me.roster.contains(p) && (p.wear > 0 || car.restIds.contains(p.id)))
+                  _line('疲れ', '${p.wear}(${p.wear > wearSlumpLine ? 'シュートが落ちている' : p.wear >= wearRestLine ? 'けがしやすい' : 'ふつう'})${car.restIds.contains(p.id) ? '・疲れたら休ませる(今季${p.restGames}試合)' : ''}'),
                 _line('年俸', '${money(p.salary)}(残り${p.years}年)'),
                 _line('力に見合う年俸', money(fairSalary(p.ovr, p.age))),
                 _line('伸びしろ', switch (p.grade) {
@@ -363,6 +367,21 @@ class _RosterTabState extends State<RosterTab> {
                     label: Text(car.tradeBlock.contains(p.id) ? 'トレードブロックから外す' : 'トレードブロックに載せる'),
                   ),
                 ),
+                if (car.me.roster.contains(p))
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: OutlinedButton.icon(
+                      onPressed: () {
+                        final on = car.restIds.contains(p.id);
+                        c.toggleRest(p.id);
+                        Navigator.pop(ctx);
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(on ? '${p.name}は疲れても出し続ける' : '${p.name}は、疲れが$wearRestLineに届いたら次の試合を休ませる(その試合はチームが少し弱くなる)')));
+                      },
+                      icon: Icon(car.restIds.contains(p.id) ? Icons.directions_run_rounded : Icons.battery_charging_full_rounded),
+                      label: Text(car.restIds.contains(p.id) ? '疲れても出し続ける' : '疲れたら休ませる'),
+                    ),
+                  ),
                 if (car.me.roster.contains(p) && car.toTwoWayProblem(p) == null)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8),

@@ -517,6 +517,7 @@ class Career {
       x.state = PromiseState.voided;
     }
     tradeBlock = [];
+    restIds = [];
     extAsked = [];
     h2h = {};
     facilities = [1, 1, 1];
@@ -1587,6 +1588,8 @@ class Career {
       for (final p in t.roster) {
         p.prev = p.stats;
         p.stats = Stats();
+        p.wear = 0;
+        p.restGames = 0;
       }
       if (t.index != mine) _aiTrim(t);
     }
@@ -1666,7 +1669,12 @@ class Career {
     final games = <GameResult>[];
     for (final round in seasonSchedule(teams.length).sublist(roundAt, roundAt + n)) {
       for (final (h, a) in round) {
+        final rested = h == mine || a == mine ? _restBeforeGame() : const <Player>[];
         final g = playGame(teams[h], teams[a], rng, mine: mine, injuryScale: difficulty.injury * medicalScale, healScale: medicalScale);
+        for (final p in rested) {
+          p.injured = 0;
+          p.restGames++;
+        }
         if (g.involves(mine)) games.add(g);
       }
     }
@@ -1862,6 +1870,37 @@ class Career {
   }
 
   void declineIncoming() => incoming = null;
+
+  // ------------------------------------------------------------ 疲れと休ませる判断
+
+  /// 疲れたら休ませる、と決めた自分の選手の id。疲れが [wearRestLine] に届くと、次の試合を1つ休む(レギュラーシーズンだけ)。
+  List<int> restIds = [];
+
+  /// 休ませる設定を切り替える。
+  void toggleRest(int id) {
+    if (_mineById(id) == null) return;
+    if (!restIds.remove(id)) restIds.add(id);
+  }
+
+  /// 自分の試合の前に、休ませる選手を決めて、その試合だけ出られないようにする(試合のあとに戻す)。
+  /// 出られる選手が8人を切るときは休ませない。乱数は使わない。
+  List<Player> _restBeforeGame() {
+    if (restIds.isEmpty) return const [];
+    var healthy = me.roster.where((p) => p.injured == 0).length;
+    final out = <Player>[];
+    final cands = [for (final p in me.roster) if (restIds.contains(p.id) && p.injured == 0 && p.wear >= wearRestLine) p]
+      ..sort((a, b) => b.wear.compareTo(a.wear));
+    for (final p in cands) {
+      if (healthy <= 8) break;
+      p.injured = 1;
+      healthy--;
+      out.add(p);
+    }
+    return out;
+  }
+
+  /// 疲れがたまっている自分の選手(疲れの多い順)。
+  List<Player> get tiredPlayers => [for (final p in me.roster) if (p.wear >= wearRestLine) p]..sort((a, b) => b.wear.compareTo(a.wear));
 
   // ------------------------------------------------------------ トレードブロック
 
@@ -3772,6 +3811,7 @@ class Career {
         'gl': [for (final g in goals) g.toJson()],
         'aw': [for (final a in awards) a.toJson()],
         if (tradeBlock.isNotEmpty) 'tbk': tradeBlock,
+        if (restIds.isNotEmpty) 'rsw': restIds,
         'bbs': [for (final e in blockBase.entries) [e.key, ...e.value]],
         'mvm': [for (final a in monthly) a.toJson()],
         'cp': [for (final c in coachPool) c.toJson()],
@@ -3891,6 +3931,7 @@ class Career {
       ..goals = [for (final g in maps('gl')) OwnerGoal.fromJson(g)]
       ..awards = [for (final a in maps('aw')) Award.fromJson(a)]
       ..tradeBlock = [for (final x in (j['tbk'] as List? ?? const [])) x as int]
+      ..restIds = [for (final x in (j['rsw'] as List? ?? const [])) x as int]
       ..blockBase = {
         for (final r in (j['bbs'] as List? ?? const []))
           if (r is List && r.length == 5) r[0] as int: [for (final x in r.skip(1)) x as int],
