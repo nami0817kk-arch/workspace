@@ -134,6 +134,34 @@ void main() {
     expect(r.top >= box.top && r.bottom <= box.bottom, isTrue, reason: '選んだチームの行が一覧の中に見えている');
   });
 
+  testWidgets('トレード: 自分の選手を1人選ぶと、欲しがるチームが出て、印が付き、並べられる', (tester) async {
+    _size(tester, 844, 390);
+    final c = await _controller({'gmHowtoSeen': true});
+    c.newCareer(teamAtRank(1, 15), seed: 1);
+    final car = c.career!;
+    await tester.pumpWidget(BasketballCareerApp(controller: c));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('トレード').first);
+    await tester.pumpAndSettle();
+    // 欲しがるチームがいる選手を選ぶ
+    final p = car.me.roster.firstWhere((x) => !car.expiring.contains(x.id) && car.blockOffers(x.id).isNotEmpty);
+    final offers = car.blockOffers(p.id);
+    await tester.scrollUntilVisible(find.text(p.name), 200, scrollable: _vertical);
+    await tester.ensureVisible(find.text(p.name).last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(p.name).last);
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(find.textContaining('を欲しがるチーム'), -200, scrollable: _vertical);
+    expect(find.textContaining('${p.name}を欲しがるチーム: ${offers.length}チーム'), findsOneWidget);
+    expect(find.byIcon(Icons.favorite_rounded), findsWidgets);
+    await tester.tap(find.text('出してくれるものを見る'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('並べる').first);
+    await tester.pumpAndSettle();
+    expect(find.textContaining('出す: ${p.name}'), findsOneWidget);
+    expect(find.text('受けてくれそう'), findsOneWidget);
+  });
+
   testWidgets('続きは保存され、起動するとはじめの画面から「続きから」で戻れる', (tester) async {
     _size(tester, 844, 390);
     final c = await _controller();

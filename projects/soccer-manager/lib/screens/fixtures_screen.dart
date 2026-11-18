@@ -6,6 +6,7 @@ import '../models/league_theme.dart';
 import '../models/match_result.dart';
 import '../models/team.dart';
 import '../services/feedback_service.dart';
+import '../logic/calendar_engine.dart';
 import '../state/game_state.dart';
 import '../theme/semantic_colors.dart';
 import '../widgets/achievement_unlock_notifier.dart';
@@ -745,6 +746,17 @@ class _ScheduleTabState extends State<_ScheduleTab> {
               },
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                CalendarEngine.formatDate(
+                    gameState.dateOfMatchday(_selectedMatchday)),
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ),
+          ),
           const Divider(height: 1),
           Expanded(
             child: _MatchdayList(
@@ -894,7 +906,10 @@ class _UserFixtureList extends StatelessWidget {
         final opponent = league.teams.firstWhere((t) => t.id == opponentId);
         final result = f.result;
         final isNext = f.matchday == nextMatchday;
-        final isDerby = context.read<GameState>().isRivalFixture(f);
+        final gameState = context.read<GameState>();
+        final isDerby = gameState.isRivalFixture(f);
+        final dateLabel =
+            CalendarEngine.formatShortDate(gameState.dateOfMatchday(f.matchday));
         return Container(
           color: isNext
               ? Theme.of(context)
@@ -933,6 +948,7 @@ class _UserFixtureList extends StatelessWidget {
                 ],
               ),
             ),
+            subtitle: Text(dateLabel),
             title: Row(
               children: [
                 Flexible(

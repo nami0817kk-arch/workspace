@@ -67,6 +67,20 @@ class _TradeTabState extends State<TradeTab> {
     }
   }
 
+  /// 選んだ自分の選手1人を欲しがっているチーム(相手が出してくれるもの)。選び直すまで覚えておく。
+  List<TradeOffer> _suitors = const [];
+  String _suitorKey = '';
+
+  List<TradeOffer> _suitorsOf(Career car) {
+    if (_give.length != 1 || !car.canTrade) return const [];
+    final key = '${_give.first}-${car.season}-${car.phase.index}-${car.roundAt}-${car.tradesDone}-${car.me.roster.length}';
+    if (key != _suitorKey) {
+      _suitorKey = key;
+      _suitors = car.blockOffers(_give.first);
+    }
+    return _suitors;
+  }
+
   void _setPartner(int t) => setState(() {
     _partner = t;
     _get.clear();
@@ -124,6 +138,28 @@ class _TradeTabState extends State<TradeTab> {
                       TextButton(
                         onPressed: () {
                           Navigator.pop(ctx);
+                          setState(() {
+                            _partner = o.partner;
+                            _give
+                              ..clear()
+                              ..addAll(o.give);
+                            _get
+                              ..clear()
+                              ..addAll(o.get);
+                            _getPicks
+                              ..clear()
+                              ..addAll(o.getPicks);
+                            _givePicks.clear();
+                            _giveSwaps.clear();
+                            _getSwaps.clear();
+                          });
+                          WidgetsBinding.instance.addPostFrameCallback((_) => _revealPartner());
+                        },
+                        child: const Text('並べる'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(ctx);
                           final ok = tradeWithShow(context, widget.c, o, () => widget.c.acceptBlockOffer(o));
                           if (!ok) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('成立しなかった(状況が変わった)')));
                         },
@@ -149,6 +185,7 @@ class _TradeTabState extends State<TradeTab> {
     _givePicks.removeWhere((i) => i >= car.picks.length || car.picks[i].owner != car.mine);
     _getPicks.removeWhere((i) => i >= car.picks.length || car.picks[i].owner != _partner);
     final them = car.teams[_partner];
+    final suitors = _suitorsOf(car);
     final o = _offer;
     final verdict = o.isEmpty ? null : car.judge(o);
     // 選手が動くときは、両チームの強さと勝ち数の見込みがどう変わるか
@@ -170,7 +207,7 @@ class _TradeTabState extends State<TradeTab> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               // 左: 相手のチーム(縦に一覧。2026-11-16、ユーザー「トレードがやりにくい」。横に流すチップから変えた)
-              SizedBox(width: 176, child: _partnerList(context, car)),
+              SizedBox(width: 176, child: _partnerList(context, car, {for (final s in suitors) s.partner})),
               const VerticalDivider(width: 1, color: GmColors.line),
               Expanded(
                 child: ListView(
@@ -206,6 +243,7 @@ class _TradeTabState extends State<TradeTab> {
                       ],
                     ),
                     _blockLine(context, car),
+                    if (_give.length == 1) _suitorLine(context, car, suitors),
                     const SizedBox(height: 4),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -350,7 +388,7 @@ class _TradeTabState extends State<TradeTab> {
   }
 
   /// 相手のチームの一覧(縦)。上に「選手から探す」。
-  Widget _partnerList(BuildContext context, Career car) {
+  Widget _partnerList(BuildContext context, Career car, Set<int> wants) {
     final teams = [for (var t = 0; t < teamDefs.length; t++) if (t != car.mine) t];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -388,11 +426,19 @@ class _TradeTabState extends State<TradeTab> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  teamDefs[t].short,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(fontSize: 12, fontWeight: t == _partner ? FontWeight.bold : null),
+                                Row(
+                                  children: [
+                                    Flexible(
+                                      child: Text(
+                                        teamDefs[t].short,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(fontSize: 12, fontWeight: t == _partner ? FontWeight.bold : null),
+                                      ),
+                                    ),
+                                    if (wants.contains(t))
+                                      const Padding(padding: EdgeInsets.only(left: 3), child: Icon(Icons.favorite_rounded, size: 11, color: GmColors.good)),
+                                  ],
                                 ),
                                 Text(
                                   '${record(car.teams[t])}・${car.teams[t].mode.label}',
@@ -412,6 +458,37 @@ class _TradeTabState extends State<TradeTab> {
           ),
         ),
       ],
+    );
+  }
+
+  /// 選んだ自分の選手を欲しがっているチーム(1行)。押すと、それぞれが出してくれるものの一覧。
+  Widget _suitorLine(BuildContext context, Career car, List<TradeOffer> suitors) {
+    final p = car.me.roster.where((x) => x.id == _give.first).firstOrNull;
+    if (p == null || !car.canTrade) return const SizedBox.shrink();
+    final names = [for (final s in suitors.take(3)) teamDefs[s.partner].short].join('・');
+    return Padding(
+      padding: const EdgeInsets.only(top: 4),
+      child: Row(
+        children: [
+          const Icon(Icons.favorite_rounded, color: GmColors.good, size: 14),
+          const SizedBox(width: 4),
+          Expanded(
+            child: Text(
+              suitors.isEmpty ? '${p.name}を欲しがるチームは、いまは無い' : '${p.name}を欲しがるチーム: ${suitors.length}チーム($names${suitors.length > 3 ? 'ほか' : ''})',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontSize: 11, color: suitors.isEmpty ? GmColors.sub : GmColors.good, fontWeight: FontWeight.bold),
+            ),
+          ),
+          if (suitors.isNotEmpty)
+            ActionChip(
+              visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              label: const Text('出してくれるものを見る', style: TextStyle(fontSize: 11)),
+              onPressed: widget.c.busy ? null : () => _showBlockOffers(context, car, p),
+            ),
+        ],
+      ),
     );
   }
 

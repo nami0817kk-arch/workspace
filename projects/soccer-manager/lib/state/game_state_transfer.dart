@@ -810,6 +810,8 @@ extension GameStateTransfer on GameState {
     if (index < 0 || index >= _save!.friendlies.length) return null;
     final f = _save!.friendlies[index];
     if (f.result != null) return null;
+    _advanceTodayTo(
+        seasonCalendar.friendlyDate(index, _save!.friendlies.length));
     final league = _save!.league;
     final home = league.teams.firstWhere((t) => t.id == f.homeTeamId);
     final away = league.teams.firstWhere((t) => t.id == f.awayTeamId);

@@ -22,6 +22,7 @@ import 'package:basketball_career/gm/rating.dart';
 import 'package:basketball_career/ui/app.dart';
 import 'package:basketball_career/ui/gm/champion_screen.dart';
 import 'package:basketball_career/ui/gm/common.dart';
+import 'package:basketball_career/ui/gm/gm_table.dart';
 import 'package:basketball_career/ui/gm/progress_tab.dart';
 import 'package:basketball_career/ui/gm_controller.dart';
 import 'package:flutter/material.dart';
@@ -232,6 +233,15 @@ void main() {
       await t.ensureVisible(box.first);
       await t.pump(const Duration(milliseconds: 300));
       await t.tap(box.first);
+      await t.pump();
+      await t.pump(const Duration(milliseconds: 400));
+    });
+    // 自分の選手を1人選ぶと、欲しがるチーム(左の一覧に印)
+    await _shoot(t, '6d_trade_suitors', await _with(mid), act: (t) async {
+      await _tap(t, 'トレード', first: true);
+      final mineTable = find.ancestor(of: find.text('出す(自分のチーム)'), matching: find.byType(GmTable));
+      final box = find.descendant(of: mineTable, matching: find.byIcon(Icons.check_box_outline_blank_rounded));
+      await t.tap(box.at(2));
       await t.pump();
       await t.pump(const Duration(milliseconds: 400));
     });
