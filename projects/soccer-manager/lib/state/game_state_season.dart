@@ -136,6 +136,8 @@ extension GameStateSeason on GameState {
     _ageByBirthdays(before, d);
     // 夏の大会に出た選手の合流。
     _endTournamentLeaveIfDue(before, d);
+    // スカウトを送った地域・注目の選手が見えてくる。
+    _advanceScouting(before, d);
     final theme = currentLeagueTheme;
     // 窓が開いたら、名簿の外だった選手もまた登録できる。
     if (TransferWindowCalendar.openedBetween(before, d, theme)) {
@@ -1508,6 +1510,7 @@ extension GameStateSeason on GameState {
     _setToday(SeasonCalendar.preseasonDate(_save!.league.season));
     _settleLoansByDate();
     _startSummerTournament();
+    _pruneScoutKnowledge();
     _save!.boardReviewDoneThisSeason = false;
     _save!.pendingBoardReviewMessage = null;
     _save!.lastManagerOfMonthCheckpoint = 0;

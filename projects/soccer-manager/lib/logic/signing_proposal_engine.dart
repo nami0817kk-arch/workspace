@@ -52,8 +52,8 @@ class SigningProposalEngine {
       result.add(SigningProposal(
         player: p,
         reason: Tr.pick(
-            '${groupLabel(weakest)}の層が薄いので、主力を上回る総合力${p.overall}の選手です。',
-            'Our ${groupLabel(weakest)} depth is thin, and he is rated ${p.overall}, above our regulars.'),
+            '${groupLabel(weakest)}の層が薄いので、スカウトが主力より上と見ている選手です。',
+            'Our ${groupLabel(weakest)} depth is thin, and the scouts rate him above our regulars.'),
       ));
     }
     if (result.length < maxCount) {
@@ -65,8 +65,8 @@ class SigningProposalEngine {
       for (final p in rest.take(maxCount - result.length)) {
         result.add(SigningProposal(
           player: p,
-          reason: Tr.pick('市場で目を引く総合力${p.overall}の選手です。',
-              'A standout on the market, rated ${p.overall}.'),
+          reason: Tr.pick('スカウトの報告で目を引いた選手です。',
+              'He stood out in the scouting reports.'),
         ));
       }
     }

@@ -249,6 +249,14 @@ class SaveGame {
   /// (自クラブ以外の選手も含む、閲覧専用のウォッチリスト)。
   List<String> watchlistPlayerIds;
 
+  /// 他のクラブの選手がどれだけ見えているか(選手ID → 0〜100%)。スカウトを
+  /// 送った地域・注目リストの選手だけが入る(同じ部の選手の30%と、自クラブの
+  /// 100%は持たずに計算する。ScoutKnowledge)。
+  Map<String, int> scoutKnowledge;
+
+  /// スカウトを送っている地域('home:<部>' か 'foreign:<国>')。
+  List<String> scoutRegionKeys;
+
   /// 初回ガイドで既に開いた画面のステップ名(FirstRunStep.name)。
   /// 試合数や成長のように既存のカウンタから判定できるものは記録しない。
   List<String> firstRunStepsSeen;
@@ -544,6 +552,8 @@ class SaveGame {
     List<Player>? pendingYouthIntake,
     this.youthLeague,
     List<String>? watchlistPlayerIds,
+    Map<String, int>? scoutKnowledge,
+    List<String>? scoutRegionKeys,
     List<String>? firstRunStepsSeen,
     this.firstRunGuideDismissed = false,
     this.ticketPricing = TicketPricing.standard,
@@ -632,6 +642,8 @@ class SaveGame {
         transferMarketPlayers = transferMarketPlayers ?? [],
         pendingYouthIntake = pendingYouthIntake ?? [],
         watchlistPlayerIds = watchlistPlayerIds ?? [],
+        scoutKnowledge = scoutKnowledge ?? {},
+        scoutRegionKeys = scoutRegionKeys ?? [],
         firstRunStepsSeen = firstRunStepsSeen ?? [],
         infrastructure = infrastructure ?? ClubInfrastructure(),
         cups = cups ?? [],
@@ -777,6 +789,8 @@ class SaveGame {
             pendingYouthIntake.map((p) => p.toJson()).toList(),
         'youthLeague': youthLeague?.toJson(),
         'watchlistPlayerIds': watchlistPlayerIds,
+        if (scoutKnowledge.isNotEmpty) 'scoutKnowledge': scoutKnowledge,
+        if (scoutRegionKeys.isNotEmpty) 'scoutRegionKeys': scoutRegionKeys,
         'firstRunStepsSeen': firstRunStepsSeen,
         'firstRunGuideDismissed': firstRunGuideDismissed,
         'ticketPricing': ticketPricing.name,
@@ -982,6 +996,11 @@ class SaveGame {
             ? null
             : YouthLeague.fromJson(
                 json['youthLeague'] as Map<String, dynamic>),
+        scoutKnowledge: (json['scoutKnowledge'] as Map?)
+            ?.map((k, v) => MapEntry(k as String, v as int)),
+        scoutRegionKeys: (json['scoutRegionKeys'] as List?)
+            ?.map((e) => e as String)
+            .toList(),
         watchlistPlayerIds: (json['watchlistPlayerIds'] as List?)
                 ?.map((e) => e as String)
                 .toList() ??

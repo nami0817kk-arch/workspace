@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../logic/scout_knowledge.dart';
 import '../logic/signing_proposal_engine.dart';
 import '../logic/squad_registration_engine.dart';
 import '../logic/transfer_window.dart';
@@ -79,7 +80,7 @@ class _TransferScreenState extends State<TransferScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 5, vsync: this);
   }
 
   @override
@@ -95,6 +96,8 @@ class _TransferScreenState extends State<TransferScreen>
     final squadFull = gameState.userTeam.players.length >= maxSquadSize;
     // 申し込める他のクラブの選手。この画面の作り直しのたびに1回だけ集める。
     final targets = gameState.transferTargets;
+    // 同じ部の選手(最初から少し見えている)。見え方を何度も測るので1回だけ集める。
+    final same = gameState.sameLeaguePlayerIds();
 
     return Scaffold(
       appBar: screenBar(
@@ -109,6 +112,7 @@ class _TransferScreenState extends State<TransferScreen>
               'Watchlist (${save.watchlistPlayerIds.length})'),
           Tr.pick('フリーエージェント (${gameState.freeAgents.length})',
               'Free agents (${gameState.freeAgents.length})'),
+          Tr.pick('スカウト', 'Scouting'),
         ],
         actions: [
           const QuickAccessMenuButton(),
@@ -119,10 +123,13 @@ class _TransferScreenState extends State<TransferScreen>
         child: TabBarView(
           controller: _tabController,
           children: [
-            _buildProposalTab(context, gameState, save, squadFull, targets),
-            _buildSearchTab(context, gameState, squadFull, targets),
-            _buildWatchTab(context, gameState, save, squadFull, targets),
+            _buildProposalTab(context, gameState, save, squadFull, targets,
+                same),
+            _buildSearchTab(context, gameState, squadFull, targets, same),
+            _buildWatchTab(
+                context, gameState, save, squadFull, targets, same),
             _buildFreeAgentTab(context, gameState, squadFull),
+            _buildScoutTab(context, gameState, save),
           ],
         ),
       ),
@@ -136,11 +143,19 @@ class _TransferScreenState extends State<TransferScreen>
     SaveGame save,
     bool squadFull,
     List<Player> targets,
+    Set<String> same,
   ) {
     final windowOpen = gameState.isTransferWindowOpen;
+    // 監督が挙げるのは、ある程度見えている選手だけ。
+    final known = [
+      for (final p in targets)
+        if (gameState.knowledgeOf(p, sameLeagueIds: same) >=
+            ScoutKnowledge.proposalMinimum)
+          p,
+    ];
     final proposals = SigningProposalEngine.propose(
       gameState.userTeam,
-      targets,
+      known,
       budget: save.budget,
       passed: _passed,
     );
@@ -234,8 +249,8 @@ class _TransferScreenState extends State<TransferScreen>
                                         ),
                                         Text(
                                           Tr.pick(
-                                              '${gameState.clubNameOf(pr.player.id) ?? '-'}・総合力 ${pr.player.overall}・移籍金 ${formatMoney(pr.player.marketValue)}',
-                                              '${gameState.clubNameOf(pr.player.id) ?? '-'} • Overall ${pr.player.overall} • Fee ${formatMoney(pr.player.marketValue)}'),
+                                              '${gameState.clubNameOf(pr.player.id) ?? '-'}・総合力 ${ScoutKnowledge.label(gameState.overallEstimate(pr.player, sameLeagueIds: same))}・移籍金 ${formatMoney(pr.player.marketValue)}',
+                                              '${gameState.clubNameOf(pr.player.id) ?? '-'} • Overall ${ScoutKnowledge.label(gameState.overallEstimate(pr.player, sameLeagueIds: same))} • Fee ${formatMoney(pr.player.marketValue)}'),
                                           style: Theme.of(context)
                                               .textTheme
                                               .bodySmall,
@@ -292,14 +307,27 @@ class _TransferScreenState extends State<TransferScreen>
     GameState gameState,
     bool squadFull,
     List<Player> targets,
+    Set<String> same,
   ) {
+    // 総合力・伸びしろは本当の値ではなく、見立ての真ん中で並べる(見えて
+    // いない選手は後ろ)。
+    final byEstimate = _searchSort == TransferSortOption.overall ||
+        _searchSort == TransferSortOption.potential;
     var found = TransferScreen.filterAndSort(
       targets,
       group: _searchGroup,
-      sort: _searchSort,
+      sort: byEstimate ? TransferSortOption.marketValue : _searchSort,
     );
     if (_searchMaxAge != null) {
       found = found.where((p) => p.age <= _searchMaxAge!).toList();
+    }
+    if (byEstimate) {
+      int key(Player p) => ScoutKnowledge.center(
+          _searchSort == TransferSortOption.overall
+              ? gameState.overallEstimate(p, sameLeagueIds: same)
+              : gameState.potentialEstimate(p, sameLeagueIds: same));
+      final keys = {for (final p in found) p.id: key(p)};
+      found.sort((a, b) => keys[b.id]!.compareTo(keys[a.id]!));
     }
     final shown = found.take(_searchLimit).toList();
     return Column(
@@ -365,7 +393,7 @@ class _TransferScreenState extends State<TransferScreen>
             padding: const EdgeInsets.all(8),
             children: [
               for (final p in shown)
-                _targetTile(context, gameState, p, squadFull),
+                _targetTile(context, gameState, p, squadFull, same),
               if (found.length > shown.length)
                 TextButton(
                   onPressed: () => setState(() => _searchLimit += 40),
@@ -385,6 +413,7 @@ class _TransferScreenState extends State<TransferScreen>
     SaveGame save,
     bool squadFull,
     List<Player> targets,
+    Set<String> same,
   ) {
     final byId = {for (final p in targets) p.id: p};
     final watched = [
@@ -424,7 +453,8 @@ class _TransferScreenState extends State<TransferScreen>
                   'You are not watching anyone')),
             ),
           ),
-        for (final p in watched) _targetTile(context, gameState, p, squadFull),
+        for (final p in watched)
+          _targetTile(context, gameState, p, squadFull, same),
       ],
     );
   }
@@ -435,7 +465,13 @@ class _TransferScreenState extends State<TransferScreen>
     GameState gameState,
     Player p,
     bool squadFull,
+    Set<String> same,
   ) {
+    final k = gameState.knowledgeOf(p, sameLeagueIds: same);
+    final ovr = ScoutKnowledge.label(
+        gameState.overallEstimate(p, sameLeagueIds: same));
+    final pot = ScoutKnowledge.label(
+        gameState.potentialEstimate(p, sameLeagueIds: same));
     final canSign = (gameState.isTransferWindowOpen ||
             (gameState.isGoalkeeperEmergency && p.position == Position.gk)) &&
         !squadFull;
@@ -445,8 +481,8 @@ class _TransferScreenState extends State<TransferScreen>
         title: Text(Tr.pick('${p.name}(${p.position.label}・${p.age}歳)',
             '${p.name} (${p.position.label}, ${p.age})')),
         subtitle: Text(Tr.pick(
-            '${gameState.clubNameOf(p.id) ?? '-'}・総合力 ${p.overall}・市場価値 ${formatMoney(p.marketValue)}',
-            '${gameState.clubNameOf(p.id) ?? '-'} • Overall ${p.overall} • Value ${formatMoney(p.marketValue)}')),
+            '${gameState.clubNameOf(p.id) ?? '-'}・総合力 $ovr・伸びしろ $pot・市場価値 ${formatMoney(p.marketValue)}\n見えている度合い $k%',
+            '${gameState.clubNameOf(p.id) ?? '-'} • Overall $ovr • Potential $pot • Value ${formatMoney(p.marketValue)}\nScouted $k%')),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -458,6 +494,53 @@ class _TransferScreenState extends State<TransferScreen>
           ],
         ),
       ),
+    );
+  }
+
+  /// スカウト: 地域(国と部)にスカウトを送る。
+  Widget _buildScoutTab(
+    BuildContext context,
+    GameState gameState,
+    SaveGame save,
+  ) {
+    final regions = gameState.scoutRegions;
+    final used = save.scoutRegionKeys.length;
+    final slots = gameState.scoutSlots;
+    final cost = gameState.scoutTripCostPerWeek;
+    return ListView(
+      padding: const EdgeInsets.all(12),
+      children: [
+        Text(
+          Tr.pick('送っている場所 $used / $slots か所',
+              'Regions covered: $used of $slots'),
+          style: Theme.of(context).textTheme.titleSmall,
+        ),
+        const SizedBox(height: 4),
+        Text(
+          Tr.pick(
+              '送った地域の選手は、毎週${gameState.scoutWeeklyGain}%ずつ見えてきます(出張費は1か所 毎週${formatMoney(cost)})。見えているほど、総合力と伸びしろの幅が狭くなります。同じ部の選手は試合で見ているので最初から${ScoutKnowledge.sameLeagueBase}%、注目リストの選手はどこにいても毎週${ScoutKnowledge.watchWeeklyGain}%ずつ見えてきます。送れる場所の数と見えてくる速さは、スカウトの見極めの力で決まります。',
+              'Players in the regions you cover become ${gameState.scoutWeeklyGain}% clearer each week (travel costs ${formatMoney(cost)} a week per region). The clearer they are, the narrower the overall and potential ranges. Players in your own division start at ${ScoutKnowledge.sameLeagueBase}% because you see them in matches, and watchlisted players anywhere gain ${ScoutKnowledge.watchWeeklyGain}% a week. Your scout\'s judging decides how many regions you can cover and how fast.'),
+          style: TextStyle(
+              fontSize: 12, color: SemanticColors.subtleText(context)),
+        ),
+        const SizedBox(height: 8),
+        for (final r in regions)
+          Card(
+            child: SwitchListTile(
+              title: Text(r.label),
+              subtitle: Text(Tr.pick(
+                  '平均 ${gameState.regionKnowledgePercent(r.key)}% 見えている',
+                  '${gameState.regionKnowledgePercent(r.key)}% scouted on average')),
+              value: gameState.isScoutRegionActive(r.key),
+              onChanged: gameState.isScoutRegionActive(r.key) || used < slots
+                  ? (_) {
+                      FeedbackService.tap();
+                      gameState.toggleScoutRegion(r.key);
+                    }
+                  : null,
+            ),
+          ),
+      ],
     );
   }
 
