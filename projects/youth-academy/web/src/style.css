@@ -12,10 +12,14 @@ html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family
 button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:pointer}
 #app{position:fixed;inset:0;display:flex}
 #rail{width:calc(58px + var(--sal));padding:4px 0 4px var(--sal);background:linear-gradient(180deg,var(--navy2),var(--navy));display:flex;flex-direction:column;gap:3px;align-items:stretch;box-shadow:2px 0 8px rgba(20,40,75,.35);z-index:5}
-#rail .logo{color:var(--yellow);font-weight:900;font-size:9px;text-align:center;letter-spacing:.5px;padding:2px 0 4px;line-height:1.2}
-#rail button.tab{margin:0 5px;padding:5px 0 4px;border-radius:10px;color:#b9c8e6;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;font-weight:700}
-#rail button.tab i{font-style:normal;font-size:17px;line-height:1}
-#rail button.tab.on{background:linear-gradient(180deg,#2c5bb0,#1f4a9a);color:#fff;box-shadow:inset 0 -3px 0 var(--yellow),0 2px 4px rgba(0,0,0,.3)}
+#rail .logo{color:var(--yellow);font-weight:900;font-size:10.5px;text-align:center;letter-spacing:.5px;padding:2px 0 4px;line-height:1.2}
+/* 左の縦タブ：印20px・字11.5px、いまのタブは黄色の帯と白い字で（2026-11-18 ユーザビリティ4） */
+#rail button.tab{position:relative;margin:0 4px;padding:5px 0 4px;min-height:42px;border-radius:10px;color:#c4d2ec;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:11.5px;font-weight:800}
+#rail button.tab i{font-style:normal;font-size:20px;line-height:1}
+#rail button.tab.on{background:linear-gradient(180deg,#2c5bb0,#1f4a9a);color:#fff;box-shadow:0 2px 4px rgba(0,0,0,.3)}
+#rail button.tab.on::before{content:"";position:absolute;left:-4px;top:7px;bottom:7px;width:4px;border-radius:0 3px 3px 0;background:var(--yellow)}
+#rail button.tab.on i{color:var(--yellow)}
+@media (max-height:400px){#rail{gap:1px}#rail button.tab{min-height:39px;padding:3px 0}#rail .logo{padding:1px 0 2px}}
 #main{flex:1;min-width:0;display:flex;flex-direction:column;padding:calc(6px + var(--sat)) calc(8px + var(--sar)) calc(6px + var(--sab)) 8px;gap:6px;position:relative}
 .full #rail{display:none}
 .full #main{padding:calc(2px + var(--sat)) calc(6px + var(--sar)) calc(2px + var(--sab)) calc(6px + var(--sal))}
@@ -32,7 +36,7 @@ button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:poin
 .btn.sm{padding:6px 10px;min-height:34px;font-size:12px;border-radius:8px}
 .btn.on{background:linear-gradient(180deg,#2c5bb0,#1f4a9a);color:#fff;border-color:#123f94;box-shadow:0 2px 0 #123f94}
 .btn[disabled]{opacity:.4;pointer-events:none}
-.chip{display:inline-flex;align-items:center;gap:3px;border-radius:999px;padding:2px 8px;font-size:10.5px;font-weight:800;line-height:1.3;white-space:nowrap}
+.chip{display:inline-flex;align-items:center;gap:3px;border-radius:999px;padding:2px 8px;font-size:11.5px;font-weight:800;line-height:1.3;white-space:nowrap}
 .chip.trait{background:#fff1b8;color:#6b4e00;border:1px solid #f0cf55}
 .chip.pers{background:#dbe9ff;color:#134a9e;border:1px solid #a8c6f5}
 .chip.gold{background:linear-gradient(180deg,#fff3c4,#f2c94c);color:#5a3d00;border:1px solid #c99a00;font-weight:900}
@@ -55,7 +59,7 @@ button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:poin
 .opp{flex:1;padding:6px 8px;border-radius:10px;border:2px solid transparent;background:#fff;box-shadow:var(--shadow-s);text-align:left;display:flex;flex-direction:column;gap:1px;min-width:0}
 .opp.on{border-color:var(--blue);background:#eaf2ff}
 .opp b{font-size:12px;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.opp span{font-size:10px;color:var(--sub);line-height:1.25}
+.opp span{font-size:11px;color:var(--sub);line-height:1.25}
 .opp .sw{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px;vertical-align:-1px}
 .pre-body{flex:1;min-height:0;display:flex;gap:8px}
 .kick{display:flex;flex-direction:column;gap:4px;min-width:92px}
@@ -78,15 +82,15 @@ button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:poin
 .knob{display:flex;align-items:center;gap:6px;margin:5px 0}
 .knob label{width:78px;font-weight:800}
 .knob input[type=range]{flex:1;accent-color:var(--blue);height:24px}
-.knob span{width:56px;font-size:10px;color:var(--sub)}
+.knob span{width:56px;font-size:11px;color:var(--sub)}
 .knob span.l{text-align:right}
 .abg{display:grid;grid-template-columns:repeat(2,1fr);gap:1px 12px}
-.ab{display:flex;align-items:center;gap:4px;font-size:10.5px}
+.ab{display:flex;align-items:center;gap:4px;font-size:11.5px}
 .ab b{width:84px;font-weight:600;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ab .bar{flex:1}
 .ab em{font-style:normal;width:16px;text-align:right;font-weight:900}
-.note{font-size:10.5px;color:var(--sub);line-height:1.5}
-.fit{font-size:10px;font-weight:900;border-radius:6px;padding:0 5px}
+.note{font-size:11.5px;color:var(--sub);line-height:1.5}
+.fit{font-size:11px;font-weight:900;border-radius:6px;padding:0 5px}
 .fit.good{background:#d9f5e5;color:#0f7a3d}.fit.bad{background:#ffe0e0;color:#b02020}
 
 /* 試合中 */
@@ -104,8 +108,8 @@ button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:poin
 .scene-title b{color:var(--yellow);margin-right:6px}
 .tagrow{display:flex;flex-direction:column;gap:3px;align-items:flex-start}
 .tag{animation:pop .25s ease-out;background:#fff;border-radius:9px;padding:3px 8px 3px 4px;box-shadow:var(--shadow-s);display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:var(--navy)}
-.tag .chip{font-size:10px}
-.tag small{color:var(--sub);font-weight:600;font-size:10px}
+.tag .chip{font-size:11px}
+.tag small{color:var(--sub);font-weight:600;font-size:11px}
 @keyframes pop{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
 .banner{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;animation:pop .3s ease-out}
 .banner .big{font-size:44px;font-weight:900;color:#fff;letter-spacing:3px;text-shadow:0 3px 0 #123f94,0 6px 14px rgba(0,0,0,.45);-webkit-text-stroke:2px #1f6feb}
@@ -152,7 +156,7 @@ button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:poin
 
 .rolegrid{display:grid;grid-template-columns:1fr 1fr;gap:4px 6px}
 .rolegrid .rolecard{margin:0;padding:5px 7px;font-size:11px}
-.gtag{flex:none;font-size:9.5px;font-weight:800;line-height:1;padding:2px 4px;border-radius:4px;background:#e8eef7;color:#355}
+.gtag{flex:none;font-size:10.5px;font-weight:800;line-height:1;padding:2px 4px;border-radius:4px;background:#e8eef7;color:#355}
 .gtag.g1{background:#dff3e6;color:#1a7a43}
 .gtag.g2{background:#e6eefc;color:#2a5db0}
 .gtag.g3{background:#fdebd6;color:#a85d0c}
@@ -164,28 +168,29 @@ button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:poin
 .rolecard{display:flex;align-items:center;gap:8px;width:100%;text-align:left;padding:7px 9px;border-radius:10px;border:1.5px solid var(--line);background:#f5f8fd;margin-bottom:4px}
 .rolecard.on{border-color:var(--blue);background:#e6f0ff;box-shadow:inset 0 -2px 0 var(--blue)}
 .rolecard b{font-size:12.5px;color:var(--navy)}
-.rolecard span.d{font-size:10.5px;color:var(--sub);line-height:1.35}
+.rolecard span.d{font-size:11.5px;color:var(--sub);line-height:1.35}
 .aptrow{display:flex;gap:4px;flex-wrap:wrap}
-.aptchip{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border-radius:9px;background:#eef2f8;border:1px solid var(--line);font-size:10.5px;font-weight:800;color:var(--navy)}
+.aptchip{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border-radius:9px;background:#eef2f8;border:1px solid var(--line);font-size:11.5px;font-weight:800;color:var(--navy)}
 .aptchip.cur{background:#fff1b8;border-color:#f0cf55}
 .aptchip.best{background:#d9f5e5;border-color:#9fdcb8}
 
 .tut{display:flex;align-items:center;gap:8px;background:#fff7d6;border:1px solid #f0cf55;border-radius:10px;padding:5px 9px;font-size:11.5px;line-height:1.45;color:#5a4300;box-shadow:var(--shadow-s);flex:none}
 .tut.coach{background:#eef4ff;border-color:#a8c6f5;color:#173a73}
 .tut.coach .tutb{background:#2a62c4;color:#fff}
-.tut .tutb{background:var(--yellow);color:#3b2d00;font-weight:900;border-radius:7px;padding:1px 7px;font-size:10.5px;flex:none}
+.tut .tutb{background:var(--yellow);color:#3b2d00;font-weight:900;border-radius:7px;padding:1px 7px;font-size:11.5px;flex:none}
 
 /* 横向きの低い画面（スマホ）：試合前の布陣ボードを大きくするため、まわりを詰める */
 @media (max-height:460px){
   .pre-top{gap:5px}
   .opp{padding:3px 8px}
-  .opp span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  /* 相手の説明は2行まで出す（2026-11-18 ユーザビリティ8：1行で切れていた） */
+  .opp span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
   .kick{flex-direction:row;gap:5px;min-width:0}
   .kick .btn{min-height:36px;padding:4px 8px;white-space:nowrap}
   .boardwrap{gap:3px}
   .boardwrap .fm-row{flex-wrap:nowrap;gap:3px}
-  .boardwrap .btn.sm{flex:1;min-height:28px;padding:2px 1px;font-size:10px;white-space:nowrap}
-  .boardwrap .fm-row .sub{font-size:10px}
+  .boardwrap .btn.sm{flex:1;min-height:28px;padding:2px 1px;font-size:11px;white-space:nowrap}
+  .boardwrap .fm-row .sub{font-size:11px}
 }
 
 /* スクロールを減らす：横向きの低い画面で、まわりの余白と定型の部品を詰める */

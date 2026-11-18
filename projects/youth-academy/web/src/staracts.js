@@ -152,21 +152,29 @@
   if (YA.MEM_NAME) YA.MEM_NAME.sa = '二人の時間';
 
   // 選手の画面（★の子だけ）：6つの働きかけと結果
+  // 働きかけの効き目を短い札で
+  YA.STAR_ACT_TAGS = { stay: ['苦手な能力↑', '疲れ'], video: ['戦術理解↑', '自信↑', '鍵のヒント'], hint: ['鍵のヒント'], meal: ['信頼↑↑', '不満↓'], pact: [`${YA.PACT_WEEKS}週の目標`, '届けば能力↑'], ob: ['自信↑', '鍵のヒント', '年1回'] };
   YA.starActsEl = function (w, p, rerender) {
     if (!p || !p.star || !YA._ui) return null;
     const h = YA._ui.h;
     const app = YA._ui.app || {};
     const left = YA.starActLeft(w);
     const msg = app.saMsg && app.saMsg.pid === p.id ? app.saMsg : null;
+    // 2列のカードに、効き目の札と押せない理由（2026-11-18 ユーザビリティ12：2行の説明が6つ続き、長かった）。
+    // 説明の全文は「説明を見る」で開く（title の長押しは iPhone で見えないので本文に出す）
+    const full = !!app.saAbout;
     return h('div', { class: 'card', style: 'padding:6px 9px;margin:6px 0;background:#fff8e1;border-color:#e6c200' },
-      h('div', { class: 'h' }, `★の子と過ごす（今週あと${Math.max(0, left)}回・★の子全体で週${YA.STAR_ACT_WEEK}回）`),
+      h('div', { class: 'row' }, h('div', { class: 'h grow' }, `★の子と過ごす（今週あと${Math.max(0, left)}回・★の子全体で週${YA.STAR_ACT_WEEK}回）`), h('button', { class: 'btn sm', onclick: () => { app.saAbout = !full; if (rerender) rerender(); } }, full ? '説明を閉じる' : '説明を見る')),
       p.pact ? h('div', { class: 'note', style: 'color:var(--ink)' }, YA.pactLine(w, p)) : null,
-      h('div', { style: 'display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:5px;margin-top:4px' },
+      h('div', { style: 'display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;margin-top:4px' },
         YA.STAR_ACTS.map((d) => {
           const why = YA.starActWhy(w, p, d.k);
-          return h('button', { class: 'btn sm', style: 'flex-direction:column;align-items:flex-start;text-align:left;white-space:normal;min-height:44px', disabled: !!why, why: why || '',
+          return h('button', { class: 'btn sm', style: 'flex-direction:column;align-items:flex-start;text-align:left;white-space:normal;min-height:46px;gap:2px', disabled: !!why, why: why || '',
             onclick: () => { const r = YA.starAct(w, p, d.k); app.saMsg = { pid: p.id, t: r.msg, line: r.line }; if (YA.saveWorld) YA.saveWorld(); if (rerender) rerender(); } },
-          h('b', {}, d.name), h('small', { style: 'font-weight:600;opacity:.8;font-size:10.5px;line-height:1.35' }, d.about)); // 説明は全文を本文に（title の長押しは iPhone で見えない）
+          h('b', {}, d.name),
+          h('span', { style: 'display:flex;flex-wrap:wrap;gap:3px' }, ...(YA.STAR_ACT_TAGS[d.k] || []).map((t) => h('span', { class: 'chip ' + (/疲れ|年1回/.test(t) ? 'gray' : 'trait'), style: 'font-size:11px;padding:0 6px' }, t))),
+          why ? h('small', { style: 'font-weight:700;font-size:11px;color:#8a5a00' }, why) : null,
+          full ? h('small', { style: 'font-weight:600;opacity:.8;font-size:11.5px;line-height:1.35' }, d.about) : null);
         })),
       msg ? h('div', { class: 'card', style: 'padding:5px 8px;margin-top:5px;background:#fff' }, msg.line ? h('div', {}, h('b', {}, first(p) + '：'), `「${msg.line}」`) : null, h('div', { class: 'note', style: 'color:var(--ink)' }, msg.t)) : null);
   };

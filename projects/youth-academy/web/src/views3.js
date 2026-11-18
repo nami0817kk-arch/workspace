@@ -126,13 +126,22 @@
   YA.settingsBlock = function (body) {
     const app = U().app;
     const store = U().store;
-    body.append(h('div', { class: 'h' }, '設定'));
+    // 1本の長い画面だったので4つに分ける（2026-11-18 ユーザビリティ16）
+    const ST = [['disp', '表示と音'], ['notice', 'お知らせ'], ['name', '名前'], ['save', 'セーブ・ショップ']];
+    app.st = ST.some((x) => x[0] === app.st) ? app.st : 'disp';
+    body.append(h('div', { class: 'row', style: 'gap:6px' }, h('div', { class: 'h' }, '設定'), h('div', { class: 'tabs settabs', style: 'flex:1;min-width:0' }, ST.map(([k, n]) => h('button', { class: 'btn sm' + (app.st === k ? ' on' : ''), onclick: () => { app.st = k; rerender(); } }, n)))));
+    if (app.st === 'notice') { fontAndNotices(body, 'notice'); return; }
+    if (app.st === 'name') { YA.nameBlock(body); if (!app.w || !app.w.league) body.append(h('div', { class: 'note' }, '遊んでいる枠があると、クラブ名を変えられます')); return; }
+    if (app.st === 'save') return saveShop(body);
     body.append(h('div', { class: 'row', style: 'margin:6px 0' }, h('span', { class: 'grow' }, '最初の説明・コーチの一言'), h('button', { class: 'btn sm', onclick: () => { if (app.w) { app.w.coachSeen = {}; app.w.introSeen = false; YA.saveWorld(); rerender(); } } }, '読み返す')));
     body.append(h('div', { class: 'row', style: 'margin:6px 0' }, h('span', { class: 'grow' }, '試合の自動停止（前半終了・得点・失点・残り15分）'), h('button', { class: 'btn sm' + (app.autoStop ? ' on' : ''), onclick: () => { app.autoStop = !app.autoStop; store.set('autoStop', app.autoStop); rerender(); } }, app.autoStop ? 'ON' : 'OFF')));
     body.append(h('div', { class: 'row', style: 'margin:6px 0' }, h('span', { class: 'grow' }, '効果音'), h('button', { class: 'btn sm' + (YA.sfx.on ? ' on' : ''), onclick: () => { YA.sfx.on = !YA.sfx.on; store.set('sfx', YA.sfx.on); YA.sfx.play('tap'); rerender(); } }, YA.sfx.on ? 'ON' : 'OFF')));
     body.append(h('div', { class: 'row', style: 'margin:6px 0' }, h('span', { class: 'grow' }, 'BGM（ホームと試合で曲が変わります）'), h('button', { class: 'btn sm' + (YA.bgm.on ? ' on' : ''), onclick: () => { YA.bgm.setOn(!YA.bgm.on); store.set('bgm', YA.bgm.on); rerender(); } }, YA.bgm.on ? 'ON' : 'OFF')));
-    fontAndNotices(body);
-    YA.nameBlock(body);
+    fontAndNotices(body, 'font');
+  };
+  function saveShop(body) {
+    const app = U().app;
+    const store = U().store;
     if (YA.shopBlock) YA.shopBlock(body);
     // セーブ枠
     YA.slotBlock(body);
@@ -201,11 +210,11 @@
       const sm = YA.testSummary(st);
       msg.remove();
       const cell = (t, wd, strong) => h('span', { style: `width:${wd}px;flex:none;text-align:right;${strong ? 'font-weight:900' : ''}` }, t);
-      const head = h('div', { class: 'pitem', style: 'background:none;font-size:9.5px;color:var(--sub);font-weight:800;gap:2px' }, cell('年', 24), cell('順位', 46), cell('評価', 28), cell('信頼', 34), cell('予算', 42), cell('成長', 32), cell('怪我', 28), cell('退団', 28), cell('プロ', 28), cell('①/②/③', 62), cell('選ぶ/週', 46), cell('分/週', 36));
+      const head = h('div', { class: 'pitem', style: 'background:none;font-size:10.5px;color:var(--sub);font-weight:800;gap:2px' }, cell('年', 24), cell('順位', 46), cell('評価', 28), cell('信頼', 34), cell('予算', 42), cell('成長', 32), cell('怪我', 28), cell('退団', 28), cell('プロ', 28), cell('①/②/③', 62), cell('選ぶ/週', 46), cell('分/週', 36));
       bx.append(head);
       st.years.forEach((r, i) => {
         const m = r.metrics;
-        bx.append(h('div', { class: 'pitem', style: 'cursor:default;font-size:10.5px;gap:2px' }, cell(i + 1, 24, true), cell(`${m.rank}位${m.move < 0 ? '↑' : m.move > 0 ? '↓' : ''}`, 46), cell(m.letter, 28, true), cell(`${m.trustBefore}→${m.trustAfter}`, 34), cell(m.budget, 42), cell('+' + m.growthAvg, 32), cell(m.injuries, 28), cell(m.quits, 28), cell(m.gradPaths.pro, 28), cell(`${m.noticesByTier[1]}/${m.noticesByTier[2]}/${m.noticesByTier[3]}`, 62), cell(m.picksPerWeek, 46), cell(m.minutesPerWeek, 36)));
+        bx.append(h('div', { class: 'pitem', style: 'cursor:default;font-size:11.5px;gap:2px' }, cell(i + 1, 24, true), cell(`${m.rank}位${m.move < 0 ? '↑' : m.move > 0 ? '↓' : ''}`, 46), cell(m.letter, 28, true), cell(`${m.trustBefore}→${m.trustAfter}`, 34), cell(m.budget, 42), cell('+' + m.growthAvg, 32), cell(m.injuries, 28), cell(m.quits, 28), cell(m.gradPaths.pro, 28), cell(`${m.noticesByTier[1]}/${m.noticesByTier[2]}/${m.noticesByTier[3]}`, 62), cell(m.picksPerWeek, 46), cell(m.minutesPerWeek, 36)));
       });
       bx.append(h('div', { class: 'insight' }, `平均：順位${sm.avgRank}位・成長+${sm.growthAvg}/年・怪我${sm.injuries}件/年・プロ入り${sm.pro}人/年・選ぶ回数${sm.picks}回/週・想定${sm.minutes}分/週（目標は1週8〜10分）`), h('div', { class: 'insight' }, '評価の内訳：' + Object.entries(sm.letters).map(([k, v]) => `${k}×${v}`).join('、') + `／予算の平均${sm.budget}万円／在籍${sm.players}人`));
       const last = st.years[st.years.length - 1];
@@ -215,32 +224,36 @@
     next();
   }
   // ---------- 文字の大きさ・お知らせの3段（決定76） ----------
-  function fontAndNotices(body) {
+  function fontAndNotices(body, part) {
     const app = U().app;
     const store = U().store;
     const cur = store.get('fs', 1);
-    body.append(h('div', { class: 'h', style: 'margin-top:10px' }, '文字の大きさ'), h('div', { class: 'row', style: 'gap:5px;margin-top:3px' },
+    if (part !== 'notice') body.append(h('div', { class: 'h', style: 'margin-top:10px' }, '文字の大きさ'), h('div', { class: 'row', style: 'gap:5px;margin-top:3px' },
       ...YA.FONT_SCALES.map(([name], i) => h('button', { class: 'btn sm' + (cur === i ? ' on' : ''), onclick: () => { store.set('fs', i); YA.applyFontScale(i); rerender(); } }, name))));
-    if (!app.w) return;
+    if (!app.w || part === 'font') return;
     const w = app.w;
     w.noticeTier = w.noticeTier || {};
-    body.append(h('div', { class: 'h', style: 'margin-top:10px' }, 'お知らせの重さ'), h('div', { class: 'note' }, '項目ごとに選べます。「必ず止める」はおまかせ進行でも止まります。「記録だけ」は出来事の記録にだけ残ります。'));
+    body.append(h('div', { class: 'row', style: 'margin-top:8px' }, h('div', { class: 'h grow' }, 'お知らせの重さ'), h('button', { class: 'btn sm', disabled: !Object.keys(w.noticeTier).length, why: 'いまは全部おすすめ（お知らせ）のままです', onclick: () => { w.noticeTier = {}; YA.saveWorld(true); rerender(); if (YA.toast) YA.toast('お知らせの重さを、全部おすすめに戻しました'); } }, '全部おすすめに戻す')), h('div', { class: 'note' }, '項目ごとに選べます。「必ず止める」はおまかせ進行でも止まります。「記録だけ」は出来事の記録にだけ残ります。'));
     const kinds = YA.NOTICE_KINDS.map((x) => x[0]).concat(['そのほか']);
     const grid = h('div', { style: 'display:grid;grid-template-columns:1fr 1fr;gap:3px 14px' });
     body.append(grid);
     for (const k of kinds) {
       const t = w.noticeTier[k] || 2;
       grid.append(h('div', { class: 'row', style: 'gap:3px' }, h('span', { class: 'grow', style: 'font-size:11.5px' }, k),
-        ...[1, 2, 3].map((n) => h('button', { class: 'btn sm' + (t === n ? ' on' : ''), style: 'padding:3px 8px;min-height:34px;font-size:10.5px', onclick: () => { w.noticeTier[k] = n; YA.saveWorld(true); rerender(); } }, YA.NOTICE_TIER_NAME[n]))));
+        ...[1, 2, 3].map((n) => h('button', { class: 'btn sm' + (t === n ? ' on' : ''), style: 'padding:3px 8px;min-height:34px;font-size:11.5px', onclick: () => { w.noticeTier[k] = n; YA.saveWorld(true); rerender(); } }, YA.NOTICE_TIER_NAME[n]))));
     }
   }
 
   // ---------- 実績と引退（決定51） ----------
-  YA.achBlock = function (body) {
+  YA.achBlock = function (body, o) {
     const app = U().app;
     const w = app.w;
-    body.append(h('div', { class: 'h' }, '実績'));
-    for (const a of YA.achievements(w)) {
+    if (o && o.retireOnly) {
+      // 実績の一覧は系譜タブの「記録」にある。ここは引退だけ
+      const done = YA.achievements(w).filter((a) => a.done).length;
+      body.append(h('div', { class: 'row' }, h('div', { class: 'h grow' }, `実績 ${done}/${YA.achievements(w).length}`), h('button', { class: 'btn sm', onclick: () => { app.tab = 'lineage'; app.lt = 'ach'; rerender(); } }, '系譜タブで実績を見る')));
+    } else body.append(h('div', { class: 'h' }, '実績'));
+    if (!(o && o.retireOnly)) for (const a of YA.achievements(w)) {
       body.append(h('div', { class: 'pitem', style: 'cursor:default;gap:6px' },
         h('span', { class: 'chip ' + (a.done ? 'trait' : 'gray') }, a.done ? '達成' : '未達'),
         h('span', { class: 'grow', style: 'font-size:12px' }, a.name + (a.goal ? `（${Math.min(a.cur, a.goal)}/${a.goal}）` : '')),
@@ -309,13 +322,13 @@
       const slotName = (s, i) => YA.pos15OfSlot(s, i);
       body.append(h('div', { class: 'h', style: 'margin-top:8px' }, 'Bの先発と控え'), h('div', { class: 'note' }, ui.bSel == null ? '入れ替えたい先発をタップ → 入れる選手をタップ' : '入れる選手（先発・控え）をタップ'));
       const chip = (p, on, fn) => h('button', { class: 'btn sm' + (on ? ' on' : ''), style: 'min-height:34px;padding:4px 6px;font-size:11.5px', onclick: fn }, `${p.name.split(' ')[0]} ${YA.ovr(p).toFixed(0)}${p.inj > 0 ? '＊' : ''}`);
-      body.append(h('div', { class: 'row', style: 'gap:4px;flex-wrap:wrap;margin-top:3px' }, ...w.lineupB.map((s, i) => { const p = w.players[s.pid]; return h('span', { style: 'display:flex;flex-direction:column;align-items:center;gap:1px' }, h('span', { class: 'note', style: 'font-size:9.5px' }, slotName(s, i)), chip(p, ui.bSel === i, () => { if (ui.bSel == null) ui.bSel = i; else if (ui.bSel === i) ui.bSel = null; else { YA.swapB(w, ui.bSel, s.pid); ui.bSel = null; YA.saveWorld(true); } rerender(); })); })));
+      body.append(h('div', { class: 'row', style: 'gap:4px;flex-wrap:wrap;margin-top:3px' }, ...w.lineupB.map((s, i) => { const p = w.players[s.pid]; return h('span', { style: 'display:flex;flex-direction:column;align-items:center;gap:1px' }, h('span', { class: 'note', style: 'font-size:10.5px' }, slotName(s, i)), chip(p, ui.bSel === i, () => { if (ui.bSel == null) ui.bSel = i; else if (ui.bSel === i) ui.bSel = null; else { YA.swapB(w, ui.bSel, s.pid); ui.bSel = null; YA.saveWorld(true); } rerender(); })); })));
       body.append(h('div', { class: 'note', style: 'margin-top:5px' }, '控え'), h('div', { class: 'row', style: 'gap:4px;flex-wrap:wrap;margin-top:3px' }, ...(w.benchB || []).map((id) => w.players[id]).filter(Boolean).map((p) => chip(p, false, () => { if (ui.bSel == null) return; YA.swapB(w, ui.bSel, p.id); ui.bSel = null; YA.saveWorld(true); rerender(); }))));
     }
     // いまのBの先発（自分で決める以外のときも見えるように。2026-11-16 誰が出ているか見えなかった）
     if (c.policy !== 'manual' && (w.lineupB || []).length) {
       body.append(h('div', { class: 'h', style: 'margin-top:8px' }, 'Bの先発（いま）'), h('div', { style: 'display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:3px;margin-top:3px' },
-        ...w.lineupB.map((sl, i) => { const p = w.players[sl.pid]; if (!p) return null; const p15 = YA.pos15OfSlot(sl, i); return h('div', { class: 'pitem', style: 'cursor:default;gap:5px;padding:3px 6px;min-height:0' }, h('span', { class: 'pos ' + YA.posOfSlot(sl, i) }, YA.POS_LABEL[p15] || p15), h('span', { class: 'grow', style: 'min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px' }, `${p.num} ${p.name}`), h('span', { class: 'sub', style: 'font-size:10px' }, '高' + p.grade), h('b', { style: 'font-size:12px' }, YA.rating(p))); })));
+        ...w.lineupB.map((sl, i) => { const p = w.players[sl.pid]; if (!p) return null; const p15 = YA.pos15OfSlot(sl, i); return h('div', { class: 'pitem', style: 'cursor:default;gap:5px;padding:3px 6px;min-height:0' }, h('span', { class: 'pos ' + YA.posOfSlot(sl, i) }, YA.POS_LABEL[p15] || p15), h('span', { class: 'grow', style: 'min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px' }, `${p.num} ${p.name}`), h('span', { class: 'sub', style: 'font-size:11px' }, '高' + p.grade), h('b', { style: 'font-size:12px' }, YA.rating(p))); })));
     }
     // 結果は勝ち・引き分け・負けで色を分ける
     const rs = (w.resultsB || []).slice(-8).reverse();

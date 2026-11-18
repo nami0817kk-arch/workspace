@@ -343,7 +343,7 @@
     for (const r of rows) (byY[r.y] = byY[r.y] || []).push(r);
     const ys2 = Object.keys(byY).map(Number).sort((a, b) => b - a);
     body.append(h('div', { class: 'h' }, '年表'), h('div', { class: 'scroll', style: 'margin-top:5px;flex:1;min-height:0;display:flex;flex-direction:column;gap:6px' }, ys2.map((y) => h('div', { class: 'card', style: 'padding:6px 10px;flex:none' + (y === w.year ? ';border-color:#f0cf55' : '') },
-      h('div', { class: 'row', style: 'gap:6px' }, h('b', { style: 'font-size:13px' }, `${y}年目`), y === w.year ? h('span', { class: 'chip trait', style: 'font-size:10px;padding:0 5px' }, 'いま') : null),
+      h('div', { class: 'row', style: 'gap:6px' }, h('b', { style: 'font-size:13px' }, `${y}年目`), y === w.year ? h('span', { class: 'chip trait', style: 'font-size:11px;padding:0 5px' }, 'いま') : null),
       h('div', { style: 'display:flex;flex-wrap:wrap;gap:3px 12px;margin-top:3px' }, byY[y].map((r) => h('span', { style: 'font-size:12px;' + (r.k ? 'color:#a37b00;font-weight:800' : '') }, '・' + r.t)))))));
     if (rows.length) return;
     body.append(h('div', { class: 'plist', style: 'margin-top:5px' }, rows.map((r) => h('div', { class: 'pitem', style: 'cursor:default;gap:6px' }, h('span', { class: 'sub', style: 'width:54px' }, `${r.y}年目`), h('span', { class: 'grow', style: r.k ? 'font-weight:800;color:#a37b00' : '' }, r.t)))));
@@ -368,8 +368,8 @@
       const d = (w.dex || {})[f.k];
       return h('div', { class: 'card', style: 'padding:6px 7px;display:flex;flex-direction:column;gap:2px;min-height:74px;flex:none;' + (d ? 'background:linear-gradient(180deg,#fff8d6,#ffefb0);border-color:#e6c200' : 'background:#f3f6fb;opacity:.85') },
         h('div', { class: 'row', style: 'gap:4px' }, h('span', { style: `font-size:16px;color:${d ? '#c99a00' : '#b9c3d3'}` }, d ? '★' : '？'), h('b', { style: 'font-size:12px;line-height:1.25' }, d ? f.name : '？？？？')),
-        h('div', { class: 'note', style: 'font-size:10.5px;line-height:1.35' }, d ? `特性「${f.trait}」` : `向く位置：${f.pos.slice(0, 3).map((x) => YA.posJa ? YA.posJa(x) : x).join('・')}`),
-        h('div', { class: 'note', style: 'font-size:10px;line-height:1.35' }, d ? `最初の子 ${d.name}（${d.y}年目）・${d.n}回` : leanHint(f)));
+        h('div', { class: 'note', style: 'font-size:11.5px;line-height:1.35' }, d ? `特性「${f.trait}」` : `向く位置：${f.pos.slice(0, 3).map((x) => YA.posJa ? YA.posJa(x) : x).join('・')}`),
+        h('div', { class: 'note', style: 'font-size:11px;line-height:1.35' }, d ? `最初の子 ${d.name}（${d.y}年目）・${d.n}回` : leanHint(f)));
     })));
   }
   function fundTab(body, w) {
@@ -388,7 +388,17 @@
     ui.lt = ui.lt || 'tree';
     const EXTRA = YA.lineageExtraTabs || [];
     const TABS = [['tree', '系譜図'], ['alumni', '卒業生名鑑'], ['hall', '殿堂'], ['ach', '実績'], ['dex', '図鑑'], ['chron', '年表'], ['fund', '育成基金']].concat(EXTRA.map((x) => [x[0], x[1]]));
-    const tabs = h('div', { class: 'tabs', style: 'flex-wrap:wrap;gap:3px;max-width:100%' }, TABS.map(([k, n]) => h('button', { class: 'btn' + (ui.lt === k ? ' on' : ''), onclick: () => { ui.lt = k; rerender(); } }, n)));
+    // 小タブが12個で2行に折れていたので、3つの群に分けて1行に（2026-11-18 ユーザビリティ7）。群ごとに最後に見た小タブを覚える
+    const GRP = [['alumni', '卒業生', ['tree', 'alumni', 'hall', 'letters', 'clubs']], ['rec', '記録', ['ach', 'dex', 'chron', 'fund']], ['coach', '監督', ['rival', 'top', 'move']]];
+    const grpOf = (k) => (GRP.find((g) => g[2].indexOf(k) >= 0) || GRP[1])[0];
+    if (!TABS.some((x) => x[0] === ui.lt)) ui.lt = 'tree';
+    const g0 = grpOf(ui.lt);
+    ui.ltg = ui.ltg || {};
+    ui.ltg[g0] = ui.lt;
+    const tabs = h('div', { class: 'tabs', style: 'gap:3px;max-width:100%;align-items:center' },
+      h('div', { class: 'row', style: 'gap:0;flex:none;background:var(--navy);border-radius:10px;padding:2px' }, ...GRP.map(([gk, gn, ks]) => h('button', { class: 'btn sm grp' + (g0 === gk ? ' on' : ''), style: 'flex:none;border:none;box-shadow:none;' + (g0 === gk ? '' : 'background:none;color:#c9d6f0'), onclick: () => { const first = TABS.find((x) => grpOf(x[0]) === gk); ui.lt = ui.ltg[gk] || (first && first[0]) || ks[0]; rerender(); } }, gn))),
+      h('span', { style: 'width:6px;flex:none' }),
+      ...TABS.filter(([k]) => grpOf(k) === g0).map(([k, n]) => h('button', { class: 'btn' + (ui.lt === k ? ' on' : ''), onclick: () => { ui.lt = k; rerender(); } }, n)));
     const body = h('div', { class: 'card pbody', style: 'flex:1;min-height:0;display:flex;flex-direction:column' });
     if (ui.lt === 'tree') treeTab(body, w);
     else if (ui.lt === 'hall') hallTab(body, w);

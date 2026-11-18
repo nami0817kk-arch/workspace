@@ -18,7 +18,7 @@
   function goodPosRow(p) {
     const list = YA.goodPositions(p).filter((q) => q === p.main || (p.subs && p.subs.indexOf(q) >= 0) || (p.bestKnown && q === p.best));
     if (list.indexOf(p.main) < 0) list.unshift(p.main);
-    return h('span', { class: 'row', style: 'gap:3px;flex-wrap:wrap' }, list.map((q) => h('span', { class: 'aptchip' + (q === p.main ? ' cur' : ''), style: 'padding:1px 6px;font-size:10.5px' }, YA.POS_LABEL[q], h('b', {}, YA.aptLabel(p.apt[q])))));
+    return h('span', { class: 'row', style: 'gap:3px;flex-wrap:wrap' }, list.map((q) => h('span', { class: 'aptchip' + (q === p.main ? ' cur' : ''), style: 'padding:1px 6px;font-size:11.5px' }, YA.POS_LABEL[q], h('b', {}, YA.aptLabel(p.apt[q])))));
   }
   function aptBlock(p) {
     if (p.pos === 'GK') return h('div', { class: 'note' }, 'GK（ほかのポジションの適性は、この版では見ません）');
@@ -322,7 +322,8 @@
         if ((opts.showRole && opts.showRole()) || sel) {
           // 役割の札は濃い下地を敷いて、隣の子の名前と重なっても読めるように（2026-11-16「ゴールキ…・守」が名前に重なっていた）
           const fit = YA.Match.prototype.roleFit.call(null, t, i);
-          const txt = (sl.role.length > 4 ? sl.role.slice(0, 4) + '…' : sl.role) + (YA.DUTY[sl.duty] ? '・' + YA.DUTY[sl.duty].short : '');
+          // 長い役割名は切らずに決まった短い名前で（2026-11-18 ユーザビリティ8：「ゴールキ…」と切れていた）
+          const txt = YA.roleShort(sl.role) + (YA.DUTY[sl.duty] ? '・' + YA.DUTY[sl.duty].short : '');
           const ty = p15 === 'GK' ? 1.1 : posAlt ? 1.1 : 4.3;
           // 札はほかの子の上に重ねるので、あとでまとめて最後に描く（選手の並びの順番は変えない）
           overlays.push({ sel, el: s('g', { transform: `translate(${sx} ${sy})`, 'pointer-events': 'none' }, s('rect', { x: 4.9, y: ty - 2.3, width: txt.length * 2.3 + 1, height: 3.1, rx: 0.8, fill: 'rgba(12,28,56,.88)' }),
@@ -659,8 +660,8 @@
           const ok = !outP15 || (q.pos === 'GK') === outGK;
           const aptv = outP15 && q.apt ? q.apt[outP15] : null;
           // 一度下げた子は灰色で押せない（2026-11-17：前はもう一度出られた）
-          li.append(h('button', { class: 'pitem' + (st.subIn === q.id ? ' on' : ''), style: q.off ? 'opacity:.35;background:#e3e7ee' : ok ? '' : 'opacity:.35', disabled: !!q.off, why: q.sentOff ? '退場した選手は出られません' : '一度下げた選手は、もう出られません', onclick: () => { st.subIn = q.id; renderBody(); } }, posChip(q), h('span', { class: 'num' }, q.num), h('span', { class: 'nm grow' }, surname(q)), gtag(q), q.off ? h('span', { class: 'chip gray', style: 'font-size:9.5px' }, '交代済み') : null,
-            aptv != null ? h('span', { class: 'chip ' + (aptv >= 14 ? 'trait' : 'gray'), style: 'font-size:9.5px' }, '適' + aptv) : h('span', { class: 'sub', style: 'font-size:9.5px' }, q.traits.slice(0, 1).join('')),
+          li.append(h('button', { class: 'pitem' + (st.subIn === q.id ? ' on' : ''), style: q.off ? 'opacity:.35;background:#e3e7ee' : ok ? '' : 'opacity:.35', disabled: !!q.off, why: q.sentOff ? '退場した選手は出られません' : '一度下げた選手は、もう出られません', onclick: () => { st.subIn = q.id; renderBody(); } }, posChip(q), h('span', { class: 'num' }, q.num), h('span', { class: 'nm grow' }, surname(q)), gtag(q), q.off ? h('span', { class: 'chip gray', style: 'font-size:10.5px' }, '交代済み') : null,
+            aptv != null ? h('span', { class: 'chip ' + (aptv >= 14 ? 'trait' : 'gray'), style: 'font-size:10.5px' }, '適' + aptv) : h('span', { class: 'sub', style: 'font-size:10.5px' }, q.traits.slice(0, 1).join('')),
             q.inj > 0 ? h('span', { class: 'fit bad' }, '怪') : null));
         });
         cols.append(lo, li);
@@ -829,7 +830,7 @@
       const tired = Math.round(p.fat || 0);
       return h('button', { class: 'pitem sq' + (on ? ' on' : ''), style: compat ? '' : 'opacity:.3', onclick: () => handlePick(x) },
         posChip(p), h('span', { class: 'num' }, p.num), h('span', { class: 'nm grow', style: 'overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:2.6em' }, surname(p)), gtag(p),
-        aptv != null ? h('span', { class: 'chip ' + (aptv >= 14 ? 'trait' : 'gray'), style: 'font-size:9.5px' }, YA.aptLabel(aptv)) : null,
+        aptv != null ? h('span', { class: 'chip ' + (aptv >= 14 ? 'trait' : 'gray'), style: 'font-size:10.5px' }, YA.aptLabel(aptv)) : null,
         h('b', { style: 'width:26px;text-align:right' }, YA.rating(p)),
         p.inj > 0 ? h('span', { class: 'fit bad' }, '怪') : h('div', { class: 'bar stam', style: 'width:22px' }, h('i', { style: `width:${100 - tired}%;background:${tired > 60 ? '#d63a3a' : tired > 40 ? '#f0a020' : '#1a9d57'}` })));
     }
@@ -879,9 +880,20 @@
   const TABS = [['home', 'ホーム', '⌂'], ['players', '選手', '☺'], ['train', '練習', '✎'], ['match', '試合', '⚽'], ['club', 'クラブ', '▦'], ['lineage', '系譜', '❖']];
   function renderRail() {
     const rail = document.getElementById('rail');
-    rail.replaceChildren(h('div', { class: 'logo' }, 'ユースの', h('br'), '系譜'), ...TABS.map(([k, n, ic]) => h('button', { class: 'tab' + (app.tab === k ? ' on' : ''), onclick: () => { if (app.view === 'play') return; app.tab = k; render(); } }, h('i', {}, ic), n)), h('button', { class: 'tab' + (app.tab === 'more' ? ' on' : ''), style: 'margin-top:auto', onclick: () => { if (app.view === 'play') return; app.tab = 'more'; render(); } }, h('i', {}, '☰'), 'ほか')); // 2026-11-16 案A：中は名鑑・記録・Bチーム・実績と引退・用語集・設定なので「ほか」に
+    rail.replaceChildren(h('div', { class: 'logo' }, 'ユースの', h('br'), '系譜'), ...TABS.map(([k, n, ic]) => h('button', { class: 'tab' + (app.tab === k ? ' on' : ''), onclick: () => { if (app.view === 'play') return; app.tab = k; render(); } }, h('i', {}, ic), n)), app.w && app.view !== 'play' && (YA.COACH_TIPS || {})[app.tab] ? h('button', { class: 'tab tiphelp', style: 'margin-top:auto;min-height:30px', 'aria-label': 'この画面の説明', onclick: () => YA.coachTipAgain() }, h('i', { style: 'font-size:15px' }, '？')) : null, h('button', { class: 'tab' + (app.tab === 'more' ? ' on' : ''), style: (app.w && app.view !== 'play' && (YA.COACH_TIPS || {})[app.tab] ? '' : 'margin-top:auto'), onclick: () => { if (app.view === 'play') return; app.tab = 'more'; render(); } }, h('i', {}, '☰'), 'ほか')); // 2026-11-16 案A：中は名鑑・記録・Bチーム・実績と引退・用語集・設定なので「ほか」に
   }
+  // ボードの札に出す役割の短い名前（5字まで。切れ字の「…」を出さない）
+  YA.ROLE_SHORT = { ゴールキーパー: 'GK', スイーパーキーパー: 'SWキーパー', センターディフェンダー: 'CB', ボールプレイングDF: '組立DF', ノーナンセンスCB: '堅実CB', ワイドCB: 'ワイドCB', フルバック: 'FB', インバーテッドフルバック: '偽SB', ウイングバック: 'WB', インバーテッドウイングバック: '偽WB', プレイメイキングウイングバック: '組立WB', アンカーマン: 'アンカー', ディフェンシブMF: '守備MF', ボール奪取MF: '奪取MF', ハーフバック: 'HB', ディープライイングプレイメーカー: '底の司令塔', セグンドボランチ: '2列目ボラ', セントラルMF: 'CM', ボックス・トゥ・ボックスMF: 'BtoB', アドバンスドプレイメーカー: '前の司令塔', メッツァラ: 'メッツァラ', ローミングプレイメーカー: '動く司令塔', ワイドMF: 'ワイドMF', ディフェンシブウインガー: '守備WG', ワイドプレイメーカー: '外の司令塔', インサイドフォワード: '内FW', インサイドウイング: '内WG', ラウムドイター: '空間屋', アタッキングMF: '攻撃MF', エンガンチェ: 'エンガンチェ', シャドーストライカー: 'シャドー', トレクァルティスタ: 'トレクァ', フリーロール: '自由', ディープライイングフォワード: '下がるFW', フォルスナイン: '偽9番', アドバンスドフォワード: '裏抜けFW', コンプリートフォワード: '万能FW', ポーチャー: 'ポーチャー', プレッシングフォワード: '守備FW', ターゲットフォワード: '的FW' };
+  YA.roleShort = (r) => YA.ROLE_SHORT[r] || (r && r.length > 5 ? r.slice(0, 5) : r || '');
   let renderKey = '';
+  let lastTipKey = null;
+  // いまの画面のコーチの一言を読み返す（左の「？」）
+  YA.coachTipAgain = function () {
+    if (!app.w) return;
+    const key = YA.coachKey ? YA.coachKey(app.tab) : app.tab;
+    const t = app.tab === 'more' ? (YA.COACH_TIPS_MORE || {})[key.slice(5)] || (YA.COACH_TIPS || {}).more : (YA.COACH_TIPS || {})[app.tab];
+    if (t && YA.toast) YA.toast(t);
+  };
   function render() {
     const root = document.getElementById('app');
     root.classList.toggle('full', app.view === 'play');
@@ -922,6 +934,13 @@
     // 画面ごとのコーチの一言（決定128）：初めて開いたときだけ
     // 案内と重なるときは、コーチの一言を先に出す（縦が狭いので1本ずつ）
     const ct = ct0;
+    // 一度出した一言は、別の画面へ移ったら「見た」にする（2026-11-18 ユーザビリティ5：開くたびに高さ40を取っていた）。
+    // 読み返したいときは左の「？」
+    const ckey = app.w && YA.coachKey ? YA.coachKey(app.tab) : app.tab;
+    if (app.w && lastTipKey && lastTipKey !== ckey) { app.w.coachSeen = app.w.coachSeen || {}; app.w.coachSeen[lastTipKey] = 1; }
+    lastTipKey = ct ? ckey : null;
+    // 小タブは横に送られて隠れることがあるので、いま選んでいる小タブを見える所へ（ユーザビリティ18）
+    for (const tb of main.querySelectorAll('.tabs')) { const on = tb.querySelector('.btn.on'); if (on && tb.scrollWidth > tb.clientWidth + 2) tb.scrollLeft = Math.max(0, on.offsetLeft - tb.offsetLeft - 24); }
     if (ct) main.prepend(h('div', { class: 'tut coach' }, h('span', { class: 'tutb' }, 'コーチ'), h('span', { class: 'grow' }, ct), h('button', { class: 'btn sm', onclick: () => { app.w.coachSeen[YA.coachKey ? YA.coachKey(app.tab) : app.tab] = 1; YA.saveWorld(); render(); } }, 'わかった')));
     // 最初の説明（決定128）：始めたときに数枚。設定から読み返せる
     if (app.w && !app.w.introSeen && app.view !== 'play' && YA.showIntro) YA.showIntro();
@@ -1048,7 +1067,7 @@
     // 開始の文は実際に蹴る側（2026-11-17：前はいつもこちらの攻撃と出ていた）
     const koText = 'キックオフ。' + (m.kickoffSide === 'away' ? m.away.short : m.home.short) + 'のボールで試合が始まります';
     const commTx = h('span', { class: 'tx' }, koText);
-    const comm = h('div', { class: 'comm' }, commMin, commTx, h('span', { class: 'grow' }), h('span', { class: 'sub', style: 'font-size:10px' }, 'タップで経過'));
+    const comm = h('div', { class: 'comm' }, commMin, commTx, h('span', { class: 'grow' }), h('span', { class: 'sub', style: 'font-size:11px' }, 'タップで経過'));
     wrap.append(top, stage, comm);
     main.append(wrap);
 
@@ -1259,8 +1278,8 @@
     // 選手ごとの主な数字（決定89）
     function numPane() {
       const box = h('div', {});
-      const th = (t, wd) => h('b', { style: `width:${wd}px;text-align:right;font-size:10.5px` }, t);
-      box.append(h('div', { class: 'pitem', style: 'cursor:default;gap:5px;background:#f5f8fd' }, h('span', { class: 'grow', style: 'font-size:10.5px;font-weight:800' }, '選手'), th('分', 26), th('採点', 30), th('パス', 62), th('シュート', 46), th('タックル', 44), th('奪取', 30), th('札', 22)));
+      const th = (t, wd) => h('b', { style: `width:${wd}px;text-align:right;font-size:11.5px` }, t);
+      box.append(h('div', { class: 'pitem', style: 'cursor:default;gap:5px;background:#f5f8fd' }, h('span', { class: 'grow', style: 'font-size:11.5px;font-weight:800' }, '選手'), th('分', 26), th('採点', 30), th('パス', 62), th('シュート', 46), th('タックル', 44), th('奪取', 30), th('札', 22)));
       box.append(h('div', { class: 'plist' }, NB.players.map((x) => {
         const p = m.home.players[x.id];
         const td = (t, wd) => h('span', { style: `width:${wd}px;text-align:right;font-size:11px` }, t);
@@ -1276,7 +1295,7 @@
       const rows = Object.keys(m.home.players).map((id) => app.w.players[id]).filter((p) => p && p.lm && p.lm.y === app.w.year && p.lm.w === app.w.week).sort((a, b) => b.lm.mins - a.lm.mins || b.lm.rating - a.lm.rating);
       if (!rows.length) box.append(h('div', { class: 'note' }, '経験の記録がありません'));
       const sg = (v, u) => (v > 0 ? '+' : '') + v + (u || '');
-      box.append(h('div', { class: 'plist' }, rows.map((p) => h('div', { class: 'pitem', style: 'cursor:default;gap:5px;font-size:11px' }, posChip(p), h('span', { class: 'nm grow', style: 'min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap' }, `${p.num} ${surname(p)}`), h('span', { class: 'sub', style: 'width:34px' }, p.lm.mins + '分'), h('b', { style: 'width:26px' }, p.lm.rating.toFixed(1)), h('span', { class: 'chip trait', style: 'font-size:10px' }, '頭 +' + p.lm.xp), h('span', { class: 'sub', style: 'width:50px' }, '自信' + sg(p.lm.conf)), h('span', { class: 'sub', style: 'width:54px' }, '戦術' + sg(p.lm.tu)), p.lm.state ? h('span', { class: 'fit ' + (p.lm.state === 'peak' ? 'good' : 'bad') }, p.lm.state === 'peak' ? '伸び盛り' : '壁') : null))));
+      box.append(h('div', { class: 'plist' }, rows.map((p) => h('div', { class: 'pitem', style: 'cursor:default;gap:5px;font-size:11px' }, posChip(p), h('span', { class: 'nm grow', style: 'min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap' }, `${p.num} ${surname(p)}`), h('span', { class: 'sub', style: 'width:34px' }, p.lm.mins + '分'), h('b', { style: 'width:26px' }, p.lm.rating.toFixed(1)), h('span', { class: 'chip trait', style: 'font-size:11px' }, '頭 +' + p.lm.xp), h('span', { class: 'sub', style: 'width:50px' }, '自信' + sg(p.lm.conf)), h('span', { class: 'sub', style: 'width:54px' }, '戦術' + sg(p.lm.tu)), p.lm.state ? h('span', { class: 'fit ' + (p.lm.state === 'peak' ? 'good' : 'bad') }, p.lm.state === 'peak' ? '伸び盛り' : '壁') : null))));
       return box;
     }
     const tl = h('div', { class: 'tl' });
