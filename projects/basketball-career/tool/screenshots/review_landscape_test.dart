@@ -24,6 +24,7 @@ import 'package:basketball_career/ui/app.dart';
 import 'package:basketball_career/ui/gm/champion_screen.dart';
 import 'package:basketball_career/ui/gm/common.dart';
 import 'package:basketball_career/ui/gm/gm_table.dart';
+import 'package:basketball_career/ui/gm/player_card.dart';
 import 'package:basketball_career/ui/gm/negotiate_dialog.dart';
 import 'package:basketball_career/ui/gm/progress_tab.dart';
 import 'package:basketball_career/ui/gm_controller.dart';
@@ -323,6 +324,41 @@ void main() {
       await _tap(t, 'リーグ', first: true);
       await t.scrollUntilVisible(find.text('歴代の優勝・表彰・殿堂'), 300, scrollable: find.byType(Scrollable).last);
       await _tap(t, '歴代の優勝・表彰・殿堂');
+    });
+    // 3年目まで進めた経歴(トレードの答え合わせと、年ごとのグラフ)
+    final vet = careerAt(3, 12);
+    var vg = 0;
+    while (vet.season < 3 && vg++ < 6000) {
+      if (vet.phase == Phase.seasonEnd) vet.fired = false;
+      botStep(vet);
+    }
+    while (vet.phase != Phase.season && vg++ < 7000) {
+      botStep(vet);
+    }
+    for (final p in [...vet.me.order]) {
+      final offers = vet.blockOffers(p.id);
+      if (offers.isNotEmpty && vet.acceptBlockOffer(offers.first)) break;
+    }
+    final vetC = await _with(vet);
+    await _shoot(t, '8e_trade_grades', vetC, act: (t) async {
+      await _tap(t, 'リーグ', first: true);
+      await t.scrollUntilVisible(find.text('歴代の優勝・表彰・殿堂'), 300, scrollable: find.byType(Scrollable).last);
+      await _tap(t, '歴代の優勝・表彰・殿堂');
+      final s = find.text('自分のトレードの答え合わせ');
+      if (s.evaluate().isNotEmpty) {
+        await t.scrollUntilVisible(s, 200, scrollable: find.byType(Scrollable).last);
+        await t.pumpAndSettle();
+      }
+    });
+    await _shoot(t, '8f_career_chart', vetC, act: (t) async {
+      final p = vet.me.roster.reduce((a, b) => a.career.length >= b.career.length ? a : b);
+      unawaited(showPlayerCard(t.element(find.byType(Scaffold).first), vet, p, vet.mine));
+      await t.pumpAndSettle();
+      final chart = find.byKey(const Key('career-chart'));
+      if (chart.evaluate().isNotEmpty) {
+        await t.ensureVisible(chart);
+        await t.pumpAndSettle();
+      }
     });
     await _shoot(t, '7_market', await _with(mid), act: (t) => _tap(t, '補強', first: true));
     await _shoot(t, '8_league', await _with(mid), act: (t) => _tap(t, 'リーグ', first: true));

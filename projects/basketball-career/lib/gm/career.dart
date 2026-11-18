@@ -2026,6 +2026,7 @@ class Career {
     if (!judgeTrade(teams, picks, mine, o, season, hardness: _hard(o.partner)).ok) return false;
     _logTrade(mine, o);
     _fanTrade(o);
+    _keepTrade(o);
     applyTrade(teams, picks, mine, o);
     tradesDone++;
     return true;
@@ -2351,7 +2352,7 @@ class Career {
     for (final t in teams) {
       for (final p in t.roster) {
         final s = p.stats;
-        if (s.gp > 0) p.career.add([season, t.index, s.gp, s.pts, s.reb, s.ast]);
+        if (s.gp > 0) p.career.add([season, t.index, s.gp, s.pts, s.reb, s.ast, p.ovr]);
       }
     }
   }
@@ -3652,10 +3653,72 @@ class Career {
     if (!v.ok) return false;
     _logTrade(mine, o);
     _fanTrade(o);
+    _keepTrade(o);
     applyTrade(teams, picks, mine, o, swaps: swaps);
     tradesDone++;
     incoming = null;
     return true;
+  }
+
+  /// 自分のトレードの記録(古い順)。あとで「今の力」で評価する。
+  List<MyTrade> myTrades = [];
+
+  void _keepTrade(TradeOffer o) {
+    List<(int, String, int)> of(Team t, List<int> ids) => [
+          for (final id in ids)
+            if (t.roster.where((p) => p.id == id).firstOrNull case final p?) (p.id, p.name, p.ovr),
+        ];
+    myTrades = [
+      ...myTrades,
+      MyTrade(
+        season: season,
+        partner: o.partner,
+        give: of(me, o.give),
+        get: of(teams[o.partner], o.get),
+        givePicks: o.givePicks.length,
+        getPicks: o.getPicks.length,
+      ),
+    ];
+  }
+
+  /// 選手の今の力(引退したなどで見つからなければ null)。
+  int? ovrNow(int id) {
+    for (final t in teams) {
+      for (final p in t.roster) {
+        if (p.id == id) return p.ovr;
+      }
+    }
+    return freeAgents.where((p) => p.id == id).firstOrNull?.ovr;
+  }
+
+  /// 自分の選手としてトレードのあとに出た試合と点(もらった選手の働き)。
+  (int, int) playedForMe(int id, int since) {
+    var gp = 0, pts = 0;
+    for (final t in teams) {
+      for (final p in t.roster) {
+        if (p.id != id) continue;
+        for (final r in p.career) {
+          if (r[1] == mine && r[0] >= since) {
+            gp += r[2];
+            pts += r[3];
+          }
+        }
+        if (t.index == mine && phase == Phase.season) {
+          gp += p.stats.gp;
+          pts += p.stats.pts;
+        }
+      }
+    }
+    return (gp, pts);
+  }
+
+  /// トレードの評価(-100〜100 くらい。+ ならもらった側が上)。今の力(見つからなければ当時の力)を、力の高い選手ほど重く足し合わせる。
+  /// 指名権は1つ6点で数える。
+  double tradeScore(MyTrade t) {
+    double v(int ovr) => math.pow(math.max(0, shown(ovr) - 55), 1.5).toDouble() / 4;
+    final get = t.get.fold(0.0, (n, x) => n + v(ovrNow(x.$1) ?? x.$3)) + t.getPicks * 6;
+    final give = t.give.fold(0.0, (n, x) => n + v(ovrNow(x.$1) ?? x.$3)) + t.givePicks * 6;
+    return get - give;
   }
 
   void _logTrade(int from, TradeOffer o) {
@@ -4055,6 +4118,7 @@ class Career {
         'gs': goalStance,
         'asi': allStarIds,
         'hg': haggled,
+        'myt': [for (final t in myTrades) t.toJson()],
         'aga': {for (final e in agentAsks.entries) '${e.key}': e.value},
         'fp': fanPosts,
         'so': simStops,
@@ -4177,6 +4241,7 @@ class Career {
       ..goalStance = (j['gs'] as int?) ?? 0
       ..allStarIds = [for (final x in (j['asi'] as List? ?? const [])) x as int]
       ..haggled = [for (final x in (j['hg'] as List? ?? const [])) x as int]
+      ..myTrades = [for (final x in (j['myt'] as List? ?? const [])) MyTrade.fromJson(Map<String, dynamic>.from(x as Map))]
       ..agentAsks = {for (final e in ((j['aga'] as Map?) ?? const {}).entries) int.parse(e.key as String): e.value as int}
       ..fanPosts = [for (final x in (j['fp'] as List? ?? const [])) x as String]
       ..simStops = j['so'] == null ? [SimStop.offer.index, SimStop.injury.index] : [for (final x in j['so'] as List) x as int]
@@ -4277,3 +4342,43 @@ enum SimStop {
   const SimStop(this.label);
   final String label;
 }
+/// 自分のトレードの記録。選手は (id, 名前, そのときの力)。
+class MyTrade {
+  const MyTrade({required this.season, required this.partner, required this.give, required this.get, this.givePicks = 0, this.getPicks = 0});
+  final int season, partner, givePicks, getPicks;
+  final List<(int, String, int)> give, get;
+
+  Map<String, dynamic> toJson() => {
+        's': season,
+        'p': partner,
+        'g': [for (final x in give) [x.$1, x.$2, x.$3]],
+        'r': [for (final x in get) [x.$1, x.$2, x.$3]],
+        'gp': givePicks,
+        'rp': getPicks,
+      };
+
+  static MyTrade fromJson(Map<String, dynamic> j) {
+    List<(int, String, int)> list(Object? v) => [for (final x in (v as List? ?? const [])) ((x as List)[0] as int, x[1] as String, x[2] as int)];
+    return MyTrade(
+      season: j['s'] as int,
+      partner: j['p'] as int,
+      give: list(j['g']),
+      get: list(j['r']),
+      givePicks: (j['gp'] as int?) ?? 0,
+      getPicks: (j['rp'] as int?) ?? 0,
+    );
+  }
+}
+
+/// トレードの評価の文字(A+〜F)。
+String tradeGradeOf(double score) => score >= 30
+    ? 'A+'
+    : score >= 15
+        ? 'A'
+        : score >= 6
+            ? 'B'
+            : score > -6
+                ? 'C'
+                : score > -15
+                    ? 'D'
+                    : 'F';

@@ -459,7 +459,7 @@ class Player {
         traitsKnown: j['tk'] == 1,
         career: [
           for (final r in (j['cr'] as List? ?? const []))
-            if (r is List && r.length == 6) [for (final x in r) x as int],
+            if (r is List && (r.length == 6 || r.length == 7)) [for (final x in r) x as int],
         ],
       );
 }

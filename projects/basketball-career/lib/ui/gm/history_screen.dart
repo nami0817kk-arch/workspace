@@ -15,6 +15,32 @@ class HistoryScreen extends StatelessWidget {
   const HistoryScreen({super.key, required this.c});
   final GmController c;
 
+  Widget _tradeRow(Career car, MyTrade t) {
+    final score = car.tradeScore(t);
+    final grade = tradeGradeOf(score);
+    final color = grade.startsWith('A') ? GmColors.good : grade == 'B' ? GmColors.ball : grade == 'C' ? GmColors.sub : GmColors.bad;
+    String side(List<(int, String, int)> ps, int picks) => [
+          for (final x in ps) '${x.$2}(${shown(x.$3)}→${car.ovrNow(x.$1) == null ? '引退' : shown(car.ovrNow(x.$1)!)})',
+          if (picks > 0) '指名権$picks',
+        ].join('・');
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        SizedBox(
+          width: 34,
+          child: Text(grade, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: color)),
+        ),
+        Expanded(
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text('${t.season}年目・${car.teams[t.partner].def.short}と', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
+            Text('出: ${side(t.give, t.givePicks)}', style: const TextStyle(fontSize: 12.5)),
+            Text('入: ${side(t.get, t.getPicks)}', style: const TextStyle(fontSize: 12.5)),
+          ]),
+        ),
+      ]),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final car = c.career!;
@@ -53,6 +79,14 @@ class HistoryScreen extends StatelessWidget {
                     ),
                   Text('GM の格 Lv${car.gmLevel}(通算${car.gmPoints}点)', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
                 ]),
+                if (car.myTrades.isNotEmpty) ...[
+                  const SectionTitle('自分のトレードの答え合わせ'),
+                  _card([
+                    const Text('出した選手ともらった選手の、今の力で比べる(力の高い選手ほど重い。指名権は1つ6点)。', style: TextStyle(fontSize: 12, color: GmColors.sub)),
+                    const SizedBox(height: 4),
+                    for (final t in car.myTrades.reversed) _tradeRow(car, t),
+                  ]),
+                ],
                 const SectionTitle('歴代の優勝'),
                 _card([
                   if (car.champs.isEmpty) const Text('まだ優勝したチームはない。', style: TextStyle(color: GmColors.sub)),
