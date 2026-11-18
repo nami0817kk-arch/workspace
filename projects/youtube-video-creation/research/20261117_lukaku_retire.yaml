@@ -1,0 +1,149 @@
+# 取材メモ（2026年11月17日）ルカク、ベルギー代表からの引退を表明（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-17。requests（ブラウザUA）と WebFetch で本文を読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: ゲキサカ 2026-11-16 22:32「FWルカクがベルギー代表からの引退を表明「16年間、代表のために全力を尽くした」「この決断に悔いはない」」（全文） https://web.gekisaka.jp/news/world/detail/?463346-463346-fl
+#   サッカーキング 2026-11-16「ルカクがベルギー代表引退を表明「最高の旅路だった」…歴代最多94得点、W杯には4度出場」（全文） https://www.soccer-king.jp/news/world/world_other/20261116/2228409.html
+#   ESPN 2026-11-16「Romelu Lukaku retires from Belgium as fifth-highest international scorer ever」（WebFetch の要約。全文の逐語は取れていない） https://www.espn.com/soccer/story/_/id/50500248/romelu-lukaku-retired-international-duty-belgium
+# 出典で確かめたこと:
+#   ・本人の言葉（ゲキサカ。本人のインスタグラム @romelulukaku の投稿の日本語訳。字は変えず、読点で行に分けた）:
+#       「この16年間、私は代表チームのために全力を尽くしました。あらゆる感情を経験し、素晴らしいチームメイトとともにプレーできたことに心から感謝しています」
+#       「ベルギーのファンの皆さん、チームへの応援ありがとうございました。4度のW杯、3度のEUROで国を代表できたことを誇りに思います。それらの瞬間を決して忘れません。ここで引退するという決断に悔いはない。素晴らしい経験だったし、楽しかった。感謝しています。ありがとうございました」
+#     サッカーキングは同じ投稿を「僕は代表チームのために持てる力のすべてを捧げ…」と訳す（訳の違い。台本は見出しと同じゲキサカの訳）。
+#   ・ゲキサカ: 1993年5月13日生まれの33歳。2010年にA代表デビュー、4度のW杯・3度のEURO、A代表135試合で同国史上最多の94得点。2018年ロシア大会の3位に貢献。
+#   ・サッカーキング: 2010年3月、16歳9カ月18日でA代表デビュー（生年月日から数えても同じ）。今夏のW杯は全6試合に出場し3得点1アシスト。今月の代表ウィークも招集されたが2試合とも出場せず、ラストマッチは先月のフランス戦。
+#   ・ESPN（WebFetch の要約）: 94得点は男子の国際Aマッチ歴代5位。上は ロナウド146・メッシ126・ダエイ108・チェトリ95。ベルギー2位はデ・ブライネの41。W杯の通算8得点はベルギー代表最多。
+#   ・ESPN の試合データ（site.api.espn.com uefa.nations summary、ルカク選手 id 139437）:
+#       10/2 ベルギー 3-0 トルコ（event 401861109）= 61分に途中出場、76分にゴール（これが最後の得点）。
+#       10/5 フランス 4-1 ベルギー（event 401861129）= 先発、70分にデ・ケテラーレと交代（これが最後の出場）。
+#       11/15 ベルギー 4-1 イタリア（event 401861176）= 出場なし（ベンチ）。
+#   ※「今月の2試合とも出場せず」はサッカーキングの記述。11/15 は ESPN の試合データでも出場0を確認。
+# 自分で数えたもの: 94 ÷ 41 ＝ 2.29 → 「歴代2位の2.3倍」。94 − 41 ＝ 53点差。
+# 前の本との重なり: scripts/20261116_belgium_italy_comeback（ベルギー対イタリア。ルカクは出ていない）／research/covered.yaml のルカク（9/25 のドンナルンマとの仕草）。今回の初出: 代表引退の表明・本人の言葉・94得点の位置づけ。
+# 【言わないこと】引退後のクラブ（フェネルバフチェ）の話・私生活。
+# 本人の言葉: あり（ルカク本人。ゲキサカ）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+# 写真: ESPN 2024（主写真）・ゲキサカ主写真（photopool）＋ Commons CC BY-SA 4.0 の2026年の写真（Belgium v USA 2026-07-06、Fenerbahçe 2026-11-03）。
+#   photopool の記事写真は説明に代理店の表記が無いURLだけ（サッカーキングの写真は Getty と明記されているので使っていない）。
+slot: overseas
+date: "2026年11月17日"
+format: news
+no_main: true
+people: [ルカク, ベルギー代表, デ・ブライネ]
+
+short_style: Y
+short_hook_quote: この16年間、私は代表チームのために全力を尽くしました。
+short_photos:
+  - assets/images/20261117_lukaku_retire/13_v.jpg
+  - assets/images/20261117_lukaku_retire/01_v.jpg
+  - assets/images/20261117_lukaku_retire/02_v.jpg
+  - assets/images/20261117_lukaku_retire/12_v.jpg
+short_question: ルカクの94得点という記録は、ベルギー代表で破られると思いますか。
+short_telops: []
+
+theme:
+  id: lukaku_retire
+  league: england
+  league_name: ベルギー代表
+  prefix: ""
+  title: ルカク、ベルギー代表を引退。16年で積んだ得点は、歴代2位の何倍か
+  hook: ""
+  question: 代表からの引退を表明したルカクは、何を語ったのか
+  takeaway: ルカクの94得点は、ベルギー歴代2位デ・ブライネの41得点の2.3倍で、男子の国際Aマッチでは歴代5位。最後の得点は10月2日のトルコ戦、最後の出場は10月5日のフランス戦だった
+
+thumbnail:
+  layout: face
+  line1: ルカク 代表引退
+  line2: 歴代最多94得点
+  tags: [ルカク, ベルギー代表]
+  photo: assets/images/20261117_lukaku_retire/13_w.jpg
+  short_photo: assets/images/20261117_lukaku_retire/13_v.jpg
+
+answer: 16年間、代表のために全力を尽くし、決断に悔いはない。94得点はベルギー歴代最多
+watch: ルカクのいない、次のベルギー代表
+
+sections:
+  - id: what
+    main: true
+    heading: 代表引退を発表したルカクは、何を語ったか
+    tier: 報道
+    telop: ルカク「この16年間、代表チームのために全力を尽くしました」
+    say:
+      - text: ベルギー代表のロメル・ルカクが、16日に代表からの引退を発表しました。33歳です。
+        image: assets/images/20261117_lukaku_retire/13_w.jpg
+      - voice: ルカク
+        text: この16年間、私は代表チームのために全力を尽くしました。
+        emph: true
+      - voice: ルカク
+        text: あらゆる感情を経験し、
+        cont: true
+      - voice: ルカク
+        text: 素晴らしいチームメイトとともに、
+        cont: true
+      - voice: ルカク
+        text: プレーできたことに心から感謝しています。
+        cont: true
+      - text: 代表デビューは2010年3月。16歳のときでした。
+        image: assets/images/20261117_lukaku_retire/01_w.jpg
+      - text: 国際Aマッチ135試合で、94ゴール。ベルギー代表の歴代最多です。
+        card: {type: table, title: ルカクのベルギー代表での歩み, columns: [項目, 数字], rows: [[デビュー, 2010年3月], [国際Aマッチ, 135試合], [得点, 94], [W杯, 4度], [EURO, 3度]], highlight_row: 2}
+      - text: ワールドカップには4度、ヨーロッパ選手権には3度出場。
+        card: none
+        image: assets/images/20261117_lukaku_retire/12_w.jpg
+      - text: 2018年のロシア大会では、ベルギーの3位に貢献しました。
+      - text: ファンへの言葉も残しています。
+        image: assets/images/20261117_lukaku_retire/01_w.jpg
+      - voice: ルカク
+        text: ベルギーのファンの皆さん、
+      - voice: ルカク
+        text: チームへの応援ありがとうございました。
+        cont: true
+      - voice: ルカク
+        text: 4度のW杯、3度のEUROで、
+        cont: true
+        image: assets/images/20261117_lukaku_retire/12_w.jpg
+      - voice: ルカク
+        text: 国を代表できたことを誇りに思います。
+        cont: true
+      - voice: ルカク
+        text: ここで引退するという決断に悔いはない。
+        image: assets/images/20261117_lukaku_retire/13_w.jpg
+      - voice: ルカク
+        text: 素晴らしい経験だったし、楽しかった。
+        cont: true
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/world/detail/?463346-463346-fl
+      - https://www.soccer-king.jp/news/world/world_other/20261116/2228409.html
+      - https://www.espn.com/soccer/story/_/id/50500248/romelu-lukaku-retired-international-duty-belgium
+  - id: numbers
+    viewpoint: true
+    heading: ルカクの記録は、世界の男子でどの位置にあるか
+    tier: 報道
+    telop: 男子の国際Aマッチ得点 歴代5位
+    say:
+      - text: ルカクの記録は、男子の国際Aマッチで歴代5位です。
+        card: {type: table, title: 男子 国際Aマッチ通算得点, columns: [順位, 選手, 得点], rows: [[1位, クリスティアーノ・ロナウド, 146], [2位, リオネル・メッシ, 126], [3位, アリ・ダエイ, 108], [4位, スニル・チェトリ, 95], [5位, ルカク, 94]], highlight_row: 4}
+      - text: ベルギー代表の中では、2位のデ・ブライネが41ゴール。
+        card: none
+      - text: 見立てです。ルカクの得点は、そのデ・ブライネの2.3倍。53点の差があります。
+        emph: true
+      - text: ワールドカップの通算8得点も、ベルギー代表で最多です。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50500248/romelu-lukaku-retired-international-duty-belgium
+  - id: last
+    heading: 最後の1年、ルカクの得点と出場はどう終わったか
+    tier: 報道
+    telop: 最後の得点は10月2日、最後の出場は10月5日
+    say:
+      - text: ルカクの最後の1年を、試合で振り返ります。
+        card: {type: table, title: ルカクの最後の3試合, columns: [日付, 相手, ルカク], rows: [[10月2日, トルコ戦, 途中出場・76分にゴール], [10月5日, フランス戦, 先発・70分に交代], [11月15日, イタリア戦, 出場なし]], highlight_row: 1}
+      - text: 最後の得点は、10月2日のトルコ戦の76分。
+        card: none
+        emph: true
+      - text: 最後の出場は10月5日のフランス戦。11月の2試合は出番がありませんでした。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401861109
+      - https://www.espn.com/soccer/match/_/gameId/401861129
+      - https://www.espn.com/soccer/match/_/gameId/401861176
+      - https://www.soccer-king.jp/news/world/world_other/20261116/2228409.html

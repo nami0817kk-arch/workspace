@@ -1,0 +1,155 @@
+# 取材メモ（2026年11月18日）田中碧、約2分半ノンストップで森保監督への思いを語る「心の底から世界一を取りたいと思わせてくれた」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-18。WebFetch と requests（ブラウザUA）で本文を全文読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: サッカーキング 2026-11-18（取材・文 三島大輔）「田中碧が約2分半ノンストップで森保一監督への想いを熱弁「日本サッカーがどれだけ成長したか」「心の底から世界一を取りたいと思わせてくれた」」（全文） https://www.soccer-king.jp/news/japan/national/20261118/2229283.html
+# 出典で確かめたこと:
+#   ・田中碧の言葉（サッカーキング。字は変えない。台本は読点で行に分けた）:
+#       「ただ、自分が代表に入る前から日本代表を見てきて、今こうして振り返ったときに、森保さんが就任してから日本サッカーがどれだけ成長したか。個人的には過小評価されていると思います」
+#       「親善試合かもしれませんけど、強豪国に勝つことができたのは大きな進歩です。もちろん、それがワールドカップではないと言われればそれまでですけど、実際にスペインやドイツにも勝っています」
+#       「新たな基準、そして新たなゴールをこの8年間で作り上げてくれたという意味では、森保さんの器の大きさを感じます」
+#       「これから10年、20年後に日本がワールドカップで優勝するために、一人ひとりができることをやれればいいなと思いますし、それが森保さんへの最大の恩返しになると思います」
+#       「本当に心の底から世界一を取りたいと思わせてくれた監督です。次の大会なのか、10年後なのか、20年後なのかは分かりませんが、日本が世界一になることを本当に実現したいと思わせてくれました」
+#     （ほかに、世界一になるための8年間だったのではないか、という発言もある：「10年後なのか、20年後なのか、あるいは次の大会なのかは分かりませんが、そのときに世界一になるための8年間だったのではないか」）
+#   ・サッカーキング（地の文）: 田中は61分からピッチへ。2019年12月のEAFF E-1選手権でA代表デビュー、2021年から日本代表に定着。2021年10月のオーストラリア戦で代表初ゴール、カタールW杯のスペイン戦で逆転ゴール。約2分半にわたって指揮官への思いを語った。
+#   ・ESPN の試合データ（site.api.espn.com fifa.friendly summary event=401916336、2026-11-17 13:10 UTC）: Japan 1-2 Paraguay。61' Ao Tanaka が Kodai Sano と交代で入る。→ 記事の「61分から」と一致。
+#   ・来年3月から大岩剛監督の新体制（サッカーキング・ゲキサカの別記事）。
+# 依頼文との違い: 依頼文は「日本0-2パラグアイ」だったが、実際は1-2（0-2 は前半終了時）。台本は1-2とだけ言う。
+# 自分で数えたもの: 記事に載っている田中の発言の中で、「10年後」「20年後」の時間の物差しが出るのは3か所（世界一になるための8年間／優勝するために／世界一を取りたい）。A代表デビューの2019年12月からラストマッチまで6年11か月。
+# 前の本との重なり: 20261113_tanaka_brazil_rematch（ブラジル戦の前）／20261107_tanaka_mitoma_words。→ 今回の初出: ラストマッチ後の約2分半の語り。同じ日の堂安・久保の本と同じ事実（試合の経過・福田のゴール）は入れない。
+# 【言わないこと】試合の経過・福田のゴール／自分を責める言葉（「自分がもっと世界的に見てもいい選手になれば」の部分。本人を小さく見せるため使わない）／ブラジル戦の話。
+# 本人の言葉: あり（田中碧。サッカーキング）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月18日"
+format: news
+no_main: true
+people: [田中碧, 森保一]
+
+short_style: Y
+short_hook_quote: 本当に心の底から世界一を取りたいと思わせてくれた監督です
+short_photos:
+  - assets/images/20261118_tanaka_ao_speech/03_v.jpg
+  - assets/images/20261118_tanaka_ao_speech/02_v.jpg
+  - assets/images/20261118_tanaka_ao_speech/04_v.jpg
+short_question: 田中碧が言った世界一は、次のW杯で届くと思いますか。
+short_telops: []
+
+theme:
+  id: tanaka_ao_speech
+  league: japan
+  league_name: 日本代表
+  prefix: ""
+  title: 田中碧、約2分半の熱弁。森保監督に伝えた思い
+  hook: ""
+  question: ラストマッチのあと約2分半語り続けた田中碧は、森保監督に何を伝えたのか
+  takeaway: 田中が語った記事の発言には、10年後・20年後という時間の物差しが3回出る。世界一を、次の大会ではなく、10年先まで見て語った。代表は来年3月から大岩監督の新体制になる
+
+thumbnail:
+  layout: face
+  line1: 田中碧 約2分半の熱弁
+  line2: 「世界一を取りたい」
+  tags: [田中碧, 森保一, 日本代表]
+  photo: assets/images/20261118_tanaka_ao_speech/03_w.jpg
+  short_photo: assets/images/20261118_tanaka_ao_speech/03_v.jpg
+
+answer: 心の底から世界一を取りたいと思わせてくれた。10年後でも、20年後でも
+watch: 来年3月、大岩剛監督の新体制
+
+sections:
+  - id: what
+    main: true
+    heading: 田中碧は、森保監督への思いをどう語ったのか
+    tier: 報道
+    telop: 田中碧「心の底から世界一を取りたいと思わせてくれた」
+    say:
+      - text: 試合後、田中碧が約2分半、ノンストップで想いを語りました。
+      - voice: 田中碧
+        text: 本当に心の底から世界一を取りたいと思わせてくれた監督です。
+        emph: true
+      - text: 田中は2019年12月に日本代表デビュー。
+      - text: それから6年11か月、代表で戦ってきました。
+      - text: カタールW杯のスペイン戦では、逆転ゴールを決めています。
+      - text: 田中は、この8年で日本サッカーが成長したと話します。
+        image: assets/images/20261118_tanaka_ao_speech/02_w.jpg
+      - voice: 田中碧
+        text: 森保さんが就任してから
+      - voice: 田中碧
+        text: 日本サッカーがどれだけ成長したか。
+        cont: true
+      - voice: 田中碧
+        text: 個人的には過小評価されていると思います。
+        image: assets/images/20261118_tanaka_ao_speech/04_w.jpg
+        cont: true
+        emph: true
+      - text: 田中が例に挙げたのは、強豪国との試合です。
+        image: assets/images/20261118_tanaka_ao_speech/03_w.jpg
+      - voice: 田中碧
+        text: 親善試合かもしれませんけど、
+      - voice: 田中碧
+        text: 強豪国に勝つことができたのは大きな進歩です。
+        image: assets/images/20261118_tanaka_ao_speech/02_w.jpg
+        cont: true
+      - voice: 田中碧
+        text: もちろん、それがワールドカップではないと
+        cont: true
+      - voice: 田中碧
+        text: 言われればそれまでですけど、
+        image: assets/images/20261118_tanaka_ao_speech/04_w.jpg
+        cont: true
+      - voice: 田中碧
+        text: 実際にスペインやドイツにも勝っています。
+        cont: true
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20261118/2229283.html
+  - id: words
+    heading: 田中は、森保監督が残したものを何だと言ったのか
+    tier: 報道
+    telop: 田中碧「新たな基準、そして新たなゴール」
+    say:
+      - text: 田中は、森保監督が8年で作ったものを、こう表しました。
+        image: assets/images/20261118_tanaka_ao_speech/03_w.jpg
+      - voice: 田中碧
+        text: 新たな基準、そして新たなゴールを
+      - voice: 田中碧
+        text: この8年間で作り上げてくれたという意味では、
+        cont: true
+      - voice: 田中碧
+        text: 森保さんの器の大きさを感じます。
+        cont: true
+        emph: true
+      - text: そして、これからの自分たちの役目も語りました。
+        image: assets/images/20261118_tanaka_ao_speech/03_w.jpg
+      - voice: 田中碧
+        text: これから10年、20年後に
+      - voice: 田中碧
+        text: 日本がワールドカップで優勝するために、
+        cont: true
+      - voice: 田中碧
+        text: 一人ひとりができることをやれればいいなと思いますし、
+        cont: true
+      - voice: 田中碧
+        text: それが森保さんへの最大の恩返しになると思います。
+        cont: true
+        emph: true
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20261118/2229283.html
+  - id: view
+    viewpoint: true
+    heading: 田中は、世界一をいつの話として語ったのか
+    tier: 背景
+    telop: 「10年後」「20年後」が3回
+    say:
+      - text: 見立てです。田中碧の発言を数えました。
+        card: none
+      - text: 記事に載った発言には、10年後、20年後が3か所出てきます。
+        image: assets/images/20261118_tanaka_ao_speech/04_w.jpg
+        card: {type: table, title: 田中碧の発言に出た時間の物差し, columns: [話したこと, 時間], rows: [[世界一になるための8年間, 10年後か20年後か次の大会か], [W杯で優勝するために, 10年、20年後], [世界一を実現したい, 次の大会か10年後か20年後か]], highlight_row: 2}
+      - text: 田中は、世界一を次の大会だけでなく、10年先まで見て語っています。
+        card: none
+      - text: 日本代表は、来年3月から大岩剛監督の新体制です。
+        emph: true
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20261118/2229283.html
+      - https://web.gekisaka.jp/news/japan/detail/?463387-463387-fl

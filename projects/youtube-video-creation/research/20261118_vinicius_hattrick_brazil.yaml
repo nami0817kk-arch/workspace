@@ -1,0 +1,142 @@
+# 取材メモ（2026年11月18日）ヴィニシウス、開始21分でハットトリック。ブラジルがシンガポールに7-0（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-18。requests（ブラウザUA）でフットボールチャンネル・A Bola・ゲキサカを全文読んだ。ESPN の記事は requests だと 202 で本文が取れず、WebFetch の返答（本人の言葉の箇所）だけ使った。
+#   検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: フットボールチャンネル 2026-11-18「ヴィニシウスが開始21分でハットトリック！ ブラジル、シンガポールに7-0大勝」（全文）
+#   https://www.footballchannel.jp/2026/11/18/post1058121/
+#   ESPN 2026-11-17（Adriana Garcia ほか）Vinícius Júnior ... hat trick（本人の言葉。WebFetch）
+#   https://www.espn.com/soccer/story/_/id/50510724/vinicius-junior-brazil-hat-trick-real-madrid
+#   A Bola 2026-11-17「Vinícius faz hat-trick em 20 minutos e Brasil goleia」（全文。ポルトガル語）
+#   https://www.abola.pt/noticias/vinicius-faz-hat-trick-em-20-minutos-e-brasil-goleia-2026111712014082360
+#   ゲキサカ 2026-11-17（試合の結果。写真だけ使った）https://web.gekisaka.jp/news/world/detail/?463380-463380-fl
+# 写真の出どころ（ヴィニシウス本人。_pool.png を目で見て、エンドリッキの写真（ESPN の主写真）と、後ろ向きの1枚は外した）:
+#   03: ゲキサカ 463380（今回の試合の写真。右下に撮影者表記 ©Koki NAGAHAMA/GEKISAKA が入るが、代理店の透かしではない）
+#   02: A Bola の主写真（3本指のゴール後の仕草。手で顔の一部が隠れる）
+#   04・06: Wikimedia Commons（CC BY-SA 4.0）Vinicius Junior Brazil V Morocco 13 June 2026（W杯のモロッコ戦。今回の試合ではない。クレジットは credits.json）
+# 写真（最終）: 13＝ゲキサカ463380（今回の試合）、12＝A Bola の主写真、07＝ゲキサカ463210（日本戦。顔は facecrop で手で位置を指定）、14・16＝Commons（W杯モロッコ戦、縦のみ使用）。05（エンドリッキ）・06（日本のスタッフ）は外した。
+# 出典で確かめたこと:
+#   ・ESPN の試合データ（site.api.espn.com fifa.friendly summary event=401916335、2026-11-17 10:00 UTC、シンガポール国立競技場）: シンガポール 0-7 ブラジル。
+#       9分 ヴィニシウス（アシスト ブルーノ・ギマランイス）／15分 ヴィニシウス（エンドリッキ）／21分 ヴィニシウス（エステヴァン）／31分 エンドリッキ／51分 エステヴァン／65分 ラヤン／74分 オウンゴール（シンガポールのラウル・ビン・スハイミ）。
+#       ヴィニシウスは先発（ロースターの starter=True）。→ 3点とも前半21分までで、3点目が21分。
+#   ・フットボールチャンネル: 代表初のハットトリック。9分・15分・21分の得点の運び方と、31分エンドリッキ・51分エステヴァン・65分ラヤン・74分オウンゴールで7-0。日本戦（14日）の2ゴールに続き直近2試合5ゴール。
+#       アンチェロッティ監督就任後の代表通算50得点目が3点目（ブラジルサッカー連盟の発表として記事が引用）。アンチェロッティは日本戦で退場、この試合は出場停止でマウリ・アシスタントコーチが指揮。
+#   ・ESPN の記事（WebFetch の返答）: 代表で初のハットトリック（"his first international hat trick"）。日本戦（土曜、日本3-2ブラジル）では2ゴール。
+#   ・A Bola（ポルトガル語）: 3得点を20分で（"em 20 minutos"）。記事の時刻は 8分・14分・20分と書かれ、ESPN・フットボールチャンネルの 9・15・21 と1分ずつずれる（数え方の違い）。
+#     → 台本は ESPN の試合データ・フットボールチャンネルに合わせて 9分・15分・21分、「開始21分まで」。A Bola の「8・14・20分」は使わない。
+#   ・本人の言葉（ESPN。英語の記事なので、元はポルトガル語を英訳したものの可能性が高い。原文のポルトガル語は取れなかった）:
+#       "First time -- let's hope it's the first of many"（初めてのハットトリックについて）
+#       "We could have scored more, but I'm happy with the win."
+#       "Back to our clubs now. By March [the next international window], we'll have to be back at 100%."（記事は "he said" としてまとめた形）
+#       → 台本の言葉は、この英語を私が日本語にしたもの。「レアルで続ける」という本人の直接の言葉は ESPN にも無かった（記事の地の文が "wants to bring his form back to Real Madrid" と整理しただけ）ので、使わない。
+#   ・日本戦: フットボールチャンネル「ブラジルは14日の日本戦で2-3の逆転負け。ヴィニシウスは2ゴール」。ESPN の記事も同じ（日本戦で2得点、3-2で日本の勝ち）。
+# 食い違い（台本では使わない）:
+#   ・得点の分: ESPN・フットボールチャンネル 9／15／21、A Bola 8／14／20。
+#   ・取材の依頼文の「相手・会場」は ESPN の試合データで確認（相手はシンガポール、会場はシンガポール国立競技場）。
+# 前の本との重なり: 20261116_hayakawa_vinicius（日本戦のヴィニシウスのミドル弾に早川が語った話）／20261113_endrick_japan_wary。
+#   → 今回の初出: シンガポール戦のハットトリック・分刻みの得点・本人の言葉・直近2試合5ゴール。日本戦のミドル弾の中身は繰り返さない（「日本戦で2ゴール」だけ）。
+# 【言わないこと】レアル・マドリードでの今季の得点数（記事の数字を裏取りできない／本人を小さく見せる言い方になる）／アンチェロッティの退場の詳細／試合中の交代での不満顔（記事の印象）。
+# 本人の言葉: あり（ヴィニシウス。ESPN・英訳）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: foreign
+date: "2026年11月18日"
+format: news
+no_main: true
+people: [ヴィニシウス, ブラジル代表, シンガポール代表, エンドリッキ, エステヴァン]
+
+short_style: Y
+short_hook_quote: 初めてだ。たくさんあるうちの、最初の1回になればいい。
+short_photos:
+  - assets/images/20261118_vinicius_hattrick_brazil/13_v.jpg
+  - assets/images/20261118_vinicius_hattrick_brazil/12_v.jpg
+  - assets/images/20261118_vinicius_hattrick_brazil/07_v.jpg
+  - assets/images/20261118_vinicius_hattrick_brazil/14_v.jpg
+short_question: 来年のW杯後のブラジル代表で、ヴィニシウスはエースになると思いますか。
+short_telops: []
+
+theme:
+  id: vinicius_hattrick_brazil
+  league: spain
+  league_name: ブラジル代表
+  prefix: ""
+  title: ヴィニシウス、開始21分でハットトリック。ブラジルが7対0で大勝
+  hook: ""
+  question: 代表で初めてハットトリックを決めたヴィニシウスは、試合後に何を語ったのか
+  takeaway: ヴィニシウスの3点は9分、15分、21分。日本戦の2ゴールから、2試合で5ゴールになった。ブラジルはシンガポールに7対0で勝った
+
+thumbnail:
+  layout: face
+  line1: ヴィニシウス 21分で3点
+  line2: 代表初のハットトリック
+  tags: [ヴィニシウス, ブラジル代表]
+  photo: assets/images/20261118_vinicius_hattrick_brazil/13_w.jpg
+  short_photo: assets/images/20261118_vinicius_hattrick_brazil/13_v.jpg
+
+answer: 代表初のハットトリックは、最初の1回になればいい。勝ててうれしい
+watch: 次の代表戦は来年3月
+
+sections:
+  - id: what
+    main: true
+    heading: 代表初のハットトリックのあと、ヴィニシウスは何を語ったのか
+    tier: 報道
+    telop: ヴィニシウス「最初の1回になればいい」
+    say:
+      - text: 17日、日本戦に負けたブラジルが、シンガポールに7対0。ヴィニシウスは3ゴール。
+        image: assets/images/20261118_vinicius_hattrick_brazil/13_w.jpg
+      - voice: ヴィニシウス
+        text: 初めてだ。たくさんあるうちの、最初の1回になればいい。
+        emph: true
+      - voice: ヴィニシウス
+        text: もっと点は取れたけど、勝ててうれしい。
+        image: assets/images/20261118_vinicius_hattrick_brazil/07_w.jpg
+        cont: true
+      - text: ブラジル代表では、初めてのハットトリックでした。
+      - text: ゴールの時間は、9分、15分、21分です。
+        card: {type: table, title: ヴィニシウスの3ゴール, columns: [分, アシスト], rows: [[9分, ブルーノ・ギマランイス], [15分, エンドリッキ], [21分, エステヴァン]], highlight_row: 2}
+        image: assets/images/20261118_vinicius_hattrick_brazil/07_w.jpg
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/11/18/post1058121/
+      - https://www.espn.com/soccer/story/_/id/50510724/vinicius-junior-brazil-hat-trick-real-madrid
+      - https://www.espn.com/soccer/match/_/gameId/401916335
+  - id: game
+    heading: ブラジルの7点は、誰がどの時間に取ったのか
+    tier: 報道
+    telop: シンガポール 0-7 ブラジル
+    say:
+      - text: ヴィニシウスの3点のあと、31分にエンドリッキ、51分にエステヴァンが決めました。
+        card: {type: table, title: シンガポール 0-7 ブラジル（11月17日）, columns: [分, 得点], rows: [[9分, ヴィニシウス], [15分, ヴィニシウス], [21分, ヴィニシウス], [31分, エンドリッキ], [51分, エステヴァン], [65分, ラヤン], [74分, オウンゴール]], highlight_row: 2}
+        image: assets/images/20261118_vinicius_hattrick_brazil/13_w.jpg
+      - text: 65分にラヤン、74分はオウンゴールで、7対0の勝ちです。前半だけで4対0でした。
+        card: none
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401916335
+      - https://www.footballchannel.jp/2026/11/18/post1058121/
+      - https://www.abola.pt/noticias/vinicius-faz-hat-trick-em-20-minutos-e-brasil-goleia-2026111712014082360
+  - id: view
+    viewpoint: true
+    heading: 日本戦から、ヴィニシウスは2試合で何点を取ったのか
+    tier: 背景
+    telop: 日本戦の2点から、2試合で5ゴール
+    say:
+      - text: 見立てです。14日の日本戦で、ヴィニシウスは2ゴール。2対3で負け。
+        card: {type: table, title: ヴィニシウスの直近2試合, columns: [試合, 結果, ゴール], rows: [[日本戦（11月14日）, ブラジル 2-3, 2], [シンガポール戦（11月17日）, ブラジル 7-0, 3]], highlight_row: 1}
+        image: assets/images/20261118_vinicius_hattrick_brazil/07_w.jpg
+      - text: 負けた試合の2点と、勝った試合の3点で、2試合5ゴールです。
+        card: none
+        emph: true
+      - text: これで、2026年のブラジル代表の試合は終わりです。
+        image: assets/images/20261118_vinicius_hattrick_brazil/13_w.jpg
+      - text: 次の代表戦は、来年3月です。本人も、こう話しています。
+      - voice: ヴィニシウス
+        text: これからはクラブに戻る。
+        image: assets/images/20261118_vinicius_hattrick_brazil/07_w.jpg
+      - voice: ヴィニシウス
+        text: 3月には、100パーセントの状態に戻らないといけない。
+        cont: true
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50510724/vinicius-junior-brazil-hat-trick-real-madrid
+      - https://www.footballchannel.jp/2026/11/18/post1058121/
+#   https://web.gekisaka.jp/news/japan/detail/?463210-463210-fl
+#   https://web.gekisaka.jp/news/japan/detail/?463299-463299-fl

@@ -1,0 +1,139 @@
+# 取材メモ（2026年11月16日）GK早川友基、ヴィニシウスのミドル弾に「引き出しが一つ増えた」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-16。requests（ブラウザUA）でゲキサカ本文を全文読み、site.api.espn.com で確かめた。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: ゲキサカ 2026-11-16 01:13（取材・文 竹内達也）「同じ国内組DF中野就斗を陰で支えたGK早川友基、圧巻のビニシウス弾には学び「引き出しが一つ増えた」」（全文） https://web.gekisaka.jp/news/japan/detail/?463299-463299-fl
+# 写真の出どころ（本人の写真。03 は 463210 の主写真＝中野就斗とブラジル7番の場面。02 は人違い・不明なので外した）:
+#   https://web.gekisaka.jp/news/japan/detail/?463299-463299-fl
+#   https://web.gekisaka.jp/news/japan/detail/?463210-463210-fl
+#   https://web.gekisaka.jp/photonews/japan/detail/?459494-459494-pn
+# 出典で確かめたこと:
+#   ・ESPN の試合データ（site.api.espn.com fifa.friendly summary event=401916337、2026-11-14 10:15 UTC）: 日本 3-2 ブラジル。33分 ヴィニシウス（右足、エリア外から。アシスト ブルーノ・ギマランイス）／75分 ヴィニシウス（右足、エリア外から。コーナーのあと）。GK は鈴木彩艶が先発で交代なし。早川友基は控えに入り、出場していない。中野就斗は先発で 62分に菅原由勢と交代。19分の中村敬斗の2点目は中野のクロス（アシスト）。
+#   ・ESPN scoreboard 2026-11-17: Paraguay at Japan（event=401916336）。
+#   ・ゲキサカ: 1本目は右サイドへ流れたヴィニシウスがゆるやかにターンし、脱力したモーションで振り向きざまに放ったキックが真っ直ぐゴールに突き刺さった。スタジアムは歓声というよりどよめき。ブラジルのミドルシュート2本を決められた（鈴木彩艶は数々のビッグセーブ）。
+#   ・早川の言葉（原文。ゲキサカ。字は変えていない。括弧は記者の補足）:
+#       「見たら入ったという感じだった。ほぼノーステップで打っていた」
+#       「そこくらいしか仕事をしていないなかでちゃんと結果を残すのも、それがやっぱり世界のストライカーなんだなと思ったし、見ている側としてはこういうのもあるんだなという引き出しが一つ増えた」
+#       「最初はリスペクトしていたから『そんなの関係なく潰しに行けよ』って言ったり(笑)。彼なりによく頑張っていたんじゃないかなと思います」
+#       「パラグアイも相当なメンバーで来ると思うし、…自分たちもやり方を変えている部分があるので、どれだけできるかを示したい」（使わない部分あり）
+#   ・パラグアイ（記者の地の文）: MFディエゴ・ゴメス（ブライトン）を筆頭にシュートレンジの長い選手が複数。早川「自分も南米との試合に出させてもらって特有の部分も感じているので、チームとして警戒していくことが大事」。
+# 自分で数えたもの: ブラジルの2失点はどちらもヴィニシウスのエリア外からのシュート（ESPN の2得点の記述から）。
+# 食い違い: 記事は松木の題の側で「堂安律のゴールにつながる攻撃」と書くが、ESPN の得点者に堂安は無い（久保の先制点のアシストが堂安）。→ 今回の題材（早川）では使っていない。
+# 前の本との重なり: 20261115_suzuki_zion_vini_two_goals（鈴木彩艶がヴィニシウス2発に語ったこと）。今回の初出: ベンチから見ていた早川の言葉・「引き出し」・中野との会話。鈴木彩艶の言葉・セーブの話は繰り返さない。
+# 【言わないこと】鈴木彩艶の言葉／チームの守備の反省（寄せ方・セットプレー）／早川の代表歴の細かい数字。
+# 本人の言葉: あり（早川友基。ゲキサカ）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月16日"
+format: news
+no_main: true
+people: [早川友基, ヴィニシウス・ジュニオール, 中野就斗, 日本代表, ブラジル代表, パラグアイ代表]
+
+short_style: Y
+short_hook_quote: 見たら入ったという感じだった。
+short_photos:
+  - assets/images/20261116_hayakawa_vinicius/01_v.jpg
+  - assets/images/20261116_hayakawa_vinicius/03_v.jpg
+  - assets/images/20261116_hayakawa_vinicius/04_v.jpg
+short_question: 17日のパラグアイ戦で、早川友基はゴールマウスに立つと思いますか。
+short_telops: []
+
+theme:
+  id: hayakawa_vinicius
+  league: japan
+  league_name: 日本代表
+  prefix: ""
+  title: 早川友基、ヴィニシウスのミドル弾に「引き出しが一つ増えた」。同じ国内組を支えた話
+  hook: ""
+  question: ブラジル戦で出番のなかった早川友基は、ヴィニシウスの一撃と中野就斗について何を語ったのか
+  takeaway: ブラジルに決められた2点は、どちらもヴィニシウスのペナルティエリア外からのシュート。出番のなかったGK早川は、その1本目を世界のストライカーの引き出しとして受け止めた
+
+thumbnail:
+  layout: face
+  line1: 早川友基 ヴィニシウス弾
+  line2: 引き出しが一つ増えた
+  tags: [早川友基, ヴィニシウス, 日本代表]
+  photo: assets/images/20261116_hayakawa_vinicius/01_w.jpg
+  short_photo: assets/images/20261116_hayakawa_vinicius/01_v.jpg
+
+answer: 見たら入ったという感じ。世界のストライカーの引き出しが一つ増えた。中野には「潰しに行けよ」と伝えていた
+watch: 17日のパラグアイ戦（森保監督のラストマッチ）
+
+sections:
+  - id: what
+    main: true
+    heading: ヴィニシウスのミドル弾を、早川友基はどう見たか
+    tier: 報道
+    telop: 早川友基「見たら入ったという感じだった」
+    say:
+      - text: ブラジル戦に出番のなかったGK早川友基が、ヴィニシウスのミドル弾を語りました。
+        image: assets/images/20261116_hayakawa_vinicius/01_w.jpg
+      - voice: 早川友基
+        text: 見たら入ったという感じだった。
+        emph: true
+      - voice: 早川友基
+        text: ほぼノーステップで打っていた。
+        cont: true
+      - text: ノーステップとは、助走をほとんど取らずに打つことです。
+      - text: 前半33分、ヴィニシウスが右サイドで振り向きざまに放った、1本目でした。
+        image: assets/images/20261116_hayakawa_vinicius/03_w.jpg
+      - text: 力の抜けた動きから、ゴールにまっすぐ突き刺さりました。
+      - text: 早川は、世界のストライカーの怖さを、こう語っています。
+      - voice: 早川友基
+        text: そこくらいしか仕事をしていないなかで、
+      - voice: 早川友基
+        text: ちゃんと結果を残すのも、
+        cont: true
+      - voice: 早川友基
+        text: それがやっぱり世界のストライカーなんだなと思ったし、
+        cont: true
+      - voice: 早川友基
+        text: 見ている側としては、こういうのもあるんだなという
+        cont: true
+      - voice: 早川友基
+        text: 引き出しが一つ増えた。
+        cont: true
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463299-463299-fl
+      - https://www.espn.com/soccer/match/_/gameId/401916337
+  - id: game
+    heading: 早川が陰で支えた、国内組の中野就斗
+    tier: 報道
+    telop: 国内組の中野就斗を陰で支えた早川
+    say:
+      - text: 早川は、同じ国内組のDF中野就斗を陰で支えていました。
+        image: assets/images/20261116_hayakawa_vinicius/04_w.jpg
+      - text: 中野は先発して62分まで出場し、中村敬斗の2点目をクロスでアシストしました。
+      - text: ヴィニシウスとマッチアップした中野に、早川はこう声をかけたといいます。
+      - voice: 早川友基
+        text: 最初はリスペクトしていたから、
+      - voice: 早川友基
+        text: そんなの関係なく潰しに行けよって言ったり。
+        cont: true
+      - voice: 早川友基
+        text: 彼なりによく頑張っていたんじゃないかなと思います。
+        cont: true
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463299-463299-fl
+      - https://www.espn.com/soccer/match/_/gameId/401916337
+  - id: view
+    viewpoint: true
+    heading: ブラジルに決められた2点は、どこから打たれたか
+    tier: 背景
+    telop: ヴィニシウスの2得点は、どちらもエリア外から
+    say:
+      - text: 見立てです。ブラジルに決められた2点は、どちらもヴィニシウスのエリア外からのシュートでした。
+        card: {type: table, title: ヴィニシウスの2得点, columns: [時間, 打った場所], rows: [[33分, エリア外から右足], [75分, エリア外から右足]], highlight_row: 0}
+      - text: 17日のパラグアイにも、シュートレンジの長い選手が複数いる、と伝えられています。
+        card: none
+      - voice: 早川友基
+        text: 自分も南米との試合に出させてもらって特有の部分も感じているので、
+      - voice: 早川友基
+        text: チームとして警戒していくことが大事。
+        cont: true
+        emph: true
+      - text: 次は17日、森保監督のラストマッチです。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401916337
+      - https://web.gekisaka.jp/news/japan/detail/?463299-463299-fl
