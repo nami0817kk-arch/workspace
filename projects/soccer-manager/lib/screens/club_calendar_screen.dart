@@ -7,8 +7,8 @@ import '../logic/club_calendar_engine.dart';
 import '../state/game_state.dart';
 import '../widgets/responsive_body.dart';
 
-/// クラブ運営の年間予定。移籍期間・予算・事件・決算・総会を節に並べ、
-/// いまの節に印を付ける。
+/// クラブ運営の年間予定。移籍の窓の締切・契約の期限・お金の日・夏の大会・
+/// 事件・年度末を日付で並べ、今日に印を付ける。
 class ClubCalendarScreen extends StatelessWidget {
   const ClubCalendarScreen({super.key});
 
@@ -17,6 +17,9 @@ class ClubCalendarScreen extends StatelessWidget {
         ClubEventKind.budget => Icons.pie_chart_outline,
         ClubEventKind.incident => Icons.report_problem_outlined,
         ClubEventKind.season => Icons.event_available_outlined,
+        ClubEventKind.contract => Icons.assignment_outlined,
+        ClubEventKind.money => Icons.payments_outlined,
+        ClubEventKind.tournament => Icons.flag_outlined,
       };
 
   @override
@@ -33,50 +36,55 @@ class ClubCalendarScreen extends StatelessWidget {
 
   Widget _body(BuildContext context, GameState game) {
     final league = game.save!.league;
-    final total = league.fixtures.isEmpty
-        ? 0
-        : league.fixtures.map((f) => f.matchday).reduce((a, b) => a > b ? a : b);
-    final next = league.nextUnplayedFixture?.matchday ?? total + 1;
-    final events = ClubCalendarEngine.build(totalMatchdays: total);
+    final today = game.today;
+    final events = ClubCalendarEngine.build(
+      season: league.season,
+      theme: game.currentLeagueTheme,
+      calendar: game.seasonCalendar,
+    );
     final scheme = Theme.of(context).colorScheme;
-    // いまの節以降で最初の予定に「次」の印を付ける。
-    final upcomingIndex = events.indexWhere((e) => e.matchday >= next);
+    // 今日以降で最初の予定に「次」の印を付ける。
+    final upcomingIndex = events.indexWhere((e) => !e.date.isBefore(today));
     return ListView(
       padding: const EdgeInsets.all(12),
       children: [
         Text(
-          Tr.pick('${CalendarEngine.formatDate(game.today)} ・ 第${league.season}季 ・ 次は第$next節',
-              '${CalendarEngine.formatDate(game.today)} • Season ${league.season} • next: MD $next'),
+          Tr.pick('今日 ${CalendarEngine.formatDate(today)} ・ 第${league.season}季',
+              'Today ${CalendarEngine.formatDate(today)} • Season ${league.season}'),
           style: Theme.of(context).textTheme.titleSmall,
         ),
         const SizedBox(height: 8),
         for (var i = 0; i < events.length; i++)
-          Card(
-            color: i == upcomingIndex
-                ? scheme.primaryContainer
-                : events[i].matchday < next
-                    ? scheme.surfaceContainerLow
-                    : null,
-            child: ListTile(
-              leading: Icon(_icon(events[i].kind),
-                  color: events[i].matchday < next
-                      ? scheme.onSurfaceVariant
-                      : scheme.primary),
-              title: Text(events[i].title),
-              subtitle: Text(events[i].detail),
-              trailing: Text(
-                events[i].matchday == 0
-                    ? Tr.pick('開幕前', 'Pre')
-                    : events[i].matchday > total
-                        ? Tr.pick('終了時', 'End')
-                        : Tr.pick(
-                            '第${events[i].matchday}節\n${CalendarEngine.formatShortDate(game.dateOfMatchday(events[i].matchday))}',
-                            'MD ${events[i].matchday}\n${CalendarEngine.formatShortDate(game.dateOfMatchday(events[i].matchday))}'),
-                textAlign: TextAlign.right,
-                style: Theme.of(context).textTheme.bodySmall,
+          Builder(builder: (context) {
+            final e = events[i];
+            final past = e.date.isBefore(today);
+            final days = e.date.difference(today).inDays;
+            return Card(
+              color: i == upcomingIndex
+                  ? scheme.primaryContainer
+                  : past
+                      ? scheme.surfaceContainerLow
+                      : null,
+              child: ListTile(
+                leading: Icon(_icon(e.kind),
+                    color: past ? scheme.onSurfaceVariant : scheme.primary),
+                title: Text(e.title),
+                subtitle: Text(e.detail),
+                trailing: Text(
+                  [
+                    CalendarEngine.formatShortDate(e.date),
+                    if (e.matchday != null)
+                      Tr.pick('第${e.matchday}節', 'MD ${e.matchday}'),
+                    if (!past && days == 0) Tr.pick('今日', 'Today'),
+                    if (!past && days > 0 && i == upcomingIndex)
+                      Tr.pick('あと$days日', 'in $days d'),
+                  ].join('\n'),
+                  textAlign: TextAlign.right,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
               ),
-            ),
-          ),
+            );
+          }),
       ],
     );
   }

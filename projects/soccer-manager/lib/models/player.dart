@@ -1104,6 +1104,13 @@ class Player {
   /// 招集中はスタメン・自動編成の対象外になる。
   int internationalDutyWeeksRemaining;
 
+  /// 夏の代表の大会(ワールドカップ・大陸選手権)のあとの休みで、まだ
+  /// クラブに合流していない。合流の日まで試合に出せない。
+  bool onTournamentLeave;
+
+  /// 夏の大会の活躍で上がった市場価値(%)。次のシーズンの始まりで消える。
+  int tournamentBoostPct;
+
   /// 戦術上のデューティ(守備的/バランス/攻撃的)。試合エンジンの攻守貢献度に補正がかかる。
   PlayerDuty duty;
 
@@ -1268,6 +1275,8 @@ class Player {
     this.loanBuyOptionFee,
     this.releaseClause,
     this.internationalDutyWeeksRemaining = 0,
+    this.onTournamentLeave = false,
+    this.tournamentBoostPct = 0,
     this.duty = PlayerDuty.support,
     this.squadStatus = SquadStatus.regular,
     this.isTransferListed = false,
@@ -1416,7 +1425,37 @@ class Player {
 
   bool get isSuspended => suspendedMatches > 0;
 
-  bool get isOnInternationalDuty => internationalDutyWeeksRemaining > 0;
+  bool get isOnInternationalDuty =>
+      internationalDutyWeeksRemaining > 0 || onTournamentLeave;
+
+  /// 誕生日を2001年(うるう年でない年)に置いた日。月と日だけを使う。
+  /// id から決まるので保存しない。2月29日生まれはいない。
+  late final DateTime _birthday = _birthdayOf(id);
+
+  static DateTime _birthdayOf(String id) {
+    var h = 7;
+    for (final c in id.codeUnits) {
+      h = (h * 131 + c) & 0x3fffffff;
+    }
+    return DateTime(2001, 1, 1 + h % 365);
+  }
+
+  int get birthMonth => _birthday.month;
+  int get birthDay => _birthday.day;
+
+  /// [year]年の誕生日。
+  DateTime birthdayIn(int year) => DateTime(year, birthMonth, birthDay);
+
+  /// [before]の翌日から[after]まで(両端は前を含まず後を含む)に来た誕生日の数。
+  int birthdaysBetween(DateTime before, DateTime after) {
+    if (!after.isAfter(before)) return 0;
+    var n = 0;
+    for (var y = before.year; y <= after.year; y++) {
+      final b = birthdayIn(y);
+      if (b.isAfter(before) && !b.isAfter(after)) n++;
+    }
+    return n;
+  }
 
   /// 他クラブへローン放出中で、自クラブの試合には出場できない状態かどうか。
   bool get isLoanedOut => loanedOutWeeksRemaining > 0;
@@ -1429,6 +1468,7 @@ class Player {
     double ageFactor,
     double personalityFactor,
     double leadershipFactor,
+    double tournamentFactor,
   }) get marketValueBreakdown {
     // 能力に対して指数で伸びる(総合78で約5億、85で約17億、95で約100億)。
     final base = marketValueBase(overall);
@@ -1455,6 +1495,7 @@ class Player {
       ageFactor: ageFactor,
       personalityFactor: personality.marketValueFactor,
       leadershipFactor: leadershipFactor,
+      tournamentFactor: 1 + tournamentBoostPct / 100,
     );
   }
 
@@ -1464,7 +1505,8 @@ class Player {
     final value = (b.base + b.potentialBonus) *
         b.ageFactor *
         b.personalityFactor *
-        b.leadershipFactor;
+        b.leadershipFactor *
+        b.tournamentFactor;
     return value.round().clamp(minMarketValue, maxMarketValue);
   }
 
@@ -1519,6 +1561,8 @@ class Player {
     put('loanBuyOptionFee', loanBuyOptionFee, null);
     put('releaseClause', releaseClause, null);
     put('internationalDutyWeeksRemaining', internationalDutyWeeksRemaining, 0);
+    put('onTournamentLeave', onTournamentLeave, false);
+    put('tournamentBoostPct', tournamentBoostPct, 0);
     put('duty', duty.name, PlayerDuty.support.name);
     put('squadStatus', squadStatus.name, SquadStatus.regular.name);
     put('isTransferListed', isTransferListed, false);
@@ -1632,6 +1676,8 @@ class Player {
       releaseClause: json['releaseClause'] as int?,
       internationalDutyWeeksRemaining:
           json['internationalDutyWeeksRemaining'] as int? ?? 0,
+      onTournamentLeave: json['onTournamentLeave'] as bool? ?? false,
+      tournamentBoostPct: json['tournamentBoostPct'] as int? ?? 0,
       duty: enumFromName(
         PlayerDuty.values,
         json['duty'] as String?,

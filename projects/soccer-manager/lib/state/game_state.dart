@@ -64,6 +64,7 @@ import '../logic/achievement_engine.dart';
 import '../logic/ai_transfer_engine.dart';
 import '../logic/money_calendar.dart';
 import '../logic/season_calendar.dart';
+import '../logic/summer_tournament.dart';
 import '../logic/transfer_window.dart';
 import '../logic/awards_engine.dart';
 import '../logic/background_match_engine.dart';
@@ -1153,6 +1154,8 @@ class GameState extends ChangeNotifier {
     _refreshStaffCandidates();
     FreeAgentEngine.topUp(_save!.freeAgents);
     _ensureWorldSquads(_save!);
+    // 第1季の前の夏(2026年)はワールドカップ。出た選手は遅れて合流する。
+    _startSummerTournament();
     lastContractExpirations = [];
     isBusy = false;
     _notify();
