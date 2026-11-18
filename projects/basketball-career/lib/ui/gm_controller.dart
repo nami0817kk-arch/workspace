@@ -294,6 +294,8 @@ class GmController extends ChangeNotifier {
     unawaited(Sfx.play(SoundEffect.tick));
   }
   void passPick() => _act((c) => c.passPick());
+  void workout(Prospect p) => _act((c) => c.workout(p));
+
   void scoutProspect(Prospect p) {
     _act((c) => c.scoutProspect(p));
     unawaited(Sfx.play(SoundEffect.chime));

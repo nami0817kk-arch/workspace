@@ -2511,6 +2511,8 @@ class Career {
     draftLog = [];
     scoutsLeft = 1 + me.staffLevel(Staff.scout) + skillOf(Skill.eye);
     scoutAdUsed = false;
+    workoutsLeft = workoutsPerDraft;
+    workedOut = [];
     phase = Phase.draft;
     _advanceDraft();
   }
@@ -2545,7 +2547,7 @@ class Career {
     while (phase == Phase.draft && draftAt < order.length && picks[order[draftAt]].owner != mine) {
       final pick = picks[order[draftAt]];
       final t = teams[pick.owner];
-      final p = aiDraftChoice(prospects, t.mode, rng, counts: posCounts(t));
+      final p = aiDraftChoice(prospects, t.mode, rng, counts: posCounts(t), wanted: workedOut.toSet());
       _sign(t, p, draftAt);
       draftAt++;
     }
@@ -2595,6 +2597,48 @@ class Career {
       if (picks[order[k]].owner == mine) return k - draftAt;
     }
     return null;
+  }
+
+  /// ドラフトごとに呼べるワークアウトの数。
+  static const workoutsPerDraft = 2;
+  int workoutsLeft = 0;
+
+  /// ワークアウトに呼んだ候補(選手の id)。話が漏れて、ほかのチームも高く見る。
+  List<int> workedOut = [];
+
+  /// 候補をワークアウトに呼ぶ。今の力と伸びしろが正確に分かり、性格も分かる。
+  /// ただし狙いが漏れ、ほかのチームもその候補を高く見るようになる。乱数は使わない。
+  void workout(Prospect p) {
+    if (phase != Phase.draft || workoutsLeft <= 0 || p.pickedBy != null || workedOut.contains(p.player.id)) return;
+    workoutsLeft--;
+    workedOut = [...workedOut, p.player.id];
+    p
+      ..scouted = true
+      ..ovrLo = p.player.ovr
+      ..ovrHi = p.player.ovr
+      ..potLo = p.player.pot
+      ..potHi = p.player.pot;
+    p.player.traitsKnown = true;
+  }
+
+  /// ドラフトのうわさ: 今から自分の次の指名までに、ほかのチームが取りそうな候補(指名の番号・チーム・候補)。
+  List<(int, int, Prospect)> draftRumors({int max = 6}) {
+    if (phase != Phase.draft) return const [];
+    final open = [for (final p in prospects) if (p.pickedBy == null) p];
+    final wanted = workedOut.toSet();
+    final out = <(int, int, Prospect)>[];
+    // 自分の番なら、その次から見る
+    var k = draftAt + (myTurn ? 1 : 0);
+    for (; k < order.length && out.length < max; k++) {
+      final owner = picks[order[k]].owner;
+      if (owner == mine) break;
+      final t = teams[owner];
+      final g = aiDraftGuess(open, t.mode, counts: posCounts(t), wanted: wanted);
+      if (g == null) break;
+      open.remove(g);
+      out.add((k + 1, owner, g));
+    }
+    return out;
   }
 
   void scoutProspect(Prospect p) {
@@ -3855,6 +3899,8 @@ class Career {
         if (offStartRank != -1) 'ofr': offStartRank,
         if (faMoves.isNotEmpty) 'fm': [for (final m in faMoves) m.toJson()],
         'sl': scoutsLeft,
+        'wkl': workoutsLeft,
+        'wko': workedOut,
         'sau': scoutAdUsed,
         'exp': expiring,
         if (optionPending.isNotEmpty) 'opp': optionPending,
@@ -3972,6 +4018,8 @@ class Career {
           if (x is List && x.length == 7) FaMove.fromJson(x),
       ]
       ..scoutsLeft = (j['sl'] as int?) ?? 0
+      ..workoutsLeft = (j['wkl'] as int?) ?? 0
+      ..workedOut = [for (final x in (j['wko'] as List? ?? const [])) x as int]
       ..scoutAdUsed = (j['sau'] as bool?) ?? false
       ..expiring = [for (final x in (j['exp'] as List? ?? const [])) x as int]
       ..optionPending = [for (final x in (j['opp'] as List? ?? const [])) x as int]

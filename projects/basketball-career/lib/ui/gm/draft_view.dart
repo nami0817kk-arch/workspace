@@ -147,6 +147,40 @@ class _DraftViewState extends State<DraftView> {
     );
   }
 
+  /// ドラフトのうわさ(次の自分の指名までに取られそうな候補)。押すと全部見られる。
+  List<Widget> _rumorLine(Career car) {
+    final r = car.draftRumors();
+    if (r.isEmpty) return const [];
+    String line((int, int, Prospect) x) => '${x.$1}番 ${car.teams[x.$2].def.short}→${x.$3.player.name}${car.workedOut.contains(x.$3.player.id) ? '(ワークアウトの話が漏れた)' : ''}';
+    return [
+      InkWell(
+        key: const Key('draft-rumors'),
+        onTap: () => showDialog<void>(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text('ドラフトのうわさ'),
+            content: SizedBox(
+              width: 460,
+              child: SingleChildScrollView(
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
+                  const Text('次のこちらの指名までに、ほかのチームが狙っているらしい候補(当たるとは限らない)。', style: TextStyle(fontSize: 12, color: GmColors.sub)),
+                  const SizedBox(height: 6),
+                  for (final x in r) Text('・${line(x)}', style: const TextStyle(fontSize: 13, height: 1.5)),
+                ]),
+              ),
+            ),
+            actions: [TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('閉じる'))],
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 2),
+          child: Text('うわさ: ${r.take(3).map(line).join('、')}${r.length > 3 ? ' ほか' : ''}',
+              maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 11.5, color: GmColors.gold)),
+        ),
+      ),
+    ];
+  }
+
   /// 上の欄(指名の番・スカウトの残り・やること)。候補の表を広く見せるため細くする。知らせはたたんでおく。
   Widget _header(Career car) {
     final pick = car.currentPick;
@@ -177,7 +211,7 @@ class _DraftViewState extends State<DraftView> {
                 ),
                 const Icon(Icons.travel_explore_rounded, size: 15, color: GmColors.sub),
                 const SizedBox(width: 4),
-                Text('スカウト 残り${car.scoutsLeft}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                Text('スカウト 残り${car.scoutsLeft}・ワークアウト 残り${car.workoutsLeft}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
                 if (car.lotteryPre.isNotEmpty)
                   TextButton(
                     onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(fullscreenDialog: true, builder: (_) => LotteryScreen(c: c))),
@@ -202,6 +236,7 @@ class _DraftViewState extends State<DraftView> {
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(fontSize: 11, color: GmColors.sub, height: 1.4),
             ),
+            ..._rumorLine(car),
             if (car.myTurn && car.draftProblem != null)
               Padding(
                 padding: const EdgeInsets.only(top: 2),
@@ -574,6 +609,20 @@ class _ProspectPanel extends StatelessWidget {
               ],
             ],
           ),
+          if (p.pickedBy == null && !car.workedOut.contains(p.player.id)) ...[
+            const SizedBox(height: 6),
+            OutlinedButton.icon(
+              key: const Key('workout'),
+              style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(30), padding: EdgeInsets.zero),
+              onPressed: car.workoutsLeft > 0 && !c.busy ? () => c.workout(p) : null,
+              icon: const Icon(Icons.fitness_center_rounded, size: 15),
+              label: Text('ワークアウトに呼ぶ(残り${car.workoutsLeft})・正確に分かるが狙いが漏れる', style: const TextStyle(fontSize: 11.5)),
+            ),
+          ] else if (car.workedOut.contains(p.player.id))
+            const Padding(
+              padding: EdgeInsets.only(top: 6),
+              child: Text('ワークアウト済み: 力は正確。ほかのチームもこの候補を高く見ている', style: TextStyle(fontSize: 11.5, color: GmColors.gold)),
+            ),
           if (car.myTurn && p.pickedBy == null) ...[
             const SizedBox(height: 6),
             FilledButton(
