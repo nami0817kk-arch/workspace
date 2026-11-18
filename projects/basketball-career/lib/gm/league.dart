@@ -828,7 +828,8 @@ List<List<(int, int)>> roundRobin(int n, int cycle) {
     final games = <(int, int)>[];
     for (var i = 0; i < n ~/ 2; i++) {
       var a = ids[i], b = ids[n - 1 - i];
-      if ((r + i + cycle).isOdd) (a, b) = (b, a);
+      // 節ごとにホームとアウェイを入れ替える(どのチームも交互になり、ホームは82試合で40〜42)
+      if ((r + cycle).isOdd) (a, b) = (b, a);
       games.add((a, b));
     }
     rounds.add(games);

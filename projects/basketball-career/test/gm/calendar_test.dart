@@ -21,7 +21,7 @@ void main() {
   });
 
   test('順位が決まったら主力を休ませる: 決まるまでは休まず、決まったら先発が休む', () {
-    for (final seed in [5, 7, 9, 11, 13, 17, 19, 23]) {
+    for (var seed = 1; seed <= 40; seed++) {
       final b = _started(seed)..restWhenSettled = true;
       while (b.phase == Phase.season && !b.standingSettled) {
         expect(b.me.roster.fold(0, (n, p) => n + p.restGames), 0, reason: '決まる前は休まない');

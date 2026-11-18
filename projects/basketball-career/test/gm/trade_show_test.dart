@@ -8,8 +8,8 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   test('トレードの成立: 出した選手は外へ、受け取った選手は登録に入り、評価が付く', () {
     var done = 0;
-    for (final seed in [3, 7, 11, 19]) {
-      final c = careerAt(10, seed)..startSeason();
+    for (var seed = 1; seed <= 30 && done < 3; seed++) {
+      final c = careerAt(seed, 10)..startSeason();
       while (c.phase == Phase.season && (c.incoming == null || !c.canTrade)) {
         c.playBlock();
       }

@@ -1359,7 +1359,7 @@ void main() {
 
     test('相手同士のトレードが起き、どのチームも人数と年俸の決まりを守る。ニュースに残る', () {
       var trades = 0;
-      for (var seed = 1; seed <= 5; seed++) {
+      for (var seed = 1; seed <= 8; seed++) {
         final c = careerAt(seed, 15);
         var guard = 0;
         while (c.season <= 3 && c.phase != Phase.over && guard++ < 200) {
@@ -1377,7 +1377,7 @@ void main() {
         expect(c.log.any((l) => l.contains('優勝:')), isTrue);
         expect(c.log.any((l) => l.contains('ドラフト全体1位')), isTrue);
       }
-      expect(trades, greaterThan(5));
+      expect(trades, greaterThan(6));
     });
   });
 
