@@ -658,7 +658,7 @@ extension GameStateFinance on GameState {
     if (save.ownerGoal == OwnerGoal.clubValue) {
       save.ownerGoalStartValue = clubValue.total;
     }
-    transferMarket = TransferMarket.generate();
+    transferMarket = TransferMarket.generate(home: currentLeagueTheme);
     _refreshScoutCandidates();
     _refreshStaffCandidates();
     _addTimeline(Tr.pick('${theme.label}(${theme.flavorLabel})で新しいクラブ${userTeam.name}を立ち上げた',

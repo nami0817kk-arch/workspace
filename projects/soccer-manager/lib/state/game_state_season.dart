@@ -118,7 +118,145 @@ extension GameStateSeason on GameState {
   /// 今日を[day]へ進める。戻すことはしない(同じ日・前の日なら何もしない)。
   void _advanceTodayTo(DateTime day) {
     final d = SeasonCalendar.dateOnly(day);
-    if (d.isAfter(today)) _save!.today = d;
+    if (d.isAfter(today)) _setToday(d);
+  }
+
+  /// 今日を[day]にする。進んだあいだに窓が開いた・締切を過ぎたら、
+  /// 登録の名簿をそれに合わせる。
+  void _setToday(DateTime day) {
+    final before = today;
+    final d = SeasonCalendar.dateOnly(day);
+    _save!.today = d;
+    if (!d.isAfter(before)) return;
+    final theme = currentLeagueTheme;
+    // 窓が開いたら、名簿の外だった選手もまた登録できる。
+    if (TransferWindowCalendar.openedBetween(before, d, theme)) {
+      _reopenRegistration();
+    }
+    // 締切を過ぎて今は閉じていれば、名簿を締める。
+    if (TransferWindowCalendar.deadlinePassedBetween(before, d, theme) &&
+        !TransferWindowCalendar.isOpen(d, theme)) {
+      _closeRegistration();
+    }
+  }
+
+  /// 締切で登録の名簿を締める。枠を超えていなければ何もしない。
+  /// 外れた選手は次の窓が開くまで公式戦に出られない。
+  void _closeRegistration() {
+    final team = userTeam;
+    final excluded = SquadRegistration.plannedExclusions(team);
+    if (excluded.isEmpty) return;
+    for (final p in excluded) {
+      p.notRegistered = true;
+      team.startingXI.remove(p.id);
+    }
+    LineupUtils.fillVacancies(team);
+    _logNews(
+      Tr.pick(
+          '移籍の締切で登録の名簿を締めました。次の窓まで公式戦に出られない選手: ${excluded.map((p) => p.name).join('、')}',
+          'The squad list was locked at the deadline. Not eligible until the next window: ${excluded.map((p) => p.name).join(', ')}'),
+      context: Tr.pick('選手登録', 'Registration'),
+    );
+  }
+
+  /// 窓が開いたので、名簿の外だった選手を戻す。
+  void _reopenRegistration() {
+    for (final p in userTeam.players) {
+      p.notRegistered = false;
+      p.leaveOffRegistration = false;
+    }
+  }
+
+  /// 締切の名簿から外すかを切り替える(枠を超えているときだけ効く)。
+  Future<void> setLeaveOffRegistration(String playerId, bool leaveOff) async {
+    if (_save == null) return;
+    final p = userTeam.players.where((p) => p.id == playerId).firstOrNull;
+    if (p == null) return;
+    p.leaveOffRegistration = leaveOff;
+    _notify();
+    await _persist();
+  }
+
+  /// 締切で名簿から外れる予定の選手(枠を超えていなければ空)。
+  List<Player> get plannedRegistrationExclusions => _save == null
+      ? const []
+      : SquadRegistration.plannedExclusions(userTeam);
+
+  /// 日付で終わるローンを片付ける(借りている選手は戻し、貸している選手は
+  /// 呼び戻す)。シーズンの切り替わり(7月1日)でも呼ぶ。
+  void _settleLoansByDate() {
+    final t = today;
+    final team = userTeam;
+    final ended = team.players
+        .where((p) => p.isLoan && p.loanEndDate != null && !t.isBefore(p.loanEndDate!))
+        .toList();
+    for (final p in ended) {
+      team.players.remove(p);
+      team.startingXI.remove(p.id);
+      _clearPlayerRoleReferences(team, p.id);
+    }
+    if (ended.isNotEmpty) {
+      lastContractExpirations = [
+        ...lastContractExpirations,
+        ...ended.map((p) => p.name),
+      ];
+      LineupUtils.fillVacancies(team);
+    }
+    for (final p in team.players) {
+      final until = p.loanedOutUntil;
+      if (!p.isLoanedOut || until == null) continue;
+      if (!t.isBefore(until)) {
+        _returnFromLoan(p);
+      } else {
+        // 表示用の残り週数を日付に合わせておく。
+        final days = TransferWindowCalendar.daysBetween(t, until);
+        p.loanedOutWeeksRemaining = max(1, (days / 7).ceil());
+      }
+    }
+  }
+
+  /// 貸していた選手が戻る。
+  void _returnFromLoan(Player p) {
+    final loanClub = p.loanedOutToClubName;
+    p.loanedOutWeeksRemaining = 0;
+    p.loanedOutUntil = null;
+    p.loanRecallClause = false;
+    p.loanedOutToClubName = null;
+    lastLoanReturns.add(p.name);
+    if (p.loanStartOverall > 0) {
+      final delta = p.overall - p.loanStartOverall;
+      _logNews(
+        Tr.pick(
+            '${p.name}が武者修行(${loanClub ?? 'ローン先'})から復帰。総合 ${p.loanStartOverall}→${p.overall}${delta > 0 ? '(+$delta成長)' : ''}',
+            "${p.name} is back from his loan at ${loanClub ?? 'his loan club'}. Overall ${p.loanStartOverall}→${p.overall}${delta > 0 ? ' (+$delta)' : ''}"),
+        context: Tr.pick('ローン復帰', 'Loan return'),
+      );
+      p.loanStartOverall = 0;
+    }
+  }
+
+  /// 旧セーブの週数のローンを日付に直す(今日から週数×7日後)。
+  void _migrateLoanDates(SaveGame save) {
+    final t = save.today ?? today;
+    for (final team in save.league.teams) {
+      for (final p in team.players) {
+        if (p.isLoan && p.loanEndDate == null && p.loanWeeksRemaining > 0) {
+          p.loanEndDate = DateTime(t.year, t.month, t.day + 7 * p.loanWeeksRemaining);
+        }
+        if (p.isLoanedOut && p.loanedOutUntil == null) {
+          p.loanedOutUntil =
+              DateTime(t.year, t.month, t.day + 7 * p.loanedOutWeeksRemaining);
+        }
+      }
+    }
+  }
+
+  /// 移籍市場から、他の国の18歳未満を外す(国をまたいで移れない)。
+  /// どの国から来たかを持たない旧セーブの18歳未満も外す。
+  void _dropInternationalMinorsFromMarket(SaveGame save) {
+    final home = currentLeagueTheme.name;
+    save.transferMarketPlayers.removeWhere(
+        (p) => p.age < 18 && (p.originLeague == null || p.originLeague != home));
   }
 
   /// いま消化するカップ戦の日付へ今日を進める。リーグ戦の途中なら次の
@@ -1147,7 +1285,7 @@ extension GameStateSeason on GameState {
       currentWeeklyWageBill: weeklyWageBill,
       weeklyIncome: weeklyIncomeFor(_save!.userTeamId),
     );
-    transferMarket = TransferMarket.generate();
+    transferMarket = TransferMarket.generate(home: currentLeagueTheme);
     _refreshScoutCandidates();
     FreeAgentEngine.topUp(_save!.freeAgents);
 
@@ -1359,8 +1497,10 @@ extension GameStateSeason on GameState {
       _save!.continentalCup = null;
     }
     _save!.friendlies = _generateFriendlies(newActiveTeams, _save!.userTeamId);
-    // 新しいシーズンはオフ(7月1日)から始まる。
-    _save!.today = SeasonCalendar.preseasonDate(_save!.league.season);
+    // 新しいシーズンはオフ(7月1日)から始まる。夏の窓が開くので名簿の外
+    // だった選手も戻り、シーズン末までのローンはここで終わる。
+    _setToday(SeasonCalendar.preseasonDate(_save!.league.season));
+    _settleLoansByDate();
     _save!.boardReviewDoneThisSeason = false;
     _save!.pendingBoardReviewMessage = null;
     _save!.lastManagerOfMonthCheckpoint = 0;

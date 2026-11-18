@@ -16,7 +16,8 @@ class LineupUtils {
               !p.isInjured &&
               !p.isOnInternationalDuty &&
               !p.isLoanedOut &&
-              !p.isSuspended,
+              !p.isSuspended &&
+              !p.notRegistered,
         )
         .toList();
     final used = <Player>{};
@@ -70,7 +71,8 @@ class LineupUtils {
               !p.isInjured &&
               !p.isOnInternationalDuty &&
               !p.isLoanedOut &&
-              !p.isSuspended,
+              !p.isSuspended &&
+              !p.notRegistered,
         )
         .toList();
 

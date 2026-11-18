@@ -63,6 +63,7 @@ import '../models/weather.dart';
 import '../logic/achievement_engine.dart';
 import '../logic/ai_transfer_engine.dart';
 import '../logic/season_calendar.dart';
+import '../logic/transfer_window.dart';
 import '../logic/awards_engine.dart';
 import '../logic/background_match_engine.dart';
 import '../logic/best_eleven_engine.dart';
@@ -372,64 +373,121 @@ class GameState extends ChangeNotifier {
     return (total - nextMd + 1).clamp(0, total);
   }
 
-  /// 移籍ウィンドウが開いているか。プレシーズン(開幕前)・シーズン中盤の
-  /// 数節・シーズン終了後(オフシーズン)にのみ、選手の獲得・放出ができる。
-  bool get isTransferWindowOpen {
-    if (_save == null) return true;
-    final nextMd = _save!.league.nextUnplayedFixture?.matchday;
-    if (nextMd == null) return true; // シーズン終了後(オフシーズン)
-    if (nextMd <= 1) return true; // プレシーズン(開幕前)
-    final total = _totalMatchdaysThisSeason;
-    if (total == 0) return true;
-    final midStart = total ~/ 2;
-    return nextMd >= midStart && nextMd <= midStart + 2;
-  }
-
-  /// 移籍ウィンドウが閉じるまでの残り節数。
+  /// いま開いている移籍の窓。閉じていれば null。
   ///
-  /// 閉じているとき、オフシーズン、開幕前(締切は開幕そのもの)は null。
-  /// 締切が見えないと「まだ動ける」と思っているうちに閉まってしまう。
-  int? get transferWindowMatchdaysLeft {
-    if (_save == null || !isTransferWindowOpen) return null;
-    final nextMd = _save!.league.nextUnplayedFixture?.matchday;
-    if (nextMd == null) return null; // オフシーズン(期限なし)
-    final total = _totalMatchdaysThisSeason;
-    if (total == 0) return null;
-    if (nextMd <= 1) return 1; // 開幕前。開幕したら閉まる
-    final midStart = total ~/ 2;
-    return midStart + 2 - nextMd + 1;
+  /// 窓は日付で開け閉めする(国ごとに実在の日付。[TransferWindowCalendar])。
+  TransferWindowPeriod? get currentTransferWindow => _save == null
+      ? null
+      : TransferWindowCalendar.openOn(today, currentLeagueTheme);
+
+  /// 移籍の窓が開いているか。開いている間だけ、移籍金のかかる獲得・
+  /// ローン・売却・貸し出しができる(自由契約の選手はいつでも取れる)。
+  bool get isTransferWindowOpen =>
+      _save == null || currentTransferWindow != null;
+
+  /// 締切まで残り何日か(締切日の当日は0)。閉じていれば null。
+  int? get transferWindowDaysLeft {
+    final w = currentTransferWindow;
+    if (w == null) return null;
+    return TransferWindowCalendar.daysBetween(today, w.closes);
   }
 
-  /// この節を終えるとウィンドウが閉じるか。
-  bool get isTransferDeadlineMatchday => transferWindowMatchdaysLeft == 1;
+  /// 次に開く窓。開いている間は null。
+  TransferWindowPeriod? get nextTransferWindow {
+    if (_save == null || isTransferWindowOpen) return null;
+    return TransferWindowCalendar.nextAfter(today, currentLeagueTheme);
+  }
 
-  /// UI表示用の移籍ウィンドウ状態文言。
+  /// 今日より後で最初のリーグ戦の日(残っていなければ null)。
+  DateTime? get _nextLeagueDateAfterToday {
+    if (_save == null || _save!.league.fixtures.isEmpty) return null;
+    final t = today;
+    for (final d in seasonCalendar.matchdayDates) {
+      if (d.isAfter(t)) return d;
+    }
+    return null;
+  }
+
+  /// 締切日か。今日が締切日のとき、または次のリーグ戦の日には窓が
+  /// 閉じているとき(この節のあいだが最後の機会)。
+  ///
+  /// 日付は試合をするたびに進むので、締切日ちょうどに止まるとは限らない。
+  /// 「次の試合の前に閉まる」も締切日として目立たせる。
+  bool get isTransferDeadlineDay {
+    final w = currentTransferWindow;
+    if (w == null) return false;
+    if (TransferWindowCalendar.daysBetween(today, w.closes) <= 0) return true;
+    final next = _nextLeagueDateAfterToday;
+    return next != null && next.isAfter(w.closes);
+  }
+
+  /// 締切日(閉じていれば null)。
+  DateTime? get transferDeadline => currentTransferWindow?.closes;
+
+  /// UI表示用の移籍の窓の状態の文言。
   String get transferWindowStatusLabel {
-    if (isTransferWindowOpen) {
-      final left = transferWindowMatchdaysLeft;
-      if (left == null) {
-        return Tr.pick('移籍ウィンドウ: オープン中', 'Transfer window: open');
+    final w = currentTransferWindow;
+    if (_save == null) {
+      return Tr.pick('移籍の窓: 開いています', 'Transfer window: open');
+    }
+    if (w != null) {
+      final left = TransferWindowCalendar.daysBetween(today, w.closes);
+      final deadline = TransferWindowCalendar.formatMonthDay(w.closes);
+      if (left <= 0) {
+        return Tr.pick('${w.kind.label}: 今日が締切です($deadline)',
+            'Transfer window: deadline day today ($deadline)');
       }
-      if (left <= 1) {
-        return Tr.pick('移籍ウィンドウ: 今節で締切', 'Transfer window: deadline is this matchday');
+      if (isTransferDeadlineDay) {
+        return Tr.pick(
+            '${w.kind.label}: 締切まで残り$left日($deadline)。次の試合の前に閉まります',
+            'Transfer window: ${Tr.plural(left, 'day')} to the deadline ($deadline). It shuts before the next match');
       }
-      return Tr.pick('移籍ウィンドウ: オープン中（あと$left節で締切）',
-          'Transfer window: open ($left matchdays to the deadline)');
+      return Tr.pick('${w.kind.label}: 締切まで残り$left日($deadline)',
+          'Transfer window: ${Tr.plural(left, 'day')} to the deadline ($deadline)');
     }
-    final nextMd = _save?.league.nextUnplayedFixture?.matchday;
-    final total = _totalMatchdaysThisSeason;
-    if (nextMd == null || total == 0) {
-      return Tr.pick('移籍ウィンドウ: クローズ中', 'Transfer window: closed');
-    }
-    final midStart = total ~/ 2;
-    if (nextMd < midStart) {
-      return Tr.pick('移籍ウィンドウ: クローズ中(第$midStart節に再開)',
-          'Transfer window: closed (reopens on matchday $midStart)');
-    }
-    return Tr.pick('移籍ウィンドウ: クローズ中(来シーズン開幕前に再開)',
-        'Transfer window: closed (reopens before next season)');
+    final next = TransferWindowCalendar.nextAfter(today, currentLeagueTheme);
+    final opens = TransferWindowCalendar.formatMonthDay(next.opens);
+    return Tr.pick('移籍の窓: 閉じています。次の窓は$opensから',
+        'Transfer window: shut. The next one opens on $opens');
   }
 
+  /// 登録中の GK が全員出られない(怪我・出場停止・代表・貸し出し中・
+  /// 名簿の外)か。窓の外でも GK を1人だけ取れる特例の条件。
+  bool get isGoalkeeperEmergency {
+    if (_save == null || isTransferWindowOpen) return false;
+    return !userTeam.players.any((p) =>
+        p.position == Position.gk &&
+        !p.isInjured &&
+        !p.isSuspended &&
+        !p.isOnInternationalDuty &&
+        !p.isLoanedOut &&
+        !p.notRegistered);
+  }
+
+  /// [player]を今とれるか(窓の開閉と GK の特例)。
+  bool _windowAllowsSigning(Player player, {bool permanent = true}) {
+    if (isTransferWindowOpen) return true;
+    // GK の緊急獲得は期限付き(ローン)だけ。完全移籍は次の窓まで待つ。
+    if (permanent) return false;
+    return player.position == Position.gk && isGoalkeeperEmergency;
+  }
+
+  /// 18歳未満で、他の国から来る選手か(国をまたいで移れない)。
+  bool _isInternationalMinor(Player player) {
+    if (player.age >= 18) return false;
+    final origin = player.originLeague;
+    if (origin == null) return false;
+    return origin != currentLeagueTheme.name;
+  }
+
+  /// [clubName]が他の国のクラブか。
+  bool _isForeignClub(String clubName) {
+    if (_save == null) return false;
+    for (final l in _save!.foreignLeagues.values) {
+      if (l.teams.any((t) => t.name == clubName)) return true;
+    }
+    return false;
+  }
 
   /// 保存文字列からセーブを復元する。壊れていれば null。
   SaveGame? _decodeSave(String raw) {
@@ -575,7 +633,7 @@ class GameState extends ChangeNotifier {
       // 市場はセーブに保存された顔ぶれを維持する(旧セーブ等で空の場合のみ
       // 新規生成する)。
       if (transferMarket.isEmpty) {
-        transferMarket = TransferMarket.generate();
+        transferMarket = TransferMarket.generate(home: currentLeagueTheme);
       }
       _refreshScoutCandidates();
     }
@@ -596,6 +654,8 @@ class GameState extends ChangeNotifier {
     _migrateEconomyIfNeeded(save);
     // 今日の日付を持たない旧セーブは、ここで日付を作る。
     save.today ??= _rebuiltToday();
+    _migrateLoanDates(save);
+    _dropInternationalMinorsFromMarket(save);
   }
 
   /// お金の桁を部ごとに変える前(版1)のセーブを、一度だけ新しい桁に直す。
@@ -918,7 +978,7 @@ class GameState extends ChangeNotifier {
       // 市場はセーブに保存された顔ぶれを維持する(旧セーブ等で空の場合のみ
       // 新規生成する)。
       if (transferMarket.isEmpty) {
-        transferMarket = TransferMarket.generate();
+        transferMarket = TransferMarket.generate(home: currentLeagueTheme);
       }
       _refreshScoutCandidates();
     } else {
@@ -1070,7 +1130,7 @@ class GameState extends ChangeNotifier {
     final rival = cpuTeams[rng.nextInt(cpuTeams.length)];
     _save!.rivalTeamId = rival.id;
     _save!.rivalTeamName = rival.name;
-    transferMarket = TransferMarket.generate();
+    transferMarket = TransferMarket.generate(home: currentLeagueTheme);
     _refreshScoutCandidates();
     // 新規開始時もキャンプの判断から始まる。
     _save!.preseasonCampPending = true;
@@ -1130,7 +1190,7 @@ class GameState extends ChangeNotifier {
     _save = restored;
     _repairLoadedSave(restored);
     _migrateDivisionPyramidIfNeeded();
-    transferMarket = TransferMarket.generate();
+    transferMarket = TransferMarket.generate(home: currentLeagueTheme);
     _refreshScoutCandidates();
     _notify();
     await _persistNow();
@@ -1177,15 +1237,12 @@ class GameState extends ChangeNotifier {
   static const int tacticalMeetingCooldownWeeks = 3;
 
   /// ローン(期限付き移籍)で移籍市場の選手を獲得する。頭金は移籍金の2割、
-  /// 週俸は6割に軽減される代わりに20週で自動的にチームを離れる。
+  /// 週俸は6割に軽減される代わりに、決めた日(半年なら冬の窓が開く日、
+  /// 1年ならシーズン末)で自動的にチームを離れる。
   static const int loanFeeRatioPercent = 20;
-  static const int loanDurationWeeks = 20;
 
   /// 買取オプション付きローンの場合の買取金額(移籍金に対する割合)。
   static const double loanBuyOptionRatio = 0.6;
-
-  static const int loanOutMinWeeks = 4;
-  static const int loanOutMaxWeeks = 16;
 
   int _incomingOfferSeq = 0;
 

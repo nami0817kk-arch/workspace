@@ -101,19 +101,22 @@ void main() {
   });
 
   group('3. 移籍期限', () {
-    test('開幕前は締切が近いものとして扱う', () async {
+    test('開幕前は夏の窓が開いていて、締切までの日数が見える', () async {
       final game = GameState();
       await game.startNewGame('テストFC');
       expect(game.isTransferWindowOpen, isTrue);
-      expect(game.transferWindowMatchdaysLeft, isNotNull,
+      expect(game.transferWindowDaysLeft, isNotNull,
           reason: '締切が見えないと、動けるうちに動く判断ができない');
     });
 
-    test('締切の節かどうかが分かる', () async {
+    test('締切日かどうかが分かる', () async {
       final game = GameState();
       await game.startNewGame('テストFC');
-      expect(game.isTransferDeadlineMatchday,
-          game.transferWindowMatchdaysLeft == 1);
+      // 7月1日。締切(9月1日)はまだ先で、次の試合も締切より前。
+      expect(game.isTransferDeadlineDay, isFalse);
+      game.save!.today = game.transferDeadline;
+      expect(game.isTransferDeadlineDay, isTrue);
+      expect(game.transferWindowDaysLeft, 0);
     });
 
     test('駆け込みオファーは相場より高い', () {

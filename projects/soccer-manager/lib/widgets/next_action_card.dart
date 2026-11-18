@@ -51,9 +51,8 @@ class NextActionCard extends StatelessWidget {
       save,
       gameState.userTeam,
       hasSigningProposals: proposals.isNotEmpty,
-      transferDeadlineMatchdaysLeft: gameState.isTransferWindowOpen
-          ? gameState.transferWindowMatchdaysLeft
-          : null,
+      transferDeadlineDaysLeft: gameState.transferWindowDaysLeft,
+      transferDeadlineBeforeNextMatch: gameState.isTransferDeadlineDay,
     );
     if (action == null) return const SizedBox.shrink();
 

@@ -40,25 +40,31 @@ class NextActionAdvisor {
   /// 控えの契約まで急かすことになる。
   static const int keyPlayerMargin = 0;
 
-  /// [transferDeadlineMatchdaysLeft] は移籍ウィンドウが閉じるまでの残り節数
-  /// (閉じている・期限なしのときは null)。締切は移籍画面を開かないと
-  /// 見えないので、ホームからも知らせる。
+  /// [transferDeadlineDaysLeft] は移籍の窓の締切までの残り日数
+  /// (閉じているときは null)。[transferDeadlineBeforeNextMatch] は次の試合の
+  /// 前に窓が閉まるか(この節のあいだが最後の機会)。締切は移籍画面を
+  /// 開かないと見えないので、ホームからも知らせる。
   static List<NextAction> all(
     SaveGame save,
     Team team, {
-    int? transferDeadlineMatchdaysLeft,
+    int? transferDeadlineDaysLeft,
+    bool transferDeadlineBeforeNextMatch = false,
     bool hasSigningProposals = false,
   }) {
     final actions = <NextAction>[];
 
-    // 移籍の締切。過ぎると次のウィンドウまで動けない。
-    final left = transferDeadlineMatchdaysLeft;
-    if (left != null && left <= deadlineWarningMatchdays) {
+    // 移籍の締切。過ぎると次の窓まで動けない。
+    final left = transferDeadlineDaysLeft;
+    if (left != null &&
+        (left <= deadlineWarningDays || transferDeadlineBeforeNextMatch)) {
       actions.add(NextAction(
-        message: left <= 1
-            ? Tr.pick('移籍ウィンドウは今節で締切です。', 'The transfer window shuts this matchday.')
-            : Tr.pick('移籍ウィンドウの締切まであと$left節です。',
-                'The transfer window shuts in $left matchdays.'),
+        message: left <= 0
+            ? Tr.pick('今日が移籍の締切日です。', 'Today is transfer deadline day.')
+            : transferDeadlineBeforeNextMatch
+                ? Tr.pick('移籍の窓は次の試合の前に閉まります(残り$left日)。',
+                    'The transfer window shuts before the next match (${Tr.plural(left, 'day')} left).')
+                : Tr.pick('移籍の締切まで残り$left日です。',
+                    'The transfer window shuts in ${Tr.plural(left, 'day')}.'),
         target: NextActionTarget.transfer,
       ));
     }
@@ -118,18 +124,21 @@ class NextActionAdvisor {
     return actions;
   }
 
-  /// 締切の何節前から知らせるか。早すぎると毎週の雑音になる。
-  static const int deadlineWarningMatchdays = 3;
+  /// 締切の何日前から知らせるか。早すぎると毎週の雑音になる
+  /// (およそ2節ぶん)。
+  static const int deadlineWarningDays = 14;
 
   /// いま出すべき1件。何も無ければ null。
   static NextAction? top(
     SaveGame save,
     Team team, {
-    int? transferDeadlineMatchdaysLeft,
+    int? transferDeadlineDaysLeft,
+    bool transferDeadlineBeforeNextMatch = false,
     bool hasSigningProposals = false,
   }) {
     final actions = all(save, team,
-        transferDeadlineMatchdaysLeft: transferDeadlineMatchdaysLeft,
+        transferDeadlineDaysLeft: transferDeadlineDaysLeft,
+        transferDeadlineBeforeNextMatch: transferDeadlineBeforeNextMatch,
         hasSigningProposals: hasSigningProposals);
     if (actions.isEmpty) return null;
     // 損が確定しているものを先に出す。

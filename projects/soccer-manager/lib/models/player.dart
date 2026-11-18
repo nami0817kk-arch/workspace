@@ -1047,8 +1047,14 @@ class Player {
   /// [loanWeeksRemaining]が0になると自動的にチームを離れる。
   bool isLoan;
 
-  /// ローン期間の残り週数（ローン選手でない場合は0）。
+  /// ローン期間の残り週数（ローン選手でない場合は0）。旧セーブの持ち方で、
+  /// 今は[loanEndDate]で持つ。日付の無いローン(旧セーブを読んだ直後・
+  /// テストで作った選手)だけがこの週数で数える。
   int loanWeeksRemaining;
+
+  /// ローンが終わる日(この日になったら元のクラブへ戻る)。半年なら冬の窓が
+  /// 開く日、1年ならシーズン末(6月30日)。ローン選手でなければ null。
+  DateTime? loanEndDate;
 
   /// ローン契約に買取オプションが付いている場合の買取金額(万円)。
   /// ローン期間中いつでもこの金額を支払えば恒久的に完全移籍へ切り替えられる。
@@ -1076,6 +1082,25 @@ class Player {
   /// 放出中はスタメン・自動編成の対象外で、週俸は放出先クラブが負担する。
   int loanedOutWeeksRemaining;
   String? loanedOutToClubName;
+
+  /// 他クラブへ貸している選手が戻る日。日付の無い貸し出し(旧セーブ・
+  /// テストで作った選手)は[loanedOutWeeksRemaining]で数える。
+  DateTime? loanedOutUntil;
+
+  /// 貸し出しに「冬の窓で呼び戻せる」条項が付いているか。
+  bool loanRecallClause;
+
+  /// 締切の時点で登録の名簿から外れた選手か。次の窓が開くまで公式戦に
+  /// 出られない(自動編成からも外す)。
+  bool notRegistered;
+
+  /// オーナーが「締切の名簿から外す」と決めた選手か。登録の枠を超えて
+  /// いるときだけ効く(超えていなければ誰も外さない)。
+  bool leaveOffRegistration;
+
+  /// 移籍市場の選手が今いる国([LeagueTheme]の name)。18歳未満は国を
+  /// またいで移れないので、自国以外の18歳未満は獲れない。
+  String? originLeague;
 
   /// 移籍市場にスカウティング候補として掲載されている選手の現所属クラブ名
   /// (表示専用。自クラブの選手・フリーエージェントにはnull)。
@@ -1210,6 +1235,12 @@ class Player {
     this.isTransferListed = false,
     this.loanedOutWeeksRemaining = 0,
     this.loanedOutToClubName,
+    this.loanedOutUntil,
+    this.loanRecallClause = false,
+    this.notRegistered = false,
+    this.leaveOffRegistration = false,
+    this.originLeague,
+    this.loanEndDate,
     this.originClubName,
     this.appearanceFee = 0,
     this.role = PlayerRole.standard,
@@ -1451,6 +1482,12 @@ class Player {
     put('isTransferListed', isTransferListed, false);
     put('loanedOutWeeksRemaining', loanedOutWeeksRemaining, 0);
     put('loanedOutToClubName', loanedOutToClubName, null);
+    put('loanedOutUntil', _dateToJson(loanedOutUntil), null);
+    put('loanRecallClause', loanRecallClause, false);
+    put('notRegistered', notRegistered, false);
+    put('leaveOffRegistration', leaveOffRegistration, false);
+    put('originLeague', originLeague, null);
+    put('loanEndDate', _dateToJson(loanEndDate), null);
     put('originClubName', originClubName, null);
     put('appearanceFee', appearanceFee, 0);
     put('role', role.name, PlayerRole.standard.name);
@@ -1470,6 +1507,21 @@ class Player {
     put('trait', trait?.name, null);
     put('growthType', growthType.name, PlayerGrowthType.balanced.name);
     return json;
+  }
+
+  /// 日付を「2026-08-15」の形で書き出す(時刻は持たない)。
+  static String? _dateToJson(DateTime? d) => d == null
+      ? null
+      : '${d.year.toString().padLeft(4, '0')}-'
+          '${d.month.toString().padLeft(2, '0')}-'
+          '${d.day.toString().padLeft(2, '0')}';
+
+  static DateTime? _dateFromJson(Object? raw) {
+    if (raw is! String) return null;
+    final parsed = DateTime.tryParse(raw);
+    return parsed == null
+        ? null
+        : DateTime(parsed.year, parsed.month, parsed.day);
   }
 
   factory Player.fromJson(Map<String, dynamic> json) {
@@ -1560,6 +1612,12 @@ class Player {
       isTransferListed: json['isTransferListed'] as bool? ?? false,
       loanedOutWeeksRemaining: json['loanedOutWeeksRemaining'] as int? ?? 0,
       loanedOutToClubName: json['loanedOutToClubName'] as String?,
+      loanedOutUntil: _dateFromJson(json['loanedOutUntil']),
+      loanRecallClause: json['loanRecallClause'] as bool? ?? false,
+      notRegistered: json['notRegistered'] as bool? ?? false,
+      leaveOffRegistration: json['leaveOffRegistration'] as bool? ?? false,
+      originLeague: json['originLeague'] as String?,
+      loanEndDate: _dateFromJson(json['loanEndDate']),
       originClubName: json['originClubName'] as String?,
       appearanceFee: json['appearanceFee'] as int? ?? 0,
       role: enumFromName(

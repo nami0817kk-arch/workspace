@@ -784,6 +784,10 @@ class _SquadScreenState extends State<SquadScreen> {
                                                   ? Tr.pick(
                                                       '${p.loanedOutToClubName}へローン放出中（あと${p.loanedOutWeeksRemaining}週）',
                                                       'On loan at ${p.loanedOutToClubName} (${Tr.plural(p.loanedOutWeeksRemaining, 'week')} left)')
+                                                  : p.notRegistered
+                                                  ? Tr.pick(
+                                                      '登録外（次の移籍の窓まで公式戦に出られない）',
+                                                      'Not registered (ineligible until the next window)')
                                                   : Tr.pick(
                                                       // 総合力は右端に大きく出している。ここに重ねて書くと、
                                                       // 同じ数字が1行に2回並ぶうえ、行が長くなって
@@ -793,7 +797,8 @@ class _SquadScreenState extends State<SquadScreen> {
                                   style: (p.isInjured ||
                                           p.isSuspended ||
                                           p.isOnInternationalDuty ||
-                                          p.isLoanedOut)
+                                          p.isLoanedOut ||
+                                          p.notRegistered)
                                       ? const TextStyle(color: Colors.redAccent)
                                       : (!p.isLoan &&
                                               p.contractYearsRemaining <= 1)
