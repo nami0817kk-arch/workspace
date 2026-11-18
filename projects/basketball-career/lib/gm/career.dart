@@ -903,11 +903,72 @@ class Career {
         } else {
           p.morale = (p.morale - 6).clamp(0, 100);
         }
+      case MsgKind.storyContract:
+        if (choice == 0) {
+          p.morale = (p.morale + (10 * w).round()).clamp(0, 100);
+        } else {
+          // 結果で見せると燃える: 気持ちは少し下がるが、延長で上乗せを求めない
+          p.morale = (p.morale - 3).clamp(0, 100);
+          if (!hungry.contains(p.id)) hungry = [...hungry, p.id];
+        }
+      case MsgKind.storyRookie:
+        if (choice == 0) {
+          final order = [for (final x in me.order) x.id]..remove(p.id);
+          order.insert(5.clamp(0, order.length), p.id);
+          me.rotation = order;
+          p.morale = (p.morale + (10 * w).round()).clamp(0, 100);
+        } else {
+          p.pot = (p.pot + 2).clamp(0, 100);
+          p.morale = (p.morale - 4).clamp(0, 100);
+        }
+      case MsgKind.storyVeteran:
+        if (choice == 0) {
+          if (!stayIds.contains(p.id)) stayIds = [...stayIds, p.id];
+          p.morale = (p.morale + 5).clamp(0, 100);
+        }
       case MsgKind.info:
       case MsgKind.press:
       case MsgKind.ownerGoal:
       case MsgKind.scoutFocus:
         break;
+    }
+  }
+
+  /// 今季すでに出来事が起きた自分の選手(1人に1シーズン1回)。
+  List<int> storyIds = [];
+
+  /// もう1年と頼まれた選手(このオフは引退しない)。
+  List<int> stayIds = [];
+
+  /// 契約最終年で「結果を見てから」と言われた選手(延長で上乗せを求めない)。
+  List<int> hungry = [];
+
+  /// 選手の出来事(区切りのあと、1区切りに1つまで。乱数は使わない)。
+  /// 1区切り目のあと: 契約最終年の主力、2区切り目のあと: 伸び悩む新人、最後の区切りの前: 34歳以上のベテラン。
+  void _storyEvent() {
+    final roster = [for (final p in me.roster) if (!storyIds.contains(p.id)) p]..sort((a, b) => b.ovr.compareTo(a.ovr));
+    Player? first(bool Function(Player) f) => roster.where(f).firstOrNull;
+    if (block == 1) {
+      final p = first((p) => p.years == 1 && p.nextSalary == null && shown(p.ovr) >= 68);
+      if (p == null) return;
+      storyIds = [...storyIds, p.id];
+      _mail(Sender.player, '${p.name}、契約最終年に燃える',
+          '${p.name}(${p.age}歳・OVR${shown(p.ovr)})は今季で契約が切れる。「ここで結果を出して、このチームに残りたい」と話している。どう伝えるか。',
+          kind: MsgKind.storyContract, choices: const ['残ってほしいと伝える(気持ちが上がる)', '結果を見てからと伝える(気持ちは少し下がるが、延長で上乗せを求めなくなる)'], player: p.id);
+    } else if (block == 2) {
+      final p = first((p) => draftedIds.contains(p.id) && p.exp <= 1 && p.stats.gp >= 5 && p.stats.ppg < 7);
+      if (p == null) return;
+      storyIds = [...storyIds, p.id];
+      _mail(Sender.player, '${p.name}、プロの壁',
+          '新人の${p.name}は平均${p.stats.ppg.toStringAsFixed(1)}点と伸び悩み、落ち込んでいる。コーチは「出番か、練習か」と判断を求めている。',
+          kind: MsgKind.storyRookie, choices: const ['出番を増やす(控えの1番手に入れる・気持ちが上がる)', 'じっくり育てる(伸びしろ+2・気持ちは少し下がる)'], player: p.id);
+    } else if (block == blocksPerSeason - 1) {
+      final p = first((p) => p.age >= 34);
+      if (p == null) return;
+      storyIds = [...storyIds, p.id];
+      _mail(Sender.player, '${p.name}、引退を考えている',
+          '${p.age}歳の${p.name}が「今季で区切りをつけるかもしれない」と打ち明けた。若手からの信頼は厚い。',
+          kind: MsgKind.storyVeteran, choices: const ['もう1年やってほしいと頼む(このオフは引退しない)', '本人に任せる'], player: p.id);
     }
   }
 
@@ -1191,6 +1252,7 @@ class Career {
   }
 
   void _mailAfterBlock() {
+    _storyEvent();
     _makeHeadlines();
     _pressQuestion();
     final race = mvpRace(count: 5);
@@ -1692,6 +1754,8 @@ class Career {
         p.wear = 0;
         p.restGames = 0;
       }
+      storyIds = [];
+      stayIds = [];
       if (t.index != mine) _aiTrim(t);
     }
     _setModes();
@@ -2552,7 +2616,8 @@ class Career {
           if (d >= 4) news.add('${p.name}が大きく伸びた(OVR ${shown(p.ovr)})');
           if (d <= -4) news.add('${p.name}の力が落ちた(OVR ${shown(p.ovr)})');
         }
-        if (retires(p, rng)) retired.add(p);
+        // もう1年と頼まれた選手は残る(乱数の使い方は変えない)
+        if (retires(p, rng) && !(t.index == mine && stayIds.contains(p.id))) retired.add(p);
       }
       for (final p in retired) {
         t.roster.remove(p);
@@ -3850,7 +3915,7 @@ class Career {
   Ask extensionAsk(Player p) {
     final base = askOf(p, me);
     final rookie = draftedIds.contains(p.id) && p.exp <= 3;
-    final f = rookie ? 1.0 + (p.pot - p.ovr).clamp(0, 20) / 100 : 1.05;
+    final f = rookie ? 1.0 + (p.pot - p.ovr).clamp(0, 20) / 100 : (hungry.contains(p.id) ? 1.0 : 1.05);
     return Ask((base.salary * f).round().clamp(minSalary, maxSalaryFor(p.exp)), base.maxYears);
   }
 
@@ -4058,6 +4123,9 @@ class Career {
         'aga': {for (final e in agentAsks.entries) '${e.key}': e.value},
         'fp': fanPosts,
         'so': simStops,
+        'sty': storyIds,
+        'stay': stayIds,
+        'hun': hungry,
         if (rfa.isNotEmpty) 'rf': rfa,
         if (sheet != null) 'sh': sheet,
         'hy': hype,
@@ -4180,6 +4248,9 @@ class Career {
       ..agentAsks = {for (final e in ((j['aga'] as Map?) ?? const {}).entries) int.parse(e.key as String): e.value as int}
       ..fanPosts = [for (final x in (j['fp'] as List? ?? const [])) x as String]
       ..simStops = j['so'] == null ? [SimStop.offer.index, SimStop.injury.index] : [for (final x in j['so'] as List) x as int]
+      ..storyIds = [for (final x in (j['sty'] as List? ?? const [])) x as int]
+      ..stayIds = [for (final x in (j['stay'] as List? ?? const [])) x as int]
+      ..hungry = [for (final x in (j['hun'] as List? ?? const [])) x as int]
       ..rfa = [for (final x in (j['rf'] as List? ?? const [])) x as int]
       ..sheet = j['sh'] is List ? [for (final x in j['sh'] as List) x as int] : null
       ..hype = ((j['hy'] as int?) ?? 50).clamp(0, 100)
