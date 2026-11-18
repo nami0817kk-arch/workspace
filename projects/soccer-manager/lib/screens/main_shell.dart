@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../services/feedback_service.dart';
+import '../logic/calendar_engine.dart';
 import '../state/game_state.dart';
 import '../widgets/club_emblem.dart';
 import '../widgets/manager_report_card.dart';
@@ -323,8 +324,8 @@ class _FmTopBar extends StatelessWidget {
                 ),
                 Text(
                   Tr.pick(
-                      '第${league.season}季 第$matchday節・${save.currentDivisionTier}部',
-                      'Season ${league.season} MD $matchday • Tier ${save.currentDivisionTier}'),
+                      '${CalendarEngine.formatDate(gameState.today)}  第${league.season}季 第$matchday節・${save.currentDivisionTier}部',
+                      '${CalendarEngine.formatDate(gameState.today)}  Season ${league.season} MD $matchday • Tier ${save.currentDivisionTier}'),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: sub,

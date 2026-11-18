@@ -201,6 +201,8 @@ extension GameStateMatch on GameState {
     final league = _save!.league;
     final next = league.nextUnplayedFixture;
     if (next == null) return null;
+    // 今日をこの節の試合日へ進める。
+    _advanceTodayTo(dateOfMatchday(next.matchday));
 
     // 既に外側の処理(simulateAheadMatchdays等)がisBusyにしている場合は、
     // ここで自分がfalseに戻してしまわないようにする。

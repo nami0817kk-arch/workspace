@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../l10n/tr.dart';
+import '../logic/calendar_engine.dart';
 import '../logic/club_calendar_engine.dart';
 import '../state/game_state.dart';
 import '../widgets/responsive_body.dart';
@@ -44,7 +45,8 @@ class ClubCalendarScreen extends StatelessWidget {
       padding: const EdgeInsets.all(12),
       children: [
         Text(
-          Tr.pick('第${league.season}季 ・ 次は第$next節', 'Season ${league.season} • next: MD $next'),
+          Tr.pick('${CalendarEngine.formatDate(game.today)} ・ 第${league.season}季 ・ 次は第$next節',
+              '${CalendarEngine.formatDate(game.today)} • Season ${league.season} • next: MD $next'),
           style: Theme.of(context).textTheme.titleSmall,
         ),
         const SizedBox(height: 8),
@@ -67,7 +69,10 @@ class ClubCalendarScreen extends StatelessWidget {
                     ? Tr.pick('開幕前', 'Pre')
                     : events[i].matchday > total
                         ? Tr.pick('終了時', 'End')
-                        : Tr.pick('第${events[i].matchday}節', 'MD ${events[i].matchday}'),
+                        : Tr.pick(
+                            '第${events[i].matchday}節\n${CalendarEngine.formatShortDate(game.dateOfMatchday(events[i].matchday))}',
+                            'MD ${events[i].matchday}\n${CalendarEngine.formatShortDate(game.dateOfMatchday(events[i].matchday))}'),
+                textAlign: TextAlign.right,
                 style: Theme.of(context).textTheme.bodySmall,
               ),
             ),

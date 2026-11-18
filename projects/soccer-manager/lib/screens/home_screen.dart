@@ -217,6 +217,10 @@ class HomeScreen extends StatelessWidget {
                                       ),
                                     ),
                                     const SizedBox(width: 8),
+                                    _BandPill(
+                                        text: CalendarEngine.formatDate(
+                                            gameState.today)),
+                                    const SizedBox(width: 6),
                                     // 布陣は監督が決めるので、オーナーの帯には出さない。
                                     _BandPill(
                                         text: Tr.pick('S${league.season}',
@@ -1639,9 +1643,10 @@ class _ThisWeekCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final today = gameState.currentDate;
-    final dateLabel =
-        '${today.month}/${today.day}(${CalendarEngine.weekdayLabel(today.weekday)})';
+    final dateLabel = CalendarEngine.formatShortDate(gameState.today);
+    final nextDate = gameState.nextMatchDate;
+    final nextDateLabel =
+        nextDate == null ? '' : CalendarEngine.formatShortDate(nextDate);
     String matchLine;
     if (next == null) {
       matchLine = Tr.pick('リーグ戦は今シーズン終了しています', 'The league season is over');
@@ -1655,8 +1660,8 @@ class _ThisWeekCard extends StatelessWidget {
       );
       final derby = gameState.isRivalFixture(next!);
       matchLine = Tr.pick(
-          '第${next!.matchday}節 ${isHome ? '(H)' : '(A)'} vs ${opponent.name}${derby ? ' ・ダービー' : ''}',
-          "Matchday ${next!.matchday} ${isHome ? '(H)' : '(A)'} vs ${opponent.name}${derby ? ' • derby' : ''}");
+          '$nextDateLabel 第${next!.matchday}節 ${isHome ? '(H)' : '(A)'} vs ${opponent.name}${derby ? ' ・ダービー' : ''}',
+          "$nextDateLabel Matchday ${next!.matchday} ${isHome ? '(H)' : '(A)'} vs ${opponent.name}${derby ? ' • derby' : ''}");
     }
 
     return Card(

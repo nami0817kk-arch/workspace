@@ -8,6 +8,7 @@ import 'package:soccer_manager/l10n/tr.dart';
 import 'package:soccer_manager/logic/achievement_engine.dart';
 import 'package:soccer_manager/logic/ai_transfer_engine.dart';
 import 'package:soccer_manager/logic/calendar_engine.dart';
+import 'package:soccer_manager/logic/season_calendar.dart';
 import 'package:soccer_manager/logic/awards_engine.dart';
 import 'package:soccer_manager/logic/best_eleven_engine.dart';
 import 'package:soccer_manager/logic/board_engine.dart';
@@ -6684,17 +6685,16 @@ void main() {
   });
 
   test(
-      'CalendarEngine.seasonAnchor and dateForMatchday always land on a '
-      'Saturday, exactly 7 days apart per matchday', () {
+      'SeasonCalendar opens each season on a Saturday and keeps every '
+      'matchday after the previous one', () {
     for (final season in [1, 2, 3, 10]) {
-      final anchor = CalendarEngine.seasonAnchor(season);
-      expect(anchor.weekday, DateTime.saturday);
-
-      final md1 = CalendarEngine.dateForMatchday(season, 1);
-      final md2 = CalendarEngine.dateForMatchday(season, 2);
-      expect(md1, anchor);
-      expect(md2.weekday, DateTime.saturday);
-      expect(md2.difference(md1).inDays, 7);
+      final cal = SeasonCalendar.build(
+          season: season, theme: LeagueTheme.england, totalMatchdays: 38);
+      expect(cal.dateForMatchday(1).weekday, DateTime.saturday);
+      for (var md = 2; md <= 38; md++) {
+        expect(cal.dateForMatchday(md).isAfter(cal.dateForMatchday(md - 1)),
+            isTrue);
+      }
     }
   });
 
@@ -6712,7 +6712,7 @@ void main() {
       season: 1,
     );
 
-    final matchDate = CalendarEngine.dateForMatchday(1, 1);
+    final matchDate = CalendarEngine.calendarFor(league).dateForMatchday(1);
     // トレーニング曜日をあえて試合日と同じ曜日に設定し、試合日が優先され
     // 二重にマークされないことを確認する。
     final days = CalendarEngine.buildRange(
@@ -6758,7 +6758,7 @@ void main() {
       ],
       lastPlayedAtMatchday: 2,
     );
-    final eligibleDate = CalendarEngine.dateForMatchday(1, 3);
+    final eligibleDate = CalendarEngine.calendarFor(league).cupDateBefore(3);
 
     final days = CalendarEngine.buildRange(
       from: eligibleDate.subtract(const Duration(days: 3)),
@@ -10101,7 +10101,7 @@ void main() {
     final save = gameState.save!;
     expect(save.friendlies, isNotEmpty, reason: '新規ゲームでプレシーズン親善試合が生成されていない');
 
-    final anchor = CalendarEngine.seasonAnchor(save.league.season);
+    final anchor = gameState.dateOfMatchday(1);
     final days = CalendarEngine.buildRange(
       from: anchor.subtract(const Duration(days: 30)),
       to: anchor.add(const Duration(days: 7)),
@@ -10110,6 +10110,7 @@ void main() {
       trainingDayOfWeek: gameState.userTeam.trainingDayOfWeek,
       today: anchor,
       friendlies: save.friendlies,
+      calendar: gameState.seasonCalendar,
     );
 
     final friendlyDays = days.where((d) => d.isFriendlyMatchDay).toList();
@@ -10130,6 +10131,7 @@ void main() {
       trainingDayOfWeek: gameState.userTeam.trainingDayOfWeek,
       today: anchor,
       friendlies: const [],
+      calendar: gameState.seasonCalendar,
     );
     expect(playedAll.any((d) => d.isFriendlyMatchDay), isFalse);
 

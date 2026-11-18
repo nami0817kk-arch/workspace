@@ -62,7 +62,7 @@ import '../models/match_result.dart';
 import '../models/weather.dart';
 import '../logic/achievement_engine.dart';
 import '../logic/ai_transfer_engine.dart';
-import '../logic/calendar_engine.dart';
+import '../logic/season_calendar.dart';
 import '../logic/awards_engine.dart';
 import '../logic/background_match_engine.dart';
 import '../logic/best_eleven_engine.dart';
@@ -594,6 +594,8 @@ class GameState extends ChangeNotifier {
     save.renumberDuplicatePlayerIds(PlayerGenerator.nextPlayerId);
     _dropDanglingJobOffer(save);
     _migrateEconomyIfNeeded(save);
+    // 今日の日付を持たない旧セーブは、ここで日付を作る。
+    save.today ??= _rebuiltToday();
   }
 
   /// お金の桁を部ごとに変える前(版1)のセーブを、一度だけ新しい桁に直す。
@@ -1072,6 +1074,7 @@ class GameState extends ChangeNotifier {
     _refreshScoutCandidates();
     // 新規開始時もキャンプの判断から始まる。
     _save!.preseasonCampPending = true;
+    _save!.today = SeasonCalendar.preseasonDate(league.season);
     // 開始時は全役職が空席。誰を先に雇うかが最初の判断になる。
     _refreshStaffCandidates();
     FreeAgentEngine.topUp(_save!.freeAgents);

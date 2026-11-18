@@ -608,6 +608,8 @@ extension GameStateFinance on GameState {
     save.continentalCup = null;
     save.continentalTeams = [];
     save.friendlies = _generateFriendlies(mine.teams, 'user');
+    // 新しい国のリーグは開幕前から始まる。日付もそのシーズンのオフに戻す。
+    save.today = SeasonCalendar.preseasonDate(save.league.season);
     final rival = cpuInMine[rng.nextInt(cpuInMine.length)];
     save.rivalTeamId = rival.id;
     save.rivalTeamName = rival.name;
