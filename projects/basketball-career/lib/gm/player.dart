@@ -236,6 +236,8 @@ class Player {
     this.injured = 0,
     this.injPart = -1,
     this.injCount = 0,
+    this.wear = 0,
+    this.restGames = 0,
     this.allStars = 0,
     this.nextSalary,
     this.optionYears = 0,
@@ -305,6 +307,13 @@ class Player {
 
   /// これまでのけがの回数(繰り返すとけがしがちと言われる)。
   int injCount;
+
+  /// シーズンの疲れ(0〜100。自分のチームの選手だけ数える)。出場時間が長いほど、年が上なほどたまり、休むと抜ける。
+  /// たまるとけがしやすく、[wearSlumpLine] を超えるとシュートも入りにくい。
+  int wear;
+
+  /// 今季、疲れで休ませた試合の数。
+  int restGames;
 
   /// 今のけがの重さ(軽い・中くらい・重い)。
   String get injurySeverity => injured <= 3 ? '軽い' : injured <= 14 ? '中くらい' : '重い';
@@ -402,6 +411,8 @@ class Player {
         if (injured != 0) 'in': injured,
         if (injPart != -1) 'ip': injPart,
         if (injCount != 0) 'ic': injCount,
+        if (wear != 0) 'wr': wear,
+        if (restGames != 0) 'rg': restGames,
         if (allStars != 0) 'as': allStars,
         if (nextSalary != null) 'ns': nextSalary,
         if (optionYears != 0) 'op': optionYears,
@@ -434,6 +445,8 @@ class Player {
         injured: ((j['in'] as int?) ?? 0).clamp(0, 99),
         injPart: ((j['ip'] as int?) ?? -1).clamp(-1, 99),
         injCount: ((j['ic'] as int?) ?? 0).clamp(0, 99),
+        wear: ((j['wr'] as int?) ?? 0).clamp(0, 100),
+        restGames: ((j['rg'] as int?) ?? 0).clamp(0, 82),
         allStars: (j['as'] as int?) ?? 0,
         nextSalary: j['ns'] as int?,
         optionYears: ((j['op'] as int?) ?? 0).clamp(0, 4),

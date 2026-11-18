@@ -122,6 +122,29 @@ const totalMinutes = 240;
 const maxMinutes = 44;
 const fatigueLine = 36;
 
+/// シーズンの疲れ([Player.wear])。この線から上で「疲れ」と出し、休ませる設定の選手はこの線で1試合休む。
+const wearRestLine = 50;
+
+/// 疲れがこの線を超えると、シュートが入りにくくなる(ふつうの出場時間では届かない)。
+const wearSlumpLine = 70;
+
+/// 疲れによる、けがの起きやすさの倍率(疲れ0で0.6倍、50で1.0倍、100で1.4倍)。
+double wearInjury(Player p) => 0.6 + p.wear / 100 * 0.8;
+
+/// 疲れによる、シュートの入る見込みの下がり(線を超えた分。100で-6%)。
+double wearSlump(Player p) => p.wear <= wearSlumpLine ? 0 : (p.wear - wearSlumpLine) * 0.002;
+
+/// 1試合のあとの疲れ([order] は試合のときの並び、[mins] はその順の出場時間)。出た分だけたまり(31歳から年ごとに5%ずつ多く)、毎試合1割抜ける。出なかった試合は4分の1抜ける。
+/// 乱数は使わない。
+void updateWear(List<Player> order, List<int> mins) {
+  for (var i = 0; i < order.length && i < mins.length; i++) {
+    final p = order[i];
+    final m = mins[i];
+    final age = 1 + math.max(0, p.age - 30) * 0.05;
+    p.wear = (m <= 0 ? p.wear * 0.75 : p.wear * 0.9 + m * 0.16 * age).round().clamp(0, 100);
+  }
+}
+
 /// チームの考え方。トレードで欲しがるものが変わる。
 enum TeamMode {
   contend('優勝を狙う', '今すぐ勝てる選手が欲しい'),
@@ -704,7 +727,7 @@ const minutesByOrder = [34, 33, 32, 30, 28, 22, 18, 14, 10, 8, 6, 3, 2, 0, 0];
 }
 
 /// 試合のあとの、けがの残りとけがの抽選(トレーナーが良いほど少なく、治りも早い)。[mins] は実際に出た分。
-void injuriesAfterGame(Team t, List<int> mins, Rng rng, {bool count = true, double injuryScale = 1.0, double healScale = 1.0}) {
+void injuriesAfterGame(Team t, List<int> mins, Rng rng, {bool count = true, double injuryScale = 1.0, double healScale = 1.0, bool wear = false}) {
   final order = t.order;
   final trainer = t.staffLevel(Staff.trainer);
   // 練習がきついほど、けがが増える
@@ -714,7 +737,7 @@ void injuriesAfterGame(Team t, List<int> mins, Rng rng, {bool count = true, doub
     final p = order[i];
     if (p.injured > 0) {
       p.injured--;
-    } else if (count && mins[i] > 0 && rng.nextInt(100000) < (chance * mins[i] / 30 * (1 + math.max(0, mins[i] - fatigueLine) * 0.1) * 100000).round()) {
+    } else if (count && mins[i] > 0 && rng.nextInt(100000) < (chance * (wear ? wearInjury(p) : 1.0) * mins[i] / 30 * (1 + math.max(0, mins[i] - fatigueLine) * 0.1) * 100000).round()) {
       final r = rng.nextInt(100);
       final games = r < 80 ? 1 + rng.nextInt(6) : r < 97 ? 8 + rng.nextInt(15) : 30 + rng.nextInt(30);
       p.injured = math.max(1, (games * speed).round());
@@ -742,8 +765,12 @@ GameResult playGame(Team home, Team away, Rng rng, {int? mine, bool count = true
     addSeasonStats(h);
     addSeasonStats(a);
   }
-  injuriesAfterGame(home, [for (var i = 0; i < h.order.length; i++) minutesOf(h, i)], rng, count: count, injuryScale: mine == home.index ? injuryScale : 1.0, healScale: mine == home.index ? healScale : 1.0);
-  injuriesAfterGame(away, [for (var i = 0; i < a.order.length; i++) minutesOf(a, i)], rng, count: count, injuryScale: mine == away.index ? injuryScale : 1.0, healScale: mine == away.index ? healScale : 1.0);
+  final hMins = [for (var i = 0; i < h.order.length; i++) minutesOf(h, i)], aMins = [for (var i = 0; i < a.order.length; i++) minutesOf(a, i)];
+  injuriesAfterGame(home, hMins, rng, count: count, injuryScale: mine == home.index ? injuryScale : 1.0, healScale: mine == home.index ? healScale : 1.0, wear: count && mine == home.index);
+  injuriesAfterGame(away, aMins, rng, count: count, injuryScale: mine == away.index ? injuryScale : 1.0, healScale: mine == away.index ? healScale : 1.0, wear: count && mine == away.index);
+  // シーズンの疲れは自分のチームだけ数える(レギュラーシーズンの試合)
+  if (count && mine == home.index) updateWear(h.order, hMins);
+  if (count && mine == away.index) updateWear(a.order, aMins);
   String? topName;
   var topPts = 0;
   if (isMine) {

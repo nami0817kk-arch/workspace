@@ -277,6 +277,7 @@ class ProgressTab extends StatelessWidget {
       _pressCard(car),
       _goalsCard(car),
       ..._injuryCard(car),
+      ..._wearCard(car),
       // 試合の結果を先に見せ、経営はそのあと
       if (car.lastGames.isNotEmpty)
         _card([
@@ -378,6 +379,35 @@ class ProgressTab extends StatelessWidget {
         _head('けが人', icon: Icons.healing_rounded, color: GmColors.bad),
         const SizedBox(height: 4),
         for (final p in hurt) Text('・${p.name}(${p.pos.short}・OVR${shown(p.ovr)}) あと${p.injured}試合', style: const TextStyle(height: 1.6)),
+      ]),
+    ];
+  }
+
+  /// 疲れがたまっている自分の選手。休ませるかをその場で決められる。
+  List<Widget> _wearCard(Career car) {
+    final tired = car.tiredPlayers.where((p) => p.injured == 0).take(5).toList();
+    if (tired.isEmpty || car.phase != Phase.season) return const [];
+    return [
+      _card(edge: tired.any((p) => p.wear > wearSlumpLine) ? GmColors.bad : null, [
+        _head('疲れがたまっている', icon: Icons.battery_alert_rounded, color: GmColors.gold),
+        const SizedBox(height: 2),
+        const Text('疲れが多いほどけがしやすく、$wearSlumpLineを超えるとシュートも落ちる。休ませると、疲れが$wearRestLineに届いた試合を1つ休む。', style: TextStyle(fontSize: 11, color: GmColors.sub, height: 1.4)),
+        for (final p in tired)
+          Padding(
+            padding: const EdgeInsets.only(top: 4),
+            child: Row(children: [
+              Expanded(child: Text('${p.name}(${p.pos.short}・${p.age}歳)', maxLines: 1, overflow: TextOverflow.ellipsis)),
+              Text('疲れ${p.wear}', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: p.wear > wearSlumpLine ? GmColors.bad : GmColors.gold)),
+              const SizedBox(width: 8),
+              FilterChip(
+                visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                label: Text(car.restIds.contains(p.id) ? '休ませる(今季${p.restGames}試合)' : '休ませる', style: const TextStyle(fontSize: 11)),
+                selected: car.restIds.contains(p.id),
+                onSelected: (_) => c.toggleRest(p.id),
+              ),
+            ]),
+          ),
       ]),
     ];
   }

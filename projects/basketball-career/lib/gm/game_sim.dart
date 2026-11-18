@@ -88,7 +88,7 @@ class SimTeam {
 
   /// 試合ごとの調子を決める(試合の乱数で)。
   void rollForm(Rng r) {
-    form = [for (final p in order) (r.nextInt(2001) - 1000) / 1000 * formRange(p)];
+    form = [for (final p in order) (r.nextInt(2001) - 1000) / 1000 * formRange(p) - wearSlump(p)];
   }
 
   final Team team;

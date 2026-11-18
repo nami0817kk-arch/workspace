@@ -113,6 +113,21 @@ void main() {
       await t.ensureVisible(card);
       await t.pumpAndSettle();
     });
+    // 疲れがたまった主力(休ませる設定を1人に。もう1人は出し続けてシュートが落ちる線を超えた形)
+    final tired = careerAt(3, 12)..startSeason();
+    tired
+      ..playBlock()
+      ..playBlock();
+    final top = tired.me.order.where((p) => p.injured == 0).toList();
+    top[0].wear = max(top[0].wear, 56);
+    top[1].wear = 74;
+    tired.toggleRest(top[0].id);
+    await _shoot(t, '4g_wear', await _with(tired), act: (t) async {
+      final card = find.text('疲れがたまっている');
+      await t.scrollUntilVisible(card, 200, scrollable: find.descendant(of: find.byType(ProgressTab), matching: find.byType(Scrollable)).first);
+      await t.ensureVisible(card);
+      await t.pumpAndSettle();
+    });
     await _shoot(t, '4d_box_score', await _with(careerAt(3, 12)..startSeason()), act: (t) async {
       await _tap(t, '次の20試合へ');
       await t.pumpAndSettle();
