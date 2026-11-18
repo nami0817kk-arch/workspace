@@ -1,0 +1,302 @@
+# 物語型の本編の見た目と絵の割り当て：上杉景勝と直江兼続のその後（scripts/uesugi-sonogo-story.yaml）。chiso/storymain.py が読む。
+# 11-18 作成（11/23 19:00 公開予定）。atsuhime_main_look.yaml を写した。絵は Gemini（Chrome）で作った写実の油彩の歴史画（暗すぎない光）。
+# 時代の考証：1601〜1620年代の米沢城は天守の無い平城（土塁と堀、板塀、木の櫓）。白壁の高い天守は描かせない。町は茅葺・板葺の低い家。
+# 実在の絵（パブリックドメイン）は額（frame:）で：上杉景勝像・直江兼続像・徳川家康像・大坂城仕寄之図・前田慶次の浮世絵。
+script: scripts/uesugi-sonogo-story.yaml
+out: uesugi_story_main
+art_dir: out/story/uesugi/main
+main_art_dir: out/story/uesugi/main
+ai_disclosure: この動画の情景の画像は、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+chapters:
+  0:
+    label: 序章 6千人の町に3万人
+    now: null
+    dates: {}
+  1:
+    label: 第1章 景勝はどう謝ったのか
+    now: 1600年
+    dates:
+      16: 慶長6年7月
+      20: 慶長6年8月16日
+      23: 慶長6年
+      24: 慶長6年10月4日
+      25: null
+  2:
+    label: 第2章 家臣はどこに住んだのか
+    now: 慶長6年
+    dates:
+      30: 慶長6年10月16日
+      31: null
+      34: 慶長6年
+      38: null
+      39: 慶長7年2月
+      41: 天保11年
+      43: null
+      45: 慶長7年
+      47: null
+  3:
+    label: 第3章 兼続は山の上から何を見たのか
+    now: null
+    dates:
+      57: 慶長14年夏
+      58: 慶長14年
+      59: null
+      63: 文化9年
+      65: null
+  4:
+    label: 第4章 なぜ家康の重臣の息子を婿にしたのか
+    now: 慶長9年
+    dates:
+      72: 慶長9年5月5日
+      73: 慶長9年8月
+      75: null
+      78: 慶長14年
+      80: 慶長14年6月
+      83: 慶長16年
+      84: null
+  5:
+    label: 第5章 30万石の家老は何を残そうとしたのか
+    now: 慶長12年
+    dates:
+      89: null
+      92: 元和4年
+      94: 明治42年
+      96: 延享2年
+      98: null
+  6:
+    label: 第6章 兼続と景勝はどう最期を迎えたのか
+    now: 慶長19年11月
+    dates:
+      102: 元和元年7月12日
+      105: 元和5年12月
+      106: null
+      111: 元和9年3月20日
+      112: null
+      116: 寛永2年
+      117: 寛永6年
+      120: null
+  7:
+    label: まとめ なぜ上杉家は続いたのか
+    now: null
+    dates: {}
+no_tag_from: 129
+references:
+- 木村徳衛『直江兼續伝』（1944年。『景勝卿記』・兼続の覚書・鎌田政近の書状・本多家譜・『軒の玉水』などを引く）　https://dl.ndl.go.jp/pid/1057882/1/212
+- 『大日本史料』第12編之32（1935年。『上杉年譜』『上杉家記』『上杉家中諸士略系譜』『米沢地名選』『郡村誌』を収録）　https://dl.ndl.go.jp/pid/3450652/1/40
+- 長井政太郎「上杉藩の郷士聚落の研究」（郷土研究叢書 第6輯、1936年）　https://dl.ndl.go.jp/pid/1216631/1/18
+- 『米沢古誌類纂』（1908年）所収『米沢事跡考』
+- 『史料綜覧』巻16（1957年）元和9年3月20日条
+- 大槻磐渓『近古史談』（1864年初版）・岡谷繁実『名将言行録』
+- 山形大学附属図書館・附属博物館『直江兼続とその時代展 PartⅡ』解説（2009年）　https://www.lib.yamagata-u.ac.jp/database/nakajo/kaisetsu/Kj_nakajyouke_naoe2009.pdf
+- 市立米沢図書館の展示解説（直江版文選・亀岡百首・集古十種の肖像）
+- 米沢市上杉博物館 年報 VOL.36（2024年）・特別展「直江兼続」（2018年）の紹介
+- 国土交通省 東北地方整備局 山形河川国道事務所「川べりの史跡（置賜の歴史）」　https://www.thr.mlit.go.jp/yamagata/river/rekishi/janru01.html
+- 山形県 文化財保護審議会資料（林泉寺の墓所、2019年）・置賜の観光資源の紹介
+- 米沢市の観光の冊子・文化財の一覧
+credits:
+  paintings/mitsunari_uesugi_kagekatsu_armor.jpg: 《上杉景勝像》（部分、17世紀。米沢市上杉博物館蔵。パブリックドメイン）
+  paintings/mitsunari_naoe_kanetsugu_portrait.jpg: 《直江兼続像》（パブリックドメイン）
+  paintings/sekigahara_tokugawa_ieyasu.jpg: 《徳川家康像》17世紀（パブリックドメイン）
+  paintings/ieyasu_osaka_winter_siege_map_1614.jpg: 《大坂城仕寄之図》（江戸時代。パブリックドメイン）
+  paintings/toshiie_portrait_keiji.jpg: 前田慶次（江戸時代の浮世絵・想像図。パブリックドメイン）
+ai:
+  U01: {scene: 1601年秋の米沢盆地、天守の無い低い平城と茅葺の町、城下へ入る家臣と家族の長い列（遠景）, pan: h, crops: &id001 {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  U02: {scene: 秋の山の峠道を荷を背負い馬を引いて進む武士の家族の列, pan: h, crops: *id001}
+  U03: {scene: 茅葺の家が並ぶ狭い町の通りにあふれる、荷を抱えた武士の家族, pan: h, crops: *id001}
+  U04: {scene: 書院に座る厳しい顔の年配の大名と、そばに控える背の高い家老（夕方の光）, pan: zoom, crops: {wide: [1.15, 0.5, 0.45], left: [1.2, 0.38, 0.42], right: [1.2, 0.62, 0.42]}}
+  U05: {scene: 1601年夏、伏見の武家屋敷の門に着く小さな騎馬の一行, pan: h, crops: *id001}
+  U06: {scene: 大坂城の広間、上段の遠くの影と、頭を下げる武士の後ろ姿, pan: h, crops: *id001}
+  U07: {scene: 文机で筆を執る武士の手元と書状、障子の昼の光, pan: h, crops: *id001}
+  U08: {scene: 京の座敷で懐紙を囲んで句を詠む武士たち（秋の昼）, pan: h, crops: *id001}
+  U10: {scene: 城下の外れの荒れ地を耕す下級の武士、畦に置いた刀、茅葺の家と山, pan: h, crops: *id001}
+  U11: {scene: 2月の雪の野を荷を背負って茅葺の家へ向かう武士の家族, pan: h, crops: *id001}
+  U12: {scene: 山の上に立ち、川と小さな城下町を見下ろす武士の後ろ姿, pan: h, crops: *id001}
+  U13: {scene: 大雨で茶色く濁ってあふれる川と、流される畑, pan: h, crops: *id001}
+  U14: {scene: 川べりで河原の石を積み上げて堤を築く大勢の人足と武士, pan: h, crops: *id001}
+  U15: {scene: 刀を差したまま鍬をふるって堰（用水路）を掘る武士たち, pan: h, crops: *id001}
+  U16: {scene: 城下の細い堀を流れる薪の束と、岸の板葺の家, pan: h, crops: *id001}
+  U17: {scene: 土塁と広い堀に囲まれた天守の無い平城、木の三階の櫓（1610年ごろ）, pan: h, crops: *id001}
+  U18: {scene: 夏の山あいに広がる紅花の畑と、摘む農民, pan: h, crops: *id001}
+  U19: {scene: 川の取り入れ口の上の苔むした石碑（字は読めない）と木の堰, pan: v, crops: *id001}
+  U20: {scene: 洪水のあと、石積みの堤を直す大勢の藩士（江戸後期）, pan: h, crops: *id001}
+  U21: {scene: 武家屋敷の婚礼、白無垢の花嫁と紋付の若い武士（横顔）、燭台の灯, pan: h, crops: *id001}
+  U22: {scene: 朝の光の産室、赤子を抱く女中と床の母（顔は小さく）, pan: h, crops: *id001}
+  U23: {scene: 江戸城の書院で、年配の重臣の前に手をつく武士（昼）, pan: h, crops: *id001}
+  U24: {scene: 京の寺の一室で木の活字を並べて刷る僧たち、刷り上がった紙, pan: h, crops: *id001}
+  U25: {scene: 唐本と巻物が積まれた書庫の棚（昼の光）, pan: v, crops: *id001}
+  U26: {scene: 禅寺の講堂で僧のもと書物を読む少年たち, pan: h, crops: *id001}
+  U27: {scene: 1614年冬、大坂の川べりの戦い、旗と鉄砲の煙（紋なし）, pan: h, crops: {wide: [1.6, 0.5, 0.72], left: [1.6, 0.4, 0.72], right: [1.6, 0.6, 0.72]}}
+  U28: {scene: 夕暮れの雪の江戸の武家屋敷の庭と灯籠, pan: h, crops: *id001}
+  U29: {scene: 屋敷の庭の木の上で頭巾をかぶった猿、縁側に座る大名の後ろ姿, pan: h, crops: *id001}
+  U30: {scene: 高野山の杉木立の中の小さな木の塔（昼）, pan: v, crops: *id001}
+  U31: {scene: 杉木立に並ぶ銅屋根の霊屋（上杉家廟所、昼）, pan: h, crops: *id001}
+  U32: {scene: 雪の寺の墓所に並ぶ古い石の墓（昼）, pan: h, crops: *id001}
+  UEND: {scene: 秋の米沢盆地の遠景（終了画面、右半分に空）, pan: h, lock: [1.0, 0.5, 0.5]}
+paint_fx: {}
+shots:
+# 序章（0〜10）
+- 0 ai:U01 wide
+- 1 ai:U02 wide
+- 2 frame:paintings/mitsunari_uesugi_kagekatsu_armor.jpg
+- 3 ai:U03 wide
+- 4 ai:U17 wide
+- 5 ai:U14 wide
+- 6 frame:paintings/mitsunari_naoe_kanetsugu_portrait.jpg
+- 7 ai:U04 wide
+- 8 ai:U03 right
+- 9 ai:U12 wide            # 覚えてほしい名前（9）の下地
+- 10 ai:U05 wide
+# 第1章（11〜26）
+- 11 ai:U02 left
+- 12 frame:paintings/sekigahara_tokugawa_ieyasu.jpg
+- 13 ai:U05 left
+- 14 ai:U06 wide            # 図：取りなし
+- 15 ai:U23 wide
+- 16 ai:U05 right
+- 17 ai:U07 wide
+- 18 ai:U05 wide
+- 19 ai:U04 right
+- 20 ai:U06 right
+- 21 ai:U01 left            # 図：会津から米沢へ
+- 22 ai:U01 right           # 図：石高
+- 23 frame:paintings/mitsunari_naoe_kanetsugu_portrait.jpg
+- 24 ai:U08 wide
+- 25 ai:U03 left
+- 26 ai:U04 left
+# 第2章（27〜48）
+- 27 ai:U07 left
+- 28 ai:U07 right           # 史料の札（覚書）
+- 29 ai:U02 right
+- 30 ai:U07 wide
+- 31 ai:U03 wide
+- 32 ai:U02 left            # 史料の札（景勝卿記）
+- 33 ai:U03 right
+- 34 ai:U17 left
+- 35 ai:U17 right
+- 36 ai:U01 wide            # 図：6,027と3万
+- 37 ai:U03 left
+- 38 ai:U10 wide
+- 39 ai:U11 wide
+- 40 ai:U10 left
+- 41 ai:U11 left            # 史料の札（旅日記）
+- 42 ai:U10 right
+- 43 ai:U18 wide
+- 44 frame:paintings/toshiie_portrait_keiji.jpg
+- 45 ai:U08 left
+- 46 ai:U03 wide
+- 47 ai:U13 wide
+- 48 ai:U12 left
+# 第3章（49〜66）
+- 49 ai:U13 left
+- 50 ai:U12 wide            # 史料の札（軒の玉水）
+- 51 ai:U14 left
+- 52 ai:U14 right
+- 53 ai:U13 right
+- 54 ai:U19 wide
+- 55 ai:U15 wide
+- 56 ai:U16 wide
+- 57 ai:U16 left
+- 58 ai:U03 right
+- 59 ai:U17 left
+- 60 ai:U17 right
+- 61 ai:U18 left
+- 62 ai:U19 wide
+- 63 ai:U20 wide
+- 64 ai:U20 left
+- 65 ai:U01 wide
+- 66 ai:U04 wide
+# 第4章（67〜86）
+- 67 ai:U23 left
+- 68 ai:U07 wide            # 史料の札（本多家譜）
+- 69 ai:U04 right
+- 70 ai:U21 wide
+- 71 ai:U21 right
+- 72 ai:U22 wide
+- 73 ai:U28 wide
+- 74 ai:U28 left
+- 75 ai:U04 left
+- 76 ai:U07 right
+- 77 ai:U23 right
+- 78 ai:U21 left
+- 79 frame:paintings/sekigahara_tokugawa_ieyasu.jpg
+- 80 ai:U23 wide
+- 81 ai:U10 wide
+- 82 ai:U23 left
+- 83 ai:U05 left
+- 84 ai:U12 right
+- 85 ai:U24 left
+- 86 ai:U24 right
+# 第5章（87〜99）
+- 87 ai:U24 wide
+- 88 ai:U25 wide
+- 89 ai:U25 left
+- 90 ai:U07 wide
+- 91 ai:U25 right
+- 92 ai:U26 wide
+- 93 ai:U26 right
+- 94 ai:U25 wide
+- 95 ai:U26 wide
+- 96 ai:U07 left
+- 97 ai:U07 wide
+- 98 ai:U25 left
+- 99 ai:U12 right
+# 第6章（100〜123）
+- 100 frame:paintings/ieyasu_osaka_winter_siege_map_1614.jpg
+- 101 ai:U27 wide
+- 102 ai:U12 left
+- 103 ai:U21 right
+- 104 ai:U19 wide
+- 105 ai:U28 right
+- 106 ai:U07 left           # 図：兼続の最期
+- 107 frame:paintings/mitsunari_naoe_kanetsugu_portrait.jpg
+- 108 ai:U10 left
+- 109 ai:U10 right          # 図：兼続の禄
+- 110 ai:U07 right
+- 111 frame:paintings/mitsunari_uesugi_kagekatsu_armor.jpg
+- 112 ai:U29 left
+- 113 ai:U29 wide
+- 114 ai:U29 right          # 図：猿の書き方
+- 115 ai:U25 left
+- 116 ai:U16 left
+- 117 ai:U30 wide
+- 118 ai:U30 left
+- 119 ai:U30 left
+- 120 ai:U31 wide
+- 121 ai:U32 wide
+- 122 ai:U14 wide
+- 123 ai:U01 right
+# まとめ（124〜131）
+- 124 ai:U01 wide
+- 125 ai:U17 wide
+- 126 ai:U10 wide
+- 127 ai:U14 left
+- 128 ai:U23 wide
+- 129 ai:U32 left
+- 130 ai:U01 left
+- 131 ai:UEND wide
+- end ai:UEND wide
+focus: {}
+fx:
+  U27: {smoke: {region: [0.0, 0.0, 1.0, 0.55], alpha: 0.10, speed: 6}}
+  U13: {mist: {region: [0.0, 0.0, 1.0, 0.4], alpha: 0.08, speed: 4}}
+figures: []
+parts:
+- {type: names, from: 9, to: 9, title: この物語で覚えてほしい名前, every: 0.7,
+   items: [[上杉景勝, 謙信の跡を継いだ上杉家の当主, paintings/mitsunari_uesugi_kagekatsu_armor.jpg, [0.5, 0.3]],
+           [直江兼続, 景勝を支えた家老, paintings/mitsunari_naoe_kanetsugu_portrait.jpg, [0.5, 0.3]],
+           [本多正信, 家康の重臣, null]]}
+- {type: quote, from: 28, to: 28, label: 史料, text: 知行之儀、跡々之三分一宛／被遣候, source: 直江兼続の覚書（木村徳衛『直江兼続伝』に引用）}
+- {type: quote, from: 32, to: 32, label: 史料, text: 諸牢人散々に罷成候而／御譜代の者計御供仕, source: 『景勝卿記』（木村徳衛『直江兼続伝』に引用）}
+- {type: quote, from: 41, to: 41, label: 史料, text: 住於山野者凡八團／團二百人餘、耕耨雜作, source: 『天保庚子遊草』（長井政太郎「上杉藩の郷士聚落の研究」1936年に引用）}
+- {type: quote, from: 50, to: 50, label: 史料, text: 公自ら赤崩の山に登覽し／米澤城及び松川の形勢を觀望し, source: 木村徳衛『直江兼続伝』（1944年）}
+- {type: quote, from: 68, to: 68, label: 史料, text: 上杉景勝殿實子無之／以後男子於出生者、上杉家相續, source: 本多家譜（木村徳衛『直江兼続伝』に引用）}
+stills:
+- {line: 0, note: 冒頭（0秒）米沢へ入る列}
+- {line: 9, note: 覚えてほしい名前}
+- {line: 14, note: 取りなしの関係図}
+- {line: 32, note: 景勝卿記}
+- {line: 36, note: 6,027と3万}
+- {line: 58, note: 米沢城}
+- {line: 106, note: 兼続の最期の食い違い}
+- {line: 115, note: 猿の食い違い}
+- {end: true, note: 終了画面}

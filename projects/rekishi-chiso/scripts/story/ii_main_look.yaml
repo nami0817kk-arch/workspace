@@ -1,0 +1,274 @@
+# 物語型の本編の見た目と絵の割り当て：井伊直弼と桜田門外の変（scripts/ii-naosuke-story.yaml）。chiso/storymain.py が読む。
+# 11-18 作成（11/23 12:00 公開予定）。tsukiyama_main_look.yaml を写した。絵は Gemini（Chrome、写実の油彩）。人の顔・血・遺体は描かない。
+# 時代：1860年の江戸。桜田門は石垣と高麗門・渡櫓門（天守は描かない）、雪、黒漆の駕籠、合羽と笠の供。近代の物は描かない。
+script: scripts/ii-naosuke-story.yaml
+out: ii_story_main
+art_dir: out/story/ii/main
+main_art_dir: out/story/ii/main
+ai_disclosure: この動画の情景の画像は、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+chapters:
+  0:
+    label: 序章 大老はなぜ討たれたのか
+    now: 1860年3月3日
+    dates: {}
+  1:
+    label: 第1章 大雪の愛宕山と外桜田
+    now: 1860年3月3日
+    dates: {}
+  2:
+    label: 第2章 時計で3分の斬り合い
+    now: 1860年3月3日
+    dates: {}
+  3:
+    label: 第3章 ピストルの弾はどこに当たったのか
+    now: 1860年
+    dates:
+      46: 2018年
+      47: 1860年
+      50: 2015年
+      51: 2024年
+      52: 1860年
+      54: null
+  4:
+    label: 第4章 条約と跡継ぎと密勅
+    now: 1858年4月
+    dates:
+      64: 1858年6月
+      66: 1858年6月19日
+      72: 1858年8月8日
+      75: 1858年9月
+      80: 1860年2月23日
+      81: 1860年2月24日
+      83: 2014年
+      84: 1860年3月
+  5:
+    label: 第5章 生きていることにされた大老
+    now: 1860年3月3日
+    dates:
+      111: 1860年3月30日
+      112: 1860年閏3月
+      115: 1860年4月7日
+      116: 1860年4月10日
+      117: null
+  6:
+    label: 第6章 雪の朝のあとに
+    now: 1861年
+    dates:
+      126: 1860年3月
+      128: 1860年5月5日
+      129: null
+      130: 2025年
+      131: null
+      132: 2014年
+      133: null
+  7:
+    label: まとめ なぜ討たれたのか
+    now: null
+    dates: {}
+no_tag_from: 143
+references:
+- 『桜田紅雪録』（小寺玉晁）・『堤蟻叢書』（高野武貞 編）・城兼文『近世野史』（1870）（国立国会図書館デジタルコレクション）
+- 和歌山県立文書館「前代未聞之珍事」（北家文書）の翻刻・『維新史料綱要』巻3（1943）
+- 彦根城博物館・茨城県立歴史館（歴史館だより110号、永井博「生かされていた井伊直弼」2022）・鳥取県立博物館（来見田博基）・東京大学史料編纂所『大日本維新史料 類纂之部 井伊家史料』の紹介・世田谷区・国立国会図書館の公開資料
+- 中国新聞（2022）・『歴史街道』（2015）・ぷらっとみと（2024）・和樂web（2020）
+ai:
+  I01: {scene: 1860年の雪の朝の江戸城・桜田門の外（石垣・堀・高麗門と渡櫓門）, pan: h, crops: &c {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  I02: {scene: 雪の外桜田の大名屋敷の長屋門と堀沿いの道（人なし）, pan: h, crops: *c}
+  I03: {scene: 雪の中を進む大名行列の遠景（黒漆の駕籠、合羽と笠の供）, pan: h, crops: *c}
+  I04: {scene: 雪の早朝の芝の愛宕山の石段と社, pan: v, crops: *c}
+  I05: {scene: 柄袋をかぶせた刀の柄と雪の合羽（顔なし）, pan: h, crops: *c}
+  I06: {scene: 雪の道に置かれた黒漆の駕籠（人なし）, pan: h, crops: *c}
+  I07: {scene: 雪の堀端の乱闘の遠景（小さな人影、血なし）, pan: h, crops: *c}
+  I08: {scene: 雪の辻の番小屋（辻番所）と番人の後ろ姿, pan: h, crops: *c}
+  I09: {scene: 文机の書状と筆と硯、行灯, pan: h, crops: *c}
+  I10: {scene: 冬の鳥取の城下町, pan: h, crops: *c}
+  I11: {scene: 文机の和綴じの日記帳（人なし）, pan: h, crops: *c}
+  I12: {scene: 19世紀半ばの小型の短銃の静物, pan: h, crops: *c}
+  I13: {scene: 冬の晴れた彦根の城下の堀と石垣, pan: h, crops: *c}
+  I14: {scene: 茶室の点前座と黒い楽焼の茶碗, pan: h, crops: *c}
+  I15: {scene: 1858年、神奈川沖の黒い外輪の蒸気軍艦, pan: h, crops: *c}
+  I16: {scene: 京都御所の築地塀と門（秋）, pan: h, crops: *c}
+  I17: {scene: 水戸城の大広間の長い廊下（人なし）, pan: h, crops: *c}
+  I18: {scene: 雪がやんだ朝の江戸城の堀と石垣, pan: h, crops: *c}
+  I19: {scene: 春の街道を進む葬列と警固の侍の遠景, pan: h, crops: *c}
+  I20: {scene: 寺の墓所の苔むした石の墓と灯籠, pan: h, crops: *c}
+  I21: {scene: 夜の大名屋敷の門前に集まる侍たちと提灯, pan: h, crops: *c}
+  I22: {scene: 浦賀に入る三本マストの蒸気帆船, pan: h, crops: *c}
+  I23: {scene: 書院で書き物をする役人の小さな後ろ姿, pan: h, crops: *c}
+  TH: {scene: 雪の桜田門外、駕籠を囲む供と迫る浪士（サムネと同じ絵）, pan: h, crops: *c}
+  IEND: {scene: 雪の朝の堀端の遠景（右半分に余白、終了画面）, pan: h, lock: [1.0, 0.5, 0.5]}
+paint_fx: {}
+shots:
+- 0 ai:I01 wide
+- 1 ai:I09 wide
+- 2 ai:I06 wide
+- 3 ai:I23 wide
+- 4 ai:I02 wide
+- 5 ai:I03 wide
+- 6 ai:I08 wide
+- 7 ai:I18 wide
+- 8 ai:I01 left
+- 9 ai:I03 left
+- 10 ai:I09 left
+- 11 ai:I04 wide
+- 12 ai:I11 wide
+- 13 ai:I04 right
+- 14 ai:I09 right
+- 15 ai:I13 wide
+- 16 ai:I02 right
+- 17 ai:I01 right
+- 18 ai:I11 left
+- 19 ai:I02 wide
+- 20 ai:I03 wide
+- 21 ai:I08 wide
+- 22 ai:I11 right
+- 23 ai:I02 left
+- 24 ai:I03 right
+- 25 ai:I12 wide
+- 26 ai:I06 wide
+- 27 ai:TH wide
+- 28 ai:I02 right
+- 29 ai:I03 left
+- 30 ai:I11 wide
+- 31 ai:I08 left
+- 32 ai:I05 wide
+- 33 ai:I06 left
+- 34 ai:I05 left
+- 35 ai:TH left
+- 36 ai:I11 right
+- 37 ai:I18 wide
+- 38 ai:I23 wide
+- 39 ai:I02 left
+- 40 ai:I08 right
+- 41 ai:I06 right
+- 42 ai:I10 wide
+- 43 ai:I09 left
+- 44 ai:I11 wide
+- 45 ai:I05 right
+- 46 ai:I10 right
+- 47 ai:I12 right
+- 48 ai:I18 left
+- 49 ai:I06 wide
+- 50 ai:I23 left
+- 51 ai:I12 wide
+- 52 ai:I05 wide
+- 53 ai:I23 right
+- 54 ai:I13 wide
+- 55 ai:I11 left
+- 56 ai:I14 wide
+- 57 ai:I09 wide
+- 58 ai:I11 right
+- 59 ai:I14 left
+- 60 ai:I02 left
+- 61 ai:I14 right
+- 62 ai:I01 wide
+- 63 ai:I23 wide
+- 64 ai:I09 right
+- 65 ai:I11 left
+- 66 ai:I15 wide
+- 67 ai:I09 left
+- 68 ai:I15 left
+- 69 ai:I16 left
+- 70 ai:I23 right
+- 71 ai:I13 left
+- 72 ai:I16 right
+- 73 ai:I09 wide
+- 74 ai:I11 wide
+- 75 ai:I21 wide
+- 76 ai:I23 left
+- 77 ai:I16 wide
+- 78 ai:I21 left
+- 79 ai:I20 wide
+- 80 ai:I01 right
+- 81 ai:I17 wide
+- 82 ai:I01 left
+- 83 ai:I09 right
+- 84 ai:I11 right
+- 85 ai:I04 wide
+- 86 ai:I11 left
+- 87 ai:I15 wide
+- 88 ai:I06 wide
+- 89 ai:I21 wide
+- 90 ai:I09 wide
+- 91 ai:I23 right
+- 92 ai:I20 left
+- 93 ai:I03 wide
+- 94 ai:I11 right
+- 95 ai:I20 right
+- 96 ai:I23 wide
+- 97 ai:I09 right
+- 98 ai:I23 left
+- 99 ai:I08 wide
+- 100 ai:I02 wide
+- 101 ai:I09 wide
+- 102 ai:I11 wide
+- 103 ai:I21 right
+- 104 ai:I23 right
+- 105 ai:I13 wide
+- 106 ai:I17 left
+- 107 ai:I21 left
+- 108 ai:I18 wide
+- 109 ai:I02 right
+- 110 ai:I18 left
+- 111 ai:I01 wide
+- 112 ai:I23 wide
+- 113 ai:I09 left
+- 114 ai:I16 right
+- 115 ai:I23 left
+- 116 ai:I19 wide
+- 117 ai:I20 wide
+- 118 ai:I18 right
+- 119 ai:I05 wide
+- 120 ai:I23 left
+- 121 ai:I17 left
+- 122 ai:I23 right
+- 123 ai:I13 left
+- 124 ai:I20 right
+- 125 ai:I23 wide
+- 126 ai:I04 right
+- 127 ai:I10 left
+- 128 ai:I22 wide
+- 129 ai:I11 left
+- 130 ai:TH right
+- 131 ai:I04 wide
+- 132 ai:I20 left
+- 133 ai:I13 right
+- 134 ai:I18 wide
+- 135 ai:I03 wide
+- 136 ai:I01 right
+- 137 ai:I03 right
+- 138 ai:TH wide
+- 139 ai:I15 left
+- 140 ai:I06 left
+- 141 ai:I20 wide
+- 142 ai:I21 wide
+- 143 ai:I06 right
+- 144 ai:IEND wide
+- end ai:IEND wide
+focus: {}
+fx:
+  I21: {lamp: {region: [0.2, 0.2, 0.8, 0.6]}}
+parts:
+- {type: quote, from: 12, to: 12, label: 史料, text: 三日早朝愛宕に会申候／有村治左衛門先到着一同驚き申候, source: 『桜田紅雪録』浪士の供述の書き留め（国立国会図書館デジタル）}
+- {type: quote, from: 35, to: 35, label: 要点, text: 浪士の話／引き出したときには、もう事切れていたように見えた, source: 『桜田紅雪録』（彦根の松井貞之進の話と並ぶ）}
+- {type: quote, from: 37, to: 37, label: 史料, text: 接戦中は時計三分斗ニ而／至而早く相済申候, source: 『堤蟻叢書』の書き留め（国立国会図書館デジタル）}
+- {type: quote, from: 44, to: 44, label: 史料, text: ヒストンノ玉、胸先ニ中リテ死シ, source: 安達清一郎の日記『万延元年庚申日乗』（鳥取県立博物館）}
+- {type: versus3, from: 48, to: 48, items: [[安達清一郎の日記, 胸先], [よく知られた話, 太ももから腰]], every: 2.5}
+- {type: quote, from: 68, to: 68, label: 要点, text: 担当の2人が仮の条約書に調印した／よんどころない場合だった, source: 井伊直弼の書状（国立国会図書館の翻刻）}
+- {type: quote, from: 85, to: 85, label: 要点, text: 勅許なく条約を結んだ／忠義の人を罪に落とした／将軍の幼さにつけこんだ, source: 浪士の『斬奸趣意書』（『水戸藩史料』所収）}
+- {type: quote, from: 91, to: 91, label: 要点, text: 取り押さえの指図をするうちに／少々けがをしたので、ひとまず帰宅, source: 井伊家の届（和歌山県立文書館「前代未聞之珍事」の翻刻）}
+- {type: versus3, from: 94, to: 94, items: [[井伊家の届, その場で4人], [村田蔵六の手紙, その場で6人]], every: 2.5}
+- {type: versus3, from: 114, to: 114, items: [[史料編纂所の紹介, 閏3月30日], [三条実美の年譜, 4月]], every: 2.5}
+figures:
+- {from: 16, to: 16, spec: {type: map, title: 江戸と彦根, bounds: [135.3, 141.3, 34.0, 37.2], reveal: true,
+    places: [[彦根, 136.26, 35.27], [江戸, 139.75, 35.68], [水戸, 140.47, 36.37]]}}
+- {from: 43, to: 43, spec: {type: map, title: 関鉄之介は鳥取へ, bounds: [133.3, 141.3, 34.0, 37.2],
+    places: [[江戸, 139.75, 35.68], [鳥取, 134.24, 35.50]], route: [江戸, 鳥取], note: 事件のおよそ2か月後}}
+stills:
+- {line: 0, note: 冒頭}
+- {line: 12, note: 愛宕山}
+- {line: 37, note: 時計で3分}
+- {line: 44, note: 胸先}
+- {line: 91, note: 少々けが}
+- {line: 125, note: 亡くなった供の数}
+- {end: true, note: 終了画面}

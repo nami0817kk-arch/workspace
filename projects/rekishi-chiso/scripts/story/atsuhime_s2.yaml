@@ -1,0 +1,140 @@
+# 物語完結型ショート 篤姫 s2（2026-11-18）。本編 scripts/atsuhime-story.yaml（11/22 12:00 公開予定、https://youtu.be/QA9Y8z3ZYFY）から。11/23 11:00 に予約。
+# 形式は shorui_s1〜s5.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（dev/output/rekishi-chiso/research/天璋院_facts_20261117.yaml）と本編の # fact: だけ。
+# 絵：本編の AI 絵（out/story/atsuhime/main/ の A01〜A25）の切り出しだけ。新しい絵は作らない。人物は小さな後ろ姿だけ。
+# 切り口：薩摩の仕送り「年3万円」は、円の無い年の話（本編 第2章・食い違い②、atsuhime-32・57）。
+# hook＝その金額の書き方は、どこがおかしいのか（答えはこのショートの中：円は1871年から）。
+# tease＝仕送りを断った篤姫は、暮らしのお金をどう作ったのか（答えは本編 第2章：城の道具の要らない品を売った、atsuhime-33）。
+# 計算（自分で数え直した）：慶応4年＝1868年。円の単位は明治4年＝1871年（新貨条例。本編どおり fact は付けない）→ 円ができる3年前。昭和19年＝1944年。
+# 理解テスト：①篤姫の話 ②1868年、一橋の屋敷で、薩摩の島津家が年3万円を申し出た ③固く断った ④その「円」は1868年にはまだ無く、もとの金額は決められない
+title: "篤姫｜断った仕送りは「年3万円」？"
+yt_title: "篤姫が断った薩摩の仕送りは「年3万円」　けれど1868年には、まだ「円」が無かった"
+description: |-
+  江戸城を出た篤姫の苦しい暮らしを察して、薩摩の島津家は、1年に金3万円を贈りたい、と言ってきた。篤姫は固く断り、西郷隆盛が一橋の屋敷まで出向いて頼んでも、聞き入れなかった。昭和19年の『禁苑史話』は、そう書いています。
+  けれど、円というお金の単位が決まったのは明治4年（1871年）。篤姫が一橋の屋敷にいた慶応4年（1868年）には、まだ円はありません。同じ本は、慶応4年正月の格子戸の費用も「3千円あまり」と円で書いています。
+  本編では、城を出たあとの15年あまりを、当時の新聞・勝海舟の談話・昭和の本でたどっています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#篤姫"
+- "#天璋院"
+- "#西郷隆盛"
+- "#幕末"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。人物の顔は描いていません。創作の台詞は入れていません。"
+art_dir: out/story/atsuhime
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: atsuhime_story_s2
+header:
+  tag: "篤姫　薩摩からの仕送り"
+  title: "断った仕送りは、《年3万円》？"
+now:
+- {at: "昭和19年", text: "1944年　禁苑史話", point: 2}
+- {at: "島津家", text: "1868年　一橋邸", point: 0}
+- {at: "1871年", text: "1871年　円が決まる", point: 1}
+- {at: "慶応4年の正月", text: "1868年正月　江戸城", point: 0}
+- {at: "昭和の書き手", text: "1944年　禁苑史話", point: 2}
+timeline:
+- {label: "1868"}
+- {label: "1871"}
+- {label: "1944"}
+# 台本だけの読み替え（区切りの崩れを直す。readings.yaml は変えない）
+readings:
+  "一橋の屋敷": "ヒトツバシノヤシキ"
+shots:
+  A10_1:
+    kind: "ai"
+    file: "atsuhime/main/A10.jpg"
+    focus: [0.45, 0.5]
+    move: "in"
+    must: "A10"
+  A06_2:
+    kind: "ai"
+    file: "atsuhime/main/A06.jpg"
+    focus: [0.6, 0.5]
+    move: "left"
+    must: "A06"
+  A10_3:
+    kind: "ai"
+    file: "atsuhime/main/A10.jpg"
+    focus: [0.75, 0.5]
+    move: "right"
+    must: "A10"
+  A05_4:
+    kind: "ai"
+    file: "atsuhime/main/A05.jpg"
+    focus: [0.35, 0.5]
+    move: "left"
+    must: "A05"
+  A09_5:
+    kind: "ai"
+    file: "atsuhime/main/A09.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "A09"
+  A01_6:
+    kind: "ai"
+    file: "atsuhime/main/A01.jpg"
+    focus: [0.68, 0.5]
+    move: "right"
+    must: "A01"
+  A06_7:
+    kind: "ai"
+    file: "atsuhime/main/A06.jpg"
+    focus: [0.35, 0.5]
+    move: "left"
+    must: "A06"
+  A09_8:
+    kind: "ai"
+    file: "atsuhime/main/A09.jpg"
+    focus: [0.25, 0.5]
+    move: "in"
+    must: "A09"
+lines:
+  # fact: atsuhime-32
+- 語り: "篤姫が、断った仕送り。その金額の書き方は、どこが、おかしいのか。"
+  shot: A10_1
+  tone: 強調
+  pause: 0.12
+  # fact: atsuhime-32
+- 語り: "昭和19年に出た、井原頼明の禁苑史話は、こう書く。"
+  shot: A06_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: atsuhime-32
+- 語り: "江戸城を出た篤姫の、苦しい暮らしを察して、薩摩の島津家は、1年に、金3万円を贈りたい、と言ってきた。"
+  shot: A10_3
+  tone: 重い
+  pause: 0.12
+  # fact: atsuhime-32
+- 語り: "篤姫は、固く断った。西郷隆盛が、一橋の屋敷まで出向いて頼んでも、聞き入れなかった。"
+  shot: A05_4
+  tone: 重い
+  pause: 0.12
+  # 円の単位は明治4年の新貨条例から（本編と同じく fact は付けない）
+- 語り: "けれど、円というお金の単位が決まったのは、明治4年、1871年。篤姫が、一橋の屋敷にいた1868年には、まだ、円は無い。"
+  shot: A09_5
+  tone: 強調
+  pause: 0.12
+  # fact: atsuhime-57
+- 語り: "同じ本は、慶応4年の正月に、城の非常口に、格子戸を付けた費用も、3千円あまり、と円で書いている。"
+  shot: A01_6
+  tone: しみじみ
+  pause: 0.12
+- 語り: "昭和の書き手が、のちのお金の言い方に、置き換えたのかもしれない。もとの金額は、記録からは、決められない。"
+  shot: A06_7
+  tone: しみじみ
+  pause: 0.12
+  # tease：答えは本編 第2章（atsuhime-33）
+- 語り: "では、仕送りを断った篤姫は、暮らしのお金を、どうやって作ったのか。"
+  shot: A09_8
+  tone: 疑問
+  pause: 0.15
