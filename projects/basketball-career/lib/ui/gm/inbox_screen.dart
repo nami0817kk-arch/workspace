@@ -48,6 +48,9 @@ class _InboxScreenState extends State<InboxScreen> {
   GmController get c => widget.c;
   Sender? _only;
 
+  /// 返事が要る知らせだけを出す。
+  bool _needs = false;
+
   @override
   void initState() {
     super.initState();
@@ -74,7 +77,7 @@ class _InboxScreenState extends State<InboxScreen> {
       final list =
           [
             for (final m in car.inbox)
-              if (_only == null || m.from == _only) m,
+              if ((_only == null || m.from == _only) && (!_needs || m.needsAnswer)) m,
           ]..sort((a, b) {
             final r = _rank(a).compareTo(_rank(b));
             return r != 0 ? r : order[a.id]!.compareTo(order[b.id]!);
@@ -103,6 +106,17 @@ class _InboxScreenState extends State<InboxScreen> {
                               spacing: 4,
                               runSpacing: 4,
                               children: [
+                                if (car.inbox.any((m) => m.needsAnswer))
+                                  FilterChip(
+                                    key: const Key('inbox-needs'),
+                                    visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                    showCheckmark: false,
+                                    avatar: const Icon(Icons.reply_rounded, size: 13, color: GmColors.ball),
+                                    label: Text('返事が要る(${car.inbox.where((m) => m.needsAnswer).length})', style: const TextStyle(fontSize: 11)),
+                                    selected: _needs,
+                                    onSelected: (v) => setState(() => _needs = v),
+                                  ),
                                 for (final s in <Sender?>[null, ...senders])
                                   ChoiceChip(
                                     visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
