@@ -241,7 +241,7 @@ P["ch4"] = dict(title="第4章 赤道の冷たい海", cta=False, lines=[
     dict(id="d5", text="南からは、冷たい水を運ぶ流れが来ます。フンボルト海流です。", scene=MAP(WIDE_T, HUMB("d5"), LABEL((-82.0, -9.0), "フンボルト海流", 52, COLD), step=3)),
     dict(id="d6", text="さらに西からは、海の深い所を東へ流れる流れがぶつかります。クロムウェル海流です。", scene=MAP((-91.8, -0.4, 3.6, 0), CROM("d6"), LABEL((-92.9, -0.75), "クロムウェル海流", 50, COLD), step=3, view_to=(-91.6, -0.5, 3.2, 20))),
     dict(id="d7", text="この流れが島の山の根元に当たり、深くの冷たい水を、海面へ押し上げます。", scene=HOT(step=3, tr="zoom")),
-    dict(id="d8", text="イサベラ島とフェルナンディナ島の西には、まわりより冷たい水のたまりができます。", scene=MAP(WEST_T, dict(kind="area", rings=[[(-92.1, 0.25), (-91.65, 0.3), (-91.45, -0.2), (-91.55, -0.75), (-91.95, -0.9), (-92.25, -0.4)]], color=COLD, alpha=0.35, width=4, id="cold", at=0.0), step=3)),
+    dict(id="d8", text="イサベラ島とフェルナンディナ島の西には、まわりより冷たい水のたまりができます。", scene=MAP((-91.75, -0.45, 1.9, 30), dict(kind="area", rings=[[(-92.1, 0.25), (-91.65, 0.3), (-91.45, -0.2), (-91.55, -0.75), (-91.95, -0.9), (-92.25, -0.4)]], color=COLD, alpha=0.35, width=4, id="cold", at=0.0), step=3)),
     dict(id="d9", text="1年の平均で、22〜23度です。", scene=CARD("22〜23度", sub="島の西の冷たい水のたまり（1年の平均）", note="Karnauskas ほか 2015", view=WEST, step=3, count=False)),
     dict(id="d10", text="深くの水には、栄養がたっぷり含まれています。"),
     dict(id="d11", text="だから、魚や海藻がよく育ちます。", scene=MAP(WEST, step=3, view_to=(-91.4, -0.3, 0.9, 30))),
@@ -254,7 +254,7 @@ P["ch4"] = dict(title="第4章 赤道の冷たい海", cta=False, lines=[
     dict(id="d18", text="海に出るトカゲは、世界でこの1種類だけです。", scene=CARD("世界で1種類", sub="海に出るトカゲ", note=GC, view=WEST, step=3, count=False)),
     dict(id="d19", text="島には、20万〜30万匹がいます。", scene=CARD("20万〜30万匹", sub="ウミイグアナの数", note=GC, view=ARCH, step=3, count=False)),
     dict(id="d20", text="冷たい海には長くいられないので、潜ったあとは黒い体で岩に並び、日を浴びて温まります。", scene=PHOTO("bask", step=3)),
-    dict(id="d21", text="赤道の日差しと、冷たい海。この組み合わせが、ほかでは見ない暮らし方を生みました。", scene=MAP(ARCH_T, EQ("d21"), CROM("d21"), step=3)),
+    dict(id="d21", text="赤道の日差しと、冷たい海。この組み合わせが、ほかでは見ない暮らし方を生みました。", scene=MAP(ARCH_T, EQ("d21"), ARROW((-92.2, -0.25), (-91.6, -0.3), COLD, 16, id="cromd21"), step=3)),
 ])
 
 # ---- 第5章 島ごとに違う ------------------------------------------------------------------------------------
