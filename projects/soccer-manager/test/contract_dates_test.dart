@@ -147,8 +147,13 @@ void main() {
       final cpu = game.save!.league.teams.firstWhere((t) => t.id != 'user');
       final theirs = cpu.players.first..contractEndYear = clock;
       final cpuSize = cpu.players.length;
-      // シーズンを終えた5月末から進める(1月1日の仮契約の処理は済んだ扱い)。
+      // シーズンを終えた5月末から進める。1月1日の仮契約・3月31日の延長
+      // オプションの処理は、ふつうに遊べばシーズン中に済んでいるので、済んだ
+      // 扱いにする(済んでいないと6月30日へ進めたときに走り、他のクラブが
+      // 満了の年の選手と更新することがある)。
       game.save!.today = DateTime(clock, 5, 31);
+      game.save!.preContractOpenedSeason = game.save!.league.season;
+      game.save!.optionDeadlineSeason = game.save!.league.season;
 
       await game.startNextSeason();
 
