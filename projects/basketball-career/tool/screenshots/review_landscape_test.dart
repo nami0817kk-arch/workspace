@@ -366,6 +366,24 @@ void main() {
     }
 
     await _shoot(t, '10_draft', await _with(draft), act: openDraft);
+    await _shoot(t, '10e_workout', await _with(toDraft()), act: (t) async {
+      await openDraft(t);
+      final w = find.byKey(const Key('workout'));
+      if (w.evaluate().isNotEmpty) {
+        await t.ensureVisible(w);
+        await t.pumpAndSettle();
+        await t.tap(w);
+        await t.pumpAndSettle();
+      }
+    });
+    await _shoot(t, '10f_rumors', await _with(toDraft()), act: (t) async {
+      await openDraft(t);
+      final r = find.byKey(const Key('draft-rumors'));
+      if (r.evaluate().isNotEmpty) {
+        await t.tap(r);
+        await t.pumpAndSettle();
+      }
+    });
     // 動きの途中(指名の発表・スカウトで幅が狭まるところ)
     await _shoot(t, '10b2_pick_intro', await _with(toDraft()), act: (t) async {
       await openDraft(t);

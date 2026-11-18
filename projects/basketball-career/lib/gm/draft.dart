@@ -277,7 +277,8 @@ List<int> draftOrder(List<Team> teams, List<DraftPick> picks, int season, List<i
 
 /// 相手のチームが選ぶ候補。本当の力を少しぶれて見ている。立て直し中のチームは伸びしろを重く見る。
 /// [counts] はそのチームのポジションごとの人数。足りないポジションの候補を少し高く見る。
-Prospect aiDraftChoice(List<Prospect> pool, TeamMode mode, Rng rng, {Map<Pos, int>? counts}) {
+/// [wanted] の候補は、ワークアウトの話が漏れて、ほかのチームも高く見る(+[wantedBonus])。乱数の使い方は同じ。
+Prospect aiDraftChoice(List<Prospect> pool, TeamMode mode, Rng rng, {Map<Pos, int>? counts, Set<int> wanted = const {}}) {
   final open = pool.where((p) => p.pickedBy == null).toList();
   Prospect? best;
   var bestScore = -1e9;
@@ -285,11 +286,36 @@ Prospect aiDraftChoice(List<Prospect> pool, TeamMode mode, Rng rng, {Map<Pos, in
     final w = mode == TeamMode.rebuild ? 0.7 : mode == TeamMode.contend ? 0.45 : 0.6;
     final have = counts?[p.player.pos] ?? 2;
     final need = have == 0 ? 6 : have == 1 ? 3 : have >= 4 ? -4 : 0;
-    final s = p.player.ovr * (1 - w) + p.player.pot * w + rng.nextInt(9) - 4 + need;
+    final s = p.player.ovr * (1 - w) + p.player.pot * w + rng.nextInt(9) - 4 + need + (wanted.contains(p.player.id) ? wantedBonus : 0);
     if (s > bestScore) {
       bestScore = s.toDouble();
       best = p;
     }
   }
   return best!;
+}
+
+/// ワークアウトに呼んだ候補を、ほかのチームが高く見る分。
+const wantedBonus = 6;
+
+/// ほかのチームの指名の見込み(乱数の揺れを除いた、いちばん高い候補)。うわさに使う。
+Prospect? aiDraftGuess(Iterable<Prospect> open, TeamMode mode, {Map<Pos, int>? counts, Set<int> wanted = const {}}) {
+  Prospect? best;
+  var bestScore = -1e9;
+  for (final p in open) {
+    final s = aiDraftScore(p, mode, counts: counts, wanted: wanted);
+    if (s > bestScore) {
+      bestScore = s.toDouble();
+      best = p;
+    }
+  }
+  return best;
+}
+
+/// ほかのチームの見込みの点(乱数の揺れを除く)。
+double aiDraftScore(Prospect p, TeamMode mode, {Map<Pos, int>? counts, Set<int> wanted = const {}}) {
+  final w = mode == TeamMode.rebuild ? 0.7 : mode == TeamMode.contend ? 0.45 : 0.6;
+  final have = counts?[p.player.pos] ?? 2;
+  final need = have == 0 ? 6 : have == 1 ? 3 : have >= 4 ? -4 : 0;
+  return p.player.ovr * (1 - w) + p.player.pot * w + need + (wanted.contains(p.player.id) ? wantedBonus : 0);
 }
