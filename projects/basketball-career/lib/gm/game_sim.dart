@@ -101,7 +101,14 @@ class SimTeam {
   late final double avgOvr;
   late final List<int> out, ins, pas, reb, def;
   late final List<double> wUse, wTov, wStl, wBlk, wReb, wAst;
-  late final int pace, focus, share, press;
+  late int pace, focus, share, press;
+
+  /// 采配のタイムアウトで足す強さ(残り [boostLeft] 秒)。采配しない試合ではずっと 0。
+  double boost = 0;
+  int boostLeft = 0;
+
+  /// 采配で決めたコートの5人(null なら出場時間どおり)。
+  List<int>? courtOverride;
   int pts = 0;
   final periods = <int>[];
 
@@ -188,6 +195,33 @@ class SimResult {
   int homeMaxLead = 0, awayMaxLead = 0;
 
   int get overtimes => home.periods.length - 4;
+
+  /// 采配の区切りで止めたとき、その区切りの番号([liveBreaks] の順)。最後まで進めたら -1。
+  int stoppedAt = -1;
+  bool get finished => stoppedAt < 0;
+}
+
+/// 采配できる区切り(1Q・前半・3Qの終わりと、4Q残り4分)。
+const liveBreaks = ['1Q終了', '前半終了', '3Q終了', '4Q残り4分'];
+
+/// 1試合で取れるタイムアウトの数。
+const liveTimeouts = 2;
+
+/// 試合の途中の采配(自分のチームだけ。区切りごとに1つ)。
+enum GameCall {
+  timeout('タイムアウト', '流れを切る。3分のあいだ少し強くなる(1試合$liveTimeouts回まで)'),
+  outside('外から打つ', '3ポイントを増やす(攻めの重点を外へ)'),
+  inside('中で攻める', 'ゴール下を増やす(攻めの重点を中へ)'),
+  fast('速く攻める', '攻めの回数を増やす(点の取り合いに)'),
+  slow('じっくり攻める', '攻めの回数を減らす(差を守る・追い上げを抑える)'),
+  pressure('前から当たる', 'ボールを奪いにいく(奪えるがファウルと失点の危険も)'),
+  packPaint('中を固める', 'ゴール下を守る(相手の3ポイントは増える)'),
+  stars('主力で押し切る', 'ここから主力5人を出し続ける(疲れとけがが増える)'),
+  bench('控えに任せる', 'ここから控えを出す(主力を休ませる。大差のとき)'),
+  plan('いつもの起用に戻す', '出場時間どおりの入れ替えに戻す');
+
+  const GameCall(this.label, this.help);
+  final String label, help;
 }
 
 double _pow(num x, double e) => math.pow(math.max(1, x), e).toDouble();
@@ -227,7 +261,10 @@ String _clock(int period, int left) {
 }
 
 /// [home] と [away] の1試合を進める。チームの勝敗・個人成績・けがはここでは触らない(呼ぶ側で行う)。
-SimResult simulateGame(Team home, Team away, Rng r, {required double homeStr, required double awayStr, bool record = false}) {
+/// [calls] は区切り([liveBreaks])ごとの自分の采配([side] 0 ならホーム)。[stopAt] の区切りに着いたら、そこで止めて途中の結果を返す。
+/// どちらも無ければ、ふつうの試合(采配で増やした処理は何もしない)。
+SimResult simulateGame(Team home, Team away, Rng r,
+    {required double homeStr, required double awayStr, bool record = false, List<GameCall?> calls = const [], int? stopAt, int side = 0}) {
   final h = SimTeam(home, homeStr + 1.0), a = SimTeam(away, awayStr);
   h.rollForm(r);
   a.rollForm(r);
@@ -266,6 +303,52 @@ SimResult simulateGame(Team home, Team away, Rng r, {required double homeStr, re
   }
 
   final hClose = closers(h), aClose = closers(a);
+  final live = calls.isNotEmpty || stopAt != null;
+  final me = side == 0 ? h : a;
+  var timeoutsUsed = 0;
+
+  /// 区切り [k] に着いた。止めるなら false。
+  bool atBreak(int k) {
+    if (stopAt == k) {
+      res.stoppedAt = k;
+      return false;
+    }
+    final call = k < calls.length ? calls[k] : null;
+    switch (call) {
+      case null:
+        break;
+      case GameCall.timeout:
+        if (timeoutsUsed < liveTimeouts) {
+          timeoutsUsed++;
+          me.boost = 4;
+          me.boostLeft = 180;
+        }
+      case GameCall.outside:
+        me.focus = 0;
+      case GameCall.inside:
+        me.focus = 2;
+      case GameCall.fast:
+        me.pace = 2;
+      case GameCall.slow:
+        me.pace = 0;
+      case GameCall.pressure:
+        me.press = 2;
+      case GameCall.packPaint:
+        me.press = 0;
+      case GameCall.stars:
+        me.courtOverride = closers(me);
+      case GameCall.bench:
+        final idx = [for (var i = 0; i < me.order.length; i++) i]..sort((x, y) => me.mins[y].compareTo(me.mins[x]));
+        final rest = idx.skip(5).toList();
+        final five = [...rest.take(5), ...idx.take(5).toList().reversed].take(5).toList()..sort();
+        me.courtOverride = five;
+      case GameCall.plan:
+        me.courtOverride = null;
+    }
+    return true;
+  }
+
+  var did4 = false;
 
   final teams = [h, a];
   var offense = r.nextInt(2); // ジャンプボール
@@ -283,6 +366,7 @@ SimResult simulateGame(Team home, Team away, Rng r, {required double homeStr, re
     final len = period < 4 ? 720 : 300;
     // 各クォーターの最初の攻めは、交互に(2Qと3Qはジャンプボールで取らなかった側)
     if (period > 0 && period < 4) offense = (period == 1 || period == 2) ? 1 - firstBall : firstBall;
+    if (live && period > 0 && period < 4 && !atBreak(period - 1)) return res;
     var clock = len;
     final h0 = hScore, a0 = aScore;
     var nextMinute = len - 60;
@@ -292,17 +376,26 @@ SimResult simulateGame(Team home, Team away, Rng r, {required double homeStr, re
         a.setCourt(aClose);
       } else {
         final minute = (period * 12 + (len - clock) ~/ 60).clamp(0, 47);
-        h.setCourt(hp[minute]);
-        a.setCourt(ap[minute]);
+        h.setCourt(h.courtOverride ?? hp[minute]);
+        a.setCourt(a.courtOverride ?? ap[minute]);
       }
     }
 
     setCourt();
     while (clock > 0) {
+      if (live && period == 3 && clock <= 240 && !did4) {
+        did4 = true;
+        if (!atBreak(3)) return res;
+        setCourt();
+      }
       final o = teams[offense], d = teams[1 - offense];
       var used = (const [13, 10, 7][o.pace]) + r.nextInt(9);
       if (used > clock) used = clock;
       clock -= used;
+      if (me.boostLeft > 0) {
+        me.boostLeft -= used;
+        if (me.boostLeft <= 0) me.boost = 0;
+      }
       // 出ている時間を数える
       for (final t in teams) {
         for (final i in t.court) {
@@ -373,7 +466,7 @@ void _possession(SimTeam o, SimTeam d, Rng r, void Function(String)? play) {
   final oc = o.court, dc = d.court;
   if (oc.isEmpty || dc.isEmpty) return;
   // チームの強さの差と、いまコートにいる5人がチームの平均よりどれだけ強いか
-  final diff = (o.str - d.str) + 0.35 * ((o.cOvr - o.avgOvr) - (d.cOvr - d.avgOvr));
+  final diff = ((o.str + o.boost) - (d.str + d.boost)) + 0.35 * ((o.cOvr - o.avgOvr) - (d.cOvr - d.avgOvr));
   final edge = diff * edgePerStrength;
   final press = d.press; // 0 中を固める / 2 前から当たる
   final focus = o.focus; // 0 外 / 2 中

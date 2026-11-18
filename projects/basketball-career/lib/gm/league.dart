@@ -752,12 +752,17 @@ void injuriesAfterGame(Team t, List<int> mins, Rng rng, {bool count = true, doub
 /// 1試合を進める(`game_sim.dart` で1回の攻めずつ)。どちらのチームにも個人の数字を付ける([count] ならシーズンの成績に足す)。
 /// [mine] のチームの試合なら、ボックススコア・クォーター・点差の流れ・見せ場を結果に残す。
 /// [injuryScale] は、[mine] のチームのけがの起きやすさの倍率(難しさと医療の施設)。[healScale] は治るまでの試合の倍率(医療の施設)。
-GameResult playGame(Team home, Team away, Rng rng, {int? mine, bool count = true, double injuryScale = 1.0, double healScale = 1.0}) {
+/// [liveSeed] があれば、自分が采配した試合([calls])をその乱数で進める(リーグの乱数の使い方は同じ)。
+GameResult playGame(Team home, Team away, Rng rng,
+    {int? mine, bool count = true, double injuryScale = 1.0, double healScale = 1.0, int? liveSeed, List<GameCall?> calls = const []}) {
   final hStr = home.strength, aStr = away.strength;
   final p = winChance(hStr, aStr);
   final isMine = mine == home.index || mine == away.index;
   // 試合の中は、この試合だけの乱数で進める(リーグの乱数は1つだけ使う)
-  final sim = simulateGame(home, away, Rng(rng.next() ^ 0x5bd1e995), homeStr: hStr, awayStr: aStr, record: isMine);
+  final simSeed = rng.next() ^ 0x5bd1e995;
+  final sim = liveSeed == null
+      ? simulateGame(home, away, Rng(simSeed), homeStr: hStr, awayStr: aStr, record: isMine)
+      : simulateGame(home, away, Rng(liveSeed), homeStr: hStr, awayStr: aStr, record: isMine, calls: calls, side: mine == away.index ? 1 : 0);
   final h = sim.home, a = sim.away;
   final hp = h.pts, ap = a.pts;
   final homeWins = hp > ap;

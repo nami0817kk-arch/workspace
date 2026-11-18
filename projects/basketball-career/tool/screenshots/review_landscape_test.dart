@@ -128,6 +128,19 @@ void main() {
       await t.ensureVisible(card);
       await t.pumpAndSettle();
     });
+    await _shoot(t, '4h_live', await _with(careerAt(3, 12)..startSeason()), act: (t) async {
+      final btn = find.byKey(const Key('live-game'));
+      await t.ensureVisible(btn);
+      await t.pumpAndSettle();
+      await t.tap(btn);
+      await t.pumpAndSettle();
+      await t.tap(find.text('タイムアウト'));
+      await t.pumpAndSettle();
+      await t.tap(find.textContaining('で前半終了まで'));
+      await t.pumpAndSettle();
+      await t.tap(find.text('主力で押し切る'));
+      await t.pumpAndSettle();
+    });
     await _shoot(t, '4d_box_score', await _with(careerAt(3, 12)..startSeason()), act: (t) async {
       await _tap(t, '次の20試合へ');
       await t.pumpAndSettle();

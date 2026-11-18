@@ -14,6 +14,7 @@ import 'coaches_screen.dart';
 import 'common.dart';
 import 'draft_show_screen.dart';
 import 'inbox_screen.dart';
+import 'live_game_screen.dart';
 import 'negotiate_dialog.dart';
 import 'offseason_show_screen.dart';
 import 'opponent_card.dart';
@@ -248,6 +249,15 @@ class ProgressTab extends StatelessWidget {
             ),
           ),
         ]),
+        if (car.nextMyGame != null) ...[
+          const SizedBox(height: 8),
+          OutlinedButton.icon(
+            key: const Key('live-game'),
+            onPressed: c.busy ? null : () => _live(context, car),
+            icon: const Icon(Icons.sports_basketball_rounded, size: 18),
+            label: const Text('次の試合を采配する(1試合)'),
+          ),
+        ],
         const SizedBox(height: 8),
         // まとめて進める(申し込みが届いたら、そこで止まる)
         Row(children: [
@@ -582,6 +592,17 @@ class ProgressTab extends StatelessWidget {
   }
 
   /// 試合を進め、終わったら報告を画面いっぱいに出す。
+  /// 次の自分の試合を、区切りごとに見ながら采配する。確定したら、その節を進めてボックススコアを見せる。
+  Future<void> _live(BuildContext context, Career car) async {
+    final calls = await showLiveGame(context, car);
+    if (calls == null || !context.mounted) return;
+    final before = car.lastGames.length;
+    final blockBefore = car.block;
+    await _run(context, () => c.playLive(calls));
+    if (!context.mounted || car.block != blockBefore || car.lastGames.length <= before) return;
+    await showBoxScore(context, car.lastGames.last, car.mine);
+  }
+
   Future<void> _run(BuildContext context, Future<BlockReport?> Function() play) async {
     final nav = Navigator.of(context);
     await showBlockReport(nav, c, await play());

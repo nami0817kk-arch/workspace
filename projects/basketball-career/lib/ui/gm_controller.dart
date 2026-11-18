@@ -11,6 +11,7 @@ import '../gm/skills.dart';
 import '../sound/sound.dart';
 import '../gm/difficulty.dart';
 import '../gm/draft.dart';
+import '../gm/game_sim.dart';
 import '../gm/league.dart';
 import '../gm/player.dart';
 import '../gm/profile.dart';
@@ -244,6 +245,20 @@ class GmController extends ChangeNotifier {
     _record(c);
     _changed();
     // 区切りの全部の試合でまとめる(週ごとの分ではなく)
+    return ended ? BlockReport.make(c, snap, c.lastGames) : null;
+  }
+
+  /// 采配した試合のある1節を進める。区切りの終わりに着いたときだけ報告を返す。
+  Future<BlockReport?> playLive(List<GameCall?> calls) async {
+    final c = career;
+    if (c == null || c.phase != Phase.season || busy || c.nextMyGame == null) return null;
+    final snap = BlockSnapshot.of(c);
+    final starters = _healthyStarters(c);
+    final ended = c.playLiveDay(calls);
+    injuryStop = c.phase == Phase.season ? _newlyHurt(c, starters) : null;
+    if (ended) await money?.tournamentPlayed();
+    _record(c);
+    _changed();
     return ended ? BlockReport.make(c, snap, c.lastGames) : null;
   }
 
