@@ -63,7 +63,7 @@ class SummerTournament {
           Tr.pick('$year年ワールドカップ', '$year World Cup'),
         SummerTournamentKind.continental => Tr.pick(
             '$year年の大陸選手権(欧州選手権・コパ・アメリカなど)',
-            '$year continental championships (Euros, Copa América and others)'),
+            '$year continental championships (Euros, Copa America and others)'),
       };
 
   /// クラブに合流する日。
