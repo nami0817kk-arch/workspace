@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import '../../gm/career.dart';
@@ -261,12 +263,17 @@ class CareerTable extends StatelessWidget {
       decoration: BoxDecoration(color: GmColors.panelHi, borderRadius: BorderRadius.circular(12)),
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         const Text('年ごとの成績', style: TextStyle(fontWeight: FontWeight.bold)),
+        if (p.career.length >= 2) ...[
+          const SizedBox(height: 6),
+          SizedBox(height: 90, child: CustomPaint(key: const Key('career-chart'), painter: _CareerChart(p.career))),
+          const Text('棒: 1試合の得点 / 線: その年の終わりのOVR', style: TextStyle(fontSize: 11, color: GmColors.sub)),
+        ],
         const SizedBox(height: 4),
-        row(['年', 'チーム', '試合', '得点', 'リバ', 'アシ'], head: true),
+        row(['年', 'チーム', '試合', '得点', 'リバ', 'アシ', 'OVR'], head: true),
         for (final r in p.career)
-          row(['${r[0]}年目', teamDefs[r[1]].short, '${r[2]}', f(r[3], r[2]), f(r[4], r[2]), f(r[5], r[2])]),
+          row(['${r[0]}年目', teamDefs[r[1]].short, '${r[2]}', f(r[3], r[2]), f(r[4], r[2]), f(r[5], r[2]), r.length > 6 ? '${shown(r[6])}' : '-']),
         const Divider(height: 10),
-        row(['通算', '${p.career.length}シーズン', '${t.gp}', f(t.pts, t.gp), f(t.reb, t.gp), f(t.ast, t.gp)], color: GmColors.gold),
+        row(['通算', '${p.career.length}シーズン', '${t.gp}', f(t.pts, t.gp), f(t.reb, t.gp), f(t.ast, t.gp), ''], color: GmColors.gold),
       ]),
     );
   }
@@ -279,3 +286,54 @@ Widget _line(String k, String v) => Padding(
         Expanded(child: Text(v, style: const TextStyle(fontWeight: FontWeight.bold))),
       ]),
     );
+
+/// 年ごとの得点(棒)と OVR(線)。
+class _CareerChart extends CustomPainter {
+  _CareerChart(this.rows);
+  final List<List<int>> rows;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final n = rows.length;
+    final w = size.width / n;
+    final ppg = [for (final r in rows) r[2] == 0 ? 0.0 : r[3] / r[2]];
+    // 得点は35点を上の端にする(1年だけの選手でも棒がいっぱいにならない)
+    final top = math.max(35.0, ppg.reduce(math.max));
+    final bar = Paint()..color = GmColors.ball.withValues(alpha: 0.75);
+    final bw = math.min(w * 0.6, 34.0);
+    for (var i = 0; i < n; i++) {
+      final h = (size.height - 16) * ppg[i] / top;
+      final cx = i * w + w / 2;
+      canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(cx - bw / 2, size.height - h, bw, h), const Radius.circular(3)), bar);
+      final tp = TextPainter(
+        text: TextSpan(text: ppg[i].toStringAsFixed(1), style: const TextStyle(fontFamily: 'NotoSansJP', fontSize: 10, color: GmColors.text)),
+        textDirection: TextDirection.ltr,
+      )..layout();
+      tp.paint(canvas, Offset(cx - tp.width / 2, size.height - h - tp.height - 1));
+    }
+    final ovr = [for (final r in rows) if (r.length > 6) shown(r[6])];
+    if (ovr.length == n) {
+      final line = Paint()
+        ..color = GmColors.gold
+        ..strokeWidth = 2
+        ..style = PaintingStyle.stroke;
+      double y(int o) => size.height - (size.height - 12) * ((o - 40) / 60).clamp(0.0, 1.0);
+      final path = Path()..moveTo(w / 2, y(ovr[0]));
+      for (var i = 1; i < n; i++) {
+        path.lineTo(i * w + w / 2, y(ovr[i]));
+      }
+      canvas.drawPath(path, line);
+      for (var i = 0; i < n; i++) {
+        canvas.drawCircle(Offset(i * w + w / 2, y(ovr[i])), 3, Paint()..color = GmColors.gold);
+        final tp = TextPainter(
+          text: TextSpan(text: '${ovr[i]}', style: const TextStyle(fontFamily: 'NotoSansJP', fontSize: 10, color: GmColors.gold, fontWeight: FontWeight.bold)),
+          textDirection: TextDirection.ltr,
+        )..layout();
+        tp.paint(canvas, Offset(i * w + w / 2 + 5, y(ovr[i]) - tp.height));
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(_CareerChart old) => old.rows != rows;
+}
