@@ -202,6 +202,7 @@ extension GameStateSeason on GameState {
       team.players.remove(p);
       team.startingXI.remove(p.id);
       _clearPlayerRoleReferences(team, p.id);
+      _returnLoanToParent(p);
     }
     if (ended.isNotEmpty) {
       lastContractExpirations = [
@@ -1301,7 +1302,7 @@ extension GameStateSeason on GameState {
       currentWeeklyWageBill: weeklyWageBill,
       weeklyIncome: weeklyIncomeFor(_save!.userTeamId),
     );
-    transferMarket = TransferMarket.generate(home: currentLeagueTheme);
+    transferMarket = [];
     _refreshScoutCandidates();
     FreeAgentEngine.topUp(_save!.freeAgents);
 

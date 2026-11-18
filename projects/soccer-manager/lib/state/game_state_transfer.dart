@@ -6,9 +6,9 @@ extension GameStateTransfer on GameState {
     if (_save == null) return false;
     lastSigningBlockReason = null;
     if (!isTransferWindowOpen) return false;
-    final idx = transferMarket.indexWhere((p) => p.id == playerId);
-    if (idx < 0) return false;
-    final player = transferMarket[idx];
+    final target = _acquisitionTarget(playerId);
+    if (target == null) return false;
+    final player = target.player;
     if (!_minorRuleAllows(player)) return false;
     final fee = TransferTermsEngine.agentFee(player.marketValue);
     if (_save!.budget < player.marketValue + fee) return false;
@@ -17,8 +17,8 @@ extension GameStateTransfer on GameState {
     _book(LedgerCategory.transfers, -(player.marketValue));
     _bookAgentFee(player, fee);
     ContractEngine.applyTransferContract(player);
+    _takeFromSeller(target);
     userTeam.players.add(player);
-    transferMarket.removeWhere((p) => p.id == playerId);
     _notify();
     await _persist();
     return true;
@@ -71,10 +71,130 @@ extension GameStateTransfer on GameState {
 
   /// 値切りオファーが受け入れられる確率(0.0〜1.0)。市場価値の満額なら
   /// 必ず成立し、55%以下なら必ず拒否される。UIで交渉前に提示する。
-  double transferOfferAcceptChance(int marketValue, int offer) {
+  ///
+  /// 他のクラブの選手([player])なら、そのクラブの事情も少し効く。先発の
+  /// 選手は安くは手放さず(-15%)、契約が今季で切れる選手は今のうちに
+  /// 売りたい(+15%)。
+  double transferOfferAcceptChance(int marketValue, int offer,
+      {Player? player}) {
     if (marketValue <= 0) return 1.0;
     final ratio = offer / marketValue;
-    return ((ratio - 0.55) / 0.45).clamp(0.0, 1.0);
+    if (ratio >= 1.0) return 1.0;
+    var chance = (ratio - 0.55) / 0.45;
+    if (ratio > 0.55 && player != null) {
+      final club = _sellingClubOf(player.id);
+      if (club != null) {
+        if (club.startingXI.contains(player.id)) chance -= 0.15;
+        if (player.contractYearsRemaining <= 1) chance += 0.15;
+      }
+    }
+    return chance.clamp(0.0, 1.0);
+  }
+
+  /// 他のクラブが手放せる最少の人数。これを割るなら売らない。
+  static const int minSquadToSell = 18;
+
+  /// 獲得を申し込める他のクラブの選手(自国の全部と、他の4か国の1部)。
+  /// 借りている・貸している選手、ほかのクラブと仮契約を結んだ選手、
+  /// 国をまたげない18歳未満は出さない。人数が少ないクラブは売らない。
+  List<Player> get transferTargets {
+    if (_save == null) return const [];
+    final foreign = _foreignTeamIds();
+    final home = currentLeagueTheme.name;
+    final taken = {for (final c in preContracts) c.playerId};
+    return [
+      ...transferMarket,
+      for (final t in _worldTeams)
+        if (t.id != _save!.userTeamId && t.players.length > minSquadToSell)
+          for (final p in t.players)
+            if (_isTransferTarget(p, taken) &&
+                !(p.age < 18 &&
+                    (foreign[t.id] ?? home) != home))
+              p,
+    ];
+  }
+
+  /// 他の国のクラブの id → その国([LeagueTheme]の name)。
+  Map<String, String> _foreignTeamIds() => {
+        for (final e in _save!.foreignLeagues.entries)
+          for (final t in e.value.teams) t.id: e.key,
+      };
+
+  bool _isTransferTarget(Player p, Set<String> preContracted) =>
+      !p.isLoan && !p.isLoanedOut && !preContracted.contains(p.id);
+
+  /// [playerId]の選手が今いる他のクラブ(自クラブ・作り物の市場なら null)。
+  Team? _sellingClubOf(String playerId) {
+    if (_save == null) return null;
+    for (final t in _worldTeams) {
+      if (t.id == _save!.userTeamId) continue;
+      if (t.players.any((p) => p.id == playerId)) return t;
+    }
+    return null;
+  }
+
+  /// 画面に出す、その選手の所属クラブの名前。
+  String? clubNameOf(String playerId) =>
+      _sellingClubOf(playerId)?.name ??
+      transferMarket
+          .where((p) => p.id == playerId)
+          .map((p) => p.originClubName)
+          .firstOrNull;
+
+  /// 獲得の相手。作り物の市場(テスト・旧セーブの名残)にいればそこ、
+  /// いなければ他のクラブの選手から探す。申し込めない選手なら null。
+  ({Player player, Team? club})? _acquisitionTarget(String playerId) {
+    final i = transferMarket.indexWhere((p) => p.id == playerId);
+    if (i >= 0) return (player: transferMarket[i], club: null);
+    final club = _sellingClubOf(playerId);
+    if (club == null || club.players.length <= minSquadToSell) return null;
+    final player = club.players.firstWhere((p) => p.id == playerId);
+    final taken = {for (final c in preContracts) c.playerId};
+    if (!_isTransferTarget(player, taken)) return null;
+    // 18歳未満の国際移籍の判定と、画面の「元の所属」に使う。
+    player.originClubName = club.name;
+    player.originLeague = _foreignTeamIds()[club.id] ?? currentLeagueTheme.name;
+    return (player: player, club: club);
+  }
+
+  /// 獲得した選手を、元のクラブ(または作り物の市場)から外す。
+  void _takeFromSeller(({Player player, Team? club}) target) {
+    final p = target.player;
+    final club = target.club;
+    if (club == null) {
+      transferMarket.removeWhere((q) => q.id == p.id);
+      return;
+    }
+    club.players.remove(p);
+    club.startingXI.remove(p.id);
+    if (club.captainId == p.id) club.captainId = null;
+    if (club.viceCaptainId == p.id) club.viceCaptainId = null;
+    if (club.penaltyTakerId == p.id) club.penaltyTakerId = null;
+    if (club.freeKickTakerId == p.id) club.freeKickTakerId = null;
+    if (club.cornerTakerId == p.id) club.cornerTakerId = null;
+    if (club.manMarkerId == p.id) club.manMarkerId = null;
+    if (club.setPieceDefenderId == p.id) club.setPieceDefenderId = null;
+    LineupUtils.fillVacancies(club);
+  }
+
+  /// 他のクラブから借りていた選手を、ローンの終わりに元のクラブへ戻す。
+  void _returnLoanToParent(Player p) {
+    final id = p.loanFromClubId;
+    if (id == null) return;
+    p.isLoan = false;
+    p.loanEndDate = null;
+    p.loanBuyOptionFee = null;
+    if (p.loanBaseWage != null) p.wage = p.loanBaseWage!;
+    p.loanFromClubId = null;
+    p.loanBaseWage = null;
+    final club = _worldTeams.where((t) => t.id == id).firstOrNull;
+    if (club == null || club.id == _save!.userTeamId) return;
+    club.players.add(p);
+    _logNews(
+      Tr.pick('${p.name}のローンが終わり、${club.name}へ戻りました。',
+          '${p.name}\'s loan is over and he has gone back to ${club.name}.'),
+      context: Tr.pick('ローン', 'Loan'),
+    );
   }
 
   /// 市場の選手に移籍金[offer](万円)の値切りオファーを出す。成立すれば
@@ -91,9 +211,9 @@ extension GameStateTransfer on GameState {
     if (transferOffersRejectedThisWeek.contains(playerId)) {
       return (attempted: false, accepted: false);
     }
-    final idx = transferMarket.indexWhere((p) => p.id == playerId);
-    if (idx < 0) return (attempted: false, accepted: false);
-    final player = transferMarket[idx];
+    final target = _acquisitionTarget(playerId);
+    if (target == null) return (attempted: false, accepted: false);
+    final player = target.player;
     lastSigningBlockReason = null;
     if (!_minorRuleAllows(player)) return (attempted: false, accepted: false);
     if (offer <= 0 ||
@@ -107,7 +227,8 @@ extension GameStateTransfer on GameState {
     if (!_wageBudgetAllowsSigning(player.wage)) {
       return (attempted: false, accepted: false);
     }
-    final chance = transferOfferAcceptChance(player.marketValue, offer);
+    final chance =
+        transferOfferAcceptChance(player.marketValue, offer, player: player);
     final accepted = GameState._transferOfferRng.nextDouble() < chance;
     if (!accepted) {
       transferOffersRejectedThisWeek.add(playerId);
@@ -126,8 +247,8 @@ extension GameStateTransfer on GameState {
           context: Tr.pick('移籍', 'Transfer'));
     }
     ContractEngine.applyTransferContract(player);
+    _takeFromSeller(target);
     userTeam.players.add(player);
-    transferMarket.removeWhere((p) => p.id == playerId);
     if (offer < player.marketValue) {
       _save!.negotiationSignings++;
       _evaluateAchievements();
@@ -491,9 +612,9 @@ extension GameStateTransfer on GameState {
   Future<bool> buyPlayerOnInstallments(String playerId) async {
     if (_save == null) return false;
     if (!isTransferWindowOpen) return false;
-    final idx = transferMarket.indexWhere((p) => p.id == playerId);
-    if (idx < 0) return false;
-    final player = transferMarket[idx];
+    final target = _acquisitionTarget(playerId);
+    if (target == null) return false;
+    final player = target.player;
     if (!_minorRuleAllows(player)) return false;
     if (!_registrationAllows(player)) return false;
     final total = player.marketValue;
@@ -517,8 +638,8 @@ extension GameStateTransfer on GameState {
       ),
     );
     ContractEngine.applyTransferContract(player);
+    _takeFromSeller(target);
     userTeam.players.add(player);
-    transferMarket.removeAt(idx);
     _notify();
     await _persist();
     return true;
@@ -536,9 +657,9 @@ extension GameStateTransfer on GameState {
   }) async {
     if (_save == null) return false;
     lastSigningBlockReason = null;
-    final idx = transferMarket.indexWhere((p) => p.id == playerId);
-    if (idx < 0) return false;
-    final player = transferMarket[idx];
+    final target = _acquisitionTarget(playerId);
+    if (target == null) return false;
+    final player = target.player;
     if (!_windowAllowsSigning(player, permanent: false)) return false;
     if (!_minorRuleAllows(player)) return false;
     if (!_registrationAllows(player)) return false;
@@ -549,6 +670,8 @@ extension GameStateTransfer on GameState {
 
     _book(LedgerCategory.transfers, -(fee));
     player.isLoan = true;
+    player.loanFromClubId = target.club?.id;
+    player.loanBaseWage = player.wage;
     player.loanWeeksRemaining = 0;
     player.loanEndDate =
         TransferWindowCalendar.loanEndDate(today, currentLeagueTheme, length);
@@ -559,8 +682,8 @@ extension GameStateTransfer on GameState {
     // 前クラブで設定されていた解放条項が残っていると、ローン中の選手が
     // 自動移籍オファーの対象になってしまうため解除する。
     player.releaseClause = null;
+    _takeFromSeller(target);
     userTeam.players.add(player);
-    transferMarket.removeAt(idx);
     _notify();
     await _persist();
     return true;
@@ -582,7 +705,9 @@ extension GameStateTransfer on GameState {
     player.loanBuyOptionFee = null;
     // ローン中は週俸を6割に軽減していた(signLoanPlayer)ため、完全移籍化に
     // あたって元の水準に戻す。そのままだと恒久的に割引契約のままになる。
-    player.wage = max(1, (player.wage / 0.6).round());
+    player.wage = player.loanBaseWage ?? max(1, (player.wage / 0.6).round());
+    player.loanFromClubId = null;
+    player.loanBaseWage = null;
     // 年数そのものを入れると今シーズンぶんが足りず、例えば32歳以上は1年で
     // 境界を迎えてその場で退団していた。獲得と同じ考え方で結ぶ。
     player.contractYearsRemaining = 0;

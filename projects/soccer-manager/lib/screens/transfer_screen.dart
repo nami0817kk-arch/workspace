@@ -68,12 +68,18 @@ class _TransferScreenState extends State<TransferScreen>
     with SingleTickerProviderStateMixin {
   /// オーナーが見送った候補。この画面を開いているあいだだけ覚える。
   final Set<String> _passed = {};
+
+  // 「探す」の絞り込み。
+  PositionGroup? _searchGroup;
+  int? _searchMaxAge;
+  TransferSortOption _searchSort = TransferSortOption.overall;
+  int _searchLimit = 40;
   late final TabController _tabController;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
   }
 
   @override
@@ -87,6 +93,8 @@ class _TransferScreenState extends State<TransferScreen>
     final gameState = context.watch<GameState>();
     final save = gameState.save!;
     final squadFull = gameState.userTeam.players.length >= maxSquadSize;
+    // 申し込める他のクラブの選手。この画面の作り直しのたびに1回だけ集める。
+    final targets = gameState.transferTargets;
 
     return Scaffold(
       appBar: screenBar(
@@ -95,7 +103,10 @@ class _TransferScreenState extends State<TransferScreen>
         leading: widget.embedded ? null : const BackButton(),
         controller: _tabController,
         tabs: [
-          Tr.pick('市場', 'Market'),
+          Tr.pick('監督の案', 'Proposals'),
+          Tr.pick('探す', 'Search'),
+          Tr.pick('注目 (${save.watchlistPlayerIds.length})',
+              'Watchlist (${save.watchlistPlayerIds.length})'),
           Tr.pick('フリーエージェント (${gameState.freeAgents.length})',
               'Free agents (${gameState.freeAgents.length})'),
         ],
@@ -108,7 +119,9 @@ class _TransferScreenState extends State<TransferScreen>
         child: TabBarView(
           controller: _tabController,
           children: [
-            _buildProposalTab(context, gameState, save, squadFull),
+            _buildProposalTab(context, gameState, save, squadFull, targets),
+            _buildSearchTab(context, gameState, squadFull, targets),
+            _buildWatchTab(context, gameState, save, squadFull, targets),
             _buildFreeAgentTab(context, gameState, squadFull),
           ],
         ),
@@ -122,11 +135,12 @@ class _TransferScreenState extends State<TransferScreen>
     GameState gameState,
     SaveGame save,
     bool squadFull,
+    List<Player> targets,
   ) {
     final windowOpen = gameState.isTransferWindowOpen;
     final proposals = SigningProposalEngine.propose(
       gameState.userTeam,
-      gameState.transferMarket,
+      targets,
       budget: save.budget,
       passed: _passed,
     );
@@ -220,8 +234,8 @@ class _TransferScreenState extends State<TransferScreen>
                                         ),
                                         Text(
                                           Tr.pick(
-                                              '総合力 ${pr.player.overall}・移籍金 ${formatMoney(pr.player.marketValue)}',
-                                              'Overall ${pr.player.overall} • Fee ${formatMoney(pr.player.marketValue)}'),
+                                              '${gameState.clubNameOf(pr.player.id) ?? '-'}・総合力 ${pr.player.overall}・移籍金 ${formatMoney(pr.player.marketValue)}',
+                                              '${gameState.clubNameOf(pr.player.id) ?? '-'} • Overall ${pr.player.overall} • Fee ${formatMoney(pr.player.marketValue)}'),
                                           style: Theme.of(context)
                                               .textTheme
                                               .bodySmall,
@@ -237,6 +251,8 @@ class _TransferScreenState extends State<TransferScreen>
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
+                                  _WatchButton(playerId: pr.player.id),
+                                  const Spacer(),
                                   TextButton(
                                     onPressed: () {
                                       FeedbackService.tap();
@@ -269,6 +285,196 @@ class _TransferScreenState extends State<TransferScreen>
       ],
     );
   }
+
+  /// 探す: 他のクラブの選手を、ポジション・年齢で絞って並べる。
+  Widget _buildSearchTab(
+    BuildContext context,
+    GameState gameState,
+    bool squadFull,
+    List<Player> targets,
+  ) {
+    var found = TransferScreen.filterAndSort(
+      targets,
+      group: _searchGroup,
+      sort: _searchSort,
+    );
+    if (_searchMaxAge != null) {
+      found = found.where((p) => p.age <= _searchMaxAge!).toList();
+    }
+    final shown = found.take(_searchLimit).toList();
+    return Column(
+      children: [
+        _TransferWindowBanner(
+          open: gameState.isTransferWindowOpen,
+          deadlineDay: gameState.isTransferDeadlineDay,
+          label: gameState.transferWindowStatusLabel,
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(12, 8, 12, 0),
+          child: Wrap(
+            spacing: 6,
+            runSpacing: 4,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              for (final g in <PositionGroup?>[null, ...PositionGroup.values])
+                ChoiceChip(
+                  label: Text(_groupLabel(g)),
+                  selected: _searchGroup == g,
+                  onSelected: (_) => setState(() => _searchGroup = g),
+                ),
+              DropdownButton<int?>(
+                value: _searchMaxAge,
+                items: [
+                  for (final a in const <int?>[null, 21, 25, 29])
+                    DropdownMenuItem(
+                      value: a,
+                      child: Text(a == null
+                          ? Tr.pick('年齢を問わない', 'Any age')
+                          : Tr.pick('$a歳以下', '$a or younger')),
+                    ),
+                ],
+                onChanged: (v) => setState(() => _searchMaxAge = v),
+              ),
+              DropdownButton<TransferSortOption>(
+                value: _searchSort,
+                items: [
+                  for (final o in TransferSortOption.values)
+                    DropdownMenuItem(value: o, child: Text(_sortLabel(o))),
+                ],
+                onChanged: (v) =>
+                    setState(() => _searchSort = v ?? _searchSort),
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(12, 4, 12, 0),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              Tr.pick(
+                  '自国の全部と、他の4か国の1部のクラブの選手から探せます。該当 ${found.length}人(上から${shown.length}人を表示)。',
+                  'Search players at every club at home and in the top flights of the other four countries. ${found.length} match (showing the top ${shown.length}).'),
+              style: TextStyle(
+                  fontSize: 12, color: SemanticColors.subtleText(context)),
+            ),
+          ),
+        ),
+        Expanded(
+          child: ListView(
+            padding: const EdgeInsets.all(8),
+            children: [
+              for (final p in shown)
+                _targetTile(context, gameState, p, squadFull),
+              if (found.length > shown.length)
+                TextButton(
+                  onPressed: () => setState(() => _searchLimit += 40),
+                  child: Text(Tr.pick('もっと見る', 'Show more')),
+                ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// 注目: 注目リストに入れた選手。
+  Widget _buildWatchTab(
+    BuildContext context,
+    GameState gameState,
+    SaveGame save,
+    bool squadFull,
+    List<Player> targets,
+  ) {
+    final byId = {for (final p in targets) p.id: p};
+    final watched = [
+      for (final id in save.watchlistPlayerIds)
+        if (byId[id] != null) byId[id]!,
+    ];
+    final unavailable = save.watchlistPlayerIds.length - watched.length;
+    return ListView(
+      padding: const EdgeInsets.all(8),
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8),
+          child: Text(
+            Tr.pick(
+                '星を付けた選手です。監督の案や「探す」で星を押すと入ります。',
+                'Players you starred. Tap the star in Proposals or Search to add one.'),
+            style: TextStyle(
+                fontSize: 12, color: SemanticColors.subtleText(context)),
+          ),
+        ),
+        if (unavailable > 0)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Text(
+              Tr.pick(
+                  'ほかに$unavailable人は、今は申し込めません(自クラブの選手・ローン中・他のクラブと仮契約済み・引退など)。',
+                  '$unavailable more cannot be approached right now (your own players, on loan, pre-contracted elsewhere, retired and so on).'),
+              style: TextStyle(
+                  fontSize: 12, color: SemanticColors.subtleText(context)),
+            ),
+          ),
+        if (watched.isEmpty)
+          Padding(
+            padding: const EdgeInsets.all(24),
+            child: Center(
+              child: Text(Tr.pick('注目している選手はいません',
+                  'You are not watching anyone')),
+            ),
+          ),
+        for (final p in watched) _targetTile(context, gameState, p, squadFull),
+      ],
+    );
+  }
+
+  /// 他のクラブの選手の1行(所属・総合力・市場価値・注目・獲得)。
+  Widget _targetTile(
+    BuildContext context,
+    GameState gameState,
+    Player p,
+    bool squadFull,
+  ) {
+    final canSign = (gameState.isTransferWindowOpen ||
+            (gameState.isGoalkeeperEmergency && p.position == Position.gk)) &&
+        !squadFull;
+    return Card(
+      child: ListTile(
+        leading: PlayerFaceAvatar(playerId: p.id, position: p.position),
+        title: Text(Tr.pick('${p.name}(${p.position.label}・${p.age}歳)',
+            '${p.name} (${p.position.label}, ${p.age})')),
+        subtitle: Text(Tr.pick(
+            '${gameState.clubNameOf(p.id) ?? '-'}・総合力 ${p.overall}・市場価値 ${formatMoney(p.marketValue)}',
+            '${gameState.clubNameOf(p.id) ?? '-'} • Overall ${p.overall} • Value ${formatMoney(p.marketValue)}')),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _WatchButton(playerId: p.id),
+            TextButton(
+              onPressed: canSign ? () => _showAcquireSheet(context, p) : null,
+              child: Text(Tr.pick('獲得', 'Sign')),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  static String _groupLabel(PositionGroup? g) => switch (g) {
+        null => Tr.pick('全員', 'All'),
+        PositionGroup.gk => 'GK',
+        PositionGroup.def => Tr.pick('守備', 'DEF'),
+        PositionGroup.mid => Tr.pick('中盤', 'MID'),
+        PositionGroup.att => Tr.pick('攻撃', 'ATT'),
+      };
+
+  static String _sortLabel(TransferSortOption o) => switch (o) {
+        TransferSortOption.overall => Tr.pick('総合力が高い順', 'Best overall'),
+        TransferSortOption.potential => Tr.pick('伸びしろの順', 'Best potential'),
+        TransferSortOption.marketValue => Tr.pick('安い順', 'Cheapest'),
+        TransferSortOption.age => Tr.pick('若い順', 'Youngest'),
+      };
 
   Widget _buildFreeAgentTab(
     BuildContext context,
@@ -358,7 +564,8 @@ class _TransferScreenState extends State<TransferScreen>
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setState) {
           final offer = (total * ratio).round();
-          final chance = gameState.transferOfferAcceptChance(total, offer);
+          final chance = gameState.transferOfferAcceptChance(total, offer,
+              player: player);
           return AlertDialog(
             title: Text(Tr.pick(
                 '${player.name}への移籍金オファー', 'Your bid for ${player.name}')),
@@ -799,6 +1006,30 @@ class _RegistrationCard extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+}
+
+/// 注目リストに入れる・外す星。
+class _WatchButton extends StatelessWidget {
+  const _WatchButton({required this.playerId});
+
+  final String playerId;
+
+  @override
+  Widget build(BuildContext context) {
+    final game = context.watch<GameState>();
+    final watched = game.isWatched(playerId);
+    return IconButton(
+      icon: Icon(watched ? Icons.star : Icons.star_border,
+          color: watched ? Colors.amber : null),
+      tooltip: watched
+          ? Tr.pick('注目から外す', 'Stop watching')
+          : Tr.pick('注目に入れる', 'Watch this player'),
+      onPressed: () {
+        FeedbackService.tap();
+        game.toggleWatched(playerId);
+      },
     );
   }
 }
