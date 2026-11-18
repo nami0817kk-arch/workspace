@@ -386,6 +386,10 @@ extension GameStateFinance on GameState {
   @visibleForTesting
   void debugSettlePartnerClub() => _settlePartnerClub();
 
+  /// テスト用: 今日を [day] まで進める(あいだの給与日・入金日も処理する)。
+  @visibleForTesting
+  void debugAdvanceTodayTo(DateTime day) => _advanceTodayTo(day);
+
   /// 次の節に打つと決めた試合日のイベント。無ければ null。
   MatchdayPromo? get activeMatchdayPromo {
     final id = _save?.matchdayPromoId;
@@ -803,6 +807,112 @@ extension GameStateFinance on GameState {
       : perMatchdayFromWeekly(
           scaledMoney(_save!.infrastructure.totalStaffWeeklyWage),
           matchdaysPerSeason);
+
+  /// 選手の給与を毎月末にいくら払うか(年俸の12分の1)。
+  int get monthlyPlayerWageCost => _save == null
+      ? 0
+      : MoneyCalendar.monthlyFromWeekly(
+          ContractEngine.weeklyWageBill(userTeam));
+
+  /// スタッフの給与を毎月末にいくら払うか。
+  int get monthlyStaffWageCost => _save == null
+      ? 0
+      : MoneyCalendar.monthlyFromWeekly(
+          scaledMoney(_save!.infrastructure.totalStaffWeeklyWage));
+
+  /// 今日が [before] から [after] へ進んだあいだのお金の日(給与の月末・
+  /// 放映権の入金日)を、日付の順に処理する。
+  void _settleMoneyDates(DateTime before, DateTime after) {
+    final events = <(DateTime, bool)>[
+      for (final d in MoneyCalendar.monthEndsBetween(before, after)) (d, true),
+      for (final d in MoneyCalendar.broadcastDatesBetween(before, after))
+        (d, false),
+    ]..sort((a, b) => a.$1.compareTo(b.$1));
+    for (final (day, isWage) in events) {
+      if (isWage) {
+        _book(LedgerCategory.staffWages, -monthlyStaffWageCost);
+        _book(LedgerCategory.playerWages, -monthlyPlayerWageCost);
+      } else {
+        _book(LedgerCategory.broadcast, broadcastInstallmentOn(day));
+      }
+    }
+  }
+
+  /// [day] の放映権の入金額(入金日でなければ0)。今いる部の年額の4分の1。
+  int broadcastInstallmentOn(DateTime day) {
+    final i = MoneyCalendar.broadcastIndexOf(day);
+    if (i == null) return 0;
+    return MoneyCalendar.broadcastInstallment(
+        annualBroadcast(currentDivisionTier), i);
+  }
+
+  /// 第[matchday]節が祝日なら、その祝日の名前。
+  String? holidayOfMatchday(int matchday) => MoneyCalendar.holidayName(
+      dateOfMatchday(matchday), currentLeagueTheme);
+
+  /// 第[matchday]節の試合の日に入る見込みの収入(観客・スポンサー・グッズ。
+  /// 祝日なら客が増える。放映権は入金日に別に入る)。
+  int expectedMatchdayIncome(int matchday) {
+    if (_save == null) return 0;
+    final p = weeklyIncomeParts(_save!.userTeamId);
+    final income = p.gate + p.sponsor + p.merchandise;
+    if (holidayOfMatchday(matchday) == null) return income;
+    final base = expectedAttendance;
+    return GameState.derbyAdjustedIncome(
+      income,
+      baseAttendance: base,
+      actualAttendance:
+          MoneyCalendar.holidayAttendance(base, stadiumCapacity),
+    );
+  }
+
+  /// 今日より後のお金の予定(給与日・放映権の入金日・リーグ戦の日)を
+  /// 日付の順に [count] 件。
+  List<({DateTime date, String label, int amount})> upcomingMoneyDates(
+      {int count = 8}) {
+    final save = _save;
+    if (save == null) return const [];
+    final from = today;
+    final horizon = DateTime(from.year + 1, from.month, from.day);
+    final wages = monthlyPlayerWageCost + monthlyStaffWageCost;
+    final out = <({DateTime date, String label, int amount})>[
+      for (final d in MoneyCalendar.monthEndsBetween(from, horizon))
+        (
+          date: d,
+          label: Tr.pick('給与の支払い(選手・スタッフ)', 'Wages paid (players and staff)'),
+          amount: -wages,
+        ),
+      for (final d in MoneyCalendar.broadcastDatesBetween(from, horizon))
+        (
+          date: d,
+          label: Tr.pick(
+              '放映権の入金(${MoneyCalendar.broadcastIndexOf(d)! + 1}/4回目)',
+              'Broadcast payment (${MoneyCalendar.broadcastIndexOf(d)! + 1} of 4)'),
+          amount: broadcastInstallmentOn(d),
+        ),
+    ];
+    final seen = <int>{};
+    for (final f in save.league.fixtures) {
+      if (f.result != null) continue;
+      if (f.homeTeamId != save.userTeamId && f.awayTeamId != save.userTeamId) {
+        continue;
+      }
+      if (!seen.add(f.matchday)) continue;
+      final d = dateOfMatchday(f.matchday);
+      if (!d.isAfter(from) && d != from) continue;
+      final holiday = holidayOfMatchday(f.matchday);
+      out.add((
+        date: d,
+        label: holiday == null
+            ? Tr.pick('第${f.matchday}節の試合の収入', 'Matchday ${f.matchday} income')
+            : Tr.pick('第${f.matchday}節の試合の収入($holiday・客が増える)',
+                'Matchday ${f.matchday} income ($holiday, bigger crowd)'),
+        amount: expectedMatchdayIncome(f.matchday),
+      ));
+    }
+    out.sort((a, b) => a.date.compareTo(b.date));
+    return out.take(count).toList();
+  }
 
   /// 資金が動く唯一の入口。資金を増減させ、同じ額をそのシーズンの収支の
   /// 記録に残す。ここを通さずに資金だけ動かすと、損益計算書の合計が実際の

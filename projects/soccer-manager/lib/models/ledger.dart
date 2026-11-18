@@ -8,7 +8,7 @@ enum LedgerCategory {
   gate, // 観客収入
   sponsor, // スポンサー収入
   merchandise, // グッズ収入
-  broadcast, // 放映権料(毎節の配分と季末の分配金)
+  broadcast, // 放映権料(年4回の入金と季末の分配金)
   prize, // 賞金・ボーナス(リーグ・カップ・大陸・理事会・昇格)
   playerSales, // 選手の売却・ユースの補償金
   playerWages, // 選手の給与

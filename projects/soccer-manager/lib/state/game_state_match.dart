@@ -614,8 +614,17 @@ extension GameStateMatch on GameState {
       }
     }
 
-    var income = weeklyIncomeFor(_save!.userTeamId);
+    // 試合の日に入るのは観客・スポンサー・グッズ。放映権は年4回の入金日に、
+    // 給与は毎月末に払う(MoneyCalendar)。
+    final incomeParts = weeklyIncomeParts(_save!.userTeamId);
+    final partsTotal =
+        incomeParts.gate + incomeParts.sponsor + incomeParts.merchandise;
+    var income = partsTotal;
     final isDerby = userFixture != null && isRivalFixture(userFixture);
+    // 祝日の試合は客が増える(リーグ戦のみ)。
+    final holiday = userFixture == null
+        ? null
+        : MoneyCalendar.holidayName(dateOfMatchday(md), currentLeagueTheme);
 
     // ダービーは客が増える。ただし**入れる人数以上からは入場料を取れない**。
     // 観客数だけを収容人数で頭打ちにして、収入には倍率をそのまま掛けていた
@@ -628,33 +637,27 @@ extension GameStateMatch on GameState {
       attendance =
           (attendance * GameState.derbyAttendanceMultiplier).round();
     }
+    if (holiday != null) {
+      attendance =
+          (attendance * MoneyCalendar.holidayAttendanceMultiplier).round();
+    }
     final actualAttendance = attendance.clamp(0, stadiumCapacity);
     lastMatchAttendance = actualAttendance;
-    if (isDerby) {
+    if (isDerby || holiday != null) {
       income = GameState.derbyAdjustedIncome(
         income,
         baseAttendance: baseAttendance,
         actualAttendance: actualAttendance,
       );
     }
-    // 収入は内訳ごとに記録する。ダービーで増えた分は観客収入に入れる。
-    final incomeParts = weeklyIncomeParts(_save!.userTeamId);
-    final partsTotal = incomeParts.gate +
-        incomeParts.sponsor +
-        incomeParts.merchandise +
-        incomeParts.broadcast;
+    // 収入は内訳ごとに記録する。ダービー・祝日で増えた分は観客収入に入れる。
     _book(LedgerCategory.gate, incomeParts.gate + (income - partsTotal));
     _book(LedgerCategory.sponsor, incomeParts.sponsor);
     _book(LedgerCategory.merchandise, incomeParts.merchandise);
-    _book(LedgerCategory.broadcast, incomeParts.broadcast);
     // 営業ブーストは、収入が入った節で1つ使う。
     if (_save!.marketingBoostWeeks > 0) _save!.marketingBoostWeeks -= 1;
     // 試合日のイベントも、収入が入った節で使い切る。
     _consumeMatchdayPromo();
-    // 給与は年額(週俸×52)をその年の節の数で割って毎節払う。表示の年俸と
-    // 1年に払う総額が一致する。スタッフの給与は今の部の規模に直して払う。
-    _book(LedgerCategory.staffWages, -matchdayStaffWageCost);
-    _book(LedgerCategory.playerWages, -matchdayPlayerWageCost);
 
     // リーグ公式戦にスタメン出場した選手には出場手当を支払う(親善試合・カップ戦は対象外)。
     if (userFixture != null) {

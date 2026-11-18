@@ -67,6 +67,7 @@ import 'package:soccer_manager/screens/youth_screen.dart';
 import 'package:soccer_manager/screens/glossary_screen.dart';
 import 'package:soccer_manager/data/glossary_entries.dart';
 import 'package:soccer_manager/data/guide_sections.dart';
+import 'package:soccer_manager/models/ledger.dart';
 import 'package:soccer_manager/state/game_state.dart';
 import 'package:soccer_manager/widgets/formation_layout.dart';
 import 'package:soccer_manager/widgets/match_widgets.dart'
@@ -8112,7 +8113,8 @@ void main() {
     final cup = gameState.domesticCup!;
     final match = cup.nextUnplayedMatch!;
     final userId = gameState.userTeam.id;
-    final budgetBefore = gameState.save!.budget;
+    // 試合の日までに月末を越えると給与が出るので、資金ではなく賞金の記録で見る。
+    final prizeBefore = gameState.currentLedger.of(LedgerCategory.prize);
     final appsBefore = gameState.userTeam.players
         .fold<int>(0, (s, p) => s + p.careerAppearances);
 
@@ -8140,7 +8142,8 @@ void main() {
       expect(match.penaltyWinnerId, isNotNull, reason: 'ノックアウトの引き分けはPK戦で決着する');
     }
     if (match.winnerId == userId) {
-      expect(gameState.save!.budget, greaterThan(budgetBefore),
+      expect(gameState.currentLedger.of(LedgerCategory.prize),
+          greaterThan(prizeBefore),
           reason: 'カップ戦の勝ち上がり賞金が入る');
     }
 
@@ -8724,7 +8727,7 @@ void main() {
     expect(
       easyState.save!.boardTargetRank,
       (BoardEngine.estimateTargetRank(easyState.save!.league, 'user') + 2)
-          .clamp(1, teamsPerLeague),
+          .clamp(1, easyState.save!.league.teams.length),
       reason: 'イージーは理事会目標が2つ緩い',
     );
 
@@ -8735,7 +8738,7 @@ void main() {
     expect(
       hardState.save!.boardTargetRank,
       (BoardEngine.estimateTargetRank(hardState.save!.league, 'user') - 1)
-          .clamp(1, teamsPerLeague),
+          .clamp(1, hardState.save!.league.teams.length),
       reason: 'ハードは理事会目標が1つ厳しい',
     );
 

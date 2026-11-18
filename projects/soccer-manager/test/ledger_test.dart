@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:soccer_manager/logic/ledger_engine.dart';
 import 'package:soccer_manager/logic/loan_engine.dart';
 import 'package:soccer_manager/models/ledger.dart';
+import 'package:soccer_manager/logic/money_calendar.dart';
 import 'package:soccer_manager/models/save_game.dart';
 import 'package:soccer_manager/state/game_state.dart';
 
@@ -113,9 +114,13 @@ void main() {
       await gs.playNextMatchdayQuickSim();
       final l = gs.currentLedger;
       expect(l.of(LedgerCategory.playerWages), lessThan(0));
-      // 年俸(週俸×52)をその年の節の数で割って毎節払う。
-      expect(-(l.of(LedgerCategory.playerWages) + l.of(LedgerCategory.staffWages)),
-          gs.matchdayPlayerWageCost + gs.matchdayStaffWageCost);
+      // 給与は毎月末に年俸の12分の1を払う。7月1日から第1節(8月)までに
+      // 7月末を1回越えている。
+      final months =
+          MoneyCalendar.monthEndsBetween(DateTime(2026, 6, 30), gs.today).length;
+      expect(months, greaterThanOrEqualTo(1));
+      expect(-l.of(LedgerCategory.playerWages), gs.monthlyPlayerWageCost * months);
+      expect(-l.of(LedgerCategory.staffWages), gs.monthlyStaffWageCost * months);
     });
 
     test('今の収支が赤字なら、資金が尽きるまでの節数が出る', () async {

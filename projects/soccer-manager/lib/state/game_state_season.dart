@@ -130,6 +130,8 @@ extension GameStateSeason on GameState {
     if (!d.isAfter(before)) return;
     // 仮契約の解禁(1月1日)・延長オプションの期限(3月31日)。
     _onContractDatesAdvanced(before, d);
+    // 給与の月末・放映権の入金日。
+    _settleMoneyDates(before, d);
     final theme = currentLeagueTheme;
     // 窓が開いたら、名簿の外だった選手もまた登録できる。
     if (TransferWindowCalendar.openedBetween(before, d, theme)) {
@@ -852,6 +854,9 @@ extension GameStateSeason on GameState {
     // シミュレーションなど重い処理に入る。
     await Future<void>.delayed(Duration.zero);
     final league = _save!.league;
+    // 会計年度の終わり(6月30日)まで日を進める。5・6月の給与は、この季の
+    // 年度の記録に入る(7月1日からが次の年度)。
+    _advanceTodayTo(MoneyCalendar.fiscalYearEnd(league.season));
     final standings = league.sortedStandings;
     final finalRank =
         standings.indexWhere((r) => r.teamId == _save!.userTeamId) + 1;
