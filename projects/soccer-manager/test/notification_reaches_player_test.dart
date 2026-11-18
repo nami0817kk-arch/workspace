@@ -20,6 +20,8 @@ void main() {
     const reachesPlayerAnotherWay = <String, String>{
       'lastMilestones': 'ニュースログへ流し込んでいる(_logNews)',
       'lastPromotionBonus': '金額を lastDivisionChangeMessage の文面に含めている',
+      'lastRenewalRefusals': 'シーズン開始のニュースログへ流し込んでいる(_logNews)',
+      'lastPreContractArrivals': 'シーズン開始のニュースログへ流し込んでいる(_logNews)',
     };
 
     // フィールドの宣言は全て game_state.dart にある。part 側の extension は

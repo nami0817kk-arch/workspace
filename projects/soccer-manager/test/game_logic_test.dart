@@ -838,7 +838,9 @@ void main() {
       () async {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
-    final player = gameState.userTeam.players.first;
+    // 18歳未満は契約の上限が3年なので、上限に掛からない年齢の選手で見る。
+    final player =
+        gameState.userTeam.players.firstWhere((p) => p.age >= 18);
     player.contractYearsRemaining = 1;
     final cost = gameState.renewalCostFor(player.id) +
         gameState.signingBonusFor(player.id);
