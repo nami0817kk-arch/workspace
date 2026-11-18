@@ -14,6 +14,7 @@ import 'rating.dart';
 import 'records.dart';
 import 'skills.dart';
 import 'rng.dart';
+import 'scenario.dart';
 import 'trade.dart';
 
 /// 自動で遊ぶGM・点検が1回に進める年数。ゲームの任期に上限は無い(解任か、自分で終えるまで続く)。
@@ -1846,6 +1847,41 @@ class Career {
     return false;
   }
 
+  /// シナリオ([Scenario] の番号。ふつうに始めたら null)と、そのチーム・結果(0: 途中、1: 達成、-1: 失敗)。
+  int? scenario;
+  int scenarioTeamId = -1;
+  int scenarioResult = 0;
+
+  Scenario? get scenarioOf => scenario == null ? null : Scenario.values[scenario!.clamp(0, Scenario.values.length - 1)];
+
+  /// シナリオを始める(新しく任されたすぐあとに呼ぶ)。
+  void startScenario(Scenario s) {
+    scenario = s.index;
+    scenarioTeamId = mine;
+    scenarioResult = 0;
+    _mail(Sender.owner, 'シナリオ: ${s.label}', '${s.goal}。期限は${s.years}年目のシーズンまで。');
+  }
+
+  /// シーズンの終わりにシナリオを確かめる。
+  void _checkScenario(int res) {
+    final s = scenarioOf;
+    if (s == null || scenarioResult != 0) return;
+    if (mine != scenarioTeamId) {
+      scenarioResult = -1;
+      _mail(Sender.owner, 'シナリオ失敗: ${s.label}', '任されたチームを離れたため、お題は果たせなかった。');
+      return;
+    }
+    if (scenarioDone(this, s, rank: confRank, result: res)) {
+      scenarioResult = 1;
+      trust = (trust + 10).clamp(0, 100);
+      hype = (hype + 10).clamp(0, 100);
+      _mail(Sender.owner, 'シナリオ達成: ${s.label}', '$season年目でお題を果たした(${s.goal})。オーナーの信頼+10・人気+10。');
+    } else if (season >= s.years) {
+      scenarioResult = -1;
+      _mail(Sender.owner, 'シナリオ失敗: ${s.label}', '期限の${s.years}年目までに、お題を果たせなかった(${s.goal})。任期はこのまま続けられる。');
+    }
+  }
+
   /// 采配する試合の乱数。リーグの乱数を使わず、季と節から決める(見ながら進めても、確定しても同じ試合になる)。
   int get liveSeed => (seed * 1000003 + season * 9176 + roundAt * 131 + 0x2545) & 0x7fffffff;
 
@@ -2442,6 +2478,7 @@ class Career {
     final delta = raw < 0 ? (raw * difficulty.ownerStrict).round() : raw;
     trust = (trust + delta).clamp(0, 100);
     history.add(SeasonRecord(season: season, wins: me.wins, losses: me.losses, rank: confRank, result: res, trustAfter: trust, target: target));
+    _checkScenario(res);
     if (trust <= 0) fired = true;
     jobOffers = fired ? _makeOffers() : [];
     _awardRating(res);
@@ -4220,6 +4257,7 @@ class Career {
         'myt': [for (final t in myTrades) t.toJson()],
         'slg': seasonLog,
         if (restWhenSettled) 'rws': true,
+        if (scenario != null) 'scn': [scenario, scenarioTeamId, scenarioResult],
         'aga': {for (final e in agentAsks.entries) '${e.key}': e.value},
         'fp': fanPosts,
         'so': simStops,
@@ -4348,6 +4386,9 @@ class Career {
       ..myTrades = [for (final x in (j['myt'] as List? ?? const [])) MyTrade.fromJson(Map<String, dynamic>.from(x as Map))]
       ..seasonLog = [for (final r in (j['slg'] as List? ?? const [])) [for (final x in r as List) x as int]]
       ..restWhenSettled = j['rws'] == true
+      ..scenario = j['scn'] is List ? (j['scn'] as List)[0] as int : null
+      ..scenarioTeamId = j['scn'] is List ? (j['scn'] as List)[1] as int : -1
+      ..scenarioResult = j['scn'] is List ? (j['scn'] as List)[2] as int : 0
       ..agentAsks = {for (final e in ((j['aga'] as Map?) ?? const {}).entries) int.parse(e.key as String): e.value as int}
       ..fanPosts = [for (final x in (j['fp'] as List? ?? const [])) x as String]
       ..simStops = j['so'] == null ? [SimStop.offer.index, SimStop.injury.index] : [for (final x in j['so'] as List) x as int]

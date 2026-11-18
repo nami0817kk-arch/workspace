@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../gm/difficulty.dart';
 import '../../gm/profile.dart';
+import '../../gm/scenario.dart';
 import '../art/title_art.dart';
 import '../gm_controller.dart';
 import '../howto_screen.dart';
@@ -48,6 +49,39 @@ class GmHomeScreen extends StatelessWidget {
     c.newCareer(team, seed: seed, difficulty: difficulty);
   }
 
+  /// お題を選んで始める(チームはお題に合わせて決まる)。
+  Future<void> _scenario(BuildContext context) async {
+    final s = await showDialog<Scenario>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('シナリオで始める'),
+        content: SizedBox(
+          width: 480,
+          child: SingleChildScrollView(
+            child: Column(mainAxisSize: MainAxisSize.min, children: [
+              for (final s in Scenario.values)
+                Card(
+                  child: ListTile(
+                    title: Text(s.label, style: const TextStyle(fontWeight: FontWeight.bold)),
+                    subtitle: Text('${s.goal}(期限 ${s.years}年)', style: const TextStyle(fontSize: 12.5)),
+                    onTap: () => Navigator.pop(ctx, s),
+                  ),
+                ),
+              if (c.career != null) const Text('始めると、いまの任期の続きは消える。', style: TextStyle(fontSize: 12, color: GmColors.bad)),
+            ]),
+          ),
+        ),
+        actions: [TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('やめる'))],
+      ),
+    );
+    if (s == null || !context.mounted) return;
+    if (!c.howtoSeen) {
+      await Navigator.of(context).push(MaterialPageRoute<void>(builder: (ctx) => HowToScreen(onStart: () => Navigator.pop(ctx))));
+      await c.markHowtoSeen();
+    }
+    c.newScenario(s);
+  }
+
   @override
   Widget build(BuildContext context) {
     final p = c.profile;
@@ -89,6 +123,13 @@ class GmHomeScreen extends StatelessWidget {
         onPressed: () => _start(context),
         icon: const Icon(Icons.badge_rounded),
         label: const Text('GMに就任する'),
+      ),
+      const SizedBox(height: 8),
+      OutlinedButton.icon(
+        key: const Key('scenario'),
+        onPressed: () => _scenario(context),
+        icon: const Icon(Icons.flag_rounded),
+        label: const Text('シナリオで始める'),
       ),
     ]);
     final right = ListView(

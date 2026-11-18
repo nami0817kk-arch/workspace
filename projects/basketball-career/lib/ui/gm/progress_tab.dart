@@ -81,10 +81,31 @@ class ProgressTab extends StatelessWidget {
 
   // ------------------------------------------------------------ シーズン前
 
+  /// シナリオのお題と、いまの様子。
+  List<Widget> _scenarioCard(Career car) {
+    final s = car.scenarioOf;
+    if (s == null) return const [];
+    final left = s.years - car.season;
+    final (text, color) = switch (car.scenarioResult) {
+      1 => ('達成した', GmColors.good),
+      -1 => ('果たせなかった', GmColors.bad),
+      _ => (left > 0 ? '期限まであと$left年(今季を入れて${left + 1}シーズン)' : '今季が期限', GmColors.gold),
+    };
+    return [
+      _card(edge: color, [
+        _head('シナリオ: ${s.label}', icon: Icons.flag_rounded, color: color),
+        const SizedBox(height: 4),
+        Text(s.goal, style: const TextStyle(fontSize: 13, height: 1.4)),
+        Text(text, style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.bold, color: color)),
+      ]),
+    ];
+  }
+
   List<Widget> _preseason(BuildContext context, Career car) {
     final problem = car.startProblem;
     final rank = car.strengthRank(car.mine) + 1;
     return [
+      ..._scenarioCard(car),
       _card([
         _head('${car.season}年目のシーズン前'),
         const SizedBox(height: 8),
@@ -224,6 +245,7 @@ class ProgressTab extends StatelessWidget {
     final deadline = car.block < tradeDeadlineBlock;
     final blockWins = car.lastGames.where((g) => g.winner == car.mine).length;
     return [
+      ..._scenarioCard(car),
       _card([
         _head(played == 0 ? '開幕' : '$played試合を終えて'),
         const SizedBox(height: 8),
