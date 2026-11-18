@@ -284,7 +284,9 @@ class ProgressTab extends StatelessWidget {
       ..._inboxCard(context, car),
       ..._scheduleCard(car),
       if (car.phase == Phase.season) NextOpponentCard(car: car),
+      ..._columnCard(car),
       _pressCard(car),
+      ..._fanCard(car),
       _goalsCard(car),
       ..._injuryCard(car),
       ..._wearCard(car),
@@ -794,6 +796,42 @@ class ProgressTab extends StatelessWidget {
         Text('ファンの声: 「${car.fanVoice}」', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
       ]);
 
+  /// 週ごとのリーグの話題。
+  List<Widget> _columnCard(Career car) {
+    final items = car.leagueColumn;
+    if (items.isEmpty) return const [];
+    return [
+      _card([
+        _head('リーグの話題', icon: Icons.campaign_rounded),
+        const SizedBox(height: 6),
+        for (final n in items) Padding(padding: const EdgeInsets.symmetric(vertical: 2), child: Text('・$n', style: const TextStyle(fontSize: 13, height: 1.4))),
+      ]),
+    ];
+  }
+
+  /// 自分の動きへのファンの反応(SNS 風)。
+  List<Widget> _fanCard(Career car) {
+    if (car.fanPosts.isEmpty) return const [];
+    return [
+      _card([
+        _head('ファンの反応', icon: Icons.forum_rounded),
+        const SizedBox(height: 6),
+        for (final f in car.fanPosts.take(4))
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 3),
+            child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              const Icon(Icons.account_circle_rounded, size: 18, color: GmColors.sub),
+              const SizedBox(width: 6),
+              Expanded(child: Text(f.substring(f.indexOf('|') + 1), style: const TextStyle(fontSize: 13, height: 1.4))),
+              const SizedBox(width: 6),
+              const Icon(Icons.favorite_rounded, size: 13, color: GmColors.bad),
+              Text(' ${f.substring(0, f.indexOf('|'))}', style: const TextStyle(fontSize: 11.5, color: GmColors.sub)),
+            ]),
+          ),
+      ]),
+    ];
+  }
+
   /// GM の格。このシーズンの点の内訳と、通算・次の段階。
   Widget _ratingCard(BuildContext context, Career car) {
     final total = car.lastRating.fold(0, (n, x) => n + x.points);
@@ -874,6 +912,7 @@ class ProgressTab extends StatelessWidget {
         ],
       ]),
       _contractsGuide(car, exp.length),
+      ..._fanCard(car),
       if (car.growth.isNotEmpty) _growthCard(car),
       if (car.sheetPlayer != null) _sheetCard(context, car),
       if (car.optionPending.isNotEmpty) ...[

@@ -1065,6 +1065,106 @@ class Career {
     headlines = [...out.map((h) => '$season年目・$roundAt試合: $h'), ...headlines].take(12).toList();
   }
 
+  /// リーグの話題(週ごとのニュース欄)。乱数を使わず、いまの成績から作る。
+  /// 地区の首位争い・連勝と連敗・得点王争い・記録的なペース・締め切り前のうわさ。
+  List<String> get leagueColumn {
+    if (phase != Phase.season || roundAt == 0) return const [];
+    final out = <String>[];
+    for (final east in const [true, false]) {
+      final conf = teams.where((t) => t.east == east).toList()
+        ..sort((a, b) {
+          final c = b.winPct.compareTo(a.winPct);
+          return c != 0 ? c : b.wins.compareTo(a.wins);
+        });
+      if (conf.length < 2) continue;
+      final top = conf[0], second = conf[1];
+      final gap = ((top.wins - top.losses) - (second.wins - second.losses)) / 2;
+      final g = gap == gap.roundToDouble() ? '${gap.round()}' : gap.toStringAsFixed(1);
+      out.add('${east ? '東' : '西'}地区: ${top.def.short}が${top.wins}勝${top.losses}敗で首位${gap >= 3 ? '(2位に$gゲーム差)' : gap <= 0 ? '(${second.def.short}と並ぶ)' : '。${second.def.short}が$gゲーム差で追う'}');
+    }
+    final hot = [for (final t in teams) if (t.streak.abs() >= 5) t]..sort((a, b) => b.streak.abs().compareTo(a.streak.abs()));
+    for (final t in hot.take(2)) {
+      out.add(t.streak > 0 ? '${t.def.short}が${t.streak}連勝中。勢いが止まらない' : '${t.def.short}が${-t.streak}連敗。出口が見えない');
+    }
+    final minGp = math.max(3, (roundAt * 0.5).round());
+    final all = [
+      for (final t in teams)
+        for (final p in t.roster)
+          if (p.stats.gp >= minGp) (p, t),
+    ];
+    if (all.length >= 2) {
+      final byPts = [...all]..sort((a, b) => b.$1.stats.ppg.compareTo(a.$1.stats.ppg));
+      final (a, at) = byPts[0];
+      final (b, bt) = byPts[1];
+      out.add('得点王争い: ${a.name}(${at.def.short})${a.stats.ppg.toStringAsFixed(1)}点、${b.name}(${bt.def.short})${b.stats.ppg.toStringAsFixed(1)}点');
+      if (a.stats.ppg >= 32) out.add('${a.name}が平均${a.stats.ppg.toStringAsFixed(1)}点。歴史に残るペース');
+      final byReb = [...all]..sort((x, y) => y.$1.stats.rpg.compareTo(x.$1.stats.rpg));
+      if (byReb.first.$1.stats.rpg >= 13.5) out.add('${byReb.first.$1.name}がリバウンド平均${byReb.first.$1.stats.rpg.toStringAsFixed(1)}。ゴール下の王');
+      final byAst = [...all]..sort((x, y) => y.$1.stats.apg.compareTo(x.$1.stats.apg));
+      if (byAst.first.$1.stats.apg >= 10.5) out.add('${byAst.first.$1.name}がアシスト平均${byAst.first.$1.stats.apg.toStringAsFixed(1)}。司令塔ぶりが光る');
+    }
+    if (block < tradeDeadlineBlock && roundAt >= 10) {
+      final others = [for (final t in teams) if (t.index != mine) t]..sort((a, b) => a.winPct.compareTo(b.winPct));
+      final worst = others.first;
+      final star = ([...worst.roster.where((p) => p.age >= 27)]..sort((a, b) => b.ovr.compareTo(a.ovr))).firstOrNull;
+      if (star != null) out.add('うわさ: 不振の${worst.def.short}が${star.name}(${star.age}歳・OVR${shown(star.ovr)})の放出を探っているとの声');
+    }
+    return out;
+  }
+
+  /// ファンの反応(自分のトレード・補強・指名のたびに足す。新しい順・[fanLimit] 件まで)。「いいねの数|本文」の形。
+  List<String> fanPosts = [];
+  static const fanLimit = 12;
+
+  static const _fanLines = {
+    2: ['{x}が来るなんて最高! 今年は行ける', 'GMやるじゃん。{x}は大当たり', '{x}を見にチケット取った', 'この動きは歴史に残る。{x}ようこそ'],
+    1: ['{x}、いい動きだと思う', '{x}は地味に効きそう', '悪くない。{x}に期待', '{x}か。チームに合いそう'],
+    0: ['{x}か…様子見かな', '{x}、どんな選手なんだろう', 'まあ、こんなもんか({x})', '{x}の評価は試合を見てから'],
+    -1: ['{x}を出すのはもったいない気がする', 'うーん、{x}の件はよくわからない', 'GMの考えが見えない({x})', '{x}がいなくなるのは寂しい'],
+    -2: ['{x}を手放すなんて信じられない', 'このトレードは失敗だろ…({x})', '{x}を返してくれ', 'GM、{x}の件は説明してほしい'],
+  };
+
+  /// [x] についてのファンの投稿を2つ足す([mood] は -2〜2)。乱数は使わない。
+  void _fan(int mood, String x) {
+    final lines = _fanLines[mood.clamp(-2, 2)]!;
+    final h = (seed + season * 31 + roundAt * 7 + fanPosts.length * 13 + x.length * 5).abs();
+    final a = h % lines.length, b = (a + 1 + (h ~/ 7) % (lines.length - 1)) % lines.length;
+    for (final (k, i) in [(0, a), (1, b)]) {
+      final likes = (12 + (h * 37 + k * 101) % 300) * (mood.abs() + 1);
+      fanPosts.insert(0, '$likes|${lines[i].replaceAll('{x}', x)}');
+    }
+    if (fanPosts.length > fanLimit) fanPosts.removeRange(fanLimit, fanPosts.length);
+  }
+
+  /// トレードへの反応。もらう側と出す側のいちばん良い選手の力の差で決める。
+  void _fanTrade(TradeOffer o) {
+    final give = [for (final id in o.give) teams[mine].roster.where((p) => p.id == id).firstOrNull].nonNulls.toList();
+    final get = [for (final id in o.get) teams[o.partner].roster.where((p) => p.id == id).firstOrNull].nonNulls.toList();
+    if (give.isEmpty && get.isEmpty) return;
+    int best(List<Player> ps) => ps.isEmpty ? 0 : ps.map((p) => shown(p.ovr)).reduce(math.max);
+    final d = best(get) - best(give) + (get.length - give.length);
+    final mood = d >= 6
+        ? 2
+        : d >= 2
+        ? 1
+        : d > -2
+        ? 0
+        : d > -6
+        ? -1
+        : -2;
+    final x = mood >= 0
+        ? (get.isEmpty ? '指名権' : ([...get]..sort((a, b) => b.ovr.compareTo(a.ovr))).first.name)
+        : ([...give]..sort((a, b) => b.ovr.compareTo(a.ovr))).first.name;
+    _fan(mood, x);
+  }
+
+  /// 補強(自由契約・申し込みの成立)への反応。力の高い選手だけ。
+  void _fanSign(Player p) {
+    final o = shown(p.ovr);
+    if (o < 70) return;
+    _fan(o >= 80 ? 2 : 1, p.name);
+  }
+
   /// ファンの声(人気と勝率から、その場で決まる)。
   String get fanVoice {
     final pct = me.winPct;
@@ -1916,6 +2016,7 @@ class Career {
     incoming = null;
     if (!judgeTrade(teams, picks, mine, o, season, hardness: _hard(o.partner)).ok) return false;
     _logTrade(mine, o);
+    _fanTrade(o);
     applyTrade(teams, picks, mine, o);
     tradesDone++;
     return true;
@@ -2570,6 +2671,8 @@ class Career {
   /// 自分の番で、候補を指名する。
   void pickProspect(Prospect p) {
     if (!canDraftPick || p.pickedBy != null) return;
+    final pot = shown(p.player.pot);
+    _fan(pot >= 82 ? 2 : pot >= 74 ? 1 : 0, '${p.player.name}の指名');
     _sign(me, p, draftAt);
     draftAt++;
     _advanceDraft();
@@ -2972,6 +3075,7 @@ class Career {
     freeAgents.removeAt(i);
     p.morale = 65;
     me.roster.add(p);
+    _fanSign(p);
     if (phase == Phase.contracts) faMoves.add(FaMove(p.id, p.name, p.ovr, mine, p.salary, p.years, faDay));
     if (ex != null) _useException(ex);
   }
@@ -3152,6 +3256,7 @@ class Career {
       if (ex != null) _useException(ex);
     }
     t.roster.add(p);
+    if (b.team == mine) _fanSign(p);
     faMoves.add(FaMove(p.id, p.name, p.ovr, b.team, b.salary, b.years, faDay));
     final text = '${p.name}(OVR${shown(p.ovr)})が${t.def.short}と${b.years}年 ${money(b.salary)}';
     faLog.insert(0, '${faDay + 1}日目 $text');
@@ -3493,6 +3598,7 @@ class Career {
     final v = judge(o);
     if (!v.ok) return false;
     _logTrade(mine, o);
+    _fanTrade(o);
     applyTrade(teams, picks, mine, o, swaps: swaps);
     tradesDone++;
     incoming = null;
@@ -3895,6 +4001,7 @@ class Career {
         'asi': allStarIds,
         'hg': haggled,
         'aga': {for (final e in agentAsks.entries) '${e.key}': e.value},
+        'fp': fanPosts,
         if (rfa.isNotEmpty) 'rf': rfa,
         if (sheet != null) 'sh': sheet,
         'hy': hype,
@@ -4013,6 +4120,7 @@ class Career {
       ..allStarIds = [for (final x in (j['asi'] as List? ?? const [])) x as int]
       ..haggled = [for (final x in (j['hg'] as List? ?? const [])) x as int]
       ..agentAsks = {for (final e in ((j['aga'] as Map?) ?? const {}).entries) int.parse(e.key as String): e.value as int}
+      ..fanPosts = [for (final x in (j['fp'] as List? ?? const [])) x as String]
       ..rfa = [for (final x in (j['rf'] as List? ?? const [])) x as int]
       ..sheet = j['sh'] is List ? [for (final x in j['sh'] as List) x as int] : null
       ..hype = ((j['hy'] as int?) ?? 50).clamp(0, 100)

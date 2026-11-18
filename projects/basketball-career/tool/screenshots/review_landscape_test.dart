@@ -124,6 +124,15 @@ void main() {
     top[0].wear = max(top[0].wear, 56);
     top[1].wear = 74;
     tired.toggleRest(top[0].id);
+    final talked = careerAt(3, 12)..startSeason();
+    talked.playBlock();
+    talked.fanPosts = ['812|ペンバートンが来るなんて最高! 今年は行ける', '455|GMやるじゃん。ペンバートンは大当たり'];
+    await _shoot(t, '4i_column', await _with(talked), act: (t) async {
+      final card = find.text('リーグの話題');
+      await t.scrollUntilVisible(card, 200, scrollable: find.descendant(of: find.byType(ProgressTab), matching: find.byType(Scrollable)).first);
+      await t.ensureVisible(card);
+      await t.pumpAndSettle();
+    });
     await _shoot(t, '4g_wear', await _with(tired), act: (t) async {
       final card = find.text('疲れがたまっている');
       await t.scrollUntilVisible(card, 200, scrollable: find.descendant(of: find.byType(ProgressTab), matching: find.byType(Scrollable)).first);
