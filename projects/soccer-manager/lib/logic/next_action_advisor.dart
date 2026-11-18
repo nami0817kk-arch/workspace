@@ -2,6 +2,7 @@ import '../models/player.dart';
 import '../models/save_game.dart';
 import '../models/team.dart';
 import '../l10n/tr.dart';
+import 'contract_engine.dart';
 import 'youth_departure_engine.dart';
 
 /// 「次にやること」1件。
@@ -115,8 +116,8 @@ class NextActionAdvisor {
     final key = _expiringKeyPlayer(team);
     if (key != null) {
       actions.add(NextAction(
-        message: Tr.pick('${key.name}の契約が残り${key.contractYearsRemaining}年です。更新しないと無償で失います。',
-            "${key.name}'s contract has ${key.contractYearsRemaining} year(s) left. Renew it or lose him for nothing."),
+        message: Tr.pick('${key.name}の契約は${ContractEngine.untilLabel(key.contractEndYear)}です。更新しないと無償で失います。',
+            "${key.name}'s contract runs ${ContractEngine.untilLabel(key.contractEndYear)}. Renew it or lose him for nothing."),
         target: NextActionTarget.squad,
       ));
     }

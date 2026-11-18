@@ -95,6 +95,8 @@ import '../logic/manager_career_engine.dart';
 import '../logic/player_generator.dart';
 import '../logic/promotion_engine.dart';
 import '../logic/retirement_engine.dart';
+import '../logic/pre_contract_engine.dart';
+import '../models/pre_contract.dart';
 import '../logic/rotation_engine.dart';
 import '../logic/fixture_generator.dart';
 import '../logic/free_agent_engine.dart';
@@ -131,6 +133,7 @@ part 'game_state_transfer.dart';
 part 'game_state_finance.dart';
 part 'game_state_match.dart';
 part 'game_state_season.dart';
+part 'game_state_contracts.dart';
 
 /// 終えたシーズンの締めくくり。シーズン開始レポートに出す絵を決める。
 enum SeasonFinale { none, promoted, champion }
@@ -291,6 +294,12 @@ class GameState extends ChangeNotifier {
   /// 直近のstartNextSeasonで契約の最終年に入った(事前警告)選手名
   /// (1回表示したら呼び出し側でクリアする想定)。
   List<String> lastContractWarnings = [];
+
+  /// 直近のstartNextSeasonで「契約を延長しない」と言い出した選手名。
+  List<String> lastRenewalRefusals = [];
+
+  /// 直近のstartNextSeasonで仮契約(ボスマン)により加入した選手名。
+  List<String> lastPreContractArrivals = [];
 
   /// 契約切れでスカッドが最低人数を割り込んだ際、自動的に緊急補強された
   /// フリーエージェントの選手名(1回表示したら呼び出し側でクリアする想定)。
@@ -647,6 +656,7 @@ class GameState extends ChangeNotifier {
   /// - 相手クラブが今のリーグに居ない監督オファーを消す(残っているとホーム
   ///   画面が開くたびに落ち、セーブが詰む)。
   void _repairLoadedSave(SaveGame save) {
+    _syncContractClock(save);
     _reseedPlayerIdCounter(save);
     _ensureWorldSquads(save);
     save.renumberDuplicatePlayerIds(PlayerGenerator.nextPlayerId);
@@ -1034,6 +1044,9 @@ class GameState extends ChangeNotifier {
     _notify();
     // ローディング表示を1フレーム描画させてから、重いクラブ生成処理に入る。
     await Future<void>.delayed(Duration.zero);
+    // 契約の満了の年は第1季から数える(前に遊んでいたセーブの年のままに
+    // しない)。
+    Player.contractClockYear = Player.seasonEndYearOf(1);
     final userTeam = PlayerGenerator.generateSquad(
       id: 'user',
       name: clubName,

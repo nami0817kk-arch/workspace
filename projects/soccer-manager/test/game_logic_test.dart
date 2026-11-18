@@ -324,8 +324,8 @@ void main() {
   });
 
   test(
-      'ContractEngine.advanceSeason decrements contracts by one year and '
-      'removes expired players', () {
+      'ContractEngine.advanceSeason removes players whose contract ended on '
+      '30 June', () {
     final team = PlayerGenerator.generateSquad(
         id: 't3', name: 'Test FC', strengthTier: 60);
     // 他の選手が偶然同じタイミングで契約切れにならないよう、十分な年数にしておく。
@@ -337,6 +337,10 @@ void main() {
     team.startingXI = [soonToExpire.id];
     final beforeCount = team.players.length;
 
+    // 7月1日に新しいシーズンへ入る(契約は満了の年で持つので、基準の年を進める)。
+    final clock = Player.contractClockYear;
+    addTearDown(() => Player.contractClockYear = clock);
+    Player.contractClockYear += 1;
     final result = ContractEngine.advanceSeason(team);
 
     expect(result.expired.map((p) => p.id), contains(soonToExpire.id));
@@ -357,6 +361,9 @@ void main() {
     enteringFinalYear.contractYearsRemaining = 2;
     final beforeCount = team.players.length;
 
+    final clock = Player.contractClockYear;
+    addTearDown(() => Player.contractClockYear = clock);
+    Player.contractClockYear += 1;
     final result = ContractEngine.advanceSeason(team);
 
     expect(enteringFinalYear.contractYearsRemaining, 1);

@@ -8,7 +8,7 @@ import 'player.dart';
 /// 細かい能力値は、選手の id から決まる種で作り直す。同じ軽い形からは、
 /// 何度読み込んでも同じ選手になる(総合力は保存した値にそろえる)。
 ///
-/// 並び: [id, 名前, 年齢, ポジション, 潜在, 総合力, 週俸, 契約年数,
+/// 並び: [id, 名前, 年齢, ポジション, 潜在, 総合力, 週俸, 満了の年(旧セーブは契約年数),
 ///        印(1=国内育成, 2=ユース出身), 性格, 成長の型, 特性(-1=無し),
 ///        怪我のしやすさ, 通算出場, 通算得点]
 class PlayerStub {
@@ -20,7 +20,7 @@ class PlayerStub {
         p.potential,
         p.overall,
         p.wage,
-        p.contractYearsRemaining,
+        p.contractEndYear,
         (p.homegrown ? 1 : 0) | (p.academyGraduate ? 2 : 0),
         p.personality.index,
         p.growthType.index,
@@ -29,6 +29,12 @@ class PlayerStub {
         p.careerAppearances,
         p.careerGoals,
       ];
+
+  /// 8番目(添字7)の値を満了の年に直す。旧セーブは残り年数(0〜10)を
+  /// 入れていたので、年に見えない小さな値は年数として換算する
+  /// ([Player.contractEndYearFromYears]と同じ式)。
+  static int contractEndYearOf(int raw) =>
+      raw < 1000 ? Player.contractEndYearFromYears(raw) : raw;
 
   /// id から決まる種。文字列の hashCode は実行ごとに同じとは限らないので、
   /// 文字コードから自前で作る。
@@ -63,7 +69,7 @@ class PlayerStub {
       ..['age'] = age
       ..['potential'] = potential
       ..['wage'] = s[6] as int
-      ..['contractYearsRemaining'] = s[7] as int
+      ..['contractEndYear'] = contractEndYearOf(s[7] as int)
       ..['homegrown'] = flags & 1 == 1
       ..['academyGraduate'] = flags & 2 == 2
       ..['personality'] = PlayerPersonality

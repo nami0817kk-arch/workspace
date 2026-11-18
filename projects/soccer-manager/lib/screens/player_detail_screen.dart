@@ -387,8 +387,8 @@ class PlayerDetailScreen extends StatelessWidget {
                     : Tr.pick('年俸: ${formatMoney(annualFromWeekly(p.wage))} / ローン残り${p.loanWeeksRemaining}週',
                         'Salary: ${formatMoney(annualFromWeekly(p.wage))} a year / ${Tr.plural(p.loanWeeksRemaining, 'week')} left on loan'))
                 : Tr.pick(
-                    '年俸: ${formatMoney(annualFromWeekly(p.wage))} / ${ContractEngine.yearsLabel(p.contractYearsRemaining)}',
-                    'Salary: ${formatMoney(annualFromWeekly(p.wage))} a year / ${ContractEngine.yearsLabel(p.contractYearsRemaining)}'),
+                    '年俸: ${formatMoney(annualFromWeekly(p.wage))} / ${ContractEngine.contractLabel(p)}',
+                    'Salary: ${formatMoney(annualFromWeekly(p.wage))} a year / ${ContractEngine.contractLabel(p)}'),
           ),
           if (p.releaseClause != null)
             Text(
@@ -648,21 +648,60 @@ class PlayerDetailScreen extends StatelessWidget {
                       fontSize: 12, color: SemanticColors.negative(context)),
                 ),
               ),
+            // 仮契約で出ていく・「延長しない」選手とは更新できない。
+            if (gameState.renewalBlockReason(p) != null)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4),
+                child: Text(
+                  gameState.renewalBlockReason(p)!,
+                  style: TextStyle(
+                      fontSize: 12, color: SemanticColors.negative(context)),
+                ),
+              ),
+            // 延長オプション(満了の年の3月31日まで)。
+            if (p.contractOption) ...[
+              Text(
+                Tr.pick(
+                    '延長オプション: ${TransferWindowCalendar.formatMonthDay(ContractEngine.optionDeadline(p.contractEndYear))}までに行使すると、同じ年俸で${ContractEngine.untilLabel(p.contractEndYear + 1)}に延びます。',
+                    '1-year option: take it up by ${TransferWindowCalendar.formatMonthDay(ContractEngine.optionDeadline(p.contractEndYear))} to extend him on the same salary ${ContractEngine.untilLabel(p.contractEndYear + 1)}.'),
+                style: const TextStyle(fontSize: 12),
+              ),
+              const SizedBox(height: 4),
+              OutlinedButton.icon(
+                icon: const Icon(Icons.event_repeat),
+                onPressed: gameState.canExerciseContractOption(playerId)
+                    ? () async {
+                        final ok =
+                            await gameState.exerciseContractOption(playerId);
+                        ok
+                            ? FeedbackService.success()
+                            : FeedbackService.error();
+                      }
+                    : null,
+                label: Text(
+                    Tr.pick('延長オプションを行使する', 'Take up the 1-year option')),
+              ),
+              const SizedBox(height: 8),
+            ],
             FilledButton(
-              onPressed: gameState.save!.budget < totalRenewalCost
+              onPressed: gameState.save!.budget < totalRenewalCost ||
+                      gameState.renewalBlockReason(p) != null
                   ? null
                   : () => _renew(context),
               child: Text(
                 Tr.pick(
-                    '契約更新する（基本${formatMoney(renewalCost)} + サインボーナス${formatMoney(signingBonus)} / +40週 / 新出場手当${formatMoney(newAppearanceFee)}）',
-                    'Renew his contract (base ${formatMoney(renewalCost)} + signing bonus ${formatMoney(signingBonus)} / +40 weeks / new appearance fee ${formatMoney(newAppearanceFee)})'),
+                    '契約更新する（基本${formatMoney(renewalCost)} + サインボーナス${formatMoney(signingBonus)} / ${ContractEngine.untilLabel(ContractEngine.defaultRenewalEndYear(p))} / 新出場手当${formatMoney(newAppearanceFee)}）',
+                    'Renew his contract (base ${formatMoney(renewalCost)} + signing bonus ${formatMoney(signingBonus)} / ${ContractEngine.untilLabel(ContractEngine.defaultRenewalEndYear(p))} / new appearance fee ${formatMoney(newAppearanceFee)})'),
                 textAlign: TextAlign.center,
               ),
             ),
             const SizedBox(height: 8),
             OutlinedButton.icon(
               icon: const Icon(Icons.handshake_outlined),
-              onPressed: () => _negotiate(context, isNegotiatingThisPlayer),
+              onPressed: !isNegotiatingThisPlayer &&
+                      gameState.renewalBlockReason(p) != null
+                  ? null
+                  : () => _negotiate(context, isNegotiatingThisPlayer),
               label: Text(
                 isNegotiatingThisPlayer
                     ? Tr.pick('交渉を続ける（選手の対案: 年俸${formatMoney(annualFromWeekly(negotiation.counterWage))}）',
@@ -694,6 +733,17 @@ class PlayerDetailScreen extends StatelessWidget {
               label: Text(p.isTransferListed
                   ? Tr.pick('移籍リストから外す', 'Take off the transfer list')
                   : Tr.pick('移籍リストに登録する', 'Put on the transfer list')),
+            ),
+            const SizedBox(height: 8),
+            // 合意して契約を解除する(窓の外でもできる。選手は自由契約になる)。
+            OutlinedButton.icon(
+              icon: const Icon(Icons.assignment_return_outlined),
+              onPressed: team.players.length <= minSquadSize ||
+                      gameState.mutualTerminationCostFor(playerId) == null
+                  ? null
+                  : () => _confirmMutualTermination(context),
+              label: Text(
+                  Tr.pick('合意して契約を解除する', 'Terminate by mutual consent')),
             ),
             const SizedBox(height: 8),
             OutlinedButton.icon(
@@ -835,17 +885,62 @@ class PlayerDetailScreen extends StatelessWidget {
     await _showNegotiationDialog(context);
   }
 
+  /// 合意解除の確認。払う額を見せてから決めさせる。
+  Future<void> _confirmMutualTermination(BuildContext context) async {
+    final gameState = context.read<GameState>();
+    final cost = gameState.mutualTerminationCostFor(playerId);
+    if (cost == null) return;
+    final p = gameState.userTeam.players.firstWhere((p) => p.id == playerId);
+    final remaining = ContractEngine.remainingWages(p, gameState.today);
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(Tr.pick('合意して契約を解除する', 'Terminate by mutual consent')),
+        content: Text(Tr.pick(
+            '${p.name}の契約(${ContractEngine.untilLabel(p.contractEndYear)})を解除します。残りの年俸${formatMoney(remaining)}のうち${formatMoney(cost)}を払い、${p.name}は自由契約になります。',
+            "${p.name}'s contract (${ContractEngine.untilLabel(p.contractEndYear)}) will be cancelled. You pay ${formatMoney(cost)} of the ${formatMoney(remaining)} left on it, and he becomes a free agent.")),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(Tr.pick('やめる', 'Cancel')),
+          ),
+          FilledButton(
+            onPressed: gameState.save!.budget < cost
+                ? null
+                : () => Navigator.pop(ctx, true),
+            child: Text(Tr.pick('${formatMoney(cost)}を払って解除する',
+                'Pay ${formatMoney(cost)} and terminate')),
+          ),
+        ],
+      ),
+    );
+    if (ok != true) return;
+    final done = await gameState.terminateContractByMutualConsent(playerId);
+    done ? FeedbackService.success() : FeedbackService.error();
+    if (done && context.mounted) Navigator.of(context).maybePop();
+  }
+
   Future<void> _showNegotiationDialog(BuildContext context) async {
     final gameState = context.read<GameState>();
-    final negotiation = gameState.pendingContractNegotiation;
-    if (negotiation == null) return;
+    final first = gameState.pendingContractNegotiation;
+    if (first == null) return;
+    final player = gameState.userTeam.players
+        .where((p) => p.id == first.playerId)
+        .firstOrNull;
+    if (player == null) return;
+    final choices = ContractEngine.endYearChoicesNow(player.age);
     final controller = TextEditingController(
       // 年俸(万円)で入力してもらい、内部の週俸に直す。
-      text: annualFromWeekly(negotiation.counterWage).toString(),
+      text: annualFromWeekly(first.counterWage).toString(),
     );
     await showDialog<void>(
       context: context,
-      builder: (dialogContext) => AlertDialog(
+      builder: (dialogContext) => StatefulBuilder(
+          builder: (dialogContext, setState) {
+        final negotiation = gameState.pendingContractNegotiation ?? first;
+        final endYear =
+            negotiation.endYear ?? ContractEngine.defaultRenewalEndYear(player);
+        return AlertDialog(
         title: Text(Tr.pick('年俸交渉', 'Salary negotiation')),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -865,7 +960,42 @@ class PlayerDetailScreen extends StatelessWidget {
               style: TextStyle(
                   color: SemanticColors.subtleText(context), fontSize: 12),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 8),
+            // 契約の長さ(最長5年、18歳未満は3年)。
+            if (choices.isNotEmpty)
+              DropdownButton<int>(
+                value: choices.contains(endYear) ? endYear : choices.last,
+                isExpanded: true,
+                items: [
+                  for (final y in choices)
+                    DropdownMenuItem(
+                        value: y, child: Text(ContractEngine.untilLabel(y))),
+                ],
+                onChanged: (y) {
+                  if (y == null) return;
+                  gameState.setNegotiationTerms(endYear: y);
+                  setState(() {});
+                },
+              ),
+            CheckboxListTile(
+              contentPadding: EdgeInsets.zero,
+              dense: true,
+              value: negotiation.option,
+              onChanged: ContractEngine.canAttachOption(endYear, player.age)
+                  ? (v) {
+                      gameState.setNegotiationTerms(option: v ?? false);
+                      final n = gameState.pendingContractNegotiation;
+                      if (n != null) {
+                        controller.text =
+                            annualFromWeekly(n.counterWage).toString();
+                      }
+                      setState(() {});
+                    }
+                  : null,
+              title: Text(Tr.pick('クラブ側の1年延長オプションを付ける(年俸+5%)',
+                  'Add a 1-year club option (salary +5%)')),
+            ),
+            const SizedBox(height: 4),
             TextField(
               controller: controller,
               keyboardType: TextInputType.number,
@@ -897,7 +1027,8 @@ class PlayerDetailScreen extends StatelessWidget {
             child: Text(Tr.pick('提示する', 'Offer')),
           ),
         ],
-      ),
+      );
+      }),
     );
     controller.dispose();
   }

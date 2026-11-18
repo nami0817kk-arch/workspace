@@ -17,6 +17,7 @@ import 'live_match_progress.dart';
 import 'news_item.dart';
 import 'youth_league.dart';
 import 'player.dart';
+import 'pre_contract.dart';
 import 'press_question.dart';
 import 'season_award.dart';
 import 'season_record.dart';
@@ -471,6 +472,20 @@ class SaveGame {
   /// 旧セーブには無い(null)。読み込んだ時に GameState が作り直す。
   DateTime? today;
 
+  /// 結ばれている仮契約(ボスマン)。7月1日に選手が移る。旧セーブは空。
+  List<PreContract> preContracts;
+
+  /// 1月1日の仮契約の解禁(他のクラブの更新と、AI の仮契約)を済ませた
+  /// シーズン。旧セーブは0(そのシーズンの1月1日を過ぎていれば読み込み後に行う)。
+  int preContractOpenedSeason;
+
+  /// 延長オプションの期限(3月31日)を締めたシーズン。旧セーブは0。
+  int optionDeadlineSeason;
+
+  /// 給料の未払いを通告した(選手が解除できるようになる前の知らせ)か。
+  /// 資金が黒字に戻ったら false に戻す。
+  bool unpaidWagesNoticeGiven;
+
   /// 進行中の自クラブのリーグ戦の途中経過。試合中でなければ null。
   LiveMatchProgress? liveMatchProgress;
 
@@ -594,7 +609,12 @@ class SaveGame {
     this.weekProcessedMatchday = 0,
     this.liveMatchProgress,
     this.today,
-  })  : budgetPlan = budgetPlan ?? BudgetPlan.balanced(),
+    List<PreContract>? preContracts,
+    this.preContractOpenedSeason = 0,
+    this.optionDeadlineSeason = 0,
+    this.unpaidWagesNoticeGiven = false,
+  })  : preContracts = preContracts ?? [],
+        budgetPlan = budgetPlan ?? BudgetPlan.balanced(),
         unlockedAchievements = unlockedAchievements ?? {},
         seasonStartOverallByPlayerId = seasonStartOverallByPlayerId ?? {},
         newsLog = newsLog ?? [],
@@ -832,9 +852,23 @@ class SaveGame {
         'weekProcessedMatchday': weekProcessedMatchday,
         'liveMatchProgress': liveMatchProgress?.toJson(),
         'today': today == null ? null : formatSaveDate(today!),
+        if (preContracts.isNotEmpty)
+          'preContracts': preContracts.map((c) => c.toJson()).toList(),
+        'preContractOpenedSeason': preContractOpenedSeason,
+        'optionDeadlineSeason': optionDeadlineSeason,
+        if (unpaidWagesNoticeGiven) 'unpaidWagesNoticeGiven': true,
       };
 
-  factory SaveGame.fromJson(Map<String, dynamic> json) => SaveGame(
+  /// 読み込む前に、契約の残り年数を数える基準の年をこのセーブのシーズンに
+  /// 合わせる。旧セーブの残り年数を満了の年に直すときに使う
+  /// ([Player.contractEndYearFromYears])。
+  factory SaveGame.fromJson(Map<String, dynamic> json) {
+    final season = (json['league'] as Map?)?['season'] as int? ?? 1;
+    Player.contractClockYear = Player.seasonEndYearOf(season);
+    return SaveGame._fromJson(json);
+  }
+
+  factory SaveGame._fromJson(Map<String, dynamic> json) => SaveGame(
         clubName: json['clubName'] as String,
         userTeamId: json['userTeamId'] as String,
         league: League.fromJson(json['league'] as Map<String, dynamic>),
@@ -1137,6 +1171,15 @@ class SaveGame {
             : LiveMatchProgress.fromJson(
                 (json['liveMatchProgress'] as Map).cast<String, dynamic>()),
         today: parseSaveDate(json['today']),
+        preContracts: (json['preContracts'] as List?)
+                ?.map((e) =>
+                    PreContract.fromJson((e as Map).cast<String, dynamic>()))
+                .toList() ??
+            [],
+        preContractOpenedSeason: json['preContractOpenedSeason'] as int? ?? 0,
+        optionDeadlineSeason: json['optionDeadlineSeason'] as int? ?? 0,
+        unpaidWagesNoticeGiven:
+            json['unpaidWagesNoticeGiven'] as bool? ?? false,
       );
 
   /// 日付を「2026-08-15」の形で保存する(時刻は持たない)。

@@ -1033,9 +1033,44 @@ class Player {
   /// 週俸（万円）
   int wage;
 
-  /// 契約残り年数。0になると自由契約としてチームを去る(シーズン開始時に
-  /// 1年ずつ消化する)。
-  int contractYearsRemaining;
+  /// 契約の満了日の年。契約は「この年の6月30日まで」。
+  ///
+  /// 以前は残り年数で持ち、シーズン末に1つ減らしていた。実在の契約と同じく
+  /// 満了日で持つ。7月1日に新しいシーズンへ入ったとき、満了日を過ぎた
+  /// 選手は自由契約になる。
+  int contractEndYear;
+
+  /// 残り年数を数える基準の年(今のシーズンが終わる年。第1季は2027)。
+  ///
+  /// 選手は今日の日付を知らないので、ゲームの側がシーズンの切り替わり・
+  /// 読み込み・新規開始のたびに合わせる(GameState._syncContractClock)。
+  /// 保存はしない。保存するのは満了の年だけ。
+  static int contractClockYear = defaultContractClockYear;
+
+  /// 第1季(2026/27)が終わる年。
+  static const int defaultContractClockYear = 2027;
+
+  /// [season]季が終わる年(6月30日の年)。
+  static int seasonEndYearOf(int season) => defaultContractClockYear + season - 1;
+
+  /// 今のシーズンを含めた契約の残りのシーズン数。1なら今のシーズン末
+  /// (6月30日)で満了する。0は満了済み(フリーエージェント)。
+  int get contractYearsRemaining {
+    final years = contractEndYear - contractClockYear + 1;
+    return years < 0 ? 0 : years;
+  }
+
+  /// 残りのシーズン数で満了の年を決める(1なら今のシーズン末)。
+  set contractYearsRemaining(int years) =>
+      contractEndYear = contractClockYear + years - 1;
+
+  /// クラブ側の1年延長オプションが付いているか。満了の年の3月31日までに
+  /// 行使すると、同じ年俸で満了が1年延びる。行使しなければ消える。
+  bool contractOption;
+
+  /// 「契約を延長しない」と言い出した選手か(残り1年に入ったときに決まる)。
+  /// 更新の交渉に応じない。売るか、満了でただで失うかになる。
+  bool refusesRenewal;
 
   /// 性格。不満度の変動しやすさ・移籍希望の出やすさに影響する。
   PlayerPersonality personality;
@@ -1222,7 +1257,10 @@ class Player {
     this.careerAppearances = 0,
     this.careerGoals = 0,
     this.wage = 20,
-    this.contractYearsRemaining = 2,
+    int? contractEndYear,
+    int contractYearsRemaining = 2,
+    this.contractOption = false,
+    this.refusesRenewal = false,
     this.personality = PlayerPersonality.balanced,
     this.happiness = 70,
     this.isLoan = false,
@@ -1259,7 +1297,9 @@ class Player {
     this.lastYouthMatchRating = 0,
     this.trait,
     this.growthType = PlayerGrowthType.balanced,
-  })  : secondaryPositions = secondaryPositions ?? [],
+  })  : contractEndYear =
+            contractEndYear ?? contractClockYear + contractYearsRemaining - 1,
+        secondaryPositions = secondaryPositions ?? [],
         attributes = attributes ?? {for (final k in AttributeKeys.all) k: 50},
         positionFamiliarity = positionFamiliarity ?? {},
         injuryHistoryCounts = injuryHistoryCounts ?? {},
@@ -1446,9 +1486,9 @@ class Player {
       // 変えてはならない(変えると旧セーブの値が別の属性にずれてしまう)。
       'attributes': [for (final k in AttributeKeys.all) attributes[k] ?? 50],
       'potential': potential,
-      // 契約年数は「キーが無い=旧セーブ」とみなして2年に移行する処理が
-      // あるため、0年でも必ず書き出す。
-      'contractYearsRemaining': contractYearsRemaining,
+      // 満了の年。キーが無いのは旧セーブ(残り年数で持っていた)なので、
+      // 必ず書き出す。
+      'contractEndYear': contractEndYear,
     };
     // 既定値と異なるときだけ書き出す。
     void put(String key, Object? value, Object? defaultValue) {
@@ -1470,6 +1510,8 @@ class Player {
     put('careerAppearances', careerAppearances, 0);
     put('careerGoals', careerGoals, 0);
     put('wage', wage, 20);
+    put('contractOption', contractOption, false);
+    put('refusesRenewal', refusesRenewal, false);
     put('personality', personality.name, PlayerPersonality.balanced.name);
     put('happiness', happiness, 70);
     put('isLoan', isLoan, false);
@@ -1574,7 +1616,10 @@ class Player {
       careerAppearances: json['careerAppearances'] as int? ?? 0,
       careerGoals: json['careerGoals'] as int? ?? 0,
       wage: json['wage'] as int? ?? 20,
-      contractYearsRemaining: _migrateContractYears(json),
+      contractEndYear: json['contractEndYear'] as int? ??
+          contractEndYearFromYears(_migrateContractYears(json)),
+      contractOption: json['contractOption'] as bool? ?? false,
+      refusesRenewal: json['refusesRenewal'] as bool? ?? false,
       personality: enumFromName(
         PlayerPersonality.values,
         json['personality'] as String?,
@@ -1699,6 +1744,14 @@ class Player {
     }
     return map;
   }
+
+  /// 残り年数(今のシーズンを含む)を満了の年に直す。旧セーブの年数は
+  /// シーズン末に1つ減らし、0で退団する持ち方だった。残り1年は「今の
+  /// シーズン末(6月30日)で満了」なので、満了の年は
+  /// 今のシーズンが終わる年 + 残り年数 - 1。0年(フリーエージェント)は
+  /// 前のシーズン末に満了済み。
+  static int contractEndYearFromYears(int years) =>
+      contractClockYear + years - 1;
 
   /// 旧セーブ(契約を週数で管理していた版)からの移行用。新フィールドが
   /// あればそれを使い、なければ旧フィールドの週数を年数に丸めて引き継ぐ。

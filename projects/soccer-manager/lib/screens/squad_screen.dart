@@ -215,10 +215,18 @@ class _SquadScreenState extends State<SquadScreen> {
                 const SizedBox(height: 4),
                 Text(
                   Tr.pick(
-                      '年俸: ${formatMoney(annualFromWeekly(p.wage))} / ${ContractEngine.yearsLabel(p.contractYearsRemaining)}',
-                      'Salary: ${formatMoney(annualFromWeekly(p.wage))} / ${ContractEngine.yearsLabel(p.contractYearsRemaining)}'),
+                      '年俸: ${formatMoney(annualFromWeekly(p.wage))} / ${ContractEngine.contractLabel(p)}',
+                      'Salary: ${formatMoney(annualFromWeekly(p.wage))} / ${ContractEngine.contractLabel(p)}'),
                 ),
                 const SizedBox(height: 12),
+                if (gameState.renewalBlockReason(p) != null)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Text(gameState.renewalBlockReason(p)!,
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: SemanticColors.negative(context))),
+                  ),
                 if (gameState.save!.budget < totalCost)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8),
@@ -236,7 +244,8 @@ class _SquadScreenState extends State<SquadScreen> {
                 SizedBox(
                   width: double.infinity,
                   child: FilledButton(
-                    onPressed: gameState.save!.budget < totalCost
+                    onPressed: gameState.save!.budget < totalCost ||
+                            gameState.renewalBlockReason(p) != null
                         ? null
                         : () async {
                             Navigator.pop(sheetContext);
@@ -260,8 +269,8 @@ class _SquadScreenState extends State<SquadScreen> {
                           },
                     child: Text(
                       Tr.pick(
-                          '契約更新する（基本${formatMoney(renewalCost)} + サインボーナス${formatMoney(signingBonus)} / 新契約${ContractEngine.negotiatedYears(p)}年 / 新出場手当${formatMoney(newAppearanceFee)}）',
-                          'Renew (base ${formatMoney(renewalCost)} + signing bonus ${formatMoney(signingBonus)} / ${Tr.plural(ContractEngine.negotiatedYears(p), 'year')} / new appearance fee ${formatMoney(newAppearanceFee)})'),
+                          '契約更新する（基本${formatMoney(renewalCost)} + サインボーナス${formatMoney(signingBonus)} / 新契約${ContractEngine.untilLabel(ContractEngine.defaultRenewalEndYear(p))} / 新出場手当${formatMoney(newAppearanceFee)}）',
+                          'Renew (base ${formatMoney(renewalCost)} + signing bonus ${formatMoney(signingBonus)} / ${ContractEngine.untilLabel(ContractEngine.defaultRenewalEndYear(p))} / new appearance fee ${formatMoney(newAppearanceFee)})'),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -792,8 +801,8 @@ class _SquadScreenState extends State<SquadScreen> {
                                                       // 総合力は右端に大きく出している。ここに重ねて書くと、
                                                       // 同じ数字が1行に2回並ぶうえ、行が長くなって
                                                       // 「契約残り3年」が途中で折り返していた。
-                                                      '${p.age}歳 / ${p.position.label}${lastRatings?[p.id] != null ? ' / 前節 ${lastRatings![p.id]!.toStringAsFixed(1)}' : ''}${p.isLoan ? '' : ' / ${ContractEngine.yearsLabel(p.contractYearsRemaining)}'}',
-                                                      "Age ${p.age} / ${p.position.label}${lastRatings?[p.id] != null ? ' / last ${lastRatings![p.id]!.toStringAsFixed(1)}' : ''}${p.isLoan ? '' : ' / ${ContractEngine.yearsLabel(p.contractYearsRemaining)}'}"),
+                                                      '${p.age}歳 / ${p.position.label}${lastRatings?[p.id] != null ? ' / 前節 ${lastRatings![p.id]!.toStringAsFixed(1)}' : ''}${p.isLoan ? '' : ' / ${ContractEngine.contractLabel(p)}'}',
+                                                      "Age ${p.age} / ${p.position.label}${lastRatings?[p.id] != null ? ' / last ${lastRatings![p.id]!.toStringAsFixed(1)}' : ''}${p.isLoan ? '' : ' / ${ContractEngine.contractLabel(p)}'}"),
                                   style: (p.isInjured ||
                                           p.isSuspended ||
                                           p.isOnInternationalDuty ||

@@ -12,17 +12,21 @@ class YouthPromotionTerms {
   /// 契約時に一括で支払う契約金(万円)。
   final int signingBonus;
 
-  /// 契約年数。
+  /// 契約年数(今のシーズンを含める)。
   final int years;
 
   /// 割り当てられる背番号。
   final int squadNumber;
+
+  /// クラブ側の1年延長オプションを付けるか。
+  final bool option;
 
   const YouthPromotionTerms({
     required this.weeklyWage,
     required this.signingBonus,
     required this.years,
     required this.squadNumber,
+    this.option = false,
   });
 }
 
@@ -60,20 +64,50 @@ class YouthPromotionEngine {
     return maxSquadNumber;
   }
 
-  static YouthPromotionTerms termsFor(Team team, Player player) =>
-      YouthPromotionTerms(
-        // 週俸は市場価値に連動する(生成時と同じ式)。ユースの給与のまま
-        // 一軍に置けると、安い戦力を作る抜け道になる。
-        weeklyWage: weeklyWageForValue(player.marketValue),
-        signingBonus: ContractEngine.signingBonusFor(player),
-        years: ContractEngine.negotiatedYears(player),
-        squadNumber: nextSquadNumber(team, player),
-      );
+  /// プロ契約を結べる年齢に届いているか(16歳から)。
+  static bool oldEnough(Player player) =>
+      player.age >= ContractEngine.minProfessionalAge;
+
+  /// 選べる契約の年数(今のシーズンを含めて数える)。1年〜上限
+  /// (5年、18歳未満は3年)。
+  static List<int> yearChoices(Player player) => [
+        for (var y = 1; y <= ContractEngine.capYears(player.age); y++) y,
+      ];
+
+  /// 昇格の条件。[years]を省くと年齢に応じた年数(上限に収める)。
+  /// [option]で延長オプションを付けると週俸が5%上がる(行使して1年延びても
+  /// 上限に収まる年数のときだけ付けられる)。
+  static YouthPromotionTerms termsFor(
+    Team team,
+    Player player, {
+    int? years,
+    bool option = false,
+  }) {
+    final cap = ContractEngine.capYears(player.age);
+    final y = (years ?? ContractEngine.negotiatedYears(player)).clamp(1, cap);
+    final withOption = option && y < cap;
+    // 週俸は市場価値に連動する(生成時と同じ式)。ユースの給与のまま
+    // 一軍に置けると、安い戦力を作る抜け道になる。
+    final wage = weeklyWageForValue(player.marketValue);
+    return YouthPromotionTerms(
+      weeklyWage: withOption
+          ? (wage * ContractEngine.optionWageFactor).round()
+          : wage,
+      signingBonus: ContractEngine.signingBonusFor(player),
+      years: y,
+      squadNumber: nextSquadNumber(team, player),
+      option: withOption,
+    );
+  }
 
   /// 昇格した選手に契約と適応の状態を書き込む。名簿の移動は呼び出し側が行う。
+  /// 契約は今のシーズンを含めて[YouthPromotionTerms.years]年(満了は
+  /// その最後の年の6月30日)。
   static void applyPromotion(Player player, YouthPromotionTerms terms) {
     player.wage = terms.weeklyWage;
     player.contractYearsRemaining = terms.years;
+    player.contractOption = terms.option;
+    player.refusesRenewal = false;
     player.squadNumber = terms.squadNumber;
     // 買ってきた選手ではなく、自分のクラブで育てた選手だという印。
     // 外れることは無い(他クラブへ移っても出身は変わらない)。

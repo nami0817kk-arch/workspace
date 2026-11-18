@@ -254,8 +254,8 @@ class FinanceScreen extends StatelessWidget {
                           SizedBox(
                             width: 64,
                             child: Text(
-                              ContractEngine.yearsShortLabel(
-                                  p.contractYearsRemaining),
+                              ContractEngine.untilShortLabel(
+                                  p.contractEndYear),
                               textAlign: TextAlign.right,
                               style: TextStyle(
                                 fontSize: 12,

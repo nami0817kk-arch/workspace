@@ -671,6 +671,8 @@ extension GameStateMatch on GameState {
     } else {
       _save!.consecutiveNegativeBudgetWeeks = 0;
     }
+    // 給料が払えない状態が続くと、選手は催告のうえ契約を解除できる。
+    _checkUnpaidWages();
     final budgetConfidenceDelta = BoardEngine.negativeBudgetConfidenceDelta(
       _save!.consecutiveNegativeBudgetWeeks,
     );

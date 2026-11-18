@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../logic/contract_engine.dart';
 import '../logic/scouting_engine.dart';
+import '../logic/youth_promotion_engine.dart';
 import '../logic/youth_departure_engine.dart';
 import '../logic/youth_match_engine.dart';
 import '../models/player.dart';
@@ -521,12 +523,35 @@ class _YouthScreenState extends State<YouthScreen> {
     final gameState = context.read<GameState>();
     // 昇格はプロ契約を結ぶ手続きになった。押した瞬間に契約金が引かれるので、
     // 条件を見せてから決めさせる。
-    final terms = gameState.youthPromotionTermsFor(playerId);
-    if (terms == null) return;
+    final first = gameState.youthPromotionTermsFor(playerId);
+    if (first == null) return;
+    final prospect = gameState.save?.youthProspects
+        .where((p) => p.id == playerId)
+        .firstOrNull;
+    if (prospect == null) return;
+    // プロ契約は16歳から。
+    if (!YouthPromotionEngine.oldEnough(prospect)) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(Tr.pick(
+              'プロ契約は${ContractEngine.minProfessionalAge}歳から結べます($nameは${prospect.age}歳)。',
+              'Professional contracts start at ${ContractEngine.minProfessionalAge} ($name is ${prospect.age}).'))));
+      return;
+    }
+    var years = first.years;
+    var option = false;
+    var terms = first;
 
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (ctx) => AlertDialog(
+      builder: (ctx) => StatefulBuilder(builder: (ctx, setState) {
+        void refresh() {
+          terms = gameState.youthPromotionTermsFor(playerId,
+                  years: years, option: option) ??
+              terms;
+          option = terms.option;
+        }
+
+        return AlertDialog(
         title: Text(Tr.pick('$nameとプロ契約を結びますか？',
             'Sign $name to a professional contract?')),
         content: Column(
@@ -539,8 +564,40 @@ class _YouthScreenState extends State<YouthScreen> {
                 'Salary: ${formatMoney(annualFromWeekly(terms.weeklyWage))} a year')),
             Text(Tr.pick('契約金: ${formatMoney(terms.signingBonus)}(一括)',
                 'Signing fee: ${formatMoney(terms.signingBonus)} (one-off)')),
-            Text(Tr.pick('契約年数: ${terms.years}年',
-                'Contract: ${terms.years} years')),
+            // 契約の長さ(今のシーズンを含めて。18歳未満は3年まで)。
+            DropdownButton<int>(
+              value: years,
+              isExpanded: true,
+              items: [
+                for (final y in YouthPromotionEngine.yearChoices(prospect))
+                  DropdownMenuItem(
+                    value: y,
+                    child: Text(Tr.pick(
+                        '$y年(${ContractEngine.untilLabel(Player.contractClockYear + y - 1)})',
+                        '${Tr.plural(y, 'year')} (${ContractEngine.untilLabel(Player.contractClockYear + y - 1)})')),
+                  ),
+              ],
+              onChanged: (y) {
+                if (y == null) return;
+                setState(() {
+                  years = y;
+                  refresh();
+                });
+              },
+            ),
+            CheckboxListTile(
+              contentPadding: EdgeInsets.zero,
+              dense: true,
+              value: option,
+              onChanged: years < ContractEngine.capYears(prospect.age)
+                  ? (v) => setState(() {
+                        option = v ?? false;
+                        refresh();
+                      })
+                  : null,
+              title: Text(Tr.pick('クラブ側の1年延長オプションを付ける(年俸+5%)',
+                  'Add a 1-year club option (salary +5%)')),
+            ),
             const SizedBox(height: 8),
             Text(
               Tr.pick('昇格直後は一軍の強度に慣れておらず、実戦感覚が低い状態から始まります。出番を作ると戻ります。',
@@ -559,11 +616,13 @@ class _YouthScreenState extends State<YouthScreen> {
             child: Text(Tr.pick('契約して昇格', 'Sign and promote')),
           ),
         ],
-      ),
+      );
+      }),
     );
     if (confirmed != true) return;
 
-    final ok = await gameState.promoteYouthProspect(playerId);
+    final ok = await gameState.promoteYouthProspect(playerId,
+        years: years, option: option);
     ok ? FeedbackService.success() : FeedbackService.error();
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(

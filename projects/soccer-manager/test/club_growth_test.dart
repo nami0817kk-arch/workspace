@@ -126,7 +126,10 @@ void main() {
         final team = Team(id: 't', name: 'T', players: [p]);
 
         ContractEngine.renewContract(p);
+        final clock = Player.contractClockYear;
+        Player.contractClockYear += 1; // 7月1日、新しいシーズンへ
         final result = ContractEngine.advanceSeason(team);
+        Player.contractClockYear = clock;
 
         expect(result.expired.map((x) => x.id), isNot(contains(p.id)),
             reason: '$age歳で、更新した直後のシーズン末に契約が切れている');
@@ -140,6 +143,9 @@ void main() {
       p.contractYearsRemaining = 1;
       final team = Team(id: 't', name: 'T', players: [p]);
 
+      final clock = Player.contractClockYear;
+      addTearDown(() => Player.contractClockYear = clock);
+      Player.contractClockYear += 1; // 7月1日、新しいシーズンへ
       final result = ContractEngine.advanceSeason(team);
 
       expect(result.expired.map((x) => x.id), contains(p.id));
