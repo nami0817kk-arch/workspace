@@ -1802,6 +1802,15 @@ class Career {
     return block != before;
   }
 
+  /// まとめて進めるときに止まる場面([SimStop] の番号)。はじめは申し込みとけが(前からの動き)。
+  List<int> simStops = [SimStop.offer.index, SimStop.injury.index];
+
+  bool stopsOn(SimStop s) => simStops.contains(s.index);
+
+  void toggleSimStop(SimStop s) {
+    if (!simStops.remove(s.index)) simStops = [...simStops, s.index]..sort();
+  }
+
   /// [n] 節進める。区切りの終わりに着いたら、区切りのあとの出来事(気持ち・相手同士のトレード・申し込み)を起こす。
   void _playRounds(int n) {
     if (phase != Phase.season || block >= blocksPerSeason || n <= 0) return;
@@ -4002,6 +4011,7 @@ class Career {
         'hg': haggled,
         'aga': {for (final e in agentAsks.entries) '${e.key}': e.value},
         'fp': fanPosts,
+        'so': simStops,
         if (rfa.isNotEmpty) 'rf': rfa,
         if (sheet != null) 'sh': sheet,
         'hy': hype,
@@ -4121,6 +4131,7 @@ class Career {
       ..haggled = [for (final x in (j['hg'] as List? ?? const [])) x as int]
       ..agentAsks = {for (final e in ((j['aga'] as Map?) ?? const {}).entries) int.parse(e.key as String): e.value as int}
       ..fanPosts = [for (final x in (j['fp'] as List? ?? const [])) x as String]
+      ..simStops = j['so'] == null ? [SimStop.offer.index, SimStop.injury.index] : [for (final x in j['so'] as List) x as int]
       ..rfa = [for (final x in (j['rf'] as List? ?? const [])) x as int]
       ..sheet = j['sh'] is List ? [for (final x in j['sh'] as List) x as int] : null
       ..hype = ((j['hy'] as int?) ?? 50).clamp(0, 100)
@@ -4204,4 +4215,17 @@ class AgentReply {
 
   /// まとまった額、または代理人の今の言い値。
   final int salary;
+}
+
+/// まとめて進めるときに止まる場面(保存は番号なので、増やすときは後ろに足す)。
+enum SimStop {
+  offer('トレードの申し込みが届いた'),
+  injury('先発が3試合以上のけがをした'),
+  mail('返事が要る知らせが届いた'),
+  slump('4連敗した'),
+  hot('5連勝した'),
+  tired('疲れが70を超えた選手が出た');
+
+  const SimStop(this.label);
+  final String label;
 }

@@ -133,6 +133,23 @@ void main() {
       await t.ensureVisible(card);
       await t.pumpAndSettle();
     });
+    await _shoot(t, '4j_sim_stops', await _with(careerAt(3, 12)..startSeason()), act: (t) async {
+      final btn = find.byKey(const Key('sim-stops'));
+      await t.ensureVisible(btn);
+      await t.pumpAndSettle();
+      await t.tap(btn);
+      await t.pumpAndSettle();
+      await t.tap(find.text(SimStop.slump.label));
+      await t.pumpAndSettle();
+    });
+    await _shoot(t, '9b_inbox_needs', await _with(mid), act: (t) async {
+      await _tap(t, '受信箱', first: true);
+      final chip = find.byKey(const Key('inbox-needs'));
+      if (chip.evaluate().isNotEmpty) {
+        await t.tap(chip);
+        await t.pumpAndSettle();
+      }
+    });
     await _shoot(t, '4g_wear', await _with(tired), act: (t) async {
       final card = find.text('疲れがたまっている');
       await t.scrollUntilVisible(card, 200, scrollable: find.descendant(of: find.byType(ProgressTab), matching: find.byType(Scrollable)).first);

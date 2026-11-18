@@ -277,6 +277,12 @@ class ProgressTab extends StatelessWidget {
               label: const Text('シーズン終わりまで', maxLines: 1, style: TextStyle(fontSize: 13)),
             ),
           ),
+          IconButton(
+            key: const Key('sim-stops'),
+            tooltip: 'まとめて進めるときに止まる場面',
+            onPressed: () => _stopsDialog(context),
+            icon: const Icon(Icons.tune_rounded, size: 20, color: GmColors.sub),
+          ),
         ]),
       ]),
       if (car.form.isNotEmpty) _formCard(context, car),
@@ -593,7 +599,6 @@ class ProgressTab extends StatelessWidget {
     ];
   }
 
-  /// 試合を進め、終わったら報告を画面いっぱいに出す。
   /// 次の自分の試合を、区切りごとに見ながら采配する。確定したら、その節を進めてボックススコアを見せる。
   Future<void> _live(BuildContext context, Career car) async {
     final calls = await showLiveGame(context, car);
@@ -604,10 +609,44 @@ class ProgressTab extends StatelessWidget {
     if (!context.mounted || car.block != blockBefore || car.lastGames.length <= before) return;
     await showBoxScore(context, car.lastGames.last, car.mine);
   }
+  /// まとめて進めるときに止まる場面を選ぶ。
+  Future<void> _stopsDialog(BuildContext context) => showDialog<void>(
+        context: context,
+        builder: (ctx) => ListenableBuilder(
+          listenable: c,
+          builder: (ctx, _) => AlertDialog(
+            title: const Text('まとめて進めるときに止まる場面'),
+            content: SizedBox(
+              width: 460,
+              child: SingleChildScrollView(
+                child: Column(mainAxisSize: MainAxisSize.min, children: [
+                  for (final s in SimStop.values)
+                    CheckboxListTile(
+                      dense: true,
+                      contentPadding: EdgeInsets.zero,
+                      title: Text(s.label, style: const TextStyle(fontSize: 13.5)),
+                      value: c.career!.stopsOn(s),
+                      onChanged: (_) => c.toggleSimStop(s),
+                    ),
+                  const Text('区切り(20試合ほど)ごとに見て、当てはまれば止まる。', style: TextStyle(fontSize: 12, color: GmColors.sub)),
+                ]),
+              ),
+            ),
+            actions: [TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('閉じる'))],
+          ),
+        ),
+      );
 
+  /// 試合を進め、終わったら報告を画面いっぱいに出す。
   Future<void> _run(BuildContext context, Future<BlockReport?> Function() play) async {
     final nav = Navigator.of(context);
+    final messenger = ScaffoldMessenger.of(context);
     await showBlockReport(nav, c, await play());
+    final why = c.simStopReason;
+    if (why != null) {
+      c.simStopReason = null;
+      messenger.showSnackBar(SnackBar(content: Text('止まった: ${why.label}')));
+    }
     final hurt = c.injuryStop;
     if (hurt == null || !nav.mounted) return;
     // 先発がけがをした: 組み直すかを聞く

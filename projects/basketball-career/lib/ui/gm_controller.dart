@@ -182,17 +182,26 @@ class GmController extends ChangeNotifier {
     final snap = BlockSnapshot.of(c);
     final games = <GameResult>[];
     injuryStop = null;
+    simStopReason = null;
     while (c.phase == Phase.season && (!toDeadline || c.block < tradeDeadlineBlock)) {
       final before = c.lastGames.length;
       final fromStart = c.roundAt == blockStart(c.block);
       final starters = _healthyStarters(c);
+      final asked = {for (final m in c.inbox) if (m.needsAnswer) m.id};
       c.playBlock();
       games.addAll(fromStart ? c.lastGames : c.lastGames.sublist(before));
       await money?.tournamentPlayed();
-      if (c.incoming != null) break;
+      if (c.phase != Phase.season) break;
+      final reason = _stopReason(c, asked);
+      if (reason != null) {
+        simStopReason = reason;
+        break;
+      }
       // 先発がけがをしたら止めて聞く(2K でも、けがのたびにシムが止まり組み直すかを聞かれる)
-      injuryStop = _newlyHurt(c, starters);
-      if (injuryStop != null) break;
+      if (c.stopsOn(SimStop.injury)) {
+        injuryStop = _newlyHurt(c, starters);
+        if (injuryStop != null) break;
+      }
     }
     _record(c);
     _changed();
@@ -201,6 +210,20 @@ class GmController extends ChangeNotifier {
 
   /// まとめて進めている途中で、先発の選手が長めのけがをした(画面が止めて「組み直すか」を聞く)。聞いたら null に戻す。
   Player? injuryStop;
+
+  /// まとめて進めるのを止めた場面(けが以外。画面が知らせる)。
+  SimStop? simStopReason;
+
+  static SimStop? _stopReason(Career c, Set<int> asked) {
+    if (c.stopsOn(SimStop.offer) && c.incoming != null) return SimStop.offer;
+    if (c.stopsOn(SimStop.mail) && c.inbox.any((m) => m.needsAnswer && !asked.contains(m.id))) return SimStop.mail;
+    if (c.stopsOn(SimStop.slump) && c.me.streak <= -4) return SimStop.slump;
+    if (c.stopsOn(SimStop.hot) && c.me.streak >= 5) return SimStop.hot;
+    if (c.stopsOn(SimStop.tired) && c.me.roster.any((p) => p.wear > wearSlumpLine)) return SimStop.tired;
+    return null;
+  }
+
+  void toggleSimStop(SimStop s) => _act((c) => c.toggleSimStop(s));
 
   static Set<int> _healthyStarters(Career c) => {for (final p in c.me.order.take(5)) if (p.injured == 0) p.id};
 
