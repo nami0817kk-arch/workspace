@@ -690,9 +690,6 @@ extension GameStateMatch on GameState {
           "You have been in the red for ${Tr.plural(_save!.consecutiveNegativeBudgetWeeks, 'week')}. The shareholders' confidence has slipped.");
     }
 
-    // 移籍市場は全員を作り直さず、数人だけ入れ替える(持続的な市場)。
-    transferMarket =
-        TransferMarket.rotate(transferMarket, home: currentLeagueTheme);
     transferOffersRejectedThisWeek.clear();
     _refreshScoutCandidates();
 

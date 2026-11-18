@@ -70,6 +70,7 @@ import 'package:soccer_manager/data/guide_sections.dart';
 import 'package:soccer_manager/models/ledger.dart';
 import 'package:soccer_manager/state/game_state.dart';
 import 'package:soccer_manager/widgets/formation_layout.dart';
+import 'support/legacy_market.dart';
 import 'package:soccer_manager/widgets/match_widgets.dart'
     show matchCommentaryText;
 
@@ -284,7 +285,7 @@ void main() {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
     final beforeCount = gameState.userTeam.players.length;
-    final target = gameState.transferMarket.first;
+    final target = legacyMarket(gameState).first;
     // 移籍金のほかに代理人手数料が掛かる。
     gameState.save!.budget =
         target.marketValue + TransferTermsEngine.agentFee(target.marketValue) + 100;
@@ -302,7 +303,7 @@ void main() {
   test('GameState.buyPlayer fails when budget is insufficient', () async {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
-    final target = gameState.transferMarket.first;
+    final target = legacyMarket(gameState).first;
     gameState.save!.wageBudget = 999999; // 年俸の枠で止めない
     gameState.save!.budget = 0;
 
@@ -1190,7 +1191,7 @@ void main() {
       () async {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
-    final target = gameState.transferMarket.first;
+    final target = legacyMarket(gameState).first;
     gameState.save!.wageBudget = 999999; // 年俸の枠で止めない
     gameState.save!.budget = target.marketValue; // ローン料は移籍金の一部で足りるはず
 
@@ -1210,7 +1211,7 @@ void main() {
       'convert the loan into a permanent signing', () async {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
-    final target = gameState.transferMarket.first;
+    final target = legacyMarket(gameState).first;
     gameState.save!.wageBudget = 999999; // 年俸の枠で止めない
     final expectedFee =
         (target.marketValue * GameState.loanBuyOptionRatio).round();
@@ -1238,7 +1239,7 @@ void main() {
       () async {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
-    final target = gameState.transferMarket.first;
+    final target = legacyMarket(gameState).first;
     gameState.save!.wageBudget = 999999; // 年俸の枠で止めない
     gameState.save!.budget = target.marketValue;
     await gameState.signLoanPlayer(target.id);
@@ -1422,7 +1423,7 @@ void main() {
       () async {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
-    final target = gameState.transferMarket.first;
+    final target = legacyMarket(gameState).first;
     gameState.save!.budget = target.marketValue; // 頭金分は十分ある
     // 週給予算はシーズン開始時に確定し、獲得時はその枠でも判定される。
     // ここを広げないと、ランダム生成された市場の週給次第で約1.5%の確率で
@@ -3545,7 +3546,7 @@ void main() {
     expect(gameState.isTransferWindowOpen, isFalse);
 
     gameState.save!.budget = 999999;
-    final target = gameState.transferMarket.first;
+    final target = legacyMarket(gameState).first;
     gameState.save!.wageBudget = 999999; // 年俸の枠で止めない
     final ok = await gameState.buyPlayer(target.id);
     expect(ok, isFalse);
@@ -6429,7 +6430,7 @@ void main() {
       'owns', () async {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
-    final target = gameState.transferMarket.first;
+    final target = legacyMarket(gameState).first;
     gameState.save!.budget = target.marketValue;
     // 週給予算はシーズン開始時に確定し、獲得時はその枠でも判定される。
     // ここを広げないと、ランダム生成された市場の週給次第で約1.5%の確率で
@@ -6508,7 +6509,7 @@ void main() {
       'of permanently keeping the loan-period discount', () async {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
-    final target = gameState.transferMarket.first;
+    final target = legacyMarket(gameState).first;
     final wageBeforeLoan = target.wage;
     final expectedFee =
         (target.marketValue * GameState.loanBuyOptionRatio).round();
@@ -8181,28 +8182,14 @@ void main() {
     expect(appsAfter, greaterThan(appsBefore));
   });
 
-  test(
-      'the transfer market persists across matchdays with partial rotation '
-      '(most faces stay, a few are replaced) and the roster survives a JSON '
-      'round-trip of the save', () async {
+  test('作り物の移籍市場は作らず、試合を進めても空のまま', () async {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
-    final before = gameState.transferMarket.map((p) => p.id).toSet();
-    expect(before, isNotEmpty);
-
+    expect(gameState.transferMarket, isEmpty);
+    expect(gameState.transferTargets, isNotEmpty);
     await gameState.playNextMatchday();
     await gameState.playSecondHalf();
-
-    final after = gameState.transferMarket.map((p) => p.id).toSet();
-    expect(after.length, 24);
-    final stayed = before.intersection(after);
-    expect(stayed.length, greaterThanOrEqualTo(before.length - 6),
-        reason: '1週の入れ替えは最大6人で、大半の選手は市場に残り続ける');
-    expect(stayed.length, lessThan(before.length), reason: '毎週数人は入れ替わる');
-
-    final restored = SaveGame.fromJson(gameState.save!.toJson());
-    expect(restored.transferMarketPlayers.map((p) => p.id).toSet(), after,
-        reason: '市場の顔ぶれはセーブに保存され、ロードしても維持される');
+    expect(gameState.transferMarket, isEmpty);
   });
 
   test(
@@ -8216,14 +8203,14 @@ void main() {
     // よう広げる(予算ブロック自体は専用テストで検証している)。
     gameState.save!.wageBudget = 999999;
 
-    final target = gameState.transferMarket.first;
+    final target = legacyMarket(gameState).first;
     final res =
         await gameState.makeTransferOffer(target.id, target.marketValue);
     expect(res.attempted, isTrue);
     expect(res.accepted, isTrue, reason: '満額オファーは必ず成立する');
     expect(gameState.userTeam.players.any((p) => p.id == target.id), isTrue);
 
-    final target2 = gameState.transferMarket.first;
+    final target2 = legacyMarket(gameState).first;
     final low = (target2.marketValue * 0.5).floor();
     final res2 = await gameState.makeTransferOffer(target2.id, low);
     expect(res2.attempted, isTrue);
@@ -8237,7 +8224,7 @@ void main() {
         await gameState.makeTransferOffer(target2.id, target2.marketValue);
     expect(res3.attempted, isFalse, reason: '断られた週は同じ選手に再交渉できない');
     expect(
-      gameState.transferMarket.any((p) => p.id == target2.id),
+      legacyMarket(gameState).any((p) => p.id == target2.id),
       isTrue,
       reason: '交渉が成立していない選手は市場に残る',
     );
@@ -8959,7 +8946,7 @@ void main() {
 
     // 上限を現在の週給総額ちょうどまで絞ると、どんな新加入も枠を超える。
     gameState.save!.wageBudget = gameState.weeklyWageBill;
-    final target = gameState.transferMarket.first;
+    final target = legacyMarket(gameState).first;
     gameState.save!.budget = target.marketValue + 10000;
     final bought = await gameState.buyPlayer(target.id);
     expect(bought, isFalse);
@@ -9537,7 +9524,7 @@ void main() {
             reason: '$label: 理事会目標が順位の範囲内');
         expect(save.managerContractYears, greaterThan(0),
             reason: '$label: 監督契約が結ばれている');
-        expect(gameState.transferMarket, isNotEmpty,
+        expect(legacyMarket(gameState), isNotEmpty,
             reason: '$label: 移籍市場に選手がいる');
 
         // 同姓同名が並ぶと、スタメン編成や交代で誰を選んでいるか分からなくなる。
@@ -9548,7 +9535,7 @@ void main() {
         expect(clubNames.toSet().length, clubNames.length,
             reason: '$label: リーグ内にクラブ名の重複がない');
         final marketNames =
-            gameState.transferMarket.map((p) => p.name).toList();
+            legacyMarket(gameState).map((p) => p.name).toList();
         expect(marketNames.toSet().length, marketNames.length,
             reason: '$label: 移籍市場に同姓同名が並ばない');
       }

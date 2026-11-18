@@ -390,6 +390,10 @@ extension GameStateFinance on GameState {
   @visibleForTesting
   void debugAdvanceTodayTo(DateTime day) => _advanceTodayTo(day);
 
+  /// 日付で終わるローンを今日の日付で片付ける(テスト用)。
+  @visibleForTesting
+  void debugSettleLoansByDate() => _settleLoansByDate();
+
   /// 次の節に打つと決めた試合日のイベント。無ければ null。
   MatchdayPromo? get activeMatchdayPromo {
     final id = _save?.matchdayPromoId;
@@ -662,7 +666,7 @@ extension GameStateFinance on GameState {
     if (save.ownerGoal == OwnerGoal.clubValue) {
       save.ownerGoalStartValue = clubValue.total;
     }
-    transferMarket = TransferMarket.generate(home: currentLeagueTheme);
+    transferMarket = [];
     _refreshScoutCandidates();
     _refreshStaffCandidates();
     _addTimeline(Tr.pick('${theme.label}(${theme.flavorLabel})で新しいクラブ${userTeam.name}を立ち上げた',

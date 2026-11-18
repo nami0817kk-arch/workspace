@@ -1091,6 +1091,14 @@ class Player {
   /// 開く日、1年ならシーズン末(6月30日)。ローン選手でなければ null。
   DateTime? loanEndDate;
 
+  /// 他のクラブから借りている選手の、元のクラブの id。ローンが終わると
+  /// そのクラブへ戻る。作り物の市場から借りた旧セーブの選手は null(戻る先が無い)。
+  String? loanFromClubId;
+
+  /// 借りる前の週俸。ローン中はこちらが6割だけ負担するので下げてある。
+  /// 元のクラブへ戻る・買い取るときにこの額へ戻す。
+  int? loanBaseWage;
+
   /// ローン契約に買取オプションが付いている場合の買取金額(万円)。
   /// ローン期間中いつでもこの金額を支払えば恒久的に完全移籍へ切り替えられる。
   /// 買取オプションがない通常のローンの場合はnull。
@@ -1288,6 +1296,8 @@ class Player {
     this.leaveOffRegistration = false,
     this.originLeague,
     this.loanEndDate,
+    this.loanFromClubId,
+    this.loanBaseWage,
     this.originClubName,
     this.appearanceFee = 0,
     this.role = PlayerRole.standard,
@@ -1574,6 +1584,8 @@ class Player {
     put('leaveOffRegistration', leaveOffRegistration, false);
     put('originLeague', originLeague, null);
     put('loanEndDate', _dateToJson(loanEndDate), null);
+    put('loanFromClubId', loanFromClubId, null);
+    put('loanBaseWage', loanBaseWage, null);
     put('originClubName', originClubName, null);
     put('appearanceFee', appearanceFee, 0);
     put('role', role.name, PlayerRole.standard.name);
@@ -1709,6 +1721,8 @@ class Player {
       leaveOffRegistration: json['leaveOffRegistration'] as bool? ?? false,
       originLeague: json['originLeague'] as String?,
       loanEndDate: _dateFromJson(json['loanEndDate']),
+      loanFromClubId: json['loanFromClubId'] as String?,
+      loanBaseWage: json['loanBaseWage'] as int?,
       originClubName: json['originClubName'] as String?,
       appearanceFee: json['appearanceFee'] as int? ?? 0,
       role: enumFromName(

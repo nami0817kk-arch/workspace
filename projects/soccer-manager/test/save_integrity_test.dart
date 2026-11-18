@@ -103,7 +103,6 @@ void main() {
     // そこを数えていなければ、読み込み後に作る選手(スカウト候補など)が
     // 同じIDになる。
     final pools = <String, void Function(SaveGame save, Player p)>{
-      'transferMarketPlayers': (s, p) => s.transferMarketPlayers.add(p),
       'freeAgents': (s, p) => s.freeAgents.add(p),
       'pendingYouthIntake': (s, p) => s.pendingYouthIntake.add(p),
       'youthProspects': (s, p) => s.youthProspects.add(p),
@@ -151,9 +150,8 @@ void main() {
       final save = game.save!;
       final userPlayer =
           save.league.teams.firstWhere((t) => t.id == save.userTeamId).players.first;
-      final marketPlayer = save.transferMarketPlayers.first;
-      save.transferMarketPlayers[0] = _withId(marketPlayer, userPlayer.id);
-      save.freeAgents.add(_withId(marketPlayer, userPlayer.id));
+      final marketPlayer = save.freeAgents.first;
+      save.freeAgents[0] = _withId(marketPlayer, userPlayer.id);
 
       final reloaded = await _reload(game);
       final re = reloaded.save!;
@@ -164,8 +162,8 @@ void main() {
       expect(userTeam.players.first.id, userPlayer.id,
           reason: '自クラブの選手のIDは変えない(先発・主将などから参照される)');
       expect(userTeam.players.first.name, userPlayer.name);
-      expect(re.transferMarketPlayers.first.id, isNot(userPlayer.id));
-      expect(re.transferMarketPlayers.first.name, marketPlayer.name,
+      expect(re.freeAgents.first.id, isNot(userPlayer.id));
+      expect(re.freeAgents.first.name, marketPlayer.name,
           reason: '振り直しで選手の中身が変わった');
     });
 

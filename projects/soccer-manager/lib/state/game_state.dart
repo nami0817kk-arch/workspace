@@ -109,7 +109,6 @@ import '../logic/season_projection_engine.dart';
 import '../logic/sponsor_engine.dart';
 import '../logic/super_cup_engine.dart';
 import '../logic/training_engine.dart';
-import '../logic/transfer_market.dart';
 import '../logic/weather_engine.dart';
 import '../logic/youth_departure_engine.dart';
 import '../logic/youth_league_engine.dart';
@@ -247,9 +246,9 @@ class GameState extends ChangeNotifier {
   /// [SaveGame.transferMarketPlayers]が実体)。
   List<Player> _transferMarketFallback = [];
 
-  /// 移籍市場に出ている選手一覧。毎節数人ずつ入れ替わる持続的な市場で
-  /// ([TransferMarket.rotate])、セーブデータに保存されるためロードしても
-  /// 同じ顔ぶれが維持される。
+  /// 作り物の移籍市場の選手。**ゲームはもう作らない**(獲得の相手は
+  /// [transferTargets]の他のクラブの選手)。テストが選手を置くためと、
+  /// 獲得の関数が先に見る場所として残してある。
   List<Player> get transferMarket =>
       _save?.transferMarketPlayers ?? _transferMarketFallback;
 
@@ -641,11 +640,9 @@ class GameState extends ChangeNotifier {
     if (_save != null) {
       _repairLoadedSave(_save!);
       _migrateDivisionPyramidIfNeeded();
-      // 市場はセーブに保存された顔ぶれを維持する(旧セーブ等で空の場合のみ
-      // 新規生成する)。
-      if (transferMarket.isEmpty) {
-        transferMarket = TransferMarket.generate(home: currentLeagueTheme);
-      }
+      // 作り物の移籍市場はやめた(獲得の相手は他のクラブの選手)。旧セーブに
+      // 残っている市場の選手は捨てる。
+      transferMarket = [];
       _refreshScoutCandidates();
     }
     initialized = true;
@@ -987,11 +984,9 @@ class GameState extends ChangeNotifier {
     if (_save != null) {
       _repairLoadedSave(_save!);
       _migrateDivisionPyramidIfNeeded();
-      // 市場はセーブに保存された顔ぶれを維持する(旧セーブ等で空の場合のみ
-      // 新規生成する)。
-      if (transferMarket.isEmpty) {
-        transferMarket = TransferMarket.generate(home: currentLeagueTheme);
-      }
+      // 作り物の移籍市場はやめた(獲得の相手は他のクラブの選手)。旧セーブに
+      // 残っている市場の選手は捨てる。
+      transferMarket = [];
       _refreshScoutCandidates();
     } else {
       transferMarket = [];
@@ -1145,7 +1140,7 @@ class GameState extends ChangeNotifier {
     final rival = cpuTeams[rng.nextInt(cpuTeams.length)];
     _save!.rivalTeamId = rival.id;
     _save!.rivalTeamName = rival.name;
-    transferMarket = TransferMarket.generate(home: currentLeagueTheme);
+    transferMarket = [];
     _refreshScoutCandidates();
     // 新規開始時もキャンプの判断から始まる。
     _save!.preseasonCampPending = true;
@@ -1207,7 +1202,7 @@ class GameState extends ChangeNotifier {
     _save = restored;
     _repairLoadedSave(restored);
     _migrateDivisionPyramidIfNeeded();
-    transferMarket = TransferMarket.generate(home: currentLeagueTheme);
+    transferMarket = [];
     _refreshScoutCandidates();
     _notify();
     await _persistNow();

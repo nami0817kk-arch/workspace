@@ -43,7 +43,7 @@ class NextActionCard extends StatelessWidget {
     final proposals = gameState.isTransferWindowOpen
         ? SigningProposalEngine.propose(
             gameState.userTeam,
-            gameState.transferMarket,
+            gameState.transferTargets,
             budget: save.budget,
           )
         : const <SigningProposal>[];
