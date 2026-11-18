@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:basketball_career/gm/bot.dart';
@@ -290,6 +291,9 @@ void main() {
     await _closeDialogs(tester);
     final see = find.text('自由契約の選手を見る');
     await tester.scrollUntilVisible(see, 300, scrollable: _progress);
+    // 下に固定した「オフを終える」の帯に隠れないよう、画面の上の方へ寄せる
+    unawaited(Scrollable.ensureVisible(tester.element(see), alignment: 0.2));
+    await tester.pumpAndSettle();
     await tester.tap(see);
     await tester.pumpAndSettle();
     await tester.tap(find.text('次の日へ'));
