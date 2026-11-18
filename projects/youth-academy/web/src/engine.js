@@ -123,6 +123,7 @@
           p.st = { goals: 0, assists: 0, shots: 0, rating: 6.0, minutes: 0, saves: 0 };
           p.yellow = 0;
           p.off = false;
+          p.sentOff = false; // 前の試合の退場を持ち越さない（名簿の選手をそのまま使うので）
           // 気分屋は試合ごとに調子が大きく振れる
           if (pers(p, '感情の波', '気分屋')) p.form = clamp(p.form + this.rng.int(-2, 2), -3, 3);
         }

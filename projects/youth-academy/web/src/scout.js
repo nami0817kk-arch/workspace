@@ -416,16 +416,17 @@
     return j ? J_TIER_NAME[j.tier] : null;
   };
   // 力に合うクラブを選ぶ：その子の総合力より少し上（+4）に近いクラブほど選ばれやすい
-  function pickFit(r, list, target) {
+  function pickFit(r, list, target, not) {
+    if (not) { const l2 = list.filter((c) => c[0] !== not); if (l2.length) list = l2; } // いまのクラブへは移らない
     const ws = list.map((c) => Math.exp(-Math.abs(c[1] - target) / 7));
     let x = r() * ws.reduce((s, v) => s + v, 0);
     for (let i = 0; i < list.length; i++) { x -= ws[i]; if (x <= 0) return list[i]; }
     return list[list.length - 1];
   }
   const jList = (w) => (YA.PRO_CLUBS || []).filter((c) => !w.top || c.name !== w.top.name).map((c) => [c.name, YA.clubStr(c.name)]);
-  function jClub(w, r, league, o) {
+  function jClub(w, r, league, o, not) {
     const target = o != null ? YA.rate(o) + 4 : J_BAND[league === 'J1リーグ' ? 1 : league === 'J2リーグ' ? 2 : 3].reduce((a, b) => (a + b) / 2);
-    return pickFit(r, jList(w), target)[0];
+    return pickFit(r, jList(w), target, not)[0];
   }
   // 最初の海外移籍は中堅のリーグから（2026-11-17：Jから直接プレミア15人・セリエA13人、ベルギー0人と現実から遠かった）。
   // 日本の選手の最初の海外は、ベルギー・オランダ・ポルトガル・スコットランド・オーストリア・スイス・デンマーク・ドイツ2部・イングランド2部がほとんど。
@@ -434,7 +435,7 @@
   const VETERAN = ['MLS・アメリカ', 'サウジ・プロリーグ', 'スターズリーグ・カタール', 'UAEプロリーグ', '中国スーパーリーグ', 'タイ・リーグ1', 'Aリーグ・オーストラリア', 'Kリーグ1・韓国'];
   YA.FIRST_ABROAD = FIRST_ABROAD;
   YA.retireWord = (a) => (a && a.note === '指導者に転身' ? '指導者に転身' : a && (a.quit || (a.age != null && a.age < 28)) ? 'サッカーをやめた' : '引退');
-  function abroadPick(r, o, bigOk, first, age) {
+  function abroadPick(r, o, bigOk, first, age, not) {
     const list = [];
     const rt = YA.rate(o);
     for (const [, lg, big] of ABROAD) {
@@ -445,7 +446,7 @@
     let target = rt + 4;
     if (first && rt < 165) target = Math.min(target, 150);
     const vet = age != null && age >= 30;
-    const c = vet ? pickFit(r, list.filter((x) => VETERAN.indexOf(x[2]) >= 0).concat(list.filter((x) => r() < 0.25)), target) : pickFit(r, list, target);
+    const c = vet ? pickFit(r, list.filter((x) => VETERAN.indexOf(x[2]) >= 0).concat(list.filter((x) => r() < 0.25)), target, not) : pickFit(r, list, target, not);
     return { club: c[0], league: c[2] };
   }
   const abroadClub = (r, league) => r.pick(ABROAD_CLUBS[league] || ABROAD_CLUBS['プレミアリーグ'])[0];
@@ -731,13 +732,13 @@
           const free = a.age >= 30 || r() < freeP;
           a.transfers++;
           if (abroad) {
-            const ab = abroadPick(r, a.ovr, a.ovr >= 15.3, !fromAbroad, a.age);
+            const ab = abroadPick(r, a.ovr, a.ovr >= 15.3, !fromAbroad, a.age, from);
             a.club = ab.club;
             a.league = ab.league;
             a.abroad = true;
           } else {
             if (a.abroad) a.abroad = false; // 国内へ戻る
-            a.club = jClub(w, r, domLeague(a.ovr), a.ovr);
+            a.club = jClub(w, r, domLeague(a.ovr), a.ovr, from);
             a.league = YA.clubLeague(a.club) || domLeague(a.ovr);
           }
           let fee = free ? 0 : valNow * mult * (abroad && !fromAbroad ? 2.2 : 1);
@@ -928,6 +929,7 @@
     for (const p of Object.values(w.players)) {
       if (p.away > 0) p.away--;
       if (p.suspend > 0) p.suspend--;
+      if (p.banM > 0 && YA.hasMatch(w.week, w)) { p.banM--; p.suspend = Math.max(p.suspend || 0, 1); }
       if (p.adapt > 0) p.adapt--;
       if (p.dorm) p.fat = clamp(p.fat - 2, 0, 100);
       // 本当に向いているポジションに気づく

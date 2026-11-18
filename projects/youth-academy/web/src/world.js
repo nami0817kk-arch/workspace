@@ -462,7 +462,8 @@
   // 名簿 → 試合用のチーム（engine の Match がそのまま使える形）
   YA.teamFromWorld = function (w, which) {
     const lineup = which === 'A' ? w.lineupA : w.lineupB;
-    const bench = which === 'A' ? w.benchA : w.benchB;
+    // 出場停止の子はベンチにも入れない（先発から外れた子がベンチに回って、途中から出られていた）
+    const bench = (which === 'A' ? w.benchA : w.benchB).filter((id) => !(w.players[id] && w.players[id].suspend > 0));
     lineup.forEach((s, i) => YA.fixSlotRole(s, i)); // 古い保存データの役割名や、任務のないスロットを直す
     const ids = lineup.map((s) => s.pid).concat(bench);
     const players = {};
@@ -1071,8 +1072,10 @@
   }
   YA.autoTeamsKeep = autoTeamsKeep;
   YA.newcomer = (w, rng, grade, forcePos) => newcomer(w, rng, grade, forcePos);
+  // 使えない名前：いまの選手と卒業生（2026-11-18：途中加入と新入生が卒業生と同じ名前になっていた）
+  YA.usedNames = (w) => new Set(Object.values(w.players).map((p) => p.name).concat((w.alumni || []).map((a) => a.name)));
   function newcomer(w, rng, grade, forcePos) {
-    const used = new Set(Object.values(w.players).map((p) => p.name));
+    const used = YA.usedNames(w);
     // GKが足りなくなったら、途中加入はGK
     const gkCount = Object.values(w.players).filter((q) => q.pos === 'GK').length;
     const pos = forcePos || (gkCount < 3 ? 'GK' : rng.pick(['CB', 'LB', 'RB', 'DM', 'CM', 'CM', 'AM', 'LW', 'RW', 'ST']));
@@ -1109,6 +1112,12 @@
         p.tu = Math.min(100, (p.tu == null ? 40 : p.tu) + (fit >= 0 ? 2 : 0.5));
       }
       p._weekMins = (p._weekMins || 0) + mm;
+      // 退場した子は、次に試合のある週に出場停止（2026-11-18：退場しても次の試合に出られた）
+      if (p.sentOff && (scheduled || which === 'B')) {
+        p.banM = Math.max(p.banM || 0, 1);
+        p.hist.unshift({ y: w.year, w: w.week, t: '退場（次の試合は出場停止）' });
+        noteTier(w, 1, p.num + '番 ' + p.name + ' が退場。次の試合は出場停止', p.id);
+      }
       if (mm > 0) {
         // 試合の疲れ：出た時間と、試合で減ったスタミナから。90分で10〜20
         const drop = Math.max(0, (p._startStam != null ? p._startStam : 100) - (p.stam != null ? p.stam : 100));
@@ -1193,6 +1202,7 @@
 
   // ---------- 戦術と役割で変わる成長 ----------
   // 戻り値：{ exp: 能力→上乗せ, tactic: 戦術名, tabs: 戦術で伸びやすい能力, role: 役割名, rabs: 役割で伸びやすい能力 }
+  YA.tacBase = (t) => (t ? (t.type === 'カスタム' && t.baseType ? t.baseType : t.type) : null);
   YA.tacticTrainBonus = function (w, p) {
     const out = { exp: {}, tactic: null, tabs: [], role: null, rabs: [] };
     if (!w.lineupA || p.pos === 'GK') return out;
@@ -1201,7 +1211,8 @@
     const benchA = (w.benchA || []).indexOf(p.id) >= 0;
     if (inA < 0 && inB < 0 && !benchA && p.team !== 'A') return out;
     const team = inA >= 0 || benchA || p.team === 'A' ? 'A' : 'B';
-    const type = team === 'B' && w.bCtl && w.bCtl.tactic && YA.TAC_PROFILE[w.bCtl.tactic] ? w.bCtl.tactic : w.tactic && w.tactic.type;
+    // カスタムの戦術は、もとの型（baseType）で伸びる能力を決める（2026-11-18：カスタムにすると戦術の上乗せが消えていた）
+    const type = team === 'B' && w.bCtl && w.bCtl.tactic && YA.TAC_PROFILE[w.bCtl.tactic] ? w.bCtl.tactic : YA.tacBase(w.tactic);
     const pf = YA.TAC_PROFILE[type];
     const rep = team === 'A' ? YA.tactRepOf(w) : 0.8;
     const wide = ['LW', 'RW', 'LB', 'RB', 'LWB', 'RWB', 'LM', 'RM'];
@@ -1362,7 +1373,7 @@
       p.unrest = 0;
     }
     for (const [p, note] of grads) w.alumni.push(YA.alumniEntry(w, p, note));
-    const used = new Set(Object.values(w.players).map((p) => p.name));
+    const used = YA.usedNames(w);
     YA.intake(w, rng, used);
     numbers(w);
     w.year++;

@@ -162,9 +162,10 @@ module.exports = (YA, ok) => {
 
   // 48 試合の怪我：出た子が試合で怪我をすることがある・まれに長い
   {
-    const st = YA.testStart({ seed: 41, tier: 2 });
-    YA.testYear(st);
-    const txt = st.w.inbox.map((n) => n.text).join('\n');
+    // 1年で数件なので、1つのシードでは0件の年もある（2026-11-18 退場の直しで乱数がずれて seed 41 が0件）。2つのシードで見る
+    let txt = '';
+    let st = null;
+    for (const sd of [41, 42]) { st = YA.testStart({ seed: sd, tier: 2 }); YA.testYear(st); txt += st.w.inbox.map((n) => n.text).join('\n') + '\n'; }
     ok(/試合で怪我/.test(txt), '試合でも怪我をする');
   }
 

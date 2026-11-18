@@ -306,7 +306,8 @@
       return;
     }
     const NAMES = ['ベスト16', 'ベスト8', 'ベスト4', '準優勝'];
-    for (let i = 0; i < c.opps.length; i++) {
+    // 準決勝まではここで決め、決勝は次の週の「決勝の前」の場面のあと（story.js）に決める（2026-11-18：決勝前の場面が出なくなっていた）
+    for (let i = 0; i < c.opps.length - 1; i++) {
       c.round = i + 1;
       if (!YA.koWin(w, c.opps[i], r)) {
         c.alive = false;
@@ -315,12 +316,31 @@
         return;
       }
     }
+    c.round = c.opps.length - 1;
+    c.finalPending = true;
+    YA.noteTier(w, 1, `${YA.CUP_NAME.summer}はグループ${rank}位から決勝トーナメントを勝ち上がり、決勝へ。相手は${c.opps[c.opps.length - 1].name}`);
+  }
+  // 夏の決勝（試合をせずに決める）
+  YA.summerFinal = function (w) {
+    const c = w.cup && w.cup.summer;
+    if (!c || !c.finalPending) return;
+    c.finalPending = false;
+    c.round = c.opps.length;
+    const fin = c.opps[c.opps.length - 1];
+    const r = YA.rngOf(w.seed * 31 + w.year * 101 + 7);
+    if (!YA.koWin(w, fin, r)) {
+      c.alive = false;
+      c.result = `準優勝（決勝で${fin.name}に敗れた）`;
+      YA.noteTier(w, 1, `${YA.CUP_NAME.summer}は準優勝。決勝で${fin.name}に敗れた`);
+      return;
+    }
+    const rank = c.grank;
     c.alive = false;
     c.result = '優勝';
     w.trophies = (w.trophies || []).concat([{ year: w.year, name: YA.CUP_NAME.summer, rank: '優勝' }]);
     YA.noteTier(w, 1, `${YA.CUP_NAME.summer}で優勝しました！（グループ${rank}位から決勝トーナメントを4つ勝ち抜いた）`);
     if (w.club) YA.addRep(w, 4);
-  }
+  };
   YA._summerAfterGroup = summerAfterGroup;
 
   // 今週の相手（試合用の定義）
