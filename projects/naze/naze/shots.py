@@ -303,7 +303,7 @@ def draw_illust(img: Image.Image, sc: dict, u: float) -> None:
     img.paste(Image.fromarray(a.astype(np.uint8)).convert("RGBA"), (0, 0))
     d = ImageDraw.Draw(img)
     f = ov.font(28)
-    d.text((W - 36, H - 40 if W > H else 260), "イメージ", font=f, fill=(230, 230, 230), anchor="rd", stroke_width=3, stroke_fill=ov.NAVY)
+    d.text((W - 36, H - 40 if W > H else 260), sc.get("label", "イメージ"), font=f, fill=(230, 230, 230), anchor="rd", stroke_width=3, stroke_fill=ov.NAVY)
     if sc.get("title"):
         a2 = _ease(u * 4)
         size = int(sc.get("size", 120) * (1.12 - 0.12 * a2))

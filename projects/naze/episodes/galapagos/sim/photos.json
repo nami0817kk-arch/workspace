@@ -1,0 +1,80 @@
+{
+ "swim": {
+  "file": "File:Galapagos Iguana 01.jpg",
+  "artist": "Andrew Skujins",
+  "license": "CC BY-SA 3.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Galapagos_Iguana_01.jpg"
+ },
+ "bask": {
+  "file": "File:Juvenile Marine Iguanas (Amblyrhynchus cristatus) on Isabela, Galapagos Islands.jpg",
+  "artist": "Dallas Krentzel",
+  "license": "CC BY 2.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Juvenile_Marine_Iguanas_(Amblyrhynchus_cristatus)_on_Isabela,_Galapagos_Islands.jpg"
+ },
+ "dome": {
+  "file": "File:Santa Cruz giant tortoises 01.jpg",
+  "artist": "Bernard Gagnon",
+  "license": "CC BY-SA 4.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Santa_Cruz_giant_tortoises_01.jpg"
+ },
+ "domeeat": {
+  "file": "File:Santa Cruz giant tortoise 05.jpg",
+  "artist": "Bernard Gagnon",
+  "license": "CC BY-SA 4.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Santa_Cruz_giant_tortoise_05.jpg"
+ },
+ "saddle": {
+  "file": "File:Galápagos giant tortoise (Chelonoidis niger hoodensis).jpg",
+  "artist": "E bailey",
+  "license": "CC BY-SA 4.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Gal%C3%A1pagos_giant_tortoise_(Chelonoidis_niger_hoodensis).jpg"
+ },
+ "saddle2": {
+  "file": "File:Galápagos giant tortoise, moving (Chelonoidis niger hoodensis).jpg",
+  "artist": "E bailey",
+  "license": "CC BY-SA 4.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Gal%C3%A1pagos_giant_tortoise,_moving_(Chelonoidis_niger_hoodensis).jpg"
+ },
+ "penguin": {
+  "file": "File:189 365 Galapagos Penguin - Spheniscus mendiculus, Fernandina Island, Galapagos, Ecuador, July 8, 2021 (51329133046).jpg",
+  "artist": "Judy Gallagher",
+  "license": "CC BY 2.0",
+  "page": "https://commons.wikimedia.org/wiki/File:189_365_Galapagos_Penguin_-_Spheniscus_mendiculus,_Fernandina_Island,_Galapagos,_Ecuador,_July_8,_2021_(51329133046).jpg"
+ },
+ "penguinswim": {
+  "file": "File:Galápagos penguin (Spheniscus mendiculus) male.jpg",
+  "artist": "Charles J. Sharp",
+  "license": "CC BY-SA 3.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Gal%C3%A1pagos_penguin_(Spheniscus_mendiculus)_male.jpg"
+ },
+ "finch": {
+  "file": "File:Medium Ground Finch.jpeg",
+  "artist": "Judy Gallagher",
+  "license": "CC BY 2.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Medium_Ground_Finch.jpeg"
+ },
+ "finch2": {
+  "file": "File:Geospiza fortis.jpg",
+  "artist": "",
+  "license": "CC BY-SA 2.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Geospiza_fortis.jpg"
+ },
+ "sealion": {
+  "file": "File:Galápagos sea lions Isabela.jpg",
+  "artist": "Charles J. Sharp",
+  "license": "CC BY-SA 3.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Gal%C3%A1pagos_sea_lions_Isabela.jpg"
+ },
+ "lava": {
+  "file": "File:Fernandina view.jpg",
+  "artist": "jthetzel",
+  "license": "CC BY 2.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Fernandina_view.jpg"
+ },
+ "cactus": {
+  "file": "File:Giant Prickly Pear Cactus (Opuntia echios) - Santa Fe Island - Galápagos Islands - Pacific Ocean - 14 Sept. 2011.jpg",
+  "artist": "Joanne Goldby from Birmingham, UK",
+  "license": "CC BY-SA 2.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Giant_Prickly_Pear_Cactus_(Opuntia_echios)_-_Santa_Fe_Island_-_Gal%C3%A1pagos_Islands_-_Pacific_Ocean_-_14_Sept._2011.jpg"
+ }
+}
