@@ -467,6 +467,10 @@ class SaveGame {
   int weekProcessedSeason;
   int weekProcessedMatchday;
 
+  /// ゲームの中の今日(日付のみ)。試合を消化するとその試合の日に進む。
+  /// 旧セーブには無い(null)。読み込んだ時に GameState が作り直す。
+  DateTime? today;
+
   /// 進行中の自クラブのリーグ戦の途中経過。試合中でなければ null。
   LiveMatchProgress? liveMatchProgress;
 
@@ -589,6 +593,7 @@ class SaveGame {
     this.weekProcessedSeason = 0,
     this.weekProcessedMatchday = 0,
     this.liveMatchProgress,
+    this.today,
   })  : budgetPlan = budgetPlan ?? BudgetPlan.balanced(),
         unlockedAchievements = unlockedAchievements ?? {},
         seasonStartOverallByPlayerId = seasonStartOverallByPlayerId ?? {},
@@ -826,6 +831,7 @@ class SaveGame {
         'weekProcessedSeason': weekProcessedSeason,
         'weekProcessedMatchday': weekProcessedMatchday,
         'liveMatchProgress': liveMatchProgress?.toJson(),
+        'today': today == null ? null : formatSaveDate(today!),
       };
 
   factory SaveGame.fromJson(Map<String, dynamic> json) => SaveGame(
@@ -1130,7 +1136,22 @@ class SaveGame {
             ? null
             : LiveMatchProgress.fromJson(
                 (json['liveMatchProgress'] as Map).cast<String, dynamic>()),
+        today: parseSaveDate(json['today']),
       );
+
+  /// 日付を「2026-08-15」の形で保存する(時刻は持たない)。
+  static String formatSaveDate(DateTime d) =>
+      '${d.year.toString().padLeft(4, '0')}-'
+      '${d.month.toString().padLeft(2, '0')}-'
+      '${d.day.toString().padLeft(2, '0')}';
+
+  /// [formatSaveDate]の逆。無い・読めないときは null。
+  static DateTime? parseSaveDate(Object? raw) {
+    if (raw is! String) return null;
+    final parsed = DateTime.tryParse(raw);
+    if (parsed == null) return null;
+    return DateTime(parsed.year, parsed.month, parsed.day);
+  }
 
   /// 5部制ピラミッド導入前の旧セーブデータ(`otherDivisionLeagues`キーが
   /// 存在しない)を読み込む際、旧来の単一`otherDivisionLeague`

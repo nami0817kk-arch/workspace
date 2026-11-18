@@ -2,7 +2,9 @@ import '../models/continental_cup.dart';
 import '../models/cup.dart';
 import '../models/league.dart';
 import '../models/team.dart';
+import '../models/league_theme.dart';
 import 'continental_cup_engine.dart';
+import 'season_calendar.dart';
 import '../l10n/tr.dart';
 
 /// カレンダー表示用の1日分の情報。
@@ -37,27 +39,25 @@ class CalendarDayInfo {
   bool get isCupMatchDay => cupLabels.isNotEmpty;
 }
 
-/// シーズン内の節・親善試合に実際の暦日を与え、カレンダー画面向けに
-/// 日ごとの予定(試合日/重点練習日)を計算する。ゲームは節(週)単位で
-/// 進行するため、この日付はあくまで表示用であり、セーブデータへの
-/// 永続化は不要(シーズン番号から常に同じ日付を再計算できる)。
+/// カレンダー画面向けに、日ごとの予定(試合日/重点練習日)を計算する。
+/// 節・カップ戦・親善試合の暦日は [SeasonCalendar] が決める。
 class CalendarEngine {
-  /// 指定シーズンの開幕節(第1節)の実日付。常に土曜日になるよう調整する。
-  static DateTime seasonAnchor(int season) {
-    final d = DateTime(2024 + (season - 1), 8, 1);
-    final diff = (DateTime.saturday - d.weekday) % 7;
-    return d.add(Duration(days: diff));
-  }
-
-  /// 指定シーズン・節の実日付(常に土曜日)。
-  static DateTime dateForMatchday(int season, int matchday) =>
-      seasonAnchor(season).add(Duration(days: (matchday - 1) * 7));
-
-  /// プレシーズン親善試合の推定日付。開幕の週から遡って1週間隔で並べる。
-  static DateTime dateForFriendly(int season, int index, int count) =>
-      seasonAnchor(season).subtract(Duration(days: (count - index) * 7));
-
   static DateTime dateOnly(DateTime d) => DateTime(d.year, d.month, d.day);
+
+  static const _monthLabels = [
+        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+      ];
+
+  /// 「2026年8月16日(土)」/ "Sat 16 Aug 2026"。画面上部の今日の表示に使う。
+  static String formatDate(DateTime d) => Tr.pick(
+      '${d.year}年${d.month}月${d.day}日(${weekdayLabel(d.weekday)})',
+      '${weekdayLabel(d.weekday)} ${d.day} ${_monthLabels[d.month - 1]} ${d.year}');
+
+  /// 「8/16(土)」/ "Sat 16 Aug"。日程の一覧など、年の要らない所に使う。
+  static String formatShortDate(DateTime d) => Tr.pick(
+      '${d.month}/${d.day}(${weekdayLabel(d.weekday)})',
+      '${weekdayLabel(d.weekday)} ${d.day} ${_monthLabels[d.month - 1]}');
 
   // const にできないのは、曜日名が表示時の言語で決まるため。static final に
   // すると最初のアクセスで言語が固定され、設定で切り替えても反映されない。
@@ -95,14 +95,15 @@ class CalendarEngine {
   static (DateTime, String)? _domesticCupEntry(
     Cup? cup,
     League league,
+    SeasonCalendar calendar,
     String userTeamId,
     List<Team> extraTeams,
   ) {
     if (cup == null) return null;
     final match = cup.nextUnplayedMatch;
     if (match == null) return null;
-    final eligibleMatchday = (cup.lastPlayedAtMatchday ?? 0) + 1;
-    final date = dateOnly(dateForMatchday(league.season, eligibleMatchday));
+    final date = calendar.cupDateBefore(
+        _eligibleMatchday(cup.lastPlayedAtMatchday, league, calendar));
     final involvesUser =
         match.homeTeamId == userTeamId || match.awayTeamId == userTeamId;
     if (!involvesUser) {
@@ -120,6 +121,7 @@ class CalendarEngine {
   static (DateTime, String)? _continentalCupEntry(
     ContinentalCup? cup,
     League league,
+    SeasonCalendar calendar,
     String userTeamId,
     List<Team> extraTeams,
   ) {
@@ -147,8 +149,9 @@ class CalendarEngine {
       awayId = tie.teamBId;
       isHome = null;
     }
-    final eligibleMatchday = (cup.lastPlayedAtMatchday ?? 0) + 1;
-    final date = dateOnly(dateForMatchday(league.season, eligibleMatchday));
+    final date = calendar.cupDateBefore(
+        _eligibleMatchday(cup.lastPlayedAtMatchday, league, calendar),
+        continental: true);
     final involvesUser = homeId == userTeamId || awayId == userTeamId;
     if (!involvesUser) {
       return (date, Tr.pick('${cup.name}: 消化可能', '${cup.name}: tie available'));
@@ -159,6 +162,31 @@ class CalendarEngine {
     final sideLabel = isHome == null ? '' : (isHome ? '(H)' : '(A)');
     return (date, '${cup.name}: $sideLabel vs $opponentName');
   }
+
+  /// カップ戦の次の試合を消化できるようになる節。最後に消化した節の次と、
+  /// いまのリーグの節(次に消化する節)の遅い方。
+  static int _eligibleMatchday(
+    int? lastPlayedAtMatchday,
+    League league,
+    SeasonCalendar calendar,
+  ) {
+    final afterLast = (lastPlayedAtMatchday ?? 0) + 1;
+    final current = league.nextUnplayedFixture?.matchday ??
+        (calendar.totalMatchdays + 1);
+    return afterLast > current ? afterLast : current;
+  }
+
+  /// [league]の節数から作る暦。国が分からないときはイングランドの暦。
+  static SeasonCalendar calendarFor(
+    League league, {
+    LeagueTheme theme = LeagueTheme.england,
+  }) =>
+      SeasonCalendar.build(
+        season: league.season,
+        theme: theme,
+        totalMatchdays: league.fixtures
+            .fold<int>(0, (m, f) => f.matchday > m ? f.matchday : m),
+      );
 
   /// [from]〜[to](両端含む)の各日について、自クラブのリーグ戦がある日は
   /// 対戦相手情報を、それ以外は重点練習日かどうかを付与して返す。カップ戦
@@ -174,31 +202,32 @@ class CalendarEngine {
     ContinentalCup? continentalCup,
     List<Team> continentalTeams = const [],
     List<Fixture> friendlies = const [],
+    SeasonCalendar? calendar,
   }) {
+    final cal = calendar ?? calendarFor(league);
     // プレシーズン親善試合は開幕前の週に並ぶ。未消化のものだけ予定として扱う。
     final friendlyByDate = <DateTime, Fixture>{};
-    final upcomingFriendlies = [
-      for (final f in friendlies)
-        if (f.result == null) f,
-    ];
-    for (var i = 0; i < upcomingFriendlies.length; i++) {
-      friendlyByDate[dateOnly(
-        dateForFriendly(league.season, i, upcomingFriendlies.length),
-      )] = upcomingFriendlies[i];
+    // 日付は全体の並び順で決める(消化した試合があっても残りの日付は動かない)。
+    for (var i = 0; i < friendlies.length; i++) {
+      if (friendlies[i].result != null) continue;
+      friendlyByDate[dateOnly(cal.friendlyDate(i, friendlies.length))] =
+          friendlies[i];
     }
 
     final matchesByDate = <DateTime, Fixture>{};
     for (final f in league.fixtures) {
       if (f.homeTeamId != userTeamId && f.awayTeamId != userTeamId) continue;
-      matchesByDate[dateOnly(dateForMatchday(league.season, f.matchday))] = f;
+      matchesByDate[dateOnly(cal.dateForMatchday(f.matchday))] = f;
     }
 
     final cupLabelsByDate = <DateTime, List<String>>{};
     for (final entry in [
-      _domesticCupEntry(domesticCup, league, userTeamId, continentalTeams),
+      _domesticCupEntry(
+          domesticCup, league, cal, userTeamId, continentalTeams),
       _continentalCupEntry(
         continentalCup,
         league,
+        cal,
         userTeamId,
         continentalTeams,
       ),
