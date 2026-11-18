@@ -37,7 +37,7 @@ ISABELA, WOLF, FERN = (-91.1, -0.55), (-91.335, 0.043), (-91.55, -0.37)
 SANCRI, ESPA, SANTACRUZ, DAPHNE = (-89.45, -0.85), (-89.68, -1.38), (-90.33, -0.65), (-90.37, -0.42)
 QUITO = (-78.5, -0.2)
 HUMBOLDT = [(-80.0, -14.0), (-82.5, -8.0), (-85.5, -4.0), (-89.0, -2.0)]
-CROMWELL_A, CROMWELL_B = (-97.0, -0.2), (-92.0, -0.3)
+CROMWELL_A, CROMWELL_B = (-93.6, -0.25), (-91.9, -0.3)
 
 WIDE = (-85.5, -1.5, 18.0, 0)
 WIDE_T = (-86.0, -3.5, 15.0, 30)
@@ -123,10 +123,10 @@ def BARS(items, title=None, note=None, fmt="{}", step=None, tr=None):
     return d
 
 
-def SEA(step=None, plate=False, tr=None, view=(-85.4, 0.6, 16.0, 58)):
+def SEA(step=None, plate=False, tr=None, view=(-85.4, 0.6, 16.0, 58), inner=False):
     """本土からガラパゴスまで、南緯 0.75 度で海を切った箱。plate で本土の沖に沈みこむ板。"""
     d = dict(shot="block", view=view, lat=-0.75, lon=(-91.9, -79.0), depth_m=9000, step=step,
-             labels=[(-90.6, 2600, "ガラパゴス"), (-79.8, 2600, "南米"), (-85.5, -1500, "深さ約3,200mの海")])
+             labels=[(-89.6 if inner else -90.6, 2600, "ガラパゴス"), (-81.0 if inner else -79.8, 2600, "南米"), (-85.5, -1500, "深さ約3,200mの海")])
     if plate:
         d.update(plate=True, trench=-81.0)
     if tr:
@@ -134,10 +134,10 @@ def SEA(step=None, plate=False, tr=None, view=(-85.4, 0.6, 16.0, 58)):
     return d
 
 
-def HOT(step=None, tr=None, view=(-90.7, 0.5, 4.6, 58)):
+def HOT(step=None, tr=None, view=(-90.7, -0.1, 4.6, 58), inner=False):
     """島の下を切った箱。西の端の下にホットスポット。"""
     d = dict(shot="block", view=view, lat=-0.45, lon=(-92.4, -89.0), depth_m=9000, step=step,
-             labels=[(-91.55, -6500, "ホットスポット"), (-91.5, 2400, "西は若い"), (-89.4, 1800, "東は古い")])
+             labels=[(-91.55, -4200 if inner else -2600, "ホットスポット"), (-91.2 if inner else -91.5, 2400, "西は若い"), (-89.9 if inner else -89.4, 1800, "東は古い")])
     if tr:
         d["tr"] = tr
     return d
@@ -146,8 +146,8 @@ def HOT(step=None, tr=None, view=(-90.7, 0.5, 4.6, 58)):
 GC, MINE, FR = "Galapagos Conservancy", "自分で測った（標高データ）", "Frontiers in Earth Science 2018"
 ENDEMIC = BARS([("爬虫類・陸の哺乳類", 97, YEL), ("陸の鳥", 80, BLUE), ("植物", 30, GREEN)], title="ここにしかいない種類の割合（%）", note=GC + "（植物は30%以上）", fmt="{}")
 FAR = BARS([("本土〜ガラパゴス", 928, YEL), ("東京〜福岡", 886, GREY)], title="まっすぐの距離（km）", note=MINE, fmt="{:,}")
-AGES = BARS([("エスパニョーラ島（東）", 270, YEL), ("サンクリストバル島（東）", 235, YEL), ("フェルナンディナ島（西）", 0, RED)],
-            title="見つかった古い溶岩（万年前）", note=FR + "（西は今も噴火）", fmt="{}")
+AGES = BARS([("エスパニョーラ", 270, YEL), ("サンクリストバル", 235, YEL)],
+            title="見つかった古い溶岩（万年前）", note=FR + "（東の島。西は今も噴火）", fmt="{}")
 
 ANSWERS = [("大陸から約930km", "来られる生き物が限られた"),
            ("海の底の火山から生まれた", "一度も大陸とつながっていない"),
@@ -188,6 +188,7 @@ P["ch2"] = dict(title="第2章 930kmの海", cta=False, lines=[
     dict(id="b4", text="東京から福岡まで、まっすぐ約890km。それより遠いのです。", scene=FAR),
     dict(id="b5", text="あいだの海の深さも、標高のデータで測りました。", scene=SEA(step=1, tr="zoom")),
     dict(id="b6", text="いちばん深い所は、約3,200m。", scene=CARD("約3,200m", sub="本土とガラパゴスのあいだの海の、いちばん深い所", note=MINE, view=WIDE, step=1)),
+    dict(id="b6b", text="東京スカイツリーを5本積んでも、届かない深さです。", scene=BARS([("海のいちばん深い所", 3199, BLUE), ("スカイツリー5本", 3170, GREY)], title="深さ・高さ（m）", note=MINE + "・スカイツリー634m", fmt="{:,}", step=1)),
     dict(id="b7", text="海の水を抜いてみると、島と大陸のあいだには、深い谷が残ります。", scene=SEA(step=1, view=(-85.4, 0.4, 15.0, 62))),
     dict(id="b8", text="陸の道は、どこにもありません。"),
     dict(id="b9", text="生き物は、歩いては来られないのです。", scene=MAP(WIDE_T, DIST("b9"), step=1)),
@@ -222,6 +223,7 @@ P["ch3"] = dict(title="第3章 海の底から生まれた島", cta=False, lines
     dict(id="c13", text="いちばん西のフェルナンディナ島は、今も噴火を続ける若い島です。", scene=MAP(WEST, PIN(FERN, "フェルナンディナ島", id="p_cf"), step=2, view_to=(-91.4, -0.4, 0.9, 30))),
     dict(id="c14", text="東のサンクリストバル島では、約235万年前の溶岩が見つかっています。", scene=AGES),
     dict(id="c15", text="エスパニョーラ島では、約270万年前です。"),
+    dict(id="c15b", text="西の端から東の端までは、測ると約240kmあります。", scene=MAP(ARCH, LINE([FERN, SANCRI], YEL, 8, id="r_we"), LABEL((-90.5, -0.35), "約240km", 60, YEL, on="240"), step=2)),
     dict(id="c16", text="島は、ベルトコンベアに乗って並んだように、東ほど古いのです。", scene=MAP(ARCH, PIN(FERN, "若い", id="p_cy"), PIN(ESPA, "古い", id="p_co"), ARROW((-91.4, -1.6), (-89.4, -1.6), YEL, 12, id="a_conv"), step=2)),
     dict(id="c17", text="つまり、どの島も、生まれたときは溶岩だけの、生き物のいない島でした。", section=True, scene=PHOTO("lava", step=2, pan=(0.1, 0.0, -0.05, 0.03))),
     dict(id="c18", text="日本列島は、昔は大陸とつながっていました。だから、大陸と同じ仲間の生き物が多くいます。", scene=dict(shot="globe", center=(135, 35), to=(130, 38), step=2)),
@@ -237,7 +239,7 @@ P["ch4"] = dict(title="第4章 赤道の冷たい海", cta=False, lines=[
     dict(id="d3", text="いちばん大きなイサベラ島には、赤道の線が通っています。", scene=MAP(WEST, EQ("d3"), PIN(ISABELA, "イサベラ島", id="p_di"), step=3, view_to=(-91.2, -0.1, 1.0, 25))),
     dict(id="d4", text="赤道の海なら、あたたかいはず。ところが、ここの海は冷たいのです。", section=True, scene=CARD("赤道なのに\n冷たい海", view=ARCH, step=3, count=False)),
     dict(id="d5", text="南からは、冷たい水を運ぶ流れが来ます。フンボルト海流です。", scene=MAP(WIDE_T, HUMB("d5"), LABEL((-82.0, -9.0), "フンボルト海流", 52, COLD), step=3)),
-    dict(id="d6", text="さらに西からは、海の深い所を東へ流れる流れがぶつかります。クロムウェル海流です。", scene=MAP(ARCH_T, CROM("d6"), LABEL((-91.9, 0.45), "クロムウェル海流", 50, COLD), step=3, view_to=(-91.0, -0.8, 3.4, 35))),
+    dict(id="d6", text="さらに西からは、海の深い所を東へ流れる流れがぶつかります。クロムウェル海流です。", scene=MAP((-91.8, -0.4, 3.6, 0), CROM("d6"), LABEL((-92.9, -0.75), "クロムウェル海流", 50, COLD), step=3, view_to=(-91.6, -0.5, 3.2, 20))),
     dict(id="d7", text="この流れが島の山の根元に当たり、深くの冷たい水を、海面へ押し上げます。", scene=HOT(step=3, tr="zoom")),
     dict(id="d8", text="イサベラ島とフェルナンディナ島の西には、まわりより冷たい水のたまりができます。", scene=MAP(WEST_T, dict(kind="area", rings=[[(-92.1, 0.25), (-91.65, 0.3), (-91.45, -0.2), (-91.55, -0.75), (-91.95, -0.9), (-92.25, -0.4)]], color=COLD, alpha=0.35, width=4, id="cold", at=0.0), step=3)),
     dict(id="d9", text="1年の平均で、22〜23度です。", scene=CARD("22〜23度", sub="島の西の冷たい水のたまり（1年の平均）", note="Karnauskas ほか 2015", view=WEST, step=3, count=False)),
@@ -294,8 +296,8 @@ P["s1"] = dict(title="赤道の真下に、ペンギンがいる", lines=[
     dict(id="k3", text="北半球にもすむ、ただ1種類のペンギンです。", scene=PHOTO("penguinswim")),
     dict(id="k4", text="赤道の海は、あたたかいはず。なぜ、ここで暮らせるのか。", style="question", scene=MAP(ARCH_P, EQ("k4"))),
     dict(id="k5", text="答えは、海の深くから、冷たい水がわき上がっているからです。", section=True),
-    dict(id="k6", text="島の西には、海の深い所を東へ流れる流れがあります。クロムウェル海流です。", scene=MAP(ARCH_P, CROM("k6"), LABEL((-92.0, 0.5), "クロムウェル海流", 44, COLD))),
-    dict(id="k7", text="この流れが、海の底からそびえる島の山にぶつかります。", scene=HOT(view=(-90.9, 0.4, 3.6, 58))),
+    dict(id="k6", text="島の西には、海の深い所を東へ流れる流れがあります。クロムウェル海流です。", scene=MAP((-91.4, -0.4, 2.6, 0), ARROW((-92.6, -0.25), (-91.7, -0.3), COLD, 16, id="cromk6"), LABEL((-92.0, 0.3), "クロムウェル海流", 44, COLD))),
+    dict(id="k7", text="この流れが、海の底からそびえる島の山にぶつかります。", scene=HOT(view=(-90.9, 0.4, 3.6, 58), inner=True)),
     dict(id="k8", text="行き場をなくした深くの冷たい水が、海面へ押し上げられます。"),
     dict(id="k9", text="イサベラ島の西の海は、1年の平均で22〜23度。まわりより冷たい水のたまりです。", scene=CARD("22〜23度", sub="島の西の海（1年の平均）", view=WEST_P, count=False)),
     dict(id="k10", text="深い水は栄養が多く、魚がよく集まります。", scene=MAP(WEST_P, step=None, view_to=(-91.4, -0.3, 0.75, 25))),
@@ -311,7 +313,7 @@ P["s2"] = dict(title="泳げないゾウガメが、930kmの海を渡れた理�
     dict(id="m4", text="答えは、流れ着いた、と考えられています。", section=True, scene=MAP(WIDE_P, LINE([(-80.2, -2.5), (-84.0, -2.0), (-88.0, -1.2), NEAR], BLUE, 8, id="r_raft2"))),
     dict(id="m5", text="南米の川から流された木や草のかたまりに乗って。あるいは、自分の体で浮かんで。"),
     dict(id="m6", text="930kmは、東京から福岡よりも遠い距離です。", scene=FAR),
-    dict(id="m7", text="何週間も、食べ物も水もない海の上です。", scene=SEA(view=(-85.4, 0.6, 12.0, 58))),
+    dict(id="m7", text="何週間も、食べ物も水もない海の上です。", scene=SEA(view=(-85.4, 0.6, 14.0, 58), inner=True)),
     dict(id="m8", text="ところがゾウガメは、何も食べず、何も飲まずに、最長1年生きられます。", scene=CARD("最長1年", sub="食べず飲まずで生きられる長さ", view=WIDE_P, count=False)),
     dict(id="m9", text="だから、生きたまま島に着けたのです。", scene=PHOTO("domeeat")),
     dict(id="m10", text="逆に、大陸のシカやサルは来られませんでした。", scene=MAP(WIDE_P, ECU("m10", 0.35))),
@@ -326,11 +328,11 @@ P["s3"] = dict(title="ガラパゴスの島は、西へ行くほど若い", line
     dict(id="n3", text="西のフェルナンディナ島は、今も噴火を続けています。", scene=PHOTO("lava")),
     dict(id="n4", text="なぜ、島の年齢が、東から西へ並んでいるのか。", style="question", scene=MAP(ARCH_P)),
     dict(id="n5", text="答えは、海の底がベルトコンベアのように動いているからです。", section=True, scene=MAP(ARCH_P, ARROW((-91.4, -1.5), (-89.4, -1.5), YEL, 14, id="a_n5"))),
-    dict(id="n6", text="島の下の深くには、マグマがわき上がる出口があります。ホットスポットと呼ばれます。", scene=HOT(view=(-90.9, 0.4, 3.6, 58))),
+    dict(id="n6", text="島の下の深くには、マグマがわき上がる出口があります。ホットスポットと呼ばれます。", scene=HOT(view=(-90.9, 0.4, 3.6, 58), inner=True)),
     dict(id="n7", text="この出口は、動きません。"),
     dict(id="n8", text="ところが、その上の海の底の板は、東へ動いています。", scene=MAP(ARCH_P, ARROW((-91.4, -1.5), (-89.4, -1.5), YEL, 14, id="a_n8"), LABEL((-90.4, -1.75), "ナスカプレート", 44, YEL))),
     dict(id="n9", text="速さは、100万年で約51km。1年で約5cmです。", scene=CARD("1年に約5cm", sub="100万年で約51km", view=ARCH_P, count=False)),
-    dict(id="n10", text="出口の上で生まれた島は、東へ運ばれていきます。", scene=HOT(view=(-90.9, 0.4, 3.6, 58))),
+    dict(id="n10", text="出口の上で生まれた島は、東へ運ばれていきます。", scene=HOT(view=(-90.9, 0.4, 3.6, 58), inner=True)),
     dict(id="n11", text="そして、出口の上で、また新しい島が生まれます。"),
     dict(id="n12", text="だから、東の島ほど古く、西の島ほど若いのです。", scene=MAP(ARCH_P, PIN(FERN, "若い", id="p_ny2"), PIN(ESPA, "古い", id="p_no2"))),
     dict(id="n13", text="どの島も、溶岩だけの島から始まりました。生き物は、すべて海を越えて来たのです。", scene=PHOTO("lava", pan=(0.1, 0.0, -0.05, 0.03))),
@@ -373,7 +375,7 @@ P["s5"] = dict(title="ゾウガメの甲羅は、島によって形が違う", l
 # ---- 読み ------------------------------------------------------------------------------------------------
 YOMI = [("「進化」", "しんか"), ("「ホットスポット」", "ホットスポット"), ("ダフネ・メジャー", "ダフネメジャー"), ("生きたまま島に", "いきたまま、しまに"),
         ("通っています", "とおっています"), ("深く", "ふかく"), ("8割", "ハチワリ"), ("四国", "シコク"), ("爬虫類", "ハチュウルイ"), ("約930km", "約九百三十キロ"), ("930km", "九百三十キロ"), ("約890km", "約八百九十キロ"), ("約3,200m", "約三千二百メートル"), ("約1,700m", "約千七百メートル"),
-        ("約51km", "約五十一キロ"), ("約5cm", "約五センチ"), ("1km²", "一平方キロメートル"), ("10km²", "十平方キロメートル"),
+        ("約51km", "約五十一キロ"), ("約240km", "約二百四十キロ"), ("5本", "ごほん"), ("東京スカイツリー", "とうきょうスカイツリー"), ("約5cm", "約五センチ"), ("1km²", "一平方キロメートル"), ("10km²", "十平方キロメートル"),
         ("1835年", "千八百三十五年"), ("1977年", "千九百七十七年"), ("100万年", "百万年"), ("約235万年前", "約二百三十五万年前"), ("約270万年前", "約二百七十万年前"),
         ("数百万年", "すうひゃくまんねん"), ("20万〜30万匹", "二十万から三十万びき"), ("22〜23度", "二十二から二十三度"), ("97%", "九十七パーセント"), ("約80%", "約八十パーセント"),
         ("30%以上", "三十パーセント以上"), ("29種", "にじゅうきゅうしゅ"), ("22種", "にじゅうにしゅ"), ("6種", "ろくしゅ"), ("15種類", "じゅうごしゅるい"),
