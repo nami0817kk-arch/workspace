@@ -8727,7 +8727,7 @@ void main() {
     expect(
       easyState.save!.boardTargetRank,
       (BoardEngine.estimateTargetRank(easyState.save!.league, 'user') + 2)
-          .clamp(1, teamsPerLeague),
+          .clamp(1, easyState.save!.league.teams.length),
       reason: 'イージーは理事会目標が2つ緩い',
     );
 
@@ -8738,7 +8738,7 @@ void main() {
     expect(
       hardState.save!.boardTargetRank,
       (BoardEngine.estimateTargetRank(hardState.save!.league, 'user') - 1)
-          .clamp(1, teamsPerLeague),
+          .clamp(1, hardState.save!.league.teams.length),
       reason: 'ハードは理事会目標が1つ厳しい',
     );
 
