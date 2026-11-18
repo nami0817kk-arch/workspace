@@ -99,6 +99,12 @@ class FinanceScreen extends StatelessWidget {
                               'Weekly income: +${formatMoney(income)} (gate, sponsorship, merchandise and broadcasting)')),
                           Text(Tr.pick('週間人件費: -${formatMoney(wageBill)}（年俸を節の数で割った額・スタッフ込み）',
                               'Weekly wages: -${formatMoney(wageBill)} (annual salaries spread over the matchdays, staff included)')),
+                          Text(
+                            Tr.pick(
+                                '給与は毎月末に年俸の12分の1(${formatMoney(gameState.monthlyPlayerWageCost + gameState.monthlyStaffWageCost)})を払い、放映権は年4回(8/1・11/1・2/1・5/1)に入ります。上の週の額は1節あたりに直した目安です。',
+                                'Wages are paid at the end of each month, one twelfth of the annual bill (${formatMoney(gameState.monthlyPlayerWageCost + gameState.monthlyStaffWageCost)}). Broadcast money arrives four times a year (1 Aug, 1 Nov, 1 Feb, 1 May). The weekly figures above are per-matchday averages.'),
+                            style: const TextStyle(fontSize: 12),
+                          ),
                           if (loanRepayment > 0)
                             Text(Tr.pick('週間融資返済: -${formatMoney(loanRepayment)}',
                                 'Weekly loan repayment: -${formatMoney(loanRepayment)}')),
@@ -160,6 +166,7 @@ class FinanceScreen extends StatelessWidget {
                       ),
                     ),
                   ),
+                  const _MoneyCalendarCard(),
                   const ProposalCard(),
                   const RewardFundsCard(),
                   const BudgetPlanCard(),
@@ -340,6 +347,59 @@ class FinanceScreen extends StatelessWidget {
 }
 
 /// 週間収入と支出(人件費+融資返済)の比率を視覚化する内訳バー。
+/// これから先のお金の予定(給与日・放映権の入金日・試合の日)。
+class _MoneyCalendarCard extends StatelessWidget {
+  const _MoneyCalendarCard();
+
+  @override
+  Widget build(BuildContext context) {
+    final gameState = context.watch<GameState>();
+    final items = gameState.upcomingMoneyDates();
+    if (items.isEmpty) return const SizedBox.shrink();
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              Tr.pick('入出金の予定', 'Upcoming money dates'),
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 8),
+            for (final e in items)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 2),
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 56,
+                      child: Text('${e.date.month}/${e.date.day}',
+                          style: const TextStyle(fontSize: 12)),
+                    ),
+                    Expanded(
+                      child: Text(e.label, style: const TextStyle(fontSize: 12)),
+                    ),
+                    Text(
+                      formatMoneySigned(e.amount),
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: e.amount >= 0
+                            ? SemanticColors.positive(context)
+                            : SemanticColors.negative(context),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _CashFlowBar extends StatelessWidget {
   final int income;
   final int expenses;

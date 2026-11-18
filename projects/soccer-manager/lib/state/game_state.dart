@@ -62,6 +62,7 @@ import '../models/match_result.dart';
 import '../models/weather.dart';
 import '../logic/achievement_engine.dart';
 import '../logic/ai_transfer_engine.dart';
+import '../logic/money_calendar.dart';
 import '../logic/season_calendar.dart';
 import '../logic/transfer_window.dart';
 import '../logic/awards_engine.dart';
@@ -1316,6 +1317,9 @@ class GameState extends ChangeNotifier {
 
   /// 直近の試合の観客動員数(ダービーなら増幅される)。未実施の場合はnull。
   int? lastMatchAttendance;
+
+  /// 直近の試合が祝日だったら、その祝日の名前(客が増えた)。
+  String? lastMatchHoliday;
 
   /// 直近の獲得操作が週給予算でブロックされた場合の理由文言(表示用)。
   String? lastSigningBlockReason;

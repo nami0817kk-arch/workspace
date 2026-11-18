@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../l10n/tr.dart';
 import '../logic/ledger_engine.dart';
+import '../logic/money_calendar.dart';
 import '../models/ledger.dart';
 import '../state/game_state.dart';
 import '../theme/semantic_colors.dart';
@@ -65,8 +66,9 @@ class LedgerCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              Tr.pick('今季の収支(第${save.league.season}季)',
-                  'This season (Season ${save.league.season})'),
+              Tr.pick(
+                  '今季の収支(第${save.league.season}季・${MoneyCalendar.fiscalYearLabel(save.league.season)}年度 7/1〜6/30)',
+                  'This season (Season ${save.league.season}, FY ${MoneyCalendar.fiscalYearLabel(save.league.season)}, 1 Jul to 30 Jun)'),
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 8),
@@ -192,7 +194,10 @@ class LedgerCard extends StatelessWidget {
                   child: Row(
                     children: [
                       Expanded(
-                          child: Text(Tr.pick('第${l.season}季', 'S${l.season}'),
+                          child: Text(
+                              Tr.pick(
+                                  '第${l.season}季(${MoneyCalendar.fiscalYearLabel(l.season)})',
+                                  'S${l.season} (${MoneyCalendar.fiscalYearLabel(l.season)})'),
                               style: const TextStyle(fontSize: 12))),
                       _Cell(formatMoney(l.operatingIncome)),
                       _Cell(formatMoney(l.wageCost)),
